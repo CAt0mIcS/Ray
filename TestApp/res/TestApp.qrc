@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/TestApp">
+        <file>plusBlack.jpg</file>
+        <file>testPlus.png</file>
+    </qresource>
+</RCC>

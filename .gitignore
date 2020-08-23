@@ -1,0 +1,6 @@
+bin/
+bin-int/
+.vs/
+.git/
+CustomNodeWidget/bin-int/
+TestApp/bin-int/

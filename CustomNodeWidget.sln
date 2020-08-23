@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CustomNodeWidget", "CustomNodeWidget\CustomNodeWidget.vcxproj", "{C384736F-5AA7-4E41-9D56-95DFFDDFA7D6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestApp", "TestApp\TestApp.vcxproj", "{2BB9B2BB-564F-4B8E-B102-1E69063C2BDE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C384736F-5AA7-4E41-9D56-95DFFDDFA7D6}.Debug|x86.ActiveCfg = Debug|Win32
+		{C384736F-5AA7-4E41-9D56-95DFFDDFA7D6}.Debug|x86.Build.0 = Debug|Win32
+		{C384736F-5AA7-4E41-9D56-95DFFDDFA7D6}.Release|x86.ActiveCfg = Release|Win32
+		{C384736F-5AA7-4E41-9D56-95DFFDDFA7D6}.Release|x86.Build.0 = Release|Win32
+		{2BB9B2BB-564F-4B8E-B102-1E69063C2BDE}.Debug|x86.ActiveCfg = Debug|Win32
+		{2BB9B2BB-564F-4B8E-B102-1E69063C2BDE}.Debug|x86.Build.0 = Debug|Win32
+		{2BB9B2BB-564F-4B8E-B102-1E69063C2BDE}.Release|x86.ActiveCfg = Release|Win32
+		{2BB9B2BB-564F-4B8E-B102-1E69063C2BDE}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A6B4D321-DACC-41DE-A895-0692FFC95290}
+	EndGlobalSection
+EndGlobal
