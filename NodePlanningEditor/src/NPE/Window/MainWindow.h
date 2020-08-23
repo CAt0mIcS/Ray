@@ -19,6 +19,8 @@ namespace NPE
 
 	private:
 		void Paint(HDC hDC, RECT* rcDirty, BOOL bErase);
+
+		std::vector<HWND> m_Windows;
 	};
 }
 
