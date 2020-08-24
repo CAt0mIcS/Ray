@@ -6,6 +6,8 @@
 #include <QtWidgets/QStyleOption>
 #include <QtWidgets/QStylePainter>
 
+#include <QtWidgets/QGraphicsView>
+
 #include <QTimer>
 
 #include "EditText.h"
@@ -81,6 +83,11 @@ void Node::mouseMoveEvent(QMouseEvent* e)
 {
 	QPoint delta = e->pos() - m_MoveStartPos;
 	this->move(this->pos() + delta);
+}
+
+void Node::wheelEvent(QWheelEvent* e)
+{
+	
 }
 
 

@@ -12,6 +12,8 @@ public:
 
     void mousePressEvent(QMouseEvent* e) override;
 
+    void paintEvent(QPaintEvent* e) override;
+
 private:
     Ui::TestAppClass ui;
 };

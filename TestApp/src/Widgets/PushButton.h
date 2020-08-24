@@ -15,6 +15,13 @@ public:
 
 private:
 	void mousePressEvent(QMouseEvent* e) override;
+	void mouseMoveEvent(QMouseEvent* e) override;
+	void mouseReleaseEvent(QMouseEvent* e) override;
+
+	void paintEvent(QPaintEvent* e) override;
 
 private:
+	QPoint m_ConStartPos;
+	QPoint m_ConNextPos;
+	bool m_DrawLine;
 };

@@ -119,11 +119,6 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CustomNodeWidget\CustomNodeWidget.vcxproj">
-      <Project>{c384736f-5aa7-4e41-9d56-95dffddfa7d6}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <QtMoc Include="src\Widgets\Textbox.h" />
   </ItemGroup>
   <ItemGroup>
