@@ -21,7 +21,7 @@ private:
 	void paintEvent(QPaintEvent* e) override;
 
 private:
-	QPoint m_ConStartPos;
-	QPoint m_ConNextPos;
+	QPointF m_ConStartPos;
+	QPointF m_ConNextPos;
 	bool m_DrawLine;
 };

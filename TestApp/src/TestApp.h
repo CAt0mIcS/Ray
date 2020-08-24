@@ -11,10 +11,15 @@ class TestApp : public QMainWindow
 public:
     TestApp(QWidget *parent = Q_NULLPTR);
 
-    void mousePressEvent(QMouseEvent* e) override;
-
-    void paintEvent(QPaintEvent* e) override;
     void invokeLinePaint(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2);
+
+protected:
+    bool eventFiler(QObject* watched, QEvent* e);
+
+    void mousePressEvent(QMouseEvent* e) override;
+    void mouseMoveEvent(QMouseEvent* e) override;
+    
+    void paintEvent(QPaintEvent* e) override;
 
 private:
     Ui::TestAppClass ui;

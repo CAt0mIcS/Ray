@@ -9,6 +9,7 @@
 PushButton::PushButton(QWidget* parent)
 	: QPushButton(parent), m_DrawLine(false)
 {
+	setMouseTracking(true);
 }
 
 void PushButton::mousePressEvent(QMouseEvent* e)
