@@ -1,4 +1,5 @@
 #include "PushButton.h"
+#include "TestApp.h"
 
 #include <QMouseEvent>
 
@@ -12,18 +13,22 @@ PushButton::PushButton(QWidget* parent)
 
 void PushButton::mousePressEvent(QMouseEvent* e)
 {
-	m_ConStartPos = e->pos();
+	m_ConStartPos = e->globalPos();
 	m_DrawLine = true;
 	QPushButton::mousePressEvent(e);
 }
 
 void PushButton::mouseMoveEvent(QMouseEvent* e)
 {
-	//Draw line from startPos to cursor
 	if (m_DrawLine)
 	{
-		m_ConNextPos = e->pos();
-		this->update();
+		Node* parentNode = (Node*)parentWidget();
+		TestApp* parent = (TestApp*)parentNode->parentWidget();
+		if (parent)
+		{
+			m_ConNextPos = e->globalPos();
+			parent->invokeLinePaint(m_ConStartPos.x(), m_ConStartPos.y(), m_ConNextPos.x(), m_ConNextPos.y());
+		}
 	}
 }
 
@@ -34,13 +39,5 @@ void PushButton::mouseReleaseEvent(QMouseEvent* e)
 
 void PushButton::paintEvent(QPaintEvent* e)
 {
-	//Called from mouseMoveEvent
-	if (m_DrawLine)
-	{
-		QPainter painter(this);
-		painter.setPen(QPen(Qt::black, 12, Qt::DashDotLine, Qt::RoundCap));
-		painter.drawLine(0, 0, 200, 200);
-		m_DrawLine = false;
-	}
 	QPushButton::paintEvent(e);
 }

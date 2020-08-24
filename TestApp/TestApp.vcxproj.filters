@@ -39,6 +39,9 @@
     <QtMoc Include="src\Widgets\PushButton.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="src\Widgets\CentralWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -57,6 +60,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Widgets\PushButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Widgets\CentralWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

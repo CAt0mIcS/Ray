@@ -23,4 +23,5 @@ private:
 
 private:
 	QPoint m_MoveStartPos;
+	unsigned int m_HeightLock;
 };

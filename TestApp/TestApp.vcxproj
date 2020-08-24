@@ -108,6 +108,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Widgets\CentralWidget.cpp" />
     <ClCompile Include="src\Widgets\EditText.cpp" />
     <ClCompile Include="src\Widgets\Node.cpp" />
     <ClCompile Include="src\Widgets\PushButton.cpp" />
@@ -128,6 +129,7 @@
     <QtMoc Include="src\Widgets\Node.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="src\Widgets\CentralWidget.h" />
     <ClInclude Include="src\Widgets\Interfaces\Widget.h" />
     <QtMoc Include="src\Widgets\PushButton.h" />
   </ItemGroup>

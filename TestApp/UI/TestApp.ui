@@ -22,7 +22,7 @@ color: rgb(35, 38, 40);
 
 </string>
   </property>
-  <widget class="QWidget" name="centralWidget">
+  <widget class="CentralWidget" name="centralWidget">
    <widget class="Node" name="nodeWidget" native="true">
     <property name="geometry">
      <rect>
@@ -148,11 +148,11 @@ background-image: url(:/TestApp/testPlus.png);</string>
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
     </widget>
-    <widget class="PushButton" name="pushButton">
+    <widget class="PushButton" name="btnConDot">
      <property name="geometry">
       <rect>
-       <x>280</x>
-       <y>20</y>
+       <x>260</x>
+       <y>0</y>
        <width>16</width>
        <height>16</height>
       </rect>
@@ -164,6 +164,10 @@ background-image: url(:/TestApp/testPlus.png);</string>
       <string/>
      </property>
     </widget>
+    <zorder>btnConDot</zorder>
+    <zorder>txtTitle</zorder>
+    <zorder>btnAddWidget</zorder>
+    <zorder>txtInfo</zorder>
    </widget>
    <widget class="Line" name="menuBarSeparatorLine">
     <property name="geometry">
@@ -255,6 +259,12 @@ background-image: url(:/TestApp/testPlus.png);</string>
    <class>PushButton</class>
    <extends>QPushButton</extends>
    <header>Widgets/PushButton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CentralWidget</class>
+   <extends>QWidget</extends>
+   <header>Widgets/CentralWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
