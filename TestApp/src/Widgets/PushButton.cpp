@@ -10,5 +10,5 @@ PushButton::PushButton(QWidget* parent)
 
 void PushButton::mousePressEvent(QMouseEvent* e)
 {
-	
+    
 }

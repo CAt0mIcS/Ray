@@ -6,6 +6,8 @@
 #include <QtWidgets/QStyleOption>
 #include <QtWidgets/QStylePainter>
 
+#include <QTimer>
+
 #include "EditText.h"
 #include "Textbox.h"
 
@@ -72,8 +74,13 @@ void Node::resizeEvent(QResizeEvent* e)
 
 void Node::mousePressEvent(QMouseEvent* e)
 {
-	
+	m_MoveStartPos = e->pos();
 }
 
+void Node::mouseMoveEvent(QMouseEvent* e)
+{
+	QPoint delta = e->pos() - m_MoveStartPos;
+	this->move(this->pos() + delta);
+}
 
 
