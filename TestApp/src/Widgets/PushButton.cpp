@@ -25,12 +25,11 @@ void PushButton::mouseMoveEvent(QMouseEvent* e)
 		m_ConNextPos = e->pos();
 		this->update();
 	}
-	QPushButton::mouseMoveEvent(e);
 }
 
 void PushButton::mouseReleaseEvent(QMouseEvent* e)
 {
-	//m_DrawLine = false;
+	QPushButton::mouseReleaseEvent(e);
 }
 
 void PushButton::paintEvent(QPaintEvent* e)

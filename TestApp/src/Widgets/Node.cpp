@@ -30,15 +30,12 @@ void Node::paintEvent(QPaintEvent* e)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-int runs = 0;
 int heightPrev = 0;
 void Node::resizeEvent(QResizeEvent* e)
 {
-	if (runs == 0)
-	{
-		++runs;
+
+	if (e->oldSize() == QSize(-1, -1))
 		return;
-	}
 
 	TextBox* txtTitle = findChild<TextBox*>("txtTitle");
 	EditText* txtInfo = findChild<EditText*>("txtInfo");

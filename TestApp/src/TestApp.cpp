@@ -17,14 +17,13 @@ void TestApp::mousePressEvent(QMouseEvent* e)
 
 void TestApp::paintEvent(QPaintEvent* e)
 {
-    QPainter painter;
-    painter.begin(this);
-    QPen pen;
-    pen.setColor(Qt::white);
-    pen.setStyle(Qt::SolidLine);
-    pen.setWidth(20);
-    painter.setPen(pen);
-
-    painter.drawLine(QPoint(80, 100), QPoint(200, 300));
+    //QPainter painter;
+    //painter.begin(this);
+    //QPen pen;
+    //pen.setColor(Qt::white);
+    //pen.setStyle(Qt::SolidLine);
+    //pen.setWidth(20);
+    //painter.setPen(pen);
+    //painter.drawLine(QPoint(80, 100), QPoint(200, 300));
     QMainWindow::paintEvent(e);
 }
