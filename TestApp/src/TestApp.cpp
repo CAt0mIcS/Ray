@@ -4,4 +4,10 @@ TestApp::TestApp(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+
+
+}
+
+void TestApp::mousePressEvent(QMouseEvent* e)
+{
 }

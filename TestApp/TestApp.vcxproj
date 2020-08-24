@@ -110,6 +110,7 @@
   <ItemGroup>
     <ClCompile Include="src\Widgets\EditText.cpp" />
     <ClCompile Include="src\Widgets\Node.cpp" />
+    <ClCompile Include="src\Widgets\PushButton.cpp" />
     <ClCompile Include="src\Widgets\Textbox.cpp" />
     <QtRcc Include="res\TestApp.qrc" />
     <QtUic Include="UI\TestApp.ui" />
@@ -130,6 +131,10 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\Widgets\Node.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Widgets\Interfaces\Widget.h" />
+    <QtMoc Include="src\Widgets\PushButton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

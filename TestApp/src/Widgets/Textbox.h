@@ -3,13 +3,18 @@
 
 #include <QtWidgets/QLineEdit>
 
+#include "Interfaces/Widget.h"
 
-class TextBox : public QLineEdit
+
+class TextBox : public QLineEdit, public Widget
 {
 	Q_OBJECT;
 public:
 	TextBox(QWidget* parent = nullptr);
 
-	void leaveEvent(QEvent* e) override;
-	void enterEvent(QEvent* e) override;
+private:
+
+private:
+	QAction* m_ActionLocked;
+
 };

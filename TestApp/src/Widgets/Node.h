@@ -2,6 +2,8 @@
 
 #include <QtWidgets/QWidget>
 
+#include <vector>
+
 
 class Node : public QWidget
 {
@@ -11,4 +13,9 @@ public:
 
 	void paintEvent(QPaintEvent* e) override;
 	void resizeEvent(QResizeEvent* e) override;
+
+	void mousePressEvent(QMouseEvent* e) override;
+
+private:
+
 };

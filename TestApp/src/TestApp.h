@@ -10,6 +10,8 @@ class TestApp : public QMainWindow
 public:
     TestApp(QWidget *parent = Q_NULLPTR);
 
+    void mousePressEvent(QMouseEvent* e) override;
+
 private:
     Ui::TestAppClass ui;
 };

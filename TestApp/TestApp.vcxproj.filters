@@ -27,13 +27,16 @@
     <QtMoc Include="src\TestApp.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\Widgets\Textbox.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="src\Widgets\EditText.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="src\Widgets\Node.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\Widgets\Textbox.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\Widgets\PushButton.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -53,6 +56,9 @@
     <ClCompile Include="src\Widgets\Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Widgets\PushButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="res\TestApp.qrc">
@@ -63,5 +69,10 @@
     <QtUic Include="UI\TestApp.ui">
       <Filter>Resource Files</Filter>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Widgets\Interfaces\Widget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -27,7 +27,7 @@ void Node::paintEvent(QPaintEvent* e)
 }
 
 int runs = 0;
-QSize overdueTop{};
+int heightPrev = 0;
 void Node::resizeEvent(QResizeEvent* e)
 {
 	if (runs == 0)
@@ -48,15 +48,32 @@ void Node::resizeEvent(QResizeEvent* e)
 	int txtTitleBottomCorner = txtTitle->pos().y() + txtTitle->size().height();
 	int txtInfoTopCorner = txtInfo->pos().y();
 
-	if (txtTitleBottomCorner + spaceBetweenWidgets < txtInfoTopCorner)
+	// Top widget wants to be resized again
+	if (txtInfo->size().height() < heightPrev)
 	{
-		overdueTop += diffSize;
-		txtTitle->resize(txtTitle->size() + diffSize);
+		if(!txtTitle->IsPositionLocked())
+			txtTitle->resize(txtTitle->size() + diffSize);
+	}
+	else if (txtTitleBottomCorner + spaceBetweenWidgets < txtInfoTopCorner)
+	{
+		if(!txtTitle->IsPositionLocked())
+			txtTitle->resize(txtTitle->size() + diffSize);
+		heightPrev = txtInfo->size().height();
 	}
 	else
 	{
-		txtTitle->resize({ txtTitle->size().width() + diffSize.width(), txtTitle->height() });
+		if(!txtTitle->IsPositionLocked())
+			txtTitle->resize({ txtTitle->size().width() + diffSize.width(), txtTitle->height() });
 	}
-	txtInfo->resize(txtInfo->size() + diffSize);
+	if(!txtInfo->IsPositionLocked())
+		txtInfo->resize(txtInfo->size() + diffSize);
 
 }
+
+void Node::mousePressEvent(QMouseEvent* e)
+{
+	
+}
+
+
+

@@ -60,7 +60,14 @@ padding: 6px;
 color: rgb(230, 230, 230);
 }
 
+QMenu{
+	color: rgb(230, 230, 230);
+	background-color: rgb(35, 38, 40);
+}
 
+QMenu::item:selected{
+	background-color: rgb(120, 120, 120);
+}
 </string>
     </property>
     <widget class="TextBox" name="txtTitle">
@@ -81,11 +88,14 @@ color: rgb(230, 230, 230);
        <bold>false</bold>
       </font>
      </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::ActionsContextMenu</enum>
+     </property>
      <property name="styleSheet">
       <string notr="true"/>
      </property>
     </widget>
-    <widget class="QPushButton" name="btnAddWidget">
+    <widget class="PushButton" name="btnAddWidget">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -93,6 +103,9 @@ color: rgb(230, 230, 230);
        <width>30</width>
        <height>30</height>
       </rect>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::ActionsContextMenu</enum>
      </property>
      <property name="styleSheet">
       <string notr="true">border-style: outset;
@@ -121,6 +134,9 @@ background-image: url(:/TestApp/testPlus.png);</string>
        <family>Consolas</family>
        <pointsize>10</pointsize>
       </font>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::ActionsContextMenu</enum>
      </property>
      <property name="styleSheet">
       <string notr="true"/>
@@ -218,6 +234,11 @@ background-image: url(:/TestApp/testPlus.png);</string>
    <extends>QWidget</extends>
    <header>Widgets/Node.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PushButton</class>
+   <extends>QPushButton</extends>
+   <header>Widgets/PushButton.h</header>
   </customwidget>
  </customwidgets>
  <resources>
