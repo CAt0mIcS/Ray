@@ -14,7 +14,7 @@ PushButton::PushButton(QWidget* parent)
 
 void PushButton::mousePressEvent(QMouseEvent* e)
 {
-	m_ConStartPos = e->globalPos();
+	m_ConStartPos = e->localPos().toPoint();
 	m_DrawLine = true;
 	QPushButton::mousePressEvent(e);
 }
@@ -27,7 +27,7 @@ void PushButton::mouseMoveEvent(QMouseEvent* e)
 		TestApp* parent = (TestApp*)parentNode->parentWidget();
 		if (parent)
 		{
-			m_ConNextPos = e->globalPos();
+			m_ConNextPos = e->localPos().toPoint();
 			parent->invokeLinePaint(m_ConStartPos.x(), m_ConStartPos.y(), m_ConNextPos.x(), m_ConNextPos.y());
 		}
 	}

@@ -18,10 +18,16 @@ protected:
 
     void mousePressEvent(QMouseEvent* e) override;
     void mouseMoveEvent(QMouseEvent* e) override;
-    
+    void wheelEvent(QWheelEvent* e) override;
+    void keyPressEvent(QKeyEvent* e) override;
+
     void paintEvent(QPaintEvent* e) override;
+
+    bool event(QEvent* e) override;
+
 
 private:
     Ui::TestAppClass ui;
+    QPointF m_MousePos;
 
 };

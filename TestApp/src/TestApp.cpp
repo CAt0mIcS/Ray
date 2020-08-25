@@ -17,7 +17,7 @@ QPoint m_ConNextPos{ 0, 0 };
 bool press1 = true;
 
 
-TestApp::TestApp(QWidget *parent)
+TestApp::TestApp(QWidget* parent)
     : QMainWindow(parent)
 {
     this->installEventFilter(this);
@@ -28,9 +28,9 @@ TestApp::TestApp(QWidget *parent)
 void TestApp::mousePressEvent(QMouseEvent* e)
 {
     qDebug() << "MousePos: " << e->localPos();
-
+    m_MousePos = e->localPos();
     //m_ConStartPos = e->pos();
-    
+
     m_PaintLine = true;
     this->update();
 
@@ -40,20 +40,87 @@ void TestApp::mousePressEvent(QMouseEvent* e)
 
 void TestApp::mouseMoveEvent(QMouseEvent* e)
 {
+    m_MousePos = e->localPos();
+    qDebug() << "MousePosMove: " << m_MousePos;
+
     if (m_ConStartPos.x() != 0)
     {
         m_ConNextPos = e->pos();
         m_PaintLine = true;
         this->update();
     }
-    
+
+}
+
+void TestApp::wheelEvent(QWheelEvent* e)
+{
+    int delta = e->delta();
+    char direction = (delta > 0) ? 1 : -1;
+
+    QList<Node*> children = findChildren<Node*>();
+
+
+    for (auto* child : children)
+    {
+        if (direction == 1)
+            child->Resize(-10, -10, 20, 20);
+        else
+            child->Resize(10, 10, -20, -20);
+    }
+
+}
+
+void TestApp::keyPressEvent(QKeyEvent* e)
+{
+    QList<Node*> children = findChildren<Node*>();
+    unsigned char stepSize = 10;
+
+    if (e->key() == Qt::Key::Key_A && (QApplication::keyboardModifiers() & Qt::ShiftModifier))
+    {
+        Node::CreateNode(this, m_MousePos);
+        return;
+    }
+
+    for (auto* child : children)
+    {
+        switch (e->key())
+        {
+        case Qt::Key::Key_W:
+        {
+            child->move(child->pos() + QPoint{ 0, stepSize });
+            break;
+        }
+        case Qt::Key::Key_A:
+        {
+            child->move(child->pos() + QPoint{ stepSize, 0 });
+            break;
+        }
+        case Qt::Key::Key_S:
+        {
+            child->move(child->pos() + QPoint{ 0, -stepSize });
+            break;
+        }
+        case Qt::Key::Key_D:
+        {
+            child->move(child->pos() + QPoint{ -stepSize, 0 });
+            break;
+        }
+        }
+    }
+    QMainWindow::keyPressEvent(e);
 }
 
 bool TestApp::eventFiler(QObject* watched, QEvent* e)
 {
-    if (watched == ui.btnConDot)
+    QList<Node*> nodes = findChildren<Node*>();
+
+    for (auto* node : nodes)
     {
-        qDebug() << "Event here\n";
+        if (watched == node && e->type() == QEvent::FocusIn)
+        {
+            node->setFocus();
+            return true;
+        }
     }
     return false;
 }
@@ -68,12 +135,27 @@ void TestApp::paintEvent(QPaintEvent* e)
         pen.setWidth(2);
         painter.setPen(pen);
         //painter.drawLine(m_LineCoordinates.x1, m_LineCoordinates.y1, m_LineCoordinates.x2, m_LineCoordinates.y2);
-        painter.drawLine(m_ConStartPos, m_ConNextPos);
+        //painter.drawLine(m_ConStartPos, m_ConNextPos);
 
         m_PaintLine = false;
     }
 
     QMainWindow::paintEvent(e);
+}
+
+bool TestApp::event(QEvent* e)
+{
+    QList<Node*> nodes = findChildren<Node*>();
+
+    for (auto* node : nodes)
+    {
+        if (node->hasFocus())
+        {
+            node->raise();
+        }
+    }
+    QMainWindow::event(e);
+    return false;
 }
 
 void TestApp::invokeLinePaint(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2)

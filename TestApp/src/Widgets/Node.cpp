@@ -93,9 +93,75 @@ void Node::mouseMoveEvent(QMouseEvent* e)
 	this->move(this->pos() + delta);
 }
 
-void Node::wheelEvent(QWheelEvent* e)
+void Node::Resize(int x, int y, int width, int height)
 {
-	
+	this->move(this->pos() + QPoint{x, y});
+	this->resize(this->size() + QSize{ width, height });
 }
 
+void Node::CreateNode(QWidget* parent, QPointF spawnPoint)
+{
+	Node* node = new Node(parent);
+	//node->move(spawnPoint);
 
+	node->setStyleSheet("QWidget{\nbackground-color: rgb(17, 18, 20);\nborder-color: rgb(115, 255, 0);\nborder: none;\nborder-radius: 50px;\n}\n\nQPlainTextEdit{\nborder-style: outset;\nborder-width: 2px;\nborder-radius: 10px;\nborder-color: rgb(35, 38, 40);\nmin-width: 10em;\npadding: 6px;\ncolor: rgb(230, 230, 230);\n}\n\nTextBox{\nborder-style: outset;\nborder-width: 2px;\nborder-radius: 10px;\nborder-color: rgb(35, 38, 40);\nmin-width: 10em;\npadding: 6px;\ncolor: rgb(230, 230, 230);\n}\n\nQMenu{\n	color: rgb(230, 230, 230);\n	background-color: rgb(35, 38, 40);\n}\n\nQMenu::item:selected{\n	background-color: rgb(120, 120, 120);\n}\n");
+	node->setGeometry(spawnPoint.x(), spawnPoint.y(), 321, 171);
+
+	TextBox* txtTitle = CreateTextbox(node);
+	EditText* txtInfo = CreateEditText(node);
+	PushButton* btnCon = CreateButton(node);
+
+	txtTitle->raise();
+	btnCon->raise();
+	txtInfo->raise();
+
+
+	node->show();
+	txtTitle->show();
+	txtInfo->show();
+	btnCon->show();
+}
+
+TextBox* Node::CreateTextbox(Node* parent)
+{
+	TextBox* txtTitle = new TextBox(parent);
+	txtTitle->setObjectName(QString::fromUtf8("txtTitle"));
+	txtTitle->setGeometry(QRect(42, 20, 250, 40));
+	QFont font;
+	font.setFamily(QString::fromUtf8("Consolas"));
+	font.setPointSize(15);
+	font.setBold(false);
+	font.setItalic(false);
+	font.setWeight(50);
+	txtTitle->setFont(font);
+	txtTitle->setContextMenuPolicy(Qt::ActionsContextMenu);
+	txtTitle->setStyleSheet(QString::fromUtf8(""));
+
+	return txtTitle;
+}
+
+EditText* Node::CreateEditText(Node* parent)
+{
+	EditText* txtInfo = new EditText(parent);
+	txtInfo->setObjectName(QString::fromUtf8("txtInfo"));
+	txtInfo->setGeometry(QRect(42, 80, 250, 71));
+	QFont font1;
+	font1.setFamily(QString::fromUtf8("Consolas"));
+	font1.setPointSize(10);
+	txtInfo->setFont(font1);
+	txtInfo->setContextMenuPolicy(Qt::ActionsContextMenu);
+	txtInfo->setStyleSheet(QString::fromUtf8(""));
+	txtInfo->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	txtInfo->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+	return txtInfo;
+}
+
+PushButton* Node::CreateButton(Node* parent)
+{
+	PushButton* btnConDot = new PushButton(parent);
+	btnConDot->setObjectName(QString::fromUtf8("btnConDot"));
+	btnConDot->setGeometry(QRect(260, 0, 16, 16));
+	btnConDot->setStyleSheet(QString::fromUtf8("border-image: url(:/TestApp/circle.png);"));
+	return btnConDot;
+}

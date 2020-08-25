@@ -4,6 +4,10 @@
 
 #include <vector>
 
+class TextBox;
+class EditText;
+class PushButton;
+
 
 class Node : public QWidget
 {
@@ -17,9 +21,14 @@ public:
 	void mousePressEvent(QMouseEvent* e) override;
 	void mouseMoveEvent(QMouseEvent* e) override;
 
-	void wheelEvent(QWheelEvent* e) override;
+	void Resize(int x, int y, int width, int height);
+
+	static void CreateNode(QWidget* parent, QPointF spawnPoint);
 
 private:
+	static TextBox* CreateTextbox(Node* parent);
+	static EditText* CreateEditText(Node* parent);
+	static PushButton* CreateButton(Node* parent);
 
 private:
 	QPoint m_MoveStartPos;
