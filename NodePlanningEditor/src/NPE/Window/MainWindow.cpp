@@ -21,6 +21,7 @@ namespace NPE
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+		Sleep(10);
 		return {};
 	}
 
@@ -31,15 +32,6 @@ namespace NPE
 		case WM_DESTROY:
 		{
 			PostQuitMessage(0);
-			return 0;
-		}
-		case WM_PAINT:
-		{
-			PAINTSTRUCT ps;
-			HDC hDC = BeginPaint(m_hWnd, &ps);
-			Paint(hDC, &ps.rcPaint, FALSE);
-			EndPaint(m_hWnd, &ps);
-			ReleaseDC(m_hWnd, hDC);
 			return 0;
 		}
 		case WM_KILLFOCUS:
