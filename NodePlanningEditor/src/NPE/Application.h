@@ -1,17 +1,25 @@
 #pragma once
 
+#include "Window/MainWindow.h"
+
 
 namespace NPE
 {
 	class Application
 	{
 	public:
-		Application() = default;
+		Application();
 
 		/**
 		* Starts the application loop
 		*/
-		void Run();
+		int Run();
+
+	private:
+		void OnFrame();
+
+	private:
+		MainWindow m_Window;
 	};
 }
 

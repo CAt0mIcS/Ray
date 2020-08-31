@@ -3,24 +3,29 @@
 #include "pch.h"
 #include "BaseWindow.h"
 
+#include "NPE/Handlers/Mouse.h"
+#include "NPE/Handlers/Keyboard.h"
+
 
 namespace NPE
 {
 	class MainWindow : public BaseWindow<MainWindow>
 	{
 	public:
-		MainWindow();
+		MainWindow(unsigned short width, unsigned short height, PCWSTR name);
 
-		void Show(_In_ int nCmdShow);
-
-		void EnterMessageLoop();
+		static std::optional<int> ProcessMessage();
 
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	
+	public:
+		Mouse mouse;
+		Keyboard keyboard;
 
 	private:
 		void Paint(HDC hDC, RECT* rcDirty, BOOL bErase);
 
-		std::vector<HWND> m_Windows;
+		std::vector<HWND> m_Controls;
 	};
 }
 

@@ -6,11 +6,27 @@
 
 namespace NPE
 {
-	void Application::Run()
+	Application::Application()
+		: m_Window(800, 600, L"NodePlanningEditor")
 	{
-		MainWindow win;
-		win.Show(SW_MAXIMIZE);
-		win.EnterMessageLoop();
+	}
+
+	int Application::Run()
+	{
+		while (true)
+		{
+			if (const auto ecode = MainWindow::ProcessMessage())
+			{
+				return *ecode;
+			}
+			OnFrame();
+		}
+
+	}
+	
+	void Application::OnFrame()
+	{
+		
 	}
 }
 

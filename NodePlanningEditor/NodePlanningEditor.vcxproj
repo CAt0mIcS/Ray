@@ -155,12 +155,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\NPE\Handlers\Mouse.cpp" />
+    <ClCompile Include="src\NPE\Handlers\Keyboard.cpp" />
     <ClCompile Include="src\NPE\Window\MainWindow.cpp" />
     <ClCompile Include="src\NPE\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\NPE\Handlers\Mouse.h" />
+    <ClInclude Include="src\NPE\Handlers\Keyboard.h" />
     <ClInclude Include="src\NPE\Window\MainWindow.h" />
     <ClInclude Include="src\NPE\Application.h" />
     <ClInclude Include="src\NPE\Window\BaseWindow.h" />
