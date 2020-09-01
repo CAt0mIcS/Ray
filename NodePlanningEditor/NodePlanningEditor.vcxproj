@@ -155,6 +155,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\NPE\Controls\Control.cpp" />
+    <ClCompile Include="src\NPE\Handlers\Camera.cpp" />
     <ClCompile Include="src\NPE\Controls\Node.cpp" />
     <ClCompile Include="src\NPE\Handlers\Mouse.cpp" />
     <ClCompile Include="src\NPE\Handlers\Keyboard.cpp" />
@@ -164,6 +166,7 @@
     <ClCompile Include="src\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\NPE\Handlers\Camera.h" />
     <ClInclude Include="src\NPE\Controls\Node.h" />
     <ClInclude Include="src\NPE\Handlers\Mouse.h" />
     <ClInclude Include="src\NPE\Handlers\Keyboard.h" />

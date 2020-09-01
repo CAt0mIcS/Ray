@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Window/MainWindow.h"
+#include "Handlers/Camera.h"
 
 
 namespace NPE
@@ -24,6 +25,7 @@ namespace NPE
 	private:
 		MainWindow m_Window;
 		NPoint m_MousePos;
+		Camera camera;
 	};
 }
 

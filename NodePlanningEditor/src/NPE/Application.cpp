@@ -50,8 +50,7 @@ namespace NPE
 				{
 					if (control.GetType() == Control::Type::Node)
 					{
-						Node* node = (Node*)&control;
-						node->AdjustPos(diff);
+						control.MoveBy(diff);
 					}
 				}
 			}
@@ -60,13 +59,24 @@ namespace NPE
 
 	void Application::Zoom(const Mouse::Event& e)
 	{
+		const float zoomFactor = 1.05f;
 		if (e.GetType() == Mouse::Event::Type::WheelUp)
 		{
+			//Move objects away from origin (middle) when zooming in
+			
+			for (auto& control : m_Window.GetControls())
+			{
+				const auto& pos = control.GetPos();
+
+
+
+			}
 
 		}
 		else if (e.GetType() == Mouse::Event::Type::WheelDown)
 		{
-
+			// Move objects towards origin (middle) when zooming out
+			
 		}
 	}
 }

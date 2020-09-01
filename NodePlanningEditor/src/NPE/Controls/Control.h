@@ -18,15 +18,20 @@ namespace NPE
 		unsigned short GetId() const { return m_Id; }
 		Type GetType() const { return m_Type; }
 
+		void MoveBy(NPoint posToAdd);
+
+		NPoint GetPos() const { return m_Pos; }
+		NSize GetSize() const { return m_Size; }
+
+		HWND GetNativeWindow() const { return m_hWnd; }
+
 	protected:
-		Control(const Type type, const NPoint& pos, const NSize& size, float scale)
-			: m_Type(type), m_Id(m_NextId), m_Pos(pos), m_Size(size), m_Scale(scale) { ++m_NextId; }
+		Control(const Type type, const NPoint& pos, const NSize& size);
 
 	protected:
 		HWND m_hWnd;
 		NPoint m_Pos;
 		NSize m_Size;
-		float m_Scale;
 
 	private:
 		static unsigned short m_NextId;

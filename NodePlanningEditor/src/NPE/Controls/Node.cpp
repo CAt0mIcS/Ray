@@ -8,7 +8,7 @@ namespace NPE
 	LRESULT CALLBACK CtrlProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	Node::Node(MainWindow* parent, const NPoint pos, const NSize size)
-		: Control(Type::Node, pos, size, 1.0f)
+		: Control(Type::Node, pos, size)
 	{
 
 		WNDCLASS wc{};
@@ -29,12 +29,6 @@ namespace NPE
 		TrackMouseEvent(&e);
 
 		ShowWindow(m_hWnd, SW_SHOWDEFAULT);
-	}
-
-	void Node::AdjustPos(NPoint posToAdd)
-	{
-		m_Pos += posToAdd;
-		MoveWindow(m_hWnd, m_Pos.x, m_Pos.y, m_Size.width, m_Size.height, TRUE);
 	}
 
 	LRESULT CALLBACK CtrlProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
