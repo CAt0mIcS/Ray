@@ -18,7 +18,6 @@ namespace NPE
 	
 	void Application::OnMessage()
 	{
-		Control* ctrl = &m_Window.GetControls()[0];
 		const auto e = m_Window.Mouse.GetEvent();
 		if (e.IsValid())
 		{

@@ -31,9 +31,6 @@ namespace NPE
 			PAINTSTRUCT ps;
 			HDC hDC = BeginPaint(hWnd, &ps);
 			//FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(16, 17, 19)));
-			
-			RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, 100, 100);
-			
 			EndPaint(hWnd, &ps);
 			ReleaseDC(hWnd, hDC);
 			return 0;
@@ -65,6 +62,4 @@ namespace NPE
 	}
 
 }
-
-
 
