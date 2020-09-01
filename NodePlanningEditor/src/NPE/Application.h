@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Window/MainWindow.h"
-#include "Handlers/Camera.h"
 
 
 namespace NPE
@@ -25,8 +24,9 @@ namespace NPE
 	private:
 		MainWindow m_Window;
 		NPoint m_MousePos;
-		Camera camera;
 		
+		char m_Zoom;
+
 		static constexpr float m_ZoomFactor = 0.05f;
 		static constexpr float m_ResizeFactor = 1.05f;
 	};
