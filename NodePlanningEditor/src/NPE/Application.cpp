@@ -60,47 +60,38 @@ namespace NPE
 	{
 		NPoint screenCenter = e.GetPos();
 
-		if (e.GetType() == Mouse::Event::Type::WheelUp)
-		{			
-			for (auto& control : m_Window.GetControls())
-			{
-				const NPoint& pos = control.GetPos();
-				const NSize& size = control.GetSize();
+		for (auto& control : m_Window.GetControls())
+		{
+			const NPoint& pos = control.GetPos();
+			const NSize& size = control.GetSize();
+			NPoint newPos = screenCenter - pos;
+			NSize newSize;
 
-				NPoint newPos;
-				newPos = (screenCenter - pos);
+			if (e.GetType() == Mouse::Event::Type::WheelUp)
+			{
 				newPos.x *= -m_ZoomFactor;
 				newPos.y *= -m_ZoomFactor;
-				
-				NSize newSize;
+
 				newSize.width = size.width * m_ResizeFactor;
 				newSize.height = size.height * m_ResizeFactor;
-
-				control.MoveBy(newPos);
-				control.ResizeTo(newSize);
 			}
-
-		}
-		else if (e.GetType() == Mouse::Event::Type::WheelDown)
-		{
-			for (auto& control : m_Window.GetControls())
+			else if (e.GetType() == Mouse::Event::Type::WheelDown)
 			{
-				const NPoint& pos = control.GetPos();
-				const NSize& size = control.GetSize();
-				
-				NPoint newPos;
-				newPos = (screenCenter - pos);
 				newPos.x *= m_ZoomFactor;
 				newPos.y *= m_ZoomFactor;
-				
-				NSize newSize;
+
 				newSize.width = size.width / m_ResizeFactor;
 				newSize.height = size.height / m_ResizeFactor;
-
-				control.MoveBy(newPos);
-				control.ResizeTo(newSize);
 			}
+			else
+			{
+				return;
+			}
+
+			control.MoveBy(newPos);
+			control.ResizeTo(newSize);
 		}
+
 	}
 }
 
