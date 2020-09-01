@@ -9,29 +9,31 @@ namespace NPE
 	{
 		friend class MainWindow;
 	public:
-		class KeyboardEvent
+		class Event
 		{
 		public:
-			enum class KeyboardEventType
+			enum class Type
 			{
 				INVALID = 0,
 				KeyUp, KeyDown
 			};
 
-			KeyboardEvent()
-				: m_Type(KeyboardEventType::INVALID), m_Code(0u) {}
+			Event()
+				: m_Type(Type::INVALID), m_Code(0u) {}
 
-			KeyboardEvent(const KeyboardEventType type, unsigned char code)
+			Event(const Type type, unsigned char code)
 				: m_Type(type), m_Code(code) {}
 
 			unsigned char GetCode() const { return m_Code; }
-			bool IsValid() const { return m_Type != KeyboardEventType::INVALID; }
-			bool IsPress() const { return m_Type == KeyboardEventType::KeyDown; }
-			bool IsRelease() const { return m_Type == KeyboardEventType::KeyUp; }
+			bool IsValid() const { return m_Type != Type::INVALID; }
+			bool IsPress() const { return m_Type == Type::KeyDown; }
+			bool IsRelease() const { return m_Type == Type::KeyUp; }
+
+			Type GetType() const { return m_Type; }
 
 		private:
 			unsigned char m_Code;
-			KeyboardEventType m_Type;
+			Type m_Type;
 
 		};
 
@@ -40,7 +42,7 @@ namespace NPE
 
 		void ClearStates() { m_KeyStates = std::bitset<m_nKeys>(); }
 
-		KeyboardEvent GetEvent();
+		Event GetEvent();
 
 		bool IsKeyPressed(unsigned char keycode) const { return m_KeyStates[keycode]; }
 
@@ -61,7 +63,7 @@ namespace NPE
 		static constexpr unsigned int m_BufferSize = 32;
 		bool m_AutorepeatEnabled;
 		std::bitset<m_nKeys> m_KeyStates;
-		std::queue<KeyboardEvent> m_KeyEventQueue;
+		std::queue<Event> m_KeyEventQueue;
 		std::queue<char> m_CharEventQueue;
 
 	};

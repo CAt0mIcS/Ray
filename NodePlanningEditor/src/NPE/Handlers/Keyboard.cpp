@@ -10,7 +10,7 @@ namespace NPE
 
 	}
 
-	Keyboard::KeyboardEvent Keyboard::GetEvent()
+	Keyboard::Event Keyboard::GetEvent()
 	{
 		if (m_KeyEventQueue.size() > 0u)
 		{
@@ -19,20 +19,20 @@ namespace NPE
 			return e;
 		}
 
-		return KeyboardEvent();
+		return Event();
 	}
 
 	void Keyboard::OnKeyPressed(unsigned char keycode)
 	{
 		m_KeyStates[keycode] = true;
-		m_KeyEventQueue.push(KeyboardEvent(KeyboardEvent::KeyboardEventType::KeyDown, keycode));
+		m_KeyEventQueue.push(Event(Event::Type::KeyDown, keycode));
 		TrimBuffer(m_KeyEventQueue);
 	}
 
 	void Keyboard::OnKeyReleased(unsigned char keycode)
 	{
 		m_KeyStates[keycode] = false;
-		m_KeyEventQueue.push(KeyboardEvent(KeyboardEvent::KeyboardEventType::KeyUp, keycode));
+		m_KeyEventQueue.push(Event(Event::Type::KeyUp, keycode));
 		TrimBuffer(m_KeyEventQueue);
 	}
 
