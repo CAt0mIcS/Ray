@@ -20,7 +20,7 @@ namespace NPE
 		static int ProcessMessage(F&& func);
 
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		std::vector<Node>& GetNodes() { return m_Nodes; }
+		std::vector<Control>& GetControls() { return m_Controls; }
 
 	public:
 		Mouse Mouse;
@@ -29,7 +29,7 @@ namespace NPE
 	private:
 		void Paint(HDC hDC, RECT* rcDirty, BOOL bErase);
 
-		std::vector<Node> m_Nodes;
+		std::vector<Control> m_Controls;
 	};
 
 

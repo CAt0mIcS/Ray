@@ -172,6 +172,7 @@
     <ClInclude Include="src\NPE\Application.h" />
     <ClInclude Include="src\NPE\Window\BaseWindow.h" />
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\NPE\Controls\Control.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

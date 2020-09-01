@@ -16,6 +16,7 @@ namespace NPE
 		return MainWindow::ProcessMessage([this]() { OnMessage(); });
 	}
 	
+	NPoint startPos{ 0 };
 	void Application::OnMessage()
 	{
 		const auto e = m_Window.Mouse.GetEvent();
@@ -45,9 +46,13 @@ namespace NPE
 				m_MousePos.x = e.GetPos().x;
 				m_MousePos.y = e.GetPos().y;
 
-				for (auto& node : m_Window.GetNodes())
+				for (auto& control : m_Window.GetControls())
 				{
-					node.AdjustPos(diff);
+					if (control.GetType() == Control::Type::Node)
+					{
+						Node* node = (Node*)&control;
+						node->AdjustPos(diff);
+					}
 				}
 			}
 		}
@@ -55,7 +60,14 @@ namespace NPE
 
 	void Application::Zoom(const Mouse::Event& e)
 	{
+		if (e.GetType() == Mouse::Event::Type::WheelUp)
+		{
 
+		}
+		else if (e.GetType() == Mouse::Event::Type::WheelDown)
+		{
+
+		}
 	}
 }
 

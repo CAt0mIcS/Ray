@@ -6,16 +6,16 @@
 namespace NPE
 {
 	MainWindow::MainWindow(unsigned short width, unsigned short height, PCWSTR name)
-		: m_Nodes{}
+		: m_Controls{}
 	{
 		if (!CreateNativeWindow(name, WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, width, height))
 			return;
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
-		m_Nodes.emplace_back(Node(this, { 10, 10 }, { 100, 50 }));
-		m_Nodes.emplace_back(Node(this, { 200, 10 }, { 100, 100 }));
-		m_Nodes.emplace_back(Node(this, { 400, 50 }, { 200, 100 }));
-		m_Nodes.emplace_back(Node(this, { 600, 180 }, { 100, 200 }));
+		m_Controls.emplace_back(Node(this, { 10, 10 }, { 100, 50 }));
+		m_Controls.emplace_back(Node(this, { 200, 10 }, { 100, 100 }));
+		m_Controls.emplace_back(Node(this, { 400, 50 }, { 200, 100 }));
+		m_Controls.emplace_back(Node(this, { 600, 180 }, { 100, 200 }));
 	}
 
 	bool moveNodes = false;

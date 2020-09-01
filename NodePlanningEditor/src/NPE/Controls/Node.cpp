@@ -8,7 +8,7 @@ namespace NPE
 	LRESULT CALLBACK CtrlProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	Node::Node(MainWindow* parent, const NPoint pos, const NSize size)
-		: m_Pos(pos), m_Size(size), m_Scale(1.0f)
+		: Control(Type::Node, pos, size, 1.0f)
 	{
 
 		WNDCLASS wc{};
