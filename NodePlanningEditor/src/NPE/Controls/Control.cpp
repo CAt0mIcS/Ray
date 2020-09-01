@@ -4,7 +4,6 @@
 
 namespace NPE
 {
-
 	Control::Control(const Type type, const NPoint& pos, const NSize& size)
 		: m_Type(type), m_Id(m_NextId), m_Pos(pos), m_Size(size), m_hWnd(0)
 	{

@@ -19,13 +19,6 @@ namespace NPE
 
 		m_hWnd = CreateWindowEx(0, L"NODE", L"", WS_CHILD | WS_VISIBLE, pos.x, pos.y, size.width, size.height, parent->GetNativeWindow(), (HMENU)m_Id, 0, this);
 
-		TRACKMOUSEEVENT e{};
-		e.cbSize = sizeof(TRACKMOUSEEVENT);
-		e.dwFlags = TME_HOVER | TME_LEAVE;
-		e.dwHoverTime = 10;
-		e.hwndTrack = m_hWnd;
-		TrackMouseEvent(&e);
-
 		ShowWindow(m_hWnd, SW_SHOWDEFAULT);
 	}
 
@@ -39,8 +32,7 @@ namespace NPE
 			HDC hDC = BeginPaint(hWnd, &ps);
 			//FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(16, 17, 19)));
 			
-			if(this)
-				RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, 100, 100);
+			RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, 100, 100);
 			
 			EndPaint(hWnd, &ps);
 			ReleaseDC(hWnd, hDC);
