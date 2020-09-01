@@ -1,37 +1,12 @@
 #pragma once
 
 #include "pch.h"
-
+#include "NPE/Util/Props.h"
 
 
 namespace NPE
 {
 	class MainWindow;
-
-
-	struct NPoint
-	{
-		int x, y;
-
-		NPoint& operator+(const NPoint& other)
-		{
-			x += other.x;
-			y += other.y;
-			return *this;
-		}
-
-		NPoint& operator+=(const NPoint& other)
-		{
-			x += other.x;
-			y += other.y;
-			return *this;
-		}
-	};
-
-	struct NSize
-	{
-		int width, height;
-	};
 
 
 	class Node

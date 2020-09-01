@@ -18,21 +18,6 @@ namespace NPE
 		m_Nodes.emplace_back(Node(this, { 600, 180 }, { 100, 200 }));
 	}
 
-	std::optional<int> MainWindow::ProcessMessage()
-	{
-		MSG msg{};
-		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			if (msg.message == WM_QUIT)
-				return (int)msg.wParam;
-		
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		Sleep(10);
-		return {};
-	}
-
 	bool moveNodes = false;
 	LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{

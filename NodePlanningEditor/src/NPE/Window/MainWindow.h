@@ -16,7 +16,8 @@ namespace NPE
 	public:
 		MainWindow(unsigned short width, unsigned short height, PCWSTR name);
 
-		static std::optional<int> ProcessMessage();
+		template<typename F>
+		static int ProcessMessage(F&& func);
 
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	
@@ -32,6 +33,22 @@ namespace NPE
 
 		NPoint m_MousePos;
 	};
+
+
+	template<typename F>
+	int MainWindow::ProcessMessage(F&& func)
+	{
+		MSG msg{};
+		while (GetMessage(&msg, NULL, 0, 0))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			func();
+
+		}
+		return (int)msg.wParam;
+	}
+
 }
 
 

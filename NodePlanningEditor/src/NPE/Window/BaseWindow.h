@@ -56,6 +56,7 @@ namespace NPE
             wc.lpfnWndProc = DERIVED_TYPE::WindowProc;
             wc.hInstance = GetModuleHandle(NULL);
             wc.lpszClassName = NPE_MAINWINDOW_CLASS_NAME;
+            wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 
             RegisterClass(&wc);
 

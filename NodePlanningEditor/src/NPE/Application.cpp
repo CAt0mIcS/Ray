@@ -13,15 +13,7 @@ namespace NPE
 
 	int Application::Run()
 	{
-		while (true)
-		{
-			if (const auto ecode = MainWindow::ProcessMessage())
-			{
-				return *ecode;
-			}
-			OnFrame();
-		}
-
+		return MainWindow::ProcessMessage([this]() { OnFrame(); });
 	}
 	
 	void Application::OnFrame()

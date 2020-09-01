@@ -167,6 +167,7 @@
     <ClInclude Include="src\NPE\Controls\Node.h" />
     <ClInclude Include="src\NPE\Handlers\Mouse.h" />
     <ClInclude Include="src\NPE\Handlers\Keyboard.h" />
+    <ClInclude Include="src\NPE\Util\Props.h" />
     <ClInclude Include="src\NPE\Window\MainWindow.h" />
     <ClInclude Include="src\NPE\Application.h" />
     <ClInclude Include="src\NPE\Window\BaseWindow.h" />

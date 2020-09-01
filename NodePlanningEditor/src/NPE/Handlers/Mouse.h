@@ -103,7 +103,7 @@ namespace NPE
 		bool m_IsMiddlePressed;
 		std::queue<MouseEvent> m_Queue;
 		static constexpr unsigned int m_nQueueSize = 32;
-		unsigned int m_WheelDeltaCarry;
+		int m_WheelDeltaCarry;
 	};
 }
 
