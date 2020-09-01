@@ -26,15 +26,15 @@ namespace NPE
 			
 		NPoint& operator-(const NPoint& other)
 		{
-			x += other.x; 
-			y += other.y; 
+			x -= other.x; 
+			y -= other.y; 
 			return *this; 
 		}
 			
 		NPoint& operator-=(const NPoint& other)
 		{
-			x += other.x; 
-			y += other.y; 
+			x -= other.x; 
+			y -= other.y; 
 			return *this; 
 		}
 
@@ -274,15 +274,15 @@ namespace NPE
 
 		NSize& operator-(const int val)
 		{
-			width += val;
-			height += val;
+			width -= val;
+			height -= val;
 			return *this;
 		}
 
 		NSize& operator-=(const int val)
 		{
-			width += val;
-			height += val;
+			width -= val;
+			height -= val;
 			return *this;
 		}
 

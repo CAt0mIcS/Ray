@@ -11,9 +11,15 @@ namespace NPE
 		++m_NextId;
 	}
 
-	void Control::MoveBy(NPoint posToAdd)
+	void Control::MoveBy(const NPoint& pos)
 	{
-		m_Pos += posToAdd;
+		m_Pos += pos;
+		MoveWindow(m_hWnd, m_Pos.x, m_Pos.y, m_Size.width, m_Size.height, TRUE);
+	}
+
+	void Control::MoveTo(const NPoint& pos)
+	{
+		m_Pos = pos;
 		MoveWindow(m_hWnd, m_Pos.x, m_Pos.y, m_Size.width, m_Size.height, TRUE);
 	}
 

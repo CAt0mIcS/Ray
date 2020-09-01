@@ -16,7 +16,6 @@ namespace NPE
 		return MainWindow::ProcessMessage([this]() { OnMessage(); });
 	}
 	
-	NPoint startPos{ 0 };
 	void Application::OnMessage()
 	{
 		const auto e = m_Window.Mouse.GetEvent();
@@ -59,24 +58,44 @@ namespace NPE
 
 	void Application::Zoom(const Mouse::Event& e)
 	{
-		const float zoomFactor = 1.05f;
+		const float zoomFactor = 0.05f;
 		if (e.GetType() == Mouse::Event::Type::WheelUp)
 		{
 			//Move objects away from origin (middle) when zooming in
 			
 			for (auto& control : m_Window.GetControls())
 			{
-				const auto& pos = control.GetPos();
+				const NPoint& pos = control.GetPos();
 
+				//values shouldn't be hard coded! (1920/2, 1080/2)
+				NPoint screenCenter{ 920, 540 };
 
+				NPoint newPos;
+				newPos = (screenCenter - pos);
+				newPos.x *= -zoomFactor;
+				newPos.y *= -zoomFactor;
 
+				control.MoveBy(newPos);
 			}
 
 		}
 		else if (e.GetType() == Mouse::Event::Type::WheelDown)
 		{
 			// Move objects towards origin (middle) when zooming out
-			
+			for (auto& control : m_Window.GetControls())
+			{
+				const NPoint& pos = control.GetPos();
+
+				//values shouldn't be hard coded! (1920/2, 1080/2)
+				NPoint screenCenter{ 920, 540 };
+
+				NPoint newPos;
+				newPos = (screenCenter - pos);
+				newPos.x *= zoomFactor;
+				newPos.y *= zoomFactor;
+
+				control.MoveBy(newPos);
+			}
 		}
 	}
 }

@@ -18,7 +18,8 @@ namespace NPE
 		unsigned short GetId() const { return m_Id; }
 		Type GetType() const { return m_Type; }
 
-		void MoveBy(NPoint posToAdd);
+		void MoveBy(const NPoint& pos);
+		void MoveTo(const NPoint& pos);
 
 		NPoint GetPos() const { return m_Pos; }
 		NSize GetSize() const { return m_Size; }
