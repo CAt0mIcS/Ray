@@ -26,6 +26,9 @@ namespace NPE
 		MainWindow m_Window;
 		NPoint m_MousePos;
 		Camera camera;
+		
+		static constexpr float m_ZoomFactor = 0.05f;
+		static constexpr float m_ResizeFactor = 1.05f;
 	};
 }
 

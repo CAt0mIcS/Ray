@@ -13,7 +13,7 @@ namespace NPE
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
 		m_Controls.emplace_back(Node(this, { 150, 540 }, { 200, 270 }));
-		//m_Controls.emplace_back(Node(this, { 450, 200 }, { 200, 150 }));
+		m_Controls.emplace_back(Node(this, { 450, 200 }, { 200, 150 }));
 	}
 
 	LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)

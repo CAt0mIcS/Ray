@@ -56,12 +56,9 @@ namespace NPE
 		}
 	}
 
-	float zoom = 1.0f;
 	void Application::Zoom(const Mouse::Event& e)
 	{
-		const float zoomFactor = 0.05f;
-		const float zoomFacTrue = 1.05f;
-		NPoint screenCenter = { GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2 };
+		NPoint screenCenter = e.GetPos();
 
 		if (e.GetType() == Mouse::Event::Type::WheelUp)
 		{			
@@ -70,16 +67,14 @@ namespace NPE
 				const NPoint& pos = control.GetPos();
 				const NSize& size = control.GetSize();
 
-				zoom *= zoomFacTrue;
-				
 				NPoint newPos;
 				newPos = (screenCenter - pos);
-				newPos.x *= -zoomFactor;
-				newPos.y *= -zoomFactor;
+				newPos.x *= -m_ZoomFactor;
+				newPos.y *= -m_ZoomFactor;
 				
 				NSize newSize;
-				newSize.width = size.width * zoomFacTrue;
-				newSize.height = size.height * zoomFacTrue;
+				newSize.width = size.width * m_ResizeFactor;
+				newSize.height = size.height * m_ResizeFactor;
 
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
@@ -88,22 +83,19 @@ namespace NPE
 		}
 		else if (e.GetType() == Mouse::Event::Type::WheelDown)
 		{
-			// Move objects towards origin (middle) when zooming out
 			for (auto& control : m_Window.GetControls())
 			{
 				const NPoint& pos = control.GetPos();
 				const NSize& size = control.GetSize();
 				
-				zoom /= zoomFacTrue;
-				
 				NPoint newPos;
 				newPos = (screenCenter - pos);
-				newPos.x *= zoomFactor;
-				newPos.y *= zoomFactor;
+				newPos.x *= m_ZoomFactor;
+				newPos.y *= m_ZoomFactor;
 				
 				NSize newSize;
-				newSize.width = size.width / zoomFacTrue;
-				newSize.height = size.height / zoomFacTrue;
+				newSize.width = size.width / m_ResizeFactor;
+				newSize.height = size.height / m_ResizeFactor;
 
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
