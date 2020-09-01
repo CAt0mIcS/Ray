@@ -5,8 +5,6 @@
 
 namespace NPE
 {
-	LRESULT CALLBACK CtrlProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 	Node::Node(MainWindow* parent, const NPoint pos, const NSize size)
 		: Control(Type::Node, pos, size)
 	{
@@ -19,7 +17,7 @@ namespace NPE
 		wc.hbrBackground = CreateSolidBrush(RGB(15, 17, 19));
 		RegisterClass(&wc);
 
-		m_hWnd = CreateWindowEx(0, L"NODE", L"", WS_CHILD | WS_VISIBLE, pos.x, pos.y, size.width, size.height, parent->GetNativeWindow(), (HMENU)1, 0, 0);
+		m_hWnd = CreateWindowEx(0, L"NODE", L"", WS_CHILD | WS_VISIBLE, pos.x, pos.y, size.width, size.height, parent->GetNativeWindow(), (HMENU)m_Id, 0, this);
 
 		TRACKMOUSEEVENT e{};
 		e.cbSize = sizeof(TRACKMOUSEEVENT);
@@ -39,8 +37,11 @@ namespace NPE
 		{
 			PAINTSTRUCT ps;
 			HDC hDC = BeginPaint(hWnd, &ps);
-			FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(16, 17, 19)));
-			//RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, 100, 100);
+			//FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(16, 17, 19)));
+			
+			if(this)
+				RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, 100, 100);
+			
 			EndPaint(hWnd, &ps);
 			ReleaseDC(hWnd, hDC);
 			return 0;

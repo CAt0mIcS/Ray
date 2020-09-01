@@ -36,10 +36,10 @@ namespace NPE
 		HWND m_hWnd;
 		NPoint m_Pos;
 		NSize m_Size;
+		unsigned short m_Id;
 
 	private:
 		static unsigned short m_NextId;
-		unsigned short m_Id;
 		Type m_Type;
 	};
 
