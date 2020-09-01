@@ -1,5 +1,8 @@
 #include "MainWindow.h"
 
+#include "NPE/Controls/Node.h"
+
+
 namespace NPE
 {
 	MainWindow::MainWindow(unsigned short width, unsigned short height, PCWSTR name)
@@ -8,6 +11,7 @@ namespace NPE
 			return;
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
+		Node node(this);
 	}
 
 	std::optional<int> MainWindow::ProcessMessage()
