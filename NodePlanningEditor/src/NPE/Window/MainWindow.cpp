@@ -6,7 +6,7 @@
 namespace NPE
 {
 	MainWindow::MainWindow(unsigned short width, unsigned short height, PCWSTR name)
-		: m_MousePos{ 0, 0 }, m_Nodes{}
+		: m_Nodes{}
 	{
 		if (!CreateNativeWindow(name, WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, width, height))
 			return;
@@ -30,8 +30,8 @@ namespace NPE
 		}
 		case WM_KILLFOCUS:
 		{
-			mouse.ClearStates();
-			keyboard.ClearStates();
+			Mouse.ClearStates();
+			Keyboard.ClearStates();
 			return 0;
 		}
 		case WM_PAINT:
@@ -46,85 +46,60 @@ namespace NPE
 		case WM_MOUSEMOVE:
 		{
 			POINTS pt = MAKEPOINTS(lParam);
-
-			if (moveNodes)
-			{
-				NPoint diff{};
-				diff.x = pt.x - m_MousePos.x;
-				diff.y = pt.y - m_MousePos.y;
-
-				int mBuff = 5;
-				if (diff.x > mBuff || diff.y > mBuff || diff.x < -mBuff || diff.y < -mBuff)
-				{
-					m_MousePos.x = pt.x;
-					m_MousePos.y = pt.y;
-
-					for (auto& node : m_Nodes)
-					{
-						node.AdjustPos(diff);
-					}
-				}
-				
-			}
-
-			mouse.OnMouseMove(pt.x, pt.y);
+			Mouse.OnMouseMove(pt.x, pt.y);
 			return 0;
 		}
 		case WM_LBUTTONDOWN:
 		{
-			mouse.OnLButtonDown();
+			Mouse.OnLButtonDown();
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
-			mouse.OnLButtonUp();
+			Mouse.OnLButtonUp();
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
-			mouse.OnRButtonDown();
+			Mouse.OnRButtonDown();
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
-			mouse.OnRButtonUp();
+			Mouse.OnRButtonUp();
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
 			POINTS pt = MAKEPOINTS(lParam);
-			m_MousePos.x = pt.x;
-			m_MousePos.y = pt.y;
-			moveNodes = true;
-
-			mouse.OnMButtonDown();
+			Mouse.OnMButtonDown();
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
 			moveNodes = false;
-			mouse.OnMButtonUp();
+			Mouse.OnMButtonUp();
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
 		{
 			const auto delta = GET_WHEEL_DELTA_WPARAM(wParam);
-			mouse.OnMouseWheelDelta(delta);
+			Mouse.OnMouseWheelDelta(delta);
 			return 0;
 		}
 		case WM_KEYDOWN:
 		{
-			keyboard.OnKeyPressed((unsigned char)wParam);
+			Keyboard.OnKeyPressed((unsigned char)wParam);
 			return 0;
 		}
 		case WM_KEYUP:
 		{
-			keyboard.OnKeyReleased((unsigned char)wParam);
+			Keyboard.OnKeyReleased((unsigned char)wParam);
 			return 0;
 		}
 		case WM_CHAR:
 		{
-			keyboard.OnChar((unsigned char)wParam);
+			Keyboard.OnChar((unsigned char)wParam);
 			return 0;
 		}
 		}

@@ -1,71 +1,196 @@
 #pragma once
 
 
-#define NPE_DECLARE_OPERATORS(cls, x, y)	cls& operator+(const cls& other)\
-											{\
-											x += other.x;\
-											y += other.y;\
-											return *this;\
-											}\
-											\
-											cls& operator+=(const cls& other)\
-											{\
-												x += other.x;\
-												y += other.y;\
-												return *this;\
-											}\
-											\
-											cls& operator-(const cls& other)\
-											{\
-												x += other.x;\
-												y += other.y;\
-												return *this;\
-											}\
-											\
-											cls& operator-=(const cls& other)\
-											{\
-												x += other.x;\
-												y += other.y;\
-												return *this;\
-											}\
-											\
-											cls& operator+(const int val)\
-											{\
-												x += val;\
-												y += val;\
-												return *this;\
-											}\
-											\
-											cls& operator+=(const int val)\
-											{\
-												x += val;\
-												y += val;\
-												return *this;\
-											}\
-											\
-											cls& operator-(const int val)\
-											{\
-												x += val;\
-												y += val;\
-												return *this;\
-											}\
-											\
-											cls& operator-=(const int val)\
-											{\
-												x += val;\
-												y += val;\
-												return *this;\
-											}
-
-
-
 namespace NPE
 {
 	struct NPoint
 	{
 		int x, y;
 
-		NPE_DECLARE_OPERATORS(NPoint, x, y)
+		//NPoint
+		NPoint& operator+(const NPoint& other)
+		{
+			x += other.x; 
+			y += other.y; 
+			return *this; 
+		}
+			
+		NPoint& operator+=(const NPoint& other)
+		{
+			x += other.x; 
+			y += other.y; 
+			return *this; 
+		}
+			
+		NPoint& operator-(const NPoint& other)
+		{
+			x += other.x; 
+			y += other.y; 
+			return *this; 
+		}
+			
+		NPoint& operator-=(const NPoint& other)
+		{
+			x += other.x; 
+			y += other.y; 
+			return *this; 
+		}
+
+		NPoint& operator*=(const NPoint& other)
+		{
+			x *= other.x;
+			y *= other.y;
+			return *this;
+		}
+
+		NPoint& operator*(const NPoint& other)
+		{
+			x *= other.x;
+			y *= other.y;
+			return *this;
+		}
+
+		NPoint& operator/(const NPoint& other)
+		{
+			x /= other.x;
+			y /= other.y;
+			return *this;
+		}
+
+		NPoint& operator/=(const NPoint& other)
+		{
+			x /= other.x;
+			y /= other.y;
+			return *this;
+		}
+		
+		//int
+		NPoint& operator+(const int val)
+		{
+			x += val; 
+			y += val; 
+			return *this; 
+		}
+			
+		NPoint& operator+=(const int val)
+		{
+			x += val; 
+			y += val; 
+			return *this; 
+		}
+			
+		NPoint& operator-(const int val)
+		{
+			x += val; 
+			y += val; 
+			return *this; 
+		}
+			
+		NPoint& operator-=(const int val)
+		{
+			x += val; 
+			y += val; 
+			return *this; 
+		}
+
+		NPoint& operator*=(const int val)
+		{
+			x *= val;
+			y *= val;
+			return *this;
+		}
+
+		NPoint& operator*(const int val)
+		{
+			x *= val;
+			y *= val;
+			return *this;
+		}
+
+		NPoint& operator/(const int val)
+		{
+			x /= val;
+			y /= val;
+			return *this;
+		}
+
+		NPoint& operator/=(const int val)
+		{
+			x /= val;
+			y /= val;
+			return *this;
+		}
+
+		NPoint& operator=(const int val)
+		{
+			x = val;
+			y = val;
+			return *this;
+		}
+
+		//POINTS
+		NPoint& operator+(const POINTS val)
+		{
+			x += val.x;
+			y += val.y;
+			return *this;
+		}
+
+		NPoint& operator+=(const POINTS val)
+		{
+			x += val.x;
+			y += val.y;
+			return *this;
+		}
+
+		NPoint& operator-(const POINTS val)
+		{
+			x += val.x;
+			y += val.y;
+			return *this;
+		}
+
+		NPoint& operator-=(const POINTS val)
+		{
+			x += val.x;
+			y += val.y;
+			return *this;
+		}
+
+		NPoint& operator*=(const POINTS val)
+		{
+			x *= val.x;
+			y *= val.y;
+			return *this;
+		}
+
+		NPoint& operator*(const POINTS val)
+		{
+			x *= val.x;
+			y *= val.y;
+			return *this;
+		}
+
+		NPoint& operator/(const POINTS val)
+		{
+			x /= val.x;
+			y /= val.y;
+			return *this;
+		}
+
+		NPoint& operator/=(const POINTS val)
+		{
+			x /= val.x;
+			y /= val.y;
+			return *this;
+		}
+
+		NPoint& operator=(const POINTS val)
+		{
+			x = val.x;
+			y = val.y;
+			return *this;
+		}
 	};
 
 
@@ -73,7 +198,119 @@ namespace NPE
 	{
 		int width, height;
 
-		NPE_DECLARE_OPERATORS(NSize, width, height)
+		//NSize
+		NSize& operator+(const NSize& other)
+		{
+			width += other.width;
+			height += other.height;
+			return *this;
+		}
+
+		NSize& operator+=(const NSize& other)
+		{
+			width += other.width;
+			height += other.height;
+			return *this;
+		}
+
+		NSize& operator-(const NSize& other)
+		{
+			width += other.width;
+			height += other.height;
+			return *this;
+		}
+
+		NSize& operator-=(const NSize& other)
+		{
+			width += other.width;
+			height += other.height;
+			return *this;
+		}
+
+		NSize& operator*=(const NSize& other)
+		{
+			width *= other.width;
+			height *= other.height;
+			return *this;
+		}
+
+		NSize& operator*(const NSize& other)
+		{
+			width *= other.width;
+			height *= other.height;
+			return *this;
+		}
+
+		NSize& operator/(const NSize& other)
+		{
+			width /= other.width;
+			height /= other.height;
+			return *this;
+		}
+
+		NSize& operator/=(const NSize& other)
+		{
+			width /= other.width;
+			height /= other.height;
+			return *this;
+		}
+
+		//int
+		NSize& operator+(const int val)
+		{
+			width += val;
+			height += val;
+			return *this;
+		}
+
+		NSize& operator+=(const int val)
+		{
+			width += val;
+			height += val;
+			return *this;
+		}
+
+		NSize& operator-(const int val)
+		{
+			width += val;
+			height += val;
+			return *this;
+		}
+
+		NSize& operator-=(const int val)
+		{
+			width += val;
+			height += val;
+			return *this;
+		}
+
+		NSize& operator*=(const int val)
+		{
+			width *= val;
+			height *= val;
+			return *this;
+		}
+
+		NSize& operator*(const int val)
+		{
+			width *= val;
+			height *= val;
+			return *this;
+		}
+
+		NSize& operator/(const int val)
+		{
+			width /= val;
+			height /= val;
+			return *this;
+		}
+
+		NSize& operator/=(const int val)
+		{
+			width /= val;
+			height /= val;
+			return *this;
+		}
 	};
 }
 

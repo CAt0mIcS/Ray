@@ -1,38 +1,20 @@
 #pragma once
 
 #include "pch.h"
+#include "NPE/Util/Props.h"
 
 
 namespace NPE
 {
-	struct MousePos
-	{
-		int x, y;
-
-		MousePos& operator+=(const MousePos& other)
-		{
-			x += other.x;
-			y += other.y;
-			return *this;
-		}
-
-		MousePos& operator-=(const MousePos& other)
-		{
-			x -= other.x;
-			y -= other.y;
-			return *this;
-		}
-	};
-
 
 	class Mouse
 	{
 		friend class MainWindow;
 	public:
-		class MouseEvent
+		class Event
 		{
 		public:
-			enum class MouseEventType
+			enum class Type
 			{
 				INVALID = 0,
 				LPress, LRelease,
@@ -43,25 +25,23 @@ namespace NPE
 				Move
 			};
 
-			MouseEvent(const MouseEventType type, const Mouse& parent)
-				: m_Type(type), m_Pos(parent.GetPos()), m_IsRightPressed(parent.IsRightPressed()), m_IsLeftPressed(parent.IsLeftPressed()), m_IsMiddlePressed(parent.IsMiddlePressed()) {}
+			Event(const Type type, const Mouse* parent)
+				: m_Type(type), m_Parent(parent) {}
 
-			MouseEvent()
-				: m_Type(MouseEventType::INVALID), m_Pos{ 0, 0 }, m_IsRightPressed(false), m_IsLeftPressed(false), m_IsMiddlePressed(false) {}
+			Event()
+				: m_Type(Type::INVALID), m_Parent(nullptr) {}
 
-			bool IsLeftPressed() const { return m_IsLeftPressed; }
-			bool IsRightPressed() const { return m_IsRightPressed; }
-			bool IsMiddlePressed() const { return m_IsMiddlePressed; }
-			bool IsValid() const { return m_Type != MouseEventType::INVALID; }
+			bool IsLeftPressed() const { return m_Parent->m_IsLeftPressed; }
+			bool IsRightPressed() const { return m_Parent->m_IsRightPressed; }
+			bool IsMiddlePressed() const { return m_Parent->m_IsMiddlePressed; }
+			bool IsValid() const { return m_Type != Type::INVALID; }
 
-			MousePos GetPos() const { return m_Pos; }
+			NPoint GetPos() const { return m_Parent->m_Pos; }
+			Type GetType() const { return m_Type; }
 
 		private:
-			MouseEventType m_Type;
-			MousePos m_Pos;
-			bool m_IsLeftPressed;
-			bool m_IsRightPressed;
-			bool m_IsMiddlePressed;
+			Type m_Type;
+			const Mouse* m_Parent;
 		};
 
 	public:
@@ -74,11 +54,11 @@ namespace NPE
 		bool IsRightPressed() const { return m_IsRightPressed; }
 		bool IsMiddlePressed() const { return m_IsMiddlePressed; }
 
-		MousePos GetPos() const { return m_Pos; }
+		NPoint GetPos() const { return m_Pos; }
 		
 		void ClearStates() { m_IsLeftPressed = false, m_IsRightPressed = false; m_IsMiddlePressed = false; }
 
-		MouseEvent GetEvent();
+		Event GetEvent();
 
 	private:
 		void OnLButtonDown();
@@ -97,11 +77,11 @@ namespace NPE
 		void TrimBuffer();
 
 	private:
-		MousePos m_Pos;
+		NPoint m_Pos;
 		bool m_IsLeftPressed;
 		bool m_IsRightPressed;
 		bool m_IsMiddlePressed;
-		std::queue<MouseEvent> m_Queue;
+		std::queue<Event> m_Queue;
 		static constexpr unsigned int m_nQueueSize = 32;
 		int m_WheelDeltaCarry;
 	};

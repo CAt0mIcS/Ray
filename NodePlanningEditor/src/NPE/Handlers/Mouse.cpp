@@ -9,7 +9,7 @@ namespace NPE
 	{
 	}
 
-	Mouse::MouseEvent Mouse::GetEvent()
+	Mouse::Event Mouse::GetEvent()
 	{
 		if (m_Queue.size() > 0u)
 		{
@@ -17,60 +17,60 @@ namespace NPE
 			m_Queue.pop();
 			return e;
 		}
-		return MouseEvent();
+		return Event();
 	}
 
 	void Mouse::OnLButtonDown()
 	{
 		m_IsLeftPressed = true;
-		m_Queue.push(MouseEvent(MouseEvent::MouseEventType::LPress, *this));
+		m_Queue.push(Event(Event::Type::LPress, this));
 		TrimBuffer();
 	}
 
 	void Mouse::OnLButtonUp()
 	{
 		m_IsLeftPressed = false;
-		m_Queue.push(MouseEvent(MouseEvent::MouseEventType::LRelease, *this));
+		m_Queue.push(Event(Event::Type::LRelease, this));
 		TrimBuffer();
 	}
 
 	void Mouse::OnRButtonDown()
 	{
 		m_IsRightPressed = false;
-		m_Queue.push(MouseEvent(MouseEvent::MouseEventType::RPress, *this));
+		m_Queue.push(Event(Event::Type::RPress, this));
 		TrimBuffer();
 	}
 
 	void Mouse::OnRButtonUp()
 	{
 		m_IsRightPressed = false;
-		m_Queue.push(MouseEvent(MouseEvent::MouseEventType::RRelease, *this));
+		m_Queue.push(Event(Event::Type::RRelease, this));
 		TrimBuffer();
 	}
 
 	void Mouse::OnMButtonDown()
 	{
 		m_IsMiddlePressed = true;
-		m_Queue.push(MouseEvent(MouseEvent::MouseEventType::MWheelPress, *this));
+		m_Queue.push(Event(Event::Type::MWheelPress, this));
 		TrimBuffer();
 	}
 
 	void Mouse::OnMButtonUp()
 	{
 		m_IsMiddlePressed = false;
-		m_Queue.push(MouseEvent(MouseEvent::MouseEventType::MWheelRelease, *this));
+		m_Queue.push(Event(Event::Type::MWheelRelease, this));
 		TrimBuffer();
 	}
 
 	void Mouse::OnMouseWheelUp()
 	{
-		m_Queue.push(MouseEvent(MouseEvent::MouseEventType::WheelUp, *this));
+		m_Queue.push(Event(Event::Type::WheelUp, this));
 		TrimBuffer();
 	}
 
 	void Mouse::OnMouseWheelDown()
 	{
-		m_Queue.push(MouseEvent(MouseEvent::MouseEventType::WheelDown, *this));
+		m_Queue.push(Event(Event::Type::WheelDown, this));
 		TrimBuffer();
 	}
 
@@ -93,8 +93,8 @@ namespace NPE
 
 	void Mouse::OnMouseMove(int x, int y)
 	{
-		m_Pos += {x, y};
-		m_Queue.push(MouseEvent(MouseEvent::MouseEventType::Move, *this));
+		m_Pos = NPoint{x, y};
+		m_Queue.push(Event(Event::Type::Move, this));
 		TrimBuffer();
 	}
 

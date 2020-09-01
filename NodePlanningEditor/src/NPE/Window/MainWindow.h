@@ -20,18 +20,16 @@ namespace NPE
 		static int ProcessMessage(F&& func);
 
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	
+		std::vector<Node>& GetNodes() { return m_Nodes; }
+
 	public:
-		Mouse mouse;
-		Keyboard keyboard;
+		Mouse Mouse;
+		Keyboard Keyboard;
 
 	private:
 		void Paint(HDC hDC, RECT* rcDirty, BOOL bErase);
 
-		std::vector<HWND> m_Controls;
 		std::vector<Node> m_Nodes;
-
-		NPoint m_MousePos;
 	};
 
 
