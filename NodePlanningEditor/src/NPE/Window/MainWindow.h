@@ -6,6 +6,8 @@
 #include "NPE/Handlers/Mouse.h"
 #include "NPE/Handlers/Keyboard.h"
 
+#include "NPE/Controls/Node.h"
+
 
 namespace NPE
 {
@@ -26,6 +28,9 @@ namespace NPE
 		void Paint(HDC hDC, RECT* rcDirty, BOOL bErase);
 
 		std::vector<HWND> m_Controls;
+		std::vector<Node> m_Nodes;
+
+		NPoint m_MousePos;
 	};
 }
 

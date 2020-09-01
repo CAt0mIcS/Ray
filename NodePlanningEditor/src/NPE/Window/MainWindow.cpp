@@ -6,12 +6,16 @@
 namespace NPE
 {
 	MainWindow::MainWindow(unsigned short width, unsigned short height, PCWSTR name)
+		: m_MousePos{ 0, 0 }, m_Nodes{}
 	{
 		if (!CreateNativeWindow(name, WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, width, height))
 			return;
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
-		Node node(this);
+		m_Nodes.emplace_back(Node(this, { 10, 10 }, { 100, 50 }));
+		m_Nodes.emplace_back(Node(this, { 200, 10 }, { 100, 100 }));
+		m_Nodes.emplace_back(Node(this, { 400, 50 }, { 200, 100 }));
+		m_Nodes.emplace_back(Node(this, { 600, 180 }, { 100, 200 }));
 	}
 
 	std::optional<int> MainWindow::ProcessMessage()
@@ -29,6 +33,7 @@ namespace NPE
 		return {};
 	}
 
+	bool moveNodes = false;
 	LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
@@ -44,9 +49,39 @@ namespace NPE
 			keyboard.ClearStates();
 			return 0;
 		}
+		case WM_PAINT:
+		{
+			PAINTSTRUCT ps;
+			HDC hDC = BeginPaint(m_hWnd, &ps);
+			Paint(hDC, &ps.rcPaint, FALSE);
+			EndPaint(m_hWnd, &ps);
+			ReleaseDC(m_hWnd, hDC);
+			return 0;
+		}
 		case WM_MOUSEMOVE:
 		{
 			POINTS pt = MAKEPOINTS(lParam);
+
+			if (moveNodes)
+			{
+				NPoint diff{};
+				diff.x = pt.x - m_MousePos.x;
+				diff.y = pt.y - m_MousePos.y;
+
+				int mBuff = 5;
+				if (diff.x > mBuff || diff.y > mBuff || diff.x < -mBuff || diff.y < -mBuff)
+				{
+					m_MousePos.x = pt.x;
+					m_MousePos.y = pt.y;
+
+					for (auto& node : m_Nodes)
+					{
+						node.AdjustPos(diff);
+					}
+				}
+				
+			}
+
 			mouse.OnMouseMove(pt.x, pt.y);
 			return 0;
 		}
@@ -72,11 +107,17 @@ namespace NPE
 		}
 		case WM_MBUTTONDOWN:
 		{
+			POINTS pt = MAKEPOINTS(lParam);
+			m_MousePos.x = pt.x;
+			m_MousePos.y = pt.y;
+			moveNodes = true;
+
 			mouse.OnMButtonDown();
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
+			moveNodes = false;
 			mouse.OnMButtonUp();
 			return 0;
 		}
