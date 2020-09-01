@@ -23,5 +23,17 @@ namespace NPE
 		MoveWindow(m_hWnd, m_Pos.x, m_Pos.y, m_Size.width, m_Size.height, TRUE);
 	}
 
+	void Control::ResizeBy(const NSize& size)
+	{
+		m_Size += size;
+		MoveWindow(m_hWnd, m_Pos.x, m_Pos.y, m_Size.width, m_Size.height, TRUE);
+	}
+
+	void Control::ResizeTo(const NSize& size)
+	{
+		m_Size = size;
+		MoveWindow(m_hWnd, m_Pos.x, m_Pos.y, m_Size.width, m_Size.height, TRUE);
+	}
+
 }
 

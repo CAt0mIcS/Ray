@@ -56,26 +56,31 @@ namespace NPE
 		}
 	}
 
+	float zoom = 1.0f;
 	void Application::Zoom(const Mouse::Event& e)
 	{
 		const float zoomFactor = 0.05f;
+		const float zoomFacTrue = 1.05f;
+		NPoint origin = { GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
+
 		if (e.GetType() == Mouse::Event::Type::WheelUp)
 		{
 			//Move objects away from origin (middle) when zooming in
 			
 			for (auto& control : m_Window.GetControls())
 			{
-				const NPoint& pos = control.GetPos();
-
-				//values shouldn't be hard coded! (1920/2, 1080/2)
-				NPoint screenCenter{ 920, 540 };
-
-				NPoint newPos;
-				newPos = (screenCenter - pos);
-				newPos.x *= -zoomFactor;
-				newPos.y *= -zoomFactor;
-
-				control.MoveBy(newPos);
+				//const NPoint& pos = control.GetPos();
+				//zoom *= zoomFacTrue;
+				//
+				////values shouldn't be hard coded! (1920/2, 1080/2)
+				//NPoint screenCenter{ 920, 540 };
+				//
+				//NPoint newPos;
+				//newPos = (screenCenter - pos);
+				//newPos.x *= -zoomFactor;
+				//newPos.y *= -zoomFactor;
+				//
+				//control.MoveBy(newPos);
 			}
 
 		}
@@ -84,17 +89,18 @@ namespace NPE
 			// Move objects towards origin (middle) when zooming out
 			for (auto& control : m_Window.GetControls())
 			{
-				const NPoint& pos = control.GetPos();
-
-				//values shouldn't be hard coded! (1920/2, 1080/2)
-				NPoint screenCenter{ 920, 540 };
-
-				NPoint newPos;
-				newPos = (screenCenter - pos);
-				newPos.x *= zoomFactor;
-				newPos.y *= zoomFactor;
-
-				control.MoveBy(newPos);
+				//const NPoint& pos = control.GetPos();
+				//zoom /= zoomFacTrue;
+				//
+				////values shouldn't be hard coded! (1920/2, 1080/2)
+				//NPoint screenCenter{ 920, 540 };
+				//
+				//NPoint newPos;
+				//newPos = (screenCenter - pos);
+				//newPos.x *= zoomFactor;
+				//newPos.y *= zoomFactor;
+				//
+				//control.MoveBy(newPos);
 			}
 		}
 	}

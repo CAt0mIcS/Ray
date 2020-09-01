@@ -12,13 +12,10 @@ namespace NPE
 			return;
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
-		m_Controls.emplace_back(Node(this, { 10, 10 }, { 100, 50 }));
-		m_Controls.emplace_back(Node(this, { 200, 10 }, { 100, 100 }));
-		m_Controls.emplace_back(Node(this, { 400, 50 }, { 200, 100 }));
-		m_Controls.emplace_back(Node(this, { 600, 180 }, { 100, 200 }));
+		m_Controls.emplace_back(Node(this, { 150, 540 }, { 200, 270 }));
+		m_Controls.emplace_back(Node(this, { 450, 200 }, { 200, 150 }));
 	}
 
-	bool moveNodes = false;
 	LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
@@ -77,7 +74,6 @@ namespace NPE
 		}
 		case WM_MBUTTONUP:
 		{
-			moveNodes = false;
 			Mouse.OnMButtonUp();
 			return 0;
 		}
