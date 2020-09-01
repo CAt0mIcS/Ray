@@ -12,7 +12,7 @@ namespace NPE
 	{
 
 		WNDCLASS wc{};
-		wc.lpfnWndProc = CtrlProc;
+		wc.lpfnWndProc = HandleMessageSetup;
 		wc.hInstance = GetModuleHandle(NULL);
 		wc.lpszClassName = L"NODE";
 		wc.style = CS_OWNDC;
@@ -31,7 +31,7 @@ namespace NPE
 		ShowWindow(m_hWnd, SW_SHOWDEFAULT);
 	}
 
-	LRESULT CALLBACK CtrlProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT CALLBACK Node::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -40,6 +40,7 @@ namespace NPE
 			PAINTSTRUCT ps;
 			HDC hDC = BeginPaint(hWnd, &ps);
 			FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(16, 17, 19)));
+			//RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, 100, 100);
 			EndPaint(hWnd, &ps);
 			ReleaseDC(hWnd, hDC);
 			return 0;
@@ -48,6 +49,26 @@ namespace NPE
 
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 
+	}
+
+	LRESULT CALLBACK Node::HandleMessageSetup(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		if (uMsg == WM_NCCREATE)
+		{
+			CREATESTRUCT* pCreate = (CREATESTRUCT*)lParam;
+			Node* node = (Node*)pCreate->lpCreateParams;
+
+			SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)node);
+			SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)HandleMessagePass);
+			return node->HandleMessage(hWnd, uMsg, wParam, lParam);
+		}
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	}
+
+	LRESULT Node::HandleMessagePass(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		Node* node = (Node*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+		return node->HandleMessage(hWnd, uMsg, wParam, lParam);
 	}
 
 }

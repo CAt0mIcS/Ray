@@ -1,5 +1,10 @@
 #pragma once
 
+/**
+* warning C4244: conversion from 'float' to 'int', possible loss of data
+*/
+#pragma warning(disable : 4244)
+
 #include <Windows.h>
 #include <windowsx.h>
 
