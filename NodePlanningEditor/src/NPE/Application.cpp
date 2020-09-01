@@ -61,26 +61,28 @@ namespace NPE
 	{
 		const float zoomFactor = 0.05f;
 		const float zoomFacTrue = 1.05f;
-		NPoint origin = { GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
+		NPoint screenCenter = { GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2 };
 
 		if (e.GetType() == Mouse::Event::Type::WheelUp)
-		{
-			//Move objects away from origin (middle) when zooming in
-			
+		{			
 			for (auto& control : m_Window.GetControls())
 			{
-				//const NPoint& pos = control.GetPos();
-				//zoom *= zoomFacTrue;
-				//
-				////values shouldn't be hard coded! (1920/2, 1080/2)
-				//NPoint screenCenter{ 920, 540 };
-				//
-				//NPoint newPos;
-				//newPos = (screenCenter - pos);
-				//newPos.x *= -zoomFactor;
-				//newPos.y *= -zoomFactor;
-				//
-				//control.MoveBy(newPos);
+				const NPoint& pos = control.GetPos();
+				const NSize& size = control.GetSize();
+
+				zoom *= zoomFacTrue;
+				
+				NPoint newPos;
+				newPos = (screenCenter - pos);
+				newPos.x *= -zoomFactor;
+				newPos.y *= -zoomFactor;
+				
+				NSize newSize;
+				newSize.width = size.width * zoomFacTrue;
+				newSize.height = size.height * zoomFacTrue;
+
+				control.MoveBy(newPos);
+				control.ResizeTo(newSize);
 			}
 
 		}
@@ -89,18 +91,22 @@ namespace NPE
 			// Move objects towards origin (middle) when zooming out
 			for (auto& control : m_Window.GetControls())
 			{
-				//const NPoint& pos = control.GetPos();
-				//zoom /= zoomFacTrue;
-				//
-				////values shouldn't be hard coded! (1920/2, 1080/2)
-				//NPoint screenCenter{ 920, 540 };
-				//
-				//NPoint newPos;
-				//newPos = (screenCenter - pos);
-				//newPos.x *= zoomFactor;
-				//newPos.y *= zoomFactor;
-				//
-				//control.MoveBy(newPos);
+				const NPoint& pos = control.GetPos();
+				const NSize& size = control.GetSize();
+				
+				zoom /= zoomFacTrue;
+				
+				NPoint newPos;
+				newPos = (screenCenter - pos);
+				newPos.x *= zoomFactor;
+				newPos.y *= zoomFactor;
+				
+				NSize newSize;
+				newSize.width = size.width / zoomFacTrue;
+				newSize.height = size.height / zoomFacTrue;
+
+				control.MoveBy(newPos);
+				control.ResizeTo(newSize);
 			}
 		}
 	}
