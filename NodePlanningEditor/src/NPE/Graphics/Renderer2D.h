@@ -16,10 +16,14 @@ namespace NPE
 		void Draw();
 		void DrawNode(const NodeRect& rc);
 
-		void SetHWNDAndContruct(HWND hWnd) { m_hWnd = hWnd; InitGraphicsResources(); }
+		void SetHWNDAndContruct(HWND hWnd);
+
+		float PixelsToDIPs(const float pixel);
+		//float PixelsToDIPsY(const float pixel);
 
 	private:
 		void InitGraphicsResources();
+		void InitDPIScale();
 
 	private:
 		Microsoft::WRL::ComPtr<ID2D1Factory>			m_pFactory;
@@ -27,6 +31,7 @@ namespace NPE
 		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush>	m_pBrush;
 
 		HWND m_hWnd;
+		float m_DPIScale;
 	};
 }
 

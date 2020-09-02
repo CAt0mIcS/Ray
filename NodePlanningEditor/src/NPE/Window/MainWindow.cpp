@@ -10,6 +10,9 @@ namespace NPE
 		if (!CreateNativeWindow(name, WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, width, height))
 			return;
 
+		//TODO: should be done in manifest
+		SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE);
+
 		m_Renderer2D.SetHWNDAndContruct(m_hWnd);
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
