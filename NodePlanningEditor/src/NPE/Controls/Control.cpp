@@ -15,7 +15,7 @@ namespace NPE
 		m_Pos += pos;
 		if (!MoveWindow(m_hWnd, m_Pos.x, m_Pos.y, m_Size.width, m_Size.height, TRUE))
 			return;
-		InvalidateRect(m_hWnd, NULL, TRUE);
+		InvalidateRect(m_hWnd, NULL, FALSE);
 	}
 
 	void Control::MoveTo(const NPoint& pos)
@@ -23,7 +23,7 @@ namespace NPE
 		m_Pos = pos;
 		if (!MoveWindow(m_hWnd, m_Pos.x, m_Pos.y, m_Size.width, m_Size.height, TRUE))
 			return;
-		InvalidateRect(m_hWnd, NULL, TRUE);
+		InvalidateRect(m_hWnd, NULL, FALSE);
 	}
 
 	void Control::ResizeBy(const NSize& size)
@@ -31,7 +31,7 @@ namespace NPE
 		m_Size += size;
 		if (!MoveWindow(m_hWnd, m_Pos.x, m_Pos.y, m_Size.width, m_Size.height, TRUE))
 			return;
-		InvalidateRect(m_hWnd, NULL, TRUE);
+		InvalidateRect(m_hWnd, NULL, FALSE);
 	}
 
 	void Control::ResizeTo(const NSize& size)
@@ -39,7 +39,7 @@ namespace NPE
 		m_Size = size;
 		if (!MoveWindow(m_hWnd, m_Pos.x, m_Pos.y, m_Size.width, m_Size.height, TRUE))
 			return;
-		InvalidateRect(m_hWnd, NULL, TRUE);
+		InvalidateRect(m_hWnd, NULL, FALSE);
 	}
 
 }

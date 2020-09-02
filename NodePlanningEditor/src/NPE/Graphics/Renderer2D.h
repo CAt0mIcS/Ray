@@ -13,13 +13,11 @@ namespace NPE
 		Renderer2D(HWND hWnd);
 		Renderer2D() = default;
 
+		void Init(HWND hWnd);
+
 		void Draw();
-		void DrawNode(const NodeRect& rc);
 
-		void SetHWNDAndContruct(HWND hWnd);
-
-		float PixelsToDIPs(const float pixel);
-		//float PixelsToDIPsY(const float pixel);
+		void DrawNode(const NodeRect& node);
 
 	private:
 		void InitGraphicsResources();

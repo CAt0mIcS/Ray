@@ -10,40 +10,6 @@ namespace wrl = Microsoft::WRL;
 namespace NPE
 {
 
-	//struct NRect
-	//{
-	//public:
-	//	NRect(float x, float y, float width, float height)
-	//		: m_X(x), m_Y(y), m_Width(width), m_Height(height)
-	//	{
-
-	//	}
-
-	//	float GetLeft()
-	//	{
-	//		return m_X;
-	//	}
-
-	//	float GetTop()
-	//	{
-	//		return m_Y;
-	//	}
-
-	//	float GetRight()
-	//	{
-	//		return m_X + m_Width;
-	//	}
-
-	//	float GetBottom()
-	//	{
-	//		return m_Y + m_Height;
-	//	}
-
-	//private:
-	//	float m_X, m_Y, m_Width, m_Height;
-
-	//};
-
 	int NodeRect::m_NextId = 0;
 
 	NodeRect::NodeRect(MainWindow* parent, const NPoint& pos, const NSize& size)

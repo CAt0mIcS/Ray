@@ -14,6 +14,7 @@ namespace NPE
 {
 	class MainWindow : public BaseWindow<MainWindow>
 	{
+		friend class Renderer2D;
 	public:
 		MainWindow(unsigned short width, unsigned short height, PCWSTR name);
 

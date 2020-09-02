@@ -35,12 +35,12 @@ namespace NPE
 			PAINTSTRUCT ps;
 			HDC hDC = BeginPaint(hWnd, &ps);
 
-			if (m_Size.width < 5000 && m_Size.width > -5000)
-			{
+			//if (m_Size.width < 5000 && m_Size.width > -5000)
+			//{
 				FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(35, 38, 40)));
-				RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, 100, 100);
-				UpdateWindow(hWndParent);
-			}
+				//RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, 100, 100);
+				//UpdateWindow(hWndParent);
+			//}
 
 			EndPaint(hWnd, &ps);
 			ReleaseDC(hWnd, hDC);

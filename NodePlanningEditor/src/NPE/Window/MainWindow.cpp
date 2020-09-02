@@ -13,11 +13,11 @@ namespace NPE
 		//TODO: should be done in manifest
 		SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE);
 
-		m_Renderer2D.SetHWNDAndContruct(m_hWnd);
+		m_Renderer2D.Init(m_hWnd);
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
 		m_Nodes.emplace_back(NodeRect(this, { 10, 10 }, { 100, 100 }));
-		//m_Controls.emplace_back(Node(this, { 10, 10 }, { 100, 100 }));
+		//m_Controls.emplace_back(Node(this, { 10, 120 }, { 100, 100 }));
 	}
 
 	LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -52,8 +52,6 @@ namespace NPE
 		}
 		case WM_LBUTTONDOWN:
 		{
-			InvalidateRect(m_hWnd, NULL, TRUE);
-			UpdateWindow(m_hWnd);
 			Mouse.OnLButtonDown();
 			return 0;
 		}
@@ -74,7 +72,6 @@ namespace NPE
 		}
 		case WM_MBUTTONDOWN:
 		{
-			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.OnMButtonDown();
 			return 0;
 		}
@@ -111,7 +108,7 @@ namespace NPE
 
 	void MainWindow::Paint(HDC hDC, RECT* rcDirty, BOOL bErase)
 	{
-		//FillRect(hDC, rcDirty, CreateSolidBrush(RGB(35, 38, 40)));
+		FillRect(hDC, rcDirty, CreateSolidBrush(RGB(35, 38, 40)));
 		m_Renderer2D.Draw();
 		for (auto& n : m_Nodes)
 			m_Renderer2D.DrawNode(n);

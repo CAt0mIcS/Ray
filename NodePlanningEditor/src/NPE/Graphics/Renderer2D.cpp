@@ -13,7 +13,7 @@ namespace NPE
 		InitGraphicsResources();
 	}
 
-	void Renderer2D::SetHWNDAndContruct(HWND hWnd)
+	void Renderer2D::Init(HWND hWnd)
 	{
 		m_hWnd = hWnd;
 		InitDPIScale();
@@ -23,30 +23,20 @@ namespace NPE
 	void Renderer2D::Draw()
 	{
 		m_pRenderTarget->BeginDraw();
-		m_pRenderTarget->Clear(D2D1::ColorF(35.0f / 255.0f, 38.0f / 255.0f, 40.0f / 255.0f));
-		if (FAILED(m_pRenderTarget->EndDraw())) throw std::exception("Failed to draw RoundedRect");
+		m_pRenderTarget->Clear(D2D1::ColorF(35.0f / 255, 38.0f / 255, 40.0f / 255));
+		if (FAILED(m_pRenderTarget->EndDraw())) throw std::exception("Failed to draw node");
 	}
 
-	void Renderer2D::DrawNode(const NodeRect& rc)
+	void Renderer2D::DrawNode(const NodeRect& node)
 	{
 		m_pRenderTarget->BeginDraw();
-		//D2D1_ROUNDED_RECT rect = rc.GetRect();
-		//rect.radiusX = PixelsToDIPs(rect.radiusX);
-		//rect.radiusY = PixelsToDIPs(rect.radiusY);
+		
+		m_pBrush->SetColor(D2D1::ColorF(0.058f, 0.066f, 0.074f));
+		m_pRenderTarget->FillRoundedRectangle(node.GetRect(), m_pBrush.Get());
 
-		//rect.rect.left = PixelsToDIPs(rect.rect.left);
-		//rect.rect.top = PixelsToDIPs(rect.rect.top);
-		//rect.rect.right = PixelsToDIPs(rect.rect.right);
-		//rect.rect.bottom = PixelsToDIPs(rect.rect.bottom);
-
-		m_pRenderTarget->DrawRoundedRectangle(rc.GetRect(), m_pBrush.Get());
-		//m_pRenderTarget->FillRoundedRectangle(rc.GetRect(), m_pBrush.Get());
-		if (FAILED(m_pRenderTarget->EndDraw())) throw std::exception("Failed to draw RoundedRect");
-	}
-
-	float Renderer2D::PixelsToDIPs(const float pixel)
-	{
-		return pixel / m_DPIScale;
+		m_pBrush->SetColor(D2D1::ColorF(0, 0, 0));
+		m_pRenderTarget->DrawRoundedRectangle(node.GetRect(), m_pBrush.Get(), 1.0f);
+		if (FAILED(m_pRenderTarget->EndDraw())) throw std::exception("Failed to draw node");
 	}
 
 	void Renderer2D::InitGraphicsResources()
