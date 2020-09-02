@@ -15,9 +15,10 @@ namespace NPE
 		wc.lpszClassName = L"NODE";
 		wc.style = CS_OWNDC;
 		wc.hbrBackground = CreateSolidBrush(RGB(15, 17, 19));
+		
 		RegisterClass(&wc);
 
-		m_hWnd = CreateWindowEx(0, L"NODE", L"", WS_CHILD | WS_VISIBLE, pos.x, pos.y, size.width, size.height, parent->GetNativeWindow(), (HMENU)m_Id, 0, this);
+		m_hWnd = CreateWindowEx(0, L"NODE", L"", WS_CHILD | WS_VISIBLE, pos.x, pos.y, size.width, size.height, parent->GetNativeWindow(), (HMENU)m_Id, NULL, this);
 
 		ShowWindow(m_hWnd, SW_SHOWDEFAULT);
 	}
@@ -28,11 +29,24 @@ namespace NPE
 		{
 		case WM_PAINT:
 		{
+			InvalidateRect(hWnd, NULL, TRUE);
 			PAINTSTRUCT ps;
 			HDC hDC = BeginPaint(hWnd, &ps);
 			//FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(16, 17, 19)));
+
+			RECT rc;
+			GetWindowRect(hWnd, &rc);
+			RoundRect(hDC, 0, 0, rc.right - rc.left, rc.bottom - rc.top, 100, 100);
+
 			EndPaint(hWnd, &ps);
 			ReleaseDC(hWnd, hDC);
+			return 0;
+		}
+		case WM_SIZE:
+		{
+			POINTS pt = MAKEPOINTS(lParam);
+			m_Size.width = pt.x;
+			m_Size.height = pt.y;
 			return 0;
 		}
 		}

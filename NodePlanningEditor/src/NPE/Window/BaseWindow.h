@@ -13,7 +13,7 @@ namespace NPE
     public:
         static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         {
-            DERIVED_TYPE* pThis = NULL;
+            DERIVED_TYPE* pThis = nullptr;
 
             if (uMsg == WM_NCCREATE)
             {
