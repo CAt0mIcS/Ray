@@ -16,10 +16,10 @@ namespace NPE
 		int Run();
 
 	private:
-		void OnMessage();
+		void OnEvent(const Event& e);
 
-		void MoveNodes(const Mouse::Event& e);
-		void Zoom(const Mouse::Event& e);
+		void MoveNodes(const Event& e);
+		void Zoom(const Event& e);
 
 	private:
 		MainWindow m_Window;

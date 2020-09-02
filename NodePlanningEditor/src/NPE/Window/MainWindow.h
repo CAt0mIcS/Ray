@@ -3,10 +3,8 @@
 #include "pch.h"
 #include "BaseWindow.h"
 
-#include "NPE/Handlers/Mouse.h"
-#include "NPE/Handlers/Keyboard.h"
-
 #include "NPE/Controls/Node.h"
+#include "NPE/Handlers/Event.h"
 
 namespace NPE
 {
@@ -14,10 +12,9 @@ namespace NPE
 	{
 		friend class Renderer2D;
 	public:
-		MainWindow(unsigned short width, unsigned short height, PCWSTR name);
+		MainWindow(unsigned short width, unsigned short height, PCWSTR name, std::function<void(const Event&)> eventFn);
 
-		template<typename F>
-		int ProcessMessage(F&& func);
+		int ProcessMessage();
 
 		void Update(const RECT* rc = nullptr, BOOL bErase = FALSE);
 
@@ -25,29 +22,21 @@ namespace NPE
 		std::vector<Node>& GetControls() { return m_Controls; }
 	
 	public:
-		Mouse Mouse;
-		Keyboard Keyboard;
 
 	private:
 		void Paint(HDC hDC, RECT* rcDirty, BOOL bErase);
 
+		struct WindowData
+		{
+			//unsigned int x, y, width, height;
+			NPoint pos;
+			NSize size;
+			std::function<void(const Event& e)> EventCallback;
+		};
+		WindowData m_Data;
+
 		std::vector<Node> m_Controls;
 	};
-
-
-	template<typename F>
-	inline int MainWindow::ProcessMessage(F&& func)
-	{
-		MSG msg{};
-		while (GetMessage(&msg, NULL, 0, 0))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			func();
-
-		}
-		return (int)msg.wParam;
-	}
 
 }
 

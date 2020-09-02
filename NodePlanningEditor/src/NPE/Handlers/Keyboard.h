@@ -7,76 +7,23 @@ namespace NPE
 {
 	class Keyboard
 	{
-		friend class MainWindow;
 	public:
-		class Event
-		{
-		public:
-			enum class Type
-			{
-				INVALID = 0,
-				KeyUp, KeyDown
-			};
+		Keyboard() = delete;
 
-			Event()
-				: m_Type(Type::INVALID), m_Code(0u) {}
+		static void SetKeyState(const unsigned char keycode, const unsigned char state) { m_KeyStates[keycode] = state; }
+		static bool IsKeyPressed(const unsigned char keycode) { return m_KeyStates[keycode]; }
 
-			Event(const Type type, unsigned char code)
-				: m_Type(type), m_Code(code) {}
+		static void ClearStates() { m_KeyStates = std::bitset<m_nKeys>(); }
 
-			unsigned char GetCode() const { return m_Code; }
-			bool IsValid() const { return m_Type != Type::INVALID; }
-			bool IsPress() const { return m_Type == Type::KeyDown; }
-			bool IsRelease() const { return m_Type == Type::KeyUp; }
-
-			Type GetType() const { return m_Type; }
-
-		private:
-			unsigned char m_Code;
-			Type m_Type;
-
-		};
-
-	public:
-		Keyboard();
-
-		void ClearStates() { m_KeyStates = std::bitset<m_nKeys>(); }
-
-		Event GetEvent();
-
-		bool IsKeyPressed(unsigned char keycode) const { return m_KeyStates[keycode]; }
-
-		bool IsAutorepeatEnabled() const { return m_AutorepeatEnabled; }
-		void EnableAutorepeat() { m_AutorepeatEnabled = true; }
-		void DisableAutorepeat() { m_AutorepeatEnabled = false; }
+		static constexpr unsigned char GetNKeys() { return m_nKeys; }
 
 	private:
-		void OnKeyPressed(unsigned char keycode);
-		void OnKeyReleased(unsigned char keycode);
-		void OnChar(unsigned char character);
-
-		template<typename T>
-		void TrimBuffer(std::queue<T>& buff);
-
-	private:
-		static constexpr unsigned int m_nKeys = 256;
-		static constexpr unsigned int m_BufferSize = 32;
-		bool m_AutorepeatEnabled;
-		std::bitset<m_nKeys> m_KeyStates;
-		std::queue<Event> m_KeyEventQueue;
-		std::queue<char> m_CharEventQueue;
+		static constexpr unsigned char m_nKeys = (char)256u;
+		static std::bitset<m_nKeys> m_KeyStates;
 
 	};
 
-	template<typename T>
-	inline void Keyboard::TrimBuffer(std::queue<T>& buff)
-	{
-		while (buff.size() > m_BufferSize)
-		{
-			buff.pop();
-		}
-	}
-
+	inline std::bitset<Keyboard::GetNKeys()> Keyboard::m_KeyStates;
 }
 
 

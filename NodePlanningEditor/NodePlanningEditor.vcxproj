@@ -157,8 +157,6 @@
   <ItemGroup>
     <ClCompile Include="src\NPE\Controls\Control.cpp" />
     <ClCompile Include="src\NPE\Controls\Node.cpp" />
-    <ClCompile Include="src\NPE\Handlers\Mouse.cpp" />
-    <ClCompile Include="src\NPE\Handlers\Keyboard.cpp" />
     <ClCompile Include="src\NPE\Window\MainWindow.cpp" />
     <ClCompile Include="src\NPE\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -166,8 +164,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\NPE\Controls\Node.h" />
-    <ClInclude Include="src\NPE\Handlers\Mouse.h" />
+    <ClInclude Include="src\NPE\Handlers\ApplicationEvent.h" />
+    <ClInclude Include="src\NPE\Handlers\Event.h" />
     <ClInclude Include="src\NPE\Handlers\Keyboard.h" />
+    <ClInclude Include="src\NPE\Handlers\KeyboardEvent.h" />
+    <ClInclude Include="src\NPE\Handlers\Mouse.h" />
+    <ClInclude Include="src\NPE\Handlers\MouseEvent.h" />
     <ClInclude Include="src\NPE\Util\Props.h" />
     <ClInclude Include="src\NPE\Window\MainWindow.h" />
     <ClInclude Include="src\NPE\Application.h" />

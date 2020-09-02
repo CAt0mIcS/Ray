@@ -2,26 +2,45 @@
 
 #include "NPE/Controls/Node.h"
 
+#include "NPE/Handlers/KeyboardEvent.h"
+#include "NPE/Handlers/MouseEvent.h"
+#include "NPE/Handlers/ApplicationEvent.h"
+
 
 namespace NPE
 {
-	MainWindow::MainWindow(unsigned short width, unsigned short height, PCWSTR name)
+	MainWindow::MainWindow(unsigned short width, unsigned short height, PCWSTR name, std::function<void(const Event&)> eventFn)
+		: m_Data{ { 0, 0 }, { width, height }, eventFn }
 	{
-		if (!CreateNativeWindow(name, WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, width, height))
+		if (!CreateNativeWindow(name, WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, m_Data.size.width, m_Data.size.height))
 			return;
 
-		//TODO: should be done in manifest
-		//SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE);
+		RECT winRec;
+		GetWindowRect(m_hWnd, &winRec);
+		m_Data.pos.x = winRec.left;
+		m_Data.pos.y = winRec.top;
 
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
 		m_Controls.emplace_back(Node(this, { 10, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 250, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 500, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 750, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 1000, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 1250, 400 }, { 200, 200 }));
+		//m_Controls.emplace_back(Node(this, { 250, 400 }, { 200, 200 }));
+		//m_Controls.emplace_back(Node(this, { 500, 400 }, { 200, 200 }));
+		//m_Controls.emplace_back(Node(this, { 750, 400 }, { 200, 200 }));
+		//m_Controls.emplace_back(Node(this, { 1000, 400 }, { 200, 200 }));
+		//m_Controls.emplace_back(Node(this, { 1250, 400 }, { 200, 200 }));
 		//m_Controls.emplace_back(Node(this, { 1500, 400 }, { 200, 200 }));
+	}
+
+	int MainWindow::ProcessMessage()
+	{
+		MSG msg{};
+		while (GetMessage(&msg, NULL, 0, 0))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+
+		}
+		return (int)msg.wParam;
 	}
 
 	void MainWindow::Update(const RECT* rc, BOOL bErase)
@@ -41,8 +60,8 @@ namespace NPE
 		}
 		case WM_KILLFOCUS:
 		{
-			Mouse.ClearStates();
-			Keyboard.ClearStates();
+			Mouse::ClearStates();
+			Keyboard::ClearStates();
 			return 0;
 		}
 		case WM_PAINT:
@@ -57,59 +76,100 @@ namespace NPE
 		case WM_MOUSEMOVE:
 		{
 			POINTS pt = MAKEPOINTS(lParam);
-			Mouse.OnMouseMove(pt.x, pt.y);
+			MouseMoveEvent e({ pt.x, pt.y });
+			m_Data.EventCallback(e);
 			return 0;
 		}
 		case WM_LBUTTONDOWN:
 		{
-			Mouse.OnLButtonDown();
+			MouseButtonPressedEvent e(Button::LeftMouseButton);
+			m_Data.EventCallback(e);
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
-			Mouse.OnLButtonUp();
+			MouseButtonReleasedEvent e(Button::LeftMouseButton);
+			m_Data.EventCallback(e);
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
-			Mouse.OnRButtonDown();
+			MouseButtonPressedEvent e(Button::RightMouseButton);
+			m_Data.EventCallback(e);
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
-			Mouse.OnRButtonUp();
+			MouseButtonReleasedEvent e(Button::RightMouseButton);
+			m_Data.EventCallback(e);
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
-			Mouse.OnMButtonDown();
+			MouseButtonPressedEvent e(Button::MiddleMouseButton);
+			m_Data.EventCallback(e);
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
-			Mouse.OnMButtonUp();
+			MouseButtonReleasedEvent e(Button::MiddleMouseButton);
+			m_Data.EventCallback(e);
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
 		{
 			const auto delta = GET_WHEEL_DELTA_WPARAM(wParam);
-			Mouse.OnMouseWheelDelta(delta);
+			if (delta < 0)
+			{
+				MouseWheelDownEvent e(delta);
+				m_Data.EventCallback(e);
+			}
+			else
+			{ 
+				MouseWheelUpEvent e(delta);
+				m_Data.EventCallback(e);
+			}
 			return 0;
 		}
 		case WM_KEYDOWN:
 		{
-			Keyboard.OnKeyPressed((unsigned char)wParam);
+			KeyPressedEvent e((unsigned char)wParam);
+			m_Data.EventCallback(e);
 			return 0;
 		}
 		case WM_KEYUP:
 		{
-			Keyboard.OnKeyReleased((unsigned char)wParam);
+			KeyReleasedEvent e((unsigned char)wParam);
+			m_Data.EventCallback(e);
 			return 0;
 		}
 		case WM_CHAR:
 		{
-			Keyboard.OnChar((unsigned char)wParam);
+			//Keyboard::OnChar((unsigned char)wParam);
 			return 0;
+		}
+		case WM_SIZE:
+		{
+			m_Data.size.width = LOWORD(lParam);
+			m_Data.size.height = HIWORD(lParam);
+			AppResizeEvent e(m_Data.size);
+			m_Data.EventCallback(e);
+			return 0;
+		}
+		case WM_MOVE:
+		{
+			m_Data.pos.x = LOWORD(lParam);
+			m_Data.pos.y = HIWORD(lParam);
+			AppMoveEvent e(m_Data.pos);
+			m_Data.EventCallback(e);
+			return 0;
+		}
+		case WM_CLOSE:
+		{
+			//AppCloseEvent e;
+			//m_Data.EventCallback(e);
+			//return 0;
+			break;
 		}
 		}
 

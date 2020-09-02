@@ -1,58 +1,48 @@
 #include "pch.h"
+#include "pch.h"
 #include "Application.h"
 
 #include "Window/MainWindow.h"
+
+#include "NPE/Handlers/Mouse.h"
+#include "NPE/Handlers/Keyboard.h"
 
 
 namespace NPE
 {
 	Application::Application()
-		: m_Window(800, 600, L"NodePlanningEditor"), m_Zoom(0), m_MousePos{ 0, 0 }
+		: m_Window(800, 600, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_Zoom(0), m_MousePos{ 0, 0 }
 	{
 	}
 
 	int Application::Run()
 	{
-		return m_Window.ProcessMessage([this]() { OnMessage(); });
+		return m_Window.ProcessMessage();
 	}
 	
-	void Application::OnMessage()
+	void Application::OnEvent(const Event& e)
 	{
-		try
-		{
-			const auto e = m_Window.Mouse.GetEvent();
-			if (e.IsValid())
-			{
-				MoveNodes(e);
-				Zoom(e);
-			}
-		}
-		catch (...)
-		{
-
-		}
-		
+		MoveNodes(e);
 	}
 
-	void Application::MoveNodes(const Mouse::Event& e)
+	void Application::MoveNodes(const Event& e)
 	{
-		if (e.GetType() == Mouse::Event::Type::MWheelPress)
+		if (e.GetType() == EventType::MouseButtonPressedEvent && Mouse::IsMiddlePressed())
 		{
-			m_MousePos = e.GetPos();
+			m_MousePos = Mouse::GetPos();
 		}
 
-		else if (e.GetType() == Mouse::Event::Type::Move && e.IsMiddlePressed())
+		else if (e.GetType() == EventType::MouseMoveEvent && Mouse::IsMiddlePressed())
 		{
-
 			NPoint diff{};
-			diff.x = e.GetPos().x - m_MousePos.x;
-			diff.y = e.GetPos().y - m_MousePos.y;
+			diff.x = Mouse::GetPos().x - m_MousePos.x;
+			diff.y = Mouse::GetPos().y - m_MousePos.y;
 
 			int mBuff = 10;
 			if (diff.x > mBuff || diff.y > mBuff || diff.x < -mBuff || diff.y < -mBuff)
 			{
-				m_MousePos.x = e.GetPos().x;
-				m_MousePos.y = e.GetPos().y;
+				m_MousePos.x = Mouse::GetPos().x;
+				m_MousePos.y = Mouse::GetPos().y;
 
 				for (auto& control : m_Window.GetControls())
 				{
@@ -64,11 +54,11 @@ namespace NPE
 		}
 	}
 
-	void Application::Zoom(const Mouse::Event& e)
+	void Application::Zoom(const Event& e)
 	{
-		NPoint screenCenter = e.GetPos();
+		NPoint screenCenter = Mouse::GetPos();
 
-		if (e.GetType() == Mouse::Event::Type::WheelUp)
+		if (e.GetType() == EventType::MouseWheelUpEvent)
 		{
 			++m_Zoom;
 			if (m_Zoom >= m_ZoomBoundary)
@@ -93,7 +83,7 @@ namespace NPE
 				UpdateWindow(control.GetNativeWindow());
 			}
 		}
-		else if (e.GetType() == Mouse::Event::Type::WheelDown)
+		else if (e.GetType() == EventType::MouseWheelDownEvent)
 		{
 			--m_Zoom;
 			if (m_Zoom <= -m_ZoomBoundary)
