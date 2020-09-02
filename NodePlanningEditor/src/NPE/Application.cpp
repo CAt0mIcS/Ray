@@ -18,13 +18,20 @@ namespace NPE
 	
 	void Application::OnMessage()
 	{
-		const auto e = m_Window.Mouse.GetEvent();
-		if (e.IsValid())
+		try
 		{
-			MoveNodes(e);
-			Zoom(e);
+			const auto e = m_Window.Mouse.GetEvent();
+			if (e.IsValid())
+			{
+				MoveNodes(e);
+				Zoom(e);
+			}
 		}
-		auto* pE = &e;
+		catch (...)
+		{
+
+		}
+		
 	}
 
 	void Application::MoveNodes(const Mouse::Event& e)
@@ -60,14 +67,13 @@ namespace NPE
 	void Application::Zoom(const Mouse::Event& e)
 	{
 		NPoint screenCenter = e.GetPos();
-		constexpr int zoomBoundary = 20;
 
 		if (e.GetType() == Mouse::Event::Type::WheelUp)
 		{
 			++m_Zoom;
-			if (m_Zoom >= zoomBoundary)
+			if (m_Zoom >= m_ZoomBoundary)
 			{
-				m_Zoom = zoomBoundary;
+				m_Zoom = m_ZoomBoundary;
 				return;
 			}
 
@@ -90,9 +96,9 @@ namespace NPE
 		else if (e.GetType() == Mouse::Event::Type::WheelDown)
 		{
 			--m_Zoom;
-			if (m_Zoom <= -zoomBoundary)
+			if (m_Zoom <= -m_ZoomBoundary)
 			{
-				m_Zoom = -zoomBoundary;
+				m_Zoom = -m_ZoomBoundary;
 				return;
 			}
 

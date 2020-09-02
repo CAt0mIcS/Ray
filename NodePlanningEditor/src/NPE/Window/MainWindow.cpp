@@ -20,7 +20,7 @@ namespace NPE
 		m_Controls.emplace_back(Node(this, { 500, 400 }, { 200, 200 }));
 		m_Controls.emplace_back(Node(this, { 750, 400 }, { 200, 200 }));
 		m_Controls.emplace_back(Node(this, { 1000, 400 }, { 200, 200 }));
-		//m_Controls.emplace_back(Node(this, { 1250, 400 }, { 200, 200 }));
+		m_Controls.emplace_back(Node(this, { 1250, 400 }, { 200, 200 }));
 		//m_Controls.emplace_back(Node(this, { 1500, 400 }, { 200, 200 }));
 	}
 

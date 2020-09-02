@@ -29,6 +29,7 @@ namespace NPE
 
 		static constexpr float m_ZoomFactor = 0.05f;
 		static constexpr float m_ResizeFactor = 1.05f;
+		static constexpr unsigned char m_ZoomBoundary = 20;
 	};
 }
 
