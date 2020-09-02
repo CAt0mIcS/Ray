@@ -40,7 +40,7 @@ namespace NPE
 			diff.x = e.GetPos().x - m_MousePos.x;
 			diff.y = e.GetPos().y - m_MousePos.y;
 
-			int mBuff = 5;
+			int mBuff = 10;
 			if (diff.x > mBuff || diff.y > mBuff || diff.x < -mBuff || diff.y < -mBuff)
 			{
 				m_MousePos.x = e.GetPos().x;
@@ -48,10 +48,10 @@ namespace NPE
 
 				for (auto& control : m_Window.GetControls())
 				{
-					if (control.GetType() == Control::Type::Node)
-					{
+					//if (control.GetType() == Control::Type::Node)
+					//{
 						control.MoveBy(diff);
-					}
+					//}
 				}
 			}
 		}
