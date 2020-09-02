@@ -8,8 +8,6 @@
 
 #include "NPE/Controls/Node.h"
 
-#include "NPE/Graphics/Renderer2D.h"
-
 namespace NPE
 {
 	class MainWindow : public BaseWindow<MainWindow>
@@ -21,20 +19,19 @@ namespace NPE
 		template<typename F>
 		int ProcessMessage(F&& func);
 
-		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		std::vector<NodeRect>& GetControls() { return m_Nodes; }
-		Renderer2D& Get2DRenderer() { return m_Renderer2D; }
+		void Update(const RECT* rc = nullptr, BOOL bErase = FALSE);
 
+		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		std::vector<Node>& GetControls() { return m_Controls; }
+	
 	public:
 		Mouse Mouse;
 		Keyboard Keyboard;
 
 	private:
 		void Paint(HDC hDC, RECT* rcDirty, BOOL bErase);
-		Renderer2D m_Renderer2D;
-		std::vector<NodeRect> m_Nodes;
 
-		//std::vector<Node> m_Controls;
+		std::vector<Node> m_Controls;
 	};
 
 

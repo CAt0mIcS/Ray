@@ -14,7 +14,7 @@ namespace NPE
 		wc.lpfnWndProc = HandleMessageSetup;
 		wc.hInstance = GetModuleHandle(NULL);
 		wc.lpszClassName = L"NODE";
-		wc.style = CS_OWNDC;
+		wc.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
 		//wc.hbrBackground = CreateSolidBrush(RGB(15, 17, 19));
 
 		RegisterClass(&wc);
@@ -30,17 +30,27 @@ namespace NPE
 	{
 		switch (uMsg)
 		{
+		case WM_CREATE:
+		{
+			POINTS pt = MAKEPOINTS(lParam);
+			m_Size.width = pt.x;
+			m_Size.height = pt.y;
+			return 0;
+		}
 		case WM_PAINT:
 		{
 			PAINTSTRUCT ps;
 			HDC hDC = BeginPaint(hWnd, &ps);
+			FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(35, 38, 40)));
 
-			//if (m_Size.width < 5000 && m_Size.width > -5000)
-			//{
-				FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(35, 38, 40)));
-				//RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, 100, 100);
-				//UpdateWindow(hWndParent);
-			//}
+			if (m_Size.width < 5000 && m_Size.width > -5000)
+			{
+				SelectObject(hDC, GetStockObject(DC_BRUSH));
+				SetDCBrushColor(hDC, RGB(15, 17, 19));
+				
+				RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, 100, 100);
+				UpdateWindow(hWndParent);
+			}
 
 			EndPaint(hWnd, &ps);
 			ReleaseDC(hWnd, hDC);

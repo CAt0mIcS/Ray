@@ -155,8 +155,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\NPE\Graphics\Renderer2D.cpp" />
-    <ClCompile Include="src\NPE\Controls\NodeRect.cpp" />
     <ClCompile Include="src\NPE\Controls\Control.cpp" />
     <ClCompile Include="src\NPE\Controls\Node.cpp" />
     <ClCompile Include="src\NPE\Handlers\Mouse.cpp" />
@@ -167,8 +165,6 @@
     <ClCompile Include="src\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\NPE\Graphics\Renderer2D.h" />
-    <ClInclude Include="src\NPE\Controls\NodeRect.h" />
     <ClInclude Include="src\NPE\Controls\Node.h" />
     <ClInclude Include="src\NPE\Handlers\Mouse.h" />
     <ClInclude Include="src\NPE\Handlers\Keyboard.h" />
