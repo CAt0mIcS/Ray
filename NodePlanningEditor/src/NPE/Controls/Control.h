@@ -5,6 +5,8 @@
 
 namespace NPE
 {
+	class MainWindow;
+
 	class Control
 	{
 	public:
@@ -27,13 +29,16 @@ namespace NPE
 		NPoint GetPos() const { return m_Pos; }
 		NSize GetSize() const { return m_Size; }
 
+		bool IsInWindow() const;
+
 		HWND GetNativeWindow() const { return m_hWnd; }
 
 	protected:
-		Control(const Type type, const NPoint& pos, const NSize& size);
+		Control(MainWindow* parent, const Type type, const NPoint& pos, const NSize& size);
 
 	protected:
 		HWND m_hWnd;
+		HWND m_hWndParent;
 		NPoint m_Pos;
 		NSize m_Size;
 		unsigned short m_Id;

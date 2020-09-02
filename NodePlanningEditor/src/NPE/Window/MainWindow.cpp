@@ -16,6 +16,7 @@ namespace NPE
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
 		m_Controls.emplace_back(Node(this, { 10, 10 }, { 200, 200 }));
+		m_Controls.emplace_back(Node(this, { 400, 400 }, { 200, 200 }));
 	}
 
 	void MainWindow::Update(const RECT* rc, BOOL bErase)

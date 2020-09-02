@@ -49,9 +49,10 @@ namespace NPE
 				for (auto& control : m_Window.GetControls())
 				{
 					control.MoveBy(diff);
+					InvalidateRgn(control.GetNativeWindow(), NULL, FALSE);
+					SendMessage(control.GetNativeWindow(), WM_PAINT, control.GetSize().width, control.GetSize().height);
 				}
 			}
-			//m_Window.Update();
 		}
 	}
 
@@ -82,8 +83,8 @@ namespace NPE
 				newSize.height = size.height * m_ResizeFactor;
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
+				UpdateWindow(control.GetNativeWindow());
 			}
-			//m_Window.Update();
 		}
 		else if (e.GetType() == Mouse::Event::Type::WheelDown)
 		{
@@ -107,8 +108,8 @@ namespace NPE
 				newSize.height = size.height / m_ResizeFactor;
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
+				UpdateWindow(control.GetNativeWindow());
 			}
-			//m_Window.Update();
 		}
 	}
 }

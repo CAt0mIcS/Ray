@@ -7,7 +7,7 @@ HWND hWndParent;
 namespace NPE
 {
 	Node::Node(MainWindow* parent, const NPoint pos, const NSize size)
-		: Control(Type::Node, pos, size)
+		: Control(parent, Type::Node, pos, size)
 	{
 
 		WNDCLASS wc{};
@@ -19,8 +19,7 @@ namespace NPE
 
 		RegisterClass(&wc);
 
-		hWndParent = parent->GetNativeWindow();
-		m_hWnd = CreateWindowEx(0, L"NODE", L"", WS_CHILD | WS_VISIBLE, pos.x, pos.y, size.width, size.height, parent->GetNativeWindow(), (HMENU)m_Id, NULL, this);
+		m_hWnd = CreateWindowEx(0, L"NODE", L"", WS_CHILD | WS_VISIBLE, pos.x, pos.y, size.width, size.height, m_hWndParent, (HMENU)m_Id, NULL, this);
 
 		ShowWindow(m_hWnd, SW_SHOWDEFAULT);
 		UpdateWindow(m_hWnd);
@@ -49,11 +48,20 @@ namespace NPE
 				SetDCBrushColor(hDC, RGB(15, 17, 19));
 				
 				RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, 100, 100);
-				UpdateWindow(hWndParent);
+				UpdateWindow(m_hWnd);
+				//UpdateWindow(hWndParent);
+			}
+			else if (wParam != 0 && lParam != 0)
+			{
+				SelectObject(hDC, GetStockObject(DC_BRUSH));
+				SetDCBrushColor(hDC, RGB(15, 17, 19));
+
+				RoundRect(hDC, 0, 0, wParam, lParam, 100, 100);
+				UpdateWindow(m_hWnd);
+				//UpdateWindow(hWndParent);
 			}
 
 			EndPaint(hWnd, &ps);
-			ReleaseDC(hWnd, hDC);
 			return 0;
 		}
 		case WM_SIZE:
