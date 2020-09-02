@@ -9,6 +9,11 @@
 #include <windowsx.h>
 
 
+#pragma comment(lib, "d2d1.lib")
+#include <d2d1.h>
+#include <wrl.h>
+
+
 #include <vector>
 #include <string>
 #include <queue>

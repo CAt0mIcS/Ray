@@ -8,7 +8,7 @@
 
 #include "NPE/Controls/Node.h"
 
-#include "NPE/Controls/NodeEllipse.h"
+#include "NPE/Graphics/Renderer2D.h"
 
 namespace NPE
 {
@@ -21,7 +21,8 @@ namespace NPE
 		int ProcessMessage(F&& func);
 
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		std::vector<NodeEllipse>& GetControls() { return m_Controls; }
+		std::vector<NodeRect>& GetControls() { return m_Nodes; }
+		Renderer2D& Get2DRenderer() { return m_Renderer2D; }
 
 	public:
 		Mouse Mouse;
@@ -29,8 +30,9 @@ namespace NPE
 
 	private:
 		void Paint(HDC hDC, RECT* rcDirty, BOOL bErase);
+		Renderer2D m_Renderer2D;
+		std::vector<NodeRect> m_Nodes;
 
-		std::vector<NodeEllipse> m_Controls;
 	};
 
 

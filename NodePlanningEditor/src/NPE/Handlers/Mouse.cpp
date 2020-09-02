@@ -91,7 +91,7 @@ namespace NPE
 
 	}
 
-	void Mouse::OnMouseMove(int x, int y)
+	void Mouse::OnMouseMove(float x, float y)
 	{
 		m_Pos = NPoint{x, y};
 		m_Queue.push(Event(Event::Type::Move, this));

@@ -6,16 +6,14 @@
 namespace NPE
 {
 	MainWindow::MainWindow(unsigned short width, unsigned short height, PCWSTR name)
-		: m_Controls{}
 	{
 		if (!CreateNativeWindow(name, WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, width, height))
 			return;
 
-		ShowWindow(m_hWnd, SW_MAXIMIZE);
+		m_Renderer2D.SetHWNDAndContruct(m_hWnd);
 
-		m_Controls.reserve(1000);
-		m_Controls.emplace_back(NodeEllipse(this, { 150, 540 }, { 200, 270 }));
-		m_Controls.emplace_back(NodeEllipse(this, { 450, 200 }, { 200, 150 }));
+		ShowWindow(m_hWnd, SW_MAXIMIZE);
+		m_Nodes.emplace_back(NodeRect(this, { 10, 10 }, { 200, 200 }));
 	}
 
 	LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -107,11 +105,8 @@ namespace NPE
 
 	void MainWindow::Paint(HDC hDC, RECT* rcDirty, BOOL bErase)
 	{
-		FillRect(hDC, rcDirty, CreateSolidBrush(RGB(35, 38, 40)));
-
-		for (auto& e : m_Controls)
-			e.Draw(hDC);
-
+		//FillRect(hDC, rcDirty, CreateSolidBrush(RGB(35, 38, 40)));
+		m_Renderer2D.Draw();
 	}
 	
 }

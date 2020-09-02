@@ -51,6 +51,7 @@ namespace NPE
 					//if (control.GetType() == Control::Type::Node)
 					//{
 						control.MoveBy(diff);
+						m_Window.Get2DRenderer().DrawNode(control);
 					//}
 				}
 			}

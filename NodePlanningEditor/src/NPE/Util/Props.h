@@ -7,7 +7,7 @@ namespace NPE
 {
 	struct NPoint
 	{
-		int x, y;
+		float x, y;
 
 		//NPoint
 		NPoint operator+(const NPoint& other)
@@ -61,57 +61,57 @@ namespace NPE
 			return *this;
 		}
 		
-		//int
-		NPoint operator+(const int val)
+		//float
+		NPoint operator+(const float val)
 		{
 			return { x + val, y + val };
 
 		}
 			
-		NPoint& operator+=(const int val)
+		NPoint& operator+=(const float val)
 		{
 			x += val; 
 			y += val; 
 			return *this; 
 		}
 			
-		NPoint operator-(const int val)
+		NPoint operator-(const float val)
 		{
 			return { x - val, y - val };
 		}
 			
-		NPoint& operator-=(const int val)
+		NPoint& operator-=(const float val)
 		{
 			x += val; 
 			y += val; 
 			return *this; 
 		}
 
-		NPoint& operator*=(const int val)
+		NPoint& operator*=(const float val)
 		{
 			x *= val;
 			y *= val;
 			return *this;
 		}
 
-		NPoint operator*(const int val)
+		NPoint operator*(const float val)
 		{
 			return { x * val, y * val };
 		}
 
-		NPoint operator/(const int val)
+		NPoint operator/(const float val)
 		{
 			return { x / val, y / val };
 		}
 
-		NPoint& operator/=(const int val)
+		NPoint& operator/=(const float val)
 		{
 			x /= val;
 			y /= val;
 			return *this;
 		}
 
-		NPoint& operator=(const int val)
+		NPoint& operator=(const float val)
 		{
 			x = val;
 			y = val;
@@ -178,7 +178,7 @@ namespace NPE
 
 	struct NSize
 	{
-		int width, height;
+		float width, height;
 
 		//NSize
 		NSize operator+(const NSize& other)
@@ -229,49 +229,49 @@ namespace NPE
 			return *this;
 		}
 
-		//int
-		NSize operator+(const int val)
+		//float
+		NSize operator+(const float val)
 		{
 			return { width + val, height + val };
 		}
 
-		NSize& operator+=(const int val)
+		NSize& operator+=(const float val)
 		{
 			width += val;
 			height += val;
 			return *this;
 		}
 
-		NSize operator-(const int val)
+		NSize operator-(const float val)
 		{
 			return { width - val, height - val };
 		}
 
-		NSize& operator-=(const int val)
+		NSize& operator-=(const float val)
 		{
 			width -= val;
 			height -= val;
 			return *this;
 		}
 
-		NSize& operator*=(const int val)
+		NSize& operator*=(const float val)
 		{
 			width *= val;
 			height *= val;
 			return *this;
 		}
 
-		NSize operator*(const int val)
+		NSize operator*(const float val)
 		{
 			return { width * val, height * val };
 		}
 
-		NSize operator/(const int val)
+		NSize operator/(const float val)
 		{
 			return { width / val, height / val };
 		}
 
-		NSize& operator/=(const int val)
+		NSize& operator/=(const float val)
 		{
 			width /= val;
 			height /= val;
