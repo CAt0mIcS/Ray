@@ -17,7 +17,7 @@ namespace NPE
 		MainWindow(unsigned short width, unsigned short height, PCWSTR name);
 
 		template<typename F>
-		static int ProcessMessage(F&& func);
+		int ProcessMessage(F&& func);
 
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		std::vector<Control>& GetControls() { return m_Controls; }
@@ -34,7 +34,7 @@ namespace NPE
 
 
 	template<typename F>
-	int MainWindow::ProcessMessage(F&& func)
+	inline int MainWindow::ProcessMessage(F&& func)
 	{
 		MSG msg{};
 		while (GetMessage(&msg, NULL, 0, 0))

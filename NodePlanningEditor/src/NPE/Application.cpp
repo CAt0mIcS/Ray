@@ -13,7 +13,7 @@ namespace NPE
 
 	int Application::Run()
 	{
-		return MainWindow::ProcessMessage([this]() { OnMessage(); });
+		return m_Window.ProcessMessage([this]() { OnMessage(); });
 	}
 	
 	void Application::OnMessage()

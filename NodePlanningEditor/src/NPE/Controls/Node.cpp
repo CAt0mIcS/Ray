@@ -2,6 +2,7 @@
 
 #include "NPE/Window/MainWindow.h"
 
+HWND hWndParent;
 
 namespace NPE
 {
@@ -14,13 +15,15 @@ namespace NPE
 		wc.hInstance = GetModuleHandle(NULL);
 		wc.lpszClassName = L"NODE";
 		wc.style = CS_OWNDC;
-		wc.hbrBackground = CreateSolidBrush(RGB(15, 17, 19));
-		
+		//wc.hbrBackground = CreateSolidBrush(RGB(15, 17, 19));
+
 		RegisterClass(&wc);
 
+		hWndParent = parent->GetNativeWindow();
 		m_hWnd = CreateWindowEx(0, L"NODE", L"", WS_CHILD | WS_VISIBLE, pos.x, pos.y, size.width, size.height, parent->GetNativeWindow(), (HMENU)m_Id, NULL, this);
 
 		ShowWindow(m_hWnd, SW_SHOWDEFAULT);
+		UpdateWindow(m_hWnd);
 	}
 
 	LRESULT CALLBACK Node::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -29,14 +32,15 @@ namespace NPE
 		{
 		case WM_PAINT:
 		{
-			InvalidateRect(hWnd, NULL, TRUE);
 			PAINTSTRUCT ps;
 			HDC hDC = BeginPaint(hWnd, &ps);
-			//FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(16, 17, 19)));
 
-			RECT rc;
-			GetWindowRect(hWnd, &rc);
-			RoundRect(hDC, 0, 0, rc.right - rc.left, rc.bottom - rc.top, 100, 100);
+			if (m_Size.width < 1000 && m_Size.width > -1000)
+			{
+				FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(35, 38, 40)));
+				RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, 100, 100);
+				UpdateWindow(hWndParent);
+			}
 
 			EndPaint(hWnd, &ps);
 			ReleaseDC(hWnd, hDC);

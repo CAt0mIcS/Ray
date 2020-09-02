@@ -12,6 +12,8 @@ namespace NPE
 			return;
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
+
+		m_Controls.reserve(1000);
 		m_Controls.emplace_back(Node(this, { 150, 540 }, { 200, 270 }));
 		m_Controls.emplace_back(Node(this, { 450, 200 }, { 200, 150 }));
 	}
