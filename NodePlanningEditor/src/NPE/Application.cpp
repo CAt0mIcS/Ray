@@ -24,6 +24,7 @@ namespace NPE
 			MoveNodes(e);
 			Zoom(e);
 		}
+		auto* pE = &e;
 	}
 
 	void Application::MoveNodes(const Mouse::Event& e)
