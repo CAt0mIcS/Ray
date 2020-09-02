@@ -22,10 +22,12 @@ namespace NPE
 
 		const D2D1_ROUNDED_RECT& GetRect() const { return m_RoundedRect; }
 
-		NPoint GetPos() const { return { m_RoundedRect.rect.left, m_RoundedRect.rect.top }; }
-		NSize GetSize() const { return { m_RoundedRect.rect.right - m_RoundedRect.rect.left, m_RoundedRect.rect.bottom - m_RoundedRect.rect.top }; }
+		NPoint GetPos() const { return { (int)m_RoundedRect.rect.left, (int)m_RoundedRect.rect.top }; }
+		NSize GetSize() const { return { (int)(m_RoundedRect.rect.right - m_RoundedRect.rect.left), (int)(m_RoundedRect.rect.bottom - m_RoundedRect.rect.top) }; }
 
 	private:
+		NPoint m_Pos;
+		NSize m_Size;
 		D2D1_ROUNDED_RECT m_RoundedRect;
 		int m_Id;
 

@@ -13,7 +13,8 @@ namespace NPE
 		m_Renderer2D.SetHWNDAndContruct(m_hWnd);
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
-		m_Nodes.emplace_back(NodeRect(this, { 10, 10 }, { 200, 200 }));
+		m_Nodes.emplace_back(NodeRect(this, { 10, 10 }, { 100, 100 }));
+		//m_Controls.emplace_back(Node(this, { 10, 10 }, { 100, 100 }));
 	}
 
 	LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -48,6 +49,8 @@ namespace NPE
 		}
 		case WM_LBUTTONDOWN:
 		{
+			InvalidateRect(m_hWnd, NULL, TRUE);
+			UpdateWindow(m_hWnd);
 			Mouse.OnLButtonDown();
 			return 0;
 		}
@@ -107,6 +110,8 @@ namespace NPE
 	{
 		//FillRect(hDC, rcDirty, CreateSolidBrush(RGB(35, 38, 40)));
 		m_Renderer2D.Draw();
+		for (auto& n : m_Nodes)
+			m_Renderer2D.DrawNode(n);
 	}
 	
 }

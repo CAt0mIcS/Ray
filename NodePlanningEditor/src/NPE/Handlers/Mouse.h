@@ -72,7 +72,7 @@ namespace NPE
 		void OnMouseWheelDown();
 		void OnMouseWheelDelta(int delte);
 
-		void OnMouseMove(float x, float y);
+		void OnMouseMove(int x, int y);
 
 		void TrimBuffer();
 

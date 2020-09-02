@@ -21,6 +21,7 @@ namespace NPE
 	{
 		m_pRenderTarget->BeginDraw();
 		m_pRenderTarget->DrawRoundedRectangle(rc.GetRect(), m_pBrush.Get());
+		//m_pRenderTarget->FillRoundedRectangle(rc.GetRect(), m_pBrush.Get());
 		if (FAILED(m_pRenderTarget->EndDraw())) throw std::exception("Failed to draw RoundedRect");
 	}
 

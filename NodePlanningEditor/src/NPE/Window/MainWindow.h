@@ -33,6 +33,7 @@ namespace NPE
 		Renderer2D m_Renderer2D;
 		std::vector<NodeRect> m_Nodes;
 
+		//std::vector<Node> m_Controls;
 	};
 
 
