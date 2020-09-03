@@ -23,6 +23,7 @@ namespace NPE
 	void Application::OnEvent(const Event& e)
 	{
 		MoveNodes(e);
+		Zoom(e);
 	}
 
 	void Application::MoveNodes(const Event& e)
@@ -47,7 +48,7 @@ namespace NPE
 				for (auto& control : m_Window.GetControls())
 				{
 					control.MoveBy(diff);
-					InvalidateRgn(control.GetNativeWindow(), NULL, FALSE);
+					//InvalidateRgn(control.GetNativeWindow(), NULL, FALSE);
 					SendMessage(control.GetNativeWindow(), WM_PAINT, control.GetSize().width, control.GetSize().height);
 				}
 			}
@@ -80,6 +81,7 @@ namespace NPE
 				newSize.height = size.height * m_ResizeFactor;
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
+				//InvalidateRgn(control.GetNativeWindow(), NULL, FALSE);
 				UpdateWindow(control.GetNativeWindow());
 			}
 		}
@@ -105,6 +107,7 @@ namespace NPE
 				newSize.height = size.height / m_ResizeFactor;
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
+				//InvalidateRgn(control.GetNativeWindow(), NULL, FALSE);
 				UpdateWindow(control.GetNativeWindow());
 			}
 		}
