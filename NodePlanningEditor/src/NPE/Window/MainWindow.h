@@ -1,6 +1,8 @@
 #pragma once
 
-#include "pch.h"
+#include <functional>
+#include <vector>
+
 #include "BaseWindow.h"
 
 #include "NPE/Handlers/Event.h"

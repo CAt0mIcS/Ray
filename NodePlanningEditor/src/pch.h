@@ -5,11 +5,7 @@
 */
 #pragma warning(disable : 4244)
 
-#include <sdkddkver.h>
-
-#define NOMINMAX
-
-#include <Windows.h>
+#include "Win.h"
 #include <windowsx.h>
 
 

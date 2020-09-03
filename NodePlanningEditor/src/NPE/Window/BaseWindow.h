@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pch.h"
+#include "Win.h"
 
 #define NPE_MAINWINDOW_CLASS_NAME L"MAINWINDOWCLASS"
 

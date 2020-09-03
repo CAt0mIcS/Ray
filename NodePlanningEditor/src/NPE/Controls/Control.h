@@ -3,6 +3,7 @@
 #include "NPE/Util/Props.h"
 
 #include <string>
+#include <vector>
 
 /**
 * QUESTION: 
@@ -52,6 +53,8 @@ namespace NPE
 		NSize m_Size;
 		NColor m_Color;
 		std::string m_Text;
+
+		std::vector<Control> m_Children;
 
 	private:
 		Type m_Type;

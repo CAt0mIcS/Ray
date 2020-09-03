@@ -12,7 +12,6 @@ namespace NPE
 		Node(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color, const std::string& text);
 
 	private:
-		Button m_LineBtn;
 	};
 }
 
