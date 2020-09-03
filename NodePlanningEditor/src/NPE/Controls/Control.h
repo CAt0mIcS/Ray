@@ -3,6 +3,9 @@
 #include "NPE/Util/Props.h"
 
 
+#define WM_THREAD_PAINT_UPDATE WM_USER + 0x1
+
+
 namespace NPE
 {
 	class MainWindow;

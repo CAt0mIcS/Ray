@@ -14,7 +14,7 @@ namespace NPE
 		wc.lpfnWndProc = HandleMessageSetup;
 		wc.hInstance = GetModuleHandle(NULL);
 		wc.lpszClassName = L"NODE";
-		wc.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
+		wc.style = CS_HREDRAW | CS_VREDRAW;
 		//wc.hbrBackground = CreateSolidBrush(RGB(15, 17, 19));
 
 		RegisterClass(&wc);
@@ -63,6 +63,13 @@ namespace NPE
 
 			EndPaint(hWnd, &ps);
 			return 0;
+		}
+		case WM_THREAD_PAINT_UPDATE:
+		{
+			InvalidateRect(hWnd, nullptr, TRUE);
+			SendMessage(hWnd, WM_PAINT, wParam, lParam);
+			break;
+
 		}
 		case WM_SIZE:
 		{

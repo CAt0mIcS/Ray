@@ -6,6 +6,7 @@
 #include "NPE/Controls/Node.h"
 #include "NPE/Handlers/Event.h"
 
+
 namespace NPE
 {
 	class MainWindow : public BaseWindow<MainWindow>

@@ -11,7 +11,7 @@
 namespace NPE
 {
 	Application::Application()
-		: m_Window(800, 600, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_Zoom(0), m_MousePos{ 0, 0 }
+		: m_Window(800, 600, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_Zoom(0), m_MousePos{ 0, 0 }, m_Futures{}
 	{
 	}
 
@@ -55,6 +55,11 @@ namespace NPE
 		}
 	}
 
+	static void Calc(Control* control, float zoomFactor, float resizeFactor)
+	{
+
+	}
+
 	void Application::Zoom(const Event& e)
 	{
 		NPoint screenCenter = Mouse::GetPos();
@@ -70,19 +75,22 @@ namespace NPE
 
 			for (auto& control : m_Window.GetControls())
 			{
-				const NPoint& pos = control.GetPos();
-				const NSize& size = control.GetSize();
-				NPoint newPos = screenCenter - pos;
-				NSize newSize;
-				newPos.x *= -m_ZoomFactor;
-				newPos.y *= -m_ZoomFactor;
+				m_Futures.push_back(std::async(std::launch::async, [](Control* control, const float zoomFactor, const float resizeFactor) 
+					{
+						NPoint screenCenter = Mouse::GetPos();
+						const NPoint& pos = control->GetPos();
+						const NSize& size = control->GetSize();
+						NPoint newPos = screenCenter - pos;
+						NSize newSize;
+						newPos.x *= -zoomFactor;
+						newPos.y *= -zoomFactor;
 
-				newSize.width = size.width * m_ResizeFactor;
-				newSize.height = size.height * m_ResizeFactor;
-				control.MoveBy(newPos);
-				control.ResizeTo(newSize);
-				//InvalidateRgn(control.GetNativeWindow(), NULL, FALSE);
-				UpdateWindow(control.GetNativeWindow());
+						newSize.width = size.width * resizeFactor;
+						newSize.height = size.height * resizeFactor;
+						control->MoveBy(newPos);
+						control->ResizeTo(newSize);
+						SendMessage(control->GetNativeWindow(), WM_THREAD_PAINT_UPDATE, control->GetSize().width, control->GetSize().height);
+					}, &control, m_ZoomFactor, m_ResizeFactor));
 			}
 		}
 		else if (e.GetType() == EventType::MouseWheelDownEvent)
@@ -96,19 +104,22 @@ namespace NPE
 
 			for(auto& control : m_Window.GetControls())
 			{
-				const NPoint& pos = control.GetPos();
-				const NSize& size = control.GetSize();
-				NPoint newPos = screenCenter - pos;
-				NSize newSize;
-				newPos.x *= m_ZoomFactor;
-				newPos.y *= m_ZoomFactor;
+				m_Futures.push_back(std::async(std::launch::async, [](Control* control, const float zoomFactor, const float resizeFactor) 
+					{
+						NPoint screenCenter = Mouse::GetPos();
+						const NPoint& pos = control->GetPos();
+						const NSize& size = control->GetSize();
+						NPoint newPos = screenCenter - pos;
+						NSize newSize;
+						newPos.x *= zoomFactor;
+						newPos.y *= zoomFactor;
 
-				newSize.width = size.width / m_ResizeFactor;
-				newSize.height = size.height / m_ResizeFactor;
-				control.MoveBy(newPos);
-				control.ResizeTo(newSize);
-				//InvalidateRgn(control.GetNativeWindow(), NULL, FALSE);
-				UpdateWindow(control.GetNativeWindow());
+						newSize.width = size.width / resizeFactor;
+						newSize.height = size.height / resizeFactor;
+						control->MoveBy(newPos);
+						control->ResizeTo(newSize);
+						SendMessage(control->GetNativeWindow(), WM_THREAD_PAINT_UPDATE, control->GetSize().width, control->GetSize().height);
+					}, &control, m_ZoomFactor, m_ResizeFactor));
 			}
 		}
 	}
