@@ -44,6 +44,8 @@ namespace NPE
 
 		const std::string& GetText() const { return m_Text; }
 
+		virtual ~Control() = default;
+
 	protected:
 		Control(Renderer2D& renderer, const Type type, const NPoint& pos, const NSize& size, const NColor& color, const std::string& text);
 

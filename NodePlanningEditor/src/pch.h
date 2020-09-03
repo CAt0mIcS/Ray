@@ -20,4 +20,5 @@
 #include <bitset>
 #include <optional>
 #include <functional>
+#include <sstream>
 
