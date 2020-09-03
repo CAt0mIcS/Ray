@@ -11,7 +11,7 @@
 namespace NPE
 {
 	Application::Application()
-		: m_Window(800, 600, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_Zoom(0), m_MousePos{ 0, 0 }
+		: m_Window({ 800, 600 }, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_Zoom(0), m_MousePos{ 0, 0 }
 	{
 	}
 
@@ -48,9 +48,6 @@ namespace NPE
 				for (auto& control : m_Window.GetControls())
 				{
 					control.MoveBy(diff);
-					//InvalidateRect(control.GetNativeWindow(), nullptr, FALSE);
-					//SendMessage(control.GetNativeWindow(), WM_PAINT, control.GetSize().width, control.GetSize().height);
-					UpdateWindow(control.GetNativeWindow());
 				}
 			}
 		}
@@ -77,8 +74,6 @@ namespace NPE
 				newSize.height = size.height * m_ResizeFactor;
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
-				//InvalidateRgn(control.GetNativeWindow(), NULL, FALSE);
-				UpdateWindow(control.GetNativeWindow());
 			}
 		}
 		else if (e.GetType() == EventType::MouseWheelDownEvent)
@@ -103,8 +98,6 @@ namespace NPE
 				newSize.height = size.height / m_ResizeFactor;
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
-				//InvalidateRgn(control.GetNativeWindow(), NULL, FALSE);
-				UpdateWindow(control.GetNativeWindow());
 			}
 		}
 	}

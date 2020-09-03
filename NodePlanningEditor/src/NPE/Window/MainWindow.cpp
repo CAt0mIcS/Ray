@@ -1,7 +1,5 @@
 #include "MainWindow.h"
 
-#include "NPE/Controls/Node.h"
-
 #include "NPE/Handlers/KeyboardEvent.h"
 #include "NPE/Handlers/MouseEvent.h"
 #include "NPE/Handlers/ApplicationEvent.h"
@@ -9,32 +7,14 @@
 
 namespace NPE
 {
-	MainWindow::MainWindow(unsigned short width, unsigned short height, PCWSTR name, std::function<void(const Event&)> eventFn)
-		: m_Data{ { 0, 0 }, { width, height }, eventFn }
+	MainWindow::MainWindow(const NSize& size, PCWSTR name, std::function<void(const Event&)> eventFn)
+		: m_EventCallback(eventFn)
 	{
-		if (!CreateNativeWindow(name, WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, m_Data.size.width, m_Data.size.height))
+		if (!CreateNativeWindow(name, WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, size.width, size.height))
 			return;
 
-		RECT winRec;
-		GetWindowRect(m_hWnd, &winRec);
-		m_Data.pos.x = winRec.left;
-		m_Data.pos.y = winRec.top;
-
-
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
-		m_Controls.emplace_back(Node(this, { 10, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 250, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 500, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 750, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 1000, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 1250, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 1500, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 1750, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 2000, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 2250, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 2500, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 2750, 400 }, { 200, 200 }));
-		m_Controls.emplace_back(Node(this, { 3000, 400 }, { 200, 200 }));
+		Renderer2D.Init(m_hWnd, 30);
 	}
 
 	int MainWindow::ProcessMessage()
@@ -47,12 +27,6 @@ namespace NPE
 
 		}
 		return (int)msg.wParam;
-	}
-
-	void MainWindow::Update(const RECT* rc, BOOL bErase)
-	{
-		InvalidateRect(m_hWnd, rc, FALSE);
-		UpdateWindow(m_hWnd);
 	}
 
 	LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -83,43 +57,43 @@ namespace NPE
 		{
 			POINTS pt = MAKEPOINTS(lParam);
 			MouseMoveEvent e({ pt.x, pt.y });
-			m_Data.EventCallback(e);
+			m_EventCallback(e);
 			return 0;
 		}
 		case WM_LBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(Button::LeftMouseButton);
-			m_Data.EventCallback(e);
+			m_EventCallback(e);
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(Button::LeftMouseButton);
-			m_Data.EventCallback(e);
+			m_EventCallback(e);
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(Button::RightMouseButton);
-			m_Data.EventCallback(e);
+			m_EventCallback(e);
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(Button::RightMouseButton);
-			m_Data.EventCallback(e);
+			m_EventCallback(e);
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(Button::MiddleMouseButton);
-			m_Data.EventCallback(e);
+			m_EventCallback(e);
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(Button::MiddleMouseButton);
-			m_Data.EventCallback(e);
+			m_EventCallback(e);
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
@@ -128,25 +102,25 @@ namespace NPE
 			if (delta < 0)
 			{
 				MouseWheelDownEvent e(delta);
-				m_Data.EventCallback(e);
+				m_EventCallback(e);
 			}
 			else
 			{ 
 				MouseWheelUpEvent e(delta);
-				m_Data.EventCallback(e);
+				m_EventCallback(e);
 			}
 			return 0;
 		}
 		case WM_KEYDOWN:
 		{
 			KeyPressedEvent e((unsigned char)wParam);
-			m_Data.EventCallback(e);
+			m_EventCallback(e);
 			return 0;
 		}
 		case WM_KEYUP:
 		{
 			KeyReleasedEvent e((unsigned char)wParam);
-			m_Data.EventCallback(e);
+			m_EventCallback(e);
 			return 0;
 		}
 		case WM_CHAR:
@@ -156,25 +130,20 @@ namespace NPE
 		}
 		case WM_SIZE:
 		{
-			m_Data.size.width = LOWORD(lParam);
-			m_Data.size.height = HIWORD(lParam);
-			AppResizeEvent e(m_Data.size);
-			m_Data.EventCallback(e);
+			AppResizeEvent e(GetSize());
+			m_EventCallback(e);
 			return 0;
 		}
 		case WM_MOVE:
 		{
-			m_Data.pos.x = LOWORD(lParam);
-			m_Data.pos.y = HIWORD(lParam);
-			AppMoveEvent e(m_Data.pos);
-			m_Data.EventCallback(e);
+			AppMoveEvent e(GetPos());
+			m_EventCallback(e);
 			return 0;
 		}
 		case WM_CLOSE:
 		{
-			//AppCloseEvent e;
-			//m_Data.EventCallback(e);
-			//return 0;
+			AppCloseEvent e;
+			m_EventCallback(e);
 			break;
 		}
 		}
@@ -184,7 +153,30 @@ namespace NPE
 
 	void MainWindow::Paint(HDC hDC, RECT* rcDirty, BOOL bErase)
 	{
-		FillRect(hDC, rcDirty, CreateSolidBrush(RGB(35, 38, 40)));
+		//FillRect(hDC, rcDirty, CreateSolidBrush(RGB(35, 38, 40)));
+
+		Renderer2D.RenderScene(NColor{ 35.0f, 38.0f, 40.0f });
+		for (auto& control : m_Controls)
+			Renderer2D.RenderControl(control);
+
 	}
 	
+	NPoint MainWindow::GetPos() const
+	{
+		RECT rc = GetRect();
+		return { rc.left, rc.top };
+	}
+
+	NSize MainWindow::GetSize() const
+	{
+		RECT rc = GetRect();
+		return { rc.left + rc.right, rc.top + rc.bottom };
+	}
+	
+	RECT MainWindow::GetRect() const
+	{
+		RECT rc;
+		GetWindowRect(m_hWnd, &rc);
+		return rc;
+	}
 }

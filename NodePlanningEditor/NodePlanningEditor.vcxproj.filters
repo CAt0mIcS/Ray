@@ -27,10 +27,13 @@
     <ClCompile Include="src\NPE\Window\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\NPE\Controls\Node.cpp">
+    <ClCompile Include="src\NPE\Controls\Control.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\NPE\Controls\Control.cpp">
+    <ClCompile Include="src\NPE\Graphics\Renderer2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NPE\Controls\Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -45,9 +48,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\NPE\Window\MainWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\NPE\Controls\Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\NPE\Util\Props.h">
@@ -72,6 +72,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\NPE\Handlers\ApplicationEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NPE\Graphics\Renderer2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NPE\Controls\Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

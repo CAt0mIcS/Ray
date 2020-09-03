@@ -2,14 +2,19 @@
 
 #include "NPE/Util/Props.h"
 
+#include <string>
+
+/**
+* QUESTION: 
+*	Should I have a function in the Control class to draw or should I use Renderer2D::DrawControl(Control& control);?
+*/
 
 
 namespace NPE
 {
-	class MainWindow;
-
 	class Control
 	{
+		friend class Renderer2D;
 	public:
 		enum class Type
 		{
@@ -18,7 +23,6 @@ namespace NPE
 		};
 
 	public:
-		unsigned short GetId() const { return m_Id; }
 		Type GetType() const { return m_Type; }
 
 		void MoveBy(const NPoint& pos);
@@ -27,29 +31,25 @@ namespace NPE
 		void ResizeBy(const NSize& size);
 		void ResizeTo(const NSize& size);
 
-		NPoint GetPos() const { return m_Pos; }
-		NSize GetSize() const { return m_Size; }
+		const NPoint& GetPos() const { return m_Pos; }
+		const NSize& GetSize() const { return m_Size; }
 
 		bool IsInWindow() const;
 
-		HWND GetNativeWindow() const { return m_hWnd; }
+		const std::string& GetText() const { return m_Text; }
 
 	protected:
-		Control(MainWindow* parent, const Type type, const NPoint& pos, const NSize& size);
+		Control(HWND parent, const Type type, const NPoint& pos, const NSize& size, const std::string& text);
 
 	protected:
-		HWND m_hWnd;
 		HWND m_hWndParent;
 		NPoint m_Pos;
 		NSize m_Size;
-		unsigned short m_Id;
+		std::string m_Text;
 
 	private:
-		static unsigned short m_NextId;
 		Type m_Type;
 	};
-
-	inline unsigned short Control::m_NextId = 0;
 }
 
 

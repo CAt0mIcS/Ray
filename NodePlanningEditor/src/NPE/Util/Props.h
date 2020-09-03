@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pch.h"
+#include <d2d1.h>
 
 
 namespace NPE
@@ -82,8 +82,8 @@ namespace NPE
 			
 		NPoint& operator-=(const int val)
 		{
-			x += val; 
-			y += val; 
+			x -= val; 
+			y -= val; 
 			return *this; 
 		}
 
@@ -278,6 +278,198 @@ namespace NPE
 			return *this;
 		}
 	};
+
+
+
+	struct NColor
+	{
+		float r, g, b;
+
+		//NColor
+		NColor operator+(const NColor& other)
+		{
+			return { r + other.r, g + other.g, b + other.b };
+		}
+
+		NColor& operator+=(const NColor& other)
+		{
+			r += other.r;
+			g += other.g;
+			b += other.b;
+			return *this;
+		}
+
+		NColor operator-(const NColor& other)
+		{
+			return { r - other.r, g - other.g, b - other.b };
+
+		}
+
+		NColor& operator-=(const NColor& other)
+		{
+			r -= other.r;
+			g -= other.g;
+			b -= other.b;
+			return *this;
+		}
+
+		NColor& operator*=(const NColor& other)
+		{
+			r *= other.r;
+			g *= other.g;
+			b *= other.b;
+			return *this;
+		}
+
+		NColor operator*(const NColor& other)
+		{
+			return { r * other.r, g * other.g, b * other.b };
+
+		}
+
+		NColor operator/(const NColor& other)
+		{
+			return { r / other.r, g / other.g, b / other.b };
+
+		}
+
+		NColor& operator/=(const NColor& other)
+		{
+			r /= other.r;
+			g /= other.g;
+			b /= other.b;
+			return *this;
+		}
+
+		//float
+		NColor operator+(const float val)
+		{
+			return { r + val, g + val, b + val };
+
+		}
+
+		NColor& operator+=(const float val)
+		{
+			r += val;
+			g += val;
+			b += val;
+			return *this;
+		}
+
+		NColor operator-(const float val)
+		{
+			return { r - val, g - val, b - val };
+		}
+
+		NColor& operator-=(const float val)
+		{
+			r -= val;
+			g -= val;
+			b -= val;
+			return *this;
+		}
+
+		NColor& operator*=(const float val)
+		{
+			r *= val;
+			g *= val;
+			b *= val;
+			return *this;
+		}
+
+		NColor operator*(const float val)
+		{
+			return { r * val, g * val, b * val };
+		}
+
+		NColor operator/(const float val)
+		{
+			return { r / val, g / val, b / val };
+		}
+
+		NColor& operator/=(const float val)
+		{
+			r /= val;
+			g /= val;
+			b /= val;
+			return *this;
+		}
+
+		NColor& operator=(const float val)
+		{
+			r = val;
+			g = val;
+			b = val;
+			return *this;
+		}
+
+		//D2D1_COLOR_F
+		NColor operator+(const D2D1_COLOR_F& val)
+		{
+			return { r + val.r, g + val.g, b + val.b };
+		}
+
+		NColor& operator+=(const D2D1_COLOR_F& val)
+		{
+			r += val.r;
+			g += val.g;
+			b += val.b;
+			return *this;
+		}
+
+		NColor operator-(const D2D1_COLOR_F& val)
+		{
+			return { r - val.r, g - val.g, b - val.b };
+		}
+
+		NColor& operator-=(const D2D1_COLOR_F& val)
+		{
+			r -= val.r;
+			g -= val.g;
+			b -= val.b;
+			return *this;
+		}
+
+		NColor& operator*=(const D2D1_COLOR_F& val)
+		{
+			r *= val.r;
+			g *= val.g;
+			b *= val.b;
+			return *this;
+		}
+
+		NColor operator*(const D2D1_COLOR_F& val)
+		{
+			return { r * val.r, g * val.g, b * val.b };
+		}
+
+		NColor operator/(const D2D1_COLOR_F& val)
+		{
+			return { r / val.r, g / val.g, b / val.b };
+		}
+
+		NColor& operator/=(const D2D1_COLOR_F& val)
+		{
+			r /= val.r;
+			g /= val.g;
+			b /= val.b;
+			return *this;
+		}
+
+		NColor& operator=(const D2D1_COLOR_F& val)
+		{
+			r = val.r;
+			g = val.g;
+			b = val.b;
+			return *this;
+		}
+
+		D2D1_COLOR_F ToD2D1ColorF() const
+		{
+			return { r / 255.0f, g / 255.0f, b / 255.0f, 1.0f };
+		}
+	};
+
 }
 
 
