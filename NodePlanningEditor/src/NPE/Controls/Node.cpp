@@ -42,12 +42,12 @@ namespace NPE
 			HDC hDC = BeginPaint(hWnd, &ps);
 			FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(35, 38, 40)));
 
-			if (m_Size.width < 5000 && m_Size.width > -5000)
+			if (m_Size.width < 5000 && m_Size.width > -5000 && m_Size.height < 5000 && m_Size.height > -5000)
 			{
 				SelectObject(hDC, GetStockObject(DC_BRUSH));
 				SetDCBrushColor(hDC, RGB(15, 17, 19));
 				
-				RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, 100, 100);
+				RoundRect(hDC, 0, 0, m_Size.width, m_Size.height, m_Size.width / 2, m_Size.height / 2);
 				UpdateWindow(m_hWnd);
 				//UpdateWindow(hWndParent);
 			}
@@ -56,7 +56,7 @@ namespace NPE
 				SelectObject(hDC, GetStockObject(DC_BRUSH));
 				SetDCBrushColor(hDC, RGB(15, 17, 19));
 
-				RoundRect(hDC, 0, 0, wParam, lParam, 100, 100);
+				RoundRect(hDC, 0, 0, wParam, lParam, wParam / 2, lParam / 2);
 				UpdateWindow(m_hWnd);
 				//UpdateWindow(hWndParent);
 			}

@@ -48,7 +48,8 @@ namespace NPE
 				for (auto& control : m_Window.GetControls())
 				{
 					control.MoveBy(diff);
-					//InvalidateRgn(control.GetNativeWindow(), NULL, FALSE);
+					//InvalidateRect(control.GetNativeWindow(), nullptr, FALSE);
+					//SendMessage(control.GetNativeWindow(), WM_PAINT, control.GetSize().width, control.GetSize().height);
 					UpdateWindow(control.GetNativeWindow());
 				}
 			}
@@ -62,11 +63,6 @@ namespace NPE
 		if (e.GetType() == EventType::MouseWheelUpEvent)
 		{
 			++m_Zoom;
-			if (m_Zoom >= m_ZoomBoundary)
-			{
-				m_Zoom = m_ZoomBoundary;
-				return;
-			}
 
 			for (auto& control : m_Window.GetControls())
 			{
