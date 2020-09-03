@@ -8,10 +8,10 @@
 namespace NPE
 {
 
-	enum class Button
+	enum class MouseButton
 	{
 		INVALID = 0,
-		LeftMouseButton, MiddleMouseButton, RightMouseButton
+		Left, Middle, Right
 	};
 
 	class MouseMoveEvent : public Event
@@ -41,21 +41,21 @@ namespace NPE
 	class MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressedEvent(const Button btn)
+		MouseButtonPressedEvent(const MouseButton btn)
 		{
 			switch (btn)
 			{
-			case Button::LeftMouseButton:
+			case MouseButton::Left:
 			{
 				Mouse::SetLeftPressed(true);
 				break;
 			}
-			case Button::RightMouseButton:
+			case MouseButton::Right:
 			{
 				Mouse::SetRightPressed(true);
 				break;
 			}
-			case Button::MiddleMouseButton:
+			case MouseButton::Middle:
 			{
 				Mouse::SetMiddlePressed(true);
 				break;
@@ -69,21 +69,21 @@ namespace NPE
 	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleasedEvent(const Button btn)
+		MouseButtonReleasedEvent(const MouseButton btn)
 		{
 			switch (btn)
 			{
-			case Button::LeftMouseButton:
+			case MouseButton::Left:
 			{
 				Mouse::SetLeftPressed(false);
 				break;
 			}
-			case Button::RightMouseButton:
+			case MouseButton::Right:
 			{
 				Mouse::SetRightPressed(false);
 				break;
 			}
-			case Button::MiddleMouseButton:
+			case MouseButton::Middle:
 			{
 				Mouse::SetMiddlePressed(false);
 				break;

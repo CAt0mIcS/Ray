@@ -12,6 +12,8 @@
 
 namespace NPE
 {
+	class Renderer2D;
+
 	class Control
 	{
 		friend class Renderer2D;
@@ -19,7 +21,7 @@ namespace NPE
 		enum class Type
 		{
 			INVALID = 0,
-			Node,
+			Node, Button
 		};
 
 	public:
@@ -35,15 +37,17 @@ namespace NPE
 		const NSize& GetSize() const { return m_Size; }
 		const NColor& GetColor() const { return m_Color; }
 
+		bool Render();
+
 		bool IsInWindow() const;
 
 		const std::string& GetText() const { return m_Text; }
 
 	protected:
-		Control(HWND parent, const Type type, const NPoint& pos, const NSize& size, const NColor& color, const std::string& text);
+		Control(Renderer2D& renderer, const Type type, const NPoint& pos, const NSize& size, const NColor& color, const std::string& text);
 
 	protected:
-		HWND m_hWndParent;
+		Renderer2D& m_Renderer;
 		NPoint m_Pos;
 		NSize m_Size;
 		NColor m_Color;

@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\NPE\Controls\Button.cpp" />
     <ClCompile Include="src\NPE\Controls\Node.cpp" />
     <ClCompile Include="src\NPE\Graphics\Renderer2D.cpp" />
     <ClCompile Include="src\NPE\Controls\Control.cpp" />
@@ -164,6 +165,7 @@
     <ClCompile Include="src\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\NPE\Controls\Button.h" />
     <ClInclude Include="src\NPE\Controls\Node.h" />
     <ClInclude Include="src\NPE\Graphics\Renderer2D.h" />
     <ClInclude Include="src\NPE\Handlers\ApplicationEvent.h" />

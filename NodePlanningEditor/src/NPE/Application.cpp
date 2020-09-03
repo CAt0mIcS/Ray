@@ -50,7 +50,7 @@ namespace NPE
 				for (auto& control : m_Window.GetControls())
 				{
 					control.MoveBy(diff);
-					m_Window.Renderer2D.RenderRoundedRectControl(control);
+					control.Render();
 				}
 				m_Window.Renderer2D.EndDraw();
 			}
@@ -80,7 +80,7 @@ namespace NPE
 				newSize.height = size.height * m_ResizeFactor;
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
-				m_Window.Renderer2D.RenderRoundedRectControl(control);
+				control.Render();
 			}
 			m_Window.Renderer2D.EndDraw();
 		}
@@ -108,7 +108,7 @@ namespace NPE
 				newSize.height = size.height / m_ResizeFactor;
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
-				m_Window.Renderer2D.RenderRoundedRectControl(control);
+				control.Render();
 			}
 			m_Window.Renderer2D.EndDraw();
 		}

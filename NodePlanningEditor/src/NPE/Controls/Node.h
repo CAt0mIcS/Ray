@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Control.h"
+#include "Button.h"
 
 
 namespace NPE
@@ -8,10 +9,10 @@ namespace NPE
 	class Node : public Control
 	{
 	public:
-		Node(HWND parent, const NPoint& pos, const NSize& size, const NColor& color, const std::string& text);
+		Node(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color, const std::string& text);
 
 	private:
-
+		Button m_LineBtn;
 	};
 }
 
