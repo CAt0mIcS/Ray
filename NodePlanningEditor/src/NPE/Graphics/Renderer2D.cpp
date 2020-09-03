@@ -30,7 +30,6 @@ namespace NPE
 
 	void Renderer2D::RenderRoundedRectControl(Control& control)
 	{
-
 		D2D1_ROUNDED_RECT rc;
 
 		const auto radius = std::max(control.GetSize().width, control.GetSize().height);

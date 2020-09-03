@@ -46,10 +46,10 @@ namespace NPE
 				m_MousePos.y = Mouse::GetPos().y;
 
 				m_Window.Renderer2D.BeginDraw();
+				m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
 				for (auto& control : m_Window.GetControls())
 				{
 					control.MoveBy(diff);
-					m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
 					m_Window.Renderer2D.RenderRoundedRectControl(control);
 				}
 				m_Window.Renderer2D.EndDraw();
@@ -66,6 +66,7 @@ namespace NPE
 			++m_Zoom;
 
 			m_Window.Renderer2D.BeginDraw();
+			m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
 			for (auto& control : m_Window.GetControls())
 			{
 				const NPoint& pos = control.GetPos();
@@ -79,7 +80,6 @@ namespace NPE
 				newSize.height = size.height * m_ResizeFactor;
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
-				m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
 				m_Window.Renderer2D.RenderRoundedRectControl(control);
 			}
 			m_Window.Renderer2D.EndDraw();
@@ -94,6 +94,7 @@ namespace NPE
 			}
 
 			m_Window.Renderer2D.BeginDraw();
+			m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
 			for(auto& control : m_Window.GetControls())
 			{
 				const NPoint& pos = control.GetPos();
@@ -107,7 +108,6 @@ namespace NPE
 				newSize.height = size.height / m_ResizeFactor;
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
-				m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
 				m_Window.Renderer2D.RenderRoundedRectControl(control);
 			}
 			m_Window.Renderer2D.EndDraw();
