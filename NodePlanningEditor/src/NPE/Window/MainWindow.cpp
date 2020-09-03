@@ -26,9 +26,15 @@ namespace NPE
 		m_Controls.emplace_back(Node(this, { 250, 400 }, { 200, 200 }));
 		m_Controls.emplace_back(Node(this, { 500, 400 }, { 200, 200 }));
 		m_Controls.emplace_back(Node(this, { 750, 400 }, { 200, 200 }));
-		//m_Controls.emplace_back(Node(this, { 1000, 400 }, { 200, 200 }));
-		//m_Controls.emplace_back(Node(this, { 1250, 400 }, { 200, 200 }));
-		//m_Controls.emplace_back(Node(this, { 1500, 400 }, { 200, 200 }));
+		m_Controls.emplace_back(Node(this, { 1000, 400 }, { 200, 200 }));
+		m_Controls.emplace_back(Node(this, { 1250, 400 }, { 200, 200 }));
+		m_Controls.emplace_back(Node(this, { 1500, 400 }, { 200, 200 }));
+		m_Controls.emplace_back(Node(this, { 1750, 400 }, { 200, 200 }));
+		m_Controls.emplace_back(Node(this, { 2000, 400 }, { 200, 200 }));
+		m_Controls.emplace_back(Node(this, { 2250, 400 }, { 200, 200 }));
+		m_Controls.emplace_back(Node(this, { 2500, 400 }, { 200, 200 }));
+		m_Controls.emplace_back(Node(this, { 2750, 400 }, { 200, 200 }));
+		m_Controls.emplace_back(Node(this, { 3000, 400 }, { 200, 200 }));
 	}
 
 	int MainWindow::ProcessMessage()

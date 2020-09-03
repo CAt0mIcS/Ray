@@ -64,13 +64,6 @@ namespace NPE
 			EndPaint(hWnd, &ps);
 			return 0;
 		}
-		case WM_THREAD_PAINT_UPDATE:
-		{
-			InvalidateRect(hWnd, nullptr, TRUE);
-			SendMessage(hWnd, WM_PAINT, wParam, lParam);
-			break;
-
-		}
 		case WM_SIZE:
 		{
 			POINTS pt = MAKEPOINTS(lParam);
