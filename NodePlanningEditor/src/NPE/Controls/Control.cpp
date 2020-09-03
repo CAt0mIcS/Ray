@@ -4,8 +4,8 @@
 
 namespace NPE
 {
-	Control::Control(HWND parent, const Type type, const NPoint& pos, const NSize& size, const std::string& text)
-		: m_hWndParent(parent), m_Type(type), m_Pos(pos), m_Size(size), m_Text(text)
+	Control::Control(HWND parent, const Type type, const NPoint& pos, const NSize& size, const NColor& color, const std::string& text)
+		: m_hWndParent(parent), m_Type(type), m_Pos(pos), m_Size(size), m_Text(text), m_Color(color)
 	{
 	}
 

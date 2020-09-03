@@ -39,16 +39,20 @@ namespace NPE
 			diff.x = Mouse::GetPos().x - m_MousePos.x;
 			diff.y = Mouse::GetPos().y - m_MousePos.y;
 
-			int mBuff = 10;
+			int mBuff = 0;
 			if (diff.x > mBuff || diff.y > mBuff || diff.x < -mBuff || diff.y < -mBuff)
 			{
 				m_MousePos.x = Mouse::GetPos().x;
 				m_MousePos.y = Mouse::GetPos().y;
 
+				m_Window.Renderer2D.BeginDraw();
 				for (auto& control : m_Window.GetControls())
 				{
 					control.MoveBy(diff);
+					m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
+					m_Window.Renderer2D.RenderRoundedRectControl(control);
 				}
+				m_Window.Renderer2D.EndDraw();
 			}
 		}
 	}
@@ -61,6 +65,7 @@ namespace NPE
 		{
 			++m_Zoom;
 
+			m_Window.Renderer2D.BeginDraw();
 			for (auto& control : m_Window.GetControls())
 			{
 				const NPoint& pos = control.GetPos();
@@ -74,7 +79,10 @@ namespace NPE
 				newSize.height = size.height * m_ResizeFactor;
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
+				m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
+				m_Window.Renderer2D.RenderRoundedRectControl(control);
 			}
+			m_Window.Renderer2D.EndDraw();
 		}
 		else if (e.GetType() == EventType::MouseWheelDownEvent)
 		{
@@ -85,6 +93,7 @@ namespace NPE
 				return;
 			}
 
+			m_Window.Renderer2D.BeginDraw();
 			for(auto& control : m_Window.GetControls())
 			{
 				const NPoint& pos = control.GetPos();
@@ -98,7 +107,10 @@ namespace NPE
 				newSize.height = size.height / m_ResizeFactor;
 				control.MoveBy(newPos);
 				control.ResizeTo(newSize);
+				m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
+				m_Window.Renderer2D.RenderRoundedRectControl(control);
 			}
+			m_Window.Renderer2D.EndDraw();
 		}
 	}
 }

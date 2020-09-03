@@ -22,7 +22,10 @@ namespace NPE
 		Renderer2D();
 		void Init(HWND hWnd, const unsigned int fontSize);
 
-		void RenderControl(Control& control);
+		void BeginDraw();
+		void EndDraw();
+
+		void RenderRoundedRectControl(Control& control);
 		void RenderText(const std::wstring text, const NPoint& pos, const NSize& size);
 
 		void RenderScene(const NColor& color);

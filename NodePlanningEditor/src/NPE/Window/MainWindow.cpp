@@ -4,6 +4,8 @@
 #include "NPE/Handlers/MouseEvent.h"
 #include "NPE/Handlers/ApplicationEvent.h"
 
+#include "NPE/Controls/Node.h"
+
 
 namespace NPE
 {
@@ -15,6 +17,17 @@ namespace NPE
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
 		Renderer2D.Init(m_hWnd, 30);
+		m_Controls.emplace_back(Node(m_hWnd, { 10, 350 }, { 200, 100 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		m_Controls.emplace_back(Node(m_hWnd, { 250, 350 }, { 200, 100 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		m_Controls.emplace_back(Node(m_hWnd, { 500, 350 }, { 200, 100 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		m_Controls.emplace_back(Node(m_hWnd, { 750, 350 }, { 200, 100 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		m_Controls.emplace_back(Node(m_hWnd, { 1000, 350 }, { 200, 100 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		m_Controls.emplace_back(Node(m_hWnd, { 1250, 350 }, { 200, 100 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		//m_Controls.emplace_back(Node(m_hWnd, { 1500, 350 }, { 200, 100 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		//m_Controls.emplace_back(Node(m_hWnd, { 1750, 350 }, { 200, 100 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		//m_Controls.emplace_back(Node(m_hWnd, { 2000, 350 }, { 200, 100 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		//m_Controls.emplace_back(Node(m_hWnd, { 2250, 350 }, { 200, 100 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		//m_Controls.emplace_back(Node(m_hWnd, { 2500, 350 }, { 200, 100 }, { 15.0f, 17.0f, 19.0f }, "He"));
 	}
 
 	int MainWindow::ProcessMessage()
@@ -62,6 +75,10 @@ namespace NPE
 		}
 		case WM_LBUTTONDOWN:
 		{
+			//DEBUG:
+			InvalidateRect(m_hWnd, nullptr, FALSE);
+			UpdateWindow(m_hWnd);
+
 			MouseButtonPressedEvent e(Button::LeftMouseButton);
 			m_EventCallback(e);
 			return 0;
@@ -153,12 +170,11 @@ namespace NPE
 
 	void MainWindow::Paint(HDC hDC, RECT* rcDirty, BOOL bErase)
 	{
-		//FillRect(hDC, rcDirty, CreateSolidBrush(RGB(35, 38, 40)));
-
+		Renderer2D.BeginDraw();
 		Renderer2D.RenderScene(NColor{ 35.0f, 38.0f, 40.0f });
 		for (auto& control : m_Controls)
-			Renderer2D.RenderControl(control);
-
+			Renderer2D.RenderRoundedRectControl(control);
+		Renderer2D.EndDraw();
 	}
 	
 	NPoint MainWindow::GetPos() const

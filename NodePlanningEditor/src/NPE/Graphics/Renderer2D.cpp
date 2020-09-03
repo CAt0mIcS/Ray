@@ -15,9 +15,38 @@ namespace NPE
 		CreateGraphicsResources(fontSize);
 	}
 
-	void Renderer2D::RenderControl(Control& control)
+	void Renderer2D::BeginDraw()
+	{
+		m_pRenderTarget->BeginDraw();
+	}
+
+	void Renderer2D::EndDraw()
+	{
+		if (FAILED(m_pRenderTarget->EndDraw()))
+		{
+			throw std::exception();
+		}
+	}
+
+	void Renderer2D::RenderRoundedRectControl(Control& control)
 	{
 
+		D2D1_ROUNDED_RECT rc;
+
+		const auto radius = std::max(control.GetSize().width, control.GetSize().height);
+		rc.radiusX = radius / 5.0f;
+		rc.radiusY = radius / 5.0f;
+
+		//rc.radiusX = control.GetSize().width / 5.0f; 
+		//rc.radiusY = control.GetSize().height / 5.0f;
+
+		rc.rect.left = control.GetPos().x;
+		rc.rect.top = control.GetPos().y;
+		rc.rect.right = rc.rect.left + control.GetSize().width;
+		rc.rect.bottom = rc.rect.top + control.GetSize().height;
+
+		m_pBrush->SetColor(control.GetColor().ToD2D1ColorF());
+		m_pRenderTarget->FillRoundedRectangle(&rc, m_pBrush.Get());
 	}
 
 	void Renderer2D::RenderText(const std::wstring text, const NPoint& pos, const NSize& size)
@@ -27,14 +56,7 @@ namespace NPE
 
 	void Renderer2D::RenderScene(const NColor& color)
 	{
-		m_pRenderTarget->BeginDraw();
-
 		m_pRenderTarget->Clear(color.ToD2D1ColorF());
-
-		if (FAILED(m_pRenderTarget->EndDraw())) 
-		{ 
-			throw std::exception();
-		}
 	}
 
 	void Renderer2D::CreateGraphicsResources(const unsigned int fontSize)

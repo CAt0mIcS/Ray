@@ -33,18 +33,20 @@ namespace NPE
 
 		const NPoint& GetPos() const { return m_Pos; }
 		const NSize& GetSize() const { return m_Size; }
+		const NColor& GetColor() const { return m_Color; }
 
 		bool IsInWindow() const;
 
 		const std::string& GetText() const { return m_Text; }
 
 	protected:
-		Control(HWND parent, const Type type, const NPoint& pos, const NSize& size, const std::string& text);
+		Control(HWND parent, const Type type, const NPoint& pos, const NSize& size, const NColor& color, const std::string& text);
 
 	protected:
 		HWND m_hWndParent;
 		NPoint m_Pos;
 		NSize m_Size;
+		NColor m_Color;
 		std::string m_Text;
 
 	private:

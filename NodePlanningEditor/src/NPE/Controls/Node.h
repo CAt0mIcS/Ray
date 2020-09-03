@@ -8,7 +8,7 @@ namespace NPE
 	class Node : public Control
 	{
 	public:
-		Node(HWND parent, const Type type, const NPoint& pos, const NSize& size, const std::string& text);
+		Node(HWND parent, const NPoint& pos, const NSize& size, const NColor& color, const std::string& text);
 
 	private:
 
