@@ -65,9 +65,18 @@ namespace NPE
 		}
 		case WM_LBUTTONDOWN:
 		{
-			//DEBUG:
-			InvalidateRect(m_hWnd, nullptr, FALSE);
-			UpdateWindow(m_hWnd);
+			//TODO: make recursive to work with an infinite amount of child-parent relationships
+			for (auto* control : m_Controls)
+			{
+				for (auto* child : control->GetChildren())
+				{
+					if (child->GetType() == Control::Type::Button && Mouse::IsOnControl(child))
+					{
+						Button* btn = (Button*)child;
+						btn->OnButtonClickedEventCallback(*btn);
+					}
+				}
+			}
 
 			MouseButtonPressedEvent e(MouseButton::Left);
 			m_EventCallback(e);

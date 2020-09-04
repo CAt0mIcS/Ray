@@ -5,6 +5,8 @@
 
 namespace NPE
 {
+	class Button;
+
 	class Application
 	{
 	public:
@@ -15,10 +17,12 @@ namespace NPE
 		*/
 		int Run();
 
+		void OnButtonClicked(Button& control);
+
 	private:
 		void OnEvent(const Event& e);
 
-		void DrawLine(const Event& e);
+		void DrawLine(const Button& btn);
 
 		void Resize(const Event& e);
 

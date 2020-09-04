@@ -15,17 +15,11 @@ namespace NPE
 	Application::Application()
 		: m_Window({ 800, 600 }, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_Zoom(0), m_MousePos{ 0, 0 }
 	{
-		m_Window.AddControl(new Node(m_Window.Renderer2D, { 10, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		m_Window.AddControl(new Node(m_Window.Renderer2D, { 250, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		m_Window.AddControl(new Node(m_Window.Renderer2D, { 500, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		m_Window.AddControl(new Node(m_Window.Renderer2D, { 750, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		m_Window.AddControl(new Node(m_Window.Renderer2D, { 1000, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		m_Window.AddControl(new Node(m_Window.Renderer2D, { 1250, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		m_Window.AddControl(new Node(m_Window.Renderer2D, { 1500, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		m_Window.AddControl(new Node(m_Window.Renderer2D, { 1750, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		m_Window.AddControl(new Node(m_Window.Renderer2D, { 2000, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		m_Window.AddControl(new Node(m_Window.Renderer2D, { 2250, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		m_Window.AddControl(new Node(m_Window.Renderer2D, { 2500, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
+		for (int i = 0; i <= 500; ++i)
+		{
+			m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
+		}
+		Button::SetOnButtonClickedCallback([this](Button& btn) { OnButtonClicked(btn); });
 	}
 
 	int Application::Run()
@@ -33,34 +27,24 @@ namespace NPE
 		return m_Window.ProcessMessage();
 	}
 	
+	void Application::OnButtonClicked(Button& control)
+	{
+		//TODO: Implement functions bellow this point
+		DrawLine(control);
+	}
+
 	void Application::OnEvent(const Event& e)
 	{
 		MoveNodes(e);
 		Zoom(e);
 		OnPaint(e);
-
+	
 		//TODO: Implement functions bellow this point
 		Resize(e);
-		DrawLine(e);
 	}
 
-	void Application::DrawLine(const Event& e)
+	void Application::DrawLine(const Button& btn)
 	{
-		if (e.GetType() == EventType::MouseButtonPressedEvent && Mouse::IsLeftPressed())
-		{
-			for (const auto* control : m_Window.GetControls())
-			{
-				for (const auto* child : control->GetChildren())
-				{
-					if (Mouse::IsOnControl(child))
-					{
-						MessageBox(NULL, L"Button clicked", L"", NULL);
-					}
-				}
-				
-			}
-		}
-		
 		
 	}
 
