@@ -13,7 +13,12 @@ namespace NPE
 
 		virtual bool Render() const override;
 
+		template<typename F>
+		static void SetOnNodeClickedCallback(F&& func) { m_OnNodeClickedCallback = func; }
+		static void OnNodeClickedEventCallback(Node& control) { m_OnNodeClickedCallback(control); }
+
 	private:
+		static std::function<void(Node&)> m_OnNodeClickedCallback;
 	};
 }
 

@@ -4,6 +4,8 @@
 
 namespace NPE
 {
+	std::function<void(Node&)> Node::m_OnNodeClickedCallback;
+
 	//TODO: Measure speed and test if variables are being moved instead of coppied
 	Node::Node(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color)
 		: Control(renderer, Control::Type::Node, pos, size, color)

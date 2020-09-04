@@ -22,6 +22,7 @@ namespace NPE
 			m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
 		}
 		Button::SetOnButtonClickedCallback([this](Button& btn) { OnButtonClicked(btn); });
+		Node::SetOnNodeClickedCallback([this](Node& node) { OnNodeClicked(node); });
 	}
 
 	int Application::Run()
@@ -32,8 +33,16 @@ namespace NPE
 	void Application::OnButtonClicked(Button& control)
 	{
 		//TODO: Implement functions bellow this point
-		//ERROR: OnButtonClicked is only called once, thus Mouse::IsLeftPressed() is only checked once and the line only draws when clicking the button
+		//WARNING: OnButtonClicked is only called once, thus Mouse::IsLeftPressed() is only checked once and the line only draws when clicking the button
 		DrawLine(control);
+	}
+
+	void Application::OnNodeClicked(Node& node)
+	{
+		//TODO: Implement functions bellow this point
+		//WARNING: Same as in Application::OnButtonClicked (cannot detect "ControlHoldMouseEvent")
+		MoveNodesWithMouse(node);
+		ResizeNodes(node);
 	}
 
 	void Application::OnEvent(const Event& e)
@@ -41,10 +50,16 @@ namespace NPE
 		MoveNodes(e);
 		Zoom(e);
 		OnPaint(e);
+	}
 
-		//TODO: Implement functions bellow this point
-		ResizeNodes(e);
-		MoveNodes(e);
+	void Application::MoveNodesWithMouse(Node& node)
+	{
+
+	}
+
+	void Application::ResizeNodes(Node& node)
+	{
+
 	}
 
 	void Application::DrawLine(const Button& btn)
@@ -62,11 +77,6 @@ namespace NPE
 			
 			m_Window.Renderer2D.EndDraw();
 		}
-
-	}
-
-	void Application::ResizeNodes(const Event& e)
-	{
 
 	}
 

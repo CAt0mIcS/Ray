@@ -32,8 +32,11 @@ namespace NPE
 	}
 
 	//DEBUG:
-	bool wasClicked = false;
-	Button* childB = nullptr;
+	bool wasClickedB = false;
+	Button* buttonBackup = nullptr;
+
+	bool wasClickedN = false;
+	Node* nodeBackup = nullptr;
 	//DEBUG END
 
 	LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -67,7 +70,7 @@ namespace NPE
 			MouseMoveEvent e({ (float)pt.x, (float)pt.y });
 			m_EventCallback(e);
 
-			//DEBUG:
+			#pragma region TemporaryControlHoldEvent
 			if (Mouse::IsLeftPressed() || Mouse::IsRightPressed() || Mouse::IsMiddlePressed())
 			{
 				//TODO: make recursive to work with an infinite amount of child-parent relationships
@@ -75,14 +78,25 @@ namespace NPE
 				{
 					for (auto* child : control->GetChildren())
 					{
-						if (child->GetType() == Control::Type::Button && wasClicked && child == childB)
+						if (child->GetType() == Control::Type::Button && wasClickedB && child == buttonBackup)
 						{
 							Button* btn = (Button*)child;
 							btn->OnButtonClickedEventCallback(*btn);
+							return 0;
 						}
 					}
+
+					//NEW:
+					if (control->GetType() == Control::Type::Node && wasClickedN && control == nodeBackup)
+					{
+						Node* node = (Node*)control;
+						node->OnNodeClickedEventCallback(*node);
+						return 0;
+					}
+
 				}
 			}
+			#pragma endregion
 
 			return 0;
 		}
@@ -91,6 +105,7 @@ namespace NPE
 			MouseButtonPressedEvent e(MouseButton::Left);
 			m_EventCallback(e);
 
+			#pragma region TemporaryControlHoldEvent
 			//TODO: make recursive to work with an infinite amount of child-parent relationships
 			for (auto* control : m_Controls)
 			{
@@ -99,21 +114,37 @@ namespace NPE
 					if (child->GetType() == Control::Type::Button && Mouse::IsOnControl(child))
 					{
 						Button* btn = (Button*)child;
-						
-						//DEBUG:
-						childB = btn;
-
+						buttonBackup = btn;
 						btn->OnButtonClickedEventCallback(*btn);
-						wasClicked = true;
+						wasClickedB = true;
+						return 0;
 					}
 				}
+
+				//NEW:
+				if (control->GetType() == Control::Type::Node && Mouse::IsOnControl(control))
+				{
+					Node* node = (Node*)control;
+
+					//DEBUG:
+					nodeBackup = node;
+
+					node->OnNodeClickedEventCallback(*node);
+					wasClickedN = true;
+					return 0;
+				}
 			}
+			#pragma endregion
 
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
-			wasClicked = false;
+			#pragma region TemporaryControlHoldEvent
+			wasClickedB = false;
+			wasClickedN = false;
+			#pragma endregion
+
 			MouseButtonReleasedEvent e(MouseButton::Left);
 			m_EventCallback(e);
 			return 0;
