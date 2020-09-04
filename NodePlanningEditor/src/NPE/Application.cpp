@@ -59,6 +59,9 @@ namespace NPE
 
 	void Application::MoveNodesWithMouse(Node& node)
 	{
+		if (Mouse::GetPos().x < node.GetPos().x + node.GetSize().width && Mouse::GetPos().x > node.GetPos().x + node.GetSize().width - 100)
+			return;
+
 		NPoint diff{};
 		diff.x = Mouse::GetPos().x - m_MousePos.x;
 		diff.y = Mouse::GetPos().y - m_MousePos.y;
@@ -78,7 +81,31 @@ namespace NPE
 
 	void Application::ResizeNodes(Node& node)
 	{
-
+		////TODO: Implement function (not required)
+		//
+		////If mouse is in the lower right corner of the node
+		//const NPoint& mousePos = Mouse::GetPos();
+		//const NPoint& nodePos = node.GetPos();
+		//const NSize& nodeSize = node.GetSize();
+		//
+		//if (mousePos.x < nodePos.x + nodeSize.width && mousePos.x > nodePos.x + nodeSize.width - 100)
+		//{
+		//	SetCursor(LoadCursor(NULL, IDC_CROSS));
+		//	NPoint diff{};
+		//	diff.x = Mouse::GetPos().x - m_MousePos.x;
+		//	diff.y = Mouse::GetPos().y - m_MousePos.y;
+		//
+		//	
+		//	node.ResizeTo({ nodeSize.width + diff.x, nodeSize.height + diff.y });
+		//
+		//	m_Window.Renderer2D.BeginDraw();
+		//	for (auto* control : m_Window.GetControls())
+		//	{
+		//		control->Render();
+		//	}
+		//	m_Window.Renderer2D.EndDraw();
+		//}
+		//SetCursor(LoadCursor(NULL, IDC_ARROW));
 	}
 
 	void Application::DrawLine(const Button& btn)
