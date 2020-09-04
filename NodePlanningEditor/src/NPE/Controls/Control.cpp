@@ -6,40 +6,50 @@
 
 namespace NPE
 {
-	Control::Control(Renderer2D& renderer, const Type type, const NPoint& pos, const NSize& size, const NColor& color, const std::string& text)
-		: m_Renderer(renderer), m_Type(type), m_Pos(pos), m_Size(size), m_Text(text), m_Color(color), m_Children{}
+	Control::Control(Renderer2D& renderer, const Type type, const NPoint& pos, const NSize& size, const NColor& color)
+		: m_Renderer(renderer), m_Type(type), m_Pos(pos), m_Size(size), m_Children{}, m_Color(color)
 	{
 	}
 
 	void Control::MoveBy(const NPoint& pos)
 	{
+		for (auto& child : m_Children)
+		{
+			child->m_Pos += pos;
+		}
+
 		m_Pos += pos;
 	}
 
 	void Control::MoveTo(const NPoint& pos)
 	{
+		for (auto& child : m_Children)
+		{
+			child->m_Pos = pos;
+		}
+
 		m_Pos = pos;
 	}
 
 	void Control::ResizeBy(const NSize& size)
 	{
+		for (auto& child : m_Children)
+		{
+			child->m_Size += size;
+		}
+
 		m_Size += size;
 	}
 
 	void Control::ResizeTo(const NSize& size)
 	{
-		m_Size = size;
-	}
-
-	//TODO: fix return type
-	bool Control::Render()
-	{
-		m_Renderer.RenderRoundedRectControl(*this);
-		
 		for (auto& child : m_Children)
-			m_Renderer.RenderRoundedRectControl(child);
+		{
+			NSize ratio = m_Size / size;
+			child->m_Size *= ratio;
+		}
 
-		return false;
+		m_Size = size;
 	}
 
 	//TODO: fix function

@@ -9,7 +9,9 @@ namespace NPE
 	class Node : public Control
 	{
 	public:
-		Node(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color, const std::string& text);
+		Node(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color);
+
+		virtual bool Render() const override;
 
 	private:
 	};

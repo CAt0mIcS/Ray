@@ -27,7 +27,7 @@ namespace NPE
 		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->EndDraw(), "Failed to draw object(s)");
 	}
 
-	void Renderer2D::RenderRoundedRectControl(Control& control)
+	void Renderer2D::RenderRoundedRectControl(const Control& control) const
 	{
 		D2D1_ROUNDED_RECT rc;
 

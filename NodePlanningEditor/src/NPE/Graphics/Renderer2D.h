@@ -25,7 +25,7 @@ namespace NPE
 		void BeginDraw();
 		void EndDraw();
 
-		void RenderRoundedRectControl(Control& control);
+		void RenderRoundedRectControl(const Control& control) const;
 		void RenderText(const std::wstring text, const NPoint& pos, const NSize& size);
 
 		void RenderScene(const NColor& color);

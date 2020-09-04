@@ -36,27 +36,25 @@ namespace NPE
 
 		const NPoint& GetPos() const { return m_Pos; }
 		const NSize& GetSize() const { return m_Size; }
+		
 		const NColor& GetColor() const { return m_Color; }
 
-		bool Render();
+		virtual bool Render() const = 0;
 
 		bool IsInWindow() const;
-
-		const std::string& GetText() const { return m_Text; }
 
 		virtual ~Control() = default;
 
 	protected:
-		Control(Renderer2D& renderer, const Type type, const NPoint& pos, const NSize& size, const NColor& color, const std::string& text);
+		Control(Renderer2D& renderer, const Type type, const NPoint& pos, const NSize& size, const NColor& color);
 
 	protected:
 		Renderer2D& m_Renderer;
 		NPoint m_Pos;
 		NSize m_Size;
 		NColor m_Color;
-		std::string m_Text;
 
-		std::vector<Control> m_Children;
+		std::vector<Control*> m_Children;
 
 	private:
 		Type m_Type;
