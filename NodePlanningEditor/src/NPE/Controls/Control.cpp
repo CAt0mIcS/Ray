@@ -45,7 +45,7 @@ namespace NPE
 	{
 		for (auto& child : m_Children)
 		{
-			NSize ratio = m_Size / size;
+			NSize ratio = size / m_Size;
 			child->m_Size *= ratio;
 		}
 

@@ -71,7 +71,7 @@ namespace NPE
 		case WM_MOUSEMOVE:
 		{
 			POINTS pt = MAKEPOINTS(lParam);
-			MouseMoveEvent e({ pt.x, pt.y });
+			MouseMoveEvent e({ (float)pt.x, (float)pt.y });
 			m_EventCallback(e);
 			return 0;
 		}
@@ -173,13 +173,13 @@ namespace NPE
 	NPoint MainWindow::GetPos() const
 	{
 		RECT rc = GetRect();
-		return { rc.left, rc.top };
+		return { (float)rc.left, (float)rc.top };
 	}
 
 	NSize MainWindow::GetSize() const
 	{
 		RECT rc = GetRect();
-		return { rc.left + rc.right, rc.top + rc.bottom };
+		return { (float)(rc.left + rc.right), (float)(rc.top + rc.bottom) };
 	}
 	
 	RECT MainWindow::GetRect() const
