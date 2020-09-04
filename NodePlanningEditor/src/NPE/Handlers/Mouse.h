@@ -5,6 +5,8 @@
 
 namespace NPE
 {
+	class Control;
+
 	class Mouse
 	{
 	public:
@@ -21,6 +23,8 @@ namespace NPE
 		
 		static void SetRightPressed(bool pressed) { m_IsRightPressed = pressed; }
 		static bool IsRightPressed() { return m_IsRightPressed; }
+
+		static bool IsOnControl(const Control* const control);
 
 		static void ClearStates() { m_IsLeftPressed = false; m_IsMiddlePressed = false; m_IsRightPressed = false; }
 

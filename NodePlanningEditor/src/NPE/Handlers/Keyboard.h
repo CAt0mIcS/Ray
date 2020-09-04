@@ -16,10 +16,10 @@ namespace NPE
 
 		static void ClearStates() { m_KeyStates = std::bitset<m_nKeys>(); }
 
-		static constexpr unsigned char GetNKeys() { return m_nKeys; }
+		static constexpr unsigned short GetNKeys() { return m_nKeys; }
 
 	private:
-		static constexpr unsigned char m_nKeys = (char)256u;
+		static constexpr unsigned short m_nKeys = 256u;
 		static std::bitset<m_nKeys> m_KeyStates;
 
 	};

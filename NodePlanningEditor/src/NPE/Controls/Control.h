@@ -39,6 +39,8 @@ namespace NPE
 		
 		const NColor& GetColor() const { return m_Color; }
 
+		const std::vector<Control*>& GetChildren() const { return m_Children; }
+
 		virtual bool Render() const = 0;
 
 		bool IsInWindow() const;

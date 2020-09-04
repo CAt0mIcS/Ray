@@ -46,12 +46,12 @@ namespace NPE
 	{
 		for (auto& child : m_Children)
 		{
-			NSize ratio{ size.width / m_Size.width, size.height / m_Size.height };
 			
 			//child->m_Pos.x += (m_Size.width - size.width);
 			child->m_Pos.x = m_Pos.x + (size.width / 2) - (10 / 2);
-			child->m_Pos.y = m_Pos.y + m_Size.height / 10;
+			child->m_Pos.y = m_Pos.y + m_Size.height / 30;
 			
+			NSize ratio{ size.width / m_Size.width, size.height / m_Size.height };
 			child->m_Size *= ratio;
 
 			//child->m_Pos.y *= ratio.height;

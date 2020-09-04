@@ -18,6 +18,10 @@ namespace NPE
 	private:
 		void OnEvent(const Event& e);
 
+		void DrawLine(const Event& e);
+
+		void Resize(const Event& e);
+
 		void OnPaint(const Event& e);
 
 		void MoveNodes(const Event& e);

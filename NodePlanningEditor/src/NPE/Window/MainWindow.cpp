@@ -12,23 +12,11 @@ namespace NPE
 	MainWindow::MainWindow(const NSize& size, PCWSTR name, std::function<void(const Event&)> eventFn)
 		: m_EventCallback(eventFn)
 	{
-		if (!CreateNativeWindow(name, WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, size.width, size.height))
+		if (!CreateNativeWindow(name, WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, (int)size.width, (int)size.height))
 			return;
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
 		Renderer2D.Init(m_hWnd, 30);
-
-		AddControl(new Node(Renderer2D, { 10, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		AddControl(new Node(Renderer2D, { 250, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		AddControl(new Node(Renderer2D, { 500, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		AddControl(new Node(Renderer2D, { 750, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		AddControl(new Node(Renderer2D, { 1000, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		AddControl(new Node(Renderer2D, { 1250, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		AddControl(new Node(Renderer2D, { 1500, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		AddControl(new Node(Renderer2D, { 1750, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		AddControl(new Node(Renderer2D, { 2000, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		AddControl(new Node(Renderer2D, { 2250, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		AddControl(new Node(Renderer2D, { 2500, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
 	}
 
 	int MainWindow::ProcessMessage()

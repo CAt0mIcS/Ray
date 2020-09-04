@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\NPE\Handlers\Mouse.cpp" />
     <ClCompile Include="src\NPE\Util\Exceptions\Exceptions.cpp" />
     <ClCompile Include="src\NPE\Controls\Button.cpp" />
     <ClCompile Include="src\NPE\Controls\Node.cpp" />
