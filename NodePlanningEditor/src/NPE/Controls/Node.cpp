@@ -8,7 +8,8 @@ namespace NPE
 	Node::Node(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color)
 		: Control(renderer, Control::Type::Node, pos, size, color)
 	{
-		m_Children.emplace_back(new Button(renderer, { pos.x + size.width - 30, pos.y + 15 }, { 10, 10 }, { 160.0f, 160.0f, 160.0f }, ""));
+		//m_Children.emplace_back(new Button(renderer, { pos.x + size.width - 30, pos.y + 15 }, { 10, 10 }, { 160.0f, 160.0f, 160.0f }, ""));
+		m_Children.emplace_back(new Button(renderer, { pos.x + (size.width / 2) - (10 / 2), pos.y + 15 }, { 10, 10 }, { 160.0f, 160.0f, 160.0f }, ""));
 	}
 	
 	//TODO: fix return type

@@ -25,7 +25,8 @@ namespace NPE
 	{
 		for (auto& child : m_Children)
 		{
-			child->m_Pos = pos;
+			NPoint ratio{ pos.x / m_Pos.x, pos.y / m_Pos.y };
+			child->m_Pos += ratio;
 		}
 
 		m_Pos = pos;
@@ -45,8 +46,15 @@ namespace NPE
 	{
 		for (auto& child : m_Children)
 		{
-			NSize ratio = size / m_Size;
+			NSize ratio{ size.width / m_Size.width, size.height / m_Size.height };
+			
+			//child->m_Pos.x += (m_Size.width - size.width);
+			child->m_Pos.x = m_Pos.x + (size.width / 2) - (10 / 2);
+			child->m_Pos.y = m_Pos.y + m_Size.height / 10;
+			
 			child->m_Size *= ratio;
+
+			//child->m_Pos.y *= ratio.height;
 		}
 
 		m_Size = size;
