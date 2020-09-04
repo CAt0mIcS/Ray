@@ -15,18 +15,18 @@
 namespace NPE
 {
 	Application::Application()
-		: m_Database("saves\\save.dbs", 2), m_Window({ 800, 600 }, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_Zoom(0), m_MousePos{ 0, 0 }
+		: m_Database("saves\\save.dbs", 2), m_Window({ 800, 600 }, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_Zoom(1.0f), m_MousePos{ 0, 0 }
 	{
 
 		/* Table fetch */
 		QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
 		QRD::Table& tbSceneInfo = m_Database.GetTable("SceneInfo");
 
-		m_Zoom = std::stoi(tbSceneInfo.GetRecords()[0].GetRecordData()[0]);
+		m_Zoom = std::stof(tbSceneInfo.GetRecords()[0].GetRecordData()[0]);
 
 		//for (int i = 0; i <= 5000; ++i)
 		//{
-			//m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
+		//	m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
 		//}
 
 		for (auto& record : tbNodeInfo.GetRecords())
@@ -39,7 +39,7 @@ namespace NPE
 		m_Database.DeleteTable("NodeInfo");
 		m_Database.DeleteTable("SceneInfo");
 		m_Database.WriteDb();
-
+		
 		/* Table creation and setup */
 		QRD::Table& tbNodeInfoC = m_Database.CreateTable("NodeInfo");
 		QRD::Table& tbSceneInfoC = m_Database.CreateTable("SceneInfo");
@@ -220,7 +220,7 @@ namespace NPE
 
 		if (e.GetType() == EventType::MouseWheelUpEvent)
 		{
-			++m_Zoom;
+			m_Zoom += 0.02f;
 
 			m_Window.Renderer2D.BeginDraw();
 			m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
@@ -243,10 +243,10 @@ namespace NPE
 		}
 		else if (e.GetType() == EventType::MouseWheelDownEvent)
 		{
-			--m_Zoom;
-			if (m_Zoom <= -m_ZoomBoundary)
+			m_Zoom -= 0.02f;
+			if (m_Zoom <= m_ZoomBoundary)
 			{
-				m_Zoom = -m_ZoomBoundary;
+				m_Zoom = m_ZoomBoundary;
 				return;
 			}
 

@@ -41,10 +41,10 @@ namespace NPE
 		
 		QRD::Database m_Database;
 
-		short m_Zoom;
+		float m_Zoom;
 		static constexpr float m_ZoomFactor = 0.05f;
 		static constexpr float m_ResizeFactor = 1.05f;
-		static constexpr unsigned char m_ZoomBoundary = 40;
+		static constexpr float m_ZoomBoundary = 0.1f;
 	};
 }
 
