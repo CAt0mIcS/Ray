@@ -24,6 +24,19 @@ namespace NPE
 	{
 		MoveNodes(e);
 		Zoom(e);
+		OnPaint(e);
+	}
+
+	void Application::OnPaint(const Event& e)
+	{
+		if (e.GetType() == EventType::AppPaintEvent)
+		{
+			m_Window.Renderer2D.BeginDraw();
+			m_Window.Renderer2D.RenderScene(NColor{ 35.0f, 38.0f, 40.0f });
+			for (auto* control : m_Window.GetControls())
+				control->Render();
+			m_Window.Renderer2D.EndDraw();
+		}
 	}
 
 	void Application::MoveNodes(const Event& e)
@@ -47,10 +60,10 @@ namespace NPE
 
 				m_Window.Renderer2D.BeginDraw();
 				m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
-				for (auto& control : m_Window.GetControls())
+				for (auto* control : m_Window.GetControls())
 				{
-					control.MoveBy(diff);
-					control.Render();
+					control->MoveBy(diff);
+					control->Render();
 				}
 				m_Window.Renderer2D.EndDraw();
 			}
@@ -67,10 +80,10 @@ namespace NPE
 
 			m_Window.Renderer2D.BeginDraw();
 			m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
-			for (auto& control : m_Window.GetControls())
+			for (auto* control : m_Window.GetControls())
 			{
-				const NPoint& pos = control.GetPos();
-				const NSize& size = control.GetSize();
+				const NPoint& pos = control->GetPos();
+				const NSize& size = control->GetSize();
 				NPoint newPos = screenCenter - pos;
 				NSize newSize;
 				newPos.x *= -m_ZoomFactor;
@@ -78,9 +91,9 @@ namespace NPE
 
 				newSize.width = size.width * m_ResizeFactor;
 				newSize.height = size.height * m_ResizeFactor;
-				control.MoveBy(newPos);
-				control.ResizeTo(newSize);
-				control.Render();
+				control->MoveBy(newPos);
+				control->ResizeTo(newSize);
+				control->Render();
 			}
 			m_Window.Renderer2D.EndDraw();
 		}
@@ -95,10 +108,10 @@ namespace NPE
 
 			m_Window.Renderer2D.BeginDraw();
 			m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
-			for(auto& control : m_Window.GetControls())
+			for(auto* control : m_Window.GetControls())
 			{
-				const NPoint& pos = control.GetPos();
-				const NSize& size = control.GetSize();
+				const NPoint& pos = control->GetPos();
+				const NSize& size = control->GetSize();
 				NPoint newPos = screenCenter - pos;
 				NSize newSize;
 				newPos.x *= m_ZoomFactor;
@@ -106,9 +119,9 @@ namespace NPE
 
 				newSize.width = size.width / m_ResizeFactor;
 				newSize.height = size.height / m_ResizeFactor;
-				control.MoveBy(newPos);
-				control.ResizeTo(newSize);
-				control.Render();
+				control->MoveBy(newPos);
+				control->ResizeTo(newSize);
+				control->Render();
 			}
 			m_Window.Renderer2D.EndDraw();
 		}

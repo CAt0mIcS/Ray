@@ -12,7 +12,7 @@ namespace NPE
 		INVALID = 0,
 		MouseButtonPressedEvent, MouseButtonReleasedEvent, MouseWheelUpEvent, MouseWheelDownEvent, MouseMoveEvent, MouseEnterEvent, MouseLeaveEvent,
 		KeyPressedEvent, KeyReleasedEvent,
-		AppResizeEvent, AppCloseEvent, AppMoveEvent
+		AppResizeEvent, AppCloseEvent, AppMoveEvent, AppPaintEvent
 	};
 
 

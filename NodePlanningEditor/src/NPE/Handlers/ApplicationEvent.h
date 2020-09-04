@@ -43,4 +43,22 @@ namespace NPE
 
 		NPE_DECLARE_TYPE_FN(AppCloseEvent)
 	};
+
+	class PaintEvent : public Event
+	{
+	public:
+		PaintEvent(HDC hDC, RECT* rc)
+			: m_hDC(hDC), m_RC(rc)
+		{
+
+		}
+
+		HDC GetDC() const { return m_hDC; }
+		RECT* GetRect() const { return m_RC; }
+
+		NPE_DECLARE_TYPE_FN(AppPaintEvent)
+	private:
+		HDC m_hDC;
+		RECT* m_RC;
+	};
 }

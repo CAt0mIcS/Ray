@@ -13,6 +13,8 @@
 
 namespace NPE
 {
+	using WindowPaintFn = std::function<void(HDC, RECT*)>;
+
 	class MainWindow : public BaseWindow<MainWindow>
 	{
 	public:
@@ -21,7 +23,9 @@ namespace NPE
 		int ProcessMessage();
 
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		std::vector<Control>& GetControls() { return m_Controls; }
+		std::vector<Control*>& GetControls() { return m_Controls; }
+
+		void AddControl(Control* control) { m_Controls.emplace_back(control); }
 
 		NPoint GetPos() const;
 		NSize GetSize() const;
@@ -31,12 +35,8 @@ namespace NPE
 		Renderer2D Renderer2D;
 
 	private:
-		void Paint(HDC hDC, RECT* rcDirty, BOOL bErase);
-
-	private:
 		std::function<void(const Event& e)> m_EventCallback;
-		
-		std::vector<Control> m_Controls;
+		std::vector<Control*> m_Controls;
 	};
 
 }

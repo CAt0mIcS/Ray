@@ -17,17 +17,18 @@ namespace NPE
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
 		Renderer2D.Init(m_hWnd, 30);
-		m_Controls.emplace_back(Node(Renderer2D, { 10, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
-		m_Controls.emplace_back(Node(Renderer2D, { 250, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
-		m_Controls.emplace_back(Node(Renderer2D, { 500, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
-		m_Controls.emplace_back(Node(Renderer2D, { 750, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
-		m_Controls.emplace_back(Node(Renderer2D, { 1000, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
-		m_Controls.emplace_back(Node(Renderer2D, { 1250, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
-		m_Controls.emplace_back(Node(Renderer2D, { 1500, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
-		m_Controls.emplace_back(Node(Renderer2D, { 1750, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
-		m_Controls.emplace_back(Node(Renderer2D, { 2000, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
-		m_Controls.emplace_back(Node(Renderer2D, { 2250, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
-		m_Controls.emplace_back(Node(Renderer2D, { 2500, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
+
+		AddControl(new Node(Renderer2D, { 10, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		AddControl(new Node(Renderer2D, { 250, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		AddControl(new Node(Renderer2D, { 500, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		AddControl(new Node(Renderer2D, { 750, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		AddControl(new Node(Renderer2D, { 1000, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		AddControl(new Node(Renderer2D, { 1250, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		AddControl(new Node(Renderer2D, { 1500, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		AddControl(new Node(Renderer2D, { 1750, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		AddControl(new Node(Renderer2D, { 2000, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		AddControl(new Node(Renderer2D, { 2250, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
+		AddControl(new Node(Renderer2D, { 2500, 350 }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }, "He"));
 	}
 
 	int MainWindow::ProcessMessage()
@@ -61,7 +62,8 @@ namespace NPE
 		{
 			PAINTSTRUCT ps;
 			HDC hDC = BeginPaint(m_hWnd, &ps);
-			Paint(hDC, &ps.rcPaint, FALSE);
+			PaintEvent e(hDC, &ps.rcPaint);
+			m_EventCallback(e);
 			EndPaint(m_hWnd, &ps);
 			ReleaseDC(m_hWnd, hDC);
 			return 0;
@@ -166,15 +168,6 @@ namespace NPE
 		}
 
 		return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
-	}
-
-	void MainWindow::Paint(HDC hDC, RECT* rcDirty, BOOL bErase)
-	{
-		Renderer2D.BeginDraw();
-		Renderer2D.RenderScene(NColor{ 35.0f, 38.0f, 40.0f });
-		for (auto& control : m_Controls)
-			control.Render();
-		Renderer2D.EndDraw();
 	}
 	
 	NPoint MainWindow::GetPos() const
