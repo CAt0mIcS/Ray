@@ -28,12 +28,12 @@ namespace NPE
 	{
 		return m_Window.ProcessMessage();
 	}
-	
+
 	void Application::OnButtonClicked(Button& control)
 	{
 		//TODO: Implement functions bellow this point
 		//ERROR: OnButtonClicked is only called once, thus Mouse::IsLeftPressed() is only checked once and the line only draws when clicking the button
-		//DrawLine(control);
+		DrawLine(control);
 	}
 
 	void Application::OnEvent(const Event& e)
@@ -41,19 +41,30 @@ namespace NPE
 		MoveNodes(e);
 		Zoom(e);
 		OnPaint(e);
-	
+
 		//TODO: Implement functions bellow this point
 		Resize(e);
 	}
 
+	NPoint pos[2] = { { 0, 0 }, {0, 0} };
 	void Application::DrawLine(const Button& btn)
 	{
-		m_Window.Renderer2D.BeginDraw();
-		if (Mouse::IsLeftPressed())
+		if (pos[0].x == 0)
 		{
-			m_Window.Renderer2D.RenderLine(btn.GetPos(), Mouse::GetPos(), { 255.0f, 255.0f, 255.0f }, 2);
+			pos[0] = Mouse::GetPos();
 		}
-		m_Window.Renderer2D.EndDraw();
+		else if (pos[1].x == 0)
+		{
+			pos[1] = Mouse::GetPos();
+			m_Window.Renderer2D.BeginDraw();
+		
+			m_Window.Renderer2D.RenderLine(pos[0], pos[1], { 255.0f, 255.0f, 255.0f }, 2);
+			
+			m_Window.Renderer2D.EndDraw();
+			pos[0] = NPoint{ 0, 0 };
+			pos[1] = NPoint{ 0, 0 };
+		}
+
 	}
 
 	void Application::Resize(const Event& e)
