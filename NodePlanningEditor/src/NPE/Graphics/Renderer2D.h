@@ -28,6 +28,8 @@ namespace NPE
 		void RenderRoundedRectControl(const Control& control) const;
 		void RenderText(const std::wstring text, const NPoint& pos, const NSize& size);
 
+		void RenderLine(const NPoint& startPos, const NPoint& endPos, const NColor& color, const unsigned int width);
+
 		void RenderScene(const NColor& color);
 
 	private:

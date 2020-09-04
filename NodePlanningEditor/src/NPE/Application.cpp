@@ -30,6 +30,7 @@ namespace NPE
 	void Application::OnButtonClicked(Button& control)
 	{
 		//TODO: Implement functions bellow this point
+		//ERROR: OnButtonClicked is only called once, thus Mouse::IsLeftPressed() is only checked once and the line only draws when clicking the button
 		DrawLine(control);
 	}
 
@@ -45,7 +46,12 @@ namespace NPE
 
 	void Application::DrawLine(const Button& btn)
 	{
-		
+		m_Window.Renderer2D.BeginDraw();
+		if (Mouse::IsLeftPressed())
+		{
+			m_Window.Renderer2D.RenderLine(btn.GetPos(), Mouse::GetPos(), { 255.0f, 255.0f, 255.0f }, 2);
+		}
+		m_Window.Renderer2D.EndDraw();
 	}
 
 	void Application::Resize(const Event& e)

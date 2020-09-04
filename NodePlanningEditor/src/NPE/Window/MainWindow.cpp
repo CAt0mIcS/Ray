@@ -65,6 +65,9 @@ namespace NPE
 		}
 		case WM_LBUTTONDOWN:
 		{
+			MouseButtonPressedEvent e(MouseButton::Left);
+			m_EventCallback(e);
+
 			//TODO: make recursive to work with an infinite amount of child-parent relationships
 			for (auto* control : m_Controls)
 			{
@@ -78,8 +81,6 @@ namespace NPE
 				}
 			}
 
-			MouseButtonPressedEvent e(MouseButton::Left);
-			m_EventCallback(e);
 			return 0;
 		}
 		case WM_LBUTTONUP:

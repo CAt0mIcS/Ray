@@ -52,6 +52,12 @@ namespace NPE
 
 	}
 
+	void Renderer2D::RenderLine(const NPoint& startPos, const NPoint& endPos, const NColor& color, const unsigned int width)
+	{
+		m_pBrush->SetColor(color.ToD2D1ColorF());
+		m_pRenderTarget->DrawLine(startPos.ToD2D1Point2F(), endPos.ToD2D1Point2F(), m_pBrush.Get(), width);
+	}
+
 	void Renderer2D::RenderScene(const NColor& color)
 	{
 		m_pRenderTarget->Clear(color.ToD2D1ColorF());

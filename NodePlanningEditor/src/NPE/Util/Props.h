@@ -173,6 +173,11 @@ namespace NPE
 			y = val.y;
 			return *this;
 		}
+
+		D2D1_POINT_2F ToD2D1Point2F() const
+		{
+			return { x, y };
+		}
 	};
 
 
