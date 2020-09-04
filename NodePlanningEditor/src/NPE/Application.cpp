@@ -47,6 +47,11 @@ namespace NPE
 
 	void Application::OnEvent(const Event& e)
 	{
+		if (e.GetType() == EventType::MouseButtonPressedEvent && Mouse::IsLeftPressed())
+		{
+			m_MousePos = Mouse::GetPos();
+		}
+
 		MoveNodes(e);
 		Zoom(e);
 		OnPaint(e);
@@ -54,7 +59,21 @@ namespace NPE
 
 	void Application::MoveNodesWithMouse(Node& node)
 	{
+		NPoint diff{};
+		diff.x = Mouse::GetPos().x - m_MousePos.x;
+		diff.y = Mouse::GetPos().y - m_MousePos.y;
 
+		node.MoveBy(diff);
+
+		m_MousePos = Mouse::GetPos();
+
+		m_Window.Renderer2D.BeginDraw();
+		m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
+		
+		for (auto* control : m_Window.GetControls())
+			control->Render();
+		
+		m_Window.Renderer2D.EndDraw();
 	}
 
 	void Application::ResizeNodes(Node& node)
