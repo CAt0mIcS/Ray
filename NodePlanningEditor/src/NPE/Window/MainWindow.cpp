@@ -31,6 +31,11 @@ namespace NPE
 		return (int)msg.wParam;
 	}
 
+	//DEBUG:
+	bool wasClicked = false;
+	Button* childB = nullptr;
+	//DEBUG END
+
 	LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
@@ -61,6 +66,24 @@ namespace NPE
 			POINTS pt = MAKEPOINTS(lParam);
 			MouseMoveEvent e({ (float)pt.x, (float)pt.y });
 			m_EventCallback(e);
+
+			//DEBUG:
+			if (Mouse::IsLeftPressed() || Mouse::IsRightPressed() || Mouse::IsMiddlePressed())
+			{
+				//TODO: make recursive to work with an infinite amount of child-parent relationships
+				for (auto* control : m_Controls)
+				{
+					for (auto* child : control->GetChildren())
+					{
+						if (child->GetType() == Control::Type::Button && wasClicked && child == childB)
+						{
+							Button* btn = (Button*)child;
+							btn->OnButtonClickedEventCallback(*btn);
+						}
+					}
+				}
+			}
+
 			return 0;
 		}
 		case WM_LBUTTONDOWN:
@@ -76,7 +99,12 @@ namespace NPE
 					if (child->GetType() == Control::Type::Button && Mouse::IsOnControl(child))
 					{
 						Button* btn = (Button*)child;
+						
+						//DEBUG:
+						childB = btn;
+
 						btn->OnButtonClickedEventCallback(*btn);
+						wasClicked = true;
 					}
 				}
 			}
@@ -85,6 +113,7 @@ namespace NPE
 		}
 		case WM_LBUTTONUP:
 		{
+			wasClicked = false;
 			MouseButtonReleasedEvent e(MouseButton::Left);
 			m_EventCallback(e);
 			return 0;

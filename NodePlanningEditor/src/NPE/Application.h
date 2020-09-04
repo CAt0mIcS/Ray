@@ -16,18 +16,14 @@ namespace NPE
 		* Starts the application loop
 		*/
 		int Run();
-
-		void OnButtonClicked(Button& control);
-
+	
 	private:
 		void OnEvent(const Event& e);
+		void OnButtonClicked(Button& control);
 
 		void DrawLine(const Button& btn);
-
-		void Resize(const Event& e);
-
+		void ResizeNodes(const Event& e);
 		void OnPaint(const Event& e);
-
 		void MoveNodes(const Event& e);
 		void Zoom(const Event& e);
 

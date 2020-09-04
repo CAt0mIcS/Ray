@@ -43,31 +43,29 @@ namespace NPE
 		OnPaint(e);
 
 		//TODO: Implement functions bellow this point
-		Resize(e);
+		ResizeNodes(e);
+		MoveNodes(e);
 	}
 
-	NPoint pos[2] = { { 0, 0 }, {0, 0} };
 	void Application::DrawLine(const Button& btn)
 	{
-		if (pos[0].x == 0)
+		if(Mouse::IsLeftPressed())
 		{
-			pos[0] = Mouse::GetPos();
-		}
-		else if (pos[1].x == 0)
-		{
-			pos[1] = Mouse::GetPos();
 			m_Window.Renderer2D.BeginDraw();
 		
-			m_Window.Renderer2D.RenderLine(pos[0], pos[1], { 255.0f, 255.0f, 255.0f }, 2);
+			m_Window.Renderer2D.RenderScene({ 35.0f, 37.0f, 40.0f });
+			for (auto* control : m_Window.GetControls())
+				control->Render();
+
+			NPoint btnPos = { btn.GetPos().x + btn.GetSize().width / 2, btn.GetPos().y + btn.GetSize().height / 2 };
+			m_Window.Renderer2D.RenderLine(btnPos, Mouse::GetPos(), { 255.0f, 255.0f, 255.0f }, 2);
 			
 			m_Window.Renderer2D.EndDraw();
-			pos[0] = NPoint{ 0, 0 };
-			pos[1] = NPoint{ 0, 0 };
 		}
 
 	}
 
-	void Application::Resize(const Event& e)
+	void Application::ResizeNodes(const Event& e)
 	{
 
 	}
