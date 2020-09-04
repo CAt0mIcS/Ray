@@ -59,4 +59,4 @@ namespace NPE
 #define NPE_THROW_EXCEPT() throw NPE::Exception(__LINE__, __FILE__)
 
 #define NPE_THROW_WND_EXCEPT(hr) throw NPE::WindowException(hr, __LINE__, __FILE__)
-#define NPE_THROW_GFX_EXCEPT(hr, msg) throw NPE::GraphicsException(hr, __LINE__, __FILE__, msg)
+#define NPE_THROW_GFX_EXCEPT(hr, msg) if(FAILED(hr)) throw NPE::GraphicsException(hr, __LINE__, __FILE__, msg)

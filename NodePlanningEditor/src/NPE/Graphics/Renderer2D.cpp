@@ -24,10 +24,7 @@ namespace NPE
 
 	void Renderer2D::EndDraw()
 	{
-		if (HRESULT hr = FAILED(m_pRenderTarget->EndDraw()))
-		{
-			NPE_THROW_GFX_EXCEPT(hr, "Failed to draw object(s)");
-		}
+		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->EndDraw(), "Failed to draw object(s)");
 	}
 
 	void Renderer2D::RenderRoundedRectControl(Control& control)
@@ -62,39 +59,24 @@ namespace NPE
 
 	void Renderer2D::CreateGraphicsResources(const unsigned int fontSize)
 	{
-		if (HRESULT hr = FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED,
-			__uuidof(m_pFactory), &m_pFactory)))
-		{
-			NPE_THROW_GFX_EXCEPT(hr, "Failed to create D2D1Factory");
-		}
+		NPE_THROW_GFX_EXCEPT(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED,
+			__uuidof(m_pFactory), &m_pFactory), "Failed to create D2D1Factory");
 
 		RECT rc;
 		GetClientRect(m_hWnd, &rc);
 		D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
-		if (HRESULT hr = FAILED(m_pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
-			D2D1::HwndRenderTargetProperties(m_hWnd, size), &m_pRenderTarget)))
-		{
-			NPE_THROW_GFX_EXCEPT(hr, "Failed to create D2D1HwndRenderTarget");
-		}
+		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
+			D2D1::HwndRenderTargetProperties(m_hWnd, size), &m_pRenderTarget), "Failed to create D2D1HwndRenderTarget");
 
-		if (HRESULT hr = FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED,
-			__uuidof(m_pWriteFactory), &m_pWriteFactory)))
-		{
-			NPE_THROW_GFX_EXCEPT(hr, "Failed to create DWriteFactory");
-		}
+		NPE_THROW_GFX_EXCEPT(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED,
+			__uuidof(m_pWriteFactory), &m_pWriteFactory), "Failed to create DWriteFactory");
 
-		if (HRESULT hr = FAILED(m_pWriteFactory->CreateTextFormat(L"Consolas", nullptr,
+		NPE_THROW_GFX_EXCEPT(m_pWriteFactory->CreateTextFormat(L"Consolas", nullptr,
 			DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL,
-			DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &m_pTextFormat)))
-		{
-			NPE_THROW_GFX_EXCEPT(hr, "Failed to create IDWriteTextFormat");
-		}
+			DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &m_pTextFormat), "Failed to create IDWriteTextFormat");
 
 		const D2D1_COLOR_F color = D2D1::ColorF(35.0f / 255.0f, 38.0f / 255.0f, 40.0f / 255.0f);
-		if (HRESULT hr = FAILED(m_pRenderTarget->CreateSolidColorBrush(color, &m_pBrush)))
-		{
-			NPE_THROW_GFX_EXCEPT(hr, "Failed to create D2D1SolidColorBrush");
-		}
+			NPE_THROW_GFX_EXCEPT(m_pRenderTarget->CreateSolidColorBrush(color, &m_pBrush), "Failed to create D2D1SolidColorBrush");
 	}
 }
 
