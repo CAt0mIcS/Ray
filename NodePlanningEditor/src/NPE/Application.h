@@ -25,12 +25,14 @@ namespace NPE
 	private:
 		void OnEvent(const Event& e);
 
+
 		void MoveNodesWithMouse(Node& node);
 		void OnButtonClicked(Button& control);
 		void OnNodeClicked(Node& node);
 		void ResizeNodes(Node& node);
-
 		void DrawLine(const Button& btn);
+
+		void NewNode(const Event& e);
 		void OnPaint(const Event& e);
 		void MoveNodes(const Event& e);
 		void Zoom(const Event& e);

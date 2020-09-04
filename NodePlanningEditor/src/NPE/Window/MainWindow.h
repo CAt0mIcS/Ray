@@ -25,7 +25,7 @@ namespace NPE
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		std::vector<Control*>& GetControls() { return m_Controls; }
 
-		void AddControl(Control* control) { m_Controls.emplace_back(control); }
+		Control* AddControl(Control* control) { return m_Controls.emplace_back(control); }
 
 		NPoint GetPos() const;
 		NSize GetSize() const;

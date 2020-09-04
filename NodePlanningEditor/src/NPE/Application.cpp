@@ -24,9 +24,9 @@ namespace NPE
 
 		m_Zoom = std::stof(tbSceneInfo.GetRecords()[0].GetRecordData()[0]);
 
-		//for (int i = 0; i <= 5000; ++i)
+		//for (int i = 0; i < 1000; ++i)
 		//{
-		//	m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
+			//m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
 		//}
 
 		for (auto& record : tbNodeInfo.GetRecords())
@@ -103,6 +103,23 @@ namespace NPE
 		MoveNodes(e);
 		Zoom(e);
 		OnPaint(e);
+		NewNode(e);
+	}
+
+	void Application::NewNode(const Event& e)
+	{
+		if (e.GetType() == EventType::KeyPressedEvent)
+		{
+			//Shift + A
+			if (Keyboard::IsKeyPressed(VK_SHIFT) && Keyboard::IsKeyPressed(65))
+			{
+				Control* control = m_Window.AddControl(new Node(m_Window.Renderer2D, Mouse::GetPos(), { 200.0f * m_Zoom, 150.0f * m_Zoom }, { 15.0f, 16.0f, 19.0f }));
+				
+				m_Window.Renderer2D.BeginDraw();
+				control->Render();
+				m_Window.Renderer2D.EndDraw();
+			}
+		}
 	}
 
 	void Application::MoveNodesWithMouse(Node& node)
