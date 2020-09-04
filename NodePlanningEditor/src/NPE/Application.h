@@ -2,6 +2,8 @@
 
 #include "Window/MainWindow.h"
 
+#include <QRD/QRD.h>
+
 
 namespace NPE
 {
@@ -12,6 +14,8 @@ namespace NPE
 	{
 	public:
 		Application();
+
+		~Application();
 
 		/**
 		* Starts the application loop
@@ -35,7 +39,9 @@ namespace NPE
 		MainWindow m_Window;
 		NPoint m_MousePos;
 		
-		char m_Zoom;
+		QRD::Database m_Database;
+
+		short m_Zoom;
 		static constexpr float m_ZoomFactor = 0.05f;
 		static constexpr float m_ResizeFactor = 1.05f;
 		static constexpr unsigned char m_ZoomBoundary = 40;

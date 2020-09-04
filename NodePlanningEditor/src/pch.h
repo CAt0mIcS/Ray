@@ -15,6 +15,11 @@
 #include <d2d1.h>
 #include <wrl.h>
 
+/**
+* Database Management System
+*/
+#include <QRD/QRD.h>
+
 
 #include <vector>
 #include <string>

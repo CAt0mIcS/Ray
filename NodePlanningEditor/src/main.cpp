@@ -10,7 +10,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		AllocConsole();
 		FILE* f = freopen("CONOUT$", "w", stdout);
 
-		return NPE::Application{}.Run();
+		//return NPE::Application{}.Run();
+		NPE::Application app;
+		auto retCode = app.Run();
+		return retCode;
 	}
 	catch (NPE::Exception& e)
 	{
