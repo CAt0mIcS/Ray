@@ -65,7 +65,7 @@ namespace NPE
 
 	void Renderer2D::CreateGraphicsResources(const unsigned int fontSize)
 	{
-		NPE_THROW_GFX_EXCEPT(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED,
+		NPE_THROW_GFX_EXCEPT(D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED,
 			__uuidof(m_pFactory), &m_pFactory), "Failed to create D2D1Factory");
 
 		RECT rc;

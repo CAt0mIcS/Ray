@@ -12,14 +12,17 @@ namespace NPE
 
 	}
 
-	//TODO: fix return type
 	bool Button::Render() const
 	{
-		m_Renderer.RenderRoundedRectControl(*this);
+		if (this->IsInWindow())
+		{
+			m_Renderer.RenderRoundedRectControl(*this);
 
-		for (auto& child : m_Children)
-			m_Renderer.RenderRoundedRectControl(*child);
-
+			for (auto& child : m_Children)
+				m_Renderer.RenderRoundedRectControl(*child);
+			
+			return true;
+		}
 		return false;
 	}
 }

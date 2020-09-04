@@ -60,13 +60,11 @@ namespace NPE
 		m_Size = size;
 	}
 
-	//TODO: fix function
 	bool Control::IsInWindow() const
 	{
-		//RECT rc;
-		//GetWindowRect(m_hWndParent, &rc);
-		//return m_Pos.x + m_Size.width > 0 && m_Pos.y + m_Size.height > 0 && m_Pos.x < rc.right && m_Pos.y < rc.bottom;
-		return false;
+		RECT rc;
+		GetWindowRect(m_Renderer.GetNativeWindow(), &rc);
+		return m_Pos.x + m_Size.width > 0 && m_Pos.y + m_Size.height > 0 && m_Pos.x < rc.right && m_Pos.y < rc.bottom;
 	}
 
 }

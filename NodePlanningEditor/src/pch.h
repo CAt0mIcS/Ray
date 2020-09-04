@@ -1,5 +1,7 @@
 #pragma once
 
+#define _CRT_SECURE_NO_WARNINGS
+
 /**
 * warning C4244: conversion from 'float' to 'int', possible loss of data
 */
@@ -20,5 +22,6 @@
 #include <bitset>
 #include <optional>
 #include <functional>
+#include <future>
 #include <sstream>
 

@@ -32,6 +32,8 @@ namespace NPE
 
 		void RenderScene(const NColor& color);
 
+		const HWND GetNativeWindow() const { return m_hWnd; }
+
 	private:
 		void CreateGraphicsResources(const unsigned int fontSize);
 

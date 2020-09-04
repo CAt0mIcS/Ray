@@ -60,7 +60,7 @@ namespace NPE
 	{
 		std::ostringstream oss;
 		oss << GetType() << '\n'
-			<< "\t[Error Code] " << m_Hr << '\n'
+			<< "\t[Error Code] 0x" << std::hex << std::uppercase << m_Hr << '\n'
 			<< "\t[Message] " << m_Message << '\n'
 			<< GetOriginString();
 		m_WhatBuffer = oss.str();

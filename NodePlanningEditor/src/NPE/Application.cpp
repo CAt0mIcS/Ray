@@ -9,13 +9,15 @@
 
 #include "NPE/Controls/Node.h"
 
+#include "NPE/Util/Debug/Timer.h"
+
 
 namespace NPE
 {
 	Application::Application()
 		: m_Window({ 800, 600 }, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_Zoom(0), m_MousePos{ 0, 0 }
 	{
-		for (int i = 0; i <= 500; ++i)
+		for (int i = 0; i <= 5000; ++i)
 		{
 			m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
 		}
@@ -31,7 +33,7 @@ namespace NPE
 	{
 		//TODO: Implement functions bellow this point
 		//ERROR: OnButtonClicked is only called once, thus Mouse::IsLeftPressed() is only checked once and the line only draws when clicking the button
-		DrawLine(control);
+		//DrawLine(control);
 	}
 
 	void Application::OnEvent(const Event& e)

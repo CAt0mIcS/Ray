@@ -12,13 +12,17 @@ namespace NPE
 		m_Children.emplace_back(new Button(renderer, { pos.x + (size.width / 2) - (10 / 2), pos.y + 5 }, { 10, 10 }, { 160.0f, 160.0f, 160.0f }, ""));
 	}
 	
-	//TODO: fix return type
 	bool Node::Render() const
 	{
-		m_Renderer.RenderRoundedRectControl(*this);
+		if (this->IsInWindow())
+		{
+			m_Renderer.RenderRoundedRectControl(*this);
 
-		for (auto& child : m_Children)
-			m_Renderer.RenderRoundedRectControl(*child);
+			for (auto& child : m_Children)
+				m_Renderer.RenderRoundedRectControl(*child);
+
+			return true;
+		}
 
 		return false;
 	}
