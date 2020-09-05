@@ -4,6 +4,8 @@
 
 #include <string>
 #include <vector>
+#include <optional>
+
 
 /**
 * QUESTION: 
@@ -97,6 +99,8 @@ namespace NPE
 		* Renders the widget
 		*/
 		virtual bool Render() const = 0;
+
+		virtual std::optional<std::pair<NPoint, NSize>> CalculateLayout(const NPoint& parentPos, const NSize& parentSize) { return { }; }
 
 		/**
 		* Checks if control is in window bounds

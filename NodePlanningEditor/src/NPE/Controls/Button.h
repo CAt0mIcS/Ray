@@ -37,6 +37,15 @@ namespace NPE
 		const std::string& GetText() const { return m_Text; }
 
 		/**
+		* Calculates the layout of a new button
+		*
+		* @param parentPos is the position of the parent control
+		* @param parentSize is the size of the parent control
+		* @returns the new position and size of the layout
+		*/
+		virtual std::optional<std::pair<NPoint, NSize>> CalculateLayout(const NPoint& parentPos, const NSize& parentSize) override;
+
+		/**
 		* Sets a function to be called when any button was clicked
 		* 
 		* @tparam F is any callable and to an std::function<void(Button&)> castable type

@@ -34,37 +34,35 @@ namespace NPE
 
 	void Control::ResizeBy(const NSize& size)
 	{
+		m_Size += size;
+		
 		for (auto& child : m_Children)
 		{
-			child->m_Size += size;
+			auto newLayout = child->CalculateLayout(m_Pos, m_Size);
+
+			if (newLayout)
+			{
+				child->MoveTo(newLayout.value().first);
+				child->ResizeTo(newLayout.value().second);
+			}
 		}
 
-		m_Size += size;
 	}
 
 	void Control::ResizeTo(const NSize& size)
 	{
+		m_Size = size;
+
 		for (auto& child : m_Children)
 		{
-			if (child->GetType() == Type::Button)
+			auto newLayout = child->CalculateLayout(m_Pos, m_Size);
+			
+			if (newLayout)
 			{
-				//child->m_Pos.x += (m_Size.width - size.width);
-				child->m_Pos.x = m_Pos.x + (size.width / 2) - (10 / 2);
-				child->m_Pos.y = m_Pos.y + m_Size.height / 30;
-
-				NSize ratio{ size.width / m_Size.width, size.height / m_Size.height };
-				child->m_Size *= ratio;
-
-				//child->m_Pos.y *= ratio.height;
-			}
-			else if (child->GetType() == Type::TextBox)
-			{
-				NSize ratio{ size.width / m_Size.width, size.height / m_Size.height };
-				child->m_Size *= ratio;
+				child->MoveTo(newLayout.value().first);
+				child->ResizeTo(newLayout.value().second);
 			}
 		}
-
-		m_Size = size;
 	}
 
 	bool Control::IsInWindow() const

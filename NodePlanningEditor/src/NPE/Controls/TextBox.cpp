@@ -41,6 +41,23 @@ namespace NPE
 
 		return false;
 	}
+	
+	std::optional<std::pair<NPoint, NSize>> TextBox::CalculateLayout(const NPoint& parentPos, const NSize& parentSize)
+	{
+		float xOffsetTxt = parentSize.width / 22.5f;
+		float txtX = parentPos.x + xOffsetTxt;
+
+		float yOffsetTxt = parentSize.height / 7.0f;
+		float txtY = parentPos.y + yOffsetTxt;
+
+		float txtWidth = parentSize.width - (xOffsetTxt * 2);
+
+		//20% of Node's height is this textbox
+		float txtPercentOfNode = 0.2f;
+		float txtHeight = parentSize.height * txtPercentOfNode;
+
+		return { { {txtX, txtY}, {txtWidth, txtHeight} } };
+	}
 }
 
 

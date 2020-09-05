@@ -25,6 +25,19 @@ namespace NPE
 		}
 		return false;
 	}
+	
+	std::optional<std::pair<NPoint, NSize>> Button::CalculateLayout(const NPoint& parentPos, const NSize& parentSize)
+	{
+		float middleOfNodeX = parentPos.x + (parentSize.width / 2);
+
+		float btnWidthHeight = std::min(parentSize.width, parentSize.height) / 12;
+		float btnX = middleOfNodeX - (btnWidthHeight / 2);
+
+		float yOffsetBtn = parentSize.height / 56;
+		float btnY = parentPos.y + yOffsetBtn;
+
+		return { { { btnX, btnY }, { btnWidthHeight, btnWidthHeight } } };
+	}
 }
 
 
