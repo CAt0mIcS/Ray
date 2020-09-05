@@ -42,6 +42,7 @@ namespace NPE
 		return false;
 	}
 	
+	//TODO: Allow for independen position (currently only works if the textbox is centered) and make the 20% height variable calculate itself
 	std::optional<std::pair<NPoint, NSize>> TextBox::CalculateLayout(const NPoint& parentPos, const NSize& parentSize)
 	{
 		float xOffsetTxt = parentSize.width / 22.5f;
