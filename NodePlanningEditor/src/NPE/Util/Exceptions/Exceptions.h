@@ -8,16 +8,44 @@ namespace NPE
 	class Exception : public std::exception
 	{
 	public:
+		/**
+		* Exception contructor
+		* 
+		* @param line is the line where the exception occured
+		* @param file is the file where the exception occured
+		*/
 		Exception(unsigned int line, const char* file);
 
+		/**
+		* Deleted copy-asignment operators
+		*/
 		Exception(const Exception&) = delete;
 		Exception& operator=(const Exception&) = delete;
 
+		/**
+		* Getter for a string with line and file info
+		* 
+		* @returns line/file string
+		*/
 		std::string GetOriginString() const;
 
+		/**
+		* Getter for string with type
+		* 
+		* @returns string with type
+		*/
 		virtual const char* GetType() const = 0;
+
+		/**
+		* Getter for more information about the error
+		* 
+		* @returns more information about the erro
+		*/
 		virtual const char* what() const override = 0;
 
+		/**
+		* Virtual Exception destructor
+		*/
 		virtual ~Exception() = default;
 
 	protected:
@@ -30,10 +58,34 @@ namespace NPE
 	class WindowException : public Exception
 	{
 	public:
+		/**
+		* WindowException contructor
+		* 
+		* @param hr is the error code
+		* @param line is the line where the error occured
+		* @param file is the file where the error occured
+		*/
 		WindowException(HRESULT hr, unsigned int line, const char* file);
 
+		/**
+		* Getter for string with type
+		*
+		* @returns string with type
+		*/
 		virtual const char* GetType() const override { return "NPE WindowException"; }
+
+		/**
+		* Getter for more information about the error
+		*
+		* @returns more information about the erro
+		*/
 		virtual const char* what() const override;
+
+		/**
+		* Uses format message to get the message string from Win32API
+		* 
+		* @returns the formated message
+		*/
 		std::string GetErrorString() const;
 
 	private:
@@ -43,9 +95,27 @@ namespace NPE
 	class GraphicsException : public Exception
 	{
 	public:
+		/**
+		* WindowException contructor
+		*
+		* @param hr is the error code
+		* @param line is the line where the error occured
+		* @param file is the file where the error occured
+		*/
 		GraphicsException(HRESULT hr, unsigned int line, const char* file, const char* message);
 
+		/**
+		* Getter for string with type
+		*
+		* @returns string with type
+		*/
 		virtual const char* GetType() const override { return "NPE GraphicsException"; }
+
+		/**
+		* Getter for more information about the error
+		*
+		* @returns more information about the erro
+		*/
 		virtual const char* what() const override;
 
 	private:
