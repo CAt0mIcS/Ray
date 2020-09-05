@@ -33,7 +33,6 @@ namespace NPE
 		{
 			const float fontSize = std::max(m_Size.width, m_Size.height) / 7.2f;
 
-			//405, 56
 			float xOffset = m_Size.width / 81.0f;
 			float yOffset = m_Size.height / -11.2f;
 			m_Renderer.RenderText(m_Text, { m_Pos.x + xOffset, m_Pos.y + yOffset }, { 160.0f, 160.0f, 160.0f }, fontSize);
