@@ -43,6 +43,9 @@ namespace NPE
 
 	bool wasClickedN = false;
 	Node* nodeBackup = nullptr;
+
+	bool wasClickedT = false;
+	TextBox* txtBoxBackup = nullptr;
 	//DEBUG END
 
 	LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -92,6 +95,11 @@ namespace NPE
 							btn->OnButtonClickedEventCallback(*btn);
 							return 0;
 						}
+						else if (child->GetType() == Control::Type::TextBox && wasClickedT && child == txtBoxBackup)
+						{
+							TextBox* txtBox = (TextBox*)child;
+							txtBox->OnTextBoxClickedEventCallback(*txtBox);
+						}
 					}
 
 					if (control->GetType() == Control::Type::Node && wasClickedN && control == nodeBackup)
@@ -126,6 +134,14 @@ namespace NPE
 						wasClickedB = true;
 						return 0;
 					}
+					else if (child->GetType() == Control::Type::TextBox && Mouse::IsOnControl(child))
+					{
+						TextBox* txtBox = (TextBox*)child;
+						txtBoxBackup = txtBox;
+						txtBox->OnTextBoxClickedEventCallback(*txtBox);
+						wasClickedT = true;
+						return 0;
+					}
 				}
 
 				if (control->GetType() == Control::Type::Node && Mouse::IsOnControl(control))
@@ -149,6 +165,7 @@ namespace NPE
 			#pragma region TemporaryControlHoldEvent
 			wasClickedB = false;
 			wasClickedN = false;
+			wasClickedT = false;
 			#pragma endregion
 
 			MouseButtonReleasedEvent e(MouseButton::Left);

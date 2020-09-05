@@ -9,6 +9,7 @@ namespace NPE
 {
 	class Button;
 	class Node;
+	class TextBox;
 
 	class Application
 	{
@@ -56,6 +57,13 @@ namespace NPE
 		* @param node is the node that was clicked
 		*/
 		void OnNodeClicked(Node& node);
+
+		/**
+		* Receives all textbox clicked events
+		* 
+		* @param txtBox is the txtBox that was clicked
+		*/
+		void OnTextBoxClicked(TextBox& txtBox);
 
 		/**
 		* Contains logic to drag a certain node with the mouse

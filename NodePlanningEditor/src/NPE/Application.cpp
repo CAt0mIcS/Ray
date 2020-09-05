@@ -55,7 +55,7 @@ namespace NPE
 
 		Button::SetOnButtonClickedCallback([this](Button& btn) { OnButtonClicked(btn); });
 		Node::SetOnNodeClickedCallback([this](Node& node) { OnNodeClicked(node); });
-		TextBox::SetOnTextBoxClickedCallback([](TextBox& txtBox) {});
+		TextBox::SetOnTextBoxClickedCallback([this](TextBox& txtBox) { OnTextBoxClicked(txtBox); });
 	}
 
 	Application::~Application()
@@ -93,6 +93,14 @@ namespace NPE
 		//WARNING: Same as in Application::OnButtonClicked (cannot detect "ControlHoldMouseEvent")
 		MoveNodesWithMouse(node);
 		ResizeNodes(node);
+	}
+
+	void Application::OnTextBoxClicked(TextBox& txtBox)
+	{
+		if (Mouse::IsLeftPressed())
+		{
+
+		}
 	}
 
 	void Application::OnEvent(const Event& e)
