@@ -13,36 +13,30 @@ namespace NPE
 	Node::Node(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color)
 		: Control(renderer, Control::Type::Node, pos, size, color)
 	{
-		//5.177 percent of node x is button
-		float widthPercentOfNode = 0.05177f;
-		float btnWidth = m_Size.width * widthPercentOfNode;
-		float spaceButtonXToNodeBorder = (m_Size.width / 2) - (btnWidth / 2);
-		float btnX = m_Pos.x + spaceButtonXToNodeBorder;
+		float middleOfNodeX = m_Pos.x + (m_Size.width / 2);
 
-		float yOffset = m_Size.height / 56;
-		float btnY = m_Pos.y + yOffset;
-
-		float widthAndHeight = std::min(m_Size.width, m_Size.height) / 12;
-
-		m_Children.emplace_back(new Button(renderer, { btnX, btnY }, { widthAndHeight, widthAndHeight }, { 160.0f, 160.0f, 160.0f }, ""));
+		float btnHeightAndHeight = std::min(m_Size.width, m_Size.height) / 12;
+		float btnX = middleOfNodeX - (btnHeightAndHeight / 2);
 		
-		float spaceTxtboxXToNodeBorder = m_Size.width / 20;
-		float x = m_Pos.x + spaceTxtboxXToNodeBorder;
+		float yOffsetBtn = m_Size.height / 56;
+		float btnY = m_Pos.y + yOffsetBtn;
 
-		float spaceTxtboxYToLineButton = m_Size.width / 40;
-		Control* lastLineButton = m_Children[m_Children.size() - 1];
-		float y = lastLineButton->GetPos().y + lastLineButton->GetSize().height + spaceTxtboxYToLineButton;
-
-		//20% of Node is textbox
-		float width = m_Size.width - spaceTxtboxXToNodeBorder * 2;
-
-		float heightPercentOfNode = 0.2f;
-		float height = m_Size.height * heightPercentOfNode;
-
-		m_Children.emplace_back(new TextBox(renderer, { x, y }, { width, height }, { 15.0f, 17.0f, 19.0f }, L""));
+		m_Children.emplace_back(new Button(renderer, { btnX, btnY }, { btnHeightAndHeight, btnHeightAndHeight }, { 160.0f, 160.0f, 160.0f }, ""));
 		
-		//new TextBox(m_Window.Renderer2D, { 10, 10 }, { 1000, 1000 }, { 255, 255, 255 }, L"Hello World")
 
+		float xOffsetTxt = m_Size.width / 22.5f;
+		float txtX = m_Pos.x + xOffsetTxt;
+
+		float yOffsetTxt = m_Size.height / 7.0f;
+		float txtY = m_Pos.y + yOffsetTxt;
+		
+		float txtWidth = m_Size.width - (xOffsetTxt * 2);
+
+		//20% of Node's height is this textbox
+		float txtPercentOfNode = 0.2f;
+		float txtHeight = m_Size.height * txtPercentOfNode;
+
+		m_Children.emplace_back(new TextBox(renderer, { txtX, txtY }, { txtWidth, txtHeight }, { 15.0f, 17.0f, 19.0f }, L""));
 	}
 	
 	bool Node::Render() const
