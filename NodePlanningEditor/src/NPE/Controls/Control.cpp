@@ -65,10 +65,34 @@ namespace NPE
 		}
 	}
 
+	//TODO: Implement function
+	bool Control::OverlapsWith(const Control& other, const NSize& minDst)
+	{
+		bool ret = false;
+
+		const NPoint& otherPos = other.GetPos();
+		const NSize& otherSize = other.GetSize();
+
+
+
+		return ret;
+	}
+
 	bool Control::IsInWindow() const
 	{
 		RECT rc;
 		GetWindowRect(m_Renderer.GetNativeWindow(), &rc);
+		
+		//bool ret = false;
+		//if (m_Pos.x + m_Size.width > 0 && m_Pos.y + m_Size.height > 0)
+		//{
+			//ret = true;
+		//}
+		//if (!(m_Pos.x < rc.right && m_Pos.y < rc.bottom))
+		//{
+			//ret = false;
+		//}
+
 		return m_Pos.x + m_Size.width > 0 && m_Pos.y + m_Size.height > 0 && m_Pos.x < rc.right && m_Pos.y < rc.bottom;
 	}
 

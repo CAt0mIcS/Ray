@@ -45,6 +45,13 @@ namespace NPE
 		void OnEvent(const Event& e);
 
 		/**
+		* Contains logic to disallow nodes from overlapping
+		* 
+		* @param node is the node being draged
+		*/
+		void NoOverlappingNodes(Node& node);
+
+		/**
 		* Receives all button clicked events
 		*
 		* @param control is the button that was clicked

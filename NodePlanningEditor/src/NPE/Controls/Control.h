@@ -100,6 +100,18 @@ namespace NPE
 		*/
 		virtual bool Render() const = 0;
 
+		/**
+		* Checks if the current control overlaps with other
+		* 
+		* @param other is the other control
+		* @param minDst is the minimum distance allowed between nodes
+		* @returns true if this controls overlaps with the other one, false otherwise
+		*/
+		bool OverlapsWith(const Control& other, const NSize& minDst = { 0.0f, 0.0f });
+
+		/**
+		* TODO: Add documentation
+		*/
 		virtual std::optional<std::pair<NPoint, NSize>> CalculateLayout(const NPoint& parentPos, const NSize& parentSize) { return { }; }
 
 		/**

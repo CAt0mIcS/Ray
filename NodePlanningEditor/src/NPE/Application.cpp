@@ -25,11 +25,15 @@ namespace NPE
 
 		//m_Zoom = std::stof(tbSceneInfo.GetRecords()[0].GetRecordData()[0]);
 
-		for (int i = 0; i < 1000; ++i)
+		for (int i = 0; i < 2; ++i)
 		{
 			//m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-			m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 450, 280}, { 15.0f, 17.0f, 19.0f }));
+			//m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 450, 280}, { 15.0f, 17.0f, 19.0f }));
 		}
+
+		m_Window.AddControl(new Node(m_Window.Renderer2D, { 10, 10 }, { 450, 280 }, { 15.0f, 17.0f, 19.0f }));
+		m_Window.AddControl(new Node(m_Window.Renderer2D, { 500, 10 }, { 450, 280 }, { 15.0f, 17.0f, 19.0f }));
+
 		//auto* txtbox = (TextBox*)m_Window.GetControls()[m_Window.GetControls().size() - 1];
 		//txtbox->SetText(L"Hello world");
 
@@ -96,6 +100,7 @@ namespace NPE
 		//WARNING: Same as in Application::OnButtonClicked (cannot detect "ControlHoldMouseEvent")
 		MoveNodesWithMouse(node);
 		ResizeNodes(node);
+		NoOverlappingNodes(node);
 	}
 
 	void Application::OnTextBoxClicked(TextBox& txtBox)
@@ -117,6 +122,20 @@ namespace NPE
 		Zoom(e);
 		OnPaint(e);
 		NewNode(e);
+	}
+
+	void Application::NoOverlappingNodes(Node& node)
+	{
+		if (Mouse::IsLeftPressed())
+		{
+			for (const auto* control : m_Window.GetControls())
+			{
+				if (node != control && node.IsInWindow() && node.OverlapsWith(*control))
+				{
+					MessageBox(NULL, L"OVERLAPPING", L"", NULL);
+				}
+			}
+		}
 	}
 
 	void Application::NewNode(const Event& e)
