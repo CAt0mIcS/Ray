@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #include "NPE/Application.h"
-#include "NPE/Util/Exceptions/Exceptions.h"
+#include "NPE/Util/Exceptions.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR nCmdLine, _In_ int nCmdShow)
 {

@@ -6,6 +6,8 @@
 
 #include "NPE/Controls/Node.h"
 
+#include "NPE/Util/Exceptions.h"
+
 
 namespace NPE
 {
@@ -13,9 +15,15 @@ namespace NPE
 		: m_EventCallback(eventFn)
 	{
 		if (!CreateNativeWindow(name, WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, (int)size.width, (int)size.height))
-			return;
+		{
+			NPE_THROW_WND_EXCEPT(GetLastError());
+		}
 
-		ShowWindow(m_hWnd, SW_MAXIMIZE);
+		if (!ShowWindow(m_hWnd, SW_MAXIMIZE))
+		{
+			NPE_THROW_WND_EXCEPT(GetLastError());
+		}
+
 		Renderer2D.Init(m_hWnd, 30);
 	}
 

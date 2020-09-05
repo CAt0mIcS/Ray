@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Renderer2D.h"
 
-#include "NPE/Util/Exceptions/Exceptions.h"
+#include "NPE/Util/Exceptions.h"
 
 
 namespace NPE
