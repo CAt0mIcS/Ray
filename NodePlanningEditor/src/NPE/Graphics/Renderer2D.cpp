@@ -47,8 +47,24 @@ namespace NPE
 		m_pRenderTarget->FillRoundedRectangle(&rc, m_pBrush.Get());
 	}
 
-	void Renderer2D::RenderText(const std::string text, const NPoint& pos, const NSize& size)
+	void Renderer2D::RenderText(const std::wstring text, const NPoint& pos, const NSize& size)
 	{
+		//D2D1_RECT_F layoutRect;
+		//layoutRect.left = pos.x;
+		//layoutRect.top = pos.y;
+		//layoutRect.right = pos.x + size.width;
+		//layoutRect.bottom = pos.y + size.height;
+
+		D2D1_RECT_F layoutRect;
+		layoutRect.left = 10;
+		layoutRect.top = 10;
+		layoutRect.right = 300;
+		layoutRect.bottom = 300;
+
+		//TEMPORARY: 
+		m_pBrush->SetColor({ 255, 255, 255 });
+		//m_pRenderTarget->DrawTextW(text.c_str(), wcslen(text.c_str()), m_pTextFormat.Get(),
+		//	layoutRect, m_pBrush.Get());
 
 	}
 

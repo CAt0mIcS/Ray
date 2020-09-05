@@ -18,7 +18,7 @@ namespace NPE
 		* @param size is the textbox size
 		* @param color is the textbox background color
 		*/
-		TextBox(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color, const std::string& startText = "");
+		TextBox(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color, const std::wstring& startText = L"");
 
 		/**
 		* Calls the renderer and draws the textbox and text
@@ -41,7 +41,7 @@ namespace NPE
 		* 
 		* @returns the current text
 		*/
-		const std::string& GetText() const { return m_Text; }
+		const std::wstring& GetText() const { return m_Text; }
 		
 		/**
 		* Setter for text displayed in the textbox
@@ -50,7 +50,7 @@ namespace NPE
 		* @warning function does not render the text, it just sets the member variable
 		* @see TextBox::RenderText()
 		*/
-		void SetText(const std::string& newText) { m_Text = newText; }
+		void SetText(const std::wstring& newText) { m_Text = newText; }
 
 		/**
 		* Sets a function to be called when any button was clicked
@@ -69,7 +69,7 @@ namespace NPE
 		static void OnTextBoxClickedEventCallback(TextBox& control) { m_OnTextBoxClickedCallback(control); }
 
 	private:
-		std::string m_Text;
+		std::wstring m_Text;
 		static std::function<void(TextBox&)> m_OnTextBoxClickedCallback;
 	};
 }

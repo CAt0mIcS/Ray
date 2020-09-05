@@ -22,7 +22,7 @@ namespace NPE
 		}
 		
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
-		Renderer2D.Init(m_hWnd, 30);
+		Renderer2D.Init(m_hWnd, 50);
 	}
 
 	int MainWindow::ProcessMessage()
