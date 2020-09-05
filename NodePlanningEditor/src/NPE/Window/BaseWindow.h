@@ -11,6 +11,16 @@ namespace NPE
     class BaseWindow
     {
     public:
+        /**
+        * Window procedure which calls the DERIVED_TYPE::HandleMessage function
+        * 
+        * @param hwnd is the hwnd
+        * @param uMsg is the window message
+        * @param wParam is the wParam
+        * @param lParam is the lParam
+        * 
+        * @returns handled status
+        */
         static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         {
             DERIVED_TYPE* pThis = nullptr;
@@ -37,8 +47,18 @@ namespace NPE
             }
         }
 
+        /**
+        * Contructor for BaseWindow
+        */
         BaseWindow() : m_hWnd(NULL) { }
 
+        /**
+        * Creates the native window
+        * 
+        * @param lpWindowName is the title of the window
+        * @param dwStyle are style flags for the window
+        * @returns TRUE if the window was created successfully, false otherwise
+        */
         BOOL CreateNativeWindow(
             PCWSTR lpWindowName,
             DWORD dwStyle,
@@ -68,10 +88,19 @@ namespace NPE
             return (m_hWnd ? TRUE : FALSE);
         }
 
+        /**
+        * Getter for native HWND
+        */
         HWND GetNativeWindow() const { return m_hWnd; }
 
     protected:
-
+        /**
+        * Handles all window messages
+        * 
+        * @param uMsg is the window message
+        * @param wParam is the wParam
+        * @param lParam is the lParam
+        */
         virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
 
         HWND m_hWnd;

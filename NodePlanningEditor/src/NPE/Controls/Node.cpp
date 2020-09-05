@@ -10,7 +10,7 @@ namespace NPE
 	Node::Node(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color)
 		: Control(renderer, Control::Type::Node, pos, size, color)
 	{
-		float minWiHi = min(m_Size.width, m_Size.height);
+		float minWiHi = std::min(m_Size.width, m_Size.height);
 		m_Children.emplace_back(new Button(renderer, { m_Pos.x + (m_Size.width / 2) - ((m_Size.width / 20) / 2), m_Pos.y + 5 }, { minWiHi / 12, minWiHi / 12 }, { 160.0f, 160.0f, 160.0f }, ""));
 	}
 	

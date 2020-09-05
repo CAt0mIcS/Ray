@@ -4,14 +4,13 @@
 
 #include "NPE/Controls/Control.h"
 
-#include <string>
+#include "Win.h"
 
-#include <wrl.h>
-#include <d2d1.h>
-#pragma comment(lib, "d2d1.lib")
-
-#include <dwrite.h>
 #pragma comment(lib, "dwrite.lib")
+#include <dwrite.h>
+
+#include <string>
+#include <wrl.h>
 
 
 namespace NPE
