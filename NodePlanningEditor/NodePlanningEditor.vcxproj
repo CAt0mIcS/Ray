@@ -166,7 +166,7 @@
     <ClCompile Include="src\NPE\Handlers\Mouse.cpp" />
     <ClCompile Include="src\NPE\Util\Debug\Logger.cpp" />
     <ClCompile Include="src\NPE\Util\Debug\Timer.cpp" />
-    <ClCompile Include="src\NPE\Util\Exceptions\Exceptions.cpp" />
+    <ClCompile Include="src\NPE\Util\Exceptions.cpp" />
     <ClCompile Include="src\NPE\Controls\Button.cpp" />
     <ClCompile Include="src\NPE\Controls\Node.cpp" />
     <ClCompile Include="src\NPE\Graphics\Renderer2D.cpp" />
@@ -179,7 +179,7 @@
   <ItemGroup>
     <ClInclude Include="src\NPE\Util\Debug\Logger.h" />
     <ClInclude Include="src\NPE\Util\Debug\Timer.h" />
-    <ClInclude Include="src\NPE\Util\Exceptions\Exceptions.h" />
+    <ClInclude Include="src\NPE\Util\Exceptions.h" />
     <ClInclude Include="src\NPE\Controls\Button.h" />
     <ClInclude Include="src\NPE\Controls\Node.h" />
     <ClInclude Include="src\NPE\Graphics\Renderer2D.h" />
