@@ -15,7 +15,25 @@ namespace NPE
 	{
 		float minWiHi = std::min(m_Size.width, m_Size.height);
 		m_Children.emplace_back(new Button(renderer, { m_Pos.x + (m_Size.width / 2) - ((m_Size.width / 20) / 2), m_Pos.y + 5 }, { minWiHi / 12, minWiHi / 12 }, { 160.0f, 160.0f, 160.0f }, ""));
-		m_Children.emplace_back(new TextBox(renderer, {m_Pos.x, m_Pos.y}, {minWiHi / 5, minWiHi / 5}, { 120.0f, 120.0f, 120.0f }, L"Hello World"));
+		
+		
+		float spaceTxtboxXToNodeBorder = m_Size.width / 20;
+		float x = m_Pos.x + spaceTxtboxXToNodeBorder;
+
+		float spaceTxtboxYToLineButton = m_Size.width / 40;
+		Control* lastLineButton = m_Children[m_Children.size() - 1];
+		float y = lastLineButton->GetPos().y + lastLineButton->GetSize().height + spaceTxtboxYToLineButton;
+
+		//20% of Node is textbox
+		float width = m_Size.width - spaceTxtboxXToNodeBorder * 2;
+
+		float heightPercentOfNode = 0.2f;
+		float height = m_Size.height * heightPercentOfNode;
+
+		m_Children.emplace_back(new TextBox(renderer, { x, y }, { width, height }, { 15.0f, 17.0f, 19.0f }, L"Hello World"));
+		
+		//new TextBox(m_Window.Renderer2D, { 10, 10 }, { 1000, 1000 }, { 255, 255, 255 }, L"Hello World")
+
 	}
 	
 	bool Node::Render() const
@@ -25,7 +43,7 @@ namespace NPE
 			m_Renderer.RenderRoundedRectControl(*this);
 
 			for (auto& child : m_Children)
-				m_Renderer.RenderRoundedRectControl(*child);
+				child->Render();
 
 			return true;
 		}

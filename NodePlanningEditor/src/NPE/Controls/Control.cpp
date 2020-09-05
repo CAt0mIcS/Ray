@@ -46,15 +46,22 @@ namespace NPE
 	{
 		for (auto& child : m_Children)
 		{
-			
-			//child->m_Pos.x += (m_Size.width - size.width);
-			child->m_Pos.x = m_Pos.x + (size.width / 2) - (10 / 2);
-			child->m_Pos.y = m_Pos.y + m_Size.height / 30;
-			
-			NSize ratio{ size.width / m_Size.width, size.height / m_Size.height };
-			child->m_Size *= ratio;
+			if (child->GetType() == Type::Button)
+			{
+				//child->m_Pos.x += (m_Size.width - size.width);
+				child->m_Pos.x = m_Pos.x + (size.width / 2) - (10 / 2);
+				child->m_Pos.y = m_Pos.y + m_Size.height / 30;
 
-			//child->m_Pos.y *= ratio.height;
+				NSize ratio{ size.width / m_Size.width, size.height / m_Size.height };
+				child->m_Size *= ratio;
+
+				//child->m_Pos.y *= ratio.height;
+			}
+			else if (child->GetType() == Type::TextBox)
+			{
+				NSize ratio{ size.width / m_Size.width, size.height / m_Size.height };
+				child->m_Size *= ratio;
+			}
 		}
 
 		m_Size = size;

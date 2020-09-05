@@ -11,10 +11,10 @@ namespace NPE
 	{
 	}
 
-	void Renderer2D::Init(HWND hWnd, const unsigned int fontSize)
+	void Renderer2D::Init(HWND hWnd)
 	{
 		m_hWnd = hWnd;
-		CreateGraphicsResources(fontSize);
+		CreateGraphicsResources();
 	}
 
 	void Renderer2D::BeginDraw()
@@ -27,13 +27,21 @@ namespace NPE
 		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->EndDraw(), "Failed to draw object(s)");
 	}
 
-	void Renderer2D::RenderRoundedRectControl(const Control& control) const
+	void Renderer2D::RenderRoundedRectControl(const Control& control, float radiusX, float radiusY) const
 	{
 		D2D1_ROUNDED_RECT rc;
 
-		const auto radius = std::max(control.GetSize().width, control.GetSize().height);
-		rc.radiusX = radius / 5.0f;
-		rc.radiusY = radius / 5.0f;
+		if (radiusX == 0.0f || radiusY == 0.0f)
+		{
+			const auto radius = std::max(control.GetSize().width, control.GetSize().height);
+			rc.radiusX = radius / 5.0f;
+			rc.radiusY = radius / 5.0f;
+		}
+		else
+		{
+			rc.radiusX = radiusX;
+			rc.radiusY = radiusY;
+		}
 
 		//rc.radiusX = control.GetSize().width / 5.0f; 
 		//rc.radiusY = control.GetSize().height / 5.0f;
@@ -47,24 +55,48 @@ namespace NPE
 		m_pRenderTarget->FillRoundedRectangle(&rc, m_pBrush.Get());
 	}
 
-	void Renderer2D::RenderText(const std::wstring text, const NPoint& pos, const NSize& size)
+	void Renderer2D::RenderRoundedRectBorder(const NPoint& pos, const NSize& size, const NColor& color, float radiusX, float radiusY) const
 	{
-		//D2D1_RECT_F layoutRect;
-		//layoutRect.left = pos.x;
-		//layoutRect.top = pos.y;
-		//layoutRect.right = pos.x + size.width;
-		//layoutRect.bottom = pos.y + size.height;
+		D2D1_ROUNDED_RECT rc;
 
-		D2D1_RECT_F layoutRect;
-		layoutRect.left = 10;
-		layoutRect.top = 10;
-		layoutRect.right = 300;
-		layoutRect.bottom = 300;
+		if (radiusX == 0.0f || radiusY == 0.0f)
+		{
+			const auto radius = std::max(size.width, size.height);
+			rc.radiusX = radius / 5.0f;
+			rc.radiusY = radius / 5.0f;
+		}
+		else
+		{
+			rc.radiusX = radiusX;
+			rc.radiusY = radiusY;
+		}
 
-		//TEMPORARY: 
-		m_pBrush->SetColor({ 255, 255, 255 });
-		//m_pRenderTarget->DrawTextW(text.c_str(), wcslen(text.c_str()), m_pTextFormat.Get(),
-		//	layoutRect, m_pBrush.Get());
+		rc.rect.left = pos.x;
+		rc.rect.top = pos.y;
+		rc.rect.right = rc.rect.left + size.width;
+		rc.rect.bottom = rc.rect.top + size.height;
+
+		m_pBrush->SetColor(color.ToD2D1ColorF());
+		m_pRenderTarget->DrawRoundedRectangle(&rc, m_pBrush.Get());
+	}
+
+	void Renderer2D::RenderText(const std::wstring& text, const NPoint& pos, const NColor& color, const float fontSize)
+	{
+		//needs to be created here to allow for custom font size
+		NPE_THROW_GFX_EXCEPT(m_pWriteFactory->CreateTextFormat(L"Consolas", nullptr,
+			DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &m_pTextFormat), "Failed to create IDWriteTextFormat");
+
+		D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
+
+		m_pBrush->SetColor(color.ToD2D1ColorF());
+		m_pRenderTarget->DrawTextW(
+			text.c_str(),
+			wcslen(text.c_str()),
+			m_pTextFormat.Get(),
+			D2D1::RectF(pos.x, pos.y, renderTargetSize.width, renderTargetSize.height),
+			m_pBrush.Get()
+		);
 
 	}
 
@@ -79,7 +111,7 @@ namespace NPE
 		m_pRenderTarget->Clear(color.ToD2D1ColorF());
 	}
 
-	void Renderer2D::CreateGraphicsResources(const unsigned int fontSize)
+	void Renderer2D::CreateGraphicsResources()
 	{
 		NPE_THROW_GFX_EXCEPT(D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED,
 			__uuidof(m_pFactory), &m_pFactory), "Failed to create D2D1Factory");
@@ -92,10 +124,6 @@ namespace NPE
 
 		NPE_THROW_GFX_EXCEPT(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED,
 			__uuidof(m_pWriteFactory), &m_pWriteFactory), "Failed to create DWriteFactory");
-
-		NPE_THROW_GFX_EXCEPT(m_pWriteFactory->CreateTextFormat(L"Consolas", nullptr,
-			DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL,
-			DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &m_pTextFormat), "Failed to create IDWriteTextFormat");
 
 		const D2D1_COLOR_F color = D2D1::ColorF(35.0f / 255.0f, 38.0f / 255.0f, 40.0f / 255.0f);
 			NPE_THROW_GFX_EXCEPT(m_pRenderTarget->CreateSolidColorBrush(color, &m_pBrush), "Failed to create D2D1SolidColorBrush");

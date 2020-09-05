@@ -29,7 +29,7 @@ namespace NPE
 		* @param hWnd is the main HWND
 		* @param fontSize is the future font size (to be changed)
 		*/
-		void Init(HWND hWnd, const unsigned int fontSize);
+		void Init(HWND hWnd);
 
 		/**
 		* Wrapper for ID2D1HwndRenderTarget::BeginDraw function
@@ -46,7 +46,14 @@ namespace NPE
 		* 
 		* @param control is the control to render
 		*/
-		void RenderRoundedRectControl(const Control& control) const;
+		void RenderRoundedRectControl(const Control& control, float radiusX = 0.0f, float radiusY = 0.0f) const;
+
+		/**
+		* Renders a round border
+		*
+		* @param control is the control to render
+		*/
+		void RenderRoundedRectBorder(const NPoint& pos, const NSize& size, const NColor& color, float radiusX = 0.0f, float radiusY = 0.0f) const;
 
 		/**
 		* Renders a text to the screen
@@ -55,7 +62,14 @@ namespace NPE
 		* @param pos are the x and y coordinates of the text
 		* @param size is the size of the text
 		*/
-		void RenderText(const std::wstring text, const NPoint& pos, const NSize& size);
+		void RenderText(const std::wstring& text, const NPoint& pos, const NColor& color, const float fontSize);
+
+		/**
+		* Uses the control's position, size and color to render a rectangular object
+		*
+		* @param control is the control to render
+		*/
+		void RenderRect(const Control& control);
 
 		/**
 		* Draws a line
@@ -87,7 +101,7 @@ namespace NPE
 		* 
 		* @param fontSize is the fontSize passed in by Init
 		*/
-		void CreateGraphicsResources(const unsigned int fontSize);
+		void CreateGraphicsResources();
 
 	private:
 		HWND m_hWnd;

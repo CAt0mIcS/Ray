@@ -16,7 +16,10 @@ namespace NPE
 	{
 		if (this->IsInWindow())
 		{
-			m_Renderer.RenderRoundedRectControl(*this);
+			const float radius = std::max(m_Size.width, m_Size.height) / 18;
+			
+			m_Renderer.RenderRoundedRectControl(*this, radius, radius);
+			m_Renderer.RenderRoundedRectBorder(m_Pos, m_Size, { 44, 62, 80 }, radius, radius);
 			RenderText();
 			return true;
 		}
@@ -28,7 +31,12 @@ namespace NPE
 	{
 		if (this->IsInWindow())
 		{
-			m_Renderer.RenderText(m_Text, { 100, 100 }, { 100, 100 });
+			const float fontSize = std::max(m_Size.width, m_Size.height) / 7.2f;
+
+			//405, 56
+			float xOffset = m_Size.width / 81.0f;
+			float yOffset = m_Size.height / -11.2f;
+			m_Renderer.RenderText(m_Text, { m_Pos.x + xOffset, m_Pos.y + yOffset }, { 160.0f, 160.0f, 160.0f }, fontSize);
 			return true;
 		}
 
