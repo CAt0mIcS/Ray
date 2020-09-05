@@ -26,8 +26,7 @@ namespace NPE
 		Application operator=(const Application&) = delete;
 
 		/**
-		* Application destructor
-		* Currently does nothing
+		* Application destructor, saves scene to database
 		*/
 		~Application();
 

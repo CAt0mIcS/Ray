@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Control.h"
-#include "Button.h"
+
+#include <functional>
 
 
 namespace NPE

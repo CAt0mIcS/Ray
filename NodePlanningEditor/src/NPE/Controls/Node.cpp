@@ -1,6 +1,9 @@
 #include "Node.h"
 #include "NPE/Graphics/Renderer2D.h"
 
+#include "Button.h"
+#include "TextBox.h"
+
 
 namespace NPE
 {
@@ -12,6 +15,7 @@ namespace NPE
 	{
 		float minWiHi = std::min(m_Size.width, m_Size.height);
 		m_Children.emplace_back(new Button(renderer, { m_Pos.x + (m_Size.width / 2) - ((m_Size.width / 20) / 2), m_Pos.y + 5 }, { minWiHi / 12, minWiHi / 12 }, { 160.0f, 160.0f, 160.0f }, ""));
+		m_Children.emplace_back(new TextBox(renderer, {}, {}, {}));
 	}
 	
 	bool Node::Render() const

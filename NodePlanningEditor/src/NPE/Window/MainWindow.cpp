@@ -5,6 +5,8 @@
 #include "NPE/Handlers/ApplicationEvent.h"
 
 #include "NPE/Controls/Node.h"
+#include "NPE/Controls/Button.h"
+#include "NPE/Controls/TextBox.h"
 
 #include "NPE/Util/Exceptions.h"
 
@@ -18,12 +20,8 @@ namespace NPE
 		{
 			NPE_THROW_WND_EXCEPT(GetLastError());
 		}
-
-		if (!ShowWindow(m_hWnd, SW_MAXIMIZE))
-		{
-			NPE_THROW_WND_EXCEPT(GetLastError());
-		}
-
+		
+		ShowWindow(m_hWnd, SW_MAXIMIZE);
 		Renderer2D.Init(m_hWnd, 30);
 	}
 

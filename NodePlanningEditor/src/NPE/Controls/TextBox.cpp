@@ -5,6 +5,8 @@
 
 namespace NPE
 {
+	std::function<void(TextBox&)> TextBox::m_OnTextBoxClickedCallback;
+
 	TextBox::TextBox(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color, const std::string& startText)
 		: Control(renderer, Type::TextBox, pos, size, color), m_Text(startText)
 	{

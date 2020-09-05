@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "pch.h"
 #include "Application.h"
 
 #include "Window/MainWindow.h"
@@ -8,6 +7,8 @@
 #include "NPE/Handlers/Keyboard.h"
 
 #include "NPE/Controls/Node.h"
+#include "NPE/Controls/Button.h"
+#include "NPE/Controls/TextBox.h"
 
 #include "NPE/Util/Debug/Timer.h"
 
@@ -19,58 +20,59 @@ namespace NPE
 	{
 
 		/* Table fetch */
-		QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
-		QRD::Table& tbSceneInfo = m_Database.GetTable("SceneInfo");
+		//QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
+		//QRD::Table& tbSceneInfo = m_Database.GetTable("SceneInfo");
 
-		m_Zoom = std::stof(tbSceneInfo.GetRecords()[0].GetRecordData()[0]);
+		//m_Zoom = std::stof(tbSceneInfo.GetRecords()[0].GetRecordData()[0]);
 
-		//for (int i = 0; i < 1000; ++i)
-		//{
-			//m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-		//}
-
-		for (auto& record : tbNodeInfo.GetRecords())
+		for (int i = 0; i < 1000; ++i)
 		{
-			auto& data = record.GetRecordData();
-			m_Window.AddControl(new Node(m_Window.Renderer2D, { std::stof(data[0]), std::stof(data[1]) }, { std::stof(data[2]), std::stof(data[3]) }, { 15.0f, 17.0f, 19.0f }));
+			m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
 		}
 
+		//for (auto& record : tbNodeInfo.GetRecords())
+		//{
+			//auto& data = record.GetRecordData();
+			//m_Window.AddControl(new Node(m_Window.Renderer2D, { std::stof(data[0]), std::stof(data[1]) }, { std::stof(data[2]), std::stof(data[3]) }, { 15.0f, 17.0f, 19.0f }));
+		//}
+
 		//clear save file
-		m_Database.DeleteTable("NodeInfo");
-		m_Database.DeleteTable("SceneInfo");
-		m_Database.WriteDb();
+		//m_Database.DeleteTable("NodeInfo");
+		//m_Database.DeleteTable("SceneInfo");
+		//m_Database.WriteDb();
 		
 		/* Table creation and setup */
-		QRD::Table& tbNodeInfoC = m_Database.CreateTable("NodeInfo");
-		QRD::Table& tbSceneInfoC = m_Database.CreateTable("SceneInfo");
+		//QRD::Table& tbNodeInfoC = m_Database.CreateTable("NodeInfo");
+		//QRD::Table& tbSceneInfoC = m_Database.CreateTable("SceneInfo");
 		
-		tbNodeInfoC.AddField<QRD::NUMBER>("x");
-		tbNodeInfoC.AddField<QRD::NUMBER>("y");
-		tbNodeInfoC.AddField<QRD::NUMBER>("width");
-		tbNodeInfoC.AddField<QRD::NUMBER>("height");
+		//tbNodeInfoC.AddField<QRD::NUMBER>("x");
+		//tbNodeInfoC.AddField<QRD::NUMBER>("y");
+		//tbNodeInfoC.AddField<QRD::NUMBER>("width");
+		//tbNodeInfoC.AddField<QRD::NUMBER>("height");
 		
 		//to store Application::m_Zoom
-		tbSceneInfoC.AddField<QRD::NUMBER>("zoom");
+		//tbSceneInfoC.AddField<QRD::NUMBER>("zoom");
 
 		Button::SetOnButtonClickedCallback([this](Button& btn) { OnButtonClicked(btn); });
 		Node::SetOnNodeClickedCallback([this](Node& node) { OnNodeClicked(node); });
+		TextBox::SetOnTextBoxClickedCallback([](TextBox& txtBox) {});
 	}
 
 	Application::~Application()
 	{
-		QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
-		QRD::Table& tbSceneInfo = m_Database.GetTable("SceneInfo");
+		//QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
+		//QRD::Table& tbSceneInfo = m_Database.GetTable("SceneInfo");
 
 		for (auto* control : m_Window.GetControls())
 		{
 			const auto& pos = control->GetPos();
 			const auto& size = control->GetSize();
-			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height);
+			//tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height);
 		}
 		
-		tbSceneInfo.AddRecord(m_Zoom);
+		//tbSceneInfo.AddRecord(m_Zoom);
 
-		m_Database.ExitDb();
+		//m_Database.ExitDb();
 	}
 
 	int Application::Run()
