@@ -175,6 +175,7 @@
     <ClCompile Include="src\NPE\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\NPE\Controls\TextBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\NPE\Util\Debug\Logger.h" />
@@ -196,6 +197,7 @@
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\NPE\Controls\Control.h" />
     <ClInclude Include="src\Win.h" />
+    <ClInclude Include="src\NPE\Controls\TextBox.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

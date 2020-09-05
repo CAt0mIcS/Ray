@@ -47,7 +47,7 @@ namespace NPE
 		m_pRenderTarget->FillRoundedRectangle(&rc, m_pBrush.Get());
 	}
 
-	void Renderer2D::RenderText(const std::wstring text, const NPoint& pos, const NSize& size)
+	void Renderer2D::RenderText(const std::string text, const NPoint& pos, const NSize& size)
 	{
 
 	}

@@ -26,7 +26,7 @@ namespace NPE
 		enum class Type
 		{
 			INVALID = 0,
-			Node, Button
+			Node, Button, TextBox
 		};
 
 	public:

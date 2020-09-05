@@ -66,8 +66,10 @@ namespace NPE
 		{
 			PAINTSTRUCT ps;
 			HDC hDC = BeginPaint(m_hWnd, &ps);
+
 			PaintEvent e(hDC, &ps.rcPaint);
 			m_EventCallback(e);
+
 			EndPaint(m_hWnd, &ps);
 			ReleaseDC(m_hWnd, hDC);
 			return 0;
@@ -94,7 +96,6 @@ namespace NPE
 						}
 					}
 
-					//NEW:
 					if (control->GetType() == Control::Type::Node && wasClickedN && control == nodeBackup)
 					{
 						Node* node = (Node*)control;
@@ -129,7 +130,6 @@ namespace NPE
 					}
 				}
 
-				//NEW:
 				if (control->GetType() == Control::Type::Node && Mouse::IsOnControl(control))
 				{
 					Node* node = (Node*)control;

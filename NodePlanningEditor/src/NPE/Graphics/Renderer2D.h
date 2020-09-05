@@ -55,7 +55,7 @@ namespace NPE
 		* @param pos are the x and y coordinates of the text
 		* @param size is the size of the text
 		*/
-		void RenderText(const std::wstring text, const NPoint& pos, const NSize& size);
+		void RenderText(const std::string text, const NPoint& pos, const NSize& size);
 
 		/**
 		* Draws a line
