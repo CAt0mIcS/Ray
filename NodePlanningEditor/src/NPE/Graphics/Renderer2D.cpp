@@ -122,10 +122,10 @@ namespace NPE
 		rcOne.radiusX = radius / 5.0f;
 		rcOne.radiusY = radius / 5.0f;
 
-		rcOne.rect.left = cOne.GetPos().x;
-		rcOne.rect.top = cOne.GetPos().y;
-		rcOne.rect.right = rcOne.rect.left + cOne.GetSize().width;
-		rcOne.rect.bottom = rcOne.rect.top + cOne.GetSize().height;
+		rcOne.rect.left = cOne.GetPos().x + minDst.width;
+		rcOne.rect.top = cOne.GetPos().y + minDst.height;
+		rcOne.rect.right = rcOne.rect.left + cOne.GetSize().width + minDst.width;
+		rcOne.rect.bottom = rcOne.rect.top + cOne.GetSize().height + minDst.height;
 
 		ID2D1RoundedRectangleGeometry* rrgOne;
 		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateRoundedRectangleGeometry(rcOne, &rrgOne), "Failed to create rounded rectangle geometry (1) for overlap comparison");
@@ -135,10 +135,10 @@ namespace NPE
 		rcTwo.radiusX = radius / 5.0f;
 		rcTwo.radiusY = radius / 5.0f;
 
-		rcTwo.rect.left = cTwo.GetPos().x;
-		rcTwo.rect.top = cTwo.GetPos().y;
-		rcTwo.rect.right = rcTwo.rect.left + cTwo.GetSize().width;
-		rcTwo.rect.bottom = rcTwo.rect.top + cTwo.GetSize().height;
+		rcTwo.rect.left = cTwo.GetPos().x + minDst.width;
+		rcTwo.rect.top = cTwo.GetPos().y + minDst.height;
+		rcTwo.rect.right = rcTwo.rect.left + cTwo.GetSize().width + minDst.width;
+		rcTwo.rect.bottom = rcTwo.rect.top + cTwo.GetSize().height + minDst.height;
 
 		ID2D1RoundedRectangleGeometry* rrgTwo;
 		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateRoundedRectangleGeometry(rcTwo, &rrgTwo), "Failed to create rounded rectangle geometry (2) for overlap comparison");
