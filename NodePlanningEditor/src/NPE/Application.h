@@ -32,6 +32,16 @@ namespace NPE
 		~Application();
 
 		/**
+		* Saves scene to file
+		*/
+		void SaveFile();
+
+		/**
+		* Reads scene from file
+		*/
+		void LoadFile();
+
+		/**
 		* Starts the application loop
 		*/
 		int Run();
@@ -128,6 +138,13 @@ namespace NPE
 		* @param e is the received event
 		*/
 		void CreateOrDeleteLine(const Event& e);
+
+		/**
+		* Press Ctrl + S to save scene to file
+		* 
+		* @param e is the received event
+		*/
+		void SaveShortcut(const Event& e);
 
 	private:
 		MainWindow m_Window;

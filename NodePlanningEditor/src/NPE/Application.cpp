@@ -21,74 +21,11 @@ namespace NPE
 		: m_Database("saves\\save.dbs", 3), m_Window({ 800, 600 }, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_MousePos{ 0, 0 }, m_Zoom(0)
 	{
 
-		//QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
-		//QRD::Table& tbSceneInfo = m_Database.GetTable("SceneInfo");
-		//QRD::Table& tbLines = m_Database.GetTable("Lines");
-		//		
-		//m_Zoom = std::stoi(tbSceneInfo.GetRecords()[0].GetRecordData()[0]);
-
-		for (int i = 0; i < 1000; ++i)
-		{
-			m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 450, 280}, { 15.0f, 17.0f, 19.0f }));
-		}
-
-		//for (auto& record : tbNodeInfo.GetRecords())
+		//for (int i = 0; i < 1000; ++i)
 		//{
-		//	auto& data = record.GetRecordData();
-		//	m_Window.AddControl(new Node(m_Window.Renderer2D, { std::stof(data[0]), std::stof(data[1]) }, { std::stof(data[2]), std::stof(data[3]) }, { 15.0f, 17.0f, 19.0f }));
+		//	m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 450, 280}, { 15.0f, 17.0f, 19.0f }));
 		//}
-		//
-		//for (auto& record : tbLines.GetRecords())
-		//{
-		//	auto& data = record.GetRecordData();
-		//
-		//	std::pair<Button*, Button*> line;
-		//
-		//	for (auto* control : m_Window.GetControls())
-		//	{
-		//		for (auto* child : control->GetChildren())
-		//		{
-		//			if (child->GetId() == std::stoi(data[0]))
-		//			{
-		//				line.first = (Button*)child;
-		//				break;
-		//			}
-		//			else if (child->GetId() == std::stoi(data[1]))
-		//			{
-		//				line.second = (Button*)child;
-		//				break;
-		//			}
-		//		}
-		//		if (line.first && line.second)
-		//			break;
-		//	}
-		//
-		//	if (line.first && line.second)
-		//	{
-		//		m_Window.AddLine(line);
-		//	}
-		//}
-		
-		////clear save file
-		//m_Database.DeleteTable("NodeInfo");
-		//m_Database.DeleteTable("SceneInfo");
-		//m_Database.DeleteTable("Lines");
-		//m_Database.WriteDb();
-		//
-		////Table creation and setup
-		//QRD::Table& tbNodeInfoC = m_Database.CreateTable("NodeInfo");
-		//QRD::Table& tbSceneInfoC = m_Database.CreateTable("SceneInfo");
-		//QRD::Table& tbLinesC = m_Database.CreateTable("Lines");
-		//
-		//tbNodeInfoC.AddField<QRD::NUMBER>("x");
-		//tbNodeInfoC.AddField<QRD::NUMBER>("y");
-		//tbNodeInfoC.AddField<QRD::NUMBER>("width");
-		//tbNodeInfoC.AddField<QRD::NUMBER>("height");
-		//
-		//tbLinesC.AddField<QRD::NUMBER>("ID2");
-		//tbLinesC.AddField<QRD::NUMBER>("ID1");
-		//
-		//tbSceneInfoC.AddField<QRD::NUMBER>("zoom");
+		LoadFile();
 
 		Button::SetOnButtonClickedCallback([this](Button& btn) { OnButtonClicked(btn); });
 		Node::SetOnNodeClickedCallback([this](Node& node) { OnNodeClicked(node); });
@@ -97,25 +34,92 @@ namespace NPE
 
 	Application::~Application()
 	{
-		//QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
-		//QRD::Table& tbSceneInfo = m_Database.GetTable("SceneInfo");
-		//QRD::Table& tbLines = m_Database.GetTable("Lines");
-		//
-		//for (auto* control : m_Window.GetControls())
-		//{
-		//	const auto& pos = control->GetPos();
-		//	const auto& size = control->GetSize();
-		//	tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height);
-		//}
-		//
-		//for (std::pair<Button*, Button*>& line : m_Window.GetLines())
-		//{
-		//	tbLines.AddRecord(line.first->GetId(), line.second->GetId());
-		//}
-		//
-		//tbSceneInfo.AddRecord(m_Zoom);
-		//
-		//m_Database.ExitDb();
+		SaveFile();
+	}
+
+	void Application::SaveFile()
+	{
+		//clear save file
+		m_Database.DeleteTable("NodeInfo");
+		m_Database.DeleteTable("SceneInfo");
+		m_Database.DeleteTable("Lines");
+		m_Database.WriteDb();
+
+		//Table creation and setup
+		QRD::Table& tbNodeInfo = m_Database.CreateTable("NodeInfo");
+		QRD::Table& tbSceneInfo = m_Database.CreateTable("SceneInfo");
+		QRD::Table& tbLines = m_Database.CreateTable("Lines");
+
+		tbNodeInfo.AddField<QRD::NUMBER>("x");
+		tbNodeInfo.AddField<QRD::NUMBER>("y");
+		tbNodeInfo.AddField<QRD::NUMBER>("width");
+		tbNodeInfo.AddField<QRD::NUMBER>("height");
+
+		tbLines.AddField<QRD::NUMBER>("ID2");
+		tbLines.AddField<QRD::NUMBER>("ID1");
+
+		tbSceneInfo.AddField<QRD::NUMBER>("zoom");
+		
+		for (auto* control : m_Window.GetControls())
+		{
+			const auto& pos = control->GetPos();
+			const auto& size = control->GetSize();
+			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height);
+		}
+		
+		for (std::pair<Button*, Button*>& line : m_Window.GetLines())
+		{
+			tbLines.AddRecord(line.first->GetId(), line.second->GetId());
+		}
+		
+		tbSceneInfo.AddRecord(m_Zoom);
+		
+		m_Database.ExitDb();
+	}
+
+	void Application::LoadFile()
+	{
+		QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
+		QRD::Table& tbSceneInfo = m_Database.GetTable("SceneInfo");
+		QRD::Table& tbLines = m_Database.GetTable("Lines");
+
+		m_Zoom = std::stoi(tbSceneInfo.GetRecords()[0].GetRecordData()[0]);
+		for (auto& record : tbNodeInfo.GetRecords())
+		{
+			auto& data = record.GetRecordData();
+			m_Window.AddControl(new Node(m_Window.Renderer2D, { std::stof(data[0]), std::stof(data[1]) }, { std::stof(data[2]), std::stof(data[3]) }, { 15.0f, 17.0f, 19.0f }));
+		}
+
+		for (auto& record : tbLines.GetRecords())
+		{
+			auto& data = record.GetRecordData();
+
+			std::pair<Button*, Button*> line;
+
+			for (auto* control : m_Window.GetControls())
+			{
+				for (auto* child : control->GetChildren())
+				{
+					if (child->GetId() == std::stoi(data[0]))
+					{
+						line.first = (Button*)child;
+						break;
+					}
+					else if (child->GetId() == std::stoi(data[1]))
+					{
+						line.second = (Button*)child;
+						break;
+					}
+				}
+				if (line.first && line.second)
+					break;
+			}
+
+			if (line.first && line.second)
+			{
+				m_Window.AddLine(line);
+			}
+		}
 	}
 
 	int Application::Run()
@@ -160,6 +164,7 @@ namespace NPE
 		Zoom(e);
 		OnPaint(e);
 		NewNode(e);
+		SaveShortcut(e);
 	}
 
 	void Application::NoOverlappingNodes(Node& node)
@@ -432,6 +437,14 @@ namespace NPE
 				m_Window.RenderLines();
 				m_Window.Renderer2D.EndDraw();
 			}
+		}
+	}
+
+	void Application::SaveShortcut(const Event& e)
+	{
+		if (Keyboard::IsKeyPressed(VK_CONTROL) && Keyboard::IsKeyPressed(83))
+		{
+			SaveFile();
 		}
 	}
 }
