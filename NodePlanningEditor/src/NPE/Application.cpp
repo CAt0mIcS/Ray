@@ -46,9 +46,9 @@ namespace NPE
 		m_Database.WriteDb();
 
 		//Table creation and setup
-		QRD::Table& tbNodeInfo = m_Database.CreateTable("NodeInfo");
+		QRD::Table& tbNodeInfo	= m_Database.CreateTable("NodeInfo");
 		QRD::Table& tbSceneInfo = m_Database.CreateTable("SceneInfo");
-		QRD::Table& tbLines = m_Database.CreateTable("Lines");
+		QRD::Table& tbLines		= m_Database.CreateTable("Lines");
 
 		tbNodeInfo.AddField<QRD::NUMBER>("x");
 		tbNodeInfo.AddField<QRD::NUMBER>("y");
@@ -79,18 +79,23 @@ namespace NPE
 
 	void Application::LoadFile()
 	{
-		QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
-		QRD::Table& tbSceneInfo = m_Database.GetTable("SceneInfo");
-		QRD::Table& tbLines = m_Database.GetTable("Lines");
+		//needs to be declared in release mode (error C4703: potentially uninitialized local pointer variable used)
+		QRD::Table* tbNodeInfo	= nullptr;
+		QRD::Table* tbSceneInfo = nullptr;
+		QRD::Table* tbLines		= nullptr;
 
-		m_Zoom = std::stoi(tbSceneInfo.GetRecords()[0].GetRecordData()[0]);
-		for (auto& record : tbNodeInfo.GetRecords())
+		tbNodeInfo	= &m_Database.GetTable("NodeInfo");
+		tbSceneInfo	= &m_Database.GetTable("SceneInfo");
+		tbLines		= &m_Database.GetTable("Lines");
+
+		m_Zoom = std::stoi(tbSceneInfo->GetRecords()[0].GetRecordData()[0]);
+		for (auto& record : tbNodeInfo->GetRecords())
 		{
 			auto& data = record.GetRecordData();
 			m_Window.AddControl(new Node(m_Window.Renderer2D, { std::stof(data[0]), std::stof(data[1]) }, { std::stof(data[2]), std::stof(data[3]) }, g_DefaultNodeColor));
 		}
 
-		for (auto& record : tbLines.GetRecords())
+		for (auto& record : tbLines->GetRecords())
 		{
 			auto& data = record.GetRecordData();
 
