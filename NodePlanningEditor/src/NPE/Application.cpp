@@ -34,7 +34,7 @@ namespace NPE
 
 	Application::~Application()
 	{
-		SaveFile();
+		//SaveFile();
 	}
 
 	void Application::SaveFile()
@@ -270,8 +270,8 @@ namespace NPE
 	{
 		if(Mouse::IsLeftPressed())
 		{
-			m_Window.Renderer2D.RenderScene({ 35.0f, 37.0f, 40.0f });
 			m_Window.Renderer2D.BeginDraw();
+			m_Window.Renderer2D.RenderScene({ 35.0f, 37.0f, 40.0f });
 		
 			for (auto* control : m_Window.GetControls())
 				control->Render();
