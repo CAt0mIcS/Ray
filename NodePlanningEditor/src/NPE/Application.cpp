@@ -119,6 +119,26 @@ namespace NPE
 		{
 			m_MousePos = Mouse::GetPos();
 		}
+		//Delete node (get line function and check if mouse pos on line)
+		else if (Mouse::IsRightPressed() && e.GetType() == EventType::MouseButtonPressedEvent)
+		{
+			auto pointsOnLine = [](float m, int t, NPoint pos)
+			{
+				return pos.y == ((m * pos.x) + t);
+			};
+
+			for (std::pair<Button*, Button*>& line : m_Window.GetLineCons())
+			{
+				float slope = (line.first->GetPos().y - line.second->GetPos().y) / (line.first->GetPos().x - line.second->GetPos().x);
+				float t = -slope * line.first->GetPos().x - line.first->GetPos().y;
+
+				if (pointsOnLine(slope, t, Mouse::GetPos()))
+				{
+					__debugbreak;
+				}
+
+			}
+		}
 		else if (e.GetType() == EventType::MouseButtonReleasedEvent)
 		{
 			MouseButtonReleasedEvent& eReleased = (MouseButtonReleasedEvent&)e;
