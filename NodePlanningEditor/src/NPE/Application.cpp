@@ -18,48 +18,78 @@
 namespace NPE
 {
 	Application::Application()
-		: m_Database("saves\\save.dbs", 2), m_Window({ 800, 600 }, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_Zoom(1.0f), m_MousePos{ 0, 0 }
+		: m_Database("saves\\save.dbs", 3), m_Window({ 800, 600 }, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_Zoom(1.0f), m_MousePos{ 0, 0 }
 	{
 
 		/* Table fetch */
-		//QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
-		//QRD::Table& tbSceneInfo = m_Database.GetTable("SceneInfo");
+		QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
+		QRD::Table& tbSceneInfo = m_Database.GetTable("SceneInfo");
+		QRD::Table& tbLines = m_Database.GetTable("Lines");
 
-		//m_Zoom = std::stof(tbSceneInfo.GetRecords()[0].GetRecordData()[0]);
+		m_Zoom = std::stof(tbSceneInfo.GetRecords()[0].GetRecordData()[0]);
 
-		for (int i = 0; i < 500; ++i)
-		{
-			m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 450, 280}, { 15.0f, 17.0f, 19.0f }));
-		}
-
-		//m_Window.AddControl(new Node(m_Window.Renderer2D, { 10, 10 }, { 450, 280 }, { 15.0f, 17.0f, 19.0f }));
-		//m_Window.AddControl(new Node(m_Window.Renderer2D, { 500, 10 }, { 450, 280 }, { 15.0f, 17.0f, 19.0f }));
-
-		//auto* txtbox = (TextBox*)m_Window.GetControls()[m_Window.GetControls().size() - 1];
-		//txtbox->SetText(L"Hello world");
-
-		//for (auto& record : tbNodeInfo.GetRecords())
+		//for (int i = 0; i < 1000; ++i)
 		//{
-			//auto& data = record.GetRecordData();
-			//m_Window.AddControl(new Node(m_Window.Renderer2D, { std::stof(data[0]), std::stof(data[1]) }, { std::stof(data[2]), std::stof(data[3]) }, { 15.0f, 17.0f, 19.0f }));
+		//	m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 450, 280}, { 15.0f, 17.0f, 19.0f }));
 		//}
 
+		for (auto& record : tbNodeInfo.GetRecords())
+		{
+			auto& data = record.GetRecordData();
+			m_Window.AddControl(new Node(m_Window.Renderer2D, { std::stof(data[0]), std::stof(data[1]) }, { std::stof(data[2]), std::stof(data[3]) }, { 15.0f, 17.0f, 19.0f }));
+		}
+
+		for (auto& record : tbLines.GetRecords())
+		{
+			auto& data = record.GetRecordData();
+		
+			std::pair<Button*, Button*> line;
+		
+			for (auto* control : m_Window.GetControls())
+			{
+				for (auto* child : control->GetChildren())
+				{
+					if (child->GetId() == std::stoi(data[0]))
+					{
+						line.first = (Button*)child;
+						break;
+					}
+					else if (child->GetId() == std::stoi(data[1]))
+					{
+						line.second = (Button*)child;
+						break;
+					}
+				}
+				if (line.first && line.second)
+					break;
+			}
+		
+			if (line.first && line.second)
+			{
+				m_Window.AddLine(line);
+			}
+		}
+
 		//clear save file
-		//m_Database.DeleteTable("NodeInfo");
-		//m_Database.DeleteTable("SceneInfo");
-		//m_Database.WriteDb();
+		m_Database.DeleteTable("NodeInfo");
+		m_Database.DeleteTable("SceneInfo");
+		m_Database.DeleteTable("Lines");
+		m_Database.WriteDb();
 		
 		/* Table creation and setup */
-		//QRD::Table& tbNodeInfoC = m_Database.CreateTable("NodeInfo");
-		//QRD::Table& tbSceneInfoC = m_Database.CreateTable("SceneInfo");
+		QRD::Table& tbNodeInfoC = m_Database.CreateTable("NodeInfo");
+		QRD::Table& tbSceneInfoC = m_Database.CreateTable("SceneInfo");
+		QRD::Table& tbLinesC = m_Database.CreateTable("Lines");
+
+		tbNodeInfoC.AddField<QRD::NUMBER>("x");
+		tbNodeInfoC.AddField<QRD::NUMBER>("y");
+		tbNodeInfoC.AddField<QRD::NUMBER>("width");
+		tbNodeInfoC.AddField<QRD::NUMBER>("height");
 		
-		//tbNodeInfoC.AddField<QRD::NUMBER>("x");
-		//tbNodeInfoC.AddField<QRD::NUMBER>("y");
-		//tbNodeInfoC.AddField<QRD::NUMBER>("width");
-		//tbNodeInfoC.AddField<QRD::NUMBER>("height");
-		
-		//to store Application::m_Zoom
-		//tbSceneInfoC.AddField<QRD::NUMBER>("zoom");
+		tbLinesC.AddField<QRD::NUMBER>("ID2");
+		tbLinesC.AddField<QRD::NUMBER>("ID1");
+
+		tbSceneInfoC.AddField<QRD::NUMBER>("zoom");
 
 		Button::SetOnButtonClickedCallback([this](Button& btn) { OnButtonClicked(btn); });
 		Node::SetOnNodeClickedCallback([this](Node& node) { OnNodeClicked(node); });
@@ -68,19 +98,25 @@ namespace NPE
 
 	Application::~Application()
 	{
-		//QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
-		//QRD::Table& tbSceneInfo = m_Database.GetTable("SceneInfo");
+		QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
+		QRD::Table& tbSceneInfo = m_Database.GetTable("SceneInfo");
+		QRD::Table& tbLines = m_Database.GetTable("Lines");
 
 		for (auto* control : m_Window.GetControls())
 		{
 			const auto& pos = control->GetPos();
 			const auto& size = control->GetSize();
-			//tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height);
+			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height);
 		}
 		
-		//tbSceneInfo.AddRecord(m_Zoom);
+		for (std::pair<Button*, Button*>& line : m_Window.GetLines())
+		{
+			tbLines.AddRecord(line.first->GetId(), line.second->GetId());
+		}
 
-		//m_Database.ExitDb();
+		tbSceneInfo.AddRecord(m_Zoom);
+
+		m_Database.ExitDb();
 	}
 
 	int Application::Run()
@@ -119,52 +155,8 @@ namespace NPE
 		{
 			m_MousePos = Mouse::GetPos();
 		}
-		else if (e.GetType() == EventType::MouseButtonReleasedEvent)
-		{
-			MouseButtonReleasedEvent& eReleased = (MouseButtonReleasedEvent&)e;
-			if (eReleased.GetButton() == MouseButton::Left)
-			{
-				for (auto* control : m_Window.GetControls())
-				{
-					if (control->IsInWindow() && control->GetType() == Control::Type::Node)
-					{
-						Button* btn = (Button*)control->GetChildren()[0];
-						if (Mouse::IsOnControl(btn))
-						{
-							m_Window.AddLine({ lineDrawOriginBtn, btn });
-							break;
-						}
-					}
-				}
-			}
-			//Delete node (get line function and check if mouse pos on line)
-			else if (eReleased.GetButton() == MouseButton::Right)
-			{
-				auto linesIntersect = [](const NPoint& p1, const NPoint& p2, const NPoint& q1, const NPoint& q2)
-				{
-					return (((q1.x - p1.x) * (p2.y - p1.y) - (q1.y - p1.y) * (p2.x - p1.x))
-						* ((q2.x - p1.x) * (p2.y - p1.y) - (q2.y - p1.y) * (p2.x - p1.x)) < 0)
-						&&
-						(((p1.x - q1.x) * (q2.y - q1.y) - (p1.y - q1.y) * (q2.x - q1.x))
-							* ((p2.x - q1.x) * (q2.y - q1.y) - (p2.y - q1.y) * (q2.x - q1.x)) < 0);
-				};
-
-				for (unsigned int i = 0; i < m_Window.GetLines().size(); ++i)
-				{
-					if (linesIntersect(m_Window.GetLines()[i].first->GetPos(), m_Window.GetLines()[i].second->GetPos(), m_MousePos, Mouse::GetPos()))
-					{
-						m_Window.GetLines().erase(m_Window.GetLines().begin() + i);
-					}
-				}
-				m_Window.Renderer2D.BeginDraw();
-				m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
-				for (auto* control : m_Window.GetControls())
-					control->Render();
-				m_Window.RenderLines();
-				m_Window.Renderer2D.EndDraw();
-			}
-		}
-
+		
+		CreateOrDeleteLine(e);
 		MoveNodes(e);
 		Zoom(e);
 		OnPaint(e);
@@ -372,6 +364,55 @@ namespace NPE
 			}
 			m_Window.RenderLines();
 			m_Window.Renderer2D.EndDraw();
+		}
+	}
+
+	void Application::CreateOrDeleteLine(const Event& e)
+	{
+		if (e.GetType() == EventType::MouseButtonReleasedEvent)
+		{
+			MouseButtonReleasedEvent& eReleased = (MouseButtonReleasedEvent&)e;
+			if (eReleased.GetButton() == MouseButton::Left)
+			{
+				for (auto* control : m_Window.GetControls())
+				{
+					if (control->IsInWindow() && control->GetType() == Control::Type::Node)
+					{
+						Button* btn = (Button*)control->GetChildren()[0];
+						if (Mouse::IsOnControl(btn))
+						{
+							m_Window.AddLine({ lineDrawOriginBtn, btn });
+							break;
+						}
+					}
+				}
+			}
+			//Delete node (get line function and check if mouse pos on line)
+			else if (eReleased.GetButton() == MouseButton::Right)
+			{
+				auto linesIntersect = [](const NPoint& p1, const NPoint& p2, const NPoint& q1, const NPoint& q2)
+				{
+					return (((q1.x - p1.x) * (p2.y - p1.y) - (q1.y - p1.y) * (p2.x - p1.x))
+						* ((q2.x - p1.x) * (p2.y - p1.y) - (q2.y - p1.y) * (p2.x - p1.x)) < 0)
+						&&
+						(((p1.x - q1.x) * (q2.y - q1.y) - (p1.y - q1.y) * (q2.x - q1.x))
+							* ((p2.x - q1.x) * (q2.y - q1.y) - (p2.y - q1.y) * (q2.x - q1.x)) < 0);
+				};
+
+				for (unsigned int i = 0; i < m_Window.GetLines().size(); ++i)
+				{
+					if (linesIntersect(m_Window.GetLines()[i].first->GetPos(), m_Window.GetLines()[i].second->GetPos(), m_MousePos, Mouse::GetPos()))
+					{
+						m_Window.GetLines().erase(m_Window.GetLines().begin() + i);
+					}
+				}
+				m_Window.Renderer2D.BeginDraw();
+				m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
+				for (auto* control : m_Window.GetControls())
+					control->Render();
+				m_Window.RenderLines();
+				m_Window.Renderer2D.EndDraw();
+			}
 		}
 	}
 }

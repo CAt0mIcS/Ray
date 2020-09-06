@@ -122,6 +122,13 @@ namespace NPE
 		*/
 		void Zoom(const Event& e);
 
+		/**
+		* Manages creation and deletion of lines between nodes
+		* 
+		* @param e is the received event
+		*/
+		void CreateOrDeleteLine(const Event& e);
+
 	private:
 		MainWindow m_Window;
 		
