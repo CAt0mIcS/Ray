@@ -15,6 +15,7 @@
 
 namespace NPE
 {
+
 	class Renderer2D
 	{
 	public:
@@ -65,11 +66,9 @@ namespace NPE
 		void RenderText(const std::wstring& text, const NPoint& pos, const NColor& color, const float fontSize);
 
 		/**
-		* Uses the control's position, size and color to render a rectangular object
-		*
-		* @param control is the control to render
+		* Uses the bitmap in relative directory (name = BackgroundImage.bmp) to draw the background
 		*/
-		void RenderRect(const Control& control);
+		void RenderBitmapBackground();
 
 		/**
 		* Draws a line
@@ -120,6 +119,10 @@ namespace NPE
 		Microsoft::WRL::ComPtr<ID2D1HwndRenderTarget> m_pRenderTarget;
 		Microsoft::WRL::ComPtr<IDWriteTextFormat> m_pTextFormat;
 		Microsoft::WRL::ComPtr<IDWriteFactory> m_pWriteFactory;
+
+		Microsoft::WRL::ComPtr<IWICImagingFactory> m_pIWICFactory;
+		Microsoft::WRL::ComPtr<ID2D1Bitmap> m_pD2DBitmap;
+		Microsoft::WRL::ComPtr<IWICFormatConverter> m_pConvertedSourceBitmap;
 	};
 }
 
