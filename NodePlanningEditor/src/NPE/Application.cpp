@@ -100,7 +100,7 @@ namespace NPE
 		//WARNING: Same as in Application::OnButtonClicked (cannot detect "ControlHoldMouseEvent")
 		MoveNodesWithMouse(node);
 		ResizeNodes(node);
-		NoOverlappingNodes(node);
+		//NoOverlappingNodes(node);
 	}
 
 	void Application::OnTextBoxClicked(TextBox& txtBox)
