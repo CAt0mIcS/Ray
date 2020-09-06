@@ -53,6 +53,23 @@ namespace NPE
 
 		m_pBrush->SetColor(control.GetColor().ToD2D1ColorF());
 		m_pRenderTarget->FillRoundedRectangle(&rc, m_pBrush.Get());
+
+		////drawing test border
+		//if (control.GetType() == Control::Type::Node)
+		//{
+		//	auto size = control.GetSize();
+		//	auto pos = control.GetPos();
+		//
+		//	float offset = size.width / 70;
+		//
+		//	pos.x += offset;
+		//	pos.y += offset;
+		//
+		//	size.width -= offset * 2;
+		//	size.height -= offset * 2;
+		//
+		//	RenderRoundedRectBorder(pos, size, { 46, 204, 113 });
+		//}
 	}
 
 	void Renderer2D::RenderRoundedRectBorder(const NPoint& pos, const NSize& size, const NColor& color, float radiusX, float radiusY) const

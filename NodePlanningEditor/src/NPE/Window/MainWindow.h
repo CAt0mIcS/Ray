@@ -15,8 +15,6 @@ namespace NPE
 {
 	class Button;
 
-	static NColor g_DefaultWindowBackgroundColor{ 35.0f, 38.0f, 40.0f };
-
 	class MainWindow : public BaseWindow<MainWindow>
 	{
 	public:

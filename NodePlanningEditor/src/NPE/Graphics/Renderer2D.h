@@ -22,6 +22,7 @@ namespace NPE
 	static constexpr NColor g_DefaultLineColor{ 160.0f, 160.0f, 160.0f };
 	static constexpr NColor g_DefaultTextColor{ 160.0f, 160.0f, 160.0f };
 	static constexpr NColor g_DefaultLineButtonColor{ 160.0f, 160.0f, 160.0f };
+	static constexpr NColor g_DefaultWindowBackgroundColor{ 35.0f, 38.0f, 40.0f };
 
 	class Renderer2D
 	{
@@ -92,7 +93,7 @@ namespace NPE
 		* 
 		* @param color is the background color
 		*/
-		void RenderScene(const NColor& color = { 35.0f, 38.0f,40.0f });
+		void RenderScene(const NColor& color = g_DefaultWindowBackgroundColor);
 
 		/**
 		* Getter for the HWND passed into the Init function
