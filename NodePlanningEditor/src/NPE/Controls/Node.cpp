@@ -21,7 +21,7 @@ namespace NPE
 		float yOffsetBtn = m_Size.height / 56;
 		float btnY = m_Pos.y + yOffsetBtn;
 
-		m_Children.emplace_back(new Button(renderer, { btnX, btnY }, { btnHeightAndHeight, btnHeightAndHeight }, { 160.0f, 160.0f, 160.0f }, ""));
+		m_Children.emplace_back(new Button(renderer, { btnX, btnY }, { btnHeightAndHeight, btnHeightAndHeight }, g_DefaultLineButtonColor, ""));
 		
 
 		float xOffsetTxt = m_Size.width / 22.5f;
@@ -36,7 +36,7 @@ namespace NPE
 		float txtPercentOfNode = 0.2f;
 		float txtHeight = m_Size.height * txtPercentOfNode;
 
-		m_Children.emplace_back(new TextBox(renderer, { txtX, txtY }, { txtWidth, txtHeight }, { 15.0f, 17.0f, 19.0f }, L"MainWindow"));
+		m_Children.emplace_back(new TextBox(renderer, { txtX, txtY }, { txtWidth, txtHeight }, g_DefaultNodeColor, L"MainWindow"));
 	}
 	
 	bool Node::Render() const

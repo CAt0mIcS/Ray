@@ -287,7 +287,7 @@ namespace NPE
 			unsigned int fontsize = (unsigned int)(line.first->GetSize().width / 3);
 			if (fontsize == 0) fontsize = 1;
 
-			Renderer2D.RenderLine({ x1, y1 }, { x2, y2 }, { 160.0f, 160.0f, 160.0f }, fontsize);
+			Renderer2D.RenderLine({ x1, y1 }, { x2, y2 }, g_DefaultLineColor, fontsize);
 			//}
 		}
 	}

@@ -9,7 +9,7 @@
 
 namespace NPE
 {
-	static NColor g_DefaultNodeColor{ 15.0f, 17.0f, 19.0f };
+	static constexpr NColor g_DefaultNodeColor{ 15.0f, 17.0f, 19.0f };
 
 	class Node : public Control
 	{

@@ -12,9 +12,17 @@
 #include <string>
 #include <wrl.h>
 
+/**QUESTION:
+*	Where should i put static global variables? 
+*/
+
 
 namespace NPE
 {
+	static constexpr NColor g_DefaultLineColor{ 160.0f, 160.0f, 160.0f };
+	static constexpr NColor g_DefaultTextColor{ 160.0f, 160.0f, 160.0f };
+	static constexpr NColor g_DefaultLineButtonColor{ 160.0f, 160.0f, 160.0f };
+
 	class Renderer2D
 	{
 	public:

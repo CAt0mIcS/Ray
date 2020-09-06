@@ -23,7 +23,7 @@ namespace NPE
 
 		//for (int i = 0; i < 1000; ++i)
 		//{
-		//	m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 450, 280}, { 15.0f, 17.0f, 19.0f }));
+		//	m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 450, 280}, g_DefaultNodeColor));
 		//}
 		LoadFile();
 
@@ -87,7 +87,7 @@ namespace NPE
 		for (auto& record : tbNodeInfo.GetRecords())
 		{
 			auto& data = record.GetRecordData();
-			m_Window.AddControl(new Node(m_Window.Renderer2D, { std::stof(data[0]), std::stof(data[1]) }, { std::stof(data[2]), std::stof(data[3]) }, { 15.0f, 17.0f, 19.0f }));
+			m_Window.AddControl(new Node(m_Window.Renderer2D, { std::stof(data[0]), std::stof(data[1]) }, { std::stof(data[2]), std::stof(data[3]) }, g_DefaultNodeColor));
 		}
 
 		for (auto& record : tbLines.GetRecords())
@@ -277,7 +277,7 @@ namespace NPE
 				control->Render();
 
 			NPoint btnPos = { btn.GetPos().x + btn.GetSize().width / 2, btn.GetPos().y + btn.GetSize().height / 2 };
-			m_Window.Renderer2D.RenderLine(btnPos, Mouse::GetPos(), { 160.0f, 160.0f, 160.0f }, (unsigned int)btn.GetSize().width / 3);
+			m_Window.Renderer2D.RenderLine(btnPos, Mouse::GetPos(), g_DefaultLineColor, (unsigned int)btn.GetSize().width / 3);
 			lineDrawOriginBtn = &btn;
 
 			m_Window.RenderLines();
@@ -292,7 +292,7 @@ namespace NPE
 		if (e.GetType() == EventType::AppPaintEvent)
 		{
 			m_Window.Renderer2D.BeginDraw();
-			m_Window.Renderer2D.RenderScene(NColor{ 35.0f, 38.0f, 40.0f });
+			m_Window.Renderer2D.RenderScene();
 			for (auto* control : m_Window.GetControls())
 				control->Render();
 			m_Window.RenderLines();

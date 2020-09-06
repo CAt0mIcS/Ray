@@ -35,7 +35,7 @@ namespace NPE
 
 			float xOffset = m_Size.width / 81.0f;
 			float yOffset = m_Size.height / -11.2f;
-			m_Renderer.RenderText(m_Text, { m_Pos.x + xOffset, m_Pos.y + yOffset }, { 160.0f, 160.0f, 160.0f }, fontSize);
+			m_Renderer.RenderText(m_Text, { m_Pos.x + xOffset, m_Pos.y + yOffset }, g_DefaultTextColor, fontSize);
 			return true;
 		}
 
