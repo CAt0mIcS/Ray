@@ -274,16 +274,21 @@ namespace NPE
 	{
 		for (std::pair<Button*, Button*>& line : m_LineCons)
 		{
-			if (line.first->IsInWindow() || line.second->IsInWindow())
-			{
-				float x1 = line.first->GetPos().x + line.first->GetSize().width / 2;
-				float y1 = line.first->GetPos().y + line.first->GetSize().height / 2;
+			//TODO: Render only lines that are in the window, but don't check if button is in window because line could go from button left to button right while both buttons are outsise the window
+			
+			//if (line.first->IsInWindow() || line.second->IsInWindow())
+			//{
+			float x1 = line.first->GetPos().x + line.first->GetSize().width / 2;
+			float y1 = line.first->GetPos().y + line.first->GetSize().height / 2;
 
-				float x2 = line.second->GetPos().x + line.second->GetSize().width / 2;
-				float y2 = line.second->GetPos().y + line.second->GetSize().height / 2;
+			float x2 = line.second->GetPos().x + line.second->GetSize().width / 2;
+			float y2 = line.second->GetPos().y + line.second->GetSize().height / 2;
 
-				Renderer2D.RenderLine({ x1, y1 }, { x2, y2 }, { 160.0f, 160.0f, 160.0f }, (unsigned int)line.first->GetSize().width / 4.66666666f);
-			}
+			unsigned int fontsize = (unsigned int)(line.first->GetSize().width / 3);
+			if (fontsize == 0) fontsize = 1;
+
+			Renderer2D.RenderLine({ x1, y1 }, { x2, y2 }, { 160.0f, 160.0f, 160.0f }, fontsize);
+			//}
 		}
 	}
 }

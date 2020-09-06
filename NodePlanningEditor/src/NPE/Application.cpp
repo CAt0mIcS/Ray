@@ -27,14 +27,13 @@ namespace NPE
 
 		//m_Zoom = std::stof(tbSceneInfo.GetRecords()[0].GetRecordData()[0]);
 
-		for (int i = 0; i < 2; ++i)
+		for (int i = 0; i < 500; ++i)
 		{
-			//m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 200, 150 }, { 15.0f, 17.0f, 19.0f }));
-			//m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 450, 280}, { 15.0f, 17.0f, 19.0f }));
+			m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 450, 280}, { 15.0f, 17.0f, 19.0f }));
 		}
 
-		m_Window.AddControl(new Node(m_Window.Renderer2D, { 10, 10 }, { 450, 280 }, { 15.0f, 17.0f, 19.0f }));
-		m_Window.AddControl(new Node(m_Window.Renderer2D, { 500, 10 }, { 450, 280 }, { 15.0f, 17.0f, 19.0f }));
+		//m_Window.AddControl(new Node(m_Window.Renderer2D, { 10, 10 }, { 450, 280 }, { 15.0f, 17.0f, 19.0f }));
+		//m_Window.AddControl(new Node(m_Window.Renderer2D, { 500, 10 }, { 450, 280 }, { 15.0f, 17.0f, 19.0f }));
 
 		//auto* txtbox = (TextBox*)m_Window.GetControls()[m_Window.GetControls().size() - 1];
 		//txtbox->SetText(L"Hello world");
@@ -236,8 +235,10 @@ namespace NPE
 				control->Render();
 
 			NPoint btnPos = { btn.GetPos().x + btn.GetSize().width / 2, btn.GetPos().y + btn.GetSize().height / 2 };
-			m_Window.Renderer2D.RenderLine(btnPos, Mouse::GetPos(), { 160.0f, 160.0f, 160.0f }, btn.GetSize().width / 4.66666666f);
+			m_Window.Renderer2D.RenderLine(btnPos, Mouse::GetPos(), { 160.0f, 160.0f, 160.0f }, (unsigned int)btn.GetSize().width / 3);
 			lineDrawOriginBtn = &btn;
+
+			m_Window.RenderLines();
 
 			m_Window.Renderer2D.EndDraw();
 		}
