@@ -92,7 +92,7 @@ namespace NPE
 		* 
 		* @returns all lines
 		*/
-		std::vector<std::pair<Button*, Button*>>& GetLineCons() { return m_LineCons; }
+		std::vector<std::pair<Button*, Button*>>& GetLines() { return m_LineCons; }
 
 		/**
 		* Renders all lines in window

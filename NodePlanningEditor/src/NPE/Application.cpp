@@ -115,29 +115,9 @@ namespace NPE
 
 	void Application::OnEvent(const Event& e)
 	{
-		if (e.GetType() == EventType::MouseButtonPressedEvent && Mouse::IsLeftPressed())
+		if (e.GetType() == EventType::MouseButtonPressedEvent && (Mouse::IsLeftPressed() || Mouse::IsRightPressed()))
 		{
 			m_MousePos = Mouse::GetPos();
-		}
-		//Delete node (get line function and check if mouse pos on line)
-		else if (Mouse::IsRightPressed() && e.GetType() == EventType::MouseButtonPressedEvent)
-		{
-			auto pointsOnLine = [](float m, int t, NPoint pos)
-			{
-				return pos.y == ((m * pos.x) + t);
-			};
-
-			for (std::pair<Button*, Button*>& line : m_Window.GetLineCons())
-			{
-				float slope = (line.first->GetPos().y - line.second->GetPos().y) / (line.first->GetPos().x - line.second->GetPos().x);
-				float t = -slope * line.first->GetPos().x - line.first->GetPos().y;
-
-				if (pointsOnLine(slope, t, Mouse::GetPos()))
-				{
-					__debugbreak;
-				}
-
-			}
 		}
 		else if (e.GetType() == EventType::MouseButtonReleasedEvent)
 		{
@@ -156,6 +136,32 @@ namespace NPE
 						}
 					}
 				}
+			}
+			//Delete node (get line function and check if mouse pos on line)
+			else if (eReleased.GetButton() == MouseButton::Right)
+			{
+				auto linesIntersect = [](const NPoint& p1, const NPoint& p2, const NPoint& q1, const NPoint& q2)
+				{
+					return (((q1.x - p1.x) * (p2.y - p1.y) - (q1.y - p1.y) * (p2.x - p1.x))
+						* ((q2.x - p1.x) * (p2.y - p1.y) - (q2.y - p1.y) * (p2.x - p1.x)) < 0)
+						&&
+						(((p1.x - q1.x) * (q2.y - q1.y) - (p1.y - q1.y) * (q2.x - q1.x))
+							* ((p2.x - q1.x) * (q2.y - q1.y) - (p2.y - q1.y) * (q2.x - q1.x)) < 0);
+				};
+
+				for (unsigned int i = 0; i < m_Window.GetLines().size(); ++i)
+				{
+					if (linesIntersect(m_Window.GetLines()[i].first->GetPos(), m_Window.GetLines()[i].second->GetPos(), m_MousePos, Mouse::GetPos()))
+					{
+						m_Window.GetLines().erase(m_Window.GetLines().begin() + i);
+					}
+				}
+				m_Window.Renderer2D.BeginDraw();
+				m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
+				for (auto* control : m_Window.GetControls())
+					control->Render();
+				m_Window.RenderLines();
+				m_Window.Renderer2D.EndDraw();
 			}
 		}
 
