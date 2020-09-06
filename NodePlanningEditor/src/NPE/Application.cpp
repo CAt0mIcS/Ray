@@ -18,7 +18,7 @@
 namespace NPE
 {
 	Application::Application()
-		: m_Database("saves\\save.dbs", 3), m_Window({ 800, 600 }, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_Zoom(1.0f), m_MousePos{ 0, 0 }
+		: m_Database("saves\\save.dbs", 3), m_Window({ 800, 600 }, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_Zoom(1.0f), m_MousePos{ 0, 0 }, m_NumZooms(0)
 	{
 
 		//QRD::Table& tbNodeInfo = m_Database.GetTable("NodeInfo");
@@ -183,7 +183,27 @@ namespace NPE
 			//Shift + A
 			if (Keyboard::IsKeyPressed(VK_SHIFT) && Keyboard::IsKeyPressed(65))
 			{
-				Control* control = m_Window.AddControl(new Node(m_Window.Renderer2D, Mouse::GetPos(), { 450.0f * m_Zoom, 280.0f * m_Zoom }, { 15.0f, 16.0f, 19.0f }));
+				float width = 450.0f;
+				float height = 280.0f;
+
+				if (m_NumZooms > 0)
+				{
+					for (int i = 0; i < m_NumZooms; ++i)
+					{
+						width *= m_ResizeFactor;
+						height *= m_ResizeFactor;
+					}
+				}
+				else
+				{
+					for (int i = m_NumZooms; i < 0; ++i)
+					{
+						width /= m_ResizeFactor;
+						height /= m_ResizeFactor;
+					}
+				}
+
+				Control* control = m_Window.AddControl(new Node(m_Window.Renderer2D, Mouse::GetPos(), { width, height }, { 15.0f, 16.0f, 19.0f }));
 				
 				m_Window.Renderer2D.BeginDraw();
 				control->Render();
@@ -314,6 +334,7 @@ namespace NPE
 		if (e.GetType() == EventType::MouseWheelUpEvent)
 		{
 			m_Zoom += 0.02f;
+			++m_NumZooms;
 
 			m_Window.Renderer2D.BeginDraw();
 			m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
@@ -338,9 +359,11 @@ namespace NPE
 		else if (e.GetType() == EventType::MouseWheelDownEvent)
 		{
 			m_Zoom -= 0.02f;
+			--m_NumZooms;
 			if (m_Zoom <= m_ZoomBoundary)
 			{
 				m_Zoom = m_ZoomBoundary;
+				m_NumZooms = -45;
 				return;
 			}
 

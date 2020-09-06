@@ -140,6 +140,8 @@ namespace NPE
 		QRD::Database m_Database;
 
 		float m_Zoom;
+		int m_NumZooms;
+
 		static constexpr float m_ZoomFactor = 0.05f;
 		static constexpr float m_ResizeFactor = 1.05f;
 		static constexpr float m_ZoomBoundary = 0.1f;
