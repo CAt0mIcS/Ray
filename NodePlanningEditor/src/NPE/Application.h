@@ -92,7 +92,7 @@ namespace NPE
 		* 
 		* @param btn is the start button where the line is drawn from
 		*/
-		void DrawLine(const Button& btn);
+		void DrawLine(Button& btn);
 
 		/**
 		* Contains logic for spawning a new node when pressing Shift + A

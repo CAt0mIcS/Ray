@@ -42,6 +42,7 @@ namespace NPE
 	{
 	public:
 		MouseButtonPressedEvent(const MouseButton btn)
+			: m_Button(btn)
 		{
 			switch (btn)
 			{
@@ -63,13 +64,19 @@ namespace NPE
 			}
 		}
 
+		MouseButton GetButton() const { return m_Button; }
+
 		NPE_DECLARE_TYPE_FN(MouseButtonPressedEvent)
+
+	private:
+		MouseButton m_Button;
 	};
 
 	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonReleasedEvent(const MouseButton btn)
+			: m_Button(btn)
 		{
 			switch (btn)
 			{
@@ -91,7 +98,12 @@ namespace NPE
 			}
 		}
 
+		MouseButton GetButton() const { return m_Button; }
+
 		NPE_DECLARE_TYPE_FN(MouseButtonReleasedEvent)
+
+	private:
+		MouseButton m_Button;
 	};
 
 	class MouseWheelEvent : public Event

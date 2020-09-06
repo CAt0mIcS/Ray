@@ -15,6 +15,8 @@ namespace NPE
 {
 	using WindowPaintFn = std::function<void(HDC, RECT*)>;
 
+	class Button;
+
 	class MainWindow : public BaseWindow<MainWindow>
 	{
 	public:
@@ -78,12 +80,37 @@ namespace NPE
 		*/
 		RECT GetRect() const;
 
+		/**
+		* Adds a line between two buttons
+		* 
+		* @param line is a pair of two buttons to connect
+		*/
+		void AddLine(std::pair<Button*, Button*> line) { m_LineCons.emplace_back(line); }
+		
+		/**
+		* Getter for all lines
+		* 
+		* @returns all lines
+		*/
+		std::vector<std::pair<Button*, Button*>>& GetLineCons() { return m_LineCons; }
+
+		/**
+		* Renders all lines in window
+		* 
+		* @warning function does not call BeginDraw or EndDraw
+		*/
+		void RenderLines();
+
 	public:
 		Renderer2D Renderer2D;
 
 	private:
+
+	private:
 		std::function<void(const Event& e)> m_EventCallback;
 		std::vector<Control*> m_Controls;
+
+		std::vector<std::pair<Button*, Button*>> m_LineCons;
 	};
 
 }

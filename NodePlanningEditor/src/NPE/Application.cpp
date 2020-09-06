@@ -6,6 +6,8 @@
 #include "NPE/Handlers/Mouse.h"
 #include "NPE/Handlers/Keyboard.h"
 
+#include "NPE/Handlers/MouseEvent.h"
+
 #include "NPE/Controls/Node.h"
 #include "NPE/Controls/Button.h"
 #include "NPE/Controls/TextBox.h"
@@ -87,6 +89,7 @@ namespace NPE
 		return m_Window.ProcessMessage();
 	}
 
+	Button* lineDrawOriginBtn = nullptr;
 	void Application::OnButtonClicked(Button& control)
 	{
 		//TODO: Implement functions bellow this point
@@ -116,6 +119,25 @@ namespace NPE
 		if (e.GetType() == EventType::MouseButtonPressedEvent && Mouse::IsLeftPressed())
 		{
 			m_MousePos = Mouse::GetPos();
+		}
+		else if (e.GetType() == EventType::MouseButtonReleasedEvent)
+		{
+			MouseButtonReleasedEvent& eReleased = (MouseButtonReleasedEvent&)e;
+			if (eReleased.GetButton() == MouseButton::Left)
+			{
+				for (auto* control : m_Window.GetControls())
+				{
+					if (control->IsInWindow() && control->GetType() == Control::Type::Node)
+					{
+						Button* btn = (Button*)control->GetChildren()[0];
+						if (Mouse::IsOnControl(btn))
+						{
+							m_Window.AddLine({ lineDrawOriginBtn, btn });
+							break;
+						}
+					}
+				}
+			}
 		}
 
 		MoveNodes(e);
@@ -169,6 +191,7 @@ namespace NPE
 		
 		for (auto* control : m_Window.GetControls())
 			control->Render();
+		m_Window.RenderLines();
 		
 		m_Window.Renderer2D.EndDraw();
 	}
@@ -202,7 +225,7 @@ namespace NPE
 		//SetCursor(LoadCursor(NULL, IDC_ARROW));
 	}
 
-	void Application::DrawLine(const Button& btn)
+	void Application::DrawLine(Button& btn)
 	{
 		if(Mouse::IsLeftPressed())
 		{
@@ -213,8 +236,9 @@ namespace NPE
 				control->Render();
 
 			NPoint btnPos = { btn.GetPos().x + btn.GetSize().width / 2, btn.GetPos().y + btn.GetSize().height / 2 };
-			m_Window.Renderer2D.RenderLine(btnPos, Mouse::GetPos(), { 255.0f, 255.0f, 255.0f }, 2);
-			
+			m_Window.Renderer2D.RenderLine(btnPos, Mouse::GetPos(), { 160.0f, 160.0f, 160.0f }, btn.GetSize().width / 4.66666666f);
+			lineDrawOriginBtn = &btn;
+
 			m_Window.Renderer2D.EndDraw();
 		}
 
@@ -228,6 +252,7 @@ namespace NPE
 			m_Window.Renderer2D.RenderScene(NColor{ 35.0f, 38.0f, 40.0f });
 			for (auto* control : m_Window.GetControls())
 				control->Render();
+			m_Window.RenderLines();
 			m_Window.Renderer2D.EndDraw();
 		}
 	}
@@ -258,6 +283,7 @@ namespace NPE
 					control->MoveBy(diff);
 					control->Render();
 				}
+				m_Window.RenderLines();
 				m_Window.Renderer2D.EndDraw();
 			}
 		}
@@ -288,6 +314,7 @@ namespace NPE
 				control->ResizeTo(newSize);
 				control->Render();
 			}
+			m_Window.RenderLines();
 			m_Window.Renderer2D.EndDraw();
 		}
 		else if (e.GetType() == EventType::MouseWheelDownEvent)
@@ -316,6 +343,7 @@ namespace NPE
 				control->ResizeTo(newSize);
 				control->Render();
 			}
+			m_Window.RenderLines();
 			m_Window.Renderer2D.EndDraw();
 		}
 	}
