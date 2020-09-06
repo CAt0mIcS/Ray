@@ -36,7 +36,7 @@ namespace NPE
 		float txtPercentOfNode = 0.2f;
 		float txtHeight = m_Size.height * txtPercentOfNode;
 
-		m_Children.emplace_back(new TextBox(renderer, { txtX, txtY }, { txtWidth, txtHeight }, { 15.0f, 17.0f, 19.0f }, L""));
+		m_Children.emplace_back(new TextBox(renderer, { txtX, txtY }, { txtWidth, txtHeight }, { 15.0f, 17.0f, 19.0f }, L"MainWindow"));
 	}
 	
 	bool Node::Render() const

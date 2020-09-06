@@ -130,7 +130,7 @@ namespace NPE
 		{
 			for (const auto* control : m_Window.GetControls())
 			{
-				if (node != control && node.IsInWindow() && node.OverlapsWith(*control))
+				if (node.GetId() != control->GetId() && node.IsInWindow() && node.OverlapsWith(control, { 10.0f, 10.0f }))
 				{
 					MessageBox(NULL, L"OVERLAPPING", L"", NULL);
 				}

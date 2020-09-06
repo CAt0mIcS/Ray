@@ -6,9 +6,12 @@
 
 namespace NPE
 {
+	unsigned int Control::m_NextId = 0;
+
 	Control::Control(Renderer2D& renderer, const Type type, const NPoint& pos, const NSize& size, const NColor& color)
-		: m_Renderer(renderer), m_Type(type), m_Pos(pos), m_Size(size), m_Children{}, m_Color(color)
+		: m_Renderer(renderer), m_Type(type), m_Pos(pos), m_Size(size), m_Children{}, m_Color(color), m_Id(m_NextId)
 	{
+		++m_NextId;
 	}
 
 	void Control::MoveBy(const NPoint& pos)
@@ -66,32 +69,15 @@ namespace NPE
 	}
 
 	//TODO: Implement function
-	bool Control::OverlapsWith(const Control& other, const NSize& minDst)
+	bool Control::OverlapsWith(const Control* other, const NSize& minDst)
 	{
-		bool ret = false;
-
-		const NPoint& otherPos = other.GetPos();
-		const NSize& otherSize = other.GetSize();
-
-
-
-		return ret;
+		return m_Renderer.RoundedRectConrolsOverlap(*this, *other, minDst);
 	}
 
 	bool Control::IsInWindow() const
 	{
 		RECT rc;
 		GetWindowRect(m_Renderer.GetNativeWindow(), &rc);
-		
-		//bool ret = false;
-		//if (m_Pos.x + m_Size.width > 0 && m_Pos.y + m_Size.height > 0)
-		//{
-			//ret = true;
-		//}
-		//if (!(m_Pos.x < rc.right && m_Pos.y < rc.bottom))
-		//{
-			//ret = false;
-		//}
 
 		return m_Pos.x + m_Size.width > 0 && m_Pos.y + m_Size.height > 0 && m_Pos.x < rc.right && m_Pos.y < rc.bottom;
 	}

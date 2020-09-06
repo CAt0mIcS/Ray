@@ -89,6 +89,7 @@ namespace NPE
 
 		D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
 
+		//TODO: fix text splitting onto new line when it doesn't fit anymore
 		m_pBrush->SetColor(color.ToD2D1ColorF());
 		m_pRenderTarget->DrawTextW(
 			text.c_str(),
@@ -109,6 +110,47 @@ namespace NPE
 	void Renderer2D::RenderScene(const NColor& color)
 	{
 		m_pRenderTarget->Clear(color.ToD2D1ColorF());
+	}
+
+	bool Renderer2D::RoundedRectConrolsOverlap(const Control& cOne, const Control& cTwo, const NSize& minDst)
+	{
+		D2D1_ROUNDED_RECT rcOne;
+		D2D1_ROUNDED_RECT rcTwo;
+
+		//rcOne
+		auto radius = std::max(cOne.GetSize().width, cOne.GetSize().height);
+		rcOne.radiusX = radius / 5.0f;
+		rcOne.radiusY = radius / 5.0f;
+
+		rcOne.rect.left = cOne.GetPos().x;
+		rcOne.rect.top = cOne.GetPos().y;
+		rcOne.rect.right = rcOne.rect.left + cOne.GetSize().width;
+		rcOne.rect.bottom = rcOne.rect.top + cOne.GetSize().height;
+
+		ID2D1RoundedRectangleGeometry* rrgOne;
+		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateRoundedRectangleGeometry(rcOne, &rrgOne), "Failed to create rounded rectangle geometry (1) for overlap comparison");
+
+		//rcTwo
+		radius = std::max(cTwo.GetSize().width, cTwo.GetSize().height);
+		rcTwo.radiusX = radius / 5.0f;
+		rcTwo.radiusY = radius / 5.0f;
+
+		rcTwo.rect.left = cTwo.GetPos().x;
+		rcTwo.rect.top = cTwo.GetPos().y;
+		rcTwo.rect.right = rcTwo.rect.left + cTwo.GetSize().width;
+		rcTwo.rect.bottom = rcTwo.rect.top + cTwo.GetSize().height;
+
+		ID2D1RoundedRectangleGeometry* rrgTwo;
+		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateRoundedRectangleGeometry(rcTwo, &rrgTwo), "Failed to create rounded rectangle geometry (2) for overlap comparison");
+
+		//compare and store result in relation
+		D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;
+		NPE_THROW_GFX_EXCEPT(rrgOne->CompareWithGeometry(rrgTwo, nullptr, &relation), "Failed to compare rounded rectangle geometries for overlap comparison");
+
+		rrgOne->Release();
+		rrgTwo->Release();
+
+		return relation == D2D1_GEOMETRY_RELATION_CONTAINS || relation == D2D1_GEOMETRY_RELATION_OVERLAP || relation == D2D1_GEOMETRY_RELATION_IS_CONTAINED;
 	}
 
 	void Renderer2D::CreateGraphicsResources()

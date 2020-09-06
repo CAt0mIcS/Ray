@@ -95,6 +95,15 @@ namespace NPE
 		*/
 		const HWND GetNativeWindow() const { return m_hWnd; }
 
+		/**
+		* Uses ID2D1RoundedRectangleGeometry::CompareWithGeometry to identify if two controls overlapp
+		* 
+		* @param cOne is the first control
+		* @param cTwo is the second control
+		* @returns true if the controls overlap, false otherwise
+		*/
+		bool RoundedRectConrolsOverlap(const Control& cOne, const Control& cTwo, const NSize& minDst = { 0.0f, 0.0f });
+
 	private:
 		/**
 		* Initializes all private ComPtr variables, function is called in Renderer2D::Init

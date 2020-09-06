@@ -96,6 +96,13 @@ namespace NPE
 		const std::vector<Control*>& GetChildren() const { return m_Children; }
 
 		/**
+		* Getter for current control id
+		* 
+		* @returns the control's id
+		*/
+		unsigned int GetId() const { return m_Id; }
+
+		/**
 		* Renders the widget
 		*/
 		virtual bool Render() const = 0;
@@ -107,7 +114,7 @@ namespace NPE
 		* @param minDst is the minimum distance allowed between nodes
 		* @returns true if this controls overlaps with the other one, false otherwise
 		*/
-		bool OverlapsWith(const Control& other, const NSize& minDst = { 0.0f, 0.0f });
+		bool OverlapsWith(const Control* other, const NSize& minDst = { 0.0f, 0.0f });
 
 		/**
 		* TODO: Add documentation
@@ -147,7 +154,10 @@ namespace NPE
 		std::vector<Control*> m_Children;
 
 	private:
+		unsigned int m_Id;
 		Type m_Type;
+
+		static unsigned int m_NextId;
 	};
 }
 
