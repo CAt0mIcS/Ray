@@ -208,7 +208,7 @@ namespace NPE
 					}
 				}
 
-				Control* control = m_Window.AddControl(new Node(m_Window.Renderer2D, Mouse::GetPos(), { width, height }, { 15.0f, 16.0f, 19.0f }));
+				Control* control = m_Window.AddControl(new Node(m_Window.Renderer2D, Mouse::GetPos(), { width, height }, g_DefaultNodeColor));
 				
 				m_Window.Renderer2D.BeginDraw();
 				control->Render();
@@ -228,7 +228,7 @@ namespace NPE
 		m_MousePos = Mouse::GetPos();
 
 		m_Window.Renderer2D.BeginDraw();
-		m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
+		m_Window.Renderer2D.RenderScene();
 		
 		for (auto* control : m_Window.GetControls())
 			control->Render();
@@ -271,7 +271,7 @@ namespace NPE
 		if(Mouse::IsLeftPressed())
 		{
 			m_Window.Renderer2D.BeginDraw();
-			m_Window.Renderer2D.RenderScene({ 35.0f, 37.0f, 40.0f });
+			m_Window.Renderer2D.RenderScene();
 		
 			for (auto* control : m_Window.GetControls())
 				control->Render();
@@ -320,7 +320,7 @@ namespace NPE
 				m_MousePos.y = Mouse::GetPos().y;
 
 				m_Window.Renderer2D.BeginDraw();
-				m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
+				m_Window.Renderer2D.RenderScene();
 				for (auto* control : m_Window.GetControls())
 				{
 					control->MoveBy(diff);
@@ -341,7 +341,7 @@ namespace NPE
 			++m_Zoom;
 
 			m_Window.Renderer2D.BeginDraw();
-			m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
+			m_Window.Renderer2D.RenderScene();
 			for (auto* control : m_Window.GetControls())
 			{
 				const NPoint& pos = control->GetPos();
@@ -370,7 +370,7 @@ namespace NPE
 			}
 
 			m_Window.Renderer2D.BeginDraw();
-			m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
+			m_Window.Renderer2D.RenderScene();
 			for(auto* control : m_Window.GetControls())
 			{
 				const NPoint& pos = control->GetPos();
@@ -431,7 +431,7 @@ namespace NPE
 					}
 				}
 				m_Window.Renderer2D.BeginDraw();
-				m_Window.Renderer2D.RenderScene({ 35.0f, 38.0f, 40.0f });
+				m_Window.Renderer2D.RenderScene();
 				for (auto* control : m_Window.GetControls())
 					control->Render();
 				m_Window.RenderLines();

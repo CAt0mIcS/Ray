@@ -103,77 +103,11 @@ namespace NPE
 
 	void Renderer2D::RenderBitmapBackground()
 	{
-		HRESULT hr = S_OK;
-
-		// Create WIC factory
-		hr = CoCreateInstance(
-			CLSID_WICImagingFactory,
-			nullptr,
-			CLSCTX_INPROC_SERVER,
-			IID_PPV_ARGS(&m_pIWICFactory)
-		);
-
-		IWICBitmapDecoder* pDecoder = nullptr;
-
-		hr = m_pIWICFactory->CreateDecoderFromFilename(
-			L"BackgroundImage.bmp",                // Image to be decoded
-			nullptr,                         // Do not prefer a particular vendor
-			GENERIC_READ,                    // Desired read access to the file
-			WICDecodeMetadataCacheOnDemand,  // Cache metadata when needed
-			&pDecoder                        // Pointer to the decoder
-		);
-
-		// Retrieve the first frame of the image from the decoder
-		IWICBitmapFrameDecode* pFrame = nullptr;
-
-		if (SUCCEEDED(hr))
-		{
-			hr = pDecoder->GetFrame(0, &pFrame);
-		}
-
-		//Step 3: Format convert the frame to 32bppPBGRA
-		if (SUCCEEDED(hr))
-		{
-			hr = m_pIWICFactory->CreateFormatConverter(&m_pConvertedSourceBitmap);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = m_pConvertedSourceBitmap->Initialize(
-				pFrame,                          // Input bitmap to convert
-				GUID_WICPixelFormat32bppPBGRA,   // Destination pixel format
-				WICBitmapDitherTypeNone,         // Specified dither pattern
-				nullptr,                         // Specify a particular palette 
-				0.f,                             // Alpha threshold
-				WICBitmapPaletteTypeCustom       // Palette translation type
-			);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			// Need to release the previous D2DBitmap if there is one
-			hr = m_pRenderTarget->CreateBitmapFromWicBitmap(m_pConvertedSourceBitmap.Get(), nullptr, &m_pD2DBitmap);
-		}
-
-		m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-
 		auto rtSize = m_pRenderTarget->GetSize();
 
 		// Create a rectangle with size of current window
 		auto rectangle = D2D1::RectF(0.0f, 0.0f, rtSize.width, rtSize.height);
-
-		// D2DBitmap may have been released due to device loss. 
-		// If so, re-create it from the source bitmap
-		if (m_pConvertedSourceBitmap && !m_pD2DBitmap)
-		{
-			m_pRenderTarget->CreateBitmapFromWicBitmap(m_pConvertedSourceBitmap.Get(), nullptr, &m_pD2DBitmap);
-		}
-
-		// Draws an image and scales it to the current window size
-		if (m_pD2DBitmap)
-		{
-			m_pRenderTarget->DrawBitmap(m_pD2DBitmap.Get(), rectangle);
-		}
+		m_pRenderTarget->DrawBitmap(m_pD2DBitmap.Get(), rectangle);
 	}
 
 	void Renderer2D::RenderLine(const NPoint& startPos, const NPoint& endPos, const NColor& color, const unsigned int width)
@@ -245,6 +179,50 @@ namespace NPE
 
 		const D2D1_COLOR_F color = D2D1::ColorF(35.0f / 255.0f, 38.0f / 255.0f, 40.0f / 255.0f);
 			NPE_THROW_GFX_EXCEPT(m_pRenderTarget->CreateSolidColorBrush(color, &m_pBrush), "Failed to create D2D1SolidColorBrush");
+
+
+		//for background bitmap
+		IWICImagingFactory* pIWICFactory;
+		IWICFormatConverter* pConvertedSourceBitmap;
+		IWICBitmapDecoder* pDecoder;
+		IWICBitmapFrameDecode* pFrame;
+
+		NPE_THROW_GFX_EXCEPT(CoCreateInstance(
+				CLSID_WICImagingFactory,
+				nullptr,
+				CLSCTX_INPROC_SERVER,
+				IID_PPV_ARGS(&pIWICFactory)
+			), "Failed to create WICImagingFactory");
+
+		NPE_THROW_GFX_EXCEPT(pIWICFactory->CreateDecoderFromFilename(
+			L"BackgroundImage.bmp",
+			nullptr,
+			GENERIC_READ,
+			WICDecodeMetadataCacheOnDemand,
+			&pDecoder
+		), "");
+
+
+		NPE_THROW_GFX_EXCEPT(pDecoder->GetFrame(0, &pFrame), "Failed to get decoded bitmap frame");
+		pDecoder->Release();
+
+		NPE_THROW_GFX_EXCEPT(pIWICFactory->CreateFormatConverter(&pConvertedSourceBitmap), "Failed to format frame to 32bppPBGRA");
+		pIWICFactory->Release();
+
+		NPE_THROW_GFX_EXCEPT(pConvertedSourceBitmap->Initialize(
+			pFrame,
+			GUID_WICPixelFormat32bppPBGRA,
+			WICBitmapDitherTypeNone,
+			nullptr,
+			0.f,
+			WICBitmapPaletteTypeCustom
+		), "Failed to initialize converted source bitmap");
+		pFrame->Release();
+
+		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->CreateBitmapFromWicBitmap(
+			pConvertedSourceBitmap, nullptr, &m_pD2DBitmap
+		), "Failed to create bitmap from wic bitmap");
+		pConvertedSourceBitmap->Release();
 	}
 }
 

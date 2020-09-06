@@ -15,7 +15,6 @@
 
 namespace NPE
 {
-
 	class Renderer2D
 	{
 	public:
@@ -85,7 +84,7 @@ namespace NPE
 		* 
 		* @param color is the background color
 		*/
-		void RenderScene(const NColor& color);
+		void RenderScene(const NColor& color = { 35.0f, 38.0f,40.0f });
 
 		/**
 		* Getter for the HWND passed into the Init function
@@ -117,12 +116,13 @@ namespace NPE
 		Microsoft::WRL::ComPtr<ID2D1Factory> m_pFactory;
 		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush > m_pBrush;
 		Microsoft::WRL::ComPtr<ID2D1HwndRenderTarget> m_pRenderTarget;
+		
+		//for drawing text
 		Microsoft::WRL::ComPtr<IDWriteTextFormat> m_pTextFormat;
 		Microsoft::WRL::ComPtr<IDWriteFactory> m_pWriteFactory;
 
-		Microsoft::WRL::ComPtr<IWICImagingFactory> m_pIWICFactory;
+		//for drawing background bitmap
 		Microsoft::WRL::ComPtr<ID2D1Bitmap> m_pD2DBitmap;
-		Microsoft::WRL::ComPtr<IWICFormatConverter> m_pConvertedSourceBitmap;
 	};
 }
 

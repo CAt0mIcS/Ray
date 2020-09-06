@@ -14,7 +14,7 @@
 namespace NPE
 {
 	MainWindow::MainWindow(const NSize& size, PCWSTR name, std::function<void(const Event&)> eventFn)
-		: m_EventCallback(eventFn), m_LineCons{}
+		: m_EventCallback(eventFn), m_Lines{}
 	{
 		if (!CreateNativeWindow(name, WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, (int)size.width, (int)size.height))
 		{
@@ -272,7 +272,7 @@ namespace NPE
 
 	void MainWindow::RenderLines()
 	{
-		for (std::pair<Button*, Button*>& line : m_LineCons)
+		for (std::pair<Button*, Button*>& line : m_Lines)
 		{
 			//TODO: Render only lines that are in the window, but don't check if button is in window because line could go from button left to button right while both buttons are outsise the window
 			

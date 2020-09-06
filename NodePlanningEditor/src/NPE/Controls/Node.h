@@ -1,12 +1,16 @@
 #pragma once
 
 #include "Control.h"
+#include "NPE/Util/Props.h"
 
 #include <functional>
 
 
+
 namespace NPE
 {
+	static NColor g_DefaultNodeColor{ 15.0f, 17.0f, 19.0f };
+
 	class Node : public Control
 	{
 	public:

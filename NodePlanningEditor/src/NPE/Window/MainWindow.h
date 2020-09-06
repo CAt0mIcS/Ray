@@ -13,9 +13,9 @@
 
 namespace NPE
 {
-	using WindowPaintFn = std::function<void(HDC, RECT*)>;
-
 	class Button;
+
+	static NColor g_DefaultWindowBackgroundColor{ 35.0f, 38.0f, 40.0f };
 
 	class MainWindow : public BaseWindow<MainWindow>
 	{
@@ -85,14 +85,14 @@ namespace NPE
 		* 
 		* @param line is a pair of two buttons to connect
 		*/
-		void AddLine(std::pair<Button*, Button*> line) { m_LineCons.emplace_back(line); }
+		void AddLine(std::pair<Button*, Button*> line) { m_Lines.emplace_back(line); }
 		
 		/**
 		* Getter for all lines
 		* 
 		* @returns all lines
 		*/
-		std::vector<std::pair<Button*, Button*>>& GetLines() { return m_LineCons; }
+		std::vector<std::pair<Button*, Button*>>& GetLines() { return m_Lines; }
 
 		/**
 		* Renders all lines in window
@@ -110,7 +110,7 @@ namespace NPE
 		std::function<void(const Event& e)> m_EventCallback;
 		std::vector<Control*> m_Controls;
 
-		std::vector<std::pair<Button*, Button*>> m_LineCons;
+		std::vector<std::pair<Button*, Button*>> m_Lines;
 	};
 
 }
