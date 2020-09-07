@@ -16,7 +16,7 @@ namespace GUI
 		Control* receiver = nullptr;
 		for (auto* child : GetChildren())
 		{
-			Control* receiver = child->GetEventReceiver(e);
+			receiver = child->GetEventReceiver(e);
 		}
 
 		//no child control was clicked, check if mouse is on node control

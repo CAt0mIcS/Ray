@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Util/Util.h"
+#include "GUIBase.h"
 
 #include <string>
 #include <vector>
@@ -18,7 +19,7 @@ namespace GUI
 	class Renderer;
 	class Event;
 
-	class Control
+	class GUI_API Control
 	{
 		friend class Renderer;
 	public:
@@ -29,7 +30,8 @@ namespace GUI
 		enum class Type
 		{
 			INVALID = 0,
-			Node, Button, TextBox, PlainTextEdit
+			Node, Button, TextBox, PlainTextEdit,
+			MenuItem, MenuBar
 		};
 
 	public:

@@ -8,10 +8,16 @@ namespace GUI
 {
 	Renderer* Renderer::s_Instance = new Renderer();
 
-	void Renderer::RenderTest()
+	void Renderer::RenderRect(const Util::NPoint& pos, const Util::NSize& size, const Util::NColor& color)
 	{
-		m_pBrush->SetColor({ 0.9f, 0.9f, 0.9f, 0.9f });
-		m_pRenderTarget->FillRectangle({ 0, 0, 1920, 100 }, m_pBrush.Get());
+		m_pBrush->SetColor(color.ToD2D1ColorF());
+		D2D1_RECT_F rc;
+		rc.left = pos.x;
+		rc.top = pos.y;
+		rc.right = pos.x + size.width;
+		rc.bottom = pos.y + size.height;
+
+		m_pRenderTarget->FillRectangle(rc, m_pBrush.Get());
 	}
 
 	Renderer::Renderer()

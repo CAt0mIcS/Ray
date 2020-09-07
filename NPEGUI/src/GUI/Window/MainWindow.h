@@ -58,14 +58,14 @@ namespace GUI
 		* 
 		* @returns vector of all controls
 		*/
-		std::vector<Control*>& GetControls() { return m_Controls; }
+		std::vector<Control*>& GetControls() { return m_Children; }
 
 		/**
 		* Adds a Control to the window
 		* 
 		* @returns the added Control
 		*/
-		Control* AddControl(Control* control) { return m_Controls.emplace_back(control); }
+		Control* AddControl(Control* control) { return m_Children.emplace_back(control); }
 
 		/**
 		* Getter for window position
@@ -102,7 +102,6 @@ namespace GUI
 
 	private:
 		EventCallbackFn m_EventCallbackFn;
-		std::vector<Control*> m_Controls;
 
 	};
 

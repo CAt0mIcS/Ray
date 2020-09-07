@@ -58,10 +58,14 @@ namespace GUI
 		*/
 		void RenderScene(const Util::NColor& color = g_DefaultWindowBackgroundColor);
 
-		/// <summary>
-		/// DEBUG:
-		/// </summary>
-		void RenderTest();
+		/**
+		* Draws a filled rectangle with specified arguments
+		* 
+		* @param pos is the x and y coordinate of the rect
+		* @param size is the width and height of the rect
+		* @param color are the rgb values of the rect
+		*/
+		void RenderRect(const Util::NPoint& pos, const Util::NSize& size, const Util::NColor& color);
 
 	private:
 		/**
