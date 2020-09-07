@@ -1,0 +1,113 @@
+#include "pch.h"
+#include "Renderer.h"
+
+#include "Util/Exceptions.h"
+
+
+namespace GUI
+{
+	Renderer* Renderer::s_Instance = nullptr;
+
+	Renderer::Renderer()
+		: m_hWnd(0) {}
+
+	void Renderer::Init(HWND hWnd)
+	{
+		s_Instance = new Renderer();
+		m_hWnd = hWnd;
+		CreateGraphicsResources();
+	}
+
+	void Renderer::BeginDraw()
+	{
+		m_pRenderTarget->BeginDraw();
+	}
+
+	void Renderer::EndDraw()
+	{
+		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->EndDraw(), "Failed to draw object(s)");
+	}
+
+	void Renderer::RenderScene(const Util::NColor& color)
+	{
+		RenderBitmapBackground();
+	}
+
+	void Renderer::RenderBitmapBackground()
+	{
+		auto rtSize = m_pRenderTarget->GetSize();
+
+		// Create a rectangle with size of current window
+		auto rectangle = D2D1::RectF(0.0f, 0.0f, rtSize.width, rtSize.height);
+		m_pRenderTarget->DrawBitmap(m_pD2DBitmap.Get(), rectangle);
+	}
+
+	void Renderer::CreateGraphicsResources()
+	{
+		NPE_THROW_GFX_EXCEPT(D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED,
+			__uuidof(m_pFactory), &m_pFactory), "Failed to create D2D1Factory");
+
+		RECT rc;
+		GetClientRect(m_hWnd, &rc);
+		D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
+		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
+			D2D1::HwndRenderTargetProperties(m_hWnd, size), &m_pRenderTarget), "Failed to create D2D1HwndRenderTarget");
+
+		NPE_THROW_GFX_EXCEPT(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED,
+			__uuidof(m_pWriteFactory), &m_pWriteFactory), "Failed to create DWriteFactory");
+
+		D2D1_COLOR_F col;
+		col.r = g_DefaultWindowBackgroundColor.r;
+		col.g = g_DefaultWindowBackgroundColor.g;
+		col.b = g_DefaultWindowBackgroundColor.b;
+		col.a = 1.0f;
+
+		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->CreateSolidColorBrush(
+			col, &m_pBrush
+		), "Failed to create D2D1SolidColorBrush");
+
+
+		//for background bitmap
+		IWICImagingFactory* pIWICFactory;
+		IWICFormatConverter* pConvertedSourceBitmap;
+		IWICBitmapDecoder* pDecoder;
+		IWICBitmapFrameDecode* pFrame;
+
+		NPE_THROW_GFX_EXCEPT(CoCreateInstance(
+			CLSID_WICImagingFactory,
+			nullptr,
+			CLSCTX_INPROC_SERVER,
+			IID_PPV_ARGS(&pIWICFactory)
+		), "Failed to create WICImagingFactory");
+
+		NPE_THROW_GFX_EXCEPT(pIWICFactory->CreateDecoderFromFilename(
+			L"BackgroundImage.bmp",
+			nullptr,
+			GENERIC_READ,
+			WICDecodeMetadataCacheOnDemand,
+			&pDecoder
+		), "");
+
+
+		NPE_THROW_GFX_EXCEPT(pDecoder->GetFrame(0, &pFrame), "Failed to get decoded bitmap frame");
+		pDecoder->Release();
+
+		NPE_THROW_GFX_EXCEPT(pIWICFactory->CreateFormatConverter(&pConvertedSourceBitmap), "Failed to format frame to 32bppPBGRA");
+		pIWICFactory->Release();
+
+		NPE_THROW_GFX_EXCEPT(pConvertedSourceBitmap->Initialize(
+			pFrame,
+			GUID_WICPixelFormat32bppPBGRA,
+			WICBitmapDitherTypeNone,
+			nullptr,
+			0.f,
+			WICBitmapPaletteTypeCustom
+		), "Failed to initialize converted source bitmap");
+		pFrame->Release();
+
+		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->CreateBitmapFromWicBitmap(
+			pConvertedSourceBitmap, nullptr, &m_pD2DBitmap
+		), "Failed to create bitmap from wic bitmap");
+		pConvertedSourceBitmap->Release();
+	}
+}

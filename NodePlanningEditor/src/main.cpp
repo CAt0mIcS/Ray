@@ -1,19 +1,13 @@
 #include "pch.h"
 
 #include "NPE/Application.h"
-#include "NPE/Util/Exceptions.h"
+#include "Util/Exceptions.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR nCmdLine, _In_ int nCmdShow)
 {
 	try
 	{
-		AllocConsole();
-		FILE* f = freopen("CONOUT$", "w", stdout);
-
-		//return NPE::Application{}.Run();
-		NPE::Application app;
-		auto retCode = app.Run();
-		return retCode;
+		return NPE::Application{}.Run();
 	}
 	catch (NPE::Exception& e)
 	{
