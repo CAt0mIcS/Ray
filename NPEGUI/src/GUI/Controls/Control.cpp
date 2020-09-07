@@ -39,12 +39,10 @@ namespace GUI
 	{
 		for (auto& child : m_Children)
 		{
-			child->m_Pos.x += pos.x;
-			child->m_Pos.y += pos.y;
+			child->m_Pos += pos;
 		}
 
-		m_Pos.x += pos.x;
-		m_Pos.y += pos.y;
+		m_Pos += pos;
 	}
 
 	void Control::MoveTo(const NPoint& pos)
@@ -52,8 +50,7 @@ namespace GUI
 		for (auto& child : m_Children)
 		{
 			NPoint ratio{ pos.x / m_Pos.x, pos.y / m_Pos.y };
-			child->m_Pos.x += ratio.x;
-			child->m_Pos.y += ratio.y;
+			child->m_Pos += ratio;
 		}
 
 		m_Pos = pos;
@@ -61,8 +58,7 @@ namespace GUI
 
 	void Control::ResizeBy(const NSize& size)
 	{
-		m_Size.width += size.width;
-		m_Size.height += size.height;
+		m_Size += size;
 		
 		for (auto& child : m_Children)
 		{
