@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QRD/QRD.h>
+#include "FileHandler.h"
 
 #include <GUI/GUIApplication.h>
 
@@ -26,10 +26,11 @@ namespace NPE
 		/**
 		* Application deconstructor, saves scene to file
 		*/
-		~Application();
+		
+		~Application() { m_FileHandler.SaveScene(this->GetWindow()); }
 
 	private:
-		QRD::Database m_Database;
+		FileHandler m_FileHandler;
 	};
 }
 

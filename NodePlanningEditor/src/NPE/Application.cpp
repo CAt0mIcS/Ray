@@ -5,9 +5,9 @@
 namespace NPE
 {
 	Application::Application()
-		: m_Database("saves\\save.dbs", 3)
+		: m_FileHandler("saves\\save.dbs")
 	{
-		//LoadFile();
+		m_FileHandler.LoadScene(this->GetWindow());
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 	}
 
@@ -21,11 +21,6 @@ namespace NPE
 			return true;
 		}
 		return false;
-	}
-
-	Application::~Application()
-	{
-		//SaveFile();
 	}
 
 }

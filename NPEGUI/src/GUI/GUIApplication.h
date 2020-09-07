@@ -25,7 +25,24 @@ namespace GUI
 		*/
 		int Run();
 
+		/**
+		* Getter for main window
+		* 
+		* @returns the main window of the application
+		*/
+		MainWindow& GetWindow() { return m_Window; }
+
+		/**
+		* Getter for main window
+		*
+		* @returns the main window of the application
+		*/
+		const MainWindow& GetWindow() const { return m_Window; }
+
 	protected:
+		/**
+		* GUIApplication constructor
+		*/
 		GUIApplication();
 
 	protected:
