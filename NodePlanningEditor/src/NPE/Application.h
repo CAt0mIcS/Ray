@@ -55,6 +55,13 @@ namespace NPE
 		void OnEvent(const Event& e);
 
 		/**
+		* Handles typing into main textbox
+		* 
+		* @param e is the received event
+		*/
+		void WriteTextbox(const Event& e);
+
+		/**
 		* Contains logic to disallow nodes from overlapping
 		* 
 		* @param node is the node being draged

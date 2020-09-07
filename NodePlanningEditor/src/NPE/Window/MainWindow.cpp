@@ -211,21 +211,33 @@ namespace NPE
 			}
 			return 0;
 		}
+		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:
 		{
-			KeyPressedEvent e((unsigned char)wParam);
-			m_EventCallback(e);
+			if (wParam < 256)
+			{
+				KeyPressedEvent e((unsigned char)wParam);
+				m_EventCallback(e);
+			}
 			return 0;
 		}
+		case WM_SYSKEYUP:
 		case WM_KEYUP:
 		{
-			KeyReleasedEvent e((unsigned char)wParam);
-			m_EventCallback(e);
+			if (wParam < 256)
+			{
+				KeyReleasedEvent e((unsigned char)wParam);
+				m_EventCallback(e);
+			}
 			return 0;
 		}
 		case WM_CHAR:
 		{
-			//Keyboard::OnChar((unsigned char)wParam);
+			if (wParam > 0 && wParam < 0x10000)
+			{
+				CharEvent e((unsigned char)wParam);
+				m_EventCallback(e);
+			}
 			return 0;
 		}
 		case WM_SIZE:

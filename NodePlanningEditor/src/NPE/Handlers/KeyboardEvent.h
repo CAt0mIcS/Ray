@@ -15,7 +15,8 @@ namespace NPE
 		{
 		}
 
-		unsigned char GetKeyCode() const { return m_KeyCode; }
+	public:
+		virtual unsigned char GetKeyCode() const { return m_KeyCode; }
 
 	private:
 		unsigned char m_KeyCode;
@@ -43,6 +44,17 @@ namespace NPE
 		}
 
 		NPE_DECLARE_TYPE_FN(KeyReleasedEvent)
+	};
+
+	class CharEvent : public KeyEvent
+	{
+	public:
+		CharEvent(const unsigned char keycode)
+			: KeyEvent(keycode)
+		{
+		}
+
+		NPE_DECLARE_TYPE_FN(CharEvent)
 	};
 }
 

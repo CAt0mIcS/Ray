@@ -7,6 +7,7 @@
 #include "NPE/Handlers/Keyboard.h"
 
 #include "NPE/Handlers/MouseEvent.h"
+#include "NPE/Handlers/KeyboardEvent.h"
 
 #include "NPE/Controls/Node.h"
 #include "NPE/Controls/Button.h"
@@ -149,11 +150,12 @@ namespace NPE
 		//NoOverlappingNodes(node);
 	}
 
+	TextBox* txtboxFocus = nullptr;
 	void Application::OnTextBoxClicked(TextBox& txtBox)
 	{
 		if (Mouse::IsLeftPressed())
 		{
-
+			txtboxFocus = &txtBox;
 		}
 	}
 
@@ -170,6 +172,27 @@ namespace NPE
 		OnPaint(e);
 		NewNode(e);
 		SaveShortcut(e);
+		WriteTextbox(e);
+	}
+
+	void Application::WriteTextbox(const Event& e)
+	{
+		if (e.GetType() == EventType::CharEvent)
+		{
+			KeyReleasedEvent& evnt = (KeyReleasedEvent&)e;
+
+			if (txtboxFocus)
+			{
+				std::wstring newText = txtboxFocus->GetText();
+				newText += evnt.GetKeyCode();
+
+				txtboxFocus->SetText(newText);
+				m_Window.Renderer2D.BeginDraw();
+				txtboxFocus->Render();
+				m_Window.Renderer2D.EndDraw();
+			}
+
+		}
 	}
 
 	void Application::NoOverlappingNodes(Node& node)
