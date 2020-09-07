@@ -31,6 +31,9 @@ namespace NPE
 	
 		renderer.BeginDraw();
 		renderer.RenderScene();
+
+		renderer.RenderTest();
+
 		renderer.EndDraw();
 		
 		return true;

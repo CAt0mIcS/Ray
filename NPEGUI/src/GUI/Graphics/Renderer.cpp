@@ -8,6 +8,12 @@ namespace GUI
 {
 	Renderer* Renderer::s_Instance = new Renderer();
 
+	void Renderer::RenderTest()
+	{
+		m_pBrush->SetColor({ 0.9f, 0.9f, 0.9f, 0.9f });
+		m_pRenderTarget->FillRectangle({ 0, 0, 1920, 100 }, m_pBrush.Get());
+	}
+
 	Renderer::Renderer()
 		: m_hWnd(0) {}
 

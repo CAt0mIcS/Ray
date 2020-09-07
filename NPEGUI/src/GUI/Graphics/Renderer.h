@@ -58,6 +58,11 @@ namespace GUI
 		*/
 		void RenderScene(const Util::NColor& color = g_DefaultWindowBackgroundColor);
 
+		/// <summary>
+		/// DEBUG:
+		/// </summary>
+		void RenderTest();
+
 	private:
 		/**
 		* Private renderer constructor
