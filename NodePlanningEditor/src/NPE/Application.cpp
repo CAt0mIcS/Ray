@@ -22,11 +22,11 @@ namespace NPE
 		: m_Database("saves\\save.dbs", 3), m_Window({ 800, 600 }, L"NodePlanningEditor", [this](const Event& e) { OnEvent(e); }), m_MousePos{ 0, 0 }, m_Zoom(0)
 	{
 
-		//for (int i = 0; i < 1000; ++i)
-		//{
-		//	m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 450, 280}, g_DefaultNodeColor));
-		//}
-		LoadFile();
+		for (int i = 0; i < 1000; ++i)
+		{
+			m_Window.AddControl(new Node(m_Window.Renderer2D, { (float)(rand() / 2), (float)(rand() / 2) }, { 450, 280}, g_DefaultNodeColor));
+		}
+		//LoadFile();
 
 		Button::SetOnButtonClickedCallback([this](Button& btn) { OnButtonClicked(btn); });
 		Node::SetOnNodeClickedCallback([this](Node& node) { OnNodeClicked(node); });
@@ -159,6 +159,12 @@ namespace NPE
 		}
 	}
 
+	PlainTextBox* plainTxtboxFocus = nullptr;
+	void Application::OnPlaintTextBoxClicked(PlaintTextBox& txtBox)
+	{
+
+	}
+
 	void Application::OnEvent(const Event& e)
 	{
 		if (e.GetType() == EventType::MouseButtonPressedEvent && (Mouse::IsLeftPressed() || Mouse::IsRightPressed()))
@@ -173,8 +179,62 @@ namespace NPE
 		NewNode(e);
 		SaveShortcut(e);
 		WriteTextbox(e);
+		WritePlaintText(e);
 	}
 
+	void Application::WritePlaintText(const Event& e)
+	{
+		if (e.GetType() == EventType::CharEvent)
+		{
+			KeyReleasedEvent& evnt = (KeyReleasedEvent&)e;
+
+			if (plainTxtboxFocus)
+			{
+				std::wstring newText = plainTxtboxFocus->GetText();
+
+				//check for backspace
+				if (evnt.GetKeyCode() == VK_BACK && newText.size() > 0)
+				{
+					newText.erase(newText.end() - 1);
+					if (g_NodeResizedText)
+					{
+						plainTxtboxFocus->GetParentNode()->ResizeTo({ plainTxtboxFocus->GetParentNode()->GetSize().width - 80.0f, plainTxtboxFocus->GetParentNode()->GetSize().height });
+						g_NodeResizedText -= 80;
+					}
+				}
+				else
+				{
+					newText += evnt.GetKeyCode();
+				}
+
+				const float fontSize = std::min(plainTxtboxFocus->GetSize().width, plainTxtboxFocus->GetSize().height) / 1.12f;
+
+				float xOffset = plainTxtboxFocus->GetSize().width / 81.0f;
+				float yOffset = plainTxtboxFocus->GetSize().height / -11.2f;
+
+				if (!m_Window.Renderer2D.TextFitsOntoOneLine(newText, plainTxtboxFocus->GetPos(), plainTxtboxFocus->GetSize(), fontSize))
+				{
+					g_NodeResizedText += 80;
+					plainTxtboxFocus->GetParentNode()->ResizeTo({ plainTxtboxFocus->GetParentNode()->GetSize().width + 80.0f, plainTxtboxFocus->GetParentNode()->GetSize().height });
+				}
+
+				plainTxtboxFocus->SetText(newText);
+				m_Window.Renderer2D.BeginDraw();
+
+				m_Window.Renderer2D.RenderScene();
+
+				for (auto* control : m_Window.GetControls())
+					control->Render();
+
+				m_Window.RenderLines();
+
+				m_Window.Renderer2D.EndDraw();
+			}
+
+		}
+	}
+
+	int g_NodeResizedText = 0;
 	void Application::WriteTextbox(const Event& e)
 	{
 		if (e.GetType() == EventType::CharEvent)
@@ -184,11 +244,43 @@ namespace NPE
 			if (txtboxFocus)
 			{
 				std::wstring newText = txtboxFocus->GetText();
-				newText += evnt.GetKeyCode();
+			
+				//check for backspace
+				if (evnt.GetKeyCode() == VK_BACK && newText.size() > 0)
+				{
+					newText.erase(newText.end() - 1);
+					if (g_NodeResizedText)
+					{
+						txtboxFocus->GetParentNode()->ResizeTo({ txtboxFocus->GetParentNode()->GetSize().width - 80.0f, txtboxFocus->GetParentNode()->GetSize().height });
+						g_NodeResizedText -= 80;
+					}
+				}
+				else
+				{
+					newText += evnt.GetKeyCode();
+				}
+
+				const float fontSize = std::min(txtboxFocus->GetSize().width, txtboxFocus->GetSize().height) / 1.12f;
+
+				float xOffset = txtboxFocus->GetSize().width / 81.0f;
+				float yOffset = txtboxFocus->GetSize().height / -11.2f;
+
+				if (!m_Window.Renderer2D.TextFitsOntoOneLine(newText, txtboxFocus->GetPos(), txtboxFocus->GetSize(), fontSize))
+				{
+					g_NodeResizedText += 80;
+					txtboxFocus->GetParentNode()->ResizeTo({ txtboxFocus->GetParentNode()->GetSize().width + 80.0f, txtboxFocus->GetParentNode()->GetSize().height });
+				}
 
 				txtboxFocus->SetText(newText);
 				m_Window.Renderer2D.BeginDraw();
-				txtboxFocus->Render();
+				
+				m_Window.Renderer2D.RenderScene();
+
+				for (auto* control : m_Window.GetControls())
+					control->Render();
+
+				m_Window.RenderLines();
+
 				m_Window.Renderer2D.EndDraw();
 			}
 

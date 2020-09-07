@@ -30,7 +30,7 @@ namespace NPE
 		* @returns true if the node was rendered (in window), false otherwise
 		* @warning Function does not call BeginDraw/EndDraw
 		*/
-		virtual bool Render() const override;
+		virtual bool Render() override;
 
 		/**
 		* Sets a function to be called when any node was clicked

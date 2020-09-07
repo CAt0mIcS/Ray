@@ -12,7 +12,7 @@ namespace NPE
 
 	}
 
-	bool Button::Render() const
+	bool Button::Render()
 	{
 		if (this->IsInWindow())
 		{

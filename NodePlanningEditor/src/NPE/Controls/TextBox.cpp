@@ -1,18 +1,19 @@
 #include "TextBox.h"
 
 #include "NPE/Graphics/Renderer2D.h"
+#include "Node.h"
 
 
 namespace NPE
 {
 	std::function<void(TextBox&)> TextBox::m_OnTextBoxClickedCallback;
 
-	TextBox::TextBox(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color, const std::wstring& startText)
-		: Control(renderer, Type::TextBox, pos, size, color), m_Text(startText)
+	TextBox::TextBox(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color, const std::wstring& startText, Node* parent)
+		: Control(renderer, Type::TextBox, pos, size, color), m_Text(startText), m_Node(parent)
 	{
 	}
 
-	bool TextBox::Render() const
+	bool TextBox::Render()
 	{
 		if (this->IsInWindow())
 		{
@@ -27,15 +28,16 @@ namespace NPE
 		return false;
 	}
 
-	bool TextBox::RenderText() const
+	bool TextBox::RenderText()
 	{
 		if (this->IsInWindow())
 		{
-			const float fontSize = std::max(m_Size.width, m_Size.height) / 7.2f;
+			//const float fontSize = std::min(m_Size.width, m_Size.height) / 7.2f;
+			const float fontSize = std::min(m_Size.width, m_Size.height) / 1.12f;
 
 			float xOffset = m_Size.width / 81.0f;
 			float yOffset = m_Size.height / -11.2f;
-			m_Renderer.RenderText(m_Text, { m_Pos.x + xOffset, m_Pos.y + yOffset }, g_DefaultTextColor, fontSize);
+			m_Renderer.RenderText(m_Text, { m_Pos.x + xOffset, m_Pos.y + yOffset }, m_Size, g_DefaultTextColor, fontSize);
 			return true;
 		}
 

@@ -7,6 +7,8 @@
 
 namespace NPE
 {
+	class Node;
+
 	class TextBox : public Control
 	{
 	public:
@@ -18,7 +20,7 @@ namespace NPE
 		* @param size is the textbox size
 		* @param color is the textbox background color
 		*/
-		TextBox(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color, const std::wstring& startText = L"");
+		TextBox(Renderer2D& renderer, const NPoint& pos, const NSize& size, const NColor& color, const std::wstring& startText = L"", Node* parent = nullptr);
 
 		/**
 		* Calls the renderer and draws the textbox and text
@@ -26,7 +28,7 @@ namespace NPE
 		* @returns true if the textbox was rendered (in window), false otherwise
 		* @warning function does not call BeginDraw/EndDraw
 		*/
-		virtual bool Render() const override;
+		virtual bool Render() override;
 
 		/**
 		* Renders text in member variable
@@ -34,7 +36,7 @@ namespace NPE
 		* @returns true if the textbox was in the window, false otherwise
 		* @see TextBox::SetText()
 		*/
-		bool RenderText() const;
+		bool RenderText();
 
 		/**
 		* Getter for current text in textbox
@@ -77,9 +79,18 @@ namespace NPE
 		*/
 		static void OnTextBoxClickedEventCallback(TextBox& control) { m_OnTextBoxClickedCallback(control); }
 
+		/**
+		* Getter for parent node
+		* 
+		* @returns the parent node if there is one, nullptr otherwise
+		*/
+		Node* GetParentNode() { return m_Node; }
+
 	private:
 		std::wstring m_Text;
 		static std::function<void(TextBox&)> m_OnTextBoxClickedCallback;
+
+		Node* m_Node;
 	};
 }
 

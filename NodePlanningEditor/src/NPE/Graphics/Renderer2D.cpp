@@ -97,25 +97,46 @@ namespace NPE
 		m_pRenderTarget->DrawRoundedRectangle(&rc, m_pBrush.Get());
 	}
 
-	void Renderer2D::RenderText(const std::wstring& text, const NPoint& pos, const NColor& color, const float fontSize)
+	bool Renderer2D::TextFitsOntoOneLine(const std::wstring& text, const NPoint& pos, const NSize& size, const float fontSize)
 	{
-		//needs to be created here to allow for custom font size
+		IDWriteTextFormat* pTextFormat;
 		NPE_THROW_GFX_EXCEPT(m_pWriteFactory->CreateTextFormat(L"Consolas", nullptr,
 			DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL,
-			DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &m_pTextFormat), "Failed to create IDWriteTextFormat");
+			DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &pTextFormat), "Failed to create IDWriteTextFormat");
 
-		D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
+		IDWriteTextLayout* pTextLayout;
+		NPE_THROW_GFX_EXCEPT(m_pWriteFactory->CreateTextLayout(text.c_str(),
+			wcslen(text.c_str()), pTextFormat, size.width, size.height, &pTextLayout
+		), "Failed to create text layout");
+
+		DWRITE_TEXT_METRICS metrics;
+		pTextLayout->GetMetrics(&metrics);
+
+		pTextFormat->Release();
+		pTextLayout->Release();
+
+		return !(metrics.lineCount > 1);
+	}
+
+	void Renderer2D::RenderText(const std::wstring& text, const NPoint& pos, const NSize& size, const NColor& color, const float fontSize)
+	{
+		//needs to be created here to allow for custom font size
+		IDWriteTextFormat* pTextFormat;
+		NPE_THROW_GFX_EXCEPT(m_pWriteFactory->CreateTextFormat(L"Consolas", nullptr,
+			DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &pTextFormat), "Failed to create IDWriteTextFormat");
 
 		//TODO: fix text splitting onto new line when it doesn't fit anymore
 		m_pBrush->SetColor(color.ToD2D1ColorF());
 		m_pRenderTarget->DrawTextW(
 			text.c_str(),
 			wcslen(text.c_str()),
-			m_pTextFormat.Get(),
-			D2D1::RectF(pos.x, pos.y, renderTargetSize.width, renderTargetSize.height),
+			pTextFormat,
+			D2D1::RectF(pos.x, pos.y, pos.x + size.width, pos.y + size.height),
 			m_pBrush.Get()
 		);
 
+		pTextFormat->Release();
 	}
 
 	void Renderer2D::RenderBitmapBackground()

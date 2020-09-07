@@ -55,6 +55,13 @@ namespace NPE
 		void OnEvent(const Event& e);
 
 		/**
+		* Handles typing into plain textbox
+		*
+		* @param e is the received event
+		*/
+		void WritePlaintText(const Event& e);
+
+		/**
 		* Handles typing into main textbox
 		* 
 		* @param e is the received event

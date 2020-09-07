@@ -1,8 +1,7 @@
 #pragma once
 
-#include "NPE/Util/Props.h"
-
 #include "NPE/Controls/Control.h"
+#include "NPE/Util/Props.h"
 
 #include "Win.h"
 
@@ -65,13 +64,24 @@ namespace NPE
 		void RenderRoundedRectBorder(const NPoint& pos, const NSize& size, const NColor& color, float radiusX = 0.0f, float radiusY = 0.0f) const;
 
 		/**
-		* Renders a text to the screen
+		* Checks if the specified text fits onto one line
+		* 
+		* @param text is the text to check
+		* @param pos is the text position
+		* @param size is the max width and height of the text
+		* @param fontsize is the fontsize
+		*/
+		bool TextFitsOntoOneLine(const std::wstring& text, const NPoint& pos, const NSize& size, const float fontSize);
+
+		/**
+		* Renders the control's text to the screen
 		* 
 		* @param text is the text to render
-		* @param pos are the x and y coordinates of the text
-		* @param size is the size of the text
+		* @param pos is the text position
+		* @param color is the text color
+		* @param fontSize is the font size
 		*/
-		void RenderText(const std::wstring& text, const NPoint& pos, const NColor& color, const float fontSize);
+		void RenderText(const std::wstring& text, const NPoint& pos, const NSize& size, const NColor& color, const float fontSize);
 
 		/**
 		* Uses the bitmap in relative directory (name = BackgroundImage.bmp) to draw the background
@@ -127,7 +137,6 @@ namespace NPE
 		Microsoft::WRL::ComPtr<ID2D1HwndRenderTarget> m_pRenderTarget;
 		
 		//for drawing text
-		Microsoft::WRL::ComPtr<IDWriteTextFormat> m_pTextFormat;
 		Microsoft::WRL::ComPtr<IDWriteFactory> m_pWriteFactory;
 
 		//for drawing background bitmap

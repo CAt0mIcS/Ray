@@ -27,7 +27,7 @@ namespace NPE
 		* @returns true if the button was rendered (in window), false otherwise
 		* @warning Function does not call BeginDraw/EndDraw
 		*/
-		virtual bool Render() const override;
+		virtual bool Render() override;
 		
 		/**
 		* Getter for button text

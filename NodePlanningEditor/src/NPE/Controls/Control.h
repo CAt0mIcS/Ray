@@ -105,7 +105,7 @@ namespace NPE
 		/**
 		* Renders the widget
 		*/
-		virtual bool Render() const = 0;
+		virtual bool Render() = 0;
 
 		/**
 		* Checks if the current control overlaps with other
