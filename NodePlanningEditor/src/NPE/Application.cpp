@@ -2,18 +2,25 @@
 #include "Application.h"
 
 
-
 namespace NPE
 {
 	Application::Application()
 		: m_Database("saves\\save.dbs", 3)
 	{
 		//LoadFile();
+		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 	}
 
-	int Application::Run()
+	bool Application::OnEvent(GUI::Control* watched, GUI::Event& e)
 	{
-		return 0;
+		if (e.GetType() == GUI::EventType::AppPaintEvent)
+		{
+			GUI::Renderer::Get().BeginDraw();
+			GUI::Renderer::Get().RenderScene();
+			GUI::Renderer::Get().EndDraw();
+			return true;
+		}
+		return false;
 	}
 
 	Application::~Application()

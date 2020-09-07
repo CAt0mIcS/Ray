@@ -6,14 +6,13 @@
 
 namespace GUI
 {
-	Renderer* Renderer::s_Instance = nullptr;
+	Renderer* Renderer::s_Instance = new Renderer();
 
 	Renderer::Renderer()
 		: m_hWnd(0) {}
 
 	void Renderer::Init(HWND hWnd)
 	{
-		s_Instance = new Renderer();
 		m_hWnd = hWnd;
 		CreateGraphicsResources();
 	}

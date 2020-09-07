@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Control.h"
 
+#include "GUI/Handlers/Mouse.h"
 #include "GUI/Graphics/Renderer.h"
 
 using namespace Util;
@@ -9,6 +10,24 @@ using namespace Util;
 namespace GUI
 {
 	unsigned int Control::m_NextId = 0;
+
+	Control* Control::GetEventReceiver(Event& e)
+	{
+		Control* receiver = nullptr;
+		for (auto* child : GetChildren())
+		{
+			Control* receiver = child->GetEventReceiver(e);
+		}
+
+		//no child control was clicked, check if mouse is on node control
+		if (receiver == nullptr)
+		{
+			if (Mouse::IsOnControl(this))
+				receiver = this;
+		}
+
+		return receiver;
+	}
 
 	Control::Control(Control* parent)
 		: m_Parent(parent), m_Id(m_NextId), m_Pos{}, m_Size{}, m_Color{}, m_Type(Type::INVALID)
@@ -24,7 +43,6 @@ namespace GUI
 			child->m_Pos.y += pos.y;
 		}
 
-		//m_Pos += pos;
 		m_Pos.x += pos.x;
 		m_Pos.y += pos.y;
 	}
@@ -82,11 +100,10 @@ namespace GUI
 		return false;
 	}
 
-	//TODO: Implement function
 	bool Control::IsInWindow() const
 	{
 		//RECT rc;
-		//GetWindowRect(m_Renderer.GetNativeWindow(), &rc);
+		//GetWindowRect(Renderer::Get().GetNativeWindow(), &rc);
 
 		//return m_Pos.x + m_Size.width > 0 && m_Pos.y + m_Size.height > 0 && m_Pos.x < rc.right && m_Pos.y < rc.bottom;
 		return true;

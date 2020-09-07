@@ -2,16 +2,31 @@
 
 #include <QRD/QRD.h>
 
+#include <GUI/GUIApplication.h>
+
 
 namespace NPE
 {
-	class Application
+	class Application : public GUI::GUIApplication
 	{
 	public:
+		/**
+		* Application constructor
+		*/
 		Application();
-		~Application();
 
-		int Run();
+		/**
+		* Receives all events
+		* 
+		* @param watched is the control that received the event
+		* @param e is the received event
+		*/
+		bool OnEvent(GUI::Control* watched, GUI::Event& e);
+
+		/**
+		* Application deconstructor, saves scene to file
+		*/
+		~Application();
 
 	private:
 		QRD::Database m_Database;

@@ -167,6 +167,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GUI\GUIApplication.h" />
     <ClInclude Include="src\GUIBase.h" />
     <ClInclude Include="src\GUI\Events\ApplicationEvent.h" />
     <ClInclude Include="src\GUI\Events\Event.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="src\Win.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GUI\GUIApplication.cpp" />
     <ClCompile Include="src\GUI\Handlers\Mouse.cpp" />
     <ClCompile Include="src\GUI\Graphics\Renderer.cpp" />
     <ClCompile Include="src\GUI\Window\MainWindow.cpp" />

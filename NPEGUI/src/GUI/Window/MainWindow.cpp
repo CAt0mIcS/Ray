@@ -12,13 +12,18 @@ namespace GUI
 {
 	MainWindow::MainWindow()
 	{
-		if (!CreateNativeWindow(L"GUI", WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT))
+		if (!CreateNativeWindow(L"NPE", WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT))
 		{
 			NPE_THROW_WND_EXCEPT(GetLastError());
 		}
 		
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
 		Renderer::Get().Init(m_hWnd);
+	}
+
+	bool MainWindow::Render()
+	{
+		return false;
 	}
 
 	int MainWindow::ProcessMessage()
@@ -54,7 +59,7 @@ namespace GUI
 			HDC hDC = BeginPaint(m_hWnd, &ps);
 
 			PaintEvent e(hDC, &ps.rcPaint);
-			m_EventCallback(e);
+			DispatchEvent(e);
 
 			EndPaint(m_hWnd, &ps);
 			return 0;
@@ -63,45 +68,45 @@ namespace GUI
 		{
 			POINTS pt = MAKEPOINTS(lParam);
 			MouseMoveEvent e({ (float)pt.x, (float)pt.y });
-			m_EventCallback(e);
+			DispatchEvent(e);
 
 			return 0;
 		}
 		case WM_LBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Left);
-			m_EventCallback(e);
+			DispatchEvent(e);
 
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Left);
-			m_EventCallback(e);
+			DispatchEvent(e);
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Right);
-			m_EventCallback(e);
+			DispatchEvent(e);
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Right);
-			m_EventCallback(e);
+			DispatchEvent(e);
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Middle);
-			m_EventCallback(e);
+			DispatchEvent(e);
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Middle);
-			m_EventCallback(e);
+			DispatchEvent(e);
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
@@ -110,12 +115,12 @@ namespace GUI
 			if (delta < 0)
 			{
 				MouseWheelDownEvent e(delta);
-				m_EventCallback(e);
+				DispatchEvent(e);
 			}
 			else
 			{ 
 				MouseWheelUpEvent e(delta);
-				m_EventCallback(e);
+				DispatchEvent(e);
 			}
 			return 0;
 		}
@@ -125,7 +130,7 @@ namespace GUI
 			if (wParam < 256)
 			{
 				KeyPressedEvent e((unsigned char)wParam);
-				m_EventCallback(e);
+				DispatchEvent(e);
 			}
 			return 0;
 		}
@@ -135,7 +140,7 @@ namespace GUI
 			if (wParam < 256)
 			{
 				KeyReleasedEvent e((unsigned char)wParam);
-				m_EventCallback(e);
+				DispatchEvent(e);
 			}
 			return 0;
 		}
@@ -144,26 +149,26 @@ namespace GUI
 			if (wParam > 0 && wParam < 0x10000)
 			{
 				CharEvent e((unsigned char)wParam);
-				m_EventCallback(e);
+				DispatchEvent(e);
 			}
 			return 0;
 		}
 		case WM_SIZE:
 		{
 			AppResizeEvent e(GetSize());
-			m_EventCallback(e);
+			DispatchEvent(e);
 			return 0;
 		}
 		case WM_MOVE:
 		{
 			AppMoveEvent e(GetPos());
-			m_EventCallback(e);
+			DispatchEvent(e);
 			return 0;
 		}
 		case WM_CLOSE:
 		{
 			AppCloseEvent e;
-			m_EventCallback(e);
+			DispatchEvent(e);
 			break;
 		}
 		}
@@ -188,5 +193,23 @@ namespace GUI
 		RECT rc;
 		GetWindowRect(m_hWnd, &rc);
 		return rc;
+	}
+	
+	void MainWindow::DispatchEvent(Event& e)
+	{
+		if (!m_EventCallbackFn)
+			return;
+
+		Control* receiver = nullptr;
+		for (auto* control : GetControls())
+		{
+			Control* receiver = control->GetEventReceiver(e);
+		}
+		//if no control was clicked... then the window will receive the event
+		if (receiver == nullptr)
+			receiver = this;
+
+		//call event filter set by user
+		m_EventCallbackFn(receiver, e);
 	}
 }

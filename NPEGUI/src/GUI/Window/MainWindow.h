@@ -13,15 +13,29 @@
 
 namespace GUI
 {
-	class Button;
+	/**
+	* Event filter function type
+	* 
+	* @param watched is the object that received the event
+	* @param e is the received event
+	* @returns true if the event was handled, false otherwise
+	*/
+	using EventCallbackFn = std::function<bool(GUI::Control* watched, GUI::Event& e)>;
 
-	class MainWindow : public BaseWindow<MainWindow>
+	class MainWindow : public BaseWindow<MainWindow>, public Control
 	{
 	public:
 		/**
 		* MainWindow constructor
 		*/
 		MainWindow();
+
+		/**
+		* Renders the window background
+		* 
+		* @returns always true
+		*/
+		virtual bool Render() override;
 
 		/**
 		* Enters the message loop
@@ -74,8 +88,20 @@ namespace GUI
 		*/
 		RECT GetRect() const;
 
+		/**
+		* Sets the event callback
+		* 
+		* @tparam F is any callable and to GUI::EventCallbackFn castable type
+		* @param func is the function to set the event callback to
+		*/
+		template<typename F>
+		void SetEventCallback(F&& func) { m_EventCallbackFn = func; }
+
 	private:
-		std::function<void(const Event& e)> m_EventCallback;
+		void DispatchEvent(Event& e);
+
+	private:
+		EventCallbackFn m_EventCallbackFn;
 		std::vector<Control*> m_Controls;
 
 	};

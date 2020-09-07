@@ -16,6 +16,7 @@
 namespace GUI
 {
 	class Renderer;
+	class Event;
 
 	class Control
 	{
@@ -164,6 +165,14 @@ namespace GUI
 		* Virtual destructor of control
 		*/
 		virtual ~Control() = default;
+
+		/**
+		* Determines which control should receive the event
+		*
+		* @param e is the event received by the window procedure
+		* @returns the controls which should receive the event
+		*/
+		Control* GetEventReceiver(Event& e);
 
 	protected:
 		/**

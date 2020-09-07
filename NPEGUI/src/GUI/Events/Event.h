@@ -21,6 +21,7 @@ namespace GUI
 	public:
 		virtual EventType GetType() const = 0;
 	};
+
 }
 
 
