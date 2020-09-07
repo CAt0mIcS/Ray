@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Application.h"
 
+#include "GUI/Events/ApplicationEvent.h"
+
 
 namespace NPE
 {
@@ -13,14 +15,25 @@ namespace NPE
 
 	bool Application::OnEvent(GUI::Control* watched, GUI::Event& e)
 	{
-		if (e.GetType() == GUI::EventType::AppPaintEvent)
+		switch (e.GetType())
 		{
-			GUI::Renderer::Get().BeginDraw();
-			GUI::Renderer::Get().RenderScene();
-			GUI::Renderer::Get().EndDraw();
-			return true;
+		case GUI::EventType::AppPaintEvent:
+		{
+			return OnPaintEvent((GUI::PaintEvent&)e);
+		}
 		}
 		return false;
+	}
+
+	bool Application::OnPaintEvent(GUI::PaintEvent& e)
+	{
+		GUI::Renderer& renderer = GUI::Renderer::Get();
+	
+		renderer.BeginDraw();
+		renderer.RenderScene();
+		renderer.EndDraw();
+		
+		return true;
 	}
 
 }

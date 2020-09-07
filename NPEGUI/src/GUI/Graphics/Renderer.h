@@ -52,7 +52,7 @@ namespace GUI
 		void EndDraw();
 		
 		/**
-		* Renders the background with a color
+		* Renders the background with a color (currently renders bitmap, parameter color is ignored)
 		*
 		* @param color is the background color
 		*/

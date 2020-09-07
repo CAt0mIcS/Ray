@@ -4,6 +4,11 @@
 
 #include <GUI/GUIApplication.h>
 
+namespace GUI
+{
+	class PaintEvent;
+}
+
 
 namespace NPE
 {
@@ -22,6 +27,13 @@ namespace NPE
 		* @param e is the received event
 		*/
 		bool OnEvent(GUI::Control* watched, GUI::Event& e);
+
+		/**
+		* Receives paint event from Application::OnEvent
+		* 
+		* @param e is the received event
+		*/
+		bool OnPaintEvent(GUI::PaintEvent& e);
 
 		/**
 		* Application deconstructor, saves scene to file
