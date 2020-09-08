@@ -3,6 +3,8 @@
 
 #include "GUI/Events/ApplicationEvent.h"
 
+#include "GUI/Controls/TextBox.h"
+
 
 namespace NPE
 {

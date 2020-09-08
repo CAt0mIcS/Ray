@@ -68,6 +68,17 @@ namespace GUI
 		*/
 		void RenderRect(const Util::NPoint& pos, const Util::NSize& size, const Util::NColor& color);
 
+		/**
+		* Draws a filled rounded rectangle with specified arguments
+		*
+		* @param pos is the x and y coordinate of the rounded rect
+		* @param size is the width and height of the rounded rect
+		* @param color are the rgb values of the rounded rect
+		* @param radiusX is the x value of the rounded corner
+		* @param radiusY is the y value of the rounded corner
+		*/
+		void RenderRoundedRect(const Util::NPoint& pos, const Util::NSize& size, const Util::NColor& color, const float radiusX, const float radiusY);
+
 	private:
 		/**
 		* Private renderer constructor

@@ -7,7 +7,7 @@ namespace GUI
 {
 	class Node;
 
-	class TextBox : public Control
+	class GUI_API TextBox : public Control
 	{
 	public:
 		/**

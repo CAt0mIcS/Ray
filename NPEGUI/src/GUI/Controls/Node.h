@@ -6,7 +6,7 @@
 
 namespace GUI
 {
-	class Node : public Control
+	class GUI_API Node : public Control
 	{
 	public:
 		/**

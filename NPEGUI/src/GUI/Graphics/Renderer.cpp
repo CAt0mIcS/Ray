@@ -20,6 +20,13 @@ namespace GUI
 		m_pRenderTarget->FillRectangle(rc, m_pBrush.Get());
 	}
 
+	void Renderer::RenderRoundedRect(const Util::NPoint& pos, const Util::NSize& size, const Util::NColor& color, const float radiusX, const float radiusY)
+	{
+		m_pBrush->SetColor(color.ToD2D1ColorF());
+	
+		m_pRenderTarget->FillRoundedRectangle({ { pos.x, pos.y, pos.x + size.width, pos.y + size.height }, radiusX, radiusY }, m_pBrush.Get());
+	}
+
 	Renderer::Renderer()
 		: m_hWnd(0) {}
 

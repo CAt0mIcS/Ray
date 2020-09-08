@@ -5,7 +5,7 @@
 
 namespace GUI
 {
-	class Button : public Control
+	class GUI_API Button : public Control
 	{
 	public:
 		/**
