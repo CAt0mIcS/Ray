@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Node.h"
 
-#include "GUI/Handlers/Mouse.h"
+#include "GUI/Graphics/Renderer.h"
 
 
 using namespace Util;
@@ -17,6 +17,18 @@ namespace GUI
 
 	bool Node::Render()
 	{
+		if (this->IsInWindow())
+		{
+			for (auto* child : m_Children)
+			{
+				child->Render();
+			}
+
+			const float max = std::max(GetSize().width, GetSize().height);
+			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
+
+			return true;
+		}
 		return false;
 	}
 	

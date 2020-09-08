@@ -31,7 +31,7 @@ namespace GUI
 		return false;
 	}
 
-	bool TextBoxRenderText()
+	bool TextBox::RenderText()
 	{
 		return false;
 	}
