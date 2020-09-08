@@ -3,6 +3,11 @@
 
 #include "GUI/Graphics/Renderer.h"
 
+/**
+* QUESTION:
+*	Should I be designing something like this GUI library only for this project or should I make it usable in another one?
+*/
+
 
 using namespace Util;
 
