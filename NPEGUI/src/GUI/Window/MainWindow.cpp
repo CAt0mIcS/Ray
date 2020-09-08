@@ -19,6 +19,7 @@ namespace GUI
 		
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
 		Renderer::Get().Init(m_hWnd);
+		TextRenderer::Get().Init();
 	}
 
 	bool MainWindow::Render()

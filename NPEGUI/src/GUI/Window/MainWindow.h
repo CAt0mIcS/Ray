@@ -7,8 +7,9 @@
 
 #include "GUI/Events/Event.h"
 
-#include "GUI/Graphics/Renderer.h"
 #include "GUI/Controls/Control.h"
+#include "GUI/Graphics/Renderer.h"
+#include "GUI/Graphics/TextRenderer.h"
 
 
 namespace GUI

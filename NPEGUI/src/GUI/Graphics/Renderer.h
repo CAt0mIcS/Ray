@@ -26,6 +26,7 @@ namespace GUI
 	*/
 	class GUI_API Renderer
 	{
+		friend class TextRenderer;
 	public:
 		/**
 		* Initializes the renderer
