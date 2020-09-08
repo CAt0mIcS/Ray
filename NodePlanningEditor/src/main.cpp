@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "pch.h"
 
 #include "NPE/Application.h"
@@ -7,6 +8,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 {
 	try
 	{
+		AllocConsole();
+		freopen("CONOUT$", "w", stdout);
 		return NPE::Application{}.Run();
 	}
 	catch (NPE::Exception& e)

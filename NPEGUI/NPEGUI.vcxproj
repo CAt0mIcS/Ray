@@ -188,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GUI\GUIApplication.cpp" />
+    <ClCompile Include="src\GUI\Handlers\Keyboard.cpp" />
     <ClCompile Include="src\GUI\Handlers\Mouse.cpp" />
     <ClCompile Include="src\GUI\Graphics\Renderer.cpp" />
     <ClCompile Include="src\GUI\Window\MainWindow.cpp" />

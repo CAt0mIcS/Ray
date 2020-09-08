@@ -7,6 +7,8 @@
 namespace GUI
 {
 	class PaintEvent;
+	class MouseButtonPressedEvent;
+	class MouseMoveEvent;
 }
 
 
@@ -29,11 +31,25 @@ namespace NPE
 		bool OnEvent(GUI::Control* watched, GUI::Event& e);
 
 		/**
+		* Receives all mouse move events from Application::OnEvent
+		*
+		* @param e is the received event
+		*/
+		bool OnMouseMove(GUI::MouseMoveEvent& e);
+
+		/**
 		* Receives paint event from Application::OnEvent
 		* 
 		* @param e is the received event
 		*/
 		bool OnPaintEvent(GUI::PaintEvent& e);
+		
+		/**
+		* Receives all mouse button pressed events from Application::OnEvent
+		*
+		* @param e is the received event
+		*/
+		bool OnMouseButtonPressed(GUI::MouseButtonPressedEvent& e);
 
 		/**
 		* Application deconstructor, saves scene to file
@@ -43,6 +59,7 @@ namespace NPE
 
 	private:
 		FileHandler m_FileHandler;
+		Util::NPoint m_MousePos;
 	};
 }
 

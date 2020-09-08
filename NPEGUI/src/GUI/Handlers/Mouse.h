@@ -1,13 +1,14 @@
 #pragma once
 
 #include "Util/Util.h"
+#include "GUIBase.h"
 
 
 namespace GUI
 {
 	class Control;
 
-	class Mouse
+	class GUI_API Mouse
 	{
 	public:
 		/**
@@ -96,10 +97,5 @@ namespace GUI
 		static bool m_IsRightPressed;
 		static bool m_IsMiddlePressed;
 	};
-
-	inline bool Mouse::m_IsLeftPressed = false;
-	inline bool Mouse::m_IsMiddlePressed = false;
-	inline bool Mouse::m_IsRightPressed = false;
-	inline Util::NPoint Mouse::m_Pos = { 0, 0 };
 }
 

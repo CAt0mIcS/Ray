@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bitset>
+#include "GUIBase.h"
 
 
 namespace GUI
@@ -8,7 +9,7 @@ namespace GUI
 	/**
 	* Static class to get Keyboard stuff
 	*/
-	class Keyboard
+	class GUI_API Keyboard
 	{
 	public:
 		/**
@@ -52,7 +53,6 @@ namespace GUI
 
 	};
 
-	inline std::bitset<Keyboard::GetNKeys()> Keyboard::m_KeyStates;
 }
 
 

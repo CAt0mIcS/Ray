@@ -2,8 +2,11 @@
 #include "Application.h"
 
 #include "GUI/Events/ApplicationEvent.h"
+#include "GUI/Events/MouseEvent.h"
 
 #include "GUI/Controls/TextBox.h"
+
+#include "GUI/Handlers/Mouse.h"
 
 
 struct UI
@@ -15,7 +18,7 @@ struct UI
 namespace NPE
 {
 	Application::Application()
-		: m_FileHandler("saves\\save.dbs")
+		: m_FileHandler("saves\\save.dbs"), m_MousePos{ 0.0f, 0.0f }
 	{
 		m_FileHandler.LoadScene(this->GetWindow());
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
@@ -38,6 +41,44 @@ namespace NPE
 		{
 			return OnPaintEvent((GUI::PaintEvent&)e);
 		}
+		case GUI::EventType::MouseMoveEvent:
+		{
+			return OnMouseMove((GUI::MouseMoveEvent&)e);
+		}
+		case GUI::EventType::MouseButtonPressedEvent:
+		{
+			return OnMouseButtonPressed((GUI::MouseButtonPressedEvent&)e);
+		}
+		}
+		return false;
+	}
+
+	bool Application::OnMouseMove(GUI::MouseMoveEvent& e)
+	{
+		if (GUI::Mouse::IsMiddlePressed())
+		{
+			Util::NPoint diff = GUI::Mouse::GetPos() - m_MousePos;
+			m_MousePos = GUI::Mouse::GetPos();
+
+			GUI::Renderer::Get().BeginDraw();
+			GUI::Renderer::Get().RenderScene();
+			for (auto* control : m_Window.GetControls())
+			{
+				control->MoveBy(diff);
+				control->Render();
+			}
+
+			GUI::Renderer::Get().EndDraw();
+			return true;
+		}
+		return false;
+	}
+
+	bool Application::OnMouseButtonPressed(GUI::MouseButtonPressedEvent& e)
+	{
+		if (e.GetButton() == GUI::MouseButton::Middle)
+		{
+			m_MousePos = GUI::Mouse::GetPos();
 		}
 		return false;
 	}

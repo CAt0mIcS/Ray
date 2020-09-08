@@ -5,6 +5,11 @@
 
 namespace GUI
 {
+	bool Mouse::m_IsLeftPressed = false;
+	bool Mouse::m_IsMiddlePressed = false;
+	bool Mouse::m_IsRightPressed = false;
+	Util::NPoint Mouse::m_Pos = { 0.0f, 0.0f };
+
 	bool Mouse::IsOnControl(const Control* const control)
 	{
 		const Util::NPoint& controlPos = control->GetPos();
