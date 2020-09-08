@@ -6,6 +6,12 @@
 #include "GUI/Controls/TextBox.h"
 
 
+struct UI
+{
+	GUI::TextBox* txtbox;
+} ui;
+
+
 namespace NPE
 {
 	Application::Application()
@@ -13,6 +19,15 @@ namespace NPE
 	{
 		m_FileHandler.LoadScene(this->GetWindow());
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
+	
+		ui.txtbox = (GUI::TextBox*)m_Window.AddControl(new GUI::TextBox(&m_Window));
+		ui.txtbox->SetText(L"Hello World");
+		ui.txtbox->SetColor({ 15, 17, 19 });
+		ui.txtbox->SetFontFamily(L"Consolas");
+		ui.txtbox->SetFontSize(20);
+		ui.txtbox->SetPos({ 250, 250 });
+		ui.txtbox->SetSize({ 300, 100 });
+	
 	}
 
 	bool Application::OnEvent(GUI::Control* watched, GUI::Event& e)

@@ -9,6 +9,14 @@ namespace GUI
 
 	class GUI_API TextBox : public Control
 	{
+	private:
+		class TextCursor
+		{
+
+		private:
+			unsigned int m_PosInText;
+		};
+
 	public:
 		/**
 		* TextBox constructor
@@ -28,10 +36,9 @@ namespace GUI
 		/**
 		* Renders text in member variable
 		* 
-		* @returns true if the textbox was in the window, false otherwise
 		* @see TextBox::SetText()
 		*/
-		bool RenderText();
+		void RenderText();
 
 		/**
 		* Getter for current text in textbox
@@ -50,6 +57,20 @@ namespace GUI
 		void SetText(const std::wstring& newText) { m_Text = newText; }
 
 		/**
+		* Setter for the font family
+		*
+		* @param family is the new font family
+		*/
+		void SetFontFamily(const std::wstring& family) { m_FontFamily = family; }
+
+		/**
+		* Setter for the font size
+		*
+		* @param size is the new font size
+		*/
+		void SetFontSize(const float size) { m_FontSize = size; }
+
+		/**
 		* Calculates the layout of a new textbox
 		* 
 		* @param parentPos is the position of the parent control
@@ -60,6 +81,8 @@ namespace GUI
 
 	private:
 		std::wstring m_Text;
+		std::wstring m_FontFamily;
+		float m_FontSize;
 	};
 }
 

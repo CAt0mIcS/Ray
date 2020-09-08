@@ -24,7 +24,7 @@ namespace GUI
 		Renderer::Get().m_pBrush->SetColor(text.color.ToD2D1ColorF());
 
 		Renderer::Get().m_pRenderTarget->DrawTextW(
-			text.text.c_str(), wcslen(text.text.c_str()), pFormat,
+			text.text.c_str(), (UINT32)wcslen(text.text.c_str()), pFormat,
 			{ text.pos.x, text.pos.y, text.pos.x + text.size.width , text.pos.y + text.size.height },
 			Renderer::Get().m_pBrush.Get(), text.options, text.measuringMode
 		);

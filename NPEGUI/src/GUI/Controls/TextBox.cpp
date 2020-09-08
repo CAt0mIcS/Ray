@@ -2,6 +2,7 @@
 #include "TextBox.h"
 
 #include "GUI/Graphics/Renderer.h"
+#include "GUI/Graphics/TextRenderer.h"
 
 /**
 * QUESTION:
@@ -14,7 +15,7 @@ using namespace Util;
 namespace GUI
 {
 	TextBox::TextBox(Control* parent)
-		: Control(parent), m_Text(L"")
+		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(20)
 	{
 	}
 
@@ -29,6 +30,7 @@ namespace GUI
 
 			const float max = std::max(GetSize().width, GetSize().height);
 			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
+			RenderText();
 
 			return true;
 		}
@@ -36,9 +38,16 @@ namespace GUI
 		return false;
 	}
 
-	bool TextBox::RenderText()
+	void TextBox::RenderText()
 	{
-		return false;
+		NText text;
+		text.text = m_Text;
+		text.fontFamily = m_FontFamily;
+		text.fontSize = m_FontSize;
+		text.size = GetSize();
+		text.pos = GetPos();
+
+		TextRenderer::Get().RenderText(text);
 	}
 
 	std::optional<std::pair<Util::NPoint, Util::NSize>> TextBox::CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize)
