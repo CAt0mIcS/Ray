@@ -27,7 +27,7 @@ namespace NPE
 		ui.txtbox->SetText(L"Hello World");
 		ui.txtbox->SetColor({ 15, 17, 19 });
 		ui.txtbox->SetFontFamily(L"Consolas");
-		ui.txtbox->SetFontSize(20);
+		ui.txtbox->SetFontSize(45);
 		ui.txtbox->SetPos({ 250, 250 });
 		ui.txtbox->SetSize({ 300, 100 });
 	
@@ -79,6 +79,7 @@ namespace NPE
 		if (e.GetButton() == GUI::MouseButton::Middle)
 		{
 			m_MousePos = GUI::Mouse::GetPos();
+			return true;
 		}
 		return false;
 	}

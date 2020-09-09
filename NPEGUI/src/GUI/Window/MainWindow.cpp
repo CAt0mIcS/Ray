@@ -60,7 +60,7 @@ namespace GUI
 			HDC hDC = BeginPaint(m_hWnd, &ps);
 
 			PaintEvent e(hDC, &ps.rcPaint);
-			DispatchEvent(e);
+			if (DispatchEvent(e)) break;
 
 			EndPaint(m_hWnd, &ps);
 			return 0;
@@ -69,45 +69,45 @@ namespace GUI
 		{
 			POINTS pt = MAKEPOINTS(lParam);
 			MouseMoveEvent e({ (float)pt.x, (float)pt.y });
-			DispatchEvent(e);
+			if (DispatchEvent(e)) break;
 
 			return 0;
 		}
 		case WM_LBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Left);
-			DispatchEvent(e);
+			if (DispatchEvent(e)) break;
 
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Left);
-			DispatchEvent(e);
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Right);
-			DispatchEvent(e);
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Right);
-			DispatchEvent(e);
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Middle);
-			DispatchEvent(e);
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Middle);
-			DispatchEvent(e);
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
@@ -116,32 +116,30 @@ namespace GUI
 			if (delta < 0)
 			{
 				MouseWheelDownEvent e(delta);
-				DispatchEvent(e);
+				if (DispatchEvent(e)) break;
 			}
 			else
 			{ 
 				MouseWheelUpEvent e(delta);
-				DispatchEvent(e);
+				if (DispatchEvent(e)) break;
 			}
 			return 0;
 		}
-		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:
 		{
 			if (wParam < 256)
 			{
 				KeyPressedEvent e((unsigned char)wParam);
-				DispatchEvent(e);
+				if (DispatchEvent(e)) break;
 			}
 			return 0;
 		}
-		case WM_SYSKEYUP:
 		case WM_KEYUP:
 		{
 			if (wParam < 256)
 			{
 				KeyReleasedEvent e((unsigned char)wParam);
-				DispatchEvent(e);
+				if (DispatchEvent(e)) break;
 			}
 			return 0;
 		}
@@ -150,26 +148,26 @@ namespace GUI
 			if (wParam > 0 && wParam < 0x10000)
 			{
 				CharEvent e((unsigned char)wParam);
-				DispatchEvent(e);
+				if (DispatchEvent(e)) break;
 			}
 			return 0;
 		}
 		case WM_SIZE:
 		{
 			AppResizeEvent e(GetSize());
-			DispatchEvent(e);
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MOVE:
 		{
 			AppMoveEvent e(GetPos());
-			DispatchEvent(e);
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_CLOSE:
 		{
 			AppCloseEvent e;
-			DispatchEvent(e);
+			if (DispatchEvent(e)) break;
 			break;
 		}
 		}
@@ -196,10 +194,10 @@ namespace GUI
 		return rc;
 	}
 	
-	void MainWindow::DispatchEvent(Event& e)
+	bool MainWindow::DispatchEvent(Event& e)
 	{
 		if (!m_EventCallbackFn)
-			return;
+			return false;
 
 		Control* receiver = nullptr;
 		for (auto* control : GetControls())
@@ -211,6 +209,6 @@ namespace GUI
 			receiver = this;
 
 		//call event filter set by user
-		m_EventCallbackFn(receiver, e);
+		return m_EventCallbackFn(receiver, e);
 	}
 }

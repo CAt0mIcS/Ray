@@ -99,7 +99,7 @@ namespace GUI
 		void SetEventCallback(F&& func) { m_EventCallbackFn = func; }
 
 	private:
-		void DispatchEvent(Event& e);
+		bool DispatchEvent(Event& e);
 
 	private:
 		EventCallbackFn m_EventCallbackFn;

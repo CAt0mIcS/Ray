@@ -15,7 +15,7 @@ using namespace Util;
 namespace GUI
 {
 	TextBox::TextBox(Control* parent)
-		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(20)
+		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(0)
 	{
 	}
 
@@ -28,7 +28,7 @@ namespace GUI
 				child->Render();
 			}
 
-			const float max = std::max(GetSize().width, GetSize().height);
+			const float max = std::min(GetSize().width, GetSize().height);
 			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
 			RenderText();
 
@@ -43,9 +43,14 @@ namespace GUI
 		NText text;
 		text.text = m_Text;
 		text.fontFamily = m_FontFamily;
+		
+		float xOffset = m_Size.width / 30.0f;
+		float yOffset = m_Size.height / 2.0f - m_FontSize / 2.0f;
+
 		text.fontSize = m_FontSize;
-		text.size = GetSize();
-		text.pos = GetPos();
+
+		text.pos = Util::NPoint{ m_Pos.x + xOffset, m_Pos.y + yOffset };
+		text.size = m_Size;
 
 		TextRenderer::Get().RenderText(text);
 	}
