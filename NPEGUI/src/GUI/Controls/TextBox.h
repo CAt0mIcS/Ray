@@ -6,17 +6,10 @@
 namespace GUI
 {
 	class Node;
+	class TextCursor;
 
 	class GUI_API TextBox : public Control
 	{
-	private:
-		class TextCursor
-		{
-
-		private:
-			unsigned int m_PosInText;
-		};
-
 	public:
 		/**
 		* TextBox constructor
@@ -91,8 +84,7 @@ namespace GUI
 		std::wstring m_Text;
 		std::wstring m_FontFamily;
 		float m_FontSize;
-
-		bool m_IsHovering;
+		TextCursor* m_Cursor;
 	};
 }
 

@@ -6,10 +6,12 @@
 
 #include "GUI/Events/MouseEvent.h"
 #include "GUI/Events/KeyboardEvent.h"
+#include "Private/TextCursor.h"
 
 /**
 * QUESTION:
 *	Should I be designing something like this GUI library only for this project or should I make it usable in another one?
+*	Should I write class declarations (class Node;) in header files instead of including them
 */
 
 
@@ -18,8 +20,10 @@ using namespace Util;
 namespace GUI
 {
 	TextBox::TextBox(Control* parent)
-		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(0), m_IsHovering(false)
+		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"),
+		m_FontSize(0), m_Cursor((TextCursor*)m_Children.emplace_back(new TextCursor(this)))
 	{
+		
 	}
 
 	bool TextBox::Render()
@@ -43,8 +47,8 @@ namespace GUI
 
 	bool TextBox::OnEvent(Event& e)
 	{
-
-		return false;
+		//Dispatch all events to the text cursor
+		return m_Cursor->OnEvent(e);
 	}
 
 	void TextBox::RenderText()
