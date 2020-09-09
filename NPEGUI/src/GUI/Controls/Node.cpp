@@ -3,6 +3,9 @@
 
 #include "GUI/Graphics/Renderer.h"
 
+#include "GUI/Events/MouseEvent.h"
+#include "GUI/Events/KeyboardEvent.h"
+
 
 using namespace Util;
 
@@ -29,6 +32,11 @@ namespace GUI
 
 			return true;
 		}
+		return false;
+	}
+
+	bool Node::OnEvent(Event& e)
+	{
 		return false;
 	}
 	

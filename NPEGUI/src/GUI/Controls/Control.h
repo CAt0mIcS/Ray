@@ -139,6 +139,14 @@ namespace GUI
 		virtual bool Render() = 0;
 
 		/**
+		* All events of the specific control will be dispatched to this function
+		* 
+		* @param e is the received event
+		* @returns true if the event was handled, else false and the event will be dispatched to the client
+		*/
+		virtual bool OnEvent(Event& e) = 0;
+
+		/**
 		* Checks if the current control overlaps with other
 		* 
 		* @param other is the other control

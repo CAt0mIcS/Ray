@@ -2,6 +2,9 @@
 #include "Button.h"
 #include "GUI/Graphics/Renderer.h"
 
+#include "GUI/Events/MouseEvent.h"
+#include "GUI/Events/KeyboardEvent.h"
+
 using namespace Util;
 
 
@@ -27,6 +30,11 @@ namespace GUI
 	
 			return true;
 		}
+		return false;
+	}
+
+	bool Button::OnEvent(Event& e)
+	{
 		return false;
 	}
 

@@ -34,6 +34,14 @@ namespace GUI
 		virtual bool Render() override;
 
 		/**
+		* All events of the specific control will be dispatched to this function
+		*
+		* @param e is the received event
+		* @returns true if the event was handled, else false and the event will be dispatched to the client
+		*/
+		virtual bool OnEvent(Event& e) override;
+
+		/**
 		* Renders text in member variable
 		* 
 		* @see TextBox::SetText()

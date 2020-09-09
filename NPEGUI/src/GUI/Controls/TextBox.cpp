@@ -4,6 +4,9 @@
 #include "GUI/Graphics/Renderer.h"
 #include "GUI/Graphics/TextRenderer.h"
 
+#include "GUI/Events/MouseEvent.h"
+#include "GUI/Events/KeyboardEvent.h"
+
 /**
 * QUESTION:
 *	Should I be designing something like this GUI library only for this project or should I make it usable in another one?
@@ -35,6 +38,11 @@ namespace GUI
 			return true;
 		}
 
+		return false;
+	}
+
+	bool TextBox::OnEvent(Event& e)
+	{
 		return false;
 	}
 

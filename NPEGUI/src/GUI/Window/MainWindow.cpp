@@ -27,6 +27,11 @@ namespace GUI
 		return false;
 	}
 
+	bool MainWindow::OnEvent(Event& e)
+	{
+		return false;
+	}
+
 	int MainWindow::ProcessMessage()
 	{
 		MSG msg{};
@@ -207,6 +212,10 @@ namespace GUI
 		//if no control was clicked... then the window will receive the event
 		if (receiver == nullptr)
 			receiver = this;
+
+		//dispatch event to all controls first
+		if (receiver->OnEvent(e))
+			return true;
 
 		//call event filter set by user
 		return m_EventCallbackFn(receiver, e);
