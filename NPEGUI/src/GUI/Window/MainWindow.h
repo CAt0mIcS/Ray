@@ -107,6 +107,12 @@ namespace GUI
 		void SetEventCallback(F&& func) { m_EventCallbackFn = func; }
 
 	private:
+		/**
+		* Receives all events, finds the event receiver and dispatches the event to first the receiver and then the user
+		* 
+		* @param e is the received event from window procedure
+		* @returns true if the event was handled, false otherwise
+		*/
 		bool DispatchEvent(Event& e);
 
 	private:

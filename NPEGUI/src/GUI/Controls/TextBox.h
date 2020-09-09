@@ -91,6 +91,8 @@ namespace GUI
 		std::wstring m_Text;
 		std::wstring m_FontFamily;
 		float m_FontSize;
+
+		bool m_IsHovering;
 	};
 }
 
