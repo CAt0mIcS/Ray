@@ -72,6 +72,13 @@ namespace GUI
 		void SetFontSize(const float size) { m_FontSize = size; }
 
 		/**
+		* Getter for font size
+		* 
+		* @returns the current font size of the text
+		*/
+		float GetFontSize() const { return m_FontSize; }
+
+		/**
 		* Calculates the layout of a new textbox
 		* 
 		* @param parentPos is the position of the parent control

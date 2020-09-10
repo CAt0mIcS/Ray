@@ -79,6 +79,14 @@ namespace GUI
 		*/
 		void RenderRoundedRect(const Util::NPoint& pos, const Util::NSize& size, const Util::NColor& color, const float radiusX, const float radiusY);
 
+		/**
+		* Draws a filled line from startPos to endPos
+		* 
+		* @param startPos is the start position of the line
+		* @param endPos is the end position of the line
+		*/
+		void RenderLine(const Util::NPoint& startPos, const Util::NPoint& endPos, const Util::NColor& color = g_DefaultLineColor, const float radius = 1.0f);
+
 	private:
 		/**
 		* Private renderer constructor

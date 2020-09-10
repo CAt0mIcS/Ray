@@ -27,6 +27,12 @@ namespace GUI
 		m_pRenderTarget->FillRoundedRectangle({ { pos.x, pos.y, pos.x + size.width, pos.y + size.height }, radiusX, radiusY }, m_pBrush.Get());
 	}
 
+	void Renderer::RenderLine(const Util::NPoint& startPos, const Util::NPoint& endPos, const Util::NColor& color, const float radius)
+	{
+		m_pBrush->SetColor(color.ToD2D1ColorF());
+		m_pRenderTarget->DrawLine(startPos.ToD2D1Point2F(), endPos.ToD2D1Point2F(), m_pBrush.Get(), radius);
+	}
+
 	Renderer::Renderer()
 		: m_hWnd(0) {}
 

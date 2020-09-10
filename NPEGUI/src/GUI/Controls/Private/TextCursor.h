@@ -23,6 +23,7 @@ namespace GUI
 	private:
 		unsigned int m_PosInText;
 		TextBox* m_TxtParent;
+		bool m_IsFocused;
 	};
 }
 

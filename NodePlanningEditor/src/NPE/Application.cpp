@@ -55,6 +55,7 @@ namespace NPE
 
 	bool Application::OnMouseMove(GUI::MouseMoveEvent& e)
 	{
+		std::cout << GUI::Mouse::GetPos().x << ", " << GUI::Mouse::GetPos().y << '\n';
 		if (GUI::Mouse::IsMiddlePressed())
 		{
 			Util::NPoint diff = GUI::Mouse::GetPos() - m_MousePos;
