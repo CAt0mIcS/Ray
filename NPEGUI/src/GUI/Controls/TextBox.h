@@ -12,6 +12,7 @@ namespace GUI
 
 	class GUI_API TextBox : public Control
 	{
+		friend class HWNDTextBox;
 	public:
 		/**
 		* TextBox constructor

@@ -9,8 +9,13 @@
 
 namespace GUI
 {
-	HWNDTextBox::HWNDTextBox(TextBox* parent, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
+	HWNDTextBox::HWNDTextBox(TextBox* parent)
 		: m_Parent(parent)
+	{
+
+	}
+
+	void HWNDTextBox::CreateTextWindow(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 	{
 		if (!CreateNativeWindow(L"", WS_OVERLAPPEDWINDOW, 0, x, y, width, height))
 		{
@@ -23,17 +28,7 @@ namespace GUI
 		{
 			NPE_THROW_WND_EXCEPT(GetLastError());
 		}
-
-	}
-
-	void HWNDTextBox::Show()
-	{
 		ShowWindow(m_hWnd, SW_SHOWDEFAULT);
-	}
-
-	void HWNDTextBox::Hide()
-	{
-		ShowWindow(m_hWnd, SW_HIDE);
 	}
 
 	LRESULT HWNDTextBox::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -46,9 +41,7 @@ namespace GUI
 			if(len < m_Text.capacity())
 				m_Text.reserve(len + 1);
 			
-			GetWindowText(m_hWndEdit, (wchar_t*)m_Text.c_str(), (int)m_Text.capacity());
-
-			m_Parent->SetText(m_Text);
+			GetWindowText(m_hWndEdit, (wchar_t*)m_Parent->m_Text.c_str(), (int)m_Text.capacity());
 
 			Renderer::Get().BeginDraw();
 			

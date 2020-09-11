@@ -12,6 +12,12 @@ namespace GUI
     {
     public:
         /**
+        * Getter for native HWND
+        */
+        HWND GetNativeWindow() const { return m_hWnd; }
+
+    protected:
+        /**
         * Window procedure which calls the DERIVED_TYPE::HandleMessage function
         * 
         * @param hwnd is the hwnd
@@ -89,12 +95,6 @@ namespace GUI
         }
 
         /**
-        * Getter for native HWND
-        */
-        HWND GetNativeWindow() const { return m_hWnd; }
-
-    protected:
-        /**
         * Handles all window messages
         * 
         * @param uMsg is the window message
@@ -103,6 +103,7 @@ namespace GUI
         */
         virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
 
+    protected:
         HWND m_hWnd;
     };
 }
