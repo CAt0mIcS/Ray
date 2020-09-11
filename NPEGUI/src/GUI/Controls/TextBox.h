@@ -6,7 +6,6 @@
 namespace GUI
 {
 	class Node;
-	class TextCursor;
 
 	class GUI_API TextBox : public Control
 	{
@@ -91,7 +90,6 @@ namespace GUI
 		std::wstring m_Text;
 		std::wstring m_FontFamily;
 		float m_FontSize;
-		TextCursor* m_Cursor;
 	};
 }
 

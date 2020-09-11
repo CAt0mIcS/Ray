@@ -6,7 +6,6 @@
 
 #include "GUI/Events/MouseEvent.h"
 #include "GUI/Events/KeyboardEvent.h"
-#include "Private/TextCursor.h"
 
 /**
 * QUESTION:
@@ -20,8 +19,7 @@ using namespace Util;
 namespace GUI
 {
 	TextBox::TextBox(Control* parent)
-		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"),
-		m_FontSize(0), m_Cursor((TextCursor*)m_Children.emplace_back(new TextCursor(this)))
+		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(0)
 	{
 		
 	}
@@ -48,7 +46,7 @@ namespace GUI
 	bool TextBox::OnEvent(Event& e)
 	{
 		//Dispatch all events to the text cursor
-		return m_Cursor->OnEvent(e);
+		return false;
 	}
 
 	void TextBox::RenderText()
