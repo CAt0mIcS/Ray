@@ -19,7 +19,7 @@ using namespace Util;
 namespace GUI
 {
 	TextBox::TextBox(Control* parent)
-		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(0)
+		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(0), m_IsMultiline(false), m_TextBoxWindow(this, 100, 100, 500, 500)
 	{
 		
 	}
@@ -45,7 +45,10 @@ namespace GUI
 
 	bool TextBox::OnEvent(Event& e)
 	{
-		//Dispatch all events to the text cursor
+		if (e.GetType() == EventType::MouseButtonPressedEvent)
+		{
+			return OnMouseButtonPressed((MouseButtonPressedEvent&)e);
+		}
 		return false;
 	}
 
@@ -69,6 +72,16 @@ namespace GUI
 	std::optional<std::pair<Util::NPoint, Util::NSize>> TextBox::CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize)
 	{
 		return { {{}, {}} };
+	}
+
+	bool TextBox::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+	{
+		if (e.GetButton() == MouseButton::Left && m_IsMultiline)
+		{
+			m_TextBoxWindow.Show();
+			return true;
+		}
+		return false;
 	}
 
 }

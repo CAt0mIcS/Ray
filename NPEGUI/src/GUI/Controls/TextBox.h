@@ -2,10 +2,13 @@
 
 #include "Control.h"
 
+#include "HWNDTextBox.h"
+
 
 namespace GUI
 {
 	class Node;
+	class MouseButtonPressedEvent;
 
 	class GUI_API TextBox : public Control
 	{
@@ -57,6 +60,13 @@ namespace GUI
 		void SetText(const std::wstring& newText) { m_Text = newText; }
 
 		/**
+		* Setter for multiline textbox
+		* 
+		* @param multiline should be true if the textbox should be multiline, false otherwise
+		*/
+		void SetMultiline(const bool multiline) { m_IsMultiline = multiline; }
+
+		/**
 		* Setter for the font family
 		*
 		* @param family is the new font family
@@ -87,9 +97,21 @@ namespace GUI
 		virtual std::optional<std::pair<Util::NPoint, Util::NSize>> CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize) override;
 
 	private:
+		/**
+		* Handles left clicked mouse button press, opens the edit window
+		* 
+		* @param e is the received event
+		* @returns true if the event was handled, false otherwise
+		*/
+		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
+
+	private:
 		std::wstring m_Text;
 		std::wstring m_FontFamily;
+
+		bool m_IsMultiline;
 		float m_FontSize;
+		HWNDTextBox m_TextBoxWindow;
 	};
 }
 

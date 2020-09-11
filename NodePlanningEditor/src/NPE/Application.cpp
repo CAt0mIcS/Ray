@@ -30,6 +30,7 @@ namespace NPE
 		ui.txtbox->SetFontSize(45);
 		ui.txtbox->SetPos({ 250, 250 });
 		ui.txtbox->SetSize({ 300, 100 });
+		ui.txtbox->SetMultiline(true);
 	
 	}
 
