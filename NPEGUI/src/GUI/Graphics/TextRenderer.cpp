@@ -23,7 +23,7 @@ namespace GUI
 
 		IDWriteTextLayout* pLayout;
 		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateTextLayout(text.text.c_str(),
-			wcslen(text.text.c_str()), pFormat, text.size.width, text.size.height, &pLayout),
+			(UINT32)wcslen(text.text.c_str()), pFormat, text.size.width, text.size.height, &pLayout),
 			"Failed to create DWriteTextLayout"
 		);
 

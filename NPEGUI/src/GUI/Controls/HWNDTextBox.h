@@ -10,7 +10,7 @@ namespace GUI
 	class HWNDTextBox : public BaseWindow<HWNDTextBox>
 	{
 	public:
-		HWNDTextBox(TextBox* parent, float x, float y, float width, float height);
+		HWNDTextBox(TextBox* parent, unsigned int x, unsigned int y, unsigned int width, unsigned int height);
 
 		void Show();
 

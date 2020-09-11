@@ -9,16 +9,7 @@
 
 namespace GUI
 {
-	LRESULT CALLBACK WindowProcEdit(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		switch (uMsg)
-		{
-			
-		}
-		return DefWindowProc(hWnd, uMsg, wParam, lParam);
-	}
-
-	HWNDTextBox::HWNDTextBox(TextBox* parent, float x, float y, float width, float height)
+	HWNDTextBox::HWNDTextBox(TextBox* parent, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 		: m_Parent(parent)
 	{
 		if (!CreateNativeWindow(L"", WS_OVERLAPPEDWINDOW, 0, x, y, width, height))
@@ -53,9 +44,9 @@ namespace GUI
 		{
 			int len = GetWindowTextLength(m_hWndEdit);
 			if(len < m_Text.capacity())
-				m_Text.reserve(len + 1.0);
+				m_Text.reserve(len + 1);
 			
-			GetWindowText(m_hWndEdit, (wchar_t*)m_Text.c_str(), m_Text.capacity());
+			GetWindowText(m_hWndEdit, (wchar_t*)m_Text.c_str(), (int)m_Text.capacity());
 
 			m_Parent->SetText(m_Text);
 
