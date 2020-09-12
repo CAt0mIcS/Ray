@@ -20,8 +20,8 @@ namespace GUI
 
 	private:
 		static HWND m_hWndEdit;
-		static HWND m_hWndOkBtn;
-		static HWND m_HWndCancelBtn;
+		//static HWND m_hWndOkBtn;
+		//static HWND m_HWndCancelBtn;
 
 		TextBox* m_Parent;
 	};

@@ -10,28 +10,38 @@
 namespace GUI
 {
 	HWND HWNDTextBox::m_hWndEdit = 0;
-	HWND HWNDTextBox::m_hWndOkBtn = 0;
-	HWND HWNDTextBox::m_HWndCancelBtn = 0;
+	//HWND HWNDTextBox::m_hWndOkBtn = 0;
+	//HWND HWNDTextBox::m_HWndCancelBtn = 0;
 
 	HWNDTextBox::HWNDTextBox(TextBox* parent, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 		: m_Parent(parent)
 	{
 		if (!CreateNativeWindow(L"", 0, 0, x, y, width, height))
-		{
 			NPE_THROW_WND_EXCEPT(GetLastError());
-		}
 
-		m_hWndEdit = CreateWindowEx(0, L"EDIT", L"", WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL, 20, 20, width - 40, height - 120, m_hWnd, 0, 0, 0);
+		m_hWndEdit = CreateWindowEx(
+			0, L"EDIT", L"", 
+			WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL,
+			20, 20, width - 40, height - 120, m_hWnd, 0, 0, 0
+		);
 
 		if (!m_hWndEdit)
 			NPE_THROW_WND_EXCEPT(GetLastError());
 
-		m_hWndOkBtn = CreateWindowEx(0, L"BUTTON", L"Ok", WS_TABSTOP | BS_DEFPUSHBUTTON | WS_BORDER | WS_CHILD | WS_VISIBLE, 20, height - 90, 150, 40, m_hWnd, (HMENU)1, GetModuleHandle(NULL), 0);
-
-		if (!m_hWndOkBtn)
-			NPE_THROW_WND_EXCEPT(GetLastError());
-
-		m_HWndCancelBtn = CreateWindowEx(0, L"BUTTON", L"Cancel", WS_TABSTOP | BS_DEFPUSHBUTTON | WS_BORDER | WS_CHILD | WS_VISIBLE, 190, height - 90, 150, 40, m_hWnd, (HMENU)2, GetModuleHandle(NULL), 0);
+		//m_hWndOkBtn = CreateWindowEx(
+		//	0, L"BUTTON", L"Ok", 
+		//	WS_TABSTOP | BS_DEFPUSHBUTTON | WS_BORDER | WS_CHILD | WS_VISIBLE,
+		//	20, height - 90, 150, 40, m_hWnd, (HMENU)1, GetModuleHandle(NULL), 0
+		//);
+		//
+		//if (!m_hWndOkBtn)
+		//	NPE_THROW_WND_EXCEPT(GetLastError());
+		//
+		//m_HWndCancelBtn = CreateWindowEx(
+		//	0, L"BUTTON", L"Cancel",
+		//	WS_TABSTOP | BS_DEFPUSHBUTTON | WS_BORDER | WS_CHILD | WS_VISIBLE,
+		//	190, height - 90, 150, 40, m_hWnd, (HMENU)2, GetModuleHandle(NULL), 0
+		//);
 	}
 
 	void HWNDTextBox::Hide()
@@ -57,10 +67,6 @@ namespace GUI
 
 			// Update non-client area of the dialog, for the changes to take effect
 			SetWindowPos(NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER, 0);
-			return 0;
-		}
-		case WM_DESTROY:
-		{
 			return 0;
 		}
 		case WM_COMMAND:
