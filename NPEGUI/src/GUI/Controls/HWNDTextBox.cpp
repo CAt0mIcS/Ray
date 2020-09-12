@@ -16,10 +16,10 @@ namespace GUI
 	HWNDTextBox::HWNDTextBox(TextBox* parent, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 		: m_Parent(parent)
 	{
-		//if (!CreateNativeWindow(L"", WS_SYSMENU, 0, x, y, width, height))
-		//{
-		//	NPE_THROW_WND_EXCEPT(GetLastError());
-		//}
+		if (!CreateNativeWindow(L"", 0, 0, x, y, width, height))
+		{
+			NPE_THROW_WND_EXCEPT(GetLastError());
+		}
 
 		m_hWndEdit = CreateWindowEx(0, L"EDIT", L"", WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL, 20, 20, width - 40, height - 120, m_hWnd, 0, 0, 0);
 
@@ -32,6 +32,17 @@ namespace GUI
 			NPE_THROW_WND_EXCEPT(GetLastError());
 
 		m_HWndCancelBtn = CreateWindowEx(0, L"BUTTON", L"Cancel", WS_TABSTOP | BS_DEFPUSHBUTTON | WS_BORDER | WS_CHILD | WS_VISIBLE, 190, height - 90, 150, 40, m_hWnd, (HMENU)2, GetModuleHandle(NULL), 0);
+	}
+
+	void HWNDTextBox::Hide()
+	{
+		ShowWindow(m_hWnd, SW_HIDE);
+	}
+
+	void HWNDTextBox::Show()
+	{
+		ShowWindow(m_hWnd, SW_SHOWDEFAULT); 
+		SetWindowText(m_hWndEdit, m_Parent->m_Text.c_str());
 	}
 
 	LRESULT HWNDTextBox::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -50,17 +61,32 @@ namespace GUI
 		}
 		case WM_DESTROY:
 		{
-			int len = GetWindowTextLength(m_hWndEdit);
-			if(len < m_Parent->m_Text.capacity())
-				m_Parent->m_Text.reserve(len + 1);
-			
-			GetWindowText(m_hWndEdit, (wchar_t*)m_Parent->m_Text.c_str(), (int)m_Parent->m_Text.capacity());
+			return 0;
+		}
+		case WM_COMMAND:
+		{
+			//OkBtn
+			if (LOWORD(wParam) == 1)
+			{
+				int len = GetWindowTextLength(m_hWndEdit);
+				if (len < m_Parent->m_Text.capacity())
+					m_Parent->m_Text.reserve(len + 1ll);
 
-			Renderer::Get().BeginDraw();
-			
-			m_Parent->Render();
-			
-			Renderer::Get().EndDraw();
+				GetWindowText(m_hWndEdit, (wchar_t*)m_Parent->m_Text.c_str(), (int)m_Parent->m_Text.capacity());
+
+				Renderer::Get().BeginDraw();
+
+				m_Parent->Render();
+
+				Renderer::Get().EndDraw();
+				Hide();
+			}
+			//CancelBtn
+			else if (LOWORD(wParam) == 2)
+			{
+				SetWindowText(m_hWndEdit, L"");
+				Hide();
+			}
 
 			return 0;
 		}

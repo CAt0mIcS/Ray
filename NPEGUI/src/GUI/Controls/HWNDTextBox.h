@@ -12,9 +12,9 @@ namespace GUI
 	public:
 		HWNDTextBox(TextBox* parent, unsigned int x, unsigned int y, unsigned int width, unsigned int height);
 
-		void Hide() { ShowWindow(m_hWnd, SW_HIDE); }
+		void Hide();
 
-		void Show() { ShowWindow(m_hWnd, SW_SHOWDEFAULT); }
+		void Show();
 
 		virtual LRESULT CALLBACK HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
