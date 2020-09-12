@@ -19,7 +19,7 @@ using namespace Util;
 namespace GUI
 {
 	TextBox::TextBox(Control* parent)
-		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(0), m_IsMultiline(false), m_TextBoxWindow(this, 100, 100, 500, 500)
+		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(0), m_IsMultiline(false), m_TextBoxWindow(this, CW_USEDEFAULT, CW_USEDEFAULT, 400, 300)
 	{
 		
 	}

@@ -10,8 +10,8 @@
 namespace GUI
 {
 	HWND HWNDTextBox::m_hWndEdit = 0;
-	//HWND HWNDTextBox::m_hWndOkBtn = 0;
-	//HWND HWNDTextBox::m_HWndCancelBtn = 0;
+	HWND HWNDTextBox::m_hWndOkBtn = 0;
+	HWND HWNDTextBox::m_HWndCancelBtn = 0;
 
 	HWNDTextBox::HWNDTextBox(TextBox* parent, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 		: m_Parent(parent)
@@ -28,20 +28,20 @@ namespace GUI
 		if (!m_hWndEdit)
 			NPE_THROW_WND_EXCEPT(GetLastError());
 
-		//m_hWndOkBtn = CreateWindowEx(
-		//	0, L"BUTTON", L"Ok", 
-		//	WS_TABSTOP | BS_DEFPUSHBUTTON | WS_BORDER | WS_CHILD | WS_VISIBLE,
-		//	20, height - 90, 150, 40, m_hWnd, (HMENU)1, GetModuleHandle(NULL), 0
-		//);
-		//
-		//if (!m_hWndOkBtn)
-		//	NPE_THROW_WND_EXCEPT(GetLastError());
-		//
-		//m_HWndCancelBtn = CreateWindowEx(
-		//	0, L"BUTTON", L"Cancel",
-		//	WS_TABSTOP | BS_DEFPUSHBUTTON | WS_BORDER | WS_CHILD | WS_VISIBLE,
-		//	190, height - 90, 150, 40, m_hWnd, (HMENU)2, GetModuleHandle(NULL), 0
-		//);
+		m_hWndOkBtn = CreateWindowEx(
+			0, L"BUTTON", L"Ok", 
+			WS_TABSTOP | BS_DEFPUSHBUTTON | WS_BORDER | WS_CHILD | WS_VISIBLE,
+			20, height - 90, 150, 40, m_hWnd, (HMENU)1, GetModuleHandle(NULL), 0
+		);
+		
+		if (!m_hWndOkBtn)
+			NPE_THROW_WND_EXCEPT(GetLastError());
+		
+		m_HWndCancelBtn = CreateWindowEx(
+			0, L"BUTTON", L"Cancel",
+			WS_TABSTOP | BS_DEFPUSHBUTTON | WS_BORDER | WS_CHILD | WS_VISIBLE,
+			190, height - 90, 150, 40, m_hWnd, (HMENU)2, GetModuleHandle(NULL), 0
+		);
 	}
 
 	void HWNDTextBox::Hide()
