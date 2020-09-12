@@ -14,7 +14,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	}
 	catch (NPE::Exception& e)
 	{
-		MessageBoxA(NULL, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);
+		MessageBoxW(NULL, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);
 	}
 	catch (std::exception& e)
 	{

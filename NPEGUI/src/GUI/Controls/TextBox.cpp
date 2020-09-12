@@ -19,7 +19,7 @@ using namespace Util;
 namespace GUI
 {
 	TextBox::TextBox(Control* parent)
-		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(0), m_IsMultiline(false), m_TextBoxWindow(this)
+		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(0), m_IsMultiline(false), m_TextBoxWindow(this, 100, 100, 500, 500)
 	{
 		
 	}
@@ -78,7 +78,7 @@ namespace GUI
 	{
 		if (e.GetButton() == MouseButton::Left && m_IsMultiline)
 		{
-			m_TextBoxWindow.CreateTextWindow(100, 100, 500, 500);
+			m_TextBoxWindow.Show();
 			return true;
 		}
 		return false;

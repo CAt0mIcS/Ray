@@ -11,7 +11,7 @@
 
 namespace NPE
 {
-	class UTIL_API Exception : public std::exception
+	class UTIL_API Exception
 	{
 	public:
 		/**
@@ -33,21 +33,21 @@ namespace NPE
 		* 
 		* @returns line/file string
 		*/
-		std::string GetOriginString() const;
+		std::wstring GetOriginString() const;
 
 		/**
 		* Getter for string with type
 		* 
 		* @returns string with type
 		*/
-		virtual const char* GetType() const = 0;
+		virtual const wchar_t* GetType() const = 0;
 
 		/**
 		* Getter for more information about the error
 		* 
 		* @returns more information about the erro
 		*/
-		virtual const char* what() const override = 0;
+		virtual const wchar_t* what() const = 0;
 
 		/**
 		* Virtual Exception destructor
@@ -55,7 +55,7 @@ namespace NPE
 		virtual ~Exception() = default;
 
 	protected:
-		mutable std::string m_WhatBuffer;
+		mutable std::wstring m_WhatBuffer;
 		unsigned int m_Line;
 		const char* m_File;
 	};
@@ -78,21 +78,21 @@ namespace NPE
 		*
 		* @returns string with type
 		*/
-		virtual const char* GetType() const override { return "NPE WindowException"; }
+		virtual const wchar_t* GetType() const override { return L"NPE WindowException"; }
 
 		/**
 		* Getter for more information about the error
 		*
 		* @returns more information about the erro
 		*/
-		virtual const char* what() const override;
+		virtual const wchar_t* what() const override;
 
 		/**
 		* Uses format message to get the message string from Win32API
 		* 
 		* @returns the formated message
 		*/
-		std::string GetErrorString() const;
+		std::wstring GetErrorString() const;
 
 	private:
 		HRESULT m_Hr;
@@ -115,14 +115,14 @@ namespace NPE
 		*
 		* @returns string with type
 		*/
-		virtual const char* GetType() const override { return "NPE GraphicsException"; }
+		virtual const wchar_t* GetType() const override { return L"NPE GraphicsException"; }
 
 		/**
 		* Getter for more information about the error
 		*
 		* @returns more information about the erro
 		*/
-		virtual const char* what() const override;
+		virtual const wchar_t* what() const override;
 
 	private:
 		HRESULT m_Hr;

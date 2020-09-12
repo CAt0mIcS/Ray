@@ -5,13 +5,13 @@
 namespace NPE
 {
 	Exception::Exception(unsigned int line, const char* file)
-		: m_Line(line), m_File(file), m_WhatBuffer("")
+		: m_Line(line), m_File(file), m_WhatBuffer(L"")
 	{
 	}
 
-	std::string Exception::GetOriginString() const
+	std::wstring Exception::GetOriginString() const
 	{
-		std::ostringstream oss;
+		std::wstringstream oss;
 		oss << "\t[File] " << m_File << '\n'
 			<< "\t[Line] " << m_Line;
 
@@ -24,9 +24,9 @@ namespace NPE
 	{
 	}
 
-	const char* WindowException::what() const
+	const wchar_t* WindowException::what() const
 	{
-		std::ostringstream oss;
+		std::wstringstream oss;
 		oss << GetType() << '\n'
 			<< "\t[Error Code] " << m_Hr << '\n'
 			<< "\t[Description] " << GetErrorString() << '\n'
@@ -36,16 +36,16 @@ namespace NPE
 		return m_WhatBuffer.c_str();
 	}
 
-	std::string WindowException::GetErrorString() const
+	std::wstring WindowException::GetErrorString() const
 	{
-		char* pMsgBuf = nullptr;
+		wchar_t* pMsgBuf = nullptr;
 		DWORD nMsgLen = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 			nullptr, m_Hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&pMsgBuf, 0, nullptr);
 
 		if (nMsgLen == 0)
-			return "Unidentified error code";
+			return L"Unidentified error code";
 
-		std::string errorString = pMsgBuf;
+		std::wstring errorString = pMsgBuf;
 		LocalFree(pMsgBuf);
 		return errorString;
 	}
@@ -56,9 +56,9 @@ namespace NPE
 	{
 	}
 
-	const char* GraphicsException::what() const
+	const wchar_t* GraphicsException::what() const
 	{
-		std::ostringstream oss;
+		std::wstringstream oss;
 		oss << GetType() << '\n'
 			<< "\t[Error Code] 0x" << std::hex << std::uppercase << m_Hr << '\n'
 			<< "\t[Message] " << m_Message << '\n'

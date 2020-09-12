@@ -9,18 +9,17 @@
 
 namespace GUI
 {
-	HWNDTextBox::HWNDTextBox(TextBox* parent)
+	HWND HWNDTextBox::m_hWndEdit = 0;
+	HWND HWNDTextBox::m_hWndOkBtn = 0;
+	HWND HWNDTextBox::m_HWndCancelBtn = 0;
+
+	HWNDTextBox::HWNDTextBox(TextBox* parent, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 		: m_Parent(parent)
 	{
-
-	}
-
-	void HWNDTextBox::CreateTextWindow(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
-	{
-		if (!CreateNativeWindow(L"", WS_SYSMENU, 0, x, y, width, height))
-		{
-			NPE_THROW_WND_EXCEPT(GetLastError());
-		}
+		//if (!CreateNativeWindow(L"", WS_SYSMENU, 0, x, y, width, height))
+		//{
+		//	NPE_THROW_WND_EXCEPT(GetLastError());
+		//}
 
 		m_hWndEdit = CreateWindowEx(0, L"EDIT", L"", WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL, 20, 20, width - 40, height - 120, m_hWnd, 0, 0, 0);
 
@@ -33,8 +32,6 @@ namespace GUI
 			NPE_THROW_WND_EXCEPT(GetLastError());
 
 		m_HWndCancelBtn = CreateWindowEx(0, L"BUTTON", L"Cancel", WS_TABSTOP | BS_DEFPUSHBUTTON | WS_BORDER | WS_CHILD | WS_VISIBLE, 190, height - 90, 150, 40, m_hWnd, (HMENU)2, GetModuleHandle(NULL), 0);
-
-		ShowWindow(m_hWnd, SW_SHOWDEFAULT);
 	}
 
 	LRESULT HWNDTextBox::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)

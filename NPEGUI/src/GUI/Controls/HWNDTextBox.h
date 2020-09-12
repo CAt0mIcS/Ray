@@ -10,16 +10,18 @@ namespace GUI
 	class HWNDTextBox : public BaseWindow<HWNDTextBox>
 	{
 	public:
-		HWNDTextBox(TextBox* parent);
+		HWNDTextBox(TextBox* parent, unsigned int x, unsigned int y, unsigned int width, unsigned int height);
 
-		void CreateTextWindow(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
+		void Hide() { ShowWindow(m_hWnd, SW_HIDE); }
+
+		void Show() { ShowWindow(m_hWnd, SW_SHOWDEFAULT); }
 
 		virtual LRESULT CALLBACK HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		HWND m_hWndEdit;
-		HWND m_hWndOkBtn;
-		HWND m_HWndCancelBtn;
+		static HWND m_hWndEdit;
+		static HWND m_hWndOkBtn;
+		static HWND m_HWndCancelBtn;
 
 		TextBox* m_Parent;
 	};
