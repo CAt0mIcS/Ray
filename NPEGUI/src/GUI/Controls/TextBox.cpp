@@ -60,7 +60,15 @@ namespace GUI
 		text.fontFamily = m_FontFamily;
 		
 		float xOffset = m_Size.width / 30.0f;
-		float yOffset = m_Size.height / 2.0f - m_FontSize / 2.0f;
+		float yOffset;
+		if (m_IsMultiline)
+		{
+			yOffset = m_Size.height / 10.0f;
+		}
+		else
+		{
+			yOffset = m_Size.height / 2.0f - m_FontSize / 2.0f;
+		}
 
 		text.fontSize = m_FontSize;
 

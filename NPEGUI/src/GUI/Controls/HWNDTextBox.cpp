@@ -86,7 +86,7 @@ namespace GUI
 	void HWNDTextBox::OnOkButtonPressed()
 	{
 		int len = GetWindowTextLength(s_hWndEdit);
-		if (len < m_Parent->m_Text.capacity())
+		if (len > m_Parent->m_Text.capacity())
 			m_Parent->m_Text.reserve(len + 1ll);
 
 		GetWindowText(s_hWndEdit, (wchar_t*)m_Parent->m_Text.c_str(), (int)m_Parent->m_Text.capacity());

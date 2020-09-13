@@ -27,14 +27,26 @@ namespace GUI
 			"Failed to create DWriteTextLayout"
 		);
 
-		Renderer::Get().m_pBrush->SetColor(text.color.ToD2D1ColorF());
+		DWRITE_TEXT_METRICS metrics;
+		NPE_THROW_GFX_EXCEPT(pLayout->GetMetrics(&metrics), "Failed to get text metrics");
 
+		unsigned int lineCountThreshold = 0;
+
+		if (metrics.lineCount > lineCountThreshold)
+		{
+
+		}
+
+
+		Renderer::Get().m_pBrush->SetColor(text.color.ToD2D1ColorF());
 		Renderer::Get().m_pRenderTarget->DrawTextW(
 			text.text.c_str(), (UINT32)wcslen(text.text.c_str()), pFormat,
 			{ text.pos.x, text.pos.y, text.pos.x + text.size.width , text.pos.y + text.size.height },
 			Renderer::Get().m_pBrush.Get(), text.options, text.measuringMode
 		);
+
 		pFormat->Release();
+		pLayout->Release();
 	}
 
 	TextRenderer::TextRenderer()
