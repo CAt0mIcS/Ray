@@ -52,6 +52,7 @@ namespace GUI
 		return false;
 	}
 
+	//TODO: Check if the text is too long and the node needs to expand
 	void TextBox::RenderText()
 	{
 		NText text;
