@@ -53,8 +53,8 @@ namespace GUI
 
 		TextBox* m_Parent;
 
-		static constexpr int s_OkBtnId = 0x1;
-		static constexpr int s_CancelBtnId = 0x2;
+		static constexpr char s_OkBtnId = 0x1;
+		static constexpr char s_CancelBtnId = 0x2;
 	};
 
 }

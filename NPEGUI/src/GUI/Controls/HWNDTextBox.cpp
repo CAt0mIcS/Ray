@@ -59,16 +59,6 @@ namespace GUI
 	{
 		switch (uMsg)
 		{
-		case WM_CREATE:
-		{
-			// Disable default titlebar icon 
-			int extendedStyle = GetWindowLong(m_hWnd, GWL_EXSTYLE);
-			SetWindowLong(m_hWnd, GWL_EXSTYLE, extendedStyle | WS_EX_DLGMODALFRAME);
-
-			// Update non-client area of the dialog, for the changes to take effect
-			SetWindowPos(NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER, 0);
-			return 0;
-		}
 		case WM_COMMAND:
 		{
 			//OkBtn
