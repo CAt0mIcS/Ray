@@ -73,7 +73,7 @@ namespace GUI
 		text.fontSize = m_FontSize;
 
 		text.pos = Util::NPoint{ m_Pos.x + xOffset, m_Pos.y + yOffset };
-		text.size = m_Size;
+		text.size = { m_Size.width - xOffset, m_Size.height - yOffset };
 
 		TextRenderer::Get().RenderText(text);
 	}

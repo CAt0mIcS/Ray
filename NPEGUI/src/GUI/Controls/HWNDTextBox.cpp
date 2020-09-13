@@ -86,10 +86,11 @@ namespace GUI
 	void HWNDTextBox::OnOkButtonPressed()
 	{
 		int len = GetWindowTextLength(s_hWndEdit);
-		if (len > m_Parent->m_Text.capacity())
-			m_Parent->m_Text.reserve(len + 1ll);
+		wchar_t* buff = new wchar_t[len];
 
-		GetWindowText(s_hWndEdit, (wchar_t*)m_Parent->m_Text.c_str(), (int)m_Parent->m_Text.capacity());
+		GetWindowText(s_hWndEdit, buff, len);
+		m_Parent->SetText(buff);
+		delete[] buff;
 
 		Renderer::Get().BeginDraw();
 

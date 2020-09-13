@@ -30,13 +30,11 @@ namespace GUI
 		DWRITE_TEXT_METRICS metrics;
 		NPE_THROW_GFX_EXCEPT(pLayout->GetMetrics(&metrics), "Failed to get text metrics");
 
-		unsigned int lineCountThreshold = 0;
-
-		if (metrics.lineCount > lineCountThreshold)
+		float yOffset = metrics.layoutHeight / 10.0f;
+		//TODO: Only render fitting parts and implement scrolling
+		if (metrics.height > metrics.layoutHeight - yOffset)
 		{
-
 		}
-
 
 		Renderer::Get().m_pBrush->SetColor(text.color.ToD2D1ColorF());
 		Renderer::Get().m_pRenderTarget->DrawTextW(
