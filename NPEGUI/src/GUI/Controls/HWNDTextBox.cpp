@@ -9,9 +9,9 @@
 
 namespace GUI
 {
-	HWND HWNDTextBox::m_hWndEdit = 0;
-	HWND HWNDTextBox::m_hWndOkBtn = 0;
-	HWND HWNDTextBox::m_HWndCancelBtn = 0;
+	HWND HWNDTextBox::s_hWndEdit = 0;
+	HWND HWNDTextBox::s_hWndOkBtn = 0;
+	HWND HWNDTextBox::s_HWndCancelBtn = 0;
 
 	HWNDTextBox::HWNDTextBox(TextBox* parent, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 		: m_Parent(parent)
@@ -19,28 +19,28 @@ namespace GUI
 		if (!CreateNativeWindow(L"", 0, 0, x, y, width, height))
 			NPE_THROW_WND_EXCEPT(GetLastError());
 
-		m_hWndEdit = CreateWindowEx(
+		s_hWndEdit = CreateWindowEx(
 			0, L"EDIT", L"", 
 			WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL,
 			20, 20, width - 40, height - 120, m_hWnd, 0, 0, 0
 		);
 
-		if (!m_hWndEdit)
+		if (!s_hWndEdit)
 			NPE_THROW_WND_EXCEPT(GetLastError());
 
-		m_hWndOkBtn = CreateWindowEx(
+		s_hWndOkBtn = CreateWindowEx(
 			0, L"BUTTON", L"Ok", 
 			WS_TABSTOP | BS_DEFPUSHBUTTON | WS_BORDER | WS_CHILD | WS_VISIBLE,
-			20, height - 90, 150, 40, m_hWnd, (HMENU)1, GetModuleHandle(NULL), 0
+			20, height - 90, 150, 40, m_hWnd, (HMENU)s_OkBtnId, GetModuleHandle(NULL), 0
 		);
 		
-		if (!m_hWndOkBtn)
+		if (!s_hWndOkBtn)
 			NPE_THROW_WND_EXCEPT(GetLastError());
 		
-		m_HWndCancelBtn = CreateWindowEx(
+		s_HWndCancelBtn = CreateWindowEx(
 			0, L"BUTTON", L"Cancel",
 			WS_TABSTOP | BS_DEFPUSHBUTTON | WS_BORDER | WS_CHILD | WS_VISIBLE,
-			190, height - 90, 150, 40, m_hWnd, (HMENU)2, GetModuleHandle(NULL), 0
+			190, height - 90, 150, 40, m_hWnd, (HMENU)s_CancelBtnId, GetModuleHandle(NULL), 0
 		);
 	}
 
@@ -52,7 +52,7 @@ namespace GUI
 	void HWNDTextBox::Show()
 	{
 		ShowWindow(m_hWnd, SW_SHOWDEFAULT); 
-		SetWindowText(m_hWndEdit, m_Parent->m_Text.c_str());
+		SetWindowText(s_hWndEdit, m_Parent->m_Text.c_str());
 	}
 
 	LRESULT HWNDTextBox::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -72,26 +72,14 @@ namespace GUI
 		case WM_COMMAND:
 		{
 			//OkBtn
-			if (LOWORD(wParam) == 1)
+			if (LOWORD(wParam) == s_OkBtnId)
 			{
-				int len = GetWindowTextLength(m_hWndEdit);
-				if (len < m_Parent->m_Text.capacity())
-					m_Parent->m_Text.reserve(len + 1ll);
-
-				GetWindowText(m_hWndEdit, (wchar_t*)m_Parent->m_Text.c_str(), (int)m_Parent->m_Text.capacity());
-
-				Renderer::Get().BeginDraw();
-
-				m_Parent->Render();
-
-				Renderer::Get().EndDraw();
-				Hide();
+				OnOkButtonPressed();
 			}
 			//CancelBtn
-			else if (LOWORD(wParam) == 2)
+			else if (LOWORD(wParam) == s_CancelBtnId)
 			{
-				SetWindowText(m_hWndEdit, L"");
-				Hide();
+				OnCancelBtnPressed();
 			}
 
 			return 0;
@@ -103,6 +91,28 @@ namespace GUI
 		}
 
 		return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
+	}
+
+	void HWNDTextBox::OnOkButtonPressed()
+	{
+		int len = GetWindowTextLength(s_hWndEdit);
+		if (len < m_Parent->m_Text.capacity())
+			m_Parent->m_Text.reserve(len + 1ll);
+
+		GetWindowText(s_hWndEdit, (wchar_t*)m_Parent->m_Text.c_str(), (int)m_Parent->m_Text.capacity());
+
+		Renderer::Get().BeginDraw();
+
+		m_Parent->Render();
+
+		Renderer::Get().EndDraw();
+		Hide();
+	}
+
+	void HWNDTextBox::OnCancelBtnPressed()
+	{
+		SetWindowText(s_hWndEdit, L"");
+		Hide();
 	}
 }
 

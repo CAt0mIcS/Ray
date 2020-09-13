@@ -76,9 +76,18 @@ namespace GUI
 
 	bool TextBox::OnMouseButtonPressed(MouseButtonPressedEvent& e)
 	{
-		if (e.GetButton() == MouseButton::Left && m_IsMultiline)
+		if (e.GetButton() == MouseButton::Left)
 		{
-			m_TextBoxWindow.Show();
+			if (m_IsMultiline)
+			{
+				//display edit window
+				m_TextBoxWindow.Show();
+			}
+			else
+			{
+				//use normal single-line edit
+
+			}
 			return true;
 		}
 		return false;
