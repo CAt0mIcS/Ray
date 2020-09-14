@@ -34,6 +34,17 @@ namespace GUI
 		Util::NSize m_Size;
 	};
 
+	class SetCursorEvent : public Event
+	{
+	public:
+		SetCursorEvent()
+		{
+
+		}
+
+		NPE_DECLARE_TYPE_FN(SetCursorEvent)
+	};
+
 	class AppCloseEvent : public Event
 	{
 	public:

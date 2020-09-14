@@ -61,10 +61,9 @@ namespace GUI
 		}
 		case WM_SETCURSOR:
 		{
-			//SetCursorEvent e;
-			//if (!DispatchEvent(e)) break;
-			break;
-			//return 0;
+			SetCursorEvent e;
+			if (!DispatchEvent(e)) break;
+			return 0;
 		}
 		case WM_PAINT:
 		{

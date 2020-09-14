@@ -12,7 +12,7 @@ namespace GUI
 		INVALID = 0,
 		MouseButtonPressedEvent, MouseButtonReleasedEvent, MouseWheelUpEvent, MouseWheelDownEvent, MouseMoveEvent, MouseEnterEvent, MouseLeaveEvent,
 		KeyPressedEvent, KeyReleasedEvent, CharEvent,
-		AppResizeEvent, AppCloseEvent, AppMoveEvent, AppPaintEvent
+		AppResizeEvent, AppCloseEvent, AppMoveEvent, AppPaintEvent, SetCursorEvent
 	};
 
 

@@ -9,6 +9,7 @@ namespace GUI
 {
 	class Node;
 	class MouseButtonPressedEvent;
+	class SetCursorEvent;
 
 	class GUI_API TextBox : public Control
 	{
@@ -98,6 +99,14 @@ namespace GUI
 		virtual std::optional<std::pair<Util::NPoint, Util::NSize>> CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize) override;
 
 	private:
+		/**
+		* Handles cursor changed events
+		* 
+		* @param e is the cursor event
+		* @returns true if the event was handled, false otherwise
+		*/
+		bool OnSetCursor(SetCursorEvent& e);
+
 		/**
 		* Handles left clicked mouse button press, opens the edit window
 		* 

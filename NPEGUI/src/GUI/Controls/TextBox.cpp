@@ -6,6 +6,7 @@
 
 #include "GUI/Events/MouseEvent.h"
 #include "GUI/Events/KeyboardEvent.h"
+#include "GUI/Events/ApplicationEvent.h"
 
 /**
 * QUESTION:
@@ -49,6 +50,10 @@ namespace GUI
 		{
 			return OnMouseButtonPressed((MouseButtonPressedEvent&)e);
 		}
+		else if (e.GetType() == EventType::SetCursorEvent)
+		{
+			return OnSetCursor((SetCursorEvent&)e);
+		}
 		return false;
 	}
 
@@ -84,6 +89,21 @@ namespace GUI
 	std::optional<std::pair<Util::NPoint, Util::NSize>> TextBox::CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize)
 	{
 		return { {{}, {}} };
+	}
+
+	bool TextBox::OnSetCursor(SetCursorEvent& e)
+	{
+		if (Mouse::IsOnControl(this))
+		{
+			SetCursor(LoadCursor(NULL, IDC_IBEAM));
+			return true;
+		}
+		else
+		{
+			SetCursor(LoadCursor(NULL, IDC_ARROW));
+			return true;
+		}
+		return false;
 	}
 
 	bool TextBox::OnMouseButtonPressed(MouseButtonPressedEvent& e)
