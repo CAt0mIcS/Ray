@@ -61,8 +61,10 @@ namespace GUI
 		}
 		case WM_SETCURSOR:
 		{
-			//TODO: Implement OnSetCursorEvent
+			//SetCursorEvent e;
+			//if (!DispatchEvent(e)) break;
 			break;
+			//return 0;
 		}
 		case WM_PAINT:
 		{
@@ -70,7 +72,7 @@ namespace GUI
 			HDC hDC = BeginPaint(m_hWnd, &ps);
 
 			PaintEvent e(hDC, &ps.rcPaint);
-			if (DispatchEvent(e)) break;
+			if (!DispatchEvent(e)) break;
 
 			EndPaint(m_hWnd, &ps);
 			return 0;
@@ -79,45 +81,45 @@ namespace GUI
 		{
 			POINTS pt = MAKEPOINTS(lParam);
 			MouseMoveEvent e({ (float)pt.x, (float)pt.y });
-			if (DispatchEvent(e)) break;
+			if (!DispatchEvent(e)) break;
 
 			return 0;
 		}
 		case WM_LBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Left);
-			if (DispatchEvent(e)) break;
+			if (!DispatchEvent(e)) break;
 
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Left);
-			if (DispatchEvent(e)) break;
+			if (!DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Right);
-			if (DispatchEvent(e)) break;
+			if (!DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Right);
-			if (DispatchEvent(e)) break;
+			if (!DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Middle);
-			if (DispatchEvent(e)) break;
+			if (!DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Middle);
-			if (DispatchEvent(e)) break;
+			if (!DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
@@ -126,12 +128,12 @@ namespace GUI
 			if (delta < 0)
 			{
 				MouseWheelDownEvent e(delta);
-				if (DispatchEvent(e)) break;
+				if (!DispatchEvent(e)) break;
 			}
 			else
 			{ 
 				MouseWheelUpEvent e(delta);
-				if (DispatchEvent(e)) break;
+				if (!DispatchEvent(e)) break;
 			}
 			return 0;
 		}
@@ -140,7 +142,7 @@ namespace GUI
 			if (wParam < 256)
 			{
 				KeyPressedEvent e((unsigned char)wParam);
-				if (DispatchEvent(e)) break;
+				if (!DispatchEvent(e)) break;
 			}
 			return 0;
 		}
@@ -149,7 +151,7 @@ namespace GUI
 			if (wParam < 256)
 			{
 				KeyReleasedEvent e((unsigned char)wParam);
-				if (DispatchEvent(e)) break;
+				if (!DispatchEvent(e)) break;
 			}
 			return 0;
 		}
@@ -158,26 +160,26 @@ namespace GUI
 			if (wParam > 0 && wParam < 0x10000)
 			{
 				CharEvent e((unsigned char)wParam);
-				if (DispatchEvent(e)) break;
+				if (!DispatchEvent(e)) break;
 			}
 			return 0;
 		}
 		case WM_SIZE:
 		{
 			AppResizeEvent e(GetSize());
-			if (DispatchEvent(e)) break;
+			if (!DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MOVE:
 		{
 			AppMoveEvent e(GetPos());
-			if (DispatchEvent(e)) break;
+			if (!DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_CLOSE:
 		{
 			AppCloseEvent e;
-			if (DispatchEvent(e)) break;
+			if (!DispatchEvent(e)) break;
 			break;
 		}
 		}
