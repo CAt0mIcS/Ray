@@ -42,6 +42,14 @@ namespace GUI
 		void Init();
 
 		/**
+		* Returns the text metrics to the current text
+		* 
+		* @param text is the text to get the metrics for
+		* @returns the text metrics to text
+		*/
+		DWRITE_TEXT_METRICS GetTextMetrics(const NText& text);
+
+		/**
 		* Renders text to specifies bounding rect
 		* 
 		* @param text is the NText structure containing all text info

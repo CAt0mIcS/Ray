@@ -52,7 +52,7 @@ namespace GUI
 		return false;
 	}
 
-	//TODO: Check if the text is too long and the node needs to expand
+	//TODO: Check if the text is too long and implement scrolling here
 	void TextBox::RenderText()
 	{
 		NText text;
@@ -74,6 +74,9 @@ namespace GUI
 
 		text.pos = Util::NPoint{ m_Pos.x + xOffset, m_Pos.y + yOffset };
 		text.size = { m_Size.width - xOffset, m_Size.height - yOffset };
+
+		auto metrics = TextRenderer::Get().GetTextMetrics(text);
+
 
 		TextRenderer::Get().RenderText(text);
 	}

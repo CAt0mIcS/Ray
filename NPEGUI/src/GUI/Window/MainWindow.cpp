@@ -59,6 +59,11 @@ namespace GUI
 			Keyboard::ClearStates();
 			return 0;
 		}
+		case WM_SETCURSOR:
+		{
+			//TODO: Implement OnSetCursorEvent
+			break;
+		}
 		case WM_PAINT:
 		{
 			PAINTSTRUCT ps;

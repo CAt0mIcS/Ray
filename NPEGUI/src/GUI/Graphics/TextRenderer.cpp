@@ -13,7 +13,7 @@ namespace GUI
 		CreateTextGraphicsResources();
 	}
 
-	void TextRenderer::RenderText(const NText& text)
+	DWRITE_TEXT_METRICS TextRenderer::GetTextMetrics(const NText& text)
 	{
 		IDWriteTextFormat* pFormat;
 		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateTextFormat(text.fontFamily.c_str(),
@@ -30,11 +30,19 @@ namespace GUI
 		DWRITE_TEXT_METRICS metrics;
 		NPE_THROW_GFX_EXCEPT(pLayout->GetMetrics(&metrics), "Failed to get text metrics");
 
-		float yOffset = metrics.layoutHeight / 10.0f;
-		//TODO: Only render fitting parts and implement scrolling
-		if (metrics.height > metrics.layoutHeight - yOffset)
-		{
-		}
+		pLayout->Release();
+		pFormat->Release();
+
+		return metrics;
+	}
+
+	void TextRenderer::RenderText(const NText& text)
+	{
+		IDWriteTextFormat* pFormat;
+		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateTextFormat(text.fontFamily.c_str(),
+			nullptr, text.fontWeight, text.fontStyle, text.fontStretch, text.fontSize,
+			text.localeName.c_str(), &pFormat), "Failed to create IDWriteTextFormat"
+		);
 
 		Renderer::Get().m_pBrush->SetColor(text.color.ToD2D1ColorF());
 		Renderer::Get().m_pRenderTarget->DrawTextW(
@@ -44,7 +52,6 @@ namespace GUI
 		);
 
 		pFormat->Release();
-		pLayout->Release();
 	}
 
 	TextRenderer::TextRenderer()
