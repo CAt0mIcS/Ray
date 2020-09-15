@@ -2,6 +2,9 @@
 #include "Renderer.h"
 
 #include "Util/Exceptions.h"
+#include "Util/Direct2D.h"
+
+#include "../res/resource.h"
 
 
 namespace GUI
@@ -92,10 +95,17 @@ namespace GUI
 
 
 		//for background bitmap
-		IWICImagingFactory* pIWICFactory;
-		IWICFormatConverter* pConvertedSourceBitmap;
-		IWICBitmapDecoder* pDecoder;
-		IWICBitmapFrameDecode* pFrame;
+		IWICImagingFactory* pIWICFactory = nullptr;
+		IWICBitmapDecoder* pDecoder = nullptr;
+		IWICBitmapFrameDecode* pSource = nullptr;
+		IWICStream* pStream = nullptr;
+		IWICFormatConverter* pConverter = nullptr;
+		IWICBitmapScaler* pScaler = nullptr;
+
+		HRSRC imageResHandle = NULL;
+		HGLOBAL imageResDataHandle = NULL;
+		void* pImageFile = nullptr;
+		DWORD imageFileSize = 0;
 
 		NPE_THROW_GFX_EXCEPT(CoCreateInstance(
 			CLSID_WICImagingFactory,
@@ -104,34 +114,49 @@ namespace GUI
 			IID_PPV_ARGS(&pIWICFactory)
 		), "Failed to create WICImagingFactory");
 
-		NPE_THROW_GFX_EXCEPT(pIWICFactory->CreateDecoderFromFilename(
-			L"BackgroundImage.bmp",
-			nullptr,
-			GENERIC_READ,
-			WICDecodeMetadataCacheOnDemand,
-			&pDecoder
-		), "");
+		imageResHandle = FindResource(GetModuleHandle(L"NPEGUI.dll"), MAKEINTRESOURCE(IDR_IMAGE1), L"Image");
+		if (!imageResHandle)
+			NPE_THROW_WND_EXCEPT(GetLastError());
 
+		imageResDataHandle = LoadResource(GetModuleHandle(L"NPEGUI.dll"), imageResHandle);
+		if (!imageResDataHandle)
+			NPE_THROW_WND_EXCEPT(GetLastError());
 
-		NPE_THROW_GFX_EXCEPT(pDecoder->GetFrame(0, &pFrame), "Failed to get decoded bitmap frame");
-		pDecoder->Release();
+		pImageFile = LockResource(imageResDataHandle);
+		if (!pImageFile)
+			NPE_THROW_WND_EXCEPT(GetLastError());
 
-		NPE_THROW_GFX_EXCEPT(pIWICFactory->CreateFormatConverter(&pConvertedSourceBitmap), "Failed to format frame to 32bppPBGRA");
-		pIWICFactory->Release();
+		imageFileSize = SizeofResource(GetModuleHandle(L"NPEGUI.dll"), imageResHandle);
+		if (!imageFileSize)
+			NPE_THROW_WND_EXCEPT(GetLastError());
 
-		NPE_THROW_GFX_EXCEPT(pConvertedSourceBitmap->Initialize(
-			pFrame,
+		NPE_THROW_GFX_EXCEPT(pIWICFactory->CreateStream(&pStream), "Failed to create IWICStream");
+		NPE_THROW_GFX_EXCEPT(pStream->InitializeFromMemory((BYTE*)pImageFile, imageFileSize), "Failed to initialize IWICStream from memory");
+
+		NPE_THROW_GFX_EXCEPT(pIWICFactory->CreateDecoderFromStream(
+			pStream, nullptr, WICDecodeMetadataCacheOnLoad, &pDecoder), "Failed to create IWICBitmapDecoder from IWICStream");
+
+		NPE_THROW_GFX_EXCEPT(pDecoder->GetFrame(0, &pSource), "Failed to get first frame from IWICBitmapDecoder");
+
+		NPE_THROW_GFX_EXCEPT(pIWICFactory->CreateFormatConverter(&pConverter), "Failed to create IWICFormatConverter");
+		NPE_THROW_GFX_EXCEPT(pConverter->Initialize(
+			pSource,
 			GUID_WICPixelFormat32bppPBGRA,
 			WICBitmapDitherTypeNone,
-			nullptr,
+			NULL,
 			0.f,
-			WICBitmapPaletteTypeCustom
-		), "Failed to initialize converted source bitmap");
-		pFrame->Release();
+			WICBitmapPaletteTypeMedianCut
+		), "Failed to initialize IWICFormatConverter");
 
 		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->CreateBitmapFromWicBitmap(
-			pConvertedSourceBitmap, nullptr, &m_pD2DBitmap
-		), "Failed to create bitmap from wic bitmap");
-		pConvertedSourceBitmap->Release();
+			pConverter,
+			&m_pD2DBitmap
+		), "Failed to create bitmap from WIC bitmap");
+
+		Util::Release(&pDecoder);
+		Util::Release(&pSource);
+		Util::Release(&pStream);
+		Util::Release(&pConverter);
+		Util::Release(&pScaler);
 	}
 }
