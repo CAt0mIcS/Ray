@@ -114,7 +114,7 @@ namespace GUI
 			IID_PPV_ARGS(&pIWICFactory)
 		), "Failed to create WICImagingFactory");
 
-		imageResHandle = FindResource(GetModuleHandle(L"NPEGUI.dll"), MAKEINTRESOURCE(IDR_IMAGE1), L"Image");
+		imageResHandle = FindResource(GetModuleHandle(L"NPEGUI.dll"), MAKEINTRESOURCE(IDI_BGND_IMAGE), L"Image");
 		if (!imageResHandle)
 			NPE_THROW_WND_EXCEPT(GetLastError());
 
