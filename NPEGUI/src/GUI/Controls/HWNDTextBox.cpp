@@ -52,7 +52,7 @@ namespace GUI
 	void HWNDTextBox::Show()
 	{
 		ShowWindow(m_hWnd, SW_SHOWDEFAULT); 
-		SetWindowText(s_hWndEdit, m_Parent->m_Text.c_str());
+		SetWindowText(s_hWndEdit, m_Parent->m_Text.text.c_str());
 	}
 
 	LRESULT HWNDTextBox::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -7,6 +7,9 @@
 #include <d2d1.h>
 #include <dwrite.h>
 
+#include "GUI/Graphics/TextRenderer.h"
+
+
 namespace GUI
 {
 	class Node;
@@ -52,7 +55,7 @@ namespace GUI
 		* 
 		* @returns the current text
 		*/
-		const std::wstring& GetText() const { return m_Text; }
+		const std::wstring& GetText() const { return m_Text.text; }
 		
 		/**
 		* Setter for text displayed in the textbox
@@ -61,7 +64,7 @@ namespace GUI
 		* @warning function does not render the text, it just sets the member variable
 		* @see TextBox::RenderText()
 		*/
-		void SetText(const std::wstring& newText) { m_Text = newText; }
+		void SetText(const std::wstring& newText) { m_Text.text = newText; }
 
 		/**
 		* Setter for multiline textbox
@@ -75,7 +78,7 @@ namespace GUI
 		*
 		* @param family is the new font family
 		*/
-		void SetFontFamily(const std::wstring& family) { m_FontFamily = family; }
+		void SetFontFamily(const std::wstring& family) { m_Text.fontFamily = family; }
 
 		/**
 		* Setter for the font size
@@ -118,8 +121,7 @@ namespace GUI
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 
 	private:
-		std::wstring m_Text;
-		std::wstring m_FontFamily;
+		NText m_Text;
 
 		bool m_IsMultiline;
 		bool m_CurrentlySelecting;

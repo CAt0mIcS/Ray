@@ -48,13 +48,12 @@ namespace GUI
 
 		DWRITE_HIT_TEST_METRICS metrics;
 
-		float x = Mouse::GetPos().x;
-		float y = Mouse::GetPos().y;
+		float transformedX = Mouse::GetPos().x - text.pos.x;
+		float transformedY = Mouse::GetPos().y - text.pos.y;
 
-		//TODO: Apply transform to x and y to make relative to layout box: (0 | 0) is top left corner of text!
 		NPE_THROW_GFX_EXCEPT(m_pLayout->HitTestPoint(
-			20,
-			5,
+			transformedX,
+			transformedY,
 			isTrailingHit,
 			isInside,
 			&metrics),

@@ -22,7 +22,7 @@ using namespace Util;
 namespace GUI
 {
 	TextBox::TextBox(Control* parent)
-		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(0), m_CurrentlySelecting(true), m_IsMultiline(false)
+		: Control(parent), m_Text{}, m_FontSize(0), m_CurrentlySelecting(true), m_IsMultiline(false)
 	{
 		
 	}
@@ -62,10 +62,6 @@ namespace GUI
 	//TODO: Check if the text is too long and implement scrolling here
 	void TextBox::RenderText()
 	{
-		NText text;
-		text.text = m_Text;
-		text.fontFamily = m_FontFamily;
-		
 		float xOffset = m_Size.width / 30.0f;
 		float yOffset;
 		if (m_IsMultiline)
@@ -77,13 +73,13 @@ namespace GUI
 			yOffset = m_Size.height / 2.0f - m_FontSize / 2.0f;
 		}
 
-		text.fontSize = m_FontSize;
+		m_Text.fontSize = m_FontSize;
 
-		text.pos = Util::NPoint{ m_Pos.x + xOffset, m_Pos.y + yOffset };
-		text.size = { m_Size.width - xOffset, m_Size.height - yOffset };
+		m_Text.pos = Util::NPoint{ m_Pos.x + xOffset, m_Pos.y + yOffset };
+		m_Text.size = { m_Size.width - xOffset, m_Size.height - yOffset };
 
-		TextRenderer::Get().CreateTextLayout(text);
-		TextRenderer::Get().RenderText(text);
+		TextRenderer::Get().CreateTextLayout(m_Text);
+		TextRenderer::Get().RenderText(m_Text);
 	}
 
 	std::optional<std::pair<Util::NPoint, Util::NSize>> TextBox::CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize)
@@ -111,12 +107,11 @@ namespace GUI
 		if (e.GetButton() == MouseButton::Left)
 		{
 			m_CurrentlySelecting = true;
-			NText text{};
-			text.text = m_Text;
+			
 			BOOL isTrailingHit;
 			BOOL isInside;
 
-			auto metrics = TextRenderer::Get().HitTestPoint(text, &isTrailingHit, &isInside);
+			auto metrics = TextRenderer::Get().HitTestPoint(m_Text, &isTrailingHit, &isInside);
 
  			return true;
 		}
