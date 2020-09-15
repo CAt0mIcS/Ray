@@ -1,4 +1,6 @@
-#define _CRT_SECURE_NO_WARNINGS
+#ifdef _DEBUG
+	#define _CRT_SECURE_NO_WARNINGS
+#endif
 #include "pch.h"
 
 #include "NPE/Application.h"
@@ -8,8 +10,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 {
 	try
 	{
-		AllocConsole();
-		freopen("CONOUT$", "w", stdout);
+		/**
+		* QUESTION:
+		*	Should I indent #ifdef... like this or let VS position them to the left
+		*	Should I keep error handling in release builds
+		*/
+		#ifdef _DEBUG
+			AllocConsole();
+			freopen("CONOUT$", "w", stdout);
+		#endif
+
 		return NPE::Application{}.Run();
 	}
 	catch (NPE::Exception& e)

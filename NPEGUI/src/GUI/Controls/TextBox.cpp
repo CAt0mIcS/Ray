@@ -90,24 +90,19 @@ namespace GUI
 
 	bool TextBox::OnSetCursor(SetCursorEvent& e)
 	{
-		if (Mouse::IsOnControl(this))
-		{
-			SetCursor(LoadCursor(NULL, IDC_IBEAM));
-			return true;
-		}
-		else
-		{
-			SetCursor(LoadCursor(NULL, IDC_ARROW));
-			return true;
-		}
-		return false;
+		/**
+		* Mouse is already guaranteed to be on the control, we don't need to check here
+		* Default cursor is automatically restored when exiting the control
+		*/
+		TIMER;
+		SetCursor(LoadCursor(NULL, IDC_IBEAM));
+		return true;
 	}
 
 	bool TextBox::OnMouseButtonPressed(MouseButtonPressedEvent& e)
 	{
 		if (e.GetButton() == MouseButton::Left)
 		{
-			TIMER;
 			m_CurrentlySelecting = true;
 			
 			BOOL isTrailingHit;
