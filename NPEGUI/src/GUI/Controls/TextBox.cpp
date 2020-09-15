@@ -8,6 +8,8 @@
 #include "GUI/Events/KeyboardEvent.h"
 #include "GUI/Events/ApplicationEvent.h"
 
+#include "Util/Exceptions.h"
+
 /**
 * QUESTION:
 *	Should I be designing something like this GUI library only for this project or should I make it usable in another one?
@@ -20,7 +22,7 @@ using namespace Util;
 namespace GUI
 {
 	TextBox::TextBox(Control* parent)
-		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(0), m_IsMultiline(false), m_TextBoxWindow(this, CW_USEDEFAULT, CW_USEDEFAULT, 400, 300)
+		: Control(parent), m_Text(L""), m_FontFamily(L"Consolas"), m_FontSize(0), m_CurrentlySelecting(true), m_IsMultiline(false)
 	{
 		
 	}
@@ -80,9 +82,7 @@ namespace GUI
 		text.pos = Util::NPoint{ m_Pos.x + xOffset, m_Pos.y + yOffset };
 		text.size = { m_Size.width - xOffset, m_Size.height - yOffset };
 
-		auto metrics = TextRenderer::Get().GetTextMetrics(text);
-
-
+		TextRenderer::Get().CreateTextLayout(text);
 		TextRenderer::Get().RenderText(text);
 	}
 
@@ -110,21 +110,18 @@ namespace GUI
 	{
 		if (e.GetButton() == MouseButton::Left)
 		{
-			if (m_IsMultiline)
-			{
-				//display edit window
-				m_TextBoxWindow.Show();
-			}
-			else
-			{
-				//use normal single-line edit
+			m_CurrentlySelecting = true;
+			NText text{};
+			text.text = m_Text;
+			BOOL isTrailingHit;
+			BOOL isInside;
 
-			}
-			return true;
+			auto metrics = TextRenderer::Get().HitTestPoint(text, &isTrailingHit, &isInside);
+
+ 			return true;
 		}
 		return false;
 	}
-
 }
 
 

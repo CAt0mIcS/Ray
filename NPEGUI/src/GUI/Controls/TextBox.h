@@ -4,6 +4,8 @@
 
 #include "HWNDTextBox.h"
 
+#include <d2d1.h>
+#include <dwrite.h>
 
 namespace GUI
 {
@@ -120,8 +122,8 @@ namespace GUI
 		std::wstring m_FontFamily;
 
 		bool m_IsMultiline;
+		bool m_CurrentlySelecting;
 		float m_FontSize;
-		HWNDTextBox m_TextBoxWindow;
 	};
 }
 
