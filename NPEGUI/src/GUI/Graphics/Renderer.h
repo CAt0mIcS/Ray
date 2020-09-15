@@ -87,6 +87,13 @@ namespace GUI
 		*/
 		void RenderLine(const Util::NPoint& startPos, const Util::NPoint& endPos, const Util::NColor& color = g_DefaultLineColor, const float radius = 1.0f);
 
+		/**
+		* Getter for main HWND
+		* 
+		* @returns the main window's hWnd
+		*/
+		HWND GetNativeWindow() { return m_hWnd; }
+
 	private:
 		/**
 		* Private renderer constructor

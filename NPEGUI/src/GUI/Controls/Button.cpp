@@ -5,8 +5,6 @@
 #include "GUI/Events/MouseEvent.h"
 #include "GUI/Events/KeyboardEvent.h"
 
-using namespace Util;
-
 
 namespace GUI
 {

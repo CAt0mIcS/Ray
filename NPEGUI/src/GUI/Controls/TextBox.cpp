@@ -8,8 +8,6 @@
 #include "GUI/Events/KeyboardEvent.h"
 #include "GUI/Events/ApplicationEvent.h"
 
-#include "Util/Exceptions.h"
-
 #include "Util/Debug/Timer.h"
 
 /**
@@ -19,7 +17,6 @@
 */
 
 
-using namespace Util;
 
 namespace GUI
 {
@@ -130,6 +127,7 @@ namespace GUI
 			m_CurrentlySelecting = false;
 			return true;
 		}
+		return false;
 	}
 }
 

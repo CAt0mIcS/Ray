@@ -4,7 +4,6 @@
 #include "GUI/Handlers/Mouse.h"
 #include "GUI/Graphics/Renderer.h"
 
-using namespace Util;
 
 
 namespace GUI
@@ -35,7 +34,7 @@ namespace GUI
 		++m_NextId;
 	}
 
-	void Control::MoveBy(const NPoint& pos)
+	void Control::MoveBy(const Util::NPoint& pos)
 	{
 		for (auto& child : m_Children)
 		{
@@ -45,18 +44,18 @@ namespace GUI
 		m_Pos += pos;
 	}
 
-	void Control::MoveTo(const NPoint& pos)
+	void Control::MoveTo(const Util::NPoint& pos)
 	{
 		for (auto& child : m_Children)
 		{
-			NPoint ratio{ pos.x / m_Pos.x, pos.y / m_Pos.y };
+			Util::NPoint ratio{ pos.x / m_Pos.x, pos.y / m_Pos.y };
 			child->m_Pos += ratio;
 		}
 
 		m_Pos = pos;
 	}
 
-	void Control::ResizeBy(const NSize& size)
+	void Control::ResizeBy(const Util::NSize& size)
 	{
 		m_Size += size;
 		
@@ -73,7 +72,7 @@ namespace GUI
 
 	}
 
-	void Control::ResizeTo(const NSize& size)
+	void Control::ResizeTo(const Util::NSize& size)
 	{
 		m_Size = size;
 
@@ -90,7 +89,7 @@ namespace GUI
 	}
 
 	//TODO: Implement function
-	bool Control::OverlapsWith(const Control* other, const NSize& minDst)
+	bool Control::OverlapsWith(const Control* other, const Util::NSize& minDst)
 	{
 		//return m_Renderer.RoundedRectConrolsOverlap(*this, *other, minDst);
 		return false;
@@ -98,10 +97,10 @@ namespace GUI
 
 	bool Control::IsInWindow() const
 	{
-		//RECT rc;
-		//GetWindowRect(Renderer::Get().GetNativeWindow(), &rc);
-
-		//return m_Pos.x + m_Size.width > 0 && m_Pos.y + m_Size.height > 0 && m_Pos.x < rc.right && m_Pos.y < rc.bottom;
+		RECT rc;
+		GetWindowRect(Renderer::Get().GetNativeWindow(), &rc);
+		
+		return m_Pos.x + m_Size.width > 0 && m_Pos.y + m_Size.height > 0 && m_Pos.x < rc.right && m_Pos.y < rc.bottom;
 		return true;
 	}
 

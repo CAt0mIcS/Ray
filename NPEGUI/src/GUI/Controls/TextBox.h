@@ -2,11 +2,6 @@
 
 #include "Control.h"
 
-#include "HWNDTextBox.h"
-
-#include <d2d1.h>
-#include <dwrite.h>
-
 #include "GUI/Graphics/TextRenderer.h"
 
 /**

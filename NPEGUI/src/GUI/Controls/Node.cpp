@@ -7,8 +7,6 @@
 #include "GUI/Events/KeyboardEvent.h"
 
 
-using namespace Util;
-
 
 namespace GUI
 {

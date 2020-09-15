@@ -167,7 +167,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\GUI\Controls\HWNDTextBox.h" />
     <ClInclude Include="src\GUI\GUIApplication.h" />
     <ClInclude Include="src\GUIBase.h" />
     <ClInclude Include="src\GUI\Events\ApplicationEvent.h" />
@@ -188,7 +187,6 @@
     <ClInclude Include="src\GUI\Graphics\TextRenderer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GUI\Controls\HWNDTextBox.cpp" />
     <ClCompile Include="src\GUI\GUIApplication.cpp" />
     <ClCompile Include="src\GUI\Handlers\Keyboard.cpp" />
     <ClCompile Include="src\GUI\Handlers\Mouse.cpp" />
