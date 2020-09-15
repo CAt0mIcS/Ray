@@ -10,6 +10,8 @@
 
 #include "Util/Exceptions.h"
 
+#include "Util/Debug/Timer.h"
+
 /**
 * QUESTION:
 *	Should I be designing something like this GUI library only for this project or should I make it usable in another one?
@@ -22,7 +24,7 @@ using namespace Util;
 namespace GUI
 {
 	TextBox::TextBox(Control* parent)
-		: Control(parent), m_Text{}, m_FontSize(0), m_CurrentlySelecting(true), m_IsMultiline(false)
+		: Control(parent), m_Text{}, m_CurrentlySelecting(true), m_IsMultiline(false)
 	{
 		
 	}
@@ -52,10 +54,15 @@ namespace GUI
 		{
 			return OnMouseButtonPressed((MouseButtonPressedEvent&)e);
 		}
+		else if (e.GetType() == EventType::MouseButtonReleasedEvent)
+		{
+			return OnMouseButtonReleased((MouseButtonReleasedEvent&)e);
+		}
 		else if (e.GetType() == EventType::SetCursorEvent)
 		{
 			return OnSetCursor((SetCursorEvent&)e);
 		}
+		
 		return false;
 	}
 
@@ -70,15 +77,12 @@ namespace GUI
 		}
 		else
 		{
-			yOffset = m_Size.height / 2.0f - m_FontSize / 2.0f;
+			yOffset = m_Size.height / 2.0f - m_Text.fontSize / 2.0f;
 		}
-
-		m_Text.fontSize = m_FontSize;
 
 		m_Text.pos = Util::NPoint{ m_Pos.x + xOffset, m_Pos.y + yOffset };
 		m_Text.size = { m_Size.width - xOffset, m_Size.height - yOffset };
 
-		TextRenderer::Get().CreateTextLayout(m_Text);
 		TextRenderer::Get().RenderText(m_Text);
 	}
 
@@ -106,16 +110,26 @@ namespace GUI
 	{
 		if (e.GetButton() == MouseButton::Left)
 		{
+			TIMER;
 			m_CurrentlySelecting = true;
 			
 			BOOL isTrailingHit;
 			BOOL isInside;
-
+			
 			auto metrics = TextRenderer::Get().HitTestPoint(m_Text, &isTrailingHit, &isInside);
 
  			return true;
 		}
 		return false;
+	}
+
+	bool TextBox::OnMouseButtonReleased(MouseButtonReleasedEvent& e)
+	{
+		if (e.GetButton() == MouseButton::Left)
+		{
+			m_CurrentlySelecting = false;
+			return true;
+		}
 	}
 }
 

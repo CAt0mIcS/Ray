@@ -18,40 +18,38 @@ namespace GUI
 
 	DWRITE_TEXT_METRICS TextRenderer::GetTextMetrics(const NText& text)
 	{
-		//TODO: Add exception which will be thrown if the user didn't call CreateTextLayout
-		if (!m_pLayout)
-			return {};
+		IDWriteTextLayout* pLayout;
+		CreateTextLayout(text, &pLayout);
 
 		DWRITE_TEXT_METRICS metrics;
-		CreateTextLayout(text);
 
-		NPE_THROW_GFX_EXCEPT(m_pLayout->GetMetrics(&metrics), "Failed to get text metrics");
+		NPE_THROW_GFX_EXCEPT(pLayout->GetMetrics(&metrics), "Failed to get text metrics");
+		Util::Release(&pLayout);
 
 		return metrics;
 	}
 
 	void TextRenderer::RenderText(const NText& text)
 	{
-		//TODO: Add exception which will be thrown if the user didn't call CreateTextLayout
-		if (!m_pLayout)
-			return;
+		IDWriteTextLayout* pLayout;
+		CreateTextLayout(text, &pLayout);
 
 		Renderer::Get().m_pBrush->SetColor(text.color.ToD2D1ColorF());
-		Renderer::Get().m_pRenderTarget->DrawTextLayout(text.pos.ToD2D1Point2F(), m_pLayout.Get(), Renderer::Get().m_pBrush.Get());
+		Renderer::Get().m_pRenderTarget->DrawTextLayout(text.pos.ToD2D1Point2F(), pLayout, Renderer::Get().m_pBrush.Get());
+		Util::Release(&pLayout);
 	}
 
 	DWRITE_HIT_TEST_METRICS TextRenderer::HitTestPoint(const NText& text, BOOL* isTrailingHit, BOOL* isInside)
 	{
-		//TODO: Add exception which will be thrown if the user didn't call CreateTextLayout
-		if (!m_pLayout)
-			return{};
+		IDWriteTextLayout* pLayout;
+		CreateTextLayout(text, &pLayout);
 
 		DWRITE_HIT_TEST_METRICS metrics;
 
 		float transformedX = Mouse::GetPos().x - text.pos.x;
 		float transformedY = Mouse::GetPos().y - text.pos.y;
 
-		NPE_THROW_GFX_EXCEPT(m_pLayout->HitTestPoint(
+		NPE_THROW_GFX_EXCEPT(pLayout->HitTestPoint(
 			transformedX,
 			transformedY,
 			isTrailingHit,
@@ -59,6 +57,8 @@ namespace GUI
 			&metrics),
 			"Failed to run DWriteTextLayout::HitTestPoint"
 		);
+
+		Util::Release(&pLayout);
 		return metrics;
 	}
 
@@ -72,7 +72,7 @@ namespace GUI
 			__uuidof(m_pFactory), &m_pFactory), "Failed to create IDWriteFactory");
 	}
 	
-	void TextRenderer::CreateTextLayout(const NText& text)
+	void TextRenderer::CreateTextLayout(const NText& text, IDWriteTextLayout** ppLayout)
 	{
 		IDWriteTextFormat* pFormat;
 		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateTextFormat(text.fontFamily.c_str(),
@@ -82,7 +82,7 @@ namespace GUI
 
 		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateTextLayout(
 			text.text.c_str(), (UINT32)wcslen(text.text.c_str()), pFormat,
-			text.size.width, text.size.height, &m_pLayout), 
+			text.size.width, text.size.height, ppLayout), 
 			"Failed to create DWriteTextLayout"
 		);
 

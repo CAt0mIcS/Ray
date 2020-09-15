@@ -9,12 +9,18 @@
 
 #include "GUI/Graphics/TextRenderer.h"
 
+/**
+* QUESTION:
+*	Should I add class declarations like this or just include the header?
+*/
+
 
 namespace GUI
 {
 	class Node;
 	class MouseButtonPressedEvent;
 	class SetCursorEvent;
+	class MouseButtonReleasedEvent;
 
 	class GUI_API TextBox : public Control
 	{
@@ -22,7 +28,7 @@ namespace GUI
 	public:
 		/**
 		* TextBox constructor
-		* 
+		*
 		* @param paarent is the parent control
 		*/
 		TextBox(Control* parent = nullptr);
@@ -45,21 +51,21 @@ namespace GUI
 
 		/**
 		* Renders text in member variable
-		* 
+		*
 		* @see TextBox::SetText()
 		*/
 		void RenderText();
 
 		/**
 		* Getter for current text in textbox
-		* 
+		*
 		* @returns the current text
 		*/
 		const std::wstring& GetText() const { return m_Text.text; }
-		
+
 		/**
 		* Setter for text displayed in the textbox
-		* 
+		*
 		* @param newText is the new text for the textbox
 		* @warning function does not render the text, it just sets the member variable
 		* @see TextBox::RenderText()
@@ -68,7 +74,7 @@ namespace GUI
 
 		/**
 		* Setter for multiline textbox
-		* 
+		*
 		* @param multiline should be true if the textbox should be multiline, false otherwise
 		*/
 		void SetMultiline(const bool multiline) { m_IsMultiline = multiline; }
@@ -85,18 +91,18 @@ namespace GUI
 		*
 		* @param size is the new font size
 		*/
-		void SetFontSize(const float size) { m_FontSize = size; }
+		void SetFontSize(const float size) { m_Text.fontSize = size; }
 
 		/**
 		* Getter for font size
-		* 
+		*
 		* @returns the current font size of the text
 		*/
-		float GetFontSize() const { return m_FontSize; }
+		float GetFontSize() const { return m_Text.fontSize; }
 
 		/**
 		* Calculates the layout of a new textbox
-		* 
+		*
 		* @param parentPos is the position of the parent control
 		* @param parentSize is the size of the parent control
 		* @returns the new position and size of the layout
@@ -106,26 +112,34 @@ namespace GUI
 	private:
 		/**
 		* Handles cursor changed events
-		* 
+		*
 		* @param e is the cursor event
 		* @returns true if the event was handled, false otherwise
 		*/
 		bool OnSetCursor(SetCursorEvent& e);
 
 		/**
-		* Handles left clicked mouse button press, opens the edit window
-		* 
+		* Handles left clicked mouse button press
+		*
 		* @param e is the received event
 		* @returns true if the event was handled, false otherwise
 		*/
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
+
+		/**
+		* Handles left clicked mouse button release
+		*
+		* @param e is the received event
+		* @returns true if the event was handled, false otherwise
+		*/
+		bool OnMouseButtonReleased(MouseButtonReleasedEvent& e);
 
 	private:
 		NText m_Text;
 
 		bool m_IsMultiline;
 		bool m_CurrentlySelecting;
-		float m_FontSize;
+
 	};
 }
 

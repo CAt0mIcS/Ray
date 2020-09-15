@@ -61,7 +61,7 @@ namespace GUI
 		* TODO: Add documentation
 		*/
 		DWRITE_HIT_TEST_METRICS HitTestPoint(const NText& text, BOOL* isTrailingHit, BOOL* isInside);
-		void CreateTextLayout(const NText& text);
+		void CreateTextLayout(const NText& text, IDWriteTextLayout** ppLayout);
 
 	private:
 		TextRenderer();
@@ -70,7 +70,6 @@ namespace GUI
 
 	private:
 		Microsoft::WRL::ComPtr<IDWriteFactory> m_pFactory;
-		Microsoft::WRL::ComPtr<IDWriteTextLayout> m_pLayout;
 
 		static TextRenderer* s_TextRenderer;
 	};
