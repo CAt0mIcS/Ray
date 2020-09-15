@@ -83,14 +83,9 @@ namespace GUI
 		NPE_THROW_GFX_EXCEPT(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED,
 			__uuidof(m_pWriteFactory), &m_pWriteFactory), "Failed to create DWriteFactory");
 
-		D2D1_COLOR_F col;
-		col.r = g_DefaultWindowBackgroundColor.r;
-		col.g = g_DefaultWindowBackgroundColor.g;
-		col.b = g_DefaultWindowBackgroundColor.b;
-		col.a = 1.0f;
-
+		D2D1_COLOR_F backgroundColor = g_DefaultWindowBackgroundColor.ToD2D1ColorF();
 		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->CreateSolidColorBrush(
-			col, &m_pBrush
+			backgroundColor, &m_pBrush
 		), "Failed to create D2D1SolidColorBrush");
 
 
