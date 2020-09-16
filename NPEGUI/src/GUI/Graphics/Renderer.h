@@ -69,6 +69,14 @@ namespace GUI
 		void RenderRect(const Util::NPoint& pos, const Util::NSize& size, const Util::NColor& color);
 
 		/**
+		* Draws a filled rectangle with specified arguments
+		*
+		* @param rect is the rect of the rectangle to draw
+		* @param color are the rgb values of the rect
+		*/
+		void RenderRect(const D2D1_RECT_F& rect, const Util::NColor& color);
+
+		/**
 		* Draws a filled rounded rectangle with specified arguments
 		*
 		* @param pos is the x and y coordinate of the rounded rect

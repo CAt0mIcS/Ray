@@ -39,7 +39,7 @@ namespace GUI
 		Util::Release(&pLayout);
 	}
 
-	DWRITE_HIT_TEST_METRICS TextRenderer::HitTestPoint(const NText& text, BOOL* isTrailingHit, BOOL* isInside)
+	DWRITE_HIT_TEST_METRICS TextRenderer::HitTestPoint(_In_ const NText& text, _Out_ BOOL* isTrailingHit, _Out_ BOOL* isInside)
 	{
 		IDWriteTextLayout* pLayout;
 		CreateTextLayout(text, &pLayout);
@@ -57,6 +57,25 @@ namespace GUI
 			&metrics),
 			"Failed to run DWriteTextLayout::HitTestPoint"
 		);
+
+		Util::Release(&pLayout);
+		return metrics;
+	}
+
+	DWRITE_HIT_TEST_METRICS TextRenderer::HitTestTextPosition(_In_ const NText& text, _In_ unsigned int textPos, _In_ BOOL isTrailingHit, _Out_ float* caretX, _Out_ float* caretY)
+	{
+		IDWriteTextLayout* pLayout;
+		CreateTextLayout(text, &pLayout);
+
+		DWRITE_HIT_TEST_METRICS metrics;
+
+		NPE_THROW_GFX_EXCEPT(pLayout->HitTestTextPosition(
+			textPos,
+			isTrailingHit,
+			caretX,
+			caretY,
+			&metrics
+		), "Failed to run DWriteTextLayout::HitTestTextPosition");
 
 		Util::Release(&pLayout);
 		return metrics;

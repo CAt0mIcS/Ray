@@ -21,7 +21,7 @@
 namespace GUI
 {
 	TextBox::TextBox(Control* parent)
-		: Control(parent), m_Text{}, m_CurrentlySelecting(true), m_IsMultiline(false)
+		: Control(parent), m_Text{}, m_CurrentlySelecting(true), m_IsMultiline(false), m_Caret(this)
 	{
 		
 	}
@@ -38,6 +38,15 @@ namespace GUI
 			const float max = std::min(GetSize().width, GetSize().height);
 			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
 			RenderText();
+
+			auto caretRect = m_Caret.GetCaretRect();
+
+			caretRect.left += m_Pos.x;
+			caretRect.top += m_Pos.y + 55;
+			caretRect.right = caretRect.left + 1;
+			caretRect.bottom = caretRect.top + m_Text.fontSize;
+
+			Renderer::Get().RenderRect(caretRect, { 255, 255, 255 });
 
 			return true;
 		}
@@ -94,7 +103,6 @@ namespace GUI
 		* Mouse is already guaranteed to be on the control, we don't need to check here
 		* Default cursor is automatically restored when exiting the control
 		*/
-		TIMER;
 		SetCursor(LoadCursor(NULL, IDC_IBEAM));
 		return true;
 	}
@@ -105,10 +113,17 @@ namespace GUI
 		{
 			m_CurrentlySelecting = true;
 			
+			bool extendSelection = false;
 			BOOL isTrailingHit;
 			BOOL isInside;
 			
-			auto metrics = TextRenderer::Get().HitTestPoint(m_Text, &isTrailingHit, &isInside);
+			auto caretMetrics = TextRenderer::Get().HitTestPoint(m_Text, &isTrailingHit, &isInside);
+
+			m_Caret.SetSelection(
+				isTrailingHit ? Caret::SetSelectionMode::AbsoluteTrailing : Caret::SetSelectionMode::AbsoluteLeading,
+				caretMetrics.textPosition,
+				extendSelection
+			);
 
  			return true;
 		}
@@ -123,6 +138,128 @@ namespace GUI
 			return true;
 		}
 		return false;
+	}
+
+
+	/******************
+	*****  Caret  *****
+	*******************/
+	TextBox::Caret::Caret(TextBox* parent)
+		: m_Parent(parent), m_CaretPos(0), m_CaretPosOffset(0), m_CaretAnchor(0), m_CaretFormat{}
+	{
+
+	}
+
+	void TextBox::Caret::SetSelection(SetSelectionMode moveMode, unsigned int advance, bool extendSelection, bool updateCaretFormat)
+	{
+		unsigned int absolutePosition = m_CaretPos + m_CaretPosOffset;
+		unsigned int oldAbsolutePosition = absolutePosition;
+		unsigned int oldCaretAnchor = m_CaretAnchor;
+
+		switch (moveMode)
+		{
+		case SetSelectionMode::AbsoluteLeading:
+		{
+			m_CaretPos = advance;
+			m_CaretPosOffset = 0;
+			break;
+		}
+		case SetSelectionMode::AbsoluteTrailing:
+		{
+			m_CaretPos = advance;
+			AlignCaretToNearestCluster(true);
+			break;
+		}
+		}
+
+		absolutePosition = m_CaretPos + m_CaretPosOffset;
+		if (!extendSelection)
+			m_CaretAnchor = absolutePosition;
+
+		bool caretMoved = (absolutePosition != oldAbsolutePosition)
+			|| (m_CaretAnchor != oldCaretAnchor);
+
+		if (caretMoved)
+		{
+			if (updateCaretFormat)
+			{
+				UpdateCaretFormatting();
+			}
+			Renderer::Get().BeginDraw();
+			m_Parent->Render();
+			Renderer::Get().EndDraw();
+		}
+	}
+
+	void TextBox::Caret::AlignCaretToNearestCluster(bool isTrailingHit, bool skipZeroWidth)
+	{
+		float caretX, caretY;
+
+		auto hitTestMetrics = TextRenderer::Get().HitTestTextPosition(
+			m_Parent->GetText(),
+			m_CaretPos,
+			false,
+			&caretX,
+			&caretY
+		);
+
+		m_CaretPos = hitTestMetrics.textPosition;
+		m_CaretPosOffset = (isTrailingHit) ? hitTestMetrics.length : 0;
+
+		if (skipZeroWidth && hitTestMetrics.width == 0)
+		{
+			m_CaretPos += m_CaretPosOffset;
+			m_CaretPosOffset = 0;
+		}
+	}
+
+	void TextBox::Caret::UpdateCaretFormatting()
+	{
+		unsigned int currentPos = m_CaretPos + m_CaretPosOffset;
+
+		IDWriteTextLayout* pLayout;
+		TextRenderer::Get().CreateTextLayout(m_Parent->GetText(), &pLayout);
+
+		if (currentPos > 0)
+		{
+			//Adopt trailing properties
+			--currentPos;
+		}
+
+		// Get the family name
+		m_CaretFormat.fontFamilyName[0] = '\0';
+		pLayout->GetFontFamilyName(currentPos, &m_CaretFormat.fontFamilyName[0], ARRAYSIZE(m_CaretFormat.fontFamilyName));
+
+		// Get the locale
+		m_CaretFormat.localeName[0] = '\0';
+		pLayout->GetLocaleName(currentPos, &m_CaretFormat.localeName[0], ARRAYSIZE(m_CaretFormat.localeName));
+
+		// Get the remaining attributes...
+		pLayout->GetFontWeight(currentPos, &m_CaretFormat.fontWeight);
+		pLayout->GetFontStyle(currentPos, &m_CaretFormat.fontStyle);
+		pLayout->GetFontStretch(currentPos, &m_CaretFormat.fontStretch);
+		pLayout->GetFontSize(currentPos, &m_CaretFormat.fontSize);
+		pLayout->GetUnderline(currentPos, &m_CaretFormat.hasUnderline);
+		pLayout->GetStrikethrough(currentPos, &m_CaretFormat.hasStrikethrough);
+	}
+
+	D2D1_RECT_F TextBox::Caret::GetCaretRect()
+	{
+		D2D1_RECT_F rc{};
+
+		float caretX, caretY;
+		auto caretMetrics = TextRenderer::Get().HitTestTextPosition(m_Parent->GetText(), m_CaretPos, m_CaretPosOffset > 0, &caretX, &caretY);
+
+		unsigned int caretIntThickness = 2;
+		SystemParametersInfo(SPI_GETCARETWIDTH, 0, &caretIntThickness, FALSE);
+		const float caretThickness = (float)caretIntThickness;
+
+		rc.left = caretX - caretThickness / 2.0f;
+		rc.right = rc.left + caretThickness;
+		rc.top = caretY;
+		rc.bottom = caretY + caretMetrics.height;
+
+		return rc;
 	}
 }
 

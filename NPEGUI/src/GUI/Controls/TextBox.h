@@ -20,6 +20,65 @@ namespace GUI
 	class GUI_API TextBox : public Control
 	{
 		friend class HWNDTextBox;
+	private:
+		class Caret
+		{
+		public:
+			enum class SetSelectionMode
+			{
+				AbsoluteTrailing,
+				AbsoluteLeading
+			};
+
+		public:
+			//TODO: Add functionality
+			Caret(TextBox* parent);
+
+			void SetPos(unsigned int pos) { m_CaretPos = pos; }
+			void SetPosOffset(unsigned int offset) { m_CaretPosOffset = offset; }
+			void SetAnchor(unsigned int anchor) { m_CaretAnchor = anchor; }
+
+			unsigned int Pos() { return m_CaretPos; }
+			unsigned int PosOffset() { return m_CaretPosOffset; }
+			unsigned int Anchor() { return m_CaretAnchor; }
+
+			void SetSelection(SetSelectionMode moveMode, unsigned int advance, bool extendSelection, bool updateCaretFormat = true);
+
+			void AlignCaretToNearestCluster(bool isTrailingHit = false, bool skipZeroWidth = false);
+
+			void UpdateCaretFormatting();
+
+			/**
+			* Calculate caret rect
+			* 
+			* @returns the caret pos and size relative to the text layout box
+			*/
+			D2D1_RECT_F GetCaretRect();
+
+		private:
+			struct CaretFormat
+			{
+				// The important range based properties for the current caret.
+				// Note these are stored outside the layout, since the current caret
+				// actually has a format, independent of the text it lies between.
+				wchar_t fontFamilyName[100];
+				wchar_t localeName[LOCALE_NAME_MAX_LENGTH];
+				FLOAT fontSize;
+				DWRITE_FONT_WEIGHT fontWeight;
+				DWRITE_FONT_STRETCH fontStretch;
+				DWRITE_FONT_STYLE fontStyle;
+				UINT32 color;
+				BOOL hasUnderline;
+				BOOL hasStrikethrough;
+			};
+
+			CaretFormat m_CaretFormat;
+			unsigned int m_CaretPos;
+			unsigned int m_CaretPosOffset;
+			unsigned int m_CaretAnchor;
+			TextBox* m_Parent;
+		};
+
 	public:
 		/**
 		* TextBox constructor
@@ -56,7 +115,7 @@ namespace GUI
 		*
 		* @returns the current text
 		*/
-		const std::wstring& GetText() const { return m_Text.text; }
+		const NText& GetText() const { return m_Text; }
 
 		/**
 		* Setter for text displayed in the textbox
@@ -131,6 +190,8 @@ namespace GUI
 
 	private:
 		NText m_Text;
+
+		Caret m_Caret;
 
 		bool m_IsMultiline;
 		bool m_CurrentlySelecting;

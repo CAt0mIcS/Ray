@@ -2,6 +2,10 @@
 // Microsoft Visual C++ generated include file.
 // Used by Resource.rc
 //
+
+/**
+* Background image resource ID
+*/
 #define IDI_BGND_IMAGE                  101
 
 // Next default values for new objects

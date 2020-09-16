@@ -60,7 +60,9 @@ namespace GUI
 		/**
 		* TODO: Add documentation
 		*/
-		DWRITE_HIT_TEST_METRICS HitTestPoint(const NText& text, BOOL* isTrailingHit, BOOL* isInside);
+		DWRITE_HIT_TEST_METRICS HitTestPoint(_In_ const NText& text, _Out_ BOOL* isTrailingHit, _Out_ BOOL* isInside);
+		DWRITE_HIT_TEST_METRICS HitTestTextPosition(_In_ const NText& text, _In_ unsigned int textPos, _In_ BOOL isTrailingHit, _Out_ float* caretX, _Out_ float* caretY);
+		
 		void CreateTextLayout(const NText& text, IDWriteTextLayout** ppLayout);
 
 	private:
