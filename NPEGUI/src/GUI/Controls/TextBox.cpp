@@ -41,10 +41,22 @@ namespace GUI
 
 			auto caretRect = m_Caret.GetCaretRect();
 
-			caretRect.left += m_Pos.x;
-			caretRect.top += m_Pos.y + 55;
-			caretRect.right = caretRect.left + 1;
-			caretRect.bottom = caretRect.top + m_Text.fontSize;
+			float xOffset = m_Size.width / 30.0f;
+			caretRect.left += (m_Pos.x + xOffset);
+
+			float yOffset;
+			if (m_IsMultiline)
+			{
+				yOffset = m_Size.height / 10.0f;
+			}
+			else
+			{
+				yOffset = m_Size.height / 2.0f - m_Text.fontSize / 2.0f;
+			}
+
+			caretRect.top += m_Pos.y + yOffset;
+			caretRect.right = caretRect.left + m_Caret.GetCaretThickness();
+			caretRect.bottom += caretRect.top;
 
 			Renderer::Get().RenderRect(caretRect, { 255, 255, 255 });
 
@@ -250,9 +262,7 @@ namespace GUI
 		float caretX, caretY;
 		auto caretMetrics = TextRenderer::Get().HitTestTextPosition(m_Parent->GetText(), m_CaretPos, m_CaretPosOffset > 0, &caretX, &caretY);
 
-		unsigned int caretIntThickness = 2;
-		SystemParametersInfo(SPI_GETCARETWIDTH, 0, &caretIntThickness, FALSE);
-		const float caretThickness = (float)caretIntThickness;
+		const float caretThickness = GetCaretThickness();
 
 		rc.left = caretX - caretThickness / 2.0f;
 		rc.right = rc.left + caretThickness;
@@ -260,6 +270,13 @@ namespace GUI
 		rc.bottom = caretY + caretMetrics.height;
 
 		return rc;
+	}
+
+	float TextBox::Caret::GetCaretThickness()
+	{
+		unsigned int caretIntThickness = 2;
+		SystemParametersInfo(SPI_GETCARETWIDTH, 0, &caretIntThickness, FALSE);
+		return (float)caretIntThickness;
 	}
 }
 

@@ -55,6 +55,8 @@ namespace GUI
 			*/
 			D2D1_RECT_F GetCaretRect();
 
+			float GetCaretThickness();
+
 		private:
 			struct CaretFormat
 			{
