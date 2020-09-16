@@ -106,6 +106,11 @@ namespace GUI
 		virtual bool OnEvent(Event& e) override;
 
 		/**
+		* Renders caret to position in text
+		*/
+		void RenderCaret();
+
+		/**
 		* Renders text in member variable
 		*
 		* @see TextBox::SetText()

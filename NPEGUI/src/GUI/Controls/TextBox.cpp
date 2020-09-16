@@ -38,27 +38,7 @@ namespace GUI
 			const float max = std::min(GetSize().width, GetSize().height);
 			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
 			RenderText();
-
-			auto caretRect = m_Caret.GetCaretRect();
-
-			float xOffset = m_Size.width / 30.0f;
-			caretRect.left += (m_Pos.x + xOffset);
-
-			float yOffset;
-			if (m_IsMultiline)
-			{
-				yOffset = m_Size.height / 10.0f;
-			}
-			else
-			{
-				yOffset = m_Size.height / 2.0f - m_Text.fontSize / 2.0f;
-			}
-
-			caretRect.top += m_Pos.y + yOffset;
-			caretRect.right = caretRect.left + m_Caret.GetCaretThickness();
-			caretRect.bottom += caretRect.top;
-
-			Renderer::Get().RenderRect(caretRect, { 255, 255, 255 });
+			RenderCaret();
 
 			return true;
 		}
@@ -84,7 +64,30 @@ namespace GUI
 		return false;
 	}
 
-	//TODO: Check if the text is too long and implement scrolling here
+	void TextBox::RenderCaret()
+	{
+		auto caretRect = m_Caret.GetCaretRect();
+
+		float xOffset = m_Size.width / 30.0f;
+		caretRect.left += (m_Pos.x + xOffset);
+
+		float yOffset;
+		if (m_IsMultiline)
+		{
+			yOffset = m_Size.height / 10.0f;
+		}
+		else
+		{
+			yOffset = m_Size.height / 2.0f - m_Text.fontSize / 2.0f;
+		}
+
+		caretRect.top += m_Pos.y + yOffset;
+		caretRect.right = caretRect.left + m_Caret.GetCaretThickness();
+		caretRect.bottom += caretRect.top;
+
+		Renderer::Get().RenderRect(caretRect, { 255, 255, 255 });
+	}
+
 	void TextBox::RenderText()
 	{
 		float xOffset = m_Size.width / 30.0f;
