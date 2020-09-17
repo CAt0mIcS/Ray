@@ -66,6 +66,22 @@ namespace NPE
 		m_WhatBuffer = oss.str();
 		return m_WhatBuffer.c_str();
 	}
+	
+	MSGException::MSGException(const char* message, unsigned int line, const char* file)
+		: Exception(line, file), m_Message(message)
+	{
+
+	}
+	
+	const wchar_t* MSGException::what() const
+	{
+		std::wstringstream oss;
+		oss << GetType() << '\n'
+			<< "\t[Message] " << m_Message << '\n'
+			<< GetOriginString();
+		m_WhatBuffer = oss.str();
+		return m_WhatBuffer.c_str();
+	}
 }
 
 

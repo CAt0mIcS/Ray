@@ -11,6 +11,8 @@
 #include "GUI/Graphics/Renderer.h"
 #include "GUI/Graphics/TextRenderer.h"
 
+#include "GUI/Util/Timer.h"
+
 
 namespace GUI
 {
@@ -23,7 +25,7 @@ namespace GUI
 	*/
 	using EventCallbackFn = std::function<bool(GUI::Control* watched, GUI::Event& e)>;
 
-	class MainWindow : public BaseWindow<MainWindow>, public Control
+	class GUI_API MainWindow : public BaseWindow<MainWindow>, public Control
 	{
 	public:
 		/**
@@ -106,6 +108,14 @@ namespace GUI
 		template<typename F>
 		void SetEventCallback(F&& func) { m_EventCallbackFn = func; }
 
+		/**
+		* Creates a new timer
+		* 
+		* @param time is the time in milliseconds the timer runs
+		* @param repeats is true if the timer should repeat
+		*/
+		void CreateTimer(unsigned int time, bool repeats);
+
 	private:
 		/**
 		* Receives all events, finds the event receiver and dispatches the event to first the receiver and then the user
@@ -115,8 +125,17 @@ namespace GUI
 		*/
 		bool DispatchEvent(Event& e);
 
+		/**
+		* Handles WM_TIMER message
+		* 
+		* @param id is the wParam (the timer id) of the WM_TIMER message
+		* @returns true if the message was handled
+		*/
+		bool HandleTimer(unsigned int id);
+
 	private:
 		EventCallbackFn m_EventCallbackFn;
+		std::vector<Timer> m_Timers;
 
 	};
 

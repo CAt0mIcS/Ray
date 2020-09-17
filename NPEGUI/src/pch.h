@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include <sstream>
 
 #include <wrl.h>
 #pragma comment(lib, "dwrite.lib")

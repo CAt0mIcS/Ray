@@ -129,6 +129,36 @@ namespace NPE
 		const char* m_Message;
 	};
 
+	class MSGException : public Exception
+	{
+	public:
+		/**
+		* Exception with message contructor
+		*
+		* @param message is the message to display if the error occurs
+		* @param line is the line where the error occured
+		* @param file is the file where the error occured
+		*/
+		MSGException(const char* message, unsigned int line, const char* file);
+
+		/**
+		* Getter for string with type
+		*
+		* @returns string with type
+		*/
+		virtual const wchar_t* GetType() const override { return L"NPE Exception with message"; }
+
+		/**
+		* Getter for more information about the error
+		*
+		* @returns more information about the erro
+		*/
+		virtual const wchar_t* what() const override;
+
+	private:
+		const char* m_Message;
+	};
+
 }
 
 
@@ -136,3 +166,4 @@ namespace NPE
 
 #define NPE_THROW_WND_EXCEPT(hr) throw NPE::WindowException(hr, __LINE__, __FILE__)
 #define NPE_THROW_GFX_EXCEPT(hr, msg) if(FAILED(hr)) throw NPE::GraphicsException(hr, __LINE__, __FILE__, msg)
+#define NPE_THROW_EXCEPT_MSG(msg) throw NPE::MSGException(msg, __LINE__, __FILE__)

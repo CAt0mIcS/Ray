@@ -3,6 +3,8 @@
 #include "Event.h"
 #include "Util/Util.h"
 
+#include "GUI/Util/Timer.h"
+
 
 namespace GUI
 {
@@ -32,6 +34,28 @@ namespace GUI
 
 	private:
 		Util::NSize m_Size;
+	};
+
+
+	/**
+	* QUESTION:
+	*	Shoud I add "friend class MainWindow" to every event to be able to access hWnd and timerId or make public getters
+	*/
+
+	class TimerEvent : public Event
+	{
+	public:
+		TimerEvent(Timer* timer)
+			: m_Timer(timer)
+		{
+		}
+
+		Timer* GetTimer() const { return m_Timer; }
+
+		NPE_DECLARE_TYPE_FN(TimerEvent)
+
+	private:
+		Timer* m_Timer;
 	};
 
 	class SetCursorEvent : public Event

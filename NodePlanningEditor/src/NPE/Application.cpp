@@ -50,6 +50,11 @@ namespace NPE
 		{
 			return OnMouseButtonPressed((GUI::MouseButtonPressedEvent&)e);
 		}
+		case GUI::EventType::TimerEvent:
+		{
+			std::cout << "H\n";
+			return true;
+		}
 		}
 		return false;
 	}
@@ -81,6 +86,10 @@ namespace NPE
 		{
 			m_MousePos = GUI::Mouse::GetPos();
 			return true;
+		}
+		if (e.GetButton() == GUI::MouseButton::Left)
+		{
+			m_Window.CreateTimer(1000, true);
 		}
 		return false;
 	}

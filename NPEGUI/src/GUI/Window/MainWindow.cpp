@@ -7,6 +7,8 @@
 
 #include "Util/Exceptions.h"
 
+#include "GUI/Util/Timer.h"
+
 
 namespace GUI
 {
@@ -175,10 +177,15 @@ namespace GUI
 			if (!DispatchEvent(e)) break;
 			return 0;
 		}
+		case WM_TIMER:
+		{
+			if (!HandleTimer((unsigned int)wParam)) break;
+			return 0;
+		}
 		case WM_CLOSE:
 		{
 			AppCloseEvent e;
-			if (!DispatchEvent(e)) break;
+			DispatchEvent(e);
 			break;
 		}
 		}
@@ -205,6 +212,12 @@ namespace GUI
 		return rc;
 	}
 	
+	void MainWindow::CreateTimer(unsigned int time, bool repeats)
+	{
+		auto& timer = m_Timers.emplace_back(m_hWnd, repeats);
+		timer.Run(time);
+	}
+
 	bool MainWindow::DispatchEvent(Event& e)
 	{
 		if (!m_EventCallbackFn)
@@ -225,5 +238,46 @@ namespace GUI
 
 		//call event filter set by user
 		return m_EventCallbackFn(receiver, e);
+	}
+	
+	bool MainWindow::HandleTimer(unsigned int id)
+	{
+		unsigned int idInVec = 0xffffffff;
+		Timer* timer = nullptr;
+
+		for (unsigned int i = 0; i < m_Timers.size(); ++i)
+		{
+			if (m_Timers[i].GetId() == id)
+			{
+				timer = &m_Timers[i];
+				idInVec = i;
+			}
+		}
+
+		auto destroyTimerFn = [&]()
+		{
+			if (!timer->IsRepeating())
+			{
+				timer->Destroy();
+				m_Timers.erase(m_Timers.begin() + idInVec);
+			}
+		};
+
+		if (!timer)
+		{
+			std::ostringstream oss;
+			oss << "Failed to find timer with ID " << id << '\n';
+			NPE_THROW_EXCEPT_MSG(oss.str().c_str());
+		}
+
+		TimerEvent e(timer);
+		if (!DispatchEvent(e))
+		{
+			destroyTimerFn();
+			return false;
+		}
+
+		destroyTimerFn();
+		return true;
 	}
 }
