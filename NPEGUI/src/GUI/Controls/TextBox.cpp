@@ -173,6 +173,32 @@ namespace GUI
 
 		switch (moveMode)
 		{
+		case SetSelectionMode::Left:
+		{
+			break;
+		}
+		case SetSelectionMode::Right:
+		{
+			break;
+		}
+		case SetSelectionMode::LeftChar:
+		{
+			break;
+		}
+		case SetSelectionMode::RightChar:
+		{
+			break;
+		}
+		case SetSelectionMode::Up:
+		case SetSelectionMode::Down:
+		{
+			break;
+		}
+		case SetSelectionMode::LeftWord:
+		case SetSelectionMode::RightWord:
+		{
+			break;
+		}
 		case SetSelectionMode::AbsoluteLeading:
 		{
 			m_CaretPos = advance;

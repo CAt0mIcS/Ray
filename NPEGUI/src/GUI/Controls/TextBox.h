@@ -29,8 +29,6 @@ namespace GUI
 			*/
 			enum class SetSelectionMode
 			{
-				AbsoluteTrailing,
-				AbsoluteLeading,
 				Right,
 				Left,
 				RightChar,
@@ -38,7 +36,9 @@ namespace GUI
 				Up,
 				Down,
 				LeftWord,
-				RightWord
+				RightWord,
+				AbsoluteTrailing,
+				AbsoluteLeading
 			};
 
 		public:
