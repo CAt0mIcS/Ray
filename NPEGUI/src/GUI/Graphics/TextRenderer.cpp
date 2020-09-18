@@ -29,6 +29,21 @@ namespace GUI
 		return metrics;
 	}
 
+	std::vector<DWRITE_LINE_METRICS> TextRenderer::GetLineMetrics(const NText& text)
+	{
+		std::vector<DWRITE_LINE_METRICS> lineMetrics;
+
+		IDWriteTextLayout* pLayout;
+		CreateTextLayout(text, &pLayout);
+
+		DWRITE_TEXT_METRICS metrics = GetTextMetrics(text);
+		lineMetrics.resize(metrics.lineCount);
+
+		pLayout->GetLineMetrics(&lineMetrics.front(), metrics.lineCount, &metrics.lineCount);
+		Util::Release(&pLayout);
+		return lineMetrics;
+	}
+
 	void TextRenderer::RenderText(const NText& text)
 	{
 		IDWriteTextLayout* pLayout;

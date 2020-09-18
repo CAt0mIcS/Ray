@@ -24,28 +24,49 @@ namespace GUI
 		class Caret
 		{
 		public:
+			/**
+			* Modes which define the behaviour of SetSelection
+			*/
 			enum class SetSelectionMode
 			{
 				AbsoluteTrailing,
-				AbsoluteLeading
+				AbsoluteLeading,
+				Right,
+				Left,
+				RightChar,
+				LeftChar,
+				Up,
+				Down,
+				LeftWord,
+				RightWord
 			};
 
 		public:
-			//TODO: Add functionality
+			/**
+			* Caret constructor
+			* 
+			* @param parent is the textbox which owns the caret
+			*/
 			Caret(TextBox* parent);
 
-			void SetPos(unsigned int pos) { m_CaretPos = pos; }
-			void SetPosOffset(unsigned int offset) { m_CaretPosOffset = offset; }
-			void SetAnchor(unsigned int anchor) { m_CaretAnchor = anchor; }
-
-			unsigned int Pos() { return m_CaretPos; }
-			unsigned int PosOffset() { return m_CaretPosOffset; }
-			unsigned int Anchor() { return m_CaretAnchor; }
-
+			/**
+			* Sets the selection depending on the mode
+			* 
+			* @param moveMode is the type of move which defines the behaviour of the function
+			* @param advance is the new position of the caret
+			* @param extendSelection is true when the user selected part of the text
+			*/
 			void SetSelection(SetSelectionMode moveMode, unsigned int advance, bool extendSelection, bool updateCaretFormat = true);
 
+			/**
+			* @param isTrailingHit is the bool received from HitTestPoint
+			* @param skipZeroWidth is true if zero widht should be skipped
+			*/
 			void AlignCaretToNearestCluster(bool isTrailingHit = false, bool skipZeroWidth = false);
 
+			/**
+			* Coppies all text properties from the char after the caret and sets the proper caret formaat
+			*/
 			void UpdateCaretFormatting();
 
 			/**
@@ -55,14 +76,21 @@ namespace GUI
 			*/
 			D2D1_RECT_F GetCaretRect();
 
+			/**
+			* Calculates the caret thickness
+			* 
+			* @returns the caret thickness
+			*/
 			float GetCaretThickness();
 
 		private:
+			/**
+			* The important range based properties for the current caret.
+			* Note these are stored outside the layout, since the current caret
+			* actually has a format, independent of the text it lies between.
+			*/
 			struct CaretFormat
 			{
-				// The important range based properties for the current caret.
-				// Note these are stored outside the layout, since the current caret
-				// actually has a format, independent of the text it lies between.
 				wchar_t fontFamilyName[100];
 				wchar_t localeName[LOCALE_NAME_MAX_LENGTH];
 				FLOAT fontSize;
