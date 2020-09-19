@@ -16,6 +16,7 @@ namespace GUI
 	class MouseButtonPressedEvent;
 	class SetCursorEvent;
 	class MouseButtonReleasedEvent;
+	class KeyPressedEvent;
 
 	class GUI_API TextBox : public Control
 	{
@@ -50,6 +51,20 @@ namespace GUI
 			Caret(TextBox* parent);
 
 			/**
+			* Getter for current caret position
+			* 
+			* @returns the current caret position
+			*/
+			unsigned int Pos() const { return m_CaretPos; }
+			
+			/**
+			* Getter for current caret position offset
+			* 
+			* @returns the current caret position offset
+			*/
+			unsigned int PosOffset() const { return m_CaretPosOffset; }
+
+			/**
 			* Sets the selection depending on the mode
 			* 
 			* @param moveMode is the type of move which defines the behaviour of the function
@@ -82,6 +97,18 @@ namespace GUI
 			* @returns the caret thickness
 			*/
 			float GetCaretThickness();
+
+			void OnReturnPressed(KeyPressedEvent& e);
+			void OnBackPressed(KeyPressedEvent& e);
+			void OnLeftPressed(KeyPressedEvent& e);
+			void OnRightPressed(KeyPressedEvent& e);
+			void OnUpPressed(KeyPressedEvent& e);
+			void OnDownPressed(KeyPressedEvent& e);
+
+			void DeleteSelection();
+
+			DWRITE_TEXT_RANGE GetSelectionRange();
+			void GetLineFromPosition(const DWRITE_LINE_METRICS* lineMetrics, unsigned int lineCount, unsigned int textPosition, unsigned int* lineOut, unsigned int* linePositionOut);
 
 		private:
 			/**
@@ -203,25 +230,29 @@ namespace GUI
 		* Handles cursor changed events
 		*
 		* @param e is the cursor event
-		* @returns true if the event was handled, false otherwise
 		*/
-		bool OnSetCursor(SetCursorEvent& e);
+		void OnSetCursor(SetCursorEvent& e);
 
 		/**
 		* Handles left clicked mouse button press
 		*
 		* @param e is the received event
-		* @returns true if the event was handled, false otherwise
 		*/
-		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
+		void OnMouseButtonPressed(MouseButtonPressedEvent& e);
 
 		/**
 		* Handles left clicked mouse button release
 		*
-		* @param e is the received event
-		* @returns true if the event was handled, false otherwise
+		* @param e is the received
 		*/
-		bool OnMouseButtonReleased(MouseButtonReleasedEvent& e);
+		void OnMouseButtonReleased(MouseButtonReleasedEvent& e);
+
+		/**
+		* Handles key pressed events
+		* 
+		* @param e is the received event
+		*/
+		void OnKeyPressed(KeyPressedEvent& e);
 
 	private:
 		NText m_Text;

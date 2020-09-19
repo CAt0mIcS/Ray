@@ -8,7 +8,7 @@
 #include "GUI/Events/KeyboardEvent.h"
 #include "GUI/Events/ApplicationEvent.h"
 
-#include "Util/Debug/Timer.h"
+#include "Util/Exceptions.h"
 
 /**
 * QUESTION:
@@ -50,15 +50,20 @@ namespace GUI
 	{
 		if (e.GetType() == EventType::MouseButtonPressedEvent)
 		{
-			return OnMouseButtonPressed((MouseButtonPressedEvent&)e);
+			OnMouseButtonPressed((MouseButtonPressedEvent&)e);
 		}
 		else if (e.GetType() == EventType::MouseButtonReleasedEvent)
 		{
-			return OnMouseButtonReleased((MouseButtonReleasedEvent&)e);
+			OnMouseButtonReleased((MouseButtonReleasedEvent&)e);
+		}
+		else if (e.GetType() == EventType::KeyPressedEvent)
+		{
+			OnKeyPressed((KeyPressedEvent&)e);
 		}
 		else if (e.GetType() == EventType::SetCursorEvent)
 		{
-			return OnSetCursor((SetCursorEvent&)e);
+			OnSetCursor((SetCursorEvent&)e);
+			return true;
 		}
 		
 		return false;
@@ -112,17 +117,16 @@ namespace GUI
 		return { {{}, {}} };
 	}
 
-	bool TextBox::OnSetCursor(SetCursorEvent& e)
+	void TextBox::OnSetCursor(SetCursorEvent& e)
 	{
 		/**
 		* Mouse is already guaranteed to be on the control, we don't need to check here
 		* Default cursor is automatically restored when exiting the control
 		*/
 		SetCursor(LoadCursor(NULL, IDC_IBEAM));
-		return true;
 	}
 
-	bool TextBox::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+	void TextBox::OnMouseButtonPressed(MouseButtonPressedEvent& e)
 	{
 		if (e.GetButton() == MouseButton::Left)
 		{
@@ -139,20 +143,52 @@ namespace GUI
 				caretMetrics.textPosition,
 				extendSelection
 			);
-
- 			return true;
 		}
-		return false;
 	}
 
-	bool TextBox::OnMouseButtonReleased(MouseButtonReleasedEvent& e)
+	void TextBox::OnMouseButtonReleased(MouseButtonReleasedEvent& e)
 	{
 		if (e.GetButton() == MouseButton::Left)
 		{
 			m_CurrentlySelecting = false;
-			return true;
 		}
-		return false;
+	}
+
+	void TextBox::OnKeyPressed(KeyPressedEvent& e)
+	{
+		switch (e.GetKeyCode())
+		{
+		case VK_RETURN:
+		{
+			m_Caret.OnReturnPressed(e);
+			break;
+		}
+		case VK_BACK:
+		{
+			m_Caret.OnBackPressed(e);
+			break;
+		}
+		case VK_LEFT:
+		{
+			m_Caret.OnLeftPressed(e);
+			break;
+		}
+		case VK_RIGHT:
+		{
+			m_Caret.OnRightPressed(e);
+			break;
+		}
+		case VK_UP:
+		{
+			m_Caret.OnUpPressed(e);
+			break;
+		}
+		case VK_DOWN:
+		{
+			m_Caret.OnDownPressed(e);
+			break;
+		}
+		}
 	}
 
 
@@ -167,31 +203,149 @@ namespace GUI
 
 	void TextBox::Caret::SetSelection(SetSelectionMode moveMode, unsigned int advance, bool extendSelection, bool updateCaretFormat)
 	{
+		unsigned int line = UINT32_MAX;
 		unsigned int absolutePosition = m_CaretPos + m_CaretPosOffset;
 		unsigned int oldAbsolutePosition = absolutePosition;
 		unsigned int oldCaretAnchor = m_CaretAnchor;
+
+		auto& text = m_Parent->m_Text.text;
 
 		switch (moveMode)
 		{
 		case SetSelectionMode::Left:
 		{
+			m_CaretPos += m_CaretPosOffset;
+			if (m_CaretPos > 0)
+			{
+				--m_CaretPos;
+				AlignCaretToNearestCluster(false, true);
+				absolutePosition = m_CaretPos + m_CaretPosOffset;
+				if (absolutePosition >= 1
+					&& absolutePosition < text.size()
+					&& text[absolutePosition - 1] == '\r'
+					&& text[absolutePosition] == '\n')
+				{
+					m_CaretPos = absolutePosition - 1;
+					AlignCaretToNearestCluster(false, true);
+				}
+			}
 			break;
 		}
 		case SetSelectionMode::Right:
 		{
+			m_CaretPos = absolutePosition;
+			AlignCaretToNearestCluster(true, true);
+
+			absolutePosition = m_CaretPos + m_CaretPosOffset;
+			if (absolutePosition >= 1
+				&& absolutePosition < text.size()
+				&& text[absolutePosition - 1] == '\r'
+				&& text[absolutePosition] == '\n')
+			{
+				m_CaretPos = absolutePosition + 1;
+				AlignCaretToNearestCluster(false, true);
+			}
+
 			break;
 		}
 		case SetSelectionMode::LeftChar:
 		{
+			m_CaretPos = absolutePosition;
+			m_CaretPos -= std::min(advance, absolutePosition);
+			m_CaretPosOffset = 0;
 			break;
 		}
 		case SetSelectionMode::RightChar:
 		{
+			m_CaretPos = absolutePosition + advance;
+			m_CaretPosOffset = 0;
+
+			float caretX, caretY;
+			DWRITE_HIT_TEST_METRICS hitTestMetrics = TextRenderer::Get().HitTestTextPosition(
+				m_Parent->GetText(),
+				m_CaretPos,
+				false,
+				&caretX,
+				&caretY
+			);
+
+			m_CaretPos = std::min(m_CaretPos, hitTestMetrics.textPosition + hitTestMetrics.length);
+
 			break;
 		}
 		case SetSelectionMode::Up:
 		case SetSelectionMode::Down:
 		{
+			// Retrieve the line metrics to figure out what line we are on.
+			auto lineMetrics = TextRenderer::Get().GetLineMetrics(m_Parent->GetText());
+
+			unsigned int linePosition;
+			GetLineFromPosition(
+				&lineMetrics.front(),
+				(unsigned int)lineMetrics.size(),
+				m_CaretPos,
+				&line,
+				&linePosition
+			);
+
+			// Move up a line or down
+			if (moveMode == SetSelectionMode::Up)
+			{
+				if (line <= 0)
+					break; // already top line
+				line--;
+				linePosition -= lineMetrics[line].length;
+			}
+			else
+			{
+				linePosition += lineMetrics[line].length;
+				line++;
+				if (line >= lineMetrics.size())
+					break; // already bottom line
+			}
+
+			// To move up or down, we need three hit-testing calls to determine:
+			// 1. The x of where we currently are.
+			// 2. The y of the new line.
+			// 3. New text position from the determined x and y.
+			// This is because the characters are variable size.
+
+			float caretX, caretY, dummyX;
+
+			// Get x of current text position
+			DWRITE_HIT_TEST_METRICS hitTestMetrics = TextRenderer::Get().HitTestTextPosition(
+				m_Parent->GetText(),
+				m_CaretPos,
+				m_CaretPosOffset > 0,
+				&caretX,
+				&caretY
+			);
+
+			// Get y of new position
+			hitTestMetrics = TextRenderer::Get().HitTestTextPosition(
+				m_Parent->GetText(),
+				linePosition,
+				false,
+				&dummyX,
+				&caretY
+			);
+
+			// Now get text position of new x,y.
+			IDWriteTextLayout* pLayout;
+			TextRenderer::Get().CreateTextLayout(m_Parent->GetText(), &pLayout);
+
+			BOOL isInside, isTrailingHit;
+			pLayout->HitTestPoint(
+				caretX,
+				caretY,
+				&isTrailingHit,
+				&isInside,
+				&hitTestMetrics
+			);
+
+			m_CaretPos = hitTestMetrics.textPosition;
+			m_CaretPosOffset = isTrailingHit ? (hitTestMetrics.length > 0) : 0;
+
 			break;
 		}
 		case SetSelectionMode::LeftWord:
@@ -269,19 +423,19 @@ namespace GUI
 
 		// Get the family name
 		m_CaretFormat.fontFamilyName[0] = '\0';
-		pLayout->GetFontFamilyName(currentPos, &m_CaretFormat.fontFamilyName[0], ARRAYSIZE(m_CaretFormat.fontFamilyName));
+		NPE_THROW_GFX_EXCEPT(pLayout->GetFontFamilyName(currentPos, &m_CaretFormat.fontFamilyName[0], ARRAYSIZE(m_CaretFormat.fontFamilyName)), "Failed to get font family name");
 
 		// Get the locale
 		m_CaretFormat.localeName[0] = '\0';
-		pLayout->GetLocaleName(currentPos, &m_CaretFormat.localeName[0], ARRAYSIZE(m_CaretFormat.localeName));
+		NPE_THROW_GFX_EXCEPT(pLayout->GetLocaleName(currentPos, &m_CaretFormat.localeName[0], ARRAYSIZE(m_CaretFormat.localeName)), "failed to get locale name");
 
 		// Get the remaining attributes...
-		pLayout->GetFontWeight(currentPos, &m_CaretFormat.fontWeight);
-		pLayout->GetFontStyle(currentPos, &m_CaretFormat.fontStyle);
-		pLayout->GetFontStretch(currentPos, &m_CaretFormat.fontStretch);
-		pLayout->GetFontSize(currentPos, &m_CaretFormat.fontSize);
-		pLayout->GetUnderline(currentPos, &m_CaretFormat.hasUnderline);
-		pLayout->GetStrikethrough(currentPos, &m_CaretFormat.hasStrikethrough);
+		NPE_THROW_GFX_EXCEPT(pLayout->GetFontWeight(currentPos, &m_CaretFormat.fontWeight), "failed to get font weight");
+		NPE_THROW_GFX_EXCEPT(pLayout->GetFontStyle(currentPos, &m_CaretFormat.fontStyle), "failed to get font style");
+		NPE_THROW_GFX_EXCEPT(pLayout->GetFontStretch(currentPos, &m_CaretFormat.fontStretch), "failed to get font stretch");
+		NPE_THROW_GFX_EXCEPT(pLayout->GetFontSize(currentPos, &m_CaretFormat.fontSize), "failed to get font size");
+		NPE_THROW_GFX_EXCEPT(pLayout->GetUnderline(currentPos, &m_CaretFormat.hasUnderline), "failed to get underline");
+		NPE_THROW_GFX_EXCEPT(pLayout->GetStrikethrough(currentPos, &m_CaretFormat.hasStrikethrough), "failed to get strikethrough");
 	}
 
 	D2D1_RECT_F TextBox::Caret::GetCaretRect()
@@ -307,6 +461,114 @@ namespace GUI
 		SystemParametersInfo(SPI_GETCARETWIDTH, 0, &caretIntThickness, FALSE);
 		return (float)caretIntThickness;
 	}
+
+	void TextBox::Caret::OnReturnPressed(KeyPressedEvent& e)
+	{
+		unsigned int absolutePosition = m_CaretPos + m_CaretPosOffset;
+
+		DeleteSelection();
+		//TODO: Copy properties from next text
+		m_Parent->m_Text.text.insert(absolutePosition, L"\r\n");
+	}
+
+	void TextBox::Caret::OnBackPressed(KeyPressedEvent& e)
+	{
+		unsigned int absolutePosition = m_CaretPos + m_CaretPosOffset;
+		auto& text = m_Parent->GetText().text;
+
+		auto IsLowSurrogate = [](wchar_t ch) { return (ch & 0xFC00) == 0xDC00; };
+		auto IsHighSurrogate = [](wchar_t ch) { return (ch & 0xFC00) == 0xD800; };
+
+		if (absolutePosition != m_CaretAnchor)
+		{
+			DeleteSelection();
+		}
+		else if (absolutePosition > 0)
+		{
+			unsigned int count = 1;
+			if (absolutePosition >= 2 && absolutePosition <= text.size())
+			{
+				wchar_t charBackOne = text[absolutePosition - 1];
+				wchar_t charBackTwo = text[absolutePosition - 2];
+				if ((IsLowSurrogate(charBackOne) && IsHighSurrogate(charBackTwo)) || (charBackOne == L'\n' && charBackTwo == L'\r'))
+				{
+					count = 2;
+				}
+			}
+			SetSelection(SetSelectionMode::LeftChar, count, false);
+			m_Parent->m_Text.text.erase(m_CaretPos, count);
+		}
+
+	}
+
+	void TextBox::Caret::OnLeftPressed(KeyPressedEvent& e)
+	{
+		SetSelection(Keyboard::IsKeyPressed(VK_CONTROL) ? SetSelectionMode::LeftWord : SetSelectionMode::Left, 1, Keyboard::IsKeyPressed(VK_SHIFT));
+	}
+
+	void TextBox::Caret::OnRightPressed(KeyPressedEvent& e)
+	{
+		SetSelection(Keyboard::IsKeyPressed(VK_CONTROL) ? SetSelectionMode::RightWord : SetSelectionMode::Right, 1, Keyboard::IsKeyPressed(VK_SHIFT));
+		unsigned int absolutePosition = m_CaretPos + m_CaretPosOffset;
+	}
+
+	void TextBox::Caret::OnUpPressed(KeyPressedEvent& e)
+	{
+		SetSelection(SetSelectionMode::Up, 1, Keyboard::IsKeyPressed(VK_SHIFT));
+		unsigned int absolutePosition = m_CaretPos + m_CaretPosOffset;
+	}
+
+	void TextBox::Caret::OnDownPressed(KeyPressedEvent& e)
+	{
+		SetSelection(SetSelectionMode::Down, 1, Keyboard::IsKeyPressed(VK_SHIFT));
+		unsigned int absolutePosition = m_CaretPos + m_CaretPosOffset;
+	}
+
+	void TextBox::Caret::DeleteSelection()
+	{
+		DWRITE_TEXT_RANGE selectionRange = GetSelectionRange();
+		if (selectionRange.length <= 0)
+			return;
+
+		m_Parent->m_Text.text.erase(selectionRange.startPosition, selectionRange.length);
+		SetSelection(SetSelectionMode::AbsoluteLeading, selectionRange.startPosition, false);
+
+	}
+
+	DWRITE_TEXT_RANGE TextBox::Caret::GetSelectionRange()
+	{
+		unsigned int caretBegin = m_CaretAnchor;
+		unsigned int caretEnd = m_CaretPos + m_CaretPosOffset;
+		if (caretBegin > caretEnd)
+			std::swap(caretBegin, caretEnd);
+
+		unsigned int textLength = (unsigned int)m_Parent->GetText().text.size();
+		caretBegin = std::min(caretBegin, textLength);
+		caretEnd = std::min(caretEnd, textLength);
+
+		return { caretBegin, caretEnd - caretBegin };
+	}
+
+	void TextBox::Caret::GetLineFromPosition(const DWRITE_LINE_METRICS* lineMetrics, unsigned int lineCount, unsigned int textPosition, unsigned int* lineOut, unsigned int* linePositionOut)
+	{
+		unsigned int line = 0;
+		unsigned int linePosition = 0;
+		unsigned int nextLinePosition = 0;
+		for (; line < lineCount; ++line)
+		{
+			linePosition = nextLinePosition;
+			nextLinePosition = linePosition + lineMetrics[line].length;
+			if (nextLinePosition > textPosition)
+			{
+				// The next line is beyond the desired text position,
+				// so it must be in the current line.
+				break;
+			}
+		}
+		*linePositionOut = linePosition;
+		*lineOut = std::min(line, lineCount - 1);
+	}
+
 }
 
 
