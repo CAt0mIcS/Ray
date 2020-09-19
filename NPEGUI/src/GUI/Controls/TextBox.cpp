@@ -402,9 +402,8 @@ namespace GUI
 			{
 				UpdateCaretFormatting();
 			}
-			Renderer::Get().BeginDraw();
-			m_Parent->Render();
-			Renderer::Get().EndDraw();
+			InvalidateRect(Renderer::Get().GetNativeWindow(), nullptr, TRUE);
+
 		}
 	}
 
@@ -516,8 +515,14 @@ namespace GUI
 		{
 			//Replace existing selection
 			DeleteSelection();
-			m_Parent->m_Text.text.insert(m_CaretPos + m_CaretPosOffset, e.GetKeyCode());
-			m_Parent->Render();
+
+			UINT32 charsLength = 1;
+			wchar_t chars[2] = { (wchar_t)e.GetKeyCode(), 0 };
+
+			m_Parent->m_Text.text.insert(m_CaretPos + m_CaretPosOffset, chars);
+			SetSelection(SetSelectionMode::Right, charsLength, false, false);
+
+			InvalidateRect(Renderer::Get().GetNativeWindow(), nullptr, TRUE);
 		}
 	}
 
