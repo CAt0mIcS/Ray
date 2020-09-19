@@ -44,6 +44,24 @@ namespace GUI
 		return lineMetrics;
 	}
 
+	std::vector<DWRITE_CLUSTER_METRICS> TextRenderer::GetClusterMetrics(_In_ const NText& text, _Out_ unsigned int* clusterCount)
+	{
+		std::vector<DWRITE_CLUSTER_METRICS> clusterMetrics;
+
+		IDWriteTextLayout* pLayout;
+		CreateTextLayout(text, &pLayout);
+
+		pLayout->GetClusterMetrics(nullptr, 0, clusterCount);
+		if (clusterCount == 0)
+			return {};
+
+		clusterMetrics.resize(*clusterCount);
+		pLayout->GetClusterMetrics(&clusterMetrics.front(), *clusterCount, clusterCount);
+
+		Util::Release(&pLayout);
+		return clusterMetrics;
+	}
+
 	void TextRenderer::RenderText(const NText& text)
 	{
 		IDWriteTextLayout* pLayout;

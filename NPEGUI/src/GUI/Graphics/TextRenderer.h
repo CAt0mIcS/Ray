@@ -58,6 +58,15 @@ namespace GUI
 		std::vector<DWRITE_LINE_METRICS> GetLineMetrics(const NText& text);
 
 		/**
+		* Getter for cluster metrics in current text
+		* 
+		* @param text is the text to get the metrics for
+		* @param clusterCount will be filled with the amount of clusters
+		* @returns the cluster metrics in current text
+		*/
+		std::vector<DWRITE_CLUSTER_METRICS> GetClusterMetrics(_In_ const NText& text, _Out_ unsigned int* clusterCount);
+
+		/**
 		* Renders text to specifies bounding rect
 		* 
 		* @param text is the NText structure containing all text info
@@ -66,15 +75,45 @@ namespace GUI
 		void RenderText(const NText& text);
 
 		/**
-		* TODO: Add documentation
+		* Creates IDWriteTextLayout and calls its HitTestPoint function
+		* 
+		* @param text is the current text
+		* @param isTrailingHit will be filled by IDWriteTextLayout::HitTestPoint
+		* @param isInside will be filled by IDWRiteTextLayout::HitTestPoint
+		* 
+		* @returns the hit test metrics
 		*/
 		DWRITE_HIT_TEST_METRICS HitTestPoint(_In_ const NText& text, _Out_ BOOL* isTrailingHit, _Out_ BOOL* isInside);
+		
+		/**
+		* Creates IDWriteTextLayout and calls its HitTestTextPosition function
+		*
+		* @param text is the current text
+		* @param textPos is the text position to look for
+		* @param isTrailling hit is received by HitTestPoint
+		* @param caretX is the x output position
+		* @param caretY is the y output position
+		* @returns the hit test text metrics
+		*/
 		DWRITE_HIT_TEST_METRICS HitTestTextPosition(_In_ const NText& text, _In_ unsigned int textPos, _In_ BOOL isTrailingHit, _Out_ float* caretX, _Out_ float* caretY);
 		
+		/**
+		* Creates a IDWriteTextLayout with the text
+		* 
+		* @param text is the text of the new layout
+		* @paaram ppLayout will be filled with the new layout
+		*/
 		void CreateTextLayout(const NText& text, IDWriteTextLayout** ppLayout);
 
 	private:
+		/**
+		* Private TextRenderer constructor (Singelton design)
+		*/
 		TextRenderer();
+
+		/**
+		* Initializes m_pFactory
+		*/
 		void CreateTextGraphicsResources();
 
 

@@ -73,6 +73,7 @@ namespace GUI
 		return false;
 	}
 
+	//TODO: Fix multiline text causing caret to be too long (Position is translated using the top left corner of the first line of text!)
 	void TextBox::RenderCaret()
 	{
 		auto caretRect = m_Caret.GetCaretRect();
@@ -346,6 +347,43 @@ namespace GUI
 		case SetSelectionMode::LeftWord:
 		case SetSelectionMode::RightWord:
 		{
+			unsigned int clusterCount = 0;
+			std::vector<DWRITE_CLUSTER_METRICS> clusterMetrics = TextRenderer::Get().GetClusterMetrics(m_Parent->GetText(), &clusterCount);
+
+			m_CaretPos = absolutePosition;
+			unsigned int clusterPosition = 0;
+			unsigned int oldCaretPosition = m_CaretPos;
+
+			if (moveMode == SetSelectionMode::LeftWord)
+			{
+				m_CaretPos = 0;
+				m_CaretPosOffset = 0;
+				for (unsigned int cluster = 0; cluster < clusterCount; ++cluster)
+				{
+					clusterPosition += clusterMetrics[cluster].length;
+					if (clusterMetrics[cluster].canWrapLineAfter)
+					{
+						if (clusterPosition >= oldCaretPosition)
+							break;
+
+						m_CaretPos = clusterPosition;
+					}
+				}
+			}
+			else // SetSelectionMode::RightWord
+			{
+				for (unsigned int cluster = 0; cluster < clusterCount; ++cluster)
+				{
+					unsigned int clusterLength = clusterMetrics[cluster].length;
+					m_CaretPos = clusterPosition;
+					m_CaretPosOffset = clusterLength;
+					if (clusterPosition >= oldCaretPosition && clusterMetrics[cluster].canWrapLineAfter)
+						break;
+
+					clusterPosition += clusterLength;
+				}
+			}
+
 			break;
 		}
 		case SetSelectionMode::AbsoluteLeading:

@@ -24,7 +24,7 @@ namespace NPE
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 	
 		ui.txtbox = (GUI::TextBox*)m_Window.AddControl(new GUI::TextBox(&m_Window));
-		ui.txtbox->SetText(L"Hello World");
+		ui.txtbox->SetText(L"Hello World.\nThis is a test with multiline text");
 		ui.txtbox->SetColor({ 15, 17, 19 });
 		ui.txtbox->SetFontFamily(L"Consolas");
 		ui.txtbox->SetFontSize(20);
