@@ -16,7 +16,7 @@ namespace GUI
 		CreateTextGraphicsResources();
 	}
 
-	DWRITE_TEXT_METRICS TextRenderer::GetTextMetrics(const NText& text)
+	DWRITE_TEXT_METRICS TextRenderer::GetTextMetrics(_In_ const NText& text)
 	{
 		IDWriteTextLayout* pLayout;
 		CreateTextLayout(text, &pLayout);
@@ -29,7 +29,7 @@ namespace GUI
 		return metrics;
 	}
 
-	std::vector<DWRITE_LINE_METRICS> TextRenderer::GetLineMetrics(const NText& text)
+	std::vector<DWRITE_LINE_METRICS> TextRenderer::GetLineMetrics(_In_ const NText& text)
 	{
 		std::vector<DWRITE_LINE_METRICS> lineMetrics;
 
@@ -44,7 +44,10 @@ namespace GUI
 		return lineMetrics;
 	}
 
-	std::vector<DWRITE_CLUSTER_METRICS> TextRenderer::GetClusterMetrics(_In_ const NText& text, _Out_ unsigned int* clusterCount)
+	std::vector<DWRITE_CLUSTER_METRICS> TextRenderer::GetClusterMetrics(
+		_In_ const NText& text, 
+		_Out_ unsigned int* clusterCount
+		)
 	{
 		std::vector<DWRITE_CLUSTER_METRICS> clusterMetrics;
 
@@ -62,7 +65,7 @@ namespace GUI
 		return clusterMetrics;
 	}
 
-	void TextRenderer::RenderText(const NText& text)
+	void TextRenderer::RenderText(_In_ const NText& text)
 	{
 		IDWriteTextLayout* pLayout;
 		CreateTextLayout(text, &pLayout);
@@ -72,7 +75,11 @@ namespace GUI
 		Util::Release(&pLayout);
 	}
 
-	DWRITE_HIT_TEST_METRICS TextRenderer::HitTestPoint(_In_ const NText& text, _Out_ BOOL* isTrailingHit, _Out_ BOOL* isInside)
+	DWRITE_HIT_TEST_METRICS TextRenderer::HitTestPoint(
+		_In_ const NText& text, 
+		_Out_ BOOL* isTrailingHit, 
+		_Out_ BOOL* isInside
+		)
 	{
 		IDWriteTextLayout* pLayout;
 		CreateTextLayout(text, &pLayout);
@@ -95,7 +102,13 @@ namespace GUI
 		return metrics;
 	}
 
-	DWRITE_HIT_TEST_METRICS TextRenderer::HitTestTextPosition(_In_ const NText& text, _In_ unsigned int textPos, _In_ BOOL isTrailingHit, _Out_ float* caretX, _Out_ float* caretY)
+	DWRITE_HIT_TEST_METRICS TextRenderer::HitTestTextPosition(
+		_In_ const NText& text, 
+		_In_ unsigned int textPos, 
+		_In_ BOOL isTrailingHit, 
+		_Out_ float* caretX, 
+		_Out_ float* caretY
+		)
 	{
 		IDWriteTextLayout* pLayout;
 		CreateTextLayout(text, &pLayout);
@@ -124,7 +137,7 @@ namespace GUI
 			__uuidof(m_pFactory), &m_pFactory), "Failed to create IDWriteFactory");
 	}
 	
-	void TextRenderer::CreateTextLayout(const NText& text, IDWriteTextLayout** ppLayout)
+	void TextRenderer::CreateTextLayout(_In_ const NText& text, _Out_ IDWriteTextLayout** ppLayout)
 	{
 		IDWriteTextFormat* pFormat;
 		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateTextFormat(text.fontFamily.c_str(),

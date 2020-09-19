@@ -11,7 +11,7 @@ namespace GUI
 	class AppMoveEvent : public Event
 	{
 	public:
-		AppMoveEvent(const Util::NPoint& pos)
+		AppMoveEvent(_In_ const Util::NPoint& pos)
 			: m_Pos(pos) {}
 
 		const Util::NPoint& GetPos() const { return m_Pos; }
@@ -25,7 +25,7 @@ namespace GUI
 	class AppResizeEvent : public Event
 	{
 	public:
-		AppResizeEvent(const Util::NSize& size)
+		AppResizeEvent(_In_ const Util::NSize& size)
 			: m_Size(size) {}
 
 		const Util::NSize& GetSize() const { return m_Size; }
@@ -45,7 +45,7 @@ namespace GUI
 	class TimerEvent : public Event
 	{
 	public:
-		TimerEvent(Timer* timer)
+		TimerEvent(_In_ Timer* timer)
 			: m_Timer(timer)
 		{
 		}
@@ -80,10 +80,14 @@ namespace GUI
 		NPE_DECLARE_TYPE_FN(AppCloseEvent)
 	};
 
+	/**
+	* QUESTION:
+	*	Should I add SAL defines together like _In_opt_ _Maybenull_ or use only one of them
+	*/
 	class PaintEvent : public Event
 	{
 	public:
-		PaintEvent(HDC hDC, RECT* rc)
+		PaintEvent(_In_ HDC hDC, _In_opt_ _Maybenull_ RECT* rc)
 			: m_hDC(hDC), m_RC(rc)
 		{
 

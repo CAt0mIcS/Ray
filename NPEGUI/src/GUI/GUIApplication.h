@@ -16,7 +16,7 @@ namespace GUI
 		* @param func is the function which will be called when any event is received
 		*/
 		template<typename F>
-		void InstallEventFilter(F&& func);
+		void InstallEventFilter(_In_ F&& func);
 
 		/**
 		* Start the application loop
@@ -51,7 +51,7 @@ namespace GUI
 
 
 	template<typename F>
-	inline void GUIApplication::InstallEventFilter(F&& func)
+	inline void GUIApplication::InstallEventFilter(_In_ F&& func)
 	{
 		m_Window.SetEventCallback(func);
 	}

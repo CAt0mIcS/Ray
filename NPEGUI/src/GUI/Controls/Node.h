@@ -14,7 +14,7 @@ namespace GUI
 		* 
 		* @param parent is the parent control
 		*/
-		Node(Control* parent = nullptr);
+		Node(_In_opt_ Control* parent = nullptr);
 
 		/**
 		* Calls the renderer and draws the node
@@ -30,7 +30,7 @@ namespace GUI
 		* @param e is the received event
 		* @returns true if the event was handled, else false and the event will be dispatched to the client
 		*/
-		virtual bool OnEvent(Event& e) override;
+		virtual bool OnEvent(_In_ Event& e) override;
 	};
 }
 

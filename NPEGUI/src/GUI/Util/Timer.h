@@ -8,9 +8,9 @@ namespace GUI
 	class GUI_API Timer
 	{
 	public:
-		Timer(HWND hWnd, bool repeat);
+		Timer(_In_ HWND hWnd, _In_ bool repeat);
 
-		void Run(unsigned int time);
+		void Run(_In_ unsigned int time);
 
 		HWND GetWindow() const { return m_hWnd; }
 		bool IsRepeating() const { return m_Repeat; }

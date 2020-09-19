@@ -30,7 +30,7 @@ namespace GUI
 		*
 		* @param paarent is the parent control
 		*/
-		TextBox(Control* parent = nullptr);
+		TextBox(_In_opt_ Control* parent = nullptr);
 
 		/**
 		* Calls the renderer and draws the textbox
@@ -46,7 +46,7 @@ namespace GUI
 		* @param e is the received event
 		* @returns true if the event was handled, else false and the event will be dispatched to the client
 		*/
-		virtual bool OnEvent(Event& e) override;
+		virtual bool OnEvent(_In_ Event& e) override;
 
 		/**
 		* Renders text in member variable
@@ -69,14 +69,14 @@ namespace GUI
 		* @warning function does not render the text, it just sets the member variable
 		* @see TextBox::RenderText()
 		*/
-		void SetText(const std::wstring& newText) { m_Text.text = newText; }
+		void SetText(_In_ const std::wstring& newText) { m_Text.text = newText; }
 
 		/**
 		* Setter for multiline textbox
 		*
 		* @param multiline should be true if the textbox should be multiline, false otherwise
 		*/
-		void SetMultiline(const bool multiline) { m_IsMultiline = multiline; }
+		void SetMultiline(_In_ const bool multiline) { m_IsMultiline = multiline; }
 
 		/**
 		* Getter for multiline textbox
@@ -90,14 +90,14 @@ namespace GUI
 		*
 		* @param family is the new font family
 		*/
-		void SetFontFamily(const std::wstring& family) { m_Text.fontFamily = family; }
+		void SetFontFamily(_In_ const std::wstring& family) { m_Text.fontFamily = family; }
 
 		/**
 		* Setter for the font size
 		*
 		* @param size is the new font size
 		*/
-		void SetFontSize(const float size) { m_Text.fontSize = size; }
+		void SetFontSize(_In_ const float size) { m_Text.fontSize = size; }
 
 		/**
 		* Getter for font size
@@ -113,7 +113,7 @@ namespace GUI
 		* @param parentSize is the size of the parent control
 		* @returns the new position and size of the layout
 		*/
-		virtual std::optional<std::pair<Util::NPoint, Util::NSize>> CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize) override;
+		virtual std::optional<std::pair<Util::NPoint, Util::NSize>> CalculateLayout(_In_ const Util::NPoint& parentPos, _In_ const Util::NSize& parentSize) override;
 
 	private:
 		NText m_Text;

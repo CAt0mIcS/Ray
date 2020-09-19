@@ -21,7 +21,7 @@
 
 namespace GUI
 {
-	TextBox::TextBox(Control* parent)
+	TextBox::TextBox(_In_ Control* parent)
 		: Control(parent), m_Text{}, m_IsMultiline(false), m_Caret(this)
 	{
 		
@@ -47,7 +47,7 @@ namespace GUI
 		return false;
 	}
 
-	bool TextBox::OnEvent(Event& e)
+	bool TextBox::OnEvent(_In_ Event& e)
 	{
 
 		switch (e.GetType())
@@ -60,22 +60,22 @@ namespace GUI
 		case EventType::MouseButtonReleasedEvent:
 		{
 			m_Caret.OnMouseButtonReleased((MouseButtonReleasedEvent&)e);
-			return false;
+			break;
 		}
 		case EventType::KeyPressedEvent:
 		{
 			m_Caret.OnKeyPressed((KeyPressedEvent&)e);
-			return false;
+			break;
 		}
 		case EventType::MouseMoveEvent:
 		{
 			m_Caret.OnMouseMove((MouseMoveEvent&)e);
-			return false;
+			break;
 		}
 		case EventType::CharEvent:
 		{
 			m_Caret.OnCharEvent((CharEvent&)e);
-			return false;
+			break;
 		}
 		case EventType::SetCursorEvent:
 		{
@@ -86,23 +86,6 @@ namespace GUI
 			SetCursor(LoadCursor(NULL, IDC_IBEAM));
 			return true;
 		}
-		}
-
-		if (e.GetType() == EventType::MouseButtonPressedEvent)
-		{
-		}
-		else if (e.GetType() == EventType::KeyPressedEvent)
-		{
-		}
-		else if (e.GetType() == EventType::MouseMoveEvent)
-		{
-		}
-		else if (e.GetType() == EventType::CharEvent)
-		{
-		}
-		else if (e.GetType() == EventType::SetCursorEvent)
-		{
-			
 		}
 		
 		return false;
@@ -127,7 +110,7 @@ namespace GUI
 		TextRenderer::Get().RenderText(m_Text);
 	}
 
-	std::optional<std::pair<Util::NPoint, Util::NSize>> TextBox::CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize)
+	std::optional<std::pair<Util::NPoint, Util::NSize>> TextBox::CalculateLayout(_In_ const Util::NPoint& parentPos, _In_ const Util::NSize& parentSize)
 	{
 		return { {{}, {}} };
 	}

@@ -46,7 +46,7 @@ namespace GUI
 		* @param e is the received event
 		* @returns true if the event was handled, else false and the event will be dispatched to the client
 		*/
-		virtual bool OnEvent(Event& e) override;
+		virtual bool OnEvent(_In_ Event& e) override;
 
 		/**
 		* Enters the message loop
@@ -62,7 +62,7 @@ namespace GUI
 		* @param wParam is the wParam
 		* @param lParam is the lParam
 		*/
-		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		LRESULT HandleMessage(_In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam) override;
 
 		/**
 		* Getter for all controls in the window
@@ -76,7 +76,7 @@ namespace GUI
 		* 
 		* @returns the added Control
 		*/
-		Control* AddControl(Control* control) { return m_Children.emplace_back(control); }
+		Control* AddControl(_In_ Control* control) { return m_Children.emplace_back(control); }
 
 		/**
 		* Getter for window position
@@ -106,7 +106,7 @@ namespace GUI
 		* @param func is the function to set the event callback to
 		*/
 		template<typename F>
-		void SetEventCallback(F&& func) { m_EventCallbackFn = func; }
+		void SetEventCallback(_In_ F&& func) { m_EventCallbackFn = func; }
 
 		/**
 		* Creates a new timer
@@ -114,7 +114,7 @@ namespace GUI
 		* @param time is the time in milliseconds the timer runs
 		* @param repeats is true if the timer should repeat
 		*/
-		void CreateTimer(unsigned int time, bool repeats);
+		void CreateTimer(_In_ unsigned int time, _In_ bool repeats);
 
 	private:
 		/**
@@ -123,7 +123,7 @@ namespace GUI
 		* @param e is the received event from window procedure
 		* @returns true if the event was handled, false otherwise
 		*/
-		bool DispatchEvent(Event& e);
+		bool DispatchEvent(_In_ Event& e);
 
 		/**
 		* Handles WM_TIMER message
@@ -131,7 +131,7 @@ namespace GUI
 		* @param id is the wParam (the timer id) of the WM_TIMER message
 		* @returns true if the message was handled
 		*/
-		bool HandleTimer(unsigned int id);
+		bool HandleTimer(_In_ unsigned int id);
 
 	private:
 		EventCallbackFn m_EventCallbackFn;

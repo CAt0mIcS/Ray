@@ -17,7 +17,7 @@ namespace GUI
 	class MouseMoveEvent : public Event
 	{
 	public:
-		MouseMoveEvent(const Util::NPoint& pos)
+		MouseMoveEvent(_In_ const Util::NPoint& pos)
 		{
 			Mouse::SetPos(pos);
 		}
@@ -41,7 +41,7 @@ namespace GUI
 	class MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressedEvent(const MouseButton btn)
+		MouseButtonPressedEvent(_In_ const MouseButton btn)
 			: m_Button(btn)
 		{
 			switch (btn)
@@ -75,7 +75,7 @@ namespace GUI
 	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleasedEvent(const MouseButton btn)
+		MouseButtonReleasedEvent(_In_ const MouseButton btn)
 			: m_Button(btn)
 		{
 			switch (btn)
@@ -112,7 +112,7 @@ namespace GUI
 		int GetDelta() const { return m_Delta; }
 
 	protected:
-		MouseWheelEvent(int delta)
+		MouseWheelEvent(_In_ int delta)
 			: m_Delta(delta) {}
 
 	private:
@@ -122,19 +122,19 @@ namespace GUI
 	class MouseWheelUpEvent : public MouseWheelEvent
 	{
 	public:
-		MouseWheelUpEvent(int delta)
+		MouseWheelUpEvent(_In_ int delta)
 			: MouseWheelEvent(delta)
 		{
 
 		}
 
-		NPE_DECLARE_TYPE_FN(MouseWheelUpEvent);
+		NPE_DECLARE_TYPE_FN(MouseWheelUpEvent)
 	};
 
 	class MouseWheelDownEvent : public MouseWheelEvent
 	{
 	public:
-		MouseWheelDownEvent(int delta)
+		MouseWheelDownEvent(_In_ int delta)
 			: MouseWheelEvent(delta)
 		{
 
@@ -147,7 +147,7 @@ namespace GUI
 	class MouseEnterEvent : public Event
 	{
 	public:
-		MouseEnterEvent(HWND hWnd)
+		MouseEnterEvent(_In_ HWND hWnd)
 		{
 			SetCapture(hWnd);
 		}

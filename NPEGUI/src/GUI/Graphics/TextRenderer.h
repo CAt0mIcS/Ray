@@ -47,7 +47,7 @@ namespace GUI
 		* @param text is the text to get the metrics for
 		* @returns the text metrics to text
 		*/
-		DWRITE_TEXT_METRICS GetTextMetrics(const NText& text);
+		DWRITE_TEXT_METRICS GetTextMetrics(_In_ const NText& text);
 
 		/**
 		* Getter for the line metrics to the current text
@@ -55,7 +55,7 @@ namespace GUI
 		* @param text is the text to get the metrics for 
 		* @returns the line metrics to the current text
 		*/
-		std::vector<DWRITE_LINE_METRICS> GetLineMetrics(const NText& text);
+		std::vector<DWRITE_LINE_METRICS> GetLineMetrics(_In_ const NText& text);
 
 		/**
 		* Getter for cluster metrics in current text
@@ -72,7 +72,7 @@ namespace GUI
 		* @param text is the NText structure containing all text info
 		* @see GUI::NText;
 		*/
-		void RenderText(const NText& text);
+		void RenderText(_In_ const NText& text);
 
 		/**
 		* Creates IDWriteTextLayout and calls its HitTestPoint function
@@ -103,7 +103,7 @@ namespace GUI
 		* @param text is the text of the new layout
 		* @paaram ppLayout will be filled with the new layout
 		*/
-		void CreateTextLayout(const NText& text, IDWriteTextLayout** ppLayout);
+		void CreateTextLayout(_In_ const NText& text, _Out_ IDWriteTextLayout** ppLayout);
 
 	private:
 		/**

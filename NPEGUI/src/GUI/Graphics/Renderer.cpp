@@ -11,7 +11,7 @@ namespace GUI
 {
 	Renderer* Renderer::s_Instance = new Renderer();
 
-	void Renderer::RenderRect(const Util::NPoint& pos, const Util::NSize& size, const Util::NColor& color)
+	void Renderer::RenderRect(_In_ const Util::NPoint& pos, _In_ const Util::NSize& size, _In_ const Util::NColor& color)
 	{
 		m_pBrush->SetColor(color.ToD2D1ColorF());
 		D2D1_RECT_F rc;
@@ -23,20 +23,31 @@ namespace GUI
 		m_pRenderTarget->FillRectangle(rc, m_pBrush.Get());
 	}
 
-	void Renderer::RenderRect(const D2D1_RECT_F& rect, const Util::NColor& color)
+	void Renderer::RenderRect(_In_ const D2D1_RECT_F& rect, _In_ const Util::NColor& color)
 	{
 		m_pBrush->SetColor(color.ToD2D1ColorF());
 		m_pRenderTarget->FillRectangle(rect, m_pBrush.Get());
 	}
 
-	void Renderer::RenderRoundedRect(const Util::NPoint& pos, const Util::NSize& size, const Util::NColor& color, const float radiusX, const float radiusY)
+	void Renderer::RenderRoundedRect(
+		_In_ const Util::NPoint& pos, 
+		_In_ const Util::NSize& size, 
+		_In_ const Util::NColor& color, 
+		_In_ const float radiusX, 
+		_In_ const float radiusY
+		)
 	{
 		m_pBrush->SetColor(color.ToD2D1ColorF());
 	
 		m_pRenderTarget->FillRoundedRectangle({ { pos.x, pos.y, pos.x + size.width, pos.y + size.height }, radiusX, radiusY }, m_pBrush.Get());
 	}
 
-	void Renderer::RenderLine(const Util::NPoint& startPos, const Util::NPoint& endPos, const Util::NColor& color, const float radius)
+	void Renderer::RenderLine(
+		_In_ const Util::NPoint& startPos, 
+		_In_ const Util::NPoint& endPos, 
+		_In_opt_ const Util::NColor& color, 
+		_In_opt_ const float radius
+		)
 	{
 		m_pBrush->SetColor(color.ToD2D1ColorF());
 		m_pRenderTarget->DrawLine(startPos.ToD2D1Point2F(), endPos.ToD2D1Point2F(), m_pBrush.Get(), radius);
@@ -45,7 +56,7 @@ namespace GUI
 	Renderer::Renderer()
 		: m_hWnd(0) {}
 
-	void Renderer::Init(HWND hWnd)
+	void Renderer::Init(_In_ HWND hWnd)
 	{
 		m_hWnd = hWnd;
 		CreateGraphicsResources();
@@ -61,7 +72,7 @@ namespace GUI
 		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->EndDraw(), "Failed to draw object(s)");
 	}
 
-	void Renderer::RenderScene(const Util::NColor& color)
+	void Renderer::RenderScene(_In_opt_ const Util::NColor& color)
 	{
 		RenderBitmapBackground();
 	}

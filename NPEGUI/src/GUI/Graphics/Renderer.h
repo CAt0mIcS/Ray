@@ -35,7 +35,7 @@ namespace GUI
 		* 
 		* @param hWnd is the main window
 		*/
-		void Init(HWND hWnd);
+		void Init(_In_ HWND hWnd);
 
 		/**
 		* Getter for static Renderer instance (Singelton design)
@@ -59,7 +59,9 @@ namespace GUI
 		*
 		* @param color is the background color
 		*/
-		void RenderScene(const Util::NColor& color = g_DefaultWindowBackgroundColor);
+		void RenderScene(
+			_In_opt_ const Util::NColor& color = g_DefaultWindowBackgroundColor
+		);
 
 		/**
 		* Draws a filled rectangle with specified arguments
@@ -68,7 +70,11 @@ namespace GUI
 		* @param size is the width and height of the rect
 		* @param color are the rgb values of the rect
 		*/
-		void RenderRect(const Util::NPoint& pos, const Util::NSize& size, const Util::NColor& color);
+		void RenderRect(
+			_In_ const Util::NPoint& pos, 
+			_In_ const Util::NSize& size, 
+			_In_ const Util::NColor& color
+		);
 
 		/**
 		* Draws a filled rectangle with specified arguments
@@ -76,7 +82,10 @@ namespace GUI
 		* @param rect is the rect of the rectangle to draw
 		* @param color are the rgb values of the rect
 		*/
-		void RenderRect(const D2D1_RECT_F& rect, const Util::NColor& color);
+		void RenderRect(
+			_In_ const D2D1_RECT_F& rect, 
+			_In_ const Util::NColor& color
+		);
 
 		/**
 		* Draws a filled rounded rectangle with specified arguments
@@ -87,7 +96,12 @@ namespace GUI
 		* @param radiusX is the x value of the rounded corner
 		* @param radiusY is the y value of the rounded corner
 		*/
-		void RenderRoundedRect(const Util::NPoint& pos, const Util::NSize& size, const Util::NColor& color, const float radiusX, const float radiusY);
+		void RenderRoundedRect(_In_ const Util::NPoint& pos, 
+			_In_ const Util::NSize& size, 
+			_In_ const Util::NColor& color, 
+			_In_ const float radiusX, 
+			_In_ const float radiusY
+		);
 
 		/**
 		* Draws a filled line from startPos to endPos
@@ -95,7 +109,11 @@ namespace GUI
 		* @param startPos is the start position of the line
 		* @param endPos is the end position of the line
 		*/
-		void RenderLine(const Util::NPoint& startPos, const Util::NPoint& endPos, const Util::NColor& color = g_DefaultLineColor, const float radius = 1.0f);
+		void RenderLine(_In_ const Util::NPoint& startPos, 
+			_In_ const Util::NPoint& endPos, 
+			_In_opt_ const Util::NColor& color = g_DefaultLineColor, 
+			_In_opt_ const float radius = 1.0f
+		);
 
 		/**
 		* Getter for main HWND

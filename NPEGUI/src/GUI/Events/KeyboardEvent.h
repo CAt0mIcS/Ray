@@ -10,7 +10,7 @@ namespace GUI
 	class KeyEvent : public Event
 	{
 	protected:
-		KeyEvent(const unsigned char keycode)
+		KeyEvent(_In_ const unsigned char keycode)
 			: m_KeyCode(keycode)
 		{
 		}
@@ -25,7 +25,7 @@ namespace GUI
 	class KeyPressedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(const unsigned char keycode)
+		KeyPressedEvent(_In_ const unsigned char keycode)
 			: KeyEvent(keycode)
 		{
 			Keyboard::SetKeyState(keycode, 1);
@@ -37,7 +37,7 @@ namespace GUI
 	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyReleasedEvent(const unsigned char keycode)
+		KeyReleasedEvent(_In_ const unsigned char keycode)
 			: KeyEvent(keycode)
 		{
 			Keyboard::SetKeyState(keycode, 0);
@@ -49,7 +49,7 @@ namespace GUI
 	class CharEvent : public KeyEvent
 	{
 	public:
-		CharEvent(const unsigned char keycode)
+		CharEvent(_In_ const unsigned char keycode)
 			: KeyEvent(keycode)
 		{
 		}

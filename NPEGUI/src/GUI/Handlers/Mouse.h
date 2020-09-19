@@ -15,8 +15,8 @@ namespace GUI
 		* Deleted contructor and copy-asignment operators
 		*/
 		Mouse() = delete;
-		Mouse(const Mouse&) = delete;
-		Mouse operator=(const Mouse&) = delete;
+		Mouse(_In_ const Mouse&) = delete;
+		Mouse operator=(_In_ const Mouse&) = delete;
 
 		/**
 		* Sets mouse position
@@ -24,7 +24,7 @@ namespace GUI
 		* @param pos is the new mouse position
 		* @warning function does not update actual mouse position, just the member variable
 		*/
-		static void SetPos(const Util::NPoint& pos) { m_Pos = pos; }
+		static void SetPos(_In_ const Util::NPoint& pos) { m_Pos = pos; }
 
 		/**
 		* Getter for mouse position
@@ -39,7 +39,7 @@ namespace GUI
 		* @param pressed is the new state of the mouse
 		* @warning function does not actually press the mouse, just the member variable
 		*/
-		static void SetLeftPressed(bool pressed) { m_IsLeftPressed = pressed; }
+		static void SetLeftPressed(_In_ bool pressed) { m_IsLeftPressed = pressed; }
 
 		/**
 		* Getter for left pressed state
@@ -54,7 +54,7 @@ namespace GUI
 		* @param pressed is the new state of the mouse
 		* @warning function does not actually press the mouse, just the member variable
 		*/
-		static void SetMiddlePressed(bool pressed) { m_IsMiddlePressed = pressed; }
+		static void SetMiddlePressed(_In_ bool pressed) { m_IsMiddlePressed = pressed; }
 		
 		/**
 		* Getter for middle pressed state
@@ -69,7 +69,7 @@ namespace GUI
 		* @param pressed is the new state of the mouse
 		* @warning function does not actually press the mouse, just the member variable
 		*/
-		static void SetRightPressed(bool pressed) { m_IsRightPressed = pressed; }
+		static void SetRightPressed(_In_ bool pressed) { m_IsRightPressed = pressed; }
 
 		/**
 		* Getter for right pressed state
@@ -84,7 +84,7 @@ namespace GUI
 		* @param control is the control to check is the mouse is on
 		* @returns true is the mouse is on the control, false otherwise
 		*/
-		static bool IsOnControl(const Control* const control);
+		static bool IsOnControl(_In_ const Control* const control);
 
 		/**
 		* Sets all pressed to false

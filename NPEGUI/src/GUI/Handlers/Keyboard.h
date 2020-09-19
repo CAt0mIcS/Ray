@@ -16,8 +16,8 @@ namespace GUI
 		* Deleted contructor and copy-asignment operators
 		*/
 		Keyboard() = delete;
-		Keyboard(const Keyboard&) = delete;
-		Keyboard operator=(const Keyboard&) = delete;
+		Keyboard(_In_ const Keyboard&) = delete;
+		Keyboard operator=(_In_ const Keyboard&) = delete;
 
 		/**
 		* Sets the key state of a keycode
@@ -25,7 +25,7 @@ namespace GUI
 		* @param keycode is the code to change
 		* @param state is either 1 for down or 0 for up
 		*/
-		static void SetKeyState(const unsigned char keycode, const unsigned char state) { m_KeyStates[keycode] = state; }
+		static void SetKeyState(_In_ const unsigned char keycode, _In_ const unsigned char state) { m_KeyStates[keycode] = state; }
 
 		/**
 		* Checks if a key with keycode is pressed
@@ -33,7 +33,7 @@ namespace GUI
 		* @param keycode is the code of the key
 		* @returns true if the key with keycode is pressed, false otherwise
 		*/
-		static bool IsKeyPressed(const unsigned char keycode) { return m_KeyStates[keycode]; }
+		static bool IsKeyPressed(_In_ const unsigned char keycode) { return m_KeyStates[keycode]; }
 
 		/**
 		* Sets all keys to 0

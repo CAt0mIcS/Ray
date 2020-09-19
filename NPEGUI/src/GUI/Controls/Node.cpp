@@ -11,7 +11,7 @@
 namespace GUI
 {
 	//TODO: Measure speed and test if variables are being moved instead of coppied
-	Node::Node(Control* parent)
+	Node::Node(_In_opt_ Control* parent)
 		: Control(parent)
 	{
 	}
@@ -33,7 +33,7 @@ namespace GUI
 		return false;
 	}
 
-	bool Node::OnEvent(Event& e)
+	bool Node::OnEvent(_In_ Event& e)
 	{
 		return false;
 	}

@@ -29,7 +29,7 @@ namespace GUI
 		return false;
 	}
 
-	bool MainWindow::OnEvent(Event& e)
+	bool MainWindow::OnEvent(_In_ Event& e)
 	{
 		switch (e.GetType())
 		{
@@ -54,7 +54,7 @@ namespace GUI
 		return (int)msg.wParam;
 	}
 
-	LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT MainWindow::HandleMessage(_In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -220,13 +220,13 @@ namespace GUI
 		return rc;
 	}
 	
-	void MainWindow::CreateTimer(unsigned int time, bool repeats)
+	void MainWindow::CreateTimer(_In_ unsigned int time, _In_ bool repeats)
 	{
 		auto& timer = m_Timers.emplace_back(m_hWnd, repeats);
 		timer.Run(time);
 	}
 
-	bool MainWindow::DispatchEvent(Event& e)
+	bool MainWindow::DispatchEvent(_In_ Event& e)
 	{
 		if (!m_EventCallbackFn)
 			return false;
@@ -248,7 +248,7 @@ namespace GUI
 		return m_EventCallbackFn(receiver, e);
 	}
 	
-	bool MainWindow::HandleTimer(unsigned int id)
+	bool MainWindow::HandleTimer(_In_ unsigned int id)
 	{
 		unsigned int idInVec = 0xffffffff;
 		Timer* timer = nullptr;

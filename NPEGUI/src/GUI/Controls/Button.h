@@ -13,14 +13,14 @@ namespace GUI
 		* 
 		* @param parent is the parent control
 		*/
-		Button(Control* parent = nullptr);
+		Button(_In_opt_ Control* parent = nullptr);
 
 		/**
 		* Setter for button text
 		*
 		* @param text is the new button text
 		*/
-		void SetText(const std::wstring& text) { m_Text = text; }
+		void SetText(_In_ const std::wstring& text) { m_Text = text; }
 
 		/**
 		* Calls the renderer and draws the button
@@ -36,7 +36,7 @@ namespace GUI
 		* @param e is the received event
 		* @returns true if the event was handled, else false and the event will be dispatched to the client
 		*/
-		virtual bool OnEvent(Event& e) override;
+		virtual bool OnEvent(_In_ Event& e) override;
 
 		/**
 		* Getter for button text
@@ -52,7 +52,7 @@ namespace GUI
 		* @param parentSize is the size of the parent control
 		* @returns the new position and size of the control
 		*/
-		virtual std::optional<std::pair<Util::NPoint, Util::NSize>> CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize) override;
+		virtual std::optional<std::pair<Util::NPoint, Util::NSize>> CalculateLayout(_In_ const Util::NPoint& parentPos, _In_ const Util::NSize& parentSize) override;
 
 	private:
 		std::wstring m_Text;

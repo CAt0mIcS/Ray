@@ -10,7 +10,7 @@ namespace GUI
 	bool Mouse::m_IsRightPressed = false;
 	Util::NPoint Mouse::m_Pos = { 0.0f, 0.0f };
 
-	bool Mouse::IsOnControl(const Control* const control)
+	bool Mouse::IsOnControl(_In_ const Control* const control)
 	{
 		const Util::NPoint& controlPos = control->GetPos();
 		const Util::NSize& controlSize = control->GetSize();

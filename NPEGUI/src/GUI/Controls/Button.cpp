@@ -8,7 +8,7 @@
 
 namespace GUI
 {
-	Button::Button(Control* parent)
+	Button::Button(_In_opt_ Control* parent)
 		: Control(parent), m_Text(L"")
 	{
 
@@ -31,12 +31,12 @@ namespace GUI
 		return false;
 	}
 
-	bool Button::OnEvent(Event& e)
+	bool Button::OnEvent(_In_ Event& e)
 	{
 		return false;
 	}
 
-	std::optional<std::pair<Util::NPoint, Util::NSize>> Button::CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize)
+	std::optional<std::pair<Util::NPoint, Util::NSize>> Button::CalculateLayout(_In_ const Util::NPoint& parentPos, _In_ const Util::NSize& parentSize)
 	{
 		return { {{}, {}} };
 	}

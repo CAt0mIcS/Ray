@@ -27,7 +27,7 @@ namespace GUI
         * 
         * @returns handled status
         */
-        static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+        static LRESULT CALLBACK WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
         {
             DERIVED_TYPE* pThis = nullptr;
 
@@ -66,15 +66,15 @@ namespace GUI
         * @returns TRUE if the window was created successfully, false otherwise
         */
         BOOL CreateNativeWindow(
-            PCWSTR lpWindowName,
-            DWORD dwStyle,
-            DWORD dwExStyle = 0,
-            int x = CW_USEDEFAULT,
-            int y = CW_USEDEFAULT,
-            int nWidth = CW_USEDEFAULT,
-            int nHeight = CW_USEDEFAULT,
-            HWND hWndParent = 0,
-            HMENU hMenu = 0
+            _In_ PCWSTR lpWindowName,
+            _In_ DWORD dwStyle,
+            _In_opt_ DWORD dwExStyle = 0,
+            _In_opt_ int x = CW_USEDEFAULT,
+            _In_opt_ int y = CW_USEDEFAULT,
+            _In_opt_ int nWidth = CW_USEDEFAULT,
+            _In_opt_ int nHeight = CW_USEDEFAULT,
+            _In_opt_ HWND hWndParent = 0,
+            _In_opt_ HMENU hMenu = 0
         )
         {
             WNDCLASS wc = { 0 };
@@ -100,7 +100,7 @@ namespace GUI
         * @param wParam is the wParam
         * @param lParam is the lParam
         */
-        virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
+        virtual LRESULT HandleMessage(_In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam) = 0;
 
     protected:
         HWND m_hWnd;

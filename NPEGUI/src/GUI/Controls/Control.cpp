@@ -10,7 +10,7 @@ namespace GUI
 {
 	unsigned int Control::m_NextId = 0;
 
-	Control* Control::GetEventReceiver(Event& e)
+	Control* Control::GetEventReceiver(_In_ Event& e)
 	{
 		Control* receiver = nullptr;
 		for (auto* child : GetChildren())
@@ -28,13 +28,13 @@ namespace GUI
 		return receiver;
 	}
 
-	Control::Control(Control* parent)
+	Control::Control(_In_ Control* parent)
 		: m_Parent(parent), m_Id(m_NextId), m_Pos{}, m_Size{}, m_Color{}, m_Type(Type::INVALID)
 	{
 		++m_NextId;
 	}
 
-	void Control::MoveBy(const Util::NPoint& pos)
+	void Control::MoveBy(_In_ const Util::NPoint& pos)
 	{
 		for (auto& child : m_Children)
 		{
@@ -44,7 +44,7 @@ namespace GUI
 		m_Pos += pos;
 	}
 
-	void Control::MoveTo(const Util::NPoint& pos)
+	void Control::MoveTo(_In_ const Util::NPoint& pos)
 	{
 		for (auto& child : m_Children)
 		{
@@ -55,7 +55,7 @@ namespace GUI
 		m_Pos = pos;
 	}
 
-	void Control::ResizeBy(const Util::NSize& size)
+	void Control::ResizeBy(_In_ const Util::NSize& size)
 	{
 		m_Size += size;
 		
@@ -72,7 +72,7 @@ namespace GUI
 
 	}
 
-	void Control::ResizeTo(const Util::NSize& size)
+	void Control::ResizeTo(_In_ const Util::NSize& size)
 	{
 		m_Size = size;
 
@@ -89,7 +89,7 @@ namespace GUI
 	}
 
 	//TODO: Implement function
-	bool Control::OverlapsWith(const Control* other, const Util::NSize& minDst)
+	bool Control::OverlapsWith(_In_ const Control* other, _In_opt_ const Util::NSize& minDst)
 	{
 		//return m_Renderer.RoundedRectConrolsOverlap(*this, *other, minDst);
 		return false;
