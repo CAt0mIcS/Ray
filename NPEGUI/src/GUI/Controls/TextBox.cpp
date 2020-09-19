@@ -62,7 +62,11 @@ namespace GUI
 		}
 		else if (e.GetType() == EventType::SetCursorEvent)
 		{
-			OnSetCursor((SetCursorEvent&)e);
+			/**
+			* Mouse is already guaranteed to be on the control, we don't need to check here
+			* Default cursor is automatically restored when exiting the control
+			*/
+			SetCursor(LoadCursor(NULL, IDC_IBEAM));
 			return true;
 		}
 		
@@ -115,15 +119,6 @@ namespace GUI
 	std::optional<std::pair<Util::NPoint, Util::NSize>> TextBox::CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize)
 	{
 		return { {{}, {}} };
-	}
-
-	void TextBox::OnSetCursor(SetCursorEvent& e)
-	{
-		/**
-		* Mouse is already guaranteed to be on the control, we don't need to check here
-		* Default cursor is automatically restored when exiting the control
-		*/
-		SetCursor(LoadCursor(NULL, IDC_IBEAM));
 	}
 
 	void TextBox::OnMouseButtonPressed(MouseButtonPressedEvent& e)
@@ -549,7 +544,7 @@ namespace GUI
 		return { caretBegin, caretEnd - caretBegin };
 	}
 
-	void TextBox::Caret::GetLineFromPosition(const DWRITE_LINE_METRICS* lineMetrics, unsigned int lineCount, unsigned int textPosition, unsigned int* lineOut, unsigned int* linePositionOut)
+	void TextBox::Caret::GetLineFromPosition(_In_ const DWRITE_LINE_METRICS* lineMetrics, _In_ unsigned int lineCount, _In_ unsigned int textPosition, _Out_ unsigned int* lineOut, _Out_ unsigned int* linePositionOut)
 	{
 		unsigned int line = 0;
 		unsigned int linePosition = 0;

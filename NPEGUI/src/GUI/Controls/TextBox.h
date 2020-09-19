@@ -98,17 +98,70 @@ namespace GUI
 			*/
 			float GetCaretThickness();
 
+			/**
+			* Handles return press
+			* 
+			* @param e is the received event
+			*/
 			void OnReturnPressed(KeyPressedEvent& e);
+
+			/**
+			* Handles back press
+			*
+			* @param e is the received event
+			*/
 			void OnBackPressed(KeyPressedEvent& e);
+
+			/**
+			* Handles arrow left press
+			*
+			* @param e is the received event
+			*/
 			void OnLeftPressed(KeyPressedEvent& e);
+
+			/**
+			* Handles arrow right press
+			*
+			* @param e is the received event
+			*/
 			void OnRightPressed(KeyPressedEvent& e);
+
+			/**
+			* Handles arrow up press
+			*
+			* @param e is the received event
+			*/
 			void OnUpPressed(KeyPressedEvent& e);
+
+			/**
+			* Handles arrow down press
+			*
+			* @param e is the received event
+			*/
 			void OnDownPressed(KeyPressedEvent& e);
 
+			/**
+			* Deletes the current selection
+			*/
 			void DeleteSelection();
 
+			/**
+			* Calculates the selection in the text
+			* 
+			* @returns the selection range
+			*/
 			DWRITE_TEXT_RANGE GetSelectionRange();
-			void GetLineFromPosition(const DWRITE_LINE_METRICS* lineMetrics, unsigned int lineCount, unsigned int textPosition, unsigned int* lineOut, unsigned int* linePositionOut);
+
+			/**
+			* Calculates the line from a position
+			* 
+			* @param lineMetrics are the metrics
+			* @param lineCount is the amount of lines
+			* @param textPosition is the position in the global text
+			* @param lineOut is the output of line count
+			* @param linePositionOut is the output of line position
+			*/
+			void GetLineFromPosition(_In_ const DWRITE_LINE_METRICS* lineMetrics, _In_ unsigned int lineCount, _In_ unsigned int textPosition, _Out_ unsigned int* lineOut, _Out_ unsigned int* linePositionOut);
 
 		private:
 			/**
@@ -226,13 +279,6 @@ namespace GUI
 		virtual std::optional<std::pair<Util::NPoint, Util::NSize>> CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize) override;
 
 	private:
-		/**
-		* Handles cursor changed events
-		*
-		* @param e is the cursor event
-		*/
-		void OnSetCursor(SetCursorEvent& e);
-
 		/**
 		* Handles left clicked mouse button press
 		*
