@@ -5,6 +5,8 @@
 #include "Win.h"
 #include <dwrite.h>
 
+#include "Util/Util.h"
+
 
 namespace GUI
 {
@@ -13,6 +15,7 @@ namespace GUI
 	class MouseButtonReleasedEvent;
 	class KeyPressedEvent;
 	class CharEvent;
+	class MouseMoveEvent;
 
 	class GUI_API Caret
 	{
@@ -39,7 +42,7 @@ namespace GUI
 		*
 		* @param parent is the textbox which owns the caret
 		*/
-		Caret(TextBox* parent);
+		Caret(_In_ TextBox* parent);
 
 		/**
 		* Draws caret and selection
@@ -67,13 +70,21 @@ namespace GUI
 		* @param advance is the new position of the caret
 		* @param extendSelection is true when the user selected part of the text
 		*/
-		void SetSelection(MoveMode moveMode, unsigned int advance, bool extendSelection, bool updateCaretFormat = true);
+		void SetSelection(
+			_In_ MoveMode moveMode,
+			_In_ unsigned int advance, 
+			_In_ bool extendSelection, 
+			_In_opt_ bool updateCaretFormat = true
+		);
 
 		/**
 		* @param isTrailingHit is the bool received from HitTestPoint
 		* @param skipZeroWidth is true if zero widht should be skipped
 		*/
-		void AlignCaretToNearestCluster(bool isTrailingHit = false, bool skipZeroWidth = false);
+		void AlignCaretToNearestCluster(
+			_In_opt_ bool isTrailingHit = false, 
+			_In_opt_ bool skipZeroWidth = false
+		);
 
 		/**
 		* Coppies all text properties from the char after the caret and sets the proper caret formaat
@@ -95,25 +106,60 @@ namespace GUI
 		float GetCaretThickness();
 
 		/**
+		* Starts the selection from a specific point
+		* 
+		* @param pos is the point where the selection will start
+		* @param extendSelection is true if the selection should be extended
+		*/
+		void SetSelectionFromPoint(
+			_In_ const Util::NPoint& pos, 
+			_In_ bool extendSelection
+		);
+
+		/**
 		* Handles mouse button pressed events
 		*
 		* @param e is the received event
 		*/
-		void OnMouseButtonPressed(MouseButtonPressedEvent& e);
+		void OnMouseButtonPressed(
+			_In_ MouseButtonPressedEvent& e
+		);
+
+		/**
+		* Handles mouse button released events
+		* 
+		* @param e is the received event
+		*/
+		void OnMouseButtonReleased(
+			_In_ MouseButtonReleasedEvent& e
+		);
+
+		/**
+		* Handles mouse move events
+		* 
+		* @param e is the received event
+		*/
+		void OnMouseMove(
+			_In_ MouseMoveEvent& e
+		);
 
 		/**
 		* Handles character events
 		*
 		* @param e is the received event
 		*/
-		void OnCharEvent(CharEvent& e);
+		void OnCharEvent(
+			_In_ CharEvent& e
+		);
 
 		/**
 		* Handles all necessary key presses
 		*
 		* @param e is the received event
 		*/
-		void OnKeyPressed(KeyPressedEvent& e);
+		void OnKeyPressed(
+			_In_ KeyPressedEvent& e
+		);
 
 		/**
 		* Calculates the line from a position
@@ -124,7 +170,13 @@ namespace GUI
 		* @param lineOut is the output of line count
 		* @param linePositionOut is the output of line position
 		*/
-		void GetLineFromPosition(_In_ const DWRITE_LINE_METRICS* lineMetrics, _In_ unsigned int lineCount, _In_ unsigned int textPosition, _Out_ unsigned int* lineOut, _Out_ unsigned int* linePositionOut);
+		void GetLineFromPosition(
+			_In_ const DWRITE_LINE_METRICS* lineMetrics, 
+			_In_ unsigned int lineCount, 
+			_In_ unsigned int textPosition, 
+			_Out_ unsigned int* lineOut, 
+			_Out_ unsigned int* linePositionOut
+		);
 
 		/**
 		* Deletes the current selection
@@ -172,6 +224,8 @@ namespace GUI
 		unsigned int m_CaretPos;
 		unsigned int m_CaretPosOffset;
 		unsigned int m_CaretAnchor;
+
+		bool m_CurrentlySelecting;
 
 		TextBox* m_Parent;
 	};

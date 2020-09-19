@@ -116,35 +116,6 @@ namespace GUI
 		virtual std::optional<std::pair<Util::NPoint, Util::NSize>> CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize) override;
 
 	private:
-		/**
-		* Handles left clicked mouse button press
-		*
-		* @param e is the received event
-		*/
-		void OnMouseButtonPressed(MouseButtonPressedEvent& e);
-
-		/**
-		* Handles left clicked mouse button release
-		*
-		* @param e is the received
-		*/
-		void OnMouseButtonReleased(MouseButtonReleasedEvent& e);
-
-		/**
-		* Handles key pressed events
-		* 
-		* @param e is the received event
-		*/
-		void OnKeyPressed(KeyPressedEvent& e);
-
-		/**
-		* Handles char events
-		* 
-		* @param e is the received event
-		*/
-		void OnCharEvent(CharEvent& e);
-
-	private:
 		NText m_Text;
 
 		Caret m_Caret;

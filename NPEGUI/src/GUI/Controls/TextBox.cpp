@@ -49,23 +49,35 @@ namespace GUI
 
 	bool TextBox::OnEvent(Event& e)
 	{
-		if (e.GetType() == EventType::MouseButtonPressedEvent)
+
+		switch (e.GetType())
 		{
-			OnMouseButtonPressed((MouseButtonPressedEvent&)e);
-		}
-		else if (e.GetType() == EventType::MouseButtonReleasedEvent)
+		case EventType::MouseButtonPressedEvent:
 		{
-			OnMouseButtonReleased((MouseButtonReleasedEvent&)e);
+			m_Caret.OnMouseButtonPressed((MouseButtonPressedEvent&)e);
+			return false;
 		}
-		else if (e.GetType() == EventType::KeyPressedEvent)
+		case EventType::MouseButtonReleasedEvent:
 		{
-			OnKeyPressed((KeyPressedEvent&)e);
+			m_Caret.OnMouseButtonReleased((MouseButtonReleasedEvent&)e);
+			return false;
 		}
-		else if (e.GetType() == EventType::CharEvent)
+		case EventType::KeyPressedEvent:
 		{
-			OnCharEvent((CharEvent&)e);
+			m_Caret.OnKeyPressed((KeyPressedEvent&)e);
+			return false;
 		}
-		else if (e.GetType() == EventType::SetCursorEvent)
+		case EventType::MouseMoveEvent:
+		{
+			m_Caret.OnMouseMove((MouseMoveEvent&)e);
+			return false;
+		}
+		case EventType::CharEvent:
+		{
+			m_Caret.OnCharEvent((CharEvent&)e);
+			return false;
+		}
+		case EventType::SetCursorEvent:
 		{
 			/**
 			* Mouse is already guaranteed to be on the control, we don't need to check here
@@ -73,6 +85,24 @@ namespace GUI
 			*/
 			SetCursor(LoadCursor(NULL, IDC_IBEAM));
 			return true;
+		}
+		}
+
+		if (e.GetType() == EventType::MouseButtonPressedEvent)
+		{
+		}
+		else if (e.GetType() == EventType::KeyPressedEvent)
+		{
+		}
+		else if (e.GetType() == EventType::MouseMoveEvent)
+		{
+		}
+		else if (e.GetType() == EventType::CharEvent)
+		{
+		}
+		else if (e.GetType() == EventType::SetCursorEvent)
+		{
+			
 		}
 		
 		return false;
@@ -102,24 +132,6 @@ namespace GUI
 		return { {{}, {}} };
 	}
 
-	void TextBox::OnMouseButtonPressed(MouseButtonPressedEvent& e)
-	{
-		m_Caret.OnMouseButtonPressed(e);
-	}
-
-	void TextBox::OnMouseButtonReleased(MouseButtonReleasedEvent& e)
-	{
-	}
-
-	void TextBox::OnKeyPressed(KeyPressedEvent& e)
-	{
-		m_Caret.OnKeyPressed(e);
-	}
-
-	void TextBox::OnCharEvent(CharEvent& e)
-	{
-		m_Caret.OnCharEvent(e);
-	}
 }
 
 

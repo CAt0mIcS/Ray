@@ -6,14 +6,16 @@
 #include "Util/Direct2D.h"
 #include "Util/Exceptions.h"
 
+#include "Util/Util.h"
+
 #include "GUI/Events/KeyboardEvent.h"
 #include "GUI/Events/MouseEvent.h"
 
 
 namespace GUI
 {
-	Caret::Caret(TextBox* parent)
-		: m_Parent(parent), m_CaretPos(0), m_CaretPosOffset(0), m_CaretAnchor(0), m_CaretFormat{}
+	Caret::Caret(_In_ TextBox* parent)
+		: m_Parent(parent), m_CaretPos(0), m_CaretPosOffset(0), m_CaretAnchor(0), m_CaretFormat{}, m_CurrentlySelecting(false)
 	{
 
 	}
@@ -25,7 +27,7 @@ namespace GUI
 		RenderCaret();
 	}
 
-	void Caret::SetSelection(MoveMode moveMode, unsigned int advance, bool extendSelection, bool updateCaretFormat)
+	void Caret::SetSelection(_In_ MoveMode moveMode, _In_ unsigned int advance, _In_ bool extendSelection, _In_opt_ bool updateCaretFormat)
 	{
 		unsigned int line = UINT32_MAX;
 		unsigned int absolutePosition = m_CaretPos + m_CaretPosOffset;
@@ -246,7 +248,7 @@ namespace GUI
 		}
 	}
 
-	void Caret::AlignCaretToNearestCluster(bool isTrailingHit, bool skipZeroWidth)
+	void Caret::AlignCaretToNearestCluster(_In_opt_ bool isTrailingHit, _In_opt_ bool skipZeroWidth)
 	{
 		float caretX, caretY;
 
@@ -322,25 +324,43 @@ namespace GUI
 		return (float)caretIntThickness;
 	}
 
-	void Caret::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+	void Caret::SetSelectionFromPoint(_In_ const Util::NPoint& pos, _In_ bool extendSelection)
+	{
+		BOOL isTrailingHit;
+		BOOL isInside;
+
+		auto caretMetrics = TextRenderer::Get().HitTestPoint(m_Parent->GetText(), &isTrailingHit, &isInside);
+
+		SetSelection(
+			isTrailingHit ? MoveMode::AbsoluteTrailing : MoveMode::AbsoluteLeading,
+			caretMetrics.textPosition,
+			extendSelection
+		);
+	}
+
+	void Caret::OnMouseButtonPressed(_In_ MouseButtonPressedEvent& e)
 	{
 		if (e.GetButton() == MouseButton::Left)
 		{
-			bool extendSelection = false;
-			BOOL isTrailingHit;
-			BOOL isInside;
-		
-			auto caretMetrics = TextRenderer::Get().HitTestPoint(m_Parent->GetText(), &isTrailingHit, &isInside);
-		
-			SetSelection(
-				isTrailingHit ? MoveMode::AbsoluteTrailing : MoveMode::AbsoluteLeading,
-				caretMetrics.textPosition,
-				extendSelection
-			);
+			m_CurrentlySelecting = true;
+			SetSelectionFromPoint(Mouse::GetPos(), false);
 		}
 	}
 
-	void Caret::OnCharEvent(CharEvent& e)
+	void Caret::OnMouseButtonReleased(_In_ MouseButtonReleasedEvent& e)
+	{
+		m_CurrentlySelecting = false;
+	}
+
+	void Caret::OnMouseMove(_In_ MouseMoveEvent& e)
+	{
+		if (m_CurrentlySelecting)
+		{
+			SetSelectionFromPoint(e.GetPos(), true);
+		}
+	}
+
+	void Caret::OnCharEvent(_In_ CharEvent& e)
 	{
 		//Allow normal characters and tab
 		if (e.GetKeyCode() >= 0x20 || e.GetKeyCode() == 9)
@@ -356,7 +376,7 @@ namespace GUI
 		}
 	}
 	
-	void Caret::OnKeyPressed(KeyPressedEvent& e)
+	void Caret::OnKeyPressed(_In_ KeyPressedEvent& e)
 	{
 		switch (e.GetKeyCode())
 		{
@@ -425,7 +445,13 @@ namespace GUI
 		}
 	}
 
-	void Caret::GetLineFromPosition(_In_ const DWRITE_LINE_METRICS* lineMetrics, _In_ unsigned int lineCount, _In_ unsigned int textPosition, _Out_ unsigned int* lineOut, _Out_ unsigned int* linePositionOut)
+	void Caret::GetLineFromPosition(
+		_In_ const DWRITE_LINE_METRICS* lineMetrics, 
+		_In_ unsigned int lineCount, 
+		_In_ unsigned int textPosition, 
+		_Out_ unsigned int* lineOut, 
+		_Out_ unsigned int* linePositionOut
+		)
 	{
 		unsigned int line = 0;
 		unsigned int linePosition = 0;
