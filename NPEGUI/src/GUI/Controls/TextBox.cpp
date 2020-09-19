@@ -101,7 +101,7 @@ namespace GUI
 		caretRect.right = caretRect.left + m_Caret.GetCaretThickness();
 		caretRect.bottom += caretRect.top;
 
-		Renderer::Get().RenderRect(caretRect, { 255, 255, 255 });
+		Renderer::Get().RenderRect(caretRect, g_DefaultCaretColor);
 	}
 
 	void TextBox::RenderText()
@@ -183,7 +183,7 @@ namespace GUI
 				highlightRect.right = highlightRect.left + htm.width;
 				highlightRect.bottom = highlightRect.top + htm.height;
 
-				Renderer::Get().RenderRect(highlightRect, { 45, 45, 45 });
+				Renderer::Get().RenderRect(highlightRect, g_DefaultSelectionRectColor);
 			}
 		}
 

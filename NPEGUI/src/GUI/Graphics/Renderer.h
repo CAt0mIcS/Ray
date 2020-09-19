@@ -20,6 +20,8 @@ namespace GUI
 	static constexpr Util::NColor g_DefaultWindowBackgroundColor{ 35.0f, 38.0f, 40.0f };
 	static constexpr Util::NColor g_DefaultNodeColor{ 15.0f, 17.0f, 19.0f };
 	static constexpr Util::NColor g_DefaultTextBoxColor{ 35.0f, 38.0f, 40.0f };
+	static constexpr Util::NColor g_DefaultCaretColor{ 255, 255, 255 };
+	static constexpr Util::NColor g_DefaultSelectionRectColor{ 45, 45, 45 };
 
 	/**
 	* Renderer class used to render the GUI
