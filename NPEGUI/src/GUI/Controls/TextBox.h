@@ -250,6 +250,11 @@ namespace GUI
 		void RenderText();
 
 		/**
+		* Renders box around selection
+		*/
+		void RenderSelection();
+
+		/**
 		* Getter for current text in textbox
 		*
 		* @returns the current text

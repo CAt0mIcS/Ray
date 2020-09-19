@@ -9,6 +9,7 @@
 #include "GUI/Events/ApplicationEvent.h"
 
 #include "Util/Exceptions.h"
+#include "Util/Direct2D.h"
 
 /**
 * QUESTION:
@@ -37,6 +38,7 @@ namespace GUI
 
 			const float max = std::min(GetSize().width, GetSize().height);
 			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
+			RenderSelection();
 			RenderText();
 			RenderCaret();
 
@@ -119,6 +121,73 @@ namespace GUI
 		m_Text.size = { m_Size.width - xOffset, m_Size.height - yOffset };
 
 		TextRenderer::Get().RenderText(m_Text);
+	}
+
+	void TextBox::RenderSelection()
+	{
+		IDWriteTextLayout* pLayout;
+		TextRenderer::Get().CreateTextLayout(m_Text, &pLayout);
+
+		DWRITE_TEXT_RANGE caretRange = m_Caret.GetSelectionRange();
+		UINT32 actualHitTestCount = 0;
+
+		if (caretRange.length > 0)
+		{
+			pLayout->HitTestTextRange(
+				caretRange.startPosition,
+				caretRange.length,
+				0, // x
+				0, // y
+				nullptr,
+				0, // metrics count
+				&actualHitTestCount
+			);
+		}
+
+		// Allocate enough room to return all hit-test metrics.
+		std::vector<DWRITE_HIT_TEST_METRICS> hitTestMetrics(actualHitTestCount);
+
+		if (caretRange.length > 0)
+		{
+			pLayout->HitTestTextRange(
+				caretRange.startPosition,
+				caretRange.length,
+				0, // x
+				0, // y
+				&hitTestMetrics[0],
+				(UINT32)hitTestMetrics.size(),
+				&actualHitTestCount
+			);
+		}
+
+		// Draw the selection ranges behind the text.
+		if (actualHitTestCount > 0)
+		{
+			float xOffset = m_Size.width / 30.0f;
+			float yOffset;
+			if (m_IsMultiline)
+			{
+				yOffset = m_Size.height / 10.0f;
+			}
+			else
+			{
+				yOffset = m_Size.height / 2.0f - m_Text.fontSize / 2.0f;
+			}
+
+			for (size_t i = 0; i < actualHitTestCount; ++i)
+			{
+				const DWRITE_HIT_TEST_METRICS& htm = hitTestMetrics[i];
+				D2D1_RECT_F highlightRect{};
+				highlightRect.left = htm.left + m_Pos.x + xOffset;
+				highlightRect.top = htm.top + m_Pos.y + yOffset;
+				highlightRect.right = highlightRect.left + htm.width;
+				highlightRect.bottom = highlightRect.top + htm.height;
+
+				Renderer::Get().RenderRect(highlightRect, { 45, 45, 45 });
+			}
+		}
+
+		Util::Release(&pLayout);
 	}
 
 	std::optional<std::pair<Util::NPoint, Util::NSize>> TextBox::CalculateLayout(const Util::NPoint& parentPos, const Util::NSize& parentSize)
@@ -327,6 +396,7 @@ namespace GUI
 				&isInside,
 				&hitTestMetrics
 			);
+			Util::Release(&pLayout);
 
 			m_CaretPos = hitTestMetrics.textPosition;
 			m_CaretPosOffset = isTrailingHit ? (hitTestMetrics.length > 0) : 0;
@@ -496,7 +566,7 @@ namespace GUI
 			auto caretMetrics = TextRenderer::Get().HitTestPoint(m_Parent->GetText(), &isTrailingHit, &isInside);
 
 			SetSelection(
-				isTrailingHit ? Caret::SetSelectionMode::AbsoluteTrailing : Caret::SetSelectionMode::AbsoluteLeading,
+				isTrailingHit ? SetSelectionMode::AbsoluteTrailing : SetSelectionMode::AbsoluteLeading,
 				caretMetrics.textPosition,
 				extendSelection
 			);
