@@ -473,7 +473,6 @@ namespace GUI
 				UpdateCaretFormatting();
 			}
 			InvalidateRect(Renderer::Get().GetNativeWindow(), nullptr, TRUE);
-
 		}
 	}
 
@@ -591,8 +590,6 @@ namespace GUI
 
 			m_Parent->m_Text.text.insert(m_CaretPos + m_CaretPosOffset, chars);
 			SetSelection(SetSelectionMode::Right, charsLength, false, false);
-
-			InvalidateRect(Renderer::Get().GetNativeWindow(), nullptr, TRUE);
 		}
 	}
 
@@ -603,6 +600,7 @@ namespace GUI
 		DeleteSelection();
 		//TODO: Copy properties from next text
 		m_Parent->m_Text.text.insert(absolutePosition, L"\r\n");
+		SetSelection(SetSelectionMode::AbsoluteLeading, absolutePosition + 2, false, false);
 	}
 
 	void TextBox::Caret::OnBackPressed(KeyPressedEvent& e)
