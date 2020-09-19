@@ -17,6 +17,7 @@ namespace GUI
 	class SetCursorEvent;
 	class MouseButtonReleasedEvent;
 	class KeyPressedEvent;
+	class CharEvent;
 
 	class GUI_API TextBox : public Control
 	{
@@ -97,6 +98,27 @@ namespace GUI
 			* @returns the caret thickness
 			*/
 			float GetCaretThickness();
+
+			/**
+			* Handles mouse button pressed events
+			* 
+			* @param e is the received event
+			*/
+			void OnMouseButtonPressed(MouseButtonPressedEvent& e);
+
+			/**
+			* Handles mouse button released events
+			*
+			* @param e is the received event
+			*/
+			void OnMouseButtonReleased(MouseButtonReleasedEvent& e);
+
+			/**
+			* Handles character events
+			* 
+			* @param e is the received event
+			*/
+			void OnCharEvent(CharEvent& e);
 
 			/**
 			* Handles return press
@@ -186,6 +208,8 @@ namespace GUI
 			unsigned int m_CaretPos;
 			unsigned int m_CaretPosOffset;
 			unsigned int m_CaretAnchor;
+			
+			bool m_CurrentlySelecting;
 			TextBox* m_Parent;
 		};
 
@@ -306,7 +330,6 @@ namespace GUI
 		Caret m_Caret;
 
 		bool m_IsMultiline;
-		bool m_CurrentlySelecting;
 
 	};
 }

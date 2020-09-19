@@ -21,7 +21,7 @@
 namespace GUI
 {
 	TextBox::TextBox(Control* parent)
-		: Control(parent), m_Text{}, m_CurrentlySelecting(true), m_IsMultiline(false), m_Caret(this)
+		: Control(parent), m_Text{}, m_IsMultiline(false), m_Caret(this)
 	{
 		
 	}
@@ -60,6 +60,10 @@ namespace GUI
 		{
 			OnKeyPressed((KeyPressedEvent&)e);
 		}
+		else if (e.GetType() == EventType::CharEvent)
+		{
+			m_Caret.OnCharEvent((CharEvent&)e);
+		}
 		else if (e.GetType() == EventType::SetCursorEvent)
 		{
 			/**
@@ -73,7 +77,7 @@ namespace GUI
 		return false;
 	}
 
-	//TODO: Fix multiline text causing caret to be too long (Position is translated using the top left corner of the first line of text!)
+	//TODO: Fix multiline text causing caret to be too long (Position is translated using the top left corner of the first line of text!)ite.
 	void TextBox::RenderCaret()
 	{
 		auto caretRect = m_Caret.GetCaretRect();
@@ -124,29 +128,14 @@ namespace GUI
 
 	void TextBox::OnMouseButtonPressed(MouseButtonPressedEvent& e)
 	{
-		if (e.GetButton() == MouseButton::Left)
-		{
-			m_CurrentlySelecting = true;
-			
-			bool extendSelection = false;
-			BOOL isTrailingHit;
-			BOOL isInside;
-			
-			auto caretMetrics = TextRenderer::Get().HitTestPoint(m_Text, &isTrailingHit, &isInside);
-
-			m_Caret.SetSelection(
-				isTrailingHit ? Caret::SetSelectionMode::AbsoluteTrailing : Caret::SetSelectionMode::AbsoluteLeading,
-				caretMetrics.textPosition,
-				extendSelection
-			);
-		}
+		m_Caret.OnMouseButtonPressed(e);
 	}
 
 	void TextBox::OnMouseButtonReleased(MouseButtonReleasedEvent& e)
 	{
 		if (e.GetButton() == MouseButton::Left)
 		{
-			m_CurrentlySelecting = false;
+			m_Caret.OnMouseButtonReleased(e);
 		}
 	}
 
@@ -192,7 +181,7 @@ namespace GUI
 	*****  Caret  *****
 	*******************/
 	TextBox::Caret::Caret(TextBox* parent)
-		: m_Parent(parent), m_CaretPos(0), m_CaretPosOffset(0), m_CaretAnchor(0), m_CaretFormat{}
+		: m_Parent(parent), m_CaretPos(0), m_CaretPosOffset(0), m_CaretAnchor(0), m_CurrentlySelecting(false), m_CaretFormat{}
 	{
 
 	}
@@ -493,6 +482,43 @@ namespace GUI
 		unsigned int caretIntThickness = 2;
 		SystemParametersInfo(SPI_GETCARETWIDTH, 0, &caretIntThickness, FALSE);
 		return (float)caretIntThickness;
+	}
+
+	void TextBox::Caret::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+	{
+		if (e.GetButton() == MouseButton::Left)
+		{
+			m_CurrentlySelecting = true;
+
+			bool extendSelection = false;
+			BOOL isTrailingHit;
+			BOOL isInside;
+
+			auto caretMetrics = TextRenderer::Get().HitTestPoint(m_Parent->GetText(), &isTrailingHit, &isInside);
+
+			SetSelection(
+				isTrailingHit ? Caret::SetSelectionMode::AbsoluteTrailing : Caret::SetSelectionMode::AbsoluteLeading,
+				caretMetrics.textPosition,
+				extendSelection
+			);
+		}
+	}
+
+	void TextBox::Caret::OnMouseButtonReleased(MouseButtonReleasedEvent& e)
+	{
+		m_CurrentlySelecting = false;
+	}
+
+	void TextBox::Caret::OnCharEvent(CharEvent& e)
+	{
+		//Allow normal characters and tab
+		if (e.GetKeyCode() >= 0x20 || e.GetKeyCode() == 9)
+		{
+			//Replace existing selection
+			DeleteSelection();
+			m_Parent->m_Text.text.insert(m_CaretPos + m_CaretPosOffset, e.GetKeyCode());
+			m_Parent->Render();
+		}
 	}
 
 	void TextBox::Caret::OnReturnPressed(KeyPressedEvent& e)
