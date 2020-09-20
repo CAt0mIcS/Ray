@@ -474,6 +474,19 @@ namespace GUI
 	void Caret::RenderCaret()
 	{
 		auto caretRect = GetCaretRect();
+		float caretHeight = caretRect.bottom - caretRect.top;
+
+		auto lineMetrics = TextRenderer::Get().GetLineMetrics(m_Parent->GetText());
+		
+		unsigned int line;
+		unsigned int linePosition;
+		GetLineFromPosition(
+			&lineMetrics.front(),
+			(unsigned int)lineMetrics.size(),
+			m_CaretPos,
+			&line,
+			&linePosition
+		);
 
 		float xOffset = m_Parent->GetSize().width / 30.0f;
 		caretRect.left += (m_Parent->GetPos().x + xOffset);
@@ -490,7 +503,7 @@ namespace GUI
 
 		caretRect.top += m_Parent->GetPos().y + yOffset;
 		caretRect.right = caretRect.left + GetCaretThickness();
-		caretRect.bottom += caretRect.top;
+		caretRect.bottom += caretRect.top - (line * caretHeight);
 
 		Renderer::Get().RenderRect(caretRect, g_DefaultCaretColor);
 	}
