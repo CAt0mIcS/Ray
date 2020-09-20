@@ -163,12 +163,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\NPE\Actions.cpp" />
     <ClCompile Include="src\NPE\FileHandler.cpp" />
     <ClCompile Include="src\NPE\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\NPE\Actions.h" />
     <ClInclude Include="src\NPE\FileHandler.h" />
     <ClInclude Include="src\NPE\Application.h" />
     <ClInclude Include="src\pch.h" />

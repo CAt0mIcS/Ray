@@ -261,9 +261,8 @@ namespace GUI
 			receiver = this;
 
 		//Defines events which need to be handled by the focused object, like CharEvent
-		if (e.GetType() == EventType::CharEvent)
+		if (e.GetType() == EventType::CharEvent && GetFocus())
 		{
-			s_Focus;
 			if (GetFocus()->OnEvent(e))
 			{
 				m_EventCallbackFn(GetFocus(), e);
