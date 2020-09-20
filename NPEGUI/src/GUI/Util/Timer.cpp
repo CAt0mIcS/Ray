@@ -8,7 +8,7 @@ namespace GUI
 {
 	unsigned int Timer::s_NextId = 0;
 
-	Timer::Timer(H_In_ WND hWnd, _In_ bool repeat)
+	Timer::Timer(_In_ HWND hWnd, _In_ bool repeat)
 		: m_hWnd(hWnd), m_Repeat(repeat), m_Id(s_NextId)
 	{
 		++s_NextId;
