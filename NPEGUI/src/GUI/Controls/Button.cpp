@@ -39,7 +39,7 @@ namespace GUI
 		{
 			if (((MouseButtonPressedEvent&)e).GetButton() == MouseButton::Left)
 				this->SetFocus();
-			break;
+			return true;
 		}
 		case EventType::SetCursorEvent:
 		{

@@ -260,16 +260,22 @@ namespace GUI
 		if (receiver == nullptr)
 			receiver = this;
 
+		//Defines events which need to be handled by the focused object, like CharEvent
+		if (e.GetType() == EventType::CharEvent)
+		{
+			s_Focus;
+			if (GetFocus()->OnEvent(e))
+			{
+				m_EventCallbackFn(GetFocus(), e);
+				return true;
+			}
+		}
+
 		//dispatch event to all controls first
 		if (receiver->OnEvent(e))
-			return true;
-
-		//If the receiver is not equal to the focused object
-		//Call the focused object's OnEvent function
-		if (receiver != GetFocus() && GetFocus())
 		{
-			if (GetFocus()->OnEvent(e))
-				return true;
+			m_EventCallbackFn(receiver, e);
+			return true;
 		}
 
 		//call event filter set by user

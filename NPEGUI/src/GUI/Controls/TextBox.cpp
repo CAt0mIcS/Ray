@@ -57,27 +57,27 @@ namespace GUI
 			if (((MouseButtonPressedEvent&)e).GetButton() == MouseButton::Left)
 				this->SetFocus();
 			m_Caret.OnMouseButtonPressed((MouseButtonPressedEvent&)e);
-			return false;
+			return true;
 		}
 		case EventType::MouseButtonReleasedEvent:
 		{
 			m_Caret.OnMouseButtonReleased((MouseButtonReleasedEvent&)e);
-			break;
+			return true;
 		}
 		case EventType::KeyPressedEvent:
 		{
 			m_Caret.OnKeyPressed((KeyPressedEvent&)e);
-			break;
+			return true;
 		}
 		case EventType::MouseMoveEvent:
 		{
 			m_Caret.OnMouseMove((MouseMoveEvent&)e);
-			break;
+			return true;
 		}
 		case EventType::CharEvent:
 		{
 			m_Caret.OnCharEvent((CharEvent&)e);
-			break;
+			return true;
 		}
 		case EventType::SetCursorEvent:
 		{
