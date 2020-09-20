@@ -24,7 +24,7 @@ namespace NPE
 	Application::Application()
 		: m_FileHandler("saves\\save.dbs"), m_Actions(this), m_MousePos{ }, m_Zoom(0), m_HandleControls{}
 	{
-		m_FileHandler.LoadScene(this->GetWindow());
+		//m_FileHandler.LoadScene(*this);
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 	
 
@@ -124,7 +124,7 @@ namespace NPE
 		//Save shortcut
 		else if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('S'))
 		{
-			m_FileHandler.SaveScene(m_Window);
+			//m_FileHandler.SaveScene(*this);
 		}
 		return false;
 	}

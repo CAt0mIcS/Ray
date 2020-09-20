@@ -4,21 +4,17 @@
 #include <QRD/QRD.h>
 
 
-namespace GUI
-{
-	class MainWindow;
-}
-
-
 namespace NPE
 {
+	class Application;
+
 	class FileHandler
 	{
 	public:
 		FileHandler(const std::string& filePathToSaveFile);
 
-		void SaveScene(const GUI::MainWindow& win);
-		void LoadScene(GUI::MainWindow& win);
+		void SaveScene(Application& app);
+		void LoadScene(Application& app);
 
 	private:
 		QRD::Database m_Db;
