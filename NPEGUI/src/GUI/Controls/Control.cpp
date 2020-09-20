@@ -9,6 +9,7 @@
 namespace GUI
 {
 	unsigned int Control::m_NextId = 0;
+	Control* Control::s_Focus = nullptr;
 
 	Control* Control::GetEventReceiver(_In_ Event& e)
 	{

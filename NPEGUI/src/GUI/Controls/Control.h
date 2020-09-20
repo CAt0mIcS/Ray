@@ -16,7 +16,6 @@
 
 namespace GUI
 {
-	class Renderer;
 	class Event;
 
 	class GUI_API Control
@@ -184,15 +183,25 @@ namespace GUI
 		*/
 		Control* GetEventReceiver(_In_ Event& e);
 
+		/**
+		* Sets the current focused object
+		* 
+		* @param focus is the new object which should be focused
+		*/
+		void SetFocus(Control* focus) { s_Focus = focus; }
+
+		/**
+		* Getter for focused object
+		* 
+		* @returns the currently focused object
+		*/
+		Control* GetFocus() const { return s_Focus; }
+
 	protected:
 		/**
 		* Protected Control constructor
 		* 
-		* @param renderer is the current 2D renderer
-		* @param type is the type of the control
-		* @param pos is the control position
-		* @param size is the control size
-		* @param color is the control color
+		* @param parent is the parent window
 		*/
 		Control(_In_opt_ Control* parent = nullptr);
 
@@ -203,6 +212,8 @@ namespace GUI
 
 		Control* m_Parent;
 		std::vector<Control*> m_Children;
+
+		static Control* s_Focus;
 
 	private:
 		unsigned int m_Id;
