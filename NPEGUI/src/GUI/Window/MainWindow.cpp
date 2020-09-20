@@ -235,6 +235,8 @@ namespace GUI
 		for (auto* control : GetControls())
 		{
 			receiver = control->GetEventReceiver(e);
+			if (receiver)
+				break;
 		}
 		//if no control was clicked... then the window will receive the event
 		if (receiver == nullptr)

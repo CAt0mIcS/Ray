@@ -183,20 +183,6 @@ namespace GUI
 		*/
 		Control* GetEventReceiver(_In_ Event& e);
 
-		/**
-		* Sets the current focused object
-		* 
-		* @param focus is the new object which should be focused
-		*/
-		void SetFocus(Control* focus) { s_Focus = focus; }
-
-		/**
-		* Getter for focused object
-		* 
-		* @returns the currently focused object
-		*/
-		Control* GetFocus() const { return s_Focus; }
-
 	protected:
 		/**
 		* Protected Control constructor
@@ -212,8 +198,6 @@ namespace GUI
 
 		Control* m_Parent;
 		std::vector<Control*> m_Children;
-
-		static Control* s_Focus;
 
 	private:
 		unsigned int m_Id;

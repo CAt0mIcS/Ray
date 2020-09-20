@@ -36,6 +36,24 @@ namespace GUI
 		txtbox->SetSize({ txtWidth, txtHeight });
 		txtbox->SetPos({ txtX, txtY });
 		txtbox->SetText(L"Hello World");
+
+
+		txtbox = (TextBox*)m_Children.emplace_back(new TextBox(this));
+		xOffsetTxt = m_Size.width / 22.5f;
+		txtX = m_Pos.x + xOffsetTxt;
+
+		yOffsetTxt = m_Size.height / 7.0f;
+		txtY = m_Pos.y + yOffsetTxt + 100;
+
+		//20% of Node's height is this textbox
+		txtPercentOfNode = 0.4f;
+		txtHeight = m_Size.height * txtPercentOfNode;
+
+		txtbox->SetColor(g_DefaultTextBoxColor);
+		txtbox->SetSize({ txtWidth, txtHeight });
+		txtbox->SetPos({ txtX, txtY });
+		txtbox->SetText(L"Hello World");
+		txtbox->SetMultiline(true);
 	}
 
 	bool Node::Render()
@@ -57,6 +75,14 @@ namespace GUI
 
 	bool Node::OnEvent(_In_ Event& e)
 	{
+		switch (e.GetType())
+		{
+		case EventType::SetCursorEvent:
+		{
+			SetCursor(LoadCursor(NULL, IDC_ARROW));
+			return true;
+		}
+		}
 		return false;
 	}
 	

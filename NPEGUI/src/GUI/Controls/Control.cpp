@@ -4,19 +4,26 @@
 #include "GUI/Handlers/Mouse.h"
 #include "GUI/Graphics/Renderer.h"
 
+#include "GUI/Events/MouseEvent.h"
 
 
 namespace GUI
 {
 	unsigned int Control::m_NextId = 0;
-	Control* Control::s_Focus = nullptr;
 
 	Control* Control::GetEventReceiver(_In_ Event& e)
 	{
+		if (e.GetType() == EventType::MouseButtonPressedEvent)
+		{
+			bool tu = true;
+		}
+
 		Control* receiver = nullptr;
 		for (auto* child : GetChildren())
 		{
 			receiver = child->GetEventReceiver(e);
+			if (receiver)
+				break;
 		}
 
 		//no child control was clicked, check if mouse is on node control

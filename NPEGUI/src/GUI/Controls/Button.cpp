@@ -33,6 +33,14 @@ namespace GUI
 
 	bool Button::OnEvent(_In_ Event& e)
 	{
+		switch (e.GetType())
+		{
+		case EventType::SetCursorEvent:
+		{
+			SetCursor(LoadCursor(NULL, IDC_ARROW));
+			return true;
+		}
+		}
 		return false;
 	}
 
