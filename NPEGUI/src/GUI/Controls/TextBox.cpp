@@ -115,7 +115,6 @@ namespace GUI
 
 	std::optional<std::pair<Util::NPoint, Util::NSize>> TextBox::CalculateLayout(_In_ const Util::NPoint& parentPos, _In_ const Util::NSize& parentSize)
 	{
-
 		float xOffsetTxt = parentSize.width / 22.5f;
 		float txtX = parentPos.x + xOffsetTxt;
 

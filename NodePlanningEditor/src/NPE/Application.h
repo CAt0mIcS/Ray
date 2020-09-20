@@ -11,6 +11,9 @@ namespace GUI
 	class MouseButtonPressedEvent;
 	class MouseMoveEvent;
 	class KeyPressedEvent;
+	class MouseButtonReleasedEvent;
+	class MouseWheelUpEvent;
+	class MouseWheelDownEvent;
 }
 
 
@@ -37,34 +40,65 @@ namespace NPE
 		/**
 		* Receives all mouse move events from Application::OnEvent
 		*
+		* @param watched is the control that received the event
 		* @param e is the received event
 		* @returns true if the event was handled, false otherwise
 		*/
-		bool OnMouseMove(GUI::MouseMoveEvent& e);
+		bool OnMouseMove(GUI::Control* watched, GUI::MouseMoveEvent& e);
 
 		/**
 		* Receives paint event from Application::OnEvent
 		* 
+		* @param watched is the control that received the event
 		* @param e is the received event
 		* @returns true if the event was handled, false otherwise
 		*/
-		bool OnPaintEvent(GUI::PaintEvent& e);
+		bool OnPaintEvent(GUI::Control* watched, GUI::PaintEvent& e);
 		
 		/**
 		* Receives all mouse button pressed events from Application::OnEvent
 		*
+		* @param watched is the control that received the event
 		* @param e is the received event
 		* @returns true if the event was handled, false otherwise
 		*/
-		bool OnMouseButtonPressed(GUI::MouseButtonPressedEvent& e);
+		bool OnMouseButtonPressed(GUI::Control* watched, GUI::MouseButtonPressedEvent& e);
+
+		/**
+		* Receives all mouse button released events from Application::OnEvent
+		*
+		* @param watched is the control that received the event
+		* @param e is the received event
+		* @returns true if the event was handled, false otherwise
+		*/
+		bool OnMouseButtonReleased(GUI::Control* watched, GUI::MouseButtonReleasedEvent& e);
 
 		/**
 		* Receives all key press events from Application::OnEvent
 		* 
+		* @param watched is the control that received the event
 		* @param e is the received event
 		* @returns true if the event was handled, false otherwise
 		*/
-		bool OnKeyPressed(GUI::KeyPressedEvent& e);
+		bool OnKeyPressed(GUI::Control* watched, GUI::KeyPressedEvent& e);
+
+		/**
+		* Receives all mouse wheel up events from Application::OnEvent
+		*
+		* @param watched is the control that received the event
+		* @param e is the received event
+		* @returns true if the event was handled, false otherwise
+		*/
+		bool OnMouseWheelUp(GUI::Control* watched, GUI::MouseWheelUpEvent& e);
+
+		/**
+		* Receives all mouse wheel down events from Application::OnEvent
+		*
+		* @param watched is the control that received the event
+		* @param e is the received event
+		* @returns true if the event was handled, false otherwise
+		*/
+		bool OnMouseWheelDown(GUI::Control* watched, GUI::MouseWheelDownEvent& e);
 
 		/**
 		* Application deconstructor, saves scene to file
@@ -73,6 +107,16 @@ namespace NPE
 		~Application() { m_FileHandler.SaveScene(this->GetWindow()); }
 
 	private:
+
+		/**
+		* Contains pointers to the controls which are used by an event to work across multiple events
+		*/
+		struct HandleControls
+		{
+			GUI::Node* draggingNode;
+		};
+
+		HandleControls m_HandleControls;
 		FileHandler m_FileHandler;
 		Actions m_Actions;
 		Util::NPoint m_MousePos;

@@ -1,6 +1,11 @@
 #pragma once
 
 
+namespace GUI
+{
+	class Node;
+}
+
 
 namespace NPE
 {
@@ -16,6 +21,9 @@ namespace NPE
 
 		void MoveCamera();
 		void SpawnNode();
+		void MoveNodes(GUI::Node* node);
+		void ZoomIn();
+		void ZoomOut();
 
 	private:
 		Application* m_App;

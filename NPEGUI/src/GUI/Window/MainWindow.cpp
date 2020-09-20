@@ -26,6 +26,7 @@ namespace GUI
 
 	bool MainWindow::Render()
 	{
+		//TODO: Render lines here
 		Renderer::Get().RenderScene();
 		for (auto* child : m_Children)
 		{
