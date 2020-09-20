@@ -76,6 +76,7 @@ namespace NPE
 	{
 		if (GUI::Mouse::IsMiddlePressed())
 		{
+			SetCursor(LoadCursor(NULL, IDC_SIZEALL));
 			m_Actions.MoveCamera();
 			return true;
 		}

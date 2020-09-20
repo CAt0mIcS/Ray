@@ -105,7 +105,7 @@ namespace NPE
 		* Application deconstructor, saves scene to file
 		*/
 		
-		~Application() { m_FileHandler.SaveScene(this->GetWindow()); }
+		~Application() { m_FileHandler.SaveScene(*this); }
 
 	private:
 
