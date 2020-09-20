@@ -18,13 +18,13 @@ namespace GUI
 	{
 		if (this->IsInWindow())
 		{
+			const float max = std::max(GetSize().width, GetSize().height);
+			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
+
 			for (auto* child : m_Children)
 			{
 				child->Render();
 			}
-
-			const float max = std::max(GetSize().width, GetSize().height);
-			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
 	
 			return true;
 		}

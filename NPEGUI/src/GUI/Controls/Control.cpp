@@ -28,7 +28,7 @@ namespace GUI
 		return receiver;
 	}
 
-	Control::Control(_In_ Control* parent)
+	Control::Control(_In_opt_ Control* parent)
 		: m_Parent(parent), m_Id(m_NextId), m_Pos{}, m_Size{}, m_Color{}, m_Type(Type::INVALID)
 	{
 		++m_NextId;

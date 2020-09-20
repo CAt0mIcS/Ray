@@ -5,13 +5,14 @@
 #include "GUI/Events/MouseEvent.h"
 
 #include "GUI/Controls/TextBox.h"
+#include "GUI/Controls/Node.h"
 
 #include "GUI/Handlers/Mouse.h"
 
 
 struct UI
 {
-	GUI::TextBox* txtbox;
+	GUI::Node* node;
 } ui;
 
 
@@ -23,14 +24,12 @@ namespace NPE
 		m_FileHandler.LoadScene(this->GetWindow());
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 	
-		ui.txtbox = (GUI::TextBox*)m_Window.AddControl(new GUI::TextBox(&m_Window));
-		ui.txtbox->SetText(L"Hello World.\nThis is a test with multiline text");
-		ui.txtbox->SetColor({ 15, 17, 19 });
-		ui.txtbox->SetFontFamily(L"Consolas");
-		ui.txtbox->SetFontSize(20);
-		ui.txtbox->SetPos({ 250, 250 });
-		ui.txtbox->SetSize({ 400, 550 });
-		ui.txtbox->SetMultiline(true);
+
+		ui.node = m_Window.AddControl<GUI::Node>(new GUI::Node(&m_Window));
+		ui.node->SetSize({ 450, 280 });
+		ui.node->SetPos({ 250, 180 });
+		ui.node->SetColor(GUI::g_DefaultNodeColor);
+		ui.node->Init();
 	
 	}
 

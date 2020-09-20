@@ -17,6 +17,11 @@ namespace GUI
 		Node(_In_opt_ Control* parent = nullptr);
 
 		/**
+		* Creates all children of the node
+		*/
+		void Init();
+
+		/**
 		* Calls the renderer and draws the node
 		*
 		* @returns true if the node was rendered (in window), false otherwise

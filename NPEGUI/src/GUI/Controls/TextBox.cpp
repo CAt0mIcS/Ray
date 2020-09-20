@@ -21,7 +21,7 @@
 
 namespace GUI
 {
-	TextBox::TextBox(_In_ Control* parent)
+	TextBox::TextBox(_In_opt_ Control* parent)
 		: Control(parent), m_Text{}, m_IsMultiline(false), m_Caret(this)
 	{
 		
@@ -31,15 +31,15 @@ namespace GUI
 	{
 		if (this->IsInWindow())
 		{
-			for (auto* child : m_Children)
-			{
-				child->Render();
-			}
-
 			const float max = std::min(GetSize().width, GetSize().height);
 			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
 			m_Caret.Render();
 			RenderText();
+
+			for (auto* child : m_Children)
+			{
+				child->Render();
+			}
 
 			return true;
 		}

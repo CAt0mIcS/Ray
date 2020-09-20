@@ -71,12 +71,19 @@ namespace GUI
 		*/
 		std::vector<Control*>& GetControls() { return m_Children; }
 
+
+		/**
+		* QUESTION:
+		*	Should I do it like this or have it return a control or have the argument control be a template argument T
+		*/
+
 		/**
 		* Adds a Control to the window
 		* 
 		* @returns the added Control
 		*/
-		Control* AddControl(_In_ Control* control) { return m_Children.emplace_back(control); }
+		template<typename T>
+		T* AddControl(_In_ Control* control) { return (T*)m_Children.emplace_back(control); }
 
 		/**
 		* Getter for window position

@@ -20,7 +20,6 @@ namespace GUI
 
 	}
 
-	//TODO: Fix multiline text causing caret to be too long (Position is translated using the top left corner of the first line of text!)ite.
 	void Caret::Render()
 	{
 		RenderSelection();
