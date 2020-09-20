@@ -26,13 +26,31 @@ namespace GUI
 
 	bool MainWindow::Render()
 	{
-		return false;
+		Renderer::Get().RenderScene();
+		for (auto* child : m_Children)
+		{
+			child->Render();
+		}
+		return true;
 	}
 
 	bool MainWindow::OnEvent(_In_ Event& e)
 	{
 		switch (e.GetType())
 		{
+		case EventType::MouseButtonPressedEvent:
+		{
+			if (((MouseButtonPressedEvent&)e).GetButton() == MouseButton::Left)
+			{
+				//TODO: Make more performant, only render part where the caret disappeared
+				this->SetFocus();
+				Renderer::Get().BeginDraw();
+				Render();
+				Renderer::Get().EndDraw();
+			}
+			
+			break;
+		}
 		case EventType::SetCursorEvent:
 		{
 			SetCursor(LoadCursor(NULL, IDC_ARROW));
@@ -245,6 +263,14 @@ namespace GUI
 		//dispatch event to all controls first
 		if (receiver->OnEvent(e))
 			return true;
+
+		//If the receiver is not equal to the focused object
+		//Call the focused object's OnEvent function
+		if (receiver != GetFocus() && GetFocus())
+		{
+			if (GetFocus()->OnEvent(e))
+				return true;
+		}
 
 		//call event filter set by user
 		return m_EventCallbackFn(receiver, e);

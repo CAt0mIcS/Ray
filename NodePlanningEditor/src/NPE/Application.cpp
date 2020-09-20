@@ -89,17 +89,9 @@ namespace NPE
 	bool Application::OnPaintEvent(GUI::PaintEvent& e)
 	{
 		GUI::Renderer& renderer = GUI::Renderer::Get();
-	
 		renderer.BeginDraw();
-		renderer.RenderScene();
-
-		for (auto* control : m_Window.GetChildren())
-		{
-			control->Render();
-		}
-
+		m_Window.Render();
 		renderer.EndDraw();
-		
 		return true;
 	}
 

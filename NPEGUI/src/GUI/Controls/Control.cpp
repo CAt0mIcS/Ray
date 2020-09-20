@@ -9,15 +9,11 @@
 
 namespace GUI
 {
-	unsigned int Control::m_NextId = 0;
+	unsigned int Control::s_NextId = 0;
+	Control* Control::s_Focus = nullptr;
 
 	Control* Control::GetEventReceiver(_In_ Event& e)
 	{
-		if (e.GetType() == EventType::MouseButtonPressedEvent)
-		{
-			bool tu = true;
-		}
-
 		Control* receiver = nullptr;
 		for (auto* child : GetChildren())
 		{
@@ -37,9 +33,9 @@ namespace GUI
 	}
 
 	Control::Control(_In_opt_ Control* parent)
-		: m_Parent(parent), m_Id(m_NextId), m_Pos{}, m_Size{}, m_Color{}, m_Type(Type::INVALID)
+		: m_Parent(parent), m_Id(s_NextId), m_Pos{}, m_Size{}, m_Color{}, m_Type(Type::INVALID)
 	{
-		++m_NextId;
+		++s_NextId;
 	}
 
 	void Control::MoveBy(_In_ const Util::NPoint& pos)

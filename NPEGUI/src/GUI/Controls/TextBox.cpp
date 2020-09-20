@@ -54,6 +54,8 @@ namespace GUI
 		{
 		case EventType::MouseButtonPressedEvent:
 		{
+			if (((MouseButtonPressedEvent&)e).GetButton() == MouseButton::Left)
+				this->SetFocus();
 			m_Caret.OnMouseButtonPressed((MouseButtonPressedEvent&)e);
 			return false;
 		}

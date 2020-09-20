@@ -23,7 +23,10 @@ namespace GUI
 	void Caret::Render()
 	{
 		RenderSelection();
-		RenderCaret();
+		if (m_Parent->HasFocus())
+		{
+			RenderCaret();
+		}
 	}
 
 	void Caret::SetSelection(_In_ MoveMode moveMode, _In_ unsigned int advance, _In_ bool extendSelection, _In_opt_ bool updateCaretFormat)

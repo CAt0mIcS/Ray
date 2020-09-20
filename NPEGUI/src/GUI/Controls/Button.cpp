@@ -35,6 +35,12 @@ namespace GUI
 	{
 		switch (e.GetType())
 		{
+		case EventType::MouseButtonPressedEvent:
+		{
+			if (((MouseButtonPressedEvent&)e).GetButton() == MouseButton::Left)
+				this->SetFocus();
+			break;
+		}
 		case EventType::SetCursorEvent:
 		{
 			SetCursor(LoadCursor(NULL, IDC_ARROW));
