@@ -24,7 +24,7 @@ namespace GUI
 	TextBox::TextBox(_In_opt_ Control* parent)
 		: Control(parent), m_Text{}, m_IsMultiline(false), m_Caret(this)
 	{
-		
+		SetType(Type::TextBox);
 	}
 
 	bool TextBox::Render()
@@ -93,6 +93,7 @@ namespace GUI
 
 	void TextBox::RenderText()
 	{
+
 		float xOffset = m_Size.width / 30.0f;
 		float yOffset;
 		if (m_IsMultiline)
@@ -112,7 +113,20 @@ namespace GUI
 
 	std::optional<std::pair<Util::NPoint, Util::NSize>> TextBox::CalculateLayout(_In_ const Util::NPoint& parentPos, _In_ const Util::NSize& parentSize)
 	{
-		return { {{}, {}} };
+
+		float xOffsetTxt = parentSize.width / 22.5f;
+		float txtX = parentPos.x + xOffsetTxt;
+
+		float yOffsetTxt = parentSize.height / 7.0f;
+		float txtY = parentPos.y + yOffsetTxt;
+
+		float txtWidth = parentSize.width - (xOffsetTxt * 2);
+
+		//20% of Node's height is this textbox
+		float txtPercentOfNode = 0.2f;
+		float txtHeight = parentSize.height * txtPercentOfNode;
+
+		return { { {txtX, txtY}, {txtWidth, txtHeight} } };
 	}
 
 }

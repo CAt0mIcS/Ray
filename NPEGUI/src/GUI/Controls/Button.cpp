@@ -11,7 +11,7 @@ namespace GUI
 	Button::Button(_In_opt_ Control* parent)
 		: Control(parent), m_Text(L"")
 	{
-
+		SetType(Type::Button);
 	}
 
 	bool Button::Render()

@@ -14,7 +14,7 @@ namespace GUI
 	Node::Node(_In_opt_ Control* parent)
 		: Control(parent)
 	{
-		
+		SetType(Type::Node);
 	}
 
 	void Node::Init()

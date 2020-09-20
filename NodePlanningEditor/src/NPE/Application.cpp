@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Application.h"
 
+#include "GUI/Graphics/TextRenderer.h"
+
 #include "GUI/Events/ApplicationEvent.h"
 #include "GUI/Events/MouseEvent.h"
 
