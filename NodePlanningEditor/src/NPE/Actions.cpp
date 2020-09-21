@@ -88,6 +88,11 @@ namespace NPE
 		GUI::Renderer::Get().EndDraw();
 	}
 	
+	/*
+	* TODO: Look at ID2D1RenderTarget::SetTransform
+	*	https://docs.microsoft.com/en-us/windows/win32/direct2d/id2d1rendertarget-settransform?redirectedfrom=MSDN
+	*	https://stackoverflow.com/questions/23228990/implement-a-simple-lookat-like-camera-in-direct2d
+	*/
 	void Actions::ZoomIn()
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
