@@ -20,14 +20,14 @@ namespace GUI
 		}
 		
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
-		Renderer2D::Get().Init(m_hWnd);
+		Renderer::Get().Init(m_hWnd);
 		TextRenderer::Get().Init();
 	}
 
 	bool MainWindow::Render()
 	{
 		//TODO: Render lines here
-		Renderer2D::Get().RenderScene();
+		Renderer::Get().RenderScene();
 		for (auto* child : m_Children)
 		{
 			child->Render();
@@ -45,9 +45,9 @@ namespace GUI
 			{
 				//TODO: Make more performant, only render part where the caret disappeared
 				this->SetFocus();
-				Renderer2D::Get().BeginDraw();
+				Renderer::Get().BeginDraw();
 				Render();
-				Renderer2D::Get().EndDraw();
+				Renderer::Get().EndDraw();
 			}
 			
 			break;

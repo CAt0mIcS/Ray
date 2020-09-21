@@ -24,9 +24,9 @@ namespace GUI
 	static constexpr Util::NColor g_DefaultSelectionRectColor{ 45, 45, 45 };
 
 	/**
-	* Renderer2D class used to render the GUI
+	* Renderer class used to render the GUI
 	*/
-	class GUI_API Renderer2D
+	class GUI_API Renderer
 	{
 		friend class TextRenderer;
 	public:
@@ -38,11 +38,11 @@ namespace GUI
 		void Init(_In_ HWND hWnd);
 
 		/**
-		* Getter for static Renderer2D instance (Singelton design)
+		* Getter for static Renderer instance (Singelton design)
 		*
 		* @returns the renderer
 		*/
-		static Renderer2D& Get() { return *s_Instance; };
+		static Renderer& Get() { return *s_Instance; };
 
 		/**
 		* Wrapper for ID2D1HwndRenderTarget::BeginDraw function
@@ -126,7 +126,7 @@ namespace GUI
 		/**
 		* Private renderer constructor
 		*/
-		Renderer2D();
+		Renderer();
 
 		/**
 		* Creates all Graphics resources (member variables)
@@ -148,7 +148,7 @@ namespace GUI
 
 		Microsoft::WRL::ComPtr<ID2D1Bitmap> m_pD2DBitmap;
 
-		static Renderer2D* s_Instance;
+		static Renderer* s_Instance;
 	};
 }
 

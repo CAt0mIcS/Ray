@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Renderer2D.h"
+#include "Renderer.h"
 
 #include "Util/Exceptions.h"
 #include "Util/Direct2D.h"
@@ -9,9 +9,9 @@
 
 namespace GUI
 {
-	Renderer2D* Renderer2D::s_Instance = new Renderer2D();
+	Renderer* Renderer::s_Instance = new Renderer();
 
-	void Renderer2D::RenderRect(_In_ const Util::NPoint& pos, _In_ const Util::NSize& size, _In_ const Util::NColor& color)
+	void Renderer::RenderRect(_In_ const Util::NPoint& pos, _In_ const Util::NSize& size, _In_ const Util::NColor& color)
 	{
 		m_pBrush->SetColor(color.ToD2D1ColorF());
 		D2D1_RECT_F rc;
@@ -23,13 +23,13 @@ namespace GUI
 		m_pRenderTarget->FillRectangle(rc, m_pBrush.Get());
 	}
 
-	void Renderer2D::RenderRect(_In_ const D2D1_RECT_F& rect, _In_ const Util::NColor& color)
+	void Renderer::RenderRect(_In_ const D2D1_RECT_F& rect, _In_ const Util::NColor& color)
 	{
 		m_pBrush->SetColor(color.ToD2D1ColorF());
 		m_pRenderTarget->FillRectangle(rect, m_pBrush.Get());
 	}
 
-	void Renderer2D::RenderRoundedRect(
+	void Renderer::RenderRoundedRect(
 		_In_ const Util::NPoint& pos, 
 		_In_ const Util::NSize& size, 
 		_In_ const Util::NColor& color, 
@@ -42,7 +42,7 @@ namespace GUI
 		m_pRenderTarget->FillRoundedRectangle({ { pos.x, pos.y, pos.x + size.width, pos.y + size.height }, radiusX, radiusY }, m_pBrush.Get());
 	}
 
-	void Renderer2D::RenderLine(
+	void Renderer::RenderLine(
 		_In_ const Util::NPoint& startPos, 
 		_In_ const Util::NPoint& endPos, 
 		_In_opt_ const Util::NColor& color, 
@@ -53,31 +53,31 @@ namespace GUI
 		m_pRenderTarget->DrawLine(startPos.ToD2D1Point2F(), endPos.ToD2D1Point2F(), m_pBrush.Get(), radius);
 	}
 
-	Renderer2D::Renderer2D()
+	Renderer::Renderer()
 		: m_hWnd(0) {}
 
-	void Renderer2D::Init(_In_ HWND hWnd)
+	void Renderer::Init(_In_ HWND hWnd)
 	{
 		m_hWnd = hWnd;
 		CreateGraphicsResources();
 	}
 
-	void Renderer2D::BeginDraw()
+	void Renderer::BeginDraw()
 	{
 		m_pRenderTarget->BeginDraw();
 	}
 
-	void Renderer2D::EndDraw()
+	void Renderer::EndDraw()
 	{
 		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->EndDraw(), "Failed to draw object(s)");
 	}
 
-	void Renderer2D::RenderScene(_In_opt_ const Util::NColor& color)
+	void Renderer::RenderScene(_In_opt_ const Util::NColor& color)
 	{
 		RenderBitmapBackground();
 	}
 
-	void Renderer2D::RenderBitmapBackground()
+	void Renderer::RenderBitmapBackground()
 	{
 		auto rtSize = m_pRenderTarget->GetSize();
 
@@ -86,7 +86,7 @@ namespace GUI
 		m_pRenderTarget->DrawBitmap(m_pD2DBitmap.Get(), rectangle);
 	}
 
-	void Renderer2D::CreateGraphicsResources()
+	void Renderer::CreateGraphicsResources()
 	{
 		NPE_THROW_GFX_EXCEPT(D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED,
 			__uuidof(m_pFactory), &m_pFactory), "Failed to create D2D1Factory");

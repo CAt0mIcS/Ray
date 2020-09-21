@@ -7,13 +7,20 @@ FIELDS
     width:INTEGER
     height:INTEGER
 }
-RECORDS: 1
+RECORDS: 2
 RECORD
 {
-    339.337
-    280.134
-    335.797
-    208.94
+    263.904
+    296.821
+    388.727
+    241.875
+}
+RECORD
+{
+    768.035
+    134.289
+    388.727
+    241.875
 }
 TABLE: SceneInfo
 FIELDS

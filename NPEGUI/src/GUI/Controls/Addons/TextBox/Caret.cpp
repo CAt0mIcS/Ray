@@ -246,7 +246,7 @@ namespace GUI
 			{
 				UpdateCaretFormatting();
 			}
-			InvalidateRect(Renderer2D::Get().GetNativeWindow(), nullptr, TRUE);
+			InvalidateRect(Renderer::Get().GetNativeWindow(), nullptr, TRUE);
 		}
 	}
 
@@ -507,7 +507,7 @@ namespace GUI
 		caretRect.right = caretRect.left + GetCaretThickness();
 		caretRect.bottom += caretRect.top - (line * caretHeight);
 
-		Renderer2D::Get().RenderRect(caretRect, g_DefaultCaretColor);
+		Renderer::Get().RenderRect(caretRect, g_DefaultCaretColor);
 	}
 
 	void Caret::RenderSelection()
@@ -570,7 +570,7 @@ namespace GUI
 				highlightRect.right = highlightRect.left + htm.width;
 				highlightRect.bottom = highlightRect.top + htm.height;
 
-				Renderer2D::Get().RenderRect(highlightRect, g_DefaultSelectionRectColor);
+				Renderer::Get().RenderRect(highlightRect, g_DefaultSelectionRectColor);
 			}
 		}
 

@@ -75,7 +75,7 @@
     <ClInclude Include="src\GUI\Controls\Addons\TextBox\Caret.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\Graphics\Renderer2D.h">
+    <ClInclude Include="src\GUI\Graphics\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,7 +116,7 @@
     <ClCompile Include="src\GUI\Controls\Addons\TextBox\Caret.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Graphics\Renderer2D.cpp">
+    <ClCompile Include="src\GUI\Graphics\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

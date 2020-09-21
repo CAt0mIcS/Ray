@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TextBox.h"
 
-#include "GUI/Graphics/Renderer2D.h"
+#include "GUI/Graphics/Renderer.h"
 #include "GUI/Graphics/TextRenderer.h"
 
 #include "GUI/Events/MouseEvent.h"
@@ -32,7 +32,7 @@ namespace GUI
 		if (this->IsInWindow())
 		{
 			const float max = std::min(GetSize().width, GetSize().height);
-			Renderer2D::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
+			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
 			m_Caret.Render();
 			RenderText();
 
