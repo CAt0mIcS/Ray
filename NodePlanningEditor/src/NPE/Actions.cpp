@@ -92,6 +92,8 @@ namespace NPE
 	* TODO: Look at ID2D1RenderTarget::SetTransform
 	*	https://docs.microsoft.com/en-us/windows/win32/direct2d/id2d1rendertarget-settransform?redirectedfrom=MSDN
 	*	https://stackoverflow.com/questions/23228990/implement-a-simple-lookat-like-camera-in-direct2d
+	* 
+	*	https://gamedev.stackexchange.com/questions/46228/implementing-a-camera-viewport-to-a-2d-game
 	*/
 	void Actions::ZoomIn()
 	{
