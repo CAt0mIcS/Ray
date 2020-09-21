@@ -177,7 +177,7 @@
     <ClInclude Include="src\GUI\Events\MouseEvent.h" />
     <ClInclude Include="src\GUI\Handlers\Keyboard.h" />
     <ClInclude Include="src\GUI\Handlers\Mouse.h" />
-    <ClInclude Include="src\GUI\Graphics\Renderer.h" />
+    <ClInclude Include="src\GUI\Graphics\Renderer2D.h" />
     <ClInclude Include="src\GUI\Window\BaseWindow.h" />
     <ClInclude Include="src\GUI\Window\MainWindow.h" />
     <ClInclude Include="src\pch.h" />
@@ -194,7 +194,7 @@
     <ClCompile Include="src\GUI\GUIApplication.cpp" />
     <ClCompile Include="src\GUI\Handlers\Keyboard.cpp" />
     <ClCompile Include="src\GUI\Handlers\Mouse.cpp" />
-    <ClCompile Include="src\GUI\Graphics\Renderer.cpp" />
+    <ClCompile Include="src\GUI\Graphics\Renderer2D.cpp" />
     <ClCompile Include="src\GUI\Window\MainWindow.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

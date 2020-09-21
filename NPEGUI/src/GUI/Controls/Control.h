@@ -10,7 +10,7 @@
 
 /**
 * QUESTION: 
-*	Should I have a function in the Control class to draw or should I use Renderer::DrawControl(Control& control);?
+*	Should I have a function in the Control class to draw or should I use Renderer2D::DrawControl(Control& control);?
 */
 
 
@@ -20,7 +20,7 @@ namespace GUI
 
 	class GUI_API Control
 	{
-		friend class Renderer;
+		friend class Renderer2D;
 	public:
 
 		/**

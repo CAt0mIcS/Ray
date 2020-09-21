@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Node.h"
 
-#include "GUI/Graphics/Renderer.h"
+#include "GUI/Graphics/Renderer2D.h"
 
 #include "GUI/Events/MouseEvent.h"
 #include "GUI/Events/KeyboardEvent.h"
@@ -61,7 +61,7 @@ namespace GUI
 		if (this->IsInWindow())
 		{
 			const float max = std::max(GetSize().width, GetSize().height);
-			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
+			Renderer2D::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
 
 			for (auto* child : m_Children)
 			{

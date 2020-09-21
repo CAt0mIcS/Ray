@@ -25,15 +25,15 @@ namespace NPE
 		Util::NPoint diff = GUI::Mouse::GetPos() - app.m_MousePos;
 		app.m_MousePos = GUI::Mouse::GetPos();
 
-		GUI::Renderer::Get().BeginDraw();
-		GUI::Renderer::Get().RenderScene();
+		GUI::Renderer2D::Get().BeginDraw();
+		GUI::Renderer2D::Get().RenderScene();
 		for (auto* control : app.m_Window.GetControls())
 		{
 			control->MoveBy(diff);
 			control->Render();
 		}
 
-		GUI::Renderer::Get().EndDraw();
+		GUI::Renderer2D::Get().EndDraw();
 	}
 	
 	void Actions::SpawnNode()
@@ -66,9 +66,9 @@ namespace NPE
 		control->SetPos(GUI::Mouse::GetPos());
 		control->Init();
 
-		GUI::Renderer::Get().BeginDraw();
+		GUI::Renderer2D::Get().BeginDraw();
 		control->Render();
-		GUI::Renderer::Get().EndDraw();
+		GUI::Renderer2D::Get().EndDraw();
 	}
 	
 	void Actions::MoveNodes(GUI::Node* node)
@@ -83,16 +83,16 @@ namespace NPE
 
 		app.m_MousePos = GUI::Mouse::GetPos();
 
-		GUI::Renderer::Get().BeginDraw();
+		GUI::Renderer2D::Get().BeginDraw();
 		app.m_Window.Render();
-		GUI::Renderer::Get().EndDraw();
+		GUI::Renderer2D::Get().EndDraw();
 	}
 	
 	void Actions::ZoomIn()
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
 
-		GUI::Renderer::Get().BeginDraw();
+		GUI::Renderer2D::Get().BeginDraw();
 		for (auto* control : m_App->m_Window.GetControls())
 		{
 			control->MoveBy((center - control->GetPos()) * -0.05f);
@@ -100,14 +100,14 @@ namespace NPE
 		}
 		
 		m_App->m_Window.Render();
-		GUI::Renderer::Get().EndDraw();
+		GUI::Renderer2D::Get().EndDraw();
 	}
 
 	void Actions::ZoomOut()
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
 
-		GUI::Renderer::Get().BeginDraw();
+		GUI::Renderer2D::Get().BeginDraw();
 		for (auto* control : m_App->m_Window.GetControls())
 		{
 			control->MoveBy((center - control->GetPos()) * 0.05f);
@@ -115,7 +115,7 @@ namespace NPE
 		}
 		
 		m_App->m_Window.Render();
-		GUI::Renderer::Get().EndDraw();
+		GUI::Renderer2D::Get().EndDraw();
 
 	}
 }

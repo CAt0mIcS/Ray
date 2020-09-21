@@ -2,7 +2,7 @@
 #include "Control.h"
 
 #include "GUI/Handlers/Mouse.h"
-#include "GUI/Graphics/Renderer.h"
+#include "GUI/Graphics/Renderer2D.h"
 
 #include "GUI/Events/MouseEvent.h"
 
@@ -102,7 +102,7 @@ namespace GUI
 	bool Control::IsInWindow() const
 	{
 		RECT rc;
-		GetWindowRect(Renderer::Get().GetNativeWindow(), &rc);
+		GetWindowRect(Renderer2D::Get().GetNativeWindow(), &rc);
 		
 		return m_Pos.x + m_Size.width > 0 && m_Pos.y + m_Size.height > 0 && m_Pos.x < rc.right && m_Pos.y < rc.bottom;
 		return true;

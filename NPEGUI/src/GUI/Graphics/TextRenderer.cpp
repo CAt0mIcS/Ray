@@ -70,8 +70,8 @@ namespace GUI
 		IDWriteTextLayout* pLayout;
 		CreateTextLayout(text, &pLayout);
 
-		Renderer::Get().m_pBrush->SetColor(text.color.ToD2D1ColorF());
-		Renderer::Get().m_pRenderTarget->DrawTextLayout(text.pos.ToD2D1Point2F(), pLayout, Renderer::Get().m_pBrush.Get());
+		Renderer2D::Get().m_pBrush->SetColor(text.color.ToD2D1ColorF());
+		Renderer2D::Get().m_pRenderTarget->DrawTextLayout(text.pos.ToD2D1Point2F(), pLayout, Renderer2D::Get().m_pBrush.Get());
 		Util::Release(&pLayout);
 	}
 

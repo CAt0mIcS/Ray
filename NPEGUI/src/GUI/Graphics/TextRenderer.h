@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GUIBase.h"
-#include "Renderer.h"
+#include "Renderer2D.h"
 
 #include <dwrite.h>
 #include <wrl.h>

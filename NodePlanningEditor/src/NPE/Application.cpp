@@ -144,7 +144,7 @@ namespace NPE
 
 	bool Application::OnPaintEvent(GUI::Control* watched, GUI::PaintEvent& e)
 	{
-		GUI::Renderer& renderer = GUI::Renderer::Get();
+		GUI::Renderer2D& renderer = GUI::Renderer2D::Get();
 		renderer.BeginDraw();
 		m_Window.Render();
 		renderer.EndDraw();
