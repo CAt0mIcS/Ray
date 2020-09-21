@@ -9,6 +9,7 @@
 
 #include "GUI/Controls/TextBox.h"
 #include "GUI/Controls/Node.h"
+#include "GUI/Controls/Button.h"
 
 #include "GUI/Handlers/Mouse.h"
 

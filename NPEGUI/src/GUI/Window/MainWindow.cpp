@@ -5,6 +5,8 @@
 #include "GUI/Events/MouseEvent.h"
 #include "GUI/Events/ApplicationEvent.h"
 
+#include "GUI/Graphics/TextRenderer.h"
+
 #include "Util/Exceptions.h"
 
 #include "GUI/Util/Timer.h"
@@ -262,7 +264,8 @@ namespace GUI
 			receiver = this;
 
 		//Defines events which need to be handled by the focused object, like CharEvent
-		if (e.GetType() == EventType::CharEvent && GetFocus())
+		if ((e.GetType() == EventType::CharEvent || 
+			e.GetType() == EventType::KeyPressedEvent) && GetFocus())
 		{
 			if (GetFocus()->OnEvent(e))
 			{

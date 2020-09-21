@@ -14,6 +14,8 @@ namespace GUI
 	class MouseButtonReleasedEvent;
 	class MouseWheelUpEvent;
 	class MouseWheelDownEvent;
+
+	class Button;
 }
 
 
@@ -115,6 +117,7 @@ namespace NPE
 		struct HandleControls
 		{
 			GUI::Node* draggingNode;
+			GUI::Button* lineButtonStart;
 		};
 
 		HandleControls m_HandleControls;

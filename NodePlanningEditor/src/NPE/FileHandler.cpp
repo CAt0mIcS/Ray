@@ -5,6 +5,8 @@
 #include "GUI/Controls/Node.h"
 #include "GUI/Controls/Button.h"
 
+#include "GUI/Graphics/Renderer.h"
+
 
 namespace NPE
 {

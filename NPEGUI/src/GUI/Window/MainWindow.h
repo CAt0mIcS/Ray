@@ -4,18 +4,14 @@
 #include <vector>
 
 #include "BaseWindow.h"
-
-#include "GUI/Events/Event.h"
-
 #include "GUI/Controls/Control.h"
-#include "GUI/Graphics/Renderer.h"
-#include "GUI/Graphics/TextRenderer.h"
-
 #include "GUI/Util/Timer.h"
 
 
 namespace GUI
 {
+	class Event;
+
 	/**
 	* Event filter function type
 	* 
