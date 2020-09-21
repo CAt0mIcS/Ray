@@ -90,59 +90,33 @@ namespace NPE
 	
 	void Actions::ZoomIn()
 	{
-		auto& app = *m_App;
 		Util::NPoint center = GUI::Mouse::GetPos();
 
-		++app.m_Zoom;
 		GUI::Renderer::Get().BeginDraw();
-		for (auto* control : app.m_Window.GetControls())
+		for (auto* control : m_App->m_Window.GetControls())
 		{
-			const Util::NPoint& pos = control->GetPos();
-			const Util::NSize& size = control->GetSize();
-			Util::NPoint newPos = center - pos;
-			Util::NSize newSize;
-			newPos.x *= -app.s_ZoomFactor;
-			newPos.y *= -app.s_ZoomFactor;
-
-			newSize.width = size.width * app.s_ResizeFactor;
-			newSize.height = size.height * app.s_ResizeFactor;
-			control->MoveBy(newPos);
-			control->ResizeTo(newSize);
-			control->Render();
+			control->MoveBy((center - control->GetPos()) * -0.05f);
+			control->ResizeTo(control->GetSize() * s_ZoomFactor);
 		}
-		app.m_Window.Render();
+		
+		m_App->m_Window.Render();
 		GUI::Renderer::Get().EndDraw();
 	}
 
 	void Actions::ZoomOut()
 	{
-		auto& app = *m_App;
 		Util::NPoint center = GUI::Mouse::GetPos();
 
-		--app.m_Zoom;
-		if (app.m_Zoom <= app.s_ZoomBoundary)
-		{
-			app.m_Zoom = app.s_ZoomBoundary;
-			return;
-		}
-
 		GUI::Renderer::Get().BeginDraw();
-		for (auto* control : app.m_Window.GetControls())
+		for (auto* control : m_App->m_Window.GetControls())
 		{
-			const Util::NPoint& pos = control->GetPos();
-			const Util::NSize& size = control->GetSize();
-			Util::NPoint newPos = center - pos;
-			Util::NSize newSize;
-			newPos.x *= app.s_ZoomFactor;
-			newPos.y *= app.s_ZoomFactor;
-
-			newSize.width = size.width / app.s_ResizeFactor;
-			newSize.height = size.height / app.s_ResizeFactor;
-			control->MoveBy(newPos);
-			control->ResizeTo(newSize);
+			control->MoveBy((center - control->GetPos()) * 0.05f);
+			control->ResizeTo(control->GetSize() / s_ZoomFactor);
 		}
-		app.m_Window.Render();
+		
+		m_App->m_Window.Render();
 		GUI::Renderer::Get().EndDraw();
+
 	}
 }
 
