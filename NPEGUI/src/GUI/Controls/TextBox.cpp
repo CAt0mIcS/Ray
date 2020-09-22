@@ -33,6 +33,12 @@ namespace GUI
 		{
 			const float max = std::min(GetSize().width, GetSize().height);
 			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
+
+			if (IsMultiline())
+				SetFontSize((m_Size.width + m_Size.height) / 34.8f);
+			else
+				SetFontSize((m_Size.width + m_Size.height) / 17.4f);
+
 			m_Caret.Render();
 			RenderText();
 
@@ -43,7 +49,6 @@ namespace GUI
 
 			return true;
 		}
-
 		return false;
 	}
 
@@ -57,6 +62,10 @@ namespace GUI
 			if (((MouseButtonPressedEvent&)e).GetButton() == MouseButton::Left)
 				this->SetFocus();
 			m_Caret.OnMouseButtonPressed((MouseButtonPressedEvent&)e);
+
+			Renderer::Get().BeginDraw();
+			m_Caret.Render();
+			Renderer::Get().EndDraw();
 			return true;
 		}
 		case EventType::MouseButtonReleasedEvent:
