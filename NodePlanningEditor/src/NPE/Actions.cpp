@@ -13,11 +13,11 @@
 namespace NPE
 {
 	Actions::Actions(Application* app)
-		: m_App(app)
+		: m_App(app), m_Zoom(0)
 	{
 
 	}
-	
+
 	void Actions::MoveCamera()
 	{
 		auto& app = *m_App;
@@ -35,7 +35,7 @@ namespace NPE
 
 		GUI::Renderer::Get().EndDraw();
 	}
-	
+
 	void Actions::SpawnNode()
 	{
 		auto& app = *m_App;
@@ -70,11 +70,11 @@ namespace NPE
 		control->Render();
 		GUI::Renderer::Get().EndDraw();
 	}
-	
+
 	void Actions::MoveNodes(GUI::Node* node)
 	{
 		auto& app = *m_App;
-	
+
 		Util::NPoint diff{};
 		diff.x = GUI::Mouse::GetPos().x - app.m_MousePos.x;
 		diff.y = GUI::Mouse::GetPos().y - app.m_MousePos.y;
@@ -87,23 +87,32 @@ namespace NPE
 		app.m_Window.Render();
 		GUI::Renderer::Get().EndDraw();
 	}
-	
+
 	/*
 	* TODO: Look at ID2D1RenderTarget::SetTransform
 	*	https://docs.microsoft.com/en-us/windows/win32/direct2d/id2d1rendertarget-settransform?redirectedfrom=MSDN
 	*	https://stackoverflow.com/questions/23228990/implement-a-simple-lookat-like-camera-in-direct2d
-	* 
+	*
 	*	https://gamedev.stackexchange.com/questions/46228/implementing-a-camera-viewport-to-a-2d-game
 	*/
 	void Actions::ZoomIn()
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
+		++m_Zoom;
+
+		if (m_Zoom >= s_ZoomBoundary)
+		{
+			m_Zoom = s_ZoomBoundary;
+			return;
+		}
 
 		GUI::Renderer::Get().BeginDraw();
 		for (auto* control : m_App->m_Window.GetControls())
 		{
-			control->MoveBy((center - control->GetPos()) * -0.05f);
-			control->ResizeTo(control->GetSize() * s_ZoomFactor);
+			std::cout << "Control before: Center: " << center << ' ' << control->GetPos() << ' ' << control->GetSize() << '\n';
+			control->MoveBy((center - control->GetPos()) * -s_ZoomFactor);
+			control->ResizeTo(control->GetSize() * s_ResizeFactor);
+			std::cout << "Control after: Center: " << center << ' ' << control->GetPos() << ' ' << control->GetSize() << '\n';
 		}
 
 		m_App->m_Window.Render();
@@ -114,13 +123,21 @@ namespace NPE
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
 
+		--m_Zoom;
+		if (m_Zoom <= -s_ZoomBoundary)
+		{
+			m_Zoom = -s_ZoomBoundary;
+			return;
+		}
+
 		GUI::Renderer::Get().BeginDraw();
 		for (auto* control : m_App->m_Window.GetControls())
 		{
-			control->MoveBy((center - control->GetPos()) * 0.05f);
-			control->ResizeTo(control->GetSize() / s_ZoomFactor);
+			control->MoveBy((center - control->GetPos()) * s_ZoomFactor);
+			control->ResizeTo(control->GetSize() / s_ResizeFactor);
+			std::cout << "Control before: Center: " << center << ' ' << control->GetPos() << ' ' << control->GetSize() << '\n';
 		}
-		
+
 		m_App->m_Window.Render();
 		GUI::Renderer::Get().EndDraw();
 
