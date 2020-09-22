@@ -105,7 +105,7 @@ namespace NPE
 			control->MoveBy((center - control->GetPos()) * -0.05f);
 			control->ResizeTo(control->GetSize() * s_ZoomFactor);
 		}
-		
+
 		m_App->m_Window.Render();
 		GUI::Renderer::Get().EndDraw();
 	}

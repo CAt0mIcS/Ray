@@ -2,6 +2,7 @@
 
 #include "UtilBase.h"
 #include "pch.h"
+#include <iostream>
 
 
 namespace Util
@@ -476,4 +477,22 @@ namespace Util
 		}
 
 	};
+
+	inline std::ostream& operator<<(std::ostream& os, const NPoint& pos)
+	{
+		std::cout << "{ x=" << pos.x << " y=" << pos.y << " }";
+		return os;
+	}
+
+	inline std::ostream& operator<<(std::ostream& os, const NSize& size)
+	{
+		std::cout << "{ width=" << size.width << " height=" << size.height << " }";
+		return os;
+	}
+
+	inline std::ostream& operator<<(std::ostream& os, const NColor& col)
+	{
+		std::cout << "{ r=" << col.r << " g=" << col.g << " b=" << col.b << " }";
+		return os;
+	}
 }
