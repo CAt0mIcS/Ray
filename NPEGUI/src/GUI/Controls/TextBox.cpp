@@ -63,6 +63,7 @@ namespace GUI
 				this->SetFocus();
 			m_Caret.OnMouseButtonPressed((MouseButtonPressedEvent&)e);
 
+			//To remove caret
 			Renderer::Get().BeginDraw();
 			m_Parent->Render();
 			Renderer::Get().EndDraw();

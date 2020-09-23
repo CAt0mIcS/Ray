@@ -39,6 +39,12 @@ namespace GUI
 		{
 			if (((MouseButtonPressedEvent&)e).GetButton() == MouseButton::Left)
 				this->SetFocus();
+
+			//To remove caret
+			Renderer::Get().BeginDraw();
+			m_Parent->Render();
+			Renderer::Get().EndDraw();
+
 			return true;
 		}
 		case EventType::SetCursorEvent:
@@ -52,7 +58,15 @@ namespace GUI
 
 	std::optional<std::pair<Util::NPoint, Util::NSize>> Button::CalculateLayout(_In_ const Util::NPoint& parentPos, _In_ const Util::NSize& parentSize)
 	{
-		return { {{}, {}} };
+		float middleOfNodeX = parentPos.x + (parentSize.width / 2);
+
+		float btnWidthAndHeight = std::min(parentSize.width, parentSize.height) / 12;
+		float btnX = middleOfNodeX - (btnWidthAndHeight / 2);
+
+		float yOffsetBtn = parentSize.height / 56;
+		float btnY = parentPos.y + yOffsetBtn;
+
+		return { {{btnX, btnY}, {btnWidthAndHeight, btnWidthAndHeight}} };
 	}
 
 }

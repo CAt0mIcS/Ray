@@ -7,6 +7,7 @@
 #include "GUI/Events/KeyboardEvent.h"
 
 #include "TextBox.h"
+#include "Button.h"
 
 
 namespace GUI
@@ -53,6 +54,22 @@ namespace GUI
 		txtbox->SetFontSize((m_Size.width + m_Size.height) / 48.6f);
 		txtbox->SetText(L"Hello World");
 		txtbox->SetMultiline(true);
+
+
+		Button* btn = (Button*)m_Children.emplace_back(new Button(this));
+		btn->SetColor(g_DefaultLineButtonColor);
+	
+		float middleOfNodeX = m_Pos.x + (m_Size.width / 2);
+
+		float btnWidthAndHeight = std::min(m_Size.width, m_Size.height) / 12;
+		float btnX = middleOfNodeX - (btnWidthAndHeight / 2);
+
+		float yOffsetBtn = m_Size.height / 56;
+		float btnY = m_Pos.y + yOffsetBtn;
+
+		btn->SetPos({ btnX, btnY });
+		btn->SetSize({ btnWidthAndHeight, btnWidthAndHeight });
+		
 	}
 
 	bool Node::Render()
