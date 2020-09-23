@@ -64,7 +64,7 @@ namespace GUI
 			m_Caret.OnMouseButtonPressed((MouseButtonPressedEvent&)e);
 
 			Renderer::Get().BeginDraw();
-			m_Caret.Render();
+			m_Parent->Render();
 			Renderer::Get().EndDraw();
 			return true;
 		}
