@@ -124,19 +124,37 @@ namespace GUI
 
 	std::optional<std::pair<Util::NPoint, Util::NSize>> TextBox::CalculateLayout(_In_ const Util::NPoint& parentPos, _In_ const Util::NSize& parentSize)
 	{
-		float xOffsetTxt = parentSize.width / 22.5f;
-		float txtX = parentPos.x + xOffsetTxt;
+		if (IsMultiline())
+		{
+			float xOffsetTxt = parentSize.width / 22.5f;
+			float txtX = parentPos.x + xOffsetTxt;
+			float txtWidth = parentSize.width - (xOffsetTxt * 2);
+			float yOffsetTxt = parentSize.height / 7.0f;
+			float txtY = parentPos.y + yOffsetTxt + (parentSize.height / 3.5f);
 
-		float yOffsetTxt = parentSize.height / 7.0f;
-		float txtY = parentPos.y + yOffsetTxt;
+			//40% of Node's height is this textbox
+			float txtPercentOfNode = 0.4f;
+			float txtHeight = parentSize.height * txtPercentOfNode;
 
-		float txtWidth = parentSize.width - (xOffsetTxt * 2);
+			return { {{txtX, txtY}, {txtWidth, txtHeight}} };
+		}
+		else
+		{
+			float xOffsetTxt = parentSize.width / 22.5f;
+			float txtX = parentPos.x + xOffsetTxt;
 
-		//20% of Node's height is this textbox
-		float txtPercentOfNode = 0.2f;
-		float txtHeight = parentSize.height * txtPercentOfNode;
+			float yOffsetTxt = parentSize.height / 7.0f;
+			float txtY = parentPos.y + yOffsetTxt;
 
-		return { { {txtX, txtY}, {txtWidth, txtHeight} } };
+			float txtWidth = parentSize.width - (xOffsetTxt * 2);
+
+			//20% of Node's height is this textbox
+			float txtPercentOfNode = 0.2f;
+			float txtHeight = parentSize.height * txtPercentOfNode;
+
+			return { { {txtX, txtY}, {txtWidth, txtHeight} } };
+		}
+		
 	}
 
 }

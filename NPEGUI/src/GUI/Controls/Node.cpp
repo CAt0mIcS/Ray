@@ -39,20 +39,20 @@ namespace GUI
 		txtbox->SetText(L"Hello World");
 
 
-		//txtbox = (TextBox*)m_Children.emplace_back(new TextBox(this));
-		//yOffsetTxt = m_Size.height / 7.0f;
-		//txtY = m_Pos.y + yOffsetTxt + 100;
-		//
-		////20% of Node's height is this textbox
-		//txtPercentOfNode = 0.4f;
-		//txtHeight = m_Size.height * txtPercentOfNode;
-		//
-		//txtbox->SetColor(g_DefaultTextBoxColor);
-		//txtbox->SetSize({ txtWidth, txtHeight });
-		//txtbox->SetPos({ txtX, txtY });
-		//txtbox->SetFontSize((m_Size.width + m_Size.height) / 48.6f);
-		//txtbox->SetText(L"Hello World");
-		//txtbox->SetMultiline(true);
+		txtbox = (TextBox*)m_Children.emplace_back(new TextBox(this));
+		yOffsetTxt = m_Size.height / 7.0f;
+		txtY = m_Pos.y + yOffsetTxt + (m_Size.height / 3.5f);
+		
+		//20% of Node's height is this textbox
+		txtPercentOfNode = 0.4f;
+		txtHeight = m_Size.height * txtPercentOfNode;
+		
+		txtbox->SetColor(g_DefaultTextBoxColor);
+		txtbox->SetSize({ txtWidth, txtHeight });
+		txtbox->SetPos({ txtX, txtY });
+		txtbox->SetFontSize((m_Size.width + m_Size.height) / 48.6f);
+		txtbox->SetText(L"Hello World");
+		txtbox->SetMultiline(true);
 	}
 
 	bool Node::Render()
