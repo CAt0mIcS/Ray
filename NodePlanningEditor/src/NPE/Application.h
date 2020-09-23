@@ -21,6 +21,8 @@ namespace GUI
 
 namespace NPE
 {
+	typedef std::pair<GUI::Button*, GUI::Button*> Line;
+
 	class Application : public GUI::GUIApplication
 	{
 		friend class Actions;
@@ -123,7 +125,10 @@ namespace NPE
 		HandleControls m_HandleControls;
 		FileHandler m_FileHandler;
 		Actions m_Actions;
+		
 		Util::NPoint m_MousePos;
+		std::vector<Line> m_Lines;
+		bool m_DrawLines;
 
 		int m_Zoom;
 

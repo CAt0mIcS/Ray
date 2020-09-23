@@ -45,10 +45,10 @@ namespace NPE
 			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height);
 		}
 
-		//for (std::pair<GUI::Button*, GUI::Button*>& line : app.m_Window.GetLines())
-		//{
-		//	tbLines.AddRecord(line.first->GetId(), line.second->GetId());
-		//}
+		for (std::pair<GUI::Button*, GUI::Button*>& line : app.m_Lines)
+		{
+			tbLines.AddRecord(line.first->GetId(), line.second->GetId());
+		}
 
 		tbSceneInfo.AddRecord(app.m_Zoom);
 
@@ -104,7 +104,7 @@ namespace NPE
 
 			if (line.first && line.second)
 			{
-				//m_Window.AddLine(line);
+				app.m_Lines.emplace_back(line);
 			}
 		}
 	}

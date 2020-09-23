@@ -5,6 +5,7 @@
 #include "GUI/Graphics/TextRenderer.h"
 
 #include "GUI/Controls/TextBox.h"
+#include "GUI/Controls/Button.h"
 #include "GUI/Controls/Node.h"
 
 #include "GUI/Handlers/Mouse.h"
@@ -33,6 +34,7 @@ namespace NPE
 			control->Render();
 		}
 
+		RenderLines();
 		GUI::Renderer::Get().EndDraw();
 	}
 
@@ -85,6 +87,7 @@ namespace NPE
 
 		GUI::Renderer::Get().BeginDraw();
 		app.m_Window.Render();
+		RenderLines();
 		GUI::Renderer::Get().EndDraw();
 	}
 
@@ -116,6 +119,7 @@ namespace NPE
 		}
 
 		m_App->m_Window.Render();
+		RenderLines();
 		GUI::Renderer::Get().EndDraw();
 	}
 
@@ -139,8 +143,44 @@ namespace NPE
 		}
 
 		m_App->m_Window.Render();
+		RenderLines();
 		GUI::Renderer::Get().EndDraw();
 
+	}
+	
+	void Actions::DrawLine()
+	{
+		GUI::Button& startBtn = *m_App->m_Lines[m_App->m_Lines.size() - 1].first;
+		Util::NPoint btnPos = { startBtn.GetPos().x + startBtn.GetSize().width / 2, startBtn.GetPos().y + startBtn.GetSize().height / 2 };
+		
+		GUI::Renderer::Get().BeginDraw();
+
+		m_App->m_Window.Render();
+
+		GUI::Renderer::Get().RenderLine(btnPos, GUI::Mouse::GetPos(), GUI::g_DefaultLineColor, (unsigned int)startBtn.GetSize().width / 3);
+		GUI::Renderer::Get().EndDraw();
+	}
+	
+	void Actions::RenderLines()
+	{
+		for (Line& line : m_App->m_Lines)
+		{
+			float x2 = GUI::Mouse::GetPos().x;
+			float y2 = GUI::Mouse::GetPos().y;
+			if (line.second)
+			{
+				x2 = line.second->GetPos().x + line.second->GetSize().width / 2;
+				y2 = line.second->GetPos().y + line.second->GetSize().height / 2;
+			}
+			
+			float x1 = line.first->GetPos().x + line.first->GetSize().width / 2;
+			float y1 = line.first->GetPos().y + line.first->GetSize().height / 2;
+
+			unsigned int fontsize = (unsigned int)(line.first->GetSize().width / 3);
+			if (fontsize == 0) fontsize = 1;
+
+			GUI::Renderer::Get().RenderLine({ x1, y1 }, { x2, y2 }, GUI::g_DefaultLineColor, fontsize);
+		}
 	}
 }
 

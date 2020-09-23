@@ -23,12 +23,11 @@ struct UI
 namespace NPE
 {
 	Application::Application()
-		: m_FileHandler("saves\\save.dbs"), m_Actions(this), m_MousePos{ }, m_Zoom(0), m_HandleControls{}
+		: m_FileHandler("saves\\save.dbs"), m_Actions(this), m_MousePos{ }, m_Zoom(0), m_HandleControls{}, m_Lines{}, m_DrawLines(false)
 	{
 		//m_FileHandler.LoadScene(*this);
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 	
-
 		ui.node = m_Window.AddControl<GUI::Node>(new GUI::Node(&m_Window));
 		ui.node->SetSize({ 450, 280 });
 		ui.node->SetPos({ 250, 180 });
@@ -83,7 +82,15 @@ namespace NPE
 		}
 		else if (GUI::Mouse::IsLeftPressed())
 		{
-			if (m_HandleControls.draggingNode)
+			if (m_Lines.size() > 0 && m_DrawLines)
+			{
+				GUI::Renderer::Get().BeginDraw();
+				m_Window.Render();
+				m_Actions.RenderLines();
+				GUI::Renderer::Get().EndDraw();
+				return true;
+			}
+			else if (m_HandleControls.draggingNode)
 			{
 				m_Actions.MoveNodes(m_HandleControls.draggingNode);
 				return true;
@@ -97,9 +104,16 @@ namespace NPE
 		m_MousePos = GUI::Mouse::GetPos();
 		if (e.GetButton() == GUI::MouseButton::Left)
 		{
-			if (watched->GetType() == GUI::Control::Type::Node)
+			if (watched->GetType() == GUI::Control::Type::Button)
+			{
+				m_Lines.emplace_back((GUI::Button*)watched, nullptr);
+				m_DrawLines = true;
+				return true;
+			}
+			else if (watched->GetType() == GUI::Control::Type::Node)
 			{
 				m_HandleControls.draggingNode = (GUI::Node*)watched;
+				return true;
 			}
 		}
 		return false;
@@ -109,7 +123,51 @@ namespace NPE
 	{
 		if (e.GetButton() == GUI::MouseButton::Left)
 		{
+			for (auto* control : m_Window.GetControls())
+			{
+				if (control->IsInWindow() && control->GetType() == GUI::Control::Type::Node)
+				{
+					GUI::Button* btn = (GUI::Button*)control->GetChildren()[2];
+					if (GUI::Mouse::IsOnControl(btn))
+					{
+						m_Lines[m_Lines.size() - 1].second = btn;
+						break;
+					}
+				}
+			}
+			if (m_Lines.size() > 0 && m_Lines[m_Lines.size() - 1].second == nullptr)
+			{
+				m_Lines.erase(m_Lines.end() - 1);
+			}
+
 			m_HandleControls.draggingNode = nullptr;
+			m_DrawLines = false;
+			return true;
+		}
+		else if (e.GetButton() == GUI::MouseButton::Right)
+		{
+
+			auto linesIntersect = [](const Util::NPoint& p1, const Util::NPoint& p2, const Util::NPoint& q1, const Util::NPoint& q2)
+			{
+				return (((q1.x - p1.x) * (p2.y - p1.y) - (q1.y - p1.y) * (p2.x - p1.x))
+					* ((q2.x - p1.x) * (p2.y - p1.y) - (q2.y - p1.y) * (p2.x - p1.x)) < 0)
+					&&
+					(((p1.x - q1.x) * (q2.y - q1.y) - (p1.y - q1.y) * (q2.x - q1.x))
+						* ((p2.x - q1.x) * (q2.y - q1.y) - (p2.y - q1.y) * (q2.x - q1.x)) < 0);
+			};
+
+			for (unsigned int i = 0; i < m_Lines.size(); ++i)
+			{
+				if (linesIntersect(m_Lines[i].first->GetPos(), m_Lines[i].second->GetPos(), m_MousePos, GUI::Mouse::GetPos()))
+				{
+					m_Lines.erase(m_Lines.begin() + i);
+				}
+			}
+
+			GUI::Renderer::Get().BeginDraw();
+			m_Window.Render();
+			GUI::Renderer::Get().EndDraw();
+
 			return true;
 		}
 		return false;
@@ -148,6 +206,7 @@ namespace NPE
 		GUI::Renderer& renderer = GUI::Renderer::Get();
 		renderer.BeginDraw();
 		m_Window.Render();
+
 		renderer.EndDraw();
 		return true;
 	}

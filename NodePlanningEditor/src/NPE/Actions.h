@@ -24,6 +24,8 @@ namespace NPE
 		void MoveNodes(GUI::Node* node);
 		void ZoomIn();
 		void ZoomOut();
+		void DrawLine();
+		void RenderLines();
 
 	private:
 		Application* m_App;
