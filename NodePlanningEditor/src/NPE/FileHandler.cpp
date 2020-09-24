@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "FileHandler.h"
 
 #include "Application.h"
@@ -7,26 +8,23 @@
 
 #include "GUI/Graphics/Renderer.h"
 
+#include "Util/Exceptions.h"
+
 
 namespace NPE
 {
-	FileHandler::FileHandler(const std::string& filePathToSaveFile)
-		:m_Db(filePathToSaveFile, 3)
-	{
-	}
-	
 	void FileHandler::SaveScene(Application& app)
 	{
 		//clear save file
-		m_Db.DeleteTable("NodeInfo");
-		m_Db.DeleteTable("SceneInfo");
-		m_Db.DeleteTable("Lines");
-		m_Db.WriteDb();
+		m_Db->DeleteTable("NodeInfo");
+		m_Db->DeleteTable("SceneInfo");
+		m_Db->DeleteTable("Lines");
+		m_Db->WriteDb();
 
 		//Table creation and setup
-		QRD::Table& tbNodeInfo = m_Db.CreateTable("NodeInfo");
-		QRD::Table& tbSceneInfo = m_Db.CreateTable("SceneInfo");
-		QRD::Table& tbLines = m_Db.CreateTable("Lines");
+		QRD::Table& tbNodeInfo = m_Db->CreateTable("NodeInfo");
+		QRD::Table& tbSceneInfo = m_Db->CreateTable("SceneInfo");
+		QRD::Table& tbLines = m_Db->CreateTable("Lines");
 
 		tbNodeInfo.AddField<QRD::NUMBER>("x");
 		tbNodeInfo.AddField<QRD::NUMBER>("y");
@@ -52,7 +50,7 @@ namespace NPE
 
 		tbSceneInfo.AddRecord(app.m_Zoom);
 
-		m_Db.ExitDb();
+		m_Db->ExitDb();
 	}
 	
 	void FileHandler::LoadScene(Application& app)
@@ -62,9 +60,9 @@ namespace NPE
 		QRD::Table* tbSceneInfo = nullptr;
 		QRD::Table* tbLines = nullptr;
 
-		tbNodeInfo = &m_Db.GetTable("NodeInfo");
-		tbSceneInfo = &m_Db.GetTable("SceneInfo");
-		tbLines = &m_Db.GetTable("Lines");
+		tbNodeInfo = &m_Db->GetTable("NodeInfo");
+		tbSceneInfo = &m_Db->GetTable("SceneInfo");
+		tbLines = &m_Db->GetTable("Lines");
 
 		app.m_Zoom = std::stoi(tbSceneInfo->GetRecords()[0].GetRecordData()[0]);
 		for (auto& record : tbNodeInfo->GetRecords())
@@ -108,6 +106,31 @@ namespace NPE
 			}
 		}
 	}
+
+	void FileHandler::CreateDefaultTemplate(Application& app)
+	{
+		QRD::Table& tbNodeInfo = m_Db->CreateTable("NodeInfo");
+		QRD::Table& tbSceneInfo = m_Db->CreateTable("SceneInfo");
+		QRD::Table& tbLines = m_Db->CreateTable("Lines");
+
+		tbNodeInfo.AddField<QRD::NUMBER>("x");
+		tbNodeInfo.AddField<QRD::NUMBER>("y");
+		tbNodeInfo.AddField<QRD::NUMBER>("width");
+		tbNodeInfo.AddField<QRD::NUMBER>("height");
+
+		tbLines.AddField<QRD::NUMBER>("ID2");
+		tbLines.AddField<QRD::NUMBER>("ID1");
+
+		tbSceneInfo.AddField<QRD::NUMBER>("zoom");
+		tbSceneInfo.AddRecord(app.m_Zoom);
+		m_Db->WriteDb();
+	}
+
+	void FileHandler::CreateDatabase(const std::string& filepath)
+	{
+		m_Db = new QRD::Database(filepath, 3);
+	}
+	
 }
 
 

@@ -69,7 +69,8 @@ namespace NPE
 		control->Init();
 
 		GUI::Renderer::Get().BeginDraw();
-		control->Render();
+		app.m_Window.Render();
+		RenderLines();
 		GUI::Renderer::Get().EndDraw();
 	}
 

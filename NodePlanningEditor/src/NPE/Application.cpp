@@ -23,9 +23,50 @@ struct UI
 namespace NPE
 {
 	Application::Application()
-		: m_FileHandler("saves\\save.dbs"), m_Actions(this), m_MousePos{ }, m_Zoom(0), m_HandleControls{}, m_Lines{}, m_DrawLines(false)
+		: m_Actions(this), m_MousePos{ }, m_Zoom(0), m_HandleControls{}, m_Lines{}, m_DrawLines(false)
 	{
-		//m_FileHandler.LoadScene(*this);
+
+		auto dirExists = [](const std::string& dirNameIn)
+		{
+			DWORD ftyp = GetFileAttributesA(dirNameIn.c_str());
+			if (ftyp == INVALID_FILE_ATTRIBUTES)
+				return false;  //something is wrong with your path!
+
+			if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
+				return true;   // this is a directory!
+
+			return false;    // this is not a directory!
+		};
+
+		auto fileExists = [](const std::string& fileName)
+		{
+			struct stat buffer;
+			return (stat(fileName.c_str(), &buffer) == 0);
+		};
+
+		if (!dirExists("saves"))
+		{
+			if (!CreateDirectory(L"saves", nullptr))
+			{
+				//TODO : throw error
+			}
+		}
+
+		if (!fileExists("save.dbs"))
+		{
+			std::ofstream writer("saves/save.dbs");
+			writer << "";
+			writer.close();
+		}
+
+		m_FileHandler.CreateDatabase("saves\\save.dbs");
+
+		if (!fileExists("save.dbs"))
+		{
+			m_FileHandler.CreateDefaultTemplate(*this);
+		}
+
+		m_FileHandler.LoadScene(*this);
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 	
 		ui.node = m_Window.AddControl<GUI::Node>(new GUI::Node(&m_Window));
@@ -184,7 +225,7 @@ namespace NPE
 		//Save shortcut
 		else if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('S'))
 		{
-			//m_FileHandler.SaveScene(*this);
+			m_FileHandler.SaveScene(*this);
 		}
 		return false;
 	}

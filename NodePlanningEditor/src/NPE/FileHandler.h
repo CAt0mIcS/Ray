@@ -11,13 +11,18 @@ namespace NPE
 	class FileHandler
 	{
 	public:
-		FileHandler(const std::string& filePathToSaveFile);
+		FileHandler() = default;
+
 
 		void SaveScene(Application& app);
 		void LoadScene(Application& app);
+		void CreateDefaultTemplate(Application& app);
+
+		void CreateDatabase(const std::string& filepath);
+
 
 	private:
-		QRD::Database m_Db;
+		QRD::Database* m_Db;
 	};
 }
 
