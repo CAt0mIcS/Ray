@@ -14,6 +14,7 @@ namespace GUI
 	class MouseButtonReleasedEvent;
 	class MouseWheelUpEvent;
 	class MouseWheelDownEvent;
+	class TimerEvent;
 
 	class Button;
 }
@@ -106,10 +107,19 @@ namespace NPE
 		bool OnMouseWheelDown(GUI::Control* watched, GUI::MouseWheelDownEvent& e);
 
 		/**
+		* Receives all timer events
+		* 
+		* @param watched is the control that received the event
+		* @param e is the received event
+		* @returns true if the event was handled, false otherwise
+		*/
+		bool OnTimer(GUI::Control* watched, GUI::TimerEvent& e);
+
+		/**
 		* Application deconstructor, saves scene to file
 		*/
 		
-		~Application() { /*m_FileHandler.SaveScene(*this);*/ }
+		~Application() {  }
 
 	private:
 
@@ -129,9 +139,12 @@ namespace NPE
 		Util::NPoint m_MousePos;
 		std::vector<Line> m_Lines;
 		bool m_DrawLines;
+		bool m_NeedsToSave;
 
 		static constexpr float s_NodeWidth = 450.0f;
 		static constexpr float s_NodeHeight = 280.0f;
+
+		static constexpr int s_TimerAutosaveId = 0;
 	};
 }
 

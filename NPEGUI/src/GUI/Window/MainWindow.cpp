@@ -28,7 +28,6 @@ namespace GUI
 
 	bool MainWindow::Render()
 	{
-		//TODO: Render lines here
 		Renderer::Get().RenderScene();
 		for (auto* child : m_Children)
 		{
@@ -47,9 +46,12 @@ namespace GUI
 			{
 				//TODO: Make more performant, only render part where the caret disappeared
 				this->SetFocus();
-				Renderer::Get().BeginDraw();
-				Render();
-				Renderer::Get().EndDraw();
+				
+				HDC hDC = GetDC(m_hWnd);
+				PaintEvent e(hDC, nullptr);
+				DispatchEvent(e);
+				ReleaseDC(m_hWnd, hDC);
+			
 			}
 			
 			break;
@@ -245,6 +247,11 @@ namespace GUI
 	{
 		auto& timer = m_Timers.emplace_back(m_hWnd, repeats);
 		timer.Run(time);
+	}
+
+	void MainWindow::SetTitle(const std::wstring& title)
+	{
+		SetWindowText(m_hWnd, title.c_str());
 	}
 
 	bool MainWindow::DispatchEvent(_In_ Event& e)

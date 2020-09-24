@@ -7,7 +7,35 @@ FIELDS
     width:INTEGER
     height:INTEGER
 }
-RECORDS: 0
+RECORDS: 4
+RECORD
+{
+    629.454
+    642.462
+    290.074
+    180.491
+}
+RECORD
+{
+    1099.58
+    404.941
+    290.074
+    180.491
+}
+RECORD
+{
+    420.801
+    312.202
+    290.074
+    180.491
+}
+RECORD
+{
+    1355.77
+    202.835
+    290.074
+    180.492
+}
 TABLE: SceneInfo
 FIELDS
 {
@@ -16,7 +44,7 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    0
+    -9
 }
 TABLE: Lines
 FIELDS
@@ -24,4 +52,19 @@ FIELDS
     ID2:INTEGER
     ID1:INTEGER
 }
-RECORDS: 0
+RECORDS: 3
+RECORD
+{
+    4
+    12
+}
+RECORD
+{
+    8
+    16
+}
+RECORD
+{
+    12
+    8
+}

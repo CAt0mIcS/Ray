@@ -119,6 +119,13 @@ namespace GUI
 		*/
 		void CreateTimer(_In_ unsigned int time, _In_ bool repeats);
 
+		/**
+		* Sets the HWND window title
+		* 
+		* @param title is the new title
+		*/
+		void SetTitle(const std::wstring& title);
+
 	private:
 		/**
 		* Receives all events, finds the event receiver and dispatches the event to first the receiver and then the user

@@ -27,6 +27,8 @@ namespace NPE
 		void ZoomOut();
 		void DrawLine();
 		void RenderLines();
+		void FinnishLineDrawing();
+		void EraseLine();
 
 	private:
 		Application* m_App;

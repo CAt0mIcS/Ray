@@ -19,7 +19,6 @@ namespace NPE
 		m_Db->DeleteTable("NodeInfo");
 		m_Db->DeleteTable("SceneInfo");
 		m_Db->DeleteTable("Lines");
-		m_Db->WriteDb();
 
 		//Table creation and setup
 		QRD::Table& tbNodeInfo = m_Db->CreateTable("NodeInfo");
@@ -50,7 +49,7 @@ namespace NPE
 
 		tbSceneInfo.AddRecord(zoom);
 
-		m_Db->ExitDb();
+		m_Db->WriteDb();
 	}
 	
 	void FileHandler::LoadScene(Application& app, int& zoom)

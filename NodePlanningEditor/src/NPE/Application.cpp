@@ -14,16 +14,11 @@
 #include "GUI/Handlers/Mouse.h"
 
 
-struct UI
-{
-	GUI::Node* node;
-} ui;
-
 
 namespace NPE
 {
 	Application::Application()
-		: m_Actions(this), m_MousePos{ }, m_HandleControls{}, m_Lines{}, m_DrawLines(false)
+		: m_Actions(this), m_MousePos{ }, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false)
 	{
 
 		auto dirExists = [](const std::string& dirNameIn)
@@ -52,7 +47,7 @@ namespace NPE
 			}
 		}
 
-		if (!fileExists("save.dbs"))
+		if (!fileExists("saves/save.dbs"))
 		{
 			std::ofstream writer("saves/save.dbs");
 			writer << "";
@@ -61,24 +56,27 @@ namespace NPE
 
 		m_FileHandler.CreateDatabase("saves\\save.dbs");
 
-		if (!fileExists("save.dbs"))
+		if (!fileExists("saves/save.dbs"))
 		{
 			m_FileHandler.CreateDefaultTemplate(m_Actions.m_Zoom);
 		}
 
 		m_FileHandler.LoadScene(*this, m_Actions.m_Zoom);
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
-	
-		ui.node = m_Window.AddControl<GUI::Node>(new GUI::Node(&m_Window));
-		ui.node->SetSize({ 450, 280 });
-		ui.node->SetPos({ 250, 180 });
-		ui.node->SetColor(GUI::g_DefaultNodeColor);
-		ui.node->Init();
-	
+		m_Window.CreateTimer(20000, true);
 	}
 
 	bool Application::OnEvent(GUI::Control* watched, GUI::Event& e)
 	{
+		if (m_NeedsToSave)
+		{
+			m_Window.SetTitle(L"NodePlanningEditor*");
+		}
+		else
+		{
+			m_Window.SetTitle(L"NodePlanningEditor");
+		}
+
 		switch (e.GetType())
 		{
 		case GUI::EventType::MouseMoveEvent:
@@ -105,6 +103,10 @@ namespace NPE
 		{
 			return OnMouseWheelDown(watched, (GUI::MouseWheelDownEvent&)e);
 		}
+		case GUI::EventType::TimerEvent:
+		{
+			return OnTimer(watched, (GUI::TimerEvent&)e);
+		}
 		case GUI::EventType::AppPaintEvent:
 		{
 			return OnPaintEvent(watched, (GUI::PaintEvent&)e);
@@ -119,6 +121,7 @@ namespace NPE
 		{
 			SetCursor(LoadCursor(NULL, IDC_SIZEALL));
 			m_Actions.MoveCamera();
+			m_NeedsToSave = true;
 			return true;
 		}
 		else if (GUI::Mouse::IsLeftPressed())
@@ -134,6 +137,7 @@ namespace NPE
 			else if (m_HandleControls.draggingNode)
 			{
 				m_Actions.MoveNodes(m_HandleControls.draggingNode);
+				m_NeedsToSave = true;
 				return true;
 			}
 		}
@@ -164,51 +168,14 @@ namespace NPE
 	{
 		if (e.GetButton() == GUI::MouseButton::Left)
 		{
-			for (auto* control : m_Window.GetControls())
-			{
-				if (control->IsInWindow() && control->GetType() == GUI::Control::Type::Node)
-				{
-					GUI::Button* btn = (GUI::Button*)control->GetChildren()[2];
-					if (GUI::Mouse::IsOnControl(btn))
-					{
-						m_Lines[m_Lines.size() - 1].second = btn;
-						break;
-					}
-				}
-			}
-			if (m_Lines.size() > 0 && m_Lines[m_Lines.size() - 1].second == nullptr)
-			{
-				m_Lines.erase(m_Lines.end() - 1);
-			}
+			m_Actions.FinnishLineDrawing();
 
 			m_HandleControls.draggingNode = nullptr;
-			m_DrawLines = false;
 			return true;
 		}
 		else if (e.GetButton() == GUI::MouseButton::Right)
 		{
-
-			auto linesIntersect = [](const Util::NPoint& p1, const Util::NPoint& p2, const Util::NPoint& q1, const Util::NPoint& q2)
-			{
-				return (((q1.x - p1.x) * (p2.y - p1.y) - (q1.y - p1.y) * (p2.x - p1.x))
-					* ((q2.x - p1.x) * (p2.y - p1.y) - (q2.y - p1.y) * (p2.x - p1.x)) < 0)
-					&&
-					(((p1.x - q1.x) * (q2.y - q1.y) - (p1.y - q1.y) * (q2.x - q1.x))
-						* ((p2.x - q1.x) * (q2.y - q1.y) - (p2.y - q1.y) * (q2.x - q1.x)) < 0);
-			};
-
-			for (unsigned int i = 0; i < m_Lines.size(); ++i)
-			{
-				if (linesIntersect(m_Lines[i].first->GetPos(), m_Lines[i].second->GetPos(), m_MousePos, GUI::Mouse::GetPos()))
-				{
-					m_Lines.erase(m_Lines.begin() + i);
-				}
-			}
-
-			GUI::Renderer::Get().BeginDraw();
-			m_Window.Render();
-			GUI::Renderer::Get().EndDraw();
-
+			m_Actions.EraseLine();
 			return true;
 		}
 		return false;
@@ -220,12 +187,14 @@ namespace NPE
 		if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('A'))
 		{
 			m_Actions.SpawnNode();
+			m_NeedsToSave = true;
 			return true;
 		}
 		//Save shortcut
 		else if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('S'))
 		{
 			m_FileHandler.SaveScene(*this, m_Actions.m_Zoom);
+			m_NeedsToSave = false;
 		}
 		return false;
 	}
@@ -242,12 +211,28 @@ namespace NPE
 		return true;
 	}
 
+	bool Application::OnTimer(GUI::Control* watched, GUI::TimerEvent& e)
+	{
+		switch (e.GetTimer()->GetId())
+		{
+		case s_TimerAutosaveId:
+		{
+			//TODO: Implement alert to user that a autosave is comming
+			m_FileHandler.SaveScene(*this, m_Actions.m_Zoom);
+			m_NeedsToSave = false;
+			return true;
+		}
+		}
+
+		return false;
+	}
+
 	bool Application::OnPaintEvent(GUI::Control* watched, GUI::PaintEvent& e)
 	{
 		GUI::Renderer& renderer = GUI::Renderer::Get();
 		renderer.BeginDraw();
 		m_Window.Render();
-
+		m_Actions.RenderLines();
 		renderer.EndDraw();
 		return true;
 	}
