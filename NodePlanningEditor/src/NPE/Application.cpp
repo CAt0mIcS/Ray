@@ -23,7 +23,7 @@ struct UI
 namespace NPE
 {
 	Application::Application()
-		: m_Actions(this), m_MousePos{ }, m_Zoom(0), m_HandleControls{}, m_Lines{}, m_DrawLines(false)
+		: m_Actions(this), m_MousePos{ }, m_HandleControls{}, m_Lines{}, m_DrawLines(false)
 	{
 
 		auto dirExists = [](const std::string& dirNameIn)
@@ -63,10 +63,10 @@ namespace NPE
 
 		if (!fileExists("save.dbs"))
 		{
-			m_FileHandler.CreateDefaultTemplate(*this);
+			m_FileHandler.CreateDefaultTemplate(m_Actions.m_Zoom);
 		}
 
-		m_FileHandler.LoadScene(*this);
+		m_FileHandler.LoadScene(*this, m_Actions.m_Zoom);
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 	
 		ui.node = m_Window.AddControl<GUI::Node>(new GUI::Node(&m_Window));
@@ -225,7 +225,7 @@ namespace NPE
 		//Save shortcut
 		else if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('S'))
 		{
-			m_FileHandler.SaveScene(*this);
+			m_FileHandler.SaveScene(*this, m_Actions.m_Zoom);
 		}
 		return false;
 	}

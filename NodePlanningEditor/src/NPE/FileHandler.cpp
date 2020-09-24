@@ -13,7 +13,7 @@
 
 namespace NPE
 {
-	void FileHandler::SaveScene(Application& app)
+	void FileHandler::SaveScene(Application& app, int zoom)
 	{
 		//clear save file
 		m_Db->DeleteTable("NodeInfo");
@@ -48,12 +48,12 @@ namespace NPE
 			tbLines.AddRecord(line.first->GetId(), line.second->GetId());
 		}
 
-		tbSceneInfo.AddRecord(app.m_Zoom);
+		tbSceneInfo.AddRecord(zoom);
 
 		m_Db->ExitDb();
 	}
 	
-	void FileHandler::LoadScene(Application& app)
+	void FileHandler::LoadScene(Application& app, int& zoom)
 	{
 		//needs to be declared in release mode (error C4703: potentially uninitialized local pointer variable used)
 		QRD::Table* tbNodeInfo = nullptr;
@@ -64,7 +64,7 @@ namespace NPE
 		tbSceneInfo = &m_Db->GetTable("SceneInfo");
 		tbLines = &m_Db->GetTable("Lines");
 
-		app.m_Zoom = std::stoi(tbSceneInfo->GetRecords()[0].GetRecordData()[0]);
+		zoom = std::stoi(tbSceneInfo->GetRecords()[0].GetRecordData()[0]);
 		for (auto& record : tbNodeInfo->GetRecords())
 		{
 			auto& data = record.GetRecordData();
@@ -107,7 +107,7 @@ namespace NPE
 		}
 	}
 
-	void FileHandler::CreateDefaultTemplate(Application& app)
+	void FileHandler::CreateDefaultTemplate(int zoom)
 	{
 		QRD::Table& tbNodeInfo = m_Db->CreateTable("NodeInfo");
 		QRD::Table& tbSceneInfo = m_Db->CreateTable("SceneInfo");
@@ -122,7 +122,7 @@ namespace NPE
 		tbLines.AddField<QRD::NUMBER>("ID1");
 
 		tbSceneInfo.AddField<QRD::NUMBER>("zoom");
-		tbSceneInfo.AddRecord(app.m_Zoom);
+		tbSceneInfo.AddRecord(zoom);
 		m_Db->WriteDb();
 	}
 

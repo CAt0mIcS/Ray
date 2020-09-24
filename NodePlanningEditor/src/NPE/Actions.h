@@ -16,6 +16,7 @@ namespace NPE
 	*/
 	class Actions
 	{
+		friend class Application;
 	public:
 		Actions(Application* app);
 

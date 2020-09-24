@@ -130,13 +130,8 @@ namespace NPE
 		std::vector<Line> m_Lines;
 		bool m_DrawLines;
 
-		int m_Zoom;
-
 		static constexpr float s_NodeWidth = 450.0f;
 		static constexpr float s_NodeHeight = 280.0f;
-		static constexpr float s_ZoomFactor = 0.05f;
-		static constexpr float s_ResizeFactor = 1.05f;
-		static constexpr int s_ZoomBoundary = -45;
 	};
 }
 

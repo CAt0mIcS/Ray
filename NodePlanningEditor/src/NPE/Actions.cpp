@@ -45,20 +45,20 @@ namespace NPE
 		float width = app.s_NodeWidth;
 		float height = app.s_NodeHeight;
 
-		if (app.m_Zoom > 0)
+		if (m_Zoom > 0)
 		{
-			for (int i = 0; i < app.m_Zoom; ++i)
+			for (int i = 0; i < m_Zoom; ++i)
 			{
-				width *= app.s_ResizeFactor;
-				height *= app.s_ResizeFactor;
+				width *= s_ResizeFactor;
+				height *= s_ResizeFactor;
 			}
 		}
 		else
 		{
-			for (int i = app.m_Zoom; i < 0; ++i)
+			for (int i = m_Zoom; i < 0; ++i)
 			{
-				width /= app.s_ResizeFactor;
-				height /= app.s_ResizeFactor;
+				width /= s_ResizeFactor;
+				height /= s_ResizeFactor;
 			}
 		}
 

@@ -14,9 +14,9 @@ namespace NPE
 		FileHandler() = default;
 
 
-		void SaveScene(Application& app);
-		void LoadScene(Application& app);
-		void CreateDefaultTemplate(Application& app);
+		void SaveScene(Application& app, int zoom);
+		void LoadScene(Application& app, int& zoom);
+		void CreateDefaultTemplate(int zoom);
 
 		void CreateDatabase(const std::string& filepath);
 
