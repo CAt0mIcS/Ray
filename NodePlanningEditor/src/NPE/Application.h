@@ -15,6 +15,7 @@ namespace GUI
 	class MouseWheelUpEvent;
 	class MouseWheelDownEvent;
 	class TimerEvent;
+	class AppCloseEvent;
 
 	class Button;
 }
@@ -60,6 +61,15 @@ namespace NPE
 		* @returns true if the event was handled, false otherwise
 		*/
 		bool OnPaintEvent(GUI::Control* watched, GUI::PaintEvent& e);
+
+		/**
+		* Called when the application gets closed
+		*
+		* @param watched is the control that received the event
+		* @param e is the received event
+		* @returns true if the event was handled, false otherwise
+		*/
+		bool OnClose(GUI::Control* watched, GUI::AppCloseEvent& e);
 		
 		/**
 		* Receives all mouse button pressed events from Application::OnEvent

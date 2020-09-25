@@ -111,6 +111,10 @@ namespace NPE
 		{
 			return OnPaintEvent(watched, (GUI::PaintEvent&)e);
 		}
+		case GUI::EventType::AppCloseEvent:
+		{
+			return OnClose(watched, (GUI::AppCloseEvent&)e);
+		}
 		}
 		return false;
 	}
@@ -234,6 +238,19 @@ namespace NPE
 		m_Window.Render();
 		m_Actions.RenderLines();
 		renderer.EndDraw();
+		return true;
+	}
+
+	bool Application::OnClose(GUI::Control* watched, GUI::AppCloseEvent& e)
+	{
+		if (m_NeedsToSave)
+		{
+			int result = MessageBox(m_Window.GetNativeWindow(), L"Save changes to the scene?", L"Unsafed changes", MB_YESNO);
+			if (result == IDYES)
+			{
+				m_FileHandler.SaveScene(*this, m_Actions.m_Zoom);
+			}
+		}
 		return true;
 	}
 
