@@ -35,6 +35,7 @@ protected:
     {
         fmt::memory_buffer formatted;
         sink::formatter_->format(msg, formatted);
+        //__HIT__
         file_helper_.write(formatted);
     }
 

@@ -22,7 +22,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 			freopen("CONOUT$", "w", stdout);
 		#endif
 
-		UTIL_LOG_CLEAR("NPE.log");
+		Util::Logger::Init("NPE.log");
 		return NPE::Application{}.Run();
 	}
 	catch (NPE::Exception& e)

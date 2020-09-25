@@ -94,12 +94,16 @@ static const char *short_level_names[]{"T", "D", "I", "W", "E", "C", "O"};
 
 inline const char *to_c_str(spdlog::level::level_enum l) SPDLOG_NOEXCEPT
 {
-    return level_names[l];
+    //return level_names[l];
+    //__MODIFIED__
+    return "";
 }
 
 inline const char *to_short_c_str(spdlog::level::level_enum l) SPDLOG_NOEXCEPT
 {
-    return short_level_names[l];
+    //return short_level_names[l];
+    //__MODIFIED__
+    return "";
 }
 
 inline spdlog::level::level_enum from_str(const std::string &name) SPDLOG_NOEXCEPT

@@ -84,10 +84,34 @@ public:
     {
         size_t msg_size = buf.size();
         auto data = buf.data();
-        if (std::fwrite(data, 1, msg_size, fd_) != msg_size)
+        
+        //__MODIFIED__ __HIT__
+        std::string str = data;
+
+#ifdef SPDLOG_PRINT_TO_CONSOLE
+        printf(str.c_str());
+#endif
+
+        size_t id = 0;
+        id = str.find("[]");
+
+        if (id == std::string::npos)
         {
-            throw spdlog_ex("Failed writing to file " + os::filename_to_str(_filename), errno);
+            if (std::fwrite(data, 1, msg_size, fd_) != msg_size)
+            {
+                throw spdlog_ex("Failed writing to file " + os::filename_to_str(_filename), errno);
+            }
         }
+        else
+        {
+            str.replace(str.begin() + id, str.begin() + id + 3, "");
+
+            if (std::fwrite(str.c_str(), 1, msg_size, fd_) != msg_size)
+            {
+                throw spdlog_ex("Failed writing to file " + os::filename_to_str(_filename), errno);
+            }
+        }
+        
     }
 
     size_t size() const

@@ -2,60 +2,31 @@
 
 #include "UtilBase.h"
 #include "pch.h"
-#include <fstream>
-#include <ctime>
-#include <sstream>
-#include <vector>
 
-#define UTIL_LOG_ACTIVE 1
+#define SPDLOG_NO_NAME
+#define SPDLOG_PRINT_TO_CONSOLE
+
+#include "spdlog/spdlog.h"
+#include "spdlog/logger.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 
 namespace Util
 {
-
 	class UTIL_API Logger
 	{
 	public:
-		static void Init(const std::string& filepath);
+		static void Init(const std::string& filename);
 
-		template<typename T>
-		static void Log(const T& message);
+		static std::shared_ptr<spdlog::logger>& GetLogger() { return s_Logger; }
 
 	private:
-		static std::string s_FilePath;
+		static std::shared_ptr<spdlog::logger> s_Logger;
 	};
-
-	template<typename T>
-	inline void Logger::Log(const T& message)
-	{
-		std::ofstream stream(s_FilePath, std::ios_base::app);
-		std::time_t t = std::time(0);
-		std::tm now{};
-		localtime_s(&now, &t);
-		std::stringstream ss;
-
-		ss << "[LOG " << now.tm_hour << ':' << now.tm_min << ':' << round(now.tm_sec) << "]: " << message << '\n';
-
-		stream << ss.str();
-		stream.close();
-	}
-
 }
 
 
-#if UTIL_LOG_ACTIVE
-	template<typename T, typename... Args>
-	inline void U_UTIL_LOG_U(const T& text, Args&&... args)
-	{
-
-		Util::Logger::Log((*(T*)&text));
-	}
-
-	#define UTIL_LOG(text, ...) U_UTIL_LOG_U(text, __VA_ARGS__)
-	#define UTIL_LOG_CLEAR(logPath) Util::Logger::Init(logPath)
-#else
-	template<typename T>
-	inline void UTIL_LOG(const T& text) {}
-	//#define QRD_LOG(text)
-	#define UTIL_LOG_CLEAR()
-#endif
+#define NPE_LOG(...) Util::Logger::GetLogger()->info(__VA_ARGS__)
+#define NPE_LOG_WARN(...) Util::Logger::GetLogger()->warn(__VA_ARGS__)
+#define NPE_LOG_ERROR(...) Util::Logger::GetLogger()->error(__VA_ARGS__)
+#define NPE_LOG_TRACE(...) Util::Logger::GetLogger()->trace(__VA_ARGS__)

@@ -29,6 +29,7 @@ public:
     void log(const details::log_msg &msg) final
     {
         std::lock_guard<Mutex> lock(mutex_);
+        //__HIT__
         sink_it_(msg);
     }
 

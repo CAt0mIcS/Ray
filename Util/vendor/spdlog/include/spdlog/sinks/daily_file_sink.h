@@ -66,7 +66,6 @@ public:
 protected:
     void sink_it_(const details::log_msg &msg) override
     {
-
         if (msg.time >= rotation_tp_)
         {
             file_helper_.open(FileNameCalc::calc_filename(base_filename_, now_tm(msg.time)), truncate_);
