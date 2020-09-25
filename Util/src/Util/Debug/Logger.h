@@ -5,6 +5,7 @@
 #include <fstream>
 #include <ctime>
 #include <sstream>
+#include <vector>
 
 #define UTIL_LOG_ACTIVE 1
 
@@ -43,13 +44,14 @@ namespace Util
 
 
 #if UTIL_LOG_ACTIVE
-	template<typename T>
-	inline void U_UTIL_LOG_U(const T& text)
+	template<typename T, typename... Args>
+	inline void U_UTIL_LOG_U(const T& text, Args&&... args)
 	{
+
 		Util::Logger::Log((*(T*)&text));
 	}
 
-	#define UTIL_LOG(text) U_UTIL_LOG_U(text)
+	#define UTIL_LOG(text, ...) U_UTIL_LOG_U(text, __VA_ARGS__)
 	#define UTIL_LOG_CLEAR(logPath) Util::Logger::Init(logPath)
 #else
 	template<typename T>

@@ -18,7 +18,7 @@ namespace Util
 		localtime_s(&now, &t);
 
 		ss << "[LOG " << now.tm_hour << ':' << now.tm_min << ':' << now.tm_sec << "] ";
-		ss << "****** Log initalized for NodePlanningEditor ******\n\n";
+		ss << "****** Log initalized for NodePlanningEditor ******\n\n\n\n";
 
 		ofs << ss.str();
 

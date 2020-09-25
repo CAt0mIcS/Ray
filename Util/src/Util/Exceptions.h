@@ -1,7 +1,10 @@
 #pragma once
 
 #include <string>
+#include <sstream>
 #include "UtilBase.h"
+
+#include "Debug/Logger.h"
 
 /**
 * non dll-interface class used as base for dll-interface class
@@ -211,8 +214,6 @@ if(FAILED(hr)) \
 	MessageBoxW(NULL, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION); \
 	throw e; \
 }
-
-
 
 #define NPE_THROW_EXCEPT_MSG(msg) \
 { \

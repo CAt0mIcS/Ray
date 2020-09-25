@@ -69,14 +69,12 @@ namespace NPE
 
 	bool Application::OnEvent(GUI::Control* watched, GUI::Event& e)
 	{
+		//Add * to title if the scene was modified
 		if (m_NeedsToSave)
-		{
 			m_Window.SetTitle(L"NodePlanningEditor*");
-		}
 		else
-		{
 			m_Window.SetTitle(L"NodePlanningEditor");
-		}
+
 
 		switch (e.GetType())
 		{
@@ -248,7 +246,7 @@ namespace NPE
 	{
 		if (m_NeedsToSave)
 		{
-			int result = MessageBox(m_Window.GetNativeWindow(), L"Save changes to the scene?", L"Unsafed changes", MB_YESNO);
+			int result = MessageBox(m_Window.GetNativeWindow(), L"Save changes to the scene?", L"Unsaved changes", MB_YESNO);
 			if (result == IDYES)
 			{
 				m_FileHandler.SaveScene(*this, m_Actions.m_Zoom);
