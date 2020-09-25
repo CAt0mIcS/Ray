@@ -6,7 +6,7 @@
 #include <ctime>
 #include <sstream>
 
-#define Util_LOG_ACTIVE 1
+#define UTIL_LOG_ACTIVE 1
 
 
 namespace Util
@@ -18,33 +18,39 @@ namespace Util
 		static void Init(const std::string& filepath);
 
 		template<typename T>
-		static void Log(const T& message, const std::string& filepath);
+		static void Log(const T& message);
+
+	private:
+		static std::string s_FilePath;
 	};
 
 	template<typename T>
-	void Logger::Log(const T& message, const std::string& filepath)
+	inline void Logger::Log(const T& message)
 	{
-		std::ofstream stream(filepath, std::ios_base::app);
+		std::ofstream stream(s_FilePath, std::ios_base::app);
 		std::time_t t = std::time(0);
-		std::tm* now = std::localtime(&t);
+		std::tm now{};
+		localtime_s(&now, &t);
 		std::stringstream ss;
-		ss << message;
 
-		stream << '[' << now->tm_hour << ':' << now->tm_min << ':' << round(now->tm_sec) << "]: " << ss.str() << '\n';
+		ss << "[LOG " << now.tm_hour << ':' << now.tm_min << ':' << round(now.tm_sec) << "]: " << message << '\n';
 
+		stream << ss.str();
 		stream.close();
 	}
 
 }
 
 
-#if Util_LOG_ACTIVE
+#if UTIL_LOG_ACTIVE
 	template<typename T>
-	inline void UTIL_LOG(const T& text)
+	inline void U_UTIL_LOG_U(const T& text)
 	{
-		Util::Logger::Log((*(T*)&text), "D:\\dev\\Cpp\\Projects\\NodePlanningEditor\\log.txt");
+		Util::Logger::Log((*(T*)&text));
 	}
-	#define UTIL_LOG_CLEAR() Util::Logger::Init("D:\\dev\\Cpp\\Projects\\NodePlanningEditor\\log.txt")
+
+	#define UTIL_LOG(text) U_UTIL_LOG_U(text)
+	#define UTIL_LOG_CLEAR(logPath) Util::Logger::Init(logPath)
 #else
 	template<typename T>
 	inline void UTIL_LOG(const T& text) {}

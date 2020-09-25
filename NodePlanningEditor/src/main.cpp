@@ -6,6 +6,8 @@
 #include "NPE/Application.h"
 #include "Util/Exceptions.h"
 
+#include "Util/Debug/Logger.h"
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR nCmdLine, _In_ int nCmdShow)
 {
 	try
@@ -20,6 +22,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 			freopen("CONOUT$", "w", stdout);
 		#endif
 
+		UTIL_LOG_CLEAR("NPE.log");
 		return NPE::Application{}.Run();
 	}
 	catch (NPE::Exception& e)
