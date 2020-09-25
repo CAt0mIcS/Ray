@@ -6,49 +6,63 @@ FIELDS
     y:INTEGER
     width:INTEGER
     height:INTEGER
+    txt1:TEXT
+    txt2:TEXT
 }
 RECORDS: 6
 RECORD
 {
-    474.509
-    470.513
-    238.645
-    148.49
+    382.792
+    728.269
+    352.587
+    219.387
+    Hello World
+    Hello World2
 }
 RECORD
 {
-    781.877
-    669.342
-    238.645
-    148.49
+    822.377
+    1012.62
+    352.587
+    219.387
+    Hello World
+    Hello World2
 }
 RECORD
 {
-    1180.05
-    493.6
-    238.645
-    148.49
+    1121.9
+    745.775
+    352.587
+    219.387
+    Hello World
+    Hello World2
 }
 RECORD
 {
-    565.023
-    246.943
-    238.645
-    148.49
+    512.241
+    408.53
+    352.587
+    219.387
+    Hello World This is a test
+    Hello World2
 }
 RECORD
 {
-    960.803
-    207.107
-    238.645
-    148.49
+    1078.27
+    351.559
+    352.587
+    219.387
+    Hello World
+    Hello World2
 }
 RECORD
 {
-    688.758
-    75.1571
-    238.645
-    148.49
+    689.202
+    162.851
+    352.587
+    219.387
+    Hello World
+    Hello World2
 }
 TABLE: SceneInfo
 FIELDS
@@ -58,7 +72,7 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    -13
+    -5
 }
 TABLE: Lines
 FIELDS

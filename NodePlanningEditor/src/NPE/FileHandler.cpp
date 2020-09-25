@@ -5,6 +5,7 @@
 
 #include "GUI/Controls/Node.h"
 #include "GUI/Controls/Button.h"
+#include "GUI/Controls/TextBox.h"
 
 #include "GUI/Graphics/Renderer.h"
 
@@ -29,6 +30,8 @@ namespace NPE
 		tbNodeInfo.AddField<QRD::NUMBER>("y");
 		tbNodeInfo.AddField<QRD::NUMBER>("width");
 		tbNodeInfo.AddField<QRD::NUMBER>("height");
+		tbNodeInfo.AddField<QRD::TEXT>("txt1");
+		tbNodeInfo.AddField<QRD::TEXT>("txt2");
 
 		tbLines.AddField<QRD::NUMBER>("ID2");
 		tbLines.AddField<QRD::NUMBER>("ID1");
@@ -39,7 +42,12 @@ namespace NPE
 		{
 			const auto& pos = control->GetPos();
 			const auto& size = control->GetSize();
-			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height);
+			
+			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+			std::string txt1 = converter.to_bytes(((GUI::TextBox*)control->GetChildren()[0])->GetText().text);
+			std::string txt2 = converter.to_bytes(((GUI::TextBox*)control->GetChildren()[1])->GetText().text);
+
+			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height, txt1, txt2);
 		}
 
 		for (std::pair<GUI::Button*, GUI::Button*>& line : app.m_Lines)
@@ -72,6 +80,13 @@ namespace NPE
 			node->SetSize({ std::stof(data[2]), std::stof(data[3]) });
 			node->SetColor(GUI::g_DefaultNodeColor);
 			node->Init();
+
+			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+			std::wstring txt1 = converter.from_bytes(data[4]);
+			std::wstring txt2 = converter.from_bytes(data[5]);
+
+			((GUI::TextBox*)(node->GetChildren()[0]))->SetText(txt1);
+			((GUI::TextBox*)(node->GetChildren()[1]))->SetText(txt2);
 		}
 
 		for (auto& record : tbLines->GetRecords())
@@ -116,6 +131,8 @@ namespace NPE
 		tbNodeInfo.AddField<QRD::NUMBER>("y");
 		tbNodeInfo.AddField<QRD::NUMBER>("width");
 		tbNodeInfo.AddField<QRD::NUMBER>("height");
+		tbNodeInfo.AddField<QRD::TEXT>("txt1");
+		tbNodeInfo.AddField<QRD::TEXT>("txt2");
 
 		tbLines.AddField<QRD::NUMBER>("ID2");
 		tbLines.AddField<QRD::NUMBER>("ID1");
