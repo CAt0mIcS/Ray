@@ -92,13 +92,6 @@ namespace NPE
 		GUI::Renderer::Get().EndDraw();
 	}
 
-	/*
-	* TODO: Look at ID2D1RenderTarget::SetTransform
-	*	https://docs.microsoft.com/en-us/windows/win32/direct2d/id2d1rendertarget-settransform?redirectedfrom=MSDN
-	*	https://stackoverflow.com/questions/23228990/implement-a-simple-lookat-like-camera-in-direct2d
-	*
-	*	https://gamedev.stackexchange.com/questions/46228/implementing-a-camera-viewport-to-a-2d-game
-	*/
 	void Actions::ZoomIn()
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
@@ -235,6 +228,39 @@ namespace NPE
 		m_App->m_Window.Render();
 		RenderLines();
 		GUI::Renderer::Get().EndDraw();
+	}
+	
+	void Actions::DeleteNode(GUI::Node* watched)
+	{
+		auto& controls = m_App->m_Window.GetControls();
+		auto& lines = m_App->m_Lines;
+
+		for (unsigned int i = 0; i < controls.size(); ++i)
+		{
+			if (controls[i]->GetId() == watched->GetId())
+			{
+				GUI::Button* lineBtn = (GUI::Button*)controls[i]->GetChildren()[2];
+
+				for (unsigned int j = 0; j < lines.size(); ++j)
+				{
+					if (lines[j].first == lineBtn || lines[j].second == lineBtn)
+					{
+						m_App->m_Lines.erase(lines.begin() + j);
+					}
+				}
+
+				delete controls[i];
+				controls.erase(controls.begin() + i);
+				m_App->m_NeedsToSave = true;
+
+				GUI::Renderer::Get().BeginDraw();
+				m_App->m_Window.Render();
+				RenderLines();
+				GUI::Renderer::Get().EndDraw();
+
+				break;
+			}
+		}
 	}
 }
 

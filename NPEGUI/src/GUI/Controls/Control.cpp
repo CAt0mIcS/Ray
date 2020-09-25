@@ -108,5 +108,13 @@ namespace GUI
 		return true;
 	}
 
+	Control::~Control()
+	{
+		for (auto* child : m_Children)
+		{
+			delete child;
+		}
+	}
+
 }
 

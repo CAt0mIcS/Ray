@@ -29,6 +29,7 @@ namespace NPE
 		void RenderLines();
 		void FinnishLineDrawing();
 		void EraseLine();
+		void DeleteNode(GUI::Node* watched);
 
 	private:
 		Application* m_App;

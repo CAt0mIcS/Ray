@@ -181,6 +181,8 @@ namespace NPE
 		else if (e.GetButton() == GUI::MouseButton::Right)
 		{
 			m_Actions.EraseLine();
+			if(GUI::Mouse::IsOnControl(watched) && watched->GetType() == GUI::Control::Type::Node)
+				m_Actions.DeleteNode((GUI::Node*)watched);
 			return true;
 		}
 		return false;

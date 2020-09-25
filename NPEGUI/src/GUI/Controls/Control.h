@@ -173,7 +173,7 @@ namespace GUI
 		/**
 		* Virtual destructor of control
 		*/
-		virtual ~Control() = default;
+		virtual ~Control();
 
 		/**
 		* Determines which control should receive the event
