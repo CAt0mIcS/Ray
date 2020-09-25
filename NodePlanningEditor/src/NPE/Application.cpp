@@ -13,6 +13,7 @@
 
 #include "GUI/Handlers/Mouse.h"
 
+#include "Util/Exceptions.h"
 
 
 namespace NPE
@@ -43,7 +44,7 @@ namespace NPE
 		{
 			if (!CreateDirectory(L"saves", nullptr))
 			{
-				//TODO : throw error
+				NPE_THROW_EXCEPT_MSG("Failed to create directory to store save file");
 			}
 		}
 

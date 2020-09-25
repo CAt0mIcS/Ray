@@ -40,14 +40,14 @@ namespace NPE
 		* 
 		* @returns string with type
 		*/
-		virtual const wchar_t* GetType() const = 0;
+		virtual const wchar_t* GetType() const { return L"NPE Exception"; };
 
 		/**
 		* Getter for more information about the error
 		* 
 		* @returns more information about the erro
 		*/
-		virtual const wchar_t* what() const = 0;
+		virtual const wchar_t* what() const;
 
 		/**
 		* Virtual Exception destructor
@@ -72,6 +72,13 @@ namespace NPE
 		* @param file is the file where the error occured
 		*/
 		WindowException(HRESULT hr, unsigned int line, const char* file);
+
+		/**
+		* WindowException constructor
+		*
+		* @param other is another window exception
+		*/
+		WindowException(const WindowException& other);
 
 		/**
 		* Getter for string with type
@@ -102,13 +109,20 @@ namespace NPE
 	{
 	public:
 		/**
-		* WindowException contructor
+		* GraphicsException contructor
 		*
 		* @param hr is the error code
 		* @param line is the line where the error occured
 		* @param file is the file where the error occured
 		*/
 		GraphicsException(HRESULT hr, unsigned int line, const char* file, const char* message);
+
+		/**
+		* GraphicsException constructor
+		* 
+		* @param other is another graphics exception
+		*/
+		GraphicsException(const GraphicsException& other);
 
 		/**
 		* Getter for string with type
@@ -123,6 +137,13 @@ namespace NPE
 		* @returns more information about the erro
 		*/
 		virtual const wchar_t* what() const override;
+
+		/**
+		* Checks which error was thrown and returns the error string for the HRESULT
+		* 
+		* @returns the error string specified on https://docs.microsoft.com/en-us/windows/win32/direct2d/direct2d-error-codes
+		*/
+		std::wstring GetErrorString() const;
 
 	private:
 		HRESULT m_Hr;
@@ -142,11 +163,18 @@ namespace NPE
 		MSGException(const char* message, unsigned int line, const char* file);
 
 		/**
+		* MSGException constructor
+		*
+		* @param other is another msg exception
+		*/
+		MSGException(const MSGException& other);
+
+		/**
 		* Getter for string with type
 		*
 		* @returns string with type
 		*/
-		virtual const wchar_t* GetType() const override { return L"NPE Exception with message"; }
+		virtual const wchar_t* GetType() const override { return L"NPE Exception"; }
 
 		/**
 		* Getter for more information about the error
@@ -162,8 +190,33 @@ namespace NPE
 }
 
 
-#define NPE_THROW_EXCEPT() throw NPE::Exception(__LINE__, __FILE__)
+#define NPE_THROW_EXCEPT() \
+{ \
+	NPE::Exception e(__LINE__, __FILE__); \
+	MessageBoxW(NULL, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION); \
+	throw e; \
+}
 
-#define NPE_THROW_WND_EXCEPT(hr) throw NPE::WindowException(hr, __LINE__, __FILE__)
-#define NPE_THROW_GFX_EXCEPT(hr, msg) if(FAILED(hr)) throw NPE::GraphicsException(hr, __LINE__, __FILE__, msg)
-#define NPE_THROW_EXCEPT_MSG(msg) throw NPE::MSGException(msg, __LINE__, __FILE__)
+#define NPE_THROW_WND_EXCEPT(hr) \
+{ \
+	NPE::WindowException e(hr, __LINE__, __FILE__); \
+	MessageBoxW(NULL, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION); \
+	throw e; \
+}
+
+#define NPE_THROW_GFX_EXCEPT(hr, msg) \
+if(FAILED(hr)) \
+{ \
+	NPE::GraphicsException e(hr, __LINE__, __FILE__, msg); \
+	MessageBoxW(NULL, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION); \
+	throw e; \
+}
+
+
+
+#define NPE_THROW_EXCEPT_MSG(msg) \
+{ \
+	NPE::MSGException e(msg, __LINE__, __FILE__); \
+	MessageBoxW(NULL, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION); \
+	throw e; \
+}

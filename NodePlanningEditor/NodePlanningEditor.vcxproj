@@ -180,6 +180,9 @@
     <ProjectReference Include="..\NPEGUI\NPEGUI.vcxproj">
       <Project>{0c020602-4cc8-4f00-9960-40241ca114a1}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Util\Util.vcxproj">
+      <Project>{20438ecc-4a35-4490-ba7b-1f8ab8970202}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
