@@ -19,11 +19,13 @@
 namespace NPE
 {
 	Application::Application()
-		: m_Actions(this), m_MousePos{ }, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false)
+		: m_Actions(this), m_MousePos{}, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false)
 	{
 
 		auto dirExists = [](const std::string& dirNameIn)
 		{
+			NPE_LOG("Checking if directory {0} exists...", dirNameIn);
+
 			DWORD ftyp = GetFileAttributesA(dirNameIn.c_str());
 			if (ftyp == INVALID_FILE_ATTRIBUTES)
 				return false;  //something is wrong with your path!
@@ -37,32 +39,43 @@ namespace NPE
 		auto fileExists = [](const std::string& fileName)
 		{
 			struct stat buffer;
+			NPE_LOG("Checking if file {0} exists...", fileName);
 			return (stat(fileName.c_str(), &buffer) == 0);
 		};
 
 		if (!dirExists("saves"))
 		{
+			NPE_LOG("Directory saves doesn't exist, creating it...");
 			if (!CreateDirectory(L"saves", nullptr))
 			{
 				NPE_THROW_EXCEPT_MSG("Failed to create directory to store save file");
 			}
 		}
+		else
+			NPE_LOG("Directory exists");
 
+		bool fileExist = true;
 		if (!fileExists("saves/save.dbs"))
 		{
+			NPE_LOG("Directory saves/save.dbs doesn't exist, creating it...");
 			std::ofstream writer("saves/save.dbs");
 			writer << "";
 			writer.close();
+			fileExist = false;
 		}
+		else
+			NPE_LOG("File exists");
 
 		m_FileHandler.CreateDatabase("saves\\save.dbs");
 
-		if (!fileExists("saves/save.dbs"))
+		if (!fileExist)
 		{
 			m_FileHandler.CreateDefaultTemplate(m_Actions.m_Zoom);
 		}
 
+		NPE_LOG("Start of loading scene...");
 		m_FileHandler.LoadScene(*this, m_Actions.m_Zoom);
+		NPE_LOG("Finnished loading scene");
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 		m_Window.CreateTimer(20000, true);
 	}
@@ -252,6 +265,7 @@ namespace NPE
 				m_FileHandler.SaveScene(*this, m_Actions.m_Zoom);
 			}
 		}
+		NPE_LOG(" ****** Log finnished for NodePlanningEditor ******");
 		return true;
 	}
 

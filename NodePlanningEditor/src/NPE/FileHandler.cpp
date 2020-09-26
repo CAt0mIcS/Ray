@@ -48,11 +48,13 @@ namespace NPE
 			std::string txt2 = converter.to_bytes(((GUI::TextBox*)control->GetChildren()[1])->GetText().text);
 
 			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height, txt1, txt2);
+			NPE_LOG("Saved Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t{4}\nInfo:\t{5}", pos.x, pos.y, size.width, size.height, txt1, txt2);
 		}
 
 		for (std::pair<GUI::Button*, GUI::Button*>& line : app.m_Lines)
 		{
 			tbLines.AddRecord(line.first->GetId(), line.second->GetId());
+			NPE_LOG("Saved Line: \nStart:\tx={0} y={1}\nEnd:\tx={2} y={3}", line.first->GetPos().x, line.first->GetPos().y, line.second->GetPos().x, line.second->GetPos().y);
 		}
 
 		tbSceneInfo.AddRecord(zoom);
@@ -87,6 +89,7 @@ namespace NPE
 
 			((GUI::TextBox*)(node->GetChildren()[0]))->SetText(txt1);
 			((GUI::TextBox*)(node->GetChildren()[1]))->SetText(txt2);
+			NPE_LOG("Loaded Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t{4}\nInfo:\t{5}", node->GetPos().x, node->GetPos().y, node->GetSize().width, node->GetSize().height, data[4], data[5]);
 		}
 
 		for (auto& record : tbLines->GetRecords())
@@ -117,6 +120,7 @@ namespace NPE
 			if (line.first && line.second)
 			{
 				app.m_Lines.emplace_back(line);
+				NPE_LOG("Loaded Line: \nStart:\tx={0} y={1}\nEnd:\tx={2} y={3}", line.first->GetPos().x, line.first->GetPos().y, line.second->GetPos().x, line.second->GetPos().y);
 			}
 		}
 	}

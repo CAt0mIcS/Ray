@@ -5,6 +5,7 @@
 #include "UtilBase.h"
 
 #include "Debug/Logger.h"
+#include "Util/Util.h"
 
 /**
 * non dll-interface class used as base for dll-interface class

@@ -10,6 +10,8 @@
 
 #include "GUI/Handlers/Mouse.h"
 
+#include "Util/Debug/Logger.h"
+
 
 namespace NPE
 {
@@ -68,6 +70,8 @@ namespace NPE
 		control->SetPos(GUI::Mouse::GetPos());
 		control->Init();
 
+		NPE_LOG("Created Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}", control->GetPos().x, control->GetPos().y, control->GetSize().width, control->GetSize().height);
+
 		GUI::Renderer::Get().BeginDraw();
 		app.m_Window.Render();
 		RenderLines();
@@ -106,10 +110,8 @@ namespace NPE
 		GUI::Renderer::Get().BeginDraw();
 		for (auto* control : m_App->m_Window.GetControls())
 		{
-			std::cout << "Control before: Center: " << center << ' ' << control->GetPos() << ' ' << control->GetSize() << '\n';
 			control->MoveBy((center - control->GetPos()) * -s_ZoomFactor);
 			control->ResizeTo(control->GetSize() * s_ResizeFactor);
-			std::cout << "Control after: Center: " << center << ' ' << control->GetPos() << ' ' << control->GetSize() << '\n';
 		}
 
 		m_App->m_NeedsToSave = true;
@@ -134,7 +136,6 @@ namespace NPE
 		{
 			control->MoveBy((center - control->GetPos()) * s_ZoomFactor);
 			control->ResizeTo(control->GetSize() / s_ResizeFactor);
-			std::cout << "Control before: Center: " << center << ' ' << control->GetPos() << ' ' << control->GetSize() << '\n';
 		}
 
 		m_App->m_NeedsToSave = true;
@@ -200,6 +201,8 @@ namespace NPE
 		else
 		{
 			m_App->m_NeedsToSave = true;
+			auto line = m_App->m_Lines[m_App->m_Lines.size() - 1];
+			NPE_LOG("Connected Line: \nStart:\t{0}\nEnd:\t{1}", line.first->GetPos(), line.second->GetPos());
 		}
 		m_App->m_DrawLines = false;
 	}
