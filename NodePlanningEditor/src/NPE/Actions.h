@@ -4,6 +4,7 @@
 namespace GUI
 {
 	class Node;
+	class TextBox;
 }
 
 
@@ -30,6 +31,7 @@ namespace NPE
 		void FinnishLineDrawing();
 		void EraseLine();
 		void DeleteNode(GUI::Node* watched);
+		void OnLineExpand(GUI::TextBox* watched);
 
 	private:
 		Application* m_App;

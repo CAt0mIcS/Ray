@@ -107,6 +107,10 @@ namespace NPE
 		{
 			return OnKeyPressed(watched, (GUI::KeyPressedEvent&)e);
 		}
+		case GUI::EventType::CharEvent:
+		{
+			return OnChar(watched, (GUI::CharEvent&)e);
+		}
 		case GUI::EventType::MouseWheelUpEvent:
 		{
 			return OnMouseWheelUp(watched, (GUI::MouseWheelUpEvent&)e);
@@ -214,6 +218,20 @@ namespace NPE
 			m_FileHandler.SaveScene(*this, m_Actions.m_Zoom);
 			m_NeedsToSave = false;
 		}
+		return false;
+	}
+
+	bool Application::OnChar(GUI::Control* watched, GUI::CharEvent& e)
+	{
+		if (watched->GetType() == GUI::Control::Type::TextBox)
+		{
+			GUI::TextBox* txtbox = (GUI::TextBox*)watched;
+			if (txtbox->IsMultiline())
+			{
+				m_Actions.OnLineExpand(txtbox);
+			}
+		}
+
 		return false;
 	}
 

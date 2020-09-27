@@ -44,7 +44,7 @@ namespace GUI
 		yOffsetTxt = m_Size.height / 7.0f;
 		txtY = m_Pos.y + yOffsetTxt + (m_Size.height / 3.5f);
 		
-		//20% of Node's height is this textbox
+		//40% of Node's height is this textbox
 		txtPercentOfNode = 0.4f;
 		txtHeight = m_Size.height * txtPercentOfNode;
 		

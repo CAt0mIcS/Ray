@@ -47,7 +47,9 @@ namespace GUI
 		* @param text is the text to get the metrics for
 		* @returns the text metrics to text
 		*/
-		DWRITE_TEXT_METRICS GetTextMetrics(_In_ const NText& text);
+		DWRITE_TEXT_METRICS GetTextMetrics(
+			_In_ const NText& text
+		);
 
 		/**
 		* Getter for the line metrics to the current text
@@ -55,7 +57,9 @@ namespace GUI
 		* @param text is the text to get the metrics for 
 		* @returns the line metrics to the current text
 		*/
-		std::vector<DWRITE_LINE_METRICS> GetLineMetrics(_In_ const NText& text);
+		std::vector<DWRITE_LINE_METRICS> GetLineMetrics(
+			_In_ const NText& text
+		);
 
 		/**
 		* Getter for cluster metrics in current text
@@ -64,7 +68,10 @@ namespace GUI
 		* @param clusterCount will be filled with the amount of clusters
 		* @returns the cluster metrics in current text
 		*/
-		std::vector<DWRITE_CLUSTER_METRICS> GetClusterMetrics(_In_ const NText& text, _Out_ unsigned int* clusterCount);
+		std::vector<DWRITE_CLUSTER_METRICS> GetClusterMetrics(
+			_In_ const NText& text, 
+			_Out_ unsigned int* clusterCount
+		);
 
 		/**
 		* Renders text to specifies bounding rect
@@ -72,7 +79,9 @@ namespace GUI
 		* @param text is the NText structure containing all text info
 		* @see GUI::NText;
 		*/
-		void RenderText(_In_ const NText& text);
+		void RenderText(
+			_In_ const NText& text
+		);
 
 		/**
 		* Creates IDWriteTextLayout and calls its HitTestPoint function
@@ -83,7 +92,11 @@ namespace GUI
 		* 
 		* @returns the hit test metrics
 		*/
-		DWRITE_HIT_TEST_METRICS HitTestPoint(_In_ const NText& text, _Out_ BOOL* isTrailingHit, _Out_ BOOL* isInside);
+		DWRITE_HIT_TEST_METRICS HitTestPoint(
+			_In_ const NText& text, 
+			_Out_ BOOL* isTrailingHit, 
+			_Out_ BOOL* isInside
+		);
 		
 		/**
 		* Creates IDWriteTextLayout and calls its HitTestTextPosition function
@@ -95,7 +108,13 @@ namespace GUI
 		* @param caretY is the y output position
 		* @returns the hit test text metrics
 		*/
-		DWRITE_HIT_TEST_METRICS HitTestTextPosition(_In_ const NText& text, _In_ unsigned int textPos, _In_ BOOL isTrailingHit, _Out_ float* caretX, _Out_ float* caretY);
+		DWRITE_HIT_TEST_METRICS HitTestTextPosition(
+			_In_ const NText& text, 
+			_In_ unsigned int textPos, 
+			_In_ BOOL isTrailingHit, 
+			_Out_ float* caretX, 
+			_Out_ float* caretY
+		);
 		
 		/**
 		* Creates a IDWriteTextLayout with the text
@@ -103,7 +122,10 @@ namespace GUI
 		* @param text is the text of the new layout
 		* @paaram ppLayout will be filled with the new layout
 		*/
-		void CreateTextLayout(_In_ const NText& text, _Out_ IDWriteTextLayout** ppLayout);
+		void CreateTextLayout(
+			_In_ const NText& text, 
+			_Out_ IDWriteTextLayout** ppLayout
+		);
 
 	private:
 		/**

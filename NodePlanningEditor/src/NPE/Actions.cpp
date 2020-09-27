@@ -182,6 +182,9 @@ namespace NPE
 	
 	void Actions::FinnishLineDrawing()
 	{
+		if (m_App->m_Lines.size() == 0)
+			return;
+			
 		for (auto* control : m_App->m_Window.GetControls())
 		{
 			if (control->IsInWindow() && control->GetType() == GUI::Control::Type::Node)
@@ -264,6 +267,35 @@ namespace NPE
 				break;
 			}
 		}
+	}
+	
+	void Actions::OnLineExpand(GUI::TextBox* watched)
+	{
+		auto GetPageSize = [watched]()
+		{
+			DWRITE_TEXT_METRICS textMetrics;
+			
+			IDWriteTextLayout* pLayout;
+			GUI::TextRenderer::Get().CreateTextLayout(watched->GetText(), &pLayout);
+			pLayout->GetMetrics(&textMetrics);
+
+			float width = std::max(textMetrics.layoutWidth, textMetrics.left + textMetrics.width);
+			float height = std::max(textMetrics.layoutHeight, textMetrics.height);
+
+			D2D1_POINT_2F pageSize = { width, height };
+			return pageSize;
+		};
+
+		auto pageSize = GetPageSize();
+
+		std::cout << pageSize.x << ", " << pageSize.y << '\n';
+		NPE_LOG("PageSize: x={0} y={1}", pageSize.x, pageSize.y);
+
+		if (pageSize.y > watched->GetSize().height)
+		{
+			watched->GetParent()->ResizeTo({ watched->GetParent()->GetSize().width, pageSize.y });
+		}
+
 	}
 }
 

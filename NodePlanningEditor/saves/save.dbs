@@ -9,58 +9,31 @@ FIELDS
     txt1:TEXT
     txt2:TEXT
 }
-RECORDS: 6
+RECORDS: 3
 RECORD
 {
-    296.638
-    540.991
-    290.074
-    180.49
+    469.811
+    88.221
+    496.125
+    335.245
+    Hello World
+    Hello Worlddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+}
+RECORD
+{
+    438.832
+    -285.291
+    496.125
+    308.698
     Hello World
     Hello World2
 }
 RECORD
 {
-    654.683
-    772.596
-    290.074
-    180.49
-    Hello World
-    Hello World2
-}
-RECORD
-{
-    898.646
-    555.249
-    290.074
-    180.49
-    Hello World
-    Hello World2
-}
-RECORD
-{
-    402.075
-    280.561
-    290.074
-    180.49
-    Hello World This is a test
-    Hello World2
-}
-RECORD
-{
-    863.109
-    234.158
-    290.074
-    180.49
-    Hello World
-    Hello World2
-}
-RECORD
-{
-    546.211
-    80.4541
-    290.074
-    180.49
+    -264.618
+    -471.693
+    496.125
+    308.698
     Hello World
     Hello World2
 }
@@ -72,7 +45,7 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    -9
+    1
 }
 TABLE: Lines
 FIELDS
@@ -80,54 +53,4 @@ FIELDS
     ID2:INTEGER
     ID1:INTEGER
 }
-RECORDS: 10
-RECORD
-{
-    8
-    4
-}
-RECORD
-{
-    12
-    20
-}
-RECORD
-{
-    12
-    16
-}
-RECORD
-{
-    12
-    4
-}
-RECORD
-{
-    12
-    8
-}
-RECORD
-{
-    24
-    12
-}
-RECORD
-{
-    16
-    4
-}
-RECORD
-{
-    16
-    24
-}
-RECORD
-{
-    24
-    20
-}
-RECORD
-{
-    20
-    8
-}
+RECORDS: 0

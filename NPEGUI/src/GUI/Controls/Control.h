@@ -202,6 +202,18 @@ namespace GUI
 		*/
 		bool HasFocus() { return this == s_Focus; }
 
+		/*
+		* QUESTION:
+		*	Should i use _Maybenull_ like this (annoying warning!)
+		*/
+
+		/**
+		* Gets the parent of a control
+		* 
+		* @returns the control's parent, may be null
+		*/
+		_Maybenull_ Control* GetParent() const { return m_Parent; }
+
 	protected:
 		/**
 		* Protected Control constructor

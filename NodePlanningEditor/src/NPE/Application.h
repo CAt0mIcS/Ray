@@ -16,6 +16,7 @@ namespace GUI
 	class MouseWheelDownEvent;
 	class TimerEvent;
 	class AppCloseEvent;
+	class CharEvent;
 
 	class Button;
 }
@@ -97,6 +98,15 @@ namespace NPE
 		* @returns true if the event was handled, false otherwise
 		*/
 		bool OnKeyPressed(GUI::Control* watched, GUI::KeyPressedEvent& e);
+
+		/**
+		* Receives all char events from Application::OnEvent
+		*
+		* @param watched is the control that received the event
+		* @param e is the received event
+		* @returns true if the event was handled, false otherwise
+		*/
+		bool OnChar(GUI::Control* watched, GUI::CharEvent& e);
 
 		/**
 		* Receives all mouse wheel up events from Application::OnEvent
