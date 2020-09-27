@@ -12,39 +12,31 @@
 
 #include "Util/Debug/Logger.h"
 
+#include "Util/Util.h"
+
 
 namespace NPE
 {
-	Actions::Actions(Application* app)
+	Actions::Actions(Application& app)
 		: m_App(app)
 	{
 
 	}
 
-	void Actions::MoveCamera()
+	void Actions::MoveCamera(const Util::NPoint& oldMousePos, std::vector<GUI::Control*>& controls)
 	{
-		auto& app = *m_App;
-
-		Util::NPoint diff = GUI::Mouse::GetPos() - app.m_MousePos;
-		app.m_MousePos = GUI::Mouse::GetPos();
-
-		for (auto* control : app.m_Window.GetControls())
+		Util::NPoint diff = GUI::Mouse::GetPos() - oldMousePos;
+		for (auto* control : controls)
 		{
 			control->MoveBy(diff);
 		}
-		app.m_Window.PostRedraw();
 	}
 
-	void Actions::SpawnNode()
+	void Actions::SpawnNode(GUI::MainWindow& win, float width, float height, int zoom)
 	{
-		auto& app = *m_App;
-
-		float width = app.s_NodeWidth;
-		float height = app.s_NodeHeight;
-
-		if (app.m_Zoom > 0)
+		if (zoom > 0)
 		{
-			for (int i = 0; i < app.m_Zoom; ++i)
+			for (int i = 0; i < zoom; ++i)
 			{
 				width *= s_ResizeFactor;
 				height *= s_ResizeFactor;
@@ -52,84 +44,69 @@ namespace NPE
 		}
 		else
 		{
-			for (int i = app.m_Zoom; i < 0; ++i)
+			for (int i = zoom; i < 0; ++i)
 			{
 				width /= s_ResizeFactor;
 				height /= s_ResizeFactor;
 			}
 		}
 
-		GUI::Node* control = app.m_Window.AddControl<GUI::Node>(new GUI::Node(&app.m_Window));
+		GUI::Node* control = win.AddControl<GUI::Node>(new GUI::Node(&win));
 		control->SetColor(GUI::g_DefaultNodeColor);
 		control->SetSize({ width, height });
 		control->SetPos(GUI::Mouse::GetPos());
 		control->Init();
 
 		NPE_LOG("Created Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}", control->GetPos().x, control->GetPos().y, control->GetSize().width, control->GetSize().height);
-
-		app.m_Window.PostRedraw();
 	}
 
-	void Actions::MoveNodes(GUI::Node* node)
+	void Actions::MoveNodes(GUI::Node* node, const Util::NPoint& oldMousePos)
 	{
-		auto& app = *m_App;
-
 		Util::NPoint diff{};
-		diff.x = GUI::Mouse::GetPos().x - app.m_MousePos.x;
-		diff.y = GUI::Mouse::GetPos().y - app.m_MousePos.y;
-
+		diff = GUI::Mouse::GetPos() - oldMousePos;
 		node->MoveBy(diff);
-
-		app.m_MousePos = GUI::Mouse::GetPos();
-
-		app.m_Window.PostRedraw();
 	}
 
-	void Actions::ZoomIn()
+	void Actions::ZoomIn(int& zoom, std::vector<GUI::Control*>& controls)
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
-		++m_App->m_Zoom;
+		++zoom;
 
-		if (m_App->m_Zoom >= s_ZoomBoundary)
+		if (zoom >= s_ZoomBoundary)
 		{
-			m_App->m_Zoom = s_ZoomBoundary;
+			zoom = s_ZoomBoundary;
 			return;
 		}
 
-		for (auto* control : m_App->m_Window.GetControls())
+		for (auto* control : controls)
 		{
 			control->MoveBy((center - control->GetPos()) * -s_ZoomFactor);
 			control->ResizeTo(control->GetSize() * s_ResizeFactor);
 		}
 
-		m_App->m_NeedsToSave = true;
-		m_App->m_Window.PostRedraw();
 	}
 
-	void Actions::ZoomOut()
+	void Actions::ZoomOut(int& zoom, std::vector<GUI::Control*>& controls)
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
 
-		--m_App->m_Zoom;
-		if (m_App->m_Zoom <= -s_ZoomBoundary)
+		--zoom;
+		if (zoom <= -s_ZoomBoundary)
 		{
-			m_App->m_Zoom = -s_ZoomBoundary;
+			zoom = -s_ZoomBoundary;
 			return;
 		}
 
-		for (auto* control : m_App->m_Window.GetControls())
+		for (auto* control : controls)
 		{
 			control->MoveBy((center - control->GetPos()) * s_ZoomFactor);
 			control->ResizeTo(control->GetSize() / s_ResizeFactor);
 		}
-
-		m_App->m_NeedsToSave = true;
-		m_App->m_Window.PostRedraw();
 	}
 	
-	void Actions::RenderLines()
+	void Actions::RenderLines(const std::vector<Line>& lines)
 	{
-		for (Line& line : m_App->m_Lines)
+		for (const Line& line : lines)
 		{
 			float x2 = GUI::Mouse::GetPos().x;
 			float y2 = GUI::Mouse::GetPos().y;
@@ -149,38 +126,38 @@ namespace NPE
 		}
 	}
 	
-	void Actions::FinnishLineDrawing()
+	void Actions::FinnishLineDrawing(std::vector<Line>& lines, const std::vector<GUI::Control*> controls)
 	{
-		if (m_App->m_Lines.size() == 0)
+		if (lines.size() == 0)
 			return;
 			
-		for (auto* control : m_App->m_Window.GetControls())
+		for (auto* control : controls)
 		{
 			if (control->IsInWindow() && control->GetType() == GUI::Control::Type::Node)
 			{
 				GUI::Button* btn = (GUI::Button*)control->GetChildren()[2];
 				if (GUI::Mouse::IsOnControl(btn))
 				{
-					m_App->m_Lines[m_App->m_Lines.size() - 1].second = btn;
+					lines[lines.size() - 1].second = btn;
 					break;
 				}
 			}
 		}
-		if (m_App->m_Lines.size() > 0 && m_App->m_Lines[m_App->m_Lines.size() - 1].second == nullptr)
+		if (lines.size() > 0 && lines[lines.size() - 1].second == nullptr)
 		{
-			m_App->m_Lines.erase(m_App->m_Lines.end() - 1);
-			m_App->m_Window.PostRedraw();
+			lines.erase(lines.end() - 1);
+			//m_App->m_Window.PostRedraw();
 		}
 		else
 		{
-			m_App->m_NeedsToSave = true;
-			auto line = m_App->m_Lines[m_App->m_Lines.size() - 1];
+			//m_App->m_NeedsToSave = true;
+			auto line = lines[lines.size() - 1];
 			NPE_LOG("Connected Line: \nStart:\t{0}\nEnd:\t{1}", line.first->GetPos(), line.second->GetPos());
 		}
-		m_App->m_DrawLines = false;
+		//m_App->m_DrawLines = false;
 	}
 	
-	void Actions::EraseLine()
+	void Actions::EraseLine(std::vector<Line>& lines, const Util::NPoint& oldMousePos)
 	{
 		auto linesIntersect = [](const Util::NPoint& p1, const Util::NPoint& p2, const Util::NPoint& q1, const Util::NPoint& q2)
 		{
@@ -191,23 +168,20 @@ namespace NPE
 					* ((p2.x - q1.x) * (q2.y - q1.y) - (p2.y - q1.y) * (q2.x - q1.x)) < 0);
 		};
 
-		for (unsigned int i = 0; i < m_App->m_Lines.size(); ++i)
+		for (unsigned int i = 0; i < lines.size(); ++i)
 		{
-			if (linesIntersect(m_App->m_Lines[i].first->GetPos(), m_App->m_Lines[i].second->GetPos(), m_App->m_MousePos, GUI::Mouse::GetPos()))
+			if (linesIntersect(lines[i].first->GetPos(), lines[i].second->GetPos(), oldMousePos, GUI::Mouse::GetPos()))
 			{
-				m_App->m_Lines.erase(m_App->m_Lines.begin() + i);
-				m_App->m_NeedsToSave = true;
+				lines.erase(lines.begin() + i);
+				//m_App->m_NeedsToSave = true;
 			}
 		}
 
-		m_App->m_Window.PostRedraw();
+		//m_App->m_Window.PostRedraw();
 	}
 	
-	void Actions::DeleteNode(GUI::Node* watched)
+	void Actions::DeleteNode(GUI::Node* watched, std::vector<GUI::Control*>& controls, std::vector<Line>& lines)
 	{
-		auto& controls = m_App->m_Window.GetControls();
-		auto& lines = m_App->m_Lines;
-
 		for (unsigned int i = 0; i < controls.size(); ++i)
 		{
 			if (controls[i]->GetId() == watched->GetId())
@@ -218,15 +192,15 @@ namespace NPE
 				{
 					if (lines[j].first == lineBtn || lines[j].second == lineBtn)
 					{
-						m_App->m_Lines.erase(lines.begin() + j);
+						lines.erase(lines.begin() + j);
 					}
 				}
 
 				delete controls[i];
 				controls.erase(controls.begin() + i);
-				m_App->m_NeedsToSave = true;
+				//m_App->m_NeedsToSave = true;
 
-				m_App->m_Window.PostRedraw();
+				//m_App->m_Window.PostRedraw();
 
 				break;
 			}

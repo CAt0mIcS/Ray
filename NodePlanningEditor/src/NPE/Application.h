@@ -30,11 +30,8 @@ namespace GUI
 
 namespace NPE
 {
-	typedef std::pair<GUI::Button*, GUI::Button*> Line;
-
 	class Application : public GUI::GUIApplication
 	{
-		friend class Actions;
 		friend class FileHandler;
 	public:
 		/**
@@ -146,6 +143,21 @@ namespace NPE
 		*/
 		
 		~Application() {  }
+
+		/**
+		* Getter for zoom
+		* 
+		* @returns the current zoom
+		*/
+		int GetZoom() const { return m_Zoom; }
+
+		/**
+		* Setter for zoom
+		* 
+		* @param zoom is the new zoom
+		* @warning function only sets m_Zoom variable, doing this in the wrong context will case bad behaviour
+		*/
+		void SetZoom(int zoom) { m_Zoom = zoom; }
 
 	private:
 

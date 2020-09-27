@@ -19,7 +19,7 @@
 namespace NPE
 {
 	Application::Application()
-		: m_Actions(this), m_MousePos{}, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false), m_Zoom(0)
+		: m_Actions(*this), m_MousePos{}, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false), m_Zoom(0)
 	{
 
 		auto dirExists = [](const std::string& dirNameIn)
@@ -140,7 +140,11 @@ namespace NPE
 		if (GUI::Mouse::IsMiddlePressed())
 		{
 			SetCursor(LoadCursor(NULL, IDC_SIZEALL));
-			m_Actions.MoveCamera();
+			
+			m_Actions.MoveCamera(m_MousePos, m_Window.GetControls());
+			m_MousePos = GUI::Mouse::GetPos();
+			m_Window.PostRedraw();
+
 			m_NeedsToSave = true;
 			return true;
 		}
@@ -153,7 +157,10 @@ namespace NPE
 			}
 			else if (m_HandleControls.draggingNode)
 			{
-				m_Actions.MoveNodes(m_HandleControls.draggingNode);
+				m_Actions.MoveNodes(m_HandleControls.draggingNode, m_MousePos);
+				m_MousePos = GUI::Mouse::GetPos();
+				m_Window.PostRedraw();
+
 				m_NeedsToSave = true;
 				return true;
 			}
@@ -185,16 +192,27 @@ namespace NPE
 	{
 		if (e.GetButton() == GUI::MouseButton::Left)
 		{
-			m_Actions.FinnishLineDrawing();
+			m_Actions.FinnishLineDrawing(m_Lines, m_Window.GetControls());
+			m_Window.PostRedraw();
+			m_NeedsToSave = true;
+			m_DrawLines = false;
 
 			m_HandleControls.draggingNode = nullptr;
 			return true;
 		}
 		else if (e.GetButton() == GUI::MouseButton::Right)
 		{
-			m_Actions.EraseLine();
-			if(GUI::Mouse::IsOnControl(watched) && watched->GetType() == GUI::Control::Type::Node)
-				m_Actions.DeleteNode((GUI::Node*)watched);
+			m_Actions.EraseLine(m_Lines, m_MousePos);
+			m_Window.PostRedraw();
+			m_NeedsToSave = true;
+
+			if (GUI::Mouse::IsOnControl(watched) && watched->GetType() == GUI::Control::Type::Node)
+			{
+				m_Actions.DeleteNode((GUI::Node*)watched, m_Window.GetControls(), m_Lines);
+				m_NeedsToSave = true;
+				m_Window.PostRedraw();
+			}
+
 			return true;
 		}
 		return false;
@@ -205,7 +223,8 @@ namespace NPE
 		//Create new node shortcut
 		if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('A'))
 		{
-			m_Actions.SpawnNode();
+			m_Actions.SpawnNode(m_Window, s_NodeWidth, s_NodeHeight, m_Zoom);
+			m_Window.PostRedraw();
 			m_NeedsToSave = true;
 			return true;
 		}
@@ -231,7 +250,9 @@ namespace NPE
 		}
 		else
 		{
-			m_Actions.ZoomIn();
+			m_Actions.ZoomIn(m_Zoom, m_Window.GetControls());
+			m_NeedsToSave = true;
+			m_Window.PostRedraw();
 		}
 		return true;
 	}
@@ -244,7 +265,9 @@ namespace NPE
 		}
 		else
 		{
-			m_Actions.ZoomOut();
+			m_Actions.ZoomOut(m_Zoom, m_Window.GetControls());
+			m_NeedsToSave = true;
+			m_Window.PostRedraw();
 		}
 		return true;
 	}
@@ -270,7 +293,7 @@ namespace NPE
 		GUI::Renderer& renderer = GUI::Renderer::Get();
 		renderer.BeginDraw();
 		m_Window.Render();
-		m_Actions.RenderLines();
+		m_Actions.RenderLines(m_Lines);
 		renderer.EndDraw();
 		return true;
 	}

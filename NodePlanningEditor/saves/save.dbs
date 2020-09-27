@@ -9,40 +9,49 @@ FIELDS
     txt1:TEXT
     txt2:TEXT
 }
-RECORDS: 4
+RECORDS: 5
 RECORD
 {
-    1439.36
-    214.861
-    352.588
-    219.386
+    1334.47
+    268.585
+    319.808
+    198.99
     Hello World
     Hello World2
 }
 RECORD
 {
-    301.689
-    637.698
-    352.588
-    219.386
+    338.132
+    582.169
+    319.808
+    198.99
     Hello World
     Hello World2
 }
 RECORD
 {
-    1257.71
-    651.575
-    335.797
-    208.94
+    1198.59
+    595.257
+    304.578
+    189.515
     Hello World
     Hello World
 }
 RECORD
 {
-    815.488
-    641.331
-    335.797
-    208.94
+    867.802
+    587.594
+    304.578
+    189.515
+    Hello World
+    Hello World
+}
+RECORD
+{
+    309.163
+    214.768
+    290.074
+    180.491
     Hello World
     Hello World
 }
@@ -54,7 +63,7 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    -6
+    -9
 }
 TABLE: Lines
 FIELDS
@@ -62,7 +71,7 @@ FIELDS
     ID2:INTEGER
     ID1:INTEGER
 }
-RECORDS: 5
+RECORDS: 6
 RECORD
 {
     4
@@ -87,4 +96,9 @@ RECORD
 {
     16
     12
+}
+RECORD
+{
+    8
+    20
 }
