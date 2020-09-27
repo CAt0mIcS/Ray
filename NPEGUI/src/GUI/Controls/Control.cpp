@@ -110,6 +110,11 @@ namespace GUI
 
 	Control::~Control()
 	{
+		if (this->HasFocus())
+		{
+			s_Focus = nullptr;
+		}
+
 		for (auto* child : m_Children)
 		{
 			delete child;

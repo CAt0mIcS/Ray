@@ -16,7 +16,7 @@
 namespace NPE
 {
 	Actions::Actions(Application* app)
-		: m_App(app), m_Zoom(0)
+		: m_App(app)
 	{
 
 	}
@@ -28,16 +28,11 @@ namespace NPE
 		Util::NPoint diff = GUI::Mouse::GetPos() - app.m_MousePos;
 		app.m_MousePos = GUI::Mouse::GetPos();
 
-		GUI::Renderer::Get().BeginDraw();
-		GUI::Renderer::Get().RenderScene();
 		for (auto* control : app.m_Window.GetControls())
 		{
 			control->MoveBy(diff);
-			control->Render();
 		}
-
-		RenderLines();
-		GUI::Renderer::Get().EndDraw();
+		app.m_Window.PostRedraw();
 	}
 
 	void Actions::SpawnNode()
@@ -47,9 +42,9 @@ namespace NPE
 		float width = app.s_NodeWidth;
 		float height = app.s_NodeHeight;
 
-		if (m_Zoom > 0)
+		if (app.m_Zoom > 0)
 		{
-			for (int i = 0; i < m_Zoom; ++i)
+			for (int i = 0; i < app.m_Zoom; ++i)
 			{
 				width *= s_ResizeFactor;
 				height *= s_ResizeFactor;
@@ -57,7 +52,7 @@ namespace NPE
 		}
 		else
 		{
-			for (int i = m_Zoom; i < 0; ++i)
+			for (int i = app.m_Zoom; i < 0; ++i)
 			{
 				width /= s_ResizeFactor;
 				height /= s_ResizeFactor;
@@ -72,10 +67,7 @@ namespace NPE
 
 		NPE_LOG("Created Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}", control->GetPos().x, control->GetPos().y, control->GetSize().width, control->GetSize().height);
 
-		GUI::Renderer::Get().BeginDraw();
-		app.m_Window.Render();
-		RenderLines();
-		GUI::Renderer::Get().EndDraw();
+		app.m_Window.PostRedraw();
 	}
 
 	void Actions::MoveNodes(GUI::Node* node)
@@ -90,24 +82,20 @@ namespace NPE
 
 		app.m_MousePos = GUI::Mouse::GetPos();
 
-		GUI::Renderer::Get().BeginDraw();
-		app.m_Window.Render();
-		RenderLines();
-		GUI::Renderer::Get().EndDraw();
+		app.m_Window.PostRedraw();
 	}
 
 	void Actions::ZoomIn()
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
-		++m_Zoom;
+		++m_App->m_Zoom;
 
-		if (m_Zoom >= s_ZoomBoundary)
+		if (m_App->m_Zoom >= s_ZoomBoundary)
 		{
-			m_Zoom = s_ZoomBoundary;
+			m_App->m_Zoom = s_ZoomBoundary;
 			return;
 		}
 
-		GUI::Renderer::Get().BeginDraw();
 		for (auto* control : m_App->m_Window.GetControls())
 		{
 			control->MoveBy((center - control->GetPos()) * -s_ZoomFactor);
@@ -115,23 +103,20 @@ namespace NPE
 		}
 
 		m_App->m_NeedsToSave = true;
-		m_App->m_Window.Render();
-		RenderLines();
-		GUI::Renderer::Get().EndDraw();
+		m_App->m_Window.PostRedraw();
 	}
 
 	void Actions::ZoomOut()
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
 
-		--m_Zoom;
-		if (m_Zoom <= -s_ZoomBoundary)
+		--m_App->m_Zoom;
+		if (m_App->m_Zoom <= -s_ZoomBoundary)
 		{
-			m_Zoom = -s_ZoomBoundary;
+			m_App->m_Zoom = -s_ZoomBoundary;
 			return;
 		}
 
-		GUI::Renderer::Get().BeginDraw();
 		for (auto* control : m_App->m_Window.GetControls())
 		{
 			control->MoveBy((center - control->GetPos()) * s_ZoomFactor);
@@ -139,23 +124,7 @@ namespace NPE
 		}
 
 		m_App->m_NeedsToSave = true;
-		m_App->m_Window.Render();
-		RenderLines();
-		GUI::Renderer::Get().EndDraw();
-
-	}
-	
-	void Actions::DrawLine()
-	{
-		GUI::Button& startBtn = *m_App->m_Lines[m_App->m_Lines.size() - 1].first;
-		Util::NPoint btnPos = { startBtn.GetPos().x + startBtn.GetSize().width / 2, startBtn.GetPos().y + startBtn.GetSize().height / 2 };
-		
-		GUI::Renderer::Get().BeginDraw();
-
-		m_App->m_Window.Render();
-
-		GUI::Renderer::Get().RenderLine(btnPos, GUI::Mouse::GetPos(), GUI::g_DefaultLineColor, startBtn.GetSize().width / 3);
-		GUI::Renderer::Get().EndDraw();
+		m_App->m_Window.PostRedraw();
 	}
 	
 	void Actions::RenderLines()
@@ -200,6 +169,7 @@ namespace NPE
 		if (m_App->m_Lines.size() > 0 && m_App->m_Lines[m_App->m_Lines.size() - 1].second == nullptr)
 		{
 			m_App->m_Lines.erase(m_App->m_Lines.end() - 1);
+			m_App->m_Window.PostRedraw();
 		}
 		else
 		{
@@ -230,10 +200,7 @@ namespace NPE
 			}
 		}
 
-		GUI::Renderer::Get().BeginDraw();
-		m_App->m_Window.Render();
-		RenderLines();
-		GUI::Renderer::Get().EndDraw();
+		m_App->m_Window.PostRedraw();
 	}
 	
 	void Actions::DeleteNode(GUI::Node* watched)
@@ -259,42 +226,20 @@ namespace NPE
 				controls.erase(controls.begin() + i);
 				m_App->m_NeedsToSave = true;
 
-				GUI::Renderer::Get().BeginDraw();
-				m_App->m_Window.Render();
-				RenderLines();
-				GUI::Renderer::Get().EndDraw();
+				m_App->m_Window.PostRedraw();
 
 				break;
 			}
 		}
 	}
 	
-	void Actions::OnLineExpand(GUI::TextBox* watched)
+	void Actions::ScrollUp(GUI::TextBox* watched)
 	{
-		auto GetPageSize = [watched]()
-		{
-			DWRITE_TEXT_METRICS textMetrics;
-			
-			IDWriteTextLayout* pLayout;
-			GUI::TextRenderer::Get().CreateTextLayout(watched->GetText(), &pLayout);
-			pLayout->GetMetrics(&textMetrics);
 
-			float width = std::max(textMetrics.layoutWidth, textMetrics.left + textMetrics.width);
-			float height = std::max(textMetrics.layoutHeight, textMetrics.height);
-
-			D2D1_POINT_2F pageSize = { width, height };
-			return pageSize;
-		};
-
-		auto pageSize = GetPageSize();
-
-		std::cout << pageSize.x << ", " << pageSize.y << '\n';
-		NPE_LOG("PageSize: x={0} y={1}", pageSize.x, pageSize.y);
-
-		if (pageSize.y > watched->GetSize().height)
-		{
-			watched->GetParent()->ResizeTo({ watched->GetParent()->GetSize().width, pageSize.y });
-		}
+	}
+	
+	void Actions::ScrollDown(GUI::TextBox* watched)
+	{
 
 	}
 }

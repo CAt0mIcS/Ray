@@ -22,6 +22,12 @@ namespace GUI
 }
 
 
+/**
+* QUESTION:
+*	friend class declaration or getters and setters for everything?
+*/
+
+
 namespace NPE
 {
 	typedef std::pair<GUI::Button*, GUI::Button*> Line;
@@ -160,6 +166,7 @@ namespace NPE
 		std::vector<Line> m_Lines;
 		bool m_DrawLines;
 		bool m_NeedsToSave;
+		int m_Zoom;
 
 		static constexpr float s_NodeWidth = 450.0f;
 		static constexpr float s_NodeHeight = 280.0f;

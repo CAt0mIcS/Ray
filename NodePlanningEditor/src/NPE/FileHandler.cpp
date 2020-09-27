@@ -43,18 +43,26 @@ namespace NPE
 			const auto& pos = control->GetPos();
 			const auto& size = control->GetSize();
 			
-			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-			std::string txt1 = converter.to_bytes(((GUI::TextBox*)control->GetChildren()[0])->GetText().text);
-			std::string txt2 = converter.to_bytes(((GUI::TextBox*)control->GetChildren()[1])->GetText().text);
+			//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+			//std::string txt1 = converter.to_bytes(((GUI::TextBox*)control->GetChildren()[0])->GetText().text);
+			//std::string txt2 = converter.to_bytes(((GUI::TextBox*)control->GetChildren()[1])->GetText().text);
+
+			std::string txt1 = Util::ToMultiByteChar(((GUI::TextBox*)control->GetChildren()[0])->GetText().text);
+			std::string txt2 = Util::ToMultiByteChar(((GUI::TextBox*)control->GetChildren()[1])->GetText().text);
 
 			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height, txt1, txt2);
 			NPE_LOG("Saved Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t{4}\nInfo:\t{5}", pos.x, pos.y, size.width, size.height, txt1, txt2);
 		}
 
-		for (std::pair<GUI::Button*, GUI::Button*>& line : app.m_Lines)
+		for (Line& line : app.m_Lines)
 		{
-			tbLines.AddRecord(line.first->GetId(), line.second->GetId());
-			NPE_LOG("Saved Line: \nStart:\tx={0} y={1}\nEnd:\tx={2} y={3}", line.first->GetPos().x, line.first->GetPos().y, line.second->GetPos().x, line.second->GetPos().y);
+			if (line.first && line.second)
+			{
+				tbLines.AddRecord(line.first->GetId(), line.second->GetId());
+				NPE_LOG("Saved Line: \nStart:\tx={0} y={1}\nEnd:\tx={2} y={3}", line.first->GetPos().x, line.first->GetPos().y, line.second->GetPos().x, line.second->GetPos().y);
+			}
+			else
+				NPE_LOG("Didn't save line because it didn't have a valid end point");
 		}
 
 		tbSceneInfo.AddRecord(zoom);
@@ -83,9 +91,12 @@ namespace NPE
 			node->SetColor(GUI::g_DefaultNodeColor);
 			node->Init();
 
-			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-			std::wstring txt1 = converter.from_bytes(data[4]);
-			std::wstring txt2 = converter.from_bytes(data[5]);
+			//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+			//std::wstring txt1 = converter.from_bytes(data[4]);
+			//std::wstring txt2 = converter.from_bytes(data[5]);
+
+			std::wstring txt1 = Util::ToWideChar(data[4]);
+			std::wstring txt2 = Util::ToWideChar(data[5]);
 
 			((GUI::TextBox*)(node->GetChildren()[0]))->SetText(txt1);
 			((GUI::TextBox*)(node->GetChildren()[1]))->SetText(txt2);

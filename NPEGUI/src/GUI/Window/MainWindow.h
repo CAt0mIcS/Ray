@@ -126,6 +126,14 @@ namespace GUI
 		*/
 		void SetTitle(const std::wstring& title);
 
+		/**
+		* Invalidates the window and thus sends WM_PAINT message
+		* 
+		* @param rc is the rect to redraw, nullptr to redraw the entire window
+		* @param erase specifies whether the background within the update region should be erased
+		*/
+		void PostRedraw(const RECT* const rc = nullptr, BOOL erase = TRUE) { InvalidateRect(m_hWnd, rc, erase); UpdateWindow(m_hWnd); }
+
 	private:
 		/**
 		* Receives all events, finds the event receiver and dispatches the event to first the receiver and then the user

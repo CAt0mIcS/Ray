@@ -9,33 +9,42 @@ FIELDS
     txt1:TEXT
     txt2:TEXT
 }
-RECORDS: 3
+RECORDS: 4
 RECORD
 {
-    469.811
-    88.221
-    496.125
-    335.245
-    Hello World
-    Hello Worlddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
-}
-RECORD
-{
-    438.832
-    -285.291
-    496.125
-    308.698
+    1439.36
+    214.861
+    352.588
+    219.386
     Hello World
     Hello World2
 }
 RECORD
 {
-    -264.618
-    -471.693
-    496.125
-    308.698
+    301.689
+    637.698
+    352.588
+    219.386
     Hello World
     Hello World2
+}
+RECORD
+{
+    1257.71
+    651.575
+    335.797
+    208.94
+    Hello World
+    Hello World
+}
+RECORD
+{
+    815.488
+    641.331
+    335.797
+    208.94
+    Hello World
+    Hello World
 }
 TABLE: SceneInfo
 FIELDS
@@ -45,7 +54,7 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    1
+    -6
 }
 TABLE: Lines
 FIELDS
@@ -53,4 +62,29 @@ FIELDS
     ID2:INTEGER
     ID1:INTEGER
 }
-RECORDS: 0
+RECORDS: 5
+RECORD
+{
+    4
+    8
+}
+RECORD
+{
+    4
+    12
+}
+RECORD
+{
+    4
+    16
+}
+RECORD
+{
+    8
+    16
+}
+RECORD
+{
+    16
+    12
+}

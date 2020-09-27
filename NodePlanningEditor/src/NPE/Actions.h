@@ -26,17 +26,16 @@ namespace NPE
 		void MoveNodes(GUI::Node* node);
 		void ZoomIn();
 		void ZoomOut();
-		void DrawLine();
 		void RenderLines();
 		void FinnishLineDrawing();
 		void EraseLine();
 		void DeleteNode(GUI::Node* watched);
-		void OnLineExpand(GUI::TextBox* watched);
+		void ScrollUp(GUI::TextBox* watched);
+		void ScrollDown(GUI::TextBox* watched);
 
 	private:
 		Application* m_App;
 
-		int m_Zoom;
 		static constexpr float s_ZoomFactor = 0.05f;
 		static constexpr float s_ResizeFactor = 1.05f;
 		static constexpr int s_ZoomBoundary = 45;

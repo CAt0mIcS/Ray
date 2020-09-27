@@ -19,7 +19,7 @@
 namespace NPE
 {
 	Application::Application()
-		: m_Actions(this), m_MousePos{}, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false)
+		: m_Actions(this), m_MousePos{}, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false), m_Zoom(0)
 	{
 
 		auto dirExists = [](const std::string& dirNameIn)
@@ -70,11 +70,11 @@ namespace NPE
 
 		if (!fileExist)
 		{
-			m_FileHandler.CreateDefaultTemplate(m_Actions.m_Zoom);
+			m_FileHandler.CreateDefaultTemplate(m_Zoom);
 		}
 
 		NPE_LOG("Start of loading scene...");
-		m_FileHandler.LoadScene(*this, m_Actions.m_Zoom);
+		m_FileHandler.LoadScene(*this, m_Zoom);
 		NPE_LOG("Finnished loading scene");
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 		m_Window.CreateTimer(20000, true);
@@ -148,10 +148,7 @@ namespace NPE
 		{
 			if (m_Lines.size() > 0 && m_DrawLines)
 			{
-				GUI::Renderer::Get().BeginDraw();
-				m_Window.Render();
-				m_Actions.RenderLines();
-				GUI::Renderer::Get().EndDraw();
+				m_Window.PostRedraw();
 				return true;
 			}
 			else if (m_HandleControls.draggingNode)
@@ -215,7 +212,7 @@ namespace NPE
 		//Save shortcut
 		else if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('S'))
 		{
-			m_FileHandler.SaveScene(*this, m_Actions.m_Zoom);
+			m_FileHandler.SaveScene(*this, m_Zoom);
 			m_NeedsToSave = false;
 		}
 		return false;
@@ -223,27 +220,32 @@ namespace NPE
 
 	bool Application::OnChar(GUI::Control* watched, GUI::CharEvent& e)
 	{
-		if (watched->GetType() == GUI::Control::Type::TextBox)
-		{
-			GUI::TextBox* txtbox = (GUI::TextBox*)watched;
-			if (txtbox->IsMultiline())
-			{
-				m_Actions.OnLineExpand(txtbox);
-			}
-		}
-
 		return false;
 	}
 
 	bool Application::OnMouseWheelUp(GUI::Control* watched, GUI::MouseWheelUpEvent& e)
 	{
-		m_Actions.ZoomIn();
+		if (watched->GetType() == GUI::Control::Type::TextBox)
+		{
+			m_Actions.ScrollUp((GUI::TextBox*)watched);
+		}
+		else
+		{
+			m_Actions.ZoomIn();
+		}
 		return true;
 	}
 
 	bool Application::OnMouseWheelDown(GUI::Control* watched, GUI::MouseWheelDownEvent& e)
 	{
-		m_Actions.ZoomOut();
+		if (watched->GetType() == GUI::Control::Type::TextBox)
+		{
+			m_Actions.ScrollDown((GUI::TextBox*)watched);
+		}
+		else
+		{
+			m_Actions.ZoomOut();
+		}
 		return true;
 	}
 
@@ -254,7 +256,7 @@ namespace NPE
 		case s_TimerAutosaveId:
 		{
 			//TODO: Implement alert to user that a autosave is comming
-			m_FileHandler.SaveScene(*this, m_Actions.m_Zoom);
+			m_FileHandler.SaveScene(*this, m_Zoom);
 			m_NeedsToSave = false;
 			return true;
 		}
@@ -280,7 +282,11 @@ namespace NPE
 			int result = MessageBox(m_Window.GetNativeWindow(), L"Save changes to the scene?", L"Unsaved changes", MB_YESNO);
 			if (result == IDYES)
 			{
-				m_FileHandler.SaveScene(*this, m_Actions.m_Zoom);
+				m_FileHandler.SaveScene(*this, m_Zoom);
+			}
+			else
+			{
+				NPE_LOG("Unsaved changes discarded due to user input");
 			}
 		}
 		NPE_LOG(" ****** Log finnished for NodePlanningEditor ******");
