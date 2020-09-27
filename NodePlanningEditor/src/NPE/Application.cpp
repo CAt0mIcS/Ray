@@ -74,7 +74,7 @@ namespace NPE
 		}
 
 		NPE_LOG("Start of loading scene...");
-		m_FileHandler.LoadScene(*this, m_Zoom);
+		m_FileHandler.LoadScene(m_Window, m_Lines, m_Zoom);
 		NPE_LOG("Finnished loading scene");
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 		m_Window.CreateTimer(20000, true);
@@ -231,7 +231,7 @@ namespace NPE
 		//Save shortcut
 		else if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('S'))
 		{
-			m_FileHandler.SaveScene(*this, m_Zoom);
+			m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom);
 			m_NeedsToSave = false;
 		}
 		return false;
@@ -279,7 +279,7 @@ namespace NPE
 		case s_TimerAutosaveId:
 		{
 			//TODO: Implement alert to user that a autosave is comming
-			m_FileHandler.SaveScene(*this, m_Zoom);
+			m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom);
 			m_NeedsToSave = false;
 			return true;
 		}
@@ -305,7 +305,7 @@ namespace NPE
 			int result = MessageBox(m_Window.GetNativeWindow(), L"Save changes to the scene?", L"Unsaved changes", MB_YESNO);
 			if (result == IDYES)
 			{
-				m_FileHandler.SaveScene(*this, m_Zoom);
+				m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom);
 			}
 			else
 			{

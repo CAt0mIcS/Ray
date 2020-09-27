@@ -32,7 +32,6 @@ namespace NPE
 {
 	class Application : public GUI::GUIApplication
 	{
-		friend class FileHandler;
 	public:
 		/**
 		* Application constructor

@@ -3,10 +3,17 @@
 #include <string>
 #include <QRD/QRD.h>
 
+namespace GUI
+{
+	class MainWindow;
+	class Control;
+	class Button;
+}
+
 
 namespace NPE
 {
-	class Application;
+	using Line = std::pair<GUI::Button*, GUI::Button*>;
 
 	class FileHandler
 	{
@@ -14,8 +21,8 @@ namespace NPE
 		FileHandler() = default;
 
 
-		void SaveScene(Application& app, int zoom);
-		void LoadScene(Application& app, int& zoom);
+		void SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, int zoom);
+		void LoadScene(GUI::MainWindow& win, std::vector<Line>& lines, int& zoom);
 		void CreateDefaultTemplate(int zoom);
 
 		void CreateDatabase(const std::string& filepath);

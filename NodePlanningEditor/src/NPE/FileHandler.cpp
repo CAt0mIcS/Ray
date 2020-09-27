@@ -14,7 +14,7 @@
 
 namespace NPE
 {
-	void FileHandler::SaveScene(Application& app, int zoom)
+	void FileHandler::SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, int zoom)
 	{
 		//clear save file
 		m_Db->DeleteTable("NodeInfo");
@@ -38,7 +38,7 @@ namespace NPE
 
 		tbSceneInfo.AddField<QRD::NUMBER>("zoom");
 
-		for (auto* control : app.m_Window.GetControls())
+		for (auto* control : controls)
 		{
 			const auto& pos = control->GetPos();
 			const auto& size = control->GetSize();
@@ -54,7 +54,7 @@ namespace NPE
 			NPE_LOG("Saved Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t{4}\nInfo:\t{5}", pos.x, pos.y, size.width, size.height, txt1, txt2);
 		}
 
-		for (Line& line : app.m_Lines)
+		for (const Line& line : lines)
 		{
 			if (line.first && line.second)
 			{
@@ -70,7 +70,7 @@ namespace NPE
 		m_Db->WriteDb();
 	}
 	
-	void FileHandler::LoadScene(Application& app, int& zoom)
+	void FileHandler::LoadScene(GUI::MainWindow& win, std::vector<Line>& lines, int& zoom)
 	{
 		//needs to be declared in release mode (error C4703: potentially uninitialized local pointer variable used)
 		QRD::Table* tbNodeInfo = nullptr;
@@ -85,7 +85,7 @@ namespace NPE
 		for (auto& record : tbNodeInfo->GetRecords())
 		{
 			auto& data = record.GetRecordData();
-			GUI::Node* node = app.m_Window.AddControl<GUI::Node>(new GUI::Node(&app.m_Window));
+			GUI::Node* node = win.AddControl<GUI::Node>(new GUI::Node(&win));
 			node->SetPos({ std::stof(data[0]), std::stof(data[1]) });
 			node->SetSize({ std::stof(data[2]), std::stof(data[3]) });
 			node->SetColor(GUI::g_DefaultNodeColor);
@@ -109,7 +109,7 @@ namespace NPE
 
 			std::pair<GUI::Button*, GUI::Button*> line;
 
-			for (auto* control : app.m_Window.GetControls())
+			for (auto* control : win.GetControls())
 			{
 				for (auto* child : control->GetChildren())
 				{
@@ -130,7 +130,7 @@ namespace NPE
 
 			if (line.first && line.second)
 			{
-				app.m_Lines.emplace_back(line);
+				lines.emplace_back(line);
 				NPE_LOG("Loaded Line: \nStart:\tx={0} y={1}\nEnd:\tx={2} y={3}", line.first->GetPos().x, line.first->GetPos().y, line.second->GetPos().x, line.second->GetPos().y);
 			}
 		}
