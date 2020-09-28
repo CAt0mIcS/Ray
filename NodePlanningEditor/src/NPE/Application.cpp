@@ -15,6 +15,8 @@
 
 #include "Util/Exceptions.h"
 
+#include "GUI/Window/SaveFileWindow.h"
+
 
 namespace NPE
 {
@@ -319,3 +321,4 @@ namespace NPE
 }
 
 
+//auto result = win.Show(L"Select a Save File to Load", L"Save File (*.dbs)\0*.dbs\0Any File\0*.*\0");
