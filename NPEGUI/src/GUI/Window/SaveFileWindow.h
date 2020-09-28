@@ -21,6 +21,8 @@ namespace GUI
 			_In_ const wchar_t* title,
 			_In_ const wchar_t* filter
 		);
+
+	private:
 	};
 }
 

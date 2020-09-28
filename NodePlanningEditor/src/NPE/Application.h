@@ -138,10 +138,10 @@ namespace NPE
 		bool OnTimer(GUI::Control* watched, GUI::TimerEvent& e);
 
 		/**
-		* Application deconstructor, saves scene to file
+		* Application deconstructor
 		*/
 		
-		~Application() {  }
+		~Application();
 
 		/**
 		* Getter for zoom

@@ -15,3 +15,8 @@
 #include <wrl.h>
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "d2d1.lib")
+
+//TODO: Sort out necessary
+#pragma comment(lib,"comctl32.lib") 
+#pragma comment(lib,"propsys.lib")
+#pragma comment(lib,"shlwapi.lib") 

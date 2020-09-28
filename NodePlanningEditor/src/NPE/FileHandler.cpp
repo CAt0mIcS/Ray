@@ -11,11 +11,33 @@
 
 #include "Util/Exceptions.h"
 
+#include "GUI/Window/SaveFileWindow.h"
+
 
 namespace NPE
 {
 	void FileHandler::SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, int zoom)
 	{
+
+		if (m_IsTemporarySave)
+		{
+			GUI::SaveFileWindow win;
+			auto result = win.Show(L"Select a Save File to Load", L"Any File\0*.*\0Save File (*.dbs)\0*.dbs\0");
+			
+			delete m_Db;
+			CreateDatabase(Util::ToMultiByteChar(result));
+			CreateDefaultTemplate();
+			m_IsTemporarySave = false;
+
+			std::string newPath = Util::ToMultiByteChar(result);
+			auto replaceBegin = newPath.find_last_of('\\');
+
+			std::ofstream writer(s_ConfigFilePath);
+			writer << newPath << '\n';
+			writer << newPath.replace(newPath.begin() + replaceBegin, newPath.end(), "");
+			writer.close();
+		}
+
 		//clear save file
 		m_Db->DeleteTable("NodeInfo");
 		m_Db->DeleteTable("SceneInfo");
@@ -43,10 +65,6 @@ namespace NPE
 			const auto& pos = control->GetPos();
 			const auto& size = control->GetSize();
 			
-			//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-			//std::string txt1 = converter.to_bytes(((GUI::TextBox*)control->GetChildren()[0])->GetText().text);
-			//std::string txt2 = converter.to_bytes(((GUI::TextBox*)control->GetChildren()[1])->GetText().text);
-
 			std::string txt1 = Util::ToMultiByteChar(((GUI::TextBox*)control->GetChildren()[0])->GetText().text);
 			std::string txt2 = Util::ToMultiByteChar(((GUI::TextBox*)control->GetChildren()[1])->GetText().text);
 
@@ -72,6 +90,9 @@ namespace NPE
 	
 	void FileHandler::LoadScene(GUI::MainWindow& win, std::vector<Line>& lines, int& zoom)
 	{
+		win.GetControls().clear();
+		lines.clear();
+
 		//needs to be declared in release mode (error C4703: potentially uninitialized local pointer variable used)
 		QRD::Table* tbNodeInfo = nullptr;
 		QRD::Table* tbSceneInfo = nullptr;
@@ -81,7 +102,15 @@ namespace NPE
 		tbSceneInfo = &m_Db->GetTable("SceneInfo");
 		tbLines = &m_Db->GetTable("Lines");
 
-		zoom = std::stoi(tbSceneInfo->GetRecords()[0].GetRecordData()[0]);
+		try
+		{
+			zoom = std::stoi(tbSceneInfo->GetRecords().at(0).GetRecordData()[0]);
+		}
+		catch (std::out_of_range&)
+		{
+			zoom = 1;
+		}
+
 		for (auto& record : tbNodeInfo->GetRecords())
 		{
 			auto& data = record.GetRecordData();
@@ -136,7 +165,7 @@ namespace NPE
 		}
 	}
 
-	void FileHandler::CreateDefaultTemplate(int zoom)
+	void FileHandler::CreateDefaultTemplate()
 	{
 		QRD::Table& tbNodeInfo = m_Db->CreateTable("NodeInfo");
 		QRD::Table& tbSceneInfo = m_Db->CreateTable("SceneInfo");
@@ -153,13 +182,157 @@ namespace NPE
 		tbLines.AddField<QRD::NUMBER>("ID1");
 
 		tbSceneInfo.AddField<QRD::NUMBER>("zoom");
-		tbSceneInfo.AddRecord(zoom);
 		m_Db->WriteDb();
 	}
 
 	void FileHandler::CreateDatabase(const std::string& filepath)
 	{
 		m_Db = new QRD::Database(filepath, 3);
+	}
+
+	void FileHandler::CreateOrLoadSave()
+	{
+		//Get path to temporary file location
+		char tempLoc[MAX_PATH];
+		GetTempPathA(MAX_PATH, tempLoc);
+		std::string tempLocation = tempLoc;
+		tempLocation += "saves\\";
+
+		/**
+		* Checks if directory exists
+		*
+		* @param dirNameIn is the directory to check
+		* @returns true if the directory exists, false otherwise
+		*/
+		auto dirExists = [](const std::string& dirNameIn)
+		{
+			NPE_LOG("Checking if directory {0} exists...", dirNameIn);
+
+			DWORD ftyp = GetFileAttributesA(dirNameIn.c_str());
+			if (ftyp == INVALID_FILE_ATTRIBUTES)
+				return false;  //something is wrong with your path!
+
+			if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
+				return true;   // this is a directory!
+
+			return false;    // this is not a directory!
+		};
+
+		/**
+		* Checks if file exists
+		*
+		* @param fileName is the file to check
+		* @returns true if the file exists, false otherwise
+		*/
+		auto fileExists = [](const std::string& fileName)
+		{
+			struct stat buffer;
+			NPE_LOG("Checking if file {0} exists...", fileName);
+			return (stat(fileName.c_str(), &buffer) == 0);
+		};
+
+		/**
+		* Creating config directory and file
+		*/
+		bool configFileExists = true;
+		if (!fileExists(s_ConfigFilePath))
+		{
+			NPE_LOG("Config file config.cfg doesn't exist, creating it...");
+
+			/**
+			* Write temporary path to config file and create it
+			*/
+			std::ofstream writer(s_ConfigFilePath);
+			writer << tempLocation + s_SaveFileName + '\n';
+			writer << tempLocation;
+			writer.close();
+			configFileExists = false;
+		}
+		else
+			NPE_LOG("Config file exists");
+
+		/**
+		* Read configs
+		*/
+		std::ifstream reader(s_ConfigFilePath);
+		std::string line;
+		std::unordered_map<std::string, std::string> configs;
+		configs["SaveFile"] = "";
+		configs["SaveDir"] = "";
+
+		for (auto& config : configs)
+		{
+			std::getline(reader, line);
+			if (line.empty())
+			{
+				configs["SaveFile"] = tempLocation + s_SaveFileName;
+				configs["SaveDir"] = tempLocation;
+				break;
+			}
+			else
+			{
+				config.second = line;
+			}
+		}
+		reader.close();
+
+		if (configs["SaveDir"] == tempLocation)
+			m_IsTemporarySave = true;
+
+		bool saveFileExist = true;
+		if (!dirExists(configs["SaveDir"]))
+		{
+			NPE_LOG("Directory {0} doesn't exist, using temporary storage location ({1})", configs["SaveFile"], tempLocation);
+			m_IsTemporarySave = true;
+			if (!CreateDirectoryA(tempLocation.c_str(), nullptr))
+			{
+				NPE_THROW_WND_EXCEPT(GetLastError());
+			}
+			saveFileExist = false;
+		}
+		else
+			NPE_LOG("Directory {0} exists", tempLocation);
+
+		if (!saveFileExist || !fileExists(configs["SaveFile"]))
+		{
+			configs["SaveDir"] = tempLocation;
+			configs["SaveFile"] = tempLocation + s_SaveFileName;
+			NPE_LOG("Save file in directory {0} doesn't exist, using temporary storage location", configs["SaveFile"]);
+			
+			if (!dirExists(configs["SaveDir"]))
+			{
+				if (!CreateDirectoryA(configs["SaveDir"].c_str(), nullptr))
+				{
+					NPE_THROW_WND_EXCEPT(GetLastError());
+				}
+			}
+
+			std::ofstream writer(tempLocation + s_SaveFileName);
+			writer << "";
+			writer.close();
+
+			std::ofstream writer2(s_ConfigFilePath);
+			writer2 << configs["SaveFile"] << '\n';
+			writer2 << configs["SaveDir"];
+			writer2.close();
+
+			saveFileExist = false;
+		}
+		else
+			NPE_LOG("File exists");
+
+		CreateDatabase(configs["SaveFile"]);
+
+		if (!saveFileExist)
+		{
+			CreateDefaultTemplate();
+		}
+	}
+
+	void FileHandler::ChangeScene(const std::string& filepath)
+	{
+		delete m_Db;
+		CreateDatabase(filepath);
 	}
 	
 }

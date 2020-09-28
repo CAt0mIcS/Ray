@@ -17,63 +17,20 @@
 
 #include "GUI/Window/SaveFileWindow.h"
 
+/**
+* QUESTION:
+*	Use MultiByteCharacters or WideStringCharacters
+*/
+
 
 namespace NPE
 {
 	Application::Application()
 		: m_Actions(*this), m_MousePos{}, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false), m_Zoom(0)
 	{
+		NPE_THROW_GFX_EXCEPT(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE), "Failed to initialize Com");
 
-		auto dirExists = [](const std::string& dirNameIn)
-		{
-			NPE_LOG("Checking if directory {0} exists...", dirNameIn);
-
-			DWORD ftyp = GetFileAttributesA(dirNameIn.c_str());
-			if (ftyp == INVALID_FILE_ATTRIBUTES)
-				return false;  //something is wrong with your path!
-
-			if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
-				return true;   // this is a directory!
-
-			return false;    // this is not a directory!
-		};
-
-		auto fileExists = [](const std::string& fileName)
-		{
-			struct stat buffer;
-			NPE_LOG("Checking if file {0} exists...", fileName);
-			return (stat(fileName.c_str(), &buffer) == 0);
-		};
-
-		if (!dirExists("saves"))
-		{
-			NPE_LOG("Directory saves doesn't exist, creating it...");
-			if (!CreateDirectory(L"saves", nullptr))
-			{
-				NPE_THROW_EXCEPT_MSG("Failed to create directory to store save file");
-			}
-		}
-		else
-			NPE_LOG("Directory exists");
-
-		bool fileExist = true;
-		if (!fileExists("saves/save.dbs"))
-		{
-			NPE_LOG("Directory saves/save.dbs doesn't exist, creating it...");
-			std::ofstream writer("saves/save.dbs");
-			writer << "";
-			writer.close();
-			fileExist = false;
-		}
-		else
-			NPE_LOG("File exists");
-
-		m_FileHandler.CreateDatabase("saves\\save.dbs");
-
-		if (!fileExist)
-		{
-			m_FileHandler.CreateDefaultTemplate(m_Zoom);
-		}
+		m_FileHandler.CreateOrLoadSave();
 
 		NPE_LOG("Start of loading scene...");
 		m_FileHandler.LoadScene(m_Window, m_Lines, m_Zoom);
@@ -290,6 +247,11 @@ namespace NPE
 		return false;
 	}
 
+	Application::~Application()
+	{
+		CoUninitialize();
+	}
+
 	bool Application::OnPaintEvent(GUI::Control* watched, GUI::PaintEvent& e)
 	{
 		GUI::Renderer& renderer = GUI::Renderer::Get();
@@ -321,4 +283,3 @@ namespace NPE
 }
 
 
-//auto result = win.Show(L"Select a Save File to Load", L"Save File (*.dbs)\0*.dbs\0Any File\0*.*\0");
