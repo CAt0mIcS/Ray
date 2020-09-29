@@ -21,7 +21,7 @@ namespace NPE
 		FileHandler() : m_Db(nullptr), m_IsTemporarySave(false) {};
 
 
-		void SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, int zoom);
+		void SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, int zoom, bool saveToNewLocation = false);
 		void LoadScene(GUI::MainWindow& win, std::vector<Line>& lines, int& zoom);
 		void CreateDefaultTemplate();
 

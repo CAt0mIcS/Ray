@@ -13,7 +13,6 @@ namespace Util
 
 	void Logger::Init(const std::string& filename)
 	{
-
 		std::ofstream ofs(filename, std::ios_base::trunc);
 		ofs.close();
 

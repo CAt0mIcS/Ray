@@ -16,24 +16,24 @@ namespace GUI
 	{
 		PWSTR filePath;
 
-		IFileDialog* pFileOpen = nullptr;
+		IFileDialog* pFileSave = nullptr;
 		NPE_THROW_GFX_EXCEPT(CoCreateInstance(
-			CLSID_FileOpenDialog, 
+			CLSID_FileSaveDialog, 
 			NULL,
 			CLSCTX_ALL,
-			IID_IFileOpenDialog,
-			(void**)&pFileOpen), 
+			IID_IFileSaveDialog,
+			(void**)&pFileSave), 
 			"Failed to create IFileOpenDialog");
 
-		NPE_THROW_GFX_EXCEPT(pFileOpen->SetDefaultExtension(L"dbs;txt"), "Failed to set default extension for IFileOpenDialog");
-		NPE_THROW_GFX_EXCEPT(pFileOpen->Show(NULL), "Failed to show IFileOpenDialog");
+		NPE_THROW_GFX_EXCEPT(pFileSave->SetDefaultExtension(L"dbs;txt"), "Failed to set default extension for IFileOpenDialog");
+		NPE_THROW_GFX_EXCEPT(pFileSave->Show(NULL), "Failed to show IFileOpenDialog");
 		
 		IShellItem* pItem;
-		NPE_THROW_GFX_EXCEPT(pFileOpen->GetResult(&pItem), "Failed to get result from IFileOpenDialog");
+		NPE_THROW_GFX_EXCEPT(pFileSave->GetResult(&pItem), "Failed to get result from IFileOpenDialog");
 
 		NPE_THROW_GFX_EXCEPT(pItem->GetDisplayName(SIGDN_FILESYSPATH, &filePath), "Failed to get display name from IFileOpenDialog");
 		Util::Release(&pItem);
-		Util::Release(&pFileOpen);
+		Util::Release(&pFileSave);
 
 		return filePath;
 	}

@@ -32,9 +32,9 @@ namespace NPE
 
 		m_FileHandler.CreateOrLoadSave();
 
-		NPE_LOG("Start of loading scene...");
+		NPE_LOG("Start of loading scene...\n");
 		m_FileHandler.LoadScene(m_Window, m_Lines, m_Zoom);
-		NPE_LOG("Finnished loading scene");
+		NPE_LOG("Finnished loading scene\n");
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 		m_Window.CreateTimer(20000, true);
 	}
@@ -186,6 +186,12 @@ namespace NPE
 			m_Window.PostRedraw();
 			m_NeedsToSave = true;
 			return true;
+		}
+		//Save to shortcut
+		else if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed(VK_SHIFT) && GUI::Keyboard::IsKeyPressed('S'))
+		{
+			m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom, true);
+			m_NeedsToSave = true;
 		}
 		//Save shortcut
 		else if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('S'))

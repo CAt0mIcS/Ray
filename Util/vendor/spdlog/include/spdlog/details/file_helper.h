@@ -19,6 +19,9 @@
 #include <thread>
 #include <tuple>
 
+#include <fstream>
+
+
 namespace spdlog {
 namespace details {
 
@@ -95,21 +98,37 @@ public:
         size_t id = 0;
         id = str.find("[]");
 
+        size_t idSlashR = 0;
+        idSlashR = str.find("\r");
+
+        if (idSlashR != std::string::npos)
+        {
+            str.replace(str.begin() + idSlashR, str.begin() + idSlashR + 1, "");
+        }
+
         if (id == std::string::npos)
         {
-            if (std::fwrite(data, 1, msg_size, fd_) != msg_size)
-            {
-                throw spdlog_ex("Failed writing to file " + os::filename_to_str(_filename), errno);
-            }
+            std::ofstream writer(os::filename_to_str(_filename), std::ios_base::app);
+            writer << data;
+            writer.close();
+
+            //if (std::fwrite(data, 1, msg_size, fd_) != msg_size)
+            //{
+            //    throw spdlog_ex("Failed writing to file " + os::filename_to_str(_filename), errno);
+            //}
         }
         else
         {
             str.replace(str.begin() + id, str.begin() + id + 3, "");
 
-            if (std::fwrite(str.c_str(), 1, msg_size, fd_) != msg_size)
-            {
-                throw spdlog_ex("Failed writing to file " + os::filename_to_str(_filename), errno);
-            }
+            std::ofstream writer(os::filename_to_str(_filename), std::ios_base::app);
+            writer << str;
+            writer.close();
+
+            //if (std::fwrite(str.c_str(), 1, msg_size, fd_) != msg_size)
+            //{
+            //    throw spdlog_ex("Failed writing to file " + os::filename_to_str(_filename), errno);
+            //}
         }
         
     }
