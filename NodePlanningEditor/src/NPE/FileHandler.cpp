@@ -16,14 +16,38 @@
 
 namespace NPE
 {
+	FileHandler::FileHandler()
+		: m_Db(nullptr), m_IsTemporarySave(false)
+	{
+
+		//m_SaveFolder += "{{";
+		//int len = 20;
+		//static constexpr const char alphanum[] =
+		//	"0123456789"
+		//	"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		//	"abcdefghijklmnopqrstuvwxyz";
+		//
+		////srand((unsigned)time(nullptr) * getpid());
+		//
+		//for (int i = 0; i < len; ++i)
+		//	m_SaveFolder += alphanum[rand() % (sizeof(alphanum) - 1)];
+		//
+		//m_SaveFolder += "}}\\";
+		////TODO: Random string here
+		////m_SaveFolder = "saves\\";
+	}
+
 	void FileHandler::SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, int zoom, bool saveToNewLocation)
 	{
 
-		if (m_IsTemporarySave || saveToNewLocation)
+		if (saveToNewLocation)
 		{
 			GUI::SaveFileWindow win;
 			auto result = win.Show(L"Select a Save File", L"Any File\0*.*\0Save File (*.dbs)\0*.dbs\0");
 			
+			std::ofstream writer2(result);
+			writer2.close();
+
 			delete m_Db;
 			CreateDatabase(Util::ToMultiByteChar(result));
 			CreateDefaultTemplate();
@@ -120,10 +144,6 @@ namespace NPE
 			node->SetColor(GUI::g_DefaultNodeColor);
 			node->Init();
 
-			//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-			//std::wstring txt1 = converter.from_bytes(data[4]);
-			//std::wstring txt2 = converter.from_bytes(data[5]);
-
 			std::wstring txt1 = Util::ToWideChar(data[4]);
 			std::wstring txt2 = Util::ToWideChar(data[5]);
 
@@ -193,11 +213,7 @@ namespace NPE
 
 	void FileHandler::CreateOrLoadSave()
 	{
-		//Get path to temporary file location
-		char tempLoc[MAX_PATH];
-		GetTempPathA(MAX_PATH, tempLoc);
-		std::string tempLocation = tempLoc;
-		tempLocation += "saves\\";
+		std::string fileDir = "saves\\";
 
 		/**
 		* Checks if directory exists
@@ -244,8 +260,8 @@ namespace NPE
 			* Write temporary path to config file and create it
 			*/
 			std::ofstream writer(s_ConfigFilePath);
-			writer << tempLocation + s_SaveFileName + '\n';
-			writer << tempLocation;
+			writer << fileDir + s_SaveFileName + '\n';
+			writer << fileDir;
 			writer.close();
 			configFileExists = false;
 		}
@@ -266,8 +282,8 @@ namespace NPE
 			std::getline(reader, line);
 			if (line.empty())
 			{
-				configs["SaveFile"] = tempLocation + s_SaveFileName;
-				configs["SaveDir"] = tempLocation;
+				configs["SaveFile"] = fileDir + s_SaveFileName;
+				configs["SaveDir"] = fileDir;
 				break;
 			}
 			else
@@ -277,27 +293,27 @@ namespace NPE
 		}
 		reader.close();
 
-		if (configs["SaveDir"] == tempLocation)
+		if (configs["SaveDir"] == fileDir)
 			m_IsTemporarySave = true;
 
 		bool saveFileExist = true;
 		if (!dirExists(configs["SaveDir"]))
 		{
-			NPE_LOG("Directory {0} doesn't exist, using temporary storage location ({1})", configs["SaveFile"], tempLocation);
+			NPE_LOG("Directory {0} doesn't exist, using temporary storage location ({1})", configs["SaveFile"], fileDir);
 			m_IsTemporarySave = true;
-			if (!CreateDirectoryA(tempLocation.c_str(), nullptr))
+			if (!CreateDirectoryA(fileDir.c_str(), nullptr))
 			{
 				NPE_THROW_WND_EXCEPT(GetLastError());
 			}
 			saveFileExist = false;
 		}
 		else
-			NPE_LOG("Directory {0} exists", tempLocation);
+			NPE_LOG("Directory {0} exists", fileDir);
 
 		if (!saveFileExist || !fileExists(configs["SaveFile"]))
 		{
-			configs["SaveDir"] = tempLocation;
-			configs["SaveFile"] = tempLocation + s_SaveFileName;
+			configs["SaveDir"] = fileDir;
+			configs["SaveFile"] = fileDir + s_SaveFileName;
 			NPE_LOG("Save file in directory {0} doesn't exist, using temporary storage location", configs["SaveFile"]);
 			
 			if (!dirExists(configs["SaveDir"]))
@@ -308,7 +324,7 @@ namespace NPE
 				}
 			}
 
-			std::ofstream writer(tempLocation + s_SaveFileName);
+			std::ofstream writer(fileDir + s_SaveFileName);
 			writer << "";
 			writer.close();
 

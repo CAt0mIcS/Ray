@@ -1,89 +1,69 @@
-[2020-09-29 19:31:44.565] ******Log initalized for NodePlanningEditor******
+[2020-09-29 19:51:04.060] ******Log initalized for NodePlanningEditor******
 
 
 
-[2020-09-29 19:31:44.721] Checking if file config.cfg exists...
-[2020-09-29 19:31:44.721] Config file exists
-[2020-09-29 19:31:44.722] Checking if directory D:\Documents exists...
-[2020-09-29 19:31:44.722] Directory C:\Users\Simon\AppData\Local\Temp\saves\ exists
-[2020-09-29 19:31:44.722] Checking if file D:\Documents\test2.dbs exists...
-[2020-09-29 19:31:44.723] File exists
-[2020-09-29 19:31:44.724] Start of loading scene...
+[2020-09-29 19:51:04.219] Checking if file config.cfg exists...
+[2020-09-29 19:51:04.220] Config file exists
+[2020-09-29 19:51:04.220] Checking if directory D:\Documents exists...
+[2020-09-29 19:51:04.220] Directory saves\ exists
+[2020-09-29 19:51:04.220] Checking if file D:\Documents\test1.dbs exists...
+[2020-09-29 19:51:04.221] File exists
+[2020-09-29 19:51:04.222] Start of loading scene...
 
-[2020-09-29 19:31:44.725] Loaded Node: 
-Pos:	x=691.715 y=875.574
-Size:	width=388.727 height=241.875
+[2020-09-29 19:51:04.222] Loaded Node: 
+Pos:	x=557 y=677
+Size:	width=472.5 height=294
 Title:	Hello World
 Info:	Hello World
 
-[2020-09-29 19:31:44.725] Loaded Node: 
-Pos:	x=217.672 y=434.926
-Size:	width=388.727 height=241.875
+[2020-09-29 19:51:04.222] Loaded Node: 
+Pos:	x=81 y=367
+Size:	width=472.5 height=294
 Title:	Hello World
 Info:	Hello World
 
-[2020-09-29 19:31:44.727] Loaded Node: 
-Pos:	x=921 y=505
-Size:	width=388.727 height=241.875
+[2020-09-29 19:51:04.223] Loaded Node: 
+Pos:	x=914 y=271
+Size:	width=472.5 height=294
 Title:	Hello World
 Info:	Hello World
 
-[2020-09-29 19:31:44.728] Loaded Node: 
-Pos:	x=650 y=136
-Size:	width=388.727 height=241.875
+[2020-09-29 19:51:04.223] 
+
+[2020-09-29 19:51:04.224] Loaded Line: 
+Start:	x=1138 y=276.25
+End:	x=305 y=372.25
+
+[2020-09-29 19:51:04.225] 
+
+
+[2020-09-29 19:51:04.225] Finnished loading scene
+
+[2020-09-29 19:51:06.233] Saved Node: 
+Pos:	x=411.71 y=630.489
+Size:	width=352.587 height=219.387
 Title:	Hello World
 Info:	Hello World
 
-[2020-09-29 19:31:44.728] 
-
-[2020-09-29 19:31:44.729] Loaded Line: 
-Start:	x=401.957 y=439.245
-End:	x=876 y=879.893
-
-[2020-09-29 19:31:44.731] Loaded Line: 
-Start:	x=834.285 y=140.319
-End:	x=1105.29 y=509.319
-
-[2020-09-29 19:31:44.732] 
-
-
-[2020-09-29 19:31:44.732] Finnished loading scene
-
-[2020-09-29 19:32:04.723] Saved Node: 
-Pos:	x=691.715 y=875.574
-Size:	width=388.727 height=241.875
+[2020-09-29 19:51:06.234] Saved Node: 
+Pos:	x=61.8061 y=402.61
+Size:	width=352.587 height=219.387
 Title:	Hello World
 Info:	Hello World
 
-[2020-09-29 19:32:04.724] Saved Node: 
-Pos:	x=217.672 y=434.926
-Size:	width=388.727 height=241.875
+[2020-09-29 19:51:06.235] Saved Node: 
+Pos:	x=674.138 y=332.041
+Size:	width=352.587 height=219.387
 Title:	Hello World
 Info:	Hello World
 
-[2020-09-29 19:32:04.726] Saved Node: 
-Pos:	x=921 y=505
-Size:	width=388.727 height=241.875
-Title:	Hello World
-Info:	Hello World
+[2020-09-29 19:51:06.235] 
 
-[2020-09-29 19:32:04.727] Saved Node: 
-Pos:	x=650 y=136
-Size:	width=388.727 height=241.875
-Title:	Hello World
-Info:	Hello World
+[2020-09-29 19:51:06.236] Saved Line: 
+Start:	x=841.29 y=335.959
+End:	x=228.958 y=406.528
 
-[2020-09-29 19:32:04.728] 
-
-[2020-09-29 19:32:04.729] Saved Line: 
-Start:	x=401.957 y=439.245
-End:	x=876 y=879.893
-
-[2020-09-29 19:32:04.729] Saved Line: 
-Start:	x=834.285 y=140.319
-End:	x=1105.29 y=509.319
-
-[2020-09-29 19:32:04.730] 
+[2020-09-29 19:51:06.236] 
 
 
-[2020-09-29 19:32:12.444]  ****** Log finnished for NodePlanningEditor ******
+[2020-09-29 19:51:06.914]  ****** Log finnished for NodePlanningEditor ******
