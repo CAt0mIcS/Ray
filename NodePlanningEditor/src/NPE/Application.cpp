@@ -132,7 +132,11 @@ namespace NPE
 		m_MousePos = GUI::Mouse::GetPos();
 		if (e.GetButton() == GUI::MouseButton::Left)
 		{
-			if (watched->GetType() == GUI::Control::Type::Button)
+			if (watched->GetType() == GUI::Control::Type::TextBox)
+			{
+				m_Window.PostRedraw();
+			}
+			else if (watched->GetType() == GUI::Control::Type::Button)
 			{
 				m_Lines.emplace_back((GUI::Button*)watched, nullptr);
 				m_DrawLines = true;

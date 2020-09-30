@@ -246,7 +246,6 @@ namespace GUI
 			{
 				UpdateCaretFormatting();
 			}
-			InvalidateRect(Renderer::Get().GetNativeWindow(), nullptr, TRUE);
 		}
 	}
 

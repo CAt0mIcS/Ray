@@ -49,12 +49,8 @@ namespace GUI
 			{
 				//TODO: Make more performant, only render part where the caret disappeared
 				this->SetFocus();
-				
-				HDC hDC = GetDC(m_hWnd);
-				PaintEvent e(hDC, nullptr);
-				DispatchEvent(e);
-				ReleaseDC(m_hWnd, hDC);
 			
+				PostRedraw();
 			}
 			
 			break;
