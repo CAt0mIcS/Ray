@@ -22,9 +22,8 @@
 namespace GUI
 {
 	TextBox::TextBox(_In_opt_ Control* parent)
-		: Control(parent), m_Text{}, m_IsMultiline(false), m_Caret(this)
+		: Control(Type::TextBox, parent), m_Text{}, m_IsMultiline(false), m_Caret(this)
 	{
-		SetType(Type::TextBox);
 	}
 
 	bool TextBox::Render()
@@ -60,8 +59,10 @@ namespace GUI
 		case EventType::MouseButtonPressedEvent:
 		{
 			if (((MouseButtonPressedEvent&)e).GetButton() == MouseButton::Left)
+			{
 				this->SetFocus();
-			m_Caret.OnMouseButtonPressed((MouseButtonPressedEvent&)e);
+				m_Caret.OnMouseButtonPressed((MouseButtonPressedEvent&)e);
+			}
 
 			//To remove caret
 			Renderer::Get().BeginDraw();
@@ -76,17 +77,20 @@ namespace GUI
 		}
 		case EventType::KeyPressedEvent:
 		{
-			m_Caret.OnKeyPressed((KeyPressedEvent&)e);
+			if(this->HasFocus())
+				m_Caret.OnKeyPressed((KeyPressedEvent&)e);
 			return true;
 		}
 		case EventType::MouseMoveEvent:
 		{
-			m_Caret.OnMouseMove((MouseMoveEvent&)e);
+			if(this->HasFocus())
+				m_Caret.OnMouseMove((MouseMoveEvent&)e);
 			return true;
 		}
 		case EventType::CharEvent:
 		{
-			m_Caret.OnCharEvent((CharEvent&)e);
+			if(this->HasFocus())
+				m_Caret.OnCharEvent((CharEvent&)e);
 			return true;
 		}
 		case EventType::SetCursorEvent:

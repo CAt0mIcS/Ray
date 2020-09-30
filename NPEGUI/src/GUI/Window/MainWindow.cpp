@@ -15,12 +15,15 @@
 namespace GUI
 {
 	MainWindow::MainWindow()
+		: Control(Type::Window)
 	{
 		if (!CreateNativeWindow(L"NPE", WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT))
 		{
 			NPE_THROW_WND_EXCEPT(GetLastError());
 		}
-		
+	
+		this->SetFocus();
+
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
 		Renderer::Get().Init(m_hWnd);
 		TextRenderer::Get().Init();
@@ -216,8 +219,8 @@ namespace GUI
 		case WM_CLOSE:
 		{
 			AppCloseEvent e;
-			DispatchEvent(e);
-			break;
+			if (!DispatchEvent(e)) break;
+			return 0;
 		}
 		}
 

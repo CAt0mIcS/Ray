@@ -32,7 +32,7 @@ namespace NPE
 	public:
 		Actions(Application& app);
 
-		void MoveCamera(const Util::NPoint& oldMousePos, std::vector<GUI::Control*>& controls);
+		void MoveCamera(const Util::NPoint& diff, std::vector<GUI::Control*>& controls);
 		void SpawnNode(GUI::MainWindow& win, float width, float height, int zoom);
 		void MoveNodes(GUI::Node* node, const Util::NPoint& oldMousePos);
 		void ZoomIn(int& zoom, std::vector<GUI::Control*>& controls);

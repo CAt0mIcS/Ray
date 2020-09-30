@@ -29,8 +29,8 @@ namespace GUI
 		enum class Type
 		{
 			INVALID = 0,
-			Node, Button, TextBox, PlainTextEdit,
-			MenuItem, MenuBar
+			Node, Button, TextBox,
+			Window
 		};
 
 	public:
@@ -54,13 +54,6 @@ namespace GUI
 		* @param color is the control color
 		*/
 		void SetColor(_In_ const Util::NColor& color) { m_Color = color; }
-
-		/**
-		* Setter for type
-		*
-		* @param type is the control type
-		*/
-		void SetType(_In_ Type type) { m_Type = type; }
 
 		/**
 		* Getter for the control type
@@ -220,7 +213,7 @@ namespace GUI
 		* 
 		* @param parent is the parent window
 		*/
-		Control(_In_opt_ Control* parent = nullptr);
+		Control(_In_ Type type, _In_opt_ Control* parent = nullptr);
 
 	protected:
 		Util::NPoint m_Pos;

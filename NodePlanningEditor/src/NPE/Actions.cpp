@@ -23,9 +23,8 @@ namespace NPE
 
 	}
 
-	void Actions::MoveCamera(const Util::NPoint& oldMousePos, std::vector<GUI::Control*>& controls)
+	void Actions::MoveCamera(const Util::NPoint& diff, std::vector<GUI::Control*>& controls)
 	{
-		Util::NPoint diff = GUI::Mouse::GetPos() - oldMousePos;
 		for (auto* control : controls)
 		{
 			control->MoveBy(diff);

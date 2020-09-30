@@ -100,7 +100,7 @@ namespace NPE
 		{
 			SetCursor(LoadCursor(NULL, IDC_SIZEALL));
 			
-			m_Actions.MoveCamera(m_MousePos, m_Window.GetControls());
+			m_Actions.MoveCamera(GUI::Mouse::GetPos() - m_MousePos, m_Window.GetControls());
 			m_MousePos = GUI::Mouse::GetPos();
 			m_Window.PostRedraw();
 
@@ -151,7 +151,7 @@ namespace NPE
 	{
 		if (e.GetButton() == GUI::MouseButton::Left)
 		{
-			if (!m_HandleControls.draggingNode)
+			if (!m_HandleControls.draggingNode && m_DrawLines)
 			{
 				m_Actions.FinnishLineDrawing(m_Lines, m_Window.GetControls());
 				m_Window.PostRedraw();
@@ -207,6 +207,36 @@ namespace NPE
 
 	bool Application::OnChar(GUI::Control* watched, GUI::CharEvent& e)
 	{
+		if (m_Window.HasFocus())
+		{
+			float incr = 30.0f;
+			switch (e.GetKeyCode())
+			{
+			case 'w':
+				m_Actions.MoveCamera({ 0.0f, incr }, m_Window.GetControls());
+				break;
+			case 'a':
+				m_Actions.MoveCamera({ incr, 0.0f }, m_Window.GetControls());
+				break;
+			case 's':
+				m_Actions.MoveCamera({ 0.0f, -incr }, m_Window.GetControls());
+				break;
+			case 'd':
+				m_Actions.MoveCamera({ -incr, 0.0f }, m_Window.GetControls());
+				break;
+			default:
+				return false;
+			}
+			
+			m_Window.PostRedraw();
+			m_NeedsToSave = true;
+			return true;
+		}
+		else if (watched->GetType() == GUI::Control::Type::TextBox && watched->HasFocus())
+		{
+			m_NeedsToSave = true;
+		}
+
 		return false;
 	}
 
@@ -275,10 +305,14 @@ namespace NPE
 	{
 		if (m_NeedsToSave)
 		{
-			int result = MessageBox(m_Window.GetNativeWindow(), L"Save changes to the scene?", L"Unsaved changes", MB_YESNO);
+			int result = MessageBox(m_Window.GetNativeWindow(), L"Save changes to the scene?", L"Unsaved changes", MB_YESNOCANCEL);
 			if (result == IDYES)
 			{
 				m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom);
+			}
+			else if (result == IDCANCEL)
+			{
+				return true;
 			}
 			else
 			{
@@ -286,7 +320,7 @@ namespace NPE
 			}
 		}
 		NPE_LOG(" ****** Log finnished for NodePlanningEditor ******");
-		return true;
+		return false;
 	}
 
 }
