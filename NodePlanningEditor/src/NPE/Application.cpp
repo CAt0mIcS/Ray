@@ -151,10 +151,13 @@ namespace NPE
 	{
 		if (e.GetButton() == GUI::MouseButton::Left)
 		{
-			m_Actions.FinnishLineDrawing(m_Lines, m_Window.GetControls());
-			m_Window.PostRedraw();
-			m_NeedsToSave = true;
-			m_DrawLines = false;
+			if (!m_HandleControls.draggingNode)
+			{
+				m_Actions.FinnishLineDrawing(m_Lines, m_Window.GetControls());
+				m_Window.PostRedraw();
+				m_NeedsToSave = true;
+				m_DrawLines = false;
+			}
 
 			m_HandleControls.draggingNode = nullptr;
 			return true;

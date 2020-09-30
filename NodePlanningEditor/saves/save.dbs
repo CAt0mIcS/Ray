@@ -1,0 +1,198 @@
+TABLES: 3
+TABLE: NodeInfo
+FIELDS
+{
+    x:INTEGER
+    y:INTEGER
+    width:INTEGER
+    height:INTEGER
+    txt1:TEXT
+    txt2:TEXT
+}
+RECORDS: 6
+RECORD
+{
+    674.155
+    746.404
+    335.797
+    208.941
+    Hello World
+    Hello World
+}
+RECORD
+{
+    1067.39
+    227.193
+    335.797
+    208.941
+    Hello World
+    Hello World
+}
+RECORD
+{
+    254.736
+    686.999
+    335.797
+    208.941
+    Hello World
+    Hello World
+}
+RECORD
+{
+    1075.51
+    688.683
+    335.797
+    208.941
+    Hello World
+    Hello World
+}
+RECORD
+{
+    270.889
+    212.52
+    335.797
+    208.941
+    Hello World
+    Hello World
+}
+RECORD
+{
+    675.845
+    157.569
+    335.797
+    208.94
+    Hello World
+    Hello World
+}
+TABLE: SceneInfo
+FIELDS
+{
+    zoom:INTEGER
+}
+RECORDS: 1
+RECORD
+{
+    -6
+}
+TABLE: Lines
+FIELDS
+{
+    ID2:INTEGER
+    ID1:INTEGER
+}
+RECORDS: 23
+RECORD
+{
+    8
+    4
+}
+RECORD
+{
+    8
+    16
+}
+RECORD
+{
+    4
+    12
+}
+RECORD
+{
+    4
+    8
+}
+RECORD
+{
+    8
+    4
+}
+RECORD
+{
+    8
+    4
+}
+RECORD
+{
+    4
+    8
+}
+RECORD
+{
+    8
+    4
+}
+RECORD
+{
+    4
+    8
+}
+RECORD
+{
+    8
+    4
+}
+RECORD
+{
+    4
+    8
+}
+RECORD
+{
+    12
+    20
+}
+RECORD
+{
+    12
+    8
+}
+RECORD
+{
+    8
+    20
+}
+RECORD
+{
+    20
+    4
+}
+RECORD
+{
+    4
+    16
+}
+RECORD
+{
+    16
+    20
+}
+RECORD
+{
+    12
+    16
+}
+RECORD
+{
+    24
+    8
+}
+RECORD
+{
+    24
+    20
+}
+RECORD
+{
+    24
+    12
+}
+RECORD
+{
+    24
+    4
+}
+RECORD
+{
+    24
+    16
+}

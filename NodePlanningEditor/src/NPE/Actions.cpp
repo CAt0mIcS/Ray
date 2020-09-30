@@ -143,18 +143,28 @@ namespace NPE
 				}
 			}
 		}
-		if (lines.size() > 0 && lines[lines.size() - 1].second == nullptr)
+		if (lines[lines.size() - 1].second == nullptr)
 		{
 			lines.erase(lines.end() - 1);
-			//m_App->m_Window.PostRedraw();
 		}
 		else
 		{
-			//m_App->m_NeedsToSave = true;
 			auto line = lines[lines.size() - 1];
-			NPE_LOG("Connected Line: \nStart:\t{0}\nEnd:\t{1}", line.first->GetPos(), line.second->GetPos());
+			
+			//Check if connection already exists between these two buttons
+			for (auto it = lines.begin(); it != lines.end() - 1; ++it)
+			{
+				if ((line.first->GetId() == it->first->GetId() && line.second->GetId() == it->second->GetId()) 
+					|| (line.first->GetId() == it->second->GetId() && line.second->GetId() == it->first->GetId()))
+				{
+					NPE_LOG("Didn't connect Line because a connection between these two points already exists");
+					lines.erase(lines.end() - 1);
+					return;
+				}
+			}
+			
+			NPE_LOG("Connected Line");
 		}
-		//m_App->m_DrawLines = false;
 	}
 	
 	void Actions::EraseLine(std::vector<Line>& lines, const Util::NPoint& oldMousePos)
@@ -173,11 +183,8 @@ namespace NPE
 			if (linesIntersect(lines[i].first->GetPos(), lines[i].second->GetPos(), oldMousePos, GUI::Mouse::GetPos()))
 			{
 				lines.erase(lines.begin() + i);
-				//m_App->m_NeedsToSave = true;
 			}
 		}
-
-		//m_App->m_Window.PostRedraw();
 	}
 	
 	void Actions::DeleteNode(GUI::Node* watched, std::vector<GUI::Control*>& controls, std::vector<Line>& lines)
@@ -198,10 +205,6 @@ namespace NPE
 
 				delete controls[i];
 				controls.erase(controls.begin() + i);
-				//m_App->m_NeedsToSave = true;
-
-				//m_App->m_Window.PostRedraw();
-
 				break;
 			}
 		}
