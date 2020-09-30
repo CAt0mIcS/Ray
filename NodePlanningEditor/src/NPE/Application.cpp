@@ -109,7 +109,13 @@ namespace NPE
 		}
 		else if (GUI::Mouse::IsLeftPressed())
 		{
-			if (m_Lines.size() > 0 && m_DrawLines)
+			//Redraw caret when selecting
+			if (watched->HasFocus() && watched->GetType() == GUI::Control::Type::TextBox)
+			{
+				m_Window.PostRedraw();
+				return true;
+			}
+			else if (m_Lines.size() > 0 && m_DrawLines)
 			{
 				m_Window.PostRedraw();
 				return true;
@@ -186,6 +192,13 @@ namespace NPE
 
 	bool Application::OnKeyPressed(GUI::Control* watched, GUI::KeyPressedEvent& e)
 	{
+		//Redraw caret when moving with arrow keys
+		if (watched->HasFocus() && watched->GetType() == GUI::Control::Type::TextBox)
+		{
+			m_Window.PostRedraw();
+			return true;
+		}
+
 		//Create new node shortcut
 		if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('A'))
 		{
@@ -236,9 +249,11 @@ namespace NPE
 			m_NeedsToSave = true;
 			return true;
 		}
+		//Render caret on key press
 		else if (watched->GetType() == GUI::Control::Type::TextBox && watched->HasFocus())
 		{
 			m_NeedsToSave = true;
+			m_Window.PostRedraw();
 		}
 
 		return false;

@@ -70,7 +70,7 @@ namespace NPE
 		*
 		* @param watched is the control that received the event
 		* @param e is the received event
-		* @returns true if the event was handled, false otherwise
+		* @returns false if the window should close, true if the window should stay open
 		*/
 		bool OnClose(GUI::Control* watched, GUI::AppCloseEvent& e);
 		
@@ -166,7 +166,6 @@ namespace NPE
 		struct HandleControls
 		{
 			GUI::Node* draggingNode;
-			GUI::Button* lineButtonStart;
 		};
 
 		HandleControls m_HandleControls;

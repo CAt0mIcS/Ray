@@ -12,57 +12,57 @@ FIELDS
 RECORDS: 6
 RECORD
 {
-    691.722
-    802.085
-    335.797
-    208.941
-    wHelsflo World
+    562.081
+    501.128
+    319.807
+    198.991
+    Hello World
     aHello sdWorld
 }
 RECORD
 {
-    1029.28
-    356.396
-    335.797
-    208.941
+    879.566
+    81.943
+    319.807
+    198.991
     sHello fdsWorld
     aHello Worldfds
 }
 RECORD
 {
-    331.695
-    751.092
-    335.797
-    208.941
+    223.463
+    453.168
+    319.807
+    198.991
     wHello World
     dHello World
 }
 RECORD
 {
-    1036.25
-    752.537
-    335.797
-    208.941
+    886.121
+    454.527
+    319.807
+    198.991
     dHello Worfdsld
     sHello Worldef
 }
 RECORD
 {
-    345.56
-    343.801
-    335.797
-    208.941
-    dddwwwdadHello World
-    aaaaaasaaaadddsfdseffefdsfawdHello World
+    236.503
+    70.096
+    319.807
+    198.991
+    Hello World
+    aaaaaasaaaadddsfdseffefdsfawwadHello World
 }
 RECORD
 {
-    693.172
-    296.631
-    335.797
-    208.94
-    ddHellofdse World
-    wwHello World
+    563.444
+    25.7314
+    319.807
+    198.99
+    Hello World
+    wwHello wWorld
 }
 TABLE: SceneInfo
 FIELDS
@@ -72,7 +72,7 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    -6
+    -7
 }
 TABLE: Lines
 FIELDS

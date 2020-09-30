@@ -1,149 +1,149 @@
-[2020-09-30 20:45:46.353] ******Log initalized for NodePlanningEditor******
+[2020-09-30 21:36:02.483] ******Log initalized for NodePlanningEditor******
 
 
 
-[2020-09-30 20:45:46.506] Checking if file config.cfg exists...
-[2020-09-30 20:45:46.507] Config file exists
-[2020-09-30 20:45:46.507] Checking if directory saves\ exists...
-[2020-09-30 20:45:46.507] Directory saves\ exists
-[2020-09-30 20:45:46.508] Checking if file saves\save.dbs exists...
-[2020-09-30 20:45:46.508] File exists
-[2020-09-30 20:45:46.510] Start of loading scene...
+[2020-09-30 21:36:02.645] Checking if file config.cfg exists...
+[2020-09-30 21:36:02.645] Config file exists
+[2020-09-30 21:36:02.646] Checking if directory saves\ exists...
+[2020-09-30 21:36:02.646] Directory saves\ exists
+[2020-09-30 21:36:02.646] Checking if file saves\save.dbs exists...
+[2020-09-30 21:36:02.646] File exists
+[2020-09-30 21:36:02.647] Start of loading scene...
 
-[2020-09-30 20:45:46.511] Loaded Node: 
-Pos:	x=691.722 y=802.085
-Size:	width=335.797 height=208.941
-Title:	wHelsflo World
+[2020-09-30 21:36:02.647] Loaded Node: 
+Pos:	x=562.081 y=501.128
+Size:	width=319.807 height=198.991
+Title:	Hello World
 Info:	aHello sdWorld
 
-[2020-09-30 20:45:46.511] Loaded Node: 
-Pos:	x=1029.28 y=356.396
-Size:	width=335.797 height=208.941
+[2020-09-30 21:36:02.647] Loaded Node: 
+Pos:	x=879.566 y=81.943
+Size:	width=319.807 height=198.991
 Title:	sHello fdsWorld
 Info:	aHello Worldfds
 
-[2020-09-30 20:45:46.511] Loaded Node: 
-Pos:	x=331.695 y=751.092
-Size:	width=335.797 height=208.941
+[2020-09-30 21:36:02.648] Loaded Node: 
+Pos:	x=223.463 y=453.168
+Size:	width=319.807 height=198.991
 Title:	wHello World
 Info:	dHello World
 
-[2020-09-30 20:45:46.512] Loaded Node: 
-Pos:	x=1036.25 y=752.537
-Size:	width=335.797 height=208.941
+[2020-09-30 21:36:02.648] Loaded Node: 
+Pos:	x=886.121 y=454.527
+Size:	width=319.807 height=198.991
 Title:	dHello Worfdsld
 Info:	sHello Worldef
 
-[2020-09-30 20:45:46.512] Loaded Node: 
-Pos:	x=345.56 y=343.801
-Size:	width=335.797 height=208.941
-Title:	dddwwwdadHello World
-Info:	aaaaaasaaaadddsfdseffefdsfawdHello World
+[2020-09-30 21:36:02.648] Loaded Node: 
+Pos:	x=236.503 y=70.096
+Size:	width=319.807 height=198.991
+Title:	Hello World
+Info:	aaaaaasaaaadddsfdseffefdsfawwadHello World
 
-[2020-09-30 20:45:46.513] Loaded Node: 
-Pos:	x=693.172 y=296.631
-Size:	width=335.797 height=208.94
-Title:	ddHellofdse World
-Info:	wwHello World
+[2020-09-30 21:36:02.648] Loaded Node: 
+Pos:	x=563.444 y=25.7314
+Size:	width=319.807 height=198.99
+Title:	Hello World
+Info:	wwHello wWorld
 
-[2020-09-30 20:45:46.513] 
+[2020-09-30 21:36:02.649] 
 
-[2020-09-30 20:45:46.513] Loaded Line: 
-Start:	x=1188.47 y=360.127
-End:	x=850.915 y=805.816
+[2020-09-30 21:36:02.649] Loaded Line: 
+Start:	x=1031.18 y=85.4964
+End:	x=713.693 y=504.681
 
-[2020-09-30 20:45:46.514] Loaded Line: 
-Start:	x=1188.47 y=360.127
-End:	x=1195.44 y=756.268
+[2020-09-30 21:36:02.649] Loaded Line: 
+Start:	x=1031.18 y=85.4964
+End:	x=1037.73 y=458.08
 
-[2020-09-30 20:45:46.514] Loaded Line: 
-Start:	x=850.915 y=805.816
-End:	x=490.888 y=754.823
+[2020-09-30 21:36:02.649] Loaded Line: 
+Start:	x=713.693 y=504.681
+End:	x=375.075 y=456.721
 
-[2020-09-30 20:45:46.515] Loaded Line: 
-Start:	x=850.915 y=805.816
-End:	x=1188.47 y=360.127
+[2020-09-30 21:36:02.649] Loaded Line: 
+Start:	x=713.693 y=504.681
+End:	x=1031.18 y=85.4964
 
-[2020-09-30 20:45:46.515] Loaded Line: 
-Start:	x=1188.47 y=360.127
-End:	x=850.915 y=805.816
+[2020-09-30 21:36:02.650] Loaded Line: 
+Start:	x=1031.18 y=85.4964
+End:	x=713.693 y=504.681
 
-[2020-09-30 20:45:46.515] Loaded Line: 
-Start:	x=1188.47 y=360.127
-End:	x=850.915 y=805.816
+[2020-09-30 21:36:02.650] Loaded Line: 
+Start:	x=1031.18 y=85.4964
+End:	x=713.693 y=504.681
 
-[2020-09-30 20:45:46.517] Loaded Line: 
-Start:	x=850.915 y=805.816
-End:	x=1188.47 y=360.127
+[2020-09-30 21:36:02.650] Loaded Line: 
+Start:	x=713.693 y=504.681
+End:	x=1031.18 y=85.4964
 
-[2020-09-30 20:45:46.518] Loaded Line: 
-Start:	x=1188.47 y=360.127
-End:	x=850.915 y=805.816
+[2020-09-30 21:36:02.650] Loaded Line: 
+Start:	x=1031.18 y=85.4964
+End:	x=713.693 y=504.681
 
-[2020-09-30 20:45:46.518] Loaded Line: 
-Start:	x=850.915 y=805.816
-End:	x=1188.47 y=360.127
+[2020-09-30 21:36:02.650] Loaded Line: 
+Start:	x=713.693 y=504.681
+End:	x=1031.18 y=85.4964
 
-[2020-09-30 20:45:46.518] Loaded Line: 
-Start:	x=1188.47 y=360.127
-End:	x=850.915 y=805.816
+[2020-09-30 21:36:02.651] Loaded Line: 
+Start:	x=1031.18 y=85.4964
+End:	x=713.693 y=504.681
 
-[2020-09-30 20:45:46.519] Loaded Line: 
-Start:	x=850.915 y=805.816
-End:	x=1188.47 y=360.127
+[2020-09-30 21:36:02.651] Loaded Line: 
+Start:	x=713.693 y=504.681
+End:	x=1031.18 y=85.4964
 
-[2020-09-30 20:45:46.519] Loaded Line: 
-Start:	x=490.888 y=754.823
-End:	x=504.753 y=347.532
+[2020-09-30 21:36:02.651] Loaded Line: 
+Start:	x=375.075 y=456.721
+End:	x=388.115 y=73.6494
 
-[2020-09-30 20:45:46.520] Loaded Line: 
-Start:	x=490.888 y=754.823
-End:	x=1188.47 y=360.127
+[2020-09-30 21:36:02.651] Loaded Line: 
+Start:	x=375.075 y=456.721
+End:	x=1031.18 y=85.4964
 
-[2020-09-30 20:45:46.520] Loaded Line: 
-Start:	x=1188.47 y=360.127
-End:	x=504.753 y=347.532
+[2020-09-30 21:36:02.652] Loaded Line: 
+Start:	x=1031.18 y=85.4964
+End:	x=388.115 y=73.6494
 
-[2020-09-30 20:45:46.521] Loaded Line: 
-Start:	x=504.753 y=347.532
-End:	x=850.915 y=805.816
+[2020-09-30 21:36:02.652] Loaded Line: 
+Start:	x=388.115 y=73.6494
+End:	x=713.693 y=504.681
 
-[2020-09-30 20:45:46.521] Loaded Line: 
-Start:	x=850.915 y=805.816
-End:	x=1195.44 y=756.268
+[2020-09-30 21:36:02.652] Loaded Line: 
+Start:	x=713.693 y=504.681
+End:	x=1037.73 y=458.08
 
-[2020-09-30 20:45:46.522] Loaded Line: 
-Start:	x=1195.44 y=756.268
-End:	x=504.753 y=347.532
+[2020-09-30 21:36:02.652] Loaded Line: 
+Start:	x=1037.73 y=458.08
+End:	x=388.115 y=73.6494
 
-[2020-09-30 20:45:46.522] Loaded Line: 
-Start:	x=490.888 y=754.823
-End:	x=1195.44 y=756.268
+[2020-09-30 21:36:02.652] Loaded Line: 
+Start:	x=375.075 y=456.721
+End:	x=1037.73 y=458.08
 
-[2020-09-30 20:45:46.522] Loaded Line: 
-Start:	x=852.365 y=300.362
-End:	x=1188.47 y=360.127
+[2020-09-30 21:36:02.653] Loaded Line: 
+Start:	x=715.056 y=29.2848
+End:	x=1031.18 y=85.4964
 
-[2020-09-30 20:45:46.523] Loaded Line: 
-Start:	x=852.365 y=300.362
-End:	x=504.753 y=347.532
+[2020-09-30 21:36:02.653] Loaded Line: 
+Start:	x=715.056 y=29.2848
+End:	x=388.115 y=73.6494
 
-[2020-09-30 20:45:46.523] Loaded Line: 
-Start:	x=852.365 y=300.362
-End:	x=490.888 y=754.823
+[2020-09-30 21:36:02.653] Loaded Line: 
+Start:	x=715.056 y=29.2848
+End:	x=375.075 y=456.721
 
-[2020-09-30 20:45:46.524] Loaded Line: 
-Start:	x=852.365 y=300.362
-End:	x=850.915 y=805.816
+[2020-09-30 21:36:02.653] Loaded Line: 
+Start:	x=715.056 y=29.2848
+End:	x=713.693 y=504.681
 
-[2020-09-30 20:45:46.524] Loaded Line: 
-Start:	x=852.365 y=300.362
-End:	x=1195.44 y=756.268
+[2020-09-30 21:36:02.653] Loaded Line: 
+Start:	x=715.056 y=29.2848
+End:	x=1037.73 y=458.08
 
-[2020-09-30 20:45:46.524] 
+[2020-09-30 21:36:02.654] 
 
 
-[2020-09-30 20:45:46.525] Finnished loading scene
+[2020-09-30 21:36:02.654] Finnished loading scene
 
-[2020-09-30 20:45:58.737] Unsaved changes discarded due to user input
-[2020-09-30 20:45:58.738]  ****** Log finnished for NodePlanningEditor ******
+[2020-09-30 21:36:19.999] Unsaved changes discarded due to user input
+[2020-09-30 21:36:20.000]  ****** Log finnished for NodePlanningEditor ******
