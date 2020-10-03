@@ -11,7 +11,7 @@
 
 #include "Util/Exceptions.h"
 
-#include "GUI/Window/SaveFileWindow.h"
+#include "GUI/Window/FileWindow.h"
 
 
 namespace NPE
@@ -41,9 +41,19 @@ namespace NPE
 	{
 		if (saveToNewLocation)
 		{
-			GUI::SaveFileWindow win;
-			auto result = win.Show(L"Select a Save File", L"Any File\0*.*\0Save File (*.dbs)\0*.dbs\0");
+			GUI::FileWindow win;
+
+			GUI::FileWindow::FilterSpecs filterSpecs[] =
+			{
+				{ L"Database File", L"*.dbs;*.txt" },
+				{ L"Any File" , L"*.*" }
+			};
+
+			auto result = win.ShowSaveDialog(L"Select a Save File", filterSpecs, std::size(filterSpecs));
 			
+			if (result == L"")
+				return;
+
 			std::ofstream writer2(result);
 			writer2.close();
 

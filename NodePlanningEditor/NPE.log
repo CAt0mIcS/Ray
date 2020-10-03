@@ -1,21 +1,21 @@
-[2020-10-03 16:39:36.435] ******Log initalized for NodePlanningEditor******
+[2020-10-03 20:43:08.151] ******Log initalized for NodePlanningEditor******
 
 
 
-[2020-10-03 16:39:36.693] Checking if file config.cfg exists...
-[2020-10-03 16:39:36.694] Config file exists
-[2020-10-03 16:39:36.694] Checking if directory D:\Documents exists...
-[2020-10-03 16:39:36.694] Directory saves\ exists
-[2020-10-03 16:39:36.694] Checking if file D:\Documents\test.dbs exists...
-[2020-10-03 16:39:36.694] Save file in directory saves\save.dbs doesn't exist, using temporary storage location
-[2020-10-03 16:39:36.695] Checking if directory saves\ exists...
-[2020-10-03 16:39:36.696] Start of loading scene...
+[2020-10-03 20:43:08.392] Checking if file config.cfg exists...
+[2020-10-03 20:43:08.393] Config file exists
+[2020-10-03 20:43:08.393] Checking if directory saves\ exists...
+[2020-10-03 20:43:08.393] Directory saves\ exists
+[2020-10-03 20:43:08.393] Checking if file saves\save.dbs exists...
+[2020-10-03 20:43:08.393] File exists
+[2020-10-03 20:43:08.394] Start of loading scene...
 
-[2020-10-03 16:39:36.696] 
+[2020-10-03 20:43:08.394] 
 
-[2020-10-03 16:39:36.696] 
+[2020-10-03 20:43:08.395] 
 
 
-[2020-10-03 16:39:36.696] Finnished loading scene
+[2020-10-03 20:43:08.395] Finnished loading scene
 
-[2020-10-03 16:39:37.893]  ****** Log finnished for NodePlanningEditor ******
+[2020-10-03 20:43:23.949] Unsaved changes discarded due to user input
+[2020-10-03 20:43:23.949]  ****** Log finnished for NodePlanningEditor ******

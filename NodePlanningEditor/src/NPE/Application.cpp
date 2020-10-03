@@ -15,7 +15,7 @@
 
 #include "Util/Exceptions.h"
 
-#include "GUI/Window/SaveFileWindow.h"
+#include "GUI/Window/FileWindow.h"
 
 /**
 * QUESTION:
@@ -216,6 +216,25 @@ namespace NPE
 		{
 			m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom);
 			m_NeedsToSave = false;
+		}
+		//Load scene from new file shortcut
+		else if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('O'))
+		{
+			GUI::FileWindow win;
+
+			GUI::FileWindow::FilterSpecs filterSpecs[] =
+			{
+				{ L"Database File", L"*.dbs;*.txt" },
+				{ L"Any File" , L"*.*" }
+			};
+
+			auto result = win.ShowOpenDialog(L"Select file to open", filterSpecs, std::size(filterSpecs));
+			
+			if (result == L"")
+				return false;
+
+			m_FileHandler.ChangeScene(Util::WideCharToMultiByte(result));
+			m_FileHandler.LoadScene(m_Window, m_Lines, m_Zoom);
 		}
 		return false;
 	}

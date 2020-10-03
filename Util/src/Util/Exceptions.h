@@ -202,6 +202,7 @@ namespace NPE
 }
 
 #define NPE_THROW_WND_EXCEPT(hr) \
+if(FAILED(hr)) \
 { \
 	NPE::WindowException e(hr, __LINE__, __FILE__); \
 	throw e; \
