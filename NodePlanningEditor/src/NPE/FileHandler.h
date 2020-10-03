@@ -25,7 +25,6 @@ namespace NPE
 		void LoadScene(GUI::MainWindow& win, std::vector<Line>& lines, int& zoom);
 		void CreateDefaultTemplate();
 
-		void CreateDatabase(const std::string& filepath);
 		void CreateOrLoadSave();
 
 		void ChangeScene(const std::string& filepath);

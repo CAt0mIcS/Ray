@@ -39,7 +39,6 @@ namespace NPE
 
 	void FileHandler::SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, int zoom, bool saveToNewLocation)
 	{
-
 		if (saveToNewLocation)
 		{
 			GUI::SaveFileWindow win;
@@ -48,8 +47,8 @@ namespace NPE
 			std::ofstream writer2(result);
 			writer2.close();
 
-			delete m_Db;
-			CreateDatabase(Util::WideCharToMultiByte(result));
+			m_Db->Clear();
+			m_Db->SetFilePath(Util::WideCharToMultiByte(result));
 			CreateDefaultTemplate();
 			m_IsTemporarySave = false;
 
@@ -206,11 +205,6 @@ namespace NPE
 		m_Db->WriteDb();
 	}
 
-	void FileHandler::CreateDatabase(const std::string& filepath)
-	{
-		m_Db = new QRD::Database(filepath, 3);
-	}
-
 	void FileHandler::CreateOrLoadSave()
 	{
 		std::string fileDir = "saves\\";
@@ -338,7 +332,7 @@ namespace NPE
 		else
 			NPE_LOG("File exists");
 
-		CreateDatabase(configs["SaveFile"]);
+		m_Db = new QRD::Database(configs["SaveFile"], 3, 6);
 
 		if (!saveFileExist)
 		{
@@ -348,8 +342,9 @@ namespace NPE
 
 	void FileHandler::ChangeScene(const std::string& filepath)
 	{
-		delete m_Db;
-		CreateDatabase(filepath);
+		m_Db->Clear();
+		m_Db->SetFilePath(filepath);
+		m_Db->ReadDb();
 	}
 	
 }
