@@ -30,6 +30,9 @@ namespace NPE
 		void ChangeScene(const std::string& filepath);
 
 	private:
+		void WriteConfig(std::string filePath);
+
+	private:
 		QRD::Database* m_Db;
 		bool m_IsTemporarySave;
 

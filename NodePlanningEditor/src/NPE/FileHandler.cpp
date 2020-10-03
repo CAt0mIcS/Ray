@@ -39,6 +39,8 @@ namespace NPE
 
 	void FileHandler::SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, int zoom, bool saveToNewLocation)
 	{
+		HCURSOR prevCursor = GetCursor();
+		SetCursor(LoadCursor(NULL, IDC_WAIT));
 		if (saveToNewLocation)
 		{
 			GUI::FileWindow win;
@@ -62,13 +64,8 @@ namespace NPE
 			CreateDefaultTemplate();
 			m_IsTemporarySave = false;
 
-			std::string newPath = Util::WideCharToMultiByte(result);
-			auto replaceBegin = newPath.find_last_of('\\');
-
-			std::ofstream writer(s_ConfigFilePath);
-			writer << newPath << '\n';
-			writer << newPath.replace(newPath.begin() + replaceBegin, newPath.end(), "");
-			writer.close();
+			WriteConfig(Util::WideCharToMultiByte(result));
+			
 		}
 
 		//clear save file
@@ -119,10 +116,18 @@ namespace NPE
 		tbSceneInfo.AddRecord(zoom);
 
 		m_Db->WriteDb();
+		SetCursor(prevCursor);
 	}
 	
 	void FileHandler::LoadScene(GUI::MainWindow& win, std::vector<Line>& lines, int& zoom)
 	{
+		HCURSOR prevCursor = GetCursor();
+		SetCursor(LoadCursor(NULL, IDC_WAIT));
+		for (auto* control : win.GetControls())
+		{
+			delete control;
+		}
+
 		win.GetControls().clear();
 		lines.clear();
 
@@ -193,6 +198,7 @@ namespace NPE
 			}
 		}
 		NPE_LOG("\n\n");
+		SetCursor(prevCursor);
 	}
 
 	void FileHandler::CreateDefaultTemplate()
@@ -355,8 +361,18 @@ namespace NPE
 		m_Db->Clear();
 		m_Db->SetFilePath(filepath);
 		m_Db->ReadDb();
+		WriteConfig(filepath);
 	}
 	
+	void FileHandler::WriteConfig(std::string filePath)
+	{
+		auto replaceBegin = filePath.find_last_of('\\');
+
+		std::ofstream writer(s_ConfigFilePath);
+		writer << filePath << '\n';
+		writer << filePath.replace(filePath.begin() + replaceBegin, filePath.end(), "");
+		writer.close();
+	}
 }
 
 

@@ -235,6 +235,7 @@ namespace NPE
 
 			m_FileHandler.ChangeScene(Util::WideCharToMultiByte(result));
 			m_FileHandler.LoadScene(m_Window, m_Lines, m_Zoom);
+			m_Window.PostRedraw();
 		}
 		return false;
 	}

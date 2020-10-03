@@ -15,11 +15,7 @@ FIELDS
 {
     zoom:INTEGER
 }
-RECORDS: 1
-RECORD
-{
-    1
-}
+RECORDS: 0
 TABLE: Lines
 FIELDS
 {
