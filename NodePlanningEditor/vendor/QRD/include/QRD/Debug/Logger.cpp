@@ -1,4 +1,4 @@
-#include "../pch.h"
+
 
 #ifdef _DEBUG
 #include "Logger.h"

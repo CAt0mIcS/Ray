@@ -1,7 +1,10 @@
 #pragma once
 
-#include "../pch.h"
+
 #include "../Base.h"
+
+#include <vector>
+#include <string>
 
 
 namespace QRD

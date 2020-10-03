@@ -1,4 +1,4 @@
-#include "../pch.h"
+#include <sstream>
 #include "Table.h"
 
 
@@ -41,11 +41,9 @@ namespace QRD
                 return field;
         }
 
-#ifdef _DEBUG
         std::stringstream ss;
         ss << "Unable to find field with name " << fieldName;
         QRD_THROW(ObjectNotFoundException, ss.str());
-#endif
     }
 
     bool Table::FieldExists(const std::string_view fieldName)
@@ -84,20 +82,16 @@ namespace QRD
             }
         }
 
-#ifdef _DEBUG
         std::stringstream ss;
         ss << "Unable to delete field with name " << fieldName;
         QRD_THROW(ObjectNotFoundException, ss.str());
-#endif
     }
 
     Record& Table::GetRecordById(const unsigned int id)
     {
 
-#ifdef _DEBUG
         if (id > m_Records.size())
             QRD_THROW(OutOfRangeException, "Vector subscription out of range");
-#endif
 
         return m_Records[id];
     }

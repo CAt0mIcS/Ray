@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../pch.h"
+
 #include "../Base.h"
 #include "Field.h"
 #include "Record.h"
 
-#include "QRD/ExceptionHandlers/Exception.h"
+#include "../ExceptionHandlers/Exception.h"
 
 
 namespace QRD
@@ -254,9 +254,7 @@ namespace QRD
 	{
 		std::vector<std::string_view> commands{ commandStrs... };
 
-#ifdef _DEBUG
 		ValidateCommands(commands);
-#endif
 
 		std::vector<Record*> recs{};
 		
@@ -306,7 +304,6 @@ namespace QRD
 			return;
 		}
 
-#ifdef _DEBUG
 		if (recs.size() == 0)
 		{
 			std::stringstream ss;
@@ -317,7 +314,6 @@ namespace QRD
 		std::stringstream ss;
 		ss << "Unable to delete record";
 		QRD_THROW(ObjectNotFoundException, ss.str());
-#endif
 
 	}
 }

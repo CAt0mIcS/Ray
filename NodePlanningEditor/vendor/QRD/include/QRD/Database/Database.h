@@ -1,11 +1,13 @@
 #pragma once
 
-#include "pch.h"
-#include "Base.h"
+#include <vector>
 
-#include "DBObjects/Table.h"
-#include "DBObjects/Record.h"
-#include "DBObjects/Field.h"
+
+#include "../Base.h"
+
+#include "../DBObjects/Table.h"
+#include "../DBObjects/Record.h"
+#include "../DBObjects/Field.h"
 
 
 namespace QRD
@@ -131,10 +133,36 @@ namespace QRD
 		*/
 		std::string ToString() const;
 
+		/**
+		* Sets a new file path and initializes database to this file
+		* 
+		* @param newPath is the new path to the .dbs file
+		* @warning function does not write to old location
+		*/
+		void SetFilePath(const std::string& newPath);
+
+		/**
+		* Clears the database, removes all tables
+		*/
+		void Clear();
+
+		/**
+		* Getter for constructor argument fieldAmnt
+		* 
+		* @returns the amount of allocated fields
+		*/
+		size_t GetFieldAllocCount() const { return m_FieldAllocCount; }
+		
+		/**
+		* Getter for constructor argument recordAmnt
+		*
+		* @returns the amount of allocated records
+		*/
+		size_t GetRecordAllocCount() const { return m_RecordAllocCount; }
+
 	private:
 		void ReadFields(std::ifstream& reader, std::string& line);
 		void ReadRecords(std::ifstream& reader, std::string& line);
-
 
 	private:
 		/**
@@ -152,7 +180,7 @@ namespace QRD
 		/**
 		* File path to the .dbs file
 		*/
-		const std::string m_DBFilePath;
+		std::string m_DBFilePath;
 
 		/**
 		* Number of Fields in m_Fields before references become invalid

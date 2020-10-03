@@ -1,8 +1,10 @@
-#include "pch.h"
-#include "Database.h"
-#include "Debug/Timer.h"
+#include <sstream>
+#include <fstream>
 
-#include "ExceptionHandlers/Exception.h"
+#include "Database.h"
+#include "../Debug/Timer.h"
+
+#include "../ExceptionHandlers/Exception.h"
 
 
 namespace QRD
@@ -16,14 +18,12 @@ namespace QRD
 			return (stat(filePath.c_str(), &buffer) == 0);
 		};
 
-#ifdef _DEBUG
 		if (!FileExists(filePath))
 		{
 			std::stringstream ss;
 			ss << "The specified path to the .dbs file is either invalid or doesn't exist\n[Path]:\t\t " << filePath;
 			QRD_THROW(FileNotFoundException, ss.str());
 		}
-#endif
 
 		m_Tables.reserve(tableAmnt);
 		ReadDb(fieldAmnt, recordAmnt);
@@ -50,11 +50,10 @@ namespace QRD
 				return table;
 		}
 
-#ifdef _DEBUG
 		std::stringstream ss;
 		ss << "Unable to find table with name " << tableName;
 		QRD_THROW(ObjectNotFoundException, ss.str());
-#endif
+
 	}
 
 	bool Database::TableExists(const std::string& tableName)
@@ -84,11 +83,9 @@ namespace QRD
 			}
 		}
 
-#ifdef _DEBUG
 		std::stringstream ss;
 		ss << "Unable to delete table with name " << table.GetTableName();
 		QRD_THROW(ObjectNotFoundException, ss.str());
-#endif
 	}
 
 	void Database::DeleteTable(const std::string& tableName)
@@ -107,11 +104,9 @@ namespace QRD
 			}
 		}
 
-#ifdef _DEBUG
 		std::stringstream ss;
 		ss << "Unable to delete table with name " << tableName;
 		QRD_THROW(ObjectNotFoundException, ss.str());
-#endif
 	}
 
 	void Database::UpdateTableIds(unsigned short indexOfDeletedElement)
@@ -208,6 +203,17 @@ namespace QRD
 		return ss.str();
 	}
 
+	void Database::SetFilePath(const std::string& newPath)
+	{
+		m_DBFilePath = newPath;
+	}
+
+	void Database::Clear()
+	{
+		m_Tables.clear();
+		m_TablePosInVec.clear();
+	}
+
 	void Database::ReadFields(std::ifstream& reader, std::string& line)
 	{
 		Table& table = m_Tables[m_Tables.size() - 1];
@@ -220,14 +226,12 @@ namespace QRD
 		{
 			char typeIdx = (unsigned char)line.find(':') + 1;
 
-#ifdef _DEBUG
 			if (!typeIdx)
 			{
 				std::stringstream ss;
 				ss << "Invalid index for type specifier, index was" << (int)typeIdx;
 				QRD_THROW(FileReadException, ss.str());
 			}
-#endif
 
 			if (line[typeIdx] == 'I')
 				table.AddField<NUMBER>(line.replace(line.size() - 8, line.size() - 1, "").replace(0, 4, ""));
