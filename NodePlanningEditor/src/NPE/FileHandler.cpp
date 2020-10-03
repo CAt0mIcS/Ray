@@ -49,11 +49,11 @@ namespace NPE
 			writer2.close();
 
 			delete m_Db;
-			CreateDatabase(Util::ToMultiByteChar(result));
+			CreateDatabase(Util::WideCharToMultiByte(result));
 			CreateDefaultTemplate();
 			m_IsTemporarySave = false;
 
-			std::string newPath = Util::ToMultiByteChar(result);
+			std::string newPath = Util::WideCharToMultiByte(result);
 			auto replaceBegin = newPath.find_last_of('\\');
 
 			std::ofstream writer(s_ConfigFilePath);
@@ -89,8 +89,8 @@ namespace NPE
 			const auto& pos = control->GetPos();
 			const auto& size = control->GetSize();
 			
-			std::string txt1 = Util::ToMultiByteChar(((GUI::TextBox*)control->GetChildren()[0])->GetText().text);
-			std::string txt2 = Util::ToMultiByteChar(((GUI::TextBox*)control->GetChildren()[1])->GetText().text);
+			std::string txt1 = Util::WideCharToMultiByte(((GUI::TextBox*)control->GetChildren()[0])->GetText().text);
+			std::string txt2 = Util::WideCharToMultiByte(((GUI::TextBox*)control->GetChildren()[1])->GetText().text);
 
 			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height, txt1, txt2);
 			NPE_LOG("Saved Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t{4}\nInfo:\t{5}\n", pos.x, pos.y, size.width, size.height, txt1, txt2);
@@ -144,8 +144,8 @@ namespace NPE
 			node->SetColor(GUI::g_DefaultNodeColor);
 			node->Init();
 
-			std::wstring txt1 = Util::ToWideChar(data[4]);
-			std::wstring txt2 = Util::ToWideChar(data[5]);
+			std::wstring txt1 = Util::MultiByteToWideChar(data[4]);
+			std::wstring txt2 = Util::MultiByteToWideChar(data[5]);
 
 			((GUI::TextBox*)(node->GetChildren()[0]))->SetText(txt1);
 			((GUI::TextBox*)(node->GetChildren()[1]))->SetText(txt2);

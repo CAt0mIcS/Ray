@@ -495,24 +495,24 @@ namespace Util
 		return os;
 	}
 
-	inline std::wstring ToWideChar(const std::string& str)
+	inline std::wstring MultiByteToWideChar(const std::string& str)
 	{
-		auto size = MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.c_str(), -1, nullptr, 0);
+		auto size = ::MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.c_str(), -1, nullptr, 0);
 
 		wchar_t* buff = new wchar_t[size];
-		MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.c_str(), -1, buff, size);
+		::MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.c_str(), -1, buff, size);
 
 		std::wstring ret = buff;
 		delete[] buff;
 		return ret;
 	}
 
-	inline std::string ToMultiByteChar(const std::wstring& str)
+	inline std::string WideCharToMultiByte(const std::wstring& str)
 	{
-		auto size = WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.c_str(), -1, nullptr, 0, NULL, NULL);
+		auto size = ::WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.c_str(), -1, nullptr, 0, NULL, NULL);
 		
 		char* buff = new char[size];
-		WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.c_str(), -1, buff, size, NULL, NULL);
+		::WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.c_str(), -1, buff, size, NULL, NULL);
 
 		std::string ret = buff;
 		delete[] buff;

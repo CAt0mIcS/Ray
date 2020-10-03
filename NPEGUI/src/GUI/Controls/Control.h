@@ -197,7 +197,7 @@ namespace GUI
 
 		/*
 		* QUESTION:
-		*	Should i use _Maybenull_ like this (annoying warning!)
+		*	Should i use _Ret_maybenull_ like this (annoying warning!)
 		*/
 
 		/**
@@ -205,7 +205,7 @@ namespace GUI
 		* 
 		* @returns the control's parent, may be null
 		*/
-		_Maybenull_ Control* GetParent() const { return m_Parent; }
+		_Ret_maybenull_ Control* GetParent() const { return m_Parent; }
 
 	protected:
 		/**

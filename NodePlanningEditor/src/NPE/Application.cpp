@@ -19,9 +19,8 @@
 
 /**
 * QUESTION:
-*	Use MultiByteCharacters or WideStringCharacters
+*	Use strings or wstrings
 */
-
 
 namespace NPE
 {
@@ -46,7 +45,6 @@ namespace NPE
 			m_Window.SetTitle(L"NodePlanningEditor*");
 		else
 			m_Window.SetTitle(L"NodePlanningEditor");
-
 
 		switch (e.GetType())
 		{

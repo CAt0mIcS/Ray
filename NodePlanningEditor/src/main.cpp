@@ -5,10 +5,13 @@
 
 #include "Util/Debug/Logger.h"
 
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR nCmdLine, _In_ int nCmdShow)
 {
 	try
 	{
+		Util::Logger::Init("NPE.log");
+
 		/**
 		* QUESTION:
 		*	Should I indent #ifdef... like this or let VS position them to the left
@@ -16,10 +19,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		*/
 		#ifdef _DEBUG
 			AllocConsole();
-			freopen("CONOUT$", "w", stdout);
+			if (!freopen("CONOUT$", "w", stdout))
+				NPE_LOG("Failed to open debug console");
 		#endif
 
-		Util::Logger::Init("NPE.log");
 		return NPE::Application{}.Run();
 	}
 	catch (NPE::Exception& e)
@@ -34,5 +37,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	{
 		MessageBoxA(NULL, "Unknown Exception occured", "Unknown exception", MB_OK | MB_ICONEXCLAMATION);
 	}
-	return -1;
+
+	/**
+	* QUESTION:
+	*	Should I return errno or get a exit code from the exception (<-- how?) or just return 1 or -1?
+	*/
+	return errno;
 }

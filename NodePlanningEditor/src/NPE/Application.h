@@ -24,7 +24,7 @@ namespace GUI
 
 /**
 * QUESTION:
-*	friend class declaration or getters and setters for everything?
+*	friend class declaration or getters and setters for everything, or function parameters (for file handler to save controls, zoom...)
 */
 
 
