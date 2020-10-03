@@ -1,7 +1,6 @@
 #pragma once
 
 #include "UtilBase.h"
-#include "pch.h"
 
 #define SPDLOG_PRINT_TO_CONSOLE
 

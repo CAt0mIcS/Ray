@@ -1,7 +1,6 @@
 #pragma once
 
 #include "UtilBase.h"
-#include "pch.h"
 #include <iostream>
 
 

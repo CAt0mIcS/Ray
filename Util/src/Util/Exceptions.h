@@ -12,10 +12,10 @@
 */
 #pragma warning(disable : 4275)
 
-//TODO: Inherit from std::exception
+
 namespace NPE
 {
-	class UTIL_API Exception
+	class UTIL_API Exception : public std::exception
 	{
 	public:
 		/**
@@ -37,21 +37,21 @@ namespace NPE
 		* 
 		* @returns line/file string
 		*/
-		std::wstring GetOriginString() const;
+		std::string GetOriginString() const;
 
 		/**
 		* Getter for string with type
 		* 
 		* @returns string with type
 		*/
-		virtual const wchar_t* GetType() const { return L"NPE Exception"; };
+		virtual const char* GetType() const { return "NPE Exception"; };
 
 		/**
 		* Getter for more information about the error
 		* 
 		* @returns more information about the erro
 		*/
-		virtual const wchar_t* what() const;
+		virtual const char* what() const override;
 
 		/**
 		* Virtual Exception destructor
@@ -59,12 +59,12 @@ namespace NPE
 		virtual ~Exception() = default;
 
 	protected:
-		mutable std::wstring m_WhatBuffer;
+		mutable std::string m_WhatBuffer;
 		unsigned int m_Line;
 		const char* m_File;
 	};
 
-	//TODO: Add future exceptions here and test BaseException class
+
 	class UTIL_API WindowException : public Exception
 	{
 	public:
@@ -89,21 +89,21 @@ namespace NPE
 		*
 		* @returns string with type
 		*/
-		virtual const wchar_t* GetType() const override { return L"NPE WindowException"; }
+		virtual const char* GetType() const override { return "NPE WindowException"; }
 
 		/**
 		* Getter for more information about the error
 		*
 		* @returns more information about the erro
 		*/
-		virtual const wchar_t* what() const override;
+		virtual const char* what() const override;
 
 		/**
 		* Uses format message to get the message string from Win32API
 		* 
 		* @returns the formated message
 		*/
-		std::wstring GetErrorString() const;
+		std::string GetErrorString() const;
 
 	private:
 		HRESULT m_Hr;
@@ -133,21 +133,21 @@ namespace NPE
 		*
 		* @returns string with type
 		*/
-		virtual const wchar_t* GetType() const override { return L"NPE GraphicsException"; }
+		virtual const char* GetType() const override { return "NPE GraphicsException"; }
 
 		/**
 		* Getter for more information about the error
 		*
 		* @returns more information about the erro
 		*/
-		virtual const wchar_t* what() const override;
+		virtual const char* what() const override;
 
 		/**
 		* Checks which error was thrown and returns the error string for the HRESULT
 		* 
 		* @returns the error string specified on https://docs.microsoft.com/en-us/windows/win32/direct2d/direct2d-error-codes
 		*/
-		std::wstring GetErrorString() const;
+		std::string GetErrorString() const;
 
 	private:
 		HRESULT m_Hr;
@@ -178,14 +178,14 @@ namespace NPE
 		*
 		* @returns string with type
 		*/
-		virtual const wchar_t* GetType() const override { return L"NPE Exception"; }
+		virtual const char* GetType() const override { return "NPE Exception"; }
 
 		/**
 		* Getter for more information about the error
 		*
 		* @returns more information about the erro
 		*/
-		virtual const wchar_t* what() const override;
+		virtual const char* what() const override;
 
 	private:
 		const char* m_Message;
@@ -194,17 +194,16 @@ namespace NPE
 }
 
 
+//TODO: Add logging when exception occurs
 #define NPE_THROW_EXCEPT() \
 { \
 	NPE::Exception e(__LINE__, __FILE__); \
-	MessageBoxW(NULL, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION); \
 	throw e; \
 }
 
 #define NPE_THROW_WND_EXCEPT(hr) \
 { \
 	NPE::WindowException e(hr, __LINE__, __FILE__); \
-	MessageBoxW(NULL, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION); \
 	throw e; \
 }
 
@@ -212,13 +211,11 @@ namespace NPE
 if(FAILED(hr)) \
 { \
 	NPE::GraphicsException e(hr, __LINE__, __FILE__, msg); \
-	MessageBoxW(NULL, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION); \
 	throw e; \
 }
 
 #define NPE_THROW_EXCEPT_MSG(msg) \
 { \
 	NPE::MSGException e(msg, __LINE__, __FILE__); \
-	MessageBoxW(NULL, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION); \
 	throw e; \
 }
