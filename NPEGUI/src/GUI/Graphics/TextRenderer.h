@@ -3,9 +3,6 @@
 #include "GUIBase.h"
 #include "Renderer.h"
 
-#include <dwrite.h>
-#include <wrl.h>
-
 
 
 namespace GUI

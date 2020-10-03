@@ -1,11 +1,11 @@
 #pragma once
 
-#include <functional>
-#include <vector>
-
 #include "BaseWindow.h"
 #include "GUI/Controls/Control.h"
 #include "GUI/Util/Timer.h"
+
+#include <functional>
+#include <vector>
 
 
 namespace GUI

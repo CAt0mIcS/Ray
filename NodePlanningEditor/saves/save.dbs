@@ -12,55 +12,55 @@ FIELDS
 RECORDS: 6
 RECORD
 {
-    562.081
-    501.128
-    319.807
-    198.991
+    672.271
+    727.147
+    388.727
+    241.875
     Hello World
     aHello sdWorld
 }
 RECORD
 {
-    879.566
-    81.943
-    319.807
-    198.991
+    1053.38
+    223.962
+    388.727
+    241.875
     sHello fdsWorld
     aHello Worldfds
 }
 RECORD
 {
-    223.463
-    453.168
-    319.807
-    198.991
+    265.799
+    669.576
+    388.727
+    241.875
     wHello World
     dHello World
 }
 RECORD
 {
-    886.121
-    454.527
-    319.807
-    198.991
+    1061.24
+    671.207
+    388.727
+    241.875
     dHello Worfdsld
     sHello Worldef
 }
 RECORD
 {
-    236.503
-    70.096
-    319.807
-    198.991
+    281.452
+    209.741
+    388.727
+    241.875
     Hello World
     aaaaaasaaaadddsfdseffefdsfawwadHello World
 }
 RECORD
 {
-    563.444
-    25.7314
-    319.807
-    198.99
+    673.908
+    156.486
+    388.727
+    241.874
     Hello World
     wwHello wWorld
 }
@@ -72,7 +72,7 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    -7
+    -3
 }
 TABLE: Lines
 FIELDS

@@ -12,7 +12,7 @@
 */
 #pragma warning(disable : 4275)
 
-
+//TODO: Inherit from std::exception
 namespace NPE
 {
 	class UTIL_API Exception

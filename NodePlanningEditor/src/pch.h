@@ -1,11 +1,15 @@
 #pragma once
 
-//#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+#ifdef _DEBUG
+	#define _CRT_SECURE_NO_WARNINGS
+#endif
 
 #include "Win.h"
 
-//#include <locale>
-//#include <codecvt>
+#include <vector>
+#include <string>
+
+
 /**
 * Database Management System
 */

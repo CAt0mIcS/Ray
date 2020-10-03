@@ -11,6 +11,8 @@
 #include <vector>
 #include <optional>
 #include <sstream>
+#include <bitset>
+#include <functional>
 
 #include <wrl.h>
 #pragma comment(lib, "dwrite.lib")
