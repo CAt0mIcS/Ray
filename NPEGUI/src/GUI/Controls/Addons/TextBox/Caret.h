@@ -20,9 +20,9 @@ namespace GUI
 	class GUI_API Caret
 	{
 	public:
-		/**
-		* Modes which define the behaviour of SetSelection
-		*/
+		/// <summary>
+		/// Modes which define the behaviour of SetSelection
+		/// </summary>
 		enum class MoveMode
 		{
 			Right,
@@ -37,39 +37,36 @@ namespace GUI
 			AbsoluteLeading
 		};
 	public:
-		/**
-		* Caret constructor
-		*
-		* @param parent is the textbox which owns the caret
-		*/
+		/// <summary>
+		/// Caret Constructor
+		/// </summary>
+		/// <param name="parent">Is the GUI::TextBox which owns the caret</param>
 		Caret(_In_ TextBox* parent);
 
-		/**
-		* Draws caret and selection
-		*/
+		/// <summary>
+		/// Draws caret and selection
+		/// </summary>
 		void Render();
 
-		/**
-		* Getter for current caret position
-		*
-		* @returns the current caret position
-		*/
+		/// <summary>
+		/// Getter for current caret pos
+		/// </summary>
+		/// <returns>The current position of the caret</returns>
 		unsigned int Pos() const { return m_CaretPos; }
 
-		/**
-		* Getter for current caret position offset
-		*
-		* @returns the current caret position offset
-		*/
+		/// <summary>
+		/// Getter for the current caret pos offset
+		/// </summary>
+		/// <returns>The current caret pos offset</returns>
 		unsigned int PosOffset() const { return m_CaretPosOffset; }
 
-		/**
-		* Sets the selection depending on the mode
-		*
-		* @param moveMode is the type of move which defines the behaviour of the function
-		* @param advance is the new position of the caret
-		* @param extendSelection is true when the user selected part of the text
-		*/
+		/// <summary>
+		/// Sets the selection depending on the mode
+		/// </summary>
+		/// <param name="moveMode">Is the type of move which defines the behaviour of the function</param>
+		/// <param name="advance">Is the new position of the caret</param>
+		/// <param name="extendSelection">Is true when the user selected part of the text</param>
+		/// <param name="updateCaretFormat">Is true if a new text format should be applied</param>
 		void SetSelection(
 			_In_ MoveMode moveMode,
 			_In_ unsigned int advance, 
@@ -77,99 +74,91 @@ namespace GUI
 			_In_opt_ bool updateCaretFormat = true
 		);
 
-		/**
-		* @param isTrailingHit is the bool received from HitTestPoint
-		* @param skipZeroWidth is true if zero widht should be skipped
-		*/
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="isTrailingHit">Is the bool received from HitTestPoint</param>
+		/// <param name="skipZeroWidth">Is true if zero widht should be skipped</param>
 		void AlignCaretToNearestCluster(
 			_In_opt_ bool isTrailingHit = false, 
 			_In_opt_ bool skipZeroWidth = false
 		);
 
-		/**
-		* Coppies all text properties from the char after the caret and sets the proper caret formaat
-		*/
+		/// <summary>
+		/// Coppies all text properties from the char after the caret and sets the proper caret formaat
+		/// </summary>
 		void UpdateCaretFormatting();
 
-		/**
-		* Calculate caret rect
-		*
-		* @returns the caret pos and size relative to the text layout box
-		*/
+		/// <summary>
+		/// Calculates caret rect
+		/// </summary>
+		/// <returns>The caret pos and size relative to the text layout box</returns>
 		D2D1_RECT_F GetCaretRect();
 
-		/**
-		* Calculates the caret thickness
-		*
-		* @returns the caret thickness
-		*/
+		/// <summary>
+		/// Calculates the caret thickness
+		/// </summary>
+		/// <returns>The caret thickness</returns>
 		float GetCaretThickness();
 
-		/**
-		* Starts the selection from a specific point
-		* 
-		* @param pos is the point where the selection will start
-		* @param extendSelection is true if the selection should be extended
-		*/
+		/// <summary>
+		/// Starts the selection from a specific point
+		/// </summary>
+		/// <param name="pos">Is the point where the selection will start</param>
+		/// <param name="extendSelection">Is true if the selection should be extended</param>
 		void SetSelectionFromPoint(
 			_In_ const Util::NPoint& pos, 
 			_In_ bool extendSelection
 		);
 
-		/**
-		* Handles mouse button pressed events
-		*
-		* @param e is the received event
-		*/
+		/// <summary>
+		/// Handles mouse button press events
+		/// </summary>
+		/// <param name="e">Is the received event</param>
 		void OnMouseButtonPressed(
 			_In_ MouseButtonPressedEvent& e
 		);
 
-		/**
-		* Handles mouse button released events
-		* 
-		* @param e is the received event
-		*/
+		/// <summary>
+		/// Handles mouse button release events
+		/// </summary>
+		/// <param name="e">Is the received event</param>
 		void OnMouseButtonReleased(
 			_In_ MouseButtonReleasedEvent& e
 		);
 
-		/**
-		* Handles mouse move events
-		* 
-		* @param e is the received event
-		*/
+		/// <summary>
+		/// Handles mouse move events
+		/// </summary>
+		/// <param name="e">Is the received event</param>
 		void OnMouseMove(
 			_In_ MouseMoveEvent& e
 		);
 
-		/**
-		* Handles character events
-		*
-		* @param e is the received event
-		*/
+		/// <summary>
+		/// Handles char press events
+		/// </summary>
+		/// <param name="e">Is the received event</param>
 		void OnCharEvent(
 			_In_ CharEvent& e
 		);
 
-		/**
-		* Handles all necessary key presses
-		*
-		* @param e is the received event
-		*/
+		/// <summary>
+		/// Handles al necessary key presses events
+		/// </summary>
+		/// <param name="e">Is the received event</param>
 		void OnKeyPressed(
 			_In_ KeyPressedEvent& e
 		);
 
-		/**
-		* Calculates the line from a position
-		*
-		* @param lineMetrics are the metrics
-		* @param lineCount is the amount of lines
-		* @param textPosition is the position in the global text
-		* @param lineOut is the output of line count
-		* @param linePositionOut is the output of line position
-		*/
+		/// <summary>
+		/// Calculates the line from a position
+		/// </summary>
+		/// <param name="lineMetrics">Are the metrics</param>
+		/// <param name="lineCount">Is the amount of lines</param>
+		/// <param name="textPosition">Is the position in the global text</param>
+		/// <param name="lineOut">Is the output of line count</param>
+		/// <param name="linePositionOut">Is the output of line position</param>
 		void GetLineFromPosition(
 			_In_ const DWRITE_LINE_METRICS* lineMetrics, 
 			_In_ unsigned int lineCount, 
@@ -178,35 +167,40 @@ namespace GUI
 			_Out_ unsigned int* linePositionOut
 		);
 
-		/**
-		* Deletes the current selection
-		*/
+		/// <summary>
+		/// Deletes the current selection
+		/// </summary>
 		void DeleteSelection();
 
-		/**
-		* Calculates the selection in the text
-		*
-		* @returns the selection range
-		*/
+		/// <summary>
+		/// Calculates the selection in the text
+		/// </summary>
+		/// <returns>The current selection range</returns>
 		DWRITE_TEXT_RANGE GetSelectionRange();
 
 	private:
-		/**
-		* Renders caret to position in text
-		*/
+		/// <summary>
+		/// Renders caret position in the text
+		/// </summary>
 		void RenderCaret();
 
-		/**
-		* Draws the selection rect
-		*/
+		/// <summary>
+		/// Draws selection rect
+		/// </summary>
 		void RenderSelection();
 
 	private:
 		/**
-		* The important range based properties for the current caret.
-		* Note these are stored outside the layout, since the current caret
-		* actually has a format, independent of the text it lies between.
+		* 
+		* et
+		* 
 		*/
+
+		/// <summary>
+		/// The important range based properties for the current caret.
+		/// Note these are stored outside the layout, since the current car
+		/// actually has a format, independent of the text it lies between.
+		/// </summary>
 		struct CaretFormat
 		{
 			wchar_t fontFamilyName[100];

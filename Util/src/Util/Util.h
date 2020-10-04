@@ -10,7 +10,6 @@ namespace Util
 	{
 		float x, y;
 
-		//NPoint
 		const NPoint operator+(const NPoint& other) const
 		{
 			return { x + other.x, y + other.y };
@@ -62,7 +61,6 @@ namespace Util
 			return *this;
 		}
 
-		//float
 		const NPoint operator+(const float val) const
 		{
 			return { x + val, y + val };
@@ -119,7 +117,6 @@ namespace Util
 			return *this;
 		}
 
-		//POINTS
 		const NPoint operator+(const POINTS val) const
 		{
 			return { x + val.x, y + val.y };
@@ -179,6 +176,12 @@ namespace Util
 		{
 			return { x, y };
 		}
+
+		friend std::ostream& operator<<(std::ostream& os, const NPoint& pos)
+		{
+			os << "{ x=" << pos.x << " y=" << pos.y << " }";
+			return os;
+		}
 	};
 
 
@@ -186,7 +189,6 @@ namespace Util
 	{
 		float width, height;
 
-		//NSize
 		const NSize operator+(const NSize& other)
 		{
 			return { width + other.width, height + other.height };
@@ -235,7 +237,6 @@ namespace Util
 			return *this;
 		}
 
-		//float
 		const NSize operator+(const float val) const
 		{
 			return { width + val, height + val };
@@ -283,6 +284,12 @@ namespace Util
 			height /= val;
 			return *this;
 		}
+
+		friend std::ostream& operator<<(std::ostream& os, const NSize& size)
+		{
+			os << "{ width=" << size.width << " height=" << size.height << " }";
+			return os;
+		}
 	};
 
 
@@ -291,7 +298,6 @@ namespace Util
 	{
 		float r, g, b;
 
-		//NColor
 		NColor operator+(const NColor& other) const
 		{
 			return { r + other.r, g + other.g, b + other.b };
@@ -347,7 +353,6 @@ namespace Util
 			return *this;
 		}
 
-		//float
 		NColor operator+(const float val) const
 		{
 			return { r + val, g + val, b + val };
@@ -409,7 +414,6 @@ namespace Util
 			return *this;
 		}
 
-		//D2D1_COLOR_F
 		NColor operator+(const D2D1_COLOR_F& val) const
 		{
 			return { r + val.r, g + val.g, b + val.b };
@@ -475,26 +479,19 @@ namespace Util
 			return { r / 255.0f, g / 255.0f, b / 255.0f, 1.0f };
 		}
 
+		friend std::ostream& operator<<(std::ostream& os, const NColor& col)
+		{
+			os << "{ r=" << col.r << " g=" << col.g << " b=" << col.b << " }";
+			return os;
+		}
 	};
 
-	inline std::ostream& operator<<(std::ostream& os, const NPoint& pos)
-	{
-		std::cout << "{ x=" << pos.x << " y=" << pos.y << " }";
-		return os;
-	}
-
-	inline std::ostream& operator<<(std::ostream& os, const NSize& size)
-	{
-		std::cout << "{ width=" << size.width << " height=" << size.height << " }";
-		return os;
-	}
-
-	inline std::ostream& operator<<(std::ostream& os, const NColor& col)
-	{
-		std::cout << "{ r=" << col.r << " g=" << col.g << " b=" << col.b << " }";
-		return os;
-	}
-
+	/// <summary>
+	/// Converts a multi byte string (std::string) to wide character string (std::wstring)
+	/// </summary>
+	/// <param name="str">Is the multi byte string</param>
+	/// <returns>The wide character string</returns>
+	/// <TODO>Check for speed and if std::wstring ret cannot be used immediately</TODO>
 	inline std::wstring MultiByteToWideChar(const std::string& str)
 	{
 		auto size = ::MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.c_str(), -1, nullptr, 0);
@@ -507,6 +504,12 @@ namespace Util
 		return ret;
 	}
 
+	/// <summary>
+	/// Converts a wide character string (std::wstring) to multi byte string (std::string)
+	/// </summary>
+	/// <param name="str">Is the wide character string</param>
+	/// <returns>The multi byte string</returns>
+	/// <TODO>Check for speed and if std::string ret cannot be used immediately</TODO>
 	inline std::string WideCharToMultiByte(const std::wstring& str)
 	{
 		auto size = ::WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.c_str(), -1, nullptr, 0, NULL, NULL);
