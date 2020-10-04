@@ -1,117 +1,1235 @@
-[2020-10-04 12:14:17.359] ******Log initalized for NodePlanningEditor******
+[2020-10-04 12:15:48.462] ******Log initalized for NodePlanningEditor******
 
 
 
-[2020-10-04 12:14:17.591] Checking if file config.cfg exists...
-[2020-10-04 12:14:17.592] Config file exists
-[2020-10-04 12:14:17.592] Checking if directory D:\dev\Cpp\Projects\NodePlanningEditor\NodePlanningEditor\saves exists...
-[2020-10-04 12:14:17.593] Directory saves\ exists
-[2020-10-04 12:14:17.593] Checking if file D:\dev\Cpp\Projects\NodePlanningEditor\NodePlanningEditor\saves\save.dbs exists...
-[2020-10-04 12:14:17.593] File exists
-[2020-10-04 12:14:17.595] Start of loading scene...
+[2020-10-04 12:15:48.706] Checking if file config.cfg exists...
+[2020-10-04 12:15:48.706] Config file exists
+[2020-10-04 12:15:48.707] Checking if directory D:\dev\Cpp\Projects\NodePlanningEditor\NodePlanningEditor\saves exists...
+[2020-10-04 12:15:48.707] Directory saves\ exists
+[2020-10-04 12:15:48.707] Checking if file D:\dev\Cpp\Projects\NodePlanningEditor\NodePlanningEditor\saves\save.dbs exists...
+[2020-10-04 12:15:48.707] File exists
+[2020-10-04 12:15:48.710] Start of loading scene...
 
-[2020-10-04 12:14:17.596] Loaded Node: 
+[2020-10-04 12:15:48.711] Loaded Node: 
 Pos:	x=1093.55 y=606.757
 Size:	width=304.578 height=189.515
 Title:	Hello World
 Info:	Hello World
 
-[2020-10-04 12:14:17.596] Loaded Node: 
+[2020-10-04 12:15:48.711] Loaded Node: 
 Pos:	x=281.1 y=611.572
 Size:	width=304.578 height=189.515
 Title:	Hello World
 Info:	Hello World
 
-[2020-10-04 12:14:17.596] Loaded Node: 
+[2020-10-04 12:15:48.711] Loaded Node: 
 Pos:	x=320.19 y=305.37
 Size:	width=304.578 height=189.515
 Title:	Hello World
 Info:	Hello World
 
-[2020-10-04 12:14:17.596] Loaded Node: 
+[2020-10-04 12:15:48.711] Loaded Node: 
 Pos:	x=1060.74 y=308.749
 Size:	width=304.578 height=189.515
 Title:	Hello World
 Info:	Hello World
 
-[2020-10-04 12:14:17.597] Loaded Node: 
+[2020-10-04 12:15:48.711] Loaded Node: 
 Pos:	x=698.447 y=205.19
 Size:	width=304.578 height=189.515
 Title:	Hello World
 Info:	Hello World
 
-[2020-10-04 12:14:17.597] Loaded Node: 
+[2020-10-04 12:15:48.712] Loaded Node: 
 Pos:	x=693.788 y=711.758
 Size:	width=304.578 height=189.515
 Title:	Hello World
 Info:	Hello World
 
-[2020-10-04 12:14:17.597] 
+[2020-10-04 12:15:48.712] 
 
-[2020-10-04 12:14:17.597] Loaded Line: 
+[2020-10-04 12:15:48.712] Loaded Line: 
 Start:	x=425.493 y=614.956
 End:	x=1205.13 y=312.133
 
-[2020-10-04 12:14:17.598] Loaded Line: 
+[2020-10-04 12:15:48.712] Loaded Line: 
 Start:	x=464.583 y=308.754
 End:	x=1205.13 y=312.133
 
-[2020-10-04 12:14:17.598] Loaded Line: 
+[2020-10-04 12:15:48.712] Loaded Line: 
 Start:	x=1205.13 y=312.133
 End:	x=1237.94 y=610.141
 
-[2020-10-04 12:14:17.598] Loaded Line: 
+[2020-10-04 12:15:48.712] Loaded Line: 
 Start:	x=425.493 y=614.956
 End:	x=464.583 y=308.754
 
-[2020-10-04 12:14:17.598] Loaded Line: 
+[2020-10-04 12:15:48.712] Loaded Line: 
 Start:	x=464.583 y=308.754
 End:	x=1237.94 y=610.141
 
-[2020-10-04 12:14:17.598] Loaded Line: 
+[2020-10-04 12:15:48.713] Loaded Line: 
 Start:	x=1237.94 y=610.141
 End:	x=425.493 y=614.956
 
-[2020-10-04 12:14:17.599] Loaded Line: 
+[2020-10-04 12:15:48.713] Loaded Line: 
 Start:	x=842.84 y=208.574
 End:	x=464.583 y=308.754
 
-[2020-10-04 12:14:17.599] Loaded Line: 
+[2020-10-04 12:15:48.713] Loaded Line: 
 Start:	x=842.84 y=208.574
 End:	x=1205.13 y=312.133
 
-[2020-10-04 12:14:17.599] Loaded Line: 
+[2020-10-04 12:15:48.713] Loaded Line: 
 Start:	x=842.84 y=208.574
 End:	x=838.181 y=715.142
 
-[2020-10-04 12:14:17.599] Loaded Line: 
+[2020-10-04 12:15:48.713] Loaded Line: 
 Start:	x=838.181 y=715.142
 End:	x=425.493 y=614.956
 
-[2020-10-04 12:14:17.599] Loaded Line: 
+[2020-10-04 12:15:48.713] Loaded Line: 
 Start:	x=838.181 y=715.142
 End:	x=1237.94 y=610.141
 
-[2020-10-04 12:14:17.600] Loaded Line: 
+[2020-10-04 12:15:48.714] Loaded Line: 
 Start:	x=838.181 y=715.142
 End:	x=1205.13 y=312.133
 
-[2020-10-04 12:14:17.600] Loaded Line: 
+[2020-10-04 12:15:48.714] Loaded Line: 
 Start:	x=838.181 y=715.142
 End:	x=464.583 y=308.754
 
-[2020-10-04 12:14:17.600] Loaded Line: 
+[2020-10-04 12:15:48.714] Loaded Line: 
 Start:	x=842.84 y=208.574
 End:	x=425.493 y=614.956
 
-[2020-10-04 12:14:17.600] Loaded Line: 
+[2020-10-04 12:15:48.714] Loaded Line: 
 Start:	x=842.84 y=208.574
 End:	x=1237.94 y=610.141
 
-[2020-10-04 12:14:17.601] 
+[2020-10-04 12:15:48.714] 
 
 
-[2020-10-04 12:14:17.601] Finnished loading scene
+[2020-10-04 12:15:48.714] Finnished loading scene
 
-[2020-10-04 12:14:21.645] Unsaved changes discarded due to user input
-[2020-10-04 12:14:21.646]  ****** Log finnished for NodePlanningEditor ****** 
+[2020-10-04 12:15:49.934] Created Node: 
+Pos:	x=434 y=103
+Size:	width=304.578 height=189.515
+[2020-10-04 12:15:50.679] Created Node: 
+Pos:	x=1188 y=135
+Size:	width=304.578 height=189.515
+[2020-10-04 12:15:52.399] Connected Line
+[2020-10-04 12:15:53.447] Connected Line
+[2020-10-04 12:15:54.474] Connected Line
+[2020-10-04 12:16:08.712] Saved Node: 
+Pos:	x=991.044 y=717.584
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:08.712] Saved Node: 
+Pos:	x=362.385 y=721.31
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:08.713] Saved Node: 
+Pos:	x=392.633 y=484.377
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:08.713] Saved Node: 
+Pos:	x=965.656 y=486.991
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:08.713] Saved Node: 
+Pos:	x=708.321 y=69.8593
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:08.713] Saved Node: 
+Pos:	x=681.716 y=798.832
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:08.714] Saved Node: 
+Pos:	x=390.056 y=279.1
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:08.714] Saved Node: 
+Pos:	x=1044.01 y=241.897
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:08.714] 
+
+[2020-10-04 12:16:08.714] Saved Line: 
+Start:	x=475.521 y=723.961
+End:	x=1078.79 y=489.643
+
+[2020-10-04 12:16:08.715] Saved Line: 
+Start:	x=505.768 y=487.028
+End:	x=1078.79 y=489.643
+
+[2020-10-04 12:16:08.715] Saved Line: 
+Start:	x=1078.79 y=489.643
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:08.715] Saved Line: 
+Start:	x=475.521 y=723.961
+End:	x=505.768 y=487.028
+
+[2020-10-04 12:16:08.715] Saved Line: 
+Start:	x=505.768 y=487.028
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:08.715] Saved Line: 
+Start:	x=1104.18 y=720.236
+End:	x=475.521 y=723.961
+
+[2020-10-04 12:16:08.715] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=505.768 y=487.028
+
+[2020-10-04 12:16:08.716] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=1078.79 y=489.643
+
+[2020-10-04 12:16:08.716] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=794.851 y=801.484
+
+[2020-10-04 12:16:08.716] Saved Line: 
+Start:	x=794.851 y=801.484
+End:	x=475.521 y=723.961
+
+[2020-10-04 12:16:08.716] Saved Line: 
+Start:	x=794.851 y=801.484
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:08.716] Saved Line: 
+Start:	x=794.851 y=801.484
+End:	x=1078.79 y=489.643
+
+[2020-10-04 12:16:08.717] Saved Line: 
+Start:	x=794.851 y=801.484
+End:	x=505.768 y=487.028
+
+[2020-10-04 12:16:08.717] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=475.521 y=723.961
+
+[2020-10-04 12:16:08.717] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:08.717] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=1157.14 y=244.548
+
+[2020-10-04 12:16:08.717] Saved Line: 
+Start:	x=1157.14 y=244.548
+End:	x=503.192 y=281.752
+
+[2020-10-04 12:16:08.718] Saved Line: 
+Start:	x=503.192 y=281.752
+End:	x=821.456 y=72.5109
+
+[2020-10-04 12:16:08.718] 
+
+
+[2020-10-04 12:16:16.703] Connected Line
+[2020-10-04 12:16:21.074] Connected Line
+[2020-10-04 12:16:23.369] Connected Line
+[2020-10-04 12:16:26.199] Connected Line
+[2020-10-04 12:16:27.859] Connected Line
+[2020-10-04 12:16:28.716] Saved Node: 
+Pos:	x=991.044 y=717.584
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:28.716] Saved Node: 
+Pos:	x=362.385 y=721.31
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:28.716] Saved Node: 
+Pos:	x=363.633 y=484.377
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:28.717] Saved Node: 
+Pos:	x=988.656 y=488.991
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:28.717] Saved Node: 
+Pos:	x=708.321 y=69.8593
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:28.717] Saved Node: 
+Pos:	x=681.716 y=798.832
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:28.718] Saved Node: 
+Pos:	x=381.056 y=265.1
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:28.718] Saved Node: 
+Pos:	x=999.009 y=306.897
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:28.718] 
+
+[2020-10-04 12:16:28.718] Saved Line: 
+Start:	x=475.521 y=723.961
+End:	x=1101.79 y=491.643
+
+[2020-10-04 12:16:28.718] Saved Line: 
+Start:	x=476.768 y=487.028
+End:	x=1101.79 y=491.643
+
+[2020-10-04 12:16:28.719] Saved Line: 
+Start:	x=1101.79 y=491.643
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:28.719] Saved Line: 
+Start:	x=475.521 y=723.961
+End:	x=476.768 y=487.028
+
+[2020-10-04 12:16:28.719] Saved Line: 
+Start:	x=476.768 y=487.028
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:28.719] Saved Line: 
+Start:	x=1104.18 y=720.236
+End:	x=475.521 y=723.961
+
+[2020-10-04 12:16:28.719] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=476.768 y=487.028
+
+[2020-10-04 12:16:28.720] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=1101.79 y=491.643
+
+[2020-10-04 12:16:28.720] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=794.851 y=801.484
+
+[2020-10-04 12:16:28.720] Saved Line: 
+Start:	x=794.851 y=801.484
+End:	x=475.521 y=723.961
+
+[2020-10-04 12:16:28.720] Saved Line: 
+Start:	x=794.851 y=801.484
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:28.721] Saved Line: 
+Start:	x=794.851 y=801.484
+End:	x=1101.79 y=491.643
+
+[2020-10-04 12:16:28.721] Saved Line: 
+Start:	x=794.851 y=801.484
+End:	x=476.768 y=487.028
+
+[2020-10-04 12:16:28.721] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=475.521 y=723.961
+
+[2020-10-04 12:16:28.721] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:28.721] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=1112.14 y=309.548
+
+[2020-10-04 12:16:28.722] Saved Line: 
+Start:	x=1112.14 y=309.548
+End:	x=494.192 y=267.752
+
+[2020-10-04 12:16:28.722] Saved Line: 
+Start:	x=494.192 y=267.752
+End:	x=821.456 y=72.5109
+
+[2020-10-04 12:16:28.722] Saved Line: 
+Start:	x=494.192 y=267.752
+End:	x=476.768 y=487.028
+
+[2020-10-04 12:16:28.722] Saved Line: 
+Start:	x=494.192 y=267.752
+End:	x=475.521 y=723.961
+
+[2020-10-04 12:16:28.722] Saved Line: 
+Start:	x=494.192 y=267.752
+End:	x=794.851 y=801.484
+
+[2020-10-04 12:16:28.723] Saved Line: 
+Start:	x=494.192 y=267.752
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:28.723] Saved Line: 
+Start:	x=1101.79 y=491.643
+End:	x=494.192 y=267.752
+
+[2020-10-04 12:16:28.723] Didn't save line because it didn't have a valid end point
+[2020-10-04 12:16:28.723] 
+
+
+[2020-10-04 12:16:29.221] Didn't connect Line because a connection between these two points already exists
+[2020-10-04 12:16:34.656] Connected Line
+[2020-10-04 12:16:36.668] Didn't connect Line because a connection between these two points already exists
+[2020-10-04 12:16:40.065] Connected Line
+[2020-10-04 12:16:42.011] Connected Line
+[2020-10-04 12:16:44.298] Connected Line
+[2020-10-04 12:16:47.043] Connected Line
+[2020-10-04 12:16:48.811] Saved Node: 
+Pos:	x=991.044 y=717.584
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:48.811] Saved Node: 
+Pos:	x=362.385 y=721.31
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:48.812] Saved Node: 
+Pos:	x=363.633 y=484.377
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:48.812] Saved Node: 
+Pos:	x=988.656 y=488.991
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:48.812] Saved Node: 
+Pos:	x=708.321 y=69.8593
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:48.812] Saved Node: 
+Pos:	x=681.716 y=798.832
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:48.813] Saved Node: 
+Pos:	x=381.056 y=265.1
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:48.813] Saved Node: 
+Pos:	x=999.009 y=306.897
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:16:48.813] 
+
+[2020-10-04 12:16:48.814] Saved Line: 
+Start:	x=475.521 y=723.961
+End:	x=1101.79 y=491.643
+
+[2020-10-04 12:16:48.814] Saved Line: 
+Start:	x=476.768 y=487.028
+End:	x=1101.79 y=491.643
+
+[2020-10-04 12:16:48.814] Saved Line: 
+Start:	x=1101.79 y=491.643
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:48.814] Saved Line: 
+Start:	x=475.521 y=723.961
+End:	x=476.768 y=487.028
+
+[2020-10-04 12:16:48.814] Saved Line: 
+Start:	x=476.768 y=487.028
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:48.814] Saved Line: 
+Start:	x=1104.18 y=720.236
+End:	x=475.521 y=723.961
+
+[2020-10-04 12:16:48.815] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=476.768 y=487.028
+
+[2020-10-04 12:16:48.815] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=1101.79 y=491.643
+
+[2020-10-04 12:16:48.815] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=794.851 y=801.484
+
+[2020-10-04 12:16:48.815] Saved Line: 
+Start:	x=794.851 y=801.484
+End:	x=475.521 y=723.961
+
+[2020-10-04 12:16:48.816] Saved Line: 
+Start:	x=794.851 y=801.484
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:48.816] Saved Line: 
+Start:	x=794.851 y=801.484
+End:	x=1101.79 y=491.643
+
+[2020-10-04 12:16:48.816] Saved Line: 
+Start:	x=794.851 y=801.484
+End:	x=476.768 y=487.028
+
+[2020-10-04 12:16:48.816] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=475.521 y=723.961
+
+[2020-10-04 12:16:48.816] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:48.817] Saved Line: 
+Start:	x=821.456 y=72.5109
+End:	x=1112.14 y=309.548
+
+[2020-10-04 12:16:48.817] Saved Line: 
+Start:	x=1112.14 y=309.548
+End:	x=494.192 y=267.752
+
+[2020-10-04 12:16:48.817] Saved Line: 
+Start:	x=494.192 y=267.752
+End:	x=821.456 y=72.5109
+
+[2020-10-04 12:16:48.817] Saved Line: 
+Start:	x=494.192 y=267.752
+End:	x=476.768 y=487.028
+
+[2020-10-04 12:16:48.817] Saved Line: 
+Start:	x=494.192 y=267.752
+End:	x=475.521 y=723.961
+
+[2020-10-04 12:16:48.818] Saved Line: 
+Start:	x=494.192 y=267.752
+End:	x=794.851 y=801.484
+
+[2020-10-04 12:16:48.818] Saved Line: 
+Start:	x=494.192 y=267.752
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:48.818] Saved Line: 
+Start:	x=1101.79 y=491.643
+End:	x=494.192 y=267.752
+
+[2020-10-04 12:16:48.818] Saved Line: 
+Start:	x=1112.14 y=309.548
+End:	x=476.768 y=487.028
+
+[2020-10-04 12:16:48.818] Saved Line: 
+Start:	x=1112.14 y=309.548
+End:	x=1101.79 y=491.643
+
+[2020-10-04 12:16:48.819] Saved Line: 
+Start:	x=1112.14 y=309.548
+End:	x=1104.18 y=720.236
+
+[2020-10-04 12:16:48.819] Saved Line: 
+Start:	x=794.851 y=801.484
+End:	x=1112.14 y=309.548
+
+[2020-10-04 12:16:48.819] Saved Line: 
+Start:	x=1112.14 y=309.548
+End:	x=475.521 y=723.961
+
+[2020-10-04 12:16:48.819] Didn't save line because it didn't have a valid end point
+[2020-10-04 12:16:48.819] 
+
+
+[2020-10-04 12:16:49.647] Didn't connect Line because a connection between these two points already exists
+[2020-10-04 12:17:08.713] Saved Node: 
+Pos:	x=999.044 y=726.584
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:08.713] Saved Node: 
+Pos:	x=370.385 y=730.31
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:08.713] Saved Node: 
+Pos:	x=216.633 y=512.377
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:08.713] Saved Node: 
+Pos:	x=1150.66 y=494.991
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:08.714] Saved Node: 
+Pos:	x=703.321 y=45.8593
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:08.714] Saved Node: 
+Pos:	x=689.716 y=807.832
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:08.714] Saved Node: 
+Pos:	x=290.056 y=269.1
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:08.715] Saved Node: 
+Pos:	x=1075.01 y=269.897
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:08.715] 
+
+[2020-10-04 12:17:08.715] Saved Line: 
+Start:	x=483.521 y=732.961
+End:	x=1263.79 y=497.643
+
+[2020-10-04 12:17:08.715] Saved Line: 
+Start:	x=329.768 y=515.028
+End:	x=1263.79 y=497.643
+
+[2020-10-04 12:17:08.715] Saved Line: 
+Start:	x=1263.79 y=497.643
+End:	x=1112.18 y=729.236
+
+[2020-10-04 12:17:08.715] Saved Line: 
+Start:	x=483.521 y=732.961
+End:	x=329.768 y=515.028
+
+[2020-10-04 12:17:08.716] Saved Line: 
+Start:	x=329.768 y=515.028
+End:	x=1112.18 y=729.236
+
+[2020-10-04 12:17:08.716] Saved Line: 
+Start:	x=1112.18 y=729.236
+End:	x=483.521 y=732.961
+
+[2020-10-04 12:17:08.716] Saved Line: 
+Start:	x=816.456 y=48.5109
+End:	x=329.768 y=515.028
+
+[2020-10-04 12:17:08.716] Saved Line: 
+Start:	x=816.456 y=48.5109
+End:	x=1263.79 y=497.643
+
+[2020-10-04 12:17:08.716] Saved Line: 
+Start:	x=816.456 y=48.5109
+End:	x=802.851 y=810.484
+
+[2020-10-04 12:17:08.717] Saved Line: 
+Start:	x=802.851 y=810.484
+End:	x=483.521 y=732.961
+
+[2020-10-04 12:17:08.717] Saved Line: 
+Start:	x=802.851 y=810.484
+End:	x=1112.18 y=729.236
+
+[2020-10-04 12:17:08.717] Saved Line: 
+Start:	x=802.851 y=810.484
+End:	x=1263.79 y=497.643
+
+[2020-10-04 12:17:08.717] Saved Line: 
+Start:	x=802.851 y=810.484
+End:	x=329.768 y=515.028
+
+[2020-10-04 12:17:08.717] Saved Line: 
+Start:	x=816.456 y=48.5109
+End:	x=483.521 y=732.961
+
+[2020-10-04 12:17:08.718] Saved Line: 
+Start:	x=816.456 y=48.5109
+End:	x=1112.18 y=729.236
+
+[2020-10-04 12:17:08.718] Saved Line: 
+Start:	x=816.456 y=48.5109
+End:	x=1188.14 y=272.548
+
+[2020-10-04 12:17:08.718] Saved Line: 
+Start:	x=1188.14 y=272.548
+End:	x=403.192 y=271.752
+
+[2020-10-04 12:17:08.718] Saved Line: 
+Start:	x=403.192 y=271.752
+End:	x=816.456 y=48.5109
+
+[2020-10-04 12:17:08.719] Saved Line: 
+Start:	x=403.192 y=271.752
+End:	x=329.768 y=515.028
+
+[2020-10-04 12:17:08.719] Saved Line: 
+Start:	x=403.192 y=271.752
+End:	x=483.521 y=732.961
+
+[2020-10-04 12:17:08.719] Saved Line: 
+Start:	x=403.192 y=271.752
+End:	x=802.851 y=810.484
+
+[2020-10-04 12:17:08.719] Saved Line: 
+Start:	x=403.192 y=271.752
+End:	x=1112.18 y=729.236
+
+[2020-10-04 12:17:08.719] Saved Line: 
+Start:	x=1263.79 y=497.643
+End:	x=403.192 y=271.752
+
+[2020-10-04 12:17:08.720] Saved Line: 
+Start:	x=1188.14 y=272.548
+End:	x=329.768 y=515.028
+
+[2020-10-04 12:17:08.720] Saved Line: 
+Start:	x=1188.14 y=272.548
+End:	x=1263.79 y=497.643
+
+[2020-10-04 12:17:08.720] Saved Line: 
+Start:	x=1188.14 y=272.548
+End:	x=1112.18 y=729.236
+
+[2020-10-04 12:17:08.720] Saved Line: 
+Start:	x=802.851 y=810.484
+End:	x=1188.14 y=272.548
+
+[2020-10-04 12:17:08.720] Saved Line: 
+Start:	x=1188.14 y=272.548
+End:	x=483.521 y=732.961
+
+[2020-10-04 12:17:08.721] 
+
+
+[2020-10-04 12:17:28.711] Saved Node: 
+Pos:	x=873.044 y=541.584
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:28.711] Saved Node: 
+Pos:	x=532.385 y=537.31
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:28.711] Saved Node: 
+Pos:	x=250.633 y=452.377
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:28.712] Saved Node: 
+Pos:	x=1166.66 y=459.991
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:28.712] Saved Node: 
+Pos:	x=720.321 y=8.85925
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:28.712] Saved Node: 
+Pos:	x=705.716 y=772.832
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:28.713] Saved Node: 
+Pos:	x=306.056 y=234.1
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:28.713] Saved Node: 
+Pos:	x=1091.01 y=234.897
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:28.713] 
+
+[2020-10-04 12:17:28.713] Saved Line: 
+Start:	x=645.521 y=539.961
+End:	x=1279.79 y=462.643
+
+[2020-10-04 12:17:28.713] Saved Line: 
+Start:	x=363.768 y=455.028
+End:	x=1279.79 y=462.643
+
+[2020-10-04 12:17:28.714] Saved Line: 
+Start:	x=1279.79 y=462.643
+End:	x=986.179 y=544.236
+
+[2020-10-04 12:17:28.714] Saved Line: 
+Start:	x=645.521 y=539.961
+End:	x=363.768 y=455.028
+
+[2020-10-04 12:17:28.714] Saved Line: 
+Start:	x=363.768 y=455.028
+End:	x=986.179 y=544.236
+
+[2020-10-04 12:17:28.714] Saved Line: 
+Start:	x=986.179 y=544.236
+End:	x=645.521 y=539.961
+
+[2020-10-04 12:17:28.714] Saved Line: 
+Start:	x=833.456 y=11.5109
+End:	x=363.768 y=455.028
+
+[2020-10-04 12:17:28.715] Saved Line: 
+Start:	x=833.456 y=11.5109
+End:	x=1279.79 y=462.643
+
+[2020-10-04 12:17:28.715] Saved Line: 
+Start:	x=833.456 y=11.5109
+End:	x=818.851 y=775.484
+
+[2020-10-04 12:17:28.715] Saved Line: 
+Start:	x=818.851 y=775.484
+End:	x=645.521 y=539.961
+
+[2020-10-04 12:17:28.715] Saved Line: 
+Start:	x=818.851 y=775.484
+End:	x=986.179 y=544.236
+
+[2020-10-04 12:17:28.715] Saved Line: 
+Start:	x=818.851 y=775.484
+End:	x=1279.79 y=462.643
+
+[2020-10-04 12:17:28.716] Saved Line: 
+Start:	x=818.851 y=775.484
+End:	x=363.768 y=455.028
+
+[2020-10-04 12:17:28.716] Saved Line: 
+Start:	x=833.456 y=11.5109
+End:	x=645.521 y=539.961
+
+[2020-10-04 12:17:28.716] Saved Line: 
+Start:	x=833.456 y=11.5109
+End:	x=986.179 y=544.236
+
+[2020-10-04 12:17:28.716] Saved Line: 
+Start:	x=833.456 y=11.5109
+End:	x=1204.14 y=237.548
+
+[2020-10-04 12:17:28.716] Saved Line: 
+Start:	x=1204.14 y=237.548
+End:	x=419.192 y=236.752
+
+[2020-10-04 12:17:28.716] Saved Line: 
+Start:	x=419.192 y=236.752
+End:	x=833.456 y=11.5109
+
+[2020-10-04 12:17:28.717] Saved Line: 
+Start:	x=419.192 y=236.752
+End:	x=363.768 y=455.028
+
+[2020-10-04 12:17:28.717] Saved Line: 
+Start:	x=419.192 y=236.752
+End:	x=645.521 y=539.961
+
+[2020-10-04 12:17:28.717] Saved Line: 
+Start:	x=419.192 y=236.752
+End:	x=818.851 y=775.484
+
+[2020-10-04 12:17:28.717] Saved Line: 
+Start:	x=419.192 y=236.752
+End:	x=986.179 y=544.236
+
+[2020-10-04 12:17:28.717] Saved Line: 
+Start:	x=1279.79 y=462.643
+End:	x=419.192 y=236.752
+
+[2020-10-04 12:17:28.718] Saved Line: 
+Start:	x=1204.14 y=237.548
+End:	x=363.768 y=455.028
+
+[2020-10-04 12:17:28.718] Saved Line: 
+Start:	x=1204.14 y=237.548
+End:	x=1279.79 y=462.643
+
+[2020-10-04 12:17:28.718] Saved Line: 
+Start:	x=1204.14 y=237.548
+End:	x=986.179 y=544.236
+
+[2020-10-04 12:17:28.718] Saved Line: 
+Start:	x=818.851 y=775.484
+End:	x=1204.14 y=237.548
+
+[2020-10-04 12:17:28.718] Saved Line: 
+Start:	x=1204.14 y=237.548
+End:	x=645.521 y=539.961
+
+[2020-10-04 12:17:28.719] 
+
+
+[2020-10-04 12:17:48.715] Saved Node: 
+Pos:	x=873.044 y=541.584
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:48.715] Saved Node: 
+Pos:	x=532.385 y=537.31
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:48.715] Saved Node: 
+Pos:	x=250.633 y=452.377
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:48.716] Saved Node: 
+Pos:	x=1166.66 y=450.991
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:48.716] Saved Node: 
+Pos:	x=710.321 y=14.8593
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:48.716] Saved Node: 
+Pos:	x=705.716 y=772.832
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:48.716] Saved Node: 
+Pos:	x=346.056 y=232.1
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:48.717] Saved Node: 
+Pos:	x=1091.01 y=234.897
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:17:48.717] 
+
+[2020-10-04 12:17:48.717] Saved Line: 
+Start:	x=645.521 y=539.961
+End:	x=1279.79 y=453.643
+
+[2020-10-04 12:17:48.717] Saved Line: 
+Start:	x=363.768 y=455.028
+End:	x=1279.79 y=453.643
+
+[2020-10-04 12:17:48.717] Saved Line: 
+Start:	x=1279.79 y=453.643
+End:	x=986.179 y=544.236
+
+[2020-10-04 12:17:48.717] Saved Line: 
+Start:	x=645.521 y=539.961
+End:	x=363.768 y=455.028
+
+[2020-10-04 12:17:48.718] Saved Line: 
+Start:	x=363.768 y=455.028
+End:	x=986.179 y=544.236
+
+[2020-10-04 12:17:48.718] Saved Line: 
+Start:	x=986.179 y=544.236
+End:	x=645.521 y=539.961
+
+[2020-10-04 12:17:48.718] Saved Line: 
+Start:	x=823.456 y=17.5109
+End:	x=363.768 y=455.028
+
+[2020-10-04 12:17:48.718] Saved Line: 
+Start:	x=823.456 y=17.5109
+End:	x=1279.79 y=453.643
+
+[2020-10-04 12:17:48.718] Saved Line: 
+Start:	x=823.456 y=17.5109
+End:	x=818.851 y=775.484
+
+[2020-10-04 12:17:48.719] Saved Line: 
+Start:	x=818.851 y=775.484
+End:	x=645.521 y=539.961
+
+[2020-10-04 12:17:48.719] Saved Line: 
+Start:	x=818.851 y=775.484
+End:	x=986.179 y=544.236
+
+[2020-10-04 12:17:48.719] Saved Line: 
+Start:	x=818.851 y=775.484
+End:	x=1279.79 y=453.643
+
+[2020-10-04 12:17:48.719] Saved Line: 
+Start:	x=818.851 y=775.484
+End:	x=363.768 y=455.028
+
+[2020-10-04 12:17:48.719] Saved Line: 
+Start:	x=823.456 y=17.5109
+End:	x=645.521 y=539.961
+
+[2020-10-04 12:17:48.720] Saved Line: 
+Start:	x=823.456 y=17.5109
+End:	x=986.179 y=544.236
+
+[2020-10-04 12:17:48.720] Saved Line: 
+Start:	x=823.456 y=17.5109
+End:	x=1204.14 y=237.548
+
+[2020-10-04 12:17:48.720] Saved Line: 
+Start:	x=1204.14 y=237.548
+End:	x=459.192 y=234.752
+
+[2020-10-04 12:17:48.720] Saved Line: 
+Start:	x=459.192 y=234.752
+End:	x=823.456 y=17.5109
+
+[2020-10-04 12:17:48.720] Saved Line: 
+Start:	x=459.192 y=234.752
+End:	x=363.768 y=455.028
+
+[2020-10-04 12:17:48.721] Saved Line: 
+Start:	x=459.192 y=234.752
+End:	x=645.521 y=539.961
+
+[2020-10-04 12:17:48.721] Saved Line: 
+Start:	x=459.192 y=234.752
+End:	x=818.851 y=775.484
+
+[2020-10-04 12:17:48.721] Saved Line: 
+Start:	x=459.192 y=234.752
+End:	x=986.179 y=544.236
+
+[2020-10-04 12:17:48.721] Saved Line: 
+Start:	x=1279.79 y=453.643
+End:	x=459.192 y=234.752
+
+[2020-10-04 12:17:48.721] Saved Line: 
+Start:	x=1204.14 y=237.548
+End:	x=363.768 y=455.028
+
+[2020-10-04 12:17:48.722] Saved Line: 
+Start:	x=1204.14 y=237.548
+End:	x=1279.79 y=453.643
+
+[2020-10-04 12:17:48.722] Saved Line: 
+Start:	x=1204.14 y=237.548
+End:	x=986.179 y=544.236
+
+[2020-10-04 12:17:48.722] Saved Line: 
+Start:	x=818.851 y=775.484
+End:	x=1204.14 y=237.548
+
+[2020-10-04 12:17:48.722] Saved Line: 
+Start:	x=1204.14 y=237.548
+End:	x=645.521 y=539.961
+
+[2020-10-04 12:17:48.722] 
+
+
+[2020-10-04 12:18:07.831] Saved Node: 
+Pos:	x=865.044 y=559.584
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:18:07.832] Saved Node: 
+Pos:	x=556.385 y=555.31
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:18:07.832] Saved Node: 
+Pos:	x=254.633 y=467.377
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:18:07.832] Saved Node: 
+Pos:	x=1170.66 y=465.991
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:18:07.832] Saved Node: 
+Pos:	x=714.321 y=29.8593
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:18:07.833] Saved Node: 
+Pos:	x=709.716 y=787.832
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:18:07.833] Saved Node: 
+Pos:	x=355.056 y=247.1
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:18:07.833] Saved Node: 
+Pos:	x=1072.01 y=248.897
+Size:	width=238.645 height=148.49
+Title:	Hello World
+Info:	Hello World
+
+[2020-10-04 12:18:07.833] 
+
+[2020-10-04 12:18:07.834] Saved Line: 
+Start:	x=669.521 y=557.961
+End:	x=1283.79 y=468.643
+
+[2020-10-04 12:18:07.834] Saved Line: 
+Start:	x=367.768 y=470.028
+End:	x=1283.79 y=468.643
+
+[2020-10-04 12:18:07.834] Saved Line: 
+Start:	x=1283.79 y=468.643
+End:	x=978.179 y=562.236
+
+[2020-10-04 12:18:07.834] Saved Line: 
+Start:	x=669.521 y=557.961
+End:	x=367.768 y=470.028
+
+[2020-10-04 12:18:07.834] Saved Line: 
+Start:	x=367.768 y=470.028
+End:	x=978.179 y=562.236
+
+[2020-10-04 12:18:07.835] Saved Line: 
+Start:	x=978.179 y=562.236
+End:	x=669.521 y=557.961
+
+[2020-10-04 12:18:07.835] Saved Line: 
+Start:	x=827.456 y=32.5109
+End:	x=367.768 y=470.028
+
+[2020-10-04 12:18:07.835] Saved Line: 
+Start:	x=827.456 y=32.5109
+End:	x=1283.79 y=468.643
+
+[2020-10-04 12:18:07.835] Saved Line: 
+Start:	x=827.456 y=32.5109
+End:	x=822.851 y=790.484
+
+[2020-10-04 12:18:07.835] Saved Line: 
+Start:	x=822.851 y=790.484
+End:	x=669.521 y=557.961
+
+[2020-10-04 12:18:07.835] Saved Line: 
+Start:	x=822.851 y=790.484
+End:	x=978.179 y=562.236
+
+[2020-10-04 12:18:07.836] Saved Line: 
+Start:	x=822.851 y=790.484
+End:	x=1283.79 y=468.643
+
+[2020-10-04 12:18:07.836] Saved Line: 
+Start:	x=822.851 y=790.484
+End:	x=367.768 y=470.028
+
+[2020-10-04 12:18:07.836] Saved Line: 
+Start:	x=827.456 y=32.5109
+End:	x=669.521 y=557.961
+
+[2020-10-04 12:18:07.836] Saved Line: 
+Start:	x=827.456 y=32.5109
+End:	x=978.179 y=562.236
+
+[2020-10-04 12:18:07.836] Saved Line: 
+Start:	x=827.456 y=32.5109
+End:	x=1185.14 y=251.548
+
+[2020-10-04 12:18:07.837] Saved Line: 
+Start:	x=1185.14 y=251.548
+End:	x=468.192 y=249.752
+
+[2020-10-04 12:18:07.837] Saved Line: 
+Start:	x=468.192 y=249.752
+End:	x=827.456 y=32.5109
+
+[2020-10-04 12:18:07.837] Saved Line: 
+Start:	x=468.192 y=249.752
+End:	x=367.768 y=470.028
+
+[2020-10-04 12:18:07.837] Saved Line: 
+Start:	x=468.192 y=249.752
+End:	x=669.521 y=557.961
+
+[2020-10-04 12:18:07.837] Saved Line: 
+Start:	x=468.192 y=249.752
+End:	x=822.851 y=790.484
+
+[2020-10-04 12:18:07.838] Saved Line: 
+Start:	x=468.192 y=249.752
+End:	x=978.179 y=562.236
+
+[2020-10-04 12:18:07.838] Saved Line: 
+Start:	x=1283.79 y=468.643
+End:	x=468.192 y=249.752
+
+[2020-10-04 12:18:07.838] Saved Line: 
+Start:	x=1185.14 y=251.548
+End:	x=367.768 y=470.028
+
+[2020-10-04 12:18:07.838] Saved Line: 
+Start:	x=1185.14 y=251.548
+End:	x=1283.79 y=468.643
+
+[2020-10-04 12:18:07.838] Saved Line: 
+Start:	x=1185.14 y=251.548
+End:	x=978.179 y=562.236
+
+[2020-10-04 12:18:07.839] Saved Line: 
+Start:	x=822.851 y=790.484
+End:	x=1185.14 y=251.548
+
+[2020-10-04 12:18:07.839] Saved Line: 
+Start:	x=1185.14 y=251.548
+End:	x=669.521 y=557.961
+
+[2020-10-04 12:18:07.839] 
+
+
+[2020-10-04 12:18:08.903]  ****** Log finnished for NodePlanningEditor ****** 

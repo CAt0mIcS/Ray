@@ -9,58 +9,76 @@ FIELDS
     txt1:TEXT
     txt2:TEXT
 }
-RECORDS: 6
+RECORDS: 8
 RECORD
 {
-    1093.55
-    606.757
-    304.578
-    189.515
+    865.044
+    559.584
+    238.645
+    148.49
     Hello World
     Hello World
 }
 RECORD
 {
-    281.1
-    611.572
-    304.578
-    189.515
+    556.385
+    555.31
+    238.645
+    148.49
     Hello World
     Hello World
 }
 RECORD
 {
-    320.19
-    305.37
-    304.578
-    189.515
+    254.633
+    467.377
+    238.645
+    148.49
     Hello World
     Hello World
 }
 RECORD
 {
-    1060.74
-    308.749
-    304.578
-    189.515
+    1170.66
+    465.991
+    238.645
+    148.49
     Hello World
     Hello World
 }
 RECORD
 {
-    698.447
-    205.19
-    304.578
-    189.515
+    714.321
+    29.8593
+    238.645
+    148.49
     Hello World
     Hello World
 }
 RECORD
 {
-    693.788
-    711.758
-    304.578
-    189.515
+    709.716
+    787.832
+    238.645
+    148.49
+    Hello World
+    Hello World
+}
+RECORD
+{
+    355.056
+    247.1
+    238.645
+    148.49
+    Hello World
+    Hello World
+}
+RECORD
+{
+    1072.01
+    248.897
+    238.645
+    148.49
     Hello World
     Hello World
 }
@@ -72,7 +90,7 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    -8
+    -13
 }
 TABLE: Lines
 FIELDS
@@ -80,7 +98,7 @@ FIELDS
     ID2:INTEGER
     ID1:INTEGER
 }
-RECORDS: 32
+RECORDS: 28
 RECORD
 {
     8
@@ -159,85 +177,65 @@ RECORD
 RECORD
 {
     20
+    32
+}
+RECORD
+{
+    32
+    28
+}
+RECORD
+{
+    28
     20
 }
 RECORD
 {
-    20
-    20
+    28
+    12
 }
 RECORD
 {
-    20
-    20
+    28
+    8
 }
 RECORD
 {
-    20
-    20
+    28
+    24
 }
 RECORD
 {
-    20
-    20
+    28
+    4
 }
 RECORD
 {
-    20
-    20
+    16
+    28
 }
 RECORD
 {
-    20
-    20
+    32
+    12
 }
 RECORD
 {
-    20
-    20
+    32
+    16
 }
 RECORD
 {
-    20
-    20
+    32
+    4
 }
 RECORD
 {
-    20
-    20
+    24
+    32
 }
 RECORD
 {
-    20
-    20
-}
-RECORD
-{
-    20
-    20
-}
-RECORD
-{
-    20
-    20
-}
-RECORD
-{
-    20
-    20
-}
-RECORD
-{
-    20
-    20
-}
-RECORD
-{
-    20
-    20
-}
-RECORD
-{
-    20
-    20
+    32
+    8
 }
