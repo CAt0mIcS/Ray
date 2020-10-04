@@ -80,7 +80,7 @@ FIELDS
     ID2:INTEGER
     ID1:INTEGER
 }
-RECORDS: 16
+RECORDS: 32
 RECORD
 {
     8
@@ -155,6 +155,86 @@ RECORD
 {
     20
     4
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
+}
+RECORD
+{
+    20
+    20
 }
 RECORD
 {

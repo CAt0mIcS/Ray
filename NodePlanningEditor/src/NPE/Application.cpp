@@ -22,6 +22,7 @@
 *	Use strings or wstrings
 */
 
+
 namespace NPE
 {
 	Application::Application()

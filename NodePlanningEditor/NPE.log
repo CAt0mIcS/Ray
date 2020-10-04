@@ -1,145 +1,117 @@
-[2020-10-04 12:01:55.405] ******Log initalized for NodePlanningEditor******
+[2020-10-04 12:14:17.359] ******Log initalized for NodePlanningEditor******
 
 
 
-[2020-10-04 12:01:55.641] Checking if file config.cfg exists...
-[2020-10-04 12:01:55.642] Config file exists
-[2020-10-04 12:01:55.642] Checking if directory D:\dev\Cpp\Projects\NodePlanningEditor\NodePlanningEditor\saves exists...
-[2020-10-04 12:01:55.642] Directory saves\ exists
-[2020-10-04 12:01:55.642] Checking if file D:\dev\Cpp\Projects\NodePlanningEditor\NodePlanningEditor\saves\save.dbs exists...
-[2020-10-04 12:01:55.643] File exists
-[2020-10-04 12:01:55.644] Start of loading scene...
+[2020-10-04 12:14:17.591] Checking if file config.cfg exists...
+[2020-10-04 12:14:17.592] Config file exists
+[2020-10-04 12:14:17.592] Checking if directory D:\dev\Cpp\Projects\NodePlanningEditor\NodePlanningEditor\saves exists...
+[2020-10-04 12:14:17.593] Directory saves\ exists
+[2020-10-04 12:14:17.593] Checking if file D:\dev\Cpp\Projects\NodePlanningEditor\NodePlanningEditor\saves\save.dbs exists...
+[2020-10-04 12:14:17.593] File exists
+[2020-10-04 12:14:17.595] Start of loading scene...
 
-[2020-10-04 12:01:55.645] Loaded Node: 
+[2020-10-04 12:14:17.596] Loaded Node: 
 Pos:	x=1093.55 y=606.757
 Size:	width=304.578 height=189.515
 Title:	Hello World
 Info:	Hello World
 
-[2020-10-04 12:01:55.645] Loaded Node: 
+[2020-10-04 12:14:17.596] Loaded Node: 
 Pos:	x=281.1 y=611.572
 Size:	width=304.578 height=189.515
 Title:	Hello World
 Info:	Hello World
 
-[2020-10-04 12:01:55.645] Loaded Node: 
+[2020-10-04 12:14:17.596] Loaded Node: 
 Pos:	x=320.19 y=305.37
 Size:	width=304.578 height=189.515
 Title:	Hello World
 Info:	Hello World
 
-[2020-10-04 12:01:55.645] Loaded Node: 
+[2020-10-04 12:14:17.596] Loaded Node: 
 Pos:	x=1060.74 y=308.749
 Size:	width=304.578 height=189.515
 Title:	Hello World
 Info:	Hello World
 
-[2020-10-04 12:01:55.646] Loaded Node: 
+[2020-10-04 12:14:17.597] Loaded Node: 
 Pos:	x=698.447 y=205.19
 Size:	width=304.578 height=189.515
 Title:	Hello World
 Info:	Hello World
 
-[2020-10-04 12:01:55.646] Loaded Node: 
+[2020-10-04 12:14:17.597] Loaded Node: 
 Pos:	x=693.788 y=711.758
 Size:	width=304.578 height=189.515
 Title:	Hello World
 Info:	Hello World
 
-[2020-10-04 12:01:55.646] 
+[2020-10-04 12:14:17.597] 
 
-[2020-10-04 12:01:55.646] Loaded Line: 
+[2020-10-04 12:14:17.597] Loaded Line: 
 Start:	x=425.493 y=614.956
 End:	x=1205.13 y=312.133
 
-[2020-10-04 12:01:55.646] Loaded Line: 
+[2020-10-04 12:14:17.598] Loaded Line: 
 Start:	x=464.583 y=308.754
 End:	x=1205.13 y=312.133
 
-[2020-10-04 12:01:55.647] Loaded Line: 
+[2020-10-04 12:14:17.598] Loaded Line: 
 Start:	x=1205.13 y=312.133
 End:	x=1237.94 y=610.141
 
-[2020-10-04 12:01:55.647] Loaded Line: 
+[2020-10-04 12:14:17.598] Loaded Line: 
 Start:	x=425.493 y=614.956
 End:	x=464.583 y=308.754
 
-[2020-10-04 12:01:55.647] Loaded Line: 
+[2020-10-04 12:14:17.598] Loaded Line: 
 Start:	x=464.583 y=308.754
 End:	x=1237.94 y=610.141
 
-[2020-10-04 12:01:55.647] Loaded Line: 
+[2020-10-04 12:14:17.598] Loaded Line: 
 Start:	x=1237.94 y=610.141
 End:	x=425.493 y=614.956
 
-[2020-10-04 12:01:55.647] Loaded Line: 
+[2020-10-04 12:14:17.599] Loaded Line: 
 Start:	x=842.84 y=208.574
 End:	x=464.583 y=308.754
 
-[2020-10-04 12:01:55.647] Loaded Line: 
+[2020-10-04 12:14:17.599] Loaded Line: 
 Start:	x=842.84 y=208.574
 End:	x=1205.13 y=312.133
 
-[2020-10-04 12:01:55.648] Loaded Line: 
+[2020-10-04 12:14:17.599] Loaded Line: 
 Start:	x=842.84 y=208.574
 End:	x=838.181 y=715.142
 
-[2020-10-04 12:01:55.648] Loaded Line: 
+[2020-10-04 12:14:17.599] Loaded Line: 
 Start:	x=838.181 y=715.142
 End:	x=425.493 y=614.956
 
-[2020-10-04 12:01:55.648] Loaded Line: 
+[2020-10-04 12:14:17.599] Loaded Line: 
 Start:	x=838.181 y=715.142
 End:	x=1237.94 y=610.141
 
-[2020-10-04 12:01:55.648] Loaded Line: 
+[2020-10-04 12:14:17.600] Loaded Line: 
 Start:	x=838.181 y=715.142
 End:	x=1205.13 y=312.133
 
-[2020-10-04 12:01:55.648] Loaded Line: 
+[2020-10-04 12:14:17.600] Loaded Line: 
 Start:	x=838.181 y=715.142
 End:	x=464.583 y=308.754
 
-[2020-10-04 12:01:55.648] Loaded Line: 
+[2020-10-04 12:14:17.600] Loaded Line: 
 Start:	x=842.84 y=208.574
 End:	x=425.493 y=614.956
 
-[2020-10-04 12:01:55.649] Loaded Line: 
+[2020-10-04 12:14:17.600] Loaded Line: 
 Start:	x=842.84 y=208.574
 End:	x=1237.94 y=610.141
 
-[2020-10-04 12:01:55.649] 
+[2020-10-04 12:14:17.601] 
 
 
-[2020-10-04 12:01:55.649] Finnished loading scene
+[2020-10-04 12:14:17.601] Finnished loading scene
 
-[2020-10-04 12:01:57.722] Cannot connect line to the same point
-[2020-10-04 12:01:58.365] Cannot connect line to the same point
-[2020-10-04 12:01:59.056] Cannot connect line to the same point
-[2020-10-04 12:02:00.358] Cannot connect line to the same point
-[2020-10-04 12:02:01.084] Cannot connect line to the same point
-[2020-10-04 12:02:01.763] Cannot connect line to the same point
-[2020-10-04 12:02:02.183] Cannot connect line to the same point
-[2020-10-04 12:02:02.445] Cannot connect line to the same point
-[2020-10-04 12:02:02.608] Cannot connect line to the same point
-[2020-10-04 12:02:02.804] Cannot connect line to the same point
-[2020-10-04 12:02:02.980] Cannot connect line to the same point
-[2020-10-04 12:02:03.137] Cannot connect line to the same point
-[2020-10-04 12:02:03.294] Cannot connect line to the same point
-[2020-10-04 12:02:03.707] Cannot connect line to the same point
-[2020-10-04 12:02:04.074] Cannot connect line to the same point
-[2020-10-04 12:02:04.390] Cannot connect line to the same point
-[2020-10-04 12:02:05.127] Cannot connect line to the same point
-[2020-10-04 12:02:05.486] Cannot connect line to the same point
-[2020-10-04 12:02:05.821] Cannot connect line to the same point
-[2020-10-04 12:02:06.151] Cannot connect line to the same point
-[2020-10-04 12:02:06.485] Cannot connect line to the same point
-[2020-10-04 12:02:06.812] Cannot connect line to the same point
-[2020-10-04 12:02:07.145] Cannot connect line to the same point
-[2020-10-04 12:02:07.488] Cannot connect line to the same point
-[2020-10-04 12:02:08.401] Cannot connect line to the same point
-[2020-10-04 12:02:08.791] Cannot connect line to the same point
-[2020-10-04 12:02:09.049] Cannot connect line to the same point
-[2020-10-04 12:02:09.244] Cannot connect line to the same point
-[2020-10-04 12:02:14.882] Unsaved changes discarded due to user input
-[2020-10-04 12:02:14.882]  ****** Log finnished for NodePlanningEditor ******
+[2020-10-04 12:14:21.645] Unsaved changes discarded due to user input
+[2020-10-04 12:14:21.646]  ****** Log finnished for NodePlanningEditor ****** 

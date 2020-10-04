@@ -39,11 +39,6 @@ namespace GUI
 			if (((MouseButtonPressedEvent&)e).GetButton() == MouseButton::Left)
 				this->SetFocus();
 
-			//To remove caret
-			Renderer::Get().BeginDraw();
-			m_Parent->Render();
-			Renderer::Get().EndDraw();
-
 			return true;
 		}
 		case EventType::SetCursorEvent:
