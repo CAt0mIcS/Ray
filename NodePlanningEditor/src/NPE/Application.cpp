@@ -314,8 +314,11 @@ namespace NPE
 		case s_TimerAutosaveId:
 		{
 			//TODO: Implement alert to user that a autosave is comming
-			m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom);
-			m_NeedsToSave = false;
+			if (m_NeedsToSave)
+			{
+				m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom);
+				m_NeedsToSave = false;
+			}
 			return true;
 		}
 		}

@@ -65,7 +65,6 @@ namespace NPE
 			m_IsTemporarySave = false;
 
 			WriteConfig(Util::WideCharToMultiByte(result));
-			
 		}
 
 		//clear save file
@@ -101,7 +100,9 @@ namespace NPE
 			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height, txt1, txt2);
 			NPE_LOG("Saved Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t{4}\nInfo:\t{5}\n", pos.x, pos.y, size.width, size.height, txt1, txt2);
 		}
+
 		NPE_LOG("\n");
+
 		for (const Line& line : lines)
 		{
 			if (line.first && line.second)
@@ -165,7 +166,9 @@ namespace NPE
 			((GUI::TextBox*)(node->GetChildren()[1]))->SetText(txt2);
 			NPE_LOG("Loaded Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t{4}\nInfo:\t{5}\n", node->GetPos().x, node->GetPos().y, node->GetSize().width, node->GetSize().height, data[4], data[5]);
 		}
+
 		NPE_LOG("\n");
+
 		for (auto& record : tbLines->GetRecords())
 		{
 			auto& data = record.GetRecordData();

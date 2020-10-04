@@ -9,17 +9,155 @@ FIELDS
     txt1:TEXT
     txt2:TEXT
 }
-RECORDS: 0
+RECORDS: 6
+RECORD
+{
+    1093.55
+    606.757
+    304.578
+    189.515
+    Hello World
+    Hello World
+}
+RECORD
+{
+    281.1
+    611.572
+    304.578
+    189.515
+    Hello World
+    Hello World
+}
+RECORD
+{
+    320.19
+    305.37
+    304.578
+    189.515
+    Hello World
+    Hello World
+}
+RECORD
+{
+    1060.74
+    308.749
+    304.578
+    189.515
+    Hello World
+    Hello World
+}
+RECORD
+{
+    698.447
+    205.19
+    304.578
+    189.515
+    Hello World
+    Hello World
+}
+RECORD
+{
+    693.788
+    711.758
+    304.578
+    189.515
+    Hello World
+    Hello World
+}
 TABLE: SceneInfo
 FIELDS
 {
     zoom:INTEGER
 }
-RECORDS: 0
+RECORDS: 1
+RECORD
+{
+    -8
+}
 TABLE: Lines
 FIELDS
 {
     ID2:INTEGER
     ID1:INTEGER
 }
-RECORDS: 0
+RECORDS: 16
+RECORD
+{
+    8
+    16
+}
+RECORD
+{
+    12
+    16
+}
+RECORD
+{
+    16
+    4
+}
+RECORD
+{
+    8
+    12
+}
+RECORD
+{
+    12
+    4
+}
+RECORD
+{
+    4
+    8
+}
+RECORD
+{
+    20
+    12
+}
+RECORD
+{
+    20
+    16
+}
+RECORD
+{
+    20
+    24
+}
+RECORD
+{
+    24
+    8
+}
+RECORD
+{
+    24
+    4
+}
+RECORD
+{
+    24
+    16
+}
+RECORD
+{
+    24
+    12
+}
+RECORD
+{
+    20
+    8
+}
+RECORD
+{
+    20
+    4
+}
+RECORD
+{
+    20
+    20
+}
