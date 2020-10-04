@@ -151,6 +151,12 @@ namespace NPE
 		{
 			auto line = lines[lines.size() - 1];
 			
+			if (line.first->GetId() == line.second->GetId())
+			{
+				NPE_LOG("Cannot connect line to the same point");
+				return;
+			}
+
 			//Check if connection already exists between these two buttons
 			for (auto it = lines.begin(); it != lines.end() - 1; ++it)
 			{

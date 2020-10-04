@@ -62,10 +62,6 @@ namespace GUI
 				m_Caret.OnMouseButtonPressed((MouseButtonPressedEvent&)e);
 			}
 
-			////To remove caret
-			//Renderer::Get().BeginDraw();
-			//m_Parent->Render();
-			//Renderer::Get().EndDraw();
 			return true;
 		}
 		case EventType::MouseButtonReleasedEvent:

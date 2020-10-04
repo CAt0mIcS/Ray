@@ -113,7 +113,7 @@ namespace NPE
 				m_Window.PostRedraw();
 				return true;
 			}
-			else if (m_Lines.size() > 0 && m_DrawLines)
+			else if (m_DrawLines)
 			{
 				m_Window.PostRedraw();
 				return true;
@@ -359,7 +359,7 @@ namespace NPE
 				NPE_LOG("Unsaved changes discarded due to user input");
 			}
 		}
-		NPE_LOG(" ****** Log finnished for NodePlanningEditor ******");
+		NPE_LOG(" ****** Log finnished for NodePlanningEditor ****** ");
 		return false;
 	}
 
