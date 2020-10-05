@@ -23,9 +23,9 @@ namespace GUI
 		friend class Renderer;
 	public:
 
-		/**
-		* Enum containing all types of controls
-		*/
+		/// <summary>
+		/// Contains all types of Controls
+		/// </summary>
 		enum class Type
 		{
 			INVALID = 0,
@@ -34,165 +34,146 @@ namespace GUI
 		};
 
 	public:
-		/**
-		* Setter for position
-		*
-		* @param pos is the control position
-		*/
+		/// <summary>
+		/// Setter for position
+		/// </summary>
+		/// <param name="pos">Is the new position</param>
 		void SetPos(_In_ const Util::NPoint& pos) { m_Pos = pos; }
 
-		/**
-		* Setter for size
-		*
-		* @param size is the control size
-		*/
+		/// <summary>
+		/// Setter for size
+		/// </summary>
+		/// <param name="size">Is the new size</param>
 		void SetSize(_In_ const Util::NSize& size) { m_Size = size; }
 
-		/**
-		* Setter for color
-		*
-		* @param color is the control color
-		*/
+		/// <summary>
+		/// Setter for display color
+		/// </summary>
+		/// <param name="color">Is the new color</param>
 		void SetColor(_In_ const Util::NColor& color) { m_Color = color; }
 
-		/**
-		* Getter for the control type
-		* 
-		* @returns the type of the control
-		*/
+		/// <summary>
+		/// Getter for the Control Type
+		/// </summary>
+		/// <returns>The Control's type</returns>
 		Type GetType() const { return m_Type; }
 
-		/**
-		* Adds position to current position
-		* 
-		* @param pos is the position to add
-		*/
+		/// <summary>
+		/// Adds a position to the current one
+		/// </summary>
+		/// <param name="pos">Is the position to add</param>
 		void MoveBy(_In_ const Util::NPoint& pos);
 
-		/**
-		* Moves the window to the new position
-		* 
-		* @param pos is the new position
-		*/
+		/// <summary>
+		/// Moves window to the new position
+		/// </summary>
+		/// <param name="pos">Is the new posistion</param>
 		void MoveTo(_In_ const Util::NPoint& pos);
 
-		/**
-		* Adds size to the current size
-		* 
-		* @param size is the size to add
-		*/
+		/// <summary>
+		/// Adds size to the current one
+		/// </summary>
+		/// <param name="size">Is the size to add</param>
 		void ResizeBy(_In_ const Util::NSize& size);
 
-		/**
-		* Resizes the window to the new size
-		* 
-		* @param size is the new size
-		*/
+		/// <summary>
+		/// Resizes the Control to the new size
+		/// </summary>
+		/// <param name="size">Is the new size</param>
 		void ResizeTo(_In_ const Util::NSize& size);
 
-		/**
-		* Getter for current position
-		* 
-		* @returns the control's position
-		*/
+		/// <summary>
+		/// Getter for the current Control position
+		/// </summary>
+		/// <returns>The position of the Control</returns>
 		const Util::NPoint& GetPos() const { return m_Pos; }
 
-		/**
-		* Getter for current size
-		*
-		* @returns the control's size
-		*/
+		/// <summary>
+		/// Getter for the current Control size
+		/// </summary>
+		/// <returns>The size of the Control</returns>
 		const Util::NSize& GetSize() const { return m_Size; }
 		
-		/**
-		* Getter for current color
-		*
-		* @returns the control's color
-		*/
+		/// <summary>
+		/// Getter for the current Control color
+		/// </summary>
+		/// <returns>The color of the Control</returns>
 		const Util::NColor& GetColor() const { return m_Color; }
 
-		/**
-		* Getter for child windows
-		* 
-		* @returns all children of the current widget
-		*/
+		/// <summary>
+		/// Getter for all child Controls
+		/// </summary>
+		/// <returns>All the children of this Control</returns>
 		const std::vector<Control*>& GetChildren() const { return m_Children; }
 
-		/**
-		* Getter for current control id
-		* 
-		* @returns the control's id
-		*/
+		/// <summary>
+		/// Getter for Control Id
+		/// </summary>
+		/// <returns>The Control's Id</returns>
 		unsigned int GetId() const { return m_Id; }
 
-		/**
-		* Renders the widget
-		*/
+		/// <summary>
+		/// Renders Control and all it's children
+		/// </summary>
+		/// <returns>True if the Control was rendered(was in window), false otherwise</returns>
 		virtual bool Render() = 0;
 
-		/**
-		* All events of the specific control will be dispatched to this function
-		* 
-		* @param e is the received event
-		* @returns true if the event was handled, else false and the event will be dispatched to the client
-		*/
+		/// <summary>
+		/// All events of the specific control will be dispatched to this function
+		/// </summary>
+		/// <param name="e">Is the received event</param>
+		/// <returns>True if the event was handled, else false and the event will be dispatched to the client</returns>
 		virtual bool OnEvent(_In_ Event& e) = 0;
 
-		/**
-		* Checks if the current control overlaps with other
-		* 
-		* @param other is the other control
-		* @param minDst is the minimum distance allowed between nodes
-		* @returns true if this controls overlaps with the other one, false otherwise
-		*/
+		/// <summary>
+		/// Checks if the Control overlapps with other
+		/// </summary>
+		/// <param name="other">Is the other Control</param>
+		/// <param name="minDst">Is the minimum distance allowed between Controls</param>
+		/// <returns>True if this Control overlaps with the other one, false otherwise</returns>
 		bool OverlapsWith(_In_ const Control* other, _In_opt_ const Util::NSize& minDst = { 0.0f, 0.0f });
 
-		/**
-		* Calculates the layout of a new control
-		*
-		* @param parentPos is the position of the parent control
-		* @param parentSize is the size of the parent control
-		* @returns the new position and size of the control
-		*/
+		/// <summary>
+		/// Calculates the layout of a new Control
+		/// </summary>
+		/// <param name="parentPos">Is the position of the parent Control</param>
+		/// <param name="parentSize">Is the size of the parent Control</param>
+		/// <returns>The Control's new position and size</returns>
 		virtual std::optional<std::pair<Util::NPoint, Util::NSize>> CalculateLayout(_In_ const Util::NPoint& parentPos, _In_ const Util::NSize& parentSize) { return { }; }
 
-		/**
-		* Checks if control is in window bounds
-		* 
-		* @returns true if the control is in the window, false otherwise
-		*/
+		/// <summary>
+		/// Checks If Control is in window bounds
+		/// </summary>
+		/// <returns>True if the Control is in the window, false otherwise</returns>
 		bool IsInWindow() const;
 
-		/**
-		* Virtual destructor of control
-		*/
+		/// <summary>
+		/// Virtual Control Destructor
+		/// </summary>
 		virtual ~Control();
 
-		/**
-		* Determines which control should receive the event
-		*
-		* @param e is the event received by the window procedure
-		* @returns the controls which should receive the event
-		*/
+		/// <summary>
+		/// Determines which Control should receive the event
+		/// </summary>
+		/// <param name="e">Is the event received by the window procedure</param>
+		/// <returns>The controls which should receive the event</returns>
 		Control* GetEventReceiver(_In_ Event& e);
 
-		/**
-		* Sets new focus to this
-		*/
+		/// <summary>
+		/// Sets new focus to this Control
+		/// </summary>
 		void SetFocus() { s_Focus = this; }
 		
-		/**
-		* Getter for focused control
-		* 
-		* @returns the control which has focus
-		*/
-		Control* GetFocus() const { return s_Focus; }
+		/// <summary>
+		/// Getter for focused Control
+		/// </summary>
+		/// <returns>The Control with focus</returns>
+		_Ret_maybenull_ _Check_return_ Control* GetFocus() const { return s_Focus; }
 		
-		/**
-		* Checks if obj has focus
-		* 
-		* @returns true if obj has focus, false otherwise
-		*/
+		/// <summary>
+		/// Checks if this Control has focus
+		/// </summary>
+		/// <returns>True if this Control has focus, false otherwise</returns>
 		bool HasFocus() { return this == s_Focus; }
 
 		/*
@@ -200,35 +181,68 @@ namespace GUI
 		*	Should i use _Ret_maybenull_ like this (annoying warning!)
 		*/
 
-		/**
-		* Gets the parent of a control
-		* 
-		* @returns the control's parent, may be null
-		*/
-		_Ret_maybenull_ Control* GetParent() const { return m_Parent; }
+		/// <summary>
+		/// Getter for the parent Control
+		/// </summary>
+		/// <returns>The parent Control, may be null</returns>
+		_Ret_maybenull_ _Check_return_ Control* GetParent() const { return m_Parent; }
 
 	protected:
-		/**
-		* Protected Control constructor
-		* 
-		* @param parent is the parent window
-		*/
+		/// <summary>
+		/// Control Constructor
+		/// </summary>
+		/// <param name="type">Is the type of the Control</param>
+		/// <param name="parent">Is the parent of the Control</param>
 		Control(_In_ Type type, _In_opt_ Control* parent = nullptr);
 
 	protected:
+		/// <summary>
+		/// Specifies Control position
+		/// </summary>
 		Util::NPoint m_Pos;
+
+		/// <summary>
+		/// Specifies Control size
+		/// </summary>
 		Util::NSize m_Size;
+
+		/// <summary>
+		/// Specifies Control color
+		/// </summary>
 		Util::NColor m_Color;
 
+		/// <summary>
+		/// Specifies the parent of this Control, could be null
+		/// </summary>
 		Control* m_Parent;
+
+		/// <summary>
+		/// Specifies a list of this Control's children,
+		/// their Render() function needs to be called in this Control's Render() function.
+		/// There is currently no function to add a child
+		/// </summary>
 		std::vector<Control*> m_Children;
 
+		/// <summary>
+		/// Static pointer to the Control with focus, could be null
+		/// </summary>
 		static Control* s_Focus;
 
 	private:
+		/// <summary>
+		/// The Id of this Control
+		/// </summary>
 		unsigned int m_Id;
+
+		/// <summary>
+		/// The type of this Control
+		/// </summary>
 		Type m_Type;
 
+		/// <summary>
+		/// Used to assign m_Id when creating a new Control,
+		/// variable is incremented in the Control Constructor
+		/// </summary>
 		static unsigned int s_NextId;
 	};
 }

@@ -9,32 +9,29 @@ namespace GUI
 	class GUI_API Node : public Control
 	{
 	public:
-		/**
-		* Node constructor
-		* 
-		* @param parent is the parent control
-		*/
+		/// <summary>
+		/// Node Constructor
+		/// </summary>
+		/// <param name="parent">Is the parent of the Node</param>
 		Node(_In_opt_ Control* parent = nullptr);
 
-		/**
-		* Creates all children of the node
-		*/
+		/// <summary>
+		/// Creates Node template
+		/// </summary>
 		void Init();
 
-		/**
-		* Calls the renderer and draws the node
-		*
-		* @returns true if the node was rendered (in window), false otherwise
-		* @warning Function does not call BeginDraw/EndDraw
-		*/
+		/// <summary>
+		/// Uses the Renderer to draw the Node and all it's child controls, 
+		/// but does not call BeginDraw() or EndDraw()
+		/// </summary>
+		/// <returns>True if the Control was rendered, false otherwise</returns>
 		virtual bool Render() override;
 
-		/**
-		* All events of the specific control will be dispatched to this function
-		*
-		* @param e is the received event
-		* @returns true if the event was handled, else false and the event will be dispatched to the client
-		*/
+		/// <summary>
+		/// All events of the specific Control will be dispatched to this function
+		/// </summary>
+		/// <param name="e">Is the received event</param>
+		/// <returns>True if the event was handled, else false and the event will be dispatched to the client</returns>
 		virtual bool OnEvent(_In_ Event& e) override;
 	};
 }

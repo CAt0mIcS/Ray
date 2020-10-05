@@ -491,17 +491,15 @@ namespace Util
 	/// </summary>
 	/// <param name="str">Is the multi byte string</param>
 	/// <returns>The wide character string</returns>
-	/// <TODO>Check for speed and if std::wstring ret cannot be used immediately</TODO>
 	inline std::wstring MultiByteToWideChar(const std::string& str)
 	{
 		auto size = ::MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.c_str(), -1, nullptr, 0);
 
-		wchar_t* buff = new wchar_t[size];
-		::MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.c_str(), -1, buff, size);
-
-		std::wstring ret = buff;
-		delete[] buff;
-		return ret;
+		std::wstring buff;
+		buff.resize(size);
+		::MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.c_str(), -1, buff.data(), size);
+		
+		return buff;
 	}
 
 	/// <summary>
@@ -509,16 +507,14 @@ namespace Util
 	/// </summary>
 	/// <param name="str">Is the wide character string</param>
 	/// <returns>The multi byte string</returns>
-	/// <TODO>Check for speed and if std::string ret cannot be used immediately</TODO>
 	inline std::string WideCharToMultiByte(const std::wstring& str)
 	{
 		auto size = ::WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.c_str(), -1, nullptr, 0, NULL, NULL);
 		
-		char* buff = new char[size];
-		::WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.c_str(), -1, buff, size, NULL, NULL);
-
-		std::string ret = buff;
-		delete[] buff;
-		return ret;
+		std::string buff;
+		buff.resize(size);
+		::WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.c_str(), -1, buff.data(), size, NULL, NULL);
+		
+		return buff;
 	}
 }

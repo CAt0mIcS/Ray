@@ -97,8 +97,8 @@ namespace GUI
 		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
 			D2D1::HwndRenderTargetProperties(m_hWnd, size), &m_pRenderTarget), "Failed to create D2D1HwndRenderTarget");
 
-		NPE_THROW_GFX_EXCEPT(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED,
-			__uuidof(m_pWriteFactory), &m_pWriteFactory), "Failed to create DWriteFactory");
+		//NPE_THROW_GFX_EXCEPT(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED,
+			//__uuidof(m_pWriteFactory), &m_pWriteFactory), "Failed to create DWriteFactory");
 
 		D2D1_COLOR_F backgroundColor = g_DefaultWindowBackgroundColor.ToD2D1ColorF();
 		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->CreateSolidColorBrush(

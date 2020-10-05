@@ -12,7 +12,7 @@
 
 namespace GUI
 {
-	std::wstring FileWindow::ShowSaveDialog(_In_ const wchar_t* title, _In_ FilterSpecs rgSpecs[], _In_ unsigned int numSpecs)
+	std::wstring FileWindow::ShowSaveDialog(_In_ const wchar_t* title, _In_ FilterSpecs* rgSpecs, _In_ unsigned int numSpecs)
 	{
 		wchar_t* filePath;
 
@@ -55,7 +55,7 @@ namespace GUI
 		return filePath;
 	}
 	
-	std::wstring FileWindow::ShowOpenDialog(_In_ const wchar_t* title, _In_ FilterSpecs rgSpecs[], _In_ unsigned int numSpecs)
+	std::wstring FileWindow::ShowOpenDialog(_In_ const wchar_t* title, _In_ FilterSpecs* rgSpecs, _In_ unsigned int numSpecs)
 	{
 		wchar_t* filePath;
 

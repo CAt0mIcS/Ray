@@ -15,179 +15,195 @@
 
 namespace NPE
 {
+	/// <summary>
+	/// Base Exception class
+	/// </summary>
 	class UTIL_API Exception : public std::exception
 	{
 	public:
-		/**
-		* Exception contructor
-		* 
-		* @param line is the line where the exception occured
-		* @param file is the file where the exception occured
-		*/
+		/// <summary>
+		/// Exception contructor
+		/// </summary>
+		/// <param name="line">Is the line where the exception occured</param>
+		/// <param name="file">Is the file where the exception occured</param>
 		Exception(unsigned int line, const char* file);
 
-		/**
-		* Deleted copy-asignment operators
-		*/
+		/// <summary>
+		/// Deleted Copy Constructor
+		/// </summary>
 		Exception(const Exception&) = delete;
+
+		/// <summary>
+		/// Deleted Copy Assignment operator
+		/// </summary>
 		Exception& operator=(const Exception&) = delete;
 
-		/**
-		* Getter for a string with line and file info
-		* 
-		* @returns line/file string
-		*/
+		/// <summary>
+		/// Getter for a string with line and file info
+		/// </summary>
+		/// <returns>Line/file string</returns>
 		std::string GetOriginString() const;
 
-		/**
-		* Getter for string with type
-		* 
-		* @returns string with type
-		*/
+		/// <summary>
+		/// Getter for string with Exception type
+		/// </summary>
+		/// <returns>The exception type string</returns>
 		virtual const char* GetType() const { return "NPE Exception"; };
-
-		/**
-		* Getter for more information about the error
-		* 
-		* @returns more information about the erro
-		*/
+		
+		/// <summary>
+		/// Getter for more information about the error
+		/// </summary>
+		/// <returns>More information about the error</returns>
 		virtual const char* what() const override;
 
-		/**
-		* Virtual Exception destructor
-		*/
+		/// <summary>
+		/// Virtual Exception Deconstructor
+		/// </summary>
 		virtual ~Exception() = default;
 
 	protected:
+		/// <summary>
+		/// Buffer to store string from Exception::what()
+		/// </summary>
 		mutable std::string m_WhatBuffer;
+
+		/// <summary>
+		/// Line where the exception occured
+		/// </summary>
 		unsigned int m_Line;
+
+		/// <summary>
+		/// File where the exception occured
+		/// </summary>
 		const char* m_File;
 	};
 
-
+	/// <summary>
+	/// Exception class which handles Win32API HRESULT error codes
+	/// </summary>
 	class UTIL_API WindowException : public Exception
 	{
 	public:
-		/**
-		* WindowException contructor
-		* 
-		* @param hr is the error code
-		* @param line is the line where the error occured
-		* @param file is the file where the error occured
-		*/
+		/// <summary>
+		/// WindowException Contructor
+		/// </summary>
+		/// <param name="hr">Is the error code</param>
+		/// <param name="line">Is the line where the error occured</param>
+		/// <param name="file">Is the file where the error occured</param>
 		WindowException(HRESULT hr, unsigned int line, const char* file);
 
-		/**
-		* WindowException constructor
-		*
-		* @param other is another window exception
-		*/
+		/// <summary>
+		/// WindowException Constructor
+		/// </summary>
+		/// <param name="other">Is another window exception</param>
 		WindowException(const WindowException& other);
 
-		/**
-		* Getter for string with type
-		*
-		* @returns string with type
-		*/
+		/// <summary>
+		/// Getter for string with Exception type
+		/// </summary>
+		/// <returns>The exception type string</returns>
 		virtual const char* GetType() const override { return "NPE WindowException"; }
 
-		/**
-		* Getter for more information about the error
-		*
-		* @returns more information about the erro
-		*/
+		/// <summary>
+		/// Getter for more information about the error
+		/// </summary>
+		/// <returns>More information about the error</returns>
 		virtual const char* what() const override;
-
-		/**
-		* Uses format message to get the message string from Win32API
-		* 
-		* @returns the formated message
-		*/
+		
+		/// <summary>
+		/// Uses format message to get the message string from Win32API
+		/// </summary>
+		/// <returns>The formated message</returns>
 		std::string GetErrorString() const;
 
 	private:
+		/// <summary>
+		/// HRESULT error code
+		/// </summary>
 		HRESULT m_Hr;
 	};
 
 	class UTIL_API GraphicsException : public Exception
 	{
 	public:
-		/**
-		* GraphicsException contructor
-		*
-		* @param hr is the error code
-		* @param line is the line where the error occured
-		* @param file is the file where the error occured
-		*/
+		/// <summary>
+		/// GraphicsException Contructor
+		/// </summary>
+		/// <param name="hr">Is the error code</param>
+		/// <param name="line">Is the line where the error occured</param>
+		/// <param name="file">Is the file where the error occured</param>
+		/// <param name="message">Is a message to display additional information</param>
 		GraphicsException(HRESULT hr, unsigned int line, const char* file, const char* message);
 
-		/**
-		* GraphicsException constructor
-		* 
-		* @param other is another graphics exception
-		*/
+		/// <summary>
+		/// GraphicsException Constructor
+		/// </summary>
+		/// <param name="other">Is another graphics exception</param>
 		GraphicsException(const GraphicsException& other);
 
-		/**
-		* Getter for string with type
-		*
-		* @returns string with type
-		*/
+		/// <summary>
+		/// Getter for string with Exception type
+		/// </summary>
+		/// <returns>The exception type string</returns>
 		virtual const char* GetType() const override { return "NPE GraphicsException"; }
 
-		/**
-		* Getter for more information about the error
-		*
-		* @returns more information about the erro
-		*/
+		/// <summary>
+		/// Getter for more information about the error
+		/// </summary>
+		/// <returns>More information about the error</returns>
 		virtual const char* what() const override;
 
-		/**
-		* Checks which error was thrown and returns the error string for the HRESULT
-		* 
-		* @returns the error string specified on https://docs.microsoft.com/en-us/windows/win32/direct2d/direct2d-error-codes
-		*/
+		/// <summary>
+		/// Checks which error was thrown and returns the error string for the HRESULT
+		/// </summary>
+		/// <returns>The error string specified on https://docs.microsoft.com/en-us/windows/win32/direct2d/direct2d-error-codes</returns>
 		std::string GetErrorString() const;
 
 	private:
+		/// <summary>
+		/// HRESULT error code
+		/// </summary>
 		HRESULT m_Hr;
+
+		/// <summary>
+		/// Custom message to add additional information
+		/// </summary>
 		const char* m_Message;
 	};
 
 	class MSGException : public Exception
 	{
 	public:
-		/**
-		* Exception with message contructor
-		*
-		* @param message is the message to display if the error occurs
-		* @param line is the line where the error occured
-		* @param file is the file where the error occured
-		*/
+		/// <summary>
+		/// Exception with message Contructor
+		/// </summary>
+		/// <param name="message">Is the message to display if the error occurs</param>
+		/// <param name="line">Is the line where the error occured</param>
+		/// <param name="file">Is the file where the error occured</param>
 		MSGException(const char* message, unsigned int line, const char* file);
 
-		/**
-		* MSGException constructor
-		*
-		* @param other is another msg exception
-		*/
+		/// <summary>
+		/// MSGException Constructor
+		/// </summary>
+		/// <param name="other">Is another msg exception</param>
 		MSGException(const MSGException& other);
 
-		/**
-		* Getter for string with type
-		*
-		* @returns string with type
-		*/
+		/// <summary>
+		/// Getter for string with Exception type
+		/// </summary>
+		/// <returns>The exception type string</returns>
 		virtual const char* GetType() const override { return "NPE Exception"; }
 
-		/**
-		* Getter for more information about the error
-		*
-		* @returns more information about the erro
-		*/
+		/// <summary>
+		/// Getter for more information about the error
+		/// </summary>
+		/// <returns>More information about the error</returns>
 		virtual const char* what() const override;
 
 	private:
+		/// <summary>
+		/// Custom message to add additional information
+		/// </summary>
 		const char* m_Message;
 	};
 

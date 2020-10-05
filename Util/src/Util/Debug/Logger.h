@@ -12,14 +12,28 @@
 
 namespace Util
 {
+	/// <summary>
+	/// Logger class, logs to file "NPE.log"
+	/// </summary>
 	class UTIL_API Logger
 	{
 	public:
+		/// <summary>
+		/// Clears the log file and creates the spdlog Logger
+		/// </summary>
+		/// <param name="filename">Is the path to the log file</param>
 		static void Init(const std::string& filename);
 
+		/// <summary>
+		/// Getter for the Logger
+		/// </summary>
+		/// <returns>The Logger</returns>
 		static std::shared_ptr<spdlog::logger>& GetLogger() { return s_Logger; }
 
 	private:
+		/// <summary>
+		/// spdlog Logger
+		/// </summary>
 		static std::shared_ptr<spdlog::logger> s_Logger;
 	};
 }

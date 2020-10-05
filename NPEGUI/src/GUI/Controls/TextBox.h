@@ -25,100 +25,95 @@ namespace GUI
 	{
 		friend class Caret;
 	public:
-		/**
-		* TextBox constructor
-		*
-		* @param paarent is the parent control
-		*/
+		/// <summary>
+		/// TextBox Constructor
+		/// </summary>
+		/// <param name="parent">Is the parent Control</param>
 		TextBox(_In_opt_ Control* parent = nullptr);
 
-		/**
-		* Calls the renderer and draws the textbox
-		*
-		* @returns true if the textbox was rendered (in window), false otherwise
-		* @warning function does not call BeginDraw/EndDraw
-		*/
+		/// <summary>
+		/// Uses the Renderer to draw the TextBox and all it's child controls, 
+		/// but does not call BeginDraw() or EndDraw()
+		/// </summary>
+		/// <returns>True if the Control was rendered, false otherwise</returns>
 		virtual bool Render() override;
 
-		/**
-		* All events of the specific control will be dispatched to this function
-		*
-		* @param e is the received event
-		* @returns true if the event was handled, else false and the event will be dispatched to the client
-		*/
+		/// <summary>
+		/// All events of the specific Control will be dispatched to this function
+		/// </summary>
+		/// <param name="e">Is the received event</param>
+		/// <returns>True if the event was handled, else false and the event will be dispatched to the client</returns>
 		virtual bool OnEvent(_In_ Event& e) override;
 
-		/**
-		* Renders text in member variable
-		*
-		* @see TextBox::SetText()
-		*/
+		/// <summary>
+		/// Renders the currently set text
+		/// </summary>
 		void RenderText();
 
-		/**
-		* Getter for current text in textbox
-		*
-		* @returns the current text
-		*/
+		/// <summary>
+		/// Getter for the current text
+		/// </summary>
+		/// <returns>The current text</returns>
 		const NText& GetText() const { return m_Text; }
 
-		/**
-		* Setter for text displayed in the textbox
-		*
-		* @param newText is the new text for the textbox
-		* @warning function does not render the text, it just sets the member variable
-		* @see TextBox::RenderText()
-		*/
+		/// <summary>
+		/// Setter for text displayed in the TextBox, use RenderText() to render it
+		/// </summary>
+		/// <param name="newText">Is the new text the TextBox will display</param>
 		void SetText(_In_ const std::wstring& newText) { m_Text.text = newText; }
 
-		/**
-		* Setter for multiline textbox
-		*
-		* @param multiline should be true if the textbox should be multiline, false otherwise
-		*/
+		/// <summary>
+		/// Setter for multiline TextBox
+		/// </summary>
+		/// <param name="multiline">Is true if the TextBox should support multiline text, false otherwise</param>
 		void SetMultiline(_In_ const bool multiline) { m_IsMultiline = multiline; }
 
-		/**
-		* Getter for multiline textbox
-		* 
-		* @returns true if the textbox is multiline, false otherwise
-		*/
+		/// <summary>
+		/// Checks if TextBox is multiline
+		/// </summary>
+		/// <returns>True if the TextBox supports multiline text, false otherwise</returns>
 		bool IsMultiline() const { return m_IsMultiline; }
 
-		/**
-		* Setter for the font family
-		*
-		* @param family is the new font family
-		*/
+		/// <summary>
+		/// Setter for font family
+		/// </summary>
+		/// <param name="family">Is the name of the font family</param>
 		void SetFontFamily(_In_ const std::wstring& family) { m_Text.fontFamily = family; }
 
-		/**
-		* Setter for the font size
-		*
-		* @param size is the new font size
-		*/
+		/// <summary>
+		/// Setter fot font size
+		/// </summary>
+		/// <param name="size">Is the size of the font</param>
 		void SetFontSize(_In_ const float size) { m_Text.fontSize = size; }
 
-		/**
-		* Getter for font size
-		*
-		* @returns the current font size of the text
-		*/
+		/// <summary>
+		/// Getter for font size
+		/// </summary>
+		/// <returns>The current font size</returns>
 		float GetFontSize() const { return m_Text.fontSize; }
 
-		/**
-		* Calculates the layout of a new textbox
-		*
-		* @param parentPos is the position of the parent control
-		* @param parentSize is the size of the parent control
-		* @returns the new position and size of the layout
-		*/
+		/// <summary>
+		/// Calculates the layout of a new TextBox
+		/// </summary>
+		/// <param name="parentPos">Is the position of the parent Control</param>
+		/// <param name="parentSize">Is the size of the parent Control</param>
+		/// <returns>The new position and size of the Control</returns>
 		virtual std::optional<std::pair<Util::NPoint, Util::NSize>> CalculateLayout(_In_ const Util::NPoint& parentPos, _In_ const Util::NSize& parentSize) override;
 
 	private:
+		/// <summary>
+		/// Structure which holds text information
+		/// </summary>
 		NText m_Text;
 
+		/// <summary>
+		/// Caret in the TextBox
+		/// </summary>
 		Caret m_Caret;
+
+		/// <summary>
+		/// True if multiple lines are allowed, false otherwise. 
+		/// </summary>
 		bool m_IsMultiline;
 
 	};

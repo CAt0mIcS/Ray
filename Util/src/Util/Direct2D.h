@@ -3,60 +3,60 @@
 
 namespace Util
 {
-	/**
-	* Releases a COM object and nullifies pointer
-	* 
-	* @param it is the interface to release
-	*/
-	template<typename InterfaceType>
-	inline void Release(InterfaceType** it)
+	/// <summary>
+	/// Releases a COM object and nullifies pointer
+	/// </summary>
+	/// <typeparam name="InterfaceType">Is any type which inherits from IUnknown</typeparam>
+	/// <param name="obj">is the interface to release</param>
+	template<typename InterfaceType, typename = std::enable_if_t<std::is_convertible<InterfaceType*, IUnknown*>::value>>
+	inline void Release(InterfaceType** obj)
 	{
-		if (*it)
+		if (*obj)
 		{
-			(*it)->Release();
-			*it = nullptr;
+			(*obj)->Release();
+			*obj = nullptr;
 		}
 	}
 
-	/**
-	* Acquires an additional reference, if non-null
-	* 
-	* @param it is the interface to add a reference to
-	* @returns the interface
-	*/
-	template<typename InterfaceType>
-	inline InterfaceType* Aquire(InterfaceType* it)
+	/// <summary>
+	/// Acquires an additional reference, if non-null
+	/// </summary>
+	/// <typeparam name="InterfaceType">Is any type which inherits from IUnknown</typeparam>
+	/// <param name="obj">Is the interface to add a reference to</param>
+	/// <returns>The interface object passed into the function</returns>
+	template<typename InterfaceType, typename = std::enable_if_t<std::is_convertible<InterfaceType*, IUnknown*>::value>>
+	inline InterfaceType* Aquire(InterfaceType* obj)
 	{
-		if (it)
-			it->AddRef();
+		if (obj)
+			obj->AddRef();
 
-		return it;
+		return obj;
 	}
 
-	/**
-	* Sets a new COM object, acquiring the reference
-	* 
-	* @param currentObj is the object which will be the newObj
-	* @param newObj is the new interface
-	*/
-	template<typename InterfaceType>
+	/// <summary>
+	/// Sets a new COM object, acquiring the reference
+	/// </summary>
+	/// <typeparam name="InterfaceType">Is any type which inherits from IUnknown</typeparam>
+	/// <param name="currentObj">Is the object which will be the newObj</param>
+	/// <param name="newObj">Is the new interface</param>
+	template<typename InterfaceType, typename = std::enable_if_t<std::is_convertible<InterfaceType*, IUnknown*>::value>>
 	inline void Attach(InterfaceType** currentObj, InterfaceType* newObj)
 	{
 		Util::Release(currentObj);
 		*currentObj = newObj;
 	}
 
-	/**
-	* Releases a COM object and nullifies pointer
-	* 
-	* @param it is the interface
-	* @returns the new old interface
-	*/
-	template<typename InterfaceType>
-	inline InterfaceType* Detach(InterfaceType** it)
+	/// <summary>
+	/// Releases a COM object and nullifies pointer
+	/// </summary>
+	/// <typeparam name="InterfaceType">Is any type which inherits from IUnknown</typeparam>
+	/// <param name="obj">Is the interface</param>
+	/// <returns>The old interface</returns>
+	template<typename InterfaceType, typename = std::enable_if_t<std::is_convertible<InterfaceType*, IUnknown*>::value>>
+	inline InterfaceType* Detach(InterfaceType** obj)
 	{
-		InterfaceType* oldObj = *it;
-		*it = nullptr;
+		InterfaceType* oldObj = *obj;
+		*obj = nullptr;
 		return oldObj;
 	}
 }

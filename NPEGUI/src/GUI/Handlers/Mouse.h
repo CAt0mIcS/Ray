@@ -8,93 +8,106 @@ namespace GUI
 {
 	class Control;
 
+	/// <summary>
+	/// Static class which will always be updated with any mouse events
+	/// </summary>
 	class GUI_API Mouse
 	{
 	public:
-		/**
-		* Deleted contructor and copy-asignment operators
-		*/
+		/// <summary>
+		/// Deleted Constructor
+		/// </summary>
 		Mouse() = delete;
+
+		/// <summary>
+		/// Deleted Copy Constructor
+		/// </summary>
 		Mouse(_In_ const Mouse&) = delete;
+
+		/// <summary>
+		/// Deleted Copy Assignment operator
+		/// </summary>
 		Mouse operator=(_In_ const Mouse&) = delete;
 
-		/**
-		* Sets mouse position
-		* 
-		* @param pos is the new mouse position
-		* @warning function does not update actual mouse position, just the member variable
-		*/
+		/// <summary>
+		/// Sets mouse position, only sets member variable, does not actually move the mouse
+		/// </summary>
+		/// <param name="pos"></param>
 		static void SetPos(_In_ const Util::NPoint& pos) { m_Pos = pos; }
 
-		/**
-		* Getter for mouse position
-		* 
-		* @returns the current mouse position
-		*/
+		/// <summary>
+		/// Getter for the current mouse position in the window
+		/// </summary>
+		/// <returns>The current mouse position</returns>
 		static const Util::NPoint& GetPos() { return m_Pos; }
 
-		/**
-		* Sets left pressed
-		* 
-		* @param pressed is the new state of the mouse
-		* @warning function does not actually press the mouse, just the member variable
-		*/
+		/// <summary>
+		/// Sets left pressed, only sets member variable, does not actually press the button
+		/// </summary>
+		/// <param name="pressed">Is the new state of the mouse</param>
 		static void SetLeftPressed(_In_ bool pressed) { m_IsLeftPressed = pressed; }
 
-		/**
-		* Getter for left pressed state
-		* 
-		* @returns true if the left mouse button is pressed, false otherwise
-		*/
+		/// <summary>
+		/// Getter for left pressed state
+		/// </summary>
+		/// <returns>True if the left mouse button is pressed, false otherwise</returns>
 		static bool IsLeftPressed() { return m_IsLeftPressed; }
 
-		/**
-		* Sets middle pressed
-		*
-		* @param pressed is the new state of the mouse
-		* @warning function does not actually press the mouse, just the member variable
-		*/
+		/// <summary>
+		/// Sets middle pressed, only sets member variable, does not actually press the button
+		/// </summary>
+		/// <param name="pressed">Is the new state of the mouse</param>
 		static void SetMiddlePressed(_In_ bool pressed) { m_IsMiddlePressed = pressed; }
 		
-		/**
-		* Getter for middle pressed state
-		*
-		* @returns true if the middle mouse button is pressed, false otherwise
-		*/
+		/// <summary>
+		/// Getter for middle pressed state
+		/// </summary>
+		/// <returns>True if the middle mouse button is pressed, false otherwise</returns>
 		static bool IsMiddlePressed() { return m_IsMiddlePressed; }
-		
-		/**
-		* Sets right pressed
-		*
-		* @param pressed is the new state of the mouse
-		* @warning function does not actually press the mouse, just the member variable
-		*/
+
+		/// <summary>
+		/// Sets right pressed, only sets member variable, does not actually press the button
+		/// </summary>
+		/// <param name="pressed">Is the new state of the mouse</param>
 		static void SetRightPressed(_In_ bool pressed) { m_IsRightPressed = pressed; }
 
-		/**
-		* Getter for right pressed state
-		*
-		* @returns true if the right mouse button is pressed, false otherwise
-		*/
+		/// <summary>
+		/// Getter for right pressed state
+		/// </summary>
+		/// <returns>True if the right mouse button is pressed, false otherwise</returns>
 		static bool IsRightPressed() { return m_IsRightPressed; }
 
-		/**
-		* Checks if the mouse is on the control
-		* 
-		* @param control is the control to check is the mouse is on
-		* @returns true is the mouse is on the control, false otherwise
-		*/
+		/// <summary>
+		/// Checks if the mouse is on the Control
+		/// </summary>
+		/// <param name="control">Is the Control to check if the mouse is on</param>
+		/// <returns>True if the mouse is on the Control, false otherwise</returns>
 		static bool IsOnControl(_In_ const Control* const control);
 
-		/**
-		* Sets all pressed to false
-		*/
+		/// <summary>
+		/// Sets all pressed to false
+		/// </summary>
 		static void ClearStates() { m_IsLeftPressed = false; m_IsMiddlePressed = false; m_IsRightPressed = false; }
 
 	private:
+		/// <summary>
+		/// Current mouse position
+		/// </summary>
 		static Util::NPoint m_Pos;
+
+		/// <summary>
+		/// True if left mouse button is pressed
+		/// </summary>
 		static bool m_IsLeftPressed;
+
+		/// <summary>
+		/// True if right mouse button is pressed
+		/// </summary>
 		static bool m_IsRightPressed;
+
+		/// <summary>
+		/// True if middle mouse button is pressed
+		/// </summary>
 		static bool m_IsMiddlePressed;
 	};
 }

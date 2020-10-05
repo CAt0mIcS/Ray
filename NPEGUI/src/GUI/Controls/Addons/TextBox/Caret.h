@@ -190,12 +190,6 @@ namespace GUI
 		void RenderSelection();
 
 	private:
-		/**
-		* 
-		* et
-		* 
-		*/
-
 		/// <summary>
 		/// The important range based properties for the current caret.
 		/// Note these are stored outside the layout, since the current car

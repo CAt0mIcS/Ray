@@ -7,6 +7,9 @@
 
 namespace GUI
 {
+	/// <summary>
+	/// Contains all necessary information to render a text
+	/// </summary>
 	struct GUI_API NText
 	{
 		std::wstring text = L"";
@@ -26,85 +29,76 @@ namespace GUI
 	class GUI_API TextRenderer
 	{
 	public:
-		/**
-		* Getter for static TextRenderer (singelton design)
-		* 
-		* @returns the TextRenderer
-		*/
+		/// <summary>
+		/// Getter for static TextRenderer (singelton design)
+		/// </summary>
+		/// <returns>The TextRenderer</returns>
 		static TextRenderer& Get() { return *s_TextRenderer; }
 		
-		/**
-		* Initializes the TextRenderer
-		*/
+		/// <summary>
+		/// Initializes the TextRenderer
+		/// </summary>
 		void Init();
 
-		/**
-		* Returns the text metrics to the current text
-		* 
-		* @param text is the text to get the metrics for
-		* @returns the text metrics to text
-		*/
+		/// <summary>
+		/// Returns the text metrics for the current text
+		/// </summary>
+		/// <param name="text">Is the text for which to get the metrics for</param>
+		/// <returns>The text metrics to text</returns>
 		DWRITE_TEXT_METRICS GetTextMetrics(
 			_In_ const NText& text
 		);
 
-		/**
-		* Getter for the line metrics to the current text
-		* 
-		* @param text is the text to get the metrics for 
-		* @returns the line metrics to the current text
-		*/
+		/// <summary>
+		/// Getter for the line metrics of the current text
+		/// </summary>
+		/// <param name="text">Is the text for which to get the metrics for</param>
+		/// <returns>The line metrics to the current text</returns>
 		std::vector<DWRITE_LINE_METRICS> GetLineMetrics(
 			_In_ const NText& text
 		);
 
-		/**
-		* Getter for cluster metrics in current text
-		* 
-		* @param text is the text to get the metrics for
-		* @param clusterCount will be filled with the amount of clusters
-		* @returns the cluster metrics in current text
-		*/
+		/// <summary>
+		/// Getter for cluster metrics for the current text
+		/// </summary>
+		/// <param name="text">Is the text to get the metrics for</param>
+		/// <param name="clusterCount">Will be filled with the amount of clusters</param>
+		/// <returns>The cluster metrics for the current text</returns>
 		std::vector<DWRITE_CLUSTER_METRICS> GetClusterMetrics(
 			_In_ const NText& text, 
 			_Out_ unsigned int* clusterCount
 		);
 
-		/**
-		* Renders text to specifies bounding rect
-		* 
-		* @param text is the NText structure containing all text info
-		* @see GUI::NText;
-		*/
+		/// <summary>
+		/// Renders text to specified bounding rect
+		/// </summary>
+		/// <param name="text">Is the NText structure containing all text info</param>
 		void RenderText(
 			_In_ const NText& text
 		);
 
-		/**
-		* Creates IDWriteTextLayout and calls its HitTestPoint function
-		* 
-		* @param text is the current text
-		* @param isTrailingHit will be filled by IDWriteTextLayout::HitTestPoint
-		* @param isInside will be filled by IDWRiteTextLayout::HitTestPoint
-		* 
-		* @returns the hit test metrics
-		*/
+		/// <summary>
+		/// Creates IDWriteTextLayout and calls its HitTestPoint function
+		/// </summary>
+		/// <param name="text">Is the current text</param>
+		/// <param name="isTrailingHit">Will be filled by IDWriteTextLayout::HitTestPoint</param>
+		/// <param name="isInside">Will be filled by IDWRiteTextLayout::HitTestPoint</param>
+		/// <returns>The hit test metrics</returns>
 		DWRITE_HIT_TEST_METRICS HitTestPoint(
 			_In_ const NText& text, 
 			_Out_ BOOL* isTrailingHit, 
 			_Out_ BOOL* isInside
 		);
-		
-		/**
-		* Creates IDWriteTextLayout and calls its HitTestTextPosition function
-		*
-		* @param text is the current text
-		* @param textPos is the text position to look for
-		* @param isTrailling hit is received by HitTestPoint
-		* @param caretX is the x output position
-		* @param caretY is the y output position
-		* @returns the hit test text metrics
-		*/
+
+		/// <summary>
+		/// Creates IDWriteTextLayout and calls its HitTestTextPosition function
+		/// </summary>
+		/// <param name="text">Is the current text</param>
+		/// <param name="textPos">Is the text position to look for</param>
+		/// <param name="isTrailingHit">Is received by HitTestPoint</param>
+		/// <param name="caretX">Is the x output position</param>
+		/// <param name="caretY">Is the y output position</param>
+		/// <returns>The hit test text metrics</returns>
 		DWRITE_HIT_TEST_METRICS HitTestTextPosition(
 			_In_ const NText& text, 
 			_In_ unsigned int textPos, 
@@ -113,32 +107,37 @@ namespace GUI
 			_Out_ float* caretY
 		);
 		
-		/**
-		* Creates a IDWriteTextLayout with the text
-		* 
-		* @param text is the text of the new layout
-		* @paaram ppLayout will be filled with the new layout
-		*/
+		/// <summary>
+		/// Creates a IDWriteTextLayout with the text
+		/// </summary>
+		/// <param name="text">Is the text of the new layout</param>
+		/// <param name="ppLayout">Contains newly created TextLayout, or null in case of failure</param>
 		void CreateTextLayout(
 			_In_ const NText& text, 
 			_Out_ IDWriteTextLayout** ppLayout
 		);
 
 	private:
-		/**
-		* Private TextRenderer constructor (Singelton design)
-		*/
+		/// <summary>
+		/// TextRenderer Constructor
+		/// </summary>
 		TextRenderer();
 
-		/**
-		* Initializes m_pFactory
-		*/
+		/// <summary>
+		/// Creates all graphics resources
+		/// </summary>
 		void CreateTextGraphicsResources();
 
 
 	private:
+		/// <summary>
+		/// DWrite Factory object, used to create all other DWrite objects
+		/// </summary>
 		Microsoft::WRL::ComPtr<IDWriteFactory> m_pFactory;
 
+		/// <summary>
+		/// Static TextRenderer instance for singelton design
+		/// </summary>
 		static TextRenderer* s_TextRenderer;
 	};
 }

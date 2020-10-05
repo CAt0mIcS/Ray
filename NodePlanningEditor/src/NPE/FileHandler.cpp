@@ -228,12 +228,11 @@ namespace NPE
 	{
 		std::string fileDir = "saves\\";
 
-		/**
-		* Checks if directory exists
-		*
-		* @param dirNameIn is the directory to check
-		* @returns true if the directory exists, false otherwise
-		*/
+		/// <summary>
+		/// Checks if directory exists
+		/// </summary>
+		/// <param name="dirNameIn">Is the directory to check</param>
+		/// <returns>True if the directory exists, false otherwise</returns>
 		auto dirExists = [](const std::string& dirNameIn)
 		{
 			NPE_LOG("Checking if directory {0} exists...", dirNameIn);
@@ -248,12 +247,11 @@ namespace NPE
 			return false;    // this is not a directory!
 		};
 
-		/**
-		* Checks if file exists
-		*
-		* @param fileName is the file to check
-		* @returns true if the file exists, false otherwise
-		*/
+		/// <summary>
+		/// Checks if file exists
+		/// </summary>
+		/// <param name="filename">Is the file to search for</param>
+		/// <returns>True if the file exists, false otherwise</returns>
 		auto fileExists = [](const std::string& fileName)
 		{
 			struct stat buffer;

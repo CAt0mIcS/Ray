@@ -13,6 +13,7 @@
 #include <sstream>
 #include <bitset>
 #include <functional>
+#include <type_traits>
 
 #include <wrl.h>
 #pragma comment(lib, "dwrite.lib")

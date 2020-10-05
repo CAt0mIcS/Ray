@@ -11,22 +11,21 @@ namespace GUI
     class BaseWindow
     {
     public:
-        /**
-        * Getter for native HWND
-        */
+        /// <summary>
+        /// Getter for window handle
+        /// </summary>
+        /// <returns>A handle to this window</returns>
         HWND GetNativeWindow() const { return m_hWnd; }
 
     protected:
-        /**
-        * Window procedure which calls the DERIVED_TYPE::HandleMessage function
-        * 
-        * @param hwnd is the hwnd
-        * @param uMsg is the window message
-        * @param wParam is the wParam
-        * @param lParam is the lParam
-        * 
-        * @returns handled status
-        */
+        /// <summary>
+        /// Window procedure which calls the DERIVED_TYPE::HandleMessage function
+        /// </summary>
+        /// <param name="hwnd">Is the window handle to the window which should receive the event</param>
+        /// <param name="uMsg">Is the message code</param>
+        /// <param name="wParam">Is an additional parameter</param>
+        /// <param name="lParam">Is an additional parameter</param>
+        /// <returns>LRESULT code</returns>
         static LRESULT CALLBACK WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
         {
             DERIVED_TYPE* pThis = nullptr;
@@ -53,18 +52,24 @@ namespace GUI
             }
         }
 
-        /**
-        * Contructor for BaseWindow
-        */
+        /// <summary>
+        /// BaseWindow Constructor
+        /// </summary>
         BaseWindow() : m_hWnd(NULL) { }
 
-        /**
-        * Creates the native window
-        * 
-        * @param lpWindowName is the title of the window
-        * @param dwStyle are style flags for the window
-        * @returns TRUE if the window was created successfully, false otherwise
-        */
+        /// <summary>
+        /// Creates the native window
+        /// </summary>
+        /// <param name="lpWindowName">Is the title of the window</param>
+        /// <param name="dwStyle">Are window styles</param>
+        /// <param name="dwExStyle">Are extended window styles</param>
+        /// <param name="x">Is the x-position of the window</param>
+        /// <param name="y">Is the y-position of the window</param>
+        /// <param name="nWidth">Is the width of the window</param>
+        /// <param name="nHeight">Is the height of the window</param>
+        /// <param name="hWndParent">Is a handle to the parent window</param>
+        /// <param name="hMenu">Is a window Id</param>
+        /// <returns>TRUE(1) if the window was created successfully, FALSE(0) otherwise</returns>
         BOOL CreateNativeWindow(
             _In_ PCWSTR lpWindowName,
             _In_ DWORD dwStyle,
@@ -93,16 +98,19 @@ namespace GUI
             return (m_hWnd ? TRUE : FALSE);
         }
 
-        /**
-        * Handles all window messages
-        * 
-        * @param uMsg is the window message
-        * @param wParam is the wParam
-        * @param lParam is the lParam
-        */
+        /// <summary>
+        /// Handles all window messages
+        /// </summary>
+        /// <param name="uMsg">Is the message code</param>
+        /// <param name="wParam">Is an additional parameter</param>
+        /// <param name="lParam">Is an additional parameter</param>
+        /// <returns>LRESULT code</returns>
         virtual LRESULT HandleMessage(_In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam) = 0;
 
     protected:
+        /// <summary>
+        /// Window handle
+        /// </summary>
         HWND m_hWnd;
     };
 }
