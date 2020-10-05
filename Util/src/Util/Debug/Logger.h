@@ -2,7 +2,7 @@
 
 #include "UtilBase.h"
 
-#define SPDLOG_PRINT_TO_CONSOLE
+//#define SPDLOG_PRINT_TO_CONSOLE
 
 #include "spdlog/spdlog.h"
 #include "spdlog/logger.h"

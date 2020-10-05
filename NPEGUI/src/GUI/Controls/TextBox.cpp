@@ -37,8 +37,11 @@ namespace GUI
 			else
 				SetFontSize((m_Size.width + m_Size.height) / 17.4f);
 
-			m_Caret.Render();
-			RenderText();
+			if (m_Text.fontSize > 5.0f)
+			{
+				m_Caret.Render();
+				RenderText();
+			}
 
 			for (auto* child : m_Children)
 			{
@@ -103,7 +106,6 @@ namespace GUI
 
 	void TextBox::RenderText()
 	{
-
 		float xOffset = m_Size.width / 30.0f;
 		float yOffset;
 		if (m_IsMultiline)

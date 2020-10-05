@@ -17,10 +17,17 @@
 
 #include "GUI/Window/FileWindow.h"
 
+
+#include "Util/Debug/Timer.h"
+
 /**
 * QUESTION:
 *	Use strings or wstrings
 */
+
+//#define NPE_DEBUG_DISABLE_AUTOSAVE
+//#define NPE_DEBUG_RANDOM_NODES
+
 
 
 namespace NPE
@@ -34,6 +41,23 @@ namespace NPE
 
 		NPE_LOG("Start of loading scene...\n");
 		m_FileHandler.LoadScene(m_Window, m_Lines, m_Zoom);
+
+		#ifdef NPE_DEBUG_RANDOM_NODES
+			auto& controls = m_Window.GetControls();
+			controls.clear();
+			m_Lines.clear();
+			m_Zoom = 40;
+
+			for (int i = 0; i < 5000; ++i)
+			{
+				auto* node = m_Window.AddControl<GUI::Node>(new GUI::Node(&m_Window));
+				node->SetPos({ (float)rand(), (float)rand() });
+				node->SetSize({ s_NodeWidth, s_NodeHeight });
+				node->SetColor(GUI::g_DefaultNodeColor);
+				node->Init();
+			}
+		#endif
+
 		NPE_LOG("Finnished loading scene\n");
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 		m_Window.CreateTimer(20000, true);
@@ -99,7 +123,8 @@ namespace NPE
 		{
 			SetCursor(LoadCursor(NULL, IDC_SIZEALL));
 			
-			m_Actions.MoveCamera(GUI::Mouse::GetPos() - m_MousePos, m_Window.GetControls());
+			const Util::NPoint diff = GUI::Mouse::GetPos() - m_MousePos;
+			m_Actions.MoveCamera(diff, m_Window.GetControls());
 			m_MousePos = GUI::Mouse::GetPos();
 			m_Window.PostRedraw();
 
@@ -312,16 +337,18 @@ namespace NPE
 	{
 		switch (e.GetTimer()->GetId())
 		{
-		case s_TimerAutosaveId:
-		{
-			//TODO: Implement alert to user that a autosave is comming
-			if (m_NeedsToSave)
+		#ifndef NPE_DEBUG_DISABLE_AUTOSAVE
+			case s_TimerAutosaveId:
 			{
-				m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom);
-				m_NeedsToSave = false;
+				//TODO: Implement alert to user that a autosave is comming
+				if (m_NeedsToSave)
+				{
+					m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom);
+					m_NeedsToSave = false;
+				}
+				return true;
 			}
-			return true;
-		}
+		#endif
 		}
 
 		return false;

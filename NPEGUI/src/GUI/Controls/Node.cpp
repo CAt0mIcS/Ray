@@ -78,9 +78,17 @@ namespace GUI
 			const float max = std::max(GetSize().width, GetSize().height);
 			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
 
+			constexpr float minWidth = 48.2f, minHeight = 30.0f;
 			for (auto* child : m_Children)
 			{
-				child->Render();
+				if (m_Size.width > minWidth && m_Size.height > minHeight)
+				{
+					child->Render();
+				}
+				else if (m_Size.width <= minWidth && m_Size.height <= minHeight && child->GetType() == Type::Button)
+				{
+					child->Render();
+				}
 			}
 
 			return true;
