@@ -19,10 +19,9 @@ namespace GUI
 		SetTimer(m_hWnd, m_Id, time, nullptr);
 	}
 
-	void Timer::Destroy()
+	bool Timer::Destroy()
 	{
-		if (!KillTimer(GetWindow(), GetId()))
-			NPE_THROW_WND_EXCEPT(GetLastError());
+		return KillTimer(GetWindow(), GetId());
 	}
 }
 

@@ -254,6 +254,17 @@ namespace GUI
 		SetWindowText(m_hWnd, title.c_str());
 	}
 
+	MainWindow::~MainWindow()
+	{
+		delete &Renderer::Get();
+		delete &TextRenderer::Get();
+
+		for (auto& timer : m_Timers)
+		{
+			timer.Destroy();
+		}
+	}
+
 	bool MainWindow::DispatchEvent(_In_ Event& e)
 	{
 		if (!m_EventCallbackFn)

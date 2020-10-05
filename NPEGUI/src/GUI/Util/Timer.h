@@ -43,9 +43,10 @@ namespace GUI
 		unsigned int GetId() const { return m_Id; }
 
 		/// <summary>
-		/// Destroys the timer
+		/// Destroys the Timer
 		/// </summary>
-		void Destroy();
+		/// <returns>True if the Timer was destroyed successfully, false otherwise</returns>
+		bool Destroy();
 
 	private:
 		/// <summary>

@@ -145,19 +145,19 @@ namespace GUI
 		Microsoft::WRL::ComPtr<ID2D1Factory> m_pFactory;
 
 		/// <summary>
-		/// D2D1 Brush
-		/// </summary>
-		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_pBrush;
-
-		/// <summary>
 		/// Render target, uses Handle to the main window
 		/// </summary>
 		Microsoft::WRL::ComPtr<ID2D1HwndRenderTarget> m_pRenderTarget;
 
 		/// <summary>
-		/// Cached bitmap for background
+		/// D2D1 Brush
 		/// </summary>
-		Microsoft::WRL::ComPtr<ID2D1Bitmap> m_pD2DBitmap;
+		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_pBrush;
+
+		/// <summary>
+		/// Cached bitmap for background, access read violation when trying to release, thus is left unreleased
+		/// </summary>
+		ID2D1Bitmap* m_pD2DBitmap;
 
 		/// <summary>
 		/// Static Renderer instance for singelton design

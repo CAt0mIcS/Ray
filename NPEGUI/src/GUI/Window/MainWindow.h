@@ -128,6 +128,11 @@ namespace GUI
 		/// <param name="erase">Specifies whether the background within the update region should be erased</param>
 		void PostRedraw(const RECT* const rc = nullptr, BOOL erase = TRUE) { InvalidateRect(m_hWnd, rc, erase); UpdateWindow(m_hWnd); }
 
+		/// <summary>
+		/// MainWindow Deconstructor
+		/// </summary>
+		~MainWindow();
+
 	private:
 		
 		/// <summary>
@@ -148,7 +153,7 @@ namespace GUI
 		/// <summary>
 		/// Event callback function, set with MainWindow::SetEventCallback, 
 		/// NPE::Application::Application calls InstallEventFilter (function in GUI::GUIApplication),
-		///  which calls MainWindow::SetEventCallback
+		/// which calls MainWindow::SetEventCallback
 		/// </summary>
 		EventCallbackFn m_EventCallbackFn;
 

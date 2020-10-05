@@ -2,8 +2,6 @@
 
 #include "Win.h"
 
-#define NPE_MAINWINDOW_CLASS_NAME L"MAINWINDOWCLASS"
-
 
 namespace GUI
 {
@@ -16,6 +14,14 @@ namespace GUI
         /// </summary>
         /// <returns>A handle to this window</returns>
         HWND GetNativeWindow() const { return m_hWnd; }
+
+        /// <summary>
+        /// Virtual BaseWindow Deconstructor
+        /// </summary>
+        virtual ~BaseWindow()
+        {
+            UnregisterClass(s_MainWindowClassName, NULL);
+        }
 
     protected:
         /// <summary>
@@ -73,25 +79,25 @@ namespace GUI
         BOOL CreateNativeWindow(
             _In_ PCWSTR lpWindowName,
             _In_ DWORD dwStyle,
-            _In_opt_ DWORD dwExStyle = 0,
+            _In_opt_ _Maybenull_ DWORD dwExStyle = 0,
             _In_opt_ int x = CW_USEDEFAULT,
             _In_opt_ int y = CW_USEDEFAULT,
             _In_opt_ int nWidth = CW_USEDEFAULT,
             _In_opt_ int nHeight = CW_USEDEFAULT,
-            _In_opt_ HWND hWndParent = 0,
-            _In_opt_ HMENU hMenu = 0
+            _In_opt_ _Maybenull_ HWND hWndParent = 0,
+            _In_opt_ _Maybenull_ HMENU hMenu = 0
         )
         {
             WNDCLASS wc = { 0 };
 
             wc.lpfnWndProc = DERIVED_TYPE::WindowProc;
             wc.hInstance = GetModuleHandle(NULL);
-            wc.lpszClassName = NPE_MAINWINDOW_CLASS_NAME;
+            wc.lpszClassName = s_MainWindowClassName;
 
             RegisterClass(&wc);
 
             m_hWnd = CreateWindowEx(
-                dwExStyle, NPE_MAINWINDOW_CLASS_NAME, lpWindowName, dwStyle, x, y,
+                dwExStyle, s_MainWindowClassName, lpWindowName, dwStyle, x, y,
                 nWidth, nHeight, hWndParent, hMenu, GetModuleHandle(NULL), this
             );
 
@@ -112,6 +118,11 @@ namespace GUI
         /// Window handle
         /// </summary>
         HWND m_hWnd;
+
+        /// <summary>
+        /// Name of the window class
+        /// </summary>
+        static constexpr const wchar_t* s_MainWindowClassName = L"NPE_MAINWINDOWCLASS";
     };
 }
 
