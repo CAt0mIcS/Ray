@@ -49,7 +49,7 @@ namespace NPE
 		/// <param name="win">Is the main window</param>
 		/// <param name="width">Is the widht of the new Node</param>
 		/// <param name="height">Is the height of the new Node</param>
-		/// <param name="zoom">Is the current zoom level to size the node appropriately</param>
+		/// <param name="zoom">Is the current zoom level to size the Node appropriately</param>
 		void SpawnNode(GUI::MainWindow& win, float width, float height, int zoom);
 
 		/// <summary>

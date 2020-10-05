@@ -38,9 +38,9 @@ namespace GUI
 		virtual bool OnEvent(_In_ Event& e) override;
 
 		/// <summary>
-		/// Getter for button text
+		/// Getter for Button text
 		/// </summary>
-		/// <returns>The button text</returns>
+		/// <returns>The Button text</returns>
 		const std::wstring& GetText() const { return m_Text; }
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace GUI
 
 	private:
 		/// <summary>
-		/// The button text
+		/// The Button text
 		/// </summary>
 		std::wstring m_Text;
 	};

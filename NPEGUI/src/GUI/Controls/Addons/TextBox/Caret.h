@@ -112,7 +112,7 @@ namespace GUI
 		);
 
 		/// <summary>
-		/// Handles mouse button press events
+		/// Handles mouse Button press events
 		/// </summary>
 		/// <param name="e">Is the received event</param>
 		void OnMouseButtonPressed(
@@ -120,7 +120,7 @@ namespace GUI
 		);
 
 		/// <summary>
-		/// Handles mouse button release events
+		/// Handles mouse Button release events
 		/// </summary>
 		/// <param name="e">Is the received event</param>
 		void OnMouseButtonReleased(

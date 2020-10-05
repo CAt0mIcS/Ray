@@ -22,7 +22,7 @@ namespace GUI
 				break;
 		}
 
-		//no child control was clicked, check if mouse is on node control
+		//no child Control was clicked, check if mouse is on Node Control
 		if (receiver == nullptr)
 		{
 			if (Mouse::IsOnControl(this))

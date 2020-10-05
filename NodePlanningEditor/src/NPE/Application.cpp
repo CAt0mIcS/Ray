@@ -223,7 +223,7 @@ namespace NPE
 			return true;
 		}
 
-		//Create new node shortcut
+		//Create new Node shortcut
 		if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('A'))
 		{
 			m_Actions.SpawnNode(m_Window, s_NodeWidth, s_NodeHeight, m_Zoom);
@@ -361,12 +361,19 @@ namespace NPE
 
 	bool Application::OnPaintEvent(GUI::Control* watched, GUI::PaintEvent& e)
 	{
-		GUI::Renderer& renderer = GUI::Renderer::Get();
-		renderer.BeginDraw();
-		m_Window.Render();
-		m_Actions.RenderLines(m_Lines);
-		renderer.EndDraw();
-		return true;
+		switch (watched->GetType())
+		{
+		case GUI::Control::Type::Window:
+		{
+			GUI::Renderer& renderer = GUI::Renderer::Get();
+			renderer.BeginDraw();
+			m_Window.Render();
+			m_Actions.RenderLines(m_Lines);
+			renderer.EndDraw();
+			return true;
+		}
+		}
+		return false;
 	}
 
 	bool Application::OnClose(GUI::Control* watched, GUI::AppCloseEvent& e)

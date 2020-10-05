@@ -39,7 +39,7 @@ namespace GUI
 		virtual bool Render() override;
 
 		/// <summary>
-		/// All events of a specific control will be dispatched to this function
+		/// All events of a specific Control will be dispatched to this function
 		/// </summary>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, else false and the event will be dispatched to the client</returns>
@@ -69,12 +69,12 @@ namespace GUI
 
 		/**
 		* QUESTION:
-		*	Should I do it like this or have it return a control or have the argument control be a template argument T
+		*	Should I do it like this or have it return a Control or have the argument Control be a template argument T
 		*	Should I use std::enable_if_t or static_assert
 		*/
 
 		/// <summary>
-		/// Adds a control to the window
+		/// Adds a Control to the window
 		/// </summary>
 		/// <typeparam name="T">Is any to Control castable object</typeparam>
 		/// <param name="control">Is the Control to add</param>

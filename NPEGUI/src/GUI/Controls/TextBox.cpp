@@ -93,8 +93,8 @@ namespace GUI
 		case EventType::SetCursorEvent:
 		{
 			/**
-			* Mouse is already guaranteed to be on the control, we don't need to check here
-			* Default cursor is automatically restored when exiting the control
+			* Mouse is already guaranteed to be on the Control, we don't need to check here
+			* Default cursor is automatically restored when exiting the Control
 			*/
 			SetCursor(LoadCursor(NULL, IDC_IBEAM));
 			return true;
@@ -133,7 +133,7 @@ namespace GUI
 			float yOffsetTxt = parentSize.height / 7.0f;
 			float txtY = parentPos.y + yOffsetTxt + (parentSize.height / 3.5f);
 
-			//40% of Node's height is this textbox
+			//40% of Node's height is this TextBox
 			float txtPercentOfNode = 0.4f;
 			float txtHeight = parentSize.height * txtPercentOfNode;
 
@@ -149,7 +149,7 @@ namespace GUI
 
 			float txtWidth = parentSize.width - (xOffsetTxt * 2);
 
-			//20% of Node's height is this textbox
+			//20% of Node's height is this TextBox
 			float txtPercentOfNode = 0.2f;
 			float txtHeight = parentSize.height * txtPercentOfNode;
 

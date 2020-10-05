@@ -119,7 +119,7 @@ namespace GUI
 		virtual bool Render() = 0;
 
 		/// <summary>
-		/// All events of the specific control will be dispatched to this function
+		/// All events of the specific Control will be dispatched to this function
 		/// </summary>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, else false and the event will be dispatched to the client</returns>

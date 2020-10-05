@@ -42,7 +42,7 @@ namespace GUI
 		static const Util::NPoint& GetPos() { return m_Pos; }
 
 		/// <summary>
-		/// Sets left pressed, only sets member variable, does not actually press the button
+		/// Sets left pressed, only sets member variable, does not actually press the Button
 		/// </summary>
 		/// <param name="pressed">Is the new state of the mouse</param>
 		static void SetLeftPressed(_In_ bool pressed) { m_IsLeftPressed = pressed; }
@@ -50,11 +50,11 @@ namespace GUI
 		/// <summary>
 		/// Getter for left pressed state
 		/// </summary>
-		/// <returns>True if the left mouse button is pressed, false otherwise</returns>
+		/// <returns>True if the left mouse Button is pressed, false otherwise</returns>
 		static bool IsLeftPressed() { return m_IsLeftPressed; }
 
 		/// <summary>
-		/// Sets middle pressed, only sets member variable, does not actually press the button
+		/// Sets middle pressed, only sets member variable, does not actually press the Button
 		/// </summary>
 		/// <param name="pressed">Is the new state of the mouse</param>
 		static void SetMiddlePressed(_In_ bool pressed) { m_IsMiddlePressed = pressed; }
@@ -62,11 +62,11 @@ namespace GUI
 		/// <summary>
 		/// Getter for middle pressed state
 		/// </summary>
-		/// <returns>True if the middle mouse button is pressed, false otherwise</returns>
+		/// <returns>True if the middle mouse Button is pressed, false otherwise</returns>
 		static bool IsMiddlePressed() { return m_IsMiddlePressed; }
 
 		/// <summary>
-		/// Sets right pressed, only sets member variable, does not actually press the button
+		/// Sets right pressed, only sets member variable, does not actually press the Button
 		/// </summary>
 		/// <param name="pressed">Is the new state of the mouse</param>
 		static void SetRightPressed(_In_ bool pressed) { m_IsRightPressed = pressed; }
@@ -74,7 +74,7 @@ namespace GUI
 		/// <summary>
 		/// Getter for right pressed state
 		/// </summary>
-		/// <returns>True if the right mouse button is pressed, false otherwise</returns>
+		/// <returns>True if the right mouse Button is pressed, false otherwise</returns>
 		static bool IsRightPressed() { return m_IsRightPressed; }
 
 		/// <summary>
@@ -96,17 +96,17 @@ namespace GUI
 		static Util::NPoint m_Pos;
 
 		/// <summary>
-		/// True if left mouse button is pressed
+		/// True if left mouse Button is pressed
 		/// </summary>
 		static bool m_IsLeftPressed;
 
 		/// <summary>
-		/// True if right mouse button is pressed
+		/// True if right mouse Button is pressed
 		/// </summary>
 		static bool m_IsRightPressed;
 
 		/// <summary>
-		/// True if middle mouse button is pressed
+		/// True if middle mouse Button is pressed
 		/// </summary>
 		static bool m_IsMiddlePressed;
 	};

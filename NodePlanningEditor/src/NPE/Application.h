@@ -44,7 +44,7 @@ namespace NPE
 		/// <summary>
 		/// Receives all events
 		/// </summary>
-		/// <param name="watched">Is the control that received the event</param>
+		/// <param name="watched">Is the Control that received the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		bool OnEvent(GUI::Control* watched, GUI::Event& e);
@@ -52,7 +52,7 @@ namespace NPE
 		/// <summary>
 		/// Receives all mouse move events from OnEvent
 		/// </summary>
-		/// <param name="watched">Is the control that received the event</param>
+		/// <param name="watched">Is the Control that received the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		bool OnMouseMove(GUI::Control* watched, GUI::MouseMoveEvent& e);
@@ -60,7 +60,7 @@ namespace NPE
 		/// <summary>
 		/// Receives all mouse move events from OnEvent
 		/// </summary>
-		/// <param name="watched">Is the control that received the event</param>
+		/// <param name="watched">Is the Control that received the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		bool OnPaintEvent(GUI::Control* watched, GUI::PaintEvent& e);
@@ -68,23 +68,23 @@ namespace NPE
 		/// <summary>
 		/// Called when the application gets closed
 		/// </summary>
-		/// <param name="watched">Is the control that received the event</param>
+		/// <param name="watched">Is the Control that received the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>False if the window should close, true if the window should stay open</returns>
 		bool OnClose(GUI::Control* watched, GUI::AppCloseEvent& e);
 		
 		/// <summary>
-		/// Receives all mouse button press events from OnEvent
+		/// Receives all mouse Button press events from OnEvent
 		/// </summary>
-		/// <param name="watched">Is the control that received the event</param>
+		/// <param name="watched">Is the Control that received the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		bool OnMouseButtonPressed(GUI::Control* watched, GUI::MouseButtonPressedEvent& e);
 
 		/// <summary>
-		/// Receives all mouse button release events from OnEvent
+		/// Receives all mouse Button release events from OnEvent
 		/// </summary>
-		/// <param name="watched">Is the control that received the event</param>
+		/// <param name="watched">Is the Control that received the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		bool OnMouseButtonReleased(GUI::Control* watched, GUI::MouseButtonReleasedEvent& e);
@@ -92,7 +92,7 @@ namespace NPE
 		/// <summary>
 		/// Receives all key press events from OnEvent
 		/// </summary>
-		/// <param name="watched">Is the control that received the event</param>
+		/// <param name="watched">Is the Control that received the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		bool OnKeyPressed(GUI::Control* watched, GUI::KeyPressedEvent& e);
@@ -100,7 +100,7 @@ namespace NPE
 		/// <summary>
 		/// Receives all char events from OnEvent
 		/// </summary>
-		/// <param name="watched">Is the control that received the event</param>
+		/// <param name="watched">Is the Control that received the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		bool OnChar(GUI::Control* watched, GUI::CharEvent& e);
@@ -108,7 +108,7 @@ namespace NPE
 		/// <summary>
 		/// Receives all mouse wheel up events from OnEvent
 		/// </summary>
-		/// <param name="watched">Is the control that received the event</param>
+		/// <param name="watched">Is the Control that received the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		bool OnMouseWheelUp(GUI::Control* watched, GUI::MouseWheelUpEvent& e);
@@ -116,7 +116,7 @@ namespace NPE
 		/// <summary>
 		/// Receives all mouse wheel down events from OnEvent
 		/// </summary>
-		/// <param name="watched">Is the control that received the event</param>
+		/// <param name="watched">Is the Control that received the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		bool OnMouseWheelDown(GUI::Control* watched, GUI::MouseWheelDownEvent& e);
@@ -124,7 +124,7 @@ namespace NPE
 		/// <summary>
 		/// Receives all timer events from OnEvent
 		/// </summary>
-		/// <param name="watched">Is the control that received the event</param>
+		/// <param name="watched">Is the Control that received the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		bool OnTimer(GUI::Control* watched, GUI::TimerEvent& e);
@@ -154,7 +154,7 @@ namespace NPE
 		struct
 		{
 			/// <summary>
-			/// The node which is dragged around, set in OnMouseButtonPressed and used in OnMouseMove
+			/// The Node which is dragged around, set in OnMouseButtonPressed and used in OnMouseMove
 			/// </summary>
 			GUI::Node* draggingNode;
 		} m_HandleControls;
