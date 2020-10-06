@@ -153,6 +153,9 @@ namespace NPE
 		for (auto& record : tbNodeInfo->GetRecords())
 		{
 			auto& data = record.GetRecordData();
+
+			unsigned int baseId = std::stoi(data[6]);
+
 			GUI::Node* node = win.AddControl<GUI::Node>(new GUI::Node(&win));
 			node->SetPos({ std::stof(data[0]), std::stof(data[1]) });
 			node->SetSize({ std::stof(data[2]), std::stof(data[3]) });
@@ -164,6 +167,11 @@ namespace NPE
 
 			((GUI::TextBox*)(node->GetChildren()[0]))->SetText(txt1);
 			((GUI::TextBox*)(node->GetChildren()[1]))->SetText(txt2);
+
+			node->SetId(baseId);
+			node->GetChildren()[0]->SetId(baseId + 1);
+			node->GetChildren()[1]->SetId(baseId + 2);
+			node->GetChildren()[2]->SetId(baseId + 3);
 			NPE_LOG("Loaded Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t{4}\nInfo:\t{5}\n", node->GetPos().x, node->GetPos().y, node->GetSize().width, node->GetSize().height, data[4], data[5]);
 		}
 
@@ -179,6 +187,10 @@ namespace NPE
 			{
 				for (auto* child : control->GetChildren())
 				{
+					if (child->GetType() != GUI::Control::Type::Button)
+						continue;
+
+					int id = child->GetId();
 					if (child->GetId() == std::stoi(data[0]))
 					{
 						line.first = (GUI::Button*)child;
@@ -360,6 +372,21 @@ namespace NPE
 	void FileHandler::ChangeScene(const std::string& filepath)
 	{
 		m_Db->Clear();
+
+		/**
+		* Checking if file size is 0, if so the we need to create a default template
+		*/
+		{
+			std::ifstream in(filepath, std::ifstream::ate | std::ifstream::binary);
+			size_t size = in.tellg();
+			in.close();
+		
+			if (size == 0)
+			{
+				CreateDefaultTemplate();
+			}
+		}
+
 		m_Db->SetFilePath(filepath);
 		m_Db->ReadDb();
 		WriteConfig(filepath);

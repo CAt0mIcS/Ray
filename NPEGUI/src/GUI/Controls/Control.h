@@ -187,6 +187,12 @@ namespace GUI
 		/// <returns>The parent Control, may be null</returns>
 		_Ret_maybenull_ _Check_return_ Control* GetParent() const { return m_Parent; }
 
+		/// <summary>
+		/// Sets the Control's Id
+		/// </summary>
+		/// <param name="id">Is the new Id of this Control</param>
+		void SetId(unsigned int id) { m_Id = id; }
+
 	protected:
 		/// <summary>
 		/// Control Constructor

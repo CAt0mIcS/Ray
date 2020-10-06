@@ -363,7 +363,8 @@ namespace NPE
 	{
 		switch (watched->GetType())
 		{
-		case GUI::Control::Type::Window:
+		//case GUI::Control::Type::Window:
+		default:
 		{
 			GUI::Renderer& renderer = GUI::Renderer::Get();
 			renderer.BeginDraw();
