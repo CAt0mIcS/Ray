@@ -125,19 +125,19 @@ namespace GUI
 
 		imageResHandle = FindResource(GetModuleHandle(L"NPEGUI.dll"), MAKEINTRESOURCE(IDI_BGND_IMAGE), L"Image");
 		if (!imageResHandle)
-			NPE_THROW_WND_EXCEPT(GetLastError());
+			NPE_THROW_LAST_WND_EXCEPT();
 
 		imageResDataHandle = LoadResource(GetModuleHandle(L"NPEGUI.dll"), imageResHandle);
 		if (!imageResDataHandle)
-			NPE_THROW_WND_EXCEPT(GetLastError());
+			NPE_THROW_LAST_WND_EXCEPT();
 
 		pImageFile = LockResource(imageResDataHandle);
 		if (!pImageFile)
-			NPE_THROW_WND_EXCEPT(GetLastError());
+			NPE_THROW_LAST_WND_EXCEPT();
 
 		imageFileSize = SizeofResource(GetModuleHandle(L"NPEGUI.dll"), imageResHandle);
 		if (!imageFileSize)
-			NPE_THROW_WND_EXCEPT(GetLastError());
+			NPE_THROW_LAST_WND_EXCEPT();
 
 		NPE_THROW_GFX_EXCEPT(pIWICFactory->CreateStream(&pStream), "Failed to create IWICStream");
 		NPE_THROW_GFX_EXCEPT(pStream->InitializeFromMemory((BYTE*)pImageFile, imageFileSize), "Failed to initialize IWICStream from memory");

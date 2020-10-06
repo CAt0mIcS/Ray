@@ -224,6 +224,12 @@ if(FAILED(hr)) \
 	throw e; \
 }
 
+#define NPE_THROW_LAST_WND_EXCEPT() \
+{ \
+	NPE::WindowException e(GetLastError(), __LINE__, __FILE__); \
+	throw e; \
+}
+
 #define NPE_THROW_GFX_EXCEPT(hr, msg) \
 if(FAILED(hr)) \
 { \

@@ -314,7 +314,7 @@ namespace NPE
 			m_IsTemporarySave = true;
 			if (!CreateDirectoryA(fileDir.c_str(), nullptr))
 			{
-				NPE_THROW_WND_EXCEPT(GetLastError());
+				NPE_THROW_LAST_WND_EXCEPT();
 			}
 			saveFileExist = false;
 		}
@@ -331,7 +331,7 @@ namespace NPE
 			{
 				if (!CreateDirectoryA(configs["SaveDir"].c_str(), nullptr))
 				{
-					NPE_THROW_WND_EXCEPT(GetLastError());
+					NPE_THROW_LAST_WND_EXCEPT();
 				}
 			}
 

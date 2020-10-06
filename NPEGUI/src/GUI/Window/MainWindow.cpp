@@ -35,7 +35,7 @@ namespace GUI
 	{
 		if (!CreateNativeWindow(L"NPE", WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT))
 		{
-			NPE_THROW_WND_EXCEPT(GetLastError());
+			NPE_THROW_LAST_WND_EXCEPT();
 		}
 	
 		this->SetFocus();
@@ -278,6 +278,8 @@ namespace GUI
 		{
 			timer.Destroy();
 		}
+
+		UnregisterClass(s_MainWindowClassName, NULL);
 	}
 
 	bool MainWindow::DispatchEvent(_In_ Event& e)

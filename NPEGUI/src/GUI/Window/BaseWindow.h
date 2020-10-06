@@ -18,10 +18,7 @@ namespace GUI
         /// <summary>
         /// Virtual BaseWindow Deconstructor
         /// </summary>
-        virtual ~BaseWindow()
-        {
-            UnregisterClass(s_MainWindowClassName, NULL);
-        }
+        virtual ~BaseWindow() = default;
 
     protected:
         /// <summary>
