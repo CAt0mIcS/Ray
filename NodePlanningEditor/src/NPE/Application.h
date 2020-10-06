@@ -147,6 +147,13 @@ namespace NPE
 		void SetZoom(int zoom) { m_Zoom = zoom; }
 
 	private:
+		/// <summary>
+		/// Shows a messagebox asking if the scene should be saved and saves it if the user choses yes
+		/// </summary>
+		/// <returns>The result of the message box</returns>
+		int PromptSaveChangesMsgBox();
+
+	private:
 
 		/// <summary>
 		/// Contains pointers to the controls which are used by an event to work across multiple events

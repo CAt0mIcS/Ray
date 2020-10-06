@@ -188,10 +188,10 @@ namespace GUI
 		_Ret_maybenull_ _Check_return_ Control* GetParent() const { return m_Parent; }
 
 		/// <summary>
-		/// Sets the Control's Id
+		/// Sets the static variable which is used to determine the next Control's Id
 		/// </summary>
-		/// <param name="id">Is the new Id of this Control</param>
-		void SetId(unsigned int id) { m_Id = id; }
+		/// <param name="id">Is the id to set it to</param>
+		static void ResetIdCounter(unsigned int id) { s_NextId = id; }
 
 	protected:
 		/// <summary>

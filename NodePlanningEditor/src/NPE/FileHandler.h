@@ -59,6 +59,15 @@ namespace NPE
 		/// <param name="filepath">Is the file which will be loaded</param>
 		void ChangeScene(const std::string& filepath);
 
+		/// <summary>
+		/// Asks the user to choose a file to open
+		/// </summary>
+		/// <param name="win">Is the MainWindow where all the controls will be</param>
+		/// <param name="lines">Is a vector where all line connections will be added to</param>
+		/// <param name="m_Zoom">Is the current zoom of the scene</param>
+		/// <returns>True if the user didn't abort the process, false otherwise</returns>
+		bool OpenScene(GUI::MainWindow& win, std::vector<Line>& lines, int& m_Zoom);
+
 	private:
 		/// <summary>
 		/// Writes the file path to fonfig

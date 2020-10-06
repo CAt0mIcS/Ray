@@ -83,6 +83,7 @@ namespace NPE
 		tbNodeInfo.AddField<QRD::NUMBER>("height");
 		tbNodeInfo.AddField<QRD::TEXT>("txt1");
 		tbNodeInfo.AddField<QRD::TEXT>("txt2");
+		//tbNodeInfo.AddField<QRD::NUMBER>("idLineBtn");
 
 		tbLines.AddField<QRD::NUMBER>("ID2");
 		tbLines.AddField<QRD::NUMBER>("ID1");
@@ -97,7 +98,7 @@ namespace NPE
 			std::string txt1 = Util::WideCharToMultiByte(((GUI::TextBox*)control->GetChildren()[0])->GetText().text);
 			std::string txt2 = Util::WideCharToMultiByte(((GUI::TextBox*)control->GetChildren()[1])->GetText().text);
 
-			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height, txt1, txt2);
+			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height, txt1, txt2/*, control->GetChildren()[2]->GetId()*/);
 			NPE_LOG("Saved Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t{4}\nInfo:\t{5}\n", pos.x, pos.y, size.width, size.height, txt1, txt2);
 		}
 
@@ -122,6 +123,7 @@ namespace NPE
 	
 	void FileHandler::LoadScene(GUI::MainWindow& win, std::vector<Line>& lines, int& zoom)
 	{
+		GUI::Control::ResetIdCounter(1);
 		HCURSOR prevCursor = GetCursor();
 		SetCursor(LoadCursor(NULL, IDC_WAIT));
 		for (auto* control : win.GetControls())
@@ -154,8 +156,6 @@ namespace NPE
 		{
 			auto& data = record.GetRecordData();
 
-			unsigned int baseId = std::stoi(data[6]);
-
 			GUI::Node* node = win.AddControl<GUI::Node>(new GUI::Node(&win));
 			node->SetPos({ std::stof(data[0]), std::stof(data[1]) });
 			node->SetSize({ std::stof(data[2]), std::stof(data[3]) });
@@ -168,10 +168,6 @@ namespace NPE
 			((GUI::TextBox*)(node->GetChildren()[0]))->SetText(txt1);
 			((GUI::TextBox*)(node->GetChildren()[1]))->SetText(txt2);
 
-			node->SetId(baseId);
-			node->GetChildren()[0]->SetId(baseId + 1);
-			node->GetChildren()[1]->SetId(baseId + 2);
-			node->GetChildren()[2]->SetId(baseId + 3);
 			NPE_LOG("Loaded Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t{4}\nInfo:\t{5}\n", node->GetPos().x, node->GetPos().y, node->GetSize().width, node->GetSize().height, data[4], data[5]);
 		}
 
@@ -378,7 +374,7 @@ namespace NPE
 		*/
 		{
 			std::ifstream in(filepath, std::ifstream::ate | std::ifstream::binary);
-			size_t size = in.tellg();
+			size_t size = (size_t)in.tellg();
 			in.close();
 		
 			if (size == 0)
@@ -390,6 +386,26 @@ namespace NPE
 		m_Db->SetFilePath(filepath);
 		m_Db->ReadDb();
 		WriteConfig(filepath);
+	}
+
+	bool FileHandler::OpenScene(GUI::MainWindow& win, std::vector<Line>& lines, int& m_Zoom)
+	{
+		GUI::FileWindow fileWin;
+
+		GUI::FileWindow::FilterSpecs filterSpecs[] =
+		{
+			{ L"Database File", L"*.dbs;*.txt" },
+			{ L"Any File" , L"*.*" }
+		};
+
+		auto result = fileWin.ShowOpenDialog(L"Select file to open", filterSpecs, std::size(filterSpecs));
+
+		if (result == L"")
+			return false;
+
+		ChangeScene(Util::WideCharToMultiByte(result));
+		LoadScene(win, lines , m_Zoom);
+		return true;
 	}
 	
 	void FileHandler::WriteConfig(std::string filePath)

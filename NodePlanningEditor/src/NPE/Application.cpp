@@ -246,22 +246,16 @@ namespace NPE
 		//Load scene from new file shortcut
 		else if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('O'))
 		{
-			GUI::FileWindow win;
-
-			GUI::FileWindow::FilterSpecs filterSpecs[] =
+			if (m_NeedsToSave)
 			{
-				{ L"Database File", L"*.dbs;*.txt" },
-				{ L"Any File" , L"*.*" }
-			};
+				int result = PromptSaveChangesMsgBox();
+				if (result == IDCANCEL)
+					return false;
+			}
 
-			auto result = win.ShowOpenDialog(L"Select file to open", filterSpecs, std::size(filterSpecs));
-			
-			if (result == L"")
-				return false;
-
-			m_FileHandler.ChangeScene(Util::WideCharToMultiByte(result));
-			m_FileHandler.LoadScene(m_Window, m_Lines, m_Zoom);
+			bool result = m_FileHandler.OpenScene(m_Window, m_Lines, m_Zoom);
 			m_Window.PostRedraw();
+			return result;
 		}
 		return false;
 	}
@@ -359,6 +353,16 @@ namespace NPE
 		CoUninitialize();
 	}
 
+	int Application::PromptSaveChangesMsgBox()
+	{
+		int result = MessageBox(m_Window.GetNativeWindow(), L"Save changes to the scene?", L"Unsaved changes", MB_YESNOCANCEL);
+		if (result == IDYES)
+		{
+			m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom);
+		}
+		return result;
+	}
+
 	bool Application::OnPaintEvent(GUI::Control* watched, GUI::PaintEvent& e)
 	{
 		switch (watched->GetType())
@@ -381,12 +385,8 @@ namespace NPE
 	{
 		if (m_NeedsToSave)
 		{
-			int result = MessageBox(m_Window.GetNativeWindow(), L"Save changes to the scene?", L"Unsaved changes", MB_YESNOCANCEL);
-			if (result == IDYES)
-			{
-				m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom);
-			}
-			else if (result == IDCANCEL)
+			int result = PromptSaveChangesMsgBox();
+			if (result == IDCANCEL)
 			{
 				return true;
 			}
