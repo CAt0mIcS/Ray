@@ -68,6 +68,8 @@ namespace NPE
 		/// <returns>True if the user didn't abort the process, false otherwise</returns>
 		bool OpenScene(GUI::MainWindow& win, std::vector<Line>& lines, int& m_Zoom);
 
+		const std::string& GetFileName() const { return m_FileName; }
+
 	private:
 		/// <summary>
 		/// Writes the file path to fonfig
@@ -85,6 +87,11 @@ namespace NPE
 		/// Is true if we are saving at a temporary location
 		/// </summary>
 		bool m_IsTemporarySave;
+
+		/// <summary>
+		/// Specifies the name of the currently loaded file
+		/// </summary>
+		std::string m_FileName;
 
 		/// <summary>
 		/// Is the name of the default save file

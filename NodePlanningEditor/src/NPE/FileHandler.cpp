@@ -17,7 +17,7 @@
 namespace NPE
 {
 	FileHandler::FileHandler()
-		: m_Db(nullptr), m_IsTemporarySave(false)
+		: m_Db(nullptr), m_IsTemporarySave(false), m_FileName("")
 	{
 
 		//m_SaveFolder += "{{";
@@ -51,7 +51,7 @@ namespace NPE
 				{ L"Any File" , L"*.*" }
 			};
 
-			auto result = win.ShowSaveDialog(L"Select a Save File", filterSpecs, std::size(filterSpecs));
+			auto result = win.ShowSaveDialog(L"Select a Save File", filterSpecs, (unsigned int)std::size(filterSpecs));
 			
 			if (result == L"")
 				return;
@@ -83,7 +83,6 @@ namespace NPE
 		tbNodeInfo.AddField<QRD::NUMBER>("height");
 		tbNodeInfo.AddField<QRD::TEXT>("txt1");
 		tbNodeInfo.AddField<QRD::TEXT>("txt2");
-		//tbNodeInfo.AddField<QRD::NUMBER>("idLineBtn");
 
 		tbLines.AddField<QRD::NUMBER>("ID2");
 		tbLines.AddField<QRD::NUMBER>("ID1");
@@ -98,7 +97,13 @@ namespace NPE
 			std::string txt1 = Util::WideCharToMultiByte(((GUI::TextBox*)control->GetChildren()[0])->GetText().text);
 			std::string txt2 = Util::WideCharToMultiByte(((GUI::TextBox*)control->GetChildren()[1])->GetText().text);
 
-			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height, txt1, txt2/*, control->GetChildren()[2]->GetId()*/);
+			if (txt1[txt1.size() - 1] == '\0')
+				txt1.erase(txt1.cend() - 1);
+
+			if (txt2[txt2.size() - 1] == '\0')
+				txt2.erase(txt2.cend() - 1);
+
+			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height, txt1, txt2);
 			NPE_LOG("Saved Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t{4}\nInfo:\t{5}\n", pos.x, pos.y, size.width, size.height, txt1, txt2);
 		}
 
@@ -363,6 +368,9 @@ namespace NPE
 		{
 			CreateDefaultTemplate();
 		}
+
+		auto fileNameBegin = configs["SaveFile"].find_last_of('\\');
+		m_FileName = configs["SaveFile"].substr(fileNameBegin + 1);
 	}
 
 	void FileHandler::ChangeScene(const std::string& filepath)
@@ -383,6 +391,12 @@ namespace NPE
 			}
 		}
 
+		/**
+		* Get filename of new scene
+		*/
+		auto fileNameBegin = filepath.find_last_of('\\');
+		m_FileName = filepath.substr(fileNameBegin + 1);
+
 		m_Db->SetFilePath(filepath);
 		m_Db->ReadDb();
 		WriteConfig(filepath);
@@ -398,7 +412,7 @@ namespace NPE
 			{ L"Any File" , L"*.*" }
 		};
 
-		auto result = fileWin.ShowOpenDialog(L"Select file to open", filterSpecs, std::size(filterSpecs));
+		auto result = fileWin.ShowOpenDialog(L"Select file to open", filterSpecs, (unsigned int)std::size(filterSpecs));
 
 		if (result == L"")
 			return false;
@@ -410,6 +424,10 @@ namespace NPE
 	
 	void FileHandler::WriteConfig(std::string filePath)
 	{
+		//Remove null-termination character because std::ofstream also writes it
+		if(filePath[filePath.size() - 1] == '\0')
+			filePath.erase(filePath.cend() - 1);
+		
 		auto replaceBegin = filePath.find_last_of('\\');
 
 		std::ofstream writer(s_ConfigFilePath);

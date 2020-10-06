@@ -67,9 +67,17 @@ namespace NPE
 	{
 		//Add * to title if the scene was modified
 		if (m_NeedsToSave)
-			m_Window.SetTitle(L"NodePlanningEditor*");
+		{
+			std::ostringstream oss;
+			oss << "NodePlanningEditor        " << m_FileHandler.GetFileName() << '*';
+			m_Window.SetTitle(Util::MultiByteToWideChar(oss.str()));
+		}
 		else
-			m_Window.SetTitle(L"NodePlanningEditor");
+		{
+			std::ostringstream oss;
+			oss << "NodePlanningEditor        " << m_FileHandler.GetFileName();
+			m_Window.SetTitle(Util::MultiByteToWideChar(oss.str()));
+		}
 
 		switch (e.GetType())
 		{
