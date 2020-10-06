@@ -8,7 +8,8 @@ This repository is where I develop the NodePlanningEditor product. The source co
 </p>
 
 ## The Product
-The idea is that you create a Node, give it a title and description and connect a line to another Node. Repeat this process to form a tree of tasks to complete.
+The idea is that you create a Node, give it a Title and Description and connect a Line to another Node. Repeat this process to form a tree of tasks to complete.
+
 You can:
 * Create new Nodes
 * Edit Title and Detail Text
