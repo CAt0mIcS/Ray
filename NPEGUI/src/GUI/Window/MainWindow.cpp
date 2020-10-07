@@ -213,12 +213,16 @@ namespace GUI
 		}
 		case WM_SIZE:
 		{
+			m_Size = Util::NSize{ (float)LOWORD(lParam), (float)HIWORD(lParam) };
+
 			AppResizeEvent e(GetSize());
 			if (!DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MOVE:
 		{
+			m_Pos = Util::NPoint{ (float)LOWORD(lParam), (float)HIWORD(lParam) };
+
 			AppMoveEvent e(GetPos());
 			if (!DispatchEvent(e)) break;
 			return 0;
@@ -237,18 +241,6 @@ namespace GUI
 		}
 
 		return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
-	}
-	
-	Util::NPoint MainWindow::GetPos() const
-	{
-		RECT rc = GetRect();
-		return { (float)rc.left, (float)rc.top };
-	}
-
-	Util::NSize MainWindow::GetSize() const
-	{
-		RECT rc = GetRect();
-		return { (float)(rc.left + rc.right), (float)(rc.top + rc.bottom) };
 	}
 	
 	RECT MainWindow::GetRect() const

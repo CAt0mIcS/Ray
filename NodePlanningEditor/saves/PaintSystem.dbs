@@ -12,8 +12,8 @@ FIELDS
 RECORDS: 2
 RECORD
 {
-    740.922
-    105.348
+    896.922
+    150.348
     472.5
     294
     New Paint System
@@ -21,8 +21,8 @@ RECORD
 }
 RECORD
 {
-    226.68
-    557.361
+    382.68
+    602.361
     450
     280
     PostRedraw

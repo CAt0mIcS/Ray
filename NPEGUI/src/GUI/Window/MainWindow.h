@@ -83,18 +83,6 @@ namespace GUI
 		T* AddControl(_In_ Control* control) { return (T*)m_Children.emplace_back(control); }
 
 		/// <summary>
-		/// Getter for window position
-		/// </summary>
-		/// <returns>The window position</returns>
-		Util::NPoint GetPos() const;
-
-		/// <summary>
-		/// Getter for window size
-		/// </summary>
-		/// <returns>The window size</returns>
-		Util::NSize GetSize() const;
-
-		/// <summary>
 		/// Getter for window rect
 		/// </summary>
 		/// <returns>The window rect</returns>
