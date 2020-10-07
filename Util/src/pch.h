@@ -10,14 +10,13 @@
 
 #include <sstream>
 #include <string>
-
+#include <chrono>
+#include <iostream>
+#include <ctime>
+#include <fstream>
 
 #include "spdlog/spdlog.h"
 #include "spdlog/logger.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/fmt/ostr.h"
 
-#include <chrono>
-#include <iostream>
-#include <ctime>
-#include <fstream>

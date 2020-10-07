@@ -116,7 +116,7 @@ namespace GUI
 		void* pImageFile = nullptr;
 		DWORD imageFileSize = 0;
 
-		NPE_THROW_GFX_EXCEPT(CoCreateInstance(
+		NPE_THROW_WND_EXCEPT(CoCreateInstance(
 			CLSID_WICImagingFactory,
 			nullptr,
 			CLSCTX_INPROC_SERVER,
@@ -139,16 +139,16 @@ namespace GUI
 		if (!imageFileSize)
 			NPE_THROW_LAST_WND_EXCEPT();
 
-		NPE_THROW_GFX_EXCEPT(pIWICFactory->CreateStream(&pStream), "Failed to create IWICStream");
-		NPE_THROW_GFX_EXCEPT(pStream->InitializeFromMemory((BYTE*)pImageFile, imageFileSize), "Failed to initialize IWICStream from memory");
+		NPE_THROW_WND_EXCEPT(pIWICFactory->CreateStream(&pStream), "Failed to create IWICStream");
+		NPE_THROW_WND_EXCEPT(pStream->InitializeFromMemory((BYTE*)pImageFile, imageFileSize), "Failed to initialize IWICStream from memory");
 
-		NPE_THROW_GFX_EXCEPT(pIWICFactory->CreateDecoderFromStream(
+		NPE_THROW_WND_EXCEPT(pIWICFactory->CreateDecoderFromStream(
 			pStream, nullptr, WICDecodeMetadataCacheOnLoad, &pDecoder), "Failed to create IWICBitmapDecoder from IWICStream");
 
-		NPE_THROW_GFX_EXCEPT(pDecoder->GetFrame(0, &pSource), "Failed to get first frame from IWICBitmapDecoder");
+		NPE_THROW_WND_EXCEPT(pDecoder->GetFrame(0, &pSource), "Failed to get first frame from IWICBitmapDecoder");
 
-		NPE_THROW_GFX_EXCEPT(pIWICFactory->CreateFormatConverter(&pConverter), "Failed to create IWICFormatConverter");
-		NPE_THROW_GFX_EXCEPT(pConverter->Initialize(
+		NPE_THROW_WND_EXCEPT(pIWICFactory->CreateFormatConverter(&pConverter), "Failed to create IWICFormatConverter");
+		NPE_THROW_WND_EXCEPT(pConverter->Initialize(
 			pSource,
 			GUID_WICPixelFormat32bppPBGRA,
 			WICBitmapDitherTypeNone,
@@ -157,7 +157,7 @@ namespace GUI
 			WICBitmapPaletteTypeMedianCut
 		), "Failed to initialize IWICFormatConverter");
 
-		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->CreateBitmapFromWicBitmap(
+		NPE_THROW_WND_EXCEPT(m_pRenderTarget->CreateBitmapFromWicBitmap(
 			pConverter,
 			&m_pD2DBitmap
 		), "Failed to create bitmap from WIC bitmap");

@@ -23,6 +23,7 @@
 /**
 * QUESTION:
 *	Use strings or wstrings
+*	Is it ok to use "using namespace GUI" in source files
 */
 
 //#define NPE_DEBUG_DISABLE_AUTOSAVE
@@ -35,7 +36,7 @@ namespace NPE
 	Application::Application()
 		: m_Actions(*this), m_MousePos{}, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false), m_Zoom(0)
 	{
-		NPE_THROW_GFX_EXCEPT(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE), "Failed to initialize Com");
+		NPE_THROW_WND_EXCEPT(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE), "Failed to initialize Com");
 
 		m_FileHandler.CreateOrLoadSave();
 
@@ -309,7 +310,7 @@ namespace NPE
 	{
 		if (watched->GetType() == GUI::Control::Type::TextBox)
 		{
-			m_Actions.ScrollUp((GUI::TextBox*)watched);
+			//m_Actions.ScrollUp((GUI::TextBox*)watched);
 		}
 		else
 		{
@@ -324,7 +325,7 @@ namespace NPE
 	{
 		if (watched->GetType() == GUI::Control::Type::TextBox)
 		{
-			m_Actions.ScrollDown((GUI::TextBox*)watched);
+			//m_Actions.ScrollDown((GUI::TextBox*)watched);
 		}
 		else
 		{
