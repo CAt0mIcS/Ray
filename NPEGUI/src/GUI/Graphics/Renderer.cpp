@@ -97,7 +97,7 @@ namespace GUI
 		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
 			D2D1::HwndRenderTargetProperties(m_hWnd, size), &m_pRenderTarget), "Failed to create D2D1HwndRenderTarget");
 
-		D2D1_COLOR_F backgroundColor = g_DefaultWindowBackgroundColor.ToD2D1ColorF();
+		D2D1_COLOR_F backgroundColor = Constants::g_DefaultWindowBackgroundColor.ToD2D1ColorF();
 		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->CreateSolidColorBrush(
 			backgroundColor, &m_pBrush
 		), "Failed to create D2D1SolidColorBrush");

@@ -164,7 +164,7 @@ namespace NPE
 			GUI::Node* node = win.AddControl<GUI::Node>(new GUI::Node(&win));
 			node->SetPos({ std::stof(data[0]), std::stof(data[1]) });
 			node->SetSize({ std::stof(data[2]), std::stof(data[3]) });
-			node->SetColor(GUI::g_DefaultNodeColor);
+			node->SetColor(Constants::g_DefaultNodeColor);
 			node->Init();
 
 			std::wstring txt1 = Util::MultiByteToWideChar(data[4]);

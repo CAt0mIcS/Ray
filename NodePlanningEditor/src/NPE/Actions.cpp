@@ -52,7 +52,7 @@ namespace NPE
 		}
 
 		GUI::Node* control = win.AddControl<GUI::Node>(new GUI::Node(&win));
-		control->SetColor(GUI::g_DefaultNodeColor);
+		control->SetColor(Constants::g_DefaultNodeColor);
 		control->SetSize({ width, height });
 		control->SetPos(GUI::Mouse::GetPos());
 		control->Init();
@@ -122,7 +122,7 @@ namespace NPE
 			float fontsize = line.first->GetSize().width / 3;
 			if (fontsize == 0) fontsize = 1;
 
-			GUI::Renderer::Get().RenderLine({ x1, y1 }, { x2, y2 }, GUI::g_DefaultLineColor, fontsize);
+			GUI::Renderer::Get().RenderLine({ x1, y1 }, { x2, y2 }, Constants::g_DefaultLineColor, fontsize);
 		}
 	}
 	

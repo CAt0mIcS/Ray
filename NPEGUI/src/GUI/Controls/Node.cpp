@@ -32,7 +32,7 @@ namespace GUI
 		float txtPercentOfNode = 0.2f;
 		float txtHeight = m_Size.height * txtPercentOfNode;
 
-		txtbox->SetColor(g_DefaultTextBoxColor);
+		txtbox->SetColor(Constants::g_DefaultTextBoxColor);
 		txtbox->SetSize({ txtWidth, txtHeight });
 		txtbox->SetPos({ txtX, txtY });
 		txtbox->SetFontSize((m_Size.width + m_Size.height) / 24.3f);
@@ -46,7 +46,7 @@ namespace GUI
 		txtPercentOfNode = 0.4f;
 		txtHeight = m_Size.height * txtPercentOfNode;
 		
-		txtbox->SetColor(g_DefaultTextBoxColor);
+		txtbox->SetColor(Constants::g_DefaultTextBoxColor);
 		txtbox->SetSize({ txtWidth, txtHeight });
 		txtbox->SetPos({ txtX, txtY });
 		txtbox->SetFontSize((m_Size.width + m_Size.height) / 48.6f);
@@ -54,7 +54,7 @@ namespace GUI
 
 
 		Button* btn = (Button*)m_Children.emplace_back(new Button(this));
-		btn->SetColor(g_DefaultLineButtonColor);
+		btn->SetColor(Constants::g_DefaultLineButtonColor);
 	
 		float middleOfNodeX = m_Pos.x + (m_Size.width / 2);
 

@@ -506,7 +506,7 @@ namespace GUI
 		caretRect.right = caretRect.left + GetCaretThickness();
 		caretRect.bottom += caretRect.top - (line * caretHeight);
 
-		Renderer::Get().RenderRect(caretRect, g_DefaultCaretColor);
+		Renderer::Get().RenderRect(caretRect, Constants::g_DefaultCaretColor);
 	}
 
 	void Caret::RenderSelection()
@@ -569,7 +569,7 @@ namespace GUI
 				highlightRect.right = highlightRect.left + htm.width;
 				highlightRect.bottom = highlightRect.top + htm.height;
 
-				Renderer::Get().RenderRect(highlightRect, g_DefaultSelectionRectColor);
+				Renderer::Get().RenderRect(highlightRect, Constants::g_DefaultSelectionRectColor);
 			}
 		}
 

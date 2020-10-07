@@ -7,23 +7,11 @@
 #include <wrl.h>
 #include <dwrite.h>
 
+#include "Util/Constants.h"
 
-/**QUESTION:
-*	Where should I put static global variables?
-*	Should I use static global variables
-*/
 
 namespace GUI
 {
-	static constexpr Util::NColor g_DefaultLineColor{ 160.0f, 160.0f, 160.0f };
-	static constexpr Util::NColor g_DefaultTextColor{ 160.0f, 160.0f, 160.0f };
-	static constexpr Util::NColor g_DefaultLineButtonColor{ 160.0f, 160.0f, 160.0f };
-	static constexpr Util::NColor g_DefaultWindowBackgroundColor{ 35.0f, 38.0f, 40.0f };
-	static constexpr Util::NColor g_DefaultNodeColor{ 15.0f, 17.0f, 19.0f };
-	static constexpr Util::NColor g_DefaultTextBoxColor{ 35.0f, 38.0f, 40.0f };
-	static constexpr Util::NColor g_DefaultCaretColor{ 255, 255, 255 };
-	static constexpr Util::NColor g_DefaultSelectionRectColor{ 80, 80, 80 };
-
 	/// <summary>
 	/// Renderer class used to Render the GUI
 	/// </summary>
@@ -59,7 +47,7 @@ namespace GUI
 		/// </summary>
 		/// <param name="color">Is the background color</param>
 		void RenderScene(
-			_In_opt_ const Util::NColor& color = g_DefaultWindowBackgroundColor
+			_In_opt_ const Util::NColor& color = Constants::g_DefaultWindowBackgroundColor
 		);
 
 		/// <summary>
@@ -108,7 +96,7 @@ namespace GUI
 		/// <param name="radius">Is the radius of the line</param>
 		void RenderLine(_In_ const Util::NPoint& startPos, 
 			_In_ const Util::NPoint& endPos, 
-			_In_opt_ const Util::NColor& color = g_DefaultLineColor, 
+			_In_opt_ const Util::NColor& color = Constants::g_DefaultLineColor, 
 			_In_opt_ const float radius = 1.0f
 		);
 
