@@ -24,6 +24,7 @@
 * QUESTION:
 *	Use strings or wstrings
 *	Is it ok to use "using namespace GUI" in source files
+*	How to design a library with include directories (Example QRD)
 */
 
 //#define NPE_DEBUG_DISABLE_AUTOSAVE
@@ -225,7 +226,7 @@ namespace NPE
 
 	bool Application::OnKeyPressed(GUI::Control* watched, GUI::KeyPressedEvent& e)
 	{
-		//Redraw caret when moving with arrow keys
+		//Redraw caret when moving with arrow keys. TODO: Don't redraw the entire window! (watched->PostRedraw()?)
 		if (watched->HasFocus() && watched->GetType() == GUI::Control::Type::TextBox)
 		{
 			m_Window.PostRedraw();
