@@ -61,6 +61,12 @@ namespace GUI
 		unsigned int PosOffset() const { return m_CaretPosOffset; }
 
 		/// <summary>
+		/// Setter for the caret position
+		/// </summary>
+		/// <param name="newPos">Is the new position of the caret</param>
+		void SetPos(unsigned int newPos) { m_CaretPos = newPos; }
+
+		/// <summary>
 		/// Sets the selection depending on the mode
 		/// </summary>
 		/// <param name="moveMode">Is the type of move which defines the behaviour of the function</param>

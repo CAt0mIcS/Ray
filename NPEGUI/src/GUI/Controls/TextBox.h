@@ -15,11 +15,8 @@
 namespace GUI
 {
 	class Node;
-	class MouseButtonPressedEvent;
-	class SetCursorEvent;
-	class MouseButtonReleasedEvent;
-	class KeyPressedEvent;
-	class CharEvent;
+	class MouseWheelUpEvent;
+	class MouseWheelDownEvent;
 
 	class GUI_API TextBox : public Control
 	{
@@ -99,6 +96,19 @@ namespace GUI
 		/// <param name="parentSize">Is the size of the parent Control</param>
 		/// <returns>The new position and size of the Control</returns>
 		virtual std::optional<std::pair<Util::NPoint, Util::NSize>> CalculateLayout(_In_ const Util::NPoint& parentPos, _In_ const Util::NSize& parentSize) override;
+
+	private:
+		/// <summary>
+		/// Handles scrolling up
+		/// </summary>
+		/// <param name="e">Is the received event</param>
+		void OnMouseWheelUp(_In_ MouseWheelUpEvent& e);
+
+		/// <summary>
+		/// Handles scrolling down
+		/// </summary>
+		/// <param name="e">Is the received event</param>
+		void OnMouseWheelDown(_In_ MouseWheelDownEvent& e);
 
 	private:
 		/// <summary>

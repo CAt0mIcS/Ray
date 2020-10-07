@@ -36,7 +36,6 @@ namespace GUI
 		txtbox->SetSize({ txtWidth, txtHeight });
 		txtbox->SetPos({ txtX, txtY });
 		txtbox->SetFontSize((m_Size.width + m_Size.height) / 24.3f);
-		txtbox->SetText(L"Hello World");
 
 
 		txtbox = (TextBox*)m_Children.emplace_back(new TextBox(this));
@@ -51,7 +50,6 @@ namespace GUI
 		txtbox->SetSize({ txtWidth, txtHeight });
 		txtbox->SetPos({ txtX, txtY });
 		txtbox->SetFontSize((m_Size.width + m_Size.height) / 48.6f);
-		txtbox->SetText(L"Hello World");
 		txtbox->SetMultiline(true);
 
 

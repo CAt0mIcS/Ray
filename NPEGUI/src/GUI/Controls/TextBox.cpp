@@ -90,6 +90,18 @@ namespace GUI
 				m_Caret.OnCharEvent((CharEvent&)e);
 			return true;
 		}
+		case EventType::MouseWheelUpEvent:
+		{
+			if (this->IsMultiline())
+				OnMouseWheelUp((MouseWheelUpEvent&)e);
+			return true;
+		}
+		case EventType::MouseWheelDownEvent:
+		{
+			if (this->IsMultiline())
+				OnMouseWheelDown((MouseWheelDownEvent&)e);
+			return true;
+		}
 		case EventType::SetCursorEvent:
 		{
 			/**
@@ -108,7 +120,7 @@ namespace GUI
 	{
 		float xOffset = m_Size.width / 30.0f;
 		float yOffset;
-		if (m_IsMultiline)
+		if (this->IsMultiline())
 		{
 			yOffset = m_Size.height / 10.0f;
 		}
@@ -119,6 +131,13 @@ namespace GUI
 
 		m_Text.pos = Util::NPoint{ m_Pos.x + xOffset, m_Pos.y + yOffset };
 		m_Text.size = { m_Size.width - xOffset, m_Size.height - yOffset };
+		
+		std::vector<DWRITE_LINE_METRICS> metrics = TextRenderer::Get().GetLineMetrics(m_Text);
+		if (metrics.size() > 5)
+		{
+			m_Text.text.replace(m_Text.text.begin(), m_Text.text.begin() + metrics[0].length, L"");
+			m_Caret.SetPos(m_Caret.Pos() - metrics[0].length);
+		}
 
 		TextRenderer::Get().RenderText(m_Text);
 	}
@@ -155,6 +174,16 @@ namespace GUI
 
 			return { { {txtX, txtY}, {txtWidth, txtHeight} } };
 		}
+		
+	}
+
+	void TextBox::OnMouseWheelUp(_In_ MouseWheelUpEvent& e)
+	{
+
+	}
+
+	void TextBox::OnMouseWheelDown(_In_ MouseWheelDownEvent& e)
+	{
 		
 	}
 

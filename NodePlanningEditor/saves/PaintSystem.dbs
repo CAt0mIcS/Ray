@@ -18,7 +18,6 @@ RECORD
     294
     New Paint System
     Goals: 
-- Only render part which needs to be updated
 }
 RECORD
 {
@@ -27,7 +26,7 @@ RECORD
     450
     280
     PostRedraw
-    Every Control will be able to call PostRedraw() on itself to post a OnPaint Render call
+    
 }
 TABLE: SceneInfo
 FIELDS
