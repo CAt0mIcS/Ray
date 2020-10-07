@@ -68,6 +68,10 @@ namespace NPE
 		/// <returns>True if the user didn't abort the process, false otherwise</returns>
 		bool OpenScene(GUI::MainWindow& win, std::vector<Line>& lines, int& m_Zoom);
 
+		/// <summary>
+		/// Getter for the current Save File name
+		/// </summary>
+		/// <returns>The name of the current Save File</returns>
 		const std::string& GetFileName() const { return m_FileName; }
 
 	private:

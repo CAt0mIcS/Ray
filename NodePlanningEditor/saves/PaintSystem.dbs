@@ -9,7 +9,26 @@ FIELDS
     txt1:TEXT
     txt2:TEXT
 }
-RECORDS: 0
+RECORDS: 2
+RECORD
+{
+    740.922
+    105.348
+    472.5
+    294
+    New Paint System
+    Goals: 
+- Only render part which needs to be updated
+}
+RECORD
+{
+    226.68
+    557.361
+    450
+    280
+    PostRedraw
+    Every Control will be able to call PostRedraw() on itself to post a OnPaint Render call
+}
 TABLE: SceneInfo
 FIELDS
 {
@@ -18,7 +37,7 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    -6
+    0
 }
 TABLE: Lines
 FIELDS
@@ -26,4 +45,9 @@ FIELDS
     ID2:INTEGER
     ID1:INTEGER
 }
-RECORDS: 0
+RECORDS: 1
+RECORD
+{
+    8
+    4
+}
