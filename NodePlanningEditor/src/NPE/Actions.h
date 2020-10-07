@@ -102,16 +102,10 @@ namespace NPE
 		void DeleteNode(GUI::Node* watched, std::vector<GUI::Control*>& controls, std::vector<Line>& lines);
 
 		/// <summary>
-		/// Scrols the text int TextBox watched
+		/// Creates the standard node template
 		/// </summary>
-		/// <param name="watched">Is the TextBox to scroll</param>
-		void ScrollUp(GUI::TextBox* watched);
-
-		/// <summary>
-		/// Scrols the text int TextBox watched
-		/// </summary>
-		/// <param name="watched">Is the TextBox to scroll</param>
-		void ScrollDown(GUI::TextBox* watched);
+		/// <returns>The created node</returns>
+		static void CreateNodeTemplate(GUI::Node* node);
 
 	private:
 		/// <summary>

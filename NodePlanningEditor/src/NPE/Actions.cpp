@@ -55,7 +55,7 @@ namespace NPE
 		control->SetColor(Constants::g_DefaultNodeColor);
 		control->SetSize({ width, height });
 		control->SetPos(GUI::Mouse::GetPos());
-		control->Init();
+		CreateNodeTemplate(control);
 
 		NPE_LOG("Created Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}", control->GetPos().x, control->GetPos().y, control->GetSize().width, control->GetSize().height);
 	}
@@ -216,14 +216,55 @@ namespace NPE
 		}
 	}
 	
-	void Actions::ScrollUp(GUI::TextBox* watched)
+	void Actions::CreateNodeTemplate(GUI::Node* node)
 	{
+		GUI::TextBox* txtbox = node->AddChild<GUI::TextBox>(new GUI::TextBox(node));
+		float xOffsetTxt = node->GetSize().width / 22.5f;
+		float txtX = node->GetPos().x + xOffsetTxt;
 
-	}
-	
-	void Actions::ScrollDown(GUI::TextBox* watched)
-	{
+		float yOffsetTxt = node->GetSize().height / 7.0f;
+		float txtY = node->GetPos().y + yOffsetTxt;
 
+		float txtWidth = node->GetSize().width - (xOffsetTxt * 2);
+
+		//20% of Node's height is this TextBox
+		float txtPercentOfNode = 0.2f;
+		float txtHeight = node->GetSize().height * txtPercentOfNode;
+
+		txtbox->SetColor(Constants::g_DefaultTextBoxColor);
+		txtbox->SetSize({ txtWidth, txtHeight });
+		txtbox->SetPos({ txtX, txtY });
+		txtbox->SetFontSize((node->GetSize().width + node->GetSize().height) / 24.3f);
+
+
+		txtbox = node->AddChild<GUI::TextBox>(new GUI::TextBox(node));
+		yOffsetTxt = node->GetSize().height / 7.0f;
+		txtY = node->GetPos().y + yOffsetTxt + (node->GetSize().height / 3.5f);
+
+		//40% of Node's height is this TextBox
+		txtPercentOfNode = 0.4f;
+		txtHeight = node->GetSize().height * txtPercentOfNode;
+
+		txtbox->SetColor(Constants::g_DefaultTextBoxColor);
+		txtbox->SetSize({ txtWidth, txtHeight });
+		txtbox->SetPos({ txtX, txtY });
+		txtbox->SetFontSize((node->GetSize().width + node->GetSize().height) / 48.6f);
+		txtbox->SetMultiline(true);
+
+
+		GUI::Button* btn = node->AddChild<GUI::Button>(new GUI::Button(node));
+		btn->SetColor(Constants::g_DefaultLineButtonColor);
+
+		float middleOfNodeX = node->GetPos().x + (node->GetSize().width / 2);
+
+		float btnWidthAndHeight = std::min(node->GetSize().width, node->GetSize().height) / 12;
+		float btnX = middleOfNodeX - (btnWidthAndHeight / 2);
+
+		float yOffsetBtn = node->GetSize().height / 56;
+		float btnY = node->GetPos().y + yOffsetBtn;
+
+		btn->SetPos({ btnX, btnY });
+		btn->SetSize({ btnWidthAndHeight, btnWidthAndHeight });
 	}
 }
 

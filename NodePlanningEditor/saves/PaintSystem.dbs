@@ -12,19 +12,19 @@ FIELDS
 RECORDS: 2
 RECORD
 {
-    896.922
-    150.348
-    472.5
-    294
+    937.278
+    213.358
+    428.571
+    266.667
     New Paint System
     Goals: 
 }
 RECORD
 {
-    382.68
-    602.361
-    450
-    280
+    494.733
+    602.352
+    408.163
+    253.968
     PostRedraw
     
 }
@@ -36,7 +36,7 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    0
+    -2
 }
 TABLE: Lines
 FIELDS

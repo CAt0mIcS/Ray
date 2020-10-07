@@ -16,11 +16,6 @@ namespace GUI
 		Node(_In_opt_ Control* parent = nullptr);
 
 		/// <summary>
-		/// Creates Node template
-		/// </summary>
-		void Init();
-
-		/// <summary>
 		/// Uses the Renderer to draw the Node and all it's child controls, 
 		/// but does not call BeginDraw() or EndDraw()
 		/// </summary>

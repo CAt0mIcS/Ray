@@ -193,6 +193,15 @@ namespace GUI
 		/// <param name="id">Is the id to set it to</param>
 		static void ResetIdCounter(unsigned int id) { s_NextId = id; }
 
+		/// <summary>
+		/// Adds a child to this Control
+		/// </summary>
+		/// <typeparam name="T">Is any to Control castable type</typeparam>
+		/// <param name="child">Is the child to add</param>
+		/// <returns>The added child</returns>
+		template<typename T, typename = std::enable_if_t<std::is_convertible<T*, Control*>::value>>
+		T* AddChild(Control* child) { return (T*)m_Children.emplace_back(child); }
+
 	protected:
 		/// <summary>
 		/// Control Constructor
