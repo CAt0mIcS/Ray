@@ -37,7 +37,7 @@ namespace NPE
 	Application::Application()
 		: m_Actions(*this), m_MousePos{}, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false), m_Zoom(0)
 	{
-		NPE_THROW_WND_EXCEPT(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE), "Failed to initialize Com");
+		NPE_THROW_WND_EXCEPT(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE));
 
 		m_FileHandler.CreateOrLoadSave();
 
@@ -146,7 +146,8 @@ namespace NPE
 			//Redraw caret when selecting
 			if (watched->HasFocus() && watched->GetType() == GUI::Control::Type::TextBox)
 			{
-				m_Window.PostRedraw();
+				//m_Window.PostRedraw();
+				watched->GetParent()->PostRedraw();
 				return true;
 			}
 			else if (m_DrawLines)
@@ -174,7 +175,8 @@ namespace NPE
 		{
 			if (watched->GetType() == GUI::Control::Type::TextBox)
 			{
-				m_Window.PostRedraw();
+				//m_Window.PostRedraw();
+				watched->GetParent()->PostRedraw();
 			}
 			else if (watched->GetType() == GUI::Control::Type::Button)
 			{
@@ -229,7 +231,8 @@ namespace NPE
 		//Redraw caret when moving with arrow keys. TODO: Don't redraw the entire window! (watched->PostRedraw()?)
 		if (watched->HasFocus() && watched->GetType() == GUI::Control::Type::TextBox)
 		{
-			m_Window.PostRedraw();
+			//m_Window.PostRedraw();
+			watched->GetParent()->PostRedraw();
 			return true;
 		}
 
@@ -301,7 +304,8 @@ namespace NPE
 		else if (watched->GetType() == GUI::Control::Type::TextBox && watched->HasFocus())
 		{
 			m_NeedsToSave = true;
-			m_Window.PostRedraw();
+			//m_Window.PostRedraw();
+			watched->GetParent()->PostRedraw();
 		}
 
 		return false;
@@ -378,19 +382,29 @@ namespace NPE
 		GUI::Renderer& renderer = GUI::Renderer::Get();
 		renderer.BeginDraw();
 		
-		switch (watched->GetType())
-		{
+		//NPE_LOG("Rendered area:\n{0}{1}", Util::ToTransform(*e.GetRect()), '\n');
+
+		watched->Render();
+		//switch (watched->GetType())
+		//{
 		//case GUI::Control::Type::Window:
-		default:
-		{
-			m_Window.Render();
-			renderer.EndDraw();
-			return true;
-		}
-		}
-		
+		//{
+		//	m_Window.Render();
+		//	m_Actions.RenderLines(m_Lines);
+		//	renderer.EndDraw();
+		//	return true;
+		//}
+		//case GUI::Control::Type::TextBox:
+		//{
+		//	watched->Render();
+		//	m_Actions.RenderLines(m_Lines);
+		//	renderer.EndDraw();
+		//	return true;
+		//}
+		//}
 		m_Actions.RenderLines(m_Lines);
-		return false;
+		renderer.EndDraw();
+		return true;
 	}
 
 	bool Application::OnClose(GUI::Control* watched, GUI::AppCloseEvent& e)

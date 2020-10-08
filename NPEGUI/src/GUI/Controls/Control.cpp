@@ -32,6 +32,14 @@ namespace GUI
 		return receiver;
 	}
 
+	void Control::PostRedraw()
+	{
+		RECT rc = Util::ToRect(m_Pos, m_Size);
+
+		InvalidateRect(Renderer::Get().GetNativeWindow(), &rc, TRUE);
+		UpdateWindow(Renderer::Get().GetNativeWindow());
+	}
+
 	Control::Control(_In_ Type type, _In_opt_ Control* parent)
 		: m_Parent(parent), m_Id(s_NextId), m_Pos{}, m_Size{}, m_Color{}, m_Type(type)
 	{

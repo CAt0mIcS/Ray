@@ -202,6 +202,11 @@ namespace GUI
 		template<typename T, typename = std::enable_if_t<std::is_convertible<T*, Control*>::value>>
 		T* AddChild(Control* child) { return (T*)m_Children.emplace_back(child); }
 
+		/// <summary>
+		/// Sends a WM_PAINT message to the window
+		/// </summary>
+		void PostRedraw();
+
 	protected:
 		/// <summary>
 		/// Control Constructor

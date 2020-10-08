@@ -12,6 +12,7 @@
 namespace GUI
 {
 	class Event;
+	class PaintEvent;
 
 	/// <summary>
 	/// Event filter function type
@@ -129,6 +130,13 @@ namespace GUI
 		/// <param name="e">Is the received event from window procedure</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		bool DispatchEvent(_In_ Event& e);
+
+		/// <summary>
+		/// Receives all paint events, finds the control that needs to be redrawn and dispatches the event to the user
+		/// </summary>
+		/// <param name="e">Is the received event from WM_PAINT</param>
+		/// <returns>True if the event was handled, false otherwise</returns>
+		bool DispatchPaintEvent(_In_ PaintEvent& e);
 
 		/// <summary>
 		/// Handles WM_TIMER message

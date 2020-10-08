@@ -182,6 +182,11 @@ namespace Util
 			os << "{ x=" << pos.x << " y=" << pos.y << " }";
 			return os;
 		}
+
+		bool operator==(const NPoint& other)
+		{
+			return x == other.x && y == other.y;
+		}
 	};
 
 
@@ -289,6 +294,11 @@ namespace Util
 		{
 			os << "{ width=" << size.width << " height=" << size.height << " }";
 			return os;
+		}
+
+		bool operator==(const NSize& other)
+		{
+			return width == other.width && height == other.height;
 		}
 	};
 
@@ -484,6 +494,28 @@ namespace Util
 			os << "{ r=" << col.r << " g=" << col.g << " b=" << col.b << " }";
 			return os;
 		}
+
+		bool operator==(const NColor& other)
+		{
+			return r == other.r && g == other.g && b == other.b;
+		}
+	};
+
+	struct UTIL_API NTransform
+	{
+		NPoint pos;
+		NSize size;
+
+		bool operator==(const NTransform& other)
+		{
+			return pos == other.pos && size == other.size;
+		}
+
+		friend std::ostream& operator<<(std::ostream& os, const NTransform& transform)
+		{
+			os << "Pos :" << transform.pos << "\nSize:" << transform.size;
+			return os;
+		}
 	};
 
 	/// <summary>
@@ -516,5 +548,38 @@ namespace Util
 		::WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.c_str(), -1, buff.data(), size, NULL, NULL);
 		
 		return buff;
+	}
+
+	/// <summary>
+	/// Transforms a position and size into a RECT structure
+	/// </summary>
+	/// <param name="pos">Is the position to transform</param>
+	/// <param name="size">Is the size to transform</param>
+	/// <returns>The transformed RECT structure</returns>
+	inline RECT ToRect(const NPoint& pos, const NSize& size)
+	{
+		RECT rc;
+		rc.left = (LONG)floor(pos.x);
+		rc.right = (LONG)floor(pos.x + size.width);
+		rc.top = (LONG)floor(pos.y);
+		rc.bottom = (LONG)floor(pos.y + size.height);
+
+		return rc;
+	}
+
+	/// <summary>
+	/// Transforms a RECT structure into a NTransform structure
+	/// </summary>
+	/// <param name="rc">Is the RECT to transform</param>
+	/// <returns>The traansformed NTransform structure</returns>
+	inline NTransform ToTransform(const RECT& rc)
+	{
+		NTransform transform;
+		transform.pos.x = (float)floor(rc.left);
+		transform.pos.y = (float)floor(rc.top);
+		transform.size.width = (float)floor(rc.right - rc.left);
+		transform.size.height = (float)floor(rc.bottom - rc.top);
+
+		return transform;
 	}
 }

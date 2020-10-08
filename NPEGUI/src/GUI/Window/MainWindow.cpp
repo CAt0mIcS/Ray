@@ -119,8 +119,12 @@ namespace GUI
 			HDC hDC = BeginPaint(m_hWnd, &ps);
 
 			PaintEvent e(hDC, &ps.rcPaint);
-			if (!DispatchEvent(e)) break;
 
+			if (!DispatchPaintEvent(e))
+			{
+				EndPaint(m_hWnd, &ps);
+				break;
+			}
 			EndPaint(m_hWnd, &ps);
 			return 0;
 		}
@@ -309,6 +313,31 @@ namespace GUI
 		}
 
 		//call event filter set by user
+		return m_EventCallbackFn(receiver, e);
+	}
+
+	bool MainWindow::DispatchPaintEvent(_In_ PaintEvent& e)
+	{
+		Util::NTransform transform = Util::ToTransform(*e.GetRect());
+
+		Control* receiver = nullptr;
+		for (auto* control : m_Children)
+		{
+			auto& pos = control->GetPos();
+			auto& size = control->GetSize();
+
+			Util::NPoint diffP{ floor(pos.x), floor(pos.y) };
+			Util::NSize diffS{ floor(size.width), floor(size.height) + 1 };
+
+			if (transform.pos == diffP && transform.size == diffS)
+			{
+				receiver = control;
+				break;
+			}
+		}
+		if (!receiver)
+			receiver = this;
+
 		return m_EventCallbackFn(receiver, e);
 	}
 	
