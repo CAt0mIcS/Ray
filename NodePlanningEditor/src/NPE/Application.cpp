@@ -375,19 +375,21 @@ namespace NPE
 
 	bool Application::OnPaintEvent(GUI::Control* watched, GUI::PaintEvent& e)
 	{
+		GUI::Renderer& renderer = GUI::Renderer::Get();
+		renderer.BeginDraw();
+		
 		switch (watched->GetType())
 		{
 		//case GUI::Control::Type::Window:
 		default:
 		{
-			GUI::Renderer& renderer = GUI::Renderer::Get();
-			renderer.BeginDraw();
 			m_Window.Render();
-			m_Actions.RenderLines(m_Lines);
 			renderer.EndDraw();
 			return true;
 		}
 		}
+		
+		m_Actions.RenderLines(m_Lines);
 		return false;
 	}
 
