@@ -132,9 +132,9 @@ namespace GUI
 		m_Text.pos = Util::NPoint{ m_Pos.x + xOffset, m_Pos.y + yOffset };
 		m_Text.size = { m_Size.width - xOffset, m_Size.height - yOffset };
 
-		std::vector<DWRITE_LINE_METRICS> metrics = TextRenderer::Get().GetLineMetrics(m_Text);
-		if (metrics.size() > 5)
-			TrimText();
+		//std::vector<DWRITE_LINE_METRICS> metrics = TextRenderer::Get().GetLineMetrics(m_Text);
+		//if (metrics.size() > 5)
+		//	TrimText();
 
 		TextRenderer::Get().RenderText(m_Text);
 	}
@@ -186,8 +186,8 @@ namespace GUI
 		std::vector<DWRITE_LINE_METRICS> metrics = TextRenderer::Get().GetLineMetrics(m_Text);
 		if (metrics.size() <= 5)
 		{
-			ExtendText();
-			GetParent()->PostRedraw();
+			//ExtendText();
+			//GetParent()->PostRedraw();
 		}
 	}
 
@@ -196,8 +196,8 @@ namespace GUI
 		std::vector<DWRITE_LINE_METRICS> metrics = TextRenderer::Get().GetLineMetrics(m_Text);
 		if (metrics.size() > 5)
 		{
-			TrimText();
-			GetParent()->PostRedraw();
+			//TrimText();
+			//GetParent()->PostRedraw();
 		}
 	}
 

@@ -70,6 +70,15 @@ namespace GUI
 		);
 
 		/// <summary>
+		/// Getter for overhang metrics for the current text
+		/// </summary>
+		/// <param name="text">Is the text to get the metrics for</param>
+		/// <returns>The overhang metrics for the current text</returns>
+		DWRITE_OVERHANG_METRICS GetOverhangMetrics(
+			_In_ const NText& text
+		);
+
+		/// <summary>
 		/// Renders text to specified bounding rect
 		/// </summary>
 		/// <param name="text">Is the NText structure containing all text info</param>

@@ -39,7 +39,7 @@ namespace GUI
 		DWRITE_TEXT_METRICS metrics = GetTextMetrics(text);
 		lineMetrics.resize(metrics.lineCount);
 
-		pLayout->GetLineMetrics(&lineMetrics.front(), metrics.lineCount, &metrics.lineCount);
+		NPE_THROW_GFX_EXCEPT(pLayout->GetLineMetrics(&lineMetrics.front(), metrics.lineCount, &metrics.lineCount), "Failed to get line metrics");
 		Util::Release(&pLayout);
 		return lineMetrics;
 	}
@@ -59,10 +59,22 @@ namespace GUI
 			return {};
 
 		clusterMetrics.resize(*clusterCount);
-		pLayout->GetClusterMetrics(&clusterMetrics.front(), *clusterCount, clusterCount);
+		NPE_THROW_GFX_EXCEPT(pLayout->GetClusterMetrics(&clusterMetrics.front(), *clusterCount, clusterCount), "Failed to get cluster metrics");
 
 		Util::Release(&pLayout);
 		return clusterMetrics;
+	}
+
+	DWRITE_OVERHANG_METRICS TextRenderer::GetOverhangMetrics(_In_ const NText& text)
+	{
+		DWRITE_OVERHANG_METRICS overhangMetrics;
+		IDWriteTextLayout* pLayout;
+		CreateTextLayout(text, &pLayout);
+		
+		NPE_THROW_GFX_EXCEPT(pLayout->GetOverhangMetrics(&overhangMetrics), "Failed to get overhang metrics");
+		Util::Release(&pLayout);
+
+		return overhangMetrics;
 	}
 
 	void TextRenderer::RenderText(_In_ const NText& text)
@@ -71,7 +83,7 @@ namespace GUI
 		CreateTextLayout(text, &pLayout);
 
 		Renderer::Get().m_pBrush->SetColor(text.color.ToD2D1ColorF());
-		Renderer::Get().m_pRenderTarget->DrawTextLayout(text.pos.ToD2D1Point2F(), pLayout, Renderer::Get().m_pBrush.Get());
+		Renderer::Get().m_pRenderTarget->DrawTextLayout(text.pos.ToD2D1Point2F(), pLayout, Renderer::Get().m_pBrush.Get(), D2D1_DRAW_TEXT_OPTIONS_CLIP);
 		Util::Release(&pLayout);
 	}
 
