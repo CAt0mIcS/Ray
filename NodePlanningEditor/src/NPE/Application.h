@@ -153,6 +153,28 @@ namespace NPE
 		/// <returns>The result of the message box</returns>
 		int PromptSaveChangesMsgBox();
 
+		/// <summary>
+		/// Saves the scene to the save file
+		/// </summary>
+		/// <param name="saveToNewLocation">Specifies whether the scene should be saved to a new save file and the SaveFileDialog should open</param>
+		void SaveScene(bool saveToNewLocation = false);
+
+		/// <summary>
+		/// Sets a member variable to needsToSave
+		/// </summary>
+		/// <param name="needsToSave">Specifies whether the file has changed and needs to be saved</param>
+		void SetNeedsToSave(bool needsToSave);
+
+		/// <summary>
+		/// Sets text to the one which should be displayed when the scene does need to save
+		/// </summary>
+		void SetWindowSaveText();
+
+		/// <summary>
+		/// Sets text to the one which should be displayed when the scene doesn't need to save
+		/// </summary>
+		void SetWindowSavedText();
+
 	private:
 
 		/// <summary>

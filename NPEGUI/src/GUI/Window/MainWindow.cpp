@@ -20,7 +20,7 @@ namespace GUI
 	MainWindow::MainWindow()
 		: Control(Type::Window)
 	{
-		if (!CreateNativeWindow(L"NPE", WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT))
+		if (!CreateNativeWindow(L"", WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT))
 		{
 			NPE_THROW_LAST_WND_EXCEPT();
 		}
@@ -70,11 +70,16 @@ namespace GUI
 	int MainWindow::ProcessMessage()
 	{
 		MSG msg{};
-		while (GetMessage(&msg, NULL, 0, 0))
+		while (true)
 		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+			{
+				if (msg.message == WM_QUIT)
+					break;
 
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
 		}
 		return (int)msg.wParam;
 	}
