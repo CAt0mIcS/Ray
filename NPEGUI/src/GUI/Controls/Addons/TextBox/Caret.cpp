@@ -89,7 +89,7 @@ namespace GUI
 			m_CaretPosOffset = 0;
 
 			float caretX, caretY;
-			DWRITE_HIT_TEST_METRICS hitTestMetrics = TextRenderer::Get().HitTestTextPosition(
+			DWrite::HitTestMetrics hitTestMetrics = TextRenderer::Get().HitTestTextPosition(
 				m_Parent->GetText(),
 				m_CaretPos,
 				false,
@@ -141,7 +141,7 @@ namespace GUI
 			float caretX, caretY, dummyX;
 
 			// Get x of current text position
-			DWRITE_HIT_TEST_METRICS hitTestMetrics = TextRenderer::Get().HitTestTextPosition(
+			DWrite::HitTestMetrics hitTestMetrics = TextRenderer::Get().HitTestTextPosition(
 				m_Parent->GetText(),
 				m_CaretPos,
 				m_CaretPosOffset > 0,
@@ -181,7 +181,7 @@ namespace GUI
 		case MoveMode::RightWord:
 		{
 			unsigned int clusterCount = 0;
-			std::vector<DWRITE_CLUSTER_METRICS> clusterMetrics = TextRenderer::Get().GetClusterMetrics(m_Parent->GetText(), &clusterCount);
+			std::vector<DWrite::ClusterMetrics> clusterMetrics = TextRenderer::Get().GetClusterMetrics(m_Parent->GetText(), &clusterCount);
 
 			m_CaretPos = absolutePosition;
 			unsigned int clusterPosition = 0;
@@ -301,9 +301,9 @@ namespace GUI
 		NPE_THROW_GFX_EXCEPT(pLayout->GetStrikethrough(currentPos, &m_CaretFormat.hasStrikethrough), "failed to get strikethrough");
 	}
 
-	D2D1_RECT_F Caret::GetCaretRect()
+	Direct2D::RectF Caret::GetCaretRect()
 	{
-		D2D1_RECT_F rc{};
+		Direct2D::RectF rc{};
 
 		float caretX, caretY;
 		auto caretMetrics = TextRenderer::Get().HitTestTextPosition(m_Parent->GetText(), m_CaretPos, m_CaretPosOffset > 0, &caretX, &caretY);
@@ -447,7 +447,7 @@ namespace GUI
 	}
 
 	void Caret::GetLineFromPosition(
-		_In_ const DWRITE_LINE_METRICS* lineMetrics, 
+		_In_ const DWrite::LineMetrics* lineMetrics, 
 		_In_ unsigned int lineCount, 
 		_In_ unsigned int textPosition, 
 		_Out_ unsigned int* lineOut, 
@@ -531,7 +531,7 @@ namespace GUI
 		}
 
 		// Allocate enough room to return all hit-test metrics.
-		std::vector<DWRITE_HIT_TEST_METRICS> hitTestMetrics(actualHitTestCount);
+		std::vector<DWrite::HitTestMetrics> hitTestMetrics(actualHitTestCount);
 
 		if (caretRange.length > 0)
 		{
@@ -562,8 +562,8 @@ namespace GUI
 
 			for (size_t i = 0; i < actualHitTestCount; ++i)
 			{
-				const DWRITE_HIT_TEST_METRICS& htm = hitTestMetrics[i];
-				D2D1_RECT_F highlightRect{};
+				const DWrite::HitTestMetrics& htm = hitTestMetrics[i];
+				Direct2D::RectF highlightRect{};
 				highlightRect.left = htm.left + m_Parent->GetPos().x + xOffset;
 				highlightRect.top = htm.top + m_Parent->GetPos().y + yOffset;
 				highlightRect.right = highlightRect.left + htm.width;

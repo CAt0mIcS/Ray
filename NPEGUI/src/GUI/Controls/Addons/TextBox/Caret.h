@@ -6,6 +6,7 @@
 #include <dwrite.h>
 
 #include "Util/Util.h"
+#include "Util/Direct2D.h"
 
 
 namespace GUI
@@ -99,7 +100,7 @@ namespace GUI
 		/// Calculates caret rect
 		/// </summary>
 		/// <returns>The caret pos and size relative to the text layout box</returns>
-		D2D1_RECT_F GetCaretRect();
+		Direct2D::RectF GetCaretRect();
 
 		/// <summary>
 		/// Calculates the caret thickness
@@ -166,7 +167,7 @@ namespace GUI
 		/// <param name="lineOut">Is the output of line count</param>
 		/// <param name="linePositionOut">Is the output of line position</param>
 		void GetLineFromPosition(
-			_In_ const DWRITE_LINE_METRICS* lineMetrics, 
+			_In_ const DWrite::LineMetrics* lineMetrics, 
 			_In_ unsigned int lineCount, 
 			_In_ unsigned int textPosition, 
 			_Out_ unsigned int* lineOut, 
@@ -182,7 +183,7 @@ namespace GUI
 		/// Calculates the selection in the text
 		/// </summary>
 		/// <returns>The current selection range</returns>
-		DWRITE_TEXT_RANGE GetSelectionRange();
+		DWrite::TextRange GetSelectionRange();
 
 		/// <summary>
 		/// Clears the selection, doesn't remove the selected text
@@ -211,9 +212,9 @@ namespace GUI
 			wchar_t fontFamilyName[100];
 			wchar_t localeName[LOCALE_NAME_MAX_LENGTH];
 			FLOAT fontSize;
-			DWRITE_FONT_WEIGHT fontWeight;
-			DWRITE_FONT_STRETCH fontStretch;
-			DWRITE_FONT_STYLE fontStyle;
+			DWrite::FontWeight fontWeight;
+			DWrite::FontStretch fontStretch;
+			DWrite::FontStyle fontStyle;
 			UINT32 color;
 			BOOL hasUnderline;
 			BOOL hasStrikethrough;

@@ -4,7 +4,6 @@
 #include "Renderer.h"
 
 
-
 namespace GUI
 {
 	/// <summary>
@@ -16,14 +15,14 @@ namespace GUI
 		Util::NPoint pos = { 0.0f, 0.0f, };
 		Util::NSize size = { 0.0f, 0.0f };
 		Util::NColor color = { 255.0f, 255.0f, 255.0f };
-		FLOAT fontSize = 20;
+		float fontSize = 20;
 		std::wstring fontFamily = L"Consolas";
 		std::wstring localeName = L"";
-		DWRITE_FONT_WEIGHT fontWeight = DWRITE_FONT_WEIGHT_NORMAL;
-		DWRITE_FONT_STYLE fontStyle = DWRITE_FONT_STYLE_NORMAL;
-		DWRITE_FONT_STRETCH fontStretch = DWRITE_FONT_STRETCH_NORMAL;
-		D2D1_DRAW_TEXT_OPTIONS options = D2D1_DRAW_TEXT_OPTIONS_NONE;
-		DWRITE_MEASURING_MODE measuringMode = DWRITE_MEASURING_MODE_NATURAL;
+		DWrite::FontWeight fontWeight = DWRITE_FONT_WEIGHT_NORMAL;
+		DWrite::FontStyle fontStyle = DWRITE_FONT_STYLE_NORMAL;
+		DWrite::FontStretch fontStretch = DWRITE_FONT_STRETCH_NORMAL;
+		Direct2D::DrawTextOptions options = D2D1_DRAW_TEXT_OPTIONS_NONE;
+		DWrite::MeasuringMode measuringMode = DWRITE_MEASURING_MODE_NATURAL;
 	};
 
 	class GUI_API TextRenderer
@@ -45,7 +44,7 @@ namespace GUI
 		/// </summary>
 		/// <param name="text">Is the text for which to get the metrics for</param>
 		/// <returns>The text metrics to text</returns>
-		DWRITE_TEXT_METRICS GetTextMetrics(
+		DWrite::TextMetrics GetTextMetrics(
 			_In_ const NText& text
 		);
 
@@ -54,7 +53,7 @@ namespace GUI
 		/// </summary>
 		/// <param name="text">Is the text for which to get the metrics for</param>
 		/// <returns>The line metrics to the current text</returns>
-		std::vector<DWRITE_LINE_METRICS> GetLineMetrics(
+		std::vector<DWrite::LineMetrics> GetLineMetrics(
 			_In_ const NText& text
 		);
 
@@ -64,7 +63,7 @@ namespace GUI
 		/// <param name="text">Is the text to get the metrics for</param>
 		/// <param name="clusterCount">Will be filled with the amount of clusters</param>
 		/// <returns>The cluster metrics for the current text</returns>
-		std::vector<DWRITE_CLUSTER_METRICS> GetClusterMetrics(
+		std::vector<DWrite::ClusterMetrics> GetClusterMetrics(
 			_In_ const NText& text, 
 			_Out_ unsigned int* clusterCount
 		);
@@ -74,7 +73,7 @@ namespace GUI
 		/// </summary>
 		/// <param name="text">Is the text to get the metrics for</param>
 		/// <returns>The overhang metrics for the current text</returns>
-		DWRITE_OVERHANG_METRICS GetOverhangMetrics(
+		DWrite::OverhangMetrics GetOverhangMetrics(
 			_In_ const NText& text
 		);
 
@@ -93,7 +92,7 @@ namespace GUI
 		/// <param name="isTrailingHit">Will be filled by IDWriteTextLayout::HitTestPoint</param>
 		/// <param name="isInside">Will be filled by IDWRiteTextLayout::HitTestPoint</param>
 		/// <returns>The hit test metrics</returns>
-		DWRITE_HIT_TEST_METRICS HitTestPoint(
+		DWrite::HitTestMetrics HitTestPoint(
 			_In_ const NText& text, 
 			_Out_ BOOL* isTrailingHit, 
 			_Out_ BOOL* isInside
@@ -108,7 +107,7 @@ namespace GUI
 		/// <param name="caretX">Is the x output position</param>
 		/// <param name="caretY">Is the y output position</param>
 		/// <returns>The hit test text metrics</returns>
-		DWRITE_HIT_TEST_METRICS HitTestTextPosition(
+		DWrite::HitTestMetrics HitTestTextPosition(
 			_In_ const NText& text, 
 			_In_ unsigned int textPos, 
 			_In_ BOOL isTrailingHit, 

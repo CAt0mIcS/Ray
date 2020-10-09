@@ -1,5 +1,34 @@
 #pragma once
 
+namespace DWrite
+{
+	/**
+	* QUESTION:
+	*	Should I do this?
+	*	Should I use "typedef" or "using"
+	*/
+
+	typedef DWRITE_FONT_WEIGHT FontWeight;
+	typedef DWRITE_FONT_STYLE FontStyle;
+	typedef DWRITE_FONT_STRETCH FontStretch;
+	typedef DWRITE_MEASURING_MODE MeasuringMode;
+
+	typedef DWRITE_TEXT_METRICS TextMetrics;
+	typedef DWRITE_LINE_METRICS LineMetrics;
+	typedef DWRITE_CLUSTER_METRICS ClusterMetrics;
+	typedef DWRITE_OVERHANG_METRICS OverhangMetrics;
+	typedef DWRITE_HIT_TEST_METRICS HitTestMetrics;
+
+	typedef DWRITE_TEXT_RANGE TextRange;
+}
+
+namespace Direct2D
+{
+	typedef D2D1_RECT_F RectF;
+	typedef D2D1_DRAW_TEXT_OPTIONS DrawTextOptions;
+}
+
+
 
 namespace Util
 {

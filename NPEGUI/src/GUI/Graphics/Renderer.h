@@ -8,6 +8,7 @@
 #include <dwrite.h>
 
 #include "Util/Constants.h"
+#include "Util/Direct2D.h"
 
 
 namespace GUI
@@ -68,7 +69,7 @@ namespace GUI
 		/// <param name="rect">Is the rect of the rectangle to draw</param>
 		/// <param name="color">Are the rgb values of the rect</param>
 		void RenderRect(
-			_In_ const D2D1_RECT_F& rect, 
+			_In_ const Direct2D::RectF& rect, 
 			_In_ const Util::NColor& color
 		);
 

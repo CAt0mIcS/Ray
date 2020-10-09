@@ -12,8 +12,8 @@ FIELDS
 RECORDS: 2
 RECORD
 {
-    945.299
-    283.38
+    1003.3
+    287.38
     520.931
     324.135
     New Paint System
@@ -21,12 +21,12 @@ RECORD
 }
 RECORD
 {
-    338
-    528
+    394
+    518
     496.125
     308.7
     GUI
-    fds\r\nfdsaf\r\nd\r\nsfsa
+    fds\r\nfdd\r\nfssaf\r\nddfs
 }
 TABLE: SceneInfo
 FIELDS
@@ -47,6 +47,6 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    12
+    8
     4
 }

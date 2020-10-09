@@ -14,7 +14,7 @@ namespace GUI
 	void Renderer::RenderRect(_In_ const Util::NPoint& pos, _In_ const Util::NSize& size, _In_ const Util::NColor& color)
 	{
 		m_pBrush->SetColor(color.ToD2D1ColorF());
-		D2D1_RECT_F rc;
+		Direct2D::RectF rc;
 		rc.left = pos.x;
 		rc.top = pos.y;
 		rc.right = pos.x + size.width;
@@ -23,7 +23,7 @@ namespace GUI
 		m_pRenderTarget->FillRectangle(rc, m_pBrush.Get());
 	}
 
-	void Renderer::RenderRect(_In_ const D2D1_RECT_F& rect, _In_ const Util::NColor& color)
+	void Renderer::RenderRect(_In_ const Direct2D::RectF& rect, _In_ const Util::NColor& color)
 	{
 		m_pBrush->SetColor(color.ToD2D1ColorF());
 		m_pRenderTarget->FillRectangle(rect, m_pBrush.Get());

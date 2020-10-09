@@ -16,12 +16,12 @@ namespace GUI
 		CreateTextGraphicsResources();
 	}
 
-	DWRITE_TEXT_METRICS TextRenderer::GetTextMetrics(_In_ const NText& text)
+	DWrite::TextMetrics TextRenderer::GetTextMetrics(_In_ const NText& text)
 	{
 		IDWriteTextLayout* pLayout;
 		CreateTextLayout(text, &pLayout);
 
-		DWRITE_TEXT_METRICS metrics;
+		DWrite::TextMetrics metrics;
 
 		NPE_THROW_GFX_EXCEPT(pLayout->GetMetrics(&metrics), "Failed to get text metrics");
 		Util::Release(&pLayout);
@@ -29,14 +29,14 @@ namespace GUI
 		return metrics;
 	}
 
-	std::vector<DWRITE_LINE_METRICS> TextRenderer::GetLineMetrics(_In_ const NText& text)
+	std::vector<DWrite::LineMetrics> TextRenderer::GetLineMetrics(_In_ const NText& text)
 	{
-		std::vector<DWRITE_LINE_METRICS> lineMetrics;
+		std::vector<DWrite::LineMetrics> lineMetrics;
 
 		IDWriteTextLayout* pLayout;
 		CreateTextLayout(text, &pLayout);
 
-		DWRITE_TEXT_METRICS metrics = GetTextMetrics(text);
+		DWrite::TextMetrics metrics = GetTextMetrics(text);
 		lineMetrics.resize(metrics.lineCount);
 
 		NPE_THROW_GFX_EXCEPT(pLayout->GetLineMetrics(&lineMetrics.front(), metrics.lineCount, &metrics.lineCount), "Failed to get line metrics");
@@ -44,12 +44,12 @@ namespace GUI
 		return lineMetrics;
 	}
 
-	std::vector<DWRITE_CLUSTER_METRICS> TextRenderer::GetClusterMetrics(
+	std::vector<DWrite::ClusterMetrics> TextRenderer::GetClusterMetrics(
 		_In_ const NText& text, 
 		_Out_ unsigned int* clusterCount
 		)
 	{
-		std::vector<DWRITE_CLUSTER_METRICS> clusterMetrics;
+		std::vector<DWrite::ClusterMetrics> clusterMetrics;
 
 		IDWriteTextLayout* pLayout;
 		CreateTextLayout(text, &pLayout);
@@ -65,9 +65,9 @@ namespace GUI
 		return clusterMetrics;
 	}
 
-	DWRITE_OVERHANG_METRICS TextRenderer::GetOverhangMetrics(_In_ const NText& text)
+	DWrite::OverhangMetrics TextRenderer::GetOverhangMetrics(_In_ const NText& text)
 	{
-		DWRITE_OVERHANG_METRICS overhangMetrics;
+		DWrite::OverhangMetrics overhangMetrics;
 		IDWriteTextLayout* pLayout;
 		CreateTextLayout(text, &pLayout);
 		
@@ -87,7 +87,7 @@ namespace GUI
 		Util::Release(&pLayout);
 	}
 
-	DWRITE_HIT_TEST_METRICS TextRenderer::HitTestPoint(
+	DWrite::HitTestMetrics TextRenderer::HitTestPoint(
 		_In_ const NText& text, 
 		_Out_ BOOL* isTrailingHit, 
 		_Out_ BOOL* isInside
@@ -96,7 +96,7 @@ namespace GUI
 		IDWriteTextLayout* pLayout;
 		CreateTextLayout(text, &pLayout);
 
-		DWRITE_HIT_TEST_METRICS metrics;
+		DWrite::HitTestMetrics metrics;
 
 		float transformedX = Mouse::GetPos().x - text.pos.x;
 		float transformedY = Mouse::GetPos().y - text.pos.y;
@@ -114,7 +114,7 @@ namespace GUI
 		return metrics;
 	}
 
-	DWRITE_HIT_TEST_METRICS TextRenderer::HitTestTextPosition(
+	DWrite::HitTestMetrics TextRenderer::HitTestTextPosition(
 		_In_ const NText& text, 
 		_In_ unsigned int textPos, 
 		_In_ BOOL isTrailingHit, 
@@ -125,7 +125,7 @@ namespace GUI
 		IDWriteTextLayout* pLayout;
 		CreateTextLayout(text, &pLayout);
 
-		DWRITE_HIT_TEST_METRICS metrics;
+		DWrite::HitTestMetrics metrics;
 
 		NPE_THROW_GFX_EXCEPT(pLayout->HitTestTextPosition(
 			textPos,
