@@ -12,19 +12,6 @@
 #include "GUI/Util/Timer.h"
 
 /// <TODO>
-/// Dispatch PaintEvents in a way that every Control can issue a redraw.
-/// The watched object should then be the Control that wants to redraw.
-/// This allows the client to specify different rendering tequniques depending on the type of the Control, e.g.: 
-///		If watched has type Window, render all Controls
-///		If watched has type TextBox, render the TextBox and maybe do other things like render the parent Node or the caret...
-/// 
-/// </TODO>
-/// <GOAL>
-/// I don't want to redraw the entire window if move the caret, move a Node, ...
-///	 ->	Performance boost
-/// <GOAL>
-
-/// <TODO>
 /// Implement scrolling for the multiline TextBox
 /// </TODO>
 
