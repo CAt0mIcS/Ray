@@ -373,7 +373,6 @@ namespace GUI
 			wchar_t chars[2] = { (wchar_t)e.GetKeyCode(), 0 };
 
 			m_Parent->m_Text.text.insert(m_CaretPos + m_CaretPosOffset, chars);
-			m_Parent->m_FullText.insert(m_Parent->m_TxtIndexBegin + m_CaretPos + m_CaretPosOffset, chars);
 			SetSelection(MoveMode::Right, charsLength, false, false);
 		}
 	}
@@ -389,7 +388,6 @@ namespace GUI
 			DeleteSelection();
 			//TODO: Copy properties from next text
 			m_Parent->m_Text.text.insert(absolutePosition, L"\r\n");
-			m_Parent->m_FullText.insert(m_Parent->m_TxtIndexBegin + absolutePosition, L"\r\n");
 			SetSelection(MoveMode::AbsoluteLeading, absolutePosition + 2, false, false);
 			break;
 		}
@@ -419,7 +417,6 @@ namespace GUI
 				}
 				SetSelection(MoveMode::LeftChar, count, false);
 				m_Parent->m_Text.text.erase(m_CaretPos, count);
-				m_Parent->m_FullText.erase(m_Parent->m_TxtIndexBegin + m_CaretPos, count);
 			}
 			break;
 		}
@@ -586,7 +583,6 @@ namespace GUI
 			return;
 
 		m_Parent->m_Text.text.erase(selectionRange.startPosition, selectionRange.length);
-		m_Parent->m_FullText.erase(m_Parent->m_TxtIndexBegin + selectionRange.startPosition, selectionRange.length);
 		SetSelection(MoveMode::AbsoluteLeading, selectionRange.startPosition, false);
 
 	}

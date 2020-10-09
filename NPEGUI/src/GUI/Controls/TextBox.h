@@ -54,16 +54,10 @@ namespace GUI
 		const NText& GetText() const { return m_Text; }
 
 		/// <summary>
-		/// Getter for the full text
-		/// </summary>
-		/// <returns>The full text</returns>
-		const std::wstring& GetFullText() const { return m_FullText; }
-
-		/// <summary>
 		/// Setter for text displayed in the TextBox, use RenderText() to render it
 		/// </summary>
 		/// <param name="newText">Is the new text the TextBox will display</param>
-		void SetText(_In_ const std::wstring& newText);
+		void SetText(_In_ const std::wstring& newText) { m_Text.text = newText; }
 
 		/// <summary>
 		/// Setter for multiline TextBox
@@ -116,26 +110,11 @@ namespace GUI
 		/// <param name="e">Is the received event</param>
 		void OnMouseWheelDown(_In_ MouseWheelDownEvent& e);
 
-		/// <summary>
-		/// Changes m_Text to only contain the displayed text
-		/// </summary>
-		void TrimText();
-
-		/// <summary>
-		/// Adds a line above the text
-		/// </summary>
-		void ExtendText();
-
 	private:
 		/// <summary>
 		/// Structure which holds text information
 		/// </summary>
 		NText m_Text;
-
-		/// <summary>
-		/// Holds the unmodified text
-		/// </summary>
-		std::wstring m_FullText;
 
 		/// <summary>
 		/// Caret in the TextBox
@@ -146,10 +125,6 @@ namespace GUI
 		/// True if multiple lines are allowed, false otherwise. 
 		/// </summary>
 		bool m_IsMultiline;
-
-		int m_TxtIndexBegin = 0;
-		int m_TxtIndexEnd = 0;
-
 	};
 }
 
