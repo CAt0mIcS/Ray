@@ -132,6 +132,13 @@ namespace GUI
 		m_Text.pos = Util::NPoint{ m_Pos.x + xOffset, m_Pos.y + yOffset };
 		m_Text.size = { m_Size.width - xOffset, m_Size.height - yOffset };
 
+		DWRITE_OVERHANG_METRICS overhangMetrics = TextRenderer::Get().GetOverhangMetrics(m_Text);
+		if (overhangMetrics.bottom > 0)
+		{
+			GetParent()->ResizeBy({ 0, ceil(overhangMetrics.bottom) });
+			Render();
+		}
+
 		TextRenderer::Get().RenderText(m_Text);
 	}
 
