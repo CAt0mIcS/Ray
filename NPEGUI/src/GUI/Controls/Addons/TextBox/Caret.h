@@ -184,6 +184,11 @@ namespace GUI
 		/// <returns>The current selection range</returns>
 		DWRITE_TEXT_RANGE GetSelectionRange();
 
+		/// <summary>
+		/// Clears the selection, doesn't remove the selected text
+		/// </summary>
+		void ClearSelection();
+
 	private:
 		/// <summary>
 		/// Renders caret position in the text

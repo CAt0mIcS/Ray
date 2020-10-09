@@ -132,9 +132,9 @@ namespace GUI
 		m_Text.pos = Util::NPoint{ m_Pos.x + xOffset, m_Pos.y + yOffset };
 		m_Text.size = { m_Size.width - xOffset, m_Size.height - yOffset };
 
-		//std::vector<DWRITE_LINE_METRICS> metrics = TextRenderer::Get().GetLineMetrics(m_Text);
-		//if (metrics.size() > 5)
-		//	TrimText();
+		std::vector<DWRITE_LINE_METRICS> metrics = TextRenderer::Get().GetLineMetrics(m_Text);
+		if (metrics.size() > 5)
+			TrimText();
 
 		TextRenderer::Get().RenderText(m_Text);
 	}
@@ -143,7 +143,6 @@ namespace GUI
 	{
 		m_FullText = newText;
 		m_Text.text = m_FullText;
-		TrimText();
 	}
 
 	std::optional<std::pair<Util::NPoint, Util::NSize>> TextBox::CalculateLayout(_In_ const Util::NPoint& parentPos, _In_ const Util::NSize& parentSize)
@@ -186,8 +185,9 @@ namespace GUI
 		std::vector<DWRITE_LINE_METRICS> metrics = TextRenderer::Get().GetLineMetrics(m_Text);
 		if (metrics.size() <= 5)
 		{
-			//ExtendText();
-			//GetParent()->PostRedraw();
+			ExtendText();
+			m_Caret.ClearSelection();
+			GetParent()->PostRedraw();
 		}
 	}
 
@@ -196,8 +196,9 @@ namespace GUI
 		std::vector<DWRITE_LINE_METRICS> metrics = TextRenderer::Get().GetLineMetrics(m_Text);
 		if (metrics.size() > 5)
 		{
-			//TrimText();
-			//GetParent()->PostRedraw();
+			TrimText();
+			m_Caret.ClearSelection();
+			GetParent()->PostRedraw();
 		}
 	}
 
@@ -209,7 +210,7 @@ namespace GUI
 			m_Text.text.replace(m_Text.text.begin(), m_Text.text.begin() + metrics[0].length, L"");
 			m_Caret.SetPos(m_Caret.Pos() - metrics[0].length);
 
-			m_TxtIndexBegin = metrics[0].length;
+			m_TxtIndexBegin += metrics[0].length;
 		}
 	}
 

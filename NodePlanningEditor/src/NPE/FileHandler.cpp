@@ -94,8 +94,8 @@ namespace NPE
 			const auto& pos = control->GetPos();
 			const auto& size = control->GetSize();
 			
-			std::string txt1 = Util::WideCharToMultiByte(((GUI::TextBox*)control->GetChildren()[0])->GetText().text);
-			std::string txt2 = Util::WideCharToMultiByte(((GUI::TextBox*)control->GetChildren()[1])->GetText().text);
+			std::string txt1 = Util::WideCharToMultiByte(((GUI::TextBox*)control->GetChildren()[0])->GetFullText());
+			std::string txt2 = Util::WideCharToMultiByte(((GUI::TextBox*)control->GetChildren()[1])->GetFullText());
 
 			if (txt1[txt1.size() - 1] == '\0')
 				txt1.erase(txt1.cend() - 1);

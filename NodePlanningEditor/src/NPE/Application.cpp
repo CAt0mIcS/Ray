@@ -228,14 +228,6 @@ namespace NPE
 
 	bool Application::OnKeyPressed(GUI::Control* watched, GUI::KeyPressedEvent& e)
 	{
-		//Redraw caret when moving with arrow keys. TODO: Don't redraw the entire window! (watched->PostRedraw()?)
-		if (watched->HasFocus() && watched->GetType() == GUI::Control::Type::TextBox)
-		{
-			//m_Window.PostRedraw();
-			watched->GetParent()->PostRedraw();
-			return true;
-		}
-
 		//Create new Node shortcut
 		if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('A'))
 		{
@@ -270,6 +262,14 @@ namespace NPE
 			m_Window.PostRedraw();
 			return result;
 		}
+
+		//Redraw caret when moving with arrow keys.
+		if (watched->HasFocus() && watched->GetType() == GUI::Control::Type::TextBox)
+		{
+			watched->GetParent()->PostRedraw();
+			return true;
+		}
+
 		return false;
 	}
 

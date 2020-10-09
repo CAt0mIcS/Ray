@@ -54,6 +54,12 @@ namespace GUI
 		const NText& GetText() const { return m_Text; }
 
 		/// <summary>
+		/// Getter for the full text
+		/// </summary>
+		/// <returns>The full text</returns>
+		const std::wstring& GetFullText() const { return m_FullText; }
+
+		/// <summary>
 		/// Setter for text displayed in the TextBox, use RenderText() to render it
 		/// </summary>
 		/// <param name="newText">Is the new text the TextBox will display</param>
