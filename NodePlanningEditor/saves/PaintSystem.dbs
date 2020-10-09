@@ -12,23 +12,21 @@ FIELDS
 RECORDS: 2
 RECORD
 {
-    1174.95
-    121.432
-    520.931
-    324.135
+    1268.6
+    20.6036
+    546.978
+    340.342
     ew Paint System
     
 }
 RECORD
 {
-    544.145
-    537.755
-    496.125
-    308.7
+    606.252
+    457.743
+    520.931
+    324.135
     ostRedraw
-    fdsafasddfsafdas
-fdaefd
-efdss df sf
+    fdsafasd\r\nfdaefds\r\nefds fds fds fsd\r\neeefd s\r\nfdse fds
 }
 TABLE: SceneInfo
 FIELDS
@@ -38,7 +36,7 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    2
+    3
 }
 TABLE: Lines
 FIELDS

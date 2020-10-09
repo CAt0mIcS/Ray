@@ -241,12 +241,14 @@ namespace NPE
 		{
 			m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom, true);
 			m_NeedsToSave = true;
+			return true;
 		}
 		//Save shortcut
 		else if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('S'))
 		{
 			m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom);
 			m_NeedsToSave = false;
+			return true;
 		}
 		//Load scene from new file shortcut
 		else if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('O'))

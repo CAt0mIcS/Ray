@@ -27,7 +27,7 @@ namespace QRD
 		std::ofstream stream(filepath, std::ios_base::app);
 		std::time_t t = std::time(0);
 		std::tm* now = std::localtime(&t);
-		std::stringstream ss;
+		std::ostringstream ss;
 		ss << message;
 
 		stream << '[' << now->tm_hour << ':' << now->tm_min << ':' << round(now->tm_sec) << "]: " << ss.str() << '\n';

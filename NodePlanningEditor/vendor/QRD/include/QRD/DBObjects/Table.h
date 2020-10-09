@@ -306,12 +306,12 @@ namespace QRD
 
 		if (recs.size() == 0)
 		{
-			std::stringstream ss;
+			std::ostringstream ss;
 			ss << "Unable to find record";
 			QRD_THROW(ObjectNotFoundException, ss.str());
 		}
 
-		std::stringstream ss;
+		std::ostringstream ss;
 		ss << "Unable to delete record";
 		QRD_THROW(ObjectNotFoundException, ss.str());
 

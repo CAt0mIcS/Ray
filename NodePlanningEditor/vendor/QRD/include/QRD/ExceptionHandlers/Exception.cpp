@@ -12,7 +12,7 @@ namespace QRD
 
     const char* Exception::what() const noexcept
     {
-        std::stringstream ss;
+        std::ostringstream ss;
         ss << "[Exception]:\t " << m_Name
             << "\n[File]:\t\t " << m_File
             << "\n[Line]:\t\t " << m_Line

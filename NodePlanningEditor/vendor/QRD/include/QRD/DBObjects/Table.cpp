@@ -18,7 +18,7 @@ namespace QRD
 
             if (it == command.end() || idCol > command.size() - 2 || idCol < 1)
             {
-                std::stringstream ss;
+                std::ostringstream ss;
                 ss << "Unable to find colon in string or colon position is invalid";
                 QRD_THROW(InvalidCommandException, ss.str());
             }
@@ -26,7 +26,7 @@ namespace QRD
             std::string_view fieldName = command.substr(0, idCol - 1);
             if (!FieldExists(fieldName))
             {
-                std::stringstream ss;
+                std::ostringstream ss;
                 ss << "Unable to find field with name " << fieldName;
                 QRD_THROW(ObjectNotFoundException, ss.str());
             }
@@ -41,7 +41,7 @@ namespace QRD
                 return field;
         }
 
-        std::stringstream ss;
+        std::ostringstream ss;
         ss << "Unable to find field with name " << fieldName;
         QRD_THROW(ObjectNotFoundException, ss.str());
     }
@@ -82,7 +82,7 @@ namespace QRD
             }
         }
 
-        std::stringstream ss;
+        std::ostringstream ss;
         ss << "Unable to delete field with name " << fieldName;
         QRD_THROW(ObjectNotFoundException, ss.str());
     }
@@ -129,8 +129,8 @@ namespace QRD
     std::string Table::ToString() const
     {
 
-        std::stringstream ssRec;
-        std::stringstream ssFields;
+        std::ostringstream ssRec;
+        std::ostringstream ssFields;
         for (auto& rec : m_Records)
         {
             ssRec << rec.ToString();
@@ -141,7 +141,7 @@ namespace QRD
             ssFields << field.ToString();
         }
 
-        std::stringstream ss;
+        std::ostringstream ss;
         ss << "Table object: "
             << "\n\t[Table::Location]: " << this
             << "\n\t[Table::m_TableName]: " << m_TableName

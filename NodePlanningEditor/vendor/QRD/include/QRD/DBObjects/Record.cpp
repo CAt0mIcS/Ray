@@ -16,13 +16,13 @@ namespace QRD
 
     std::string Record::ToString() const
     {
-        std::stringstream ss2;
+        std::ostringstream ss2;
         for (unsigned int i = 0; i < m_RecordData.size(); ++i)
         {
             ss2 << "\n\t  [" << i << "]: " << m_RecordData[i];
         }
 
-        std::stringstream ss;
+        std::ostringstream ss;
         ss << "Record object: "
             << "\n\t[Record::Location]: " << this
             << "\n\t[Record::m_Data]: " << ss2.str()

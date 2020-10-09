@@ -1,5 +1,6 @@
 #include <sstream>
 #include <fstream>
+#include <algorithm>
 
 #include "Database.h"
 #include "../Debug/Timer.h"
@@ -20,7 +21,7 @@ namespace QRD
 
 		if (!FileExists(filePath))
 		{
-			std::stringstream ss;
+			std::ostringstream ss;
 			ss << "The specified path to the .dbs file is either invalid or doesn't exist\n[Path]:\t\t " << filePath;
 			QRD_THROW(FileNotFoundException, ss.str());
 		}
@@ -50,7 +51,7 @@ namespace QRD
 				return table;
 		}
 
-		std::stringstream ss;
+		std::ostringstream ss;
 		ss << "Unable to find table with name " << tableName;
 		QRD_THROW(ObjectNotFoundException, ss.str());
 
@@ -83,7 +84,7 @@ namespace QRD
 			}
 		}
 
-		std::stringstream ss;
+		std::ostringstream ss;
 		ss << "Unable to delete table with name " << table.GetTableName();
 		QRD_THROW(ObjectNotFoundException, ss.str());
 	}
@@ -104,7 +105,7 @@ namespace QRD
 			}
 		}
 
-		std::stringstream ss;
+		std::ostringstream ss;
 		ss << "Unable to delete table with name " << tableName;
 		QRD_THROW(ObjectNotFoundException, ss.str());
 	}
@@ -171,7 +172,28 @@ namespace QRD
 				writer << "RECORD\n{\n";
 				for (unsigned short j = 0; j < record.GetRecordData().size(); ++j)
 				{
-					writer << "    " << record.GetRecordData()[j] << '\n';
+					auto data = record.GetRecordData()[j];
+					
+					// Print newline character(\n) and not a new line
+					size_t pos = data.find("\n");
+					while (pos != std::string::npos)
+					{
+						data.erase(data.begin() + pos);
+						data.insert(pos, "\\n");
+
+						pos = data.find("\n");
+					}
+
+					pos = data.find("\r");
+					while (pos != std::string::npos)
+					{
+						data.erase(data.begin() + pos);
+						data.insert(pos, "\\r");
+
+						pos = data.find("\r");
+					}
+
+					writer << "    " << data << '\n';
 				}
 				writer << "}\n";
 			}
@@ -186,13 +208,13 @@ namespace QRD
 
 	std::string Database::ToString() const
 	{
-		std::stringstream ssT;
+		std::ostringstream ssT;
 		for (auto& table : m_Tables)
 		{
 			ssT << table.ToString();
 		}
 
-		std::stringstream ss;
+		std::ostringstream ss;
 		ss << "Database object: "
 			<< "\n\t[Database::Location]: " << this
 			<< "\n\t[Database::m_DBFilePath]: " << m_DBFilePath
@@ -228,7 +250,7 @@ namespace QRD
 
 			if (!typeIdx)
 			{
-				std::stringstream ss;
+				std::ostringstream ss;
 				ss << "Invalid index for type specifier, index was" << (int)typeIdx;
 				QRD_THROW(FileReadException, ss.str());
 			}
@@ -267,6 +289,20 @@ namespace QRD
 			Record& rec = table.AddRecord();
 			while (line != "}")
 			{
+				size_t pos = line.find("\\n");
+				while (pos != std::string::npos)
+				{
+					line.replace(pos, 2, "\n");
+					pos = line.find("\\n");
+				}
+
+				pos = line.find("\\r");
+				while (pos != std::string::npos)
+				{
+					line.replace(pos, 2, "\r");
+					pos = line.find("\\r");
+				}
+
 				rec.AddData(line.replace(0, 4, ""));
 				std::getline(reader, line);
 			}

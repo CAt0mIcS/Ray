@@ -23,7 +23,7 @@ namespace QRD
 		case NUMBER: fieldType = "Number (" + std::to_string(NUMBER) + ')'; break;
 		}
 
-		std::stringstream ss;
+		std::ostringstream ss;
 		ss << "Field object: "
 			<< "\n\t[Field::Location]: " << this
 			<< "\n\t[Field::m_FieldName]: " << m_FieldName

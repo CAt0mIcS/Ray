@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <string>
+#include <sstream>
 
 
 namespace QRD
@@ -89,7 +90,7 @@ namespace QRD
 	template<typename T>
 	inline void Record::AddData(const T& data)
 	{
-		std::stringstream ss;
+		std::ostringstream ss;
 		ss << data;
 		m_RecordData.emplace_back(ss.str());
 	}
