@@ -112,9 +112,7 @@ namespace NPE
 		/// </summary>
 		Application& m_App;
 
-		static constexpr float s_ZoomFactor = 0.05f;
-		static constexpr float s_ResizeFactor = 1.05f;
-		static constexpr int s_ZoomBoundary = 45;
+		static constexpr float s_ScaleFactor = 1.0625f;
 	};
 }
 

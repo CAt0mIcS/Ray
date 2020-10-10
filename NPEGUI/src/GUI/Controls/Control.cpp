@@ -109,14 +109,22 @@ namespace GUI
 
 	bool Control::IsInWindow() const
 	{
+
 		/// <TODO>
-		/// Fix function to support Renderer Transforms
+		/// Perfect function, parts are still rendered outside of window rect
 		/// </TODO>
 
 		RECT rc;
 		GetWindowRect(Renderer::Get().GetNativeWindow(), &rc);
 		
-		return m_Pos.x + m_Size.width > 0 && m_Pos.y + m_Size.height > 0 && m_Pos.x < rc.right && m_Pos.y < rc.bottom;
+		auto pos = m_Pos;
+		auto matrix = Renderer::Get().GetViewMatrix(Renderer::Get().GetOrigin());
+
+		pos.x = (m_Pos.x * matrix.m11 + m_Pos.y * matrix.m21 + matrix.dx);
+		pos.y = (m_Pos.x * matrix.m12 + m_Pos.y * matrix.m22 + matrix.dy);
+
+		bool result = pos.x + m_Size.width > 0 && pos.y + m_Size.height > 0 && pos.x < rc.right && pos.y < rc.bottom;
+		return result;
 	}
 
 	Control::~Control()

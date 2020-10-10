@@ -54,15 +54,14 @@ namespace NPE
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
 
-		float scaleFactor = (3 > 0) ? 1.0625f : 1 / 1.0625f;
-		GUI::Renderer::Get().SetScale(GUI::Renderer::Get().GetScale() * Util::NSize{ scaleFactor, scaleFactor });
+		GUI::Renderer::Get().SetScale(GUI::Renderer::Get().GetScale() * Util::NSize{ s_ScaleFactor, s_ScaleFactor });
 	}
 
 	void Actions::ZoomOut(std::vector<GUI::Control*>& controls)
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
 		
-		float scaleFactor = (-3 > 0) ? 1.0625f : 1 / 1.0625f;
+		float scaleFactor = 1 / s_ScaleFactor;
 		GUI::Renderer::Get().SetScale(GUI::Renderer::Get().GetScale() * Util::NSize{ scaleFactor, scaleFactor });
 	}
 	
