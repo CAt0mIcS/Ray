@@ -21,6 +21,8 @@ namespace DWrite
 	using HitTestMetrics	= DWRITE_HIT_TEST_METRICS;
 
 	using TextRange			= DWRITE_TEXT_RANGE;
+
+	using Matrix			= DWRITE_MATRIX;
 }
 
 namespace Direct2D

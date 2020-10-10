@@ -165,6 +165,57 @@ namespace GUI
 
 		Util::Release(&pFormat);
 	}
+	
+	DWrite::Matrix TextRenderer::GetViewMatrix(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale)
+	{
+		RECT rect;
+		GetClientRect(Renderer::Get().GetNativeWindow(), &rect);
+
+		DWrite::Matrix translationMatrix = {
+			1, 0,
+			0, 1,
+			-origin.x, -origin.y
+		};
+
+		double cosValue = 1.0;
+		double sinValue = 0.0;
+
+		DWrite::Matrix rotationMatrix = {
+			float(cosValue * scale.width), float(sinValue * scale.width),
+			float(-sinValue * scale.height), float(cosValue * scale.height),
+			0, 0
+		};
+
+		float centeringFactor = 0.5f;
+		DWRITE_MATRIX centerMatrix = {
+			1, 0,
+			0, 1,
+			(float)floor((float)(rect.right * centeringFactor)), (float)floor((float)(rect.bottom * centeringFactor))
+		};
+
+		D2D1::Matrix3x2F resultA, resultB;
+
+		resultB.SetProduct(*(D2D1::Matrix3x2F*)&translationMatrix, *(D2D1::Matrix3x2F*)&rotationMatrix);
+		resultA.SetProduct(resultB, *(D2D1::Matrix3x2F*)&centerMatrix);
+
+		// For better pixel alignment (less blurry text)
+		resultA._31 = (float)floor(resultA._31);
+		resultA._32 = (float)floor(resultA._32);
+
+		return *(DWrite::Matrix*)&resultA;
+	}
+	
+	DWrite::Matrix TextRenderer::GetTransform()
+	{
+		D2D1::Matrix3x2F transform;
+		Renderer::Get().m_pRenderTarget->GetTransform(&transform);
+		return *(DWrite::Matrix*)&transform;
+	}
+
+	DWrite::Matrix TextRenderer::SetTransform(_In_ const DWrite::Matrix& transform)
+	{
+		Renderer::Get().m_pRenderTarget->SetTransform((D2D1::Matrix3x2F*)&transform);
+	}
 }
 
 

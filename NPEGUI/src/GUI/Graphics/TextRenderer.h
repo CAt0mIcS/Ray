@@ -125,6 +125,26 @@ namespace GUI
 			_Out_ IDWriteTextLayout** ppLayout
 		);
 
+		/// <summary>
+		/// Calculates the view matrix TODO!!
+		/// </summary>
+		/// <param name="origin">Is the point where the window should zoom towards</param>
+		/// <param name="scale">Is the zoomed scale of the window</param>
+		/// <returns></returns>
+		DWrite::Matrix GetViewMatrix(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale);
+
+		/// <summary>
+		/// Getter for the current transform of the MainWindow
+		/// </summary>
+		/// <returns>The current window transform</returns>
+		DWrite::Matrix GetTransform();
+
+		/// <summary>
+		/// Setter for the MainWindow transform
+		/// </summary>
+		/// <param name="transform">Is the new window transform</param>
+		void SetTransform(_In_ const DWrite::Matrix& transform);
+
 	private:
 		/// <summary>
 		/// TextRenderer Constructor
