@@ -10,6 +10,9 @@
 #include "Button.h"
 
 
+#include "Util/Debug/Timer.h"
+
+
 namespace GUI
 {
 	Node::Node(_In_opt_ Control* parent)
@@ -21,17 +24,18 @@ namespace GUI
 	{
 		if (this->IsInWindow())
 		{
-			const float max = std::max(GetSize().width, GetSize().height);
-			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), max / 5.0f, max / 5.0f);
+			const float roundAngle = m_Size.width / 5.0f;
+			Renderer::Get().RenderRoundedRect(GetPos(), GetSize(), GetColor(), roundAngle, roundAngle);
 
-			constexpr float minWidth = 48.2f, minHeight = 30.0f;
+			constexpr float minScale = 0.15f;
 			for (auto* child : m_Children)
 			{
-				if (m_Size.width > minWidth && m_Size.height > minHeight)
+				auto& scale = Renderer::Get().GetScale();
+				if (scale.width > minScale && scale.height > minScale)
 				{
 					child->Render();
 				}
-				else if (m_Size.width <= minWidth && m_Size.height <= minHeight && child->GetType() == Type::Button)
+				else if (scale.width <= minScale && scale.height <= minScale && child->GetType() == Type::Button)
 				{
 					child->Render();
 				}

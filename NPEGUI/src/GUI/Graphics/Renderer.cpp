@@ -53,23 +53,19 @@ namespace GUI
 		m_pRenderTarget->DrawLine(startPos.ToD2D1Point2F(), endPos.ToD2D1Point2F(), m_pBrush.Get(), radius);
 	}
 
-	Util::NPoint Renderer::GetOrigin() const
-	{
-		Util::NPoint origin;
-		RECT rc;
-		GetClientRect(m_hWnd, &rc);
-		
-		origin.x = float(rc.right - rc.left) / 2.0f;
-		origin.y = float(rc.bottom - rc.top) / 2.0f;
-		return origin;
-	}
-
 	Renderer::Renderer()
-		: m_hWnd(0), m_pD2DBitmap(nullptr), m_Scale{ 1.0f, 1.0f } {}
+		: m_hWnd(0), m_pD2DBitmap(nullptr), m_Scale{ 1.0f, 1.0f }, m_Origin{ 0.0f, 0.0f } {}
 
 	void Renderer::Init(_In_ HWND hWnd)
 	{
 		m_hWnd = hWnd;
+
+		RECT rc;
+		GetClientRect(m_hWnd, &rc);
+
+		m_Origin.x = float(rc.right - rc.left) / 2.0f;
+		m_Origin.y = float(rc.bottom - rc.top) / 2.0f;
+
 		CreateGraphicsResources();
 	}
 
@@ -180,7 +176,7 @@ namespace GUI
 		Util::Release(&pScaler);
 	}
 
-	DWrite::Matrix Renderer::GetViewMatrix(_In_ const Util::NPoint& origin)
+	DWrite::Matrix Renderer::GetViewMatrix()
 	{
 		RECT rect;
 		GetClientRect(m_hWnd, &rect);
@@ -188,7 +184,7 @@ namespace GUI
 		DWrite::Matrix translationMatrix = {
 			1, 0,
 			0, 1,
-			-origin.x, -origin.y
+			-m_Origin.x, -m_Origin.y
 		};
 
 		double cosValue = 1.0;
@@ -218,9 +214,9 @@ namespace GUI
 		return *(DWrite::Matrix*)&resultA;
 	}
 
-	DWrite::Matrix Renderer::GetInverseViewMatrix(_In_ const Util::NPoint& origin)
+	DWrite::Matrix Renderer::GetInverseViewMatrix()
 	{
-		return ComputeInverseMatrix(GetViewMatrix(origin));
+		return ComputeInverseMatrix(GetViewMatrix());
 	}
 
 	DWrite::Matrix Renderer::ComputeInverseMatrix(_In_ const DWrite::Matrix& matrix)

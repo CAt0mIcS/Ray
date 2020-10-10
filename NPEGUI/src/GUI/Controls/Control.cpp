@@ -118,7 +118,7 @@ namespace GUI
 		GetWindowRect(Renderer::Get().GetNativeWindow(), &rc);
 		
 		auto pos = m_Pos;
-		auto matrix = Renderer::Get().GetViewMatrix(Renderer::Get().GetOrigin());
+		auto matrix = Renderer::Get().GetViewMatrix();
 
 		pos.x = (m_Pos.x * matrix.m11 + m_Pos.y * matrix.m21 + matrix.dx);
 		pos.y = (m_Pos.x * matrix.m12 + m_Pos.y * matrix.m22 + matrix.dy);

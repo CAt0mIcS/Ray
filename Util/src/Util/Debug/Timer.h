@@ -6,6 +6,7 @@
 #include <chrono>
 
 #define UTIL_TIMER_ACTIVE 1
+#define UTIL_LOG_TIMER 0
 
 
 namespace Util
@@ -25,7 +26,7 @@ namespace Util
 }
 
 #if UTIL_TIMER_ACTIVE
-	#define TIMER Util::Timer t(std::string("Timer in file ") + std::string(__FILE__).replace(0, 45, "") + std::string(", function ") + std::string(__FUNCTION__) + std::string(", line ") + std::to_string(__LINE__) + std::string(" took "))
+	#define TIMER Util::Timer t(std::string("Timer in file ") + std::string(__FILE__).replace(0, 39, "") + std::string(", function ") + std::string(__FUNCTION__) + std::string(", line ") + std::to_string(__LINE__) + std::string(" took "))
 #else
 	#define TIMER
 #endif

@@ -11,9 +11,6 @@
 
 #include "GUI/Util/Timer.h"
 
-/// <TODO>
-/// Implement scrolling for the multiline TextBox
-/// </TODO>
 
 namespace GUI
 {
@@ -69,16 +66,10 @@ namespace GUI
 	int MainWindow::ProcessMessage()
 	{
 		MSG msg{};
-		while (true)
+		while (GetMessage(&msg, NULL, 0, 0))
 		{
-			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-			{
-				if (msg.message == WM_QUIT)
-					break;
-
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
 		}
 		return (int)msg.wParam;
 	}

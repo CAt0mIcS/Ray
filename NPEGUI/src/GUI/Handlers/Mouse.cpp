@@ -14,7 +14,7 @@ namespace GUI
 
 	void Mouse::SetPos(_In_ const Util::NPoint& pos)
 	{
-		auto matrix = Renderer::Get().GetInverseViewMatrix(Renderer::Get().GetOrigin());
+		auto matrix = Renderer::Get().GetInverseViewMatrix();
 		m_Pos = pos;
 
 		m_Pos.x = (m_Pos.x * matrix.m11 + m_Pos.y * matrix.m21 + matrix.dx);

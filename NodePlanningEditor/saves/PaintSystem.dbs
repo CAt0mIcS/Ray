@@ -12,8 +12,8 @@ FIELDS
 RECORDS: 3
 RECORD
 {
-    985.3
-    338.38
+    1015.06
+    307.734
     520.931
     324.135
     New Paint System
@@ -21,8 +21,8 @@ RECORD
 }
 RECORD
 {
-    345
-    571
+    374.757
+    540.354
     496.125
     308.7
     GUI
@@ -30,8 +30,8 @@ RECORD
 }
 RECORD
 {
-    447
-    164
+    476.757
+    133.354
     450
     280
     
@@ -46,8 +46,8 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    1.0
-    1.0
+    1.12891
+    1.12891
 }
 TABLE: Lines
 FIELDS

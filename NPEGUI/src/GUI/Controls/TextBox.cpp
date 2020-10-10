@@ -37,7 +37,8 @@ namespace GUI
 			else
 				SetFontSize((m_Size.width + m_Size.height) / 17.4f);
 
-			if (m_Text.fontSize > 5.0f)
+			constexpr float minScale = 0.25f;
+			if (Renderer::Get().GetScale().width > minScale && Renderer::Get().GetScale().height > minScale)
 			{
 				m_Caret.Render();
 				RenderText();

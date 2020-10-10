@@ -18,9 +18,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		*	Should I keep error handling in release builds
 		*/
 		#ifdef _DEBUG
+		{
 			AllocConsole();
-			if (!freopen("CONOUT$", "w", stdout))
+			FILE* pFile;
+			if (freopen_s(&pFile, "CONOUT$", "w", stdout))
 				NPE_LOG("Failed to open debug console");
+		}
 		#endif
 
 		return NPE::Application{}.Run();

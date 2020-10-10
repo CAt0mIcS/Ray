@@ -106,16 +106,14 @@ namespace GUI
 		/// <summary>
 		/// Calculates the view matrix
 		/// </summary>
-		/// <param name="origin">Is the point where the window should zoom towards</param>
 		/// <returns>The view matrix</returns>
-		DWrite::Matrix GetViewMatrix(_In_ const Util::NPoint& origin);
+		DWrite::Matrix GetViewMatrix();
 
 		/// <summary>
 		/// Calculates the inverse view matrix
 		/// </summary>
-		/// <param name="origin">Is the point where the window should zoom towards</param>
 		/// <returns>The inverse view matrix</returns>
-		DWrite::Matrix GetInverseViewMatrix(_In_ const Util::NPoint& origin);
+		DWrite::Matrix GetInverseViewMatrix();
 
 		/// <summary>
 		/// Calculates the inverse matrix from a normal matrix
@@ -152,7 +150,13 @@ namespace GUI
 		/// Caclulates the coordinates of the middle of the screen
 		/// </summary>
 		/// <returns>The origin of the screen</returns>
-		Util::NPoint GetOrigin() const;
+		const Util::NPoint& GetOrigin() const { return m_Origin; }
+
+		/// <summary>
+		/// Setter for the window origin
+		/// </summary>
+		/// <param name="origin">Is the new origin of the window</param>
+		void SetOrigin(const Util::NPoint& origin) { m_Origin = origin; }
 
 	private:
 		/// <summary>
@@ -201,6 +205,11 @@ private:
 		/// Represents the scale of the current window
 		/// </summary>
 		Util::NSize m_Scale;
+
+		/// <summary>
+		/// Represents the origin of the current window
+		/// </summary>
+		Util::NPoint m_Origin;
 
 		/// <summary>
 		/// Static Renderer instance for singelton design

@@ -24,10 +24,10 @@
 * QUESTION:
 *	Use strings or wstrings
 *	Is it ok to use "using namespace GUI" in source files
-*	How to design a library with include directories (Example QRD)
+*	How to design a library with include directories (Example QRD) --> Good project file structure (CMake structure?)
 */
 
-#define NPE_DEBUG_DISABLE_AUTOSAVE
+//#define NPE_DEBUG_DISABLE_AUTOSAVE
 //#define NPE_DEBUG_RANDOM_NODES
 
 
@@ -48,15 +48,16 @@ namespace NPE
 			auto& controls = m_Window.GetControls();
 			controls.clear();
 			m_Lines.clear();
-			m_Zoom = 40;
 
 			for (int i = 0; i < 5000; ++i)
 			{
 				auto* node = m_Window.AddControl<GUI::Node>(new GUI::Node(&m_Window));
 				node->SetPos({ (float)rand(), (float)rand() });
 				node->SetSize({ s_NodeWidth, s_NodeHeight });
-				node->SetColor(GUI::g_DefaultNodeColor);
-				node->Init();
+				node->SetColor(Constants::g_DefaultNodeColor);
+				m_Actions.CreateNodeTemplate(node);
+				((GUI::TextBox*)node->GetChildren()[0])->SetText(L"Hello World!");
+				((GUI::TextBox*)node->GetChildren()[1])->SetText(L"Hello World2!");
 			}
 		#endif
 
@@ -133,7 +134,6 @@ namespace NPE
 			//Redraw caret when selecting
 			if (watched->HasFocus() && watched->GetType() == GUI::Control::Type::TextBox)
 			{
-				//m_Window.PostRedraw();
 				watched->GetParent()->PostRedraw();
 				return true;
 			}
@@ -162,7 +162,6 @@ namespace NPE
 		{
 			if (watched->GetType() == GUI::Control::Type::TextBox)
 			{
-				//m_Window.PostRedraw();
 				watched->GetParent()->PostRedraw();
 			}
 			else if (watched->GetType() == GUI::Control::Type::Button)
@@ -322,7 +321,7 @@ namespace NPE
 			{
 				//TODO: Implement alert to user that an autosave is comming
 				if (m_NeedsToSave)
-					m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Zoom);
+					m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines);
 				return true;
 			}
 		#endif
@@ -341,33 +340,31 @@ namespace NPE
 		GUI::Renderer& renderer = GUI::Renderer::Get();
 		renderer.BeginDraw();
 
+		// Store current transform to be able to set it again at the end of this function
 		DWrite::Matrix prevTransform = renderer.GetTransform();
 
 		if (watched->GetType() == GUI::Control::Type::Window)
 		{
+			// Render the entire scene if the window requested a redraw
 			renderer.RenderScene();
-			/// <TODO>
-			/// Look at https://docs.microsoft.com/en-us/windows/win32/direct2d/id2d1brush-settransform
-			/// Try to make zooming work with transforms
-			///		Look at PadWrite.sln and figure out how they work with caret and mouse pos in a transformed window
-			///		"Detransform" transform locally when moving camera (Look at PadWrite.sln again)
-			/// </TODO>
 
-			D2D1::Matrix3x2F pageTransform = *(D2D1::Matrix3x2F*)&GUI::Renderer::Get().GetViewMatrix(GUI::Renderer::Get().GetOrigin());
+			D2D1::Matrix3x2F pageTransform = *(D2D1::Matrix3x2F*)&GUI::Renderer::Get().GetViewMatrix();
 			GUI::Renderer::Get().SetTransform(*(DWrite::Matrix*)&pageTransform);
 		}
 		
-		//NPE_LOG("Rendered area:\n{0}{1}", Util::ToTransform(*e.GetRect()), '\n');
-
 		watched->Render();
 		m_Actions.RenderLines(m_Lines);
+
+		// Restore previous transform
 		renderer.SetTransform(prevTransform);
+		
 		renderer.EndDraw();
 		return true;
 	}
 
 	bool Application::OnClose(GUI::Control* watched, GUI::AppCloseEvent& e)
 	{
+		// Display a message box if the scene has unsaved changes
 		if (m_NeedsToSave)
 		{
 			int result = PromptSaveChangesMsgBox();
