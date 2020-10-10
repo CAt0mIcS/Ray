@@ -30,10 +30,11 @@ namespace GUI
 		Mouse operator=(_In_ const Mouse&) = delete;
 
 		/// <summary>
-		/// Sets mouse position, only sets member variable, does not actually move the mouse
+		/// Sets mouse position, only sets member variable, does not actually move the mouse, 
+		/// Also transforms the position to work with Renderer Transforms
 		/// </summary>
-		/// <param name="pos"></param>
-		static void SetPos(_In_ const Util::NPoint& pos) { m_Pos = pos; }
+		/// <param name="pos">Is the new mouse position</param>
+		static void SetPos(_In_ const Util::NPoint& pos);
 
 		/// <summary>
 		/// Getter for the current mouse position in the window

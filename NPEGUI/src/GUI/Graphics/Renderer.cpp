@@ -38,7 +38,7 @@ namespace GUI
 		)
 	{
 		m_pBrush->SetColor(color.ToD2D1ColorF());
-		DWrite::Matrix matrix = GetViewMatrix(GetOrigin());
+		
 		m_pRenderTarget->FillRoundedRectangle({ { pos.x, pos.y, pos.x + size.width, pos.y + size.height }, radiusX, radiusY }, m_pBrush.Get());
 	}
 
@@ -60,7 +60,7 @@ namespace GUI
 		GetClientRect(m_hWnd, &rc);
 		
 		origin.x = float(rc.right - rc.left) / 2.0f;
-		origin.x = float(rc.bottom - rc.top) / 2.0f;
+		origin.y = float(rc.bottom - rc.top) / 2.0f;
 		return origin;
 	}
 

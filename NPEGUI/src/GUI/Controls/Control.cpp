@@ -109,11 +109,14 @@ namespace GUI
 
 	bool Control::IsInWindow() const
 	{
+		/// <TODO>
+		/// Fix function to support Renderer Transforms
+		/// </TODO>
+
 		RECT rc;
 		GetWindowRect(Renderer::Get().GetNativeWindow(), &rc);
 		
 		return m_Pos.x + m_Size.width > 0 && m_Pos.y + m_Size.height > 0 && m_Pos.x < rc.right && m_Pos.y < rc.bottom;
-		return true;
 	}
 
 	Control::~Control()
