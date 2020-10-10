@@ -32,25 +32,8 @@ namespace NPE
 		}
 	}
 
-	void Actions::SpawnNode(GUI::MainWindow& win, float width, float height, int zoom)
+	void Actions::SpawnNode(GUI::MainWindow& win, float width, float height)
 	{
-		if (zoom > 0)
-		{
-			for (int i = 0; i < zoom; ++i)
-			{
-				width *= s_ResizeFactor;
-				height *= s_ResizeFactor;
-			}
-		}
-		else
-		{
-			for (int i = zoom; i < 0; ++i)
-			{
-				width /= s_ResizeFactor;
-				height /= s_ResizeFactor;
-			}
-		}
-
 		GUI::Node* control = win.AddControl<GUI::Node>(new GUI::Node(&win));
 		control->SetColor(Constants::g_DefaultNodeColor);
 		control->SetSize({ width, height });
@@ -67,21 +50,21 @@ namespace NPE
 		node->MoveBy(diff);
 	}
 
-	void Actions::ZoomIn(int& zoom, std::vector<GUI::Control*>& controls)
+	void Actions::ZoomIn(Util::NSize& scale, std::vector<GUI::Control*>& controls)
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
 
 		float scaleFactor = (3 > 0) ? 1.0625f : 1 / 1.0625f;
-		TestScale *= { scaleFactor, scaleFactor };
+		scale *= { scaleFactor, scaleFactor };
 
 	}
 
-	void Actions::ZoomOut(int& zoom, std::vector<GUI::Control*>& controls)
+	void Actions::ZoomOut(Util::NSize& scale, std::vector<GUI::Control*>& controls)
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
 		
 		float scaleFactor = (-3 > 0) ? 1.0625f : 1 / 1.0625f;
-		TestScale *= { scaleFactor, scaleFactor };
+		scale *= { scaleFactor, scaleFactor };
 
 	}
 	

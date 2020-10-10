@@ -72,12 +72,12 @@ namespace GUI
 		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->EndDraw(), "Failed to draw object(s)");
 	}
 
-	void Renderer::RenderScene(_In_opt_ const Util::NColor& color)
+	void Renderer::RenderScene(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale)
 	{
-		RenderBitmapBackground();
+		RenderBitmapBackground(origin, scale);
 	}
 
-	void Renderer::RenderBitmapBackground()
+	void Renderer::RenderBitmapBackground(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale)
 	{
 		auto rtSize = m_pRenderTarget->GetSize();
 		
@@ -198,13 +198,13 @@ namespace GUI
 
 		D2D1::Matrix3x2F resultA, resultB;
 
-		resultB.SetProduct(*(D2D1::Matrix3x2F*) & translationMatrix, *(D2D1::Matrix3x2F*) & rotationMatrix);
-		resultA.SetProduct(resultB, *(D2D1::Matrix3x2F*) & centerMatrix);
+		resultB.SetProduct(*(D2D1::Matrix3x2F*)&translationMatrix, *(D2D1::Matrix3x2F*)&rotationMatrix);
+		resultA.SetProduct(resultB, *(D2D1::Matrix3x2F*)&centerMatrix);
 
 		resultA._31 = (float)floor(resultA._31);
 		resultA._32 = (float)floor(resultA._32);
 
-		return *(DWrite::Matrix*) & resultA;
+		return *(DWrite::Matrix*)&resultA;
 	}
 
 	DWrite::Matrix Renderer::GetInverseViewMatrix(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale)
@@ -236,11 +236,11 @@ namespace GUI
 	{
 		D2D1::Matrix3x2F transform;
 		m_pRenderTarget->GetTransform(&transform);
-		return *(DWrite::Matrix*) & transform;
+		return *(DWrite::Matrix*)&transform;
 	}
 
 	void Renderer::SetTransform(_In_ const DWrite::Matrix& transform)
 	{
-		m_pRenderTarget->SetTransform((D2D1::Matrix3x2F*) & transform);
+		m_pRenderTarget->SetTransform((D2D1::Matrix3x2F*)&transform);
 	}
 }

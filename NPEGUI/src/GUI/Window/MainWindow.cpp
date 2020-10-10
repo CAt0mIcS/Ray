@@ -34,7 +34,6 @@ namespace GUI
 
 	bool MainWindow::Render()
 	{
-		Renderer::Get().RenderScene();
 		for (auto* child : m_Children)
 		{
 			child->Render();

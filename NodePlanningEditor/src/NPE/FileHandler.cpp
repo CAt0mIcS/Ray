@@ -37,7 +37,7 @@ namespace NPE
 		////m_SaveFolder = "saves\\";
 	}
 
-	void FileHandler::SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, int zoom, bool saveToNewLocation)
+	void FileHandler::SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, const Util::NSize& scale, bool saveToNewLocation)
 	{
 		HCURSOR prevCursor = GetCursor();
 		SetCursor(LoadCursor(NULL, IDC_WAIT));
@@ -87,7 +87,8 @@ namespace NPE
 		tbLines.AddField<QRD::NUMBER>("ID2");
 		tbLines.AddField<QRD::NUMBER>("ID1");
 
-		tbSceneInfo.AddField<QRD::NUMBER>("zoom");
+		tbSceneInfo.AddField<QRD::NUMBER>("scaleX");
+		tbSceneInfo.AddField<QRD::NUMBER>("scaleY");
 
 		for (auto* control : controls)
 		{
@@ -120,13 +121,13 @@ namespace NPE
 				NPE_LOG("Didn't save line because it didn't have a valid end point");
 		}
 		NPE_LOG("\n\n");
-		tbSceneInfo.AddRecord(zoom);
+		tbSceneInfo.AddRecord(scale.width, scale.height);
 
 		m_Db->WriteDb();
 		SetCursor(prevCursor);
 	}
 	
-	void FileHandler::LoadScene(GUI::MainWindow& win, std::vector<Line>& lines, int& zoom)
+	void FileHandler::LoadScene(GUI::MainWindow& win, std::vector<Line>& lines, Util::NSize& scale)
 	{
 		GUI::Control::ResetIdCounter(1);
 		HCURSOR prevCursor = GetCursor();
@@ -150,11 +151,12 @@ namespace NPE
 
 		try
 		{
-			zoom = std::stoi(tbSceneInfo->GetRecords().at(0).GetRecordData()[0]);
+			scale.width = std::stof(tbSceneInfo->GetRecords().at(0).GetRecordData()[0]);
+			scale.height = std::stof(tbSceneInfo->GetRecords().at(0).GetRecordData()[1]);
 		}
 		catch (std::out_of_range&)
 		{
-			zoom = 1;
+			scale = { 1.0f, 1.0f };
 		}
 
 		for (auto& record : tbNodeInfo->GetRecords())
@@ -233,7 +235,9 @@ namespace NPE
 		tbLines.AddField<QRD::NUMBER>("ID2");
 		tbLines.AddField<QRD::NUMBER>("ID1");
 
-		tbSceneInfo.AddField<QRD::NUMBER>("zoom");
+		tbSceneInfo.AddField<QRD::NUMBER>("scaleX");
+		tbSceneInfo.AddField<QRD::NUMBER>("scaleY");
+
 		m_Db->WriteDb();
 	}
 
@@ -402,7 +406,7 @@ namespace NPE
 		WriteConfig(filepath);
 	}
 
-	bool FileHandler::OpenScene(GUI::MainWindow& win, std::vector<Line>& lines, int& m_Zoom)
+	bool FileHandler::OpenScene(GUI::MainWindow& win, std::vector<Line>& lines, Util::NSize& scale)
 	{
 		GUI::FileWindow fileWin;
 
@@ -418,7 +422,7 @@ namespace NPE
 			return false;
 
 		ChangeScene(Util::WideCharToMultiByte(result));
-		LoadScene(win, lines , m_Zoom);
+		LoadScene(win, lines , scale);
 		return true;
 	}
 	

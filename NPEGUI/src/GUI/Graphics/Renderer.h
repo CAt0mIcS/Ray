@@ -42,13 +42,14 @@ namespace GUI
 		/// </summary>
 		void EndDraw();
 
-
 		/// <summary>
 		/// Renders the background with a color (currently renders bitmap, parameter color is ignored)
 		/// </summary>
-		/// <param name="color">Is the background color</param>
+		/// <param name="origin">Is the point where the window should zoom towards</param>
+		/// <param name="scale">Is the zoomed scale of the window</param>
 		void RenderScene(
-			_In_opt_ const Util::NColor& color = Constants::g_DefaultWindowBackgroundColor
+			_In_ const Util::NPoint& origin,
+			_In_ const Util::NSize& scale
 		);
 
 		/// <summary>
@@ -156,7 +157,9 @@ namespace GUI
 		/// <summary>
 		/// Uses the bitmap in the resource to draw the background
 		/// </summary>
-		void RenderBitmapBackground();
+		/// <param name="origin">Is the point where the window should zoom towards</param>
+		/// <param name="scale">Is the zoomed scale of the window</param>
+		void RenderBitmapBackground(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale);
 	private:
 		/// <summary>
 		/// Handle to the main window

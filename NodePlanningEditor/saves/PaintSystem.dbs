@@ -9,11 +9,11 @@ FIELDS
     txt1:TEXT
     txt2:TEXT
 }
-RECORDS: 2
+RECORDS: 3
 RECORD
 {
-    1027.3
-    252.38
+    985.3
+    338.38
     520.931
     324.135
     New Paint System
@@ -21,22 +21,33 @@ RECORD
 }
 RECORD
 {
-    418
-    483
+    345
+    571
     496.125
     308.7
     GUI
     fds\r\nfdd\r\nfssaf\r\nddfs
 }
+RECORD
+{
+    447
+    164
+    450
+    280
+    
+    
+}
 TABLE: SceneInfo
 FIELDS
 {
-    zoom:INTEGER
+    scaleX:INTEGER
+    scaleY:INTEGER
 }
 RECORDS: 1
 RECORD
 {
-    2
+    1.19946
+    1.19946
 }
 TABLE: Lines
 FIELDS

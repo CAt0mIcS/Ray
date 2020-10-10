@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "Util/Util.h"
+
 
 namespace GUI
 {
@@ -49,8 +51,7 @@ namespace NPE
 		/// <param name="win">Is the main window</param>
 		/// <param name="width">Is the widht of the new Node</param>
 		/// <param name="height">Is the height of the new Node</param>
-		/// <param name="zoom">Is the current zoom level to size the Node appropriately</param>
-		void SpawnNode(GUI::MainWindow& win, float width, float height, int zoom);
+		void SpawnNode(GUI::MainWindow& win, float width, float height);
 
 		/// <summary>
 		/// Moves specific Node
@@ -62,16 +63,16 @@ namespace NPE
 		/// <summary>
 		/// Zooms into the scene
 		/// </summary>
-		/// <param name="zoom">Is a reference to a variable which will hold the current zoom level</param>
+		/// <param name="scale">Is a reference to a variable which will hold the current scale level</param>
 		/// <param name="controls">Is the list of Controls</param>
-		void ZoomIn(int& zoom, std::vector<GUI::Control*>& controls);
+		void ZoomIn(Util::NSize& scale, std::vector<GUI::Control*>& controls);
 
 		/// <summary>
 		/// Zooms out of the scene
 		/// </summary>
-		/// <param name="zoom">Is a reference to a variable which will hold the current zoom level</param>
+		/// <param name="scale">Is a reference to a variable which will hold the current scale level</param>
 		/// <param name="controls">Is the list of Controls</param>
-		void ZoomOut(int& zoom, std::vector<GUI::Control*>& controls);
+		void ZoomOut(Util::NSize& scale, std::vector<GUI::Control*>& controls);
 
 		/// <summary>
 		/// Renders all lines

@@ -27,8 +27,6 @@ namespace GUI
 *	friend class declaration or getters and setters for everything, or function parameters (for file handler to save controls, zoom...)
 */
 
-extern Util::NSize TestScale;
-
 
 namespace NPE
 {
@@ -140,13 +138,13 @@ namespace NPE
 		/// Getter for zoom
 		/// </summary>
 		/// <returns>The current zoom</returns>
-		int GetZoom() const { return m_Zoom; }
+		const Util::NSize& GetScale() const { return m_Scale; }
 
 		/// <summary>
 		/// Setter for zoom
 		/// </summary>
 		/// <param name="zoom">Is the new zoom</param>
-		void SetZoom(int zoom) { m_Zoom = zoom; }
+		void SetScale(const Util::NSize& scale) { m_Scale = scale; }
 
 	private:
 		/// <summary>
@@ -221,9 +219,9 @@ namespace NPE
 		bool m_NeedsToSave;
 
 		/// <summary>
-		/// Specifies the zoom level
+		/// Specifies the scale in x and y (used for zooming)
 		/// </summary>
-		int m_Zoom;
+		Util::NSize m_Scale;
 
 		/// <summary>
 		/// Default Node width
