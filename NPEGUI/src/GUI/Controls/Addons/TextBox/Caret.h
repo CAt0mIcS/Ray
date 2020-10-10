@@ -202,12 +202,17 @@ namespace GUI
 		void RenderSelection();
 
 	private:
+
+		/**
+		* Define anonymous struct (like bellow)?
+		*/
+
 		/// <summary>
 		/// The important range based properties for the current caret.
-		/// Note these are stored outside the layout, since the current car
+		/// Note these are stored outside the layout, since the current caret
 		/// actually has a format, independent of the text it lies between.
 		/// </summary>
-		struct CaretFormat
+		struct
 		{
 			wchar_t fontFamilyName[100];
 			wchar_t localeName[LOCALE_NAME_MAX_LENGTH];
@@ -218,9 +223,8 @@ namespace GUI
 			UINT32 color;
 			BOOL hasUnderline;
 			BOOL hasStrikethrough;
-		};
+		} m_CaretFormat;
 
-		CaretFormat m_CaretFormat;
 		unsigned int m_CaretPos;
 		unsigned int m_CaretPosOffset;
 		unsigned int m_CaretAnchor;
