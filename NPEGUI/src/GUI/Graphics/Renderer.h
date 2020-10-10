@@ -107,6 +107,41 @@ namespace GUI
 		/// <returns>A handle to the main window</returns>
 		HWND GetNativeWindow() { return m_hWnd; }
 
+		/// <summary>
+		/// Calculates the view matrix
+		/// </summary>
+		/// <param name="origin">Is the point where the window should zoom towards</param>
+		/// <param name="scale">Is the zoomed scale of the window</param>
+		/// <returns>The view matrix</returns>
+		DWrite::Matrix GetViewMatrix(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale);
+
+		/// <summary>
+		/// Calculates the inverse view matrix
+		/// </summary>
+		/// <param name="origin">Is the point where the window should zoom towards</param>
+		/// <param name="scale">Is the zoomed scale of the window</param>
+		/// <returns>The inverse view matrix</returns>
+		DWrite::Matrix GetInverseViewMatrix(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale);
+
+		/// <summary>
+		/// Calculates the inverse matrix from a normal matrix
+		/// </summary>
+		/// <param name="matrix">Is the normal matrix</param>
+		/// <returns>The inverse matrix</returns>
+		DWrite::Matrix ComputeInverseMatrix(_In_ const DWrite::Matrix& matrix);
+
+		/// <summary>
+		/// Getter for the current transform of the MainWindow
+		/// </summary>
+		/// <returns>The current window transform</returns>
+		DWrite::Matrix GetTransform();
+
+		/// <summary>
+		/// Setter for the MainWindow transform
+		/// </summary>
+		/// <param name="transform">Is the new window transform</param>
+		void SetTransform(_In_ const DWrite::Matrix& transform);
+
 	private:
 		/// <summary>
 		/// Renderer Constructor

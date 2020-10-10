@@ -357,8 +357,8 @@ namespace NPE
 			float originX = float(rc.right - rc.left) / 2;
 			float originY = float(rc.bottom - rc.top) / 2;
 
-			D2D1::Matrix3x2F pageTransform = *(D2D1::Matrix3x2F*)&GUI::TextRenderer::Get().GetViewMatrix({ originX, originY }, TestScale);
-			GUI::TextRenderer::Get().SetTransform(*(DWrite::Matrix*)&pageTransform);
+			D2D1::Matrix3x2F pageTransform = *(D2D1::Matrix3x2F*)&GUI::Renderer::Get().GetViewMatrix({ originX, originY }, TestScale);
+			GUI::Renderer::Get().SetTransform(*(DWrite::Matrix*)&pageTransform);
 		}
 		
 		//NPE_LOG("Rendered area:\n{0}{1}", Util::ToTransform(*e.GetRect()), '\n');

@@ -80,7 +80,7 @@ namespace GUI
 	void Renderer::RenderBitmapBackground()
 	{
 		auto rtSize = m_pRenderTarget->GetSize();
-
+		
 		// Create a rectangle with size of current window
 		auto rectangle = D2D1::RectF(0.0f, 0.0f, rtSize.width, rtSize.height);
 		m_pRenderTarget->DrawBitmap(m_pD2DBitmap, rectangle);
@@ -167,5 +167,80 @@ namespace GUI
 		Util::Release(&pStream);
 		Util::Release(&pConverter);
 		Util::Release(&pScaler);
+	}
+
+	DWrite::Matrix Renderer::GetViewMatrix(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale)
+	{
+		RECT rect;
+		GetClientRect(m_hWnd, &rect);
+
+		DWrite::Matrix translationMatrix = {
+			1, 0,
+			0, 1,
+			-origin.x, -origin.y
+		};
+
+		double cosValue = 1.0;
+		double sinValue = 0.0;
+
+		DWrite::Matrix rotationMatrix = {
+			float(cosValue * scale.width), float(sinValue * scale.width),
+			float(-sinValue * scale.height), float(cosValue * scale.height),
+			0, 0
+		};
+
+		float centeringFactor = 0.5f;
+		DWrite::Matrix centerMatrix = {
+			1, 0,
+			0, 1,
+			(float)floor((float)(rect.right * centeringFactor)), (float)floor((float)(rect.bottom * centeringFactor))
+		};
+
+		D2D1::Matrix3x2F resultA, resultB;
+
+		resultB.SetProduct(*(D2D1::Matrix3x2F*) & translationMatrix, *(D2D1::Matrix3x2F*) & rotationMatrix);
+		resultA.SetProduct(resultB, *(D2D1::Matrix3x2F*) & centerMatrix);
+
+		resultA._31 = (float)floor(resultA._31);
+		resultA._32 = (float)floor(resultA._32);
+
+		return *(DWrite::Matrix*) & resultA;
+	}
+
+	DWrite::Matrix Renderer::GetInverseViewMatrix(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale)
+	{
+		return ComputeInverseMatrix(GetViewMatrix(origin, scale));
+	}
+
+	DWrite::Matrix Renderer::ComputeInverseMatrix(_In_ const DWrite::Matrix& matrix)
+	{
+		auto GetDeterminant = [](const DWrite::Matrix& matrix)
+		{
+			return matrix.m11 * matrix.m22 - matrix.m12 * matrix.m21;
+		};
+
+		DWrite::Matrix result;
+		
+		float invdet = 1.0f / GetDeterminant(matrix);
+		result.m11 = matrix.m22 * invdet;
+		result.m12 = -matrix.m12 * invdet;
+		result.m21 = -matrix.m21 * invdet;
+		result.m22 = matrix.m11 * invdet;
+		result.dx = (matrix.m21 * matrix.dy - matrix.dx * matrix.m22) * invdet;
+		result.dy = (matrix.dx * matrix.m12 - matrix.m11 * matrix.dy) * invdet;
+
+		return result;
+	}
+
+	DWrite::Matrix Renderer::GetTransform()
+	{
+		D2D1::Matrix3x2F transform;
+		m_pRenderTarget->GetTransform(&transform);
+		return *(DWrite::Matrix*) & transform;
+	}
+
+	void Renderer::SetTransform(_In_ const DWrite::Matrix& transform)
+	{
+		m_pRenderTarget->SetTransform((D2D1::Matrix3x2F*) & transform);
 	}
 }
