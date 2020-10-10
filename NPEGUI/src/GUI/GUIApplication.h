@@ -31,7 +31,7 @@ namespace GUI
 
 	protected:
 		/// <summary>
-		/// MainWindow structure
+		/// Object representing the Main Window in the Application
 		/// </summary>
 		MainWindow m_Window;
 	};

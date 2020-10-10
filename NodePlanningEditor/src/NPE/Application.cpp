@@ -345,11 +345,20 @@ namespace NPE
 		
 		if (watched->GetType() == GUI::Control::Type::Window)
 		{
+			/// <TODO>
+			/// Look at https://docs.microsoft.com/en-us/windows/win32/direct2d/id2d1brush-settransform
+			/// Try to make zooming work with transforms
+			///		Look at PadWrite.sln and figure out how they work with caret and mouse pos in a transformed window
+			///		"Detransform" transform locally when moving camera (Look at PadWrite.sln again)
+			/// </TODO>
+
 			RECT rc = m_Window.GetRect();
 
-			D2D1::Matrix3x2F pageTransform = *(D2D1::Matrix3x2F*) & GUI::TextRenderer::Get().GetViewMatrix({ float(rc.right - rc.left) / 2, float(rc.bottom - rc.top) / 2 }, TestScale);
-			DWrite::Matrix previousTransform = GUI::TextRenderer::Get().GetTransform();
-			GUI::TextRenderer::Get().SetTransform(*(DWrite::Matrix*) & pageTransform);
+			float originX = float(rc.right - rc.left) / 2;
+			float originY = float(rc.bottom - rc.top) / 2;
+
+			D2D1::Matrix3x2F pageTransform = *(D2D1::Matrix3x2F*)&GUI::TextRenderer::Get().GetViewMatrix({ originX, originY }, TestScale);
+			GUI::TextRenderer::Get().SetTransform(*(DWrite::Matrix*)&pageTransform);
 		}
 		
 		//NPE_LOG("Rendered area:\n{0}{1}", Util::ToTransform(*e.GetRect()), '\n');
