@@ -5,27 +5,28 @@ namespace DWrite
 	/**
 	* QUESTION:
 	*	Should I do this?
-	*	Should I use "typedef" or "using"
+	*	Should I use "typedef" or "using"?
+	*	Should I line the "=" up?
 	*/
 
-	typedef DWRITE_FONT_WEIGHT FontWeight;
-	typedef DWRITE_FONT_STYLE FontStyle;
-	typedef DWRITE_FONT_STRETCH FontStretch;
-	typedef DWRITE_MEASURING_MODE MeasuringMode;
+	using FontWeight		= DWRITE_FONT_WEIGHT;
+	using FontStyle			= DWRITE_FONT_STYLE;
+	using FontStretch		= DWRITE_FONT_STRETCH;
+	using MeasuringMode		= DWRITE_MEASURING_MODE;
 
-	typedef DWRITE_TEXT_METRICS TextMetrics;
-	typedef DWRITE_LINE_METRICS LineMetrics;
-	typedef DWRITE_CLUSTER_METRICS ClusterMetrics;
-	typedef DWRITE_OVERHANG_METRICS OverhangMetrics;
-	typedef DWRITE_HIT_TEST_METRICS HitTestMetrics;
+	using TextMetrics		= DWRITE_TEXT_METRICS;
+	using LineMetrics		= DWRITE_LINE_METRICS;
+	using ClusterMetrics	= DWRITE_CLUSTER_METRICS;
+	using OverhangMetrics	= DWRITE_OVERHANG_METRICS;
+	using HitTestMetrics	= DWRITE_HIT_TEST_METRICS;
 
-	typedef DWRITE_TEXT_RANGE TextRange;
+	using TextRange			= DWRITE_TEXT_RANGE;
 }
 
 namespace Direct2D
 {
-	typedef D2D1_RECT_F RectF;
-	typedef D2D1_DRAW_TEXT_OPTIONS DrawTextOptions;
+	using RectF				= D2D1_RECT_F;
+	using DrawTextOptions	= D2D1_DRAW_TEXT_OPTIONS;
 }
 
 
