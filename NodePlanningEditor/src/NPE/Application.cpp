@@ -31,6 +31,8 @@
 //#define NPE_DEBUG_RANDOM_NODES
 
 
+Util::NSize TestScale = { 1.0f, 1.0f };
+
 
 namespace NPE
 {
@@ -340,6 +342,15 @@ namespace NPE
 	{
 		GUI::Renderer& renderer = GUI::Renderer::Get();
 		renderer.BeginDraw();
+		
+		if (watched->GetType() == GUI::Control::Type::Window)
+		{
+			RECT rc = m_Window.GetRect();
+
+			D2D1::Matrix3x2F pageTransform = *(D2D1::Matrix3x2F*) & GUI::TextRenderer::Get().GetViewMatrix({ float(rc.right - rc.left) / 2, float(rc.bottom - rc.top) / 2 }, TestScale);
+			DWrite::Matrix previousTransform = GUI::TextRenderer::Get().GetTransform();
+			GUI::TextRenderer::Get().SetTransform(*(DWrite::Matrix*) & pageTransform);
+		}
 		
 		//NPE_LOG("Rendered area:\n{0}{1}", Util::ToTransform(*e.GetRect()), '\n');
 

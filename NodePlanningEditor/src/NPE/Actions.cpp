@@ -70,38 +70,19 @@ namespace NPE
 	void Actions::ZoomIn(int& zoom, std::vector<GUI::Control*>& controls)
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
-		++zoom;
 
-		if (zoom >= s_ZoomBoundary)
-		{
-			zoom = s_ZoomBoundary;
-			return;
-		}
-
-		for (auto* control : controls)
-		{
-			control->MoveBy((center - control->GetPos()) * -s_ZoomFactor);
-			control->ResizeTo(control->GetSize() * s_ResizeFactor);
-		}
+		float scaleFactor = (3 > 0) ? 1.0625f : 1 / 1.0625f;
+		TestScale *= { scaleFactor, scaleFactor };
 
 	}
 
 	void Actions::ZoomOut(int& zoom, std::vector<GUI::Control*>& controls)
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
+		
+		float scaleFactor = (-3 > 0) ? 1.0625f : 1 / 1.0625f;
+		TestScale *= { scaleFactor, scaleFactor };
 
-		--zoom;
-		if (zoom <= -s_ZoomBoundary)
-		{
-			zoom = -s_ZoomBoundary;
-			return;
-		}
-
-		for (auto* control : controls)
-		{
-			control->MoveBy((center - control->GetPos()) * s_ZoomFactor);
-			control->ResizeTo(control->GetSize() / s_ResizeFactor);
-		}
 	}
 	
 	void Actions::RenderLines(const std::vector<Line>& lines)

@@ -212,7 +212,7 @@ namespace GUI
 		return *(DWrite::Matrix*)&transform;
 	}
 
-	DWrite::Matrix TextRenderer::SetTransform(_In_ const DWrite::Matrix& transform)
+	void TextRenderer::SetTransform(_In_ const DWrite::Matrix& transform)
 	{
 		Renderer::Get().m_pRenderTarget->SetTransform((D2D1::Matrix3x2F*)&transform);
 	}

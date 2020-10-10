@@ -27,6 +27,8 @@ namespace GUI
 *	friend class declaration or getters and setters for everything, or function parameters (for file handler to save controls, zoom...)
 */
 
+extern Util::NSize TestScale;
+
 
 namespace NPE
 {
@@ -176,7 +178,6 @@ namespace NPE
 		void SetWindowSavedText();
 
 	private:
-
 		/// <summary>
 		/// Contains pointers to the controls which are used by an event to work across multiple events
 		/// </summary>
@@ -238,6 +239,7 @@ namespace NPE
 		/// The id of the timer which runs every 20s to automatically save the scene
 		/// </summary>
 		static constexpr int s_TimerAutosaveId = 0;
+
 	};
 }
 
