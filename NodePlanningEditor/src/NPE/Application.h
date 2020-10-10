@@ -134,18 +134,6 @@ namespace NPE
 		/// </summary>
 		~Application();
 
-		/// <summary>
-		/// Getter for zoom
-		/// </summary>
-		/// <returns>The current zoom</returns>
-		const Util::NSize& GetScale() const { return m_Scale; }
-
-		/// <summary>
-		/// Setter for zoom
-		/// </summary>
-		/// <param name="zoom">Is the new zoom</param>
-		void SetScale(const Util::NSize& scale) { m_Scale = scale; }
-
 	private:
 		/// <summary>
 		/// Shows a messagebox asking if the scene should be saved and saves it if the user choses yes
@@ -217,11 +205,6 @@ namespace NPE
 		/// Set to true after any kind of interaction
 		/// </summary>
 		bool m_NeedsToSave;
-
-		/// <summary>
-		/// Specifies the scale in x and y (used for zooming)
-		/// </summary>
-		Util::NSize m_Scale;
 
 		/// <summary>
 		/// Default Node width

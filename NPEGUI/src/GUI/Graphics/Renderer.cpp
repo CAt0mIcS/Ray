@@ -38,7 +38,7 @@ namespace GUI
 		)
 	{
 		m_pBrush->SetColor(color.ToD2D1ColorF());
-	
+		DWrite::Matrix matrix = GetViewMatrix(GetOrigin());
 		m_pRenderTarget->FillRoundedRectangle({ { pos.x, pos.y, pos.x + size.width, pos.y + size.height }, radiusX, radiusY }, m_pBrush.Get());
 	}
 
@@ -53,8 +53,19 @@ namespace GUI
 		m_pRenderTarget->DrawLine(startPos.ToD2D1Point2F(), endPos.ToD2D1Point2F(), m_pBrush.Get(), radius);
 	}
 
+	Util::NPoint Renderer::GetOrigin() const
+	{
+		Util::NPoint origin;
+		RECT rc;
+		GetClientRect(m_hWnd, &rc);
+		
+		origin.x = float(rc.right - rc.left) / 2.0f;
+		origin.x = float(rc.bottom - rc.top) / 2.0f;
+		return origin;
+	}
+
 	Renderer::Renderer()
-		: m_hWnd(0), m_pD2DBitmap(nullptr) {}
+		: m_hWnd(0), m_pD2DBitmap(nullptr), m_Scale{ 1.0f, 1.0f } {}
 
 	void Renderer::Init(_In_ HWND hWnd)
 	{
@@ -72,12 +83,12 @@ namespace GUI
 		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->EndDraw(), "Failed to draw object(s)");
 	}
 
-	void Renderer::RenderScene(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale)
+	void Renderer::RenderScene()
 	{
-		RenderBitmapBackground(origin, scale);
+		RenderBitmapBackground();
 	}
 
-	void Renderer::RenderBitmapBackground(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale)
+	void Renderer::RenderBitmapBackground()
 	{
 		auto rtSize = m_pRenderTarget->GetSize();
 		
@@ -169,7 +180,7 @@ namespace GUI
 		Util::Release(&pScaler);
 	}
 
-	DWrite::Matrix Renderer::GetViewMatrix(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale)
+	DWrite::Matrix Renderer::GetViewMatrix(_In_ const Util::NPoint& origin)
 	{
 		RECT rect;
 		GetClientRect(m_hWnd, &rect);
@@ -184,8 +195,8 @@ namespace GUI
 		double sinValue = 0.0;
 
 		DWrite::Matrix rotationMatrix = {
-			float(cosValue * scale.width), float(sinValue * scale.width),
-			float(-sinValue * scale.height), float(cosValue * scale.height),
+			float(cosValue * m_Scale.width), float(sinValue * m_Scale.width),
+			float(-sinValue * m_Scale.height), float(cosValue * m_Scale.height),
 			0, 0
 		};
 
@@ -207,9 +218,9 @@ namespace GUI
 		return *(DWrite::Matrix*)&resultA;
 	}
 
-	DWrite::Matrix Renderer::GetInverseViewMatrix(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale)
+	DWrite::Matrix Renderer::GetInverseViewMatrix(_In_ const Util::NPoint& origin)
 	{
-		return ComputeInverseMatrix(GetViewMatrix(origin, scale));
+		return ComputeInverseMatrix(GetViewMatrix(origin));
 	}
 
 	DWrite::Matrix Renderer::ComputeInverseMatrix(_In_ const DWrite::Matrix& matrix)

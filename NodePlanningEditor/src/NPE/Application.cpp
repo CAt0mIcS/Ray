@@ -35,14 +35,14 @@
 namespace NPE
 {
 	Application::Application()
-		: m_Actions(*this), m_MousePos{}, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false), m_Scale{ 1.0f, 1.0f }
+		: m_Actions(*this), m_MousePos{}, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false)
 	{
 		NPE_THROW_WND_EXCEPT(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE));
 
 		m_FileHandler.CreateOrLoadSave();
 
 		NPE_LOG("Start of loading scene...\n");
-		m_FileHandler.LoadScene(m_Window, m_Lines, m_Scale);
+		m_FileHandler.LoadScene(m_Window, m_Lines);
 
 		#ifdef NPE_DEBUG_RANDOM_NODES
 			auto& controls = m_Window.GetControls();
@@ -245,7 +245,7 @@ namespace NPE
 					return false;
 			}
 
-			bool result = m_FileHandler.OpenScene(m_Window, m_Lines, m_Scale);
+			bool result = m_FileHandler.OpenScene(m_Window, m_Lines);
 			m_Window.PostRedraw();
 			return result;
 		}
@@ -299,7 +299,7 @@ namespace NPE
 
 	bool Application::OnMouseWheelUp(GUI::Control* watched, GUI::MouseWheelUpEvent& e)
 	{
-		m_Actions.ZoomIn(m_Scale, m_Window.GetControls());
+		m_Actions.ZoomIn(m_Window.GetControls());
 		SetNeedsToSave(true);
 		m_Window.PostRedraw();
 		return true;
@@ -307,7 +307,7 @@ namespace NPE
 
 	bool Application::OnMouseWheelDown(GUI::Control* watched, GUI::MouseWheelDownEvent& e)
 	{
-		m_Actions.ZoomOut(m_Scale, m_Window.GetControls());
+		m_Actions.ZoomOut(m_Window.GetControls());
 		SetNeedsToSave(true);
 		m_Window.PostRedraw();
 		return true;
@@ -342,15 +342,10 @@ namespace NPE
 		renderer.BeginDraw();
 
 		DWrite::Matrix prevTransform = renderer.GetTransform();
-		RECT rc = m_Window.GetRect();
-
-		float originX = float(rc.right - rc.left) / 2;
-		float originY = float(rc.bottom - rc.top) / 2;
-
-		renderer.RenderScene({ originX, originY }, m_Scale);
 
 		if (watched->GetType() == GUI::Control::Type::Window)
 		{
+			renderer.RenderScene();
 			/// <TODO>
 			/// Look at https://docs.microsoft.com/en-us/windows/win32/direct2d/id2d1brush-settransform
 			/// Try to make zooming work with transforms
@@ -358,7 +353,7 @@ namespace NPE
 			///		"Detransform" transform locally when moving camera (Look at PadWrite.sln again)
 			/// </TODO>
 
-			D2D1::Matrix3x2F pageTransform = *(D2D1::Matrix3x2F*)&GUI::Renderer::Get().GetViewMatrix({ originX, originY }, m_Scale);
+			D2D1::Matrix3x2F pageTransform = *(D2D1::Matrix3x2F*)&GUI::Renderer::Get().GetViewMatrix(GUI::Renderer::Get().GetOrigin());
 			GUI::Renderer::Get().SetTransform(*(DWrite::Matrix*)&pageTransform);
 		}
 		
@@ -402,7 +397,7 @@ namespace NPE
 	void Application::SaveScene(bool saveToNewLocation)
 	{
 		SetWindowSavedText();
-		m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, m_Scale, saveToNewLocation);
+		m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, saveToNewLocation);
 		SetNeedsToSave(false);
 	}
 

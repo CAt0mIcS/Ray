@@ -37,7 +37,7 @@ namespace NPE
 		////m_SaveFolder = "saves\\";
 	}
 
-	void FileHandler::SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, const Util::NSize& scale, bool saveToNewLocation)
+	void FileHandler::SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, bool saveToNewLocation)
 	{
 		HCURSOR prevCursor = GetCursor();
 		SetCursor(LoadCursor(NULL, IDC_WAIT));
@@ -121,13 +121,13 @@ namespace NPE
 				NPE_LOG("Didn't save line because it didn't have a valid end point");
 		}
 		NPE_LOG("\n\n");
-		tbSceneInfo.AddRecord(scale.width, scale.height);
+		tbSceneInfo.AddRecord(GUI::Renderer::Get().GetScale().width, GUI::Renderer::Get().GetScale().height);
 
 		m_Db->WriteDb();
 		SetCursor(prevCursor);
 	}
 	
-	void FileHandler::LoadScene(GUI::MainWindow& win, std::vector<Line>& lines, Util::NSize& scale)
+	void FileHandler::LoadScene(GUI::MainWindow& win, std::vector<Line>& lines)
 	{
 		GUI::Control::ResetIdCounter(1);
 		HCURSOR prevCursor = GetCursor();
@@ -151,12 +151,16 @@ namespace NPE
 
 		try
 		{
-			scale.width = std::stof(tbSceneInfo->GetRecords().at(0).GetRecordData()[0]);
-			scale.height = std::stof(tbSceneInfo->GetRecords().at(0).GetRecordData()[1]);
+			GUI::Renderer::Get().SetScale(
+				{ 
+					std::stof(tbSceneInfo->GetRecords().at(0).GetRecordData()[0]), 
+					std::stof(tbSceneInfo->GetRecords().at(0).GetRecordData()[1]) 
+				}
+			);
 		}
 		catch (std::out_of_range&)
 		{
-			scale = { 1.0f, 1.0f };
+			GUI::Renderer::Get().SetScale({ 1.0f, 1.0f });
 		}
 
 		for (auto& record : tbNodeInfo->GetRecords())
@@ -406,7 +410,7 @@ namespace NPE
 		WriteConfig(filepath);
 	}
 
-	bool FileHandler::OpenScene(GUI::MainWindow& win, std::vector<Line>& lines, Util::NSize& scale)
+	bool FileHandler::OpenScene(GUI::MainWindow& win, std::vector<Line>& lines)
 	{
 		GUI::FileWindow fileWin;
 
@@ -422,7 +426,7 @@ namespace NPE
 			return false;
 
 		ChangeScene(Util::WideCharToMultiByte(result));
-		LoadScene(win, lines , scale);
+		LoadScene(win, lines);
 		return true;
 	}
 	

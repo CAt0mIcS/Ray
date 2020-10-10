@@ -45,12 +45,7 @@ namespace GUI
 		/// <summary>
 		/// Renders the background with a color (currently renders bitmap, parameter color is ignored)
 		/// </summary>
-		/// <param name="origin">Is the point where the window should zoom towards</param>
-		/// <param name="scale">Is the zoomed scale of the window</param>
-		void RenderScene(
-			_In_ const Util::NPoint& origin,
-			_In_ const Util::NSize& scale
-		);
+		void RenderScene();
 
 		/// <summary>
 		/// Draws a filled rectangle with specified arguments
@@ -112,17 +107,15 @@ namespace GUI
 		/// Calculates the view matrix
 		/// </summary>
 		/// <param name="origin">Is the point where the window should zoom towards</param>
-		/// <param name="scale">Is the zoomed scale of the window</param>
 		/// <returns>The view matrix</returns>
-		DWrite::Matrix GetViewMatrix(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale);
+		DWrite::Matrix GetViewMatrix(_In_ const Util::NPoint& origin);
 
 		/// <summary>
 		/// Calculates the inverse view matrix
 		/// </summary>
 		/// <param name="origin">Is the point where the window should zoom towards</param>
-		/// <param name="scale">Is the zoomed scale of the window</param>
 		/// <returns>The inverse view matrix</returns>
-		DWrite::Matrix GetInverseViewMatrix(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale);
+		DWrite::Matrix GetInverseViewMatrix(_In_ const Util::NPoint& origin);
 
 		/// <summary>
 		/// Calculates the inverse matrix from a normal matrix
@@ -143,6 +136,24 @@ namespace GUI
 		/// <param name="transform">Is the new window transform</param>
 		void SetTransform(_In_ const DWrite::Matrix& transform);
 
+		/// <summary>
+		/// Getter for the window scale
+		/// </summary>
+		/// <returns>The current window scale</returns>
+		const Util::NSize& GetScale() const { return m_Scale; }
+
+		/// <summary>
+		/// Setter for the window scale
+		/// </summary>
+		/// <param name="scale">Is the new scale of the window</param>
+		void SetScale(const Util::NSize& scale) { m_Scale = scale; }
+
+		/// <summary>
+		/// Caclulates the coordinates of the middle of the screen
+		/// </summary>
+		/// <returns>The origin of the screen</returns>
+		Util::NPoint GetOrigin() const;
+
 	private:
 		/// <summary>
 		/// Renderer Constructor
@@ -157,15 +168,9 @@ namespace GUI
 		/// <summary>
 		/// Uses the bitmap in the resource to draw the background
 		/// </summary>
-		/// <param name="origin">Is the point where the window should zoom towards</param>
-		/// <param name="scale">Is the zoomed scale of the window</param>
-		void RenderBitmapBackground(_In_ const Util::NPoint& origin, _In_ const Util::NSize& scale);
-	private:
-		/// <summary>
-		/// Handle to the main window
-		/// </summary>
-		HWND m_hWnd;
-
+		void RenderBitmapBackground();
+	
+private:
 		/// <summary>
 		/// Factory object, used to create all other D2D1 objects
 		/// </summary>
@@ -185,6 +190,17 @@ namespace GUI
 		/// Cached bitmap for background, access read violation when trying to release, thus is left unreleased
 		/// </summary>
 		ID2D1Bitmap* m_pD2DBitmap;
+
+	private:
+		/// <summary>
+		/// Handle to the main window
+		/// </summary>
+		HWND m_hWnd;
+
+		/// <summary>
+		/// Represents the scale of the current window
+		/// </summary>
+		Util::NSize m_Scale;
 
 		/// <summary>
 		/// Static Renderer instance for singelton design

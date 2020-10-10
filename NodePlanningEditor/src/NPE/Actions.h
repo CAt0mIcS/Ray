@@ -63,16 +63,14 @@ namespace NPE
 		/// <summary>
 		/// Zooms into the scene
 		/// </summary>
-		/// <param name="scale">Is a reference to a variable which will hold the current scale level</param>
 		/// <param name="controls">Is the list of Controls</param>
-		void ZoomIn(Util::NSize& scale, std::vector<GUI::Control*>& controls);
+		void ZoomIn(std::vector<GUI::Control*>& controls);
 
 		/// <summary>
 		/// Zooms out of the scene
 		/// </summary>
-		/// <param name="scale">Is a reference to a variable which will hold the current scale level</param>
 		/// <param name="controls">Is the list of Controls</param>
-		void ZoomOut(Util::NSize& scale, std::vector<GUI::Control*>& controls);
+		void ZoomOut(std::vector<GUI::Control*>& controls);
 
 		/// <summary>
 		/// Renders all lines

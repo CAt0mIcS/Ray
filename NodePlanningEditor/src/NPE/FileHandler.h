@@ -33,17 +33,15 @@ namespace NPE
 		/// </summary>
 		/// <param name="controls">Is a list of all Controls to save</param>
 		/// <param name="lines">Is a list of all lines to save</param>
-		/// <param name="scale">Is the scale level to save</param>
 		/// <param name="saveToNewLocation">Is true if the SaveFileDialog should open to save to a new location</param>
-		void SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, const Util::NSize& scale, bool saveToNewLocation = false);
+		void SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, bool saveToNewLocation = false);
 		
 		/// <summary>
 		/// Loads a scene from the file specified in "config.cfg" file
 		/// </summary>
 		/// <param name="win">Is the main window</param>
 		/// <param name="lines">Is a reference to a list of lines which will be populated with the saved ones</param>
-		/// <param name="scale">Is a reference to the scale level</param>
-		void LoadScene(GUI::MainWindow& win, std::vector<Line>& lines, Util::NSize& scale);
+		void LoadScene(GUI::MainWindow& win, std::vector<Line>& lines);
 
 		/// <summary>
 		/// Creates a default databases template
@@ -66,9 +64,8 @@ namespace NPE
 		/// </summary>
 		/// <param name="win">Is the MainWindow where all the controls will be</param>
 		/// <param name="lines">Is a vector where all line connections will be added to</param>
-		/// <param name="m_Zoom">Is the current scale of the scene</param>
 		/// <returns>True if the user didn't abort the process, false otherwise</returns>
-		bool OpenScene(GUI::MainWindow& win, std::vector<Line>& lines, Util::NSize& scale);
+		bool OpenScene(GUI::MainWindow& win, std::vector<Line>& lines);
 
 		/// <summary>
 		/// Getter for the current Save File name

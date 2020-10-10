@@ -50,22 +50,20 @@ namespace NPE
 		node->MoveBy(diff);
 	}
 
-	void Actions::ZoomIn(Util::NSize& scale, std::vector<GUI::Control*>& controls)
+	void Actions::ZoomIn(std::vector<GUI::Control*>& controls)
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
 
 		float scaleFactor = (3 > 0) ? 1.0625f : 1 / 1.0625f;
-		scale *= { scaleFactor, scaleFactor };
-
+		GUI::Renderer::Get().SetScale(GUI::Renderer::Get().GetScale() * Util::NSize{ scaleFactor, scaleFactor });
 	}
 
-	void Actions::ZoomOut(Util::NSize& scale, std::vector<GUI::Control*>& controls)
+	void Actions::ZoomOut(std::vector<GUI::Control*>& controls)
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
 		
 		float scaleFactor = (-3 > 0) ? 1.0625f : 1 / 1.0625f;
-		scale *= { scaleFactor, scaleFactor };
-
+		GUI::Renderer::Get().SetScale(GUI::Renderer::Get().GetScale() * Util::NSize{ scaleFactor, scaleFactor });
 	}
 	
 	void Actions::RenderLines(const std::vector<Line>& lines)
