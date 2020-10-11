@@ -345,8 +345,8 @@ namespace NPE
 			// Render the entire scene if the window requested a redraw
 			renderer.RenderScene();
 
-			D2D1::Matrix3x2F pageTransform = GUI::Renderer::Get().GetViewMatrix();
-			GUI::Renderer::Get().SetTransform(pageTransform);
+			D2D1::Matrix3x2F pageTransform = renderer.GetViewMatrix();
+			renderer.SetTransform(pageTransform);
 		}
 		
 		watched->Render();
