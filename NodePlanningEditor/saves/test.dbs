@@ -1,4 +1,14 @@
-TABLES: 3
+TABLES: 4
+TABLE: VersionInfo
+FIELDS
+{
+    SaveFileVersion:INTEGER
+}
+RECORDS: 1
+RECORD
+{
+    1
+}
 TABLE: NodeInfo
 FIELDS
 {
@@ -12,8 +22,8 @@ FIELDS
 RECORDS: 4
 RECORD
 {
-    353.391
-    549.949
+    302.014
+    590.696
     450
     280
     GUI
@@ -21,8 +31,8 @@ RECORD
 }
 RECORD
 {
-    1071.46
-    552.588
+    1020.08
+    593.335
     450
     280
     WebServer
@@ -30,8 +40,8 @@ RECORD
 }
 RECORD
 {
-    402.214
-    152.713
+    350.837
+    193.46
     450
     280
     GGGGGUUUUUUIIIII
@@ -39,8 +49,8 @@ RECORD
 }
 RECORD
 {
-    1040.21
-    155.713
+    988.829
+    196.46
     450
     280
     TestNode2

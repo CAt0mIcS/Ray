@@ -18,4 +18,6 @@ namespace Constants
 	inline constexpr Util::NColor g_DefaultTextBoxColor{ 35.0f, 38.0f, 40.0f };
 	inline constexpr Util::NColor g_DefaultCaretColor{ 255, 255, 255 };
 	inline constexpr Util::NColor g_DefaultSelectionRectColor{ 80, 80, 80 };
+
+	inline constexpr float g_SaveFileVersion = 1.0f;
 }

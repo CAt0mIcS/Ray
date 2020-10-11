@@ -68,14 +68,18 @@ namespace NPE
 		}
 
 		//clear save file
+		m_Db->DeleteTable("VersionInfo");
 		m_Db->DeleteTable("NodeInfo");
 		m_Db->DeleteTable("SceneInfo");
 		m_Db->DeleteTable("Lines");
 
 		//Table creation and setup
+		QRD::Table& tbVersionInfo = m_Db->CreateTable("VersionInfo");
 		QRD::Table& tbNodeInfo = m_Db->CreateTable("NodeInfo");
 		QRD::Table& tbSceneInfo = m_Db->CreateTable("SceneInfo");
 		QRD::Table& tbLines = m_Db->CreateTable("Lines");
+
+		tbVersionInfo.AddField<QRD::NUMBER>("SaveFileVersion");
 
 		tbNodeInfo.AddField<QRD::NUMBER>("x");
 		tbNodeInfo.AddField<QRD::NUMBER>("y");
@@ -90,6 +94,7 @@ namespace NPE
 		tbSceneInfo.AddField<QRD::NUMBER>("scaleX");
 		tbSceneInfo.AddField<QRD::NUMBER>("scaleY");
 
+		tbVersionInfo.AddRecord(Constants::g_SaveFileVersion);
 		for (auto* control : controls)
 		{
 			const auto& pos = control->GetPos();
@@ -141,9 +146,17 @@ namespace NPE
 		lines.clear();
 
 		//needs to be declared in release mode (error C4703: potentially uninitialized local pointer variable used)
+		QRD::Table* tbVersionInfo = nullptr;
 		QRD::Table* tbNodeInfo = nullptr;
 		QRD::Table* tbSceneInfo = nullptr;
 		QRD::Table* tbLines = nullptr;
+
+		tbVersionInfo = &m_Db->GetTable("VersionInfo");
+		if (std::stof(tbVersionInfo->GetRecordById(0).GetRecordData()[0]) != Constants::g_SaveFileVersion)
+		{
+			MessageBox(NULL, L"You are using an old save file version, please update the file to continue", L"Invalid Save File", MB_OK);
+			exit(0);
+		}
 
 		tbNodeInfo = &m_Db->GetTable("NodeInfo");
 		tbSceneInfo = &m_Db->GetTable("SceneInfo");
@@ -225,9 +238,12 @@ namespace NPE
 
 	void FileHandler::CreateDefaultTemplate()
 	{
+		QRD::Table& tbVersionInfo = m_Db->CreateTable("VersionInfo");
 		QRD::Table& tbNodeInfo = m_Db->CreateTable("NodeInfo");
 		QRD::Table& tbSceneInfo = m_Db->CreateTable("SceneInfo");
 		QRD::Table& tbLines = m_Db->CreateTable("Lines");
+
+		tbVersionInfo.AddField<QRD::NUMBER>("SaveFileVersion");
 
 		tbNodeInfo.AddField<QRD::NUMBER>("x");
 		tbNodeInfo.AddField<QRD::NUMBER>("y");
@@ -370,7 +386,7 @@ namespace NPE
 		else
 			NPE_LOG("File exists");
 
-		m_Db = new QRD::Database(configs["SaveFile"], 3, 6);
+		m_Db = new QRD::Database(configs["SaveFile"], 4, 6);
 
 		if (!saveFileExist)
 		{
