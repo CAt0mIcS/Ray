@@ -70,7 +70,7 @@ namespace NPE
 	{
 		Util::NPoint center = GUI::Mouse::GetPos();
 		
-		float scaleFactor = 1 / s_ScaleFactor;
+		float scaleFactor = 1.0f / s_ScaleFactor;
 		GUI::Renderer::Get().SetScale(GUI::Renderer::Get().GetScale() * Util::NSize{ scaleFactor, scaleFactor });
 	}
 	

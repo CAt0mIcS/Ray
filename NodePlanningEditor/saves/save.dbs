@@ -12,85 +12,87 @@ FIELDS
 RECORDS: 8
 RECORD
 {
-    848.209
-    580.003
-    250.577
-    155.914
+    820.139
+    519.278
+    450
+    280
     Hello World
     Hello World
 }
 RECORD
 {
-    527.346
-    575.56
-    250.577
-    155.914
+    436.324
+    518.695
+    450
+    280
     Hello World
     Hello World
 }
 RECORD
 {
-    213.663
-    484.15
-    250.577
-    155.914
+    -148.045
+    657.491
+    450
+    280
     Hello World
     Hello World
 }
 RECORD
 {
-    1165.91
-    482.709
-    250.577
-    155.914
+    1365.55
+    682.501
+    450
+    280
     Hello World
     Hello World
 }
 RECORD
 {
-    691.527
-    29.3334
-    250.577
-    155.914
+    619.225
+    -162.948
+    450
+    280
     Hello World
     Hello World
 }
 RECORD
 {
-    686.74
-    817.276
-    250.577
-    155.914
+    633.674
+    968.079
+    450
+    280
     Hello World
     Hello World
 }
 RECORD
 {
-    318.056
-    255.164
-    250.577
-    155.914
+    177.999
+    148.766
+    450
+    280
     Hello World
     Hello World
 }
 RECORD
 {
-    1063.36
-    257.032
-    250.577
-    155.914
+    1089.01
+    155.762
+    450
+    280
     Hello World
     Hello World
 }
 TABLE: SceneInfo
 FIELDS
 {
-    zoom:INTEGER
+    scaleX:INTEGER
+    scaleY:INTEGER
 }
 RECORDS: 1
 RECORD
 {
-    -12
+    0.579481
+    0.579481
 }
 TABLE: Lines
 FIELDS

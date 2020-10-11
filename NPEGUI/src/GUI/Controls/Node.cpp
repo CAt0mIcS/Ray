@@ -10,9 +10,6 @@
 #include "Button.h"
 
 
-#include "Util/Debug/Timer.h"
-
-
 namespace GUI
 {
 	Node::Node(_In_opt_ Control* parent)

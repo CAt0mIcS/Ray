@@ -17,9 +17,6 @@
 
 #include "GUI/Window/FileWindow.h"
 
-
-#include "Util/Debug/Timer.h"
-
 /**
 * QUESTION:
 *	Use strings or wstrings
@@ -27,7 +24,7 @@
 *	How to design a library with include directories (Example QRD) --> Good project file structure (CMake structure?)
 */
 
-//#define NPE_DEBUG_DISABLE_AUTOSAVE
+#define NPE_DEBUG_DISABLE_AUTOSAVE
 //#define NPE_DEBUG_RANDOM_NODES
 
 
