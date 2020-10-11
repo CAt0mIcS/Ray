@@ -148,10 +148,10 @@ namespace NPE
 		void SaveScene(bool saveToNewLocation = false);
 
 		/// <summary>
-		/// Sets a member variable to needsToSave
+		/// Sets a member variable to needsToSave and sets the window title to the correct one
 		/// </summary>
 		/// <param name="needsToSave">Specifies whether the file has changed and needs to be saved</param>
-		void SetNeedsToSave(bool needsToSave);
+		void SetNeedsToSaveAndWindowTitle(bool needsToSave);
 
 		/// <summary>
 		/// Sets text to the one which should be displayed when the scene does need to save

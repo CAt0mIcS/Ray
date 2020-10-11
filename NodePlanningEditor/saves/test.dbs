@@ -1,0 +1,82 @@
+TABLES: 3
+TABLE: NodeInfo
+FIELDS
+{
+    x:INTEGER
+    y:INTEGER
+    width:INTEGER
+    height:INTEGER
+    txt1:TEXT
+    txt2:TEXT
+}
+RECORDS: 4
+RECORD
+{
+    297.585
+    549.949
+    450
+    280
+    GUI
+    This is a test gui which will test\r\nall the current features and different\r\nmatrix manipulation techniques\r\nthis is exciting!!!
+}
+RECORD
+{
+    1015.66
+    552.588
+    450
+    280
+    WebServer
+    This nefjdk sjkf dslj fk sdljfk jfk \r\nf dsjkf sdlkjfksjdjfkdsjfkdjfkd\r\nfdsjkfsdljfk sd\r\nfdjsklfjdkjkjdiejfd
+}
+RECORD
+{
+    346.408
+    152.713
+    450
+    280
+    GGGGGUUUUUUIIIII
+    This is a jfksdl fjj fklsd\r\nf djlskf jdlsdljfksdjfd skjdfk sjksdljfei fjdsl \r\nfsdf jeklf jdslj mcvkssdljfksdl fjkl sdfs\r\nf jd sdlmksdljkfsdl jfksdljf klsdm fsdfjklsd \r\nfjd sljfkdksl ejif jdsljkl
+}
+RECORD
+{
+    984.408
+    155.713
+    450
+    280
+    TestNode2
+    That jfk sdlfjkdksljei fjdsl jfljf ps apfjd sapjffjd sjfpq jkfsd;fjd sfjkdlsa\r\nfjdsl eifjkkl jfidsjekl fji jdls;a j;fj a;jfdsdla; j dsdl\r\nfjksdlfjiejfjjiejf
+}
+TABLE: SceneInfo
+FIELDS
+{
+    scaleX:INTEGER
+    scaleY:INTEGER
+}
+RECORDS: 1
+RECORD
+{
+    1.12891
+    1.12891
+}
+TABLE: Lines
+FIELDS
+{
+    ID2:INTEGER
+    ID1:INTEGER
+}
+RECORDS: 3
+RECORD
+{
+    12
+    8
+}
+RECORD
+{
+    8
+    16
+}
+RECORD
+{
+    4
+    16
+}

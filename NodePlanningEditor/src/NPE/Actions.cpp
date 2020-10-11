@@ -55,8 +55,7 @@ namespace NPE
 
 	void Actions::MoveNodes(GUI::Node* node, const Util::NPoint& oldMousePos)
 	{
-		Util::NPoint diff{};
-		diff = GUI::Mouse::GetPos() - oldMousePos;
+		Util::NPoint diff = GUI::Mouse::GetPos() - oldMousePos;
 		node->MoveBy(diff);
 	}
 

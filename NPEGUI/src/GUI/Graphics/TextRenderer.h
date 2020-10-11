@@ -6,6 +6,11 @@
 
 namespace GUI
 {
+	/**
+	* QUESTION:
+	*	Wherer should I put this?
+	*/
+
 	/// <summary>
 	/// Contains all necessary information to render a text
 	/// </summary>
@@ -135,7 +140,6 @@ namespace GUI
 		/// Creates all graphics resources
 		/// </summary>
 		void CreateTextGraphicsResources();
-
 
 	private:
 		/// <summary>

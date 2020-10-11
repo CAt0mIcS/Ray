@@ -9,55 +9,18 @@ FIELDS
     txt1:TEXT
     txt2:TEXT
 }
-RECORDS: 3
-RECORD
-{
-    1021.26
-    313.934
-    520.931
-    324.135
-    New Paint System
-    This\r\nis a new Test\r\nAnd it's going just\r\nfine...
-}
-RECORD
-{
-    380.958
-    546.554
-    496.125
-    308.7
-    GUI
-    fds\r\nfdd\r\nfssaf\r\nddfs
-}
-RECORD
-{
-    482.958
-    139.554
-    450
-    280
-    
-    
-}
+RECORDS: 0
 TABLE: SceneInfo
 FIELDS
 {
     scaleX:INTEGER
     scaleY:INTEGER
 }
-RECORDS: 1
-RECORD
-{
-    1.12891
-    1.12891
-}
+RECORDS: 0
 TABLE: Lines
 FIELDS
 {
     ID2:INTEGER
     ID1:INTEGER
 }
-RECORDS: 1
-RECORD
-{
-    8
-    4
-}
+RECORDS: 0

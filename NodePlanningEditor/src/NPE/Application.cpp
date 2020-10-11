@@ -126,7 +126,7 @@ namespace NPE
 			m_MousePos = GUI::Mouse::GetPos();
 			m_Window.PostRedraw();
 
-			SetNeedsToSave(true);
+			SetNeedsToSaveAndWindowTitle(true);
 			return true;
 		}
 		else if (GUI::Mouse::IsLeftPressed())
@@ -148,7 +148,7 @@ namespace NPE
 				m_MousePos = GUI::Mouse::GetPos();
 				m_Window.PostRedraw();
 
-				SetNeedsToSave(true);
+				SetNeedsToSaveAndWindowTitle(true);
 				return true;
 			}
 		}
@@ -187,7 +187,7 @@ namespace NPE
 			{
 				m_Actions.FinnishLineDrawing(m_Lines, m_Window.GetControls());
 				m_Window.PostRedraw();
-				SetNeedsToSave(true);
+				SetNeedsToSaveAndWindowTitle(true);
 				m_DrawLines = false;
 			}
 
@@ -198,12 +198,12 @@ namespace NPE
 		{
 			m_Actions.EraseLine(m_Lines, m_MousePos);
 			m_Window.PostRedraw();
-			SetNeedsToSave(true);
+			SetNeedsToSaveAndWindowTitle(true);
 
 			if (GUI::Mouse::IsOnControl(watched) && watched->GetType() == GUI::Control::Type::Node)
 			{
 				m_Actions.DeleteNode((GUI::Node*)watched, m_Window.GetControls(), m_Lines);
-				SetNeedsToSave(true);
+				SetNeedsToSaveAndWindowTitle(true);
 				m_Window.PostRedraw();
 			}
 
@@ -219,7 +219,7 @@ namespace NPE
 		{
 			m_Actions.SpawnNode(m_Window, s_NodeWidth, s_NodeHeight);
 			m_Window.PostRedraw();
-			SetNeedsToSave(true);
+			SetNeedsToSaveAndWindowTitle(true);
 			return true;
 		}
 		//Save to shortcut
@@ -283,13 +283,13 @@ namespace NPE
 			}
 			
 			m_Window.PostRedraw();
-			SetNeedsToSave(true);
+			SetNeedsToSaveAndWindowTitle(true);
 			return true;
 		}
 		//Render caret on key press
 		else if (watched->GetType() == GUI::Control::Type::TextBox && watched->HasFocus())
 		{
-			SetNeedsToSave(true);
+			SetNeedsToSaveAndWindowTitle(true);
 			watched->GetParent()->PostRedraw();
 		}
 
@@ -299,7 +299,7 @@ namespace NPE
 	bool Application::OnMouseWheelUp(GUI::Control* watched, GUI::MouseWheelUpEvent& e)
 	{
 		m_Actions.ZoomIn(m_Window.GetControls());
-		SetNeedsToSave(true);
+		SetNeedsToSaveAndWindowTitle(true);
 		m_Window.PostRedraw();
 		return true;
 	}
@@ -307,7 +307,7 @@ namespace NPE
 	bool Application::OnMouseWheelDown(GUI::Control* watched, GUI::MouseWheelDownEvent& e)
 	{
 		m_Actions.ZoomOut(m_Window.GetControls());
-		SetNeedsToSave(true);
+		SetNeedsToSaveAndWindowTitle(true);
 		m_Window.PostRedraw();
 		return true;
 	}
@@ -395,10 +395,10 @@ namespace NPE
 	{
 		SetWindowSavedText();
 		m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, saveToNewLocation);
-		SetNeedsToSave(false);
+		SetNeedsToSaveAndWindowTitle(false);
 	}
 
-	void Application::SetNeedsToSave(bool needsToSave)
+	void Application::SetNeedsToSaveAndWindowTitle(bool needsToSave)
 	{
 		m_NeedsToSave = needsToSave;
 		if (m_NeedsToSave)

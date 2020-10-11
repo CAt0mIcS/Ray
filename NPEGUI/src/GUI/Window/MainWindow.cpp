@@ -47,9 +47,11 @@ namespace GUI
 			if (((MouseButtonPressedEvent&)e).GetButton() == MouseButton::Left)
 			{
 				//TODO: Make more performant, only render part where the caret disappeared
+				auto* prevFocus = GetFocus();
 				this->SetFocus();
 			
-				PostRedraw();
+				if(prevFocus && prevFocus->GetType() == Type::TextBox)
+					PostRedraw();
 			}
 			
 			break;
