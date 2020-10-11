@@ -175,7 +175,7 @@ namespace GUI
 		Util::Release(&pScaler);
 	}
 
-	DWrite::Matrix Renderer::GetViewMatrix()
+	D2D1::Matrix3x2F Renderer::GetViewMatrix()
 	{
 		RECT rect;
 		GetClientRect(m_hWnd, &rect);
@@ -210,22 +210,22 @@ namespace GUI
 		resultA._31 = (float)floor(resultA._31);
 		resultA._32 = (float)floor(resultA._32);
 
-		return *(DWrite::Matrix*)&resultA;
+		return resultA;
 	}
 
-	DWrite::Matrix Renderer::GetInverseViewMatrix()
+	D2D1::Matrix3x2F Renderer::GetInverseViewMatrix()
 	{
 		return ComputeInverseMatrix(GetViewMatrix());
 	}
 
-	DWrite::Matrix Renderer::ComputeInverseMatrix(_In_ const DWrite::Matrix& matrix)
+	D2D1::Matrix3x2F Renderer::ComputeInverseMatrix(_In_ const D2D1::Matrix3x2F& matrix)
 	{
-		auto GetDeterminant = [](const DWrite::Matrix& matrix)
+		auto GetDeterminant = [](const D2D1::Matrix3x2F& matrix)
 		{
 			return matrix.m11 * matrix.m22 - matrix.m12 * matrix.m21;
 		};
 
-		DWrite::Matrix result;
+		D2D1::Matrix3x2F result{};
 		
 		float invdet = 1.0f / GetDeterminant(matrix);
 		result.m11 = matrix.m22 * invdet;
@@ -238,15 +238,15 @@ namespace GUI
 		return result;
 	}
 
-	DWrite::Matrix Renderer::GetTransform()
+	D2D1::Matrix3x2F Renderer::GetTransform()
 	{
 		D2D1::Matrix3x2F transform;
 		m_pRenderTarget->GetTransform(&transform);
-		return *(DWrite::Matrix*)&transform;
+		return transform;
 	}
 
-	void Renderer::SetTransform(_In_ const DWrite::Matrix& transform)
+	void Renderer::SetTransform(_In_ const D2D1::Matrix3x2F& transform)
 	{
-		m_pRenderTarget->SetTransform((D2D1::Matrix3x2F*)&transform);
+		m_pRenderTarget->SetTransform(transform);
 	}
 }

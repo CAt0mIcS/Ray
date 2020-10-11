@@ -23,6 +23,12 @@ namespace GUI
 		/// <returns>The exit code when quitting the application</returns>
 		int Run();
 
+		/// <summary>
+		/// Getter for the MainWindow
+		/// </summary>
+		/// <returns>The Main Window</returns>
+		MainWindow& GetWindow() { return m_Window; }
+
 	protected:
 		/// <summary>
 		/// GUIApplication Constructor

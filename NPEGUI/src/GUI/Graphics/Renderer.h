@@ -107,32 +107,32 @@ namespace GUI
 		/// Calculates the view matrix
 		/// </summary>
 		/// <returns>The view matrix</returns>
-		DWrite::Matrix GetViewMatrix();
+		D2D1::Matrix3x2F GetViewMatrix();
 
 		/// <summary>
 		/// Calculates the inverse view matrix
 		/// </summary>
 		/// <returns>The inverse view matrix</returns>
-		DWrite::Matrix GetInverseViewMatrix();
+		D2D1::Matrix3x2F GetInverseViewMatrix();
 
 		/// <summary>
 		/// Calculates the inverse matrix from a normal matrix
 		/// </summary>
 		/// <param name="matrix">Is the normal matrix</param>
 		/// <returns>The inverse matrix</returns>
-		DWrite::Matrix ComputeInverseMatrix(_In_ const DWrite::Matrix& matrix);
+		D2D1::Matrix3x2F ComputeInverseMatrix(_In_ const D2D1::Matrix3x2F& matrix);
 
 		/// <summary>
 		/// Getter for the current transform of the MainWindow
 		/// </summary>
 		/// <returns>The current window transform</returns>
-		DWrite::Matrix GetTransform();
+		D2D1::Matrix3x2F GetTransform();
 
 		/// <summary>
 		/// Setter for the MainWindow transform
 		/// </summary>
 		/// <param name="transform">Is the new window transform</param>
-		void SetTransform(_In_ const DWrite::Matrix& transform);
+		void SetTransform(_In_ const D2D1::Matrix3x2F & transform);
 
 		/// <summary>
 		/// Getter for the window scale

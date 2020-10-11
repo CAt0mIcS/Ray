@@ -115,7 +115,7 @@ namespace GUI
 		/// </summary>
 		/// <param name="rc">Is the rect to redraw, null to redraw the entire window</param>
 		/// <param name="erase">Specifies whether the background within the update region should be erased</param>
-		void PostRedraw(const RECT* const rc = nullptr, BOOL erase = TRUE) { InvalidateRect(m_hWnd, rc, erase); UpdateWindow(m_hWnd); }
+		void PostRedraw(const RECT* const rc = nullptr, BOOL erase = TRUE) const { InvalidateRect(m_hWnd, rc, erase); UpdateWindow(m_hWnd); }
 
 		/// <summary>
 		/// MainWindow Deconstructor

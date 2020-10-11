@@ -341,15 +341,15 @@ namespace NPE
 		renderer.BeginDraw();
 
 		// Store current transform to be able to set it again at the end of this function
-		DWrite::Matrix prevTransform = renderer.GetTransform();
+		D2D1::Matrix3x2F prevTransform = renderer.GetTransform();
 
 		if (watched->GetType() == GUI::Control::Type::Window)
 		{
 			// Render the entire scene if the window requested a redraw
 			renderer.RenderScene();
 
-			D2D1::Matrix3x2F pageTransform = *(D2D1::Matrix3x2F*)&GUI::Renderer::Get().GetViewMatrix();
-			GUI::Renderer::Get().SetTransform(*(DWrite::Matrix*)&pageTransform);
+			D2D1::Matrix3x2F pageTransform = GUI::Renderer::Get().GetViewMatrix();
+			GUI::Renderer::Get().SetTransform(pageTransform);
 		}
 		
 		watched->Render();
