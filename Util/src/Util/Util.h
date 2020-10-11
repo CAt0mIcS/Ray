@@ -3,6 +3,8 @@
 #include "UtilBase.h"
 #include <iostream>
 
+#include <d2d1.h>
+
 
 namespace Util
 {
@@ -172,9 +174,14 @@ namespace Util
 			return *this;
 		}
 
-		D2D1_POINT_2F ToD2D1Point2F() const
+		operator D2D1_POINT_2F() const
 		{
 			return { x, y };
+		}
+
+		operator POINTS() const
+		{
+			return { (SHORT)x, (SHORT)y };
 		}
 
 		friend std::ostream& operator<<(std::ostream& os, const NPoint& pos)
@@ -484,7 +491,7 @@ namespace Util
 			return *this;
 		}
 
-		D2D1_COLOR_F ToD2D1ColorF() const
+		operator D2D1_COLOR_F() const
 		{
 			return { r / 255.0f, g / 255.0f, b / 255.0f, 1.0f };
 		}
@@ -571,7 +578,7 @@ namespace Util
 	/// Transforms a RECT structure into a NTransform structure
 	/// </summary>
 	/// <param name="rc">Is the RECT to transform</param>
-	/// <returns>The traansformed NTransform structure</returns>
+	/// <returns>The transformed NTransform structure</returns>
 	inline NTransform ToTransform(const RECT& rc)
 	{
 		NTransform transform;

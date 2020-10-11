@@ -105,7 +105,7 @@ namespace NPE
 				txt2.erase(txt2.cend() - 1);
 
 			tbNodeInfo.AddRecord(pos.x, pos.y, size.width, size.height, txt1, txt2);
-			NPE_LOG("Saved Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t{4}\nInfo:\t{5}\n", pos.x, pos.y, size.width, size.height, txt1, txt2);
+			NPE_LOG("Saved Node:\nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t\"{4}\"\nInfo:\t\"{5}\"\n", pos.x, pos.y, size.width, size.height, txt1, txt2);
 		}
 
 		NPE_LOG("\n");
@@ -115,7 +115,7 @@ namespace NPE
 			if (line.first && line.second)
 			{
 				tbLines.AddRecord(line.first->GetId(), line.second->GetId());
-				NPE_LOG("Saved Line: \nStart:\tx={0} y={1}\nEnd:\tx={2} y={3}\n", line.first->GetPos().x, line.first->GetPos().y, line.second->GetPos().x, line.second->GetPos().y);
+				NPE_LOG("Saved Line:\nStart:\tx={0} y={1}\nEnd:\tx={2} y={3}\n", line.first->GetPos().x, line.first->GetPos().y, line.second->GetPos().x, line.second->GetPos().y);
 			}
 			else
 				NPE_LOG("Didn't save line because it didn't have a valid end point");
@@ -179,7 +179,7 @@ namespace NPE
 			((GUI::TextBox*)(node->GetChildren()[0]))->SetText(txt1);
 			((GUI::TextBox*)(node->GetChildren()[1]))->SetText(txt2);
 
-			NPE_LOG("Loaded Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t{4}\nInfo:\t{5}\n", node->GetPos().x, node->GetPos().y, node->GetSize().width, node->GetSize().height, data[4], data[5]);
+			NPE_LOG("Loaded Node:\nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}\nTitle:\t\"{4}\"\nInfo:\t\"{5}\"\n", node->GetPos().x, node->GetPos().y, node->GetSize().width, node->GetSize().height, data[4], data[5]);
 		}
 
 		NPE_LOG("\n");
@@ -216,7 +216,7 @@ namespace NPE
 			if (line.first && line.second)
 			{
 				lines.emplace_back(line);
-				NPE_LOG("Loaded Line: \nStart:\tx={0} y={1}\nEnd:\tx={2} y={3}\n", line.first->GetPos().x, line.first->GetPos().y, line.second->GetPos().x, line.second->GetPos().y);
+				NPE_LOG("Loaded Line:\nStart:\tx={0} y={1}\nEnd:\tx={2} y={3}\n", line.first->GetPos().x, line.first->GetPos().y, line.second->GetPos().x, line.second->GetPos().y);
 			}
 		}
 		NPE_LOG("\n\n");

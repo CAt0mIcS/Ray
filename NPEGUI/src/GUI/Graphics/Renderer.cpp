@@ -13,7 +13,7 @@ namespace GUI
 
 	void Renderer::RenderRect(_In_ const Util::NPoint& pos, _In_ const Util::NSize& size, _In_ const Util::NColor& color)
 	{
-		m_pBrush->SetColor(color.ToD2D1ColorF());
+		m_pBrush->SetColor(color);
 		Direct2D::RectF rc;
 		rc.left = pos.x;
 		rc.top = pos.y;
@@ -25,7 +25,7 @@ namespace GUI
 
 	void Renderer::RenderRect(_In_ const Direct2D::RectF& rect, _In_ const Util::NColor& color)
 	{
-		m_pBrush->SetColor(color.ToD2D1ColorF());
+		m_pBrush->SetColor(color);
 		m_pRenderTarget->FillRectangle(rect, m_pBrush.Get());
 	}
 
@@ -37,7 +37,7 @@ namespace GUI
 		_In_ const float radiusY
 		)
 	{
-		m_pBrush->SetColor(color.ToD2D1ColorF());
+		m_pBrush->SetColor(color);
 		
 		m_pRenderTarget->FillRoundedRectangle({ { pos.x, pos.y, pos.x + size.width, pos.y + size.height }, radiusX, radiusY }, m_pBrush.Get());
 	}
@@ -49,8 +49,8 @@ namespace GUI
 		_In_opt_ const float radius
 		)
 	{
-		m_pBrush->SetColor(color.ToD2D1ColorF());
-		m_pRenderTarget->DrawLine(startPos.ToD2D1Point2F(), endPos.ToD2D1Point2F(), m_pBrush.Get(), radius);
+		m_pBrush->SetColor(color);
+		m_pRenderTarget->DrawLine(startPos, endPos, m_pBrush.Get(), radius);
 	}
 
 	Renderer::Renderer()
@@ -104,9 +104,8 @@ namespace GUI
 		NPE_THROW_GFX_EXCEPT(m_pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
 			D2D1::HwndRenderTargetProperties(m_hWnd, size), &m_pRenderTarget), "Failed to create D2D1HwndRenderTarget");
 
-		D2D1_COLOR_F backgroundColor = Constants::g_DefaultWindowBackgroundColor.ToD2D1ColorF();
 		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->CreateSolidColorBrush(
-			backgroundColor, &m_pBrush
+			Constants::g_DefaultWindowBackgroundColor, &m_pBrush
 		), "Failed to create D2D1SolidColorBrush");
 
 

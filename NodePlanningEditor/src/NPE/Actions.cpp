@@ -11,7 +11,7 @@
 
 #include "GUI/Handlers/Mouse.h"
 
-#include "Util/Debug/Logger.h"
+#include "Util/Logger.h"
 
 #include "Util/Util.h"
 

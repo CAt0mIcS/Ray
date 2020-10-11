@@ -170,7 +170,7 @@
     <ClInclude Include="src\UtilBase.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Util\Constants.h" />
-    <ClInclude Include="src\Util\Debug\Logger.h" />
+    <ClInclude Include="src\Util\Logger.h" />
     <ClInclude Include="src\Util\Debug\Timer.h" />
     <ClInclude Include="src\Util\Direct2D.h" />
     <ClInclude Include="src\Util\Exceptions.h" />
@@ -184,7 +184,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Util\Debug\Logger.cpp" />
+    <ClCompile Include="src\Util\Logger.cpp" />
     <ClCompile Include="src\Util\Debug\Timer.cpp" />
     <ClCompile Include="src\Util\Exceptions.cpp" />
   </ItemGroup>

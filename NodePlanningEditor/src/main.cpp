@@ -3,7 +3,7 @@
 #include "NPE/Application.h"
 #include "Util/Exceptions.h"
 
-#include "Util/Debug/Logger.h"
+#include "Util/Logger.h"
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR nCmdLine, _In_ int nCmdShow)

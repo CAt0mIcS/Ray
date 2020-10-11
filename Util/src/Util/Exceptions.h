@@ -4,7 +4,7 @@
 #include <sstream>
 #include "UtilBase.h"
 
-#include "Debug/Logger.h"
+#include "Logger.h"
 #include "Util/Util.h"
 
 /**

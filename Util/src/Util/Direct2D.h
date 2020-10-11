@@ -29,6 +29,8 @@ namespace Direct2D
 {
 	using RectF				= D2D1_RECT_F;
 	using DrawTextOptions	= D2D1_DRAW_TEXT_OPTIONS;
+
+	using Point2F			= D2D1_POINT_2F;
 }
 
 
