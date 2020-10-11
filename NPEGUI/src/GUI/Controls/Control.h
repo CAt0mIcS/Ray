@@ -30,7 +30,7 @@ namespace GUI
 		{
 			INVALID = 0,
 			Node, Button, TextBox,
-			Window
+			Window, Tab
 		};
 
 	public:
