@@ -11,48 +11,6 @@ namespace GUI
 {
 	Renderer* Renderer::s_Instance = new Renderer();
 
-	void Renderer::RenderRect(_In_ const Util::NPoint& pos, _In_ const Util::NSize& size, _In_ const Util::NColor& color)
-	{
-		m_pBrush->SetColor(color);
-		Direct2D::RectF rc;
-		rc.left = pos.x;
-		rc.top = pos.y;
-		rc.right = pos.x + size.width;
-		rc.bottom = pos.y + size.height;
-
-		m_pRenderTarget->FillRectangle(rc, m_pBrush.Get());
-	}
-
-	void Renderer::RenderRect(_In_ const Direct2D::RectF& rect, _In_ const Util::NColor& color)
-	{
-		m_pBrush->SetColor(color);
-		m_pRenderTarget->FillRectangle(rect, m_pBrush.Get());
-	}
-
-	void Renderer::RenderRoundedRect(
-		_In_ const Util::NPoint& pos, 
-		_In_ const Util::NSize& size, 
-		_In_ const Util::NColor& color, 
-		_In_ const float radiusX, 
-		_In_ const float radiusY
-		)
-	{
-		m_pBrush->SetColor(color);
-		
-		m_pRenderTarget->FillRoundedRectangle({ { pos.x, pos.y, pos.x + size.width, pos.y + size.height }, radiusX, radiusY }, m_pBrush.Get());
-	}
-
-	void Renderer::RenderLine(
-		_In_ const Util::NPoint& startPos, 
-		_In_ const Util::NPoint& endPos, 
-		_In_opt_ const Util::NColor& color, 
-		_In_opt_ const float radius
-		)
-	{
-		m_pBrush->SetColor(color);
-		m_pRenderTarget->DrawLine(startPos, endPos, m_pBrush.Get(), radius);
-	}
-
 	Renderer::Renderer()
 		: m_hWnd(0), m_pD2DBitmap(nullptr), m_Scale{ 1.0f, 1.0f }, m_Origin{ 0.0f, 0.0f } {}
 
@@ -69,33 +27,9 @@ namespace GUI
 		CreateGraphicsResources();
 	}
 
-	void Renderer::BeginDraw()
-	{
-		m_pRenderTarget->BeginDraw();
-	}
-
-	void Renderer::EndDraw()
-	{
-		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->EndDraw(), "Failed to draw object(s)");
-	}
-
-	void Renderer::RenderScene()
-	{
-		RenderBitmapBackground();
-	}
-
-	void Renderer::RenderBitmapBackground()
-	{
-		auto rtSize = m_pRenderTarget->GetSize();
-		
-		// Create a rectangle with size of current window
-		auto rectangle = D2D1::RectF(0.0f, 0.0f, rtSize.width, rtSize.height);
-		m_pRenderTarget->DrawBitmap(m_pD2DBitmap, rectangle);
-	}
-
 	void Renderer::CreateGraphicsResources()
 	{
-		NPE_THROW_GFX_EXCEPT(D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED,
+		NPE_THROW_GFX_EXCEPT(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED,
 			__uuidof(m_pFactory), &m_pFactory), "Failed to create D2D1Factory");
 
 		RECT rc;
@@ -173,6 +107,72 @@ namespace GUI
 		Util::Release(&pStream);
 		Util::Release(&pConverter);
 		Util::Release(&pScaler);
+	}
+
+	void Renderer::RenderRect(_In_ const Util::NPoint& pos, _In_ const Util::NSize& size, _In_ const Util::NColor& color)
+	{
+		m_pBrush->SetColor(color);
+		Direct2D::RectF rc;
+		rc.left = pos.x;
+		rc.top = pos.y;
+		rc.right = pos.x + size.width;
+		rc.bottom = pos.y + size.height;
+
+		m_pRenderTarget->FillRectangle(rc, m_pBrush.Get());
+	}
+
+	void Renderer::RenderRect(_In_ const Direct2D::RectF& rect, _In_ const Util::NColor& color)
+	{
+		m_pBrush->SetColor(color);
+		m_pRenderTarget->FillRectangle(rect, m_pBrush.Get());
+	}
+
+	void Renderer::RenderRoundedRect(
+		_In_ const Util::NPoint& pos, 
+		_In_ const Util::NSize& size, 
+		_In_ const Util::NColor& color, 
+		_In_ const float radiusX, 
+		_In_ const float radiusY
+		)
+	{
+		m_pBrush->SetColor(color);
+		
+		m_pRenderTarget->FillRoundedRectangle({ { pos.x, pos.y, pos.x + size.width, pos.y + size.height }, radiusX, radiusY }, m_pBrush.Get());
+	}
+
+	void Renderer::RenderLine(
+		_In_ const Util::NPoint& startPos, 
+		_In_ const Util::NPoint& endPos, 
+		_In_opt_ const Util::NColor& color, 
+		_In_opt_ const float radius
+		)
+	{
+		m_pBrush->SetColor(color);
+		m_pRenderTarget->DrawLine(startPos, endPos, m_pBrush.Get(), radius);
+	}
+
+	void Renderer::BeginDraw()
+	{
+		m_pRenderTarget->BeginDraw();
+	}
+
+	void Renderer::EndDraw()
+	{
+		NPE_THROW_GFX_EXCEPT(m_pRenderTarget->EndDraw(), "Failed to draw object(s)");
+	}
+
+	void Renderer::RenderScene()
+	{
+		RenderBitmapBackground();
+	}
+
+	void Renderer::RenderBitmapBackground()
+	{
+		auto rtSize = m_pRenderTarget->GetSize();
+		
+		// Create a rectangle with size of current window
+		auto rectangle = D2D1::RectF(0.0f, 0.0f, rtSize.width, rtSize.height);
+		m_pRenderTarget->DrawBitmap(m_pD2DBitmap, rectangle);
 	}
 
 	D2D1::Matrix3x2F Renderer::GetViewMatrix()
