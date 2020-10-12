@@ -115,6 +115,22 @@ namespace NPE
 
 	bool Application::OnMouseMove(GUI::Control* watched, GUI::MouseMoveEvent& e)
 	{
+		/// <summary>
+		/// Remove blue effect when mouse leaves tab
+		/// </summary>
+		{		
+			static bool s_RenderTabs = false;
+
+			if (watched->GetType() == GUI::Control::Type::Tab)
+				s_RenderTabs = true;
+
+			if (s_RenderTabs && watched->GetType() != GUI::Control::Type::Tab)
+			{
+				m_Window.PostRedraw();
+				s_RenderTabs = false;
+			}
+		}
+
 		if (GUI::Mouse::IsMiddlePressed())
 		{
 			SetCursor(LoadCursor(NULL, IDC_SIZEALL));
@@ -175,12 +191,7 @@ namespace NPE
 			}
 			else if (watched->GetType() == GUI::Control::Type::Tab)
 			{
-				for (auto* tab : m_Tabs)
-				{
-					tab->SetActive(false);
-				}
-				((GUI::SceneTab*)watched)->SetActive(true);
-				m_Window.PostRedraw();
+				SwitchTab((GUI::SceneTab*)watched);
 				return true;
 			}
 		}
@@ -253,13 +264,25 @@ namespace NPE
 			}
 
 			std::string result = m_FileHandler.OpenScene(m_Window, m_Lines);
-
 			if (result != "")
 			{
 				AddNewTab(Util::MultiByteToWideChar(result));
 			}
-
 			m_Window.PostRedraw();
+			
+			return true;
+		}
+		// Close current tab
+		else if (GUI::Keyboard::IsKeyPressed(VK_CONTROL) && GUI::Keyboard::IsKeyPressed('W'))
+		{
+			if (m_NeedsToSave)
+			{
+				int result = PromptSaveChangesMsgBox();
+				if (result == IDCANCEL)
+					return false;
+			}
+
+			CloseTab(GetActiveSceneTab());
 			return true;
 		}
 
@@ -377,10 +400,9 @@ namespace NPE
 			watched->Render();
 		else if (watched->GetType() == GUI::Control::Type::Window)
 		{
-			for (auto* control : m_Window.GetControls())
+			for (auto* tab : GetSceneTabs())
 			{
-				if (control->GetType() == GUI::Control::Type::Tab)
-					control->Render();
+				tab->Render();
 			}
 		}
 
@@ -441,21 +463,34 @@ namespace NPE
 	
 	GUI::SceneTab* Application::GetActiveSceneTab()
 	{
+		for (auto* tab : GetSceneTabs())
+		{
+			if (tab->IsActive())
+				return tab;
+		}
+		return nullptr;
+	}
+
+	std::vector<GUI::SceneTab*> Application::GetSceneTabs()
+	{
+		std::vector<GUI::SceneTab*> tabs;
+
 		for (auto* control : m_Window.GetControls())
 		{
 			if (control->GetType() == GUI::Control::Type::Tab)
-			{
-				auto* tab = (GUI::SceneTab*)control;
-				if (tab->IsActive())
-					return tab;
-			}
+				tabs.emplace_back((GUI::SceneTab*)control);
 		}
-		return nullptr;
+		return tabs;
 	}
 	
 	void Application::AddNewTab(std::wstring filepath)
 	{
-		auto* tab = m_Window.AddControl<GUI::SceneTab>(new GUI::SceneTab(&m_Window));
+		//auto* tab = m_Window.AddControl<GUI::SceneTab>(new GUI::SceneTab(&m_Window));
+		auto* tab = new GUI::SceneTab(&m_Window);
+
+		auto lastTab = std::find_if(m_Window.GetControls().rbegin(), m_Window.GetControls().rend(), [](GUI::Control* control) { return control->GetType() == GUI::Control::Type::Tab; });
+
+		m_Window.GetControls().insert(lastTab.base(), tab);
 
 		Util::NPoint pos{};
 		static constexpr Util::NSize size{ 100.0f, 25.0f };
@@ -477,6 +512,75 @@ namespace NPE
 		filepath.erase(filepath.begin(), filepath.begin() + idx + 1);
 		tab->SetText(filepath);
 		tab->SetActive(true);
+	}
+	
+	void Application::SwitchTab(GUI::SceneTab* newTab)
+	{
+		for (auto* tab : GetSceneTabs())
+		{
+			tab->SetActive(false);
+		}
+		newTab->SetActive(true);
+
+		m_FileHandler.ChangeScene(Util::WideCharToMultiByte(newTab->GetFilePath()));
+
+		for (unsigned int i = 0; i < m_Window.GetControls().size(); ++i)
+		{
+			if (m_Window.GetControls()[i]->GetType() != GUI::Control::Type::Tab)
+			{
+				delete m_Window.GetControls()[i];
+				m_Window.GetControls().erase(m_Window.GetControls().begin() + i);
+				--i;
+			}
+		}
+		m_Lines.clear();
+		m_FileHandler.LoadScene(m_Window, m_Lines);
+		
+		m_Window.PostRedraw();
+	}
+	
+	void Application::CloseTab(GUI::SceneTab* tab)
+	{
+		m_FileHandler.RemoveTabFromConfig(tab);
+		
+		GUI::SceneTab* tabToOpenAfterClosing;
+		std::vector<GUI::Control*>::iterator tabIt = std::find(m_Window.GetControls().begin(), m_Window.GetControls().end(), tab);
+
+		// Tab is at the end of the list
+		if (tabIt == m_Window.GetControls().end() - 1)
+		{
+			tabToOpenAfterClosing = (GUI::SceneTab*)*(tabIt - 1);
+		}
+		// Tab is at the beginning of the list
+		else if (tabIt == m_Window.GetControls().begin())
+		{
+			tabToOpenAfterClosing = (GUI::SceneTab*)*(tabIt + 1);
+
+			auto tabs = GetSceneTabs();
+			for (unsigned int i = 1; i < tabs.size(); ++i)
+			{
+				tabs[i]->MoveBy({ -tab->GetSize().width, 0.0f });
+			}
+
+		}
+		// Tab is somewhere in the middle
+		else
+		{
+			tabToOpenAfterClosing = (GUI::SceneTab*)*tabIt + 1;
+
+			for (auto it = tabIt + 1; it != m_Window.GetControls().end(); ++it)
+			{
+				if ((*it)->GetType() == GUI::Control::Type::Tab)
+				{
+					(*it)->MoveBy({ -tab->GetPos().x, 0.0f });
+				}
+			}
+		}
+
+		delete tab;
+		m_Window.GetControls().erase(std::find(m_Window.GetControls().begin(), m_Window.GetControls().end(), tab));
+
+		SwitchTab(tabToOpenAfterClosing);
 	}
 }
 

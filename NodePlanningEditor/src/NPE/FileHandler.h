@@ -72,6 +72,12 @@ namespace NPE
 		/// <returns>The new path</returns>
 		std::string OpenScene(GUI::MainWindow& win, std::vector<Line>& lines);
 
+		/// <summary>
+		/// Removes the active tab from the config file
+		/// </summary>
+		/// <param name="active">Is the active scene tab</param>
+		void RemoveTabFromConfig(GUI::SceneTab* active);
+
 	private:
 		/// <summary>
 		/// Writes the file path to fonfig

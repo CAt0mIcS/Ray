@@ -19,7 +19,34 @@ FIELDS
     txt1:TEXT
     txt2:TEXT
 }
-RECORDS: 0
+RECORDS: 3
+RECORD
+{
+    181
+    434
+    450
+    280
+    
+    
+}
+RECORD
+{
+    1037
+    455
+    450
+    280
+    
+    
+}
+RECORD
+{
+    754
+    220
+    450
+    280
+    
+    
+}
 TABLE: SceneInfo
 FIELDS
 {

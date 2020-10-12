@@ -275,24 +275,17 @@ namespace NPE
 		/// Delete all invalid paths in configs
 		/// </summary>
 		bool configChanged = false;
-		std::vector<int> configDelIdx{};
 		for (unsigned int i = 0; i < m_Configs.size(); ++i)
 		{
 			if (!FileExists(m_Configs[i].first))
 			{
 				NPE_LOG("Save File in Directory {0} doesn't exist, removing it...", m_Configs[i].first);
-				//m_Configs.erase(m_Configs.begin() + i);
-				configDelIdx.emplace_back(i);
+				m_Configs.erase(m_Configs.begin() + i);
+				--i;
 				configChanged = true;
 			}
 		}
-
-		for (auto idx : configDelIdx)
-		{
-			m_Configs.erase(m_Configs.begin() + idx);
-		}
-		configDelIdx.resize(0);
-
+		
 		/// <summary>
 		/// Add default path if file no file in configs exists
 		/// </summary>
@@ -392,16 +385,16 @@ namespace NPE
 
 		ChangeScene(result);
 
-		for (auto* control : win.GetControls())
+		for (unsigned int i = 0; i < win.GetControls().size(); ++i)
 		{
-			if(control->GetType() != GUI::Control::Type::Tab)
-				delete control;
+			if (win.GetControls()[i]->GetType() != GUI::Control::Type::Tab)
+			{
+				delete win.GetControls()[i];
+				win.GetControls().erase(win.GetControls().begin() + i);
+				--i;
+			}
 		}
-
-		//win.GetControls().clear();
-		win.GetControls().shrink_to_fit();
 		lines.clear();
-
 		LoadScene(win, lines);
 
 		size_t idx = result.find_last_of('\\');
@@ -409,6 +402,29 @@ namespace NPE
 		WriteConfig();
 
 		return result;
+	}
+
+	void FileHandler::RemoveTabFromConfig(GUI::SceneTab* active)
+	{
+		std::string filePath = Util::WideCharToMultiByte(active->GetFilePath());
+		if (filePath[filePath.size() - 1] == '\0')
+			filePath.erase(filePath.end() - 1);
+
+		std::string fileDir = filePath;
+		fileDir.erase(fileDir.begin() + fileDir.find_last_of('\\'), fileDir.end());
+
+		std::pair<std::string, std::string> comp(filePath, fileDir);
+		std::vector<std::pair<std::string, std::string>>::iterator activeInConfig = m_Configs.begin();
+		for (int i = 0; i < m_Configs.size(); ++i)
+		{
+			if (m_Configs[i] == comp)
+			{
+				std::advance(activeInConfig, i);
+				m_Configs.erase(activeInConfig);
+				WriteConfig();
+				break;
+			}
+		}
 	}
 	
 	void FileHandler::WriteConfig()

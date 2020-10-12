@@ -155,10 +155,28 @@ namespace NPE
 		GUI::SceneTab* GetActiveSceneTab();
 
 		/// <summary>
+		/// Gets all the scene tabs in the window
+		/// </summary>
+		/// <returns>A list of all scene tabs</returns>
+		std::vector<GUI::SceneTab*> GetSceneTabs();
+
+		/// <summary>
 		/// Adds a new tab
 		/// </summary>
 		/// <param name="filepath">Is the path where the tab will point to</param>
 		void AddNewTab(std::wstring filepath);
+
+		/// <summary>
+		/// Switches the view to the new tab
+		/// </summary>
+		/// <param name="newTab">Is the tab to switch to</param>
+		void SwitchTab(GUI::SceneTab* newTab);
+
+		/// <summary>
+		/// Closes the tab
+		/// </summary>
+		/// <param name="tab">Is the tab to close</param>
+		void CloseTab(GUI::SceneTab* tab);
 
 	private:
 		/// <summary>
