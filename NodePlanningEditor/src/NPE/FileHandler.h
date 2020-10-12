@@ -37,7 +37,8 @@ namespace NPE
 		/// <param name="controls">Is a list of all Controls to save</param>
 		/// <param name="lines">Is a list of all lines to save</param>
 		/// <param name="saveToNewLocation">Is true if the SaveFileDialog should open to save to a new location</param>
-		void SaveScene(const std::string& filepath, const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, bool saveToNewLocation = false);
+		/// <returns>The new path</returns>
+		std::string SaveScene(const std::string& filepath, const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, bool saveToNewLocation = false);
 		
 		/// <summary>
 		/// Loads a scene from the file specified in "config.cfg" file
@@ -68,8 +69,8 @@ namespace NPE
 		/// </summary>
 		/// <param name="win">Is the MainWindow where all the controls will be</param>
 		/// <param name="lines">Is a vector where all line connections will be added to</param>
-		/// <returns>True if the user didn't abort the process, false otherwise</returns>
-		bool OpenScene(GUI::MainWindow& win, std::vector<Line>& lines);
+		/// <returns>The new path</returns>
+		std::string OpenScene(GUI::MainWindow& win, std::vector<Line>& lines);
 
 	private:
 		/// <summary>
@@ -120,11 +121,6 @@ namespace NPE
 		/// Is the database object
 		/// </summary>
 		QRD::Database* m_Db;
-
-		/// <summary>
-		/// Is true if we are saving at a temporary location
-		/// </summary>
-		bool m_IsTemporarySave;
 
 		/// <summary>
 		/// Specifies all loaded file paths

@@ -11,7 +11,6 @@ namespace GUI
 	SceneTab::SceneTab(_In_opt_ Control* parent)
 		: GUI::Control(Control::Type::Tab, parent), m_IsActive(false), m_Text{}
 	{
-
 	}
 	
 	bool SceneTab::Render()
@@ -37,8 +36,14 @@ namespace GUI
 		return false;
 	}
 	
-	void SceneTab::RenderText() const
+	void SceneTab::RenderText()
 	{
+		float xOffset = m_Size.width / 30.0f;
+		float yOffset = m_Size.height / 2.0f - m_Text.fontSize / 2.0f;
+
+		m_Text.pos = Util::NPoint{ m_Pos.x + xOffset, m_Pos.y + yOffset };
+		m_Text.size = { m_Size.width - xOffset, m_Size.height - yOffset };
+
 		TextRenderer::Get().RenderText(m_Text);
 	}
 }

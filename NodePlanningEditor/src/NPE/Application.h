@@ -154,6 +154,12 @@ namespace NPE
 		/// <returns>The active SceneTab</returns>
 		GUI::SceneTab* GetActiveSceneTab();
 
+		/// <summary>
+		/// Adds a new tab
+		/// </summary>
+		/// <param name="filepath">Is the path where the tab will point to</param>
+		void AddNewTab(std::wstring filepath);
+
 	private:
 		/// <summary>
 		/// Contains pointers to the controls which are used by an event to work across multiple events

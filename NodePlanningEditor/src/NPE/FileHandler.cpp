@@ -18,7 +18,7 @@
 namespace NPE
 {
 	FileHandler::FileHandler()
-		: m_Db(nullptr), m_IsTemporarySave(false)
+		: m_Db(nullptr)
 	{
 
 		//m_SaveFolder += "{{";
@@ -38,10 +38,11 @@ namespace NPE
 		////m_SaveFolder = "saves\\";
 	}
 
-	void FileHandler::SaveScene(const std::string& filepath, const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, bool saveToNewLocation)
+	std::string FileHandler::SaveScene(const std::string& filepath, const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, bool saveToNewLocation)
 	{
 		HCURSOR prevCursor = GetCursor();
 		SetCursor(LoadCursor(NULL, IDC_WAIT));
+		std::string newFile = "";
 		if (saveToNewLocation)
 		{
 			GUI::FileWindow win;
@@ -53,9 +54,10 @@ namespace NPE
 			};
 
 			auto result = Util::WideCharToMultiByte(win.ShowSaveDialog(L"Select a Save File", filterSpecs, (unsigned int)std::size(filterSpecs)));
-			
+			newFile = result;
+
 			if (result == "")
-				return;
+				return "";
 
 			std::ofstream writer2(result);
 			writer2.close();
@@ -63,7 +65,6 @@ namespace NPE
 			m_Db->Clear();
 			m_Db->SetFilePath(result);
 			CreateDefaultTemplate();
-			m_IsTemporarySave = false;
 
 			m_Configs.emplace_back(result, "");
 			size_t idx = result.find_last_of('\\');
@@ -103,6 +104,9 @@ namespace NPE
 		tbVersionInfo.AddRecord(Constants::g_SaveFileVersion);
 		for (auto* control : controls)
 		{
+			if (control->GetType() == GUI::Control::Type::Tab)
+				continue;
+
 			const auto& pos = control->GetPos();
 			const auto& size = control->GetSize();
 			
@@ -136,6 +140,7 @@ namespace NPE
 
 		m_Db->WriteDb();
 		SetCursor(prevCursor);
+		return newFile;
 	}
 	
 	void FileHandler::LoadScene(GUI::MainWindow& win, std::vector<Line>& lines)
@@ -326,7 +331,7 @@ namespace NPE
 			auto* tab = win.AddControl<GUI::SceneTab>(new GUI::SceneTab(&win));
 
 			Util::NPoint pos{};
-			static constexpr Util::NSize size{ 100.0f, 40.0f };
+			static constexpr Util::NSize size{ 100.0f, 25.0f };
 			for (auto* tb : win.GetControls())
 			{
 				/// <summary>
@@ -339,6 +344,10 @@ namespace NPE
 			tab->SetPos(pos);
 			tab->SetSize(size);
 			tab->SetFile(path);
+			tab->SetFontSize(14);
+
+			size_t idx = path.find_last_of('\\');
+			path.erase(path.begin(), path.begin() + idx + 1);
 			tab->SetText(path);
 		}
 		((GUI::SceneTab*)(win.GetControls()[0]))->SetActive(true);
@@ -366,7 +375,7 @@ namespace NPE
 		m_Db->ReadDb();
 	}
 
-	bool FileHandler::OpenScene(GUI::MainWindow& win, std::vector<Line>& lines)
+	std::string FileHandler::OpenScene(GUI::MainWindow& win, std::vector<Line>& lines)
 	{
 		GUI::FileWindow fileWin;
 
@@ -376,34 +385,44 @@ namespace NPE
 			{ L"Any File" , L"*.*" }
 		};
 
-		auto result = fileWin.ShowOpenDialog(L"Select file to open", filterSpecs, (unsigned int)std::size(filterSpecs));
+		auto result = Util::WideCharToMultiByte(fileWin.ShowOpenDialog(L"Select file to open", filterSpecs, (unsigned int)std::size(filterSpecs)));
 
-		if (result == L"")
-			return false;
+		if (result == "")
+			return "";
 
-		ChangeScene(Util::WideCharToMultiByte(result));
+		ChangeScene(result);
 
 		for (auto* control : win.GetControls())
 		{
-			delete control;
+			if(control->GetType() != GUI::Control::Type::Tab)
+				delete control;
 		}
 
-		win.GetControls().clear();
+		//win.GetControls().clear();
+		win.GetControls().shrink_to_fit();
 		lines.clear();
 
 		LoadScene(win, lines);
-		return true;
+
+		size_t idx = result.find_last_of('\\');
+		m_Configs.emplace_back(result, result.substr(0, idx));
+		WriteConfig();
+
+		return result;
 	}
 	
 	void FileHandler::WriteConfig()
 	{
+		std::ofstream writer(s_ConfigFilePath);
+		writer.close();
+
 		for (auto& [filePath, fileDir] : m_Configs)
 		{
 			//Remove null-termination character because std::ofstream also writes it
 			if (filePath[filePath.size() - 1] == '\0')
 				filePath.erase(filePath.cend() - 1);
 
-			std::ofstream writer(s_ConfigFilePath);
+			std::ofstream writer(s_ConfigFilePath, std::ios_base::app);
 			writer << filePath << '\n';
 			writer.close();
 		}

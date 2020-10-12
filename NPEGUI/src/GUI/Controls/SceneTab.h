@@ -48,7 +48,7 @@ namespace GUI
 		/// <summary>
 		/// Renders the set text
 		/// </summary>
-		void RenderText() const;
+		void RenderText();
 
 		/// <summary>
 		/// Getter for the active state

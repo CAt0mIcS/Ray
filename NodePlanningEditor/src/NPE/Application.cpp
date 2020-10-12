@@ -180,6 +180,7 @@ namespace NPE
 					tab->SetActive(false);
 				}
 				((GUI::SceneTab*)watched)->SetActive(true);
+				m_Window.PostRedraw();
 				return true;
 			}
 		}
@@ -251,9 +252,15 @@ namespace NPE
 					return false;
 			}
 
-			bool result = m_FileHandler.OpenScene(m_Window, m_Lines);
+			std::string result = m_FileHandler.OpenScene(m_Window, m_Lines);
+
+			if (result != "")
+			{
+				AddNewTab(Util::MultiByteToWideChar(result));
+			}
+
 			m_Window.PostRedraw();
-			return result;
+			return true;
 		}
 
 		//Redraw caret when moving with arrow keys.
@@ -416,19 +423,60 @@ namespace NPE
 
 		if (active)
 		{
-			m_FileHandler.SaveScene(Util::WideCharToMultiByte(active->GetFilePath()), m_Window.GetControls(), m_Lines, saveToNewLocation);
+			auto newFile = Util::MultiByteToWideChar(m_FileHandler.SaveScene(Util::WideCharToMultiByte(active->GetFilePath()), m_Window.GetControls(), m_Lines, saveToNewLocation));
+			if (saveToNewLocation)
+			{
+				active->SetFile(newFile);
+
+				size_t idx = newFile.find_last_of('\\');
+				newFile.erase(newFile.begin(), newFile.begin() + idx + 1);
+
+				active->SetText(newFile);
+				m_Window.PostRedraw();
+			}
+
 			m_NeedsToSave = false;
 		}
 	}
 	
 	GUI::SceneTab* Application::GetActiveSceneTab()
 	{
-		for (auto* tab : m_Tabs)
+		for (auto* control : m_Window.GetControls())
 		{
-			if (tab->IsActive())
-				return tab;
+			if (control->GetType() == GUI::Control::Type::Tab)
+			{
+				auto* tab = (GUI::SceneTab*)control;
+				if (tab->IsActive())
+					return tab;
+			}
 		}
 		return nullptr;
+	}
+	
+	void Application::AddNewTab(std::wstring filepath)
+	{
+		auto* tab = m_Window.AddControl<GUI::SceneTab>(new GUI::SceneTab(&m_Window));
+
+		Util::NPoint pos{};
+		static constexpr Util::NSize size{ 100.0f, 25.0f };
+		for (auto* tb : m_Window.GetControls())
+		{
+			if (tb->GetType() == GUI::Control::Type::Tab)
+			{
+				pos.x += tb->GetSize().width;
+				((GUI::SceneTab*)tb)->SetActive(false);
+			}
+		}
+
+		tab->SetPos(pos);
+		tab->SetSize(size);
+		tab->SetFile(filepath);
+		tab->SetFontSize(14);
+
+		size_t idx = filepath.find_last_of('\\');
+		filepath.erase(filepath.begin(), filepath.begin() + idx + 1);
+		tab->SetText(filepath);
+		tab->SetActive(true);
 	}
 }
 

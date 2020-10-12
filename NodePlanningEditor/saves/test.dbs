@@ -1,0 +1,41 @@
+TABLES: 4
+TABLE: VersionInfo
+FIELDS
+{
+    SaveFileVersion:INTEGER
+}
+RECORDS: 1
+RECORD
+{
+    1
+}
+TABLE: NodeInfo
+FIELDS
+{
+    x:INTEGER
+    y:INTEGER
+    width:INTEGER
+    height:INTEGER
+    txt1:TEXT
+    txt2:TEXT
+}
+RECORDS: 0
+TABLE: SceneInfo
+FIELDS
+{
+    scaleX:INTEGER
+    scaleY:INTEGER
+}
+RECORDS: 1
+RECORD
+{
+    1
+    1
+}
+TABLE: Lines
+FIELDS
+{
+    ID2:INTEGER
+    ID1:INTEGER
+}
+RECORDS: 0
