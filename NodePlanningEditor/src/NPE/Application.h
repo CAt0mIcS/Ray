@@ -149,20 +149,10 @@ namespace NPE
 		void SaveScene(bool saveToNewLocation = false);
 
 		/// <summary>
-		/// Sets a member variable to needsToSave and sets the window title to the correct one
+		/// Finds the currently active SceneTab
 		/// </summary>
-		/// <param name="needsToSave">Specifies whether the file has changed and needs to be saved</param>
-		void SetNeedsToSaveAndWindowTitle(bool needsToSave);
-
-		/// <summary>
-		/// Sets text to the one which should be displayed when the scene does need to save
-		/// </summary>
-		void SetWindowSaveText();
-
-		/// <summary>
-		/// Sets text to the one which should be displayed when the scene doesn't need to save
-		/// </summary>
-		void SetWindowSavedText();
+		/// <returns>The active SceneTab</returns>
+		GUI::SceneTab* GetActiveSceneTab();
 
 	private:
 		/// <summary>

@@ -98,8 +98,8 @@ namespace GUI
 
 		DWrite::HitTestMetrics metrics;
 
-		float transformedX = Mouse::GetPos().x - text.pos.x;
-		float transformedY = Mouse::GetPos().y - text.pos.y;
+		float transformedX = Mouse::GetTransformedPos().x - text.pos.x;
+		float transformedY = Mouse::GetTransformedPos().y - text.pos.y;
 
 		NPE_THROW_GFX_EXCEPT(pLayout->HitTestPoint(
 			transformedX,

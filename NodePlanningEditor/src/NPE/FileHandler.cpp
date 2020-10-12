@@ -6,6 +6,7 @@
 #include "GUI/Controls/Node.h"
 #include "GUI/Controls/Button.h"
 #include "GUI/Controls/TextBox.h"
+#include "GUI/Controls/SceneTab.h"
 
 #include "GUI/Graphics/Renderer.h"
 
@@ -37,7 +38,7 @@ namespace NPE
 		////m_SaveFolder = "saves\\";
 	}
 
-	void FileHandler::SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, bool saveToNewLocation)
+	void FileHandler::SaveScene(const std::string& filepath, const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, bool saveToNewLocation)
 	{
 		HCURSOR prevCursor = GetCursor();
 		SetCursor(LoadCursor(NULL, IDC_WAIT));
@@ -51,20 +52,25 @@ namespace NPE
 				{ L"Any File" , L"*.*" }
 			};
 
-			auto result = win.ShowSaveDialog(L"Select a Save File", filterSpecs, (unsigned int)std::size(filterSpecs));
+			auto result = Util::WideCharToMultiByte(win.ShowSaveDialog(L"Select a Save File", filterSpecs, (unsigned int)std::size(filterSpecs)));
 			
-			if (result == L"")
+			if (result == "")
 				return;
 
 			std::ofstream writer2(result);
 			writer2.close();
 
 			m_Db->Clear();
-			m_Db->SetFilePath(Util::WideCharToMultiByte(result));
+			m_Db->SetFilePath(result);
 			CreateDefaultTemplate();
 			m_IsTemporarySave = false;
 
-			//WriteConfig(Util::WideCharToMultiByte(result));
+			m_Configs.emplace_back(result, "");
+			size_t idx = result.find_last_of('\\');
+			result.erase(result.begin() + idx, result.end());
+			m_Configs[m_Configs.size() - 1].second = result;
+
+			WriteConfig();
 		}
 
 		//clear save file
@@ -137,13 +143,6 @@ namespace NPE
 		GUI::Control::ResetIdCounter(1);
 		HCURSOR prevCursor = GetCursor();
 		SetCursor(LoadCursor(NULL, IDC_WAIT));
-		for (auto* control : win.GetControls())
-		{
-			delete control;
-		}
-
-		win.GetControls().clear();
-		lines.clear();
 
 		//needs to be declared in release mode (error C4703: potentially uninitialized local pointer variable used)
 		QRD::Table* tbVersionInfo = nullptr;
@@ -154,8 +153,7 @@ namespace NPE
 		tbVersionInfo = &m_Db->GetTable("VersionInfo");
 		if (std::stof(tbVersionInfo->GetRecordById(0).GetRecordData()[0]) != Constants::g_SaveFileVersion)
 		{
-			MessageBox(NULL, L"You are using an old save file version, please update the file to continue", L"Invalid Save File", MB_OK);
-			exit(0);
+			MessageBox(NULL, L"You are using an old save file version, expect unexpected behaviour", L"Invalid Save File", MB_OK);
 		}
 
 		tbNodeInfo = &m_Db->GetTable("NodeInfo");
@@ -263,7 +261,7 @@ namespace NPE
 		m_Db->WriteDb();
 	}
 
-	void FileHandler::CreateOrLoadSave()
+	void FileHandler::CreateOrLoadSave(GUI::MainWindow& win, std::vector<GUI::SceneTab*>& tabs)
 	{
 		bool configFileExists = CreateConfigFile();
 		ReadConfig();
@@ -310,10 +308,40 @@ namespace NPE
 
 		CreateDatabase(m_Configs[0].first);
 
-		if (!saveFileExists)
-		{
+		/// <summary>
+		/// Create the default template if the file is empty
+		/// </summary>
+		std::ifstream in(m_Configs[0].first, std::ifstream::ate | std::ifstream::binary);
+		size_t size = (size_t)in.tellg();
+		in.close();
+
+		if (size == 0)
 			CreateDefaultTemplate();
+
+		/// <summary>
+		/// Create all the tabs
+		/// </summary>
+		for (auto& config : m_Configs)
+		{
+			auto* tab = win.AddControl<GUI::SceneTab>(new GUI::SceneTab(&win));
+
+			Util::NPoint pos{};
+			static constexpr Util::NSize size{ 100.0f, 40.0f };
+			for (auto* tb : win.GetControls())
+			{
+				/// <summary>
+				/// All Controls are SceneTabs at this stage of the program
+				/// </summary>
+				pos.x += tb->GetSize().width;
+			}
+
+			std::wstring path = Util::MultiByteToWideChar(config.first);
+			tab->SetPos(pos);
+			tab->SetSize(size);
+			tab->SetFile(path);
+			tab->SetText(path);
 		}
+		((GUI::SceneTab*)(win.GetControls()[0]))->SetActive(true);
 	}
 
 	void FileHandler::ChangeScene(const std::string& filepath)
@@ -334,15 +362,8 @@ namespace NPE
 			}
 		}
 
-		/**
-		* Get filename of new scene
-		*/
-		auto fileNameBegin = filepath.find_last_of('\\');
-		//m_FileName = filepath.substr(fileNameBegin + 1);
-
 		m_Db->SetFilePath(filepath);
 		m_Db->ReadDb();
-		//WriteConfig(filepath);
 	}
 
 	bool FileHandler::OpenScene(GUI::MainWindow& win, std::vector<Line>& lines)
@@ -361,6 +382,15 @@ namespace NPE
 			return false;
 
 		ChangeScene(Util::WideCharToMultiByte(result));
+
+		for (auto* control : win.GetControls())
+		{
+			delete control;
+		}
+
+		win.GetControls().clear();
+		lines.clear();
+
 		LoadScene(win, lines);
 		return true;
 	}

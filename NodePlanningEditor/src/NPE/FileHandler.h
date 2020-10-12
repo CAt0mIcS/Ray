@@ -11,6 +11,7 @@ namespace GUI
 	class MainWindow;
 	class Control;
 	class Button;
+	class SceneTab;
 }
 
 
@@ -32,10 +33,11 @@ namespace NPE
 		/// <summary>
 		/// Saves the scene to the file
 		/// </summary>
+		/// <param name="filepath">Is the path to save to</param>
 		/// <param name="controls">Is a list of all Controls to save</param>
 		/// <param name="lines">Is a list of all lines to save</param>
 		/// <param name="saveToNewLocation">Is true if the SaveFileDialog should open to save to a new location</param>
-		void SaveScene(const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, bool saveToNewLocation = false);
+		void SaveScene(const std::string& filepath, const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, bool saveToNewLocation = false);
 		
 		/// <summary>
 		/// Loads a scene from the file specified in "config.cfg" file
@@ -52,7 +54,8 @@ namespace NPE
 		/// <summary>
 		/// Called once to load the save at the beginning of the program and check if the save file exists
 		/// </summary>
-		void CreateOrLoadSave();
+		/// <param name="tabs">Is the structure which will be filled with all tabs</param>
+		void CreateOrLoadSave(GUI::MainWindow& win, std::vector<GUI::SceneTab*>& tabs);
 
 		/// <summary>
 		/// Loads a new save file

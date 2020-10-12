@@ -25,8 +25,16 @@ namespace GUI
 		//no child Control was clicked, check if mouse is on Node Control
 		if (receiver == nullptr)
 		{
-			if (Mouse::IsOnControl(this))
-				receiver = this;
+			if (GetType() == Type::Tab)
+			{
+				if (Mouse::IsOnControl(this))
+					receiver = this;
+			}
+			else
+			{
+				if(Mouse::IsOnTransformedControl(this))
+					receiver = this;
+			}
 		}
 
 		return receiver;

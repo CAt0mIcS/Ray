@@ -33,6 +33,7 @@ namespace GUI
 	{
 		for (auto* child : m_Children)
 		{
+			if(child->GetType() != Type::Tab)
 			child->Render();
 		}
 		return true;

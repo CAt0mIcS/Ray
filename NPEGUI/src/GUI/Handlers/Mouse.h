@@ -34,13 +34,19 @@ namespace GUI
 		/// Also transforms the position to work with Renderer Transforms
 		/// </summary>
 		/// <param name="pos">Is the new mouse position</param>
-		static void SetPos(_In_ const Util::NPoint& pos);
+		static void SetPos(_In_ const Util::NPoint& pos) { m_Pos = pos; }
 
 		/// <summary>
 		/// Getter for the current mouse position in the window
 		/// </summary>
 		/// <returns>The current mouse position</returns>
 		static const Util::NPoint& GetPos() { return m_Pos; }
+
+		/// <summary>
+		/// Transforms the mouse position to match view matrix
+		/// </summary>
+		/// <returns>The transformed position of the mouse</returns>
+		static Util::NPoint GetTransformedPos();
 
 		/// <summary>
 		/// Sets left pressed, only sets member variable, does not actually press the Button
@@ -84,6 +90,13 @@ namespace GUI
 		/// <param name="control">Is the Control to check if the mouse is on</param>
 		/// <returns>True if the mouse is on the Control, false otherwise</returns>
 		static bool IsOnControl(_In_ const Control* const control);
+
+		/// <summary>
+		/// Checks if the mouse is on the transformed Control
+		/// </summary>
+		/// <param name="control">Is the Control to check if the mouse is on</param>
+		/// <returns>True if the mouse is on the Control, false otherwise</returns>
+		static bool IsOnTransformedControl(_In_ const Control* const control);
 
 		/// <summary>
 		/// Sets all pressed to false

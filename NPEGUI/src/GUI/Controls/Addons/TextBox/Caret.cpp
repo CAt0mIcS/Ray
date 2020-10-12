@@ -344,7 +344,7 @@ namespace GUI
 		if (e.GetButton() == MouseButton::Left)
 		{
 			m_CurrentlySelecting = true;
-			SetSelectionFromPoint(Mouse::GetPos(), false);
+			SetSelectionFromPoint(Mouse::GetTransformedPos(), false);
 		}
 	}
 

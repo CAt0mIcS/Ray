@@ -8,7 +8,7 @@
 
 namespace GUI
 { 
-	SceneTab::SceneTab(Control* parent)
+	SceneTab::SceneTab(_In_opt_ Control* parent)
 		: GUI::Control(Control::Type::Tab, parent), m_IsActive(false), m_Text{}
 	{
 
@@ -26,7 +26,7 @@ namespace GUI
 		return true;
 	}
 	
-	bool SceneTab::OnEvent(Event& e)
+	bool SceneTab::OnEvent(_In_ Event& e)
 	{
 		if (e.GetType() == EventType::MouseMoveEvent)
 		{

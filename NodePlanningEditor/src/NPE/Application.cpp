@@ -37,7 +37,7 @@ namespace NPE
 	{
 		NPE_THROW_WND_EXCEPT(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE));
 
-		m_FileHandler.CreateOrLoadSave();
+		m_FileHandler.CreateOrLoadSave(m_Window, m_Tabs);
 
 		NPE_LOG("Start of loading scene...\n");
 		m_FileHandler.LoadScene(m_Window, m_Lines);
@@ -62,7 +62,7 @@ namespace NPE
 		NPE_LOG("Finnished loading scene\n");
 		InstallEventFilter([this](GUI::Control* watched, GUI::Event& e) { return OnEvent(watched, e); });
 		m_Window.CreateTimer(20000, true);
-		SetWindowSavedText();
+		m_Window.SetTitle(L"NodePlanningEditor");
 	}
 
 	bool Application::OnEvent(GUI::Control* watched, GUI::Event& e)
@@ -119,12 +119,12 @@ namespace NPE
 		{
 			SetCursor(LoadCursor(NULL, IDC_SIZEALL));
 			
-			const Util::NPoint diff = GUI::Mouse::GetPos() - m_MousePos;
+			const Util::NPoint diff = GUI::Mouse::GetTransformedPos() - m_MousePos;
 			m_Actions.MoveCamera(diff, m_Window.GetControls());
-			m_MousePos = GUI::Mouse::GetPos();
+			m_MousePos = GUI::Mouse::GetTransformedPos();
 			m_Window.PostRedraw();
 
-			SetNeedsToSaveAndWindowTitle(true);
+			m_NeedsToSave = true;
 			return true;
 		}
 		else if (GUI::Mouse::IsLeftPressed())
@@ -143,10 +143,10 @@ namespace NPE
 			else if (m_HandleControls.draggingNode)
 			{
 				m_Actions.MoveNodes(m_HandleControls.draggingNode, m_MousePos);
-				m_MousePos = GUI::Mouse::GetPos();
+				m_MousePos = GUI::Mouse::GetTransformedPos();
 				m_Window.PostRedraw();
 
-				SetNeedsToSaveAndWindowTitle(true);
+				m_NeedsToSave = true;
 				return true;
 			}
 		}
@@ -155,7 +155,7 @@ namespace NPE
 
 	bool Application::OnMouseButtonPressed(GUI::Control* watched, GUI::MouseButtonPressedEvent& e)
 	{
-		m_MousePos = GUI::Mouse::GetPos();
+		m_MousePos = GUI::Mouse::GetTransformedPos();
 		if (e.GetButton() == GUI::MouseButton::Left)
 		{
 			if (watched->GetType() == GUI::Control::Type::TextBox)
@@ -194,7 +194,7 @@ namespace NPE
 			{
 				m_Actions.FinnishLineDrawing(m_Lines, m_Window.GetControls());
 				m_Window.PostRedraw();
-				SetNeedsToSaveAndWindowTitle(true);
+				m_NeedsToSave = true;
 				m_DrawLines = false;
 			}
 
@@ -205,12 +205,12 @@ namespace NPE
 		{
 			m_Actions.EraseLine(m_Lines, m_MousePos);
 			m_Window.PostRedraw();
-			SetNeedsToSaveAndWindowTitle(true);
+			m_NeedsToSave = true;
 
-			if (GUI::Mouse::IsOnControl(watched) && watched->GetType() == GUI::Control::Type::Node)
+			if (GUI::Mouse::IsOnTransformedControl(watched) && watched->GetType() == GUI::Control::Type::Node)
 			{
 				m_Actions.DeleteNode((GUI::Node*)watched, m_Window.GetControls(), m_Lines);
-				SetNeedsToSaveAndWindowTitle(true);
+				m_NeedsToSave = true;
 				m_Window.PostRedraw();
 			}
 
@@ -226,7 +226,7 @@ namespace NPE
 		{
 			m_Actions.SpawnNode(m_Window, s_NodeWidth, s_NodeHeight);
 			m_Window.PostRedraw();
-			SetNeedsToSaveAndWindowTitle(true);
+			m_NeedsToSave = true;
 			return true;
 		}
 		//Save to shortcut
@@ -290,13 +290,13 @@ namespace NPE
 			}
 			
 			m_Window.PostRedraw();
-			SetNeedsToSaveAndWindowTitle(true);
+			m_NeedsToSave = true;
 			return true;
 		}
 		//Render caret on key press
 		else if (watched->GetType() == GUI::Control::Type::TextBox && watched->HasFocus())
 		{
-			SetNeedsToSaveAndWindowTitle(true);
+			m_NeedsToSave = true;
 			watched->GetParent()->PostRedraw();
 		}
 
@@ -306,7 +306,7 @@ namespace NPE
 	bool Application::OnMouseWheelUp(GUI::Control* watched, GUI::MouseWheelUpEvent& e)
 	{
 		m_Actions.ZoomIn(m_Window.GetControls());
-		SetNeedsToSaveAndWindowTitle(true);
+		m_NeedsToSave = true;
 		m_Window.PostRedraw();
 		return true;
 	}
@@ -314,7 +314,7 @@ namespace NPE
 	bool Application::OnMouseWheelDown(GUI::Control* watched, GUI::MouseWheelDownEvent& e)
 	{
 		m_Actions.ZoomOut(m_Window.GetControls());
-		SetNeedsToSaveAndWindowTitle(true);
+		m_NeedsToSave = true;
 		m_Window.PostRedraw();
 		return true;
 	}
@@ -365,6 +365,18 @@ namespace NPE
 		// Restore previous transform
 		renderer.SetTransform(prevTransform);
 		
+		// Render tabs without transform
+		if(watched->GetType() == GUI::Control::Type::Tab)
+			watched->Render();
+		else if (watched->GetType() == GUI::Control::Type::Window)
+		{
+			for (auto* control : m_Window.GetControls())
+			{
+				if (control->GetType() == GUI::Control::Type::Tab)
+					control->Render();
+			}
+		}
+
 		renderer.EndDraw();
 		return true;
 	}
@@ -400,34 +412,24 @@ namespace NPE
 
 	void Application::SaveScene(bool saveToNewLocation)
 	{
-		SetWindowSavedText();
-		m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines, saveToNewLocation);
-		SetNeedsToSaveAndWindowTitle(false);
-	}
+		auto* active = GetActiveSceneTab();
 
-	void Application::SetNeedsToSaveAndWindowTitle(bool needsToSave)
+		if (active)
+		{
+			m_FileHandler.SaveScene(Util::WideCharToMultiByte(active->GetFilePath()), m_Window.GetControls(), m_Lines, saveToNewLocation);
+			m_NeedsToSave = false;
+		}
+	}
+	
+	GUI::SceneTab* Application::GetActiveSceneTab()
 	{
-		m_NeedsToSave = needsToSave;
-		if (m_NeedsToSave)
-			SetWindowSaveText();
-		else
-			SetWindowSavedText();
+		for (auto* tab : m_Tabs)
+		{
+			if (tab->IsActive())
+				return tab;
+		}
+		return nullptr;
 	}
-
-	void Application::SetWindowSaveText()
-	{
-		std::ostringstream oss;
-		oss << "NodePlanningEditor        " /*<< m_FileHandler.GetFileName()*/ << '*';
-		m_Window.SetTitle(Util::MultiByteToWideChar(oss.str()));
-	}
-
-	void Application::SetWindowSavedText()
-	{
-		std::ostringstream oss;
-		oss << "NodePlanningEditor        " /*<< m_FileHandler.GetFileName()*/;
-		m_Window.SetTitle(Util::MultiByteToWideChar(oss.str()));
-	}
-
 }
 
 

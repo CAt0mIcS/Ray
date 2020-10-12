@@ -28,7 +28,8 @@ namespace NPE
 	{
 		for (auto* control : controls)
 		{
-			control->MoveBy(diff);
+			if(control->GetType() != GUI::Control::Type::Tab)
+				control->MoveBy(diff);
 		}
 
 		//auto& renderer = GUI::Renderer::Get();
@@ -47,7 +48,7 @@ namespace NPE
 		GUI::Node* control = win.AddControl<GUI::Node>(new GUI::Node(&win));
 		control->SetColor(Constants::g_DefaultNodeColor);
 		control->SetSize({ width, height });
-		control->SetPos(GUI::Mouse::GetPos());
+		control->SetPos(GUI::Mouse::GetTransformedPos());
 		CreateNodeTemplate(control);
 
 		NPE_LOG("Created Node: \nPos:\tx={0} y={1}\nSize:\twidth={2} height={3}", control->GetPos().x, control->GetPos().y, control->GetSize().width, control->GetSize().height);
@@ -55,20 +56,20 @@ namespace NPE
 
 	void Actions::MoveNodes(GUI::Node* node, const Util::NPoint& oldMousePos)
 	{
-		Util::NPoint diff = GUI::Mouse::GetPos() - oldMousePos;
+		Util::NPoint diff = GUI::Mouse::GetTransformedPos() - oldMousePos;
 		node->MoveBy(diff);
 	}
 
 	void Actions::ZoomIn(std::vector<GUI::Control*>& controls)
 	{
-		Util::NPoint center = GUI::Mouse::GetPos();
+		Util::NPoint center = GUI::Mouse::GetTransformedPos();
 
 		GUI::Renderer::Get().SetScale(GUI::Renderer::Get().GetScale() * Util::NSize{ s_ScaleFactor, s_ScaleFactor });
 	}
 
 	void Actions::ZoomOut(std::vector<GUI::Control*>& controls)
 	{
-		Util::NPoint center = GUI::Mouse::GetPos();
+		Util::NPoint center = GUI::Mouse::GetTransformedPos();
 		
 		float scaleFactor = 1.0f / s_ScaleFactor;
 		GUI::Renderer::Get().SetScale(GUI::Renderer::Get().GetScale() * Util::NSize{ scaleFactor, scaleFactor });
@@ -78,8 +79,8 @@ namespace NPE
 	{
 		for (const Line& line : lines)
 		{
-			float x2 = GUI::Mouse::GetPos().x;
-			float y2 = GUI::Mouse::GetPos().y;
+			float x2 = GUI::Mouse::GetTransformedPos().x;
+			float y2 = GUI::Mouse::GetTransformedPos().y;
 			if (line.second)
 			{
 				x2 = line.second->GetPos().x + line.second->GetSize().width / 2;
@@ -106,7 +107,7 @@ namespace NPE
 			if (control->IsInWindow() && control->GetType() == GUI::Control::Type::Node)
 			{
 				GUI::Button* btn = (GUI::Button*)control->GetChildren()[2];
-				if (GUI::Mouse::IsOnControl(btn))
+				if (GUI::Mouse::IsOnTransformedControl(btn))
 				{
 					lines[lines.size() - 1].second = btn;
 					break;
@@ -156,7 +157,7 @@ namespace NPE
 
 		for (unsigned int i = 0; i < lines.size(); ++i)
 		{
-			if (linesIntersect(lines[i].first->GetPos(), lines[i].second->GetPos(), oldMousePos, GUI::Mouse::GetPos()))
+			if (linesIntersect(lines[i].first->GetPos(), lines[i].second->GetPos(), oldMousePos, GUI::Mouse::GetTransformedPos()))
 			{
 				lines.erase(lines.begin() + i);
 			}
