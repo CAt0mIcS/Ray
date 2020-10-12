@@ -23,6 +23,7 @@
 *	Use strings or wstrings
 *	Is it ok to use "using namespace GUI" in source files
 *	How to design a library with include directories (Example QRD) --> Good project file structure (CMake structure?)
+*	Is it a good idea to let actions be handled by a separate class? Or should I put everything into the Application class?
 */
 
 #define NPE_DEBUG_DISABLE_AUTOSAVE
@@ -541,20 +542,19 @@ namespace NPE
 	
 	void Application::CloseTab(GUI::SceneTab* tab)
 	{
-		m_FileHandler.RemoveTabFromConfig(tab);
-		
 		GUI::SceneTab* tabToOpenAfterClosing;
 		std::vector<GUI::Control*>::iterator tabIt = std::find(m_Window.GetControls().begin(), m_Window.GetControls().end(), tab);
 
-		// Tab is at the end of the list
-		if (tabIt == m_Window.GetControls().end() - 1)
-		{
-			tabToOpenAfterClosing = (GUI::SceneTab*)*(tabIt - 1);
-		}
 		// Tab is at the beginning of the list
-		else if (tabIt == m_Window.GetControls().begin())
+		if (tabIt == m_Window.GetControls().begin())
 		{
-			tabToOpenAfterClosing = (GUI::SceneTab*)*(tabIt + 1);
+			// Deny user from closing the last tab
+			if (m_Window.GetControls().size() == 1 || (*(tabIt + 1))->GetType() != GUI::Control::Type::Tab)
+			{
+				return;
+			}
+
+			tabToOpenAfterClosing = (GUI::SceneTab*) * (tabIt + 1);
 
 			auto tabs = GetSceneTabs();
 			for (unsigned int i = 1; i < tabs.size(); ++i)
@@ -562,6 +562,11 @@ namespace NPE
 				tabs[i]->MoveBy({ -tab->GetSize().width, 0.0f });
 			}
 
+		}
+		// Tab is at the end of the list
+		else if (tabIt == m_Window.GetControls().end() - 1)
+		{
+			tabToOpenAfterClosing = (GUI::SceneTab*)*(tabIt - 1);
 		}
 		// Tab is somewhere in the middle
 		else
@@ -581,6 +586,7 @@ namespace NPE
 			}
 		}
 
+		m_FileHandler.RemoveTabFromConfig(tab);
 		delete tab;
 		m_Window.GetControls().erase(std::find(m_Window.GetControls().begin(), m_Window.GetControls().end(), tab));
 
