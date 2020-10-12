@@ -566,13 +566,17 @@ namespace NPE
 		// Tab is somewhere in the middle
 		else
 		{
-			tabToOpenAfterClosing = (GUI::SceneTab*)*tabIt + 1;
+			tabToOpenAfterClosing = (GUI::SceneTab*)*(tabIt + 1);
 
 			for (auto it = tabIt + 1; it != m_Window.GetControls().end(); ++it)
 			{
 				if ((*it)->GetType() == GUI::Control::Type::Tab)
 				{
 					(*it)->MoveBy({ -tab->GetSize().width, 0.0f });
+				}
+				else
+				{
+					break;
 				}
 			}
 		}
