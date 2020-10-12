@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 #include <QRD/QRD.h>
 
 #include "Util/Util.h"
@@ -67,18 +68,49 @@ namespace NPE
 		/// <returns>True if the user didn't abort the process, false otherwise</returns>
 		bool OpenScene(GUI::MainWindow& win, std::vector<Line>& lines);
 
-		/// <summary>
-		/// Getter for the current Save File name
-		/// </summary>
-		/// <returns>The name of the current Save File</returns>
-		const std::string& GetFileName() const { return m_FileName; }
-
 	private:
 		/// <summary>
 		/// Writes the file path to fonfig
 		/// </summary>
-		/// <param name="filePath">Is the path with file to write to config</param>
-		void WriteConfig(std::string filePath);
+		void WriteConfig();
+
+		/// <summary>
+		/// Checks if the config file exists and creates it if it doesn't
+		/// </summary>
+		/// <returns>True if the file exists, false otherwise</returns>
+		bool CreateConfigFile();
+
+		/// <summary>
+		/// Reads the config file and fills m_Configs
+		/// </summary>
+		void ReadConfig();
+
+		/// <summary>
+		/// Recursively creates the save file at filepath
+		/// </summary>
+		/// <param name="filepath">Is the path to the save file</param>
+		/// <returns>True if the file exists, false otherwise</returns>
+		bool CreateSaveFile(const std::string& filepath);
+
+		/// <summary>
+		/// Checks if directory exists
+		/// </summary>
+		/// <param name="dirNameIn">Is the directory to check</param>
+		/// <returns>True if the directory exists, false otherwise</returns>
+		bool DirectoryExists(const std::string& dir);
+
+		/// <summary>
+		/// Checks if file exists
+		/// </summary>
+		/// <param name="filename">Is the file to search for</param>
+		/// <returns>True if the file exists, false otherwise</returns>
+		bool FileExists(const std::string& filepath);
+
+		/// <summary>
+		/// Creates the database
+		/// </summary>
+		/// <param name="path">Is the path to the save file</param>
+		void CreateDatabase(const std::string& path);
 
 	private:
 		/// <summary>
@@ -92,19 +124,29 @@ namespace NPE
 		bool m_IsTemporarySave;
 
 		/// <summary>
-		/// Specifies the name of the currently loaded file
+		/// Specifies all loaded file paths
 		/// </summary>
-		std::string m_FileName;
+		std::vector<std::pair<std::string, std::string>> m_Configs;
 
 		/// <summary>
 		/// Is the name of the default save file
 		/// </summary>
-		static constexpr const char* s_SaveFileName = "save.dbs";
+		inline static const std::string s_SaveFileName = "save.dbs";
 
 		/// <summary>
-		/// is the name of the default config file path
+		/// Is the name of the default config file path
 		/// </summary>
-		static constexpr const char* s_ConfigFilePath = "config.cfg";
+		inline static const std::string s_ConfigFilePath = "config.cfg";
+
+		/// <summary>
+		/// Is the default save directory
+		/// </summary>
+		inline static const std::string s_DefaultSaveFileDir = "saves\\";
+
+		/// <summary>
+		/// Is the default name of a save file
+		/// </summary>
+		inline static const std::string s_DefaultSaveFileName = "save.dbs";
 	};
 }
 

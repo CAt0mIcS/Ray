@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GUI/Controls/Control.h"
+#include "GUI/Graphics/TextRenderer.h"
 
 /**
 * QUESTION:

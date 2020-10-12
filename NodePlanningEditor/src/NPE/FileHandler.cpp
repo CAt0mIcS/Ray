@@ -17,7 +17,7 @@
 namespace NPE
 {
 	FileHandler::FileHandler()
-		: m_Db(nullptr), m_IsTemporarySave(false), m_FileName("")
+		: m_Db(nullptr), m_IsTemporarySave(false)
 	{
 
 		//m_SaveFolder += "{{";
@@ -64,7 +64,7 @@ namespace NPE
 			CreateDefaultTemplate();
 			m_IsTemporarySave = false;
 
-			WriteConfig(Util::WideCharToMultiByte(result));
+			//WriteConfig(Util::WideCharToMultiByte(result));
 		}
 
 		//clear save file
@@ -245,6 +245,8 @@ namespace NPE
 
 		tbVersionInfo.AddField<QRD::NUMBER>("SaveFileVersion");
 
+		tbVersionInfo.AddRecord(Constants::g_SaveFileVersion);
+
 		tbNodeInfo.AddField<QRD::NUMBER>("x");
 		tbNodeInfo.AddField<QRD::NUMBER>("y");
 		tbNodeInfo.AddField<QRD::NUMBER>("width");
@@ -263,138 +265,55 @@ namespace NPE
 
 	void FileHandler::CreateOrLoadSave()
 	{
-		std::string fileDir = "saves\\";
+		bool configFileExists = CreateConfigFile();
+		ReadConfig();
 
 		/// <summary>
-		/// Checks if directory exists
+		/// Delete all invalid paths in configs
 		/// </summary>
-		/// <param name="dirNameIn">Is the directory to check</param>
-		/// <returns>True if the directory exists, false otherwise</returns>
-		auto dirExists = [](const std::string& dirNameIn)
+		bool configChanged = false;
+		std::vector<int> configDelIdx{};
+		for (unsigned int i = 0; i < m_Configs.size(); ++i)
 		{
-			NPE_LOG("Checking if directory {0} exists...", dirNameIn);
+			if (!FileExists(m_Configs[i].first))
+			{
+				NPE_LOG("Save File in Directory {0} doesn't exist, removing it...", m_Configs[i].first);
+				//m_Configs.erase(m_Configs.begin() + i);
+				configDelIdx.emplace_back(i);
+				configChanged = true;
+			}
+		}
 
-			DWORD ftyp = GetFileAttributesA(dirNameIn.c_str());
-			if (ftyp == INVALID_FILE_ATTRIBUTES)
-				return false;  //something is wrong with your path!
-
-			if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
-				return true;   // this is a directory!
-
-			return false;    // this is not a directory!
-		};
+		for (auto idx : configDelIdx)
+		{
+			m_Configs.erase(m_Configs.begin() + idx);
+		}
+		configDelIdx.resize(0);
 
 		/// <summary>
-		/// Checks if file exists
+		/// Add default path if file no file in configs exists
 		/// </summary>
-		/// <param name="filename">Is the file to search for</param>
-		/// <returns>True if the file exists, false otherwise</returns>
-		auto fileExists = [](const std::string& fileName)
+		bool saveFileExists = true;
+		if (m_Configs.size() == 0)
 		{
-			struct stat buffer;
-			NPE_LOG("Checking if file {0} exists...", fileName);
-			return (stat(fileName.c_str(), &buffer) == 0);
-		};
-
-		/**
-		* Creating config directory and file
-		*/
-		bool configFileExists = true;
-		if (!fileExists(s_ConfigFilePath))
-		{
-			NPE_LOG("Config file config.cfg doesn't exist, creating it...");
-
-			/**
-			* Write temporary path to config file and create it
-			*/
-			std::ofstream writer(s_ConfigFilePath);
-			writer << fileDir + s_SaveFileName + '\n';
-			writer << fileDir;
-			writer.close();
-			configFileExists = false;
+			m_Configs.emplace_back(s_DefaultSaveFileDir + s_DefaultSaveFileName, s_DefaultSaveFileDir);
+			saveFileExists = CreateSaveFile(m_Configs[0].first);
 		}
-		else
-			NPE_LOG("Config file exists");
 
-		/**
-		* Read configs
-		*/
-		std::ifstream reader(s_ConfigFilePath);
-		std::string line;
-		std::unordered_map<std::string, std::string> configs;
-		configs["SaveFile"] = "";
-		configs["SaveDir"] = "";
-
-		for (auto& config : configs)
+		/// <summary>
+		/// Update the config file if it contained an invalid path
+		/// </summary>
+		if (configChanged)
 		{
-			std::getline(reader, line);
-			if (line.empty())
-			{
-				configs["SaveFile"] = fileDir + s_SaveFileName;
-				configs["SaveDir"] = fileDir;
-				break;
-			}
-			else
-			{
-				config.second = line;
-			}
+			WriteConfig();
 		}
-		reader.close();
 
-		if (configs["SaveDir"] == fileDir)
-			m_IsTemporarySave = true;
+		CreateDatabase(m_Configs[0].first);
 
-		bool saveFileExist = true;
-		if (!dirExists(configs["SaveDir"]))
-		{
-			NPE_LOG("Directory {0} doesn't exist, using temporary storage location ({1})", configs["SaveFile"], fileDir);
-			m_IsTemporarySave = true;
-			if (!CreateDirectoryA(fileDir.c_str(), nullptr))
-			{
-				NPE_THROW_LAST_WND_EXCEPT();
-			}
-			saveFileExist = false;
-		}
-		else
-			NPE_LOG("Directory {0} exists", fileDir);
-
-		if (!saveFileExist || !fileExists(configs["SaveFile"]))
-		{
-			configs["SaveDir"] = fileDir;
-			configs["SaveFile"] = fileDir + s_SaveFileName;
-			NPE_LOG("Save file in directory {0} doesn't exist, using temporary storage location", configs["SaveFile"]);
-			
-			if (!dirExists(configs["SaveDir"]))
-			{
-				if (!CreateDirectoryA(configs["SaveDir"].c_str(), nullptr))
-				{
-					NPE_THROW_LAST_WND_EXCEPT();
-				}
-			}
-
-			std::ofstream writer(fileDir + s_SaveFileName);
-			writer << "";
-			writer.close();
-
-			std::ofstream writer2(s_ConfigFilePath);
-			writer2 << configs["SaveFile"] << '\n';
-			writer2 << configs["SaveDir"];
-			writer2.close();
-
-			saveFileExist = false;
-		}
-		else
-			NPE_LOG("File exists");
-
-		m_Db = new QRD::Database(configs["SaveFile"], 4, 6);
-
-		if (!saveFileExist)
+		if (!saveFileExists)
 		{
 			CreateDefaultTemplate();
 		}
-
-		auto fileNameBegin = configs["SaveFile"].find_last_of('\\');
-		m_FileName = configs["SaveFile"].substr(fileNameBegin + 1);
 	}
 
 	void FileHandler::ChangeScene(const std::string& filepath)
@@ -419,11 +338,11 @@ namespace NPE
 		* Get filename of new scene
 		*/
 		auto fileNameBegin = filepath.find_last_of('\\');
-		m_FileName = filepath.substr(fileNameBegin + 1);
+		//m_FileName = filepath.substr(fileNameBegin + 1);
 
 		m_Db->SetFilePath(filepath);
 		m_Db->ReadDb();
-		WriteConfig(filepath);
+		//WriteConfig(filepath);
 	}
 
 	bool FileHandler::OpenScene(GUI::MainWindow& win, std::vector<Line>& lines)
@@ -446,18 +365,114 @@ namespace NPE
 		return true;
 	}
 	
-	void FileHandler::WriteConfig(std::string filePath)
+	void FileHandler::WriteConfig()
 	{
-		//Remove null-termination character because std::ofstream also writes it
-		if(filePath[filePath.size() - 1] == '\0')
-			filePath.erase(filePath.cend() - 1);
-		
-		auto replaceBegin = filePath.find_last_of('\\');
+		for (auto& [filePath, fileDir] : m_Configs)
+		{
+			//Remove null-termination character because std::ofstream also writes it
+			if (filePath[filePath.size() - 1] == '\0')
+				filePath.erase(filePath.cend() - 1);
 
-		std::ofstream writer(s_ConfigFilePath);
-		writer << filePath << '\n';
-		writer << filePath.replace(filePath.begin() + replaceBegin, filePath.end(), "");
-		writer.close();
+			std::ofstream writer(s_ConfigFilePath);
+			writer << filePath << '\n';
+			writer.close();
+		}
+		
+	}
+
+	bool FileHandler::CreateConfigFile()
+	{
+		if (!FileExists(s_ConfigFilePath))
+		{
+			NPE_LOG("Config file config.cfg doesn't exist, creating it...");
+
+			/**
+			* Write temporary path to config file and create it
+			*/
+			std::ofstream writer(s_ConfigFilePath);
+			writer << s_DefaultSaveFileDir << s_DefaultSaveFileName << '\n';
+			writer.close();
+			return false;
+		}
+		else
+		{
+			NPE_LOG("Config file exists");
+			return true;
+		}
+		return false;
+	}
+
+	void FileHandler::ReadConfig()
+	{
+		std::ifstream reader(s_ConfigFilePath);
+		std::string line;
+
+		while (std::getline(reader, line))
+		{
+			if (line.empty() && m_Configs.size() == 0)
+			{
+				m_Configs.emplace_back(s_DefaultSaveFileDir + s_DefaultSaveFileName, s_DefaultSaveFileDir);
+				break;
+			}
+			else
+			{
+				size_t id = line.find_last_of('\\');
+				m_Configs.emplace_back(line, "");
+				line.erase(line.begin() + id, line.end());
+				m_Configs[m_Configs.size() - 1].second = line;
+			}
+		}
+		reader.close();
+	}
+
+	bool FileHandler::CreateSaveFile(const std::string& filepath)
+	{
+		size_t idx = filepath.find_last_of('\\');
+		std::string filedir = filepath.substr(0, idx);
+		bool dirExists = true;
+		if (!DirectoryExists(filedir))
+		{
+			bool dirExists = false;
+			if (!CreateDirectoryA(filedir.c_str(), nullptr))
+			{
+				NPE_THROW_LAST_WND_EXCEPT();
+			}
+		}
+
+		if (!dirExists || !FileExists(filepath))
+		{
+			std::ofstream writer(filepath);
+			writer << "";
+			writer.close();
+			return false;
+		}
+		return true;
+	}
+	
+	bool FileHandler::DirectoryExists(const std::string& dir)
+	{
+		NPE_LOG("Checking if directory {0} exists...", dir);
+
+		DWORD ftyp = GetFileAttributesA(dir.c_str());
+		if (ftyp == INVALID_FILE_ATTRIBUTES)
+			return false;  //something is wrong with your path!
+
+		if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
+			return true;   // this is a directory!
+
+		return false;    // this is not a directory!
+	}
+	
+	bool FileHandler::FileExists(const std::string& filepath)
+	{
+		struct stat buffer;
+		NPE_LOG("Checking if file {0} exists...", filepath);
+		return (stat(filepath.c_str(), &buffer) == 0);
+	}
+	
+	void FileHandler::CreateDatabase(const std::string& path)
+	{
+		m_Db = new QRD::Database(path, 4, 6);
 	}
 }
 

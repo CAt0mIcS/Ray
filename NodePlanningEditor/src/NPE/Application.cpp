@@ -417,14 +417,14 @@ namespace NPE
 	void Application::SetWindowSaveText()
 	{
 		std::ostringstream oss;
-		oss << "NodePlanningEditor        " << m_FileHandler.GetFileName() << '*';
+		oss << "NodePlanningEditor        " /*<< m_FileHandler.GetFileName()*/ << '*';
 		m_Window.SetTitle(Util::MultiByteToWideChar(oss.str()));
 	}
 
 	void Application::SetWindowSavedText()
 	{
 		std::ostringstream oss;
-		oss << "NodePlanningEditor        " << m_FileHandler.GetFileName();
+		oss << "NodePlanningEditor        " /*<< m_FileHandler.GetFileName()*/;
 		m_Window.SetTitle(Util::MultiByteToWideChar(oss.str()));
 	}
 

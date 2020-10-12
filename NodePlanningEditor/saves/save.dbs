@@ -7,7 +7,7 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    1.0
+    1
 }
 TABLE: NodeInfo
 FIELDS
@@ -19,235 +19,18 @@ FIELDS
     txt1:TEXT
     txt2:TEXT
 }
-RECORDS: 8
-RECORD
-{
-    820.139
-    519.278
-    450
-    280
-    Hello World
-    Hello World
-}
-RECORD
-{
-    436.324
-    518.695
-    450
-    280
-    Hello World
-    Hello World
-}
-RECORD
-{
-    -148.045
-    657.491
-    450
-    280
-    Hello World
-    Hello World
-}
-RECORD
-{
-    1365.55
-    682.501
-    450
-    280
-    Hello World
-    Hello World
-}
-RECORD
-{
-    619.225
-    -162.948
-    450
-    280
-    Hello World
-    Hello World
-}
-RECORD
-{
-    633.674
-    968.079
-    450
-    280
-    Hello World
-    Hello World
-}
-RECORD
-{
-    177.999
-    148.766
-    450
-    280
-    Hello World
-    Hello World
-}
-RECORD
-{
-    1089.01
-    155.762
-    450
-    280
-    Hello World
-    Hello World
-}
+RECORDS: 0
 TABLE: SceneInfo
 FIELDS
 {
     scaleX:INTEGER
     scaleY:INTEGER
 }
-RECORDS: 1
-RECORD
-{
-    0.579481
-    0.579481
-}
+RECORDS: 0
 TABLE: Lines
 FIELDS
 {
     ID2:INTEGER
     ID1:INTEGER
 }
-RECORDS: 28
-RECORD
-{
-    8
-    16
-}
-RECORD
-{
-    12
-    16
-}
-RECORD
-{
-    16
-    4
-}
-RECORD
-{
-    8
-    12
-}
-RECORD
-{
-    12
-    4
-}
-RECORD
-{
-    4
-    8
-}
-RECORD
-{
-    20
-    12
-}
-RECORD
-{
-    20
-    16
-}
-RECORD
-{
-    20
-    24
-}
-RECORD
-{
-    24
-    8
-}
-RECORD
-{
-    24
-    4
-}
-RECORD
-{
-    24
-    16
-}
-RECORD
-{
-    24
-    12
-}
-RECORD
-{
-    20
-    8
-}
-RECORD
-{
-    20
-    4
-}
-RECORD
-{
-    20
-    32
-}
-RECORD
-{
-    32
-    28
-}
-RECORD
-{
-    28
-    20
-}
-RECORD
-{
-    28
-    12
-}
-RECORD
-{
-    28
-    8
-}
-RECORD
-{
-    28
-    24
-}
-RECORD
-{
-    28
-    4
-}
-RECORD
-{
-    16
-    28
-}
-RECORD
-{
-    32
-    12
-}
-RECORD
-{
-    32
-    16
-}
-RECORD
-{
-    32
-    4
-}
-RECORD
-{
-    24
-    32
-}
-RECORD
-{
-    32
-    8
-}
+RECORDS: 0
