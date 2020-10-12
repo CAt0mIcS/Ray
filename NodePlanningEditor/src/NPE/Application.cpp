@@ -572,7 +572,7 @@ namespace NPE
 			{
 				if ((*it)->GetType() == GUI::Control::Type::Tab)
 				{
-					(*it)->MoveBy({ -tab->GetPos().x, 0.0f });
+					(*it)->MoveBy({ -tab->GetSize().width, 0.0f });
 				}
 			}
 		}
