@@ -32,7 +32,7 @@ namespace GUI
 		return receiver;
 	}
 
-	void Control::PostRedraw()
+	void Control::PostRedraw() const
 	{
 		RECT rc = Util::ToRect(m_Pos, m_Size);
 

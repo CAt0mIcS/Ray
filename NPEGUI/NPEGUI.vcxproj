@@ -167,6 +167,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GUI\Controls\SceneTab.h" />
     <ClInclude Include="src\GUI\Window\FileWindow.h" />
     <ClInclude Include="src\GUI\Controls\Addons\TextBox\Caret.h" />
     <ClInclude Include="res\resource.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="src\GUI\Util\Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GUI\Controls\SceneTab.cpp" />
     <ClCompile Include="src\GUI\Window\FileWindow.cpp" />
     <ClCompile Include="src\GUI\Controls\Addons\TextBox\Caret.cpp" />
     <ClCompile Include="src\GUI\GUIApplication.cpp" />

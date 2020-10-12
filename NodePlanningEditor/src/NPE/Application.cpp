@@ -10,6 +10,7 @@
 #include "GUI/Controls/TextBox.h"
 #include "GUI/Controls/Node.h"
 #include "GUI/Controls/Button.h"
+#include "GUI/Controls/SceneTab.h"
 
 #include "GUI/Handlers/Mouse.h"
 
@@ -32,7 +33,7 @@
 namespace NPE
 {
 	Application::Application()
-		: m_Actions(*this), m_MousePos{}, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false)
+		: m_Actions(*this), m_MousePos{}, m_HandleControls{}, m_Lines{}, m_DrawLines(false), m_NeedsToSave(false), m_Tabs{}
 	{
 		NPE_THROW_WND_EXCEPT(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE));
 
@@ -170,6 +171,15 @@ namespace NPE
 			else if (watched->GetType() == GUI::Control::Type::Node)
 			{
 				m_HandleControls.draggingNode = (GUI::Node*)watched;
+				return true;
+			}
+			else if (watched->GetType() == GUI::Control::Type::Tab)
+			{
+				for (auto* tab : m_Tabs)
+				{
+					tab->SetActive(false);
+				}
+				((GUI::SceneTab*)watched)->SetActive(true);
 				return true;
 			}
 		}

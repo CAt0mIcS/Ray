@@ -19,6 +19,7 @@ namespace GUI
 	class CharEvent;
 
 	class Button;
+	class SceneTab;
 }
 
 
@@ -195,6 +196,11 @@ namespace NPE
 		/// Contains all lines in the scene
 		/// </summary>
 		std::vector<Line> m_Lines;
+
+		/// <summary>
+		/// Contains pointers to all the scene tabs
+		/// </summary>
+		std::vector<GUI::SceneTab*> m_Tabs;
 
 		/// <summary>
 		/// True if the mouse has moved and we are currently drawing a line

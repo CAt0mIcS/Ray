@@ -174,7 +174,7 @@ namespace GUI
 		/// Checks if this Control has focus
 		/// </summary>
 		/// <returns>True if this Control has focus, false otherwise</returns>
-		bool HasFocus() { return this == s_Focus; }
+		bool HasFocus() const { return this == s_Focus; }
 
 		/*
 		* QUESTION:
@@ -205,7 +205,7 @@ namespace GUI
 		/// <summary>
 		/// Sends a WM_PAINT message to the window
 		/// </summary>
-		void PostRedraw();
+		void PostRedraw() const;
 
 	protected:
 		/// <summary>

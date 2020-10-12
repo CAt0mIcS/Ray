@@ -30,9 +30,6 @@
     <ClCompile Include="src\NPE\Actions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\NPE\CustomControls\SceneTab.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -48,9 +45,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\NPE\Actions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\NPE\CustomControls\SceneTab.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
