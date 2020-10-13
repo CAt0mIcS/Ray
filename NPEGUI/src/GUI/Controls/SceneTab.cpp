@@ -20,6 +20,7 @@ namespace GUI
 		else
 			Renderer::Get().RenderRect(m_Pos, m_Size, Constants::g_DefaultInactiveSceneTabColor);
 
+		Renderer::Get().RenderRectOutline(m_Pos, m_Size, Constants::g_DefaultTabBorderColor);
 		RenderText();
 
 		return true;

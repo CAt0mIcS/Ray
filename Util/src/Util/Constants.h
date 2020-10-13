@@ -26,6 +26,7 @@ namespace Constants
 	*/
 	inline constexpr Util::NColor g_DefaultActiveSceneTabColor{ 0.0f, 122.0f, 204.0f };
 	inline constexpr Util::NColor g_DefaultInactiveSceneTabColor{ 45.0f, 45.0f, 48.0f };
+	inline constexpr Util::NColor g_DefaultTabBorderColor{ 15.0f, 15.0f, 15.0f };
 	inline constexpr Util::NSize  g_DefaultTabSize{ 100.0f, 25.0f };
 
 	inline constexpr float g_SaveFileVersion = 1.0f;

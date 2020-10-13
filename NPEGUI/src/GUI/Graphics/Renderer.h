@@ -70,6 +70,20 @@ namespace GUI
 		);
 
 		/// <summary>
+		/// Draws a border rectangle with specified arguments
+		/// </summary>
+		/// <param name="pos">Is the x and y coordinate of the rect</param>
+		/// <param name="size">Is the width and height of the rect</param>
+		/// <param name="color">Are the rgb values of the rect</param>
+		/// <param name="strokeWidth">Is the border width</param>
+		void RenderRectOutline(
+			_In_ const Util::NPoint& pos,
+			_In_ const Util::NSize& size,
+			_In_ const Util::NColor& color,
+			_In_opt_ float strokeWidth = 1.0f
+		);
+
+		/// <summary>
 		/// Draws a filled rounded rectangle with specified arguments
 		/// </summary>
 		/// <param name="pos">Is the x and y coordinate of the rounded rect</param>

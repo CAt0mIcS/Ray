@@ -513,6 +513,17 @@ namespace Util
 		NPoint pos;
 		NSize size;
 
+		D2D1_RECT_F ToD2D1RectF()
+		{
+			D2D1_RECT_F rc;
+			rc.left = pos.x;
+			rc.top = pos.y;
+			rc.right = pos.x + size.width;
+			rc.bottom = pos.y + size.height;
+
+			return rc;
+		}
+
 		bool operator==(const NTransform& other)
 		{
 			return pos == other.pos && size == other.size;

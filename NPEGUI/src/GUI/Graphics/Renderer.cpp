@@ -127,6 +127,12 @@ namespace GUI
 		m_pRenderTarget->FillRectangle(rect, m_pBrush.Get());
 	}
 
+	void Renderer::RenderRectOutline(_In_ const Util::NPoint& pos, _In_ const Util::NSize& size, _In_ const Util::NColor& color, _In_opt_ float strokeWidth)
+	{
+		m_pBrush->SetColor(color);
+		m_pRenderTarget->DrawRectangle(Util::NTransform{ pos, size }.ToD2D1RectF(), m_pBrush.Get(), strokeWidth);
+	}
+
 	void Renderer::RenderRoundedRect(
 		_In_ const Util::NPoint& pos, 
 		_In_ const Util::NSize& size, 
