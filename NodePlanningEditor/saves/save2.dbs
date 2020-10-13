@@ -1,0 +1,200 @@
+TABLES: 4
+TABLE: VersionInfo
+FIELDS
+{
+    SaveFileVersion:INTEGER
+}
+RECORDS: 1
+RECORD
+{
+    1
+}
+TABLE: NodeInfo
+FIELDS
+{
+    x:INTEGER
+    y:INTEGER
+    width:INTEGER
+    height:INTEGER
+    txt1:TEXT
+    txt2:TEXT
+}
+RECORDS: 16
+RECORD
+{
+    427
+    7
+    450
+    280
+    
+    
+}
+RECORD
+{
+    1071
+    311
+    450
+    280
+    
+    
+}
+RECORD
+{
+    926
+    656
+    450
+    280
+    
+    
+}
+RECORD
+{
+    305
+    571
+    450
+    280
+    
+    
+}
+RECORD
+{
+    783
+    190
+    450
+    280
+    
+    
+}
+RECORD
+{
+    1202
+    287
+    450
+    280
+    
+    
+}
+RECORD
+{
+    843
+    620
+    450
+    280
+    
+    
+}
+RECORD
+{
+    506
+    450
+    450
+    280
+    
+    
+}
+RECORD
+{
+    182
+    609
+    450
+    280
+    
+    
+}
+RECORD
+{
+    531
+    774
+    450
+    280
+    
+    
+}
+RECORD
+{
+    1265
+    721
+    450
+    280
+    
+    
+}
+RECORD
+{
+    1319
+    263
+    450
+    280
+    
+    
+}
+RECORD
+{
+    898
+    107
+    450
+    280
+    
+    
+}
+RECORD
+{
+    534
+    346
+    450
+    280
+    
+    
+}
+RECORD
+{
+    42
+    364
+    450
+    280
+    
+    
+}
+RECORD
+{
+    180
+    550
+    450
+    280
+    
+    
+}
+TABLE: SceneInfo
+FIELDS
+{
+    scaleX:INTEGER
+    scaleY:INTEGER
+}
+RECORDS: 1
+RECORD
+{
+    1
+    1
+}
+TABLE: Lines
+FIELDS
+{
+    ID2:INTEGER
+    ID1:INTEGER
+}
+RECORDS: 3
+RECORD
+{
+    56
+    52
+}
+RECORD
+{
+    52
+    4
+}
+RECORD
+{
+    4
+    60
+}

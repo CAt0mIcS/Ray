@@ -349,6 +349,7 @@ namespace NPE
 	void FileHandler::ChangeScene(const std::string& filepath)
 	{
 		m_Db->Clear();
+		m_Db->SetFilePath(filepath);
 
 		/**
 		* Checking if file size is 0, if so the we need to create a default template
@@ -364,7 +365,6 @@ namespace NPE
 			}
 		}
 
-		m_Db->SetFilePath(filepath);
 		m_Db->ReadDb();
 	}
 

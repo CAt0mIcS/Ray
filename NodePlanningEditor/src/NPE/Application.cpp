@@ -24,6 +24,10 @@
 *	Is it ok to use "using namespace GUI" in source files
 *	How to design a library with include directories (Example QRD) --> Good project file structure (CMake structure?)
 *	Is it a good idea to let actions be handled by a separate class? Or should I put everything into the Application class?
+* 
+*	Sometimes there is a lot of small things that need to be checked (FileHandler --> Does .cfg file exist?, does save file exist, is save file valid...)
+*		->> How do I structure a bunch of if-statements?
+*			->> A lot of private functions?
 */
 
 #define NPE_DEBUG_DISABLE_AUTOSAVE
