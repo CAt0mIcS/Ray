@@ -7,6 +7,8 @@
 #include <wrl.h>
 #include <dwrite.h>
 
+#include <memory>
+
 #include "Util/Constants.h"
 #include "Util/Direct2D.h"
 
@@ -20,6 +22,21 @@ namespace GUI
 	{
 		friend class TextRenderer;
 	public:
+		/// <summary>
+		/// Renderer Constructor
+		/// </summary>
+		Renderer();
+
+		/// <summary>
+		/// Deleted Copy Constructor
+		/// </summary>
+		Renderer(const Renderer&) = delete;
+		
+		/// <summary>
+		/// Deleted Copy-Asignment operator
+		/// </summary>
+		Renderer& operator=(const Renderer&) = delete;
+
 		/// <summary>
 		/// Initializes the Renderer
 		/// </summary>
@@ -174,11 +191,6 @@ namespace GUI
 
 	private:
 		/// <summary>
-		/// Renderer Constructor
-		/// </summary>
-		Renderer();
-
-		/// <summary>
 		/// Creates all graphics resources
 		/// </summary>
 		void CreateGraphicsResources();
@@ -228,7 +240,7 @@ private:
 		/// <summary>
 		/// Static Renderer instance for singelton design
 		/// </summary>
-		static Renderer* s_Instance;
+		static std::shared_ptr<Renderer> s_Instance;
 	};
 }
 

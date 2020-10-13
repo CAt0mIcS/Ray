@@ -9,10 +9,11 @@
 
 namespace GUI
 {
-	TextRenderer* TextRenderer::s_TextRenderer = new TextRenderer();
+	std::shared_ptr<TextRenderer> TextRenderer::s_TextRenderer = std::make_shared<TextRenderer>();
 
 	void TextRenderer::Init()
 	{
+		//TODO: Only allow one instance of TextRenderer
 		CreateTextGraphicsResources();
 	}
 

@@ -251,9 +251,6 @@ namespace GUI
 
 	MainWindow::~MainWindow()
 	{
-		delete &Renderer::Get();
-		delete &TextRenderer::Get();
-
 		for (auto& timer : m_Timers)
 		{
 			timer.Destroy();

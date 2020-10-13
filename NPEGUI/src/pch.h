@@ -14,6 +14,7 @@
 #include <bitset>
 #include <functional>
 #include <type_traits>
+#include <memory>
 
 #include <wrl.h>
 #pragma comment(lib, "dwrite.lib")

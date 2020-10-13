@@ -34,6 +34,11 @@ namespace GUI
 	{
 	public:
 		/// <summary>
+		/// TextRenderer Constructor
+		/// </summary>
+		TextRenderer();
+
+		/// <summary>
 		/// Getter for static TextRenderer (singelton design)
 		/// </summary>
 		/// <returns>The TextRenderer</returns>
@@ -132,11 +137,6 @@ namespace GUI
 
 	private:
 		/// <summary>
-		/// TextRenderer Constructor
-		/// </summary>
-		TextRenderer();
-
-		/// <summary>
 		/// Creates all graphics resources
 		/// </summary>
 		void CreateTextGraphicsResources();
@@ -150,7 +150,7 @@ namespace GUI
 		/// <summary>
 		/// Static TextRenderer instance for singelton design
 		/// </summary>
-		static TextRenderer* s_TextRenderer;
+		static std::shared_ptr<TextRenderer> s_TextRenderer;
 	};
 }
 

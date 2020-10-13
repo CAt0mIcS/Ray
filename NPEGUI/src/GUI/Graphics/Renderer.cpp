@@ -9,13 +9,14 @@
 
 namespace GUI
 {
-	Renderer* Renderer::s_Instance = new Renderer();
+	std::shared_ptr<Renderer> Renderer::s_Instance = std::make_shared<Renderer>();
 
 	Renderer::Renderer()
 		: m_hWnd(0), m_pD2DBitmap(nullptr), m_Scale{ 1.0f, 1.0f }, m_Origin{ 0.0f, 0.0f } {}
 
 	void Renderer::Init(_In_ HWND hWnd)
 	{
+		//TODO: Only allow one instance of Renderer class
 		m_hWnd = hWnd;
 
 		RECT rc;
