@@ -65,7 +65,7 @@ namespace GUI
 		/// Getter for all Controls in the window
 		/// </summary>
 		/// <returns>List of Controls in the window</returns>
-		std::vector<Control*>& GetControls() { return m_Children; }
+		Control::ContainerType& GetControls() { return m_Children; }
 
 
 		/**

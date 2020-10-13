@@ -38,7 +38,7 @@ namespace NPE
 		////m_SaveFolder = "saves\\";
 	}
 
-	std::string FileHandler::SaveScene(const std::string& filepath, const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, bool saveToNewLocation)
+	std::string FileHandler::SaveScene(const std::string& filepath, const GUI::Control::ContainerType& controls, const std::vector<Line>& lines, bool saveToNewLocation)
 	{
 		HCURSOR prevCursor = GetCursor();
 		SetCursor(LoadCursor(NULL, IDC_WAIT));

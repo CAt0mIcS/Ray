@@ -22,6 +22,10 @@ namespace GUI
 	{
 		friend class Renderer;
 	public:
+		/// <summary>
+		/// Specifies the container type which hols all Control children
+		/// </summary>
+		using ContainerType = std::vector<Control*>;
 
 		/// <summary>
 		/// Contains all types of Controls
@@ -104,7 +108,7 @@ namespace GUI
 		/// Getter for all child Controls
 		/// </summary>
 		/// <returns>All the children of this Control</returns>
-		const std::vector<Control*>& GetChildren() const { return m_Children; }
+		const Control::ContainerType& GetChildren() const { return m_Children; }
 
 		/// <summary>
 		/// Getter for Control Id
@@ -248,7 +252,7 @@ namespace GUI
 		/// their Render() function needs to be called in this Control's Render() function.
 		/// There is currently no function to add a child
 		/// </summary>
-		std::vector<Control*> m_Children;
+		Control::ContainerType m_Children;
 
 		/// <summary>
 		/// Static pointer to the Control with focus, could be null

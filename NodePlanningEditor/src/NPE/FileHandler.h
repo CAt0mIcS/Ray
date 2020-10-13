@@ -4,12 +4,13 @@
 #include <unordered_map>
 #include <QRD/QRD.h>
 
+#include "GUI/Controls/Control.h"
+
 #include "Util/Util.h"
 
 namespace GUI
 {
 	class MainWindow;
-	class Control;
 	class Button;
 	class SceneTab;
 }
@@ -38,7 +39,7 @@ namespace NPE
 		/// <param name="lines">Is a list of all lines to save</param>
 		/// <param name="saveToNewLocation">Is true if the SaveFileDialog should open to save to a new location</param>
 		/// <returns>The new path</returns>
-		std::string SaveScene(const std::string& filepath, const std::vector<GUI::Control*> controls, const std::vector<Line>& lines, bool saveToNewLocation = false);
+		std::string SaveScene(const std::string& filepath, const GUI::Control::ContainerType& controls, const std::vector<Line>& lines, bool saveToNewLocation = false);
 		
 		/// <summary>
 		/// Loads a scene from the file specified in "config.cfg" file

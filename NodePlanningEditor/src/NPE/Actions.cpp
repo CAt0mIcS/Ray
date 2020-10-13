@@ -24,7 +24,7 @@ namespace NPE
 
 	}
 
-	void Actions::MoveCamera(const Util::NPoint& diff, std::vector<GUI::Control*>& controls)
+	void Actions::MoveCamera(const Util::NPoint& diff, GUI::Control::ContainerType& controls)
 	{
 		for (auto* control : controls)
 		{
@@ -50,14 +50,14 @@ namespace NPE
 		node->MoveBy(diff);
 	}
 
-	void Actions::ZoomIn(std::vector<GUI::Control*>& controls)
+	void Actions::ZoomIn(GUI::Control::ContainerType& controls)
 	{
 		Util::NPoint center = GUI::Mouse::GetTransformedPos();
 
 		GUI::Renderer::Get().SetScale(GUI::Renderer::Get().GetScale() * Util::NSize{ s_ScaleFactor, s_ScaleFactor });
 	}
 
-	void Actions::ZoomOut(std::vector<GUI::Control*>& controls)
+	void Actions::ZoomOut(GUI::Control::ContainerType& controls)
 	{
 		Util::NPoint center = GUI::Mouse::GetTransformedPos();
 		
@@ -87,7 +87,7 @@ namespace NPE
 		}
 	}
 	
-	void Actions::FinnishLineDrawing(std::vector<Line>& lines, const std::vector<GUI::Control*> controls)
+	void Actions::FinnishLineDrawing(std::vector<Line>& lines, const GUI::Control::ContainerType& controls)
 	{
 		if (lines.size() == 0)
 			return;
@@ -154,7 +154,7 @@ namespace NPE
 		}
 	}
 	
-	void Actions::DeleteNode(GUI::Node* watched, std::vector<GUI::Control*>& controls, std::vector<Line>& lines)
+	void Actions::DeleteNode(GUI::Node* watched, GUI::Control::ContainerType& controls, std::vector<Line>& lines)
 	{
 		for (unsigned int i = 0; i < controls.size(); ++i)
 		{

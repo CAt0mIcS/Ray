@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "GUI/Controls/Control.h"
+
 #include "Util/Util.h"
 
 
@@ -9,7 +11,6 @@ namespace GUI
 {
 	class Node;
 	class TextBox;
-	class Control;
 	class Button;
 	class MainWindow;
 }
@@ -43,7 +44,7 @@ namespace NPE
 		/// </summary>
 		/// <param name="diff">Is the camera movement</param>
 		/// <param name="controls">Is a list of Controls to move</param>
-		void MoveCamera(const Util::NPoint& diff, std::vector<GUI::Control*>& controls);
+		void MoveCamera(const Util::NPoint& diff, GUI::Control::ContainerType& controls);
 
 		/// <summary>
 		/// Creates a new Node at mouse position
@@ -64,13 +65,13 @@ namespace NPE
 		/// Zooms into the scene
 		/// </summary>
 		/// <param name="controls">Is the list of Controls</param>
-		void ZoomIn(std::vector<GUI::Control*>& controls);
+		void ZoomIn(GUI::Control::ContainerType& controls);
 
 		/// <summary>
 		/// Zooms out of the scene
 		/// </summary>
 		/// <param name="controls">Is the list of Controls</param>
-		void ZoomOut(std::vector<GUI::Control*>& controls);
+		void ZoomOut(GUI::Control::ContainerType& controls);
 
 		/// <summary>
 		/// Renders all lines
@@ -83,7 +84,7 @@ namespace NPE
 		/// </summary>
 		/// <param name="lines">Is the list of Lines where the line will be added to</param>
 		/// <param name="controls">Is the list of Controls</param>
-		void FinnishLineDrawing(std::vector<Line>& lines, const std::vector<GUI::Control*> controls);
+		void FinnishLineDrawing(std::vector<Line>& lines, const GUI::Control::ContainerType& controls);
 
 		/// <summary>
 		/// Deletes a line
@@ -98,7 +99,7 @@ namespace NPE
 		/// <param name="watched">Is the Node to delete</param>
 		/// <param name="controls">Is the list of Controls where the Node will be removed from</param>
 		/// <param name="lines">Is the list of lines where all lines connected with this Node will be removed from</param>
-		void DeleteNode(GUI::Node* watched, std::vector<GUI::Control*>& controls, std::vector<Line>& lines);
+		void DeleteNode(GUI::Node* watched, GUI::Control::ContainerType& controls, std::vector<Line>& lines);
 
 		/// <summary>
 		/// Creates the standard node template

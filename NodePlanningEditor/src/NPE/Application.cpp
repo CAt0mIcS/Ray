@@ -589,7 +589,7 @@ namespace NPE
 	{
 		GUI::SceneTab* tabToOpenAfterClosing;
 		auto sceneTabs = GetSceneTabs();
-		std::vector<GUI::Control*>::iterator tabIt = std::find(m_Window.GetControls().begin(), m_Window.GetControls().end(), tab);
+		GUI::Control::ContainerType::iterator tabIt = std::find(m_Window.GetControls().begin(), m_Window.GetControls().end(), tab);
 
 		// Tab is at the beginning of the list
 		if (tabIt == m_Window.GetControls().begin())
