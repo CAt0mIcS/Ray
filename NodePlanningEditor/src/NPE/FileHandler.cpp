@@ -324,7 +324,6 @@ namespace NPE
 			auto* tab = win.AddControl<GUI::SceneTab>(new GUI::SceneTab(&win));
 
 			Util::NPoint pos{};
-			static constexpr Util::NSize size{ 100.0f, 25.0f };
 			for (auto* tb : win.GetControls())
 			{
 				/// <summary>
@@ -335,7 +334,7 @@ namespace NPE
 
 			std::wstring path = Util::MultiByteToWideChar(config.first);
 			tab->SetPos(pos);
-			tab->SetSize(size);
+			tab->SetSize(Constants::g_DefaultTabSize);
 			tab->SetFile(path);
 			tab->SetFontSize(14);
 
@@ -415,7 +414,7 @@ namespace NPE
 
 		std::pair<std::string, std::string> comp(filePath, fileDir);
 		std::vector<std::pair<std::string, std::string>>::iterator activeInConfig = m_Configs.begin();
-		for (int i = 0; i < m_Configs.size(); ++i)
+		for (unsigned int i = 0; i < m_Configs.size(); ++i)
 		{
 			if (m_Configs[i] == comp)
 			{

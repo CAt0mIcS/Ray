@@ -207,6 +207,13 @@ namespace GUI
 		/// </summary>
 		void PostRedraw() const;
 
+		/// <summary>
+		/// Checks if the ids of both controls match
+		/// </summary>
+		/// <param name="other">Is the other control</param>
+		/// <returns>True if both ids are the same, false otherwise</returns>
+		bool operator==(const Control& other);
+
 	protected:
 		/// <summary>
 		/// Control Constructor

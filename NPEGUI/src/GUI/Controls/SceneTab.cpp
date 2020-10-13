@@ -27,12 +27,21 @@ namespace GUI
 	
 	bool SceneTab::OnEvent(_In_ Event& e)
 	{
-		if (e.GetType() == EventType::MouseMoveEvent)
+		switch (e.GetType())
+		{
+		case EventType::MouseMoveEvent:
 		{
 			// Mouse is on this SceneTab --> Issue rendering call to draw the tab in the active color
 			PostRedraw();
 			return true;
 		}
+		case EventType::SetCursorEvent:
+		{
+			SetCursor(LoadCursor(NULL, IDC_ARROW));
+			return true;
+		}
+		}
+		
 		return false;
 	}
 	

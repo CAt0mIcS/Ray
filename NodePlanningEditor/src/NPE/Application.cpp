@@ -30,7 +30,7 @@
 *			->> A lot of private functions?
 */
 
-#define NPE_DEBUG_DISABLE_AUTOSAVE
+//#define NPE_DEBUG_DISABLE_AUTOSAVE
 //#define NPE_DEBUG_RANDOM_NODES
 
 
@@ -364,8 +364,7 @@ namespace NPE
 				//TODO: Implement alert to user that an autosave is comming
 				if (m_NeedsToSave)
 				{
-
-					m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines);
+					m_FileHandler.SaveScene(Util::WideCharToMultiByte(GetActiveSceneTab()->GetFilePath()), m_Window.GetControls(), m_Lines);
 					SetSaveStatusAndTabText(false);
 				}
 				return true;
@@ -531,7 +530,6 @@ namespace NPE
 		m_Window.GetControls().insert(lastTab.base(), tab);
 
 		Util::NPoint pos{};
-		static constexpr Util::NSize size{ 100.0f, 25.0f };
 		for (auto* tb : m_Window.GetControls())
 		{
 			if (tb->GetType() == GUI::Control::Type::Tab)
@@ -542,7 +540,7 @@ namespace NPE
 		}
 
 		tab->SetPos(pos);
-		tab->SetSize(size);
+		tab->SetSize(Constants::g_DefaultTabSize);
 		tab->SetFile(filepath);
 		tab->SetFontSize(14);
 
@@ -554,6 +552,15 @@ namespace NPE
 	
 	void Application::SwitchTab(GUI::SceneTab* newTab)
 	{
+		HCURSOR prevCursor = GetCursor();
+		SetCursor(LoadCursor(NULL, IDC_WAIT));
+		if (m_NeedsToSave)
+		{
+			int result = PromptSaveChangesMsgBox();
+			if (result == IDCANCEL)
+				return;
+		}
+		
 		for (auto* tab : GetSceneTabs())
 		{
 			tab->SetActive(false);
@@ -575,11 +582,13 @@ namespace NPE
 		m_FileHandler.LoadScene(m_Window, m_Lines);
 		
 		m_Window.PostRedraw();
+		SetCursor(prevCursor);
 	}
 	
 	void Application::CloseTab(GUI::SceneTab* tab)
 	{
 		GUI::SceneTab* tabToOpenAfterClosing;
+		auto sceneTabs = GetSceneTabs();
 		std::vector<GUI::Control*>::iterator tabIt = std::find(m_Window.GetControls().begin(), m_Window.GetControls().end(), tab);
 
 		// Tab is at the beginning of the list
@@ -587,9 +596,7 @@ namespace NPE
 		{
 			// Deny user from closing the last tab
 			if (m_Window.GetControls().size() == 1 || (*(tabIt + 1))->GetType() != GUI::Control::Type::Tab)
-			{
 				return;
-			}
 
 			tabToOpenAfterClosing = (GUI::SceneTab*) * (tabIt + 1);
 
@@ -601,7 +608,7 @@ namespace NPE
 
 		}
 		// Tab is at the end of the list
-		else if (tabIt == m_Window.GetControls().end() - 1)
+		else if (*(*tabIt) == *sceneTabs[sceneTabs.size() - 1])
 		{
 			tabToOpenAfterClosing = (GUI::SceneTab*)*(tabIt - 1);
 		}

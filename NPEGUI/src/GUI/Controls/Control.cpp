@@ -48,6 +48,11 @@ namespace GUI
 		UpdateWindow(Renderer::Get().GetNativeWindow());
 	}
 
+	bool Control::operator==(const Control& other)
+	{
+		return this->GetId() == other.GetId();
+	}
+
 	Control::Control(_In_ Type type, _In_opt_ Control* parent)
 		: m_Parent(parent), m_Id(s_NextId), m_Pos{}, m_Size{}, m_Color{}, m_Type(type)
 	{
