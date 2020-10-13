@@ -6,7 +6,7 @@
 #include <chrono>
 
 #define UTIL_TIMER_ACTIVE 1
-#define UTIL_LOG_TIMER 0
+#define UTIL_LOG_TIMER 1
 
 
 namespace Util

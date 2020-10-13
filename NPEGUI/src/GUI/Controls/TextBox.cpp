@@ -119,6 +119,9 @@ namespace GUI
 
 	void TextBox::RenderText()
 	{
+		if (m_Text.text == L"")
+			return;
+
 		float xOffset = m_Size.width / 30.0f;
 		float yOffset;
 		if (this->IsMultiline())

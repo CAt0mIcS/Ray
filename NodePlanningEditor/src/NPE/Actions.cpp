@@ -31,16 +31,6 @@ namespace NPE
 			if(control->GetType() != GUI::Control::Type::Tab)
 				control->MoveBy(diff);
 		}
-
-		//auto& renderer = GUI::Renderer::Get();
-		//auto matrix = renderer.GetInverseViewMatrix();
-		//
-		//renderer.SetOrigin(
-		//	{
-		//		renderer.GetOrigin().x - (diff.x * matrix.m11 + diff.y * matrix.m21),
-		//		renderer.GetOrigin().y - (diff.x * matrix.m12 + diff.y * matrix.m22)
-		//	}
-		//);
 	}
 
 	void Actions::SpawnNode(GUI::MainWindow& win, float width, float height)

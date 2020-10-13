@@ -30,7 +30,7 @@
 *			->> A lot of private functions?
 */
 
-//#define NPE_DEBUG_DISABLE_AUTOSAVE
+#define NPE_DEBUG_DISABLE_AUTOSAVE
 //#define NPE_DEBUG_RANDOM_NODES
 
 
@@ -522,7 +522,6 @@ namespace NPE
 	
 	void Application::AddNewTab(std::wstring filepath)
 	{
-		//auto* tab = m_Window.AddControl<GUI::SceneTab>(new GUI::SceneTab(&m_Window));
 		auto* tab = new GUI::SceneTab(&m_Window);
 
 		auto lastTab = std::find_if(m_Window.GetControls().rbegin(), m_Window.GetControls().rend(), [](GUI::Control* control) { return control->GetType() == GUI::Control::Type::Tab; });
