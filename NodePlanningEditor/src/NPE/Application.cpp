@@ -141,7 +141,7 @@ namespace NPE
 			m_MousePos = GUI::Mouse::GetTransformedPos();
 			m_Window.PostRedraw();
 
-			m_NeedsToSave = true;
+			SetSaveStatusAndTabText(true);
 			return true;
 		}
 		else if (GUI::Mouse::IsLeftPressed())
@@ -163,7 +163,7 @@ namespace NPE
 				m_MousePos = GUI::Mouse::GetTransformedPos();
 				m_Window.PostRedraw();
 
-				m_NeedsToSave = true;
+				SetSaveStatusAndTabText(true);
 				return true;
 			}
 		}
@@ -207,7 +207,7 @@ namespace NPE
 			{
 				m_Actions.FinnishLineDrawing(m_Lines, m_Window.GetControls());
 				m_Window.PostRedraw();
-				m_NeedsToSave = true;
+				SetSaveStatusAndTabText(true);
 				m_DrawLines = false;
 			}
 
@@ -218,12 +218,12 @@ namespace NPE
 		{
 			m_Actions.EraseLine(m_Lines, m_MousePos);
 			m_Window.PostRedraw();
-			m_NeedsToSave = true;
+			SetSaveStatusAndTabText(true);
 
 			if (GUI::Mouse::IsOnTransformedControl(watched) && watched->GetType() == GUI::Control::Type::Node)
 			{
 				m_Actions.DeleteNode((GUI::Node*)watched, m_Window.GetControls(), m_Lines);
-				m_NeedsToSave = true;
+				SetSaveStatusAndTabText(true);
 				m_Window.PostRedraw();
 			}
 
@@ -239,7 +239,7 @@ namespace NPE
 		{
 			m_Actions.SpawnNode(m_Window, s_NodeWidth, s_NodeHeight);
 			m_Window.PostRedraw();
-			m_NeedsToSave = true;
+			SetSaveStatusAndTabText(true);
 			return true;
 		}
 		//Save to shortcut
@@ -321,13 +321,13 @@ namespace NPE
 			}
 			
 			m_Window.PostRedraw();
-			m_NeedsToSave = true;
+			SetSaveStatusAndTabText(true);
 			return true;
 		}
 		//Render caret on key press
 		else if (watched->GetType() == GUI::Control::Type::TextBox && watched->HasFocus())
 		{
-			m_NeedsToSave = true;
+			SetSaveStatusAndTabText(true);
 			watched->GetParent()->PostRedraw();
 		}
 
@@ -337,7 +337,7 @@ namespace NPE
 	bool Application::OnMouseWheelUp(GUI::Control* watched, GUI::MouseWheelUpEvent& e)
 	{
 		m_Actions.ZoomIn(m_Window.GetControls());
-		m_NeedsToSave = true;
+		SetSaveStatusAndTabText(true);
 		m_Window.PostRedraw();
 		return true;
 	}
@@ -345,7 +345,7 @@ namespace NPE
 	bool Application::OnMouseWheelDown(GUI::Control* watched, GUI::MouseWheelDownEvent& e)
 	{
 		m_Actions.ZoomOut(m_Window.GetControls());
-		m_NeedsToSave = true;
+		SetSaveStatusAndTabText(true);
 		m_Window.PostRedraw();
 		return true;
 	}
@@ -359,7 +359,11 @@ namespace NPE
 			{
 				//TODO: Implement alert to user that an autosave is comming
 				if (m_NeedsToSave)
+				{
+
 					m_FileHandler.SaveScene(m_Window.GetControls(), m_Lines);
+					SetSaveStatusAndTabText(false);
+				}
 				return true;
 			}
 		#endif
@@ -458,8 +462,37 @@ namespace NPE
 				m_Window.PostRedraw();
 			}
 
-			m_NeedsToSave = false;
+			SetSaveStatusAndTabText(false);
 		}
+	}
+
+	void Application::SetSaveStatusAndTabText(bool status)
+	{
+		m_NeedsToSave = status;
+		auto* activeTab = GetActiveSceneTab();
+
+		if (m_NeedsToSave)
+		{
+			if (activeTab->GetText().text[activeTab->GetText().text.size() - 1] == '*')
+				return;
+
+			std::wstring text = activeTab->GetText().text;
+			if (text[text.size() - 1] == '\0')
+				text.replace(text.end() - 1, text.end(), L"*");
+			else
+				text += '*';
+			activeTab->SetText(text);
+		}
+		else
+		{
+			if (activeTab->GetText().text[activeTab->GetText().text.size() - 1] != '*')
+				return;
+
+			std::wostringstream oss;
+			oss << activeTab->GetText().text;
+			activeTab->SetText(oss.str().substr(0, oss.str().size() - 1));
+		}
+		activeTab->PostRedraw();
 	}
 	
 	GUI::SceneTab* Application::GetActiveSceneTab()

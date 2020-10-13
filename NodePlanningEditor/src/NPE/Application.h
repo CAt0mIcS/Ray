@@ -149,6 +149,12 @@ namespace NPE
 		void SaveScene(bool saveToNewLocation = false);
 
 		/// <summary>
+		/// Sets the needsToSave member variable to status
+		/// </summary>
+		/// <param name="status">Is true if the tab needs to be saved, false otherwise</param>
+		void SetSaveStatusAndTabText(bool status);
+
+		/// <summary>
 		/// Finds the currently active SceneTab
 		/// </summary>
 		/// <returns>The active SceneTab</returns>

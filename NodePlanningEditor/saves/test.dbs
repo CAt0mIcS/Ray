@@ -22,8 +22,8 @@ FIELDS
 RECORDS: 3
 RECORD
 {
-    181
-    434
+    248.12
+    475.116
     450
     280
     
@@ -31,8 +31,8 @@ RECORD
 }
 RECORD
 {
-    1037
-    455
+    1104.12
+    496.116
     450
     280
     
@@ -40,8 +40,8 @@ RECORD
 }
 RECORD
 {
-    754
-    220
+    821.12
+    261.116
     450
     280
     
@@ -56,8 +56,8 @@ FIELDS
 RECORDS: 1
 RECORD
 {
-    1
-    1
+    0.885813
+    0.885813
 }
 TABLE: Lines
 FIELDS
