@@ -78,6 +78,11 @@ namespace NPE
 		/// <param name="active">Is the active scene tab</param>
 		void RemoveTabFromConfig(GUI::SceneTab* active);
 
+		/// <summary>
+		/// Creates all scene tabs from config
+		/// </summary>
+		void CreateSceneTabs(GUI::MainWindow& win);
+
 	private:
 		/// <summary>
 		/// Writes the file path to fonfig

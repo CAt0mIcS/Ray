@@ -43,6 +43,7 @@ namespace NPE
 		NPE_THROW_WND_EXCEPT(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE));
 
 		m_FileHandler.CreateOrLoadSave(m_Window, m_Tabs);
+		m_FileHandler.CreateSceneTabs(m_Window);
 
 		NPE_LOG("Start of loading scene...\n");
 		m_FileHandler.LoadScene(m_Window, m_Lines);

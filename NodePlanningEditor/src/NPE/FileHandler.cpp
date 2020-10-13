@@ -315,34 +315,6 @@ namespace NPE
 
 		if (size == 0)
 			CreateDefaultTemplate();
-
-		/// <summary>
-		/// Create all the tabs
-		/// </summary>
-		for (auto& config : m_Configs)
-		{
-			auto* tab = win.AddControl<GUI::SceneTab>(new GUI::SceneTab(&win));
-
-			Util::NPoint pos{};
-			for (auto* tb : win.GetControls())
-			{
-				/// <summary>
-				/// All Controls are SceneTabs at this stage of the program
-				/// </summary>
-				pos.x += tb->GetSize().width;
-			}
-
-			std::wstring path = Util::MultiByteToWideChar(config.first);
-			tab->SetPos(pos);
-			tab->SetSize(Constants::g_DefaultTabSize);
-			tab->SetFile(path);
-			tab->SetFontSize(14);
-
-			size_t idx = path.find_last_of('\\');
-			path.erase(path.begin(), path.begin() + idx + 1);
-			tab->SetText(path);
-		}
-		((GUI::SceneTab*)(win.GetControls()[0]))->SetActive(true);
 	}
 
 	void FileHandler::ChangeScene(const std::string& filepath)
@@ -424,6 +396,33 @@ namespace NPE
 				break;
 			}
 		}
+	}
+
+	void FileHandler::CreateSceneTabs(GUI::MainWindow& win)
+	{
+		/// Create all the tabs
+		for (auto& config : m_Configs)
+		{
+			auto* tab = win.AddControl<GUI::SceneTab>(new GUI::SceneTab(&win));
+
+			Util::NPoint pos{};
+			for (auto* tb : win.GetControls())
+			{
+				/// All Controls are SceneTabs at this stage of the program
+				pos.x += tb->GetSize().width;
+			}
+
+			std::wstring path = Util::MultiByteToWideChar(config.first);
+			tab->SetPos(pos);
+			tab->SetSize(Constants::g_DefaultTabSize);
+			tab->SetFile(path);
+			tab->SetFontSize(14);
+
+			size_t idx = path.find_last_of('\\');
+			path.erase(path.begin(), path.begin() + idx + 1);
+			tab->SetText(path);
+		}
+		((GUI::SceneTab*)(win.GetControls()[0]))->SetActive(true);
 	}
 	
 	void FileHandler::WriteConfig()
