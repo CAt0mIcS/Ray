@@ -8,6 +8,9 @@
 #include <vector>
 #include <type_traits>
 
+//TODO: Add to pch
+#include <Uxtheme.h>
+
 
 namespace GUI
 {
@@ -84,10 +87,16 @@ namespace GUI
 		T* AddControl(_In_ Control* control) { return (T*)m_Children.emplace_back(control); }
 
 		/// <summary>
-		/// Getter for window rect
+		/// Getter for client rect
+		/// </summary>
+		/// <returns>The client rect</returns>
+		RECT GetClientRect() const;
+
+		/// <summary>
+		/// Getter for the window rrect
 		/// </summary>
 		/// <returns>The window rect</returns>
-		RECT GetRect() const;
+		RECT GetWindowRect() const;
 
 		/// <summary>
 		/// Sets the event callback function

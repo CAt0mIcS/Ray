@@ -17,5 +17,3 @@
 #include <memory>
 
 #include <wrl.h>
-#pragma comment(lib, "dwrite.lib")
-#pragma comment(lib, "d2d1.lib")

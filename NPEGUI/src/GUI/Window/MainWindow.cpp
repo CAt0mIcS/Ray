@@ -12,16 +12,19 @@
 #include "GUI/Util/Timer.h"
 
 
+
 namespace GUI
 {
 	MainWindow::MainWindow()
 		: Control(Type::Window)
 	{
-		if (!CreateNativeWindow(L"", WS_OVERLAPPEDWINDOW, 0, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT))
+		if (!CreateNativeWindow(L"", 0, 0, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT))
 		{
 			NPE_THROW_LAST_WND_EXCEPT();
 		}
 	
+		SetWindowLongPtr(m_hWnd, GWL_STYLE, 0);
+
 		this->SetFocus();
 
 		ShowWindow(m_hWnd, SW_MAXIMIZE);
@@ -80,6 +83,11 @@ namespace GUI
 	{
 		switch (uMsg)
 		{
+		case WM_CREATE:
+		{
+			SetWindowPos(m_hWnd, nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE);
+			break;
+		}
 		case WM_DESTROY:
 		{
 			PostQuitMessage(0);
@@ -231,10 +239,17 @@ namespace GUI
 		return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
 	
-	RECT MainWindow::GetRect() const
+	RECT MainWindow::GetClientRect() const
 	{
 		RECT rc;
-		GetWindowRect(m_hWnd, &rc);
+		::GetClientRect(m_hWnd, &rc);
+		return rc;
+	}
+
+	RECT MainWindow::GetWindowRect() const
+	{
+		RECT rc;
+		::GetWindowRect(m_hWnd, &rc);
 		return rc;
 	}
 	
@@ -299,6 +314,9 @@ namespace GUI
 
 	bool MainWindow::DispatchPaintEvent(_In_ PaintEvent& e)
 	{
+		if (!m_EventCallbackFn)
+			return false;
+
 		Util::NTransform transform = Util::ToTransform(*e.GetRect());
 
 		Control* receiver = nullptr;
