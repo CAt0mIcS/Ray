@@ -30,7 +30,7 @@
 *			->> A lot of private functions?
 */
 
-#define NPE_DEBUG_DISABLE_AUTOSAVE
+//#define NPE_DEBUG_DISABLE_AUTOSAVE
 //#define NPE_DEBUG_RANDOM_NODES
 
 

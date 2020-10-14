@@ -130,14 +130,6 @@ namespace GUI
 		virtual bool OnEvent(_In_ Event& e) = 0;
 
 		/// <summary>
-		/// Checks if the Control overlapps with other
-		/// </summary>
-		/// <param name="other">Is the other Control</param>
-		/// <param name="minDst">Is the minimum distance allowed between Controls</param>
-		/// <returns>True if this Control overlaps with the other one, false otherwise</returns>
-		bool OverlapsWith(_In_ const Control* other, _In_opt_ const Util::NSize& minDst = { 0.0f, 0.0f });
-
-		/// <summary>
 		/// Calculates the layout of a new Control
 		/// </summary>
 		/// <param name="parentPos">Is the position of the parent Control</param>

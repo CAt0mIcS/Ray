@@ -113,22 +113,10 @@ namespace GUI
 		}
 	}
 
-	//TODO: Implement function
-	bool Control::OverlapsWith(_In_ const Control* other, _In_opt_ const Util::NSize& minDst)
-	{
-		//return m_Renderer.RoundedRectConrolsOverlap(*this, *other, minDst);
-		return false;
-	}
-
 	bool Control::IsInWindow() const
 	{
-
-		/// <TODO>
-		/// Perfect function, parts are still rendered outside of window rect
-		/// </TODO>
-
 		RECT rc;
-		GetWindowRect(Renderer::Get().GetNativeWindow(), &rc);
+		GetClientRect(Renderer::Get().GetNativeWindow(), &rc);
 		
 		auto pos = m_Pos;
 		auto matrix = Renderer::Get().GetViewMatrix();

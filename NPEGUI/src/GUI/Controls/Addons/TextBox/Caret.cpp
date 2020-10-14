@@ -386,7 +386,6 @@ namespace GUI
 			unsigned int absolutePosition = m_CaretPos + m_CaretPosOffset;
 
 			DeleteSelection();
-			//TODO: Copy properties from next text
 			m_Parent->m_Text.text.insert(absolutePosition, L"\r\n");
 			SetSelection(MoveMode::AbsoluteLeading, absolutePosition + 2, false, false);
 			break;

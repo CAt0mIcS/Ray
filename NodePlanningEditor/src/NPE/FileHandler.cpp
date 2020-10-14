@@ -20,22 +20,6 @@ namespace NPE
 	FileHandler::FileHandler()
 		: m_Db(nullptr)
 	{
-
-		//m_SaveFolder += "{{";
-		//int len = 20;
-		//static constexpr const char alphanum[] =
-		//	"0123456789"
-		//	"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-		//	"abcdefghijklmnopqrstuvwxyz";
-		//
-		////srand((unsigned)time(nullptr) * getpid());
-		//
-		//for (int i = 0; i < len; ++i)
-		//	m_SaveFolder += alphanum[rand() % (sizeof(alphanum) - 1)];
-		//
-		//m_SaveFolder += "}}\\";
-		////TODO: Random string here
-		////m_SaveFolder = "saves\\";
 	}
 
 	std::string FileHandler::SaveScene(const std::string& filepath, const GUI::Control::ContainerType& controls, const std::vector<Line>& lines, bool saveToNewLocation)
