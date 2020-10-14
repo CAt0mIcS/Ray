@@ -34,7 +34,7 @@ namespace GUI
 		{
 			INVALID = 0,
 			Node, Button, TextBox,
-			Window, Tab
+			Window, Tab, Widget
 		};
 
 	public:

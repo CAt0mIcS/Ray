@@ -12,7 +12,6 @@
 #include "GUI/Util/Timer.h"
 
 
-
 namespace GUI
 {
 	MainWindow::MainWindow()
@@ -22,7 +21,6 @@ namespace GUI
 		{
 			NPE_THROW_LAST_WND_EXCEPT();
 		}
-	
 		SetWindowLongPtr(m_hWnd, GWL_STYLE, 0);
 
 		this->SetFocus();

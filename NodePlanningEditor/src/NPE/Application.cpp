@@ -11,6 +11,7 @@
 #include "GUI/Controls/Node.h"
 #include "GUI/Controls/Button.h"
 #include "GUI/Controls/SceneTab.h"
+#include "GUI/Controls/Widget.h"
 
 #include "GUI/Handlers/Mouse.h"
 
@@ -45,6 +46,24 @@ namespace NPE
 		m_FileHandler.CreateOrLoadSave(m_Window, m_Tabs);
 		m_FileHandler.CreateSceneTabs(m_Window);
 
+		// Create the title bar
+		{
+			RECT rc = m_Window.GetWindowRect();
+			GUI::Widget* titleBar = m_Window.AddControl<GUI::Widget>(new GUI::Widget(&m_Window));
+			titleBar->SetPos({ 0.0f, 0.0f });
+			titleBar->SetSize({ 10.0f, (float)rc.right });
+			titleBar->SetRenderCallback([](GUI::Widget* widget)
+				{
+					auto& renderer = GUI::Renderer::Get();
+					renderer.BeginDraw();
+
+					renderer.RenderRect(widget->GetPos(), widget->GetSize(), { 10, 10, 10 });
+
+					renderer.EndDraw();
+				}
+			);
+		}
+		
 		NPE_LOG("Start of loading scene...\n");
 		m_FileHandler.LoadScene(m_Window, m_Lines);
 

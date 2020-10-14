@@ -190,6 +190,7 @@
     <ClInclude Include="src\Win.h" />
     <ClInclude Include="src\GUI\Graphics\TextRenderer.h" />
     <ClInclude Include="src\GUI\Util\Timer.h" />
+    <ClInclude Include="src\GUI\Controls\Widget.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GUI\Controls\SceneTab.cpp" />
@@ -212,6 +213,7 @@
     <ClCompile Include="src\GUI\Controls\TextBox.cpp" />
     <ClCompile Include="src\GUI\Graphics\TextRenderer.cpp" />
     <ClCompile Include="src\GUI\Util\Timer.cpp" />
+    <ClCompile Include="src\GUI\Controls\Widget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Util\Util.vcxproj">
