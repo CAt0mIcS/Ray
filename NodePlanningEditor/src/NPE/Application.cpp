@@ -51,15 +51,11 @@ namespace NPE
 			RECT rc = m_Window.GetWindowRect();
 			GUI::Widget* titleBar = m_Window.AddControl<GUI::Widget>(new GUI::Widget(&m_Window));
 			titleBar->SetPos({ 0.0f, 0.0f });
-			titleBar->SetSize({ 10.0f, (float)rc.right });
+			titleBar->SetSize({ (float)rc.right, 10.0f });
 			titleBar->SetRenderCallback([](GUI::Widget* widget)
 				{
 					auto& renderer = GUI::Renderer::Get();
-					renderer.BeginDraw();
-
 					renderer.RenderRect(widget->GetPos(), widget->GetSize(), { 10, 10, 10 });
-
-					renderer.EndDraw();
 				}
 			);
 		}
@@ -412,10 +408,10 @@ namespace NPE
 		{
 			// Render the entire scene if the window requested a redraw
 			renderer.RenderScene();
-
-			D2D1::Matrix3x2F pageTransform = renderer.GetViewMatrix();
-			renderer.SetTransform(pageTransform);
 		}
+
+		D2D1::Matrix3x2F pageTransform = renderer.GetViewMatrix();
+		renderer.SetTransform(pageTransform);
 		
 		watched->Render();
 		m_Actions.RenderLines(m_Lines);
@@ -424,7 +420,7 @@ namespace NPE
 		renderer.SetTransform(prevTransform);
 		
 		// Render tabs without transform
-		if(watched->GetType() == GUI::Control::Type::Tab)
+		if(watched->GetType() == GUI::Control::Type::Tab || watched->GetType() == GUI::Control::Type::Widget)
 			watched->Render();
 		else if (watched->GetType() == GUI::Control::Type::Window)
 		{
