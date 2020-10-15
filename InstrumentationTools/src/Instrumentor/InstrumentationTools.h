@@ -33,15 +33,15 @@
 
 
 #if ZEAL_ENABLE_PROFILING
-	#define ZEAL_PROFILE_BEGIN_SESSION(name, filepath)	::Zeal::Instrumentation::Instrumentor::Get().BeginSession(name, filepath)
-	#define ZEAL_PROFILE_END_SESSION()					::Zeal::Instrumentation::Instrumentor::Get().EndSession()
-	#define ZEAL_PROFILE_LINE_2(name, line)				::Zeal::Instrumentation::Timer timer__ZEAL_##line(name)
-	#define ZEAL_PROFILE_LINE(name, line)				ZEAL_PROFILE_LINE_2(name, line)
-	#define ZEAL_PROFILE_SCOPE(name)					ZEAL_PROFILE_LINE(name, __LINE__)
-	#define ZEAL_PROFILE_FUNCTION()						ZEAL_PROFILE_SCOPE(ZEAL_FUNC_SIG)
+	#define ZL_PROFILE_BEGIN_SESSION(name, filepath)	::Zeal::Instrumentation::Instrumentor::Get().BeginSession(name, filepath)
+	#define ZL_PROFILE_END_SESSION()					::Zeal::Instrumentation::Instrumentor::Get().EndSession()
+	#define ZL_PROFILE_LINE_2(name, line)				::Zeal::Instrumentation::Timer timer__ZEAL_##line(name)
+	#define ZL_PROFILE_LINE(name, line)					  ZL_PROFILE_LINE_2(name, line)
+	#define ZL_PROFILE_SCOPE(name)						  ZL_PROFILE_LINE(name, __LINE__)
+	#define ZL_PROFILE_FUNCTION()						  ZL_PROFILE_SCOPE(ZEAL_FUNC_SIG)
 #else
-	#define ZEAL_PROFILE_BEGIN_SESSION(name, filepath)
-	#define ZEAL_PROFILE_END_SESSION()
-	#define ZEAL_PROFILE_SCOPE(name)
-	#define ZEAL_PROFILE_FUNCTION()
+	#define ZL_PROFILE_BEGIN_SESSION(name, filepath)
+	#define ZL_PROFILE_END_SESSION()
+	#define ZL_PROFILE_SCOPE(name)
+	#define ZL_PROFILE_FUNCTION()
 #endif

@@ -42,11 +42,12 @@ namespace Zeal::Instrumentation
 			{
 				if (Log::Logger::Get())
 				{
-					ZEAL_LOG_ERROR("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name, m_CurrentSession->Name);
+					ZL_LOG_ERROR("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name, m_CurrentSession->Name);
 				}
 				InternalEndSession();
 			}
 
+			m_Writer.open(filepath);
 			if (m_Writer.is_open())
 			{
 				m_CurrentSession = new Session({ name });
@@ -56,7 +57,7 @@ namespace Zeal::Instrumentation
 			{
 				if (Log::Logger::Get())
 				{
-					ZEAL_LOG_ERROR("Instrumentor could not open results file '{0}'.", filepath);
+					ZL_LOG_ERROR("Instrumentor could not open results file '{0}'.", filepath);
 				}
 			}
 		}
@@ -90,7 +91,7 @@ namespace Zeal::Instrumentation
 			}
 			else if(Log::Logger::Get())
 			{
-				ZEAL_LOG_DEBUG("[Instrumentor] Timer with function signature '{0}' took '{1}'us", result.Name, result.ElapsedTime.count());
+				ZL_LOG_DEBUG("[Instrumentor] Timer with function signature '{0}' took '{1}'us", result.Name, result.ElapsedTime.count());
 			}
 		}
 

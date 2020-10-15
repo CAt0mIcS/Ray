@@ -18,6 +18,18 @@
 namespace Zeal::Log
 {
 
+	template<typename T>
+	using BaseRefType = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+
+	template<typename T>
+	using BasePtrType = typename std::remove_cv<typename std::remove_pointer<T>::type>::type;
+
+	template<typename T>
+	using BaseArrType = typename std::remove_cv<typename std::remove_all_extents<T>::type>::type;
+
+	using LogMessageType = LogLevel;
+
+
 	class BaseLogger
 	{
 	public:
@@ -149,9 +161,6 @@ namespace Zeal::Log
 		}
 
 	protected:
-		using LogMessageType = LogLevel;
-
-	protected:
 		virtual void Log(const std::string& message) = 0;
 
 		BaseLogger()
@@ -192,23 +201,67 @@ namespace Zeal::Log
 
 	private:
 		template<typename T>
-		void SerializeStringArg(std::string& message, T&& arg, int& argCount)
+		void SerializeStringArg(std::string& message, T&& arg, int& argCount, typename std::enable_if_t<std::is_same_v<BaseRefType<T>, std::wstring>>* = 0)
+		{
+			WideCharSerialize(message, arg, argCount);
+		}
+
+		template<typename T>
+		void SerializeStringArg(std::string& message, T&& arg, int& argCount, typename std::enable_if_t<std::is_convertible_v<T, std::wstring>>* = 0, 
+																				typename std::enable_if_t<!std::is_same_v<BaseRefType<T>, std::wstring>>* = 0)
+		{
+			WideCharSerialize(message, arg, argCount);
+		}
+
+		template<typename T>
+		void SerializeStringArg(std::string& message, T&& arg, int& argCount,
+			typename std::enable_if_t<!std::is_same_v<BaseRefType<T>, std::wstring>>* = 0,
+			typename std::enable_if_t<!std::is_convertible_v<T, std::wstring>>* = 0
+		)
+		{
+			MultiByteSerialize(message, arg, argCount);
+		}
+
+		template<typename T>
+		void WideCharSerialize(std::string& message, T&& arg, int& argCount)
+		{
+			if (argCount == -1)
+				return;
+
+			std::wostringstream oss;
+			oss << arg;
+
+			const std::string toFind = "{" + std::to_string(argCount) + "}";
+			size_t foundIdx = message.find(toFind);
+
+			if (foundIdx == std::string::npos)
+			{
+				argCount = -1;
+				return;
+			}
+
+			message.replace(message.begin() + foundIdx, message.begin() + foundIdx + std::size(toFind), Helper::ToMultiByte(oss.str()));
+			++argCount;
+		}
+
+		template<typename T>
+		void MultiByteSerialize(std::string& message, T&& arg, int& argCount)
 		{
 			if (argCount == -1)
 				return;
 
 			std::ostringstream oss;
 			oss << arg;
-			
+
 			const std::string toFind = "{" + std::to_string(argCount) + "}";
 			size_t foundIdx = message.find(toFind);
-			
+
 			if (foundIdx == std::string::npos)
 			{
 				argCount = -1;
 				return;
 			}
-			
+
 			message.replace(message.begin() + foundIdx, message.begin() + foundIdx + std::size(toFind), oss.str());
 			++argCount;
 		}
