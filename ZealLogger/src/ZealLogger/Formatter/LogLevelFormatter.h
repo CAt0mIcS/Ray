@@ -14,11 +14,8 @@ namespace Zeal::Log
 		{
 #ifndef ZEAL_NO_LOG_LEVEL_OUT
 
-			//std::wstring strToInsert = L"[" + s_LogLevelStr[(int)logLvl] + L" ] ";
-			//str.insert(0, strToInsert);
-
-			//std::scoped_lock lock(m_Mutex);
-			str.insert(0, L"[234 ]");
+			std::wstring strToInsert = L"[" + s_LogLevelStr[(int)logLvl] + L" ] ";
+			str.insert(0, strToInsert);
 
 #endif // !ZEAL_NO_LOG_LEVEL_OUT
 		}

@@ -151,11 +151,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\ZealLogger\Formatter\DateFormatter.h" />
+    <ClInclude Include="src\ZealLogger\Formatter\DateTimeFormatter.h" />
     <ClInclude Include="src\ZealLogger\Formatter\Formatter.h" />
     <ClInclude Include="src\ZealLogger\Formatter\LogLevelFormatter.h" />
     <ClInclude Include="src\ZealLogger\Private\LogLevel.h" />
-    <ClInclude Include="src\ZealLogger\Private\String.h" />
+    <ClInclude Include="src\ZealLogger\Private\Queue.h" />
     <ClInclude Include="src\ZealLogger\Private\ZealHelper.h" />
     <ClInclude Include="src\ZealLogger\ZealBaseLogger.h" />
     <ClInclude Include="src\ZealLogger\ZealCustomize.h" />

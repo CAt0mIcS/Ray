@@ -33,16 +33,16 @@
     <ClInclude Include="src\ZealLogger\Formatter\Formatter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ZealLogger\Formatter\DateFormatter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ZealLogger\Formatter\LogLevelFormatter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ZealLogger\Private\LogLevel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ZealLogger\Private\String.h">
+    <ClInclude Include="src\ZealLogger\Private\Queue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ZealLogger\Formatter\DateTimeFormatter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

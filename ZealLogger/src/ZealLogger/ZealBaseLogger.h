@@ -6,11 +6,12 @@
 #include <sstream>
 
 #include "Formatter/LogLevelFormatter.h"
-#include "Formatter/DateFormatter.h"
+#include "Formatter/DateTimeFormatter.h"
 
 #include "Private/ZealHelper.h"
 
 #include "Private/LogLevel.h"
+#include "Private/Queue.h"
 
 
 namespace Zeal::Log
@@ -40,16 +41,10 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Trace(const std::wstring& str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Debug))
+			if (!ShouldLog(LogMessageType::Trace))
 				return;
 
-			{
-				std::scoped_lock lock(m_Mutex);
-				m_LogMessage = str;
-			}
-			
-			FormatMessage(args...);
-			LogTrace();
+			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -58,13 +53,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			{
-				std::scoped_lock lock(m_Mutex);
-				m_LogMessage = str;
-			}
-
-			FormatMessage(args...);
-			LogDebug();
+			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -73,13 +62,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			{
-				std::scoped_lock lock(m_Mutex);
-				m_LogMessage = str;
-			}
-
-			FormatMessage(args...);
-			LogInfo();
+			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -88,13 +71,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			{
-				std::scoped_lock lock(m_Mutex);
-				m_LogMessage = str;
-			}
-
-			FormatMessage(args...);
-			LogWarn();
+			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -103,13 +80,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			{
-				std::scoped_lock lock(m_Mutex);
-				m_LogMessage = str;
-			}
-
-			FormatMessage(args...);
-			LogError();
+			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -118,13 +89,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			{
-				std::scoped_lock lock(m_Mutex);
-				m_LogMessage = str;
-			}
-
-			FormatMessage(args...);
-			LogCritical();
+			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
 
@@ -186,17 +151,7 @@ namespace Zeal::Log
 		using LogMessageType = LogLevel;
 
 	protected:
-		virtual void LogTrace() = 0;
-
-		virtual void LogDebug() = 0;
-
-		virtual void LogInfo() = 0;
-
-		virtual void LogWarn() = 0;
-
-		virtual void LogError() = 0;
-
-		virtual void LogCritical() = 0;
+		virtual void Log(const std::wstring& message) = 0;
 
 		BaseLogger()
 			: m_LogLevel(LogLevel::None)
@@ -204,7 +159,7 @@ namespace Zeal::Log
 			LogLevelFormatter* pLogLevelFormatter = new LogLevelFormatter();
 			m_Formatters.push_back(pLogLevelFormatter);
 
-			DateFormatter* pDateFormatter = new DateFormatter();
+			DateTimeFormatter* pDateFormatter = new DateTimeFormatter();
 			m_Formatters.push_back(pDateFormatter);
 		}
 
@@ -218,23 +173,23 @@ namespace Zeal::Log
 		}
 
 		template<typename... Args>
-		void SerializeString(Args&&... args)
+		std::wstring SerializeString(Args&&... args)
 		{
 			int argCount = 0;
-
-			std::scoped_lock lock(m_Mutex);
-			(SerializeStringArg(args, argCount), ...);
+			std::wstring serializedStr = m_LogMessages.PopFront();
+			(SerializeStringArg(serializedStr, args, argCount), ...);
+			return serializedStr;
 		}
 
 		bool ShouldLog(LogMessageType msgType)
 		{
-			std::scoped_lock lock(m_Mutex);
+			std::scoped_lock lock(s_Mutex);
 			return msgType >= m_LogLevel;
 		}
 
 	private:
 		template<typename T>
-		void SerializeStringArg(T&& arg, int& argCount)
+		void SerializeStringArg(std::wstring& message, T&& arg, int& argCount)
 		{
 			if (argCount == -1)
 				return;
@@ -243,7 +198,7 @@ namespace Zeal::Log
 			oss << arg;
 			
 			const std::wstring toFind = L"{" + std::to_wstring(argCount) + L"}";
-			size_t foundIdx = m_LogMessage.find(toFind);
+			size_t foundIdx = message.find(toFind);
 			
 			if (foundIdx == std::string::npos)
 			{
@@ -251,29 +206,30 @@ namespace Zeal::Log
 				return;
 			}
 			
-			m_LogMessage.replace(m_LogMessage.begin() + foundIdx, m_LogMessage.begin() + foundIdx + std::size(toFind), oss.str());
+			message.replace(message.begin() + foundIdx, message.begin() + foundIdx + std::size(toFind), oss.str());
 			++argCount;
 		}
 
 		template<typename... Args>
-		void FormatMessage(Args&&... args)
+		std::wstring FormatMessage(const std::wstring& str, Args&&... args)
 		{
-			SerializeString(args...);
+			m_LogMessages.PushBack(str);
+			std::wstring msg = SerializeString(args...);
 
-			std::scoped_lock lock(m_Mutex);
 			for (auto formatter : m_Formatters)
 			{
-				formatter->Format(m_LogMessage, m_LogLevel);
+				formatter->Format(msg, m_LogLevel);
 			}
+			return msg;
 		}
 
 	protected:
 #ifndef  ZEAL_LOG_NON_THREAD_SAVE
-		std::mutex m_Mutex;
+		std::mutex s_Mutex;
 #endif // ! ZEAL_LOG_NON_THREAD_SAVE
 
 		LogLevel m_LogLevel;
-		std::wstring m_LogMessage;
+		Queue<std::wstring> m_LogMessages;
 		std::vector<Formatter*> m_Formatters;
 
 	};

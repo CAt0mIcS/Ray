@@ -4,8 +4,10 @@ int two = 323;
 
 void LogStuff(Zeal::Log::FileLogger& logger)
 {
-	for(int i = 0; i < 5000; ++i)
+	for (int i = 0; i < 50000; ++i)
+	{
 		logger.Trace(L"This is a test {0}, {1}", one, two);
+	}
 }
 
 
@@ -27,10 +29,24 @@ int main()
 		}
 	);
 
+	std::thread t3([&]()
+		{
+			LogStuff(logger);
+		}
+	);
+
+	std::thread t4([&]()
+		{
+			LogStuff(logger);
+		}
+	);
+
 	LogStuff(logger);
 
 	t1.join();
 	t2.join();
+	t3.join();
+	t4.join();
 
 	logger.Close();
 }

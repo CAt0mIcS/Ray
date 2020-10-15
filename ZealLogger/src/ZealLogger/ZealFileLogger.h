@@ -70,44 +70,19 @@ namespace Zeal::Log
 		}
 
 	private:
-		virtual void LogTrace() override
+		/// <summary>
+		/// Writes the message to the output stream
+		/// </summary>
+		/// <param name="message">Is the message to output</param>
+		virtual void Log(const std::wstring& message) override
 		{
-			std::scoped_lock lock(m_Mutex);
-			m_Writer << m_LogMessage << '\n';
-		}
-
-		virtual void LogDebug() override
-		{
-			std::scoped_lock lock(m_Mutex);
-			m_Writer << m_LogMessage << '\n';
-		}
-
-		virtual void LogInfo() override
-		{
-			std::scoped_lock lock(m_Mutex);
-			m_Writer << m_LogMessage << '\n';
-		}
-
-		virtual void LogWarn() override
-		{
-			std::scoped_lock lock(m_Mutex);
-			m_Writer << m_LogMessage << '\n';
-		}
-
-		virtual void LogError() override
-		{
-			std::scoped_lock lock(m_Mutex);
-			m_Writer << m_LogMessage << '\n';
-		}
-
-		virtual void LogCritical() override
-		{
-			std::scoped_lock lock(m_Mutex);
-			m_Writer << m_LogMessage << '\n';
+			std::scoped_lock lock(m_StreamMutex);
+			m_Writer << message << '\n';
 		}
 
 	private:
 		std::wofstream m_Writer;
 		std::wstring m_FilePath;
+		std::mutex m_StreamMutex;
 	};
 }
