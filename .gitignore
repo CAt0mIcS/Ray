@@ -4,4 +4,4 @@ bin-int/
 .vs/
 .git/
 .github/
-*.json/
+*.json
