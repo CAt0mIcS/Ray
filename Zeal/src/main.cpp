@@ -1,52 +1,52 @@
 #include "ZealLogger/ZealLog.h"
+#include "Instrumentor/InstrumentationTools.h"
+
 int one = 32;
 int two = 323;
 
-void LogStuff(Zeal::Log::FileLogger& logger)
+void LogStuff()
 {
+	ZEAL_PROFILE_FUNCTION();
 	for (int i = 0; i < 5000; ++i)
 	{
-		logger.Trace(L"This is a test {0}, {1}", one, two);
+		//logger.Trace(L"This is a test {0}, {1}", one, two);
 	}
 }
 
 
 int main()
 {
-	Zeal::Log::FileLogger logger(L"Zeal.log");
-	logger.SetLogLevel(Zeal::Log::LogLevel::Trace);
-	logger.Open();
+	Zeal::Log::Logger::Init("Zeal.log");
+	Zeal::Log::Logger::Get()->SetLogLevel(Zeal::Log::LogLevel::Trace);
 
-	std::thread t1([&]()
-		{
-			LogStuff(logger);
-		}
-	);
+	//std::thread t1([&]()
+	//	{
+	//		LogStuff();
+	//	}
+	//);
 
-	std::thread t2([&]()
-		{
-			LogStuff(logger);
-		}
-	);
+	//std::thread t2([&]()
+	//	{
+	//		LogStuff();
+	//	}
+	//);
 
-	std::thread t3([&]()
-		{
-			LogStuff(logger);
-		}
-	);
+	//std::thread t3([&]()
+	//	{
+	//		LogStuff();
+	//	}
+	//);
 
-	std::thread t4([&]()
-		{
-			LogStuff(logger);
-		}
-	);
+	//std::thread t4([&]()
+	//	{
+	//		LogStuff();
+	//	}
+	//);
 
-	LogStuff(logger);
+	LogStuff();
 
-	t1.join();
-	t2.join();
-	t3.join();
-	t4.join();
-
-	logger.Close();
+	//t1.join();
+	//t2.join();
+	//t3.join();
+	//t4.join();
 }

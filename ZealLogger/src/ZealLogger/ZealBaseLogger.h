@@ -40,7 +40,7 @@ namespace Zeal::Log
 		virtual void Close() = 0;
 
 		template<typename... Args>
-		void Trace(const std::wstring& str, Args&&... args)
+		void Trace(const std::string& str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Trace))
 				return;
@@ -49,67 +49,12 @@ namespace Zeal::Log
 		}
 
 		template<typename... Args>
-		void Debug(const std::wstring& str, Args&&... args)
-		{
-			if (!ShouldLog(LogMessageType::Debug))
-				return;
-
-			Log(FormatMessage(str, std::forward<Args>(args)...));
-		}
-
-		template<typename... Args>
-		void Info(const std::wstring& str, Args&&... args)
-		{
-			if (!ShouldLog(LogMessageType::Debug))
-				return;
-
-			Log(FormatMessage(str, std::forward<Args>(args)...));
-		}
-
-		template<typename... Args>
-		void Warn(const std::wstring& str, Args&&... args)
-		{
-			if (!ShouldLog(LogMessageType::Debug))
-				return;
-
-			Log(FormatMessage(str, std::forward<Args>(args)...));
-		}
-
-		template<typename... Args>
-		void Error(const std::wstring& str, Args&&... args)
-		{
-			if (!ShouldLog(LogMessageType::Debug))
-				return;
-
-			Log(FormatMessage(str, std::forward<Args>(args)...));
-		}
-
-		template<typename... Args>
-		void Critical(const std::wstring& str, Args&&... args)
-		{
-			if (!ShouldLog(LogMessageType::Debug))
-				return;
-
-			Log(FormatMessage(str, std::forward<Args>(args)...));
-		}
-
-
-		template<typename... Args>
-		void Trace(const std::string& str, Args&&... args)
-		{
-			if (!ShouldLog(LogMessageType::Debug))
-				return;
-
-			Trace(Helper::ToWideChar(str));
-		}
-
-		template<typename... Args>
 		void Debug(const std::string& str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			Debug(Helper::ToWideChar(str));
+			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -118,7 +63,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			Info(Helper::ToWideChar(str));
+			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -127,7 +72,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			Warn(Helper::ToWideChar(str));
+			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -136,7 +81,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			Error(Helper::ToWideChar(str));
+			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -145,14 +90,69 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			Critical(Helper::ToWideChar(str));
+			Log(FormatMessage(str, std::forward<Args>(args)...));
+		}
+
+
+		template<typename... Args>
+		void Trace(const std::wstring& str, Args&&... args)
+		{
+			if (!ShouldLog(LogMessageType::Debug))
+				return;
+
+			Log(FormatMessage(Helper::ToMultiByte(str), std::forward<Args>(args)...));
+		}
+
+		template<typename... Args>
+		void Debug(const std::wstring& str, Args&&... args)
+		{
+			if (!ShouldLog(LogMessageType::Debug))
+				return;
+
+			Log(FormatMessage(Helper::ToMultiByte(str), std::forward<Args>(args)...));
+		}
+
+		template<typename... Args>
+		void Info(const std::wstring& str, Args&&... args)
+		{
+			if (!ShouldLog(LogMessageType::Debug))
+				return;
+
+			Log(FormatMessage(Helper::ToMultiByte(str), std::forward<Args>(args)...));
+		}
+
+		template<typename... Args>
+		void Warn(const std::wstring& str, Args&&... args)
+		{
+			if (!ShouldLog(LogMessageType::Debug))
+				return;
+
+			Log(FormatMessage(Helper::ToMultiByte(str), std::forward<Args>(args)...));
+		}
+
+		template<typename... Args>
+		void Error(const std::wstring& str, Args&&... args)
+		{
+			if (!ShouldLog(LogMessageType::Debug))
+				return;
+
+			Log(FormatMessage(Helper::ToMultiByte(str), std::forward<Args>(args)...));
+		}
+
+		template<typename... Args>
+		void Critical(const std::wstring& str, Args&&... args)
+		{
+			if (!ShouldLog(LogMessageType::Debug))
+				return;
+
+			Log(FormatMessage(Helper::ToMultiByte(str), std::forward<Args>(args)...));
 		}
 
 	protected:
 		using LogMessageType = LogLevel;
 
 	protected:
-		virtual void Log(const std::wstring& message) = 0;
+		virtual void Log(const std::string& message) = 0;
 
 		BaseLogger()
 			: m_LogLevel(LogLevel::None)
@@ -177,35 +177,30 @@ namespace Zeal::Log
 		}
 
 		template<typename... Args>
-		std::wstring SerializeString(Args&&... args)
+		std::string SerializeString(Args&&... args)
 		{
 			int argCount = 0;
-			std::wstring serializedStr = m_LogMessages.PopFront();
+			std::string serializedStr = m_LogMessages.PopFront();
 			(SerializeStringArg(serializedStr, args, argCount), ...);
 			return serializedStr;
 		}
 
 		bool ShouldLog(LogMessageType msgType)
 		{
-#ifndef ZEAL_LOG_NON_THREAD_SAVE
-			
-			std::scoped_lock lock(s_Mutex);
-
-#endif
 			return msgType >= m_LogLevel;
 		}
 
 	private:
 		template<typename T>
-		void SerializeStringArg(std::wstring& message, T&& arg, int& argCount)
+		void SerializeStringArg(std::string& message, T&& arg, int& argCount)
 		{
 			if (argCount == -1)
 				return;
 
-			std::wostringstream oss;
+			std::ostringstream oss;
 			oss << arg;
 			
-			const std::wstring toFind = L"{" + std::to_wstring(argCount) + L"}";
+			const std::string toFind = "{" + std::to_string(argCount) + "}";
 			size_t foundIdx = message.find(toFind);
 			
 			if (foundIdx == std::string::npos)
@@ -219,10 +214,10 @@ namespace Zeal::Log
 		}
 
 		template<typename... Args>
-		std::wstring FormatMessage(const std::wstring& str, Args&&... args)
+		std::string FormatMessage(const std::string& str, Args&&... args)
 		{
 			m_LogMessages.PushBack(str);
-			std::wstring msg = SerializeString(args...);
+			std::string msg = SerializeString(args...);
 
 			for (auto formatter : m_Formatters)
 			{
@@ -232,12 +227,8 @@ namespace Zeal::Log
 		}
 
 	protected:
-#ifndef  ZEAL_LOG_NON_THREAD_SAVE
-		std::mutex s_Mutex;
-#endif // ! ZEAL_LOG_NON_THREAD_SAVE
-
 		LogLevel m_LogLevel;
-		Queue<std::wstring> m_LogMessages;
+		Queue<std::string> m_LogMessages;
 		std::vector<Formatter*> m_Formatters;
 
 	};

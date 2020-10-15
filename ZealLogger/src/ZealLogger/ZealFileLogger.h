@@ -15,7 +15,7 @@ namespace Zeal::Log
 		/// Default FileLogger Constructor
 		/// </summary>
 		FileLogger()
-			: m_FilePath(L"")
+			: m_FilePath("")
 		{
 
 		}
@@ -24,7 +24,7 @@ namespace Zeal::Log
 		/// File Logger Constructor
 		/// </summary>
 		/// <param name="filepath">Is the path to the log file. Note: The file will be cleared when the logger starts</param>
-		FileLogger(const std::wstring& filepath)
+		FileLogger(const std::string& filepath)
 			: m_FilePath(filepath)
 		{
 
@@ -43,7 +43,7 @@ namespace Zeal::Log
 		/// This should only be used if the logger was created with the default Constructor to set the path once
 		/// </summary>
 		/// <param name="filepath"></param>
-		void SetFilePath(const std::wstring& filepath) { m_FilePath = filepath; }
+		void SetFilePath(const std::string& filepath) { m_FilePath = filepath; }
 
 		/// <summary>
 		/// Opens the FileStream
@@ -55,7 +55,8 @@ namespace Zeal::Log
 			std::scoped_lock lock(m_StreamMutex);
 
 #endif
-			m_Writer.open(m_FilePath);
+			if(!m_Writer.is_open())
+				m_Writer.open(m_FilePath);
 		}
 
 		/// <summary>
@@ -68,7 +69,8 @@ namespace Zeal::Log
 			std::scoped_lock lock(m_StreamMutex);
 
 #endif
-			m_Writer.flush();
+			if(m_Writer.is_open())
+				m_Writer.flush();
 		}
 
 		/// <summary>
@@ -81,7 +83,8 @@ namespace Zeal::Log
 			std::scoped_lock lock(m_StreamMutex);
 
 #endif
-			m_Writer.close();
+			if(m_Writer.is_open())
+				m_Writer.close();
 		}
 
 	private:
@@ -89,7 +92,7 @@ namespace Zeal::Log
 		/// Writes the message to the output stream
 		/// </summary>
 		/// <param name="message">Is the message to output</param>
-		virtual void Log(const std::wstring& message) override
+		virtual void Log(const std::string& message) override
 		{
 #ifndef ZEAL_LOG_NON_THREAD_SAVE
 
@@ -100,8 +103,8 @@ namespace Zeal::Log
 		}
 
 	private:
-		std::wofstream m_Writer;
-		std::wstring m_FilePath;
+		std::ofstream m_Writer;
+		std::string m_FilePath;
 
 #ifndef ZEAL_LOG_NON_THREAD_SAVE
 

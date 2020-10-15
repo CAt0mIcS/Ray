@@ -12,7 +12,7 @@ namespace Zeal::Log
 	public:
 		DateTimeFormatter() = default;
 
-		virtual void Format(std::wstring& str, LogLevel logLvl) override
+		virtual void Format(std::string& str, LogLevel logLvl) override
 		{
 #ifndef ZEAL_NO_DATETIME_OUT
 
@@ -20,36 +20,36 @@ namespace Zeal::Log
 			static constexpr unsigned int s_InsertIdx = 1;
 #else
 			static constexpr unsigned int s_InsertIdx = 5;
-			str.insert(s_InsertIdx - 1, L" ");
+			str.insert(s_InsertIdx - 1, " ");
 #endif
 
 
 			time_t rawTime;
 			struct tm timeInfo;
-			wchar_t buff[80];
+			char buff[80];
 
 			time(&rawTime);
 			localtime_s(&timeInfo, &rawTime);
 
-			wcsftime(buff, sizeof(buff), L"%d-%m-%Y %H:%M:%S", &timeInfo);
+			strftime(buff, sizeof(buff), "%d-%m-%Y %H:%M:%S", &timeInfo);
 
 			long long ms;
 			{
 				std::scoped_lock lock(s_ChronoMutex);
 				ms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()) % 1000).count();
 			}
-			std::wostringstream oss;
+			std::ostringstream oss;
 			if (ms < 10)
 			{
-				oss << buff << L":00" << ms;
+				oss << buff << ":00" << ms;
 			}
 			else if (ms < 100)
 			{
-				oss << buff << L":0" << ms;
+				oss << buff << ":0" << ms;
 			}
 			else
 			{
-				oss << buff << L':' << ms;
+				oss << buff << ':' << ms;
 			}
 
 			str.insert(s_InsertIdx, oss.str());

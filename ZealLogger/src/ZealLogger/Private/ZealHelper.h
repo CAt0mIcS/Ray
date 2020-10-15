@@ -7,10 +7,10 @@
 
 namespace Zeal::Log::Helper
 {
-	std::wstring ToWideChar(const std::string& str)
+	std::string ToMultiByte(const std::wstring& str)
 	{
 		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-		return converter.from_bytes(str);
+		return converter.to_bytes(str);
 	}
 }
 

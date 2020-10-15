@@ -10,12 +10,12 @@ namespace Zeal::Log
 	public:
 		BracketFormatter() = default;
 
-		virtual void Format(std::wstring& str, LogLevel logLvl) override
+		virtual void Format(std::string& str, LogLevel logLvl) override
 		{
 
 #ifndef ZEAL_NO_BRACKETS
 
-			str.insert(0, L"[] ");
+			str.insert(0, "[] ");
 
 #endif // !ZEAL_NO_BRACKETS
 		}
