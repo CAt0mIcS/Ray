@@ -14,8 +14,14 @@ namespace Zeal::Log
 
 		virtual void Format(std::wstring& str, LogLevel logLvl) override
 		{
-#ifndef ZEAL_NO_DATE_OUT
+#ifndef ZEAL_NO_DATETIME_OUT
+
+#ifdef ZEAL_NO_LOG_LEVEL_OUT
+			static constexpr unsigned int s_InsertIdx = 1;
+#else
 			static constexpr unsigned int s_InsertIdx = 5;
+			str.insert(s_InsertIdx - 1, L" ");
+#endif
 
 
 			time_t rawTime;
@@ -28,7 +34,6 @@ namespace Zeal::Log
 			wcsftime(buff, sizeof(buff), L"%d-%m-%Y %H:%M:%S", &timeInfo);
 
 			long long ms;
-			
 			{
 				std::scoped_lock lock(s_ChronoMutex);
 				ms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()) % 1000).count();
@@ -48,22 +53,17 @@ namespace Zeal::Log
 			}
 
 			str.insert(s_InsertIdx, oss.str());
-
-#endif // !ZEAL_NO_DATE_OUT
-
+#endif
 		}
 
 	private:
-#ifndef ZEAL_NO_DATE_OUT
-#ifndef ZEAL_LOG_NON_THREAD_SAVE
+#if !defined(ZEAL_NO_DATE_OUT) && !defined(ZEAL_NO_TIME_OUT) || !defined(ZEAL_LOG_NON_THREAD_SAVE)
 		
-		static std::mutex s_ChronoMutex;
+		std::mutex s_ChronoMutex;
 
-#endif // !ZEAL_LOG_NON_THREAD_SAVE
-#endif // !ZEAL_NO_DATE_OUT
+#endif // !ZEAL_LOG_NON_THREAD_SAVE || !ZEAL_NO_DATE_OUT
 
 	};
 
-	inline std::mutex DateTimeFormatter::s_ChronoMutex;
 }
 

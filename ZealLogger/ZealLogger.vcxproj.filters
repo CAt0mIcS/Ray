@@ -45,5 +45,8 @@
     <ClInclude Include="src\ZealLogger\Formatter\DateTimeFormatter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ZealLogger\Formatter\BracketFormatter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

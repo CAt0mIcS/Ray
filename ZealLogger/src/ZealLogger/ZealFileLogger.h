@@ -50,6 +50,11 @@ namespace Zeal::Log
 		/// </summary>
 		virtual void Open() override
 		{
+#ifndef ZEAL_LOG_NON_THREAD_SAVE
+
+			std::scoped_lock lock(m_StreamMutex);
+
+#endif
 			m_Writer.open(m_FilePath);
 		}
 
@@ -58,6 +63,11 @@ namespace Zeal::Log
 		/// </summary>
 		virtual void Flush() override
 		{
+#ifndef ZEAL_LOG_NON_THREAD_SAVE
+
+			std::scoped_lock lock(m_StreamMutex);
+
+#endif
 			m_Writer.flush();
 		}
 
@@ -66,6 +76,11 @@ namespace Zeal::Log
 		/// </summary>
 		virtual void Close() override
 		{
+#ifndef ZEAL_LOG_NON_THREAD_SAVE
+
+			std::scoped_lock lock(m_StreamMutex);
+
+#endif
 			m_Writer.close();
 		}
 
@@ -76,13 +91,22 @@ namespace Zeal::Log
 		/// <param name="message">Is the message to output</param>
 		virtual void Log(const std::wstring& message) override
 		{
+#ifndef ZEAL_LOG_NON_THREAD_SAVE
+
 			std::scoped_lock lock(m_StreamMutex);
+
+#endif
 			m_Writer << message << '\n';
 		}
 
 	private:
 		std::wofstream m_Writer;
 		std::wstring m_FilePath;
+
+#ifndef ZEAL_LOG_NON_THREAD_SAVE
+
 		std::mutex m_StreamMutex;
+
+#endif
 	};
 }

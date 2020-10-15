@@ -14,8 +14,7 @@ namespace Zeal::Log
 		{
 #ifndef ZEAL_NO_LOG_LEVEL_OUT
 
-			std::wstring strToInsert = L"[" + s_LogLevelStr[(int)logLvl] + L" ] ";
-			str.insert(0, strToInsert);
+			str.insert(1, s_LogLevelStr[(int)logLvl]);
 
 #endif // !ZEAL_NO_LOG_LEVEL_OUT
 		}

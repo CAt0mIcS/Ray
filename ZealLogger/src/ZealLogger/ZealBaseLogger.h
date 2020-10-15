@@ -5,6 +5,7 @@
 #include <vector>
 #include <sstream>
 
+#include "Formatter/BracketFormatter.h"
 #include "Formatter/LogLevelFormatter.h"
 #include "Formatter/DateTimeFormatter.h"
 
@@ -156,6 +157,9 @@ namespace Zeal::Log
 		BaseLogger()
 			: m_LogLevel(LogLevel::None)
 		{
+			BracketFormatter* pBracketFormatter = new BracketFormatter();
+			m_Formatters.push_back(pBracketFormatter);
+
 			LogLevelFormatter* pLogLevelFormatter = new LogLevelFormatter();
 			m_Formatters.push_back(pLogLevelFormatter);
 
@@ -183,7 +187,11 @@ namespace Zeal::Log
 
 		bool ShouldLog(LogMessageType msgType)
 		{
+#ifndef ZEAL_LOG_NON_THREAD_SAVE
+			
 			std::scoped_lock lock(s_Mutex);
+
+#endif
 			return msgType >= m_LogLevel;
 		}
 
