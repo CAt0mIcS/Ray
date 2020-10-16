@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ZealLogger\ZealLog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ZealLogger\Formatter\Formatter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -46,6 +43,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ZealLogger\LogConfigure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ZealLogger\Log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

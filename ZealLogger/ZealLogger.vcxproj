@@ -165,7 +165,7 @@
     <ClInclude Include="src\ZealLogger\Loggers\BaseLogger.h" />
     <ClInclude Include="src\ZealLogger\LogConfigure.h" />
     <ClInclude Include="src\ZealLogger\Loggers\FileLogger.h" />
-    <ClInclude Include="src\ZealLogger\ZealLog.h" />
+    <ClInclude Include="src\ZealLogger\Log.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

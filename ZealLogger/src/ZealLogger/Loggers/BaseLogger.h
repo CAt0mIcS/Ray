@@ -5,13 +5,13 @@
 #include <vector>
 #include <sstream>
 
+#include <Util/TypeConvert.h>
+
 #include "../Formatter/BracketFormatter.h"
 #include "../Formatter/LogLevelFormatter.h"
 #include "../Formatter/DateTimeFormatter.h"
 
 #include "../Private/LogLevel.h"
-
-#include <Util/TypeConvert.h>
 
 
 namespace Zeal::Log
@@ -269,6 +269,13 @@ namespace Zeal::Log
 			}
 		}
 
+		/// <summary>
+		/// Takes a correct string possibly containing "{0}", "{1}", ... and fills these in with the corresponding argument
+		/// </summary>
+		/// <typeparam name="...Args">Is any list of arguments that have a output operator defined</typeparam>
+		/// <param name="serializedStr">Is the string which should be serialized</param>
+		/// <param name="...args">Are the arguments to insert into the string</param>
+		/// <returns>The serialized string</returns>
 		template<typename... Args>
 		std::string SerializeString(std::string serializedStr, Args&&... args)
 		{
@@ -277,12 +284,24 @@ namespace Zeal::Log
 			return serializedStr;
 		}
 
+		/// <summary>
+		/// Checks if a message with the msgType message type should be logged
+		/// </summary>
+		/// <param name="msgType">Is the log message type of the message</param>
+		/// <returns>True if the message should be logged, false otherwise</returns>
 		bool ShouldLog(LogMessageType msgType)
 		{
 			return msgType >= m_LogLevel;
 		}
 
 	private:
+		/// <summary>
+		/// Inserts one argument into the string, this function overload is called when the argument type is a std::wstring
+		/// </summary>
+		/// <typeparam name="T">Is any list of arguments that have a output operator defined</typeparam>
+		/// <param name="message">Is the string to insert the argument into</param>
+		/// <param name="arg">Is the argument to insert</param>
+		/// <param name="argCount">Is the current number where the argument will be inserted ({0} = 0, {3} = 3, ...)</param>
 		template<typename T>
 		void SerializeStringArg(std::string& message, T&& arg, int& argCount, 
 			typename std::enable_if_t<std::is_same_v<BaseRefType<T>, std::wstring>>* = 0
@@ -291,6 +310,13 @@ namespace Zeal::Log
 			WideCharSerialize(message, arg, argCount);
 		}
 
+		/// <summary>
+		/// Inserts one argument into the string, this function overload is called when the argument type is convertible to a std::wstring
+		/// </summary>
+		/// <typeparam name="T">Is any list of arguments that have a output operator defined</typeparam>
+		/// <param name="message">Is the string to insert the argument into</param>
+		/// <param name="arg">Is the argument to insert</param>
+		/// <param name="argCount">Is the current number where the argument will be inserted ({0} = 0, {3} = 3, ...)</param>
 		template<typename T>
 		void SerializeStringArg(std::string& message, T&& arg, int& argCount, 
 			typename std::enable_if_t<std::is_convertible_v<T, std::wstring>>* = 0, 
@@ -300,6 +326,13 @@ namespace Zeal::Log
 			WideCharSerialize(message, arg, argCount);
 		}
 
+		/// <summary>
+		/// Inserts one argument into the string, this function is called for any type that is not std::wstring and not castable to std::wstring
+		/// </summary>
+		/// <typeparam name="T">Is any list of arguments that have a output operator defined</typeparam>
+		/// <param name="message">Is the string to insert the argument into</param>
+		/// <param name="arg">Is the argument to insert</param>
+		/// <param name="argCount">Is the current number where the argument will be inserted ({0} = 0, {3} = 3, ...)</param>
 		template<typename T>
 		void SerializeStringArg(std::string& message, T&& arg, int& argCount,
 			typename std::enable_if_t<!std::is_same_v<BaseRefType<T>, std::wstring>>* = 0,
@@ -309,6 +342,13 @@ namespace Zeal::Log
 			MultiByteSerialize(message, arg, argCount);
 		}
 
+		/// <summary>
+		/// Inserts the argument into the string
+		/// </summary>
+		/// <typeparam name="T">Is any argument type which should be serialized using wide character strings</typeparam>
+		/// <param name="message">Is the string to insert the argument into</param>
+		/// <param name="arg">Is the argument to insert</param>
+		/// <param name="argCount">Is the current number where the argument will be inserted ({0} = 0, {3} = 3, ...)</param>
 		template<typename T>
 		void WideCharSerialize(std::string& message, T&& arg, int& argCount)
 		{
@@ -331,6 +371,13 @@ namespace Zeal::Log
 			++argCount;
 		}
 
+		/// <summary>
+		/// Inserts the argument into the string
+		/// </summary>
+		/// <typeparam name="T">Is any argument type which should be serialized using multi byte strings</typeparam>
+		/// <param name="message">Is the string to insert the argument into</param>
+		/// <param name="arg">Is the argument to insert</param>
+		/// <param name="argCount">Is the current number where the argument will be inserted ({0} = 0, {3} = 3, ...)</param>
 		template<typename T>
 		void MultiByteSerialize(std::string& message, T&& arg, int& argCount)
 		{
@@ -353,6 +400,13 @@ namespace Zeal::Log
 			++argCount;
 		}
 
+		/// <summary>
+		/// Formats the message, inserts all arguments and calls the formatters
+		/// </summary>
+		/// <typeparam name="...Args">Are a list of any typed arguments</typeparam>
+		/// <param name="str">Is the base string to insert the arguments into</param>
+		/// <param name="...args">Are the arguments to insert</param>
+		/// <returns>The formatted string ready for logging</returns>
 		template<typename... Args>
 		std::string FormatMessage(const std::string& str, Args&&... args)
 		{

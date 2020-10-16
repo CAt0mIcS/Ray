@@ -1,10 +1,10 @@
-# NodePlanningEditor - Plan Projects using Nodes
+# Zeal - Plan Projects using Nodes
 
 ## The Repository
-This repository is where I develop the NodePlanningEditor product. The source code as well as the product is available to anyone under the standard [MIT License](https://github.com/CAt0mIcS/NodePlanningEditor/blob/master/LICENSE.txt).
+This repository is where I develop the Zeal application. The source code as well as the product is available to anyone under the standard [MIT License](https://github.com/CAt0mIcS/NodePlanningEditor/blob/master/LICENSE.txt).
 
 <p align="center">
-  <img alt="NodePlanningEditor", src="https://github.com/CAt0mIcS/NodePlanningEditor/blob/master/assets/Demonstration/DemonstrationPicture.jpg">
+  <img alt="Zeal", src="https://github.com/CAt0mIcS/NodePlanningEditor/blob/master/assets/Demonstration/DemonstrationPicture.jpg">
 </p>
 
 ## The Product
@@ -18,6 +18,11 @@ You can:
 * Save the Scene
 * Open another Save File
 * Open multiple Tabs (Different Save Files)
+
+
+Planned features:
+* Create projects like in Visual Studio with multiple files
+* Add Alt-Text to lines (named connections)
 
 You can find the full documentation on the [wiki](https://github.com/CAt0mIcS/NodePlanningEditor/wiki) (soon).
 

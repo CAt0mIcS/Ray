@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ZealLogger/ZealLog.h>
+#include <ZealLogger/Log.h>
 
 #include <string>
 #include <mutex>
@@ -28,9 +28,22 @@ namespace Zeal::Instrumentation
 	class Instrumentor
 	{
 	public:
+		/// <summary>
+		/// Deleted Copy Constructor
+		/// </summary>
 		Instrumentor(const Instrumentor&) = delete;
+
+		/// <summary>
+		/// Deleted Copy-Asignment operator
+		/// </summary>
+		/// <param name=""></param>
 		Instrumentor(Instrumentor&&) = delete;
 
+		/// <summary>
+		/// Starts a session, closes the previous session if one was already open
+		/// </summary>
+		/// <param name="name">Is the session name</param>
+		/// <param name="filepath">Is a path to a file to export the profile result to</param>
 		void BeginSession(const std::string name, const std::string& filepath = "results.json")
 		{
 			std::scoped_lock lock(m_Mutex);
@@ -56,12 +69,19 @@ namespace Zeal::Instrumentation
 			}
 		}
 
+		/// <summary>
+		/// Closes the Session
+		/// </summary>
 		void EndSession()
 		{
 			std::scoped_lock lock(m_Mutex);
 			InternalEndSession();
 		}
 
+		/// <summary>
+		/// Writes the profiling result to the output file
+		/// </summary>
+		/// <param name="result">Is the result to write</param>
 		void WriteProfile(const ProfileResult& result)
 		{
 			std::ostringstream json;
@@ -90,6 +110,10 @@ namespace Zeal::Instrumentation
 			}
 		}
 
+		/// <summary>
+		/// Getter for the Instrumentor instance
+		/// </summary>
+		/// <returns></returns>
 		static Instrumentor& Get()
 		{
 			static Instrumentor instance;
@@ -97,26 +121,42 @@ namespace Zeal::Instrumentation
 		}
 
 	private:
+		/// <summary>
+		/// Private Instrumentor Constructor
+		/// </summary>
 		Instrumentor()
 			: m_CurrentSession(nullptr) {}
 
+		/// <summary>
+		/// Instrumentor Deconstructor, automatically closes any open sessions
+		/// </summary>
 		~Instrumentor()
 		{
 			EndSession();
 		}
 
+		/// <summary>
+		/// Writes the json header to the output file
+		/// </summary>
 		void WriteHeader()
 		{
 			m_Writer << "{\"otherData\": {},\"traceEvents\":[{}";
 			m_Writer.flush();
 		}
 
+		/// <summary>
+		/// Writes the json footer to the output file
+		/// </summary>
 		void WriteFooter()
 		{
 			m_Writer << "]}";
 			m_Writer.flush();
 		}
 
+		/// <summary>
+		/// Closes the session.
+		/// Writes the footer, closes the stream and deletes the current session
+		/// </summary>
 		void InternalEndSession()
 		{
 			if (m_CurrentSession)
@@ -138,18 +178,28 @@ namespace Zeal::Instrumentation
 	class Timer
 	{
 	public:
+		/// <summary>
+		/// Timer Constructor
+		/// </summary>
+		/// <param name="name">Is the name of the timer</param>
 		Timer(const char* name)
 			: m_Name(name), m_Stopped(false)
 		{
 			m_StartTimepoint = std::chrono::steady_clock::now();
 		}
 
+		/// <summary>
+		/// Timer Deconstructor, automatically stops the current timer
+		/// </summary>
 		~Timer()
 		{
 			if (!m_Stopped)
 				Stop();
 		}
 
+		/// <summary>
+		/// Stops the timer, calculates the result and writes it to the session profile file
+		/// </summary>
 		void Stop()
 		{
 			auto endPoint = std::chrono::steady_clock::now();
