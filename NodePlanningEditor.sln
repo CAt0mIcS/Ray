@@ -8,7 +8,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Zeal", "Zeal\Zeal.vcxproj",
 		{07D62C35-CB78-4F34-ADE7-CB67DE81E8B8} = {07D62C35-CB78-4F34-ADE7-CB67DE81E8B8}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZealLogger", "ZealLogger\ZealLogger.vcxproj", "{07D62C35-CB78-4F34-ADE7-CB67DE81E8B8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logger", "ZealLogger\ZealLogger.vcxproj", "{07D62C35-CB78-4F34-ADE7-CB67DE81E8B8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{86347A05-60DE-478C-8D35-FB579CE3CB8B} = {86347A05-60DE-478C-8D35-FB579CE3CB8B}
 	EndProjectSection
@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InstrumentationTools", "Ins
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Util", "Util\Util.vcxproj", "{86347A05-60DE-478C-8D35-FB579CE3CB8B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Reyal-GUI", "Reyal-GUI\Reyal-GUI.vcxproj", "{5CD296B6-1615-4441-8716-EFE426E9056A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +62,14 @@ Global
 		{86347A05-60DE-478C-8D35-FB579CE3CB8B}.Release|x64.Build.0 = Release|x64
 		{86347A05-60DE-478C-8D35-FB579CE3CB8B}.Release|x86.ActiveCfg = Release|Win32
 		{86347A05-60DE-478C-8D35-FB579CE3CB8B}.Release|x86.Build.0 = Release|Win32
+		{5CD296B6-1615-4441-8716-EFE426E9056A}.Debug|x64.ActiveCfg = Debug|x64
+		{5CD296B6-1615-4441-8716-EFE426E9056A}.Debug|x64.Build.0 = Debug|x64
+		{5CD296B6-1615-4441-8716-EFE426E9056A}.Debug|x86.ActiveCfg = Debug|Win32
+		{5CD296B6-1615-4441-8716-EFE426E9056A}.Debug|x86.Build.0 = Debug|Win32
+		{5CD296B6-1615-4441-8716-EFE426E9056A}.Release|x64.ActiveCfg = Release|x64
+		{5CD296B6-1615-4441-8716-EFE426E9056A}.Release|x64.Build.0 = Release|x64
+		{5CD296B6-1615-4441-8716-EFE426E9056A}.Release|x86.ActiveCfg = Release|Win32
+		{5CD296B6-1615-4441-8716-EFE426E9056A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

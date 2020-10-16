@@ -9,7 +9,7 @@
 #if ZL_ENABLE_LOGGING
 	#include "LoggerClass.h"
 
-	#define ZL_LOG_INIT(path, ...)		::Zeal::Log::Logger::Init(path, __VA_ARGS__)
+	#define ZL_LOG_INIT(path, loglevel)	::Zeal::Log::Logger::Init(path, loglevel)
 
 	#define ZL_LOG_TRACE(msg, ...)		::Zeal::Log::Logger::GetFileLogger()->Trace(msg, __VA_ARGS__)
 	#define ZL_LOG_DEBUG(msg, ...)		::Zeal::Log::Logger::GetFileLogger()->Debug(msg, __VA_ARGS__)
@@ -18,7 +18,7 @@
 	#define ZL_LOG_ERROR(msg, ...)		::Zeal::Log::Logger::GetFileLogger()->Error(msg, __VA_ARGS__)
 	#define ZL_LOG_CRITICAL(msg, ...)	::Zeal::Log::Logger::GetFileLogger()->Critical(msg, __VA_ARGS__)
 #else
-	#define ZL_LOG_INIT(path)
+	#define ZL_LOG_INIT(path, loglevel)
 
 	#define ZL_LOG_TRACE(msg, ...)	
 	#define ZL_LOG_DEBUG(msg, ...)	
