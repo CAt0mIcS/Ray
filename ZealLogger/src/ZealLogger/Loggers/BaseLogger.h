@@ -53,6 +53,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Trace(const std::string& str, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (!ShouldLog(LogMessageType::Trace))
 				return;
 
@@ -62,6 +64,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Debug(const std::string& str, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
@@ -71,6 +75,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Info(const std::string& str, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
@@ -80,6 +86,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Warn(const std::string& str, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
@@ -89,6 +97,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Error(const std::string& str, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
@@ -98,6 +108,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Critical(const std::string& str, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
@@ -108,6 +120,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Trace(const std::wstring& str, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
@@ -117,6 +131,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Debug(const std::wstring& str, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
@@ -126,6 +142,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Info(const std::wstring& str, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
@@ -135,6 +153,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Warn(const std::wstring& str, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
@@ -144,6 +164,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Error(const std::wstring& str, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
@@ -153,6 +175,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Critical(const std::wstring& str, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
@@ -165,6 +189,8 @@ namespace Zeal::Log
 		BaseLogger()
 			: m_LogLevel(LogLevel::None)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			BracketFormatter* pBracketFormatter = new BracketFormatter();
 			m_Formatters.push_back(pBracketFormatter);
 
@@ -177,6 +203,8 @@ namespace Zeal::Log
 
 		virtual ~BaseLogger()
 		{
+			ZL_PROFILE_FUNCTION();
+
 			for (auto* formatter : m_Formatters)
 			{
 				if (formatter)
@@ -187,6 +215,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		std::string SerializeString(std::string serializedStr, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			int argCount = 0;
 			(SerializeStringArg(serializedStr, args, argCount), ...);
 			return serializedStr;
@@ -203,6 +233,8 @@ namespace Zeal::Log
 			typename std::enable_if_t<std::is_same_v<BaseRefType<T>, std::wstring>>* = 0
 		)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			WideCharSerialize(message, arg, argCount);
 		}
 
@@ -212,6 +244,8 @@ namespace Zeal::Log
 			typename std::enable_if_t<!std::is_same_v<BaseRefType<T>, std::wstring>>* = 0
 		)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			WideCharSerialize(message, arg, argCount);
 		}
 
@@ -221,12 +255,16 @@ namespace Zeal::Log
 			typename std::enable_if_t<!std::is_convertible_v<T, std::wstring>>* = 0
 		)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			MultiByteSerialize(message, arg, argCount);
 		}
 
 		template<typename T>
 		void WideCharSerialize(std::string& message, T&& arg, int& argCount)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (argCount == -1)
 				return;
 
@@ -249,6 +287,8 @@ namespace Zeal::Log
 		template<typename T>
 		void MultiByteSerialize(std::string& message, T&& arg, int& argCount)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			if (argCount == -1)
 				return;
 
@@ -271,6 +311,8 @@ namespace Zeal::Log
 		template<typename... Args>
 		std::string FormatMessage(const std::string& str, Args&&... args)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			std::string msg = SerializeString(str, args...);
 
 			for (auto formatter : m_Formatters)

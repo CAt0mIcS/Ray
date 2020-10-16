@@ -12,12 +12,13 @@ namespace Zeal::Log
 
 		virtual void Format(std::string& str, LogLevel logLvl) override
 		{
+			ZL_PROFILE_FUNCTION();
 
-#ifndef ZEAL_NO_BRACKETS
+#ifndef ZL_NO_BRACKETS
 
 			str.insert(0, "[] ");
 
-#endif // !ZEAL_NO_BRACKETS
+#endif // !ZL_NO_BRACKETS
 		}
 	};
 }

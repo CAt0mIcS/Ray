@@ -4,6 +4,8 @@
 
 #include "../Private/LogLevel.h"
 
+#include <Instrumentor/InstrumentationTools.h>
+
 
 namespace Zeal::Log
 {

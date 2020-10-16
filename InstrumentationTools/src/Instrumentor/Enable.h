@@ -32,7 +32,7 @@
 #if ZL_ENABLE_PROFILING
 	#define ZL_PROFILE_BEGIN_SESSION(name, filepath)	::Zeal::Instrumentation::Instrumentor::Get().BeginSession(name, filepath)
 	#define ZL_PROFILE_END_SESSION()					::Zeal::Instrumentation::Instrumentor::Get().EndSession()
-	#define ZL_PROFILE_LINE_2(name, line)				::Zeal::Instrumentation::Timer timer__ZEAL_##line(name)
+	#define ZL_PROFILE_LINE_2(name, line)				::Zeal::Instrumentation::Timer timer__ZeaL_##line(name)
 	#define ZL_PROFILE_LINE(name, line)					ZL_PROFILE_LINE_2(name, line)
 	#define ZL_PROFILE_SCOPE(name)						ZL_PROFILE_LINE(name, __LINE__)
 	#define ZL_PROFILE_FUNCTION()						ZL_PROFILE_SCOPE(ZL_FUNC_SIG)

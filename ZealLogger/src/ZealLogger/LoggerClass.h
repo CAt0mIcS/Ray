@@ -24,6 +24,8 @@ namespace Zeal::Log
 		/// <param name="logLvl">Is the log level</param>
 		static void Init(const std::string& filepath, LogLevel logLvl)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			// TODO: Add assert instead of if-statement
 			if (!s_FileLogger)
 			{

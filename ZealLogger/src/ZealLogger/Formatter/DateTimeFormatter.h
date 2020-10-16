@@ -14,9 +14,11 @@ namespace Zeal::Log
 
 		virtual void Format(std::string& str, LogLevel logLvl) override
 		{
-#ifndef ZEAL_NO_DATETIME_OUT
+			ZL_PROFILE_FUNCTION();
 
-#ifdef ZEAL_NO_LOG_LEVEL_OUT
+#ifndef ZL_NO_DATETIME_OUT
+
+#ifdef ZL_NO_LOG_LEVEL_OUT
 			static constexpr unsigned int s_InsertIdx = 1;
 #else
 			static constexpr unsigned int s_InsertIdx = 5;
@@ -57,11 +59,11 @@ namespace Zeal::Log
 		}
 
 	private:
-#if !defined(ZEAL_NO_DATE_OUT) && !defined(ZEAL_NO_TIME_OUT) || !defined(ZEAL_LOG_NON_THREAD_SAVE)
+#if !defined(ZL_NO_DATE_OUT) && !defined(ZL_NO_TIME_OUT) || !defined(ZL_LOG_NON_THREAD_SAVE)
 		
 		std::mutex s_ChronoMutex;
 
-#endif // !ZEAL_LOG_NON_THREAD_SAVE || !ZEAL_NO_DATE_OUT
+#endif // !ZL_LOG_NON_THREAD_SAVE || !ZL_NO_DATE_OUT
 
 	};
 

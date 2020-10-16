@@ -1,14 +1,12 @@
 #pragma once
 
+#include <ZealLogger/ZealLog.h>
 
 #include <string>
 #include <mutex>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-
-#include <ZealLogger/ZealLog.h>
-
 
 
 namespace Zeal::Instrumentation
@@ -36,11 +34,12 @@ namespace Zeal::Instrumentation
 		void BeginSession(const std::string name, const std::string& filepath = "results.json")
 		{
 			std::scoped_lock lock(m_Mutex);
-			
+
 			// Close session if one already exists
 			if (m_CurrentSession)
 			{
-				ZL_LOG_ERROR("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name, m_CurrentSession->Name);
+				if (Log::Logger::GetFileLogger())
+					ZL_LOG_DEBUG("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name, m_CurrentSession->Name);
 				InternalEndSession();
 			}
 
@@ -52,7 +51,8 @@ namespace Zeal::Instrumentation
 			}
 			else
 			{
-				ZL_LOG_ERROR("Instrumentor could not open results file '{0}'.", filepath);
+				if (Log::Logger::GetFileLogger())
+					ZL_LOG_DEBUG("Instrumentor could not open results file '{0}'.", filepath);
 			}
 		}
 
@@ -85,7 +85,8 @@ namespace Zeal::Instrumentation
 			}
 			else
 			{
-				ZL_LOG_DEBUG("[Instrumentor] Timer with function signature '{0}' took '{1}'us", result.Name, result.ElapsedTime.count());
+				if (Log::Logger::GetFileLogger())
+					ZL_LOG_DEBUG("[Instrumentor] Timer with function signature '{0}' took '{1}'us", result.Name, result.ElapsedTime.count());
 			}
 		}
 
