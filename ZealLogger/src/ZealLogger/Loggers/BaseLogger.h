@@ -5,14 +5,13 @@
 #include <vector>
 #include <sstream>
 
-#include "Formatter/BracketFormatter.h"
-#include "Formatter/LogLevelFormatter.h"
-#include "Formatter/DateTimeFormatter.h"
+#include "../Formatter/BracketFormatter.h"
+#include "../Formatter/LogLevelFormatter.h"
+#include "../Formatter/DateTimeFormatter.h"
 
-#include "Private/ZealHelper.h"
+#include "../Private/LogLevel.h"
 
-#include "Private/LogLevel.h"
-#include "Private/Queue.h"
+#include <Util/TypeConvert.h>
 
 
 namespace Zeal::Log
@@ -112,7 +111,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			Log(FormatMessage(Helper::ToMultiByte(str), std::forward<Args>(args)...));
+			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -121,7 +120,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			Log(FormatMessage(Helper::ToMultiByte(str), std::forward<Args>(args)...));
+			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -130,7 +129,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			Log(FormatMessage(Helper::ToMultiByte(str), std::forward<Args>(args)...));
+			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -139,7 +138,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			Log(FormatMessage(Helper::ToMultiByte(str), std::forward<Args>(args)...));
+			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -148,7 +147,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			Log(FormatMessage(Helper::ToMultiByte(str), std::forward<Args>(args)...));
+			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
 		}
 
 		template<typename... Args>
@@ -157,7 +156,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			Log(FormatMessage(Helper::ToMultiByte(str), std::forward<Args>(args)...));
+			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
 		}
 
 	protected:
@@ -186,10 +185,9 @@ namespace Zeal::Log
 		}
 
 		template<typename... Args>
-		std::string SerializeString(Args&&... args)
+		std::string SerializeString(std::string serializedStr, Args&&... args)
 		{
 			int argCount = 0;
-			std::string serializedStr = m_LogMessages.PopFront();
 			(SerializeStringArg(serializedStr, args, argCount), ...);
 			return serializedStr;
 		}
@@ -201,14 +199,18 @@ namespace Zeal::Log
 
 	private:
 		template<typename T>
-		void SerializeStringArg(std::string& message, T&& arg, int& argCount, typename std::enable_if_t<std::is_same_v<BaseRefType<T>, std::wstring>>* = 0)
+		void SerializeStringArg(std::string& message, T&& arg, int& argCount, 
+			typename std::enable_if_t<std::is_same_v<BaseRefType<T>, std::wstring>>* = 0
+		)
 		{
 			WideCharSerialize(message, arg, argCount);
 		}
 
 		template<typename T>
-		void SerializeStringArg(std::string& message, T&& arg, int& argCount, typename std::enable_if_t<std::is_convertible_v<T, std::wstring>>* = 0, 
-																				typename std::enable_if_t<!std::is_same_v<BaseRefType<T>, std::wstring>>* = 0)
+		void SerializeStringArg(std::string& message, T&& arg, int& argCount, 
+			typename std::enable_if_t<std::is_convertible_v<T, std::wstring>>* = 0, 
+			typename std::enable_if_t<!std::is_same_v<BaseRefType<T>, std::wstring>>* = 0
+		)
 		{
 			WideCharSerialize(message, arg, argCount);
 		}
@@ -240,7 +242,7 @@ namespace Zeal::Log
 				return;
 			}
 
-			message.replace(message.begin() + foundIdx, message.begin() + foundIdx + std::size(toFind), Helper::ToMultiByte(oss.str()));
+			message.replace(message.begin() + foundIdx, message.begin() + foundIdx + std::size(toFind), Util::WideCharToMultiByte(oss.str()));
 			++argCount;
 		}
 
@@ -269,8 +271,7 @@ namespace Zeal::Log
 		template<typename... Args>
 		std::string FormatMessage(const std::string& str, Args&&... args)
 		{
-			m_LogMessages.PushBack(str);
-			std::string msg = SerializeString(args...);
+			std::string msg = SerializeString(str, args...);
 
 			for (auto formatter : m_Formatters)
 			{
@@ -281,7 +282,6 @@ namespace Zeal::Log
 
 	protected:
 		LogLevel m_LogLevel;
-		Queue<std::string> m_LogMessages;
 		std::vector<Formatter*> m_Formatters;
 
 	};

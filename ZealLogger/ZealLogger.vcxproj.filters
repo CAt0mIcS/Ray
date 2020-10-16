@@ -15,19 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ZealLogger\ZealBaseLogger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ZealLogger\ZealLog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ZealLogger\ZealCustomize.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ZealLogger\ZealFileLogger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ZealLogger\Private\ZealHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ZealLogger\Formatter\Formatter.h">
@@ -39,16 +27,25 @@
     <ClInclude Include="src\ZealLogger\Private\LogLevel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ZealLogger\Private\Queue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ZealLogger\Formatter\DateTimeFormatter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ZealLogger\Formatter\BracketFormatter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ZealLogger\ZealLogWrapper.h">
+    <ClInclude Include="src\ZealLogger\Enable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ZealLogger\LoggerClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ZealLogger\Loggers\BaseLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ZealLogger\Loggers\FileLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ZealLogger\LogConfigure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

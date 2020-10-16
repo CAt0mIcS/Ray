@@ -1,5 +1,6 @@
 #pragma once
 
+
 /// <summary>
 /// All mutexes and lock guards will be disabled if ZEAL_LOG_NON_THREAD_SAVE is defined
 /// </summary>
@@ -26,6 +27,4 @@
 	#define ZEAL_NO_LOG_LEVEL_OUT
 	#define ZEAL_NO_DATETIME_OUT
 #endif
-
-
 

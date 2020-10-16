@@ -15,13 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Instrumentor\InstrumentationTools.h">
+    <ClCompile Include="src\pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Util\TypeConvert.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Instrumentor\Instrumentor.h">
+    <ClInclude Include="src\Win.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Instrumentor\Enable.h">
+    <ClInclude Include="src\Util\TypeConvert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

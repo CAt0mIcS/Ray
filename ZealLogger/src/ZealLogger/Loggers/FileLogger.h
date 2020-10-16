@@ -1,9 +1,9 @@
 #pragma once
 
 #include <fstream>
-#include "ZealBaseLogger.h"
+#include "BaseLogger.h"
 
-#include "Private/ZealHelper.h"
+#include <Util/TypeConvert.h>
 
 
 namespace Zeal::Log
@@ -36,6 +36,15 @@ namespace Zeal::Log
 		~FileLogger()
 		{
 			Close();
+		}
+
+		/// <summary>
+		/// Checks if the file stream is open
+		/// </summary>
+		/// <returns>True if the stream to the log file is open, false otherwise</returns>
+		bool IsOpen() const
+		{
+			return m_Writer.is_open();
 		}
 
 		/// <summary>

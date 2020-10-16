@@ -74,21 +74,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../Util/src/;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../Util/src/;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../Util/src/;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../Util/src/;</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -151,18 +155,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\ZealLogger\Enable.h" />
     <ClInclude Include="src\ZealLogger\Formatter\BracketFormatter.h" />
     <ClInclude Include="src\ZealLogger\Formatter\DateTimeFormatter.h" />
     <ClInclude Include="src\ZealLogger\Formatter\Formatter.h" />
     <ClInclude Include="src\ZealLogger\Formatter\LogLevelFormatter.h" />
+    <ClInclude Include="src\ZealLogger\LoggerClass.h" />
     <ClInclude Include="src\ZealLogger\Private\LogLevel.h" />
-    <ClInclude Include="src\ZealLogger\Private\Queue.h" />
-    <ClInclude Include="src\ZealLogger\Private\ZealHelper.h" />
-    <ClInclude Include="src\ZealLogger\ZealBaseLogger.h" />
-    <ClInclude Include="src\ZealLogger\ZealCustomize.h" />
-    <ClInclude Include="src\ZealLogger\ZealFileLogger.h" />
+    <ClInclude Include="src\ZealLogger\Loggers\BaseLogger.h" />
+    <ClInclude Include="src\ZealLogger\LogConfigure.h" />
+    <ClInclude Include="src\ZealLogger\Loggers\FileLogger.h" />
     <ClInclude Include="src\ZealLogger\ZealLog.h" />
-    <ClInclude Include="src\ZealLogger\ZealLogWrapper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

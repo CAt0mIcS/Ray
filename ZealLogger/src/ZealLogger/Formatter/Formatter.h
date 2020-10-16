@@ -2,7 +2,6 @@
 
 #include <string>
 
-#include "../ZealCustomize.h"
 #include "../Private/LogLevel.h"
 
 

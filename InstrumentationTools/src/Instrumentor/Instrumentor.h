@@ -4,10 +4,10 @@
 #include <string>
 #include <mutex>
 #include <fstream>
+#include <sstream>
 #include <iomanip>
 
 #include <ZealLogger/ZealLog.h>
-
 
 
 
@@ -40,10 +40,7 @@ namespace Zeal::Instrumentation
 			// Close session if one already exists
 			if (m_CurrentSession)
 			{
-				if (Log::Logger::Get())
-				{
-					ZL_LOG_ERROR("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name, m_CurrentSession->Name);
-				}
+				ZL_LOG_ERROR("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name, m_CurrentSession->Name);
 				InternalEndSession();
 			}
 
@@ -55,10 +52,7 @@ namespace Zeal::Instrumentation
 			}
 			else
 			{
-				if (Log::Logger::Get())
-				{
-					ZL_LOG_ERROR("Instrumentor could not open results file '{0}'.", filepath);
-				}
+				ZL_LOG_ERROR("Instrumentor could not open results file '{0}'.", filepath);
 			}
 		}
 
@@ -89,7 +83,7 @@ namespace Zeal::Instrumentation
 				m_Writer << json.str();
 				m_Writer.flush();
 			}
-			else if(Log::Logger::Get())
+			else
 			{
 				ZL_LOG_DEBUG("[Instrumentor] Timer with function signature '{0}' took '{1}'us", result.Name, result.ElapsedTime.count());
 			}
