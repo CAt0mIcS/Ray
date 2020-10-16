@@ -10,12 +10,18 @@ namespace Zeal::Log
 	class DateTimeFormatter : public Formatter
 	{
 	public:
+		/// <summary>
+		/// Default DateTimeFormatter Constructor
+		/// </summary>
 		DateTimeFormatter() = default;
 
+		/// <summary>
+		/// Adds the date and time to the string
+		/// </summary>
+		/// <param name="str">Is the string which will be modified</param>
+		/// <param name="logLvl">Is the current log level, unused in this function specification</param>
 		virtual void Format(std::string& str, LogLevel logLvl) override
 		{
-			ZL_PROFILE_FUNCTION();
-
 #ifndef ZL_NO_DATETIME_OUT
 
 #ifdef ZL_NO_LOG_LEVEL_OUT

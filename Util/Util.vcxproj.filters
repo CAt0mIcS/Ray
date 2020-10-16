@@ -18,7 +18,7 @@
     <ClCompile Include="src\Util\TypeConvert.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Util\pch.cpp">
+    <ClCompile Include="src\utilpch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -26,10 +26,10 @@
     <ClInclude Include="src\Util\TypeConvert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Util\pch.h">
+    <ClInclude Include="src\Util\Win.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Util\Win.h">
+    <ClInclude Include="src\utilpch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

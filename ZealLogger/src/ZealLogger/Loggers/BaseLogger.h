@@ -20,12 +20,6 @@ namespace Zeal::Log
 	template<typename T>
 	using BaseRefType = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
-	template<typename T>
-	using BasePtrType = typename std::remove_cv<typename std::remove_pointer<T>::type>::type;
-
-	template<typename T>
-	using BaseArrType = typename std::remove_cv<typename std::remove_all_extents<T>::type>::type;
-
 	using LogMessageType = LogLevel;
 
 
@@ -44,72 +38,105 @@ namespace Zeal::Log
 		/// <returns>The current log level of this logger</returns>
 		LogLevel GetLogLevel() const { return m_LogLevel; }
 
+		/// <summary>
+		/// Opens the stream to write to
+		/// </summary>
 		virtual void Open() = 0;
 		
+		/// <summary>
+		/// Flushes the output stream
+		/// </summary>
 		virtual void Flush() = 0;
 
+		/// <summary>
+		/// Closes the output stream
+		/// </summary>
 		virtual void Close() = 0;
 
+		/// <summary>
+		/// Logs a trace message, will only be logged if the loglevel is trace
+		/// </summary>
+		/// <typeparam name="...Args">Is any type which has output operator for std::stringstream defined</typeparam>
+		/// <param name="str">Is the initial string</param>
+		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
 		void Trace(const std::string& str, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (!ShouldLog(LogMessageType::Trace))
 				return;
 
 			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
+		/// <summary>
+		/// Logs a debug message, will only be logged if the loglevel >= Debug
+		/// </summary>
+		/// <typeparam name="...Args">Is any type which has output operator for std::stringstream defined</typeparam>
+		/// <param name="str">Is the initial string</param>
+		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
 		void Debug(const std::string& str, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
 			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
+		/// <summary>
+		/// Logs a info message, will only be logged if the loglevel is >= Information
+		/// </summary>
+		/// <typeparam name="...Args">Is any type which has output operator for std::stringstream defined</typeparam>
+		/// <param name="str">Is the initial string</param>
+		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
 		void Info(const std::string& str, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
 			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
+		/// <summary>
+		/// Logs a warning message, will only be logged if the loglevel >= Warning
+		/// </summary>
+		/// <typeparam name="...Args">Is any type which has output operator for std::stringstream defined</typeparam>
+		/// <param name="str">Is the initial string</param>
+		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
 		void Warn(const std::string& str, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
 			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
+		/// <summary>
+		/// Logs a error message, will only be logged if the loglevel is >= "Error"
+		/// </summary>
+		/// <typeparam name="...Args">Is any type which has output operator for std::stringstream defined</typeparam>
+		/// <param name="str">Is the initial string</param>
+		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
 		void Error(const std::string& str, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
 			Log(FormatMessage(str, std::forward<Args>(args)...));
 		}
 
+		/// <summary>
+		/// Logs a critical message, will always be logged if the loglevel is not "None"
+		/// </summary>
+		/// <typeparam name="...Args">Is any type which has output operator for std::stringstream defined</typeparam>
+		/// <param name="str">Is the initial string</param>
+		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
 		void Critical(const std::string& str, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
@@ -117,66 +144,90 @@ namespace Zeal::Log
 		}
 
 
+		/// <summary>
+		/// Logs a trace message, will only be logged if the loglevel is trace
+		/// </summary>
+		/// <typeparam name="...Args">Is any type which has output operator for std::stringstream defined</typeparam>
+		/// <param name="str">Is the initial string</param>
+		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
 		void Trace(const std::wstring& str, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
 			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
 		}
 
+		/// <summary>
+		/// Logs a debug message, will only be logged if the loglevel >= Debug
+		/// </summary>
+		/// <typeparam name="...Args">Is any type which has output operator for std::stringstream defined</typeparam>
+		/// <param name="str">Is the initial string</param>
+		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
 		void Debug(const std::wstring& str, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
 			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
 		}
 
+		/// <summary>
+		/// Logs a info message, will only be logged if the loglevel is >= Information
+		/// </summary>
+		/// <typeparam name="...Args">Is any type which has output operator for std::stringstream defined</typeparam>
+		/// <param name="str">Is the initial string</param>
+		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
 		void Info(const std::wstring& str, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
 			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
 		}
 
+		/// <summary>
+		/// Logs a warning message, will only be logged if the loglevel >= Warning
+		/// </summary>
+		/// <typeparam name="...Args">Is any type which has output operator for std::stringstream defined</typeparam>
+		/// <param name="str">Is the initial string</param>
+		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
 		void Warn(const std::wstring& str, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
 			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
 		}
 
+		/// <summary>
+		/// Logs a error message, will only be logged if the loglevel is >= "Error"
+		/// </summary>
+		/// <typeparam name="...Args">Is any type which has output operator for std::stringstream defined</typeparam>
+		/// <param name="str">Is the initial string</param>
+		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
 		void Error(const std::wstring& str, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
 			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
 		}
 
+		/// <summary>
+		/// Logs a critical message, will always be logged if the loglevel is not "None"
+		/// </summary>
+		/// <typeparam name="...Args">Is any type which has output operator for std::stringstream defined</typeparam>
+		/// <param name="str">Is the initial string</param>
+		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
 		void Critical(const std::wstring& str, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
@@ -184,13 +235,18 @@ namespace Zeal::Log
 		}
 
 	protected:
+		/// <summary>
+		/// Writes message to output buffer
+		/// </summary>
+		/// <param name="message">Is the message to write</param>
 		virtual void Log(const std::string& message) = 0;
 
+		/// <summary>
+		/// Base Logger Constructor
+		/// </summary>
 		BaseLogger()
 			: m_LogLevel(LogLevel::None)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			BracketFormatter* pBracketFormatter = new BracketFormatter();
 			m_Formatters.push_back(pBracketFormatter);
 
@@ -201,10 +257,11 @@ namespace Zeal::Log
 			m_Formatters.push_back(pDateFormatter);
 		}
 
+		/// <summary>
+		/// Virtual BaseLogger Deconstructor
+		/// </summary>
 		virtual ~BaseLogger()
 		{
-			ZL_PROFILE_FUNCTION();
-
 			for (auto* formatter : m_Formatters)
 			{
 				if (formatter)
@@ -215,8 +272,6 @@ namespace Zeal::Log
 		template<typename... Args>
 		std::string SerializeString(std::string serializedStr, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			int argCount = 0;
 			(SerializeStringArg(serializedStr, args, argCount), ...);
 			return serializedStr;
@@ -233,8 +288,6 @@ namespace Zeal::Log
 			typename std::enable_if_t<std::is_same_v<BaseRefType<T>, std::wstring>>* = 0
 		)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			WideCharSerialize(message, arg, argCount);
 		}
 
@@ -244,8 +297,6 @@ namespace Zeal::Log
 			typename std::enable_if_t<!std::is_same_v<BaseRefType<T>, std::wstring>>* = 0
 		)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			WideCharSerialize(message, arg, argCount);
 		}
 
@@ -255,16 +306,12 @@ namespace Zeal::Log
 			typename std::enable_if_t<!std::is_convertible_v<T, std::wstring>>* = 0
 		)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			MultiByteSerialize(message, arg, argCount);
 		}
 
 		template<typename T>
 		void WideCharSerialize(std::string& message, T&& arg, int& argCount)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (argCount == -1)
 				return;
 
@@ -287,8 +334,6 @@ namespace Zeal::Log
 		template<typename T>
 		void MultiByteSerialize(std::string& message, T&& arg, int& argCount)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			if (argCount == -1)
 				return;
 
@@ -311,8 +356,6 @@ namespace Zeal::Log
 		template<typename... Args>
 		std::string FormatMessage(const std::string& str, Args&&... args)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			std::string msg = SerializeString(str, args...);
 
 			for (auto formatter : m_Formatters)

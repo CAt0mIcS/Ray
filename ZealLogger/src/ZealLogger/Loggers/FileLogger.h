@@ -59,8 +59,6 @@ namespace Zeal::Log
 		/// </summary>
 		virtual void Open() override
 		{
-			ZL_PROFILE_FUNCTION();
-
 #ifndef ZL_LOG_NON_THREAD_SAVE
 
 			std::scoped_lock lock(m_StreamMutex);
@@ -75,8 +73,6 @@ namespace Zeal::Log
 		/// </summary>
 		virtual void Flush() override
 		{
-			ZL_PROFILE_FUNCTION();
-
 #ifndef ZL_LOG_NON_THREAD_SAVE
 
 			std::scoped_lock lock(m_StreamMutex);
@@ -91,8 +87,6 @@ namespace Zeal::Log
 		/// </summary>
 		virtual void Close() override
 		{
-			ZL_PROFILE_FUNCTION();
-
 #ifndef ZL_LOG_NON_THREAD_SAVE
 
 			std::scoped_lock lock(m_StreamMutex);
@@ -109,8 +103,6 @@ namespace Zeal::Log
 		/// <param name="message">Is the message to output</param>
 		virtual void Log(const std::string& message) override
 		{
-			ZL_PROFILE_FUNCTION();
-
 #ifndef ZL_LOG_NON_THREAD_SAVE
 
 			std::scoped_lock lock(m_StreamMutex);
