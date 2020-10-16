@@ -4,7 +4,7 @@
 This repository is where I develop the Zeal application. The source code as well as the product is available to anyone under the standard [MIT License](https://github.com/CAt0mIcS/NodePlanningEditor/blob/master/LICENSE.txt).
 
 <p align="center">
-  <img alt="Zeal", src="https://github.com/CAt0mIcS/NodePlanningEditor/blob/master/assets/Demonstration/DemonstrationPicture.jpg">
+  <img alt="Zeal", src="https://github.com/CAt0mIcS/NodePlanningEditor/blob/ProjectOverhaul/assets/Demonstration/DemonstrationPicture.jpg">
 </p>
 
 ## The Product
