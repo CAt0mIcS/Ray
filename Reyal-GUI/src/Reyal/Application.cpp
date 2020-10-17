@@ -2,6 +2,7 @@
 #include "Application.h"
 
 
+
 namespace Zeal::Reyal
 {
 	Application::Application()
@@ -11,7 +12,7 @@ namespace Zeal::Reyal
 
 	int Application::Run()
 	{
-		Sleep(4000);
+		while (true);
 		return 0;
 	}
 

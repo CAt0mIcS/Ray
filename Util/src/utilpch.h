@@ -3,3 +3,4 @@
 #include "UtilWin.h"
 
 #include <string>
+#include <cmath>

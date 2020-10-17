@@ -170,6 +170,8 @@
     <ClInclude Include="src\utilpch.h" />
     <ClInclude Include="src\Util\TypeConvert.h" />
     <ClInclude Include="src\UtilWin.h" />
+    <ClInclude Include="src\Util\ZPoint.h" />
+    <ClInclude Include="src\Util\ZRect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\utilpch.cpp">
@@ -179,6 +181,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Util\TypeConvert.cpp" />
+    <ClCompile Include="src\Util\ZPoint.cpp" />
+    <ClCompile Include="src\Util\ZRect.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
