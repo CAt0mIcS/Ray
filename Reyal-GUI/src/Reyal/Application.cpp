@@ -11,7 +11,7 @@ namespace Zeal::Reyal
 
 	int Application::Run()
 	{
-		Sleep(1000);
+		Sleep(4000);
 		return 0;
 	}
 

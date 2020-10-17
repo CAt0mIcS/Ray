@@ -169,7 +169,7 @@
   <ItemGroup>
     <ClInclude Include="src\utilpch.h" />
     <ClInclude Include="src\Util\TypeConvert.h" />
-    <ClInclude Include="src\Util\Win.h" />
+    <ClInclude Include="src\UtilWin.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\utilpch.cpp">

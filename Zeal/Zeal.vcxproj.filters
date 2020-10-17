@@ -18,12 +18,15 @@
     <ClCompile Include="src\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\TestApp.cpp">
+    <ClCompile Include="src\Zeal\Sandbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Zeal\Sandbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

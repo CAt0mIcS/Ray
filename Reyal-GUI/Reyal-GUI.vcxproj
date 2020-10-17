@@ -171,6 +171,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Reyal\Exception.h" />
     <ClInclude Include="src\Reyal\Application.h" />
     <ClInclude Include="src\Reyal\EntryPoint.h" />
     <ClInclude Include="src\Reyal\Reyal.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="src\rlpch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Reyal\Exception.cpp" />
     <ClCompile Include="src\Reyal\Application.cpp" />
     <ClCompile Include="src\rlpch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

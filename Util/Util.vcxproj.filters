@@ -26,10 +26,10 @@
     <ClInclude Include="src\Util\TypeConvert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Util\Win.h">
+    <ClInclude Include="src\utilpch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\utilpch.h">
+    <ClInclude Include="src\UtilWin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

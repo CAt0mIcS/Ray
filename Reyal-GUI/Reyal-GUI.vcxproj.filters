@@ -33,12 +33,18 @@
     <ClInclude Include="src\Reyal\Reyal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Reyal\Exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rlpch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Exception.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
