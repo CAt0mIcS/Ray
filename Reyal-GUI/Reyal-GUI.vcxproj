@@ -171,6 +171,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Reyal\Window\BaseWindow.h" />
     <ClInclude Include="src\Reyal\Exception.h" />
     <ClInclude Include="src\Reyal\Application.h" />
     <ClInclude Include="src\Reyal\EntryPoint.h" />
