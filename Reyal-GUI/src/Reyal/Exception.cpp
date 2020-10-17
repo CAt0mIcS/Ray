@@ -38,8 +38,8 @@ namespace Zeal::Reyal
     {
         std::stringstream oss;
         oss << GetType() << '\n'
-            << "\t[Error Code] " << m_Hr << '\n'
-            << "\t[Description] " << GetErrorString() << '\n'
+            << "[Error Code] 0x" << std::hex << std::uppercase << m_Hr << '\n'
+            << "[Description] " << GetErrorString() << '\n'
             << GetDefaultString();
 
         m_WhatBuffer = oss.str();

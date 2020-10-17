@@ -5,6 +5,9 @@
 
 #include <stdint.h>
 
+// class needs to have dll-interface to be used by clients
+#pragma warning(disable : 4251)
+
 
 namespace Zeal::Reyal
 {
@@ -17,6 +20,20 @@ namespace Zeal::Reyal
 		/// </summary>
 		BaseWindow()
 			: m_hWnd(0) {}
+
+		/// <summary>
+		/// Virtual BaseWindow Deconstructor, unregisters the window class
+		/// </summary>
+		virtual ~BaseWindow()
+		{
+			UnregisterClass(m_ClassName.c_str(), GetModuleHandle(NULL));
+		}
+
+		/// <summary>
+		/// Getter for the current window handle
+		/// </summary>
+		/// <returns>The handle to the window</returns>
+		HWND GetWindowHandle() const { return m_hWnd; }
 
 		/// <summary>
 		/// Creates the native window
@@ -33,28 +50,31 @@ namespace Zeal::Reyal
 		/// <param name="hMenu">Is a window Id</param>
 		/// <returns>TRUE(1) if the window was created successfully, FALSE(0) otherwise</returns>
 		uint8_t CreateNativeWindow(
-			_In_ wchar_t* windowName,
-			_In_ wchar_t* windowClassName,
+			_In_ const wchar_t* windowName,
+			_In_ const wchar_t* windowClassName,
 			_In_ DWORD style,
 			_In_opt_ _Maybenull_ DWORD exStyle = 0,
-			_In_opt_ int x = CW_USEDEFAULT,
-			_In_opt_ int y = CW_USEDEFAULT,
-			_In_opt_ int width = CW_USEDEFAULT,
-			_In_opt_ int height = CW_USEDEFAULT,
+			_In_opt_ uint32_t x = CW_USEDEFAULT,
+			_In_opt_ uint32_t y = CW_USEDEFAULT,
+			_In_opt_ uint32_t width = CW_USEDEFAULT,
+			_In_opt_ uint32_t height = CW_USEDEFAULT,
 			_In_opt_ _Maybenull_ HWND hWndParent = 0,
 			_In_opt_ _Maybenull_ HMENU hMenu = 0
 		)
 		{
+			m_ClassName = windowClassName;
+
 			WNDCLASS wc{};
 			wc.lpfnWndProc = DERIVED_TYPE::WindowProc;
-			wc.hInstance = GetModuleHandle(L"Reyal"); //TODO: Test if that works
-			wc.lpszClassName = windowClassName;
+			wc.hInstance = GetModuleHandle(NULL);
+			wc.lpszClassName = m_ClassName.c_str();
+			wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 
 			RegisterClass(&wc);
 
-			n_hWnd = CreateWindowEx(
+			m_hWnd = CreateWindowEx(
 				exStyle, windowClassName, windowName, style, x, y, width, height,
-				hWndParent, hMenu, GetModuleHandle(L"Reyal"), this
+				hWndParent, hMenu, wc.hInstance, this
 			);
 
 			return m_hWnd ? TRUE : FALSE;
@@ -69,7 +89,7 @@ namespace Zeal::Reyal
 		/// <param name="wParam">Is an additional parameter</param>
 		/// <param name="lParam">Is an additional parameter</param>
 		/// <returns>LRESULT code</returns>
-		static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+		static LRESULT CALLBACK WindowProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
 		{
 			DERIVED_TYPE* pDerived = nullptr;
 			if (uMsg == WM_NCCREATE)
@@ -77,10 +97,12 @@ namespace Zeal::Reyal
 				CREATESTRUCT* pCreate = (CREATESTRUCT*)lParam;
 				pDerived = (DERIVED_TYPE*)pCreate->lpCreateParams;
 				SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)pDerived);
+
+				pDerived->m_hWnd = hWnd;
 			}
 			else
 			{
-				pDerived = GetWindowLongPtr(hWnd, GWLP_USERDATA);
+				pDerived = (DERIVED_TYPE*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 			}
 
 			if (pDerived)
@@ -98,13 +120,19 @@ namespace Zeal::Reyal
 		/// <param name="wParam">Is an additional parameter</param>
 		/// <param name="lParam">Is an additional parameter</param>
 		/// <returns>LRESULT code</returns>
-		virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
+		virtual LRESULT HandleMessage(_In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam) = 0;
 
 	protected:
 		/// <summary>
 		/// Window handle
 		/// </summary>
 		HWND m_hWnd;
+
+	private:
+		/// <summary>
+		/// Stored to unregister class in Deconstructor
+		/// </summary>
+		std::wstring m_ClassName;
 	};
 }
 

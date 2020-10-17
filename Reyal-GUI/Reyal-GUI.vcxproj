@@ -184,6 +184,7 @@
     <ClInclude Include="src\Reyal\Application.h" />
     <ClInclude Include="src\Reyal\EntryPoint.h" />
     <ClInclude Include="src\Reyal\Reyal.h" />
+    <ClInclude Include="src\Reyal\Window\Window.h" />
     <ClInclude Include="src\RlWin.h" />
     <ClInclude Include="src\RlBase.h" />
     <ClInclude Include="src\rlpch.h" />
@@ -191,6 +192,7 @@
   <ItemGroup>
     <ClCompile Include="src\Reyal\Exception.cpp" />
     <ClCompile Include="src\Reyal\Application.cpp" />
+    <ClCompile Include="src\Reyal\Window\Window.cpp" />
     <ClCompile Include="src\rlpch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

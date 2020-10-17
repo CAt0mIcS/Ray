@@ -2,6 +2,8 @@
 
 #include "RlBase.h"
 
+#include "Window/Window.h"
+
 
 namespace Zeal::Reyal
 {
@@ -28,7 +30,8 @@ namespace Zeal::Reyal
 		virtual ~Application();
 
 	protected:
-
+		Window m_MainWindow;
+		Window m_Window;
 	};
 
 	/// <summary>
