@@ -15,14 +15,14 @@ You can:
 * Edit Title and Detail Text
 * Connect the Nodes together with Lines
 * Move the Nodes around
-* Save the Scene
-* Open another Save File
-* Open multiple Tabs (Different Save Files)
+* Save the Project
 
 
 Planned features:
 * Create projects like in Visual Studio with multiple files
-* Add Alt-Text to lines (named connections)
+* Add Alt-Text to Lines (named connections)
+* Link external files to Nodes
+* Multiple Tabs (Scene, NodeEditing, (like in Microsoft Teams: Post, Class Notebook, ...))
 
 You can find the full documentation on the [wiki](https://github.com/CAt0mIcS/NodePlanningEditor/wiki) (soon).
 
@@ -30,7 +30,7 @@ You can find the full documentation on the [wiki](https://github.com/CAt0mIcS/No
 There are many ways in which you can participate in the project, for example:
 * [Submit bugs and feature requests](https://github.com/CAt0mIcS/NodePlanningEditor/issues)
 * Review [source code changes](https://github.com/CAt0mIcS/NodePlanningEditor/pulls)
-* Review the [source code](https://github.com/CAt0mIcS/NodePlanningEditor) and look for any possible bugs or typos
+* Review the [source code](https://github.com/CAt0mIcS/NodePlanningEditor) and look for any possible bugs or typographical errors
 
 ## License
 Licensed under the [MIT](https://github.com/CAt0mIcS/NodePlanningEditor/blob/master/LICENSE.txt) license.
