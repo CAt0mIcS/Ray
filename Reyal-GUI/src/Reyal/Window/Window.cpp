@@ -5,7 +5,7 @@
 #include "Reyal/Debug/ReyalLogger.h"
 
 #include <Util/Random.h>
-#include <iostream>
+
 
 namespace Zeal::Reyal
 {
@@ -19,19 +19,9 @@ namespace Zeal::Reyal
 		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(windowTitle.c_str(), rnd.c_str(), WS_OVERLAPPEDWINDOW));
 	}
 
-	void Window::Show(uint8_t cmdShow)
+	Window::~Window()
 	{
-		ShowWindow(m_hWnd, cmdShow);
-	}
-
-	void Window::Hide()
-	{
-		ShowWindow(m_hWnd, SW_HIDE);
-	}
-
-	void Window::Close()
-	{
-		SendMessage(m_hWnd, WM_CLOSE, 0, 0);
+		Close();
 	}
 
 	LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -53,6 +43,26 @@ namespace Zeal::Reyal
 		return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
 	
+	void Window::Show(uint8_t cmdShow) const
+	{
+		ShowWindow(m_hWnd, cmdShow);
+	}
+
+	void Window::Hide() const
+	{
+		ShowWindow(m_hWnd, SW_HIDE);
+	}
+
+	void Window::Close() const
+	{
+		SendMessage(m_hWnd, WM_CLOSE, 0, 0);
+	}
+
+	bool Window::IsOpen() const
+	{
+		return IsWindowVisible(m_hWnd);
+	}
+
 	bool Window::ShouldClose()
 	{
 		MSG msg;

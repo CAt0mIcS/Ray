@@ -126,6 +126,12 @@ namespace Zeal::Reyal
 		/// <returns>LRESULT code</returns>
 		virtual LRESULT HandleMessage(_In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam) = 0;
 
+		/// <summary>
+		/// Getter for the window class name of this window
+		/// </summary>
+		/// <returns>The window class name</returns>
+		const std::wstring& GetWindowClassName() const { return m_ClassName; }
+
 	protected:
 		/// <summary>
 		/// Window handle
@@ -135,6 +141,7 @@ namespace Zeal::Reyal
 	private:
 		/// <summary>
 		/// Stored to unregister class in Deconstructor
+		/// <TODO>Try using GetClassName instead of storing it</TODO>
 		/// </summary>
 		std::wstring m_ClassName;
 	};
