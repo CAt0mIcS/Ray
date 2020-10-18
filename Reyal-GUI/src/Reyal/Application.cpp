@@ -10,6 +10,7 @@ namespace Zeal::Reyal
 	Application::Application()
 		: m_MainWindow(L"Title", true), m_LayerStack{}
 	{
+
 	}
 
 	int Application::Run()

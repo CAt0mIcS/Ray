@@ -155,7 +155,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\ZealLogger\Enable.h" />
     <ClInclude Include="src\ZealLogger\Formatter\BracketFormatter.h" />
     <ClInclude Include="src\ZealLogger\Formatter\DateTimeFormatter.h" />
     <ClInclude Include="src\ZealLogger\Formatter\Formatter.h" />

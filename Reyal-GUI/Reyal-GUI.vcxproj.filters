@@ -51,6 +51,9 @@
     <ClInclude Include="src\Reyal\Debug\Instrumentor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Reyal\CoreConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rlpch.cpp">

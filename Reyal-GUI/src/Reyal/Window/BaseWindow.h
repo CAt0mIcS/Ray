@@ -8,9 +8,6 @@
 #include "Reyal/Debug/Instrumentor.h"
 
 
-// class needs to have dll-interface to be used by clients
-#pragma warning(disable : 4251)
-
 
 namespace Zeal::Reyal
 {

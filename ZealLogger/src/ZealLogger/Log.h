@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Enable.h"
+#include "../../../Reyal-GUI/src/Reyal/CoreConfig.h"
 
 #if ZL_ENABLE_LOGGING
 
