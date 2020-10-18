@@ -192,6 +192,7 @@
     <ClInclude Include="src\RlWin.h" />
     <ClInclude Include="src\RlBase.h" />
     <ClInclude Include="src\rlpch.h" />
+    <ClInclude Include="src\Reyal\Widgets\ZWidget.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Reyal\Debug\Instrumentor.cpp" />
@@ -206,6 +207,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Util\Util.vcxproj">

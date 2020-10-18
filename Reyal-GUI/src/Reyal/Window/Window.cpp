@@ -67,6 +67,8 @@ namespace Zeal::Reyal
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+		//TODO: Change to something more appropriate (needed so cpu doesn't go up to 30% usage when using program)
+		Sleep(1);
 		return false;
 	}
 }

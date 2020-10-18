@@ -20,12 +20,12 @@
 
 namespace Zeal::Reyal
 {
-	struct RL_API Session
+	struct Session
 	{
 		std::string Name;
 	};
 
-	struct RL_API ProfileResult
+	struct ProfileResult
 	{
 		std::string Name;
 
