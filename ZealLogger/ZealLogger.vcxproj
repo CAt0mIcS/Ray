@@ -160,7 +160,6 @@
     <ClInclude Include="src\ZealLogger\Formatter\DateTimeFormatter.h" />
     <ClInclude Include="src\ZealLogger\Formatter\Formatter.h" />
     <ClInclude Include="src\ZealLogger\Formatter\LogLevelFormatter.h" />
-    <ClInclude Include="src\ZealLogger\LoggerClass.h" />
     <ClInclude Include="src\ZealLogger\Private\LogLevel.h" />
     <ClInclude Include="src\ZealLogger\Loggers\BaseLogger.h" />
     <ClInclude Include="src\ZealLogger\LogConfigure.h" />

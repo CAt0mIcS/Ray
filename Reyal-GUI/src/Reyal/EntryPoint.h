@@ -4,16 +4,47 @@
 #include "Reyal/Exception.h"
 
 #include <Instrumentor/InstrumentationTools.h>
-#include <ZealLogger/Log.h>
+#include "Reyal/Debug/ReyalLogger.h"
 
+#include <signal.h>
+
+/// <summary>
+/// Handles any unexpected signals, logs the signal and closes the logger
+/// </summary>
+/// <param name="signum">Is the received signal</param>
+void SignalHandler(int signum)
+{
+	ZL_LOG_CRITICAL("Signal '{0}' received, terminating program", signum);
+
+	// Note: We do not need to do this as the destructor does it automatically, 
+	// but it's good to have it here
+	ZL_LOG_END();
+
+	exit(signum);
+}
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int pCmdShow)
 {
-	ZL_LOG_INIT("Zeal.log", Zeal::Log::LogLevel::Trace);
+	ZL_LOG_BEGIN("Zeal.log", Zeal::Log::LogLevel::Trace);
 
+	/// <summary>
+	/// QUESTION:
+	///		Should I handle signals like this or is there a better way? Like not doing it at all?
+	/// </summary>
+	signal(SIGABRT, SignalHandler);
+	signal(SIGFPE, SignalHandler);
+	signal(SIGILL, SignalHandler);
+	signal(SIGINT, SignalHandler);
+	signal(SIGSEGV, SignalHandler);
+	signal(SIGTERM, SignalHandler);
+	
 #ifdef _DEBUG
 	{
+		/// <summary>
+		/// QUESTION:
+		///		freopen or freopen_s
+		/// </summary>
 		AllocConsole();
 		FILE* pFile;
 		freopen_s(&pFile, "CONOUT$", "w", stdout);

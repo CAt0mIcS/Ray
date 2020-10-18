@@ -31,7 +31,6 @@ namespace Zeal::Reyal
 
 	protected:
 		Window m_MainWindow;
-		Window m_Window;
 	};
 
 	/// <summary>

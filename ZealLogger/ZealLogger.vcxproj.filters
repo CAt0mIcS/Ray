@@ -33,9 +33,6 @@
     <ClInclude Include="src\ZealLogger\Enable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ZealLogger\LoggerClass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ZealLogger\Loggers\BaseLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>

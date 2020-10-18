@@ -65,7 +65,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Trace))
 				return;
 
-			Log(FormatMessage(str, std::forward<Args>(args)...));
+			Log(FormatMessage(str, LogMessageType::Trace, std::forward<Args>(args)...));
 		}
 
 		/// <summary>
@@ -80,7 +80,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			Log(FormatMessage(str, std::forward<Args>(args)...));
+			Log(FormatMessage(str, LogMessageType::Debug, std::forward<Args>(args)...));
 		}
 
 		/// <summary>
@@ -92,10 +92,10 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Info(const std::string& str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Debug))
+			if (!ShouldLog(LogMessageType::Information))
 				return;
 
-			Log(FormatMessage(str, std::forward<Args>(args)...));
+			Log(FormatMessage(str, LogMessageType::Information, std::forward<Args>(args)...));
 		}
 
 		/// <summary>
@@ -107,10 +107,10 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Warn(const std::string& str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Debug))
+			if (!ShouldLog(LogMessageType::Warning))
 				return;
 
-			Log(FormatMessage(str, std::forward<Args>(args)...));
+			Log(FormatMessage(str, LogMessageType::Warning, std::forward<Args>(args)...));
 		}
 
 		/// <summary>
@@ -122,10 +122,10 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Error(const std::string& str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Debug))
+			if (!ShouldLog(LogMessageType::Error))
 				return;
 
-			Log(FormatMessage(str, std::forward<Args>(args)...));
+			Log(FormatMessage(str, LogMessageType::Error, std::forward<Args>(args)...));
 		}
 
 		/// <summary>
@@ -137,10 +137,10 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Critical(const std::string& str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Debug))
+			if (!ShouldLog(LogMessageType::Critical))
 				return;
 
-			Log(FormatMessage(str, std::forward<Args>(args)...));
+			Log(FormatMessage(str, LogMessageType::Critical, std::forward<Args>(args)...));
 		}
 
 
@@ -153,10 +153,10 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Trace(const std::wstring& str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Debug))
+			if (!ShouldLog(LogMessageType::Trace))
 				return;
 
-			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
+			Log(FormatMessage(Util::WideCharToMultiByte(str), LogMessageType::Trace, std::forward<Args>(args)...));
 		}
 
 		/// <summary>
@@ -171,7 +171,7 @@ namespace Zeal::Log
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
 
-			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
+			Log(FormatMessage(Util::WideCharToMultiByte(str), LogMessageType::Debug, std::forward<Args>(args)...));
 		}
 
 		/// <summary>
@@ -183,10 +183,10 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Info(const std::wstring& str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Debug))
+			if (!ShouldLog(LogMessageType::Information))
 				return;
 
-			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
+			Log(FormatMessage(Util::WideCharToMultiByte(str), LogMessageType::Information, std::forward<Args>(args)...));
 		}
 
 		/// <summary>
@@ -198,10 +198,10 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Warn(const std::wstring& str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Debug))
+			if (!ShouldLog(LogMessageType::Warning))
 				return;
 
-			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
+			Log(FormatMessage(Util::WideCharToMultiByte(str), LogMessageType::Warning, std::forward<Args>(args)...));
 		}
 
 		/// <summary>
@@ -213,10 +213,10 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Error(const std::wstring& str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Debug))
+			if (!ShouldLog(LogMessageType::Error))
 				return;
 
-			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
+			Log(FormatMessage(Util::WideCharToMultiByte(str), LogMessageType::Error, std::forward<Args>(args)...));
 		}
 
 		/// <summary>
@@ -228,10 +228,10 @@ namespace Zeal::Log
 		template<typename... Args>
 		void Critical(const std::wstring& str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Debug))
+			if (!ShouldLog(LogMessageType::Critical))
 				return;
 
-			Log(FormatMessage(Util::WideCharToMultiByte(str), std::forward<Args>(args)...));
+			Log(FormatMessage(Util::WideCharToMultiByte(str), LogMessageType::Critical, std::forward<Args>(args)...));
 		}
 
 	protected:
@@ -408,13 +408,13 @@ namespace Zeal::Log
 		/// <param name="...args">Are the arguments to insert</param>
 		/// <returns>The formatted string ready for logging</returns>
 		template<typename... Args>
-		std::string FormatMessage(const std::string& str, Args&&... args)
+		std::string FormatMessage(const std::string& str, LogMessageType msgLvl, Args&&... args)
 		{
 			std::string msg = SerializeString(str, args...);
 
 			for (auto formatter : m_Formatters)
 			{
-				formatter->Format(msg, m_LogLevel);
+				formatter->Format(msg, msgLvl);
 			}
 			return msg;
 		}

@@ -179,6 +179,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Reyal\Debug\ReyalLogger.h" />
     <ClInclude Include="src\Reyal\Window\BaseWindow.h" />
     <ClInclude Include="src\Reyal\Exception.h" />
     <ClInclude Include="src\Reyal\Application.h" />
@@ -190,6 +191,7 @@
     <ClInclude Include="src\rlpch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Reyal\Debug\ReyalLogger.cpp" />
     <ClCompile Include="src\Reyal\Exception.cpp" />
     <ClCompile Include="src\Reyal\Application.cpp" />
     <ClCompile Include="src\Reyal\Window\Window.cpp" />

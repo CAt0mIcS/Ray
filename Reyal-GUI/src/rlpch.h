@@ -8,6 +8,7 @@
 #include <vector>
 #include <sstream>
 #include <chrono>
+#include <memory>
 #include <fstream>
 
 #include <assert.h>
