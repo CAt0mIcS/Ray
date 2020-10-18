@@ -1,18 +1,28 @@
 #include "rlpch.h"
 #include "Application.h"
 
+#include "Layer.h"
+
 
 
 namespace Zeal::Reyal
 {
 	Application::Application()
-		: m_MainWindow(L"Title")
+		: m_MainWindow(L"Title", true), m_LayerStack{}
 	{
 	}
 
 	int Application::Run()
 	{
-		return Window::ProcessMessages();
+		while (!m_MainWindow.ShouldClose())
+		{
+			for (auto* layer : m_LayerStack)
+			{
+				layer->OnUpdate();
+			}
+		}
+
+		return m_MainWindow.GetExitCode();
 	}
 
 	Application::~Application()

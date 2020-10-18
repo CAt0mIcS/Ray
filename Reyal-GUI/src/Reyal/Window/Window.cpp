@@ -9,7 +9,8 @@
 
 namespace Zeal::Reyal
 {
-	Window::Window(const std::wstring& windowTitle)
+	Window::Window(const std::wstring& windowTitle, bool isMainWindow)
+		: m_IsMainWindow(isMainWindow), m_ExitCode(0)
 	{
 		auto rnd = Util::GenerateRandomToken<std::wstring>(20);
 		ZL_LOG_INFO("Creating Window class with name '{0}'", rnd);
@@ -31,38 +32,40 @@ namespace Zeal::Reyal
 		SendMessage(m_hWnd, WM_CLOSE, 0, 0);
 	}
 
-	int Window::ProcessMessages()
-	{
-		MSG msg;
-		while (true)
-		{
-			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-			{
-				if (msg.message == WM_QUIT)
-				{
-					break;
-				}
-
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-		}
-
-		return (int)msg.wParam;
-	}
-
 	LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
 		case WM_DESTROY:
 		{
-			PostQuitMessage(0);
-			return 0;
+			// TODO: Check resources of the closed window are destroyed correctly if the closed window is not the main window
+			if (this->IsMainWindow())
+			{
+				PostQuitMessage(0);
+				return 0;
+			}
+			break;
 		}
 		}
 
 		return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
+	}
+	
+	bool Window::ShouldClose()
+	{
+		MSG msg;
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			if (msg.message == WM_QUIT)
+			{
+				m_ExitCode = (int)msg.wParam;
+				return true;
+			}
+
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		return false;
 	}
 }
 

@@ -7,6 +7,8 @@
 
 namespace Zeal::Reyal
 {
+	class Layer;
+
 	/// <summary>
 	/// Base Application class, the client should inherit from it.
 	/// </summary>
@@ -31,6 +33,9 @@ namespace Zeal::Reyal
 
 	protected:
 		Window m_MainWindow;
+
+	private:
+		std::vector<Layer*> m_LayerStack;
 	};
 
 	/// <summary>
