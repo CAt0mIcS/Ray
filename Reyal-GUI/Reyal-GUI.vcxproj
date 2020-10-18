@@ -179,6 +179,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Reyal\Debug\Instrumentor.h" />
     <ClInclude Include="src\Reyal\Layer.h" />
     <ClInclude Include="src\Reyal\Debug\ReyalLogger.h" />
     <ClInclude Include="src\Reyal\Window\BaseWindow.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="src\rlpch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Reyal\Debug\Instrumentor.cpp" />
     <ClCompile Include="src\Reyal\Layer.cpp" />
     <ClCompile Include="src\Reyal\Debug\ReyalLogger.cpp" />
     <ClCompile Include="src\Reyal\Exception.cpp" />
@@ -205,9 +207,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\InstrumentationTools\InstrumentationTools.vcxproj">
-      <Project>{da94b9d5-60af-4073-9a2b-e18b132b63b7}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Util\Util.vcxproj">
       <Project>{86347a05-60de-478c-8d35-fb579ce3cb8b}</Project>
     </ProjectReference>

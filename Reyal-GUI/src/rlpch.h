@@ -10,10 +10,11 @@
 #include <chrono>
 #include <memory>
 #include <fstream>
+#include <iomanip>
 
 #include <assert.h>
 
 
 #include <ZealLogger/Log.h>
-#include <Instrumentor/InstrumentationTools.h>
+#include "Reyal/Debug/Instrumentor.h"
 

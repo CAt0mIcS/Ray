@@ -3,7 +3,7 @@
 
 #include "Reyal/Exception.h"
 
-#include <Instrumentor/InstrumentationTools.h>
+#include "Reyal/Debug/Instrumentor.h"
 #include "Reyal/Debug/ReyalLogger.h"
 
 #include <signal.h>
@@ -19,6 +19,9 @@ void SignalHandler(int signum)
 	// Note: We do not need to do this as the destructor does it automatically, 
 	// but it's good to have it here
 	ZL_LOG_END();
+
+	// We need to do this tough
+	ZL_PROFILE_END_SESSION();
 
 	exit(signum);
 }

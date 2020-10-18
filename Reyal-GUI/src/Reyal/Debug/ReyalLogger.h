@@ -54,6 +54,8 @@ namespace Zeal::Reyal
 	#define ZL_LOG_ERROR(msg, ...)		::Zeal::Reyal::Logger::GetFileLogger()->Error(msg, __VA_ARGS__)
 	#define ZL_LOG_CRITICAL(msg, ...)	::Zeal::Reyal::Logger::GetFileLogger()->Critical(msg, __VA_ARGS__)
 
+	#define ZL_FL_LOGGER()				::Zeal::Reyal::Logger::GetFileLogger()
+
 	#define ZL_LOG_END()				::Zeal::Reyal::Logger::GetFileLogger()->Close();
 #else
 	#define ZL_LOG_BEGIN(path, loglevel)
@@ -64,6 +66,8 @@ namespace Zeal::Reyal
 	#define ZL_LOG_WARN(msg, ...)		
 	#define ZL_LOG_ERROR(msg, ...)	
 	#define ZL_LOG_CRITICAL(msg, ...)
+
+	#define ZL_FL_LOGGER()
 
 	#define ZL_LOG_END()
 #endif

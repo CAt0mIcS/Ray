@@ -27,7 +27,7 @@ namespace Zeal::Reyal
 
 	Application::~Application()
 	{
-
+		ZL_PROFILE_FUNCTION();
 	}
 }
 

@@ -5,6 +5,9 @@
 
 #include <stdint.h>
 
+#include "Reyal/Debug/Instrumentor.h"
+
+
 // class needs to have dll-interface to be used by clients
 #pragma warning(disable : 4251)
 
@@ -26,6 +29,8 @@ namespace Zeal::Reyal
 		/// </summary>
 		virtual ~BaseWindow()
 		{
+			ZL_PROFILE_FUNCTION();
+
 			UnregisterClass(m_ClassName.c_str(), GetModuleHandle(NULL));
 		}
 
@@ -62,6 +67,8 @@ namespace Zeal::Reyal
 			_In_opt_ _Maybenull_ HMENU hMenu = 0
 		)
 		{
+			ZL_PROFILE_FUNCTION();
+
 			m_ClassName = windowClassName;
 
 			WNDCLASS wc{};
