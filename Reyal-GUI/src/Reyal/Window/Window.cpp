@@ -40,7 +40,7 @@ namespace Zeal::Reyal
 		{
 		case WM_DESTROY:
 		{
-			// TODO: Check resources of the closed window are destroyed correctly if the closed window is not the main window
+			// TODO: Check resources of the closed window are destroyed correctly
 			if (this->IsMainWindow())
 			{
 				PostQuitMessage(0);
