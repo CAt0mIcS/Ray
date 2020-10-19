@@ -2,6 +2,7 @@
 
 #include "RlWin.h"
 
+#include <deque>
 #include <exception>
 #include <string>
 #include <mutex>

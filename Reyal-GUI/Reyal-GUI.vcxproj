@@ -179,6 +179,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Reyal\Events\Event.h" />
+    <ClInclude Include="src\Reyal\Events\EventQueue.h" />
     <ClInclude Include="src\Reyal\Layers\LayerStack.h" />
     <ClInclude Include="src\Reyal\Input\Keyboard.h" />
     <ClInclude Include="src\Reyal\Input\Mouse.h" />
@@ -198,6 +200,7 @@
     <ClInclude Include="src\Reyal\Widgets\ZWidget.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Reyal\Events\EventQueue.cpp" />
     <ClCompile Include="src\Reyal\Layers\LayerStack.cpp" />
     <ClCompile Include="src\Reyal\Input\Keyboard.cpp" />
     <ClCompile Include="src\Reyal\Input\Mouse.cpp" />
