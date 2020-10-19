@@ -24,7 +24,7 @@ namespace Zeal::Reyal
 		Close();
 	}
 
-	LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT Window::HandleMessage(_In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -99,14 +99,14 @@ namespace Zeal::Reyal
 		return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
 	
-	void Window::Show(_In_opt_ uint8_t cmdShow) const
+	void Window::Show(_In_opt_ ShowCommand cmdShow) const
 	{
-		ShowWindow(m_hWnd, cmdShow);
+		ShowWindow(m_hWnd, (int)cmdShow);
 	}
 
 	void Window::Hide() const
 	{
-		this->Show(SW_HIDE);
+		this->Show(ShowCommand::Hide);
 	}
 
 	void Window::Close() const

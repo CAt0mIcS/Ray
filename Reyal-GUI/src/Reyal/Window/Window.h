@@ -11,6 +11,19 @@ namespace Zeal::Reyal
 	class RL_API Window : public BaseWindow<Window>
 	{
 	public:
+		enum class ShowCommand : uint8_t
+		{
+			Hide		= SW_HIDE,
+			Normal		= SW_SHOWNORMAL,
+			Minimized	= SW_SHOWMINIMIZED,
+			Maximized	= SW_SHOWMAXIMIZED,
+			Maximize	= SW_MAXIMIZE,
+			Show		= SW_SHOW,
+			Minimize	= SW_MINIMIZE,
+			Restore		= SW_RESTORE,
+			Default		= SW_SHOWDEFAULT
+		};
+	public:
 		/// <summary>
 		/// Window Constructor
 		/// </summary>
@@ -30,7 +43,7 @@ namespace Zeal::Reyal
 		/// <param name="wParam">Is an additional parameter</param>
 		/// <param name="lParam">Is an additional parameter</param>
 		/// <returns>LRESULT code</returns>
-		virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
+		virtual LRESULT HandleMessage(_In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam) override;
 
 		/// <summary>
 		/// Checks if this window is the main Window
@@ -42,13 +55,13 @@ namespace Zeal::Reyal
 		/// Shows the window
 		/// </summary>
 		/// <param name="cmdShow">Is a flag to set how the window should be shown</param>
-		void Show(_In_opt_ uint8_t cmdShow = SW_SHOWDEFAULT) const;
+		void Show(_In_opt_ ShowCommand cmdShow = ShowCommand::Default) const;
 
 		/// <summary>
 		/// Hides the Window
 		/// </summary>
 		void Hide() const;
-
+		
 		/// <summary>
 		/// Sends a WM_CLOSE message to the window, thus closing it
 		/// </summary>
