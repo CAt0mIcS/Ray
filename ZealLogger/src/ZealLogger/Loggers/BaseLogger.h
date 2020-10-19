@@ -10,6 +10,7 @@
 #include "../Formatter/BracketFormatter.h"
 #include "../Formatter/LogLevelFormatter.h"
 #include "../Formatter/DateTimeFormatter.h"
+#include "../Formatter/NullTerminatorFormatter.h"
 
 #include "../Private/LogLevel.h"
 
@@ -255,6 +256,9 @@ namespace Zeal::Log
 
 			DateTimeFormatter* pDateFormatter = new DateTimeFormatter();
 			m_Formatters.push_back(pDateFormatter);
+
+			NullTerminatorFormatter* pNullTerminatorFormatter = new NullTerminatorFormatter();
+			m_Formatters.push_back(pNullTerminatorFormatter);
 		}
 
 		/// <summary>

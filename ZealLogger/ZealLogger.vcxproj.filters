@@ -42,5 +42,8 @@
     <ClInclude Include="src\ZealLogger\Log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ZealLogger\Formatter\NullTerminatorFormatter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
