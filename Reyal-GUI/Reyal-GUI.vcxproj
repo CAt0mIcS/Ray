@@ -179,11 +179,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Reyal\Layers\LayerStack.h" />
     <ClInclude Include="src\Reyal\Input\Keyboard.h" />
     <ClInclude Include="src\Reyal\Input\Mouse.h" />
     <ClInclude Include="src\Reyal\CoreConfig.h" />
     <ClInclude Include="src\Reyal\Debug\Instrumentor.h" />
-    <ClInclude Include="src\Reyal\Layer.h" />
+    <ClInclude Include="src\Reyal\Layers\Layer.h" />
     <ClInclude Include="src\Reyal\Debug\ReyalLogger.h" />
     <ClInclude Include="src\Reyal\Window\BaseWindow.h" />
     <ClInclude Include="src\Reyal\Exception.h" />
@@ -197,10 +198,11 @@
     <ClInclude Include="src\Reyal\Widgets\ZWidget.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Reyal\Layers\LayerStack.cpp" />
     <ClCompile Include="src\Reyal\Input\Keyboard.cpp" />
     <ClCompile Include="src\Reyal\Input\Mouse.cpp" />
     <ClCompile Include="src\Reyal\Debug\Instrumentor.cpp" />
-    <ClCompile Include="src\Reyal\Layer.cpp" />
+    <ClCompile Include="src\Reyal\Layers\Layer.cpp" />
     <ClCompile Include="src\Reyal\Debug\ReyalLogger.cpp" />
     <ClCompile Include="src\Reyal\Exception.cpp" />
     <ClCompile Include="src\Reyal\Application.cpp" />

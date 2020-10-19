@@ -3,7 +3,7 @@
 #include "RlBase.h"
 
 #include "Window/Window.h"
-
+#include "Layers/LayerStack.h"
 
 namespace Zeal::Reyal
 {
@@ -27,6 +27,13 @@ namespace Zeal::Reyal
 		int Run();
 
 		/// <summary>
+		/// Pushes a layer onto the stack
+		/// </summary>
+		/// <param name="layer">Is a raw, (heap-allocated) pointer to the layer</param>
+		/// <returns>The pushed layer</returns>
+		void PushLayer(_In_ Layer* layer);
+
+		/// <summary>
 		/// Virtual Application Deconstructorr
 		/// </summary>
 		virtual ~Application();
@@ -35,7 +42,7 @@ namespace Zeal::Reyal
 		Window m_MainWindow;
 
 	private:
-		std::vector<Layer*> m_LayerStack;
+		LayerStack m_LayerStack;
 	};
 
 	/// <summary>

@@ -1,7 +1,7 @@
 #include "rlpch.h"
 #include "Application.h"
 
-#include "Layer.h"
+#include "Reyal/Layers/Layer.h"
 
 
 
@@ -23,6 +23,11 @@ namespace Zeal::Reyal
 		}
 
 		return m_MainWindow.GetExitCode();
+	}
+
+	void Application::PushLayer(_In_ Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
 	}
 
 	Application::~Application()
