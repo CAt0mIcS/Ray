@@ -14,7 +14,7 @@ namespace Zeal::Util
 			"abcdefghijklmnopqrstuvwxyz";
 
 
-		for (uint16_t i = 0; i <= length; ++i)
+		for (uint16_t i = 0; i < length; ++i)
 		{
 			ret += charset[rand() % (std::size(charset) - 1)];
 		}
@@ -31,7 +31,7 @@ namespace Zeal::Util
 			L"abcdefghijklmnopqrstuvwxyz";
 
 
-		for (uint16_t i = 0; i <= length; ++i)
+		for (uint16_t i = 0; i < length; ++i)
 		{
 			ret += charset[rand() % (std::size(charset) - 1)];
 		}
