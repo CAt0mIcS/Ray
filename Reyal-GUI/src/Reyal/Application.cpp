@@ -2,7 +2,7 @@
 #include "Application.h"
 
 #include "Reyal/Layers/Layer.h"
-
+#include "Reyal/Debug/ReyalLogger.h"
 
 
 namespace Zeal::Reyal
