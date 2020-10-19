@@ -8,7 +8,7 @@ namespace Zeal::Reyal
 {
 	class Layer;
 
-	class LayerStack
+	class RL_API LayerStack
 	{
 		using Iterator = std::vector<Layer*>::iterator;
 		using ReverseIterator = std::vector<Layer*>::reverse_iterator;

@@ -1,6 +1,7 @@
 #include "rlpch.h"
 #include "LayerStack.h"
 
+#include "Layer.h"
 #include "Reyal/Debug/Instrumentor.h"
 
 

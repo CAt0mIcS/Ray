@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Zeal\GUILayer.cpp" />
     <ClCompile Include="src\Zeal\Sandbox.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -28,6 +29,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Zeal\GUILayer.h" />
     <ClInclude Include="src\Zeal\Sandbox.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>

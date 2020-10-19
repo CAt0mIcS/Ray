@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "Sandbox.h"
 
-#include <iostream>
+#include "GUILayer.h"
+
 
 namespace Zeal
 {
@@ -10,6 +11,7 @@ namespace Zeal
 		ZL_PROFILE_FUNCTION();
 
 		m_MainWindow.Show();
+		PushLayer(new GUILayer());
 	}
 	
 	Sandbox::~Sandbox()

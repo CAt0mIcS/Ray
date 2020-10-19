@@ -5,7 +5,7 @@
 
 namespace Zeal::Reyal
 {
-	class Layer
+	class RL_API Layer
 	{
 	public:
 		Layer() = default;
