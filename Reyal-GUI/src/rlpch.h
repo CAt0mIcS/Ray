@@ -10,6 +10,7 @@
 #include <chrono>
 #include <memory>
 #include <fstream>
+#include <bitset>
 #include <iomanip>
 
 #include <assert.h>

@@ -30,7 +30,7 @@ namespace Zeal::Reyal
 		{
 		case WM_DESTROY:
 		{
-			// TODO: Check resources of the closed window are destroyed correctly
+			// TODO: Check if resources of the closed window are destroyed correctly
 			if (this->IsMainWindow())
 			{
 				PostQuitMessage(0);
@@ -38,19 +38,75 @@ namespace Zeal::Reyal
 			}
 			break;
 		}
+		case WM_MOUSEMOVE:
+		{
+			return 0;
+		}
+		case WM_LBUTTONDOWN:
+		{
+			return 0;
+		}
+		case WM_LBUTTONUP:
+		{
+			return 0;
+		}
+		case WM_MBUTTONDOWN:
+		{
+			return 0;
+		}
+		case WM_MBUTTONUP:
+		{
+			return 0;
+		}
+		case WM_RBUTTONDOWN:
+		{
+			return 0;
+		}
+		case WM_RBUTTONUP:
+		{
+			return 0;
+		}
+		case WM_KEYDOWN:
+		{
+			return 0;
+		}
+		case WM_KEYUP:
+		{
+			return 0;
+		}
+		case WM_MOUSEWHEEL:
+		{
+			return 0;
+		}
+		case WM_PAINT:
+		{
+			PAINTSTRUCT ps;
+			HDC hDC = BeginPaint(m_hWnd, &ps);
+			FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(35, 37, 40)));
+			EndPaint(m_hWnd, &ps);
+			return 0;
+		}
+		case WM_SIZE:
+		{
+			return 0;
+		}
+		case WM_CLOSE:
+		{
+			break;
+		}
 		}
 
 		return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
 	
-	void Window::Show(uint8_t cmdShow) const
+	void Window::Show(_In_opt_ uint8_t cmdShow) const
 	{
 		ShowWindow(m_hWnd, cmdShow);
 	}
 
 	void Window::Hide() const
 	{
-		ShowWindow(m_hWnd, SW_HIDE);
+		this->Show(SW_HIDE);
 	}
 
 	void Window::Close() const
@@ -77,7 +133,7 @@ namespace Zeal::Reyal
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		//TODO: Change to something more appropriate (needed so cpu doesn't go up to 30% usage when using program)
+		//TODO: Change to something more appropriate (needed so cpu doesn't go up to 30% usage when running)
 		Sleep(1);
 		return false;
 	}

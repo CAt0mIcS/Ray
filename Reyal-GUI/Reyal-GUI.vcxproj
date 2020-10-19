@@ -179,6 +179,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Reyal\Input\Keyboard.h" />
+    <ClInclude Include="src\Reyal\Input\Mouse.h" />
     <ClInclude Include="src\Reyal\CoreConfig.h" />
     <ClInclude Include="src\Reyal\Debug\Instrumentor.h" />
     <ClInclude Include="src\Reyal\Layer.h" />
@@ -195,6 +197,8 @@
     <ClInclude Include="src\Reyal\Widgets\ZWidget.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Reyal\Input\Keyboard.cpp" />
+    <ClCompile Include="src\Reyal\Input\Mouse.cpp" />
     <ClCompile Include="src\Reyal\Debug\Instrumentor.cpp" />
     <ClCompile Include="src\Reyal\Layer.cpp" />
     <ClCompile Include="src\Reyal\Debug\ReyalLogger.cpp" />

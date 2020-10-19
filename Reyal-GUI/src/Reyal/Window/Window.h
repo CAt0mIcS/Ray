@@ -2,6 +2,9 @@
 
 #include "BaseWindow.h"
 
+#include "Reyal/Input/Keyboard.h"
+#include "Reyal/Input/Mouse.h"
+
 
 namespace Zeal::Reyal
 {
@@ -68,6 +71,10 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <returns></returns>
 		int GetExitCode() const { return m_ExitCode; }
+
+	public:
+		Keyboard Keyboard;
+		Mouse Mouse;
 
 	private:
 		bool m_IsMainWindow;
