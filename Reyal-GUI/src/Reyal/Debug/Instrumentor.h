@@ -2,12 +2,14 @@
 
 #include "Reyal/CoreConfig.h"
 
-#if ZL_ENABLE_PROFILING
-
 // class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients
 #pragma warning(disable : 4564)
 // class 'std::chrono::time_point<std::chrono::steady_clock,std::chrono::nanoseconds>' needs to have dll-interface to be used by clients
 #pragma warning(disable : 4251)
+
+
+#if ZL_ENABLE_PROFILING
+
 
 #include "RlBase.h"
 

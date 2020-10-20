@@ -24,12 +24,12 @@ namespace Zeal::Reyal
 		return m_IsRightPressed;
 	}
 	
-	const Util::ZPoint& Mouse::GetMousePos() const
+	const Util::Point& Mouse::GetMousePos() const
 	{
 		return m_MousePos;
 	}
 
-	void Mouse::SetMousePos(const Util::ZPoint& mousePos)
+	void Mouse::SetMousePos(const Util::Point& mousePos)
 	{
 		m_MousePos = mousePos;
 	}

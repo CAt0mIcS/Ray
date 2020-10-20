@@ -4,6 +4,8 @@
 #include "RlWin.h"
 
 #include <Util/ZRect.h>
+#include <Util/ZPoint.h>
+#include <Util/ZSize.h>
 
 
 namespace Zeal::Reyal
@@ -23,6 +25,12 @@ namespace Zeal::Reyal
 			return GetID() == other.GetID();
 		}
 
+		void MoveBy(const Util::Point& pos);
+		void MoveTo(const Util::Point& pos);
+
+		void ResizeBy(const Util::Size& size);
+		void ResizeTo(const Util::Size& size);
+
 	protected:
 		Widget(_In_opt_ Widget* parent = nullptr);
 
@@ -35,6 +43,7 @@ namespace Zeal::Reyal
 		Util::ZRect m_Rect;
 
 		std::vector<Widget*> m_Children;
+		D2D1::Matrix3x2F m_Matrix;
 
 	private:
 		static uint32_t s_NextID;

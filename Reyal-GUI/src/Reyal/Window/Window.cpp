@@ -19,7 +19,7 @@ namespace Zeal::Reyal
 		ZL_PROFILE_FUNCTION();
 
 		auto rnd = Util::GenerateRandomToken<std::wstring>(5);
-		ZL_LOG_INFO("Creating Window class with name '{0}'", rnd);
+		ZL_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
 		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(windowTitle.data(), rnd.c_str(), WS_OVERLAPPEDWINDOW));
 	}
 
@@ -167,7 +167,7 @@ namespace Zeal::Reyal
 	bool Window::ShouldClose()
 	{
 		MSG msg;
-		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) != 0)
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if (msg.message == WM_QUIT)
 			{

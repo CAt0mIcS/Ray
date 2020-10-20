@@ -168,11 +168,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\utilpch.h" />
+    <ClInclude Include="src\Util\Direct2D.h" />
     <ClInclude Include="src\Util\Random.h" />
     <ClInclude Include="src\Util\TypeConvert.h" />
     <ClInclude Include="src\UtilWin.h" />
     <ClInclude Include="src\Util\ZPoint.h" />
     <ClInclude Include="src\Util\ZRect.h" />
+    <ClInclude Include="src\Util\ZSize.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\utilpch.cpp">
@@ -185,6 +187,7 @@
     <ClCompile Include="src\Util\TypeConvert.cpp" />
     <ClCompile Include="src\Util\ZPoint.cpp" />
     <ClCompile Include="src\Util\ZRect.cpp" />
+    <ClCompile Include="src\Util\ZSize.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

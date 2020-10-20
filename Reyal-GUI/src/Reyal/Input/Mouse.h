@@ -16,15 +16,15 @@ namespace Zeal::Reyal
 		bool IsMiddlePressed() const;
 		bool IsRightPressed() const;
 
-		const Util::ZPoint& GetMousePos() const;
-		void SetMousePos(const Util::ZPoint& mousePos);
+		const Util::Point& GetMousePos() const;
+		void SetMousePos(const Util::Point& mousePos);
 
 	private:
 		bool m_IsLeftPressed;
 		bool m_IsMiddlePressed;
 		bool m_IsRightPressed;
 
-		Util::ZPoint m_MousePos;
+		Util::Point m_MousePos;
 	};
 }
 
