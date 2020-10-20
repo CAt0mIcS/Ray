@@ -5,6 +5,7 @@
 #include "Window/Window.h"
 #include "Layers/LayerStack.h"
 
+
 namespace Zeal::Reyal
 {
 	class Layer;
@@ -37,6 +38,9 @@ namespace Zeal::Reyal
 		/// Virtual Application Deconstructorr
 		/// </summary>
 		virtual ~Application();
+
+	private:
+		bool OnEvent(_In_ ZWidget* receiver, _In_ Event& e);
 
 	protected:
 		Window m_MainWindow;

@@ -10,6 +10,7 @@ namespace Zeal::Reyal
 	Application::Application()
 		: m_MainWindow(L"Title", true), m_LayerStack{}
 	{
+		m_MainWindow.SetEventCallback([this](ZWidget* receiver, Event& e) { return OnEvent(receiver, e); });
 	}
 
 	int Application::Run()
@@ -33,6 +34,11 @@ namespace Zeal::Reyal
 	Application::~Application()
 	{
 		ZL_PROFILE_FUNCTION();
+	}
+	
+	bool Application::OnEvent(ZWidget* receiver, Event& e)
+	{
+		return false;
 	}
 }
 

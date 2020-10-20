@@ -9,6 +9,7 @@
 #include <vector>
 #include <sstream>
 #include <chrono>
+#include <functional>
 #include <memory>
 #include <fstream>
 #include <bitset>

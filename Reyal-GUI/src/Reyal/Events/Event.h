@@ -20,6 +20,8 @@ namespace Zeal::Reyal
 
 		EventType GetType() const { return m_Type; }
 
+		virtual ~Event() = default;
+
 	protected:
 		EventType m_Type;
 	};

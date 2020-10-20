@@ -5,11 +5,21 @@
 #include "Reyal/Input/Keyboard.h"
 #include "Reyal/Input/Mouse.h"
 
-#include "Reyal/Events/EventQueue.h"
+#include <functional>
 
 
 namespace Zeal::Reyal
 {
+	class Event;
+
+	/// <summary>
+	/// Receives all events
+	/// <param name="receiver">Is the Widget which receives the Event</param>
+	/// <param name="e">Is the received Event</param>
+	/// <returns>True if the event was handled by the client, false if the event should be handled by the Window</returns>
+	/// </summary>
+	using EventCallbackFn = std::function<bool(ZWidget* receiver, Event& e)>;
+
 	class RL_API Window : public BaseWindow<Window>
 	{
 	public:
@@ -131,12 +141,20 @@ namespace Zeal::Reyal
 		/// <returns></returns>
 		int GetExitCode() const { return m_ExitCode; }
 
+		/// <summary>
+		/// Sets the function which will receive events
+		/// </summary>
+		/// <typeparam name="F">Is any callable, to EventCallbackFn castable function pointer</typeparam>
+		/// <param name="func">Is the function which will receive all events</param>
+		template<typename F, typename = std::enable_if_t<std::is_invocable_v<F, ZWidget*, Event&>>, typename = std::enable_if_t<std::is_convertible_v<F, EventCallbackFn>>>
+		void SetEventCallback(F&& func) { m_CallbackFunc = func; }
+
 	public:
 		Keyboard Keyboard;
 		Mouse Mouse;
 
 	private:
-		EventQueue m_EventQueue;
+		EventCallbackFn m_CallbackFunc;
 		bool m_IsMainWindow;
 		int m_ExitCode;
 	};
