@@ -11,7 +11,7 @@ namespace Zeal
 		ZL_PROFILE_FUNCTION();
 
 		m_MainWindow.Show();
-		PushLayer(new GUILayer("GUI-Layer"));
+		PushLayer(new GUILayer(L"GUI-Layer"));
 	}
 	
 	Sandbox::~Sandbox()
@@ -22,9 +22,6 @@ namespace Zeal
 	void Sandbox::OnEvent(Reyal::Widget* receiver, Reyal::Event& e)
 	{
 		ZL_PROFILE_FUNCTION();
-
-		std::cout << m_MainWindow.GetRect() << '\n';
-
 
 	}
 

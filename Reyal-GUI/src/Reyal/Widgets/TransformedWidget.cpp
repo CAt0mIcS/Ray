@@ -25,7 +25,7 @@ namespace Zeal::Reyal
 	}
 
 	TransformedWidget::TransformedWidget(const std::wstring_view name, _In_opt_ Widget* parent)
-		: Widget(name, parent)
+		: PositionedWidget(name, parent)
 	{
 	}
 }

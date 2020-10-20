@@ -5,8 +5,8 @@
 
 namespace Zeal::Reyal
 {
-    Layer::Layer(const std::string_view name)
-        : m_Name(name)
+    Layer::Layer(const std::wstring_view name, _In_opt_ Widget* parent)
+        : Widget(name, parent), m_Name(name)
     {
     }
 }

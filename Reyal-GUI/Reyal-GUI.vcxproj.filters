@@ -75,13 +75,16 @@
     <ClInclude Include="src\Reyal\Events\MouseEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Reyal\Widgets\ZWidget.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Reyal\Widgets\TransformedWidget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Widgets\VectorizedWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Widgets\PositionedWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Widgets\ZWidget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,13 +119,16 @@
     <ClCompile Include="src\Reyal\Layers\LayerStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Reyal\Widgets\TransformedWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Widgets\VectorizedWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Widgets\PositionedWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

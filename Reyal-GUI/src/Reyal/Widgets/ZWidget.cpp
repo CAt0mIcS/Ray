@@ -1,9 +1,6 @@
 #include "rlpch.h"
 #include "ZWidget.h"
 
-#include "Reyal/Events/ApplicationEvent.h"
-#include "Reyal/Events/KeyboardEvent.h"
-#include "Reyal/Events/MouseEvent.h"
 
 
 namespace Zeal::Reyal
@@ -32,7 +29,7 @@ namespace Zeal::Reyal
         : m_Parent(parent), m_Name(name)
     {
     }
-    
+
     Widget* Widget::GetEventReceiver(const Event& e)
     {
         Widget* receiver = nullptr;
@@ -49,3 +46,4 @@ namespace Zeal::Reyal
         return receiver;
     }
 }
+

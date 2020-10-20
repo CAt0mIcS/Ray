@@ -36,31 +36,7 @@ namespace Zeal::Reyal
 		/// <param name="child">Is the child to add</param>
 		/// <returns>The added child</returns>
 		template<typename T, typename = std::enable_if_t<std::is_convertible_v<T*, Widget*>>>
-		T* AddChild(_In_ Widget* child);
-	
-		/// <summary>
-		/// Moves the position of the Widget by the specified values
-		/// </summary>
-		/// <param name="pos">Is the position to add to it's current one</param>
-		virtual void MoveBy(const Util::Point& pos) = 0;
-
-		/// <summary>
-		/// Moves the position of the Widget to the specified value
-		/// </summary>
-		/// <param name="pos">Is the new position of this Widget</param>
-		virtual void MoveTo(const Util::Point& pos) = 0;
-
-		/// <summary>
-		/// Resizes the Widget by the specified value
-		/// </summary>
-		/// <param name="size">Is the value added to the Widget's current size</param>
-		virtual void ResizeBy(const Util::Size& size) = 0;
-
-		/// <summary>
-		/// Resizes the Widget to the specified value
-		/// </summary>
-		/// <param name="size">Is the new size of this Widget</param>
-		virtual void ResizeTo(const Util::Size& size) = 0;
+		T* AddChild(_In_ T* child);
 
 		/// <summary>
 		/// Comparison operator
@@ -94,10 +70,10 @@ namespace Zeal::Reyal
 		const std::wstring m_Name;
 		std::vector<Widget*> m_Children;
 	};
-	
+
 
 	template<typename T, typename>
-	inline T* Widget::AddChild(Widget* child)
+	inline T* Widget::AddChild(T* child)
 	{
 		return (T*)m_Children.emplace_back(child);
 	}

@@ -331,6 +331,21 @@ namespace Zeal::Log
 		}
 
 		/// <summary>
+		/// Inserts one argument into the string, this function overload is called when the argument type is a std::wstring_view
+		/// </summary>
+		/// <typeparam name="T">Is any list of arguments that have a output operator defined</typeparam>
+		/// <param name="message">Is the string to insert the argument into</param>
+		/// <param name="arg">Is the argument to insert</param>
+		/// <param name="argCount">Is the current number where the argument will be inserted ({0} = 0, {3} = 3, ...)</param>
+		template<typename T>
+		void SerializeStringArg(std::string& message, T&& arg, int& argCount,
+			typename std::enable_if_t<std::is_same_v<BaseRefType<T>, std::wstring_view>>* = 0
+		)
+		{
+			WideCharSerialize(message, arg, argCount);
+		}
+
+		/// <summary>
 		/// Inserts one argument into the string, this function is called for any type that is not std::wstring and not castable to std::wstring
 		/// </summary>
 		/// <typeparam name="T">Is any list of arguments that have a output operator defined</typeparam>
@@ -340,7 +355,8 @@ namespace Zeal::Log
 		template<typename T>
 		void SerializeStringArg(std::string& message, T&& arg, int& argCount,
 			typename std::enable_if_t<!std::is_same_v<BaseRefType<T>, std::wstring>>* = 0,
-			typename std::enable_if_t<!std::is_convertible_v<T, std::wstring>>* = 0
+			typename std::enable_if_t<!std::is_convertible_v<T, std::wstring>>* = 0,
+			typename std::enable_if_t<!std::is_same_v<BaseRefType<T>, std::wstring_view>>* = 0
 		)
 		{
 			MultiByteSerialize(message, arg, argCount);

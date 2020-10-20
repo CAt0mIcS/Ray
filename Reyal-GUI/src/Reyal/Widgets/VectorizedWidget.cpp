@@ -29,7 +29,7 @@ namespace Zeal::Reyal
 	}
 
 	VectorizedWidget::VectorizedWidget(const std::wstring_view name, Widget* parent)
-		: Widget(name, parent)
+		: PositionedWidget(name, parent)
 	{
 
 	}

@@ -190,7 +190,7 @@
     <ClInclude Include="src\Reyal\Debug\Instrumentor.h" />
     <ClInclude Include="src\Reyal\Layers\Layer.h" />
     <ClInclude Include="src\Reyal\Debug\ReyalLogger.h" />
-    <ClInclude Include="src\Reyal\Widgets\ZWidget.h" />
+    <ClInclude Include="src\Reyal\Widgets\PositionedWidget.h" />
     <ClInclude Include="src\Reyal\Window\BaseWindow.h" />
     <ClInclude Include="src\Reyal\Exception.h" />
     <ClInclude Include="src\Reyal\Application.h" />
@@ -202,6 +202,7 @@
     <ClInclude Include="src\rlpch.h" />
     <ClInclude Include="src\Reyal\Widgets\TransformedWidget.h" />
     <ClInclude Include="src\Reyal\Widgets\VectorizedWidget.h" />
+    <ClInclude Include="src\Reyal\Widgets\ZWidget.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Reyal\Layers\LayerStack.cpp" />
@@ -212,7 +213,7 @@
     <ClCompile Include="src\Reyal\Debug\ReyalLogger.cpp" />
     <ClCompile Include="src\Reyal\Exception.cpp" />
     <ClCompile Include="src\Reyal\Application.cpp" />
-    <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp" />
+    <ClCompile Include="src\Reyal\Widgets\PositionedWidget.cpp" />
     <ClCompile Include="src\Reyal\Window\Window.cpp" />
     <ClCompile Include="src\rlpch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -222,6 +223,7 @@
     </ClCompile>
     <ClCompile Include="src\Reyal\Widgets\TransformedWidget.cpp" />
     <ClCompile Include="src\Reyal\Widgets\VectorizedWidget.cpp" />
+    <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Util\Util.vcxproj">

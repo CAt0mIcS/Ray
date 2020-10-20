@@ -1,14 +1,14 @@
 #pragma once
 
 #include "RlBase.h"
-#include "ZWidget.h"
+#include "PositionedWidget.h"
 
 #include <Util/ZRect.h>
 
 
 namespace Zeal::Reyal
 {
-	class RL_API VectorizedWidget : public Widget
+	class RL_API VectorizedWidget : public PositionedWidget
 	{
 	public:
 		/// <summary>
