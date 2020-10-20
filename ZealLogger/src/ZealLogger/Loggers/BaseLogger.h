@@ -61,7 +61,7 @@ namespace Zeal::Log
 		/// <param name="str">Is the initial string</param>
 		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
-		void Trace(const std::string& str, Args&&... args)
+		void Trace(const std::string_view str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Trace))
 				return;
@@ -76,7 +76,7 @@ namespace Zeal::Log
 		/// <param name="str">Is the initial string</param>
 		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
-		void Debug(const std::string& str, Args&&... args)
+		void Debug(const std::string_view str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
@@ -91,7 +91,7 @@ namespace Zeal::Log
 		/// <param name="str">Is the initial string</param>
 		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
-		void Info(const std::string& str, Args&&... args)
+		void Info(const std::string_view str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Information))
 				return;
@@ -106,7 +106,7 @@ namespace Zeal::Log
 		/// <param name="str">Is the initial string</param>
 		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
-		void Warn(const std::string& str, Args&&... args)
+		void Warn(const std::string_view str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Warning))
 				return;
@@ -121,7 +121,7 @@ namespace Zeal::Log
 		/// <param name="str">Is the initial string</param>
 		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
-		void Error(const std::string& str, Args&&... args)
+		void Error(const std::string_view str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Error))
 				return;
@@ -136,7 +136,7 @@ namespace Zeal::Log
 		/// <param name="str">Is the initial string</param>
 		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
-		void Critical(const std::string& str, Args&&... args)
+		void Critical(const std::string_view str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Critical))
 				return;
@@ -152,7 +152,7 @@ namespace Zeal::Log
 		/// <param name="str">Is the initial string</param>
 		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
-		void Trace(const std::wstring& str, Args&&... args)
+		void Trace(const std::wstring_view str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Trace))
 				return;
@@ -167,7 +167,7 @@ namespace Zeal::Log
 		/// <param name="str">Is the initial string</param>
 		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
-		void Debug(const std::wstring& str, Args&&... args)
+		void Debug(const std::wstring_view str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Debug))
 				return;
@@ -182,7 +182,7 @@ namespace Zeal::Log
 		/// <param name="str">Is the initial string</param>
 		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
-		void Info(const std::wstring& str, Args&&... args)
+		void Info(const std::wstring_view str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Information))
 				return;
@@ -197,7 +197,7 @@ namespace Zeal::Log
 		/// <param name="str">Is the initial string</param>
 		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
-		void Warn(const std::wstring& str, Args&&... args)
+		void Warn(const std::wstring_view str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Warning))
 				return;
@@ -212,7 +212,7 @@ namespace Zeal::Log
 		/// <param name="str">Is the initial string</param>
 		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
-		void Error(const std::wstring& str, Args&&... args)
+		void Error(const std::wstring_view str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Error))
 				return;
@@ -227,7 +227,7 @@ namespace Zeal::Log
 		/// <param name="str">Is the initial string</param>
 		/// <param name="...args">Are arguments to insert into the string</param>
 		template<typename... Args>
-		void Critical(const std::wstring& str, Args&&... args)
+		void Critical(const std::wstring_view str, Args&&... args)
 		{
 			if (!ShouldLog(LogMessageType::Critical))
 				return;
@@ -240,7 +240,7 @@ namespace Zeal::Log
 		/// Writes message to output buffer
 		/// </summary>
 		/// <param name="message">Is the message to write</param>
-		virtual void Log(const std::string& message) = 0;
+		virtual void Log(const std::string_view message) = 0;
 
 		/// <summary>
 		/// Base Logger Constructor
@@ -412,9 +412,9 @@ namespace Zeal::Log
 		/// <param name="...args">Are the arguments to insert</param>
 		/// <returns>The formatted string ready for logging</returns>
 		template<typename... Args>
-		std::string FormatMessage(const std::string& str, LogMessageType msgLvl, Args&&... args)
+		std::string FormatMessage(const std::string_view str, LogMessageType msgLvl, Args&&... args)
 		{
-			std::string msg = SerializeString(str, args...);
+			std::string msg = SerializeString(str.data(), args...);
 
 			for (auto formatter : m_Formatters)
 			{

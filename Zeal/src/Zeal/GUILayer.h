@@ -8,7 +8,7 @@ namespace Zeal
 	class GUILayer : public Reyal::Layer
 	{
 	public:
-		GUILayer() = default;
+		GUILayer(const std::string_view name);
 
 		virtual void OnUpdate() override;
 	};

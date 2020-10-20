@@ -5,6 +5,9 @@
 
 namespace Zeal::Reyal
 {
-
+    Layer::Layer(const std::string_view name)
+        : m_Name(name)
+    {
+    }
 }
 

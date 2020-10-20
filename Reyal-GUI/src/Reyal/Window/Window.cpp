@@ -9,18 +9,19 @@
 
 namespace Zeal::Reyal
 {
-	Window::Window(const std::wstring& windowTitle, bool isMainWindow)
+	Window::Window(const std::wstring_view windowTitle, bool isMainWindow)
 		: m_IsMainWindow(isMainWindow), m_ExitCode(0)
 	{
 		ZL_PROFILE_FUNCTION();
 
 		auto rnd = Util::GenerateRandomToken<std::wstring>(5);
 		ZL_LOG_INFO("Creating Window class with name '{0}'", rnd);
-		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(windowTitle.c_str(), rnd.c_str(), WS_OVERLAPPEDWINDOW));
+		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(windowTitle.data(), rnd.c_str(), WS_OVERLAPPEDWINDOW));
 	}
 
 	Window::~Window()
 	{
+		ZL_PROFILE_FUNCTION();
 		Close();
 	}
 
@@ -101,21 +102,25 @@ namespace Zeal::Reyal
 	
 	void Window::Show(_In_opt_ ShowCommand cmdShow) const
 	{
+		ZL_PROFILE_FUNCTION();
 		ShowWindow(m_hWnd, (int)cmdShow);
 	}
 
 	void Window::Hide() const
 	{
+		ZL_PROFILE_FUNCTION();
 		this->Show(ShowCommand::Hide);
 	}
 
 	void Window::Close() const
 	{
+		ZL_PROFILE_FUNCTION();
 		SendMessage(m_hWnd, WM_CLOSE, 0, 0);
 	}
 
 	bool Window::IsOpen() const
 	{
+		ZL_PROFILE_FUNCTION();
 		return IsWindowVisible(m_hWnd);
 	}
 

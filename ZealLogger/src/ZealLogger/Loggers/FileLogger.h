@@ -24,7 +24,7 @@ namespace Zeal::Log
 		/// File Logger Constructor
 		/// </summary>
 		/// <param name="filepath">Is the path to the log file. Note: The file will be cleared when the logger starts</param>
-		FileLogger(const std::string& filepath)
+		FileLogger(const std::string_view filepath)
 			: m_FilePath(filepath)
 		{
 
@@ -52,7 +52,7 @@ namespace Zeal::Log
 		/// This should only be used if the logger was created with the default Constructor to set the path once
 		/// </summary>
 		/// <param name="filepath"></param>
-		void SetFilePath(const std::string& filepath) { m_FilePath = filepath; }
+		void SetFilePath(const std::string_view filepath) { m_FilePath = filepath; }
 
 		/// <summary>
 		/// Opens the FileStream
@@ -101,7 +101,7 @@ namespace Zeal::Log
 		/// Writes the message to the output stream
 		/// </summary>
 		/// <param name="message">Is the message to output</param>
-		virtual void Log(const std::string& message) override
+		virtual void Log(const std::string_view message) override
 		{
 #ifndef ZL_LOG_NON_THREAD_SAVE
 

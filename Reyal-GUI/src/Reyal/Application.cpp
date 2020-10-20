@@ -36,7 +36,7 @@ namespace Zeal::Reyal
 		ZL_PROFILE_FUNCTION();
 	}
 	
-	bool Application::OnEvent(ZWidget* receiver, Event& e)
+	bool Application::OnEvent(_In_ ZWidget* receiver, _In_ Event& e)
 	{
 		return false;
 	}

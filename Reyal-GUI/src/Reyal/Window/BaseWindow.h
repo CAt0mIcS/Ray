@@ -130,7 +130,7 @@ namespace Zeal::Reyal
 		/// Getter for the window class name of this window
 		/// </summary>
 		/// <returns>The window class name</returns>
-		const std::wstring& GetWindowClassName() const { return m_ClassName; }
+		const std::wstring_view GetWindowClassName() const { return m_ClassName; }
 
 	protected:
 		/// <summary>

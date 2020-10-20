@@ -85,7 +85,7 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <param name="windowTitle">Is the window title</param>
 		/// <param name="isMainWindow">Specifies whether this window is the main one which will exit the application when closed</param>
-		Window(const std::wstring& windowTitle, bool isMainWindow = false);
+		Window(const std::wstring_view windowTitle, bool isMainWindow = false);
 
 		/// <summary>
 		/// Window Deconstructor

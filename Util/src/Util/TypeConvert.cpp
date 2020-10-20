@@ -4,24 +4,24 @@
 
 namespace Zeal::Util
 {
-	std::wstring MultiByteToWideChar(const std::string& str)
+	std::wstring MultiByteToWideChar(const std::string_view str)
 	{
-		auto size = ::MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.c_str(), -1, nullptr, 0);
+		auto size = ::MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.data(), -1, nullptr, 0);
 
 		std::wstring buff;
 		buff.resize(size);
-		::MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.c_str(), -1, buff.data(), size);
+		::MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.data(), -1, buff.data(), size);
 
 		return buff;
 	}
 
-	std::string WideCharToMultiByte(const std::wstring& str)
+	std::string WideCharToMultiByte(const std::wstring_view str)
 	{
-		auto size = ::WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.c_str(), -1, nullptr, 0, NULL, NULL);
+		auto size = ::WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.data(), -1, nullptr, 0, NULL, NULL);
 
 		std::string buff;
 		buff.resize(size);
-		::WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.c_str(), -1, buff.data(), size, NULL, NULL);
+		::WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.data(), -1, buff.data(), size, NULL, NULL);
 
 		return buff;
 	}

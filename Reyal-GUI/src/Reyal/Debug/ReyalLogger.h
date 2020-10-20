@@ -28,7 +28,7 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <param name="filepath">Is the path to a log file</param>
 		/// <param name="logLvl">Is the log level</param>
-		static void Init(const std::string& filepath, Log::LogLevel logLvl);
+		static void Init(const std::string_view filepath, Log::LogLevel logLvl);
 
 	private:
 		static std::shared_ptr<Log::FileLogger> s_FileLogger;

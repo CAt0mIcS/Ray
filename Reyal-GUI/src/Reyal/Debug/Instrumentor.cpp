@@ -8,7 +8,7 @@
 
 namespace Zeal::Reyal
 {
-	void Instrumentor::BeginSession(const std::string name, const std::string& filepath)
+	void Instrumentor::BeginSession(const std::string_view name, const std::string_view filepath)
 	{
 		std::scoped_lock lock(m_Mutex);
 
@@ -20,10 +20,10 @@ namespace Zeal::Reyal
 			InternalEndSession();
 		}
 
-		m_Writer.open(filepath);
+		m_Writer.open(filepath.data());
 		if (m_Writer.is_open())
 		{
-			m_CurrentSession = new Session({ name });
+			m_CurrentSession = new Session{name.data()};
 			WriteHeader();
 		}
 		else

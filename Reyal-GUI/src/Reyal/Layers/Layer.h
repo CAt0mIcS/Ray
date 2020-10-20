@@ -8,9 +8,12 @@ namespace Zeal::Reyal
 	class RL_API Layer
 	{
 	public:
-		Layer() = default;
+		Layer(const std::string_view name);
 
 		virtual void OnUpdate() = 0;
+
+	private:
+		std::string m_Name;
 	};
 }
 

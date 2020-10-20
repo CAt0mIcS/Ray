@@ -9,7 +9,7 @@ namespace Zeal::Reyal
 
 	std::shared_ptr<Log::FileLogger> Logger::s_FileLogger = nullptr;
 
-	void Logger::Init(const std::string& filepath, Log::LogLevel logLvl)
+	void Logger::Init(const std::string_view filepath, Log::LogLevel logLvl)
 	{
 		// TODO: Add assert instead of if-statement
 		if (!s_FileLogger)
