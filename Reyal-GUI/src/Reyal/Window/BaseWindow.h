@@ -6,13 +6,12 @@
 #include <stdint.h>
 
 #include "Reyal/Debug/Instrumentor.h"
-#include "Reyal/Widgets/ZWidget.h"
 
 
 namespace Zeal::Reyal
 {
 	template<typename DERIVED_TYPE>
-	class RL_API BaseWindow : public Widget
+	class RL_API BaseWindow
 	{
 	public:
 		/// <summary>

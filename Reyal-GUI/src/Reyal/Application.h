@@ -39,8 +39,7 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <param name="receiver">Is the window which received the event</param>
 		/// <param name="e">Is the received event</param>
-		/// <returns>True if the event was handled, false otherwise</returns>
-		virtual bool OnEvent(_In_ Widget* receiver, _In_ Event& e) = 0;
+		virtual void OnEvent(_In_ Widget* receiver, _In_ Event& e) = 0;
 
 		/// <summary>
 		/// Virtual Application Deconstructorr

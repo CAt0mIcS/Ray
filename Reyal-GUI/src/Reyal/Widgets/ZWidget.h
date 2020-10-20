@@ -1,9 +1,10 @@
 #pragma once
 
 #include "RlBase.h"
-#include "RlWin.h"
 
-#include <Util/ZRect.h>
+#include <sal.h>
+#include <vector>
+
 #include <Util/ZPoint.h>
 #include <Util/ZSize.h>
 
@@ -15,39 +16,37 @@ namespace Zeal::Reyal
 	class RL_API Widget
 	{
 	public:
+		const std::wstring_view GetName() const { return m_Name; }
 
-		const Util::ZRect& GetRect() const { return m_Rect; }
+		Widget* FindChild(const std::wstring_view name);
+		
+		bool operator==(const Widget& other);
 
-		uint32_t GetID() const { return m_ID; }
+		template<typename T>
+		T* AddChild(_In_ Widget* child);
+	
+		virtual void MoveBy(const Util::Point& pos) = 0;
+		virtual void MoveTo(const Util::Point& pos) = 0;
+		virtual void ResizeBy(const Util::Size& size) = 0;
+		virtual void ResizeTo(const Util::Size& size) = 0;
 
-		bool operator==(_In_ const Widget& other)
-		{
-			return GetID() == other.GetID();
-		}
-
-		void MoveBy(const Util::Point& pos);
-		void MoveTo(const Util::Point& pos);
-
-		void ResizeBy(const Util::Size& size);
-		void ResizeTo(const Util::Size& size);
-
+		virtual ~Widget();
 	protected:
-		Widget(_In_opt_ Widget* parent = nullptr);
+		Widget(const std::wstring_view name, _In_opt_ Widget* parent = nullptr);
 
 		Widget* GetEventReceiver(const Event& e);
 
 	protected:
-		uint32_t m_ID;
 		Widget* m_Parent;
-
-		Util::ZRect m_Rect;
-
+		const std::wstring m_Name;
 		std::vector<Widget*> m_Children;
-		D2D1::Matrix3x2F m_Matrix;
-
-	private:
-		static uint32_t s_NextID;
 	};
+	
+	template<typename T>
+	inline T* Widget::AddChild(Widget* child)
+	{
+		return (T*)m_Children.emplace_back(child);
+	}
 }
 
 

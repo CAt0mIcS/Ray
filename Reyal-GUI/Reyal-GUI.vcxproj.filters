@@ -78,6 +78,12 @@
     <ClInclude Include="src\Reyal\Widgets\ZWidget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Reyal\Widgets\TransformedWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Widgets\VectorizedWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rlpch.cpp">
@@ -111,6 +117,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Widgets\TransformedWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Widgets\VectorizedWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

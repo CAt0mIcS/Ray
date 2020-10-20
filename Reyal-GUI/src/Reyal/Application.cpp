@@ -10,7 +10,7 @@
 namespace Zeal::Reyal
 {
 	Application::Application()
-		: m_MainWindow(L"Title", true), m_LayerStack{}
+		: m_MainWindow(L"MainWindow", L"Title", nullptr, true), m_LayerStack{}
 	{
 		m_MainWindow.SetEventCallback([this](Widget* receiver, Event& e) { return OnEventReceived(receiver, e); });
 	}

@@ -24,7 +24,7 @@ namespace Zeal
 		/// <param name="receiver">Is the window which receives the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
-		virtual bool OnEvent(Reyal::Widget* receiver, Reyal::Event& e);
+		virtual void OnEvent(Reyal::Widget* receiver, Reyal::Event& e);
 
 	};
 

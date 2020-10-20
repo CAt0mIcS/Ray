@@ -8,32 +8,29 @@
 
 namespace Zeal::Reyal
 {
-    uint32_t Widget::s_NextID = 0;
-
-    void Widget::MoveBy(const Util::Point& pos)
+    bool Widget::operator==(const Widget& other)
     {
-        m_Matrix = m_Matrix * D2D1::Matrix3x2F::Translation(pos);
+        return GetName() == other.GetName();
     }
 
-    void Widget::MoveTo(const Util::Point& pos)
+    Widget* Widget::FindChild(const std::wstring_view name)
     {
-        m_Matrix = D2D1::Matrix3x2F::Translation(pos);
+        for (auto* child : m_Children)
+        {
+            if (child->GetName() == name)
+                return child;
+        }
+        return nullptr;
     }
 
-    void Widget::ResizeBy(const Util::Size& size)
+    Widget::~Widget()
     {
-        m_Matrix = m_Matrix * D2D1::Matrix3x2F::Scale(size);
+        //TODO: Delete children
     }
 
-    void Widget::ResizeTo(const Util::Size& size)
+    Widget::Widget(const std::wstring_view name, _In_opt_ Widget* parent)
+        : m_Parent(parent), m_Name(name)
     {
-        m_Matrix = D2D1::Matrix3x2F::Scale(size);
-    }
-
-    Widget::Widget(_In_opt_ Widget* parent)
-        : m_Parent(parent), m_ID(s_NextID), m_Matrix{}
-    {
-        ++s_NextID;
     }
     
     Widget* Widget::GetEventReceiver(const Event& e)

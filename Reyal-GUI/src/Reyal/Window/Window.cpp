@@ -13,8 +13,8 @@
 
 namespace Zeal::Reyal
 {
-	Window::Window(const std::wstring_view windowTitle, bool isMainWindow)
-		: m_IsMainWindow(isMainWindow), m_ExitCode(0)
+	Window::Window(const std::wstring_view name, const std::wstring_view windowTitle, _In_opt_ Widget* parent, bool isMainWindow)
+		: VectorizedWidget(name, parent), m_IsMainWindow(isMainWindow), m_ExitCode(0)
 	{
 		ZL_PROFILE_FUNCTION();
 
@@ -29,7 +29,7 @@ namespace Zeal::Reyal
 		Close();
 	}
 
-	LRESULT Window::HandleMessage(_In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
+	LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
@@ -125,7 +125,17 @@ namespace Zeal::Reyal
 		}
 		case WM_SIZE:
 		{
+			ResizeTo({ (float)LOWORD(lParam), (float)HIWORD(lParam) });
+
 			WindowResizeEvent e;
+			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			return 0;
+		}
+		case WM_MOVE:
+		{
+			MoveTo({ (float)LOWORD(lParam), (float)HIWORD(lParam) });
+
+			WindowMoveEvent e;
 			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
 			return 0;
 		}
@@ -140,7 +150,7 @@ namespace Zeal::Reyal
 		return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
 	
-	void Window::Show(_In_opt_ ShowCommand cmdShow) const
+	void Window::Show(ShowCommand cmdShow) const
 	{
 		ZL_PROFILE_FUNCTION();
 		ShowWindow(m_hWnd, (int)cmdShow);

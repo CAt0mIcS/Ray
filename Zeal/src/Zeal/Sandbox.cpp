@@ -19,10 +19,13 @@ namespace Zeal
 		ZL_PROFILE_FUNCTION();
 	}
 
-	bool Sandbox::OnEvent(Reyal::Widget* receiver, Reyal::Event& e)
+	void Sandbox::OnEvent(Reyal::Widget* receiver, Reyal::Event& e)
 	{
 		ZL_PROFILE_FUNCTION();
-		return false;
+
+		std::cout << m_MainWindow.GetRect() << '\n';
+
+
 	}
-	
+
 }

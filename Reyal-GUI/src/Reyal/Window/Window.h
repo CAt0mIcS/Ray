@@ -5,6 +5,8 @@
 #include "Reyal/Input/Keyboard.h"
 #include "Reyal/Input/Mouse.h"
 
+#include "Reyal/Widgets/VectorizedWidget.h"
+
 #include <functional>
 
 
@@ -20,7 +22,7 @@ namespace Zeal::Reyal
 	/// </summary>
 	using EventCallbackFn = std::function<bool(Widget* receiver, Event& e)>;
 
-	class RL_API Window : public BaseWindow<Window>
+	class RL_API Window : public BaseWindow<Window>, public VectorizedWidget
 	{
 	public:
 		/// <summary>
@@ -83,9 +85,11 @@ namespace Zeal::Reyal
 		/// <summary>
 		/// Window Constructor
 		/// </summary>
+		/// <param name="name">Is the unique name of the window</param>
 		/// <param name="windowTitle">Is the window title</param>
+		/// <param name="parent">Is the parent of this window</param>
 		/// <param name="isMainWindow">Specifies whether this window is the main one which will exit the application when closed</param>
-		Window(const std::wstring_view windowTitle, bool isMainWindow = false);
+		Window(const std::wstring_view name, const std::wstring_view windowTitle, _In_opt_ Widget* parent = nullptr, bool isMainWindow = false);
 
 		/// <summary>
 		/// Window Deconstructor
@@ -99,7 +103,7 @@ namespace Zeal::Reyal
 		/// <param name="wParam">Is an additional parameter</param>
 		/// <param name="lParam">Is an additional parameter</param>
 		/// <returns>LRESULT code</returns>
-		virtual LRESULT HandleMessage(_In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam) override;
+		virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 
 		/// <summary>
 		/// Checks if this window is the main Window
@@ -111,7 +115,7 @@ namespace Zeal::Reyal
 		/// Shows the window
 		/// </summary>
 		/// <param name="cmdShow">Is a flag to set how the window should be shown</param>
-		void Show(_In_opt_ ShowCommand cmdShow = ShowCommand::Default) const;
+		void Show(ShowCommand cmdShow = ShowCommand::Default) const;
 
 		/// <summary>
 		/// Hides the Window

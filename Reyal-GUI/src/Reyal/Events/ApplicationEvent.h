@@ -16,6 +16,17 @@ namespace Zeal::Reyal
 		RL_DECLARE_TYPE_FN(WindowResizeEvent)
 	};
 
+	class WindowMoveEvent : public Event
+	{
+	public:
+		WindowMoveEvent()
+		{
+
+		}
+
+		RL_DECLARE_TYPE_FN(WindowMoveEvent)
+	};
+
 	class SetCursorEvent : public Event
 	{
 	public:
