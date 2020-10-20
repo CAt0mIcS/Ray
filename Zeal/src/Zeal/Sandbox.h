@@ -18,6 +18,14 @@ namespace Zeal
 		/// </summary>
 		~Sandbox();
 
+		/// <summary>
+		/// Receives all window events (WindowResize, WindowClose, WindowPaint)
+		/// </summary>
+		/// <param name="receiver">Is the window which receives the event</param>
+		/// <param name="e">Is the received event</param>
+		/// <returns>True if the event was handled, false otherwise</returns>
+		virtual bool OnEvent(Reyal::Widget* receiver, Reyal::Event& e);
+
 	};
 
 

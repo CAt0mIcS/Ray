@@ -11,6 +11,7 @@ namespace Zeal
 		GUILayer(const std::string_view name);
 
 		virtual void OnUpdate() override;
+		virtual void OnEvent(Reyal::Widget* receiver, Reyal::Event& e) override;
 	};
 }
 

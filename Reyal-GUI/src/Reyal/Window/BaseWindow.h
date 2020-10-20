@@ -12,7 +12,7 @@
 namespace Zeal::Reyal
 {
 	template<typename DERIVED_TYPE>
-	class RL_API BaseWindow : public ZWidget
+	class RL_API BaseWindow : public Widget
 	{
 	public:
 		/// <summary>

@@ -35,12 +35,26 @@ namespace Zeal::Reyal
 		void PushLayer(_In_ Layer* layer);
 
 		/// <summary>
+		/// Called if any window itself received an event
+		/// </summary>
+		/// <param name="receiver">Is the window which received the event</param>
+		/// <param name="e">Is the received event</param>
+		/// <returns>True if the event was handled, false otherwise</returns>
+		virtual bool OnEvent(_In_ Widget* receiver, _In_ Event& e) = 0;
+
+		/// <summary>
 		/// Virtual Application Deconstructorr
 		/// </summary>
 		virtual ~Application();
 
 	private:
-		bool OnEvent(_In_ ZWidget* receiver, _In_ Event& e);
+		/// <summary>
+		/// Receives all events from all Windows, dispatches them to the correct Layer
+		/// </summary>
+		/// <param name="receiver">Is the Widget that received the event</param>
+		/// <param name="e">Is the received event</param>
+		/// <returns>True if the event was handled, false otherwise</returns>
+		bool OnEventReceived(_In_ Widget* receiver, _In_ Event& e);
 
 	protected:
 		Window m_MainWindow;

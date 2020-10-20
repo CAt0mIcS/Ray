@@ -14,11 +14,11 @@ namespace Zeal::Reyal
 
 	/// <summary>
 	/// Receives all events
-	/// <param name="receiver">Is the Widget which receives the Event</param>
+	/// <param name="receiver">Is the Widget that received the event</param>
 	/// <param name="e">Is the received Event</param>
 	/// <returns>True if the event was handled by the client, false if the event should be handled by the Window</returns>
 	/// </summary>
-	using EventCallbackFn = std::function<bool(ZWidget* receiver, Event& e)>;
+	using EventCallbackFn = std::function<bool(Widget* receiver, Event& e)>;
 
 	class RL_API Window : public BaseWindow<Window>
 	{
@@ -146,7 +146,7 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <typeparam name="F">Is any callable, to EventCallbackFn castable function pointer</typeparam>
 		/// <param name="func">Is the function which will receive all events</param>
-		template<typename F, typename = std::enable_if_t<std::is_invocable_v<F, ZWidget*, Event&>>, typename = std::enable_if_t<std::is_convertible_v<F, EventCallbackFn>>>
+		template<typename F, typename = std::enable_if_t<std::is_invocable_v<F, Widget*, Event&>>, typename = std::enable_if_t<std::is_convertible_v<F, EventCallbackFn>>>
 		void SetEventCallback(F&& func) { m_CallbackFunc = func; }
 
 	public:

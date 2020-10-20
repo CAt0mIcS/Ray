@@ -2,6 +2,12 @@
 
 #include <cmath>
 
+namespace std
+{
+	template <class Elem, class Traits>
+	class basic_ostream;
+}
+
 #if 0
 
 

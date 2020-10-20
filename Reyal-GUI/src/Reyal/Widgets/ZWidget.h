@@ -8,7 +8,9 @@
 
 namespace Zeal::Reyal
 {
-	class RL_API ZWidget
+	class Event;
+
+	class RL_API Widget
 	{
 	public:
 
@@ -16,19 +18,23 @@ namespace Zeal::Reyal
 
 		uint32_t GetID() const { return m_ID; }
 
-		bool operator==(_In_ const ZWidget& other)
+		bool operator==(_In_ const Widget& other)
 		{
 			return GetID() == other.GetID();
 		}
 
 	protected:
-		ZWidget(_In_opt_ ZWidget* parent = nullptr);
+		Widget(_In_opt_ Widget* parent = nullptr);
+
+		Widget* GetEventReceiver(const Event& e);
 
 	protected:
 		uint32_t m_ID;
-		ZWidget* m_Parent;
+		Widget* m_Parent;
 
 		Util::ZRect m_Rect;
+
+		std::vector<Widget*> m_Children;
 
 	private:
 		static uint32_t s_NextID;

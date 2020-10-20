@@ -1,7 +1,13 @@
 #pragma once
 
-#if 0
+namespace std
+{
+	template <class Elem, class Traits>
+	class basic_ostream;
+}
 
+
+#if 0
 
 
 namespace Zeal::Util

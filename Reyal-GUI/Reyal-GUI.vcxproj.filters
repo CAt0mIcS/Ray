@@ -51,9 +51,6 @@
     <ClInclude Include="src\Reyal\CoreConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Reyal\Widgets\ZWidget.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Reyal\Input\Mouse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -67,6 +64,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Events\Event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Events\ApplicationEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Events\KeyboardEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Events\MouseEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Widgets\ZWidget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -89,9 +98,6 @@
     <ClCompile Include="src\Reyal\Debug\Instrumentor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Reyal\Input\Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -102,6 +108,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Layers\LayerStack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

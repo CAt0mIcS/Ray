@@ -6,6 +6,10 @@
 
 #include <Util/Random.h>
 
+#include "Reyal/Events/KeyboardEvent.h"
+#include "Reyal/Events/MouseEvent.h"
+#include "Reyal/Events/ApplicationEvent.h"
+
 
 namespace Zeal::Reyal
 {
@@ -41,58 +45,94 @@ namespace Zeal::Reyal
 		}
 		case WM_MOUSEMOVE:
 		{
+			POINTS pt = MAKEPOINTS(lParam);
+			Mouse.SetMousePos({ (float)pt.x, (float)pt.y });
+
+			MouseMoveEvent e;
+			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
 			return 0;
 		}
 		case WM_LBUTTONDOWN:
 		{
+			MouseButtonPressedEvent e(MouseButton::Left);
+			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
+			MouseButtonReleasedEvent e(MouseButton::Left);
+			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
+			MouseButtonPressedEvent e(MouseButton::Middle);
+			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
+			MouseButtonReleasedEvent e(MouseButton::Middle);
+			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
+			MouseButtonPressedEvent e(MouseButton::Right);
+			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
+			MouseButtonReleasedEvent e(MouseButton::Right);
+			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
 			return 0;
 		}
 		case WM_KEYDOWN:
 		{
+			KeyPressedEvent e(wParam);
+			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
 			return 0;
 		}
 		case WM_KEYUP:
 		{
+			KeyReleasedEvent e(wParam);
+			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
 		{
+			int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+
+			if (delta > 0)
+			{
+				MouseWheelUpEvent e(delta);
+				if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			}
+			else if (delta < 0)
+			{
+				MouseWheelDownEvent e(delta);
+				if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			}
+
 			return 0;
 		}
 		case WM_PAINT:
 		{
-			PAINTSTRUCT ps;
-			HDC hDC = BeginPaint(m_hWnd, &ps);
-			FillRect(hDC, &ps.rcPaint, CreateSolidBrush(RGB(35, 37, 40)));
-			EndPaint(m_hWnd, &ps);
+			PaintEvent e;
+			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
 			return 0;
 		}
 		case WM_SIZE:
 		{
+			WindowResizeEvent e;
+			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
 			return 0;
 		}
 		case WM_CLOSE:
 		{
+			WindowCloseEvent e;
+			if (m_CallbackFunc(GetEventReceiver(e), e)) return 0;
 			break;
 		}
 		}

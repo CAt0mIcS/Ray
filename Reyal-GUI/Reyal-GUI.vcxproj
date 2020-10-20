@@ -179,7 +179,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Reyal\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Reyal\Events\Event.h" />
+    <ClInclude Include="src\Reyal\Events\KeyboardEvent.h" />
+    <ClInclude Include="src\Reyal\Events\MouseEvent.h" />
     <ClInclude Include="src\Reyal\Layers\LayerStack.h" />
     <ClInclude Include="src\Reyal\Input\Keyboard.h" />
     <ClInclude Include="src\Reyal\Input\Mouse.h" />

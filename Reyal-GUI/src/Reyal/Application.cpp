@@ -4,13 +4,15 @@
 #include "Reyal/Layers/Layer.h"
 #include "Reyal/Debug/ReyalLogger.h"
 
+#include "Reyal/Events/KeyboardEvent.h"
+
 
 namespace Zeal::Reyal
 {
 	Application::Application()
 		: m_MainWindow(L"Title", true), m_LayerStack{}
 	{
-		m_MainWindow.SetEventCallback([this](ZWidget* receiver, Event& e) { return OnEvent(receiver, e); });
+		m_MainWindow.SetEventCallback([this](Widget* receiver, Event& e) { return OnEventReceived(receiver, e); });
 	}
 
 	int Application::Run()
@@ -36,9 +38,23 @@ namespace Zeal::Reyal
 		ZL_PROFILE_FUNCTION();
 	}
 	
-	bool Application::OnEvent(_In_ ZWidget* receiver, _In_ Event& e)
+	bool Application::OnEventReceived(_In_ Widget* receiver, _In_ Event& e)
 	{
-		return false;
+		ZL_PROFILE_FUNCTION();
+
+		// Dispatch event to every layer
+		for (auto* layer : m_LayerStack)
+		{
+			if (e.Handled)
+				return true;
+			layer->OnEvent(receiver, e);
+		}
+
+		// If no layer handled the event (e.g. WindowCloseEvent) then dispatch it to the Application
+		if (!e.Handled)
+			this->OnEvent(receiver, e);
+
+		return e.Handled;
 	}
 }
 
