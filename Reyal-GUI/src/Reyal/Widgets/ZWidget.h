@@ -34,10 +34,10 @@ namespace Zeal::Reyal
 		/// Adds a new child to this control
 		/// </summary>
 		/// <typeparam name="T">Is any base type of Widget</typeparam>
-		/// <param name="child">Is the child to add</param>
+		/// <param name="parent">Is the parent of the child to add</param>
 		/// <returns>The added child</returns>
 		template<typename T, typename = std::enable_if_t<std::is_convertible_v<T*, Widget*>>>
-		T* AddChild(_In_ T* child);
+		T* AddChild(_In_opt_ Widget* parent = nullptr);
 
 		/// <summary>
 		/// Requests the specific Widget to be redrawn
@@ -80,9 +80,9 @@ namespace Zeal::Reyal
 
 
 	template<typename T, typename>
-	inline T* Widget::AddChild(T* child)
+	inline T* Widget::AddChild(_In_opt_ Widget* parent)
 	{
-		return (T*)m_Children.emplace_back(child);
+		return (T*)m_Children.emplace_back(new T(parent, m_Renderer));
 	}
 }
 
