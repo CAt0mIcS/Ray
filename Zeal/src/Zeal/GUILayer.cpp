@@ -22,7 +22,7 @@ namespace Zeal
 	void GUILayer::OnUpdate()
 	{
 		auto winChild = FindChild(L"H");
-		auto str = ((Reyal::Window*)winChild)->GetName();
+		auto str = ((Reyal::Window*)winChild)->GetTitle();
 		ZL_LOG_DEBUG("{0}", str);
 	}
 	

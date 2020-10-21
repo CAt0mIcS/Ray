@@ -112,6 +112,12 @@ namespace Zeal::Reyal
 		bool IsMainWindow() const { return m_IsMainWindow; }
 
 		/// <summary>
+		/// Gets the title of this Window
+		/// </summary>
+		/// <returns>The Window title</returns>
+		std::wstring GetTitle() const;
+
+		/// <summary>
 		/// Shows the window
 		/// </summary>
 		/// <param name="cmdShow">Is a flag to set how the window should be shown</param>

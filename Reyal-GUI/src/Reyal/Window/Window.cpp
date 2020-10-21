@@ -150,6 +150,19 @@ namespace Zeal::Reyal
 		return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
 	
+	std::wstring Window::GetTitle() const
+	{
+		std::wstring str = L"";
+		int len = GetWindowTextLength(m_hWnd);
+		if (len > 0)
+		{
+			str.resize(len);
+			GetWindowText(m_hWnd, str.data(), len + 1);
+		}
+
+		return str;
+	}
+
 	void Window::Show(ShowCommand cmdShow) const
 	{
 		ZL_PROFILE_FUNCTION();
