@@ -39,6 +39,11 @@ namespace Zeal::Reyal
 		T* AddChild(_In_ T* child);
 
 		/// <summary>
+		/// Requests the specific Widget to be redrawn
+		/// </summary>
+		virtual void PostRedraw() const {  };
+
+		/// <summary>
 		/// Comparison operator
 		/// </summary>
 		/// <param name="other">Is the Widget to compare to</param>

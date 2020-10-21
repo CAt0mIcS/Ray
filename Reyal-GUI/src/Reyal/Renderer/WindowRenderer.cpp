@@ -21,7 +21,22 @@ namespace Zeal::Reyal
 	{
 		// TODO: Error handling
 
-		D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, m_pFactory.GetAddressOf());
+		if (!m_pFactory)
+		{
+#if defined(DEBUG) || defined(_DEBUG)
+			D2D1_FACTORY_OPTIONS options{ D2D1_DEBUG_LEVEL_INFORMATION };
+			D2D1CreateFactory(
+				D2D1_FACTORY_TYPE_SINGLE_THREADED, 
+				options, 
+				m_pFactory.GetAddressOf()
+			);
+#else
+			D2D1CreateFactory(
+				D2D1_FACTORY_TYPE_SINGLE_THREADED,
+				m_pFactory.GetAddressOf()
+			);
+#endif
+		}
 
 		m_pFactory->CreateHwndRenderTarget(
 			D2D1::RenderTargetProperties(), 

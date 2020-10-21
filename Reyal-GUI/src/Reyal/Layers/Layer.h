@@ -31,7 +31,6 @@ namespace Zeal::Reyal
 		virtual void OnEvent(_In_ Widget* receiver, Event& e) { }
 
 	private:
-		std::wstring m_Name;
 	};
 	
 }
