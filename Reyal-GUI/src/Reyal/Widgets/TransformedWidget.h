@@ -44,7 +44,7 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <param name="name">Is the unique name of this Widget</param>
 		/// <param name="parent">Is the parent of this Widget</param>
-		TransformedWidget(const std::wstring_view name, _In_opt_ Widget* parent = nullptr);
+		TransformedWidget(const std::wstring_view name, WindowRenderer& renderer, _In_opt_ Widget* parent = nullptr);
 
 	protected:
 		D2D1::Matrix3x2F m_Matrix;

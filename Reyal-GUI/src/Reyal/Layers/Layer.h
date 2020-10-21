@@ -16,7 +16,7 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <param name="name">Is the unique name of this Layer</param>
 		/// <param name="parent">Is the parent Widget of this Layer</param>
-		Layer(const std::wstring_view name, _In_opt_ Widget* parent = nullptr);
+		Layer(const std::wstring_view name, WindowRenderer& renderer, _In_opt_ Widget* parent = nullptr);
 
 		/// <summary>
 		/// Function which is called every frame

@@ -14,7 +14,7 @@
 namespace Zeal::Reyal
 {
 	Window::Window(const std::wstring_view name, const std::wstring_view windowTitle, _In_opt_ Widget* parent, bool isMainWindow)
-		: VectorizedWidget(name, parent), m_IsMainWindow(isMainWindow), m_ExitCode(0)
+		: VectorizedWidget(name, m_Renderer, parent), m_IsMainWindow(isMainWindow), m_ExitCode(0)
 	{
 		ZL_PROFILE_FUNCTION();
 

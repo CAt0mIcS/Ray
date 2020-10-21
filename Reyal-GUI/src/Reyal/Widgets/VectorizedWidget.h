@@ -47,7 +47,7 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <param name="name">Is the unique name of this Widget</param>
 		/// <param name="parent">Is the parent of this Widget</param>
-		VectorizedWidget(const std::wstring_view name, _In_opt_ Widget* parent = nullptr);
+		VectorizedWidget(const std::wstring_view name, WindowRenderer& renderer, _In_opt_ Widget* parent = nullptr);
 
 	protected:
 		Util::ZRect m_Rect;

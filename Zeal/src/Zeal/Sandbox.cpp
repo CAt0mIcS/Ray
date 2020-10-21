@@ -11,7 +11,7 @@ namespace Zeal
 		ZL_PROFILE_FUNCTION();
 
 		m_MainWindow.Show();
-		PushLayer(new GUILayer(L"GUI-Layer"));
+		PushLayer(new GUILayer(L"GUI-Layer", m_MainWindow.GetRenderer()));
 	}
 	
 	Sandbox::~Sandbox()

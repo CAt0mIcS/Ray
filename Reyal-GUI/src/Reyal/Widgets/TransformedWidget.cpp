@@ -24,8 +24,8 @@ namespace Zeal::Reyal
 		m_Matrix = D2D1::Matrix3x2F::Scale(size);
 	}
 
-	TransformedWidget::TransformedWidget(const std::wstring_view name, _In_opt_ Widget* parent)
-		: PositionedWidget(name, parent)
+	TransformedWidget::TransformedWidget(const std::wstring_view name, WindowRenderer& renderer, _In_opt_ Widget* parent)
+		: PositionedWidget(name, renderer, parent)
 	{
 	}
 }

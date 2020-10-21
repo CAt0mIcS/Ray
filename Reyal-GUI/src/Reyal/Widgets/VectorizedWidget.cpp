@@ -28,8 +28,8 @@ namespace Zeal::Reyal
 		m_Rect.bottom = m_Rect.top + size.height;
 	}
 
-	VectorizedWidget::VectorizedWidget(const std::wstring_view name, Widget* parent)
-		: PositionedWidget(name, parent)
+	VectorizedWidget::VectorizedWidget(const std::wstring_view name, WindowRenderer& renderer, Widget* parent)
+		: PositionedWidget(name, renderer, parent)
 	{
 
 	}

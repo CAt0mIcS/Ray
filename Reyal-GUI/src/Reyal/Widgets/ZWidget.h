@@ -12,6 +12,7 @@
 namespace Zeal::Reyal
 {
 	class Event;
+	class WindowRenderer;
 
 	class RL_API Widget
 	{
@@ -61,7 +62,7 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <param name="name">Is the unique name of the Widget</param>
 		/// <param name="parent">Is the parent of this Widget</param>
-		Widget(const std::wstring_view name, _In_opt_ Widget* parent = nullptr);
+		Widget(const std::wstring_view name, WindowRenderer& renderer, _In_opt_ Widget* parent = nullptr);
 
 		/// <summary>
 		/// Recursively searches through all children and finds the one which should receive the specified event
@@ -74,6 +75,7 @@ namespace Zeal::Reyal
 		Widget* m_Parent;
 		const std::wstring m_Name;
 		std::vector<Widget*> m_Children;
+		WindowRenderer& m_Renderer;
 	};
 
 

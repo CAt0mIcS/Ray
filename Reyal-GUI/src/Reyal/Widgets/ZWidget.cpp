@@ -25,8 +25,8 @@ namespace Zeal::Reyal
         //TODO: Delete children
     }
 
-    Widget::Widget(const std::wstring_view name, _In_opt_ Widget* parent)
-        : m_Parent(parent), m_Name(name)
+    Widget::Widget(const std::wstring_view name, WindowRenderer& renderer, _In_opt_ Widget* parent)
+        : m_Renderer(renderer), m_Name(name), m_Parent(parent)
     {
     }
 

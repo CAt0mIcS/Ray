@@ -119,6 +119,12 @@ namespace Zeal::Reyal
 		std::wstring GetTitle() const;
 
 		/// <summary>
+		/// Getter for the Renderer of this Window
+		/// </summary>
+		/// <returns>The Window Renderer</returns>
+		WindowRenderer& GetRenderer() { return m_Renderer; }
+
+		/// <summary>
 		/// Shows the window
 		/// </summary>
 		/// <param name="cmdShow">Is a flag to set how the window should be shown</param>

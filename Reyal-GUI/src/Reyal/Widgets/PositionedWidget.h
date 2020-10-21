@@ -42,7 +42,7 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <param name="name">Is the unique name of the Widget</param>
 		/// <param name="parent">Is the parent of this Widget</param>
-		PositionedWidget(const std::wstring_view name, _In_opt_ Widget* parent = nullptr);
+		PositionedWidget(const std::wstring_view name, WindowRenderer& renderer, _In_opt_ Widget* parent = nullptr);
 	};
 }
 
