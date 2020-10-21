@@ -6,6 +6,7 @@
 #include "Reyal/Input/Mouse.h"
 
 #include "Reyal/Widgets/VectorizedWidget.h"
+#include "Reyal/Renderer/WindowRenderer.h"
 
 #include <functional>
 
@@ -167,5 +168,6 @@ namespace Zeal::Reyal
 		EventCallbackFn m_CallbackFunc;
 		bool m_IsMainWindow;
 		int m_ExitCode;
+		WindowRenderer m_Renderer;
 	};
 }

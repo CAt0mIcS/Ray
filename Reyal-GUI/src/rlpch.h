@@ -15,6 +15,7 @@
 #include <fstream>
 #include <bitset>
 #include <iomanip>
+#include <wrl.h>
 
 #include <assert.h>
 

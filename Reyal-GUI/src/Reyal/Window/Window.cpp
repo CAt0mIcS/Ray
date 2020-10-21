@@ -21,6 +21,8 @@ namespace Zeal::Reyal
 		auto rnd = Util::GenerateRandomToken<std::wstring>(5);
 		ZL_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
 		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(windowTitle.data(), rnd.c_str(), WS_OVERLAPPEDWINDOW));
+
+		m_Renderer.Init(m_hWnd);
 	}
 
 	Window::~Window()
