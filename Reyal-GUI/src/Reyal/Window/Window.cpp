@@ -13,16 +13,17 @@
 
 namespace Zeal::Reyal
 {
-	Window::Window(const std::wstring_view name, const std::wstring_view windowTitle, _In_opt_ Widget* parent, bool isMainWindow)
-		: VectorizedWidget(name, m_Renderer, parent), m_IsMainWindow(isMainWindow), m_ExitCode(0)
+	Window::Window(const std::wstring_view name, _In_opt_ Widget* parent, bool isMainWindow)
+		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_ExitCode(0), m_CurrentHover()
 	{
 		ZL_PROFILE_FUNCTION();
 
 		auto rnd = Util::GenerateRandomToken<std::wstring>(5);
 		ZL_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
-		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(windowTitle.data(), rnd.c_str(), WS_OVERLAPPEDWINDOW));
+		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW));
 
-		m_Renderer.Init(m_hWnd);
+		if(!parent || !parent->GetRenderer())
+			m_Renderer.Init(m_hWnd);
 	}
 
 	Window::~Window()
@@ -33,6 +34,9 @@ namespace Zeal::Reyal
 
 	LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		if (!m_CallbackFunc)
+			return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
+
 		switch (uMsg)
 		{
 		case WM_DESTROY:
@@ -51,55 +55,56 @@ namespace Zeal::Reyal
 			Mouse.SetMousePos({ (float)pt.x, (float)pt.y });
 
 			MouseMoveEvent e;
-			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+
 			return 0;
 		}
 		case WM_LBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Left);
-			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Left);
-			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Middle);
-			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Middle);
-			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Right);
-			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Right);
-			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
 			return 0;
 		}
 		case WM_KEYDOWN:
 		{
 			KeyPressedEvent e(wParam);
-			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
 			return 0;
 		}
 		case WM_KEYUP:
 		{
 			KeyReleasedEvent e(wParam);
-			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
@@ -109,12 +114,12 @@ namespace Zeal::Reyal
 			if (delta > 0)
 			{
 				MouseWheelUpEvent e(delta);
-				if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+				if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
 			}
 			else if (delta < 0)
 			{
 				MouseWheelDownEvent e(delta);
-				if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+				if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
 			}
 
 			return 0;
@@ -122,7 +127,7 @@ namespace Zeal::Reyal
 		case WM_PAINT:
 		{
 			PaintEvent e;
-			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
 			return 0;
 		}
 		case WM_SIZE:
@@ -130,7 +135,7 @@ namespace Zeal::Reyal
 			ResizeTo({ (float)LOWORD(lParam), (float)HIWORD(lParam) });
 
 			WindowResizeEvent e;
-			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
 			return 0;
 		}
 		case WM_MOVE:
@@ -138,13 +143,13 @@ namespace Zeal::Reyal
 			MoveTo({ (float)LOWORD(lParam), (float)HIWORD(lParam) });
 
 			WindowMoveEvent e;
-			if (m_CallbackFunc(GetEventReceiver(e), e)) break;
+			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
 			return 0;
 		}
 		case WM_CLOSE:
 		{
 			WindowCloseEvent e;
-			if (m_CallbackFunc(GetEventReceiver(e), e)) return 0;
+			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) return 0;
 			break;
 		}
 		}
@@ -163,6 +168,20 @@ namespace Zeal::Reyal
 		}
 
 		return str;
+	}
+
+	WindowRenderer* Window::GetRenderer()
+	{
+		if (GetParent())
+		{
+			return GetParent()->GetRenderer();
+		}
+		return &m_Renderer;
+	}
+
+	void Window::SetTitle(const std::wstring_view title)
+	{
+		SetWindowText(m_hWnd, title.data());
 	}
 
 	void Window::Show(ShowCommand cmdShow) const

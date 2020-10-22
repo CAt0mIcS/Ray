@@ -5,7 +5,7 @@
 #include "Reyal/Input/Keyboard.h"
 #include "Reyal/Input/Mouse.h"
 
-#include "Reyal/Widgets/VectorizedWidget.h"
+#include "Reyal/Widgets/ZWidget.h"
 #include "Reyal/Renderer/WindowRenderer.h"
 
 #include <functional>
@@ -23,7 +23,7 @@ namespace Zeal::Reyal
 	/// </summary>
 	using EventCallbackFn = std::function<bool(Widget* receiver, Event& e)>;
 
-	class RL_API Window : public BaseWindow<Window>, public VectorizedWidget
+	class RL_API Window : public BaseWindow<Window>, public Widget
 	{
 	public:
 		/// <summary>
@@ -87,10 +87,9 @@ namespace Zeal::Reyal
 		/// Window Constructor
 		/// </summary>
 		/// <param name="name">Is the unique name of the window</param>
-		/// <param name="windowTitle">Is the window title</param>
 		/// <param name="parent">Is the parent of this window</param>
 		/// <param name="isMainWindow">Specifies whether this window is the main one which will exit the application when closed</param>
-		Window(const std::wstring_view name, const std::wstring_view windowTitle, _In_opt_ Widget* parent = nullptr, bool isMainWindow = false);
+		Window(const std::wstring_view name, _In_opt_ Widget* parent = nullptr, bool isMainWindow = false);
 
 		/// <summary>
 		/// Window Deconstructor
@@ -122,7 +121,13 @@ namespace Zeal::Reyal
 		/// Getter for the Renderer of this Window
 		/// </summary>
 		/// <returns>The Window Renderer</returns>
-		WindowRenderer& GetRenderer() { return m_Renderer; }
+		virtual WindowRenderer* GetRenderer() override;
+
+		/// <summary>
+		/// Sets the Window title
+		/// </summary>
+		/// <param name="title">Is the new title of this Window</param>
+		void SetTitle(const std::wstring_view title);
 
 		/// <summary>
 		/// Shows the window
@@ -175,5 +180,6 @@ namespace Zeal::Reyal
 		bool m_IsMainWindow;
 		int m_ExitCode;
 		WindowRenderer m_Renderer;
+		Widget* m_CurrentHover;
 	};
 }

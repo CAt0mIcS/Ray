@@ -7,6 +7,8 @@
 
 namespace Zeal::Reyal
 {
+	class Widget;
+
 	class RL_API Mouse
 	{
 	public:
@@ -15,6 +17,8 @@ namespace Zeal::Reyal
 		bool IsLeftPressed() const;
 		bool IsMiddlePressed() const;
 		bool IsRightPressed() const;
+
+		bool IsOnWidget(const Widget* widget) const;
 
 		const Util::Point& GetMousePos() const;
 		void SetMousePos(const Util::Point& mousePos);

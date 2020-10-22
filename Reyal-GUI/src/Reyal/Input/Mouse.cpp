@@ -1,6 +1,8 @@
 #include "rlpch.h"
 #include "Mouse.h"
 
+#include "Reyal/Widgets/ZWidget.h"
+
 
 namespace Zeal::Reyal
 {
@@ -23,7 +25,12 @@ namespace Zeal::Reyal
 	{
 		return m_IsRightPressed;
 	}
-	
+
+	bool Mouse::IsOnWidget(const Widget* widget) const
+	{
+		return false;
+	}
+
 	const Util::Point& Mouse::GetMousePos() const
 	{
 		return m_MousePos;

@@ -12,8 +12,8 @@
 
 namespace Zeal
 {
-	GUILayer::GUILayer(const std::wstring_view name, Reyal::WindowRenderer& renderer)
-		: Reyal::Layer(name, renderer)
+	GUILayer::GUILayer(const std::wstring_view name, Reyal::Window& win)
+		: Reyal::Layer(name), m_Win(win)
 	{
 
 	}

@@ -1,22 +1,21 @@
 #pragma once
 
 #include "RlBase.h"
-#include "Reyal/Widgets/ZWidget.h"
 
 
 namespace Zeal::Reyal
 {
 	class Event;
+	class Widget;
 
-	class RL_API Layer : public Widget
+	class RL_API Layer
 	{
 	public:
 		/// <summary>
 		/// Layer Constructor
 		/// </summary>
 		/// <param name="name">Is the unique name of this Layer</param>
-		/// <param name="parent">Is the parent Widget of this Layer</param>
-		Layer(const std::wstring_view name, WindowRenderer& renderer, _In_opt_ Widget* parent = nullptr);
+		Layer(const std::wstring_view name);
 
 		/// <summary>
 		/// Function which is called every frame

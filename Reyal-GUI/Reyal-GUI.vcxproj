@@ -192,7 +192,6 @@
     <ClInclude Include="src\Reyal\Debug\ReyalLogger.h" />
     <ClInclude Include="src\Reyal\Renderer\Renderer.h" />
     <ClInclude Include="src\Reyal\Renderer\WindowRenderer.h" />
-    <ClInclude Include="src\Reyal\Widgets\PositionedWidget.h" />
     <ClInclude Include="src\Reyal\Window\BaseWindow.h" />
     <ClInclude Include="src\Reyal\Exception.h" />
     <ClInclude Include="src\Reyal\Application.h" />
@@ -202,8 +201,6 @@
     <ClInclude Include="src\RlWin.h" />
     <ClInclude Include="src\RlBase.h" />
     <ClInclude Include="src\rlpch.h" />
-    <ClInclude Include="src\Reyal\Widgets\TransformedWidget.h" />
-    <ClInclude Include="src\Reyal\Widgets\VectorizedWidget.h" />
     <ClInclude Include="src\Reyal\Widgets\ZWidget.h" />
   </ItemGroup>
   <ItemGroup>
@@ -217,7 +214,6 @@
     <ClCompile Include="src\Reyal\Application.cpp" />
     <ClCompile Include="src\Reyal\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Reyal\Renderer\WindowRenderer.cpp" />
-    <ClCompile Include="src\Reyal\Widgets\PositionedWidget.cpp" />
     <ClCompile Include="src\Reyal\Window\Window.cpp" />
     <ClCompile Include="src\rlpch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -225,8 +221,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Reyal\Widgets\TransformedWidget.cpp" />
-    <ClCompile Include="src\Reyal\Widgets\VectorizedWidget.cpp" />
     <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp" />
   </ItemGroup>
   <ItemGroup>

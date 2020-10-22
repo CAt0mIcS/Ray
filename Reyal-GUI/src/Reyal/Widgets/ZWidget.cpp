@@ -1,6 +1,7 @@
 #include "rlpch.h"
 #include "ZWidget.h"
 
+#include "Reyal/Input/Mouse.h"
 
 
 namespace Zeal::Reyal
@@ -8,6 +9,26 @@ namespace Zeal::Reyal
     bool Widget::operator==(const Widget& other)
     {
         return GetName() == other.GetName();
+    }
+
+    void Widget::MoveBy(const Util::Point& pos)
+    {
+
+    }
+
+    void Widget::MoveTo(const Util::Point& pos)
+    {
+
+    }
+
+    void Widget::ResizeBy(const Util::Size& size)
+    {
+
+    }
+
+    void Widget::ResizeTo(const Util::Size& size)
+    {
+
     }
 
     Widget* Widget::FindChild(const std::wstring_view name)
@@ -25,23 +46,26 @@ namespace Zeal::Reyal
         //TODO: Delete children
     }
 
-    Widget::Widget(const std::wstring_view name, WindowRenderer& renderer, _In_opt_ Widget* parent)
-        : m_Renderer(renderer), m_Name(name), m_Parent(parent)
+    Widget::Widget(const std::wstring_view name, _In_opt_ Widget* parent)
+        : m_Name(name), m_Parent(parent)
     {
     }
 
-    Widget* Widget::GetEventReceiver(const Event& e)
+    Widget* Widget::GetEventReceiver(const Event& e, const Mouse& mouse)
     {
         Widget* receiver = nullptr;
-        for (auto* child : m_Children)
+        if (mouse.IsOnWidget(this))
         {
-            receiver = child->GetEventReceiver(e);
-            if (receiver)
-                break;
-        }
+            for (auto* child : m_Children)
+            {
+                receiver = child->GetEventReceiver(e, mouse);
+                if (receiver)
+                    break;
+            }
 
-        if (!receiver)
-            receiver = this;
+            if (!receiver)
+                receiver = this;
+        }
 
         return receiver;
     }

@@ -13,6 +13,7 @@ namespace Zeal::Reyal
 {
 	class Event;
 	class WindowRenderer;
+	class Mouse;
 
 	class RL_API Widget
 	{
@@ -22,6 +23,48 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <returns>The name of the widget</returns>
 		const std::wstring_view GetName() const { return m_Name; }
+
+		/// <summary>
+		/// Moves the position of the Widget by the specified values
+		/// </summary>
+		/// <param name="pos">Is the position to add to it's current one</param>
+		void MoveBy(const Util::Point& pos);
+
+		/// <summary>
+		/// Moves the position of the Widget to the specified value
+		/// </summary>
+		/// <param name="pos">Is the new position of this Widget</param>
+		void MoveTo(const Util::Point& pos);
+
+		/// <summary>
+		/// Resizes the Widget by the specified value
+		/// </summary>
+		/// <param name="size">Is the value added to the Widget's current size</param>
+		void ResizeBy(const Util::Size& size);
+
+		/// <summary>
+		/// Resizes the Widget to the specified value
+		/// </summary>
+		/// <param name="size">Is the new size of this Widget</param>
+		void ResizeTo(const Util::Size& size);
+
+		/// <summary>
+		/// Gets the current Widget Matrix
+		/// </summary>
+		/// <returns>The transform matrix of this Widget</returns>
+		const D2D1::Matrix3x2F& GetMatrix() const { return m_Matrix; }
+
+		/// <summary>
+		/// Getter for the Window Renderer
+		/// </summary>
+		/// <returns>The Renderer for this window</returns>
+		virtual WindowRenderer* GetRenderer() = 0;
+
+		/// <summary>
+		/// Getter for the parent of this Widget
+		/// </summary>
+		/// <returns>The parent Widget</returns>
+		Widget* GetParent() const { return m_Parent; }
 
 		/// <summary>
 		/// Searches through all children and finds the one with name
@@ -37,7 +80,7 @@ namespace Zeal::Reyal
 		/// <param name="parent">Is the parent of the child to add</param>
 		/// <returns>The added child</returns>
 		template<typename T, typename = std::enable_if_t<std::is_convertible_v<T*, Widget*>>>
-		T* AddChild(_In_opt_ Widget* parent = nullptr);
+		T* AddChild(const std::wstring_view name, _In_opt_ Widget* parent = nullptr);
 
 		/// <summary>
 		/// Requests the specific Widget to be redrawn
@@ -62,27 +105,28 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <param name="name">Is the unique name of the Widget</param>
 		/// <param name="parent">Is the parent of this Widget</param>
-		Widget(const std::wstring_view name, WindowRenderer& renderer, _In_opt_ Widget* parent = nullptr);
+		Widget(const std::wstring_view name, _In_opt_ Widget* parent = nullptr);
 
 		/// <summary>
 		/// Recursively searches through all children and finds the one which should receive the specified event
 		/// </summary>
 		/// <param name="e">Is the received event</param>
 		/// <returns>The Widget which should receive the event</returns>
-		Widget* GetEventReceiver(const Event& e);
+		Widget* GetEventReceiver(const Event& e, const Mouse& mouse);
 
 	protected:
 		Widget* m_Parent;
 		const std::wstring m_Name;
 		std::vector<Widget*> m_Children;
-		WindowRenderer& m_Renderer;
+		WindowRenderer* m_Renderer;
+		D2D1::Matrix3x2F m_Matrix;
 	};
 
 
 	template<typename T, typename>
-	inline T* Widget::AddChild(_In_opt_ Widget* parent)
+	inline T* Widget::AddChild(const std::wstring_view name, _In_opt_ Widget* parent)
 	{
-		return (T*)m_Children.emplace_back(new T(parent, m_Renderer));
+		return (T*)m_Children.emplace_back(new T(name, parent));
 	}
 }
 

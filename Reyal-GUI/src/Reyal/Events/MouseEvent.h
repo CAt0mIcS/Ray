@@ -90,5 +90,21 @@ namespace Zeal::Reyal
 
 		RL_DECLARE_TYPE_FN(MouseWheelDownEvent)
 	};
+
+	class HoverEnterEvent : public Event
+	{
+	public:
+		HoverEnterEvent() = default;
+
+		RL_DECLARE_TYPE_FN(HoverEnterEvent);
+	};
+
+	class HoverLeaveEvent : public Event
+	{
+	public:
+		HoverLeaveEvent() = default;
+
+		RL_DECLARE_TYPE_FN(HoverLeaveEvent);
+	};
 }
 

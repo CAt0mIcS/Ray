@@ -11,6 +11,7 @@ namespace Zeal::Reyal
 	{
 		INVALID = 0,
 		MouseButtonPressedEvent, MouseButtonReleasedEvent, MouseWheelUpEvent, MouseWheelDownEvent, MouseMoveEvent, 
+		HoverEnterEvent, HoverLeaveEvent,
 		KeyPressedEvent, KeyReleasedEvent, CharEvent,
 		WindowResizeEvent, WindowCloseEvent, WindowMoveEvent, PaintEvent, SetCursorEvent
 	};
