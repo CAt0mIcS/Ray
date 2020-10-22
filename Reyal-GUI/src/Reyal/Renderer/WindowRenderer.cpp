@@ -8,17 +8,20 @@ namespace Zeal::Reyal
 	WindowRenderer::WindowRenderer()
 		: m_hWnd(0)
 	{
+		ZL_PROFILE_FUNCTION();
 
 	}
 	
 	void WindowRenderer::Init(HWND hWnd)
 	{
+		ZL_PROFILE_FUNCTION();
 		m_hWnd = hWnd;
 		CreateGraphicsResources();
 	}
 	
 	void WindowRenderer::CreateGraphicsResources()
 	{
+		ZL_PROFILE_FUNCTION();
 		// TODO: Error handling
 
 		if (!m_pFactory)

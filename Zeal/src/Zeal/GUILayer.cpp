@@ -15,6 +15,8 @@ namespace Zeal
 	GUILayer::GUILayer(const std::wstring_view name, Reyal::Window& win)
 		: Reyal::Layer(name), m_Win(win)
 	{
+		ZL_PROFILE_FUNCTION();
+
 
 	}
 

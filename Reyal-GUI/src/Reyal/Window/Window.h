@@ -176,6 +176,9 @@ namespace Zeal::Reyal
 		Mouse Mouse;
 
 	private:
+		bool DispatchEvent(Event& e);
+
+	private:
 		EventCallbackFn m_CallbackFunc;
 		bool m_IsMainWindow;
 		int m_ExitCode;

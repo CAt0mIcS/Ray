@@ -30,6 +30,8 @@ namespace Zeal::Reyal
 
 	void Application::PushLayer(_In_ Layer* layer)
 	{
+		ZL_PROFILE_FUNCTION();
+
 		m_LayerStack.PushLayer(layer);
 	}
 

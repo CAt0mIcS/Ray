@@ -55,56 +55,56 @@ namespace Zeal::Reyal
 			Mouse.SetMousePos({ (float)pt.x, (float)pt.y });
 
 			MouseMoveEvent e;
-			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+			if (DispatchEvent(e)) break;
 
 			return 0;
 		}
 		case WM_LBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Left);
-			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Left);
-			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Middle);
-			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Middle);
-			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
 			MouseButtonPressedEvent e(MouseButton::Right);
-			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
 			MouseButtonReleasedEvent e(MouseButton::Right);
-			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_KEYDOWN:
 		{
 			KeyPressedEvent e(wParam);
-			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_KEYUP:
 		{
 			KeyReleasedEvent e(wParam);
-			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
@@ -114,12 +114,12 @@ namespace Zeal::Reyal
 			if (delta > 0)
 			{
 				MouseWheelUpEvent e(delta);
-				if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+				if (DispatchEvent(e)) break;
 			}
 			else if (delta < 0)
 			{
 				MouseWheelDownEvent e(delta);
-				if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+				if (DispatchEvent(e)) break;
 			}
 
 			return 0;
@@ -127,7 +127,7 @@ namespace Zeal::Reyal
 		case WM_PAINT:
 		{
 			PaintEvent e;
-			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_SIZE:
@@ -135,7 +135,7 @@ namespace Zeal::Reyal
 			ResizeTo({ (float)LOWORD(lParam), (float)HIWORD(lParam) });
 
 			WindowResizeEvent e;
-			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MOVE:
@@ -143,13 +143,13 @@ namespace Zeal::Reyal
 			MoveTo({ (float)LOWORD(lParam), (float)HIWORD(lParam) });
 
 			WindowMoveEvent e;
-			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) break;
+			if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_CLOSE:
 		{
 			WindowCloseEvent e;
-			if (m_CallbackFunc(GetEventReceiver(e, Mouse), e)) return 0;
+			if (DispatchEvent(e)) return 0;
 			break;
 		}
 		}
@@ -159,6 +159,8 @@ namespace Zeal::Reyal
 	
 	std::wstring Window::GetTitle() const
 	{
+		ZL_PROFILE_FUNCTION();
+
 		std::wstring str = L"";
 		int len = GetWindowTextLength(m_hWnd);
 		if (len > 0)
@@ -172,6 +174,8 @@ namespace Zeal::Reyal
 
 	WindowRenderer* Window::GetRenderer()
 	{
+		ZL_PROFILE_FUNCTION();
+
 		if (GetParent())
 		{
 			return GetParent()->GetRenderer();
@@ -181,6 +185,8 @@ namespace Zeal::Reyal
 
 	void Window::SetTitle(const std::wstring_view title)
 	{
+		ZL_PROFILE_FUNCTION();
+
 		SetWindowText(m_hWnd, title.data());
 	}
 
@@ -225,6 +231,16 @@ namespace Zeal::Reyal
 		//TODO: Change to something more appropriate (needed so cpu doesn't go up to 30% usage when running)
 		Sleep(1);
 		return false;
+	}
+	
+	bool Window::DispatchEvent(Event& e)
+	{
+		Widget* receiver = GetEventReceiver(e, Mouse);
+
+		if (!receiver)
+			receiver = this;
+
+		return m_CallbackFunc(receiver, e);
 	}
 }
 
