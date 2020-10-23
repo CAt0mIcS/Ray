@@ -10,10 +10,8 @@ namespace Zeal::Util
 {
 	struct Vec2
 	{
-		/// <summary>
-		/// X and Y screen position
-		/// </summary>
-		float x, y;
+		union { float x, width; };
+		union { float y, height; };
 
 		/// <summary>
 		/// Vec2 Constructor
@@ -94,5 +92,6 @@ namespace Zeal::Util
 
 
 	using Point = Vec2;
+	using Size = Vec2;
 }
 

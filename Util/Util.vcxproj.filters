@@ -30,9 +30,6 @@
     <ClCompile Include="src\Util\Random.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Util\ZSize.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Util\TypeConvert.h">
@@ -51,9 +48,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Util\Random.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Util\ZSize.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Util\Direct2D.h">

@@ -6,7 +6,6 @@
 #include <vector>
 
 #include <Util/ZPoint.h>
-#include <Util/ZSize.h>
 
 
 namespace Zeal::Reyal
