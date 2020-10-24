@@ -1,10 +1,13 @@
 #pragma once
 
-#include <Reyal/Reyal.h>
+#include <Reyal/Application.h>
 
 
 namespace Zeal
 {
+	class Widget;
+	class Event;
+
 	class Sandbox : public Reyal::Application
 	{
 	public:
@@ -29,9 +32,9 @@ namespace Zeal
 	};
 
 
-	Reyal::Application* Reyal::CreateApplication()
+	void Reyal::CreateApplication()
 	{
-		return new Sandbox();
+		Reyal::Application::Create(new Sandbox());
 	}
 }
 

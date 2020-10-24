@@ -9,10 +9,22 @@
 
 namespace Zeal::Reyal
 {
+	std::shared_ptr<Application> Application::s_Instance = nullptr;
+
 	Application::Application()
 		: m_MainWindow(L"MainWindow", nullptr, true), m_LayerStack{}
 	{
 		m_MainWindow.SetEventCallback([this](Widget* receiver, Event& e) { return OnEventReceived(receiver, e); });
+	}
+
+	void Application::Create(Application* app)
+	{
+		s_Instance.reset(app);
+	}
+
+	void Application::Destroy()
+	{
+		s_Instance.reset();
 	}
 
 	int Application::Run()

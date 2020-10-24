@@ -8,6 +8,13 @@
 
 namespace Zeal::Reyal
 {
+	class Application;
+	/// <summary>
+	/// Function which has to be defined by the client to be used in EntryPoint.h.
+	/// Note: Return a raw, heap-allocated pointer because it will call delete in EntryPoint.h
+	/// </summary>
+	void CreateApplication();
+
 	class Layer;
 
 	/// <summary>
@@ -15,11 +22,26 @@ namespace Zeal::Reyal
 	/// </summary>
 	class RL_API Application
 	{
+		// QUESTION:
+		//		Should I add friend declaration and make static void Create(...) private or leave it public?
+		//friend void Reyal::CreateApplication();
 	public:
 		/// <summary>
-		/// Application Constructor
+		/// Initializes the application
 		/// </summary>
-		Application();
+		/// <param name="app">Is the application</param>
+		static void Create(Application* app);
+
+		/// <summary>
+		/// Deletes the application
+		/// </summary>
+		static void Destroy();
+
+		/// <summary>
+		/// Getter for this application
+		/// </summary>
+		/// <returns>The current application</returns>
+		static std::shared_ptr<Application> Get() { return s_Instance; }
 
 		/// <summary>
 		/// Starts the application run loop
@@ -46,6 +68,12 @@ namespace Zeal::Reyal
 		/// </summary>
 		virtual ~Application();
 
+	protected:
+		/// <summary>
+		/// Application Constructor
+		/// </summary>
+		Application();
+
 	private:
 		/// <summary>
 		/// Receives all events from all Windows, dispatches them to the correct Layer
@@ -60,14 +88,8 @@ namespace Zeal::Reyal
 
 	private:
 		LayerStack m_LayerStack;
+		static std::shared_ptr<Application> s_Instance;
 	};
-
-	/// <summary>
-	/// Function which has to be defined by the client to be used in EntryPoint.h.
-	/// Note: Return a raw, heap-allocated pointer because it will call delete in EntryPoint.h
-	/// </summary>
-	/// <returns>The newly created application</returns>
-	Application* CreateApplication();
 
 }
 

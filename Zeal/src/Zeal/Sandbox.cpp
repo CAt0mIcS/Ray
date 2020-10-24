@@ -1,8 +1,12 @@
 #include "pch.h"
 #include "Sandbox.h"
 
-#include "GUILayer.h"
 
+//QUESTION: When entry point is included in Reyal.h
+//#include <Reyal/Reyal.h>
+#include <Reyal/EntryPoint.h>
+
+#include "GUILayer.h"
 
 namespace Zeal
 {
@@ -12,7 +16,7 @@ namespace Zeal
 
 		m_MainWindow.SetTitle(L"Zeal");
 		m_MainWindow.Show();
-		PushLayer(new GUILayer(L"GUI-Layer", m_MainWindow));
+		PushLayer(new GUILayer(L"GUI-Layer"));
 	}
 	
 	Sandbox::~Sandbox()

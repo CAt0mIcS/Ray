@@ -4,6 +4,7 @@
 #include "RlWin.h"
 
 #include <stdint.h>
+#include <string>
 
 #include "Reyal/Debug/Instrumentor.h"
 
@@ -27,6 +28,10 @@ namespace Zeal::Reyal
 		{
 			ZL_PROFILE_FUNCTION();
 
+			//QUESTION: Global constant for this and the amount of characters generated? (Window.cpp)
+			//wchar_t className[5];
+			//GetClassName(m_hWnd, className, std::size(className));
+			//UnregisterClass(className, GetModuleHandle(NULL));
 			UnregisterClass(m_ClassName.c_str(), GetModuleHandle(NULL));
 		}
 

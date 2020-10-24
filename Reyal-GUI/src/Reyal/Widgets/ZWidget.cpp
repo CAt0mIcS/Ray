@@ -36,10 +36,10 @@ namespace Zeal::Reyal
 
     }
 
-    Widget* Widget::FindChild(const std::wstring_view name)
+    std::shared_ptr<Widget> Widget::FindChild(const std::wstring_view name)
     {
         ZL_PROFILE_FUNCTION();
-        for (auto* child : m_Children)
+        for (auto child : m_Children)
         {
             if (child->GetName() == name)
                 return child;
@@ -53,7 +53,7 @@ namespace Zeal::Reyal
         //TODO: Delete children
     }
 
-    Widget::Widget(const std::wstring_view name, _In_opt_ Widget* parent)
+    Widget::Widget(const std::wstring_view name, _In_opt_ std::shared_ptr<Widget> parent)
         : m_Name(name), m_Parent(parent), m_Renderer(nullptr)
     {
         ZL_PROFILE_FUNCTION();
@@ -66,7 +66,7 @@ namespace Zeal::Reyal
         Widget* receiver = nullptr;
         if (mouse.IsOnWidget(this))
         {
-            for (auto* child : m_Children)
+            for (auto child : m_Children)
             {
                 receiver = child->GetEventReceiver(e, mouse);
                 if (receiver)

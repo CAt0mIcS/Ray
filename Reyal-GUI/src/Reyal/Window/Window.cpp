@@ -13,7 +13,7 @@
 
 namespace Zeal::Reyal
 {
-	Window::Window(const std::wstring_view name, _In_opt_ Widget* parent, bool isMainWindow)
+	Window::Window(const std::wstring_view name, _In_opt_ std::shared_ptr<Widget> parent, bool isMainWindow)
 		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_ExitCode(0), m_CurrentHover()
 	{
 		ZL_PROFILE_FUNCTION();

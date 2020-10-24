@@ -1,10 +1,10 @@
 #pragma once
+
 #include "rlpch.h"
 
-#include "Reyal/Exception.h"
-
-#include "Reyal/Debug/Instrumentor.h"
+#include "Reyal/Application.h"
 #include "Reyal/Debug/ReyalLogger.h"
+#include "Reyal/Exception.h"
 
 #include <signal.h>
 
@@ -29,6 +29,8 @@ void SignalHandler(int signum)
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int pCmdShow)
 {
+	using namespace Zeal;
+
 	ZL_LOG_BEGIN("Zeal.log", Zeal::Log::LogLevel::Trace);
 
 	/// <summary>
@@ -57,15 +59,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 	try
 	{
 		ZL_PROFILE_BEGIN_SESSION("Startup", "Profile-Startup.json");
-		auto app = Zeal::Reyal::CreateApplication();
+		Reyal::CreateApplication();
 		ZL_PROFILE_END_SESSION();
 
 		ZL_PROFILE_BEGIN_SESSION("Runtime", "Profile-Runtime.json");
-		int exitCode = app->Run();
+		int exitCode = Reyal::Application::Get()->Run();
 		ZL_PROFILE_END_SESSION();
 
 		ZL_PROFILE_BEGIN_SESSION("Shutdown", "Profile-Shutdown.json");
-		delete app;
+		Reyal::Application::Destroy();
 		ZL_PROFILE_END_SESSION();
 
 #ifdef _DEBUG
