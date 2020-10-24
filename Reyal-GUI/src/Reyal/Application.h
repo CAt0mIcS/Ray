@@ -5,6 +5,8 @@
 #include "Window/Window.h"
 #include "Layers/LayerStack.h"
 
+#include "Core/Queue.h"
+
 
 namespace Zeal::Reyal
 {
@@ -87,7 +89,9 @@ namespace Zeal::Reyal
 		Window m_MainWindow;
 
 	private:
+		// QUESTION: Create custom class for stack or just templated queue/stack
 		LayerStack m_LayerStack;
+		//Queue<Layer*> m_LayerStack;
 		static std::shared_ptr<Application> s_Instance;
 	};
 

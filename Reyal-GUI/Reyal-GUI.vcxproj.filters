@@ -84,6 +84,9 @@
     <ClInclude Include="src\Reyal\Renderer\WindowRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Reyal\Core\Queue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rlpch.cpp">

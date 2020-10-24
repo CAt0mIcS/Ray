@@ -202,6 +202,7 @@
     <ClInclude Include="src\RlBase.h" />
     <ClInclude Include="src\rlpch.h" />
     <ClInclude Include="src\Reyal\Widgets\ZWidget.h" />
+    <ClInclude Include="src\Reyal\Core\Queue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Reyal\Layers\LayerStack.cpp" />

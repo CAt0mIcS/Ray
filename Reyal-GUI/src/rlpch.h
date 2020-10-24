@@ -4,6 +4,7 @@
 
 
 #include <deque>
+#include <queue>
 #include <exception>
 #include <string>
 #include <mutex>
