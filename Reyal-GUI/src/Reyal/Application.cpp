@@ -9,14 +9,14 @@
 
 namespace Zeal::Reyal
 {
-	std::shared_ptr<Application> Application::s_Instance = nullptr;
+	Ref<Application> Application::s_Instance = nullptr;
 
 	Application::Application()
 		: m_MainWindow(L"MainWindow", nullptr, true), m_LayerStack{}
 	{
 	}
 
-	void Application::Create(Application* app)
+	void Application::Create(_In_ Application* app)
 	{
 		s_Instance.reset(app);
 	}

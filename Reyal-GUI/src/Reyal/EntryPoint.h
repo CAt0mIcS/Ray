@@ -61,7 +61,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 		ZL_PROFILE_END_SESSION();
 
 		ZL_PROFILE_BEGIN_SESSION("Runtime", "Profile-Runtime.json");
-		int exitCode = Reyal::Application::Get()->Run();
+		int exitCode = Reyal::Application::Get().Run();
 		ZL_PROFILE_END_SESSION();
 
 		ZL_PROFILE_BEGIN_SESSION("Shutdown", "Profile-Shutdown.json");

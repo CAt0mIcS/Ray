@@ -14,7 +14,7 @@ namespace Zeal::Layers
 
 	void GUILayer::OnMouseMove(Reyal::Widget* receiver, Reyal::MouseMoveEvent& e)
 	{
-		ZL_LOG_DEBUG("[GUILayer] Mouse PosMouse {0}", Reyal::Application::Get()->GetMainWindow().Mouse.GetPos());
+		ZL_LOG_DEBUG("[GUILayer] Mouse PosMouse {0}", Reyal::Application::Get().GetMainWindow().Mouse.GetPos());
 		ZL_LOG_DEBUG("[GUILayer] Mouse PosEvent {0}", e.GetPos());
 	}
 }

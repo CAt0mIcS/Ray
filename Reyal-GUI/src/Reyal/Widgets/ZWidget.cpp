@@ -36,13 +36,13 @@ namespace Zeal::Reyal
 
     }
 
-    std::shared_ptr<Widget> Widget::FindChild(const std::wstring_view name)
+    Widget* Widget::FindChild(const std::wstring_view name)
     {
         ZL_PROFILE_FUNCTION();
-        for (auto child : m_Children)
+        for (auto& child : m_Children)
         {
             if (child->GetName() == name)
-                return child;
+                return child.get();;
         }
         return nullptr;
     }
@@ -50,11 +50,12 @@ namespace Zeal::Reyal
     Widget::~Widget()
     {
         ZL_PROFILE_FUNCTION();
-        //TODO: Delete children
+
+        //std::vector<std::unique_ptr<Widget>> m_Children is deleted automatically
     }
 
-    Widget::Widget(const std::wstring_view name, _In_opt_ std::shared_ptr<Widget> parent)
-        : m_Name(name), m_Parent(parent), m_Renderer(nullptr)
+    Widget::Widget(const std::wstring_view name, _In_opt_ Widget* parent)
+        : m_Name(name), m_Parent(parent), m_Renderer(nullptr), m_Children{}
     {
         ZL_PROFILE_FUNCTION();
     }
@@ -64,22 +65,26 @@ namespace Zeal::Reyal
         ZL_PROFILE_FUNCTION();
 
         Widget* receiver = nullptr;
+
+        //The main window should always receive the event if no other receiver is found
+        if (!GetParent())
+            receiver = this;
+
         if (mouse.IsOnWidget(this))
         {
-            for (auto child : m_Children)
+            for (auto& child : m_Children)
             {
-                receiver = child->GetEventReceiver(e, mouse);
-                if (receiver)
+                Widget* receiver2 = child->GetEventReceiver(e, mouse);
+                if (receiver2)
+                {
+                    receiver = receiver2;
                     break;
+                }
             }
 
             if (!receiver)
                 receiver = this;
         }
-
-        //The main window should always receive the event if no other widget received it
-        if (!GetParent())
-            receiver = this;
 
         return receiver;
     }

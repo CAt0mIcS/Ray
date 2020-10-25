@@ -103,7 +103,7 @@ namespace Zeal::Reyal
 		/// <param name="name">Is the unique name of the window</param>
 		/// <param name="parent">Is the parent of this window</param>
 		/// <param name="isMainWindow">Specifies whether this window is the main one which will exit the application when closed</param>
-		Window(const std::wstring_view name, _In_opt_ std::shared_ptr<Widget> parent = nullptr, bool isMainWindow = false);
+		Window(const std::wstring_view name, _In_opt_ Widget* parent = nullptr, bool isMainWindow = false);
 
 		/// <summary>
 		/// Window Deconstructor

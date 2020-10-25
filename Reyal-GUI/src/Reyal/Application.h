@@ -34,7 +34,7 @@ namespace Zeal::Reyal
 		/// Initializes the application
 		/// </summary>
 		/// <param name="app">Is the application</param>
-		static void Create(Application* app);
+		static void Create(_In_ Application* app);
 
 		/// <summary>
 		/// Deletes the application
@@ -42,10 +42,16 @@ namespace Zeal::Reyal
 		static void Destroy();
 
 		/// <summary>
-		/// Getter for this application
+		/// Getter for this application, doesn't increment the std::shared_ptr reference count
 		/// </summary>
 		/// <returns>The current application</returns>
-		static std::shared_ptr<Application> Get() { return s_Instance; }
+		static Application& Get() { return *s_Instance; }
+
+		/// <summary>
+		/// Getter for this application, increments the std::shared_ptr reference count
+		/// </summary>
+		/// <returns>The current application</returns>
+		static Ref<Application> GetShared() { return s_Instance; }
 
 		/// <summary>
 		/// Getter for the main window
@@ -111,7 +117,7 @@ namespace Zeal::Reyal
 
 	private:
 		LayerStack m_LayerStack;
-		static std::shared_ptr<Application> s_Instance;
+		static Ref<Application> s_Instance;
 	};
 
 }

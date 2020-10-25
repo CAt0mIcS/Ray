@@ -63,14 +63,14 @@ namespace Zeal::Reyal
 		/// Getter for the parent of this Widget
 		/// </summary>
 		/// <returns>The parent Widget</returns>
-		std::shared_ptr<Widget> GetParent() const { return m_Parent; }
+		Widget* GetParent() const { return m_Parent; }
 
 		/// <summary>
 		/// Searches through all children and finds the one with name
 		/// </summary>
 		/// <param name="name">Is the child's name</param>
 		/// <returns>The child, or nullptr if no child was found</returns>
-		std::shared_ptr<Widget> FindChild(const std::wstring_view name);
+		Widget* FindChild(const std::wstring_view name);
 
 		/// <summary>
 		/// Adds a new child to this control
@@ -104,7 +104,7 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <param name="name">Is the unique name of the Widget</param>
 		/// <param name="parent">Is the parent of this Widget</param>
-		Widget(const std::wstring_view name, _In_opt_ std::shared_ptr<Widget> parent = nullptr);
+		Widget(const std::wstring_view name, _In_opt_ Widget* parent = nullptr);
 
 		/// <summary>
 		/// Recursively searches through all children and finds the one which should receive the specified event
@@ -114,9 +114,9 @@ namespace Zeal::Reyal
 		Widget* GetEventReceiver(const Event& e, const Mouse& mouse);
 
 	protected:
-		std::shared_ptr<Widget> m_Parent;
+		Widget* m_Parent;
 		const std::wstring m_Name;
-		std::vector<std::shared_ptr<Widget>> m_Children;
+		std::vector<Scope<Widget>> m_Children;
 		WindowRenderer* m_Renderer;
 		D2D1::Matrix3x2F m_Matrix;
 	};
@@ -125,7 +125,7 @@ namespace Zeal::Reyal
 	template<typename T, typename... Args, typename>
 	inline T* Widget::AddChild(const std::wstring_view name, Args&&... args)
 	{
-		return (T*)m_Children.emplace_back(std::make_shared(name, args...));
+		return (T*)m_Children.emplace_back(MakeScope(name, args...));
 	}
 }
 
