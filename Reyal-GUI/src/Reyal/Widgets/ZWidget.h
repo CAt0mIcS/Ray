@@ -18,6 +18,12 @@ namespace Zeal::Reyal
 	{
 	public:
 		/// <summary>
+		/// Default Widget Move-Constructor
+		/// </summary>
+		/// <param name=""></param>
+		Widget(Widget&&) = default;
+
+		/// <summary>
 		/// Gets the unique name of the current Widget
 		/// </summary>
 		/// <returns>The name of the widget</returns>
@@ -125,7 +131,7 @@ namespace Zeal::Reyal
 	template<typename T, typename... Args, typename>
 	inline T* Widget::AddChild(const std::wstring_view name, Args&&... args)
 	{
-		return (T*)m_Children.emplace_back(MakeScope(name, args...));
+		return (T*)m_Children.emplace_back(MakeScope(name, std::forward<Args>(args)...));
 	}
 }
 

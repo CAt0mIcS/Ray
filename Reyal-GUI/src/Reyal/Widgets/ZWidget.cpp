@@ -42,7 +42,7 @@ namespace Zeal::Reyal
         for (auto& child : m_Children)
         {
             if (child->GetName() == name)
-                return child.get();;
+                return child.get();
         }
         return nullptr;
     }
