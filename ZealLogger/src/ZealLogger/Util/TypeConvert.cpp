@@ -1,9 +1,8 @@
+#include "zlpch.h"
 #include "TypeConvert.h"
 
-#include <Windows.h>
 
-
-namespace Zeal::Util
+namespace Zeal::Log::Util
 {
 	std::wstring MultiByteToWideChar(const std::string_view str)
 	{
