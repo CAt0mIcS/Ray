@@ -48,6 +48,18 @@ namespace Zeal::Reyal
 		static std::shared_ptr<Application> Get() { return s_Instance; }
 
 		/// <summary>
+		/// Getter for the main window
+		/// </summary>
+		/// <returns>The main window of this application</returns>
+		Window& GetMainWindow() { return m_MainWindow; }
+
+		/// <summary>
+		/// Getter for the main window
+		/// </summary>
+		/// <returns>The main window of this application</returns>
+		const Window& GetMainWindow() const { return m_MainWindow; }
+
+		/// <summary>
 		/// Starts the application run loop
 		/// </summary>
 		/// <returns>The exit code when the program terminates</returns>

@@ -8,7 +8,7 @@
 namespace Zeal::Reyal
 {
 	template<typename T, size_t MaxSize = -1>
-	class Queue
+	class RL_API Queue
 	{
 		using Iterator = typename std::deque<T>::iterator;
 		using ReverseIterator = typename std::deque<T>::reverse_iterator;

@@ -1,12 +1,13 @@
 #pragma once
 
+#include "RlBase.h"
 #include "Event.h"
 
 
 
 namespace Zeal::Reyal
 {
-	class KeyEvent : public Event
+	class RL_API KeyEvent : public Event
 	{
 	protected:
 		KeyEvent(const unsigned char keycode)
@@ -21,7 +22,7 @@ namespace Zeal::Reyal
 		unsigned char m_KeyCode;
 	};
 
-	class KeyPressedEvent : public KeyEvent
+	class RL_API KeyPressedEvent : public KeyEvent
 	{
 	public:
 		KeyPressedEvent(const unsigned char keycode)
@@ -39,7 +40,7 @@ namespace Zeal::Reyal
 		RL_DECLARE_TYPE_FN(KeyPressedEvent)
 	};
 
-	class KeyReleasedEvent : public KeyEvent
+	class RL_API KeyReleasedEvent : public KeyEvent
 	{
 	public:
 		KeyReleasedEvent(const unsigned char keycode)
@@ -57,7 +58,7 @@ namespace Zeal::Reyal
 		RL_DECLARE_TYPE_FN(KeyReleasedEvent)
 	};
 
-	class CharEvent : public KeyEvent
+	class RL_API CharEvent : public KeyEvent
 	{
 	public:
 		CharEvent(const unsigned char keycode)

@@ -20,8 +20,9 @@ namespace Zeal::Reyal
 
 		bool IsOnWidget(const Widget* widget) const;
 
-		const Point& GetMousePos() const;
-		void SetMousePos(const Point& mousePos);
+		const Point& GetPos() const;
+		const Point& GetOldPos() const;
+		void SetPos(const Point& mousePos);
 
 	private:
 		bool m_IsLeftPressed;
@@ -29,6 +30,7 @@ namespace Zeal::Reyal
 		bool m_IsRightPressed;
 
 		Point m_MousePos;
+		Point m_OldMousePos;
 	};
 }
 

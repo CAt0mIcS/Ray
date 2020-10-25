@@ -191,7 +191,8 @@ namespace Zeal::Reyal
 		bool m_IsMainWindow;
 		int m_ExitCode;
 		WindowRenderer m_Renderer;
-		Widget* m_CurrentHover;
+		Point m_OldWindowPos;
+		Size m_OldSize;
 
 		Queue<EventMessage, s_MaxMessagesInQueue> m_EventQueue;
 

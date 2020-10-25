@@ -31,13 +31,19 @@ namespace Zeal::Reyal
 		return false;
 	}
 
-	const Point& Mouse::GetMousePos() const
+	const Point& Mouse::GetPos() const
 	{
 		return m_MousePos;
 	}
 
-	void Mouse::SetMousePos(const Point& mousePos)
+	const Point& Mouse::GetOldPos() const
 	{
+		return m_OldMousePos;
+	}
+
+	void Mouse::SetPos(const Point& mousePos)
+	{
+		m_OldMousePos = m_MousePos;
 		m_MousePos = mousePos;
 	}
 }

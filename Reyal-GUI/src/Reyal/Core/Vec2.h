@@ -1,14 +1,20 @@
 #pragma once
 
-#include <cmath>
-#include <iostream>
+#include "RlBase.h"
 
 #include "Reyal/Util/Direct2D.h"
+
+namespace std
+{
+	template <class Elem, class Traits>
+	class basic_ostream;
+}
+
 
 
 namespace Zeal::Reyal
 {
-	struct Vec2
+	struct RL_API Vec2
 	{
 		union { float x, width; };
 		union { float y, height; };
@@ -80,15 +86,15 @@ namespace Zeal::Reyal
 		/// Conversion operator to Direct2D Size
 		/// </summary>
 		operator D2D::SizeF() const;
-	};
 
-	/// <summary>
-	/// Output stream operator for the vector
-	/// </summary>
-	/// <param name="os">Is the output stream</param>
-	/// <param name="vec">Is the vector to output</param>
-	/// <returns>floathe modified output stream</returns>
-	std::ostream& operator<<(std::ostream& os, const Vec2& vec);
+		/// <summary>
+		/// Output stream operator for the vector
+		/// </summary>
+		/// <param name="os">Is the output stream</param>
+		/// <param name="vec">Is the vector to output</param>
+		/// <returns>floathe modified output stream</returns>
+		RL_API friend std::ostream& operator<<(std::ostream& os, const Vec2& vec);
+	};
 
 
 	using Point = Vec2;

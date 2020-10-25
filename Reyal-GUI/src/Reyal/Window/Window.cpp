@@ -14,7 +14,7 @@
 namespace Zeal::Reyal
 {
 	Window::Window(const std::wstring_view name, _In_opt_ std::shared_ptr<Widget> parent, bool isMainWindow)
-		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_ExitCode(0), m_CurrentHover()
+		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_ExitCode(0), m_OldWindowPos{}
 	{
 		ZL_PROFILE_FUNCTION();
 
@@ -49,9 +49,9 @@ namespace Zeal::Reyal
 		case WM_MOUSEMOVE:
 		{
 			POINTS pt = MAKEPOINTS(lParam);
-			Mouse.SetMousePos({ (float)pt.x, (float)pt.y });
+			Mouse.SetPos({ (float)pt.x, (float)pt.y });
 
-			Scope<MouseMoveEvent> e = MakeScope<MouseMoveEvent>(Point{ (float)pt.x, (float)pt.y });
+			Scope<MouseMoveEvent> e = MakeScope<MouseMoveEvent>(Mouse.GetOldPos(), Mouse.GetPos());
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 
 			return 0;
@@ -123,6 +123,10 @@ namespace Zeal::Reyal
 		}
 		case WM_PAINT:
 		{
+			PAINTSTRUCT ps;
+			HDC hDC = BeginPaint(m_hWnd, &ps);
+			EndPaint(m_hWnd, &ps);
+
 			Scope<PaintEvent> e = MakeScope<PaintEvent>();
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
@@ -134,8 +138,10 @@ namespace Zeal::Reyal
 
 			//TODO: Read how windows handles events (how they're built, how they handle it)
 
-			//WindowResizeEvent e(newSize);
-			//if (DispatchEvent(e)) break;
+			Scope<WindowResizeEvent> e = MakeScope<WindowResizeEvent>(m_OldSize, newSize);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+
+			m_OldSize = newSize;
 			return 0;
 		}
 		case WM_MOVE:
@@ -143,10 +149,11 @@ namespace Zeal::Reyal
 			Point newPos = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
 			MoveTo(newPos);
 
-			Scope<WindowMoveEvent> e = MakeScope<WindowMoveEvent>(newPos);
+			Scope<WindowMoveEvent> e = MakeScope<WindowMoveEvent>(m_OldWindowPos, newPos);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
-			
-			break;
+
+			m_OldWindowPos = newPos;
+			return 0;
 		}
 		case WM_CLOSE:
 		{

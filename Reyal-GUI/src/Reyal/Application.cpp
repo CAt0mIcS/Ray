@@ -26,6 +26,7 @@ namespace Zeal::Reyal
 		s_Instance.reset();
 	}
 
+	// TODO: Clean up
 	static std::thread s_EventThread;
 	int Application::Run()
 	{
@@ -36,15 +37,14 @@ namespace Zeal::Reyal
 				layer->OnUpdate();
 			}
 
-			if (s_EventThread.joinable())
-				s_EventThread.join();
-
-
 			// TODO: Strip in better builds
 			for (EventMessage& eMsg : m_MainWindow.GetEventQueue())
 			{
 				ZL_LOG_DEBUG(eMsg.e->ToString());
 			}
+
+			if (s_EventThread.joinable())
+				s_EventThread.join();
 
 			s_EventThread = std::thread([this]()
 				{
@@ -93,23 +93,23 @@ namespace Zeal::Reyal
 		//TODO: Implement receiver
 		switch (e.GetType())
 		{
-		case EventType::MouseButtonPressedEvent:	layer->OnMousePress(receiver, e); break;
-		case EventType::MouseButtonReleasedEvent:	layer->OnMouseRelease(receiver, e); break;
-		case EventType::MouseWheelUpEvent:			layer->OnMouseWheelUp(receiver, e); break;
-		case EventType::MouseWheelDownEvent:		layer->OnMouseWheelDown(receiver, e); break;
-		case EventType::MouseMoveEvent:				layer->OnMouseMove(receiver, e); break;
-		case EventType::HoverEnterEvent:			layer->OnHoverEnter(receiver, e); break;
-		case EventType::HoverLeaveEvent:			layer->OnHoverLeave(receiver, e); break;
-		case EventType::KeyPressedEvent:			layer->OnKeyPress(receiver, e); break;
-		case EventType::CharEvent:					layer->OnChar(receiver, e); break;
-		case EventType::KeyReleasedEvent:			layer->OnKeyRelease(receiver, e); break;
-		case EventType::WindowResizeEvent:			layer->OnResize(receiver, e); break;
-		//case EventType::WindowCloseEvent:			layer->OnWindowClose(receiver, e); break;
-		case EventType::WindowMoveEvent:			layer->OnWindowMove(receiver, e); break;
-		case EventType::PaintEvent:					layer->OnPaint(receiver, e); break;
-		//case EventType::SetCursorEvent:			layer->OnSetCursor(receiver, e); break;
+		case EventType::MouseButtonPressedEvent:	layer->OnMousePress(receiver, (MouseButtonPressedEvent&)e); break;
+		case EventType::MouseButtonReleasedEvent:	layer->OnMouseRelease(receiver, (MouseButtonReleasedEvent&)e); break;
+		case EventType::MouseWheelUpEvent:			layer->OnMouseWheelUp(receiver, (MouseWheelUpEvent&)e); break;
+		case EventType::MouseWheelDownEvent:		layer->OnMouseWheelDown(receiver, (MouseWheelDownEvent&)e); break;
+		case EventType::MouseMoveEvent:				layer->OnMouseMove(receiver, (MouseMoveEvent&)e); break;
+		case EventType::HoverEnterEvent:			layer->OnHoverEnter(receiver, (HoverEnterEvent&)e); break;
+		case EventType::HoverLeaveEvent:			layer->OnHoverLeave(receiver, (HoverLeaveEvent&)e); break;
+		case EventType::KeyPressedEvent:			layer->OnKeyPress(receiver, (KeyPressedEvent&)e); break;
+		case EventType::KeyReleasedEvent:			layer->OnKeyRelease(receiver, (KeyReleasedEvent&)e); break;
+		case EventType::CharEvent:					layer->OnChar(receiver, (CharEvent&)e); break;
+		case EventType::WindowResizeEvent:			layer->OnResize(receiver, (WindowResizeEvent&)e); break;
+		//case EventType::WindowCloseEvent:			layer->OnWindowClose(receiver, (WindowCloseEvent&)e); break;
+		case EventType::WindowMoveEvent:			layer->OnWindowMove(receiver, (WindowMoveEvent&)e); break;
+		case EventType::PaintEvent:					layer->OnPaint(receiver, (PaintEvent&)e); break;
+		//case EventType::SetCursorEvent:			layer->OnSetCursor(receiver, (SetCursorEvent&)e); break;
 		default:
-			assert(false, "Unimplemented event");
+			assert(false && "Unimplemented event");
 		}
 	}
 }

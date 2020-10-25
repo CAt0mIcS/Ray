@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RlBase.h"
 #include "Event.h"
 
 #include "Reyal/Core/Vec2.h"
@@ -7,11 +8,11 @@
 
 namespace Zeal::Reyal
 {
-	class WindowResizeEvent : public Event
+	class RL_API WindowResizeEvent : public Event
 	{
 	public:
-		WindowResizeEvent(const Size& size)
-			: m_Size(size)
+		WindowResizeEvent(const Size& oldSize, const Size& newSize)
+			: m_OldSize(oldSize), m_NewSize(newSize)
 		{
 
 		}
@@ -19,23 +20,25 @@ namespace Zeal::Reyal
 		virtual std::string ToString() const override
 		{
 			std::ostringstream oss;
-			oss << "[WindowResizeEvent] New Size: " << m_Size;
+			oss << "[WindowResizeEvent] New Size: " << m_NewSize;
 			return oss.str();
 		}
 
-		const Size& GetSize() const { return m_Size; }
+		const Size& GetSize() const { return m_NewSize; }
+		const Size& GetOldSize() const { return m_OldSize; }
 
 		RL_DECLARE_TYPE_FN(WindowResizeEvent)
 
 	private:
-		Size m_Size;
+		Size m_OldSize;
+		Size m_NewSize;
 	};
 
-	class WindowMoveEvent : public Event
+	class RL_API WindowMoveEvent : public Event
 	{
 	public:
-		WindowMoveEvent(const Point& pos)
-			: m_Pos(pos)
+		WindowMoveEvent(const Point& oldPos, const Point& newPos)
+			: m_OldPos(oldPos), m_NewPos(newPos)
 		{
 
 		}
@@ -43,19 +46,21 @@ namespace Zeal::Reyal
 		virtual std::string ToString() const override
 		{
 			std::ostringstream oss;
-			oss << "[WindowMoveEvent] New Posititon: " << m_Pos;
+			oss << "[WindowMoveEvent] New Posititon: " << m_NewPos;
 			return oss.str();
 		}
 
-		const Point& GetPos() const { return m_Pos; }
+		const Point& GetPos() const { return m_NewPos; }
+		const Point& GetOldPos() const { return m_OldPos; }
 
 		RL_DECLARE_TYPE_FN(WindowMoveEvent)
 
 	private:
-		Point m_Pos;
+		Point m_OldPos;
+		Point m_NewPos;
 	};
 
-	class SetCursorEvent : public Event
+	class RL_API SetCursorEvent : public Event
 	{
 	public:
 		SetCursorEvent()
@@ -72,7 +77,7 @@ namespace Zeal::Reyal
 		RL_DECLARE_TYPE_FN(SetCursorEvent)
 	};
 
-	class WindowCloseEvent : public Event
+	class RL_API WindowCloseEvent : public Event
 	{
 	public:
 		WindowCloseEvent()
@@ -89,7 +94,7 @@ namespace Zeal::Reyal
 		RL_DECLARE_TYPE_FN(WindowCloseEvent)
 	};
 
-	class PaintEvent : public Event
+	class RL_API PaintEvent : public Event
 	{
 	public:
 		PaintEvent()

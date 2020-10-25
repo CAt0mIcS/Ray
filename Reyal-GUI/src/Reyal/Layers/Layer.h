@@ -2,12 +2,15 @@
 
 #include "RlBase.h"
 
+#include "Reyal/Events/ApplicationEvent.h"
+#include "Reyal/Events/KeyboardEvent.h"
+#include "Reyal/Events/MouseEvent.h"
+
+#include "Reyal/Widgets/ZWidget.h"
+
 
 namespace Zeal::Reyal
 {
-	class Event;
-	class Widget;
-
 	class RL_API Layer
 	{
 	public:
@@ -22,19 +25,19 @@ namespace Zeal::Reyal
 		/// </summary>
 		virtual void OnUpdate() { };
 
-		virtual void OnMousePress(_In_ Widget* receiver, Event& e) {}
-		virtual void OnMouseRelease(_In_ Widget* receiver, Event& e) {}
-		virtual void OnMouseWheelUp(_In_ Widget* receiver, Event& e) {}
-		virtual void OnMouseWheelDown(_In_ Widget* receiver, Event& e) {}
-		virtual void OnMouseMove(_In_ Widget* receiver, Event& e) {}
-		virtual void OnHoverEnter(_In_ Widget* receiver, Event& e) {}
-		virtual void OnHoverLeave(_In_ Widget* receiver, Event& e) {}
-		virtual void OnKeyPress(_In_ Widget* receiver, Event& e) {}
-		virtual void OnKeyRelease(_In_ Widget* receiver, Event& e) {}
-		virtual void OnChar(_In_ Widget* receiver, Event& e) {}
-		virtual void OnResize(_In_ Widget* receiver, Event& e) {}
-		virtual void OnWindowMove(_In_ Widget* receiver, Event& e) {}
-		virtual void OnPaint(_In_ Widget* receiver, Event& e) {}
+		virtual void OnMousePress(_In_ Widget* receiver, MouseButtonPressedEvent& e) {}
+		virtual void OnMouseRelease(_In_ Widget* receiver, MouseButtonReleasedEvent& e) {}
+		virtual void OnMouseWheelUp(_In_ Widget* receiver, MouseWheelUpEvent& e) {}
+		virtual void OnMouseWheelDown(_In_ Widget* receiver, MouseWheelDownEvent& e) {}
+		virtual void OnMouseMove(_In_ Widget* receiver, MouseMoveEvent& e) {}
+		virtual void OnHoverEnter(_In_ Widget* receiver, HoverEnterEvent& e) {}
+		virtual void OnHoverLeave(_In_ Widget* receiver, HoverLeaveEvent& e) {}
+		virtual void OnKeyPress(_In_ Widget* receiver, KeyPressedEvent& e) {}
+		virtual void OnKeyRelease(_In_ Widget* receiver, KeyReleasedEvent& e) {}
+		virtual void OnChar(_In_ Widget* receiver, CharEvent& e) {}
+		virtual void OnResize(_In_ Widget* receiver, WindowResizeEvent& e) {}
+		virtual void OnWindowMove(_In_ Widget* receiver, WindowMoveEvent& e) {}
+		virtual void OnPaint(_In_ Widget* receiver, PaintEvent& e) {}
 	protected:
 	};
 	

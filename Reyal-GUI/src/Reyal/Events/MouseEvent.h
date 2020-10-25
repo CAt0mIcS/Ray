@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RlBase.h"
 #include "Event.h"
 
 #include "Reyal/Core/Vec2.h"
@@ -8,36 +9,38 @@
 namespace Zeal::Reyal
 {
 
-	enum class MouseButton
+	enum class RL_API MouseButton
 	{
 		INVALID = 0,
 		Left, Middle, Right
 	};
 
-	class MouseMoveEvent : public Event
+	class RL_API MouseMoveEvent : public Event
 	{
 	public:
-		MouseMoveEvent(const Point& pos)
-			: m_Pos(pos)
+		MouseMoveEvent(const Point& oldPos, const Point& newPos)
+			: m_OldPos(oldPos), m_NewPos(newPos)
 		{
 		}
 
 		virtual std::string ToString() const override
 		{
 			std::ostringstream oss;
-			oss << "[MouseMoveEvent] New Position: " << m_Pos;
+			oss << "[MouseMoveEvent] New Position: " << m_NewPos;
 			return oss.str();
 		}
 
-		const Point& GetPos() const { return m_Pos; }
+		const Point& GetPos() const { return m_NewPos; }
+		const Point& GetOldPos() const { return m_OldPos; }
 
 		RL_DECLARE_TYPE_FN(MouseMoveEvent)
 
 	private:
-		Point m_Pos;
+		Point m_OldPos;
+		Point m_NewPos;
 	};
 
-	class MouseButtonPressedEvent : public Event
+	class RL_API MouseButtonPressedEvent : public Event
 	{
 	public:
 		MouseButtonPressedEvent(const MouseButton btn)
@@ -60,7 +63,7 @@ namespace Zeal::Reyal
 		MouseButton m_Button;
 	};
 
-	class MouseButtonReleasedEvent : public Event
+	class RL_API MouseButtonReleasedEvent : public Event
 	{
 	public:
 		MouseButtonReleasedEvent(const MouseButton btn)
@@ -83,7 +86,7 @@ namespace Zeal::Reyal
 		MouseButton m_Button;
 	};
 
-	class MouseWheelEvent : public Event
+	class RL_API MouseWheelEvent : public Event
 	{
 	public:
 		int GetDelta() const { return m_Delta; }
@@ -96,7 +99,7 @@ namespace Zeal::Reyal
 		int m_Delta;
 	};
 
-	class MouseWheelUpEvent : public MouseWheelEvent
+	class RL_API MouseWheelUpEvent : public MouseWheelEvent
 	{
 	public:
 		MouseWheelUpEvent(int delta)
@@ -114,7 +117,7 @@ namespace Zeal::Reyal
 		RL_DECLARE_TYPE_FN(MouseWheelUpEvent)
 	};
 
-	class MouseWheelDownEvent : public MouseWheelEvent
+	class RL_API MouseWheelDownEvent : public MouseWheelEvent
 	{
 	public:
 		MouseWheelDownEvent(int delta)
@@ -132,7 +135,7 @@ namespace Zeal::Reyal
 		RL_DECLARE_TYPE_FN(MouseWheelDownEvent)
 	};
 
-	class HoverEnterEvent : public Event
+	class RL_API HoverEnterEvent : public Event
 	{
 	public:
 		HoverEnterEvent() = default;
@@ -147,7 +150,7 @@ namespace Zeal::Reyal
 		RL_DECLARE_TYPE_FN(HoverEnterEvent);
 	};
 
-	class HoverLeaveEvent : public Event
+	class RL_API HoverLeaveEvent : public Event
 	{
 	public:
 		HoverLeaveEvent() = default;

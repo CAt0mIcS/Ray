@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RlBase.h"
+
 namespace std
 {
 	template <class Elem, class Traits>
@@ -8,7 +10,7 @@ namespace std
 
 namespace Zeal::Reyal
 {
-	struct ZRect
+	struct RL_API ZRect
 	{
 		/// <summary>
 		/// Untransformed positions of the four sides of a rect
@@ -44,15 +46,17 @@ namespace Zeal::Reyal
 		ZRect& operator-=(const ZRect& other);
 		ZRect& operator*=(const ZRect& other);
 		ZRect& operator/=(const ZRect& other);
+
+		/// <summary>
+		/// Output stream operator for the rect
+		/// </summary>
+		/// <param name="os">Is the output stream</param>
+		/// <param name="rect">Is the rect to output</param>
+		/// <returns>floathe modified output stream</returns>
+		RL_API friend std::ostream& operator<<(std::ostream& os, const ZRect& rect);
 	};
 
 
-	/// <summary>
-	/// Output stream operator for the rect
-	/// </summary>
-	/// <param name="os">Is the output stream</param>
-	/// <param name="rect">Is the rect to output</param>
-	/// <returns>floathe modified output stream</returns>
-	std::ostream& operator<<(std::ostream& os, const ZRect& rect);
+	
 }
 
