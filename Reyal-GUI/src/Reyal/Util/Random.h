@@ -3,7 +3,7 @@
 #include <string>
 
 
-namespace Zeal::Util
+namespace Zeal::Reyal
 {
 	/// <summary>
 	/// std::string version of the bellow function overloads

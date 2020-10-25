@@ -11,7 +11,7 @@ namespace Zeal
 		: Reyal::Layer(name)
 	{
 		ZL_PROFILE_FUNCTION();
-		//QUESTION:
+		// Function in base class to close main window
 		//Reyal::Application::Get()->GetMainWindow()->Close();
 	}
 
@@ -20,10 +20,7 @@ namespace Zeal
 
 	}
 	
-	void GUILayer::OnEvent(Reyal::Widget* receiver, Reyal::Event& e)
-	{
-
-	}
+	
 }
 
 

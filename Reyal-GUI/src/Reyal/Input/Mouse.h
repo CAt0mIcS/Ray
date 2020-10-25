@@ -2,7 +2,7 @@
 
 #include "RlBase.h"
 
-#include <Util/ZPoint.h>
+#include "Reyal/Core/Vec2.h"
 
 
 namespace Zeal::Reyal
@@ -20,15 +20,15 @@ namespace Zeal::Reyal
 
 		bool IsOnWidget(const Widget* widget) const;
 
-		const Util::Point& GetMousePos() const;
-		void SetMousePos(const Util::Point& mousePos);
+		const Point& GetMousePos() const;
+		void SetMousePos(const Point& mousePos);
 
 	private:
 		bool m_IsLeftPressed;
 		bool m_IsMiddlePressed;
 		bool m_IsRightPressed;
 
-		Util::Point m_MousePos;
+		Point m_MousePos;
 	};
 }
 

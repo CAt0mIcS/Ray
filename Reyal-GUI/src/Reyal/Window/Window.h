@@ -10,6 +10,8 @@
 
 #include <functional>
 
+#include "Reyal/Core/Queue.h"
+
 
 namespace Zeal::Reyal
 {
@@ -22,6 +24,15 @@ namespace Zeal::Reyal
 	/// <returns>True if the event was handled by the client, false if the event should be handled by the Window</returns>
 	/// </summary>
 	using EventCallbackFn = std::function<bool(Widget* receiver, Event& e)>;
+
+	/// <summary>
+	/// Struct pushed into the event queue
+	/// </summary>
+	struct EventMessage
+	{
+		Widget* receiver;
+		Event* e;
+	};
 
 	class RL_API Window : public BaseWindow<Window>, public Widget
 	{
@@ -164,25 +175,21 @@ namespace Zeal::Reyal
 		int GetExitCode() const { return m_ExitCode; }
 
 		/// <summary>
-		/// Sets the function which will receive events
+		/// Getter for the current event queue
 		/// </summary>
-		/// <typeparam name="F">Is any callable, to EventCallbackFn castable function pointer</typeparam>
-		/// <param name="func">Is the function which will receive all events</param>
-		template<typename F, typename = std::enable_if_t<std::is_invocable_v<F, Widget*, Event&>>, typename = std::enable_if_t<std::is_convertible_v<F, EventCallbackFn>>>
-		void SetEventCallback(F&& func) { m_CallbackFunc = func; }
+		/// <returns>Returns the event queue for this window</returns>
+		Queue<EventMessage>& GetEventQueue() { return m_EventQueue; }
 
 	public:
 		Keyboard Keyboard;
 		Mouse Mouse;
 
 	private:
-		bool DispatchEvent(Event& e);
-
-	private:
-		EventCallbackFn m_CallbackFunc;
 		bool m_IsMainWindow;
 		int m_ExitCode;
 		WindowRenderer m_Renderer;
 		Widget* m_CurrentHover;
+
+		Queue<EventMessage> m_EventQueue;
 	};
 }

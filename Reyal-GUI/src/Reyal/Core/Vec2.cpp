@@ -1,10 +1,10 @@
-#include "utilpch.h"
-#include "ZPoint.h"
+#include "rlpch.h"
+#include "Vec2.h"
 
 #include <iostream>
 
 
-namespace Zeal::Util
+namespace Zeal::Reyal
 {
 	Vec2::Vec2(float xy) : x(xy), y(xy) {}
 

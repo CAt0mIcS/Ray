@@ -14,7 +14,6 @@ namespace Zeal::Reyal
 	Application::Application()
 		: m_MainWindow(L"MainWindow", nullptr, true), m_LayerStack{}
 	{
-		m_MainWindow.SetEventCallback([this](Widget* receiver, Event& e) { return OnEventReceived(receiver, e); });
 	}
 
 	void Application::Create(Application* app)
@@ -31,6 +30,15 @@ namespace Zeal::Reyal
 	{
 		while (!m_MainWindow.ShouldClose())
 		{
+			if (!m_MainWindow.GetEventQueue().Empty())
+			{
+				//TODO: Limit amount of messages
+				std::cout << m_MainWindow.GetEventQueue().Size() << '\n';
+				EventMessage eMsg = m_MainWindow.GetEventQueue().PopFront();
+				OnEventReceived(eMsg.receiver, *eMsg.e);
+				delete eMsg.e;
+			}
+
 			for (auto* layer : m_LayerStack)
 			{
 				layer->OnUpdate();
@@ -52,7 +60,7 @@ namespace Zeal::Reyal
 		ZL_PROFILE_FUNCTION();
 	}
 	
-	bool Application::OnEventReceived(_In_ Widget* receiver, _In_ Event& e)
+	void Application::OnEventReceived(_In_ Widget* receiver, Event& e)
 	{
 		ZL_PROFILE_FUNCTION();
 
@@ -60,15 +68,36 @@ namespace Zeal::Reyal
 		for (auto* layer : m_LayerStack)
 		{
 			if (e.Handled)
-				return true;
-			layer->OnEvent(receiver, e);
+				break;
+			DispatchEvent(layer, receiver, e);
 		}
+	}
+	
+	void Application::DispatchEvent(_In_ Layer* layer, _In_ Widget* receiver, Event& e)
+	{
+		ZL_PROFILE_FUNCTION();
 
-		// If no layer handled the event (e.g. WindowCloseEvent) then dispatch it to the Application
-		if (!e.Handled)
-			this->OnEvent(receiver, e);
-
-		return e.Handled;
+		//TODO: Implement receiver
+		switch (e.GetType())
+		{
+		case EventType::MouseButtonPressedEvent:	layer->OnMousePress(receiver, e); break;
+		case EventType::MouseButtonReleasedEvent:	layer->OnMouseRelease(receiver, e); break;
+		case EventType::MouseWheelUpEvent:			layer->OnMouseWheelUp(receiver, e); break;
+		case EventType::MouseWheelDownEvent:		layer->OnMouseWheelDown(receiver, e); break;
+		case EventType::MouseMoveEvent:				layer->OnMouseMove(receiver, e); break;
+		case EventType::HoverEnterEvent:			layer->OnHoverEnter(receiver, e); break;
+		case EventType::HoverLeaveEvent:			layer->OnHoverLeave(receiver, e); break;
+		case EventType::KeyPressedEvent:			layer->OnKeyPress(receiver, e); break;
+		case EventType::CharEvent:					layer->OnChar(receiver, e); break;
+		case EventType::KeyReleasedEvent:			layer->OnKeyRelease(receiver, e); break;
+		case EventType::WindowResizeEvent:			layer->OnResize(receiver, e); break;
+		//case EventType::WindowCloseEvent:			layer->OnWindowClose(receiver, e); break;
+		case EventType::WindowMoveEvent:			layer->OnWindowMove(receiver, e); break;
+		case EventType::PaintEvent:					layer->OnPaint(receiver, e); break;
+		//case EventType::SetCursorEvent:			layer->OnSetCursor(receiver, e); break;
+		default:
+			assert(false, "Unimplemented event");
+		}
 	}
 }
 

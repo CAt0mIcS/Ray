@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include "rlpch.h"
 
 #include "Reyal/Application.h"
@@ -7,6 +8,14 @@
 #include "Reyal/Exception.h"
 
 #include <signal.h>
+
+
+void* operator new(size_t size)
+{
+	std::cout << "Allocated " << size << " bytes\n";
+	return malloc(size);
+}
+
 
 /// <summary>
 /// Handles any unexpected signals, logs the signal and closes the logger
@@ -46,13 +55,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 	
 #ifdef _DEBUG
 	{
-		/// <summary>
-		/// QUESTION:
-		///		freopen or freopen_s
-		/// </summary>
 		AllocConsole();
-		FILE* pFile;
-		freopen_s(&pFile, "CONOUT$", "w", stdout);
+		FILE* file;
+		freopen_s(&file, "CONOUT$", "w", stdout);
 	}
 #endif
 

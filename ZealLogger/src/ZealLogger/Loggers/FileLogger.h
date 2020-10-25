@@ -3,7 +3,7 @@
 #include <fstream>
 #include "BaseLogger.h"
 
-#include <Util/TypeConvert.h>
+#include "../Util/TypeConvert.h"
 
 
 namespace Zeal::Log

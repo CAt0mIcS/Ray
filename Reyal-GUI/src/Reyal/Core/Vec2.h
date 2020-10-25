@@ -3,10 +3,10 @@
 #include <cmath>
 #include <iostream>
 
-#include "Direct2D.h"
+#include "Reyal/Util/Direct2D.h"
 
 
-namespace Zeal::Util
+namespace Zeal::Reyal
 {
 	struct Vec2
 	{

@@ -3,7 +3,6 @@
 #include "RlBase.h"
 
 #include <deque>
-#include <queue>
 
 
 namespace Zeal::Reyal
@@ -70,9 +69,19 @@ namespace Zeal::Reyal
 			return m_Queue.back();
 		}
 
+		bool Empty() const
+		{
+			return m_Queue.empty();
+		}
+
+		size_t Size() const
+		{
+			return m_Queue.size();
+		}
+
 		Iterator begin()
 		{
-std::scoped_lock lock(m_Mutex); 
+			std::scoped_lock lock(m_Mutex); 
 			return m_Queue.begin();
 		}
 

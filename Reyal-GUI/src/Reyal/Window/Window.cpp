@@ -4,7 +4,7 @@
 #include "Reyal/Exception.h"
 #include "Reyal/Debug/ReyalLogger.h"
 
-#include <Util/Random.h>
+#include "Reyal/Util/Random.h"
 
 #include "Reyal/Events/KeyboardEvent.h"
 #include "Reyal/Events/MouseEvent.h"
@@ -18,7 +18,7 @@ namespace Zeal::Reyal
 	{
 		ZL_PROFILE_FUNCTION();
 
-		auto rnd = Util::GenerateRandomToken<std::wstring>(5);
+		auto rnd = GenerateRandomToken<std::wstring>(5);
 		ZL_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
 		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW));
 
@@ -34,9 +34,6 @@ namespace Zeal::Reyal
 
 	LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		if (!m_CallbackFunc)
-			return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
-
 		switch (uMsg)
 		{
 		case WM_DESTROY:
@@ -54,57 +51,66 @@ namespace Zeal::Reyal
 			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.SetMousePos({ (float)pt.x, (float)pt.y });
 
-			MouseMoveEvent e;
-			if (DispatchEvent(e)) break;
+			MouseMoveEvent* e = new MouseMoveEvent({ (float)pt.x, (float)pt.y });
+			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
+			m_EventQueue.PushBack(eMsg);
 
 			return 0;
 		}
 		case WM_LBUTTONDOWN:
 		{
-			MouseButtonPressedEvent e(MouseButton::Left);
-			if (DispatchEvent(e)) break;
+			MouseButtonPressedEvent* e = new MouseButtonPressedEvent(MouseButton::Left);
+			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
+			m_EventQueue.PushBack(eMsg);
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
-			MouseButtonReleasedEvent e(MouseButton::Left);
-			if (DispatchEvent(e)) break;
+			MouseButtonReleasedEvent* e = new MouseButtonReleasedEvent(MouseButton::Left);
+			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
+			m_EventQueue.PushBack(eMsg);
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
-			MouseButtonPressedEvent e(MouseButton::Middle);
-			if (DispatchEvent(e)) break;
+			MouseButtonPressedEvent* e = new MouseButtonPressedEvent(MouseButton::Middle);
+			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
+			m_EventQueue.PushBack(eMsg);
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
-			MouseButtonReleasedEvent e(MouseButton::Middle);
-			if (DispatchEvent(e)) break;
+			MouseButtonReleasedEvent* e = new MouseButtonReleasedEvent(MouseButton::Middle);
+			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
+			m_EventQueue.PushBack(eMsg);
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
-			MouseButtonPressedEvent e(MouseButton::Right);
-			if (DispatchEvent(e)) break;
+			MouseButtonPressedEvent* e = new MouseButtonPressedEvent(MouseButton::Right);
+			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
+			m_EventQueue.PushBack(eMsg);
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
-			MouseButtonReleasedEvent e(MouseButton::Right);
-			if (DispatchEvent(e)) break;
+			MouseButtonReleasedEvent* e = new MouseButtonReleasedEvent(MouseButton::Right);
+			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
+			m_EventQueue.PushBack(eMsg);
 			return 0;
 		}
 		case WM_KEYDOWN:
 		{
-			KeyPressedEvent e(wParam);
-			if (DispatchEvent(e)) break;
+			KeyPressedEvent* e = new KeyPressedEvent(wParam);
+			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
+			m_EventQueue.PushBack(eMsg);
 			return 0;
 		}
 		case WM_KEYUP:
 		{
-			KeyReleasedEvent e(wParam);
-			if (DispatchEvent(e)) break;
+			KeyReleasedEvent* e = new KeyReleasedEvent(wParam);
+			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
+			m_EventQueue.PushBack(eMsg);
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
@@ -113,43 +119,52 @@ namespace Zeal::Reyal
 
 			if (delta > 0)
 			{
-				MouseWheelUpEvent e(delta);
-				if (DispatchEvent(e)) break;
+				MouseWheelUpEvent* e = new MouseWheelUpEvent(delta);
+				EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
+				m_EventQueue.PushBack(eMsg);
 			}
 			else if (delta < 0)
 			{
-				MouseWheelDownEvent e(delta);
-				if (DispatchEvent(e)) break;
+				MouseWheelDownEvent* e = new MouseWheelDownEvent(delta);
+				EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
+				m_EventQueue.PushBack(eMsg);
 			}
 
 			return 0;
 		}
 		case WM_PAINT:
 		{
-			PaintEvent e;
-			if (DispatchEvent(e)) break;
+			PaintEvent* e = new PaintEvent();
+			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
+			m_EventQueue.PushBack(eMsg);
 			return 0;
 		}
 		case WM_SIZE:
 		{
-			ResizeTo({ (float)LOWORD(lParam), (float)HIWORD(lParam) });
+			Size newSize = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
+			ResizeTo(newSize);
 
-			WindowResizeEvent e;
-			if (DispatchEvent(e)) break;
+			//TODO: Read how windows handles events (how they're built, how they handle it)
+
+			//WindowResizeEvent e(newSize);
+			//if (DispatchEvent(e)) break;
 			return 0;
 		}
 		case WM_MOVE:
 		{
-			MoveTo({ (float)LOWORD(lParam), (float)HIWORD(lParam) });
+			Point newPos = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
+			MoveTo(newPos);
 
-			WindowMoveEvent e;
-			if (DispatchEvent(e)) break;
-			return 0;
+			WindowMoveEvent* e = new WindowMoveEvent(newPos);
+			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
+			m_EventQueue.PushBack(eMsg);
+			
+			break;
 		}
 		case WM_CLOSE:
 		{
-			WindowCloseEvent e;
-			if (DispatchEvent(e)) return 0;
+			//WindowCloseEvent e;
+			//if (DispatchEvent(e)) return 0;
 			break;
 		}
 		}
@@ -231,16 +246,6 @@ namespace Zeal::Reyal
 		//TODO: Change to something more appropriate (needed so cpu doesn't go up to 30% usage when running)
 		Sleep(1);
 		return false;
-	}
-	
-	bool Window::DispatchEvent(Event& e)
-	{
-		Widget* receiver = GetEventReceiver(e, Mouse);
-
-		if (!receiver)
-			receiver = this;
-
-		return m_CallbackFunc(receiver, e);
 	}
 }
 

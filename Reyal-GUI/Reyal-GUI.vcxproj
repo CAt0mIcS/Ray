@@ -98,7 +98,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;REYALGUI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);RL_BUILD;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;REYALGUI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);RL_BUILD;;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>rlpch.h</PrecompiledHeaderFile>
@@ -119,7 +119,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;REYALGUI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);RL_BUILD;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;REYALGUI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);RL_BUILD;;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>rlpch.h</PrecompiledHeaderFile>
@@ -140,7 +140,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;REYALGUI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);RL_BUILD;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;REYALGUI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);RL_BUILD;;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>rlpch.h</PrecompiledHeaderFile>
@@ -161,7 +161,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;REYALGUI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);RL_BUILD;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;REYALGUI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);RL_BUILD;;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>rlpch.h</PrecompiledHeaderFile>
@@ -179,6 +179,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Reyal\Core\Vec2.h" />
+    <ClInclude Include="src\Reyal\Core\ZRect.h" />
     <ClInclude Include="src\Reyal\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Reyal\Events\Event.h" />
     <ClInclude Include="src\Reyal\Events\KeyboardEvent.h" />
@@ -192,6 +194,9 @@
     <ClInclude Include="src\Reyal\Debug\ReyalLogger.h" />
     <ClInclude Include="src\Reyal\Renderer\Renderer.h" />
     <ClInclude Include="src\Reyal\Renderer\WindowRenderer.h" />
+    <ClInclude Include="src\Reyal\Util\Direct2D.h" />
+    <ClInclude Include="src\Reyal\Util\Random.h" />
+    <ClInclude Include="src\Reyal\Util\TypeConvert.h" />
     <ClInclude Include="src\Reyal\Window\BaseWindow.h" />
     <ClInclude Include="src\Reyal\Exception.h" />
     <ClInclude Include="src\Reyal\Application.h" />
@@ -205,6 +210,8 @@
     <ClInclude Include="src\Reyal\Core\Queue.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Reyal\Core\Vec2.cpp" />
+    <ClCompile Include="src\Reyal\Core\ZRect.cpp" />
     <ClCompile Include="src\Reyal\Layers\LayerStack.cpp" />
     <ClCompile Include="src\Reyal\Input\Keyboard.cpp" />
     <ClCompile Include="src\Reyal\Input\Mouse.cpp" />
@@ -215,6 +222,8 @@
     <ClCompile Include="src\Reyal\Application.cpp" />
     <ClCompile Include="src\Reyal\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Reyal\Renderer\WindowRenderer.cpp" />
+    <ClCompile Include="src\Reyal\Util\Random.cpp" />
+    <ClCompile Include="src\Reyal\Util\TypeConvert.cpp" />
     <ClCompile Include="src\Reyal\Window\Window.cpp" />
     <ClCompile Include="src\rlpch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -225,9 +234,6 @@
     <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Util\Util.vcxproj">
-      <Project>{86347a05-60de-478c-8d35-fb579ce3cb8b}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\ZealLogger\ZealLogger.vcxproj">
       <Project>{07d62c35-cb78-4f34-ade7-cb67de81e8b8}</Project>
     </ProjectReference>

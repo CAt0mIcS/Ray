@@ -7,10 +7,12 @@
 
 #include "Core/Queue.h"
 
+//TODO: Separate class which contains a reference to MainWindow and implements functions that are allowed to be used
 
 namespace Zeal::Reyal
 {
 	class Application;
+
 	/// <summary>
 	/// Function which has to be defined by the client to be used in EntryPoint.h.
 	/// Note: Return a raw, heap-allocated pointer because it will call delete in EntryPoint.h
@@ -82,16 +84,21 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <param name="receiver">Is the Widget that received the event</param>
 		/// <param name="e">Is the received event</param>
-		/// <returns>True if the event was handled, false otherwise</returns>
-		bool OnEventReceived(_In_ Widget* receiver, _In_ Event& e);
+		void OnEventReceived(_In_ Widget* receiver, Event& e);
+
+		/// <summary>
+		/// Calls the correct event function depending on the event
+		/// </summary>
+		/// <param name="layer">Is the layer which receives the event</param>
+		/// <param name="receiver">Is the widget which receives the event</param>
+		/// <param name="e">Is the event to dispatch</param>
+		void DispatchEvent(_In_ Layer* layer, _In_ Widget* receiver, Event& e);
 
 	protected:
 		Window m_MainWindow;
 
 	private:
-		// QUESTION: Create custom class for stack or just templated queue/stack
 		LayerStack m_LayerStack;
-		//Queue<Layer*> m_LayerStack;
 		static std::shared_ptr<Application> s_Instance;
 	};
 

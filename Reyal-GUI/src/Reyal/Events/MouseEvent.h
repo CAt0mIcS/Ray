@@ -2,7 +2,7 @@
 
 #include "Event.h"
 
-#include <Util/ZPoint.h>
+#include "Reyal/Core/Vec2.h"
 
 
 namespace Zeal::Reyal
@@ -17,11 +17,17 @@ namespace Zeal::Reyal
 	class MouseMoveEvent : public Event
 	{
 	public:
-		MouseMoveEvent()
+		MouseMoveEvent(const Point& pos)
+			: m_Pos(pos)
 		{
 		}
 
+		const Point& GetPos() const { return m_Pos; }
+
 		RL_DECLARE_TYPE_FN(MouseMoveEvent)
+
+	private:
+		Point m_Pos;
 	};
 
 	class MouseButtonPressedEvent : public Event

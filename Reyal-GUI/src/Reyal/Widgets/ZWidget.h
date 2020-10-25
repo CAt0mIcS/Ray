@@ -5,7 +5,7 @@
 #include <sal.h>
 #include <vector>
 
-#include <Util/ZPoint.h>
+#include "Reyal/Core/Vec2.h"
 
 
 namespace Zeal::Reyal
@@ -27,25 +27,25 @@ namespace Zeal::Reyal
 		/// Moves the position of the Widget by the specified values
 		/// </summary>
 		/// <param name="pos">Is the position to add to it's current one</param>
-		void MoveBy(const Util::Point& pos);
+		void MoveBy(const Point& pos);
 
 		/// <summary>
 		/// Moves the position of the Widget to the specified value
 		/// </summary>
 		/// <param name="pos">Is the new position of this Widget</param>
-		void MoveTo(const Util::Point& pos);
+		void MoveTo(const Point& pos);
 
 		/// <summary>
 		/// Resizes the Widget by the specified value
 		/// </summary>
 		/// <param name="size">Is the value added to the Widget's current size</param>
-		void ResizeBy(const Util::Size& size);
+		void ResizeBy(const Size& size);
 
 		/// <summary>
 		/// Resizes the Widget to the specified value
 		/// </summary>
 		/// <param name="size">Is the new size of this Widget</param>
-		void ResizeTo(const Util::Size& size);
+		void ResizeTo(const Size& size);
 
 		/// <summary>
 		/// Gets the current Widget Matrix

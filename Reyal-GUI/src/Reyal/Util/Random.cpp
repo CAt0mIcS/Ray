@@ -1,8 +1,8 @@
-#include "utilpch.h"
+#include "rlpch.h"
 #include "Random.h"
 
 
-namespace Zeal::Util
+namespace Zeal::Reyal
 {
 	std::string GenerateRandomTokenA(uint16_t length)
 	{

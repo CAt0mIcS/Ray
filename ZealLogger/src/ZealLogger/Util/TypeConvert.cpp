@@ -1,5 +1,6 @@
-#include "utilpch.h"
 #include "TypeConvert.h"
+
+#include <Windows.h>
 
 
 namespace Zeal::Util

@@ -5,7 +5,7 @@
 #include <vector>
 #include <sstream>
 
-#include <Util/TypeConvert.h>
+#include "../Util/TypeConvert.h"
 
 #include "../Formatter/BracketFormatter.h"
 #include "../Formatter/LogLevelFormatter.h"

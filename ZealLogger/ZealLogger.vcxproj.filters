@@ -45,5 +45,13 @@
     <ClInclude Include="src\ZealLogger\Formatter\NullTerminatorFormatter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ZealLogger\Util\TypeConvert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ZealLogger\Util\TypeConvert.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

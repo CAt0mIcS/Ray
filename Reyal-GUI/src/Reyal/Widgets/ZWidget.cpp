@@ -12,25 +12,25 @@ namespace Zeal::Reyal
         return GetName() == other.GetName();
     }
 
-    void Widget::MoveBy(const Util::Point& pos)
+    void Widget::MoveBy(const Point& pos)
     {
         ZL_PROFILE_FUNCTION();
 
     }
 
-    void Widget::MoveTo(const Util::Point& pos)
+    void Widget::MoveTo(const Point& pos)
     {
         ZL_PROFILE_FUNCTION();
 
     }
 
-    void Widget::ResizeBy(const Util::Size& size)
+    void Widget::ResizeBy(const Size& size)
     {
         ZL_PROFILE_FUNCTION();
 
     }
 
-    void Widget::ResizeTo(const Util::Size& size)
+    void Widget::ResizeTo(const Size& size)
     {
         ZL_PROFILE_FUNCTION();
 

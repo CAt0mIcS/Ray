@@ -22,14 +22,20 @@ namespace Zeal::Reyal
 		/// </summary>
 		virtual void OnUpdate() { };
 
-		/// <summary>
-		/// Receives all events
-		/// </summary>
-		/// <param name="receiver">Is the Widget which received the event</param>
-		/// <param name="e">Is the received event</param>
-		virtual void OnEvent(_In_ Widget* receiver, Event& e) { }
-
-	private:
+		virtual void OnMousePress(_In_ Widget* receiver, Event& e) {}
+		virtual void OnMouseRelease(_In_ Widget* receiver, Event& e) {}
+		virtual void OnMouseWheelUp(_In_ Widget* receiver, Event& e) {}
+		virtual void OnMouseWheelDown(_In_ Widget* receiver, Event& e) {}
+		virtual void OnMouseMove(_In_ Widget* receiver, Event& e) {}
+		virtual void OnHoverEnter(_In_ Widget* receiver, Event& e) {}
+		virtual void OnHoverLeave(_In_ Widget* receiver, Event& e) {}
+		virtual void OnKeyPress(_In_ Widget* receiver, Event& e) {}
+		virtual void OnKeyRelease(_In_ Widget* receiver, Event& e) {}
+		virtual void OnChar(_In_ Widget* receiver, Event& e) {}
+		virtual void OnResize(_In_ Widget* receiver, Event& e) {}
+		virtual void OnWindowMove(_In_ Widget* receiver, Event& e) {}
+		virtual void OnPaint(_In_ Widget* receiver, Event& e) {}
+	protected:
 	};
 	
 }
