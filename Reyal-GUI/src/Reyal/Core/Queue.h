@@ -7,7 +7,7 @@
 
 namespace Zeal::Reyal
 {
-	template<typename T>
+	template<typename T, size_t MaxSize = -1>
 	class Queue
 	{
 		using Iterator = typename std::deque<T>::iterator;
@@ -20,31 +20,35 @@ namespace Zeal::Reyal
 		void PushFront(T&& elem)
 		{
 			std::scoped_lock lock(m_Mutex);
-			m_Queue.push_front(elem);
+			m_Queue.push_front(std::move(elem));
+			TrimBuffer();
 		}
 
 		void PushBack(T&& elem)
 		{
 			std::scoped_lock lock(m_Mutex);
-			m_Queue.push_back(elem);
+			m_Queue.push_back(std::move(elem));
+			TrimBuffer();
 		}
 
-		void PushFront(T elem)
+		void PushFront(const T& elem)
 		{
 			std::scoped_lock lock(m_Mutex);
-			m_Queue.push_front(elem);
+			m_Queue.push_front(std::move(elem));
+			TrimBuffer();
 		}
 
-		void PushBack(T elem)
+		void PushBack(const T& elem)
 		{
 			std::scoped_lock lock(m_Mutex);
-			m_Queue.push_back(elem);
+			m_Queue.push_back(std::move(elem));
+			TrimBuffer();
 		}
 
 		T PopFront()
 		{
 			std::scoped_lock lock(m_Mutex);
-			auto front = m_Queue.front();
+			auto front = std::move(m_Queue.front());
 			m_Queue.pop_front();
 			return front;
 		}
@@ -52,7 +56,7 @@ namespace Zeal::Reyal
 		T PopBack()
 		{
 			std::scoped_lock lock(m_Mutex);
-			auto back = m_Queue.back();
+			auto back = std::move(m_Queue.back());
 			m_Queue.pop_back();
 			return back;
 		}
@@ -123,6 +127,15 @@ namespace Zeal::Reyal
 		{
 			std::scoped_lock lock(m_Mutex);
 			return m_Queue.crend();
+		}
+
+	private:
+		void TrimBuffer()
+		{
+			while (m_Queue.size() > MaxSize)
+			{
+				m_Queue.pop_front();
+			}
 		}
 
 	private:

@@ -10,13 +10,6 @@
 #include <signal.h>
 
 
-void* operator new(size_t size)
-{
-	std::cout << "Allocated " << size << " bytes\n";
-	return malloc(size);
-}
-
-
 /// <summary>
 /// Handles any unexpected signals, logs the signal and closes the logger
 /// </summary>

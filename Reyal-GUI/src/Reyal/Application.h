@@ -84,7 +84,7 @@ namespace Zeal::Reyal
 		/// </summary>
 		/// <param name="receiver">Is the Widget that received the event</param>
 		/// <param name="e">Is the received event</param>
-		void OnEventReceived(_In_ Widget* receiver, Event& e);
+		void OnEventReceived(_In_ Widget* receiver, Scope<Event>&& e);
 
 		/// <summary>
 		/// Calls the correct event function depending on the event

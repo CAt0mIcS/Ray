@@ -26,23 +26,36 @@ namespace Zeal::Reyal
 		s_Instance.reset();
 	}
 
+	static std::thread s_EventThread;
 	int Application::Run()
 	{
 		while (!m_MainWindow.ShouldClose())
 		{
-			if (!m_MainWindow.GetEventQueue().Empty())
-			{
-				//TODO: Limit amount of messages
-				std::cout << m_MainWindow.GetEventQueue().Size() << '\n';
-				EventMessage eMsg = m_MainWindow.GetEventQueue().PopFront();
-				OnEventReceived(eMsg.receiver, *eMsg.e);
-				delete eMsg.e;
-			}
-
 			for (auto* layer : m_LayerStack)
 			{
 				layer->OnUpdate();
 			}
+
+			if (s_EventThread.joinable())
+				s_EventThread.join();
+
+
+			// TODO: Strip in better builds
+			for (EventMessage& eMsg : m_MainWindow.GetEventQueue())
+			{
+				ZL_LOG_DEBUG(eMsg.e->ToString());
+			}
+
+			s_EventThread = std::thread([this]()
+				{
+					if (!m_MainWindow.GetEventQueue().Empty())
+					{
+						EventMessage eMsg = m_MainWindow.GetEventQueue().PopFront();
+						OnEventReceived(eMsg.receiver, std::move(eMsg.e));
+					}
+				}
+			);
+
 		}
 
 		return m_MainWindow.GetExitCode();
@@ -60,16 +73,16 @@ namespace Zeal::Reyal
 		ZL_PROFILE_FUNCTION();
 	}
 	
-	void Application::OnEventReceived(_In_ Widget* receiver, Event& e)
+	void Application::OnEventReceived(_In_ Widget* receiver, Scope<Event>&& e)
 	{
 		ZL_PROFILE_FUNCTION();
 
 		// Dispatch event to every layer
 		for (auto* layer : m_LayerStack)
 		{
-			if (e.Handled)
+			if (e->Handled)
 				break;
-			DispatchEvent(layer, receiver, e);
+			DispatchEvent(layer, receiver, *e);
 		}
 	}
 	

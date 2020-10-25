@@ -77,6 +77,10 @@ namespace Zeal::Reyal
                 receiver = this;
         }
 
+        //The main window should always receive the event if no other widget received it
+        if (!GetParent())
+            receiver = this;
+
         return receiver;
     }
 }

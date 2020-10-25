@@ -22,6 +22,13 @@ namespace Zeal::Reyal
 		{
 		}
 
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[MouseMoveEvent] New Position: " << m_Pos;
+			return oss.str();
+		}
+
 		const Point& GetPos() const { return m_Pos; }
 
 		RL_DECLARE_TYPE_FN(MouseMoveEvent)
@@ -38,6 +45,13 @@ namespace Zeal::Reyal
 		{
 		}
 
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[MouseButtonPressedEvent] Button: " << (int)m_Button;
+			return oss.str();
+		}
+
 		MouseButton GetButton() const { return m_Button; }
 
 		RL_DECLARE_TYPE_FN(MouseButtonPressedEvent)
@@ -52,6 +66,13 @@ namespace Zeal::Reyal
 		MouseButtonReleasedEvent(const MouseButton btn)
 			: m_Button(btn)
 		{
+		}
+
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[MouseButtonReleasedEvent] Button: " << (int)m_Button;
+			return oss.str();
 		}
 
 		MouseButton GetButton() const { return m_Button; }
@@ -83,6 +104,13 @@ namespace Zeal::Reyal
 		{
 		}
 
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[MouseWheelUpEvent] Delta: " << GetDelta();
+			return oss.str();
+		}
+
 		RL_DECLARE_TYPE_FN(MouseWheelUpEvent)
 	};
 
@@ -94,6 +122,13 @@ namespace Zeal::Reyal
 		{
 		}
 
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[MouseWheelDownEvent] Delta: " << GetDelta();
+			return oss.str();
+		}
+
 		RL_DECLARE_TYPE_FN(MouseWheelDownEvent)
 	};
 
@@ -102,6 +137,13 @@ namespace Zeal::Reyal
 	public:
 		HoverEnterEvent() = default;
 
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[HoverEnterEvent]";
+			return oss.str();
+		}
+
 		RL_DECLARE_TYPE_FN(HoverEnterEvent);
 	};
 
@@ -109,6 +151,13 @@ namespace Zeal::Reyal
 	{
 	public:
 		HoverLeaveEvent() = default;
+
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[HoverLeaveEvent]";
+			return oss.str();
+		}
 
 		RL_DECLARE_TYPE_FN(HoverLeaveEvent);
 	};

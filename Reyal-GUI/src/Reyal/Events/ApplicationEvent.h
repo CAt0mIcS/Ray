@@ -16,6 +16,13 @@ namespace Zeal::Reyal
 
 		}
 
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[WindowResizeEvent] New Size: " << m_Size;
+			return oss.str();
+		}
+
 		const Size& GetSize() const { return m_Size; }
 
 		RL_DECLARE_TYPE_FN(WindowResizeEvent)
@@ -33,6 +40,13 @@ namespace Zeal::Reyal
 
 		}
 
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[WindowMoveEvent] New Posititon: " << m_Pos;
+			return oss.str();
+		}
+
 		const Point& GetPos() const { return m_Pos; }
 
 		RL_DECLARE_TYPE_FN(WindowMoveEvent)
@@ -48,6 +62,13 @@ namespace Zeal::Reyal
 		{
 		}
 
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[SetCursorEvent]";
+			return oss.str();
+		}
+
 		RL_DECLARE_TYPE_FN(SetCursorEvent)
 	};
 
@@ -56,6 +77,13 @@ namespace Zeal::Reyal
 	public:
 		WindowCloseEvent()
 		{
+		}
+
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[WindowCloseEvent]";
+			return oss.str();
 		}
 
 		RL_DECLARE_TYPE_FN(WindowCloseEvent)
@@ -67,6 +95,13 @@ namespace Zeal::Reyal
 		PaintEvent()
 		{
 
+		}
+
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[PaintEvent]";
+			return oss.str();
 		}
 
 		RL_DECLARE_TYPE_FN(PaintEvent)

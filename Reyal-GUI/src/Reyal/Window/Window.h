@@ -31,11 +31,14 @@ namespace Zeal::Reyal
 	struct EventMessage
 	{
 		Widget* receiver;
-		Event* e;
+		Scope<Event> e;
 	};
 
 	class RL_API Window : public BaseWindow<Window>, public Widget
 	{
+	private:
+		static constexpr uint8_t s_MaxMessagesInQueue = 16u;
+
 	public:
 		/// <summary>
 		/// From https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
@@ -178,7 +181,7 @@ namespace Zeal::Reyal
 		/// Getter for the current event queue
 		/// </summary>
 		/// <returns>Returns the event queue for this window</returns>
-		Queue<EventMessage>& GetEventQueue() { return m_EventQueue; }
+		Queue<EventMessage, s_MaxMessagesInQueue>& GetEventQueue() { return m_EventQueue; }
 
 	public:
 		Keyboard Keyboard;
@@ -190,6 +193,7 @@ namespace Zeal::Reyal
 		WindowRenderer m_Renderer;
 		Widget* m_CurrentHover;
 
-		Queue<EventMessage> m_EventQueue;
+		Queue<EventMessage, s_MaxMessagesInQueue> m_EventQueue;
+
 	};
 }

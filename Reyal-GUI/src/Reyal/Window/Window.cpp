@@ -51,66 +51,57 @@ namespace Zeal::Reyal
 			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.SetMousePos({ (float)pt.x, (float)pt.y });
 
-			MouseMoveEvent* e = new MouseMoveEvent({ (float)pt.x, (float)pt.y });
-			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
-			m_EventQueue.PushBack(eMsg);
+			Scope<MouseMoveEvent> e = MakeScope<MouseMoveEvent>(Point{ (float)pt.x, (float)pt.y });
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 
 			return 0;
 		}
 		case WM_LBUTTONDOWN:
 		{
-			MouseButtonPressedEvent* e = new MouseButtonPressedEvent(MouseButton::Left);
-			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
-			m_EventQueue.PushBack(eMsg);
+			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Left);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
-			MouseButtonReleasedEvent* e = new MouseButtonReleasedEvent(MouseButton::Left);
-			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
-			m_EventQueue.PushBack(eMsg);
+			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Left);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
-			MouseButtonPressedEvent* e = new MouseButtonPressedEvent(MouseButton::Middle);
-			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
-			m_EventQueue.PushBack(eMsg);
+			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Middle);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
-			MouseButtonReleasedEvent* e = new MouseButtonReleasedEvent(MouseButton::Middle);
-			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
-			m_EventQueue.PushBack(eMsg);
+			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Middle);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
-			MouseButtonPressedEvent* e = new MouseButtonPressedEvent(MouseButton::Right);
-			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
-			m_EventQueue.PushBack(eMsg);
+			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Right);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
-			MouseButtonReleasedEvent* e = new MouseButtonReleasedEvent(MouseButton::Right);
-			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
-			m_EventQueue.PushBack(eMsg);
+			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Right);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_KEYDOWN:
 		{
-			KeyPressedEvent* e = new KeyPressedEvent(wParam);
-			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
-			m_EventQueue.PushBack(eMsg);
+			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>(wParam);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_KEYUP:
 		{
-			KeyReleasedEvent* e = new KeyReleasedEvent(wParam);
-			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
-			m_EventQueue.PushBack(eMsg);
+			Scope<KeyReleasedEvent> e = MakeScope<KeyReleasedEvent>(wParam);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
@@ -119,24 +110,21 @@ namespace Zeal::Reyal
 
 			if (delta > 0)
 			{
-				MouseWheelUpEvent* e = new MouseWheelUpEvent(delta);
-				EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
-				m_EventQueue.PushBack(eMsg);
+				Scope<MouseWheelUpEvent> e = MakeScope<MouseWheelUpEvent>(delta);
+				m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			}
 			else if (delta < 0)
 			{
-				MouseWheelDownEvent* e = new MouseWheelDownEvent(delta);
-				EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
-				m_EventQueue.PushBack(eMsg);
+				Scope<MouseWheelDownEvent> e = MakeScope<MouseWheelDownEvent>(delta);
+				m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			}
 
 			return 0;
 		}
 		case WM_PAINT:
 		{
-			PaintEvent* e = new PaintEvent();
-			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
-			m_EventQueue.PushBack(eMsg);
+			Scope<PaintEvent> e = MakeScope<PaintEvent>();
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_SIZE:
@@ -155,9 +143,8 @@ namespace Zeal::Reyal
 			Point newPos = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
 			MoveTo(newPos);
 
-			WindowMoveEvent* e = new WindowMoveEvent(newPos);
-			EventMessage eMsg = { GetEventReceiver(*e, Mouse), e };
-			m_EventQueue.PushBack(eMsg);
+			Scope<WindowMoveEvent> e = MakeScope<WindowMoveEvent>(newPos);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			
 			break;
 		}

@@ -29,6 +29,13 @@ namespace Zeal::Reyal
 		{
 		}
 
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[KeyPressedEvent] Key " << (uint16_t)GetKeyCode() << " pressed";
+			return oss.str();
+		}
+
 		RL_DECLARE_TYPE_FN(KeyPressedEvent)
 	};
 
@@ -40,6 +47,13 @@ namespace Zeal::Reyal
 		{
 		}
 
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[KeyReleasedEvent] Key " << (uint16_t)GetKeyCode() << " released";
+			return oss.str();
+		}
+
 		RL_DECLARE_TYPE_FN(KeyReleasedEvent)
 	};
 
@@ -49,6 +63,13 @@ namespace Zeal::Reyal
 		CharEvent(const unsigned char keycode)
 			: KeyEvent(keycode)
 		{
+		}
+
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[CharEvent] Character " << GetKeyCode() << " written";
+			return oss.str();
 		}
 
 		RL_DECLARE_TYPE_FN(CharEvent)

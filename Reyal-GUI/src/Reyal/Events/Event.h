@@ -21,6 +21,7 @@ namespace Zeal::Reyal
 	{
 	public:
 		virtual EventType GetType() const = 0;
+		virtual std::string ToString() const = 0;
 
 	public:
 		bool Handled = false;
