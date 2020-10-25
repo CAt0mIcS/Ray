@@ -19,13 +19,6 @@ namespace Zeal
 	{
 
 	}
-
-	void GUILayer::OnResize(_In_ Reyal::Widget* receiver, Reyal::WindowResizeEvent& e)
-	{
-		ZL_LOG_DEBUG("Entered OnResize Event handler, OldPos: {0} | NewPos {1}", e.GetOldSize(), e.GetSize());
-	}
-	
-	
 }
 
 
