@@ -38,7 +38,9 @@ namespace Zeal::Reyal
 		virtual void OnResize(_In_ Widget* receiver, WindowResizeEvent& e) {}
 		virtual void OnWindowMove(_In_ Widget* receiver, WindowMoveEvent& e) {}
 		virtual void OnPaint(_In_ Widget* receiver, PaintEvent& e) {}
-	protected:
+	
+	private:
+		std::wstring m_Name;
 	};
 	
 }

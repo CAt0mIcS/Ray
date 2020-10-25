@@ -12,6 +12,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZealLogger", "ZealLogger\Ze
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Reyal-GUI", "Reyal-GUI\Reyal-GUI.vcxproj", "{5CD296B6-1615-4441-8716-EFE426E9056A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZealGUILayer", "ZealGUILayer\ZealGUILayer.vcxproj", "{C453629B-9100-4F85-B5CB-771DADB9CBF6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LayerExtensions", "LayerExtensions", "{0BDE1A35-E341-4575-A26D-B4922CF2AC99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -44,9 +48,20 @@ Global
 		{5CD296B6-1615-4441-8716-EFE426E9056A}.Release|x64.Build.0 = Release|x64
 		{5CD296B6-1615-4441-8716-EFE426E9056A}.Release|x86.ActiveCfg = Release|Win32
 		{5CD296B6-1615-4441-8716-EFE426E9056A}.Release|x86.Build.0 = Release|Win32
+		{C453629B-9100-4F85-B5CB-771DADB9CBF6}.Debug|x64.ActiveCfg = Debug|x64
+		{C453629B-9100-4F85-B5CB-771DADB9CBF6}.Debug|x64.Build.0 = Debug|x64
+		{C453629B-9100-4F85-B5CB-771DADB9CBF6}.Debug|x86.ActiveCfg = Debug|Win32
+		{C453629B-9100-4F85-B5CB-771DADB9CBF6}.Debug|x86.Build.0 = Debug|Win32
+		{C453629B-9100-4F85-B5CB-771DADB9CBF6}.Release|x64.ActiveCfg = Release|x64
+		{C453629B-9100-4F85-B5CB-771DADB9CBF6}.Release|x64.Build.0 = Release|x64
+		{C453629B-9100-4F85-B5CB-771DADB9CBF6}.Release|x86.ActiveCfg = Release|Win32
+		{C453629B-9100-4F85-B5CB-771DADB9CBF6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C453629B-9100-4F85-B5CB-771DADB9CBF6} = {0BDE1A35-E341-4575-A26D-B4922CF2AC99}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D0FA6EFD-AF52-4C05-B052-5E7BDAAB3286}

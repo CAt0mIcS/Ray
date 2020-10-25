@@ -6,7 +6,8 @@
 //#include <Reyal/Reyal.h>
 #include <Reyal/EntryPoint.h>
 
-#include "GUILayer.h"
+#include <filesystem>
+
 
 namespace Zeal
 {
@@ -16,7 +17,43 @@ namespace Zeal
 
 		m_MainWindow.SetTitle(L"Zeal");
 		m_MainWindow.Show();
-		PushLayer(new GUILayer(L"GUI-Layer"));
+
+		// Test loading in layers
+		typedef Reyal::Layer* (*LayerCreateFunc)();
+		const std::string dllDir = "D:\\dev\\Cpp\\Projects\\NodePlanningEditor\\bin\\Debug-Win32\\Editors";
+
+		for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(dllDir))
+		{
+			std::wstring path = dirEntry.path().c_str();
+			std::wstring ending = L".dll";
+
+			if (path.length() > ending.length())
+			{
+				if (path.compare(path.length() - ending.length(), ending.length(), ending) != 0)
+					continue;
+			}
+			else
+			{
+				continue;
+			}
+
+			HMODULE hDll = LoadLibrary(path.c_str());
+			if (!hDll || hDll == INVALID_HANDLE_VALUE)
+			{
+				DWORD err = GetLastError();
+				__debugbreak();
+			}
+
+			LayerCreateFunc layerCreateFunc = (LayerCreateFunc)GetProcAddress(hDll, "CreateLayer");
+			if (!layerCreateFunc)
+			{
+				DWORD err = GetLastError();
+				__debugbreak();
+			}
+
+			PushLayer(layerCreateFunc());
+		}
+
 	}
 	
 	Sandbox::~Sandbox()

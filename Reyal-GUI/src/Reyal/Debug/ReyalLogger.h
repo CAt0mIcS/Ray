@@ -7,6 +7,9 @@
 #include <memory>
 #include <string>
 
+// class 'std::shared_ptr<Zeal::Log::FileLogger>' needs to have dll-interface to be used by clients of class 'Zeal::Reyal::Logger'
+#pragma warning(disable : 4251)
+
 
 #if ZL_ENABLE_LOGGING
 
