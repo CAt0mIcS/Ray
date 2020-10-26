@@ -5,7 +5,7 @@
 #include <Reyal/Reyal.h>
 
 
-namespace Zeal::Layers
+namespace At0::Layers
 {
 	class ZGL_API GUILayer : public Reyal::Layer
 	{
@@ -18,8 +18,8 @@ namespace Zeal::Layers
 
 extern "C"
 {
-	ZGL_API Zeal::Layers::GUILayer* CreateLayer()
+	ZGL_API At0::Layers::GUILayer* CreateLayer()
 	{
-		return new Zeal::Layers::GUILayer(L"GUI-Layer");
+		return new At0::Layers::GUILayer(L"GUI-Layer");
 	}
 }

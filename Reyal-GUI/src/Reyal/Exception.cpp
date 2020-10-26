@@ -2,7 +2,7 @@
 #include "Exception.h"
 
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
     Exception::Exception(uint16_t line, const char* file)
         : m_Line(line), m_File(file), m_WhatBuffer("")

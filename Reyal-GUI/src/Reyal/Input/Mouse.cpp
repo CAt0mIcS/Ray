@@ -4,7 +4,7 @@
 #include "Reyal/Widgets/ZWidget.h"
 
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	Mouse::Mouse()
 		: m_IsLeftPressed(false), m_IsMiddlePressed(false), m_IsRightPressed(false), m_MousePos{}

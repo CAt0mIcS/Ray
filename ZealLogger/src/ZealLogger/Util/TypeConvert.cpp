@@ -2,7 +2,7 @@
 #include "TypeConvert.h"
 
 
-namespace Zeal::Log::Util
+namespace At0::Log::Util
 {
 	std::wstring MultiByteToWideChar(const std::string_view str)
 	{

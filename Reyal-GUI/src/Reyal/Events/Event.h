@@ -7,7 +7,7 @@
 									virtual EventType GetType() const override { return GetStaticType(); }
 
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	enum class RL_API EventType
 	{

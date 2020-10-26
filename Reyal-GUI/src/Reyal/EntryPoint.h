@@ -31,9 +31,9 @@ void SignalHandler(int signum)
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int pCmdShow)
 {
-	using namespace Zeal;
+	using namespace At0;
 
-	ZL_LOG_BEGIN("Zeal.log", Zeal::Log::LogLevel::Trace);
+	ZL_LOG_BEGIN("Zeal.log", At0::Log::LogLevel::Trace);
 
 	/// <summary>
 	/// QUESTION:
@@ -74,7 +74,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 		return exitCode;
 	}
 	// TODO: Custom Window for errors
-	catch (Zeal::Reyal::Exception& e)
+	catch (At0::Reyal::Exception& e)
 	{
 		MessageBoxA(NULL, e.what(), e.GetType(), MB_OK | MB_ICONERROR);
 	}

@@ -8,7 +8,7 @@
 #pragma warning(disable : 4251)
 
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	/// <summary>
 	/// Base Exception class
@@ -103,8 +103,8 @@ namespace Zeal::Reyal
 
 
 #define RL_THROW_WND_EXCEPT(hr) \
-if(FAILED(hr)) throw ::Zeal::Reyal::WindowsException(hr, (uint16_t)__LINE__, __FILE__)
+if(FAILED(hr)) throw ::At0::Reyal::WindowsException(hr, (uint16_t)__LINE__, __FILE__)
 
 #define RL_THROW_LAST_WND_EXCEPT(booleanResult) \
-if(!(booleanResult)) throw ::Zeal::Reyal::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE__)
+if(!(booleanResult)) throw ::At0::Reyal::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE__)
 

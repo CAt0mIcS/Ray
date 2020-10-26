@@ -12,7 +12,7 @@ namespace std
 
 
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	struct RL_API Vec2
 	{
@@ -95,7 +95,6 @@ namespace Zeal::Reyal
 		/// <returns>floathe modified output stream</returns>
 		RL_API friend std::ostream& operator<<(std::ostream& os, const Vec2& vec);
 	};
-
 
 	using Point = Vec2;
 	using Size = Vec2;

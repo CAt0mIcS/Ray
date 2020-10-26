@@ -4,7 +4,7 @@
 #include "Formatter.h"
 
 
-namespace Zeal::Log
+namespace At0::Log
 {
 	class NullTerminatorFormatter : public Formatter
 	{

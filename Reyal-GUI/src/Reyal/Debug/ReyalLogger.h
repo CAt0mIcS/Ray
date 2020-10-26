@@ -15,7 +15,7 @@
 
 
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	class RL_API Logger
 	{
@@ -46,18 +46,18 @@ namespace Zeal::Reyal
 /// </summary>
 #if ZL_ENABLE_LOGGING
 
-	#define ZL_LOG_BEGIN(path, loglevel)::Zeal::Reyal::Logger::Init(path, loglevel)
+	#define ZL_LOG_BEGIN(path, loglevel)::At0::Reyal::Logger::Init(path, loglevel)
 	
-	#define ZL_LOG_TRACE(msg, ...)		::Zeal::Reyal::Logger::GetFileLogger()->Trace(msg, __VA_ARGS__)
-	#define ZL_LOG_DEBUG(msg, ...)		::Zeal::Reyal::Logger::GetFileLogger()->Debug(msg, __VA_ARGS__)
-	#define ZL_LOG_INFO(msg, ...)		::Zeal::Reyal::Logger::GetFileLogger()->Info(msg, __VA_ARGS__)
-	#define ZL_LOG_WARN(msg, ...)		::Zeal::Reyal::Logger::GetFileLogger()->Warn(msg, __VA_ARGS__)
-	#define ZL_LOG_ERROR(msg, ...)		::Zeal::Reyal::Logger::GetFileLogger()->Error(msg, __VA_ARGS__)
-	#define ZL_LOG_CRITICAL(msg, ...)	::Zeal::Reyal::Logger::GetFileLogger()->Critical(msg, __VA_ARGS__)
+	#define ZL_LOG_TRACE(msg, ...)		::At0::Reyal::Logger::GetFileLogger()->Trace(msg, __VA_ARGS__)
+	#define ZL_LOG_DEBUG(msg, ...)		::At0::Reyal::Logger::GetFileLogger()->Debug(msg, __VA_ARGS__)
+	#define ZL_LOG_INFO(msg, ...)		::At0::Reyal::Logger::GetFileLogger()->Info(msg, __VA_ARGS__)
+	#define ZL_LOG_WARN(msg, ...)		::At0::Reyal::Logger::GetFileLogger()->Warn(msg, __VA_ARGS__)
+	#define ZL_LOG_ERROR(msg, ...)		::At0::Reyal::Logger::GetFileLogger()->Error(msg, __VA_ARGS__)
+	#define ZL_LOG_CRITICAL(msg, ...)	::At0::Reyal::Logger::GetFileLogger()->Critical(msg, __VA_ARGS__)
 
-	#define ZL_FL_LOGGER()				::Zeal::Reyal::Logger::GetFileLogger()
+	#define ZL_FL_LOGGER()				::At0::Reyal::Logger::GetFileLogger()
 
-	#define ZL_LOG_END()				::Zeal::Reyal::Logger::GetFileLogger()->Close();
+	#define ZL_LOG_END()				::At0::Reyal::Logger::GetFileLogger()->Close();
 #else
 	#define ZL_LOG_BEGIN(path, loglevel)
 	

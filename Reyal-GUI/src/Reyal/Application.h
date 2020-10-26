@@ -9,7 +9,7 @@
 
 //TODO: Separate class which contains a reference to MainWindow and implements functions that are allowed to be used
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	class Application;
 

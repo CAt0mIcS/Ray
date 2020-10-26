@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	ZRect::ZRect(float ltrb)
 		: left(ltrb), top(ltrb), right(ltrb), bottom(ltrb)

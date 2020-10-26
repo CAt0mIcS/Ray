@@ -5,7 +5,7 @@
 #include <deque>
 
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	template<typename T, size_t MaxSize = -1>
 	class RL_API Queue

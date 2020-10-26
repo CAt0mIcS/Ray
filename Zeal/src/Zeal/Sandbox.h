@@ -3,7 +3,7 @@
 #include <Reyal/Application.h>
 
 
-namespace Zeal
+namespace At0
 {
 	class Widget;
 	class Event;

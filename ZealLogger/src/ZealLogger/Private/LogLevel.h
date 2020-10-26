@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace Zeal::Log
+namespace At0::Log
 {
 	/// <summary>
 	/// Defines logging severity levels 

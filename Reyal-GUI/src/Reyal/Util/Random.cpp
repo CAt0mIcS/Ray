@@ -2,7 +2,7 @@
 #include "Random.h"
 
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	std::string GenerateRandomTokenA(uint16_t length)
 	{

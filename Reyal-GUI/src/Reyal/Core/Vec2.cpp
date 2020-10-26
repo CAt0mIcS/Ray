@@ -4,7 +4,7 @@
 #include <iostream>
 
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	Vec2::Vec2(float xy) : x(xy), y(xy) {}
 

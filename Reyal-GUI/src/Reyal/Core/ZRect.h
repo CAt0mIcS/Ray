@@ -8,7 +8,7 @@ namespace std
 	class basic_ostream;
 }
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	struct RL_API ZRect
 	{

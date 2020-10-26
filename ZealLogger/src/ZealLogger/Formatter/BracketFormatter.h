@@ -3,7 +3,7 @@
 #include "Formatter.h"
 
 
-namespace Zeal::Log
+namespace At0::Log
 {
 	class BracketFormatter : public Formatter
 	{

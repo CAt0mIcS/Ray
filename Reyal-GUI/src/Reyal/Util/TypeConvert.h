@@ -4,7 +4,7 @@
 #include "RlBase.h"
 
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	/// <summary>
 	/// Converts a multi byte string (std::string) to wide character string (std::wstring)

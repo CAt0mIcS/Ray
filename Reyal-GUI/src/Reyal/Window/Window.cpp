@@ -11,7 +11,7 @@
 #include "Reyal/Events/ApplicationEvent.h"
 
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	Window::Window(const std::wstring_view name, _In_opt_ Widget* parent, bool isMainWindow)
 		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_ExitCode(0), m_OldWindowPos{}

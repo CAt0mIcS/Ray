@@ -9,7 +9,7 @@
 	#define RL_API __declspec(dllimport)
 #endif
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
 	template<typename T>
 	using Scope = std::unique_ptr<T>;

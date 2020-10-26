@@ -3,7 +3,7 @@
 #include <string>
 
 
-namespace Zeal::Log::Util
+namespace At0::Log::Util
 {
 	/// <summary>
 	/// Converts a multi byte string (std::string) to wide character string (std::wstring)

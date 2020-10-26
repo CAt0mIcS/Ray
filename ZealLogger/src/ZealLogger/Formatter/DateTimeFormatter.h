@@ -5,7 +5,7 @@
 #include <mutex>
 #include <sstream>
 
-namespace Zeal::Log
+namespace At0::Log
 {
 	class DateTimeFormatter : public Formatter
 	{

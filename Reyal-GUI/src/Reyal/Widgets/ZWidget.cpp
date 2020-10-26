@@ -4,7 +4,7 @@
 #include "Reyal/Input/Mouse.h"
 
 
-namespace Zeal::Reyal
+namespace At0::Reyal
 {
     bool Widget::operator==(const Widget& other)
     {

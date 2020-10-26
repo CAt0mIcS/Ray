@@ -6,7 +6,7 @@
 #include "../Util/TypeConvert.h"
 
 
-namespace Zeal::Log
+namespace At0::Log
 {
 	class FileLogger : public BaseLogger
 	{

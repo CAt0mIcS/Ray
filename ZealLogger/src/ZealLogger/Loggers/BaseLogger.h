@@ -15,7 +15,7 @@
 #include "../Private/LogLevel.h"
 
 
-namespace Zeal::Log
+namespace At0::Log
 {
 
 	template<typename T>
