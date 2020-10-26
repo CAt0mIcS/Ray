@@ -158,9 +158,9 @@ namespace At0::Reyal
 #endif
 
 
-#define ZL_PROFILE_BEGIN_SESSION(name, filepath)	::Zeal::Reyal::Instrumentor::Get().BeginSession(name, filepath)
-#define ZL_PROFILE_END_SESSION()					::Zeal::Reyal::Instrumentor::Get().EndSession()
-#define ZL_PROFILE_LINE_2(name, line)				::Zeal::Reyal::Timer timer__ZeaL_##line(name)
+#define ZL_PROFILE_BEGIN_SESSION(name, filepath)	::At0::Reyal::Instrumentor::Get().BeginSession(name, filepath)
+#define ZL_PROFILE_END_SESSION()					::At0::Reyal::Instrumentor::Get().EndSession()
+#define ZL_PROFILE_LINE_2(name, line)				::At0::Reyal::Timer timer__ZeaL_##line(name)
 #define ZL_PROFILE_LINE(name, line)					ZL_PROFILE_LINE_2(name, line)
 #define ZL_PROFILE_SCOPE(name)						ZL_PROFILE_LINE(name, __LINE__)
 #define ZL_PROFILE_FUNCTION()						ZL_PROFILE_SCOPE(ZL_FUNC_SIG)
