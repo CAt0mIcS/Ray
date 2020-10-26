@@ -118,6 +118,7 @@ namespace At0::Reyal
 	private:
 		LayerStack m_LayerStack;
 		static Ref<Application> s_Instance;
+		bool m_Running;
 	};
 
 }

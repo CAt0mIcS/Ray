@@ -12,7 +12,7 @@ namespace At0::Reyal
 	Ref<Application> Application::s_Instance = nullptr;
 
 	Application::Application()
-		: m_MainWindow(L"MainWindow", nullptr, true), m_LayerStack{}
+		: m_MainWindow(L"MainWindow", nullptr, true), m_LayerStack{}, m_Running(true)
 	{
 	}
 
@@ -26,10 +26,9 @@ namespace At0::Reyal
 		s_Instance.reset();
 	}
 
-	// TODO: Clean up
-	static std::thread s_EventThread;
 	int Application::Run()
 	{
+		std::thread s_EventThread;
 		while (!m_MainWindow.ShouldClose())
 		{
 			for (auto* layer : m_LayerStack)
@@ -37,26 +36,33 @@ namespace At0::Reyal
 				layer->OnUpdate();
 			}
 
-			// TODO: Strip in better builds
-			for (EventMessage& eMsg : m_MainWindow.GetEventQueue())
-			{
-				ZL_LOG_DEBUG(eMsg.e->ToString());
-			}
-
-			if (s_EventThread.joinable())
-				s_EventThread.join();
-
+			// TODO: Clean up and figure out which version is the most performant
+			if (s_EventThread.get_id() != std::thread::id())
+				continue;
 			s_EventThread = std::thread([this]()
 				{
-					if (!m_MainWindow.GetEventQueue().Empty())
+					//if (!m_MainWindow.GetEventQueue().Empty())
+					//{
+					//	EventMessage eMsg = m_MainWindow.GetEventQueue().PopFront();
+					//	OnEventReceived(eMsg.receiver, std::move(eMsg.e));
+					//}
+
+					while (m_Running)
 					{
-						EventMessage eMsg = m_MainWindow.GetEventQueue().PopFront();
-						OnEventReceived(eMsg.receiver, std::move(eMsg.e));
+						while (!m_MainWindow.GetEventQueue().Empty())
+						{
+							EventMessage eMsg = m_MainWindow.GetEventQueue().PopFront();
+							OnEventReceived(eMsg.receiver, std::move(eMsg.e));
+						}
+						Sleep(1);
 					}
 				}
 			);
-
 		}
+
+		m_Running = false;
+		if (s_EventThread.joinable())
+			s_EventThread.join();
 
 		return m_MainWindow.GetExitCode();
 	}

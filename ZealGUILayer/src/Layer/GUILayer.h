@@ -13,6 +13,8 @@ namespace At0::Layers
 		GUILayer(const std::wstring_view name);
 
 		virtual void OnMouseMove(Reyal::Widget* receiver, Reyal::MouseMoveEvent& e) override;
+		virtual void OnResize(Reyal::Widget* receiver, Reyal::WindowResizeEvent& e) override;
+		virtual void OnMousePress(Reyal::Widget* receiver, Reyal::MouseButtonPressedEvent& e) override;
 	};
 }
 

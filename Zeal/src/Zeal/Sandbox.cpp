@@ -20,7 +20,7 @@ namespace At0
 
 		// Test loading in layers
 		typedef Reyal::Layer* (*LayerCreateFunc)();
-		const std::string dllDir = "D:\\dev\\Cpp\\Projects\\NodePlanningEditor\\bin\\Debug-Win32\\Editors";
+		const std::string dllDir = "D:\\dev\\Cpp\\Projects\\NodePlanningEditor\\bin\\Release-Win32\\Editors";
 
 		for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(dllDir))
 		{

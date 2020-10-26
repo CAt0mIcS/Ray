@@ -14,7 +14,16 @@ namespace At0::Layers
 
 	void GUILayer::OnMouseMove(Reyal::Widget* receiver, Reyal::MouseMoveEvent& e)
 	{
-		ZL_LOG_DEBUG("[GUILayer] Mouse PosMouse {0}", Reyal::Application::Get().GetMainWindow().Mouse.GetPos());
 		ZL_LOG_DEBUG("[GUILayer] Mouse PosEvent {0}", e.GetPos());
+	}
+	
+	void GUILayer::OnMousePress(Reyal::Widget* receiver, Reyal::MouseButtonPressedEvent& e)
+	{
+		ZL_LOG_DEBUG("[GUILayer] MBP PosMouse {0}", Reyal::Application::Get().GetMainWindow().Mouse.GetPos());
+	}
+
+	void GUILayer::OnResize(Reyal::Widget* receiver, Reyal::WindowResizeEvent& e)
+	{
+		ZL_LOG_DEBUG("[GUILayer] WindowResizeEvent {0}", e.GetSize());
 	}
 }
