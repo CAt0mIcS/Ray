@@ -9,21 +9,21 @@ workspace "NodePlanningEditor"
 
     platforms
     {
-        "Win32",
-        "Win64"
+        "x86",
+        "x86_64"
     }
 
-    filter "platforms:Win32"
+    filter "platforms:x86"
         system "Windows"
         architecture "x86"
 
-    filter "platforms:Win64"
+    filter "platforms:x86_64"
         system "Windows"
         architecture "x64"
 
 
-outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-targetOutDir = "bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputDir = "%{cfg.buildcfg}-%{cfg.system}-$(Platform)"
+targetOutDir = "bin/%{cfg.buildcfg}-%{cfg.system}-$(Platform)"
 cwd = os.getcwd()
 
 
