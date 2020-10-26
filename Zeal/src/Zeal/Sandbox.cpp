@@ -8,6 +8,25 @@
 
 #include <filesystem>
 
+// TODO: Temporary
+#if defined(_DEBUG) || defined(DEBUG)
+	#if defined(_WIN64)
+		#define ZL_OUT_FOLDER "Release-x64"
+	#elif defined(_WIN32)
+		#define ZL_OUT_FOLDER "Release-Win32"
+	#endif
+#elif defined(NDEBUG) || defined(_NDEBUG)
+	#if defined(_WIN64)
+		#define ZL_OUT_FOLDER "Release-x64"
+	#elif defined(_WIN32)
+		#define ZL_OUT_FOLDER "Release-Win32"
+	#endif
+#else
+	#error "Unknown build configuration"
+#endif
+
+#define ZL_OUT_DIR "D:\\dev\\Cpp\\Projects\\NodePlanningEditor\\bin\\" ZL_OUT_FOLDER "\\Editors"
+
 
 namespace At0
 {
@@ -19,25 +38,19 @@ namespace At0
 		m_MainWindow.Show();
 
 		// Test loading in layers
-		typedef Reyal::Layer* (*LayerCreateFunc)();
-		const std::string dllDir = "D:\\dev\\Cpp\\Projects\\NodePlanningEditor\\bin\\Release-Win32\\Editors";
+		using LayerCreateFunc = Reyal::Layer* (*)();
+		const std::wstring ending = L".dll";
 
-		for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(dllDir))
+		for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(ZL_OUT_DIR))
 		{
-			std::wstring path = dirEntry.path().c_str();
-			std::wstring ending = L".dll";
+			std::wstring_view path = dirEntry.path().native();
 
-			if (path.length() > ending.length())
-			{
-				if (path.compare(path.length() - ending.length(), ending.length(), ending) != 0)
-					continue;
-			}
-			else
+			if (path.size() < ending.size() || path.compare(path.size() - ending.size(), ending.size(), ending) != 0)
 			{
 				continue;
 			}
 
-			HMODULE hDll = LoadLibrary(path.c_str());
+			HMODULE hDll = LoadLibrary(path.data());
 			if (!hDll || hDll == INVALID_HANDLE_VALUE)
 			{
 				DWORD err = GetLastError();
