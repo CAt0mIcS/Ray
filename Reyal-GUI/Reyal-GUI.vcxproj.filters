@@ -1,159 +1,169 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Reyal">
+      <UniqueIdentifier>{624B040E-CE5F-2CBF-97E1-CF1E03B528F0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Reyal\Core">
+      <UniqueIdentifier>{FADC7D4B-E694-BF98-4F9C-98F43B735A89}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Reyal\Debug">
+      <UniqueIdentifier>{58D745BB-C48C-BEB0-4D81-B887B935B5B4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reyal\Events">
+      <UniqueIdentifier>{06158B27-F277-1ACC-9BFD-5282873FE64E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reyal\Input">
+      <UniqueIdentifier>{E17CA5BB-4D32-1EB1-D626-188842DB14B5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reyal\Layers">
+      <UniqueIdentifier>{E1FF6D36-CD62-FDDA-76E8-3591622AC95D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reyal\Renderer">
+      <UniqueIdentifier>{487D9F2D-344B-9333-1DDF-035A094C6F98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reyal\Util">
+      <UniqueIdentifier>{EFCF874B-DB87-C998-448F-A2F430666489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reyal\Widgets">
+      <UniqueIdentifier>{C8BC1C64-347D-989A-FDB7-E1176937DD76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reyal\Window">
+      <UniqueIdentifier>{0976A150-F5D8-30F5-9E5E-69AB8AA0FC77}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\rlpch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Reyal\Application.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RlBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\EntryPoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RlWin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Reyal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Exception.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Window\BaseWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Window\Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Debug\ReyalLogger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Debug\Instrumentor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\CoreConfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Input\Mouse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Input\Keyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Layers\Layer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Layers\LayerStack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Events\Event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Events\ApplicationEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Events\KeyboardEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Events\MouseEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Widgets\ZWidget.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Renderer\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Renderer\WindowRenderer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Reyal</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Core\Queue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Core\ZRect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Util\Direct2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Util\Random.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Util\TypeConvert.h">
-      <Filter>Header Files</Filter>
+      <Filter>Reyal\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Core\Vec2.h">
-      <Filter>Header Files</Filter>
+      <Filter>Reyal\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Reyal\Core\ZRect.h">
+      <Filter>Reyal\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\CoreConfig.h">
+      <Filter>Reyal</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Debug\Instrumentor.h">
+      <Filter>Reyal\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Debug\ReyalLogger.h">
+      <Filter>Reyal\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\EntryPoint.h">
+      <Filter>Reyal</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Events\ApplicationEvent.h">
+      <Filter>Reyal\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Events\Event.h">
+      <Filter>Reyal\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Events\KeyboardEvent.h">
+      <Filter>Reyal\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Events\MouseEvent.h">
+      <Filter>Reyal\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Exception.h">
+      <Filter>Reyal</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Input\Keyboard.h">
+      <Filter>Reyal\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Input\Mouse.h">
+      <Filter>Reyal\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Layers\Layer.h">
+      <Filter>Reyal\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Layers\LayerStack.h">
+      <Filter>Reyal\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Renderer\Renderer.h">
+      <Filter>Reyal\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Renderer\WindowRenderer.h">
+      <Filter>Reyal\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Reyal.h">
+      <Filter>Reyal</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Util\Direct2D.h">
+      <Filter>Reyal\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Util\Random.h">
+      <Filter>Reyal\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Util\TypeConvert.h">
+      <Filter>Reyal\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Widgets\ZWidget.h">
+      <Filter>Reyal\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Window\BaseWindow.h">
+      <Filter>Reyal\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Window\Window.h">
+      <Filter>Reyal\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RlBase.h" />
+    <ClInclude Include="src\RlWin.h" />
+    <ClInclude Include="src\rlpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\rlpch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Reyal\Application.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Exception.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Window\Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Debug\ReyalLogger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Debug\Instrumentor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Input\Mouse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Input\Keyboard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Layers\Layer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Layers\LayerStack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Renderer\Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Renderer\WindowRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Core\ZRect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Util\Random.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Util\TypeConvert.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Reyal</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Core\Vec2.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Reyal\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Reyal\Core\ZRect.cpp">
+      <Filter>Reyal\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Debug\Instrumentor.cpp">
+      <Filter>Reyal\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Debug\ReyalLogger.cpp">
+      <Filter>Reyal\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Exception.cpp">
+      <Filter>Reyal</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Input\Keyboard.cpp">
+      <Filter>Reyal\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Input\Mouse.cpp">
+      <Filter>Reyal\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Layers\Layer.cpp">
+      <Filter>Reyal\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Layers\LayerStack.cpp">
+      <Filter>Reyal\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Renderer\Renderer.cpp">
+      <Filter>Reyal\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Renderer\WindowRenderer.cpp">
+      <Filter>Reyal\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Util\Random.cpp">
+      <Filter>Reyal\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Util\TypeConvert.cpp">
+      <Filter>Reyal\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp">
+      <Filter>Reyal\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Window\Window.cpp">
+      <Filter>Reyal\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rlpch.cpp" />
   </ItemGroup>
 </Project>

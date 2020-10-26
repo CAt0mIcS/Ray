@@ -8,26 +8,6 @@
 
 #include <filesystem>
 
-// TODO: Temporary
-#if defined(_DEBUG) || defined(DEBUG)
-	#if defined(_WIN64)
-		#define ZL_OUT_FOLDER "Release-x64"
-	#elif defined(_WIN32)
-		#define ZL_OUT_FOLDER "Release-Win32"
-	#endif
-#elif defined(NDEBUG) || defined(_NDEBUG)
-	#if defined(_WIN64)
-		#define ZL_OUT_FOLDER "Release-x64"
-	#elif defined(_WIN32)
-		#define ZL_OUT_FOLDER "Release-Win32"
-	#endif
-#else
-	#error "Unknown build configuration"
-#endif
-
-#define ZL_OUT_DIR "D:\\dev\\Cpp\\Projects\\NodePlanningEditor\\bin\\" ZL_OUT_FOLDER "\\Editors"
-
-
 namespace At0
 {
 	Sandbox::Sandbox()
@@ -41,7 +21,7 @@ namespace At0
 		using LayerCreateFunc = Reyal::Layer* (*)();
 		const std::wstring ending = L".dll";
 
-		for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(ZL_OUT_DIR))
+		for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(ZL_OUT_DIR + std::string("/Editors")))
 		{
 			std::wstring_view path = dirEntry.path().native();
 
@@ -53,15 +33,15 @@ namespace At0
 			HMODULE hDll = LoadLibrary(path.data());
 			if (!hDll || hDll == INVALID_HANDLE_VALUE)
 			{
-				DWORD err = GetLastError();
-				__debugbreak();
+				MessageBox(NULL, L"Error", L"Cannot find dll", MB_OK);
+				return;
 			}
 
 			LayerCreateFunc layerCreateFunc = (LayerCreateFunc)GetProcAddress(hDll, "CreateLayer");
 			if (!layerCreateFunc)
 			{
-				DWORD err = GetLastError();
-				__debugbreak();
+				MessageBox(NULL, L"Error", L"Cannot find layer create function", MB_OK);
+				return;
 			}
 
 			PushLayer(layerCreateFunc());

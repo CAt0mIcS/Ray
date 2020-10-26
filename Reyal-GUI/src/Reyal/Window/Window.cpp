@@ -94,13 +94,13 @@ namespace At0::Reyal
 		}
 		case WM_KEYDOWN:
 		{
-			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>(wParam);
+			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)wParam);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_KEYUP:
 		{
-			Scope<KeyReleasedEvent> e = MakeScope<KeyReleasedEvent>(wParam);
+			Scope<KeyReleasedEvent> e = MakeScope<KeyReleasedEvent>((unsigned char)wParam);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
