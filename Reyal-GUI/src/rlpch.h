@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_RLPCH_H
+#define RL_RLPCH_H
 
 #include "RlWin.h"
 
@@ -24,3 +25,4 @@
 #include <ZealLogger/Log.h>
 #include "Reyal/Debug/Instrumentor.h"
 
+#endif /* RL_RLPCH_H */

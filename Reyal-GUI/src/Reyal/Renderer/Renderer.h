@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_RENDERER_H
+#define RL_RENDERER_H
 
 #include "RlBase.h"
 #include <wrl.h>
@@ -19,4 +20,5 @@ namespace At0::Reyal
 }
 
 
+#endif /* RL_RENDERER_H */
 

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_MOUSEEVENT_H
+#define RL_MOUSEEVENT_H
 
 #include "RlBase.h"
 #include "Event.h"
@@ -166,3 +167,4 @@ namespace At0::Reyal
 	};
 }
 
+#endif /* RL_MOUSEEVENT_H */

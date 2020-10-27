@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_ZRECT_H
+#define RL_ZRECT_H
 
 #include "RlBase.h"
 
@@ -60,3 +61,4 @@ namespace At0::Reyal
 	
 }
 
+#endif /* RL_ZRECT_H */

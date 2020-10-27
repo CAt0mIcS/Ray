@@ -1,18 +1,17 @@
-#pragma once
+#ifndef RL_REYALLOGGER_H
+#define RL_REYALLOGGER_H
 // class 'std::shared_ptr<Zeal::Log::FileLogger>' needs to have dll-interface to be used by clients of class 'Zeal::Reyal::Logger'
 #pragma warning(disable : 4251)
 
 #include "RlBase.h"
 
-#if ZL_ENABLE_LOGGING
 #include <ZealLogger/Log.h>
 
 #include <memory>
 #include <string>
 
 
-
-
+#if ZL_ENABLE_LOGGING
 
 
 namespace At0::Reyal
@@ -72,3 +71,5 @@ namespace At0::Reyal
 
 	#define ZL_LOG_END()
 #endif
+
+#endif /* RL_REYALLOGGER_H */

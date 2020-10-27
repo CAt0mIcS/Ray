@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_EVENT_H
+#define RL_EVENT_H
 
 #include "RlBase.h"
 
@@ -32,4 +33,4 @@ namespace At0::Reyal
 }
 
 
-
+#endif /* RL_EVENT_H */

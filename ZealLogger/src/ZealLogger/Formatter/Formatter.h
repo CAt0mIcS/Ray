@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ZZL_FORMATTER_H
+#define ZZL_FORMATTER_H
 
 #include <string>
 
@@ -24,3 +25,5 @@ namespace At0::Log
 		Formatter() = default;
 	};
 }
+
+#endif /* ZZL_FORMATTER_H */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ZZL_LOGINCLUDE_H
+#define ZZL_LOGINCLUDE_H
 
 #include "../../../Reyal-GUI/src/Reyal/CoreConfig.h"
 
@@ -9,3 +10,4 @@
 
 #endif
 
+#endif /* ZZL_LOGINCLUDE_H */

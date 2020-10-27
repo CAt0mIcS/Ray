@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_APPEVENT_H
+#define RL_APPEVENT_H
 
 #include "RlBase.h"
 #include "Event.h"
@@ -114,3 +115,5 @@ namespace At0::Reyal
 	private:
 	};
 }
+
+#endif /* RL_APPEVENT_H */

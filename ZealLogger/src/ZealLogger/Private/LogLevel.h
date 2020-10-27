@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ZZL_LOGLEVEL_H
+#define ZZL_LOGLEVEL_H
 
 
 namespace At0::Log
@@ -51,3 +52,5 @@ namespace At0::Log
 		None
 	};
 }
+
+#endif /* ZZL_LOGLEVEL_H */

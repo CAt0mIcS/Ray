@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ZZL_BASELOGGER_H
+#define ZZL_BASELOGGER_H
 
 #include <string>
 #include <mutex>
@@ -446,3 +447,4 @@ namespace At0::Log
 	};
 }
 
+#endif /* ZZL_BASELOGGER_H */

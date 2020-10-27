@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_QUEUE_H
+#define RL_QUEUE_H
 
 #include "RlBase.h"
 
@@ -146,5 +147,5 @@ namespace At0::Reyal
 }
 
 
-
+#endif /* RL_QUEUE_H */
 

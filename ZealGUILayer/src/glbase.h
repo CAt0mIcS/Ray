@@ -1,7 +1,6 @@
-#pragma once
+#ifndef ZGL_GLBASE_H
+#define ZGL_GLBASE_H
 
-#ifdef ZEAL_GUI_LAYER_BUILD
 #define ZGL_API __declspec(dllexport)
-#else
-#define ZGL_API __declspec(dllimport)
-#endif
+
+#endif /* ZGL_GLBASE_H */

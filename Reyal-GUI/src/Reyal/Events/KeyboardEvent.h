@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_KBDEVENT_H
+#define RL_KBDEVENT_H
 
 #include "RlBase.h"
 #include "Event.h"
@@ -78,3 +79,4 @@ namespace At0::Reyal
 }
 
 
+#endif /* RL_KBDEVENT_H */

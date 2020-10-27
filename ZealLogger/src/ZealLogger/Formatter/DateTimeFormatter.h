@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ZZL_DATETIMEFORMATTER_H
+#define ZZL_DATETIMEFORMATTER_H
 
 #include "Formatter.h"
 #include <chrono>
@@ -75,3 +76,4 @@ namespace At0::Log
 
 }
 
+#endif /* ZZL_DATETIMEFORMATTER_H */

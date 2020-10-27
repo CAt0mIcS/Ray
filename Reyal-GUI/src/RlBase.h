@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_RLBASE_H
+#define RL_RLBASE_H
 
 #include <memory>
 
@@ -29,3 +30,5 @@ namespace At0::Reyal
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
 }
+
+#endif /* RL_RLBASE_H */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_APPLICATION_H
+#define RL_APPLICATION_H
 
 #include "RlBase.h"
 
@@ -123,5 +124,6 @@ namespace At0::Reyal
 
 }
 
+#endif /* RL_APPLICATION_H */
 
 

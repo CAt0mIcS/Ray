@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ZGL_GUILAYER_H
+#define ZGL_GUILAYER_H
 
 #include "glbase.h"
 
@@ -25,3 +26,5 @@ extern "C"
 		return new At0::Layers::GUILayer(L"GUI-Layer");
 	}
 }
+
+#endif /* ZGL_GUILAYER_H */

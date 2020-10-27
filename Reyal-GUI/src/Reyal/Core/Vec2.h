@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_VEC2_H
+#define RL_VEC2_H
 
 #include "RlBase.h"
 
@@ -100,3 +101,4 @@ namespace At0::Reyal
 	using Size = Vec2;
 }
 
+#endif /* RL_VEC2_H */

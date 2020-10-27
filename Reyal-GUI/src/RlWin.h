@@ -1,4 +1,6 @@
-#pragma once
+#ifndef RL_RLWIN_H
+#define RL_RLWIN_H
+
 
 #include <sdkddkver.h>
 
@@ -19,3 +21,5 @@
 
 #include <Windows.h>
 #include <d2d1.h>
+
+#endif /* RL_RLWIN_H */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_INSTRUMENTOR_H
+#define RL_INSTRUMENTOR_H
 
 #include "Reyal/CoreConfig.h"
 
@@ -173,3 +174,5 @@ namespace At0::Reyal
 #define ZL_PROFILE_FUNCTION()
 
 #endif
+
+#endif /* RL_INSTRUMENTOR_H */

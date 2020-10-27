@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ZZL_TYPECONVERT_H
+#define ZZL_TYPECONVERT_H
 
 #include <string>
 
@@ -20,3 +21,4 @@ namespace At0::Log::Util
 	std::string WideCharToMultiByte(const std::wstring_view str);
 }
 
+#endif /* ZZL_TyPECONVERT_H */

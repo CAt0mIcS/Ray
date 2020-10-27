@@ -1,4 +1,7 @@
-#pragma once
+#ifndef RL_CORECONFIG_H
+#define RL_CORECONFIG_H
 
 #define ZL_ENABLE_LOGGING 1
 #define ZL_ENABLE_PROFILING 0
+
+#endif /* RL_CORECONFIG_H */

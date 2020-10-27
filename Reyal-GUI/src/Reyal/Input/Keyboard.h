@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_KEYBOARD_H
+#define RL_KEYBOARD_H
 
 #include "RlBase.h"
 #include <bitset>
@@ -22,4 +23,4 @@ namespace At0::Reyal
 }
 
 
-
+#endif /* RL_KEYBOARD_H */

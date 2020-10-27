@@ -1,4 +1,6 @@
-#pragma once
+#ifndef RL_WINDOWRENDERER_H
+#define RL_WINDOWRENDERER_H
+
 #include "RlBase.h"
 
 #include "RlWin.h"
@@ -39,4 +41,4 @@ namespace At0::Reyal
 
 
 
-
+#endif /* RL_WINDOWRENDERER_H */

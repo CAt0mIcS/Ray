@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ZZL_LOGCONFIGURE_H
+#define ZZL_LOGCONFIGURE_H
 
 
 /// <summary>
@@ -28,3 +29,4 @@
 	#define ZL_NO_DATETIME_OUT
 #endif
 
+#endif /* ZZL_LOGCONFIGURE_H */

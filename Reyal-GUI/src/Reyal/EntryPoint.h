@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_ENTRYPOINT_H
+#define RL_ENTRYPOINT_H
 
 
 #include "rlpch.h"
@@ -91,3 +92,4 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 	return -1;
 }
 
+#endif /* RL_ENTRYPOINT_H */

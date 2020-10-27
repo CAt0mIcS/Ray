@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ZL_SANDBOX_H
+#define ZL_SANDBOX_H
 
 #include <Reyal/Application.h>
 
@@ -39,4 +40,4 @@ namespace At0
 }
 
 
-
+#endif /* ZL_SANDBOX_H */

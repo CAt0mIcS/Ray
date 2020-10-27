@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_RANDOM_H
+#define RL_RANDOM_H
 
 #include <string>
 #include "RlBase.h"
@@ -38,3 +39,6 @@ namespace At0::Reyal
 		return GenerateRandomTokenA(length);
 	}
 }
+
+
+#endif /* RL_RANDOM_H */

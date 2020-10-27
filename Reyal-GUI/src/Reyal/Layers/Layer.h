@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_LAYER_H
+#define RL_LAYER_H
 
 #include "RlBase.h"
 
@@ -46,4 +47,5 @@ namespace At0::Reyal
 }
 
 
+#endif /* RL_LAYER_H */
 

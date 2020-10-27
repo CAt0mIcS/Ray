@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_LAYERSTACK_H
+#define RL_LAYERSTACK_H
 
 #include "RlBase.h"
 #include <vector>
@@ -50,4 +51,4 @@ namespace At0::Reyal
 }
 
 
-
+#endif /* RL_LAYERSTACK_H */
