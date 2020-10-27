@@ -4,6 +4,7 @@
 #include "Event.h"
 
 #include "Reyal/Core/Vec2.h"
+#include <sstream>
 
 
 namespace At0::Reyal
