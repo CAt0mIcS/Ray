@@ -8,8 +8,9 @@
 #include "Reyal/Widgets/ZWidget.h"
 #include "Reyal/Window/Window.h"
 #include "Reyal/Layers/Layer.h"
-#include "Reyal/Renderer/Renderer.h"
-#include "Reyal/Renderer/WindowRenderer.h"
+
+#include "Reyal/Renderer/Renderer2D.h"
+#include "Reyal/Renderer/Renderer3D.h"
 
 #include "Reyal/Events/ApplicationEvent.h"
 #include "Reyal/Events/KeyboardEvent.h"

@@ -22,8 +22,10 @@ namespace At0::Reyal
 		ZL_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
 		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW));
 
-		if(!parent || !parent->GetRenderer())
-			m_Renderer.Init(m_hWnd);
+		if(!parent || !parent->GetRenderer2D())
+			m_Renderer2D.Init(m_hWnd);
+
+		m_Renderer3D.Init(m_hWnd);
 	}
 
 	Window::~Window()
@@ -94,6 +96,9 @@ namespace At0::Reyal
 		}
 		case WM_KEYDOWN:
 		{
+			m_Renderer3D.RenderTestTriangle();
+			m_Renderer3D.EndDraw();
+
 			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)wParam);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
@@ -181,15 +186,15 @@ namespace At0::Reyal
 		return str;
 	}
 
-	WindowRenderer* Window::GetRenderer()
+	Renderer2D* Window::GetRenderer2D()
 	{
 		ZL_PROFILE_FUNCTION();
 
 		if (GetParent())
 		{
-			return GetParent()->GetRenderer();
+			return GetParent()->GetRenderer2D();
 		}
-		return &m_Renderer;
+		return &m_Renderer2D;
 	}
 
 	void Window::SetTitle(const std::wstring_view title)

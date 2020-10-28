@@ -1,169 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Reyal">
-      <UniqueIdentifier>{624B040E-CE5F-2CBF-97E1-CF1E03B528F0}</UniqueIdentifier>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{EFAC8DF2-5B8C-0C8E-64A4-9764D00273EF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Reyal\Core">
-      <UniqueIdentifier>{FADC7D4B-E694-BF98-4F9C-98F43B735A89}</UniqueIdentifier>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Reyal\Debug">
-      <UniqueIdentifier>{58D745BB-C48C-BEB0-4D81-B887B935B5B4}</UniqueIdentifier>
+    <Filter Include="src\Reyal">
+      <UniqueIdentifier>{B959C1B3-25C4-752A-6E02-27D0DAAB537F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Reyal\Events">
-      <UniqueIdentifier>{06158B27-F277-1ACC-9BFD-5282873FE64E}</UniqueIdentifier>
+    <Filter Include="src\Reyal\Core">
+      <UniqueIdentifier>{B1798482-9D47-7888-86DB-E8AE724854ED}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Reyal\Input">
-      <UniqueIdentifier>{E17CA5BB-4D32-1EB1-D626-188842DB14B5}</UniqueIdentifier>
+    <Filter Include="src\Reyal\Debug">
+      <UniqueIdentifier>{EF0A20D3-5B96-8D97-64A7-108CD0B1E997}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Reyal\Layers">
-      <UniqueIdentifier>{E1FF6D36-CD62-FDDA-76E8-3591622AC95D}</UniqueIdentifier>
+    <Filter Include="src\Reyal\Events">
+      <UniqueIdentifier>{7DBBAB3A-69B4-CA8C-92E6-AF117E3EAA98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Reyal\Renderer">
-      <UniqueIdentifier>{487D9F2D-344B-9333-1DDF-035A094C6F98}</UniqueIdentifier>
+    <Filter Include="src\Reyal\Input">
+      <UniqueIdentifier>{78B07FD3-E43B-ED97-ED4C-708C59574998}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Reyal\Util">
-      <UniqueIdentifier>{EFCF874B-DB87-C998-448F-A2F430666489}</UniqueIdentifier>
+    <Filter Include="src\Reyal\Layers">
+      <UniqueIdentifier>{58A68E49-449F-AD9B-6DD1-922059298DA7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Reyal\Widgets">
-      <UniqueIdentifier>{C8BC1C64-347D-989A-FDB7-E1176937DD76}</UniqueIdentifier>
+    <Filter Include="src\Reyal\Renderer">
+      <UniqueIdentifier>{7F9D838B-6B81-44E1-D4E1-3E34C0E42E63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Reyal\Window">
-      <UniqueIdentifier>{0976A150-F5D8-30F5-9E5E-69AB8AA0FC77}</UniqueIdentifier>
+    <Filter Include="src\Reyal\Util">
+      <UniqueIdentifier>{A66C8E82-923A-8288-7BCE-F2AE673B5EED}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Reyal\Widgets">
+      <UniqueIdentifier>{1F3252DB-8B48-5071-D4BF-DB92401521F9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Reyal\Window">
+      <UniqueIdentifier>{801CC263-6C15-E1B5-9547-C63A819FC0C1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Reyal\Application.h">
-      <Filter>Reyal</Filter>
+      <Filter>src\Reyal</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Core\Queue.h">
-      <Filter>Reyal\Core</Filter>
+      <Filter>src\Reyal\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Core\Vec2.h">
-      <Filter>Reyal\Core</Filter>
+      <Filter>src\Reyal\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Core\ZRect.h">
-      <Filter>Reyal\Core</Filter>
+      <Filter>src\Reyal\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\CoreConfig.h">
-      <Filter>Reyal</Filter>
+      <Filter>src\Reyal</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Debug\Instrumentor.h">
-      <Filter>Reyal\Debug</Filter>
+      <Filter>src\Reyal\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Debug\ReyalLogger.h">
-      <Filter>Reyal\Debug</Filter>
+      <Filter>src\Reyal\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\EntryPoint.h">
-      <Filter>Reyal</Filter>
+      <Filter>src\Reyal</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Events\ApplicationEvent.h">
-      <Filter>Reyal\Events</Filter>
+      <Filter>src\Reyal\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Events\Event.h">
-      <Filter>Reyal\Events</Filter>
+      <Filter>src\Reyal\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Events\KeyboardEvent.h">
-      <Filter>Reyal\Events</Filter>
+      <Filter>src\Reyal\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Events\MouseEvent.h">
-      <Filter>Reyal\Events</Filter>
+      <Filter>src\Reyal\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Exception.h">
-      <Filter>Reyal</Filter>
+      <Filter>src\Reyal</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Input\Keyboard.h">
-      <Filter>Reyal\Input</Filter>
+      <Filter>src\Reyal\Input</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Input\Mouse.h">
-      <Filter>Reyal\Input</Filter>
+      <Filter>src\Reyal\Input</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Layers\Layer.h">
-      <Filter>Reyal\Layers</Filter>
+      <Filter>src\Reyal\Layers</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Layers\LayerStack.h">
-      <Filter>Reyal\Layers</Filter>
+      <Filter>src\Reyal\Layers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Reyal\Renderer\Renderer.h">
-      <Filter>Reyal\Renderer</Filter>
+    <ClInclude Include="src\Reyal\Renderer\Renderer2D.h">
+      <Filter>src\Reyal\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Reyal\Renderer\WindowRenderer.h">
-      <Filter>Reyal\Renderer</Filter>
+    <ClInclude Include="src\Reyal\Renderer\Renderer3D.h">
+      <Filter>src\Reyal\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Reyal.h">
-      <Filter>Reyal</Filter>
+      <Filter>src\Reyal</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Util\Direct2D.h">
-      <Filter>Reyal\Util</Filter>
+      <Filter>src\Reyal\Util</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Util\Random.h">
-      <Filter>Reyal\Util</Filter>
+      <Filter>src\Reyal\Util</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Util\TypeConvert.h">
-      <Filter>Reyal\Util</Filter>
+      <Filter>src\Reyal\Util</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Widgets\ZWidget.h">
-      <Filter>Reyal\Widgets</Filter>
+      <Filter>src\Reyal\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Window\BaseWindow.h">
-      <Filter>Reyal\Window</Filter>
+      <Filter>src\Reyal\Window</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Window\Window.h">
-      <Filter>Reyal\Window</Filter>
+      <Filter>src\Reyal\Window</Filter>
     </ClInclude>
-    <ClInclude Include="src\RlBase.h" />
-    <ClInclude Include="src\RlWin.h" />
-    <ClInclude Include="src\rlpch.h" />
+    <ClInclude Include="src\RlBase.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RlWin.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rlpch.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Reyal\Application.cpp">
-      <Filter>Reyal</Filter>
+      <Filter>src\Reyal</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Core\Vec2.cpp">
-      <Filter>Reyal\Core</Filter>
+      <Filter>src\Reyal\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Core\ZRect.cpp">
-      <Filter>Reyal\Core</Filter>
+      <Filter>src\Reyal\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Debug\Instrumentor.cpp">
-      <Filter>Reyal\Debug</Filter>
+      <Filter>src\Reyal\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Debug\ReyalLogger.cpp">
-      <Filter>Reyal\Debug</Filter>
+      <Filter>src\Reyal\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Exception.cpp">
-      <Filter>Reyal</Filter>
+      <Filter>src\Reyal</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Input\Keyboard.cpp">
-      <Filter>Reyal\Input</Filter>
+      <Filter>src\Reyal\Input</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Input\Mouse.cpp">
-      <Filter>Reyal\Input</Filter>
+      <Filter>src\Reyal\Input</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Layers\Layer.cpp">
-      <Filter>Reyal\Layers</Filter>
+      <Filter>src\Reyal\Layers</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Layers\LayerStack.cpp">
-      <Filter>Reyal\Layers</Filter>
+      <Filter>src\Reyal\Layers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Reyal\Renderer\Renderer.cpp">
-      <Filter>Reyal\Renderer</Filter>
+    <ClCompile Include="src\Reyal\Renderer\Renderer2D.cpp">
+      <Filter>src\Reyal\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Reyal\Renderer\WindowRenderer.cpp">
-      <Filter>Reyal\Renderer</Filter>
+    <ClCompile Include="src\Reyal\Renderer\Renderer3D.cpp">
+      <Filter>src\Reyal\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Util\Random.cpp">
-      <Filter>Reyal\Util</Filter>
+      <Filter>src\Reyal\Util</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Util\TypeConvert.cpp">
-      <Filter>Reyal\Util</Filter>
+      <Filter>src\Reyal\Util</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp">
-      <Filter>Reyal\Widgets</Filter>
+      <Filter>src\Reyal\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Window\Window.cpp">
-      <Filter>Reyal\Window</Filter>
+      <Filter>src\Reyal\Window</Filter>
     </ClCompile>
-    <ClCompile Include="src\rlpch.cpp" />
+    <ClCompile Include="src\rlpch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\PixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

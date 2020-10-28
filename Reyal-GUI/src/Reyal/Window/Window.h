@@ -6,11 +6,13 @@
 #include "Reyal/Input/Mouse.h"
 
 #include "Reyal/Widgets/ZWidget.h"
-#include "Reyal/Renderer/WindowRenderer.h"
+#include "Reyal/Core/Queue.h"
+
+#include "Reyal/Renderer/Renderer2D.h"
+#include "Reyal/Renderer/Renderer3D.h"
 
 #include <functional>
 
-#include "Reyal/Core/Queue.h"
 
 
 namespace At0::Reyal
@@ -135,7 +137,7 @@ namespace At0::Reyal
 		/// Getter for the Renderer of this Window
 		/// </summary>
 		/// <returns>The Window Renderer</returns>
-		virtual WindowRenderer* GetRenderer() override;
+		virtual Renderer2D* GetRenderer2D() override;
 
 		/// <summary>
 		/// Sets the Window title
@@ -190,9 +192,10 @@ namespace At0::Reyal
 	private:
 		bool m_IsMainWindow;
 		int m_ExitCode;
-		WindowRenderer m_Renderer;
 		Point m_OldWindowPos;
 		Size m_OldSize;
+		Renderer2D m_Renderer2D;
+		Renderer3D m_Renderer3D;
 
 		Queue<EventMessage, s_MaxMessagesInQueue> m_EventQueue;
 

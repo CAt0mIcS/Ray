@@ -49,7 +49,8 @@ project "Reyal-GUI"
     files
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/Shaders/**.hlsl"
     }
 
     includedirs
@@ -61,7 +62,9 @@ project "Reyal-GUI"
     links
     {
         "ZealLogger.lib",
-        "D2D1.lib"
+        "D2D1.lib",
+        "D3D11.lib",
+        "D3DCompiler.lib"
     }
 
     libdirs

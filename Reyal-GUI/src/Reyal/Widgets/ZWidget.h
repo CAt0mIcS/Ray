@@ -12,8 +12,8 @@
 namespace At0::Reyal
 {
 	class Event;
-	class WindowRenderer;
 	class Mouse;
+	class Renderer2D;
 
 	class RL_API Widget
 	{
@@ -64,7 +64,7 @@ namespace At0::Reyal
 		/// Getter for the Window Renderer
 		/// </summary>
 		/// <returns>The Renderer for this window</returns>
-		virtual WindowRenderer* GetRenderer() = 0;
+		virtual Renderer2D* GetRenderer2D() = 0;
 
 		/// <summary>
 		/// Getter for the parent of this Widget
@@ -124,7 +124,6 @@ namespace At0::Reyal
 		Widget* m_Parent;
 		const std::wstring m_Name;
 		std::vector<Scope<Widget>> m_Children;
-		WindowRenderer* m_Renderer;
 		D2D1::Matrix3x2F m_Matrix;
 	};
 

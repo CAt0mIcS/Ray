@@ -55,7 +55,7 @@ namespace At0::Reyal
     }
 
     Widget::Widget(const std::wstring_view name, _In_opt_ Widget* parent)
-        : m_Name(name), m_Parent(parent), m_Renderer(nullptr), m_Children{}
+        : m_Name(name), m_Parent(parent), m_Children{}
     {
         ZL_PROFILE_FUNCTION();
     }
