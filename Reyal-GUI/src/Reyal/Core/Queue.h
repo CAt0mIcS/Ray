@@ -9,6 +9,10 @@
 
 namespace At0::Reyal
 {
+	/// <summary>
+	/// Thread-Safe Queue
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
 	template<typename T, size_t MaxSize = -1>
 	class RL_API Queue
 	{
@@ -17,8 +21,15 @@ namespace At0::Reyal
 		using ConstInterator = typename std::deque<T>::const_iterator;
 		using ConstReverseIterator = typename std::deque<T>::const_reverse_iterator;
 	public:
+		/// <summary>
+		/// Default Queue Constructor
+		/// </summary>
 		Queue() = default;
 
+		/// <summary>
+		/// Adds an element to the front of the queue
+		/// </summary>
+		/// <param name="elem">Is the element to add</param>
 		void PushFront(T&& elem)
 		{
 			std::scoped_lock lock(m_Mutex);
@@ -26,6 +37,10 @@ namespace At0::Reyal
 			TrimBuffer();
 		}
 
+		/// <summary>
+		/// Adds an element to the back of the queue
+		/// </summary>
+		/// <param name="elem">Is the element to add</param>
 		void PushBack(T&& elem)
 		{
 			std::scoped_lock lock(m_Mutex);
@@ -33,6 +48,10 @@ namespace At0::Reyal
 			TrimBuffer();
 		}
 
+		/// <summary>
+		/// Adds an element to the front of the queue
+		/// </summary>
+		/// <param name="elem">Is the element to add</param>
 		void PushFront(const T& elem)
 		{
 			std::scoped_lock lock(m_Mutex);
@@ -40,6 +59,10 @@ namespace At0::Reyal
 			TrimBuffer();
 		}
 
+		/// <summary>
+		/// Adds an element to the back of the queue
+		/// </summary>
+		/// <param name="elem">Is the element to add</param>
 		void PushBack(const T& elem)
 		{
 			std::scoped_lock lock(m_Mutex);
@@ -47,6 +70,10 @@ namespace At0::Reyal
 			TrimBuffer();
 		}
 
+		/// <summary>
+		/// Removes the first element in the queue and returns it
+		/// </summary>
+		/// <returns>The first element in the queue</returns>
 		T PopFront()
 		{
 			std::scoped_lock lock(m_Mutex);
@@ -55,6 +82,10 @@ namespace At0::Reyal
 			return front;
 		}
 
+		/// <summary>
+		/// Removes the last element in the queue and returns it
+		/// </summary>
+		/// <returns>The last element in the queue</returns>
 		T PopBack()
 		{
 			std::scoped_lock lock(m_Mutex);
@@ -63,23 +94,39 @@ namespace At0::Reyal
 			return back;
 		}
 
+		/// <summary>
+		/// Getter for the first element in the queue
+		/// </summary>
+		/// <returns>A reference to the first element</returns>
 		T& Front()
 		{
 			std::scoped_lock lock(m_Mutex);
 			return m_Queue.front();
 		}
 
+		/// <summary>
+		/// Getter for the last element in the queue
+		/// </summary>
+		/// <returns>A reference to the last element</returns>
 		T& Back()
 		{
 			std::scoped_lock lock(m_Mutex);
 			return m_Queue.back();
 		}
 
+		/// <summary>
+		/// Checks if the queue is empty
+		/// </summary>
+		/// <returns>True if it's empty, false otherwise</returns>
 		bool Empty() const
 		{
 			return m_Queue.empty();
 		}
 
+		/// <summary>
+		/// Getter for the size of the queue
+		/// </summary>
+		/// <returns>The size of the queue</returns>
 		size_t Size() const
 		{
 			return m_Queue.size();
@@ -132,6 +179,9 @@ namespace At0::Reyal
 		}
 
 	private:
+		/// <summary>
+		/// Trims the queue down to the maximum allowed size, mutex is already locked at this stage
+		/// </summary>
 		void TrimBuffer()
 		{
 			while (m_Queue.size() > MaxSize)
@@ -141,7 +191,14 @@ namespace At0::Reyal
 		}
 
 	private:
+		/// <summary>
+		/// The queue which holds the data
+		/// </summary>
 		std::deque<T> m_Queue;
+
+		/// <summary>
+		/// Mutex for m_Queue
+		/// </summary>
 		std::mutex m_Mutex;
 	};
 }

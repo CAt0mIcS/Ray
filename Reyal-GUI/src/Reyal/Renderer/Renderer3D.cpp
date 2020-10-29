@@ -102,7 +102,7 @@ namespace At0::Reyal
         ///////////////////////////////////////////////////////////////////////////////////////
         Microsoft::WRL::ComPtr<ID3D11PixelShader> pPixelShader;
         Microsoft::WRL::ComPtr<ID3DBlob> pBlob;
-        D3DReadFileToBlob(L"../Reyal-GUI/Shaders/PixelShader.cso", &pBlob);
+        D3DReadFileToBlob(L"../Reyal-GUI/Shaders/PixelShader-p.cso", &pBlob);
         m_pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
         m_pContext->PSSetShader(pPixelShader.Get(), nullptr, 0);
 
@@ -111,7 +111,7 @@ namespace At0::Reyal
         ////////// Vertex Shader //////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////
         Microsoft::WRL::ComPtr<ID3D11VertexShader> pVertexShader;
-        D3DReadFileToBlob(L"../Reyal-GUI/Shaders/VertexShader.cso", &pBlob);
+        D3DReadFileToBlob(L"../Reyal-GUI/Shaders/VertexShader-v.cso", &pBlob);
         m_pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
         m_pContext->VSSetShader(pVertexShader.Get(), nullptr, 0);
 

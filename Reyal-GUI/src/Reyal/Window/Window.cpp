@@ -99,7 +99,7 @@ namespace At0::Reyal
 			m_Renderer3D.RenderTestTriangle();
 			m_Renderer3D.EndDraw();
 
-			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)wParam);
+			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)wParam, lParam & 0xff);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}

@@ -21,6 +21,14 @@ workspace "NodePlanningEditor"
         system "Windows"
         architecture "x64"
 
+    filter "files:**-v.hlsl"
+        shaderobjectfileoutput("Shaders/%{file.basename}.cso")
+        shadertype "Vertex"
+
+    filter "files:**-p.hlsl"
+        shaderobjectfileoutput("Shaders/%{file.basename}.cso")
+        shadertype "Pixel"
+
 
 outputDir = "%{cfg.buildcfg}-%{cfg.system}-$(Platform)"
 targetOutDir = "bin/%{cfg.buildcfg}-%{cfg.system}-$(Platform)"

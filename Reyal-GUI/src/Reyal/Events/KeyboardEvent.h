@@ -26,10 +26,12 @@ namespace At0::Reyal
 	class RL_API KeyPressedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(const unsigned char keycode)
-			: KeyEvent(keycode)
+		KeyPressedEvent(const unsigned char keycode, uint32_t repeatCount)
+			: KeyEvent(keycode), m_RepeatCount(repeatCount)
 		{
 		}
+
+		uint32_t GetRepeatCount() const { return m_RepeatCount; }
 
 		virtual std::string ToString() const override
 		{
@@ -39,6 +41,9 @@ namespace At0::Reyal
 		}
 
 		RL_DECLARE_TYPE_FN(KeyPressedEvent)
+
+	private:
+		uint32_t m_RepeatCount;
 	};
 
 	class RL_API KeyReleasedEvent : public KeyEvent

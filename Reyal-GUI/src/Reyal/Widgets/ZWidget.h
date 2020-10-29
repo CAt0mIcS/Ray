@@ -22,7 +22,7 @@ namespace At0::Reyal
 		/// Default Widget Move-Constructor
 		/// </summary>
 		/// <param name=""></param>
-		Widget(Widget&&) = default;
+		Widget(Widget&&) noexcept = default;
 
 		/// <summary>
 		/// Gets the unique name of the current Widget
@@ -82,8 +82,10 @@ namespace At0::Reyal
 		/// <summary>
 		/// Adds a new child to this control
 		/// </summary>
-		/// <typeparam name="T">Is any base type of Widget</typeparam>
-		/// <param name="parent">Is the parent of the child to add</param>
+		/// <typeparam name="T">Is any derived type of Widget</typeparam>
+		/// <typeparam name="...Args">Are any arguments</typeparam>
+		/// <param name="name">Is the unique name of the child</param>
+		/// <param name="...arg">Are all the arguments to pass to the constructor of T</param>
 		/// <returns>The added child</returns>
 		template<typename T, typename... Args, typename = std::enable_if_t<std::is_convertible_v<T*, Widget*>>>
 		T* AddChild(const std::wstring_view name, Args&&... arg);
@@ -117,13 +119,29 @@ namespace At0::Reyal
 		/// Recursively searches through all children and finds the one which should receive the specified event
 		/// </summary>
 		/// <param name="e">Is the received event</param>
+		/// <param name="mouse">Is the mouse of the window the widget is in</param>
 		/// <returns>The Widget which should receive the event</returns>
 		Widget* GetEventReceiver(const Event& e, const Mouse& mouse);
 
 	protected:
+		/// <summary>
+		/// The parent of this Widget, may be null
+		/// </summary>
 		Widget* m_Parent;
+
+		/// <summary>
+		/// The name of this widget, should be unique across all widgets
+		/// </summary>
 		const std::wstring m_Name;
+
+		/// <summary>
+		/// All the child widgets
+		/// </summary>
 		std::vector<Scope<Widget>> m_Children;
+
+		/// <summary>
+		/// The current transform of this widget
+		/// </summary>
 		D2D1::Matrix3x2F m_Matrix;
 	};
 

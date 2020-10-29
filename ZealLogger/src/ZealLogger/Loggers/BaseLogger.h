@@ -441,7 +441,15 @@ namespace At0::Log
 		}
 
 	protected:
+		/// <summary>
+		/// Is the loglevel by which it will be decided if the Logger should log the message
+		/// </summary>
 		LogLevel m_LogLevel;
+		
+	private:
+		/// <summary>
+		/// Is a list of formatters to call in order
+		/// </summary>
 		std::vector<Formatter*> m_Formatters;
 
 	};

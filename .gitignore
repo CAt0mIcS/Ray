@@ -6,3 +6,5 @@ bin-int/
 .github/
 *.json
 *.cso
+Doxygen/
+Doxyfile

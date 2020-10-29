@@ -186,17 +186,50 @@ namespace At0::Reyal
 		Queue<EventMessage, s_MaxMessagesInQueue>& GetEventQueue() { return m_EventQueue; }
 
 	public:
+		/// <summary>
+		/// The keyboard holding information about which key is pressed in this window
+		/// </summary>
 		Keyboard Keyboard;
+		
+		/// <summary>
+		/// The mouse holding information about which mouse button is pressed in this window
+		/// </summary>
 		Mouse Mouse;
 
 	private:
+		/// <summary>
+		/// Is true, then if this window closes, the application will exit
+		/// </summary>
 		bool m_IsMainWindow;
+
+		/// <summary>
+		/// Specifies the exit code when quitting the program
+		/// </summary>
 		int m_ExitCode;
+
+		/// <summary>
+		/// Specifies the old position of this window
+		/// </summary>
 		Point m_OldWindowPos;
+
+		/// <summary>
+		/// Specifies the old size of this window
+		/// </summary>
 		Size m_OldSize;
+
+		/// <summary>
+		/// Specifies the 2D renderer
+		/// </summary>
 		Renderer2D m_Renderer2D;
+		
+		/// <summary>
+		/// Specifies the 3D renderer
+		/// </summary>
 		Renderer3D m_Renderer3D;
 
+		/// <summary>
+		/// Is the Queue of messages to process, they will be popped in Reyal::Application and dispatched to the layers
+		/// </summary>
 		Queue<EventMessage, s_MaxMessagesInQueue> m_EventQueue;
 
 	};

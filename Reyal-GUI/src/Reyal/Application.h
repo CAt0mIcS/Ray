@@ -114,6 +114,9 @@ namespace At0::Reyal
 		void DispatchEvent(_In_ Layer* layer, _In_ Widget* receiver, Event& e);
 
 	protected:
+		/// <summary>
+		/// The main window which will exit the application on close
+		/// </summary>
 		Window m_MainWindow;
 
 	private:
