@@ -242,8 +242,6 @@ namespace At0::Reyal
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		//TODO: Change to something more appropriate (needed so cpu doesn't go up to 30% usage when running)
-		Sleep(1);
 		return false;
 	}
 }

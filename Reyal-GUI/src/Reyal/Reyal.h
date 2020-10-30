@@ -2,8 +2,6 @@
 #define RL_REYALINCLUDE_H
 
 
-#include "Reyal/Debug/ReyalLogger.h"
-
 #include "Reyal/Application.h"
 #include "Reyal/Widgets/ZWidget.h"
 #include "Reyal/Window/Window.h"

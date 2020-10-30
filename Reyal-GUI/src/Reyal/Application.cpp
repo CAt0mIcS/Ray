@@ -28,36 +28,26 @@ namespace At0::Reyal
 
 	int Application::Run()
 	{
-		std::thread s_EventThread;
+		auto dispatchEvents = [this]()
+		{
+			auto& queue = m_MainWindow.GetEventQueue();
+			while (m_Running)
+			{
+				while (!queue.Empty())
+				{
+					EventMessage eMsg = queue.PopFront();
+					OnEventReceived(eMsg.receiver, std::move(eMsg.e));
+				}
+			}
+		};
+		std::thread s_EventThread(dispatchEvents);
+
 		while (!m_MainWindow.ShouldClose())
 		{
 			for (auto* layer : m_LayerStack)
 			{
 				layer->OnUpdate();
 			}
-
-			// TODO: Clean up and figure out which version is the most performant
-			if (s_EventThread.get_id() != std::thread::id())
-				continue;
-			s_EventThread = std::thread([this]()
-				{
-					//if (!m_MainWindow.GetEventQueue().Empty())
-					//{
-					//	EventMessage eMsg = m_MainWindow.GetEventQueue().PopFront();
-					//	OnEventReceived(eMsg.receiver, std::move(eMsg.e));
-					//}
-
-					while (m_Running)
-					{
-						while (!m_MainWindow.GetEventQueue().Empty())
-						{
-							EventMessage eMsg = m_MainWindow.GetEventQueue().PopFront();
-							OnEventReceived(eMsg.receiver, std::move(eMsg.e));
-						}
-						Sleep(1);
-					}
-				}
-			);
 		}
 
 		m_Running = false;

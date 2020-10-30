@@ -4,14 +4,14 @@
 #pragma warning(disable : 4251)
 
 #include "RlBase.h"
-
-#include <ZealLogger/Log.h>
+#include "Reyal/CoreConfig.h"
 
 #include <memory>
 #include <string>
 
 
 #if ZL_ENABLE_LOGGING
+#include <ZealLogger/Log.h>
 
 
 namespace At0::Reyal
@@ -23,7 +23,7 @@ namespace At0::Reyal
 		/// Getter for the file logger
 		/// </summary>
 		/// <returns>The file logger</returns>
-		static std::shared_ptr<Log::FileLogger> GetFileLogger() { return s_FileLogger; }
+		static Log::FileLogger* GetFileLogger() { return s_FileLogger.get(); }
 
 		/// <summary>
 		/// Creates and opens all loggers
@@ -33,7 +33,7 @@ namespace At0::Reyal
 		static void Init(const std::string_view filepath, Log::LogLevel logLvl);
 
 	private:
-		static std::shared_ptr<Log::FileLogger> s_FileLogger;
+		static std::unique_ptr<Log::FileLogger> s_FileLogger;
 	};
 
 }

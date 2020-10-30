@@ -173,11 +173,11 @@
     <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp">
       <Filter>src\Reyal\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="src\Reyal\Window\Window.cpp">
-      <Filter>src\Reyal\Window</Filter>
-    </ClCompile>
     <ClCompile Include="src\rlpch.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Window\Window.cpp">
+      <Filter>src\Reyal\Window</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
