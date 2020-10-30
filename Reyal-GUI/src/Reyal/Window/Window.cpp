@@ -145,6 +145,7 @@ namespace At0::Reyal
 			ResizeTo(newSize);
 
 			//TODO: Read how windows handles events (how they're built, how they handle it)
+			//TODO: ERROR: Some invalid values (race condition?) when printing the value of WindowResizeEvent in GUILayer
 
 			WindowResizeEvent e(m_OldSize, newSize);
 			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
