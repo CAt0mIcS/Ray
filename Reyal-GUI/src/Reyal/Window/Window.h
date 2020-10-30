@@ -170,8 +170,9 @@ namespace At0::Reyal
 		/// <summary>
 		/// Will return false as long as the window hasn't been closed
 		/// </summary>
+		/// <param name="exitCode">Will be filled with the exit code when the application quits, specify nullptr to ignore</param>
 		/// <returns>True if the window was closed, false otherwise</returns>
-		bool ShouldClose();
+		bool ShouldClose(_In_opt_ _Maybenull_ int* exitCode = nullptr);
 
 		/// <summary>
 		/// Getter for the current event queue

@@ -228,13 +228,15 @@ namespace At0::Reyal
 		return IsWindowVisible(m_hWnd);
 	}
 
-	bool Window::ShouldClose()
+	bool Window::ShouldClose(_In_opt_ _Maybenull_ int* exitCode)
 	{
 		MSG msg;
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if (msg.message == WM_QUIT)
 			{
+				if (exitCode)
+					*exitCode = (int)msg.wParam;
 				return true;
 			}
 

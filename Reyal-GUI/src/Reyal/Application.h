@@ -71,7 +71,8 @@ namespace At0::Reyal
 		/// <summary>
 		/// Starts the application run loop
 		/// </summary>
-		void Run();
+		/// <returns>Application exit code</returns>
+		int Run();
 
 		/// <summary>
 		/// Pushes a layer onto the stack
