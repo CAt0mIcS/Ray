@@ -23,6 +23,7 @@ Planned features:
 * Add Alt-Text to Lines (named connections)
 * Link external files to Nodes
 * Multiple Tabs (Scene, NodeEditing, (like in Microsoft Teams: Post, Class Notebook, ...))
+* Externally modded Tabs (technically the ability to program a game as a mod)
 
 You can find the full documentation on the [wiki](https://github.com/CAt0mIcS/NodePlanningEditor/wiki) (soon).
 
