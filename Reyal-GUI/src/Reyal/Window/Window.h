@@ -174,12 +174,6 @@ namespace At0::Reyal
 		bool ShouldClose();
 
 		/// <summary>
-		/// Gets the exit code which is set when the main Window was closed
-		/// </summary>
-		/// <returns></returns>
-		int GetExitCode() const { return m_ExitCode; }
-
-		/// <summary>
 		/// Getter for the current event queue
 		/// </summary>
 		/// <returns>Returns the event queue for this window</returns>
@@ -201,11 +195,6 @@ namespace At0::Reyal
 		/// Is true, then if this window closes, the application will exit
 		/// </summary>
 		bool m_IsMainWindow;
-
-		/// <summary>
-		/// Specifies the exit code when quitting the program
-		/// </summary>
-		int m_ExitCode;
 
 		/// <summary>
 		/// Specifies the old position of this window
@@ -231,6 +220,11 @@ namespace At0::Reyal
 		/// Is the Queue of messages to process, they will be popped in Reyal::Application and dispatched to the layers
 		/// </summary>
 		Queue<EventMessage, s_MaxMessagesInQueue> m_EventQueue;
+
+		/// <summary>
+		/// Specifies the control where the mouse is currently on
+		/// </summary>
+		Widget* m_CurrentlyHovering;
 
 	};
 }

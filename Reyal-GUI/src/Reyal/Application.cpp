@@ -32,7 +32,7 @@ namespace At0::Reyal
 		s_Instance.reset();
 	}
 
-	int Application::Run()
+	void Application::Run()
 	{
 		/// <summary>
 		/// QUESTION: Threads in a large program (thread-pools?)
@@ -60,7 +60,6 @@ namespace At0::Reyal
 		}
 
 		m_Running = false;
-		return m_MainWindow.GetExitCode();
 	}
 
 	void Application::PushLayer(_In_ Layer* layer)

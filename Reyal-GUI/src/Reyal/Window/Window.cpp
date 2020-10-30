@@ -14,7 +14,7 @@
 namespace At0::Reyal
 {
 	Window::Window(const std::wstring_view name, _In_opt_ Widget* parent, bool isMainWindow)
-		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_ExitCode(0), m_OldWindowPos{}
+		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_OldWindowPos{}, m_CurrentlyHovering(this)
 	{
 		ZL_PROFILE_FUNCTION();
 
@@ -235,7 +235,6 @@ namespace At0::Reyal
 		{
 			if (msg.message == WM_QUIT)
 			{
-				m_ExitCode = (int)msg.wParam;
 				return true;
 			}
 
