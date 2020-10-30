@@ -126,6 +126,7 @@
     <ClInclude Include="src\rlpch.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Reyal\Core\ThreadPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Reyal\Application.cpp">
@@ -179,6 +180,7 @@
     <ClCompile Include="src\Reyal\Window\Window.cpp">
       <Filter>src\Reyal\Window</Filter>
     </ClCompile>
+    <ClCompile Include="src\Reyal\Core\ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\PixelShader-p.hlsl">

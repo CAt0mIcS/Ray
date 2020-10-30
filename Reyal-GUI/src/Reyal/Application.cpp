@@ -7,6 +7,12 @@
 #include "Reyal/Events/KeyboardEvent.h"
 
 
+//TODO:
+#include <iostream>
+
+
+
+
 namespace At0::Reyal
 {
 	Ref<Application> Application::s_Instance = nullptr;
@@ -28,6 +34,9 @@ namespace At0::Reyal
 
 	int Application::Run()
 	{
+		/// <summary>
+		/// QUESTION: Threads in a large program (thread-pools?)
+		/// </summary>
 		auto dispatchEvents = [this]()
 		{
 			auto& queue = m_MainWindow.GetEventQueue();
@@ -41,6 +50,13 @@ namespace At0::Reyal
 			}
 		};
 		std::thread s_EventThread(dispatchEvents);
+
+		auto testTask = []()
+		{
+			std::cout << "Hello World from thread " << std::this_thread::get_id() << '\n';
+		};
+
+		m_ThreadPool.AddTask(testTask);
 
 		while (!m_MainWindow.ShouldClose())
 		{

@@ -6,6 +6,8 @@
 #include "Window/Window.h"
 #include "Layers/LayerStack.h"
 
+#include "Core/ThreadPool.h"
+
 #include "Core/Queue.h"
 
 //TODO: Separate class which contains a reference to MainWindow and implements functions that are allowed to be used
@@ -123,6 +125,7 @@ namespace At0::Reyal
 		LayerStack m_LayerStack;
 		static Ref<Application> s_Instance;
 		bool m_Running;
+		ThreadPool m_ThreadPool;
 	};
 
 }
