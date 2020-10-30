@@ -99,9 +99,6 @@
     <ClInclude Include="src\Reyal\Reyal.h">
       <Filter>src\Reyal</Filter>
     </ClInclude>
-    <ClInclude Include="src\Reyal\Util\Direct2D.h">
-      <Filter>src\Reyal\Util</Filter>
-    </ClInclude>
     <ClInclude Include="src\Reyal\Util\Random.h">
       <Filter>src\Reyal\Util</Filter>
     </ClInclude>

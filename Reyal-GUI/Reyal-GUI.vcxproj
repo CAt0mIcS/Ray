@@ -205,7 +205,6 @@
     <ClInclude Include="src\Reyal\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Reyal\Renderer\Renderer3D.h" />
     <ClInclude Include="src\Reyal\Reyal.h" />
-    <ClInclude Include="src\Reyal\Util\Direct2D.h" />
     <ClInclude Include="src\Reyal\Util\Random.h" />
     <ClInclude Include="src\Reyal\Util\TypeConvert.h" />
     <ClInclude Include="src\Reyal\Widgets\ZWidget.h" />

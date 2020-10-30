@@ -101,12 +101,12 @@ namespace At0::Reyal
 		return sqrt(pow(x, 2) + pow(y, 2));
 	}
 
-	Vec2::operator D2D::PointF() const
+	Vec2::operator D2D1_POINT_2F() const
 	{
 		return { x, y };
 	}
 
-	Vec2::operator D2D::SizeF() const
+	Vec2::operator D2D1_POINT_2F() const
 	{
 		return { x, y };
 	}

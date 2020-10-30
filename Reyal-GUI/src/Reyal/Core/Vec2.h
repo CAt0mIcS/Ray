@@ -3,8 +3,6 @@
 
 #include "RlBase.h"
 
-#include "Reyal/Util/Direct2D.h"
-
 namespace std
 {
 	template <class Elem, class Traits>
@@ -81,12 +79,12 @@ namespace At0::Reyal
 		/// <summary>
 		/// Conversion operator to Direct2D Point
 		/// </summary>
-		operator D2D::PointF() const;
+		operator D2D1_POINT_2F() const;
 
 		/// <summary>
 		/// Conversion operator to Direct2D Size
 		/// </summary>
-		operator D2D::SizeF() const;
+		operator D2D1_POINT_2F() const;
 
 		/// <summary>
 		/// Output stream operator for the vector
