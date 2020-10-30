@@ -96,11 +96,53 @@ namespace At0::Reyal
 		virtual void PostRedraw() const {  };
 
 		/// <summary>
+		/// Region which defines commonly used operators
+		/// </summarn>
+		#pragma region Operators
+
+		/// <summary>
 		/// Comparison operator
 		/// </summary>
 		/// <param name="other">Is the Widget to compare to</param>
 		/// <returns>True if these two Widgets are the same, false otherwise</returns>
 		bool operator==(const Widget& other);
+
+		/// <summary>
+		/// Comparison operator
+		/// </summary>
+		/// <param name="other">Is the Widget to compare to</param>
+		/// <returns>True if these two Widgets are the same, false otherwise</returns>
+		bool operator==(const Scope<Widget>& other);
+
+		/// <summary>
+		/// Comparison operator
+		/// </summary>
+		/// <param name="other">Is the Widget to compare to</param>
+		/// <returns>True if these two Widgets are the same, false otherwise</returns>
+		bool operator==(const Ref<Widget>& other);
+
+		/// <summary>
+		/// Comparison operator
+		/// </summary>
+		/// <param name="other">Is the Widget to compare to</param>
+		/// <returns>True if these two Widgets are the not same, false otherwise</returns>
+		bool operator!=(const Widget& other);
+
+		/// <summary>
+		/// Comparison operator
+		/// </summary>
+		/// <param name="other">Is the Widget to compare to</param>
+		/// <returns>True if these two Widgets are the not same, false otherwise</returns>
+		bool operator!=(const Scope<Widget>& other);
+
+		/// <summary>
+		/// Comparison operator
+		/// </summary>
+		/// <param name="other">Is the Widget to compare to</param>
+		/// <returns>True if these two Widgets are the not same, false otherwise</returns>
+		bool operator!=(const Ref<Widget>& other);
+
+		#pragma endregion
 
 		/// <summary>
 		/// Virtual Widget Deconstructor

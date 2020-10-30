@@ -56,6 +56,9 @@ namespace At0::Reyal
 			Scope<MouseMoveEvent> e = MakeScope<MouseMoveEvent>(Mouse.GetOldPos(), Mouse.GetPos());
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 
+			// Loop over the widgets and check if the mouse left any
+			SetHoveringWidget();
+
 			return 0;
 		}
 		case WM_LBUTTONDOWN:
@@ -246,6 +249,38 @@ namespace At0::Reyal
 		//TODO: QUESTION: Change to something more appropriate (CPU Usage too high without it)
 		Sleep(1);
 		return false;
+	}
+	
+	void Window::SetHoveringWidget()
+	{
+		ZL_PROFILE_FUNCTION();
+		
+		bool setNew = false;
+		
+		static auto generateEvents = [this](Widget* child)
+		{
+			Scope<HoverLeaveEvent> e = MakeScope<HoverLeaveEvent>();
+			m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
+
+			m_CurrentlyHovering = child;
+
+			Scope<HoverEnterEvent> e2 = MakeScope<HoverEnterEvent>();
+			m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
+		};
+
+		for (Scope<Widget>& child : m_Children)
+		{
+			if (Mouse.IsOnWidget(child) && *m_CurrentlyHovering != child)
+			{
+				generateEvents(child.get());
+				setNew = true;
+			}
+		}
+
+		if (!setNew && !Mouse.IsOnWidget(m_CurrentlyHovering) && Mouse.IsOnWidget(this))
+		{
+			generateEvents(this);
+		}
 	}
 }
 

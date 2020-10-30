@@ -18,6 +18,9 @@ namespace At0::Layers
 		virtual void OnMouseMove(Reyal::Widget* receiver, Reyal::MouseMoveEvent& e) override;
 		virtual void OnResize(Reyal::Widget* receiver, Reyal::WindowResizeEvent& e) override;
 		virtual void OnMousePress(Reyal::Widget* receiver, Reyal::MouseButtonPressedEvent& e) override;
+
+		virtual void OnHoverEnter(Reyal::Widget* receiver, Reyal::HoverEnterEvent& e) override;
+		virtual void OnHoverLeave(Reyal::Widget* receiver, Reyal::HoverLeaveEvent& e) override;
 	};
 }
 

@@ -31,6 +31,11 @@ namespace At0::Reyal
 		return false;
 	}
 
+	bool Mouse::IsOnWidget(const Scope<Widget>& widget) const
+	{
+		return IsOnWidget(widget.get());
+	}
+
 	const Point& Mouse::GetPos() const
 	{
 		return m_MousePos;

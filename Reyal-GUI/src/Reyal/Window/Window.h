@@ -180,6 +180,12 @@ namespace At0::Reyal
 		/// <returns>Returns the event queue for this window</returns>
 		Queue<EventMessage, s_MaxMessagesInQueue>& GetEventQueue() { return m_EventQueue; }
 
+	private:
+		/// <summary>
+		/// Loops over all children and figures out if we need to send a HoverEnter/HoverLeave Event
+		/// </summary>
+		void SetHoveringWidget();
+
 	public:
 		/// <summary>
 		/// The keyboard holding information about which key is pressed in this window
@@ -207,6 +213,7 @@ namespace At0::Reyal
 		/// </summary>
 		Size m_OldSize;
 
+		//QUESTION: Where to put the renderers? (Q In .txt File)
 		/// <summary>
 		/// Specifies the 2D renderer
 		/// </summary>

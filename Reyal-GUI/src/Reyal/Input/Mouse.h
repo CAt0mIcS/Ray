@@ -42,6 +42,13 @@ namespace At0::Reyal
 		/// <param name="widget">Is the widget to check</param>
 		/// <returns>True if the mouse is on the widget, false otherwise</returns>
 		bool IsOnWidget(const Widget* widget) const;
+		
+		/// <summary>
+		/// Checks if the mouse is on a certain widget, handles widget transforms
+		/// </summary>
+		/// <param name="widget">Is the widget to check</param>
+		/// <returns>True if the mouse is on the widget, false otherwise</returns>
+		bool IsOnWidget(const Scope<Widget>& widget) const;
 
 		/// <summary>
 		/// Getter for the current mouse position

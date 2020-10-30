@@ -26,4 +26,14 @@ namespace At0::Layers
 	{
 		ZL_LOG_DEBUG("[GUILayer] WindowResizeEvent {0}", e.GetSize());
 	}
+
+	void GUILayer::OnHoverEnter(Reyal::Widget* receiver, Reyal::HoverEnterEvent& e)
+	{
+		ZL_LOG_DEBUG("[GUILayer] Widget {0} gained hovering focus", receiver->GetName());
+	}
+
+	void GUILayer::OnHoverLeave(Reyal::Widget* receiver, Reyal::HoverLeaveEvent& e)
+	{
+		ZL_LOG_DEBUG("[GUILayer] Widget {0} lost hovering focus", receiver->GetName());
+	}
 }

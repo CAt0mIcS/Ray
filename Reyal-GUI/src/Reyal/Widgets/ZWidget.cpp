@@ -6,12 +6,6 @@
 
 namespace At0::Reyal
 {
-    bool Widget::operator==(const Widget& other)
-    {
-        ZL_PROFILE_FUNCTION();
-        return GetName() == other.GetName();
-    }
-
     void Widget::MoveBy(const Point& pos)
     {
         ZL_PROFILE_FUNCTION();
@@ -47,11 +41,51 @@ namespace At0::Reyal
         return nullptr;
     }
 
+    /// <summary>
+    /// Defines commonly used operators
+    /// </summary>
+    #pragma region Operators
+
+    bool Widget::operator==(const Widget& other)
+    {
+        ZL_PROFILE_FUNCTION();
+        return GetName() == other.GetName();
+    }
+
+    bool Widget::operator==(const Scope<Widget>& other)
+    {
+        ZL_PROFILE_FUNCTION();
+        return GetName() == other->GetName();
+    }
+
+    bool Widget::operator==(const Ref<Widget>& other)
+    {
+        ZL_PROFILE_FUNCTION();
+        return GetName() == other->GetName();
+    }
+
+    bool Widget::operator!=(const Widget& other)
+    {
+        return GetName() == other.GetName();
+    }
+
+    bool Widget::operator!=(const Scope<Widget>& other)
+    {
+        return GetName() == other->GetName();
+    }
+
+    bool Widget::operator!=(const Ref<Widget>& other)
+    {
+        return GetName() == other->GetName();
+    }
+    
+    #pragma endregion
+
     Widget::~Widget()
     {
         ZL_PROFILE_FUNCTION();
 
-        //std::vector<std::unique_ptr<Widget>> m_Children is deleted automatically
+        //std::vector<Scope<Widget>> m_Children is deleted automatically
     }
 
     Widget::Widget(const std::wstring_view name, _In_opt_ Widget* parent)
