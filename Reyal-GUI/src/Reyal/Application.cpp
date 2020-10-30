@@ -49,14 +49,7 @@ namespace At0::Reyal
 				}
 			}
 		};
-		std::thread s_EventThread(dispatchEvents);
-
-		auto testTask = []()
-		{
-			std::cout << "Hello World from thread " << std::this_thread::get_id() << '\n';
-		};
-
-		m_ThreadPool.AddTask(testTask);
+		m_ThreadPool.AddTask(dispatchEvents);
 
 		while (!m_MainWindow.ShouldClose())
 		{
@@ -67,9 +60,6 @@ namespace At0::Reyal
 		}
 
 		m_Running = false;
-		if (s_EventThread.joinable())
-			s_EventThread.join();
-
 		return m_MainWindow.GetExitCode();
 	}
 
