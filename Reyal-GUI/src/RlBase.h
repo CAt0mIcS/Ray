@@ -2,6 +2,7 @@
 #define RL_RLBASE_H
 
 #include <memory>
+#include <assert.h>
 
 
 #ifdef RL_BUILD
@@ -9,6 +10,16 @@
 #else
 	#define RL_API __declspec(dllimport)
 #endif
+
+
+#ifdef RL_DEBUG
+	#define RL_ASSERT(condition, msg) if(!(condition)) _wassert(_CRT_WIDE(#msg), _CRT_WIDE(__FILE__), (unsigned int)__LINE__)
+	#define RL_EXPECTS(expected) RL_ASSERT(expected, Expected: expected)
+#else
+	#define RL_ASSERT(condition, msg)
+	#define RL_EXPECTS(expected)
+#endif
+
 
 namespace At0::Reyal
 {

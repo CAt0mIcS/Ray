@@ -108,6 +108,8 @@ namespace At0::Reyal
 	{
 		ZL_PROFILE_FUNCTION();
 
+		RL_EXPECTS(e.GetType() != EventType::INVALID);
+
 		//TODO: Implement receiver
 		switch (e.GetType())
 		{
@@ -126,7 +128,7 @@ namespace At0::Reyal
 		case EventType::PaintEvent:					layer->OnPaint(receiver, (PaintEvent&)e); break;
 		//case EventType::SetCursorEvent:			layer->OnSetCursor(receiver, (SetCursorEvent&)e); break;
 		default:
-			assert(false && "Unimplemented event");
+			RL_ASSERT(false, "Unimplemented Event");
 		}
 	}
 }
