@@ -21,6 +21,8 @@ namespace At0::Layers
 
 		virtual void OnHoverEnter(Reyal::Widget* receiver, Reyal::HoverEnterEvent& e) override;
 		virtual void OnHoverLeave(Reyal::Widget* receiver, Reyal::HoverLeaveEvent& e) override;
+
+		virtual bool OnWindowClose(Reyal::Widget* receiver, Reyal::WindowCloseEvent& e) override;
 	};
 }
 

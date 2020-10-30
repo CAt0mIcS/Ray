@@ -119,6 +119,14 @@ namespace At0::Reyal
 		/// <param name="e">Is the generated event</param>
 		virtual void OnPaint(_In_ Widget* receiver, PaintEvent& e) {}
 	
+		/// <summary>
+		/// Receives all WindowClose Events.
+		/// </summary>
+		/// <param name="receiver">Is the window which was closed</param>
+		/// <param name="e">Is the generated event</param>
+		/// <returns>True if the WindowProc should return 0, false if it should break</returns>
+		virtual bool OnWindowClose(_In_ Widget* receiver, WindowCloseEvent& e) { return true; }
+
 	private:
 		/// <summary>
 		/// Is the name of the current Layer, this name should be unique between Layers

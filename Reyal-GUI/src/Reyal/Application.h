@@ -108,12 +108,21 @@ namespace At0::Reyal
 		void OnEventReceived(_In_ Widget* receiver, Scope<Event>&& e);
 
 		/// <summary>
+		/// Handles immediate events
+		/// </summary>
+		/// <param name="receiver">Is the widget which received the event</param>
+		/// <param name="e">Is the received event</param>
+		/// <returns>True if the WindowProc should return 0, false if it should break</returns>
+		bool OnImmediateEvent(_In_ Widget* receiver, Event& e);
+		
+		/// <summary>
 		/// Calls the correct event function depending on the event
 		/// </summary>
 		/// <param name="layer">Is the layer which receives the event</param>
 		/// <param name="receiver">Is the widget which receives the event</param>
 		/// <param name="e">Is the event to dispatch</param>
 		void DispatchEvent(_In_ Layer* layer, _In_ Widget* receiver, Event& e);
+
 
 	protected:
 		/// <summary>

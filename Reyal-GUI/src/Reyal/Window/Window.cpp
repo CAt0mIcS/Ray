@@ -165,9 +165,14 @@ namespace At0::Reyal
 		}
 		case WM_CLOSE:
 		{
-			//WindowCloseEvent e;
-			//if (DispatchEvent(e)) return 0;
-			break;
+			if (m_ImmediateEvent)
+			{
+				if (!m_ImmediateEvent(this, WindowCloseEvent()))
+				{
+					break;
+				}
+			}
+			return 0;
 		}
 		}
 

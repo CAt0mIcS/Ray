@@ -36,4 +36,14 @@ namespace At0::Layers
 	{
 		ZL_LOG_DEBUG("[GUILayer] Widget {0} lost hovering focus", receiver->GetName());
 	}
+	
+	bool GUILayer::OnWindowClose(Reyal::Widget* receiver, Reyal::WindowCloseEvent& e)
+	{
+		ZL_LOG_DEBUG("Window {0} wants to close", receiver->GetName());
+		if (MessageBox(NULL, L"Close?", L"Do you want to close the window?", MB_OKCANCEL) == IDOK)
+		{
+			return false;
+		}
+		return true;
+	}
 }

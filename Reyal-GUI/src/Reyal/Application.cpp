@@ -7,12 +7,6 @@
 #include "Reyal/Events/KeyboardEvent.h"
 
 
-//TODO:
-#include <iostream>
-
-
-
-
 namespace At0::Reyal
 {
 	Ref<Application> Application::s_Instance = nullptr;
@@ -20,6 +14,7 @@ namespace At0::Reyal
 	Application::Application()
 		: m_MainWindow(L"MainWindow", nullptr, true), m_LayerStack{}, m_Running(true)
 	{
+		m_MainWindow.SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
 	}
 
 	void Application::Create(_In_ Application* app)
@@ -88,6 +83,26 @@ namespace At0::Reyal
 			DispatchEvent(layer, receiver, *e);
 		}
 	}
+
+	bool Application::OnImmediateEvent(_In_ Widget* receiver, Event& e)
+	{
+		ZL_PROFILE_FUNCTION();
+
+		// Wait for queue to be empty (TODO)
+		while (!m_MainWindow.GetEventQueue().Empty());
+
+		for (auto* layer : m_LayerStack)
+		{
+			switch (e.GetType())
+			{
+			case EventType::WindowCloseEvent:			return layer->OnWindowClose(receiver, (WindowCloseEvent&)e);
+			default:
+				assert(false && "Unimplemented event");
+			}
+		}
+		
+		return false;
+	}
 	
 	void Application::DispatchEvent(_In_ Layer* layer, _In_ Widget* receiver, Event& e)
 	{
@@ -107,7 +122,6 @@ namespace At0::Reyal
 		case EventType::KeyReleasedEvent:			layer->OnKeyRelease(receiver, (KeyReleasedEvent&)e); break;
 		case EventType::CharEvent:					layer->OnChar(receiver, (CharEvent&)e); break;
 		case EventType::WindowResizeEvent:			layer->OnResize(receiver, (WindowResizeEvent&)e); break;
-		//case EventType::WindowCloseEvent:			layer->OnWindowClose(receiver, (WindowCloseEvent&)e); break;
 		case EventType::WindowMoveEvent:			layer->OnWindowMove(receiver, (WindowMoveEvent&)e); break;
 		case EventType::PaintEvent:					layer->OnPaint(receiver, (PaintEvent&)e); break;
 		//case EventType::SetCursorEvent:			layer->OnSetCursor(receiver, (SetCursorEvent&)e); break;

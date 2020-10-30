@@ -180,6 +180,14 @@ namespace At0::Reyal
 		/// <returns>Returns the event queue for this window</returns>
 		Queue<EventMessage, s_MaxMessagesInQueue>& GetEventQueue() { return m_EventQueue; }
 
+		/// <summary>
+		/// Setts the function which will be called when any event is received which needs to be handled immediately
+		/// </summary>
+		/// <typeparam name="F">Is any callable, std::function castable type</typeparam>
+		/// <param name="func">Is the function to call</param>
+		template<typename F, typename = std::enable_if_t<std::is_convertible_v<F, std::function<bool(_In_ Widget*, Event&)>>>>
+		void SetImmediateEventHandler(F&& func) { m_ImmediateEvent = func; }
+
 	private:
 		/// <summary>
 		/// Loops over all children and figures out if we need to send a HoverEnter/HoverLeave Event
@@ -234,5 +242,12 @@ namespace At0::Reyal
 		/// </summary>
 		Widget* m_CurrentlyHovering;
 
+		/// <summary>
+		/// Called when any event occurs which needs to be handled immediately (WindowCloseEvent)
+		/// <param name="receiver">Is the window which received the immediate event</param>
+		/// <param name="e">Is the immediate event</param>
+		/// <returns>True if the WindowProc should return 0, false if the WindowProc should break</returns>
+		/// </summary>
+		std::function<bool(_In_ Widget* receiver, Event& e)> m_ImmediateEvent;
 	};
 }
