@@ -66,16 +66,19 @@ namespace At0::Reyal
 
     bool Widget::operator!=(const Widget& other)
     {
+        ZL_PROFILE_FUNCTION();
         return GetName() == other.GetName();
     }
 
     bool Widget::operator!=(const Scope<Widget>& other)
     {
+        ZL_PROFILE_FUNCTION();
         return GetName() == other->GetName();
     }
 
     bool Widget::operator!=(const Ref<Widget>& other)
     {
+        ZL_PROFILE_FUNCTION();
         return GetName() == other->GetName();
     }
     
@@ -84,8 +87,6 @@ namespace At0::Reyal
     Widget::~Widget()
     {
         ZL_PROFILE_FUNCTION();
-
-        //std::vector<Scope<Widget>> m_Children is deleted automatically
     }
 
     Widget::Widget(const std::wstring_view name, _In_opt_ Widget* parent)

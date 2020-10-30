@@ -19,6 +19,7 @@ namespace At0::Reyal
 		ZL_PROFILE_FUNCTION();
 
 		auto rnd = GenerateRandomToken<std::wstring>(5);
+		RL_EXPECTS(!rnd.empty());
 		ZL_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
 		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW));
 
@@ -183,14 +184,14 @@ namespace At0::Reyal
 	{
 		ZL_PROFILE_FUNCTION();
 
-		std::wstring str = L"";
+		std::wstring str;
 		int len = GetWindowTextLength(m_hWnd);
 		if (len > 0)
 		{
 			str.resize(len);
 			GetWindowText(m_hWnd, str.data(), len + 1);
 		}
-
+		
 		return str;
 	}
 
@@ -215,6 +216,8 @@ namespace At0::Reyal
 	void Window::Show(ShowCommand cmdShow) const
 	{
 		ZL_PROFILE_FUNCTION();
+
+		RL_EXPECTS(cmdShow <= ShowCommand::Last && cmdShow >= ShowCommand::First);
 		ShowWindow(m_hWnd, (int)cmdShow);
 	}
 

@@ -96,7 +96,10 @@ namespace At0::Reyal
 			/// Sets the show state based on the SW_ value specified in the STARTUPINFO structure
 			/// passed to the CreateProcess function by the program that started the application.
 			/// </summary>
-			Default		= SW_SHOWDEFAULT
+			Default		= SW_SHOWDEFAULT,
+
+			First = Hide,
+			Last = Default
 		};
 	public:
 		/// <summary>

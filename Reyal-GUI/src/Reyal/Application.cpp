@@ -87,6 +87,7 @@ namespace At0::Reyal
 	bool Application::OnImmediateEvent(_In_ Widget* receiver, Event& e)
 	{
 		ZL_PROFILE_FUNCTION();
+		RL_EXPECTS(e.GetType() != EventType::INVALID);
 
 		// Wait for queue to be empty (TODO)
 		while (!m_MainWindow.GetEventQueue().Empty());
@@ -97,10 +98,9 @@ namespace At0::Reyal
 			{
 			case EventType::WindowCloseEvent:			return layer->OnWindowClose(receiver, (WindowCloseEvent&)e);
 			default:
-				assert(false && "Unimplemented event");
+				RL_ASSERT(false, "Unimplemented Event");
 			}
 		}
-		
 		return false;
 	}
 	
