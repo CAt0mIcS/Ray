@@ -53,8 +53,8 @@ namespace At0::Reyal
 			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.SetPos({ (float)pt.x, (float)pt.y });
 
-			MouseMoveEvent e(Mouse.GetOldPos(), Mouse.GetPos());
-			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+			Scope<MouseMoveEvent> e = MakeScope<MouseMoveEvent>(Mouse.GetOldPos(), Mouse.GetPos());
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 
 			// Loop over the widgets and check if the mouse left any
 			SetHoveringWidget();
@@ -63,38 +63,38 @@ namespace At0::Reyal
 		}
 		case WM_LBUTTONDOWN:
 		{
-			MouseButtonPressedEvent e(MouseButton::Left);
-			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Left);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
-			MouseButtonReleasedEvent e(MouseButton::Left);
-			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Left);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
-			MouseButtonPressedEvent e(MouseButton::Middle);
-			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Middle);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
-			MouseButtonReleasedEvent e(MouseButton::Middle);
-			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Middle);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
-			MouseButtonPressedEvent e(MouseButton::Right);
-			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Right);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
-			MouseButtonReleasedEvent e(MouseButton::Right);
-			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Right);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_KEYDOWN:
@@ -102,14 +102,14 @@ namespace At0::Reyal
 			m_Renderer3D.RenderTestTriangle();
 			m_Renderer3D.EndDraw();
 
-			KeyPressedEvent e((unsigned char)wParam, lParam & 0xff);
-			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)wParam, (uint32_t)(lParam & 0xff));
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_KEYUP:
 		{
-			KeyReleasedEvent e((unsigned char)wParam);
-			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+			Scope<KeyReleasedEvent> e = MakeScope<KeyReleasedEvent>((unsigned char)wParam);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
@@ -118,13 +118,13 @@ namespace At0::Reyal
 
 			if (delta > 0)
 			{
-				MouseWheelUpEvent e(delta);
-				m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+				Scope<MouseWheelUpEvent> e = MakeScope<MouseWheelUpEvent>(delta);
+				m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			}
 			else if (delta < 0)
 			{
-				MouseWheelDownEvent e(delta);
-				m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+				Scope<MouseWheelDownEvent> e = MakeScope<MouseWheelDownEvent>(delta);
+				m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			}
 
 			return 0;
@@ -135,8 +135,8 @@ namespace At0::Reyal
 			HDC hDC = BeginPaint(m_hWnd, &ps);
 			EndPaint(m_hWnd, &ps);
 
-			PaintEvent e;
-			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+			Scope<PaintEvent> e = MakeScope<PaintEvent>();
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_SIZE:
@@ -145,10 +145,9 @@ namespace At0::Reyal
 			ResizeTo(newSize);
 
 			//TODO: Read how windows handles events (how they're built, how they handle it)
-			//TODO: ERROR: Some invalid values (race condition?) when printing the value of WindowResizeEvent in GUILayer
 
-			WindowResizeEvent e(m_OldSize, newSize);
-			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+			Scope<WindowResizeEvent> e = MakeScope<WindowResizeEvent>(m_OldSize, newSize);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 
 			m_OldSize = newSize;
 			return 0;
@@ -158,8 +157,8 @@ namespace At0::Reyal
 			Point newPos = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
 			MoveTo(newPos);
 
-			WindowMoveEvent e(m_OldWindowPos, newPos);
-			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
+			Scope<WindowMoveEvent> e = MakeScope<WindowMoveEvent>(m_OldWindowPos, newPos);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 
 			m_OldWindowPos = newPos;
 			return 0;
@@ -266,12 +265,12 @@ namespace At0::Reyal
 		{
 			//QUESTION: Use the HoverEnter object in receiver and event?
 
-			HoverLeaveEvent e(m_CurrentlyHovering);
+			Scope<HoverLeaveEvent> e = MakeScope<HoverLeaveEvent>(m_CurrentlyHovering);
 			m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
 
 			m_CurrentlyHovering = child;
 
-			HoverEnterEvent e2(m_CurrentlyHovering);
+			Scope<HoverEnterEvent> e2 = MakeScope<HoverEnterEvent>(m_CurrentlyHovering);
 			m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
 		};
 

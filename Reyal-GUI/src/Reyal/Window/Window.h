@@ -33,7 +33,7 @@ namespace At0::Reyal
 	struct EventMessage
 	{
 		Widget* receiver;
-		Event&& e;
+		Scope<Event> e;
 	};
 
 	class RL_API Window : public BaseWindow<Window>, public Widget

@@ -105,7 +105,7 @@ namespace At0::Reyal
 		/// </summary>
 		/// <param name="receiver">Is the Widget that received the event</param>
 		/// <param name="e">Is the received event</param>
-		void OnEventReceived(_In_ Widget* receiver, Event&& e);
+		void OnEventReceived(_In_ Widget* receiver, Scope<Event>&& e);
 
 		/// <summary>
 		/// Handles immediate events
@@ -121,7 +121,7 @@ namespace At0::Reyal
 		/// <param name="layer">Is the layer which receives the event</param>
 		/// <param name="receiver">Is the widget which receives the event</param>
 		/// <param name="e">Is the event to dispatch</param>
-		void DispatchEvent(_In_ Layer* layer, _In_ Widget* receiver, Event&& e);
+		void DispatchEvent(_In_ Layer* layer, _In_ Widget* receiver, Event& e);
 
 
 	protected:
