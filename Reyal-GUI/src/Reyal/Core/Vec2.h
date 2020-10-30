@@ -84,7 +84,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Conversion operator to Direct2D Size
 		/// </summary>
-		operator D2D1_POINT_2F() const;
+		operator D2D1_SIZE_F() const;
 
 		/// <summary>
 		/// Output stream operator for the vector

@@ -106,7 +106,7 @@ namespace At0::Reyal
 		return { x, y };
 	}
 
-	Vec2::operator D2D1_POINT_2F() const
+	Vec2::operator D2D1_SIZE_F() const
 	{
 		return { x, y };
 	}
