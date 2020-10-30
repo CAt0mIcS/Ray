@@ -156,7 +156,6 @@
       <AdditionalDependencies>ZealLogger.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Release-windows-$(Platform)\Reyal.lib</ImportLibrary>
-      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -181,12 +180,12 @@
       <AdditionalDependencies>ZealLogger.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Release-windows-$(Platform)\Reyal.lib</ImportLibrary>
-      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Reyal\Application.h" />
     <ClInclude Include="src\Reyal\Core\Queue.h" />
+    <ClInclude Include="src\Reyal\Core\ThreadPool.h" />
     <ClInclude Include="src\Reyal\Core\Vec2.h" />
     <ClInclude Include="src\Reyal\Core\ZRect.h" />
     <ClInclude Include="src\Reyal\CoreConfig.h" />
@@ -213,10 +212,10 @@
     <ClInclude Include="src\RlBase.h" />
     <ClInclude Include="src\RlWin.h" />
     <ClInclude Include="src\rlpch.h" />
-    <ClInclude Include="src\Reyal\Core\ThreadPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Reyal\Application.cpp" />
+    <ClCompile Include="src\Reyal\Core\ThreadPool.cpp" />
     <ClCompile Include="src\Reyal\Core\Vec2.cpp" />
     <ClCompile Include="src\Reyal\Core\ZRect.cpp" />
     <ClCompile Include="src\Reyal\Debug\Instrumentor.cpp" />
@@ -235,7 +234,6 @@
     <ClCompile Include="src\rlpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Reyal\Core\ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\PixelShader-p.hlsl">

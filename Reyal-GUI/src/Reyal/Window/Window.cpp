@@ -53,8 +53,8 @@ namespace At0::Reyal
 			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.SetPos({ (float)pt.x, (float)pt.y });
 
-			Scope<MouseMoveEvent> e = MakeScope<MouseMoveEvent>(Mouse.GetOldPos(), Mouse.GetPos());
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseMoveEvent e(Mouse.GetOldPos(), Mouse.GetPos());
+			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 
 			// Loop over the widgets and check if the mouse left any
 			SetHoveringWidget();
@@ -63,38 +63,38 @@ namespace At0::Reyal
 		}
 		case WM_LBUTTONDOWN:
 		{
-			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Left);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseButtonPressedEvent e(MouseButton::Left);
+			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
-			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Left);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseButtonReleasedEvent e(MouseButton::Left);
+			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
-			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Middle);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseButtonPressedEvent e(MouseButton::Middle);
+			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
-			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Middle);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseButtonReleasedEvent e(MouseButton::Middle);
+			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
-			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Right);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseButtonPressedEvent e(MouseButton::Right);
+			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
-			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Right);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseButtonReleasedEvent e(MouseButton::Right);
+			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_KEYDOWN:
@@ -102,14 +102,14 @@ namespace At0::Reyal
 			m_Renderer3D.RenderTestTriangle();
 			m_Renderer3D.EndDraw();
 
-			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)wParam, lParam & 0xff);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			KeyPressedEvent e((unsigned char)wParam, lParam & 0xff);
+			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_KEYUP:
 		{
-			Scope<KeyReleasedEvent> e = MakeScope<KeyReleasedEvent>((unsigned char)wParam);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			KeyReleasedEvent e((unsigned char)wParam);
+			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
@@ -118,13 +118,13 @@ namespace At0::Reyal
 
 			if (delta > 0)
 			{
-				Scope<MouseWheelUpEvent> e = MakeScope<MouseWheelUpEvent>(delta);
-				m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+				MouseWheelUpEvent e(delta);
+				m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 			}
 			else if (delta < 0)
 			{
-				Scope<MouseWheelDownEvent> e = MakeScope<MouseWheelDownEvent>(delta);
-				m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+				MouseWheelDownEvent e(delta);
+				m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 			}
 
 			return 0;
@@ -135,8 +135,8 @@ namespace At0::Reyal
 			HDC hDC = BeginPaint(m_hWnd, &ps);
 			EndPaint(m_hWnd, &ps);
 
-			Scope<PaintEvent> e = MakeScope<PaintEvent>();
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			PaintEvent e;
+			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_SIZE:
@@ -146,8 +146,8 @@ namespace At0::Reyal
 
 			//TODO: Read how windows handles events (how they're built, how they handle it)
 
-			Scope<WindowResizeEvent> e = MakeScope<WindowResizeEvent>(m_OldSize, newSize);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			WindowResizeEvent e(m_OldSize, newSize);
+			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 
 			m_OldSize = newSize;
 			return 0;
@@ -157,8 +157,8 @@ namespace At0::Reyal
 			Point newPos = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
 			MoveTo(newPos);
 
-			Scope<WindowMoveEvent> e = MakeScope<WindowMoveEvent>(m_OldWindowPos, newPos);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			WindowMoveEvent e(m_OldWindowPos, newPos);
+			m_EventQueue.PushBack({ GetEventReceiver(e, Mouse), std::move(e) });
 
 			m_OldWindowPos = newPos;
 			return 0;
@@ -259,17 +259,18 @@ namespace At0::Reyal
 	void Window::SetHoveringWidget()
 	{
 		ZL_PROFILE_FUNCTION();
-		
+
 		bool setNew = false;
-		
 		static auto generateEvents = [this](Widget* child)
 		{
-			Scope<HoverLeaveEvent> e = MakeScope<HoverLeaveEvent>();
+			//QUESTION: Use the HoverEnter object in receiver and event?
+
+			HoverLeaveEvent e(m_CurrentlyHovering);
 			m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
 
 			m_CurrentlyHovering = child;
 
-			Scope<HoverEnterEvent> e2 = MakeScope<HoverEnterEvent>();
+			HoverEnterEvent e2(m_CurrentlyHovering);
 			m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
 		};
 
@@ -286,6 +287,12 @@ namespace At0::Reyal
 		{
 			generateEvents(this);
 		}
+		// We can assume that no widget is in focus if the mouse is outside the window rect
+		// TODO: Implement IsOnWidget function
+		// else if (!setNew && !Mouse.IsOnWidget(this))
+		// {
+		// 	generateEvents(nullptr);
+		// }
 	}
 }
 

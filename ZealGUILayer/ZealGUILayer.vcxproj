@@ -156,7 +156,6 @@
       <AdditionalDependencies>Reyal.lib;ZealLogger.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Release-windows-$(Platform)\Editors\ZealGUILayer.lib</ImportLibrary>
-      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -181,7 +180,6 @@
       <AdditionalDependencies>Reyal.lib;ZealLogger.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Release-windows-$(Platform)\Editors\ZealGUILayer.lib</ImportLibrary>
-      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

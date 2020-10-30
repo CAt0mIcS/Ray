@@ -14,32 +14,32 @@ namespace At0::Layers
 
 	void GUILayer::OnMouseMove(Reyal::Widget* receiver, Reyal::MouseMoveEvent& e)
 	{
-		ZL_LOG_DEBUG("[GUILayer] Mouse PosEvent {0}", e.GetPos());
+		ZL_LOG_DEBUG("[GUILayer] {0}", e.ToString());
 	}
 	
 	void GUILayer::OnMousePress(Reyal::Widget* receiver, Reyal::MouseButtonPressedEvent& e)
 	{
-		ZL_LOG_DEBUG("[GUILayer] MBP PosMouse {0}", Reyal::Application::Get().GetMainWindow().Mouse.GetPos());
+		ZL_LOG_DEBUG("[GUILayer] {0}", e.ToString());
 	}
 
 	void GUILayer::OnResize(Reyal::Widget* receiver, Reyal::WindowResizeEvent& e)
 	{
-		ZL_LOG_DEBUG("[GUILayer] WindowResizeEvent {0}", e.GetSize());
+		ZL_LOG_DEBUG("[GUILayer] {0}", e.ToString());
 	}
 
 	void GUILayer::OnHoverEnter(Reyal::Widget* receiver, Reyal::HoverEnterEvent& e)
 	{
-		ZL_LOG_DEBUG("[GUILayer] Widget {0} gained hovering focus", receiver->GetName());
+		ZL_LOG_DEBUG("[GUILayer] {0}", e.ToString());
 	}
 
 	void GUILayer::OnHoverLeave(Reyal::Widget* receiver, Reyal::HoverLeaveEvent& e)
 	{
-		ZL_LOG_DEBUG("[GUILayer] Widget {0} lost hovering focus", receiver->GetName());
+		ZL_LOG_DEBUG("[GUILayer] {0}", e.ToString());
 	}
 	
 	bool GUILayer::OnWindowClose(Reyal::Widget* receiver, Reyal::WindowCloseEvent& e)
 	{
-		ZL_LOG_DEBUG("Window {0} wants to close", receiver->GetName());
+		ZL_LOG_DEBUG("[GUILayer] {0}", e.ToString());
 		return false;
 	}
 }

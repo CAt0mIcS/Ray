@@ -5,6 +5,9 @@
 #include "Event.h"
 
 #include "Reyal/Core/Vec2.h"
+#include "Reyal/Widgets/ZWidget.h"
+
+#include "Reyal/Util/TypeConvert.h"
 
 
 namespace At0::Reyal
@@ -139,31 +142,41 @@ namespace At0::Reyal
 	class RL_API HoverEnterEvent : public Event
 	{
 	public:
-		HoverEnterEvent() = default;
+		HoverEnterEvent(_In_ Widget* hoverEntered)
+			: m_HoverEntered(hoverEntered) {}
 
 		virtual std::string ToString() const override
 		{
 			std::ostringstream oss;
-			oss << "[HoverEnterEvent]";
+			oss << "[HoverEnterEvent] Widget with name " << WideCharToMultiByte(m_HoverEntered->GetName()) << " gained hover focus";
 			return oss.str();
 		}
 
+		Widget* GetHoverWidget() const { return m_HoverEntered; }
+
 		RL_DECLARE_TYPE_FN(HoverEnterEvent);
+
+	private:
+		Widget* m_HoverEntered;
 	};
 
 	class RL_API HoverLeaveEvent : public Event
 	{
 	public:
-		HoverLeaveEvent() = default;
+		HoverLeaveEvent(_In_ Widget* hoverLeft)
+			: m_HoverLeft(hoverLeft) {}
 
 		virtual std::string ToString() const override
 		{
 			std::ostringstream oss;
-			oss << "[HoverLeaveEvent]";
+			oss << "[HoverLeaveEvent] The Widget with name " << WideCharToMultiByte(m_HoverLeft->GetName()) << " lost hover focus";
 			return oss.str();
 		}
 
 		RL_DECLARE_TYPE_FN(HoverLeaveEvent);
+
+	private:
+		Widget* m_HoverLeft;
 	};
 }
 

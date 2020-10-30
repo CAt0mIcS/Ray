@@ -71,16 +71,16 @@ namespace At0::Reyal
 		ZL_PROFILE_FUNCTION();
 	}
 	
-	void Application::OnEventReceived(_In_ Widget* receiver, Scope<Event>&& e)
+	void Application::OnEventReceived(_In_ Widget* receiver, Event&& e)
 	{
 		ZL_PROFILE_FUNCTION();
 
 		// Dispatch event to every layer
 		for (auto* layer : m_LayerStack)
 		{
-			if (e->Handled)
+			if (e.Handled)
 				break;
-			DispatchEvent(layer, receiver, *e);
+			DispatchEvent(layer, receiver, std::move(e));
 		}
 	}
 
@@ -104,7 +104,7 @@ namespace At0::Reyal
 		return false;
 	}
 	
-	void Application::DispatchEvent(_In_ Layer* layer, _In_ Widget* receiver, Event& e)
+	void Application::DispatchEvent(_In_ Layer* layer, _In_ Widget* receiver, Event&& e)
 	{
 		ZL_PROFILE_FUNCTION();
 
