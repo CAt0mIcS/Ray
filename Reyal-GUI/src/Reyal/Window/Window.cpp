@@ -42,6 +42,7 @@ namespace At0::Reyal
 		case WM_DESTROY:
 		{
 			// TODO: Check if resources of the closed window are destroyed correctly
+			ZL_LOG_DEBUG("[MessageLoop] WM_DESTROY Message in HandleMessage received");
 			if (this->IsMainWindow())
 			{
 				PostQuitMessage(0);
@@ -166,6 +167,7 @@ namespace At0::Reyal
 		}
 		case WM_CLOSE:
 		{
+			ZL_LOG_DEBUG("[MessageLoop] WM_CLOSE Message in HandleMessage received");
 			if (m_ImmediateEvent)
 			{
 				if (!m_ImmediateEvent(this, WindowCloseEvent()))
@@ -174,6 +176,12 @@ namespace At0::Reyal
 				}
 			}
 			return 0;
+		}
+		case WM_QUIT:
+		{
+			ZL_LOG_DEBUG("[MessageLoop] WM_QUIT Message in HandleMessage received");
+			int i = 32;
+			break;
 		}
 		}
 
@@ -246,6 +254,7 @@ namespace At0::Reyal
 		{
 			if (msg.message == WM_QUIT)
 			{
+				ZL_LOG_DEBUG("[MessageLoop] WM_QUIT Message Received");
 				if (exitCode)
 					*exitCode = (int)msg.wParam;
 				return true;

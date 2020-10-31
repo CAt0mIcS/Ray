@@ -1,7 +1,9 @@
 #include "rlpch.h"
 #include "Renderer3D.h"
 
-//TODO: Premake doesn't set shader property --> https://stackoverflow.com/questions/55055150/premake5-how-to-build-hlsl-shaders
+#include "Reyal/Debug/ReyalLogger.h"
+
+#pragma comment(lib, "DXGI.lib")
 
 
 namespace At0::Reyal
@@ -52,6 +54,35 @@ namespace At0::Reyal
         m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer);
 
         m_pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pTarget);
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////
+        ////////// Graaphics Card Info ////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////
+        Microsoft::WRL::ComPtr<IDXGIFactory> pFactory;
+        CreateDXGIFactory(__uuidof(pFactory), &pFactory);
+
+        Microsoft::WRL::ComPtr<IDXGIAdapter> pAdapter;
+        for (uint32_t i = 0; pFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
+        {
+            DXGI_ADAPTER_DESC adapterDesc;
+            pAdapter->GetDesc(&adapterDesc);
+            ZL_LOG_INFO("[Renderer3D] Found DXGIAdapter: "
+                "\n\tDescription: {0}\n\tVendorID: {1}\n\tDeviceID: {2}\n\tSubSysID: {3}"
+                "\n\tRevision: {4}\n\tDedicated Video Memory: {5}\n\tDedicated System Memory: {6}"
+                "\n\tShared System Memory: {7}\n\tAdapterLuid::LowPart: {8}\n\tAdapterLuid::HighPart: {9}\n", 
+                adapterDesc.Description,
+                adapterDesc.VendorId,
+                adapterDesc.DeviceId,
+                adapterDesc.SubSysId,
+                adapterDesc.Revision,
+                adapterDesc.DedicatedVideoMemory,
+                adapterDesc.DedicatedSystemMemory,
+                adapterDesc.SharedSystemMemory,
+                adapterDesc.AdapterLuid.LowPart,
+                adapterDesc.AdapterLuid.HighPart
+            );
+        }
     }
 
     void Renderer3D::RenderTestTriangle()
