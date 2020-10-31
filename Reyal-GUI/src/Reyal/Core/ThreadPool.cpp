@@ -2,6 +2,7 @@
 #include "ThreadPool.h"
 
 #include <mutex>
+#include "Reyal/Debug/ReyalLogger.h"
 
 
 namespace At0::Reyal
@@ -21,16 +22,22 @@ namespace At0::Reyal
 	{
 		ZL_PROFILE_FUNCTION();
 
+		ZL_LOG_DEBUG("[ThreadPool] Shutting down");
 		{
 			std::unique_lock lock(m_PoolMutex);
 			m_Shutdown = true;
 		}
 		m_WaitCondition.notify_all();
 
+		ZL_LOG_DEBUG("[ThreadPool] Joining Threads");
 		for (uint16_t i = 0; i < m_MaxThreads; ++i)
 		{
+			auto id = m_Threads[i].get_id();
+			ZL_LOG_DEBUG("[ThreadPool] Joining Thread {0}", id);
 			m_Threads[i].join();
+			ZL_LOG_DEBUG("[ThreadPool] Thread {0} joined", id);
 		}
+		ZL_LOG_DEBUG("[ThreadPool] Finnished joining Threads");
 	}
 
 	ThreadPool::~ThreadPool()
@@ -38,7 +45,10 @@ namespace At0::Reyal
 		ZL_PROFILE_FUNCTION();
 
 		if (!m_Shutdown)
+		{
+			ZL_LOG_DEBUG("[ThreadPool] Calling ThreadPool::Shutdown from Deconstructor");
 			Shutdown();
+		}
 	}
 
 	void ThreadPool::InfiniteWait()
@@ -47,6 +57,7 @@ namespace At0::Reyal
 
 		while (!m_Shutdown)
 		{
+			ZL_LOG_DEBUG("[ThreadPool] Thread {0} entered ThreadPool::InfiniteWait", std::this_thread::get_id());
 			std::function<void()> task;
 			{
 				std::unique_lock lock(m_QueueMutex);
@@ -56,8 +67,12 @@ namespace At0::Reyal
 				if(!m_TaskQueue.Empty())
 					task = m_TaskQueue.PopFront();
 			}
-			if(task)
+			if (task)
+			{
+				ZL_LOG_DEBUG("[ThreadPool] Thread {0} Task {1} Execution started", std::this_thread::get_id(), &task);
 				task();
+				ZL_LOG_DEBUG("[ThreadPool] Thread {0} Task {1} Execution finnished", std::this_thread::get_id(), &task);
+			}
 		}
 	}
 }
