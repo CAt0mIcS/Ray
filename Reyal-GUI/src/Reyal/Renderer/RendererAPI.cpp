@@ -16,6 +16,9 @@ namespace At0::Reyal
 		{
 		case API::D3D11:			return MakeScope<D3D11RendererAPI>();
 		}
+
+		RL_ASSERT(false, "Unknown Renderer API");
+		return nullptr;
 	}
 }
 

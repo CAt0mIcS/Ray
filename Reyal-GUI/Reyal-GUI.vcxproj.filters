@@ -25,8 +25,17 @@
     <Filter Include="src\Reyal\Layers">
       <UniqueIdentifier>{58A68E49-449F-AD9B-6DD1-922059298DA7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Reyal\Platform">
+      <UniqueIdentifier>{2D96A6B0-197A-6706-82DA-61596EDD5188}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Reyal\Platform\D3D11">
+      <UniqueIdentifier>{D9DA49AF-C5FF-982F-EE4A-7EBFDACE974D}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Reyal\Renderer">
       <UniqueIdentifier>{7F9D838B-6B81-44E1-D4E1-3E34C0E42E63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Reyal\Renderer\Old">
+      <UniqueIdentifier>{2D691FB7-1963-4809-02D0-DE19EE68AE75}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Reyal\Util">
       <UniqueIdentifier>{A66C8E82-923A-8288-7BCE-F2AE673B5EED}</UniqueIdentifier>
@@ -93,6 +102,15 @@
     <ClInclude Include="src\Reyal\Layers\LayerStack.h">
       <Filter>src\Reyal\Layers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Reyal\Platform\D3D11\D3D11RendererAPI.h">
+      <Filter>src\Reyal\Platform\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Renderer\Renderer3D.h">
+      <Filter>src\Reyal\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Renderer\RendererAPI.h">
+      <Filter>src\Reyal\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Reyal\Reyal.h">
       <Filter>src\Reyal</Filter>
     </ClInclude>
@@ -120,15 +138,6 @@
     <ClInclude Include="src\rlpch.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Reyal\Renderer\Old\Renderer3D.h">
-      <Filter>src\Reyal\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Renderer\Old\Renderer2D.h">
-      <Filter>src\Reyal\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Renderer\RendererAPI.h" />
-    <ClInclude Include="src\Reyal\Platform\D3D11\D3D11RendererAPI.h" />
-    <ClInclude Include="src\Reyal\Renderer\Renderer3D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Reyal\Application.cpp">
@@ -164,6 +173,15 @@
     <ClCompile Include="src\Reyal\Layers\LayerStack.cpp">
       <Filter>src\Reyal\Layers</Filter>
     </ClCompile>
+    <ClCompile Include="src\Reyal\Platform\D3D11\D3D11RendererAPI.cpp">
+      <Filter>src\Reyal\Platform\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Renderer\Renderer3D.cpp">
+      <Filter>src\Reyal\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Renderer\RendererAPI.cpp">
+      <Filter>src\Reyal\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Reyal\Util\Random.cpp">
       <Filter>src\Reyal\Util</Filter>
     </ClCompile>
@@ -179,15 +197,6 @@
     <ClCompile Include="src\rlpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Reyal\Renderer\Old\Renderer2D.cpp">
-      <Filter>src\Reyal\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Renderer\Old\Renderer3D.cpp">
-      <Filter>src\Reyal\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Renderer\RendererAPI.cpp" />
-    <ClCompile Include="src\Reyal\Platform\D3D11\D3D11RendererAPI.cpp" />
-    <ClCompile Include="src\Reyal\Renderer\Renderer3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\PixelShader-p.hlsl">

@@ -6,7 +6,6 @@
 
 namespace At0::Reyal
 {
-
 	class RL_API Renderer3D
 	{
 	public:
@@ -25,6 +24,11 @@ namespace At0::Reyal
 		/// DEBUG: TODO: Renders test triangle onto the screen
 		/// </summary>
 		void RenderTestTriangle();
+
+		/// <summary>
+		/// Draws the scene to the screen
+		/// </summary>
+		void EndDraw();
 
 	private:
 		/// <summary>

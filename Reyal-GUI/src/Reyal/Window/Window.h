@@ -5,6 +5,8 @@
 #include "Reyal/Input/Keyboard.h"
 #include "Reyal/Input/Mouse.h"
 
+#include "Reyal/Renderer/Renderer3D.h"
+
 #include "Reyal/Widgets/ZWidget.h"
 #include "Reyal/Core/Queue.h"
 
@@ -226,11 +228,11 @@ namespace At0::Reyal
 		///// Specifies the 2D renderer
 		///// </summary>
 		//Renderer2D m_Renderer2D;
-		//
-		///// <summary>
-		///// Specifies the 3D renderer
-		///// </summary>
-		//Renderer3D m_Renderer3D;
+		
+		/// <summary>
+		/// Specifies the 3D renderer
+		/// </summary>
+		Renderer3D m_Renderer3D;
 
 		/// <summary>
 		/// Is the Queue of messages to process, they will be popped in Reyal::Application and dispatched to the layers

@@ -1,6 +1,8 @@
 #include "rlpch.h"
 #include "D3D11RendererAPI.h"
 
+#include "Reyal/Debug/ReyalLogger.h"
+
 #include "RlWin.h"
 
 namespace WRL = Microsoft::WRL;
@@ -8,8 +10,39 @@ namespace WRL = Microsoft::WRL;
 
 namespace At0::Reyal
 {
+    D3D11RendererAPI::D3D11RendererAPI()
+        : m_hWnd(NULL)
+    {
+        WRL::ComPtr<IDXGIFactory> pIDXGIFactory;
+        CreateDXGIFactory(__uuidof(IDXGIFactory), &pIDXGIFactory);
+
+        WRL::ComPtr<IDXGIAdapter> pAdapter;
+        for (uint32_t i = 0; pIDXGIFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
+        {
+            DXGI_ADAPTER_DESC adapterDesc;
+            pAdapter->GetDesc(&adapterDesc);
+            ZL_LOG_INFO("[Renderer3D] Found DXGIAdapter: "
+                "\n\tDescription: {0}\n\tVendorID: {1}\n\tDeviceID: {2}\n\tSubSysID: {3}"
+                "\n\tRevision: {4}\n\tDedicated Video Memory: {5}\n\tDedicated System Memory: {6}"
+                "\n\tShared System Memory: {7}\n\tAdapterLuid::LowPart: {8}\n\tAdapterLuid::HighPart: {9}\n",
+                adapterDesc.Description,
+                adapterDesc.VendorId,
+                adapterDesc.DeviceId,
+                adapterDesc.SubSysId,
+                adapterDesc.Revision,
+                adapterDesc.DedicatedVideoMemory,
+                adapterDesc.DedicatedSystemMemory,
+                adapterDesc.SharedSystemMemory,
+                adapterDesc.AdapterLuid.LowPart,
+                adapterDesc.AdapterLuid.HighPart
+            );
+        }
+    }
+
     void D3D11RendererAPI::Init(_In_ void* window)
     {
+        m_hWnd = static_cast<HWND>(window);
+
         DXGI_SWAP_CHAIN_DESC sd{};
 
         // Let DXGI figure it out with hWnd
@@ -22,7 +55,7 @@ namespace At0::Reyal
         sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
         
         sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        sd.OutputWindow = static_cast<HWND>(window);
+        sd.OutputWindow = m_hWnd;
         
         sd.SampleDesc = { 1, 0 };
         sd.BufferCount = 1;
@@ -43,7 +76,7 @@ namespace At0::Reyal
             NULL,
             creationFlags,
             nullptr,
-            D3D_FEATURE_LEVEL_11_0,
+            0,
             D3D11_SDK_VERSION,
             &sd,
             &m_SwapChain,
@@ -98,7 +131,7 @@ namespace At0::Reyal
 
         uint32_t strides = sizeof(Vertex);
         uint32_t offset = 0;
-        m_Context->IASetVertexBuffers(1, 1, pVertexBuffer.GetAddressOf(), &strides, &offset);
+        m_Context->IASetVertexBuffers(0, 1, pVertexBuffer.GetAddressOf(), &strides, &offset);
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +139,7 @@ namespace At0::Reyal
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         WRL::ComPtr<ID3D11PixelShader> pPixelShader;
         WRL::ComPtr<ID3DBlob> pBlob;
-        D3DReadFileToBlob(L"", &pBlob);
+        D3DReadFileToBlob(L"../Reyal-GUI/Shaders/PixelShader-p.cso", &pBlob);
         m_Device->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
         m_Context->PSSetShader(pPixelShader.Get(), nullptr, 0);
 
@@ -115,7 +148,7 @@ namespace At0::Reyal
         ////////// Vertex Shader ///////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         WRL::ComPtr<ID3D11VertexShader> pVertexShader;
-        D3DReadFileToBlob(L"", &pBlob);
+        D3DReadFileToBlob(L"../Reyal-GUI/Shaders/VertexShader-v.cso", &pBlob);
         m_Device->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
         m_Context->VSSetShader(pVertexShader.Get(), nullptr, 0);
 
@@ -129,18 +162,22 @@ namespace At0::Reyal
             { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
         };
         m_Device->CreateInputLayout(ied, std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pLayout);
+        m_Context->IASetInputLayout(pLayout.Get());
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////// Viewport ////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        RECT rc;
+        GetClientRect(m_hWnd, &rc);
+
         D3D11_VIEWPORT vp;
         vp.TopLeftX = 0;
         vp.TopLeftY = 0;
         vp.MaxDepth = 1;
         vp.MinDepth = 0;
-        //vp.Width = 
-        //vp.Height = 
+        vp.Width = (float)rc.right;
+        vp.Height = (float)rc.bottom;
         m_Context->RSSetViewports(1, &vp);
 
         
@@ -151,8 +188,23 @@ namespace At0::Reyal
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////// Set Render Target ///////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        m_Context->OMSetRenderTargets(1, m_TargetView.GetAddressOf(), nullptr);
+
+        /*
+        * QUESTION:
+        *   Large separators? Improves readability but vertical screen space is limited
+        */
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////// Draw Call ///////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         m_Context->Draw(std::size(vertices), 0);
+    }
+    
+    void D3D11RendererAPI::EndDraw()
+    {
+        m_SwapChain->Present(1, 0);
     }
 }

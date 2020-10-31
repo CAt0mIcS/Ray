@@ -19,5 +19,10 @@ namespace At0::Reyal
     {
         m_API->RenderTestTriangle();
     }
+    
+    void Renderer3D::EndDraw()
+    {
+        m_API->EndDraw();
+    }
 }
 

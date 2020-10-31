@@ -26,7 +26,7 @@ namespace At0::Reyal
 		//if(!parent || !parent->GetRenderer2D())
 			//m_Renderer2D.Init(m_hWnd);
 
-		//m_Renderer3D.Init(m_hWnd);
+		m_Renderer3D.Init(m_hWnd);
 	}
 
 	Window::~Window()
@@ -101,8 +101,8 @@ namespace At0::Reyal
 		}
 		case WM_KEYDOWN:
 		{
-			//m_Renderer3D.RenderTestTriangle();
-			//m_Renderer3D.EndDraw();
+			m_Renderer3D.RenderTestTriangle();
+			m_Renderer3D.EndDraw();
 
 			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)wParam, (uint32_t)(lParam & 0xff));
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });

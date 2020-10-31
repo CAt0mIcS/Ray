@@ -36,6 +36,11 @@ namespace At0::Reyal
 		virtual void RenderTestTriangle() = 0;
 
 		/// <summary>
+		/// Draws the scene to the screen
+		/// </summary>
+		virtual void EndDraw() = 0;
+
+		/// <summary>
 		/// Getter for the currently used API
 		/// </summary>
 		/// <returns>The current API</returns>

@@ -72,7 +72,8 @@ project "Reyal-GUI"
         "ZealLogger.lib",
         "D2D1.lib",
         "D3D11.lib",
-        "D3DCompiler.lib"
+        "D3DCompiler.lib",
+        "DXGI.lib"
     }
 
     libdirs

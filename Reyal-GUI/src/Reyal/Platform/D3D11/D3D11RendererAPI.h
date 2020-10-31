@@ -11,7 +11,10 @@ namespace At0::Reyal
 	class D3D11RendererAPI : public RendererAPI
 	{
 	public:
-		D3D11RendererAPI() = default;
+		/// <summary>
+		/// D3D11RendererAPI Constructor
+		/// </summary>
+		D3D11RendererAPI();
 
 		/// <summary>
 		/// Initializes all components required for rendering
@@ -24,11 +27,18 @@ namespace At0::Reyal
 		/// </summary>
 		virtual void RenderTestTriangle() override;
 
+		/// <summary>
+		/// Draws the scene to the screen
+		/// </summary>
+		virtual void EndDraw() override;
+
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_Context;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_TargetView;
+
+		HWND m_hWnd;
 	};
 }
 

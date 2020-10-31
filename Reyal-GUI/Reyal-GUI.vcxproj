@@ -109,7 +109,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ZealLogger.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ZealLogger.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;DXGI.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Debug-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Debug-windows-$(Platform)\Reyal.lib</ImportLibrary>
     </Link>
@@ -129,7 +129,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ZealLogger.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ZealLogger.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;DXGI.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Debug-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Debug-windows-$(Platform)\Reyal.lib</ImportLibrary>
     </Link>
@@ -153,7 +153,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ZealLogger.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ZealLogger.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;DXGI.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Release-windows-$(Platform)\Reyal.lib</ImportLibrary>
     </Link>
@@ -177,15 +177,12 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ZealLogger.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ZealLogger.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;DXGI.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Release-windows-$(Platform)\Reyal.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Reyal\Renderer\Renderer3D.h" />
-    <ClInclude Include="src\Reyal\Platform\D3D11\D3D11RendererAPI.h" />
-    <ClInclude Include="src\Reyal\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Reyal\Application.h" />
     <ClInclude Include="src\Reyal\Core\Queue.h" />
     <ClInclude Include="src\Reyal\Core\ThreadPool.h" />
@@ -204,8 +201,9 @@
     <ClInclude Include="src\Reyal\Input\Mouse.h" />
     <ClInclude Include="src\Reyal\Layers\Layer.h" />
     <ClInclude Include="src\Reyal\Layers\LayerStack.h" />
-    <ClInclude Include="src\Reyal\Renderer\Old\Renderer2D.h" />
-    <ClInclude Include="src\Reyal\Renderer\Old\Renderer3D.h" />
+    <ClInclude Include="src\Reyal\Platform\D3D11\D3D11RendererAPI.h" />
+    <ClInclude Include="src\Reyal\Renderer\Renderer3D.h" />
+    <ClInclude Include="src\Reyal\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Reyal\Reyal.h" />
     <ClInclude Include="src\Reyal\Util\Random.h" />
     <ClInclude Include="src\Reyal\Util\TypeConvert.h" />
@@ -217,9 +215,6 @@
     <ClInclude Include="src\rlpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Reyal\Renderer\Renderer3D.cpp" />
-    <ClCompile Include="src\Reyal\Platform\D3D11\D3D11RendererAPI.cpp" />
-    <ClCompile Include="src\Reyal\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Reyal\Application.cpp" />
     <ClCompile Include="src\Reyal\Core\ThreadPool.cpp" />
     <ClCompile Include="src\Reyal\Core\Vec2.cpp" />
@@ -231,8 +226,11 @@
     <ClCompile Include="src\Reyal\Input\Mouse.cpp" />
     <ClCompile Include="src\Reyal\Layers\Layer.cpp" />
     <ClCompile Include="src\Reyal\Layers\LayerStack.cpp" />
-    <ClCompile Include="src\Reyal\Renderer\Old\Renderer2D.cpp" />
-    <ClCompile Include="src\Reyal\Renderer\Old\Renderer3D.cpp" />
+    <ClCompile Include="src\Reyal\Platform\D3D11\D3D11RendererAPI.cpp" />
+    <ClCompile Include="src\Reyal\Renderer\Renderer3D.cpp">
+      <ObjectFileName>$(IntDir)\Renderer3D1.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\Reyal\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Reyal\Util\Random.cpp" />
     <ClCompile Include="src\Reyal\Util\TypeConvert.cpp" />
     <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp" />
