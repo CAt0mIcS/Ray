@@ -10,6 +10,8 @@
 #include "Reyal/Events/MouseEvent.h"
 #include "Reyal/Events/ApplicationEvent.h"
 
+#include "Reyal/Debug/RlAssert.h"
+
 
 namespace At0::Reyal
 {

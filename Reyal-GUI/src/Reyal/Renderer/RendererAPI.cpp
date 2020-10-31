@@ -3,6 +3,8 @@
 
 #include "Reyal/Platform/D3D11/D3D11RendererAPI.h"
 
+#include "Reyal/Debug/RlAssert.h"
+
 
 namespace At0::Reyal
 {

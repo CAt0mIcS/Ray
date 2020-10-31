@@ -6,6 +6,8 @@
 
 #include "Reyal/Events/KeyboardEvent.h"
 
+#include "Reyal/Debug/RlAssert.h"
+
 
 namespace At0::Reyal
 {
