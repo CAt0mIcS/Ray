@@ -180,7 +180,6 @@ namespace At0::Reyal
 		case WM_QUIT:
 		{
 			ZL_LOG_DEBUG("[MessageLoop] WM_QUIT Message in HandleMessage received");
-			int i = 32;
 			break;
 		}
 		}
