@@ -7,9 +7,6 @@
 #include "Reyal/Window/Window.h"
 #include "Reyal/Layers/Layer.h"
 
-#include "Reyal/Renderer/Renderer2D.h"
-#include "Reyal/Renderer/Renderer3D.h"
-
 #include "Reyal/Events/ApplicationEvent.h"
 #include "Reyal/Events/KeyboardEvent.h"
 #include "Reyal/Events/MouseEvent.h"

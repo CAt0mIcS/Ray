@@ -1,30 +1,38 @@
 #pragma once
 
 #include "RlBase.h"
-
-#include "RlWin.h"
-#include <wrl.h>
+#include "RendererAPI.h"
 
 
 namespace At0::Reyal
 {
+
 	class RL_API Renderer3D
 	{
 	public:
-		Renderer3D() = default;
+		/// <summary>
+		/// Renderer3D Constructor
+		/// </summary>
+		Renderer3D();
 
-		void Init(HWND hWnd);
+		/// <summary>
+		/// Initializes Renderer aand RendererAPI
+		/// </summary>
+		/// <param name="window">Is the platform specific window to render to</param>
+		void Init(_In_ void* window);
+
+		/// <summary>
+		/// DEBUG: TODO: Renders test triangle onto the screen
+		/// </summary>
 		void RenderTestTriangle();
-		void EndDraw();
 
 	private:
-		HWND m_hWnd;
-
-		Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
-		Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
-		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pContext;
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pTarget;
+		/// <summary>
+		/// Rendering calls will be dispatched to the platform's API
+		/// </summary>
+		Scope<RendererAPI> m_API;
 	};
 
 }
+
 
