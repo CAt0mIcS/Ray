@@ -28,6 +28,12 @@ namespace At0::Reyal
 		void AddTask(F&& func);
 
 		/// <summary>
+		/// Getter for the amount of available threads
+		/// </summary>
+		/// <returns>The amount of threads in the list</returns>
+		uint32_t MaxThreads() const { return m_MaxThreads; }
+
+		/// <summary>
 		/// Waits until all threads have finnished
 		/// </summary>
 		void Shutdown();

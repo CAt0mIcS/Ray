@@ -14,6 +14,7 @@ namespace At0::Reyal
 	Application::Application()
 		: m_MainWindow(L"MainWindow", nullptr, true), m_LayerStack{}, m_Running(true)
 	{
+		ZL_LOG_DEBUG("[ThreadPool] Initialized {0} threads", m_ThreadPool.MaxThreads());
 		m_MainWindow.SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
 	}
 
@@ -87,7 +88,7 @@ namespace At0::Reyal
 	bool Application::OnImmediateEvent(_In_ Widget* receiver, Event& e)
 	{
 		ZL_PROFILE_FUNCTION();
-		RL_EXPECTS(e.GetType() != EventType::INVALID);
+		RL_EXPECTS(e.GetType() <= EventType::LAST && e.GetType() >= EventType::FIRST);
 
 		// Wait for queue to be empty (TODO)
 		while (!m_MainWindow.GetEventQueue().Empty());
@@ -108,9 +109,8 @@ namespace At0::Reyal
 	{
 		ZL_PROFILE_FUNCTION();
 
-		RL_EXPECTS(e.GetType() != EventType::INVALID);
+		RL_EXPECTS(e.GetType() <= EventType::LAST && e.GetType() >= EventType::FIRST);
 
-		//TODO: Implement receiver
 		switch (e.GetType())
 		{
 		case EventType::MouseButtonPressedEvent:	layer->OnMousePress(receiver, (MouseButtonPressedEvent&)e); break;

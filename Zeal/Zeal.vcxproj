@@ -99,7 +99,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>ZL_OUT_DIR="C:/dev/Cpp/Projects/NodePlanningEditor/bin/Debug-windows-$(Platform)";ZL_PLATFORM_WINDOWS;ZL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ZL_OUT_DIR="D:/dev/Cpp/Projects/NodePlanningEditor/bin/Debug-windows-$(Platform)";ZL_PLATFORM_WINDOWS;ZL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;..\ZealLogger\src;..\Reyal-GUI\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -118,7 +118,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>ZL_OUT_DIR="C:/dev/Cpp/Projects/NodePlanningEditor/bin/Debug-windows-$(Platform)";ZL_PLATFORM_WINDOWS;ZL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ZL_OUT_DIR="D:/dev/Cpp/Projects/NodePlanningEditor/bin/Debug-windows-$(Platform)";ZL_PLATFORM_WINDOWS;ZL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;..\ZealLogger\src;..\Reyal-GUI\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -137,7 +137,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>ZL_OUT_DIR="C:/dev/Cpp/Projects/NodePlanningEditor/bin/Release-windows-$(Platform)";ZL_PLATFORM_WINDOWS;ZL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ZL_OUT_DIR="D:/dev/Cpp/Projects/NodePlanningEditor/bin/Release-windows-$(Platform)";ZL_PLATFORM_WINDOWS;ZL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;..\ZealLogger\src;..\Reyal-GUI\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -160,7 +160,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>ZL_OUT_DIR="C:/dev/Cpp/Projects/NodePlanningEditor/bin/Release-windows-$(Platform)";ZL_PLATFORM_WINDOWS;ZL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ZL_OUT_DIR="D:/dev/Cpp/Projects/NodePlanningEditor/bin/Release-windows-$(Platform)";ZL_PLATFORM_WINDOWS;ZL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;..\ZealLogger\src;..\Reyal-GUI\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>

@@ -13,10 +13,11 @@ namespace At0::Reyal
 	enum class RL_API EventType
 	{
 		INVALID = 0,
-		MouseButtonPressedEvent, MouseButtonReleasedEvent, MouseWheelUpEvent, MouseWheelDownEvent, MouseMoveEvent, 
+		MouseButtonPressedEvent, MouseButtonReleasedEvent, MouseWheelUpEvent, MouseWheelDownEvent, MouseMoveEvent,
 		HoverEnterEvent, HoverLeaveEvent,
 		KeyPressedEvent, KeyReleasedEvent, CharEvent,
-		WindowResizeEvent, WindowCloseEvent, WindowMoveEvent, PaintEvent, SetCursorEvent
+		WindowResizeEvent, WindowCloseEvent, WindowMoveEvent, PaintEvent, SetCursorEvent,
+		FIRST = INVALID, LAST = SetCursorEvent
 	};
 
 

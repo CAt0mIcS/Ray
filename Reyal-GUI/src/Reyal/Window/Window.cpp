@@ -217,7 +217,7 @@ namespace At0::Reyal
 	{
 		ZL_PROFILE_FUNCTION();
 
-		RL_EXPECTS(cmdShow <= ShowCommand::Last && cmdShow >= ShowCommand::First);
+		RL_EXPECTS(cmdShow <= ShowCommand::LAST && cmdShow >= ShowCommand::FIRST);
 		ShowWindow(m_hWnd, (int)cmdShow);
 	}
 

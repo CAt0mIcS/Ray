@@ -98,8 +98,8 @@ namespace At0::Reyal
 			/// </summary>
 			Default		= SW_SHOWDEFAULT,
 
-			First = Hide,
-			Last = Default
+			FIRST = Hide,
+			LAST = Default
 		};
 	public:
 		/// <summary>
