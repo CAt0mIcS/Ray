@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FF8FF4A8-6B45-6D9E-F439-677560EE63A2}</ProjectGuid>
+    <ProjectGuid>{073ADAD3-73EF-52C9-FCE3-4CA0689849CD}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>RlUtilities</RootNamespace>
+    <RootNamespace>ZlUtilities</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -68,26 +68,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>..\bin\Debug-windows-$(Platform)\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-$(Platform)\RlUtilities\x86\</IntDir>
-    <TargetName>RlUtilities</TargetName>
+    <IntDir>..\bin-int\Debug-windows-$(Platform)\ZlUtilities\x86\</IntDir>
+    <TargetName>ZlUtilities</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\bin\Debug-windows-$(Platform)\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-$(Platform)\RlUtilities\x86_64\</IntDir>
-    <TargetName>RlUtilities</TargetName>
+    <IntDir>..\bin-int\Debug-windows-$(Platform)\ZlUtilities\x86_64\</IntDir>
+    <TargetName>ZlUtilities</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\bin\Release-windows-$(Platform)\</OutDir>
-    <IntDir>..\bin-int\Release-windows-$(Platform)\RlUtilities\x86\</IntDir>
-    <TargetName>RlUtilities</TargetName>
+    <IntDir>..\bin-int\Release-windows-$(Platform)\ZlUtilities\x86\</IntDir>
+    <TargetName>ZlUtilities</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\bin\Release-windows-$(Platform)\</OutDir>
-    <IntDir>..\bin-int\Release-windows-$(Platform)\RlUtilities\x86_64\</IntDir>
-    <TargetName>RlUtilities</TargetName>
+    <IntDir>..\bin-int\Release-windows-$(Platform)\ZlUtilities\x86_64\</IntDir>
+    <TargetName>ZlUtilities</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -167,14 +167,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\RlUtil\Random.h" />
-    <ClInclude Include="src\RlUtil\Serialize.h" />
-    <ClInclude Include="src\RlUtil\TypeConvert.h" />
+    <ClInclude Include="src\ZlUtil\Random.h" />
+    <ClInclude Include="src\ZlUtil\Serialize.h" />
+    <ClInclude Include="src\ZlUtil\TypeConvert.h" />
     <ClInclude Include="src\utpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\RlUtil\Random.cpp" />
-    <ClCompile Include="src\RlUtil\TypeConvert.cpp" />
+    <ClCompile Include="src\ZlUtil\Random.cpp" />
+    <ClCompile Include="src\ZlUtil\TypeConvert.cpp" />
     <ClCompile Include="src\utpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

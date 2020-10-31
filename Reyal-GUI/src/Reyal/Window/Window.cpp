@@ -4,7 +4,7 @@
 #include "Reyal/Exception.h"
 #include "Reyal/Debug/ReyalLogger.h"
 
-#include <RlUtil/Random.h>
+#include <ZlUtil/Random.h>
 
 #include "Reyal/Events/KeyboardEvent.h"
 #include "Reyal/Events/MouseEvent.h"

@@ -132,6 +132,7 @@ namespace At0::Reyal
         uint32_t strides = sizeof(Vertex);
         uint32_t offset = 0;
         m_Context->IASetVertexBuffers(0, 1, pVertexBuffer.GetAddressOf(), &strides, &offset);
+        ZL_LOG_DEBUG("Bound Vertex Buffer {0}", pVertexBuffer.Get());
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,6 +143,7 @@ namespace At0::Reyal
         D3DReadFileToBlob(L"../Reyal-GUI/Shaders/PixelShader-p.cso", &pBlob);
         m_Device->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
         m_Context->PSSetShader(pPixelShader.Get(), nullptr, 0);
+        ZL_LOG_DEBUG("Bound Pixel Shader {0}", pPixelShader.Get());
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,6 +153,7 @@ namespace At0::Reyal
         D3DReadFileToBlob(L"../Reyal-GUI/Shaders/VertexShader-v.cso", &pBlob);
         m_Device->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
         m_Context->VSSetShader(pVertexShader.Get(), nullptr, 0);
+        ZL_LOG_DEBUG("Bound Vertex Shader {0}", pVertexShader.Get());
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,6 +166,7 @@ namespace At0::Reyal
         };
         m_Device->CreateInputLayout(ied, std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pLayout);
         m_Context->IASetInputLayout(pLayout.Get());
+        ZL_LOG_DEBUG("Bound Input Layout {0}", pLayout.Get());
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -179,18 +183,22 @@ namespace At0::Reyal
         vp.Width = (float)rc.right;
         vp.Height = (float)rc.bottom;
         m_Context->RSSetViewports(1, &vp);
+        ZL_LOG_DEBUG("Bound Viewport {0}", &vp);
 
         
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////// Primitive Topology //////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         m_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        ZL_LOG_DEBUG("Set Primitive Topology to {0}", D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////// Set Render Target ///////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         m_Context->OMSetRenderTargets(1, m_TargetView.GetAddressOf(), nullptr);
+        ZL_LOG_DEBUG("Set Render Target {0}", m_TargetView.Get());
+
 
         /*
         * QUESTION:
@@ -201,6 +209,7 @@ namespace At0::Reyal
         ////////// Draw Call ///////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         m_Context->Draw(std::size(vertices), 0);
+        ZL_LOG_DEBUG("Drew Triangle");
     }
     
     void D3D11RendererAPI::EndDraw()

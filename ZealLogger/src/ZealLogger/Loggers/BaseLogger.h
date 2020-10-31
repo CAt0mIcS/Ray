@@ -6,8 +6,8 @@
 #include <vector>
 #include <sstream>
 
-#include <RlUtil/Serialize.h>
-#include <RlUtil/TypeConvert.h>
+#include <ZlUtil/Serialize.h>
+#include <ZlUtil/TypeConvert.h>
 
 #include "../Formatter/BracketFormatter.h"
 #include "../Formatter/LogLevelFormatter.h"
