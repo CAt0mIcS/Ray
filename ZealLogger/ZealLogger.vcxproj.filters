@@ -13,9 +13,6 @@
     <Filter Include="ZealLogger\Private">
       <UniqueIdentifier>{3B0BA2D7-27EF-622D-904F-5D807C524DAF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ZealLogger\Util">
-      <UniqueIdentifier>{3E8518CB-AA10-868F-B321-09841F2CE28F}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ZealLogger\Formatter\BracketFormatter.h">
@@ -48,15 +45,9 @@
     <ClInclude Include="src\ZealLogger\Private\LogLevel.h">
       <Filter>ZealLogger\Private</Filter>
     </ClInclude>
-    <ClInclude Include="src\ZealLogger\Util\TypeConvert.h">
-      <Filter>ZealLogger\Util</Filter>
-    </ClInclude>
     <ClInclude Include="src\zlpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ZealLogger\Util\TypeConvert.cpp">
-      <Filter>ZealLogger\Util</Filter>
-    </ClCompile>
     <ClCompile Include="src\zlpch.cpp" />
   </ItemGroup>
 </Project>

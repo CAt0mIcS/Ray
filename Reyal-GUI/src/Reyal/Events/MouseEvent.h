@@ -7,7 +7,7 @@
 #include "Reyal/Core/Vec2.h"
 #include "Reyal/Widgets/ZWidget.h"
 
-#include "Reyal/Util/TypeConvert.h"
+#include <RlUtil/TypeConvert.h>
 
 
 namespace At0::Reyal
@@ -148,7 +148,7 @@ namespace At0::Reyal
 		virtual std::string ToString() const override
 		{
 			std::ostringstream oss;
-			oss << "[HoverEnterEvent] Widget with name " << WideCharToMultiByte(m_HoverEntered->GetName()) << " gained hover focus";
+			oss << "[HoverEnterEvent] Widget with name " << Util::WideCharToMultiByte(m_HoverEntered->GetName()) << " gained hover focus";
 			return oss.str();
 		}
 
@@ -169,7 +169,7 @@ namespace At0::Reyal
 		virtual std::string ToString() const override
 		{
 			std::ostringstream oss;
-			oss << "[HoverLeaveEvent] The Widget with name " << WideCharToMultiByte(m_HoverLeft->GetName()) << " lost hover focus";
+			oss << "[HoverLeaveEvent] The Widget with name " << Util::WideCharToMultiByte(m_HoverLeft->GetName()) << " lost hover focus";
 			return oss.str();
 		}
 

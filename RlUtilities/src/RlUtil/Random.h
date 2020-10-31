@@ -2,20 +2,19 @@
 #define RL_RANDOM_H
 
 #include <string>
-#include "RlBase.h"
 
 
-namespace At0::Reyal
+namespace At0::Util
 {
 	/// <summary>
 	/// std::string version of the bellow function overloads
 	/// </summary>
-	RL_API std::string GenerateRandomTokenA(uint16_t length);
+	std::string GenerateRandomTokenA(uint16_t length);
 	
 	/// <summary>
 	/// std::wstring version of the bellow function overloads
 	/// </summary>
-	RL_API std::wstring GenerateRandomTokenW(uint16_t length);
+	std::wstring GenerateRandomTokenW(uint16_t length);
 
 	/// <summary>
 	/// Generates a random string with length
@@ -23,7 +22,7 @@ namespace At0::Reyal
 	/// <param name="length">Is the length of the generated string</param>
 	/// <returns>The randomly generated string</returns>
 	template<typename T>
-	RL_API T GenerateRandomToken(uint16_t length, typename std::enable_if_t<std::is_same_v<T, std::wstring>>* = 0)
+	T GenerateRandomToken(uint16_t length, typename std::enable_if_t<std::is_same_v<T, std::wstring>>* = 0)
 	{
 		return GenerateRandomTokenW(length);
 	}
@@ -34,7 +33,7 @@ namespace At0::Reyal
 	/// <param name="length">Is the length of the generated string</param>
 	/// <returns>The randomly generated string</returns>
 	template<typename T>
-	RL_API T GenerateRandomToken(uint16_t length, typename std::enable_if_t<std::is_same_v<T, std::string>>* = 0)
+	T GenerateRandomToken(uint16_t length, typename std::enable_if_t<std::is_same_v<T, std::string>>* = 0)
 	{
 		return GenerateRandomTokenA(length);
 	}

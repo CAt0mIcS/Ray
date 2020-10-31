@@ -1,8 +1,8 @@
-#include "rlpch.h"
+#include "utpch.h"
 #include "Random.h"
 
 
-namespace At0::Reyal
+namespace At0::Util
 {
 	std::string GenerateRandomTokenA(uint16_t length)
 	{

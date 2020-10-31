@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{51B35B4E-3D6B-9D9B-A672-76F79249388C}</ProjectGuid>
+    <ProjectGuid>{FF8FF4A8-6B45-6D9E-F439-677560EE63A2}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ZealLogger</RootNamespace>
+    <RootNamespace>RlUtilities</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -68,35 +68,35 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>..\bin\Debug-windows-$(Platform)\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-$(Platform)\ZealLogger\x86\</IntDir>
-    <TargetName>ZealLogger</TargetName>
+    <IntDir>..\bin-int\Debug-windows-$(Platform)\RlUtilities\x86\</IntDir>
+    <TargetName>RlUtilities</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\bin\Debug-windows-$(Platform)\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-$(Platform)\ZealLogger\x86_64\</IntDir>
-    <TargetName>ZealLogger</TargetName>
+    <IntDir>..\bin-int\Debug-windows-$(Platform)\RlUtilities\x86_64\</IntDir>
+    <TargetName>RlUtilities</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\bin\Release-windows-$(Platform)\</OutDir>
-    <IntDir>..\bin-int\Release-windows-$(Platform)\ZealLogger\x86\</IntDir>
-    <TargetName>ZealLogger</TargetName>
+    <IntDir>..\bin-int\Release-windows-$(Platform)\RlUtilities\x86\</IntDir>
+    <TargetName>RlUtilities</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\bin\Release-windows-$(Platform)\</OutDir>
-    <IntDir>..\bin-int\Release-windows-$(Platform)\ZealLogger\x86_64\</IntDir>
-    <TargetName>ZealLogger</TargetName>
+    <IntDir>..\bin-int\Release-windows-$(Platform)\RlUtilities\x86_64\</IntDir>
+    <TargetName>RlUtilities</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>zlpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>utpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>ZLL_PLATFORM_WINDOWS;ZLL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\RlUtilities\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UT_PLATFORM_WINDOWS;UT_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -106,18 +106,14 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <Lib>
-      <AdditionalDependencies>RlUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\bin\Debug-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>zlpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>utpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>ZLL_PLATFORM_WINDOWS;ZLL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\RlUtilities\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UT_PLATFORM_WINDOWS;UT_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -127,18 +123,14 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <Lib>
-      <AdditionalDependencies>RlUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\bin\Debug-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>zlpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>utpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>ZLL_PLATFORM_WINDOWS;ZLL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\RlUtilities\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UT_PLATFORM_WINDOWS;UT_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -152,18 +144,14 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <Lib>
-      <AdditionalDependencies>RlUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>zlpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>utpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>ZLL_PLATFORM_WINDOWS;ZLL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\RlUtilities\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UT_PLATFORM_WINDOWS;UT_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -177,26 +165,17 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <Lib>
-      <AdditionalDependencies>RlUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\ZealLogger\Formatter\BracketFormatter.h" />
-    <ClInclude Include="src\ZealLogger\Formatter\DateTimeFormatter.h" />
-    <ClInclude Include="src\ZealLogger\Formatter\Formatter.h" />
-    <ClInclude Include="src\ZealLogger\Formatter\LogLevelFormatter.h" />
-    <ClInclude Include="src\ZealLogger\Formatter\NullTerminatorFormatter.h" />
-    <ClInclude Include="src\ZealLogger\Log.h" />
-    <ClInclude Include="src\ZealLogger\LogConfigure.h" />
-    <ClInclude Include="src\ZealLogger\Loggers\BaseLogger.h" />
-    <ClInclude Include="src\ZealLogger\Loggers\FileLogger.h" />
-    <ClInclude Include="src\ZealLogger\Private\LogLevel.h" />
-    <ClInclude Include="src\zlpch.h" />
+    <ClInclude Include="src\RlUtil\Random.h" />
+    <ClInclude Include="src\RlUtil\Serialize.h" />
+    <ClInclude Include="src\RlUtil\TypeConvert.h" />
+    <ClInclude Include="src\utpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\zlpch.cpp">
+    <ClCompile Include="src\RlUtil\Random.cpp" />
+    <ClCompile Include="src\RlUtil\TypeConvert.cpp" />
+    <ClCompile Include="src\utpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>

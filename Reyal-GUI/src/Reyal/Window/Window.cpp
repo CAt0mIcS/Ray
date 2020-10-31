@@ -4,7 +4,7 @@
 #include "Reyal/Exception.h"
 #include "Reyal/Debug/ReyalLogger.h"
 
-#include "Reyal/Util/Random.h"
+#include <RlUtil/Random.h>
 
 #include "Reyal/Events/KeyboardEvent.h"
 #include "Reyal/Events/MouseEvent.h"
@@ -18,7 +18,7 @@ namespace At0::Reyal
 	{
 		ZL_PROFILE_FUNCTION();
 
-		auto rnd = GenerateRandomToken<std::wstring>(5);
+		auto rnd = Util::GenerateRandomToken<std::wstring>(5);
 		RL_EXPECTS(!rnd.empty());
 		ZL_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
 		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW));

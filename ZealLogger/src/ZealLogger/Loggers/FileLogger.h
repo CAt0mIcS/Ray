@@ -4,7 +4,7 @@
 #include <fstream>
 #include "BaseLogger.h"
 
-#include "../Util/TypeConvert.h"
+#include <RlUtil/TypeConvert.h>
 
 
 namespace At0::Log

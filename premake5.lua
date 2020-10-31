@@ -64,7 +64,8 @@ project "Reyal-GUI"
     includedirs
     {
         "%{prj.name}/src",
-        "ZealLogger/src"
+        "ZealLogger/src",
+        "RlUtilities/src"
     }
 
     links
@@ -138,7 +139,8 @@ project "Zeal"
     {
         "%{prj.name}/src",
         "ZealLogger/src",
-        "Reyal-GUI/src"
+        "Reyal-GUI/src",
+        "RlUtilities/src"
     }
 
     links
@@ -192,7 +194,23 @@ project "ZealLogger"
 
     includedirs
     {
-        "%{prj.name}/src"
+        "%{prj.name}/src",
+        "RlUtilities/src"
+    }
+
+    dependson
+    {
+        "RlUtilities"
+    }
+
+    libdirs
+    {
+        targetOutDir
+    }
+
+    links
+    {
+        "RlUtilities.lib"
     }
 
     filter "system:windows"
@@ -212,6 +230,7 @@ project "ZealLogger"
         optimize "speed"
         runtime "Release"
         defines "ZLL_RELEASE"
+
 
 group "ExtensionLayers"
     project "ZealGUILayer"
@@ -247,7 +266,8 @@ group "ExtensionLayers"
         {
             "%{prj.name}/src",
             "Reyal-GUI/src",
-            "ZealLogger/src"
+            "ZealLogger/src",
+            "RlUtilities/src"
         }
 
         libdirs
@@ -279,3 +299,46 @@ group "ExtensionLayers"
             runtime "Release"
             defines "ZGL_RELEASE"
 group "" -- End of group "ExtensionLayers"
+
+
+project "RlUtilities"
+    location "RlUtilities"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "default"
+    kind "StaticLib"
+
+    targetdir("bin/" .. outputDir)
+    objdir("bin-int/" .. outputDir .. "/%{prj.name}")
+
+    pchheader "utpch.h"
+    pchsource "RlUtilities/src/utpch.cpp"
+
+    files
+    {
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.cpp"
+    }
+
+    includedirs
+    {
+        "%{prj.name}/src"
+    }
+
+    filter "system:windows"
+        systemversion "latest"
+
+        defines
+        {
+            "UT_PLATFORM_WINDOWS"
+        }
+
+    filter "configurations:Debug"
+        symbols "on"
+        runtime "Debug"
+        defines "UT_DEBUG"
+
+    filter "configurations:Release"
+        optimize "speed"
+        runtime "Release"
+        defines "UT_RELEASE"

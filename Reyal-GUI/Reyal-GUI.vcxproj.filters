@@ -34,12 +34,6 @@
     <Filter Include="src\Reyal\Renderer">
       <UniqueIdentifier>{7F9D838B-6B81-44E1-D4E1-3E34C0E42E63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Reyal\Renderer\Old">
-      <UniqueIdentifier>{2D691FB7-1963-4809-02D0-DE19EE68AE75}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Reyal\Util">
-      <UniqueIdentifier>{A66C8E82-923A-8288-7BCE-F2AE673B5EED}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Reyal\Widgets">
       <UniqueIdentifier>{1F3252DB-8B48-5071-D4BF-DB92401521F9}</UniqueIdentifier>
     </Filter>
@@ -70,6 +64,9 @@
       <Filter>src\Reyal\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\Debug\ReyalLogger.h">
+      <Filter>src\Reyal\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Reyal\Debug\RlAssert.h">
       <Filter>src\Reyal\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\EntryPoint.h">
@@ -114,12 +111,6 @@
     <ClInclude Include="src\Reyal\Reyal.h">
       <Filter>src\Reyal</Filter>
     </ClInclude>
-    <ClInclude Include="src\Reyal\Util\Random.h">
-      <Filter>src\Reyal\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Util\TypeConvert.h">
-      <Filter>src\Reyal\Util</Filter>
-    </ClInclude>
     <ClInclude Include="src\Reyal\Widgets\ZWidget.h">
       <Filter>src\Reyal\Widgets</Filter>
     </ClInclude>
@@ -158,6 +149,9 @@
     <ClCompile Include="src\Reyal\Debug\ReyalLogger.cpp">
       <Filter>src\Reyal\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="src\Reyal\Debug\RlAssert.cpp">
+      <Filter>src\Reyal\Debug</Filter>
+    </ClCompile>
     <ClCompile Include="src\Reyal\Exception.cpp">
       <Filter>src\Reyal</Filter>
     </ClCompile>
@@ -181,12 +175,6 @@
     </ClCompile>
     <ClCompile Include="src\Reyal\Renderer\RendererAPI.cpp">
       <Filter>src\Reyal\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Util\Random.cpp">
-      <Filter>src\Reyal\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Util\TypeConvert.cpp">
-      <Filter>src\Reyal\Util</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp">
       <Filter>src\Reyal\Widgets</Filter>
