@@ -116,6 +116,12 @@ namespace At0::Reyal
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
+		case WM_CHAR:
+		{
+			Scope<CharEvent> e = MakeScope<CharEvent>((unsigned char)wParam);
+			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			return 0;
+		}
 		case WM_MOUSEWHEEL:
 		{
 			int delta = GET_WHEEL_DELTA_WPARAM(wParam);
