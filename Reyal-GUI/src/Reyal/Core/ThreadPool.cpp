@@ -57,6 +57,8 @@ namespace At0::Reyal
 
 		while (!m_Shutdown)
 		{
+			ZL_PROFILE_SCOPE("[ThreadPool] InfiniteWait while(!m_Shutdown) Scope");
+
 			ZL_LOG_DEBUG("[ThreadPool] Thread {0} entered ThreadPool::InfiniteWait", std::this_thread::get_id());
 			std::function<void()> task;
 			{

@@ -252,6 +252,12 @@ namespace At0::Reyal
 
 	bool Window::ShouldClose(_In_opt_ _Maybenull_ int* exitCode)
 	{
+		/// <summary>
+		/// QUESTION:
+		///		Should I use GetMessage in a while loop with a function to execute every "frame"?
+		///		The application class should be able to hook into the while loop and execute some code
+		/// </summary>
+
 		MSG msg;
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
