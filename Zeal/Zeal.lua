@@ -31,8 +31,7 @@ project "Zeal"
     {
         "src",
         "../ZealLogger/src",
-        "../Reyal-GUI/src",
-        "../ZlUtilities/src"
+        "../Reyal-GUI/src"
     }
 
     links

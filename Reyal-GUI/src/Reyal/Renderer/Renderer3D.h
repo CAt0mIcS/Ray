@@ -18,7 +18,13 @@ namespace At0::Reyal
 		/// Initializes Renderer aand RendererAPI
 		/// </summary>
 		/// <param name="window">Is the platform specific window to render to</param>
-		void Init(_In_ void* window);
+		void Init(_In_ WindowHandle window);
+
+		/// <summary>
+		/// Checks if the renderer was initialized
+		/// </summary>
+		/// <returns>True if initialized, false otherwise</returns>
+		bool IsInitialized() const { return m_API != nullptr; }
 
 		/// <summary>
 		/// DEBUG: TODO: Renders test triangle onto the screen

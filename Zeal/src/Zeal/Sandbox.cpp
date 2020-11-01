@@ -14,6 +14,7 @@ namespace At0
 	{
 		ZL_PROFILE_FUNCTION();
 
+		m_MainWindow.InitRenderer3D();
 		m_MainWindow.SetTitle(L"Zeal");
 		m_MainWindow.Show();
 
@@ -26,9 +27,7 @@ namespace At0
 			std::wstring_view path = dirEntry.path().native();
 
 			if (path.size() < ending.size() || path.compare(path.size() - ending.size(), ending.size(), ending) != 0)
-			{
 				continue;
-			}
 
 			HMODULE hDll = LoadLibrary(path.data());
 			if (!hDll || hDll == INVALID_HANDLE_VALUE)

@@ -2,6 +2,7 @@
 #include "D3D11RendererAPI.h"
 
 #include "Reyal/Debug/ReyalLogger.h"
+#include "Reyal/Debug/RlAssert.h"
 
 #include "RlWin.h"
 
@@ -11,7 +12,7 @@ namespace WRL = Microsoft::WRL;
 namespace At0::Reyal
 {
     D3D11RendererAPI::D3D11RendererAPI()
-        : m_hWnd(NULL)
+        : m_hWnd(NULL), m_Device(nullptr), m_SwapChain(nullptr), m_Context(nullptr), m_TargetView(nullptr)
     {
         WRL::ComPtr<IDXGIFactory> pIDXGIFactory;
         CreateDXGIFactory(__uuidof(IDXGIFactory), &pIDXGIFactory);
@@ -39,8 +40,10 @@ namespace At0::Reyal
         }
     }
 
-    void D3D11RendererAPI::Init(_In_ void* window)
+    void D3D11RendererAPI::Init(_In_ WindowHandle window)
     {
+        RL_MEXPECTS(!this->IsInitialized(), "D3D11RendererAPI was already initialized.");
+
         m_hWnd = static_cast<HWND>(window);
 
         DXGI_SWAP_CHAIN_DESC sd{};
@@ -91,8 +94,15 @@ namespace At0::Reyal
         m_Device->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_TargetView);
     }
     
+    bool D3D11RendererAPI::IsInitialized() const
+    {
+        return m_Device != nullptr;
+    }
+
     void D3D11RendererAPI::RenderTestTriangle()
     {
+        RL_MEXPECTS(this->IsInitialized(), "D3D11RendererAPI was not initialized.");
+        
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////// Vertices ////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -214,6 +224,7 @@ namespace At0::Reyal
     
     void D3D11RendererAPI::EndDraw()
     {
+        RL_MEXPECTS(this->IsInitialized(), "D3D11RendererAPI was not initialized.");
         m_SwapChain->Present(1, 0);
     }
 }

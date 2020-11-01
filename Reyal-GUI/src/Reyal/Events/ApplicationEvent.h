@@ -19,10 +19,10 @@ namespace At0::Reyal
 
 		}
 
-		virtual std::string ToString() const override
+		virtual std::wstring ToString() const override
 		{
-			std::ostringstream oss;
-			oss << "[WindowResizeEvent] New Size: " << m_NewSize;
+			std::wostringstream oss;
+			oss << L"[WindowResizeEvent] New Size: " << m_NewSize;
 			return oss.str();
 		}
 
@@ -45,10 +45,10 @@ namespace At0::Reyal
 
 		}
 
-		virtual std::string ToString() const override
+		virtual std::wstring ToString() const override
 		{
-			std::ostringstream oss;
-			oss << "[WindowMoveEvent] New Posititon: " << m_NewPos;
+			std::wostringstream oss;
+			oss << L"[WindowMoveEvent] New Posititon: " << m_NewPos;
 			return oss.str();
 		}
 
@@ -69,10 +69,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::string ToString() const override
+		virtual std::wstring ToString() const override
 		{
-			std::ostringstream oss;
-			oss << "[SetCursorEvent]";
+			std::wostringstream oss;
+			oss << L"[SetCursorEvent]";
 			return oss.str();
 		}
 
@@ -86,10 +86,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::string ToString() const override
+		virtual std::wstring ToString() const override
 		{
-			std::ostringstream oss;
-			oss << "[WindowCloseEvent]";
+			std::wostringstream oss;
+			oss << L"[WindowCloseEvent]";
 			return oss.str();
 		}
 
@@ -104,10 +104,10 @@ namespace At0::Reyal
 
 		}
 
-		virtual std::string ToString() const override
+		virtual std::wstring ToString() const override
 		{
-			std::ostringstream oss;
-			oss << "[PaintEvent]";
+			std::wostringstream oss;
+			oss << L"[PaintEvent]";
 			return oss.str();
 		}
 

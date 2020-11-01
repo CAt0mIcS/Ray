@@ -29,16 +29,15 @@ void SignalHandler(int signum)
 	exit(signum);
 }
 
-
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int pCmdShow)
 {
 	using namespace At0;
 
-	ZL_LOG_BEGIN("Zeal.log", At0::Log::LogLevel::Trace);
+	ZL_LOG_BEGIN("Zeal.log", Log::LogLevel::Trace);
 
 	/// <summary>
 	/// QUESTION:
-	///		Should I handle signals like this or is there a better way? Like not doing it at all?
+	///		Util::SetSignals (TODO)
 	/// </summary>
 	signal(SIGABRT, SignalHandler);
 	signal(SIGFPE, SignalHandler);
@@ -47,6 +46,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 	signal(SIGSEGV, SignalHandler);
 	signal(SIGTERM, SignalHandler);
 	
+	//TODO: Awake function (maybe)?
+
 #ifdef _DEBUG
 	{
 		AllocConsole();

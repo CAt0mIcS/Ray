@@ -7,8 +7,6 @@
 #include "Reyal/Core/Vec2.h"
 #include "Reyal/Widgets/ZWidget.h"
 
-#include <ZlUtil/TypeConvert.h>
-
 
 namespace At0::Reyal
 {
@@ -27,10 +25,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::string ToString() const override
+		virtual std::wstring ToString() const override
 		{
-			std::ostringstream oss;
-			oss << "[MouseMoveEvent] New Position: " << m_NewPos;
+			std::wostringstream oss;
+			oss << L"[MouseMoveEvent] New Position: " << m_NewPos;
 			return oss.str();
 		}
 
@@ -52,10 +50,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::string ToString() const override
+		virtual std::wstring ToString() const override
 		{
-			std::ostringstream oss;
-			oss << "[MouseButtonPressedEvent] Button: " << (int)m_Button;
+			std::wostringstream oss;
+			oss << L"[MouseButtonPressedEvent] Button: " << (int)m_Button;
 			return oss.str();
 		}
 
@@ -75,10 +73,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::string ToString() const override
+		virtual std::wstring ToString() const override
 		{
-			std::ostringstream oss;
-			oss << "[MouseButtonReleasedEvent] Button: " << (int)m_Button;
+			std::wostringstream oss;
+			oss << L"[MouseButtonReleasedEvent] Button: " << (int)m_Button;
 			return oss.str();
 		}
 
@@ -111,10 +109,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::string ToString() const override
+		virtual std::wstring ToString() const override
 		{
-			std::ostringstream oss;
-			oss << "[MouseWheelUpEvent] Delta: " << GetDelta();
+			std::wostringstream oss;
+			oss << L"[MouseWheelUpEvent] Delta: " << GetDelta();
 			return oss.str();
 		}
 
@@ -129,10 +127,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::string ToString() const override
+		virtual std::wstring ToString() const override
 		{
-			std::ostringstream oss;
-			oss << "[MouseWheelDownEvent] Delta: " << GetDelta();
+			std::wostringstream oss;
+			oss << L"[MouseWheelDownEvent] Delta: " << GetDelta();
 			return oss.str();
 		}
 
@@ -145,10 +143,10 @@ namespace At0::Reyal
 		HoverEnterEvent(_In_ Widget* hoverEntered)
 			: m_HoverEntered(hoverEntered) {}
 
-		virtual std::string ToString() const override
+		virtual std::wstring ToString() const override
 		{
-			std::ostringstream oss;
-			oss << "[HoverEnterEvent] Widget with name " << Util::WideCharToMultiByte(m_HoverEntered->GetName()) << " gained hover focus";
+			std::wostringstream oss;
+			oss << L"[HoverEnterEvent] Widget with name " << m_HoverEntered->GetName() << " gained hover focus";
 			return oss.str();
 		}
 
@@ -166,10 +164,10 @@ namespace At0::Reyal
 		HoverLeaveEvent(_In_ Widget* hoverLeft)
 			: m_HoverLeft(hoverLeft) {}
 
-		virtual std::string ToString() const override
+		virtual std::wstring ToString() const override
 		{
-			std::ostringstream oss;
-			oss << "[HoverLeaveEvent] The Widget with name " << Util::WideCharToMultiByte(m_HoverLeft->GetName()) << " lost hover focus";
+			std::wostringstream oss;
+			oss << L"[HoverLeaveEvent] The Widget with name " << m_HoverLeft->GetName() << " lost hover focus";
 			return oss.str();
 		}
 

@@ -5,6 +5,16 @@
 
 namespace At0::Reyal
 {
+	#ifdef WIN32
+		using WindowHandle = HWND;
+	#elif defined(RL_PLATFORM_LINUX)
+		using WindowHandle = TODO;
+	#elif defined(RL_PLATFORM_MAC)
+		using WindowHandle = TODO;
+	#else
+		#error "Unsuported Platform"
+	#endif
+
 	class RendererAPI
 	{
 	public:
@@ -28,7 +38,13 @@ namespace At0::Reyal
 		/// Initializes all components required for rendering
 		/// <param name="window">Is the platform specific window handle</param>
 		/// </summary>
-		virtual void Init(_In_ void* window) = 0;
+		virtual void Init(_In_ WindowHandle window) = 0;
+
+		/// <summary>
+		/// Checks if the renderer API was initialized
+		/// </summary>
+		/// <returns>True if initialized, false otherwise</returns>
+		virtual bool IsInitialized() const = 0;
 
 		/// <summary>
 		/// DEBUG: TODO: Renders test triangle onto the screen

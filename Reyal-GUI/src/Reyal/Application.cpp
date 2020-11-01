@@ -16,8 +16,8 @@ namespace At0::Reyal
 	Application::Application()
 		: m_MainWindow(L"MainWindow", nullptr, true), m_LayerStack{}, m_Running(true)
 	{
+		m_MainWindow.SetImmediateEventHandler([this](_In_ Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
 		ZL_LOG_DEBUG("[ThreadPool] Initialized {0} threads", m_ThreadPool.MaxThreads());
-		m_MainWindow.SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
 	}
 
 	void Application::Create(_In_ Application* app)
@@ -37,6 +37,7 @@ namespace At0::Reyal
 		/// </summary>
 		auto dispatchEvents = [this]()
 		{
+			//TODO: std::condition_variable?
 			auto& queue = m_MainWindow.GetEventQueue();
 			while (m_Running)
 			{
@@ -45,6 +46,7 @@ namespace At0::Reyal
 					EventMessage eMsg = queue.PopFront();
 					OnEventReceived(eMsg.receiver, std::move(eMsg.e));
 				}
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			}
 		};
 		m_ThreadPool.AddTask(dispatchEvents);

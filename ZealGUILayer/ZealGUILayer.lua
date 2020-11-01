@@ -29,8 +29,7 @@ project "ZealGUILayer"
     {
         "src",
         "../Reyal-GUI/src",
-        "../ZealLogger/src",
-        "../ZlUtilities/src"
+        "../ZealLogger/src"
     }
 
     libdirs

@@ -190,6 +190,16 @@ namespace At0::Reyal
 		template<typename F, typename = std::enable_if_t<std::is_convertible_v<F, std::function<bool(_In_ Widget*, Event&)>>>>
 		void SetImmediateEventHandler(F&& func) { m_ImmediateEvent = func; }
 
+		/// <summary>
+		/// Initializes the 2D Renderer, checks if it has already been initialized
+		/// </summary>
+		void InitRenderer2D();
+
+		/// <summary>
+		/// Initializes the 3D Renderer, checks if it has already been initialized
+		/// </summary>
+		void InitRenderer3D();
+
 	private:
 		/// <summary>
 		/// Loops over all children and figures out if we need to send a HoverEnter/HoverLeave Event
@@ -223,7 +233,8 @@ namespace At0::Reyal
 		/// </summary>
 		Size m_OldSize;
 
-		////QUESTION: Where to put the renderers? (Q In .txt File)
+		// TODO: Both renderers in here or only one renderer
+
 		///// <summary>
 		///// Specifies the 2D renderer
 		///// </summary>

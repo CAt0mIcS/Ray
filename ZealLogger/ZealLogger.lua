@@ -17,8 +17,7 @@ project "ZealLogger"
 
     includedirs
     {
-        "src",
-        "../ZlUtilities/src"
+        "src"
     }
 
     dependson

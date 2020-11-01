@@ -116,4 +116,10 @@ namespace At0::Reyal
 		os << "{x=" << vec.x << ", y=" << vec.y << "}";
 		return os;
 	}
+	
+	RL_API std::wostream& operator<<(std::wostream& os, const Vec2& vec)
+	{
+		os << L"{x=" << vec.x << L", y=" << vec.y << L"}";
+		return os;
+	}
 }

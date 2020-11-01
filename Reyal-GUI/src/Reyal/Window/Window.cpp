@@ -24,11 +24,6 @@ namespace At0::Reyal
 		RL_EXPECTS(!rnd.empty());
 		ZL_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
 		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW));
-
-		//if(!parent || !parent->GetRenderer2D())
-			//m_Renderer2D.Init(m_hWnd);
-
-		m_Renderer3D.Init(m_hWnd);
 	}
 
 	Window::~Window()
@@ -271,11 +266,23 @@ namespace At0::Reyal
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		//TODO: QUESTION: Change to something more appropriate (CPU Usage too high without it)
-		Sleep(1);
+		//TODO: Change to something more appropriate (CPU Usage too high without it)
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		return false;
 	}
 	
+	void Window::InitRenderer2D()
+	{
+		//if (!m_Renderer2D.IsInitialized())
+		//	m_Renderer2D.Init(m_hWnd);
+	}
+
+	void Window::InitRenderer3D()
+	{
+		if (!m_Renderer3D.IsInitialized())
+			m_Renderer3D.Init(m_hWnd);
+	}
+
 	void Window::SetHoveringWidget()
 	{
 		ZL_PROFILE_FUNCTION();

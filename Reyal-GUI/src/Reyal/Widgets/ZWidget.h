@@ -184,6 +184,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// The current transform of this widget
 		/// </summary>
+		// TODO: Take D3D11Matrix
 		D2D1::Matrix3x2F m_Matrix;
 	};
 

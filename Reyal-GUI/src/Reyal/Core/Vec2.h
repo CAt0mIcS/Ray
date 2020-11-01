@@ -93,6 +93,14 @@ namespace At0::Reyal
 		/// <param name="vec">Is the vector to output</param>
 		/// <returns>floathe modified output stream</returns>
 		RL_API friend std::ostream& operator<<(std::ostream& os, const Vec2& vec);
+
+		/// <summary>
+		/// Output stream operator for the vector
+		/// </summary>
+		/// <param name="os">Is the output stream</param>
+		/// <param name="vec">Is the vector to output</param>
+		/// <returns>floathe modified output stream</returns>
+		RL_API friend std::wostream& operator<<(std::wostream& os, const Vec2& vec);
 	};
 
 	using Point = Vec2;
