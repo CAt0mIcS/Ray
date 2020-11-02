@@ -101,16 +101,6 @@ namespace At0::Reyal
 		return sqrt(pow(x, 2) + pow(y, 2));
 	}
 
-	Vec2::operator D2D1_POINT_2F() const
-	{
-		return { x, y };
-	}
-
-	Vec2::operator D2D1_SIZE_F() const
-	{
-		return { x, y };
-	}
-
 	std::ostream& operator<<(std::ostream& os, const Vec2& vec)
 	{
 		os << "{x=" << vec.x << ", y=" << vec.y << "}";

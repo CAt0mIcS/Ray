@@ -1,4 +1,4 @@
-project "Reyal"
+project "RlRender"
     kind "SharedLib"
     language "C++"
     cppdialect "C++17"
@@ -6,37 +6,32 @@ project "Reyal"
     targetdir(targetOutDir)
     objdir("../bin-int/" .. outputDir .. "/%{prj.name}")
 
-    pchheader "rlpch.h"
-    pchsource "src/rlpch.cpp"
-
-    dependson
-    {
-        "RlLogger",
-        "RlDebug",
-        "RlRender"
-    }
+    pchheader "rlrpch.h"
+    pchsource "src/rlrpch.cpp"
 
     files
     {
         "src/**.h",
-        "src/**.cpp",
-        "Shaders/**.hlsl"
+        "src/**.cpp"
     }
 
     includedirs
     {
         "src",
-        "../RlLogger/src",
-        "../RlDebug/src",
-        "../RlUtilities/src",
-        "../RlRender/src"
+        "../RlDebug/src"
     }
 
     links
     {
         "RlDebug.lib",
-        "RlUtilities.lib",
-        "RlRender.lib"
+        "DXGI.lib",
+        "D3D11.lib",
+        "D3DCompiler.lib"
+    }
+
+    dependson
+    {
+        "RlDebug"
     }
 
     libdirs
@@ -46,7 +41,7 @@ project "Reyal"
 
     defines
     {
-        "RL_BUILD"
+        "RLR_BUILD"
     }
 
     filter "system:windows"

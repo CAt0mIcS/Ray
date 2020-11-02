@@ -1,12 +1,14 @@
 #pragma once
 
-#include "RlBase.h"
+#include "RlRBase.h"
 #include "RendererAPI.h"
+
+#pragma warning(disable : 4251)
 
 
 namespace At0::Reyal
 {
-	class RL_API Renderer3D
+	class RLR_API Renderer3D
 	{
 	public:
 		/// <summary>
@@ -40,7 +42,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Rendering calls will be dispatched to the platform's API
 		/// </summary>
-		Scope<RendererAPI> m_API;
+		std::unique_ptr<RendererAPI> m_API;
 	};
 
 }

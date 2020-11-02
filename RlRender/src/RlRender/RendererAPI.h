@@ -1,18 +1,32 @@
 #pragma once
 
-#include "RlBase.h"
+#include "RlRBase.h"
+
+#include <memory>
 
 
 namespace At0::Reyal
 {
 	#ifdef WIN32
 		using WindowHandle = HWND;
-	#elif defined(RL_PLATFORM_LINUX)
-		using WindowHandle = TODO;
-	#elif defined(RL_PLATFORM_MAC)
-		using WindowHandle = TODO;
+	#elif defined(__APPLE__)
+		#include <TargetConditionals.h>
+		
+		#if TARGET_IPHONE_SIMULATOR
+			
+		#elif TARGET_OS_IPHONE
+			
+		#elif TARGET_OS_MAC
+			
+		#endif
+	#elif defined(__linux__)
+		#error "Linux is currently not supported"
+	#elif defined(__unix__)
+		#error "Unix is currently not supported"
+	#elif defined(__POSIX__)
+		#error "POSIX is currently not supported"
 	#else
-		#error "Unsuported Platform"
+		#error "Unknown Platform"
 	#endif
 
 	class RendererAPI
@@ -21,7 +35,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Enum describing the current renderer API to use
 		/// </summary>
-		enum class RL_API API
+		enum class RLR_API API
 		{
 			None = 0, D3D11,
 
@@ -72,7 +86,7 @@ namespace At0::Reyal
 		/// Creates the API-Specific rendering API
 		/// </summary>
 		/// <returns></returns>
-		static Scope<RendererAPI> Create();
+		static std::unique_ptr<RendererAPI> Create();
 
 	private:
 		/// <summary>

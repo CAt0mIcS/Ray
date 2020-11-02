@@ -21,11 +21,6 @@
 
 #ifdef _WIN32
 	#include <Windows.h>
-	#include <d2d1.h>
-
-	#include <d3d11.h>
-	#include <d3dcompiler.h>
-	#include <DirectXMath.h>
 #else
 	#error "Only Windows is currently supported!"
 #endif

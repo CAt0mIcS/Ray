@@ -84,15 +84,6 @@
     <ClInclude Include="src\Reyal\Layers\LayerStack.h">
       <Filter>src\Reyal\Layers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Reyal\Platform\D3D11\D3D11RendererAPI.h">
-      <Filter>src\Reyal\Platform\D3D11</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Renderer\Renderer3D.h">
-      <Filter>src\Reyal\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Renderer\RendererAPI.h">
-      <Filter>src\Reyal\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\Reyal\Reyal.h">
       <Filter>src\Reyal</Filter>
     </ClInclude>
@@ -142,15 +133,6 @@
     </ClCompile>
     <ClCompile Include="src\Reyal\Layers\LayerStack.cpp">
       <Filter>src\Reyal\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Platform\D3D11\D3D11RendererAPI.cpp">
-      <Filter>src\Reyal\Platform\D3D11</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Renderer\Renderer3D.cpp">
-      <Filter>src\Reyal\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Renderer\RendererAPI.cpp">
-      <Filter>src\Reyal\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp">
       <Filter>src\Reyal\Widgets</Filter>

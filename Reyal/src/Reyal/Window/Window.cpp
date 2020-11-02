@@ -13,6 +13,8 @@
 #include <RlDebug/RlAssert.h>
 #include <RlDebug/Instrumentor.h>
 
+#include <RlRender/Renderer3D.h>
+
 
 namespace At0::Reyal
 {
@@ -99,8 +101,8 @@ namespace At0::Reyal
 		}
 		case WM_KEYDOWN:
 		{
-			m_Renderer3D.RenderTestTriangle();
-			m_Renderer3D.EndDraw();
+			m_Renderer3D->RenderTestTriangle();
+			m_Renderer3D->EndDraw();
 
 			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)wParam, (uint32_t)(lParam & 0xff));
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
@@ -280,14 +282,20 @@ namespace At0::Reyal
 	
 	void Window::InitRenderer2D()
 	{
-		//if (!m_Renderer2D.IsInitialized())
-		//	m_Renderer2D.Init(m_hWnd);
+		//if (!m_Renderer2D)
+		//{
+		//	m_Renderer2D = MakeRef<Renderer2D>();
+		//	m_Renderer2D->Init(m_hWnd);
+		//}
 	}
 
 	void Window::InitRenderer3D()
 	{
-		if (!m_Renderer3D.IsInitialized())
-			m_Renderer3D.Init(m_hWnd);
+		if (!m_Renderer3D)
+		{
+			m_Renderer3D = MakeRef<Renderer3D>();
+			m_Renderer3D->Init(m_hWnd);
+		}
 	}
 
 	void Window::SetHoveringWidget()

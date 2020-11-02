@@ -10,7 +10,6 @@ namespace std
 }
 
 
-
 namespace At0::Reyal
 {
 	struct RL_API Vec2
@@ -75,16 +74,6 @@ namespace At0::Reyal
 		/// </summary>
 		/// <returns>floathe lenght of this vector</returns>
 		float Absolute() const;
-
-		/// <summary>
-		/// Conversion operator to Direct2D Point
-		/// </summary>
-		operator D2D1_POINT_2F() const;
-
-		/// <summary>
-		/// Conversion operator to Direct2D Size
-		/// </summary>
-		operator D2D1_SIZE_F() const;
 
 		/// <summary>
 		/// Output stream operator for the vector

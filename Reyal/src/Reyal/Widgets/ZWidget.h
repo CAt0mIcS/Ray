@@ -61,7 +61,7 @@ namespace At0::Reyal
 		/// Gets the current Widget Matrix
 		/// </summary>
 		/// <returns>The transform matrix of this Widget</returns>
-		const D2D1::Matrix3x2F& GetMatrix() const { return m_Matrix; }
+		//const D2D1::Matrix3x2F& GetMatrix() const { return m_Matrix; }
 
 		/// <summary>
 		/// Getter for the Window Renderer
@@ -188,7 +188,7 @@ namespace At0::Reyal
 		/// The current transform of this widget
 		/// </summary>
 		// TODO: Take D3D11Matrix
-		D2D1::Matrix3x2F m_Matrix;
+		//D2D1::Matrix3x2F m_Matrix;
 	};
 
 
