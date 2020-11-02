@@ -1,4 +1,4 @@
-#include "rlpch.h"
+#include "rldpch.h"
 #include "Instrumentor.h"
 
 #if ZL_ENABLE_PROFILING
@@ -6,7 +6,7 @@
 #include "ReyalLogger.h"
 
 
-namespace At0::Reyal
+namespace At0::Reyal::Debug
 {
 	void Instrumentor::BeginSession(const std::string_view name, const std::string_view filepath)
 	{
@@ -15,8 +15,8 @@ namespace At0::Reyal
 		// Close session if one already exists
 		if (m_CurrentSession)
 		{
-			if (ZL_FL_LOGGER())
-				ZL_LOG_DEBUG("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name, m_CurrentSession->Name);
+			if (RL_FL_LOGGER_OPEN())
+				RL_LOG_DEBUG("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name, m_CurrentSession->Name);
 			InternalEndSession();
 		}
 
@@ -28,8 +28,8 @@ namespace At0::Reyal
 		}
 		else
 		{
-			if (ZL_FL_LOGGER())
-				ZL_LOG_DEBUG("Instrumentor could not open results file '{0}'.", filepath);
+			if (RL_FL_LOGGER_OPEN())
+				RL_LOG_DEBUG("Instrumentor could not open results file '{0}'.", filepath);
 		}
 	}
 
@@ -62,8 +62,8 @@ namespace At0::Reyal
 		}
 		else
 		{
-			if (ZL_FL_LOGGER())
-				ZL_LOG_DEBUG("[Instrumentor] Timer with function signature '{0}' took '{1}'us", result.Name, result.ElapsedTime.count());
+			if (RL_FL_LOGGER_OPEN())
+				RL_LOG_DEBUG("[Instrumentor] Timer with function signature '{0}' took '{1}'us", result.Name, result.ElapsedTime.count());
 		}
 	}
 

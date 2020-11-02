@@ -1,7 +1,7 @@
 #include "rlpch.h"
 #include "Renderer3D.h"
 
-#include "Reyal/Debug/RlAssert.h"
+#include <RlDebug/RlAssert.h>
 
 
 namespace At0::Reyal

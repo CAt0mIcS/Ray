@@ -13,9 +13,6 @@
     <Filter Include="src\Reyal\Core">
       <UniqueIdentifier>{B1798482-9D47-7888-86DB-E8AE724854ED}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Reyal\Debug">
-      <UniqueIdentifier>{EF0A20D3-5B96-8D97-64A7-108CD0B1E997}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Reyal\Events">
       <UniqueIdentifier>{7DBBAB3A-69B4-CA8C-92E6-AF117E3EAA98}</UniqueIdentifier>
     </Filter>
@@ -56,15 +53,6 @@
     </ClInclude>
     <ClInclude Include="src\Reyal\Core\ZRect.h">
       <Filter>src\Reyal\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Debug\Instrumentor.h">
-      <Filter>src\Reyal\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Debug\ReyalLogger.h">
-      <Filter>src\Reyal\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Reyal\Debug\RlAssert.h">
-      <Filter>src\Reyal\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\Reyal\EntryPoint.h">
       <Filter>src\Reyal</Filter>
@@ -139,15 +127,6 @@
     </ClCompile>
     <ClCompile Include="src\Reyal\Core\ZRect.cpp">
       <Filter>src\Reyal\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Debug\Instrumentor.cpp">
-      <Filter>src\Reyal\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Debug\ReyalLogger.cpp">
-      <Filter>src\Reyal\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Debug\RlAssert.cpp">
-      <Filter>src\Reyal\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Exception.cpp">
       <Filter>src\Reyal</Filter>

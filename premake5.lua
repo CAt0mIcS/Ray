@@ -43,6 +43,7 @@ group "ExtensionLayers"
     include "ZealGUILayer/ZealGUILayer.lua"
 group "" -- End of group "ExtensionLayers"
 
-
-include "RlUtilities/RlUtilities.lua"
-
+group "RlUtilities"
+    include "RlUtilities/RlUtilities.lua"
+    include "RlDebug/RlDebug.lua"
+group "" -- End of group RlUtilities

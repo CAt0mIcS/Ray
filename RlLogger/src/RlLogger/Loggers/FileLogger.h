@@ -4,8 +4,6 @@
 #include <fstream>
 #include "BaseLogger.h"
 
-#include <../../RlUtilities/src/RlUtil/TypeConvert.h>
-
 
 namespace At0::Log
 {
@@ -19,6 +17,18 @@ namespace At0::Log
 			: m_FilePath("")
 		{
 
+		}
+
+		/// <summary>
+		/// Operator =
+		/// </summary>
+		/// <param name="other">Is the other file logger</param>
+		/// <returns>The new file logger</returns>
+		FileLogger& operator=(const FileLogger& other)
+		{
+			this->m_FilePath = other.m_FilePath;
+			this->m_LogLevel = other.m_LogLevel;
+			return *this;
 		}
 
 		/// <summary>

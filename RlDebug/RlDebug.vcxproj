@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{624B040E-CE5F-2CBF-97E1-CF1E03B528F0}</ProjectGuid>
+    <ProjectGuid>{0ACCDBAC-76AB-5A48-7FC3-E51EEB21C1A9}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Reyal</RootNamespace>
+    <RootNamespace>RlDebug</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -69,38 +69,38 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin\Debug-windows-$(Platform)\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-$(Platform)\Reyal\x86\</IntDir>
-    <TargetName>Reyal</TargetName>
+    <IntDir>..\bin-int\Debug-windows-$(Platform)\RlDebug\x86\</IntDir>
+    <TargetName>RlDebug</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin\Debug-windows-$(Platform)\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-$(Platform)\Reyal\x86_64\</IntDir>
-    <TargetName>Reyal</TargetName>
+    <IntDir>..\bin-int\Debug-windows-$(Platform)\RlDebug\x86_64\</IntDir>
+    <TargetName>RlDebug</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin\Release-windows-$(Platform)\</OutDir>
-    <IntDir>..\bin-int\Release-windows-$(Platform)\Reyal\x86\</IntDir>
-    <TargetName>Reyal</TargetName>
+    <IntDir>..\bin-int\Release-windows-$(Platform)\RlDebug\x86\</IntDir>
+    <TargetName>RlDebug</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin\Release-windows-$(Platform)\</OutDir>
-    <IntDir>..\bin-int\Release-windows-$(Platform)\Reyal\x86_64\</IntDir>
-    <TargetName>Reyal</TargetName>
+    <IntDir>..\bin-int\Release-windows-$(Platform)\RlDebug\x86_64\</IntDir>
+    <TargetName>RlDebug</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>rlpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>rldpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>RL_BUILD;ZL_PLATFORM_WINDOWS;ZL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\RlLogger\src;..\RlDebug\src;..\RlUtilities\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RLD_BUILD;ZL_PLATFORM_WINDOWS;ZL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;..\RlUtilities\src;..\RlLogger\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -109,18 +109,19 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>RlDebug.lib;RlUtilities.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;DXGI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>RlLogger.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Debug-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\Debug-windows-$(Platform)\Reyal.lib</ImportLibrary>
+      <ImportLibrary>..\bin\Debug-windows-$(Platform)\RlDebug.lib</ImportLibrary>
+      <ModuleDefinitionFile>RlDebug.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>rlpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>rldpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>RL_BUILD;ZL_PLATFORM_WINDOWS;ZL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\RlLogger\src;..\RlDebug\src;..\RlUtilities\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RLD_BUILD;ZL_PLATFORM_WINDOWS;ZL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;..\RlUtilities\src;..\RlLogger\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -129,18 +130,19 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>RlDebug.lib;RlUtilities.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;DXGI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>RlLogger.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Debug-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\Debug-windows-$(Platform)\Reyal.lib</ImportLibrary>
+      <ImportLibrary>..\bin\Debug-windows-$(Platform)\RlDebug.lib</ImportLibrary>
+      <ModuleDefinitionFile>RlDebug.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>rlpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>rldpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>RL_BUILD;ZL_PLATFORM_WINDOWS;ZL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\RlLogger\src;..\RlDebug\src;..\RlUtilities\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RLD_BUILD;ZL_PLATFORM_WINDOWS;ZL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;..\RlUtilities\src;..\RlLogger\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -153,18 +155,19 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>RlDebug.lib;RlUtilities.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;DXGI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>RlLogger.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\Release-windows-$(Platform)\Reyal.lib</ImportLibrary>
+      <ImportLibrary>..\bin\Release-windows-$(Platform)\RlDebug.lib</ImportLibrary>
+      <ModuleDefinitionFile>RlDebug.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>rlpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>rldpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>RL_BUILD;ZL_PLATFORM_WINDOWS;ZL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\RlLogger\src;..\RlDebug\src;..\RlUtilities\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RLD_BUILD;ZL_PLATFORM_WINDOWS;ZL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;..\RlUtilities\src;..\RlLogger\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -177,66 +180,28 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>RlDebug.lib;RlUtilities.lib;D2D1.lib;D3D11.lib;D3DCompiler.lib;DXGI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>RlLogger.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\Release-windows-$(Platform)\Reyal.lib</ImportLibrary>
+      <ImportLibrary>..\bin\Release-windows-$(Platform)\RlDebug.lib</ImportLibrary>
+      <ModuleDefinitionFile>RlDebug.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Reyal\Application.h" />
-    <ClInclude Include="src\Reyal\Core\Queue.h" />
-    <ClInclude Include="src\Reyal\Core\ThreadPool.h" />
-    <ClInclude Include="src\Reyal\Core\Vec2.h" />
-    <ClInclude Include="src\Reyal\Core\ZRect.h" />
-    <ClInclude Include="src\Reyal\EntryPoint.h" />
-    <ClInclude Include="src\Reyal\Events\ApplicationEvent.h" />
-    <ClInclude Include="src\Reyal\Events\Event.h" />
-    <ClInclude Include="src\Reyal\Events\KeyboardEvent.h" />
-    <ClInclude Include="src\Reyal\Events\MouseEvent.h" />
-    <ClInclude Include="src\Reyal\Exception.h" />
-    <ClInclude Include="src\Reyal\Input\Keyboard.h" />
-    <ClInclude Include="src\Reyal\Input\Mouse.h" />
-    <ClInclude Include="src\Reyal\Layers\Layer.h" />
-    <ClInclude Include="src\Reyal\Layers\LayerStack.h" />
-    <ClInclude Include="src\Reyal\Platform\D3D11\D3D11RendererAPI.h" />
-    <ClInclude Include="src\Reyal\Renderer\Renderer3D.h" />
-    <ClInclude Include="src\Reyal\Renderer\RendererAPI.h" />
-    <ClInclude Include="src\Reyal\Reyal.h" />
-    <ClInclude Include="src\Reyal\Widgets\ZWidget.h" />
-    <ClInclude Include="src\Reyal\Window\BaseWindow.h" />
-    <ClInclude Include="src\Reyal\Window\Window.h" />
-    <ClInclude Include="src\RlBase.h" />
-    <ClInclude Include="src\RlWin.h" />
-    <ClInclude Include="src\rlpch.h" />
+    <ClInclude Include="src\RlDBase.h" />
+    <ClInclude Include="src\RlDebug\Instrumentor.h" />
+    <ClInclude Include="src\RlDebug\ReyalLogger.h" />
+    <ClInclude Include="src\RlDebug\RlAssert.h" />
+    <ClInclude Include="src\rldpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Reyal\Application.cpp" />
-    <ClCompile Include="src\Reyal\Core\ThreadPool.cpp" />
-    <ClCompile Include="src\Reyal\Core\Vec2.cpp" />
-    <ClCompile Include="src\Reyal\Core\ZRect.cpp" />
-    <ClCompile Include="src\Reyal\Exception.cpp" />
-    <ClCompile Include="src\Reyal\Input\Keyboard.cpp" />
-    <ClCompile Include="src\Reyal\Input\Mouse.cpp" />
-    <ClCompile Include="src\Reyal\Layers\Layer.cpp" />
-    <ClCompile Include="src\Reyal\Layers\LayerStack.cpp" />
-    <ClCompile Include="src\Reyal\Platform\D3D11\D3D11RendererAPI.cpp" />
-    <ClCompile Include="src\Reyal\Renderer\Renderer3D.cpp" />
-    <ClCompile Include="src\Reyal\Renderer\RendererAPI.cpp" />
-    <ClCompile Include="src\Reyal\Widgets\ZWidget.cpp" />
-    <ClCompile Include="src\Reyal\Window\Window.cpp" />
-    <ClCompile Include="src\rlpch.cpp">
+    <ClCompile Include="src\RlDebug\Instrumentor.cpp" />
+    <ClCompile Include="src\RlDebug\ReyalLogger.cpp" />
+    <ClCompile Include="src\rldpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\PixelShader-p.hlsl">
-      <ShaderType>Pixel</ShaderType>
-      <ObjectFileOutput>Shaders/PixelShader-p.cso</ObjectFileOutput>
-    </FxCompile>
-    <FxCompile Include="Shaders\VertexShader-v.hlsl">
-      <ShaderType>Vertex</ShaderType>
-      <ObjectFileOutput>Shaders/VertexShader-v.cso</ObjectFileOutput>
-    </FxCompile>
+    <None Include="RlDebug.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

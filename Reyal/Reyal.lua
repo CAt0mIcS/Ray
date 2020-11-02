@@ -11,7 +11,8 @@ project "Reyal"
 
     dependson
     {
-        "RlLogger"
+        "RlLogger",
+        "RlDebug"
     }
 
     files
@@ -25,12 +26,14 @@ project "Reyal"
     {
         "src",
         "../RlLogger/src",
+        "../RlDebug/src",
         "../RlUtilities/src"
     }
 
     links
     {
-        "RlLogger.lib",
+        "RlDebug.lib",
+        "RlUtilities.lib",
         "D2D1.lib",
         "D3D11.lib",
         "D3DCompiler.lib",
@@ -42,21 +45,25 @@ project "Reyal"
         targetOutDir
     }
 
+    defines
+    {
+        "RL_BUILD"
+    }
+
     filter "system:windows"
         systemversion "latest"
 
         defines
         {
-            "RL_PLATFORM_WINDOWS",
-            "RL_BUILD"
+            "ZL_PLATFORM_WINDOWS"
         }
 
     filter "configurations:Debug"
-        defines "RL_DEBUG"
+        defines "ZL_DEBUG"
         runtime "Debug"
         symbols "on"
 
     filter "configurations:Release"
-        defines "RL_RELEASE"
+        defines "ZL_RELEASE"
         runtime "Release"
         optimize "speed"

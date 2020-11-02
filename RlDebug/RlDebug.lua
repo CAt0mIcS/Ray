@@ -1,47 +1,46 @@
-project "Zeal"
-    kind "WindowedApp"
+project "RlDebug"
     language "C++"
     cppdialect "C++17"
+    kind "SharedLib"
 
     targetdir(targetOutDir)
     objdir("../bin-int/" .. outputDir .. "/%{prj.name}")
 
-    pchheader "pch.h"
-    pchsource "src/pch.cpp"
-
-    dependson
-    {
-        "Reyal",
-        "ZealGUILayer",
-        "RlDebug"
-    }
-
-    defines
-    {
-        "ZL_OUT_DIR=\"".. cwd.. "/".. "bin/%{cfg.buildcfg}-%{cfg.system}-$(Platform)" .. "\""
-    }
+    pchheader "rldpch.h"
+    pchsource "src/rldpch.cpp"
 
     files
     {
         "src/**.h",
-        "src/**.cpp"
+        "src/**.cpp",
+        "**.def"
     }
 
     includedirs
     {
-        "src",
-        "../Reyal/src"
+        "src/",
+        "../RlUtilities/src",
+        "../RlLogger/src"
     }
 
-    links
+    dependson
     {
-        "Reyal.lib",
-        "RlDebug.lib"
+        "RlLogger"
     }
 
     libdirs
     {
         targetOutDir
+    }
+
+    links
+    {
+        "RlLogger.lib"
+    }
+
+    defines
+    {
+        "RLD_BUILD"
     }
 
     filter "system:windows"

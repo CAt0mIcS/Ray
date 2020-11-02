@@ -5,8 +5,6 @@
 
 #include <Reyal/Reyal.h>
 
-// You need to include this to use the logger
-#include <Reyal/Debug/ReyalLogger.h>
 
 namespace At0::Layers
 {

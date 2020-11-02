@@ -5,7 +5,8 @@
 #include "rlpch.h"
 
 #include "Reyal/Application.h"
-#include "Reyal/Debug/ReyalLogger.h"
+#include "../../RlDebug/src/RlDebug/ReyalLogger.h"
+#include "../../RlDebug/src/RlDebug/Instrumentor.h"
 #include "Reyal/Exception.h"
 
 #include <signal.h>
@@ -17,14 +18,14 @@
 /// <param name="signum">Is the received signal</param>
 void SignalHandler(int signum)
 {
-	ZL_LOG_CRITICAL("Signal '{0}' received, terminating program", signum);
+	RL_LOG_CRITICAL("Signal '{0}' received, terminating program", signum);
 
 	// Note: We do not need to do this as the destructor does it automatically, 
 	// but it's good to have it here
-	ZL_LOG_END();
+	RL_LOG_END();
 
 	// We need to do this tough
-	ZL_PROFILE_END_SESSION();
+	RL_PROFILE_END_SESSION();
 
 	exit(signum);
 }
@@ -33,7 +34,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 {
 	using namespace At0;
 
-	ZL_LOG_BEGIN("Zeal.log", Log::LogLevel::Trace);
+	RL_LOG_BEGIN("Zeal.log", Log::LogLevel::Trace);
 
 	/// <summary>
 	/// QUESTION:
@@ -45,7 +46,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 	signal(SIGINT, SignalHandler);
 	signal(SIGSEGV, SignalHandler);
 	signal(SIGTERM, SignalHandler);
-	
+
 	//TODO: Awake function (maybe)?
 
 #ifdef _DEBUG
@@ -58,22 +59,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 
 	try
 	{
-		ZL_PROFILE_BEGIN_SESSION("Startup", "Profile-Startup.json");
+		RL_PROFILE_BEGIN_SESSION("Startup", "Profile-Startup.json");
 		Reyal::CreateApplication();
-		ZL_PROFILE_END_SESSION();
+		RL_PROFILE_END_SESSION();
 
-		ZL_PROFILE_BEGIN_SESSION("Runtime", "Profile-Runtime.json");
+		RL_PROFILE_BEGIN_SESSION("Runtime", "Profile-Runtime.json");
 		int exitCode = Reyal::Application::Get().Run();
-		ZL_PROFILE_END_SESSION();
+		RL_PROFILE_END_SESSION();
 
-		ZL_PROFILE_BEGIN_SESSION("Shutdown", "Profile-Shutdown.json");
+		RL_PROFILE_BEGIN_SESSION("Shutdown", "Profile-Shutdown.json");
 		Reyal::Application::Destroy();
-		ZL_PROFILE_END_SESSION();
+		RL_PROFILE_END_SESSION();
 
 #ifdef _DEBUG
 		FreeConsole();
 #endif
-		ZL_LOG_END();
+		RL_LOG_END();
 		return exitCode;
 	}
 	// TODO: Custom Window for errors

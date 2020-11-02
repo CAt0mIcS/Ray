@@ -1,7 +1,7 @@
-#ifndef RL_INSTRUMENTOR_H
-#define RL_INSTRUMENTOR_H
+#ifndef RLD_INSTRUMENTOR_H
+#define RLD_INSTRUMENTOR_H
 
-#include <RlUtil/CoreConfig.h>
+#include <../../RlUtilities/src/RlUtil/CoreConfig.h>
 
 // class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients
 #pragma warning(disable : 4564)
@@ -11,17 +11,14 @@
 
 #if ZL_ENABLE_PROFILING
 
-
-#include "RlBase.h"
-
-#include <ZealLogger/Log.h>
+#include "../RlDBase.h"
 
 #include <string>
 #include <mutex>
 #include <fstream>
 
 
-namespace At0::Reyal
+namespace At0::Reyal::Debug
 {
 	struct Session
 	{
@@ -37,7 +34,7 @@ namespace At0::Reyal
 		std::thread::id ThreadID;
 	};
 
-	class RL_API Instrumentor
+	class RLD_API Instrumentor
 	{
 	public:
 		/// <summary>
@@ -109,7 +106,7 @@ namespace At0::Reyal
 	};
 
 
-	class RL_API Timer
+	class RLD_API Timer
 	{
 	public:
 		/// <summary>
@@ -141,38 +138,38 @@ namespace At0::Reyal
 /// Define profiling macros here
 /// </summary>
 #if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
-#define ZL_FUNC_SIG __PRETTY_FUNCTION__
+#define RL_FUNC_SIG __PRETTY_FUNCTION__
 #elif defined(__DMC__) && (__DMC__ >= 0x810)
-#define ZL_FUNC_SIG __PRETTY_FUNCTION__
+#define RL_FUNC_SIG __PRETTY_FUNCTION__
 #elif (defined(__FUNCSIG__) || (_MSC_VER))
-#define ZL_FUNC_SIG __FUNCSIG__
+#define RL_FUNC_SIG __FUNCSIG__
 #elif (defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)) || (defined(__IBMCPP__) && (__IBMCPP__ >= 500))
-#define ZL_FUNC_SIG __FUNCTION__
+#define RL_FUNC_SIG __FUNCTION__
 #elif defined(__BORLANDC__) && (__BORLANDC__ >= 0x550)
-#define ZL_FUNC_SIG __FUNC__
+#define RL_FUNC_SIG __FUNC__
 #elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
-#define ZL_FUNC_SIG __func__
+#define RL_FUNC_SIG __func__
 #elif defined(__cplusplus) && (__cplusplus >= 201103)
-#define ZL_FUNC_SIG __func__
+#define RL_FUNC_SIG __func__
 #else
-#define ZL_FUNC_SIG "ZL_FUNC_SIG unknown!"
+#define RL_FUNC_SIG "ZL_FUNC_SIG unknown!"
 #endif
 
 
-#define ZL_PROFILE_BEGIN_SESSION(name, filepath)	::At0::Reyal::Instrumentor::Get().BeginSession(name, filepath)
-#define ZL_PROFILE_END_SESSION()					::At0::Reyal::Instrumentor::Get().EndSession()
-#define ZL_PROFILE_LINE_2(name, line)				::At0::Reyal::Timer timer__ZeaL_##line(name)
-#define ZL_PROFILE_LINE(name, line)					ZL_PROFILE_LINE_2(name, line)
-#define ZL_PROFILE_SCOPE(name)						ZL_PROFILE_LINE(name, __LINE__)
-#define ZL_PROFILE_FUNCTION()						ZL_PROFILE_SCOPE(ZL_FUNC_SIG)
+#define RL_PROFILE_BEGIN_SESSION(name, filepath)	::At0::Reyal::Debug::Instrumentor::Get().BeginSession(name, filepath)
+#define RL_PROFILE_END_SESSION()					::At0::Reyal::Debug::Instrumentor::Get().EndSession()
+#define RL_PROFILE_LINE_2(name, line)				::At0::Reyal::Debug::Timer timer__ZeaL_##line(name)
+#define RL_PROFILE_LINE(name, line)					RL_PROFILE_LINE_2(name, line)
+#define RL_PROFILE_SCOPE(name)						RL_PROFILE_LINE(name, __LINE__)
+#define RL_PROFILE_FUNCTION()						RL_PROFILE_SCOPE(RL_FUNC_SIG)
 
 #else
 
-#define ZL_PROFILE_BEGIN_SESSION(name, filepath)
-#define ZL_PROFILE_END_SESSION()
-#define ZL_PROFILE_SCOPE(name)
-#define ZL_PROFILE_FUNCTION()
+#define RL_PROFILE_BEGIN_SESSION(name, filepath)
+#define RL_PROFILE_END_SESSION()
+#define RL_PROFILE_SCOPE(name)
+#define RL_PROFILE_FUNCTION()
 
 #endif
 
-#endif /* RL_INSTRUMENTOR_H */
+#endif /* RLD_INSTRUMENTOR_H */

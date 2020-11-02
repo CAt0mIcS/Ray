@@ -2,8 +2,9 @@
 #include "ThreadPool.h"
 
 #include <mutex>
-#include "Reyal/Debug/ReyalLogger.h"
-#include "Reyal/Debug/Instrumentor.h"
+
+#include <RlDebug/ReyalLogger.h>
+#include <RlDebug/Instrumentor.h>
 
 
 namespace At0::Reyal
@@ -11,7 +12,7 @@ namespace At0::Reyal
 	ThreadPool::ThreadPool()
 		: m_Threads(MakeScope<std::thread[]>(m_MaxThreads)), m_Shutdown(false)
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 		for (uint16_t i = 0; i < m_MaxThreads; ++i)
 		{
@@ -21,46 +22,46 @@ namespace At0::Reyal
 	
 	void ThreadPool::Shutdown()
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
-		ZL_LOG_DEBUG("[ThreadPool] Shutting down");
+		RL_LOG_DEBUG("[ThreadPool] Shutting down");
 		{
 			std::unique_lock lock(m_PoolMutex);
 			m_Shutdown = true;
 		}
 		m_WaitCondition.notify_all();
 
-		ZL_LOG_DEBUG("[ThreadPool] Joining Threads");
+		RL_LOG_DEBUG("[ThreadPool] Joining Threads");
 		for (uint16_t i = 0; i < m_MaxThreads; ++i)
 		{
 			auto id = m_Threads[i].get_id();
-			ZL_LOG_DEBUG("[ThreadPool] Joining Thread {0}", id);
+			RL_LOG_DEBUG("[ThreadPool] Joining Thread {0}", id);
 			m_Threads[i].join();
-			ZL_LOG_DEBUG("[ThreadPool] Thread {0} joined", id);
+			RL_LOG_DEBUG("[ThreadPool] Thread {0} joined", id);
 		}
-		ZL_LOG_DEBUG("[ThreadPool] Finnished joining Threads");
+		RL_LOG_DEBUG("[ThreadPool] Finnished joining Threads");
 	}
 
 	ThreadPool::~ThreadPool()
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 		if (!m_Shutdown)
 		{
-			ZL_LOG_DEBUG("[ThreadPool] Calling ThreadPool::Shutdown from Deconstructor");
+			RL_LOG_DEBUG("[ThreadPool] Calling ThreadPool::Shutdown from Deconstructor");
 			Shutdown();
 		}
 	}
 
 	void ThreadPool::InfiniteWait()
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 		while (!m_Shutdown)
 		{
-			ZL_PROFILE_SCOPE("[ThreadPool] InfiniteWait while(!m_Shutdown) Scope");
+			RL_PROFILE_SCOPE("[ThreadPool] InfiniteWait while(!m_Shutdown) Scope");
 
-			ZL_LOG_DEBUG("[ThreadPool] Thread {0} entered ThreadPool::InfiniteWait", std::this_thread::get_id());
+			RL_LOG_DEBUG("[ThreadPool] Thread {0} entered ThreadPool::InfiniteWait", std::this_thread::get_id());
 			std::function<void()> task;
 			{
 				std::unique_lock lock(m_QueueMutex);
@@ -72,9 +73,9 @@ namespace At0::Reyal
 			}
 			if (task)
 			{
-				ZL_LOG_DEBUG("[ThreadPool] Thread {0} Task {1} Execution started", std::this_thread::get_id(), &task);
+				RL_LOG_DEBUG("[ThreadPool] Thread {0} Task {1} Execution started", std::this_thread::get_id(), &task);
 				task();
-				ZL_LOG_DEBUG("[ThreadPool] Thread {0} Task {1} Execution finnished", std::this_thread::get_id(), &task);
+				RL_LOG_DEBUG("[ThreadPool] Thread {0} Task {1} Execution finnished", std::this_thread::get_id(), &task);
 			}
 		}
 	}

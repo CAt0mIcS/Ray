@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <string>
 
-#include "Reyal/Debug/Instrumentor.h"
+#pragma warning(disable : 4251)
 
 
 namespace At0::Reyal
@@ -27,8 +27,6 @@ namespace At0::Reyal
 		/// </summary>
 		virtual ~BaseWindow()
 		{
-			ZL_PROFILE_FUNCTION();
-
 			//QUESTION: Global constant for this and the amount of characters generated? (Window.cpp)
 			//wchar_t className[5];
 			//GetClassName(m_hWnd, className, std::size(className));
@@ -69,8 +67,6 @@ namespace At0::Reyal
 			_In_opt_ _Maybenull_ HMENU hMenu = 0
 		)
 		{
-			ZL_PROFILE_FUNCTION();
-
 			m_ClassName = windowClassName;
 
 			WNDCLASS wc{};

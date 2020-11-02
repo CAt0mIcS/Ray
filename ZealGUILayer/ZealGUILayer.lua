@@ -29,7 +29,7 @@ project "ZealGUILayer"
     {
         "src",
         "../Reyal/src",
-        "../RlUtilities/src"
+        "../RlDebug/src",
     }
 
     libdirs
@@ -40,7 +40,7 @@ project "ZealGUILayer"
     links
     {
         "Reyal.lib",
-        "RlUtilities.lib"
+        "RlDebug.lib"
     }
 
     filter "system:windows"
@@ -48,15 +48,15 @@ project "ZealGUILayer"
 
         defines
         {
-            "ZGL_PLATFORM_WINDOWS"
+            "ZL_PLATFORM_WINDOWS"
         }
 
     filter "configurations:Debug"
-        symbols "on"
+        defines "ZL_DEBUG"
         runtime "Debug"
-        defines "ZGL_DEBUG"
+        symbols "on"
 
     filter "configurations:Release"
-        optimize "speed"
+        defines "ZL_RELEASE"
         runtime "Release"
-        defines "ZGL_RELEASE"
+        optimize "speed"

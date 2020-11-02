@@ -1,7 +1,7 @@
 #include "rlpch.h"
 #include "Layer.h"
 
-#include "Reyal/Debug/Instrumentor.h"
+#include <RlDebug/Instrumentor.h>
 
 
 namespace At0::Reyal
@@ -9,7 +9,7 @@ namespace At0::Reyal
     Layer::Layer(const std::wstring_view name)
         : m_Name(name)
     {
-        ZL_PROFILE_FUNCTION();
+        RL_PROFILE_FUNCTION();
 
     }
 }

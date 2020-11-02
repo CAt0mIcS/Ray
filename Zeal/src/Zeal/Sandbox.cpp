@@ -12,7 +12,7 @@ namespace At0
 {
 	Sandbox::Sandbox()
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 		m_MainWindow.InitRenderer3D();
 		m_MainWindow.SetTitle(L"Zeal");
@@ -50,12 +50,12 @@ namespace At0
 	
 	Sandbox::~Sandbox()
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 	}
 
 	void Sandbox::OnEvent(Reyal::Widget* receiver, Reyal::Event& e)
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 	}
 

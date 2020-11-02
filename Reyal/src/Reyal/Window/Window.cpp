@@ -2,7 +2,6 @@
 #include "Window.h"
 
 #include "Reyal/Exception.h"
-#include "Reyal/Debug/ReyalLogger.h"
 
 #include <RlUtil/Random.h>
 
@@ -10,7 +9,9 @@
 #include "Reyal/Events/MouseEvent.h"
 #include "Reyal/Events/ApplicationEvent.h"
 
-#include "Reyal/Debug/RlAssert.h"
+#include <RlDebug/ReyalLogger.h>
+#include <RlDebug/RlAssert.h>
+#include <RlDebug/Instrumentor.h>
 
 
 namespace At0::Reyal
@@ -18,17 +19,17 @@ namespace At0::Reyal
 	Window::Window(const std::wstring_view name, _In_opt_ Widget* parent, bool isMainWindow)
 		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_OldWindowPos{}, m_CurrentlyHovering(this)
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 		auto rnd = Util::GenerateRandomToken<std::wstring>(5);
 		RL_EXPECTS(!rnd.empty());
-		ZL_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
+		RL_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
 		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW));
 	}
 
 	Window::~Window()
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 		Close();
 	}
 
@@ -39,7 +40,7 @@ namespace At0::Reyal
 		case WM_DESTROY:
 		{
 			// TODO: Check if resources of the closed window are destroyed correctly
-			ZL_LOG_DEBUG("[MessageLoop] WM_DESTROY Message in HandleMessage received");
+			RL_LOG_DEBUG("[MessageLoop] WM_DESTROY Message in HandleMessage received");
 			if (this->IsMainWindow())
 			{
 				PostQuitMessage(0);
@@ -170,7 +171,7 @@ namespace At0::Reyal
 		}
 		case WM_CLOSE:
 		{
-			ZL_LOG_DEBUG("[MessageLoop] WM_CLOSE Message in HandleMessage received");
+			RL_LOG_DEBUG("[MessageLoop] WM_CLOSE Message in HandleMessage received");
 			if (m_ImmediateEvent)
 			{
 				if (!m_ImmediateEvent(this, WindowCloseEvent()))
@@ -182,7 +183,7 @@ namespace At0::Reyal
 		}
 		case WM_QUIT:
 		{
-			ZL_LOG_DEBUG("[MessageLoop] WM_QUIT Message in HandleMessage received");
+			RL_LOG_DEBUG("[MessageLoop] WM_QUIT Message in HandleMessage received");
 			break;
 		}
 		}
@@ -192,7 +193,7 @@ namespace At0::Reyal
 	
 	std::wstring Window::GetTitle() const
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 		std::wstring str;
 		int len = GetWindowTextLength(m_hWnd);
@@ -207,7 +208,7 @@ namespace At0::Reyal
 
 	Renderer2D* Window::GetRenderer2D()
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 		if (GetParent())
 		{
@@ -219,14 +220,14 @@ namespace At0::Reyal
 
 	void Window::SetTitle(const std::wstring_view title)
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 		SetWindowText(m_hWnd, title.data());
 	}
 
 	void Window::Show(ShowCommand cmdShow) const
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 		RL_EXPECTS(cmdShow <= ShowCommand::LAST && cmdShow >= ShowCommand::FIRST);
 		ShowWindow(m_hWnd, (int)cmdShow);
@@ -234,19 +235,19 @@ namespace At0::Reyal
 
 	void Window::Hide() const
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 		this->Show(ShowCommand::Hide);
 	}
 
 	void Window::Close() const
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 		SendMessage(m_hWnd, WM_CLOSE, 0, 0);
 	}
 
 	bool Window::IsOpen() const
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 		return IsWindowVisible(m_hWnd);
 	}
 
@@ -263,7 +264,7 @@ namespace At0::Reyal
 		{
 			if (msg.message == WM_QUIT)
 			{
-				ZL_LOG_DEBUG("[MessageLoop] WM_QUIT Message Received");
+				RL_LOG_DEBUG("[MessageLoop] WM_QUIT Message Received");
 				if (exitCode)
 					*exitCode = (int)msg.wParam;
 				return true;
@@ -291,7 +292,7 @@ namespace At0::Reyal
 
 	void Window::SetHoveringWidget()
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 		bool setNew = false;
 		static auto generateEvents = [this](Widget* child)

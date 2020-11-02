@@ -4,6 +4,8 @@
 #include "RlBase.h"
 #include <bitset>
 
+#pragma warning(disable : 4251)
+
 
 namespace At0::Reyal
 {

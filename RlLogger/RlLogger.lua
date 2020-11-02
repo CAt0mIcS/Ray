@@ -40,15 +40,15 @@ project "RlLogger"
 
         defines
         {
-            "RlL_PLATFORM_WINDOWS"
+            "ZL_PLATFORM_WINDOWS"
         }
 
     filter "configurations:Debug"
-        symbols "on"
+        defines "ZL_DEBUG"
         runtime "Debug"
-        defines "RLL_DEBUG"
+        symbols "on"
 
     filter "configurations:Release"
-        optimize "speed"
+        defines "ZL_RELEASE"
         runtime "Release"
-        defines "RLL_RELEASE"
+        optimize "speed"

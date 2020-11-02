@@ -25,15 +25,15 @@ project "RlUtilities"
 
         defines
         {
-            "RLU_PLATFORM_WINDOWS"
+            "ZL_PLATFORM_WINDOWS"
         }
 
     filter "configurations:Debug"
-        symbols "on"
+        defines "ZL_DEBUG"
         runtime "Debug"
-        defines "RLU_DEBUG"
+        symbols "on"
 
     filter "configurations:Release"
-        optimize "speed"
+        defines "ZL_RELEASE"
         runtime "Release"
-        defines "RLU_RELEASE"
+        optimize "speed"

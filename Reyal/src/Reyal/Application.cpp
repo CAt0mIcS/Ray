@@ -2,11 +2,12 @@
 #include "Application.h"
 
 #include "Reyal/Layers/Layer.h"
-#include "Reyal/Debug/ReyalLogger.h"
 
 #include "Reyal/Events/KeyboardEvent.h"
 
-#include "Reyal/Debug/RlAssert.h"
+#include <RlDebug/RlAssert.h>
+#include <RlDebug/Instrumentor.h>
+#include <RlDebug/ReyalLogger.h>
 
 
 namespace At0::Reyal
@@ -17,7 +18,7 @@ namespace At0::Reyal
 		: m_MainWindow(L"MainWindow", nullptr, true), m_LayerStack{}, m_Running(true)
 	{
 		m_MainWindow.SetImmediateEventHandler([this](_In_ Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
-		ZL_LOG_DEBUG("[ThreadPool] Initialized {0} threads", m_ThreadPool.MaxThreads());
+		RL_LOG_DEBUG("[ThreadPool] Initialized {0} threads", m_ThreadPool.MaxThreads());
 	}
 
 	void Application::Create(_In_ Application* app)
@@ -66,19 +67,19 @@ namespace At0::Reyal
 
 	void Application::PushLayer(_In_ Layer* layer)
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 		m_LayerStack.PushLayer(layer);
 	}
 
 	Application::~Application()
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 	}
 	
 	void Application::OnEventReceived(_In_ Widget* receiver, Scope<Event>&& e)
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 		// Dispatch event to every layer
 		for (auto* layer : m_LayerStack)
@@ -91,7 +92,7 @@ namespace At0::Reyal
 
 	bool Application::OnImmediateEvent(_In_ Widget* receiver, Event& e)
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 		RL_EXPECTS(e.GetType() <= EventType::LAST && e.GetType() >= EventType::FIRST);
 
 		// Wait for queue to be empty (TODO)
@@ -111,7 +112,7 @@ namespace At0::Reyal
 	
 	void Application::DispatchEvent(_In_ Layer* layer, _In_ Widget* receiver, Event& e)
 	{
-		ZL_PROFILE_FUNCTION();
+		RL_PROFILE_FUNCTION();
 
 		RL_EXPECTS(e.GetType() <= EventType::LAST && e.GetType() >= EventType::FIRST);
 
