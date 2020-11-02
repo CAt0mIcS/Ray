@@ -8,6 +8,11 @@
 
 namespace At0::Reyal
 {
+	/// <summary>
+	/// QUESTION:
+	///		I want to move Assertion to ZlUtil, but then I'd need the logger in ZlUtil  ---> Needs to link to ZealLogger in ZlUtil?
+	/// </summary>
+
 	class RlAssert
 	{
 	public:
