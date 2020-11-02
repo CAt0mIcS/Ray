@@ -22,15 +22,6 @@
     <Filter Include="src\Reyal\Layers">
       <UniqueIdentifier>{58A68E49-449F-AD9B-6DD1-922059298DA7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Reyal\Platform">
-      <UniqueIdentifier>{2D96A6B0-197A-6706-82DA-61596EDD5188}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Reyal\Platform\D3D11">
-      <UniqueIdentifier>{D9DA49AF-C5FF-982F-EE4A-7EBFDACE974D}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Reyal\Renderer">
-      <UniqueIdentifier>{7F9D838B-6B81-44E1-D4E1-3E34C0E42E63}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Reyal\Widgets">
       <UniqueIdentifier>{1F3252DB-8B48-5071-D4BF-DB92401521F9}</UniqueIdentifier>
     </Filter>

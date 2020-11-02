@@ -184,11 +184,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\RlRBase.h" />
+    <ClInclude Include="src\RlRWin.h" />
     <ClInclude Include="src\RlRender\Platform\D3D11\D3D11RendererAPI.h" />
     <ClInclude Include="src\RlRender\Renderer3D.h" />
     <ClInclude Include="src\RlRender\RendererAPI.h" />
     <ClInclude Include="src\rlrpch.h" />
-    <ClInclude Include="src\RlRWin.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RlRender\Platform\D3D11\D3D11RendererAPI.cpp" />
