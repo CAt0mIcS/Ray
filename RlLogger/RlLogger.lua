@@ -1,35 +1,28 @@
-project "ZealGUILayer"
-    kind "SharedLib"
+project "RlLogger"
+    kind "StaticLib"
     language "C++"
     cppdialect "C++17"
 
-    targetdir(targetOutDir .. "/Editors")
+    targetdir(targetOutDir)
     objdir("../bin-int/" .. outputDir .. "/%{prj.name}")
 
-    pchheader "glpch.h"
-    pchsource "src/glpch.cpp"
-
-    dependson
-    {
-        "Reyal"
-    }
-
-    defines
-    {
-        "ZEAL_GUI_LAYER_BUILD"
-    }
+    pchheader "zlpch.h"
+    pchsource "src/zlpch.cpp"
 
     files
     {
         "src/**.h",
         "src/**.cpp"
-	}
-	
+    }
+
     includedirs
     {
-        "src",
-        "../Reyal/src",
-        "../RlUtilities/src"
+        "src"
+    }
+
+    dependson
+    {
+        "RlUtilities"
     }
 
     libdirs
@@ -39,7 +32,6 @@ project "ZealGUILayer"
 
     links
     {
-        "Reyal.lib",
         "RlUtilities.lib"
     }
 
@@ -48,15 +40,15 @@ project "ZealGUILayer"
 
         defines
         {
-            "ZGL_PLATFORM_WINDOWS"
+            "RlL_PLATFORM_WINDOWS"
         }
 
     filter "configurations:Debug"
         symbols "on"
         runtime "Debug"
-        defines "ZGL_DEBUG"
+        defines "RLL_DEBUG"
 
     filter "configurations:Release"
         optimize "speed"
         runtime "Release"
-        defines "ZGL_RELEASE"
+        defines "RLL_RELEASE"

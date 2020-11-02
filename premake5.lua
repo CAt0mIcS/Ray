@@ -34,9 +34,9 @@ outputDir = "%{cfg.buildcfg}-%{cfg.system}-$(Platform)"
 targetOutDir = "../bin/%{cfg.buildcfg}-%{cfg.system}-$(Platform)"
 cwd = os.getcwd()
 
-include "Reyal-GUI/Reyal.lua"
+include "Reyal/Reyal.lua"
 include "Zeal/Zeal.lua"
-include "ZealLogger/ZealLogger.lua"
+include "RlLogger/RlLogger.lua"
 
 
 group "ExtensionLayers"
@@ -44,5 +44,5 @@ group "ExtensionLayers"
 group "" -- End of group "ExtensionLayers"
 
 
-include "ZlUtilities/ZlUtilities.lua"
+include "RlUtilities/RlUtilities.lua"
 

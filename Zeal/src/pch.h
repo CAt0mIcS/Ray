@@ -9,7 +9,4 @@
 #include <fstream>
 
 
-#include <ZealLogger/Log.h>
-#include <Reyal/Debug/Instrumentor.h>
-
 #endif /* ZL_PCH_H */

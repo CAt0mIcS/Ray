@@ -1,41 +1,40 @@
-project "Zeal"
-    kind "WindowedApp"
+project "Reyal"
+    kind "SharedLib"
     language "C++"
     cppdialect "C++17"
 
     targetdir(targetOutDir)
     objdir("../bin-int/" .. outputDir .. "/%{prj.name}")
 
-    pchheader "pch.h"
-    pchsource "src/pch.cpp"
+    pchheader "rlpch.h"
+    pchsource "src/rlpch.cpp"
 
     dependson
     {
-        "Reyal",
-        "ZealGUILayer"
-    }
-
-    defines
-    {
-        "ZL_OUT_DIR=\"".. cwd.. "/".. "bin/%{cfg.buildcfg}-%{cfg.system}-$(Platform)" .. "\""
+        "RlLogger"
     }
 
     files
     {
         "src/**.h",
-        "src/**.cpp"
+        "src/**.cpp",
+        "Shaders/**.hlsl"
     }
 
     includedirs
     {
         "src",
-        "../Reyal/src",
+        "../RlLogger/src",
         "../RlUtilities/src"
     }
 
     links
     {
-        "Reyal.lib"
+        "RlLogger.lib",
+        "D2D1.lib",
+        "D3D11.lib",
+        "D3DCompiler.lib",
+        "DXGI.lib"
     }
 
     libdirs
@@ -48,15 +47,16 @@ project "Zeal"
 
         defines
         {
-            "ZL_PLATFORM_WINDOWS"
+            "RL_PLATFORM_WINDOWS",
+            "RL_BUILD"
         }
 
     filter "configurations:Debug"
-        symbols "on"
+        defines "RL_DEBUG"
         runtime "Debug"
-        defines "ZL_DEBUG"
+        symbols "on"
 
     filter "configurations:Release"
-        optimize "speed"
+        defines "RL_RELEASE"
         runtime "Release"
-        defines "ZL_RELEASE"
+        optimize "speed"

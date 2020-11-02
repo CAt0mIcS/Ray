@@ -19,33 +19,33 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D3187D9D-BF7B-0C42-6801-45F85443D8C4}</ProjectGuid>
+    <ProjectGuid>{E309B65B-CFD6-1067-F8EF-FE0EE41B46F5}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ZealGUILayer</RootNamespace>
+    <RootNamespace>RlLogger</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
@@ -67,40 +67,36 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\Debug-windows-$(Platform)\Editors\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-$(Platform)\ZealGUILayer\x86\</IntDir>
-    <TargetName>ZealGUILayer</TargetName>
-    <TargetExt>.dll</TargetExt>
+    <OutDir>..\bin\Debug-windows-$(Platform)\</OutDir>
+    <IntDir>..\bin-int\Debug-windows-$(Platform)\RlLogger\x86\</IntDir>
+    <TargetName>RlLogger</TargetName>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\Debug-windows-$(Platform)\Editors\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-$(Platform)\ZealGUILayer\x86_64\</IntDir>
-    <TargetName>ZealGUILayer</TargetName>
-    <TargetExt>.dll</TargetExt>
+    <OutDir>..\bin\Debug-windows-$(Platform)\</OutDir>
+    <IntDir>..\bin-int\Debug-windows-$(Platform)\RlLogger\x86_64\</IntDir>
+    <TargetName>RlLogger</TargetName>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Release-windows-$(Platform)\Editors\</OutDir>
-    <IntDir>..\bin-int\Release-windows-$(Platform)\ZealGUILayer\x86\</IntDir>
-    <TargetName>ZealGUILayer</TargetName>
-    <TargetExt>.dll</TargetExt>
+    <OutDir>..\bin\Release-windows-$(Platform)\</OutDir>
+    <IntDir>..\bin-int\Release-windows-$(Platform)\RlLogger\x86\</IntDir>
+    <TargetName>RlLogger</TargetName>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Release-windows-$(Platform)\Editors\</OutDir>
-    <IntDir>..\bin-int\Release-windows-$(Platform)\ZealGUILayer\x86_64\</IntDir>
-    <TargetName>ZealGUILayer</TargetName>
-    <TargetExt>.dll</TargetExt>
+    <OutDir>..\bin\Release-windows-$(Platform)\</OutDir>
+    <IntDir>..\bin-int\Release-windows-$(Platform)\RlLogger\x86_64\</IntDir>
+    <TargetName>RlLogger</TargetName>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>glpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>zlpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>ZEAL_GUI_LAYER_BUILD;ZGL_PLATFORM_WINDOWS;ZGL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Reyal\src;..\RlUtilities\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RlL_PLATFORM_WINDOWS;RLL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -109,18 +105,19 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Reyal.lib;RlUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\bin\Debug-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\Debug-windows-$(Platform)\Editors\ZealGUILayer.lib</ImportLibrary>
     </Link>
+    <Lib>
+      <AdditionalDependencies>RlUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Debug-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>glpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>zlpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>ZEAL_GUI_LAYER_BUILD;ZGL_PLATFORM_WINDOWS;ZGL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Reyal\src;..\RlUtilities\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RlL_PLATFORM_WINDOWS;RLL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -129,18 +126,19 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Reyal.lib;RlUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\bin\Debug-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\Debug-windows-$(Platform)\Editors\ZealGUILayer.lib</ImportLibrary>
     </Link>
+    <Lib>
+      <AdditionalDependencies>RlUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Debug-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>glpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>zlpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>ZEAL_GUI_LAYER_BUILD;ZGL_PLATFORM_WINDOWS;ZGL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Reyal\src;..\RlUtilities\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RlL_PLATFORM_WINDOWS;RLL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -153,18 +151,19 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Reyal.lib;RlUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\Release-windows-$(Platform)\Editors\ZealGUILayer.lib</ImportLibrary>
     </Link>
+    <Lib>
+      <AdditionalDependencies>RlUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>glpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>zlpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>ZEAL_GUI_LAYER_BUILD;ZGL_PLATFORM_WINDOWS;ZGL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Reyal\src;..\RlUtilities\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RlL_PLATFORM_WINDOWS;RLL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -177,23 +176,31 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Reyal.lib;RlUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\Release-windows-$(Platform)\Editors\ZealGUILayer.lib</ImportLibrary>
     </Link>
+    <Lib>
+      <AdditionalDependencies>RlUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Release-windows-$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Layer\GUILayer.h" />
-    <ClInclude Include="src\glbase.h" />
-    <ClInclude Include="src\glpch.h" />
+    <ClInclude Include="src\RlLogger\Formatter\BracketFormatter.h" />
+    <ClInclude Include="src\RlLogger\Formatter\DateTimeFormatter.h" />
+    <ClInclude Include="src\RlLogger\Formatter\Formatter.h" />
+    <ClInclude Include="src\RlLogger\Formatter\LogLevelFormatter.h" />
+    <ClInclude Include="src\RlLogger\Formatter\NullTerminatorFormatter.h" />
+    <ClInclude Include="src\RlLogger\Log.h" />
+    <ClInclude Include="src\RlLogger\LogConfigure.h" />
+    <ClInclude Include="src\RlLogger\Loggers\BaseLogger.h" />
+    <ClInclude Include="src\RlLogger\Loggers\FileLogger.h" />
+    <ClInclude Include="src\RlLogger\Private\LogLevel.h" />
+    <ClInclude Include="src\zlpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Layer\GUILayer.cpp" />
-    <ClCompile Include="src\glpch.cpp">
+    <ClCompile Include="src\zlpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project>
+</Project> 
