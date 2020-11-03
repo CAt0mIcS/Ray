@@ -15,6 +15,7 @@
     <ClCompile Include="src\Zeal\Sandbox.cpp">
       <Filter>Zeal</Filter>
     </ClCompile>
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pch.cpp" />
   </ItemGroup>
 </Project>

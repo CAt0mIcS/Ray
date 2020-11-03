@@ -36,7 +36,6 @@ cwd = os.getcwd()
 
 include "Reyal/Reyal.lua"
 include "Zeal/Zeal.lua"
-include "RlLogger/RlLogger.lua"
 include "RlRender/RlRender.lua"
 
 
@@ -45,6 +44,7 @@ group "ExtensionLayers"
 group "" -- End of group "ExtensionLayers"
 
 group "RlUtilities"
+    include "RlLogger/RlLogger.lua"
     include "RlUtilities/RlUtilities.lua"
     include "RlDebug/RlDebug.lua"
 group "" -- End of group RlUtilities
