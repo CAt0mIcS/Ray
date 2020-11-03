@@ -189,7 +189,7 @@ namespace At0::Reyal
 		Queue<EventMessage, s_MaxMessagesInQueue>& GetEventQueue() { return m_EventQueue; }
 
 		/// <summary>
-		/// Setts the function which will be called when any event is received which needs to be handled immediately
+		/// Sets the function which will be called when any event is received which needs to be handled immediately
 		/// </summary>
 		/// <typeparam name="F">Is any callable, std::function castable type</typeparam>
 		/// <param name="func">Is the function to call</param>
@@ -232,7 +232,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Specifies the old position of this window
 		/// </summary>
-		Point m_OldWindowPos;
+		Point2 m_OldWindowPos;
 
 		/// <summary>
 		/// Specifies the old size of this window

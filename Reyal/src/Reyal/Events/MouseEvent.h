@@ -20,7 +20,7 @@ namespace At0::Reyal
 	class RL_API MouseMoveEvent : public Event
 	{
 	public:
-		MouseMoveEvent(const Point& oldPos, const Point& newPos)
+		MouseMoveEvent(const Point2& oldPos, const Point2& newPos)
 			: m_OldPos(oldPos), m_NewPos(newPos)
 		{
 		}
@@ -32,14 +32,14 @@ namespace At0::Reyal
 			return oss.str();
 		}
 
-		const Point& GetPos() const { return m_NewPos; }
-		const Point& GetOldPos() const { return m_OldPos; }
+		const Point2& GetPos() const { return m_NewPos; }
+		const Point2& GetOldPos() const { return m_OldPos; }
 
 		RL_DECLARE_TYPE_FN(MouseMoveEvent)
 
 	private:
-		Point m_OldPos;
-		Point m_NewPos;
+		Point2 m_OldPos;
+		Point2 m_NewPos;
 	};
 
 	class RL_API MouseButtonPressedEvent : public Event

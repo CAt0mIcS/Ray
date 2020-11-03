@@ -8,6 +8,8 @@
 
 #include "Reyal/Core/Vec2.h"
 
+#include <../../RlRender/src/RlRender/TypeDefines.h>
+
 // 4251 class 'std::wstring' needs to have dll-interface to be used by clients of class 'At0::Reyal::Widget'
 #pragma warning(disable : 4251)
 
@@ -38,13 +40,13 @@ namespace At0::Reyal
 		/// Moves the position of the Widget by the specified values
 		/// </summary>
 		/// <param name="pos">Is the position to add to it's current one</param>
-		void MoveBy(const Point& pos);
+		void MoveBy(const Point2& pos);
 
 		/// <summary>
 		/// Moves the position of the Widget to the specified value
 		/// </summary>
 		/// <param name="pos">Is the new position of this Widget</param>
-		void MoveTo(const Point& pos);
+		void MoveTo(const Point2& pos);
 
 		/// <summary>
 		/// Resizes the Widget by the specified value
@@ -59,10 +61,16 @@ namespace At0::Reyal
 		void ResizeTo(const Size& size);
 
 		/// <summary>
-		/// Gets the current Widget Matrix
+		/// Gets the current Widget Transformation Matrix
 		/// </summary>
-		/// <returns>The transform matrix of this Widget</returns>
-		//const D2D1::Matrix3x2F& GetMatrix() const { return m_Matrix; }
+		/// <returns>The Transformation Matrix of this Widget</returns>
+		const Matrix& GetTransform() const { return m_Matrix; }
+
+		/// <summary>
+		/// Setter for the current Widget Transformation Matrix
+		/// </summary>
+		/// <param name="matrix">Is the Transformation Matrix to multiply with the existing one</param>
+		void SetTransform(const Matrix& matrix) { m_Matrix = matrix; }
 
 		/// <summary>
 		/// Getter for the Window Renderer
@@ -103,7 +111,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Requests the specific Widget to be redrawn
 		/// </summary>
-		void PostRedraw() const;
+		void PostRedraw(bool eraseBkgnd = false) const;
 
 		/// <summary>
 		/// Region which defines commonly used operators
@@ -194,8 +202,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// The current transform of this widget
 		/// </summary>
-		// TODO: Take D3D11Matrix
-		//D2D1::Matrix3x2F m_Matrix;
+		Matrix m_Matrix;
 	};
 
 

@@ -4,17 +4,18 @@
 #include "Reyal/Input/Mouse.h"
 
 #include <RlDebug/Instrumentor.h>
+#include <RlUtil/Exception.h>
 
 
 namespace At0::Reyal
 {
-    void Widget::MoveBy(const Point& pos)
+    void Widget::MoveBy(const Point2& pos)
     {
         RL_PROFILE_FUNCTION();
 
     }
 
-    void Widget::MoveTo(const Point& pos)
+    void Widget::MoveTo(const Point2& pos)
     {
         RL_PROFILE_FUNCTION();
 
@@ -43,15 +44,21 @@ namespace At0::Reyal
         return nullptr;
     }
 
+    void Widget::PostRedraw(bool eraseBkgnd) const
+    {
+        HWND hWnd = GetNativeWindow();
+        
+        //TODO: Program should be able to continue if one call fails
+
+        //TODO: Invalidate only widget area
+        RL_THROW_LAST_WND_EXCEPT(InvalidateRect(hWnd, nullptr, (BOOL)eraseBkgnd));
+        RL_THROW_LAST_WND_EXCEPT(UpdateWindow(hWnd));
+    }
+
     /// <summary>
     /// Defines commonly used operators
     /// </summary>
     #pragma region Operators
-
-    void Widget::PostRedraw() const
-    {
-
-    }
 
     bool Widget::operator==(const Widget& other)
     {
@@ -97,7 +104,7 @@ namespace At0::Reyal
     }
 
     Widget::Widget(const std::wstring_view name, _In_opt_ Widget* parent)
-        : m_Name(name), m_Parent(parent), m_Children{}
+        : m_Name(name), m_Parent(parent), m_Children{}, m_Matrix{}
     {
         RL_PROFILE_FUNCTION();
     }

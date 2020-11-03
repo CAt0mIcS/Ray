@@ -27,7 +27,7 @@ namespace At0::Log
 	{
 	public:
 		/// <summary>
-		/// Setts the log severity level of this logger
+		/// Sets the log severity level of this logger
 		/// </summary>
 		/// <param name="level">Is the new log level</param>
 		void SetLogLevel(LogLevel level) { m_LogLevel = level; }

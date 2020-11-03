@@ -162,7 +162,7 @@ namespace At0::Reyal
 		}
 		case WM_MOVE:
 		{
-			Point newPos = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
+			Point2 newPos = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
 			MoveTo(newPos);
 
 			Scope<WindowMoveEvent> e = MakeScope<WindowMoveEvent>(m_OldWindowPos, newPos);

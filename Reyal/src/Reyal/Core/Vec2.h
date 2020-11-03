@@ -92,7 +92,7 @@ namespace At0::Reyal
 		RL_API friend std::wostream& operator<<(std::wostream& os, const Vec2& vec);
 	};
 
-	using Point = Vec2;
+	using Point2 = Vec2;
 	using Size = Vec2;
 }
 

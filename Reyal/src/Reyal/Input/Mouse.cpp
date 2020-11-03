@@ -36,17 +36,17 @@ namespace At0::Reyal
 		return IsOnWidget(widget.get());
 	}
 
-	const Point& Mouse::GetPos() const
+	const Point2& Mouse::GetPos() const
 	{
 		return m_MousePos;
 	}
 
-	const Point& Mouse::GetOldPos() const
+	const Point2& Mouse::GetOldPos() const
 	{
 		return m_OldMousePos;
 	}
 
-	void Mouse::SetPos(const Point& mousePos)
+	void Mouse::SetPos(const Point2& mousePos)
 	{
 		m_OldMousePos = m_MousePos;
 		m_MousePos = mousePos;

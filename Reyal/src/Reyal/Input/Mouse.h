@@ -54,19 +54,19 @@ namespace At0::Reyal
 		/// Getter for the current mouse position
 		/// </summary>
 		/// <returns>The current mouse position</returns>
-		const Point& GetPos() const;
+		const Point2& GetPos() const;
 
 		/// <summary>
 		/// Getter for the previous mouse position (last MouseMoveEvent)
 		/// </summary>
 		/// <returns>The old mouse position</returns>
-		const Point& GetOldPos() const;
+		const Point2& GetOldPos() const;
 
 		/// <summary>
 		/// Sets the position of the mouse, doesn't actually move the mouse
 		/// </summary>
 		/// <param name="mousePos">Is the new mouse position</param>
-		void SetPos(const Point& mousePos);
+		void SetPos(const Point2& mousePos);
 
 	private:
 		/// <summary>
@@ -87,12 +87,12 @@ namespace At0::Reyal
 		/// <summary>
 		/// Current mouse position, set in SetPos()
 		/// </summary>
-		Point m_MousePos;
+		Point2 m_MousePos;
 
 		/// <summary>
 		/// Old mouse position, set in SetPos()
 		/// </summary>
-		Point m_OldMousePos;
+		Point2 m_OldMousePos;
 	};
 }
 
