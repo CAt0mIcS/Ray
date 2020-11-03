@@ -9,7 +9,7 @@
 #pragma warning(disable : 4251)
 
 
-#if ZL_ENABLE_PROFILING
+#if RL_ENABLE_PROFILING
 
 #include "../RlDBase.h"
 

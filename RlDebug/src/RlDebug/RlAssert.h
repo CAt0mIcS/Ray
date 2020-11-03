@@ -1,5 +1,5 @@
-#ifndef RL_RLASSERT_H
-#define RL_RLASSERT_H
+#ifndef RLD_RLASSERT_H
+#define RLD_RLASSERT_H
 
 #ifdef ZL_DEBUG
 
@@ -11,11 +11,6 @@
 
 namespace At0::Reyal::Debug
 {
-	/// <summary>
-	/// QUESTION:
-	///		I want to move Assertion to ZlUtil, but then I'd need the logger in ZlUtil  ---> Needs to link to ZealLogger in ZlUtil?
-	/// </summary>
-
 	class RLD_API RlAssert
 	{
 	public:
@@ -39,4 +34,4 @@ namespace At0::Reyal::Debug
 #define RL_EXPECTS(expected)
 #endif
 
-#endif // RL_RLASSERT_H
+#endif // RLD_RLASSERT_H

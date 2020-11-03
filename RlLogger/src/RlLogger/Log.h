@@ -3,7 +3,7 @@
 
 #include "../../../RlUtilities/src/RlUtil/CoreConfig.h"
 
-#if ZL_ENABLE_LOGGING
+#if RL_ENABLE_LOGGING
 
 #include "LogConfigure.h"
 #include "Loggers/FileLogger.h"

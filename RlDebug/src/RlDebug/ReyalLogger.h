@@ -1,11 +1,11 @@
-#ifndef RL_REYALLOGGER_H
-#define RL_REYALLOGGER_H
+#ifndef RLD_REYALLOGGER_H
+#define RLD_REYALLOGGER_H
 
 
 #include <../../RlUtilities/src/RlUtil/CoreConfig.h>
 
 
-#if ZL_ENABLE_LOGGING
+#if RL_ENABLE_LOGGING
 
 #include "../../RlLogger/src/RlLogger/Log.h"
 #include <string>
@@ -48,7 +48,7 @@ namespace At0::Reyal::Debug
 /// <summary>
 /// Define logging macros here
 /// </summary>
-#if ZL_ENABLE_LOGGING
+#if RL_ENABLE_LOGGING
 
 	#define RL_LOG_BEGIN(path, loglvl)	::At0::Reyal::Debug::Logger::Init(path, loglvl)
 
@@ -77,4 +77,4 @@ namespace At0::Reyal::Debug
 	#define RL_LOG_END()
 #endif
 
-#endif // RL_REYALLOGGER_H
+#endif // RLD_REYALLOGGER_H

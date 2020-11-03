@@ -1,5 +1,5 @@
-#ifndef RL_TYPECONVERT_H
-#define RL_TYPECONVERT_H
+#ifndef RLU_TYPECONVERT_H
+#define RLU_TYPECONVERT_H
 
 #include <string>
 
@@ -21,4 +21,4 @@ namespace At0::Util
 	std::string WideCharToMultiByte(const std::wstring_view str);
 }
 
-#endif // RL_TYPECONVERT_H
+#endif // RLU_TYPECONVERT_H

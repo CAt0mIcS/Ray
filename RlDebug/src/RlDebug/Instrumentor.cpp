@@ -1,7 +1,7 @@
 #include "rldpch.h"
 #include "Instrumentor.h"
 
-#if ZL_ENABLE_PROFILING
+#if RL_ENABLE_PROFILING
 
 #include "ReyalLogger.h"
 

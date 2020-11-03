@@ -1,5 +1,5 @@
-#ifndef RL_RANDOM_H
-#define RL_RANDOM_H
+#ifndef RLU_RANDOM_H
+#define RLU_RANDOM_H
 
 #include <string>
 
@@ -40,4 +40,4 @@ namespace At0::Util
 }
 
 
-#endif // RL_RANDOM_H
+#endif // RLU_RANDOM_H

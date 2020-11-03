@@ -9,7 +9,7 @@
 namespace At0::Reyal::Debug
 {
 
-#if ZL_ENABLE_LOGGING
+#if RL_ENABLE_LOGGING
 
 	Log::FileLogger Logger::s_FileLogger;
 
