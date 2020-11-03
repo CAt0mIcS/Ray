@@ -51,12 +51,6 @@ namespace At0::Reyal
 		static Application& Get() { return *s_Instance; }
 
 		/// <summary>
-		/// Getter for this application, increments the std::shared_ptr reference count
-		/// </summary>
-		/// <returns>The current application</returns>
-		static Ref<Application> GetShared() { return s_Instance; }
-
-		/// <summary>
 		/// Getter for the main window
 		/// </summary>
 		/// <returns>The main window of this application</returns>
@@ -123,7 +117,6 @@ namespace At0::Reyal
 		/// <param name="e">Is the event to dispatch</param>
 		void DispatchEvent(_In_ Layer* layer, _In_ Widget* receiver, Event& e);
 
-
 	protected:
 		/// <summary>
 		/// The main window which will exit the application on close
@@ -131,9 +124,24 @@ namespace At0::Reyal
 		Window m_MainWindow;
 
 	private:
+		/// <summary>
+		/// Structure holding all Layers pushed into the application
+		/// </summary>
 		LayerStack m_LayerStack;
-		static Ref<Application> s_Instance;
+
+		/// <summary>
+		/// Singelton instance of Application
+		/// </summary>
+		static Application* s_Instance;
+
+		/// <summary>
+		/// Specifies whether the application is running or not
+		/// </summary>
 		bool m_Running;
+
+		/// <summary>
+		/// Manages threads. TODO: We need this in Window too
+		/// </summary>
 		ThreadPool m_ThreadPool;
 	};
 

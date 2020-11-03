@@ -6,6 +6,8 @@
 #include <deque>
 #include <mutex>
 
+//TODO
+#include <iostream>
 
 namespace At0::Reyal
 {
@@ -35,6 +37,7 @@ namespace At0::Reyal
 			std::scoped_lock lock(m_Mutex);
 			m_Queue.push_front(std::move(elem));
 			TrimBuffer();
+			m_Condition.notify_all();
 		}
 
 		/// <summary>
@@ -46,6 +49,7 @@ namespace At0::Reyal
 			std::scoped_lock lock(m_Mutex);
 			m_Queue.push_back(std::move(elem));
 			TrimBuffer();
+			m_Condition.notify_all();
 		}
 
 		/// <summary>
@@ -57,6 +61,7 @@ namespace At0::Reyal
 			std::scoped_lock lock(m_Mutex);
 			m_Queue.push_front(std::move(elem));
 			TrimBuffer();
+			m_Condition.notify_all();
 		}
 
 		/// <summary>
@@ -68,6 +73,7 @@ namespace At0::Reyal
 			std::scoped_lock lock(m_Mutex);
 			m_Queue.push_back(std::move(elem));
 			TrimBuffer();
+			m_Condition.notify_all();
 		}
 
 		/// <summary>
@@ -130,6 +136,27 @@ namespace At0::Reyal
 		size_t Size() const
 		{
 			return m_Queue.size();
+		}
+
+		/// <summary>
+		/// Function will wait until the predicate returns true
+		/// </summary>
+		/// <typeparam name="F">Is any callable object without paraeters returning bool</typeparam>
+		/// <param name="pred"></param>
+		template<typename F, typename = std::enable_if_t<std::is_convertible_v<F, std::function<bool()>>>>
+		void WaitFor(F&& pred)
+		{
+			std::unique_lock lock(m_Mutex);
+			m_Condition.wait(lock, pred);
+		}
+
+		/// <summary>
+		/// Gets the current condition variable used for waiting in WaitFor
+		/// </summary>
+		/// <returns>The condition variable</returns>
+		std::condition_variable& GetWaiter()
+		{
+			return m_Condition;
 		}
 
 		Iterator begin()
@@ -200,6 +227,11 @@ namespace At0::Reyal
 		/// Mutex for m_Queue
 		/// </summary>
 		std::mutex m_Mutex;
+
+		/// <summary>
+		/// Will wait for a predicate to return true
+		/// </summary>
+		std::condition_variable m_Condition;
 	};
 }
 
