@@ -193,7 +193,6 @@
     <ClInclude Include="src\Reyal\Events\Event.h" />
     <ClInclude Include="src\Reyal\Events\KeyboardEvent.h" />
     <ClInclude Include="src\Reyal\Events\MouseEvent.h" />
-    <ClInclude Include="src\Reyal\Exception.h" />
     <ClInclude Include="src\Reyal\Input\Keyboard.h" />
     <ClInclude Include="src\Reyal\Input\Mouse.h" />
     <ClInclude Include="src\Reyal\Layers\Layer.h" />
@@ -211,7 +210,6 @@
     <ClCompile Include="src\Reyal\Core\ThreadPool.cpp" />
     <ClCompile Include="src\Reyal\Core\Vec2.cpp" />
     <ClCompile Include="src\Reyal\Core\ZRect.cpp" />
-    <ClCompile Include="src\Reyal\Exception.cpp" />
     <ClCompile Include="src\Reyal\Input\Keyboard.cpp" />
     <ClCompile Include="src\Reyal\Input\Mouse.cpp" />
     <ClCompile Include="src\Reyal\Layers\Layer.cpp" />

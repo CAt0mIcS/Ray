@@ -60,9 +60,6 @@
     <ClInclude Include="src\Reyal\Events\MouseEvent.h">
       <Filter>src\Reyal\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Reyal\Exception.h">
-      <Filter>src\Reyal</Filter>
-    </ClInclude>
     <ClInclude Include="src\Reyal\Input\Keyboard.h">
       <Filter>src\Reyal\Input</Filter>
     </ClInclude>
@@ -109,9 +106,6 @@
     </ClCompile>
     <ClCompile Include="src\Reyal\Core\ZRect.cpp">
       <Filter>src\Reyal\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Reyal\Exception.cpp">
-      <Filter>src\Reyal</Filter>
     </ClCompile>
     <ClCompile Include="src\Reyal\Input\Keyboard.cpp">
       <Filter>src\Reyal\Input</Filter>

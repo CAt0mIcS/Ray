@@ -5,9 +5,9 @@
 #include "rlpch.h"
 
 #include "Reyal/Application.h"
-#include "../../RlDebug/src/RlDebug/ReyalLogger.h"
-#include "../../RlDebug/src/RlDebug/Instrumentor.h"
-#include "Reyal/Exception.h"
+#include <../../RlDebug/src/RlDebug/ReyalLogger.h>
+#include <../../RlDebug/src/RlDebug/Instrumentor.h>
+#include <../../RlUtilities/src/RlUtil/Exception.h>
 
 #include <signal.h>
 

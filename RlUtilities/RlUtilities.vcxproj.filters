@@ -19,6 +19,7 @@
       <Filter>RlUtil</Filter>
     </ClInclude>
     <ClInclude Include="src\utpch.h" />
+    <ClInclude Include="src\RlUtil\Exception.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RlUtil\Random.cpp">
@@ -28,5 +29,6 @@
       <Filter>RlUtil</Filter>
     </ClCompile>
     <ClCompile Include="src\utpch.cpp" />
+    <ClCompile Include="src\RlUtil\Exception.cpp" />
   </ItemGroup>
 </Project>

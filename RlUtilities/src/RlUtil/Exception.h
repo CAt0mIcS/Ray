@@ -1,12 +1,92 @@
-#ifndef RL_EXCEPTION_H
-#define RL_EXCEPTION_H
+#ifndef RLU_EXCEPTION_H
+#define RLU_EXCEPTION_H
 
 #include <exception>
-#include "RlBase.h"
+#include <stdint.h>
+#include <string>
 
-// non dll-interface class used as base for dll-interface class (std::exception, std::string)
-#pragma warning(disable : 4275)
-#pragma warning(disable : 4251)
+#include <sdkddkver.h>
+#define NOGDICAPMASKS
+#define NOVIRTUALKEYCODES
+#define NOWINMESSAGES
+#define NOWINSTYLES
+#define NOSYSMETRICS
+#define NOMENUS
+#define NOICONS
+#define NOKEYSTATES
+#define NOSYSCOMMANDS
+#define NORASTEROPS
+#define NOSHOWWINDOW
+#define OEMRESOURCE
+#define NOATOM
+#define NOCLIPBOARD
+#define NOCOLOR
+#define NOCTLMGR
+#define NODRAWTEXT
+#define NOGDI
+#define NOKERNEL
+#define NOUSER
+#define NONLS
+#define NOMB
+#define NOMEMMGR
+#define NOMETAFILE
+#define NOMINMAX
+#define NOMSG
+#define NOOPENFILE
+#define NOSCROLL
+#define NOSERVICE
+#define NOSOUND
+#define NOTEXTMETRIC
+#define NOWH
+#define NOWINOFFSETS
+#define NOCOMM
+#define NOKANJI
+#define NOHELP
+#define NOPROFILER
+#define NODEFERWINDOWPOS
+#define NOMCX
+
+#include <Windows.h>
+
+#undef NOGDICAPMASKS
+#undef NOVIRTUALKEYCODES
+#undef NOWINMESSAGES
+#undef NOWINSTYLES
+#undef NOSYSMETRICS
+#undef NOMENUS
+#undef NOICONS
+#undef NOKEYSTATES
+#undef NOSYSCOMMANDS
+#undef NORASTEROPS
+#undef NOSHOWWINDOW
+#undef OEMRESOURCE
+#undef NOATOM
+#undef NOCLIPBOARD
+#undef NOCOLOR
+#undef NOCTLMGR
+#undef NODRAWTEXT
+#undef NOGDI
+#undef NOKERNEL
+#undef NOUSER
+#undef NONLS
+#undef NOMB
+#undef NOMEMMGR
+#undef NOMETAFILE
+#undef NOMINMAX
+#undef NOMSG
+#undef NOOPENFILE
+#undef NOSCROLL
+#undef NOSERVICE
+#undef NOSOUND
+#undef NOTEXTMETRIC
+#undef NOWH
+#undef NOWINOFFSETS
+#undef NOCOMM
+#undef NOKANJI
+#undef NOHELP
+#undef NOPROFILER
+#undef NODEFERWINDOWPOS
+#undef NOMCX
 
 
 namespace At0::Reyal
@@ -14,7 +94,7 @@ namespace At0::Reyal
 	/// <summary>
 	/// Base Exception class
 	/// </summary>
-	class RL_API Exception : public std::exception
+	class Exception : public std::exception
 	{
 	public:
 		/// <summary>
@@ -65,7 +145,7 @@ namespace At0::Reyal
 	};
 
 
-	class RL_API WindowsException : public Exception
+	class WindowsException : public Exception
 	{
 	public:
 		/// <summary>
@@ -106,8 +186,10 @@ namespace At0::Reyal
 #define RL_THROW_WND_EXCEPT(hr) \
 if(FAILED(hr)) throw ::At0::Reyal::WindowsException(hr, (uint16_t)__LINE__, __FILE__)
 
+#define RL_THROW_LAST_WND_EXCEPT2() \
+throw ::At0::Reyal::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE__)
+
 #define RL_THROW_LAST_WND_EXCEPT(booleanResult) \
-if(!(booleanResult)) throw ::At0::Reyal::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE__)
+if(!(booleanResult)) RL_THROW_LAST_WND_EXCEPT2()
 
-
-#endif // RL_EXCEPTION_H
+#endif // RLU_EXCEPTION_H

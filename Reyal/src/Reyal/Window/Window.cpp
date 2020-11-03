@@ -1,7 +1,7 @@
 #include "rlpch.h"
 #include "Window.h"
 
-#include "Reyal/Exception.h"
+#include <RlUtil/Exception.h>
 
 #include <RlUtil/Random.h>
 

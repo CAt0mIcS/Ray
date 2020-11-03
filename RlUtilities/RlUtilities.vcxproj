@@ -168,12 +168,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\RlUtil\CoreConfig.h" />
+    <ClInclude Include="src\RlUtil\Exception.h" />
     <ClInclude Include="src\RlUtil\Random.h" />
     <ClInclude Include="src\RlUtil\Serialize.h" />
     <ClInclude Include="src\RlUtil\TypeConvert.h" />
     <ClInclude Include="src\utpch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\RlUtil\Exception.cpp" />
     <ClCompile Include="src\RlUtil\Random.cpp" />
     <ClCompile Include="src\RlUtil\TypeConvert.cpp" />
     <ClCompile Include="src\utpch.cpp">
