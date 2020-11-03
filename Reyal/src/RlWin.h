@@ -26,4 +26,4 @@
 #endif
 
 
-#endif /* RL_RLWIN_H */
+#endif // RL_RLWIN_H

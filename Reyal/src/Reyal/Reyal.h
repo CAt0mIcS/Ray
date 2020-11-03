@@ -11,4 +11,4 @@
 #include "Reyal/Events/KeyboardEvent.h"
 #include "Reyal/Events/MouseEvent.h"
 
-#endif /* RL_REYALINCLUDE_H */
+#endif // RL_REYALINCLUDE_H

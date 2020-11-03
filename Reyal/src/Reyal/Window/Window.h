@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_WINDOW_H
+#define RL_WINDOW_H
 
 #include "BaseWindow.h"
 
@@ -263,3 +264,5 @@ namespace At0::Reyal
 		std::function<bool(_In_ Widget* receiver, Event& e)> m_ImmediateEvent;
 	};
 }
+
+#endif // RL_WINDOW_H

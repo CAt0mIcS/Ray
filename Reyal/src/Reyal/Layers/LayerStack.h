@@ -54,4 +54,4 @@ namespace At0::Reyal
 }
 
 
-#endif /* RL_LAYERSTACK_H */
+#endif // RL_LAYERSTACK_H

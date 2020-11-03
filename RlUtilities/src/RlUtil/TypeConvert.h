@@ -21,4 +21,4 @@ namespace At0::Util
 	std::string WideCharToMultiByte(const std::wstring_view str);
 }
 
-#endif /* RL_TYPECONVERT_H */
+#endif // RL_TYPECONVERT_H

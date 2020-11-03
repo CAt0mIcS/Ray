@@ -5,6 +5,6 @@
 
 
 
-#endif /* ZGL_GLPCH_H */
+#endif // ZGL_GLPCH_H
 
 

@@ -34,4 +34,4 @@ namespace At0::Reyal
 }
 
 
-#endif /* RL_EVENT_H */
+#endif // RL_EVENT_H

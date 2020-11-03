@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RLD_SERIALIZE_H
+#define RLD_SERIALIZE_H
 
 #include <string>
 #include "TypeConvert.h"
@@ -145,3 +146,5 @@ namespace At0::Util
 		++argCount;
 	}
 }
+
+#endif // RLD_SERIALIZE_H

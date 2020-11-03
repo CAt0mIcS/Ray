@@ -184,6 +184,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\RlRBase.h" />
+    <ClInclude Include="src\RlRender\TypeDefines.h" />
     <ClInclude Include="src\RlRWin.h" />
     <ClInclude Include="src\RlRender\Platform\D3D11\D3D11RendererAPI.h" />
     <ClInclude Include="src\RlRender\Renderer3D.h" />

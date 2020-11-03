@@ -4,4 +4,4 @@
 
 
 
-#endif /* UT_UTPCH_H */
+#endif // UT_UTPCH_H

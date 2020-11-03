@@ -204,5 +204,5 @@ namespace At0::Reyal
 }
 
 
-#endif /* RL_QUEUE_H */
+#endif // RL_QUEUE_H
 

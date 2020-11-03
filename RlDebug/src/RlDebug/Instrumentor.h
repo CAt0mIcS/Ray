@@ -172,4 +172,4 @@ namespace At0::Reyal::Debug
 
 #endif
 
-#endif /* RLD_INSTRUMENTOR_H */
+#endif // RLD_INSTRUMENTOR_H

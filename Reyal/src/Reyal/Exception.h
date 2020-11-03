@@ -110,4 +110,4 @@ if(FAILED(hr)) throw ::At0::Reyal::WindowsException(hr, (uint16_t)__LINE__, __FI
 if(!(booleanResult)) throw ::At0::Reyal::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE__)
 
 
-#endif /* RL_EXCEPTION_H */
+#endif // RL_EXCEPTION_H

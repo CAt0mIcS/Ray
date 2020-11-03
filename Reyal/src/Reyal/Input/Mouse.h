@@ -98,4 +98,4 @@ namespace At0::Reyal
 
 
 
-#endif /* RL_MOUSE_H */
+#endif // RL_MOUSE_H

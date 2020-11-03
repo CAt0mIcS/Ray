@@ -110,9 +110,6 @@
     <ClCompile Include="src\Reyal\Core\ZRect.cpp">
       <Filter>src\Reyal\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Reyal\DllMain.cpp">
-      <Filter>src\Reyal</Filter>
-    </ClCompile>
     <ClCompile Include="src\Reyal\Exception.cpp">
       <Filter>src\Reyal</Filter>
     </ClCompile>

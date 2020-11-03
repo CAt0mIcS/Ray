@@ -40,4 +40,4 @@ namespace At0::Util
 }
 
 
-#endif /* RL_RANDOM_H */
+#endif // RL_RANDOM_H

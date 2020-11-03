@@ -139,6 +139,6 @@ namespace At0::Reyal
 
 }
 
-#endif /* RL_APPLICATION_H */
+#endif // RL_APPLICATION_H
 
 

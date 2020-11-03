@@ -33,4 +33,4 @@ namespace At0::Reyal
 	}
 }
 
-#endif /* RL_RLBASE_H */
+#endif // RL_RLBASE_H

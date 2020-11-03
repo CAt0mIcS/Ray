@@ -26,4 +26,4 @@ namespace At0::Log
 	};
 }
 
-#endif /* ZZL_FORMATTER_H */
+#endif // ZZL_FORMATTER_H

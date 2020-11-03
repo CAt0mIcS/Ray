@@ -178,4 +178,4 @@ namespace At0::Reyal
 	};
 }
 
-#endif /* RL_MOUSEEVENT_H */
+#endif // RL_MOUSEEVENT_H

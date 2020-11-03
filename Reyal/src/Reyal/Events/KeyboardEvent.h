@@ -84,4 +84,4 @@ namespace At0::Reyal
 }
 
 
-#endif /* RL_KBDEVENT_H */
+#endif // RL_KBDEVENT_H

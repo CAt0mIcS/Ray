@@ -9,4 +9,4 @@
 #include <fstream>
 
 
-#endif /* ZL_PCH_H */
+#endif // ZL_PCH_H

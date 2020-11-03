@@ -38,4 +38,4 @@ extern "C"
 	}
 }
 
-#endif /* ZGL_GUILAYER_H */
+#endif // ZGL_GUILAYER_H

@@ -7,4 +7,4 @@
 
 #include <Windows.h>
 
-#endif /* ZLL_ZLPCH_H */
+#endif // ZLL_ZLPCH_H

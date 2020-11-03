@@ -77,4 +77,4 @@ namespace At0::Reyal::Debug
 	#define RL_LOG_END()
 #endif
 
-#endif /* RL_REYALLOGGER_H */
+#endif // RL_REYALLOGGER_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_THREADPOOL_H
+#define RL_THREADPOOL_H
 
 #include "Queue.h"
 #include <mutex>
@@ -70,4 +71,4 @@ namespace At0::Reyal
 }
 
 
-
+#endif // RL_THREADPOOL_H

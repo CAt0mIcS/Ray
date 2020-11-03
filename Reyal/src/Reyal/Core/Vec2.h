@@ -96,4 +96,4 @@ namespace At0::Reyal
 	using Size = Vec2;
 }
 
-#endif /* RL_VEC2_H */
+#endif // RL_VEC2_H

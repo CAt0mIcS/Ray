@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RLR_RLRBASE_H
+#define RLR_RLRBASE_H
 
 #include <sal.h>
 
@@ -7,3 +8,5 @@
 #else
 	#define RLR_API __declspec(dllimport)
 #endif
+
+#endif // RLR_RLRBASE_H

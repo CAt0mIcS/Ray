@@ -76,4 +76,4 @@ namespace At0::Log
 
 }
 
-#endif /* ZZL_DATETIMEFORMATTER_H */
+#endif // ZZL_DATETIMEFORMATTER_H

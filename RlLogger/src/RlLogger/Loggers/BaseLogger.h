@@ -317,4 +317,4 @@ namespace At0::Log
 	};
 }
 
-#endif /* ZZL_BASELOGGER_H */
+#endif // ZZL_BASELOGGER_H

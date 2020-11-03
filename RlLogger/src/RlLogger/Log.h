@@ -10,4 +10,4 @@
 
 #endif
 
-#endif /* ZZL_LOGINCLUDE_H */
+#endif // ZZL_LOGINCLUDE_H

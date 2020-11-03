@@ -34,4 +34,4 @@ namespace At0::Log
 	};
 }
 
-#endif /* ZZL_NULLTERMINATORFORMATTER_H */
+#endif // ZZL_NULLTERMINATORFORMATTER_H

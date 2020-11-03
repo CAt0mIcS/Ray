@@ -1,34 +1,15 @@
-#pragma once
+#ifndef RLR_RENDERERAPI_H
+#define RLR_RENDERERAPI_H
 
 #include "RlRBase.h"
 
 #include <memory>
 
+#include "TypeDefines.h"
+
 
 namespace At0::Reyal
 {
-	#ifdef WIN32
-		using WindowHandle = HWND;
-	#elif defined(__APPLE__)
-		#include <TargetConditionals.h>
-		
-		#if TARGET_IPHONE_SIMULATOR
-			
-		#elif TARGET_OS_IPHONE
-			
-		#elif TARGET_OS_MAC
-			
-		#endif
-	#elif defined(__linux__)
-		#error "Linux is currently not supported"
-	#elif defined(__unix__)
-		#error "Unix is currently not supported"
-	#elif defined(__POSIX__)
-		#error "POSIX is currently not supported"
-	#else
-		#error "Unknown Platform"
-	#endif
-
 	class RendererAPI
 	{
 	public:
@@ -98,3 +79,4 @@ namespace At0::Reyal
 
 
 
+#endif // RLR_RENDERERAPI_H

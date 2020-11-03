@@ -137,5 +137,5 @@ namespace At0::Reyal
 }
 
 
-#endif /* RL_LAYER_H */
+#endif // RL_LAYER_H
 

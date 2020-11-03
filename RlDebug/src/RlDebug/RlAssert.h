@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RL_RLASSERT_H
+#define RL_RLASSERT_H
 
 #ifdef ZL_DEBUG
 
@@ -37,3 +38,5 @@ namespace At0::Reyal::Debug
 #define RL_MEXPECTS(expected, msg)
 #define RL_EXPECTS(expected)
 #endif
+
+#endif // RL_RLASSERT_H

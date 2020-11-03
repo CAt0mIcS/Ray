@@ -3,4 +3,4 @@
 
 #define ZGL_API __declspec(dllexport)
 
-#endif /* ZGL_GLBASE_H */
+#endif // ZGL_GLBASE_H

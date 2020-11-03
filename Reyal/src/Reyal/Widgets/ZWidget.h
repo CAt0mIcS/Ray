@@ -200,4 +200,4 @@ namespace At0::Reyal
 }
 
 
-#endif /* RL_ZWIDGET_H */
+#endif // RL_ZWIDGET_H

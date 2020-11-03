@@ -24,6 +24,7 @@
       <Filter>RlRender</Filter>
     </ClInclude>
     <ClInclude Include="src\rlrpch.h" />
+    <ClInclude Include="src\RlRender\TypeDefines.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RlRender\Platform\D3D11\D3D11RendererAPI.cpp">

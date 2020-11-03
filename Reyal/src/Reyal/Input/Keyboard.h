@@ -45,4 +45,4 @@ namespace At0::Reyal
 }
 
 
-#endif /* RL_KEYBOARD_H */
+#endif // RL_KEYBOARD_H

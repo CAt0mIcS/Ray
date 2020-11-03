@@ -134,4 +134,4 @@ namespace At0::Log
 	};
 }
 
-#endif /* ZZL_FILELOGGER_H */
+#endif // ZZL_FILELOGGER_H

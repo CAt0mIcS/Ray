@@ -61,4 +61,4 @@ namespace At0::Reyal
 	
 }
 
-#endif /* RL_ZRECT_H */
+#endif // RL_ZRECT_H

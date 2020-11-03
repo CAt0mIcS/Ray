@@ -94,4 +94,4 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 	return -1;
 }
 
-#endif /* RL_ENTRYPOINT_H */
+#endif // RL_ENTRYPOINT_H

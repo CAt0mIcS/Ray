@@ -53,4 +53,4 @@ namespace At0::Log
 	};
 }
 
-#endif /* ZZL_LOGLEVEL_H */
+#endif // ZZL_LOGLEVEL_H

@@ -149,4 +149,4 @@ namespace At0::Reyal
 }
 
 
-#endif /* RL_BASEWINDOW_H */
+#endif // RL_BASEWINDOW_H

@@ -116,4 +116,4 @@ namespace At0::Reyal
 	};
 }
 
-#endif /* RL_APPEVENT_H */
+#endif // RL_APPEVENT_H

@@ -25,4 +25,4 @@
 #include <assert.h>
 
 
-#endif /* RL_RLPCH_H */
+#endif // RL_RLPCH_H

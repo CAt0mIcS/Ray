@@ -30,4 +30,4 @@ namespace At0::Log
 	};
 }
 
-#endif /* ZZL_BRACKETFORMATTER_H */
+#endif // ZZL_BRACKETFORMATTER_H
