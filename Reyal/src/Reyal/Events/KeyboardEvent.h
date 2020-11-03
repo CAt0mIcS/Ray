@@ -75,7 +75,7 @@ namespace At0::Reyal
 		virtual std::wstring ToString() const override
 		{
 			std::wostringstream oss;
-			oss << L"[CharEvent] Character '" << GetKeyCode() << "' written";
+			oss << L"[CharEvent] Character '" << (char)GetKeyCode() << "' written";
 			return oss.str();
 		}
 
