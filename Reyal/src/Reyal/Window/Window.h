@@ -139,7 +139,13 @@ namespace At0::Reyal
 		/// Getter for the Renderer of this Window
 		/// </summary>
 		/// <returns>The Window Renderer</returns>
-		virtual Renderer2D* GetRenderer2D() override;
+		virtual Renderer3D* GetRenderer3D() const override;
+
+		/// <summary>
+		/// Getter for the native window
+		/// </summary>
+		/// <returns>The native window handle</returns>
+		virtual HWND GetNativeWindow() const override;
 
 		/// <summary>
 		/// Sets the Window title
@@ -238,12 +244,12 @@ namespace At0::Reyal
 		///// <summary>
 		///// Specifies the 2D renderer
 		///// </summary>
-		//Renderer2D m_Renderer2D;
+		//Scope<Renderer2D> m_Renderer2D;
 		
 		/// <summary>
 		/// Specifies the 3D renderer
 		/// </summary>
-		Ref<Renderer3D> m_Renderer3D;
+		Scope<Renderer3D> m_Renderer3D;
 
 		/// <summary>
 		/// Is the Queue of messages to process, they will be popped in Reyal::Application and dispatched to the layers

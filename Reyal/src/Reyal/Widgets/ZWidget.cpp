@@ -48,6 +48,11 @@ namespace At0::Reyal
     /// </summary>
     #pragma region Operators
 
+    void Widget::PostRedraw() const
+    {
+
+    }
+
     bool Widget::operator==(const Widget& other)
     {
         RL_PROFILE_FUNCTION();

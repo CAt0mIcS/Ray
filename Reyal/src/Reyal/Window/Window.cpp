@@ -208,16 +208,20 @@ namespace At0::Reyal
 		return str;
 	}
 
-	Renderer2D* Window::GetRenderer2D()
+	Renderer3D* Window::GetRenderer3D() const
 	{
 		RL_PROFILE_FUNCTION();
 
 		if (GetParent())
 		{
-			return GetParent()->GetRenderer2D();
+			return GetParent()->GetRenderer3D();
 		}
-		//return &m_Renderer2D;
-		return nullptr;
+		return m_Renderer3D.get();
+	}
+
+	HWND Window::GetNativeWindow() const
+	{
+		return m_hWnd;
 	}
 
 	void Window::SetTitle(const std::wstring_view title)
@@ -293,7 +297,7 @@ namespace At0::Reyal
 	{
 		if (!m_Renderer3D)
 		{
-			m_Renderer3D = MakeRef<Renderer3D>();
+			m_Renderer3D = MakeScope<Renderer3D>();
 			m_Renderer3D->Init(m_hWnd);
 		}
 	}

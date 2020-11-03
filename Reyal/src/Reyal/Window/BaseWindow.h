@@ -35,12 +35,6 @@ namespace At0::Reyal
 		}
 
 		/// <summary>
-		/// Getter for the current window handle
-		/// </summary>
-		/// <returns>The handle to the window</returns>
-		HWND GetWindowHandle() const { return m_hWnd; }
-
-		/// <summary>
 		/// Creates the native window
 		/// </summary>
 		/// <param name="windowName">Is the title of the window</param>

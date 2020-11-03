@@ -17,6 +17,7 @@ namespace At0::Reyal
 	class Event;
 	class Mouse;
 	class Renderer2D;
+	class Renderer3D;
 
 	class RL_API Widget
 	{
@@ -67,7 +68,13 @@ namespace At0::Reyal
 		/// Getter for the Window Renderer
 		/// </summary>
 		/// <returns>The Renderer for this window</returns>
-		virtual Renderer2D* GetRenderer2D() = 0;
+		virtual Renderer3D* GetRenderer3D() const = 0;
+
+		/// <summary>
+		/// Getter for the native window
+		/// </summary>
+		/// <returns>The native window handle</returns>
+		virtual HWND GetNativeWindow() const = 0;
 
 		/// <summary>
 		/// Getter for the parent of this Widget
@@ -96,7 +103,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Requests the specific Widget to be redrawn
 		/// </summary>
-		virtual void PostRedraw() const {  };
+		void PostRedraw() const;
 
 		/// <summary>
 		/// Region which defines commonly used operators
