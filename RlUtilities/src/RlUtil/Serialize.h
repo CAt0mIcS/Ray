@@ -4,6 +4,8 @@
 #include <string>
 #include "TypeConvert.h"
 
+#include "../RlUBase.h"
+
 
 namespace At0::Util
 {

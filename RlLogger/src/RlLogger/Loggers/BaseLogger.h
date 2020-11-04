@@ -16,6 +16,11 @@
 
 #include "../Private/LogLevel.h"
 
+#pragma warning(disable : 4251)
+
+/// <summary>
+/// WE DON'T NEED TO EXPORT THESE CLASSES BECAUSE THEY ARE ALREADY DEFINED IN THE HEADER FILE
+/// </summary>
 
 namespace At0::Log
 {
@@ -139,7 +144,7 @@ namespace At0::Log
 		{
 			if (!ShouldLog(LogMessageType::Critical))
 				return;
-
+			
 			Log(FormatMessage(str, LogMessageType::Critical, std::forward<Args>(args)...));
 		}
 

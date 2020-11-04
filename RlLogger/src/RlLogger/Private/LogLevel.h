@@ -2,6 +2,8 @@
 #define ZZL_LOGLEVEL_H
 
 
+
+
 namespace At0::Log
 {
 	/// <summary>

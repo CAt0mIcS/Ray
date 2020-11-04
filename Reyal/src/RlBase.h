@@ -6,9 +6,21 @@
 
 
 #ifdef RL_BUILD
-	#define RL_API __declspec(dllexport)
+	#if defined(_MSC_VER)
+		#define RL_API __declspec(dllexport)
+	#elif defined(__GNUC__) || defined(__clang__)
+		#define RL_API __attribute__((dllexport))
+	#else
+		#define RL_API
+	#endif
 #else
-	#define RL_API __declspec(dllimport)
+	#if defined(_MSC_VER)
+		#define RL_API __declspec(dllimport)
+	#elif defined(__GNUC__) || defined(__clang__)
+		#define RL_API __attribute__((dllimport))
+	#else
+		#define RL_API
+	#endif
 #endif
 
 

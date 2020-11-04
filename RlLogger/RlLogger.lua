@@ -1,5 +1,5 @@
 project "RlLogger"
-    kind "StaticLib"
+    kind "SharedLib"
     language "C++"
     cppdialect "C++17"
 
@@ -28,6 +28,11 @@ project "RlLogger"
     libdirs
     {
         targetOutDir
+    }
+
+    defines
+    {
+        "RLL_BUILD"
     }
 
     links

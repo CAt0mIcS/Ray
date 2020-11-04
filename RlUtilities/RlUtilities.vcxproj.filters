@@ -6,6 +6,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\RlUBase.h" />
     <ClInclude Include="src\RlUtil\CoreConfig.h">
       <Filter>RlUtil</Filter>
     </ClInclude>

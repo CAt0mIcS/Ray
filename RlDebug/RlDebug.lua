@@ -35,7 +35,8 @@ project "RlDebug"
 
     links
     {
-        "RlLogger.lib"
+        "RlLogger.lib",
+        "RlUtilities.lib"
     }
 
     defines

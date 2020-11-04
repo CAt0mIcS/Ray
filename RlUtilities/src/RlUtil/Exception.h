@@ -89,12 +89,18 @@
 #undef NOMCX
 
 
+#include "../RlUBase.h"
+
+#pragma warning(disable : 4275)
+#pragma warning(disable : 4251)
+
+
 namespace At0::Reyal
 {
 	/// <summary>
 	/// Base Exception class
 	/// </summary>
-	class Exception : public std::exception
+	class RLU_API Exception : public std::exception
 	{
 	public:
 		/// <summary>
@@ -145,7 +151,7 @@ namespace At0::Reyal
 	};
 
 
-	class WindowsException : public Exception
+	class RLU_API WindowsException : public Exception
 	{
 	public:
 		/// <summary>

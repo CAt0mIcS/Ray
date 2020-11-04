@@ -1,7 +1,7 @@
 project "RlUtilities"
     language "C++"
     cppdialect "C++17"
-    kind "StaticLib"
+    kind "SharedLib"
 
     targetdir(targetOutDir)
     objdir("../bin-int/" .. outputDir .. "/%{prj.name}")
@@ -18,6 +18,11 @@ project "RlUtilities"
     includedirs
     {
         "src"
+    }
+
+    defines
+    {
+        "RLU_BUILD"
     }
 
     filter "system:windows"

@@ -6,6 +6,7 @@
 #if RL_ENABLE_LOGGING
 
 #include "LogConfigure.h"
+#include "Loggers/BaseLogger.h"
 #include "Loggers/FileLogger.h"
 
 #endif

@@ -92,6 +92,8 @@ namespace DirectX
 	struct XMMATRIX;
 }
 
+#include "../RlUBase.h"
+
 
 namespace At0::Util
 {
@@ -100,16 +102,21 @@ namespace At0::Util
 	/// </summary>
 	/// <param name="str">Is the multi byte string</param>
 	/// <returns>The wide character string</returns>
-	std::wstring MultiByteToWideChar(const std::string_view str);
+	RLU_API std::wstring MultiByteToWideChar(const std::string_view str);
 
 	/// <summary>
 	/// Converts a wide character string (std::wstring) to multi byte string (std::string)
 	/// </summary>
 	/// <param name="str">Is the wide character string</param>
 	/// <returns>The multi byte string</returns>
-	std::string WideCharToMultiByte(const std::wstring_view str);
+	RLU_API std::string WideCharToMultiByte(const std::wstring_view str);
 
-	RECT TransformationToRect(const DirectX::XMMATRIX& matrix);
+	/// <summary>
+	/// Converts a transformation matrix to a windows rect structure
+	/// </summary>
+	/// <param name="matrix">Is the matrix to convert</param>
+	/// <returns>The actual screen position of the transformed object</returns>
+	RLU_API RECT TransformationToRect(const DirectX::XMMATRIX& matrix);
 }
 
 #endif // RLU_TYPECONVERT_H
