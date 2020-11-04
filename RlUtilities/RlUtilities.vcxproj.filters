@@ -9,6 +9,9 @@
     <ClInclude Include="src\RlUtil\CoreConfig.h">
       <Filter>RlUtil</Filter>
     </ClInclude>
+    <ClInclude Include="src\RlUtil\Exception.h">
+      <Filter>RlUtil</Filter>
+    </ClInclude>
     <ClInclude Include="src\RlUtil\Random.h">
       <Filter>RlUtil</Filter>
     </ClInclude>
@@ -19,9 +22,11 @@
       <Filter>RlUtil</Filter>
     </ClInclude>
     <ClInclude Include="src\utpch.h" />
-    <ClInclude Include="src\RlUtil\Exception.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\RlUtil\Exception.cpp">
+      <Filter>RlUtil</Filter>
+    </ClCompile>
     <ClCompile Include="src\RlUtil\Random.cpp">
       <Filter>RlUtil</Filter>
     </ClCompile>
@@ -29,6 +34,5 @@
       <Filter>RlUtil</Filter>
     </ClCompile>
     <ClCompile Include="src\utpch.cpp" />
-    <ClCompile Include="src\RlUtil\Exception.cpp" />
   </ItemGroup>
 </Project>

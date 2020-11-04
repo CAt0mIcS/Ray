@@ -7,7 +7,6 @@
 
 #include "RlWin.h"
 
-
 #include <deque>
 #include <queue>
 #include <exception>

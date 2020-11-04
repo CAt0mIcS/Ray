@@ -1,8 +1,6 @@
 #include "utpch.h"
 #include "TypeConvert.h"
 
-#include <Windows.h>
-
 
 namespace At0::Util
 {
@@ -26,6 +24,11 @@ namespace At0::Util
 		::WideCharToMultiByte(CP_UTF8, WC_COMPOSITECHECK, str.data(), -1, buff.data(), size, NULL, NULL);
 
 		return buff;
+	}
+	
+	RECT TransformationToRect(const DirectX::XMMATRIX& matrix)
+	{
+		return {};
 	}
 }
 

@@ -24,6 +24,7 @@ project "RlRender"
     links
     {
         "RlDebug.lib",
+        "RlUtilities.lib",
         "DXGI.lib",
         "D3D11.lib",
         "D3DCompiler.lib"

@@ -5,6 +5,7 @@
 
 #include <RlDebug/Instrumentor.h>
 #include <RlUtil/Exception.h>
+#include <RlUtil/TypeConvert.h>
 
 
 namespace At0::Reyal
@@ -51,7 +52,7 @@ namespace At0::Reyal
         //TODO: Program should be able to continue if one call fails
 
         //TODO: Invalidate only widget area
-        RL_THROW_LAST_WND_EXCEPT(InvalidateRect(hWnd, nullptr, (BOOL)eraseBkgnd));
+        RL_THROW_LAST_WND_EXCEPT(InvalidateRect(hWnd, &Util::TransformationToRect(m_Matrix), (BOOL)eraseBkgnd));
         RL_THROW_LAST_WND_EXCEPT(UpdateWindow(hWnd));
     }
 
