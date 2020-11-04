@@ -1,13 +1,7 @@
 project "RlLogger"
-    kind "SharedLib"
+    kind "None"
     language "C++"
     cppdialect "C++17"
-
-    targetdir(targetOutDir)
-    objdir("../bin-int/" .. outputDir .. "/%{prj.name}")
-
-    pchheader "zlpch.h"
-    pchsource "src/zlpch.cpp"
 
     files
     {

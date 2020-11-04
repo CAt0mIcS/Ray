@@ -1,53 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="RlLogger">
-      <UniqueIdentifier>{E309B65B-CFD6-1067-F8EF-FE0EE41B46F5}</UniqueIdentifier>
+    <Filter Include="Formatter">
+      <UniqueIdentifier>{B9F87C89-2563-3100-6EA1-E2A5DA4A0F55}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RlLogger\Formatter">
-      <UniqueIdentifier>{C6141BD0-B2F8-DB25-1B59-D678075CC6A7}</UniqueIdentifier>
+    <Filter Include="Loggers">
+      <UniqueIdentifier>{385878E8-A437-F783-AD4F-825A19AE5DE5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RlLogger\Loggers">
-      <UniqueIdentifier>{050DD6A0-F105-F5F2-1A38-DA770690D4FE}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RlLogger\Private">
-      <UniqueIdentifier>{CDD3EADB-B9CC-092E-E2FE-EEB2CE56E939}</UniqueIdentifier>
+    <Filter Include="Private">
+      <UniqueIdentifier>{001F8D23-6CFE-0BBF-7516-9795E1747220}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\RlLogger\Formatter\BracketFormatter.h">
-      <Filter>RlLogger\Formatter</Filter>
+      <Filter>Formatter</Filter>
     </ClInclude>
     <ClInclude Include="src\RlLogger\Formatter\DateTimeFormatter.h">
-      <Filter>RlLogger\Formatter</Filter>
+      <Filter>Formatter</Filter>
     </ClInclude>
     <ClInclude Include="src\RlLogger\Formatter\Formatter.h">
-      <Filter>RlLogger\Formatter</Filter>
+      <Filter>Formatter</Filter>
     </ClInclude>
     <ClInclude Include="src\RlLogger\Formatter\LogLevelFormatter.h">
-      <Filter>RlLogger\Formatter</Filter>
+      <Filter>Formatter</Filter>
     </ClInclude>
     <ClInclude Include="src\RlLogger\Formatter\NullTerminatorFormatter.h">
-      <Filter>RlLogger\Formatter</Filter>
+      <Filter>Formatter</Filter>
     </ClInclude>
-    <ClInclude Include="src\RlLogger\Log.h">
-      <Filter>RlLogger</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RlLogger\LogConfigure.h">
-      <Filter>RlLogger</Filter>
-    </ClInclude>
+    <ClInclude Include="src\RlLogger\Log.h" />
+    <ClInclude Include="src\RlLogger\LogConfigure.h" />
     <ClInclude Include="src\RlLogger\Loggers\BaseLogger.h">
-      <Filter>RlLogger\Loggers</Filter>
+      <Filter>Loggers</Filter>
     </ClInclude>
     <ClInclude Include="src\RlLogger\Loggers\FileLogger.h">
-      <Filter>RlLogger\Loggers</Filter>
+      <Filter>Loggers</Filter>
     </ClInclude>
     <ClInclude Include="src\RlLogger\Private\LogLevel.h">
-      <Filter>RlLogger\Private</Filter>
+      <Filter>Private</Filter>
     </ClInclude>
-    <ClInclude Include="src\zlpch.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\zlpch.cpp" />
   </ItemGroup>
 </Project>

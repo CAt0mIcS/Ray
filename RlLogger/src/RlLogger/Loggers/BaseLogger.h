@@ -9,6 +9,7 @@
 #include <../../RlUtilities/src/RlUtil/Serialize.h>
 #include <../../RlUtilities/src/RlUtil/TypeConvert.h>
 
+
 #include "../Formatter/BracketFormatter.h"
 #include "../Formatter/LogLevelFormatter.h"
 #include "../Formatter/DateTimeFormatter.h"
@@ -19,7 +20,7 @@
 #pragma warning(disable : 4251)
 
 /// <summary>
-/// WE DON'T NEED TO EXPORT THESE CLASSES BECAUSE THEY ARE ALREADY DEFINED IN THE HEADER FILE
+/// IGNORE THE ERRORS IN THIS PROJECT! IT'S HEADER ONLY AND WILL BE INCLUDED CORRECTLY!
 /// </summary>
 
 namespace At0::Log
