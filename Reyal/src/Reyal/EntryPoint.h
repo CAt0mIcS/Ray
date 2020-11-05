@@ -59,15 +59,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 
 	try
 	{
-		RL_PROFILE_BEGIN_SESSION("Startup", "Profile-Startup.json");
+		RL_PROFILE_BEGIN_SESSION("Startup", "Profiling/Profile-Startup.json");
 		Reyal::CreateApplication();
 		RL_PROFILE_END_SESSION();
 
-		RL_PROFILE_BEGIN_SESSION("Runtime", "Profile-Runtime.json");
+		RL_PROFILE_BEGIN_SESSION("Runtime", "Profiling/Profile-Runtime.json");
 		int exitCode = Reyal::Application::Get().Run();
 		RL_PROFILE_END_SESSION();
 
-		RL_PROFILE_BEGIN_SESSION("Shutdown", "Profile-Shutdown.json");
+		RL_PROFILE_BEGIN_SESSION("Shutdown", "Profiling/Profile-Shutdown.json");
 		Reyal::Application::Destroy();
 		RL_PROFILE_END_SESSION();
 
