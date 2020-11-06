@@ -10,7 +10,7 @@ This repository is where I develop the Zeal application. The source code as well
 ## The Product
 The idea is that you create a Node, give it a Title and Description and connect a Line to another Node. Repeat this process to form a tree of tasks to complete.
 
-You can:
+## Features
 * Create new Nodes
 * Edit Title and Detail Text
 * Connect the Nodes together with Lines
@@ -18,7 +18,7 @@ You can:
 * Save the Project
 
 
-Planned features:
+## Planned Features
 * Create projects like in Visual Studio with multiple files
 * Add Alt-Text to Lines (named connections)
 * Link external files to Nodes
