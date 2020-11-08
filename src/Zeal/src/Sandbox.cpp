@@ -21,7 +21,7 @@ namespace At0
 		using LayerCreateFunc = Reyal::Layer* (*)();
 		const std::wstring ending = L".dll";
 		
-		#if defined(_DEBUG) || defined(DEBUG)
+		#ifdef RL_PLATFORM_WINDOWS
 			std::string outStr = "../../bin/Debug-Windows";
 		#else
 			std::string outStr = "../../bin/Release-Windows";

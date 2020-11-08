@@ -23,7 +23,7 @@
 #elif defined(__linux__)
 	#define RL_PLATFORM_LINUX
 #else
-	#error "Unknown platform!"
+	#error "Platform Detection was unable to detect your current Operating System!"
 #endif
 
 
