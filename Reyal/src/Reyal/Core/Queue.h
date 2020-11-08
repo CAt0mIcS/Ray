@@ -5,6 +5,7 @@
 
 #include <deque>
 #include <mutex>
+#include <functional>
 
 //TODO
 #include <iostream>
