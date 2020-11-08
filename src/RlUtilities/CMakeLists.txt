@@ -5,6 +5,7 @@ set(SRC
     "include/RlUtil/utpch.cpp"
     "include/RlUtil/utpch.h"
     "include/RlUtil/PlatformDetection.h"
+    "include/RlUtil/RlUWin.h"
 
     "include/RlUtil/CoreConfig.h"
     "include/RlUtil/Exception.h"

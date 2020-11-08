@@ -1,9 +1,9 @@
 #ifndef RL_RLWIN_H
 #define RL_RLWIN_H
 
+#include <../../RlUtilities/include/RlUtil/PlatformDetection.h>
 
-
-#ifdef _WIN32
+#ifdef RL_PLATFORM_WINDOWS
 
 	#include <sdkddkver.h>
 	#define NOATOM
@@ -37,8 +37,6 @@
 	#undef NOKANJI
 	#undef NOCRYPT
 	#undef NOMCX
-#else
-	#error "Only Windows is currently supported!"
 #endif
 
 

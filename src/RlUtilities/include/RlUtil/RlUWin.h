@@ -1,8 +1,7 @@
-#ifndef RLR_RLRWIN_H
-#define RLR_RLRWIN_H
+#ifndef UT_RLUWIN_H
+#define UT_RLUWIN_H
 
-#include <RlUtil/PlatformDetection.h>
-
+#include "PlatformDetection.h"
 
 #ifdef RL_PLATFORM_WINDOWS
 	#include <sdkddkver.h>
@@ -26,11 +25,12 @@
 	#define NODRAWTEXT
 	#define NOGDI
 	#define NOKERNEL
-	#define NONLS
+	#define NOUSER
 	#define NOMB
 	#define NOMEMMGR
 	#define NOMETAFILE
 	#define NOMINMAX
+	#define NOMSG
 	#define NOOPENFILE
 	#define NOSCROLL
 	#define NOSERVICE
@@ -44,10 +44,9 @@
 	#define NOPROFILER
 	#define NODEFERWINDOWPOS
 	#define NOMCX
-
+	
 	#include <Windows.h>
-	#include <d3d11.h>
-
+	
 	#undef NOGDICAPMASKS
 	#undef NOVIRTUALKEYCODES
 	#undef NOWINMESSAGES
@@ -67,11 +66,12 @@
 	#undef NODRAWTEXT
 	#undef NOGDI
 	#undef NOKERNEL
-	#undef NONLS
+	#undef NOUSER
 	#undef NOMB
 	#undef NOMEMMGR
 	#undef NOMETAFILE
 	#undef NOMINMAX
+	#undef NOMSG
 	#undef NOOPENFILE
 	#undef NOSCROLL
 	#undef NOSERVICE
@@ -85,9 +85,6 @@
 	#undef NOPROFILER
 	#undef NODEFERWINDOWPOS
 	#undef NOMCX
-#else
-	#error "Only Windows is currently supported!"
 #endif // RL_PLATFORM_WINDOWS
 
-
-#endif // RLR_RLRWIN_H
+#endif
