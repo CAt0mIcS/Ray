@@ -40,6 +40,7 @@ include("BuildFiles/macros.cmake")
 # Initialize the Solution Project
 project("NodePlanningEditor")
 
+
 # ------------------------------------------------
 # Redirect Output Files (Remove VS /Debug folder)
 # ------------------------------------------------
