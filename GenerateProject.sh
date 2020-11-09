@@ -1,20 +1,7 @@
-
+# Edit for Architecture and Configuration
 architecture=x86
 configuration=Debug
-for arg in "$@"
-do
-	if [ "$arg"=="x86" ] || [ "$arg"=="x64" ]
-		then
-			architecture=$arg
-			echo Setting Build Architecture to "$arg"
-	fi
 
-	if [ "$arg"=="Debug" ] || [ "$arg"=="Release" ]
-		then
-			configuration=$arg
-			echo Setting Build Configuration to "$arg"
-	fi
-done
 
 unameOut="$(uname -s)"
 case "${unameOut}" in
@@ -29,7 +16,7 @@ echo Selecting Build Settings "$configuration" "$unameOut" and "$architecture"
 
 [ ! -d "./$buildPath" ] && mkdir ./$buildPath
 cd ./$buildPath
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=$configuration
 
 read -s -n 1 -p "Press any key to continue . . ."
 cd ..

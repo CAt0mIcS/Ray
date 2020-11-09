@@ -2,8 +2,11 @@
 #define RLU_UTPCH_H
 
 #include "RlUWin.h"
+
+#ifdef RL_PLATFORM_WWINDOWS
 #include <WinNls.h>
 #include <stringapiset.h>
+#endif
 
 #include <exception>
 #include <stdint.h>
