@@ -9,6 +9,10 @@
 #include <Reyal/Events/ApplicationEvent.h>
 #include <Reyal/Events/KeyboardEvent.h>
 
+/// <TODO>
+/// e.ToString() fails in Release builds
+/// </TODO>
+
 
 namespace At0::Layers
 {

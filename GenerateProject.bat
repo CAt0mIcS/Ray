@@ -3,7 +3,7 @@
 @REM set argC=0
 @REM for %%x in (%*) do Set /A argC+=1
 
-set architecture=x86
+set architecture=x64
 set configuration=Debug
 FOR %%A IN (%*) DO (
 	IF "%%A"=="x86" (
@@ -44,7 +44,7 @@ cd %buildPath%
 echo Starting CMake.
 echo.
 
-call cmake ..
+call cmake .. -DCMAKE_BUILD_TYPE=%configuration%
 
 echo.
 echo Cmake finished.
