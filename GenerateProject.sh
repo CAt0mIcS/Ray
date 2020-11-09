@@ -1,5 +1,9 @@
 # Edit for Architecture and Configuration
-architecture=x86
+# Possible Values: 
+#   architecture:   Win32 | x64
+#   configuration:  Debug | Release
+
+architecture=x64
 configuration=Debug
 
 
