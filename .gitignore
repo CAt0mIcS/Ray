@@ -6,4 +6,4 @@
 *.cso
 Doxygen/
 Doxyfile
-build/
+build*/
