@@ -69,7 +69,7 @@ namespace At0::Reyal
 
         //uint32_t creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
         uint32_t creationFlags = 0;
-        #ifdef RL_DEBUG
+        #ifndef NDEBUG
             creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
         #endif
 

@@ -1,7 +1,7 @@
 #ifndef RLD_RLASSERT_H
 #define RLD_RLASSERT_H
 
-#ifdef ZL_DEBUG
+#ifndef NDEBUG
 
 #include "ReyalLogger.h"
 

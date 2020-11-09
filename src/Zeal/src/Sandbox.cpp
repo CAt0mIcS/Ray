@@ -114,7 +114,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 
 	//TODO: Awake function (maybe)?
 
-	#ifdef _DEBUG
+	#ifndef NDEBUG
 	{
 		AllocConsole();
 		FILE* file;
@@ -136,7 +136,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 		Reyal::Application::Destroy();
 		RL_PROFILE_END_SESSION();
 
-#ifdef _DEBUG
+#ifndef NDEBUG
 		FreeConsole();
 #endif
 		RL_LOG_END();
