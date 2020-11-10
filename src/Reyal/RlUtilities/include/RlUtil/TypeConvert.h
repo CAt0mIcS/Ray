@@ -4,12 +4,9 @@
 #include <string>
 
 #include "RlUWin.h"
-#ifdef RL_PLATFORM_WINDOWS
-	#include <DirectXMath.h>
-#endif
-
-
 #include "RlUBase.h"
+
+#include <glm/mat4x4.hpp>
 
 
 namespace At0::Util
@@ -33,7 +30,7 @@ namespace At0::Util
 	/// </summary>
 	/// <param name="matrix">Is the matrix to convert</param>
 	/// <returns>The actual screen position of the transformed object</returns>
-	RLU_API RECT TransformationToRect(const DirectX::XMMATRIX& matrix);
+	RLU_API RECT TransformationToRect(const glm::mat4& matrix);
 }
 
 #endif // RLU_TYPECONVERT_H

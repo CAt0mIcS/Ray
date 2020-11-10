@@ -4,7 +4,7 @@
 #include "Reyal/RlBase.h"
 #include "Reyal/Events/Event.h"
 
-#include "Reyal/Core/Vec2.h"
+#include <../../RlRender/include/RlRender/TypeDefines.h>
 #include <sstream>
 
 
@@ -13,7 +13,7 @@ namespace At0::Reyal
 	class RL_API WindowResizeEvent : public Event
 	{
 	public:
-		WindowResizeEvent(const Size& oldSize, const Size& newSize)
+		WindowResizeEvent(const Size2& oldSize, const Size2& newSize)
 			: m_OldSize(oldSize), m_NewSize(newSize)
 		{
 
@@ -26,14 +26,14 @@ namespace At0::Reyal
 			return oss.str();
 		}
 
-		const Size& GetSize() const { return m_NewSize; }
-		const Size& GetOldSize() const { return m_OldSize; }
+		const Size2& GetSize() const { return m_NewSize; }
+		const Size2& GetOldSize() const { return m_OldSize; }
 
 		RL_DECLARE_TYPE_FN(WindowResizeEvent)
 
 	private:
-		Size m_OldSize;
-		Size m_NewSize;
+		Size2 m_OldSize;
+		Size2 m_NewSize;
 	};
 
 	class RL_API WindowMoveEvent : public Event

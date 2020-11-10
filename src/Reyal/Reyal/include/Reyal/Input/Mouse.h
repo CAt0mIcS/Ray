@@ -3,7 +3,7 @@
 
 #include "Reyal/RlBase.h"
 
-#include "Reyal/Core/Vec2.h"
+#include <../../RlRender/include/RlRender/TypeDefines.h>
 
 
 namespace At0::Reyal

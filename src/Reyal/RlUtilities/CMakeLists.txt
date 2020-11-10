@@ -17,6 +17,7 @@ set(SRC
 
 set(PUBLIC_INC
 	"include"
+	"${CMAKE_SOURCE_DIR}/extern/glm"
 )
 
 set(PRIVATE_INC

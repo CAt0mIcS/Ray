@@ -1,7 +1,6 @@
 set(SRC
 	"include/Reyal/Application.cpp"
 	"include/Reyal/Core/ThreadPool.cpp"
-	"include/Reyal/Core/Vec2.cpp"
 	"include/Reyal/Core/ZRect.cpp"
 	"include/Reyal/Input/Keyboard.cpp"
 	"include/Reyal/Input/Mouse.cpp"
@@ -17,7 +16,6 @@ set(SRC
 	"include/Reyal/Core/Queue.h"
 	"include/Reyal/EntryPoint.h"
 	"include/Reyal/Window/BaseWindow.h"
-	"include/Reyal/Core/Vec2.h"
 	"include/Reyal/Core/ZRect.h"
 	"include/Reyal/Events/Event.h"
 	"include/Reyal/Events/ApplicationEvent.h"
@@ -36,6 +34,7 @@ set(SRC
 
 set(PUBLIC_INC
 	"include"
+	"${CMAKE_SOURCE_DIR}/extern/glm"
 )
 
 set(PRIVATE_INC

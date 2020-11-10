@@ -7,8 +7,6 @@
 #include <vector>
 #include <string>
 
-#include "Reyal/Core/Vec2.h"
-
 #include <../../RlRender/include/RlRender/TypeDefines.h>
 
 // 4251 class 'std::wstring' needs to have dll-interface to be used by clients of class 'At0::Reyal::Widget'
@@ -53,25 +51,25 @@ namespace At0::Reyal
 		/// Resizes the Widget by the specified value
 		/// </summary>
 		/// <param name="size">Is the value added to the Widget's current size</param>
-		void ResizeBy(const Size& size);
+		void ResizeBy(const Size2& size);
 
 		/// <summary>
 		/// Resizes the Widget to the specified value
 		/// </summary>
 		/// <param name="size">Is the new size of this Widget</param>
-		void ResizeTo(const Size& size);
+		void ResizeTo(const Size2& size);
 
 		/// <summary>
 		/// Gets the current Widget Transformation Matrix
 		/// </summary>
 		/// <returns>The Transformation Matrix of this Widget</returns>
-		const Matrix& GetTransform() const { return m_Matrix; }
+		const glm::mat4& GetTransform() const { return m_Matrix; }
 
 		/// <summary>
 		/// Setter for the current Widget Transformation Matrix
 		/// </summary>
 		/// <param name="matrix">Is the Transformation Matrix to multiply with the existing one</param>
-		void SetTransform(const Matrix& matrix) { m_Matrix = matrix; }
+		void SetTransform(const glm::mat4& matrix) { m_Matrix = matrix; }
 
 		/// <summary>
 		/// Getter for the Window Renderer
@@ -203,7 +201,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// The current transform of this widget
 		/// </summary>
-		Matrix m_Matrix;
+		glm::mat4 m_Matrix;
 	};
 
 

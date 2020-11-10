@@ -2,6 +2,7 @@
 #include "RlUtil/TypeConvert.h"
 
 
+
 namespace At0::Util
 {
 	std::wstring MultiByteToWideChar(const std::string_view str)
@@ -26,7 +27,7 @@ namespace At0::Util
 		return buff;
 	}
 	
-	RECT TransformationToRect(const DirectX::XMMATRIX& matrix)
+	RECT TransformationToRect(const glm::mat4& matrix)
 	{
 		return {};
 	}

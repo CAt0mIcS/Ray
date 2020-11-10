@@ -4,7 +4,7 @@
 #include "Reyal/RlBase.h"
 #include "Reyal/Events/Event.h"
 
-#include "Reyal/Core/Vec2.h"
+#include <../../RlRender/include/RlRender/TypeDefines.h>
 #include "Reyal/Widgets/ZWidget.h"
 
 

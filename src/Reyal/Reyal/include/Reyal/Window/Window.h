@@ -237,7 +237,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Specifies the old size of this window
 		/// </summary>
-		Size m_OldSize;
+		Size2 m_OldSize;
 
 		// TODO: Both renderers in here or only one renderer
 

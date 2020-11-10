@@ -149,7 +149,7 @@ namespace At0::Reyal
 		}
 		case WM_SIZE:
 		{
-			Size newSize = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
+			Size2 newSize = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
 			ResizeTo(newSize);
 
 			//TODO: Read how windows handles events (how they're built, how they handle it)

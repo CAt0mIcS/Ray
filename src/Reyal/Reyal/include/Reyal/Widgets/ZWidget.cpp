@@ -22,13 +22,13 @@ namespace At0::Reyal
 
     }
 
-    void Widget::ResizeBy(const Size& size)
+    void Widget::ResizeBy(const Size2& size)
     {
         RL_PROFILE_FUNCTION();
 
     }
 
-    void Widget::ResizeTo(const Size& size)
+    void Widget::ResizeTo(const Size2& size)
     {
         RL_PROFILE_FUNCTION();
 
