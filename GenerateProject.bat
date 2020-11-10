@@ -6,7 +6,7 @@
 set architecture=x64
 set configuration=Debug
 FOR %%A IN (%*) DO (
-	IF "%%A"=="x86" (
+	IF "%%A"=="Win32" (
 		set architecture=%%A
 		echo Setting Build Architecture to "%%A".
 	)
@@ -44,7 +44,7 @@ cd %buildPath%
 echo Starting CMake.
 echo.
 
-call cmake .. -DCMAKE_BUILD_TYPE=%configuration%
+call cmake .. -DCMAKE_BUILD_TYPE=%configuration% -A %architecture%
 
 echo.
 echo Cmake finished.
