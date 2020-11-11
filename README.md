@@ -27,6 +27,10 @@ The idea is that you create a Node, give it a Title and Description and connect 
 
 You can find the full documentation on the [wiki](https://github.com/CAt0mIcS/NodePlanningEditor/wiki) (soon).
 
+## How to Build
+* Clone the Repository with ```git clone https://github.com/CAt0mIcS/NodePlanningEditor.git --recursive```
+* Run ```GenerateProject.bat``` or ```GenerateProject.sh``` depending on your OS. Make sure you have at least CMake Version 3.18 installed. The generated build files will be in the newly created build directory.
+
 ## Contribute
 There are many ways in which you can participate in the project, for example:
 * [Submit bugs and feature requests](https://github.com/CAt0mIcS/NodePlanningEditor/issues)
