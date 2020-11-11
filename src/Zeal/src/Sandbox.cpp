@@ -21,10 +21,10 @@ namespace At0
 		using LayerCreateFunc = Reyal::Layer* (*)();
 		const std::wstring ending = L".dll";
 		
-		#ifdef RL_PLATFORM_WINDOWS
-			std::string outStr = "../../bin/Debug-x64";
-		#else
+		#ifdef NDEBUG
 			std::string outStr = "../../bin/Release-x64";
+		#else
+			std::string outStr = "../../bin/Debug-x64";
 		#endif
 		
 		for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(outStr))

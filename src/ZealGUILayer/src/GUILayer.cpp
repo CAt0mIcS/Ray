@@ -55,8 +55,7 @@ namespace At0::Layers
 	void GUILayer::OnResize(_In_ Reyal::Widget* receiver, Reyal::WindowResizeEvent& e)
 	{
 		RL_PROFILE_FUNCTION();
-		RL_LOG_DEBUG("[GUILayer] {0} {1}", e.GetOldSize().x, e.GetOldSize().y);
-		RL_LOG_FLUSH();
+		RL_LOG_DEBUG("[GUILayer] {0}", e.ToString());
 	}
 
 	void GUILayer::OnWindowMove(_In_ Reyal::Widget* receiver, Reyal::WindowMoveEvent& e)

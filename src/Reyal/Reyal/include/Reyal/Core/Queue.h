@@ -14,7 +14,7 @@ namespace At0::Reyal
 	/// Thread-Safe Queue
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	template<typename T, size_t MaxSize = -1>
+	template<typename T, size_t MaxSize = (size_t)-1>
 	class RL_API Queue
 	{
 	public:
