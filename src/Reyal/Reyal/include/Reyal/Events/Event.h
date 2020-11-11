@@ -1,8 +1,6 @@
 #ifndef RL_EVENT_H
 #define RL_EVENT_H
 
-#include "Reyal/RlBase.h"
-
 
 #define RL_DECLARE_TYPE_FN(type)	static EventType GetStaticType() { return EventType::##type; }\
 									virtual EventType GetType() const override { return GetStaticType(); }
@@ -10,7 +8,7 @@
 
 namespace At0::Reyal
 {
-	enum class RL_API EventType
+	enum class EventType
 	{
 		INVALID = 0,
 		MouseButtonPressedEvent, MouseButtonReleasedEvent, MouseWheelUpEvent, MouseWheelDownEvent, MouseMoveEvent,
@@ -21,7 +19,7 @@ namespace At0::Reyal
 	};
 
 
-	class RL_API Event
+	class Event
 	{
 	public:
 		virtual EventType GetType() const = 0;

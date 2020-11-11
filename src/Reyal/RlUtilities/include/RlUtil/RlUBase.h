@@ -1,7 +1,7 @@
 #ifndef UT_UTBASE_H
 #define UT_UTBASE_H
 
-#define RLU_BUILD_AS_DLL 0
+#define RLU_BUILD_AS_DLL 1
 
 #if RLU_BUILD_AS_DLL
 	#ifdef RLU_BUILD

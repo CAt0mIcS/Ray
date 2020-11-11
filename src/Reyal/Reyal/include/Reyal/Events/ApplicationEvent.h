@@ -1,7 +1,6 @@
 #ifndef RL_APPEVENT_H
 #define RL_APPEVENT_H
 
-#include "Reyal/RlBase.h"
 #include "Reyal/Events/Event.h"
 
 #include <../../RlRender/include/RlRender/TypeDefines.h>
@@ -10,7 +9,7 @@
 
 namespace At0::Reyal
 {
-	class RL_API WindowResizeEvent : public Event
+	class WindowResizeEvent : public Event
 	{
 	public:
 		WindowResizeEvent(const Size2& oldSize, const Size2& newSize)
@@ -36,7 +35,7 @@ namespace At0::Reyal
 		Size2 m_NewSize;
 	};
 
-	class RL_API WindowMoveEvent : public Event
+	class WindowMoveEvent : public Event
 	{
 	public:
 		WindowMoveEvent(const Point2& oldPos, const Point2& newPos)
@@ -62,7 +61,7 @@ namespace At0::Reyal
 		Point2 m_NewPos;
 	};
 
-	class RL_API SetCursorEvent : public Event
+	class SetCursorEvent : public Event
 	{
 	public:
 		SetCursorEvent()
@@ -79,7 +78,7 @@ namespace At0::Reyal
 		RL_DECLARE_TYPE_FN(SetCursorEvent)
 	};
 
-	class RL_API WindowCloseEvent : public Event
+	class WindowCloseEvent : public Event
 	{
 	public:
 		WindowCloseEvent()
@@ -96,7 +95,7 @@ namespace At0::Reyal
 		RL_DECLARE_TYPE_FN(WindowCloseEvent)
 	};
 
-	class RL_API PaintEvent : public Event
+	class PaintEvent : public Event
 	{
 	public:
 		PaintEvent()

@@ -32,7 +32,7 @@ set(PRIVATE_LIB
 	""
 )
 
-add_library("RlUtilities" STATIC "${SRC}")
+add_library("RlUtilities" SHARED "${SRC}")
 target_include_directories("RlUtilities"
     PRIVATE
         "${PRIVATE_INC}"
@@ -48,4 +48,5 @@ target_link_libraries("RlUtilities"
 
 target_precompile_headers("RlUtilities" PRIVATE "include/RlUtil/utpch.h")
 set_target_properties("RlUtilities" PROPERTIES FOLDER "RlUtilities")
+target_compile_definitions("RlUtilities" PRIVATE "RLU_BUILD")
 AddRecursiveFilters("${SRC}")

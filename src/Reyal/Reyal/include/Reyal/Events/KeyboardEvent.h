@@ -1,14 +1,13 @@
 #ifndef RL_KBDEVENT_H
 #define RL_KBDEVENT_H
 
-#include "Reyal/RlBase.h"
 #include "Reyal/Events/Event.h"
 
 
 
 namespace At0::Reyal
 {
-	class RL_API KeyEvent : public Event
+	class KeyEvent : public Event
 	{
 	protected:
 		KeyEvent(const unsigned char keycode)
@@ -23,7 +22,7 @@ namespace At0::Reyal
 		unsigned char m_KeyCode;
 	};
 
-	class RL_API KeyPressedEvent : public KeyEvent
+	class KeyPressedEvent : public KeyEvent
 	{
 	public:
 		KeyPressedEvent(const unsigned char keycode, uint32_t repeatCount)
@@ -46,7 +45,7 @@ namespace At0::Reyal
 		uint32_t m_RepeatCount;
 	};
 
-	class RL_API KeyReleasedEvent : public KeyEvent
+	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
 		KeyReleasedEvent(const unsigned char keycode)
@@ -64,7 +63,7 @@ namespace At0::Reyal
 		RL_DECLARE_TYPE_FN(KeyReleasedEvent)
 	};
 
-	class RL_API CharEvent : public KeyEvent
+	class CharEvent : public KeyEvent
 	{
 	public:
 		CharEvent(const unsigned char keycode)

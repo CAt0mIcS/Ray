@@ -1,7 +1,6 @@
 #ifndef RL_MOUSEEVENT_H
 #define RL_MOUSEEVENT_H
 
-#include "Reyal/RlBase.h"
 #include "Reyal/Events/Event.h"
 
 #include <../../RlRender/include/RlRender/TypeDefines.h>
@@ -11,13 +10,13 @@
 namespace At0::Reyal
 {
 
-	enum class RL_API MouseButton
+	enum class MouseButton
 	{
 		INVALID = 0,
 		Left, Middle, Right
 	};
 
-	class RL_API MouseMoveEvent : public Event
+	class MouseMoveEvent : public Event
 	{
 	public:
 		MouseMoveEvent(const Point2& oldPos, const Point2& newPos)
@@ -42,7 +41,7 @@ namespace At0::Reyal
 		Point2 m_NewPos;
 	};
 
-	class RL_API MouseButtonPressedEvent : public Event
+	class MouseButtonPressedEvent : public Event
 	{
 	public:
 		MouseButtonPressedEvent(const MouseButton btn)
@@ -65,7 +64,7 @@ namespace At0::Reyal
 		MouseButton m_Button;
 	};
 
-	class RL_API MouseButtonReleasedEvent : public Event
+	class MouseButtonReleasedEvent : public Event
 	{
 	public:
 		MouseButtonReleasedEvent(const MouseButton btn)
@@ -88,7 +87,7 @@ namespace At0::Reyal
 		MouseButton m_Button;
 	};
 
-	class RL_API MouseWheelEvent : public Event
+	class MouseWheelEvent : public Event
 	{
 	public:
 		int GetDelta() const { return m_Delta; }
@@ -101,7 +100,7 @@ namespace At0::Reyal
 		int m_Delta;
 	};
 
-	class RL_API MouseWheelUpEvent : public MouseWheelEvent
+	class MouseWheelUpEvent : public MouseWheelEvent
 	{
 	public:
 		MouseWheelUpEvent(int delta)
@@ -119,7 +118,7 @@ namespace At0::Reyal
 		RL_DECLARE_TYPE_FN(MouseWheelUpEvent)
 	};
 
-	class RL_API MouseWheelDownEvent : public MouseWheelEvent
+	class MouseWheelDownEvent : public MouseWheelEvent
 	{
 	public:
 		MouseWheelDownEvent(int delta)
@@ -137,7 +136,7 @@ namespace At0::Reyal
 		RL_DECLARE_TYPE_FN(MouseWheelDownEvent)
 	};
 
-	class RL_API HoverEnterEvent : public Event
+	class HoverEnterEvent : public Event
 	{
 	public:
 		HoverEnterEvent(_In_ Widget* hoverEntered)
@@ -158,7 +157,7 @@ namespace At0::Reyal
 		Widget* m_HoverEntered;
 	};
 
-	class RL_API HoverLeaveEvent : public Event
+	class HoverLeaveEvent : public Event
 	{
 	public:
 		HoverLeaveEvent(_In_ Widget* hoverLeft)
