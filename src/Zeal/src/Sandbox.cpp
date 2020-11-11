@@ -114,13 +114,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 
 	//TODO: Awake function (maybe)?
 
-	#ifndef NDEBUG
-	{
+	//#ifndef NDEBUG
+	//{
 		AllocConsole();
 		FILE* file;
 		freopen_s(&file, "CONOUT$", "w", stdout);
-	}
-	#endif
+	//}
+	//#endif
 
 	try
 	{

@@ -62,6 +62,7 @@ namespace At0::Reyal::Debug
 	#define RL_FL_LOGGER_OPEN()			::At0::Reyal::Debug::Logger::GetFileLogger().IsOpen()
 
 	#define RL_LOG_END()				::At0::Reyal::Debug::Logger::End();
+	#define RL_LOG_FLUSH()				::At0::Reyal::Debug::Logger::GetFileLogger().Flush();
 #else
 	#define RL_LOG_BEGIN(path, loglevel)
 	
@@ -75,6 +76,7 @@ namespace At0::Reyal::Debug
 	#define RL_FL_LOGGER_OPEN()
 
 	#define RL_LOG_END()
+	#define RL_LOG_FLUSH()
 #endif
 
 #endif // RLD_REYALLOGGER_H

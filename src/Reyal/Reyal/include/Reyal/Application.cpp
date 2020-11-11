@@ -126,6 +126,7 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 
 		RL_EXPECTS(e.GetType() <= EventType::LAST && e.GetType() >= EventType::FIRST);
+		RL_EXPECTS(layer != nullptr);
 
 		switch (e.GetType())
 		{
@@ -145,6 +146,7 @@ namespace At0::Reyal
 		//case EventType::SetCursorEvent:			layer->OnSetCursor(receiver, (SetCursorEvent&)e); break;
 		default:
 			RL_ASSERT(false, "Unimplemented Event");
+			break;
 		}
 	}
 }

@@ -1,1 +1,0 @@
-Split Reyal into GUI and GameEngine and have a source file in this directory which will be another project linking to both RlGUI and RlEngine
