@@ -10,13 +10,13 @@ namespace At0::Reyal
 {
 	class Widget;
 
-	class RL_API Mouse
+	class RL_API MouseInput
 	{
 	public:
 		/// <summary>
 		/// Mouse Constructor. Initializes everything to false
 		/// </summary>
-		Mouse();
+		MouseInput();
 
 		/// <summary>
 		/// Checks if the left mouse button is pressed

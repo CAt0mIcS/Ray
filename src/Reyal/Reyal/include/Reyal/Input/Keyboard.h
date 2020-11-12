@@ -9,13 +9,13 @@
 
 namespace At0::Reyal
 {
-	class RL_API Keyboard
+	class RL_API KeyboardInput
 	{
 	public:
 		/// <summary>
 		/// Default Keyboard Constructor
 		/// </summary>
-		Keyboard() = default;
+		KeyboardInput() = default;
 
 		/// <summary>
 		/// Checks if a key with keycode is pressed

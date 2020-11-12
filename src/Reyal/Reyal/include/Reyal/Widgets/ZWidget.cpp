@@ -110,7 +110,7 @@ namespace At0::Reyal
         RL_PROFILE_FUNCTION();
     }
 
-    Widget* Widget::GetEventReceiver(const Event& e, const Mouse& mouse)
+    Widget* Widget::GetEventReceiver(const Event& e, const MouseInput& mouse)
     {
         RL_PROFILE_FUNCTION();
 

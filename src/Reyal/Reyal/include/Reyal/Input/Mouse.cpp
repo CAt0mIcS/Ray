@@ -6,47 +6,47 @@
 
 namespace At0::Reyal
 {
-	Mouse::Mouse()
+	MouseInput::MouseInput()
 		: m_IsLeftPressed(false), m_IsMiddlePressed(false), m_IsRightPressed(false), m_MousePos{}
 	{
 	}
 
-	bool Mouse::IsLeftPressed() const
+	bool MouseInput::IsLeftPressed() const
 	{
 		return m_IsLeftPressed;
 	}
 	
-	bool Mouse::IsMiddlePressed() const
+	bool MouseInput::IsMiddlePressed() const
 	{
 		return m_IsMiddlePressed;
 	}
 	
-	bool Mouse::IsRightPressed() const
+	bool MouseInput::IsRightPressed() const
 	{
 		return m_IsRightPressed;
 	}
 
-	bool Mouse::IsOnWidget(const Widget* widget) const
+	bool MouseInput::IsOnWidget(const Widget* widget) const
 	{
 		return false;
 	}
 
-	bool Mouse::IsOnWidget(const Scope<Widget>& widget) const
+	bool MouseInput::IsOnWidget(const Scope<Widget>& widget) const
 	{
 		return IsOnWidget(widget.get());
 	}
 
-	const Point2& Mouse::GetPos() const
+	const Point2& MouseInput::GetPos() const
 	{
 		return m_MousePos;
 	}
 
-	const Point2& Mouse::GetOldPos() const
+	const Point2& MouseInput::GetOldPos() const
 	{
 		return m_OldMousePos;
 	}
 
-	void Mouse::SetPos(const Point2& mousePos)
+	void MouseInput::SetPos(const Point2& mousePos)
 	{
 		m_OldMousePos = m_MousePos;
 		m_MousePos = mousePos;

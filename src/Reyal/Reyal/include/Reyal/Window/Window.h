@@ -120,15 +120,17 @@ namespace At0::Reyal
 		void SetHoveringWidget();
 
 	public:
+		// QUESTION: Ok, public?
+
 		/// <summary>
 		/// The keyboard holding information about which key is pressed in this window
 		/// </summary>
-		Keyboard Keyboard;
+		KeyboardInput Keyboard;
 		
 		/// <summary>
 		/// The mouse holding information about which mouse button is pressed in this window
 		/// </summary>
-		Mouse Mouse;
+		MouseInput Mouse;
 
 	private:
 		/// <summary>

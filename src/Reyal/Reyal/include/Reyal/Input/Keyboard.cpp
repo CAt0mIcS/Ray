@@ -5,12 +5,12 @@
 
 namespace At0::Reyal
 {
-	bool Keyboard::IsKeyPressed(unsigned char keycode) const
+	bool KeyboardInput::IsKeyPressed(unsigned char keycode) const
 	{
 		return m_Keys[keycode];
 	}
 	
-	void Keyboard::SetKeyState(unsigned char keycode, bool isPressed)
+	void KeyboardInput::SetKeyState(unsigned char keycode, bool isPressed)
 	{
 		m_Keys[keycode] = isPressed;
 	}

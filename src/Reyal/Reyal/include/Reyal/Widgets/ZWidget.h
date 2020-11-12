@@ -15,7 +15,7 @@
 namespace At0::Reyal
 {
 	class Event;
-	class Mouse;
+	class MouseInput;
 	class Renderer2D;
 	class Renderer3D;
 
@@ -179,7 +179,7 @@ namespace At0::Reyal
 		/// <param name="e">Is the received event</param>
 		/// <param name="mouse">Is the mouse of the window the widget is in</param>
 		/// <returns>The Widget which should receive the event</returns>
-		Widget* GetEventReceiver(const Event& e, const Mouse& mouse);
+		Widget* GetEventReceiver(const Event& e, const MouseInput& mouse);
 
 	protected:
 		/// <summary>
