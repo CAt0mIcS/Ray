@@ -13,18 +13,61 @@ namespace At0::Util
 	using BaseRefType = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
 	/// <summary>
-	/// Takes a correct string possibly containing "{0}", "{1}", ... and fills these in with the corresponding argument
+	/// Inserts the argument into the string
 	/// </summary>
-	/// <typeparam name="...Args">Is any list of arguments that have a output operator defined</typeparam>
-	/// <param name="serializedStr">Is the string which should be serialized</param>
-	/// <param name="...args">Are the arguments to insert into the string</param>
-	/// <returns>The serialized string</returns>
-	template<typename... Args>
-	std::string SerializeString(std::string serializedStr, Args&&... args)
+	/// <typeparam name="T">Is any argument type which should be serialized using wide character strings</typeparam>
+	/// <param name="message">Is the string to insert the argument into</param>
+	/// <param name="arg">Is the argument to insert</param>
+	/// <param name="argCount">Is the current number where the argument will be inserted ({0} = 0, {3} = 3, ...)</param>
+	template<typename T>
+	void WideCharSerialize(std::string& message, T&& arg, int& argCount)
 	{
-		int argCount = 0;
-		(SerializeStringArg(serializedStr, args, argCount), ...);
-		return serializedStr;
+		if (argCount == -1)
+			return;
+
+		std::wostringstream oss;
+		oss << arg;
+
+		const std::string toFind = "{" + std::to_string(argCount) + "}";
+		size_t foundIdx = message.find(toFind);
+
+		if (foundIdx == std::string::npos)
+		{
+			argCount = -1;
+			return;
+		}
+
+		message.replace(message.begin() + foundIdx, message.begin() + foundIdx + std::size(toFind), WideCharToMultiByte(oss.str()));
+		++argCount;
+	}
+
+	/// <summary>
+	/// Inserts the argument into the string
+	/// </summary>
+	/// <typeparam name="T">Is any argument type which should be serialized using multi byte strings</typeparam>
+	/// <param name="message">Is the string to insert the argument into</param>
+	/// <param name="arg">Is the argument to insert</param>
+	/// <param name="argCount">Is the current number where the argument will be inserted ({0} = 0, {3} = 3, ...)</param>
+	template<typename T>
+	void MultiByteSerialize(std::string& message, T&& arg, int& argCount)
+	{
+		if (argCount == -1)
+			return;
+
+		std::ostringstream oss;
+		oss << arg;
+
+		const std::string toFind = "{" + std::to_string(argCount) + "}";
+		size_t foundIdx = message.find(toFind);
+
+		if (foundIdx == std::string::npos)
+		{
+			argCount = -1;
+			return;
+		}
+
+		message.replace(message.begin() + foundIdx, message.begin() + foundIdx + std::size(toFind), oss.str());
+		++argCount;
 	}
 
 	/// <summary>
@@ -91,61 +134,18 @@ namespace At0::Util
 	}
 
 	/// <summary>
-	/// Inserts the argument into the string
+	/// Takes a correct string possibly containing "{0}", "{1}", ... and fills these in with the corresponding argument
 	/// </summary>
-	/// <typeparam name="T">Is any argument type which should be serialized using wide character strings</typeparam>
-	/// <param name="message">Is the string to insert the argument into</param>
-	/// <param name="arg">Is the argument to insert</param>
-	/// <param name="argCount">Is the current number where the argument will be inserted ({0} = 0, {3} = 3, ...)</param>
-	template<typename T>
-	void WideCharSerialize(std::string& message, T&& arg, int& argCount)
+	/// <typeparam name="...Args">Is any list of arguments that have a output operator defined</typeparam>
+	/// <param name="serializedStr">Is the string which should be serialized</param>
+	/// <param name="...args">Are the arguments to insert into the string</param>
+	/// <returns>The serialized string</returns>
+	template<typename... Args>
+	std::string SerializeString(std::string serializedStr, Args&&... args)
 	{
-		if (argCount == -1)
-			return;
-
-		std::wostringstream oss;
-		oss << arg;
-
-		const std::string toFind = "{" + std::to_string(argCount) + "}";
-		size_t foundIdx = message.find(toFind);
-
-		if (foundIdx == std::string::npos)
-		{
-			argCount = -1;
-			return;
-		}
-
-		message.replace(message.begin() + foundIdx, message.begin() + foundIdx + std::size(toFind), WideCharToMultiByte(oss.str()));
-		++argCount;
-	}
-
-	/// <summary>
-	/// Inserts the argument into the string
-	/// </summary>
-	/// <typeparam name="T">Is any argument type which should be serialized using multi byte strings</typeparam>
-	/// <param name="message">Is the string to insert the argument into</param>
-	/// <param name="arg">Is the argument to insert</param>
-	/// <param name="argCount">Is the current number where the argument will be inserted ({0} = 0, {3} = 3, ...)</param>
-	template<typename T>
-	void MultiByteSerialize(std::string& message, T&& arg, int& argCount)
-	{
-		if (argCount == -1)
-			return;
-
-		std::ostringstream oss;
-		oss << arg;
-
-		const std::string toFind = "{" + std::to_string(argCount) + "}";
-		size_t foundIdx = message.find(toFind);
-
-		if (foundIdx == std::string::npos)
-		{
-			argCount = -1;
-			return;
-		}
-
-		message.replace(message.begin() + foundIdx, message.begin() + foundIdx + std::size(toFind), oss.str());
-		++argCount;
+		int argCount = 0;
+		(SerializeStringArg(serializedStr, args, argCount), ...);
+		return serializedStr;
 	}
 }
 

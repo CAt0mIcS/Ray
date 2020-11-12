@@ -3,8 +3,10 @@
 
 #include "RlRender/RlRWin.h"
 
-#include <d3dcompiler.h>
-#include <DirectXMath.h>
+#include <RlUtil/PlatformDetection.h>
+#ifdef RL_PLATFORM_WINDOWS
+    #include <d3dcompiler.h>
+#endif
 
 #include <memory>
 #include <string>

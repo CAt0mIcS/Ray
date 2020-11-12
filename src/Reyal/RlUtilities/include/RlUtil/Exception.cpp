@@ -18,7 +18,7 @@ namespace At0::Reyal
         return oss.str();
     }
 
-    const char* Exception::what() const
+    const char* Exception::what() const noexcept
     {
         std::stringstream oss;
         oss << GetType() << '\n'

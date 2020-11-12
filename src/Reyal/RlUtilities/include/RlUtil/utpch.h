@@ -3,7 +3,7 @@
 
 #include "RlUWin.h"
 
-#ifdef RL_PLATFORM_WWINDOWS
+#ifdef RL_PLATFORM_WINDOWS
 #include <WinNls.h>
 #include <stringapiset.h>
 #endif

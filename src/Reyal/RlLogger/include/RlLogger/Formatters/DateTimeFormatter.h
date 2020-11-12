@@ -38,7 +38,7 @@ namespace At0::Log
 			char buff[80];
 
 			time(&rawTime);
-			localtime_s(&timeInfo, &rawTime);
+			timeInfo = *localtime(&rawTime);
 
 			strftime(buff, sizeof(buff), "%d-%m-%Y %H:%M:%S", &timeInfo);
 

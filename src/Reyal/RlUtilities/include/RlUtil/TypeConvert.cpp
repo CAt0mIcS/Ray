@@ -1,10 +1,16 @@
 #include "utpch.h"
 #include "RlUtil/TypeConvert.h"
 
+#include "PlatformDetection.h"
+
+//TODO
+#include <iostream>
 
 
 namespace At0::Util
 {
+#ifdef RL_PLATFORM_WINDOWS
+
 	std::wstring MultiByteToWideChar(const std::string_view str)
 	{
 		auto size = ::MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.data(), -1, nullptr, 0);
@@ -27,10 +33,47 @@ namespace At0::Util
 		return buff;
 	}
 	
+
+	// TODO: Define custom RECT class
 	RECT TransformationToRect(const glm::mat4& matrix)
 	{
 		return {};
 	}
+
+#elif defined(RL_PLATFORM_LINUX)
+
+	std::wstring MultiByteToWideChar(const std::string_view str)
+	{
+		std::wstring buff;
+		buff.resize(str.size());
+
+		if(mbstowcs(buff.data(), str.data(), str.size()) == (size_t)-1)
+		{
+			perror("mbstowcs");
+			return L"";
+		}
+
+		std::wcout << L"ConversionResult: " << buff << L'\n';
+		return buff;
+	}
+
+	std::string WideCharToMultiByte(const std::wstring_view str)
+	{
+		std::string buff;
+		buff.resize(str.size());
+
+		if(wcstombs(buff.data(), str.data(), str.size()) == (size_t)-1)
+		{
+			perror("wcstombs");
+			return "";
+		}
+
+		std::cout << "ConversionResult: " << buff << '\n';
+		return buff;
+	}
+
+#endif
+
 }
 
 
