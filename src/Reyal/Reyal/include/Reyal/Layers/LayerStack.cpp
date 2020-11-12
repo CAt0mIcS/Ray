@@ -7,13 +7,13 @@
 
 namespace At0::Reyal
 {
-	void LayerStack::PushLayer(_In_ Layer* layer)
+	void LayerStack::PushLayer(Layer* layer)
 	{
 		RL_PROFILE_FUNCTION();
 		m_Layers.emplace_back(layer);
 	}
 
-	void LayerStack::PopLayer(_In_ Layer* layer)
+	void LayerStack::PopLayer(Layer* layer)
 	{
 		RL_PROFILE_FUNCTION();
 

@@ -33,7 +33,7 @@ namespace At0::Reyal
 		/// Initializes all components required for rendering
 		/// <param name="window">Is the platform specific window handle</param>
 		/// </summary>
-		virtual void Init(_In_ WindowHandle window) = 0;
+		virtual void Init(WindowHandle window) = 0;
 
 		/// <summary>
 		/// Checks if the renderer API was initialized

@@ -29,14 +29,14 @@ namespace At0::Reyal
 		/// </summary>
 		/// <param name="layer">Is a raw, (heap-allocated) pointer to the layer</param>
 		/// <returns>The pushed layer</returns>
-		void PushLayer(_In_ Layer* layer);
+		void PushLayer(Layer* layer);
 		
 		/// <summary>
 		/// Removes a layer from the stack
 		/// </summary>
 		/// <param name="layer">Is the layer to remove</param>
 		/// <returns>The removed layer</returns>
-		void PopLayer(_In_ Layer* layer);
+		void PopLayer(Layer* layer);
 
 		Iterator begin() { return m_Layers.begin(); }
 		Iterator end() { return m_Layers.end(); }

@@ -1,7 +1,6 @@
 #ifndef RLR_RLRBASE_H
 #define RLR_RLRBASE_H
 
-#include <sal.h>
 
 #ifdef RLR_BUILD
 	#if defined(_MSC_VER)

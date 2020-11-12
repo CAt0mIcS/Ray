@@ -62,16 +62,16 @@ namespace At0::Reyal
 		/// <param name="hMenu">Is a window Id</param>
 		/// <returns>TRUE(1) if the window was created successfully, FALSE(0) otherwise</returns>
 		uint8_t CreateNativeWindow(
-			_In_ const wchar_t* windowName,
-			_In_ const wchar_t* windowClassName,
-			_In_ DWORD style,
-			_In_opt_ _Maybenull_ DWORD exStyle = 0,
-			_In_opt_ uint32_t x = CW_USEDEFAULT,
-			_In_opt_ uint32_t y = CW_USEDEFAULT,
-			_In_opt_ uint32_t width = CW_USEDEFAULT,
-			_In_opt_ uint32_t height = CW_USEDEFAULT,
-			_In_opt_ _Maybenull_ HWND hWndParent = 0,
-			_In_opt_ _Maybenull_ HMENU hMenu = 0
+			const wchar_t* windowName,
+			const wchar_t* windowClassName,
+			DWORD style,
+			DWORD exStyle = 0,
+			uint32_t x = CW_USEDEFAULT,
+			uint32_t y = CW_USEDEFAULT,
+			uint32_t width = CW_USEDEFAULT,
+			uint32_t height = CW_USEDEFAULT,
+			HWND hWndParent = 0,
+			HMENU hMenu = 0
 		)
 		{
 			m_ClassName = windowClassName;
@@ -101,7 +101,7 @@ namespace At0::Reyal
 		/// <param name="wParam">Is an additional parameter</param>
 		/// <param name="lParam">Is an additional parameter</param>
 		/// <returns>LRESULT code</returns>
-		static LRESULT CALLBACK WindowProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
+		static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			DERIVED_TYPE* pDerived = nullptr;
 			if (uMsg == WM_NCCREATE)
@@ -132,7 +132,7 @@ namespace At0::Reyal
 		/// <param name="wParam">Is an additional parameter</param>
 		/// <param name="lParam">Is an additional parameter</param>
 		/// <returns>LRESULT code</returns>
-		virtual LRESULT HandleMessage(_In_ const WindowMessage& msg) = 0;
+		virtual LRESULT HandleMessage(const WindowMessage& msg) = 0;
 
 		/// <summary>
 		/// Getter for the window class name of this window

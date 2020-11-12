@@ -104,7 +104,7 @@ namespace At0::Reyal
         RL_PROFILE_FUNCTION();
     }
 
-    Widget::Widget(const std::wstring_view name, _In_opt_ Widget* parent)
+    Widget::Widget(const std::wstring_view name, Widget* parent)
         : m_Name(name), m_Parent(parent), m_Children{}, m_Matrix{}
     {
         RL_PROFILE_FUNCTION();

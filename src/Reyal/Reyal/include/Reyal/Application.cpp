@@ -19,11 +19,11 @@ namespace At0::Reyal
 	Application::Application()
 		: m_MainWindow(L"MainWindow", nullptr, true), m_LayerStack{}, m_Running(true)
 	{
-		m_MainWindow.SetImmediateEventHandler([this](_In_ Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
+		m_MainWindow.SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
 		RL_LOG_INFO("[ThreadPool] Initialized {0} threads", m_ThreadPool.MaxThreads());
 	}
 
-	void Application::Create(_In_ Application* app)
+	void Application::Create(Application* app)
 	{
 		s_Instance = app;
 	}
@@ -75,7 +75,7 @@ namespace At0::Reyal
 		return exitCode;
 	}
 
-	void Application::PushLayer(_In_ Layer* layer)
+	void Application::PushLayer(Layer* layer)
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -87,7 +87,7 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 	}
 	
-	void Application::OnEventReceived(_In_ Widget* receiver, Scope<Event>&& e)
+	void Application::OnEventReceived(Widget* receiver, Scope<Event>&& e)
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -100,7 +100,7 @@ namespace At0::Reyal
 		}
 	}
 
-	bool Application::OnImmediateEvent(_In_ Widget* receiver, Event& e)
+	bool Application::OnImmediateEvent(Widget* receiver, Event& e)
 	{
 		RL_PROFILE_FUNCTION();
 		RL_EXPECTS(e.GetType() <= EventType::LAST && e.GetType() >= EventType::FIRST);
@@ -121,7 +121,7 @@ namespace At0::Reyal
 		return false;
 	}
 	
-	void Application::DispatchEvent(_In_ Layer* layer, _In_ Widget* receiver, Event& e)
+	void Application::DispatchEvent(Layer* layer, Widget* receiver, Event& e)
 	{
 		RL_PROFILE_FUNCTION();
 

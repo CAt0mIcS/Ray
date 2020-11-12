@@ -21,7 +21,7 @@ namespace At0::Reyal
 		/// Initializes Renderer aand RendererAPI
 		/// </summary>
 		/// <param name="window">Is the platform specific window to render to</param>
-		void Init(_In_ WindowHandle window);
+		void Init(WindowHandle window);
 
 		/// <summary>
 		/// Checks if the renderer was initialized

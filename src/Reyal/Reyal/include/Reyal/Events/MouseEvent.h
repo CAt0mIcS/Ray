@@ -139,7 +139,7 @@ namespace At0::Reyal
 	class HoverEnterEvent : public Event
 	{
 	public:
-		HoverEnterEvent(_In_ Widget* hoverEntered)
+		HoverEnterEvent(Widget* hoverEntered)
 			: m_HoverEntered(hoverEntered) {}
 
 		virtual std::wstring ToString() const override
@@ -160,7 +160,7 @@ namespace At0::Reyal
 	class HoverLeaveEvent : public Event
 	{
 	public:
-		HoverLeaveEvent(_In_ Widget* hoverLeft)
+		HoverLeaveEvent(Widget* hoverLeft)
 			: m_HoverLeft(hoverLeft) {}
 
 		virtual std::wstring ToString() const override

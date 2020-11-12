@@ -18,7 +18,7 @@
 
 namespace At0::Reyal
 {
-	Window::Window(const std::wstring_view name, _In_opt_ Widget* parent, bool isMainWindow)
+	Window::Window(const std::wstring_view name, Widget* parent, bool isMainWindow)
 		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_OldWindowPos{}, m_CurrentlyHovering(this)
 	{
 		RL_PROFILE_FUNCTION();
@@ -257,7 +257,7 @@ namespace At0::Reyal
 		return IsWindowVisible(m_hWnd);
 	}
 
-	bool Window::ShouldClose(_In_opt_ _Maybenull_ int* exitCode)
+	bool Window::ShouldClose(int* exitCode)
 	{
 		/// <summary>
 		/// QUESTION:

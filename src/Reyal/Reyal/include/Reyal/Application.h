@@ -38,7 +38,7 @@ namespace At0::Reyal
 		/// Initializes the application
 		/// </summary>
 		/// <param name="app">Is the application</param>
-		static void Create(_In_ Application* app);
+		static void Create(Application* app);
 
 		/// <summary>
 		/// Deletes the application
@@ -74,14 +74,14 @@ namespace At0::Reyal
 		/// </summary>
 		/// <param name="layer">Is a raw, (heap-allocated) pointer to the layer</param>
 		/// <returns>The pushed layer</returns>
-		void PushLayer(_In_ Layer* layer);
+		void PushLayer(Layer* layer);
 
 		/// <summary>
 		/// Called if any window itself received an event
 		/// </summary>
 		/// <param name="receiver">Is the window which received the event</param>
 		/// <param name="e">Is the received event</param>
-		virtual void OnEvent(_In_ Widget* receiver, _In_ Event& e) = 0;
+		virtual void OnEvent(Widget* receiver, Event& e) = 0;
 
 		/// <summary>
 		/// Virtual Application Deconstructorr
@@ -100,7 +100,7 @@ namespace At0::Reyal
 		/// </summary>
 		/// <param name="receiver">Is the Widget that received the event</param>
 		/// <param name="e">Is the received event</param>
-		void OnEventReceived(_In_ Widget* receiver, Scope<Event>&& e);
+		void OnEventReceived(Widget* receiver, Scope<Event>&& e);
 
 		/// <summary>
 		/// Handles immediate events
@@ -108,7 +108,7 @@ namespace At0::Reyal
 		/// <param name="receiver">Is the widget which received the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the WindowProc should return 0, false if it should break</returns>
-		bool OnImmediateEvent(_In_ Widget* receiver, Event& e);
+		bool OnImmediateEvent(Widget* receiver, Event& e);
 		
 		/// <summary>
 		/// Calls the correct event function depending on the event
@@ -116,7 +116,7 @@ namespace At0::Reyal
 		/// <param name="layer">Is the layer which receives the event</param>
 		/// <param name="receiver">Is the widget which receives the event</param>
 		/// <param name="e">Is the event to dispatch</param>
-		void DispatchEvent(_In_ Layer* layer, _In_ Widget* receiver, Event& e);
+		void DispatchEvent(Layer* layer, Widget* receiver, Event& e);
 
 	protected:
 		/// <summary>

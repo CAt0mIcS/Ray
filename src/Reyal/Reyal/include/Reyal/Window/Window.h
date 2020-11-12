@@ -108,7 +108,7 @@ namespace At0::Reyal
 		/// <param name="name">Is the unique name of the window</param>
 		/// <param name="parent">Is the parent of this window</param>
 		/// <param name="isMainWindow">Specifies whether this window is the main one which will exit the application when closed</param>
-		Window(const std::wstring_view name, _In_opt_ Widget* parent = nullptr, bool isMainWindow = false);
+		Window(const std::wstring_view name, Widget* parent = nullptr, bool isMainWindow = false);
 
 		/// <summary>
 		/// Window Deconstructor
@@ -181,7 +181,7 @@ namespace At0::Reyal
 		/// </summary>
 		/// <param name="exitCode">Will be filled with the exit code when the application quits, specify nullptr to ignore</param>
 		/// <returns>True if the window was closed, false otherwise</returns>
-		bool ShouldClose(_In_opt_ _Maybenull_ int* exitCode = nullptr);
+		bool ShouldClose(int* exitCode = nullptr);
 
 		/// <summary>
 		/// Getter for the current event queue
@@ -194,7 +194,7 @@ namespace At0::Reyal
 		/// </summary>
 		/// <typeparam name="F">Is any callable, std::function castable type</typeparam>
 		/// <param name="func">Is the function to call</param>
-		template<typename F, typename = std::enable_if_t<std::is_convertible_v<F, std::function<bool(_In_ Widget*, Event&)>>>>
+		template<typename F, typename = std::enable_if_t<std::is_convertible_v<F, std::function<bool(Widget*, Event&)>>>>
 		void SetImmediateEventHandler(F&& func) { m_ImmediateEvent = func; }
 
 		/// <summary>
@@ -268,7 +268,7 @@ namespace At0::Reyal
 		/// <param name="e">Is the immediate event</param>
 		/// <returns>True if the WindowProc should return 0, false if the WindowProc should break</returns>
 		/// </summary>
-		std::function<bool(_In_ Widget* receiver, Event& e)> m_ImmediateEvent;
+		EventCallbackFn m_ImmediateEvent;
 	};
 }
 

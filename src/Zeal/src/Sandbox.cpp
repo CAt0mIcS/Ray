@@ -95,7 +95,7 @@ void SignalHandler(int signum)
 	exit(signum);
 }
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int pCmdShow)
+int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int pCmdShow)
 {
 	using namespace At0;
 
