@@ -50,7 +50,7 @@ namespace At0::Reyal::Debug
 /// </summary>
 #if RL_ENABLE_LOGGING
 
-#ifdef MSVC
+#ifdef _MSC_VER
 	#define RL_LOG_BEGIN(path, loglvl)	::At0::Reyal::Debug::Logger::Init(path, loglvl)
 
 	#define RL_LOG_TRACE(msg, ...)		::At0::Reyal::Debug::Logger::GetFileLogger().Trace(msg, __VA_ARGS__)
