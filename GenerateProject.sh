@@ -3,7 +3,7 @@
 #   architecture:   Win32 | x64
 #   configuration:  Debug | Release
 
-architecture=x64
+architecture=x86
 configuration=Debug
 
 
@@ -20,7 +20,7 @@ echo Selecting Build Settings "$configuration" "$unameOut" and "$architecture"
 
 [ ! -d "./$buildPath" ] && mkdir ./$buildPath
 cd ./$buildPath
-cmake .. -DCMAKE_BUILD_TYPE=$configuration -A $architecture
+cmake .. -DCMAKE_BUILD_TYPE=$configuration #-A $architecture
 
 read -s -n 1 -p "Press any key to continue . . ."
 cd ..
