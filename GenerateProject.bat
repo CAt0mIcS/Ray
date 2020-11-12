@@ -41,7 +41,7 @@ IF NOT EXIST %~dp0\%buildPath% (
 
 cd %buildPath%
 
-echo Starting CMake.
+echo Starting CMake...
 echo.
 
 call cmake .. -DCMAKE_BUILD_TYPE=%configuration% -A %architecture%

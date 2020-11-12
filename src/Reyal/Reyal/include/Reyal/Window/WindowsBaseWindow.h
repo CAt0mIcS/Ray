@@ -1,5 +1,10 @@
-#ifndef RL_BASEWINDOW_H
-#define RL_BASEWINDOW_H
+#ifndef RL_WINDOWSBASEWINDOW_H
+#define RL_WINDOWSBASEWINDOW_H
+
+
+#include <../../RlUtilities/include/RlUtil/PlatformDetection.h>
+
+#ifdef RL_PLATFORM_WINDOWS
 
 #include "Reyal/RlBase.h"
 #include "Reyal/RlWin.h"
@@ -12,6 +17,14 @@
 
 namespace At0::Reyal
 {
+	struct WindowMessage
+	{
+		UINT uMsg;
+		WPARAM wParam;
+		LPARAM lParam;
+	};
+
+
 	template<typename DERIVED_TYPE>
 	class RL_API BaseWindow
 	{
@@ -105,7 +118,7 @@ namespace At0::Reyal
 			}
 
 			if (pDerived)
-				return pDerived->HandleMessage(uMsg, wParam, lParam);
+				return pDerived->HandleMessage({ uMsg, wParam, lParam });
 			else
 				return DefWindowProc(hWnd, uMsg, wParam, lParam);
 
@@ -119,7 +132,7 @@ namespace At0::Reyal
 		/// <param name="wParam">Is an additional parameter</param>
 		/// <param name="lParam">Is an additional parameter</param>
 		/// <returns>LRESULT code</returns>
-		virtual LRESULT HandleMessage(_In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam) = 0;
+		virtual LRESULT HandleMessage(_In_ const WindowMessage& msg) = 0;
 
 		/// <summary>
 		/// Getter for the window class name of this window
@@ -142,5 +155,6 @@ namespace At0::Reyal
 	};
 }
 
+#endif // RL_PLATFORM_WINDOWS
 
-#endif // RL_BASEWINDOW_H
+#endif // RL_WINDOWSBASEWINDOW_H

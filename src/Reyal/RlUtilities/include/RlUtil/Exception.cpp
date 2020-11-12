@@ -28,6 +28,8 @@ namespace At0::Reyal
         return m_WhatBuffer.c_str();
     }
     
+
+#ifdef RL_PLATFORM_WINDOWS
     
     WindowsException::WindowsException(HRESULT hr, uint16_t line, const char* file)
         : Exception(line, file), m_Hr(hr)
@@ -61,4 +63,6 @@ namespace At0::Reyal
         LocalFree(pMsgBuf);
         return errorCode;
     }
+
+#endif
 }

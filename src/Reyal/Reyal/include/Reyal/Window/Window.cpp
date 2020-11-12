@@ -35,9 +35,9 @@ namespace At0::Reyal
 		Close();
 	}
 
-	LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	LRESULT Window::HandleMessage(const WindowMessage& msg)
 	{
-		switch (uMsg)
+		switch (msg.uMsg)
 		{
 		case WM_DESTROY:
 		{
@@ -52,7 +52,7 @@ namespace At0::Reyal
 		}
 		case WM_MOUSEMOVE:
 		{
-			POINTS pt = MAKEPOINTS(lParam);
+			POINTS pt = MAKEPOINTS(msg.lParam);
 			Mouse.SetPos({ (float)pt.x, (float)pt.y });
 
 			Scope<MouseMoveEvent> e = MakeScope<MouseMoveEvent>(Mouse.GetOldPos(), Mouse.GetPos());
@@ -104,25 +104,25 @@ namespace At0::Reyal
 			m_Renderer3D->RenderTestTriangle();
 			m_Renderer3D->EndDraw();
 
-			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)wParam, (uint32_t)(lParam & 0xff));
+			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)msg.wParam, (uint32_t)(msg.lParam & 0xff));
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_KEYUP:
 		{
-			Scope<KeyReleasedEvent> e = MakeScope<KeyReleasedEvent>((unsigned char)wParam);
+			Scope<KeyReleasedEvent> e = MakeScope<KeyReleasedEvent>((unsigned char)msg.wParam);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_CHAR:
 		{
-			Scope<CharEvent> e = MakeScope<CharEvent>((unsigned char)wParam);
+			Scope<CharEvent> e = MakeScope<CharEvent>((unsigned char)msg.wParam);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
 		{
-			int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+			int delta = GET_WHEEL_DELTA_WPARAM(msg.wParam);
 
 			if (delta > 0)
 			{
@@ -149,7 +149,7 @@ namespace At0::Reyal
 		}
 		case WM_SIZE:
 		{
-			Size2 newSize = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
+			Size2 newSize = { (float)LOWORD(msg.lParam), (float)HIWORD(msg.lParam) };
 			ResizeTo(newSize);
 
 			//TODO: Read how windows handles events (how they're built, how they handle it)
@@ -162,7 +162,7 @@ namespace At0::Reyal
 		}
 		case WM_MOVE:
 		{
-			Point2 newPos = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
+			Point2 newPos = { (float)LOWORD(msg.lParam), (float)HIWORD(msg.lParam) };
 			MoveTo(newPos);
 
 			Scope<WindowMoveEvent> e = MakeScope<WindowMoveEvent>(m_OldWindowPos, newPos);
@@ -190,7 +190,7 @@ namespace At0::Reyal
 		}
 		}
 
-		return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
+		return DefWindowProc(m_hWnd, msg.uMsg, msg.wParam, msg.lParam);
 	}
 	
 	std::wstring Window::GetTitle() const

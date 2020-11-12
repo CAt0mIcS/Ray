@@ -1,7 +1,8 @@
 #ifndef RL_WINDOW_H
 #define RL_WINDOW_H
 
-#include "BaseWindow.h"
+#include "WindowsBaseWindow.h"
+#include "LinuxBaseWindow.h"
 
 #include "Reyal/Input/Keyboard.h"
 #include "Reyal/Input/Mouse.h"
@@ -121,7 +122,7 @@ namespace At0::Reyal
 		/// <param name="wParam">Is an additional parameter</param>
 		/// <param name="lParam">Is an additional parameter</param>
 		/// <returns>LRESULT code</returns>
-		virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
+		virtual LRESULT HandleMessage(const WindowMessage& msg) override;
 
 		/// <summary>
 		/// Checks if this window is the main Window
@@ -145,7 +146,7 @@ namespace At0::Reyal
 		/// Getter for the native window
 		/// </summary>
 		/// <returns>The native window handle</returns>
-		virtual HWND GetNativeWindow() const override;
+		virtual WindowHandle GetNativeWindow() const override;
 
 		/// <summary>
 		/// Sets the Window title

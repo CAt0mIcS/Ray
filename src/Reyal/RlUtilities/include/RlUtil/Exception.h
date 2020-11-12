@@ -6,7 +6,7 @@
 #include <string>
 
 #include "RlUWin.h"
-
+#include "PlatformDetection.h"
 
 #include "RlUBase.h"
 
@@ -69,6 +69,7 @@ namespace At0::Reyal
 		const char* m_File;
 	};
 
+#ifdef RL_PLATFORM_WINDOWS
 
 	class RLU_API WindowsException : public Exception
 	{
@@ -105,8 +106,11 @@ namespace At0::Reyal
 		/// </summary>
 		HRESULT m_Hr;
 	};
+
+#endif
 }
 
+#ifdef RL_PLATFORM_WINDOWS
 
 #define RL_THROW_WND_EXCEPT(hr) \
 if(FAILED(hr)) throw ::At0::Reyal::WindowsException(hr, (uint16_t)__LINE__, __FILE__)
@@ -116,5 +120,13 @@ throw ::At0::Reyal::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FIL
 
 #define RL_THROW_LAST_WND_EXCEPT(booleanResult) \
 if(!(booleanResult)) RL_THROW_LAST_WND_EXCEPT2()
+
+#else
+
+#define RL_THROW_WND_EXCEPT(hr)
+#define RL_THROW_LAST_WND_EXCEPT2()
+#define RL_THROW_LAST_WND_EXCEPT()
+
+#endif
 
 #endif // RLU_EXCEPTION_H
