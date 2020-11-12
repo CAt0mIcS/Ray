@@ -26,7 +26,7 @@ namespace At0::Reyal
 
 
 	template<typename DERIVED_TYPE>
-	class RL_API BaseWindow
+	class BaseWindow
 	{
 	public:
 		/// <summary>
@@ -34,6 +34,81 @@ namespace At0::Reyal
 		/// </summary>
 		BaseWindow()
 			: m_hWnd(0) {}
+
+		/// <summary>
+		/// Getter for the current Window Title
+		/// </summary>
+		/// <returns>The title of this Window</returns>
+		std::wstring BaseWindow::GetTitle() const
+		{
+			std::wstring str;
+			int len = GetWindowTextLength(m_hWnd);
+			if (len > 0)
+			{
+				str.resize(len);
+				GetWindowText(m_hWnd, str.data(), len + 1);
+			}
+
+			return str;
+		}
+
+		/// <summary>
+		/// Sets the Window Title
+		/// </summary>
+		/// <param name="title">Is the new Window Title</param>
+		void BaseWindow::SetTitle(const std::wstring_view title)
+		{
+			SetWindowText(m_hWnd, title.data());
+		}
+
+		/// <summary>
+		/// Shows the Window
+		/// </summary>
+		void BaseWindow::Show() const
+		{
+			ShowWindow(m_hWnd, SW_SHOW);
+		}
+
+		/// <summary>
+		/// Hides the Window
+		/// </summary>
+		void BaseWindow::Hide() const
+		{
+			ShowWindow(m_hWnd, SW_HIDE);
+		}
+
+		/// <summary>
+		/// Maximizes the Window
+		/// </summary>
+		void BaseWindow::Maximize() const
+		{
+			ShowWindow(m_hWnd, SW_MAXIMIZE);
+		}
+
+		/// <summary>
+		/// Minimizes the Window
+		/// </summary>
+		void BaseWindow::Minimize() const
+		{
+			ShowWindow(m_hWnd, SW_MINIMIZE);
+		}
+
+		/// <summary>
+		/// Closes the Window
+		/// </summary>
+		void BaseWindow::Close() const
+		{
+			SendMessage(m_hWnd, WM_CLOSE, 0, 0);
+		}
+
+		/// <summary>
+		/// Checks if the Window is open (IsVisible)
+		/// </summary>
+		/// <returns></returns>
+		bool BaseWindow::IsOpen() const
+		{
+			return IsWindowVisible(m_hWnd);
+		}
 
 		/// <summary>
 		/// Virtual BaseWindow Deconstructor, unregisters the window class
@@ -118,7 +193,7 @@ namespace At0::Reyal
 			}
 
 			if (pDerived)
-				return pDerived->HandleMessage({ uMsg, wParam, lParam });
+				return (LRESULT)pDerived->HandleMessage({ uMsg, wParam, lParam });
 			else
 				return DefWindowProc(hWnd, uMsg, wParam, lParam);
 
@@ -132,7 +207,7 @@ namespace At0::Reyal
 		/// <param name="wParam">Is an additional parameter</param>
 		/// <param name="lParam">Is an additional parameter</param>
 		/// <returns>LRESULT code</returns>
-		virtual LRESULT HandleMessage(const WindowMessage& msg) = 0;
+		virtual int64_t HandleMessage(const WindowMessage& msg) = 0;
 
 		/// <summary>
 		/// Getter for the window class name of this window

@@ -19,7 +19,7 @@
 namespace At0::Reyal
 {
 	Window::Window(const std::wstring_view name, Widget* parent, bool isMainWindow)
-		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_OldWindowPos{}, m_CurrentlyHovering(this)
+		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_OldWindowPos{}, m_CurrentlyHovering(this), m_OldSize{}
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -35,7 +35,7 @@ namespace At0::Reyal
 		Close();
 	}
 
-	LRESULT Window::HandleMessage(const WindowMessage& msg)
+	int64_t Window::HandleMessage(const WindowMessage& msg)
 	{
 		switch (msg.uMsg)
 		{
@@ -192,21 +192,6 @@ namespace At0::Reyal
 
 		return DefWindowProc(m_hWnd, msg.uMsg, msg.wParam, msg.lParam);
 	}
-	
-	std::wstring Window::GetTitle() const
-	{
-		RL_PROFILE_FUNCTION();
-
-		std::wstring str;
-		int len = GetWindowTextLength(m_hWnd);
-		if (len > 0)
-		{
-			str.resize(len);
-			GetWindowText(m_hWnd, str.data(), len + 1);
-		}
-		
-		return str;
-	}
 
 	Renderer3D* Window::GetRenderer3D() const
 	{
@@ -219,42 +204,9 @@ namespace At0::Reyal
 		return m_Renderer3D.get();
 	}
 
-	HWND Window::GetNativeWindow() const
+	WindowHandle Window::GetNativeWindow() const
 	{
 		return m_hWnd;
-	}
-
-	void Window::SetTitle(const std::wstring_view title)
-	{
-		RL_PROFILE_FUNCTION();
-
-		SetWindowText(m_hWnd, title.data());
-	}
-
-	void Window::Show(ShowCommand cmdShow) const
-	{
-		RL_PROFILE_FUNCTION();
-
-		RL_EXPECTS(cmdShow <= ShowCommand::LAST && cmdShow >= ShowCommand::FIRST);
-		ShowWindow(m_hWnd, (int)cmdShow);
-	}
-
-	void Window::Hide() const
-	{
-		RL_PROFILE_FUNCTION();
-		this->Show(ShowCommand::Hide);
-	}
-
-	void Window::Close() const
-	{
-		RL_PROFILE_FUNCTION();
-		SendMessage(m_hWnd, WM_CLOSE, 0, 0);
-	}
-
-	bool Window::IsOpen() const
-	{
-		RL_PROFILE_FUNCTION();
-		return IsWindowVisible(m_hWnd);
 	}
 
 	bool Window::ShouldClose(int* exitCode)

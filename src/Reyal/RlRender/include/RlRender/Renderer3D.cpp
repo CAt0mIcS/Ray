@@ -17,7 +17,8 @@ namespace At0::Reyal
         RL_MEXPECTS(!this->IsInitialized(), "Renderer3D was already initialized.");
 
         m_API = RendererAPI::Create();
-        m_API->Init(window);
+        if(m_API)
+            m_API->Init(window);
     }
 
     void Renderer3D::RenderTestTriangle()
