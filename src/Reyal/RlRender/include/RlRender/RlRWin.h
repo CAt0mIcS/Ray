@@ -85,8 +85,6 @@
 	#undef NOPROFILER
 	#undef NODEFERWINDOWPOS
 	#undef NOMCX
-#else
-	#error "Only Windows is currently supported!"
 #endif // RL_PLATFORM_WINDOWS
 
 
