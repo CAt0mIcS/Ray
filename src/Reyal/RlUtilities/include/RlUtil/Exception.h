@@ -92,7 +92,7 @@ namespace At0::Reyal
 		/// Getter for more information about the error
 		/// </summary>
 		/// <returns>More information about the error</returns>
-		virtual const char* what() const override;
+		virtual const char* what() const noexcept override;
 
 		/// <summary>
 		/// Uses format message to get the message string from Win32API

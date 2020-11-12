@@ -33,7 +33,7 @@ namespace At0::Reyal::Debug
 }
 
 #define RL_WIDEC2(x) L ## x
-#define RL_WIDE(x) RL_WIDEC2(#x)
+#define RL_WIDE(x) RL_WIDEC2(x)
 
 #ifdef RL_PLATFORM_WINDOWS
 #	define RL_ASSERT(condition, msg, ...)	if(!(condition)) _wassert(::At0::Reyal::Debug::RlAssert::AssertW(msg, __VA_ARGS__).c_str(), RL_WIDE(__FILE__), (unsigned int)__LINE__)

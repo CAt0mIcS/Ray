@@ -36,7 +36,7 @@ namespace At0::Reyal
     {
     }
     
-    const char* WindowsException::what() const
+    const char* WindowsException::what() const noexcept
     {
         std::stringstream oss;
         oss << GetType() << '\n'
