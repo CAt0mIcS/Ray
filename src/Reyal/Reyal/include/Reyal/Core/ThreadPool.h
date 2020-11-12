@@ -4,6 +4,7 @@
 #include "Queue.h"
 #include <mutex>
 #include <functional>
+#include <thread>
 
 
 namespace std

@@ -7,7 +7,8 @@ set(SRC
 	"include/Reyal/Layers/Layer.cpp"
 	"include/Reyal/Layers/LayerStack.cpp"
 	"include/Reyal/Widgets/ZWidget.cpp"
-	"include/Reyal/Window/Window.cpp"
+	"include/Reyal/Window/WindowsWindow.cpp"
+	"include/Reyal/Window/LinuxWindow.cpp"
 	"include/Reyal/rlpch.cpp"
 	"include/Reyal/rlpch.h"
 	

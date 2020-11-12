@@ -1,9 +1,7 @@
 #ifndef RLD_RLASSERT_H
 #define RLD_RLASSERT_H
 
-// TODO: Enable Assert again
-// #ifndef NDEBUG
-#if 0
+#ifndef NDEBUG
 
 #include "ReyalLogger.h"
 
@@ -40,7 +38,7 @@ namespace At0::Reyal::Debug
 #ifdef RL_PLATFORM_WINDOWS
 #	define RL_ASSERT(condition, msg, ...)	if(!(condition)) _wassert(::At0::Reyal::Debug::RlAssert::AssertW(msg, __VA_ARGS__).c_str(), RL_WIDE(__FILE__), (unsigned int)__LINE__)
 #elif defined(RL_PLATFORM_LINUX)
-	#define RL_ASSERT(condition, msg, ...)	if(!(condition)) __assert(::At0::Reyal::Debug::RlAssert::AssertA(msg, __VA_ARGS__).c_str(), "TODO: FILE", (unsigned int)999)
+	#define RL_ASSERT(condition, msg, ...)	if(!(condition)) __assert(::At0::Reyal::Debug::RlAssert::AssertA(msg, ## __VA_ARGS__).c_str(), "TODO: FILE", (unsigned int)999)
 #endif
 #define RL_MEXPECTS(expected, msg)		RL_ASSERT(expected, "[Expected] {0}\n{1}", #expected, msg)
 #define RL_EXPECTS(expected)			RL_ASSERT(expected, "[Expected] {0}", #expected)

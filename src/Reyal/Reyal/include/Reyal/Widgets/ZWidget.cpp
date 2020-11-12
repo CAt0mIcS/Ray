@@ -47,13 +47,14 @@ namespace At0::Reyal
 
     void Widget::PostRedraw(bool eraseBkgnd) const
     {
-        HWND hWnd = GetNativeWindow();
+        WindowHandle hWnd = GetNativeWindow();
         
         //TODO: Program should be able to continue if one call fails
 
         //TODO: Invalidate only widget area
-        RL_THROW_LAST_WND_EXCEPT(InvalidateRect(hWnd, &Util::TransformationToRect(m_Matrix), (BOOL)eraseBkgnd));
-        RL_THROW_LAST_WND_EXCEPT(UpdateWindow(hWnd));
+        //TODO: Make Platform independent
+        // RL_THROW_LAST_WND_EXCEPT(InvalidateRect(hWnd, &Util::TransformationToRect(m_Matrix), (BOOL)eraseBkgnd));
+        // RL_THROW_LAST_WND_EXCEPT(UpdateWindow(hWnd));
     }
 
     /// <summary>

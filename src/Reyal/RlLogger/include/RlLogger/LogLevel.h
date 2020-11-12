@@ -1,7 +1,10 @@
 #ifndef ZZL_LOGLEVEL_H
 #define ZZL_LOGLEVEL_H
 
-
+// None gets defined by XLib, this could break it (TODO)
+#ifdef None
+#undef None
+#endif
 
 
 namespace At0::Log

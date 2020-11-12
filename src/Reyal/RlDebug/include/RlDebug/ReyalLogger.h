@@ -50,6 +50,7 @@ namespace At0::Reyal::Debug
 /// </summary>
 #if RL_ENABLE_LOGGING
 
+#ifdef MSVC
 	#define RL_LOG_BEGIN(path, loglvl)	::At0::Reyal::Debug::Logger::Init(path, loglvl)
 
 	#define RL_LOG_TRACE(msg, ...)		::At0::Reyal::Debug::Logger::GetFileLogger().Trace(msg, __VA_ARGS__)
@@ -63,6 +64,22 @@ namespace At0::Reyal::Debug
 
 	#define RL_LOG_END()				::At0::Reyal::Debug::Logger::End();
 	#define RL_LOG_FLUSH()				::At0::Reyal::Debug::Logger::GetFileLogger().Flush();
+#elif defined(__GNUC__)
+	#define RL_LOG_BEGIN(path, loglvl)	::At0::Reyal::Debug::Logger::Init(path, loglvl)
+
+	#define RL_LOG_TRACE(msg, ...)		::At0::Reyal::Debug::Logger::GetFileLogger().Trace(msg, ## __VA_ARGS__)
+	#define RL_LOG_DEBUG(msg, ...)		::At0::Reyal::Debug::Logger::GetFileLogger().Debug(msg, ## __VA_ARGS__)
+	#define RL_LOG_INFO(msg, ...)		::At0::Reyal::Debug::Logger::GetFileLogger().Info(msg, ## __VA_ARGS__)
+	#define RL_LOG_WARN(msg, ...)		::At0::Reyal::Debug::Logger::GetFileLogger().Warn(msg, ## __VA_ARGS__)
+	#define RL_LOG_ERROR(msg, ...)		::At0::Reyal::Debug::Logger::GetFileLogger().Error(msg, ## __VA_ARGS__)
+	#define RL_LOG_CRITICAL(msg, ...)	::At0::Reyal::Debug::Logger::GetFileLogger().Critical(msg, ## __VA_ARGS__)
+
+	#define RL_FL_LOGGER_OPEN()			::At0::Reyal::Debug::Logger::GetFileLogger().IsOpen()
+
+	#define RL_LOG_END()				::At0::Reyal::Debug::Logger::End();
+	#define RL_LOG_FLUSH()				::At0::Reyal::Debug::Logger::GetFileLogger().Flush();
+#endif
+
 #else
 	#define RL_LOG_BEGIN(path, loglevel)
 	

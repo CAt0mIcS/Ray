@@ -39,7 +39,7 @@ namespace At0::Reyal
 		/// Getter for the current Window Title
 		/// </summary>
 		/// <returns>The title of this Window</returns>
-		std::wstring BaseWindow::GetTitle() const
+		std::wstring GetTitle() const
 		{
 			std::wstring str;
 			int len = GetWindowTextLength(m_hWnd);
@@ -56,7 +56,7 @@ namespace At0::Reyal
 		/// Sets the Window Title
 		/// </summary>
 		/// <param name="title">Is the new Window Title</param>
-		void BaseWindow::SetTitle(const std::wstring_view title)
+		void SetTitle(const std::wstring_view title)
 		{
 			SetWindowText(m_hWnd, title.data());
 		}
@@ -64,7 +64,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Shows the Window
 		/// </summary>
-		void BaseWindow::Show() const
+		void Show() const
 		{
 			ShowWindow(m_hWnd, SW_SHOW);
 		}
@@ -72,7 +72,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Hides the Window
 		/// </summary>
-		void BaseWindow::Hide() const
+		void Hide() const
 		{
 			ShowWindow(m_hWnd, SW_HIDE);
 		}
@@ -80,7 +80,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Maximizes the Window
 		/// </summary>
-		void BaseWindow::Maximize() const
+		void Maximize() const
 		{
 			ShowWindow(m_hWnd, SW_MAXIMIZE);
 		}
@@ -88,7 +88,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Minimizes the Window
 		/// </summary>
-		void BaseWindow::Minimize() const
+		void Minimize() const
 		{
 			ShowWindow(m_hWnd, SW_MINIMIZE);
 		}
@@ -96,7 +96,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Closes the Window
 		/// </summary>
-		void BaseWindow::Close() const
+		void Close() const
 		{
 			SendMessage(m_hWnd, WM_CLOSE, 0, 0);
 		}
@@ -104,8 +104,8 @@ namespace At0::Reyal
 		/// <summary>
 		/// Checks if the Window is open (IsVisible)
 		/// </summary>
-		/// <returns></returns>
-		bool BaseWindow::IsOpen() const
+		/// <returns>True if the Window is open, false otherwise</returns>
+		bool IsOpen() const
 		{
 			return IsWindowVisible(m_hWnd);
 		}

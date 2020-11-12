@@ -5,7 +5,10 @@
 #include <Reyal/Reyal.h>
 
 #include <filesystem>
-#include <Windows.h>
+
+#ifdef RL_PLATFORM_WINDOWS
+	#include <Windows.h>
+#endif
 
 namespace At0
 {
@@ -26,6 +29,8 @@ namespace At0
 		#else
 			std::string outStr = "../../bin/Debug-x64";
 		#endif
+		
+		#ifdef RL_PLATFORM_WINDOWS
 		
 		for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(outStr))
 		{
@@ -49,6 +54,8 @@ namespace At0
 		
 			PushLayer(layerCreateFunc());
 		}
+		
+		#endif
 
 	}
 	
@@ -94,6 +101,8 @@ void SignalHandler(int signum)
 
 	exit(signum);
 }
+
+#ifdef RL_PLATFORM_WINDOWS
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int pCmdShow)
 {
@@ -159,3 +168,11 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int pCmdSh
 	return -1;
 }
 
+#elif defined(RL_PLATFORM_LINUX)
+
+int main(int argc, char** argv)
+{
+	std::cout << "Hello World\n";
+}
+
+#endif

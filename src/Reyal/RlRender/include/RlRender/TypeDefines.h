@@ -5,17 +5,14 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-#ifdef RL_PLATFORM_LINUX
-//XLib Window 
-class Window;
-#endif
 
 namespace At0::Reyal
 {
 #ifdef RL_PLATFORM_WINDOWS
 	using WindowHandle = HWND;
 #elif defined(RL_PLATFORM_LINUX)
-	using WindowHandle = Window*;
+	// QUESTION: typedefed Window class cannot be just forward-declared. Have to use unsigned long which could change
+	using WindowHandle = unsigned long*;
 #endif
 
 	namespace
