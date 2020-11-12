@@ -28,11 +28,17 @@ set(PUBLIC_LIB
     "RlDebug"
 )
 
-set(PRIVATE_LIB
-    "D3D11"
-    "DXGI"
-    "D3DCompiler"
-)
+if(WIN32)
+    set(PRIVATE_LIB
+        "D3D11"
+        "DXGI"
+        "D3DCompiler"
+    )
+elseif(UNIX)
+    set(PRIVATE_LIB
+        ""
+    )
+endif()
 
 
 add_library("RlRender" SHARED "${SRC}")

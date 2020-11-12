@@ -2,6 +2,7 @@
 #include "Reyal/Core/ThreadPool.h"
 
 #include <mutex>
+#include <thread>
 
 #include <RlDebug/ReyalLogger.h>
 #include <RlDebug/Instrumentor.h>

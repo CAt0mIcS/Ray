@@ -5,11 +5,17 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
+#ifdef RL_PLATFORM_LINUX
+//XLib Window 
+class Window;
+#endif
 
 namespace At0::Reyal
 {
 #ifdef RL_PLATFORM_WINDOWS
 	using WindowHandle = HWND;
+#elif defined(RL_PLATFORM_LINUX)
+	using WindowHandle = Window*;
 #endif
 
 	namespace

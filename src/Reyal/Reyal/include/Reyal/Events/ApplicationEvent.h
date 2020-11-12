@@ -28,7 +28,8 @@ namespace At0::Reyal
 		const Size2& GetSize() const { return m_NewSize; }
 		const Size2& GetOldSize() const { return m_OldSize; }
 
-		RL_DECLARE_TYPE_FN(WindowResizeEvent)
+		static EventType GetStaticType() { return EventType::WindowResizeEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 
 	private:
 		Size2 m_OldSize;
@@ -54,7 +55,8 @@ namespace At0::Reyal
 		const Point2& GetPos() const { return m_NewPos; }
 		const Point2& GetOldPos() const { return m_OldPos; }
 
-		RL_DECLARE_TYPE_FN(WindowMoveEvent)
+		static EventType GetStaticType() { return EventType::WindowMoveEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 
 	private:
 		Point2 m_OldPos;
@@ -75,7 +77,8 @@ namespace At0::Reyal
 			return oss.str();
 		}
 
-		RL_DECLARE_TYPE_FN(SetCursorEvent)
+		static EventType GetStaticType() { return EventType::SetCursorEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 	};
 
 	class WindowCloseEvent : public Event
@@ -92,7 +95,8 @@ namespace At0::Reyal
 			return oss.str();
 		}
 
-		RL_DECLARE_TYPE_FN(WindowCloseEvent)
+		static EventType GetStaticType() { return EventType::WindowCloseEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 	};
 
 	class PaintEvent : public Event
@@ -110,7 +114,8 @@ namespace At0::Reyal
 			return oss.str();
 		}
 
-		RL_DECLARE_TYPE_FN(PaintEvent)
+		static EventType GetStaticType() { return EventType::PaintEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 	private:
 	};
 }

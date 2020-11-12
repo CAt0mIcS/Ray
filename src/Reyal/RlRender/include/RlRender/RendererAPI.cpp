@@ -8,7 +8,7 @@
 
 namespace At0::Reyal
 {
-	RendererAPI::API RendererAPI::s_Api = RendererAPI::API::D3D11;
+	RendererAPI::API RendererAPI::s_Api = RendererAPI::API::None;
 
 	std::unique_ptr<RendererAPI> RendererAPI::Create()
 	{
@@ -16,6 +16,7 @@ namespace At0::Reyal
 
 		switch (GetAPI())
 		{
+		case API::None:				return nullptr; // TODO: Warn!
 		case API::D3D11:			return std::make_unique<D3D11RendererAPI>();
 		}
 

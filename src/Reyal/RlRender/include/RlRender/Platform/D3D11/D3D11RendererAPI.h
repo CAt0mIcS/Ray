@@ -1,11 +1,13 @@
 #ifndef RLR_D3D11RENDERERAPI_H
 #define RLR_D3D11RENDERERAPI_H
 
-#include "RlRender/RlRBase.h"
 
 #include "RlRender/RendererAPI.h"
-#include <wrl.h>
+#include "RlRender/RlRBase.h"
 
+#ifdef RL_PLATFORM_WINDOWS
+#include <wrl.h>
+#endif
 
 namespace At0::Reyal
 {
@@ -40,12 +42,14 @@ namespace At0::Reyal
 		virtual void EndDraw() override;
 
 	private:
+#ifdef RL_PLATFORM_WINDOWS
 		Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_Context;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_TargetView;
 
 		HWND m_hWnd;
+#endif // RL_PLATFORM_WINDOWS
 	};
 }
 

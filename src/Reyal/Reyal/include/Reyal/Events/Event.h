@@ -2,10 +2,6 @@
 #define RL_EVENT_H
 
 
-#define RL_DECLARE_TYPE_FN(type)	static EventType GetStaticType() { return EventType::##type; }\
-									virtual EventType GetType() const override { return GetStaticType(); }
-
-
 namespace At0::Reyal
 {
 	enum class EventType

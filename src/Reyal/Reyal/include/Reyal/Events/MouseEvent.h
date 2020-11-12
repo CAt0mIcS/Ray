@@ -34,7 +34,8 @@ namespace At0::Reyal
 		const Point2& GetPos() const { return m_NewPos; }
 		const Point2& GetOldPos() const { return m_OldPos; }
 
-		RL_DECLARE_TYPE_FN(MouseMoveEvent)
+		static EventType GetStaticType() { return EventType::MouseMoveEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 
 	private:
 		Point2 m_OldPos;
@@ -58,7 +59,8 @@ namespace At0::Reyal
 
 		MouseButton GetButton() const { return m_Button; }
 
-		RL_DECLARE_TYPE_FN(MouseButtonPressedEvent)
+		static EventType GetStaticType() { return EventType::MouseButtonPressedEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 
 	private:
 		MouseButton m_Button;
@@ -81,7 +83,8 @@ namespace At0::Reyal
 
 		MouseButton GetButton() const { return m_Button; }
 
-		RL_DECLARE_TYPE_FN(MouseButtonReleasedEvent)
+		static EventType GetStaticType() { return EventType::MouseButtonReleasedEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 
 	private:
 		MouseButton m_Button;
@@ -115,7 +118,8 @@ namespace At0::Reyal
 			return oss.str();
 		}
 
-		RL_DECLARE_TYPE_FN(MouseWheelUpEvent)
+		static EventType GetStaticType() { return EventType::MouseWheelUpEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 	};
 
 	class MouseWheelDownEvent : public MouseWheelEvent
@@ -133,7 +137,8 @@ namespace At0::Reyal
 			return oss.str();
 		}
 
-		RL_DECLARE_TYPE_FN(MouseWheelDownEvent)
+		static EventType GetStaticType() { return EventType::MouseWheelDownEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 	};
 
 	class HoverEnterEvent : public Event
@@ -151,7 +156,8 @@ namespace At0::Reyal
 
 		Widget* GetHoverWidget() const { return m_HoverEntered; }
 
-		RL_DECLARE_TYPE_FN(HoverEnterEvent);
+		static EventType GetStaticType() { return EventType::HoverEnterEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 
 	private:
 		Widget* m_HoverEntered;
@@ -170,7 +176,8 @@ namespace At0::Reyal
 			return oss.str();
 		}
 
-		RL_DECLARE_TYPE_FN(HoverLeaveEvent);
+		static EventType GetStaticType() { return EventType::HoverLeaveEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 
 	private:
 		Widget* m_HoverLeft;

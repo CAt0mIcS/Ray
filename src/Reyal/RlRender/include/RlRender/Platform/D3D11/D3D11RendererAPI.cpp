@@ -1,4 +1,7 @@
 #include "rlrpch.h"
+
+#ifdef RL_PLATFORM_WINDOWS
+
 #include "RlRender/Platform/D3D11/D3D11RendererAPI.h"
 
 #include <RlDebug/ReyalLogger.h>
@@ -228,3 +231,5 @@ namespace At0::Reyal
         m_SwapChain->Present(1, 0);
     }
 }
+
+#endif // RL_PLATFORM_WINDOWS

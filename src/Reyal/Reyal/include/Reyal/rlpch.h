@@ -19,7 +19,8 @@
 #include <memory>
 #include <fstream>
 #include <bitset>
-#include <wrl.h>
+#include <condition_variable>
+#include <thread>
 
 #include <assert.h>
 

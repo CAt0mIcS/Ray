@@ -39,7 +39,8 @@ namespace At0::Reyal
 			return oss.str();
 		}
 
-		RL_DECLARE_TYPE_FN(KeyPressedEvent)
+		static EventType GetStaticType() { return EventType::KeyPressedEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 
 	private:
 		uint32_t m_RepeatCount;
@@ -60,7 +61,8 @@ namespace At0::Reyal
 			return oss.str();
 		}
 
-		RL_DECLARE_TYPE_FN(KeyReleasedEvent)
+		static EventType GetStaticType() { return EventType::KeyReleasedEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 	};
 
 	class CharEvent : public KeyEvent
@@ -78,7 +80,8 @@ namespace At0::Reyal
 			return oss.str();
 		}
 
-		RL_DECLARE_TYPE_FN(CharEvent)
+		static EventType GetStaticType() { return EventType::CharEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
 	};
 }
 
