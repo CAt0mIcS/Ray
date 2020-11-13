@@ -3,7 +3,7 @@
 
 #include <Reyal/Application.h>
 
-namespace At0
+namespace At0::Zeal
 {
 
 	class Sandbox : public Reyal::Application
@@ -28,13 +28,12 @@ namespace At0
 		virtual void OnEvent(Reyal::Widget* receiver, Reyal::Event& e);
 
 	};
-
-
-	void Reyal::CreateApplication()
-	{
-		Reyal::Application::Create(new Sandbox());
-	}
+	
 }
 
+void At0::Reyal::CreateApplication()
+{
+	At0::Reyal::Application::Create(new At0::Zeal::Sandbox());
+}
 
 #endif // ZL_SANDBOX_H

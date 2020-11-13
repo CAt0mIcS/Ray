@@ -4,13 +4,10 @@
 
 #include <Reyal/Reyal.h>
 
-#include <filesystem>
+#include "ExtensionLoader/ExtensionLoader.h"
 
-#ifdef RL_PLATFORM_WINDOWS
-	#include <Windows.h>
-#endif
 
-namespace At0
+namespace At0::Zeal
 {
 	Sandbox::Sandbox()
 	{
@@ -19,44 +16,14 @@ namespace At0
 		m_MainWindow.InitRenderer3D();
 		m_MainWindow.SetTitle(L"Zeal");
 		m_MainWindow.Show();
-		
-		// Test loading in layers
-		using LayerCreateFunc = Reyal::Layer* (*)();
-		const std::wstring ending = L".dll";
-		
-		#ifdef NDEBUG
-			std::string outStr = "../../bin/Release-x64";
-		#else
-			std::string outStr = "../../bin/Debug-x64";
-		#endif
-		
-		#ifdef RL_PLATFORM_WINDOWS
-		
-		for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(outStr))
-		{
-			std::wstring_view path = dirEntry.path().native();
-		
-			if (path.size() < ending.size() || path.compare(path.size() - ending.size(), ending.size(), ending) != 0)
-				continue;
-		
-			HMODULE hDll = LoadLibrary(path.data());
-			if (!hDll || hDll == INVALID_HANDLE_VALUE)
-			{
-				MessageBox(NULL, L"Error", L"Cannot find dll", MB_OK);
-				return;
-			}
-		
-			LayerCreateFunc layerCreateFunc = (LayerCreateFunc)GetProcAddress(hDll, "CreateLayer");
-			if (!layerCreateFunc)
-			{
-				continue;
-			}
-		
-			PushLayer(layerCreateFunc());
-		}
-		
-		#endif
 
+		
+		//ExtensionLoader loader;
+#ifdef NDEBUG
+		//loader.Start("../../bin/Release-x64")
+#else
+		//loader.Start("../../bin/Debug-x64");
+#endif
 	}
 	
 	Sandbox::~Sandbox()

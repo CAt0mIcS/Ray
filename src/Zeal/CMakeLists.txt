@@ -5,6 +5,10 @@ set(SRC
     "src/pch.h"
     "src/Sandbox.cpp"
     "src/Sandbox.h"
+
+    "src/ExtensionLoader/WindowsExtensionLoader.cpp"
+    "src/ExtensionLoader/LinuxExtensionLoader.cpp"
+    "src/ExtensionLoader/ExtensionLoader.h"
 )
 
 set(PUBLIC_INC
@@ -12,7 +16,7 @@ set(PUBLIC_INC
 )
 
 set(PRIVATE_INC
-    ""
+    "src"
 )
 
 set(PUBLIC_LIB
