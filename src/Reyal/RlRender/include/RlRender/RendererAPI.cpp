@@ -8,7 +8,12 @@
 
 namespace At0::Reyal
 {
+#ifdef RL_PLATFORM_WINDOWS
+	RendererAPI::API RendererAPI::s_Api = RendererAPI::API::D3D11;
+#elif defined(RL_PLATFORM_LINUX)
+	// TODO: OpenGL or XLib
 	RendererAPI::API RendererAPI::s_Api = RendererAPI::API::None;
+#endif
 
 	std::unique_ptr<RendererAPI> RendererAPI::Create()
 	{
@@ -16,7 +21,7 @@ namespace At0::Reyal
 
 		switch (GetAPI())
 		{
-		case API::None:				return nullptr; // TODO: Warn!
+		case API::None:				RL_LOG_WARN("[RendererAPI] Returning invalid RendererAPI. Calls to the API will fail!"); return nullptr; // TODO: Warn!
 		case API::D3D11:			return std::make_unique<D3D11RendererAPI>();
 		}
 

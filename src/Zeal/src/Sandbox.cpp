@@ -18,11 +18,11 @@ namespace At0::Zeal
 		m_MainWindow.Show();
 
 		
-		//ExtensionLoader loader;
+		ExtensionLoader loader;
 #ifdef NDEBUG
-		//loader.Start("../../bin/Release-x64")
+		loader.Start("../../bin/Release-x64", [this](Reyal::Layer* layer) { PushLayer(layer); })
 #else
-		//loader.Start("../../bin/Debug-x64");
+		loader.Start("../../bin/Debug-x64", [this](Reyal::Layer* layer) { PushLayer(layer); });
 #endif
 	}
 	

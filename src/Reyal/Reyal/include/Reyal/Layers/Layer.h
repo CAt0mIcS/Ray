@@ -3,8 +3,6 @@
 
 #include "Reyal/RlBase.h"
 
-#include "Reyal/Widgets/ZWidget.h"
-
 
 namespace At0::Reyal
 {
@@ -22,6 +20,8 @@ namespace At0::Reyal
 	class WindowMoveEvent;
 	class PaintEvent;
 	class WindowCloseEvent;
+
+	class Widget;
 
 	class RL_API Layer
 	{
