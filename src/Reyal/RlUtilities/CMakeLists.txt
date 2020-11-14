@@ -2,10 +2,8 @@ set(SRC
     "include/RlUtil/Exception.cpp"
     "include/RlUtil/Random.cpp"
     "include/RlUtil/TypeConvert.cpp"
-    "include/RlUtil/utpch.cpp"
     "include/RlUtil/utpch.h"
     "include/RlUtil/PlatformDetection.h"
-    "include/RlUtil/RlUWin.h"
 
     "include/RlUtil/CoreConfig.h"
     "include/RlUtil/Exception.h"

@@ -6,7 +6,6 @@
 
 #include <Reyal/Layers/Layer.h>
 
-// TODO: Remove annoying RlWin.h, ... and just include all of Windows.h (RESEARCH REQUIRED HERE)
 
 namespace At0::Zeal
 {

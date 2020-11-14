@@ -5,10 +5,10 @@
 #include <stdint.h>
 #include <string>
 
-#include "RlUWin.h"
 #include "PlatformDetection.h"
-
 #include "RlUBase.h"
+
+#include <Windows.h>
 
 #pragma warning(disable : 4275)
 #pragma warning(disable : 4251)

@@ -1,6 +1,11 @@
 #ifndef UT_UTBASE_H
 #define UT_UTBASE_H
 
+// Defined so Windows.h doesn't define min, max macro
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 #define RLU_BUILD_AS_DLL 1
 
 #if RLU_BUILD_AS_DLL

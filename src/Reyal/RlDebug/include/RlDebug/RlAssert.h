@@ -7,6 +7,7 @@
 
 #include <assert.h>
 #include "RlDBase.h"
+#include <../../RlUtilities/include/RlUtil/PlatformDetection.h>
 
 
 namespace At0::Reyal::Debug

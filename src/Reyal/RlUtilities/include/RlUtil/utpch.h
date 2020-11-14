@@ -1,11 +1,11 @@
 #ifndef RLU_UTPCH_H
 #define RLU_UTPCH_H
 
-#include "RlUWin.h"
+#include "RlUBase.h"
+#include "PlatformDetection.h"
 
 #ifdef RL_PLATFORM_WINDOWS
-#include <WinNls.h>
-#include <stringapiset.h>
+	#include <Windows.h>
 #endif
 
 #include <exception>

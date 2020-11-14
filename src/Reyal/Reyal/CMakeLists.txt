@@ -9,7 +9,6 @@ set(SRC
 	"include/Reyal/Widgets/ZWidget.cpp"
 	"include/Reyal/Window/WindowsWindow.cpp"
 	"include/Reyal/Window/LinuxWindow.cpp"
-	"include/Reyal/rlpch.cpp"
 	"include/Reyal/rlpch.h"
 	
 	"include/Reyal/Core/ThreadPool.h"

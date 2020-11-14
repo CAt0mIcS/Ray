@@ -1,7 +1,6 @@
 set(SRC
     "include/RlDebug/Instrumentor.cpp"
     "include/RlDebug/ReyalLogger.cpp"
-    "include/RlDebug/rldpch.cpp"
     "include/RlDebug/rldpch.h"
 
     "include/RlDebug/Instrumentor.h"

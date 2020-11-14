@@ -4,6 +4,10 @@
 #include <memory>
 #include <assert.h>
 
+// Define so Windows.h doesnt define min, max macros
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 
 #ifdef RL_BUILD
 	#if defined(_MSC_VER)

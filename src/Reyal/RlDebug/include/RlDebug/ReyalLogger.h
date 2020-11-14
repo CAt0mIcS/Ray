@@ -4,11 +4,10 @@
 
 #include <RlUtil/CoreConfig.h>
 
-
 #if RL_ENABLE_LOGGING
+#include "RlDBase.h"
 
 #include <RlLogger/Log.h>
-#include "RlDBase.h"
 #include <string>
 
 #pragma warning(disable : 4251)

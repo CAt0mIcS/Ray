@@ -2,7 +2,6 @@ set(SRC
     "include/RlRender/Platform/D3D11/D3D11RendererAPI.cpp"
     "include/RlRender/Renderer3D.cpp"
     "include/RlRender/RendererAPI.cpp"
-    "include/RlRender/rlrpch.cpp"
     "include/RlRender/rlrpch.h"
 
     "include/RlRender/Platform/D3D11/D3D11RendererAPI.h"
