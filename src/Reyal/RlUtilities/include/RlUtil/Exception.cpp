@@ -2,7 +2,7 @@
 #include "RlUtil/Exception.h"
 
 #ifdef RL_PLATFORM_WINDOWS
-#include <dxerr.h>
+#include <DxErr/dxerr.h>
 #endif
 
 

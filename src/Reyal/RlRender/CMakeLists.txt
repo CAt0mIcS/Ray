@@ -35,13 +35,13 @@ if(WIN32)
         "D3D11"
         "DXGI"
         "D3DCompiler"
+        "glfw"
     )
 elseif(UNIX)
     set(PRIVATE_LIB
-        ""
+        "glfw"
     )
 endif()
-list(APPEND PRIVATE_LIB "GLFW")
 
 
 add_library("RlRender" SHARED "${SRC}")
@@ -60,6 +60,7 @@ target_link_libraries("RlRender"
 )
 
 add_dependencies("RlRender" "RlDebug")
+# add_dependencies("RlRender" "glfw")
 target_compile_definitions("RlRender" PRIVATE "RLR_BUILD")
 target_precompile_headers("RlRender" PRIVATE "include/RlRender/rlrpch.h")
 

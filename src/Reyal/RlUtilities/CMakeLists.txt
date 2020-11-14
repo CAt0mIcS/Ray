@@ -16,11 +16,11 @@ set(SRC
 set(PUBLIC_INC
 	"include"
 	"${CMAKE_SOURCE_DIR}/extern/glm"
-	"${CMAKE_SOURCE_DIR}/extern/dxerr/src"
 )
 
 set(PRIVATE_INC
     "include/RlUtil"
+    "${CMAKE_SOURCE_DIR}/extern/dxerr/include"
 )
 
 set(PUBLIC_LIB
