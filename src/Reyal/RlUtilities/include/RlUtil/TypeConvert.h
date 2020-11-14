@@ -5,7 +5,10 @@
 
 #include "RlUBase.h"
 
+#ifdef RL_PLATFORM_WINDOWS
 #include <Windows.h>
+#endif
+
 #include <glm/mat4x4.hpp>
 
 

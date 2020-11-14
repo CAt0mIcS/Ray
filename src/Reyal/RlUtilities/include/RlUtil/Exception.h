@@ -8,7 +8,9 @@
 #include "PlatformDetection.h"
 #include "RlUBase.h"
 
+#ifdef RL_PLATFORM_WINDOWS
 #include <Windows.h>
+#endif
 
 #pragma warning(disable : 4275)
 #pragma warning(disable : 4251)
