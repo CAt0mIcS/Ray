@@ -1,6 +1,10 @@
 #include "utpch.h"
 #include "RlUtil/Exception.h"
 
+#ifdef RL_PLATFORM_WINDOWS
+#include <dxerr.h>
+#endif
+
 
 namespace At0::Reyal
 {
@@ -62,6 +66,36 @@ namespace At0::Reyal
         std::string errorCode = pMsgBuf;
         LocalFree(pMsgBuf);
         return errorCode;
+    }
+
+    GraphicsException::GraphicsException(HRESULT hr, uint16_t line, const char* file)
+        : Exception(line, file), m_Hr(hr)
+    {
+    }
+    
+    const char* GraphicsException::what() const noexcept
+    {
+        std::ostringstream oss;
+        oss << GetType() << '\n'
+            << "[Error Code] 0x" << std::hex << std::uppercase << m_Hr << '\n'
+            << "[Error String] " << GetErrorString()
+            << "[Description] " << GetErrorDescription() << '\n'
+            << GetDefaultString();
+
+        m_WhatBuffer = oss.str();
+        return m_WhatBuffer.c_str();
+    }
+
+    std::string GraphicsException::GetErrorString() const
+    {
+        return DXGetErrorStringA(m_Hr);
+    }
+
+    std::string GraphicsException::GetErrorDescription() const
+    {
+        char buff[512];
+        DXGetErrorDescriptionA(m_Hr, buff, sizeof(buff));
+        return buff;
     }
 
 #endif

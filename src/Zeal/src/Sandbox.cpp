@@ -18,7 +18,7 @@ namespace At0::Zeal
 		
 		ExtensionLoader loader;
 #ifdef NDEBUG
-		loader.Start("../../bin/Release-x64", [this](Reyal::Layer* layer) { PushLayer(layer); })
+		loader.Start("../../bin/Release-x64", [this](Reyal::Layer* layer) { PushLayer(layer); });
 #else
 		loader.Start("../../bin/Debug-x64", [this](Reyal::Layer* layer) { PushLayer(layer); });
 #endif

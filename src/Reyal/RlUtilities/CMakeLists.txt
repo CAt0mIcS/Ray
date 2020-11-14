@@ -16,6 +16,7 @@ set(SRC
 set(PUBLIC_INC
 	"include"
 	"${CMAKE_SOURCE_DIR}/extern/glm"
+	"${CMAKE_SOURCE_DIR}/extern/dxerr/src"
 )
 
 set(PRIVATE_INC
@@ -26,9 +27,15 @@ set(PUBLIC_LIB
 	""
 )
 
-set(PRIVATE_LIB
-	""
-)
+if(WIN32)
+	set(PRIVATE_LIB
+		"DxErr"
+	)
+else()
+	set(PRIVATE_LIB
+		""
+	)
+endif()
 
 add_library("RlUtilities" SHARED "${SRC}")
 target_include_directories("RlUtilities"

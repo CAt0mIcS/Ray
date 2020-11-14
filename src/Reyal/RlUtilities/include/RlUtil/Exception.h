@@ -107,6 +107,44 @@ namespace At0::Reyal
 		HRESULT m_Hr;
 	};
 
+	class RLU_API GraphicsException : public Exception
+	{
+	public:
+		/// <summary>
+		/// WindowException Contructor
+		/// </summary>
+		/// <param name="hr">Is the error code</param>
+		/// <param name="line">Is the line where the error occured</param>
+		/// <param name="file">Is the file where the error occured</param>
+		GraphicsException(HRESULT hr, uint16_t line, const char* file);
+
+		/// <summary>
+		/// Getter for more information about the error
+		/// </summary>
+		/// <returns>More information about the error</returns>
+		virtual const char* what() const noexcept override;
+
+		/// <summary>
+		/// Uses format message to get the message string from Win32API
+		/// </summary>
+		/// <returns>The formated message</returns>
+		std::string GetErrorString() const;
+
+		/// <summary>
+		/// Getter for string with Exception type
+		/// </summary>
+		/// <returns>The exception type string</returns>
+		virtual const char* GetType() const override { return "DirectX11 Exception"; }
+
+		/// <summary>
+		/// Gets the DX11 error description
+		/// </summary>
+		/// <returns>Returns a description for the specific error</returns>
+		std::string GetErrorDescription() const;
+	private:
+		HRESULT m_Hr;
+	};
+
 #endif
 }
 
@@ -120,6 +158,8 @@ throw ::At0::Reyal::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FIL
 
 #define RL_THROW_LAST_WND_EXCEPT(booleanResult) \
 if(!(booleanResult)) RL_THROW_LAST_WND_EXCEPT2()
+
+#define RL_GFX_THROW_FAILED(hr) if(FAILED(hr)) throw ::At0::Reyal::GraphicsException(hr, (uint16_t)__LINE__, __FILE__)
 
 #else
 

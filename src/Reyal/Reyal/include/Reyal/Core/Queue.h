@@ -143,7 +143,7 @@ namespace At0::Reyal
 		/// Function will wait until the predicate returns true
 		/// </summary>
 		/// <typeparam name="F">Is any callable object without paraeters returning bool</typeparam>
-		/// <param name="pred"></param>
+		/// <param name="pred">Is the function for which the condition will wait to return</param>
 		template<typename F, typename = std::enable_if_t<std::is_convertible_v<F, std::function<bool()>>>>
 		void WaitFor(F&& pred)
 		{

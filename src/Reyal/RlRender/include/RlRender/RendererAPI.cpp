@@ -4,6 +4,7 @@
 #include "RlRender/Platform/D3D11/D3D11RendererAPI.h"
 
 #include <RlDebug/RlAssert.h>
+#include <RlDebug/ReyalLogger.h>
 
 
 namespace At0::Reyal

@@ -4,13 +4,13 @@
 
 #include "RlRender/Platform/D3D11/D3D11RendererAPI.h"
 
+#include <RlUtil/Exception.h>
 #include <RlDebug/ReyalLogger.h>
 #include <RlDebug/RlAssert.h>
 
 #include "RlRender/RlRWin.h"
 
 namespace WRL = Microsoft::WRL;
-
 
 namespace At0::Reyal
 {
@@ -61,7 +61,8 @@ namespace At0::Reyal
         sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
         
         sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        sd.OutputWindow = m_hWnd;
+        //sd.OutputWindow = m_hWnd;
+        sd.OutputWindow = (HWND)3425435;
         
         sd.SampleDesc = { 1, 0 };
         sd.BufferCount = 1;
@@ -76,7 +77,7 @@ namespace At0::Reyal
             creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
         #endif
 
-        D3D11CreateDeviceAndSwapChain(
+        RL_GFX_THROW_FAILED(D3D11CreateDeviceAndSwapChain(
             nullptr,
             D3D_DRIVER_TYPE_HARDWARE,
             NULL,
@@ -89,7 +90,7 @@ namespace At0::Reyal
             &m_Device,
             nullptr,
             &m_Context
-        );
+        ));
 
         WRL::ComPtr<ID3D11Resource> pBackBuffer;
         m_SwapChain->GetBuffer(0u, __uuidof(ID3D11Resource), &pBackBuffer);
