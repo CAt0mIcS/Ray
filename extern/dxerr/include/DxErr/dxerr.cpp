@@ -57,7 +57,7 @@ struct _D3DCOLORBUFFER;
 //-----------------------------------------------------------------------------
 #define BUFFER_SIZE 3000
 
-#pragma warning( disable : 6001 6221 )
+#pragma warning( disable : 6001 6221 4005 )
 
 //--------------------------------------------------------------------------------------
 #define  CHK_ERR_W(hrchk, strOut) \
