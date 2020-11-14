@@ -23,6 +23,7 @@ set(PUBLIC_INC
 
 set(PRIVATE_INC
     "include/RlRender"
+    "${CMAKE_SOURCE_DIR}/extern/glfw/include"
 )
 
 set(PUBLIC_LIB
@@ -40,6 +41,7 @@ elseif(UNIX)
         ""
     )
 endif()
+list(APPEND PRIVATE_LIB "GLFW")
 
 
 add_library("RlRender" SHARED "${SRC}")
@@ -59,7 +61,7 @@ target_link_libraries("RlRender"
 
 add_dependencies("RlRender" "RlDebug")
 target_compile_definitions("RlRender" PRIVATE "RLR_BUILD")
-target_include_directories("RlRender" PRIVATE "include/RlRender/rlrpch.h")
+target_precompile_headers("RlRender" PRIVATE "include/RlRender/rlrpch.h")
 
 # Set Pixel and Vertex Shaders to compile in VS
 if(MSVC)

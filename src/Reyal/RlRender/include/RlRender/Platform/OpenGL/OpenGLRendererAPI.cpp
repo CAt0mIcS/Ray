@@ -25,7 +25,7 @@ namespace At0::Reyal
 	
 	void OpenGLRendererAPI::EndDraw()
 	{
-		//TODO:
+
 	}
 }
 

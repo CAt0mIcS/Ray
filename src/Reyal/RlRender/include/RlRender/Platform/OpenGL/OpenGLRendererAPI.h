@@ -18,23 +18,23 @@ namespace At0::Reyal
 		/// Initializes all components required for rendering
 		/// <param name="window">Is the platform specific window handle</param>
 		/// </summary>
-		virtual void Init(WindowHandle window) = 0;
+		virtual void Init(WindowHandle window);
 
 		/// <summary>
 		/// Checks if the renderer API was initialized
 		/// </summary>
 		/// <returns>True if initialized, false otherwise</returns>
-		virtual bool IsInitialized() const = 0;
+		virtual bool IsInitialized() const;
 
 		/// <summary>
 		/// DEBUG: TODO: Renders test triangle onto the screen
 		/// </summary>
-		virtual void RenderTestTriangle() = 0;
+		virtual void RenderTestTriangle();
 
 		/// <summary>
 		/// Draws the scene to the screen
 		/// </summary>
-		virtual void EndDraw() = 0;
+		virtual void EndDraw();
 
 	private:
 
