@@ -15,7 +15,7 @@ namespace At0::Zeal
 		m_MainWindow.InitRenderer3D();
 		m_MainWindow.SetTitle(L"Zeal");
 		m_MainWindow.Show();
-		
+
 		ExtensionLoader loader;
 #ifdef NDEBUG
 		loader.Start("../../bin/Release-x64", [this](Reyal::Layer* layer) { PushLayer(layer); });

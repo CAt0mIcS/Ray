@@ -2,6 +2,7 @@
 #include "RlRender/RendererAPI.h"
 
 #include "RlRender/Platform/D3D11/D3D11RendererAPI.h"
+#include "RlRender/Platform/OpenGL/OpenGLRendererAPI.h"
 
 #include <RlDebug/RlAssert.h>
 #include <RlDebug/ReyalLogger.h>
@@ -9,11 +10,11 @@
 
 namespace At0::Reyal
 {
+	// Set default RendererAPI for every platform
 #ifdef RL_PLATFORM_WINDOWS
 	RendererAPI::API RendererAPI::s_Api = RendererAPI::API::D3D11;
 #elif defined(RL_PLATFORM_LINUX)
-	// TODO: OpenGL or XLib
-	RendererAPI::API RendererAPI::s_Api = RendererAPI::API::None;
+	RendererAPI::API RendererAPI::s_Api = RendererAPI::API::OpenGL;
 #endif
 
 	std::unique_ptr<RendererAPI> RendererAPI::Create()
@@ -22,8 +23,9 @@ namespace At0::Reyal
 
 		switch (GetAPI())
 		{
-		case API::None:				RL_LOG_WARN("[RendererAPI] Returning invalid RendererAPI. Calls to the API will fail!"); return nullptr; // TODO: Warn!
+		case API::None:				RL_LOG_WARN("[RendererAPI] Returning invalid RendererAPI. Calls to the API will fail!"); return nullptr;
 		case API::D3D11:			return std::make_unique<D3D11RendererAPI>();
+		case API::OpenGL:			return std::make_unique<OpenGLRendererAPI>();
 		}
 
 		RL_ASSERT(false, "Unknown Renderer API");
