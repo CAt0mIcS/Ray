@@ -78,7 +78,7 @@ namespace At0::Reyal
         std::ostringstream oss;
         oss << GetType() << '\n'
             << "[Error Code] 0x" << std::hex << std::uppercase << m_Hr << '\n'
-            << "[Error String] " << GetErrorString()
+            << "[Error String] " << GetErrorString() << '\n'
             << "[Description] " << GetErrorDescription() << '\n'
             << GetDefaultString();
 
