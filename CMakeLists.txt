@@ -82,7 +82,11 @@ endforeach()
 
 add_subdirectory("src")
 
-
+# ------------------------------------------------------------------------------------------------
+# Disable all warnings and add pthread (TODO, not a very clean way of doing it!)
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCCXX)
+    set(CMAKE_CXX_FLAGS "-pthread")
+endif()
 
 
 

@@ -6,6 +6,8 @@ set(SRC
     "include/DxErr/DXTrace.inl"
 )
 
-add_library("DxErr" STATIC "${SRC}")
-AddRecursiveFilters("${SRC}")
-set_target_properties("DxErr" PROPERTIES FOLDER "extern")
+if(WIN32)
+    add_library("DxErr" STATIC "${SRC}")
+    AddRecursiveFilters("${SRC}")
+    set_target_properties("DxErr" PROPERTIES FOLDER "extern")
+endif()

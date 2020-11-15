@@ -1,8 +1,8 @@
 #include "rlrpch.h"
 
+#include "RlRender/Platform/D3D11/D3D11RendererAPI.h"
 #ifdef RL_PLATFORM_WINDOWS
 
-#include "RlRender/Platform/D3D11/D3D11RendererAPI.h"
 
 #include <RlUtil/Exception.h>
 #include <RlDebug/ReyalLogger.h>
@@ -240,5 +240,38 @@ namespace At0::Reyal
         m_SwapChain->Present(1, 0);
     }
 }
+
+//TODO
+#else
+
+namespace At0::Reyal
+{
+    D3D11RendererAPI::D3D11RendererAPI()
+    {
+        //TODO: Throw error
+    }
+
+    void D3D11RendererAPI::Init(WindowHandle hWnd)
+    {
+        //TODO: Throw error
+    }
+
+    bool D3D11RendererAPI::IsInitialized() const
+    {
+        //TODO: Throw error
+        return false;
+    }
+
+    void D3D11RendererAPI::RenderTestTriangle()
+    {
+        //TODO: Throw error
+    }
+    
+    void D3D11RendererAPI::EndDraw()
+    {
+        //TODO: Throw error
+    }
+}
+
 
 #endif // RL_PLATFORM_WINDOWS
