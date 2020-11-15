@@ -1,6 +1,6 @@
 # Edit for Architecture and Configuration
 # Possible Values: 
-#   architecture:   Win32 | x64
+#   architecture:   x86   | x64
 #   configuration:  Debug | Release
 
 architecture=x86

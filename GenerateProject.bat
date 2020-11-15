@@ -6,7 +6,7 @@
 set architecture=x64
 set configuration=Debug
 FOR %%A IN (%*) DO (
-	IF "%%A"=="Win32" (
+	IF "%%A"=="x86" (
 		set architecture=%%A
 		echo Setting Build Architecture to "%%A".
 	)

@@ -22,7 +22,7 @@ project("NodePlanningEditor")
 
 # ------------------------------------------------------------------------------------------------
 # Options
-option(RL_ARCHITECTURE "Set the build architecture to either x64 or Win32" "x64")
+option(RL_ARCHITECTURE "Set the build architecture to either x64 or x86" "x64")
 
 # ------------------------------------------------------------------------------------------------
 # Required for Solution Folders
