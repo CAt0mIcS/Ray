@@ -35,7 +35,8 @@ set(SRC
 
 set(PUBLIC_INC
 	"include"
-	"${CMAKE_SOURCE_DIR}/extern/glm"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/glm"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/glfw"
 )
 
 set(PRIVATE_INC
@@ -51,10 +52,12 @@ find_package("Threads" REQUIRED)
 set(PRIVATE_LIB
 	"RlRender"
 	"Threads::Threads"
+	"glfw"
 )
 else()
 set(PRIVATE_LIB
 	"RlRender"
+	"glfw"
 )
 endif()
 

@@ -5,8 +5,8 @@
 
 #ifdef RL_PLATFORM_LINUX
 
-#include <X11/Xlib.h>
 #include <stdint.h>
+#include <../../extern/glfw/include/GLFW/glfw3.h>
 
 
 namespace At0::Reyal
@@ -34,7 +34,8 @@ namespace At0::Reyal
 		/// <returns>The title of this Window</returns>
 		std::wstring GetTitle() const
 		{
-			return L"";
+			// TODO: Throw unsuported
+			return "";
 		}
 
 		/// <summary>
@@ -43,7 +44,7 @@ namespace At0::Reyal
 		/// <param name="title">Is the new Window Title</param>
 		void SetTitle(const std::wstring_view title)
 		{
-			
+			glfwSetWindowTitle(m_hWnd, title.data());
 		}
 
 		/// <summary>
@@ -51,7 +52,7 @@ namespace At0::Reyal
 		/// </summary>
 		void Show() const
 		{
-			
+			glfwShowWindow(m_hWnd);
 		}
 
 		/// <summary>
@@ -59,7 +60,7 @@ namespace At0::Reyal
 		/// </summary>
 		void Hide() const
 		{
-			
+			glfwHideWindow(m_hWnd);
 		}
 
 		/// <summary>
@@ -67,7 +68,7 @@ namespace At0::Reyal
 		/// </summary>
 		void Maximize() const
 		{
-			
+			glfwMaximizeWindow(m_hWnd);
 		}
 
 		/// <summary>
@@ -75,7 +76,7 @@ namespace At0::Reyal
 		/// </summary>
 		void Minimize() const
 		{
-			
+			glfwIconifyWindow(m_hWnd);
 		}
 
 		/// <summary>
@@ -83,7 +84,7 @@ namespace At0::Reyal
 		/// </summary>
 		void Close() const
 		{
-			
+			glfwDestroyWindow(m_hWnd);
 		}
 
 		/// <summary>
@@ -100,15 +101,39 @@ namespace At0::Reyal
 		/// </summary>
 		virtual ~BaseWindow()
 		{
-			
+
 		}
 
+		/// <summary>
+		/// Creates the native window
+		/// </summary>
+		/// <param name="windowName">Is the title of the window</param>
+		/// <param name="windowClassName">Is the window class name</param>
+		/// <param name="style">Are window styles</param>
+		/// <param name="exStyle">Are extended window styles</param>
+		/// <param name="x">Is the x-position of the window</param>
+		/// <param name="y">Is the y-position of the window</param>
+		/// <param name="width">Is the width of the window</param>
+		/// <param name="height">Is the height of the window</param>
+		/// <param name="hWndParent">Is a handle to the parent window</param>
+		/// <param name="hMenu">Is a window Id</param>
+		/// <returns>TRUE(1) if the window was created successfully, FALSE(0) otherwise</returns>
+		uint8_t CreateNativeWindow(
+			const char* windowName,
+			uint32_t x,
+			uint32_t y,
+			uint32_t width,
+			uint32_t height,
+		)
+		{
+			m_hWnd = glfwCreateWindow(width, height, windowName, nullptr, nullptr);
+		}
 
 	protected:
 		virtual int64_t HandleMessage(const WindowMessage& msg) = 0;
 
 	protected:
-		::Window* m_hWnd;
+		::GLFWwindow* m_hWnd;
 	};
 }
 
