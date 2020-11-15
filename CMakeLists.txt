@@ -75,8 +75,7 @@ foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
 endforeach()
 
 
-add_subdirectory("src/")
-add_subdirectory("extern")
+add_subdirectory("src")
 
 
 

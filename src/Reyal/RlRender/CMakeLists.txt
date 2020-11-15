@@ -23,7 +23,7 @@ set(PUBLIC_INC
 
 set(PRIVATE_INC
     "include/RlRender"
-    "${CMAKE_SOURCE_DIR}/extern/glfw/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../extern/glfw/include"
 )
 
 set(PUBLIC_LIB

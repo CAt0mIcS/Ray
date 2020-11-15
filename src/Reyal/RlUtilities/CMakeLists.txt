@@ -15,12 +15,12 @@ set(SRC
 
 set(PUBLIC_INC
 	"include"
-	"${CMAKE_SOURCE_DIR}/extern/glm"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/glm"
 )
 
 set(PRIVATE_INC
     "include/RlUtil"
-    "${CMAKE_SOURCE_DIR}/extern/dxerr/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/extern/dxerr/include"
 )
 
 set(PUBLIC_LIB
@@ -55,3 +55,7 @@ target_precompile_headers("RlUtilities" PRIVATE "include/RlUtil/utpch.h")
 set_target_properties("RlUtilities" PROPERTIES FOLDER "RlUtilities")
 target_compile_definitions("RlUtilities" PRIVATE "RLU_BUILD")
 AddRecursiveFilters("${SRC}")
+
+# ===================================================================================
+# Dependencies
+add_subdirectory("extern")

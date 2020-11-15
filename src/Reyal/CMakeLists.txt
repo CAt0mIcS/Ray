@@ -3,3 +3,7 @@ add_subdirectory("RlLogger")
 add_subdirectory("RlDebug")
 add_subdirectory("RlRender")
 add_subdirectory("Reyal")
+
+# =============================================================
+# Dependencies
+add_subdirectory("extern")
