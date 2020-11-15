@@ -20,6 +20,9 @@ endif()
 # Initialize the Solution Project
 project("NodePlanningEditor")
 
+# ------------------------------------------------------------------------------------------------
+# Options
+option(RL_ARCHITECTURE "Set the build architecture to either x64 or Win32" "x64")
 
 # ------------------------------------------------------------------------------------------------
 # Required for Solution Folders
@@ -53,10 +56,12 @@ add_definitions(-D_UNICODE)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
+# ------------------------------------------------------------------------------------------------
+# Helper Functions
 include("BuildFiles/macros.cmake")
 
 # ------------------------------------------------------------------------------------------------
-# Redirect Output Files (Remove VS /Debug folder) (TODO: Remove hard-coded x64 (add more architecture options))
+# Redirect Output Files (Remove VS /Debug folder) (TODO: Remove hard-coded x64 (add more architecture options, use RL_ARCHITECTURE option))
 # ------------------------------------------------------------------------------------------------
 
 # For Single-Configuration Projects
