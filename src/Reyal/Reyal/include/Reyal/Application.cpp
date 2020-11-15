@@ -17,7 +17,7 @@ namespace At0::Reyal
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()
-		: m_MainWindow(L"MainWindow", nullptr, true), m_LayerStack{}, m_Running(true)
+		: m_MainWindow("MainWindow", nullptr, true), m_LayerStack{}, m_Running(true)
 	{
 		m_MainWindow.SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
 		RL_LOG_INFO("[ThreadPool] Initialized {0} threads", m_ThreadPool.MaxThreads());

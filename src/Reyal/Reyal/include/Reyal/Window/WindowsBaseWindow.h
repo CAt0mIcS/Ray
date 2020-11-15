@@ -37,14 +37,14 @@ namespace At0::Reyal
 		/// Getter for the current Window Title
 		/// </summary>
 		/// <returns>The title of this Window</returns>
-		std::wstring GetTitle() const
+		std::string GetTitle() const
 		{
-			std::wstring str;
-			int len = GetWindowTextLength(m_hWnd);
+			std::string str;
+			int len = GetWindowTextLengthA(m_hWnd);
 			if (len > 0)
 			{
 				str.resize(len);
-				GetWindowText(m_hWnd, str.data(), len + 1);
+				GetWindowTextA(m_hWnd, str.data(), len + 1);
 			}
 
 			return str;
@@ -54,9 +54,9 @@ namespace At0::Reyal
 		/// Sets the Window Title
 		/// </summary>
 		/// <param name="title">Is the new Window Title</param>
-		void SetTitle(const std::wstring_view title)
+		void SetTitle(const std::string_view title)
 		{
-			SetWindowText(m_hWnd, title.data());
+			SetWindowTextA(m_hWnd, title.data());
 		}
 
 		/// <summary>

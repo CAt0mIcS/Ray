@@ -11,7 +11,7 @@ namespace At0::Layers
 	class ZGL_API GUILayer : public Reyal::Layer
 	{
 	public:
-		GUILayer(const std::wstring_view name);
+		GUILayer(const std::string_view name);
 
 		virtual void OnMousePress(Reyal::Widget* receiver, Reyal::MouseButtonPressedEvent& e) override;
 		virtual void OnMouseRelease(Reyal::Widget* receiver, Reyal::MouseButtonReleasedEvent& e) override;
@@ -34,7 +34,7 @@ extern "C"
 {
 	ZGL_API At0::Layers::GUILayer* CreateLayer()
 	{
-		return new At0::Layers::GUILayer(L"GUI-Layer");
+		return new At0::Layers::GUILayer("GUI-Layer");
 	}
 }
 

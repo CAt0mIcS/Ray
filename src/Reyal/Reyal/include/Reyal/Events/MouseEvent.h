@@ -24,10 +24,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::wstring ToString() const override
+		virtual std::string ToString() const override
 		{
-			std::wostringstream oss;
-			oss << L"[MouseMoveEvent] New Position: " << m_NewPos;
+			std::ostringstream oss;
+			oss << "[MouseMoveEvent] New Position: " << m_NewPos;
 			return oss.str();
 		}
 
@@ -50,10 +50,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::wstring ToString() const override
+		virtual std::string ToString() const override
 		{
-			std::wostringstream oss;
-			oss << L"[MouseButtonPressedEvent] Button: " << (int)m_Button;
+			std::ostringstream oss;
+			oss << "[MouseButtonPressedEvent] Button: " << (int)m_Button;
 			return oss.str();
 		}
 
@@ -74,10 +74,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::wstring ToString() const override
+		virtual std::string ToString() const override
 		{
-			std::wostringstream oss;
-			oss << L"[MouseButtonReleasedEvent] Button: " << (int)m_Button;
+			std::ostringstream oss;
+			oss << "[MouseButtonReleasedEvent] Button: " << (int)m_Button;
 			return oss.str();
 		}
 
@@ -111,10 +111,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::wstring ToString() const override
+		virtual std::string ToString() const override
 		{
-			std::wostringstream oss;
-			oss << L"[MouseWheelUpEvent] Delta: " << GetDelta();
+			std::ostringstream oss;
+			oss << "[MouseWheelUpEvent] Delta: " << GetDelta();
 			return oss.str();
 		}
 
@@ -130,10 +130,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::wstring ToString() const override
+		virtual std::string ToString() const override
 		{
-			std::wostringstream oss;
-			oss << L"[MouseWheelDownEvent] Delta: " << GetDelta();
+			std::ostringstream oss;
+			oss << "[MouseWheelDownEvent] Delta: " << GetDelta();
 			return oss.str();
 		}
 
@@ -147,10 +147,10 @@ namespace At0::Reyal
 		HoverEnterEvent(Widget* hoverEntered)
 			: m_HoverEntered(hoverEntered) {}
 
-		virtual std::wstring ToString() const override
+		virtual std::string ToString() const override
 		{
-			std::wostringstream oss;
-			oss << L"[HoverEnterEvent] Widget with name " << m_HoverEntered->GetName() << " gained hover focus";
+			std::ostringstream oss;
+			oss << "[HoverEnterEvent] Widget with name " << m_HoverEntered->GetName() << " gained hover focus";
 			return oss.str();
 		}
 
@@ -169,10 +169,10 @@ namespace At0::Reyal
 		HoverLeaveEvent(Widget* hoverLeft)
 			: m_HoverLeft(hoverLeft) {}
 
-		virtual std::wstring ToString() const override
+		virtual std::string ToString() const override
 		{
-			std::wostringstream oss;
-			oss << L"[HoverLeaveEvent] The Widget with name " << m_HoverLeft->GetName() << " lost hover focus";
+			std::ostringstream oss;
+			oss << "[HoverLeaveEvent] The Widget with name " << m_HoverLeft->GetName() << " lost hover focus";
 			return oss.str();
 		}
 

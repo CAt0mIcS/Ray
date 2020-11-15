@@ -8,7 +8,7 @@
 
 #include <../../RlRender/include/RlRender/TypeDefines.h>
 
-// 4251 class 'std::wstring' needs to have dll-interface to be used by clients of class 'At0::Reyal::Widget'
+// 4251 class 'std::string' needs to have dll-interface to be used by clients of class 'At0::Reyal::Widget'
 #pragma warning(disable : 4251)
 
 
@@ -32,7 +32,7 @@ namespace At0::Reyal
 		/// Gets the unique name of the current Widget
 		/// </summary>
 		/// <returns>The name of the widget</returns>
-		const std::wstring_view GetName() const { return m_Name; }
+		const std::string_view GetName() const { return m_Name; }
 
 		/// <summary>
 		/// Moves the position of the Widget by the specified values
@@ -93,7 +93,7 @@ namespace At0::Reyal
 		/// </summary>
 		/// <param name="name">Is the child's name</param>
 		/// <returns>The child, or nullptr if no child was found</returns>
-		Widget* FindChild(const std::wstring_view name);
+		Widget* FindChild(const std::string_view name);
 
 		/// <summary>
 		/// Adds a new child to this control
@@ -104,7 +104,7 @@ namespace At0::Reyal
 		/// <param name="...arg">Are all the arguments to pass to the constructor of T</param>
 		/// <returns>The added child</returns>
 		template<typename T, typename... Args, typename = std::enable_if_t<std::is_convertible_v<T*, Widget*>>>
-		T* AddChild(const std::wstring_view name, Args&&... arg);
+		T* AddChild(const std::string_view name, Args&&... arg);
 
 		/// <summary>
 		/// Requests the specific Widget to be redrawn
@@ -171,7 +171,7 @@ namespace At0::Reyal
 		/// </summary>
 		/// <param name="name">Is the unique name of the Widget</param>
 		/// <param name="parent">Is the parent of this Widget</param>
-		Widget(const std::wstring_view name, Widget* parent = nullptr);
+		Widget(const std::string_view name, Widget* parent = nullptr);
 
 		/// <summary>
 		/// Recursively searches through all children and finds the one which should receive the specified event
@@ -190,7 +190,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// The name of this widget, should be unique across all widgets
 		/// </summary>
-		const std::wstring m_Name;
+		const std::string m_Name;
 
 		/// <summary>
 		/// All the child widgets
@@ -205,7 +205,7 @@ namespace At0::Reyal
 
 
 	template<typename T, typename... Args, typename>
-	inline T* Widget::AddChild(const std::wstring_view name, Args&&... args)
+	inline T* Widget::AddChild(const std::string_view name, Args&&... args)
 	{
 		return (T*)m_Children.emplace_back(MakeScope(name, std::forward<Args>(args)...));
 	}

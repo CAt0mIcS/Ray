@@ -30,7 +30,7 @@ namespace At0::Reyal
 		/// Layer Constructor
 		/// </summary>
 		/// <param name="name">Is the unique name of this Layer</param>
-		Layer(const std::wstring_view name);
+		Layer(const std::string_view name);
 
 		/// <summary>
 		/// Function which is called every frame
@@ -142,7 +142,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Is the name of the current Layer, this name should be unique between Layers
 		/// </summary>
-		std::wstring m_Name;
+		std::string m_Name;
 	};
 	
 }

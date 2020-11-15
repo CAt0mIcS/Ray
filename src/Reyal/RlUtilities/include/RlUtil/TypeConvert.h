@@ -15,14 +15,14 @@
 namespace At0::Util
 {
 	/// <summary>
-	/// Converts a multi byte string (std::string) to wide character string (std::wstring)
+	/// Converts a multi byte string (std::string) to wide character string (std::string)
 	/// </summary>
 	/// <param name="str">Is the multi byte string</param>
 	/// <returns>The wide character string</returns>
 	RLU_API std::wstring MultiByteToWideChar(const std::string_view str);
 
 	/// <summary>
-	/// Converts a wide character string (std::wstring) to multi byte string (std::string)
+	/// Converts a wide character string (std::string) to multi byte string (std::string)
 	/// </summary>
 	/// <param name="str">Is the wide character string</param>
 	/// <returns>The multi byte string</returns>

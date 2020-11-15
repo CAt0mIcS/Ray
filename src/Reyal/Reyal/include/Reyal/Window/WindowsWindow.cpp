@@ -21,7 +21,7 @@
 
 namespace At0::Reyal
 {
-	Window::Window(const std::wstring_view name, Widget* parent, bool isMainWindow)
+	Window::Window(const std::string_view name, Widget* parent, bool isMainWindow)
 		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_OldWindowPos{}, m_CurrentlyHovering(this), m_OldSize{}
 	{
 		RL_PROFILE_FUNCTION();

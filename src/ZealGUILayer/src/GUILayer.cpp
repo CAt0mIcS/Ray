@@ -9,14 +9,11 @@
 #include <Reyal/Events/ApplicationEvent.h>
 #include <Reyal/Events/KeyboardEvent.h>
 
-/// <TODO>
-/// e.ToString() fails in Release builds
-/// </TODO>
 
 
 namespace At0::Layers
 {
-	GUILayer::GUILayer(const std::wstring_view name)
+	GUILayer::GUILayer(const std::string_view name)
 		: Reyal::Layer(name)
 	{
 		RL_PROFILE_FUNCTION();

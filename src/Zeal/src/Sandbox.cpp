@@ -13,7 +13,7 @@ namespace At0::Zeal
 		//RL_PROFILE_FUNCTION();
 		
 		m_MainWindow.InitRenderer3D();
-		m_MainWindow.SetTitle(L"Zeal");
+		m_MainWindow.SetTitle("Zeal");
 		m_MainWindow.Show();
 
 		ExtensionLoader loader;

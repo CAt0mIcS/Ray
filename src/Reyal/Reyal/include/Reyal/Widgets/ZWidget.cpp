@@ -34,7 +34,7 @@ namespace At0::Reyal
 
     }
 
-    Widget* Widget::FindChild(const std::wstring_view name)
+    Widget* Widget::FindChild(const std::string_view name)
     {
         RL_PROFILE_FUNCTION();
         for (auto& child : m_Children)
@@ -105,7 +105,7 @@ namespace At0::Reyal
         RL_PROFILE_FUNCTION();
     }
 
-    Widget::Widget(const std::wstring_view name, Widget* parent)
+    Widget::Widget(const std::string_view name, Widget* parent)
         : m_Name(name), m_Parent(parent), m_Children{}, m_Matrix{}
     {
         RL_PROFILE_FUNCTION();

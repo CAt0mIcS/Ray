@@ -32,10 +32,10 @@ namespace At0::Reyal
 
 		uint32_t GetRepeatCount() const { return m_RepeatCount; }
 
-		virtual std::wstring ToString() const override
+		virtual std::string ToString() const override
 		{
-			std::wostringstream oss;
-			oss << L"[KeyPressedEvent] Key " << (uint16_t)GetKeyCode() << " pressed";
+			std::ostringstream oss;
+			oss << "[KeyPressedEvent] Key " << (uint16_t)GetKeyCode() << " pressed";
 			return oss.str();
 		}
 
@@ -54,10 +54,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::wstring ToString() const override
+		virtual std::string ToString() const override
 		{
-			std::wostringstream oss;
-			oss << L"[KeyReleasedEvent] Key " << (uint16_t)GetKeyCode() << " released";
+			std::ostringstream oss;
+			oss << "[KeyReleasedEvent] Key " << (uint16_t)GetKeyCode() << " released";
 			return oss.str();
 		}
 
@@ -73,10 +73,10 @@ namespace At0::Reyal
 		{
 		}
 
-		virtual std::wstring ToString() const override
+		virtual std::string ToString() const override
 		{
-			std::wostringstream oss;
-			oss << L"[CharEvent] Character '" << (char)GetKeyCode() << "' written";
+			std::ostringstream oss;
+			oss << "[CharEvent] Character '" << (char)GetKeyCode() << "' written";
 			return oss.str();
 		}
 

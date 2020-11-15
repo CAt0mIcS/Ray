@@ -31,7 +31,7 @@ namespace At0::Reyal
 		/// Getter for the current Window Title
 		/// </summary>
 		/// <returns>The title of this Window</returns>
-		std::wstring GetTitle() const
+		std::string GetTitle() const
 		{
 			// TODO: Throw unsuported
 			return "";
@@ -41,7 +41,7 @@ namespace At0::Reyal
 		/// Sets the Window Title
 		/// </summary>
 		/// <param name="title">Is the new Window Title</param>
-		void SetTitle(const std::wstring_view title)
+		void SetTitle(const std::string_view title)
 		{
 			glfwSetWindowTitle(m_hWnd, title.data());
 		}
