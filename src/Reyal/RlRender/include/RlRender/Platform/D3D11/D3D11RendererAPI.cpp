@@ -59,8 +59,7 @@ namespace At0::Reyal
         sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
         
         sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        //sd.OutputWindow = m_hWnd;
-        sd.OutputWindow = (HWND)3425435;
+        sd.OutputWindow = m_hWnd;
         
         sd.SampleDesc = { 1, 0 };
         sd.BufferCount = 1;
