@@ -20,7 +20,7 @@ namespace At0::Zeal
 	void ExtensionLoader::Start(const std::string_view searchPath, const std::function<void(Reyal::Layer*)>& onNewLayer)
 	{
 		using DirectoryIterator = std::filesystem::directory_iterator;
-		const std::string ending = L".dll";
+		const std::string ending = ".dll";
 		using LayerCreateFunc = Reyal::Layer* (*)();
 
 		for (const std::filesystem::directory_entry& dir : std::filesystem::recursive_directory_iterator(searchPath))
