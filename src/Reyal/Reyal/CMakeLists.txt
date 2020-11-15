@@ -46,9 +46,17 @@ set(PUBLIC_LIB
 	""
 )
 
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCCXX)
+find_package("Threads" REQUIRED)
+set(PRIVATE_LIB
+	"RlRender"
+	"Threads::Threads"
+)
+else()
 set(PRIVATE_LIB
 	"RlRender"
 )
+endif()
 
 add_library("Reyal" SHARED "${SRC}")
 
