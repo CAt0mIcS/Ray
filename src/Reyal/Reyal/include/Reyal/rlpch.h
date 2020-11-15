@@ -4,10 +4,8 @@
 // class needs to have dll-interface to be used by clients of class
 #pragma warning(disable : 4251)
 
-#include <RlUtil/PlatformDetection.h>
-
 #include "RlBase.h"
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
 	#include <Windows.h>
 #endif
 

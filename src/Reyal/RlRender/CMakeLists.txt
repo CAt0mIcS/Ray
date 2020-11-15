@@ -11,7 +11,6 @@ set(SRC
     "include/RlRender/Renderer3D.h"
     "include/RlRender/RlRBase.h"
     "include/RlRender/TypeDefines.h"
-    "include/RlRender/RlRWin.h"
 
     "Shaders/PixelShader-p.hlsl"
     "Shaders/VertexShader-v.hlsl"

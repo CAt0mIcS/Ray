@@ -1,9 +1,7 @@
 #include "pch.h"
 #include "ExtensionLoader.h"
 
-#include <RlUtil/PlatformDetection.h>
-
-#ifdef RL_PLATFORM_LINUX
+#ifdef __linux__
 
 namespace At0::Zeal
 {

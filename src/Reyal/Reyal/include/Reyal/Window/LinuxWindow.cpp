@@ -1,8 +1,6 @@
 #include "rlpch.h"
 
-#include <RlUtil/PlatformDetection.h>
-
-#ifdef RL_PLATFORM_LINUX
+#ifdef __linux__
 
 #include <RlUtil/Exception.h>
 #include "Reyal/Events/KeyboardEvent.h"
@@ -118,4 +116,4 @@ namespace At0::Reyal
 }
 
 
-#endif RL_PLATFORM_LINUX
+#endif // __linux__

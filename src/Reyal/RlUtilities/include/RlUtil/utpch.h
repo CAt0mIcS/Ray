@@ -2,9 +2,7 @@
 #define RLU_UTPCH_H
 
 #include "RlUBase.h"
-#include "PlatformDetection.h"
-
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
 	#include <Windows.h>
 #endif
 

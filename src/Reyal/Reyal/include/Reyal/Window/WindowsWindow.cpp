@@ -1,8 +1,6 @@
 #include "rlpch.h"
 
-#include <RlUtil/PlatformDetection.h>
-#ifdef RL_PLATFORM_WINDOWS
-
+#ifdef _WIN32
 
 #include "Reyal/Window/Window.h"
 
@@ -300,4 +298,4 @@ namespace At0::Reyal
 }
 
 
-#endif // RL_PLATFORM_WINDOWS
+#endif // _WIN32

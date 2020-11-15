@@ -11,9 +11,9 @@
 namespace At0::Reyal
 {
 	// Set default RendererAPI for every platform
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
 	RendererAPI::API RendererAPI::s_Api = RendererAPI::API::D3D11;
-#elif defined(RL_PLATFORM_LINUX)
+#elif defined(__linux__)
 	RendererAPI::API RendererAPI::s_Api = RendererAPI::API::OpenGL;
 #endif
 

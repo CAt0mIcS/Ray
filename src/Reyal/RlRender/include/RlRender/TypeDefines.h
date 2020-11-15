@@ -1,16 +1,18 @@
 #ifndef RLR_TYPEDEFINES_H
 #define RLR_TYPEDEFINES_H
 
-#include <../../RlUtilities/include/RlUtil/PlatformDetection.h>
 #include <glm/glm.hpp>
 #include <iostream>
+
+#include "RlRBase.h"
 
 
 namespace At0::Reyal
 {
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
+	#include <Windows.h>
 	using WindowHandle = HWND;
-#elif defined(RL_PLATFORM_LINUX)
+#elif defined(__linux__)
 	// QUESTION: typedefed Window class cannot be just forward-declared. Have to use unsigned long which could change
 	using WindowHandle = unsigned long*;
 #endif

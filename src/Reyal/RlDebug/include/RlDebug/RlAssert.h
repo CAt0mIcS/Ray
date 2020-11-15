@@ -7,7 +7,6 @@
 
 #include <assert.h>
 #include "RlDBase.h"
-#include <../../RlUtilities/include/RlUtil/PlatformDetection.h>
 
 
 namespace At0::Reyal::Debug
@@ -36,9 +35,9 @@ namespace At0::Reyal::Debug
 #define RL_WIDEC2(x) L ## x
 #define RL_WIDE(x) RL_WIDEC2(x)
 
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
 #	define RL_ASSERT(condition, msg, ...)	if(!(condition)) _wassert(::At0::Reyal::Debug::RlAssert::AssertW(msg, __VA_ARGS__).c_str(), RL_WIDE(__FILE__), (unsigned int)__LINE__)
-#elif defined(RL_PLATFORM_LINUX)
+#elif defined(__linux__)
 	#define RL_ASSERT(condition, msg, ...)	if(!(condition)) __assert(::At0::Reyal::Debug::RlAssert::AssertA(msg, ## __VA_ARGS__).c_str(), "TODO: FILE", (unsigned int)999)
 #endif
 #define RL_MEXPECTS(expected, msg)		RL_ASSERT(expected, "[Expected] {0}\n{1}", #expected, msg)

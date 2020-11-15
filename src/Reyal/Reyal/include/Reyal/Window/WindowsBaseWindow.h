@@ -2,13 +2,11 @@
 #define RL_WINDOWSBASEWINDOW_H
 
 
-#include <../../RlUtilities/include/RlUtil/PlatformDetection.h>
-
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
 
 #include "Reyal/RlBase.h"
-#include "Reyal/RlWin.h"
 
+#include <Windows.h>
 #include <stdint.h>
 #include <string>
 
@@ -230,6 +228,6 @@ namespace At0::Reyal
 	};
 }
 
-#endif // RL_PLATFORM_WINDOWS
+#endif // _WIN32
 
 #endif // RL_WINDOWSBASEWINDOW_H

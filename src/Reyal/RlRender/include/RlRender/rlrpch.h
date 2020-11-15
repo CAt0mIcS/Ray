@@ -1,11 +1,12 @@
 #ifndef RLR_RLRPCH_H
 #define RLR_RLRPCH_H
 
-#include "RlRender/RlRWin.h"
+#include "RlRBase.h"
 
-#include <RlUtil/PlatformDetection.h>
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
     #include <d3dcompiler.h>
+    #include <Windows.h>
+    #include <d3d11.h>
 #endif
 
 #include <memory>

@@ -1,14 +1,12 @@
 #include "rlrpch.h"
 
 #include "RlRender/Platform/D3D11/D3D11RendererAPI.h"
-#ifdef RL_PLATFORM_WINDOWS
 
+#ifdef _WIN32
 
 #include <RlUtil/Exception.h>
 #include <RlDebug/ReyalLogger.h>
 #include <RlDebug/RlAssert.h>
-
-#include "RlRender/RlRWin.h"
 
 namespace WRL = Microsoft::WRL;
 
@@ -274,4 +272,4 @@ namespace At0::Reyal
 }
 
 
-#endif // RL_PLATFORM_WINDOWS
+#endif // _WIN32

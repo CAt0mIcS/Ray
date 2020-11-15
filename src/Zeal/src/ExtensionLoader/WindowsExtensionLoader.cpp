@@ -1,10 +1,8 @@
 #include "pch.h"
 #include "ExtensionLoader.h"
 
-#include <RlUtil/PlatformDetection.h>
 
-
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
 
 #include <filesystem>
 #include <Windows.h>

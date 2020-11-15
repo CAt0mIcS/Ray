@@ -5,7 +5,7 @@
 
 #include "RlUBase.h"
 
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
 #include <Windows.h>
 #endif
 
@@ -29,7 +29,7 @@ namespace At0::Util
 	RLU_API std::string WideCharToMultiByte(const std::wstring_view str);
 
 
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
 	/// <summary>
 	/// Converts a transformation matrix to a windows rect structure
 	/// </summary>

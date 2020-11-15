@@ -1,7 +1,7 @@
 #include "utpch.h"
 #include "RlUtil/Exception.h"
 
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
 #include <DxErr/dxerr.h>
 #endif
 
@@ -33,7 +33,7 @@ namespace At0::Reyal
     }
     
 
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
     
     WindowsException::WindowsException(HRESULT hr, uint16_t line, const char* file)
         : Exception(line, file), m_Hr(hr)

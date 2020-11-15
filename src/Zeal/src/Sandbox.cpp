@@ -67,7 +67,7 @@ void SignalHandler(int signum)
 	exit(signum);
 }
 
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
 
 #include <sal.h>
 
@@ -136,7 +136,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 	return -1;
 }
 
-#elif defined(RL_PLATFORM_LINUX)
+#elif defined(__linux__)
 
 int main(int argc, char** argv)
 {

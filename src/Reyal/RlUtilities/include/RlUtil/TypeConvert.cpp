@@ -1,15 +1,13 @@
 #include "utpch.h"
 #include "RlUtil/TypeConvert.h"
 
-#include "PlatformDetection.h"
-
 //TODO: Debug
 #include <iostream>
 
 
 namespace At0::Util
 {
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
 
 	std::wstring MultiByteToWideChar(const std::string_view str)
 	{
@@ -40,7 +38,7 @@ namespace At0::Util
 		return {};
 	}
 
-#elif defined(RL_PLATFORM_LINUX)
+#elif defined(__linux__)
 
 	std::wstring MultiByteToWideChar(const std::string_view str)
 	{

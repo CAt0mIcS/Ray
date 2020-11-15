@@ -5,11 +5,10 @@
 #include <stdint.h>
 #include <string>
 
-#include "PlatformDetection.h"
 #include "RlUBase.h"
 
-#ifdef RL_PLATFORM_WINDOWS
-#include <Windows.h>
+#ifdef _WIN32
+	#include <Windows.h>
 #endif
 
 #pragma warning(disable : 4275)
@@ -71,7 +70,7 @@ namespace At0::Reyal
 		const char* m_File;
 	};
 
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
 
 	class RLU_API WindowsException : public Exception
 	{
@@ -150,7 +149,7 @@ namespace At0::Reyal
 #endif
 }
 
-#ifdef RL_PLATFORM_WINDOWS
+#ifdef _WIN32
 
 #define RL_THROW_WND_EXCEPT(hr) \
 if(FAILED(hr)) throw ::At0::Reyal::WindowsException(hr, (uint16_t)__LINE__, __FILE__)

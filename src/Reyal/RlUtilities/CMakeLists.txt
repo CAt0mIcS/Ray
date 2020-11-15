@@ -3,7 +3,6 @@ set(SRC
     "include/RlUtil/Random.cpp"
     "include/RlUtil/TypeConvert.cpp"
     "include/RlUtil/utpch.h"
-    "include/RlUtil/PlatformDetection.h"
 
     "include/RlUtil/CoreConfig.h"
     "include/RlUtil/Exception.h"

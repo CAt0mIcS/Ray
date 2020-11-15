@@ -1,9 +1,8 @@
 #ifndef RL_LINUXBASEWINDOW_H
 #define RL_LINUXBASEWINDOW_H
 
-#include <../../RlUtilities/include/RlUtil/PlatformDetection.h>
 
-#ifdef RL_PLATFORM_LINUX
+#ifdef __linux__
 
 #include <stdint.h>
 #include <../../extern/glfw/include/GLFW/glfw3.h>
@@ -137,7 +136,7 @@ namespace At0::Reyal
 	};
 }
 
-#endif // RL_PLATFORM_LINUX
+#endif // __linux__
 
 
 #endif // RL_LINUXBASEWINDOW_H
