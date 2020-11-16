@@ -12,22 +12,22 @@ namespace At0::Zeal
 	{
 		//RL_PROFILE_FUNCTION();
 		
-		// m_MainWindow.InitRenderer3D();
-		// m_MainWindow.SetTitle("Zeal");
-		// m_MainWindow.Show();
+		 m_MainWindow.InitRenderer3D();
+		 m_MainWindow.SetTitle("Zeal");
+		 m_MainWindow.Show();
 
 		ExtensionLoader loader;
 #ifdef NDEBUG
-	#ifdef _MSVC_VER
-		loader.Start("../../bin/Release-x64", [this](Reyal::Layer* layer) { PushLayer(layer); });
+	#ifdef _MSC_VER
+		loader.Start("../../bin/Release/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
 	#else
-		loader.Start("./bin/Release-x64", [this](Reyal::Layer* layer) { PushLayer(layer); });
+		loader.Start("./bin/Release/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
 	#endif
 #else
-	#ifdef _MSVC_VER
-		loader.Start("../../bin/Debug-x64", [this](Reyal::Layer* layer) { PushLayer(layer); });
+	#ifdef _MSC_VER
+		loader.Start("../../bin/Debug/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
 	#else
-		loader.Start("./bin/Debug-x64", [this](Reyal::Layer* layer) { PushLayer(layer); });
+		loader.Start("./bin/Debug/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
 	#endif
 #endif
 	}

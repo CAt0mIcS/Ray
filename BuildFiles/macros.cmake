@@ -29,3 +29,28 @@ function(GeneratePCHFilters)
         source_group("CMake" FILES "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${target}.dir/cmake_pch.cxx")
     endforeach()
 endfunction()
+
+# Set all output directories of a specific target
+function(SetOutputDirectory target dir)
+    if(MSVC)
+        foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
+            set(OUTCFGLOW "${OUTPUTCONFIG}")
+            string( TOUPPER "${OUTPUTCONFIG}" OUTPUTCONFIG )
+
+            set(OUTPUTPATH "${CMAKE_BINARY_DIR}/bin/${OUTCFGLOW}/${dir}")
+
+            set_target_properties("${target}" PROPERTIES 
+                LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${OUTPUTPATH}"
+                RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${OUTPUTPATH}"
+                ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${OUTPUTPATH}"
+            )
+        endforeach()
+    else()
+        set(OUTPUTPATH "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/${dir}")
+        set_target_properties("${target}" PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${OUTPUTPATH}"
+            LIBRARY_OUTPUT_DIRECTORY "${OUTPUTPATH}"
+            RUNTIME_OUTPUT_DIRECTORY "${OUTPUTPATH}"
+        )
+    endif()
+endfunction()

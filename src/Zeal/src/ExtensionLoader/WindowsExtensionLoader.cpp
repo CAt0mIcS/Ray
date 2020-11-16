@@ -39,7 +39,7 @@ namespace At0::Zeal
 			{
 				RL_LOG_WARN("[ExtLoader] Was unable to find 'CreateLayer' function in Module '{0}' with path '{1}'", lib, std::filesystem::absolute(dir.path().string()));
 				//TODO: Test
-				FreeLibraryA(lib);
+				//FreeLibrary(lib);
 				continue;
 			}
 

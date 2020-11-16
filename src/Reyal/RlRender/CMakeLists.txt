@@ -80,3 +80,4 @@ if(MSVC)
 endif()
 
 AddRecursiveFilters("${SRC}")
+SetOutputDirectory("RlRender" "")

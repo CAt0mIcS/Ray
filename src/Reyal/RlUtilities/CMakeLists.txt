@@ -54,6 +54,7 @@ target_precompile_headers("RlUtilities" PRIVATE "include/RlUtil/utpch.h")
 set_target_properties("RlUtilities" PROPERTIES FOLDER "RlUtilities")
 target_compile_definitions("RlUtilities" PRIVATE "RLU_BUILD")
 AddRecursiveFilters("${SRC}")
+SetOutputDirectory("RlUtilities" "")
 
 # ===================================================================================
 # Dependencies

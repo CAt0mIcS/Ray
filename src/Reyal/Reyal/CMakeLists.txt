@@ -84,6 +84,7 @@ add_dependencies("Reyal" "RlRender")
 target_precompile_headers("Reyal" PRIVATE "include/Reyal/rlpch.h")
 
 AddRecursiveFilters("${SRC}")
+SetOutputDirectory("Reyal" "")
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND RL_BUILD_TESTS)
 	add_subdirectory("tests")

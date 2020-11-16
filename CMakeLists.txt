@@ -60,25 +60,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED true)
 # Helper Functions
 include("BuildFiles/macros.cmake")
 
-# ------------------------------------------------------------------------------------------------
-# Redirect Output Files (Remove VS /Debug folder) (TODO: Remove hard-coded x64 (add more architecture options, use RL_ARCHITECTURE option))
-# ------------------------------------------------------------------------------------------------
-
-# For Single-Configuration Projects
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}-x64")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}-x64")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}-x64")
-
-# ------------------------------------------------------------------------------------------------
-# Redirect Output Files for Multi-Configuration Projects
-foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
-    set(OUTCFGLOW "${OUTPUTCONFIG}")
-    string( TOUPPER "${OUTPUTCONFIG}" OUTPUTCONFIG )
-    set("CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG}" "${CMAKE_BINARY_DIR}/bin/${OUTCFGLOW}-x64")
-    set("CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG}" "${CMAKE_BINARY_DIR}/bin/${OUTCFGLOW}-x64")
-    set("CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG}" "${CMAKE_BINARY_DIR}/bin/${OUTCFGLOW}-x64")
-endforeach()
-
 
 add_subdirectory("src")
 

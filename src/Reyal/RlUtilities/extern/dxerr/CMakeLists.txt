@@ -9,5 +9,6 @@ set(SRC
 if(WIN32)
     add_library("DxErr" STATIC "${SRC}")
     AddRecursiveFilters("${SRC}")
+    SetOutputDirectory("DxErr" "")
     set_target_properties("DxErr" PROPERTIES FOLDER "extern")
 endif()

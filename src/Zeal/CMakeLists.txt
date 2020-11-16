@@ -50,6 +50,7 @@ target_link_libraries("Zeal"
 add_dependencies("Zeal" "Reyal" "ZealGUILayer")
 target_precompile_headers("Zeal" PRIVATE "src/pch.h")
 AddRecursiveFilters("${SRC}")
+SetOutputDirectory("Zeal" "")
 
 
 
