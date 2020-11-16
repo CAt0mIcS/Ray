@@ -17,29 +17,34 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
 endif()
 
 # ------------------------------------------------------------------------------------------------
-# Initialize the Solution Project
-project("NodePlanningEditor")
-
-# ------------------------------------------------------------------------------------------------
 # Options
 option(RL_ARCHITECTURE "Set the build architecture to either x64 or x86" "x64")
 
-# Set architecture acording to option above
-if(LINUX AND NOT APPLE)
+# ------------------------------------------------------------------------------------------------
+# Set architecture acording to RL_ARCHITECTURE option above
+if(UNIX AND NOT APPLE)
+    message(STATUS "Setting Build Architecture (Linux) to ${RL_ARCHITECTURE}")
     if("${RL_ARCHITECTURE}" STREQUAL "x64")
-        set(CFLAGS "${CFLAGS} -m64")
+        set(CMAKE_C_FLAGS "-m64")
+        set(CMAKE_CXX_FLAGS "-m64")
     elseif("${RL_ARCHITECTURE}" STREQUAL "x86")
-        set(CFLAGS "${CFLAGS} -m32")
+        set(CMAKE_C_FLAGS "-m32")
+        set(CMAKE_CXX_FLAGS "-m32")
     endif()
 elseif(WIN32)
     # Should be automatically set using the -A switch in the .bat script
 elseif(APPLE)
+    message(STATUS "Setting Build Architecture (Apple) to ${RL_ARCHITECTURE}")
     if("${RL_ARCHITECTURE}" STREQUAL "x64")
         set(CMAKE_OSX_ARCHITECTURES "x86_64")
     elseif("${RL_ARCHITECTURE}" STREQUAL "x86")
         set(CMAKE_OSX_ARCHITECTURES "i386")
     endif()
 endif()
+
+# ------------------------------------------------------------------------------------------------
+# Initialize the Solution Project
+project("NodePlanningEditor")
 
 # ------------------------------------------------------------------------------------------------
 # Required for Solution Folders

@@ -3,9 +3,21 @@
 #   architecture:   x86   | x64
 #   configuration:  Debug | Release
 
-architecture=x86
+architecture=x64
 configuration=Debug
 
+for var in "$@"
+do
+    if [ "$var" = "x86" ]; then
+        echo Architecture x86
+        architecture=x86
+    fi
+
+    if [ "$var" = "Release" ]; then
+        echo Configuration Release
+        configuration="Release"
+    fi
+done
 
 unameOut="$(uname -s)"
 case "${unameOut}" in
