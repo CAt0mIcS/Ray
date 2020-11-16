@@ -24,6 +24,23 @@ project("NodePlanningEditor")
 # Options
 option(RL_ARCHITECTURE "Set the build architecture to either x64 or x86" "x64")
 
+# Set architecture acording to option above
+if(LINUX AND NOT APPLE)
+    if("${RL_ARCHITECTURE}" STREQUAL "x64")
+        set(CFLAGS "${CFLAGS} -m64")
+    elseif("${RL_ARCHITECTURE}" STREQUAL "x86")
+        set(CFLAGS "${CFLAGS} -m32")
+    endif()
+elseif(WIN32)
+    # Should be automatically set using the -A switch in the .bat script
+elseif(APPLE)
+    if("${RL_ARCHITECTURE}" STREQUAL "x64")
+        set(CMAKE_OSX_ARCHITECTURES "x86_64")
+    elseif("${RL_ARCHITECTURE}" STREQUAL "x86")
+        set(CMAKE_OSX_ARCHITECTURES "i386")
+    endif()
+endif()
+
 # ------------------------------------------------------------------------------------------------
 # Required for Solution Folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -33,17 +50,17 @@ if(NOT DEFINED CMAKE_BUILD_TYPE)
 endif()
 
 # ------------------------------------------------------------------------------------------------
-# Set the startup project for VS
-if(MSVC)
-    set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY VS_STARTUP_PROJECT "Zeal")
-endif()
-
-# ------------------------------------------------------------------------------------------------
 # Set Debug AND Release for Multi-Configuration Generators
 if(CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
 else()
     set(CMAKE_CONFIGURATION_TYPES "${CMAKE_BUILD_TYPE}")
+endif()
+
+# ------------------------------------------------------------------------------------------------
+# Set the startup project for VS
+if(MSVC)
+    set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY VS_STARTUP_PROJECT "Zeal")
 endif()
 
 # ------------------------------------------------------------------------------------------------

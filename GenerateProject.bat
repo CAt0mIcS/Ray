@@ -44,7 +44,12 @@ cd %buildPath%
 echo Starting CMake...
 echo.
 
-call cmake .. -DCMAKE_BUILD_TYPE=%configuration% -DRL_ARCHITECTURE=%architecture% -DGLFW_INSTALL=0 -DGLFW_BUILD_DOCS=0
+IF %architecture%==x64 (
+	call cmake .. -DCMAKE_BUILD_TYPE=%configuration% -A x64 -DRL_ARCHITECTURE=%architecture% -DGLFW_INSTALL=0 -DGLFW_BUILD_DOCS=0
+)
+IF %architecture%==x86 (
+	call cmake .. -DCMAKE_BUILD_TYPE=%configuration% -A Win32 -DRL_ARCHITECTURE=%architecture% -DGLFW_INSTALL=0 -DGLFW_BUILD_DOCS=0
+)
 
 echo.
 echo Cmake finished.
