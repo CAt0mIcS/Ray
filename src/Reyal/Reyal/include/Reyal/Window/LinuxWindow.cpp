@@ -28,7 +28,7 @@ namespace At0::Reyal
         if(!CreateNativeWindow("", 50, 50, 1080, 720))
         {
             // TODO: Throw exception
-            RL_ASSERT(false, "[Window] Failed to create the native GLFWwindow");
+            RL_LOG_ERROR("[Window] Failed to create the native GLFWwindow");
         }
     }
 

@@ -17,6 +17,7 @@ namespace At0::Layers
 		: Reyal::Layer(name)
 	{
 		RL_PROFILE_FUNCTION();
+		RL_LOG_DEBUG("[GUILayer] Startup");
 	}
 
 	void GUILayer::OnMouseMove(Reyal::Widget* receiver, Reyal::MouseMoveEvent& e)

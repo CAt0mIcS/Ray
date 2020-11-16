@@ -12,15 +12,23 @@ namespace At0::Zeal
 	{
 		//RL_PROFILE_FUNCTION();
 		
-		m_MainWindow.InitRenderer3D();
-		m_MainWindow.SetTitle("Zeal");
-		m_MainWindow.Show();
+		// m_MainWindow.InitRenderer3D();
+		// m_MainWindow.SetTitle("Zeal");
+		// m_MainWindow.Show();
 
 		ExtensionLoader loader;
 #ifdef NDEBUG
+	#ifdef _MSVC_VER
 		loader.Start("../../bin/Release-x64", [this](Reyal::Layer* layer) { PushLayer(layer); });
+	#else
+		loader.Start("./bin/Release-x64", [this](Reyal::Layer* layer) { PushLayer(layer); });
+	#endif
 #else
+	#ifdef _MSVC_VER
 		loader.Start("../../bin/Debug-x64", [this](Reyal::Layer* layer) { PushLayer(layer); });
+	#else
+		loader.Start("./bin/Debug-x64", [this](Reyal::Layer* layer) { PushLayer(layer); });
+	#endif
 #endif
 	}
 	
@@ -138,13 +146,27 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 
 #elif defined(__linux__)
 
+
+#include <signal.h>
+
 int main(int argc, char** argv)
 {
 	using namespace At0;
+	RL_LOG_BEGIN("Zeal.log", Log::LogLevel::Trace);
+
+	signal(SIGABRT, SignalHandler);
+	signal(SIGFPE, SignalHandler);
+	signal(SIGILL, SignalHandler);
+	signal(SIGINT, SignalHandler);
+	signal(SIGSEGV, SignalHandler);
+	signal(SIGTERM, SignalHandler);
+
 
 	Reyal::CreateApplication();
 	Reyal::Application::Get().Run();
 	Reyal::Application::Destroy();
+	
+	RL_LOG_END();
 }
 
 #endif
