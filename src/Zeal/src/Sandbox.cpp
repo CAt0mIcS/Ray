@@ -140,7 +140,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 
 int main(int argc, char** argv)
 {
-	std::cout << "Hello World\n";
+	using namespace At0;
+
+	Reyal::CreateApplication();
+	Reyal::Application::Get().Run();
+	Reyal::Application::Destroy();
 }
 
 #endif

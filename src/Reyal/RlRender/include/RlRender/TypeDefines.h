@@ -6,15 +6,18 @@
 
 #include "RlRBase.h"
 
+#ifdef _WIN32
+	#include <Windows.h>
+#elif defined(__linux__)
+	#include <../../extern/glfw/include/GLFW/glfw3.h>
+#endif
 
 namespace At0::Reyal
 {
 #ifdef _WIN32
-	#include <Windows.h>
 	using WindowHandle = HWND;
 #elif defined(__linux__)
-	// QUESTION: typedefed Window class cannot be just forward-declared. Have to use unsigned long which could change
-	using WindowHandle = unsigned long*;
+	using WindowHandle = GLFWwindow*;
 #endif
 
 	namespace

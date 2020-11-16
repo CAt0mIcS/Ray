@@ -28,6 +28,11 @@ set(PRIVATE_LIB
     "RlDebug"
 )
 
+if(UNIX)
+    list(APPEND PRIVATE_LIB "dl")
+endif()
+
+
 add_executable("Zeal" WIN32 "${SRC}")
 target_include_directories("Zeal"
     PRIVATE

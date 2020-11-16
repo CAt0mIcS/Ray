@@ -5,6 +5,8 @@
 #ifdef __linux__
 
 #include <stdint.h>
+#include <../../RlRender/include/RlRender/TypeDefines.h>
+
 #include <../../extern/glfw/include/GLFW/glfw3.h>
 
 
@@ -107,32 +109,29 @@ namespace At0::Reyal
 		/// Creates the native window
 		/// </summary>
 		/// <param name="windowName">Is the title of the window</param>
-		/// <param name="windowClassName">Is the window class name</param>
-		/// <param name="style">Are window styles</param>
-		/// <param name="exStyle">Are extended window styles</param>
 		/// <param name="x">Is the x-position of the window</param>
 		/// <param name="y">Is the y-position of the window</param>
 		/// <param name="width">Is the width of the window</param>
 		/// <param name="height">Is the height of the window</param>
-		/// <param name="hWndParent">Is a handle to the parent window</param>
-		/// <param name="hMenu">Is a window Id</param>
-		/// <returns>TRUE(1) if the window was created successfully, FALSE(0) otherwise</returns>
-		uint8_t CreateNativeWindow(
+		/// <returns>True if the window was created successfully, false otherwise</returns>
+		bool CreateNativeWindow(
 			const char* windowName,
 			uint32_t x,
 			uint32_t y,
 			uint32_t width,
-			uint32_t height,
+			uint32_t height
 		)
 		{
 			m_hWnd = glfwCreateWindow(width, height, windowName, nullptr, nullptr);
+
+			return m_hWnd ? true : false;
 		}
 
 	protected:
 		virtual int64_t HandleMessage(const WindowMessage& msg) = 0;
 
 	protected:
-		::GLFWwindow* m_hWnd;
+		WindowHandle m_hWnd;
 	};
 }
 

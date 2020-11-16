@@ -134,7 +134,7 @@ namespace At0::Reyal
 		/// <param name="hWndParent">Is a handle to the parent window</param>
 		/// <param name="hMenu">Is a window Id</param>
 		/// <returns>TRUE(1) if the window was created successfully, FALSE(0) otherwise</returns>
-		uint8_t CreateNativeWindow(
+		bool CreateNativeWindow(
 			const wchar_t* windowName,
 			const wchar_t* windowClassName,
 			DWORD style,
@@ -162,7 +162,7 @@ namespace At0::Reyal
 				hWndParent, hMenu, wc.hInstance, this
 			);
 
-			return m_hWnd ? TRUE : FALSE;
+			return m_hWnd ? true : false;
 		}
 
 	private:

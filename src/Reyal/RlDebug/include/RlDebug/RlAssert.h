@@ -40,12 +40,12 @@ namespace At0::Reyal::Debug
 #elif defined(__linux__)
 	#define RL_ASSERT(condition, msg, ...)	if(!(condition)) __assert(::At0::Reyal::Debug::RlAssert::AssertA(msg, ## __VA_ARGS__).c_str(), __FILE__, (unsigned int)__LINE__)
 #endif
-#define RL_MEXPECTS(expected, msg)		RL_ASSERT(expected, "[Expected] {0}\n{1}", #expected, msg)
-#define RL_EXPECTS(expected)			RL_ASSERT(expected, "[Expected] {0}", #expected)
+	#define RL_MEXPECTS(expected, msg)		RL_ASSERT(expected, "[Expected] {0}\n{1}", #expected, msg)
+	#define RL_EXPECTS(expected)			RL_ASSERT(expected, "[Expected] {0}", #expected)
 #else
-#define RL_ASSERT(condition, msg, ...)
-#define RL_MEXPECTS(expected, msg)
-#define RL_EXPECTS(expected)
+	#define RL_ASSERT(condition, msg, ...)
+	#define RL_MEXPECTS(expected, msg)
+	#define RL_EXPECTS(expected)
 #endif
 
 #endif // RLD_RLASSERT_H

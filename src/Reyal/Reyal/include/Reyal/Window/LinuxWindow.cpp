@@ -23,6 +23,13 @@ namespace At0::Reyal
         : Widget(name, parent), m_IsMainWindow(isMainWindow), m_OldWindowPos{}, m_CurrentlyHovering(this), m_OldSize{}
     {
         RL_PROFILE_FUNCTION();
+
+        RL_LOG_INFO("[Window] Creating Window");
+        if(!CreateNativeWindow("", 50, 50, 1080, 720))
+        {
+            // TODO: Throw exception
+            RL_ASSERT(false, "[Window] Failed to create the native GLFWwindow");
+        }
     }
 
     Window::~Window()

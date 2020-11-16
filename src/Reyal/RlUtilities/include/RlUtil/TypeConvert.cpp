@@ -40,9 +40,9 @@ namespace At0::Util
 
 #elif defined(__linux__)
 
-	std::string MultiByteToWideChar(const std::string_view str)
+	std::wstring MultiByteToWideChar(const std::string_view str)
 	{
-		std::string buff;
+		std::wstring buff;
 		buff.resize(str.size());
 
 		if(mbstowcs(buff.data(), str.data(), str.size()) == (size_t)-1)
@@ -55,7 +55,7 @@ namespace At0::Util
 		return buff;
 	}
 
-	std::string WideCharToMultiByte(const std::string_view str)
+	std::string WideCharToMultiByte(const std::wstring_view str)
 	{
 		std::string buff;
 		buff.resize(str.size());
