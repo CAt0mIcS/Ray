@@ -9,12 +9,28 @@
 
 namespace At0::Reyal
 {
-
 	enum class MouseButton
 	{
 		INVALID = 0,
-		Left, Middle, Right
+		Left, Right, Middle
 	};
+
+	/// <summary>
+	/// Converts a mouse button to string
+	/// </summary>
+	/// <param name="btn">Is the button</param>
+	/// <returns>The mouse button name</returns>
+	static inline const char* MouseButtonToString(MouseButton btn)
+	{
+		switch (btn)
+		{
+		case MouseButton::Left:		return "Left Mouse Button";
+		case MouseButton::Right:	return "Right Mouse Button";
+		case MouseButton::Middle:	return "Middle Mouse Button";
+		}
+		return "";
+	}
+
 
 	class MouseMoveEvent : public Event
 	{
@@ -53,7 +69,7 @@ namespace At0::Reyal
 		virtual std::string ToString() const override
 		{
 			std::ostringstream oss;
-			oss << "[MouseButtonPressedEvent] Button: " << (int)m_Button;
+			oss << "[MouseButtonPressedEvent] Button: " << MouseButtonToString(m_Button);
 			return oss.str();
 		}
 
@@ -77,7 +93,7 @@ namespace At0::Reyal
 		virtual std::string ToString() const override
 		{
 			std::ostringstream oss;
-			oss << "[MouseButtonReleasedEvent] Button: " << (int)m_Button;
+			oss << "[MouseButtonReleasedEvent] Button: " << MouseButtonToString(m_Button);
 			return oss.str();
 		}
 

@@ -147,8 +147,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 #elif defined(__linux__)
 
 
-#include <signal.h>
-
 int main(int argc, char** argv)
 {
 	using namespace At0;
@@ -161,12 +159,21 @@ int main(int argc, char** argv)
 	signal(SIGSEGV, SignalHandler);
 	signal(SIGTERM, SignalHandler);
 
-
+	RL_PROFILE_BEGIN_SESSION("Startup", "Profiling/Profile-Startup.json");
 	Reyal::CreateApplication();
-	Reyal::Application::Get().Run();
+	RL_PROFILE_END_SESSION();
+
+	RL_PROFILE_BEGIN_SESSION("Runtime", "Profiling/Profile-Runtime.json");
+	int exitCode = Reyal::Application::Get().Run();
+	RL_PROFILE_END_SESSION();
+
+	RL_PROFILE_BEGIN_SESSION("Shutdown", "Profiling/Profile-Shutdown.json");
 	Reyal::Application::Destroy();
-	
+	RL_PROFILE_END_SESSION();
+
 	RL_LOG_END();
+
+	return exitCode;
 }
 
 #endif
