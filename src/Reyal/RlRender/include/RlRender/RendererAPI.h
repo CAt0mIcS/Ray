@@ -1,11 +1,11 @@
 #ifndef RLR_RENDERERAPI_H
 #define RLR_RENDERERAPI_H
 
-#include "RlRender/RlRBase.h"
+#include "RlRBase.h"
 
 #include <memory>
 
-#include "RlRender/TypeDefines.h"
+#include "TypeDefines.h"
 
 
 namespace At0::Reyal
