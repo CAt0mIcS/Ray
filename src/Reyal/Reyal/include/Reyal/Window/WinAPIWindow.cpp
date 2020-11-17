@@ -212,6 +212,23 @@ namespace At0::Reyal
 
 			return 0;
 		}
+		case WM_MOUSEHWHEEL:
+		{
+			int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+
+			if (delta > 0)
+			{
+				Scope<MouseWheelRightEvent> e = MakeScope<MouseWheelRightEvent>(delta);
+				m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			}
+			else if (delta < 0)
+			{
+				Scope<MouseWheelLeftEvent> e = MakeScope<MouseWheelLeftEvent>(delta);
+				m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			}
+
+			return 0;
+		}
 		case WM_PAINT:
 		{
 			PAINTSTRUCT ps;
