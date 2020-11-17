@@ -65,15 +65,47 @@ namespace At0::Reyal
 		void SetImmediateEventHandler(F&& func) { m_ImmediateEventFn = func; }
 
 		/// <summary>
-		/// Shows the Window
+		/// Getter for the current Window Title
 		/// </summary>
-		virtual void Show() = 0;
-		
+		/// <returns>The title of this Window</returns>
+		virtual std::string GetTitle() const = 0;
+
 		/// <summary>
 		/// Sets the Window Title
 		/// </summary>
 		/// <param name="title">Is the new Window Title</param>
 		virtual void SetTitle(const std::string_view title) = 0;
+
+		/// <summary>
+		/// Shows the Window
+		/// </summary>
+		virtual void Show() const = 0;
+
+		/// <summary>
+		/// Hides the Window
+		/// </summary>
+		virtual void Hide() const = 0;
+
+		/// <summary>
+		/// Maximizes the Window
+		/// </summary>
+		virtual void Maximize() const = 0;
+
+		/// <summary>
+		/// Minimizes the Window
+		/// </summary>
+		virtual void Minimize() const = 0;
+
+		/// <summary>
+		/// Closes the Window
+		/// </summary>
+		virtual void Close() const = 0;
+
+		/// <summary>
+		/// Checks if the Window is open (IsVisible)
+		/// </summary>
+		/// <returns>True if the Window is open, false otherwise</returns>
+		virtual bool IsOpen() const = 0;
 		
 		/// <summary>
 		/// Initializes the 3D Renderer, checks if it has already been initialized

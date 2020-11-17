@@ -28,15 +28,47 @@ namespace At0::Reyal
 		~WinAPIWindow();
 
 		/// <summary>
-		/// Shows the Window
+		/// Getter for the current Window Title
 		/// </summary>
-		virtual void Show() override;
+		/// <returns>The title of this Window</returns>
+		std::string GetTitle() const override;
 
 		/// <summary>
 		/// Sets the Window Title
 		/// </summary>
-		/// <param name="title">Is the new Title of the Window</param>
-		virtual void SetTitle(const std::string_view title) override;
+		/// <param name="title">Is the new Window Title</param>
+		void SetTitle(const std::string_view title) override;
+
+		/// <summary>
+		/// Shows the Window
+		/// </summary>
+		void Show() const override;
+
+		/// <summary>
+		/// Hides the Window
+		/// </summary>
+		void Hide() const override;
+
+		/// <summary>
+		/// Maximizes the Window
+		/// </summary>
+		void Maximize() const override;
+
+		/// <summary>
+		/// Minimizes the Window
+		/// </summary>
+		void Minimize() const override;
+
+		/// <summary>
+		/// Closes the Window
+		/// </summary>
+		void Close() const override;
+
+		/// <summary>
+		/// Checks if the Window is open (IsVisible)
+		/// </summary>
+		/// <returns>True if the Window is open, false otherwise</returns>
+		bool IsOpen() const override;
 
 		/// <summary>
 		/// Will return false as long as the window hasn't been closed

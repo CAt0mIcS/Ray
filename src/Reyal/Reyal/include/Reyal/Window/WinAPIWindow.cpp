@@ -35,18 +35,6 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 	}
 
-	void WinAPIWindow::Show()
-	{
-		RL_PROFILE_FUNCTION();
-		ShowWindow((HWND)m_hWnd, SW_SHOWDEFAULT);
-	}
-
-	void WinAPIWindow::SetTitle(const std::string_view title)
-	{
-		RL_PROFILE_FUNCTION();
-		RL_THROW_LAST_WND_EXCEPT(SetWindowTextA((HWND)m_hWnd, title.data()));
-	}
-
 	bool WinAPIWindow::ShouldClose()
 	{
 		MSG msg;
@@ -275,6 +263,54 @@ namespace At0::Reyal
 		}
 
 		return DefWindowProc((HWND)m_hWnd, uMsg, wParam, lParam);
+	}
+
+	std::string WinAPIWindow::GetTitle() const
+	{
+		std::string str;
+		int len = GetWindowTextLengthA((HWND)m_hWnd);
+		if (len > 0)
+		{
+			str.resize(len);
+			GetWindowTextA((HWND)m_hWnd, str.data(), len + 1);
+		}
+
+		return str;
+	}
+
+	void WinAPIWindow::SetTitle(const std::string_view title)
+	{
+		RL_THROW_LAST_WND_EXCEPT(SetWindowTextA((HWND)m_hWnd, title.data()));
+	}
+
+	void WinAPIWindow::Show() const
+	{
+		ShowWindow((HWND)m_hWnd, SW_SHOW);
+	}
+
+	void WinAPIWindow::Hide() const
+	{
+		ShowWindow((HWND)m_hWnd, SW_HIDE);
+	}
+
+	void WinAPIWindow::Maximize() const
+	{
+		ShowWindow((HWND)m_hWnd, SW_MAXIMIZE);
+	}
+
+	void WinAPIWindow::Minimize() const
+	{
+		ShowWindow((HWND)m_hWnd, SW_MINIMIZE);
+	}
+
+	void WinAPIWindow::Close() const
+	{
+		SendMessage((HWND)m_hWnd, WM_CLOSE, 0, 0);
+	}
+
+	bool WinAPIWindow::IsOpen() const
+	{
+		return IsWindowVisible((HWND)m_hWnd);
 	}
 }
 
