@@ -44,6 +44,7 @@ namespace At0::Reyal
 		/// <param name="exitCode">Will be filled with the exit code when the application quits, specify nullptr to ignore</param>
 		/// <returns>True if the window was closed, false otherwise</returns>
 		bool ShouldClose() override;
+
 	private:
 		/// <summary>
 		/// Creates the native window
@@ -90,27 +91,6 @@ namespace At0::Reyal
 		/// <param name="lParam">Is an additional parameter</param>
 		/// <returns>LRESULT code</returns>
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-		/// <summary>
-		/// Loops over all children and figures out if we need to send a HoverEnter/HoverLeave Event
-		/// </summary>
-		void SetHoveringWidget();
-
-	private:
-		/// <summary>
-		/// Specifies the control where the mouse is currently on
-		/// </summary>
-		Widget* m_CurrentlyHovering;
-
-		/// <summary>
-		/// Specifies the old size of this window
-		/// </summary>
-		Size2 m_OldSize;
-
-		/// <summary>
-		/// Specifies the old position of this window
-		/// </summary>
-		Point2 m_OldPos;
 	};
 }
 

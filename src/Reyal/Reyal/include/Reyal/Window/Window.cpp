@@ -7,7 +7,7 @@
 #include <RlRender/Renderer3D.h>
 //#include <RlRender/Renderer2D.h>
 
-#include "Reyal/Events/Event.h"
+#include "Reyal/Events/MouseEvent.h"
 
 #include "WinAPIWindow.h"
 #include "OpenGLWindow.h"
@@ -33,8 +33,47 @@ namespace At0::Reyal
 	}
 
 	Window::Window(const std::string_view name, Widget* parent, bool isMainWindow)
-		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_EventQueue{}, m_hWnd(nullptr)
+		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_EventQueue{}, m_hWnd(nullptr), m_CurrentlyHovering(nullptr), m_OldPos{}, m_OldSize{}
 	{
+	}
+
+	void Window::SetHoveringWidget()
+	{
+		RL_PROFILE_FUNCTION();
+
+		bool setNew = false;
+		static auto generateEvents = [this](Widget* child)
+		{
+			//QUESTION: Use the HoverEnter object in receiver and event?
+
+			Scope<HoverLeaveEvent> e = MakeScope<HoverLeaveEvent>(m_CurrentlyHovering);
+			m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
+
+			m_CurrentlyHovering = child;
+
+			Scope<HoverEnterEvent> e2 = MakeScope<HoverEnterEvent>(m_CurrentlyHovering);
+			m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
+		};
+
+		for (Scope<Widget>& child : m_Children)
+		{
+			if (Mouse.IsOnWidget(child) && *m_CurrentlyHovering != child)
+			{
+				generateEvents(child.get());
+				setNew = true;
+			}
+		}
+
+		if (!setNew && !Mouse.IsOnWidget(m_CurrentlyHovering) && Mouse.IsOnWidget(this))
+		{
+			generateEvents(this);
+		}
+		// We can assume that no widget is in focus if the mouse is outside the window rect
+		// TODO: Implement IsOnWidget function
+		// else if (!setNew && !Mouse.IsOnWidget(this))
+		// {
+		// 	generateEvents(nullptr);
+		// }
 	}
 
 	bool Window::InitRenderer3D()

@@ -20,7 +20,7 @@
 namespace At0::Reyal
 {
 	WinAPIWindow::WinAPIWindow(const std::string_view name, Widget* parent, bool isMainWindow)
-		: Window(name, parent, isMainWindow), m_OldPos{}, m_OldSize{}, m_CurrentlyHovering(nullptr)
+		: Window(name, parent, isMainWindow)
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -275,45 +275,6 @@ namespace At0::Reyal
 		}
 
 		return DefWindowProc((HWND)m_hWnd, uMsg, wParam, lParam);
-	}
-	
-	void WinAPIWindow::SetHoveringWidget()
-	{
-		RL_PROFILE_FUNCTION();
-
-		bool setNew = false;
-		static auto generateEvents = [this](Widget* child)
-		{
-			//QUESTION: Use the HoverEnter object in receiver and event?
-
-			Scope<HoverLeaveEvent> e = MakeScope<HoverLeaveEvent>(m_CurrentlyHovering);
-			m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
-
-			m_CurrentlyHovering = child;
-
-			Scope<HoverEnterEvent> e2 = MakeScope<HoverEnterEvent>(m_CurrentlyHovering);
-			m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
-		};
-
-		for (Scope<Widget>& child : m_Children)
-		{
-			if (Mouse.IsOnWidget(child) && *m_CurrentlyHovering != child)
-			{
-				generateEvents(child.get());
-				setNew = true;
-			}
-		}
-
-		if (!setNew && !Mouse.IsOnWidget(m_CurrentlyHovering) && Mouse.IsOnWidget(this))
-		{
-			generateEvents(this);
-		}
-		// We can assume that no widget is in focus if the mouse is outside the window rect
-		// TODO: Implement IsOnWidget function
-		// else if (!setNew && !Mouse.IsOnWidget(this))
-		// {
-		// 	generateEvents(nullptr);
-		// }
 	}
 }
 

@@ -128,6 +128,11 @@ namespace At0::Reyal
 		/// <param name="isMainWindow">Specifies whether this window is the main one which will exit the application when closed</param>
 		Window(const std::string_view name, Widget* parent = nullptr, bool isMainWindow = false);
 
+		/// <summary>
+		/// Loops over all children and figures out if we need to send a HoverEnter/HoverLeave Event
+		/// </summary>
+		void SetHoveringWidget();
+
 	protected:
 		/// <summary>
 		/// Called when any event occurs which needs to be handled immediately (WindowCloseEvent)
@@ -156,6 +161,21 @@ namespace At0::Reyal
 		/// Native Window Handle
 		/// </summary>
 		void* m_hWnd;
+
+		/// <summary>
+		/// Specifies the control where the mouse is currently on
+		/// </summary>
+		Widget* m_CurrentlyHovering;
+
+		/// <summary>
+		/// Specifies the old size of this window
+		/// </summary>
+		Size2 m_OldSize;
+
+		/// <summary>
+		/// Specifies the old position of this window
+		/// </summary>
+		Point2 m_OldPos;
 
 	private:
 		/// <summary>
