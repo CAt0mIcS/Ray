@@ -124,7 +124,7 @@ namespace At0::Reyal
 	void OpenGLWindow::Close() const
 	{
 		RL_PROFILE_FUNCTION();
-		delete glfwGetWindowUserPointer((GLFWwindow*)m_hWnd);
+		delete (GLFWCallbackData*)glfwGetWindowUserPointer((GLFWwindow*)m_hWnd);
 		glfwDestroyWindow((GLFWwindow*)m_hWnd);
 	}
 
