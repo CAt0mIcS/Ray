@@ -10,7 +10,7 @@
 
 namespace At0::Reyal
 {
-	class RendererAPI
+	class RLR_API RendererAPI
 	{
 	public:
 		/// <summary>
@@ -33,7 +33,7 @@ namespace At0::Reyal
 		/// Initializes all components required for rendering
 		/// <param name="window">Is the platform specific window handle</param>
 		/// </summary>
-		virtual void Init(WindowHandle window) = 0;
+		virtual void Init(void* window) = 0;
 
 		/// <summary>
 		/// Checks if the renderer API was initialized

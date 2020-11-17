@@ -8,7 +8,7 @@ namespace At0::Reyal
 	{
 	}
 
-	void OpenGLRendererAPI::Init(WindowHandle window)
+	void OpenGLRendererAPI::Init(void* window)
 	{
 
 	}

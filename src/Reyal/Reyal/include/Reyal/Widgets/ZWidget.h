@@ -80,7 +80,7 @@ namespace At0::Reyal
 		/// Getter for the native window
 		/// </summary>
 		/// <returns>The native window handle</returns>
-		virtual WindowHandle GetNativeWindow() const = 0;
+		virtual void* GetNativeWindow() const = 0;
 
 		/// <summary>
 		/// Getter for the parent of this Widget

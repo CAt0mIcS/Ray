@@ -55,13 +55,13 @@ namespace At0::Reyal
 		/// Getter for the main window
 		/// </summary>
 		/// <returns>The main window of this application</returns>
-		Window& GetMainWindow() { return m_MainWindow; }
+		Window& GetMainWindow() { return *m_MainWindow; }
 
 		/// <summary>
 		/// Getter for the main window
 		/// </summary>
 		/// <returns>The main window of this application</returns>
-		const Window& GetMainWindow() const { return m_MainWindow; }
+		const Window& GetMainWindow() const { return *m_MainWindow; }
 
 		/// <summary>
 		/// Starts the application run loop
@@ -122,7 +122,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// The main window which will exit the application on close
 		/// </summary>
-		Window m_MainWindow;
+		Ref<Window> m_MainWindow;
 
 	private:
 		/// <summary>

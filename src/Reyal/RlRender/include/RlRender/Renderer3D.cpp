@@ -12,7 +12,7 @@ namespace At0::Reyal
 
     }
 
-    void Renderer3D::Init(WindowHandle window)
+    void Renderer3D::Init(void* window)
     {
         RL_MEXPECTS(!this->IsInitialized(), "Renderer3D was already initialized.");
 

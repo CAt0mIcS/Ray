@@ -41,7 +41,7 @@ namespace At0::Reyal
         }
     }
 
-    void D3D11RendererAPI::Init(WindowHandle window)
+    void D3D11RendererAPI::Init(void* window)
     {
         RL_MEXPECTS(!this->IsInitialized(), "D3D11RendererAPI was already initialized.");
 
@@ -248,7 +248,7 @@ namespace At0::Reyal
         //TODO: Throw error
     }
 
-    void D3D11RendererAPI::Init(WindowHandle hWnd)
+    void D3D11RendererAPI::Init(void* hWnd)
     {
         //TODO: Throw error
     }

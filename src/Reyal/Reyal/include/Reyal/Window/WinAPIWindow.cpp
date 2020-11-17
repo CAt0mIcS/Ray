@@ -1,28 +1,26 @@
 #include "rlpch.h"
+#include "WinAPIWindow.h"
 
-#ifdef _WIN32
-
-#include "Reyal/Window/Window.h"
-
-#include <RlUtil/Exception.h>
-
-#include <RlUtil/Random.h>
-
-#include "Reyal/Events/KeyboardEvent.h"
-#include "Reyal/Events/MouseEvent.h"
-#include "Reyal/Events/ApplicationEvent.h"
-
+#include <RlDebug/Instrumentor.h>
 #include <RlDebug/ReyalLogger.h>
 #include <RlDebug/RlAssert.h>
-#include <RlDebug/Instrumentor.h>
+
+#include <RlUtil/Exception.h>
+#include <RlUtil/Random.h>
 
 #include <RlRender/Renderer3D.h>
+
+#include "Reyal/Events/ApplicationEvent.h"
+#include "Reyal/Events/MouseEvent.h"
+#include "Reyal/Events/KeyboardEvent.h"
+
+#include <Windows.h>
 
 
 namespace At0::Reyal
 {
-	Window::Window(const std::string_view name, Widget* parent, bool isMainWindow)
-		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_OldWindowPos{}, m_CurrentlyHovering(this), m_OldSize{}
+	WinAPIWindow::WinAPIWindow(const std::string_view name, Widget* parent, bool isMainWindow)
+		: Window(name, parent, isMainWindow), m_OldPos{}, m_OldSize{}, m_CurrentlyHovering(nullptr)
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -32,15 +30,98 @@ namespace At0::Reyal
 		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW));
 	}
 
-	Window::~Window()
+	WinAPIWindow::~WinAPIWindow()
 	{
 		RL_PROFILE_FUNCTION();
-		Close();
 	}
 
-	int64_t Window::HandleMessage(const WindowMessage& msg)
+	void WinAPIWindow::Show()
 	{
-		switch (msg.uMsg)
+		RL_PROFILE_FUNCTION();
+		ShowWindow((HWND)m_hWnd, SW_SHOWDEFAULT);
+	}
+
+	void WinAPIWindow::SetTitle(const std::string_view title)
+	{
+		RL_PROFILE_FUNCTION();
+		RL_THROW_LAST_WND_EXCEPT(SetWindowTextA((HWND)m_hWnd, title.data()));
+	}
+
+	bool WinAPIWindow::ShouldClose()
+	{
+		MSG msg;
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			if (msg.message == WM_QUIT)
+			{
+				RL_LOG_DEBUG("[MessageLoop] WM_QUIT Message Received");
+				return true;
+			}
+
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		//TODO: Change to something more appropriate (CPU Usage too high without it)
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		return false;
+	}
+
+	bool WinAPIWindow::CreateNativeWindow(
+		const wchar_t* windowName, 
+		const wchar_t* windowClassName, 
+		DWORD style, DWORD exStyle, 
+		uint32_t x, uint32_t y, 
+		uint32_t width, uint32_t height, 
+		HWND hWndParent, HMENU hMenu
+	)
+	{
+		RL_PROFILE_FUNCTION();
+
+		WNDCLASS wc{};
+		wc.lpfnWndProc = WinAPIWindow::WindowProcSetup;
+		wc.hInstance = GetModuleHandle(NULL);
+		wc.lpszClassName = windowClassName;
+		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+
+		RegisterClass(&wc);
+
+		m_hWnd = (void*)CreateWindowEx(
+			exStyle, windowClassName, windowName, style, x, y, width, height,
+			hWndParent, hMenu, wc.hInstance, this
+		);
+
+		return m_hWnd ? true : false;
+	}
+	
+	LRESULT WinAPIWindow::WindowProcSetup(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		RL_PROFILE_FUNCTION();
+
+		WinAPIWindow* pThis;
+		if (uMsg == WM_NCCREATE)
+		{
+			CREATESTRUCT* pCreate = (CREATESTRUCT*)lParam;
+			pThis = (WinAPIWindow*)pCreate->lpCreateParams;
+			SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)pThis);
+
+			pThis->m_hWnd = hWnd;
+		}
+		else
+		{
+			pThis = (WinAPIWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+		}
+
+		if (pThis)
+			return pThis->HandleMessage(uMsg, wParam, lParam);
+
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	}
+	
+	LRESULT WinAPIWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		RL_PROFILE_FUNCTION();
+
+		switch (uMsg)
 		{
 		case WM_DESTROY:
 		{
@@ -55,7 +136,7 @@ namespace At0::Reyal
 		}
 		case WM_MOUSEMOVE:
 		{
-			POINTS pt = MAKEPOINTS(msg.lParam);
+			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.SetPos({ (float)pt.x, (float)pt.y });
 
 			Scope<MouseMoveEvent> e = MakeScope<MouseMoveEvent>(Mouse.GetOldPos(), Mouse.GetPos());
@@ -107,25 +188,25 @@ namespace At0::Reyal
 			m_Renderer3D->RenderTestTriangle();
 			m_Renderer3D->EndDraw();
 
-			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)msg.wParam, (uint32_t)(msg.lParam & 0xff));
+			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)wParam, (uint32_t)(lParam & 0xff));
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_KEYUP:
 		{
-			Scope<KeyReleasedEvent> e = MakeScope<KeyReleasedEvent>((unsigned char)msg.wParam);
+			Scope<KeyReleasedEvent> e = MakeScope<KeyReleasedEvent>((unsigned char)wParam);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_CHAR:
 		{
-			Scope<CharEvent> e = MakeScope<CharEvent>((unsigned char)msg.wParam);
+			Scope<CharEvent> e = MakeScope<CharEvent>((unsigned char)wParam);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
 		{
-			int delta = GET_WHEEL_DELTA_WPARAM(msg.wParam);
+			int delta = GET_WHEEL_DELTA_WPARAM(wParam);
 
 			if (delta > 0)
 			{
@@ -143,8 +224,8 @@ namespace At0::Reyal
 		case WM_PAINT:
 		{
 			PAINTSTRUCT ps;
-			HDC hDC = BeginPaint(m_hWnd, &ps);
-			EndPaint(m_hWnd, &ps);
+			HDC hDC = BeginPaint((HWND)m_hWnd, &ps);
+			EndPaint((HWND)m_hWnd, &ps);
 
 			Scope<PaintEvent> e = MakeScope<PaintEvent>();
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
@@ -152,7 +233,7 @@ namespace At0::Reyal
 		}
 		case WM_SIZE:
 		{
-			Size2 newSize = { (float)LOWORD(msg.lParam), (float)HIWORD(msg.lParam) };
+			Size2 newSize = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
 			ResizeTo(newSize);
 
 			//TODO: Read how windows handles events (how they're built, how they handle it)
@@ -165,21 +246,21 @@ namespace At0::Reyal
 		}
 		case WM_MOVE:
 		{
-			Point2 newPos = { (float)LOWORD(msg.lParam), (float)HIWORD(msg.lParam) };
+			Point2 newPos = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
 			MoveTo(newPos);
 
-			Scope<WindowMoveEvent> e = MakeScope<WindowMoveEvent>(m_OldWindowPos, newPos);
+			Scope<WindowMoveEvent> e = MakeScope<WindowMoveEvent>(m_OldPos, newPos);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 
-			m_OldWindowPos = newPos;
+			m_OldPos = newPos;
 			return 0;
 		}
 		case WM_CLOSE:
 		{
 			RL_LOG_DEBUG("[MessageLoop] WM_CLOSE Message in HandleMessage received");
-			if (m_ImmediateEvent)
+			if (m_ImmediateEventFn)
 			{
-				if (!m_ImmediateEvent(this, WindowCloseEvent()))
+				if (!m_ImmediateEventFn(this, WindowCloseEvent()))
 				{
 					break;
 				}
@@ -193,71 +274,10 @@ namespace At0::Reyal
 		}
 		}
 
-		return DefWindowProc(m_hWnd, msg.uMsg, msg.wParam, msg.lParam);
-	}
-
-	Renderer3D* Window::GetRenderer3D() const
-	{
-		RL_PROFILE_FUNCTION();
-
-		if (GetParent())
-		{
-			return GetParent()->GetRenderer3D();
-		}
-		return m_Renderer3D.get();
-	}
-
-	WindowHandle Window::GetNativeWindow() const
-	{
-		return m_hWnd;
-	}
-
-	bool Window::ShouldClose(int* exitCode)
-	{
-		/// <summary>
-		/// QUESTION:
-		///		Should I use GetMessage in a while loop with a function to execute every "frame"?
-		///		The application class should be able to hook into the while loop and execute some code
-		/// </summary>
-
-		MSG msg;
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			if (msg.message == WM_QUIT)
-			{
-				RL_LOG_DEBUG("[MessageLoop] WM_QUIT Message Received");
-				if (exitCode)
-					*exitCode = (int)msg.wParam;
-				return true;
-			}
-
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		//TODO: Change to something more appropriate (CPU Usage too high without it)
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		return false;
+		return DefWindowProc((HWND)m_hWnd, uMsg, wParam, lParam);
 	}
 	
-	void Window::InitRenderer2D()
-	{
-		//if (!m_Renderer2D)
-		//{
-		//	m_Renderer2D = MakeRef<Renderer2D>();
-		//	m_Renderer2D->Init(m_hWnd);
-		//}
-	}
-
-	void Window::InitRenderer3D()
-	{
-		if (!m_Renderer3D)
-		{
-			m_Renderer3D = MakeScope<Renderer3D>();
-			m_Renderer3D->Init(m_hWnd);
-		}
-	}
-
-	void Window::SetHoveringWidget()
+	void WinAPIWindow::SetHoveringWidget()
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -297,5 +317,3 @@ namespace At0::Reyal
 	}
 }
 
-
-#endif // _WIN32

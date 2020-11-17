@@ -47,7 +47,7 @@ namespace At0::Reyal
 
     void Widget::PostRedraw(bool eraseBkgnd) const
     {
-        WindowHandle hWnd = GetNativeWindow();
+        void* hWnd = GetNativeWindow();
         
         //TODO: Program should be able to continue if one call fails
 

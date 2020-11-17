@@ -7,6 +7,9 @@
 #include "Reyal/Events/MouseEvent.h"
 #include "Reyal/Events/ApplicationEvent.h"
 
+// Include Renderer because of incomplete type in Window::Renderer
+#include <RlRender/Renderer3D.h>
+
 #include <RlDebug/RlAssert.h>
 #include <RlDebug/Instrumentor.h>
 #include <RlDebug/ReyalLogger.h>
@@ -17,9 +20,10 @@ namespace At0::Reyal
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()
-		: m_MainWindow("MainWindow", nullptr, true), m_LayerStack{}, m_Running(true)
+		: m_LayerStack{}, m_Running(true)
 	{
-		m_MainWindow.SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
+		m_MainWindow = Window::Create("MainWindow", nullptr, true);
+		m_MainWindow->SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
 		RL_LOG_INFO("[ThreadPool] Initialized {0} threads", m_ThreadPool.MaxThreads());
 	}
 
@@ -40,7 +44,7 @@ namespace At0::Reyal
 		//////////////////////////////////////////////////////////////////////////////////////////
 		auto dispatchEvents = [this]()
 		{
-			auto& queue = m_MainWindow.GetEventQueue();
+			auto& queue = m_MainWindow->GetEventQueue();
 			while (m_Running)
 			{
 				EventMessage eMsg = queue.PopFront();
@@ -56,8 +60,7 @@ namespace At0::Reyal
 		//////////////////////////////////////////////////////////////////////////////////////////
 		////////// Main Application Loop /////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////////////////////////////////////
-		int exitCode = 0;
-		while (!m_MainWindow.ShouldClose(&exitCode))
+		while (!m_MainWindow->ShouldClose())
 		{
 			for (auto* layer : m_LayerStack)
 			{
@@ -70,9 +73,9 @@ namespace At0::Reyal
 		// We need to notify all threads that we've exited the application
 		// and that they should stop waiting, we could also push a dummy event 
 		// into the queue
-		m_MainWindow.GetEventQueue().GetWaiter().notify_all();
+		m_MainWindow->GetEventQueue().GetWaiter().notify_all();
 
-		return exitCode;
+		return 0;
 	}
 
 	void Application::PushLayer(Layer* layer)
@@ -106,7 +109,7 @@ namespace At0::Reyal
 		RL_EXPECTS(e.GetType() <= EventType::LAST && e.GetType() >= EventType::FIRST);
 
 		// Wait for queue to be empty
-		auto& queue = m_MainWindow.GetEventQueue();
+		auto& queue = m_MainWindow->GetEventQueue();
 		queue.WaitFor([&queue]() { return queue.Empty(); });
 
 		for (auto* layer : m_LayerStack)
