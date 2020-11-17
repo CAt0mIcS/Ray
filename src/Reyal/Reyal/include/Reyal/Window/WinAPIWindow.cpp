@@ -1,4 +1,7 @@
 #include "rlpch.h"
+
+#ifdef _WIN32
+
 #include "WinAPIWindow.h"
 
 #include <RlDebug/Instrumentor.h>
@@ -314,3 +317,4 @@ namespace At0::Reyal
 	}
 }
 
+#endif // _WIN32

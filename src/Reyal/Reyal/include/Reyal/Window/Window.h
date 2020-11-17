@@ -1,7 +1,7 @@
 #ifndef RL_WINDOW_H
 #define RL_WINDOW_H
 
-#include "RlBase.h"
+#include "Reyal/RlBase.h"
 #include <string>
 
 #include "Reyal/Widgets/ZWidget.h"

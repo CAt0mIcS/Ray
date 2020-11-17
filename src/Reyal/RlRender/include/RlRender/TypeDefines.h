@@ -6,20 +6,8 @@
 
 #include "RlRBase.h"
 
-#ifdef _WIN32
-	#include <Windows.h>
-#elif defined(__linux__)
-	#include <../../extern/glfw/include/GLFW/glfw3.h>
-#endif
-
 namespace At0::Reyal
 {
-#ifdef _WIN32
-	using WindowHandle = HWND;
-#elif defined(__linux__)
-	using WindowHandle = GLFWwindow*;
-#endif
-
 	namespace
 	{
 		using Point2 = glm::vec2;

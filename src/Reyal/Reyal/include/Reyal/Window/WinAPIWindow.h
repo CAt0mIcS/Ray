@@ -2,6 +2,9 @@
 #define RL_WINAPIWINDOW_H
 
 #include "RlBase.h"
+
+#ifdef _WIN32
+
 #include "Window.h"
 
 #include <Windows.h>
@@ -123,9 +126,11 @@ namespace At0::Reyal
 		/// <param name="lParam">Is an additional parameter</param>
 		/// <returns>LRESULT code</returns>
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 	};
 }
 
+#endif // _WIN32
 
 
 

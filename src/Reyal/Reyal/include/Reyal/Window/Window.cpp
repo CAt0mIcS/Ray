@@ -24,7 +24,9 @@ namespace At0::Reyal
 
 		switch (RendererAPI::GetAPI())
 		{
+#ifdef _WIN32
 		case RendererAPI::API::D3D11:		return MakeRef<WinAPIWindow>(name, parent, isMainWindow);
+#endif
 		case RendererAPI::API::OpenGL:		return MakeRef<OpenGLWindow>(name, parent, isMainWindow);
 		}
 

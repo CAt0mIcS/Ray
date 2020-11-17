@@ -42,6 +42,11 @@ elseif(APPLE)
     endif()
 endif()
 
+if(UNIX)
+    set(CMAKE_C_FLAGS "-fPIC")
+    set(CMAKE_CXX_FLAGS "-fPIC")
+endif()
+
 # ------------------------------------------------------------------------------------------------
 # Initialize the Solution Project
 project("NodePlanningEditor")
