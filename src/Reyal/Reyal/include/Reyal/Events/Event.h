@@ -7,7 +7,8 @@ namespace At0::Reyal
 	enum class EventType
 	{
 		INVALID = 0,
-		MouseButtonPressedEvent, MouseButtonReleasedEvent, MouseWheelUpEvent, MouseWheelDownEvent, MouseMoveEvent,
+		MouseButtonPressedEvent, MouseButtonReleasedEvent, MouseMoveEvent,
+		MouseWheelUpEvent, MouseWheelDownEvent, MouseWheelRightEvent, MouseWheelLeftEvent,
 		HoverEnterEvent, HoverLeaveEvent,
 		KeyPressedEvent, KeyReleasedEvent, CharEvent,
 		WindowResizeEvent, WindowCloseEvent, WindowMoveEvent, PaintEvent, SetCursorEvent,

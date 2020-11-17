@@ -10,6 +10,8 @@ namespace At0::Reyal
 	class MouseButtonReleasedEvent;
 	class MouseWheelUpEvent;
 	class MouseWheelDownEvent;
+	class MouseWheelLeftEvent;
+	class MouseWheelRightEvent;
 	class MouseMoveEvent;
 	class HoverEnterEvent;
 	class HoverLeaveEvent;
@@ -64,6 +66,20 @@ namespace At0::Reyal
 		/// <param name="receiver">Is the Widget where the mouse was on when the scroll wheel was used</param>
 		/// <param name="e">Is the generated event containing wheel delta</param>
 		virtual void OnMouseWheelDown(Widget* receiver, MouseWheelDownEvent& e) {}
+
+		/// <summary>
+		/// Receives all MouseWheelLeft Events. The delta is stored in "e"
+		/// </summary>
+		/// <param name="receiver">Is the Widget where the mouse was on when the scroll wheel was used</param>
+		/// <param name="e">Is the generated event containing wheel delta</param>
+		virtual void OnMouseWheelLeft(Widget* receiver, MouseWheelLeftEvent& e) {}
+
+		/// <summary>
+		/// Receives all MouseWheelRight Events. The delta is stored in "e"
+		/// </summary>
+		/// <param name="receiver">Is the Widget where the mouse was on when the scroll wheel was used</param>
+		/// <param name="e">Is the generated event containing wheel delta</param>
+		virtual void OnMouseWheelRight(Widget* receiver, MouseWheelRightEvent& e) {}
 
 		/// <summary>
 		/// Receives all MouseMove Events. The new and old position are stored in "e"

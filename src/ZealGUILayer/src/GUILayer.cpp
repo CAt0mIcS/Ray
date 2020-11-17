@@ -50,6 +50,18 @@ namespace At0::Layers
 		RL_LOG_DEBUG("[GUILayer] {0}", e.ToString());
 	}
 
+	void GUILayer::OnMouseWheelLeft(Reyal::Widget* receiver, Reyal::MouseWheelLeftEvent& e)
+	{
+		RL_PROFILE_FUNCTION();
+		RL_LOG_DEBUG("[GUILayer] {0}", e.ToString());
+	}
+
+	void GUILayer::OnMouseWheelRight(Reyal::Widget* receiver, Reyal::MouseWheelRightEvent& e)
+	{
+		RL_PROFILE_FUNCTION();
+		RL_LOG_DEBUG("[GUILayer] {0}", e.ToString());
+	}
+
 	void GUILayer::OnResize(Reyal::Widget* receiver, Reyal::WindowResizeEvent& e)
 	{
 		RL_PROFILE_FUNCTION();

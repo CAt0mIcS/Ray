@@ -157,6 +157,44 @@ namespace At0::Reyal
 		virtual EventType GetType() const override { return GetStaticType(); }
 	};
 
+	class MouseWheelLeftEvent : public MouseWheelEvent
+	{
+	public:
+		MouseWheelLeftEvent(int delta)
+			: MouseWheelEvent(delta)
+		{
+		}
+
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[MouseWheelLeftEvent] Delta: " << GetDelta();
+			return oss.str();
+		}
+
+		static EventType GetStaticType() { return EventType::MouseWheelLeftEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
+	};
+
+	class MouseWheelRightEvent : public MouseWheelEvent
+	{
+	public:
+		MouseWheelRightEvent(int delta)
+			: MouseWheelEvent(delta)
+		{
+		}
+
+		virtual std::string ToString() const override
+		{
+			std::ostringstream oss;
+			oss << "[MouseWheelRightEvent] Delta: " << GetDelta();
+			return oss.str();
+		}
+
+		static EventType GetStaticType() { return EventType::MouseWheelRightEvent; }
+		virtual EventType GetType() const override { return GetStaticType(); }
+	};
+
 	class HoverEnterEvent : public Event
 	{
 	public:

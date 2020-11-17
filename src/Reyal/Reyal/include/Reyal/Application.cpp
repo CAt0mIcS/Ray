@@ -137,6 +137,8 @@ namespace At0::Reyal
 		case EventType::MouseButtonReleasedEvent:	layer->OnMouseRelease(receiver, (MouseButtonReleasedEvent&)e); break;
 		case EventType::MouseWheelUpEvent:			layer->OnMouseWheelUp(receiver, (MouseWheelUpEvent&)e); break;
 		case EventType::MouseWheelDownEvent:		layer->OnMouseWheelDown(receiver, (MouseWheelDownEvent&)e); break;
+		case EventType::MouseWheelLeftEvent:		layer->OnMouseWheelLeft(receiver, (MouseWheelLeftEvent&)e); break;
+		case EventType::MouseWheelRightEvent:		layer->OnMouseWheelRight(receiver, (MouseWheelRightEvent&)e); break;
 		case EventType::MouseMoveEvent:				layer->OnMouseMove(receiver, (MouseMoveEvent&)e); break;
 		case EventType::HoverEnterEvent:			layer->OnHoverEnter(receiver, (HoverEnterEvent&)e); break;
 		case EventType::HoverLeaveEvent:			layer->OnHoverLeave(receiver, (HoverLeaveEvent&)e); break;
