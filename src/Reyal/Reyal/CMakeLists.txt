@@ -53,11 +53,13 @@ set(PRIVATE_LIB
 	"RlRender"
 	"Threads::Threads"
 	"glfw"
+	"Glad"
 )
 else()
 set(PRIVATE_LIB
 	"RlRender"
 	"glfw"
+	"Glad"
 )
 endif()
 

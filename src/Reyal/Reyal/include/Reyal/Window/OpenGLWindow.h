@@ -79,6 +79,9 @@ namespace At0::Reyal
 		/// Sets all glfw event callbacks
 		/// </summary>
 		void SetUpEventCallbacks();
+
+	private:
+		static bool s_GLFWInitialized;
 	};
 }
 

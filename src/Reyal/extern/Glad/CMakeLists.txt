@@ -6,7 +6,7 @@ set(SRC
 
 add_library("Glad" STATIC "${SRC}")
 set_target_properties("Glad" PROPERTIES FOLDER "extern")
-target_include_directories("Glad" PRIVATE "include")
+target_include_directories("Glad" PUBLIC "include")
 AddRecursiveFilters("${SRC}")
 
 SetOutputDirectory("Glad" "")
