@@ -40,6 +40,8 @@ namespace At0::Reyal
 
 	bool WinAPIWindow::ShouldClose()
 	{
+		RL_PROFILE_FUNCTION();
+
 		MSG msg;
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
