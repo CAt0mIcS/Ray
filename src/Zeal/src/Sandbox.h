@@ -31,9 +31,15 @@ namespace At0::Zeal
 	
 }
 
+
+#include <RlRender/RendererAPI.h>
+
 void At0::Reyal::CreateApplication()
 {
-	At0::Reyal::Application::Create(new At0::Zeal::Sandbox());
+	using namespace At0;
+
+	Reyal::RendererAPI::SetAPI(Reyal::RendererAPI::API::OpenGL);
+	Reyal::Application::Create(new Zeal::Sandbox());
 }
 
 #endif // ZL_SANDBOX_H
