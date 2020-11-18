@@ -54,8 +54,6 @@ namespace At0::Reyal
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		//TODO: Change to something more appropriate (CPU Usage too high without it)
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		return false;
 	}
 

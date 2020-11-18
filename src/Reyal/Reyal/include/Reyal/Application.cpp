@@ -66,6 +66,9 @@ namespace At0::Reyal
 			{
 				layer->OnUpdate();
 			}
+
+			//TODO: Change to something more appropriate (CPU Usage too high without it)
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 
 		m_Running = false;
