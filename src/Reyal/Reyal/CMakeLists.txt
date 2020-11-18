@@ -11,9 +11,7 @@ set(SRC
 	"include/Reyal/Window/WinAPIWindow.cpp"
 	"include/Reyal/Window/OpenGLWindow.cpp"
 	"include/Reyal/Window/Window.cpp"
-	"include/Reyal/Window/X11Window.cpp"
 	
-	"include/Reyal/Window/X11Window.h"
 	"include/Reyal/Window/WinAPIWindow.h"
 	"include/Reyal/Window/OpenGLWindow.h"
 	"include/Reyal/Window/Window.h"
@@ -51,14 +49,11 @@ set(PUBLIC_LIB
 
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCCXX)
 find_package("Threads" REQUIRED)
-find_package("X11" REQUIRED)
-list(APPEND PRIVATE_INC "${X11_INCLUDE_DIR}")
 set(PRIVATE_LIB
 	"RlRender"
 	"Threads::Threads"
 	"glfw"
 	"Glad"
-	"${X11_LIBRARIES}"
 )
 else()
 set(PRIVATE_LIB

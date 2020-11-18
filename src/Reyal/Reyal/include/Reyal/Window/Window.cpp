@@ -11,7 +11,6 @@
 
 #include "WinAPIWindow.h"
 #include "OpenGLWindow.h"
-#include "X11Window.h"
 
 
 
@@ -29,9 +28,6 @@ namespace At0::Reyal
 		case RendererAPI::API::D3D11:		return MakeRef<WinAPIWindow>(name, parent, isMainWindow);
 #endif
 		case RendererAPI::API::OpenGL:		return MakeRef<OpenGLWindow>(name, parent, isMainWindow);
-#ifdef __linux__
-		case RendererAPI::API::X11:			return MakeRef<X11Window>(name, parent, isMainWindow);
-#endif
 		}
 
 		RL_ASSERT(false, "Failed to create the Window");
