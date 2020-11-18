@@ -29,5 +29,5 @@ endif()
 target_include_directories("RlLogger" INTERFACE "${INC}")
 target_link_libraries("RlLogger" INTERFACE "RlUtilities")
 
-add_dependencies("RlLogger" "RlUtilities")
+# add_dependencies("RlLogger" "RlUtilities")
 AddRecursiveFilters("${SRC}")

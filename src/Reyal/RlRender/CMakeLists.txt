@@ -58,8 +58,7 @@ target_link_libraries("RlRender"
         "${PUBLIC_LIB}"
 )
 
-add_dependencies("RlRender" "RlDebug")
-# add_dependencies("RlRender" "glfw")
+# add_dependencies("RlRender" "RlDebug")
 target_compile_definitions("RlRender" PRIVATE "RLR_BUILD")
 target_precompile_headers("RlRender" PRIVATE "include/RlRender/rlrpch.h")
 

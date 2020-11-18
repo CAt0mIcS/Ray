@@ -39,7 +39,7 @@ target_link_libraries("ZealGUILayer"
 
 set_target_properties("ZealGUILayer" PROPERTIES FOLDER "LayerExtensions")
 target_precompile_headers("ZealGUILayer" PRIVATE "src/glpch.h")
-add_dependencies("ZealGUILayer" "Reyal")
+# add_dependencies("ZealGUILayer" "Reyal")
 AddRecursiveFilters("${SRC}")
 
 SetOutputDirectory("ZealGUILayer" "Editors")

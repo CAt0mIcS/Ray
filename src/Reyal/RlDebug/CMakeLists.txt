@@ -44,6 +44,6 @@ target_link_libraries("RlDebug"
 set_target_properties("RlDebug" PROPERTIES FOLDER "RlUtilities")
 target_compile_definitions("RlDebug" PRIVATE "RLD_BUILD")
 target_precompile_headers("RlDebug" PRIVATE "include/RlDebug/rldpch.h")
-add_dependencies("RlDebug" "RlUtilities")
+# add_dependencies("RlDebug" "RlUtilities")
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("RlDebug" "")
