@@ -18,9 +18,9 @@ namespace At0::Reyal
 		/// </summary>
 		enum class RLR_API API
 		{
-			None = 0, D3D11, OpenGL,
+			None = 0, D3D11, OpenGL, X11,
 
-			FIRST = None, LAST = OpenGL
+			FIRST = None, LAST = X11
 		};
 
 	public:

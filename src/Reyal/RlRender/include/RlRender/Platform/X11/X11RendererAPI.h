@@ -1,23 +1,27 @@
-#ifndef RLR_D3D11RENDERERAPI_H
-#define RLR_D3D11RENDERERAPI_H
+#ifndef RLR_X11RENDERERAPI_H
+#define RLR_X11RENDERERAPI_H
 
-#ifdef _WIN32
+
+#ifdef __linux__
 
 
 #include "RlRender/RendererAPI.h"
-#include "RlRender/RlRBase.h"
 
-#include <wrl.h>
 
 namespace At0::Reyal
 {
-	class D3D11RendererAPI : public RendererAPI
-	{
-	public:
-		/// <summary>
-		/// D3D11RendererAPI Constructor
+    class X11RendererAPI : public RendererAPI
+    {
+    public:
+        /// <summary>
+		/// X11RendererAPI Constructor
 		/// </summary>
-		D3D11RendererAPI();
+        X11RendererAPI();
+
+        /// <summary>
+		/// Virtual RendererAPI Deconstructor
+		/// </summary>
+		virtual ~X11RendererAPI();
 
 		/// <summary>
 		/// Initializes all components required for rendering
@@ -40,18 +44,10 @@ namespace At0::Reyal
 		/// Draws the scene to the screen
 		/// </summary>
 		virtual void EndDraw() override;
-
-	private:
-		Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
-		Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
-		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_Context;
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_TargetView;
-
-		HWND m_hWnd;
-	};
+    };
 }
 
-#endif // _WIN32
+#endif // __linux__
 
 
-#endif // RLR_D3D11RENDERERAPI_H
+#endif // RLR_X11RENDERERAPI_H
