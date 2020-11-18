@@ -11,6 +11,11 @@
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 
+// Annoying X11 macros
+#ifdef None
+#undef None
+#endif
+
 #include "Reyal/Events/ApplicationEvent.h"
 #include "Reyal/Events/MouseEvent.h"
 #include "Reyal/Events/KeyboardEvent.h"
@@ -107,16 +112,24 @@ namespace At0::Reyal
 			buff.resize(len);
 			GetWindowTextA(hWnd, buff.data(), len + 1);
 		}
+		else
+		{
+			//error
+			RL_LOG_WARN("[OpenGLWindow] Failed to retrieve the Window Title")
+		}
 
 		return buff;
 
 #elif defined(__linux__)
 
 		::Window hWnd = glfwGetX11Window((GLFWwindow*)m_hWnd);
-		if (XFetchName(glfwGetX11Display(hWnd, hWnd, buff.data()) > 0)
+		XTextProperty prop;
+		if (XGetWMName(glfwGetX11Display(), hWnd, &prop) == 0)
 		{
+			// error
+			RL_LOG_WARN("[OpenGLWindow] Failed to retrieve the Window Title");
 		}
-
+		return (char*)prop.value;
 #endif
 
 	}

@@ -49,11 +49,14 @@ set(PUBLIC_LIB
 
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCCXX)
 find_package("Threads" REQUIRED)
+find_package("X11" REQUIRED)
+list(APPEND PRIVATE_INC "${X11_INCLUDE_DIRS}")
 set(PRIVATE_LIB
 	"RlRender"
 	"Threads::Threads"
 	"glfw"
 	"Glad"
+	"${X11_LIBRARIES}"
 )
 else()
 set(PRIVATE_LIB

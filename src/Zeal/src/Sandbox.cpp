@@ -15,7 +15,6 @@ namespace At0::Zeal
 		 m_MainWindow->InitRenderer3D();
 		 m_MainWindow->SetTitle("Zeal");
 		 m_MainWindow->Show();
-		 m_MainWindow->GetTitle();
 
 		ExtensionLoader loader;
 #ifdef NDEBUG

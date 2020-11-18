@@ -42,9 +42,10 @@ elseif(APPLE)
     endif()
 endif()
 
+# TODO: Enable for gcc and clang only
 if(UNIX)
-    set(CMAKE_C_FLAGS "-fPIC")
-    set(CMAKE_CXX_FLAGS "-fPIC")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wno-attributes")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wno-attributes")
 endif()
 
 # ------------------------------------------------------------------------------------------------
@@ -89,12 +90,6 @@ include("BuildFiles/macros.cmake")
 
 
 add_subdirectory("src")
-
-# ------------------------------------------------------------------------------------------------
-# Disable all warnings and add pthread (TODO, not a very clean way of doing it!)
-if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCCXX)
-    set(CMAKE_CXX_FLAGS "-pthread")
-endif()
 
 
 
