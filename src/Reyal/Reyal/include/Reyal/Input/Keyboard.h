@@ -11,6 +11,8 @@ namespace At0::Reyal
 {
 	class RL_API KeyboardInput
 	{
+		friend class WinAPIWindow;
+		friend class OpenGLWindow;
 	public:
 		/// <summary>
 		/// Default Keyboard Constructor
@@ -24,6 +26,7 @@ namespace At0::Reyal
 		/// <returns>True if the key with keycode is pressed, false otherwise</returns>
 		bool IsKeyPressed(unsigned char keycode) const;
 
+	private:
 		/// <summary>
 		/// Sets the pressed state of a key to isPressed
 		/// </summary>

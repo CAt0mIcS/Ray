@@ -12,6 +12,8 @@ namespace At0::Reyal
 
 	class RL_API MouseInput
 	{
+		friend class WinAPIWindow;
+		friend class OpenGLWindow;
 	public:
 		/// <summary>
 		/// Mouse Constructor. Initializes everything to false
@@ -62,11 +64,30 @@ namespace At0::Reyal
 		/// <returns>The old mouse position</returns>
 		const Point2& GetOldPos() const;
 
+	private:
 		/// <summary>
 		/// Sets the position of the mouse, doesn't actually move the mouse
 		/// </summary>
 		/// <param name="mousePos">Is the new mouse position</param>
 		void SetPos(const Point2& mousePos);
+
+		/// <summary>
+		/// Sets the state of the left mouse button
+		/// </summary>
+		/// <param name="isLeftPressed">Is true if the left mouse button is currently pressed, false otherwise</param>
+		void SetLeftPressed(bool isLeftPressed) { m_IsLeftPressed = isLeftPressed; }
+
+		/// <summary>
+		/// Sets the state of the right mouse button
+		/// </summary>
+		/// <param name="isLeftPressed">Is true if the right mouse button is currently pressed, false otherwise</param>
+		void SetRightPressed(bool isRightPressed) { m_IsRightPressed = isRightPressed; }
+
+		/// <summary>
+		/// Sets the state of the middle mouse button
+		/// </summary>
+		/// <param name="isLeftPressed">Is true if the middle mouse button is currently pressed, false otherwise</param>
+		void SetMiddlePressed(bool isMiddlePressed) { m_IsMiddlePressed = isMiddlePressed; }
 
 	private:
 		/// <summary>

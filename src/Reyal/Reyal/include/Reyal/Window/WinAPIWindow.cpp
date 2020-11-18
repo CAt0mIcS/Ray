@@ -142,36 +142,48 @@ namespace At0::Reyal
 		}
 		case WM_LBUTTONDOWN:
 		{
+			Mouse.SetLeftPressed(true);
+
 			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Left);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
+			Mouse.SetLeftPressed(false);
+
 			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Left);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
+			Mouse.SetMiddlePressed(true);
+
 			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Middle);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
+			Mouse.SetMiddlePressed(false);
+
 			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Middle);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
+			Mouse.SetRightPressed(true);
+
 			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Right);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
+			Mouse.SetRightPressed(false);
+
 			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Right);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
@@ -181,12 +193,16 @@ namespace At0::Reyal
 			m_Renderer3D->RenderTestTriangle();
 			m_Renderer3D->EndDraw();
 
+			Keyboard.SetKeyState((unsigned char)wParam, true);
+
 			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)wParam, (uint32_t)(lParam & 0xff));
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;
 		}
 		case WM_KEYUP:
 		{
+			Keyboard.SetKeyState((unsigned char)wParam, false);
+
 			Scope<KeyReleasedEvent> e = MakeScope<KeyReleasedEvent>((unsigned char)wParam);
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 			return 0;

@@ -19,6 +19,9 @@ namespace At0::Zeal
 		/// </summary>
 		~Sandbox();
 
+
+		///TODO: Currently not used!
+
 		/// <summary>
 		/// Receives all window events (WindowResize, WindowClose, WindowPaint)
 		/// </summary>

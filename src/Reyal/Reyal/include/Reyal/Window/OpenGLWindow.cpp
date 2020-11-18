@@ -76,9 +76,9 @@ namespace At0::Reyal
 		RL_ASSERT(status, "Failed to initialize Glad!");
 		
 		RL_LOG_INFO("[OpenGLWindow] OpenGL Info:");
-		RL_LOG_INFO("                  Vendor:   {0}", glGetString(GL_VENDOR));
-		RL_LOG_INFO("                  Renderer: {0}", glGetString(GL_RENDERER));
-		RL_LOG_INFO("                  Version:	 {0}", glGetString(GL_VERSION));
+		RL_LOG_INFO("	Vendor:   {0}", glGetString(GL_VENDOR));
+		RL_LOG_INFO("	Renderer: {0}", glGetString(GL_RENDERER));
+		RL_LOG_INFO("	Version:	 {0}", glGetString(GL_VERSION));
 		RL_LOG_FLUSH();
 
 		SetUpEventCallbacks();
@@ -182,7 +182,7 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 
 		glfwPollEvents();
-		glfwSwapBuffers((GLFWwindow*)m_hWnd);
+		//glfwSwapBuffers((GLFWwindow*)m_hWnd);
 		return glfwWindowShouldClose((GLFWwindow*)m_hWnd);
 	}
 	
@@ -218,12 +218,28 @@ namespace At0::Reyal
 				case GLFW_PRESS:
 				{
 					Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>((MouseButton)(button + 1));
+
+					switch (e->GetButton())
+					{
+					case MouseButton::Left:		pData->win.Mouse.SetLeftPressed(true); break;
+					case MouseButton::Right:	pData->win.Mouse.SetRightPressed(true); break;
+					case MouseButton::Middle:	pData->win.Mouse.SetMiddlePressed(true); break;
+					}
+
 					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>((MouseButton)(button + 1));
+
+					switch (e->GetButton())
+					{
+					case MouseButton::Left:		pData->win.Mouse.SetLeftPressed(false); break;
+					case MouseButton::Right:	pData->win.Mouse.SetRightPressed(false); break;
+					case MouseButton::Middle:	pData->win.Mouse.SetMiddlePressed(false); break;
+					}
+
 					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 					break;
 				}
@@ -240,14 +256,17 @@ namespace At0::Reyal
 				{
 				case GLFW_PRESS:
 					e = MakeScope<KeyPressedEvent>((unsigned char)key, 0);
+					pData->win.Keyboard.SetKeyState((unsigned char)key, true);
 					break;
 				case GLFW_RELEASE:
 					e = MakeScope<KeyReleasedEvent>((unsigned char)key);
+					pData->win.Keyboard.SetKeyState((unsigned char)key, false);
 					break;
 				case GLFW_REPEAT:
 					e = MakeScope<KeyPressedEvent>((unsigned char)key, 1);
 					break;
 				}
+
 				pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 			}
 		);
@@ -281,18 +300,27 @@ namespace At0::Reyal
 
 				if (xOffset > 0)
 				{
+					// TODO: Set default scroll value (120 on Windows)
 					Scope<MouseWheelLeftEvent> e = MakeScope<MouseWheelLeftEvent>(int(xOffset * 120));
 					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 				}
 				else if (xOffset < 0)
 				{
+					// TODO: Set default scroll value (120 on Windows)
 					Scope<MouseWheelRightEvent> e = MakeScope<MouseWheelRightEvent>(int(xOffset * 120));
 					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 				}
 			}
 		);
 
-		//TODO: PaintEvent!
+		glfwSetWindowRefreshCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window)
+			{
+				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
+			
+				Scope<PaintEvent> e = MakeScope<PaintEvent>();
+				pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+			}
+		);
 
 		glfwSetWindowSizeCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, int width, int height)
 			{
