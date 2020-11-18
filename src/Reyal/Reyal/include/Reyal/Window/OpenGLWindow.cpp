@@ -1,8 +1,15 @@
 #include "rlpch.h"
 #include "OpenGLWindow.h"
 
+#ifdef _WIN32
+	#define GLFW_EXPOSE_NATIVE_WIN32
+#elif defined(__linux__)
+	#define GLFW_EXPOSE_NATIVE_X11
+#endif
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
 
 #include "Reyal/Events/ApplicationEvent.h"
 #include "Reyal/Events/MouseEvent.h"
@@ -87,8 +94,31 @@ namespace At0::Reyal
 
 	std::string OpenGLWindow::GetTitle() const
 	{
+		// GLFW doesn't have functionality to get the current window title
 		RL_PROFILE_FUNCTION();
-		return std::string();
+		
+#ifdef _WIN32
+
+		HWND hWnd = glfwGetWin32Window((GLFWwindow*)m_hWnd);
+		std::string buff;
+		int len = GetWindowTextLengthA(hWnd);
+		if (len > 0)
+		{
+			buff.resize(len);
+			GetWindowTextA(hWnd, buff.data(), len + 1);
+		}
+
+		return buff;
+
+#elif defined(__linux__)
+
+		::Window hWnd = glfwGetX11Window((GLFWwindow*)m_hWnd);
+		if (XFetchName(glfwGetX11Display(hWnd, hWnd, buff.data()) > 0)
+		{
+		}
+
+#endif
+
 	}
 	
 	void OpenGLWindow::SetTitle(const std::string_view title)
@@ -147,21 +177,44 @@ namespace At0::Reyal
 	{
 		RL_PROFILE_FUNCTION();
 
-		glfwSetWindowSizeCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, int width, int height)
-			{
-				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
-
-				Scope<WindowResizeEvent> e = MakeScope<WindowResizeEvent>(pData->oldSize, Point2{ (float)width, (float)height });
-				pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
-			}
-		);
-
 		glfwSetWindowCloseCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window)
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
 
 				WindowCloseEvent e = WindowCloseEvent();
 				pData->immediateEventFn(pData->eventReceiverFn(e, pData->win.Mouse), e);
+			}
+		);
+
+		glfwSetCursorPosCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, double xPos, double yPos)
+			{
+				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
+				pData->win.Mouse.SetPos({ (float)xPos, (float)yPos });
+
+				Scope<MouseMoveEvent> e = MakeScope<MouseMoveEvent>(pData->oldPos, Point2{ (float)xPos, (float)yPos });
+				pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+			}
+		);
+
+		glfwSetMouseButtonCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, int button, int action, int mods)
+			{
+				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
+
+				switch (action)
+				{
+				case GLFW_PRESS:
+				{
+					Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>((MouseButton)(button + 1));
+					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>((MouseButton)(button + 1));
+					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+					break;
+				}
+				}
 			}
 		);
 
@@ -195,33 +248,11 @@ namespace At0::Reyal
 			}
 		);
 
-		glfwSetMouseButtonCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, int button, int action, int mods)
-			{
-				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
-
-				switch (action)
-				{
-				case GLFW_PRESS:
-				{
-					Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>((MouseButton)(button + 1));
-					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>((MouseButton)(button + 1));
-					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
-					break;
-				}
-				}
-			}
-		);
-
 		glfwSetScrollCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, double xOffset, double yOffset)
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
 				// TODO: MouseWheelLeft and Right events
-				
+
 				if (yOffset > 0)
 				{
 					// TODO: Set default scroll value (120 on Windows)
@@ -248,11 +279,14 @@ namespace At0::Reyal
 			}
 		);
 
-		glfwSetCursorPosCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, double xPos, double yPos)
+		//TODO: PaintEvent!
+
+		glfwSetWindowSizeCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, int width, int height)
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
+				pData->win.MoveTo(Point2{ width, height });
 
-				Scope<MouseMoveEvent> e = MakeScope<MouseMoveEvent>(pData->oldPos, Point2{ (float)xPos, (float)yPos });
+				Scope<WindowResizeEvent> e = MakeScope<WindowResizeEvent>(pData->oldSize, Point2{ (float)width, (float)height });
 				pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 			}
 		);
