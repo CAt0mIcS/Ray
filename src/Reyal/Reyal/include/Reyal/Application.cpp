@@ -97,8 +97,6 @@ namespace At0::Reyal
 		// Dispatch event to every layer
 		for (auto* layer : m_LayerStack)
 		{
-			if (e->Handled)
-				break;
 			DispatchEvent(layer, receiver, *e);
 		}
 	}

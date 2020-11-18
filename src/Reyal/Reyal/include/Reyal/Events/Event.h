@@ -22,8 +22,6 @@ namespace At0::Reyal
 		virtual EventType GetType() const = 0;
 		virtual std::string ToString() const = 0;
 
-	public:
-		bool Handled = false;
 	};
 
 }
