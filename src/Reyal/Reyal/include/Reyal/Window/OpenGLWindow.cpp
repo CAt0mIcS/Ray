@@ -115,7 +115,7 @@ namespace At0::Reyal
 		else
 		{
 			//error
-			RL_LOG_WARN("[OpenGLWindow] Failed to retrieve the Window Title")
+			RL_LOG_WARN("[OpenGLWindow] Failed to retrieve the Window Title");
 		}
 
 		return buff;
