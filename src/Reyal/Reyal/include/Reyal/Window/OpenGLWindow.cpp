@@ -78,7 +78,7 @@ namespace At0::Reyal
 		RL_LOG_INFO("[OpenGLWindow] OpenGL Info:");
 		RL_LOG_INFO("	Vendor:   {0}", glGetString(GL_VENDOR));
 		RL_LOG_INFO("	Renderer: {0}", glGetString(GL_RENDERER));
-		RL_LOG_INFO("	Version:	 {0}", glGetString(GL_VERSION));
+		RL_LOG_INFO("	Version:  {0}", glGetString(GL_VERSION));
 		RL_LOG_FLUSH();
 
 		SetUpEventCallbacks();
