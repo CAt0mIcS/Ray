@@ -42,20 +42,37 @@ namespace At0::Reyal
 		//////////////////////////////////////////////////////////////////////////////////////////
 		////////// Event Handling Loop ///////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////////////////////////////////////
-		auto dispatchEvents = [this]()
-		{
-			auto& queue = m_MainWindow->GetEventQueue();
-			while (m_Running)
-			{
-				EventMessage eMsg = queue.PopFront();
-				// Dispatch the Event to the layers
-				OnEventReceived(eMsg.receiver, std::move(eMsg.e));
-				// Wait for new events to come in or the program to exit
-				queue.WaitFor([&queue, this]() { return !queue.Empty() || !m_Running; });
-			}
-		};
-		m_ThreadPool.AddTask(dispatchEvents);
+		//auto dispatchEvents = [this]()
+		//{
+		//	auto& queue = m_MainWindow->GetEventQueue();
+		//	while (m_Running)
+		//	{
+		//		EventMessage eMsg = queue.PopFront();
+		//		// Dispatch the Event to the layers
+		//		OnEventReceived(eMsg.receiver, std::move(eMsg.e));
+		//		// Wait for new events to come in or the program to exit
+		//		queue.WaitFor([&queue, this]() { return !queue.Empty() || !m_Running; });
+		//	}
+		//};
+		//m_ThreadPool.AddTask(dispatchEvents);
 
+		for (auto& window : m_WindowStack)
+		{
+			Window* win = window.get();
+			m_ThreadPool.AddTask([this, win]()
+				{
+					auto& queue = win->GetEventQueue();
+					while (m_Running)
+					{
+						EventMessage eMsg = queue.PopFront();
+						// Dispatch the Event to the layers
+						OnEventReceived(eMsg.receiver, std::move(eMsg.e));
+						// Wait for new events to come in or the program to exit
+						queue.WaitFor([&queue, this]() { return !queue.Empty() || !m_Running; });
+					}
+				}
+			);
+		}
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 		////////// Main Application Loop /////////////////////////////////////////////////////////
@@ -72,20 +89,29 @@ namespace At0::Reyal
 		}
 
 		m_Running = false;
-		
+
 		// We need to notify all threads that we've exited the application
 		// and that they should stop waiting, we could also push a dummy event 
 		// into the queue
 		m_MainWindow->GetEventQueue().GetWaiter().notify_all();
-
+		
 		return 0;
 	}
 
-	void Application::PushLayer(Layer* layer)
+	Layer* Application::PushLayer(Layer* layer)
 	{
 		RL_PROFILE_FUNCTION();
 
-		m_LayerStack.PushLayer(layer);
+		m_LayerStack.PushBack(layer);
+		return layer;
+	}
+
+	Window* Application::PushWindow(Ref<Window> window)
+	{
+		RL_PROFILE_FUNCTION();
+
+		m_WindowStack.PushBack(window);
+		return window.get();
 	}
 
 	Application::~Application()
@@ -109,9 +135,9 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 		RL_EXPECTS(e.GetType() <= EventType::LAST && e.GetType() >= EventType::FIRST);
 
-		// Wait for queue to be empty
-		auto& queue = m_MainWindow->GetEventQueue();
-		queue.WaitFor([&queue]() { return queue.Empty(); });
+		// Wait for queue to be empty (maybe)
+		//auto& queue = m_MainWindow->GetEventQueue();
+		//queue.WaitFor([&queue]() { return queue.Empty(); });
 
 		for (auto* layer : m_LayerStack)
 		{

@@ -32,7 +32,7 @@ namespace At0::Zeal
 		virtual void OnEvent(Reyal::Widget* receiver, Reyal::Event& e);
 
 	private:
-		Reyal::Ref<Reyal::Window> m_Win;
+		Reyal::Window* m_Win;
 
 	};
 	

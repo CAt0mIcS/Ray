@@ -74,7 +74,14 @@ namespace At0::Reyal
 		/// </summary>
 		/// <param name="layer">Is a raw, (heap-allocated) pointer to the layer</param>
 		/// <returns>The pushed layer</returns>
-		void PushLayer(Layer* layer);
+		Layer* PushLayer(Layer* layer);
+
+		/// <summary>
+		/// Pushes a new window onto the stack
+		/// </summary>
+		/// <param name="window">Is the window to push</param>
+		/// <returns>The pushed window</returns>
+		Window* PushWindow(Ref<Window> window);
 
 		/// <summary>
 		/// Called if any window itself received an event
@@ -128,7 +135,12 @@ namespace At0::Reyal
 		/// <summary>
 		/// Structure holding all Layers pushed into the application
 		/// </summary>
-		LayerStack m_LayerStack;
+		Queue<Layer*> m_LayerStack;
+
+		/// <summary>
+		/// Structure holding all Windows pushed into the application
+		/// </summary>
+		Queue<Ref<Window>> m_WindowStack;
 
 		/// <summary>
 		/// Singelton instance of Application
