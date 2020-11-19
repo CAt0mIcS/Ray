@@ -31,30 +31,12 @@ namespace At0::Reyal
 		RL_EXPECTS(!rnd.empty());
 		RL_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
 		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW));
+		m_IsOpen = true;
 	}
 
 	WinAPIWindow::~WinAPIWindow()
 	{
 		RL_PROFILE_FUNCTION();
-	}
-
-	bool WinAPIWindow::ShouldClose()
-	{
-		RL_PROFILE_FUNCTION();
-
-		MSG msg;
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			if (msg.message == WM_QUIT)
-			{
-				RL_LOG_DEBUG("[MessageLoop] WM_QUIT Message Received");
-				return true;
-			}
-
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		return false;
 	}
 
 	bool WinAPIWindow::CreateNativeWindow(
@@ -118,12 +100,8 @@ namespace At0::Reyal
 		{
 			// TODO: Check if resources of the closed window are destroyed correctly
 			RL_LOG_DEBUG("[MessageLoop] WM_DESTROY Message in HandleMessage received");
-			if (this->IsMainWindow())
-			{
-				PostQuitMessage(0);
-				return 0;
-			}
-			break;
+			PostQuitMessage(0);
+			return 0;
 		}
 		case WM_MOUSEMOVE:
 		{
@@ -282,6 +260,12 @@ namespace At0::Reyal
 		case WM_CLOSE:
 		{
 			RL_LOG_DEBUG("[MessageLoop] WM_CLOSE Message in HandleMessage received");
+			m_IsOpen = false;
+
+			// Push a dummy event into the queue so that the condition_variable in the queue will notify all threads to check
+			Scope<WindowCloseEvent> eDummy = MakeScope<WindowCloseEvent>();
+			m_EventQueue.PushBack({ this, std::move(eDummy) });
+
 			if (m_ImmediateEventFn)
 			{
 				if (!m_ImmediateEventFn(this, WindowCloseEvent()))
@@ -339,14 +323,26 @@ namespace At0::Reyal
 		ShowWindow((HWND)m_hWnd, SW_MINIMIZE);
 	}
 
-	void WinAPIWindow::Close() const
+	void WinAPIWindow::Close()
 	{
 		SendMessage((HWND)m_hWnd, WM_CLOSE, 0, 0);
 	}
 
 	bool WinAPIWindow::IsOpen() const
 	{
-		return IsWindowVisible((HWND)m_hWnd);
+		return m_IsOpen;
+	}
+
+	void WinAPIWindow::OnUpdate()
+	{
+		RL_PROFILE_FUNCTION();
+
+		MSG msg;
+		if (PeekMessage(&msg, (HWND)m_hWnd, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
 	}
 
 	void WinAPIWindow::SetIcon(const std::string_view path)

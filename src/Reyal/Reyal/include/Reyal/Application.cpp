@@ -20,9 +20,9 @@ namespace At0::Reyal
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()
-		: m_LayerStack{}, m_Running(true)
+		: m_LayerStack{}
 	{
-		m_MainWindow = Window::Create("MainWindow", nullptr, true);
+		m_MainWindow = PushWindow(Window::Create("MainWindow", nullptr));
 		Window::SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
 		RL_LOG_INFO("[ThreadPool] Initialized {0} threads", m_ThreadPool.MaxThreads());
 	}
@@ -62,13 +62,13 @@ namespace At0::Reyal
 			m_ThreadPool.AddTask([this, win]()
 				{
 					auto& queue = win->GetEventQueue();
-					while (m_Running)
+					while (win->IsOpen())
 					{
 						EventMessage eMsg = queue.PopFront();
 						// Dispatch the Event to the layers
 						OnEventReceived(eMsg.receiver, std::move(eMsg.e));
 						// Wait for new events to come in or the program to exit
-						queue.WaitFor([&queue, this]() { return !queue.Empty() || !m_Running; });
+						queue.WaitFor([&queue, win]() { return !queue.Empty(); });
 					}
 				}
 			);
@@ -77,8 +77,14 @@ namespace At0::Reyal
 		//////////////////////////////////////////////////////////////////////////////////////////
 		////////// Main Application Loop /////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////////////////////////////////////
-		while (!m_MainWindow->ShouldClose())
+		while (m_MainWindow->IsOpen())
 		{
+			for (auto& window : m_WindowStack)
+			{
+				if(window->IsOpen())
+					window->OnUpdate();
+			}
+
 			for (auto* layer : m_LayerStack)
 			{
 				layer->OnUpdate();
@@ -87,14 +93,13 @@ namespace At0::Reyal
 			//TODO: Change to something more appropriate (CPU Usage too high without it)
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
-
-		m_Running = false;
-
-		// We need to notify all threads that we've exited the application
-		// and that they should stop waiting, we could also push a dummy event 
-		// into the queue
-		m_MainWindow->GetEventQueue().GetWaiter().notify_all();
 		
+		// Close all Windows when the MainWindow was closed
+		for (auto& window : m_WindowStack)
+		{
+			window->Close();
+		}
+
 		return 0;
 	}
 
@@ -135,15 +140,16 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 		RL_EXPECTS(e.GetType() <= EventType::LAST && e.GetType() >= EventType::FIRST);
 
-		// Wait for queue to be empty (maybe)
-		//auto& queue = m_MainWindow->GetEventQueue();
-		//queue.WaitFor([&queue]() { return queue.Empty(); });
-
 		for (auto* layer : m_LayerStack)
 		{
 			switch (e.GetType())
 			{
-			case EventType::WindowCloseEvent:			return layer->OnWindowClose(receiver, (WindowCloseEvent&)e);
+			case EventType::WindowCloseEvent:
+			{
+				// Notify that the window has been closed
+				m_MainWindow->GetEventQueue().GetWaiter().notify_all();
+				return layer->OnWindowClose(receiver, (WindowCloseEvent&)e); 
+			}
 			default:
 				RL_ASSERT(false, "Unimplemented Event");
 			}

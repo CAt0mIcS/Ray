@@ -129,7 +129,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// The main window which will exit the application on close
 		/// </summary>
-		Ref<Window> m_MainWindow;
+		Window* m_MainWindow;
 
 	private:
 		/// <summary>
@@ -146,11 +146,6 @@ namespace At0::Reyal
 		/// Singelton instance of Application
 		/// </summary>
 		static Application* s_Instance;
-
-		/// <summary>
-		/// Specifies whether the application is running or not
-		/// </summary>
-		bool m_Running;
 
 		/// <summary>
 		/// Manages threads. TODO: We need this in Window too

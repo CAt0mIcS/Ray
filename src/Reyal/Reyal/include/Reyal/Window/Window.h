@@ -41,14 +41,18 @@ namespace At0::Reyal
 		static constexpr uint8_t s_MaxMessagesInQueue = 16u;
 
 	public:
-		static Ref<Window> Create(const std::string_view name, Widget* parent = nullptr, bool isMainWindow = false);
+		/// <summary>
+		/// Create the Window acording to the RendererAPI::API
+		/// </summary>
+		/// <param name="name">Is the unique Widget name</param>
+		/// <param name="parent">Is a parent Window</param>
+		/// <returns>The created Window</returns>
+		static Ref<Window> Create(const std::string_view name, Widget* parent = nullptr);
 
 		/// <summary>
-		/// Will return false as long as the window hasn't been closed
+		/// Called every frame to read from the internal message queue
 		/// </summary>
-		/// <param name="exitCode">Will be filled with the exit code when the application quits, specify nullptr to ignore</param>
-		/// <returns>True if the window was closed, false otherwise</returns>
-		virtual bool ShouldClose() = 0;
+		virtual void OnUpdate() = 0;
 
 		/// <summary>
 		/// Getter for the current event queue
@@ -99,7 +103,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Closes the Window
 		/// </summary>
-		virtual void Close() const = 0;
+		virtual void Close() = 0;
 
 		/// <summary>
 		/// Checks if the Window is open (IsVisible)
@@ -128,12 +132,6 @@ namespace At0::Reyal
 		/// </summary>
 		/// <returns>The Window Renderer</returns>
 		virtual Renderer3D* GetRenderer3D() const override;
-
-		/// <summary>
-		/// Checks if this window is the main Window
-		/// </summary>
-		/// <returns>True if it's the main Window, false otherwise</returns>
-		bool IsMainWindow() const { return m_IsMainWindow; }
 
 		/// <summary>
 		/// Getter for the Native Window
@@ -214,12 +212,6 @@ namespace At0::Reyal
 		/// Specifies the old position of this window
 		/// </summary>
 		Point2 m_OldPos;
-
-	private:
-		/// <summary>
-		/// Is true, then if this window closes, the application will exit
-		/// </summary>
-		bool m_IsMainWindow;
 	};
 }
 

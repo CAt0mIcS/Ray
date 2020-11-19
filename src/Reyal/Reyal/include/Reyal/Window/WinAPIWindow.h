@@ -65,7 +65,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Closes the Window
 		/// </summary>
-		virtual void Close() const override;
+		virtual void Close() override;
 
 		/// <summary>
 		/// Checks if the Window is open (IsVisible)
@@ -74,11 +74,9 @@ namespace At0::Reyal
 		virtual bool IsOpen() const override;
 
 		/// <summary>
-		/// Will return false as long as the window hasn't been closed
+		/// Called every frame to read from the internal message queue
 		/// </summary>
-		/// <param name="exitCode">Will be filled with the exit code when the application quits, specify nullptr to ignore</param>
-		/// <returns>True if the window was closed, false otherwise</returns>
-		virtual bool ShouldClose() override;
+		virtual void OnUpdate() override;
 
 		/// <summary>
 		/// Sets the window icon
@@ -133,6 +131,8 @@ namespace At0::Reyal
 		/// <returns>LRESULT code</returns>
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+	private:
+		bool m_IsOpen;
 	};
 }
 

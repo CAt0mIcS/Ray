@@ -39,6 +39,7 @@ namespace At0::Reyal
 		Size2& oldSize;
 		Point2& oldPos;
 		EventCallbackFn& immediateEventFn;
+		bool& windowIsOpen;
 		std::function<Widget*(const Event& e, const MouseInput& mouse)> eventReceiverFn;
 	};
 
@@ -66,8 +67,18 @@ namespace At0::Reyal
 		}
 
 		m_hWnd = glfwCreateWindow(1280, 720, "", nullptr, nullptr);
+		m_IsOpen = true;
 
-		GLFWCallbackData* d = new GLFWCallbackData(GLFWCallbackData{ *this, m_OldSize, m_OldPos, m_ImmediateEventFn, [this](const Event& e, const MouseInput& mouse) { return GetEventReceiver(e, mouse); } });
+		GLFWCallbackData* d = new GLFWCallbackData(GLFWCallbackData
+			{
+				*this, 
+				m_OldSize, 
+				m_OldPos, 
+				m_ImmediateEventFn, 
+				m_IsOpen, 
+				[this](const Event& e, const MouseInput& mouse) { return GetEventReceiver(e, mouse); }
+			}
+		);
 		glfwSetWindowUserPointer((GLFWwindow*)m_hWnd, d);
 
 		// Context initialization
@@ -164,29 +175,32 @@ namespace At0::Reyal
 		glfwIconifyWindow((GLFWwindow*)m_hWnd);
 	}
 
-	void OpenGLWindow::Close() const
+	void OpenGLWindow::Close()
 	{
 		RL_PROFILE_FUNCTION();
 		delete (GLFWCallbackData*)glfwGetWindowUserPointer((GLFWwindow*)m_hWnd);
 		glfwDestroyWindow((GLFWwindow*)m_hWnd);
+
+		m_IsOpen = false;
+		// Push a dummy event into the queue so that the condition_variable in the queue will notify all threads to check
+		Scope<WindowCloseEvent> eDummy = MakeScope<WindowCloseEvent>();
+		m_EventQueue.PushBack({ this, std::move(eDummy) });
 	}
 
 	bool OpenGLWindow::IsOpen() const
 	{
-		RL_PROFILE_FUNCTION();
-		return m_hWnd ? true : false;
+		return m_IsOpen;
 	}
-	
-	bool OpenGLWindow::ShouldClose()
+
+	void OpenGLWindow::OnUpdate()
 	{
 		RL_PROFILE_FUNCTION();
 
+		glfwMakeContextCurrent((GLFWwindow*)m_hWnd);
+
 		// TODO: Multiple Windows
 		// https://discourse.glfw.org/t/how-to-create-multiple-window/1398/2
-
 		glfwPollEvents();
-		//glfwSwapBuffers((GLFWwindow*)m_hWnd);
-		return glfwWindowShouldClose((GLFWwindow*)m_hWnd);
 	}
 
 	void OpenGLWindow::SetIcon(const std::string_view path)
@@ -202,8 +216,13 @@ namespace At0::Reyal
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
 
-				WindowCloseEvent e = WindowCloseEvent();
-				pData->immediateEventFn(pData->eventReceiverFn(e, pData->win.Mouse), e);
+				pData->windowIsOpen = false;
+				// Push a dummy event into the queue so that the condition_variable in the queue will notify all threads to check
+				Scope<WindowCloseEvent> eDummy = MakeScope<WindowCloseEvent>();
+				pData->win.GetEventQueue().PushBack({ &pData->win, std::move(eDummy) });
+
+				// TODO: Prevent close (break vs return 0 in WinAPIWindow::HandleMessage --> WM_CLOSE)
+				pData->immediateEventFn(&pData->win, WindowCloseEvent());
 			}
 		);
 

@@ -18,7 +18,8 @@ namespace At0::Reyal
 {
 	EventCallbackFn Window::m_ImmediateEventFn;
 
-	Ref<Window> Window::Create(const std::string_view name, Widget* parent, bool isMainWindow)
+
+	Ref<Window> Window::Create(const std::string_view name, Widget* parent)
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -27,9 +28,9 @@ namespace At0::Reyal
 		switch (RendererAPI::GetAPI())
 		{
 #ifdef _WIN32
-		case RendererAPI::API::D3D11:		return MakeRef<WinAPIWindow>(name, parent, isMainWindow);
+		case RendererAPI::API::D3D11:		return MakeRef<WinAPIWindow>(name, parent);
 #endif
-		case RendererAPI::API::OpenGL:		return MakeRef<OpenGLWindow>(name, parent, isMainWindow);
+		case RendererAPI::API::OpenGL:		return MakeRef<OpenGLWindow>(name, parent);
 		}
 
 		RL_ASSERT(false, "Failed to create the Window");
@@ -37,7 +38,7 @@ namespace At0::Reyal
 	}
 
 	Window::Window(const std::string_view name, Widget* parent, bool isMainWindow)
-		: Widget(name, parent), m_IsMainWindow(isMainWindow), m_EventQueue{}, m_hWnd(nullptr), m_CurrentlyHovering(nullptr), m_OldPos{}, m_OldSize{}
+		: Widget(name, parent), m_EventQueue{}, m_hWnd(nullptr), m_CurrentlyHovering(nullptr), m_OldPos{}, m_OldSize{}
 	{
 	}
 

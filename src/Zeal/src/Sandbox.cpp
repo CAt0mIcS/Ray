@@ -16,10 +16,10 @@ namespace At0::Zeal
 		 m_MainWindow->SetTitle("Zeal");
 		 m_MainWindow->Show();
 
-		 //m_Win = PushWindow(Reyal::Window::Create("SecondaryWindow"));
-		 //m_Win->InitRenderer3D();
-		 //m_Win->SetTitle("Win2");
-		 //m_Win->Show();
+		 m_Win = PushWindow(Reyal::Window::Create("SecondaryWindow"));
+		 m_Win->InitRenderer3D();
+		 m_Win->SetTitle("Win2");
+		 m_Win->Show();
 
 		ExtensionLoader loader;
 #ifdef NDEBUG
