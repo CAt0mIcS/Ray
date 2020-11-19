@@ -42,20 +42,6 @@ namespace At0::Reyal
 		//////////////////////////////////////////////////////////////////////////////////////////
 		////////// Event Handling Loop ///////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////////////////////////////////////
-		//auto dispatchEvents = [this]()
-		//{
-		//	auto& queue = m_MainWindow->GetEventQueue();
-		//	while (m_Running)
-		//	{
-		//		EventMessage eMsg = queue.PopFront();
-		//		// Dispatch the Event to the layers
-		//		OnEventReceived(eMsg.receiver, std::move(eMsg.e));
-		//		// Wait for new events to come in or the program to exit
-		//		queue.WaitFor([&queue, this]() { return !queue.Empty() || !m_Running; });
-		//	}
-		//};
-		//m_ThreadPool.AddTask(dispatchEvents);
-
 		for (auto& window : m_WindowStack)
 		{
 			Window* win = window.get();

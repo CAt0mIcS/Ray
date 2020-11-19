@@ -30,10 +30,6 @@ namespace At0::Zeal
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		virtual void OnEvent(Reyal::Widget* receiver, Reyal::Event& e);
-
-	private:
-		Reyal::Window* m_Win;
-
 	};
 	
 }
