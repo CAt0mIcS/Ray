@@ -21,7 +21,7 @@ namespace At0::Zeal
 		~Sandbox();
 
 
-		///TODO: Currently not used!
+		///TODO: Currently not used! Could be used for WindowCloseEvent to check if some not MainWindow was closed which should close the entire application
 
 		/// <summary>
 		/// Receives all window events (WindowResize, WindowClose, WindowPaint)
@@ -45,7 +45,7 @@ void At0::Reyal::CreateApplication()
 {
 	using namespace At0;
 
-	Reyal::RendererAPI::SetAPI(Reyal::RendererAPI::API::OpenGL);
+	Reyal::RendererAPI::SetAPI(Reyal::RendererAPI::API::D3D11);
 	Reyal::Application::Create(new Zeal::Sandbox());
 }
 
