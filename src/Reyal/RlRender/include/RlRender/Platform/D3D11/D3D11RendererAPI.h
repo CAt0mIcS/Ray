@@ -42,9 +42,11 @@ namespace At0::Reyal
 		virtual void EndDraw() override;
 
 	private:
-		Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
+		static Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
+		static Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_Context;
+		static Microsoft::WRL::ComPtr<IDXGIFactory> m_IDXGIFactory;
+		
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
-		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_Context;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_TargetView;
 
 		HWND m_hWnd;

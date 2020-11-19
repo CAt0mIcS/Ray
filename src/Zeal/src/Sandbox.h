@@ -41,7 +41,7 @@ void At0::Reyal::CreateApplication()
 {
 	using namespace At0;
 
-	Reyal::RendererAPI::SetAPI(Reyal::RendererAPI::API::OpenGL);
+	Reyal::RendererAPI::SetAPI(Reyal::RendererAPI::API::D3D11);
 	Reyal::Application::Create(new Zeal::Sandbox());
 }
 

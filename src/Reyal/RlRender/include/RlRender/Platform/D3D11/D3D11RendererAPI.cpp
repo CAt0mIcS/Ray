@@ -12,14 +12,54 @@ namespace WRL = Microsoft::WRL;
 
 namespace At0::Reyal
 {
-    D3D11RendererAPI::D3D11RendererAPI()
-        : m_hWnd(NULL), m_Device(nullptr), m_SwapChain(nullptr), m_Context(nullptr), m_TargetView(nullptr)
-    {
-        WRL::ComPtr<IDXGIFactory> pIDXGIFactory;
-        CreateDXGIFactory(__uuidof(IDXGIFactory), &pIDXGIFactory);
+    WRL::ComPtr<ID3D11Device> D3D11RendererAPI::m_Device = nullptr;
+    WRL::ComPtr<ID3D11DeviceContext> D3D11RendererAPI::m_Context = nullptr;
+    WRL::ComPtr<IDXGIFactory> D3D11RendererAPI::m_IDXGIFactory = nullptr;
 
+    D3D11RendererAPI::D3D11RendererAPI()
+        : m_hWnd(NULL), m_SwapChain(nullptr), m_TargetView(nullptr)
+    {
+        ///////////////////////////////////////////////////////////////////////////////////
+        // Create Device and Context
+        if (!m_Device || !m_Context)
+        {
+#ifdef NDEBUG
+            uint32_t creationFlags = 0;
+#else
+            uint32_t creationFlags = D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+            RL_GFX_THROW_FAILED(D3D11CreateDevice(
+                nullptr,
+                D3D_DRIVER_TYPE_HARDWARE,
+                NULL,
+                creationFlags,
+                nullptr,
+                0,
+                D3D11_SDK_VERSION,
+                &m_Device,
+                nullptr,
+                &m_Context
+            ));
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        // Create IDXGIFactory to be able to create SwapChains in Init
+        if (!m_IDXGIFactory)
+        {
+            IDXGIDevice* pDevice;
+            RL_GFX_THROW_FAILED(m_Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDevice));
+
+            IDXGIAdapter* pAdapter;
+            RL_GFX_THROW_FAILED(pDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&pAdapter));
+
+            RL_GFX_THROW_FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), &m_IDXGIFactory));
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        // Loop over all available IDXGIAdapters to get information about them
         WRL::ComPtr<IDXGIAdapter> pAdapter;
-        for (uint32_t i = 0; pIDXGIFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
+        for (uint32_t i = 0; m_IDXGIFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
         {
             DXGI_ADAPTER_DESC adapterDesc;
             pAdapter->GetDesc(&adapterDesc);
@@ -68,26 +108,7 @@ namespace At0::Reyal
         sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
         sd.Flags = 0;
 
-        //uint32_t creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-        uint32_t creationFlags = 0;
-        #ifndef NDEBUG
-            creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
-        #endif
-
-        RL_GFX_THROW_FAILED(D3D11CreateDeviceAndSwapChain(
-            nullptr,
-            D3D_DRIVER_TYPE_HARDWARE,
-            NULL,
-            creationFlags,
-            nullptr,
-            0,
-            D3D11_SDK_VERSION,
-            &sd,
-            &m_SwapChain,
-            &m_Device,
-            nullptr,
-            &m_Context
-        ));
+        RL_GFX_THROW_FAILED(m_IDXGIFactory->CreateSwapChain(m_Device.Get(), &sd, &m_SwapChain));
 
         WRL::ComPtr<ID3D11Resource> pBackBuffer;
         m_SwapChain->GetBuffer(0u, __uuidof(ID3D11Resource), &pBackBuffer);
@@ -97,7 +118,7 @@ namespace At0::Reyal
     
     bool D3D11RendererAPI::IsInitialized() const
     {
-        return m_Device != nullptr;
+        return m_SwapChain != nullptr && m_TargetView != nullptr;
     }
 
     void D3D11RendererAPI::RenderTestTriangle()
@@ -152,9 +173,9 @@ namespace At0::Reyal
         WRL::ComPtr<ID3D11PixelShader> pPixelShader;
         WRL::ComPtr<ID3DBlob> pBlob;
 #ifdef NDEBUG
-        D3DReadFileToBlob(L"../../bin/Release-x64/VertexShader-v.cso", &pBlob);
+        D3DReadFileToBlob(L"../../bin/Release/VertexShader-v.cso", &pBlob);
 #else
-        D3DReadFileToBlob(L"../../bin/Debug-x64/PixelShader-p.cso", &pBlob);
+        D3DReadFileToBlob(L"../../bin/Debug/PixelShader-p.cso", &pBlob);
 #endif
         m_Device->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
         m_Context->PSSetShader(pPixelShader.Get(), nullptr, 0);
@@ -166,9 +187,9 @@ namespace At0::Reyal
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         WRL::ComPtr<ID3D11VertexShader> pVertexShader;
 #ifdef NDEBUG
-        D3DReadFileToBlob(L"../../bin/Release-x64/VertexShader-v.cso", &pBlob);
+        D3DReadFileToBlob(L"../../bin/Release/VertexShader-v.cso", &pBlob);
 #else
-        D3DReadFileToBlob(L"../../bin/Debug-x64/VertexShader-v.cso", &pBlob);
+        D3DReadFileToBlob(L"../../bin/Debug/VertexShader-v.cso", &pBlob);
 #endif
         m_Device->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
         m_Context->VSSetShader(pVertexShader.Get(), nullptr, 0);
