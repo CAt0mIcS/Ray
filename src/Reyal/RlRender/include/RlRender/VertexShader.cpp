@@ -16,7 +16,9 @@ namespace At0::Reyal
         switch (RendererAPI::GetAPI())
         {
         case RendererAPI::API::None:		RL_LOG_WARN("[VertexShader] Returning invalid VertexShader. Calls to the Shader will fail!"); return nullptr;
+#ifdef _WIN32
         case RendererAPI::API::D3D11:       return MakeRef<D3D11VertexShader>(filepath);
+#endif
         case RendererAPI::API::OpenGL:      return MakeRef<OpenGLVertexShader>(filepath);
         }
 

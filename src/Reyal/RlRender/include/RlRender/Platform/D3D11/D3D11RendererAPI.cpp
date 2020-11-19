@@ -5,8 +5,10 @@
 #include "RlRender/Platform/D3D11/D3D11RendererAPI.h"
 
 #include <RlUtil/Exception.h>
+
 #include <RlDebug/ReyalLogger.h>
 #include <RlDebug/RlAssert.h>
+#include <RlDebug/Instrumentor.h>
 
 namespace WRL = Microsoft::WRL;
 
@@ -19,6 +21,8 @@ namespace At0::Reyal
     D3D11RendererAPI::D3D11RendererAPI()
         : m_hWnd(NULL), m_SwapChain(nullptr), m_TargetView(nullptr)
     {
+        RL_PROFILE_FUNCTION();
+
         ///////////////////////////////////////////////////////////////////////////////////
         // Create Device and Context
         if (!m_Device || !m_Context)
@@ -44,7 +48,7 @@ namespace At0::Reyal
         }
 
         ///////////////////////////////////////////////////////////////////////////////////
-        // Create IDXGIFactory to be able to create SwapChains in Init
+        // Create IDXGIFactory to be able to create SwapChains in D3D11RendererAPI::Init
         if (!m_IDXGIFactory)
         {
             IDXGIDevice* pDevice;
@@ -83,6 +87,8 @@ namespace At0::Reyal
 
     void D3D11RendererAPI::Init(void* window)
     {
+        RL_PROFILE_FUNCTION();
+
         RL_MEXPECTS(!this->IsInitialized(), "D3D11RendererAPI was already initialized.");
 
         m_hWnd = static_cast<HWND>(window);
@@ -118,11 +124,15 @@ namespace At0::Reyal
     
     bool D3D11RendererAPI::IsInitialized() const
     {
+        RL_PROFILE_FUNCTION();
+
         return m_SwapChain != nullptr && m_TargetView != nullptr;
     }
 
     void D3D11RendererAPI::RenderTestTriangle()
     {
+        RL_PROFILE_FUNCTION();
+
         RL_MEXPECTS(this->IsInitialized(), "D3D11RendererAPI was not initialized.");
         
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -254,6 +264,8 @@ namespace At0::Reyal
     
     void D3D11RendererAPI::EndDraw()
     {
+        RL_PROFILE_FUNCTION();
+
         RL_MEXPECTS(this->IsInitialized(), "D3D11RendererAPI was not initialized.");
         m_SwapChain->Present(1, 0);
     }
