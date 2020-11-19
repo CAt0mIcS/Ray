@@ -16,6 +16,8 @@
 
 namespace At0::Reyal
 {
+	EventCallbackFn Window::m_ImmediateEventFn;
+
 	Ref<Window> Window::Create(const std::string_view name, Widget* parent, bool isMainWindow)
 	{
 		RL_PROFILE_FUNCTION();

@@ -2,6 +2,7 @@
 #define ZL_SANDBOX_H
 
 #include <Reyal/Application.h>
+#include <Reyal/Window/Window.h>
 
 namespace At0::Zeal
 {
@@ -29,6 +30,9 @@ namespace At0::Zeal
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		virtual void OnEvent(Reyal::Widget* receiver, Reyal::Event& e);
+
+	private:
+		Reyal::Ref<Reyal::Window> m_Win;
 
 	};
 	

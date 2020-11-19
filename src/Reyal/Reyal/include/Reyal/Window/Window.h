@@ -62,7 +62,7 @@ namespace At0::Reyal
 		/// <typeparam name="F">Is any callable, std::function castable type</typeparam>
 		/// <param name="func">Is the function to call</param>
 		template<typename F, typename = std::enable_if_t<std::is_convertible_v<F, EventCallbackFn>>>
-		void SetImmediateEventHandler(F&& func) { m_ImmediateEventFn = func; }
+		static void SetImmediateEventHandler(F&& func) { m_ImmediateEventFn = func; }
 
 		/// <summary>
 		/// Getter for the current Window Title
@@ -172,7 +172,7 @@ namespace At0::Reyal
 		/// <param name="e">Is the immediate event</param>
 		/// <returns>True if the WindowProc should return 0, false if the WindowProc should break</returns>
 		/// </summary>
-		EventCallbackFn m_ImmediateEventFn;
+		static EventCallbackFn m_ImmediateEventFn;
 
 		/// <summary>
 		/// Is the Queue of messages to process, they will be popped in Reyal::Application and dispatched to the layers

@@ -23,7 +23,7 @@ namespace At0::Reyal
 		: m_LayerStack{}, m_Running(true)
 	{
 		m_MainWindow = Window::Create("MainWindow", nullptr, true);
-		m_MainWindow->SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
+		Window::SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
 		RL_LOG_INFO("[ThreadPool] Initialized {0} threads", m_ThreadPool.MaxThreads());
 	}
 
