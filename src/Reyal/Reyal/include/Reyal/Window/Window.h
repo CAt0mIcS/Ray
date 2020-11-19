@@ -108,6 +108,12 @@ namespace At0::Reyal
 		virtual bool IsOpen() const = 0;
 		
 		/// <summary>
+		/// Sets the window icon
+		/// </summary>
+		/// <param name="path">Is the path to the .ico file</param>
+		virtual void SetIcon(const std::string_view path) = 0;
+
+		/// <summary>
 		/// Initializes the 3D Renderer, checks if it has already been initialized
 		/// </summary>
 		bool InitRenderer3D();

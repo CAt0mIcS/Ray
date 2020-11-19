@@ -348,6 +348,11 @@ namespace At0::Reyal
 	{
 		return IsWindowVisible((HWND)m_hWnd);
 	}
+
+	void WinAPIWindow::SetIcon(const std::string_view path)
+	{
+		RL_ASSERT(false, "Incomplete Implementation");
+	}
 }
 
 #endif // _WIN32

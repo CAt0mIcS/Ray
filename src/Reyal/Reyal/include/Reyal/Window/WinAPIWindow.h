@@ -34,23 +34,23 @@ namespace At0::Reyal
 		/// Getter for the current Window Title
 		/// </summary>
 		/// <returns>The title of this Window</returns>
-		std::string GetTitle() const override;
+		virtual std::string GetTitle() const override;
 
 		/// <summary>
 		/// Sets the Window Title
 		/// </summary>
 		/// <param name="title">Is the new Window Title</param>
-		void SetTitle(const std::string_view title) override;
+		virtual void SetTitle(const std::string_view title) override;
 
 		/// <summary>
 		/// Shows the Window
 		/// </summary>
-		void Show() const override;
+		virtual void Show() const override;
 
 		/// <summary>
 		/// Hides the Window
 		/// </summary>
-		void Hide() const override;
+		virtual void Hide() const override;
 
 		/// <summary>
 		/// Maximizes the Window
@@ -60,25 +60,31 @@ namespace At0::Reyal
 		/// <summary>
 		/// Minimizes the Window
 		/// </summary>
-		void Minimize() const override;
+		virtual void Minimize() const override;
 
 		/// <summary>
 		/// Closes the Window
 		/// </summary>
-		void Close() const override;
+		virtual void Close() const override;
 
 		/// <summary>
 		/// Checks if the Window is open (IsVisible)
 		/// </summary>
 		/// <returns>True if the Window is open, false otherwise</returns>
-		bool IsOpen() const override;
+		virtual bool IsOpen() const override;
 
 		/// <summary>
 		/// Will return false as long as the window hasn't been closed
 		/// </summary>
 		/// <param name="exitCode">Will be filled with the exit code when the application quits, specify nullptr to ignore</param>
 		/// <returns>True if the window was closed, false otherwise</returns>
-		bool ShouldClose() override;
+		virtual bool ShouldClose() override;
+
+		/// <summary>
+		/// Sets the window icon
+		/// </summary>
+		/// <param name="path">Is the path to the .ico file</param>
+		virtual void SetIcon(const std::string_view path) override;
 
 	private:
 		/// <summary>

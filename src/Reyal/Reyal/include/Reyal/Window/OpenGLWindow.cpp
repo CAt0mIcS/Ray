@@ -185,6 +185,11 @@ namespace At0::Reyal
 		//glfwSwapBuffers((GLFWwindow*)m_hWnd);
 		return glfwWindowShouldClose((GLFWwindow*)m_hWnd);
 	}
+
+	void OpenGLWindow::SetIcon(const std::string_view path)
+	{
+		RL_ASSERT(false, "Incomplete Implementation");
+	}
 	
 	void OpenGLWindow::SetUpEventCallbacks()
 	{
