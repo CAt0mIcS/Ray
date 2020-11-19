@@ -181,6 +181,9 @@ namespace At0::Reyal
 	{
 		RL_PROFILE_FUNCTION();
 
+		// TODO: Multiple Windows
+		// https://discourse.glfw.org/t/how-to-create-multiple-window/1398/2
+
 		glfwPollEvents();
 		//glfwSwapBuffers((GLFWwindow*)m_hWnd);
 		return glfwWindowShouldClose((GLFWwindow*)m_hWnd);
