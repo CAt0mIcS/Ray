@@ -10,6 +10,7 @@ set(SRC
     "include/RlUtil/RlUBase.h"
     "include/RlUtil/Serialize.h"
     "include/RlUtil/TypeConvert.h"
+    "include/RlUtil/Helper.h"
 )
 
 set(PUBLIC_INC

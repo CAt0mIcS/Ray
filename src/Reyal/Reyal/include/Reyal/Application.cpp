@@ -7,7 +7,7 @@
 #include "Reyal/Events/MouseEvent.h"
 #include "Reyal/Events/ApplicationEvent.h"
 
-// Include Renderer because of incomplete type in Window::Renderer
+// Include Renderer because of incomplete type in Window
 #include <RlRender/Renderer3D.h>
 
 #include <RlDebug/RlAssert.h>
