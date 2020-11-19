@@ -1,5 +1,6 @@
 #include "D3D11VertexShader.h"
 
+#ifdef _WIN32
 
 
 namespace At0::Reyal
@@ -11,4 +12,4 @@ namespace At0::Reyal
 }
 
 
-
+#endif // _WIN32
