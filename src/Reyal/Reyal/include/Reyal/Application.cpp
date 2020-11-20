@@ -70,7 +70,7 @@ namespace At0::Reyal
 					m_WindowStack[i]->OnUpdate();
 				else
 				{
-					m_WindowStack.Pop(m_WindowStack[i]);
+					m_WindowStack.PopIndexed(i);
 					--i;
 				}
 			}

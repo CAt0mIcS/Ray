@@ -107,6 +107,16 @@ namespace At0::Reyal
 		}
 
 		/// <summary>
+		/// Removes element at index i
+		/// </summary>
+		/// <param name="i">Is the element index in the stack</param>
+		void PopIndexed(uint32_t i)
+		{
+			std::scoped_lock lock(m_Mutex);
+			m_Stack.erase(m_Stack.begin() + i);
+		}
+
+		/// <summary>
 		/// Erases all elements in the stack
 		/// </summary>
 		void Clear()
