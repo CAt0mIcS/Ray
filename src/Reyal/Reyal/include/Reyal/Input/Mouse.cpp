@@ -7,7 +7,7 @@
 namespace At0::Reyal
 {
 	MouseInput::MouseInput()
-		: m_IsLeftPressed(false), m_IsMiddlePressed(false), m_IsRightPressed(false), m_MousePos{}
+		: m_IsLeftPressed(false), m_IsMiddlePressed(false), m_IsRightPressed(false), m_MousePos{}, m_OldMousePos{}
 	{
 	}
 

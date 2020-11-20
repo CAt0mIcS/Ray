@@ -64,13 +64,13 @@ namespace At0::Reyal
 		//////////////////////////////////////////////////////////////////////////////////////////
 		while (m_MainWindow->IsOpen())
 		{
+			RL_LOG_FLUSH();
 			for (uint32_t i = 0; i < m_WindowStack.Size(); ++i)
 			{
 				if(m_WindowStack[i]->IsOpen())
 					m_WindowStack[i]->OnUpdate();
 				else
 				{
-					m_WindowStack[i]->Close();
 					m_WindowStack.Pop(m_WindowStack[i]);
 					--i;
 				}

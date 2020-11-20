@@ -325,7 +325,8 @@ namespace At0::Reyal
 
 	void WinAPIWindow::Close()
 	{
-		SendMessage((HWND)m_hWnd, WM_CLOSE, 0, 0);
+		if(IsOpen())
+			SendMessage((HWND)m_hWnd, WM_CLOSE, 0, 0);
 	}
 
 	bool WinAPIWindow::IsOpen() const

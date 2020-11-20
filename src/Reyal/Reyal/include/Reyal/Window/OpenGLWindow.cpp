@@ -178,13 +178,17 @@ namespace At0::Reyal
 	void OpenGLWindow::Close()
 	{
 		RL_PROFILE_FUNCTION();
-		delete (GLFWCallbackData*)glfwGetWindowUserPointer((GLFWwindow*)m_hWnd);
-		glfwDestroyWindow((GLFWwindow*)m_hWnd);
+		if (IsOpen())
+		{
+			delete (GLFWCallbackData*)glfwGetWindowUserPointer((GLFWwindow*)m_hWnd);
+			glfwDestroyWindow((GLFWwindow*)m_hWnd);
 
-		m_IsOpen = false;
-		// Push a dummy event into the queue so that the condition_variable in the queue will notify all threads to check
-		Scope<WindowCloseEvent> eDummy = MakeScope<WindowCloseEvent>();
-		m_EventQueue.PushBack({ this, std::move(eDummy) });
+			m_IsOpen = false;
+
+			// Push a dummy event into the queue so that the condition_variable in the queue will notify all threads to check
+			Scope<WindowCloseEvent> eDummy = MakeScope<WindowCloseEvent>();
+			m_EventQueue.PushBack({ this, std::move(eDummy) });
+		}
 	}
 
 	bool OpenGLWindow::IsOpen() const
@@ -215,14 +219,7 @@ namespace At0::Reyal
 		glfwSetWindowCloseCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window)
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
-
-				pData->windowIsOpen = false;
-				// Push a dummy event into the queue so that the condition_variable in the queue will notify all threads to check
-				Scope<WindowCloseEvent> eDummy = MakeScope<WindowCloseEvent>();
-				pData->win.GetEventQueue().PushBack({ &pData->win, std::move(eDummy) });
-
-				// TODO: Prevent close (break vs return 0 in WinAPIWindow::HandleMessage --> WM_CLOSE)
-				pData->immediateEventFn(&pData->win, WindowCloseEvent());
+				pData->win.Close();
 			}
 		);
 
