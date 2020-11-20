@@ -5,7 +5,6 @@ set(SRC
 	"include/Reyal/Input/Keyboard.cpp"
 	"include/Reyal/Input/Mouse.cpp"
 	"include/Reyal/Layers/Layer.cpp"
-	"include/Reyal/Layers/LayerStack.cpp"
 	"include/Reyal/Widgets/ZWidget.cpp"
 	"include/Reyal/rlpch.h"
 	"include/Reyal/Window/WinAPIWindow.cpp"
@@ -16,7 +15,6 @@ set(SRC
 	"include/Reyal/Window/OpenGLWindow.h"
 	"include/Reyal/Window/Window.h"
 	"include/Reyal/Core/ThreadPool.h"
-	"include/Reyal/Layers/LayerStack.h"
 	"include/Reyal/Core/Queue.h"
 	"include/Reyal/EntryPoint.h"
 	"include/Reyal/Core/ZRect.h"
@@ -31,6 +29,7 @@ set(SRC
 	"include/Reyal/Application.h"
 	"include/Reyal/Reyal.h"
 	"include/Reyal/RlBase.h"
+	"include/Reyal/Core/Stack.h"
 )
 
 set(PUBLIC_INC

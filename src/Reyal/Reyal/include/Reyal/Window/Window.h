@@ -142,7 +142,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Window Deconstructor
 		/// </summary>
-		virtual ~Window() = default;
+		virtual ~Window();
 
 	public:
 		/// <summary>

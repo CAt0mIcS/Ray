@@ -117,6 +117,11 @@ namespace At0::Reyal
 		}
 		return m_Renderer3D.get();
 	}
+	
+	Window::~Window()
+	{
+		RL_LOG_DEBUG("[Window] {0} destroyed.", GetName());
+	}
 }
 
 

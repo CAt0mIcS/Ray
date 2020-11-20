@@ -1,16 +1,14 @@
 #ifndef RL_APPLICATION_H
 #define RL_APPLICATION_H
 
-#include "Reyal/RlBase.h"
+#include "RlBase.h"
 
 #include "Window/Window.h"
 #include "Widgets/ZWidget.h"
 #include "Events/Event.h"
-#include "Layers/LayerStack.h"
 
 #include "Core/ThreadPool.h"
-
-#include "Core/Queue.h"
+#include "Core/Stack.h"
 
 
 namespace At0::Reyal
@@ -135,12 +133,12 @@ namespace At0::Reyal
 		/// <summary>
 		/// Structure holding all Layers pushed into the application
 		/// </summary>
-		Queue<Layer*> m_LayerStack;
+		Stack<Layer*> m_LayerStack;
 
 		/// <summary>
 		/// Structure holding all Windows pushed into the application
 		/// </summary>
-		Queue<Ref<Window>> m_WindowStack;
+		Stack<Ref<Window>> m_WindowStack;
 
 		/// <summary>
 		/// Singelton instance of Application

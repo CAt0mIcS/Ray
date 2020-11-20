@@ -44,17 +44,16 @@ namespace At0::Reyal
 		//////////////////////////////////////////////////////////////////////////////////////////
 		for (auto& window : m_WindowStack)
 		{
-			Window* win = window.get();
-			m_ThreadPool.AddTask([this, win]()
+			m_ThreadPool.AddTask([this, window]()
 				{
-					auto& queue = win->GetEventQueue();
-					while (win->IsOpen())
+					auto& queue = window->GetEventQueue();
+					while (window->IsOpen())
 					{
 						EventMessage eMsg = queue.PopFront();
 						// Dispatch the Event to the layers
 						OnEventReceived(eMsg.receiver, std::move(eMsg.e));
 						// Wait for new events to come in or the program to exit
-						queue.WaitFor([&queue, win]() { return !queue.Empty(); });
+						queue.WaitFor([&queue, window]() { return !queue.Empty(); });
 					}
 				}
 			);
@@ -65,10 +64,16 @@ namespace At0::Reyal
 		//////////////////////////////////////////////////////////////////////////////////////////
 		while (m_MainWindow->IsOpen())
 		{
-			for (auto& window : m_WindowStack)
+			for (uint32_t i = 0; i < m_WindowStack.Size(); ++i)
 			{
-				if(window->IsOpen())
-					window->OnUpdate();
+				if(m_WindowStack[i]->IsOpen())
+					m_WindowStack[i]->OnUpdate();
+				else
+				{
+					m_WindowStack[i]->Close();
+					m_WindowStack.Pop(m_WindowStack[i]);
+					--i;
+				}
 			}
 
 			for (auto* layer : m_LayerStack)
