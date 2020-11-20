@@ -21,16 +21,22 @@ namespace At0::Reyal
 		}
 	}
 	
+	ThreadPool& ThreadPool::Get()
+	{
+		static ThreadPool instance;
+		return instance;
+	}
+
 	void ThreadPool::Shutdown()
 	{
 		RL_PROFILE_FUNCTION();
 
 		RL_LOG_DEBUG("[ThreadPool] Shutting down");
 		{
-			std::unique_lock lock(m_PoolMutex);
+			std::scoped_lock lock(m_PoolMutex);
 			m_Shutdown = true;
 		}
-		m_WaitCondition.notify_all();
+		m_TaskQueue.GetWaiter().notify_all();
 
 		RL_LOG_DEBUG("[ThreadPool] Joining Threads");
 		for (uint16_t i = 0; i < m_MaxThreads; ++i)
@@ -65,8 +71,8 @@ namespace At0::Reyal
 			RL_LOG_DEBUG("[ThreadPool] Thread {0} entered ThreadPool::InfiniteWait", std::this_thread::get_id());
 			std::function<void()> task;
 			{
-				std::unique_lock lock(m_QueueMutex);
-				m_WaitCondition.wait(lock, [this]() { return !m_TaskQueue.Empty() || m_Shutdown; });
+				std::scoped_lock lock(m_QueueMutex);
+				m_TaskQueue.WaitFor([this]() { return !m_TaskQueue.Empty() || m_Shutdown; });
 				
 				// Need to check again if waiting thread was restored because of m_Shutdown
 				if(!m_TaskQueue.Empty())

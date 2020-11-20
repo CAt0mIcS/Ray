@@ -144,11 +144,6 @@ namespace At0::Reyal
 		/// Singelton instance of Application
 		/// </summary>
 		static Application* s_Instance;
-
-		/// <summary>
-		/// Manages threads. TODO: We need this in Window too
-		/// </summary>
-		ThreadPool m_ThreadPool;
 	};
 
 }

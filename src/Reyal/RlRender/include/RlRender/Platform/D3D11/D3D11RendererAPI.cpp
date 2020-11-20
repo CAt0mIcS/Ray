@@ -54,35 +54,36 @@ namespace At0::Reyal
             IDXGIDevice* pDevice;
             RL_GFX_THROW_FAILED(m_Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDevice));
 
-            IDXGIAdapter* pAdapter;
+            WRL::ComPtr<IDXGIAdapter> pAdapter;
             RL_GFX_THROW_FAILED(pDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&pAdapter));
+            pDevice->Release();
 
             RL_GFX_THROW_FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), &m_IDXGIFactory));
+
+            ///////////////////////////////////////////////////////////////////////////////////
+            // Loop over all available IDXGIAdapters to get information about them
+            for (uint32_t i = 0; m_IDXGIFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
+            {
+                DXGI_ADAPTER_DESC adapterDesc;
+                pAdapter->GetDesc(&adapterDesc);
+                RL_LOG_INFO("[Renderer3D] Found DXGIAdapter: "
+                    "\n\tDescription: {0}\n\tVendorID: {1}\n\tDeviceID: {2}\n\tSubSysID: {3}"
+                    "\n\tRevision: {4}\n\tDedicated Video Memory: {5}\n\tDedicated System Memory: {6}"
+                    "\n\tShared System Memory: {7}\n\tAdapterLuid::LowPart: {8}\n\tAdapterLuid::HighPart: {9}\n",
+                    adapterDesc.Description,
+                    adapterDesc.VendorId,
+                    adapterDesc.DeviceId,
+                    adapterDesc.SubSysId,
+                    adapterDesc.Revision,
+                    adapterDesc.DedicatedVideoMemory,
+                    adapterDesc.DedicatedSystemMemory,
+                    adapterDesc.SharedSystemMemory,
+                    adapterDesc.AdapterLuid.LowPart,
+                    adapterDesc.AdapterLuid.HighPart
+                );
+            }
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////
-        // Loop over all available IDXGIAdapters to get information about them
-        WRL::ComPtr<IDXGIAdapter> pAdapter;
-        for (uint32_t i = 0; m_IDXGIFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
-        {
-            DXGI_ADAPTER_DESC adapterDesc;
-            pAdapter->GetDesc(&adapterDesc);
-            RL_LOG_INFO("[Renderer3D] Found DXGIAdapter: "
-                "\n\tDescription: {0}\n\tVendorID: {1}\n\tDeviceID: {2}\n\tSubSysID: {3}"
-                "\n\tRevision: {4}\n\tDedicated Video Memory: {5}\n\tDedicated System Memory: {6}"
-                "\n\tShared System Memory: {7}\n\tAdapterLuid::LowPart: {8}\n\tAdapterLuid::HighPart: {9}\n",
-                adapterDesc.Description,
-                adapterDesc.VendorId,
-                adapterDesc.DeviceId,
-                adapterDesc.SubSysId,
-                adapterDesc.Revision,
-                adapterDesc.DedicatedVideoMemory,
-                adapterDesc.DedicatedSystemMemory,
-                adapterDesc.SharedSystemMemory,
-                adapterDesc.AdapterLuid.LowPart,
-                adapterDesc.AdapterLuid.HighPart
-            );
-        }
     }
 
     void D3D11RendererAPI::Init(void* window)

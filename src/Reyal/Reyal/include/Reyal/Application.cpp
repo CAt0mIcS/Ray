@@ -24,7 +24,7 @@ namespace At0::Reyal
 	{
 		m_MainWindow = PushWindow(Window::Create("MainWindow", nullptr));
 		Window::SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
-		RL_LOG_INFO("[ThreadPool] Initialized {0} threads", m_ThreadPool.MaxThreads());
+		RL_LOG_INFO("[ThreadPool] Initialized {0} threads", ThreadPool::Get().MaxThreads());
 	}
 
 	void Application::Create(Application* app)
@@ -42,22 +42,40 @@ namespace At0::Reyal
 		//////////////////////////////////////////////////////////////////////////////////////////
 		////////// Event Handling Loop ///////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////////////////////////////////////
-		for (auto& window : m_WindowStack)
-		{
-			m_ThreadPool.AddTask([this, window]()
+		//std::vector<std::thread> threads;
+		//for (auto& window : m_WindowStack)
+		//{
+		//	threads.emplace_back([this, window]()
+		//		{
+		//			auto& queue = window->GetEventQueue();
+		//			while (window->IsOpen())
+		//			{
+		//				EventMessage eMsg = queue.PopFront();
+		//				// Dispatch the Event to the layers
+		//				OnEventReceived(eMsg.receiver, std::move(eMsg.e));
+		//				// Wait for new events to come in or the program to exit
+		//				queue.WaitFor([&queue]() { return !queue.Empty(); });
+		//			}
+		//		}
+		//	);
+		//}
+
+		// TODO: Fix event loop!
+		Ref<Window> window = m_WindowStack[0];
+		std::thread t1([this, window]() 
+			{
+				auto& queue = window->GetEventQueue();
+				while (window->IsOpen())
 				{
-					auto& queue = window->GetEventQueue();
-					while (window->IsOpen())
-					{
-						EventMessage eMsg = queue.PopFront();
-						// Dispatch the Event to the layers
-						OnEventReceived(eMsg.receiver, std::move(eMsg.e));
-						// Wait for new events to come in or the program to exit
-						queue.WaitFor([&queue, window]() { return !queue.Empty(); });
-					}
+					EventMessage eMsg = queue.PopFront();
+					// Dispatch the Event to the layers
+					OnEventReceived(eMsg.receiver, std::move(eMsg.e));
+					// Wait for new events to come in or the program to exit
+					queue.WaitFor([&queue]() { return !queue.Empty(); });
 				}
-			);
-		}
+			}
+		);
+
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 		////////// Main Application Loop /////////////////////////////////////////////////////////
@@ -75,6 +93,14 @@ namespace At0::Reyal
 				}
 			}
 
+			//for (std::thread& thread : threads)
+			//{
+			//	if (thread.joinable())
+			//		thread.join();
+			//}
+			if (t1.joinable())
+				t1.join();
+
 			for (auto* layer : m_LayerStack)
 			{
 				layer->OnUpdate();
@@ -90,6 +116,8 @@ namespace At0::Reyal
 			window->Close();
 		}
 
+		// Need this here to stop threads from waiting until the static ThreadPool object is destroyed
+		ThreadPool::Get().Shutdown();
 		return 0;
 	}
 

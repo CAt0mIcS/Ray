@@ -18,10 +18,6 @@ namespace At0::Reyal
 	class ThreadPool
 	{
 	public:
-		/// <summary>
-		/// ThreadPool Constructor
-		/// </summary>
-		ThreadPool();
 
 		/// <summary>
 		/// Adds a new task to the queue
@@ -30,6 +26,12 @@ namespace At0::Reyal
 		/// <param name="func">Is the function to execute</param>
 		template<typename F, typename = std::enable_if_t<std::is_convertible_v<F, std::function<void()>>>>
 		void AddTask(F&& func);
+
+		/// <summary>
+		/// Getter for the ThreadPool
+		/// </summary>
+		/// <returns>The Thread Pool</returns>
+		static ThreadPool& Get();
 
 		/// <summary>
 		/// Getter for the amount of available threads
@@ -48,6 +50,14 @@ namespace At0::Reyal
 		~ThreadPool();
 
 	private:
+		/// <summary>
+		/// Private ThreadPool Constructor
+		/// </summary>
+		ThreadPool();
+
+		/// <summary>
+		/// Function will wait for incomming tasks and execute them
+		/// </summary>
 		void InfiniteWait();
 
 	private:
@@ -56,9 +66,8 @@ namespace At0::Reyal
 		Scope<std::thread[]> m_Threads;
 		Queue<std::function<void()>> m_TaskQueue;
 
-		std::mutex m_QueueMutex;
 		std::mutex m_PoolMutex;
-		std::condition_variable m_WaitCondition;
+		std::mutex m_QueueMutex;
 
 		inline static const uint32_t m_MaxThreads = std::thread::hardware_concurrency();
 	};
@@ -69,7 +78,6 @@ namespace At0::Reyal
 	inline void ThreadPool::AddTask(F&& func)
 	{
 		m_TaskQueue.PushBack(func);
-		m_WaitCondition.notify_one();
 	}
 }
 
