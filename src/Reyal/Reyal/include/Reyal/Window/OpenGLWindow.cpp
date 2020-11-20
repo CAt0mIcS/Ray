@@ -63,13 +63,12 @@ namespace At0::Reyal
 			int success = glfwInit();
 			RL_ASSERT(success, "Failed to initialize GLFW");
 			glfwSetErrorCallback(GLFWErrorCallback);
-			s_GLFWInitialized = true;
 		}
 
 		m_hWnd = glfwCreateWindow(1280, 720, "", nullptr, nullptr);
 		m_IsOpen = true;
 
-		GLFWCallbackData* d = new GLFWCallbackData(GLFWCallbackData
+		GLFWCallbackData* data = new GLFWCallbackData(GLFWCallbackData
 			{
 				*this, 
 				m_OldSize, 
@@ -79,18 +78,25 @@ namespace At0::Reyal
 				[this](const Event& e, const MouseInput& mouse) { return GetEventReceiver(e, mouse); }
 			}
 		);
-		glfwSetWindowUserPointer((GLFWwindow*)m_hWnd, d);
+		glfwSetWindowUserPointer((GLFWwindow*)m_hWnd, data);
 
 		// Context initialization
 		glfwMakeContextCurrent((GLFWwindow*)m_hWnd);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		RL_ASSERT(status, "Failed to initialize Glad!");
-		
-		RL_LOG_INFO("[OpenGLWindow] OpenGL Info:");
-		RL_LOG_INFO("	Vendor:   {0}", glGetString(GL_VENDOR));
-		RL_LOG_INFO("	Renderer: {0}", glGetString(GL_RENDERER));
-		RL_LOG_INFO("	Version:  {0}", glGetString(GL_VERSION));
-		RL_LOG_FLUSH();
+
+		// Initialize Glad
+		if (!s_GLFWInitialized)
+		{
+			s_GLFWInitialized = true;
+
+			int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+			RL_ASSERT(status, "Failed to initialize Glad!");
+
+			RL_LOG_INFO("[OpenGLWindow] OpenGL Info:");
+			RL_LOG_INFO("	Vendor:   {0}", glGetString(GL_VENDOR));
+			RL_LOG_INFO("	Renderer: {0}", glGetString(GL_RENDERER));
+			RL_LOG_INFO("	Version:  {0}", glGetString(GL_VERSION));
+			RL_LOG_FLUSH();
+		}
 
 		SetUpEventCallbacks();
 
