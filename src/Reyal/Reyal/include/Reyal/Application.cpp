@@ -55,7 +55,6 @@ namespace At0::Reyal
 				}
 
 			}
-			std::cout << m_MainWindow->GetEventQueue().Size() << '\n';
 
 			// -------------------------------------------------------------------------------------
 			// Update Layers

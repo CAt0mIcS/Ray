@@ -2,7 +2,8 @@
 
 #ifdef _WIN32
 
-#include "RlRender/Platform/D3D11/D3D11RendererAPI.h"
+#include "D3D11RendererAPI.h"
+#include "D3D11RenderBase.h"
 
 #include <RlUtil/Exception.h>
 
@@ -10,14 +11,13 @@
 #include <RlDebug/RlAssert.h>
 #include <RlDebug/Instrumentor.h>
 
+#include "D3D11VertexShader.h"
+
+
 namespace WRL = Microsoft::WRL;
 
 namespace At0::Reyal
 {
-    WRL::ComPtr<ID3D11Device> D3D11RendererAPI::m_Device = nullptr;
-    WRL::ComPtr<ID3D11DeviceContext> D3D11RendererAPI::m_Context = nullptr;
-    WRL::ComPtr<IDXGIFactory> D3D11RendererAPI::m_IDXGIFactory = nullptr;
-
     D3D11RendererAPI::D3D11RendererAPI()
         : m_hWnd(NULL), m_SwapChain(nullptr), m_TargetView(nullptr)
     {
@@ -25,7 +25,7 @@ namespace At0::Reyal
 
         ///////////////////////////////////////////////////////////////////////////////////
         // Create Device and Context
-        if (!m_Device || !m_Context)
+        if (!s_Device || !s_Context)
         {
 #ifdef NDEBUG
             uint32_t creationFlags = 0;
@@ -41,28 +41,28 @@ namespace At0::Reyal
                 nullptr,
                 0,
                 D3D11_SDK_VERSION,
-                &m_Device,
+                &s_Device,
                 nullptr,
-                &m_Context
+                &s_Context
             ));
         }
 
         ///////////////////////////////////////////////////////////////////////////////////
         // Create IDXGIFactory to be able to create SwapChains in D3D11RendererAPI::Init
-        if (!m_IDXGIFactory)
+        if (!s_IDXGIFactory)
         {
             IDXGIDevice* pDevice;
-            RL_GFX_THROW_FAILED(m_Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDevice));
+            RL_GFX_THROW_FAILED(s_Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDevice));
 
             WRL::ComPtr<IDXGIAdapter> pAdapter;
             RL_GFX_THROW_FAILED(pDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&pAdapter));
             pDevice->Release();
 
-            RL_GFX_THROW_FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), &m_IDXGIFactory));
+            RL_GFX_THROW_FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), &s_IDXGIFactory));
 
             ///////////////////////////////////////////////////////////////////////////////////
             // Loop over all available IDXGIAdapters to get information about them
-            for (uint32_t i = 0; m_IDXGIFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
+            for (uint32_t i = 0; s_IDXGIFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
             {
                 DXGI_ADAPTER_DESC adapterDesc;
                 pAdapter->GetDesc(&adapterDesc);
@@ -115,12 +115,12 @@ namespace At0::Reyal
         sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
         sd.Flags = 0;
 
-        RL_GFX_THROW_FAILED(m_IDXGIFactory->CreateSwapChain(m_Device.Get(), &sd, &m_SwapChain));
+        RL_GFX_THROW_FAILED(s_IDXGIFactory->CreateSwapChain(s_Device.Get(), &sd, &m_SwapChain));
 
         WRL::ComPtr<ID3D11Resource> pBackBuffer;
         m_SwapChain->GetBuffer(0u, __uuidof(ID3D11Resource), &pBackBuffer);
 
-        m_Device->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_TargetView);
+        s_Device->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_TargetView);
     }
     
     bool D3D11RendererAPI::IsInitialized() const
@@ -170,11 +170,11 @@ namespace At0::Reyal
         D3D11_SUBRESOURCE_DATA sd{};
         sd.pSysMem = vertices;
 
-        m_Device->CreateBuffer(&bd, &sd, &pVertexBuffer);
+        s_Device->CreateBuffer(&bd, &sd, &pVertexBuffer);
 
         uint32_t strides = sizeof(Vertex);
         uint32_t offset = 0;
-        m_Context->IASetVertexBuffers(0, 1, pVertexBuffer.GetAddressOf(), &strides, &offset);
+        s_Context->IASetVertexBuffers(0, 1, pVertexBuffer.GetAddressOf(), &strides, &offset);
         RL_LOG_DEBUG("Bound Vertex Buffer {0}", pVertexBuffer.Get());
 
 
@@ -188,24 +188,21 @@ namespace At0::Reyal
 #else
         D3DReadFileToBlob(L"../../bin/Debug/PixelShader-p.cso", &pBlob);
 #endif
-        m_Device->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
-        m_Context->PSSetShader(pPixelShader.Get(), nullptr, 0);
+        s_Device->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
+        s_Context->PSSetShader(pPixelShader.Get(), nullptr, 0);
         RL_LOG_DEBUG("Bound Pixel Shader {0}", pPixelShader.Get());
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////// Vertex Shader ///////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        WRL::ComPtr<ID3D11VertexShader> pVertexShader;
 #ifdef NDEBUG
-        D3DReadFileToBlob(L"../../bin/Release/VertexShader-v.cso", &pBlob);
+        Ref<VertexShader> vertexShader = VertexShader::Create("../../bin/Release/VertexShader-v.cso");
 #else
-        D3DReadFileToBlob(L"../../bin/Debug/VertexShader-v.cso", &pBlob);
+        Ref<VertexShader> vertexShader = VertexShader::Create("../../bin/Debug/VertexShader-v.cso");
 #endif
-        m_Device->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
-        m_Context->VSSetShader(pVertexShader.Get(), nullptr, 0);
-        RL_LOG_DEBUG("Bound Vertex Shader {0}", pVertexShader.Get());
-
+        vertexShader->Bind();
+        RL_LOG_DEBUG("Bound Vertex Shader with name \"{0}\"", vertexShader->GetName());
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////// Input Layout ////////////////////////////////////////////////////////////////////////////////
@@ -215,8 +212,8 @@ namespace At0::Reyal
         {
             { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
         };
-        m_Device->CreateInputLayout(ied, std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pLayout);
-        m_Context->IASetInputLayout(pLayout.Get());
+        s_Device->CreateInputLayout(ied, std::size(ied), vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &pLayout);
+        s_Context->IASetInputLayout(pLayout.Get());
         RL_LOG_DEBUG("Bound Input Layout {0}", pLayout.Get());
 
 
@@ -233,21 +230,21 @@ namespace At0::Reyal
         vp.MinDepth = 0;
         vp.Width = (float)rc.right;
         vp.Height = (float)rc.bottom;
-        m_Context->RSSetViewports(1, &vp);
+        s_Context->RSSetViewports(1, &vp);
         RL_LOG_DEBUG("Bound Viewport {0}", &vp);
 
         
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////// Primitive Topology //////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        m_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        s_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         RL_LOG_DEBUG("Set Primitive Topology to {0}", D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////// Set Render Target ///////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        m_Context->OMSetRenderTargets(1, m_TargetView.GetAddressOf(), nullptr);
+        s_Context->OMSetRenderTargets(1, m_TargetView.GetAddressOf(), nullptr);
         RL_LOG_DEBUG("Set Render Target {0}", m_TargetView.Get());
 
 
@@ -259,7 +256,7 @@ namespace At0::Reyal
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////// Draw Call ///////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        m_Context->Draw(std::size(vertices), 0);
+        s_Context->Draw(std::size(vertices), 0);
         RL_LOG_DEBUG("Drew Triangle");
     }
     
