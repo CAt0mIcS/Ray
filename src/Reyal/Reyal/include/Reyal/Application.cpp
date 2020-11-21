@@ -24,7 +24,6 @@ namespace At0::Reyal
 	{
 		m_MainWindow = PushWindow(Window::Create("MainWindow", nullptr));
 		Window::SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
-		RL_LOG_INFO("[ThreadPool] Initialized {0} threads", ThreadPool::Get().MaxThreads());
 	}
 
 	void Application::Create(Application* app)

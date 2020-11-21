@@ -15,6 +15,7 @@ namespace At0::Reyal
 	{
 		RL_PROFILE_FUNCTION();
 
+		RL_LOG_INFO("[ThreadPool] Initialized {0} threads", MaxThreads());
 		for (uint16_t i = 0; i < m_MaxThreads; ++i)
 		{
 			m_Threads[i] = std::thread([this]() { InfiniteWait(); });
