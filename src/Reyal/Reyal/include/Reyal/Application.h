@@ -144,6 +144,11 @@ namespace At0::Reyal
 		/// Singelton instance of Application
 		/// </summary>
 		static Application* s_Instance;
+
+		/// <summary>
+		/// Specifies all threads which will read from the event queue. Create one per Window pushed
+		/// </summary>
+		std::vector<std::thread> m_EventLoopThreads;
 	};
 
 }

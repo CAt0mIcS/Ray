@@ -107,7 +107,6 @@ namespace At0::Reyal
 		/// <returns>A reference to the first element</returns>
 		T& Front()
 		{
-			std::scoped_lock lock(m_Mutex);
 			return m_Queue.front();
 		}
 
@@ -117,7 +116,6 @@ namespace At0::Reyal
 		/// <returns>A reference to the last element</returns>
 		T& Back()
 		{
-			std::scoped_lock lock(m_Mutex);
 			return m_Queue.back();
 		}
 
@@ -162,47 +160,40 @@ namespace At0::Reyal
 
 		Iterator begin()
 		{
-			std::scoped_lock lock(m_Mutex); 
 			return m_Queue.begin();
 		}
 
 		Iterator end() 
 		{
-			std::scoped_lock lock(m_Mutex);
 			return m_Queue.end();
 		}
 		ReverseIterator rbegin() 
 		{
-			std::scoped_lock lock(m_Mutex);
 			return m_Queue.rbegin();
 		}
 
 		ReverseIterator rend() 
 		{
-			std::scoped_lock lock(m_Mutex);
 			return m_Queue.rend();
 		}
 
 		ConstInterator cbegin() 
 		{
-			std::scoped_lock lock(m_Mutex);
 			return m_Queue.cbegin();
 		}
+
 		ConstInterator cend() 
 		{
-			std::scoped_lock lock(m_Mutex);
 			return m_Queue.cend();
 		}
 
 		ConstReverseIterator crbegin() 
 		{
-			std::scoped_lock lock(m_Mutex);
 			return m_Queue.crbegin();
 		}
 
 		ConstReverseIterator crend() 
 		{
-			std::scoped_lock lock(m_Mutex);
 			return m_Queue.crend();
 		}
 

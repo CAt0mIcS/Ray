@@ -40,44 +40,6 @@ namespace At0::Reyal
 	int Application::Run()
 	{
 		//////////////////////////////////////////////////////////////////////////////////////////
-		////////// Event Handling Loop ///////////////////////////////////////////////////////////
-		//////////////////////////////////////////////////////////////////////////////////////////
-		//std::vector<std::thread> threads;
-		//for (auto& window : m_WindowStack)
-		//{
-		//	threads.emplace_back([this, window]()
-		//		{
-		//			auto& queue = window->GetEventQueue();
-		//			while (window->IsOpen())
-		//			{
-		//				EventMessage eMsg = queue.PopFront();
-		//				// Dispatch the Event to the layers
-		//				OnEventReceived(eMsg.receiver, std::move(eMsg.e));
-		//				// Wait for new events to come in or the program to exit
-		//				queue.WaitFor([&queue]() { return !queue.Empty(); });
-		//			}
-		//		}
-		//	);
-		//}
-
-		// TODO: Fix event loop!
-		Ref<Window> window = m_WindowStack[0];
-		std::thread t1([this, window]() 
-			{
-				auto& queue = window->GetEventQueue();
-				while (window->IsOpen())
-				{
-					EventMessage eMsg = queue.PopFront();
-					// Dispatch the Event to the layers
-					OnEventReceived(eMsg.receiver, std::move(eMsg.e));
-					// Wait for new events to come in or the program to exit
-					queue.WaitFor([&queue]() { return !queue.Empty(); });
-				}
-			}
-		);
-
-
-		//////////////////////////////////////////////////////////////////////////////////////////
 		////////// Main Application Loop /////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////////////////////////////////////
 		while (m_MainWindow->IsOpen())
@@ -91,15 +53,11 @@ namespace At0::Reyal
 					m_WindowStack.PopIndexed(i);
 					--i;
 				}
-			}
 
-			//for (std::thread& thread : threads)
-			//{
-			//	if (thread.joinable())
-			//		thread.join();
-			//}
-			if (t1.joinable())
-				t1.join();
+			}
+			std::cout << m_MainWindow->GetEventQueue().Size() << '\n';
+
+
 
 			for (auto* layer : m_LayerStack)
 			{
@@ -109,11 +67,17 @@ namespace At0::Reyal
 			//TODO: Change to something more appropriate (CPU Usage too high without it)
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
-		
+
 		// Close all Windows when the MainWindow was closed
 		for (auto& window : m_WindowStack)
 		{
 			window->Close();
+		}
+
+		for (std::thread& thread : m_EventLoopThreads)
+		{
+			if (thread.joinable())
+				thread.join();
 		}
 
 		// Need this here to stop threads from waiting until the static ThreadPool object is destroyed
@@ -134,6 +98,25 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 
 		m_WindowStack.PushBack(window);
+
+		// Start thread for the pushed Window
+		m_EventLoopThreads.emplace_back([this, window]()
+			{
+				auto& queue = window->GetEventQueue();
+				// Wait for the first Event to come
+				queue.WaitFor([&queue]() { return !queue.Empty(); });
+
+				while (window->IsOpen())
+				{
+					EventMessage eMsg = queue.PopFront();
+					// Dispatch the Event to the layers
+					OnEventReceived(eMsg.receiver, std::move(eMsg.e));
+					// Wait for new events to come in or the program to exit
+					queue.WaitFor([&queue]() { return !queue.Empty(); });
+				}
+			}
+		);
+
 		return window.get();
 	}
 
