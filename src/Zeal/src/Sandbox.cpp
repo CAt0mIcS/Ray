@@ -5,7 +5,6 @@
 
 #include "ExtensionLoader/ExtensionLoader.h"
 
-
 namespace At0::Zeal
 {
 	Sandbox::Sandbox()
@@ -157,15 +156,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 	catch (At0::Reyal::Exception& e)
 	{
 		MessageBoxA(NULL, e.what(), e.GetType(), MB_OK | MB_ICONERROR | MB_DEFAULT_DESKTOP_ONLY);
+		RL_LOG_CRITICAL("[Main] Exception occured: {0}", e.what());
 	}
 	catch (std::exception& e)
 	{
 		MessageBoxA(NULL, e.what(), "Standard Exception", MB_OK | MB_ICONERROR | MB_DEFAULT_DESKTOP_ONLY);
+		RL_LOG_CRITICAL("[Main] Exception occured: {0}", e.what());
 	}
 	catch (...)
 	{
 		MessageBoxA(NULL, "An unknown exception occurred", "Unknown Exception", MB_OK | MB_ICONERROR | MB_DEFAULT_DESKTOP_ONLY);
+		RL_LOG_CRITICAL("[Main] Unknown Exception occured");
 	}
+	RL_LOG_END();
 
 	return -1;
 }

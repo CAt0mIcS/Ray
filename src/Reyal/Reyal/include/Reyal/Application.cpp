@@ -39,11 +39,12 @@ namespace At0::Reyal
 
 	int Application::Run()
 	{
-		//////////////////////////////////////////////////////////////////////////////////////////
-		////////// Main Application Loop /////////////////////////////////////////////////////////
-		//////////////////////////////////////////////////////////////////////////////////////////
+		// -----------------------------------------------------------------------------------------
+		// Main Application Loop
 		while (m_MainWindow->IsOpen())
 		{
+			// -------------------------------------------------------------------------------------
+			// Pop invalid windows and update valid ones
 			for (uint32_t i = 0; i < m_WindowStack.Size(); ++i)
 			{
 				if(m_WindowStack[i]->IsOpen())
@@ -57,8 +58,8 @@ namespace At0::Reyal
 			}
 			std::cout << m_MainWindow->GetEventQueue().Size() << '\n';
 
-
-
+			// -------------------------------------------------------------------------------------
+			// Update Layers
 			for (auto* layer : m_LayerStack)
 			{
 				layer->OnUpdate();
@@ -68,20 +69,7 @@ namespace At0::Reyal
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 
-		// Close all Windows when the MainWindow was closed
-		for (auto& window : m_WindowStack)
-		{
-			window->Close();
-		}
-
-		for (std::thread& thread : m_EventLoopThreads)
-		{
-			if (thread.joinable())
-				thread.join();
-		}
-
-		// Need this here to stop threads from waiting until the static ThreadPool object is destroyed
-		ThreadPool::Get().Shutdown();
+		Cleanup();
 		return 0;
 	}
 
@@ -103,15 +91,15 @@ namespace At0::Reyal
 		m_EventLoopThreads.emplace_back([this, window]()
 			{
 				auto& queue = window->GetEventQueue();
-				// Wait for the first Event to come
+				// Wait for the first event to come
 				queue.WaitFor([&queue]() { return !queue.Empty(); });
 
 				while (window->IsOpen())
 				{
 					EventMessage eMsg = queue.PopFront();
-					// Dispatch the Event to the layers
+					// Dispatch the event to the layers
 					OnEventReceived(eMsg.receiver, std::move(eMsg.e));
-					// Wait for new events to come in or the program to exit
+					// Wait for new events to come in
 					queue.WaitFor([&queue]() { return !queue.Empty(); });
 				}
 			}
@@ -149,7 +137,7 @@ namespace At0::Reyal
 			{
 				// Notify that the window has been closed
 				m_MainWindow->GetEventQueue().GetWaiter().notify_all();
-				return layer->OnWindowClose(receiver, (WindowCloseEvent&)e); 
+				return layer->OnWindowClose(receiver, (WindowCloseEvent&)e);
 			}
 			default:
 				RL_ASSERT(false, "Unimplemented Event");
@@ -187,6 +175,24 @@ namespace At0::Reyal
 			RL_ASSERT(false, "Unimplemented Event");
 			break;
 		}
+	}
+	
+	void Application::Cleanup()
+	{
+		// Close all Windows when the MainWindow was closed
+		for (auto& window : m_WindowStack)
+		{
+			window->Close();
+		}
+
+		for (std::thread& thread : m_EventLoopThreads)
+		{
+			if (thread.joinable())
+				thread.join();
+		}
+
+		// Need this here to stop threads from waiting until the static ThreadPool object is destroyed
+		ThreadPool::Get().Shutdown();
 	}
 }
 

@@ -157,9 +157,11 @@ if(FAILED(hr)) throw ::At0::Reyal::WindowsException(hr, (uint16_t)__LINE__, __FI
 #define RL_THROW_LAST_WND_EXCEPT2() \
 throw ::At0::Reyal::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE__)
 
-#define RL_THROW_LAST_WND_EXCEPT(booleanResult) \
-if(!(booleanResult)) RL_THROW_LAST_WND_EXCEPT2()
+#define RL_THROW_LAST_WND_EXCEPT(booleanResult) if(!(booleanResult)) RL_THROW_LAST_WND_EXCEPT2()
 
+/// <TODO>
+/// HRESULT expands to expression twice (calls e.g. create function twice because it's inserted in hr)
+/// </TODO>
 #define RL_GFX_THROW_FAILED(hr) if(FAILED(hr)) throw ::At0::Reyal::GraphicsException(hr, (uint16_t)__LINE__, __FILE__)
 
 #else

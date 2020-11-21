@@ -123,6 +123,11 @@ namespace At0::Reyal
 		/// <param name="e">Is the event to dispatch</param>
 		void DispatchEvent(Layer* layer, Widget* receiver, Event& e);
 
+		/// <summary>
+		/// Destroys resources
+		/// </summary>
+		void Cleanup();
+
 	protected:
 		/// <summary>
 		/// The main window which will exit the application on close
