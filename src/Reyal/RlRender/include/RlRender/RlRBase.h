@@ -5,6 +5,7 @@
 	#define NOMINMAX
 #endif
 
+
 #ifdef RLR_BUILD
 	#if defined(_MSC_VER)
 		#define RLR_API __declspec(dllexport)
@@ -22,5 +23,15 @@
 		#define RLR_API
 	#endif
 #endif
+
+
+namespace At0::Reyal
+{
+	enum class RLR_API FileState
+	{
+		Compiled = 0, Source
+	};
+}
+
 
 #endif // RLR_RLRBASE_H

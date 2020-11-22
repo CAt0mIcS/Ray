@@ -1,5 +1,5 @@
-#ifndef RLR_SHADER_H
-#define RLR_SHADER_H
+#ifndef RLR_VERTEXSHADER_H
+#define RLR_VERTEXSHADER_H
 
 #include "RlRBase.h"
 #include <../../RlUtilities/include/RlUtil/Helper.h>
@@ -12,19 +12,13 @@ namespace At0::Reyal
 	class RLR_API VertexShader
 	{
 	public:
-		enum class RLR_API FileState
-		{
-			Compiled = 0, Source
-		};
-
-	public:
 		/// <summary>
 		/// Creates the RendererAPI dependent VertexShader
 		/// </summary>
 		/// <param name="filepath">Is the path to the file containing the shader source/binary</param>
 		/// <param name="state">Specifies whether the shader file is an already compiled shader or just the shader source code</param>
 		/// <returns>The created Shader</returns>
-		static Ref<VertexShader> Create(const std::string_view filepath, FileState state = FileState::Source);
+		static Ref<VertexShader> Create(const std::string_view filepath, FileState state = FileState::Compiled);
 
 		/// <summary>
 		/// Creates the RendererAPI dependent VertexShader, also compiles the vertex source
@@ -71,4 +65,4 @@ namespace At0::Reyal
 }
 
 
-#endif // RLR_SHADER_H
+#endif // RLR_VERTEXSHADER_H

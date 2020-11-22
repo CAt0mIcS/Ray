@@ -11,10 +11,11 @@
 #include <RlDebug/RlAssert.h>
 #include <RlDebug/Instrumentor.h>
 
-#include "D3D11VertexShader.h"
-
+#include "VertexShader.h"
+#include "PixelShader.h"
 
 namespace WRL = Microsoft::WRL;
+
 
 namespace At0::Reyal
 {
@@ -181,16 +182,25 @@ namespace At0::Reyal
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////// Pixel Shader ////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        WRL::ComPtr<ID3D11PixelShader> pPixelShader;
-        WRL::ComPtr<ID3DBlob> pBlob;
+#if 0
 #ifdef NDEBUG
-        D3DReadFileToBlob(L"../../bin/Release/VertexShader-v.cso", &pBlob);
+        Ref<PixelShader> pixelShader = VertexShader::Create("../../bin/Release/PixelShader-p.cso");
 #else
-        D3DReadFileToBlob(L"../../bin/Debug/PixelShader-p.cso", &pBlob);
+        Ref<PixelShader> pixelShader = VertexShader::Create("../../bin/Debug/PixelShader-p.cso");
 #endif
-        s_Device->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
-        s_Context->PSSetShader(pPixelShader.Get(), nullptr, 0);
-        RL_LOG_DEBUG("Bound Pixel Shader {0}", pPixelShader.Get());
+#elif 1
+        Ref<PixelShader> pixelShader = PixelShader::Create("../../../src/Reyal/RlRender/Shaders/PixelShader-p.hlsl", FileState::Source);
+#else
+        std::string vertexSrc = R"(
+float4 main() : SV_TARGET
+{
+	return float4(1.0f, 1.0f, 1.0f, 1.0f);
+}
+        )";
+        Ref<VertexShader> vertexShader = VertexShader::Create("VertexShader-v", vertexSrc);
+#endif
+        pixelShader->Bind();
+        RL_LOG_DEBUG("Bound Pixel Shader with name \"{0}\"", pixelShader->GetName());
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -198,12 +208,12 @@ namespace At0::Reyal
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
 #if 0
 #ifdef NDEBUG
-        Ref<VertexShader> vertexShader = VertexShader::Create("../../bin/Release/VertexShader-v.cso", VertexShader::FileState::Compiled);
+        Ref<VertexShader> vertexShader = VertexShader::Create("../../bin/Release/VertexShader-v.cso");
 #else
-        Ref<VertexShader> vertexShader = VertexShader::Create("../../bin/Debug/VertexShader-v.cso", VertexShader::FileState::Compiled);
+        Ref<VertexShader> vertexShader = VertexShader::Create("../../bin/Debug/VertexShader-v.cso");
 #endif
 #elif 1
-        Ref<VertexShader> vertexShader = VertexShader::Create("../../../src/Reyal/RlRender/Shaders/VertexShader-v.hlsl");
+        Ref<VertexShader> vertexShader = VertexShader::Create("../../../src/Reyal/RlRender/Shaders/VertexShader-v.hlsl", FileState::Source);
 #else
         std::string vertexSrc = R"(
 float4 main( float2 pos : POSITION ) : SV_POSITION

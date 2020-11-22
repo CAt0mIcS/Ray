@@ -1,4 +1,4 @@
-#include "D3D11VertexShader.h"
+#include "D3D11PixelShader.h"
 
 #ifdef _WIN32
 
@@ -14,18 +14,19 @@ namespace WRL = Microsoft::WRL;
 
 namespace At0::Reyal
 {
-	D3D11VertexShader::D3D11VertexShader(const std::string_view filepath, FileState state)
+	D3D11PixelShader::D3D11PixelShader(const std::string_view filepath, FileState state)
 		: m_Name("")
 	{
 		RL_PROFILE_FUNCTION();
 
+		WRL::ComPtr<ID3DBlob> pBlob;
 		switch (state)
 		{
 		case FileState::Compiled:
 		{
 			RL_GFX_THROW_FAILED(D3DReadFileToBlob(
 				Util::MultiByteToWideChar(filepath).c_str(),
-				&m_pBlob
+				&pBlob
 			));
 
 			break;
@@ -36,27 +37,35 @@ namespace At0::Reyal
 #ifndef NDEBUG
 			flags |= D3DCOMPILE_DEBUG;
 #endif
+
 			WRL::ComPtr<ID3DBlob> pErrorBlob;
 			HRESULT hr = D3DCompileFromFile(
 				Util::MultiByteToWideChar(filepath).c_str(),
 				nullptr,
 				D3D_COMPILE_STANDARD_FILE_INCLUDE,
 				"main", 
-				"vs_5_0",
+				"ps_5_0",
 				flags, 0,
-				&m_pBlob,
+				&pBlob,
 				&pErrorBlob
 			);
 			
-			if(FAILED(hr))
-				RL_LOG_ERROR("[D3D11VertexShader] Compilation failed with message: {0}", (char*)pErrorBlob->GetBufferPointer());
+			if (FAILED(hr))
+			{
+				OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
+				RL_LOG_ERROR("[D3D11PixelShader] Compilation failed with message: {0}", (char*)pErrorBlob->GetBufferPointer());
+			}
 			RL_GFX_THROW_FAILED(hr);
 
 			break;
 		}
+		default:
+		{
+			RL_ASSERT(false, "[D3D11PixelShader] Unknown FileState option: {0}", (int)state);
+		}
 		}
 		
-		RL_GFX_THROW_FAILED(s_Device->CreateVertexShader(m_pBlob->GetBufferPointer(), m_pBlob->GetBufferSize(), nullptr, &m_pShader));
+		RL_GFX_THROW_FAILED(s_Device->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &m_pShader));
 
 
 		// Extract name from filepath
@@ -67,7 +76,7 @@ namespace At0::Reyal
 		m_Name = filepath.substr(lastSlash, count);
 	}
 	
-	D3D11VertexShader::D3D11VertexShader(const std::string_view name, const std::string_view vertexSrc)
+	D3D11PixelShader::D3D11PixelShader(const std::string_view name, const std::string_view PixelSrc)
 		: m_Name(name)
 	{
 		RL_PROFILE_FUNCTION();
@@ -77,45 +86,46 @@ namespace At0::Reyal
 		flags |= D3DCOMPILE_DEBUG;
 #endif
 
+		WRL::ComPtr<ID3DBlob> pBlob;
 		WRL::ComPtr<ID3DBlob> pErrorBlob;
 		HRESULT hr = D3DCompile(
-			vertexSrc.data(),
-			vertexSrc.size(),
+			PixelSrc.data(),
+			PixelSrc.size(),
 			NULL,
 			nullptr,
 			nullptr,
 			"main", 
 			"vs_5_0",
 			flags, 0,
-			&m_pBlob,
+			&pBlob,
 			&pErrorBlob
 		);
 
 		if(FAILED(hr))
-			RL_LOG_ERROR("[D3D11VertexShader] Compilation failed with message: {0}", (char*)pErrorBlob->GetBufferPointer());
+			RL_LOG_ERROR("[D3D11PixelShader] Compilation failed with message: {0}", (char*)pErrorBlob->GetBufferPointer());
 		RL_GFX_THROW_FAILED(hr);
 
-		RL_GFX_THROW_FAILED(s_Device->CreateVertexShader(m_pBlob->GetBufferPointer(), m_pBlob->GetBufferSize(), nullptr, &m_pShader));
+		RL_GFX_THROW_FAILED(s_Device->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &m_pShader));
 	}
 
-	D3D11VertexShader::~D3D11VertexShader()
+	D3D11PixelShader::~D3D11PixelShader()
 	{
 		
 	}
 
-	void D3D11VertexShader::Bind() const
+	void D3D11PixelShader::Bind() const
 	{
 		RL_PROFILE_FUNCTION();
-		s_Context->VSSetShader(m_pShader.Get(), nullptr, 0);
+		s_Context->PSSetShader(m_pShader.Get(), nullptr, 0);
 	}
 
-	void D3D11VertexShader::Unbind() const
+	void D3D11PixelShader::Unbind() const
 	{
 		RL_PROFILE_FUNCTION();
-		s_Context->VSSetShader(nullptr, nullptr, 0);
+		s_Context->PSSetShader(nullptr, nullptr, 0);
 	}
 	
-	std::string D3D11VertexShader::ReadFile(const std::string_view filepath)
+	std::string D3D11PixelShader::ReadFile(const std::string_view filepath)
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -134,12 +144,12 @@ namespace At0::Reyal
 			}
 			else
 			{
-				RL_LOG_ERROR("[OpenGLVertexShader] Was unable to read the file {0}", filepath);
+				RL_LOG_ERROR("[OpenGLPixelShader] Was unable to read the file {0}", filepath);
 			}
 		}
 		else
 		{
-			RL_LOG_ERROR("[OpenGLVertexShader] Was unable to open the file {0}", filepath);
+			RL_LOG_ERROR("[OpenGLPixelShader] Was unable to open the file {0}", filepath);
 		}
 
 		return result;
