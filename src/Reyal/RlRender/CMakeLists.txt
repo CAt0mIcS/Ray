@@ -45,10 +45,12 @@ if(WIN32)
         "DXGI"
         "D3DCompiler"
         "glfw"
+	"Glad"
     )
 elseif(UNIX)
     set(PRIVATE_LIB
         "glfw"
+	"Glad"
     )
 endif()
 

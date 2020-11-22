@@ -42,7 +42,12 @@ namespace At0::Reyal
 		virtual const std::string_view GetName() const override { return m_Name; }
 
 	private:
+		void Compile(const std::string_view source);
+		std::string ReadFile(const std::string_view filepath);
+
+	private:
 		std::string m_Name;
+		uint32_t m_RendererID;
 	};
 }
 

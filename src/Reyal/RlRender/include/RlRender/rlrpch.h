@@ -10,6 +10,7 @@
 #endif
 
 #include <memory>
+#include <fstream>
 #include <string>
 
 
