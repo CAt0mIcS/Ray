@@ -50,12 +50,12 @@ if(WIN32)
         "D3D11"
         "DXGI"
         "D3DCompiler"
-        "glfw"
+        "GLFW"
 	"Glad"
     )
 elseif(UNIX)
     set(PRIVATE_LIB
-        "glfw"
+        "GLFW"
 	"Glad"
     )
 endif()

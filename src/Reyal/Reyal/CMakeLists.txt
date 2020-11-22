@@ -52,14 +52,14 @@ list(APPEND PRIVATE_INC "${X11_INCLUDE_DIRS}")
 set(PRIVATE_LIB
 	"RlRender"
 	"Threads::Threads"
-	"glfw"
+	"GLFW"
 	"Glad"
 	"${X11_LIBRARIES}"
 )
 else()
 set(PRIVATE_LIB
 	"RlRender"
-	"glfw"
+	"GLFW"
 	"Glad"
 )
 endif()
