@@ -50,6 +50,7 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 
 		RL_LOG_CRITICAL("[OpenGLWindow] GLFW Error ({0}): {1}", error, description);
+		RL_LOG_FLUSH();
 	}
 
 
@@ -62,6 +63,7 @@ namespace At0::Reyal
 		{
 			int success = glfwInit();
 			RL_ASSERT(success, "Failed to initialize GLFW");
+			RL_LOG_INFO("[OpenGLWindow] Successfully initialized GLFW");
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}
 
@@ -91,11 +93,9 @@ namespace At0::Reyal
 			int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 			RL_ASSERT(status, "Failed to initialize Glad!");
 
-			RL_LOG_INFO("[OpenGLWindow] OpenGL Info:");
-			RL_LOG_INFO("	Vendor:   {0}", glGetString(GL_VENDOR));
-			RL_LOG_INFO("	Renderer: {0}", glGetString(GL_RENDERER));
-			RL_LOG_INFO("	Version:  {0}", glGetString(GL_VERSION));
-			RL_LOG_FLUSH();
+			RL_LOG_INFO("[OpenGLWindow] Successfully initialized Glad");
+			RL_LOG_INFO("[OpenGLWindow] OpenGL Info:"
+			"\n\tVendor:\t{0}\n\tRenderer: {1}\n\tVersion:{2}", glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION));
 		}
 
 		SetUpEventCallbacks();
@@ -322,6 +322,9 @@ namespace At0::Reyal
 				switch (action)
 				{
 				case GLFW_PRESS:
+					pData->win.GetRenderer3D()->RenderTestTriangle();
+					pData->win.GetRenderer3D()->EndDraw();
+
 					e = MakeScope<KeyPressedEvent>((unsigned char)key, 0);
 					pData->win.Keyboard.SetKeyState((unsigned char)key, true);
 					break;

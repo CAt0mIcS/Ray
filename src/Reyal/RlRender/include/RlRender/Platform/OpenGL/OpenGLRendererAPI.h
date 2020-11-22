@@ -36,8 +36,6 @@ namespace At0::Reyal
 		/// </summary>
 		virtual void EndDraw() override;
 
-	private:
-
 	};
 }
 
