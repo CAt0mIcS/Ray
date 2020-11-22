@@ -9,7 +9,7 @@
 
 namespace At0::Reyal
 {
-    Ref<VertexShader> VertexShader::Create(const std::string_view filepath)
+    Ref<VertexShader> VertexShader::Create(const std::string_view filepath, FileState state)
     {
         RL_EXPECTS(RendererAPI::GetAPI() >= RendererAPI::API::FIRST && RendererAPI::GetAPI() <= RendererAPI::API::LAST);
 
@@ -17,9 +17,9 @@ namespace At0::Reyal
         {
         case RendererAPI::API::None:		RL_LOG_WARN("[VertexShader] Returning invalid VertexShader. Calls to the Shader will fail!"); return nullptr;
 #ifdef _WIN32
-        case RendererAPI::API::D3D11:       return MakeRef<D3D11VertexShader>(filepath);
+        case RendererAPI::API::D3D11:       return MakeRef<D3D11VertexShader>(filepath, state);
 #endif
-        case RendererAPI::API::OpenGL:      return MakeRef<OpenGLVertexShader>(filepath);
+        case RendererAPI::API::OpenGL:      return MakeRef<OpenGLVertexShader>(filepath, state);
         }
 
         return nullptr;

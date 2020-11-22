@@ -196,10 +196,22 @@ namespace At0::Reyal
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////// Vertex Shader ///////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+#if 0
 #ifdef NDEBUG
-        Ref<VertexShader> vertexShader = VertexShader::Create("../../bin/Release/VertexShader-v.cso");
+        Ref<VertexShader> vertexShader = VertexShader::Create("../../bin/Release/VertexShader-v.cso", VertexShader::FileState::Compiled);
 #else
-        Ref<VertexShader> vertexShader = VertexShader::Create("../../bin/Debug/VertexShader-v.cso");
+        Ref<VertexShader> vertexShader = VertexShader::Create("../../bin/Debug/VertexShader-v.cso", VertexShader::FileState::Compiled);
+#endif
+#elif 1
+        Ref<VertexShader> vertexShader = VertexShader::Create("../../../src/Reyal/RlRender/Shaders/VertexShader-v.hlsl");
+#else
+        std::string vertexSrc = R"(
+float4 main( float2 pos : POSITION ) : SV_POSITION
+{
+    return float4(pos, 0.0, 1.0);
+}
+        )";
+        Ref<VertexShader> vertexShader = VertexShader::Create("VertexShader-v", vertexSrc);
 #endif
         vertexShader->Bind();
         RL_LOG_DEBUG("Bound Vertex Shader with name \"{0}\"", vertexShader->GetName());

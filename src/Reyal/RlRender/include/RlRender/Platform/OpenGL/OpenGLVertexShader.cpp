@@ -10,7 +10,7 @@
 
 namespace At0::Reyal
 {
-	OpenGLVertexShader::OpenGLVertexShader(const std::string_view filepath)
+	OpenGLVertexShader::OpenGLVertexShader(const std::string_view filepath, FileState state)
 		: m_RendererID(0), m_Name("")
 	{
 		RL_PROFILE_FUNCTION();

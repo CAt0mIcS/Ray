@@ -20,8 +20,8 @@ namespace At0::Reyal
 		/// <summary>
 		/// D3D11 VertexShader Constructor
 		/// </summary>
-		/// <param name="filepath">Is the path to the file containing the vertex shader source</param>
-		D3D11VertexShader(const std::string_view filepath);
+		/// <param name="filepath">Is the path to the file containing the ALREADY COMPILED vertex shader</param>
+		D3D11VertexShader(const std::string_view filepath, FileState state);
 
 		/// <summary>
 		/// D3D11 VertexShader Constructor
@@ -29,6 +29,11 @@ namespace At0::Reyal
 		/// <param name="name">Is the name of the vertex shader</param>
 		/// <param name="vertexSrc">Is the source code from which to compile the shader</param>
 		D3D11VertexShader(const std::string_view name, const std::string_view vertexSrc);
+
+		/// <summary>
+		/// D3D11 VertexShader Deconstructor
+		/// </summary>
+		~D3D11VertexShader();
 
 		/// <summary>
 		/// Binds the vertex shader to the pipeline
@@ -59,8 +64,13 @@ namespace At0::Reyal
 		virtual const std::string_view GetName() const override { return m_Name; }
 
 	private:
+		std::string ReadFile(const std::string_view filepath);
+
+	private:
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_pShader;
+
 		Microsoft::WRL::ComPtr<ID3DBlob> m_pBlob;
+
 
 		std::string m_Name;
 	};

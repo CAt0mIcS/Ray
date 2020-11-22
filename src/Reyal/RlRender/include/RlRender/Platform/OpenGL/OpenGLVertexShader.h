@@ -16,7 +16,7 @@ namespace At0::Reyal
 		/// OpenGL VertexShader Constructor
 		/// </summary>
 		/// <param name="filepath">Is the path to the file containing the vertex shader source</param>
-		OpenGLVertexShader(const std::string_view filepath);
+		OpenGLVertexShader(const std::string_view filepath, FileState state);
 
 		/// <summary>
 		/// OpenGL VertexShader Constructor

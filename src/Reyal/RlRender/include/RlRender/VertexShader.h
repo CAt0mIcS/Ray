@@ -12,12 +12,19 @@ namespace At0::Reyal
 	class RLR_API VertexShader
 	{
 	public:
+		enum class RLR_API FileState
+		{
+			Compiled = 0, Source
+		};
+
+	public:
 		/// <summary>
 		/// Creates the RendererAPI dependent VertexShader
 		/// </summary>
-		/// <param name="filepath">Is the path to the file containing the vertex source</param>
+		/// <param name="filepath">Is the path to the file containing the shader source/binary</param>
+		/// <param name="state">Specifies whether the shader file is an already compiled shader or just the shader source code</param>
 		/// <returns>The created Shader</returns>
-		static Ref<VertexShader> Create(const std::string_view filepath);
+		static Ref<VertexShader> Create(const std::string_view filepath, FileState state = FileState::Source);
 
 		/// <summary>
 		/// Creates the RendererAPI dependent VertexShader, also compiles the vertex source
