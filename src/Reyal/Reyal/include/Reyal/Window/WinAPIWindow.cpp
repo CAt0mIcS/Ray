@@ -23,7 +23,7 @@
 namespace At0::Reyal
 {
 	WinAPIWindow::WinAPIWindow(const std::string_view name, Widget* parent, bool isMainWindow)
-		: Window(name, parent, isMainWindow)
+		: Window(name, parent, isMainWindow), m_OldPos{}, m_OldSize{}, m_hWnd(0)
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -58,7 +58,7 @@ namespace At0::Reyal
 
 		RegisterClass(&wc);
 
-		m_hWnd = (void*)CreateWindowEx(
+		m_hWnd = CreateWindowEx(
 			exStyle, windowClassName, windowName, style, x, y, width, height,
 			hWndParent, hMenu, wc.hInstance, this
 		);
@@ -226,8 +226,8 @@ namespace At0::Reyal
 		case WM_PAINT:
 		{
 			PAINTSTRUCT ps;
-			HDC hDC = BeginPaint((HWND)m_hWnd, &ps);
-			EndPaint((HWND)m_hWnd, &ps);
+			HDC hDC = BeginPaint(m_hWnd, &ps);
+			EndPaint(m_hWnd, &ps);
 
 			Scope<PaintEvent> e = MakeScope<PaintEvent>();
 			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
@@ -282,17 +282,17 @@ namespace At0::Reyal
 		}
 		}
 
-		return DefWindowProc((HWND)m_hWnd, uMsg, wParam, lParam);
+		return DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
 
 	std::string WinAPIWindow::GetTitle() const
 	{
 		std::string str;
-		int len = GetWindowTextLengthA((HWND)m_hWnd);
+		int len = GetWindowTextLengthA(m_hWnd);
 		if (len > 0)
 		{
 			str.resize(len);
-			GetWindowTextA((HWND)m_hWnd, str.data(), len + 1);
+			GetWindowTextA(m_hWnd, str.data(), len + 1);
 		}
 
 		return str;
@@ -300,33 +300,33 @@ namespace At0::Reyal
 
 	void WinAPIWindow::SetTitle(const std::string_view title)
 	{
-		RL_THROW_LAST_WND_EXCEPT(SetWindowTextA((HWND)m_hWnd, title.data()));
+		RL_THROW_LAST_WND_EXCEPT(SetWindowTextA(m_hWnd, title.data()));
 	}
 
 	void WinAPIWindow::Show() const
 	{
-		ShowWindow((HWND)m_hWnd, SW_SHOW);
+		ShowWindow(m_hWnd, SW_SHOW);
 	}
 
 	void WinAPIWindow::Hide() const
 	{
-		ShowWindow((HWND)m_hWnd, SW_HIDE);
+		ShowWindow(m_hWnd, SW_HIDE);
 	}
 
 	void WinAPIWindow::Maximize() const
 	{
-		ShowWindow((HWND)m_hWnd, SW_MAXIMIZE);
+		ShowWindow(m_hWnd, SW_MAXIMIZE);
 	}
 
 	void WinAPIWindow::Minimize() const
 	{
-		ShowWindow((HWND)m_hWnd, SW_MINIMIZE);
+		ShowWindow(m_hWnd, SW_MINIMIZE);
 	}
 
 	void WinAPIWindow::Close()
 	{
 		if(IsOpen())
-			SendMessage((HWND)m_hWnd, WM_CLOSE, 0, 0);
+			SendMessage(m_hWnd, WM_CLOSE, 0, 0);
 	}
 
 	bool WinAPIWindow::IsOpen() const
@@ -339,7 +339,7 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 
 		MSG msg;
-		if (PeekMessage(&msg, (HWND)m_hWnd, 0, 0, PM_REMOVE))
+		if (PeekMessage(&msg, m_hWnd, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
@@ -349,6 +349,43 @@ namespace At0::Reyal
 	void WinAPIWindow::SetIcon(const std::string_view path)
 	{
 		RL_ASSERT(false, "Incomplete Implementation");
+	}
+	
+	bool WinAPIWindow::InitRenderer3D()
+	{
+		RL_PROFILE_FUNCTION();
+
+		if (!m_Renderer3D)
+		{
+			m_Renderer3D = MakeScope<Renderer3D>();
+			m_Renderer3D->Init(m_hWnd);
+			return true;
+		}
+		return false;
+	}
+
+	bool WinAPIWindow::InitRenderer2D()
+	{
+		RL_PROFILE_FUNCTION();
+
+		//if (!m_Renderer2D)
+		//{
+		//	m_Renderer2D = MakeScope<Renderer2D>();
+		//	m_Renderer2D->Init(m_hWnd);
+		//  return true;
+		//}
+		return false;
+	}
+
+	Renderer3D* WinAPIWindow::GetRenderer3D() const
+	{
+		RL_PROFILE_FUNCTION();
+
+		if (GetParent())
+		{
+			return GetParent()->GetRenderer3D();
+		}
+		return m_Renderer3D.get();
 	}
 }
 

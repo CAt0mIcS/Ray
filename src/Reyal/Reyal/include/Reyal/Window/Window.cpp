@@ -38,7 +38,7 @@ namespace At0::Reyal
 	}
 
 	Window::Window(const std::string_view name, Widget* parent, bool isMainWindow)
-		: Widget(name, parent), m_EventQueue{}, m_hWnd(nullptr), m_CurrentlyHovering(nullptr), m_OldPos{}, m_OldSize{}
+		: Widget(name, parent), m_EventQueue{}, m_CurrentlyHovering(nullptr)
 	{
 	}
 
@@ -79,43 +79,6 @@ namespace At0::Reyal
 		// {
 		// 	generateEvents(nullptr);
 		// }
-	}
-
-	bool Window::InitRenderer3D()
-	{
-		RL_PROFILE_FUNCTION();
-
-		if (!m_Renderer3D)
-		{
-			m_Renderer3D = MakeScope<Renderer3D>();
-			m_Renderer3D->Init(m_hWnd);
-			return true;
-		}
-		return false;
-	}
-
-	bool Window::InitRenderer2D()
-	{
-		RL_PROFILE_FUNCTION();
-
-		//if (!m_Renderer2D)
-		//{
-		//	m_Renderer2D = MakeScope<Renderer2D>();
-		//	m_Renderer2D->Init(m_hWnd);
-		//  return true;
-		//}
-		return false;
-	}
-
-	Renderer3D* Window::GetRenderer3D() const
-	{
-		RL_PROFILE_FUNCTION();
-
-		if (GetParent())
-		{
-			return GetParent()->GetRenderer3D();
-		}
-		return m_Renderer3D.get();
 	}
 	
 	Window::~Window()

@@ -4,10 +4,14 @@
 #include "RlBase.h"
 #include "Window.h"
 
+typedef struct GLFWwindow GLFWwindow;
 
 
 namespace At0::Reyal
 {
+	class Renderer3D;
+	//class Renderer2D;
+
 	class RL_API OpenGLWindow : public Window
 	{
 	public:
@@ -78,6 +82,28 @@ namespace At0::Reyal
 		/// <param name="path">Is the path to the .ico file</param>
 		virtual void SetIcon(const std::string_view path);
 
+		/// <summary>
+		/// Getter for the Native Window
+		/// </summary>
+		/// <returns>The Native Window</returns>
+		virtual void* GetNativeWindow() const override { return (void*)m_hWnd; }
+
+		/// <summary>
+		/// Initializes the 3D Renderer, checks if it has already been initialized
+		/// </summary>
+		virtual bool InitRenderer3D() override;
+
+		/// <summary>
+		/// Initializes the 2D Renderer, checks if it has already been initialized
+		/// </summary>
+		virtual bool InitRenderer2D() override;
+
+		/// <summary>
+		/// Getter for the Renderer of this Window
+		/// </summary>
+		/// <returns>The Window Renderer</returns>
+		virtual Renderer3D* GetRenderer3D() const override;
+
 	private:
 		/// <summary>
 		/// Sets all glfw event callbacks
@@ -88,6 +114,31 @@ namespace At0::Reyal
 		static bool s_GLFWInitialized;
 		
 		bool m_IsOpen;
+
+		/// <summary>
+		/// Native window handle
+		/// </summary>
+		GLFWwindow* m_hWnd;
+
+		/// <summary>
+		/// Specifies the 3D renderer
+		/// </summary>
+		Scope<Renderer3D> m_Renderer3D;
+
+		///// <summary>
+		///// Specifies the 2D renderer
+		///// </summary>
+		//Scope<Renderer2D> m_Renderer2D;
+
+		/// <summary>
+		/// Specifies the old size of this window
+		/// </summary>
+		Size2 m_OldSize;
+
+		/// <summary>
+		/// Specifies the old position of this window
+		/// </summary>
+		Point2 m_OldPos;
 	};
 }
 

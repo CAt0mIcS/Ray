@@ -14,8 +14,6 @@
 namespace At0::Reyal
 {
 	class Event;
-	class Renderer3D;
-	//class Renderer2D;
 
 	/// <summary>
 	/// Struct pushed into the event queue
@@ -120,24 +118,18 @@ namespace At0::Reyal
 		/// <summary>
 		/// Initializes the 3D Renderer, checks if it has already been initialized
 		/// </summary>
-		bool InitRenderer3D();
+		virtual bool InitRenderer3D() = 0;
 		
 		/// <summary>
 		/// Initializes the 2D Renderer, checks if it has already been initialized
 		/// </summary>
-		bool InitRenderer2D();
-
-		/// <summary>
-		/// Getter for the Renderer of this Window
-		/// </summary>
-		/// <returns>The Window Renderer</returns>
-		virtual Renderer3D* GetRenderer3D() const override;
+		virtual bool InitRenderer2D() = 0;
 
 		/// <summary>
 		/// Getter for the Native Window
 		/// </summary>
 		/// <returns>The Native Window</returns>
-		void* GetNativeWindow() const { return m_hWnd; }
+		virtual void* GetNativeWindow() const = 0;
 
 		/// <summary>
 		/// Window Deconstructor
@@ -170,6 +162,11 @@ namespace At0::Reyal
 		void SetHoveringWidget();
 
 	protected:
+
+		/// <QUESTION>
+		/// I could have e.g. m_hWnd in the base class (Window) (as protected) and then I wouldn't have to make the GetNativeWindow() function virtual.
+		/// </QUESTION>
+
 		/// <summary>
 		/// Called when any event occurs which needs to be handled immediately (WindowCloseEvent)
 		/// <param name="receiver">Is the window which received the immediate event</param>
@@ -184,34 +181,10 @@ namespace At0::Reyal
 		Queue<EventMessage, s_MaxMessagesInQueue> m_EventQueue;
 
 		/// <summary>
-		/// Specifies the 3D renderer
-		/// </summary>
-		Scope<Renderer3D> m_Renderer3D;
-		
-		///// <summary>
-		///// Specifies the 2D renderer
-		///// </summary>
-		//Scope<Renderer2D> m_Renderer2D;
-
-		/// <summary>
-		/// Native Window Handle
-		/// </summary>
-		void* m_hWnd;
-
-		/// <summary>
 		/// Specifies the control where the mouse is currently on
 		/// </summary>
 		Widget* m_CurrentlyHovering;
 
-		/// <summary>
-		/// Specifies the old size of this window
-		/// </summary>
-		Size2 m_OldSize;
-
-		/// <summary>
-		/// Specifies the old position of this window
-		/// </summary>
-		Point2 m_OldPos;
 	};
 }
 

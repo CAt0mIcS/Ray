@@ -54,7 +54,7 @@ namespace At0::Reyal
 
 
 	OpenGLWindow::OpenGLWindow(const std::string_view name, Widget* parent, bool isMainWindow)
-		: Window(name, parent, isMainWindow)
+		: Window(name, parent, isMainWindow), m_OldPos{}, m_OldSize{}, m_hWnd(0)
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -78,10 +78,10 @@ namespace At0::Reyal
 				[this](const Event& e, const MouseInput& mouse) { return GetEventReceiver(e, mouse); }
 			}
 		);
-		glfwSetWindowUserPointer((GLFWwindow*)m_hWnd, data);
+		glfwSetWindowUserPointer(m_hWnd, data);
 
 		// Context initialization
-		glfwMakeContextCurrent((GLFWwindow*)m_hWnd);
+		glfwMakeContextCurrent(m_hWnd);
 
 		// Initialize Glad
 		if (!s_GLFWInitialized)
@@ -121,7 +121,7 @@ namespace At0::Reyal
 		
 #ifdef _WIN32
 
-		HWND hWnd = glfwGetWin32Window((GLFWwindow*)m_hWnd);
+		HWND hWnd = glfwGetWin32Window(m_hWnd);
 		std::string buff;
 		int len = GetWindowTextLengthA(hWnd);
 		if (len > 0)
@@ -139,7 +139,7 @@ namespace At0::Reyal
 
 #elif defined(__linux__)
 
-		::Window hWnd = glfwGetX11Window((GLFWwindow*)m_hWnd);
+		::Window hWnd = glfwGetX11Window(m_hWnd);
 		XTextProperty prop;
 		if (XGetWMName(glfwGetX11Display(), hWnd, &prop) == 0)
 		{
@@ -154,31 +154,31 @@ namespace At0::Reyal
 	void OpenGLWindow::SetTitle(const std::string_view title)
 	{
 		RL_PROFILE_FUNCTION();
-		glfwSetWindowTitle((GLFWwindow*)m_hWnd, title.data());
+		glfwSetWindowTitle(m_hWnd, title.data());
 	}
 
 	void OpenGLWindow::Show() const
 	{
 		RL_PROFILE_FUNCTION();
-		glfwShowWindow((GLFWwindow*)m_hWnd);
+		glfwShowWindow(m_hWnd);
 	}
 
 	void OpenGLWindow::Hide() const
 	{
 		RL_PROFILE_FUNCTION();
-		glfwHideWindow((GLFWwindow*)m_hWnd);
+		glfwHideWindow(m_hWnd);
 	}
 
 	void OpenGLWindow::Maximize() const
 	{
 		RL_PROFILE_FUNCTION();
-		glfwMaximizeWindow((GLFWwindow*)m_hWnd);
+		glfwMaximizeWindow(m_hWnd);
 	}
 
 	void OpenGLWindow::Minimize() const
 	{
 		RL_PROFILE_FUNCTION();
-		glfwIconifyWindow((GLFWwindow*)m_hWnd);
+		glfwIconifyWindow(m_hWnd);
 	}
 
 	void OpenGLWindow::Close()
@@ -186,8 +186,8 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 		if (IsOpen())
 		{
-			delete (GLFWCallbackData*)glfwGetWindowUserPointer((GLFWwindow*)m_hWnd);
-			glfwDestroyWindow((GLFWwindow*)m_hWnd);
+			delete (GLFWCallbackData*)glfwGetWindowUserPointer(m_hWnd);
+			glfwDestroyWindow(m_hWnd);
 
 			m_IsOpen = false;
 
@@ -206,7 +206,7 @@ namespace At0::Reyal
 	{
 		RL_PROFILE_FUNCTION();
 
-		glfwMakeContextCurrent((GLFWwindow*)m_hWnd);
+		glfwMakeContextCurrent(m_hWnd);
 
 		// TODO: Multiple Windows
 		// https://discourse.glfw.org/t/how-to-create-multiple-window/1398/2
@@ -216,6 +216,43 @@ namespace At0::Reyal
 	void OpenGLWindow::SetIcon(const std::string_view path)
 	{
 		RL_ASSERT(false, "Incomplete Implementation");
+	}
+
+	bool OpenGLWindow::InitRenderer3D()
+	{
+		RL_PROFILE_FUNCTION();
+
+		if (!m_Renderer3D)
+		{
+			m_Renderer3D = MakeScope<Renderer3D>();
+			m_Renderer3D->Init(m_hWnd);
+			return true;
+		}
+		return false;
+	}
+
+	bool OpenGLWindow::InitRenderer2D()
+	{
+		RL_PROFILE_FUNCTION();
+
+		//if (!m_Renderer2D)
+		//{
+		//	m_Renderer2D = MakeScope<Renderer2D>();
+		//	m_Renderer2D->Init(m_hWnd);
+		//  return true;
+		//}
+		return false;
+	}
+
+	Renderer3D* OpenGLWindow::GetRenderer3D() const
+	{
+		RL_PROFILE_FUNCTION();
+
+		if (GetParent())
+		{
+			return GetParent()->GetRenderer3D();
+		}
+		return m_Renderer3D.get();
 	}
 	
 	void OpenGLWindow::SetUpEventCallbacks()
@@ -229,7 +266,7 @@ namespace At0::Reyal
 			}
 		);
 
-		glfwSetCursorPosCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, double xPos, double yPos)
+		glfwSetCursorPosCallback(m_hWnd, [](GLFWwindow* window, double xPos, double yPos)
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
 				pData->win.Mouse.SetPos({ (float)xPos, (float)yPos });
@@ -239,7 +276,7 @@ namespace At0::Reyal
 			}
 		);
 
-		glfwSetMouseButtonCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, int button, int action, int mods)
+		glfwSetMouseButtonCallback(m_hWnd, [](GLFWwindow* window, int button, int action, int mods)
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
 
@@ -277,7 +314,7 @@ namespace At0::Reyal
 			}
 		);
 
-		glfwSetKeyCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+		glfwSetKeyCallback(m_hWnd, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
 
@@ -301,7 +338,7 @@ namespace At0::Reyal
 			}
 		);
 
-		glfwSetCharCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, unsigned int keycode)
+		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode)
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
 
@@ -310,7 +347,7 @@ namespace At0::Reyal
 			}
 		);
 
-		glfwSetScrollCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, double xOffset, double yOffset)
+		glfwSetScrollCallback(m_hWnd, [](GLFWwindow* window, double xOffset, double yOffset)
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
 				// TODO: MouseWheelLeft and Right events
@@ -343,7 +380,7 @@ namespace At0::Reyal
 			}
 		);
 
-		glfwSetWindowRefreshCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window)
+		glfwSetWindowRefreshCallback(m_hWnd, [](GLFWwindow* window)
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
 			
@@ -352,7 +389,7 @@ namespace At0::Reyal
 			}
 		);
 
-		glfwSetWindowSizeCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window, int width, int height)
+		glfwSetWindowSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height)
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
 				pData->win.MoveTo(Point2{ width, height });
