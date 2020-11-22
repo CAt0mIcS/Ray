@@ -16,7 +16,6 @@ set(SRC
 	"include/Reyal/Window/Window.h"
 	"include/Reyal/Core/ThreadPool.h"
 	"include/Reyal/Core/Queue.h"
-	"include/Reyal/EntryPoint.h"
 	"include/Reyal/Core/ZRect.h"
 	"include/Reyal/Events/Event.h"
 	"include/Reyal/Events/ApplicationEvent.h"

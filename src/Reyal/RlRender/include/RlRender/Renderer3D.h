@@ -1,5 +1,4 @@
-#ifndef RLR_RENDERER3D_H
-#define RLR_RENDERER3D_H
+#pragma once
 
 #include "RlRBase.h"
 #include "RendererAPI.h"
@@ -48,5 +47,3 @@ namespace At0::Reyal
 
 }
 
-
-#endif // RLR_RENDERER3D_H

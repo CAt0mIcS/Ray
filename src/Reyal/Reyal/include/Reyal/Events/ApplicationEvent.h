@@ -1,5 +1,4 @@
-#ifndef RL_APPEVENT_H
-#define RL_APPEVENT_H
+#pragma once
 
 #include "Reyal/Events/Event.h"
 
@@ -120,4 +119,3 @@ namespace At0::Reyal
 	};
 }
 
-#endif // RL_APPEVENT_H

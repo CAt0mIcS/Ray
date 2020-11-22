@@ -1,5 +1,4 @@
-#ifndef ZLL_BRACKETFORMATTER_H
-#define ZLL_BRACKETFORMATTER_H
+#pragma once
 
 #include "Formatter.h"
 
@@ -29,5 +28,3 @@ namespace At0::Log
 		}
 	};
 }
-
-#endif // ZZL_BRACKETFORMATTER_H

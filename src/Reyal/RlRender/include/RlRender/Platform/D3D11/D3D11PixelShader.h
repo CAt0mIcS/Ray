@@ -1,5 +1,4 @@
-#ifndef RLR_D3D11PixelSHADER
-#define RLR_D3D11PixelSHADER
+#pragma once
 
 #ifdef _WIN32
 
@@ -64,5 +63,3 @@ namespace At0::Reyal
 
 
 #endif // _WIN32
-
-#endif // RLR_D3D11PixelSHADER

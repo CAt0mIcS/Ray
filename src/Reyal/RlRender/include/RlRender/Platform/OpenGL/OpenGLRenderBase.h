@@ -1,5 +1,4 @@
-#ifndef RLR_OPENGLRENDERBASE_H
-#define RLR_OPENGLRENDERBASE_H
+#pragma once
 
 
 namespace At0::Reyal
@@ -15,5 +14,3 @@ namespace At0::Reyal
 }
 
 
-
-#endif // RLR_OPENGLRENDERBASE_H

@@ -1,5 +1,4 @@
-#ifndef ZL_EXTENSION_LOADER_H
-#define ZL_EXTENSION_LOADER_H
+#pragma once
 
 #include <string>
 #include <functional>
@@ -23,5 +22,3 @@ namespace At0::Zeal
 }
 
 
-
-#endif // ZL_EXTENSION_LOADER_H

@@ -1,5 +1,4 @@
-#ifndef RLD_RLDPCH_H
-#define RLD_RLDPCH_H
+#pragma once
 
 #include <string>
 #include <mutex>
@@ -8,4 +7,3 @@
 #include <iomanip>
 #include <assert.h>
 
-#endif

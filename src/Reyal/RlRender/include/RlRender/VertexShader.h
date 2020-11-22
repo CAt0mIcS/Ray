@@ -1,5 +1,4 @@
-#ifndef RLR_VERTEXSHADER_H
-#define RLR_VERTEXSHADER_H
+#pragma once
 
 #include "RlRBase.h"
 #include <../../RlUtilities/include/RlUtil/Helper.h>
@@ -64,5 +63,3 @@ namespace At0::Reyal
 	};
 }
 
-
-#endif // RLR_VERTEXSHADER_H

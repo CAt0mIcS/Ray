@@ -1,5 +1,4 @@
-#ifndef RLR_D3D11RENDERERAPI_H
-#define RLR_D3D11RENDERERAPI_H
+#pragma once
 
 #ifdef _WIN32
 
@@ -52,5 +51,3 @@ namespace At0::Reyal
 
 #endif // _WIN32
 
-
-#endif // RLR_D3D11RENDERERAPI_H

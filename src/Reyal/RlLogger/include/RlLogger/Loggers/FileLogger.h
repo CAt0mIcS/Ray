@@ -1,5 +1,4 @@
-#ifndef ZZL_FILELOGGER_H
-#define ZZL_FILELOGGER_H
+#pragma once
 
 #include <fstream>
 #include "BaseLogger.h"
@@ -134,4 +133,3 @@ namespace At0::Log
 	};
 }
 
-#endif // ZZL_FILELOGGER_H

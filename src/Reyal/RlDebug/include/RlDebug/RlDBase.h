@@ -1,5 +1,4 @@
-#ifndef RLD_RLDBASE_H
-#define RLD_RLDBASE_H
+#pragma once
 
 #ifdef RLD_BUILD
 	#if defined(_MSC_VER)
@@ -19,4 +18,3 @@
 	#endif
 #endif
 
-#endif // RLD_RLDBASE_H

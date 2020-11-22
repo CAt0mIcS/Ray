@@ -1,5 +1,4 @@
-#ifndef RL_ZWIDGET_H
-#define RL_ZWIDGET_H
+#pragma once
 
 #include "Reyal/RlBase.h"
 
@@ -212,4 +211,3 @@ namespace At0::Reyal
 }
 
 
-#endif // RL_ZWIDGET_H

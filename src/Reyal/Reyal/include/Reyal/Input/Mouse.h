@@ -1,5 +1,4 @@
-#ifndef RL_MOUSE_H
-#define RL_MOUSE_H
+#pragma once
 
 #include "Reyal/RlBase.h"
 
@@ -118,5 +117,3 @@ namespace At0::Reyal
 }
 
 
-
-#endif // RL_MOUSE_H

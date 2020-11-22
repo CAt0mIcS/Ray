@@ -1,5 +1,4 @@
-#ifndef RLR_RLRBASE_H
-#define RLR_RLRBASE_H
+#pragma once
 
 #ifndef NOMINMAX
 	#define NOMINMAX
@@ -33,5 +32,3 @@ namespace At0::Reyal
 	};
 }
 
-
-#endif // RLR_RLRBASE_H

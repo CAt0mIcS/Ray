@@ -1,5 +1,4 @@
-#ifndef RL_WINAPIWINDOW_H
-#define RL_WINAPIWINDOW_H
+#pragma once
 
 #include "RlBase.h"
 
@@ -189,5 +188,3 @@ namespace At0::Reyal
 #endif // _WIN32
 
 
-
-#endif // RL_WINAPIWINDOW_H

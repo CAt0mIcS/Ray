@@ -1,5 +1,4 @@
-#ifndef ZZL_LOGINCLUDE_H
-#define ZZL_LOGINCLUDE_H
+#pragma once
 
 #include <RlUtil/CoreConfig.h>
 
@@ -11,4 +10,3 @@
 
 #endif
 
-#endif // ZZL_LOGINCLUDE_H

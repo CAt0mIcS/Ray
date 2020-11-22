@@ -1,5 +1,4 @@
-#ifndef RLR_TYPEDEFINES_H
-#define RLR_TYPEDEFINES_H
+#pragma once
 
 #include <glm/glm.hpp>
 #include <iostream>
@@ -65,5 +64,3 @@ namespace At0::Reyal
 	
 }
 
-
-#endif // RLR_TYPEDEFINES_H

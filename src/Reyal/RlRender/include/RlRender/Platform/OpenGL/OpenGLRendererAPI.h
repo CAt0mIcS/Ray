@@ -1,5 +1,4 @@
-#ifndef RLR_OPENGLRENDERERAPI_H
-#define RLR_OPENGLRENDERERAPI_H
+#pragma once
 
 #include "RlRender/RendererAPI.h"
 
@@ -39,5 +38,3 @@ namespace At0::Reyal
 	};
 }
 
-
-#endif // RLR_OPENGLRENDERERAPI_H

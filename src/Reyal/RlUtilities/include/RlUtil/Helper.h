@@ -1,5 +1,4 @@
-#ifndef RLU_HELPER_H
-#define RLU_HELPER_H
+#pragma once
 
 #include <memory>
 
@@ -26,4 +25,3 @@ namespace At0::Reyal
 }
 
 
-#endif // RLU_HELPER_H

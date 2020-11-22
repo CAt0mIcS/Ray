@@ -1,7 +1,4 @@
-#ifndef ZL_PCH_H
-#define ZL_PCH_H
+#pragma once
 
 
 
-
-#endif // ZL_PCH_H

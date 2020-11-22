@@ -1,5 +1,4 @@
-#ifndef RLR_D3D11VERTEXSHADER
-#define RLR_D3D11VERTEXSHADER
+#pragma once
 
 #ifdef _WIN32
 
@@ -78,5 +77,3 @@ namespace At0::Reyal
 
 
 #endif // _WIN32
-
-#endif // RLR_D3D11VERTEXSHADER

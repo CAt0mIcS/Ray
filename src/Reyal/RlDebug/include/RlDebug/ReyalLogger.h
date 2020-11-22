@@ -1,5 +1,4 @@
-#ifndef RLD_REYALLOGGER_H
-#define RLD_REYALLOGGER_H
+#pragma once
 
 
 #include <RlUtil/CoreConfig.h>
@@ -95,4 +94,3 @@ namespace At0::Reyal::Debug
 	#define RL_LOG_FLUSH()
 #endif
 
-#endif // RLD_REYALLOGGER_H

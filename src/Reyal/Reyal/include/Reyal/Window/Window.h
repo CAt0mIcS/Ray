@@ -1,5 +1,4 @@
-#ifndef RL_WINDOW_H
-#define RL_WINDOW_H
+#pragma once
 
 #include "Reyal/RlBase.h"
 #include <string>
@@ -189,6 +188,3 @@ namespace At0::Reyal
 }
 
 
-
-
-#endif // RL_WINDOW_H

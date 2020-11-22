@@ -1,5 +1,4 @@
-#ifndef RL_RLBASE_H
-#define RL_RLBASE_H
+#pragma once
 
 #include <memory>
 #include <assert.h>
@@ -31,4 +30,3 @@
 #include <../../RlUtilities/include/RlUtil/Helper.h>
 
 
-#endif // RL_RLBASE_H

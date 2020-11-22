@@ -1,5 +1,4 @@
-#ifndef RL_REYALINCLUDE_H
-#define RL_REYALINCLUDE_H
+#pragma once
 
 
 #include "Application.h"
@@ -15,4 +14,3 @@
 #include "Events/KeyboardEvent.h"
 
 
-#endif // RL_REYALINCLUDE_H

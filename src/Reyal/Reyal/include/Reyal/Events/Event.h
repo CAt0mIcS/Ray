@@ -1,6 +1,4 @@
-#ifndef RL_EVENT_H
-#define RL_EVENT_H
-
+#pragma once
 
 namespace At0::Reyal
 {
@@ -26,5 +24,3 @@ namespace At0::Reyal
 
 }
 
-
-#endif // RL_EVENT_H

@@ -1,7 +1,5 @@
-#ifndef RLU_CORECONFIG_H
-#define RLU_CORECONFIG_H
+#pragma once
 
 #define RL_ENABLE_LOGGING 1
 #define RL_ENABLE_PROFILING 0
 
-#endif // RLU_CORECONFIG_H

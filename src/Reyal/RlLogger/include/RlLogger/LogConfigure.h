@@ -1,6 +1,4 @@
-#ifndef ZZL_LOGCONFIGURE_H
-#define ZZL_LOGCONFIGURE_H
-
+#pragma once
 
 /// <summary>
 /// All mutexes and lock guards will be disabled if ZL_LOG_NON_THREAD_SAVE is defined
@@ -29,4 +27,3 @@
 	#define ZL_NO_DATETIME_OUT
 #endif
 
-#endif // ZZL_LOGCONFIGURE_H

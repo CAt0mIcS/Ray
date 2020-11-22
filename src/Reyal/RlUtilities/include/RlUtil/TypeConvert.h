@@ -1,5 +1,4 @@
-#ifndef RLU_TYPECONVERT_H
-#define RLU_TYPECONVERT_H
+#pragma once
 
 #include <string>
 
@@ -40,4 +39,3 @@ namespace At0::Util
 #endif
 }
 
-#endif // RLU_TYPECONVERT_H

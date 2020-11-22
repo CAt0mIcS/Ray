@@ -1,5 +1,4 @@
-#ifndef RLR_RENDERERAPI_H
-#define RLR_RENDERERAPI_H
+#pragma once
 
 #include "RlRBase.h"
 
@@ -78,5 +77,3 @@ namespace At0::Reyal
 }
 
 
-
-#endif // RLR_RENDERERAPI_H

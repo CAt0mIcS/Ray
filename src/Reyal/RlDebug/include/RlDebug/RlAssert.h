@@ -1,5 +1,4 @@
-#ifndef RLD_RLASSERT_H
-#define RLD_RLASSERT_H
+#pragma once
 
 #ifndef NDEBUG
 
@@ -48,4 +47,3 @@ namespace At0::Reyal::Debug
 	#define RL_EXPECTS(expected)
 #endif
 
-#endif // RLD_RLASSERT_H

@@ -1,6 +1,4 @@
-#ifndef RLU_RANDOM_H
-#define RLU_RANDOM_H
-
+#pragma once
 #include <string>
 #include "RlUBase.h"
 
@@ -41,4 +39,3 @@ namespace At0::Util
 }
 
 
-#endif // RLU_RANDOM_H

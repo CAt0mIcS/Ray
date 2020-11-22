@@ -1,5 +1,4 @@
-#ifndef RL_GLFWWINNDOW_H
-#define RL_GLFWWINNDOW_H
+#pragma once
 
 #include "RlBase.h"
 #include "Window.h"
@@ -143,5 +142,3 @@ namespace At0::Reyal
 }
 
 
-
-#endif // RL_GLFWWINNDOW_H

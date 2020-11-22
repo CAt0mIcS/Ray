@@ -1,5 +1,4 @@
-#ifndef RL_STACK_H
-#define RL_STACK_H
+#pragma once
 
 #include "Reyal/RlBase.h"
 
@@ -189,6 +188,3 @@ namespace At0::Reyal
 
 
 
-
-
-#endif // RL_STACK_H

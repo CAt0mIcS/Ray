@@ -1,5 +1,4 @@
-#ifndef RLR_OPENGLVERTEXSHADER
-#define RLR_OPENGLVERTEXSHADER
+#pragma once
 
 #include "RlRBase.h"
 #include "RlRender/PixelShader.h"
@@ -52,5 +51,3 @@ namespace At0::Reyal
 }
 
 
-
-#endif // RLR_OPENGLVERTEXSHADER

@@ -1,10 +1,5 @@
-#ifndef ZGL_GLPCH_H
-#define ZGL_GLPCH_H
+#pragma once
 
 
-
-
-
-#endif // ZGL_GLPCH_H
 
 

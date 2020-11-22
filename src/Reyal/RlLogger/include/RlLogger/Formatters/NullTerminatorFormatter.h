@@ -1,5 +1,4 @@
-#ifndef ZZL_NULLTERMINATORFORMATTER_H
-#define ZZL_NULLTERMINATORFORMATTER_H
+#pragma once
 
 
 #include "Formatter.h"
@@ -34,4 +33,3 @@ namespace At0::Log
 	};
 }
 
-#endif // ZZL_NULLTERMINATORFORMATTER_H

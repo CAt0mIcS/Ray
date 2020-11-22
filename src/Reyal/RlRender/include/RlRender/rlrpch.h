@@ -1,5 +1,4 @@
-#ifndef RLR_RLRPCH_H
-#define RLR_RLRPCH_H
+#pragma once
 
 #include "RlRBase.h"
 
@@ -13,5 +12,3 @@
 #include <fstream>
 #include <string>
 
-
-#endif

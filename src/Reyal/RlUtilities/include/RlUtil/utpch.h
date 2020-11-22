@@ -1,5 +1,4 @@
-#ifndef RLU_UTPCH_H
-#define RLU_UTPCH_H
+#pragma once
 
 #include "RlUBase.h"
 #ifdef _WIN32
@@ -12,4 +11,3 @@
 #include <sstream>
 
 
-#endif // RLU_UTPCH_H

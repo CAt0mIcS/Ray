@@ -1,5 +1,4 @@
-#ifndef RLU_SERIALIZE_H
-#define RLU_SERIALIZE_H
+#pragma once
 
 #include <string>
 #include "TypeConvert.h"
@@ -149,4 +148,3 @@ namespace At0::Util
 	}
 }
 
-#endif // RLU_SERIALIZE_H

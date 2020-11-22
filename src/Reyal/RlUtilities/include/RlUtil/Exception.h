@@ -1,5 +1,4 @@
-#ifndef RLU_EXCEPTION_H
-#define RLU_EXCEPTION_H
+#pragma once
 
 #include <exception>
 #include <stdint.h>
@@ -172,4 +171,3 @@ throw ::At0::Reyal::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FIL
 
 #endif
 
-#endif // RLU_EXCEPTION_H

@@ -1,5 +1,4 @@
-#ifndef UT_UTBASE_H
-#define UT_UTBASE_H
+#pragma once
 
 // Defined so Windows.h doesn't define min, max macro
 #ifndef NOMINMAX
@@ -30,4 +29,3 @@
 	#define RLU_API
 #endif
 
-#endif // UT_UTBASE_H

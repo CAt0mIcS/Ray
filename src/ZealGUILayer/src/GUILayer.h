@@ -1,5 +1,4 @@
-#ifndef ZGL_GUILAYER_H
-#define ZGL_GUILAYER_H
+#pragma once
 
 #include "glbase.h"
 
@@ -40,4 +39,3 @@ extern "C"
 	}
 }
 
-#endif // ZGL_GUILAYER_H

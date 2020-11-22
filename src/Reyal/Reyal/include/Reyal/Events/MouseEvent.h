@@ -1,5 +1,4 @@
-#ifndef RL_MOUSEEVENT_H
-#define RL_MOUSEEVENT_H
+#pragma once
 
 #include "Reyal/Events/Event.h"
 
@@ -238,4 +237,3 @@ namespace At0::Reyal
 	};
 }
 
-#endif // RL_MOUSEEVENT_H

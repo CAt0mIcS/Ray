@@ -1,5 +1,4 @@
-#ifndef RLD_INSTRUMENTOR_H
-#define RLD_INSTRUMENTOR_H
+#pragma once
 
 #include <RlUtil/CoreConfig.h>
 
@@ -173,4 +172,3 @@ namespace At0::Reyal::Debug
 
 #endif
 
-#endif // RLD_INSTRUMENTOR_H

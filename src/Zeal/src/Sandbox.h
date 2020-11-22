@@ -1,5 +1,4 @@
-#ifndef ZL_SANDBOX_H
-#define ZL_SANDBOX_H
+#pragma once
 
 #include <Reyal/Application.h>
 #include <Reyal/Window/Window.h>
@@ -45,4 +44,3 @@ void At0::Reyal::CreateApplication()
 	Reyal::Application::Create(new Zeal::Sandbox());
 }
 
-#endif // ZL_SANDBOX_H

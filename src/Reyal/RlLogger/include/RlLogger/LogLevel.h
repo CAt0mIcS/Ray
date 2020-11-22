@@ -1,5 +1,4 @@
-#ifndef ZZL_LOGLEVEL_H
-#define ZZL_LOGLEVEL_H
+#pragma once
 
 // None gets defined by XLib, this could break it (TODO)
 #ifdef None
@@ -58,4 +57,3 @@ namespace At0::Log
 	};
 }
 
-#endif // ZZL_LOGLEVEL_H
