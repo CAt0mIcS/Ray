@@ -48,7 +48,6 @@ namespace At0::Reyal
 
 	private:
 		std::string m_Name;
-		bool m_ShaderBound;
 	};
 }
 

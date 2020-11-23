@@ -26,34 +26,27 @@ namespace At0::Reyal
 		return true;
 	}
 	
-	static uint32_t CompileShader(uint32_t type, const char* src)
-	{
-		unsigned int id = glCreateShader(type);
-		glShaderSource(id, 1, &src, nullptr);
-		glCompileShader(id);
-		return id;
-	}
-
 	static uint32_t s_Program = 0;
-	static uint32_t CreateShader(const std::string_view shaderSrc, bool isVertexShader)
+	static uint32_t CreateShader(const char* shaderSrc, bool isVertexShader)
 	{
-		unsigned int program;
 		if (!s_Program)
-			program = glCreateProgram();
-		else
-			program = s_Program;
-		s_Program = program;
+			s_Program = glCreateProgram();
 
-		unsigned int s;
+		uint32_t s;
 		if (isVertexShader)
 		{
-			s = CompileShader(GL_VERTEX_SHADER, shaderSrc.data());
+			s = glCreateShader(GL_VERTEX_SHADER);
+			glShaderSource(s, 1, &shaderSrc, nullptr);
+			glCompileShader(s);
+			glAttachShader(s_Program, s);
 		}
 		else
 		{
-			s = CompileShader(GL_FRAGMENT_SHADER, shaderSrc.data());
+			s = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(s, 1, &shaderSrc, nullptr);
+			glCompileShader(s);
+			glAttachShader(s_Program, s);
 		}
-		glAttachShader(s_Program, s);
 
 		return s;
 	}
@@ -99,7 +92,8 @@ void main()
 	gl_Position = position;
 };
 		)";
-		uint32_t vs = CreateShader(vertexSrc, true);
+		// /*uint32_t vs = */CreateShader(vertexSrc.c_str(), true);
+		Ref<VertexShader> pVertexShader = VertexShader::Create("VertexShader", vertexSrc);
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////// Pixel Shader ////////////////////////////////////////////////////////////////////////////////
@@ -114,15 +108,17 @@ void main()
 	color = vec4(1.0, 0.0, 0.0, 1.0);
 };
 		)";
-		uint32_t fs = CreateShader(pixelSrc, false);
+		// /*uint32_t fs = */CreateShader(pixelSrc.c_str(), false);
+		Ref<PixelShader> pPixelShader = PixelShader::Create("PixelShader", pixelSrc);
+		pPixelShader->Bind();
 
-		glLinkProgram(s_Program);
+		//glLinkProgram(s_Program);
 
-		glValidateProgram(s_Program);
+		//glValidateProgram(s_Program);
 
 		//glDeleteShader(vs);
 		//glDeleteShader(fs);
-		glUseProgram(s_Program);
+		//glUseProgram(s_Program);
 
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////

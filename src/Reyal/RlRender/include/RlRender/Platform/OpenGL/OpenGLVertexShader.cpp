@@ -12,7 +12,7 @@
 namespace At0::Reyal
 {
 	OpenGLVertexShader::OpenGLVertexShader(const std::string_view filepath, FileState state)
-		: m_Name(""), m_ShaderBound(false)
+		: m_Name("")
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -38,27 +38,9 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 
 		glLinkProgram(s_RendererID);
-
-		GLint isLinked = 0;
-		glGetProgramiv(s_RendererID, GL_LINK_STATUS, (int*)&isLinked);
-		if (isLinked == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetProgramiv(s_RendererID, GL_INFO_LOG_LENGTH, &maxLength);
-
-			if (maxLength)
-			{
-				std::vector<GLchar> infoLog(maxLength);
-				glGetProgramInfoLog(s_RendererID, maxLength, &maxLength, &infoLog[0]);
-
-				RL_LOG_ERROR("[OpenGLVertexShader] {0}", infoLog.data());
-				RL_ASSERT(false, "Shader Linking Failed!");
-			}
-			glDeleteProgram(s_RendererID);
-
-			return;
-		}
-
+		glValidateProgram(s_RendererID);
+		//glDeleteShader(vs);
+		//glDeleteShader(fs);
 		glUseProgram(s_RendererID);
 	}
 	
@@ -67,53 +49,19 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 		glUseProgram(0);
 	}
-	
-	static void GLFWErrorCallback(int error, const char* description)
-	{
-		RL_LOG_CRITICAL("[OpenGLWindow] GLFW Error ({0}): {1}", error, description);
-		RL_LOG_FLUSH();
-	}
 
 	void OpenGLVertexShader::Compile(const char* source)
 	{
 		RL_PROFILE_FUNCTION();
 
-		glfwSetErrorCallback(GLFWErrorCallback);
-
-		GLuint program;
 		if (!s_RendererID)
-			program = glCreateProgram();
-		else
-			program = s_RendererID;
+			s_RendererID = glCreateProgram();
 
-		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+		uint32_t s = glCreateShader(GL_VERTEX_SHADER);
 
-		glShaderSource(vertexShader, 1, &source, nullptr);
-
-		glCompileShader(vertexShader);
-		GLint isCompiled = 0;
-
-		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
-
-			if (maxLength)
-			{
-				std::vector<GLchar> infoLog(maxLength);
-				glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
-				RL_LOG_ERROR("[OpenGLVertexShader] {0}", infoLog.data());
-				RL_ASSERT(false, "Shader Compilation Failed!");
-			}
-			glDeleteShader(vertexShader);
-		}
-		else
-		{
-			glAttachShader(program, vertexShader);
-		}
-
-		s_RendererID = program;
+		glShaderSource(s, 1, &source, nullptr);
+		glCompileShader(s);
+		glAttachShader(s_RendererID, s);
 	}
 	
 	std::string OpenGLVertexShader::ReadFile(const std::string_view filepath)

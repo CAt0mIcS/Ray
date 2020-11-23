@@ -29,7 +29,7 @@ namespace At0::Reyal
 		: m_Name(name)
 	{
 		RL_PROFILE_FUNCTION();
-
+		Compile(pixelSrc.data());
 	}
 	
 	void OpenGLPixelShader::Bind() const
@@ -37,28 +37,9 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 
 		glLinkProgram(s_RendererID);
-
-		//GLint isLinked = 0;
-		//glGetProgramiv(s_RendererID, GL_LINK_STATUS, (int*)&isLinked);
-		//if (isLinked == GL_FALSE)
-		//{
-		//	GLint maxLength = 0;
-		//	glGetProgramiv(s_RendererID, GL_INFO_LOG_LENGTH, &maxLength);
-
-		//	if (maxLength)
-		//	{
-		//		std::vector<GLchar> infoLog(maxLength);
-		//		glGetProgramInfoLog(s_RendererID, maxLength, &maxLength, &infoLog[0]);
-
-		//		RL_LOG_ERROR("[OpenGLVertexShader] {0}", infoLog.data());
-		//		RL_ASSERT(false, "Shader Linking Failed!");
-		//	}
-		//	glDeleteProgram(s_RendererID);
-
-		//	return;
-		//}
-
 		glValidateProgram(s_RendererID);
+		//glDeleteShader(vs);
+		//glDeleteShader(fs);
 		glUseProgram(s_RendererID);
 	}
 	
@@ -72,39 +53,14 @@ namespace At0::Reyal
 	{
 		RL_PROFILE_FUNCTION();
 
-		GLuint program;
 		if (!s_RendererID)
-			program = glCreateProgram();
-		else
-			program = s_RendererID;
+			s_RendererID = glCreateProgram();
 
-		unsigned int id = glCreateShader(GL_FRAGMENT_SHADER);
+		uint32_t s = glCreateShader(GL_FRAGMENT_SHADER);
 
-		glShaderSource(id, 1, &source, nullptr);
-		glCompileShader(id);
-
-		GLint isCompiled = 0;
-
-		glGetShaderiv(id, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(id, maxLength, &maxLength, &infoLog[0]);
-
-			glDeleteShader(id);
-
-			RL_LOG_ERROR("[OpenGLPixelShader] {0}", infoLog.data());
-			RL_ASSERT(false, "Shader Compilation Failed!");
-		}
-		else
-		{
-			glAttachShader(program, id);
-		}
-
-		s_RendererID = program;
+		glShaderSource(s, 1, &source, nullptr);
+		glCompileShader(s);
+		glAttachShader(s_RendererID, s);
 	}
 	
 	std::string OpenGLPixelShader::ReadFile(const std::string_view filepath)
