@@ -21,6 +21,7 @@ set(PUBLIC_LIB
 set(PRIVATE_LIB
     "Reyal"
     "RlDebug"
+    "RlRender"
 )
 
 add_library("ZealGUILayer" SHARED "${SRC}")

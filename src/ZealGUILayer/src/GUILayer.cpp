@@ -5,9 +5,8 @@
 #include <RlDebug/ReyalLogger.h>
 #include <RlDebug/Instrumentor.h>
 
-#include <Reyal/Events/MouseEvent.h>
-#include <Reyal/Events/ApplicationEvent.h>
-#include <Reyal/Events/KeyboardEvent.h>
+#include <Reyal/Reyal.h>
+#include <RlRender/Renderer3D.h>
 
 
 

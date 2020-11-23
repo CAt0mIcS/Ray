@@ -11,7 +11,7 @@
 namespace At0::Reyal
 {
 	OpenGLPixelShader::OpenGLPixelShader(const std::string_view filepath, FileState state)
-		: m_RendererID(0), m_Name("")
+		: m_Name("")
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -26,7 +26,7 @@ namespace At0::Reyal
 	}
 	
 	OpenGLPixelShader::OpenGLPixelShader(const std::string_view name, const std::string_view pixelSrc)
-		: m_RendererID(0), m_Name(name)
+		: m_Name(name)
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -35,7 +35,7 @@ namespace At0::Reyal
 	void OpenGLPixelShader::Bind() const
 	{
 		RL_PROFILE_FUNCTION();
-		glUseProgram(m_RendererID);
+		glUseProgram(s_RendererID);
 	}
 	
 	void OpenGLPixelShader::Unbind() const
@@ -48,7 +48,12 @@ namespace At0::Reyal
 	{
 		RL_PROFILE_FUNCTION();
 
-		GLuint program = glCreateProgram();
+		GLuint program;
+		if (!s_RendererID)
+			program = glCreateProgram();
+		else
+			program = s_RendererID;
+
 		GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
 
 		const GLchar* shaderSrc = source.data();
@@ -76,7 +81,7 @@ namespace At0::Reyal
 			glAttachShader(program, shader);
 		}
 
-		m_RendererID = program;
+		s_RendererID = program;
 		glLinkProgram(program);
 
 		GLint isLinked = 0;

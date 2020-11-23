@@ -3,13 +3,16 @@
 
 namespace At0::Reyal
 {
+	/// <summary>
+	/// Same as D3D11RenderBase
+	/// </summary>
 	class OpenGLRenderBase
 	{
-	public:
-		OpenGLRenderBase() = delete;
+	protected:
+		OpenGLRenderBase() = default;
 
-	private:
-
+	protected:
+		static uint32_t s_RendererID;
 	};
 }
 
