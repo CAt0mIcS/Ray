@@ -12,7 +12,7 @@
 namespace At0::Reyal
 {
 	OpenGLVertexShader::OpenGLVertexShader(const std::string_view filepath, FileState state)
-		: m_Name("")
+		: m_Name(""), m_ShaderBound(false)
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -23,19 +23,42 @@ namespace At0::Reyal
 		auto count = lastDot == std::string::npos ? filepath.size() - lastSlash : lastDot - lastSlash;
 		m_Name = filepath.substr(lastSlash, count);
 
-		Compile(ReadFile(filepath));
+		Compile(ReadFile(filepath).data());
 	}
 	
 	OpenGLVertexShader::OpenGLVertexShader(const std::string_view name, const std::string_view vertexSrc)
 		: m_Name(name)
 	{
 		RL_PROFILE_FUNCTION();
-		Compile(vertexSrc);
+		Compile(vertexSrc.data());
 	}
 	
 	void OpenGLVertexShader::Bind() const
 	{
 		RL_PROFILE_FUNCTION();
+
+		glLinkProgram(s_RendererID);
+
+		GLint isLinked = 0;
+		glGetProgramiv(s_RendererID, GL_LINK_STATUS, (int*)&isLinked);
+		if (isLinked == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetProgramiv(s_RendererID, GL_INFO_LOG_LENGTH, &maxLength);
+
+			if (maxLength)
+			{
+				std::vector<GLchar> infoLog(maxLength);
+				glGetProgramInfoLog(s_RendererID, maxLength, &maxLength, &infoLog[0]);
+
+				RL_LOG_ERROR("[OpenGLVertexShader] {0}", infoLog.data());
+				RL_ASSERT(false, "Shader Linking Failed!");
+			}
+			glDeleteProgram(s_RendererID);
+
+			return;
+		}
+
 		glUseProgram(s_RendererID);
 	}
 	
@@ -51,7 +74,7 @@ namespace At0::Reyal
 		RL_LOG_FLUSH();
 	}
 
-	void OpenGLVertexShader::Compile(const std::string_view source)
+	void OpenGLVertexShader::Compile(const char* source)
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -65,8 +88,7 @@ namespace At0::Reyal
 
 		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-		const GLchar* shaderSrc = source.data();
-		glShaderSource(vertexShader, 1, &shaderSrc, 0);
+		glShaderSource(vertexShader, 1, &source, nullptr);
 
 		glCompileShader(vertexShader);
 		GLint isCompiled = 0;
@@ -92,31 +114,6 @@ namespace At0::Reyal
 		}
 
 		s_RendererID = program;
-		glLinkProgram(program);
-
-		GLint isLinked = 0;
-		glGetProgramiv(program, GL_LINK_STATUS, (int*)&isLinked);
-		if (isLinked == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
-
-			if (maxLength)
-			{
-				std::vector<GLchar> infoLog(maxLength);
-				glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
-
-				RL_LOG_ERROR("[OpenGLVertexShader] {0}", infoLog.data());
-				RL_ASSERT(false, "Shader Linking Failed!");
-			}
-			glDeleteProgram(program);
-			glDeleteShader(vertexShader);
-			
-			return;
-		}
-
-		glDetachShader(program, vertexShader);
-		glDeleteShader(vertexShader);
 	}
 	
 	std::string OpenGLVertexShader::ReadFile(const std::string_view filepath)

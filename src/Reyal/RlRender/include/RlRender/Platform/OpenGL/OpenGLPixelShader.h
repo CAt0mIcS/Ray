@@ -43,7 +43,7 @@ namespace At0::Reyal
 		virtual const std::string_view GetName() const override { return m_Name; }
 
 	private:
-		void Compile(const std::string_view source);
+		void Compile(const char* source);
 		std::string ReadFile(const std::string_view filepath);
 
 	private:

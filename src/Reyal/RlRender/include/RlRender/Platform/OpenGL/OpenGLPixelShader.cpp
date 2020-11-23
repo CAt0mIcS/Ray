@@ -22,7 +22,7 @@ namespace At0::Reyal
 		auto count = lastDot == std::string::npos ? filepath.size() - lastSlash : lastDot - lastSlash;
 		m_Name = filepath.substr(lastSlash, count);
 
-		Compile(ReadFile(filepath));
+		Compile(ReadFile(filepath).data());
 	}
 	
 	OpenGLPixelShader::OpenGLPixelShader(const std::string_view name, const std::string_view pixelSrc)
@@ -35,6 +35,30 @@ namespace At0::Reyal
 	void OpenGLPixelShader::Bind() const
 	{
 		RL_PROFILE_FUNCTION();
+
+		glLinkProgram(s_RendererID);
+
+		//GLint isLinked = 0;
+		//glGetProgramiv(s_RendererID, GL_LINK_STATUS, (int*)&isLinked);
+		//if (isLinked == GL_FALSE)
+		//{
+		//	GLint maxLength = 0;
+		//	glGetProgramiv(s_RendererID, GL_INFO_LOG_LENGTH, &maxLength);
+
+		//	if (maxLength)
+		//	{
+		//		std::vector<GLchar> infoLog(maxLength);
+		//		glGetProgramInfoLog(s_RendererID, maxLength, &maxLength, &infoLog[0]);
+
+		//		RL_LOG_ERROR("[OpenGLVertexShader] {0}", infoLog.data());
+		//		RL_ASSERT(false, "Shader Linking Failed!");
+		//	}
+		//	glDeleteProgram(s_RendererID);
+
+		//	return;
+		//}
+
+		glValidateProgram(s_RendererID);
 		glUseProgram(s_RendererID);
 	}
 	
@@ -44,7 +68,7 @@ namespace At0::Reyal
 		glUseProgram(0);
 	}
 	
-	void OpenGLPixelShader::Compile(const std::string_view source)
+	void OpenGLPixelShader::Compile(const char* source)
 	{
 		RL_PROFILE_FUNCTION();
 
@@ -54,57 +78,33 @@ namespace At0::Reyal
 		else
 			program = s_RendererID;
 
-		GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+		unsigned int id = glCreateShader(GL_FRAGMENT_SHADER);
 
-		const GLchar* shaderSrc = source.data();
-		glShaderSource(shader, 1, &shaderSrc, 0);
+		glShaderSource(id, 1, &source, nullptr);
+		glCompileShader(id);
 
-		glCompileShader(shader);
 		GLint isCompiled = 0;
 
-		glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+		glGetShaderiv(id, GL_COMPILE_STATUS, &isCompiled);
 		if (isCompiled == GL_FALSE)
 		{
 			GLint maxLength = 0;
-			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
 
 			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+			glGetShaderInfoLog(id, maxLength, &maxLength, &infoLog[0]);
 
-			glDeleteShader(shader);
+			glDeleteShader(id);
 
 			RL_LOG_ERROR("[OpenGLPixelShader] {0}", infoLog.data());
 			RL_ASSERT(false, "Shader Compilation Failed!");
 		}
 		else
 		{
-			glAttachShader(program, shader);
+			glAttachShader(program, id);
 		}
 
 		s_RendererID = program;
-		glLinkProgram(program);
-
-		GLint isLinked = 0;
-		glGetProgramiv(program, GL_LINK_STATUS, (int*)&isLinked);
-		if (isLinked == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
-
-			std::vector<GLchar> infoLog(maxLength);
-			glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
-
-			glDeleteProgram(program);
-
-			glDeleteShader(shader);
-
-			RL_LOG_ERROR("[OpenGLPixelShader] {0}", infoLog.data());
-			RL_ASSERT(false, "Shader Linking Failed!");
-			return;
-		}
-
-		glDetachShader(program, shader);
-		glDeleteShader(shader);
 	}
 	
 	std::string OpenGLPixelShader::ReadFile(const std::string_view filepath)

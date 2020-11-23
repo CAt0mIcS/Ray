@@ -26,6 +26,38 @@ namespace At0::Reyal
 		return true;
 	}
 	
+	static uint32_t CompileShader(uint32_t type, const char* src)
+	{
+		unsigned int id = glCreateShader(type);
+		glShaderSource(id, 1, &src, nullptr);
+		glCompileShader(id);
+		return id;
+	}
+
+	static uint32_t s_Program = 0;
+	static uint32_t CreateShader(const std::string_view shaderSrc, bool isVertexShader)
+	{
+		unsigned int program;
+		if (!s_Program)
+			program = glCreateProgram();
+		else
+			program = s_Program;
+		s_Program = program;
+
+		unsigned int s;
+		if (isVertexShader)
+		{
+			s = CompileShader(GL_VERTEX_SHADER, shaderSrc.data());
+		}
+		else
+		{
+			s = CompileShader(GL_FRAGMENT_SHADER, shaderSrc.data());
+		}
+		glAttachShader(s_Program, s);
+
+		return s;
+	}
+
 	// Relies on glfw and glad to already be initialized
 	void OpenGLRendererAPI::RenderTestTriangle()
 	{
@@ -52,6 +84,46 @@ namespace At0::Reyal
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////// Vertex Shader ///////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////
+		std::string vertexSrc = R"(
+#version 330 core
+
+layout(location = 0) in vec4 position;
+
+void main()
+{
+	gl_Position = position;
+};
+		)";
+		uint32_t vs = CreateShader(vertexSrc, true);
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////// Pixel Shader ////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////
+		std::string pixelSrc = R"(
+#version 330 core
+
+layout(location = 0) out vec4 color;
+
+void main()
+{
+	color = vec4(1.0, 0.0, 0.0, 1.0);
+};
+		)";
+		uint32_t fs = CreateShader(pixelSrc, false);
+
+		glLinkProgram(s_Program);
+
+		glValidateProgram(s_Program);
+
+		//glDeleteShader(vs);
+		//glDeleteShader(fs);
+		glUseProgram(s_Program);
+
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////// Draw Call ///////////////////////////////////////////////////////////////////////////////////
