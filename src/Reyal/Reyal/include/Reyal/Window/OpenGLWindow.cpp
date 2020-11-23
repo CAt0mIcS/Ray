@@ -112,6 +112,7 @@ namespace At0::Reyal
 		{
 			Close();
 		}
+		glfwTerminate();
 	}
 
 	std::string OpenGLWindow::GetTitle() const
@@ -207,9 +208,14 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 
 		glfwMakeContextCurrent(m_hWnd);
+		
+		// --------------------------------------------------------
+		// Rendering
+		m_Renderer3D->RenderTestTriangle();
+		m_Renderer3D->EndDraw();
+		glfwSwapBuffers(m_hWnd);
+		// --------------------------------------------------------
 
-		// TODO: Multiple Windows
-		// https://discourse.glfw.org/t/how-to-create-multiple-window/1398/2
 		glfwPollEvents();
 	}
 
@@ -386,7 +392,7 @@ namespace At0::Reyal
 		glfwSetWindowRefreshCallback(m_hWnd, [](GLFWwindow* window)
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
-			
+
 				Scope<PaintEvent> e = MakeScope<PaintEvent>();
 				pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 			}
