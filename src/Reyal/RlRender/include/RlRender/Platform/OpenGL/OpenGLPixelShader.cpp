@@ -38,8 +38,7 @@ namespace At0::Reyal
 
 		glLinkProgram(s_RendererID);
 		glValidateProgram(s_RendererID);
-		//glDeleteShader(vs);
-		//glDeleteShader(fs);
+		glDeleteShader(m_ShaderID);
 		glUseProgram(s_RendererID);
 	}
 	
@@ -56,11 +55,11 @@ namespace At0::Reyal
 		if (!s_RendererID)
 			s_RendererID = glCreateProgram();
 
-		uint32_t s = glCreateShader(GL_FRAGMENT_SHADER);
+		m_ShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
-		glShaderSource(s, 1, &source, nullptr);
-		glCompileShader(s);
-		glAttachShader(s_RendererID, s);
+		glShaderSource(m_ShaderID, 1, &source, nullptr);
+		glCompileShader(m_ShaderID);
+		glAttachShader(s_RendererID, m_ShaderID);
 	}
 	
 	std::string OpenGLPixelShader::ReadFile(const std::string_view filepath)

@@ -48,6 +48,7 @@ namespace At0::Reyal
 
 	private:
 		std::string m_Name;
+		uint32_t m_ShaderID;
 	};
 }
 

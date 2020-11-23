@@ -26,31 +26,6 @@ namespace At0::Reyal
 		return true;
 	}
 	
-	static uint32_t s_Program = 0;
-	static uint32_t CreateShader(const char* shaderSrc, bool isVertexShader)
-	{
-		if (!s_Program)
-			s_Program = glCreateProgram();
-
-		uint32_t s;
-		if (isVertexShader)
-		{
-			s = glCreateShader(GL_VERTEX_SHADER);
-			glShaderSource(s, 1, &shaderSrc, nullptr);
-			glCompileShader(s);
-			glAttachShader(s_Program, s);
-		}
-		else
-		{
-			s = glCreateShader(GL_FRAGMENT_SHADER);
-			glShaderSource(s, 1, &shaderSrc, nullptr);
-			glCompileShader(s);
-			glAttachShader(s_Program, s);
-		}
-
-		return s;
-	}
-
 	// Relies on glfw and glad to already be initialized
 	void OpenGLRendererAPI::RenderTestTriangle()
 	{
@@ -92,8 +67,8 @@ void main()
 	gl_Position = position;
 };
 		)";
-		// /*uint32_t vs = */CreateShader(vertexSrc.c_str(), true);
 		Ref<VertexShader> pVertexShader = VertexShader::Create("VertexShader", vertexSrc);
+		pVertexShader->Bind();
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////// Pixel Shader ////////////////////////////////////////////////////////////////////////////////
@@ -108,17 +83,8 @@ void main()
 	color = vec4(1.0, 0.0, 0.0, 1.0);
 };
 		)";
-		// /*uint32_t fs = */CreateShader(pixelSrc.c_str(), false);
 		Ref<PixelShader> pPixelShader = PixelShader::Create("PixelShader", pixelSrc);
 		pPixelShader->Bind();
-
-		//glLinkProgram(s_Program);
-
-		//glValidateProgram(s_Program);
-
-		//glDeleteShader(vs);
-		//glDeleteShader(fs);
-		//glUseProgram(s_Program);
 
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
