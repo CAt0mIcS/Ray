@@ -10,6 +10,7 @@ set(SRC
 	"include/Reyal/Window/WinAPIWindow.cpp"
 	"include/Reyal/Window/OpenGLWindow.cpp"
 	"include/Reyal/Window/Window.cpp"
+	"include/Reyal/Window/MessageBox.cpp"
 	
 	"include/Reyal/Window/WinAPIWindow.h"
 	"include/Reyal/Window/OpenGLWindow.h"
@@ -30,6 +31,7 @@ set(SRC
 	"include/Reyal/RlBase.h"
 	"include/Reyal/Core/Stack.h"
 	"include/Reyal/EntryPoint.h"
+	"include/Reyal/Window/MessageBox.h"
 )
 
 set(PUBLIC_INC

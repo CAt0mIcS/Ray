@@ -26,6 +26,8 @@
 	#endif
 #endif
 
+#define RL_BIT(x) (1 << x)
+
 
 #include <../../RlUtilities/include/RlUtil/Helper.h>
 

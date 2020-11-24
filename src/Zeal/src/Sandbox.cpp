@@ -77,6 +77,13 @@ namespace At0::Zeal
 #include <RlDebug/ReyalLogger.h>
 #include <RlUtil/Exception.h>
 
+// Define for linux
+#ifndef _WINDOWS_
+#define MB_OK 0
+#define MB_ICONERROR 0
+#define MB_DEFAULT_DESKTOP_ONLY 0
+#endif
+
 ///////////////////////////////////////////////////////////////////////////
 ////////// Called in EntryPoint.h /////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
@@ -105,24 +112,22 @@ void At0::Reyal::Awake(int argc, char** argv)
 
 		RL_LOG_END();
 	}
-#ifdef _WIN32
 	// TODO: Custom Window for errors (Currently Platform dependent!)
 	catch (At0::Reyal::Exception& e)
 	{
-		MessageBoxA(NULL, e.what(), e.GetType(), MB_OK | MB_ICONERROR | MB_DEFAULT_DESKTOP_ONLY);
+		Reyal::ZMessageBox(e.GetType(), e.what(), Reyal::ZMessageBox::Button::Ok, Reyal::ZMessageBox::Icon::Error, Reyal::ZMessageBox::Flags::DefaultDesktop);
 		RL_LOG_CRITICAL("[Main] Exception occured: {0}", e.what());
 	}
 	catch (std::exception& e)
 	{
-		MessageBoxA(NULL, e.what(), "Standard Exception", MB_OK | MB_ICONERROR | MB_DEFAULT_DESKTOP_ONLY);
+		Reyal::ZMessageBox("Standard Exception", e.what(), Reyal::ZMessageBox::Button::Ok, Reyal::ZMessageBox::Icon::Error, Reyal::ZMessageBox::Flags::DefaultDesktop);
 		RL_LOG_CRITICAL("[Main] Exception occured: {0}", e.what());
 	}
 	catch (...)
 	{
-		MessageBoxA(NULL, "An unknown exception occurred", "Unknown Exception", MB_OK | MB_ICONERROR | MB_DEFAULT_DESKTOP_ONLY);
+		Reyal::ZMessageBox("Unknown Exception", "An unknown exception occurred", Reyal::ZMessageBox::Button::Ok, Reyal::ZMessageBox::Icon::Error, Reyal::ZMessageBox::Flags::DefaultDesktop);
 		RL_LOG_CRITICAL("[Main] Unknown Exception occured");
 	}
-#endif
 	RL_LOG_END();
 }
 
