@@ -339,7 +339,7 @@ namespace At0::Reyal
 		RL_PROFILE_FUNCTION();
 
 		MSG msg;
-		if (PeekMessage(&msg, m_hWnd, 0, 0, PM_REMOVE))
+		while (PeekMessage(&msg, m_hWnd, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
