@@ -166,9 +166,6 @@ namespace At0::Reyal
 		}
 		case WM_KEYDOWN:
 		{
-			m_Renderer3D->RenderTestTriangle();
-			m_Renderer3D->EndDraw();
-
 			Keyboard.SetKeyState((unsigned char)wParam, true);
 
 			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)wParam, (uint32_t)(lParam & 0xff));

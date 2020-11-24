@@ -210,9 +210,7 @@ namespace At0::Reyal
 		glfwMakeContextCurrent(m_hWnd);
 		
 		// --------------------------------------------------------
-		// Rendering
-		m_Renderer3D->RenderTestTriangle();
-		m_Renderer3D->EndDraw();
+		// Rendering (TODO)
 		glfwSwapBuffers(m_hWnd);
 		// --------------------------------------------------------
 
