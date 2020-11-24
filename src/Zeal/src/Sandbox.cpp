@@ -77,12 +77,6 @@ namespace At0::Zeal
 #include <RlDebug/ReyalLogger.h>
 #include <RlUtil/Exception.h>
 
-// Define for linux
-#ifndef _WINDOWS_
-#define MB_OK 0
-#define MB_ICONERROR 0
-#define MB_DEFAULT_DESKTOP_ONLY 0
-#endif
 
 ///////////////////////////////////////////////////////////////////////////
 ////////// Called in EntryPoint.h /////////////////////////////////////////
@@ -93,9 +87,7 @@ void At0::Reyal::Awake(int argc, char** argv)
 
 	RL_LOG_BEGIN("../../Zeal.log", Log::LogLevel::Trace);
 
-#ifdef _WIN32
 	try
-#endif
 	{
 		system("mkdir ..\\..\\Profiling\\");
 		RL_PROFILE_BEGIN_SESSION("Startup", "../../Profiling/Profile-Startup.json");
@@ -112,7 +104,6 @@ void At0::Reyal::Awake(int argc, char** argv)
 
 		RL_LOG_END();
 	}
-	// TODO: Custom Window for errors (Currently Platform dependent!)
 	catch (At0::Reyal::Exception& e)
 	{
 		Reyal::ZMessageBox(e.GetType(), e.what(), Reyal::ZMessageBox::Button::Ok, Reyal::ZMessageBox::Icon::Error, Reyal::ZMessageBox::Flags::DefaultDesktop);
@@ -130,6 +121,4 @@ void At0::Reyal::Awake(int argc, char** argv)
 	}
 	RL_LOG_END();
 }
-
-#include <Reyal/EntryPoint.h>
 

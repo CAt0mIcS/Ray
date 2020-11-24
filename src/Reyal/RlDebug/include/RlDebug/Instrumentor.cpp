@@ -5,12 +5,17 @@
 
 #include "ReyalLogger.h"
 
-
 namespace At0::Reyal::Debug
 {
 	void Instrumentor::BeginSession(const std::string_view name, const std::string_view filepath)
 	{
 		std::scoped_lock lock(m_Mutex);
+
+		std::string dirPath = filepath.data();
+		size_t pos = dirPath.find_last_of("\\/");
+		if(pos != std::string::npos)
+			dirPath.erase(dirPath.begin() + pos, dirPath.end());
+		std::filesystem::create_directories(dirPath);
 
 		// Close session if one already exists
 		if (m_CurrentSession)
