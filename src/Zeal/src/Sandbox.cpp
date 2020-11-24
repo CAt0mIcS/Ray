@@ -89,7 +89,6 @@ void At0::Reyal::Awake(int argc, char** argv)
 
 	try
 	{
-		system("mkdir ..\\..\\Profiling\\");
 		RL_PROFILE_BEGIN_SESSION("Startup", "../../Profiling/Profile-Startup.json");
 		Reyal::Application::Create(new Zeal::Sandbox(""));
 		RL_PROFILE_END_SESSION();

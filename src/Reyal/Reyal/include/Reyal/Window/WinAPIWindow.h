@@ -146,6 +146,8 @@ namespace At0::Reyal
 		/// <returns>LRESULT code</returns>
 		static LRESULT WindowProcSetup(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+		static LRESULT WindowProcPass(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 		/// <summary>
 		/// Handles all window messages
 		/// </summary>

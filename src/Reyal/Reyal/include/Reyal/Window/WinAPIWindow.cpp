@@ -70,24 +70,25 @@ namespace At0::Reyal
 	{
 		RL_PROFILE_FUNCTION();
 
-		WinAPIWindow* pThis;
 		if (uMsg == WM_NCCREATE)
 		{
 			CREATESTRUCT* pCreate = (CREATESTRUCT*)lParam;
-			pThis = (WinAPIWindow*)pCreate->lpCreateParams;
+			WinAPIWindow* pThis = (WinAPIWindow*)pCreate->lpCreateParams;
 			SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)pThis);
+			SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)WinAPIWindow::WindowProcPass);
 
 			pThis->m_hWnd = hWnd;
 		}
-		else
-		{
-			pThis = (WinAPIWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-		}
-
-		if (pThis)
-			return pThis->HandleMessage(uMsg, wParam, lParam);
 
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	}
+
+	LRESULT WinAPIWindow::WindowProcPass(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		RL_PROFILE_FUNCTION();
+
+		WinAPIWindow* pThis = (WinAPIWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+		return pThis->HandleMessage(uMsg, wParam, lParam);
 	}
 	
 	LRESULT WinAPIWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
