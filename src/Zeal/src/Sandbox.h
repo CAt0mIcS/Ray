@@ -12,7 +12,7 @@ namespace At0::Zeal
 		/// <summary>
 		/// Sandbox Constructor
 		/// </summary>
-		Sandbox();
+		Sandbox(const std::string_view commandLine);
 
 		/// <summary>
 		/// Sandbox Deconstructor
@@ -33,14 +33,4 @@ namespace At0::Zeal
 	
 }
 
-
-#include <RlRender/RendererAPI.h>
-
-void At0::Reyal::CreateApplication()
-{
-	using namespace At0;
-
-	Reyal::RendererAPI::SetAPI(Reyal::RendererAPI::API::OpenGL);
-	Reyal::Application::Create(new Zeal::Sandbox());
-}
 

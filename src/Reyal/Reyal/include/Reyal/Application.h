@@ -14,11 +14,11 @@ namespace At0::Reyal
 {
 	class Application;
 
-	/// <summary>
-	/// Function which has to be defined by the client to be used in EntryPoint.h.
-	/// Note: Return a raw, heap-allocated pointer because it will call delete in EntryPoint.h
-	/// </summary>
-	void CreateApplication();
+	///// <summary>
+	///// Function which has to be defined by the client to be used in EntryPoint.h.
+	///// Note: Return a raw, heap-allocated pointer because it will call delete in EntryPoint.h
+	///// </summary>
+	void Awake(int argc, char** argv);
 
 	class Layer;
 
@@ -95,8 +95,9 @@ namespace At0::Reyal
 	protected:
 		/// <summary>
 		/// Application Constructor
+		/// <param name="commandLine">Are all command line arguments from the main method</param>
 		/// </summary>
-		Application();
+		Application(const std::string_view commandLine = "");
 
 	private:
 		/// <summary>
@@ -126,6 +127,11 @@ namespace At0::Reyal
 		/// Destroys resources
 		/// </summary>
 		void Cleanup();
+
+		/// <summary>
+		/// Does some startup stuff like allocate the console
+		/// </summary>
+		void StartupSetup();
 
 	protected:
 		/// <summary>

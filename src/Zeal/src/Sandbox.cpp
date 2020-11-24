@@ -7,7 +7,8 @@
 
 namespace At0::Zeal
 {
-	Sandbox::Sandbox()
+	Sandbox::Sandbox(const std::string_view commandLine)
+		: Application(commandLine)
 	{
 		//RL_PROFILE_FUNCTION();
 		
@@ -39,7 +40,7 @@ namespace At0::Zeal
 		 //win4->InitRenderer3D();
 		 //win4->SetTitle("Win4");
 		 //win4->Show();
-
+		 
 		ExtensionLoader loader;
 #ifdef NDEBUG
 	#ifdef _MSC_VER
@@ -69,73 +70,29 @@ namespace At0::Zeal
 }
 
 
+#include <Reyal/EntryPoint.h>
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-////////// Entry Point (TODO) ///////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <RlDebug/ReyalLogger.h>
 #include <RlDebug/Instrumentor.h>
+#include <RlDebug/ReyalLogger.h>
 #include <RlUtil/Exception.h>
 
-#include <signal.h>
-
-
-/// <summary>
-/// Handles any unexpected signals, logs the signal and closes the logger
-/// </summary>
-/// <param name="signum">Is the received signal</param>
-void SignalHandler(int signum)
-{
-	RL_LOG_CRITICAL("Signal '{0}' received, terminating program", signum);
-
-	// Note: We do not need to do this as the destructor does it automatically, 
-	// but it's good to have it here
-	RL_LOG_END();
-
-	// We need to do this though
-	RL_PROFILE_END_SESSION();
-
-	exit(signum);
-}
-
-#ifdef _WIN32
-
-#include <sal.h>
-
-
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int pCmdShow)
+///////////////////////////////////////////////////////////////////////////
+////////// Called in EntryPoint.h /////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+void At0::Reyal::Awake(int argc, char** argv)
 {
 	using namespace At0;
 
 	RL_LOG_BEGIN("../../Zeal.log", Log::LogLevel::Trace);
 
-	/// <summary>
-	/// TODO:
-	///		Util::SetSignals
-	/// </summary>
-	signal(SIGABRT, SignalHandler);
-	signal(SIGFPE, SignalHandler);
-	signal(SIGILL, SignalHandler);
-	signal(SIGINT, SignalHandler);
-	signal(SIGSEGV, SignalHandler);
-	signal(SIGTERM, SignalHandler);
-
-	//TODO: Awake function (maybe)?
-
-	#ifndef NDEBUG
-	{
-		AllocConsole();
-		FILE* file;
-		freopen_s(&file, "CONOUT$", "w", stdout);
-	}
-	#endif
-
+#ifdef _WIN32
 	try
+#endif
 	{
 		system("mkdir ..\\..\\Profiling\\");
 		RL_PROFILE_BEGIN_SESSION("Startup", "../../Profiling/Profile-Startup.json");
-		Reyal::CreateApplication();
+		Reyal::Application::Create(new Zeal::Sandbox(""));
 		RL_PROFILE_END_SESSION();
 
 		RL_PROFILE_BEGIN_SESSION("Runtime", "../../Profiling/Profile-Runtime.json");
@@ -146,13 +103,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 		Reyal::Application::Destroy();
 		RL_PROFILE_END_SESSION();
 
-#ifndef NDEBUG
-		FreeConsole();
-#endif
 		RL_LOG_END();
-		return exitCode;
 	}
-	// TODO: Custom Window for errors
+#ifdef _WIN32
+	// TODO: Custom Window for errors (Currently Platform dependent!)
 	catch (At0::Reyal::Exception& e)
 	{
 		MessageBoxA(NULL, e.what(), e.GetType(), MB_OK | MB_ICONERROR | MB_DEFAULT_DESKTOP_ONLY);
@@ -168,42 +122,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 		MessageBoxA(NULL, "An unknown exception occurred", "Unknown Exception", MB_OK | MB_ICONERROR | MB_DEFAULT_DESKTOP_ONLY);
 		RL_LOG_CRITICAL("[Main] Unknown Exception occured");
 	}
-	RL_LOG_END();
-
-	return -1;
-}
-
-#elif defined(__linux__)
-
-
-int main(int argc, char** argv)
-{
-	using namespace At0;
-	RL_LOG_BEGIN("Zeal.log", Log::LogLevel::Trace);
-
-	signal(SIGABRT, SignalHandler);
-	signal(SIGFPE, SignalHandler);
-	signal(SIGILL, SignalHandler);
-	signal(SIGINT, SignalHandler);
-	signal(SIGSEGV, SignalHandler);
-	signal(SIGTERM, SignalHandler);
-
-	system("mkdir ./Profiling");
-	RL_PROFILE_BEGIN_SESSION("Startup", "Profiling/Profile-Startup.json");
-	Reyal::CreateApplication();
-	RL_PROFILE_END_SESSION();
-
-	RL_PROFILE_BEGIN_SESSION("Runtime", "Profiling/Profile-Runtime.json");
-	int exitCode = Reyal::Application::Get().Run();
-	RL_PROFILE_END_SESSION();
-
-	RL_PROFILE_BEGIN_SESSION("Shutdown", "Profiling/Profile-Shutdown.json");
-	Reyal::Application::Destroy();
-	RL_PROFILE_END_SESSION();
-
-	RL_LOG_END();
-
-	return exitCode;
-}
-
 #endif
+	RL_LOG_END();
+}
+
+#include <Reyal/EntryPoint.h>
+

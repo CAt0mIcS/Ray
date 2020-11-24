@@ -29,6 +29,7 @@ set(SRC
 	"include/Reyal/Reyal.h"
 	"include/Reyal/RlBase.h"
 	"include/Reyal/Core/Stack.h"
+	"include/Reyal/EntryPoint.h"
 )
 
 set(PUBLIC_INC

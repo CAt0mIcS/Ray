@@ -26,7 +26,6 @@ namespace At0::Zeal
 			// Check if file is a .dll file
 			if (dir.path().string().compare(dir.path().string().size() - ending.size(), ending.size(), ending) != 0) continue;
 
-			// TODO: Separate folder for Editor extensions
 			HMODULE lib = LoadLibraryA(dir.path().string().c_str());
 			if (!lib || lib == INVALID_HANDLE_VALUE)
 			{
@@ -38,8 +37,7 @@ namespace At0::Zeal
 			if (!fn)
 			{
 				RL_LOG_WARN("[ExtLoader] Was unable to find 'CreateLayer' function in Module '{0}' with path '{1}'", lib, std::filesystem::absolute(dir.path().string()));
-				//TODO: Test
-				//FreeLibrary(lib);
+				FreeLibrary(lib);
 				continue;
 			}
 

@@ -19,9 +19,10 @@ namespace At0::Reyal
 {
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application()
+	Application::Application(const std::string_view commandLine)
 		: m_LayerStack{}
 	{
+		StartupSetup();
 		m_MainWindow = PushWindow(Window::Create("MainWindow", nullptr));
 		Window::SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
 	}
@@ -63,7 +64,7 @@ namespace At0::Reyal
 				layer->OnUpdate();
 			}
 
-			//TODO: Change to something more appropriate (CPU Usage too high without it)
+			//CPU Usage too high without it (not ideal)
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 
@@ -191,6 +192,29 @@ namespace At0::Reyal
 
 		// Need this here to stop threads from waiting until the static ThreadPool object is destroyed
 		ThreadPool::Get().Shutdown();
+	}
+	
+	void Application::StartupSetup()
+	{
+		/// <summary>
+		/// Handles any unexpected signals, logs the signal and closes the logger
+		/// </summary>
+		/// <param name="signum">Is the received signal</param>
+		Util::SetSignals([](int signum)
+			{
+				RL_LOG_CRITICAL("Signal '{0}' received, terminating program", signum);
+
+				// Note: We do not need to do this as the destructor does it automatically, 
+				// but it's good to have it here
+				RL_LOG_END();
+
+				// We need to do this though
+				RL_PROFILE_END_SESSION();
+
+				exit(signum);
+			}
+		);
+		Util::ConsoleSetup();
 	}
 }
 

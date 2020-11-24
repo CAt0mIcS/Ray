@@ -9,5 +9,6 @@
 #include <stdint.h>
 #include <string>
 #include <sstream>
+#include <signal.h>
 
 
