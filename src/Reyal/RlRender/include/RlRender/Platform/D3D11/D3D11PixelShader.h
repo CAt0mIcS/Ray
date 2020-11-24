@@ -27,7 +27,7 @@ namespace At0::Reyal
 		/// </summary>
 		/// <param name="name">Is the name of the Pixel shader</param>
 		/// <param name="PixelSrc">Is the source code from which to compile the shader</param>
-		D3D11PixelShader(const std::string_view name, const std::string_view PixelSrc);
+		D3D11PixelShader(const std::string_view name, const std::string_view pixelSrc);
 
 		/// <summary>
 		/// D3D11 PixelShader Deconstructor

@@ -76,7 +76,7 @@ namespace At0::Reyal
 		m_Name = filepath.substr(lastSlash, count);
 	}
 	
-	D3D11PixelShader::D3D11PixelShader(const std::string_view name, const std::string_view PixelSrc)
+	D3D11PixelShader::D3D11PixelShader(const std::string_view name, const std::string_view pixelSrc)
 		: m_Name(name)
 	{
 		RL_PROFILE_FUNCTION();
@@ -89,8 +89,8 @@ namespace At0::Reyal
 		WRL::ComPtr<ID3DBlob> pBlob;
 		WRL::ComPtr<ID3DBlob> pErrorBlob;
 		HRESULT hr = D3DCompile(
-			PixelSrc.data(),
-			PixelSrc.size(),
+			pixelSrc.data(),
+			pixelSrc.size(),
 			NULL,
 			nullptr,
 			nullptr,
