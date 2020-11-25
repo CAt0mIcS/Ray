@@ -4,6 +4,7 @@ set(SRC
     "include/RlUtil/TypeConvert.cpp"
     "include/RlUtil/utpch.h"
     "include/RlUtil/MessageBox.h"
+    "include/RlUtil/InfoManager.h"
 
     "include/RlUtil/CoreConfig.h"
     "include/RlUtil/Exception.h"
@@ -13,6 +14,7 @@ set(SRC
     "include/RlUtil/TypeConvert.h"
     "include/RlUtil/Helper.h"
     "include/RlUtil/MessageBox.cpp"
+    "include/RlUtil/InfoManager.cpp"
 )
 
 set(PUBLIC_INC

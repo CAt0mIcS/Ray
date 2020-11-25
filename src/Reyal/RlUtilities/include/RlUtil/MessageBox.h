@@ -20,8 +20,9 @@ namespace At0::Reyal
 		enum class Icon
 		{
 			None = 0,
-			Error = 1,
-			Warn
+			Error,
+			Warn,
+			Info
 		};
 
 		enum class Flags

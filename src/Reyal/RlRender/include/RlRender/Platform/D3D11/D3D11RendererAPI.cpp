@@ -6,6 +6,7 @@
 #include "D3D11RenderBase.h"
 
 #include <RlUtil/Exception.h>
+#include <RlUtil/InfoManager.h>
 
 #include <RlDebug/ReyalLogger.h>
 #include <RlDebug/RlAssert.h>

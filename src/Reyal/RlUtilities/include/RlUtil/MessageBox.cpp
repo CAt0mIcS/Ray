@@ -28,6 +28,16 @@ namespace At0::Reyal
 			types |= MB_ICONERROR;
 			break;
 		}
+		case Icon::Warn:
+		{
+			types |= MB_ICONWARNING;
+			break;
+		}
+		case Icon::Info:
+		{
+			types |= MB_ICONINFORMATION;
+			break;
+		}
 		}
 
 		switch (flags)
