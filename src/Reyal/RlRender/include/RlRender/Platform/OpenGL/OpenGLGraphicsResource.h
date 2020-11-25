@@ -6,10 +6,10 @@ namespace At0::Reyal
 	/// <summary>
 	/// Same as D3D11RenderBase
 	/// </summary>
-	class OpenGLRenderBase
+	class OpenGLGraphicsResource
 	{
 	protected:
-		OpenGLRenderBase() = default;
+		OpenGLGraphicsResource() = default;
 
 	protected:
 		static uint32_t s_RendererID;

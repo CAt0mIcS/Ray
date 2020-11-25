@@ -5,13 +5,13 @@
 
 #include "RlRender/RendererAPI.h"
 #include "RlRender/RlRBase.h"
-#include "D3D11RenderBase.h"
+#include "D3D11GraphicsResource.h"
 
 #include <wrl.h>
 
 namespace At0::Reyal
 {
-	class D3D11RendererAPI : public RendererAPI, private D3D11RenderBase
+	class D3D11RendererAPI : public RendererAPI, private D3D11GraphicsResource
 	{
 	public:
 		/// <summary>

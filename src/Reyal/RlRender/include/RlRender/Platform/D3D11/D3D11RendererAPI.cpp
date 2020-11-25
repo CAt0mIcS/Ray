@@ -3,7 +3,6 @@
 #ifdef _WIN32
 
 #include "D3D11RendererAPI.h"
-#include "D3D11RenderBase.h"
 
 #include <RlUtil/Exception.h>
 #include <RlUtil/InfoManager.h>

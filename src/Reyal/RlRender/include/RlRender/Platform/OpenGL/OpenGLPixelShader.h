@@ -3,14 +3,14 @@
 #include "RlRBase.h"
 #include "RlRender/PixelShader.h"
 
-#include "OpenGLRenderBase.h"
+#include "OpenGLGraphicsResource.h"
 
 #include <string>
 
 
 namespace At0::Reyal
 {
-	class RLR_API OpenGLPixelShader : public PixelShader, private OpenGLRenderBase
+	class RLR_API OpenGLPixelShader : public PixelShader, private OpenGLGraphicsResource
 	{
 	public:
 		/// <summary>

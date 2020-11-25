@@ -21,10 +21,10 @@ namespace At0::Reyal
 	/// for each operation requiring the static objects. For now the RendererAPIs will just derive from this
 	/// class to access the not protected (in the future private) members
 	/// </summary>
-	class D3D11RenderBase
+	class D3D11GraphicsResource
 	{
 	protected:
-		D3D11RenderBase() = default;
+		D3D11GraphicsResource() = default;
 
 	protected:
 		//static std::mutex m_DeviceMutex;

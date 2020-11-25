@@ -3,14 +3,14 @@
 #include "RlRBase.h"
 #include "RlRender/VertexShader.h"
 
-#include "OpenGLRenderBase.h"
+#include "OpenGLGraphicsResource.h"
 
 #include <string>
 
 
 namespace At0::Reyal
 {
-	class RLR_API OpenGLVertexShader : public VertexShader, private OpenGLRenderBase
+	class RLR_API OpenGLVertexShader : public VertexShader, private OpenGLGraphicsResource
 	{
 	public:
 		/// <summary>

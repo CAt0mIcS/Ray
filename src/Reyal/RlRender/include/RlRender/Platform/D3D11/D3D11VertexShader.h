@@ -4,7 +4,7 @@
 
 
 #include "RlRBase.h"
-#include "D3D11RenderBase.h"
+#include "D3D11GraphicsResource.h"
 
 #include "RlRender/VertexShader.h"
 
@@ -13,7 +13,7 @@
 
 namespace At0::Reyal
 {
-	class RLR_API D3D11VertexShader : public VertexShader, private D3D11RenderBase
+	class RLR_API D3D11VertexShader : public VertexShader, private D3D11GraphicsResource
 	{
 	public:
 		/// <summary>
