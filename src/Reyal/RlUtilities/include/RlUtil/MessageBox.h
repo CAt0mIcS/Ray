@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Reyal/RlBase.h"
+#include "RlUBase.h"
 
 #include <string>
 
@@ -8,7 +8,7 @@
 namespace At0::Reyal
 {
 
-	class RL_API ZMessageBox
+	class RLU_API ZMessageBox
 	{
 	public:
 		enum class Button
@@ -20,7 +20,8 @@ namespace At0::Reyal
 		enum class Icon
 		{
 			None = 0,
-			Error = 1
+			Error = 1,
+			Warn
 		};
 
 		enum class Flags

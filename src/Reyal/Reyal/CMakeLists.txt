@@ -10,7 +10,6 @@ set(SRC
 	"include/Reyal/Window/WinAPIWindow.cpp"
 	"include/Reyal/Window/OpenGLWindow.cpp"
 	"include/Reyal/Window/Window.cpp"
-	"include/Reyal/Window/MessageBox.cpp"
 	
 	"include/Reyal/Window/WinAPIWindow.h"
 	"include/Reyal/Window/OpenGLWindow.h"
@@ -31,7 +30,8 @@ set(SRC
 	"include/Reyal/RlBase.h"
 	"include/Reyal/Core/Stack.h"
 	"include/Reyal/EntryPoint.h"
-	"include/Reyal/Window/MessageBox.h"
+
+	"Reyal.def"
 )
 
 set(PUBLIC_INC
@@ -54,6 +54,8 @@ find_package("X11" REQUIRED)
 list(APPEND PRIVATE_INC "${X11_INCLUDE_DIRS}")
 set(PRIVATE_LIB
 	"RlRender"
+	"RlDebug"
+	"RlUtilities"
 	"Threads::Threads"
 	"GLFW"
 	"Glad"
@@ -64,6 +66,8 @@ set(PRIVATE_LIB
 	"RlRender"
 	"GLFW"
 	"Glad"
+	"RlDebug"
+	"RlUtilities"
 )
 endif()
 

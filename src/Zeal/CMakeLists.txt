@@ -25,8 +25,8 @@ set(PUBLIC_LIB
 
 set(PRIVATE_LIB
     "Reyal"
-    "RlDebug"
     "RlRender"
+    "RlDebug"
 )
 
 if(UNIX)

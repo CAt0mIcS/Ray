@@ -42,7 +42,7 @@ set(PRIVATE_INC
 )
 
 set(PUBLIC_LIB
-    "RlDebug"
+	""
 )
 
 if(WIN32)
@@ -52,11 +52,13 @@ if(WIN32)
         "D3DCompiler"
         "GLFW"
 	"Glad"
+	"RlDebug"
     )
 elseif(UNIX)
     set(PRIVATE_LIB
         "GLFW"
 	"Glad"
+	"RlDebug"
     )
 endif()
 

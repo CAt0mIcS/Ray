@@ -3,6 +3,7 @@ set(SRC
     "include/RlUtil/Random.cpp"
     "include/RlUtil/TypeConvert.cpp"
     "include/RlUtil/utpch.h"
+    "include/RlUtil/MessageBox.h"
 
     "include/RlUtil/CoreConfig.h"
     "include/RlUtil/Exception.h"
@@ -11,6 +12,7 @@ set(SRC
     "include/RlUtil/Serialize.h"
     "include/RlUtil/TypeConvert.h"
     "include/RlUtil/Helper.h"
+    "include/RlUtil/MessageBox.cpp"
 )
 
 set(PUBLIC_INC

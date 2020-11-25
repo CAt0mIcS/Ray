@@ -40,7 +40,7 @@ namespace At0::Zeal
 		 //win4->InitRenderer3D();
 		 //win4->SetTitle("Win4");
 		 //win4->Show();
-		 
+
 		ExtensionLoader loader;
 #ifdef NDEBUG
 	#ifdef _MSC_VER
@@ -102,6 +102,7 @@ void At0::Reyal::Awake(int argc, char** argv)
 		RL_PROFILE_END_SESSION();
 
 		RL_LOG_END();
+
 	}
 	catch (At0::Reyal::Exception& e)
 	{
