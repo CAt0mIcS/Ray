@@ -17,7 +17,7 @@ namespace At0::Reyal
 	RendererAPI::API RendererAPI::s_Api = RendererAPI::API::OpenGL;
 #endif
 
-	std::unique_ptr<RendererAPI> RendererAPI::Create()
+	Scope<RendererAPI> RendererAPI::Create()
 	{
 		RL_EXPECTS(s_Api >= API::FIRST && s_Api <= API::LAST);
 

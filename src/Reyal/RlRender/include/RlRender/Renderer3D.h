@@ -42,7 +42,7 @@ namespace At0::Reyal
 		/// <summary>
 		/// Rendering calls will be dispatched to the platform's API
 		/// </summary>
-		std::unique_ptr<RendererAPI> m_API;
+		Scope<RendererAPI> m_API;
 	};
 
 }

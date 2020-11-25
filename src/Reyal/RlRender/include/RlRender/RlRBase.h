@@ -1,5 +1,7 @@
 #pragma once
 
+#include <../../RlUtilities/include/RlUtil/Helper.h>
+
 #ifndef NOMINMAX
 	#define NOMINMAX
 #endif

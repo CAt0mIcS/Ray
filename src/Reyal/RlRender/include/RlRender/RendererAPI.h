@@ -66,7 +66,7 @@ namespace At0::Reyal
 		/// Creates the API-Specific rendering API
 		/// </summary>
 		/// <returns></returns>
-		static std::unique_ptr<RendererAPI> Create();
+		static Scope<RendererAPI> Create();
 
 	private:
 		/// <summary>
