@@ -1,58 +1,18 @@
 set(SRC
-    "include/RlRender/Renderer3D.cpp"
-    "include/RlRender/Renderer3D.h"
     "include/RlRender/TypeDefines.h"
     "include/RlRender/RlRBase.h"
     "include/RlRender/rlrpch.h"
+    "include/RlRender/Renderer3D.h"
+    "include/RlRender/Renderer3D.cpp"
 
     # ----------------------------------------------
     # Rendering Interfaces
-    "include/RlRender/RendererAPI.h"
-    "include/RlRender/RendererAPI.cpp"
-    "include/RlRender/VertexShader.cpp"
-    "include/RlRender/VertexShader.h"
-    "include/RlRender/PixelShader.cpp"
-    "include/RlRender/PixelShader.h"
-    "include/RlRender/VertexBuffer.cpp"
-    "include/RlRender/VertexBuffer.h"
-    "include/RlRender/IndexBuffer.cpp"
-    "include/RlRender/IndexBuffer.h"
-    "include/RlRender/VertexLayout.h"
-    "include/RlRender/VertexLayout.cpp"
 
     # ----------------------------------------------
     # OpenGL
-    "include/RlRender/Platform/OpenGL/OpenGLVertexBuffer.cpp"
-    "include/RlRender/Platform/OpenGL/OpenGLIndexBuffer.cpp"
-    "include/RlRender/Platform/OpenGL/OpenGLVertexBuffer.h"
-    "include/RlRender/Platform/OpenGL/OpenGLIndexBuffer.h"
-    "include/RlRender/Platform/OpenGL/OpenGLGraphicsResource.h"
-    "include/RlRender/Platform/OpenGL/OpenGLVertexShader.h"
-    "include/RlRender/Platform/OpenGL/OpenGLRendererAPI.h"
-    "include/RlRender/Platform/OpenGL/OpenGLPixelShader.h"
-    "include/RlRender/Platform/OpenGL/OpenGLGraphicsResource.cpp"
-    "include/RlRender/Platform/OpenGL/OpenGLPixelShader.cpp"
-    "include/RlRender/Platform/OpenGL/OpenGLRendererAPI.cpp"
-    "include/RlRender/Platform/OpenGL/OpenGLVertexShader.cpp"
-    "include/RlRender/Platform/OpenGL/OpenGLVertexLayout.h"
-    "include/RlRender/Platform/OpenGL/OpenGLVertexLayout.cpp"
 
     # ----------------------------------------------
     # DirectX
-    "include/RlRender/Platform/D3D11/D3D11RendererAPI.h"
-    "include/RlRender/Platform/D3D11/D3D11VertexShader.h"
-    "include/RlRender/Platform/D3D11/D3D11PixelShader.h"
-    "include/RlRender/Platform/D3D11/D3D11GraphicsResource.h"
-    "include/RlRender/Platform/D3D11/D3D11VertexBuffer.h"
-    "include/RlRender/Platform/D3D11/D3D11IndexBuffer.h"
-    "include/RlRender/Platform/D3D11/D3D11VertexBuffer.cpp"
-    "include/RlRender/Platform/D3D11/D3D11IndexBuffer.cpp"
-    "include/RlRender/Platform/D3D11/D3D11RendererAPI.cpp"
-    "include/RlRender/Platform/D3D11/D3D11VertexShader.cpp"
-    "include/RlRender/Platform/D3D11/D3D11PixelShader.cpp"
-    "include/RlRender/Platform/D3D11/D3D11GraphicsResource.cpp"
-    "include/RlRender/Platform/D3D11/D3D11VertexLayout.h"
-    "include/RlRender/Platform/D3D11/D3D11VertexLayout.cpp"
 
     # ----------------------------------------------
     # Shaders
