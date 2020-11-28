@@ -229,7 +229,7 @@ namespace At0::Reyal
 		if (!m_Renderer3D)
 		{
 			m_Renderer3D = MakeScope<Renderer3D>();
-			m_Renderer3D->Init(m_hWnd);
+			//m_Renderer3D->Init(m_hWnd);
 			return true;
 		}
 		return false;
@@ -326,9 +326,6 @@ namespace At0::Reyal
 				switch (action)
 				{
 				case GLFW_PRESS:
-					pData->win.GetRenderer3D()->RenderTestTriangle();
-					pData->win.GetRenderer3D()->EndDraw();
-
 					e = MakeScope<KeyPressedEvent>((unsigned char)key, 0);
 					pData->win.Keyboard.SetKeyState((unsigned char)key, true);
 					break;

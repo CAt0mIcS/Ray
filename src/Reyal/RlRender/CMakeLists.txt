@@ -5,6 +5,11 @@ set(SRC
     "include/RlRender/Renderer3D.h"
     "include/RlRender/Renderer3D.cpp"
 
+    "include/RlRender/GraphicsResource.cpp"
+    "include/RlRender/GraphicsResource.h"
+    "include/RlRender/RendererAPI.h"
+    "include/RlRender/RendererAPI.cpp"
+
     # ----------------------------------------------
     # Rendering Interfaces
 

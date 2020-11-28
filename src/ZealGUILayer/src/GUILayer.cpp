@@ -95,9 +95,6 @@ namespace At0::Layers
 	{
 		RL_PROFILE_FUNCTION();
 
-		receiver->GetRenderer3D()->RenderTestTriangle();
-		receiver->GetRenderer3D()->EndDraw();
-
 		RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	}
 
