@@ -19,8 +19,6 @@ extern void At0::Reyal::Awake(int argc, char** argv);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int pCmdShow)
 {
-	using namespace At0;
-
 	// TODO: Command Line Arguments
 	At0::Reyal::Awake(0, nullptr);
 }
@@ -30,8 +28,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 
 int main(int argc, char** argv)
 {
-	using namespace At0;
-
 	// TODO: Command Line Arguments
 	At0::Reyal::Awake(argc, argv);
 }

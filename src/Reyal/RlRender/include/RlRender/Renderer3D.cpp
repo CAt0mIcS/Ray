@@ -46,8 +46,12 @@ namespace At0::Reyal
         WRL::ComPtr<ID3D11Resource> pBackBuffer;
         m_pSwapChain->GetBuffer(0u, __uuidof(ID3D11Resource), &pBackBuffer);
 
-        s_pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pTarget);
-
+        RL_GFX_THROW_FAILED(s_pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pTarget));
+    }
+    
+    void Renderer3D::DrawIndexed(uint32_t indicesCount)
+    {
+        // TODO: Move somewhere else (necessary for drawing in multiple windows)
         RECT rc;
         GetClientRect(m_hWnd, &rc);
         D3D11_VIEWPORT vp{};
@@ -55,10 +59,7 @@ namespace At0::Reyal
         vp.Height = rc.bottom;
         s_pContext->RSSetViewports(1, &vp);
         s_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), nullptr);
-    }
-    
-    void Renderer3D::DrawIndexed(uint32_t indicesCount)
-    {
+
         s_pContext->DrawIndexed(indicesCount, 0, 0);
     }
 
