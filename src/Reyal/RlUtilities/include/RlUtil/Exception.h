@@ -161,7 +161,7 @@ throw ::At0::Reyal::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FIL
 /// <TODO>
 /// HRESULT expands to expression twice (calls e.g. create function twice because it's inserted in hr)
 /// </TODO>
-#define RL_GFX_THROW_FAILED(hr) if(FAILED(hr)) throw ::At0::Reyal::GraphicsException(hr, (uint16_t)__LINE__, __FILE__)
+#define RL_GFX_THROW_FAILED(expr) if(HRESULT hr = (expr); FAILED(hr)) throw ::At0::Reyal::GraphicsException(hr, (uint16_t)__LINE__, __FILE__)
 
 #else
 

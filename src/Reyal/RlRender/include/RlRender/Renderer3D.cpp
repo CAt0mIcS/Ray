@@ -70,7 +70,7 @@ namespace At0::Reyal
 
     void Renderer3D::EndDraw()
     {
-        m_pSwapChain->Present(1, 0);
+        RL_GFX_THROW_FAILED(m_pSwapChain->Present(1, 0));
     }
 
     Renderer3D::~Renderer3D()
