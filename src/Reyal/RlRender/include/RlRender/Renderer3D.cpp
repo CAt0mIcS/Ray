@@ -47,5 +47,29 @@ namespace At0::Reyal
         m_pSwapChain->GetBuffer(0u, __uuidof(ID3D11Resource), &pBackBuffer);
 
         s_pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pTarget);
+
+        RECT rc;
+        GetClientRect(m_hWnd, &rc);
+        D3D11_VIEWPORT vp{};
+        vp.Width = rc.right;
+        vp.Height = rc.bottom;
+        s_pContext->RSSetViewports(1, &vp);
+        s_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), nullptr);
+    }
+    
+    void Renderer3D::DrawIndexed(uint32_t indicesCount)
+    {
+        s_pContext->DrawIndexed(indicesCount, 0, 0);
+    }
+
+    void Renderer3D::ClearBuffer(float red, float green, float blue)
+    {
+        const float color[] = { red,green,blue,1.0f };
+        s_pContext->ClearRenderTargetView(m_pTarget.Get(), color);
+    }
+
+    void Renderer3D::EndDraw()
+    {
+        m_pSwapChain->Present(1, 0);
     }
 }

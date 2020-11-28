@@ -7,6 +7,7 @@
 
 #include <Reyal/Reyal.h>
 #include <RlRender/Renderer3D.h>
+#include <RlRender/Drawable/Triangle.h>
 
 
 
@@ -94,6 +95,11 @@ namespace At0::Layers
 	void GUILayer::OnKeyPress(Reyal::Widget* receiver, Reyal::KeyPressedEvent& e)
 	{
 		RL_PROFILE_FUNCTION();
+
+		receiver->GetRenderer3D()->ClearBuffer(0.07f, 0.0f, 0.12f);
+		Reyal::Triangle triangle;
+		triangle.Draw(*receiver->GetRenderer3D());
+		receiver->GetRenderer3D()->EndDraw();
 
 		RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	}

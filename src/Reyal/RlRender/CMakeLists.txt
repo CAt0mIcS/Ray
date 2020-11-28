@@ -11,6 +11,31 @@ set(SRC
     "include/RlRender/RendererAPI.cpp"
 
     # ----------------------------------------------
+    # Bindables
+    "include/RlRender/Bindable/Bindable.h"
+    "include/RlRender/Bindable/Bindable.cpp"
+    "include/RlRender/Bindable/VertexBuffer.h"
+    "include/RlRender/Bindable/VertexBuffer.cpp"
+    "include/RlRender/Bindable/IndexBuffer.h"
+    "include/RlRender/Bindable/IndexBuffer.cpp"
+    "include/RlRender/Bindable/Topology.h"
+    "include/RlRender/Bindable/Topology.cpp"
+    "include/RlRender/Bindable/VertexShader.h"
+    "include/RlRender/Bindable/VertexShader.cpp"
+    "include/RlRender/Bindable/PixelShader.h"
+    "include/RlRender/Bindable/PixelShader.cpp"
+    "include/RlRender/Bindable/InputLayout.h"
+    "include/RlRender/Bindable/InputLayout.cpp"
+
+    # ----------------------------------------------
+    # Drawables
+    "include/RlRender/Drawable/Drawable.h"
+    "include/RlRender/Drawable/Drawable.cpp"
+    "include/RlRender/Drawable/Triangle.h"
+    "include/RlRender/Drawable/Triangle.cpp"
+
+
+    # ----------------------------------------------
     # Rendering Interfaces
 
     # ----------------------------------------------

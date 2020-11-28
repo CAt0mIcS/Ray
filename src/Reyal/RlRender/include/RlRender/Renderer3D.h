@@ -16,7 +16,11 @@ namespace At0::Reyal
     {
     public:
         Renderer3D();
+        
         void Init(HWND hWnd);
+        void DrawIndexed(uint32_t indicesCount);
+        void ClearBuffer(float red, float green, float blue);
+        void EndDraw();
 
     private:
         Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
