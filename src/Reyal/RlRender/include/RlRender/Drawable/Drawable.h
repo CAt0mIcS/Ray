@@ -18,7 +18,7 @@ namespace At0::Reyal
 		Drawable& operator=(Drawable&&) noexcept = default;
 
 		virtual void Update() = 0;
-		void Draw(Renderer3D& renderer);
+		void Draw(Renderer3D* renderer);
 
 	protected:
 		void AddBind(Scope<Bindable> bind);

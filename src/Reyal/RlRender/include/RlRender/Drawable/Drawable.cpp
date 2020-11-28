@@ -23,13 +23,13 @@ namespace At0::Reyal
 		m_Binds.push_back(std::move(indexBuffer));
 	}
 
-	void Drawable::Draw(Renderer3D& renderer)
+	void Drawable::Draw(Renderer3D* renderer)
 	{
 		for (auto& bindable : m_Binds)
 		{
 			bindable->Bind();
 		}
-		renderer.DrawIndexed(m_pIndexBuffer->GetCount());
+		renderer->DrawIndexed(m_pIndexBuffer->GetCount());
 	}
 
 	Drawable::Drawable()

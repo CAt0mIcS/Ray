@@ -98,7 +98,7 @@ namespace At0::Layers
 
 		receiver->GetRenderer3D()->ClearBuffer(0.07f, 0.0f, 0.12f);
 		Reyal::Triangle triangle;
-		triangle.Draw(*receiver->GetRenderer3D());
+		triangle.Draw(receiver->GetRenderer3D());
 		receiver->GetRenderer3D()->EndDraw();
 
 		RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
