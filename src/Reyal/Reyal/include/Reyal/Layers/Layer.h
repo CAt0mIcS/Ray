@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Reyal/RlBase.h"
-
+#include "Reyal/Core/Timestep.h"
 
 namespace At0::Reyal
 {
@@ -35,8 +35,9 @@ namespace At0::Reyal
 
 		/// <summary>
 		/// Function which is called every frame
+		/// <param name="ts">Is the current time step</param>
 		/// </summary>
-		virtual void OnUpdate() { };
+		virtual void OnUpdate(Timestep ts) { };
 
 		/// <summary>
 		/// Receives all MouseButtonPressed Events. The button which was pressed is stored in "e"

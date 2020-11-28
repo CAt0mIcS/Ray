@@ -13,6 +13,7 @@
 #include <RlDebug/RlAssert.h>
 #include <RlDebug/Instrumentor.h>
 #include <RlDebug/ReyalLogger.h>
+#include <RlUtil/Exception.h>
 
 
 namespace At0::Reyal
@@ -39,10 +40,18 @@ namespace At0::Reyal
 
 	int Application::Run()
 	{
+		auto lastFrameTime = std::chrono::high_resolution_clock::now();
+		
 		// -----------------------------------------------------------------------------------------
 		// Main Application Loop
 		while (m_MainWindow->IsOpen())
 		{
+			// -------------------------------------------------------------------------------------
+			// Setting timestep
+			auto tNow = std::chrono::high_resolution_clock::now();
+			Timestep timestep = ((float)((tNow - lastFrameTime).count())) / 1000.0f / 1000.0f / 1000.0f;
+			lastFrameTime = tNow;
+			
 			// -------------------------------------------------------------------------------------
 			// Pop invalid windows and update valid ones
 			for (uint32_t i = 0; i < m_WindowStack.Size(); ++i)
@@ -61,11 +70,12 @@ namespace At0::Reyal
 			// Update Layers
 			for (auto* layer : m_LayerStack)
 			{
-				layer->OnUpdate();
+				layer->OnUpdate(timestep);
 			}
+			std::cout << timestep.GetMilliseconds() << '\n';
 
 			//CPU Usage too high without it (not ideal)
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			std::this_thread::sleep_for(std::chrono::nanoseconds(1500));
 		}
 
 		Cleanup();

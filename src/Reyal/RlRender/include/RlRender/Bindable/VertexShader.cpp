@@ -9,6 +9,7 @@ namespace At0::Reyal
 {
     VertexShader::VertexShader(const std::string_view filepath)
     {
+        // TODO: Abort called here sometimes
         RL_GFX_THROW_FAILED(D3DReadFileToBlob(Util::MultiByteToWideChar(filepath).c_str(), &m_pBlob));
 
         RL_GFX_THROW_FAILED(s_pDevice->CreateVertexShader(m_pBlob->GetBufferPointer(), m_pBlob->GetBufferSize(), nullptr, &m_pVertexShader));

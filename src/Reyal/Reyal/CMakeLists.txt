@@ -30,6 +30,7 @@ set(SRC
 	"include/Reyal/RlBase.h"
 	"include/Reyal/Core/Stack.h"
 	"include/Reyal/EntryPoint.h"
+	"include/Reyal/Core/Timestep.h"
 
 	"Reyal.def"
 )

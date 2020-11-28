@@ -150,18 +150,18 @@ namespace At0::Reyal
 
 #ifdef _WIN32
 
-#define RL_THROW_WND_EXCEPT(hr) \
-if(FAILED(hr)) throw ::At0::Reyal::WindowsException(hr, (uint16_t)__LINE__, __FILE__)
+#define RL_THROW_WND_EXCEPT(expr) \
+if(HRESULT RL___HRES___RL = expr; FAILED(RL___HRES___RL)) throw ::At0::Reyal::WindowsException(RL___HRES___RL, (uint16_t)__LINE__, __FILE__)
 
 #define RL_THROW_LAST_WND_EXCEPT2() \
 throw ::At0::Reyal::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE__)
 
-#define RL_THROW_LAST_WND_EXCEPT(booleanResult) if(!(booleanResult)) RL_THROW_LAST_WND_EXCEPT2()
+#define RL_THROW_LAST_WND_EXCEPT(expr) if(!(expr)) RL_THROW_LAST_WND_EXCEPT2()
 
 /// <TODO>
 /// HRESULT expands to expression twice (calls e.g. create function twice because it's inserted in hr)
 /// </TODO>
-#define RL_GFX_THROW_FAILED(expr) if(HRESULT hr = (expr); FAILED(hr)) throw ::At0::Reyal::GraphicsException(hr, (uint16_t)__LINE__, __FILE__)
+#define RL_GFX_THROW_FAILED(expr) if(HRESULT RL___HRES___RL = (expr); FAILED(RL___HRES___RL)) throw ::At0::Reyal::GraphicsException(RL___HRES___RL, (uint16_t)__LINE__, __FILE__)
 
 #else
 

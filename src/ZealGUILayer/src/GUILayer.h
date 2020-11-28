@@ -12,6 +12,7 @@ namespace At0::Layers
 	public:
 		GUILayer(const std::string_view name);
 
+		virtual void OnUpdate(Reyal::Timestep ts) override;
 		virtual void OnMousePress(Reyal::Widget* receiver, Reyal::MouseButtonPressedEvent& e) override;
 		virtual void OnMouseRelease(Reyal::Widget* receiver, Reyal::MouseButtonReleasedEvent& e) override;
 		virtual void OnMouseWheelUp(Reyal::Widget* receiver, Reyal::MouseWheelUpEvent& e) override;

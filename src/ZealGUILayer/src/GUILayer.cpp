@@ -26,6 +26,10 @@ namespace At0::Layers
 		RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	}
 	
+	void GUILayer::OnUpdate(Reyal::Timestep ts)
+	{
+	}
+
 	void GUILayer::OnMousePress(Reyal::Widget* receiver, Reyal::MouseButtonPressedEvent& e)
 	{
 		RL_PROFILE_FUNCTION();
