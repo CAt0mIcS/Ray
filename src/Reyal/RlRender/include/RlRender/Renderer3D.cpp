@@ -72,4 +72,11 @@ namespace At0::Reyal
     {
         m_pSwapChain->Present(1, 0);
     }
+
+    Renderer3D::~Renderer3D()
+    {
+        WRL::ComPtr<ID3D11Debug> pDebug;
+        s_pDevice->QueryInterface(__uuidof(ID3D11Debug), &pDebug);
+        pDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+    }
 }

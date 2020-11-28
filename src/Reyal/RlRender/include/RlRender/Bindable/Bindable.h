@@ -9,6 +9,7 @@ namespace At0::Reyal
 	{
 	public:
 		virtual void Bind() = 0;
+		virtual ~Bindable() = default;
 		Bindable& operator=(Bindable&&) noexcept = default;
 		Bindable(Bindable&&) noexcept = default;
 

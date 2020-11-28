@@ -21,6 +21,7 @@ namespace At0::Reyal
         void DrawIndexed(uint32_t indicesCount);
         void ClearBuffer(float red, float green, float blue);
         void EndDraw();
+        ~Renderer3D();
 
     private:
         Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
