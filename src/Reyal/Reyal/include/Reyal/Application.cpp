@@ -72,7 +72,6 @@ namespace At0::Reyal
 			{
 				layer->OnUpdate(timestep);
 			}
-			std::cout << timestep.GetMilliseconds() << '\n';
 
 			//CPU Usage too high without it (not ideal)
 			std::this_thread::sleep_for(std::chrono::nanoseconds(1500));

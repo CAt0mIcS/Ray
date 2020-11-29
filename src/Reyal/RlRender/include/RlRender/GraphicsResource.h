@@ -6,19 +6,24 @@ struct IDXGIFactory;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 
-#define RLR_GETREFCOUNT(x) x->AddRef(); std::cout << "RefC " #x ": " << x->Release() << '\n';
-
 
 namespace At0::Reyal
 {
 	class GraphicsResource
 	{
-	protected:
-		GraphicsResource();
+	public:
+		static int GetDerivedCount() { return s_RefCount; }
 
 	protected:
-		static Microsoft::WRL::ComPtr<ID3D11Device> s_pDevice;
-		static Microsoft::WRL::ComPtr<ID3D11DeviceContext> s_pContext;
-		static Microsoft::WRL::ComPtr<IDXGIFactory> s_pIDXGIFactory;
+		GraphicsResource();
+		~GraphicsResource();
+
+	protected:
+		static ID3D11Device* s_pDevice;
+		static ID3D11DeviceContext* s_pContext;
+		static IDXGIFactory* s_pIDXGIFactory;
+
+	private:
+		static std::atomic<int> s_RefCount;
 	};
 }

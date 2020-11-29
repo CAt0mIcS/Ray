@@ -33,6 +33,8 @@ set(SRC
     "include/RlRender/Drawable/Drawable.cpp"
     "include/RlRender/Drawable/Triangle.h"
     "include/RlRender/Drawable/Triangle.cpp"
+    "include/RlRender/Drawable/Cube.h"
+    "include/RlRender/Drawable/Cube.cpp"
 
 
     # ----------------------------------------------
@@ -48,6 +50,8 @@ set(SRC
     # Shaders
     "Shaders/PixelShader-p.hlsl"
     "Shaders/VertexShader-v.hlsl"
+    "Shaders/PixelShader(Cube)-p.hlsl"
+    "Shaders/VertexShader(Cube)-v.hlsl"
 )
 
 set(PUBLIC_INC
@@ -114,6 +118,20 @@ if(MSVC)
     set_property(SOURCE "Shaders/VertexShader-v.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
     set_property(SOURCE "Shaders/VertexShader-v.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
     set_property(SOURCE "Shaders/VertexShader-v.hlsl" PROPERTY VS_SETTINGS "$<$<CONFIG:DEBUG>:SourceProperty1=SourceProperty1Value>")
+
+
+    set_property(SOURCE "Shaders/PixelShader(Cube)-p.hlsl" PROPERTY VS_SHADER_TYPE Pixel)
+    set_property(SOURCE "Shaders/PixelShader(Cube)-p.hlsl" PROPERTY VS_SHADER_ENTRYPOINT "main")
+    set_property(SOURCE "Shaders/PixelShader(Cube)-p.hlsl" PROPERTY VS_SHADER_MODEL 4.0_level_9_3)
+    set_property(SOURCE "Shaders/PixelShader(Cube)-p.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
+    set_property(SOURCE "Shaders/PixelShader(Cube)-p.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
+    
+    set_property(SOURCE "Shaders/VertexShader(Cube)-v.hlsl" PROPERTY VS_SHADER_TYPE Vertex)
+    set_property(SOURCE "Shaders/VertexShader(Cube)-v.hlsl" PROPERTY VS_SHADER_ENTRYPOINT "main")
+    set_property(SOURCE "Shaders/VertexShader(Cube)-v.hlsl" PROPERTY VS_SHADER_MODEL 4.0_level_9_3)
+    set_property(SOURCE "Shaders/VertexShader(Cube)-v.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
+    set_property(SOURCE "Shaders/VertexShader(Cube)-v.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
+    set_property(SOURCE "Shaders/VertexShader(Cube)-v.hlsl" PROPERTY VS_SETTINGS "$<$<CONFIG:DEBUG>:SourceProperty1=SourceProperty1Value>")
 endif()
 
 AddRecursiveFilters("${SRC}")

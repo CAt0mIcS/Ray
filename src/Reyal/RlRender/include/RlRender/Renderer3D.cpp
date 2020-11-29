@@ -41,7 +41,7 @@ namespace At0::Reyal
         sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
         sd.Flags = 0;
 
-        RL_GFX_THROW_FAILED(s_pIDXGIFactory->CreateSwapChain(s_pDevice.Get(), &sd, &m_pSwapChain));
+        RL_GFX_THROW_FAILED(s_pIDXGIFactory->CreateSwapChain(s_pDevice, &sd, &m_pSwapChain));
 
         WRL::ComPtr<ID3D11Resource> pBackBuffer;
         m_pSwapChain->GetBuffer(0u, __uuidof(ID3D11Resource), &pBackBuffer);
@@ -76,8 +76,6 @@ namespace At0::Reyal
 
     Renderer3D::~Renderer3D()
     {
-        WRL::ComPtr<ID3D11Debug> pDebug;
-        s_pDevice->QueryInterface(__uuidof(ID3D11Debug), &pDebug);
-        pDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+        
     }
 }

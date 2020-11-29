@@ -9,9 +9,11 @@ namespace WRL = Microsoft::WRL;
 
 namespace At0::Reyal
 {
-	WRL::ComPtr<ID3D11Device> GraphicsResource::s_pDevice = nullptr;
-	WRL::ComPtr<ID3D11DeviceContext> GraphicsResource::s_pContext = nullptr;
-	WRL::ComPtr<IDXGIFactory> GraphicsResource::s_pIDXGIFactory = nullptr;
+	std::atomic<int> GraphicsResource::s_RefCount = 0;
+
+	ID3D11Device* GraphicsResource::s_pDevice = nullptr;
+	ID3D11DeviceContext* GraphicsResource::s_pContext = nullptr;
+	IDXGIFactory* GraphicsResource::s_pIDXGIFactory = nullptr;
 
 	GraphicsResource::GraphicsResource()
 	{
@@ -38,12 +40,12 @@ namespace At0::Reyal
 			));
 
 			WRL::ComPtr<IDXGIDevice> pDevice;
-			RL_GFX_THROW_FAILED(s_pDevice->QueryInterface(__uuidof(IDXGIDevice), &pDevice));
+			RL_GFX_THROW_FAILED(s_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDevice));
 
 			WRL::ComPtr<IDXGIAdapter> pAdapter;
-			RL_GFX_THROW_FAILED(pDevice->GetParent(__uuidof(IDXGIAdapter), &pAdapter));
+			RL_GFX_THROW_FAILED(pDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&pAdapter));
 
-			RL_GFX_THROW_FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), &s_pIDXGIFactory));
+			RL_GFX_THROW_FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&s_pIDXGIFactory));
 		}
 
 		WRL::ComPtr<IDXGIAdapter> pAdapter;
@@ -66,6 +68,26 @@ namespace At0::Reyal
 				adapterDesc.AdapterLuid.LowPart,
 				adapterDesc.AdapterLuid.HighPart
 			);
+		}
+
+		++s_RefCount;
+	}
+	
+	GraphicsResource::~GraphicsResource()
+	{
+		--s_RefCount;
+		if (s_RefCount == 0)
+		{
+			s_pContext->Release();
+			s_pIDXGIFactory->Release();
+
+#ifndef NDEBUG
+			WRL::ComPtr<ID3D11Debug> pDebug;
+			s_pDevice->QueryInterface(__uuidof(ID3D11Debug), &pDebug);
+			pDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+#endif
+			
+			s_pDevice->Release();
 		}
 	}
 }
