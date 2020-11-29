@@ -106,7 +106,7 @@ namespace At0::Layers
 		//Reyal::Triangle triangle;
 		//triangle.Draw(receiver->GetRenderer3D());
 
-		Reyal::Cube cube(1.0f);
+		Reyal::Cube cube(*receiver->GetRenderer3D(), 1.0f);
 		cube.Draw(receiver->GetRenderer3D());
 
 		receiver->GetRenderer3D()->EndDraw();

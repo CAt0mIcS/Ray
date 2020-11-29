@@ -38,8 +38,15 @@ namespace At0::Reyal
 		delete s_Instance;
 	}
 
+	#include <DirectXMath.h>
 	int Application::Run()
 	{
+		// TODO: Only TEMPORARY
+		RECT rc;
+		GetClientRect((HWND)m_MainWindow->GetNativeWindow(), &rc);
+		m_MainWindow->GetRenderer3D()->SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, rc.right / rc.bottom , 0.5f, 40.0f));
+
+
 		auto lastFrameTime = std::chrono::high_resolution_clock::now();
 		
 		// -----------------------------------------------------------------------------------------

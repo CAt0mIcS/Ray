@@ -9,10 +9,8 @@ namespace At0::Reyal
 	class RLR_API Cube : public Drawable
 	{
 	public:
-		Cube(float size);
+		Cube(const Renderer3D& renderer, float size);
 		virtual void Update() override;
-
-	private:
-
+		virtual DirectX::XMMATRIX GetTransformXM() const override;
 	};
 }

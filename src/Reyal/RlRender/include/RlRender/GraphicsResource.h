@@ -1,6 +1,7 @@
 #pragma once
 
 #include <wrl.h>
+#include <atomic>
 
 struct IDXGIFactory;
 struct ID3D11Device;

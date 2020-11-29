@@ -3,6 +3,7 @@
 #include "RlRender/RlRBase.h"
 #include "RlRender/Bindable/Bindable.h"
 
+#include <DirectXMath.h>
 #include <vector>
 
 namespace At0::Reyal
@@ -19,6 +20,7 @@ namespace At0::Reyal
 
 		virtual void Update() = 0;
 		void Draw(Renderer3D* renderer);
+		virtual DirectX::XMMATRIX GetTransformXM() const = 0;
 
 	protected:
 		void AddBind(Scope<Bindable> bind);

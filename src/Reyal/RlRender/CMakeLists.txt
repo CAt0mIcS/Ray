@@ -26,6 +26,8 @@ set(SRC
     "include/RlRender/Bindable/PixelShader.cpp"
     "include/RlRender/Bindable/InputLayout.h"
     "include/RlRender/Bindable/InputLayout.cpp"
+    "include/RlRender/Bindable/ConstantBuffers.h"
+    "include/RlRender/Bindable/ConstantBuffers.cpp"
 
     # ----------------------------------------------
     # Drawables
