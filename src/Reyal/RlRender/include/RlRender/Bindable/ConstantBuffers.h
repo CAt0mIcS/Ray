@@ -59,20 +59,32 @@ namespace At0::Reyal
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pConstantBuffer;
 	};
 
+	
 	template<typename C>
-	class RLR_API VertexConstantBuffer : public ConstantBuffer<C>
+	class VertexConstantBuffer : public ConstantBuffer<C>
 	{
 		using ConstantBuffer<C>::m_pConstantBuffer;
 	public:
 		using ConstantBuffer<C>::ConstantBuffer;
-
 		virtual void Bind() override
 		{
 			s_pContext->VSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
 		}
 	};
 
-	// TODO: PixelConstantBuffer
+	
+	template<typename C>
+	class PixelConstantBuffer : public ConstantBuffer<C>
+	{
+		using ConstantBuffer<C>::m_pConstantBuffer;
+	public:
+		using ConstantBuffer<C>::ConstantBuffer;
+		virtual void Bind() override
+		{
+			s_pContext->PSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
+		}
+	};
+
 
 	class Renderer3D;
 	class RLR_API TransformConstantBuffer : public Bindable

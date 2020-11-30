@@ -45,7 +45,37 @@ namespace At0::Layers
 		pitch += pitchDist(mtEngine);
 		yaw += yawDist(mtEngine);
 		roll += rollDist(mtEngine);
-		Reyal::Cube cube(renderer, 1.0f);
+
+		std::uniform_real_distribution<float> colDist01(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist02(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist03(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist04(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist05(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist06(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist07(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist08(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist09(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist10(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist11(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist12(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist13(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist14(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist15(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist16(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist17(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist18(0.0f, 1.0f);
+
+		float colors[6][3] =
+		{
+			{ colDist01(mtEngine), colDist02(mtEngine), colDist03(mtEngine) },
+			{ colDist04(mtEngine), colDist05(mtEngine), colDist06(mtEngine) },
+			{ colDist07(mtEngine), colDist08(mtEngine), colDist09(mtEngine) },
+			{ colDist10(mtEngine), colDist11(mtEngine), colDist12(mtEngine) },
+			{ colDist13(mtEngine), colDist14(mtEngine), colDist15(mtEngine) },
+			{ colDist16(mtEngine), colDist17(mtEngine), colDist18(mtEngine) }
+		};
+
+		Reyal::Cube cube(renderer, 1.0f, colors);
 		cube.SetTransform(
 			cube.GetTransform() *
 			DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *

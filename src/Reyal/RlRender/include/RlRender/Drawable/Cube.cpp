@@ -12,7 +12,7 @@
 
 namespace At0::Reyal
 {
-	Cube::Cube(const Renderer3D& renderer, float size)
+	Cube::Cube(const Renderer3D& renderer, float size, const float colors[6][3])
 	{
 		struct Vertex
 		{
@@ -20,6 +20,17 @@ namespace At0::Reyal
 			{
 				float x, y, z;
 			} pos;
+		};
+
+		struct PixelConstantColorBuffer
+		{
+			struct
+			{
+				float r;
+				float g;
+				float b;
+				float a;
+			} face_colors[6];
 		};
 
 		float side = size / 2.0f;
@@ -68,6 +79,20 @@ namespace At0::Reyal
 			{ "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		};
 		AddBind(MakeScope<InputLayout>(inputLayoutVec, vbytecode));
+
+		const PixelConstantColorBuffer pccb
+		{
+			{
+				{ colors[0][0], colors[0][1], colors[0][2] },
+				{ colors[1][0], colors[1][1], colors[1][2] },
+				{ colors[2][0], colors[2][1], colors[2][2] },
+				{ colors[3][0], colors[3][1], colors[3][2] },
+				{ colors[4][0], colors[4][1], colors[4][2] },
+				{ colors[5][0], colors[5][1], colors[5][2] },
+			}
+		};
+
+		AddBind(MakeScope<PixelConstantBuffer<PixelConstantColorBuffer>>(pccb));
 
 		AddBind(MakeScope<TransformConstantBuffer>(renderer, *this));
 	}
