@@ -65,23 +65,41 @@ namespace At0::Layers
 		std::uniform_real_distribution<float> colDist17(0.0f, 1.0f);
 		std::uniform_real_distribution<float> colDist18(0.0f, 1.0f);
 
-		float colors[6][3] =
+		//float face_colors[6][3] =
+		//{
+		//	{ colDist01(mtEngine), colDist02(mtEngine), colDist03(mtEngine) },
+		//	{ colDist04(mtEngine), colDist05(mtEngine), colDist06(mtEngine) },
+		//	{ colDist07(mtEngine), colDist08(mtEngine), colDist09(mtEngine) },
+		//	{ colDist10(mtEngine), colDist11(mtEngine), colDist12(mtEngine) },
+		//	{ colDist13(mtEngine), colDist14(mtEngine), colDist15(mtEngine) },
+		//	{ colDist16(mtEngine), colDist17(mtEngine), colDist18(mtEngine) }
+		//};
+
+		float face_colors[6][3] =
 		{
-			{ colDist01(mtEngine), colDist02(mtEngine), colDist03(mtEngine) },
-			{ colDist04(mtEngine), colDist05(mtEngine), colDist06(mtEngine) },
-			{ colDist07(mtEngine), colDist08(mtEngine), colDist09(mtEngine) },
-			{ colDist10(mtEngine), colDist11(mtEngine), colDist12(mtEngine) },
-			{ colDist13(mtEngine), colDist14(mtEngine), colDist15(mtEngine) },
-			{ colDist16(mtEngine), colDist17(mtEngine), colDist18(mtEngine) }
+			{ 1.0f, 1.0f, 1.0f },
+			{ 1.0f, 1.0f, 1.0f },
+			{ 1.0f, 1.0f, 1.0f },
+			{ 1.0f, 1.0f, 1.0f },
+			{ 1.0f, 1.0f, 1.0f },
+			{ 1.0f, 1.0f, 1.0f }
 		};
 
-		Reyal::Cube cube(renderer, 1.0f, colors);
+		Reyal::Cube cube(renderer, 1.0f, face_colors);
 		cube.SetTransform(
 			cube.GetTransform() *
 			DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
 			DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
 		);
 		cube.Draw(&renderer);
+		
+		//Reyal::Cube cube2(renderer, 1.0f, face_colors);
+		//cube2.SetTransform(
+		//	cube2.GetTransform() *
+		//	DirectX::XMMatrixRotationRollPitchYaw(pitch + 1.0f, yaw + 1.0f, roll + 1.0f) *
+		//	DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
+		//);
+		//cube2.Draw(&renderer);
 		
 		renderer.EndDraw();
 	}
