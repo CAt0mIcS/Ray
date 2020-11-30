@@ -2,6 +2,7 @@
 
 #include <RlDebug/RlAssert.h>
 #include <RlDebug/Instrumentor.h>
+#include <RlDebug/ReyalLogger.h>
 
 #include <RlRender/RendererAPI.h>
 #include <RlRender/Renderer3D.h>
