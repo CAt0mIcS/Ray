@@ -15,7 +15,7 @@ namespace At0::Reyal
 			: m_Time(time) { }
 
 		/// <summary>
-		/// Conversion operator to float, returns the current time
+		/// Conversion operator to float, returns the current time in seconds
 		/// </summary>
 		operator float() { return m_Time; }
 

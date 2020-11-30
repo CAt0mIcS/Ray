@@ -11,7 +11,6 @@
 #include <RlRender/Drawable/Cube.h>
 
 
-
 namespace At0::Layers
 {
 	GUILayer::GUILayer(const std::string_view name)
@@ -29,6 +28,32 @@ namespace At0::Layers
 	
 	void GUILayer::OnUpdate(Reyal::Timestep ts)
 	{
+		auto& renderer = *Reyal::Application::Get().GetMainWindow().GetRenderer3D();
+
+		renderer.ClearBuffer(0.07f, 0.0f, 0.12f);
+		//Reyal::Triangle triangle;
+		//triangle.Draw(&renderer);
+		static float pitch = 0.0f;
+		static float yaw = 0.0f;
+		static float roll = 0.0f;
+
+		std::mt19937 mtEngine;
+		std::uniform_real_distribution<float> pitchDist(0.0f, 0.01f);
+		std::uniform_real_distribution<float> yawDist(0.0f, 0.01f);
+		std::uniform_real_distribution<float> rollDist(0.0f, 0.01f);
+
+		pitch += pitchDist(mtEngine);
+		yaw += yawDist(mtEngine);
+		roll += rollDist(mtEngine);
+		Reyal::Cube cube(renderer, 1.0f);
+		cube.SetTransform(
+			cube.GetTransform() *
+			DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
+			DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
+		);
+		cube.Draw(&renderer);
+		
+		renderer.EndDraw();
 	}
 
 	void GUILayer::OnMousePress(Reyal::Widget* receiver, Reyal::MouseButtonPressedEvent& e)
@@ -100,21 +125,6 @@ namespace At0::Layers
 	void GUILayer::OnKeyPress(Reyal::Widget* receiver, Reyal::KeyPressedEvent& e)
 	{
 		RL_PROFILE_FUNCTION();
-
-		receiver->GetRenderer3D()->ClearBuffer(0.07f, 0.0f, 0.12f);
-		
-		//Reyal::Triangle triangle;
-		//triangle.Draw(receiver->GetRenderer3D());
-
-		Reyal::Cube cube(*receiver->GetRenderer3D(), 1.0f);
-		cube.SetTransform(
-			DirectX::XMMatrixRotationRollPitchYaw(5.0f, 10.0f, 10.0f) *
-			DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
-		);
-		cube.Draw(receiver->GetRenderer3D());
-
-		receiver->GetRenderer3D()->EndDraw();
-
 		RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	}
 
