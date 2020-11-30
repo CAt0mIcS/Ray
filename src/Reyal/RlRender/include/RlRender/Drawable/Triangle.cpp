@@ -61,11 +61,6 @@ namespace At0::Reyal
 	void Triangle::Update()
 	{
 	}
-    
-    DirectX::XMMATRIX Triangle::GetTransformXM() const
-    {
-        return DirectX::XMMatrixIdentity();
-    }
 }
 
 

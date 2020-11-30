@@ -16,7 +16,7 @@ namespace At0::Reyal
 	{
 		m_Vcbuf.Update(
 			DirectX::XMMatrixTranspose(
-				m_Parent.GetTransformXM() * m_Renderer.GetProjection()
+				m_Parent.GetTransform() * m_Renderer.GetProjection()
 			)
 		);
 		m_Vcbuf.Bind();

@@ -107,6 +107,10 @@ namespace At0::Layers
 		//triangle.Draw(receiver->GetRenderer3D());
 
 		Reyal::Cube cube(*receiver->GetRenderer3D(), 1.0f);
+		cube.SetTransform(
+			DirectX::XMMatrixRotationRollPitchYaw(5.0f, 10.0f, 10.0f) *
+			DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
+		);
 		cube.Draw(receiver->GetRenderer3D());
 
 		receiver->GetRenderer3D()->EndDraw();

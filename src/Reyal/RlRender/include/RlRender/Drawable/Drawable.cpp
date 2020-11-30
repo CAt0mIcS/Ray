@@ -33,7 +33,7 @@ namespace At0::Reyal
 	}
 
 	Drawable::Drawable()
-		: m_pIndexBuffer(nullptr), m_Binds{}
+		: m_pIndexBuffer(nullptr), m_Binds{}, m_TransformMatrix(DirectX::XMMatrixIdentity())
 	{
 
 	}

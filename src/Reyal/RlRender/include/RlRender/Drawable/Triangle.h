@@ -10,6 +10,5 @@ namespace At0::Reyal
 	public:
 		Triangle();
 		virtual void Update() override;
-		virtual DirectX::XMMATRIX GetTransformXM() const override;
 	};
 }

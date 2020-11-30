@@ -19,15 +19,17 @@ namespace At0::Reyal
 		Drawable& operator=(Drawable&&) noexcept = default;
 
 		virtual void Update() = 0;
+		void SetTransform(const DirectX::XMMATRIX& transform) { m_TransformMatrix = transform; }
+		const DirectX::XMMATRIX& GetTransform() const { return m_TransformMatrix; }
 		void Draw(Renderer3D* renderer);
-		virtual DirectX::XMMATRIX GetTransformXM() const = 0;
 
 	protected:
 		void AddBind(Scope<Bindable> bind);
 		void AddIndexBuffer(Scope<IndexBuffer> indexBuffer);
+		Drawable();
 
 	protected:
-		Drawable();
+		DirectX::XMMATRIX m_TransformMatrix;
 
 	private:
 		const IndexBuffer* m_pIndexBuffer;
