@@ -154,6 +154,11 @@ namespace At0::Reyal
 		/// <returns>True if the WindowProc should return 0, false if it should break</returns>
 		virtual bool OnWindowClose(Widget* receiver, WindowCloseEvent& e) { return true; }
 
+		/// <summary>
+		/// Default virtual Layer Deconstructor
+		/// </summary>
+		virtual ~Layer() = default;
+
 	private:
 		/// <summary>
 		/// Is the name of the current Layer, this name should be unique between Layers

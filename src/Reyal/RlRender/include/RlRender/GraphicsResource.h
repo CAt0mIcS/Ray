@@ -17,7 +17,7 @@ namespace At0::Reyal
 
 	protected:
 		GraphicsResource();
-		~GraphicsResource();
+		virtual ~GraphicsResource();
 
 	protected:
 		static ID3D11Device* s_pDevice;

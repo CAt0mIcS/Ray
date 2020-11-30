@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <sstream>
 #include "TypeConvert.h"
 
 #include "RlUBase.h"

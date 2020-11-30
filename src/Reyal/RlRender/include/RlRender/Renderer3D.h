@@ -19,7 +19,9 @@ namespace At0::Reyal
     {
     public:
         Renderer3D();
-        
+        Renderer3D& operator=(const Renderer3D& other) = delete;
+        Renderer3D(const Renderer3D& other) = delete;
+
         void Init(HWND hWnd);
         void DrawIndexed(uint32_t indicesCount);
         void ClearBuffer(float red, float green, float blue);

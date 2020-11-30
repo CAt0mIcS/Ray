@@ -16,6 +16,7 @@ namespace At0::Reyal
 
 	public:
 		unsigned char GetKeyCode() const { return m_KeyCode; }
+		virtual ~KeyEvent() = default;
 
 	private:
 		unsigned char m_KeyCode;

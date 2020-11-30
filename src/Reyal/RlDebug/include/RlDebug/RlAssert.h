@@ -3,6 +3,8 @@
 #ifndef NDEBUG
 
 #include "ReyalLogger.h"
+#include <../../RlUtilities/include/RlUtil/TypeConvert.h>
+#include <../../RlUtilities/include/RlUtil/Serialize.h>
 
 #include <assert.h>
 #include "RlDBase.h"

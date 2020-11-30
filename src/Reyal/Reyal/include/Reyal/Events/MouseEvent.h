@@ -109,7 +109,8 @@ namespace At0::Reyal
 	{
 	public:
 		int GetDelta() const { return m_Delta; }
-
+		virtual ~MouseWheelEvent() = default;
+		
 	protected:
 		MouseWheelEvent(int delta)
 			: m_Delta(delta) {}

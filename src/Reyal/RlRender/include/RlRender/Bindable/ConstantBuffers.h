@@ -55,6 +55,8 @@ namespace At0::Reyal
 			s_pDevice->CreateBuffer(&bd, nullptr, m_pConstantBuffer.GetAddressOf());
 		}
 
+		virtual ~ConstantBuffer() = default;
+
 	protected:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pConstantBuffer;
 	};

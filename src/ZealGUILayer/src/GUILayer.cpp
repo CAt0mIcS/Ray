@@ -92,7 +92,7 @@ namespace At0::Layers
 			DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
 		);
 		cube.Draw(&renderer);
-		
+
 		//Reyal::Cube cube2(renderer, 1.0f, face_colors);
 		//cube2.SetTransform(
 		//	cube2.GetTransform() *

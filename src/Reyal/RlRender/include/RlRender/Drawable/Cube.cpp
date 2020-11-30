@@ -101,14 +101,6 @@ namespace At0::Reyal
 	{
 
 	}
-	
-	//DirectX::XMMATRIX Cube::GetTransformXM() const
-	//{
-	//	return DirectX::XMMatrixRotationRollPitchYaw(0, 0, 0) *
-	//		DirectX::XMMatrixTranslation(0, 0.0f, 0.0f) *
-	//		DirectX::XMMatrixRotationRollPitchYaw(0, 0, 0) *
-	//		DirectX::XMMatrixTranslation(0.0f, 0.0f, 20.0f);
-	//}
 }
 
 

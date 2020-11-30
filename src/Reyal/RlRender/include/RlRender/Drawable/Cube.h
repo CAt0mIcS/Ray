@@ -11,6 +11,5 @@ namespace At0::Reyal
 	public:
 		Cube(const Renderer3D& renderer, float size, const float colors[6][3]);
 		virtual void Update() override;
-		//virtual DirectX::XMMATRIX GetTransformXM() const override;
 	};
 }

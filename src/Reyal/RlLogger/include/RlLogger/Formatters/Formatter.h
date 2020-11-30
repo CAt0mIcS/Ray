@@ -17,6 +17,10 @@ namespace At0::Log
 		/// <param name="logLvl">Is the current log level</param>
 		virtual void Format(std::string& str, LogLevel logLvl) = 0;
 
+		/// <summary>
+		/// Default virtual Formatter Deconstructor
+		/// </summary>
+		virtual ~Formatter() = default;
 	protected:
 		/// <summary>
 		/// Protected default Formatter Constructor

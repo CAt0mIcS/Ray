@@ -14,6 +14,7 @@ namespace At0::Reyal
 	class RLR_API Drawable
 	{
 	public:
+		virtual ~Drawable() = default;
 		Drawable(const Drawable&) = delete;
 		Drawable(Drawable&&) noexcept = default;
 		Drawable& operator=(Drawable&&) noexcept = default;

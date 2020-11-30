@@ -1,4 +1,6 @@
 #include "utpch.h"
+#if RL_ENABLE_INFO || RL_ENABLE_WARNING
+
 #include "InfoManager.h"
 
 #include "MessageBox.h"
@@ -10,6 +12,8 @@
 
 namespace At0::Util
 {
+
+
 	std::string InfoManager::GetDefaultString(uint16_t line, const std::string_view file)
 	{
 		std::stringstream oss;
@@ -59,5 +63,5 @@ namespace At0::Util
 	// _WIN32
 }
 
-
+#endif // RL_ENABLE_INF || RL_ENABLE_WARN
 
