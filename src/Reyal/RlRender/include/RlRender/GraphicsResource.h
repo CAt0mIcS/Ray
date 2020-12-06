@@ -25,6 +25,6 @@ namespace At0::Reyal
 		static IDXGIFactory* s_pIDXGIFactory;
 
 	private:
-		static std::atomic<int> s_RefCount;
+		static std::atomic<uint32_t> s_RefCount;
 	};
 }

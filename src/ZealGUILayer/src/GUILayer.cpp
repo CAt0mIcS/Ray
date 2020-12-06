@@ -36,6 +36,19 @@ namespace At0::Layers
 		static float pitch = 0.0f;
 		static float yaw = 0.0f;
 		static float roll = 0.0f;
+		static float zDir = 5.0f;
+
+
+		Reyal::KeyboardInput& kbd = Reyal::Application::Get().GetMainWindow().Keyboard;
+		if (kbd.IsKeyPressed(17)) //LCONTROL
+		{
+			zDir -= 0.1f;
+		}
+		else if (kbd.IsKeyPressed(16)) //LSHIFT
+		{
+			zDir += 0.1f;
+		}
+
 
 		std::mt19937 mtEngine;
 		std::uniform_real_distribution<float> pitchDist(0.0f, 0.01f);
@@ -46,6 +59,7 @@ namespace At0::Layers
 		yaw += yawDist(mtEngine);
 		roll += rollDist(mtEngine);
 
+		mtEngine.seed((uint32_t)time(0));
 		std::uniform_real_distribution<float> colDist01(0.0f, 1.0f);
 		std::uniform_real_distribution<float> colDist02(0.0f, 1.0f);
 		std::uniform_real_distribution<float> colDist03(0.0f, 1.0f);
@@ -65,41 +79,39 @@ namespace At0::Layers
 		std::uniform_real_distribution<float> colDist17(0.0f, 1.0f);
 		std::uniform_real_distribution<float> colDist18(0.0f, 1.0f);
 
-		//float face_colors[6][3] =
-		//{
-		//	{ colDist01(mtEngine), colDist02(mtEngine), colDist03(mtEngine) },
-		//	{ colDist04(mtEngine), colDist05(mtEngine), colDist06(mtEngine) },
-		//	{ colDist07(mtEngine), colDist08(mtEngine), colDist09(mtEngine) },
-		//	{ colDist10(mtEngine), colDist11(mtEngine), colDist12(mtEngine) },
-		//	{ colDist13(mtEngine), colDist14(mtEngine), colDist15(mtEngine) },
-		//	{ colDist16(mtEngine), colDist17(mtEngine), colDist18(mtEngine) }
-		//};
-
 		float face_colors[6][3] =
 		{
-			{ 1.0f, 1.0f, 1.0f },
-			{ 1.0f, 1.0f, 1.0f },
-			{ 1.0f, 1.0f, 1.0f },
-			{ 1.0f, 1.0f, 1.0f },
-			{ 1.0f, 1.0f, 1.0f },
-			{ 1.0f, 1.0f, 1.0f }
+			{ colDist01(mtEngine), colDist02(mtEngine), colDist03(mtEngine) },
+			{ colDist04(mtEngine), colDist05(mtEngine), colDist06(mtEngine) },
+			{ colDist07(mtEngine), colDist08(mtEngine), colDist09(mtEngine) },
+			{ colDist10(mtEngine), colDist11(mtEngine), colDist12(mtEngine) },
+			{ colDist13(mtEngine), colDist14(mtEngine), colDist15(mtEngine) },
+			{ colDist16(mtEngine), colDist17(mtEngine), colDist18(mtEngine) }
 		};
+
+		//float face_colors[6][3] =
+		//{
+		//	{ 1.0f, 1.0f, 1.0f },
+		//	{ 1.0f, 1.0f, 1.0f },
+		//	{ 1.0f, 1.0f, 1.0f },
+		//	{ 1.0f, 1.0f, 1.0f },
+		//	{ 1.0f, 1.0f, 1.0f },
+		//	{ 1.0f, 1.0f, 1.0f }
+		//};
 
 		Reyal::Cube cube(renderer, 1.0f, face_colors);
 		cube.SetTransform(
-			cube.GetTransform() *
 			DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-			DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
+			DirectX::XMMatrixTranslation(0.0f, 0.0f, zDir)
 		);
 		cube.Draw(&renderer);
 
-		//Reyal::Cube cube2(renderer, 1.0f, face_colors);
-		//cube2.SetTransform(
-		//	cube2.GetTransform() *
-		//	DirectX::XMMatrixRotationRollPitchYaw(pitch + 1.0f, yaw + 1.0f, roll + 1.0f) *
-		//	DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
-		//);
-		//cube2.Draw(&renderer);
+		Reyal::Cube cube2(renderer, 1.0f, face_colors);
+		cube2.SetTransform(
+			DirectX::XMMatrixRotationRollPitchYaw(pitch + 1.0f, yaw + 1.0f, roll + 1.0f) *
+			DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
+		);
+		cube2.Draw(&renderer);
 		
 		renderer.EndDraw();
 	}

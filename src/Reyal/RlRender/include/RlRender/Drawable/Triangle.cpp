@@ -11,6 +11,8 @@
 
 namespace At0::Reyal
 {
+    std::vector<Scope<Bindable>> Triangle::s_StaticBinds;
+
 	Triangle::Triangle()
 	{
         struct Vertex

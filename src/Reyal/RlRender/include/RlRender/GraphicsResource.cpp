@@ -9,7 +9,7 @@ namespace WRL = Microsoft::WRL;
 
 namespace At0::Reyal
 {
-	std::atomic<int> GraphicsResource::s_RefCount = 0;
+	std::atomic<uint32_t> GraphicsResource::s_RefCount = 0;
 
 	ID3D11Device* GraphicsResource::s_pDevice = nullptr;
 	ID3D11DeviceContext* GraphicsResource::s_pContext = nullptr;

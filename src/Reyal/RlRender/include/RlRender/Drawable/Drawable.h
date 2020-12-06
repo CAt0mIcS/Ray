@@ -27,7 +27,7 @@ namespace At0::Reyal
 	protected:
 		void AddBind(Scope<Bindable> bind);
 		void AddIndexBuffer(Scope<IndexBuffer> indexBuffer);
-		virtual const std::vector<Scope<Bindable>>& GetStaticBinds() const { return {}; }
+		virtual const std::vector<Scope<Bindable>>& GetStaticBinds() const = 0;
 		Drawable();
 
 	protected:
