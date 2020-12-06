@@ -36,6 +36,9 @@ namespace At0::Layers
 		static float pitch = 0.0f;
 		static float yaw = 0.0f;
 		static float roll = 0.0f;
+
+		static float xDir = 0.0f;
+		static float yDir = 0.0f;
 		static float zDir = 5.0f;
 
 
@@ -44,9 +47,25 @@ namespace At0::Layers
 		{
 			zDir -= 0.1f;
 		}
-		else if (kbd.IsKeyPressed(16)) //LSHIFT
+		if (kbd.IsKeyPressed(16)) //LSHIFT
 		{
 			zDir += 0.1f;
+		}
+		if (kbd.IsKeyPressed('W'))
+		{
+			yDir += 0.1f;
+		}
+		if (kbd.IsKeyPressed('A'))
+		{
+			xDir -= 0.1f;
+		}
+		if (kbd.IsKeyPressed('S'))
+		{
+			yDir -= 0.1f;
+		}
+		if (kbd.IsKeyPressed('D'))
+		{
+			xDir += 0.1f;
 		}
 
 
@@ -102,7 +121,7 @@ namespace At0::Layers
 		Reyal::Cube cube(renderer, 1.0f, face_colors);
 		cube.SetTransform(
 			DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-			DirectX::XMMatrixTranslation(0.0f, 0.0f, zDir)
+			DirectX::XMMatrixTranslation(xDir, yDir, zDir)
 		);
 		cube.Draw(&renderer);
 
