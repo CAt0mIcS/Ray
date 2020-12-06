@@ -27,13 +27,14 @@ namespace At0::Reyal
 	protected:
 		void AddBind(Scope<Bindable> bind);
 		void AddIndexBuffer(Scope<IndexBuffer> indexBuffer);
+		virtual const std::vector<Scope<Bindable>>& GetStaticBinds() const { return {}; }
 		Drawable();
 
 	protected:
 		DirectX::XMMATRIX m_TransformMatrix;
+		const IndexBuffer* m_pIndexBuffer;
 
 	private:
-		const IndexBuffer* m_pIndexBuffer;
 		std::vector<Scope<Bindable>> m_Binds;
 	};
 }

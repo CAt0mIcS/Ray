@@ -25,6 +25,11 @@ namespace At0::Reyal
 
 	void Drawable::Draw(Renderer3D* renderer)
 	{
+		for (auto& bindable : GetStaticBinds())
+		{
+			bindable->Bind();
+		}
+
 		for (auto& bindable : m_Binds)
 		{
 			bindable->Bind();

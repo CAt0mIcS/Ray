@@ -77,16 +77,11 @@ namespace At0::Reyal
 		--s_RefCount;
 		if (s_RefCount == 0)
 		{
-			s_pContext->Release();
-			s_pIDXGIFactory->Release();
-
 #ifndef NDEBUG
 			WRL::ComPtr<ID3D11Debug> pDebug;
 			s_pDevice->QueryInterface(__uuidof(ID3D11Debug), &pDebug);
 			pDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 #endif
-			
-			s_pDevice->Release();
 		}
 	}
 }
