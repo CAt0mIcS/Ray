@@ -13,99 +13,27 @@
 
 namespace At0::Layers
 {
+	std::vector<Reyal::Cube> cubes;
+	static constexpr uint64_t numCubes = 3001;
+	std::mt19937 mtEngine;
+
 	GUILayer::GUILayer(const std::string_view name)
 		: Reyal::Layer(name)
 	{
 		RL_PROFILE_FUNCTION();
 		RL_LOG_DEBUG("[GUILayer] Startup");
-	}
-
-	void GUILayer::OnMouseMove(Reyal::Widget* receiver, Reyal::MouseMoveEvent& e)
-	{
-		RL_PROFILE_FUNCTION();
-		RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	}
-	
-	void GUILayer::OnUpdate(Reyal::Timestep ts)
-	{
-		auto& renderer = *Reyal::Application::Get().GetMainWindow().GetRenderer3D();
-
-		renderer.ClearBuffer(0.07f, 0.0f, 0.12f);
-		//Reyal::Triangle triangle;
-		//triangle.Draw(&renderer);
-		static float pitch = 0.0f;
-		static float yaw = 0.0f;
-		static float roll = 0.0f;
-
-		static float xDir = 0.0f;
-		static float yDir = 0.0f;
-		static float zDir = 5.0f;
-
-
-		Reyal::KeyboardInput& kbd = Reyal::Application::Get().GetMainWindow().Keyboard;
-		if (kbd.IsKeyPressed(17)) //LCONTROL
-		{
-			zDir -= 0.1f;
-		}
-		if (kbd.IsKeyPressed(16)) //LSHIFT
-		{
-			zDir += 0.1f;
-		}
-		if (kbd.IsKeyPressed('W'))
-		{
-			yDir += 0.1f;
-		}
-		if (kbd.IsKeyPressed('A'))
-		{
-			xDir -= 0.1f;
-		}
-		if (kbd.IsKeyPressed('S'))
-		{
-			yDir -= 0.1f;
-		}
-		if (kbd.IsKeyPressed('D'))
-		{
-			xDir += 0.1f;
-		}
-
-
-		std::mt19937 mtEngine;
-		std::uniform_real_distribution<float> pitchDist(0.0f, 0.01f);
-		std::uniform_real_distribution<float> yawDist(0.0f, 0.01f);
-		std::uniform_real_distribution<float> rollDist(0.0f, 0.01f);
-
-		pitch += pitchDist(mtEngine);
-		yaw += yawDist(mtEngine);
-		roll += rollDist(mtEngine);
 
 		mtEngine.seed((uint32_t)time(0));
-		std::uniform_real_distribution<float> colDist01(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist02(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist03(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist04(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist05(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist06(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist07(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist08(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist09(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist10(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist11(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist12(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist13(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist14(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist15(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist16(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist17(0.0f, 1.0f);
-		std::uniform_real_distribution<float> colDist18(0.0f, 1.0f);
+		std::uniform_real_distribution<float> colDist(0.0f, 1.0f);
 
 		float face_colors[6][3] =
 		{
-			{ colDist01(mtEngine), colDist02(mtEngine), colDist03(mtEngine) },
-			{ colDist04(mtEngine), colDist05(mtEngine), colDist06(mtEngine) },
-			{ colDist07(mtEngine), colDist08(mtEngine), colDist09(mtEngine) },
-			{ colDist10(mtEngine), colDist11(mtEngine), colDist12(mtEngine) },
-			{ colDist13(mtEngine), colDist14(mtEngine), colDist15(mtEngine) },
-			{ colDist16(mtEngine), colDist17(mtEngine), colDist18(mtEngine) }
+			{ colDist(mtEngine), colDist(mtEngine), colDist(mtEngine) },
+			{ colDist(mtEngine), colDist(mtEngine), colDist(mtEngine) },
+			{ colDist(mtEngine), colDist(mtEngine), colDist(mtEngine) },
+			{ colDist(mtEngine), colDist(mtEngine), colDist(mtEngine) },
+			{ colDist(mtEngine), colDist(mtEngine), colDist(mtEngine) },
+			{ colDist(mtEngine), colDist(mtEngine), colDist(mtEngine) }
 		};
 
 		//float face_colors[6][3] =
@@ -118,20 +46,85 @@ namespace At0::Layers
 		//	{ 1.0f, 1.0f, 1.0f }
 		//};
 
-		Reyal::Cube cube(renderer, 1.0f, face_colors);
-		cube.SetTransform(
+		// TODO: Need to reserve because ConstantBuffer takes reference to Drawable(Cube) parent
+		// and the memory address changes when std::vector reallocates
+		cubes.reserve(numCubes);
+		for (uint32_t i = 0; i < numCubes - 1; ++i)
+		{
+			cubes.emplace_back(*Reyal::Application::Get().GetMainWindow().GetRenderer3D(), 1.0f, face_colors);
+		}
+
+		cubes.emplace_back(*Reyal::Application::Get().GetMainWindow().GetRenderer3D(), 1.0f, face_colors);
+
+	}
+
+	void GUILayer::OnMouseMove(Reyal::Widget* receiver, Reyal::MouseMoveEvent& e)
+	{
+		RL_PROFILE_FUNCTION();
+		RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+	}
+	
+	void GUILayer::OnUpdate(Reyal::Timestep ts)
+	{
+		auto& renderer = *Reyal::Application::Get().GetMainWindow().GetRenderer3D();
+		
+		static float pitch = 0.0f;
+		static float yaw = 0.0f;
+		static float roll = 0.0f;
+		static float xDir = 0.0f;
+		static float yDir = 0.0f;
+		static float zDir = 5.0f;
+
+		renderer.ClearBuffer(0.07f, 0.0f, 0.12f);
+
+		Reyal::KeyboardInput& kbd = Reyal::Application::Get().GetMainWindow().Keyboard;
+		if (kbd.IsKeyPressed(17)) //LCONTROL
+		{
+			zDir -= 3.0f * ts;
+		}
+		if (kbd.IsKeyPressed(16)) //LSHIFT
+		{
+			zDir += 3.0f * ts;
+		}
+		if (kbd.IsKeyPressed('W'))
+		{
+			yDir += 3.0f * ts;
+		}
+		if (kbd.IsKeyPressed('A'))
+		{
+			xDir -= 3.0f * ts;
+		}
+		if (kbd.IsKeyPressed('S'))
+		{
+			yDir -= 3.0f * ts;
+		}
+		if (kbd.IsKeyPressed('D'))
+		{
+			xDir += 3.0f * ts;
+		}
+
+		pitch += 0.5f * ts;
+		yaw += 0.5f * ts;
+		roll += 0.5f * ts;
+
+		for (uint32_t i = 0; i < cubes.size() - 1; ++i)
+		{
+			cubes[i].SetTransform(
+				DirectX::XMMatrixRotationRollPitchYaw(pitch + i, yaw + i, roll + i) *
+				DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
+			);
+		}
+		
+		cubes.back().SetTransform(
 			DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
 			DirectX::XMMatrixTranslation(xDir, yDir, zDir)
 		);
-		cube.Draw(&renderer);
 
-		Reyal::Cube cube2(renderer, 1.0f, face_colors);
-		cube2.SetTransform(
-			DirectX::XMMatrixRotationRollPitchYaw(pitch + 1.0f, yaw + 1.0f, roll + 1.0f) *
-			DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
-		);
-		cube2.Draw(&renderer);
-		
+		for (auto& cube : cubes)
+		{
+			cube.Draw(&renderer);
+		}
+
 		renderer.EndDraw();
 	}
 

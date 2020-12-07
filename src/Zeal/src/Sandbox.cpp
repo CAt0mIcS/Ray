@@ -90,15 +90,15 @@ void At0::Reyal::Awake(int argc, char** argv)
 		RL_LOG_BEGIN("../../Zeal.log", Log::LogLevel::Trace);
 
 		RL_PROFILE_BEGIN_SESSION("Startup", "../../Profiling/Profile-Startup.json");
-		Reyal::Application::Create(new Zeal::Sandbox(""));
+		Zeal::Sandbox* app = new Zeal::Sandbox("");
 		RL_PROFILE_END_SESSION();
 
 		RL_PROFILE_BEGIN_SESSION("Runtime", "../../Profiling/Profile-Runtime.json");
-		int exitCode = Reyal::Application::Get().Run();
+		int exitCode = app->Run();
 		RL_PROFILE_END_SESSION();
 
 		RL_PROFILE_BEGIN_SESSION("Shutdown", "../../Profiling/Profile-Shutdown.json");
-		Reyal::Application::Destroy();
+		delete app;
 		RL_PROFILE_END_SESSION();
 
 		RL_LOG_END();

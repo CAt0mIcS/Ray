@@ -14,9 +14,12 @@ namespace At0::Reyal
 
 	void TransformConstantBuffer::Bind()
 	{
+		auto& pTransform = m_Parent.GetTransform();
+		auto& rTransform = m_Renderer.GetProjection();
+		
 		m_Vcbuf.Update(
 			DirectX::XMMatrixTranspose(
-				m_Parent.GetTransform() * m_Renderer.GetProjection()
+				pTransform * rTransform
 			)
 		);
 		m_Vcbuf.Bind();

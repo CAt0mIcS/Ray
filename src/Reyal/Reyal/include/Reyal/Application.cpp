@@ -23,8 +23,12 @@ namespace At0::Reyal
 	Application::Application(const std::string_view commandLine)
 		: m_LayerStack{}
 	{
+		if (s_Instance)
+			RL_ASSERT(false, "Application already initialized");
+		s_Instance = this;
+
 		StartupSetup();
-		m_MainWindow = PushWindow(Window::Create("MainWindow", nullptr));
+		m_MainWindow = PushWindow(Window::Create("MainWindow"));
 		Window::SetImmediateEventHandler([this](Widget* receiver, Event& e) { return OnImmediateEvent(receiver, e); });
 	}
 
