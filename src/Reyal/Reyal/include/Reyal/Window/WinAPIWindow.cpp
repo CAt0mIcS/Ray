@@ -13,10 +13,6 @@
 
 #include <RlRender/Renderer3D.h>
 
-#include "Reyal/Events/ApplicationEvent.h"
-#include "Reyal/Events/MouseEvent.h"
-#include "Reyal/Events/KeyboardEvent.h"
-
 #include <Windows.h>
 
 
@@ -109,8 +105,11 @@ namespace At0::Reyal
 			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.SetPos({ (float)pt.x, (float)pt.y });
 
-			Scope<MouseMoveEvent> e = MakeScope<MouseMoveEvent>(Mouse.GetOldPos(), Mouse.GetPos());
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseMoveEvent e(Mouse.GetOldPos(), Mouse.GetPos());
+			for (auto* listener : m_MouseMoveListeners)
+			{
+				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 
 			// Loop over the widgets and check if the mouse left any
 			SetHoveringWidget();
@@ -121,70 +120,97 @@ namespace At0::Reyal
 		{
 			Mouse.SetLeftPressed(true);
 
-			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Left);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseButtonPressedEvent e(MouseButton::Left);
+			for (auto* listener : m_MouseButtonPressedListeners)
+			{
+				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 			return 0;
 		}
 		case WM_LBUTTONUP:
 		{
 			Mouse.SetLeftPressed(false);
 
-			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Left);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseButtonReleasedEvent e(MouseButton::Left);
+			for (auto* listener : m_MouseButtonReleasedListeners)
+			{
+				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 			return 0;
 		}
 		case WM_MBUTTONDOWN:
 		{
 			Mouse.SetMiddlePressed(true);
 
-			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Middle);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseButtonPressedEvent e(MouseButton::Middle);
+			for (auto* listener : m_MouseButtonPressedListeners)
+			{
+				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 			return 0;
 		}
 		case WM_MBUTTONUP:
 		{
 			Mouse.SetMiddlePressed(false);
 
-			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Middle);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseButtonReleasedEvent e(MouseButton::Middle);
+			for (auto* listener : m_MouseButtonReleasedListeners)
+			{
+				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 			return 0;
 		}
 		case WM_RBUTTONDOWN:
 		{
 			Mouse.SetRightPressed(true);
 
-			Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>(MouseButton::Right);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseButtonPressedEvent e(MouseButton::Right);
+			for (auto* listener : m_MouseButtonPressedListeners)
+			{
+				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 			return 0;
 		}
 		case WM_RBUTTONUP:
 		{
 			Mouse.SetRightPressed(false);
 
-			Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>(MouseButton::Right);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			MouseButtonReleasedEvent e(MouseButton::Right);
+			for (auto* listener : m_MouseButtonReleasedListeners)
+			{
+				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 			return 0;
 		}
 		case WM_KEYDOWN:
 		{
 			Keyboard.SetKeyState((unsigned char)wParam, true);
 
-			Scope<KeyPressedEvent> e = MakeScope<KeyPressedEvent>((unsigned char)wParam, (uint32_t)(lParam & 0xff));
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			KeyPressedEvent e((unsigned char)wParam, (uint32_t)(lParam & 0xff));
+			for (auto* listener : m_KeyPressedListeners)
+			{
+				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 			return 0;
 		}
 		case WM_KEYUP:
 		{
 			Keyboard.SetKeyState((unsigned char)wParam, false);
 
-			Scope<KeyReleasedEvent> e = MakeScope<KeyReleasedEvent>((unsigned char)wParam);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			KeyReleasedEvent e((unsigned char)wParam);
+			for (auto* listener : m_KeyReleasedListeners)
+			{
+				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 			return 0;
 		}
 		case WM_CHAR:
 		{
-			Scope<CharEvent> e = MakeScope<CharEvent>((unsigned char)wParam);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			CharEvent e((unsigned char)wParam);
+			for (auto* listener : m_CharListeners)
+			{
+				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 			return 0;
 		}
 		case WM_MOUSEWHEEL:
@@ -193,13 +219,19 @@ namespace At0::Reyal
 
 			if (delta > 0)
 			{
-				Scope<MouseWheelUpEvent> e = MakeScope<MouseWheelUpEvent>(delta);
-				m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+				MouseWheelUpEvent e(delta);
+				for (auto* listener : m_MouseWheelUpListeners)
+				{
+					listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}
 			}
 			else if (delta < 0)
 			{
-				Scope<MouseWheelDownEvent> e = MakeScope<MouseWheelDownEvent>(delta);
-				m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+				MouseWheelDownEvent e(delta);
+				for (auto* listener : m_MouseWheelDownListeners)
+				{
+					listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}
 			}
 
 			return 0;
@@ -210,13 +242,19 @@ namespace At0::Reyal
 
 			if (delta > 0)
 			{
-				Scope<MouseWheelRightEvent> e = MakeScope<MouseWheelRightEvent>(delta);
-				m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+				MouseWheelRightEvent e(delta);
+				for (auto* listener : m_MouseWheelRightListeners)
+				{
+					listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}
 			}
 			else if (delta < 0)
 			{
-				Scope<MouseWheelLeftEvent> e = MakeScope<MouseWheelLeftEvent>(delta);
-				m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+				MouseWheelLeftEvent e(delta);
+				for (auto* listener : m_MouseWheelLeftListeners)
+				{
+					listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}
 			}
 
 			return 0;
@@ -227,8 +265,11 @@ namespace At0::Reyal
 			HDC hDC = BeginPaint(m_hWnd, &ps);
 			EndPaint(m_hWnd, &ps);
 
-			Scope<PaintEvent> e = MakeScope<PaintEvent>();
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			PaintEvent e;
+			for (auto* listener : m_WindowPaintListeners)
+			{
+				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 			return 0;
 		}
 		case WM_SIZE:
@@ -238,8 +279,11 @@ namespace At0::Reyal
 
 			//TODO: Read how windows handles events (how they're built, how they handle it)
 
-			Scope<WindowResizeEvent> e = MakeScope<WindowResizeEvent>(m_OldSize, newSize);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			WindowResizeEvent e(m_OldSize, newSize);
+			for (auto* listener : m_WindowResizeListeners)
+			{
+				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 
 			m_OldSize = newSize;
 			return 0;
@@ -249,8 +293,11 @@ namespace At0::Reyal
 			Point2 newPos = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
 			MoveTo(newPos);
 
-			Scope<WindowMoveEvent> e = MakeScope<WindowMoveEvent>(m_OldPos, newPos);
-			m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+			WindowMoveEvent e(m_OldPos, newPos);
+			for (auto* listener : m_WindowMoveListeners)
+			{
+				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 
 			m_OldPos = newPos;
 			return 0;
@@ -262,7 +309,7 @@ namespace At0::Reyal
 
 			// Push a dummy event into the queue so that the condition_variable in the queue will notify all threads to check
 			Scope<WindowCloseEvent> eDummy = MakeScope<WindowCloseEvent>();
-			m_EventQueue.PushBack({ this, std::move(eDummy) });
+			//m_EventQueue.PushBack({ this, std::move(eDummy) });
 
 			if (m_ImmediateEventFn)
 			{

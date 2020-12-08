@@ -41,18 +41,17 @@ namespace At0::Zeal
 		 //win4->SetTitle("Win4");
 		 //win4->Show();
 
-		ExtensionLoader loader;
 #ifdef NDEBUG
 	#ifdef _MSC_VER
-		loader.Start("../../bin/Release/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
+		m_LayerLoader.Start("../../bin/Release/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
 	#else
-		loader.Start("./bin/Release/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
+		m_LayerLoader.Start("./bin/Release/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
 	#endif
 #else
 	#ifdef _MSC_VER
-		loader.Start("../../bin/Debug/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
+		m_LayerLoader.Start("../../bin/Debug/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
 	#else
-		loader.Start("./bin/Debug/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
+		m_LayerLoader.Start("./bin/Debug/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
 	#endif
 #endif
 	}

@@ -3,10 +3,6 @@
 
 #include "Reyal/Layers/Layer.h"
 
-#include "Reyal/Events/KeyboardEvent.h"
-#include "Reyal/Events/MouseEvent.h"
-#include "Reyal/Events/ApplicationEvent.h"
-
 // Include Renderer because of incomplete type in Window
 #include <RlRender/Renderer3D.h>
 
@@ -106,23 +102,23 @@ namespace At0::Reyal
 
 		m_WindowStack.PushBack(window);
 
-		// Start thread for the pushed Window
-		m_EventLoopThreads.emplace_back([this, window]()
-			{
-				auto& queue = window->GetEventQueue();
-				// Wait for the first event to come
-				queue.WaitFor([&queue]() { return !queue.Empty(); });
+		//// Start thread for the pushed Window
+		//m_EventLoopThreads.emplace_back([this, window]()
+		//	{
+		//		auto& queue = window->GetEventQueue();
+		//		// Wait for the first event to come
+		//		queue.WaitFor([&queue]() { return !queue.Empty(); });
 
-				while (window->IsOpen())
-				{
-					EventMessage eMsg = queue.PopFront();
-					// Dispatch the event to the layers
-					OnEventReceived(eMsg.receiver, std::move(eMsg.e));
-					// Wait for new events to come in
-					queue.WaitFor([&queue]() { return !queue.Empty(); });
-				}
-			}
-		);
+		//		while (window->IsOpen())
+		//		{
+		//			EventMessage eMsg = queue.PopFront();
+		//			// Dispatch the event to the layers
+		//			OnEventReceived(eMsg.receiver, std::move(eMsg.e));
+		//			// Wait for new events to come in
+		//			queue.WaitFor([&queue]() { return !queue.Empty(); });
+		//		}
+		//	}
+		//);
 
 		return window.get();
 	}
@@ -155,7 +151,7 @@ namespace At0::Reyal
 			case EventType::WindowCloseEvent:
 			{
 				// Notify that the window has been closed
-				m_MainWindow->GetEventQueue().GetWaiter().notify_all();
+				//m_MainWindow->GetEventQueue().GetWaiter().notify_all();
 				return layer->OnWindowClose(receiver, (WindowCloseEvent&)e);
 			}
 			default:

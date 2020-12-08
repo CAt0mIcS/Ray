@@ -9,6 +9,8 @@
 #include "Reyal/Input/Mouse.h"
 #include "Reyal/Input/Keyboard.h"
 
+#include <../../RlEvent/include/RlEvent/RlEvents.h>
+
 
 namespace At0::Reyal
 {
@@ -17,11 +19,11 @@ namespace At0::Reyal
 	/// <summary>
 	/// Struct pushed into the event queue
 	/// </summary>
-	struct EventMessage
-	{
-		Widget* receiver;
-		Scope<Event> e;
-	};
+	//struct EventMessage
+	//{
+	//	Widget* receiver;
+	//	Scope<Event> e;
+	//};
 
 	/// <summary>
 	/// Receives all events
@@ -32,10 +34,26 @@ namespace At0::Reyal
 	using EventCallbackFn = std::function<bool(Widget*, Event&)>;
 
 
-	class RL_API Window : public Widget
+	class RL_API Window : public Widget, 
+		public EventDispatcher<WindowMoveEvent>,
+		public EventDispatcher<WindowResizeEvent>,
+		public EventDispatcher<WindowCloseEvent>,
+		public EventDispatcher<PaintEvent>,
+		public EventDispatcher<MouseMoveEvent>,
+		public EventDispatcher<MouseButtonPressedEvent>,
+		public EventDispatcher<MouseButtonReleasedEvent>,
+		public EventDispatcher<MouseWheelDownEvent>,
+		public EventDispatcher<MouseWheelUpEvent>,
+		public EventDispatcher<MouseWheelLeftEvent>,
+		public EventDispatcher<MouseWheelRightEvent>,
+		public EventDispatcher<HoverEnterEvent>,
+		public EventDispatcher<HoverLeaveEvent>,
+		public EventDispatcher<KeyPressedEvent>,
+		public EventDispatcher<KeyReleasedEvent>,
+		public EventDispatcher<CharEvent>
 	{
 	protected:
-		static constexpr uint8_t s_MaxMessagesInQueue = 16u;
+		//static constexpr uint8_t s_MaxMessagesInQueue = 16u;
 
 	public:
 		/// <summary>
@@ -55,7 +73,7 @@ namespace At0::Reyal
 		/// Getter for the current event queue
 		/// </summary>
 		/// <returns>Returns the event queue for this window</returns>
-		Queue<EventMessage, s_MaxMessagesInQueue>& GetEventQueue() { return m_EventQueue; }
+		//Queue<EventMessage, s_MaxMessagesInQueue>& GetEventQueue() { return m_EventQueue; }
 
 		/// <summary>
 		/// Sets the function which will be called when any event is received which needs to be handled immediately
@@ -135,6 +153,25 @@ namespace At0::Reyal
 		/// </summary>
 		virtual ~Window();
 
+
+		virtual void AddListener(EventListener<WindowMoveEvent>* pListener) override			{ m_WindowMoveListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<WindowResizeEvent>* pListener) override			{ m_WindowResizeListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<WindowCloseEvent>* pListener) override			{ m_WindowCloseListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<PaintEvent>* pListener) override					{ m_WindowPaintListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<MouseMoveEvent>* pListener) override				{ m_MouseMoveListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<MouseButtonPressedEvent>* pListener) override	{ m_MouseButtonPressedListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<MouseButtonReleasedEvent>* pListener) override	{ m_MouseButtonReleasedListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<MouseWheelDownEvent>* pListener) override		{ m_MouseWheelDownListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<MouseWheelUpEvent>* pListener) override			{ m_MouseWheelUpListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<MouseWheelLeftEvent>* pListener) override		{ m_MouseWheelLeftListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<MouseWheelRightEvent>* pListener) override		{ m_MouseWheelRightListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<HoverEnterEvent>* pListener) override			{ m_HoverEnterListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<HoverLeaveEvent>* pListener) override			{ m_HoverLeaveListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<KeyPressedEvent>* pListener) override			{ m_KeyPressedListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<KeyReleasedEvent>* pListener) override			{ m_KeyReleasedListeners.push_back(pListener); }
+		virtual void AddListener(EventListener<CharEvent>* pListener) override					{ m_CharListeners.push_back(pListener); }
+
+
 	public:
 		/// <summary>
 		/// The mouse holding information about which mouse button is pressed in this window
@@ -177,12 +214,29 @@ namespace At0::Reyal
 		/// <summary>
 		/// Is the Queue of messages to process, they will be popped in Reyal::Application and dispatched to the layers
 		/// </summary>
-		Queue<EventMessage, s_MaxMessagesInQueue> m_EventQueue;
+		//Queue<EventMessage, s_MaxMessagesInQueue> m_EventQueue;
 
 		/// <summary>
 		/// Specifies the control where the mouse is currently on
 		/// </summary>
 		Widget* m_CurrentlyHovering;
+
+		std::vector<EventListener<WindowMoveEvent>*> m_WindowMoveListeners;
+		std::vector<EventListener<WindowResizeEvent>*> m_WindowResizeListeners;
+		std::vector<EventListener<WindowCloseEvent>*> m_WindowCloseListeners;
+		std::vector<EventListener<PaintEvent>*> m_WindowPaintListeners;
+		std::vector<EventListener<MouseMoveEvent>*> m_MouseMoveListeners;
+		std::vector<EventListener<MouseButtonPressedEvent>*> m_MouseButtonPressedListeners;
+		std::vector<EventListener<MouseButtonReleasedEvent>*> m_MouseButtonReleasedListeners;
+		std::vector<EventListener<MouseWheelDownEvent>*> m_MouseWheelDownListeners;
+		std::vector<EventListener<MouseWheelUpEvent>*> m_MouseWheelUpListeners;
+		std::vector<EventListener<MouseWheelLeftEvent>*> m_MouseWheelLeftListeners;
+		std::vector<EventListener<MouseWheelRightEvent>*> m_MouseWheelRightListeners;
+		std::vector<EventListener<HoverEnterEvent>*> m_HoverEnterListeners;
+		std::vector<EventListener<HoverLeaveEvent>*> m_HoverLeaveListeners;
+		std::vector<EventListener<KeyPressedEvent>*> m_KeyPressedListeners;
+		std::vector<EventListener<KeyReleasedEvent>*> m_KeyReleasedListeners;
+		std::vector<EventListener<CharEvent>*> m_CharListeners;
 
 	};
 }

@@ -10,10 +10,8 @@
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 
-#include "Events/ApplicationEvent.h"
-#include "Events/MouseEvent.h"
-#include "Events/KeyboardEvent.h"
 
+#include <../../RlEvent/include/RlEvent/RlEvents.h>
 #include "../../RlUtilities/include/RlUtil/MessageBox.h"
 
 

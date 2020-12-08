@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Reyal/Events/Event.h"
+#include "Event.h"
 
+#include <sstream>
 
 
 namespace At0::Reyal

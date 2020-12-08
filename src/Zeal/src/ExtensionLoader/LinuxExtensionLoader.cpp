@@ -38,8 +38,14 @@ namespace At0::Zeal
                 continue;
             }
 
+            m_LibHandles.push_back(handle);
             onNewLayer(layerCreateFunc());
         }
+    }
+
+    ExtensionLoader::~ExtensionLoader()
+    {
+        RL_ASSERT(false, "Missing implementation (Free loaded libraries)");
     }
 }
 

@@ -3,6 +3,8 @@
 #include <Reyal/Application.h>
 #include <Reyal/Window/Window.h>
 
+#include "ExtensionLoader/ExtensionLoader.h"
+
 namespace At0::Zeal
 {
 
@@ -29,6 +31,9 @@ namespace At0::Zeal
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
 		virtual void OnEvent(Reyal::Widget* receiver, Reyal::Event& e);
+
+	private:
+		ExtensionLoader m_LayerLoader;
 	};
 	
 }

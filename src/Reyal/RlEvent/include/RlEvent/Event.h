@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+
+
 namespace At0::Reyal
 {
 	enum class EventType

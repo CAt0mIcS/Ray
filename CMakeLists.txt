@@ -71,7 +71,7 @@ endif()
 # ------------------------------------------------------------------------------------------------
 # Set Debug AND Release for Multi-Configuration Generators
 if(CMAKE_CONFIGURATION_TYPES)
-    set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
+    set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo;Release" CACHE STRING "" FORCE)
 else()
     set(CMAKE_CONFIGURATION_TYPES "${CMAKE_BUILD_TYPE}")
 endif()

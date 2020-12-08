@@ -16,10 +16,6 @@
 #undef None
 #endif
 
-#include "Reyal/Events/ApplicationEvent.h"
-#include "Reyal/Events/MouseEvent.h"
-#include "Reyal/Events/KeyboardEvent.h"
-
 #include "Reyal/Input/Keyboard.h"
 #include "Reyal/Input/Mouse.h"
 
@@ -101,8 +97,8 @@ namespace At0::Reyal
 		SetUpEventCallbacks();
 
 		// Push dummy event so we don't call front on empty queue in application
-		Scope<WindowResizeEvent> e = MakeScope<WindowResizeEvent>(m_OldSize, Size2{ 1280.0f, 720.0f });
-		m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
+		//Scope<WindowResizeEvent> e = MakeScope<WindowResizeEvent>(m_OldSize, Size2{ 1280.0f, 720.0f });
+		//m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 	}
 	
 	OpenGLWindow::~OpenGLWindow()
@@ -193,8 +189,8 @@ namespace At0::Reyal
 			m_IsOpen = false;
 
 			// Push a dummy event into the queue so that the condition_variable in the queue will notify all threads to check
-			Scope<WindowCloseEvent> eDummy = MakeScope<WindowCloseEvent>();
-			m_EventQueue.PushBack({ this, std::move(eDummy) });
+			//Scope<WindowCloseEvent> eDummy = MakeScope<WindowCloseEvent>();
+			//m_EventQueue.PushBack({ this, std::move(eDummy) });
 		}
 	}
 
@@ -276,7 +272,7 @@ namespace At0::Reyal
 				pData->win.Mouse.SetPos({ (float)xPos, (float)yPos });
 
 				Scope<MouseMoveEvent> e = MakeScope<MouseMoveEvent>(pData->oldPos, Point2{ (float)xPos, (float)yPos });
-				pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+				//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 			}
 		);
 
@@ -297,7 +293,7 @@ namespace At0::Reyal
 					case MouseButton::Middle:	pData->win.Mouse.SetMiddlePressed(true); break;
 					}
 
-					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+					//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 					break;
 				}
 				case GLFW_RELEASE:
@@ -311,7 +307,7 @@ namespace At0::Reyal
 					case MouseButton::Middle:	pData->win.Mouse.SetMiddlePressed(false); break;
 					}
 
-					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+					//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 					break;
 				}
 				}
@@ -338,7 +334,7 @@ namespace At0::Reyal
 					break;
 				}
 
-				pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+				//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 			}
 		);
 
@@ -347,7 +343,7 @@ namespace At0::Reyal
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
 
 				Scope<CharEvent> e = MakeScope<CharEvent>(keycode);
-				pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+				//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 			}
 		);
 
@@ -360,26 +356,26 @@ namespace At0::Reyal
 				{
 					// TODO: Set default scroll value (120 on Windows)
 					Scope<MouseWheelUpEvent> e = MakeScope<MouseWheelUpEvent>(int(yOffset * 120));
-					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+					//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 				}
 				else if (yOffset < 0)
 				{
 					// TODO: Set default scroll value (120 on Windows)
 					Scope<MouseWheelDownEvent> e = MakeScope<MouseWheelDownEvent>(int(yOffset * 120));
-					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+					//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 				}
 
 				if (xOffset > 0)
 				{
 					// TODO: Set default scroll value (120 on Windows)
 					Scope<MouseWheelLeftEvent> e = MakeScope<MouseWheelLeftEvent>(int(xOffset * 120));
-					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+					//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 				}
 				else if (xOffset < 0)
 				{
 					// TODO: Set default scroll value (120 on Windows)
 					Scope<MouseWheelRightEvent> e = MakeScope<MouseWheelRightEvent>(int(xOffset * 120));
-					pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+					//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 				}
 			}
 		);
@@ -389,7 +385,7 @@ namespace At0::Reyal
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
 
 				Scope<PaintEvent> e = MakeScope<PaintEvent>();
-				pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+				//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 			}
 		);
 
@@ -399,7 +395,7 @@ namespace At0::Reyal
 				pData->win.MoveTo(Point2{ width, height });
 
 				Scope<WindowResizeEvent> e = MakeScope<WindowResizeEvent>(pData->oldSize, Point2{ (float)width, (float)height });
-				pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+				//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
 			}
 		);
 	}

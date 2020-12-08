@@ -17,10 +17,6 @@ set(SRC
 	"include/Reyal/Core/ThreadPool.h"
 	"include/Reyal/Core/Queue.h"
 	"include/Reyal/Core/ZRect.h"
-	"include/Reyal/Events/Event.h"
-	"include/Reyal/Events/ApplicationEvent.h"
-	"include/Reyal/Events/KeyboardEvent.h"
-	"include/Reyal/Events/MouseEvent.h"
 	"include/Reyal/Input/Keyboard.h"
 	"include/Reyal/Input/Mouse.h"
 	"include/Reyal/Layers/Layer.h"
@@ -56,6 +52,7 @@ list(APPEND PRIVATE_INC "${X11_INCLUDE_DIRS}")
 set(PRIVATE_LIB
 	"RlRender"
 	"RlDebug"
+	"RlEvent"
 	"RlUtilities"
 	"Threads::Threads"
 	"GLFW"
@@ -65,6 +62,7 @@ set(PRIVATE_LIB
 else()
 set(PRIVATE_LIB
 	"RlRender"
+	"RlEvent"
 	"GLFW"
 	"Glad"
 	"RlDebug"

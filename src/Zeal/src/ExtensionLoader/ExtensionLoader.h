@@ -18,6 +18,14 @@ namespace At0::Zeal
 		/// </summary>
 		/// <param name="searchPath">Is the path to find all .dll files</param>
 		void Start(const std::string_view searchPath, const std::function<void(Reyal::Layer*)>& onNewLayer);
+
+		/// <summary>
+		/// ExtensionLoader Deconstructor, frees loaded libraries
+		/// </summary>
+		~ExtensionLoader();
+
+	private:
+		std::vector<void*> m_LibHandles;
 	};
 }
 

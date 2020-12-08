@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Reyal/Events/Event.h"
+#include "Event.h"
 
 #include <../../RlRender/include/RlRender/TypeDefines.h>
 #include <sstream>

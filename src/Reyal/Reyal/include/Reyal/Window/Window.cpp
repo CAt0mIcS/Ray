@@ -8,8 +8,6 @@
 #include <RlRender/Renderer3D.h>
 //#include <RlRender/Renderer2D.h>
 
-#include "Reyal/Events/MouseEvent.h"
-
 #include "WinAPIWindow.h"
 #include "OpenGLWindow.h"
 
@@ -39,7 +37,7 @@ namespace At0::Reyal
 	}
 
 	Window::Window(const std::string_view name, Widget* parent, bool isMainWindow)
-		: Widget(name, parent), m_EventQueue{}, m_CurrentlyHovering(nullptr)
+		: Widget(name, parent), /*m_EventQueue{}, */m_CurrentlyHovering(nullptr)
 	{
 	}
 
@@ -53,12 +51,12 @@ namespace At0::Reyal
 			//QUESTION: Use the HoverEnter object in receiver and event?
 
 			Scope<HoverLeaveEvent> e = MakeScope<HoverLeaveEvent>(m_CurrentlyHovering);
-			m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
+			//m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
 
 			m_CurrentlyHovering = child;
 
 			Scope<HoverEnterEvent> e2 = MakeScope<HoverEnterEvent>(m_CurrentlyHovering);
-			m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
+			//m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
 		};
 
 		for (Scope<Widget>& child : m_Children)

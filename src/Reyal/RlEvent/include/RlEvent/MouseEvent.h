@@ -1,13 +1,14 @@
 #pragma once
 
-#include "Reyal/Events/Event.h"
+#include "Event.h"
 
 #include <../../RlRender/include/RlRender/TypeDefines.h>
-#include "Reyal/Widgets/ZWidget.h"
 
 
 namespace At0::Reyal
 {
+	class Widget;
+
 	enum class MouseButton
 	{
 		INVALID = 0,
@@ -204,7 +205,8 @@ namespace At0::Reyal
 		virtual std::string ToString() const override
 		{
 			std::ostringstream oss;
-			oss << "[HoverEnterEvent] Widget with name " << m_HoverEntered->GetName() << " gained hover focus";
+			//oss << "[HoverEnterEvent] Widget with name " << m_HoverEntered->GetName() << " gained hover focus";
+			oss << "[HoverEnterEvent]";
 			return oss.str();
 		}
 
@@ -226,7 +228,8 @@ namespace At0::Reyal
 		virtual std::string ToString() const override
 		{
 			std::ostringstream oss;
-			oss << "[HoverLeaveEvent] The Widget with name " << m_HoverLeft->GetName() << " lost hover focus";
+			//oss << "[HoverLeaveEvent] The Widget with name " << m_HoverLeft->GetName() << " lost hover focus";
+			oss << "[HoverLeaveEvent]";
 			return oss.str();
 		}
 
