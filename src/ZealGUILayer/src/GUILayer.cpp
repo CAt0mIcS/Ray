@@ -14,7 +14,7 @@
 namespace At0::Layers
 {
 	std::vector<Reyal::Cube> cubes;
-	static constexpr uint64_t numCubes = 30000;
+	static constexpr uint64_t numCubes = 3000;
 	std::mt19937 mtEngine;
 
 	GUILayer::GUILayer(const std::string_view name)
