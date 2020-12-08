@@ -113,13 +113,11 @@ namespace At0::Reyal
     
     void Renderer3D::DrawIndexed(uint32_t indicesCount)
     {
-        RL_PROFILE_FUNCTION();
         s_pContext->DrawIndexed(indicesCount, 0, 0);
     }
 
     void Renderer3D::ClearBuffer(float red, float green, float blue)
     {
-        RL_PROFILE_FUNCTION();
         const float color[] = { red,green,blue,1.0f };
         s_pContext->ClearRenderTargetView(m_pTarget.Get(), color);
         s_pContext->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
@@ -127,7 +125,6 @@ namespace At0::Reyal
 
     void Renderer3D::EndDraw()
     {
-        RL_PROFILE_FUNCTION();
         RL_GFX_THROW_FAILED(m_pSwapChain->Present(1, 0));
     }
 

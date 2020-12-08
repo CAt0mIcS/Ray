@@ -26,6 +26,11 @@ FOR %%A IN (%*) DO (
 		set configuration=%%A
 		echo Setting Build Configuration to "%%A".
 	)
+
+	IF "%%A"=="RelWithDebInfo" (
+		set configuration=%%A
+		echo Setting Build Configuration to "%%A".
+	)
 )
 
 echo Selecting Build Settings "%configuration%" and "%architecture%".

@@ -28,7 +28,6 @@ namespace At0::Reyal
 
 	void Drawable::Draw(Renderer3D* renderer)
 	{
-		RL_PROFILE_FUNCTION();
 		for (auto& bindable : GetStaticBinds())
 		{
 			bindable->Bind();

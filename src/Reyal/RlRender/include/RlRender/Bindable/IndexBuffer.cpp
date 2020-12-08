@@ -26,7 +26,6 @@ namespace At0::Reyal
     
     void IndexBuffer::Bind()
     {
-		RL_PROFILE_FUNCTION();
 		s_pContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
     }
 }

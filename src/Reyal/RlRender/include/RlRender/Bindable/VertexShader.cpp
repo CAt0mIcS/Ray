@@ -19,7 +19,6 @@ namespace At0::Reyal
 
     void VertexShader::Bind()
     {
-        RL_PROFILE_FUNCTION();
         s_pContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
     }
     

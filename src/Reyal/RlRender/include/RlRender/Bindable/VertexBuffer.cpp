@@ -9,7 +9,6 @@ namespace At0::Reyal
 {
     void VertexBuffer::Bind()
     {
-        RL_PROFILE_FUNCTION();
         uint32_t offset = 0;
         s_pContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &m_Strides, &offset);
     }

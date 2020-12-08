@@ -61,7 +61,6 @@ namespace At0::Layers
 	
 	void GUILayer::OnUpdate(Reyal::Timestep ts)
 	{
-		RL_PROFILE_FUNCTION();
 		auto& renderer = *Reyal::Application::Get().GetMainWindow().GetRenderer3D();
 		
 		static float pitch = 0.0f;
@@ -131,7 +130,6 @@ namespace At0::Layers
 		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
 		prevTime = std::chrono::high_resolution_clock::now();
 
-		RL_PROFILE_FUNCTION();
 		RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	}
 

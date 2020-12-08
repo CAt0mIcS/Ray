@@ -114,8 +114,6 @@ namespace At0::Reyal
 
 	void Cube::Update()
 	{
-		RL_PROFILE_FUNCTION();
-
 	}
 
 	void Cube::AddStaticBind(Scope<Bindable> bind)

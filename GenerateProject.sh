@@ -10,6 +10,10 @@ do
     if [ "$var" = "Release" ]; then
         configuration="Release"
     fi
+
+    if [ "$var" = "RelWithDebInfo" ]; then
+        configuration="RelWithDebInfo"
+    fi
 done
 
 unameOut="$(uname -s)"

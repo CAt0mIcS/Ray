@@ -20,7 +20,6 @@ namespace At0::Reyal
 
 	void InputLayout::Bind()
 	{
-		RL_PROFILE_FUNCTION();
 		s_pContext->IASetInputLayout(m_pInputLayout.Get());
 	}
 }

@@ -14,7 +14,6 @@ namespace At0::Reyal
 
     void Topology::Bind()
     {
-        RL_PROFILE_FUNCTION();
         s_pContext->IASetPrimitiveTopology(m_Type);
     }
 }

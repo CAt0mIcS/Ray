@@ -17,7 +17,6 @@ namespace At0::Reyal
 
 	void TransformConstantBuffer::Bind()
 	{
-		RL_PROFILE_FUNCTION();
 		auto& pTransform = m_Parent.GetTransform();
 		auto& rTransform = m_Renderer.GetProjection();
 		

@@ -20,7 +20,7 @@ namespace At0::Reyal
 		: m_LayerStack{}
 	{
 		if (s_Instance)
-			RL_ASSERT(false, "Application already initialized");
+			RL_ASSERT(false, "Another Application Instance already exists");
 		s_Instance = this;
 
 		StartupSetup();
@@ -56,8 +56,8 @@ namespace At0::Reyal
 			// -------------------------------------------------------------------------------------
 			// Setting timestep
 			auto tNow = std::chrono::high_resolution_clock::now();
-			Timestep timestep = ((float)((tNow - lastFrameTime).count())) / 1000.0f / 1000.0f / 1000.0f;
-			lastFrameTime = tNow;
+			Timestep timestep = ((float)(tNow - lastFrameTime).count()) / 1000.0f / 1000.0f / 1000.0f;
+			lastFrameTime = std::move(tNow);
 			
 			// -------------------------------------------------------------------------------------
 			// Pop invalid windows and update valid ones
@@ -70,7 +70,6 @@ namespace At0::Reyal
 					m_WindowStack.PopIndexed(i);
 					--i;
 				}
-
 			}
 
 			// -------------------------------------------------------------------------------------

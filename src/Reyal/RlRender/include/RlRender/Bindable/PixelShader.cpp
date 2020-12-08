@@ -20,7 +20,6 @@ namespace At0::Reyal
 
     void PixelShader::Bind()
     {
-        RL_PROFILE_FUNCTION();
         s_pContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
     }
 }
