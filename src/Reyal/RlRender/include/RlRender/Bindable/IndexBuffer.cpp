@@ -2,6 +2,7 @@
 #include "IndexBuffer.h"
 
 #include <RlUtil/Exception.h>
+#include <RlDebug/Instrumentor.h>
 
 
 namespace At0::Reyal
@@ -9,6 +10,7 @@ namespace At0::Reyal
     IndexBuffer::IndexBuffer(const std::vector<uint16_t>& indices)
         : m_Count(indices.size())
     {
+		RL_PROFILE_FUNCTION();
 		D3D11_BUFFER_DESC ibd{};
 		ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		ibd.Usage = D3D11_USAGE_DEFAULT;
@@ -24,6 +26,7 @@ namespace At0::Reyal
     
     void IndexBuffer::Bind()
     {
-        s_pContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+		RL_PROFILE_FUNCTION();
+		s_pContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
     }
 }

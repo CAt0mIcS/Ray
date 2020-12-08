@@ -3,6 +3,7 @@
 
 #include <RlUtil/TypeConvert.h>
 #include <RlUtil/Exception.h>
+#include <RlDebug/Instrumentor.h>
 
 namespace WRL = Microsoft::WRL;
 
@@ -10,6 +11,7 @@ namespace At0::Reyal
 {
     PixelShader::PixelShader(const std::string_view filepath)
     {
+        RL_PROFILE_FUNCTION();
         WRL::ComPtr<ID3DBlob> pBlob;
         RL_GFX_THROW_FAILED(D3DReadFileToBlob(Util::MultiByteToWideChar(filepath).c_str(), &pBlob));
 
@@ -18,6 +20,7 @@ namespace At0::Reyal
 
     void PixelShader::Bind()
     {
+        RL_PROFILE_FUNCTION();
         s_pContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
     }
 }

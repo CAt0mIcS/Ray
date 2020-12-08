@@ -3,6 +3,7 @@
 
 #include <RlUtil/Exception.h>
 #include <RlDebug/RlAssert.h>
+#include <RlDebug/Instrumentor.h>
 
 
 namespace WRL = Microsoft::WRL;
@@ -12,11 +13,13 @@ namespace At0::Reyal
     Renderer3D::Renderer3D()
         : m_pSwapChain(nullptr), m_pTarget(nullptr), m_hWnd(0)
     {
+        RL_PROFILE_FUNCTION();
 
     }
 
     void Renderer3D::Init(HWND hWnd)
     {
+        RL_PROFILE_FUNCTION();
         RL_MEXPECTS(!m_pSwapChain, "D3D11RendererAPI was already initialized.");
         m_hWnd = hWnd;
         
@@ -110,11 +113,13 @@ namespace At0::Reyal
     
     void Renderer3D::DrawIndexed(uint32_t indicesCount)
     {
+        RL_PROFILE_FUNCTION();
         s_pContext->DrawIndexed(indicesCount, 0, 0);
     }
 
     void Renderer3D::ClearBuffer(float red, float green, float blue)
     {
+        RL_PROFILE_FUNCTION();
         const float color[] = { red,green,blue,1.0f };
         s_pContext->ClearRenderTargetView(m_pTarget.Get(), color);
         s_pContext->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
@@ -122,11 +127,13 @@ namespace At0::Reyal
 
     void Renderer3D::EndDraw()
     {
+        RL_PROFILE_FUNCTION();
         RL_GFX_THROW_FAILED(m_pSwapChain->Present(1, 0));
     }
 
     Renderer3D::~Renderer3D()
     {
-        
+        RL_PROFILE_FUNCTION();
+
     }
 }

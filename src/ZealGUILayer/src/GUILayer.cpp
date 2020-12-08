@@ -14,7 +14,7 @@
 namespace At0::Layers
 {
 	std::vector<Reyal::Cube> cubes;
-	static constexpr uint64_t numCubes = 3001;
+	static constexpr uint64_t numCubes = 30001;
 	std::mt19937 mtEngine;
 
 	GUILayer::GUILayer(const std::string_view name)
@@ -66,6 +66,7 @@ namespace At0::Layers
 	
 	void GUILayer::OnUpdate(Reyal::Timestep ts)
 	{
+		RL_PROFILE_FUNCTION();
 		auto& renderer = *Reyal::Application::Get().GetMainWindow().GetRenderer3D();
 		
 		static float pitch = 0.0f;

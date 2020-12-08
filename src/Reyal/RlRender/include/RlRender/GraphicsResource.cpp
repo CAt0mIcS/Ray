@@ -3,6 +3,7 @@
 
 #include <RlUtil/Exception.h>
 #include <RlDebug/ReyalLogger.h>
+#include <RlDebug/Instrumentor.h>
 
 
 namespace WRL = Microsoft::WRL;
@@ -17,6 +18,7 @@ namespace At0::Reyal
 
 	GraphicsResource::GraphicsResource()
 	{
+		RL_PROFILE_FUNCTION();
 #ifdef NDEBUG
 		uint32_t flags = 0;
 #else
@@ -74,6 +76,7 @@ namespace At0::Reyal
 	
 	GraphicsResource::~GraphicsResource()
 	{
+		RL_PROFILE_FUNCTION();
 		--s_RefCount;
 		if (s_RefCount == 0)
 		{
