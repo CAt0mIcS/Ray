@@ -21,7 +21,9 @@ namespace At0::Reyal
 	{
 	public:
 		virtual EventType GetType() const = 0;
-		virtual std::string ToString() const = 0;
+
+		// C++20 (virtual constexpr)
+		virtual /*constexpr */std::string ToString() const = 0;
 
 		virtual ~Event() = default;
 	};

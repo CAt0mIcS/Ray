@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "ApplicationEvent.h"
 #include "MouseEvent.h"
 #include "KeyboardEvent.h"
@@ -15,7 +14,7 @@ namespace At0::Reyal
 	class EventDispatcher
 	{
 	public:
-		virtual void AddListener(EventListener<E>* e) = 0;
+		virtual void AddListener(EventListener<E>* eListener) = 0;
 
 	protected:
 		EventDispatcher() = default;
