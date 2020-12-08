@@ -138,3 +138,4 @@ endif()
 
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("RlRender" "")
+SetWorkingDirectory("RlRender" "")

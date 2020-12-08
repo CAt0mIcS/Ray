@@ -57,11 +57,7 @@ namespace At0::Reyal
 			};
 
 			AddStaticBind(MakeScope<VertexBuffer>(vertices));
-#ifdef NDEBUG
-			auto vertexShader = MakeScope<VertexShader>("../../bin/Release/VertexShader(Cube)-v.cso");
-#else
-			auto vertexShader = MakeScope<VertexShader>("../../bin/Debug/VertexShader(Cube)-v.cso");
-#endif
+			auto vertexShader = MakeScope<VertexShader>("VertexShader(Cube)-v.cso");
 			ID3DBlob* vbytecode = vertexShader->GetBytecode();
 			AddStaticBind(std::move(vertexShader));
 
@@ -76,11 +72,7 @@ namespace At0::Reyal
 			};
 			AddStaticIndexBuffer(MakeScope<IndexBuffer>(indices));
 
-#ifdef NDEBUG
-			AddStaticBind(MakeScope<PixelShader>("../../bin/Release/PixelShader(Cube)-p.cso"));
-#else
-			AddStaticBind(MakeScope<PixelShader>("../../bin/Debug/PixelShader(Cube)-p.cso"));
-#endif
+			AddStaticBind(MakeScope<PixelShader>("PixelShader(Cube)-p.cso"));
 
 			AddStaticBind(MakeScope<Topology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 

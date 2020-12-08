@@ -44,4 +44,5 @@ target_precompile_headers("ZealGUILayer" PRIVATE "src/glpch.h")
 AddRecursiveFilters("${SRC}")
 
 SetOutputDirectory("ZealGUILayer" "Editors")
+SetWorkingDirectory("ZealGUILayer" "Editors")
 

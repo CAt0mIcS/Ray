@@ -102,6 +102,10 @@ namespace At0::Reyal
 		}
 		case WM_MOUSEMOVE:
 		{
+			static std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
+			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
+			prevTime = std::chrono::high_resolution_clock::now();
+
 			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.SetPos({ (float)pt.x, (float)pt.y });
 

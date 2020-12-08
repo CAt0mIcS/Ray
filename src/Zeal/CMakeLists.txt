@@ -53,6 +53,7 @@ add_dependencies("Zeal" "ZealGUILayer")
 target_precompile_headers("Zeal" PRIVATE "src/pch.h")
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("Zeal" "")
+SetWorkingDirectory("Zeal" "")
 
 
 

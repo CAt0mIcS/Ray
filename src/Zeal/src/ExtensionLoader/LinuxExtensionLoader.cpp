@@ -16,6 +16,7 @@ namespace At0::Zeal
         using LayerCreateFunc = Reyal::Layer* (*)();
         RL_LOG_DEBUG("[ExtLoader] Startup");
 
+        RL_LOG_WARN("[ExtLoader] Searching path '{0}' for Layers", std::filesystem::absolute(searchPath));
         for (const std::filesystem::directory_entry& dir : std::filesystem::recursive_directory_iterator(searchPath))
         {
             RL_LOG_DEBUG("[ExtLoader] Checking file {0}", dir.path().string());

@@ -12,48 +12,37 @@ namespace At0::Zeal
 	{
 		//RL_PROFILE_FUNCTION();
 		
-		 m_MainWindow->InitRenderer3D();
-		 m_MainWindow->SetTitle("Zeal");
-		 m_MainWindow->Show();
+		m_MainWindow->InitRenderer3D();
+		m_MainWindow->SetTitle("Zeal");
+		m_MainWindow->Show();
 
-		 //Reyal::Window* win = PushWindow(Reyal::Window::Create("Win0"));
-		 //win->InitRenderer3D();
-		 //win->SetTitle("Win0");
-		 //win->Show();
+		//Reyal::Window* win = PushWindow(Reyal::Window::Create("Win0"));
+		//win->InitRenderer3D();
+		//win->SetTitle("Win0");
+		//win->Show();
 
-		 //Reyal::Window* win1 = PushWindow(Reyal::Window::Create("Win1"));
-		 //win1->InitRenderer3D();
-		 //win1->SetTitle("Win1");
-		 //win1->Show();
+		//Reyal::Window* win1 = PushWindow(Reyal::Window::Create("Win1"));
+		//win1->InitRenderer3D();
+		//win1->SetTitle("Win1");
+		//win1->Show();
 
-		 //Reyal::Window* win2 = PushWindow(Reyal::Window::Create("Win2"));
-		 //win2->InitRenderer3D();
-		 //win2->SetTitle("Win2");
-		 //win2->Show();
+		//Reyal::Window* win2 = PushWindow(Reyal::Window::Create("Win2"));
+		//win2->InitRenderer3D();
+		//win2->SetTitle("Win2");
+		//win2->Show();
 
-		 //Reyal::Window* win3 = PushWindow(Reyal::Window::Create("Win3"));
-		 //win3->InitRenderer3D();
-		 //win3->SetTitle("Win3");
-		 //win3->Show();
+		//Reyal::Window* win3 = PushWindow(Reyal::Window::Create("Win3"));
+		//win3->InitRenderer3D();
+		//win3->SetTitle("Win3");
+		//win3->Show();
 
-		 //Reyal::Window* win4 = PushWindow(Reyal::Window::Create("Win4"));
-		 //win4->InitRenderer3D();
-		 //win4->SetTitle("Win4");
-		 //win4->Show();
+		//Reyal::Window* win4 = PushWindow(Reyal::Window::Create("Win4"));
+		//win4->InitRenderer3D();
+		//win4->SetTitle("Win4");
+		//win4->Show();
 
-#ifdef NDEBUG
-	#ifdef _MSC_VER
-		m_LayerLoader.Start("../../bin/Release/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
-	#else
-		m_LayerLoader.Start("./bin/Release/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
-	#endif
-#else
-	#ifdef _MSC_VER
-		m_LayerLoader.Start("../../bin/Debug/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
-	#else
-		m_LayerLoader.Start("./bin/Debug/Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
-	#endif
-#endif
+		m_LayerLoader.Start("Editors", [this](Reyal::Layer* layer) { PushLayer(layer); });
+
 	}
 	
 	Sandbox::~Sandbox()

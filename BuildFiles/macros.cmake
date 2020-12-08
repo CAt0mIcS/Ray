@@ -54,3 +54,10 @@ function(SetOutputDirectory target dir)
         )
     endif()
 endfunction()
+
+# Set Working directory (VS ONLY)
+function(SetWorkingDirectory target dir)
+    set_target_properties(
+        "${target}" PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin/$(Configuration)"
+    )
+endfunction()

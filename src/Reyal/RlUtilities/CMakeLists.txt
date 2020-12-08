@@ -60,6 +60,7 @@ set_target_properties("RlUtilities" PROPERTIES FOLDER "RlUtilities")
 target_compile_definitions("RlUtilities" PRIVATE "RLU_BUILD")
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("RlUtilities" "")
+SetWorkingDirectory("RlUtilities" "")
 
 # ===================================================================================
 # Dependencies

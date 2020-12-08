@@ -23,3 +23,4 @@ endif()
 
 target_include_directories("RlEvent" INTERFACE "${INC}")
 AddRecursiveFilters("${SRC}")
+SetWorkingDirectory("RlEvent" "")

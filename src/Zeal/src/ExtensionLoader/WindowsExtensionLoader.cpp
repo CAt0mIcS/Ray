@@ -21,6 +21,7 @@ namespace At0::Zeal
 		const std::string ending = ".dll";
 		using LayerCreateFunc = Reyal::Layer* (*)();
 
+		RL_LOG_WARN("[ExtLoader] Searching path '{0}' for Layers", std::filesystem::absolute(searchPath));
 		for (const std::filesystem::directory_entry& dir : std::filesystem::recursive_directory_iterator(searchPath))
 		{
 			// Check if file is a .dll file
