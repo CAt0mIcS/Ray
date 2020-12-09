@@ -1,6 +1,6 @@
 [submodule "extern/glm"]
-	path = src/Reyal/extern/glm
+	path = src/Ray/extern/glm
 	url = https://github.com/g-truc/glm.git
 [submodule "extern/glfw"]
-	path = src/Reyal/extern/glfw
+	path = src/Ray/extern/glfw
 	url = https://github.com/CAt0mIcS/glfw.git

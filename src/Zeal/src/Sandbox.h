@@ -1,14 +1,14 @@
 #pragma once
 
-#include <Reyal/Application.h>
-#include <Reyal/Window/Window.h>
+#include <Ray/Application.h>
+#include <Ray/Window/Window.h>
 
 #include "ExtensionLoader/ExtensionLoader.h"
 
 namespace At0::Zeal
 {
 
-	class Sandbox : public Reyal::Application
+	class Sandbox : public Ray::Application
 	{
 	public:
 		/// <summary>
@@ -30,7 +30,7 @@ namespace At0::Zeal
 		/// <param name="receiver">Is the window which receives the event</param>
 		/// <param name="e">Is the received event</param>
 		/// <returns>True if the event was handled, false otherwise</returns>
-		virtual void OnEvent(Reyal::Widget* receiver, Reyal::Event& e);
+		virtual void OnEvent(Ray::Widget* receiver, Ray::Event& e);
 
 	private:
 		ExtensionLoader m_LayerLoader;

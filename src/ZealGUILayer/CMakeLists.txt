@@ -19,9 +19,9 @@ set(PUBLIC_LIB
 )
 
 set(PRIVATE_LIB
-    "Reyal"
-    "RlDebug"
-    "RlRender"
+    "Ray"
+    "RayDebug"
+    "RayRender"
 )
 
 add_library("ZealGUILayer" SHARED "${SRC}")
@@ -40,7 +40,7 @@ target_link_libraries("ZealGUILayer"
 
 set_target_properties("ZealGUILayer" PROPERTIES FOLDER "LayerExtensions")
 target_precompile_headers("ZealGUILayer" PRIVATE "src/glpch.h")
-# add_dependencies("ZealGUILayer" "Reyal")
+# add_dependencies("ZealGUILayer" "Ray")
 AddRecursiveFilters("${SRC}")
 
 SetOutputDirectory("ZealGUILayer" "Editors")

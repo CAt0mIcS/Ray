@@ -3,17 +3,17 @@
 
 #ifdef __linux__
 
-#include <RlDebug/ReyalLogger.h>
+#include <RayDebug/RLogger.h>
 
 #include <filesystem>
 #include <dlfcn.h>
 
 namespace At0::Zeal
 {
-    void ExtensionLoader::Start(const std::string_view searchPath, const std::function<void(Reyal::Layer*)>& onNewLayer)
+    void ExtensionLoader::Start(const std::string_view searchPath, const std::function<void(Ray::Layer*)>& onNewLayer)
     {
         const std::string ending = ".so";
-        using LayerCreateFunc = Reyal::Layer* (*)();
+        using LayerCreateFunc = Ray::Layer* (*)();
         RL_LOG_DEBUG("[ExtLoader] Startup");
 
         RL_LOG_WARN("[ExtLoader] Searching path '{0}' for Layers", std::filesystem::absolute(searchPath));

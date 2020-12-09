@@ -2,24 +2,24 @@
 #include "GUILayer.h"
 
 // You need to include this to use the logger
-#include <RlDebug/ReyalLogger.h>
-#include <RlDebug/Instrumentor.h>
+#include <RayDebug/RLogger.h>
+#include <RayDebug/RInstrumentor.h>
 
-#include <Reyal/Reyal.h>
-#include <RlRender/Renderer3D.h>
-#include <RlRender/Drawable/Triangle.h>
-#include <RlRender/Drawable/Cube.h>
+#include <Ray/Ray.h>
+#include <RayRender/Renderer3D.h>
+#include <RayRender/Drawable/Triangle.h>
+#include <RayRender/Drawable/Cube.h>
 
 
 namespace At0::Layers
 {
-	std::vector<Reyal::Cube> cubes;
+	std::vector<Ray::Cube> cubes;
 	static constexpr uint64_t numCubes = 3000;
 	std::mt19937 mtEngine;
 
 	GUILayer::GUILayer(const std::string_view name)
-		: Reyal::Layer(name),
-		EventListener<Reyal::MouseMoveEvent>(Reyal::Application::Get().GetMainWindow())
+		: Ray::Layer(name),
+		EventListener<Ray::MouseMoveEvent>(Ray::Application::Get().GetMainWindow())
 	{
 		RL_PROFILE_FUNCTION();
 		RL_LOG_DEBUG("[GUILayer] Startup");
@@ -52,16 +52,16 @@ namespace At0::Layers
 		cubes.reserve(numCubes);
 		for (uint32_t i = 0; i < numCubes - 1; ++i)
 		{
-			cubes.emplace_back(*Reyal::Application::Get().GetMainWindow().GetRenderer3D(), 1.0f, face_colors);
+			cubes.emplace_back(*Ray::Application::Get().GetMainWindow().GetRenderer3D(), 1.0f, face_colors);
 		}
 
-		cubes.emplace_back(*Reyal::Application::Get().GetMainWindow().GetRenderer3D(), 1.0f, face_colors);
+		cubes.emplace_back(*Ray::Application::Get().GetMainWindow().GetRenderer3D(), 1.0f, face_colors);
 
 	}
 	
-	void GUILayer::OnUpdate(Reyal::Timestep ts)
+	void GUILayer::OnUpdate(Ray::Timestep ts)
 	{
-		auto& renderer = *Reyal::Application::Get().GetMainWindow().GetRenderer3D();
+		auto& renderer = *Ray::Application::Get().GetMainWindow().GetRenderer3D();
 		
 		static float pitch = 0.0f;
 		static float yaw = 0.0f;
@@ -72,7 +72,7 @@ namespace At0::Layers
 
 		renderer.ClearBuffer(0.07f, 0.0f, 0.12f);
 
-		Reyal::KeyboardInput& kbd = Reyal::Application::Get().GetMainWindow().Keyboard;
+		Ray::KeyboardInput& kbd = Ray::Application::Get().GetMainWindow().Keyboard;
 		if (kbd.IsKeyPressed(17)) //LCONTROL
 		{
 			zDir -= 3.0f * ts;
@@ -125,7 +125,7 @@ namespace At0::Layers
 
 	#include <chrono>
 	std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
-	void GUILayer::OnEvent(Reyal::Widget* receiver, Reyal::MouseMoveEvent& e)
+	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseMoveEvent& e)
 	{
 		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
 		prevTime = std::chrono::high_resolution_clock::now();
@@ -133,97 +133,97 @@ namespace At0::Layers
 		RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	}
 
-	//void GUILayer::OnMouseMove(Reyal::Widget* receiver, Reyal::MouseMoveEvent& e)
+	//void GUILayer::OnMouseMove(Ray::Widget* receiver, Ray::MouseMoveEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnMousePress(Reyal::Widget* receiver, Reyal::MouseButtonPressedEvent& e)
+	//void GUILayer::OnMousePress(Ray::Widget* receiver, Ray::MouseButtonPressedEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnMouseRelease(Reyal::Widget* receiver, Reyal::MouseButtonReleasedEvent& e)
+	//void GUILayer::OnMouseRelease(Ray::Widget* receiver, Ray::MouseButtonReleasedEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnMouseWheelUp(Reyal::Widget* receiver, Reyal::MouseWheelUpEvent& e)
+	//void GUILayer::OnMouseWheelUp(Ray::Widget* receiver, Ray::MouseWheelUpEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnMouseWheelDown(Reyal::Widget* receiver, Reyal::MouseWheelDownEvent& e)
+	//void GUILayer::OnMouseWheelDown(Ray::Widget* receiver, Ray::MouseWheelDownEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnMouseWheelLeft(Reyal::Widget* receiver, Reyal::MouseWheelLeftEvent& e)
+	//void GUILayer::OnMouseWheelLeft(Ray::Widget* receiver, Ray::MouseWheelLeftEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnMouseWheelRight(Reyal::Widget* receiver, Reyal::MouseWheelRightEvent& e)
+	//void GUILayer::OnMouseWheelRight(Ray::Widget* receiver, Ray::MouseWheelRightEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnResize(Reyal::Widget* receiver, Reyal::WindowResizeEvent& e)
+	//void GUILayer::OnResize(Ray::Widget* receiver, Ray::WindowResizeEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnWindowMove(Reyal::Widget* receiver, Reyal::WindowMoveEvent& e)
+	//void GUILayer::OnWindowMove(Ray::Widget* receiver, Ray::WindowMoveEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnPaint(Reyal::Widget* receiver, Reyal::PaintEvent& e)
+	//void GUILayer::OnPaint(Ray::Widget* receiver, Ray::PaintEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnHoverEnter(Reyal::Widget* receiver, Reyal::HoverEnterEvent& e)
+	//void GUILayer::OnHoverEnter(Ray::Widget* receiver, Ray::HoverEnterEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnHoverLeave(Reyal::Widget* receiver, Reyal::HoverLeaveEvent& e)
+	//void GUILayer::OnHoverLeave(Ray::Widget* receiver, Ray::HoverLeaveEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnKeyPress(Reyal::Widget* receiver, Reyal::KeyPressedEvent& e)
+	//void GUILayer::OnKeyPress(Ray::Widget* receiver, Ray::KeyPressedEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnKeyRelease(Reyal::Widget* receiver, Reyal::KeyReleasedEvent& e)
+	//void GUILayer::OnKeyRelease(Ray::Widget* receiver, Ray::KeyReleasedEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 
-	//void GUILayer::OnChar(Reyal::Widget* receiver, Reyal::CharEvent& e)
+	//void GUILayer::OnChar(Ray::Widget* receiver, Ray::CharEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	//}
 	//
-	//bool GUILayer::OnWindowClose(Reyal::Widget* receiver, Reyal::WindowCloseEvent& e)
+	//bool GUILayer::OnWindowClose(Ray::Widget* receiver, Ray::WindowCloseEvent& e)
 	//{
 	//	RL_PROFILE_FUNCTION();
 	//	RL_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());

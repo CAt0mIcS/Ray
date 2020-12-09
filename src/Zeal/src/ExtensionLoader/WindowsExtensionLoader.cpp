@@ -8,18 +8,18 @@
 #include <Windows.h>
 #include <functional>
 
-#include <RlDebug/ReyalLogger.h>
+#include <RayDebug/RLogger.h>
 
-#include "Reyal/Layers/Layer.h"
+#include "Ray/Layers/Layer.h"
 
 
 namespace At0::Zeal
 {
-	void ExtensionLoader::Start(const std::string_view searchPath, const std::function<void(Reyal::Layer*)>& onNewLayer)
+	void ExtensionLoader::Start(const std::string_view searchPath, const std::function<void(Ray::Layer*)>& onNewLayer)
 	{
 		using DirectoryIterator = std::filesystem::directory_iterator;
 		const std::string ending = ".dll";
-		using LayerCreateFunc = Reyal::Layer* (*)();
+		using LayerCreateFunc = Ray::Layer* (*)();
 
 		RL_LOG_WARN("[ExtLoader] Searching path '{0}' for Layers", std::filesystem::absolute(searchPath));
 		for (const std::filesystem::directory_entry& dir : std::filesystem::recursive_directory_iterator(searchPath))

@@ -24,9 +24,9 @@ set(PUBLIC_LIB
 )
 
 set(PRIVATE_LIB
-    "Reyal"
-    "RlRender"
-    "RlDebug"
+    "Ray"
+    "RayRender"
+    "RayDebug"
 )
 
 if(UNIX)
@@ -48,7 +48,6 @@ target_link_libraries("Zeal"
         "${PUBLIC_LIB}"
 )
 
-# add_dependencies("Zeal" "Reyal" "ZealGUILayer")
 add_dependencies("Zeal" "ZealGUILayer")
 target_precompile_headers("Zeal" PRIVATE "src/pch.h")
 AddRecursiveFilters("${SRC}")
