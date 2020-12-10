@@ -1,5 +1,5 @@
-#ifndef RL_ENTRYPOINT_H
-#define RL_ENTRYPOINT_H
+#ifndef RAY_ENTRYPOINT_H
+#define RAY_ENTRYPOINT_H
 
 
 #include "Ray/Application.h"
@@ -36,4 +36,4 @@ int main(int argc, char** argv)
 
 #else
 	#error "Application Entry Point file included twice."
-#endif // RL_ENTRYPOINT_H
+#endif // RAY_ENTRYPOINT_H

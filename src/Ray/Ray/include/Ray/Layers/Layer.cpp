@@ -9,7 +9,7 @@ namespace At0::Ray
     Layer::Layer(const std::string_view name)
         : m_Name(name)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
 
     }
 }

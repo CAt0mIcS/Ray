@@ -1,5 +1,5 @@
 #include "utpch.h"
-#if RL_ENABLE_INFO || RL_ENABLE_WARNING
+#if RAY_ENABLE_INFO || RAY_ENABLE_WARNING
 
 #include "InfoManager.h"
 

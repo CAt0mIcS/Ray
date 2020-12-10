@@ -8,7 +8,7 @@
 
 namespace At0::Ray
 {
-	class RLR_API Topology : public Bindable, private GraphicsResource
+	class RR_API Topology : public Bindable, private GraphicsResource
 	{
 	public:
 		Topology(D3D11_PRIMITIVE_TOPOLOGY type);

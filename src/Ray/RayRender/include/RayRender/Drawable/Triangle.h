@@ -5,7 +5,7 @@
 
 namespace At0::Ray
 {
-	class RLR_API Triangle : public Drawable
+	class RR_API Triangle : public Drawable
 	{
 	public:
 		Triangle();

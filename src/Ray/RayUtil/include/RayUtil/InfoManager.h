@@ -2,7 +2,7 @@
 
 #include "CoreConfig.h"
 
-#if RL_ENABLE_INFO || RL_ENABLE_WARNING
+#if RAY_ENABLE_INFO || RAY_ENABLE_WARNING
 #include "RlUBase.h"
 
 #include "Serialize.h"
@@ -14,7 +14,7 @@
 
 namespace At0::Util
 {
-	class RLU_API InfoManager
+	class RU_API InfoManager
 	{
 	public:
 		template<typename... Args>
@@ -61,37 +61,37 @@ namespace At0::Util
 }
 
 
-#if RL_ENABLE_INFO
-	#define RL_DSPL_INFO(msg, type, ...)	::At0::Util::InfoManager::Info(msg, (uint16_t)__LINE__, __FILE__, type, __VA_ARGS__)
+#if RAY_ENABLE_INFO
+	#define RAY_DSPL_INFO(msg, type, ...)	::At0::Util::InfoManager::Info(msg, (uint16_t)__LINE__, __FILE__, type, __VA_ARGS__)
 #else
-	#define RL_DSPL_INFO(msg, type, ...)
+	#define RAY_DSPL_INFO(msg, type, ...)
 #endif
-#if RL_ENABLE_WARNING
-	#define RL_DSPL_WARN(msg, type, ...)	::At0::Util::InfoManager::Warn(msg, (uint16_t)__LINE__, __FILE__, type, __VA_ARGS__)
+#if RAY_ENABLE_WARNING
+	#define RAY_DSPL_WARN(msg, type, ...)	::At0::Util::InfoManager::Warn(msg, (uint16_t)__LINE__, __FILE__, type, __VA_ARGS__)
 #else
-	#define RL_DSPL_WARN(msg, type, ...)
+	#define RAY_DSPL_WARN(msg, type, ...)
 #endif
 
 #ifdef _WIN32
 
-#if RL_ENABLE_INFO
-	#define RL_DX_INFO(hr)				if(FAILED(hr)) ::At0::Util::InfoManager::DxInfo(hr, (uint16_t)__LINE__, __FILE__, "DirectX11 Info")
-	#define RL_DX_MSG_INFO(msg, ...)	RL_DSPL_INFO(msg, "DirectX11 Info", __VA_ARGS__)
+#if RAY_ENABLE_INFO
+	#define RAY_DX_INFO(hr)				if(FAILED(hr)) ::At0::Util::InfoManager::DxInfo(hr, (uint16_t)__LINE__, __FILE__, "DirectX11 Info")
+	#define RAY_DX_MSG_INFO(msg, ...)	RAY_DSPL_INFO(msg, "DirectX11 Info", __VA_ARGS__)
 #else
-	#define RL_DX_INFO(hr) hr
-	#define RL_DX_MSG_INFO(msg, ...)
+	#define RAY_DX_INFO(hr) hr
+	#define RAY_DX_MSG_INFO(msg, ...)
 #endif	
 
-#if RL_ENABLE_WARNING
-	#define RL_DX_WARN(hr)				if(FAILED(hr)) ::At0::Util::InfoManager::DxWarn(hr, (uint16_t)__LINE__, __FILE__, "DirectX11 Warning")
-	#define RL_DX_MSG_WARN(msg, ...)	RL_DSPL_WARN(msg, "DirectX11 Warning", __VA_ARGS__)
+#if RAY_ENABLE_WARNING
+	#define RAY_DX_WARN(hr)				if(FAILED(hr)) ::At0::Util::InfoManager::DxWarn(hr, (uint16_t)__LINE__, __FILE__, "DirectX11 Warning")
+	#define RAY_DX_MSG_WARN(msg, ...)	RAY_DSPL_WARN(msg, "DirectX11 Warning", __VA_ARGS__)
 #else
-	#define RL_DX_WARN(hr) hr
-	#define RL_DX_MSG_WARN(msg, ...)
+	#define RAY_DX_WARN(hr) hr
+	#define RAY_DX_MSG_WARN(msg, ...)
 #endif
 #else
-	#define RL_DX_INFO(hr) hr
-	#define RL_DX_WARN(hr) hr
+	#define RAY_DX_INFO(hr) hr
+	#define RAY_DX_WARN(hr) hr
 #endif
 
-#endif // RL_ENABLE_INFO && RL_ENABLE_WARNING
+#endif // RAY_ENABLE_INFO && RAY_ENABLE_WARNING

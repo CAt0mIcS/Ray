@@ -13,15 +13,15 @@ namespace At0::Ray
 {
 	void Drawable::AddBind(Scope<Bindable> bind)
 	{
-		RL_PROFILE_FUNCTION();
-		RL_ASSERT(typeid(*bind) != typeid(IndexBuffer), "Trying to add an IndexBuffer with Drawable::AddBind, use Drawable::AddIndexBuffer.");
+		RAY_PROFILE_FUNCTION();
+		RAY_ASSERT(typeid(*bind) != typeid(IndexBuffer), "Trying to add an IndexBuffer with Drawable::AddBind, use Drawable::AddIndexBuffer.");
 		m_Binds.push_back(std::move(bind));
 	}
 
 	void Drawable::AddIndexBuffer(Scope<IndexBuffer> indexBuffer)
 	{
-		RL_PROFILE_FUNCTION();
-		RL_MEXPECTS(m_pIndexBuffer == nullptr, "IndexBuffer already bound.");
+		RAY_PROFILE_FUNCTION();
+		RAY_MEXPECTS(m_pIndexBuffer == nullptr, "IndexBuffer already bound.");
 		m_pIndexBuffer = indexBuffer.get();
 		m_Binds.push_back(std::move(indexBuffer));
 	}
@@ -43,7 +43,7 @@ namespace At0::Ray
 	Drawable::Drawable()
 		: m_pIndexBuffer(nullptr), m_Binds{}, m_TransformMatrix(DirectX::XMMatrixIdentity())
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 	}
 }

@@ -5,27 +5,27 @@
 #define NOMINMAX
 #endif
 
-#define RLU_BUILD_AS_DLL 1
+#define RU_BUILD_AS_DLL 1
 
-#if RLU_BUILD_AS_DLL
-	#ifdef RLU_BUILD
+#if RU_BUILD_AS_DLL
+	#ifdef RU_BUILD
 		#if defined(_MSC_VER)
-			#define RLU_API __declspec(dllexport)
+			#define RU_API __declspec(dllexport)
 		#elif defined(__GNUC__) || defined(__clang__)
-			#define RLU_API __attribute__((dllexport))
+			#define RU_API __attribute__((dllexport))
 		#else
-			#define RLU_API
+			#define RU_API
 		#endif
 	#else
 		#if defined(_MSC_VER)
-			#define RLU_API __declspec(dllimport)
+			#define RU_API __declspec(dllimport)
 		#elif defined(__GNUC__) || defined(__clang__)
-			#define RLU_API __attribute__((dllimport))
+			#define RU_API __attribute__((dllimport))
 		#else
-			#define RLU_API
+			#define RU_API
 		#endif
 	#endif
 #else
-	#define RLU_API
+	#define RU_API
 #endif
 

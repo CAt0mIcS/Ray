@@ -103,7 +103,7 @@ target_link_libraries("RayRender"
 )
 
 # add_dependencies("RayRender" "RlDebug")
-target_compile_definitions("RayRender" PRIVATE "RLR_BUILD")
+target_compile_definitions("RayRender" PRIVATE "RR_BUILD")
 target_precompile_headers("RayRender" PRIVATE "include/RayRender/rlrpch.h")
 
 # Set Pixel and Vertex Shaders to compile in VS

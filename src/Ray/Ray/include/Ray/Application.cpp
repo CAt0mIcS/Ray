@@ -20,7 +20,7 @@ namespace At0::Ray
 		: m_LayerStack{}
 	{
 		if (s_Instance)
-			RL_ASSERT(false, "Another Application Instance already exists");
+			RAY_ASSERT(false, "Another Application Instance already exists");
 		s_Instance = this;
 
 		StartupSetup();
@@ -89,7 +89,7 @@ namespace At0::Ray
 
 	Layer* Application::PushLayer(Layer* layer)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		m_LayerStack.PushBack(layer);
 		return layer;
@@ -97,7 +97,7 @@ namespace At0::Ray
 
 	Window* Application::PushWindow(Ref<Window> window)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		m_WindowStack.PushBack(window);
 
@@ -124,12 +124,12 @@ namespace At0::Ray
 
 	Application::~Application()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 	}
 	
 	void Application::OnEventReceived(Widget* receiver, Scope<Event>&& e)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		// Dispatch event to every layer
 		for (auto* layer : m_LayerStack)
@@ -140,8 +140,8 @@ namespace At0::Ray
 
 	bool Application::OnImmediateEvent(Widget* receiver, Event& e)
 	{
-		RL_PROFILE_FUNCTION();
-		RL_EXPECTS(e.GetType() <= EventType::LAST && e.GetType() >= EventType::FIRST);
+		RAY_PROFILE_FUNCTION();
+		RAY_EXPECTS(e.GetType() <= EventType::LAST && e.GetType() >= EventType::FIRST);
 
 		for (auto* layer : m_LayerStack)
 		{
@@ -154,7 +154,7 @@ namespace At0::Ray
 				return layer->OnWindowClose(receiver, (WindowCloseEvent&)e);
 			}
 			default:
-				RL_ASSERT(false, "Unimplemented Event");
+				RAY_ASSERT(false, "Unimplemented Event");
 			}
 		}
 		return false;
@@ -162,10 +162,10 @@ namespace At0::Ray
 	
 	void Application::DispatchEvent(Layer* layer, Widget* receiver, Event& e)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
-		RL_EXPECTS(e.GetType() <= EventType::LAST && e.GetType() >= EventType::FIRST);
-		RL_EXPECTS(layer != nullptr);
+		RAY_EXPECTS(e.GetType() <= EventType::LAST && e.GetType() >= EventType::FIRST);
+		RAY_EXPECTS(layer != nullptr);
 
 		switch (e.GetType())
 		{
@@ -186,7 +186,7 @@ namespace At0::Ray
 		case EventType::PaintEvent:					layer->OnPaint(receiver, (PaintEvent&)e); break;
 		//case EventType::SetCursorEvent:			layer->OnSetCursor(receiver, (SetCursorEvent&)e); break;
 		default:
-			RL_ASSERT(false, "Unimplemented Event");
+			RAY_ASSERT(false, "Unimplemented Event");
 			break;
 		}
 	}
@@ -217,14 +217,14 @@ namespace At0::Ray
 		/// <param name="signum">Is the received signal</param>
 		Util::SetSignals([](int signum)
 			{
-				RL_LOG_CRITICAL("Signal '{0}' received, terminating program", signum);
+				RAY_LOG_CRITICAL("Signal '{0}' received, terminating program", signum);
 
 				// Note: We do not need to do this as the destructor does it automatically, 
 				// but it's good to have it here
-				RL_LOG_END();
+				RAY_LOG_END();
 
 				// We need to do this though
-				RL_PROFILE_END_SESSION();
+				RAY_PROFILE_END_SESSION();
 
 				exit(signum);
 			}

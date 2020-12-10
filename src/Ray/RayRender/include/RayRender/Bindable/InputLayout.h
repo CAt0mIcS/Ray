@@ -11,7 +11,7 @@ struct D3D11_INPUT_ELEMENT_DESC;
 
 namespace At0::Ray
 {
-	class RLR_API InputLayout : public Bindable, private GraphicsResource
+	class RR_API InputLayout : public Bindable, private GraphicsResource
 	{
 	public:
 		InputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& layout, ID3DBlob* vertexShaderBytecode);

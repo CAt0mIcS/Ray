@@ -11,11 +11,11 @@ namespace At0::Ray
 {
     PixelShader::PixelShader(const std::string_view filepath)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
         WRL::ComPtr<ID3DBlob> pBlob;
-        RL_GFX_THROW_FAILED(D3DReadFileToBlob(Util::MultiByteToWideChar(filepath).c_str(), &pBlob));
+        RAY_GFX_THROW_FAILED(D3DReadFileToBlob(Util::MultiByteToWideChar(filepath).c_str(), &pBlob));
 
-        RL_GFX_THROW_FAILED(s_pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &m_pPixelShader));
+        RAY_GFX_THROW_FAILED(s_pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &m_pPixelShader));
     }
 
     void PixelShader::Bind()

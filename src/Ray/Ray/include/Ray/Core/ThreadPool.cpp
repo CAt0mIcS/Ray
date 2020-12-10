@@ -13,9 +13,9 @@ namespace At0::Ray
 	ThreadPool::ThreadPool()
 		: m_Threads(MakeScope<std::thread[]>(m_MaxThreads)), m_Shutdown(false)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
-		RL_LOG_INFO("[ThreadPool] Initialized {0} threads", MaxThreads());
+		RAY_LOG_INFO("[ThreadPool] Initialized {0} threads", MaxThreads());
 		for (uint16_t i = 0; i < m_MaxThreads; ++i)
 		{
 			m_Threads[i] = std::thread([this]() { InfiniteWait(); });
@@ -30,46 +30,46 @@ namespace At0::Ray
 
 	void ThreadPool::Shutdown()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
-		RL_LOG_DEBUG("[ThreadPool] Shutting down");
+		RAY_LOG_DEBUG("[ThreadPool] Shutting down");
 		{
 			std::scoped_lock lock(m_PoolMutex);
 			m_Shutdown = true;
 		}
 		m_TaskQueue.GetWaiter().notify_all();
 
-		RL_LOG_DEBUG("[ThreadPool] Joining Threads");
+		RAY_LOG_DEBUG("[ThreadPool] Joining Threads");
 		for (uint16_t i = 0; i < m_MaxThreads; ++i)
 		{
 			auto id = m_Threads[i].get_id();
-			RL_LOG_DEBUG("[ThreadPool] Joining Thread {0}", id);
+			RAY_LOG_DEBUG("[ThreadPool] Joining Thread {0}", id);
 			m_Threads[i].join();
-			RL_LOG_DEBUG("[ThreadPool] Thread {0} joined", id);
+			RAY_LOG_DEBUG("[ThreadPool] Thread {0} joined", id);
 		}
-		RL_LOG_DEBUG("[ThreadPool] Finnished joining Threads");
+		RAY_LOG_DEBUG("[ThreadPool] Finnished joining Threads");
 	}
 
 	ThreadPool::~ThreadPool()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		if (!m_Shutdown)
 		{
-			RL_LOG_DEBUG("[ThreadPool] Calling ThreadPool::Shutdown from Deconstructor");
+			RAY_LOG_DEBUG("[ThreadPool] Calling ThreadPool::Shutdown from Deconstructor");
 			Shutdown();
 		}
 	}
 
 	void ThreadPool::InfiniteWait()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		while (!m_Shutdown)
 		{
-			RL_PROFILE_SCOPE("[ThreadPool] InfiniteWait while(!m_Shutdown) Scope");
+			RAY_PROFILE_SCOPE("[ThreadPool] InfiniteWait while(!m_Shutdown) Scope");
 
-			RL_LOG_DEBUG("[ThreadPool] Thread {0} entered ThreadPool::InfiniteWait", std::this_thread::get_id());
+			RAY_LOG_DEBUG("[ThreadPool] Thread {0} entered ThreadPool::InfiniteWait", std::this_thread::get_id());
 			std::function<void()> task;
 			{
 				std::scoped_lock lock(m_QueueMutex);
@@ -81,9 +81,9 @@ namespace At0::Ray
 			}
 			if (task)
 			{
-				RL_LOG_DEBUG("[ThreadPool] Thread {0} Task {1} Execution started", std::this_thread::get_id(), &task);
+				RAY_LOG_DEBUG("[ThreadPool] Thread {0} Task {1} Execution started", std::this_thread::get_id(), &task);
 				task();
-				RL_LOG_DEBUG("[ThreadPool] Thread {0} Task {1} Execution finnished", std::this_thread::get_id(), &task);
+				RAY_LOG_DEBUG("[ThreadPool] Thread {0} Task {1} Execution finnished", std::this_thread::get_id(), &task);
 			}
 		}
 	}

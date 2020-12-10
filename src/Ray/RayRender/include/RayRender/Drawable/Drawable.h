@@ -11,7 +11,7 @@ namespace At0::Ray
 	class IndexBuffer;
 	class Renderer3D;
 
-	class RLR_API Drawable
+	class RR_API Drawable
 	{
 	public:
 		virtual ~Drawable() = default;

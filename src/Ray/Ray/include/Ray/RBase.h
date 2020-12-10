@@ -8,7 +8,7 @@
 #define NOMINMAX
 #endif
 
-#ifdef RL_BUILD
+#ifdef RAY_BUILD
 	#if defined(_MSC_VER)
 		#define RAY_API __declspec(dllexport)
 	#elif defined(__GNUC__) || defined(__clang__)

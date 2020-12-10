@@ -9,7 +9,7 @@ namespace At0::Ray
     Topology::Topology(D3D11_PRIMITIVE_TOPOLOGY type)
         : m_Type(type)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
     }
 
     void Topology::Bind()

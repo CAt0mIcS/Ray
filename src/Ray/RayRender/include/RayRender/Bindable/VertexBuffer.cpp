@@ -15,7 +15,7 @@ namespace At0::Ray
     
     inline void VertexBuffer::CreateBuffer(const D3D11_BUFFER_DESC& bd, const D3D11_SUBRESOURCE_DATA sd)
     {
-        RL_PROFILE_FUNCTION();
-        RL_GFX_THROW_FAILED(s_pDevice->CreateBuffer(&bd, &sd, &m_pVertexBuffer));
+        RAY_PROFILE_FUNCTION();
+        RAY_GFX_THROW_FAILED(s_pDevice->CreateBuffer(&bd, &sd, &m_pVertexBuffer));
     }
 }

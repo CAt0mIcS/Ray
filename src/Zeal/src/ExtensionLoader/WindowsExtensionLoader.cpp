@@ -21,7 +21,7 @@ namespace At0::Zeal
 		const std::string ending = ".dll";
 		using LayerCreateFunc = Ray::Layer* (*)();
 
-		RL_LOG_WARN("[ExtLoader] Searching path '{0}' for Layers", std::filesystem::absolute(searchPath));
+		RAY_LOG_WARN("[ExtLoader] Searching path '{0}' for Layers", std::filesystem::absolute(searchPath));
 		for (const std::filesystem::directory_entry& dir : std::filesystem::recursive_directory_iterator(searchPath))
 		{
 			// Check if file is a .dll file
@@ -30,14 +30,14 @@ namespace At0::Zeal
 			HMODULE lib = LoadLibraryA(dir.path().string().c_str());
 			if (!lib || lib == INVALID_HANDLE_VALUE)
 			{
-				RL_LOG_WARN("[ExtLoader] Was unable to load the library with path '{0}'", std::filesystem::absolute(dir.path().string()));
+				RAY_LOG_WARN("[ExtLoader] Was unable to load the library with path '{0}'", std::filesystem::absolute(dir.path().string()));
 				continue;
 			}
 
 			LayerCreateFunc fn = (LayerCreateFunc)GetProcAddress(lib, "CreateLayer");
 			if (!fn)
 			{
-				RL_LOG_WARN("[ExtLoader] Was unable to find 'CreateLayer' function in Module '{0}' with path '{1}'", lib, std::filesystem::absolute(dir.path().string()));
+				RAY_LOG_WARN("[ExtLoader] Was unable to find 'CreateLayer' function in Module '{0}' with path '{1}'", lib, std::filesystem::absolute(dir.path().string()));
 				FreeLibrary(lib);
 				continue;
 			}

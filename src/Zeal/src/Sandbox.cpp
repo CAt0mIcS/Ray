@@ -10,7 +10,7 @@ namespace At0::Zeal
 	Sandbox::Sandbox(const std::string_view commandLine)
 		: Application(commandLine)
 	{
-		//RL_PROFILE_FUNCTION();
+		//RAY_PROFILE_FUNCTION();
 		
 		m_MainWindow->InitRenderer3D();
 		m_MainWindow->SetTitle("Zeal");
@@ -47,12 +47,12 @@ namespace At0::Zeal
 	
 	Sandbox::~Sandbox()
 	{
-		//RL_PROFILE_FUNCTION();
+		//RAY_PROFILE_FUNCTION();
 	}
 
 	void Sandbox::OnEvent(Ray::Widget* receiver, Ray::Event& e)
 	{
-		//RL_PROFILE_FUNCTION();
+		//RAY_PROFILE_FUNCTION();
 	}
 
 }
@@ -75,38 +75,38 @@ void At0::Ray::Awake(int argc, char** argv)
 
 	try
 	{
-		RL_LOG_BEGIN("../../Zeal.log", Log::LogLevel::Trace);
+		RAY_LOG_BEGIN("../../Zeal.log", Log::LogLevel::Trace);
 
-		RL_PROFILE_BEGIN_SESSION("Startup", "../../Profiling/Profile-Startup.json");
+		RAY_PROFILE_BEGIN_SESSION("Startup", "../../Profiling/Profile-Startup.json");
 		Zeal::Sandbox* app = new Zeal::Sandbox("");
-		RL_PROFILE_END_SESSION();
+		RAY_PROFILE_END_SESSION();
 
-		RL_PROFILE_BEGIN_SESSION("Runtime", "../../Profiling/Profile-Runtime.json");
+		RAY_PROFILE_BEGIN_SESSION("Runtime", "../../Profiling/Profile-Runtime.json");
 		int exitCode = app->Run();
-		RL_PROFILE_END_SESSION();
+		RAY_PROFILE_END_SESSION();
 
-		RL_PROFILE_BEGIN_SESSION("Shutdown", "../../Profiling/Profile-Shutdown.json");
+		RAY_PROFILE_BEGIN_SESSION("Shutdown", "../../Profiling/Profile-Shutdown.json");
 		delete app;
-		RL_PROFILE_END_SESSION();
+		RAY_PROFILE_END_SESSION();
 
-		RL_LOG_END();
+		RAY_LOG_END();
 
 	}
 	catch (At0::Ray::Exception& e)
 	{
 		Ray::ZMessageBox(e.GetType(), e.what(), Ray::ZMessageBox::Button::Ok, Ray::ZMessageBox::Icon::Error, Ray::ZMessageBox::Flags::DefaultDesktop);
-		RL_LOG_CRITICAL("[Main] Exception occured: {0}", e.what());
+		RAY_LOG_CRITICAL("[Main] Exception occured: {0}", e.what());
 	}
 	catch (std::exception& e)
 	{
 		Ray::ZMessageBox("Standard Exception", e.what(), Ray::ZMessageBox::Button::Ok, Ray::ZMessageBox::Icon::Error, Ray::ZMessageBox::Flags::DefaultDesktop);
-		RL_LOG_CRITICAL("[Main] Exception occured: {0}", e.what());
+		RAY_LOG_CRITICAL("[Main] Exception occured: {0}", e.what());
 	}
 	catch (...)
 	{
 		Ray::ZMessageBox("Unknown Exception", "An unknown exception occurred", Ray::ZMessageBox::Button::Ok, Ray::ZMessageBox::Icon::Error, Ray::ZMessageBox::Flags::DefaultDesktop);
-		RL_LOG_CRITICAL("[Main] Unknown Exception occured");
+		RAY_LOG_CRITICAL("[Main] Unknown Exception occured");
 	}
-	RL_LOG_END();
+	RAY_LOG_END();
 }
 

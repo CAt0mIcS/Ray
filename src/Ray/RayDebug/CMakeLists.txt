@@ -42,7 +42,7 @@ target_link_libraries("RayDebug"
 )
 
 set_target_properties("RayDebug" PROPERTIES FOLDER "RayUtilities")
-target_compile_definitions("RayDebug" PRIVATE "RLD_BUILD")
+target_compile_definitions("RayDebug" PRIVATE "RD_BUILD")
 target_precompile_headers("RayDebug" PRIVATE "include/RayDebug/rdpch.h")
 # add_dependencies("RlDebug" "RlUtilities")
 AddRecursiveFilters("${SRC}")

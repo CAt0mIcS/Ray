@@ -10,7 +10,7 @@
 namespace At0::Ray::Debug
 {
 
-#if RL_ENABLE_LOGGING
+#if RAY_ENABLE_LOGGING
 
 	Log::FileLogger Logger::s_FileLogger;
 
@@ -21,7 +21,7 @@ namespace At0::Ray::Debug
 		s_FileLogger.Open();
 
 		// TODO: Throw exception here
-		RL_EXPECTS(s_FileLogger.IsOpen());
+		RAY_EXPECTS(s_FileLogger.IsOpen());
 	}
 
 	void Logger::End()

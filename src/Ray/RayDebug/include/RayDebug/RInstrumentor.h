@@ -8,7 +8,7 @@
 #pragma warning(disable : 4251)
 
 
-#if RL_ENABLE_PROFILING
+#if RAY_ENABLE_PROFILING
 
 #include "RDBase.h"
 
@@ -138,37 +138,37 @@ namespace At0::Ray::Debug
 /// Define profiling macros here
 /// </summary>
 #if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
-#define RL_FUNC_SIG __PRETTY_FUNCTION__
+#define RAY_FUNC_SIG __PRETTY_FUNCTION__
 #elif defined(__DMC__) && (__DMC__ >= 0x810)
-#define RL_FUNC_SIG __PRETTY_FUNCTION__
+#define RAY_FUNC_SIG __PRETTY_FUNCTION__
 #elif (defined(__FUNCSIG__) || (_MSC_VER))
-#define RL_FUNC_SIG __FUNCSIG__
+#define RAY_FUNC_SIG __FUNCSIG__
 #elif (defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)) || (defined(__IBMCPP__) && (__IBMCPP__ >= 500))
-#define RL_FUNC_SIG __FUNCTION__
+#define RAY_FUNC_SIG __FUNCTION__
 #elif defined(__BORLANDC__) && (__BORLANDC__ >= 0x550)
-#define RL_FUNC_SIG __FUNC__
+#define RAY_FUNC_SIG __FUNC__
 #elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
-#define RL_FUNC_SIG __func__
+#define RAY_FUNC_SIG __func__
 #elif defined(__cplusplus) && (__cplusplus >= 201103)
-#define RL_FUNC_SIG __func__
+#define RAY_FUNC_SIG __func__
 #else
-#define RL_FUNC_SIG "ZL_FUNC_SIG unknown!"
+#define RAY_FUNC_SIG "ZL_FUNC_SIG unknown!"
 #endif
 
 
-#define RL_PROFILE_BEGIN_SESSION(name, filepath)	::At0::Ray::Debug::Instrumentor::Get().BeginSession(name, filepath)
-#define RL_PROFILE_END_SESSION()					::At0::Ray::Debug::Instrumentor::Get().EndSession()
-#define RL_PROFILE_LINE_2(name, line)				::At0::Ray::Debug::Timer timer__ZeaL_##line(name)
-#define RL_PROFILE_LINE(name, line)					RL_PROFILE_LINE_2(name, line)
-#define RL_PROFILE_SCOPE(name)						RL_PROFILE_LINE(name, __LINE__)
-#define RL_PROFILE_FUNCTION()						RL_PROFILE_SCOPE(RL_FUNC_SIG)
+#define RAY_PROFILE_BEGIN_SESSION(name, filepath)	::At0::Ray::Debug::Instrumentor::Get().BeginSession(name, filepath)
+#define RAY_PROFILE_END_SESSION()					::At0::Ray::Debug::Instrumentor::Get().EndSession()
+#define RAY_PROFILE_LINE_2(name, line)				::At0::Ray::Debug::Timer timer__ZeaL_##line(name)
+#define RAY_PROFILE_LINE(name, line)					RAY_PROFILE_LINE_2(name, line)
+#define RAY_PROFILE_SCOPE(name)						RAY_PROFILE_LINE(name, __LINE__)
+#define RAY_PROFILE_FUNCTION()						RAY_PROFILE_SCOPE(RAY_FUNC_SIG)
 
 #else
 
-#define RL_PROFILE_BEGIN_SESSION(name, filepath)
-#define RL_PROFILE_END_SESSION()
-#define RL_PROFILE_SCOPE(name)
-#define RL_PROFILE_FUNCTION()
+#define RAY_PROFILE_BEGIN_SESSION(name, filepath)
+#define RAY_PROFILE_END_SESSION()
+#define RAY_PROFILE_SCOPE(name)
+#define RAY_PROFILE_FUNCTION()
 
 #endif
 

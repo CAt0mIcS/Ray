@@ -12,7 +12,7 @@ namespace At0::Ray
 	TransformConstantBuffer::TransformConstantBuffer(const Renderer3D& renderer, const Drawable& parent)
 		: m_Renderer(renderer), m_Parent(parent)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 	}
 
 	void TransformConstantBuffer::Bind()

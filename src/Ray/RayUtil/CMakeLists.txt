@@ -56,7 +56,7 @@ target_link_libraries("RayUtil"
 
 target_precompile_headers("RayUtil" PRIVATE "include/RayUtil/utpch.h")
 set_target_properties("RayUtil" PROPERTIES FOLDER "RayUtilities")
-target_compile_definitions("RayUtil" PRIVATE "RLU_BUILD")
+target_compile_definitions("RayUtil" PRIVATE "RU_BUILD")
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("RayUtil" "")
 SetWorkingDirectory("RayUtil" "")

@@ -20,7 +20,7 @@ namespace At0::Ray
 
 	Cube::Cube(const Renderer3D& renderer, float size, const float colors[6][3])
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		struct Vertex
 		{
@@ -110,22 +110,22 @@ namespace At0::Ray
 
 	void Cube::AddStaticBind(Scope<Bindable> bind)
 	{
-		RL_PROFILE_FUNCTION();
-		RL_ASSERT(typeid(*bind) != typeid(IndexBuffer), "Trying to add an IndexBuffer with Drawable::AddBind, use Drawable::AddIndexBuffer.");
+		RAY_PROFILE_FUNCTION();
+		RAY_ASSERT(typeid(*bind) != typeid(IndexBuffer), "Trying to add an IndexBuffer with Drawable::AddBind, use Drawable::AddIndexBuffer.");
 		s_StaticBinds.push_back(std::move(bind));
 	}
 
 	void Cube::AddStaticIndexBuffer(Scope<IndexBuffer> bind)
 	{
-		RL_PROFILE_FUNCTION();
-		RL_MEXPECTS(m_pIndexBuffer == nullptr, "IndexBuffer already bound.");
+		RAY_PROFILE_FUNCTION();
+		RAY_MEXPECTS(m_pIndexBuffer == nullptr, "IndexBuffer already bound.");
 		m_pIndexBuffer = bind.get();
 		s_StaticBinds.push_back(std::move(bind));
 	}
 
 	void Cube::SetIndexFromStatic()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 		for (Scope<Bindable>& bindable : s_StaticBinds)
 		{
 			if (const IndexBuffer* p = dynamic_cast<IndexBuffer*>(bindable.get()))

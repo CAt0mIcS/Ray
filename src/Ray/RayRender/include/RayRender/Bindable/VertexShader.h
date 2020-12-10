@@ -12,7 +12,7 @@ struct ID3D11VertexShader;
 
 namespace At0::Ray
 {
-	class RLR_API VertexShader : public Bindable, private GraphicsResource
+	class RR_API VertexShader : public Bindable, private GraphicsResource
 	{
 	public:
 		VertexShader(const std::string_view filepath);

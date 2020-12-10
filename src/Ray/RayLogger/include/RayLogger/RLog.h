@@ -2,7 +2,7 @@
 
 #include <../../RayUtil/include/RayUtil/CoreConfig.h>
 
-#if RL_ENABLE_LOGGING
+#if RAY_ENABLE_LOGGING
 
 #include "RayLogger/RLogConfigure.h"
 #include "RayLogger/Loggers/RBaseLogger.h"

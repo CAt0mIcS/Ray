@@ -21,9 +21,9 @@ namespace At0::Ray
 
 	Ref<Window> Window::Create(const std::string_view name, Widget* parent)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
-		RL_MEXPECTS(RendererAPI::GetAPI() >= RendererAPI::API::FIRST && RendererAPI::GetAPI() <= RendererAPI::API::LAST, "Invalid RendererAPI selected");
+		RAY_MEXPECTS(RendererAPI::GetAPI() >= RendererAPI::API::FIRST && RendererAPI::GetAPI() <= RendererAPI::API::LAST, "Invalid RendererAPI selected");
 
 		switch (RendererAPI::GetAPI())
 		{
@@ -33,7 +33,7 @@ namespace At0::Ray
 		case RendererAPI::API::OpenGL:		return MakeRef<OpenGLWindow>(name, parent);
 		}
 
-		RL_ASSERT(false, "Failed to create the Window");
+		RAY_ASSERT(false, "Failed to create the Window");
 		return nullptr;
 	}
 
@@ -44,7 +44,7 @@ namespace At0::Ray
 
 	void Window::SetHoveringWidget()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		bool setNew = false;
 		static auto generateEvents = [this](Widget* child)
@@ -83,7 +83,7 @@ namespace At0::Ray
 	
 	Window::~Window()
 	{
-		RL_LOG_DEBUG("[Window] {0} destroyed.", GetName());
+		RAY_LOG_DEBUG("[Window] {0} destroyed.", GetName());
 	}
 }
 

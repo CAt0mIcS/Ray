@@ -12,31 +12,31 @@ namespace At0::Ray
 {
     void Widget::MoveBy(const Point2& pos)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
 
     }
 
     void Widget::MoveTo(const Point2& pos)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
 
     }
 
     void Widget::ResizeBy(const Size2& size)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
 
     }
 
     void Widget::ResizeTo(const Size2& size)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
 
     }
 
     Widget* Widget::FindChild(const std::string_view name)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
         for (auto& child : m_Children)
         {
             if (child->GetName() == name)
@@ -53,8 +53,8 @@ namespace At0::Ray
 
         //TODO: Invalidate only widget area
         //TODO: Make Platform independent
-        // RL_THROW_LAST_WND_EXCEPT(InvalidateRect(hWnd, &Util::TransformationToRect(m_Matrix), (BOOL)eraseBkgnd));
-        // RL_THROW_LAST_WND_EXCEPT(UpdateWindow(hWnd));
+        // RAY_WND_THROW_LAST_FAILED(InvalidateRect(hWnd, &Util::TransformationToRect(m_Matrix), (BOOL)eraseBkgnd));
+        // RAY_WND_THROW_LAST_FAILED(UpdateWindow(hWnd));
     }
 
     /// <summary>
@@ -64,37 +64,37 @@ namespace At0::Ray
 
     bool Widget::operator==(const Widget& other)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
         return GetName() == other.GetName();
     }
 
     bool Widget::operator==(const Scope<Widget>& other)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
         return GetName() == other->GetName();
     }
 
     bool Widget::operator==(const Ref<Widget>& other)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
         return GetName() == other->GetName();
     }
 
     bool Widget::operator!=(const Widget& other)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
         return GetName() == other.GetName();
     }
 
     bool Widget::operator!=(const Scope<Widget>& other)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
         return GetName() == other->GetName();
     }
 
     bool Widget::operator!=(const Ref<Widget>& other)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
         return GetName() == other->GetName();
     }
     
@@ -102,18 +102,18 @@ namespace At0::Ray
 
     Widget::~Widget()
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
     }
 
     Widget::Widget(const std::string_view name, Widget* parent)
         : m_Name(name), m_Parent(parent), m_Children{}, m_Matrix{}
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
     }
 
     Widget* Widget::GetEventReceiver(const Event& e, const MouseInput& mouse)
     {
-        RL_PROFILE_FUNCTION();
+        RAY_PROFILE_FUNCTION();
 
         Widget* receiver = nullptr;
 

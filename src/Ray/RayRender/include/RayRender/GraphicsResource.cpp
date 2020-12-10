@@ -18,7 +18,7 @@ namespace At0::Ray
 
 	GraphicsResource::GraphicsResource()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 #ifdef NDEBUG
 		uint32_t flags = 0;
 #else
@@ -28,7 +28,7 @@ namespace At0::Ray
 		// Assume that if there is no device then context and IDXGI factory also don't exist
 		if (!s_pDevice)
 		{
-			RL_GFX_THROW_FAILED(D3D11CreateDevice(
+			RAY_GFX_THROW_FAILED(D3D11CreateDevice(
 				nullptr,
 				D3D_DRIVER_TYPE_HARDWARE,
 				NULL,
@@ -42,18 +42,18 @@ namespace At0::Ray
 			));
 
 			WRL::ComPtr<IDXGIDevice> pDevice;
-			RL_GFX_THROW_FAILED(s_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDevice));
+			RAY_GFX_THROW_FAILED(s_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDevice));
 
 			WRL::ComPtr<IDXGIAdapter> pAdapter;
-			RL_GFX_THROW_FAILED(pDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&pAdapter));
+			RAY_GFX_THROW_FAILED(pDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&pAdapter));
 
-			RL_GFX_THROW_FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&s_pIDXGIFactory));
+			RAY_GFX_THROW_FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&s_pIDXGIFactory));
 			
 			for (auto i = 0; s_pIDXGIFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
 			{
 				DXGI_ADAPTER_DESC adapterDesc;
-				RL_GFX_THROW_FAILED(pAdapter->GetDesc(&adapterDesc));
-				RL_LOG_INFO("[Renderer3D] Found DXGIAdapter: "
+				RAY_GFX_THROW_FAILED(pAdapter->GetDesc(&adapterDesc));
+				RAY_LOG_INFO("[Renderer3D] Found DXGIAdapter: "
 					"\n\tDescription: {0}\n\tVendorID: {1}\n\tDeviceID: {2}\n\tSubSysID: {3}"
 					"\n\tRevision: {4}\n\tDedicated Video Memory: {5}\n\tDedicated System Memory: {6}"
 					"\n\tShared System Memory: {7}\n\tAdapterLuid::LowPart: {8}\n\tAdapterLuid::HighPart: {9}\n",
@@ -76,7 +76,7 @@ namespace At0::Ray
 	
 	GraphicsResource::~GraphicsResource()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 		--s_RefCount;
 		if (s_RefCount == 0)
 		{

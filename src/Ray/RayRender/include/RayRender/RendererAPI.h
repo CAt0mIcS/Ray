@@ -5,10 +5,10 @@
 
 namespace At0::Ray
 {
-	class RLR_API RendererAPI
+	class RR_API RendererAPI
 	{
 	public:
-		enum RLR_API API
+		enum RR_API API
 		{
 			None = 0, OpenGL, D3D11,
 

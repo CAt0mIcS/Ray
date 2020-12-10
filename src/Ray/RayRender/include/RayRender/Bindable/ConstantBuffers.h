@@ -89,7 +89,7 @@ namespace At0::Ray
 
 
 	class Renderer3D;
-	class RLR_API TransformConstantBuffer : public Bindable
+	class RR_API TransformConstantBuffer : public Bindable
 	{
 	public:
 		TransformConstantBuffer(const Renderer3D& renderer, const Drawable& parent);

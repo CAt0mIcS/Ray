@@ -1,7 +1,7 @@
 #include "rdpch.h"
 #include "RInstrumentor.h"
 
-#if RL_ENABLE_PROFILING
+#if RAY_ENABLE_PROFILING
 
 #include "RLogger.h"
 
@@ -20,8 +20,8 @@ namespace At0::Ray::Debug
 		// Close session if one already exists
 		if (m_CurrentSession)
 		{
-			if (RL_FL_LOGGER_OPEN())
-				RL_LOG_DEBUG("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name, m_CurrentSession->Name);
+			if (RAY_LOG_IS_OPEN())
+				RAY_LOG_DEBUG("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name, m_CurrentSession->Name);
 			InternalEndSession();
 		}
 
@@ -33,8 +33,8 @@ namespace At0::Ray::Debug
 		}
 		else
 		{
-			if (RL_FL_LOGGER_OPEN())
-				RL_LOG_DEBUG("Instrumentor could not open results file '{0}'.", filepath);
+			if (RAY_LOG_IS_OPEN())
+				RAY_LOG_DEBUG("Instrumentor could not open results file '{0}'.", filepath);
 		}
 	}
 
@@ -67,8 +67,8 @@ namespace At0::Ray::Debug
 		}
 		else
 		{
-			if (RL_FL_LOGGER_OPEN())
-				RL_LOG_DEBUG("[Instrumentor] Timer with function signature '{0}' took '{1}'us", result.Name, result.ElapsedTime.count());
+			if (RAY_LOG_IS_OPEN())
+				RAY_LOG_DEBUG("[Instrumentor] Timer with function signature '{0}' took '{1}'us", result.Name, result.ElapsedTime.count());
 		}
 	}
 

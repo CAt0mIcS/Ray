@@ -15,7 +15,7 @@ struct ID3D11DepthStencilView;
 
 namespace At0::Ray
 {
-    class RLR_API Renderer3D : private GraphicsResource
+    class RR_API Renderer3D : private GraphicsResource
     {
     public:
         Renderer3D();

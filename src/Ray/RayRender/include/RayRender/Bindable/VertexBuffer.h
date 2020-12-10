@@ -9,7 +9,7 @@
 
 namespace At0::Ray
 {
-	class RLR_API VertexBuffer : public Bindable, private GraphicsResource
+	class RR_API VertexBuffer : public Bindable, private GraphicsResource
 	{
 	public:
 		template<typename V>

@@ -11,7 +11,7 @@ struct ID3D11PixelShader;
 
 namespace At0::Ray
 {
-	class RLR_API PixelShader : public Bindable, private GraphicsResource
+	class RR_API PixelShader : public Bindable, private GraphicsResource
 	{
 	public:
 		PixelShader(const std::string_view filepath);

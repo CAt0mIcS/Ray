@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef RLD_BUILD
+#ifdef RD_BUILD
 	#if defined(_MSC_VER)
 		#define RD_API __declspec(dllexport)
 	#elif defined(__GNUC__) || defined(__clang__)

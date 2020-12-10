@@ -1,7 +1,7 @@
 #pragma once
 
-#define RL_ENABLE_LOGGING 1
-#define RL_ENABLE_PROFILING 0
+#define RAY_ENABLE_LOGGING 1
+#define RAY_ENABLE_PROFILING 0
 
-#define RL_ENABLE_WARNING 1
-#define RL_ENABLE_INFO 1
+#define RAY_ENABLE_WARNING 1
+#define RAY_ENABLE_INFO 1

@@ -3,7 +3,7 @@
 
 #include <RayUtil/CoreConfig.h>
 
-#if RL_ENABLE_LOGGING
+#if RAY_ENABLE_LOGGING
 #include "RDBase.h"
 
 #include <../../RayLogger/include/RayLogger/RLog.h>
@@ -46,51 +46,51 @@ namespace At0::Ray::Debug
 /// <summary>
 /// Define logging macros here
 /// </summary>
-#if RL_ENABLE_LOGGING
+#if RAY_ENABLE_LOGGING
 
 #ifdef _MSC_VER
-	#define RL_LOG_BEGIN(path, loglvl)	::At0::Ray::Debug::Logger::Init(path, loglvl)
+	#define RAY_LOG_BEGIN(path, loglvl)	::At0::Ray::Debug::Logger::Init(path, loglvl)
 
-	#define RL_LOG_TRACE(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, __VA_ARGS__)
-	#define RL_LOG_DEBUG(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Debug(msg, __VA_ARGS__)
-	#define RL_LOG_INFO(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Info(msg, __VA_ARGS__)
-	#define RL_LOG_WARN(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Warn(msg, __VA_ARGS__)
-	#define RL_LOG_ERROR(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Error(msg, __VA_ARGS__)
-	#define RL_LOG_CRITICAL(msg, ...)	::At0::Ray::Debug::Logger::GetFileLogger().Critical(msg, __VA_ARGS__)
+	#define RAY_LOG_TRACE(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, __VA_ARGS__)
+	#define RAY_LOG_DEBUG(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Debug(msg, __VA_ARGS__)
+	#define RAY_LOG_INFO(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Info(msg, __VA_ARGS__)
+	#define RAY_LOG_WARN(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Warn(msg, __VA_ARGS__)
+	#define RAY_LOG_ERROR(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Error(msg, __VA_ARGS__)
+	#define RAY_LOG_CRITICAL(msg, ...)	::At0::Ray::Debug::Logger::GetFileLogger().Critical(msg, __VA_ARGS__)
 
-	#define RL_FL_LOGGER_OPEN()			::At0::Ray::Debug::Logger::GetFileLogger().IsOpen()
+	#define RAY_LOG_IS_OPEN()			::At0::Ray::Debug::Logger::GetFileLogger().IsOpen()
 
-	#define RL_LOG_END()				::At0::Ray::Debug::Logger::End();
-	#define RL_LOG_FLUSH()				::At0::Ray::Debug::Logger::GetFileLogger().Flush();
+	#define RAY_LOG_END()				::At0::Ray::Debug::Logger::End();
+	#define RAY_LOG_FLUSH()				::At0::Ray::Debug::Logger::GetFileLogger().Flush();
 #elif defined(__GNUC__)
-	#define RL_LOG_BEGIN(path, loglvl)	::At0::Ray::Debug::Logger::Init(path, loglvl)
+	#define RAY_LOG_BEGIN(path, loglvl)	::At0::Ray::Debug::Logger::Init(path, loglvl)
 
-	#define RL_LOG_TRACE(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, ## __VA_ARGS__)
-	#define RL_LOG_DEBUG(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Debug(msg, ## __VA_ARGS__)
-	#define RL_LOG_INFO(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Info(msg, ## __VA_ARGS__)
-	#define RL_LOG_WARN(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Warn(msg, ## __VA_ARGS__)
-	#define RL_LOG_ERROR(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Error(msg, ## __VA_ARGS__)
-	#define RL_LOG_CRITICAL(msg, ...)	::At0::Ray::Debug::Logger::GetFileLogger().Critical(msg, ## __VA_ARGS__)
+	#define RAY_LOG_TRACE(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, ## __VA_ARGS__)
+	#define RAY_LOG_DEBUG(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Debug(msg, ## __VA_ARGS__)
+	#define RAY_LOG_INFO(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Info(msg, ## __VA_ARGS__)
+	#define RAY_LOG_WARN(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Warn(msg, ## __VA_ARGS__)
+	#define RAY_LOG_ERROR(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Error(msg, ## __VA_ARGS__)
+	#define RAY_LOG_CRITICAL(msg, ...)	::At0::Ray::Debug::Logger::GetFileLogger().Critical(msg, ## __VA_ARGS__)
 
-	#define RL_FL_LOGGER_OPEN()			::At0::Ray::Debug::Logger::GetFileLogger().IsOpen()
+	#define RAY_LOG_IS_OPEN()			::At0::Ray::Debug::Logger::GetFileLogger().IsOpen()
 
-	#define RL_LOG_END()				::At0::Ray::Debug::Logger::End();
-	#define RL_LOG_FLUSH()				::At0::Ray::Debug::Logger::GetFileLogger().Flush();
+	#define RAY_LOG_END()				::At0::Ray::Debug::Logger::End();
+	#define RAY_LOG_FLUSH()				::At0::Ray::Debug::Logger::GetFileLogger().Flush();
 #endif
 
 #else
-	#define RL_LOG_BEGIN(path, loglevel)
+	#define RAY_LOG_BEGIN(path, loglevel)
 	
-	#define RL_LOG_TRACE(msg, ...)	
-	#define RL_LOG_DEBUG(msg, ...)	
-	#define RL_LOG_INFO(msg, ...)		
-	#define RL_LOG_WARN(msg, ...)		
-	#define RL_LOG_ERROR(msg, ...)	
-	#define RL_LOG_CRITICAL(msg, ...)
+	#define RAY_LOG_TRACE(msg, ...)	
+	#define RAY_LOG_DEBUG(msg, ...)	
+	#define RAY_LOG_INFO(msg, ...)		
+	#define RAY_LOG_WARN(msg, ...)		
+	#define RAY_LOG_ERROR(msg, ...)	
+	#define RAY_LOG_CRITICAL(msg, ...)
 
-	#define RL_FL_LOGGER_OPEN()
+	#define RAY_LOG_IS_OPEN()
 
-	#define RL_LOG_END()
-	#define RL_LOG_FLUSH()
+	#define RAY_LOG_END()
+	#define RAY_LOG_FLUSH()
 #endif
 

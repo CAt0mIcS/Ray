@@ -8,12 +8,12 @@ namespace At0::Util
 	/// <summary>
 	/// std::string version of the bellow function overloads
 	/// </summary>
-	RLU_API std::string GenerateRandomTokenA(uint16_t length);
+	RU_API std::string GenerateRandomTokenA(uint16_t length);
 	
 	/// <summary>
 	/// std::wstring version of the bellow function overloads
 	/// </summary>
-	RLU_API std::wstring GenerateRandomTokenW(uint16_t length);
+	RU_API std::wstring GenerateRandomTokenW(uint16_t length);
 
 	/// <summary>
 	/// Generates a random string with length

@@ -19,7 +19,7 @@ namespace At0::Ray
 	/// <summary>
 	/// Base Exception class
 	/// </summary>
-	class RLU_API Exception : public std::exception
+	class RU_API Exception : public std::exception
 	{
 	public:
 		/// <summary>
@@ -71,7 +71,7 @@ namespace At0::Ray
 
 #ifdef _WIN32
 
-	class RLU_API WindowsException : public Exception
+	class RU_API WindowsException : public Exception
 	{
 	public:
 		/// <summary>
@@ -107,7 +107,7 @@ namespace At0::Ray
 		HRESULT m_Hr;
 	};
 
-	class RLU_API GraphicsException : public Exception
+	class RU_API GraphicsException : public Exception
 	{
 	public:
 		/// <summary>
@@ -150,24 +150,24 @@ namespace At0::Ray
 
 #ifdef _WIN32
 
-#define RL_THROW_WND_EXCEPT(expr) \
+#define RAY_WND_THROW_FAILED(expr) \
 if(HRESULT RL___HRES___RL = expr; FAILED(RL___HRES___RL)) throw ::At0::Ray::WindowsException(RL___HRES___RL, (uint16_t)__LINE__, __FILE__)
 
-#define RL_THROW_LAST_WND_EXCEPT2() \
+#define RAY_WND_THROW_LAST_FAILED2() \
 throw ::At0::Ray::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE__)
 
-#define RL_THROW_LAST_WND_EXCEPT(expr) if(!(expr)) RL_THROW_LAST_WND_EXCEPT2()
+#define RAY_WND_THROW_LAST_FAILED(expr) if(!(expr)) RAY_WND_THROW_LAST_FAILED2()
 
 /// <TODO>
 /// HRESULT expands to expression twice (calls e.g. create function twice because it's inserted in hr)
 /// </TODO>
-#define RL_GFX_THROW_FAILED(expr) if(HRESULT RL___HRES___RL = (expr); FAILED(RL___HRES___RL)) throw ::At0::Ray::GraphicsException(RL___HRES___RL, (uint16_t)__LINE__, __FILE__)
+#define RAY_GFX_THROW_FAILED(expr) if(HRESULT RL___HRES___RL = (expr); FAILED(RL___HRES___RL)) throw ::At0::Ray::GraphicsException(RL___HRES___RL, (uint16_t)__LINE__, __FILE__)
 
 #else
 
-#define RL_THROW_WND_EXCEPT(hr)
-#define RL_THROW_LAST_WND_EXCEPT2()
-#define RL_THROW_LAST_WND_EXCEPT()
+#define RAY_WND_THROW_FAILED(expr) expr
+#define RAY_WND_THROW_LAST_FAILED2()
+#define RAY_WND_THROW_LAST_FAILED(expr) expr
 
 #endif
 

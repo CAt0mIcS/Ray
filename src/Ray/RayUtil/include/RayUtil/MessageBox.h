@@ -8,7 +8,7 @@
 namespace At0::Ray
 {
 
-	class RLU_API ZMessageBox
+	class RU_API ZMessageBox
 	{
 	public:
 		enum class Button

@@ -87,7 +87,7 @@ target_link_libraries("Ray"
 		"${PUBLIC_LIB}"
 )
 
-target_compile_definitions("Ray" PRIVATE "RL_BUILD")
+target_compile_definitions("Ray" PRIVATE "RAY_BUILD")
 # add_dependencies("Ray" "RayRender")
 
 # Add precompiled headers and move the cmake-generated file into a already existing filter (TODO)

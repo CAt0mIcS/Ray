@@ -8,8 +8,8 @@ namespace At0::Ray
 {
 	InputLayout::InputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& layout, ID3DBlob* vertexShaderBytecode)
 	{
-		RL_PROFILE_FUNCTION();
-		RL_GFX_THROW_FAILED(s_pDevice->CreateInputLayout(
+		RAY_PROFILE_FUNCTION();
+		RAY_GFX_THROW_FAILED(s_pDevice->CreateInputLayout(
 			layout.data(),
 			layout.size(),
 			vertexShaderBytecode->GetBufferPointer(),

@@ -18,14 +18,14 @@ namespace At0::Util
 	/// </summary>
 	/// <param name="str">Is the multi byte string</param>
 	/// <returns>The wide character string</returns>
-	RLU_API std::wstring MultiByteToWideChar(const std::string_view str);
+	RU_API std::wstring MultiByteToWideChar(const std::string_view str);
 
 	/// <summary>
 	/// Converts a wide character string (std::string) to multi byte string (std::string)
 	/// </summary>
 	/// <param name="str">Is the wide character string</param>
 	/// <returns>The multi byte string</returns>
-	RLU_API std::string WideCharToMultiByte(const std::wstring_view str);
+	RU_API std::string WideCharToMultiByte(const std::wstring_view str);
 
 
 #ifdef _WIN32
@@ -34,7 +34,7 @@ namespace At0::Util
 	/// </summary>
 	/// <param name="matrix">Is the matrix to convert</param>
 	/// <returns>The actual screen position of the transformed object</returns>
-	RLU_API RECT TransformationToRect(const glm::mat4& matrix);
+	RU_API RECT TransformationToRect(const glm::mat4& matrix);
 
 #endif
 }

@@ -21,18 +21,18 @@ namespace At0::Ray
 	WinAPIWindow::WinAPIWindow(const std::string_view name, Widget* parent, bool isMainWindow)
 		: Window(name, parent, isMainWindow), m_OldPos{}, m_OldSize{}, m_hWnd(0)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		auto rnd = Util::GenerateRandomToken<std::wstring>(5);
-		RL_EXPECTS(!rnd.empty());
-		RL_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
-		RL_THROW_LAST_WND_EXCEPT(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW));
+		RAY_EXPECTS(!rnd.empty());
+		RAY_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
+		RAY_WND_THROW_LAST_FAILED(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW));
 		m_IsOpen = true;
 	}
 
 	WinAPIWindow::~WinAPIWindow()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 	}
 
 	bool WinAPIWindow::CreateNativeWindow(
@@ -44,7 +44,7 @@ namespace At0::Ray
 		HWND hWndParent, HMENU hMenu
 	)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		WNDCLASS wc{};
 		wc.lpfnWndProc = WinAPIWindow::WindowProcSetup;
@@ -64,7 +64,7 @@ namespace At0::Ray
 	
 	LRESULT WinAPIWindow::WindowProcSetup(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		if (uMsg == WM_NCCREATE)
 		{
@@ -81,7 +81,7 @@ namespace At0::Ray
 
 	LRESULT WinAPIWindow::WindowProcPass(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		WinAPIWindow* pThis = (WinAPIWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 		return pThis->HandleMessage(uMsg, wParam, lParam);
@@ -89,14 +89,14 @@ namespace At0::Ray
 	
 	LRESULT WinAPIWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		switch (uMsg)
 		{
 		case WM_DESTROY:
 		{
 			// TODO: Check if resources of the closed window are destroyed correctly
-			RL_LOG_DEBUG("[MessageLoop] WM_DESTROY Message in HandleMessage received");
+			RAY_LOG_DEBUG("[MessageLoop] WM_DESTROY Message in HandleMessage received");
 			PostQuitMessage(0);
 			return 0;
 		}
@@ -309,7 +309,7 @@ namespace At0::Ray
 		}
 		case WM_CLOSE:
 		{
-			RL_LOG_DEBUG("[MessageLoop] WM_CLOSE Message in HandleMessage received");
+			RAY_LOG_DEBUG("[MessageLoop] WM_CLOSE Message in HandleMessage received");
 			m_IsOpen = false;
 
 			// Push a dummy event into the queue so that the condition_variable in the queue will notify all threads to check
@@ -327,7 +327,7 @@ namespace At0::Ray
 		}
 		case WM_QUIT:
 		{
-			RL_LOG_DEBUG("[MessageLoop] WM_QUIT Message in HandleMessage received");
+			RAY_LOG_DEBUG("[MessageLoop] WM_QUIT Message in HandleMessage received");
 			break;
 		}
 		}
@@ -350,7 +350,7 @@ namespace At0::Ray
 
 	void WinAPIWindow::SetTitle(const std::string_view title)
 	{
-		RL_THROW_LAST_WND_EXCEPT(SetWindowTextA(m_hWnd, title.data()));
+		RAY_WND_THROW_LAST_FAILED(SetWindowTextA(m_hWnd, title.data()));
 	}
 
 	void WinAPIWindow::Show() const
@@ -386,7 +386,7 @@ namespace At0::Ray
 
 	void WinAPIWindow::OnUpdate()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		MSG msg;
 		while (PeekMessage(&msg, m_hWnd, 0, 0, PM_REMOVE))
@@ -398,12 +398,12 @@ namespace At0::Ray
 
 	void WinAPIWindow::SetIcon(const std::string_view path)
 	{
-		RL_ASSERT(false, "Incomplete Implementation");
+		RAY_ASSERT(false, "Incomplete Implementation");
 	}
 	
 	bool WinAPIWindow::InitRenderer3D()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		if (!m_Renderer3D)
 		{
@@ -416,7 +416,7 @@ namespace At0::Ray
 
 	bool WinAPIWindow::InitRenderer2D()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		//if (!m_Renderer2D)
 		//{
@@ -429,7 +429,7 @@ namespace At0::Ray
 
 	Renderer3D* WinAPIWindow::GetRenderer3D() const
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		if (GetParent())
 		{

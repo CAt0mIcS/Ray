@@ -6,7 +6,7 @@
 
 namespace At0::Ray
 {
-	class RLR_API Cube : public Drawable
+	class RR_API Cube : public Drawable
 	{
 	public:
 		Cube(const Renderer3D& renderer, float size, const float colors[6][3]);

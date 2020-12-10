@@ -11,7 +11,7 @@ struct ID3D11Buffer;
 
 namespace At0::Ray
 {
-	class RLR_API IndexBuffer : public Bindable, private GraphicsResource
+	class RR_API IndexBuffer : public Bindable, private GraphicsResource
 	{
 	public:
 		IndexBuffer(const std::vector<uint16_t>& indices);

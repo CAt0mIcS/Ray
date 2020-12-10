@@ -43,23 +43,23 @@ namespace At0::Ray
 
 	static void GLFWErrorCallback(int error, const char* description)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
-		RL_LOG_CRITICAL("[OpenGLWindow] GLFW Error ({0}): {1}", error, description);
-		RL_LOG_FLUSH();
+		RAY_LOG_CRITICAL("[OpenGLWindow] GLFW Error ({0}): {1}", error, description);
+		RAY_LOG_FLUSH();
 	}
 
 
 	OpenGLWindow::OpenGLWindow(const std::string_view name, Widget* parent, bool isMainWindow)
 		: Window(name, parent, isMainWindow), m_OldPos{}, m_OldSize{}, m_hWnd(0)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		if (!s_GLFWInitialized)
 		{
 			int success = glfwInit();
-			RL_ASSERT(success, "Failed to initialize GLFW");
-			RL_LOG_INFO("[OpenGLWindow] Successfully initialized GLFW");
+			RAY_ASSERT(success, "Failed to initialize GLFW");
+			RAY_LOG_INFO("[OpenGLWindow] Successfully initialized GLFW");
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}
 
@@ -87,10 +87,10 @@ namespace At0::Ray
 			s_GLFWInitialized = true;
 
 			int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-			RL_ASSERT(status, "Failed to initialize Glad!");
+			RAY_ASSERT(status, "Failed to initialize Glad!");
 
-			RL_LOG_INFO("[OpenGLWindow] Successfully initialized Glad");
-			RL_LOG_INFO("[OpenGLWindow] OpenGL Info:"
+			RAY_LOG_INFO("[OpenGLWindow] Successfully initialized Glad");
+			RAY_LOG_INFO("[OpenGLWindow] OpenGL Info:"
 			"\n\tVendor:\t{0}\n\tRenderer: {1}\n\tVersion:{2}", glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION));
 		}
 
@@ -103,7 +103,7 @@ namespace At0::Ray
 	
 	OpenGLWindow::~OpenGLWindow()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 		if (m_hWnd)
 		{
 			Close();
@@ -114,7 +114,7 @@ namespace At0::Ray
 	std::string OpenGLWindow::GetTitle() const
 	{
 		// GLFW doesn't have functionality to get the current window title
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 		
 #ifdef _WIN32
 
@@ -129,7 +129,7 @@ namespace At0::Ray
 		else
 		{
 			//error
-			RL_LOG_WARN("[OpenGLWindow] Failed to retrieve the Window Title");
+			RAY_LOG_WARN("[OpenGLWindow] Failed to retrieve the Window Title");
 		}
 
 		return buff;
@@ -141,7 +141,7 @@ namespace At0::Ray
 		if (XGetWMName(glfwGetX11Display(), hWnd, &prop) == 0)
 		{
 			// error
-			RL_LOG_WARN("[OpenGLWindow] Failed to retrieve the Window Title");
+			RAY_LOG_WARN("[OpenGLWindow] Failed to retrieve the Window Title");
 		}
 		return (char*)prop.value;
 #endif
@@ -150,37 +150,37 @@ namespace At0::Ray
 	
 	void OpenGLWindow::SetTitle(const std::string_view title)
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 		glfwSetWindowTitle(m_hWnd, title.data());
 	}
 
 	void OpenGLWindow::Show() const
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 		glfwShowWindow(m_hWnd);
 	}
 
 	void OpenGLWindow::Hide() const
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 		glfwHideWindow(m_hWnd);
 	}
 
 	void OpenGLWindow::Maximize() const
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 		glfwMaximizeWindow(m_hWnd);
 	}
 
 	void OpenGLWindow::Minimize() const
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 		glfwIconifyWindow(m_hWnd);
 	}
 
 	void OpenGLWindow::Close()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 		if (IsOpen())
 		{
 			delete (GLFWCallbackData*)glfwGetWindowUserPointer(m_hWnd);
@@ -201,7 +201,7 @@ namespace At0::Ray
 
 	void OpenGLWindow::OnUpdate()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		glfwMakeContextCurrent(m_hWnd);
 		
@@ -215,12 +215,12 @@ namespace At0::Ray
 
 	void OpenGLWindow::SetIcon(const std::string_view path)
 	{
-		RL_ASSERT(false, "Incomplete Implementation");
+		RAY_ASSERT(false, "Incomplete Implementation");
 	}
 
 	bool OpenGLWindow::InitRenderer3D()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		if (!m_Renderer3D)
 		{
@@ -233,7 +233,7 @@ namespace At0::Ray
 
 	bool OpenGLWindow::InitRenderer2D()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		//if (!m_Renderer2D)
 		//{
@@ -246,7 +246,7 @@ namespace At0::Ray
 
 	Renderer3D* OpenGLWindow::GetRenderer3D() const
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		if (GetParent())
 		{
@@ -257,7 +257,7 @@ namespace At0::Ray
 	
 	void OpenGLWindow::SetUpEventCallbacks()
 	{
-		RL_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		glfwSetWindowCloseCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window)
 			{
