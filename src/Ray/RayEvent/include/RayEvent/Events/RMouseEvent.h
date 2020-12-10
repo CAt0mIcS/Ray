@@ -15,37 +15,11 @@ namespace At0::Ray
 		Left, Right, Middle
 	};
 
-	/// <summary>
-	/// Converts a mouse button to string
-	/// </summary>
-	/// <param name="btn">Is the button</param>
-	/// <returns>The mouse button name</returns>
-	static inline const char* MouseButtonToString(MouseButton btn)
-	{
-		switch (btn)
-		{
-		case MouseButton::Left:		return "Left Mouse Button";
-		case MouseButton::Right:	return "Right Mouse Button";
-		case MouseButton::Middle:	return "Middle Mouse Button";
-		}
-		return "";
-	}
-
-
 	class MouseMoveEvent : public Event
 	{
 	public:
-		MouseMoveEvent(const Point2& oldPos, const Point2& newPos)
-			: m_OldPos(oldPos), m_NewPos(newPos)
-		{
-		}
-
-		virtual std::string ToString() const override
-		{
-			std::ostringstream oss;
-			oss << "[MouseMoveEvent] New Position: " << m_NewPos;
-			return oss.str();
-		}
+		MouseMoveEvent(const Point2& oldPos, const Point2& newPos);
+		virtual std::string ToString() const override;
 
 		const Point2& GetPos() const { return m_NewPos; }
 		const Point2& GetOldPos() const { return m_OldPos; }
@@ -61,17 +35,9 @@ namespace At0::Ray
 	class MouseButtonPressedEvent : public Event
 	{
 	public:
-		MouseButtonPressedEvent(const MouseButton btn)
-			: m_Button(btn)
-		{
-		}
+		MouseButtonPressedEvent(const MouseButton btn);
 
-		virtual std::string ToString() const override
-		{
-			std::ostringstream oss;
-			oss << "[MouseButtonPressedEvent] Button: " << MouseButtonToString(m_Button);
-			return oss.str();
-		}
+		virtual std::string ToString() const override;
 
 		MouseButton GetButton() const { return m_Button; }
 
@@ -85,17 +51,9 @@ namespace At0::Ray
 	class MouseButtonReleasedEvent : public Event
 	{
 	public:
-		MouseButtonReleasedEvent(const MouseButton btn)
-			: m_Button(btn)
-		{
-		}
+		MouseButtonReleasedEvent(const MouseButton btn);
 
-		virtual std::string ToString() const override
-		{
-			std::ostringstream oss;
-			oss << "[MouseButtonReleasedEvent] Button: " << MouseButtonToString(m_Button);
-			return oss.str();
-		}
+		virtual std::string ToString() const override;
 
 		MouseButton GetButton() const { return m_Button; }
 
@@ -123,17 +81,9 @@ namespace At0::Ray
 	class MouseWheelUpEvent : public MouseWheelEvent
 	{
 	public:
-		MouseWheelUpEvent(int delta)
-			: MouseWheelEvent(delta)
-		{
-		}
+		MouseWheelUpEvent(int delta);
 
-		virtual std::string ToString() const override
-		{
-			std::ostringstream oss;
-			oss << "[MouseWheelUpEvent] Delta: " << GetDelta();
-			return oss.str();
-		}
+		virtual std::string ToString() const override;
 
 		static EventType GetStaticType() { return EventType::MouseWheelUpEvent; }
 		virtual EventType GetType() const override { return GetStaticType(); }
@@ -142,17 +92,9 @@ namespace At0::Ray
 	class MouseWheelDownEvent : public MouseWheelEvent
 	{
 	public:
-		MouseWheelDownEvent(int delta)
-			: MouseWheelEvent(delta)
-		{
-		}
+		MouseWheelDownEvent(int delta);
 
-		virtual std::string ToString() const override
-		{
-			std::ostringstream oss;
-			oss << "[MouseWheelDownEvent] Delta: " << GetDelta();
-			return oss.str();
-		}
+		virtual std::string ToString() const override;
 
 		static EventType GetStaticType() { return EventType::MouseWheelDownEvent; }
 		virtual EventType GetType() const override { return GetStaticType(); }
@@ -161,17 +103,9 @@ namespace At0::Ray
 	class MouseWheelLeftEvent : public MouseWheelEvent
 	{
 	public:
-		MouseWheelLeftEvent(int delta)
-			: MouseWheelEvent(delta)
-		{
-		}
+		MouseWheelLeftEvent(int delta);
 
-		virtual std::string ToString() const override
-		{
-			std::ostringstream oss;
-			oss << "[MouseWheelLeftEvent] Delta: " << GetDelta();
-			return oss.str();
-		}
+		virtual std::string ToString() const override;
 
 		static EventType GetStaticType() { return EventType::MouseWheelLeftEvent; }
 		virtual EventType GetType() const override { return GetStaticType(); }
@@ -180,17 +114,9 @@ namespace At0::Ray
 	class MouseWheelRightEvent : public MouseWheelEvent
 	{
 	public:
-		MouseWheelRightEvent(int delta)
-			: MouseWheelEvent(delta)
-		{
-		}
+		MouseWheelRightEvent(int delta);
 
-		virtual std::string ToString() const override
-		{
-			std::ostringstream oss;
-			oss << "[MouseWheelRightEvent] Delta: " << GetDelta();
-			return oss.str();
-		}
+		virtual std::string ToString() const override;
 
 		static EventType GetStaticType() { return EventType::MouseWheelRightEvent; }
 		virtual EventType GetType() const override { return GetStaticType(); }
@@ -199,16 +125,9 @@ namespace At0::Ray
 	class HoverEnterEvent : public Event
 	{
 	public:
-		HoverEnterEvent(Widget* hoverEntered)
-			: m_HoverEntered(hoverEntered) {}
+		HoverEnterEvent(Widget* hoverEntered);
 
-		virtual std::string ToString() const override
-		{
-			std::ostringstream oss;
-			//oss << "[HoverEnterEvent] Widget with name " << m_HoverEntered->GetName() << " gained hover focus";
-			oss << "[HoverEnterEvent]";
-			return oss.str();
-		}
+		virtual std::string ToString() const override;
 
 		Widget* GetHoverWidget() const { return m_HoverEntered; }
 
@@ -222,16 +141,9 @@ namespace At0::Ray
 	class HoverLeaveEvent : public Event
 	{
 	public:
-		HoverLeaveEvent(Widget* hoverLeft)
-			: m_HoverLeft(hoverLeft) {}
+		HoverLeaveEvent(Widget* hoverLeft);
 
-		virtual std::string ToString() const override
-		{
-			std::ostringstream oss;
-			//oss << "[HoverLeaveEvent] The Widget with name " << m_HoverLeft->GetName() << " lost hover focus";
-			oss << "[HoverLeaveEvent]";
-			return oss.str();
-		}
+		virtual std::string ToString() const override;
 
 		static EventType GetStaticType() { return EventType::HoverLeaveEvent; }
 		virtual EventType GetType() const override { return GetStaticType(); }

@@ -6,9 +6,8 @@
 
 #ifdef _WIN32
 #include <Windows.h>
+#include <../../extern/glm/glm/mat4x4.hpp>
 #endif
-
-#include <glm/mat4x4.hpp>
 
 
 namespace At0::Util

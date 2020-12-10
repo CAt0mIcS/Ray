@@ -1,8 +1,8 @@
 #pragma once
 
-#include "RApplicationEvent.h"
-#include "RMouseEvent.h"
-#include "RKeyboardEvent.h"
+#include "Events/RApplicationEvent.h"
+#include "Events/RMouseEvent.h"
+#include "Events/RKeyboardEvent.h"
 
 
 namespace At0::Ray

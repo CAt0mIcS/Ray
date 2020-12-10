@@ -12,8 +12,8 @@ namespace At0::Ray
 		MouseWheelUpEvent, MouseWheelDownEvent, MouseWheelRightEvent, MouseWheelLeftEvent,
 		HoverEnterEvent, HoverLeaveEvent,
 		KeyPressedEvent, KeyReleasedEvent, CharEvent,
-		WindowResizeEvent, WindowCloseEvent, WindowMoveEvent, PaintEvent, SetCursorEvent,
-		FIRST = INVALID, LAST = SetCursorEvent
+		WindowResizeEvent, WindowCloseEvent, WindowMoveEvent, PaintEvent,
+		FIRST = INVALID, LAST = PaintEvent
 	};
 
 

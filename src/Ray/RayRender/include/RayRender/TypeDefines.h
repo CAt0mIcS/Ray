@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include <../../extern/glm/glm/glm.hpp>
 #include <iostream>
 
 #include "RlRBase.h"
