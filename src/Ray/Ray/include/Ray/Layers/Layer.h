@@ -155,9 +155,9 @@ namespace At0::Ray
 		virtual bool OnWindowClose(Widget* receiver, WindowCloseEvent& e) { return true; }
 
 		/// <summary>
-		/// Default virtual Layer Deconstructor
+		/// Virtual Layer Deconstructor
 		/// </summary>
-		virtual ~Layer() = default;
+		virtual ~Layer();
 
 	private:
 		/// <summary>

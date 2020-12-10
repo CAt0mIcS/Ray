@@ -2,6 +2,7 @@
 #include "Ray/Layers/Layer.h"
 
 #include <RayDebug/RInstrumentor.h>
+#include <RayDebug/RLogger.h>
 
 
 namespace At0::Ray
@@ -11,6 +12,11 @@ namespace At0::Ray
     {
         RAY_PROFILE_FUNCTION();
 
+    }
+    
+    Layer::~Layer()
+    {
+        RAY_LOG_DEBUG("[Layer] '{0}' destroyed", m_Name);
     }
 }
 

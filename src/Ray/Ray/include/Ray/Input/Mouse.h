@@ -18,6 +18,7 @@ namespace At0::Ray
 		/// Mouse Constructor. Initializes everything to false
 		/// </summary>
 		MouseInput();
+		~MouseInput();
 
 		/// <summary>
 		/// Checks if the left mouse button is pressed

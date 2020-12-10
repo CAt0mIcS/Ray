@@ -105,6 +105,7 @@ namespace At0::Ray
 	Application::~Application()
 	{
 		RAY_PROFILE_FUNCTION();
+		RAY_LOG_DEBUG("[Application] Destroyed");
 	}
 	
 	void Application::Cleanup()

@@ -17,6 +17,7 @@ namespace At0::Ray
 		/// Default Keyboard Constructor
 		/// </summary>
 		KeyboardInput() = default;
+		~KeyboardInput();
 
 		/// <summary>
 		/// Checks if a key with keycode is pressed

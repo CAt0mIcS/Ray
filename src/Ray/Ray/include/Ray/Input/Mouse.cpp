@@ -3,12 +3,18 @@
 
 #include "Ray/Widgets/Widget.h"
 
+#include <RayDebug/RLogger.h>
 
 namespace At0::Ray
 {
 	MouseInput::MouseInput()
 		: m_IsLeftPressed(false), m_IsMiddlePressed(false), m_IsRightPressed(false), m_MousePos{}, m_OldMousePos{}
 	{
+	}
+
+	MouseInput::~MouseInput()
+	{
+		RAY_LOG_DEBUG("[MouseInput] Destroyed");
 	}
 
 	bool MouseInput::IsLeftPressed() const

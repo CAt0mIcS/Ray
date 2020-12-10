@@ -13,6 +13,7 @@ set(SRC
     "include/RayUtil/Serialize.h"
     "include/RayUtil/TypeConvert.h"
     "include/RayUtil/Helper.h"
+    "include/RayUtil/Helper.cpp"
     "include/RayUtil/MessageBox.cpp"
     "include/RayUtil/InfoManager.cpp"
 )

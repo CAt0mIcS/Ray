@@ -4,6 +4,7 @@
 #include "Events/RMouseEvent.h"
 #include "Events/RKeyboardEvent.h"
 
+#include <vector>
 
 namespace At0::Ray
 {
@@ -14,6 +15,9 @@ namespace At0::Ray
 	class EventDispatcher
 	{
 		friend class EventListener<E>;
+	public:
+		virtual ~EventDispatcher() = default;
+
 	protected:
 		EventDispatcher() = default;
 

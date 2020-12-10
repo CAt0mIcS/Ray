@@ -59,6 +59,7 @@ namespace At0::Ray
 			RAY_LOG_DEBUG("[ThreadPool] Calling ThreadPool::Shutdown from Deconstructor");
 			Shutdown();
 		}
+		RAY_LOG_DEBUG("[ThreadPool] Destroyed");
 	}
 
 	void ThreadPool::InfiniteWait()

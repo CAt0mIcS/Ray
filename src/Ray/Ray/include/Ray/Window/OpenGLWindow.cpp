@@ -107,6 +107,7 @@ namespace At0::Ray
 			Close();
 		}
 		glfwTerminate();
+		RAY_LOG_DEBUG("[OpenGLWindow] '{0}' destroyed", this->GetName());
 	}
 
 	std::string OpenGLWindow::GetTitle() const

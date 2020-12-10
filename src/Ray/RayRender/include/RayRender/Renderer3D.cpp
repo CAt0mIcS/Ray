@@ -3,6 +3,7 @@
 
 #include <RayUtil/Exception.h>
 #include <RayDebug/RAssert.h>
+#include <RayDebug/RLogger.h>
 #include <RayDebug/RInstrumentor.h>
 
 
@@ -11,10 +12,9 @@ namespace WRL = Microsoft::WRL;
 namespace At0::Ray
 {
     Renderer3D::Renderer3D()
-        : m_pSwapChain(nullptr), m_pTarget(nullptr), m_hWnd(0)
+        : m_Projection(DirectX::XMMatrixIdentity()), m_pSwapChain(nullptr), m_pTarget(nullptr), m_hWnd(0)
     {
         RAY_PROFILE_FUNCTION();
-
     }
 
     void Renderer3D::Init(HWND hWnd)
@@ -24,7 +24,7 @@ namespace At0::Ray
         m_hWnd = hWnd;
         
         RECT clientWindowRect;
-        RAY_WND_THROW_FAILED(GetClientRect(m_hWnd, &clientWindowRect));
+        RAY_WND_THROW_LAST_FAILED(GetClientRect(m_hWnd, &clientWindowRect));
 
 
         // ----------------------------------------------------------------------------------------------------
@@ -131,6 +131,6 @@ namespace At0::Ray
     Renderer3D::~Renderer3D()
     {
         RAY_PROFILE_FUNCTION();
-
+        RAY_LOG_DEBUG("[Renderer3D] Destroyed");
     }
 }

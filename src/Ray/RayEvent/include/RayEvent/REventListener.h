@@ -18,6 +18,8 @@ namespace At0::Ray
 		/// <param name="e">Is the received event</param>
 		virtual void OnEvent(Ray::Widget* receiver, E& e) = 0;
 
+		virtual ~EventListener() = default;
+
 	protected:
 		/// <summary>
 		/// Automatically adds a new EventListener to the list of listeners

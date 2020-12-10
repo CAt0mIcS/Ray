@@ -33,6 +33,7 @@ namespace At0::Ray
 	WinAPIWindow::~WinAPIWindow()
 	{
 		RAY_PROFILE_FUNCTION();
+		RAY_LOG_DEBUG("[WinAPIWindow] '{0}' destroyed", this->GetName());
 	}
 
 	bool WinAPIWindow::CreateNativeWindow(

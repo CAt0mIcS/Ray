@@ -4,6 +4,7 @@
 #include "Ray/Input/Mouse.h"
 
 #include <RayDebug/RInstrumentor.h>
+#include <RayDebug/RLogger.h>
 #include <RayUtil/Exception.h>
 #include <RayUtil/TypeConvert.h>
 
@@ -103,6 +104,7 @@ namespace At0::Ray
     Widget::~Widget()
     {
         RAY_PROFILE_FUNCTION();
+        RAY_LOG_DEBUG("[Widget] '{0}' destroyed", this->GetName());
     }
 
     Widget::Widget(const std::string_view name, Widget* parent)

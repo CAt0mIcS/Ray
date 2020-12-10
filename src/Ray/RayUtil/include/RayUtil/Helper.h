@@ -2,10 +2,6 @@
 
 #include "RlUBase.h"
 
-#if defined(_WIN32) && !defined(NDEBUG)
-#include <Windows.h>
-#endif
-
 #include <memory>
 #include <signal.h>
 
@@ -44,26 +40,15 @@ namespace At0::Util
 		signal(SIGTERM, func);
 	}
 
-	static void ConsoleSetup()
-	{
-		// Allocates Console and sets std::cout output in debug builds
-#if defined(_WIN32) && !defined(NDEBUG)
-		{
-			AllocConsole();
-			FILE* file;
-			freopen_s(&file, "CONOUT$", "w", stdout);
-		}
-#endif
-	}
+	/// <summary>
+	/// Allocates the console and sets std::cout output
+	/// </summary>
+	void RU_API ConsoleSetup();
 
-	static void ConsoleShutdown()
-	{
-#if defined(_WIN32) && !defined(NDEBUG)
-		{
-			FreeConsole();
-		}
-#endif
-	}
+	/// <summary>
+	/// Frees the console
+	/// </summary>
+	void RU_API ConsoleShutdown();
 }
 
 
