@@ -110,11 +110,11 @@ namespace At0::Ray
 			Mouse.SetPos({ (float)pt.x, (float)pt.y });
 
 			MouseMoveEvent e(Mouse.GetOldPos(), Mouse.GetPos());
-			for (auto* listener : m_MouseMoveListeners)
+			for (auto* pListener : EventDispatcher<MouseMoveEvent>::Get())
 			{
-				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
-			
+
 
 			// Loop over the widgets and check if the mouse left any
 			SetHoveringWidget();
@@ -126,9 +126,9 @@ namespace At0::Ray
 			Mouse.SetLeftPressed(true);
 
 			MouseButtonPressedEvent e(MouseButton::Left);
-			for (auto* listener : m_MouseButtonPressedListeners)
+			for (auto* pListener : EventDispatcher<MouseButtonPressedEvent>::Get())
 			{
-				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
 			return 0;
 		}
@@ -137,9 +137,9 @@ namespace At0::Ray
 			Mouse.SetLeftPressed(false);
 
 			MouseButtonReleasedEvent e(MouseButton::Left);
-			for (auto* listener : m_MouseButtonReleasedListeners)
+			for (auto* pListener : EventDispatcher<MouseButtonReleasedEvent>::Get())
 			{
-				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
 			return 0;
 		}
@@ -148,9 +148,9 @@ namespace At0::Ray
 			Mouse.SetMiddlePressed(true);
 
 			MouseButtonPressedEvent e(MouseButton::Middle);
-			for (auto* listener : m_MouseButtonPressedListeners)
+			for (auto* pListener : EventDispatcher<MouseButtonPressedEvent>::Get())
 			{
-				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
 			return 0;
 		}
@@ -159,9 +159,9 @@ namespace At0::Ray
 			Mouse.SetMiddlePressed(false);
 
 			MouseButtonReleasedEvent e(MouseButton::Middle);
-			for (auto* listener : m_MouseButtonReleasedListeners)
+			for (auto* pListener : EventDispatcher<MouseButtonReleasedEvent>::Get())
 			{
-				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
 			return 0;
 		}
@@ -170,9 +170,9 @@ namespace At0::Ray
 			Mouse.SetRightPressed(true);
 
 			MouseButtonPressedEvent e(MouseButton::Right);
-			for (auto* listener : m_MouseButtonPressedListeners)
+			for (auto* pListener : EventDispatcher<MouseButtonPressedEvent>::Get())
 			{
-				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
 			return 0;
 		}
@@ -181,9 +181,9 @@ namespace At0::Ray
 			Mouse.SetRightPressed(false);
 
 			MouseButtonReleasedEvent e(MouseButton::Right);
-			for (auto* listener : m_MouseButtonReleasedListeners)
+			for (auto* pListener : EventDispatcher<MouseButtonReleasedEvent>::Get())
 			{
-				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
 			return 0;
 		}
@@ -192,9 +192,9 @@ namespace At0::Ray
 			Keyboard.SetKeyState((unsigned char)wParam, true);
 
 			KeyPressedEvent e((unsigned char)wParam, (uint32_t)(lParam & 0xff));
-			for (auto* listener : m_KeyPressedListeners)
+			for (auto* pListener : EventDispatcher<KeyPressedEvent>::Get())
 			{
-				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
 			return 0;
 		}
@@ -203,18 +203,18 @@ namespace At0::Ray
 			Keyboard.SetKeyState((unsigned char)wParam, false);
 
 			KeyReleasedEvent e((unsigned char)wParam);
-			for (auto* listener : m_KeyReleasedListeners)
+			for (auto* pListener : EventDispatcher<KeyReleasedEvent>::Get())
 			{
-				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
 			return 0;
 		}
 		case WM_CHAR:
 		{
 			CharEvent e((unsigned char)wParam);
-			for (auto* listener : m_CharListeners)
+			for (auto* pListener : EventDispatcher<CharEvent>::Get())
 			{
-				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
 			return 0;
 		}
@@ -225,17 +225,17 @@ namespace At0::Ray
 			if (delta > 0)
 			{
 				MouseWheelUpEvent e(delta);
-				for (auto* listener : m_MouseWheelUpListeners)
+				for (auto* pListener : EventDispatcher<MouseWheelUpEvent>::Get())
 				{
-					listener->OnEvent(GetEventReceiver(e, Mouse), e);
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 				}
 			}
 			else if (delta < 0)
 			{
 				MouseWheelDownEvent e(delta);
-				for (auto* listener : m_MouseWheelDownListeners)
+				for (auto* pListener : EventDispatcher<MouseWheelDownEvent>::Get())
 				{
-					listener->OnEvent(GetEventReceiver(e, Mouse), e);
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 				}
 			}
 
@@ -248,17 +248,17 @@ namespace At0::Ray
 			if (delta > 0)
 			{
 				MouseWheelRightEvent e(delta);
-				for (auto* listener : m_MouseWheelRightListeners)
+				for (auto* pListener : EventDispatcher<MouseWheelRightEvent>::Get())
 				{
-					listener->OnEvent(GetEventReceiver(e, Mouse), e);
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 				}
 			}
 			else if (delta < 0)
 			{
 				MouseWheelLeftEvent e(delta);
-				for (auto* listener : m_MouseWheelLeftListeners)
+				for (auto* pListener : EventDispatcher<MouseWheelLeftEvent>::Get())
 				{
-					listener->OnEvent(GetEventReceiver(e, Mouse), e);
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 				}
 			}
 
@@ -271,9 +271,9 @@ namespace At0::Ray
 			EndPaint(m_hWnd, &ps);
 
 			PaintEvent e;
-			for (auto* listener : m_WindowPaintListeners)
+			for (auto* pListener : EventDispatcher<PaintEvent>::Get())
 			{
-				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
 			return 0;
 		}
@@ -285,9 +285,9 @@ namespace At0::Ray
 			//TODO: Read how windows handles events (how they're built, how they handle it)
 
 			WindowResizeEvent e(m_OldSize, newSize);
-			for (auto* listener : m_WindowResizeListeners)
+			for (auto* pListener : EventDispatcher<WindowResizeEvent>::Get())
 			{
-				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
 
 			m_OldSize = newSize;
@@ -299,9 +299,9 @@ namespace At0::Ray
 			MoveTo(newPos);
 
 			WindowMoveEvent e(m_OldPos, newPos);
-			for (auto* listener : m_WindowMoveListeners)
+			for (auto* pListener : EventDispatcher<WindowMoveEvent>::Get())
 			{
-				listener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
 
 			m_OldPos = newPos;
@@ -312,18 +312,16 @@ namespace At0::Ray
 			RAY_LOG_DEBUG("[MessageLoop] WM_CLOSE Message in HandleMessage received");
 			m_IsOpen = false;
 
-			// Push a dummy event into the queue so that the condition_variable in the queue will notify all threads to check
-			Scope<WindowCloseEvent> eDummy = MakeScope<WindowCloseEvent>();
-			//m_EventQueue.PushBack({ this, std::move(eDummy) });
-
-			if (m_ImmediateEventFn)
+			WindowCloseEvent e;
+			for (auto* pListener : EventDispatcher<WindowCloseEvent>::Get())
 			{
-				if (!m_ImmediateEventFn(this, WindowCloseEvent()))
-				{
-					break;
-				}
+				pListener->OnEvent(this, e);
 			}
-			return 0;
+
+			if (e.WindowCloseAborted())
+				return 0;
+
+			break;
 		}
 		case WM_QUIT:
 		{

@@ -1,6 +1,8 @@
 #pragma once
 
 // Defined so Windows.h doesn't define min, max macro
+
+// QUESTION: Where to put this so it's global?
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif

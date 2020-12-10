@@ -33,7 +33,7 @@ namespace At0::Ray
 	/// </summary>
 	using EventCallbackFn = std::function<bool(Widget*, Event&)>;
 
-
+	// QUESTION: New Event System
 	class RAY_API Window : public Widget, 
 		public EventDispatcher<WindowMoveEvent>,
 		public EventDispatcher<WindowResizeEvent>,
@@ -68,20 +68,6 @@ namespace At0::Ray
 		/// Called every frame to read from the internal message queue
 		/// </summary>
 		virtual void OnUpdate() = 0;
-
-		/// <summary>
-		/// Getter for the current event queue
-		/// </summary>
-		/// <returns>Returns the event queue for this window</returns>
-		//Queue<EventMessage, s_MaxMessagesInQueue>& GetEventQueue() { return m_EventQueue; }
-
-		/// <summary>
-		/// Sets the function which will be called when any event is received which needs to be handled immediately
-		/// </summary>
-		/// <typeparam name="F">Is any callable, std::function castable type</typeparam>
-		/// <param name="func">Is the function to call</param>
-		template<typename F, typename = std::enable_if_t<std::is_convertible_v<F, EventCallbackFn>>>
-		static void SetImmediateEventHandler(F&& func) { m_ImmediateEventFn = func; }
 
 		/// <summary>
 		/// Getter for the current Window Title
@@ -153,26 +139,9 @@ namespace At0::Ray
 		/// </summary>
 		virtual ~Window();
 
-
-		virtual void AddListener(EventListener<WindowMoveEvent>* pListener) override			{ m_WindowMoveListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<WindowResizeEvent>* pListener) override			{ m_WindowResizeListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<WindowCloseEvent>* pListener) override			{ m_WindowCloseListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<PaintEvent>* pListener) override					{ m_WindowPaintListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<MouseMoveEvent>* pListener) override				{ m_MouseMoveListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<MouseButtonPressedEvent>* pListener) override	{ m_MouseButtonPressedListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<MouseButtonReleasedEvent>* pListener) override	{ m_MouseButtonReleasedListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<MouseWheelDownEvent>* pListener) override		{ m_MouseWheelDownListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<MouseWheelUpEvent>* pListener) override			{ m_MouseWheelUpListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<MouseWheelLeftEvent>* pListener) override		{ m_MouseWheelLeftListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<MouseWheelRightEvent>* pListener) override		{ m_MouseWheelRightListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<HoverEnterEvent>* pListener) override			{ m_HoverEnterListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<HoverLeaveEvent>* pListener) override			{ m_HoverLeaveListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<KeyPressedEvent>* pListener) override			{ m_KeyPressedListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<KeyReleasedEvent>* pListener) override			{ m_KeyReleasedListeners.push_back(pListener); }
-		virtual void AddListener(EventListener<CharEvent>* pListener) override					{ m_CharListeners.push_back(pListener); }
-
-
 	public:
+		// QUESTION: Global Mouse and Keyboard instead of MouseInput& GetMouse() fn?
+
 		/// <summary>
 		/// The mouse holding information about which mouse button is pressed in this window
 		/// </summary>
@@ -201,43 +170,14 @@ namespace At0::Ray
 
 		/// <QUESTION>
 		/// I could have e.g. m_hWnd in the base class (Window) (as protected) and then I wouldn't have to make the GetNativeWindow() function virtual.
+		/// 
+		/// Protected members?
 		/// </QUESTION>
-
-		/// <summary>
-		/// Called when any event occurs which needs to be handled immediately (WindowCloseEvent)
-		/// <param name="receiver">Is the window which received the immediate event</param>
-		/// <param name="e">Is the immediate event</param>
-		/// <returns>True if the WindowProc should return 0, false if the WindowProc should break</returns>
-		/// </summary>
-		static EventCallbackFn m_ImmediateEventFn;
-
-		/// <summary>
-		/// Is the Queue of messages to process, they will be popped in Ray::Application and dispatched to the layers
-		/// </summary>
-		//Queue<EventMessage, s_MaxMessagesInQueue> m_EventQueue;
 
 		/// <summary>
 		/// Specifies the control where the mouse is currently on
 		/// </summary>
 		Widget* m_CurrentlyHovering;
-
-		std::vector<EventListener<WindowMoveEvent>*> m_WindowMoveListeners;
-		std::vector<EventListener<WindowResizeEvent>*> m_WindowResizeListeners;
-		std::vector<EventListener<WindowCloseEvent>*> m_WindowCloseListeners;
-		std::vector<EventListener<PaintEvent>*> m_WindowPaintListeners;
-		std::vector<EventListener<MouseMoveEvent>*> m_MouseMoveListeners;
-		std::vector<EventListener<MouseButtonPressedEvent>*> m_MouseButtonPressedListeners;
-		std::vector<EventListener<MouseButtonReleasedEvent>*> m_MouseButtonReleasedListeners;
-		std::vector<EventListener<MouseWheelDownEvent>*> m_MouseWheelDownListeners;
-		std::vector<EventListener<MouseWheelUpEvent>*> m_MouseWheelUpListeners;
-		std::vector<EventListener<MouseWheelLeftEvent>*> m_MouseWheelLeftListeners;
-		std::vector<EventListener<MouseWheelRightEvent>*> m_MouseWheelRightListeners;
-		std::vector<EventListener<HoverEnterEvent>*> m_HoverEnterListeners;
-		std::vector<EventListener<HoverLeaveEvent>*> m_HoverLeaveListeners;
-		std::vector<EventListener<KeyPressedEvent>*> m_KeyPressedListeners;
-		std::vector<EventListener<KeyReleasedEvent>*> m_KeyReleasedListeners;
-		std::vector<EventListener<CharEvent>*> m_CharListeners;
-
 	};
 }
 

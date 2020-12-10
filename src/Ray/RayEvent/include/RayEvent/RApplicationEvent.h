@@ -87,6 +87,10 @@ namespace At0::Ray
 		{
 		}
 
+		void AbortWindowClose() { m_WindowCloseAborted = true; }
+		void ContinueWindowClose() { m_WindowCloseAborted = false; }
+		bool WindowCloseAborted() const { return m_WindowCloseAborted; }
+
 		virtual std::string ToString() const override
 		{
 			std::ostringstream oss;
@@ -96,6 +100,9 @@ namespace At0::Ray
 
 		static EventType GetStaticType() { return EventType::WindowCloseEvent; }
 		virtual EventType GetType() const override { return GetStaticType(); }
+
+	private:
+		bool m_WindowCloseAborted = true;
 	};
 
 	class PaintEvent : public Event

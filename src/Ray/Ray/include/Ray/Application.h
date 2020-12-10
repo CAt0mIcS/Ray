@@ -12,13 +12,6 @@
 namespace At0::Ray
 {
 	class Application;
-
-	///// <summary>
-	///// Function which has to be defined by the client to be used in EntryPoint.h.
-	///// Note: Return a raw, heap-allocated pointer because it will call delete in EntryPoint.h
-	///// </summary>
-	void Awake(int argc, char** argv);
-
 	class Layer;
 
 	/// <summary>
@@ -99,29 +92,6 @@ namespace At0::Ray
 		Application(const std::string_view commandLine = "");
 
 	private:
-		/// <summary>
-		/// Receives all events from all Windows, dispatches them to the correct Layer
-		/// </summary>
-		/// <param name="receiver">Is the Widget that received the event</param>
-		/// <param name="e">Is the received event</param>
-		void OnEventReceived(Widget* receiver, Scope<Event>&& e);
-
-		/// <summary>
-		/// Handles immediate events
-		/// </summary>
-		/// <param name="receiver">Is the widget which received the event</param>
-		/// <param name="e">Is the received event</param>
-		/// <returns>True if the WindowProc should return 0, false if it should break</returns>
-		bool OnImmediateEvent(Widget* receiver, Event& e);
-		
-		/// <summary>
-		/// Calls the correct event function depending on the event
-		/// </summary>
-		/// <param name="layer">Is the layer which receives the event</param>
-		/// <param name="receiver">Is the widget which receives the event</param>
-		/// <param name="e">Is the event to dispatch</param>
-		void DispatchEvent(Layer* layer, Widget* receiver, Event& e);
-
 		/// <summary>
 		/// Destroys resources
 		/// </summary>

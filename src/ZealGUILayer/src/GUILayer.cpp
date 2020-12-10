@@ -17,9 +17,11 @@ namespace At0::Layers
 	static constexpr uint64_t numCubes = 3000;
 	std::mt19937 mtEngine;
 
+	// The way to get the MainWindow is too long? "Ray::Application::Get().GetMainWindow()"
 	GUILayer::GUILayer(const std::string_view name)
 		: Ray::Layer(name),
-		EventListener<Ray::MouseMoveEvent>(Ray::Application::Get().GetMainWindow())
+		EventListener<Ray::MouseMoveEvent>(Ray::Application::Get().GetMainWindow()),
+		EventListener<Ray::WindowCloseEvent>(Ray::Application::Get().GetMainWindow())
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] Startup");
@@ -124,13 +126,21 @@ namespace At0::Layers
 	}
 
 	#include <chrono>
-	std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseMoveEvent& e)
 	{
-		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
-		prevTime = std::chrono::high_resolution_clock::now();
+		//static std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
+		//std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
+		//prevTime = std::chrono::high_resolution_clock::now();
 
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+	}
+
+	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::WindowCloseEvent& e)
+	{
+		RAY_PROFILE_FUNCTION();
+		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+
+		e.AbortWindowClose();
 	}
 
 	//void GUILayer::OnMouseMove(Ray::Widget* receiver, Ray::MouseMoveEvent& e)

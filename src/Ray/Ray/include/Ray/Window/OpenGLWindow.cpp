@@ -34,7 +34,6 @@ namespace At0::Ray
 		OpenGLWindow& win;
 		Size2& oldSize;
 		Point2& oldPos;
-		EventCallbackFn& immediateEventFn;
 		bool& windowIsOpen;
 		std::function<Widget*(const Event& e, const MouseInput& mouse)> eventReceiverFn;
 	};
@@ -71,7 +70,6 @@ namespace At0::Ray
 				*this, 
 				m_OldSize, 
 				m_OldPos, 
-				m_ImmediateEventFn, 
 				m_IsOpen, 
 				[this](const Event& e, const MouseInput& mouse) { return GetEventReceiver(e, mouse); }
 			}

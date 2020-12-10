@@ -69,7 +69,7 @@ namespace At0::Zeal
 ///////////////////////////////////////////////////////////////////////////
 ////////// Called in EntryPoint.h /////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-void At0::Ray::Awake(int argc, char** argv)
+int At0::Ray::Awake(int argc, char** argv)
 {
 	using namespace At0;
 
@@ -88,9 +88,7 @@ void At0::Ray::Awake(int argc, char** argv)
 		RAY_PROFILE_BEGIN_SESSION("Shutdown", "../../Profiling/Profile-Shutdown.json");
 		delete app;
 		RAY_PROFILE_END_SESSION();
-
-		RAY_LOG_END();
-
+		return exitCode;
 	}
 	catch (At0::Ray::Exception& e)
 	{
@@ -108,5 +106,6 @@ void At0::Ray::Awake(int argc, char** argv)
 		RAY_LOG_CRITICAL("[Main] Unknown Exception occured");
 	}
 	RAY_LOG_END();
+	return -1;
 }
 

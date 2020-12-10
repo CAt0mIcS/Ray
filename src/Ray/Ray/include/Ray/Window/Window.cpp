@@ -16,9 +16,6 @@
 
 namespace At0::Ray
 {
-	EventCallbackFn Window::m_ImmediateEventFn;
-
-
 	Ref<Window> Window::Create(const std::string_view name, Widget* parent)
 	{
 		RAY_PROFILE_FUNCTION();
@@ -49,15 +46,19 @@ namespace At0::Ray
 		bool setNew = false;
 		static auto generateEvents = [this](Widget* child)
 		{
-			//QUESTION: Use the HoverEnter object in receiver and event?
-
-			Scope<HoverLeaveEvent> e = MakeScope<HoverLeaveEvent>(m_CurrentlyHovering);
-			//m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
+			HoverLeaveEvent e(m_CurrentlyHovering);
+			for (auto* pListener : EventDispatcher<HoverLeaveEvent>::Get())
+			{
+				pListener->OnEvent(m_CurrentlyHovering, e);
+			}
 
 			m_CurrentlyHovering = child;
 
-			Scope<HoverEnterEvent> e2 = MakeScope<HoverEnterEvent>(m_CurrentlyHovering);
-			//m_EventQueue.PushBack({ m_CurrentlyHovering, std::move(e) });
+			HoverEnterEvent e2(m_CurrentlyHovering);
+			for (auto* pListener : EventDispatcher<HoverEnterEvent>::Get())
+			{
+				pListener->OnEvent(m_CurrentlyHovering, e2);
+			}
 		};
 
 		for (Scope<Widget>& child : m_Children)
