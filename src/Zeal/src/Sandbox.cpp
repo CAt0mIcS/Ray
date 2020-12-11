@@ -17,7 +17,7 @@ namespace At0::Zeal
 		m_MainWindow->Show();
 
 		Ray::Window* win = PushWindow(Ray::Window::Create("Win0"));
-		//win->InitRenderer3D();
+		win->InitRenderer3D();
 		win->SetTitle("Win0");
 		win->Show();
 

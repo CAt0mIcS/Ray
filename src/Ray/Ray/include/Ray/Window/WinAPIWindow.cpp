@@ -97,7 +97,7 @@ namespace At0::Ray
 		case WM_DESTROY:
 		{
 			// TODO: Check if resources of the closed window are destroyed correctly
-			RAY_LOG_DEBUG("[MessageLoop] WM_DESTROY Message in HandleMessage received");
+			RAY_LOG_DEBUG("[MessageLoop] WM_DESTROY messagereceived");
 			PostQuitMessage(0);
 			return 0;
 		}
@@ -310,7 +310,7 @@ namespace At0::Ray
 		}
 		case WM_CLOSE:
 		{
-			RAY_LOG_DEBUG("[MessageLoop] WM_CLOSE Message in HandleMessage received");
+			RAY_LOG_DEBUG("[MessageLoop] WM_CLOSE messagereceived");
 			m_IsOpen = false;
 
 			WindowCloseEvent e;
@@ -326,7 +326,7 @@ namespace At0::Ray
 		}
 		case WM_QUIT:
 		{
-			RAY_LOG_DEBUG("[MessageLoop] WM_QUIT Message in HandleMessage received");
+			RAY_LOG_DEBUG("[MessageLoop] WM_QUIT message received");
 			break;
 		}
 		}
@@ -394,8 +394,13 @@ namespace At0::Ray
 		RAY_PROFILE_FUNCTION();
 
 		MSG msg;
-		while (GetMessage(&msg, 0, 0, 0))
+		while (PeekMessage(&msg, m_hWnd, 0, 0, PM_REMOVE))
 		{
+			if (msg.message == WM_QUIT)
+			{
+				m_IsOpen = false;
+			}
+
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}

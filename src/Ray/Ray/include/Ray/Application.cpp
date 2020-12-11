@@ -69,13 +69,24 @@ namespace At0::Ray
 		// Main Application Loop
 		while (m_MainWindow->IsOpen())
 		{
-			m_MainWindow->Update();
+			for (uint32_t i = 0; i < m_WindowStack.Size(); ++i)
+			{
+				if (m_WindowStack[i]->IsOpen())
+				{
+					m_WindowStack[i]->Update();
+				}
+				else
+				{
+					m_WindowStack.PopIndexed(i);
+					--i;
+				}
+			}
 		}
+		Cleanup();
 
 		if (appThread.joinable())
 			appThread.join();
 
-		Cleanup();
 		return 0;
 	}
 
