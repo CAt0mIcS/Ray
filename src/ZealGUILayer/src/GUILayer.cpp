@@ -13,35 +13,11 @@
 
 
 
-class Interval
-{
-public:
-	// Ctor
-	Interval()
-		: m_Initial(GetTickCount64())
-	{
-	}
-
-	uint64_t Value() const
-	{
-		return GetTickCount64() - m_Initial;
-	}
-
-private:
-	uint64_t m_Initial;
-};
-
-
 class FPS
 {
-protected:
-	uint64_t m_FPS;
-	uint64_t m_FPSCount;
-	Interval m_FPSInterval;
-
 public:
 	FPS()
-		: m_FPS(0), m_FPSCount(0)
+		: m_FPS(0), m_FPSCount(0), m_InitialInterval(GetTickCount64())
 	{
 	}
 
@@ -51,25 +27,35 @@ public:
 		m_FPSCount++;
 
 		// one second elapsed? (= 1000 milliseconds)
-		if (m_FPSInterval.Value() > 1000)
+		if (IntervalValue() > 1000)
 		{
 			// save the current counter value to m_fps
 			m_FPS = m_FPSCount;
 
 			// reset the counter and the interval
 			m_FPSCount = 0;
-			m_FPSInterval = Interval();
+			m_InitialInterval = GetTickCount64();
 
 			std::ostringstream oss;
-			oss << Get() << " FPS";
+			oss << GetFPS() << " FPS";
 			At0::Ray::Application::Get().GetMainWindow().SetTitle(oss.str());
 		}
 	}
 
-	uint64_t Get() const
+	uint32_t GetFPS() const
 	{
 		return m_FPS;
 	}
+
+	uint32_t IntervalValue() const
+	{
+		return GetTickCount64() - m_InitialInterval;
+	}
+
+private:
+	uint32_t m_FPS;
+	uint32_t m_FPSCount;
+	uint64_t m_InitialInterval;
 };
 
 FPS g_FPS;
