@@ -50,15 +50,15 @@ namespace At0::Ray
 
 		virtual std::string ToString() const override;
 
-		void AbortWindowClose() { m_WindowCloseAborted = true; }
-		void ContinueWindowClose() { m_WindowCloseAborted = false; }
-		bool WindowCloseAborted() const { return m_WindowCloseAborted; }
+		void AbortWindowClose() { m_AbortWindowClose = true; }
+		void ContinueWindowClose() { m_AbortWindowClose = false; }
+		bool WindowCloseAborted() const { return m_AbortWindowClose; }
 
 		static EventType GetStaticType() { return EventType::WindowCloseEvent; }
 		virtual EventType GetType() const override { return GetStaticType(); }
 
 	private:
-		bool m_WindowCloseAborted = true;
+		bool m_AbortWindowClose = false;
 	};
 
 	class PaintEvent : public Event

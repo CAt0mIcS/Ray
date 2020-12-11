@@ -40,40 +40,40 @@ namespace At0::Ray
 	int Application::Run()
 	{
 		auto lastFrameTime = std::chrono::high_resolution_clock::now();
+		Timestep timestep;
 		
+		std::thread appThread([this, &lastFrameTime, &timestep]() 
+			{
+				while (m_MainWindow->IsOpen())
+				{
+					// -------------------------------------------------------------------------------------
+					// Setting timestep
+					auto tNow = std::chrono::high_resolution_clock::now();
+					timestep = ((float)(tNow - lastFrameTime).count()) / 1000.0f / 1000.0f / 1000.0f;
+					lastFrameTime = std::move(tNow);
+
+					// -------------------------------------------------------------------------------------
+					// Update Layers
+					for (auto* layer : m_LayerStack)
+					{
+						layer->OnUpdate(timestep);
+					}
+
+					//CPU Usage too high without it (not ideal)
+					std::this_thread::sleep_for(std::chrono::nanoseconds(1500));
+				}
+			}
+		);
+
 		// -----------------------------------------------------------------------------------------
 		// Main Application Loop
 		while (m_MainWindow->IsOpen())
 		{
-			// -------------------------------------------------------------------------------------
-			// Setting timestep
-			auto tNow = std::chrono::high_resolution_clock::now();
-			Timestep timestep = ((float)(tNow - lastFrameTime).count()) / 1000.0f / 1000.0f / 1000.0f;
-			lastFrameTime = std::move(tNow);
-			
-			// -------------------------------------------------------------------------------------
-			// Pop invalid windows and update valid ones
-			for (uint32_t i = 0; i < m_WindowStack.Size(); ++i)
-			{
-				if(m_WindowStack[i]->IsOpen())
-					m_WindowStack[i]->Update();
-				else
-				{
-					m_WindowStack.PopIndexed(i);
-					--i;
-				}
-			}
-
-			// -------------------------------------------------------------------------------------
-			// Update Layers
-			for (auto* layer : m_LayerStack)
-			{
-				layer->OnUpdate(timestep);
-			}
-
-			//CPU Usage too high without it (not ideal)
-			std::this_thread::sleep_for(std::chrono::nanoseconds(1500));
+			m_MainWindow->Update();
 		}
+
+		if (appThread.joinable())
+			appThread.join();
 
 		Cleanup();
 		return 0;
@@ -123,12 +123,7 @@ namespace At0::Ray
 		Util::SetSignals([](int signum)
 			{
 				RAY_LOG_CRITICAL("Signal '{0}' received, terminating program", signum);
-
-				// Note: We do not need to do this as the destructor does it automatically, 
-				// but it's good to have it here
 				RAY_LOG_END();
-
-				// We need to do this though
 				RAY_PROFILE_END_SESSION();
 
 				exit(signum);

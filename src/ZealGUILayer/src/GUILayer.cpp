@@ -17,11 +17,14 @@ namespace At0::Layers
 	static constexpr uint64_t numCubes = 3000;
 	std::mt19937 mtEngine;
 
-	// The way to get the MainWindow is too long? "Ray::Application::Get().GetMainWindow()"
+	// QUESTION: The way to get the MainWindow is too long? "Ray::Application::Get().GetMainWindow()"
+	// I can only listen to events from one window (MouseMoveEvent from only MainWindow
 	GUILayer::GUILayer(const std::string_view name)
 		: Ray::Layer(name),
 		EventListener<Ray::MouseMoveEvent>(Ray::Application::Get().GetMainWindow()),
 		EventListener<Ray::WindowCloseEvent>(Ray::Application::Get().GetMainWindow())
+
+		//EventListener<Ray::MouseMoveEvent>(Ray::Application::Get().GetMainWindow()) // !!!!!!!!!!!!1
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] Startup");
@@ -138,7 +141,5 @@ namespace At0::Layers
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-
-		e.AbortWindowClose();
 	}
 }

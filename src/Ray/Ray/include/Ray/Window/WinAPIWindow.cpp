@@ -383,12 +383,18 @@ namespace At0::Ray
 		return m_IsOpen;
 	}
 
+	/// <QUESTION>
+	/// While GetMessage is much faster than if GetMessage.
+	/// I need to execute code every iteration. Take fptr in fn? std::function?
+	/// 
+	/// while GetMessage doesn't close the window properly if GetMessage gets m_hWnd as parameter instead of the first '0'
+	/// </QUESTION>
 	void WinAPIWindow::Update()
 	{
 		RAY_PROFILE_FUNCTION();
 
 		MSG msg;
-		while (PeekMessageW(&msg, m_hWnd, 0, 0, PM_REMOVE))
+		while (GetMessage(&msg, 0, 0, 0))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
