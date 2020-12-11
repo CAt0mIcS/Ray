@@ -9,7 +9,8 @@ namespace At0::Layers
 {
 	class ZGL_API GUILayer : public Ray::Layer,
 		Ray::EventListener<Ray::MouseMoveEvent>,
-		Ray::EventListener<Ray::WindowCloseEvent>
+		Ray::EventListener<Ray::WindowCloseEvent>,
+		Ray::EventListener<Ray::KeyPressedEvent>
 	{
 	public:
 		GUILayer(const std::string_view name);
@@ -17,6 +18,7 @@ namespace At0::Layers
 		virtual void OnUpdate(Ray::Timestep ts) override;
 		virtual void OnEvent(Ray::Widget* receiver, Ray::MouseMoveEvent& e) override;
 		virtual void OnEvent(Ray::Widget* receiver, Ray::WindowCloseEvent& e) override;
+		virtual void OnEvent(Ray::Widget* receiver, Ray::KeyPressedEvent& e) override;
 	};
 }
 

@@ -11,10 +11,76 @@
 #include <RayRender/Drawable/Cube.h>
 
 
+
+
+class Interval
+{
+public:
+	// Ctor
+	Interval()
+		: m_Initial(GetTickCount64())
+	{
+	}
+
+	uint64_t Value() const
+	{
+		return GetTickCount64() - m_Initial;
+	}
+
+private:
+	uint64_t m_Initial;
+};
+
+
+class FPS
+{
+protected:
+	uint64_t m_FPS;
+	uint64_t m_FPSCount;
+	Interval m_FPSInterval;
+
+public:
+	FPS()
+		: m_FPS(0), m_FPSCount(0)
+	{
+	}
+
+	void Update()
+	{
+		// increase the counter by one
+		m_FPSCount++;
+
+		// one second elapsed? (= 1000 milliseconds)
+		if (m_FPSInterval.Value() > 1000)
+		{
+			// save the current counter value to m_fps
+			m_FPS = m_FPSCount;
+
+			// reset the counter and the interval
+			m_FPSCount = 0;
+			m_FPSInterval = Interval();
+
+			std::ostringstream oss;
+			oss << Get() << " FPS";
+			At0::Ray::Application::Get().GetMainWindow().SetTitle(oss.str());
+		}
+	}
+
+	uint64_t Get() const
+	{
+		return m_FPS;
+	}
+};
+
+FPS g_FPS;
+
+
+
+
 namespace At0::Layers
 {
 	std::vector<Ray::Cube> cubes;
-	static constexpr uint64_t numCubes = 3000;
+	static constexpr uint64_t numCubes = 10000;
 	std::mt19937 mtEngine;
 
 	// QUESTION: The way to get the MainWindow is too long? "Ray::Application::Get().GetMainWindow()"
@@ -22,7 +88,8 @@ namespace At0::Layers
 	GUILayer::GUILayer(const std::string_view name)
 		: Ray::Layer(name),
 		EventListener<Ray::MouseMoveEvent>(Ray::Application::Get().GetMainWindow()),
-		EventListener<Ray::WindowCloseEvent>(Ray::Application::Get().GetMainWindow())
+		EventListener<Ray::WindowCloseEvent>(Ray::Application::Get().GetMainWindow()),
+		EventListener<Ray::KeyPressedEvent>(Ray::Application::Get().GetMainWindow())
 
 		//EventListener<Ray::MouseMoveEvent>(Ray::Application::Get().GetMainWindow()) // !!!!!!!!!!!!1
 	{
@@ -61,7 +128,6 @@ namespace At0::Layers
 		}
 
 		cubes.emplace_back(*Ray::Application::Get().GetMainWindow().GetRenderer3D(), 1.0f, face_colors);
-
 	}
 	
 	void GUILayer::OnUpdate(Ray::Timestep ts)
@@ -126,18 +192,25 @@ namespace At0::Layers
 		}
 
 		renderer.EndDraw();
+		g_FPS.Update();
 	}
 
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseMoveEvent& e)
 	{
-		static std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
-		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
-		prevTime = std::chrono::high_resolution_clock::now();
+		//static std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
+		//std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
+		//prevTime = std::chrono::high_resolution_clock::now();
 
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	}
 
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::WindowCloseEvent& e)
+	{
+		RAY_PROFILE_FUNCTION();
+		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+	}
+	
+	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::KeyPressedEvent& e)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
