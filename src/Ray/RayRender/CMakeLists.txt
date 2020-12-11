@@ -74,14 +74,16 @@ if(WIN32)
         "DXGI"
         "D3DCompiler"
         "GLFW"
-	    "Glad"
-	    "RayDebug"
+	"Glad"
+	"RayDebug"
+	"RayEvent"
     )
 elseif(UNIX)
     set(PRIVATE_LIB
         "GLFW"
-	    "Glad"
-	    "RayDebug"
+	"Glad"
+	"RayDebug"
+	"RayEvent"
     )
 endif()
 

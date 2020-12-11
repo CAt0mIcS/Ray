@@ -406,7 +406,7 @@ namespace At0::Ray
 
 		if (!m_Renderer3D)
 		{
-			m_Renderer3D = MakeScope<Renderer3D>();
+			m_Renderer3D = MakeScope<Renderer3D>(*this);
 			m_Renderer3D->Init(m_hWnd);
 			return true;
 		}

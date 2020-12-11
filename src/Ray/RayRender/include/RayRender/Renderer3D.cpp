@@ -11,8 +11,10 @@ namespace WRL = Microsoft::WRL;
 
 namespace At0::Ray
 {
-    Renderer3D::Renderer3D()
-        : m_Projection(DirectX::XMMatrixIdentity()), m_pSwapChain(nullptr), m_pTarget(nullptr), m_hWnd(0)
+    // QUESTION: Constructor would need to take dispatcher for every single event type!
+    Renderer3D::Renderer3D(EventDispatcher<WindowResizeEvent>& dispatcher)
+        : m_Projection(DirectX::XMMatrixIdentity()), m_pSwapChain(nullptr), m_pTarget(nullptr), m_hWnd(0),
+        EventListener<WindowResizeEvent>(dispatcher)
     {
         RAY_PROFILE_FUNCTION();
     }
@@ -132,5 +134,12 @@ namespace At0::Ray
     {
         RAY_PROFILE_FUNCTION();
         RAY_LOG_DEBUG("[Renderer3D] Destroyed");
+    }
+    
+    void Renderer3D::OnEvent(Widget* receiver, WindowResizeEvent& e)
+    {
+        // TEMPORARY! Need customization for near and far
+        const Size2& size = e.GetSize();
+        SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, size.y / size.x, 0.5f, 40.0f));
     }
 }
