@@ -1,7 +1,7 @@
 #include "glpch.h"
 #include "GUILayer.h"
 
-// You need to include this to use the logger
+// You need to include this to use the logger (QUESTION: But you shouldn't need to!)
 #include <RayDebug/RLogger.h>
 #include <RayDebug/RInstrumentor.h>
 
@@ -125,12 +125,11 @@ namespace At0::Layers
 		renderer.EndDraw();
 	}
 
-	#include <chrono>
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseMoveEvent& e)
 	{
-		//static std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
-		//std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
-		//prevTime = std::chrono::high_resolution_clock::now();
+		static std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
+		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
+		prevTime = std::chrono::high_resolution_clock::now();
 
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	}
@@ -142,101 +141,4 @@ namespace At0::Layers
 
 		e.AbortWindowClose();
 	}
-
-	//void GUILayer::OnMouseMove(Ray::Widget* receiver, Ray::MouseMoveEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnMousePress(Ray::Widget* receiver, Ray::MouseButtonPressedEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnMouseRelease(Ray::Widget* receiver, Ray::MouseButtonReleasedEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnMouseWheelUp(Ray::Widget* receiver, Ray::MouseWheelUpEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnMouseWheelDown(Ray::Widget* receiver, Ray::MouseWheelDownEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnMouseWheelLeft(Ray::Widget* receiver, Ray::MouseWheelLeftEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnMouseWheelRight(Ray::Widget* receiver, Ray::MouseWheelRightEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnResize(Ray::Widget* receiver, Ray::WindowResizeEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnWindowMove(Ray::Widget* receiver, Ray::WindowMoveEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnPaint(Ray::Widget* receiver, Ray::PaintEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnHoverEnter(Ray::Widget* receiver, Ray::HoverEnterEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnHoverLeave(Ray::Widget* receiver, Ray::HoverLeaveEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnKeyPress(Ray::Widget* receiver, Ray::KeyPressedEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnKeyRelease(Ray::Widget* receiver, Ray::KeyReleasedEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-
-	//void GUILayer::OnChar(Ray::Widget* receiver, Ray::CharEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//}
-	//
-	//bool GUILayer::OnWindowClose(Ray::Widget* receiver, Ray::WindowCloseEvent& e)
-	//{
-	//	RAY_PROFILE_FUNCTION();
-	//	RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-	//	return false;
-	//}
 }

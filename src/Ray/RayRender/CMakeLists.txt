@@ -61,7 +61,7 @@ set(PUBLIC_INC
 )
 
 set(PRIVATE_INC
-    "${CMAKE_CURRENT_SOURCE_DIR}/../extern/glfw/include"
+    ""
 )
 
 set(PUBLIC_LIB
@@ -107,6 +107,11 @@ target_link_libraries("RayRender"
 target_compile_definitions("RayRender" PRIVATE "RR_BUILD")
 target_precompile_headers("RayRender" PRIVATE "include/RayRender/rlrpch.h")
 
+AddRecursiveFilters("${SRC}")
+SetOutputDirectory("RayRender" "")
+SetWorkingDirectory("RayRender" "")
+
+
 # Set Pixel and Vertex Shaders to compile in VS
 if(MSVC)
     set_property(SOURCE "Shaders/PixelShader-p.hlsl" PROPERTY VS_SHADER_TYPE Pixel)
@@ -136,7 +141,3 @@ if(MSVC)
     set_property(SOURCE "Shaders/VertexShader(Cube)-v.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
     set_property(SOURCE "Shaders/VertexShader(Cube)-v.hlsl" PROPERTY VS_SETTINGS "$<$<CONFIG:DEBUG>:SourceProperty1=SourceProperty1Value>")
 endif()
-
-AddRecursiveFilters("${SRC}")
-SetOutputDirectory("RayRender" "")
-SetWorkingDirectory("RayRender" "")

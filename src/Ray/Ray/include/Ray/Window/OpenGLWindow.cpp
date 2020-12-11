@@ -198,7 +198,7 @@ namespace At0::Ray
 		return m_IsOpen;
 	}
 
-	void OpenGLWindow::OnUpdate()
+	void OpenGLWindow::Update()
 	{
 		RAY_PROFILE_FUNCTION();
 

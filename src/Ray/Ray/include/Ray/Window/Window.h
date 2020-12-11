@@ -16,23 +16,6 @@ namespace At0::Ray
 {
 	class Event;
 
-	/// <summary>
-	/// Struct pushed into the event queue
-	/// </summary>
-	//struct EventMessage
-	//{
-	//	Widget* receiver;
-	//	Scope<Event> e;
-	//};
-
-	/// <summary>
-	/// Receives all events
-	/// <param name="receiver">Is the Widget that received the event</param>
-	/// <param name="e">Is the received Event</param>
-	/// <returns>True if the event was handled by the client, false if the event should be handled by the Window</returns>
-	/// </summary>
-	using EventCallbackFn = std::function<bool(Widget*, Event&)>;
-
 	// QUESTION: New Event System
 	class RAY_API Window : public Widget, 
 		public EventDispatcher<WindowMoveEvent>,
@@ -52,9 +35,6 @@ namespace At0::Ray
 		public EventDispatcher<KeyReleasedEvent>,
 		public EventDispatcher<CharEvent>
 	{
-	protected:
-		//static constexpr uint8_t s_MaxMessagesInQueue = 16u;
-
 	public:
 		/// <summary>
 		/// Create the Window acording to the RendererAPI::API
@@ -67,7 +47,7 @@ namespace At0::Ray
 		/// <summary>
 		/// Called every frame to read from the internal message queue
 		/// </summary>
-		virtual void OnUpdate() = 0;
+		virtual void Update() = 0;
 
 		/// <summary>
 		/// Getter for the current Window Title

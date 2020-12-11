@@ -8,6 +8,7 @@ namespace At0::Ray
 	template<typename E>
 	class EventListener;
 
+	// QUESTION: Should I make this automatically dispatch all events?
 	template<typename E>
 	class EventDispatcher
 	{

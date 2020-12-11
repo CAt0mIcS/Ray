@@ -73,7 +73,7 @@ namespace At0::Ray
 		/// <summary>
 		/// Called every frame to read from the internal message queue
 		/// </summary>
-		virtual void OnUpdate() override;
+		virtual void Update() override;
 
 		/// <summary>
 		/// Sets the window icon

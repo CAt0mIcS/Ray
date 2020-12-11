@@ -84,7 +84,7 @@ namespace At0::Ray
 	
 	Window::~Window()
 	{
-		RAY_LOG_DEBUG("[Window] {0} destroyed.", GetName());
+		RAY_LOG_DEBUG("[Window] '{0}' destroyed.", GetName());
 	}
 }
 

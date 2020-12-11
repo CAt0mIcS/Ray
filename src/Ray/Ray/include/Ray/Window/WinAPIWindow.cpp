@@ -24,7 +24,7 @@ namespace At0::Ray
 		RAY_PROFILE_FUNCTION();
 
 		auto rnd = Util::GenerateRandomToken<std::wstring>(5);
-		RAY_EXPECTS(!rnd.empty());
+		RAY_MEXPECTS(!rnd.empty(), "The random token generated for the window class name is empty");
 		RAY_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
 		RAY_WND_THROW_LAST_FAILED(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW));
 		m_IsOpen = true;
@@ -103,9 +103,9 @@ namespace At0::Ray
 		}
 		case WM_MOUSEMOVE:
 		{
-			static std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
-			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
-			prevTime = std::chrono::high_resolution_clock::now();
+			//static std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
+			//std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
+			//prevTime = std::chrono::high_resolution_clock::now();
 
 			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.SetPos({ (float)pt.x, (float)pt.y });
@@ -383,12 +383,12 @@ namespace At0::Ray
 		return m_IsOpen;
 	}
 
-	void WinAPIWindow::OnUpdate()
+	void WinAPIWindow::Update()
 	{
 		RAY_PROFILE_FUNCTION();
 
 		MSG msg;
-		while (PeekMessage(&msg, m_hWnd, 0, 0, PM_REMOVE))
+		while (PeekMessageW(&msg, m_hWnd, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);

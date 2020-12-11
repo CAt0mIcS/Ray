@@ -18,6 +18,7 @@ set(PUBLIC_LIB
 	""
 )
 
+# QUESTION: I should only have to link to Ray and be able to use stuff like the logger and renderer
 set(PRIVATE_LIB
     "Ray"
     "RayDebug"

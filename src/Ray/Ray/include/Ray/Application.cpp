@@ -56,7 +56,7 @@ namespace At0::Ray
 			for (uint32_t i = 0; i < m_WindowStack.Size(); ++i)
 			{
 				if(m_WindowStack[i]->IsOpen())
-					m_WindowStack[i]->OnUpdate();
+					m_WindowStack[i]->Update();
 				else
 				{
 					m_WindowStack.PopIndexed(i);
@@ -79,6 +79,7 @@ namespace At0::Ray
 		return 0;
 	}
 
+	// QUESTION: Taking Layer by raw pointer but window by shared_ptr
 	Layer* Application::PushLayer(Layer* layer)
 	{
 		RAY_PROFILE_FUNCTION();
