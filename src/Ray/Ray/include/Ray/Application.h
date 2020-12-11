@@ -34,6 +34,21 @@ namespace At0::Ray
 		/// </summary>
 		static void Destroy();
 
+
+		// QUESTION: Reference or pointer? 
+		// Maybe Null --> Pointer
+		// Found or exception if not --> Reference
+		// Exception or nullptr
+
+		// QUESTION: How can I call FindWindowByName just FindWindow (Windows.h define...)
+
+		/// <summary>
+		/// Finds a window in the stack with name
+		/// </summary>
+		/// <param name="name">Is the name of the window to find</param>
+		/// <returns>The found window or nullptr if the window wasn't found</returns>
+		Window* FindWindowByName(const std::string_view name);
+
 		/// <summary>
 		/// Getter for this application, doesn't increment the std::shared_ptr reference count
 		/// </summary>

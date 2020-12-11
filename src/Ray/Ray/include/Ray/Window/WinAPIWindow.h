@@ -136,16 +136,7 @@ namespace At0::Ray
 			HMENU hMenu = 0
 		);
 
-		/// <summary>
-		/// Passes the message to HandleMessage
-		/// </summary>
-		/// <param name="hWnd">Is the Window Handle which received the message</param>
-		/// <param name="uMsg">Is the message code</param>
-		/// <param name="wParam">Is an additional parameter</param>
-		/// <param name="lParam">Is an additional parameter</param>
-		/// <returns>LRESULT code</returns>
 		static LRESULT WindowProcSetup(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 		static LRESULT WindowProcPass(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		/// <summary>

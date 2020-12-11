@@ -73,12 +73,12 @@ namespace At0::Layers
 	// I can only listen to events from one window (MouseMoveEvent from only MainWindow
 	GUILayer::GUILayer(const std::string_view name)
 		: Ray::Layer(name),
-		EventListener<Ray::MouseMoveEvent>(Ray::Application::Get().GetMainWindow()),
 		EventListener<Ray::WindowCloseEvent>(Ray::Application::Get().GetMainWindow()),
 		EventListener<Ray::KeyPressedEvent>(Ray::Application::Get().GetMainWindow())
-
-		//EventListener<Ray::MouseMoveEvent>(Ray::Application::Get().GetMainWindow()) // !!!!!!!!!!!!1
 	{
+		EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().GetMainWindow());
+		EventListener<Ray::MouseMoveEvent>::Subscribe(*Ray::Application::Get().FindWindowByName("Win0"));
+
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] Startup");
 

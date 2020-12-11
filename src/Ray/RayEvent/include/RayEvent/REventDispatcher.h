@@ -31,17 +31,27 @@ namespace At0::Ray
 		/// Adds a new EventListener for template Event.
 		/// </summary>
 		/// <param name="eListener">Is a pointer to the EventListener</param>
-		void AddListener(EventListener<E>* eListener);
+		void AddListener(EventListener<E>* eListener)
+		{
+			m_Listeners.push_back(eListener);
+		}
+
+		/// <summary>
+		/// Searches for the EventListener and removes it if found
+		/// </summary>
+		/// <param name="eListener">Is the EventListener to remove</param>
+		void RemoveListener(EventListener<E>* eListener)
+		{
+			// TODO: operator= && no pointers
+			m_Listeners.erase(std::find_if(m_Listeners.begin(), m_Listeners.end(), [this, &eListener](EventListener<E>* listener) 
+				{
+					return listener == eListener;
+				}
+			));
+		}
 
 	private:
 		std::vector<EventListener<E>*> m_Listeners;
 	};
-
-
-	template<typename E>
-	inline void EventDispatcher<E>::AddListener(EventListener<E>* eListener)
-	{
-		m_Listeners.push_back(eListener);
-	}
 }
 

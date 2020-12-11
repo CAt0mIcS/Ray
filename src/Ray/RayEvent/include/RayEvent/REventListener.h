@@ -18,6 +18,27 @@ namespace At0::Ray
 		/// <param name="e">Is the received event</param>
 		virtual void OnEvent(Ray::Widget* receiver, E& e) = 0;
 
+		/// <summary>
+		/// Sets this listener up to receiver events of type E
+		/// </summary>
+		/// <param name="dispatcher">Is the dispatcher dispatching the templated event</param>
+		void Subscribe(EventDispatcher<E>& dispatcher)
+		{
+			dispatcher.AddListener(this);
+		}
+
+		/// <summary>
+		/// Stops the dispatcher from sending events to this listener
+		/// </summary>
+		/// <param name="dispatcher">Is the dispatcher which sends messages to the listener</param>
+		void Unsubscribe(EventDispatcher<E>& dispatcher)
+		{
+			dispatcher.RemoveListener(this);
+		}
+
+		/// <summary>
+		/// EventListener Constructor, DOES CURRENTLY NOT UNSUBSCRIBE ---> CALL ON INVALID PTR IN WINDOW (TODO)
+		/// </summary>
 		virtual ~EventListener() = default;
 
 	protected:
@@ -27,7 +48,9 @@ namespace At0::Ray
 		/// <param name="dispatcher">Is the object that dispatches the event you want to listen to</param>
 		EventListener(EventDispatcher<E>& dispatcher)
 		{
-			dispatcher.AddListener(this);
+			Subscribe(dispatcher);
 		}
+
+		EventListener() = default;
 	};
 }

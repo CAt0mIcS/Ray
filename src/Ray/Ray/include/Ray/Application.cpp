@@ -37,6 +37,16 @@ namespace At0::Ray
 		delete s_Instance;
 	}
 
+	Window* Application::FindWindowByName(const std::string_view name)
+	{
+		for (const Ref<Window>& win : m_WindowStack)
+		{
+			if (win->GetName() == name)
+				return win.get();
+		}
+		return nullptr;
+	}
+
 	int Application::Run()
 	{
 		auto lastFrameTime = std::chrono::high_resolution_clock::now();

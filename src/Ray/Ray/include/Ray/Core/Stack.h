@@ -157,24 +157,24 @@ namespace At0::Ray
 			return m_Stack.rend();
 		}
 
-		ConstInterator cbegin()
+		ConstInterator cbegin() const
 		{
 			std::scoped_lock lock(m_Mutex);
 			return m_Stack.cbegin();
 		}
-		ConstInterator cend()
+		ConstInterator cend() const
 		{
 			std::scoped_lock lock(m_Mutex);
 			return m_Stack.cend();
 		}
 
-		ConstReverseIterator crbegin()
+		ConstReverseIterator crbegin() const
 		{
 			std::scoped_lock lock(m_Mutex);
 			return m_Stack.crbegin();
 		}
 
-		ConstReverseIterator crend()
+		ConstReverseIterator crend() const
 		{
 			std::scoped_lock lock(m_Mutex);
 			return m_Stack.crend();
