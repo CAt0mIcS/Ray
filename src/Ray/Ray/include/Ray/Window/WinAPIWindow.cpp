@@ -97,7 +97,7 @@ namespace At0::Ray
 		case WM_DESTROY:
 		{
 			// TODO: Check if resources of the closed window are destroyed correctly
-			RAY_LOG_DEBUG("[MessageLoop] WM_DESTROY messagereceived");
+			RAY_LOG_DEBUG("[MessageLoop] WM_DESTROY message received");
 			PostQuitMessage(0);
 			return 0;
 		}
@@ -310,7 +310,7 @@ namespace At0::Ray
 		}
 		case WM_CLOSE:
 		{
-			RAY_LOG_DEBUG("[MessageLoop] WM_CLOSE messagereceived");
+			RAY_LOG_DEBUG("[MessageLoop] WM_CLOSE message received");
 			m_IsOpen = false;
 
 			WindowCloseEvent e;
