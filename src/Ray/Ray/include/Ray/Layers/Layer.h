@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Ray/RBase.h"
+#include "../RBase.h"
 #include "Ray/Core/Timestep.h"
 
 namespace At0::Ray

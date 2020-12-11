@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RayRender/RlRBase.h"
+#include "../RlRBase.h"
 #include "Drawable.h"
 
 namespace At0::Ray

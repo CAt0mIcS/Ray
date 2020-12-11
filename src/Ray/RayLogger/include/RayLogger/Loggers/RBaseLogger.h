@@ -9,12 +9,12 @@
 #include <RayUtil/Serialize.h>
 
 
-#include "RayLogger/Formatters/RBracketFormatter.h"
-#include "RayLogger/Formatters/RLogLevelFormatter.h"
-#include "RayLogger/Formatters/RDateTimeFormatter.h"
-#include "RayLogger/Formatters/RNullTerminatorFormatter.h"
+#include "../Formatters/RBracketFormatter.h"
+#include "../Formatters/RLogLevelFormatter.h"
+#include "../Formatters/RDateTimeFormatter.h"
+#include "../Formatters/RNullTerminatorFormatter.h"
 
-#include "RayLogger/RLogLevel.h"
+#include "../RLogLevel.h"
 
 
 #pragma warning(disable : 4251)

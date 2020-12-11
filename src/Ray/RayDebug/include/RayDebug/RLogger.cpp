@@ -3,8 +3,6 @@
 #include "RLogger.h"
 #include "RAssert.h"
 
-#include <RayLogger/RLog.h>
-
 
 
 namespace At0::Ray::Debug
@@ -20,7 +18,6 @@ namespace At0::Ray::Debug
 		s_FileLogger.SetLogLevel(logLvl);
 		s_FileLogger.Open();
 
-		// TODO: Throw exception here
 		RAY_EXPECTS(s_FileLogger.IsOpen());
 	}
 

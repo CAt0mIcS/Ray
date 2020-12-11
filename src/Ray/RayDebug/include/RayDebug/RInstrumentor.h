@@ -106,7 +106,7 @@ namespace At0::Ray::Debug
 	};
 
 
-	class RLD_API Timer
+	class RD_API Timer
 	{
 	public:
 		/// <summary>

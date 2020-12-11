@@ -33,12 +33,11 @@ set(SRC
 
 set(PUBLIC_INC
 	"include"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/glm"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/glfw"
 )
 
 set(PRIVATE_INC
-	"include/Ray"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/glm"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/glfw"
 )
 
 set(PUBLIC_LIB

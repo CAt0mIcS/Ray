@@ -12,9 +12,9 @@ set(SRC
     "include/RayLogger/RLog.h"
 )
 
-set(INC
-    "include"
-)
+# set(INC
+#     "include"
+# )
 
 
 add_library("RayLogger" INTERFACE)
@@ -26,7 +26,7 @@ if(MSVC)
     set_target_properties("IRayLogger" PROPERTIES FOLDER "RayUtilities")
 endif()
 
-target_include_directories("RayLogger" INTERFACE "${INC}")
+# target_include_directories("RayLogger" INTERFACE "${INC}")
 target_link_libraries("RayLogger" INTERFACE "RayUtil")
 
 AddRecursiveFilters("${SRC}")

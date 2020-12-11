@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Ray/RBase.h"
+#include "../RBase.h"
 #include <bitset>
 
 #pragma warning(disable : 4251)

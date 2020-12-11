@@ -61,7 +61,6 @@ set(PUBLIC_INC
 )
 
 set(PRIVATE_INC
-    "include/RayRender"
     "${CMAKE_CURRENT_SOURCE_DIR}/../extern/glfw/include"
 )
 

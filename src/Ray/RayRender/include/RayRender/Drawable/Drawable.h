@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RayRender/RlRBase.h"
+#include "../RlRBase.h"
 #include "RayRender/Bindable/Bindable.h"
 
 #include <DirectXMath.h>

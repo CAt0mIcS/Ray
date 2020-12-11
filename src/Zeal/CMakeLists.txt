@@ -1,5 +1,3 @@
-
-# List of all source files
 set(SRC
     "src/pch.cpp"
     "src/pch.h"

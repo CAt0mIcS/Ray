@@ -4,9 +4,9 @@
 
 #if RAY_ENABLE_LOGGING
 
-#include "RayLogger/RLogConfigure.h"
-#include "RayLogger/Loggers/RBaseLogger.h"
-#include "RayLogger/Loggers/RFileLogger.h"
+#include "RLogConfigure.h"
+#include "Loggers/RBaseLogger.h"
+#include "Loggers/RFileLogger.h"
 
 #endif
 
