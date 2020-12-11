@@ -1,7 +1,7 @@
 #pragma once
 
-
 #include <vector>
+
 
 namespace At0::Ray
 {
@@ -9,6 +9,7 @@ namespace At0::Ray
 	class EventListener;
 
 	// QUESTION: Should I make this automatically dispatch all events?
+	// Possible: EventDispatcher<WindowResizeEvent, MouseMoveEvent>
 	template<typename E>
 	class EventDispatcher
 	{
