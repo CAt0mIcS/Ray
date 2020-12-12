@@ -4,5 +4,6 @@ add_subdirectory("Glad")
 
 
 SetWorkingDirectory("GLFW" "")
+SetOutputDirectory("GLFW" "")
 SetWorkingDirectory("glm" "")
 SetWorkingDirectory("Glad" "")
