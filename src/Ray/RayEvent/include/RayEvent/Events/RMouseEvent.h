@@ -67,21 +67,21 @@ namespace At0::Ray
 	class MouseWheelEvent : public Event
 	{
 	public:
-		int GetDelta() const { return m_Delta; }
+		float GetDelta() const { return m_Delta; }
 		virtual ~MouseWheelEvent() = default;
 		
 	protected:
-		MouseWheelEvent(int delta)
+		MouseWheelEvent(float delta)
 			: m_Delta(delta) {}
 
 	private:
-		int m_Delta;
+		float m_Delta;
 	};
 
 	class MouseWheelUpEvent : public MouseWheelEvent
 	{
 	public:
-		MouseWheelUpEvent(int delta);
+		MouseWheelUpEvent(float delta);
 
 		virtual std::string ToString() const override;
 
@@ -92,7 +92,7 @@ namespace At0::Ray
 	class MouseWheelDownEvent : public MouseWheelEvent
 	{
 	public:
-		MouseWheelDownEvent(int delta);
+		MouseWheelDownEvent(float delta);
 
 		virtual std::string ToString() const override;
 
@@ -103,7 +103,7 @@ namespace At0::Ray
 	class MouseWheelLeftEvent : public MouseWheelEvent
 	{
 	public:
-		MouseWheelLeftEvent(int delta);
+		MouseWheelLeftEvent(float delta);
 
 		virtual std::string ToString() const override;
 
@@ -114,7 +114,7 @@ namespace At0::Ray
 	class MouseWheelRightEvent : public MouseWheelEvent
 	{
 	public:
-		MouseWheelRightEvent(int delta);
+		MouseWheelRightEvent(float delta);
 
 		virtual std::string ToString() const override;
 

@@ -70,7 +70,7 @@ namespace At0::Ray
 	// -------------------------------------------------------------------
 	// MouseWheelUpEvent
 	// -------------------------------------------------------------------
-	MouseWheelUpEvent::MouseWheelUpEvent(int delta)
+	MouseWheelUpEvent::MouseWheelUpEvent(float delta)
 		: MouseWheelEvent(delta)
 	{
 	}
@@ -85,7 +85,7 @@ namespace At0::Ray
 	// -------------------------------------------------------------------
 	// MouseWheelDownEvent
 	// -------------------------------------------------------------------
-	MouseWheelDownEvent::MouseWheelDownEvent(int delta)
+	MouseWheelDownEvent::MouseWheelDownEvent(float delta)
 		: MouseWheelEvent(delta)
 	{
 	}
@@ -100,7 +100,7 @@ namespace At0::Ray
 	// -------------------------------------------------------------------
 	// MouseWheelLeftEvent
 	// -------------------------------------------------------------------
-	MouseWheelLeftEvent::MouseWheelLeftEvent(int delta)
+	MouseWheelLeftEvent::MouseWheelLeftEvent(float delta)
 		: MouseWheelEvent(delta)
 	{
 	}
@@ -115,7 +115,7 @@ namespace At0::Ray
 	// -------------------------------------------------------------------
 	// MouseWheelRightEvent
 	// -------------------------------------------------------------------
-	MouseWheelRightEvent::MouseWheelRightEvent(int delta)
+	MouseWheelRightEvent::MouseWheelRightEvent(float delta)
 		: MouseWheelEvent(delta)
 	{
 	}

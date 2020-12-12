@@ -74,7 +74,12 @@ namespace At0::Layers
 	GUILayer::GUILayer(const std::string_view name)
 		: Ray::Layer(name),
 		EventListener<Ray::WindowCloseEvent>(Ray::Application::Get().GetMainWindow()),
-		EventListener<Ray::KeyPressedEvent>(Ray::Application::Get().GetMainWindow())
+		EventListener<Ray::KeyPressedEvent>(Ray::Application::Get().GetMainWindow()),
+
+		EventListener<Ray::MouseWheelUpEvent>(Ray::Application::Get().GetMainWindow()),
+		EventListener<Ray::MouseWheelDownEvent>(Ray::Application::Get().GetMainWindow()),
+		EventListener<Ray::MouseWheelLeftEvent>(Ray::Application::Get().GetMainWindow()),
+		EventListener<Ray::MouseWheelRightEvent>(Ray::Application::Get().GetMainWindow())
 	{
 		EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().GetMainWindow());
 		//EventListener<Ray::MouseMoveEvent>::Subscribe(*Ray::Application::Get().FindWindowByName("Win0"));
@@ -202,4 +207,29 @@ namespace At0::Layers
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	}
+
+	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseWheelUpEvent& e)
+	{
+		RAY_PROFILE_FUNCTION();
+		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+	}
+
+	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseWheelDownEvent& e)
+	{
+		RAY_PROFILE_FUNCTION();
+		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+	}
+
+	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseWheelLeftEvent& e)
+	{
+		RAY_PROFILE_FUNCTION();
+		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+	}
+
+	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseWheelRightEvent& e)
+	{
+		RAY_PROFILE_FUNCTION();
+		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+	}
+
 }

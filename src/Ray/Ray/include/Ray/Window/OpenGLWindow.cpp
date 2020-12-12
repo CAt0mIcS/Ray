@@ -347,8 +347,7 @@ namespace At0::Ray
 			{
 				if (yOffset > 0)
 				{
-					// TODO: Set default scroll value (120 on Windows)
-					MouseWheelUpEvent e(int(yOffset * 120));
+					MouseWheelUpEvent e((float)yOffset);
 					for (auto* pListener : EventDispatcher<MouseWheelUpEvent>::Get())
 					{
 						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
@@ -356,8 +355,7 @@ namespace At0::Ray
 				}
 				else if (yOffset < 0)
 				{
-					// TODO: Set default scroll value (120 on Windows)
-					MouseWheelDownEvent e(int(yOffset * 120));
+					MouseWheelDownEvent e((float)yOffset);
 					for (auto* pListener : EventDispatcher<MouseWheelDownEvent>::Get())
 					{
 						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
@@ -366,18 +364,16 @@ namespace At0::Ray
 
 				if (xOffset > 0)
 				{
-					// TODO: Set default scroll value (120 on Windows)
-					MouseWheelLeftEvent e(int(xOffset * 120));
-					for (auto* pListener : EventDispatcher<MouseWheelLeftEvent>::Get())
+					MouseWheelRightEvent e((float)xOffset);
+					for (auto* pListener : EventDispatcher<MouseWheelRightEvent>::Get())
 					{
 						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 					}
 				}
 				else if (xOffset < 0)
 				{
-					// TODO: Set default scroll value (120 on Windows)
-					MouseWheelRightEvent e(int(xOffset * 120));
-					for (auto* pListener : EventDispatcher<MouseWheelRightEvent>::Get())
+					MouseWheelLeftEvent e((float)xOffset);
+					for (auto* pListener : EventDispatcher<MouseWheelLeftEvent>::Get())
 					{
 						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 					}

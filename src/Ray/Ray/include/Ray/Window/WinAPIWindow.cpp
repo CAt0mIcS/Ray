@@ -227,7 +227,7 @@ namespace At0::Ray
 
 			if (delta > 0)
 			{
-				MouseWheelUpEvent e(delta);
+				MouseWheelUpEvent e(delta / (float)WHEEL_DELTA);
 				for (auto* pListener : EventDispatcher<MouseWheelUpEvent>::Get())
 				{
 					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
@@ -235,7 +235,7 @@ namespace At0::Ray
 			}
 			else if (delta < 0)
 			{
-				MouseWheelDownEvent e(delta);
+				MouseWheelDownEvent e(delta / (float)WHEEL_DELTA);
 				for (auto* pListener : EventDispatcher<MouseWheelDownEvent>::Get())
 				{
 					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
@@ -246,11 +246,12 @@ namespace At0::Ray
 		}
 		case WM_MOUSEHWHEEL:
 		{
-			int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+			// Negate delta for GLFW compatibility
+			int delta = -GET_WHEEL_DELTA_WPARAM(wParam);
 
 			if (delta > 0)
 			{
-				MouseWheelRightEvent e(delta);
+				MouseWheelRightEvent e(delta / (float)WHEEL_DELTA);
 				for (auto* pListener : EventDispatcher<MouseWheelRightEvent>::Get())
 				{
 					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
@@ -258,7 +259,7 @@ namespace At0::Ray
 			}
 			else if (delta < 0)
 			{
-				MouseWheelLeftEvent e(delta);
+				MouseWheelLeftEvent e(delta / (float)WHEEL_DELTA);
 				for (auto* pListener : EventDispatcher<MouseWheelLeftEvent>::Get())
 				{
 					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
