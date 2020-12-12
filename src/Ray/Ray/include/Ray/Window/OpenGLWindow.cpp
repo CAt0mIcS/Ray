@@ -29,15 +29,6 @@
 
 namespace At0::Ray
 {
-	struct GLFWCallbackData
-	{
-		OpenGLWindow& win;
-		Size2& oldSize;
-		Point2& oldPos;
-		bool& windowIsOpen;
-		std::function<Widget*(const Event& e, const MouseInput& mouse)> eventReceiverFn;
-	};
-
 	bool OpenGLWindow::s_GLFWInitialized = false;
 
 	static void GLFWErrorCallback(int error, const char* description)
@@ -64,17 +55,6 @@ namespace At0::Ray
 
 		m_hWnd = glfwCreateWindow(1280, 720, "", nullptr, nullptr);
 		m_IsOpen = true;
-
-		GLFWCallbackData* data = new GLFWCallbackData(GLFWCallbackData
-			{
-				*this, 
-				m_OldSize, 
-				m_OldPos, 
-				m_IsOpen, 
-				[this](const Event& e, const MouseInput& mouse) { return GetEventReceiver(e, mouse); }
-			}
-		);
-		glfwSetWindowUserPointer(m_hWnd, data);
 
 		// Context initialization
 		glfwMakeContextCurrent(m_hWnd);
@@ -182,14 +162,15 @@ namespace At0::Ray
 		RAY_PROFILE_FUNCTION();
 		if (IsOpen())
 		{
-			delete (GLFWCallbackData*)glfwGetWindowUserPointer(m_hWnd);
 			glfwDestroyWindow(m_hWnd);
 
 			m_IsOpen = false;
 
-			// Push a dummy event into the queue so that the condition_variable in the queue will notify all threads to check
-			//Scope<WindowCloseEvent> eDummy = MakeScope<WindowCloseEvent>();
-			//m_EventQueue.PushBack({ this, std::move(eDummy) });
+			WindowCloseEvent e;
+			for (auto* pListener : EventDispatcher<WindowCloseEvent>::Get())
+			{
+				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+			}
 		}
 	}
 
@@ -258,143 +239,177 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		glfwSetCursorPosCallback(m_hWnd, [](GLFWwindow* window, double xPos, double yPos)
+		glfwSetCursorPosCallback(m_hWnd, [this](GLFWwindow* window, double xPos, double yPos)
 			{
-				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
-				pData->win.Mouse.SetPos({ (float)xPos, (float)yPos });
+				Mouse.SetPos({ (float)xPos, (float)yPos });
 
-				Scope<MouseMoveEvent> e = MakeScope<MouseMoveEvent>(pData->oldPos, Point2{ (float)xPos, (float)yPos });
-				//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
-			}
-		);
-
-		glfwSetMouseButtonCallback(m_hWnd, [](GLFWwindow* window, int button, int action, int mods)
-			{
-				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
-
-				switch (action)
+				MouseMoveEvent e(m_OldPos, Point2{ (float)xPos, (float)yPos });
+				for (auto* pListener : EventDispatcher<MouseMoveEvent>::Get())
 				{
-				case GLFW_PRESS:
-				{
-					Scope<MouseButtonPressedEvent> e = MakeScope<MouseButtonPressedEvent>((MouseButton)(button + 1));
-
-					switch (e->GetButton())
-					{
-					case MouseButton::Left:		pData->win.Mouse.SetLeftPressed(true); break;
-					case MouseButton::Right:	pData->win.Mouse.SetRightPressed(true); break;
-					case MouseButton::Middle:	pData->win.Mouse.SetMiddlePressed(true); break;
-					}
-
-					//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					Scope<MouseButtonReleasedEvent> e = MakeScope<MouseButtonReleasedEvent>((MouseButton)(button + 1));
-
-					switch (e->GetButton())
-					{
-					case MouseButton::Left:		pData->win.Mouse.SetLeftPressed(false); break;
-					case MouseButton::Right:	pData->win.Mouse.SetRightPressed(false); break;
-					case MouseButton::Middle:	pData->win.Mouse.SetMiddlePressed(false); break;
-					}
-
-					//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
-					break;
-				}
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 				}
 			}
 		);
 
-		glfwSetKeyCallback(m_hWnd, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+		glfwSetMouseButtonCallback(m_hWnd, [this](GLFWwindow* window, int button, int action, int mods)
 			{
-				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
-
-				Scope<KeyEvent> e;
 				switch (action)
 				{
 				case GLFW_PRESS:
-					e = MakeScope<KeyPressedEvent>((unsigned char)key, 0);
-					pData->win.Keyboard.SetKeyState((unsigned char)key, true);
+				{
+					MouseButtonPressedEvent e((MouseButton)(button + 1));
+
+					switch (e.GetButton())
+					{
+					case MouseButton::Left:		Mouse.SetLeftPressed(true); break;
+					case MouseButton::Right:	Mouse.SetRightPressed(true); break;
+					case MouseButton::Middle:	Mouse.SetMiddlePressed(true); break;
+					}
+
+
+					for (auto* pListener : EventDispatcher<MouseButtonPressedEvent>::Get())
+					{
+						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+					}
 					break;
+				}
 				case GLFW_RELEASE:
-					e = MakeScope<KeyReleasedEvent>((unsigned char)key);
-					pData->win.Keyboard.SetKeyState((unsigned char)key, false);
+				{
+					MouseButtonReleasedEvent e((MouseButton)(button + 1));
+
+					switch (e.GetButton())
+					{
+					case MouseButton::Left:		Mouse.SetLeftPressed(false); break;
+					case MouseButton::Right:	Mouse.SetRightPressed(false); break;
+					case MouseButton::Middle:	Mouse.SetMiddlePressed(false); break;
+					}
+
+					for (auto* pListener : EventDispatcher<MouseButtonReleasedEvent>::Get())
+					{
+						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+					}
 					break;
+				}
+				}
+			}
+		);
+
+		glfwSetKeyCallback(m_hWnd, [this](GLFWwindow* window, int key, int scancode, int action, int mods)
+			{
+				switch (action)
+				{
+				case GLFW_PRESS:
+				{
+					KeyPressedEvent e((unsigned char)key, 0);
+					Keyboard.SetKeyState((unsigned char)key, true);
+					for (auto* pListener : EventDispatcher<KeyPressedEvent>::Get())
+					{
+						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+					}
+
+					break;
+				}
+					
+				case GLFW_RELEASE:
+				{
+					KeyReleasedEvent e((unsigned char)key);
+					Keyboard.SetKeyState((unsigned char)key, false);
+					for (auto* pListener : EventDispatcher<KeyReleasedEvent>::Get())
+					{
+						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+					}
+					break;
+				}
 				case GLFW_REPEAT:
-					e = MakeScope<KeyPressedEvent>((unsigned char)key, 1);
+				{
+					KeyPressedEvent e((unsigned char)key, 1);
+					for (auto* pListener : EventDispatcher<KeyPressedEvent>::Get())
+					{
+						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+					}
+
 					break;
 				}
-
-				//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+				}
 			}
 		);
 
-		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode)
+		glfwSetCharCallback(m_hWnd, [this](GLFWwindow* window, unsigned int keycode)
 			{
-				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
-
-				Scope<CharEvent> e = MakeScope<CharEvent>(keycode);
-				//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
-			}
+				CharEvent e(keycode);
+				for (auto* pListener : EventDispatcher<CharEvent>::Get())
+				{
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}			}
 		);
 
-		glfwSetScrollCallback(m_hWnd, [](GLFWwindow* window, double xOffset, double yOffset)
+		glfwSetScrollCallback(m_hWnd, [this](GLFWwindow* window, double xOffset, double yOffset)
 			{
-				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
-				// TODO: MouseWheelLeft and Right events
-
 				if (yOffset > 0)
 				{
 					// TODO: Set default scroll value (120 on Windows)
-					Scope<MouseWheelUpEvent> e = MakeScope<MouseWheelUpEvent>(int(yOffset * 120));
-					//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+					MouseWheelUpEvent e(int(yOffset * 120));
+					for (auto* pListener : EventDispatcher<MouseWheelUpEvent>::Get())
+					{
+						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+					}
 				}
 				else if (yOffset < 0)
 				{
 					// TODO: Set default scroll value (120 on Windows)
-					Scope<MouseWheelDownEvent> e = MakeScope<MouseWheelDownEvent>(int(yOffset * 120));
-					//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+					MouseWheelDownEvent e(int(yOffset * 120));
+					for (auto* pListener : EventDispatcher<MouseWheelDownEvent>::Get())
+					{
+						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+					}
 				}
 
 				if (xOffset > 0)
 				{
 					// TODO: Set default scroll value (120 on Windows)
-					Scope<MouseWheelLeftEvent> e = MakeScope<MouseWheelLeftEvent>(int(xOffset * 120));
-					//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+					MouseWheelLeftEvent e(int(xOffset * 120));
+					for (auto* pListener : EventDispatcher<MouseWheelLeftEvent>::Get())
+					{
+						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+					}
 				}
 				else if (xOffset < 0)
 				{
 					// TODO: Set default scroll value (120 on Windows)
-					Scope<MouseWheelRightEvent> e = MakeScope<MouseWheelRightEvent>(int(xOffset * 120));
-					//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+					MouseWheelRightEvent e(int(xOffset * 120));
+					for (auto* pListener : EventDispatcher<MouseWheelRightEvent>::Get())
+					{
+						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+					}
 				}
 			}
 		);
 
-		glfwSetWindowRefreshCallback(m_hWnd, [](GLFWwindow* window)
+		glfwSetWindowRefreshCallback(m_hWnd, [this](GLFWwindow* window)
 			{
-				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
-
-				Scope<PaintEvent> e = MakeScope<PaintEvent>();
-				//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+				PaintEvent e;
+				for (auto* pListener : EventDispatcher<PaintEvent>::Get())
+				{
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}
 			}
 		);
 
-		glfwSetWindowSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height)
+		glfwSetWindowSizeCallback(m_hWnd, [this](GLFWwindow* window, int width, int height)
 			{
-				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
-				pData->win.MoveTo(Point2{ width, height });
+				MoveTo(Point2{ width, height });
 
-				Scope<WindowResizeEvent> e = MakeScope<WindowResizeEvent>(pData->oldSize, Point2{ (float)width, (float)height });
-				//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+				WindowResizeEvent e(m_OldSize, Point2{ (float)width, (float)height });
+				for (auto* pListener : EventDispatcher<WindowResizeEvent>::Get())
+				{
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}
 			}
 		);
 
-		glfwSetWindowCloseCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window)
+		glfwSetWindowCloseCallback((GLFWwindow*)m_hWnd, [this](GLFWwindow* window)
 			{
-				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
-				pData->win.Close();
+				Close();
 			}
 		);
 	}

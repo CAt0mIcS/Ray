@@ -90,6 +90,8 @@ int At0::Ray::Awake(int argc, char** argv)
 		RAY_PROFILE_BEGIN_SESSION("Shutdown", "../../Profiling/Profile-Shutdown.json");
 		delete app;
 		RAY_PROFILE_END_SESSION();
+
+		RAY_LOG_END();
 		return exitCode;
 	}
 	catch (At0::Ray::Exception& e)
