@@ -239,7 +239,7 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		glfwSetCursorPosCallback(m_hWnd, [this](GLFWwindow* window, double xPos, double yPos)
+		glfwSetCursorPosCallback(m_hWnd, [this](double xPos, double yPos)
 			{
 				Mouse.SetPos({ (float)xPos, (float)yPos });
 
@@ -251,7 +251,7 @@ namespace At0::Ray
 			}
 		);
 
-		glfwSetMouseButtonCallback(m_hWnd, [this](GLFWwindow* window, int button, int action, int mods)
+		glfwSetMouseButtonCallback(m_hWnd, [this](int button, int action, int mods)
 			{
 				switch (action)
 				{
@@ -294,7 +294,7 @@ namespace At0::Ray
 			}
 		);
 
-		glfwSetKeyCallback(m_hWnd, [this](GLFWwindow* window, int key, int scancode, int action, int mods)
+		glfwSetKeyCallback(m_hWnd, [this](int key, int scancode, int action, int mods)
 			{
 				switch (action)
 				{
@@ -334,7 +334,7 @@ namespace At0::Ray
 			}
 		);
 
-		glfwSetCharCallback(m_hWnd, [this](GLFWwindow* window, unsigned int keycode)
+		glfwSetCharCallback(m_hWnd, [this](unsigned int keycode)
 			{
 				CharEvent e(keycode);
 				for (auto* pListener : EventDispatcher<CharEvent>::Get())
@@ -343,7 +343,7 @@ namespace At0::Ray
 				}			}
 		);
 
-		glfwSetScrollCallback(m_hWnd, [this](GLFWwindow* window, double xOffset, double yOffset)
+		glfwSetScrollCallback(m_hWnd, [this](double xOffset, double yOffset)
 			{
 				if (yOffset > 0)
 				{
@@ -381,7 +381,7 @@ namespace At0::Ray
 			}
 		);
 
-		glfwSetWindowRefreshCallback(m_hWnd, [this](GLFWwindow* window)
+		glfwSetWindowRefreshCallback(m_hWnd, [this]()
 			{
 				PaintEvent e;
 				for (auto* pListener : EventDispatcher<PaintEvent>::Get())
@@ -391,7 +391,7 @@ namespace At0::Ray
 			}
 		);
 
-		glfwSetWindowSizeCallback(m_hWnd, [this](GLFWwindow* window, int width, int height)
+		glfwSetWindowSizeCallback(m_hWnd, [this](int width, int height)
 			{
 				MoveTo(Point2{ width, height });
 
@@ -403,7 +403,7 @@ namespace At0::Ray
 			}
 		);
 
-		glfwSetWindowCloseCallback((GLFWwindow*)m_hWnd, [this](GLFWwindow* window)
+		glfwSetWindowCloseCallback(m_hWnd, [this]()
 			{
 				Close();
 			}
