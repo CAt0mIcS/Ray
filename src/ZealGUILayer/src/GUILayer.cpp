@@ -70,7 +70,7 @@ namespace At0::Layers
 	std::mt19937 mtEngine;
 
 	// QUESTION: The way to get the MainWindow is too long? "Ray::Application::Get().GetMainWindow()"
-	// I can only listen to events from one window (MouseMoveEvent from only MainWindow
+	// I can only listen to events from one window (MouseMoveEvent from only MainWindow)
 	GUILayer::GUILayer(const std::string_view name)
 		: Ray::Layer(name),
 		EventListener<Ray::WindowCloseEvent>(Ray::Application::Get().GetMainWindow()),
@@ -118,7 +118,7 @@ namespace At0::Layers
 	
 	void GUILayer::OnUpdate(Ray::Timestep ts)
 	{
-		auto& renderer = *Ray::Application::Get().GetMainWindow().GetRenderer3D();
+		Ray::Renderer3D& renderer = *Ray::Application::Get().GetMainWindow().GetRenderer3D();
 		
 		static float pitch = 0.0f;
 		static float yaw = 0.0f;
@@ -172,6 +172,7 @@ namespace At0::Layers
 			DirectX::XMMatrixTranslation(xDir, yDir, zDir)
 		);
 
+		// Takes the most amount of time here!
 		for (auto& cube : cubes)
 		{
 			cube.Draw(&renderer);
