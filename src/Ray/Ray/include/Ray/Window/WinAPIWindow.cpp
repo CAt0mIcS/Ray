@@ -16,18 +16,20 @@
 
 #include <Windows.h>
 
+// TODO: App closes when non-mainwindow is resized and closed
+
 
 namespace At0::Ray
 {
-	WinAPIWindow::WinAPIWindow(const std::string_view name, Widget* parent, bool isMainWindow)
-		: Window(name, parent, isMainWindow), m_OldPos{}, m_OldSize{}, m_hWnd(0)
+	WinAPIWindow::WinAPIWindow(const std::string_view name, const Point2 pos, const Size2 size, Widget* parent)
+		: Window(name, parent), m_OldPos{}, m_OldSize{}, m_hWnd(0)
 	{
 		RAY_PROFILE_FUNCTION();
 
 		auto rnd = Util::GenerateRandomToken<std::wstring>(5);
 		RAY_MEXPECTS(!rnd.empty(), "The random token generated for the window class name is empty");
 		RAY_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
-		RAY_WND_THROW_LAST_FAILED(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW));
+		RAY_WND_THROW_LAST_FAILED(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW, 0, pos.x, pos.y, size.x, size.y));
 		m_IsOpen = true;
 	}
 
@@ -35,6 +37,7 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[WinAPIWindow] '{0}' destroyed", this->GetName());
+		DestroyWindow(m_hWnd);
 	}
 
 	bool WinAPIWindow::CreateNativeWindow(
@@ -56,9 +59,16 @@ namespace At0::Ray
 
 		RegisterClass(&wc);
 
+		RECT wr;
+		wr.left = x;
+		wr.top = y;
+		wr.right = wr.left + width;
+		wr.bottom = wr.top + height;
+		AdjustWindowRect(&wr, style, FALSE);
+
 		m_hWnd = CreateWindowEx(
-			exStyle, windowClassName, windowName, style, x, y, width, height,
-			hWndParent, hMenu, wc.hInstance, this
+			exStyle, windowClassName, windowName, style, wr.left, wr.top, wr.right - wr.left,
+			wr.bottom - wr.top, hWndParent, hMenu, wc.hInstance, this
 		);
 
 		return m_hWnd ? true : false;

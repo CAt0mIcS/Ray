@@ -16,7 +16,7 @@
 
 namespace At0::Ray
 {
-	Ref<Window> Window::Create(const std::string_view name, Widget* parent)
+	Ref<Window> Window::Create(const std::string_view name, const Point2 pos, const Size2 size, Widget* parent)
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -25,17 +25,17 @@ namespace At0::Ray
 		switch (RendererAPI::GetAPI())
 		{
 #ifdef _WIN32
-		case RendererAPI::API::D3D11:		return MakeRef<WinAPIWindow>(name, parent);
+		case RendererAPI::API::D3D11:		return MakeRef<WinAPIWindow>(name, pos, size, parent);
 #endif
-		case RendererAPI::API::OpenGL:		return MakeRef<OpenGLWindow>(name, parent);
+		case RendererAPI::API::OpenGL:		return MakeRef<OpenGLWindow>(name, pos, size, parent);
 		}
 
 		RAY_ASSERT(false, "Failed to create the Window");
 		return nullptr;
 	}
 
-	Window::Window(const std::string_view name, Widget* parent, bool isMainWindow)
-		: Widget(name, parent), /*m_EventQueue{}, */m_CurrentlyHovering(nullptr)
+	Window::Window(const std::string_view name, Widget* parent)
+		: Widget(name, parent), m_CurrentlyHovering(nullptr)
 	{
 	}
 

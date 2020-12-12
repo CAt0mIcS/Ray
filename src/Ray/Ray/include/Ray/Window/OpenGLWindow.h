@@ -19,8 +19,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="name">Is the unique name of the window</param>
 		/// <param name="parent">Is the parent of this window</param>
-		/// <param name="isMainWindow">Specifies whether this window is the main one which will exit the application when closed</param>
-		OpenGLWindow(const std::string_view name, Widget* parent = nullptr, bool isMainWindow = false);
+		OpenGLWindow(const std::string_view name, const Point2& pos, const Size2& size, Widget* parent = nullptr);
 		
 		/// <summary>
 		/// Window Deconstructor

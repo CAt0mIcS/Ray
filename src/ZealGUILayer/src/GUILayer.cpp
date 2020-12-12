@@ -38,6 +38,7 @@ public:
 
 			std::ostringstream oss;
 			oss << GetFPS() << " FPS";
+			// TODO: Abort when trying to set the title on an unopened window!
 			At0::Ray::Application::Get().GetMainWindow().SetTitle(oss.str());
 		}
 	}
@@ -123,67 +124,67 @@ namespace At0::Layers
 	
 	void GUILayer::OnUpdate(Ray::Timestep ts)
 	{
-		//Ray::Renderer3D& renderer = *Ray::Application::Get().GetMainWindow().GetRenderer3D();
-		//
-		//static float pitch = 0.0f;
-		//static float yaw = 0.0f;
-		//static float roll = 0.0f;
-		//static float xDir = 0.0f;
-		//static float yDir = 0.0f;
-		//static float zDir = 5.0f;
+		Ray::Renderer3D& renderer = *Ray::Application::Get().GetMainWindow().GetRenderer3D();
+		
+		static float pitch = 0.0f;
+		static float yaw = 0.0f;
+		static float roll = 0.0f;
+		static float xDir = 0.0f;
+		static float yDir = 0.0f;
+		static float zDir = 5.0f;
 
-		//renderer.ClearBuffer(0.07f, 0.0f, 0.12f);
+		renderer.ClearBuffer(0.07f, 0.0f, 0.12f);
 
-		//Ray::KeyboardInput& kbd = Ray::Application::Get().GetMainWindow().Keyboard;
-		//if (kbd.IsKeyPressed('S'))
-		//{
-		//	zDir -= 3.0f * ts;
-		//}
-		//if (kbd.IsKeyPressed('W'))
-		//{
-		//	zDir += 3.0f * ts;
-		//}
-		//if (kbd.IsKeyPressed(' '))
-		//{
-		//	yDir += 3.0f * ts;
-		//}
-		//if (kbd.IsKeyPressed('A'))
-		//{
-		//	xDir -= 3.0f * ts;
-		//}
-		//if (kbd.IsKeyPressed(17)) //LCONTROL
-		//{
-		//	yDir -= 3.0f * ts;
-		//}
-		//if (kbd.IsKeyPressed('D'))
-		//{
-		//	xDir += 3.0f * ts;
-		//}
+		Ray::KeyboardInput& kbd = Ray::Application::Get().GetMainWindow().Keyboard;
+		if (kbd.IsKeyPressed('S'))
+		{
+			zDir -= 3.0f * ts;
+		}
+		if (kbd.IsKeyPressed('W'))
+		{
+			zDir += 3.0f * ts;
+		}
+		if (kbd.IsKeyPressed(' '))
+		{
+			yDir += 3.0f * ts;
+		}
+		if (kbd.IsKeyPressed('A'))
+		{
+			xDir -= 3.0f * ts;
+		}
+		if (kbd.IsKeyPressed(17)) //LCONTROL
+		{
+			yDir -= 3.0f * ts;
+		}
+		if (kbd.IsKeyPressed('D'))
+		{
+			xDir += 3.0f * ts;
+		}
 
-		//pitch += 0.5f * ts;
-		//yaw += 0.5f * ts;
-		//roll += 0.5f * ts;
+		pitch += 0.5f * ts;
+		yaw += 0.5f * ts;
+		roll += 0.5f * ts;
 
-		//for (uint32_t i = 0; i < cubes.size() - 1; ++i)
-		//{
-		//	cubes[i].SetTransform(
-		//		DirectX::XMMatrixRotationRollPitchYaw(pitch + i, yaw + i, roll + i) *
-		//		DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
-		//	);
-		//}
-		//
-		//cubes.back().SetTransform(
-		//	DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-		//	DirectX::XMMatrixTranslation(xDir, yDir, zDir)
-		//);
+		for (uint32_t i = 0; i < cubes.size() - 1; ++i)
+		{
+			cubes[i].SetTransform(
+				DirectX::XMMatrixRotationRollPitchYaw(pitch + i, yaw + i, roll + i) *
+				DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
+			);
+		}
+		
+		cubes.back().SetTransform(
+			DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
+			DirectX::XMMatrixTranslation(xDir, yDir, zDir)
+		);
 
-		//// Takes the most amount of time here!
-		//for (auto& cube : cubes)
-		//{
-		//	cube.Draw(&renderer);
-		//}
+		// Takes the most amount of time here!
+		for (auto& cube : cubes)
+		{
+			cube.Draw(&renderer);
+		}
 
-		//renderer.EndDraw();
+		renderer.EndDraw();
 		g_FPS.Update();
 	}
 

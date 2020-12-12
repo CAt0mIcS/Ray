@@ -78,8 +78,8 @@ namespace At0::Ray
         // create depth stensil texture
         WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
         D3D11_TEXTURE2D_DESC descDepth = {};
-        descDepth.Width = clientWindowRect.right;
-        descDepth.Height = clientWindowRect.bottom;
+        descDepth.Width = clientWindowRect.right - clientWindowRect.left;
+        descDepth.Height = clientWindowRect.bottom - clientWindowRect.top;
         descDepth.MipLevels = 1u;
         descDepth.ArraySize = 1u;
         descDepth.Format = DXGI_FORMAT_D32_FLOAT;

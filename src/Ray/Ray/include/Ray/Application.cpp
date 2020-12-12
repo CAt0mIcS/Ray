@@ -24,7 +24,7 @@ namespace At0::Ray
 		s_Instance = this;
 
 		StartupSetup();
-		m_MainWindow = PushWindow(Window::Create("MainWindow"));
+		m_MainWindow = PushWindow(Window::Create("MainWindow", { 100, 100 }, { 960, 540 }));
 	}
 
 	void Application::Create(Application* app)
