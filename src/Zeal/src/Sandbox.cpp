@@ -12,7 +12,7 @@ namespace At0::Zeal
 	{
 		//RAY_PROFILE_FUNCTION();
 		
-		//m_MainWindow->InitRenderer3D();
+		m_MainWindow->InitRenderer3D();
 		m_MainWindow->SetTitle("Zeal");
 		m_MainWindow->Show();
 
@@ -79,7 +79,7 @@ int At0::Ray::Awake(int argc, char** argv)
 		RAY_LOG_BEGIN("../../Zeal.log", Log::LogLevel::Trace);
 
 		RAY_PROFILE_BEGIN_SESSION("Startup", "../../Profiling/Profile-Startup.json");
-		Ray::RendererAPI::SetAPI(Ray::RendererAPI::OpenGL);
+		Ray::RendererAPI::SetAPI(Ray::RendererAPI::D3D11);
 		Zeal::Sandbox* app = new Zeal::Sandbox("");
 		RAY_PROFILE_END_SESSION();
 

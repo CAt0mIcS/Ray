@@ -8,23 +8,23 @@ namespace At0::Ray
 	class KeyEvent : public Event
 	{
 	protected:
-		KeyEvent(const unsigned char keycode)
+		KeyEvent(uint16_t keycode)
 			: m_KeyCode(keycode)
 		{
 		}
 
 	public:
-		unsigned char GetKeyCode() const { return m_KeyCode; }
+		uint16_t GetKeyCode() const { return m_KeyCode; }
 		virtual ~KeyEvent() = default;
 
 	private:
-		unsigned char m_KeyCode;
+		uint16_t m_KeyCode;
 	};
 
 	class KeyPressedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(const unsigned char keycode, uint32_t repeatCount);
+		KeyPressedEvent(uint16_t keycode, uint32_t repeatCount);
 
 		virtual std::string ToString() const override;
 
@@ -40,7 +40,7 @@ namespace At0::Ray
 	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyReleasedEvent(const unsigned char keycode);
+		KeyReleasedEvent(uint16_t keycode);
 
 		virtual std::string ToString() const override;
 

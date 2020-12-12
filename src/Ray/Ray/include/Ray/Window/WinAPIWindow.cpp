@@ -10,6 +10,7 @@
 
 #include <RayUtil/Exception.h>
 #include <RayUtil/Random.h>
+#include <RayUtil/KeyCodes.h>
 
 #include <RayRender/Renderer3D.h>
 
@@ -168,6 +169,49 @@ namespace At0::Ray
 			}
 			return 0;
 		}
+		// TODO: Test, add more mouse buttons and add xbuttons in MouseInput
+		case WM_XBUTTONDOWN:
+		{
+			if (GET_XBUTTON_WPARAM(wParam) == XBUTTON1)
+			{
+				MouseButtonPressedEvent e(MouseButton::Button3);
+				for (auto* pListener : EventDispatcher<MouseButtonPressedEvent>::Get())
+				{
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}
+			}
+			else
+			{
+				MouseButtonPressedEvent e(MouseButton::Button4);
+				for (auto* pListener : EventDispatcher<MouseButtonPressedEvent>::Get())
+				{
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}
+			}
+
+			return 0;
+		}
+		case WM_XBUTTONUP:
+		{
+			if (GET_XBUTTON_WPARAM(wParam) == XBUTTON1)
+			{
+				MouseButtonReleasedEvent e(MouseButton::Button3);
+				for (auto* pListener : EventDispatcher<MouseButtonReleasedEvent>::Get())
+				{
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}
+			}
+			else
+			{
+				MouseButtonReleasedEvent e(MouseButton::Button4);
+				for (auto* pListener : EventDispatcher<MouseButtonReleasedEvent>::Get())
+				{
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}
+			}
+
+			return 0;
+		}
 		case WM_RBUTTONDOWN:
 		{
 			Mouse.SetRightPressed(true);
@@ -190,22 +234,25 @@ namespace At0::Ray
 			}
 			return 0;
 		}
+		// TODO: Keyboard message using new mouse/keyboard keycodes
+		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:
 		{
-			Keyboard.SetKeyState((unsigned char)wParam, true);
+			Keyboard.SetKeyState((uint16_t)wParam, true);
 
-			KeyPressedEvent e((unsigned char)wParam, (uint32_t)(lParam & 0xff));
+			KeyPressedEvent e((uint16_t)wParam, (uint32_t)(lParam & 0xff));
 			for (auto* pListener : EventDispatcher<KeyPressedEvent>::Get())
 			{
 				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
 			return 0;
 		}
+		case WM_SYSKEYUP:
 		case WM_KEYUP:
 		{
-			Keyboard.SetKeyState((unsigned char)wParam, false);
+			Keyboard.SetKeyState((uint16_t)wParam, false);
 
-			KeyReleasedEvent e((unsigned char)wParam);
+			KeyReleasedEvent e((uint16_t)wParam);
 			for (auto* pListener : EventDispatcher<KeyReleasedEvent>::Get())
 			{
 				pListener->OnEvent(GetEventReceiver(e, Mouse), e);

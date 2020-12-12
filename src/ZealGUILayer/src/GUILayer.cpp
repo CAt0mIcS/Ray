@@ -177,7 +177,7 @@ namespace At0::Layers
 		//	DirectX::XMMatrixTranslation(xDir, yDir, zDir)
 		//);
 
-		// Takes the most amount of time here!
+		//// Takes the most amount of time here!
 		//for (auto& cube : cubes)
 		//{
 		//	cube.Draw(&renderer);

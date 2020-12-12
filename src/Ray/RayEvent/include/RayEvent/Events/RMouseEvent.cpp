@@ -5,22 +5,6 @@
 
 namespace At0::Ray
 {
-	/// <summary>
-	/// Converts a mouse button to string
-	/// </summary>
-	/// <param name="btn">Is the button</param>
-	/// <returns>The mouse button name</returns>
-	static const char* MouseButtonToString(MouseButton btn)
-	{
-		switch (btn)
-		{
-		case MouseButton::Left:		return "Left Mouse Button";
-		case MouseButton::Right:	return "Right Mouse Button";
-		case MouseButton::Middle:	return "Middle Mouse Button";
-		}
-		return "";
-	}
-
 
 	// -------------------------------------------------------------------
 	// MouseMoveEvent

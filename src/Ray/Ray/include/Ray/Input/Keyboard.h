@@ -186,7 +186,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="keycode">Is the keycode to check for</param>
 		/// <returns>True if the key with keycode is pressed, false otherwise</returns>
-		bool IsKeyPressed(unsigned char keycode) const;
+		bool IsKeyPressed(uint16_t keycode) const;
 
 	private:
 		/// <summary>
@@ -194,18 +194,13 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="keycode">Is the keycode to set</param>
 		/// <param name="isPressed">Is true if the key is pressed, false otherwise</param>
-		void SetKeyState(unsigned char keycode, bool isPressed);
+		void SetKeyState(uint16_t keycode, bool isPressed);
 
 	private:
 		/// <summary>
-		/// Total number of keys
-		/// </summary>
-		static constexpr uint8_t s_nKeys = 0xff;
-
-		/// <summary>
 		/// Holds pressed-info about every keycode
 		/// </summary>
-		std::bitset<s_nKeys> m_Keys;
+		std::bitset<512> m_Keys;
 	};
 }
 

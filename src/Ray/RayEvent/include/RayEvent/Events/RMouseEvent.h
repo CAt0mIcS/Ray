@@ -3,17 +3,12 @@
 #include "REvent.h"
 
 #include <../../RayRender/include/RayRender/TypeDefines.h>
+#include <../../RayUtil/include/RayUtil/KeyCodes.h>
 
 
 namespace At0::Ray
 {
 	class Widget;
-
-	enum class MouseButton
-	{
-		INVALID = 0,
-		Left, Right, Middle
-	};
 
 	class MouseMoveEvent : public Event
 	{

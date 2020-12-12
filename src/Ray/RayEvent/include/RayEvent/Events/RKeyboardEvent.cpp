@@ -7,7 +7,7 @@ namespace At0::Ray
 	// -------------------------------------------------------------------
 	// KeyPressedEvent
 	// -------------------------------------------------------------------
-	KeyPressedEvent::KeyPressedEvent(const unsigned char keycode, uint32_t repeatCount)
+	KeyPressedEvent::KeyPressedEvent(uint16_t keycode, uint32_t repeatCount)
 		: KeyEvent(keycode), m_RepeatCount(repeatCount)
 	{
 	}
@@ -22,7 +22,7 @@ namespace At0::Ray
 	// -------------------------------------------------------------------
 	// KeyReleasedEvent
 	// -------------------------------------------------------------------
-	KeyReleasedEvent::KeyReleasedEvent(const unsigned char keycode)
+	KeyReleasedEvent::KeyReleasedEvent(uint16_t keycode)
 		: KeyEvent(keycode)
 	{
 	}
