@@ -8,7 +8,7 @@
 namespace At0::Ray
 {
 
-	class RU_API ZMessageBox
+	class RU_API RMessageBox
 	{
 	public:
 		enum class Button
@@ -32,6 +32,6 @@ namespace At0::Ray
 		};
 
 	public:
-		ZMessageBox(const std::string_view title, const std::string_view text, Button buttons = Button::Ok, Icon icon = Icon::None, Flags flags = Flags::None);
+		RMessageBox(const std::string_view title, const std::string_view text, Button buttons = Button::Ok, Icon icon = Icon::None, Flags flags = Flags::None);
 	};
 }

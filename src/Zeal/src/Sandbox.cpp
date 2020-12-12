@@ -12,14 +12,14 @@ namespace At0::Zeal
 	{
 		//RAY_PROFILE_FUNCTION();
 		
-		m_MainWindow->InitRenderer3D();
+		//m_MainWindow->InitRenderer3D();
 		m_MainWindow->SetTitle("Zeal");
 		m_MainWindow->Show();
 
-		Ray::Window* win = PushWindow(Ray::Window::Create("Win0"));
+		//Ray::Window* win = PushWindow(Ray::Window::Create("Win0"));
 		//win->InitRenderer3D();
-		win->SetTitle("Win0");
-		win->Show();
+		//win->SetTitle("Win0");
+		//win->Show();
 
 		//Ray::Window* win1 = PushWindow(Ray::Window::Create("Win1"));
 		//win1->InitRenderer3D();
@@ -64,6 +64,7 @@ namespace At0::Zeal
 #include <RayDebug/RInstrumentor.h>
 #include <RayDebug/RLogger.h>
 #include <RayUtil/Exception.h>
+#include <RayRender/RendererAPI.h>
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -78,6 +79,7 @@ int At0::Ray::Awake(int argc, char** argv)
 		RAY_LOG_BEGIN("../../Zeal.log", Log::LogLevel::Trace);
 
 		RAY_PROFILE_BEGIN_SESSION("Startup", "../../Profiling/Profile-Startup.json");
+		Ray::RendererAPI::SetAPI(Ray::RendererAPI::OpenGL);
 		Zeal::Sandbox* app = new Zeal::Sandbox("");
 		RAY_PROFILE_END_SESSION();
 
@@ -92,17 +94,17 @@ int At0::Ray::Awake(int argc, char** argv)
 	}
 	catch (At0::Ray::Exception& e)
 	{
-		Ray::ZMessageBox(e.GetType(), e.what(), Ray::ZMessageBox::Button::Ok, Ray::ZMessageBox::Icon::Error, Ray::ZMessageBox::Flags::DefaultDesktop);
+		Ray::RMessageBox(e.GetType(), e.what(), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
 		RAY_LOG_CRITICAL("[Main] Exception occured: {0}", e.what());
 	}
 	catch (std::exception& e)
 	{
-		Ray::ZMessageBox("Standard Exception", e.what(), Ray::ZMessageBox::Button::Ok, Ray::ZMessageBox::Icon::Error, Ray::ZMessageBox::Flags::DefaultDesktop);
+		Ray::RMessageBox("Standard Exception", e.what(), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
 		RAY_LOG_CRITICAL("[Main] Exception occured: {0}", e.what());
 	}
 	catch (...)
 	{
-		Ray::ZMessageBox("Unknown Exception", "An unknown exception occurred", Ray::ZMessageBox::Button::Ok, Ray::ZMessageBox::Icon::Error, Ray::ZMessageBox::Flags::DefaultDesktop);
+		Ray::RMessageBox("Unknown Exception", "An unknown exception occurred", Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
 		RAY_LOG_CRITICAL("[Main] Unknown Exception occured");
 	}
 	RAY_LOG_END();

@@ -28,12 +28,12 @@ namespace At0::Util
 
 	void InfoManager::DxWarn(HRESULT hr, uint16_t line, const std::string_view file, const std::string_view type)
 	{
-		Ray::ZMessageBox(type, GetDxString(type, line, file), Ray::ZMessageBox::Button::Ok, Ray::ZMessageBox::Icon::Warn, Ray::ZMessageBox::Flags::DefaultDesktop);
+		Ray::RMessageBox(type, GetDxString(type, line, file), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Warn, Ray::RMessageBox::Flags::DefaultDesktop);
 	}
 
 	void InfoManager::DxInfo(HRESULT hr, uint16_t line, const std::string_view file, const std::string_view type)
 	{
-		Ray::ZMessageBox(type, GetDxString(type, line, file), Ray::ZMessageBox::Button::Ok, Ray::ZMessageBox::Icon::Info, Ray::ZMessageBox::Flags::DefaultDesktop);
+		Ray::RMessageBox(type, GetDxString(type, line, file), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Info, Ray::RMessageBox::Flags::DefaultDesktop);
 	}
 
 	std::string InfoManager::GetDxErrorString()

@@ -29,7 +29,7 @@ public:
 		// one second elapsed? (= 1000 milliseconds)
 		if (IntervalValue() > 1000)
 		{
-			// save the current counter value to m_fps
+			// save the current counter value to m_FPS
 			m_FPS = m_FPSCount;
 
 			// reset the counter and the interval
@@ -77,7 +77,7 @@ namespace At0::Layers
 		EventListener<Ray::KeyPressedEvent>(Ray::Application::Get().GetMainWindow())
 	{
 		EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().GetMainWindow());
-		EventListener<Ray::MouseMoveEvent>::Subscribe(*Ray::Application::Get().FindWindowByName("Win0"));
+		//EventListener<Ray::MouseMoveEvent>::Subscribe(*Ray::Application::Get().FindWindowByName("Win0"));
 
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] Startup");
@@ -118,67 +118,67 @@ namespace At0::Layers
 	
 	void GUILayer::OnUpdate(Ray::Timestep ts)
 	{
-		Ray::Renderer3D& renderer = *Ray::Application::Get().GetMainWindow().GetRenderer3D();
-		
-		static float pitch = 0.0f;
-		static float yaw = 0.0f;
-		static float roll = 0.0f;
-		static float xDir = 0.0f;
-		static float yDir = 0.0f;
-		static float zDir = 5.0f;
+		//Ray::Renderer3D& renderer = *Ray::Application::Get().GetMainWindow().GetRenderer3D();
+		//
+		//static float pitch = 0.0f;
+		//static float yaw = 0.0f;
+		//static float roll = 0.0f;
+		//static float xDir = 0.0f;
+		//static float yDir = 0.0f;
+		//static float zDir = 5.0f;
 
-		renderer.ClearBuffer(0.07f, 0.0f, 0.12f);
+		//renderer.ClearBuffer(0.07f, 0.0f, 0.12f);
 
-		Ray::KeyboardInput& kbd = Ray::Application::Get().GetMainWindow().Keyboard;
-		if (kbd.IsKeyPressed(17)) //LCONTROL
-		{
-			zDir -= 3.0f * ts;
-		}
-		if (kbd.IsKeyPressed(16)) //LSHIFT
-		{
-			zDir += 3.0f * ts;
-		}
-		if (kbd.IsKeyPressed('W'))
-		{
-			yDir += 3.0f * ts;
-		}
-		if (kbd.IsKeyPressed('A'))
-		{
-			xDir -= 3.0f * ts;
-		}
-		if (kbd.IsKeyPressed('S'))
-		{
-			yDir -= 3.0f * ts;
-		}
-		if (kbd.IsKeyPressed('D'))
-		{
-			xDir += 3.0f * ts;
-		}
+		//Ray::KeyboardInput& kbd = Ray::Application::Get().GetMainWindow().Keyboard;
+		//if (kbd.IsKeyPressed('S'))
+		//{
+		//	zDir -= 3.0f * ts;
+		//}
+		//if (kbd.IsKeyPressed('W'))
+		//{
+		//	zDir += 3.0f * ts;
+		//}
+		//if (kbd.IsKeyPressed(' '))
+		//{
+		//	yDir += 3.0f * ts;
+		//}
+		//if (kbd.IsKeyPressed('A'))
+		//{
+		//	xDir -= 3.0f * ts;
+		//}
+		//if (kbd.IsKeyPressed(17)) //LCONTROL
+		//{
+		//	yDir -= 3.0f * ts;
+		//}
+		//if (kbd.IsKeyPressed('D'))
+		//{
+		//	xDir += 3.0f * ts;
+		//}
 
-		pitch += 0.5f * ts;
-		yaw += 0.5f * ts;
-		roll += 0.5f * ts;
+		//pitch += 0.5f * ts;
+		//yaw += 0.5f * ts;
+		//roll += 0.5f * ts;
 
-		for (uint32_t i = 0; i < cubes.size() - 1; ++i)
-		{
-			cubes[i].SetTransform(
-				DirectX::XMMatrixRotationRollPitchYaw(pitch + i, yaw + i, roll + i) *
-				DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
-			);
-		}
-		
-		cubes.back().SetTransform(
-			DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-			DirectX::XMMatrixTranslation(xDir, yDir, zDir)
-		);
+		//for (uint32_t i = 0; i < cubes.size() - 1; ++i)
+		//{
+		//	cubes[i].SetTransform(
+		//		DirectX::XMMatrixRotationRollPitchYaw(pitch + i, yaw + i, roll + i) *
+		//		DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
+		//	);
+		//}
+		//
+		//cubes.back().SetTransform(
+		//	DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
+		//	DirectX::XMMatrixTranslation(xDir, yDir, zDir)
+		//);
 
 		// Takes the most amount of time here!
-		for (auto& cube : cubes)
-		{
-			cube.Draw(&renderer);
-		}
+		//for (auto& cube : cubes)
+		//{
+		//	cube.Draw(&renderer);
+		//}
 
-		renderer.EndDraw();
+		//renderer.EndDraw();
 		g_FPS.Update();
 	}
 

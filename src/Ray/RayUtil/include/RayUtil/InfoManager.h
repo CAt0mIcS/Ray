@@ -25,7 +25,7 @@ namespace At0::Util
 				<< "[Message] " << SerializeString(baseStr.data(), std::forward<Args>(args)...) << '\n'
 				<< GetDefaultString(line, file);
 
-			Ray::ZMessageBox(type, oss.str(), Ray::ZMessageBox::Button::Ok, Ray::ZMessageBox::Icon::Info, Ray::ZMessageBox::Flags::DefaultDesktop);
+			Ray::RMessageBox(type, oss.str(), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Info, Ray::RMessageBox::Flags::DefaultDesktop);
 		}
 
 		template<typename... Args>
@@ -36,7 +36,7 @@ namespace At0::Util
 				<< "[Message] " << SerializeString(baseStr.data(), std::forward<Args>(args)...) << '\n'
 				<< GetDefaultString(line, file);
 
-			Ray::ZMessageBox(type, oss.str(), Ray::ZMessageBox::Button::Ok, Ray::ZMessageBox::Icon::Warn, Ray::ZMessageBox::Flags::DefaultDesktop);
+			Ray::RMessageBox(type, oss.str(), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Warn, Ray::RMessageBox::Flags::DefaultDesktop);
 		}
 
 	private:

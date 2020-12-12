@@ -258,13 +258,6 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		glfwSetWindowCloseCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window)
-			{
-				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
-				pData->win.Close();
-			}
-		);
-
 		glfwSetCursorPosCallback(m_hWnd, [](GLFWwindow* window, double xPos, double yPos)
 			{
 				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
@@ -395,6 +388,13 @@ namespace At0::Ray
 
 				Scope<WindowResizeEvent> e = MakeScope<WindowResizeEvent>(pData->oldSize, Point2{ (float)width, (float)height });
 				//pData->win.GetEventQueue().PushBack({ pData->eventReceiverFn(*e, pData->win.Mouse), std::move(e) });
+			}
+		);
+
+		glfwSetWindowCloseCallback((GLFWwindow*)m_hWnd, [](GLFWwindow* window)
+			{
+				GLFWCallbackData* pData = (GLFWCallbackData*)glfwGetWindowUserPointer(window);
+				pData->win.Close();
 			}
 		);
 	}

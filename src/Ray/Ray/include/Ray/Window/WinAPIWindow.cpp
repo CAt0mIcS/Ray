@@ -92,6 +92,8 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
+		// QUESTION: Multithreaded event dispatching or event handing?
+
 		switch (uMsg)
 		{
 		case WM_DESTROY:
