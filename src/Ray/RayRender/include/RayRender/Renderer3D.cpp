@@ -127,7 +127,11 @@ namespace At0::Ray
 
     void Renderer3D::EndDraw()
     {
-        RAY_GFX_THROW_FAILED(m_pSwapChain->Present(1, 0));
+        // VSYNC on
+        //RAY_GFX_THROW_FAILED(m_pSwapChain->Present(1, 0));
+
+        // VSYNC off
+        RAY_GFX_THROW_FAILED(m_pSwapChain->Present(0, 0));
     }
 
     Renderer3D::~Renderer3D()

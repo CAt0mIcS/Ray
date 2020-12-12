@@ -70,7 +70,7 @@ namespace At0::Ray
 					}
 
 					//CPU Usage too high without it (not ideal)
-					std::this_thread::sleep_for(std::chrono::nanoseconds(1500));
+					//std::this_thread::sleep_for(std::chrono::nanoseconds(1500));
 				}
 			}
 		);
