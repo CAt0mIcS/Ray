@@ -31,29 +31,29 @@ function(GeneratePCHFilters)
 endfunction()
 
 # Set all output directories of a specific target
-function(SetOutputDirectory target dir)
+macro(SetOutputDirectory target dir)
     if(MSVC)
         foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
             set(OUTCFGLOW "${OUTPUTCONFIG}")
             string( TOUPPER "${OUTPUTCONFIG}" OUTPUTCONFIG )
 
-            set(OUTPUTPATH "${CMAKE_BINARY_DIR}/bin/${OUTCFGLOW}/${dir}")
+            set(${target}_OUTPUTPATH "${CMAKE_BINARY_DIR}/bin/${OUTCFGLOW}/${dir}")
 
             set_target_properties("${target}" PROPERTIES 
-                LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${OUTPUTPATH}"
-                RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${OUTPUTPATH}"
-                ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${OUTPUTPATH}"
+                LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${${target}_OUTPUTPATH}"
+                RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${${target}_OUTPUTPATH}"
+                ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${${target}_OUTPUTPATH}"
             )
         endforeach()
     else()
-        set(OUTPUTPATH "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/${dir}")
+        set(${target}_OUTPUTPATH "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/${dir}")
         set_target_properties("${target}" PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${OUTPUTPATH}"
-            LIBRARY_OUTPUT_DIRECTORY "${OUTPUTPATH}"
-            RUNTIME_OUTPUT_DIRECTORY "${OUTPUTPATH}"
+            ARCHIVE_OUTPUT_DIRECTORY "${${target}_OUTPUTPATH}"
+            LIBRARY_OUTPUT_DIRECTORY "${${target}_OUTPUTPATH}"
+            RUNTIME_OUTPUT_DIRECTORY "${${target}_OUTPUTPATH}"
         )
     endif()
-endfunction()
+endmacro()
 
 # Set Working directory (VS ONLY)
 function(SetWorkingDirectory target dir)

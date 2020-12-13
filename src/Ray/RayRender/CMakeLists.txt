@@ -68,24 +68,18 @@ set(PUBLIC_LIB
 	""
 )
 
+set(PRIVATE_LIB
+    "GLFW"
+    "Glad"
+    "RayDebug"
+    "RayEvent"
+    "assimp"
+)
+
 if(WIN32)
-    set(PRIVATE_LIB
-        "D3D11"
-        "DXGI"
-        "D3DCompiler"
-        "GLFW"
-	"Glad"
-	"RayDebug"
-	"RayEvent"
-    )
-elseif(UNIX)
-    set(PRIVATE_LIB
-        "GLFW"
-	"Glad"
-	"RayDebug"
-	"RayEvent"
-    )
+list(APPEND PRIVATE_LIB "D3D11" "DXGI" "D3DCompiler")
 endif()
+
 
 
 add_library("RayRender" SHARED "${SRC}")
@@ -110,6 +104,13 @@ target_precompile_headers("RayRender" PRIVATE "include/RayRender/rlrpch.h")
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("RayRender" "")
 SetWorkingDirectory("RayRender" "")
+
+
+# ------------------------------------------------------------------------------------------------
+# Copy pre-compiled assimp dll into output directory (TODO: Move somewhere else!)
+add_custom_command(TARGET "RayRender" POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/assimp/lib/${RL_ARCHITECTURE}/assimp-vc142-mt.dll" "${RayRender_OUTPUTPATH}")
 
 
 # Set Pixel and Vertex Shaders to compile in VS
