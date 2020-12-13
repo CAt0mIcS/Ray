@@ -47,7 +47,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="name">Is the name of the window to find</param>
 		/// <returns>The found window or nullptr if the window wasn't found</returns>
-		Window* FindWindowByName(const std::string_view name);
+		Window& FindWindowByName(const std::string_view name);
 
 		/// <summary>
 		/// Getter for this application, doesn't increment the std::shared_ptr reference count
@@ -78,7 +78,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="layer">Is a raw, (heap-allocated) pointer to the layer</param>
 		/// <returns>The pushed layer</returns>
-		Layer* PushLayer(Layer* layer);
+		Layer* PushLayer(Ref<Layer> layer);
 
 		/// <summary>
 		/// Pushes a new window onto the stack
@@ -127,7 +127,7 @@ namespace At0::Ray
 		/// <summary>
 		/// Structure holding all Layers pushed into the application
 		/// </summary>
-		Stack<Layer*> m_LayerStack;
+		Stack<Ref<Layer>> m_LayerStack;
 
 		/// <summary>
 		/// Structure holding all Windows pushed into the application

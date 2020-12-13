@@ -37,16 +37,16 @@ namespace At0::Ray
 		delete s_Instance;
 	}
 
-	Window* Application::FindWindowByName(const std::string_view name)
+	Window& Application::FindWindowByName(const std::string_view name)
 	{
 		for (const Ref<Window>& win : m_WindowStack)
 		{
 			if (win->GetName() == name)
-				return win.get();
+				return *win.get();
 		}
 
-		// TODO: Throw exception
-		return nullptr;
+		// QUESTION: What to throw here?
+		throw std::runtime_error("Window was not found");
 	}
 
 	int Application::Run()
@@ -66,7 +66,7 @@ namespace At0::Ray
 
 					// -------------------------------------------------------------------------------------
 					// Update Layers
-					for (auto* layer : m_LayerStack)
+					for (Ref<Layer>& layer : m_LayerStack)
 					{
 						layer->OnUpdate(timestep);
 					}
@@ -104,12 +104,12 @@ namespace At0::Ray
 	}
 
 	// QUESTIONA: Taking Layer by raw pointer but window by shared_ptr (use shared_ptr)
-	Layer* Application::PushLayer(Layer* layer)
+	Layer* Application::PushLayer(Ref<Layer> layer)
 	{
 		RAY_PROFILE_FUNCTION();
 
 		m_LayerStack.PushBack(layer);
-		return layer;
+		return layer.get();
 	}
 
 	Window* Application::PushWindow(Ref<Window> window)
