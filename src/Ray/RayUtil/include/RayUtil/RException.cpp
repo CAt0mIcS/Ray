@@ -1,5 +1,5 @@
-#include "utpch.h"
-#include "RayUtil/Exception.h"
+#include "Rupch.h"
+#include "RayUtil/RException.h"
 
 #ifdef _WIN32
 #include <DxErr/dxerr.h>

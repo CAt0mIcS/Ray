@@ -5,8 +5,8 @@
 
 #include <RayDebug/RInstrumentor.h>
 #include <RayDebug/RLogger.h>
-#include <RayUtil/Exception.h>
-#include <RayUtil/TypeConvert.h>
+#include <RayUtil/RException.h>
+#include <RayUtil/RTypeConvert.h>
 
 
 namespace At0::Ray

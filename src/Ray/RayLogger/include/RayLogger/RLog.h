@@ -1,6 +1,6 @@
 #pragma once
 
-#include <../../RayUtil/include/RayUtil/CoreConfig.h>
+#include <../../RayUtil/include/RayUtil/RCoreConfig.h>
 
 #if RAY_ENABLE_LOGGING
 

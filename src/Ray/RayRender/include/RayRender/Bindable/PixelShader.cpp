@@ -1,8 +1,8 @@
 #include "RayRender/rlrpch.h"
 #include "PixelShader.h"
 
-#include <RayUtil/TypeConvert.h>
-#include <RayUtil/Exception.h>
+#include <RayUtil/RTypeConvert.h>
+#include <RayUtil/RException.h>
 #include <RayDebug/RInstrumentor.h>
 
 namespace WRL = Microsoft::WRL;

@@ -3,8 +3,8 @@
 #ifndef NDEBUG
 
 #include "RLogger.h"
-#include <../../RayUtil/include/RayUtil/TypeConvert.h>
-#include <../../RayUtil/include/RayUtil/Serialize.h>
+#include <../../RayUtil/include/RayUtil/RTypeConvert.h>
+#include <../../RayUtil/include/RayUtil/RSerialize.h>
 
 #include <assert.h>
 #include "RDBase.h"

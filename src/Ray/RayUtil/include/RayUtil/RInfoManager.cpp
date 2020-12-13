@@ -1,9 +1,10 @@
-#include "utpch.h"
+#include "Rupch.h"
+#include "RInfoManager.h"
+
 #if RAY_ENABLE_INFO || RAY_ENABLE_WARNING
 
-#include "InfoManager.h"
 
-#include "MessageBox.h"
+#include "RMessageBox.h"
 
 
 #ifdef _WIN32

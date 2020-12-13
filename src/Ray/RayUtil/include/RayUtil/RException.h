@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include <string>
 
-#include "RlUBase.h"
-#include "Serialize.h"
+#include "RUBase.h"
+#include "RSerialize.h"
 
 #ifdef _WIN32
 	#include <Windows.h>

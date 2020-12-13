@@ -1,22 +1,22 @@
 set(SRC
-    "include/RayUtil/utpch.h"
-    "include/RayUtil/CoreConfig.h"
-    "include/RayUtil/RlUBase.h"
-    "include/RayUtil/Serialize.h"
-    "include/RayUtil/KeyCodes.h"
+    "include/RayUtil/Rupch.h"
+    "include/RayUtil/RCoreConfig.h"
+    "include/RayUtil/RUBase.h"
+    "include/RayUtil/RSerialize.h"
+    "include/RayUtil/RKeyCodes.h"
 
-    "include/RayUtil/Exception.h"
-    "include/RayUtil/Exception.cpp"
-    "include/RayUtil/Random.h"
-    "include/RayUtil/Random.cpp"
-    "include/RayUtil/TypeConvert.h"
-    "include/RayUtil/TypeConvert.cpp"
-    "include/RayUtil/InfoManager.h"
-    "include/RayUtil/InfoManager.cpp"
-    "include/RayUtil/MessageBox.h"
-    "include/RayUtil/MessageBox.cpp"
-    "include/RayUtil/Helper.h"
-    "include/RayUtil/Helper.cpp"
+    "include/RayUtil/RException.h"
+    "include/RayUtil/RException.cpp"
+    "include/RayUtil/RRandom.h"
+    "include/RayUtil/RRandom.cpp"
+    "include/RayUtil/RTypeConvert.h"
+    "include/RayUtil/RTypeConvert.cpp"
+    "include/RayUtil/RInfoManager.h"
+    "include/RayUtil/RInfoManager.cpp"
+    "include/RayUtil/RMessageBox.h"
+    "include/RayUtil/RMessageBox.cpp"
+    "include/RayUtil/RHelper.h"
+    "include/RayUtil/RHelper.cpp"
 )
 
 set(PUBLIC_INC
@@ -55,7 +55,7 @@ target_link_libraries("RayUtil"
         "${PUBLIC_LIB}"
 )
 
-target_precompile_headers("RayUtil" PRIVATE "include/RayUtil/utpch.h")
+target_precompile_headers("RayUtil" PRIVATE "include/RayUtil/Rupch.h")
 set_target_properties("RayUtil" PROPERTIES FOLDER "RayUtilities")
 target_compile_definitions("RayUtil" PRIVATE "RU_BUILD")
 AddRecursiveFilters("${SRC}")

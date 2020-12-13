@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <RayUtil/CoreConfig.h>
+#include <RayUtil/RCoreConfig.h>
 
 #if RAY_ENABLE_LOGGING
 #include "RDBase.h"

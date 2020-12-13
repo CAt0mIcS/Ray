@@ -12,6 +12,6 @@
 
 
 #include <../../RayEvent/include/RayEvent/RayEvent.h>
-#include <../../RayUtil/include/RayUtil/MessageBox.h>
+#include <../../RayUtil/include/RayUtil/RMessageBox.h>
 
 

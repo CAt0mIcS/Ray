@@ -1,7 +1,7 @@
 #include "RayRender/rlrpch.h"
 #include "IndexBuffer.h"
 
-#include <RayUtil/Exception.h>
+#include <RayUtil/RException.h>
 #include <RayDebug/RInstrumentor.h>
 
 

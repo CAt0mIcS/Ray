@@ -1,12 +1,12 @@
 #pragma once
 
-#include "CoreConfig.h"
+#include "RCoreConfig.h"
 
 #if RAY_ENABLE_INFO || RAY_ENABLE_WARNING
-#include "RlUBase.h"
+#include "RUBase.h"
 
-#include "Serialize.h"
-#include "MessageBox.h"
+#include "RSerialize.h"
+#include "RMessageBox.h"
 
 #include <string>
 #include <stdint.h>

@@ -9,7 +9,7 @@
 #include <RayDebug/RAssert.h>
 #include <RayDebug/RInstrumentor.h>
 #include <RayDebug/RLogger.h>
-#include <RayUtil/Exception.h>
+#include <RayUtil/RException.h>
 
 
 namespace At0::Ray

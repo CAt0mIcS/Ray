@@ -1,7 +1,7 @@
 set(SRC
     "include/RayDebug/RInstrumentor.cpp"
     "include/RayDebug/RLogger.cpp"
-    "include/RayDebug/rdpch.h"
+    "include/RayDebug/Rdpch.h"
 
     "include/RayDebug/RInstrumentor.h"
     "include/RayDebug/RLogger.h"
@@ -43,7 +43,7 @@ target_link_libraries("RayDebug"
 
 set_target_properties("RayDebug" PROPERTIES FOLDER "RayUtilities")
 target_compile_definitions("RayDebug" PRIVATE "RD_BUILD")
-target_precompile_headers("RayDebug" PRIVATE "include/RayDebug/rdpch.h")
+target_precompile_headers("RayDebug" PRIVATE "include/RayDebug/Rdpch.h")
 # add_dependencies("RlDebug" "RlUtilities")
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("RayDebug" "")

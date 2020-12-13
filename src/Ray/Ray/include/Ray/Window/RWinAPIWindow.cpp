@@ -8,9 +8,9 @@
 #include <RayDebug/RLogger.h>
 #include <RayDebug/RAssert.h>
 
-#include <RayUtil/Exception.h>
-#include <RayUtil/Random.h>
-#include <RayUtil/KeyCodes.h>
+#include <RayUtil/RException.h>
+#include <RayUtil/RRandom.h>
+#include <RayUtil/RKeyCodes.h>
 
 #include <RayRender/Renderer3D.h>
 
