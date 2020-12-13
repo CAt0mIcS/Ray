@@ -14,7 +14,7 @@ namespace At0::Ray
 	class RR_API PixelShader : public Bindable, private GraphicsResource
 	{
 	public:
-		PixelShader(const std::string_view filepath);
+		PixelShader(std::string_view filepath);
 		virtual void Bind() override;
 
 	private:

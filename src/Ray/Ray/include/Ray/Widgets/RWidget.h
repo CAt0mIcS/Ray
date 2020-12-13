@@ -31,7 +31,7 @@ namespace At0::Ray
 		/// Gets the unique name of the current Widget
 		/// </summary>
 		/// <returns>The name of the widget</returns>
-		const std::string_view GetName() const { return m_Name; }
+		std::string_view GetName() const { return m_Name; }
 
 		/// <summary>
 		/// Moves the position of the Widget by the specified values
@@ -92,7 +92,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="name">Is the child's name</param>
 		/// <returns>The child, or nullptr if no child was found</returns>
-		Widget* FindChild(const std::string_view name);
+		Widget* FindChild(std::string_view name);
 
 		/// <summary>
 		/// Adds a new child to this control
@@ -103,7 +103,7 @@ namespace At0::Ray
 		/// <param name="...arg">Are all the arguments to pass to the constructor of T</param>
 		/// <returns>The added child</returns>
 		template<typename T, typename... Args, typename = std::enable_if_t<std::is_convertible_v<T*, Widget*>>>
-		T* AddChild(const std::string_view name, Args&&... arg);
+		T* AddChild(std::string_view name, Args&&... arg);
 
 		/// <summary>
 		/// Requests the specific Widget to be redrawn
@@ -170,7 +170,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="name">Is the unique name of the Widget</param>
 		/// <param name="parent">Is the parent of this Widget</param>
-		Widget(const std::string_view name, Widget* parent = nullptr);
+		Widget(std::string_view name, Widget* parent = nullptr);
 
 		/// <summary>
 		/// Recursively searches through all children and finds the one which should receive the specified event
@@ -204,7 +204,7 @@ namespace At0::Ray
 
 
 	template<typename T, typename... Args, typename>
-	inline T* Widget::AddChild(const std::string_view name, Args&&... args)
+	inline T* Widget::AddChild(std::string_view name, Args&&... args)
 	{
 		return (T*)m_Children.emplace_back(MakeScope(name, std::forward<Args>(args)...));
 	}

@@ -7,7 +7,7 @@
 
 namespace At0::Zeal
 {
-	Sandbox::Sandbox(const std::string_view commandLine)
+	Sandbox::Sandbox(std::string_view commandLine)
 		: Application(commandLine)
 	{
 		//RAY_PROFILE_FUNCTION();

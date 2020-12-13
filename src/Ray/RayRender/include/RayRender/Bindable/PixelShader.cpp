@@ -9,7 +9,7 @@ namespace WRL = Microsoft::WRL;
 
 namespace At0::Ray
 {
-    PixelShader::PixelShader(const std::string_view filepath)
+    PixelShader::PixelShader(std::string_view filepath)
     {
         RAY_PROFILE_FUNCTION();
         WRL::ComPtr<ID3DBlob> pBlob;

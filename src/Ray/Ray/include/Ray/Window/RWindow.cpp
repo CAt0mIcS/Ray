@@ -16,7 +16,7 @@
 
 namespace At0::Ray
 {
-	Ref<Window> Window::Create(const std::string_view name, const Point2 pos, const Size2 size, Widget* parent)
+	Ref<Window> Window::Create(std::string_view name, const Point2 pos, const Size2 size, Widget* parent)
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -34,7 +34,7 @@ namespace At0::Ray
 		return nullptr;
 	}
 
-	Window::Window(const std::string_view name, Widget* parent)
+	Window::Window(std::string_view name, Widget* parent)
 		: Widget(name, parent), m_CurrentlyHovering(nullptr)
 	{
 	}

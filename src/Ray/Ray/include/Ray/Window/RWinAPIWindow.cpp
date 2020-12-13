@@ -21,7 +21,7 @@
 
 namespace At0::Ray
 {
-	WinAPIWindow::WinAPIWindow(const std::string_view name, const Point2 pos, const Size2 size, Widget* parent)
+	WinAPIWindow::WinAPIWindow(std::string_view name, const Point2 pos, const Size2 size, Widget* parent)
 		: Window(name, parent), m_OldPos{}, m_OldSize{}, m_hWnd(0)
 	{
 		RAY_PROFILE_FUNCTION();
@@ -409,7 +409,7 @@ namespace At0::Ray
 		return str;
 	}
 
-	void WinAPIWindow::SetTitle(const std::string_view title)
+	void WinAPIWindow::SetTitle(std::string_view title)
 	{
 		RAY_WND_THROW_LAST_FAILED(SetWindowTextA(m_hWnd, title.data()));
 	}
@@ -468,7 +468,7 @@ namespace At0::Ray
 		}
 	}
 
-	void WinAPIWindow::SetIcon(const std::string_view path)
+	void WinAPIWindow::SetIcon(std::string_view path)
 	{
 		RAY_ASSERT(false, "Incomplete Implementation");
 	}

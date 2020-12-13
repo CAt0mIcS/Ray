@@ -15,7 +15,7 @@
 
 namespace At0::Zeal
 {
-	void ExtensionLoader::Start(const std::string_view searchPath, const std::function<void(Ray::Layer*)>& onNewLayer)
+	void ExtensionLoader::Start(std::string_view searchPath, const std::function<void(Ray::Layer*)>& onNewLayer)
 	{
 		using DirectoryIterator = std::filesystem::directory_iterator;
 		const std::string ending = ".dll";

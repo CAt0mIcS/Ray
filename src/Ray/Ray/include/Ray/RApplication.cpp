@@ -16,7 +16,7 @@ namespace At0::Ray
 {
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application(const std::string_view commandLine)
+	Application::Application(std::string_view commandLine)
 		: m_LayerStack{}
 	{
 		if (s_Instance)
@@ -37,7 +37,7 @@ namespace At0::Ray
 		delete s_Instance;
 	}
 
-	Window& Application::FindWindowByName(const std::string_view name)
+	Window& Application::FindWindowByName(std::string_view name)
 	{
 		for (const Ref<Window>& win : m_WindowStack)
 		{

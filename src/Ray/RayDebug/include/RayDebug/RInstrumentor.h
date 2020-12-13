@@ -53,7 +53,7 @@ namespace At0::Ray::Debug
 		/// </summary>
 		/// <param name="name">Is the session name</param>
 		/// <param name="filepath">Is a path to a file to export the profile result to</param>
-		void BeginSession(const std::string_view name, const std::string_view filepath = "results.json");
+		void BeginSession(std::string_view name, std::string_view filepath = "results.json");
 
 		/// <summary>
 		/// Closes the Session

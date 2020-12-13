@@ -10,7 +10,7 @@
 
 namespace At0::Zeal
 {
-    void ExtensionLoader::Start(const std::string_view searchPath, const std::function<void(Ray::Layer*)>& onNewLayer)
+    void ExtensionLoader::Start(std::string_view searchPath, const std::function<void(Ray::Layer*)>& onNewLayer)
     {
         const std::string ending = ".so";
         using LayerCreateFunc = Ray::Layer* (*)();

@@ -34,7 +34,7 @@ namespace At0::Log
 		/// File Logger Constructor
 		/// </summary>
 		/// <param name="filepath">Is the path to the log file. Note: The file will be cleared when the logger starts</param>
-		FileLogger(const std::string_view filepath)
+		FileLogger(std::string_view filepath)
 			: m_FilePath(filepath)
 		{
 
@@ -62,7 +62,7 @@ namespace At0::Log
 		/// This should only be used if the logger was created with the default Constructor to set the path once
 		/// </summary>
 		/// <param name="filepath"></param>
-		void SetFilePath(const std::string_view filepath) { m_FilePath = filepath; }
+		void SetFilePath(std::string_view filepath) { m_FilePath = filepath; }
 
 		/// <summary>
 		/// Opens the FileStream
@@ -111,7 +111,7 @@ namespace At0::Log
 		/// Writes the message to the output stream
 		/// </summary>
 		/// <param name="message">Is the message to output</param>
-		virtual void Log(const std::string_view message) override
+		virtual void Log(std::string_view message) override
 		{
 #ifndef ZL_LOG_NON_THREAD_SAVE
 

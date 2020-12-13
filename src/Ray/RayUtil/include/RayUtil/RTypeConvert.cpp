@@ -9,7 +9,7 @@ namespace At0::Util
 {
 #ifdef _WIN32
 
-	std::wstring MultiByteToWideChar(const std::string_view str)
+	std::wstring MultiByteToWideChar(std::string_view str)
 	{
 		auto size = ::MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, str.data(), -1, nullptr, 0);
 
@@ -40,7 +40,7 @@ namespace At0::Util
 
 #elif defined(__linux__)
 
-	std::wstring MultiByteToWideChar(const std::string_view str)
+	std::wstring MultiByteToWideChar(std::string_view str)
 	{
 		std::wstring buff;
 		buff.resize(str.size());

@@ -15,7 +15,7 @@ namespace At0::Ray
 	class RR_API VertexShader : public Bindable, private GraphicsResource
 	{
 	public:
-		VertexShader(const std::string_view filepath);
+		VertexShader(std::string_view filepath);
 		virtual void Bind() override;
 		ID3DBlob* GetBytecode() const;
 

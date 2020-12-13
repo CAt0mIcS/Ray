@@ -41,7 +41,7 @@ namespace At0::Ray
 		/// <param name="name">Is the unique Widget name</param>
 		/// <param name="parent">Is a parent Window</param>
 		/// <returns>The created Window</returns>
-		static Ref<Window> Create(const std::string_view name, const Point2 pos, const Size2 size, Widget* parent = nullptr);
+		static Ref<Window> Create(std::string_view name, const Point2 pos, const Size2 size, Widget* parent = nullptr);
 
 		/// <summary>
 		/// Called every frame to read from the internal message queue
@@ -58,7 +58,7 @@ namespace At0::Ray
 		/// Sets the Window Title
 		/// </summary>
 		/// <param name="title">Is the new Window Title</param>
-		virtual void SetTitle(const std::string_view title) = 0;
+		virtual void SetTitle(std::string_view title) = 0;
 
 		/// <summary>
 		/// Shows the Window
@@ -95,7 +95,7 @@ namespace At0::Ray
 		/// Sets the window icon
 		/// </summary>
 		/// <param name="path">Is the path to the .ico file</param>
-		virtual void SetIcon(const std::string_view path) = 0;
+		virtual void SetIcon(std::string_view path) = 0;
 
 		/// <summary>
 		/// Initializes the 3D Renderer, checks if it has already been initialized
@@ -137,7 +137,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="name">Is the unique name of the window</param>
 		/// <param name="parent">Is the parent of this window</param>
-		Window(const std::string_view name, Widget* parent = nullptr);
+		Window(std::string_view name, Widget* parent = nullptr);
 
 		/// <summary>
 		/// Loops over all children and figures out if we need to send a HoverEnter/HoverLeave Event

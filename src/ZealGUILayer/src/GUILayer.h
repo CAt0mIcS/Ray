@@ -18,7 +18,7 @@ namespace At0::Layers
 		Ray::EventListener<Ray::MouseWheelRightEvent>
 	{
 	public:
-		GUILayer(const std::string_view name);
+		GUILayer(std::string_view name);
 
 		virtual void OnUpdate(Ray::Timestep ts) override;
 		virtual void OnEvent(Ray::Widget* receiver, Ray::MouseMoveEvent& e) override;

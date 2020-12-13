@@ -28,7 +28,7 @@ namespace At0::Ray::Debug
 		/// </summary>
 		/// <param name="filepath">Is the path to a log file</param>
 		/// <param name="logLvl">Is the log level</param>
-		static void Init(const std::string_view filepath, Log::LogLevel logLvl);
+		static void Init(std::string_view filepath, Log::LogLevel logLvl);
 
 		/// <summary>
 		/// Closes the filestream and deletes the loggers

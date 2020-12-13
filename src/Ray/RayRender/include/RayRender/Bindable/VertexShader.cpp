@@ -8,7 +8,7 @@
 
 namespace At0::Ray
 {
-    VertexShader::VertexShader(const std::string_view filepath)
+    VertexShader::VertexShader(std::string_view filepath)
     {
         RAY_PROFILE_FUNCTION();
         // RAY_TODO: Abort called here sometimes

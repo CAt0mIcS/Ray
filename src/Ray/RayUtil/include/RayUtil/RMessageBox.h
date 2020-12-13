@@ -32,6 +32,6 @@ namespace At0::Ray
 		};
 
 	public:
-		RMessageBox(const std::string_view title, const std::string_view text, Button buttons = Button::Ok, Icon icon = Icon::None, Flags flags = Flags::None);
+		RMessageBox(std::string_view title, std::string_view text, Button buttons = Button::Ok, Icon icon = Icon::None, Flags flags = Flags::None);
 	};
 }

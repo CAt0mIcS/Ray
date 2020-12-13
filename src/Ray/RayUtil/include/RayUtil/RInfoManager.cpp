@@ -15,7 +15,7 @@ namespace At0::Util
 {
 
 
-	std::string InfoManager::GetDefaultString(uint16_t line, const std::string_view file)
+	std::string InfoManager::GetDefaultString(uint16_t line, std::string_view file)
 	{
 		std::stringstream oss;
 		oss << "[File] " << file << '\n'
@@ -27,12 +27,12 @@ namespace At0::Util
 #ifdef _WIN32
 	HRESULT InfoManager::m_Hr;
 
-	void InfoManager::DxWarn(HRESULT hr, uint16_t line, const std::string_view file, const std::string_view type)
+	void InfoManager::DxWarn(HRESULT hr, uint16_t line, std::string_view file, std::string_view type)
 	{
 		Ray::RMessageBox(type, GetDxString(type, line, file), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Warn, Ray::RMessageBox::Flags::DefaultDesktop);
 	}
 
-	void InfoManager::DxInfo(HRESULT hr, uint16_t line, const std::string_view file, const std::string_view type)
+	void InfoManager::DxInfo(HRESULT hr, uint16_t line, std::string_view file, std::string_view type)
 	{
 		Ray::RMessageBox(type, GetDxString(type, line, file), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Info, Ray::RMessageBox::Flags::DefaultDesktop);
 	}
@@ -49,7 +49,7 @@ namespace At0::Util
 		return buff;
 	}
 
-	std::string InfoManager::GetDxString(const std::string_view type, uint16_t line, std::string_view file)
+	std::string InfoManager::GetDxString(std::string_view type, uint16_t line, std::string_view file)
 	{
 		std::ostringstream oss;
 		oss << type << '\n'

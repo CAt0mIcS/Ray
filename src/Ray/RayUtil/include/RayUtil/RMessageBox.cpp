@@ -3,7 +3,7 @@
 
 namespace At0::Ray
 {
-	RMessageBox::RMessageBox(const std::string_view title, const std::string_view text, Button buttons, Icon icon, Flags flags)
+	RMessageBox::RMessageBox(std::string_view title, std::string_view text, Button buttons, Icon icon, Flags flags)
 	{
 #ifdef _WIN32
 

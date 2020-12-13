@@ -31,7 +31,7 @@ namespace At0::Ray
 		/// Layer Constructor
 		/// </summary>
 		/// <param name="name">Is the unique name of this Layer</param>
-		Layer(const std::string_view name);
+		Layer(std::string_view name);
 
 		/// <summary>
 		/// Function which is called every frame

@@ -7,7 +7,7 @@
 
 namespace At0::Ray::Debug
 {
-	void Instrumentor::BeginSession(const std::string_view name, const std::string_view filepath)
+	void Instrumentor::BeginSession(std::string_view name, std::string_view filepath)
 	{
 		std::scoped_lock lock(m_Mutex);
 

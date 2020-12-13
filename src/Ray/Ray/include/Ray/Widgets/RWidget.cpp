@@ -35,7 +35,7 @@ namespace At0::Ray
 
     }
 
-    Widget* Widget::FindChild(const std::string_view name)
+    Widget* Widget::FindChild(std::string_view name)
     {
         RAY_PROFILE_FUNCTION();
         for (auto& child : m_Children)
@@ -107,7 +107,7 @@ namespace At0::Ray
         RAY_LOG_DEBUG("[Widget] '{0}' destroyed", this->GetName());
     }
 
-    Widget::Widget(const std::string_view name, Widget* parent)
+    Widget::Widget(std::string_view name, Widget* parent)
         : m_Name(name), m_Parent(parent), m_Children{}, m_Matrix{}
     {
         RAY_PROFILE_FUNCTION();

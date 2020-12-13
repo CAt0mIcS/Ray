@@ -40,7 +40,7 @@ namespace At0::Ray
 	}
 
 
-	OpenGLWindow::OpenGLWindow(const std::string_view name, const Point2& pos, const Size2& size, Widget* parent)
+	OpenGLWindow::OpenGLWindow(std::string_view name, const Point2& pos, const Size2& size, Widget* parent)
 		: Window(name, parent), m_OldPos{}, m_OldSize{}, m_hWnd(0)
 	{
 		RAY_PROFILE_FUNCTION();
@@ -128,7 +128,7 @@ namespace At0::Ray
 
 	}
 	
-	void OpenGLWindow::SetTitle(const std::string_view title)
+	void OpenGLWindow::SetTitle(std::string_view title)
 	{
 		RAY_PROFILE_FUNCTION();
 		glfwSetWindowTitle(m_hWnd, title.data());
@@ -194,7 +194,7 @@ namespace At0::Ray
 		glfwPollEvents();
 	}
 
-	void OpenGLWindow::SetIcon(const std::string_view path)
+	void OpenGLWindow::SetIcon(std::string_view path)
 	{
 		RAY_ASSERT(false, "Incomplete Implementation");
 	}

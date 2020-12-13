@@ -17,7 +17,7 @@ namespace At0::Util
 	/// </summary>
 	/// <param name="str">Is the multi byte string</param>
 	/// <returns>The wide character string</returns>
-	RU_API std::wstring MultiByteToWideChar(const std::string_view str);
+	RU_API std::wstring MultiByteToWideChar(std::string_view str);
 
 	/// <summary>
 	/// Converts a wide character string (std::string) to multi byte string (std::string)

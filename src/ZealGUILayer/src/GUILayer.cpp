@@ -9,7 +9,7 @@
 #include <RayRender/Renderer3D.h>
 #include <RayRender/Drawable/Triangle.h>
 #include <RayRender/Drawable/Cube.h>
-
+#include <RayRender/Drawable/Model.h>
 
 
 
@@ -66,12 +66,13 @@ FPS g_FPS;
 namespace At0::Layers
 {
 	std::vector<Ray::Cube> cubes;
-	static constexpr uint64_t numCubes = 10000;
+	static constexpr uint64_t numCubes = 1;
+	Ray::Model model("../Resources/Cube.obj")
 	std::mt19937 mtEngine;
 
 	// QUESTIONA: The way to get the MainWindow is too long? "Ray::Application::Get().GetMainWindow()" (fn in (maybe) Layer to get or static fn somewhere)
 	// I can only listen to events from one window (MouseMoveEvent from only MainWindow)
-	GUILayer::GUILayer(const std::string_view name)
+	GUILayer::GUILayer(std::string_view name)
 		: Ray::Layer(name),
 		EventListener<Ray::WindowCloseEvent>(Ray::Application::Get().GetMainWindow()),
 		EventListener<Ray::KeyPressedEvent>(Ray::Application::Get().GetMainWindow()),

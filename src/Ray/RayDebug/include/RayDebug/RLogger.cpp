@@ -12,7 +12,7 @@ namespace At0::Ray::Debug
 
 	Log::FileLogger Logger::s_FileLogger;
 
-	void Logger::Init(const std::string_view filepath, Log::LogLevel logLvl)
+	void Logger::Init(std::string_view filepath, Log::LogLevel logLvl)
 	{
 		s_FileLogger = Log::FileLogger(filepath);
 		s_FileLogger.SetLogLevel(logLvl);

@@ -18,7 +18,7 @@ namespace At0::Util
 	{
 	public:
 		template<typename... Args>
-		static void Info(const std::string_view baseStr, uint16_t line, const std::string_view file, const std::string_view type, Args&&... args)
+		static void Info(std::string_view baseStr, uint16_t line, std::string_view file, std::string_view type, Args&&... args)
 		{
 			std::ostringstream oss;
 			oss << type << '\n'
@@ -29,7 +29,7 @@ namespace At0::Util
 		}
 
 		template<typename... Args>
-		static void Warn(const std::string_view baseStr, uint16_t line, const std::string_view file, const std::string_view type, Args&&... args)
+		static void Warn(std::string_view baseStr, uint16_t line, std::string_view file, std::string_view type, Args&&... args)
 		{
 			std::ostringstream oss;
 			oss << type << '\n'
@@ -40,17 +40,17 @@ namespace At0::Util
 		}
 
 	private:
-		static std::string GetDefaultString(uint16_t line, const std::string_view file);
+		static std::string GetDefaultString(uint16_t line, std::string_view file);
 
 #ifdef _WIN32
 	public:
-		static void DxWarn(HRESULT hr, uint16_t line, const std::string_view file, const std::string_view type);
-		static void DxInfo(HRESULT hr, uint16_t line, const std::string_view file, const std::string_view type);
+		static void DxWarn(HRESULT hr, uint16_t line, std::string_view file, std::string_view type);
+		static void DxInfo(HRESULT hr, uint16_t line, std::string_view file, std::string_view type);
 
 	private:
 		static std::string GetDxErrorString();
 		static std::string GetDxErrorDescription();
-		static std::string GetDxString(const std::string_view type, uint16_t line, std::string_view file);
+		static std::string GetDxString(std::string_view type, uint16_t line, std::string_view file);
 
 	private:
 		static HRESULT m_Hr;

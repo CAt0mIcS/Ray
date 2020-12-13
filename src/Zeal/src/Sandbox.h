@@ -14,7 +14,7 @@ namespace At0::Zeal
 		/// <summary>
 		/// Sandbox Constructor
 		/// </summary>
-		Sandbox(const std::string_view commandLine);
+		Sandbox(std::string_view commandLine);
 
 		/// <summary>
 		/// Sandbox Deconstructor

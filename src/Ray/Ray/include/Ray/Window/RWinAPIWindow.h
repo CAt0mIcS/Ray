@@ -24,7 +24,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="name">Is the unique name of the window</param>
 		/// <param name="parent">Is the parent of this window</param>
-		WinAPIWindow(const std::string_view name, const Point2 pos, const Size2 size, Widget* parent = nullptr);
+		WinAPIWindow(std::string_view name, const Point2 pos, const Size2 size, Widget* parent = nullptr);
 		
 		/// <summary>
 		/// Window Deconstructor
@@ -41,7 +41,7 @@ namespace At0::Ray
 		/// Sets the Window Title
 		/// </summary>
 		/// <param name="title">Is the new Window Title</param>
-		virtual void SetTitle(const std::string_view title) override;
+		virtual void SetTitle(std::string_view title) override;
 
 		/// <summary>
 		/// Shows the Window
@@ -83,7 +83,7 @@ namespace At0::Ray
 		/// Sets the window icon
 		/// </summary>
 		/// <param name="path">Is the path to the .ico file</param>
-		virtual void SetIcon(const std::string_view path) override;
+		virtual void SetIcon(std::string_view path) override;
 
 		/// <summary>
 		/// Getter for the Native Window

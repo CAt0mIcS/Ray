@@ -2,9 +2,9 @@ set(SRC
     "include/RayRender/TypeDefines.h"
     "include/RayRender/RlRBase.h"
     "include/RayRender/rlrpch.h"
+    
     "include/RayRender/Renderer3D.h"
     "include/RayRender/Renderer3D.cpp"
-
     "include/RayRender/GraphicsResource.cpp"
     "include/RayRender/GraphicsResource.h"
     "include/RayRender/RendererAPI.h"
@@ -37,6 +37,10 @@ set(SRC
     "include/RayRender/Drawable/Triangle.cpp"
     "include/RayRender/Drawable/Cube.h"
     "include/RayRender/Drawable/Cube.cpp"
+    "include/RayRender/Drawable/Model.h"
+    "include/RayRender/Drawable/Model.cpp"
+    "include/RayRender/Drawable/Mesh.h"
+    "include/RayRender/Drawable/Mesh.cpp"
 
 
     # ----------------------------------------------

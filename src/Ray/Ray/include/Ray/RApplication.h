@@ -47,7 +47,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="name">Is the name of the window to find</param>
 		/// <returns>The found window or nullptr if the window wasn't found</returns>
-		Window& FindWindowByName(const std::string_view name);
+		Window& FindWindowByName(std::string_view name);
 
 		/// <summary>
 		/// Getter for this application, doesn't increment the std::shared_ptr reference count
@@ -104,7 +104,7 @@ namespace At0::Ray
 		/// Application Constructor
 		/// <param name="commandLine">Are all command line arguments from the main method</param>
 		/// </summary>
-		Application(const std::string_view commandLine = "");
+		Application(std::string_view commandLine = "");
 
 	private:
 		/// <summary>
