@@ -1,7 +1,7 @@
 #include "glpch.h"
 #include "GUILayer.h"
 
-// You need to include this to use the logger (QUESTION: But you shouldn't need to!)
+// You need to include this to use the logger (QUESTIONA: But you shouldn't need to!) (everything in .def file?)
 #include <RayDebug/RLogger.h>
 #include <RayDebug/RInstrumentor.h>
 
@@ -63,14 +63,13 @@ FPS g_FPS;
 
 
 
-
 namespace At0::Layers
 {
 	std::vector<Ray::Cube> cubes;
 	static constexpr uint64_t numCubes = 10000;
 	std::mt19937 mtEngine;
 
-	// QUESTION: The way to get the MainWindow is too long? "Ray::Application::Get().GetMainWindow()"
+	// QUESTIONA: The way to get the MainWindow is too long? "Ray::Application::Get().GetMainWindow()" (fn in (maybe) Layer to get or static fn somewhere)
 	// I can only listen to events from one window (MouseMoveEvent from only MainWindow)
 	GUILayer::GUILayer(const std::string_view name)
 		: Ray::Layer(name),
@@ -83,7 +82,7 @@ namespace At0::Layers
 		EventListener<Ray::MouseWheelRightEvent>(Ray::Application::Get().GetMainWindow())
 	{
 		EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().GetMainWindow());
-		//EventListener<Ray::MouseMoveEvent>::Subscribe(*Ray::Application::Get().FindWindowByName("Win0"));
+		EventListener<Ray::MouseMoveEvent>::Subscribe(*Ray::Application::Get().FindWindowByName("Win0"));
 
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] Startup");

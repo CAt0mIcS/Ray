@@ -120,7 +120,7 @@ namespace At0::Ray
 		virtual ~Window();
 
 	public:
-		// QUESTION: Global Mouse and Keyboard instead of MouseInput& GetMouse() fn?
+		// QUESTIONA: Global Mouse and Keyboard instead of MouseInput& GetMouse() fn? (Can keep it)
 
 		/// <summary>
 		/// The mouse holding information about which mouse button is pressed in this window
@@ -147,11 +147,11 @@ namespace At0::Ray
 
 	protected:
 
-		/// <QUESTION>
+		/// <QUESTIONA>
 		/// I could have e.g. m_hWnd in the base class (Window) (as protected) and then I wouldn't have to make the GetNativeWindow() function virtual.
 		/// 
-		/// Protected members?
-		/// </QUESTION>
+		/// Protected members? (Move to protected !)
+		/// </QUESTIONA>
 
 		/// <summary>
 		/// Specifies the control where the mouse is currently on

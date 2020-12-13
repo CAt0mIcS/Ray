@@ -2,7 +2,7 @@
 
 // Defined so Windows.h doesn't define min, max macro
 
-// QUESTION: Where to put this so it's global?
+// QUESTIONA: Where to put this so it's global? (globaldefines.h / use project settings)
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif

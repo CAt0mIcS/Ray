@@ -35,13 +35,13 @@ namespace At0::Ray
 		static void Destroy();
 
 
-		// QUESTION: Reference or pointer? 
+		// QUESTIONA: Reference or pointer? 
 		// Maybe Null --> Pointer
-		// Found or exception if not --> Reference
+		// Found or exception if not --> Reference (Exception --> Programm error! / assert)
 		// Exception or nullptr
 
-		// QUESTION: How can I call FindWindowByName just FindWindow (Windows.h define...)
-
+		// QUESTIONA: How can I call FindWindowByName just FindWindow (Windows.h define...) (no other way)
+		
 		/// <summary>
 		/// Finds a window in the stack with name
 		/// </summary>

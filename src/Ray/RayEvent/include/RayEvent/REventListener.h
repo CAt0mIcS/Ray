@@ -25,6 +25,7 @@ namespace At0::Ray
 		void Subscribe(EventDispatcher<E>& dispatcher)
 		{
 			dispatcher.AddListener(this);
+			m_Dispatchers.push_back(&dispatcher);
 		}
 
 		/// <summary>
@@ -37,9 +38,15 @@ namespace At0::Ray
 		}
 
 		/// <summary>
-		/// EventListener Constructor, DOES CURRENTLY NOT UNSUBSCRIBE ---> CALL ON INVALID PTR IN WINDOW (TODO)
+		/// EventListener Constructor
 		/// </summary>
-		virtual ~EventListener() = default;
+		virtual ~EventListener()
+		{
+			for (EventDispatcher<E>* dispatcher : m_Dispatchers)
+			{
+				dispatcher->RemoveListener(this);
+			}
+		}
 
 	protected:
 		/// <summary>
@@ -52,5 +59,9 @@ namespace At0::Ray
 		}
 
 		EventListener() = default;
+
+	private:
+		// TODO: Possible invalid memory access
+		std::vector<EventDispatcher<E>*> m_Dispatchers;
 	};
 }

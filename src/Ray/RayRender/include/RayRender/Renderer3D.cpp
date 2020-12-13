@@ -11,7 +11,7 @@ namespace WRL = Microsoft::WRL;
 
 namespace At0::Ray
 {
-    // QUESTION: Constructor would need to take dispatcher for every single event type!
+    // QUESTIONA: Constructor would need to take dispatcher for every single event type! (EventDispatcher<Event>&)
     Renderer3D::Renderer3D(EventDispatcher<WindowResizeEvent>& dispatcher)
         : m_Projection(DirectX::XMMatrixIdentity()), m_pSwapChain(nullptr), m_pTarget(nullptr), m_hWnd(0),
         EventListener<WindowResizeEvent>(dispatcher)

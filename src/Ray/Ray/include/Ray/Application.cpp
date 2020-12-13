@@ -44,6 +44,8 @@ namespace At0::Ray
 			if (win->GetName() == name)
 				return win.get();
 		}
+
+		// TODO: Throw exception
 		return nullptr;
 	}
 
@@ -79,6 +81,7 @@ namespace At0::Ray
 		// Main Application Loop
 		while (m_MainWindow->IsOpen())
 		{
+			// loop from top to bottom (TODO)
 			for (uint32_t i = 0; i < m_WindowStack.Size(); ++i)
 			{
 				if (m_WindowStack[i]->IsOpen())
@@ -100,7 +103,7 @@ namespace At0::Ray
 		return 0;
 	}
 
-	// QUESTION: Taking Layer by raw pointer but window by shared_ptr
+	// QUESTIONA: Taking Layer by raw pointer but window by shared_ptr (use shared_ptr)
 	Layer* Application::PushLayer(Layer* layer)
 	{
 		RAY_PROFILE_FUNCTION();

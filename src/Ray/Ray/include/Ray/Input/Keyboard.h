@@ -6,10 +6,10 @@
 #pragma warning(disable : 4251)
 
 
-// QUESTION:
-// Custom Keyboard implementation (std::bitset) or use GetAsyncKeyState (Win32API) and glfwGetKey (GLFW)
+// QUESTIONA:
+// Custom Keyboard implementation (std::bitset) or use GetAsyncKeyState (Win32API) and glfwGetKey (GLFW) (Use GetAsyncKeyState..)
 
-// QUESTION: 
+// QUESTIONA: 
 // I need an enum containing all the keycodes
 
 //enum class KeyCode : uint16_t
@@ -148,7 +148,7 @@
 //};
 
 // where should I put it? I need it in RayEvent, Zeal, ZealGUILayer, Ray (doesn't use any dependent code --> RayUtil?)
-// same with mousecodes
+// same with mousecodes (RayUtil)
 
 //enum class MouseCode : uint16_t
 //{

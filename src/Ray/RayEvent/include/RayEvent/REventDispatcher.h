@@ -8,7 +8,7 @@ namespace At0::Ray
 	template<typename E>
 	class EventListener;
 
-	// QUESTION: Should I make this automatically dispatch all events?
+	// QUESTIONA: Should I make this automatically dispatch all events? (leave)
 	// Possible: EventDispatcher<WindowResizeEvent, MouseMoveEvent>
 	template<typename E>
 	class EventDispatcher
@@ -51,6 +51,7 @@ namespace At0::Ray
 		}
 
 	private:
+		// TODO: Possible invalid memory access
 		std::vector<EventListener<E>*> m_Listeners;
 	};
 }

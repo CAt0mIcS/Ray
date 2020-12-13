@@ -103,7 +103,7 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		// QUESTION: Multithreaded event dispatching or event handing?
+		// QUESTIONA: Multithreaded event dispatching or event handing? (NO)
 
 		switch (uMsg)
 		{
@@ -119,6 +119,8 @@ namespace At0::Ray
 			//static std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
 			//std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
 			//prevTime = std::chrono::high_resolution_clock::now();
+
+			// ANSWER: Classes need to be built in a hierachy and shouldn't depend on each uther much
 
 			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.SetPos({ (float)pt.x, (float)pt.y });
