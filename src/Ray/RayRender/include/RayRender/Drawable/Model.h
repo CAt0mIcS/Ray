@@ -15,7 +15,7 @@ namespace At0::Ray
 	{
 	public:
 		Model() = default;
-		Model(std::string_view filepath, const Renderer3D& renderer);
+		Model(std::string_view filepath, const float colors[6][3], const Renderer3D& renderer);
 		virtual const std::vector<Scope<Bindable>>& GetStaticBinds() const override { return s_StaticBinds; }
 		virtual void Update() override;
 		virtual void Draw(Renderer3D* renderer) override;

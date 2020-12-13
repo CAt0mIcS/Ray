@@ -24,7 +24,7 @@ namespace At0::Ray
 {
 	std::vector<Scope<Bindable>> Model::s_StaticBinds;
 
-	Model::Model(std::string_view filepath, const Renderer3D& renderer)
+	Model::Model(std::string_view filepath, const float colors[6][3], const Renderer3D& renderer)
 	{
 		Assimp::Importer importer;
 		const aiScene* pScene = importer.ReadFile(filepath.data(),
@@ -37,10 +37,22 @@ namespace At0::Ray
 		ProcessNode(pScene->mRootNode, pScene);
 
 		// General Initialization
-		Scope<VertexShader> vshader = MakeScope<VertexShader>("VertexShader-v.cso");
+
+		struct PixelConstantColorBuffer
+		{
+			struct
+			{
+				float r;
+				float g;
+				float b;
+				float a;
+			} face_colors[6];
+		};
+
+		Scope<VertexShader> vshader = MakeScope<VertexShader>("VertexShader(Cube)-v.cso");
 		ID3DBlob* vshaderbytecode = vshader->GetBytecode();
 		AddBind(std::move(vshader));
-		AddBind(MakeScope<PixelShader>("PixelShader-p.cso"));
+		AddBind(MakeScope<PixelShader>("PixelShader(Cube)-p.cso"));
 		AddBind(MakeScope<Topology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> ied
@@ -48,6 +60,20 @@ namespace At0::Ray
 			{ "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		};
 		AddBind(MakeScope<InputLayout>(ied, vshaderbytecode));
+
+		const PixelConstantColorBuffer pccb
+		{
+			{
+				{ colors[0][0], colors[0][1], colors[0][2] },
+				{ colors[1][0], colors[1][1], colors[1][2] },
+				{ colors[2][0], colors[2][1], colors[2][2] },
+				{ colors[3][0], colors[3][1], colors[3][2] },
+				{ colors[4][0], colors[4][1], colors[4][2] },
+				{ colors[5][0], colors[5][1], colors[5][2] },
+			}
+		};
+
+		AddStaticBind(MakeScope<PixelConstantBuffer<PixelConstantColorBuffer>>(pccb));
 
 		AddBind(MakeScope<TransformConstantBuffer>(renderer, *this));
 	}
