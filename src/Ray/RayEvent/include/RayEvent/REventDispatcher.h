@@ -42,7 +42,7 @@ namespace At0::Ray
 		/// <param name="eListener">Is the EventListener to remove</param>
 		void RemoveListener(EventListener<E>* eListener)
 		{
-			// TODO: operator= && no pointers
+			// RAY_TODO: operator= && no pointers
 			m_Listeners.erase(std::find_if(m_Listeners.begin(), m_Listeners.end(), [this, &eListener](EventListener<E>* listener) 
 				{
 					return listener == eListener;
@@ -51,7 +51,7 @@ namespace At0::Ray
 		}
 
 	private:
-		// TODO: Possible invalid memory access
+		// RAY_TODO: Possible invalid memory access
 		std::vector<EventListener<E>*> m_Listeners;
 	};
 }

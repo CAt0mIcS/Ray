@@ -1,7 +1,7 @@
 #include "utpch.h"
 #include "TypeConvert.h"
 
-//TODO: Debug
+//RAY_TODO: Debug
 #include <iostream>
 
 
@@ -32,7 +32,7 @@ namespace At0::Util
 	}
 	
 
-	// TODO: Define custom RECT class
+	// RAY_TODO: Define custom RECT class
 	RECT TransformationToRect(const glm::mat4& matrix)
 	{
 		return {};

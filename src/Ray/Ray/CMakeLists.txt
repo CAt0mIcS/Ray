@@ -89,7 +89,7 @@ target_link_libraries("Ray"
 target_compile_definitions("Ray" PRIVATE "RAY_BUILD")
 # add_dependencies("Ray" "RayRender")
 
-# Add precompiled headers and move the cmake-generated file into a already existing filter (TODO)
+# Add precompiled headers and move the cmake-generated file into a already existing filter (RAY_TODO)
 target_precompile_headers("Ray" PRIVATE "include/Ray/rpch.h")
 
 AddRecursiveFilters("${SRC}")

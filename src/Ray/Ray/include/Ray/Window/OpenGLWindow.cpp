@@ -187,7 +187,7 @@ namespace At0::Ray
 		glfwMakeContextCurrent(m_hWnd);
 		
 		// --------------------------------------------------------
-		// Rendering (TODO)
+		// Rendering (RAY_TODO)
 		glfwSwapBuffers(m_hWnd);
 		// --------------------------------------------------------
 

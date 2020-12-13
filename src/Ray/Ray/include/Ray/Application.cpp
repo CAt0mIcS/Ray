@@ -80,7 +80,7 @@ namespace At0::Ray
 		// Main Application Loop
 		while (m_MainWindow->IsOpen())
 		{
-			// loop from top to bottom (TODO)
+			// loop from top to bottom (RAY_TODO)
 			for (uint32_t i = 0; i < m_WindowStack.Size(); ++i)
 			{
 				if (m_WindowStack[i]->IsOpen())

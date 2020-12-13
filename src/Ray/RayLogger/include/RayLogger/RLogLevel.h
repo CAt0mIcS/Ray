@@ -1,6 +1,6 @@
 #pragma once
 
-// None gets defined by XLib, this could break it (TODO)
+// None gets defined by XLib
 #ifdef None
 #undef None
 #endif

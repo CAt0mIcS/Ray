@@ -27,7 +27,7 @@ namespace At0::Ray
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int pCmdShow)
 {
-	// TODO: Command Line Arguments
+	// RAY_TODO: Command Line Arguments
 	return At0::Ray::Awake(0, nullptr);
 }
 
@@ -36,7 +36,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 
 int main(int argc, char** argv)
 {
-	// TODO: Command Line Arguments
+	// RAY_TODO: Command Line Arguments
 	return At0::Ray::Awake(argc, argv);
 }
 

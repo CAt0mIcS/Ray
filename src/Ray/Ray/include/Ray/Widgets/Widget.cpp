@@ -50,10 +50,10 @@ namespace At0::Ray
     {
         void* hWnd = GetNativeWindow();
         
-        //TODO: Program should be able to continue if one call fails
+        //RAY_TODO: Program should be able to continue if one call fails
 
-        //TODO: Invalidate only widget area
-        //TODO: Make Platform independent
+        //RAY_TODO: Invalidate only widget area
+        //RAY_TODO: Make Platform independent
         // RAY_WND_THROW_LAST_FAILED(InvalidateRect(hWnd, &Util::TransformationToRect(m_Matrix), (BOOL)eraseBkgnd));
         // RAY_WND_THROW_LAST_FAILED(UpdateWindow(hWnd));
     }

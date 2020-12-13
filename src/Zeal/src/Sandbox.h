@@ -22,7 +22,7 @@ namespace At0::Zeal
 		~Sandbox();
 
 
-		///TODO: Currently not used! Could be used for WindowCloseEvent to check if some not MainWindow was closed which should close the entire application
+		///RAY_TODO: Currently not used! Could be used for WindowCloseEvent to check if some not MainWindow was closed which should close the entire application
 
 		/// <summary>
 		/// Receives all window events (WindowResize, WindowClose, WindowPaint)

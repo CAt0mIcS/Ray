@@ -75,7 +75,7 @@ namespace At0::Ray
 			generateEvents(this);
 		}
 		// We can assume that no widget is in focus if the mouse is outside the window rect
-		// TODO: Implement IsOnWidget function
+		// RAY_TODO: Implement IsOnWidget function
 		// else if (!setNew && !Mouse.IsOnWidget(this))
 		// {
 		// 	generateEvents(nullptr);

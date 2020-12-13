@@ -38,7 +38,7 @@ public:
 
 			std::ostringstream oss;
 			oss << GetFPS() << " FPS";
-			// TODO: Abort when trying to set the title on an unopened window!
+			// RAY_TODO: Abort when trying to set the title on an unopened window!
 			At0::Ray::Application::Get().GetMainWindow().SetTitle(oss.str());
 		}
 	}
@@ -82,7 +82,7 @@ namespace At0::Layers
 		EventListener<Ray::MouseWheelRightEvent>(Ray::Application::Get().GetMainWindow())
 	{
 		EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().GetMainWindow());
-		EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().FindWindowByName("Win1"));
+		EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().FindWindowByName("Win0"));
 
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] Startup");
@@ -110,7 +110,7 @@ namespace At0::Layers
 		//	{ 1.0f, 1.0f, 1.0f }
 		//};
 
-		// TODO: Need to reserve because ConstantBuffer takes reference to Drawable(Cube) parent
+		// RAY_TODO: Need to reserve because ConstantBuffer takes reference to Drawable(Cube) parent
 		// and the memory address changes when std::vector reallocates
 		cubes.reserve(numCubes);
 		for (uint32_t i = 0; i < numCubes - 1; ++i)

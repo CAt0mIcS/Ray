@@ -16,7 +16,7 @@
 
 #include <Windows.h>
 
-// TODO: App closes when non-mainwindow is resized and closed
+// RAY_TODO: App closes when non-mainwindow is resized and closed
 
 
 namespace At0::Ray
@@ -109,7 +109,7 @@ namespace At0::Ray
 		{
 		case WM_DESTROY:
 		{
-			// TODO: Check if resources of the closed window are destroyed correctly
+			// RAY_TODO: Check if resources of the closed window are destroyed correctly
 			RAY_LOG_DEBUG("[MessageLoop] WM_DESTROY message received");
 			PostQuitMessage(0);
 			return 0;
@@ -181,7 +181,7 @@ namespace At0::Ray
 			}
 			return 0;
 		}
-		// TODO: Test, add more mouse buttons and add xbuttons in MouseInput
+		// RAY_TODO: Test, add more mouse buttons and add xbuttons in MouseInput
 		case WM_XBUTTONDOWN:
 		{
 			if (GET_XBUTTON_WPARAM(wParam) == XBUTTON1)
@@ -246,7 +246,7 @@ namespace At0::Ray
 			}
 			return 0;
 		}
-		// TODO: Keyboard message using new mouse/keyboard keycodes
+		// RAY_TODO: Keyboard message using new mouse/keyboard keycodes
 		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:
 		{
@@ -345,7 +345,7 @@ namespace At0::Ray
 			Size2 newSize = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
 			ResizeTo(newSize);
 
-			//TODO: Read how windows handles events (how they're built, how they handle it)
+			//RAY_TODO: Read how windows handles events (how they're built, how they handle it)
 
 			WindowResizeEvent e(m_OldSize, newSize);
 			for (auto* pListener : EventDispatcher<WindowResizeEvent>::Get())

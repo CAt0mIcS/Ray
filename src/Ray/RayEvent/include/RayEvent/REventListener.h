@@ -61,7 +61,7 @@ namespace At0::Ray
 		EventListener() = default;
 
 	private:
-		// TODO: Possible invalid memory access
+		// RAY_TODO: Possible invalid memory access
 		std::vector<EventDispatcher<E>*> m_Dispatchers;
 	};
 }
