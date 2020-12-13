@@ -37,20 +37,20 @@ macro(SetOutputDirectory target dir)
             set(OUTCFGLOW "${OUTPUTCONFIG}")
             string( TOUPPER "${OUTPUTCONFIG}" OUTPUTCONFIG )
 
-            set(${target}_OUTPUTPATH "${CMAKE_BINARY_DIR}/bin/${OUTCFGLOW}/${dir}")
+            set(${target}_OUTPUTPATH_${OUTCFGLOW} "${CMAKE_BINARY_DIR}/bin/${OUTCFGLOW}/${dir}")
 
             set_target_properties("${target}" PROPERTIES 
-                LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${${target}_OUTPUTPATH}"
-                RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${${target}_OUTPUTPATH}"
-                ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${${target}_OUTPUTPATH}"
+                LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${${target}_OUTPUTPATH_${OUTCFGLOW}}"
+                RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${${target}_OUTPUTPATH_${OUTCFGLOW}}"
+                ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${${target}_OUTPUTPATH_${OUTCFGLOW}}"
             )
         endforeach()
     else()
-        set(${target}_OUTPUTPATH "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/${dir}")
+        set(${target}_OUTPUTPATH_${CMAKE_BUILD_TYPE} "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/${dir}")
         set_target_properties("${target}" PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY "${${target}_OUTPUTPATH}"
-            LIBRARY_OUTPUT_DIRECTORY "${${target}_OUTPUTPATH}"
-            RUNTIME_OUTPUT_DIRECTORY "${${target}_OUTPUTPATH}"
+            ARCHIVE_OUTPUT_DIRECTORY "${${target}_OUTPUTPATH_${CMAKE_BUILD_TYPE}}"
+            LIBRARY_OUTPUT_DIRECTORY "${${target}_OUTPUTPATH_${CMAKE_BUILD_TYPE}}"
+            RUNTIME_OUTPUT_DIRECTORY "${${target}_OUTPUTPATH_${CMAKE_BUILD_TYPE}}"
         )
     endif()
 endmacro()

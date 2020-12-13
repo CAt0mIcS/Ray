@@ -42,11 +42,14 @@ set(SRC
     # ----------------------------------------------
     # Rendering Interfaces
 
+
     # ----------------------------------------------
     # OpenGL
 
+
     # ----------------------------------------------
     # DirectX
+
 
     # ----------------------------------------------
     # Shaders
@@ -107,10 +110,14 @@ SetWorkingDirectory("RayRender" "")
 
 
 # ------------------------------------------------------------------------------------------------
-# Copy pre-compiled assimp dll into output directory (RAY_TODO: Coppied into the wrong directory in Debug builds)
+# Copy pre-compiled assimp dll into output directory
 add_custom_command(TARGET "RayRender" POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy_if_different
-	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/assimp/lib/${RL_ARCHITECTURE}/assimp-vc142-mt.dll" "${RayRender_OUTPUTPATH}")
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/../extern/assimp/lib/${RL_ARCHITECTURE}/assimp-vc142-mt.dll"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
+)
 
 
 # Set Pixel and Vertex Shaders to compile in VS
