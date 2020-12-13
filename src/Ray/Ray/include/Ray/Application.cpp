@@ -80,8 +80,7 @@ namespace At0::Ray
 		// Main Application Loop
 		while (m_MainWindow->IsOpen())
 		{
-			// loop from top to bottom (RAY_TODO)
-			for (uint32_t i = 0; i < m_WindowStack.Size(); ++i)
+			for (int16_t i = m_WindowStack.Size() - 1; i >= 0; --i)
 			{
 				if (m_WindowStack[i]->IsOpen())
 				{
@@ -90,7 +89,6 @@ namespace At0::Ray
 				else
 				{
 					m_WindowStack.PopIndexed(i);
-					--i;
 				}
 			}
 		}
