@@ -5,6 +5,7 @@
 #include <string>
 
 #include "RlUBase.h"
+#include "Serialize.h"
 
 #ifdef _WIN32
 	#include <Windows.h>
@@ -67,6 +68,33 @@ namespace At0::Ray
 		/// File where the exception occured
 		/// </summary>
 		const char* m_File;
+	};
+
+	class RU_API RuntimeException : public Exception
+	{
+	public:
+		/// <summary>
+		/// Exception contructor
+		/// </summary>
+		/// <param name="message">Is a message associated with the exception</param>
+		/// <param name="line">Is the line where the exception occured</param>
+		/// <param name="file">Is the file where the exception occured</param>
+		RuntimeException(const char* message, uint16_t line, const char* file);
+
+		/// <summary>
+		/// Getter for string with Exception type
+		/// </summary>
+		/// <returns>The exception type string</returns>
+		virtual const char* GetType() const { return "Runtime Exception"; };
+
+		/// <summary>
+		/// Getter for more information about the error
+		/// </summary>
+		/// <returns>More information about the error</returns>
+		virtual const char* what() const noexcept override;
+
+	private:
+		std::string m_Message;
 	};
 
 #ifdef _WIN32
@@ -170,4 +198,7 @@ throw ::At0::Ray::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE_
 #define RAY_WND_THROW_LAST_FAILED(expr) expr
 
 #endif
+
+
+#define RAY_THROW_RUNTIME(msg, ...) throw ::At0::Ray::RuntimeException(::At0::Util::SerializeString(msg, __VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
 

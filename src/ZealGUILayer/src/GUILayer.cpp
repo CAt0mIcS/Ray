@@ -82,7 +82,7 @@ namespace At0::Layers
 		EventListener<Ray::MouseWheelRightEvent>(Ray::Application::Get().GetMainWindow())
 	{
 		EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().GetMainWindow());
-		EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().FindWindowByName("Win0"));
+		EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().FindWindowByName("Win1"));
 
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] Startup");

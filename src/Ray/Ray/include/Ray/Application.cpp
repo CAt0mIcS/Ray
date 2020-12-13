@@ -45,8 +45,7 @@ namespace At0::Ray
 				return *win.get();
 		}
 
-		// QUESTION: What to throw here?
-		throw std::runtime_error("Window was not found");
+		RAY_THROW_RUNTIME("FindWindowByName was unable to find the Window with name '{0}'.", name);
 	}
 
 	int Application::Run()

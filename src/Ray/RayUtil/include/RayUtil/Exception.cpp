@@ -15,7 +15,7 @@ namespace At0::Ray
 
     std::string Exception::GetDefaultString() const
     {
-        std::stringstream oss;
+        std::ostringstream oss;
         oss << "[File] " << m_File << '\n'
             << "[Line] " << m_Line;
 
@@ -24,7 +24,7 @@ namespace At0::Ray
 
     const char* Exception::what() const noexcept
     {
-        std::stringstream oss;
+        std::ostringstream oss;
         oss << GetType() << '\n'
             << GetDefaultString();
 
@@ -32,6 +32,23 @@ namespace At0::Ray
         return m_WhatBuffer.c_str();
     }
     
+
+    RuntimeException::RuntimeException(const char* message, uint16_t line, const char* file)
+        : Exception(line, file), m_Message(message)
+    {
+    }
+
+    const char* RuntimeException::what() const noexcept
+    {
+        std::ostringstream oss;
+        oss << GetType() << '\n'
+            << "[Description] " << m_Message << '\n'
+            << GetDefaultString();
+
+        m_WhatBuffer = oss.str();
+        return m_WhatBuffer.c_str();
+    }
+
 
 #ifdef _WIN32
     
@@ -42,7 +59,7 @@ namespace At0::Ray
     
     const char* WindowsException::what() const noexcept
     {
-        std::stringstream oss;
+        std::ostringstream oss;
         oss << GetType() << '\n'
             << "[Error Code] 0x" << std::hex << std::uppercase << m_Hr << '\n'
             << "[Description] " << GetErrorString() << '\n'
