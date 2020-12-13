@@ -1,7 +1,7 @@
 #include "Ray/rpch.h"
-#include "Ray/Widgets/Widget.h"
+#include "Ray/Widgets/RWidget.h"
 
-#include "Ray/Input/Mouse.h"
+#include "Ray/Input/RMouse.h"
 
 #include <RayDebug/RInstrumentor.h>
 #include <RayDebug/RLogger.h>

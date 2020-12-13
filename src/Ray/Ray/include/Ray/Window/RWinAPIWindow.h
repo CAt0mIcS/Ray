@@ -4,7 +4,7 @@
 
 #ifdef _WIN32
 
-#include "Window.h"
+#include "RWindow.h"
 
 #include <Windows.h>
 

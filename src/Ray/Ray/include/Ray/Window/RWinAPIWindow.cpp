@@ -1,8 +1,8 @@
-#include "Ray/rpch.h"
+#include "Ray/Rpch.h"
 
 #ifdef _WIN32
 
-#include "WinAPIWindow.h"
+#include "RWinAPIWindow.h"
 
 #include <RayDebug/RInstrumentor.h>
 #include <RayDebug/RLogger.h>

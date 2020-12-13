@@ -2,7 +2,7 @@
 #define RAY_ENTRYPOINT_H
 
 
-#include "Ray/Application.h"
+#include "Ray/RApplication.h"
 #include <string>
 
 namespace At0::Ray

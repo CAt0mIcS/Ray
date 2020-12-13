@@ -186,9 +186,6 @@ throw ::At0::Ray::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE_
 
 #define RAY_WND_THROW_LAST_FAILED(expr) if(!(expr)) RAY_WND_THROW_LAST_FAILED2()
 
-/// <RAY_TODO>
-/// HRESULT expands to expression twice (calls e.g. create function twice because it's inserted in hr)
-/// </RAY_TODO>
 #define RAY_GFX_THROW_FAILED(expr) if(HRESULT RL___HRES___RL = (expr); FAILED(RL___HRES___RL)) throw ::At0::Ray::GraphicsException(RL___HRES___RL, (uint16_t)__LINE__, __FILE__)
 
 #else

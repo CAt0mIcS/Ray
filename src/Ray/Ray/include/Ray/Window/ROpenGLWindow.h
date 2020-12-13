@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../RBase.h"
-#include "Window.h"
+#include "RWindow.h"
 
 typedef struct GLFWwindow GLFWwindow;
 

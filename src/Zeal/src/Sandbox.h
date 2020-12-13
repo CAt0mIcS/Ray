@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Ray/Application.h>
-#include <Ray/Window/Window.h>
+#include <Ray/RApplication.h>
+#include <Ray/Window/RWindow.h>
 
 #include "ExtensionLoader/ExtensionLoader.h"
 

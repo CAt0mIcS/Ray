@@ -107,7 +107,7 @@ SetWorkingDirectory("RayRender" "")
 
 
 # ------------------------------------------------------------------------------------------------
-# Copy pre-compiled assimp dll into output directory (RAY_TODO: Move somewhere else!)
+# Copy pre-compiled assimp dll into output directory
 add_custom_command(TARGET "RayRender" POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_if_different
 	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/assimp/lib/${RL_ARCHITECTURE}/assimp-vc142-mt.dll" "${RayRender_OUTPUTPATH}")

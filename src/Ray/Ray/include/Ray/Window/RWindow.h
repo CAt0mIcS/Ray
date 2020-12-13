@@ -3,11 +3,10 @@
 #include "../RBase.h"
 #include <string>
 
-#include "Ray/Widgets/Widget.h"
-#include "Ray/Core/Queue.h"
+#include "Ray/Widgets/RWidget.h"
 
-#include "Ray/Input/Mouse.h"
-#include "Ray/Input/Keyboard.h"
+#include "Ray/Input/RMouse.h"
+#include "Ray/Input/RKeyboard.h"
 
 #include <../../RayEvent/include/RayEvent/RayEvent.h>
 

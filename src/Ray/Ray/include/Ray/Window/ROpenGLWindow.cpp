@@ -1,5 +1,5 @@
 #include "Ray/rpch.h"
-#include "OpenGLWindow.h"
+#include "ROpenGLWindow.h"
 
 #ifdef _WIN32
 	#define GLFW_EXPOSE_NATIVE_WIN32
@@ -16,8 +16,8 @@
 #undef None
 #endif
 
-#include "Ray/Input/Keyboard.h"
-#include "Ray/Input/Mouse.h"
+#include "Ray/Input/RKeyboard.h"
+#include "Ray/Input/RMouse.h"
 
 #include <RayRender/Renderer3D.h>
 

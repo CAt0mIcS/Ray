@@ -63,7 +63,7 @@ namespace At0::Zeal
 }
 
 
-#include <Ray/EntryPoint.h>
+#include <Ray/REntryPoint.h>
 
 
 #include <RayDebug/RInstrumentor.h>

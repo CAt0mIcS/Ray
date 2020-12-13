@@ -1,32 +1,32 @@
 set(SRC
-	"include/Ray/Application.cpp"
-	"include/Ray/Core/ThreadPool.cpp"
-	"include/Ray/Core/Rect.cpp"
-	"include/Ray/Input/Keyboard.cpp"
-	"include/Ray/Input/Mouse.cpp"
-	"include/Ray/Layers/Layer.cpp"
-	"include/Ray/Widgets/Widget.cpp"
-	"include/Ray/rpch.h"
-	"include/Ray/Window/WinAPIWindow.cpp"
-	"include/Ray/Window/OpenGLWindow.cpp"
-	"include/Ray/Window/Window.cpp"
+	"include/Ray/RApplication.cpp"
+	"include/Ray/Core/RThreadPool.cpp"
+	"include/Ray/Core/RRect.cpp"
+	"include/Ray/Input/RKeyboard.cpp"
+	"include/Ray/Input/RMouse.cpp"
+	"include/Ray/Layers/RLayer.cpp"
+	"include/Ray/Widgets/RWidget.cpp"
+	"include/Ray/Rpch.h"
+	"include/Ray/Window/RWinAPIWindow.cpp"
+	"include/Ray/Window/ROpenGLWindow.cpp"
+	"include/Ray/Window/RWindow.cpp"
 	
-	"include/Ray/Window/WinAPIWindow.h"
-	"include/Ray/Window/OpenGLWindow.h"
-	"include/Ray/Window/Window.h"
-	"include/Ray/Core/ThreadPool.h"
-	"include/Ray/Core/Queue.h"
-	"include/Ray/Core/Rect.h"
-	"include/Ray/Input/Keyboard.h"
-	"include/Ray/Input/Mouse.h"
-	"include/Ray/Layers/Layer.h"
-	"include/Ray/Widgets/Widget.h"
-	"include/Ray/Application.h"
+	"include/Ray/Window/RWinAPIWindow.h"
+	"include/Ray/Window/ROpenGLWindow.h"
+	"include/Ray/Window/RWindow.h"
+	"include/Ray/Core/RThreadPool.h"
+	"include/Ray/Core/RQueue.h"
+	"include/Ray/Core/RRect.h"
+	"include/Ray/Input/RKeyboard.h"
+	"include/Ray/Input/RMouse.h"
+	"include/Ray/Layers/RLayer.h"
+	"include/Ray/Widgets/RWidget.h"
+	"include/Ray/RApplication.h"
 	"include/Ray/Ray.h"
 	"include/Ray/RBase.h"
-	"include/Ray/Core/Stack.h"
-	"include/Ray/EntryPoint.h"
-	"include/Ray/Core/Timestep.h"
+	"include/Ray/Core/RStack.h"
+	"include/Ray/REntryPoint.h"
+	"include/Ray/Core/RTimestep.h"
 
 	"Ray.def"
 )
@@ -89,8 +89,7 @@ target_link_libraries("Ray"
 target_compile_definitions("Ray" PRIVATE "RAY_BUILD")
 # add_dependencies("Ray" "RayRender")
 
-# Add precompiled headers and move the cmake-generated file into a already existing filter (RAY_TODO)
-target_precompile_headers("Ray" PRIVATE "include/Ray/rpch.h")
+target_precompile_headers("Ray" PRIVATE "include/Ray/Rpch.h")
 
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("Ray" "")

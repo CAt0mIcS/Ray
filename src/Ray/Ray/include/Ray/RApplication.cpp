@@ -1,7 +1,7 @@
 #include "Ray/rpch.h"
-#include "Ray/Application.h"
+#include "Ray/RApplication.h"
 
-#include "Ray/Layers/Layer.h"
+#include "Ray/Layers/RLayer.h"
 
 // Include Renderer because of incomplete type in Window
 #include <RayRender/Renderer3D.h>
