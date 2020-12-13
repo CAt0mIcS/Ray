@@ -47,3 +47,5 @@ AddRecursiveFilters("${SRC}")
 SetOutputDirectory("ZealGUILayer" "Editors")
 SetWorkingDirectory("ZealGUILayer" "Editors")
 
+include("res/CopyResources.cmake")
+
