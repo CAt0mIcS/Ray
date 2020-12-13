@@ -18,7 +18,7 @@ set(PUBLIC_LIB
 	""
 )
 
-# QUESTIONA: I should only have to link to Ray and be able to use stuff like the logger and renderer (.def file)
+# QUESTIONA: I should only have to link to Ray and be able to use stuff like the logger and renderer (.def file) RAY_TODO
 set(PRIVATE_LIB
     "Ray"
     "RayDebug"
@@ -45,7 +45,7 @@ target_precompile_headers("ZealGUILayer" PRIVATE "src/glpch.h")
 AddRecursiveFilters("${SRC}")
 
 SetOutputDirectory("ZealGUILayer" "Editors")
-SetWorkingDirectory("ZealGUILayer" "Editors")
+SetWorkingDirectory("ZealGUILayer" "")
 
 add_custom_command(TARGET "ZealGUILayer" POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E make_directory 

@@ -43,8 +43,7 @@ namespace At0::Zeal
 
 		m_LayerLoader.Start("Editors", [this](Ray::Layer* layer) 
 			{
-				std::shared_ptr<Ray::Layer> ptr(layer);
-				PushLayer(std::move(ptr));
+				PushLayer(layer);
 			}
 		);
 

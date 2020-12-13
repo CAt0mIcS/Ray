@@ -65,7 +65,7 @@ namespace At0::Ray
 
 					// -------------------------------------------------------------------------------------
 					// Update Layers
-					for (Ref<Layer>& layer : m_LayerStack)
+					for (Layer* layer : m_LayerStack)
 					{
 						layer->OnUpdate(timestep);
 					}
@@ -101,12 +101,13 @@ namespace At0::Ray
 	}
 
 	// QUESTIONA: Taking Layer by raw pointer but window by shared_ptr (use shared_ptr)
-	Layer* Application::PushLayer(Ref<Layer> layer)
+	//RAY_TODO: Generalize for the entire project
+	Layer* Application::PushLayer(Layer* layer)
 	{
 		RAY_PROFILE_FUNCTION();
 
 		m_LayerStack.PushBack(layer);
-		return layer.get();
+		return layer;
 	}
 
 	Window* Application::PushWindow(Ref<Window> window)

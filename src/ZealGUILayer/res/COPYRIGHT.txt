@@ -1,0 +1,5 @@
+nanosuit.obj
+	From: https://github.com/JoeyDeVries/LearnOpenGL/blob/master/resources/objects/nanosuit/nanosuit.obj
+	Author: Joey De Vires
+	License: CC BY-NC 4.0		
+		For more information see https://learnopengl.com/About and https://creativecommons.org/licenses/by-nc/4.0/

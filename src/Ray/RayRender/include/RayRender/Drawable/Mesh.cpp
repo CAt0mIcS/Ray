@@ -1,14 +1,16 @@
 #include "RayRender/rlrpch.h"
 #include "Mesh.h"
 
+#include <RayUtil/RException.h>
+
+
 namespace At0::Ray
 {
-	Mesh::Mesh(std::string_view filepath)
-	{
-	}
+	std::vector<Scope<Bindable>> Mesh::s_StaticBinds;
 
-	void Mesh::Draw()
+	void Mesh::Update()
 	{
 
 	}
+
 }

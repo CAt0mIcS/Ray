@@ -5,6 +5,7 @@
 #include "RayRender/GraphicsResource.h"
 
 #include <vector>
+#include <d3d11.h>
 
 
 namespace At0::Ray

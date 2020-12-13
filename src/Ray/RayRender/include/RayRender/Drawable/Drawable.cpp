@@ -28,6 +28,12 @@ namespace At0::Ray
 
 	void Drawable::Draw(Renderer3D* renderer)
 	{
+		Bind();
+		renderer->DrawIndexed(m_pIndexBuffer->GetCount());
+	}
+
+	void Drawable::Bind()
+	{
 		for (auto& bindable : GetStaticBinds())
 		{
 			bindable->Bind();
@@ -37,7 +43,6 @@ namespace At0::Ray
 		{
 			bindable->Bind();
 		}
-		renderer->DrawIndexed(m_pIndexBuffer->GetCount());
 	}
 
 	Drawable::Drawable()

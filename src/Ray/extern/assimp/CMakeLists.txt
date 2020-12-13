@@ -14,6 +14,7 @@ set(SRC
 	"include/assimp/color4.h"
 	"include/assimp/color4.inl"
 	"include/assimp/commonMetaData.h"
+	"include/assimp/config.h"
 	"include/assimp/CreateAnimMesh.h"
 	"include/assimp/DefaultIOStream.h"
 	"include/assimp/DefaultIOSystem.h"
@@ -103,6 +104,7 @@ add_library("assimp" INTERFACE)
 
 target_link_directories("assimp" INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/lib/x64/")
 target_link_libraries("assimp" INTERFACE "${LIB}")
+target_include_directories("assimp" INTERFACE "${INC}")
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("assimp" "")
 

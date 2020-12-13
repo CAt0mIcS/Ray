@@ -78,7 +78,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="layer">Is a raw, (heap-allocated) pointer to the layer</param>
 		/// <returns>The pushed layer</returns>
-		Layer* PushLayer(Ref<Layer> layer);
+		Layer* PushLayer(Layer* layer);
 
 		/// <summary>
 		/// Pushes a new window onto the stack
@@ -127,7 +127,7 @@ namespace At0::Ray
 		/// <summary>
 		/// Structure holding all Layers pushed into the application
 		/// </summary>
-		Stack<Ref<Layer>> m_LayerStack;
+		Stack<Layer*> m_LayerStack;
 
 		/// <summary>
 		/// Structure holding all Windows pushed into the application

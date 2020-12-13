@@ -22,7 +22,8 @@ namespace At0::Ray
 		virtual void Update() = 0;
 		void SetTransform(const DirectX::XMMATRIX& transform) { m_TransformMatrix = transform; }
 		const DirectX::XMMATRIX& GetTransform() const { return m_TransformMatrix; }
-		void Draw(Renderer3D* renderer);
+		virtual void Draw(Renderer3D* renderer);
+		void Bind();
 
 	protected:
 		void AddBind(Scope<Bindable> bind);

@@ -66,8 +66,8 @@ FPS g_FPS;
 namespace At0::Layers
 {
 	std::vector<Ray::Cube> cubes;
-	static constexpr uint64_t numCubes = 1;
-	Ray::Model model("../Resources/Cube.obj")
+	static constexpr uint64_t numCubes = 0;
+	Ray::Model model;
 	std::mt19937 mtEngine;
 
 	// QUESTIONA: The way to get the MainWindow is too long? "Ray::Application::Get().GetMainWindow()" (fn in (maybe) Layer to get or static fn somewhere)
@@ -113,27 +113,33 @@ namespace At0::Layers
 
 		// RAY_TODO: Need to reserve because ConstantBuffer takes reference to Drawable(Cube) parent
 		// and the memory address changes when std::vector reallocates
-		cubes.reserve(numCubes);
-		for (uint32_t i = 0; i < numCubes - 1; ++i)
+
+		if constexpr (numCubes != 0)
 		{
+			cubes.reserve(numCubes);
+			for (uint32_t i = 0; i < numCubes - 1; ++i)
+			{
+				cubes.emplace_back(*Ray::Application::Get().GetMainWindow().GetRenderer3D(), 1.0f, face_colors);
+			}
+
 			cubes.emplace_back(*Ray::Application::Get().GetMainWindow().GetRenderer3D(), 1.0f, face_colors);
 		}
 
-		cubes.emplace_back(*Ray::Application::Get().GetMainWindow().GetRenderer3D(), 1.0f, face_colors);
+		model = Ray::Model("Resources/nanosuit.obj", *Ray::Application::Get().GetMainWindow().GetRenderer3D());
+
 	}
 	
 	void GUILayer::OnUpdate(Ray::Timestep ts)
 	{
 		Ray::Renderer3D& renderer = *Ray::Application::Get().GetMainWindow().GetRenderer3D();
-		
+		renderer.ClearBuffer(0.07f, 0.0f, 0.12f);
+
 		static float pitch = 0.0f;
 		static float yaw = 0.0f;
 		static float roll = 0.0f;
 		static float xDir = 0.0f;
 		static float yDir = 0.0f;
 		static float zDir = 5.0f;
-
-		renderer.ClearBuffer(0.07f, 0.0f, 0.12f);
 
 		Ray::KeyboardInput& kbd = Ray::Application::Get().GetMainWindow().Keyboard;
 		if (kbd.IsKeyPressed('S'))
@@ -165,24 +171,34 @@ namespace At0::Layers
 		yaw += 0.5f * ts;
 		roll += 0.5f * ts;
 
-		for (uint32_t i = 0; i < cubes.size() - 1; ++i)
+		if constexpr (numCubes != 0)
 		{
-			cubes[i].SetTransform(
-				DirectX::XMMatrixRotationRollPitchYaw(pitch + i, yaw + i, roll + i) *
-				DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
+			for (uint32_t i = 0; i < cubes.size() - 1; ++i)
+			{
+				cubes[i].SetTransform(
+					DirectX::XMMatrixRotationRollPitchYaw(pitch + i, yaw + i, roll + i) *
+					DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f)
+				);
+			}
+
+			cubes.back().SetTransform(
+				DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
+				DirectX::XMMatrixTranslation(xDir, yDir, zDir)
 			);
+
+			// Takes the most amount of time here!
+			for (auto& cube : cubes)
+			{
+				cube.Draw(&renderer);
+			}
 		}
-		
-		cubes.back().SetTransform(
+
+		model.SetTransform(
 			DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
 			DirectX::XMMatrixTranslation(xDir, yDir, zDir)
 		);
 
-		// Takes the most amount of time here!
-		for (auto& cube : cubes)
-		{
-			cube.Draw(&renderer);
-		}
+		model.Draw(&renderer);
 
 		renderer.EndDraw();
 		g_FPS.Update();
