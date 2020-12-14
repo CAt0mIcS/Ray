@@ -22,9 +22,20 @@ namespace At0::Ray
 		template<typename V>
 		Mesh(const std::vector<V>& vertices, const std::vector<uint16_t> indices)
 		{
-			AddBind(MakeScope<VertexBuffer>(vertices));
-			AddIndexBuffer(MakeScope<IndexBuffer>(indices));
+			if (s_StaticBinds.empty())
+			{
+				AddStaticBind(MakeScope<VertexBuffer>(vertices));
+				AddStaticIndexBuffer(MakeScope<IndexBuffer>(indices));
+			}
+			else
+			{
+				SetIndexFromStatic();
+			}
 		}
+
+		void AddStaticBind(Scope<Bindable> bind);
+		void AddStaticIndexBuffer(Scope<IndexBuffer> bind);
+		void SetIndexFromStatic();
 
 		virtual const std::vector<Scope<Bindable>>& GetStaticBinds() const override { return s_StaticBinds; }
 		virtual void Update() override;

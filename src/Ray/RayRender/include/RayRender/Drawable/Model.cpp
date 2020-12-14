@@ -49,31 +49,39 @@ namespace At0::Ray
 			} face_colors[6];
 		};
 
-		Scope<VertexShader> vshader = MakeScope<VertexShader>("VertexShader(Cube)-v.cso");
-		ID3DBlob* vshaderbytecode = vshader->GetBytecode();
-		AddBind(std::move(vshader));
-		AddBind(MakeScope<PixelShader>("PixelShader(Cube)-p.cso"));
-		AddBind(MakeScope<Topology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-
-		std::vector<D3D11_INPUT_ELEMENT_DESC> ied
+		if (s_StaticBinds.empty())
 		{
-			{ "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-		};
-		AddBind(MakeScope<InputLayout>(ied, vshaderbytecode));
+			Scope<VertexShader> vshader = MakeScope<VertexShader>("VertexShader(Cube)-v.cso");
+			ID3DBlob* vshaderbytecode = vshader->GetBytecode();
+			AddStaticBind(std::move(vshader));
+			AddStaticBind(MakeScope<PixelShader>("PixelShader(Cube)-p.cso"));
+			AddStaticBind(MakeScope<Topology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
-		const PixelConstantColorBuffer pccb
-		{
+			std::vector<D3D11_INPUT_ELEMENT_DESC> ied
 			{
-				{ colors[0][0], colors[0][1], colors[0][2] },
-				{ colors[1][0], colors[1][1], colors[1][2] },
-				{ colors[2][0], colors[2][1], colors[2][2] },
-				{ colors[3][0], colors[3][1], colors[3][2] },
-				{ colors[4][0], colors[4][1], colors[4][2] },
-				{ colors[5][0], colors[5][1], colors[5][2] },
-			}
-		};
+				{ "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+			};
+			AddStaticBind(MakeScope<InputLayout>(ied, vshaderbytecode));
 
-		AddStaticBind(MakeScope<PixelConstantBuffer<PixelConstantColorBuffer>>(pccb));
+			const PixelConstantColorBuffer pccb
+			{
+				{
+					{ colors[0][0], colors[0][1], colors[0][2] },
+					{ colors[1][0], colors[1][1], colors[1][2] },
+					{ colors[2][0], colors[2][1], colors[2][2] },
+					{ colors[3][0], colors[3][1], colors[3][2] },
+					{ colors[4][0], colors[4][1], colors[4][2] },
+					{ colors[5][0], colors[5][1], colors[5][2] },
+				}
+			};
+
+			AddStaticBind(MakeScope<PixelConstantBuffer<PixelConstantColorBuffer>>(pccb));
+		}
+		else
+		{
+			SetIndexFromStatic();
+		}
+
 
 		AddBind(MakeScope<TransformConstantBuffer>(renderer, *this));
 	}
