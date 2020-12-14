@@ -22,7 +22,7 @@
 namespace At0::Ray
 {
 	WinAPIWindow::WinAPIWindow(std::string_view name, const Point2 pos, const Size2 size, Widget* parent)
-		: Window(name, parent), m_OldPos{}, m_OldSize{}, m_hWnd(0)
+		: Window(name, parent), m_hWnd(0)
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -102,9 +102,7 @@ namespace At0::Ray
 	LRESULT WinAPIWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		RAY_PROFILE_FUNCTION();
-
-		// QUESTIONA: Multithreaded event dispatching or event handing? (NO)
-
+		
 		switch (uMsg)
 		{
 		case WM_DESTROY:
@@ -120,12 +118,12 @@ namespace At0::Ray
 			//std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
 			//prevTime = std::chrono::high_resolution_clock::now();
 
-			// ANSWER: Classes need to be built in a hierachy and shouldn't depend on each uther much
+			// ANSWER: Classes need to be built in a hierachy and shouldn't depend on each other much
 
 			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.SetPos({ (float)pt.x, (float)pt.y });
 
-			MouseMoveEvent e(Mouse.GetOldPos(), Mouse.GetPos());
+			MouseMoveEvent e(Mouse.GetPos());
 			for (auto* pListener : EventDispatcher<MouseMoveEvent>::Get())
 			{
 				pListener->OnEvent(GetEventReceiver(e, Mouse), e);

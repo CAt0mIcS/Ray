@@ -58,12 +58,6 @@ namespace At0::Ray
 		/// <returns>The current mouse position</returns>
 		const Point2& GetPos() const;
 
-		/// <summary>
-		/// Getter for the previous mouse position (last MouseMoveEvent)
-		/// </summary>
-		/// <returns>The old mouse position</returns>
-		const Point2& GetOldPos() const;
-
 	private:
 		/// <summary>
 		/// Sets the position of the mouse, doesn't actually move the mouse
@@ -109,11 +103,6 @@ namespace At0::Ray
 		/// Current mouse position, set in SetPos()
 		/// </summary>
 		Point2 m_MousePos;
-
-		/// <summary>
-		/// Old mouse position, set in SetPos()
-		/// </summary>
-		Point2 m_OldMousePos;
 	};
 }
 

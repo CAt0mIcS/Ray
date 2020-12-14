@@ -164,16 +164,6 @@ namespace At0::Ray
 		///// Specifies the 2D renderer
 		///// </summary>
 		//Scope<Renderer2D> m_Renderer2D;
-
-		/// <summary>
-		/// Specifies the old size of this window
-		/// </summary>
-		Size2 m_OldSize;
-
-		/// <summary>
-		/// Specifies the old position of this window
-		/// </summary>
-		Point2 m_OldPos;
 	};
 }
 

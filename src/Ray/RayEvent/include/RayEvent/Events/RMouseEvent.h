@@ -13,17 +13,15 @@ namespace At0::Ray
 	class MouseMoveEvent : public Event
 	{
 	public:
-		MouseMoveEvent(const Point2& oldPos, const Point2& newPos);
+		MouseMoveEvent(const Point2& newPos);
 		virtual std::string ToString() const override;
 
 		const Point2& GetPos() const { return m_NewPos; }
-		const Point2& GetOldPos() const { return m_OldPos; }
 
 		static EventType GetStaticType() { return EventType::MouseMoveEvent; }
 		virtual EventType GetType() const override { return GetStaticType(); }
 
 	private:
-		Point2 m_OldPos;
 		Point2 m_NewPos;
 	};
 

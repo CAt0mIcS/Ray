@@ -41,7 +41,7 @@ namespace At0::Ray
 
 
 	OpenGLWindow::OpenGLWindow(std::string_view name, const Point2& pos, const Size2& size, Widget* parent)
-		: Window(name, parent), m_OldPos{}, m_OldSize{}, m_hWnd(0)
+		: Window(name, parent), m_hWnd(0)
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -244,7 +244,7 @@ namespace At0::Ray
 			{
 				Mouse.SetPos({ (float)xPos, (float)yPos });
 
-				MouseMoveEvent e(m_OldPos, Point2{ (float)xPos, (float)yPos });
+				MouseMoveEvent e(Point2{ (float)xPos, (float)yPos });
 				for (auto* pListener : EventDispatcher<MouseMoveEvent>::Get())
 				{
 					pListener->OnEvent(GetEventReceiver(e, Mouse), e);

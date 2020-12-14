@@ -145,17 +145,20 @@ namespace At0::Ray
 		void SetHoveringWidget();
 
 	protected:
-
-		/// <QUESTIONA>
-		/// I could have e.g. m_hWnd in the base class (Window) (as protected) and then I wouldn't have to make the GetNativeWindow() function virtual.
-		/// 
-		/// Protected members? (Move to protected !)
-		/// </QUESTIONA>
-
 		/// <summary>
 		/// Specifies the control where the mouse is currently on
 		/// </summary>
 		Widget* m_CurrentlyHovering;
+
+		/// <summary>
+		/// Specifies the old size of this window
+		/// </summary>
+		Size2 m_OldSize;
+
+		/// <summary>
+		/// Specifies the old position of this window
+		/// </summary>
+		Point2 m_OldPos;
 	};
 }
 

@@ -8,7 +8,7 @@
 namespace At0::Ray
 {
 	MouseInput::MouseInput()
-		: m_IsLeftPressed(false), m_IsMiddlePressed(false), m_IsRightPressed(false), m_MousePos{}, m_OldMousePos{}
+		: m_IsLeftPressed(false), m_IsMiddlePressed(false), m_IsRightPressed(false), m_MousePos{}
 	{
 	}
 
@@ -47,14 +47,8 @@ namespace At0::Ray
 		return m_MousePos;
 	}
 
-	const Point2& MouseInput::GetOldPos() const
-	{
-		return m_OldMousePos;
-	}
-
 	void MouseInput::SetPos(const Point2& mousePos)
 	{
-		m_OldMousePos = m_MousePos;
 		m_MousePos = mousePos;
 	}
 }

@@ -67,7 +67,7 @@ FPS g_FPS;
 namespace At0::Layers
 {
 	std::vector<Ray::Cube> cubes;
-	static constexpr uint64_t numCubes = 1000;
+	static constexpr uint64_t numCubes = 100;
 	Ray::Model model;
 	std::mt19937 mtEngine;
 	Ray::Camera cam;
@@ -131,7 +131,7 @@ namespace At0::Layers
 		Ray::Application::Get().GetMainWindow().GetRenderer3D()->SetCamera(DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f));
 	}
 	
-	
+	Ray::Point2 mousePos{};
 	void GUILayer::OnUpdate(Ray::Timestep ts)
 	{
 		Ray::Window& window = Ray::Application::Get().GetMainWindow();
@@ -143,9 +143,10 @@ namespace At0::Layers
 		static float roll = 0.0f;
 		static float xDir = 0.0f;
 		static float yDir = 0.0f;
-		static float zDir = 5.0f;
+		static float zDir = 0.0f;
 
-		const Ray::Point2 mouseDiff = window.Mouse.GetOldPos() - window.Mouse.GetPos();
+		const Ray::Point2 mouseDiff = window.Mouse.GetPos() - mousePos;
+		mousePos = window.Mouse.GetPos();
 
 		Ray::KeyboardInput& kbd = Ray::Application::Get().GetMainWindow().Keyboard;
 		if (kbd.IsKeyPressed('S'))
@@ -177,11 +178,6 @@ namespace At0::Layers
 		yaw += 0.5f * ts;
 		roll += 0.5f * ts;
 
-		if (window.Mouse.IsMiddlePressed())
-		{
-			cam.theta += mouseDiff.x * ts;
-			cam.phi -= mouseDiff.y * ts;
-		}
 		renderer.SetCamera(cam.GetMatrix());
 
 		if constexpr (numCubes != 0)
@@ -211,7 +207,7 @@ namespace At0::Layers
 			DirectX::XMMatrixTranslation(xDir, yDir, zDir)
 		);
 
-		model.Draw(&renderer);
+		//model.Draw(&renderer);
 
 		renderer.EndDraw();
 		g_FPS.Update();
@@ -222,6 +218,13 @@ namespace At0::Layers
 		//static std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
 		//std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
 		//prevTime = std::chrono::high_resolution_clock::now();
+
+		if (Ray::Application::Get().GetMainWindow().Mouse.IsMiddlePressed())
+		{
+			auto mouseDiff = Ray::Application::Get().GetMainWindow().Mouse.GetPos() - mousePos;
+			cam.theta -= mouseDiff.x * 0.01f;
+			cam.phi += mouseDiff.y * 0.01f;
+		}
 
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	}

@@ -35,7 +35,7 @@ namespace At0::Ray
 	}
 
 	Window::Window(std::string_view name, Widget* parent)
-		: Widget(name, parent), m_CurrentlyHovering(nullptr)
+		: Widget(name, parent), m_CurrentlyHovering(nullptr), m_OldPos{}, m_OldSize{}
 	{
 	}
 
