@@ -67,7 +67,7 @@ FPS g_FPS;
 namespace At0::Layers
 {
 	std::vector<Ray::Cube> cubes;
-	static constexpr uint64_t numCubes = 3000;
+	static constexpr uint64_t numCubes = 4000;
 	Ray::Model model;
 	std::mt19937 mtEngine;
 	Ray::Camera cam;
