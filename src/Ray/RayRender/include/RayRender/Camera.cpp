@@ -13,7 +13,7 @@ namespace At0::Ray
 
 		return DirectX::XMMatrixLookAtLH(
 			pos, DirectX::XMVectorZero(), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
-		) * DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f);
+		) * DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
 	}
 }
 

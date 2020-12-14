@@ -145,7 +145,6 @@ namespace At0::Layers
 		static float yDir = 0.0f;
 		static float zDir = 0.0f;
 
-		const Ray::Point2 mouseDiff = window.Mouse.GetPos() - mousePos;
 		mousePos = window.Mouse.GetPos();
 
 		Ray::KeyboardInput& kbd = Ray::Application::Get().GetMainWindow().Keyboard;
@@ -172,6 +171,14 @@ namespace At0::Layers
 		if (kbd.IsKeyPressed('D'))
 		{
 			xDir += 3.0f * ts;
+		}
+		if (kbd.IsKeyPressed('Q'))
+		{
+			cam.roll += 3.0f * ts;
+		}
+		if (kbd.IsKeyPressed('E'))
+		{
+			cam.roll -= 3.0f * ts;
 		}
 
 		pitch += 0.5f * ts;
@@ -218,12 +225,18 @@ namespace At0::Layers
 		//static std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
 		//std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
 		//prevTime = std::chrono::high_resolution_clock::now();
-
-		if (Ray::Application::Get().GetMainWindow().Mouse.IsMiddlePressed())
+		auto& mouse = Ray::Application::Get().GetMainWindow().Mouse;
+		if (mouse.IsMiddlePressed())
 		{
-			auto mouseDiff = Ray::Application::Get().GetMainWindow().Mouse.GetPos() - mousePos;
+			auto mouseDiff = mouse.GetPos() - mousePos;
 			cam.theta -= mouseDiff.x * 0.01f;
 			cam.phi += mouseDiff.y * 0.01f;
+		}
+		if (mouse.IsRightPressed())
+		{
+			auto mouseDiff = mouse.GetPos() - mousePos;
+			cam.yaw -= mouseDiff.x * 0.01f;
+			cam.pitch -= mouseDiff.y * 0.01f;
 		}
 
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
