@@ -22,7 +22,7 @@ namespace At0::Ray
 		
 		m_Vcbuf.Update(
 			DirectX::XMMatrixTranspose(
-				pTransform * rTransform
+				pTransform * m_Renderer.GetCamera() * rTransform
 			)
 		);
 		m_Vcbuf.Bind();

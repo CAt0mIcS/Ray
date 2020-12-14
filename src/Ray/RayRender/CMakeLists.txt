@@ -9,6 +9,8 @@ set(SRC
     "include/RayRender/GraphicsResource.h"
     "include/RayRender/RendererAPI.h"
     "include/RayRender/RendererAPI.cpp"
+    "include/RayRender/Camera.h"
+    "include/RayRender/Camera.cpp"
 
     # ----------------------------------------------
     # Bindables

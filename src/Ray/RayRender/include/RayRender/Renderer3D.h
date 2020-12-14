@@ -33,6 +33,8 @@ namespace At0::Ray
         void SetProjection(const DirectX::XMMATRIX& mat) { m_Projection = mat; }
         const DirectX::XMMATRIX& GetProjection() const { return m_Projection; }
         ~Renderer3D();
+        void SetCamera(const DirectX::FXMMATRIX& cam) { m_Camera = cam; }
+        const auto GetCamera() const { return m_Camera; }
 
     private:
         virtual void OnEvent(Widget* receiver, WindowResizeEvent& e) override;
@@ -43,6 +45,7 @@ namespace At0::Ray
         Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDSV;
 
         DirectX::XMMATRIX m_Projection;
+        DirectX::XMMATRIX m_Camera;
         HWND m_hWnd;
     };
 }
