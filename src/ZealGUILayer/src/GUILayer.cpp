@@ -200,6 +200,8 @@ namespace At0::Layers
 
 		renderer.SetCamera(cam.GetMatrix());
 
+		ptLight->Bind();
+
 		if constexpr (numCubes != 0)
 		{
 			for (uint32_t i = 0; i < cubes.size() - 1; ++i)
@@ -218,8 +220,7 @@ namespace At0::Layers
 		}
 
 		//model.Draw(&renderer);
-		//ptLight->SetPos({ xDir, yDir, zDir });
-		ptLight->Bind();
+		ptLight->SetPos({ xDir, yDir, zDir });
 		ptLight->Draw();
 
 		renderer.EndDraw();

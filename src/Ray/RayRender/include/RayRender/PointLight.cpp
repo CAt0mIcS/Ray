@@ -5,9 +5,8 @@
 namespace At0::Ray
 {
 	PointLight::PointLight(Renderer3D& renderer, float radius)
-		: m_Renderer(renderer), m_Model(renderer, radius), m_cbuf(PointLightCBuf{ {20.0f, 20.0f, 20.0f}, 1.0f })
+		: m_Renderer(renderer), m_Model(renderer, radius)
 	{
-		pos = { 20.0f, 20.0f, 20.0f };
 	}
 
 	void PointLight::Draw()
@@ -18,9 +17,8 @@ namespace At0::Ray
 
 	void PointLight::Bind()
 	{
-		PointLightCBuf buff;
+		PointLightCBuf buff{};
 		buff.pos = pos;
-		buff.padding = 1.0f;
 		m_cbuf.Update(buff);
 		m_cbuf.Bind();
 	}

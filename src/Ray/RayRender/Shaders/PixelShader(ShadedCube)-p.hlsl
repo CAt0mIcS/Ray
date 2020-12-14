@@ -5,7 +5,11 @@ cbuffer CBufLight
 
 static const float3 materialColor = { 0.7f, 0.7f, 0.9f };
 static const float3 ambient = { 0.05f, 0.05f, 0.05f };
+
+// Sets the light color
 static const float3 diffuseColor = { 1.0f, 1.0f, 1.0f };
+
+
 static const float diffuseIntensity = 1.0f;
 static const float attConst = 0.3f;
 static const float attLin = 0.045f;
