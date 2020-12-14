@@ -20,11 +20,10 @@ namespace At0::Ray
 		Drawable& operator=(Drawable&&) noexcept = default;
 
 		virtual void Update() = 0;
-		void SetTransform(const DirectX::XMMATRIX& transform) { m_TransformMatrix = transform; }
-		DirectX::XMMATRIX GetTransform() const { return m_TransformMatrix; }
-		DirectX::XMMATRIX GetTranslation() const;
-		DirectX::XMMATRIX GetRollPitchYaw() const;
-		DirectX::XMMATRIX GetScale() const;
+		DirectX::XMMATRIX GetTransform() const;
+		void SetRotation(float pitch, float yaw, float roll) { m_Pitch = pitch; m_Yaw = yaw; m_Roll = roll; }
+		void SetTranslation(float x, float y, float z) { m_Translation = { x, y, z }; }
+		void SetScale(float x, float y, float z) { m_Scale = { x, y, z }; }
 		virtual void Draw(Renderer3D* renderer);
 		void Bind();
 
@@ -35,7 +34,13 @@ namespace At0::Ray
 		Drawable();
 
 	protected:
-		DirectX::XMMATRIX m_TransformMatrix;
+		DirectX::XMFLOAT3 m_Translation{};
+		DirectX::XMFLOAT3 m_Scale{};
+		
+		float m_Pitch = 0.0f;
+		float m_Yaw = 0.0f;
+		float m_Roll = 0.0f;
+
 		const IndexBuffer* m_pIndexBuffer;
 
 	private:

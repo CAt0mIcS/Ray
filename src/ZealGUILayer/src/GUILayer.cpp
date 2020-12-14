@@ -129,10 +129,8 @@ namespace At0::Layers
 			std::uniform_real_distribution<float> posDist(-50.0f, 50.0f);
 			for (uint32_t i = 0; i < numCubes - 1; ++i)
 			{
-				cubes[i].SetTransform(
-					DirectX::XMMatrixRotationRollPitchYaw(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine)) *
-					DirectX::XMMatrixTranslation(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine) - 20.0f)
-				);
+				cubes[i].SetRotation(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine));
+				cubes[i].SetTranslation(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine) - 20.0f);
 			}
 		}
 
@@ -200,16 +198,11 @@ namespace At0::Layers
 		{
 			for (uint32_t i = 0; i < cubes.size() - 1; ++i)
 			{
-				cubes[i].SetTransform(
-					DirectX::XMMatrixRotationRollPitchYaw(pitch + i, yaw + i, roll + i) *
-					cubes[i].GetTranslation()
-				);
+				cubes[i].SetRotation(pitch + i, yaw + i, roll + i);
 			}
 
-			cubes.back().SetTransform(
-				DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-				DirectX::XMMatrixTranslation(xDir, yDir, zDir)
-			);
+			cubes.back().SetRotation(pitch, yaw, roll);
+			cubes.back().SetTranslation(xDir, yDir, zDir);
 
 			// Takes the most amount of time here!
 			for (auto& cube : cubes)
@@ -217,11 +210,6 @@ namespace At0::Layers
 				cube.Draw(&renderer);
 			}
 		}
-
-		model.SetTransform(
-			DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-			DirectX::XMMatrixTranslation(xDir, yDir, zDir)
-		);
 
 		//model.Draw(&renderer);
 
