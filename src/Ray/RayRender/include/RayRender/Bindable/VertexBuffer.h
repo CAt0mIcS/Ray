@@ -16,6 +16,7 @@ namespace At0::Ray
 		template<typename V>
 		VertexBuffer(const std::vector<V>& vertices);
 		virtual void Bind() override;
+		~VertexBuffer();
 
 	private:
 		inline void CreateBuffer(const D3D11_BUFFER_DESC& bd, const D3D11_SUBRESOURCE_DATA sd);
