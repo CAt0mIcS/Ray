@@ -17,14 +17,17 @@ namespace At0::Ray
 
 	void TransformConstantBuffer::Bind()
 	{
-		auto& pTransform = m_Parent.GetTransform();
-		auto& rTransform = m_Renderer.GetProjection();
-		
-		m_Vcbuf.Update(
+		const auto model = m_Parent.GetTransform();
+		const Transforms tf =
+		{
+			DirectX::XMMatrixTranspose(model),
 			DirectX::XMMatrixTranspose(
-				pTransform * m_Renderer.GetCamera() * rTransform
+				model *
+				m_Renderer.GetCamera() *
+				m_Renderer.GetProjection()
 			)
-		);
+		};
+		m_Vcbuf.Update(tf);
 		m_Vcbuf.Bind();
 	}
 }

@@ -9,6 +9,8 @@
 #include <RayRender/Renderer3D.h>
 #include <RayRender/Drawable/Triangle.h>
 #include <RayRender/Drawable/Cube.h>
+#include <RayRender/Drawable/ShadedCube.h>
+#include <RayRender/PointLight.h>
 #include <RayRender/Drawable/Model.h>
 #include <RayRender/Camera.h>
 
@@ -66,11 +68,13 @@ FPS g_FPS;
 
 namespace At0::Layers
 {
-	std::vector<Ray::Cube> cubes;
+	std::vector<Ray::ShadedCube> cubes;
 	static constexpr uint64_t numCubes = 4000;
 	Ray::Model model;
 	std::mt19937 mtEngine;
 	Ray::Camera cam;
+	Ray::Scope<Ray::PointLight> ptLight;
+
 
 	// QUESTIONA: The way to get the MainWindow is too long? "Ray::Application::Get().GetMainWindow()" (fn in (maybe) Layer to get or static fn somewhere)
 	// I can only listen to events from one window (MouseMoveEvent from only MainWindow)
@@ -86,6 +90,8 @@ namespace At0::Layers
 	{
 		EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().GetMainWindow());
 		//EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().FindWindowByName("Win0"));
+
+		ptLight = Ray::MakeScope<Ray::PointLight>(*Ray::Application::Get().GetMainWindow().GetRenderer3D());
 
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] Startup");
@@ -121,10 +127,10 @@ namespace At0::Layers
 			cubes.reserve(numCubes);
 			for (uint32_t i = 0; i < numCubes - 1; ++i)
 			{
-				cubes.emplace_back(*Ray::Application::Get().GetMainWindow().GetRenderer3D(), 1.0f, face_colors);
+				cubes.emplace_back(*Ray::Application::Get().GetMainWindow().GetRenderer3D()/*, 1.0f, face_colors*/);
 			}
 
-			cubes.emplace_back(*Ray::Application::Get().GetMainWindow().GetRenderer3D(), 1.0f, face_colors);
+			//cubes.emplace_back(*Ray::Application::Get().GetMainWindow().GetRenderer3D()/*, 1.0f, face_colors*/);
 
 			std::uniform_real_distribution<float> posDist(-50.0f, 50.0f);
 			for (uint32_t i = 0; i < numCubes - 1; ++i)
@@ -202,7 +208,7 @@ namespace At0::Layers
 			}
 
 			cubes.back().SetRotation(pitch, yaw, roll);
-			cubes.back().SetTranslation(xDir, yDir, zDir);
+			//cubes.back().SetTranslation(xDir, yDir, zDir);
 
 			// Takes the most amount of time here!
 			for (auto& cube : cubes)
@@ -212,6 +218,9 @@ namespace At0::Layers
 		}
 
 		//model.Draw(&renderer);
+		//ptLight->SetPos({ xDir, yDir, zDir });
+		ptLight->Bind();
+		ptLight->Draw();
 
 		renderer.EndDraw();
 		g_FPS.Update();

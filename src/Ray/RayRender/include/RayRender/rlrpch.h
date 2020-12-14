@@ -13,6 +13,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <random>
 
 // Debug: RAY_TODO
 #include <iostream>

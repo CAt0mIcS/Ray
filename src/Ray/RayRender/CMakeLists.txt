@@ -11,6 +11,8 @@ set(SRC
     "include/RayRender/RendererAPI.cpp"
     "include/RayRender/Camera.h"
     "include/RayRender/Camera.cpp"
+    "include/RayRender/PointLight.h"
+    "include/RayRender/PointLight.cpp"
 
     # ----------------------------------------------
     # Bindables
@@ -43,6 +45,10 @@ set(SRC
     "include/RayRender/Drawable/Model.cpp"
     "include/RayRender/Drawable/Mesh.h"
     "include/RayRender/Drawable/Mesh.cpp"
+    "include/RayRender/Drawable/ShadedCube.h"
+    "include/RayRender/Drawable/ShadedCube.cpp"
+    "include/RayRender/Drawable/SolidSphere.h"
+    "include/RayRender/Drawable/SolidSphere.cpp"
 
 
     # ----------------------------------------------
@@ -63,6 +69,10 @@ set(SRC
     "Shaders/VertexShader-v.hlsl"
     "Shaders/PixelShader(Cube)-p.hlsl"
     "Shaders/VertexShader(Cube)-v.hlsl"
+    "Shaders/PixelShader(ShadedCube)-p.hlsl"
+    "Shaders/VertexShader(ShadedCube)-v.hlsl"
+    "Shaders/SolidVS-v.hlsl"
+    "Shaders/SolidPS-p.hlsl"
 )
 
 set(PUBLIC_INC
@@ -154,4 +164,32 @@ if(MSVC)
     set_property(SOURCE "Shaders/VertexShader(Cube)-v.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
     set_property(SOURCE "Shaders/VertexShader(Cube)-v.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
     set_property(SOURCE "Shaders/VertexShader(Cube)-v.hlsl" PROPERTY VS_SETTINGS "$<$<CONFIG:DEBUG>:SourceProperty1=SourceProperty1Value>")
+
+
+    set_property(SOURCE "Shaders/PixelShader(ShadedCube)-p.hlsl" PROPERTY VS_SHADER_TYPE Pixel)
+    set_property(SOURCE "Shaders/PixelShader(ShadedCube)-p.hlsl" PROPERTY VS_SHADER_ENTRYPOINT "main")
+    set_property(SOURCE "Shaders/PixelShader(ShadedCube)-p.hlsl" PROPERTY VS_SHADER_MODEL 5.0)
+    set_property(SOURCE "Shaders/PixelShader(ShadedCube)-p.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
+    set_property(SOURCE "Shaders/PixelShader(ShadedCube)-p.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
+    
+    set_property(SOURCE "Shaders/VertexShader(ShadedCube)-v.hlsl" PROPERTY VS_SHADER_TYPE Vertex)
+    set_property(SOURCE "Shaders/VertexShader(ShadedCube)-v.hlsl" PROPERTY VS_SHADER_ENTRYPOINT "main")
+    set_property(SOURCE "Shaders/VertexShader(ShadedCube)-v.hlsl" PROPERTY VS_SHADER_MODEL 5.0)
+    set_property(SOURCE "Shaders/VertexShader(ShadedCube)-v.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
+    set_property(SOURCE "Shaders/VertexShader(ShadedCube)-v.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
+    set_property(SOURCE "Shaders/VertexShader(ShadedCube)-v.hlsl" PROPERTY VS_SETTINGS "$<$<CONFIG:DEBUG>:SourceProperty1=SourceProperty1Value>")
+
+    
+    set_property(SOURCE "Shaders/SolidPS-p.hlsl" PROPERTY VS_SHADER_TYPE Pixel)
+    set_property(SOURCE "Shaders/SolidPS-p.hlsl" PROPERTY VS_SHADER_ENTRYPOINT "main")
+    set_property(SOURCE "Shaders/SolidPS-p.hlsl" PROPERTY VS_SHADER_MODEL 5.0)
+    set_property(SOURCE "Shaders/SolidPS-p.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
+    set_property(SOURCE "Shaders/SolidPS-p.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
+    
+    set_property(SOURCE "Shaders/SolidVS-v.hlsl" PROPERTY VS_SHADER_TYPE Vertex)
+    set_property(SOURCE "Shaders/SolidVS-v.hlsl" PROPERTY VS_SHADER_ENTRYPOINT "main")
+    set_property(SOURCE "Shaders/SolidVS-v.hlsl" PROPERTY VS_SHADER_MODEL 5.0)
+    set_property(SOURCE "Shaders/SolidVS-v.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
+    set_property(SOURCE "Shaders/SolidVS-v.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
+    set_property(SOURCE "Shaders/SolidVS-v.hlsl" PROPERTY VS_SETTINGS "$<$<CONFIG:DEBUG>:SourceProperty1=SourceProperty1Value>")
 endif()

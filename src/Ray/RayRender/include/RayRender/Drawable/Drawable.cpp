@@ -37,6 +37,8 @@ namespace At0::Ray
 	void Drawable::Draw(Renderer3D* renderer)
 	{
 		Bind();
+		RAY_MEXPECTS(m_pIndexBuffer != nullptr, "[Drawable::Draw] IndexBuffer was not set!");
+
 		renderer->DrawIndexed(m_pIndexBuffer->GetCount());
 	}
 

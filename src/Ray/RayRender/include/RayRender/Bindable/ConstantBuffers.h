@@ -81,9 +81,9 @@ namespace At0::Ray
 		using ConstantBuffer<C>::m_pConstantBuffer;
 	public:
 		using ConstantBuffer<C>::ConstantBuffer;
-		virtual void Bind() override
+		void Bind() override
 		{
-			s_pContext->PSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
+			s_pContext->PSSetConstantBuffers(0u, 1u, m_pConstantBuffer.GetAddressOf());
 		}
 	};
 
@@ -96,8 +96,14 @@ namespace At0::Ray
 		virtual void Bind() override;
 
 	private:
+		struct Transforms
+		{
+			DirectX::XMMATRIX modelViewProj;
+			DirectX::XMMATRIX model;
+		};
+
 		const Drawable& m_Parent;
 		const Renderer3D& m_Renderer;
-		VertexConstantBuffer<DirectX::XMMATRIX> m_Vcbuf;
+		VertexConstantBuffer<Transforms> m_Vcbuf;
 	};
 }
