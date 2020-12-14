@@ -152,7 +152,7 @@ namespace At0::Layers
 		static float roll = 0.0f;
 		static float xDir = 0.0f;
 		static float yDir = 0.0f;
-		static float zDir = 5.0f;
+		static float zDir = 0.0f;
 
 		mousePos = window.Mouse.GetPos();
 
@@ -198,18 +198,18 @@ namespace At0::Layers
 
 		if constexpr (numCubes != 0)
 		{
-			//for (uint32_t i = 0; i < cubes.size() - 1; ++i)
-			//{
-			//	cubes[i].SetTransform(
-			//		DirectX::XMMatrixRotationRollPitchYaw(pitch + i, yaw + i, roll + i) *
-			//		DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f)
-			//	);
-			//}
+			for (uint32_t i = 0; i < cubes.size() - 1; ++i)
+			{
+				cubes[i].SetTransform(
+					DirectX::XMMatrixRotationRollPitchYaw(pitch + i, yaw + i, roll + i) *
+					cubes[i].GetTranslation()
+				);
+			}
 
-			//cubes.back().SetTransform(
-			//	DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-			//	DirectX::XMMatrixTranslation(xDir, yDir, zDir)
-			//);
+			cubes.back().SetTransform(
+				DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
+				DirectX::XMMatrixTranslation(xDir, yDir, zDir)
+			);
 
 			// Takes the most amount of time here!
 			for (auto& cube : cubes)
@@ -235,11 +235,20 @@ namespace At0::Layers
 		//std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
 		//prevTime = std::chrono::high_resolution_clock::now();
 		auto& mouse = Ray::Application::Get().GetMainWindow().Mouse;
+		auto& kbd = Ray::Application::Get().GetMainWindow().Keyboard;
 		if (mouse.IsMiddlePressed())
 		{
 			auto mouseDiff = mouse.GetPos() - mousePos;
-			cam.theta -= mouseDiff.x * 0.003f;
-			cam.phi += mouseDiff.y * 0.003f;
+			if (kbd.IsKeyPressed(16)) // LSHIFT
+			{
+				cam.x += mouseDiff.x * 0.03f;
+				cam.y -= mouseDiff.y * 0.03f;
+			}
+			else
+			{
+				cam.theta -= mouseDiff.x * 0.003f;
+				cam.phi += mouseDiff.y * 0.003f;
+			}
 		}
 		if (mouse.IsRightPressed())
 		{
@@ -267,14 +276,14 @@ namespace At0::Layers
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-		cam.r -= 0.5f;
+		cam.z -= 1.0f;
 	}
 
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseWheelDownEvent& e)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
-		cam.r += 0.5f;
+		cam.z += 1.0f;
 	}
 
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseWheelLeftEvent& e)

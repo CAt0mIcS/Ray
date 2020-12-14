@@ -21,7 +21,10 @@ namespace At0::Ray
 
 		virtual void Update() = 0;
 		void SetTransform(const DirectX::XMMATRIX& transform) { m_TransformMatrix = transform; }
-		const DirectX::XMMATRIX& GetTransform() const { return m_TransformMatrix; }
+		DirectX::XMMATRIX GetTransform() const { return m_TransformMatrix; }
+		DirectX::XMMATRIX GetTranslation() const;
+		DirectX::XMMATRIX GetRollPitchYaw() const;
+		DirectX::XMMATRIX GetScale() const;
 		virtual void Draw(Renderer3D* renderer);
 		void Bind();
 

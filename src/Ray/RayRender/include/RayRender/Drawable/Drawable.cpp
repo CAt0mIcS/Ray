@@ -26,6 +26,30 @@ namespace At0::Ray
 		m_Binds.push_back(std::move(indexBuffer));
 	}
 
+	DirectX::XMMATRIX Drawable::GetTranslation() const
+	{
+		DirectX::XMMATRIX translation = DirectX::XMMatrixIdentity();
+		translation.r[3].m128_f32[0] = m_TransformMatrix.r[3].m128_f32[0];
+		translation.r[3].m128_f32[1] = m_TransformMatrix.r[3].m128_f32[1];
+		translation.r[3].m128_f32[2] = m_TransformMatrix.r[3].m128_f32[2];
+
+		return translation;
+	}
+
+	DirectX::XMMATRIX Drawable::GetRollPitchYaw() const
+	{
+		return DirectX::XMMATRIX();
+	}
+
+	DirectX::XMMATRIX Drawable::GetScale() const
+	{
+		DirectX::XMMATRIX scaling = DirectX::XMMatrixIdentity();
+		scaling.r[0].m128_f32[0] = m_TransformMatrix.r[0].m128_f32[0];
+		scaling.r[1].m128_f32[1] = m_TransformMatrix.r[1].m128_f32[1];
+		scaling.r[2].m128_f32[2] = m_TransformMatrix.r[2].m128_f32[2];
+		return scaling;
+	}
+
 	void Drawable::Draw(Renderer3D* renderer)
 	{
 		Bind();
