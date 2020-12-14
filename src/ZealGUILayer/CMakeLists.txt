@@ -56,6 +56,14 @@ add_custom_command(TARGET "ZealGUILayer" POST_BUILD
 
 add_custom_command(TARGET "ZealGUILayer" POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/res/nanosuit.obj" 
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/Resources/>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/Resources/>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/Resources/>"
+)
+
+add_custom_command(TARGET "ZealGUILayer" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CMAKE_CURRENT_SOURCE_DIR}/res/Cube.obj" 
     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/Resources/>"
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/Resources/>"
