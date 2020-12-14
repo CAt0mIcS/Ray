@@ -67,7 +67,7 @@ FPS g_FPS;
 namespace At0::Layers
 {
 	std::vector<Ray::Cube> cubes;
-	static constexpr uint64_t numCubes = 100;
+	static constexpr uint64_t numCubes = 3000;
 	Ray::Model model;
 	std::mt19937 mtEngine;
 	Ray::Camera cam;
@@ -125,6 +125,15 @@ namespace At0::Layers
 			}
 
 			cubes.emplace_back(*Ray::Application::Get().GetMainWindow().GetRenderer3D(), 1.0f, face_colors);
+
+			std::uniform_real_distribution<float> posDist(-50.0f, 50.0f);
+			for (uint32_t i = 0; i < numCubes - 1; ++i)
+			{
+				cubes[i].SetTransform(
+					DirectX::XMMatrixRotationRollPitchYaw(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine)) *
+					DirectX::XMMatrixTranslation(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine) - 20.0f)
+				);
+			}
 		}
 
 		model = Ray::Model("Resources/nanosuit.obj", face_colors, *Ray::Application::Get().GetMainWindow().GetRenderer3D());
@@ -189,18 +198,18 @@ namespace At0::Layers
 
 		if constexpr (numCubes != 0)
 		{
-			for (uint32_t i = 0; i < cubes.size() - 1; ++i)
-			{
-				cubes[i].SetTransform(
-					DirectX::XMMatrixRotationRollPitchYaw(pitch + i, yaw + i, roll + i) *
-					DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f)
-				);
-			}
+			//for (uint32_t i = 0; i < cubes.size() - 1; ++i)
+			//{
+			//	cubes[i].SetTransform(
+			//		DirectX::XMMatrixRotationRollPitchYaw(pitch + i, yaw + i, roll + i) *
+			//		DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f)
+			//	);
+			//}
 
-			cubes.back().SetTransform(
-				DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-				DirectX::XMMatrixTranslation(xDir, yDir, zDir)
-			);
+			//cubes.back().SetTransform(
+			//	DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
+			//	DirectX::XMMatrixTranslation(xDir, yDir, zDir)
+			//);
 
 			// Takes the most amount of time here!
 			for (auto& cube : cubes)
@@ -229,14 +238,14 @@ namespace At0::Layers
 		if (mouse.IsMiddlePressed())
 		{
 			auto mouseDiff = mouse.GetPos() - mousePos;
-			cam.theta -= mouseDiff.x * 0.01f;
-			cam.phi += mouseDiff.y * 0.01f;
+			cam.theta -= mouseDiff.x * 0.003f;
+			cam.phi += mouseDiff.y * 0.003f;
 		}
 		if (mouse.IsRightPressed())
 		{
 			auto mouseDiff = mouse.GetPos() - mousePos;
-			cam.yaw -= mouseDiff.x * 0.01f;
-			cam.pitch -= mouseDiff.y * 0.01f;
+			cam.yaw -= mouseDiff.x * 0.003f;
+			cam.pitch -= mouseDiff.y * 0.003f;
 		}
 
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());

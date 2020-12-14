@@ -144,6 +144,6 @@ namespace At0::Ray
     {
         // TEMPORARY! Need customization for near and far
         const Size2& size = e.GetSize();
-        SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, size.y / size.x, 0.5f, 40.0f));
+        SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, size.y / size.x, 0.5f, 500.0f));
     }
 }
