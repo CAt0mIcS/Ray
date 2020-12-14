@@ -143,7 +143,7 @@ namespace At0::Layers
 		static float roll = 0.0f;
 		static float xDir = 0.0f;
 		static float yDir = 0.0f;
-		static float zDir = 0.0f;
+		static float zDir = 5.0f;
 
 		mousePos = window.Mouse.GetPos();
 
