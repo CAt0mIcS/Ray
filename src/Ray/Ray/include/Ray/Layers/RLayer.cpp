@@ -4,6 +4,9 @@
 #include <RayDebug/RInstrumentor.h>
 #include <RayDebug/RLogger.h>
 
+#include "Ray/RApplication.h"
+#include "Ray/Window/RWindow.h"
+
 
 namespace At0::Ray
 {
@@ -14,6 +17,16 @@ namespace At0::Ray
 
     }
     
+    Window& Layer::GetMainWindow()
+    {
+        return Ray::Application::Get().GetMainWindow();
+    }
+
+    const Window& Layer::GetMainWindow() const
+    {
+        return Ray::Application::Get().GetMainWindow();
+    }
+
     Layer::~Layer()
     {
         RAY_LOG_DEBUG("[Layer] '{0}' destroyed", m_Name);

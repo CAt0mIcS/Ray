@@ -13,7 +13,7 @@ static const float3 ambient = { 0.05f, 0.05f, 0.05f };
 static const float3 diffuseColor = { 0.0f, 0.5f, 0.5f };
 
 // Controls how fast the light falls of
-static const float diffuseIntensity = 5.9f;
+static const float diffuseIntensity = 1.0f;
 
 
 static const float attConst = 0.3f;
