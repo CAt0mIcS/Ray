@@ -198,43 +198,6 @@ namespace At0::Ray
 	{
 		RAY_ASSERT(false, "Incomplete Implementation");
 	}
-
-	bool OpenGLWindow::InitRenderer3D()
-	{
-		RAY_PROFILE_FUNCTION();
-
-		if (!m_Renderer3D)
-		{
-			m_Renderer3D = MakeScope<Renderer3D>(*this);
-			//m_Renderer3D->Init(m_hWnd);
-			return true;
-		}
-		return false;
-	}
-
-	bool OpenGLWindow::InitRenderer2D()
-	{
-		RAY_PROFILE_FUNCTION();
-
-		//if (!m_Renderer2D)
-		//{
-		//	m_Renderer2D = MakeScope<Renderer2D>();
-		//	m_Renderer2D->Init(m_hWnd);
-		//  return true;
-		//}
-		return false;
-	}
-
-	Renderer3D* OpenGLWindow::GetRenderer3D() const
-	{
-		RAY_PROFILE_FUNCTION();
-
-		if (GetParent())
-		{
-			return GetParent()->GetRenderer3D();
-		}
-		return m_Renderer3D.get();
-	}
 	
 	void OpenGLWindow::SetUpEventCallbacks()
 	{

@@ -34,6 +34,44 @@ namespace At0::Ray
 		return nullptr;
 	}
 
+	bool Window::InitRenderer3D()
+	{
+		RAY_PROFILE_FUNCTION();
+
+		if (!m_Renderer3D)
+		{
+			m_Renderer3D = MakeScope<Renderer3D>(*this);
+			m_Renderer3D->Init((HWND)GetNativeWindow()); //RAY_TODO Temporary!
+			return true;
+		}
+		return false;
+	}
+
+	bool Window::InitRenderer2D()
+	{
+		RAY_PROFILE_FUNCTION();
+
+		//if (!m_Renderer2D)
+		//{
+		//	m_Renderer2D = MakeScope<Renderer2D>();
+		//	m_Renderer2D->Init(m_hWnd);
+		//  return true;
+		//}
+		return false;
+	}
+
+	Renderer3D& Window::GetRenderer3D() const
+	{
+		RAY_PROFILE_FUNCTION();
+
+		if (GetParent())
+		{
+			return GetParent()->GetRenderer3D();
+		}
+		RAY_MEXPECTS(m_Renderer3D.get() != nullptr, "[Window::GetRenderer3D] Renderer was not initialized. Call Window::InitRenderer3D to initialize it.");
+		return *m_Renderer3D.get();
+	}
+
 	Window::Window(std::string_view name, Widget* parent)
 		: Widget(name, parent), m_CurrentlyHovering(nullptr), m_OldPos{}, m_OldSize{}
 	{

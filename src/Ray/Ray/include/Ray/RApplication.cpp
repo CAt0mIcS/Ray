@@ -45,7 +45,7 @@ namespace At0::Ray
 				return *win.get();
 		}
 
-		RAY_THROW_RUNTIME("FindWindowByName was unable to find the Window with name '{0}'.", name);
+		RAY_THROW_RUNTIME("[Application::FindWindowByName] was unable to find the Window with name '{0}'.", name);
 	}
 
 	int Application::Run()

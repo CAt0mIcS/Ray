@@ -74,9 +74,6 @@ namespace At0::Layers
 	Ray::Camera cam;
 	Ray::Scope<Ray::PointLight> ptLight;
 
-
-	// QUESTIONA: The way to get the MainWindow is too long? "Ray::Application::Get().GetMainWindow()" (fn in (maybe) Layer to get or static fn somewhere)
-	// I can only listen to events from one window (MouseMoveEvent from only MainWindow)
 	GUILayer::GUILayer(std::string_view name)
 		: Ray::Layer(name),
 		EventListener<Ray::WindowCloseEvent>(GetMainWindow()),
@@ -90,7 +87,7 @@ namespace At0::Layers
 		EventListener<Ray::MouseMoveEvent>::Subscribe(GetMainWindow());
 		//EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().FindWindowByName("Win0"));
 
-		ptLight = Ray::MakeScope<Ray::PointLight>(*GetMainWindow().GetRenderer3D());
+		ptLight = Ray::MakeScope<Ray::PointLight>(GetMainWindow().GetRenderer3D());
 
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] Startup");
@@ -126,7 +123,7 @@ namespace At0::Layers
 			cubes.reserve(numCubes);
 			for (uint32_t i = 0; i < numCubes - 1; ++i)
 			{
-				cubes.emplace_back(*GetMainWindow().GetRenderer3D()/*, 1.0f, face_colors*/);
+				cubes.emplace_back(GetMainWindow().GetRenderer3D()/*, 1.0f, face_colors*/);
 			}
 
 			//cubes.emplace_back(*Ray::Application::Get().GetMainWindow().GetRenderer3D()/*, 1.0f, face_colors*/);
@@ -139,15 +136,15 @@ namespace At0::Layers
 			}
 		}
 
-		model = Ray::Model("Resources/nanosuit.obj", face_colors, *GetMainWindow().GetRenderer3D());
-		GetMainWindow().GetRenderer3D()->SetCamera(DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f));
+		model = Ray::Model("Resources/nanosuit.obj", face_colors, GetMainWindow().GetRenderer3D());
+		GetMainWindow().GetRenderer3D().SetCamera(DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f));
 	}
 	
 	Ray::Point2 mousePos{};
 	void GUILayer::OnUpdate(Ray::Timestep ts)
 	{
 		Ray::Window& window = GetMainWindow();
-		Ray::Renderer3D& renderer = *window.GetRenderer3D();
+		Ray::Renderer3D& renderer = window.GetRenderer3D();
 		renderer.ClearBuffer(0.07f, 0.0f, 0.12f);
 		
 		static float pitch = 0.0f;

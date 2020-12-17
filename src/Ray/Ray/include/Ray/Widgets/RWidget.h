@@ -73,7 +73,7 @@ namespace At0::Ray
 		/// Getter for the Window Renderer
 		/// </summary>
 		/// <returns>The Renderer for this window</returns>
-		virtual Renderer3D* GetRenderer3D() const = 0;
+		virtual Renderer3D& GetRenderer3D() const = 0;
 
 		/// <summary>
 		/// Getter for the native window

@@ -100,12 +100,18 @@ namespace At0::Ray
 		/// <summary>
 		/// Initializes the 3D Renderer, checks if it has already been initialized
 		/// </summary>
-		virtual bool InitRenderer3D() = 0;
+		bool InitRenderer3D();
 		
 		/// <summary>
 		/// Initializes the 2D Renderer, checks if it has already been initialized
 		/// </summary>
-		virtual bool InitRenderer2D() = 0;
+		bool InitRenderer2D();
+
+		/// <summary>
+		/// Getter for the Renderer of this Window
+		/// </summary>
+		/// <returns>The Window Renderer</returns>
+		virtual Renderer3D& GetRenderer3D() const override;
 
 		/// <summary>
 		/// Getter for the Native Window
@@ -159,6 +165,16 @@ namespace At0::Ray
 		/// Specifies the old position of this window
 		/// </summary>
 		Point2 m_OldPos;
+
+		/// <summary>
+		/// Specifies the 3D renderer
+		/// </summary>
+		Scope<Renderer3D> m_Renderer3D;
+
+		///// <summary>
+		///// Specifies the 2D renderer
+		///// </summary>
+		//Scope<Renderer2D> m_Renderer2D;
 	};
 }
 

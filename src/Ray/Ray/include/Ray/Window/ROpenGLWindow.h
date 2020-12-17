@@ -86,22 +86,6 @@ namespace At0::Ray
 		/// <returns>The Native Window</returns>
 		virtual void* GetNativeWindow() const override { return (void*)m_hWnd; }
 
-		/// <summary>
-		/// Initializes the 3D Renderer, checks if it has already been initialized
-		/// </summary>
-		virtual bool InitRenderer3D() override;
-
-		/// <summary>
-		/// Initializes the 2D Renderer, checks if it has already been initialized
-		/// </summary>
-		virtual bool InitRenderer2D() override;
-
-		/// <summary>
-		/// Getter for the Renderer of this Window
-		/// </summary>
-		/// <returns>The Window Renderer</returns>
-		virtual Renderer3D* GetRenderer3D() const override;
-
 	private:
 		/// <summary>
 		/// Sets all glfw event callbacks
@@ -117,16 +101,6 @@ namespace At0::Ray
 		/// Native window handle
 		/// </summary>
 		GLFWwindow* m_hWnd;
-
-		/// <summary>
-		/// Specifies the 3D renderer
-		/// </summary>
-		Scope<Renderer3D> m_Renderer3D;
-
-		///// <summary>
-		///// Specifies the 2D renderer
-		///// </summary>
-		//Scope<Renderer2D> m_Renderer2D;
 	};
 }
 
