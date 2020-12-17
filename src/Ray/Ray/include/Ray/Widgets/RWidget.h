@@ -92,7 +92,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="name">Is the child's name</param>
 		/// <returns>The child, or nullptr if no child was found</returns>
-		Widget* FindChild(std::string_view name);
+		Widget& FindChild(std::string_view name);
 
 		/// <summary>
 		/// Adds a new child to this control

@@ -35,15 +35,15 @@ namespace At0::Ray
 
     }
 
-    Widget* Widget::FindChild(std::string_view name)
+    Widget& Widget::FindChild(std::string_view name)
     {
         RAY_PROFILE_FUNCTION();
         for (auto& child : m_Children)
         {
             if (child->GetName() == name)
-                return child.get();
+                return *child.get();
         }
-        return nullptr;
+        RAY_THROW_RUNTIME("[Widget::FindChild] was unable to find the child with name '{0}'", name);
     }
 
     void Widget::PostRedraw(bool eraseBkgnd) const

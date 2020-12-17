@@ -22,6 +22,7 @@ namespace At0::Ray
 		using ReverseIterator = typename std::deque<T>::reverse_iterator;
 		using ConstInterator = typename std::deque<T>::const_iterator;
 		using ConstReverseIterator = typename std::deque<T>::const_reverse_iterator;
+
 	public:
 		/// <summary>
 		/// Default Queue Constructor

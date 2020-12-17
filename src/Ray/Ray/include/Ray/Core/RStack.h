@@ -12,6 +12,7 @@ namespace At0::Ray
 	template<typename T>
 	class RAY_API Stack
 	{
+	public:
 		using Iterator = typename std::vector<T>::iterator;
 		using ReverseIterator = typename std::vector<T>::reverse_iterator;
 		using ConstInterator = typename std::vector<T>::const_iterator;

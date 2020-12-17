@@ -27,16 +27,6 @@ namespace At0::Ray
 		m_MainWindow = PushWindow(Window::Create("MainWindow", { 100, 100 }, { 960, 540 }));
 	}
 
-	void Application::Create(Application* app)
-	{
-		s_Instance = app;
-	}
-
-	void Application::Destroy()
-	{
-		delete s_Instance;
-	}
-
 	Window& Application::FindWindowByName(std::string_view name)
 	{
 		for (const Ref<Window>& win : m_WindowStack)
