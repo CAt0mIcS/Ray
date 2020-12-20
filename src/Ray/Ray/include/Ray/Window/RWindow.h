@@ -125,8 +125,6 @@ namespace At0::Ray
 		virtual ~Window();
 
 	public:
-		// QUESTIONA: Global Mouse and Keyboard instead of MouseInput& GetMouse() fn? (Can keep it)
-
 		/// <summary>
 		/// The mouse holding information about which mouse button is pressed in this window
 		/// </summary>

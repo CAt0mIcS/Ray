@@ -8,8 +8,6 @@ namespace At0::Ray
 	template<typename E>
 	class EventListener;
 
-	// QUESTIONA: Should I make this automatically dispatch all events? (leave)
-	// Possible: EventDispatcher<WindowResizeEvent, MouseMoveEvent>
 	template<typename E>
 	class EventDispatcher
 	{

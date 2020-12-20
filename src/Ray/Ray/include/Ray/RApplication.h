@@ -24,25 +24,6 @@ namespace At0::Ray
 		//friend void Ray::CreateApplication();
 	public:
 		/// <summary>
-		/// Initializes the application
-		/// </summary>
-		/// <param name="app">Is the application</param>
-		static void Create(Application* app);
-
-		/// <summary>
-		/// Deletes the application
-		/// </summary>
-		static void Destroy();
-
-
-		// QUESTIONA: Reference or pointer? 
-		// Maybe Null --> Pointer
-		// Found or exception if not --> Reference (Exception --> Programm error! / assert)
-		// Exception or nullptr
-
-		// QUESTIONA: How can I call FindWindowByName just FindWindow (Windows.h define...) (no other way)
-		
-		/// <summary>
 		/// Finds a window in the stack with name
 		/// </summary>
 		/// <param name="name">Is the name of the window to find</param>
