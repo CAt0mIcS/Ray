@@ -3,12 +3,16 @@
 #include <../../extern/glm/glm/glm.hpp>
 #include <iostream>
 
-#include "RlRBase.h"
-
 namespace At0::Ray
 {
 	using Point2 = glm::vec2;
 	using Size2 = glm::vec2;
+
+	using Point3 = glm::vec3;
+	using Size3 = glm::vec3;
+
+	// RAY_TODO: Learn about quaternions and add output stream operator
+	using Quaternion = glm::quat;
 
 	inline std::wostream& operator<<(std::wostream& os, const glm::vec1& vec)
 	{
@@ -58,4 +62,3 @@ namespace At0::Ray
 		return os;
 	}
 }
-

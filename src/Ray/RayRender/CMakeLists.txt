@@ -1,5 +1,4 @@
 set(SRC
-    "include/RayRender/TypeDefines.h"
     "include/RayRender/RlRBase.h"
     "include/RayRender/rlrpch.h"
     

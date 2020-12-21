@@ -5,54 +5,54 @@
 
 namespace At0::Ray
 {
-	ZRect::ZRect(float ltrb)
+	RRect::RRect(float ltrb)
 		: left(ltrb), top(ltrb), right(ltrb), bottom(ltrb)
 	{
 
 	}
 
-	ZRect::ZRect(float ileft, float itop, float iright, float ibottom)
+	RRect::RRect(float ileft, float itop, float iright, float ibottom)
 		: left(ileft), top(itop), right(iright), bottom(ibottom)
 	{
 
 	}
 
-	ZRect::ZRect()
+	RRect::RRect()
 		: left(0), top(0), right(0), bottom(0)
 	{
 
 	}
 
-	ZRect ZRect::operator+(const ZRect& other) const
+	RRect RRect::operator+(const RRect& other) const
 	{
-		ZRect temp(*this);
+		RRect temp(*this);
 		temp += other;
 		return temp;
 	}
 
-	ZRect ZRect::operator-(const ZRect& other) const
+	RRect RRect::operator-(const RRect& other) const
 	{
-		ZRect temp(*this);
+		RRect temp(*this);
 		temp -= other;
 		return temp;
 	}
 
-	ZRect ZRect::operator*(const ZRect& other) const
+	RRect RRect::operator*(const RRect& other) const
 	{
-		ZRect temp(*this);
+		RRect temp(*this);
 		temp *= other;
 		return temp;
 	}
 
-	ZRect ZRect::operator/(const ZRect& other) const
+	RRect RRect::operator/(const RRect& other) const
 	{
-		ZRect temp(*this);
+		RRect temp(*this);
 		temp /= other;
 		return temp;
 	}
 
 
-	ZRect& ZRect::operator+=(const ZRect& other)
+	RRect& RRect::operator+=(const RRect& other)
 	{
 		left += other.left;
 		top += other.top;
@@ -61,7 +61,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	ZRect& ZRect::operator-=(const ZRect& other)
+	RRect& RRect::operator-=(const RRect& other)
 	{
 		left -= other.left;
 		top -= other.top;
@@ -70,7 +70,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	ZRect& ZRect::operator*=(const ZRect& other)
+	RRect& RRect::operator*=(const RRect& other)
 	{
 		left *= other.left;
 		top *= other.top;
@@ -79,7 +79,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	ZRect& ZRect::operator/=(const ZRect& other)
+	RRect& RRect::operator/=(const RRect& other)
 	{
 		left /= other.left;
 		top /= other.top;
@@ -88,7 +88,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	std::ostream& operator<<(std::ostream& os, const ZRect& rect)
+	std::ostream& operator<<(std::ostream& os, const RRect& rect)
 	{
 		os << "{left=" << rect.left << ", top=" << rect.top << ", right=" << rect.right << ", bottom=" << rect.bottom << "}";
 		return os;

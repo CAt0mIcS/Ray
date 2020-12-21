@@ -2,7 +2,7 @@
 
 #include "REvent.h"
 
-#include <../../RayRender/include/RayRender/TypeDefines.h>
+#include <../../RayUtil/include/RayUtil/GlobalDefines.h>
 #include <../../RayUtil/include/RayUtil/RKeyCodes.h>
 
 

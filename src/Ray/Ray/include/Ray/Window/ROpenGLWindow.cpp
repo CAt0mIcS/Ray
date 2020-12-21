@@ -362,12 +362,24 @@ namespace At0::Ray
 
 		glfwSetWindowSizeCallback(m_hWnd, [this](int width, int height)
 			{
-				MoveTo(Point2{ width, height });
+				//ResizeTo(Point2{ width, height });
 
 				WindowResizeEvent e(m_OldSize, Point2{ (float)width, (float)height });
 				for (auto* pListener : EventDispatcher<WindowResizeEvent>::Get())
 				{
-					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+					pListener->OnEvent(this, e);
+				}
+			}
+		);
+
+		glfwSetWindowPosCallback(m_hWnd, [this](int x, int y) 
+			{
+				//MoveTo(Point2{ x, y });
+
+				WindowMoveEvent e(m_OldPos, Point2{ (float)x, (float)y });
+				for (auto* pListener : EventDispatcher<WindowMoveEvent>::Get())
+				{
+					pListener->OnEvent(this, e);
 				}
 			}
 		);

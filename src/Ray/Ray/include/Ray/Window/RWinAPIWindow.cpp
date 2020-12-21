@@ -341,7 +341,7 @@ namespace At0::Ray
 		case WM_SIZE:
 		{
 			Size2 newSize = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
-			ResizeTo(newSize);
+			//ResizeTo(newSize);
 
 			//RAY_TODO: Read how windows handles events (how they're built, how they handle it)
 
@@ -357,7 +357,7 @@ namespace At0::Ray
 		case WM_MOVE:
 		{
 			Point2 newPos = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
-			MoveTo(newPos);
+			//MoveTo(newPos);
 
 			WindowMoveEvent e(m_OldPos, newPos);
 			for (auto* pListener : EventDispatcher<WindowMoveEvent>::Get())

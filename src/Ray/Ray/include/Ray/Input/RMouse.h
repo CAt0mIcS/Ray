@@ -2,7 +2,7 @@
 
 #include "../RBase.h"
 
-#include <../../RayRender/include/RayRender/TypeDefines.h>
+#include <../../RayUtil/include/RayUtil/GlobalDefines.h>
 
 
 namespace At0::Ray

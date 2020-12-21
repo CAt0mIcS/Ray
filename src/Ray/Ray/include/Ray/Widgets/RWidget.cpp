@@ -11,30 +11,6 @@
 
 namespace At0::Ray
 {
-    void Widget::MoveBy(const Point2& pos)
-    {
-        RAY_PROFILE_FUNCTION();
-
-    }
-
-    void Widget::MoveTo(const Point2& pos)
-    {
-        RAY_PROFILE_FUNCTION();
-
-    }
-
-    void Widget::ResizeBy(const Size2& size)
-    {
-        RAY_PROFILE_FUNCTION();
-
-    }
-
-    void Widget::ResizeTo(const Size2& size)
-    {
-        RAY_PROFILE_FUNCTION();
-
-    }
-
     Widget& Widget::FindChild(std::string_view name)
     {
         RAY_PROFILE_FUNCTION();
@@ -108,7 +84,7 @@ namespace At0::Ray
     }
 
     Widget::Widget(std::string_view name, Widget* parent)
-        : m_Name(name), m_Parent(parent), m_Children{}, m_Matrix{}
+        : m_Name(name), m_Parent(parent), m_Children{}
     {
         RAY_PROFILE_FUNCTION();
     }
