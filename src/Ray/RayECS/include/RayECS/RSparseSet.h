@@ -32,6 +32,11 @@ namespace At0::Ray::ECS
 			return m_Sparse[e];
 		}
 
+		bool Contains(Entity e) const
+		{
+			return (e < m_Sparse.size());
+		}
+
 	private:
 		std::vector<Entity> m_Packed;
 		std::vector<uint32_t> m_Sparse;

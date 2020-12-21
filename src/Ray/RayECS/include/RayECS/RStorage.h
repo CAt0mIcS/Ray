@@ -20,6 +20,8 @@ namespace At0::Ray::ECS
 				m_Components.push_back(Component{ std::forward<Args>(args)... });
 			else
 				m_Components.emplace_back(std::forward<Args>(args)...);
+
+			SparseSet::Emplace(e);
 		}
 
 		const Component& Get(Entity e) const

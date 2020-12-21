@@ -6,6 +6,9 @@
 #include <utility>
 #include <memory>
 
+// RAY_TODO: Remove when Registry::Create implementation is finished.
+#include <stdexcept>
+
 
 namespace At0::Ray::ECS
 {
@@ -18,9 +21,74 @@ namespace At0::Ray::ECS
 			return Assure<Component>().Emplace(entity, std::forward<Args>(args)...);
 		}
 
+		Entity Create()
+		{
+			Entity e;
+
+			if (m_Destroyed == EntityNull)
+			{
+				// No entity to recycle
+				e = m_Entities.emplace_back((uint32_t)m_Entities.size());
+			}
+			else
+			{
+				throw std::runtime_error("Missing implementation");
+			}
+
+			return e;
+		}
+
+		template<typename Component>
+		Component& Get(Entity e)
+		{
+			return const_cast<Component&>(std::as_const(*this).Get<Component>(e));
+		}
+
+		template<typename Component>
+		const Component& Get(Entity e) const
+		{
+			return Assure<Component>().Get(e);
+		}
+
+		template<typename... Component>
+		bool Has(Entity e) const
+		{
+			return (Assure<Component>().Contains(e) && ...);
+		}
+
 	private:
 		template<typename Component>
-		const Component& Assure() const
+		struct PoolHandler : Storage<Component>
+		{
+			template<typename... Args>
+			decltype(auto) Emplace(Entity e, Args&&... args)
+			{
+				Storage<Component>::Emplace(e, std::forward<Args>(args)...);
+
+				if constexpr (!std::is_empty_v<Component>)
+					return Storage<Component>::Get(e);
+			}
+
+			const Component& Get(Entity e) const
+			{
+				return Storage<Component>::Get(e);
+			}
+
+			Component& Get(Entity e)
+			{
+				return const_cast<Component>(std::as_const(*this).Get(e));
+			}
+		};
+
+		struct PoolData
+		{
+			uint32_t TypeID;
+			std::unique_ptr<SparseSet> Pool{};
+		};
+
+	private:
+		template<typename Component>
+		const PoolHandler<Component>& Assure() const
 		{
 			if constexpr (HasComponentIndex<Component>::value)
 			{
@@ -57,35 +125,14 @@ namespace At0::Ray::ECS
 			}
 		}
 
-	private:
 		template<typename Component>
-		struct PoolHandler : Storage<Component>
+		PoolHandler<Component>& Assure()
 		{
-			template<typename... Args>
-			decltype(auto) Emplace(Entity e, Args&&... args)
-			{
-				Storage<Component>::Emplace(e, std::forward<Args>(args)...);
-			}
-
-			const Component& Get(Entity e) const
-			{
-				return Storage<Component>::Get(e);
-			}
-
-			Component& Get(Entity e)
-			{
-				return const_cast<Component>(std::as_const(*this).Get(e));
-			}
-		};
-
-		struct PoolData
-		{
-			uint32_t TypeID;
-			std::unique_ptr<SparseSet> Pool{};
-		};
+			return const_cast<PoolHandler<Component>&>(std::as_const(*this).Assure<Component>());
+		}
 
 	private:
-		std::vector<PoolData> m_Pools;
+		mutable std::vector<PoolData> m_Pools;
 		std::vector<Entity> m_Entities;
 		Entity m_Destroyed{ EntityNull };
 	};

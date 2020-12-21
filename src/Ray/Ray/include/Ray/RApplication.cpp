@@ -11,6 +11,8 @@
 #include <RayDebug/RLogger.h>
 #include <RayUtil/RException.h>
 
+#include "RayECS\RayECS.h"
+
 
 namespace At0::Ray
 {
