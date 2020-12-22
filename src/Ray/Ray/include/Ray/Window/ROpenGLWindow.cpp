@@ -158,6 +158,30 @@ namespace At0::Ray
 		glfwIconifyWindow(m_hWnd);
 	}
 
+	void OpenGLWindow::SetPos(const Point2& pos)
+	{
+		glfwSetWindowPos(m_hWnd, pos.x, pos.y);
+	}
+
+	void OpenGLWindow::SetSize(const Size2& size)
+	{
+		glfwSetWindowSize(m_hWnd, size.x, size.y);
+	}
+
+	Point2 OpenGLWindow::GetPos() const
+	{
+		int x, y;
+		glfwGetWindowPos(m_hWnd, &x, &y);
+		return { x, y };
+	}
+
+	Size2 OpenGLWindow::GetSize() const
+	{
+		int width, height;
+		glfwGetWindowSize(m_hWnd, &width, &height);
+		return { width, height };
+	}
+
 	void OpenGLWindow::Close()
 	{
 		RAY_PROFILE_FUNCTION();

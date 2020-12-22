@@ -86,6 +86,30 @@ namespace At0::Ray
 		virtual void Close() = 0;
 
 		/// <summary>
+		/// Moves the window to screen coordinates in pos
+		/// </summary>
+		/// <param name="pos">Are the coordinates where the window will be moved to</param>
+		virtual void SetPos(const Point2& pos) = 0;
+
+		/// <summary>
+		/// Resizes the window
+		/// </summary>
+		/// <param name="size">Is the new size of the window</param>
+		virtual void SetSize(const Size2& size) = 0;
+
+		/// <summary>
+		/// Getter for the current window position
+		/// </summary>
+		/// <returns>The window position</returns>
+		virtual Point2 GetPos() const = 0;
+
+		/// <summary>
+		/// Getter for the current window size
+		/// </summary>
+		/// <returns>The current window size</returns>
+		virtual Size2 GetSize() const = 0;
+
+		/// <summary>
 		/// Checks if the Window is open (IsVisible)
 		/// </summary>
 		/// <returns>True if the Window is open, false otherwise</returns>

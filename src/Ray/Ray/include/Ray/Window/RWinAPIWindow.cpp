@@ -432,6 +432,32 @@ namespace At0::Ray
 		ShowWindow(m_hWnd, SW_MINIMIZE);
 	}
 
+	void WinAPIWindow::SetPos(const Point2& pos)
+	{
+		auto size = GetSize();
+		RAY_WND_THROW_LAST_FAILED(SetWindowPos(m_hWnd, 0, pos.x, pos.y, size.x, size.y, 0));
+	}
+
+	void WinAPIWindow::SetSize(const Size2& size)
+	{
+		auto pos = GetPos();
+		RAY_WND_THROW_LAST_FAILED(SetWindowPos(m_hWnd, 0, pos.x, pos.y, size.x, size.y, 0));
+	}
+
+	Point2 WinAPIWindow::GetPos() const
+	{
+		RECT rc;
+		RAY_WND_THROW_LAST_FAILED(GetWindowRect(m_hWnd, &rc));
+		return Point2{ (float)rc.left, (float)rc.top };
+	}
+
+	Size2 WinAPIWindow::GetSize() const
+	{
+		RECT rc;
+		RAY_WND_THROW_LAST_FAILED(GetWindowRect(m_hWnd, &rc));
+		return Size2{ (float)rc.right - rc.left, (float)rc.bottom - rc.top };
+	}
+
 	void WinAPIWindow::Close()
 	{
 		if(IsOpen())
