@@ -26,7 +26,7 @@ namespace At0::Ray
 		s_Instance = this;
 
 		StartupSetup();
-		m_MainWindow = PushWindow(Window::Create("MainWindow", { 100, 100 }, { 960, 540 }));
+		PushWindow(Window::Create("MainWindow", { 100, 100 }, { 960, 540 }));
 	}
 
 	Window& Application::FindWindowByName(std::string_view name)
@@ -47,7 +47,7 @@ namespace At0::Ray
 		
 		std::thread appThread([this, &lastFrameTime, &timestep]() 
 			{
-				while (m_MainWindow->IsOpen())
+				while (GetMainWindow().IsOpen())
 				{
 					// -------------------------------------------------------------------------------------
 					// Setting timestep
@@ -70,7 +70,7 @@ namespace At0::Ray
 
 		// -----------------------------------------------------------------------------------------
 		// Main Application Loop
-		while (m_MainWindow->IsOpen())
+		while (GetMainWindow().IsOpen())
 		{
 			for (int16_t i = m_WindowStack.Size() - 1; i >= 0; --i)
 			{

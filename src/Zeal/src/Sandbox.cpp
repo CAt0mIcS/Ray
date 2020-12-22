@@ -12,9 +12,9 @@ namespace At0::Zeal
 	{
 		//RAY_PROFILE_FUNCTION();
 
-		m_MainWindow->InitRenderer3D();
-		m_MainWindow->SetTitle("Zeal");
-		m_MainWindow->Show();
+		GetMainWindow().InitRenderer3D();
+		GetMainWindow().SetTitle("Zeal");
+		GetMainWindow().Show();
 
 		//Ray::Window* win = PushWindow(Ray::Window::Create("Win0", { 150, 150 }, { 960, 540 }));
 		//win->InitRenderer3D();

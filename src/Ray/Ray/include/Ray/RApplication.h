@@ -40,13 +40,13 @@ namespace At0::Ray
 		/// Getter for the main window
 		/// </summary>
 		/// <returns>The main window of this application</returns>
-		Window& GetMainWindow() { return *m_MainWindow; }
+		Window& GetMainWindow() { return *m_WindowStack[0]; }
 
 		/// <summary>
 		/// Getter for the main window
 		/// </summary>
 		/// <returns>The main window of this application</returns>
-		const Window& GetMainWindow() const { return *m_MainWindow; }
+		const Window& GetMainWindow() const { return *m_WindowStack[0]; }
 
 		/// <summary>
 		/// Starts the application run loop
@@ -97,12 +97,6 @@ namespace At0::Ray
 		/// Does some startup stuff like allocate the console
 		/// </summary>
 		void StartupSetup();
-
-	protected:
-		/// <summary>
-		/// The main window which will exit the application on close
-		/// </summary>
-		Window* m_MainWindow;
 
 	private:
 		/// <summary>

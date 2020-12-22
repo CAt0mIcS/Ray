@@ -125,12 +125,12 @@ namespace At0::Ray
 			m_Stack.clear();
 		}
 
-		/// <summary>
-		/// Index operator
-		/// </summary>
-		/// <param name="i">Is the index of the object</param>
-		/// <returns>The object at index i</returns>
 		decltype(auto) operator[](uint32_t i)
+		{
+			return std::as_const(*this).operator[](i);
+		}
+
+		decltype(auto) operator[](uint32_t i) const
 		{
 			return m_Stack[i];
 		}
