@@ -4,6 +4,7 @@ set(SRC
 	"include/RayECS/RRegistry.h"
 	"include/RayECS/RSparseSet.h"
 	"include/RayECS/RStorage.h"
+	"include/RayECS/RView.h"
 )
 
 add_library("RayECS" INTERFACE)

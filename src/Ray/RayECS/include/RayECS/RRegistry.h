@@ -2,6 +2,7 @@
 
 #include "RInternal.h"
 #include "RStorage.h"
+#include "RView.h"
 
 #include <utility>
 #include <memory>
@@ -38,16 +39,28 @@ namespace At0::Ray::ECS
 			return e;
 		}
 
-		template<typename Component>
-		Component& Get(Entity e)
+		template<typename... Component>
+		ComponentView<Component...> View()
 		{
-			return const_cast<Component&>(std::as_const(*this).Get<Component>(e));
+			return { Assure<Component>()... };
 		}
 
-		template<typename Component>
-		const Component& Get(Entity e) const
+		template<typename... Component>
+		decltype(auto) Get(Entity e)
 		{
-			return Assure<Component>().Get(e);
+			if constexpr (sizeof...(Component) == 1)
+				return Assure<Component...>().Get(e);
+			else
+				return std::forward_as_tuple(Assure<Component>().Get(e)...);
+		}
+
+		template<typename... Component>
+		decltype(auto) Get(Entity e) const
+		{
+			if constexpr (sizeof...(Component) == 1)
+				return Assure<Component...>().Get(e);
+			else
+				return std::forward_as_tuple(Assure<Component>().Get(e)...);
 		}
 
 		template<typename... Component>
@@ -69,14 +82,9 @@ namespace At0::Ray::ECS
 					return Storage<Component>::Get(e);
 			}
 
-			const Component& Get(Entity e) const
-			{
-				return Storage<Component>::Get(e);
-			}
-
 			Component& Get(Entity e)
 			{
-				return const_cast<Component>(std::as_const(*this).Get(e));
+				return Storage<Component>::Get(e);
 			}
 		};
 

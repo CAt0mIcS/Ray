@@ -21,6 +21,36 @@ namespace At0::Ray
 	Application::Application(std::string_view commandLine)
 		: m_LayerStack{}
 	{
+
+		struct TagComponent
+		{
+			std::string tag;
+
+			TagComponent(const std::string_view tag) : tag(tag) {}
+			TagComponent() = default;
+		};
+
+		struct TransformComponent
+		{
+			float x;
+
+			TransformComponent(float x) : x(x) {}
+			TransformComponent() = default;
+		};
+
+		ECS::Registry registry;
+		ECS::Entity e = registry.Create();
+		ECS::Entity e2 = registry.Create();
+		registry.Emplace<TagComponent>(e, "This is the first entities tag component");
+		registry.Emplace<TagComponent>(e2, "This is the second entities tag component");
+		registry.Emplace<TransformComponent>(e, 3.33f);
+		registry.Emplace<TransformComponent>(e2, 4.44f);
+
+		ECS::ComponentView<TagComponent, TransformComponent> view = registry.View<TagComponent, TransformComponent>();
+
+
+
+
 		if (s_Instance)
 			RAY_ASSERT(false, "Another Application Instance already exists");
 		s_Instance = this;
