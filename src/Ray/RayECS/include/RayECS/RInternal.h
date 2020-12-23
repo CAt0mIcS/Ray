@@ -21,6 +21,7 @@ namespace At0::Ray::ECS
 {
 	inline constexpr uint32_t EntityNull = -1;
 	using Entity = uint32_t;
+	using IndexType = size_t;
 
 	template<typename Component>
 	struct ComponentIndex

@@ -21,6 +21,13 @@ namespace At0::Ray
 	Application::Application(std::string_view commandLine)
 		: m_LayerStack{}
 	{
+		if (s_Instance)
+			RAY_ASSERT(false, "Another Application Instance already exists");
+		s_Instance = this;
+
+		StartupSetup();
+		PushWindow(Window::Create("MainWindow", { 100, 100 }, { 960, 540 }));
+
 
 		struct TagComponent
 		{
@@ -38,6 +45,7 @@ namespace At0::Ray
 			TransformComponent() = default;
 		};
 
+
 		ECS::Registry registry;
 		ECS::Entity e = registry.Create();
 		ECS::Entity e2 = registry.Create();
@@ -48,15 +56,12 @@ namespace At0::Ray
 
 		ECS::ComponentView<TagComponent, TransformComponent> view = registry.View<TagComponent, TransformComponent>();
 
+		for (ECS::Entity e : view)
+		{
+			std::cout << registry.Get<TransformComponent>(e).x << '\n';
+		}
 
 
-
-		if (s_Instance)
-			RAY_ASSERT(false, "Another Application Instance already exists");
-		s_Instance = this;
-
-		StartupSetup();
-		PushWindow(Window::Create("MainWindow", { 100, 100 }, { 960, 540 }));
 	}
 
 	Window& Application::FindWindowByName(std::string_view name)
