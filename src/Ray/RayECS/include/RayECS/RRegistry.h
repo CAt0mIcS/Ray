@@ -69,6 +69,12 @@ namespace At0::Ray::ECS
 			return (Assure<Component>().Contains(e) && ...);
 		}
 
+		template<typename... Component>
+		bool Any(Entity e) const
+		{
+			return (Assure<Component>().Contains(e) || ...);
+		}
+
 	private:
 		template<typename Component>
 		struct PoolHandler : Storage<Component>

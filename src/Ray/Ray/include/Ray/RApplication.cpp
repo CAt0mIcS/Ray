@@ -11,7 +11,10 @@
 #include <RayDebug/RLogger.h>
 #include <RayUtil/RException.h>
 
+// -------------------------------------------------------------
+// ECS TESTING INCLUDES
 #include "RayECS\RayECS.h"
+#include "Ray/Core/RComponents.h"
 
 
 namespace At0::Ray
@@ -28,24 +31,8 @@ namespace At0::Ray
 		StartupSetup();
 		PushWindow(Window::Create("MainWindow", { 100, 100 }, { 960, 540 }));
 
-
-		struct TagComponent
-		{
-			std::string tag;
-
-			TagComponent(const std::string_view tag) : tag(tag) {}
-			TagComponent() = default;
-		};
-
-		struct TransformComponent
-		{
-			float x;
-
-			TransformComponent(float x) : x(x) {}
-			TransformComponent() = default;
-		};
-
-
+		// -------------------------------------------------------------
+		// ECS TESTING
 		ECS::Registry registry;
 		ECS::Entity e = registry.Create();
 		ECS::Entity e2 = registry.Create();
@@ -57,6 +44,11 @@ namespace At0::Ray
 		ECS::ComponentView<TagComponent, TransformComponent> view = registry.View<TagComponent, TransformComponent>();
 
 		registry.View<TagComponent, TransformComponent>().Each([&](ECS::Entity e) { std::cout << registry.Get<TagComponent>(e).tag << '\n'; });
+
+		if (registry.Any<TagComponent, TransformComponent>(e))
+		{
+			std::cout << "Entity has\n";
+		}
 
 		for (ECS::Entity e : view)
 		{
