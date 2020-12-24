@@ -47,7 +47,7 @@ namespace At0::Ray
 
 		if (registry.Any<TagComponent, TransformComponent>(e))
 		{
-			std::cout << "Entity has\n";
+			std::cout << "Entity has any of TagComponent or TransformComponent\n";
 		}
 
 		for (ECS::Entity e : view)
