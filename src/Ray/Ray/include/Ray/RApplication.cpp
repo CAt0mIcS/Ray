@@ -56,9 +56,12 @@ namespace At0::Ray
 
 		ECS::ComponentView<TagComponent, TransformComponent> view = registry.View<TagComponent, TransformComponent>();
 
+		registry.View<TagComponent, TransformComponent>().Each([&](ECS::Entity e) { std::cout << registry.Get<TagComponent>(e).tag << '\n'; });
+
 		for (ECS::Entity e : view)
 		{
 			std::cout << registry.Get<TransformComponent>(e).x << '\n';
+			std::cout << registry.Get<TagComponent>(e).tag << '\n';
 		}
 
 

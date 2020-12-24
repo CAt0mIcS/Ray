@@ -66,6 +66,18 @@ namespace At0::Ray::ECS
 
 		}
 
+		template<typename F>
+		void Each(F&& func)
+		{
+			for (Entity e : *this)
+			{
+				if constexpr (std::is_invocable_v<F>)
+					func();
+				else if constexpr (std::is_invocable_v<F, Entity>)
+					func(e);
+			}
+		}
+
 		ViewIterator begin()
 		{
 			const SparseSet& view = Candidate();

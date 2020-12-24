@@ -90,7 +90,7 @@ namespace At0::Ray::ECS
 
 		struct PoolData
 		{
-			uint32_t TypeID;
+			uint32_t TypeID{};
 			std::unique_ptr<SparseSet> Pool{};
 		};
 
