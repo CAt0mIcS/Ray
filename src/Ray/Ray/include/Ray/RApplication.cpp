@@ -36,25 +36,8 @@ namespace At0::Ray
 		ECS::Registry registry;
 		ECS::Entity e = registry.Create();
 		ECS::Entity e2 = registry.Create();
-		registry.Emplace<TagComponent>(e, "This is the first entities tag component");
-		registry.Emplace<TagComponent>(e2, "This is the second entities tag component");
-		registry.Emplace<TransformComponent>(e, 3.33f);
-		registry.Emplace<TransformComponent>(e2, 4.44f);
-
-		ECS::ComponentView<TagComponent, TransformComponent> view = registry.View<TagComponent, TransformComponent>();
-
-		registry.View<TagComponent, TransformComponent>().Each([&](ECS::Entity e) { std::cout << registry.Get<TagComponent>(e).tag << '\n'; });
-
-		if (registry.Any<TagComponent, TransformComponent>(e))
-		{
-			std::cout << "Entity has any of TagComponent or TransformComponent\n";
-		}
-
-		for (ECS::Entity e : view)
-		{
-			std::cout << registry.Get<TransformComponent>(e).x << '\n';
-			std::cout << registry.Get<TagComponent>(e).tag << '\n';
-		}
+		registry.Emplace<TransformComponent>(e2, 3.33f);
+		registry.Emplace<TagComponent>(e, "1st Tag");
 
 
 	}
