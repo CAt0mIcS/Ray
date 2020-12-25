@@ -101,7 +101,7 @@ namespace At0::Ray
 
 		for (Scope<Widget>& child : m_Children)
 		{
-			if (Mouse.IsOnWidget(child) && *m_CurrentlyHovering != child)
+			if (Mouse.IsOnWidget(child) && *m_CurrentlyHovering != *child)
 			{
 				generateEvents(child.get());
 				setNew = true;

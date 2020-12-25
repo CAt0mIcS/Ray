@@ -21,34 +21,11 @@ namespace At0::Ray
 	class RAY_API Widget
 	{
 	public:
-		/// <summary>
-		/// Default Widget Move-Constructor
-		/// </summary>
-		/// <param name=""></param>
 		Widget(Widget&&) noexcept = default;
-
-		/// <summary>
-		/// Gets the unique name of the current Widget
-		/// </summary>
-		/// <returns>The name of the widget</returns>
+		
 		std::string_view GetName() const { return m_Name; }
-
-		/// <summary>
-		/// Getter for the Window Renderer
-		/// </summary>
-		/// <returns>The Renderer for this window</returns>
 		virtual Renderer3D& GetRenderer3D() const = 0;
-
-		/// <summary>
-		/// Getter for the native window
-		/// </summary>
-		/// <returns>The native window handle</returns>
 		virtual void* GetNativeWindow() const = 0;
-
-		/// <summary>
-		/// Getter for the parent of this Widget
-		/// </summary>
-		/// <returns>The parent Widget</returns>
 		Widget* GetParent() const { return m_Parent; }
 
 		/// <summary>
@@ -59,7 +36,7 @@ namespace At0::Ray
 		Widget& FindChild(std::string_view name);
 
 		/// <summary>
-		/// Adds a new child to this control
+		/// Adds a new child to this widget
 		/// </summary>
 		/// <typeparam name="T">Is any derived type of Widget</typeparam>
 		/// <typeparam name="...Args">Are any arguments</typeparam>
@@ -74,58 +51,9 @@ namespace At0::Ray
 		/// </summary>
 		void PostRedraw(bool eraseBkgnd = false) const;
 
-		/// <summary>
-		/// Region which defines commonly used operators
-		/// </summarn>
-		#pragma region Operators
+		bool operator==(const Widget& other) const;
+		bool operator!=(const Widget& other) const;
 
-		/// <summary>
-		/// Comparison operator
-		/// </summary>
-		/// <param name="other">Is the Widget to compare to</param>
-		/// <returns>True if these two Widgets are the same, false otherwise</returns>
-		bool operator==(const Widget& other);
-
-		/// <summary>
-		/// Comparison operator
-		/// </summary>
-		/// <param name="other">Is the Widget to compare to</param>
-		/// <returns>True if these two Widgets are the same, false otherwise</returns>
-		bool operator==(const Scope<Widget>& other);
-
-		/// <summary>
-		/// Comparison operator
-		/// </summary>
-		/// <param name="other">Is the Widget to compare to</param>
-		/// <returns>True if these two Widgets are the same, false otherwise</returns>
-		bool operator==(const Ref<Widget>& other);
-
-		/// <summary>
-		/// Comparison operator
-		/// </summary>
-		/// <param name="other">Is the Widget to compare to</param>
-		/// <returns>True if these two Widgets are the not same, false otherwise</returns>
-		bool operator!=(const Widget& other);
-
-		/// <summary>
-		/// Comparison operator
-		/// </summary>
-		/// <param name="other">Is the Widget to compare to</param>
-		/// <returns>True if these two Widgets are the not same, false otherwise</returns>
-		bool operator!=(const Scope<Widget>& other);
-
-		/// <summary>
-		/// Comparison operator
-		/// </summary>
-		/// <param name="other">Is the Widget to compare to</param>
-		/// <returns>True if these two Widgets are the not same, false otherwise</returns>
-		bool operator!=(const Ref<Widget>& other);
-
-		#pragma endregion
-
-		/// <summary>
-		/// Virtual Widget Deconstructor
-		/// </summary>
 		virtual ~Widget();
 
 	protected:
@@ -145,19 +73,8 @@ namespace At0::Ray
 		Widget* GetEventReceiver(const Event& e, const MouseInput& mouse);
 
 	protected:
-		/// <summary>
-		/// The parent of this Widget, may be null
-		/// </summary>
 		Widget* m_Parent;
-
-		/// <summary>
-		/// The name of this widget, should be unique across all widgets
-		/// </summary>
 		const std::string m_Name;
-
-		/// <summary>
-		/// All the child widgets
-		/// </summary>
 		std::vector<Scope<Widget>> m_Children;
 	};
 

@@ -34,48 +34,17 @@ namespace At0::Ray
         // RAY_WND_THROW_LAST_FAILED(UpdateWindow(hWnd));
     }
 
-    /// <summary>
-    /// Defines commonly used operators
-    /// </summary>
-    #pragma region Operators
-
-    bool Widget::operator==(const Widget& other)
+    bool Widget::operator==(const Widget& other) const
     {
         RAY_PROFILE_FUNCTION();
         return GetName() == other.GetName();
     }
 
-    bool Widget::operator==(const Scope<Widget>& other)
-    {
-        RAY_PROFILE_FUNCTION();
-        return GetName() == other->GetName();
-    }
-
-    bool Widget::operator==(const Ref<Widget>& other)
-    {
-        RAY_PROFILE_FUNCTION();
-        return GetName() == other->GetName();
-    }
-
-    bool Widget::operator!=(const Widget& other)
+    bool Widget::operator!=(const Widget& other) const
     {
         RAY_PROFILE_FUNCTION();
         return GetName() == other.GetName();
     }
-
-    bool Widget::operator!=(const Scope<Widget>& other)
-    {
-        RAY_PROFILE_FUNCTION();
-        return GetName() == other->GetName();
-    }
-
-    bool Widget::operator!=(const Ref<Widget>& other)
-    {
-        RAY_PROFILE_FUNCTION();
-        return GetName() == other->GetName();
-    }
-    
-    #pragma endregion
 
     Widget::~Widget()
     {
