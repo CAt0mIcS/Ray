@@ -39,7 +39,6 @@ namespace At0::Ray
 		/// Create the Window acording to the RendererAPI::API
 		/// </summary>
 		/// <param name="name">Is the unique Widget name</param>
-		/// <param name="parent">Is a parent Window</param>
 		/// <returns>The created Window</returns>
 		static Ref<Window> Create(std::string_view name, const Point2 pos, const Size2 size, Widget* parent = nullptr);
 
@@ -47,42 +46,15 @@ namespace At0::Ray
 		/// Called every frame to read from the internal message queue
 		/// </summary>
 		virtual void Update() = 0;
-
-		/// <summary>
-		/// Getter for the current Window Title
-		/// </summary>
-		/// <returns>The title of this Window</returns>
+		
 		virtual std::string GetTitle() const = 0;
-
-		/// <summary>
-		/// Sets the Window Title
-		/// </summary>
-		/// <param name="title">Is the new Window Title</param>
 		virtual void SetTitle(std::string_view title) = 0;
 
-		/// <summary>
-		/// Shows the Window
-		/// </summary>
 		virtual void Show() const = 0;
-
-		/// <summary>
-		/// Hides the Window
-		/// </summary>
 		virtual void Hide() const = 0;
-
-		/// <summary>
-		/// Maximizes the Window
-		/// </summary>
 		virtual void Maximize() const = 0;
-
-		/// <summary>
-		/// Minimizes the Window
-		/// </summary>
 		virtual void Minimize() const = 0;
-
-		/// <summary>
-		/// Closes the Window
-		/// </summary>
+		
 		virtual void Close() = 0;
 
 		/// <summary>
@@ -109,16 +81,7 @@ namespace At0::Ray
 		/// <returns>The current window size</returns>
 		virtual Size2 GetSize() const = 0;
 
-		/// <summary>
-		/// Checks if the Window is open (IsVisible)
-		/// </summary>
-		/// <returns>True if the Window is open, false otherwise</returns>
 		virtual bool IsOpen() const = 0;
-		
-		/// <summary>
-		/// Sets the window icon
-		/// </summary>
-		/// <param name="path">Is the path to the .ico file</param>
 		virtual void SetIcon(std::string_view path) = 0;
 
 		/// <summary>
@@ -131,21 +94,9 @@ namespace At0::Ray
 		/// </summary>
 		bool InitRenderer2D();
 
-		/// <summary>
-		/// Getter for the Renderer of this Window
-		/// </summary>
-		/// <returns>The Window Renderer</returns>
 		virtual Renderer3D& GetRenderer3D() const override;
-
-		/// <summary>
-		/// Getter for the Native Window
-		/// </summary>
-		/// <returns>The Native Window</returns>
 		virtual void* GetNativeWindow() const = 0;
-
-		/// <summary>
-		/// Window Deconstructor
-		/// </summary>
+		
 		virtual ~Window();
 
 	public:
@@ -178,24 +129,10 @@ namespace At0::Ray
 		/// </summary>
 		Widget* m_CurrentlyHovering;
 
-		/// <summary>
-		/// Specifies the old size of this window
-		/// </summary>
 		Size2 m_OldSize;
-
-		/// <summary>
-		/// Specifies the old position of this window
-		/// </summary>
 		Point2 m_OldPos;
 
-		/// <summary>
-		/// Specifies the 3D renderer
-		/// </summary>
 		Scope<Renderer3D> m_Renderer3D;
-
-		///// <summary>
-		///// Specifies the 2D renderer
-		///// </summary>
 		//Scope<Renderer2D> m_Renderer2D;
 	};
 }

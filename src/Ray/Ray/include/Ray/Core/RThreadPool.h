@@ -49,9 +49,6 @@ namespace At0::Ray
 		~ThreadPool();
 
 	private:
-		/// <summary>
-		/// Private ThreadPool Constructor
-		/// </summary>
 		ThreadPool();
 
 		/// <summary>

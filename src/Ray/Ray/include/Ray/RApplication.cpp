@@ -2,6 +2,7 @@
 #include "Ray/RApplication.h"
 
 #include "Ray/Layers/RLayer.h"
+#include "Ray/Core/RThreadPool.h"
 
 // Include Renderer because of incomplete type in Window
 #include <RayRender/Renderer3D.h>

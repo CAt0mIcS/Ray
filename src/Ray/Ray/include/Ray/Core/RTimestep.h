@@ -19,16 +19,7 @@ namespace At0::Ray
 		/// </summary>
 		operator float() { return m_Time; }
 
-		/// <summary>
-		/// Getter for the deltatime in milliseconds
-		/// </summary>
-		/// <returns>The time in milliseconds</returns>
 		float GetMilliseconds() const { return m_Time * 1000.0f; }
-		
-		/// <summary>
-		/// Getter for the deltatime in seconds
-		/// </summary>
-		/// <returns>The time in seconds</returns>
 		float GetSeconds() const { return m_Time; }
 
 	private:

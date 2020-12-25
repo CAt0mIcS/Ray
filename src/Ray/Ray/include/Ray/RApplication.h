@@ -3,9 +3,6 @@
 #include "RBase.h"
 
 #include "Ray/Window/RWindow.h"
-#include "Ray/Widgets/RWidget.h"
-
-#include "Ray/Core/RThreadPool.h"
 #include "Ray/Core/RStack.h"
 
 
@@ -19,33 +16,11 @@ namespace At0::Ray
 	/// </summary>
 	class RAY_API Application
 	{
-		// QUESTION:
-		//		Should I add friend declaration and make static void Create(...) private or leave it public?
-		//friend void Ray::CreateApplication();
 	public:
-		/// <summary>
-		/// Finds a window in the stack with name
-		/// </summary>
-		/// <param name="name">Is the name of the window to find</param>
-		/// <returns>The found window or nullptr if the window wasn't found</returns>
 		Window& FindWindowByName(std::string_view name);
 
-		/// <summary>
-		/// Getter for this application, doesn't increment the std::shared_ptr reference count
-		/// </summary>
-		/// <returns>The current application</returns>
 		static Application& Get() { return *s_Instance; }
-
-		/// <summary>
-		/// Getter for the main window
-		/// </summary>
-		/// <returns>The main window of this application</returns>
 		Window& GetMainWindow() { return *m_WindowStack[0]; }
-
-		/// <summary>
-		/// Getter for the main window
-		/// </summary>
-		/// <returns>The main window of this application</returns>
 		const Window& GetMainWindow() const { return *m_WindowStack[0]; }
 
 		/// <summary>
@@ -75,15 +50,12 @@ namespace At0::Ray
 		/// <param name="e">Is the received event</param>
 		virtual void OnEvent(Widget* receiver, Event& e) = 0;
 
-		/// <summary>
-		/// Virtual Application Deconstructorr
-		/// </summary>
 		virtual ~Application();
 
 	protected:
 		/// <summary>
 		/// Application Constructor
-		/// <param name="commandLine">Are all command line arguments from the main method</param>
+		/// <param name="commandLine">Are all command line arguments from the main function</param>
 		/// </summary>
 		Application(std::string_view commandLine = "");
 
@@ -94,7 +66,7 @@ namespace At0::Ray
 		void Cleanup();
 
 		/// <summary>
-		/// Does some startup stuff like allocate the console
+		/// Does some startup stuff like allocating the console
 		/// </summary>
 		void StartupSetup();
 
@@ -110,14 +82,9 @@ namespace At0::Ray
 		Stack<Ref<Window>> m_WindowStack;
 
 		/// <summary>
-		/// Singelton instance of Application
+		/// Singelton design
 		/// </summary>
 		static Application* s_Instance;
-
-		/// <summary>
-		/// Specifies all threads which will read from the event queue. Create one per Window pushed
-		/// </summary>
-		std::vector<std::thread> m_EventLoopThreads;
 	};
 
 }

@@ -23,44 +23,15 @@ namespace At0::Ray
 		/// Window Constructor
 		/// </summary>
 		/// <param name="name">Is the unique name of the window</param>
-		/// <param name="parent">Is the parent of this window</param>
 		WinAPIWindow(std::string_view name, const Point2 pos, const Size2 size, Widget* parent = nullptr);
-		
-		/// <summary>
-		/// Window Deconstructor
-		/// </summary>
 		~WinAPIWindow();
 
-		/// <summary>
-		/// Getter for the current Window Title
-		/// </summary>
-		/// <returns>The title of this Window</returns>
 		virtual std::string GetTitle() const override;
-
-		/// <summary>
-		/// Sets the Window Title
-		/// </summary>
-		/// <param name="title">Is the new Window Title</param>
 		virtual void SetTitle(std::string_view title) override;
 
-		/// <summary>
-		/// Shows the Window
-		/// </summary>
 		virtual void Show() const override;
-
-		/// <summary>
-		/// Hides the Window
-		/// </summary>
 		virtual void Hide() const override;
-
-		/// <summary>
-		/// Maximizes the Window
-		/// </summary>
-		void Maximize() const override;
-
-		/// <summary>
-		/// Minimizes the Window
-		/// </summary>
+		virtual void Maximize() const override;
 		virtual void Minimize() const override;
 
 		/// <summary>
@@ -87,15 +58,7 @@ namespace At0::Ray
 		/// <returns>The current window size</returns>
 		virtual Size2 GetSize() const override;
 
-		/// <summary>
-		/// Closes the Window
-		/// </summary>
 		virtual void Close() override;
-
-		/// <summary>
-		/// Checks if the Window is open (IsVisible)
-		/// </summary>
-		/// <returns>True if the Window is open, false otherwise</returns>
 		virtual bool IsOpen() const override;
 
 		/// <summary>
@@ -109,27 +72,9 @@ namespace At0::Ray
 		/// <param name="path">Is the path to the .ico file</param>
 		virtual void SetIcon(std::string_view path) override;
 
-		/// <summary>
-		/// Getter for the Native Window
-		/// </summary>
-		/// <returns>The Native Window</returns>
 		virtual void* GetNativeWindow() const override { return (void*)m_hWnd; }
 
 	private:
-		/// <summary>
-		/// Creates the native window
-		/// </summary>
-		/// <param name="windowName">Is the title of the window</param>
-		/// <param name="windowClassName">Is the window class name</param>
-		/// <param name="style">Are window styles</param>
-		/// <param name="exStyle">Are extended window styles</param>
-		/// <param name="x">Is the x-position of the window</param>
-		/// <param name="y">Is the y-position of the window</param>
-		/// <param name="width">Is the width of the window</param>
-		/// <param name="height">Is the height of the window</param>
-		/// <param name="hWndParent">Is a handle to the parent window</param>
-		/// <param name="hMenu">Is a window Id</param>
-		/// <returns>true if the window was created successfully, false otherwise</returns>
 		bool CreateNativeWindow(
 			const wchar_t* windowName,
 			const wchar_t* windowClassName,
@@ -157,21 +102,7 @@ namespace At0::Ray
 
 	private:
 		bool m_IsOpen;
-
-		/// <summary>
-		/// The native window handle
-		/// </summary>
 		HWND m_hWnd;
-
-		/// <summary>
-		/// Specifies the 3D renderer
-		/// </summary>
-		Scope<Renderer3D> m_Renderer3D;
-
-		///// <summary>
-		///// Specifies the 2D renderer
-		///// </summary>
-		//Scope<Renderer2D> m_Renderer2D;
 	};
 }
 

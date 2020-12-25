@@ -40,21 +40,9 @@ namespace At0::Ray
 		/// </summary>
 		virtual void OnUpdate(Timestep ts) { };
 
-		/// <summary>
-		/// Short getter for getting the main window
-		/// </summary>
-		/// <returns>The main windwo</returns>
 		Window& GetMainWindow();
-
-		/// <summary>
-		/// Short getter for getting the main window
-		/// </summary>
-		/// <returns>The main windwo</returns>
 		const Window& GetMainWindow() const;
 
-		/// <summary>
-		/// Virtual Layer Deconstructor
-		/// </summary>
 		virtual ~Layer();
 
 	private:
