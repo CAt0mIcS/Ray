@@ -1,40 +1,41 @@
 #pragma once
 
 #include "RInternal.h"
-#include "RSparseSet.h"
-
-#include <type_traits>
-#include <utility>
+#include "REntityStorage.h"
 
 
 namespace At0::Ray::ECS
 {
 	template<typename Component>
-	class Storage : public SparseSet
+	struct ComponentStorage : EntityStorage
 	{
 	public:
 		template<typename... Args>
-		decltype(auto) Emplace(Entity e, Args&&... args)
+		decltype(auto) Emplace(Entity entity, Args&&... args)
 		{
 			if constexpr (std::is_aggregate_v<Component>)
-				m_Components.push_back(Component{ std::forward<Args>(args)... });
+				m_Instances.push_back(Component{ std::forward<Args>(args)... });
 			else
-				m_Components.emplace_back(std::forward<Args>(args)...);
+				m_Instances.emplace_back(std::forward<Args>(args)...);
 
-			SparseSet::Emplace(e);
+			EntityStorage::Emplace(entity, (IndexType)m_Instances.size() - 1);
+
+			if constexpr (!std::is_empty_v<Component>)
+				return m_Instances.back();
 		}
 
-		const Component& Get(Entity e) const
+		const Component& Get(Entity entity) const
 		{
-			return m_Components[SparseSet::Index(e)];
+			return m_Instances[EntityStorage::Index(entity)];
 		}
 
-		Component& Get(Entity e)
+		Component& Get(Entity entity)
 		{
-			return const_cast<Component&>(std::as_const(*this).Get(e));
+			return const_cast<Component&>(std::as_const(*this).Get(entity));
 		}
 
 	private:
-		std::vector<Component> m_Components;
+		std::vector<Component> m_Instances;
 	};
 }
+

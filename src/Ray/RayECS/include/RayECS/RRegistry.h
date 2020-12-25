@@ -4,12 +4,7 @@
 #include "RStorage.h"
 #include "RView.h"
 
-#include <utility>
 #include <memory>
-
-// RAY_TODO: Remove when Registry::Create implementation is finished.
-#include <stdexcept>
-
 
 namespace At0::Ray::ECS
 {
@@ -17,26 +12,29 @@ namespace At0::Ray::ECS
 	{
 	public:
 		template<typename Component, typename... Args>
-		decltype(auto) Emplace(Entity entity, Args&&... args)
+		decltype(auto) Emplace(Entity e, Args&&... args)
 		{
-			return Assure<Component>().Emplace(entity, std::forward<Args>(args)...);
+			return Assure<Component>().Emplace(e, std::forward<Args>(args)...);
+		}
+
+		template<typename... Component>
+		decltype(auto) Get(Entity e)
+		{
+			if constexpr (sizeof...(Component) == 1)
+			{
+				return (Assure<Component>().Get(e), ...);
+			}
+			else
+			{
+				return std::forward_as_tuple(Get<Component>(e)...);
+			}
 		}
 
 		Entity Create()
 		{
-			Entity e;
+			// TODO: Entity destruction mask
 
-			if (m_Destroyed == EntityNull)
-			{
-				// No entity to recycle
-				e = m_Entities.emplace_back((uint32_t)m_Entities.size());
-			}
-			else
-			{
-				throw std::runtime_error("Missing implementation");
-			}
-
-			return e;
+			return m_Entities.emplace_back((uint32_t)m_Entities.size());
 		}
 
 		template<typename... Component>
@@ -45,88 +43,55 @@ namespace At0::Ray::ECS
 			return { Assure<Component>()... };
 		}
 
-		template<typename... Component>
-		decltype(auto) Get(Entity e)
-		{
-			if constexpr (sizeof...(Component) == 1)
-				return Assure<Component...>().Get(e);
-			else
-				return std::forward_as_tuple(Assure<Component>().Get(e)...);
-		}
-
-		template<typename... Component>
-		decltype(auto) Get(Entity e) const
-		{
-			if constexpr (sizeof...(Component) == 1)
-				return Assure<Component...>().Get(e);
-			else
-				return std::forward_as_tuple(Assure<Component>().Get(e)...);
-		}
-
-		template<typename... Component>
-		bool Has(Entity e) const
-		{
-			return (Assure<Component>().Contains(e) && ...);
-		}
-
-		template<typename... Component>
-		bool Any(Entity e) const
-		{
-			return (Assure<Component>().Contains(e) || ...);
-		}
-
 	private:
+		struct PoolData
+		{
+			IndexType TypeID{};
+			std::unique_ptr<EntityStorage> Pool{};
+		};
+
 		template<typename Component>
-		struct PoolHandler : Storage<Component>
+		struct PoolHandler : ComponentStorage<Component>
 		{
 			template<typename... Args>
 			decltype(auto) Emplace(Entity e, Args&&... args)
 			{
-				Storage<Component>::Emplace(e, std::forward<Args>(args)...);
-
-				if constexpr (!std::is_empty_v<Component>)
-					return Storage<Component>::Get(e);
+				return ComponentStorage<Component>::Emplace(e, std::forward<Args>(args)...);
 			}
 
 			Component& Get(Entity e)
 			{
-				return Storage<Component>::Get(e);
+				return ComponentStorage<Component>::Get(e);
 			}
 		};
 
-		struct PoolData
-		{
-			uint32_t TypeID{};
-			std::unique_ptr<SparseSet> Pool{};
-		};
-
-	private:
 		template<typename Component>
-		const PoolHandler<Component>& Assure() const
+		PoolHandler<Component>& Assure()
 		{
 			if constexpr (HasComponentIndex<Component>::value)
 			{
 				const auto index = ComponentIndex<Component>::Value();
+
 				if (index >= m_Pools.size())
 					m_Pools.resize(index + 1);
 
-				if (auto&& poolData = m_Pools[index]; !poolData.Pool)
+				if (auto&& pData = m_Pools[index]; !pData.Pool)
 				{
-					poolData.TypeID = ComponentIndex<Component>::Value();
-					poolData.Pool.reset(new PoolHandler<Component>());
+					pData.TypeID = ComponentIndex<Component>::Value();
+					pData.Pool.reset(new PoolHandler<Component>());
 				}
 
 				return (PoolHandler<Component>&)(*m_Pools[index].Pool);
 			}
 			else
 			{
-				SparseSet* candidate{ nullptr };
+				EntityStorage* candidate{ nullptr };
 
-				if (auto it = std::find_if(m_Pools.begin(), m_Pools.end(), [id = ComponentIndex<Component>::Value()](const auto& poolData) { return id == poolData.TypeID; }); it == m_Pools.cend())
+				if (auto it = std::find_if(m_Pools.begin(), m_Pools.end(), [id = ComponentIndex<Component>::Value()](const auto& pData) { return id == pData.TypeID; }); it == m_Pools.cend())
 				{
 					candidate = m_Pools.emplace_back(PoolData{
 						ComponentIndex<Component>::Value(),
-						std::unique_ptr<SparseSet>{new PoolHandler<Component>{}}
+						std::unique_ptr<EntityStorage>{new PoolHandler<Component>{}}
 						}
 					).Pool.get();
 				}
@@ -134,21 +99,14 @@ namespace At0::Ray::ECS
 				{
 					candidate = it->Pool.get();
 				}
-
 				return (PoolHandler<Component>&)(*candidate);
 			}
 		}
 
-		template<typename Component>
-		PoolHandler<Component>& Assure()
-		{
-			return const_cast<PoolHandler<Component>&>(std::as_const(*this).Assure<Component>());
-		}
-
 	private:
-		mutable std::vector<PoolData> m_Pools;
-		std::vector<Entity> m_Entities;
-		Entity m_Destroyed{ EntityNull };
+		std::vector<PoolData> m_Pools{};
+		std::vector<Entity> m_Entities{};
+		Entity m_Destroyed{EntityNull};
 	};
 }
 

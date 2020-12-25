@@ -1,9 +1,7 @@
 #pragma once
 
 #include "RStorage.h"
-
 #include <tuple>
-#include <type_traits>
 
 
 namespace At0::Ray::ECS
@@ -12,41 +10,51 @@ namespace At0::Ray::ECS
 	class ComponentView
 	{
 	private:
+		// If the Component (Comp) is const then PoolType will be "const ComponentStorage<std::remove_const_t<Comp>>" else just "ComponentStorage<Comp>"
 		template<typename Comp>
-		using PoolType = std::conditional_t<std::is_const_v<Comp>, const Storage<std::remove_const_t<Comp>>, Storage<Comp>>;
+		using PoolType = std::conditional_t<std::is_const_v<Comp>, const ComponentStorage<std::remove_const_t<Comp>>, ComponentStorage<Comp>>;
 
 	public:
 		class ViewIterator
 		{
+		private:
+			using Iterator = ViewIterator;
+
 		public:
-			ViewIterator(const SparseSet& view, SparseSet::SparseSetIterator it)
-				: m_View{ view }, m_SparseSetIterator{ it } {}
+			Iterator(const EntityStorage& candidate, EntityStorage::EntityStorageIterator curr)
+				: m_View{ candidate }, m_It{ curr } {}
 
-			ViewIterator& operator++()
+			Iterator operator++()
 			{
-				++m_SparseSetIterator;
+				++m_It;
 				return *this;
 			}
 
-			ViewIterator& operator--()
+			Iterator operator--()
 			{
-				--m_SparseSetIterator;
+				--m_It;
 				return *this;
 			}
 
-			bool operator==(const ViewIterator& other) const
+			Iterator operator--(int)
 			{
-				return m_SparseSetIterator == other.m_SparseSetIterator;
+				Iterator original = *this;
+				return operator--(), original;
 			}
 
-			bool operator!=(const ViewIterator& other) const
+			bool operator==(const Iterator& other) const
+			{
+				return other.m_It == m_It;
+			}
+
+			bool operator!=(const Iterator& other) const
 			{
 				return !(*this == other);
 			}
 
 			const Entity* operator->() const
 			{
-				return m_SparseSetIterator.operator->();
+				return m_It.operator->();
 			}
 
 			const Entity& operator*() const
@@ -55,45 +63,50 @@ namespace At0::Ray::ECS
 			}
 
 		private:
-			const SparseSet& m_View;
-			SparseSet::SparseSetIterator m_SparseSetIterator;
+			const EntityStorage& m_View;
+			EntityStorage::EntityStorageIterator m_It;
 		};
 
 	public:
-		ComponentView(Storage<Component>&... component)
+		ComponentView(ComponentStorage<Component>&... component)
 			: m_Components{ &component... }
 		{
 
 		}
 
-		template<typename F>
-		void Each(F&& func)
+		template<typename... Comp>
+		decltype(auto) Get(Entity e)
 		{
-			for (Entity e : *this)
+			if constexpr (sizeof...(Comp) == 0)
 			{
-				if constexpr (std::is_invocable_v<F>)
-					func();
-				else if constexpr (std::is_invocable_v<F, Entity>)
-					func(e);
+				return std::forward_as_tuple(std::get<PoolType<Component>*>(m_Components)->Get(e)...);
+			}
+			else if constexpr (sizeof...(Comp) == 1)
+			{
+				return (std::get<PoolType<Comp>*>(m_Components)->Get(e), ...);
+			}
+			else
+			{
+				return std::forward_as_tuple(std::get<PoolType<Comp>*>(m_Components)->Get(e)...);
 			}
 		}
 
-		ViewIterator begin()
+		ViewIterator begin() const
 		{
-			const SparseSet& view = Candidate();
+			const EntityStorage& view = Candidate();
 			return ViewIterator{ view, view.begin() };
 		}
 
-		ViewIterator end()
+		ViewIterator end() const
 		{
-			const SparseSet& view = Candidate();
+			const EntityStorage& view = Candidate();
 			return ViewIterator{ view, view.end() };
 		}
 
 	private:
-		const SparseSet& Candidate() const
+		const EntityStorage& Candidate() const
 		{
-			return *std::min({ (const SparseSet*)(std::get<PoolType<Component>*>(m_Components))... }, [](const SparseSet* lhs, const SparseSet* rhs)
+			return *std::min({ static_cast<const EntityStorage*>(std::get<PoolType<Component>*>(m_Components))... }, [](const EntityStorage* lhs, const EntityStorage* rhs)
 				{
 					return lhs->Size() < rhs->Size();
 				}

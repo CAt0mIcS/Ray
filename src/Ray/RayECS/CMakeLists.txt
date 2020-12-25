@@ -2,7 +2,7 @@ set(SRC
 	"include/RayECS/RayECS.h"
 	"include/RayECS/RInternal.h"
 	"include/RayECS/RRegistry.h"
-	"include/RayECS/RSparseSet.h"
+	"include/RayECS/REntityStorage.h"
 	"include/RayECS/RStorage.h"
 	"include/RayECS/RView.h"
 )
