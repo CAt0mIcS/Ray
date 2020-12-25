@@ -19,60 +19,34 @@ namespace At0::Ray
 		using ConstReverseIterator = typename std::vector<T>::const_reverse_iterator;
 
 	public:
-		/// <summary>
-		/// Default Stack Constructor
-		/// </summary>
 		Stack() = default;
 		
-		/// <summary>
-		/// Checks if the stack is empty
-		/// </summary>
-		/// <returns>True if the stack is empty, false otherwise</returns>
 		bool Empty() const
 		{
 			return m_Stack.empty();
 		}
 
-		/// <summary>
-		/// Getter for the stack size
-		/// </summary>
-		/// <returns>The stack size</returns>
 		size_t Size() const
 		{
 			return m_Stack.size();
 		}
 
-		/// <summary>
-		/// Getter for the top element in the stack
-		/// </summary>
-		/// <returns>The top stack element</returns>
 		T& Top()
 		{
 			return m_Stack.back();
 		}
 
-		/// <summary>
-		/// Getter for the top element in the stack
-		/// </summary>
-		/// <returns>The top stack element</returns>
 		const T& Top() const
 		{
 			return m_Stack.back();
 		}
 
-		/// <summary>
-		/// Adds an element to the stack
-		/// </summary>
-		/// <param name="val">Is the object to add</param>
 		void PushBack(T&& val)
 		{
 			std::scoped_lock lock(m_Mutex);
 			m_Stack.push_back(std::move(val));
 		}
-		/// <summary>
-		/// Adds an element to the stack
-		/// </summary>
-		/// <param name="val">Is the object to add</param>
+
 		void PushBack(const T& val)
 		{
 			std::scoped_lock lock(m_Mutex);
@@ -116,9 +90,6 @@ namespace At0::Ray
 			m_Stack.erase(m_Stack.begin() + i);
 		}
 
-		/// <summary>
-		/// Erases all elements in the stack
-		/// </summary>
 		void Clear()
 		{
 			std::scoped_lock lock(m_Mutex);
