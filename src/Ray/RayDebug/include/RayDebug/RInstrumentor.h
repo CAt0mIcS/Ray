@@ -7,8 +7,7 @@
 // class 'std::chrono::time_point<std::chrono::steady_clock,std::chrono::nanoseconds>' needs to have dll-interface to be used by clients
 #pragma warning(disable : 4251)
 
-
-#if RAY_ENABLE_PROFILING
+// RAY_TODO Remove class if RAY_ENABLE_PROFILING is 0, can't do it now because then RayDebug wouldn't generate a .lib file (no exports)
 
 #include "RDBase.h"
 
@@ -155,6 +154,7 @@ namespace At0::Ray::Debug
 #define RAY_FUNC_SIG "ZL_FUNC_SIG unknown!"
 #endif
 
+#if RAY_ENABLE_PROFILING
 
 #define RAY_PROFILE_BEGIN_SESSION(name, filepath)	::At0::Ray::Debug::Instrumentor::Get().BeginSession(name, filepath)
 #define RAY_PROFILE_END_SESSION()					::At0::Ray::Debug::Instrumentor::Get().EndSession()

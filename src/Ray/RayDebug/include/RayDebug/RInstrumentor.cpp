@@ -1,8 +1,6 @@
 #include "Rdpch.h"
 #include "RInstrumentor.h"
 
-#if RAY_ENABLE_PROFILING
-
 #include "RLogger.h"
 
 namespace At0::Ray::Debug
@@ -138,4 +136,3 @@ namespace At0::Ray::Debug
 	}
 }
 
-#endif
