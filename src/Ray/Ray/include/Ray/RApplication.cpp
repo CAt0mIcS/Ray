@@ -119,8 +119,7 @@ namespace At0::Ray
 
 		std::thread appThread([this, &lastFrameTime, &timestep]()
 			{
-				auto& win = GetMainWindow();
-				while (win.IsOpen())
+				while (GetMainWindow().IsOpen())
 				{
 					// -------------------------------------------------------------------------------------
 					// Setting timestep

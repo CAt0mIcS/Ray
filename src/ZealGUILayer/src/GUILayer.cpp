@@ -67,7 +67,7 @@ FPS g_FPS;
 
 namespace At0::Layers
 {
-#define RENDER 0
+#define RENDER 1
 
 	std::vector<Ray::ShadedCube> cubes;
 	static constexpr uint64_t numCubes = 4000;
@@ -271,15 +271,6 @@ namespace At0::Layers
 
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::KeyPressedEvent& e)
 	{
-		static uint32_t i = 0;
-		std::string name = "Win" + std::to_string(i);
-
-		++i;
-		Ray::Window* win = Ray::Application::Get().PushWindow(Ray::Window::Create(name, { 150, 150 }, { 960, 540 }));
-		EventListener<Ray::KeyPressedEvent>::Subscribe(*win);
-		win->SetTitle(name);
-		win->Show();
-
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	}
