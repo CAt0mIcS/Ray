@@ -11,7 +11,7 @@
 
 namespace At0::Ray
 {
-    Widget& Widget::FindChild(std::string_view name)
+    Widget& Widget::FindChildByName(std::string_view name)
     {
         RAY_PROFILE_FUNCTION();
         for (auto& child : m_Children)
