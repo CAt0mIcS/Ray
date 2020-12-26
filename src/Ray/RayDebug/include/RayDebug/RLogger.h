@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <RayUtil/RCoreConfig.h>
+#include <../../RayUtil/include/RayUtil/RCoreConfig.h>
 
 #if RAY_ENABLE_LOGGING
 #include "RDBase.h"
@@ -14,13 +14,9 @@
 
 namespace At0::Ray::Debug
 {
-	class RD_API Logger
+	class Logger
 	{
 	public:
-		/// <summary>
-		/// Getter for the file logger
-		/// </summary>
-		/// <returns>The file logger</returns>
 		static Log::FileLogger& GetFileLogger() { return s_FileLogger; }
 
 		/// <summary>
@@ -28,16 +24,29 @@ namespace At0::Ray::Debug
 		/// </summary>
 		/// <param name="filepath">Is the path to a log file</param>
 		/// <param name="logLvl">Is the log level</param>
-		static void Init(std::string_view filepath, Log::LogLevel logLvl);
+		/// <returns>True if initialisation was successful</returns>
+		static bool Init(std::string_view filepath, Log::LogLevel logLvl)
+		{
+			s_FileLogger = Log::FileLogger(filepath);
+			s_FileLogger.SetLogLevel(logLvl);
+			s_FileLogger.Open();
+
+			return s_FileLogger.IsOpen();
+		}
 
 		/// <summary>
 		/// Closes the filestream and deletes the loggers
 		/// </summary>
-		static void End();
+		static void End()
+		{
+			s_FileLogger.Close();
+		}
 
 	private:
 		static Log::FileLogger s_FileLogger;
 	};
+
+	inline Log::FileLogger Logger::s_FileLogger;
 
 }
 

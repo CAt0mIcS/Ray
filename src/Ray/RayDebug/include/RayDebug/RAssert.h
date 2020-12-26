@@ -12,7 +12,7 @@
 
 namespace At0::Ray::Debug
 {
-	class RD_API RlAssert
+	class RlAssert
 	{
 	public:
 		template<typename... Args>

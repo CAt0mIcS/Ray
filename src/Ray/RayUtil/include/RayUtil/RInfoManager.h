@@ -12,7 +12,7 @@
 #include <stdint.h>
 
 
-namespace At0::Util
+namespace At0::Ray::Util
 {
 	class RU_API InfoManager
 	{
@@ -62,12 +62,12 @@ namespace At0::Util
 
 
 #if RAY_ENABLE_INFO
-	#define RAY_DSPL_INFO(msg, type, ...)	::At0::Util::InfoManager::Info(msg, (uint16_t)__LINE__, __FILE__, type, __VA_ARGS__)
+	#define RAY_DSPL_INFO(msg, type, ...)	::At0::Ray::Util::InfoManager::Info(msg, (uint16_t)__LINE__, __FILE__, type, __VA_ARGS__)
 #else
 	#define RAY_DSPL_INFO(msg, type, ...)
 #endif
 #if RAY_ENABLE_WARNING
-	#define RAY_DSPL_WARN(msg, type, ...)	::At0::Util::InfoManager::Warn(msg, (uint16_t)__LINE__, __FILE__, type, __VA_ARGS__)
+	#define RAY_DSPL_WARN(msg, type, ...)	::At0::Ray::Util::InfoManager::Warn(msg, (uint16_t)__LINE__, __FILE__, type, __VA_ARGS__)
 #else
 	#define RAY_DSPL_WARN(msg, type, ...)
 #endif
@@ -75,7 +75,7 @@ namespace At0::Util
 #ifdef _WIN32
 
 #if RAY_ENABLE_INFO
-	#define RAY_DX_INFO(hr)				if(FAILED(hr)) ::At0::Util::InfoManager::DxInfo(hr, (uint16_t)__LINE__, __FILE__, "DirectX11 Info")
+	#define RAY_DX_INFO(hr)				if(FAILED(hr)) ::At0::Ray::Util::InfoManager::DxInfo(hr, (uint16_t)__LINE__, __FILE__, "DirectX11 Info")
 	#define RAY_DX_MSG_INFO(msg, ...)	RAY_DSPL_INFO(msg, "DirectX11 Info", __VA_ARGS__)
 #else
 	#define RAY_DX_INFO(hr) hr
@@ -83,7 +83,7 @@ namespace At0::Util
 #endif	
 
 #if RAY_ENABLE_WARNING
-	#define RAY_DX_WARN(hr)				if(FAILED(hr)) ::At0::Util::InfoManager::DxWarn(hr, (uint16_t)__LINE__, __FILE__, "DirectX11 Warning")
+	#define RAY_DX_WARN(hr)				if(FAILED(hr)) ::At0::Ray::Util::InfoManager::DxWarn(hr, (uint16_t)__LINE__, __FILE__, "DirectX11 Warning")
 	#define RAY_DX_MSG_WARN(msg, ...)	RAY_DSPL_WARN(msg, "DirectX11 Warning", __VA_ARGS__)
 #else
 	#define RAY_DX_WARN(hr) hr

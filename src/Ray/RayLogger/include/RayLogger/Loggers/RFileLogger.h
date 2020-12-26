@@ -4,7 +4,7 @@
 #include "RBaseLogger.h"
 
 
-namespace At0::Log
+namespace At0::Ray::Log
 {
 	class FileLogger : public BaseLogger
 	{

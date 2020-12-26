@@ -11,7 +11,7 @@
 #include <DxErr/dxerr.h>
 #endif
 
-namespace At0::Util
+namespace At0::Ray::Util
 {
 
 

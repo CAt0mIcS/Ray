@@ -10,7 +10,7 @@
 #endif
 
 
-namespace At0::Util
+namespace At0::Ray::Util
 {
 	/// <summary>
 	/// Converts a multi byte string (std::string) to wide character string (std::string)

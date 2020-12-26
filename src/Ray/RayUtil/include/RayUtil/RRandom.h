@@ -3,7 +3,7 @@
 #include "RUBase.h"
 
 
-namespace At0::Util
+namespace At0::Ray::Util
 {
 	/// <summary>
 	/// std::string version of the bellow function overloads

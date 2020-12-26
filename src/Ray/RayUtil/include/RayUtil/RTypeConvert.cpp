@@ -5,7 +5,7 @@
 #include <iostream>
 
 
-namespace At0::Util
+namespace At0::Ray::Util
 {
 #ifdef _WIN32
 

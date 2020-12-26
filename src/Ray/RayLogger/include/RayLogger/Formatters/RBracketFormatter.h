@@ -3,7 +3,7 @@
 #include "RFormatter.h"
 
 
-namespace At0::Log
+namespace At0::Ray::Log
 {
 	class BracketFormatter : public Formatter
 	{

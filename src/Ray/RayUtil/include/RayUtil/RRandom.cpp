@@ -2,7 +2,7 @@
 #include "RRandom.h"
 
 
-namespace At0::Util
+namespace At0::Ray::Util
 {
 	std::string GenerateRandomTokenA(uint16_t length)
 	{

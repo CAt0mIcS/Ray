@@ -5,8 +5,8 @@
 #include <vector>
 #include <sstream>
 
-#include <RayUtil/RTypeConvert.h>
-#include <RayUtil/RSerialize.h>
+#include <../../RayUtil/include/RayUtil/RTypeConvert.h>
+#include <../../RayUtil/include/RayUtil/RSerialize.h>
 
 
 #include "../Formatters/RBracketFormatter.h"
@@ -23,7 +23,7 @@
 /// IGNORE THE ERRORS IN THIS PROJECT! IT'S HEADER ONLY AND WILL BE INCLUDED CORRECTLY!
 /// </summary>
 
-namespace At0::Log
+namespace At0::Ray::Log
 {
 
 	using LogMessageType = LogLevel;

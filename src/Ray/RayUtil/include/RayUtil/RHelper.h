@@ -27,7 +27,7 @@ namespace At0::Ray
 	}
 }
 
-namespace At0::Util
+namespace At0::Ray::Util
 {
 	template<typename F>
 	static void SetSignals(F&& func)

@@ -1,3 +1,5 @@
 LIBRARY Ray
 EXPORTS
 	??0RMessageBox@Ray@At0@@QEAA@V?$basic_string_view@DU?$char_traits@D@std@@@std@@0W4Button@012@W4Icon@012@W4Flags@012@@Z
+	?MultiByteToWideChar@Util@Ray@At0@@YA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@V?$basic_string_view@DU?$char_traits@D@std@@@5@@Z
+	?WideCharToMultiByte@Util@Ray@At0@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$basic_string_view@_WU?$char_traits@_W@std@@@5@@Z

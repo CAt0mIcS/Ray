@@ -2,7 +2,7 @@
 #include "RHelper.h"
 
 
-namespace At0::Util
+namespace At0::Ray::Util
 {
 	void ConsoleSetup()
 	{

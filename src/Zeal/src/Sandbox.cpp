@@ -65,16 +65,16 @@ namespace At0::Zeal
 #include <Ray/REntryPoint.h>
 
 
-#include <RayDebug/RInstrumentor.h>
-#include <RayDebug/RLogger.h>
-#include <RayUtil/RException.h>
+#include <../../RayDebug/include/RayDebug/RInstrumentor.h>
+#include <../../RayDebug/include/RayDebug/RLogger.h>
+#include <../../RayUtil/include/RayUtil/RException.h>
 #include <RayRender/RendererAPI.h>
 
 
 ///////////////////////////////////////////////////////////////////////////
 ////////// Called in EntryPoint.h /////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-int At0::Ray::Awake(int argc, char** argv)
+int At0::Ray::Awake(std::string commandLineArguments)
 {
 	using namespace At0;
 
@@ -84,7 +84,7 @@ int At0::Ray::Awake(int argc, char** argv)
 
 		RAY_PROFILE_BEGIN_SESSION("Startup", "../../Profiling/Profile-Startup.json");
 		Ray::RendererAPI::SetAPI(Ray::RendererAPI::D3D11);
-		Zeal::Sandbox* app = new Zeal::Sandbox("");
+		Zeal::Sandbox* app = new Zeal::Sandbox(commandLineArguments);
 		RAY_PROFILE_END_SESSION();
 
 		RAY_PROFILE_BEGIN_SESSION("Runtime", "../../Profiling/Profile-Runtime.json");

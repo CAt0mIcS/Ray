@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RayUtil/RCoreConfig.h>
+#include <../../RayUtil/include/RayUtil/RCoreConfig.h>
 
 // class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients
 #pragma warning(disable : 4564)

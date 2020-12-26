@@ -7,7 +7,7 @@
 #include "RUBase.h"
 
 
-namespace At0::Util
+namespace At0::Ray::Util
 {
 	template<typename T>
 	using BaseRefType = typename std::remove_cv<typename std::remove_reference<T>::type>::type;

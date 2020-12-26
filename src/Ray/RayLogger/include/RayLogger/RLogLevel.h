@@ -6,7 +6,7 @@
 #endif
 
 
-namespace At0::Log
+namespace At0::Ray::Log
 {
 	/// <summary>
 	/// Defines logging severity levels 

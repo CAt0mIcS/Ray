@@ -24,7 +24,6 @@ set(PUBLIC_LIB
 set(PRIVATE_LIB
     "Ray"
     "RayRender"
-    "RayDebug"
 )
 
 if(UNIX)

@@ -5,7 +5,7 @@
 #include <mutex>
 #include <sstream>
 
-namespace At0::Log
+namespace At0::Ray::Log
 {
 	class DateTimeFormatter : public Formatter
 	{
