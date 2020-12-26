@@ -15,25 +15,25 @@ namespace At0::Zeal
 		GetMainWindow().SetTitle("Zeal");
 		GetMainWindow().Show();
 
-		//Ray::Window* win = PushWindow(Ray::Window::Create("Win0", { 150, 150 }, { 960, 540 }));
-		//win->SetTitle("Win0");
-		//win->Show();
+		//Ray::Window& win = PushWindow(Ray::Window::Create("Win0", { 150, 150 }, { 960, 540 }));
+		//win.SetTitle("Win0");
+		//win.Show();
 
-		//Ray::Window* win1 = PushWindow(Ray::Window::Create("Win1"));
-		//win1->SetTitle("Win1");
-		//win1->Show();
+		//Ray::Window& win1 = PushWindow(Ray::Window::Create("Win1"));
+		//win.SetTitle("Win1");
+		//win.Show();
 
-		//Ray::Window* win2 = PushWindow(Ray::Window::Create("Win2"));
-		//win2->SetTitle("Win2");
-		//win2->Show();
+		//Ray::Window& win2 = PushWindow(Ray::Window::Create("Win2"));
+		//win.SetTitle("Win2");
+		//win.Show();
 
-		//Ray::Window* win3 = PushWindow(Ray::Window::Create("Win3"));
-		//win3->SetTitle("Win3");
-		//win3->Show();
+		//Ray::Window& win3 = PushWindow(Ray::Window::Create("Win3"));
+		//win.SetTitle("Win3");
+		//win.Show();
 
-		//Ray::Window* win4 = PushWindow(Ray::Window::Create("Win4"));
-		//win4->SetTitle("Win4");
-		//win4->Show();
+		//Ray::Window& win4 = PushWindow(Ray::Window::Create("Win4"));
+		//win.SetTitle("Win4");
+		//win.Show();
 
 		m_LayerLoader.Start("Editors", [this](Ray::Layer* layer)
 			{

@@ -34,14 +34,14 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="layer">Is a raw, (heap-allocated) pointer to the layer</param>
 		/// <returns>The pushed layer</returns>
-		Layer* PushLayer(Layer* layer);
+		Layer& PushLayer(Layer* layer);
 
 		/// <summary>
 		/// Pushes a new window onto the stack
 		/// </summary>
 		/// <param name="window">Is the window to push</param>
 		/// <returns>The pushed window</returns>
-		Window* PushWindow(Ref<Window> window);
+		Window& PushWindow(Ref<Window> window);
 
 		/// <summary>
 		/// Called if any window itself received an event

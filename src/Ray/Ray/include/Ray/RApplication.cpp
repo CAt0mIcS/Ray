@@ -166,20 +166,20 @@ namespace At0::Ray
 
 	// QUESTIONA: Taking Layer by raw pointer but window by shared_ptr (use shared_ptr)
 	//RAY_TODO: Generalize for the entire project
-	Layer* Application::PushLayer(Layer* layer)
+	Layer& Application::PushLayer(Layer* layer)
 	{
 		RAY_PROFILE_FUNCTION();
 
 		m_LayerStack.PushBack(layer);
-		return layer;
+		return *layer;
 	}
 
-	Window* Application::PushWindow(Ref<Window> window)
+	Window& Application::PushWindow(Ref<Window> window)
 	{
 		RAY_PROFILE_FUNCTION();
 
 		m_WindowStack.PushBack(window);
-		return window.get();
+		return *window.get();
 	}
 
 	Application::~Application()
