@@ -15,7 +15,7 @@
 
 namespace At0::Ray::Debug
 {
-	class Logger
+	class RD_API Logger
 	{
 	public:
 		static Log::FileLogger& GetFileLogger() { return s_FileLogger; }
@@ -25,7 +25,7 @@ namespace At0::Ray::Debug
 		/// </summary>
 		/// <param name="filepath">Is the path to a log file</param>
 		/// <param name="logLvl">Is the log level</param>
-		/// <returns>True if initialisation was successful</returns>
+		/// <returns>True if initialization was successful</returns>
 		static bool Init(std::string_view filepath, Log::LogLevel logLvl)
 		{
 			s_FileLogger = Log::FileLogger(filepath);
@@ -47,8 +47,6 @@ namespace At0::Ray::Debug
 		static Log::FileLogger s_FileLogger;
 	};
 
-	inline Log::FileLogger Logger::s_FileLogger;
-
 }
 
 #endif
@@ -58,10 +56,10 @@ namespace At0::Ray::Debug
 /// </summary>
 #if RAY_ENABLE_LOGGING
 
-#define RAY_LOG_BEGIN(path, loglvl)	if(!::At0::Ray::Debug::Logger::Init(path, loglvl)) RAY_THROW_RUNTIME("[Logger::Init] Failed")
-#define RAY_LOG_IS_OPEN()			::At0::Ray::Debug::Logger::GetFileLogger().IsOpen()
-#define RAY_LOG_END()				::At0::Ray::Debug::Logger::End();
-#define RAY_LOG_FLUSH()				::At0::Ray::Debug::Logger::GetFileLogger().Flush();
+#define RAY_LOG_BEGIN(path, loglvl)		if(!::At0::Ray::Debug::Logger::Init(path, loglvl)) RAY_THROW_RUNTIME("[Logger::Init] Failed")
+#define RAY_LOG_IS_OPEN()				::At0::Ray::Debug::Logger::GetFileLogger().IsOpen()
+#define RAY_LOG_END()					::At0::Ray::Debug::Logger::End();
+#define RAY_LOG_FLUSH()					::At0::Ray::Debug::Logger::GetFileLogger().Flush();
 
 #ifdef _MSC_VER
 	#define RAY_LOG_TRACE(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, __VA_ARGS__)
@@ -80,7 +78,7 @@ namespace At0::Ray::Debug
 #endif
 
 #else
-	#define RAY_LOG_BEGIN(path, loglevel)
+	#define RAY_LOG_BEGIN(path, loglvl)
 	
 	#define RAY_LOG_TRACE(msg, ...)	
 	#define RAY_LOG_DEBUG(msg, ...)	

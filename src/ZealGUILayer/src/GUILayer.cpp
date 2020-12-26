@@ -68,7 +68,7 @@ FPS g_FPS;
 namespace At0::Layers
 {
 	std::vector<Ray::ShadedCube> cubes;
-	static constexpr uint64_t numCubes = 0; //4000
+	static constexpr uint64_t numCubes = 4000;
 	Ray::Model model;
 	std::mt19937 mtEngine;
 	Ray::Camera cam;
@@ -85,9 +85,8 @@ namespace At0::Layers
 		EventListener<Ray::MouseWheelRightEvent>(GetMainWindow())
 	{
 		EventListener<Ray::MouseMoveEvent>::Subscribe(GetMainWindow());
-		//EventListener<Ray::MouseMoveEvent>::Subscribe(Ray::Application::Get().FindWindowByName("Win0"));
 
-		//ptLight = Ray::MakeScope<Ray::PointLight>(GetMainWindow().GetRenderer3D());
+		ptLight = Ray::MakeScope<Ray::PointLight>(GetMainWindow().GetRenderer3D());
 
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] Startup");
@@ -136,8 +135,8 @@ namespace At0::Layers
 			}
 		}
 
-		//model = Ray::Model("Resources/nanosuit.obj", face_colors, GetMainWindow().GetRenderer3D());
-		//GetMainWindow().GetRenderer3D().SetCamera(DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f));
+		model = Ray::Model("Resources/nanosuit.obj", face_colors, GetMainWindow().GetRenderer3D());
+		GetMainWindow().GetRenderer3D().SetCamera(DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f));
 	}
 	
 	Ray::Point2 mousePos{};

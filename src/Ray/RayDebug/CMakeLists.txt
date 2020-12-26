@@ -1,9 +1,10 @@
 set(SRC
+    "include/RayDebug/RInstrumentor.h"
     "include/RayDebug/RInstrumentor.cpp"
     "include/RayDebug/Rdpch.h"
 
-    "include/RayDebug/RInstrumentor.h"
     "include/RayDebug/RLogger.h"
+    "include/RayDebug/RLogger.cpp"
     "include/RayDebug/RAssert.h"
     "include/RayDebug/RDBase.h"
 )

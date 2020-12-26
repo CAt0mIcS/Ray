@@ -7,3 +7,7 @@ EXPORTS
 	??0Exception@Ray@At0@@QEAA@AEBV012@@Z
 	??0RuntimeException@Ray@At0@@QEAA@AEBV012@@Z
 	??1RuntimeException@Ray@At0@@UEAA@XZ
+
+	?Init@Logger@Debug@Ray@At0@@SA_NV?$basic_string_view@DU?$char_traits@D@std@@@std@@W4LogLevel@Log@34@@Z
+	?GetFileLogger@Logger@Debug@Ray@At0@@SAAEAVFileLogger@Log@34@XZ
+	?End@Logger@Debug@Ray@At0@@SAXXZ
