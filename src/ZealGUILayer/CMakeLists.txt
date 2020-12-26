@@ -11,17 +11,15 @@ set(PUBLIC_INC
 )
 
 set(PRIVATE_INC
-    ""
+    "${CMAKE_SOURCE_DIR}/src/Ray/RayDebug/include"
 )
 
 set(PUBLIC_LIB
 	""
 )
 
-# QUESTIONA: I should only have to link to Ray and be able to use stuff like the logger and renderer (.def file) RAY_TODO
 set(PRIVATE_LIB
     "Ray"
-    "RayDebug"
     "RayRender"
 )
 
