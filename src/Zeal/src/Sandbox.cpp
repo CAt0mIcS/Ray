@@ -65,9 +65,9 @@ namespace At0::Zeal
 #include <Ray/REntryPoint.h>
 
 
-#include <../../RayDebug/include/RayDebug/RInstrumentor.h>
-#include <../../RayDebug/include/RayDebug/RLogger.h>
-#include <../../RayUtil/include/RayUtil/RException.h>
+#include <RayDebug/RInstrumentor.h>
+#include <RayDebug/RLogger.h>
+#include <RayUtil/RException.h>
 #include <RayRender/RendererAPI.h>
 
 
@@ -101,17 +101,17 @@ int At0::Ray::Awake(std::string commandLineArguments)
 	catch (At0::Ray::Exception& e)
 	{
 		Ray::RMessageBox(e.GetType(), e.what(), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
-		RAY_LOG_CRITICAL("[Main] Exception occured: {0}", e.what());
+		RAY_LOG_CRITICAL("[Awake] Exception occured: {0}", e.what());
 	}
 	catch (std::exception& e)
 	{
 		Ray::RMessageBox("Standard Exception", e.what(), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
-		RAY_LOG_CRITICAL("[Main] Exception occured: {0}", e.what());
+		RAY_LOG_CRITICAL("[Awake] Exception occured: {0}", e.what());
 	}
 	catch (...)
 	{
 		Ray::RMessageBox("Unknown Exception", "An unknown exception occurred", Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
-		RAY_LOG_CRITICAL("[Main] Unknown Exception occured");
+		RAY_LOG_CRITICAL("[Awake] Unknown Exception occured");
 	}
 	RAY_LOG_END();
 	return -1;

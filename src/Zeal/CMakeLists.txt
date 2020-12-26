@@ -15,6 +15,8 @@ set(PUBLIC_INC
 
 set(PRIVATE_INC
     "src"
+    "${CMAKE_SOURCE_DIR}/src/Ray/RayUtil/include"
+    "${CMAKE_SOURCE_DIR}/src/Ray/RayDebug/include"
 )
 
 set(PUBLIC_LIB

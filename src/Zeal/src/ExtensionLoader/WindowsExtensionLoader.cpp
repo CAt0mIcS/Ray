@@ -8,7 +8,7 @@
 #include <Windows.h>
 #include <functional>
 
-#include <../../RayDebug/include/RayDebug/RLogger.h>
+#include <RayDebug/RLogger.h>
 
 #include "Ray/Layers/RLayer.h"
 
