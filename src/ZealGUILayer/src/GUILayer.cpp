@@ -1,7 +1,7 @@
 #include "glpch.h"
 #include "GUILayer.h"
 
-// You need to include this to use the logger (QUESTIONA: But you shouldn't need to!) (everything in .def file?)
+// QUESTION: Should I add all includes that the client might need into Ray.h or let them include them on their own (but they will need to set additional include paths to other libraries)
 #include <RayDebug/RLogger.h>
 #include <RayDebug/RInstrumentor.h>
 

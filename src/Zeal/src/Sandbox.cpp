@@ -64,7 +64,6 @@ namespace At0::Zeal
 
 #include <Ray/REntryPoint.h>
 
-
 #include <RayDebug/RInstrumentor.h>
 #include <RayDebug/RLogger.h>
 #include <RayUtil/RException.h>
