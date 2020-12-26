@@ -87,15 +87,14 @@ namespace At0::Ray
 		/// <summary>
 		/// Initializes the 3D Renderer, checks if it has already been initialized
 		/// </summary>
-		bool InitRenderer3D();
+		virtual bool InitRenderer3D() = 0;
 		
 		/// <summary>
 		/// Initializes the 2D Renderer, checks if it has already been initialized
 		/// </summary>
-		bool InitRenderer2D();
+		virtual bool InitRenderer2D() = 0;
 
 		virtual Renderer3D& GetRenderer3D() const override;
-		virtual void* GetNativeWindow() const = 0;
 		
 		virtual ~Window();
 

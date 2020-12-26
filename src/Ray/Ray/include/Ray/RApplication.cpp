@@ -98,7 +98,7 @@ namespace At0::Ray
 
 		// -------------------------------------------------------------
 		// ECS TESTING
-		SpeedTest<5000000>(10);
+		//SpeedTest<5000000>(10);
 	}
 
 	Window& Application::FindWindowByName(std::string_view name)

@@ -222,6 +222,32 @@ namespace At0::Ray
 	{
 		RAY_ASSERT(false, "Incomplete Implementation");
 	}
+
+	bool OpenGLWindow::InitRenderer3D()
+	{
+		RAY_PROFILE_FUNCTION();
+
+		//if (!m_Renderer3D)
+		//{
+		//	m_Renderer3D = MakeScope<Renderer3D>(*this);
+		//	m_Renderer3D->Init(m_hWnd);
+		//	return true;
+		//}
+		return false;
+	}
+
+	bool OpenGLWindow::InitRenderer2D()
+	{
+		RAY_PROFILE_FUNCTION();
+
+		//if (!m_Renderer2D)
+		//{
+		//	m_Renderer2D = MakeScope<Renderer2D>();
+		//	m_Renderer2D->Init(m_hWnd);
+		//  return true;
+		//}
+		return false;
+	}
 	
 	void OpenGLWindow::SetUpEventCallbacks()
 	{

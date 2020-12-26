@@ -68,7 +68,15 @@ namespace At0::Ray
 		/// <param name="path">Is the path to the .ico file</param>
 		virtual void SetIcon(std::string_view path);
 
-		virtual void* GetNativeWindow() const override { return (void*)m_hWnd; }
+		/// <summary>
+		/// Initializes the 3D Renderer, checks if it has already been initialized
+		/// </summary>
+		virtual bool InitRenderer3D() override;
+
+		/// <summary>
+		/// Initializes the 2D Renderer, checks if it has already been initialized
+		/// </summary>
+		virtual bool InitRenderer2D() override;
 
 	private:
 		/// <summary>

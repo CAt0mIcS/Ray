@@ -25,7 +25,6 @@ namespace At0::Ray
 		
 		std::string_view GetName() const { return m_Name; }
 		virtual Renderer3D& GetRenderer3D() const = 0;
-		virtual void* GetNativeWindow() const = 0;
 		Widget* GetParent() const { return m_Parent; }
 
 		/// <summary>

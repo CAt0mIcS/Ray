@@ -25,6 +25,8 @@ set(SRC
 	
 	"include/Ray/Widgets/RWidget.h"
 	"include/Ray/Widgets/RWidget.cpp"
+	"include/Ray/Widgets/RButton.h"
+	"include/Ray/Widgets/RButton.cpp"
 
 	"include/Ray/Window/RWinAPIWindow.h"
 	"include/Ray/Window/RWinAPIWindow.cpp"

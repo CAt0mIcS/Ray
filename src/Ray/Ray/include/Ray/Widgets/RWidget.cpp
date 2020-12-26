@@ -24,8 +24,6 @@ namespace At0::Ray
 
     void Widget::PostRedraw(bool eraseBkgnd) const
     {
-        void* hWnd = GetNativeWindow();
-        
         //RAY_TODO: Program should be able to continue if one call fails
 
         //RAY_TODO: Invalidate only widget area
