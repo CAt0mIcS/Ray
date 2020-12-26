@@ -67,6 +67,8 @@ FPS g_FPS;
 
 namespace At0::Layers
 {
+#define RENDER 0
+
 	std::vector<Ray::ShadedCube> cubes;
 	static constexpr uint64_t numCubes = 4000;
 	Ray::Model model;
@@ -85,6 +87,8 @@ namespace At0::Layers
 		EventListener<Ray::MouseWheelRightEvent>(GetMainWindow())
 	{
 		EventListener<Ray::MouseMoveEvent>::Subscribe(GetMainWindow());
+
+#if RENDER
 
 		ptLight = Ray::MakeScope<Ray::PointLight>(GetMainWindow().GetRenderer3D());
 
@@ -137,15 +141,19 @@ namespace At0::Layers
 
 		model = Ray::Model("Resources/nanosuit.obj", face_colors, GetMainWindow().GetRenderer3D());
 		GetMainWindow().GetRenderer3D().SetCamera(DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f));
+
+#endif
 	}
-	
+
 	Ray::Point2 mousePos{};
 	void GUILayer::OnUpdate(Ray::Timestep ts)
 	{
+#if RENDER
+
 		Ray::Window& window = GetMainWindow();
 		Ray::Renderer3D& renderer = window.GetRenderer3D();
 		renderer.ClearBuffer(0.07f, 0.0f, 0.12f);
-		
+
 		static float pitch = 0.0f;
 		static float yaw = 0.0f;
 		static float roll = 0.0f;
@@ -219,6 +227,8 @@ namespace At0::Layers
 		ptLight->Draw();
 
 		renderer.EndDraw();
+#endif
+
 		g_FPS.Update();
 	}
 
@@ -258,9 +268,18 @@ namespace At0::Layers
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	}
-	
+
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::KeyPressedEvent& e)
 	{
+		static uint32_t i = 0;
+		std::string name = "Win" + std::to_string(i);
+
+		++i;
+		Ray::Window* win = Ray::Application::Get().PushWindow(Ray::Window::Create(name, { 150, 150 }, { 960, 540 }));
+		EventListener<Ray::KeyPressedEvent>::Subscribe(*win);
+		win->SetTitle(name);
+		win->Show();
+
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 	}

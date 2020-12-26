@@ -16,38 +16,33 @@ namespace At0::Zeal
 		GetMainWindow().Show();
 
 		//Ray::Window* win = PushWindow(Ray::Window::Create("Win0", { 150, 150 }, { 960, 540 }));
-		//win->InitRenderer3D();
 		//win->SetTitle("Win0");
 		//win->Show();
 
 		//Ray::Window* win1 = PushWindow(Ray::Window::Create("Win1"));
-		//win1->InitRenderer3D();
 		//win1->SetTitle("Win1");
 		//win1->Show();
 
 		//Ray::Window* win2 = PushWindow(Ray::Window::Create("Win2"));
-		//win2->InitRenderer3D();
 		//win2->SetTitle("Win2");
 		//win2->Show();
 
 		//Ray::Window* win3 = PushWindow(Ray::Window::Create("Win3"));
-		//win3->InitRenderer3D();
 		//win3->SetTitle("Win3");
 		//win3->Show();
 
 		//Ray::Window* win4 = PushWindow(Ray::Window::Create("Win4"));
-		//win4->InitRenderer3D();
 		//win4->SetTitle("Win4");
 		//win4->Show();
 
-		m_LayerLoader.Start("Editors", [this](Ray::Layer* layer) 
+		m_LayerLoader.Start("Editors", [this](Ray::Layer* layer)
 			{
 				PushLayer(layer);
 			}
 		);
 
 	}
-	
+
 	Sandbox::~Sandbox()
 	{
 		//RAY_PROFILE_FUNCTION();

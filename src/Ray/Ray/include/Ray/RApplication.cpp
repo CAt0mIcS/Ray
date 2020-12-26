@@ -116,10 +116,11 @@ namespace At0::Ray
 	{
 		auto lastFrameTime = std::chrono::high_resolution_clock::now();
 		Timestep timestep;
-		
-		std::thread appThread([this, &lastFrameTime, &timestep]() 
+
+		std::thread appThread([this, &lastFrameTime, &timestep]()
 			{
-				while (GetMainWindow().IsOpen())
+				auto& win = GetMainWindow();
+				while (win.IsOpen())
 				{
 					// -------------------------------------------------------------------------------------
 					// Setting timestep
@@ -187,7 +188,7 @@ namespace At0::Ray
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[Application] Destroyed");
 	}
-	
+
 	void Application::Cleanup()
 	{
 		// Close all Windows when the MainWindow was closed
@@ -199,7 +200,7 @@ namespace At0::Ray
 		// Need this here to stop threads from waiting until the static ThreadPool object is destroyed
 		ThreadPool::Get().Shutdown();
 	}
-	
+
 	void Application::StartupSetup()
 	{
 		/// <summary>
