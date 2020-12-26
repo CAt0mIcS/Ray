@@ -81,7 +81,7 @@ int At0::Ray::Awake(std::string commandLineArguments)
 		RAY_LOG_BEGIN("../../Zeal.log", Log::LogLevel::Trace);
 
 		RAY_PROFILE_BEGIN_SESSION("Startup", "../../Profiling/Profile-Startup.json");
-		Ray::RendererAPI::SetAPI(Ray::RendererAPI::D3D11);
+		Ray::RendererAPI::SetAPI(Ray::RendererAPI::OpenGL);
 		Zeal::Sandbox* app = new Zeal::Sandbox(commandLineArguments);
 		RAY_PROFILE_END_SESSION();
 

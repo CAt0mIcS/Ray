@@ -54,6 +54,8 @@ namespace At0::Ray
 		}
 
 		m_hWnd = glfwCreateWindow((int)size.x, (int)size.y, "", nullptr, nullptr);
+		glfwSetWindowUserPointer(m_hWnd, this);
+
 		glfwSetWindowPos(m_hWnd, (int)pos.x, (int)pos.y);
 		m_IsOpen = true;
 
@@ -226,21 +228,22 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		glfwSetCursorPosCallback(m_hWnd, [this](double xPos, double yPos)
+		glfwSetCursorPosCallback(m_hWnd, [](GLFWwindow* window, double xPos, double yPos)
 			{
-				Mouse.SetPos({ (float)xPos, (float)yPos });
+				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+				win.Mouse.SetPos({ (float)xPos, (float)yPos });
 
 				MouseMoveEvent e(Point2{ (float)xPos, (float)yPos });
-				for (auto* pListener : EventDispatcher<MouseMoveEvent>::Get())
+				for (auto* pListener : win.EventDispatcher<MouseMoveEvent>::Get())
 				{
-					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+					pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
 				}
 			}
 		);
 
-		glfwSetMouseButtonCallback(m_hWnd, [this](int button, int action, int mods)
+		glfwSetMouseButtonCallback(m_hWnd, [](GLFWwindow* window, int button, int action, int mods)
 			{
-				std::cout << MouseButtonToString((MouseButton)button) << '\n';
+				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
 
 				switch (action)
 				{
@@ -250,15 +253,15 @@ namespace At0::Ray
 
 					switch (e.GetButton())
 					{
-					case MouseButton::Left:		Mouse.SetLeftPressed(true); break;
-					case MouseButton::Right:	Mouse.SetRightPressed(true); break;
-					case MouseButton::Middle:	Mouse.SetMiddlePressed(true); break;
+					case MouseButton::Left:		win.Mouse.SetLeftPressed(true); break;
+					case MouseButton::Right:	win.Mouse.SetRightPressed(true); break;
+					case MouseButton::Middle:	win.Mouse.SetMiddlePressed(true); break;
 					}
 
 
-					for (auto* pListener : EventDispatcher<MouseButtonPressedEvent>::Get())
+					for (auto* pListener : win.EventDispatcher<MouseButtonPressedEvent>::Get())
 					{
-						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
 					}
 					break;
 				}
@@ -268,14 +271,14 @@ namespace At0::Ray
 
 					switch (e.GetButton())
 					{
-					case MouseButton::Left:		Mouse.SetLeftPressed(false); break;
-					case MouseButton::Right:	Mouse.SetRightPressed(false); break;
-					case MouseButton::Middle:	Mouse.SetMiddlePressed(false); break;
+					case MouseButton::Left:		win.Mouse.SetLeftPressed(false); break;
+					case MouseButton::Right:	win.Mouse.SetRightPressed(false); break;
+					case MouseButton::Middle:	win.Mouse.SetMiddlePressed(false); break;
 					}
 
-					for (auto* pListener : EventDispatcher<MouseButtonReleasedEvent>::Get())
+					for (auto* pListener : win.EventDispatcher<MouseButtonReleasedEvent>::Get())
 					{
-						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
 					}
 					break;
 				}
@@ -283,8 +286,10 @@ namespace At0::Ray
 			}
 		);
 
-		glfwSetKeyCallback(m_hWnd, [this](int key, int scancode, int action, int mods)
+		glfwSetKeyCallback(m_hWnd, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
+				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+
 				switch (action)
 				{
 				case GLFW_PRESS:
@@ -293,10 +298,10 @@ namespace At0::Ray
 					std::cout << KeyToString(k) << '\n';
 
 					KeyPressedEvent e((unsigned char)key, 0);
-					Keyboard.SetKeyState((unsigned char)key, true);
-					for (auto* pListener : EventDispatcher<KeyPressedEvent>::Get())
+					win.Keyboard.SetKeyState((unsigned char)key, true);
+					for (auto* pListener : win.EventDispatcher<KeyPressedEvent>::Get())
 					{
-						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
 					}
 
 					break;
@@ -305,19 +310,19 @@ namespace At0::Ray
 				case GLFW_RELEASE:
 				{
 					KeyReleasedEvent e((unsigned char)key);
-					Keyboard.SetKeyState((unsigned char)key, false);
-					for (auto* pListener : EventDispatcher<KeyReleasedEvent>::Get())
+					win.Keyboard.SetKeyState((unsigned char)key, false);
+					for (auto* pListener : win.EventDispatcher<KeyReleasedEvent>::Get())
 					{
-						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
 					}
 					break;
 				}
 				case GLFW_REPEAT:
 				{
 					KeyPressedEvent e((unsigned char)key, 1);
-					for (auto* pListener : EventDispatcher<KeyPressedEvent>::Get())
+					for (auto* pListener : win.EventDispatcher<KeyPressedEvent>::Get())
 					{
-						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
 					}
 
 					break;
@@ -326,90 +331,102 @@ namespace At0::Ray
 			}
 		);
 
-		glfwSetCharCallback(m_hWnd, [this](unsigned int keycode)
+		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode)
 			{
+				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+
 				CharEvent e(keycode);
-				for (auto* pListener : EventDispatcher<CharEvent>::Get())
+				for (auto* pListener : win.EventDispatcher<CharEvent>::Get())
 				{
-					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+					pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
 				}			}
 		);
 
-		glfwSetScrollCallback(m_hWnd, [this](double xOffset, double yOffset)
+		glfwSetScrollCallback(m_hWnd, [](GLFWwindow* window, double xOffset, double yOffset)
 			{
+				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+
 				if (yOffset > 0)
 				{
 					MouseWheelUpEvent e((float)yOffset);
-					for (auto* pListener : EventDispatcher<MouseWheelUpEvent>::Get())
+					for (auto* pListener : win.EventDispatcher<MouseWheelUpEvent>::Get())
 					{
-						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
 					}
 				}
 				else if (yOffset < 0)
 				{
 					MouseWheelDownEvent e((float)yOffset);
-					for (auto* pListener : EventDispatcher<MouseWheelDownEvent>::Get())
+					for (auto* pListener : win.EventDispatcher<MouseWheelDownEvent>::Get())
 					{
-						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
 					}
 				}
 
 				if (xOffset > 0)
 				{
 					MouseWheelRightEvent e((float)xOffset);
-					for (auto* pListener : EventDispatcher<MouseWheelRightEvent>::Get())
+					for (auto* pListener : win.EventDispatcher<MouseWheelRightEvent>::Get())
 					{
-						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
 					}
 				}
 				else if (xOffset < 0)
 				{
 					MouseWheelLeftEvent e((float)xOffset);
-					for (auto* pListener : EventDispatcher<MouseWheelLeftEvent>::Get())
+					for (auto* pListener : win.EventDispatcher<MouseWheelLeftEvent>::Get())
 					{
-						pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
 					}
 				}
 			}
 		);
 
-		glfwSetWindowRefreshCallback(m_hWnd, [this]()
+		glfwSetWindowRefreshCallback(m_hWnd, [](GLFWwindow* window)
 			{
+				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+
 				PaintEvent e;
-				for (auto* pListener : EventDispatcher<PaintEvent>::Get())
+				for (auto* pListener : win.EventDispatcher<PaintEvent>::Get())
 				{
-					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+					pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
 				}
 			}
 		);
 
-		glfwSetWindowSizeCallback(m_hWnd, [this](int width, int height)
+		glfwSetWindowSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height)
 			{
+				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+
 				//ResizeTo(Point2{ width, height });
 
-				WindowResizeEvent e(m_OldSize, Point2{ (float)width, (float)height });
-				for (auto* pListener : EventDispatcher<WindowResizeEvent>::Get())
+				WindowResizeEvent e(win.m_OldSize, Point2{ (float)width, (float)height });
+				for (auto* pListener : win.EventDispatcher<WindowResizeEvent>::Get())
 				{
-					pListener->OnEvent(this, e);
+					pListener->OnEvent(&win, e);
 				}
 			}
 		);
 
-		glfwSetWindowPosCallback(m_hWnd, [this](int x, int y) 
+		glfwSetWindowPosCallback(m_hWnd, [](GLFWwindow* window, int x, int y) 
 			{
+				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+
 				//MoveTo(Point2{ x, y });
 
-				WindowMoveEvent e(m_OldPos, Point2{ (float)x, (float)y });
-				for (auto* pListener : EventDispatcher<WindowMoveEvent>::Get())
+				WindowMoveEvent e(win.m_OldPos, Point2{ (float)x, (float)y });
+				for (auto* pListener : win.EventDispatcher<WindowMoveEvent>::Get())
 				{
-					pListener->OnEvent(this, e);
+					pListener->OnEvent(&win, e);
 				}
 			}
 		);
 
-		glfwSetWindowCloseCallback(m_hWnd, [this]()
+		glfwSetWindowCloseCallback(m_hWnd, [](GLFWwindow* window)
 			{
-				Close();
+				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+
+				win.Close();
 			}
 		);
 	}

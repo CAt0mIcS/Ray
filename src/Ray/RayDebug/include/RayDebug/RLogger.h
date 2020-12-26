@@ -2,6 +2,7 @@
 
 
 #include <../../RayUtil/include/RayUtil/RCoreConfig.h>
+#include <../../RayUtil/include/RayUtil/RException.h>
 
 #if RAY_ENABLE_LOGGING
 #include "RDBase.h"
@@ -57,34 +58,25 @@ namespace At0::Ray::Debug
 /// </summary>
 #if RAY_ENABLE_LOGGING
 
-#ifdef _MSC_VER
-	#define RAY_LOG_BEGIN(path, loglvl)	::At0::Ray::Debug::Logger::Init(path, loglvl)
+#define RAY_LOG_BEGIN(path, loglvl)	if(!::At0::Ray::Debug::Logger::Init(path, loglvl)) RAY_THROW_RUNTIME("[Logger::Init] Failed")
+#define RAY_LOG_IS_OPEN()			::At0::Ray::Debug::Logger::GetFileLogger().IsOpen()
+#define RAY_LOG_END()				::At0::Ray::Debug::Logger::End();
+#define RAY_LOG_FLUSH()				::At0::Ray::Debug::Logger::GetFileLogger().Flush();
 
+#ifdef _MSC_VER
 	#define RAY_LOG_TRACE(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, __VA_ARGS__)
 	#define RAY_LOG_DEBUG(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Debug(msg, __VA_ARGS__)
 	#define RAY_LOG_INFO(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Info(msg, __VA_ARGS__)
 	#define RAY_LOG_WARN(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Warn(msg, __VA_ARGS__)
 	#define RAY_LOG_ERROR(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Error(msg, __VA_ARGS__)
 	#define RAY_LOG_CRITICAL(msg, ...)	::At0::Ray::Debug::Logger::GetFileLogger().Critical(msg, __VA_ARGS__)
-
-	#define RAY_LOG_IS_OPEN()			::At0::Ray::Debug::Logger::GetFileLogger().IsOpen()
-
-	#define RAY_LOG_END()				::At0::Ray::Debug::Logger::End();
-	#define RAY_LOG_FLUSH()				::At0::Ray::Debug::Logger::GetFileLogger().Flush();
 #elif defined(__GNUC__)
-	#define RAY_LOG_BEGIN(path, loglvl)	::At0::Ray::Debug::Logger::Init(path, loglvl)
-
 	#define RAY_LOG_TRACE(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, ## __VA_ARGS__)
 	#define RAY_LOG_DEBUG(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Debug(msg, ## __VA_ARGS__)
 	#define RAY_LOG_INFO(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Info(msg, ## __VA_ARGS__)
 	#define RAY_LOG_WARN(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Warn(msg, ## __VA_ARGS__)
 	#define RAY_LOG_ERROR(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Error(msg, ## __VA_ARGS__)
 	#define RAY_LOG_CRITICAL(msg, ...)	::At0::Ray::Debug::Logger::GetFileLogger().Critical(msg, ## __VA_ARGS__)
-
-	#define RAY_LOG_IS_OPEN()			::At0::Ray::Debug::Logger::GetFileLogger().IsOpen()
-
-	#define RAY_LOG_END()				::At0::Ray::Debug::Logger::End();
-	#define RAY_LOG_FLUSH()				::At0::Ray::Debug::Logger::GetFileLogger().Flush();
 #endif
 
 #else

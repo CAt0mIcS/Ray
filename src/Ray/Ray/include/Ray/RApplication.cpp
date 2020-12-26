@@ -129,10 +129,10 @@ namespace At0::Ray
 
 					// -------------------------------------------------------------------------------------
 					// Update Layers
-					for (Layer* layer : m_LayerStack)
-					{
-						layer->OnUpdate(timestep);
-					}
+					//for (Layer* layer : m_LayerStack)
+					//{
+					//	layer->OnUpdate(timestep);
+					//}
 
 					//CPU Usage too high without it (not ideal)
 					//std::this_thread::sleep_for(std::chrono::nanoseconds(1500));
