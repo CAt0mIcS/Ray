@@ -57,6 +57,9 @@ namespace At0::Ray
 		glfwSetWindowPos(m_hWnd, (int)pos.x, (int)pos.y);
 		m_IsOpen = true;
 
+		//m_Renderer3D = MakeScope<Renderer3D>(*this);
+		//m_Renderer3D->Init(m_hWnd);
+
 		// Context initialization
 		glfwMakeContextCurrent(m_hWnd);
 
@@ -74,10 +77,6 @@ namespace At0::Ray
 		}
 
 		SetUpEventCallbacks();
-
-		// Push dummy event so we don't call front on empty queue in application
-		//Scope<WindowResizeEvent> e = MakeScope<WindowResizeEvent>(m_OldSize, Size2{ 1280.0f, 720.0f });
-		//m_EventQueue.PushBack({ GetEventReceiver(*e, Mouse), std::move(e) });
 	}
 	
 	OpenGLWindow::~OpenGLWindow()
@@ -221,32 +220,6 @@ namespace At0::Ray
 	void OpenGLWindow::SetIcon(std::string_view path)
 	{
 		RAY_ASSERT(false, "Incomplete Implementation");
-	}
-
-	bool OpenGLWindow::InitRenderer3D()
-	{
-		RAY_PROFILE_FUNCTION();
-
-		//if (!m_Renderer3D)
-		//{
-		//	m_Renderer3D = MakeScope<Renderer3D>(*this);
-		//	m_Renderer3D->Init(m_hWnd);
-		//	return true;
-		//}
-		return false;
-	}
-
-	bool OpenGLWindow::InitRenderer2D()
-	{
-		RAY_PROFILE_FUNCTION();
-
-		//if (!m_Renderer2D)
-		//{
-		//	m_Renderer2D = MakeScope<Renderer2D>();
-		//	m_Renderer2D->Init(m_hWnd);
-		//  return true;
-		//}
-		return false;
 	}
 	
 	void OpenGLWindow::SetUpEventCallbacks()

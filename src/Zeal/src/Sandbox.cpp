@@ -12,7 +12,6 @@ namespace At0::Zeal
 	{
 		//RAY_PROFILE_FUNCTION();
 
-		GetMainWindow().InitRenderer3D();
 		GetMainWindow().SetTitle("Zeal");
 		GetMainWindow().Show();
 

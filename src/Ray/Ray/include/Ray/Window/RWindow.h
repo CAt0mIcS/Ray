@@ -84,16 +84,6 @@ namespace At0::Ray
 		virtual bool IsOpen() const = 0;
 		virtual void SetIcon(std::string_view path) = 0;
 
-		/// <summary>
-		/// Initializes the 3D Renderer, checks if it has already been initialized
-		/// </summary>
-		virtual bool InitRenderer3D() = 0;
-		
-		/// <summary>
-		/// Initializes the 2D Renderer, checks if it has already been initialized
-		/// </summary>
-		virtual bool InitRenderer2D() = 0;
-
 		virtual Renderer3D& GetRenderer3D() const override;
 		
 		virtual ~Window();
@@ -132,7 +122,6 @@ namespace At0::Ray
 		Point2 m_OldPos;
 
 		Scope<Renderer3D> m_Renderer3D;
-		//Scope<Renderer2D> m_Renderer2D;
 	};
 }
 

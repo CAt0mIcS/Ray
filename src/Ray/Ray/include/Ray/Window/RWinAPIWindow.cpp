@@ -31,6 +31,9 @@ namespace At0::Ray
 		RAY_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
 		RAY_WND_THROW_LAST_FAILED(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW, 0, pos.x, pos.y, size.x, size.y));
 		m_IsOpen = true;
+
+		m_Renderer3D = MakeScope<Renderer3D>(*this);
+		m_Renderer3D->Init(m_hWnd);
 	}
 
 	WinAPIWindow::~WinAPIWindow()
@@ -495,32 +498,6 @@ namespace At0::Ray
 	void WinAPIWindow::SetIcon(std::string_view path)
 	{
 		RAY_ASSERT(false, "Incomplete Implementation");
-	}
-	
-	bool WinAPIWindow::InitRenderer3D()
-	{
-		RAY_PROFILE_FUNCTION();
-
-		if (!m_Renderer3D)
-		{
-			m_Renderer3D = MakeScope<Renderer3D>(*this);
-			m_Renderer3D->Init(m_hWnd);
-			return true;
-		}
-		return false;
-	}
-
-	bool WinAPIWindow::InitRenderer2D()
-	{
-		RAY_PROFILE_FUNCTION();
-
-		//if (!m_Renderer2D)
-		//{
-		//	m_Renderer2D = MakeScope<Renderer2D>();
-		//	m_Renderer2D->Init(m_hWnd);
-		//  return true;
-		//}
-		return false;
 	}
 }
 
