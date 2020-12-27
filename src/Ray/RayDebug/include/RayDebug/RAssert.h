@@ -45,7 +45,7 @@ namespace At0::Ray::Debug
 #define RAY_EXPECTS(expected)				RAY_ASSERT(expected, "[Expected] {0}", #expected)
 #else
 #define RAY_ASSERT(condition, msg, ...)
-#define RAY_MEXPECTS(expected, msg)
+#define RAY_MEXPECTS(expected, msg, ...)
 #define RAY_EXPECTS(expected)
 #endif
 

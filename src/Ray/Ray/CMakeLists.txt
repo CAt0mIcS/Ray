@@ -45,6 +45,7 @@ set(PUBLIC_INC
 set(PRIVATE_INC
 	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/glm"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/glfw"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/stb_image/include"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../RayECS/include"
 )
 
@@ -52,30 +53,22 @@ set(PUBLIC_LIB
 	""
 )
 
+set(PRIVATE_LIB
+	"RayRender"
+	"RayEvent"
+	"GLFW"
+	"Glad"
+	"RayDebug"
+	"RayUtil"
+)
+
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCCXX)
 find_package("Threads" REQUIRED)
 find_package("X11" REQUIRED)
 list(APPEND PRIVATE_INC "${X11_INCLUDE_DIRS}")
-set(PRIVATE_LIB
-	"RayRender"
-	"RayDebug"
-	"RayEvent"
-	"RayUtil"
-	"Threads::Threads"
-	"GLFW"
-	"Glad"
-	"${X11_LIBRARIES}"
-)
-else()
-set(PRIVATE_LIB
-	"RayRender"
-	"RayEvent"
-	"GLFW"
-	"Glad"
-	"RayDebug"
-	"RayUtil"
-)
+list(APPEND PRIVATE_LIB "${X11_LIBRARIES}" "Threads::Threads")
 endif()
+
 
 add_library("Ray" SHARED "${SRC}")
 

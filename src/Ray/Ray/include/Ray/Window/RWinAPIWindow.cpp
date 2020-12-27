@@ -497,9 +497,14 @@ namespace At0::Ray
 
 	void WinAPIWindow::SetIcon(std::string_view path)
 	{
+		RAY_MEXPECTS(Util::EndsWith(path, ".ico"),
+			"[WinAPIWindow::SetIcon] File '{0}' has an invalid extension. "
+			"Only .ico files are currently supported by the Win32API implementation.",
+			path
+		);
 		HANDLE hIcon = LoadImageA(NULL, path.data(), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_LOADFROMFILE);
 		if (!hIcon)
-			RAY_WND_THROW_LAST_FAILED_NO_EXPR();
+			RAY_THROW_RUNTIME("[WinAPIWindow::SetIcon] Failed to set Icon");
 
 		// Change both icons to the same icon handle.
 		SendMessage(m_hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);

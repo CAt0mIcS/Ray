@@ -1,6 +1,8 @@
 #include "Rupch.h"
 #include "RHelper.h"
 
+#include <assert.h>
+
 
 namespace At0::Ray::Util
 {
@@ -18,6 +20,12 @@ namespace At0::Ray::Util
 #if defined(_WIN32)
 		FreeConsole();
 #endif
+	}
+
+	bool EndsWith(std::string_view str, std::string_view end)
+	{
+		assert(str.size() > end.size() && "[Util::EndsWith] The supposed end of the string is larger than it.");
+		return str.substr(str.size() - end.size(), str.size()) == end;
 	}
 }
 

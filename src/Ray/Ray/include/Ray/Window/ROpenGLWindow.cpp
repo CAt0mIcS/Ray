@@ -2,9 +2,9 @@
 #include "ROpenGLWindow.h"
 
 #ifdef _WIN32
-	#define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NATIVE_WIN32
 #elif defined(__linux__)
-	#define GLFW_EXPOSE_NATIVE_X11
+#define GLFW_EXPOSE_NATIVE_X11
 #endif
 
 #include <glad/glad.h>
@@ -25,6 +25,9 @@
 #include <RayDebug/RLogger.h>
 #include <RayDebug/RInstrumentor.h>
 #include <RayUtil/RKeyCodes.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image/stb_image.h>
 
 
 namespace At0::Ray
@@ -75,12 +78,12 @@ namespace At0::Ray
 
 			RAY_LOG_INFO("[OpenGLWindow] Successfully initialized Glad");
 			RAY_LOG_INFO("[OpenGLWindow] OpenGL Info:"
-			"\n\tVendor:\t{0}\n\tRenderer: {1}\n\tVersion:{2}", glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION));
+				"\n\tVendor:\t{0}\n\tRenderer: {1}\n\tVersion:{2}", glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION));
 		}
 
 		SetUpEventCallbacks();
 	}
-	
+
 	OpenGLWindow::~OpenGLWindow()
 	{
 		RAY_PROFILE_FUNCTION();
@@ -96,7 +99,7 @@ namespace At0::Ray
 	{
 		// GLFW doesn't have functionality to get the current window title
 		RAY_PROFILE_FUNCTION();
-		
+
 #ifdef _WIN32
 
 		HWND hWnd = glfwGetWin32Window(m_hWnd);
@@ -128,7 +131,7 @@ namespace At0::Ray
 #endif
 
 	}
-	
+
 	void OpenGLWindow::SetTitle(std::string_view title)
 	{
 		RAY_PROFILE_FUNCTION();
@@ -210,7 +213,7 @@ namespace At0::Ray
 		RAY_PROFILE_FUNCTION();
 
 		glfwMakeContextCurrent(m_hWnd);
-		
+
 		// --------------------------------------------------------
 		// Rendering (RAY_TODO)
 		glfwSwapBuffers(m_hWnd);
@@ -221,9 +224,12 @@ namespace At0::Ray
 
 	void OpenGLWindow::SetIcon(std::string_view path)
 	{
-		RAY_ASSERT(false, "Incomplete Implementation");
+		GLFWimage images[1];
+		images[0].pixels = stbi_load(path.data(), &images[0].width, &images[0].height, 0, 4);
+		glfwSetWindowIcon(m_hWnd, std::size(images), images);
+		stbi_image_free(images[0].pixels);
 	}
-	
+
 	void OpenGLWindow::SetUpEventCallbacks()
 	{
 		RAY_PROFILE_FUNCTION();
@@ -306,7 +312,7 @@ namespace At0::Ray
 
 					break;
 				}
-					
+
 				case GLFW_RELEASE:
 				{
 					KeyReleasedEvent e((unsigned char)key);
@@ -408,7 +414,7 @@ namespace At0::Ray
 			}
 		);
 
-		glfwSetWindowPosCallback(m_hWnd, [](GLFWwindow* window, int x, int y) 
+		glfwSetWindowPosCallback(m_hWnd, [](GLFWwindow* window, int x, int y)
 			{
 				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
 

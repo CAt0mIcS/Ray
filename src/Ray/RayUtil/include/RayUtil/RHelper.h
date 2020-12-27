@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <signal.h>
+#include <string>
 
 
 namespace At0::Ray
@@ -49,6 +50,14 @@ namespace At0::Ray::Util
 	/// Frees the console
 	/// </summary>
 	void RU_API ConsoleShutdown();
+
+	/// <summary>
+	/// Checks if a string ends with another string
+	/// </summary>
+	/// <param name="str">Is the full string to check</param>
+	/// <param name="end">Is the supposed end of the full string</param>
+	/// <returns>True if str ends with end, false otherwise</returns>
+	bool RU_API EndsWith(std::string_view str, std::string_view end);
 }
 
 
