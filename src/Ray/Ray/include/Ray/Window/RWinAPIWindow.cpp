@@ -44,11 +44,11 @@ namespace At0::Ray
 	}
 
 	bool WinAPIWindow::CreateNativeWindow(
-		const wchar_t* windowName, 
-		const wchar_t* windowClassName, 
-		DWORD style, DWORD exStyle, 
-		uint32_t x, uint32_t y, 
-		uint32_t width, uint32_t height, 
+		const wchar_t* windowName,
+		const wchar_t* windowClassName,
+		DWORD style, DWORD exStyle,
+		uint32_t x, uint32_t y,
+		uint32_t width, uint32_t height,
 		HWND hWndParent, HMENU hMenu
 	)
 	{
@@ -76,7 +76,7 @@ namespace At0::Ray
 
 		return m_hWnd ? true : false;
 	}
-	
+
 	LRESULT WinAPIWindow::WindowProcSetup(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		RAY_PROFILE_FUNCTION();
@@ -101,11 +101,11 @@ namespace At0::Ray
 		WinAPIWindow* pThis = (WinAPIWindow*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 		return pThis->HandleMessage(uMsg, wParam, lParam);
 	}
-	
+
 	LRESULT WinAPIWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		RAY_PROFILE_FUNCTION();
-		
+
 		switch (uMsg)
 		{
 		case WM_DESTROY:
@@ -463,7 +463,7 @@ namespace At0::Ray
 
 	void WinAPIWindow::Close()
 	{
-		if(IsOpen())
+		if (IsOpen())
 			SendMessage(m_hWnd, WM_CLOSE, 0, 0);
 	}
 
