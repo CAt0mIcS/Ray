@@ -113,18 +113,16 @@ namespace At0::Ray
 
 	int Application::Run()
 	{
-		auto lastFrameTime = std::chrono::high_resolution_clock::now();
-		Timestep timestep;
-
-		std::thread appThread([this, &lastFrameTime, &timestep]()
+		std::thread appThread([this]()
 			{
+				auto lastFrameTime = std::chrono::high_resolution_clock::now();
 				while (GetMainWindow().IsOpen())
 				{
 					// -------------------------------------------------------------------------------------
 					// Setting timestep
 					auto tNow = std::chrono::high_resolution_clock::now();
-					timestep = ((float)(tNow - lastFrameTime).count()) / 1000.0f / 1000.0f / 1000.0f;
-					lastFrameTime = std::move(tNow);
+					Timestep timestep = ((float)(tNow - lastFrameTime).count()) / 1000.0f / 1000.0f / 1000.0f;
+					lastFrameTime = tNow;
 
 					// -------------------------------------------------------------------------------------
 					// Update Layers
