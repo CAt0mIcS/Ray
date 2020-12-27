@@ -89,8 +89,7 @@ namespace At0::Ray
 	Application::Application(std::string_view commandLine)
 		: m_LayerStack{}
 	{
-		if (s_Instance)
-			RAY_ASSERT(false, "Another Application Instance already exists");
+		RAY_MEXPECTS(!s_Instance, "Another Application Instance already exists at 0x{0}", s_Instance);
 		s_Instance = this;
 
 		StartupSetup();
@@ -164,8 +163,6 @@ namespace At0::Ray
 		return 0;
 	}
 
-	// QUESTIONA: Taking Layer by raw pointer but window by shared_ptr (use shared_ptr)
-	//RAY_TODO: Generalize for the entire project
 	Layer& Application::PushLayer(Layer* layer)
 	{
 		RAY_PROFILE_FUNCTION();
