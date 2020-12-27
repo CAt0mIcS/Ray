@@ -497,7 +497,17 @@ namespace At0::Ray
 
 	void WinAPIWindow::SetIcon(std::string_view path)
 	{
-		RAY_ASSERT(false, "Incomplete Implementation");
+		HANDLE hIcon = LoadImageA(NULL, path.data(), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_LOADFROMFILE);
+		if (!hIcon)
+			RAY_WND_THROW_LAST_FAILED_NO_EXPR();
+
+		// Change both icons to the same icon handle.
+		SendMessage(m_hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+		SendMessage(m_hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+
+		// This will ensure that the application icon gets changed too.
+		SendMessage(GetWindow(m_hWnd, GW_OWNER), WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+		SendMessage(GetWindow(m_hWnd, GW_OWNER), WM_SETICON, ICON_BIG, (LPARAM)hIcon);
 	}
 }
 

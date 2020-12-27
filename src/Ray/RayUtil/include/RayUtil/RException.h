@@ -8,7 +8,7 @@
 #include "RSerialize.h"
 
 #ifdef _WIN32
-	#include <Windows.h>
+#include <Windows.h>
 #endif
 
 #pragma warning(disable : 4275)
@@ -181,10 +181,10 @@ namespace At0::Ray
 #define RAY_WND_THROW_FAILED(expr) \
 if(HRESULT RL___HRES___RL = expr; FAILED(RL___HRES___RL)) throw ::At0::Ray::WindowsException(RL___HRES___RL, (uint16_t)__LINE__, __FILE__)
 
-#define RAY_WND_THROW_LAST_FAILED2() \
+#define RAY_WND_THROW_LAST_FAILED_NO_EXPR() \
 throw ::At0::Ray::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE__)
 
-#define RAY_WND_THROW_LAST_FAILED(expr) if(!(expr)) RAY_WND_THROW_LAST_FAILED2()
+#define RAY_WND_THROW_LAST_FAILED(expr) if(!(expr)) RAY_WND_THROW_LAST_FAILED_NO_EXPR()
 
 #define RAY_GFX_THROW_FAILED(expr) if(HRESULT RL___HRES___RL = (expr); FAILED(RL___HRES___RL)) throw ::At0::Ray::GraphicsException(RL___HRES___RL, (uint16_t)__LINE__, __FILE__)
 

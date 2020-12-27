@@ -14,6 +14,7 @@ namespace At0::Zeal
 
 		GetMainWindow().SetTitle("Zeal");
 		GetMainWindow().Show();
+		GetMainWindow().SetIcon("Resources/Icon.ico");
 
 		//Ray::Window& win = PushWindow(Ray::Window::Create("Win0", { 150, 150 }, { 960, 540 }));
 		//win.SetTitle("Win0");
