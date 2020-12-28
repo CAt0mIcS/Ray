@@ -56,10 +56,39 @@ using RemoveKeywords = std::remove_cv_t<std::remove_reference_t<T>>;
 #include <sstream>
 
 template<typename, typename = void>
-struct IsConvertible : std::false_type {};
+struct ShouldUseStringStream : std::false_type {};
 
 template<typename T>
-struct IsConvertible<T, std::void_t<decltype(std::declval<std::wostringstream> << std::declval<T>())>> : std::true_type {};
+struct ShouldUseStringStream<T, std::void_t<decltype(std::declval<std::ostringstream>() << std::declval<T>())>> : std::true_type {};
+
+
+template<typename, typename = void>
+struct ShouldUseWStringStream : std::false_type {};
+
+template<typename T>
+struct ShouldUseWStringStream<T, std::void_t<decltype(std::declval<std::wostringstream>() << std::declval<T>())>> : std::true_type {};
+
+
+class Data
+{
+public:
+	Data(float x) : x(x) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const Data& dt)
+	{
+		os << dt.x;
+		return os;
+	}
+
+	//friend std::wostream& operator<<(std::wostream& os, const Data& dt)
+	//{
+	//	os << dt.x;
+	//	return os;
+	//}
+
+private:
+	float x;
+};
 
 
 
@@ -71,24 +100,8 @@ namespace At0::Zeal
 		//RAY_PROFILE_FUNCTION();
 		Ray::Util::AllocateConsole();
 
-		class Data
-		{
-		public:
-			Data(float x) : x(x) {}
-
-			operator std::wstring() const
-			{
-				return std::to_wstring(x);
-			}
-
-		private:
-			float x;
-		};
 		const Data data(32.342f);
-
 		std::wstring str = L"32";
-		std::wostringstream oss;
-		oss << str;
 
 		//if constexpr (IsWStringCompatible<RemoveKeywords<decltype(str)>>::Value || IsWStringConvertible<decltype(data)>::value)
 		//{
@@ -99,13 +112,17 @@ namespace At0::Zeal
 		//	std::cout << "Non-Compatible\n";
 		//}
 
-		if constexpr (IsConvertible<RemoveKeywords<decltype(str)>>::value)
+		if constexpr (ShouldUseStringStream<RemoveKeywords<decltype(data)>>::value)
 		{
-			std::cout << "Compatible\n";
+			std::cout << "Use std::ostringstream\n";
+		}
+		else if constexpr (ShouldUseWStringStream<RemoveKeywords<decltype(data)>>::value)
+		{
+			std::cout << "Use std::wostringstream\n";
 		}
 		else
 		{
-			std::cout << "Non-Compatible\n";
+			std::cout << "No operator defined\n";
 		}
 		std::cin.get();
 		exit(0);
