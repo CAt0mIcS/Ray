@@ -21,6 +21,9 @@ namespace At0::Ray
 	void Renderer3D::Init(HWND hWnd)
 	{
 		RAY_PROFILE_FUNCTION();
+
+		auto swapChain = GetSwapChain();
+		auto context = GetContext();
 		RAY_MEXPECTS(!m_pSwapChain, "D3D11RendererAPI was already initialized.");
 		m_hWnd = hWnd;
 
@@ -51,13 +54,13 @@ namespace At0::Ray
 		sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		sd.Flags = 0;
 
-		RAY_GFX_THROW_FAILED(s_pIDXGIFactory->CreateSwapChain(s_pDevice, &sd, &GetSwapChain()));
+		RAY_GFX_THROW_FAILED(s_pIDXGIFactory->CreateSwapChain(s_pDevice, &sd, &swapChain));
 
 
 		// ----------------------------------------------------------------------------------------------------
 		// gain access to texture subresource in swap chain (back buffer)
 		WRL::ComPtr<ID3D11Resource> pBackBuffer;
-		RAY_GFX_THROW_FAILED(GetSwapChain()->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
+		RAY_GFX_THROW_FAILED(swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
 		RAY_GFX_THROW_FAILED(s_pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &GetTarget()));
 
 		// ----------------------------------------------------------------------------------------------------
@@ -71,7 +74,7 @@ namespace At0::Ray
 
 		// ----------------------------------------------------------------------------------------------------
 		// bind depth state
-		GetContext()->OMSetDepthStencilState(pDSState.Get(), 1u);
+		context->OMSetDepthStencilState(pDSState.Get(), 1u);
 
 		// ----------------------------------------------------------------------------------------------------
 		// create depth stensil texture
@@ -98,7 +101,7 @@ namespace At0::Ray
 
 		// ----------------------------------------------------------------------------------------------------
 		// bind depth stensil view to OM
-		GetContext()->OMSetRenderTargets(1u, GetTarget().GetAddressOf(), m_pDSV.Get());
+		context->OMSetRenderTargets(1u, GetTarget().GetAddressOf(), m_pDSV.Get());
 
 		// ----------------------------------------------------------------------------------------------------
 		// configure viewport
@@ -109,7 +112,7 @@ namespace At0::Ray
 		vp.MaxDepth = 1.0f;
 		vp.TopLeftX = 0.0f;
 		vp.TopLeftY = 0.0f;
-		GetContext()->RSSetViewports(1u, &vp);
+		context->RSSetViewports(1u, &vp);
 	}
 
 	void Renderer3D::DrawIndexed(uint32_t indicesCount)
@@ -120,9 +123,11 @@ namespace At0::Ray
 	void Renderer3D::ClearBuffer(float red, float green, float blue)
 	{
 		const float color[] = { red,green,blue,1.0f };
+
 		auto target = GetTarget();
-		GetContext()->ClearRenderTargetView(target.Get(), color);
-		GetContext()->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
+		auto context = GetContext();
+		context->ClearRenderTargetView(target.Get(), color);
+		context->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 	}
 
 	void Renderer3D::EndDraw()
@@ -157,9 +162,7 @@ namespace At0::Ray
 		auto context = GetContext();
 		{
 			auto target = GetTarget();
-			context->OMSetRenderTargets(0, 0, 0);
 			target.Release();
-			context->OMSetDepthStencilState(0, 0);
 			GetSwapChain()->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
 
 			WRL::ComPtr<ID3D11Resource> pBackBuffer;
