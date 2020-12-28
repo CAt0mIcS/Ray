@@ -11,10 +11,11 @@ namespace At0::Zeal
 		: Application(commandLine)
 	{
 		//RAY_PROFILE_FUNCTION();
+		Ray::Util::AllocateConsole();
 
 		GetMainWindow().SetTitle("Zeal");
 		GetMainWindow().Show();
-		GetMainWindow().SetIcon("Resources/Icon.ico");
+		GetMainWindow().SetIcon("Resources/Icon.png");
 
 		//Ray::Window& win = PushWindow(Ray::Window::Create("Win0", { 150, 150 }, { 960, 540 }));
 		//win.SetTitle("Win0");

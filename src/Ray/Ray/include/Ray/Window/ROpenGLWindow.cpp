@@ -224,6 +224,12 @@ namespace At0::Ray
 
 	void OpenGLWindow::SetIcon(std::string_view path)
 	{
+		RAY_MEXPECTS(!Util::EndsWith(path, ".ico"),
+			"[OpenGLWindow::SetIcon] File '{0}' has an invalid extension. "
+			".ico files are currently not supported by the OpenGL implementation.",
+			path
+		);
+
 		GLFWimage images[1];
 		images[0].pixels = stbi_load(path.data(), &images[0].width, &images[0].height, 0, 4);
 		glfwSetWindowIcon(m_hWnd, std::size(images), images);

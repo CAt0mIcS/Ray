@@ -210,7 +210,6 @@ namespace At0::Ray
 				exit(signum);
 			}
 		);
-		Util::ConsoleSetup();
 	}
 }
 

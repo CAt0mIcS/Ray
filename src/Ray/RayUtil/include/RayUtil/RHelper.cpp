@@ -6,12 +6,13 @@
 
 namespace At0::Ray::Util
 {
-	void ConsoleSetup()
+	void AllocateConsole()
 	{
 #if defined(_WIN32)
 		AllocConsole();
-		FILE* file;
-		freopen_s(&file, "CONOUT$", "w", stdout);
+		freopen("CONOUT$", "w", stdout);
+		freopen("CONOUT$", "w", stderr);
+		freopen("CONNIN&", "r", stdin);
 #endif
 	}
 

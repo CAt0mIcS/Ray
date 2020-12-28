@@ -101,6 +101,12 @@ namespace At0::Ray
 	private:
 		bool m_IsOpen;
 		HWND m_hWnd;
+
+		// Represents data that needs to be destroyed when the window closes
+		struct
+		{
+			HICON hCurrIcon;
+		} m_DestroyOnWindowCloseData{};
 	};
 }
 

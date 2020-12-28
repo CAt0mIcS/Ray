@@ -16,6 +16,8 @@
 
 #include <Windows.h>
 
+#include <stb_image/stb_image.h>
+
 // RAY_TODO: App closes when non-mainwindow is resized and closed
 
 
@@ -112,15 +114,15 @@ namespace At0::Ray
 		{
 			// RAY_TODO: Check if resources of the closed window are destroyed correctly
 			RAY_LOG_DEBUG("[MessageLoop] WM_DESTROY message received");
+
+			if (m_DestroyOnWindowCloseData.hCurrIcon)
+				DestroyIcon(m_DestroyOnWindowCloseData.hCurrIcon);
+
 			PostQuitMessage(0);
 			return 0;
 		}
 		case WM_MOUSEMOVE:
 		{
-			//static std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
-			//std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - prevTime).count() << '\n';
-			//prevTime = std::chrono::high_resolution_clock::now();
-
 			// ANSWER: Classes need to be built in a hierachy and shouldn't depend on each other much
 
 			POINTS pt = MAKEPOINTS(lParam);
@@ -472,12 +474,6 @@ namespace At0::Ray
 		return m_IsOpen;
 	}
 
-	/// <QUESTION>
-	/// While GetMessage is much faster than if GetMessage.
-	/// I need to execute code every iteration. Take fptr in fn? std::function?
-	/// 
-	/// while GetMessage doesn't close the window properly if GetMessage gets m_hWnd as parameter instead of the first '0'
-	/// </QUESTION>
 	void WinAPIWindow::Update()
 	{
 		RAY_PROFILE_FUNCTION();
@@ -495,24 +491,83 @@ namespace At0::Ray
 		}
 	}
 
+	// -------------------------------------------------------------------------------
+	// Icon/Image loading
+
+	struct Image
+	{
+		int width, height;
+		unsigned char* pixels;
+	};
+
+	static HICON CreateIcon(Image& image)
+	{
+		BITMAPV5HEADER bitmap;
+		ZeroMemory(&bitmap, sizeof(bitmap));
+		bitmap.bV5Size = sizeof(bitmap);
+		bitmap.bV5Width = image.width;
+		bitmap.bV5Height = -image.height;
+		bitmap.bV5Planes = 1;
+		bitmap.bV5BitCount = 32;
+		bitmap.bV5Compression = BI_BITFIELDS;
+		bitmap.bV5RedMask = 0x00ff0000;
+		bitmap.bV5GreenMask = 0x0000ff00;
+		bitmap.bV5BlueMask = 0x000000ff;
+		bitmap.bV5AlphaMask = 0xff000000;
+
+		unsigned char* target = nullptr;
+		HDC hDC = GetDC(NULL);
+		HBITMAP color = CreateDIBSection(hDC, (BITMAPINFO*)&bitmap,
+			DIB_RGB_COLORS, (void**)&target, NULL, (DWORD)0
+		);
+
+		ReleaseDC(NULL, hDC);
+		// RAY_TODO: check if usefull error message
+		RAY_WND_THROW_LAST_FAILED(color);
+
+		HBITMAP mask = CreateBitmap(image.width, image.height, 1, 1, nullptr);
+		if (!mask)
+		{
+			DeleteObject(color);
+			RAY_WND_THROW_LAST_FAILED_NO_EXPR();
+		}
+
+		for (uint32_t i = 0; i < image.width * image.height; ++i)
+		{
+			target[0] = image.pixels[2];
+			target[1] = image.pixels[1];
+			target[2] = image.pixels[0];
+			target[3] = image.pixels[3];
+			target += 4;
+			image.pixels += 4;
+		}
+
+		ICONINFO ii;
+		ZeroMemory(&ii, sizeof(ii));
+		ii.fIcon = true;
+		ii.xHotspot = 0;
+		ii.yHotspot = 0;
+		ii.hbmMask = mask;
+		ii.hbmColor = color;
+
+		HICON hIcon = CreateIconIndirect(&ii);
+
+		DeleteObject(color);
+		DeleteObject(mask);
+
+		RAY_WND_THROW_LAST_FAILED(hIcon);
+		return hIcon;
+	}
+
 	void WinAPIWindow::SetIcon(std::string_view path)
 	{
-		RAY_MEXPECTS(Util::EndsWith(path, ".ico"),
-			"[WinAPIWindow::SetIcon] File '{0}' has an invalid extension. "
-			"Only .ico files are currently supported by the Win32API implementation.",
-			path
-		);
-		HANDLE hIcon = LoadImageA(NULL, path.data(), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_LOADFROMFILE);
-		if (!hIcon)
-			RAY_THROW_RUNTIME("[WinAPIWindow::SetIcon] Failed to set Icon");
+		Image image;
+		image.pixels = stbi_load(path.data(), &image.width, &image.height, 0, 4);
+		HICON hIcon = CreateIcon(image);
 
-		// Change both icons to the same icon handle.
-		SendMessage(m_hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
 		SendMessage(m_hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
-
-		// This will ensure that the application icon gets changed too.
-		SendMessage(GetWindow(m_hWnd, GW_OWNER), WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
-		SendMessage(GetWindow(m_hWnd, GW_OWNER), WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+		SendMessage(m_hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+		m_DestroyOnWindowCloseData.hCurrIcon = hIcon;
 	}
 }
 

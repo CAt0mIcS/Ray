@@ -44,7 +44,7 @@ namespace At0::Ray::Util
 	/// <summary>
 	/// Allocates the console and sets std::cout output
 	/// </summary>
-	void RU_API ConsoleSetup();
+	void RU_API AllocateConsole();
 
 	/// <summary>
 	/// Frees the console
