@@ -5,6 +5,64 @@
 
 #include "ExtensionLoader/ExtensionLoader.h"
 
+template<typename>
+struct IsWStringCompatible
+{
+	static constexpr bool Value = false;
+};
+
+template<>
+struct IsWStringCompatible<std::wstring>
+{
+	static constexpr bool Value = true;
+};
+
+template<>
+struct IsWStringCompatible<wchar_t*>
+{
+	static constexpr bool Value = true;
+};
+
+template<>
+struct IsWStringCompatible<const wchar_t*>
+{
+	static constexpr bool Value = true;
+};
+
+template<>
+struct IsWStringCompatible<wchar_t>
+{
+	static constexpr bool Value = true;
+};
+
+template<>
+struct IsWStringCompatible<std::wstring_view>
+{
+	static constexpr bool Value = true;
+};
+
+
+template<typename, typename = void>
+struct IsWStringConvertible : std::false_type {};
+
+template<typename T>
+struct IsWStringConvertible<T, std::void_t<decltype(&T::operator std::wstring)>> : std::true_type {};
+
+
+template<typename T>
+using RemoveKeywords = std::remove_cv_t<std::remove_reference_t<T>>;
+
+
+#include <sstream>
+
+template<typename, typename = void>
+struct IsConvertible : std::false_type {};
+
+template<typename T>
+struct IsConvertible<T, std::void_t<decltype(std::declval<std::wostringstream> << std::declval<T>())>> : std::true_type {};
+
+
+
 namespace At0::Zeal
 {
 	Sandbox::Sandbox(std::string_view commandLine)
@@ -12,6 +70,45 @@ namespace At0::Zeal
 	{
 		//RAY_PROFILE_FUNCTION();
 		Ray::Util::AllocateConsole();
+
+		class Data
+		{
+		public:
+			Data(float x) : x(x) {}
+
+			operator std::wstring() const
+			{
+				return std::to_wstring(x);
+			}
+
+		private:
+			float x;
+		};
+		const Data data(32.342f);
+
+		std::wstring str = L"32";
+		std::wostringstream oss;
+		oss << str;
+
+		//if constexpr (IsWStringCompatible<RemoveKeywords<decltype(str)>>::Value || IsWStringConvertible<decltype(data)>::value)
+		//{
+		//	std::cout << "Compatible\n";
+		//}
+		//else
+		//{
+		//	std::cout << "Non-Compatible\n";
+		//}
+
+		if constexpr (IsConvertible<RemoveKeywords<decltype(str)>>::value)
+		{
+			std::cout << "Compatible\n";
+		}
+		else
+		{
+			std::cout << "Non-Compatible\n";
+		}
+		std::cin.get();
+		exit(0);
 
 		GetMainWindow().SetTitle("Zeal");
 		GetMainWindow().Show();
