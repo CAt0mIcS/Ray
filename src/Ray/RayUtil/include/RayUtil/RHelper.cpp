@@ -12,7 +12,7 @@ namespace At0::Ray::Util
 		AllocConsole();
 		freopen("CONOUT$", "w", stdout);
 		freopen("CONOUT$", "w", stderr);
-		freopen("CONNIN&", "r", stdin);
+		freopen("CONIN$", "r", stdin);
 #endif
 	}
 
