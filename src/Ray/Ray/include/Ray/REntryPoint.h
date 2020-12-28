@@ -38,12 +38,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR p
 
 int main(int argc, char** argv)
 {
-	// RAY_TODO: Command Line Arguments
-	return At0::Ray::Awake(argc, argv);
+
+	std::string cmdLine = "";
+	for (uint32_t i = 0; i < argc; ++i)
+	{
+		cmdLine += argv[i];
+		if (i + 1 < argc)
+			cmdLine += ' ';
+	}
+
+	return At0::Ray::Awake(std::move(cmdLine));
 }
 
 #endif // _WIN32
 
 #else
-	#error "Application Entry Point file included twice."
+#error "Application Entry Point file included twice."
 #endif // RAY_ENTRYPOINT_H
