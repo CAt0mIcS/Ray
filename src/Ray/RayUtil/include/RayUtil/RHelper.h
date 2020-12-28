@@ -49,7 +49,7 @@ namespace At0::Ray::Util
 	/// <summary>
 	/// Frees the console
 	/// </summary>
-	void RU_API ConsoleShutdown();
+	void RU_API DeallocateConsole();
 
 	/// <summary>
 	/// Checks if a string ends with another string
