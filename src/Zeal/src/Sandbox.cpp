@@ -3,93 +3,10 @@
 
 #include <Ray/Ray.h>
 
+#include <RayDebug/RInstrumentor.h>
+#include <RayDebug/RLogger.h>
+
 #include "ExtensionLoader/ExtensionLoader.h"
-
-template<typename>
-struct IsWStringCompatible
-{
-	static constexpr bool Value = false;
-};
-
-template<>
-struct IsWStringCompatible<std::wstring>
-{
-	static constexpr bool Value = true;
-};
-
-template<>
-struct IsWStringCompatible<wchar_t*>
-{
-	static constexpr bool Value = true;
-};
-
-template<>
-struct IsWStringCompatible<const wchar_t*>
-{
-	static constexpr bool Value = true;
-};
-
-template<>
-struct IsWStringCompatible<wchar_t>
-{
-	static constexpr bool Value = true;
-};
-
-template<>
-struct IsWStringCompatible<std::wstring_view>
-{
-	static constexpr bool Value = true;
-};
-
-
-template<typename, typename = void>
-struct IsWStringConvertible : std::false_type {};
-
-template<typename T>
-struct IsWStringConvertible<T, std::void_t<decltype(&T::operator std::wstring)>> : std::true_type {};
-
-
-template<typename T>
-using RemoveKeywords = std::remove_cv_t<std::remove_reference_t<T>>;
-
-
-#include <sstream>
-
-template<typename, typename = void>
-struct ShouldUseStringStream : std::false_type {};
-
-template<typename T>
-struct ShouldUseStringStream<T, std::void_t<decltype(std::declval<std::ostringstream>() << std::declval<T>())>> : std::true_type {};
-
-
-template<typename, typename = void>
-struct ShouldUseWStringStream : std::false_type {};
-
-template<typename T>
-struct ShouldUseWStringStream<T, std::void_t<decltype(std::declval<std::wostringstream>() << std::declval<T>())>> : std::true_type {};
-
-
-class Data
-{
-public:
-	Data(float x) : x(x) {}
-
-	friend std::ostream& operator<<(std::ostream& os, const Data& dt)
-	{
-		os << dt.x;
-		return os;
-	}
-
-	//friend std::wostream& operator<<(std::wostream& os, const Data& dt)
-	//{
-	//	os << dt.x;
-	//	return os;
-	//}
-
-private:
-	float x;
-};
-
 
 
 namespace At0::Zeal
@@ -98,34 +15,6 @@ namespace At0::Zeal
 		: Application(commandLine)
 	{
 		//RAY_PROFILE_FUNCTION();
-		Ray::Util::AllocateConsole();
-
-		const Data data(32.342f);
-		std::wstring str = L"32";
-
-		//if constexpr (IsWStringCompatible<RemoveKeywords<decltype(str)>>::Value || IsWStringConvertible<decltype(data)>::value)
-		//{
-		//	std::cout << "Compatible\n";
-		//}
-		//else
-		//{
-		//	std::cout << "Non-Compatible\n";
-		//}
-
-		if constexpr (ShouldUseStringStream<RemoveKeywords<decltype(data)>>::value)
-		{
-			std::cout << "Use std::ostringstream\n";
-		}
-		else if constexpr (ShouldUseWStringStream<RemoveKeywords<decltype(data)>>::value)
-		{
-			std::cout << "Use std::wostringstream\n";
-		}
-		else
-		{
-			std::cout << "No operator defined\n";
-		}
-		std::cin.get();
-		exit(0);
 
 		GetMainWindow().SetTitle("Zeal");
 		GetMainWindow().Show();
@@ -174,8 +63,6 @@ namespace At0::Zeal
 
 #include <Ray/REntryPoint.h>
 
-#include <RayDebug/RInstrumentor.h>
-#include <RayDebug/RLogger.h>
 #include <RayUtil/RException.h>
 #include <RayRender/RendererAPI.h>
 
