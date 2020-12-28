@@ -19,13 +19,13 @@ namespace At0::Ray
 		void Update(const C& consts)
 		{
 			D3D11_MAPPED_SUBRESOURCE msr;
-			s_pContext->Map(
+			GetContext()->Map(
 				m_pConstantBuffer.Get(), 0u,
 				D3D11_MAP_WRITE_DISCARD, 0u,
 				&msr
 			);
 			memcpy(msr.pData, &consts, sizeof(consts));
-			s_pContext->Unmap(m_pConstantBuffer.Get(), 0u);
+			GetContext()->Unmap(m_pConstantBuffer.Get(), 0u);
 		}
 
 		ConstantBuffer(const C& consts)
@@ -61,7 +61,7 @@ namespace At0::Ray
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pConstantBuffer;
 	};
 
-	
+
 	template<typename C>
 	class VertexConstantBuffer : public ConstantBuffer<C>
 	{
@@ -70,11 +70,11 @@ namespace At0::Ray
 		using ConstantBuffer<C>::ConstantBuffer;
 		virtual void Bind() override
 		{
-			s_pContext->VSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
+			GetContext()->VSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
 		}
 	};
 
-	
+
 	template<typename C>
 	class PixelConstantBuffer : public ConstantBuffer<C>
 	{
@@ -83,7 +83,7 @@ namespace At0::Ray
 		using ConstantBuffer<C>::ConstantBuffer;
 		void Bind() override
 		{
-			s_pContext->PSSetConstantBuffers(0u, 1u, m_pConstantBuffer.GetAddressOf());
+			GetContext()->PSSetConstantBuffers(0u, 1u, m_pConstantBuffer.GetAddressOf());
 		}
 	};
 

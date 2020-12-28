@@ -48,7 +48,7 @@ namespace At0::Ray
 			RAY_GFX_THROW_FAILED(pDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&pAdapter));
 
 			RAY_GFX_THROW_FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&s_pIDXGIFactory));
-			
+
 			for (auto i = 0; s_pIDXGIFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
 			{
 				DXGI_ADAPTER_DESC adapterDesc;
@@ -73,7 +73,7 @@ namespace At0::Ray
 
 		++s_RefCount;
 	}
-	
+
 	GraphicsResource::~GraphicsResource()
 	{
 		RAY_PROFILE_FUNCTION();

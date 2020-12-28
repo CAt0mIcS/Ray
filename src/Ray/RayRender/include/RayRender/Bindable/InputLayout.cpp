@@ -20,7 +20,7 @@ namespace At0::Ray
 
 	void InputLayout::Bind()
 	{
-		s_pContext->IASetInputLayout(m_pInputLayout.Get());
+		GetContext()->IASetInputLayout(m_pInputLayout.Get());
 	}
 }
 

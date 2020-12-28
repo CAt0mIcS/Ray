@@ -273,6 +273,11 @@ namespace At0::Layers
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+
+		std::mt19937 mtEngine;
+		mtEngine.seed((int)time(0));
+		std::uniform_int_distribution dist(250, 800);
+		GetMainWindow().SetSize({ dist(mtEngine), dist(mtEngine) });
 	}
 
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseWheelUpEvent& e)
