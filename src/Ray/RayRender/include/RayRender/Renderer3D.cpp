@@ -162,7 +162,7 @@ namespace At0::Ray
 		auto context = GetContext();
 		{
 			auto target = GetTarget();
-			target.Release();
+			target.ReleaseAndGetAddressOf();
 			GetSwapChain()->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
 
 			WRL::ComPtr<ID3D11Resource> pBackBuffer;
@@ -172,18 +172,18 @@ namespace At0::Ray
 
 			RECT clientWindowRect;
 			GetClientRect(m_hWnd, &clientWindowRect);
-			// ----------------------------------------------------------------------------------------------------
-			// create depth stensil state
-			D3D11_DEPTH_STENCIL_DESC dsDesc = {};
-			dsDesc.DepthEnable = TRUE;
-			dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-			dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
-			WRL::ComPtr<ID3D11DepthStencilState> pDSState;
-			RAY_GFX_THROW_FAILED(s_pDevice->CreateDepthStencilState(&dsDesc, &pDSState));
+			//// ----------------------------------------------------------------------------------------------------
+			//// create depth stensil state
+			//D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+			//dsDesc.DepthEnable = TRUE;
+			//dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+			//dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+			//WRL::ComPtr<ID3D11DepthStencilState> pDSState;
+			//RAY_GFX_THROW_FAILED(s_pDevice->CreateDepthStencilState(&dsDesc, &pDSState));
 
-			// ----------------------------------------------------------------------------------------------------
-			// bind depth state
-			context->OMSetDepthStencilState(pDSState.Get(), 1u);
+			//// ----------------------------------------------------------------------------------------------------
+			//// bind depth state
+			//context->OMSetDepthStencilState(pDSState.Get(), 1u);
 
 			// ----------------------------------------------------------------------------------------------------
 			// create depth stensil texture

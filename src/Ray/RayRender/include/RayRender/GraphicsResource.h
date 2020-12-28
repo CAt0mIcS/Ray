@@ -13,28 +13,75 @@ struct ID3D11DeviceContext;
 
 namespace At0::Ray
 {
-	class ThreadSafeContext
+	template<typename T>
+	class ThreadSafeComPtr
 	{
 	public:
-		ThreadSafeContext(ID3D11DeviceContext* pContext)
-			: m_pContext(pContext)
+		ThreadSafeComPtr(Microsoft::WRL::ComPtr<T>& ptr, std::mutex& mutex)
+			: m_Ptr(ptr), m_Mutex(mutex)
 		{
 			m_Mutex.lock();
 		}
 
-		~ThreadSafeContext()
+		~ThreadSafeComPtr()
 		{
 			m_Mutex.unlock();
 		}
 
-		ID3D11DeviceContext* operator->()
+		T* operator->()
 		{
-			return m_pContext;
+			return m_Ptr.Get();
+		}
+
+		T* Get()
+		{
+			return m_Ptr.Get();
+		}
+
+		T** GetAddressOf()
+		{
+			return m_Ptr.GetAddressOf();
+		}
+
+		T** operator&()
+		{
+			return &m_Ptr;
+		}
+
+		T** ReleaseAndGetAddressOf()
+		{
+			return m_Ptr.ReleaseAndGetAddressOf();
 		}
 
 	private:
-		ID3D11DeviceContext* m_pContext;
-		inline static std::mutex m_Mutex;
+		Microsoft::WRL::ComPtr<T>& m_Ptr;
+		std::mutex& m_Mutex;
+	};
+
+
+	template<typename T>
+	class ThreadSafeComObject
+	{
+	public:
+		ThreadSafeComObject(T* ptr, std::mutex& mutex)
+			: m_Ptr(ptr), m_Mutex(mutex)
+		{
+			m_Mutex.lock();
+		}
+
+		~ThreadSafeComObject()
+		{
+			m_Mutex.unlock();
+		}
+
+		T* operator->()
+		{
+			return m_Ptr;
+		}
+
+	private:
+		T* m_Ptr;
+		std::mutex& m_Mutex;
 	};
 
 	class GraphicsResource
@@ -46,12 +93,14 @@ namespace At0::Ray
 		GraphicsResource();
 		virtual ~GraphicsResource();
 
-		static ThreadSafeContext GetContext() { return ThreadSafeContext{ s_pContext }; }
+		static ThreadSafeComObject<ID3D11DeviceContext> GetContext() { return ThreadSafeComObject<ID3D11DeviceContext>{ s_pContext, m_DeviceContextMutex }; }
 
 	protected:
 		static ID3D11Device* s_pDevice;
 		static ID3D11DeviceContext* s_pContext;
 		static IDXGIFactory* s_pIDXGIFactory;
+
+		static inline std::mutex m_DeviceContextMutex;
 
 	private:
 		static std::atomic<uint32_t> s_RefCount;

@@ -23,71 +23,6 @@ struct ID3D11DepthStencilView;
 
 namespace At0::Ray
 {
-	class ThreadSafeSwapChain
-	{
-	public:
-		ThreadSafeSwapChain(Microsoft::WRL::ComPtr<IDXGISwapChain>& chain)
-			: m_pSwapChain(chain)
-		{
-			m_Mutex.lock();
-		}
-
-		IDXGISwapChain** operator&()
-		{
-			return &m_pSwapChain;
-		}
-
-		IDXGISwapChain** GetAddressOf()
-		{
-			return m_pSwapChain.GetAddressOf();
-		}
-
-		IDXGISwapChain* Get()
-		{
-			return m_pSwapChain.Get();
-		}
-
-		IDXGISwapChain* operator->()
-		{
-			return m_pSwapChain.Get();
-		}
-
-		~ThreadSafeSwapChain()
-		{
-			m_Mutex.unlock();
-		}
-
-	private:
-		Microsoft::WRL::ComPtr<IDXGISwapChain>& m_pSwapChain;
-		inline static std::mutex m_Mutex;
-	};
-
-	class ThreadSafeRenderTarget
-	{
-	public:
-		ThreadSafeRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& view)
-			: m_pView(view)
-		{
-			m_Mutex.lock();
-		}
-
-		~ThreadSafeRenderTarget()
-		{
-			m_Mutex.unlock();
-		}
-
-		ID3D11RenderTargetView* operator->() { return m_pView.Get(); }
-		ID3D11RenderTargetView* Get() { return m_pView.Get(); }
-		ID3D11RenderTargetView** GetAddressOf() { return m_pView.GetAddressOf(); }
-		ID3D11RenderTargetView** Release() { return m_pView.ReleaseAndGetAddressOf(); }
-
-		ID3D11RenderTargetView** operator&() { return &m_pView; }
-
-	private:
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& m_pView;
-		inline static std::mutex m_Mutex;
-	};
-
 	class RR_API Renderer3D : private GraphicsResource,
 		EventListener<WindowResizeEvent>
 	{
@@ -109,12 +44,16 @@ namespace At0::Ray
 	private:
 		virtual void OnEvent(Widget* receiver, WindowResizeEvent& e) override;
 
-		ThreadSafeRenderTarget GetTarget() { return ThreadSafeRenderTarget{ m_pTarget }; }
-		ThreadSafeSwapChain GetSwapChain() { return ThreadSafeSwapChain{ m_pSwapChain }; }
+		ThreadSafeComPtr<ID3D11RenderTargetView> GetTarget() { return ThreadSafeComPtr<ID3D11RenderTargetView>{ m_pTarget, m_RenderTargetViewMutex }; }
+		ThreadSafeComPtr<IDXGISwapChain> GetSwapChain() { return ThreadSafeComPtr<IDXGISwapChain>{ m_pSwapChain, m_SwapChainMutex }; }
+
 	private:
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pTarget;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDSV;
+
+		std::mutex m_RenderTargetViewMutex;
+		std::mutex m_SwapChainMutex;
 
 		DirectX::XMMATRIX m_Projection;
 		DirectX::XMMATRIX m_Camera;
