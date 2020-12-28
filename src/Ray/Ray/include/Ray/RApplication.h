@@ -50,6 +50,13 @@ namespace At0::Ray
 		/// <param name="e">Is the received event</param>
 		virtual void OnEvent(Widget* receiver, Event& e) = 0;
 
+		/// <summary>
+		/// Gets called in the main function to pass the command line arguments to the application without having to cross the user
+		/// </summary>
+		/// <param name="cmdLine"></param>
+		static void SetCommandLineArguments(std::string_view cmdLine) { s_CommandLine = cmdLine; }
+		std::string_view GetCommandLineArguments() const { return s_CommandLine; }
+
 		virtual ~Application();
 
 	protected:
@@ -85,6 +92,8 @@ namespace At0::Ray
 		/// Singelton design
 		/// </summary>
 		static Application* s_Instance;
+
+		static std::string s_CommandLine;
 	};
 
 }

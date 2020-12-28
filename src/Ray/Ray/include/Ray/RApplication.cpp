@@ -85,6 +85,7 @@ void SpeedTest(int num)
 namespace At0::Ray
 {
 	Application* Application::s_Instance = nullptr;
+	std::string Application::s_CommandLine = "";
 
 	Application::Application(std::string_view commandLine)
 		: m_LayerStack{}

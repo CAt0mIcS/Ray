@@ -30,11 +30,12 @@ namespace At0::Ray
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int pCmdShow)
 {
-	return At0::Ray::Awake(At0::Ray::Util::WideCharToMultiByte(pCmdLine));
+	std::string cmdLine = ::At0::Ray::Util::WideCharToMultiByte(pCmdLine);
+	::At0::Ray::Application::SetCommandLineArguments(cmdLine);
+	return ::At0::Ray::Awake(std::move(cmdLine));
 }
 
 #elif defined(__linux__)
-
 
 int main(int argc, char** argv)
 {
@@ -47,6 +48,7 @@ int main(int argc, char** argv)
 			cmdLine += ' ';
 	}
 
+	::At0::Ray::Application::SetCommandLineArguments(cmdLine);
 	return At0::Ray::Awake(std::move(cmdLine));
 }
 

@@ -11,8 +11,7 @@
 
 namespace At0::Zeal
 {
-	Sandbox::Sandbox(std::string_view commandLine)
-		: Application(commandLine)
+	Sandbox::Sandbox()
 	{
 		//RAY_PROFILE_FUNCTION();
 
@@ -80,7 +79,7 @@ int At0::Ray::Awake(std::string commandLineArguments)
 
 		RAY_PROFILE_BEGIN_SESSION("Startup", "../../Profiling/Profile-Startup.json");
 		Ray::RendererAPI::SetAPI(Ray::RendererAPI::D3D11);
-		Zeal::Sandbox* app = new Zeal::Sandbox(commandLineArguments);
+		Zeal::Sandbox* app = new Zeal::Sandbox();
 		RAY_PROFILE_END_SESSION();
 
 		RAY_PROFILE_BEGIN_SESSION("Runtime", "../../Profiling/Profile-Runtime.json");

@@ -14,7 +14,7 @@ namespace At0::Zeal
 		/// <summary>
 		/// Sandbox Constructor
 		/// </summary>
-		Sandbox(std::string_view commandLine);
+		Sandbox();
 
 		/// <summary>
 		/// Sandbox Deconstructor
@@ -35,7 +35,7 @@ namespace At0::Zeal
 	private:
 		ExtensionLoader m_LayerLoader;
 	};
-	
+
 }
 
 
