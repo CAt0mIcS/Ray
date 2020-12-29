@@ -67,7 +67,7 @@ FPS g_FPS;
 
 namespace At0::Layers
 {
-#define RENDER 0
+#define RENDER 1
 
 	std::vector<Ray::ShadedCube> cubes;
 	static constexpr uint64_t numCubes = 4000;
@@ -81,6 +81,7 @@ namespace At0::Layers
 		: Ray::Layer(name),
 		EventListener<Ray::WindowCloseEvent>(GetMainWindow()),
 		EventListener<Ray::KeyPressedEvent>(GetMainWindow()),
+		EventListener<Ray::CharEvent>(GetMainWindow()),
 
 		EventListener<Ray::MouseWheelUpEvent>(GetMainWindow()),
 		EventListener<Ray::MouseWheelDownEvent>(GetMainWindow()),
@@ -170,35 +171,35 @@ namespace At0::Layers
 		mousePos = window.Mouse.GetPos();
 
 		Ray::KeyboardInput& kbd = window.Keyboard;
-		if (kbd.IsKeyPressed('S'))
+		if (kbd.IsKeyPressed(Ray::Key::S))
 		{
 			zDir -= 3.0f * ts;
 		}
-		if (kbd.IsKeyPressed('W'))
+		if (kbd.IsKeyPressed(Ray::Key::W))
 		{
 			zDir += 3.0f * ts;
 		}
-		if (kbd.IsKeyPressed(' '))
+		if (kbd.IsKeyPressed(Ray::Key::Space))
 		{
 			yDir += 3.0f * ts;
 		}
-		if (kbd.IsKeyPressed('A'))
+		if (kbd.IsKeyPressed(Ray::Key::A))
 		{
 			xDir -= 3.0f * ts;
 		}
-		if (kbd.IsKeyPressed(17)) //LCONTROL
+		if (kbd.IsKeyPressed(Ray::Key::LeftControl))
 		{
 			yDir -= 3.0f * ts;
 		}
-		if (kbd.IsKeyPressed('D'))
+		if (kbd.IsKeyPressed(Ray::Key::D))
 		{
 			xDir += 3.0f * ts;
 		}
-		if (kbd.IsKeyPressed('Q'))
+		if (kbd.IsKeyPressed(Ray::Key::Q))
 		{
 			cam.roll += 3.0f * ts;
 		}
-		if (kbd.IsKeyPressed('E'))
+		if (kbd.IsKeyPressed(Ray::Key::E))
 		{
 			cam.roll -= 3.0f * ts;
 		}
@@ -277,6 +278,13 @@ namespace At0::Layers
 	}
 
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::KeyPressedEvent& e)
+	{
+		RAY_PROFILE_FUNCTION();
+		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+		std::cout << e.ToString() << '\n';
+	}
+
+	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::CharEvent& e)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());

@@ -37,8 +37,8 @@ namespace At0::Ray
 	// -------------------------------------------------------------------
 	// CharEvent
 	// -------------------------------------------------------------------
-	CharEvent::CharEvent(unsigned char keycode)
-		: m_Keycode(keycode)
+	CharEvent::CharEvent(uint16_t key)
+		: m_KeyCode(key)
 	{
 	}
 

@@ -252,57 +252,127 @@ namespace At0::Ray
 			}
 			return 0;
 		}
-		// RAY_TODO: Keyboard message using new mouse/keyboard keycodes
 		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:
-		{
-			int scancode = (HIWORD(lParam) & (KF_EXTENDED | 0xff));
-			// Some synthetic key messages have a scancode of 0
-			if (!scancode)
-				scancode = MapVirtualKeyW((UINT)wParam, MAPVK_VK_TO_VSC);
-
-			if (scancode >= 512)
-				RAY_THROW_RUNTIME("[WinAPIWindow::HandleMessage] Scancode '{0}' is invalid.", scancode);
-
-			Key key = s_KeycodeMap[scancode];
-
-			Keyboard.SetKeyState(key, true);
-
-			KeyPressedEvent e(key, (uint32_t)(lParam & 0xff));
-			for (auto* pListener : EventDispatcher<KeyPressedEvent>::Get())
-			{
-				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
-			}
-			return 0;
-		}
 		case WM_SYSKEYUP:
 		case WM_KEYUP:
 		{
 			int scancode = (HIWORD(lParam) & (KF_EXTENDED | 0xff));
+			bool pressed = (HIWORD(lParam) & KF_UP) ? false : true;
 			// Some synthetic key messages have a scancode of 0
 			if (!scancode)
 				scancode = MapVirtualKeyW((UINT)wParam, MAPVK_VK_TO_VSC);
 
 			if (scancode >= 512)
 				RAY_THROW_RUNTIME("[WinAPIWindow::HandleMessage] Scancode '{0}' is invalid.", scancode);
+
 			Key key = s_KeycodeMap[scancode];
 
-			Keyboard.SetKeyState(key, false);
-
-			KeyReleasedEvent e(key);
-			for (auto* pListener : EventDispatcher<KeyReleasedEvent>::Get())
+			if (wParam == VK_CONTROL)
 			{
-				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+				if (HIWORD(lParam) & KF_EXTENDED)
+				{
+					// Right side keys have the extended key bit set
+					key = Key::RightControl;
+				}
+				else
+				{
+					// Alt Gr sends Left Ctrl followed by Right Alt.
+					MSG next;
+					const DWORD time = GetMessageTime();
+
+					if (PeekMessageW(&next, NULL, 0, 0, PM_NOREMOVE))
+					{
+						if (next.message == WM_KEYDOWN ||
+							next.message == WM_SYSKEYDOWN ||
+							next.message == WM_KEYUP ||
+							next.message == WM_SYSKEYUP)
+						{
+							if (next.wParam == VK_MENU && (HIWORD(next.lParam) & KF_EXTENDED) && next.time == time)
+							{
+								// Next message is Right Alt down. Discard it
+								break;
+							}
+						}
+					}
+
+					// Regular Left Control message
+					key = Key::LeftControl;
+				}
+			}
+			else if (wParam == VK_PROCESSKEY)
+			{
+				break;
+			}
+
+			Keyboard.SetKeyState(key, pressed);
+
+			if (pressed)
+			{
+				KeyPressedEvent e(key, (uint32_t)(lParam & 0xff));
+				for (auto* pListener : EventDispatcher<KeyPressedEvent>::Get())
+				{
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}
+			}
+			else
+			{
+				KeyReleasedEvent e(key);
+				for (auto* pListener : EventDispatcher<KeyReleasedEvent>::Get())
+				{
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}
 			}
 			return 0;
 		}
 		case WM_CHAR:
 		{
-			CharEvent e((unsigned char)wParam);
+			if (wParam >= 0xd800 && wParam <= 0xdbff)
+				m_HighSurrogate = (wchar_t)wParam;
+			else
+			{
+				uint16_t codepoint = 0;
+
+				if (wParam >= 0xdc00 && wParam <= 0xdfff)
+				{
+					if (m_HighSurrogate)
+					{
+						codepoint += (m_HighSurrogate - 0xd800) << 10;
+						codepoint += (wchar_t)wParam - 0xdc00;
+						codepoint += 0x10000;
+					}
+				}
+				else
+					codepoint = (wchar_t)wParam;
+
+				m_HighSurrogate = 0;
+
+				CharEvent e(codepoint);
+				for (auto* pListener : EventDispatcher<CharEvent>::Get())
+				{
+					pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+				}
+
+			}
+
+			return 0;
+		}
+		case WM_UNICHAR:
+		{
+			// Not sent by Windows but some third-party input method engines
+
+			if (wParam == UNICODE_NOCHAR)
+			{
+				// Returning true means that we support this message
+				return TRUE;
+			}
+
+			CharEvent e(wParam);
 			for (auto* pListener : EventDispatcher<CharEvent>::Get())
 			{
 				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
+
 			return 0;
 		}
 		case WM_MOUSEWHEEL:

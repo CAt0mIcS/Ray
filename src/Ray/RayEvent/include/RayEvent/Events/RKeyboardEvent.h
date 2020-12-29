@@ -49,20 +49,19 @@ namespace At0::Ray
 		virtual EventType GetType() const override { return GetStaticType(); }
 	};
 
-	// RAY_TODO: Char event keycodes
-	class CharEvent/* : public KeyEvent*/ : public Event
+	class CharEvent : public Event
 	{
 	public:
-		CharEvent(unsigned char keycode);
+		CharEvent(uint16_t key);
 
 		virtual std::string ToString() const override;
 
-		unsigned char GetKeyCode() const { return m_Keycode; }
 		static EventType GetStaticType() { return EventType::CharEvent; }
+		uint16_t GetKeyCode() const { return m_KeyCode; }
 		virtual EventType GetType() const override { return GetStaticType(); }
 
 	private:
-		unsigned char m_Keycode;
+		uint16_t m_KeyCode;
 	};
 }
 

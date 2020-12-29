@@ -108,6 +108,9 @@ namespace At0::Ray
 		HWND m_hWnd;
 		inline static Key s_KeycodeMap[512];
 
+		// The last received high surrogate when decoding pairs of UTF-16 messages
+		wchar_t m_HighSurrogate;
+
 		// Represents data that needs to be destroyed when the window closes
 		struct
 		{

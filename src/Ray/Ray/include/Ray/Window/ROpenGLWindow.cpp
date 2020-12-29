@@ -347,7 +347,7 @@ namespace At0::Ray
 			{
 				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
 
-				CharEvent e(keycode);
+				CharEvent e((uint16_t)keycode);
 				for (auto* pListener : win.EventDispatcher<CharEvent>::Get())
 				{
 					pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
