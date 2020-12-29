@@ -5,6 +5,8 @@
 #include <RayDebug/RInstrumentor.h>
 #include <RayDebug/RAssert.h>
 
+#include <RayRender/Drawable/Rectangle.h>
+
 
 namespace At0::Ray
 {
@@ -14,12 +16,6 @@ namespace At0::Ray
 		: Widget(name, &parent), m_Pos{}, m_Size{}
 	{
 
-	}
-
-	void Button::AddPaintEventDispatcher(EventDispatcher<PaintEvent>& dispatcher)
-	{
-		RAY_MEXPECTS(!EventListener<PaintEvent>::HasDispatcher(dispatcher), "[Button::AddPaintEventDispatcher] Dispatcher already added.");
-		EventListener<PaintEvent>::Subscribe(dispatcher);
 	}
 
 	Renderer3D& Button::GetRenderer3D() const
@@ -37,11 +33,16 @@ namespace At0::Ray
 	PushButton::PushButton(const std::string_view name, Widget& parent)
 		: Button(name, parent)
 	{
+		float col[] = { 255, 0, 0 };
+		m_DrawObject = new Rectangle(parent.GetRenderer3D(), 2.0f, col);
 	}
 
-	void PushButton::OnEvent(Widget* receiver, PaintEvent& e)
+	void PushButton::Draw()
 	{
-		RAY_PROFILE_FUNCTION();
-		RAY_LOG_DEBUG("[PushButton] [{0}] '{1}' received PaintEvent", GetName(), receiver->GetName());
+		Point2 pos = GetPos();
+		Size2 size = GetSize();
+		m_DrawObject->SetTranslation(pos.x, pos.y, 0.0f);
+		m_DrawObject->SetScale(size.x, size.y, 0.0f);
+		m_DrawObject->Draw(&m_Parent->GetRenderer3D());
 	}
 }

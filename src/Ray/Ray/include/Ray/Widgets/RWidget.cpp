@@ -32,6 +32,14 @@ namespace At0::Ray
 		// RAY_WND_THROW_LAST_FAILED(UpdateWindow(hWnd));
 	}
 
+	void Widget::Draw()
+	{
+		for (Scope<Widget>& child : m_Children)
+		{
+			child->Draw();
+		}
+	}
+
 	bool Widget::operator==(const Widget& other) const
 	{
 		RAY_PROFILE_FUNCTION();

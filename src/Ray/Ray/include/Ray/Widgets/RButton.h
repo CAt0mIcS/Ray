@@ -8,20 +8,15 @@
 
 namespace At0::Ray
 {
+	class Rectangle;
+
 	// QUESTION: AddPaintEventListener is needed to add listener for paint events?
-	class RAY_API Button : public Widget,
-		EventListener<PaintEvent>
+	class RAY_API Button : public Widget
 	{
 	public:
 		/// <param name="name">Is a application-unique name for the button, doesn't represent the button text.</param>
 		/// <param name="parent">Is the button parent. Every button needs to have a valid parent (usually the Window).</param>
 		Button(const std::string_view name, Widget& parent);
-
-		/// <summary>
-		/// You need to call this function to subscribe to PaintEvents. Without, no painting will happen.
-		/// </summary>
-		/// <param name="dispatcher">Is the PaintEvent dispatcher (usually the Window).</param>
-		void AddPaintEventDispatcher(EventDispatcher<PaintEvent>& dispatcher);
 
 		void SetText(const std::string_view text) { m_Text = text; }
 		std::string_view GetText() const { return m_Text; }
@@ -60,11 +55,13 @@ namespace At0::Ray
 		/// <param name="parent">Is the button parent. Every button needs to have a valid parent (usually the Window).</param>
 		PushButton(const std::string_view name, Widget& parent);
 
-	private:
 		/// <summary>
-		/// Handles all the painting logic. If the client wants to customize the painting she/he can derive from any button and 
-		/// override this function to implement custom drawing.
+		/// Draws default button style
+		/// The client can create a custom button look by inheriting from PushButton and overriding this draw function.
 		/// </summary>
-		virtual void OnEvent(Widget* receiver, PaintEvent& e) override;
+		virtual void Draw() override;
+
+	private:
+		Rectangle* m_DrawObject;
 	};
 }

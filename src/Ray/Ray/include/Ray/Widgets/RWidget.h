@@ -56,6 +56,12 @@ namespace At0::Ray
 		/// </summary>
 		void PostRedraw(bool eraseBkgnd = false) const;
 
+		/// <summary>
+		/// By default, will draw all children to screen.
+		/// The client can create a custom widget by inheriting from it and overriding this draw function.
+		/// </summary>
+		virtual void Draw();
+
 		bool operator==(const Widget& other) const;
 		bool operator!=(const Widget& other) const;
 

@@ -48,6 +48,8 @@ set(SRC
     "include/RayRender/Drawable/ShadedCube.cpp"
     "include/RayRender/Drawable/SolidSphere.h"
     "include/RayRender/Drawable/SolidSphere.cpp"
+    "include/RayRender/Drawable/Rectangle.h"
+    "include/RayRender/Drawable/Rectangle.cpp"
 
 
     # ----------------------------------------------

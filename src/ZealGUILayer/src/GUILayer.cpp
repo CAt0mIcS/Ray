@@ -74,6 +74,7 @@ namespace At0::Layers
 	Ray::Model model;
 	std::mt19937 mtEngine;
 	Ray::Camera cam;
+	Ray::Scope<Ray::PushButton> button;
 	Ray::Scope<Ray::PointLight> ptLight;
 
 	GUILayer::GUILayer(std::string_view name)
@@ -89,6 +90,9 @@ namespace At0::Layers
 		EventListener<Ray::MouseMoveEvent>::Subscribe(GetMainWindow());
 
 #if RENDER
+		button = Ray::MakeScope<Ray::PushButton>("PushButtonName", GetMainWindow());
+		button->Move({ -1, 1 });
+		button->Resize({ 1000, 1000 });
 
 		ptLight = Ray::MakeScope<Ray::PointLight>(GetMainWindow().GetRenderer3D());
 
@@ -225,6 +229,7 @@ namespace At0::Layers
 		//model.Draw(&renderer);
 		ptLight->SetPos({ xDir, yDir, zDir });
 		ptLight->Draw();
+		button->Draw();
 
 		renderer.EndDraw();
 #endif

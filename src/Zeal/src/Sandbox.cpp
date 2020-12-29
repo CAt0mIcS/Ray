@@ -8,18 +8,12 @@
 
 #include "ExtensionLoader/ExtensionLoader.h"
 
-#include <Ray/Widgets/RButton.h>
-
 
 namespace At0::Zeal
 {
-	Ray::PushButton* button = nullptr;
 	Sandbox::Sandbox()
 	{
 		//RAY_PROFILE_FUNCTION();
-
-		button = new Ray::PushButton("Hello", GetMainWindow());
-		button->AddPaintEventDispatcher(GetMainWindow());
 
 		GetMainWindow().SetTitle("Zeal");
 		GetMainWindow().Show();
