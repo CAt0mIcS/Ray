@@ -28,10 +28,9 @@ namespace At0::Ray
 
 	DirectX::XMMATRIX Drawable::GetTransform() const
 	{
-		return DirectX::XMMatrixRotationRollPitchYaw(m_Pitch, m_Yaw, m_Roll) *
+		return DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z) *
+			DirectX::XMMatrixRotationRollPitchYaw(m_Pitch, m_Yaw, m_Roll) *
 			DirectX::XMMatrixTranslation(m_Translation.x, m_Translation.y, m_Translation.z);
-			//DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
-		// RAY_TODO Scaling
 	}
 
 	void Drawable::Draw(Renderer3D* renderer)
@@ -56,7 +55,7 @@ namespace At0::Ray
 	}
 
 	Drawable::Drawable()
-		: m_pIndexBuffer(nullptr), m_Binds{}
+		: m_pIndexBuffer(nullptr), m_Binds{}, m_Scale{ 1.0f, 1.0f, 1.0f }
 	{
 		RAY_PROFILE_FUNCTION();
 

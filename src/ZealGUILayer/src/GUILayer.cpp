@@ -92,7 +92,7 @@ namespace At0::Layers
 #if RENDER
 		button = Ray::MakeScope<Ray::PushButton>("PushButtonName", GetMainWindow());
 		button->Move({ -1, 1 });
-		button->Resize({ 1000, 1000 });
+		button->Resize({ 1, 1 });
 
 		ptLight = Ray::MakeScope<Ray::PointLight>(GetMainWindow().GetRenderer3D());
 
@@ -136,10 +136,12 @@ namespace At0::Layers
 			//cubes.emplace_back(*Ray::Application::Get().GetMainWindow().GetRenderer3D()/*, 1.0f, face_colors*/);
 
 			std::uniform_real_distribution<float> posDist(-50.0f, 50.0f);
+			std::uniform_real_distribution<float> scaleDist(0.3f, 2.0f);
 			for (uint32_t i = 0; i < numCubes - 1; ++i)
 			{
 				cubes[i].SetRotation(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine));
 				cubes[i].SetTranslation(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine) - 20.0f);
+				cubes[i].SetScale(scaleDist(mtEngine), scaleDist(mtEngine), scaleDist(mtEngine));
 			}
 		}
 

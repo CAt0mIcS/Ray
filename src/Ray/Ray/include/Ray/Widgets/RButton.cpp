@@ -34,7 +34,7 @@ namespace At0::Ray
 		: Button(name, parent)
 	{
 		float col[] = { 255, 0, 0 };
-		m_DrawObject = new Rectangle(parent.GetRenderer3D(), 2.0f, col);
+		m_DrawObject = new Rectangle(parent.GetRenderer3D(), 1.0f, col);
 	}
 
 	void PushButton::Draw()
