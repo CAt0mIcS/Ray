@@ -98,9 +98,15 @@ namespace At0::Ray
 		/// <returns>LRESULT code</returns>
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+		/// <summary>
+		/// Sets the keycode for compatibility with glfw keycodes
+		/// </summary>
+		static void SetKeycodeMap();
+
 	private:
 		bool m_IsOpen;
 		HWND m_hWnd;
+		inline static Key s_KeycodeMap[512];
 
 		// Represents data that needs to be destroyed when the window closes
 		struct

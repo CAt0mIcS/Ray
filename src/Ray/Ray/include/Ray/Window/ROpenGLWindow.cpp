@@ -309,8 +309,8 @@ namespace At0::Ray
 					Key k = (Key)key;
 					std::cout << KeyToString(k) << '\n';
 
-					KeyPressedEvent e((unsigned char)key, 0);
-					win.Keyboard.SetKeyState((unsigned char)key, true);
+					KeyPressedEvent e((Key)key, 0);
+					win.Keyboard.SetKeyState((Key)key, true);
 					for (auto* pListener : win.EventDispatcher<KeyPressedEvent>::Get())
 					{
 						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
@@ -321,8 +321,8 @@ namespace At0::Ray
 
 				case GLFW_RELEASE:
 				{
-					KeyReleasedEvent e((unsigned char)key);
-					win.Keyboard.SetKeyState((unsigned char)key, false);
+					KeyReleasedEvent e((Key)key);
+					win.Keyboard.SetKeyState((Key)key, false);
 					for (auto* pListener : win.EventDispatcher<KeyReleasedEvent>::Get())
 					{
 						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
@@ -331,7 +331,7 @@ namespace At0::Ray
 				}
 				case GLFW_REPEAT:
 				{
-					KeyPressedEvent e((unsigned char)key, 1);
+					KeyPressedEvent e((Key)key, 1);
 					for (auto* pListener : win.EventDispatcher<KeyPressedEvent>::Get())
 					{
 						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);

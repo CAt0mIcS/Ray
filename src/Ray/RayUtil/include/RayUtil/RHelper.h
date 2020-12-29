@@ -42,7 +42,7 @@ namespace At0::Ray::Util
 	}
 
 	/// <summary>
-	/// Allocates the console and sets std::cout output
+	/// Allocates the console and opens std::cout, std::clog, std::cerr, std::cin, std::wcout, std::wclog, std::wcerr, std::wcin streams
 	/// </summary>
 	void RU_API AllocateConsole();
 

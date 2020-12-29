@@ -34,6 +34,9 @@ namespace At0::Ray
 		RAY_WND_THROW_LAST_FAILED(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW, 0, pos.x, pos.y, size.x, size.y));
 		m_IsOpen = true;
 
+		if (s_KeycodeMap[0] == (Key)0)
+			SetKeycodeMap();
+
 		m_Renderer3D = MakeScope<Renderer3D>(*this);
 		m_Renderer3D->Init(m_hWnd);
 	}
@@ -253,9 +256,19 @@ namespace At0::Ray
 		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:
 		{
-			Keyboard.SetKeyState((uint16_t)wParam, true);
+			int scancode = (HIWORD(lParam) & (KF_EXTENDED | 0xff));
+			// Some synthetic key messages have a scancode of 0
+			if (!scancode)
+				scancode = MapVirtualKeyW((UINT)wParam, MAPVK_VK_TO_VSC);
 
-			KeyPressedEvent e((uint16_t)wParam, (uint32_t)(lParam & 0xff));
+			if (scancode >= 512)
+				RAY_THROW_RUNTIME("[WinAPIWindow::HandleMessage] Scancode '{0}' is invalid.", scancode);
+
+			Key key = s_KeycodeMap[scancode];
+
+			Keyboard.SetKeyState(key, true);
+
+			KeyPressedEvent e(key, (uint32_t)(lParam & 0xff));
 			for (auto* pListener : EventDispatcher<KeyPressedEvent>::Get())
 			{
 				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
@@ -265,9 +278,18 @@ namespace At0::Ray
 		case WM_SYSKEYUP:
 		case WM_KEYUP:
 		{
-			Keyboard.SetKeyState((uint16_t)wParam, false);
+			int scancode = (HIWORD(lParam) & (KF_EXTENDED | 0xff));
+			// Some synthetic key messages have a scancode of 0
+			if (!scancode)
+				scancode = MapVirtualKeyW((UINT)wParam, MAPVK_VK_TO_VSC);
 
-			KeyReleasedEvent e((uint16_t)wParam);
+			if (scancode >= 512)
+				RAY_THROW_RUNTIME("[WinAPIWindow::HandleMessage] Scancode '{0}' is invalid.", scancode);
+			Key key = s_KeycodeMap[scancode];
+
+			Keyboard.SetKeyState(key, false);
+
+			KeyReleasedEvent e(key);
 			for (auto* pListener : EventDispatcher<KeyReleasedEvent>::Get())
 			{
 				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
@@ -493,7 +515,6 @@ namespace At0::Ray
 
 	// -------------------------------------------------------------------------------
 	// Icon/Image loading
-
 	struct Image
 	{
 		int width, height;
@@ -569,6 +590,138 @@ namespace At0::Ray
 		SendMessage(m_hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
 		m_DestroyOnWindowCloseData.hCurrIcon = hIcon;
 	}
+	// End Icon/Image loading
+	// -------------------------------------------------------------------------------
+
+
+	void WinAPIWindow::SetKeycodeMap()
+	{
+		memset(s_KeycodeMap, -1, sizeof(s_KeycodeMap));
+
+		s_KeycodeMap[0x00B] = Key::D0;
+		s_KeycodeMap[0x002] = Key::D1;
+		s_KeycodeMap[0x003] = Key::D2;
+		s_KeycodeMap[0x004] = Key::D3;
+		s_KeycodeMap[0x005] = Key::D4;
+		s_KeycodeMap[0x006] = Key::D5;
+		s_KeycodeMap[0x007] = Key::D6;
+		s_KeycodeMap[0x008] = Key::D7;
+		s_KeycodeMap[0x009] = Key::D8;
+		s_KeycodeMap[0x00A] = Key::D9;
+		s_KeycodeMap[0x01E] = Key::A;
+		s_KeycodeMap[0x030] = Key::B;
+		s_KeycodeMap[0x02E] = Key::C;
+		s_KeycodeMap[0x020] = Key::D;
+		s_KeycodeMap[0x012] = Key::E;
+		s_KeycodeMap[0x021] = Key::F;
+		s_KeycodeMap[0x022] = Key::G;
+		s_KeycodeMap[0x023] = Key::H;
+		s_KeycodeMap[0x017] = Key::I;
+		s_KeycodeMap[0x024] = Key::J;
+		s_KeycodeMap[0x025] = Key::K;
+		s_KeycodeMap[0x026] = Key::L;
+		s_KeycodeMap[0x032] = Key::M;
+		s_KeycodeMap[0x031] = Key::N;
+		s_KeycodeMap[0x018] = Key::O;
+		s_KeycodeMap[0x019] = Key::P;
+		s_KeycodeMap[0x010] = Key::Q;
+		s_KeycodeMap[0x013] = Key::R;
+		s_KeycodeMap[0x01F] = Key::S;
+		s_KeycodeMap[0x014] = Key::T;
+		s_KeycodeMap[0x016] = Key::U;
+		s_KeycodeMap[0x02F] = Key::V;
+		s_KeycodeMap[0x011] = Key::W;
+		s_KeycodeMap[0x02D] = Key::X;
+		s_KeycodeMap[0x015] = Key::Y;
+		s_KeycodeMap[0x02C] = Key::Z;
+
+		s_KeycodeMap[0x028] = Key::Apostrophe;
+		s_KeycodeMap[0x02B] = Key::Backslash;
+		s_KeycodeMap[0x033] = Key::Comma;
+		s_KeycodeMap[0x00D] = Key::Equal;
+		s_KeycodeMap[0x029] = Key::GraveAccent;
+		s_KeycodeMap[0x01A] = Key::LeftBracket;
+		s_KeycodeMap[0x00C] = Key::Minus;
+		s_KeycodeMap[0x034] = Key::Period;
+		s_KeycodeMap[0x01B] = Key::RightBracket;
+		s_KeycodeMap[0x027] = Key::Semicolon;
+		s_KeycodeMap[0x035] = Key::Slash;
+		s_KeycodeMap[0x056] = Key::World2;
+
+		s_KeycodeMap[0x00E] = Key::Backspace;
+		s_KeycodeMap[0x153] = Key::Delete;
+		s_KeycodeMap[0x14F] = Key::End;
+		s_KeycodeMap[0x01C] = Key::Enter;
+		s_KeycodeMap[0x001] = Key::Escape;
+		s_KeycodeMap[0x147] = Key::Home;
+		s_KeycodeMap[0x152] = Key::Insert;
+		s_KeycodeMap[0x15D] = Key::Menu;
+		s_KeycodeMap[0x151] = Key::PageDown;
+		s_KeycodeMap[0x149] = Key::PageUp;
+		s_KeycodeMap[0x045] = Key::Pause;
+		s_KeycodeMap[0x146] = Key::Pause;
+		s_KeycodeMap[0x039] = Key::Space;
+		s_KeycodeMap[0x00F] = Key::Tab;
+		s_KeycodeMap[0x03A] = Key::CapsLock;
+		s_KeycodeMap[0x145] = Key::NumLock;
+		s_KeycodeMap[0x046] = Key::ScrollLock;
+		s_KeycodeMap[0x03B] = Key::F1;
+		s_KeycodeMap[0x03C] = Key::F2;
+		s_KeycodeMap[0x03D] = Key::F3;
+		s_KeycodeMap[0x03E] = Key::F4;
+		s_KeycodeMap[0x03F] = Key::F5;
+		s_KeycodeMap[0x040] = Key::F6;
+		s_KeycodeMap[0x041] = Key::F7;
+		s_KeycodeMap[0x042] = Key::F8;
+		s_KeycodeMap[0x043] = Key::F9;
+		s_KeycodeMap[0x044] = Key::F10;
+		s_KeycodeMap[0x057] = Key::F11;
+		s_KeycodeMap[0x058] = Key::F12;
+		s_KeycodeMap[0x064] = Key::F13;
+		s_KeycodeMap[0x065] = Key::F14;
+		s_KeycodeMap[0x066] = Key::F15;
+		s_KeycodeMap[0x067] = Key::F16;
+		s_KeycodeMap[0x068] = Key::F17;
+		s_KeycodeMap[0x069] = Key::F18;
+		s_KeycodeMap[0x06A] = Key::F19;
+		s_KeycodeMap[0x06B] = Key::F20;
+		s_KeycodeMap[0x06C] = Key::F21;
+		s_KeycodeMap[0x06D] = Key::F22;
+		s_KeycodeMap[0x06E] = Key::F23;
+		s_KeycodeMap[0x076] = Key::F24;
+		s_KeycodeMap[0x038] = Key::LeftAlt;
+		s_KeycodeMap[0x01D] = Key::LeftControl;
+		s_KeycodeMap[0x02A] = Key::LeftShift;
+		s_KeycodeMap[0x15B] = Key::LeftSuper;
+		s_KeycodeMap[0x137] = Key::PrintScreen;
+		s_KeycodeMap[0x138] = Key::RightAlt;
+		s_KeycodeMap[0x11D] = Key::RightControl;
+		s_KeycodeMap[0x036] = Key::RightShift;
+		s_KeycodeMap[0x15C] = Key::RightSuper;
+		s_KeycodeMap[0x150] = Key::Down;
+		s_KeycodeMap[0x14B] = Key::Left;
+		s_KeycodeMap[0x14D] = Key::Right;
+		s_KeycodeMap[0x148] = Key::Up;
+
+		s_KeycodeMap[0x052] = Key::NumPad0;
+		s_KeycodeMap[0x04F] = Key::NumPad1;
+		s_KeycodeMap[0x050] = Key::NumPad2;
+		s_KeycodeMap[0x051] = Key::NumPad3;
+		s_KeycodeMap[0x04B] = Key::NumPad4;
+		s_KeycodeMap[0x04C] = Key::NumPad5;
+		s_KeycodeMap[0x04D] = Key::NumPad6;
+		s_KeycodeMap[0x047] = Key::NumPad7;
+		s_KeycodeMap[0x048] = Key::NumPad8;
+		s_KeycodeMap[0x049] = Key::NumPad9;
+		s_KeycodeMap[0x04E] = Key::NumPadAdd;
+		s_KeycodeMap[0x053] = Key::NumPadDecimal;
+		s_KeycodeMap[0x135] = Key::NumPadDivide;
+		s_KeycodeMap[0x11C] = Key::NumPadEnter;
+		s_KeycodeMap[0x059] = Key::NumPadEqual;
+		s_KeycodeMap[0x037] = Key::NumPadMultiply;
+		s_KeycodeMap[0x04A] = Key::NumPadSubtract;
+	}
+
 }
 
 #endif // _WIN32

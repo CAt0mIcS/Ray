@@ -1,6 +1,7 @@
 #pragma once
 
 #include "REvent.h"
+#include <../../RayUtil/include/RayUtil/RKeyCodes.h>
 
 
 namespace At0::Ray
@@ -8,23 +9,23 @@ namespace At0::Ray
 	class KeyEvent : public Event
 	{
 	protected:
-		KeyEvent(uint16_t keycode)
+		KeyEvent(Key keycode)
 			: m_KeyCode(keycode)
 		{
 		}
 
 	public:
-		uint16_t GetKeyCode() const { return m_KeyCode; }
+		Key GetKey() const { return m_KeyCode; }
 		virtual ~KeyEvent() = default;
 
 	private:
-		uint16_t m_KeyCode;
+		Key m_KeyCode;
 	};
 
 	class KeyPressedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(uint16_t keycode, uint32_t repeatCount);
+		KeyPressedEvent(Key keycode, uint32_t repeatCount);
 
 		virtual std::string ToString() const override;
 
@@ -40,7 +41,7 @@ namespace At0::Ray
 	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyReleasedEvent(uint16_t keycode);
+		KeyReleasedEvent(Key keycode);
 
 		virtual std::string ToString() const override;
 
@@ -48,15 +49,20 @@ namespace At0::Ray
 		virtual EventType GetType() const override { return GetStaticType(); }
 	};
 
-	class CharEvent : public KeyEvent
+	// RAY_TODO: Char event keycodes
+	class CharEvent/* : public KeyEvent*/ : public Event
 	{
 	public:
-		CharEvent(const unsigned char keycode);
+		CharEvent(unsigned char keycode);
 
 		virtual std::string ToString() const override;
 
+		unsigned char GetKeyCode() const { return m_Keycode; }
 		static EventType GetStaticType() { return EventType::CharEvent; }
 		virtual EventType GetType() const override { return GetStaticType(); }
+
+	private:
+		unsigned char m_Keycode;
 	};
 }
 

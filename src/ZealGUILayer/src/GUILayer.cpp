@@ -67,7 +67,7 @@ FPS g_FPS;
 
 namespace At0::Layers
 {
-#define RENDER 1
+#define RENDER 0
 
 	std::vector<Ray::ShadedCube> cubes;
 	static constexpr uint64_t numCubes = 4000;
@@ -249,7 +249,7 @@ namespace At0::Layers
 		if (mouse.IsMiddlePressed())
 		{
 			auto mouseDiff = mouse.GetPos() - mousePos;
-			if (kbd.IsKeyPressed(16)) // LSHIFT
+			if (kbd.IsKeyPressed(Ray::Key::LeftShift)) // LSHIFT
 			{
 				cam.x += mouseDiff.x * 0.03f;
 				cam.y -= mouseDiff.y * 0.03f;
@@ -280,6 +280,7 @@ namespace At0::Layers
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_LOG_DEBUG("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+		std::cout << e.ToString() << '\n';
 	}
 
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseWheelUpEvent& e)

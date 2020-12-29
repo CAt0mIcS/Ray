@@ -12,16 +12,16 @@ namespace At0::Ray
 		RAY_LOG_DEBUG("[KeyboardInput] Destroyed");
 	}
 
-	bool KeyboardInput::IsKeyPressed(uint16_t keycode) const
+	bool KeyboardInput::IsKeyPressed(Key keycode) const
 	{
-		RAY_MEXPECTS(keycode <= 512, "The keycode was too large");
-		return m_Keys[keycode];
+		RAY_MEXPECTS((uint16_t)keycode <= 512, "The keycode was too large");
+		return m_Keys[(uint16_t)keycode];
 	}
-	
-	void KeyboardInput::SetKeyState(uint16_t keycode, bool isPressed)
+
+	void KeyboardInput::SetKeyState(Key keycode, bool isPressed)
 	{
-		RAY_MEXPECTS(keycode <= 512, "The keycode was too large");
-		m_Keys[keycode] = isPressed;
+		RAY_MEXPECTS((uint16_t)keycode <= 512, "The keycode was too large");
+		m_Keys[(uint16_t)keycode] = isPressed;
 	}
 }
 

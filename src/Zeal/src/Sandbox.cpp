@@ -15,6 +15,8 @@ namespace At0::Zeal
 	{
 		//RAY_PROFILE_FUNCTION();
 
+		Ray::Util::AllocateConsole();
+
 		GetMainWindow().SetTitle("Zeal");
 		GetMainWindow().Show();
 		GetMainWindow().SetIcon("Resources/Icon.png");

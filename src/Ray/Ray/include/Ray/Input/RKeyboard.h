@@ -2,6 +2,7 @@
 
 #include "../RBase.h"
 #include <bitset>
+#include <../../RayUtil/include/RayUtil/RKeyCodes.h>
 
 #pragma warning(disable : 4251)
 
@@ -21,10 +22,10 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="keycode">Is the keycode to check for</param>
 		/// <returns>True if the key with keycode is pressed, false otherwise</returns>
-		bool IsKeyPressed(uint16_t keycode) const;
+		bool IsKeyPressed(Key keycode) const;
 
 	private:
-		void SetKeyState(uint16_t keycode, bool isPressed);
+		void SetKeyState(Key keycode, bool isPressed);
 
 	private:
 		/// <summary>

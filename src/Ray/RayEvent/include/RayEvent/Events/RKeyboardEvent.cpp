@@ -7,7 +7,7 @@ namespace At0::Ray
 	// -------------------------------------------------------------------
 	// KeyPressedEvent
 	// -------------------------------------------------------------------
-	KeyPressedEvent::KeyPressedEvent(uint16_t keycode, uint32_t repeatCount)
+	KeyPressedEvent::KeyPressedEvent(Key keycode, uint32_t repeatCount)
 		: KeyEvent(keycode), m_RepeatCount(repeatCount)
 	{
 	}
@@ -15,14 +15,14 @@ namespace At0::Ray
 	std::string KeyPressedEvent::ToString() const
 	{
 		std::ostringstream oss;
-		oss << "[KeyPressedEvent] Key " << (uint16_t)GetKeyCode() << " pressed";
+		oss << "[KeyPressedEvent] Key " << KeyToString(GetKey()) << " pressed (" << (uint16_t)GetKey() << ')';
 		return oss.str();
 	}
 
 	// -------------------------------------------------------------------
 	// KeyReleasedEvent
 	// -------------------------------------------------------------------
-	KeyReleasedEvent::KeyReleasedEvent(uint16_t keycode)
+	KeyReleasedEvent::KeyReleasedEvent(Key keycode)
 		: KeyEvent(keycode)
 	{
 	}
@@ -30,15 +30,15 @@ namespace At0::Ray
 	std::string KeyReleasedEvent::ToString() const
 	{
 		std::ostringstream oss;
-		oss << "[KeyReleasedEvent] Key " << (uint16_t)GetKeyCode() << " released";
+		oss << "[KeyReleasedEvent] Key " << (uint16_t)GetKey() << " released";
 		return oss.str();
 	}
 
 	// -------------------------------------------------------------------
 	// CharEvent
 	// -------------------------------------------------------------------
-	CharEvent::CharEvent(const unsigned char keycode)
-		: KeyEvent(keycode)
+	CharEvent::CharEvent(unsigned char keycode)
+		: m_Keycode(keycode)
 	{
 	}
 
