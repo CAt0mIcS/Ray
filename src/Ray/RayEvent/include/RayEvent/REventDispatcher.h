@@ -15,6 +15,11 @@ namespace At0::Ray
 	public:
 		virtual ~EventDispatcher() = default;
 
+		bool operator==(const EventDispatcher<E>& rhs)
+		{
+			return m_Listeners == rhs.m_Listeners;
+		}
+
 	protected:
 		EventDispatcher() = default;
 
@@ -41,7 +46,7 @@ namespace At0::Ray
 		void RemoveListener(EventListener<E>* eListener)
 		{
 			// RAY_TODO: operator= && no pointers
-			m_Listeners.erase(std::find_if(m_Listeners.begin(), m_Listeners.end(), [this, &eListener](EventListener<E>* listener) 
+			m_Listeners.erase(std::find_if(m_Listeners.begin(), m_Listeners.end(), [this, &eListener](EventListener<E>* listener)
 				{
 					return listener == eListener;
 				}

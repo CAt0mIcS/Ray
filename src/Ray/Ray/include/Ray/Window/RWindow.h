@@ -16,7 +16,7 @@ namespace At0::Ray
 	class Event;
 
 	// QUESTION: New Event System
-	class RAY_API Window : public Widget, 
+	class RAY_API Window : public Widget,
 		public EventDispatcher<WindowMoveEvent>,
 		public EventDispatcher<WindowResizeEvent>,
 		public EventDispatcher<WindowCloseEvent>,
@@ -46,7 +46,7 @@ namespace At0::Ray
 		/// Called every frame to read from the internal message queue
 		/// </summary>
 		virtual void Update() = 0;
-		
+
 		virtual std::string GetTitle() const = 0;
 		virtual void SetTitle(std::string_view title) = 0;
 
@@ -54,26 +54,14 @@ namespace At0::Ray
 		virtual void Hide() const = 0;
 		virtual void Maximize() const = 0;
 		virtual void Minimize() const = 0;
-		
+
 		virtual void Close() = 0;
-
-		/// <summary>
-		/// Getter for the current window position
-		/// </summary>
-		/// <returns>The window position</returns>
-		virtual Point2 GetPos() const = 0;
-
-		/// <summary>
-		/// Getter for the current window size
-		/// </summary>
-		/// <returns>The current window size</returns>
-		virtual Size2 GetSize() const = 0;
 
 		virtual bool IsOpen() const = 0;
 		virtual void SetIcon(std::string_view path) = 0;
 
 		virtual Renderer3D& GetRenderer3D() const override;
-		
+
 		virtual ~Window();
 
 	public:

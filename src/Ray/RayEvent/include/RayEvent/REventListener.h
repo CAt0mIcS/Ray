@@ -37,6 +37,12 @@ namespace At0::Ray
 			dispatcher.RemoveListener(this);
 		}
 
+		/// <returns>True if the dispatcher was already added to the list of dispatchers</returns>
+		bool HasDispatcher(EventDispatcher<E>& dispatcher)
+		{
+			return std::find(m_Dispatchers.begin(), m_Dispatchers.end(), &dispatcher) != m_Dispatchers.end();
+		}
+
 		/// <summary>
 		/// EventListener Constructor
 		/// </summary>

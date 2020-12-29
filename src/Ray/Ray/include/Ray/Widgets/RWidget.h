@@ -22,7 +22,7 @@ namespace At0::Ray
 	{
 	public:
 		Widget(Widget&&) noexcept = default;
-		
+
 		std::string_view GetName() const { return m_Name; }
 		virtual Renderer3D& GetRenderer3D() const = 0;
 		Widget* GetParent() const { return m_Parent; }
@@ -34,8 +34,11 @@ namespace At0::Ray
 		/// <returns>The child, or nullptr if no child was found</returns>
 		Widget& FindChildByName(std::string_view name);
 
-		virtual void SetPos(const Point2& pos) = 0;
-		virtual void SetSize(const Size2& size) = 0;
+		virtual void Move(const Point2& pos) = 0;
+		virtual void Resize(const Size2& size) = 0;
+
+		virtual Point2 GetPos() const = 0;
+		virtual Size2 GetSize() const = 0;
 
 		/// <summary>
 		/// Adds a new child to this widget
@@ -59,11 +62,8 @@ namespace At0::Ray
 		virtual ~Widget();
 
 	protected:
-		/// <summary>
-		/// Protected Widget Constructor
-		/// </summary>
-		/// <param name="name">Is the unique name of the Widget</param>
-		/// <param name="parent">Is the parent of this Widget</param>
+		/// <param name="name">Is a application-unique name for the widget.</param>
+		/// <param name="parent">Is the widget parent.</param>
 		Widget(std::string_view name, Widget* parent = nullptr);
 
 		/// <summary>

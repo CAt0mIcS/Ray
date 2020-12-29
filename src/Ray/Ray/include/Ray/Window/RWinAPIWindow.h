@@ -38,13 +38,13 @@ namespace At0::Ray
 		/// Moves the window to screen coordinates in pos
 		/// </summary>
 		/// <param name="pos">Are the coordinates where the window will be moved to</param>
-		virtual void SetPos(const Point2& pos) override;
+		virtual void Move(const Point2& pos) override;
 
 		/// <summary>
 		/// Resizes the window
 		/// </summary>
 		/// <param name="size">Is the new size of the window</param>
-		virtual void SetSize(const Size2& size) override;
+		virtual void Resize(const Size2& size) override;
 
 		/// <summary>
 		/// Getter for the current window position
