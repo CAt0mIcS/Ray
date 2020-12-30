@@ -94,7 +94,7 @@ namespace At0::Ray
 	template<typename T, typename... Args, typename>
 	inline T* Widget::AddChild(std::string_view name, Args&&... args)
 	{
-		return (T*)m_Children.emplace_back(MakeScope<T>(name, std::forward<Args>(args)...)).get();
+		return (T*)m_Children.emplace_back(MakeScope<T>(name, *this, std::forward<Args>(args)...)).get();
 	}
 }
 

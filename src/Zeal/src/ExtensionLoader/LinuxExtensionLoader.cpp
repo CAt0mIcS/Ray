@@ -50,6 +50,8 @@ namespace At0::Zeal
 		{
 			dlclose(handle);
 		}
+
+		Ray::Log::Debug("[ExtLoader] Destroyed.");
 	}
 }
 

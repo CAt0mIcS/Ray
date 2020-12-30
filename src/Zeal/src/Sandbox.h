@@ -33,7 +33,6 @@ namespace At0::Zeal
 		virtual void OnEvent(Ray::Widget* receiver, Ray::Event& e);
 
 	private:
-		ExtensionLoader m_LayerLoader;
 	};
 
 }

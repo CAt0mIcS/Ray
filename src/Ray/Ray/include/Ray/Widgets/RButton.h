@@ -37,7 +37,7 @@ namespace At0::Ray
 		/// <param name="name">Is a application-unique name for the button, doesn't represent the button text.</param>
 		/// <param name="parent">Is the button parent. Every button needs to have a valid parent (usually the Window).</param>
 		PushButton(const std::string_view name, Widget& parent);
-		~PushButton();
+		virtual ~PushButton();
 
 		/// <summary>
 		/// Draws default button style

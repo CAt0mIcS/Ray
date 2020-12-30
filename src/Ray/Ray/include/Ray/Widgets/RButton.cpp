@@ -28,6 +28,7 @@ namespace At0::Ray
 
 	Button::~Button()
 	{
+		Log::Info("[Button] '{0}' destroyed", GetName());
 	}
 
 	// -------------------------------------------------------------------------
@@ -42,6 +43,7 @@ namespace At0::Ray
 	PushButton::~PushButton()
 	{
 		delete m_DrawObject;
+		Log::Info("[PushButton] '{0}' destroyed", GetName());
 	}
 
 	void PushButton::Draw()

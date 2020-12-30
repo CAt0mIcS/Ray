@@ -98,7 +98,8 @@ namespace At0::Layers
 		EventListener<Ray::MouseMoveEvent>::Subscribe(GetMainWindow());
 
 #if RENDER
-		button = GetMainWindow().AddChild<Ray::PushButton>("Button", GetMainWindow());
+		button = GetMainWindow().AddChild<Ray::PushButton>("Button");
+		//button = Ray::MakeScope<Ray::PushButton>("Button", GetMainWindow());
 
 		button->Resize({ 100, 100 });
 		button->Move({ 0, 0 });
@@ -250,7 +251,7 @@ namespace At0::Layers
 		renderer.EndDraw();
 #endif
 
-		g_FPS.Update();
+		//g_FPS.Update();
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::MouseMoveEvent& e)

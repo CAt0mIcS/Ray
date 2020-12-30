@@ -53,6 +53,8 @@ namespace At0::Zeal
 		{
 			FreeLibrary((HMODULE)lib);
 		}
+
+		Ray::Log::Debug("[ExtLoader] Destroyed.");
 	}
 }
 

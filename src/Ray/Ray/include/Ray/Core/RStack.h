@@ -20,7 +20,7 @@ namespace At0::Ray
 
 	public:
 		Stack() = default;
-		
+
 		bool Empty() const
 		{
 			return m_Stack.empty();
@@ -60,7 +60,7 @@ namespace At0::Ray
 		/// <param name="...args">Are the arguments to pass to the contructor of T</param>
 		/// <returns>The added object</returns>
 		template <typename... Args>
-		decltype(auto) EmplaceBack(Args&&... args) 
+		decltype(auto) EmplaceBack(Args&&... args)
 		{
 			std::scoped_lock lock(m_Mutex);
 			return m_Stack.emplace_back(std::forward<Args>(args)...);
@@ -91,6 +91,12 @@ namespace At0::Ray
 		}
 
 		void Clear()
+		{
+			std::scoped_lock lock(m_Mutex);
+			m_Stack.clear();
+		}
+
+		~Stack()
 		{
 			std::scoped_lock lock(m_Mutex);
 			m_Stack.clear();

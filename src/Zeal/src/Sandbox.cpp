@@ -11,6 +11,8 @@
 
 namespace At0::Zeal
 {
+	static ExtensionLoader s_ExtensionLoader;
+
 	Sandbox::Sandbox()
 	{
 		//RAY_PROFILE_FUNCTION();
@@ -41,7 +43,7 @@ namespace At0::Zeal
 		//win.SetTitle("Win4");
 		//win.Show();
 
-		m_LayerLoader.Start("Editors", [this](Ray::Layer* layer)
+		s_ExtensionLoader.Start("Editors", [this](Ray::Layer* layer)
 			{
 				PushLayer(layer);
 			}
