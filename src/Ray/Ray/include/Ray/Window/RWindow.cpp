@@ -61,7 +61,7 @@ namespace At0::Ray
 			HoverLeaveEvent e(m_CurrentlyHovering);
 			for (auto* pListener : EventDispatcher<HoverLeaveEvent>::Get())
 			{
-				pListener->OnEvent(m_CurrentlyHovering, e);
+				pListener->OnEvent(*m_CurrentlyHovering, e);
 			}
 
 			m_CurrentlyHovering = child;
@@ -69,7 +69,7 @@ namespace At0::Ray
 			HoverEnterEvent e2(m_CurrentlyHovering);
 			for (auto* pListener : EventDispatcher<HoverEnterEvent>::Get())
 			{
-				pListener->OnEvent(m_CurrentlyHovering, e2);
+				pListener->OnEvent(*m_CurrentlyHovering, e2);
 			}
 		};
 

@@ -16,7 +16,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="receiver">Is the object which sended the event</param>
 		/// <param name="e">Is the received event</param>
-		virtual void OnEvent(Ray::Widget* receiver, E& e) = 0;
+		virtual void OnEvent(Ray::Widget& receiver, E& e) = 0;
 
 		/// <summary>
 		/// Sets this listener up to receiver events of type E

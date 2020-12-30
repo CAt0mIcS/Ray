@@ -42,7 +42,7 @@ namespace At0::Ray
 		const auto GetCamera() const { return m_Camera; }
 
 	private:
-		virtual void OnEvent(Widget* receiver, WindowResizeEvent& e) override;
+		virtual void OnEvent(Widget& receiver, WindowResizeEvent& e) override;
 
 		ThreadSafeComPtr<ID3D11RenderTargetView> GetTarget() { return ThreadSafeComPtr<ID3D11RenderTargetView>{ m_pTarget, m_RenderTargetViewMutex }; }
 		ThreadSafeComPtr<IDXGISwapChain> GetSwapChain() { return ThreadSafeComPtr<IDXGISwapChain>{ m_pSwapChain, m_SwapChainMutex }; }

@@ -292,8 +292,8 @@ namespace At0::Ray::Profile
 	inline void EndSession() {}
 }
 
-#define RAY_PROFILE_BEGIN_SESSION(name, filepath)
-#define RAY_PROFILE_END_SESSION()
+#define RAY_PROFILE_LINE_2(name, line)
+#define RAY_PROFILE_LINE(name, line)
 #define RAY_PROFILE_SCOPE(name)
 #define RAY_PROFILE_FUNCTION()
 

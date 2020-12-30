@@ -157,7 +157,7 @@ namespace At0::Ray
 		Log::Debug("[Renderer3D] Destroyed");
 	}
 
-	void Renderer3D::OnEvent(Widget* receiver, WindowResizeEvent& e)
+	void Renderer3D::OnEvent(Widget& receiver, WindowResizeEvent& e)
 	{
 		auto context = GetContext();
 		{

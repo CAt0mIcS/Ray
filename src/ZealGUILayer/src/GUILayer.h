@@ -29,22 +29,22 @@ namespace At0::Layers
 		GUILayer(std::string_view name);
 
 		virtual void OnUpdate(Ray::Timestep ts) override;
-		virtual void OnEvent(Ray::Widget* receiver, Ray::MouseMoveEvent& e) override;
-		virtual void OnEvent(Ray::Widget* receiver, Ray::WindowCloseEvent& e) override;
-		virtual void OnEvent(Ray::Widget* receiver, Ray::KeyPressedEvent& e) override;
-		virtual void OnEvent(Ray::Widget* receiver, Ray::KeyReleasedEvent& e) override;
-		virtual void OnEvent(Ray::Widget* receiver, Ray::CharEvent& e) override;
+		virtual void OnEvent(Ray::Widget& receiver, Ray::MouseMoveEvent& e) override;
+		virtual void OnEvent(Ray::Widget& receiver, Ray::WindowCloseEvent& e) override;
+		virtual void OnEvent(Ray::Widget& receiver, Ray::KeyPressedEvent& e) override;
+		virtual void OnEvent(Ray::Widget& receiver, Ray::KeyReleasedEvent& e) override;
+		virtual void OnEvent(Ray::Widget& receiver, Ray::CharEvent& e) override;
 
-		virtual void OnEvent(Ray::Widget* receiver, Ray::MouseButtonPressedEvent& e) override;
-		virtual void OnEvent(Ray::Widget* receiver, Ray::MouseButtonReleasedEvent& e) override;
+		virtual void OnEvent(Ray::Widget& receiver, Ray::MouseButtonPressedEvent& e) override;
+		virtual void OnEvent(Ray::Widget& receiver, Ray::MouseButtonReleasedEvent& e) override;
 
-		virtual void OnEvent(Ray::Widget* receiver, Ray::HoverEnterEvent& e) override;
-		virtual void OnEvent(Ray::Widget* receiver, Ray::HoverLeaveEvent& e) override;
+		virtual void OnEvent(Ray::Widget& receiver, Ray::HoverEnterEvent& e) override;
+		virtual void OnEvent(Ray::Widget& receiver, Ray::HoverLeaveEvent& e) override;
 
-		virtual void OnEvent(Ray::Widget* receiver, Ray::MouseWheelUpEvent& e) override;
-		virtual void OnEvent(Ray::Widget* receiver, Ray::MouseWheelDownEvent& e) override;
-		virtual void OnEvent(Ray::Widget* receiver, Ray::MouseWheelLeftEvent& e) override;
-		virtual void OnEvent(Ray::Widget* receiver, Ray::MouseWheelRightEvent& e) override;
+		virtual void OnEvent(Ray::Widget& receiver, Ray::MouseWheelUpEvent& e) override;
+		virtual void OnEvent(Ray::Widget& receiver, Ray::MouseWheelDownEvent& e) override;
+		virtual void OnEvent(Ray::Widget& receiver, Ray::MouseWheelLeftEvent& e) override;
+		virtual void OnEvent(Ray::Widget& receiver, Ray::MouseWheelRightEvent& e) override;
 	};
 }
 

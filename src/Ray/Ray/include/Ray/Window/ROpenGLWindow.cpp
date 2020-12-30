@@ -199,7 +199,7 @@ namespace At0::Ray
 			WindowCloseEvent e;
 			for (auto* pListener : EventDispatcher<WindowCloseEvent>::Get())
 			{
-				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(*GetEventReceiver(e, Mouse), e);
 			}
 		}
 	}
@@ -249,7 +249,7 @@ namespace At0::Ray
 				MouseMoveEvent e(Point2{ (float)xPos, (float)yPos });
 				for (auto* pListener : win.EventDispatcher<MouseMoveEvent>::Get())
 				{
-					pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
+					pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);
 				}
 			}
 		);
@@ -274,7 +274,7 @@ namespace At0::Ray
 
 					for (auto* pListener : win.EventDispatcher<MouseButtonPressedEvent>::Get())
 					{
-						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
+						pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);
 					}
 					break;
 				}
@@ -291,7 +291,7 @@ namespace At0::Ray
 
 					for (auto* pListener : win.EventDispatcher<MouseButtonReleasedEvent>::Get())
 					{
-						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
+						pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);
 					}
 					break;
 				}
@@ -314,7 +314,7 @@ namespace At0::Ray
 					win.Keyboard.SetKeyState((Key)key, true);
 					for (auto* pListener : win.EventDispatcher<KeyPressedEvent>::Get())
 					{
-						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
+						pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);
 					}
 
 					break;
@@ -326,7 +326,7 @@ namespace At0::Ray
 					win.Keyboard.SetKeyState((Key)key, false);
 					for (auto* pListener : win.EventDispatcher<KeyReleasedEvent>::Get())
 					{
-						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
+						pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);
 					}
 					break;
 				}
@@ -335,7 +335,7 @@ namespace At0::Ray
 					KeyPressedEvent e((Key)key, 1);
 					for (auto* pListener : win.EventDispatcher<KeyPressedEvent>::Get())
 					{
-						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
+						pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);
 					}
 
 					break;
@@ -351,7 +351,7 @@ namespace At0::Ray
 				CharEvent e((uint16_t)keycode);
 				for (auto* pListener : win.EventDispatcher<CharEvent>::Get())
 				{
-					pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
+					pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);
 				}			}
 		);
 
@@ -364,7 +364,7 @@ namespace At0::Ray
 					MouseWheelUpEvent e((float)yOffset);
 					for (auto* pListener : win.EventDispatcher<MouseWheelUpEvent>::Get())
 					{
-						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
+						pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);
 					}
 				}
 				else if (yOffset < 0)
@@ -372,7 +372,7 @@ namespace At0::Ray
 					MouseWheelDownEvent e((float)yOffset);
 					for (auto* pListener : win.EventDispatcher<MouseWheelDownEvent>::Get())
 					{
-						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
+						pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);
 					}
 				}
 
@@ -381,7 +381,7 @@ namespace At0::Ray
 					MouseWheelRightEvent e((float)xOffset);
 					for (auto* pListener : win.EventDispatcher<MouseWheelRightEvent>::Get())
 					{
-						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
+						pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);
 					}
 				}
 				else if (xOffset < 0)
@@ -389,7 +389,7 @@ namespace At0::Ray
 					MouseWheelLeftEvent e((float)xOffset);
 					for (auto* pListener : win.EventDispatcher<MouseWheelLeftEvent>::Get())
 					{
-						pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
+						pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);
 					}
 				}
 			}
@@ -402,7 +402,7 @@ namespace At0::Ray
 				PaintEvent e;
 				for (auto* pListener : win.EventDispatcher<PaintEvent>::Get())
 				{
-					pListener->OnEvent(win.GetEventReceiver(e, win.Mouse), e);
+					pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);
 				}
 			}
 		);
@@ -416,7 +416,7 @@ namespace At0::Ray
 				WindowResizeEvent e(win.m_OldSize, Point2{ (float)width, (float)height });
 				for (auto* pListener : win.EventDispatcher<WindowResizeEvent>::Get())
 				{
-					pListener->OnEvent(&win, e);
+					pListener->OnEvent(win, e);
 				}
 			}
 		);
@@ -430,7 +430,7 @@ namespace At0::Ray
 				WindowMoveEvent e(win.m_OldPos, Point2{ (float)x, (float)y });
 				for (auto* pListener : win.EventDispatcher<WindowMoveEvent>::Get())
 				{
-					pListener->OnEvent(&win, e);
+					pListener->OnEvent(win, e);
 				}
 			}
 		);
