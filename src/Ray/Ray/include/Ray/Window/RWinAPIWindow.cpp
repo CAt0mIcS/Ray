@@ -14,8 +14,6 @@
 
 #include <RayRender/Renderer3D.h>
 
-#include <Windows.h>
-
 #include <stb_image/stb_image.h>
 
 // RAY_TODO: App closes when non-mainwindow is resized and closed

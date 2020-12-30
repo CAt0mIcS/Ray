@@ -81,9 +81,11 @@ namespace At0::Layers
 		: Ray::Layer(name),
 		EventListener<Ray::WindowCloseEvent>(GetMainWindow()),
 		EventListener<Ray::KeyPressedEvent>(GetMainWindow()),
+		EventListener<Ray::KeyReleasedEvent>(GetMainWindow()),
 		EventListener<Ray::CharEvent>(GetMainWindow()),
 
 		EventListener<Ray::MouseButtonPressedEvent>(GetMainWindow()),
+		EventListener<Ray::MouseButtonReleasedEvent>(GetMainWindow()),
 
 		EventListener<Ray::MouseWheelUpEvent>(GetMainWindow()),
 		EventListener<Ray::MouseWheelDownEvent>(GetMainWindow()),
@@ -286,6 +288,13 @@ namespace At0::Layers
 		std::cout << e.ToString() << '\n';
 	}
 
+	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::KeyReleasedEvent& e)
+	{
+		RAY_PROFILE_FUNCTION();
+		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+		std::cout << e.ToString() << '\n';
+	}
+
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::CharEvent& e)
 	{
 		RAY_PROFILE_FUNCTION();
@@ -294,6 +303,13 @@ namespace At0::Layers
 	}
 
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseButtonPressedEvent& e)
+	{
+		RAY_PROFILE_FUNCTION();
+		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+		std::cout << e.ToString() << '\n';
+	}
+
+	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseButtonReleasedEvent& e)
 	{
 		RAY_PROFILE_FUNCTION();
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());

@@ -30,7 +30,7 @@ namespace At0::Ray
 	std::string KeyReleasedEvent::ToString() const
 	{
 		std::ostringstream oss;
-		oss << "[KeyReleasedEvent] Key " << (uint16_t)GetKey() << " released";
+		oss << "[KeyPressedEvent] Key " << KeyToString(GetKey()) << " released (" << (uint16_t)GetKey() << ')';
 		return oss.str();
 	}
 
