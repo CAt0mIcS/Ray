@@ -55,7 +55,6 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		bool setNew = false;
 		static auto generateEvents = [this](Widget* child)
 		{
 			HoverLeaveEvent e(m_CurrentlyHovering);
@@ -64,6 +63,7 @@ namespace At0::Ray
 				pListener->OnEvent(*m_CurrentlyHovering, e);
 			}
 
+			RAY_MEXPECTS(*m_CurrentlyHovering != *child, "[Window::SetHoveringWidget] Already hovering widget is new hovering widget.");
 			m_CurrentlyHovering = child;
 
 			HoverEnterEvent e2(m_CurrentlyHovering);
@@ -75,22 +75,27 @@ namespace At0::Ray
 
 		for (Scope<Widget>& child : m_Children)
 		{
-			if (Mouse.IsOnWidget(*child) && m_CurrentlyHovering != child.get())
+			if (m_CurrentlyHovering)
+			{
+				if (Mouse.IsOnWidget(*child) && *m_CurrentlyHovering != *child)
+				{
+					generateEvents(child.get());
+					return;
+				}
+			}
+			else if (Mouse.IsOnWidget(*child))
 			{
 				generateEvents(child.get());
-				setNew = true;
+				return;
 			}
 		}
 
-		if (m_CurrentlyHovering && !setNew)
+		if (m_CurrentlyHovering && *m_CurrentlyHovering != *this && !Mouse.IsOnWidget(*m_CurrentlyHovering) && Mouse.IsOnWindow(*this))
 		{
-			if (!Mouse.IsOnWidget(*m_CurrentlyHovering) && Mouse.IsOnWindow(*this))
-			{
-				generateEvents(this);
-			}
+			generateEvents(this);
 		}
 		else
-			generateEvents(this);
+			m_CurrentlyHovering = this;
 
 		//// We can assume that no widget is in focus if the mouse is outside the window rect
 		//if (!setNew && !Mouse.IsOnWidget(this))

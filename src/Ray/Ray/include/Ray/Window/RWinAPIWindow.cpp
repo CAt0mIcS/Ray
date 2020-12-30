@@ -124,7 +124,7 @@ namespace At0::Ray
 		}
 		case WM_MOUSEMOVE:
 		{
-			// ANSWER: Classes need to be built in a hierachy and shouldn't depend on each other much
+			// RAY_TODO: Classes need to be built in a hierachy and shouldn't depend on each other much
 
 			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.SetPos({ (float)pt.x, (float)pt.y });
@@ -355,7 +355,7 @@ namespace At0::Ray
 		}
 		case WM_UNICHAR:
 		{
-			// Not sent by Windows but some third-party input method engines
+			// Not sent by Windows but by some third-party input method engines
 
 			if (wParam == UNICODE_NOCHAR)
 			{
@@ -434,10 +434,6 @@ namespace At0::Ray
 		case WM_SIZE:
 		{
 			Size2 newSize = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
-			//ResizeTo(newSize);
-
-			//RAY_TODO: Read how windows handles events (how they're built, how they handle it)
-
 			WindowResizeEvent e(m_OldSize, newSize);
 			for (auto* pListener : EventDispatcher<WindowResizeEvent>::Get())
 			{
@@ -450,8 +446,6 @@ namespace At0::Ray
 		case WM_MOVE:
 		{
 			Point2 newPos = { (float)LOWORD(lParam), (float)HIWORD(lParam) };
-			//MoveTo(newPos);
-
 			WindowMoveEvent e(m_OldPos, newPos);
 			for (auto* pListener : EventDispatcher<WindowMoveEvent>::Get())
 			{

@@ -16,10 +16,10 @@ namespace At0::Ray
 	Widget& Widget::FindChildByName(std::string_view name)
 	{
 		RAY_PROFILE_FUNCTION();
-		for (auto& child : m_Children)
+		for (Scope<Widget>& child : m_Children)
 		{
 			if (child->GetName() == name)
-				return *child.get();
+				return *child;
 		}
 		RAY_THROW_RUNTIME("[Widget::FindChild] Was unable to find the child with name '{0}'", name);
 	}
@@ -51,7 +51,7 @@ namespace At0::Ray
 	bool Widget::operator!=(const Widget& other) const
 	{
 		RAY_PROFILE_FUNCTION();
-		return GetName() == other.GetName();
+		return !(*this == other);
 	}
 
 	Widget::~Widget()

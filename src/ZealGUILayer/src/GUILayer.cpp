@@ -88,6 +88,7 @@ namespace At0::Layers
 		EventListener<Ray::MouseButtonReleasedEvent>(GetMainWindow()),
 
 		EventListener<Ray::HoverEnterEvent>(GetMainWindow()),
+		EventListener<Ray::HoverLeaveEvent>(GetMainWindow()),
 
 		EventListener<Ray::MouseWheelUpEvent>(GetMainWindow()),
 		EventListener<Ray::MouseWheelDownEvent>(GetMainWindow()),
