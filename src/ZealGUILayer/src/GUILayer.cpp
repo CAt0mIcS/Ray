@@ -338,6 +338,16 @@ namespace At0::Layers
 		}
 	}
 
+	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::HoverLeaveEvent& e)
+	{
+		RAY_PROFILE_FUNCTION();
+		if (receiver)
+		{
+			Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+			std::cout << "[" << receiver->GetName() << "]: " << e.ToString() << '\n';
+		}
+	}
+
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseWheelUpEvent& e)
 	{
 		RAY_PROFILE_FUNCTION();

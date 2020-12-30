@@ -22,14 +22,14 @@
 namespace At0::Ray
 {
 	WinAPIWindow::WinAPIWindow(std::string_view name, const Point2 pos, const Size2 size, Widget* parent)
-		: Window(name, parent), m_hWnd(0)
+		: Window{ name, parent }, m_hWnd{ 0 }, m_WindowStyles{ WS_OVERLAPPEDWINDOW }
 	{
 		RAY_PROFILE_FUNCTION();
 
 		auto rnd = Util::GenerateRandomToken<std::wstring>(5);
 		RAY_MEXPECTS(!rnd.empty(), "The random token generated for the window class name is empty");
 		Log::Info("[Window] Creating Window Class with Name '{0}'", rnd);
-		RAY_WND_THROW_LAST_FAILED(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW, 0, pos.x, pos.y, size.x, size.y));
+		RAY_WND_THROW_LAST_FAILED(CreateNativeWindow(L"", rnd.c_str(), m_WindowStyles, 0, pos.x, pos.y, size.x, size.y));
 		m_IsOpen = true;
 
 		if (s_KeycodeMap[0] == (Key)0)
@@ -528,26 +528,47 @@ namespace At0::Ray
 	void WinAPIWindow::Move(const Point2& pos)
 	{
 		Size2 size = GetSize();
-		RAY_WND_THROW_LAST_FAILED(SetWindowPos(m_hWnd, 0, pos.x, pos.y, size.x, size.y, 0));
+
+		RECT wr;
+		wr.left = pos.x;
+		wr.top = pos.y;
+		wr.right = wr.left + size.x;
+		wr.bottom = wr.top + size.y;
+		AdjustWindowRect(&wr, m_WindowStyles, FALSE);
+
+		RAY_WND_THROW_LAST_FAILED(SetWindowPos(m_hWnd, NULL, wr.left, wr.top, 0, 0,
+			SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOSIZE)
+		);
 	}
 
 	void WinAPIWindow::Resize(const Size2& size)
 	{
 		Point2 pos = GetPos();
-		RAY_WND_THROW_LAST_FAILED(SetWindowPos(m_hWnd, 0, pos.x, pos.y, size.x, size.y, 0));
+
+		RECT wr;
+		wr.left = pos.x;
+		wr.top = pos.y;
+		wr.right = wr.left + size.x;
+		wr.bottom = wr.top + size.y;
+		AdjustWindowRect(&wr, m_WindowStyles, FALSE);
+
+		RAY_WND_THROW_LAST_FAILED(SetWindowPos(m_hWnd, HWND_TOP,
+			0, 0, wr.right - wr.left, wr.bottom - wr.top,
+			SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOZORDER)
+		);
 	}
 
 	Point2 WinAPIWindow::GetPos() const
 	{
-		RECT rc;
-		RAY_WND_THROW_LAST_FAILED(GetWindowRect(m_hWnd, &rc));
-		return Point2{ (float)rc.left, (float)rc.top };
+		POINT pt{ 0, 0 };
+		RAY_WND_THROW_LAST_FAILED(ClientToScreen(m_hWnd, &pt));
+		return Point2{ (float)pt.x, (float)pt.y };
 	}
 
 	Size2 WinAPIWindow::GetSize() const
 	{
 		RECT rc;
-		RAY_WND_THROW_LAST_FAILED(GetWindowRect(m_hWnd, &rc));
+		RAY_WND_THROW_LAST_FAILED(GetClientRect(m_hWnd, &rc));
 		return Size2{ (float)(rc.right - rc.left), (float)(rc.bottom - rc.top) };
 	}
 

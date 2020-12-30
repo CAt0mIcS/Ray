@@ -117,6 +117,9 @@ namespace At0::Ray
 		{
 			HICON hCurrIcon;
 		} m_DestroyOnWindowCloseData{};
+
+		// Styles set for the window (required when getting setting window pos and size)
+		DWORD m_WindowStyles;
 	};
 }
 
