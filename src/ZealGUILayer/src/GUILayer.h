@@ -17,6 +17,8 @@ namespace At0::Layers
 		Ray::EventListener<Ray::MouseButtonPressedEvent>,
 		Ray::EventListener<Ray::MouseButtonReleasedEvent>,
 
+		Ray::EventListener<Ray::HoverEnterEvent>,
+
 		Ray::EventListener<Ray::MouseWheelUpEvent>,
 		Ray::EventListener<Ray::MouseWheelDownEvent>,
 		Ray::EventListener<Ray::MouseWheelLeftEvent>,
@@ -34,6 +36,8 @@ namespace At0::Layers
 
 		virtual void OnEvent(Ray::Widget* receiver, Ray::MouseButtonPressedEvent& e) override;
 		virtual void OnEvent(Ray::Widget* receiver, Ray::MouseButtonReleasedEvent& e) override;
+
+		virtual void OnEvent(Ray::Widget* receiver, Ray::HoverEnterEvent& e) override;
 
 		virtual void OnEvent(Ray::Widget* receiver, Ray::MouseWheelUpEvent& e) override;
 		virtual void OnEvent(Ray::Widget* receiver, Ray::MouseWheelDownEvent& e) override;

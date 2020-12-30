@@ -24,6 +24,14 @@ namespace At0::Ray
 		void SetRotation(float pitch, float yaw, float roll) { m_Pitch = pitch; m_Yaw = yaw; m_Roll = roll; }
 		void SetTranslation(float x, float y, float z) { m_Translation = { x, y, z }; }
 		void SetScale(float x, float y, float z) { m_Scale = { x, y, z }; }
+
+		float GetTranslationX() const { return m_Translation.x; }
+		float GetTranslationY() const { return m_Translation.y; }
+		float GetTranslationZ() const { return m_Translation.z; }
+		float GetScaleX() const { return m_Scale.x; }
+		float GetScaleY() const { return m_Scale.y; }
+		float GetScaleZ() const { return m_Scale.z; }
+
 		virtual void Draw(Renderer3D* renderer);
 		void Bind();
 
@@ -36,7 +44,7 @@ namespace At0::Ray
 	protected:
 		DirectX::XMFLOAT3 m_Translation{};
 		DirectX::XMFLOAT3 m_Scale{};
-		
+
 		float m_Pitch = 0.0f;
 		float m_Yaw = 0.0f;
 		float m_Roll = 0.0f;

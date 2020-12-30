@@ -69,7 +69,7 @@ namespace At0::Ray
 		virtual void SetIcon(std::string_view path);
 
 	protected:
-		virtual void* GetNativeWindow() override { return (void*)m_hWnd; }
+		virtual void* GetNativeWindow() const override { return (void*)m_hWnd; }
 
 	private:
 		/// <summary>

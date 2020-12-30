@@ -75,23 +75,28 @@ namespace At0::Ray
 
 		for (Scope<Widget>& child : m_Children)
 		{
-			if (Mouse.IsOnWidget(child) && *m_CurrentlyHovering != *child)
+			if (Mouse.IsOnWidget(*child) && m_CurrentlyHovering != child.get())
 			{
 				generateEvents(child.get());
 				setNew = true;
 			}
 		}
 
-		if (!setNew && !Mouse.IsOnWidget(m_CurrentlyHovering) && Mouse.IsOnWidget(this))
+		if (m_CurrentlyHovering && !setNew)
 		{
-			generateEvents(this);
+			if (!Mouse.IsOnWidget(*m_CurrentlyHovering) && Mouse.IsOnWindow(*this))
+			{
+				generateEvents(this);
+			}
 		}
+		else
+			generateEvents(this);
+
 		//// We can assume that no widget is in focus if the mouse is outside the window rect
-		//// RAY_TODO: Implement IsOnWidget function
-		// else if (!setNew && !Mouse.IsOnWidget(this))
-		// {
-		// 	generateEvents(nullptr);
-		// }
+		//if (!setNew && !Mouse.IsOnWidget(this))
+		//{
+		//	generateEvents(nullptr);
+		//}
 	}
 
 	Window::~Window()

@@ -2,8 +2,11 @@
 #include "Ray/Input/RMouse.h"
 
 #include "Ray/Widgets/RWidget.h"
+#include "Ray/Window/RWindow.h"
 
 #include <RayDebug/RLogger.h>
+#include <RayDebug/RAssert.h>
+
 
 namespace At0::Ray
 {
@@ -21,25 +24,38 @@ namespace At0::Ray
 	{
 		return m_IsLeftPressed;
 	}
-	
+
 	bool MouseInput::IsMiddlePressed() const
 	{
 		return m_IsMiddlePressed;
 	}
-	
+
 	bool MouseInput::IsRightPressed() const
 	{
 		return m_IsRightPressed;
 	}
 
-	bool MouseInput::IsOnWidget(const Widget* widget) const
+	bool MouseInput::IsOnWindow(const Window& window) const
 	{
-		return false;
+		Point2 widgetPos = window.GetPos();
+		Size2 widgetSize = window.GetSize();
+
+		// Mouse position is stored in window pixel coordinates.
+		// We need to transform the window pos/size to match
+		widgetSize -= widgetPos;
+		widgetPos = { 0.0f, 0.0f };
+
+		return (m_MousePos.x > widgetPos.x) && (m_MousePos.x < widgetPos.x + widgetSize.x) &&
+			(m_MousePos.y > widgetPos.y) && (m_MousePos.y < widgetPos.y + widgetSize.y);
 	}
 
-	bool MouseInput::IsOnWidget(const Scope<Widget>& widget) const
+	bool MouseInput::IsOnWidget(const Widget& widget) const
 	{
-		return IsOnWidget(widget.get());
+		Point2 widgetPos = widget.GetPos();
+		Size2 widgetSize = widget.GetSize();
+
+		return (m_MousePos.x > widgetPos.x) && (m_MousePos.x < widgetPos.x + widgetSize.x) &&
+			(m_MousePos.y > widgetPos.y) && (m_MousePos.y < widgetPos.y + widgetSize.y);
 	}
 
 	const Point2& MouseInput::GetPos() const

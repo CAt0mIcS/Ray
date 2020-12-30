@@ -15,7 +15,7 @@ namespace At0::Ray
 	// -------------------------------------------------------------------------
 	// Button
 	Button::Button(const std::string_view name, Widget& parent)
-		: Widget(name, &parent), m_Pos{}, m_Size{ 1.0f, 1.0f }
+		: Widget(name, &parent)
 	{
 
 	}
@@ -61,7 +61,6 @@ namespace At0::Ray
 		newPos.y += size.y / 2.0f;
 		newPos = transformer.ToNormalizedDeviceCoordinate(newPos);
 
-		Button::Move(pos);
 		m_DrawObject->SetTranslation(newPos.x, newPos.y, 0.0f);
 	}
 
@@ -75,7 +74,32 @@ namespace At0::Ray
 		newSize.x /= (rc.right - rc.left);
 		newSize.y /= (rc.bottom - rc.top);
 
-		Button::Resize(size);
 		m_DrawObject->SetScale(newSize.x, newSize.y, 0.0f);
+	}
+
+	Point2 PushButton::GetPos() const
+	{
+		RECT rc;
+		GetClientRect((HWND)GetNativeWindow(), &rc);
+		Util::CoordinateTransformer<Point2> transformer({ rc.right - rc.left, rc.bottom - rc.top });
+
+		Point2 pos = transformer.ToPixelCoordinate({ m_DrawObject->GetTranslationX(), m_DrawObject->GetTranslationY() });
+		Size2 size = GetSize();
+		pos.x -= size.x / 2.0f;
+		pos.y -= size.y / 2.0f;
+
+		return pos;
+	}
+
+	Size2 PushButton::GetSize() const
+	{
+		RECT rc;
+		GetClientRect((HWND)GetNativeWindow(), &rc);
+
+		Size2 size{ m_DrawObject->GetScaleX(), m_DrawObject->GetScaleY() };
+		size.x *= (rc.right - rc.left);
+		size.y *= (rc.bottom - rc.top);
+
+		return size;
 	}
 }

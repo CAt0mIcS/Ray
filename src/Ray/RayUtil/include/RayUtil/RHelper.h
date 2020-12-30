@@ -52,8 +52,8 @@ namespace At0::Ray::Util
 		Vertex ToNormalizedDeviceCoordinate(const Vertex& pixelCoord)
 		{
 			Vertex v{};
-			v.x = ((2.0f * pixelCoord.x) / m_WindowSize.x) - 1.0f;
-			v.y = -(((2.0f * pixelCoord.y) / m_WindowSize.y) - 1.0f);
+			v.x = (pixelCoord.x / m_WindowSize.x) * 2.0f - 1.0f;
+			v.y = -((pixelCoord.y / m_WindowSize.y) * 2.0f - 1.0f);
 
 			return v;
 		}
@@ -61,8 +61,8 @@ namespace At0::Ray::Util
 		Vertex ToPixelCoordinate(const Vertex& ndcCoord)
 		{
 			Vertex v{};
-			v.x = (ndcCoord.x + 1) * m_WindowSize.x * 0.5f;
-			v.y = (1 - ndcCoord.y) * m_WindowSize.y * 0.5f;
+			v.x = (ndcCoord.x + 1) * (m_WindowSize.x / 2.0f);
+			v.y = -((ndcCoord.y - 1) * (m_WindowSize.y / 2.0f));
 
 			return v;
 		}

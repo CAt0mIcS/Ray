@@ -82,7 +82,7 @@ namespace At0::Ray
 		/// <summary>
 		/// Goes up the parent chain until the window which has the window handle
 		/// </summary>
-		virtual void* GetNativeWindow();
+		virtual void* GetNativeWindow() const;
 
 	protected:
 		Widget* m_Parent;
@@ -94,7 +94,7 @@ namespace At0::Ray
 	template<typename T, typename... Args, typename>
 	inline T* Widget::AddChild(std::string_view name, Args&&... args)
 	{
-		return (T*)m_Children.emplace_back(MakeScope(name, std::forward<Args>(args)...));
+		return (T*)m_Children.emplace_back(MakeScope<T>(name, std::forward<Args>(args)...)).get();
 	}
 }
 

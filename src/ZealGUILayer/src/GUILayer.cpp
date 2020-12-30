@@ -74,7 +74,7 @@ namespace At0::Layers
 	Ray::Model model;
 	std::mt19937 mtEngine;
 	Ray::Camera cam;
-	Ray::Scope<Ray::PushButton> button;
+	Ray::PushButton* button;
 	Ray::Scope<Ray::PointLight> ptLight;
 
 	GUILayer::GUILayer(std::string_view name)
@@ -87,6 +87,8 @@ namespace At0::Layers
 		EventListener<Ray::MouseButtonPressedEvent>(GetMainWindow()),
 		EventListener<Ray::MouseButtonReleasedEvent>(GetMainWindow()),
 
+		EventListener<Ray::HoverEnterEvent>(GetMainWindow()),
+
 		EventListener<Ray::MouseWheelUpEvent>(GetMainWindow()),
 		EventListener<Ray::MouseWheelDownEvent>(GetMainWindow()),
 		EventListener<Ray::MouseWheelLeftEvent>(GetMainWindow()),
@@ -95,9 +97,13 @@ namespace At0::Layers
 		EventListener<Ray::MouseMoveEvent>::Subscribe(GetMainWindow());
 
 #if RENDER
-		button = Ray::MakeScope<Ray::PushButton>("PushButtonName", GetMainWindow());
+		button = GetMainWindow().AddChild<Ray::PushButton>("Button", GetMainWindow());
+
 		button->Resize({ 100, 100 });
 		button->Move({ 0, 0 });
+
+		Ray::Size2 s = button->GetSize();
+		Ray::Point2 p = button->GetPos();
 
 		ptLight = Ray::MakeScope<Ray::PointLight>(GetMainWindow().GetRenderer3D());
 
@@ -236,6 +242,8 @@ namespace At0::Layers
 		//model.Draw(&renderer);
 		ptLight->SetPos({ xDir, yDir, zDir });
 		ptLight->Draw();
+
+		// RAY_TODO
 		button->Draw();
 
 		renderer.EndDraw();
@@ -272,7 +280,11 @@ namespace At0::Layers
 			cam.pitch -= mouseDiff.y * 0.003f;
 		}
 
-		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+		if (receiver)
+		{
+			Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+			std::cout << "[" << receiver->GetName() << "]: " << e.ToString() << '\n';
+		}
 	}
 
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::WindowCloseEvent& e)
@@ -314,6 +326,16 @@ namespace At0::Layers
 		RAY_PROFILE_FUNCTION();
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
 		std::cout << e.ToString() << '\n';
+	}
+
+	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::HoverEnterEvent& e)
+	{
+		RAY_PROFILE_FUNCTION();
+		if (receiver)
+		{
+			Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver->GetName(), e.ToString());
+			std::cout << "[" << receiver->GetName() << "]: " << e.ToString() << '\n';
+		}
 	}
 
 	void GUILayer::OnEvent(Ray::Widget* receiver, Ray::MouseWheelUpEvent& e)

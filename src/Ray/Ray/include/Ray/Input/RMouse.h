@@ -6,6 +6,7 @@
 namespace At0::Ray
 {
 	class Widget;
+	class Window;
 
 	class RAY_API MouseInput
 	{
@@ -21,8 +22,8 @@ namespace At0::Ray
 		bool IsMiddlePressed() const;
 		bool IsRightPressed() const;
 
-		bool IsOnWidget(const Widget* widget) const;
-		bool IsOnWidget(const Scope<Widget>& widget) const;
+		bool IsOnWidget(const Widget& widget) const;
+		bool IsOnWindow(const Window& window) const;
 
 	private:
 		void SetPos(const Point2& mousePos);

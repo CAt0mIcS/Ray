@@ -90,7 +90,7 @@ namespace At0::Ray
 
 	protected:
 		/// <summary>
-		/// Specifies the control where the mouse is currently on
+		/// Specifies the widget where the mouse is currently on
 		/// </summary>
 		Widget* m_CurrentlyHovering;
 

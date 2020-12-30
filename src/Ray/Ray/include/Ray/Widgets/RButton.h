@@ -21,29 +21,12 @@ namespace At0::Ray
 		void SetText(const std::string_view text) { m_Text = text; }
 		std::string_view GetText() const { return m_Text; }
 
-		/// <param name="pos">
-		/// Screen coordinates of the top left corner of the widget. 
-		/// Screen coordinates start at the top left (0, 0) to the bottom right (window.width, window.height)
-		/// </param>
-		virtual void Move(const Point2& pos) override { m_Pos = pos; }
-
-		/// <param name="size">New width and height of the widget in pixels.</param>
-		virtual void Resize(const Size2& size) override { m_Size = size; }
-
-		/// <returns>The screen coordinates of the top left corner of the widget</returns>
-		virtual Point2 GetPos() const override { return m_Pos; }
-
-		/// <returns>Width and height of the widget</returns>
-		virtual Size2 GetSize() const override { return m_Size; }
-
 		/// <returns>The renderer of the parent. This function will recursively go up until the Window which has the renderer</returns>
 		virtual Renderer3D& GetRenderer3D() const override;
 
 		virtual ~Button();
 
 	private:
-		Point2 m_Pos;
-		Size2 m_Size;
 		std::string m_Text;
 	};
 
@@ -70,6 +53,12 @@ namespace At0::Ray
 
 		/// <param name="size">New width and height of the widget in pixels.</param>
 		virtual void Resize(const Size2& size) override;
+
+		/// <returns>The screen coordinates of the top left corner of the widget</returns>
+		virtual Point2 GetPos() const override;
+
+		/// <returns>Width and height of the widget</returns>
+		virtual Size2 GetSize() const override;
 
 	private:
 		Rectangle* m_DrawObject;

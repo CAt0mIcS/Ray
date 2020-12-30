@@ -76,7 +76,7 @@ namespace At0::Ray
 		if (!GetParent())
 			receiver = this;
 
-		if (mouse.IsOnWidget(this))
+		if (mouse.IsOnWidget(*this))
 		{
 			for (auto& child : m_Children)
 			{
@@ -95,7 +95,7 @@ namespace At0::Ray
 		return receiver;
 	}
 
-	void* Widget::GetNativeWindow()
+	void* Widget::GetNativeWindow() const
 	{
 		RAY_MEXPECTS(m_Parent != nullptr, "[Widget::GetNativeWindow] Parent is nullptr.");
 		return m_Parent->GetNativeWindow();

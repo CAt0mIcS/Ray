@@ -129,14 +129,14 @@ namespace At0::Ray
 			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.SetPos({ (float)pt.x, (float)pt.y });
 
+			// Loop over the widgets and determine the widget which should receive the mouse move event
+			SetHoveringWidget();
+
 			MouseMoveEvent e(Mouse.GetPos());
 			for (auto* pListener : EventDispatcher<MouseMoveEvent>::Get())
 			{
-				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
+				pListener->OnEvent(m_CurrentlyHovering, e);
 			}
-
-			// Loop over the widgets and check if the mouse left any
-			SetHoveringWidget();
 
 			return 0;
 		}
@@ -527,13 +527,13 @@ namespace At0::Ray
 
 	void WinAPIWindow::Move(const Point2& pos)
 	{
-		auto size = GetSize();
+		Size2 size = GetSize();
 		RAY_WND_THROW_LAST_FAILED(SetWindowPos(m_hWnd, 0, pos.x, pos.y, size.x, size.y, 0));
 	}
 
 	void WinAPIWindow::Resize(const Size2& size)
 	{
-		auto pos = GetPos();
+		Point2 pos = GetPos();
 		RAY_WND_THROW_LAST_FAILED(SetWindowPos(m_hWnd, 0, pos.x, pos.y, size.x, size.y, 0));
 	}
 
@@ -548,7 +548,7 @@ namespace At0::Ray
 	{
 		RECT rc;
 		RAY_WND_THROW_LAST_FAILED(GetWindowRect(m_hWnd, &rc));
-		return Size2{ (float)rc.right - rc.left, (float)rc.bottom - rc.top };
+		return Size2{ (float)(rc.right - rc.left), (float)(rc.bottom - rc.top) };
 	}
 
 	void WinAPIWindow::Close()
