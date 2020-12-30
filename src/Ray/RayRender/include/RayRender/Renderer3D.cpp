@@ -154,7 +154,7 @@ namespace At0::Ray
 	Renderer3D::~Renderer3D()
 	{
 		RAY_PROFILE_FUNCTION();
-		RAY_LOG_DEBUG("[Renderer3D] Destroyed");
+		Log::Debug("[Renderer3D] Destroyed");
 	}
 
 	void Renderer3D::OnEvent(Widget* receiver, WindowResizeEvent& e)

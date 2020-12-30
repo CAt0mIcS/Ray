@@ -181,7 +181,7 @@ namespace At0::Ray
 	Application::~Application()
 	{
 		RAY_PROFILE_FUNCTION();
-		RAY_LOG_DEBUG("[Application] Destroyed");
+		Log::Debug("[Application] Destroyed");
 	}
 
 	void Application::Cleanup()
@@ -204,9 +204,9 @@ namespace At0::Ray
 		/// <param name="signum">Is the received signal</param>
 		Util::SetSignals([](int signum)
 			{
-				RAY_LOG_CRITICAL("Signal '{0}' received, terminating program", signum);
-				RAY_LOG_END();
-				RAY_PROFILE_END_SESSION();
+				Log::Critical("Signal '{0}' received, terminating program", signum);
+				Log::End();
+				Profile::EndSession();
 
 				exit(signum);
 			}

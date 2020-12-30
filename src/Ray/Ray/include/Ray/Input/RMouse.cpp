@@ -14,7 +14,7 @@ namespace At0::Ray
 
 	MouseInput::~MouseInput()
 	{
-		RAY_LOG_DEBUG("[MouseInput] Destroyed");
+		Log::Debug("[MouseInput] Destroyed");
 	}
 
 	bool MouseInput::IsLeftPressed() const

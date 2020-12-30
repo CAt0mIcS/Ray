@@ -30,7 +30,7 @@ namespace At0::Ray
 
 		auto rnd = Util::GenerateRandomToken<std::wstring>(5);
 		RAY_MEXPECTS(!rnd.empty(), "The random token generated for the window class name is empty");
-		RAY_LOG_INFO("[Window] Creating Window Class with Name '{0}'", rnd);
+		Log::Info("[Window] Creating Window Class with Name '{0}'", rnd);
 		RAY_WND_THROW_LAST_FAILED(CreateNativeWindow(L"", rnd.c_str(), WS_OVERLAPPEDWINDOW, 0, pos.x, pos.y, size.x, size.y));
 		m_IsOpen = true;
 
@@ -44,7 +44,7 @@ namespace At0::Ray
 	WinAPIWindow::~WinAPIWindow()
 	{
 		RAY_PROFILE_FUNCTION();
-		RAY_LOG_DEBUG("[WinAPIWindow] '{0}' destroyed", this->GetName());
+		Log::Debug("[WinAPIWindow] '{0}' destroyed", this->GetName());
 		DestroyWindow(m_hWnd);
 	}
 
@@ -116,7 +116,7 @@ namespace At0::Ray
 		case WM_DESTROY:
 		{
 			// RAY_TODO: Check if resources of the closed window are destroyed correctly
-			RAY_LOG_DEBUG("[MessageLoop] WM_DESTROY message received");
+			Log::Debug("[MessageLoop] WM_DESTROY message received");
 
 			if (m_DestroyOnWindowCloseData.hCurrIcon)
 				DestroyIcon(m_DestroyOnWindowCloseData.hCurrIcon);
@@ -136,7 +136,6 @@ namespace At0::Ray
 			{
 				pListener->OnEvent(GetEventReceiver(e, Mouse), e);
 			}
-
 
 			// Loop over the widgets and check if the mouse left any
 			SetHoveringWidget();
@@ -187,7 +186,6 @@ namespace At0::Ray
 			}
 			return 0;
 		}
-		// RAY_TODO: Test, add more mouse buttons and add xbuttons in MouseInput
 		case WM_XBUTTONDOWN:
 		{
 			if (GET_XBUTTON_WPARAM(wParam) == XBUTTON1)
@@ -207,7 +205,7 @@ namespace At0::Ray
 				}
 			}
 
-			return 0;
+			return TRUE;
 		}
 		case WM_XBUTTONUP:
 		{
@@ -228,7 +226,7 @@ namespace At0::Ray
 				}
 			}
 
-			return 0;
+			return TRUE;
 		}
 		case WM_RBUTTONDOWN:
 		{
@@ -467,7 +465,7 @@ namespace At0::Ray
 		}
 		case WM_CLOSE:
 		{
-			RAY_LOG_DEBUG("[MessageLoop] WM_CLOSE message received");
+			Log::Debug("[MessageLoop] WM_CLOSE message received");
 			m_IsOpen = false;
 
 			WindowCloseEvent e;
@@ -483,7 +481,7 @@ namespace At0::Ray
 		}
 		case WM_QUIT:
 		{
-			RAY_LOG_DEBUG("[MessageLoop] WM_QUIT message received");
+			Log::Debug("[MessageLoop] WM_QUIT message received");
 			break;
 		}
 		}

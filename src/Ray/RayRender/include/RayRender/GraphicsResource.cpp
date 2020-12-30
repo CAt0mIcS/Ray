@@ -53,7 +53,7 @@ namespace At0::Ray
 			{
 				DXGI_ADAPTER_DESC adapterDesc;
 				RAY_GFX_THROW_FAILED(pAdapter->GetDesc(&adapterDesc));
-				RAY_LOG_INFO("[Renderer3D] Found DXGIAdapter: "
+				Log::Info("[Renderer3D] Found DXGIAdapter: "
 					"\n\tDescription: {0}\n\tVendorID: {1}\n\tDeviceID: {2}\n\tSubSysID: {3}"
 					"\n\tRevision: {4}\n\tDedicated Video Memory: {5}\n\tDedicated System Memory: {6}"
 					"\n\tShared System Memory: {7}\n\tAdapterLuid::LowPart: {8}\n\tAdapterLuid::HighPart: {9}\n",

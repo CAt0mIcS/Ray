@@ -29,7 +29,7 @@ namespace At0::Ray
 
     Layer::~Layer()
     {
-        RAY_LOG_DEBUG("[Layer] '{0}' destroyed", m_Name);
+        Log::Debug("[Layer] '{0}' destroyed", m_Name);
     }
 }
 

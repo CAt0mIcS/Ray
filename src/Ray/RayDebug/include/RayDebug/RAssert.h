@@ -19,7 +19,7 @@ namespace At0::Ray::Debug
 		static std::wstring AssertW(const std::string& str, Args&&... args)
 		{
 			std::wstring assertStr = Util::MultiByteToWideChar(Util::SerializeString(str, std::forward<Args>(args)...));
-			RAY_LOG_CRITICAL("Assertion Failed with Message: {0}", assertStr);
+			Log::Critical("Assertion Failed with Message: {0}", assertStr);
 			return assertStr;
 		}
 
@@ -27,7 +27,7 @@ namespace At0::Ray::Debug
 		static std::string AssertA(const std::string& str, Args&&... args)
 		{
 			std::string assertStr = Util::SerializeString(str, std::forward<Args>(args)...);
-			RAY_LOG_CRITICAL("Assertion Failed with Message: {0}", assertStr);
+			Log::Critical("Assertion Failed with Message: {0}", assertStr);
 			return assertStr;
 		}
 	};

@@ -4,10 +4,10 @@
 #include <../../RayUtil/include/RayUtil/RCoreConfig.h>
 #include <../../RayUtil/include/RayUtil/RException.h>
 
-#if RAY_ENABLE_LOGGING
+#include <../../RayLogger/include/RayLogger/RLog.h>
+
 #include "RDBase.h"
 
-#include <../../RayLogger/include/RayLogger/RLog.h>
 #include <string>
 
 #pragma warning(disable : 4251)
@@ -49,47 +49,136 @@ namespace At0::Ray::Debug
 
 }
 
-#endif
 
-/// <summary>
-/// Define logging macros here
-/// </summary>
+
 #if RAY_ENABLE_LOGGING
 
-#define RAY_LOG_BEGIN(path, loglvl)		if(!::At0::Ray::Debug::Logger::Init(path, loglvl)) RAY_THROW_RUNTIME("[Logger::Init] Failed")
-#define RAY_LOG_IS_OPEN()				::At0::Ray::Debug::Logger::GetFileLogger().IsOpen()
-#define RAY_LOG_END()					::At0::Ray::Debug::Logger::End();
-#define RAY_LOG_FLUSH()					::At0::Ray::Debug::Logger::GetFileLogger().Flush();
+namespace At0::Ray::Log
+{
+	inline void Begin(std::string_view path, Log::LogLevel loglvl)
+	{
+		if (!::At0::Ray::Debug::Logger::Init(path, loglvl))
+			RAY_THROW_RUNTIME("[Logger::Init] Failed");
+	}
 
-#ifdef _MSC_VER
-	#define RAY_LOG_TRACE(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, __VA_ARGS__)
-	#define RAY_LOG_DEBUG(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Debug(msg, __VA_ARGS__)
-	#define RAY_LOG_INFO(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Info(msg, __VA_ARGS__)
-	#define RAY_LOG_WARN(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Warn(msg, __VA_ARGS__)
-	#define RAY_LOG_ERROR(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Error(msg, __VA_ARGS__)
-	#define RAY_LOG_CRITICAL(msg, ...)	::At0::Ray::Debug::Logger::GetFileLogger().Critical(msg, __VA_ARGS__)
-#elif defined(__GNUC__)
-	#define RAY_LOG_TRACE(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, ## __VA_ARGS__)
-	#define RAY_LOG_DEBUG(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Debug(msg, ## __VA_ARGS__)
-	#define RAY_LOG_INFO(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Info(msg, ## __VA_ARGS__)
-	#define RAY_LOG_WARN(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Warn(msg, ## __VA_ARGS__)
-	#define RAY_LOG_ERROR(msg, ...)		::At0::Ray::Debug::Logger::GetFileLogger().Error(msg, ## __VA_ARGS__)
-	#define RAY_LOG_CRITICAL(msg, ...)	::At0::Ray::Debug::Logger::GetFileLogger().Critical(msg, ## __VA_ARGS__)
-#endif
+	inline bool IsOpen()
+	{
+		return ::At0::Ray::Debug::Logger::GetFileLogger().IsOpen();
+	}
+
+	inline void End()
+	{
+		::At0::Ray::Debug::Logger::End();
+	}
+
+	inline void Flush()
+	{
+		::At0::Ray::Debug::Logger::GetFileLogger().Flush();
+	}
+
+	template<typename... Args>
+	inline void Trace(std::string_view msg, Args&&... args)
+	{
+		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, std::forward<Args>(args)...);
+	}
+	template<typename... Args>
+	inline void Debug(std::string_view msg, Args&&... args)
+	{
+		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, std::forward<Args>(args)...);
+	}
+	template<typename... Args>
+	inline void Info(std::string_view msg, Args&&... args)
+	{
+		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, std::forward<Args>(args)...);
+	}
+	template<typename... Args>
+	inline void Warn(std::string_view msg, Args&&... args)
+	{
+		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, std::forward<Args>(args)...);
+	}
+	template<typename... Args>
+	inline void Error(std::string_view msg, Args&&... args)
+	{
+		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, std::forward<Args>(args)...);
+	}
+	template<typename... Args>
+	inline void Critical(std::string_view msg, Args&&... args)
+	{
+		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, std::forward<Args>(args)...);
+	}
+
+	template<typename... Args>
+	inline void LogTrace(std::wstring_view msg, Args&&... args)
+	{
+		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, std::forward<Args>(args)...);
+	}
+	template<typename... Args>
+	inline void LogDebug(std::wstring_view msg, Args&&... args)
+	{
+		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, std::forward<Args>(args)...);
+	}
+	template<typename... Args>
+	inline void LogInfo(std::wstring_view msg, Args&&... args)
+	{
+		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, std::forward<Args>(args)...);
+	}
+	template<typename... Args>
+	inline void LogWarning(std::wstring_view msg, Args&&... args)
+	{
+		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, std::forward<Args>(args)...);
+	}
+	template<typename... Args>
+	inline void LogError(std::wstring_view msg, Args&&... args)
+	{
+		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, std::forward<Args>(args)...);
+	}
+	template<typename... Args>
+	inline void LogCritical(std::wstring_view msg, Args&&... args)
+	{
+		::At0::Ray::Debug::Logger::GetFileLogger().Trace(msg, std::forward<Args>(args)...);
+	}
+}
+
+
+
+
 
 #else
-	#define RAY_LOG_BEGIN(path, loglvl)
-	
-	#define RAY_LOG_TRACE(msg, ...)	
-	#define RAY_LOG_DEBUG(msg, ...)	
-	#define RAY_LOG_INFO(msg, ...)		
-	#define RAY_LOG_WARN(msg, ...)		
-	#define RAY_LOG_ERROR(msg, ...)	
-	#define RAY_LOG_CRITICAL(msg, ...)
+namespace At0::Ray::Log
+{
+	inline void Begin(std::string_view path, Log::LogLevel loglvl) {}
 
-	#define RAY_LOG_IS_OPEN()
+	inline bool IsOpen() { return false; }
 
-	#define RAY_LOG_END()
-	#define RAY_LOG_FLUSH()
+	inline void End() {}
+
+	inline void Flush() {}
+
+	template<typename... Args>
+	inline void Trace(std::string_view msg, Args&&... args) {}
+	template<typename... Args>
+	inline void Debug(std::string_view msg, Args&&... args) {}
+	template<typename... Args>
+	inline void Info(std::string_view msg, Args&&... args) {}
+	template<typename... Args>
+	inline void Warn(std::string_view msg, Args&&... args) {}
+	template<typename... Args>
+	inline void Error(std::string_view msg, Args&&... args) {}
+	template<typename... Args>
+	inline void Critical(std::string_view msg, Args&&... args) {}
+
+	template<typename... Args>
+	inline void LogTrace(std::wstring_view msg, Args&&... args) {}
+	template<typename... Args>
+	inline void LogDebug(std::wstring_view msg, Args&&... args) {}
+	template<typename... Args>
+	inline void LogInfo(std::wstring_view msg, Args&&... args) {}
+	template<typename... Args>
+	inline void LogWarning(std::wstring_view msg, Args&&... args) {}
+	template<typename... Args>
+	inline void LogError(std::wstring_view msg, Args&&... args) {}
+	template<typename... Args>
+	inline void LogCritical(std::wstring_view msg, Args&&... args) {}
+}
 #endif
 

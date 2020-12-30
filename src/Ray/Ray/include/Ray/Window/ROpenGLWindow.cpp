@@ -38,8 +38,8 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		RAY_LOG_CRITICAL("[OpenGLWindow] GLFW Error ({0}): {1}", error, description);
-		RAY_LOG_FLUSH();
+		Log::Critical("[OpenGLWindow] GLFW Error ({0}): {1}", error, description);
+		Log::Flush();
 	}
 
 
@@ -52,7 +52,7 @@ namespace At0::Ray
 		{
 			int success = glfwInit();
 			RAY_ASSERT(success, "Failed to initialize GLFW");
-			RAY_LOG_INFO("[OpenGLWindow] Successfully initialized GLFW");
+			Log::Info("[OpenGLWindow] Successfully initialized GLFW");
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}
 
@@ -76,8 +76,8 @@ namespace At0::Ray
 			int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 			RAY_ASSERT(status, "Failed to initialize Glad!");
 
-			RAY_LOG_INFO("[OpenGLWindow] Successfully initialized Glad");
-			RAY_LOG_INFO("[OpenGLWindow] OpenGL Info:"
+			Log::Info("[OpenGLWindow] Successfully initialized Glad");
+			Log::Info("[OpenGLWindow] OpenGL Info:"
 				"\n\tVendor:\t{0}\n\tRenderer: {1}\n\tVersion:{2}", glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION));
 		}
 
@@ -92,7 +92,7 @@ namespace At0::Ray
 			Close();
 		}
 		glfwTerminate();
-		RAY_LOG_DEBUG("[OpenGLWindow] '{0}' destroyed", this->GetName());
+		Log::Debug("[OpenGLWindow] '{0}' destroyed", this->GetName());
 	}
 
 	std::string OpenGLWindow::GetTitle() const
@@ -113,7 +113,7 @@ namespace At0::Ray
 		else
 		{
 			//error
-			RAY_LOG_WARN("[OpenGLWindow] Failed to retrieve the Window Title");
+			Log::Warn("[OpenGLWindow] Failed to retrieve the Window Title");
 		}
 
 		return buff;
@@ -125,7 +125,7 @@ namespace At0::Ray
 		if (XGetWMName(glfwGetX11Display(), hWnd, &prop) == 0)
 		{
 			// error
-			RAY_LOG_WARN("[OpenGLWindow] Failed to retrieve the Window Title");
+			Log::Warn("[OpenGLWindow] Failed to retrieve the Window Title");
 		}
 		return (char*)prop.value;
 #endif

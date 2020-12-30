@@ -77,40 +77,40 @@ int At0::Ray::Awake(std::string commandLineArguments)
 
 	try
 	{
-		RAY_LOG_BEGIN("../../Zeal.log", Log::LogLevel::Trace);
+		Ray::Log::Begin("../../Zeal.log", Log::LogLevel::Trace);
 
-		RAY_PROFILE_BEGIN_SESSION("Startup", "../../Profiling/Profile-Startup.json");
+		Ray::Profile::BeginSession("Startup", "../../Profiling/Profile-Startup.json");
 		Ray::RendererAPI::SetAPI(Ray::RendererAPI::D3D11);
 		Zeal::Sandbox* app = new Zeal::Sandbox();
-		RAY_PROFILE_END_SESSION();
+		Ray::Profile::EndSession();
 
-		RAY_PROFILE_BEGIN_SESSION("Runtime", "../../Profiling/Profile-Runtime.json");
+		Ray::Profile::BeginSession("Runtime", "../../Profiling/Profile-Runtime.json");
 		int exitCode = app->Run();
-		RAY_PROFILE_END_SESSION();
+		Ray::Profile::EndSession();
 
-		RAY_PROFILE_BEGIN_SESSION("Shutdown", "../../Profiling/Profile-Shutdown.json");
+		Ray::Profile::BeginSession("Shutdown", "../../Profiling/Profile-Shutdown.json");
 		delete app;
-		RAY_PROFILE_END_SESSION();
+		Ray::Profile::EndSession();
 
-		RAY_LOG_END();
+		Ray::Log::End();
 		return exitCode;
 	}
 	catch (At0::Ray::Exception& e)
 	{
 		Ray::RMessageBox(e.GetType(), e.what(), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
-		RAY_LOG_CRITICAL("[Awake] Exception occured: {0}", e.what());
+		Ray::Log::Critical("[Awake] Exception occured: {0}", e.what());
 	}
 	catch (std::exception& e)
 	{
 		Ray::RMessageBox("Standard Exception", e.what(), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
-		RAY_LOG_CRITICAL("[Awake] Exception occured: {0}", e.what());
+		Ray::Log::Critical("[Awake] Exception occured: {0}", e.what());
 	}
 	catch (...)
 	{
 		Ray::RMessageBox("Unknown Exception", "An unknown exception occurred", Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
-		RAY_LOG_CRITICAL("[Awake] Unknown Exception occured");
+		Ray::Log::Critical("[Awake] Unknown Exception occured");
 	}
-	RAY_LOG_END();
+	Ray::Log::End();
 	return -1;
 }
 

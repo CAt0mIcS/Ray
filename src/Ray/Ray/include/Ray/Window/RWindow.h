@@ -40,7 +40,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="name">Is the unique Widget name</param>
 		/// <returns>The created Window</returns>
-		static Ref<Window> Create(std::string_view name, const Point2 pos, const Size2 size, Widget* parent = nullptr);
+		static Ref<Window> Create(std::string_view name, const Point2& pos, const Size2& size, Widget* parent = nullptr);
 
 		/// <summary>
 		/// Called every frame to read from the internal message queue

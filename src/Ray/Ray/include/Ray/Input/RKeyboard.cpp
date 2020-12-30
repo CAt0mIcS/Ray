@@ -9,7 +9,7 @@ namespace At0::Ray
 {
 	KeyboardInput::~KeyboardInput()
 	{
-		RAY_LOG_DEBUG("[KeyboardInput] Destroyed");
+		Log::Debug("[KeyboardInput] Destroyed");
 	}
 
 	bool KeyboardInput::IsKeyPressed(Key keycode) const

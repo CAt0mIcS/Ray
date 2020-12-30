@@ -16,7 +16,7 @@
 
 namespace At0::Ray
 {
-	Ref<Window> Window::Create(std::string_view name, const Point2 pos, const Size2 size, Widget* parent)
+	Ref<Window> Window::Create(std::string_view name, const Point2& pos, const Size2& size, Widget* parent)
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -42,7 +42,7 @@ namespace At0::Ray
 		{
 			return GetParent()->GetRenderer3D();
 		}
-		RAY_MEXPECTS(m_Renderer3D.get() != nullptr, "[Window::GetRenderer3D] Renderer was not initialized. Call Window::InitRenderer3D to initialize it.");
+		RAY_MEXPECTS(m_Renderer3D.get() != nullptr, "[Window::GetRenderer3D] Renderer was not initialized.");
 		return *m_Renderer3D.get();
 	}
 
@@ -93,10 +93,10 @@ namespace At0::Ray
 		// 	generateEvents(nullptr);
 		// }
 	}
-	
+
 	Window::~Window()
 	{
-		RAY_LOG_DEBUG("[Window] '{0}' destroyed.", GetName());
+		Log::Debug("[Window] '{0}' destroyed.", GetName());
 	}
 }
 

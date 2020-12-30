@@ -55,7 +55,7 @@ namespace At0::Ray
 	Widget::~Widget()
 	{
 		RAY_PROFILE_FUNCTION();
-		RAY_LOG_DEBUG("[Widget] '{0}' destroyed", this->GetName());
+		Log::Debug("[Widget] '{0}' destroyed", this->GetName());
 	}
 
 	Widget::Widget(std::string_view name, Widget* parent)
