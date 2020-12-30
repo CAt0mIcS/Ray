@@ -96,8 +96,8 @@ namespace At0::Layers
 
 #if RENDER
 		button = Ray::MakeScope<Ray::PushButton>("PushButtonName", GetMainWindow());
-		button->Move({ -1, 1 });
-		button->Resize({ 1, 1 });
+		button->Resize({ 100, 100 });
+		button->Move({ 0, 0 });
 
 		ptLight = Ray::MakeScope<Ray::PointLight>(GetMainWindow().GetRenderer3D());
 

@@ -15,4 +15,6 @@
 
 
 #include <../../RayUtil/include/RayUtil/RMessageBox.h>
+#include <../../RayUtil/include/RayUtil/RHelper.h>
+#include <../../RayUtil/include/RayUtil/RGlobalDefines.h>
 

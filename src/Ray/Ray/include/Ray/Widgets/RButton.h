@@ -54,12 +54,22 @@ namespace At0::Ray
 		/// <param name="name">Is a application-unique name for the button, doesn't represent the button text.</param>
 		/// <param name="parent">Is the button parent. Every button needs to have a valid parent (usually the Window).</param>
 		PushButton(const std::string_view name, Widget& parent);
+		~PushButton();
 
 		/// <summary>
 		/// Draws default button style
 		/// The client can create a custom button look by inheriting from PushButton and overriding this draw function.
 		/// </summary>
 		virtual void Draw() override;
+
+		/// <param name="pos">
+		/// Screen coordinates of the top left corner of the widget. 
+		/// Screen coordinates start at the top left (0, 0) to the bottom right (window.width, window.height)
+		/// </param>
+		virtual void Move(const Point2& pos) override;
+
+		/// <param name="size">New width and height of the widget in pixels.</param>
+		virtual void Resize(const Size2& size) override;
 
 	private:
 		Rectangle* m_DrawObject;

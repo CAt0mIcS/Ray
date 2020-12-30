@@ -11,6 +11,7 @@
 #include <RayDebug/RInstrumentor.h>
 #include <RayDebug/RLogger.h>
 #include <RayUtil/RException.h>
+#include <RayUtil/RHelper.h>
 
 // -------------------------------------------------------------
 // ECS TESTING INCLUDES

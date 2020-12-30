@@ -1,28 +1,28 @@
 #pragma once
 
-#include <../../RayUtil/include/RayUtil/RHelper.h>
+#include <../../RayUtil/include/RayUtil/RGlobalDefines.h>
 
 #ifndef NOMINMAX
-	#define NOMINMAX
+#define NOMINMAX
 #endif
 
 
 #ifdef RR_BUILD
-	#if defined(_MSC_VER)
-		#define RR_API __declspec(dllexport)
-	#elif defined(__GNUC__) || defined(__clang__)
-		#define RR_API __attribute__((dllexport))
-	#else
-		#define RR_API
-	#endif
+#if defined(_MSC_VER)
+#define RR_API __declspec(dllexport)
+#elif defined(__GNUC__) || defined(__clang__)
+#define RR_API __attribute__((dllexport))
 #else
-	#if defined(_MSC_VER)
-		#define RR_API __declspec(dllimport)
-	#elif defined(__GNUC__) || defined(__clang__)
-		#define RR_API __attribute__((dllimport))
-	#else
-		#define RR_API
-	#endif
+#define RR_API
+#endif
+#else
+#if defined(_MSC_VER)
+#define RR_API __declspec(dllimport)
+#elif defined(__GNUC__) || defined(__clang__)
+#define RR_API __attribute__((dllimport))
+#else
+#define RR_API
+#endif
 #endif
 
 

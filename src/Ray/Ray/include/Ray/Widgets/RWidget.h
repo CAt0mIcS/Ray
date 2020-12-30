@@ -5,7 +5,6 @@
 #include <vector>
 #include <string>
 
-#include <../../RayUtil/include/RayUtil/GlobalDefines.h>
 
 // 4251 class 'std::string' needs to have dll-interface to be used by clients of class 'At0::Ray::Widget'
 #pragma warning(disable : 4251)
@@ -79,6 +78,11 @@ namespace At0::Ray
 		/// <param name="mouse">Is the mouse of the window the widget is in</param>
 		/// <returns>The Widget which should receive the event</returns>
 		Widget* GetEventReceiver(const Event& e, const MouseInput& mouse);
+
+		/// <summary>
+		/// Goes up the parent chain until the window which has the window handle
+		/// </summary>
+		virtual void* GetNativeWindow();
 
 	protected:
 		Widget* m_Parent;

@@ -2,7 +2,7 @@
 
 #include "REvent.h"
 
-#include <../../RayUtil/include/RayUtil/GlobalDefines.h>
+#include <../../RayUtil/include/RayUtil/RGlobalDefines.h>
 
 
 namespace At0::Ray

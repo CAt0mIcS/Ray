@@ -68,6 +68,9 @@ namespace At0::Ray
 		/// <param name="path">Is the path to the .ico file</param>
 		virtual void SetIcon(std::string_view path);
 
+	protected:
+		virtual void* GetNativeWindow() override { return (void*)m_hWnd; }
+
 	private:
 		/// <summary>
 		/// Sets all glfw event callbacks

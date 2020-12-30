@@ -25,6 +25,7 @@
 #include <RayDebug/RLogger.h>
 #include <RayDebug/RInstrumentor.h>
 #include <RayUtil/RKeyCodes.h>
+#include <RayUtil/RHelper.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image/stb_image.h>

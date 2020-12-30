@@ -8,8 +8,6 @@
 
 #include <Windows.h>
 
-#include <../../RayUtil/include/RayUtil/GlobalDefines.h>
-
 
 namespace At0::Ray
 {
@@ -71,6 +69,9 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="path">Is the path to the .ico file</param>
 		virtual void SetIcon(std::string_view path) override;
+
+	protected:
+		virtual void* GetNativeWindow() override { return (void*)m_hWnd; }
 
 	private:
 		bool CreateNativeWindow(

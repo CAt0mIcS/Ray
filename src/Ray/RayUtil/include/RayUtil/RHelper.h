@@ -2,31 +2,11 @@
 
 #include "RUBase.h"
 
-#include <memory>
+#include "RGlobalDefines.h"
+
 #include <signal.h>
 #include <string>
 
-
-namespace At0::Ray
-{
-	template<typename T>
-	using Scope = std::unique_ptr<T>;
-
-	template<typename T>
-	using Ref = std::shared_ptr<T>;
-
-	template<typename T, typename... Args>
-	Scope<T> MakeScope(Args&&... args)
-	{
-		return std::make_unique<T>(std::forward<Args>(args)...);
-	}
-
-	template<typename T, typename... Args>
-	Ref<T> MakeRef(Args&&... args)
-	{
-		return std::make_shared<T>(std::forward<Args>(args)...);
-	}
-}
 
 namespace At0::Ray::Util
 {
@@ -58,6 +38,49 @@ namespace At0::Ray::Util
 	/// <param name="end">Is the supposed end of the full string</param>
 	/// <returns>True if str ends with end, false otherwise</returns>
 	bool RU_API EndsWith(std::string_view str, std::string_view end);
+
+	/// <summary>
+	/// Transforms coordinates between pixel space(Default) and NDC Space(DirectX/OpenGL)
+	/// </summary>
+	template<typename Vertex>
+	class CoordinateTransformer
+	{
+	public:
+		CoordinateTransformer(const Size2& windowSize)
+			: m_WindowSize(windowSize) {}
+
+		Vertex ToNormalizedDeviceCoordinate(const Vertex& pixelCoord)
+		{
+			Vertex v{};
+			v.x = ((2.0f * pixelCoord.x) / m_WindowSize.x) - 1.0f;
+			v.y = -(((2.0f * pixelCoord.y) / m_WindowSize.y) - 1.0f);
+
+			return v;
+		}
+
+		Vertex ToPixelCoordinate(const Vertex& ndcCoord)
+		{
+			Vertex v{};
+			v.x = (ndcCoord.x + 1) * m_WindowSize.x * 0.5f;
+			v.y = (1 - ndcCoord.y) * m_WindowSize.y * 0.5f;
+
+			return v;
+		}
+
+		void ToNormalizedDeviceCoordinate(const Vertex& pixelCoord, Vertex& ndcCoord)
+		{
+			ndcCoord = ToNormalizedDeviceCoordinate(pixelCoord);
+		}
+
+		void ToPixelCoordinate(const Vertex& ndcCoord, Vertex& pixelCoord)
+		{
+			pixelCoord = ToPixelCoordinate(ndcCoord);
+		}
+
+	private:
+		const Size2& m_WindowSize;
+	};
+
 }
 
 

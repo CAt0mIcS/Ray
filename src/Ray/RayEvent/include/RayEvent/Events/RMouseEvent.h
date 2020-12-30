@@ -2,7 +2,7 @@
 
 #include "REvent.h"
 
-#include <../../RayUtil/include/RayUtil/GlobalDefines.h>
+#include <../../RayUtil/include/RayUtil/RGlobalDefines.h>
 #include <../../RayUtil/include/RayUtil/RKeyCodes.h>
 
 
@@ -62,7 +62,7 @@ namespace At0::Ray
 	public:
 		float GetDelta() const { return m_Delta; }
 		virtual ~MouseWheelEvent() = default;
-		
+
 	protected:
 		MouseWheelEvent(float delta)
 			: m_Delta(delta) {}

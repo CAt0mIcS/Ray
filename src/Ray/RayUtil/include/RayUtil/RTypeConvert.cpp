@@ -30,13 +30,6 @@ namespace At0::Ray::Util
 
 		return buff;
 	}
-	
-
-	// RAY_TODO: Define custom RECT class
-	RECT TransformationToRect(const glm::mat4& matrix)
-	{
-		return {};
-	}
 
 #elif defined(__linux__)
 
@@ -45,7 +38,7 @@ namespace At0::Ray::Util
 		std::wstring buff;
 		buff.resize(str.size());
 
-		if(mbstowcs(buff.data(), str.data(), str.size()) == (size_t)-1)
+		if (mbstowcs(buff.data(), str.data(), str.size()) == (size_t)-1)
 		{
 			perror("mbstowcs");
 			return L"";
@@ -60,7 +53,7 @@ namespace At0::Ray::Util
 		std::string buff;
 		buff.resize(str.size());
 
-		if(wcstombs(buff.data(), str.data(), str.size()) == (size_t)-1)
+		if (wcstombs(buff.data(), str.data(), str.size()) == (size_t)-1)
 		{
 			perror("wcstombs");
 			return "";

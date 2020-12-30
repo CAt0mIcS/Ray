@@ -2,9 +2,29 @@
 
 #include <../../extern/glm/glm/glm.hpp>
 #include <iostream>
+#include <memory>
 
 namespace At0::Ray
 {
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+
+	template<typename T, typename... Args>
+	Scope<T> MakeScope(Args&&... args)
+	{
+		return std::make_unique<T>(std::forward<Args>(args)...);
+	}
+
+	template<typename T, typename... Args>
+	Ref<T> MakeRef(Args&&... args)
+	{
+		return std::make_shared<T>(std::forward<Args>(args)...);
+	}
+
+
 	using Point2 = glm::vec2;
 	using Size2 = glm::vec2;
 

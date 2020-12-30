@@ -5,6 +5,8 @@
 
 #include <RayDebug/RInstrumentor.h>
 #include <RayDebug/RLogger.h>
+#include <RayDebug/RAssert.h>
+
 #include <RayUtil/RException.h>
 #include <RayUtil/RTypeConvert.h>
 
@@ -19,7 +21,7 @@ namespace At0::Ray
 			if (child->GetName() == name)
 				return *child.get();
 		}
-		RAY_THROW_RUNTIME("[Widget::FindChild] was unable to find the child with name '{0}'", name);
+		RAY_THROW_RUNTIME("[Widget::FindChild] Was unable to find the child with name '{0}'", name);
 	}
 
 	void Widget::PostRedraw(bool eraseBkgnd) const
@@ -91,6 +93,12 @@ namespace At0::Ray
 		}
 
 		return receiver;
+	}
+
+	void* Widget::GetNativeWindow()
+	{
+		RAY_MEXPECTS(m_Parent != nullptr, "[Widget::GetNativeWindow] Parent is nullptr.");
+		return m_Parent->GetNativeWindow();
 	}
 }
 
