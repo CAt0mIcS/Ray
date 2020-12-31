@@ -18,3 +18,6 @@
 #include <../../RayUtil/include/RayUtil/RHelper.h>
 #include <../../RayUtil/include/RayUtil/RGlobalDefines.h>
 
+#include <../../RayDebug/include/RayDebug/RAssert.h>
+#include <../../RayDebug/include/RayDebug/RLogger.h>
+

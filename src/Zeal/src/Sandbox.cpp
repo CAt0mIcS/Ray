@@ -15,7 +15,7 @@ namespace At0::Zeal
 
 	Sandbox::Sandbox()
 	{
-		//RAY_PROFILE_FUNCTION();
+		RAY_PROFILE_FUNCTION();
 
 		Ray::Util::AllocateConsole();
 
@@ -52,11 +52,6 @@ namespace At0::Zeal
 	}
 
 	Sandbox::~Sandbox()
-	{
-		//RAY_PROFILE_FUNCTION();
-	}
-
-	void Sandbox::OnEvent(Ray::Widget* receiver, Ray::Event& e)
 	{
 		//RAY_PROFILE_FUNCTION();
 	}

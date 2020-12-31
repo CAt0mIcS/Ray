@@ -44,13 +44,6 @@ namespace At0::Ray
 		Window& PushWindow(Ref<Window> window);
 
 		/// <summary>
-		/// Called if any window itself received an event
-		/// </summary>
-		/// <param name="receiver">Is the window which received the event</param>
-		/// <param name="e">Is the received event</param>
-		virtual void OnEvent(Widget* receiver, Event& e) = 0;
-
-		/// <summary>
 		/// Gets called in the main function to pass the command line arguments to the application without having to cross the user
 		/// </summary>
 		/// <param name="cmdLine"></param>
