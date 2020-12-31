@@ -11,7 +11,11 @@ namespace At0::Ray
 
 	void PointLight::Draw()
 	{
-		m_Model.SetTranslation(pos.x, pos.y, pos.z);
+		TransformComponent& transform = m_Model.GetComponent<TransformComponent>();
+		transform.Translation.x = pos.x;
+		transform.Translation.y = pos.y;
+		transform.Translation.z = pos.z;
+
 		m_Model.Draw(&m_Renderer);
 	}
 

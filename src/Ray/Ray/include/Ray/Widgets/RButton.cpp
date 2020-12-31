@@ -63,7 +63,8 @@ namespace At0::Ray
 		newPos.y += size.y / 2.0f;
 		newPos = transformer.ToNormalizedDeviceCoordinate(newPos);
 
-		m_DrawObject->SetTranslation(newPos.x, newPos.y, 0.0f);
+		TransformComponent& tform = m_DrawObject->GetComponent<TransformComponent>();
+		tform.Translation = { newPos, 0.0f };
 	}
 
 	void PushButton::Resize(const Size2& size)
@@ -76,7 +77,8 @@ namespace At0::Ray
 		newSize.x /= (rc.right - rc.left);
 		newSize.y /= (rc.bottom - rc.top);
 
-		m_DrawObject->SetScale(newSize.x, newSize.y, 0.0f);
+		TransformComponent& tform = m_DrawObject->GetComponent<TransformComponent>();
+		tform.Scale = { newSize, 0.0f };
 	}
 
 	Point2 PushButton::GetPos() const
@@ -85,7 +87,8 @@ namespace At0::Ray
 		GetClientRect((HWND)GetNativeWindow(), &rc);
 		Util::CoordinateTransformer<Point2> transformer({ rc.right - rc.left, rc.bottom - rc.top });
 
-		Point2 pos = transformer.ToPixelCoordinate({ m_DrawObject->GetTranslationX(), m_DrawObject->GetTranslationY() });
+		TransformComponent& tform = m_DrawObject->GetComponent<TransformComponent>();
+		Point2 pos = transformer.ToPixelCoordinate({ tform.Translation.x, tform.Translation.y });
 		Size2 size = GetSize();
 		pos.x -= size.x / 2.0f;
 		pos.y -= size.y / 2.0f;
@@ -98,7 +101,8 @@ namespace At0::Ray
 		RECT rc;
 		GetClientRect((HWND)GetNativeWindow(), &rc);
 
-		Size2 size{ m_DrawObject->GetScaleX(), m_DrawObject->GetScaleY() };
+		TransformComponent& tform = m_DrawObject->GetComponent<TransformComponent>();
+		Size2 size{ tform.Scale.x, tform.Scale.y };
 		size.x *= (rc.right - rc.left);
 		size.y *= (rc.bottom - rc.top);
 

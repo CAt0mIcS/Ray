@@ -1,6 +1,8 @@
 #pragma once
 
 #include <../../extern/glm/glm/glm.hpp>
+#include <../../extern/glm/glm/gtc/quaternion.hpp>
+
 #include <iostream>
 #include <memory>
 
@@ -30,9 +32,6 @@ namespace At0::Ray
 
 	using Point3 = glm::vec3;
 	using Size3 = glm::vec3;
-
-	// RAY_TODO: Learn about quaternions and add output stream operator
-	using Quaternion = glm::quat;
 
 	inline std::wostream& operator<<(std::wostream& os, const glm::vec1& vec)
 	{

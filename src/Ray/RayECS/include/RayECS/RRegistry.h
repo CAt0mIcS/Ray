@@ -5,6 +5,8 @@
 #include "RView.h"
 
 #include <memory>
+#include <../../RayDebug/include/RayDebug/RAssert.h>
+
 
 namespace At0::Ray::ECS
 {
@@ -15,6 +17,12 @@ namespace At0::Ray::ECS
 		decltype(auto) Emplace(Entity e, Args&&... args)
 		{
 			return Assure<Component>().Emplace(e, std::forward<Args>(args)...);
+		}
+
+		template<typename Component>
+		void Remove(Entity e)
+		{
+			Assure<Component>().Remove(e);
 		}
 
 		template<typename... Component>
@@ -33,8 +41,25 @@ namespace At0::Ray::ECS
 		Entity Create()
 		{
 			// TODO: Entity destruction mask
-
 			return m_Entities.emplace_back((uint32_t)m_Entities.size());
+		}
+
+		void Destroy(Entity e)
+		{
+			// RAY_TODO: Entity versioning and recycling
+			RAY_MEXPECTS(IsValid(e), "[Registry::Destroy] Trying to destroy invalid or already destroyed entity (ID={0}).", e);
+			m_Entities.erase(std::find(m_Entities.begin(), m_Entities.end(), e));
+		}
+
+		bool IsValid(Entity e)
+		{
+			return std::find(m_Entities.begin(), m_Entities.end(), e) != m_Entities.end();
+		}
+
+		template<typename... Component>
+		bool Has(Entity e) const
+		{
+			return (Assure<Component>().Has(e) && ...);
 		}
 
 		template<typename... Component>
@@ -51,7 +76,7 @@ namespace At0::Ray::ECS
 		};
 
 		template<typename Component>
-		struct PoolHandler : ComponentStorage<Component>
+		struct PoolHandler : public ComponentStorage<Component>
 		{
 			template<typename... Args>
 			decltype(auto) Emplace(Entity e, Args&&... args)
@@ -63,10 +88,21 @@ namespace At0::Ray::ECS
 			{
 				return ComponentStorage<Component>::Get(e);
 			}
+
+			void Remove(Entity e)
+			{
+				ComponentStorage<Component>::Remove(e);
+			}
 		};
 
 		template<typename Component>
 		PoolHandler<Component>& Assure()
+		{
+			return const_cast<PoolHandler<Component>&>(std::as_const(*this).Assure<Component>());
+		}
+
+		template<typename Component>
+		const PoolHandler<Component>& Assure() const
 		{
 			if constexpr (HasComponentIndex<Component>::value)
 			{
@@ -104,9 +140,9 @@ namespace At0::Ray::ECS
 		}
 
 	private:
-		std::vector<PoolData> m_Pools{};
+		mutable std::vector<PoolData> m_Pools{};
 		std::vector<Entity> m_Entities{};
-		Entity m_Destroyed{EntityNull};
+		Entity m_Destroyed{ EntityNull };
 	};
 }
 

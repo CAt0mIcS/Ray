@@ -6,34 +6,92 @@
 #include <DirectXMath.h>
 #include <vector>
 
+#include <../../RayECS/include/RayECS/RayECS.h>
+
+
 namespace At0::Ray
 {
+
+
+	struct TranslationComponent
+	{
+		glm::vec3 Translation;
+
+		TranslationComponent(float x, float y, float z)
+			: Translation{ x, y, z } {}
+	};
+
+	struct ScaleComponent
+	{
+		glm::vec3 Scale;
+
+		ScaleComponent(float x, float y, float z)
+			: Scale{ x, y, z } {}
+	};
+
+	struct RotationComponent
+	{
+		glm::quat Quaternion;
+
+		RotationComponent()
+			: Quaternion{} {}
+	};
+
+	struct TransformComponent
+	{
+		glm::vec3 Translation;
+		glm::vec3 Scale;
+		glm::quat Rotation;
+
+		TransformComponent()
+			: Translation{}, Scale{ 1.0f, 1.0f, 1.0f }, Rotation{} {}
+	};
+
+
+
+
+
+
+
+
+
+
+
 	class IndexBuffer;
 	class Renderer3D;
 
 	class RR_API Drawable
 	{
 	public:
-		virtual ~Drawable() = default;
+		virtual ~Drawable();
 		Drawable(const Drawable&) = delete;
 		Drawable(Drawable&&) noexcept = default;
 		Drawable& operator=(Drawable&&) noexcept = default;
 
 		virtual void Update() = 0;
 		DirectX::XMMATRIX GetTransform() const;
-		void SetRotation(float pitch, float yaw, float roll) { m_Pitch = pitch; m_Yaw = yaw; m_Roll = roll; }
-		void SetTranslation(float x, float y, float z) { m_Translation = { x, y, z }; }
-		void SetScale(float x, float y, float z) { m_Scale = { x, y, z }; }
-
-		float GetTranslationX() const { return m_Translation.x; }
-		float GetTranslationY() const { return m_Translation.y; }
-		float GetTranslationZ() const { return m_Translation.z; }
-		float GetScaleX() const { return m_Scale.x; }
-		float GetScaleY() const { return m_Scale.y; }
-		float GetScaleZ() const { return m_Scale.z; }
 
 		virtual void Draw(Renderer3D* renderer);
 		void Bind();
+
+		template<typename T, typename... Args>
+		void AddComponent(Args&&... args)
+		{
+			s_Registry.Emplace<T>(m_Entity, std::forward<Args>(args)...);
+		}
+
+		template<typename T>
+		void RemoveComponent()
+		{
+			s_Registry.Remove<T>(m_Entity);
+		}
+
+		template<typename... T>
+		decltype(auto) GetComponent() const
+		{
+			RAY_MEXPECTS(s_Registry.Has<T...>(m_Entity), "[Drawable::GetComponent] Entity (ID={0}) doesn't have component.", m_Entity);
+			return s_Registry.Get<T...>(m_Entity);
+		}
 
 	protected:
 		void AddBind(Scope<Bindable> bind);
@@ -42,16 +100,11 @@ namespace At0::Ray
 		Drawable();
 
 	protected:
-		DirectX::XMFLOAT3 m_Translation{};
-		DirectX::XMFLOAT3 m_Scale{};
-
-		float m_Pitch = 0.0f;
-		float m_Yaw = 0.0f;
-		float m_Roll = 0.0f;
-
 		const IndexBuffer* m_pIndexBuffer;
 
+		ECS::Entity m_Entity;
 	private:
 		std::vector<Scope<Bindable>> m_Binds;
+		static ECS::Registry s_Registry;
 	};
 }

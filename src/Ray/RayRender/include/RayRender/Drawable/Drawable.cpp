@@ -11,6 +11,8 @@
 
 namespace At0::Ray
 {
+	ECS::Registry Drawable::s_Registry;
+
 	void Drawable::AddBind(Scope<Bindable> bind)
 	{
 		RAY_PROFILE_FUNCTION();
@@ -26,11 +28,17 @@ namespace At0::Ray
 		m_Binds.push_back(std::move(indexBuffer));
 	}
 
+	Drawable::~Drawable()
+	{
+		s_Registry.Destroy(m_Entity);
+	}
+
 	DirectX::XMMATRIX Drawable::GetTransform() const
 	{
-		return DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z) *
-			DirectX::XMMatrixRotationRollPitchYaw(m_Pitch, m_Yaw, m_Roll) *
-			DirectX::XMMatrixTranslation(m_Translation.x, m_Translation.y, m_Translation.z);
+		TransformComponent& transform = GetComponent<TransformComponent>();
+		return DirectX::XMMatrixScaling(transform.Scale.x, transform.Scale.y, transform.Scale.z) *
+			DirectX::XMMatrixRotationQuaternion({ transform.Rotation.x, transform.Rotation.y, transform.Rotation.z, transform.Rotation.w }) *
+			DirectX::XMMatrixTranslation(transform.Translation.x, transform.Translation.y, transform.Translation.z);
 	}
 
 	void Drawable::Draw(Renderer3D* renderer)
@@ -55,10 +63,10 @@ namespace At0::Ray
 	}
 
 	Drawable::Drawable()
-		: m_pIndexBuffer(nullptr), m_Binds{}, m_Scale{ 1.0f, 1.0f, 1.0f }
+		: m_pIndexBuffer(nullptr), m_Binds{}, m_Entity{ s_Registry.Create() }
 	{
 		RAY_PROFILE_FUNCTION();
-
+		AddComponent<TransformComponent>();
 	}
 }
 

@@ -33,12 +33,12 @@ namespace At0::Ray::ECS
 
 			Iterator& operator++()
 			{
-				return ++m_Idx, *this;
+				return ++m_Idx, * this;
 			}
 
 			Iterator& operator--()
 			{
-				return --m_Idx, *this;
+				return --m_Idx, * this;
 			}
 
 			Iterator& operator+=(uint32_t value)
@@ -141,6 +141,17 @@ namespace At0::Ray::ECS
 		void Emplace(Entity entity, IndexType index)
 		{
 			m_ComponentIndex.emplace_back(entity, index);
+		}
+
+		void Remove(Entity entity)
+		{
+			m_ComponentIndex.erase(m_ComponentIndex.begin() + entity);
+		}
+
+		bool Has(Entity entity) const
+		{
+			// RAY_TODO: Test!
+			return m_ComponentIndex.size() > entity;
 		}
 
 	private:

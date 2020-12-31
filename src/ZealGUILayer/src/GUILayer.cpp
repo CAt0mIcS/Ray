@@ -71,7 +71,7 @@ namespace At0::Layers
 
 	std::vector<Ray::ShadedCube> cubes;
 	static constexpr uint64_t numCubes = 4000;
-	Ray::Model model;
+	//Ray::Model model;
 	std::mt19937 mtEngine;
 	Ray::Camera cam;
 	Ray::PushButton* button;
@@ -152,13 +152,16 @@ namespace At0::Layers
 			std::uniform_real_distribution<float> scaleDist(0.3f, 2.0f);
 			for (uint32_t i = 0; i < numCubes - 1; ++i)
 			{
-				cubes[i].SetRotation(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine));
-				cubes[i].SetTranslation(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine) - 20.0f);
-				cubes[i].SetScale(scaleDist(mtEngine), scaleDist(mtEngine), scaleDist(mtEngine));
+				Ray::TransformComponent& tform = cubes[i].GetComponent<Ray::TransformComponent>();
+
+				DirectX::XMVECTOR quaternion = DirectX::XMQuaternionRotationRollPitchYaw(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine));
+				tform.Rotation = { quaternion.m128_f32[0], quaternion.m128_f32[1], quaternion.m128_f32[2], quaternion.m128_f32[3] };
+				tform.Translation = { posDist(mtEngine), posDist(mtEngine), posDist(mtEngine) - 20.0f };
+				tform.Scale = { scaleDist(mtEngine), scaleDist(mtEngine), scaleDist(mtEngine) };
 			}
 		}
 
-		model = Ray::Model("Resources/nanosuit.obj", face_colors, GetMainWindow().GetRenderer3D());
+		//model = Ray::Model("Resources/nanosuit.obj", face_colors, GetMainWindow().GetRenderer3D());
 		GetMainWindow().GetRenderer3D().SetCamera(DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f));
 
 #endif
@@ -228,10 +231,12 @@ namespace At0::Layers
 		{
 			for (uint32_t i = 0; i < cubes.size() - 1; ++i)
 			{
-				cubes[i].SetRotation(pitch + i, yaw + i, roll + i);
+				Ray::TransformComponent& tform = cubes[i].GetComponent<Ray::TransformComponent>();
+				DirectX::XMVECTOR quaternion = DirectX::XMQuaternionRotationRollPitchYaw(pitch + i, yaw + i, roll + i);
+				tform.Rotation = { quaternion.m128_f32[0], quaternion.m128_f32[1], quaternion.m128_f32[2], quaternion.m128_f32[3] };
 			}
 
-			cubes.back().SetRotation(pitch, yaw, roll);
+			//cubes.back().SetRotation(pitch, yaw, roll);
 			//cubes.back().SetTranslation(xDir, yDir, zDir);
 
 			// Takes the most amount of time here!
@@ -251,7 +256,7 @@ namespace At0::Layers
 		renderer.EndDraw();
 #endif
 
-		//g_FPS.Update();
+		g_FPS.Update();
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::MouseMoveEvent& e)

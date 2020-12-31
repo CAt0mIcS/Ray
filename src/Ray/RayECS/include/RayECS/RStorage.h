@@ -24,6 +24,12 @@ namespace At0::Ray::ECS
 				return m_Instances.back();
 		}
 
+		void Remove(Entity entity)
+		{
+			m_Instances.erase(EntityStorage::Index(entity));
+			EntityStorage::Remove(entity);
+		}
+
 		const Component& Get(Entity entity) const
 		{
 			return m_Instances[EntityStorage::Index(entity)];
@@ -32,6 +38,11 @@ namespace At0::Ray::ECS
 		Component& Get(Entity entity)
 		{
 			return const_cast<Component&>(std::as_const(*this).Get(entity));
+		}
+
+		bool Has(Entity e) const
+		{
+			return EntityStorage::Has(e);
 		}
 
 	private:

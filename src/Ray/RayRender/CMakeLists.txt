@@ -94,6 +94,7 @@ set(PRIVATE_LIB
     "RayDebug"
     "RayEvent"
     "assimp"
+    "RayECS"
 )
 
 if(WIN32)
