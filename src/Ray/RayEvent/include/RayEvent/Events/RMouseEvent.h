@@ -118,23 +118,21 @@ namespace At0::Ray
 	class HoverEnterEvent : public Event
 	{
 	public:
-		HoverEnterEvent(Widget* hoverEntered);
+		HoverEnterEvent(Widget& hoverEntered);
 
 		virtual std::string ToString() const override;
-
-		Widget* GetHoverWidget() const { return m_HoverEntered; }
 
 		static EventType GetStaticType() { return EventType::HoverEnterEvent; }
 		virtual EventType GetType() const override { return GetStaticType(); }
 
 	private:
-		Widget* m_HoverEntered;
+		Widget& m_HoverEntered;
 	};
 
 	class HoverLeaveEvent : public Event
 	{
 	public:
-		HoverLeaveEvent(Widget* hoverLeft);
+		HoverLeaveEvent(Widget& hoverLeft);
 
 		virtual std::string ToString() const override;
 
@@ -142,7 +140,7 @@ namespace At0::Ray
 		virtual EventType GetType() const override { return GetStaticType(); }
 
 	private:
-		Widget* m_HoverLeft;
+		Widget& m_HoverLeft;
 	};
 }
 

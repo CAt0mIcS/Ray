@@ -114,8 +114,8 @@ namespace At0::Ray
 	// -------------------------------------------------------------------
 	// HoverEnterEvent
 	// -------------------------------------------------------------------
-	HoverEnterEvent::HoverEnterEvent(Widget* hoverEntered)
-		: m_HoverEntered(hoverEntered) 
+	HoverEnterEvent::HoverEnterEvent(Widget& hoverEntered)
+		: m_HoverEntered(hoverEntered)
 	{
 	}
 
@@ -129,7 +129,7 @@ namespace At0::Ray
 	// -------------------------------------------------------------------
 	// HoverLeaveEvent
 	// -------------------------------------------------------------------
-	HoverLeaveEvent::HoverLeaveEvent(Widget* hoverLeft)
+	HoverLeaveEvent::HoverLeaveEvent(Widget& hoverLeft)
 		: m_HoverLeft(hoverLeft)
 	{
 	}
