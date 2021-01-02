@@ -6,7 +6,6 @@
 #include <../../RayDebug/include/RayDebug/RAssert.h>
 #include <../../RayUtil/include/RayUtil/RMath.h>
 
-//#include <DirectXMath.h>
 #include <vector>
 #include <../../extern/entt/src/entt/entt.hpp>
 

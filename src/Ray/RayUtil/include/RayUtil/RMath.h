@@ -331,8 +331,8 @@ namespace At0
 			{
 				float       vector4_f32[4];
 				uint32_t    vector4_u32[4];
-	};
-};
+			};
+		};
 #endif // _XM_NO_INTRINSICS_
 
 		//------------------------------------------------------------------------------
@@ -627,6 +627,7 @@ namespace At0
 			Float3& operator=(Float3&&) = default;
 
 			XM_CONSTEXPR Float3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
+			XM_CONSTEXPR Float3(const Float2& _xy, float _z) : x(_xy.x), y(_xy.y), z(_z) {}
 			explicit Float3(/*_In_reads_(3) */const float* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
 		};
 
@@ -642,6 +643,7 @@ namespace At0
 			Float3A& operator=(Float3A&&) = default;
 
 			XM_CONSTEXPR Float3A(float _x, float _y, float _z) : Float3(_x, _y, _z) {}
+			XM_CONSTEXPR Float3A(const Float2A& _xy, float _z) : Float3(_xy, _z) {}
 			explicit Float3A(/*_In_reads_(3) */const float* pArray) : Float3(pArray) {}
 		};
 
@@ -662,6 +664,7 @@ namespace At0
 			Int3& operator=(Int3&&) = default;
 
 			XM_CONSTEXPR Int3(int32_t _x, int32_t _y, int32_t _z) : x(_x), y(_y), z(_z) {}
+			XM_CONSTEXPR Int3(const Int2& _xy, int32_t _z) : x(_xy.x), y(_xy.y), z(_z) {}
 			explicit Int3(/*_In_reads_(3) */const int32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
 		};
 
@@ -681,6 +684,7 @@ namespace At0
 			UInt3& operator=(UInt3&&) = default;
 
 			XM_CONSTEXPR UInt3(uint32_t _x, uint32_t _y, uint32_t _z) : x(_x), y(_y), z(_z) {}
+			XM_CONSTEXPR UInt3(const UInt2& _xy, uint32_t _z) : x(_xy.x), y(_xy.y), z(_z) {}
 			explicit UInt3(/*_In_reads_(3) */const uint32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
 		};
 
@@ -702,6 +706,8 @@ namespace At0
 			Float4& operator=(Float4&&) = default;
 
 			XM_CONSTEXPR Float4(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) {}
+			XM_CONSTEXPR Float4(const Float2& _xy, const Float2& _zw) : x(_xy.x), y(_xy.y), z(_zw.x), w(_zw.y) {}
+			XM_CONSTEXPR Float4(const Float3& _xyz, float _w) : x(_xyz.x), y(_xyz.y), z(_xyz.z), w(_w) {}
 			explicit Float4(/*_In_reads_(4) */const float* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
 		};
 
@@ -717,6 +723,8 @@ namespace At0
 			Float4A& operator=(Float4A&&) = default;
 
 			XM_CONSTEXPR Float4A(float _x, float _y, float _z, float _w) : Float4(_x, _y, _z, _w) {}
+			XM_CONSTEXPR Float4A(const Float2A& _xy, const Float2A& _zw) : Float4(_xy, _zw) {}
+			XM_CONSTEXPR Float4A(const Float3A& _xyz, float _w) : Float4(_xyz, _w) {}
 			explicit Float4A(/*_In_reads_(4) */const float* pArray) : Float4(pArray) {}
 		};
 
@@ -738,6 +746,8 @@ namespace At0
 			Int4& operator=(Int4&&) = default;
 
 			XM_CONSTEXPR Int4(int32_t _x, int32_t _y, int32_t _z, int32_t _w) : x(_x), y(_y), z(_z), w(_w) {}
+			XM_CONSTEXPR Int4(const Int2& _xy, const Int2& _zw) : x(_xy.x), y(_xy.y), z(_zw.x), w(_zw.y) {}
+			XM_CONSTEXPR Int4(const Int3& _xyz, int32_t _w) : x(_xyz.x), y(_xyz.y), z(_xyz.z), w(_w) {}
 			explicit Int4(/*_In_reads_(4) */const int32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
 		};
 
@@ -758,6 +768,8 @@ namespace At0
 			UInt4& operator=(UInt4&&) = default;
 
 			XM_CONSTEXPR UInt4(uint32_t _x, uint32_t _y, uint32_t _z, uint32_t _w) : x(_x), y(_y), z(_z), w(_w) {}
+			XM_CONSTEXPR UInt4(const UInt2& _xy, const UInt2& _zw) : x(_xy.x), y(_xy.y), z(_zw.x), w(_zw.y) {}
+			XM_CONSTEXPR UInt4(const UInt3& _xyz, float _w) : x(_xyz.x), y(_xyz.y), z(_xyz.z), w(_w) {}
 			explicit UInt4(/*_In_reads_(4) */const uint32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
 		};
 
@@ -5247,7 +5259,9 @@ namespace At0
 					V.vector4_f32[1],
 					V.vector4_f32[2],
 					V.vector4_f32[3]
-				} } };
+				}
+ }
+			};
 			return U.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vld1q_lane_f32(x, V, 0);
@@ -5495,7 +5509,9 @@ namespace At0
 					V.vector4_u32[1],
 					V.vector4_u32[2],
 					V.vector4_u32[3]
-				} } };
+				}
+ }
+			};
 			return U.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vld1q_lane_u32(x, *reinterpret_cast<const uint32x4_t*>(&V), 0);
@@ -7064,7 +7080,8 @@ namespace At0
 					~(V1.vector4_u32[1] | V2.vector4_u32[1]),
 					~(V1.vector4_u32[2] | V2.vector4_u32[2]),
 					~(V1.vector4_u32[3] | V2.vector4_u32[3])
-				} } };
+				}
+ } };
 			return Result.v;
 
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
@@ -8124,7 +8141,7 @@ namespace At0
 				s = vshrq_n_u32(v, 1);
 				r = vorrq_s32(r, s);
 				return r;
-		}
+			}
 
 		} // namespace Internal
 
@@ -9135,7 +9152,9 @@ namespace At0
 					tanhf(V.vector4_f32[1]),
 					tanhf(V.vector4_f32[2]),
 					tanhf(V.vector4_f32[3])
-				} } };
+				}
+ }
+			};
 			return Result.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			static const VectorF32 Scale = { { { 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f } } }; // 2.0f / ln(2.0f)
@@ -12163,7 +12182,7 @@ namespace At0
 
 				vst1q_f32(reinterpret_cast<float*>(pOutputVector), vResult);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -12493,7 +12512,7 @@ namespace At0
 
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), V);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -12849,7 +12868,7 @@ namespace At0
 				V = vget_low_f32(vResult);
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), V);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -14638,7 +14657,7 @@ namespace At0
 
 				vst1q_f32(reinterpret_cast<float*>(pOutputVector), vResult);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -15054,7 +15073,7 @@ namespace At0
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 				vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -15544,7 +15563,7 @@ namespace At0
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 				vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -16030,8 +16049,8 @@ namespace At0
 					vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 					vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 					pOutputVector += OutputStride;
-		}
-		}
+				}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -16631,8 +16650,8 @@ namespace At0
 					vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 					vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 					pOutputVector += OutputStride;
-		}
-		}
+				}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -18672,7 +18691,7 @@ namespace At0
 
 				vst1q_f32(reinterpret_cast<float*>(pOutputVector), vResult);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -22544,7 +22563,8 @@ namespace At0
 					-Q.vector4_f32[1],
 					-Q.vector4_f32[2],
 					Q.vector4_f32[3]
-				} } };
+				}
+ } };
 			return Result.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			static const VectorF32 NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
@@ -24819,6 +24839,6 @@ namespace At0
 
 #pragma warning(pop)
 
-		}
+	}
 }
 
