@@ -177,14 +177,14 @@ namespace At0::Ray
 	{
 		int x, y;
 		glfwGetWindowPos(m_hWnd, &x, &y);
-		return { x, y };
+		return { (float)x, (float)y };
 	}
 
 	Size2 OpenGLWindow::GetSize() const
 	{
 		int width, height;
 		glfwGetWindowSize(m_hWnd, &width, &height);
-		return { width, height };
+		return { (float)width, (float)height };
 	}
 
 	void OpenGLWindow::Close()

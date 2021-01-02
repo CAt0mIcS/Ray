@@ -19,12 +19,10 @@ set(SRC
 
 add_library("RayLogger" INTERFACE)
 
-if(MSVC)
-    add_custom_target("IRayLogger"
-        SOURCES "${SRC}"
-    )
-    set_target_properties("IRayLogger" PROPERTIES FOLDER "RayUtilities")
-endif()
+add_custom_target("IRayLogger"
+    SOURCES "${SRC}"
+)
+set_target_properties("IRayLogger" PROPERTIES FOLDER "RayUtilities")
 
 # target_include_directories("RayLogger" INTERFACE "${INC}")
 target_link_libraries("RayLogger" INTERFACE "RayUtil")

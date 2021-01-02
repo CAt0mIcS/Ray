@@ -14,50 +14,50 @@ namespace At0::Ray
 {
 	struct TranslationComponent
 	{
-		float x, y, z;
+		Float3 Translation;
 
 		TranslationComponent(float x, float y, float z)
-			: x(x), y(y), z(z) {}
+			: Translation{ x, y, z } {}
 
 		TranslationComponent()
-			: x(0.0f), y(0.0f), z(0.0f) {}
+			: Translation{ 0.0f, 0.0f, 0.0f } {}
 	};
 
 	struct ScaleComponent
 	{
-		float x, y, z;
+		Float3 Scale;
 
 		ScaleComponent(float x, float y, float z)
-			: x(x), y(y), z(z) {}
+			: Scale{ x, y, z } {}
 
 		ScaleComponent()
-			: x(1.0f), y(1.0f), z(1.0f) {}
+			: Scale{ 1.0f, 1.0f, 1.0f } {}
 	};
 
 	struct RotationComponent
 	{
-		float x, y, z, w;
+		Float4 Rotation;
 
 		RotationComponent()
-			: x(0.0f), y(0.0f), z(0.0f), w(1.0f) {}
+			: Rotation{ 0.0f, 0.0f, 0.0f, 1.0f } {}
 
 		RotationComponent(float x, float y, float z, float w)
-			: x(x), y(y), z(z), w(w) {}
+			: Rotation{ x, y, z, w } {}
 	};
 
 	struct TransformComponent
 	{
-		TranslationComponent Translation;
-		ScaleComponent Scale;
-		RotationComponent Rotation;
+		Float3 Translation;
+		Float3 Scale;
+		Float4 Rotation;
 
 		TransformComponent()
 			: Translation{}, Scale{}, Rotation{} {}
 
 		TransformComponent(
-			const TranslationComponent& transform,
-			const ScaleComponent& scale,
-			const RotationComponent& rotation
+			const Float3& transform,
+			const Float3& scale,
+			const Float4& rotation
 		)
 			: Translation(transform), Scale(scale), Rotation(rotation) {}
 	};
