@@ -5,6 +5,7 @@ set(SRC
     "include/RayUtil/RSerialize.h"
     "include/RayUtil/RKeyCodes.h"
     "include/RayUtil/RGlobalDefines.h"
+    "include/RayUtil/RMath.h"
 
     "include/RayUtil/RException.h"
     "include/RayUtil/RException.cpp"

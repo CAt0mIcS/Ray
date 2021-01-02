@@ -4,6 +4,7 @@
 #include "RayRender/Bindable/Bindable.h"
 
 #include <../../RayDebug/include/RayDebug/RAssert.h>
+#include <../../RayUtil/include/RayUtil/RMath.h>
 
 #include <DirectXMath.h>
 #include <vector>
