@@ -48,6 +48,10 @@
 #define _XM_VECTORCALL_ 1
 #endif
 
+#ifdef __linux__
+#define _XM_NO_INTRINSICS_
+#endif
+
 #if _XM_VECTORCALL_
 #define XM_CALLCONV __vectorcall
 #else
@@ -995,22 +999,22 @@ namespace At0
 		Vector    XM_CALLCONV     LoadInt(/*_In_ */const uint32_t* pSource);
 		Vector    XM_CALLCONV     LoadFloat(/*_In_ */const float* pSource);
 
-		Vector    XM_CALLCONV     LoadInt2(_In_reads_(2) const uint32_t* pSource);
-		Vector    XM_CALLCONV     LoadInt2A(_In_reads_(2) const uint32_t* PSource);
+		Vector    XM_CALLCONV     LoadInt2(/*_In_reads_(2) */const uint32_t* pSource);
+		Vector    XM_CALLCONV     LoadInt2A(/*_In_reads_(2) */const uint32_t* PSource);
 		Vector    XM_CALLCONV     LoadFloat2(/*_In_ */const Float2* pSource);
 		Vector    XM_CALLCONV     LoadFloat2A(/*_In_ */const Float2A* pSource);
 		Vector    XM_CALLCONV     LoadSInt2(/*_In_ */const Int2* pSource);
 		Vector    XM_CALLCONV     LoadUInt2(/*_In_ */const UInt2* pSource);
 
-		Vector    XM_CALLCONV     LoadInt3(_In_reads_(3) const uint32_t* pSource);
-		Vector    XM_CALLCONV     LoadInt3A(_In_reads_(3) const uint32_t* pSource);
+		Vector    XM_CALLCONV     LoadInt3(/*_In_reads_(3) */const uint32_t* pSource);
+		Vector    XM_CALLCONV     LoadInt3A(/*_In_reads_(3) */const uint32_t* pSource);
 		Vector    XM_CALLCONV     LoadFloat3(/*_In_ */const Float3* pSource);
 		Vector    XM_CALLCONV     LoadFloat3A(/*_In_ */const Float3A* pSource);
 		Vector    XM_CALLCONV     LoadSInt3(/*_In_ */const Int3* pSource);
 		Vector    XM_CALLCONV     LoadUInt3(/*_In_ */const UInt3* pSource);
 
-		Vector    XM_CALLCONV     LoadInt4(_In_reads_(4) const uint32_t* pSource);
-		Vector    XM_CALLCONV     LoadInt4A(_In_reads_(4) const uint32_t* pSource);
+		Vector    XM_CALLCONV     LoadInt4(/*_In_reads_(4) */const uint32_t* pSource);
+		Vector    XM_CALLCONV     LoadInt4A(/*_In_reads_(4) */const uint32_t* pSource);
 		Vector    XM_CALLCONV     LoadFloat4(/*_In_ */const Float4* pSource);
 		Vector    XM_CALLCONV     LoadFloat4A(/*_In_ */const Float4A* pSource);
 		Vector    XM_CALLCONV     LoadSInt4(/*_In_ */const Int4* pSource);
@@ -1295,17 +1299,17 @@ namespace At0
 		Vector    XM_CALLCONV     Vector2Transform(FVector V, FMatrix M);
 		Float4* XM_CALLCONV     Vector2TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
-			_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) const Float2* pInputStream,
+			/*_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) */const Float2* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 		Vector    XM_CALLCONV     Vector2TransformCoord(FVector V, FMatrix M);
 		Float2* XM_CALLCONV     Vector2TransformCoordStream(/*_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) */Float2* pOutputStream,
 			/*_In_ */size_t OutputStride,
-			_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) const Float2* pInputStream,
+			/*_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) */const Float2* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 		Vector    XM_CALLCONV     Vector2TransformNormal(FVector V, FMatrix M);
 		Float2* XM_CALLCONV     Vector2TransformNormalStream(/*_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) */Float2* pOutputStream,
 			/*_In_ */size_t OutputStride,
-			_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) const Float2* pInputStream,
+			/*_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) */const Float2* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 
 		/****************************************************************************
@@ -1357,23 +1361,23 @@ namespace At0
 		Vector    XM_CALLCONV     Vector3Transform(FVector V, FMatrix M);
 		Float4* XM_CALLCONV     Vector3TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
-			_In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) const Float3* pInputStream,
+			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 		Vector    XM_CALLCONV     Vector3TransformCoord(FVector V, FMatrix M);
 		Float3* XM_CALLCONV     Vector3TransformCoordStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
-			_In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) const Float3* pInputStream,
+			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 		Vector    XM_CALLCONV     Vector3TransformNormal(FVector V, FMatrix M);
 		Float3* XM_CALLCONV     Vector3TransformNormalStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
-			_In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) const Float3* pInputStream,
+			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 		Vector    XM_CALLCONV     Vector3Project(FVector V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
 			FMatrix Projection, CMatrix View, CMatrix World);
 		Float3* XM_CALLCONV     Vector3ProjectStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
-			_In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) const Float3* pInputStream,
+			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount,
 			/*_In_ */float ViewportX, /*_In_ */float ViewportY, /*_In_ */float ViewportWidth, /*_In_ */float ViewportHeight, /*_In_ */float ViewportMinZ, /*_In_ */float ViewportMaxZ,
 			/*_In_ */FMatrix Projection, /*_In_ */CMatrix View, /*_In_ */CMatrix World);
@@ -1381,7 +1385,7 @@ namespace At0
 			FMatrix Projection, CMatrix View, CMatrix World);
 		Float3* XM_CALLCONV     Vector3UnprojectStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
-			_In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) const Float3* pInputStream,
+			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount,
 			/*_In_ */float ViewportX, /*_In_ */float ViewportY, /*_In_ */float ViewportWidth, /*_In_ */float ViewportHeight, /*_In_ */float ViewportMinZ, /*_In_ */float ViewportMaxZ,
 			/*_In_ */FMatrix Projection, /*_In_ */CMatrix View, /*_In_ */CMatrix World);
@@ -1431,7 +1435,7 @@ namespace At0
 		Vector    XM_CALLCONV     Vector4Transform(FVector V, FMatrix M);
 		Float4* XM_CALLCONV     Vector4TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
-			_In_reads_bytes_(sizeof(Float4) + InputStride * (VectorCount - 1)) const Float4* pInputStream,
+			/*_In_reads_bytes_(sizeof(Float4) + InputStride * (VectorCount - 1)) */const Float4* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 
 		/****************************************************************************
@@ -1558,7 +1562,7 @@ namespace At0
 		Vector    XM_CALLCONV     PlaneTransform(FVector P, FMatrix M);
 		Float4* XM_CALLCONV     PlaneTransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (PlaneCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
-			_In_reads_bytes_(sizeof(Float4) + InputStride * (PlaneCount - 1)) const Float4* pInputStream,
+			/*_In_reads_bytes_(sizeof(Float4) + InputStride * (PlaneCount - 1)) */const Float4* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t PlaneCount, /*_In_ */FMatrix M);
 
 		Vector    XM_CALLCONV     PlaneFromPointNormal(FVector Point, FVector Normal);
