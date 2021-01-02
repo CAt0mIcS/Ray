@@ -11,7 +11,7 @@
 
 namespace At0::Ray
 {
-	ECS::Registry Drawable::s_Registry;
+	entt::registry Drawable::s_Registry;
 
 	void Drawable::AddBind(Scope<Bindable> bind)
 	{
@@ -30,7 +30,7 @@ namespace At0::Ray
 
 	Drawable::~Drawable()
 	{
-		s_Registry.Destroy(m_Entity);
+		s_Registry.destroy(m_Entity);
 	}
 
 	DirectX::XMMATRIX Drawable::GetTransform() const
@@ -63,7 +63,7 @@ namespace At0::Ray
 	}
 
 	Drawable::Drawable()
-		: m_pIndexBuffer(nullptr), m_Binds{}, m_Entity{ s_Registry.Create() }
+		: m_pIndexBuffer(nullptr), m_Binds{}, m_Entity{ s_Registry.create() }
 	{
 		RAY_PROFILE_FUNCTION();
 		AddComponent<TransformComponent>();

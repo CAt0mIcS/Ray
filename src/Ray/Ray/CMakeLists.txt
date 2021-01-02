@@ -46,7 +46,6 @@ set(PRIVATE_INC
 	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/glm"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/glfw"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../extern/stb_image/include"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../RayECS/include"
 )
 
 set(PUBLIC_LIB

@@ -3,16 +3,15 @@
 #include "../RlRBase.h"
 #include "RayRender/Bindable/Bindable.h"
 
+#include <../../RayDebug/include/RayDebug/RAssert.h>
+
 #include <DirectXMath.h>
 #include <vector>
-
-#include <../../RayECS/include/RayECS/RayECS.h>
+#include <../../extern/entt/src/entt/entt.hpp>
 
 
 namespace At0::Ray
 {
-
-
 	struct TranslationComponent
 	{
 		glm::vec3 Translation;
@@ -49,14 +48,6 @@ namespace At0::Ray
 
 
 
-
-
-
-
-
-
-
-
 	class IndexBuffer;
 	class Renderer3D;
 
@@ -77,20 +68,20 @@ namespace At0::Ray
 		template<typename T, typename... Args>
 		void AddComponent(Args&&... args)
 		{
-			s_Registry.Emplace<T>(m_Entity, std::forward<Args>(args)...);
+			s_Registry.emplace<T>(m_Entity, std::forward<Args>(args)...);
 		}
 
-		template<typename T>
+		template<typename... T>
 		void RemoveComponent()
 		{
-			s_Registry.Remove<T>(m_Entity);
+			s_Registry.remove<T...>(m_Entity);
 		}
 
 		template<typename... T>
 		decltype(auto) GetComponent() const
 		{
-			RAY_MEXPECTS(s_Registry.Has<T...>(m_Entity), "[Drawable::GetComponent] Entity (ID={0}) doesn't have component.", m_Entity);
-			return s_Registry.Get<T...>(m_Entity);
+			RAY_MEXPECTS(s_Registry.has<T...>(m_Entity), "[Drawable::GetComponent] Entity (ID={0}) doesn't have component.", m_Entity);
+			return s_Registry.get<T...>(m_Entity);
 		}
 
 	protected:
@@ -102,9 +93,9 @@ namespace At0::Ray
 	protected:
 		const IndexBuffer* m_pIndexBuffer;
 
-		ECS::Entity m_Entity;
+		entt::entity m_Entity;
 	private:
 		std::vector<Scope<Bindable>> m_Binds;
-		static ECS::Registry s_Registry;
+		static entt::registry s_Registry;
 	};
 }
