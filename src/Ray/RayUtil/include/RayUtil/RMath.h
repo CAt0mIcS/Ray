@@ -55,7 +55,7 @@
 #if _XM_VECTORCALL_
 #define XM_CALLCONV __vectorcall
 #else
-#define XM_CALLCONV __fastcall
+#define XM_CALLCONV
 #endif
 
 #if defined(_MSC_VER) && (_MSC_FULL_VER < 190023506)
