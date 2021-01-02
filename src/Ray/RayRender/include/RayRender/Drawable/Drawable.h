@@ -81,7 +81,7 @@ namespace At0::Ray
 		template<typename... T>
 		decltype(auto) GetComponent() const
 		{
-			RAY_MEXPECTS(s_Registry.has<T...>(m_Entity), "[Drawable::GetComponent] Entity (ID={0}) doesn't have component.", m_Entity);
+			RAY_MEXPECTS(s_Registry.has<T...>(m_Entity), "[Drawable::GetComponent] Entity (ID={0}) doesn't have component.", entt::to_integral(m_Entity));
 			return s_Registry.get<T...>(m_Entity);
 		}
 

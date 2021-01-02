@@ -115,8 +115,6 @@
 #define _XM_SSE_INTRINSICS_
 #elif defined(_M_ARM) || defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 #define _XM_ARM_NEON_INTRINSICS_
-#elif !defined(_XM_NO_INTRINSICS_)
-#error DirectX Math does not support this target
 #endif
 #endif // !_XM_ARM_NEON_INTRINSICS_ && !_XM_SSE_INTRINSICS_ && !_XM_NO_INTRINSICS_
 
@@ -136,8 +134,11 @@
 #pragma warning(push)
 #pragma warning(disable : 4987)
 // C4987: Off by default noise
-#include <intrin.h>
 #pragma warning(pop)
+
+#ifdef _WIN32
+#include <intrin.h>
+#endif
 
 #ifdef _XM_SSE_INTRINSICS_
 #include <xmmintrin.h>
@@ -164,7 +165,6 @@
 #endif
 #endif // !_XM_NO_INTRINSICS_
 
-#include <sal.h>
 #include <assert.h>
 
 #pragma warning(push)
@@ -323,8 +323,8 @@ namespace At0
 			{
 				float       vector4_f32[4];
 				uint32_t    vector4_u32[4];
-	};
-};
+			};
+		};
 #endif // _XM_NO_INTRINSICS_
 
 		//------------------------------------------------------------------------------
@@ -483,7 +483,7 @@ namespace At0
 					float _41, _42, _43, _44;
 				};
 				float m[4][4];
-};
+			};
 #else
 			Vector r[4];
 #endif
@@ -506,7 +506,7 @@ namespace At0
 				float m10, float m11, float m12, float m13,
 				float m20, float m21, float m22, float m23,
 				float m30, float m31, float m32, float m33);
-			explicit Matrix(_In_reads_(16) const float* pArray);
+			explicit Matrix(/*_In_reads_(16) */const float* pArray);
 
 #ifdef _XM_NO_INTRINSICS_
 			float       operator() (size_t Row, size_t Column) const { return m[Row][Column]; }
@@ -547,7 +547,7 @@ namespace At0
 			Float2& operator=(Float2&&) = default;
 
 			XM_CONSTEXPR Float2(float _x, float _y) : x(_x), y(_y) {}
-			explicit Float2(_In_reads_(2) const float* pArray) : x(pArray[0]), y(pArray[1]) {}
+			explicit Float2(/*_In_reads_(2) */const float* pArray) : x(pArray[0]), y(pArray[1]) {}
 		};
 
 		// 2D Vector; 32 bit floating point components aligned on a 16 byte boundary
@@ -562,7 +562,7 @@ namespace At0
 			Float2A& operator=(Float2A&&) = default;
 
 			XM_CONSTEXPR Float2A(float _x, float _y) : Float2(_x, _y) {}
-			explicit Float2A(_In_reads_(2) const float* pArray) : Float2(pArray) {}
+			explicit Float2A(/*_In_reads_(2) */const float* pArray) : Float2(pArray) {}
 		};
 
 		//------------------------------------------------------------------------------
@@ -581,7 +581,7 @@ namespace At0
 			Int2& operator=(Int2&&) = default;
 
 			XM_CONSTEXPR Int2(int32_t _x, int32_t _y) : x(_x), y(_y) {}
-			explicit Int2(_In_reads_(2) const int32_t* pArray) : x(pArray[0]), y(pArray[1]) {}
+			explicit Int2(/*_In_reads_(2) */const int32_t* pArray) : x(pArray[0]), y(pArray[1]) {}
 		};
 
 		// 2D Vector; 32 bit unsigned integer components
@@ -599,7 +599,7 @@ namespace At0
 			UInt2& operator=(UInt2&&) = default;
 
 			XM_CONSTEXPR UInt2(uint32_t _x, uint32_t _y) : x(_x), y(_y) {}
-			explicit UInt2(_In_reads_(2) const uint32_t* pArray) : x(pArray[0]), y(pArray[1]) {}
+			explicit UInt2(/*_In_reads_(2) */const uint32_t* pArray) : x(pArray[0]), y(pArray[1]) {}
 		};
 
 		//------------------------------------------------------------------------------
@@ -619,7 +619,7 @@ namespace At0
 			Float3& operator=(Float3&&) = default;
 
 			XM_CONSTEXPR Float3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
-			explicit Float3(_In_reads_(3) const float* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
+			explicit Float3(/*_In_reads_(3) */const float* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
 		};
 
 		// 3D Vector; 32 bit floating point components aligned on a 16 byte boundary
@@ -634,7 +634,7 @@ namespace At0
 			Float3A& operator=(Float3A&&) = default;
 
 			XM_CONSTEXPR Float3A(float _x, float _y, float _z) : Float3(_x, _y, _z) {}
-			explicit Float3A(_In_reads_(3) const float* pArray) : Float3(pArray) {}
+			explicit Float3A(/*_In_reads_(3) */const float* pArray) : Float3(pArray) {}
 		};
 
 		//------------------------------------------------------------------------------
@@ -654,7 +654,7 @@ namespace At0
 			Int3& operator=(Int3&&) = default;
 
 			XM_CONSTEXPR Int3(int32_t _x, int32_t _y, int32_t _z) : x(_x), y(_y), z(_z) {}
-			explicit Int3(_In_reads_(3) const int32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
+			explicit Int3(/*_In_reads_(3) */const int32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
 		};
 
 		// 3D Vector; 32 bit unsigned integer components
@@ -673,7 +673,7 @@ namespace At0
 			UInt3& operator=(UInt3&&) = default;
 
 			XM_CONSTEXPR UInt3(uint32_t _x, uint32_t _y, uint32_t _z) : x(_x), y(_y), z(_z) {}
-			explicit UInt3(_In_reads_(3) const uint32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
+			explicit UInt3(/*_In_reads_(3) */const uint32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
 		};
 
 		//------------------------------------------------------------------------------
@@ -694,7 +694,7 @@ namespace At0
 			Float4& operator=(Float4&&) = default;
 
 			XM_CONSTEXPR Float4(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) {}
-			explicit Float4(_In_reads_(4) const float* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
+			explicit Float4(/*_In_reads_(4) */const float* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
 		};
 
 		// 4D Vector; 32 bit floating point components aligned on a 16 byte boundary
@@ -709,7 +709,7 @@ namespace At0
 			Float4A& operator=(Float4A&&) = default;
 
 			XM_CONSTEXPR Float4A(float _x, float _y, float _z, float _w) : Float4(_x, _y, _z, _w) {}
-			explicit Float4A(_In_reads_(4) const float* pArray) : Float4(pArray) {}
+			explicit Float4A(/*_In_reads_(4) */const float* pArray) : Float4(pArray) {}
 		};
 
 		//------------------------------------------------------------------------------
@@ -730,7 +730,7 @@ namespace At0
 			Int4& operator=(Int4&&) = default;
 
 			XM_CONSTEXPR Int4(int32_t _x, int32_t _y, int32_t _z, int32_t _w) : x(_x), y(_y), z(_z), w(_w) {}
-			explicit Int4(_In_reads_(4) const int32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
+			explicit Int4(/*_In_reads_(4) */const int32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
 		};
 
 		// 4D Vector; 32 bit unsigned integer components
@@ -750,7 +750,7 @@ namespace At0
 			UInt4& operator=(UInt4&&) = default;
 
 			XM_CONSTEXPR UInt4(uint32_t _x, uint32_t _y, uint32_t _z, uint32_t _w) : x(_x), y(_y), z(_z), w(_w) {}
-			explicit UInt4(_In_reads_(4) const uint32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
+			explicit UInt4(/*_In_reads_(4) */const uint32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
 		};
 
 		//------------------------------------------------------------------------------
@@ -782,7 +782,7 @@ namespace At0
 				: _11(m00), _12(m01), _13(m02),
 				_21(m10), _22(m11), _23(m12),
 				_31(m20), _32(m21), _33(m22) {}
-			explicit Float3X3(_In_reads_(9) const float* pArray);
+			explicit Float3X3(/*_In_reads_(9) */const float* pArray);
 
 			float       operator() (size_t Row, size_t Column) const { return m[Row][Column]; }
 			float& operator() (size_t Row, size_t Column) { return m[Row][Column]; }
@@ -821,7 +821,7 @@ namespace At0
 				_21(m10), _22(m11), _23(m12),
 				_31(m20), _32(m21), _33(m22),
 				_41(m30), _42(m31), _43(m32) {}
-			explicit Float4X3(_In_reads_(12) const float* pArray);
+			explicit Float4X3(/*_In_reads_(12) */const float* pArray);
 
 			float       operator() (size_t Row, size_t Column) const { return m[Row][Column]; }
 			float& operator() (size_t Row, size_t Column) { return m[Row][Column]; }
@@ -843,7 +843,7 @@ namespace At0
 				float m20, float m21, float m22,
 				float m30, float m31, float m32) :
 				Float4X3(m00, m01, m02, m10, m11, m12, m20, m21, m22, m30, m31, m32) {}
-			explicit Float4X3A(_In_reads_(12) const float* pArray) : Float4X3(pArray) {}
+			explicit Float4X3A(/*_In_reads_(12) */const float* pArray) : Float4X3(pArray) {}
 		};
 
 		//------------------------------------------------------------------------------
@@ -876,7 +876,7 @@ namespace At0
 				: _11(m00), _12(m01), _13(m02), _14(m03),
 				_21(m10), _22(m11), _23(m12), _24(m13),
 				_31(m20), _32(m21), _33(m22), _34(m23) {}
-			explicit Float3X4(_In_reads_(12) const float* pArray);
+			explicit Float3X4(/*_In_reads_(12) */const float* pArray);
 
 			float       operator() (size_t Row, size_t Column) const { return m[Row][Column]; }
 			float& operator() (size_t Row, size_t Column) { return m[Row][Column]; }
@@ -897,7 +897,7 @@ namespace At0
 				float m10, float m11, float m12, float m13,
 				float m20, float m21, float m22, float m23) :
 				Float3X4(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23) {}
-			explicit Float3X4A(_In_reads_(12) const float* pArray) : Float3X4(pArray) {}
+			explicit Float3X4A(/*_In_reads_(12) */const float* pArray) : Float3X4(pArray) {}
 		};
 
 		//------------------------------------------------------------------------------
@@ -932,7 +932,7 @@ namespace At0
 				_21(m10), _22(m11), _23(m12), _24(m13),
 				_31(m20), _32(m21), _33(m22), _34(m23),
 				_41(m30), _42(m31), _43(m32), _44(m33) {}
-			explicit Float4X4(_In_reads_(16) const float* pArray);
+			explicit Float4X4(/*_In_reads_(16) */const float* pArray);
 
 			float       operator() (size_t Row, size_t Column) const { return m[Row][Column]; }
 			float& operator() (size_t Row, size_t Column) { return m[Row][Column]; }
@@ -954,7 +954,7 @@ namespace At0
 				float m20, float m21, float m22, float m23,
 				float m30, float m31, float m32, float m33)
 				: Float4X4(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {}
-			explicit Float4X4A(_In_reads_(16) const float* pArray) : Float4X4(pArray) {}
+			explicit Float4X4A(/*_In_reads_(16) */const float* pArray) : Float4X4(pArray) {}
 		};
 
 		////////////////////////////////////////////////////////////////////////////////
@@ -992,37 +992,37 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		Vector    XM_CALLCONV     LoadInt(_In_ const uint32_t* pSource);
-		Vector    XM_CALLCONV     LoadFloat(_In_ const float* pSource);
+		Vector    XM_CALLCONV     LoadInt(/*_In_ */const uint32_t* pSource);
+		Vector    XM_CALLCONV     LoadFloat(/*_In_ */const float* pSource);
 
 		Vector    XM_CALLCONV     LoadInt2(_In_reads_(2) const uint32_t* pSource);
 		Vector    XM_CALLCONV     LoadInt2A(_In_reads_(2) const uint32_t* PSource);
-		Vector    XM_CALLCONV     LoadFloat2(_In_ const Float2* pSource);
-		Vector    XM_CALLCONV     LoadFloat2A(_In_ const Float2A* pSource);
-		Vector    XM_CALLCONV     LoadSInt2(_In_ const Int2* pSource);
-		Vector    XM_CALLCONV     LoadUInt2(_In_ const UInt2* pSource);
+		Vector    XM_CALLCONV     LoadFloat2(/*_In_ */const Float2* pSource);
+		Vector    XM_CALLCONV     LoadFloat2A(/*_In_ */const Float2A* pSource);
+		Vector    XM_CALLCONV     LoadSInt2(/*_In_ */const Int2* pSource);
+		Vector    XM_CALLCONV     LoadUInt2(/*_In_ */const UInt2* pSource);
 
 		Vector    XM_CALLCONV     LoadInt3(_In_reads_(3) const uint32_t* pSource);
 		Vector    XM_CALLCONV     LoadInt3A(_In_reads_(3) const uint32_t* pSource);
-		Vector    XM_CALLCONV     LoadFloat3(_In_ const Float3* pSource);
-		Vector    XM_CALLCONV     LoadFloat3A(_In_ const Float3A* pSource);
-		Vector    XM_CALLCONV     LoadSInt3(_In_ const Int3* pSource);
-		Vector    XM_CALLCONV     LoadUInt3(_In_ const UInt3* pSource);
+		Vector    XM_CALLCONV     LoadFloat3(/*_In_ */const Float3* pSource);
+		Vector    XM_CALLCONV     LoadFloat3A(/*_In_ */const Float3A* pSource);
+		Vector    XM_CALLCONV     LoadSInt3(/*_In_ */const Int3* pSource);
+		Vector    XM_CALLCONV     LoadUInt3(/*_In_ */const UInt3* pSource);
 
 		Vector    XM_CALLCONV     LoadInt4(_In_reads_(4) const uint32_t* pSource);
 		Vector    XM_CALLCONV     LoadInt4A(_In_reads_(4) const uint32_t* pSource);
-		Vector    XM_CALLCONV     LoadFloat4(_In_ const Float4* pSource);
-		Vector    XM_CALLCONV     LoadFloat4A(_In_ const Float4A* pSource);
-		Vector    XM_CALLCONV     LoadSInt4(_In_ const Int4* pSource);
-		Vector    XM_CALLCONV     LoadUInt4(_In_ const UInt4* pSource);
+		Vector    XM_CALLCONV     LoadFloat4(/*_In_ */const Float4* pSource);
+		Vector    XM_CALLCONV     LoadFloat4A(/*_In_ */const Float4A* pSource);
+		Vector    XM_CALLCONV     LoadSInt4(/*_In_ */const Int4* pSource);
+		Vector    XM_CALLCONV     LoadUInt4(/*_In_ */const UInt4* pSource);
 
-		Matrix    XM_CALLCONV     LoadFloat3x3(_In_ const Float3X3* pSource);
-		Matrix    XM_CALLCONV     LoadFloat4x3(_In_ const Float4X3* pSource);
-		Matrix    XM_CALLCONV     LoadFloat4x3A(_In_ const Float4X3A* pSource);
-		Matrix    XM_CALLCONV     LoadFloat3x4(_In_ const Float3X4* pSource);
-		Matrix    XM_CALLCONV     LoadFloat3x4A(_In_ const Float3X4A* pSource);
-		Matrix    XM_CALLCONV     LoadFloat4x4(_In_ const Float4X4* pSource);
-		Matrix    XM_CALLCONV     LoadFloat4x4A(_In_ const Float4X4A* pSource);
+		Matrix    XM_CALLCONV     LoadFloat3x3(/*_In_ */const Float3X3* pSource);
+		Matrix    XM_CALLCONV     LoadFloat4x3(/*_In_ */const Float4X3* pSource);
+		Matrix    XM_CALLCONV     LoadFloat4x3A(/*_In_ */const Float4X3A* pSource);
+		Matrix    XM_CALLCONV     LoadFloat3x4(/*_In_ */const Float3X4* pSource);
+		Matrix    XM_CALLCONV     LoadFloat3x4A(/*_In_ */const Float3X4A* pSource);
+		Matrix    XM_CALLCONV     LoadFloat4x4(/*_In_ */const Float4X4* pSource);
+		Matrix    XM_CALLCONV     LoadFloat4x4A(/*_In_ */const Float4X4A* pSource);
 
 		/****************************************************************************
 		 *
@@ -1030,37 +1030,37 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		void        XM_CALLCONV     StoreInt(_Out_ uint32_t* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreFloat(_Out_ float* pDestination, _In_ FVector V);
+		void        XM_CALLCONV     StoreInt(/*_Out_ */ uint32_t* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreFloat(/*_Out_ */ float* pDestination, /*_In_ */FVector V);
 
-		void        XM_CALLCONV     StoreInt2(_Out_writes_(2) uint32_t* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreInt2A(_Out_writes_(2) uint32_t* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreFloat2(_Out_ Float2* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreFloat2A(_Out_ Float2A* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreSInt2(_Out_ Int2* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreUInt2(_Out_ UInt2* pDestination, _In_ FVector V);
+		void        XM_CALLCONV     StoreInt2(/*_Out_writes_(2)*/ uint32_t* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreInt2A(/*_Out_writes_(2)*/ uint32_t* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreFloat2(/*_Out_ */ Float2* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreFloat2A(/*_Out_ */ Float2A* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreSInt2(/*_Out_ */ Int2* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreUInt2(/*_Out_ */ UInt2* pDestination, /*_In_ */FVector V);
 
-		void        XM_CALLCONV     StoreInt3(_Out_writes_(3) uint32_t* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreInt3A(_Out_writes_(3) uint32_t* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreFloat3(_Out_ Float3* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreFloat3A(_Out_ Float3A* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreSInt3(_Out_ Int3* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreUInt3(_Out_ UInt3* pDestination, _In_ FVector V);
+		void        XM_CALLCONV     StoreInt3(/*_Out_writes_(3) */uint32_t* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreInt3A(/*_Out_writes_(3)*/ uint32_t* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreFloat3(/*_Out_ */ Float3* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreFloat3A(/*_Out_ */ Float3A* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreSInt3(/*_Out_ */ Int3* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreUInt3(/*_Out_ */ UInt3* pDestination, /*_In_ */FVector V);
 
-		void        XM_CALLCONV     StoreInt4(_Out_writes_(4) uint32_t* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreInt4A(_Out_writes_(4) uint32_t* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreFloat4(_Out_ Float4* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreFloat4A(_Out_ Float4A* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreSInt4(_Out_ Int4* pDestination, _In_ FVector V);
-		void        XM_CALLCONV     StoreUInt4(_Out_ UInt4* pDestination, _In_ FVector V);
+		void        XM_CALLCONV     StoreInt4(/*_Out_writes_(4) */uint32_t* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreInt4A(/*_Out_writes_(4) */uint32_t* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreFloat4(/*_Out_ */ Float4* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreFloat4A(/*_Out_ */ Float4A* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreSInt4(/*_Out_ */ Int4* pDestination, /*_In_ */FVector V);
+		void        XM_CALLCONV     StoreUInt4(/*_Out_ */ UInt4* pDestination, /*_In_ */FVector V);
 
-		void        XM_CALLCONV     StoreFloat3x3(_Out_ Float3X3* pDestination, _In_ FMatrix M);
-		void        XM_CALLCONV     StoreFloat4x3(_Out_ Float4X3* pDestination, _In_ FMatrix M);
-		void        XM_CALLCONV     StoreFloat4x3A(_Out_ Float4X3A* pDestination, _In_ FMatrix M);
-		void        XM_CALLCONV     StoreFloat3x4(_Out_ Float3X4* pDestination, _In_ FMatrix M);
-		void        XM_CALLCONV     StoreFloat3x4A(_Out_ Float3X4A* pDestination, _In_ FMatrix M);
-		void        XM_CALLCONV     StoreFloat4x4(_Out_ Float4X4* pDestination, _In_ FMatrix M);
-		void        XM_CALLCONV     StoreFloat4x4A(_Out_ Float4X4A* pDestination, _In_ FMatrix M);
+		void        XM_CALLCONV     StoreFloat3x3(/*_Out_ */ Float3X3* pDestination, /*_In_ */FMatrix M);
+		void        XM_CALLCONV     StoreFloat4x3(/*_Out_ */ Float4X3* pDestination, /*_In_ */FMatrix M);
+		void        XM_CALLCONV     StoreFloat4x3A(/*_Out_ */ Float4X3A* pDestination, /*_In_ */FMatrix M);
+		void        XM_CALLCONV     StoreFloat3x4(/*_Out_ */ Float3X4* pDestination, /*_In_ */FMatrix M);
+		void        XM_CALLCONV     StoreFloat3x4A(/*_Out_ */ Float3X4A* pDestination, /*_In_ */FMatrix M);
+		void        XM_CALLCONV     StoreFloat4x4(/*_Out_ */ Float4X4* pDestination, /*_In_ */FMatrix M);
+		void        XM_CALLCONV     StoreFloat4x4A(/*_Out_ */ Float4X4A* pDestination, /*_In_ */FMatrix M);
 
 		/****************************************************************************
 		 *
@@ -1072,9 +1072,9 @@ namespace At0
 		Vector    XM_CALLCONV     VectorSet(float x, float y, float z, float w);
 		Vector    XM_CALLCONV     VectorSetInt(uint32_t x, uint32_t y, uint32_t z, uint32_t w);
 		Vector    XM_CALLCONV     VectorReplicate(float Value);
-		Vector    XM_CALLCONV     VectorReplicatePtr(_In_ const float* pValue);
+		Vector    XM_CALLCONV     VectorReplicatePtr(/*_In_ */const float* pValue);
 		Vector    XM_CALLCONV     VectorReplicateInt(uint32_t Value);
-		Vector    XM_CALLCONV     VectorReplicateIntPtr(_In_ const uint32_t* pValue);
+		Vector    XM_CALLCONV     VectorReplicateIntPtr(/*_In_ */const uint32_t* pValue);
 		Vector    XM_CALLCONV     VectorTrueInt();
 		Vector    XM_CALLCONV     VectorFalseInt();
 		Vector    XM_CALLCONV     VectorSplatX(FVector V);
@@ -1093,11 +1093,11 @@ namespace At0
 		float       XM_CALLCONV     VectorGetZ(FVector V);
 		float       XM_CALLCONV     VectorGetW(FVector V);
 
-		void        XM_CALLCONV     VectorGetByIndexPtr(_Out_ float* f, _In_ FVector V, _In_ size_t i);
-		void        XM_CALLCONV     VectorGetXPtr(_Out_ float* x, _In_ FVector V);
-		void        XM_CALLCONV     VectorGetYPtr(_Out_ float* y, _In_ FVector V);
-		void        XM_CALLCONV     VectorGetZPtr(_Out_ float* z, _In_ FVector V);
-		void        XM_CALLCONV     VectorGetWPtr(_Out_ float* w, _In_ FVector V);
+		void        XM_CALLCONV     VectorGetByIndexPtr(/*_Out_ */ float* f, /*_In_ */FVector V, /*_In_ */size_t i);
+		void        XM_CALLCONV     VectorGetXPtr(/*_Out_ */ float* x, /*_In_ */FVector V);
+		void        XM_CALLCONV     VectorGetYPtr(/*_Out_ */ float* y, /*_In_ */FVector V);
+		void        XM_CALLCONV     VectorGetZPtr(/*_Out_ */ float* z, /*_In_ */FVector V);
+		void        XM_CALLCONV     VectorGetWPtr(/*_Out_ */ float* w, /*_In_ */FVector V);
 
 		uint32_t    XM_CALLCONV     VectorGetIntByIndex(FVector V, size_t i);
 		uint32_t    XM_CALLCONV     VectorGetIntX(FVector V);
@@ -1105,11 +1105,11 @@ namespace At0
 		uint32_t    XM_CALLCONV     VectorGetIntZ(FVector V);
 		uint32_t    XM_CALLCONV     VectorGetIntW(FVector V);
 
-		void        XM_CALLCONV     VectorGetIntByIndexPtr(_Out_ uint32_t* x, _In_ FVector V, _In_ size_t i);
-		void        XM_CALLCONV     VectorGetIntXPtr(_Out_ uint32_t* x, _In_ FVector V);
-		void        XM_CALLCONV     VectorGetIntYPtr(_Out_ uint32_t* y, _In_ FVector V);
-		void        XM_CALLCONV     VectorGetIntZPtr(_Out_ uint32_t* z, _In_ FVector V);
-		void        XM_CALLCONV     VectorGetIntWPtr(_Out_ uint32_t* w, _In_ FVector V);
+		void        XM_CALLCONV     VectorGetIntByIndexPtr(/*_Out_ */ uint32_t* x, /*_In_ */FVector V, /*_In_ */size_t i);
+		void        XM_CALLCONV     VectorGetIntXPtr(/*_Out_ */ uint32_t* x, /*_In_ */FVector V);
+		void        XM_CALLCONV     VectorGetIntYPtr(/*_Out_ */ uint32_t* y, /*_In_ */FVector V);
+		void        XM_CALLCONV     VectorGetIntZPtr(/*_Out_ */ uint32_t* z, /*_In_ */FVector V);
+		void        XM_CALLCONV     VectorGetIntWPtr(/*_Out_ */ uint32_t* w, /*_In_ */FVector V);
 
 		Vector    XM_CALLCONV     VectorSetByIndex(FVector V, float f, size_t i);
 		Vector    XM_CALLCONV     VectorSetX(FVector V, float x);
@@ -1117,11 +1117,11 @@ namespace At0
 		Vector    XM_CALLCONV     VectorSetZ(FVector V, float z);
 		Vector    XM_CALLCONV     VectorSetW(FVector V, float w);
 
-		Vector    XM_CALLCONV     VectorSetByIndexPtr(_In_ FVector V, _In_ const float* f, _In_ size_t i);
-		Vector    XM_CALLCONV     VectorSetXPtr(_In_ FVector V, _In_ const float* x);
-		Vector    XM_CALLCONV     VectorSetYPtr(_In_ FVector V, _In_ const float* y);
-		Vector    XM_CALLCONV     VectorSetZPtr(_In_ FVector V, _In_ const float* z);
-		Vector    XM_CALLCONV     VectorSetWPtr(_In_ FVector V, _In_ const float* w);
+		Vector    XM_CALLCONV     VectorSetByIndexPtr(/*_In_ */FVector V, /*_In_ */const float* f, /*_In_ */size_t i);
+		Vector    XM_CALLCONV     VectorSetXPtr(/*_In_ */FVector V, /*_In_ */const float* x);
+		Vector    XM_CALLCONV     VectorSetYPtr(/*_In_ */FVector V, /*_In_ */const float* y);
+		Vector    XM_CALLCONV     VectorSetZPtr(/*_In_ */FVector V, /*_In_ */const float* z);
+		Vector    XM_CALLCONV     VectorSetWPtr(/*_In_ */FVector V, /*_In_ */const float* w);
 
 		Vector    XM_CALLCONV     VectorSetIntByIndex(FVector V, uint32_t x, size_t i);
 		Vector    XM_CALLCONV     VectorSetIntX(FVector V, uint32_t x);
@@ -1129,11 +1129,11 @@ namespace At0
 		Vector    XM_CALLCONV     VectorSetIntZ(FVector V, uint32_t z);
 		Vector    XM_CALLCONV     VectorSetIntW(FVector V, uint32_t w);
 
-		Vector    XM_CALLCONV     VectorSetIntByIndexPtr(_In_ FVector V, _In_ const uint32_t* x, _In_ size_t i);
-		Vector    XM_CALLCONV     VectorSetIntXPtr(_In_ FVector V, _In_ const uint32_t* x);
-		Vector    XM_CALLCONV     VectorSetIntYPtr(_In_ FVector V, _In_ const uint32_t* y);
-		Vector    XM_CALLCONV     VectorSetIntZPtr(_In_ FVector V, _In_ const uint32_t* z);
-		Vector    XM_CALLCONV     VectorSetIntWPtr(_In_ FVector V, _In_ const uint32_t* w);
+		Vector    XM_CALLCONV     VectorSetIntByIndexPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* x, /*_In_ */size_t i);
+		Vector    XM_CALLCONV     VectorSetIntXPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* x);
+		Vector    XM_CALLCONV     VectorSetIntYPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* y);
+		Vector    XM_CALLCONV     VectorSetIntZPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* z);
+		Vector    XM_CALLCONV     VectorSetIntWPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* w);
 
 #if defined(__XNAMATH_H__) && defined(VectorSwizzle)
 #undef VectorSwizzle
@@ -1160,20 +1160,20 @@ namespace At0
 			uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3);
 
 		Vector    XM_CALLCONV     VectorEqual(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorEqualR(_Out_ uint32_t* pCR, _In_ FVector V1, _In_ FVector V2);
+		Vector    XM_CALLCONV     VectorEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
 		Vector    XM_CALLCONV     VectorEqualInt(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorEqualIntR(_Out_ uint32_t* pCR, _In_ FVector V, _In_ FVector V2);
+		Vector    XM_CALLCONV     VectorEqualIntR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V, /*_In_ */FVector V2);
 		Vector    XM_CALLCONV     VectorNearEqual(FVector V1, FVector V2, FVector Epsilon);
 		Vector    XM_CALLCONV     VectorNotEqual(FVector V1, FVector V2);
 		Vector    XM_CALLCONV     VectorNotEqualInt(FVector V1, FVector V2);
 		Vector    XM_CALLCONV     VectorGreater(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorGreaterR(_Out_ uint32_t* pCR, _In_ FVector V1, _In_ FVector V2);
+		Vector    XM_CALLCONV     VectorGreaterR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
 		Vector    XM_CALLCONV     VectorGreaterOrEqual(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorGreaterOrEqualR(_Out_ uint32_t* pCR, _In_ FVector V1, _In_ FVector V2);
+		Vector    XM_CALLCONV     VectorGreaterOrEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
 		Vector    XM_CALLCONV     VectorLess(FVector V1, FVector V2);
 		Vector    XM_CALLCONV     VectorLessOrEqual(FVector V1, FVector V2);
 		Vector    XM_CALLCONV     VectorInBounds(FVector V, FVector Bounds);
-		Vector    XM_CALLCONV     VectorInBoundsR(_Out_ uint32_t* pCR, _In_ FVector V, _In_ FVector Bounds);
+		Vector    XM_CALLCONV     VectorInBoundsR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V, /*_In_ */FVector Bounds);
 
 		Vector    XM_CALLCONV     VectorIsNaN(FVector V);
 		Vector    XM_CALLCONV     VectorIsInfinite(FVector V);
@@ -1224,8 +1224,8 @@ namespace At0
 		Vector    XM_CALLCONV     VectorSinEst(FVector V);
 		Vector    XM_CALLCONV     VectorCos(FVector V);
 		Vector    XM_CALLCONV     VectorCosEst(FVector V);
-		void        XM_CALLCONV     VectorSinCos(_Out_ Vector* pSin, _Out_ Vector* pCos, _In_ FVector V);
-		void        XM_CALLCONV     VectorSinCosEst(_Out_ Vector* pSin, _Out_ Vector* pCos, _In_ FVector V);
+		void        XM_CALLCONV     VectorSinCos(/*_Out_ */ Vector* pSin, /*_Out_ */ Vector* pCos, /*_In_ */FVector V);
+		void        XM_CALLCONV     VectorSinCosEst(/*_Out_ */ Vector* pSin, /*_Out_ */ Vector* pCos, /*_In_ */FVector V);
 		Vector    XM_CALLCONV     VectorTan(FVector V);
 		Vector    XM_CALLCONV     VectorTanEst(FVector V);
 		Vector    XM_CALLCONV     VectorSinH(FVector V);
@@ -1293,20 +1293,20 @@ namespace At0
 		Vector    XM_CALLCONV     Vector2LinePointDistance(FVector LinePoint1, FVector LinePoint2, FVector Point);
 		Vector    XM_CALLCONV     Vector2IntersectLine(FVector Line1Point1, FVector Line1Point2, FVector Line2Point1, GVector Line2Point2);
 		Vector    XM_CALLCONV     Vector2Transform(FVector V, FMatrix M);
-		Float4* XM_CALLCONV     Vector2TransformStream(_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) Float4* pOutputStream,
-			_In_ size_t OutputStride,
+		Float4* XM_CALLCONV     Vector2TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
+			/*_In_ */size_t OutputStride,
 			_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) const Float2* pInputStream,
-			_In_ size_t InputStride, _In_ size_t VectorCount, _In_ FMatrix M);
+			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 		Vector    XM_CALLCONV     Vector2TransformCoord(FVector V, FMatrix M);
-		Float2* XM_CALLCONV     Vector2TransformCoordStream(_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) Float2* pOutputStream,
-			_In_ size_t OutputStride,
+		Float2* XM_CALLCONV     Vector2TransformCoordStream(/*_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) */Float2* pOutputStream,
+			/*_In_ */size_t OutputStride,
 			_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) const Float2* pInputStream,
-			_In_ size_t InputStride, _In_ size_t VectorCount, _In_ FMatrix M);
+			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 		Vector    XM_CALLCONV     Vector2TransformNormal(FVector V, FMatrix M);
-		Float2* XM_CALLCONV     Vector2TransformNormalStream(_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) Float2* pOutputStream,
-			_In_ size_t OutputStride,
+		Float2* XM_CALLCONV     Vector2TransformNormalStream(/*_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) */Float2* pOutputStream,
+			/*_In_ */size_t OutputStride,
 			_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) const Float2* pInputStream,
-			_In_ size_t InputStride, _In_ size_t VectorCount, _In_ FMatrix M);
+			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 
 		/****************************************************************************
 		 *
@@ -1351,40 +1351,40 @@ namespace At0
 		Vector    XM_CALLCONV     Vector3AngleBetweenNormals(FVector N1, FVector N2);
 		Vector    XM_CALLCONV     Vector3AngleBetweenVectors(FVector V1, FVector V2);
 		Vector    XM_CALLCONV     Vector3LinePointDistance(FVector LinePoint1, FVector LinePoint2, FVector Point);
-		void        XM_CALLCONV     Vector3ComponentsFromNormal(_Out_ Vector* pParallel, _Out_ Vector* pPerpendicular, _In_ FVector V, _In_ FVector Normal);
+		void        XM_CALLCONV     Vector3ComponentsFromNormal(/*_Out_ */ Vector* pParallel, /*_Out_ */ Vector* pPerpendicular, /*_In_ */FVector V, /*_In_ */FVector Normal);
 		Vector    XM_CALLCONV     Vector3Rotate(FVector V, FVector RotationQuaternion);
 		Vector    XM_CALLCONV     Vector3InverseRotate(FVector V, FVector RotationQuaternion);
 		Vector    XM_CALLCONV     Vector3Transform(FVector V, FMatrix M);
-		Float4* XM_CALLCONV     Vector3TransformStream(_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) Float4* pOutputStream,
-			_In_ size_t OutputStride,
+		Float4* XM_CALLCONV     Vector3TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
+			/*_In_ */size_t OutputStride,
 			_In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) const Float3* pInputStream,
-			_In_ size_t InputStride, _In_ size_t VectorCount, _In_ FMatrix M);
+			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 		Vector    XM_CALLCONV     Vector3TransformCoord(FVector V, FMatrix M);
-		Float3* XM_CALLCONV     Vector3TransformCoordStream(_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) Float3* pOutputStream,
-			_In_ size_t OutputStride,
+		Float3* XM_CALLCONV     Vector3TransformCoordStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
+			/*_In_ */size_t OutputStride,
 			_In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) const Float3* pInputStream,
-			_In_ size_t InputStride, _In_ size_t VectorCount, _In_ FMatrix M);
+			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 		Vector    XM_CALLCONV     Vector3TransformNormal(FVector V, FMatrix M);
-		Float3* XM_CALLCONV     Vector3TransformNormalStream(_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) Float3* pOutputStream,
-			_In_ size_t OutputStride,
+		Float3* XM_CALLCONV     Vector3TransformNormalStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
+			/*_In_ */size_t OutputStride,
 			_In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) const Float3* pInputStream,
-			_In_ size_t InputStride, _In_ size_t VectorCount, _In_ FMatrix M);
+			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 		Vector    XM_CALLCONV     Vector3Project(FVector V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
 			FMatrix Projection, CMatrix View, CMatrix World);
-		Float3* XM_CALLCONV     Vector3ProjectStream(_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) Float3* pOutputStream,
-			_In_ size_t OutputStride,
+		Float3* XM_CALLCONV     Vector3ProjectStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
+			/*_In_ */size_t OutputStride,
 			_In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) const Float3* pInputStream,
-			_In_ size_t InputStride, _In_ size_t VectorCount,
-			_In_ float ViewportX, _In_ float ViewportY, _In_ float ViewportWidth, _In_ float ViewportHeight, _In_ float ViewportMinZ, _In_ float ViewportMaxZ,
-			_In_ FMatrix Projection, _In_ CMatrix View, _In_ CMatrix World);
+			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount,
+			/*_In_ */float ViewportX, /*_In_ */float ViewportY, /*_In_ */float ViewportWidth, /*_In_ */float ViewportHeight, /*_In_ */float ViewportMinZ, /*_In_ */float ViewportMaxZ,
+			/*_In_ */FMatrix Projection, /*_In_ */CMatrix View, /*_In_ */CMatrix World);
 		Vector    XM_CALLCONV     Vector3Unproject(FVector V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
 			FMatrix Projection, CMatrix View, CMatrix World);
-		Float3* XM_CALLCONV     Vector3UnprojectStream(_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) Float3* pOutputStream,
-			_In_ size_t OutputStride,
+		Float3* XM_CALLCONV     Vector3UnprojectStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
+			/*_In_ */size_t OutputStride,
 			_In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) const Float3* pInputStream,
-			_In_ size_t InputStride, _In_ size_t VectorCount,
-			_In_ float ViewportX, _In_ float ViewportY, _In_ float ViewportWidth, _In_ float ViewportHeight, _In_ float ViewportMinZ, _In_ float ViewportMaxZ,
-			_In_ FMatrix Projection, _In_ CMatrix View, _In_ CMatrix World);
+			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount,
+			/*_In_ */float ViewportX, /*_In_ */float ViewportY, /*_In_ */float ViewportWidth, /*_In_ */float ViewportHeight, /*_In_ */float ViewportMinZ, /*_In_ */float ViewportMaxZ,
+			/*_In_ */FMatrix Projection, /*_In_ */CMatrix View, /*_In_ */CMatrix World);
 
 		/****************************************************************************
 		 *
@@ -1429,10 +1429,10 @@ namespace At0
 		Vector    XM_CALLCONV     Vector4AngleBetweenNormals(FVector N1, FVector N2);
 		Vector    XM_CALLCONV     Vector4AngleBetweenVectors(FVector V1, FVector V2);
 		Vector    XM_CALLCONV     Vector4Transform(FVector V, FMatrix M);
-		Float4* XM_CALLCONV     Vector4TransformStream(_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) Float4* pOutputStream,
-			_In_ size_t OutputStride,
+		Float4* XM_CALLCONV     Vector4TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
+			/*_In_ */size_t OutputStride,
 			_In_reads_bytes_(sizeof(Float4) + InputStride * (VectorCount - 1)) const Float4* pInputStream,
-			_In_ size_t InputStride, _In_ size_t VectorCount, _In_ FMatrix M);
+			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
 
 		/****************************************************************************
 		 *
@@ -1447,10 +1447,10 @@ namespace At0
 		Matrix    XM_CALLCONV     MatrixMultiply(FMatrix M1, CMatrix M2);
 		Matrix    XM_CALLCONV     MatrixMultiplyTranspose(FMatrix M1, CMatrix M2);
 		Matrix    XM_CALLCONV     MatrixTranspose(FMatrix M);
-		Matrix    XM_CALLCONV     MatrixInverse(_Out_opt_ Vector* pDeterminant, _In_ FMatrix M);
+		Matrix    XM_CALLCONV     MatrixInverse(/*_Out_opt_ */Vector* pDeterminant, /*_In_ */FMatrix M);
 		Vector    XM_CALLCONV     MatrixDeterminant(FMatrix M);
 		_Success_(return)
-			bool        XM_CALLCONV     MatrixDecompose(_Out_ Vector* outScale, _Out_ Vector* outRotQuat, _Out_ Vector* outTrans, _In_ FMatrix M);
+			bool        XM_CALLCONV     MatrixDecompose(/*_Out_ */ Vector* outScale, /*_Out_ */ Vector* outRotQuat, /*_Out_ */ Vector* outTrans, /*_In_ */FMatrix M);
 
 		Matrix    XM_CALLCONV     MatrixIdentity();
 		Matrix    XM_CALLCONV     MatrixSet(float m00, float m01, float m02, float m03,
@@ -1522,7 +1522,7 @@ namespace At0
 		Vector    XM_CALLCONV     QuaternionSlerpV(FVector Q0, FVector Q1, FVector T);
 		Vector    XM_CALLCONV     QuaternionSquad(FVector Q0, FVector Q1, FVector Q2, GVector Q3, float t);
 		Vector    XM_CALLCONV     QuaternionSquadV(FVector Q0, FVector Q1, FVector Q2, GVector Q3, HVector T);
-		void        XM_CALLCONV     QuaternionSquadSetup(_Out_ Vector* pA, _Out_ Vector* pB, _Out_ Vector* pC, _In_ FVector Q0, _In_ FVector Q1, _In_ FVector Q2, _In_ GVector Q3);
+		void        XM_CALLCONV     QuaternionSquadSetup(/*_Out_ */ Vector* pA, /*_Out_ */ Vector* pB, /*_Out_ */ Vector* pC, /*_In_ */FVector Q0, /*_In_ */FVector Q1, /*_In_ */FVector Q2, /*_In_ */GVector Q3);
 		Vector    XM_CALLCONV     QuaternionBaryCentric(FVector Q0, FVector Q1, FVector Q2, float f, float g);
 		Vector    XM_CALLCONV     QuaternionBaryCentricV(FVector Q0, FVector Q1, FVector Q2, GVector F, HVector G);
 
@@ -1533,7 +1533,7 @@ namespace At0
 		Vector    XM_CALLCONV     QuaternionRotationAxis(FVector Axis, float Angle);
 		Vector    XM_CALLCONV     QuaternionRotationMatrix(FMatrix M);
 
-		void        XM_CALLCONV     QuaternionToAxisAngle(_Out_ Vector* pAxis, _Out_ float* pAngle, _In_ FVector Q);
+		void        XM_CALLCONV     QuaternionToAxisAngle(/*_Out_ */ Vector* pAxis, /*_Out_ */ float* pAngle, /*_In_ */FVector Q);
 
 		/****************************************************************************
 		 *
@@ -1554,12 +1554,12 @@ namespace At0
 		Vector    XM_CALLCONV     PlaneNormalizeEst(FVector P);
 		Vector    XM_CALLCONV     PlaneNormalize(FVector P);
 		Vector    XM_CALLCONV     PlaneIntersectLine(FVector P, FVector LinePoint1, FVector LinePoint2);
-		void        XM_CALLCONV     PlaneIntersectPlane(_Out_ Vector* pLinePoint1, _Out_ Vector* pLinePoint2, _In_ FVector P1, _In_ FVector P2);
+		void        XM_CALLCONV     PlaneIntersectPlane(/*_Out_ */ Vector* pLinePoint1, /*_Out_ */ Vector* pLinePoint2, /*_In_ */FVector P1, /*_In_ */FVector P2);
 		Vector    XM_CALLCONV     PlaneTransform(FVector P, FMatrix M);
-		Float4* XM_CALLCONV     PlaneTransformStream(_Out_writes_bytes_(sizeof(Float4) + OutputStride * (PlaneCount - 1)) Float4* pOutputStream,
-			_In_ size_t OutputStride,
+		Float4* XM_CALLCONV     PlaneTransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (PlaneCount - 1)) */Float4* pOutputStream,
+			/*_In_ */size_t OutputStride,
 			_In_reads_bytes_(sizeof(Float4) + InputStride * (PlaneCount - 1)) const Float4* pInputStream,
-			_In_ size_t InputStride, _In_ size_t PlaneCount, _In_ FMatrix M);
+			/*_In_ */size_t InputStride, /*_In_ */size_t PlaneCount, /*_In_ */FMatrix M);
 
 		Vector    XM_CALLCONV     PlaneFromPointNormal(FVector Point, FVector Normal);
 		Vector    XM_CALLCONV     PlaneFromPoints(FVector Point1, FVector Point2, FVector Point3);
@@ -1626,8 +1626,8 @@ namespace At0
 		float           ScalarCos(float Value);
 		float           ScalarCosEst(float Value);
 
-		void            ScalarSinCos(_Out_ float* pSin, _Out_ float* pCos, float Value);
-		void            ScalarSinCosEst(_Out_ float* pSin, _Out_ float* pCos, float Value);
+		void            ScalarSinCos(/*_Out_ */ float* pSin, /*_Out_ */ float* pCos, float Value);
+		void            ScalarSinCosEst(/*_Out_ */ float* pSin, /*_Out_ */ float* pCos, float Value);
 
 		float           ScalarASin(float Value);
 		float           ScalarASinEst(float Value);
@@ -2398,8 +2398,7 @@ namespace At0
 		 ****************************************************************************/
 
 		 //------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadInt(const uint32_t* pSource)
+		inline Vector XM_CALLCONV LoadInt(const uint32_t* pSource)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -2418,8 +2417,8 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadFloat(const float* pSource)
+
+		inline Vector XM_CALLCONV LoadFloat(const float* pSource)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -2438,11 +2437,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadInt2
-			(
-				const uint32_t* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadInt2
+		(
+			const uint32_t* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -2464,11 +2463,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadInt2A
-			(
-				const uint32_t* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadInt2A
+		(
+			const uint32_t* pSource
+		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
@@ -2490,11 +2489,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadFloat2
-			(
-				const Float2* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadFloat2
+		(
+			const Float2* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -2516,11 +2515,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadFloat2A
-			(
-				const Float2A* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadFloat2A
+		(
+			const Float2A* pSource
+		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
@@ -2542,11 +2541,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadSInt2
-			(
-				const Int2* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadSInt2
+		(
+			const Int2* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -2570,11 +2569,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadUInt2
-			(
-				const UInt2* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadUInt2
+		(
+			const UInt2* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -2610,11 +2609,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadInt3
-			(
-				const uint32_t* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadInt3
+		(
+			const uint32_t* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -2639,11 +2638,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadInt3A
-			(
-				const uint32_t* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadInt3A
+		(
+			const uint32_t* pSource
+		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
@@ -2667,11 +2666,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadFloat3
-			(
-				const Float3* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadFloat3
+		(
+			const Float3* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -2696,11 +2695,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadFloat3A
-			(
-				const Float3A* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadFloat3A
+		(
+			const Float3A* pSource
+		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
@@ -2723,11 +2722,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadSInt3
-			(
-				const Int3* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadSInt3
+		(
+			const Int3* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -2756,11 +2755,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadUInt3
-			(
-				const UInt3* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadUInt3
+		(
+			const UInt3* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -2799,11 +2798,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadInt4
-			(
-				const uint32_t* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadInt4
+		(
+			const uint32_t* pSource
+		)
 		{
 			assert(pSource);
 
@@ -2823,11 +2822,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadInt4A
-			(
-				const uint32_t* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadInt4A
+		(
+			const uint32_t* pSource
+		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
@@ -2847,11 +2846,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadFloat4
-			(
-				const Float4* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadFloat4
+		(
+			const Float4* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -2869,11 +2868,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadFloat4A
-			(
-				const Float4A* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadFloat4A
+		(
+			const Float4A* pSource
+		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
@@ -2892,11 +2891,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadSInt4
-			(
-				const Int4* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadSInt4
+		(
+			const Int4* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -2918,11 +2917,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV LoadUInt4
-			(
-				const UInt4* pSource
-			)
+
+		inline Vector XM_CALLCONV LoadUInt4
+		(
+			const UInt4* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -2954,11 +2953,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Matrix XM_CALLCONV LoadFloat3x3
-			(
-				const Float3X3* pSource
-			)
+
+		inline Matrix XM_CALLCONV LoadFloat3x3
+		(
+			const Float3X3* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3019,11 +3018,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Matrix XM_CALLCONV LoadFloat4x3
-			(
-				const Float4X3* pSource
-			)
+
+		inline Matrix XM_CALLCONV LoadFloat4x3
+		(
+			const Float4X3* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3099,11 +3098,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Matrix XM_CALLCONV LoadFloat4x3A
-			(
-				const Float4X3A* pSource
-			)
+
+		inline Matrix XM_CALLCONV LoadFloat4x3A
+		(
+			const Float4X3A* pSource
+		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
@@ -3180,11 +3179,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Matrix XM_CALLCONV LoadFloat3x4
-			(
-				const Float3X4* pSource
-			)
+
+		inline Matrix XM_CALLCONV LoadFloat3x4
+		(
+			const Float3X4* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3261,11 +3260,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Matrix XM_CALLCONV LoadFloat3x4A
-			(
-				const Float3X4A* pSource
-			)
+
+		inline Matrix XM_CALLCONV LoadFloat3x4A
+		(
+			const Float3X4A* pSource
+		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
@@ -3343,11 +3342,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Matrix XM_CALLCONV LoadFloat4x4
-			(
-				const Float4X4* pSource
-			)
+
+		inline Matrix XM_CALLCONV LoadFloat4x4
+		(
+			const Float4X4* pSource
+		)
 		{
 			assert(pSource);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3392,11 +3391,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Matrix XM_CALLCONV LoadFloat4x4A
-			(
-				const Float4X4A* pSource
-			)
+
+		inline Matrix XM_CALLCONV LoadFloat4x4A
+		(
+			const Float4X4A* pSource
+		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
@@ -3446,12 +3445,12 @@ namespace At0
 		 * Vector and matrix store operations
 		 *
 		 ****************************************************************************/
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreInt
-			(
-				uint32_t* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreInt
+		(
+			uint32_t* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3464,12 +3463,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat
-			(
-				float* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreFloat
+		(
+			float* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3482,12 +3481,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreInt2
-			(
-				uint32_t* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreInt2
+		(
+			uint32_t* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3504,12 +3503,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreInt2A
-			(
-				uint32_t* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreInt2A
+		(
+			uint32_t* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
@@ -3525,12 +3524,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat2
-			(
-				Float2* pDestination,
-				FVector  V
-			)
+
+		inline void XM_CALLCONV StoreFloat2
+		(
+			Float2* pDestination,
+			FVector  V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3547,12 +3546,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat2A
-			(
-				Float2A* pDestination,
-				FVector     V
-			)
+
+		inline void XM_CALLCONV StoreFloat2A
+		(
+			Float2A* pDestination,
+			FVector     V
+		)
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
@@ -3568,12 +3567,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreSInt2
-			(
-				Int2* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreSInt2
+		(
+			Int2* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3600,12 +3599,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreUInt2
-			(
-				UInt2* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreUInt2
+		(
+			UInt2* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3641,12 +3640,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreInt3
-			(
-				uint32_t* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreInt3
+		(
+			uint32_t* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3667,12 +3666,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreInt3A
-			(
-				uint32_t* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreInt3A
+		(
+			uint32_t* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
@@ -3692,12 +3691,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat3
-			(
-				Float3* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreFloat3
+		(
+			Float3* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3718,12 +3717,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat3A
-			(
-				Float3A* pDestination,
-				FVector     V
-			)
+
+		inline void XM_CALLCONV StoreFloat3A
+		(
+			Float3A* pDestination,
+			FVector     V
+		)
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
@@ -3743,12 +3742,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreSInt3
-			(
-				Int3* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreSInt3
+		(
+			Int3* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3779,12 +3778,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreUInt3
-			(
-				UInt3* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreUInt3
+		(
+			UInt3* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3824,12 +3823,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreInt4
-			(
-				uint32_t* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreInt4
+		(
+			uint32_t* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3845,12 +3844,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreInt4A
-			(
-				uint32_t* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreInt4A
+		(
+			uint32_t* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
@@ -3867,12 +3866,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat4
-			(
-				Float4* pDestination,
-				FVector  V
-			)
+
+		inline void XM_CALLCONV StoreFloat4
+		(
+			Float4* pDestination,
+			FVector  V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3888,12 +3887,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat4A
-			(
-				Float4A* pDestination,
-				FVector     V
-			)
+
+		inline void XM_CALLCONV StoreFloat4A
+		(
+			Float4A* pDestination,
+			FVector     V
+		)
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
@@ -3910,12 +3909,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreSInt4
-			(
-				Int4* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreSInt4
+		(
+			Int4* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3940,12 +3939,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreUInt4
-			(
-				UInt4* pDestination,
-				FVector V
-			)
+
+		inline void XM_CALLCONV StoreUInt4
+		(
+			UInt4* pDestination,
+			FVector V
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -3979,12 +3978,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat3x3
-			(
-				Float3X3* pDestination,
-				FMatrix	M
-			)
+
+		inline void XM_CALLCONV StoreFloat3x3
+		(
+			Float3X3* pDestination,
+			FMatrix	M
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -4026,12 +4025,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat4x3
-			(
-				Float4X3* pDestination,
-				FMatrix M
-			)
+
+		inline void XM_CALLCONV StoreFloat4x3
+		(
+			Float4X3* pDestination,
+			FMatrix M
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -4081,12 +4080,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat4x3A
-			(
-				Float4X3A* pDestination,
-				FMatrix		M
-			)
+
+		inline void XM_CALLCONV StoreFloat4x3A
+		(
+			Float4X3A* pDestination,
+			FMatrix		M
+		)
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
@@ -4147,12 +4146,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat3x4
-			(
-				Float3X4* pDestination,
-				FMatrix M
-			)
+
+		inline void XM_CALLCONV StoreFloat3x4
+		(
+			Float3X4* pDestination,
+			FMatrix M
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -4206,12 +4205,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat3x4A
-			(
-				Float3X4A* pDestination,
-				FMatrix M
-			)
+
+		inline void XM_CALLCONV StoreFloat3x4A
+		(
+			Float3X4A* pDestination,
+			FMatrix M
+		)
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
@@ -4266,12 +4265,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat4x4
-			(
-				Float4X4* pDestination,
-				FMatrix M
-			)
+
+		inline void XM_CALLCONV StoreFloat4x4
+		(
+			Float4X4* pDestination,
+			FMatrix M
+		)
 		{
 			assert(pDestination);
 #if defined(_XM_NO_INTRINSICS_)
@@ -4310,12 +4309,12 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV StoreFloat4x4A
-			(
-				Float4X4A* pDestination,
-				FMatrix		M
-			)
+
+		inline void XM_CALLCONV StoreFloat4x4A
+		(
+			Float4X4A* pDestination,
+			FMatrix		M
+		)
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
@@ -4485,11 +4484,11 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with a replicated floating point value passed by pointer
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorReplicatePtr
-			(
-				const float* pValue
-			)
+
+		inline Vector XM_CALLCONV VectorReplicatePtr
+		(
+			const float* pValue
+		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
 			float Value = pValue[0];
@@ -4532,11 +4531,11 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with a replicated integer value passed by pointer
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorReplicateIntPtr
-			(
-				const uint32_t* pValue
-			)
+
+		inline Vector XM_CALLCONV VectorReplicateIntPtr
+		(
+			const uint32_t* pValue
+		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
 			uint32_t Value = pValue[0];
@@ -4830,8 +4829,8 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Store a component indexed by i into a 32 bit float location in memory.
-		_Use_decl_annotations_
-			inline void XM_CALLCONV VectorGetByIndexPtr(float* f, FVector V, size_t i)
+
+		inline void XM_CALLCONV VectorGetByIndexPtr(float* f, FVector V, size_t i)
 		{
 			assert(f != nullptr);
 			assert(i < 4);
@@ -4848,8 +4847,8 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Store the X component into a 32 bit float location in memory.
-		_Use_decl_annotations_
-			inline void XM_CALLCONV VectorGetXPtr(float* x, FVector V)
+
+		inline void XM_CALLCONV VectorGetXPtr(float* x, FVector V)
 		{
 			assert(x != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -4862,8 +4861,8 @@ namespace At0
 		}
 
 		// Store the Y component into a 32 bit float location in memory.
-		_Use_decl_annotations_
-			inline void XM_CALLCONV VectorGetYPtr(float* y, FVector V)
+
+		inline void XM_CALLCONV VectorGetYPtr(float* y, FVector V)
 		{
 			assert(y != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -4879,8 +4878,8 @@ namespace At0
 		}
 
 		// Store the Z component into a 32 bit float location in memory.
-		_Use_decl_annotations_
-			inline void XM_CALLCONV VectorGetZPtr(float* z, FVector V)
+
+		inline void XM_CALLCONV VectorGetZPtr(float* z, FVector V)
 		{
 			assert(z != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -4896,8 +4895,8 @@ namespace At0
 		}
 
 		// Store the W component into a 32 bit float location in memory.
-		_Use_decl_annotations_
-			inline void XM_CALLCONV VectorGetWPtr(float* w, FVector V)
+
+		inline void XM_CALLCONV VectorGetWPtr(float* w, FVector V)
 		{
 			assert(w != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -4994,8 +4993,8 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Store a component indexed by i into a 32 bit integer location in memory.
-		_Use_decl_annotations_
-			inline void XM_CALLCONV VectorGetIntByIndexPtr(uint32_t* x, FVector V, size_t i)
+
+		inline void XM_CALLCONV VectorGetIntByIndexPtr(uint32_t* x, FVector V, size_t i)
 		{
 			assert(x != nullptr);
 			assert(i < 4);
@@ -5012,8 +5011,8 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Store the X component into a 32 bit integer location in memory.
-		_Use_decl_annotations_
-			inline void XM_CALLCONV VectorGetIntXPtr(uint32_t* x, FVector V)
+
+		inline void XM_CALLCONV VectorGetIntXPtr(uint32_t* x, FVector V)
 		{
 			assert(x != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -5026,8 +5025,8 @@ namespace At0
 		}
 
 		// Store the Y component into a 32 bit integer location in memory.
-		_Use_decl_annotations_
-			inline void XM_CALLCONV VectorGetIntYPtr(uint32_t* y, FVector V)
+
+		inline void XM_CALLCONV VectorGetIntYPtr(uint32_t* y, FVector V)
 		{
 			assert(y != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -5044,8 +5043,8 @@ namespace At0
 		}
 
 		// Store the Z component into a 32 bit integer locaCantion in memory.
-		_Use_decl_annotations_
-			inline void XM_CALLCONV VectorGetIntZPtr(uint32_t* z, FVector V)
+
+		inline void XM_CALLCONV VectorGetIntZPtr(uint32_t* z, FVector V)
 		{
 			assert(z != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -5062,8 +5061,8 @@ namespace At0
 		}
 
 		// Store the W component into a 32 bit integer location in memory.
-		_Use_decl_annotations_
-			inline void XM_CALLCONV VectorGetIntWPtr(uint32_t* w, FVector V)
+
+		inline void XM_CALLCONV VectorGetIntWPtr(uint32_t* w, FVector V)
 		{
 			assert(w != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -5213,8 +5212,8 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Sets a component of a vector to a floating point value passed by pointer
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorSetByIndexPtr(FVector V, const float* f, size_t i)
+
+		inline Vector XM_CALLCONV VectorSetByIndexPtr(FVector V, const float* f, size_t i)
 		{
 			assert(f != nullptr);
 			assert(i < 4);
@@ -5228,8 +5227,8 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Sets the X component of a vector to a floating point value passed by pointer
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorSetXPtr(FVector V, const float* x)
+
+		inline Vector XM_CALLCONV VectorSetXPtr(FVector V, const float* x)
 		{
 			assert(x != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -5250,8 +5249,8 @@ namespace At0
 		}
 
 		// Sets the Y component of a vector to a floating point value passed by pointer
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorSetYPtr(FVector V, const float* y)
+
+		inline Vector XM_CALLCONV VectorSetYPtr(FVector V, const float* y)
 		{
 			assert(y != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -5278,8 +5277,8 @@ namespace At0
 		}
 
 		// Sets the Z component of a vector to a floating point value passed by pointer
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorSetZPtr(FVector V, const float* z)
+
+		inline Vector XM_CALLCONV VectorSetZPtr(FVector V, const float* z)
 		{
 			assert(z != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -5306,8 +5305,8 @@ namespace At0
 		}
 
 		// Sets the W component of a vector to a floating point value passed by pointer
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorSetWPtr(FVector V, const float* w)
+
+		inline Vector XM_CALLCONV VectorSetWPtr(FVector V, const float* w)
 		{
 			assert(w != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -5461,8 +5460,8 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Sets a component of a vector to an integer value passed by pointer
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorSetIntByIndexPtr(FVector V, const uint32_t* x, size_t i)
+
+		inline Vector XM_CALLCONV VectorSetIntByIndexPtr(FVector V, const uint32_t* x, size_t i)
 		{
 			assert(x != nullptr);
 			assert(i < 4);
@@ -5476,8 +5475,8 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Sets the X component of a vector to an integer value passed by pointer
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorSetIntXPtr(FVector V, const uint32_t* x)
+
+		inline Vector XM_CALLCONV VectorSetIntXPtr(FVector V, const uint32_t* x)
 		{
 			assert(x != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -5498,8 +5497,8 @@ namespace At0
 		}
 
 		// Sets the Y component of a vector to an integer value passed by pointer
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorSetIntYPtr(FVector V, const uint32_t* y)
+
+		inline Vector XM_CALLCONV VectorSetIntYPtr(FVector V, const uint32_t* y)
 		{
 			assert(y != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -5526,8 +5525,8 @@ namespace At0
 		}
 
 		// Sets the Z component of a vector to an integer value passed by pointer
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorSetIntZPtr(FVector V, const uint32_t* z)
+
+		inline Vector XM_CALLCONV VectorSetIntZPtr(FVector V, const uint32_t* z)
 		{
 			assert(z != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -5554,8 +5553,8 @@ namespace At0
 		}
 
 		// Sets the W component of a vector to an integer value passed by pointer
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorSetIntWPtr(FVector V, const uint32_t* w)
+
+		inline Vector XM_CALLCONV VectorSetIntWPtr(FVector V, const uint32_t* w)
 		{
 			assert(w != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -5931,13 +5930,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorEqualR
-			(
-				uint32_t* pCR,
-				FVector V1,
-				FVector V2
-			)
+
+		inline Vector XM_CALLCONV VectorEqualR
+		(
+			uint32_t* pCR,
+			FVector V1,
+			FVector V2
+		)
 		{
 			assert(pCR != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -6029,13 +6028,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorEqualIntR
-			(
-				uint32_t* pCR,
-				FVector V1,
-				FVector V2
-			)
+
+		inline Vector XM_CALLCONV VectorEqualIntR
+		(
+			uint32_t* pCR,
+			FVector V1,
+			FVector V2
+		)
 		{
 			assert(pCR != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -6212,13 +6211,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorGreaterR
-			(
-				uint32_t* pCR,
-				FVector V1,
-				FVector V2
-			)
+
+		inline Vector XM_CALLCONV VectorGreaterR
+		(
+			uint32_t* pCR,
+			FVector V1,
+			FVector V2
+		)
 		{
 			assert(pCR != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -6306,13 +6305,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorGreaterOrEqualR
-			(
-				uint32_t* pCR,
-				FVector V1,
-				FVector V2
-			)
+
+		inline Vector XM_CALLCONV VectorGreaterOrEqualR
+		(
+			uint32_t* pCR,
+			FVector V1,
+			FVector V2
+		)
 		{
 			assert(pCR != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -6466,13 +6465,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		_Use_decl_annotations_
-			inline Vector XM_CALLCONV VectorInBoundsR
-			(
-				uint32_t* pCR,
-				FVector V,
-				FVector Bounds
-			)
+
+		inline Vector XM_CALLCONV VectorInBoundsR
+		(
+			uint32_t* pCR,
+			FVector V,
+			FVector Bounds
+		)
 		{
 			assert(pCR != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
@@ -8793,13 +8792,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		_Use_decl_annotations_
-			inline void XM_CALLCONV VectorSinCos
-			(
-				Vector* pSin,
-				Vector* pCos,
-				FVector V
-			)
+
+		inline void XM_CALLCONV VectorSinCos
+		(
+			Vector* pSin,
+			Vector* pCos,
+			FVector V
+		)
 		{
 			assert(pSin != nullptr);
 			assert(pCos != nullptr);
@@ -8994,7 +8993,7 @@ namespace At0
 			for (size_t i = 0; i < 4; i++)
 			{
 				VB.vector4_u32[i] = static_cast<uint32_t>(VB.vector4_f32[i]);
-		}
+			}
 #endif
 
 			Vector VC2 = VectorMultiply(VC, VC);
@@ -9719,13 +9718,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		_Use_decl_annotations_
-			inline void XM_CALLCONV VectorSinCosEst
-			(
-				Vector* pSin,
-				Vector* pCos,
-				FVector  V
-			)
+
+		inline void XM_CALLCONV VectorSinCosEst
+		(
+			Vector* pSin,
+			Vector* pCos,
+			FVector  V
+		)
 		{
 			assert(pSin != nullptr);
 			assert(pCos != nullptr);
@@ -12030,16 +12029,16 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		_Use_decl_annotations_
-			inline Float4* XM_CALLCONV Vector2TransformStream
-			(
-				Float4* pOutputStream,
-				size_t          OutputStride,
-				const Float2* pInputStream,
-				size_t          InputStride,
-				size_t          VectorCount,
-				FMatrix       M
-			)
+
+		inline Float4* XM_CALLCONV Vector2TransformStream
+		(
+			Float4* pOutputStream,
+			size_t          OutputStride,
+			const Float2* pInputStream,
+			size_t          InputStride,
+			size_t          VectorCount,
+			FMatrix       M
+		)
 		{
 			assert(pOutputStream != nullptr);
 			assert(pInputStream != nullptr);
@@ -12331,16 +12330,16 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		_Use_decl_annotations_
-			inline Float2* XM_CALLCONV Vector2TransformCoordStream
-			(
-				Float2* pOutputStream,
-				size_t          OutputStride,
-				const Float2* pInputStream,
-				size_t          InputStride,
-				size_t          VectorCount,
-				FMatrix       M
-			)
+
+		inline Float2* XM_CALLCONV Vector2TransformCoordStream
+		(
+			Float2* pOutputStream,
+			size_t          OutputStride,
+			const Float2* pInputStream,
+			size_t          InputStride,
+			size_t          VectorCount,
+			FMatrix       M
+		)
 		{
 			assert(pOutputStream != nullptr);
 			assert(pInputStream != nullptr);
@@ -12732,16 +12731,16 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		_Use_decl_annotations_
-			inline Float2* XM_CALLCONV Vector2TransformNormalStream
-			(
-				Float2* pOutputStream,
-				size_t          OutputStride,
-				const Float2* pInputStream,
-				size_t          InputStride,
-				size_t          VectorCount,
-				FMatrix       M
-			)
+
+		inline Float2* XM_CALLCONV Vector2TransformNormalStream
+		(
+			Float2* pOutputStream,
+			size_t          OutputStride,
+			const Float2* pInputStream,
+			size_t          InputStride,
+			size_t          VectorCount,
+			FMatrix       M
+		)
 		{
 			assert(pOutputStream != nullptr);
 			assert(pInputStream != nullptr);
@@ -14257,7 +14256,7 @@ namespace At0
 				// Result = RefractionIndex * Incident - Normal * R
 				vResult = vmulq_f32(RefractionIndex, Incident);
 				vResult = vmlsq_f32(vResult, R, Normal);
-		}
+			}
 			return vResult;
 #elif defined(_XM_SSE_INTRINSICS_)
 	// Result = RefractionIndex * Incident - Normal * (RefractionIndex * dot(Incident, Normal) + 
@@ -14399,14 +14398,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		_Use_decl_annotations_
-			inline void XM_CALLCONV Vector3ComponentsFromNormal
-			(
-				Vector* pParallel,
-				Vector* pPerpendicular,
-				FVector  V,
-				FVector  Normal
-			)
+
+		inline void XM_CALLCONV Vector3ComponentsFromNormal
+		(
+			Vector* pParallel,
+			Vector* pPerpendicular,
+			FVector  V,
+			FVector  Normal
+		)
 		{
 			assert(pParallel != nullptr);
 			assert(pPerpendicular != nullptr);
@@ -14495,16 +14494,16 @@ namespace At0
 #pragma prefast(disable : 26015 26019, "PREfast noise: Esp:1307" )
 #endif
 
-		_Use_decl_annotations_
-			inline Float4* XM_CALLCONV Vector3TransformStream
-			(
-				Float4* pOutputStream,
-				size_t          OutputStride,
-				const Float3* pInputStream,
-				size_t          InputStride,
-				size_t          VectorCount,
-				FMatrix       M
-			)
+
+		inline Float4* XM_CALLCONV Vector3TransformStream
+		(
+			Float4* pOutputStream,
+			size_t          OutputStride,
+			const Float3* pInputStream,
+			size_t          InputStride,
+			size_t          VectorCount,
+			FMatrix       M
+		)
 		{
 			assert(pOutputStream != nullptr);
 			assert(pInputStream != nullptr);
@@ -14878,16 +14877,16 @@ namespace At0
 #pragma prefast(disable : 26015 26019, "PREfast noise: Esp:1307" )
 #endif
 
-		_Use_decl_annotations_
-			inline Float3* XM_CALLCONV Vector3TransformCoordStream
-			(
-				Float3* pOutputStream,
-				size_t          OutputStride,
-				const Float3* pInputStream,
-				size_t          InputStride,
-				size_t          VectorCount,
-				FMatrix       M
-			)
+
+		inline Float3* XM_CALLCONV Vector3TransformCoordStream
+		(
+			Float3* pOutputStream,
+			size_t          OutputStride,
+			const Float3* pInputStream,
+			size_t          InputStride,
+			size_t          VectorCount,
+			FMatrix       M
+		)
 		{
 			assert(pOutputStream != nullptr);
 			assert(pInputStream != nullptr);
@@ -15408,16 +15407,16 @@ namespace At0
 #pragma prefast(disable : 26015 26019, "PREfast noise: Esp:1307" )
 #endif
 
-		_Use_decl_annotations_
-			inline Float3* XM_CALLCONV Vector3TransformNormalStream
-			(
-				Float3* pOutputStream,
-				size_t          OutputStride,
-				const Float3* pInputStream,
-				size_t          InputStride,
-				size_t          VectorCount,
-				FMatrix       M
-			)
+
+		inline Float3* XM_CALLCONV Vector3TransformNormalStream
+		(
+			Float3* pOutputStream,
+			size_t          OutputStride,
+			const Float3* pInputStream,
+			size_t          InputStride,
+			size_t          VectorCount,
+			FMatrix       M
+		)
 		{
 			assert(pOutputStream != nullptr);
 			assert(pInputStream != nullptr);
@@ -15830,24 +15829,24 @@ namespace At0
 #pragma prefast(disable : 26015 26019, "PREfast noise: Esp:1307" )
 #endif
 
-		_Use_decl_annotations_
-			inline Float3* XM_CALLCONV Vector3ProjectStream
-			(
-				Float3* pOutputStream,
-				size_t          OutputStride,
-				const Float3* pInputStream,
-				size_t          InputStride,
-				size_t          VectorCount,
-				float           ViewportX,
-				float           ViewportY,
-				float           ViewportWidth,
-				float           ViewportHeight,
-				float           ViewportMinZ,
-				float           ViewportMaxZ,
-				FMatrix     Projection,
-				CMatrix     View,
-				CMatrix     World
-			)
+
+		inline Float3* XM_CALLCONV Vector3ProjectStream
+		(
+			Float3* pOutputStream,
+			size_t          OutputStride,
+			const Float3* pInputStream,
+			size_t          InputStride,
+			size_t          VectorCount,
+			float           ViewportX,
+			float           ViewportY,
+			float           ViewportWidth,
+			float           ViewportHeight,
+			float           ViewportMinZ,
+			float           ViewportMaxZ,
+			FMatrix     Projection,
+			CMatrix     View,
+			CMatrix     World
+		)
 		{
 			assert(pOutputStream != nullptr);
 			assert(pInputStream != nullptr);
@@ -16414,23 +16413,23 @@ namespace At0
 #pragma prefast(disable : 26015 26019, "PREfast noise: Esp:1307" )
 #endif
 
-		_Use_decl_annotations_
-			inline Float3* XM_CALLCONV Vector3UnprojectStream
-			(
-				Float3* pOutputStream,
-				size_t          OutputStride,
-				const Float3* pInputStream,
-				size_t          InputStride,
-				size_t          VectorCount,
-				float           ViewportX,
-				float           ViewportY,
-				float           ViewportWidth,
-				float           ViewportHeight,
-				float           ViewportMinZ,
-				float           ViewportMaxZ,
-				FMatrix       Projection,
-				CMatrix       View,
-				CMatrix       World)
+
+		inline Float3* XM_CALLCONV Vector3UnprojectStream
+		(
+			Float3* pOutputStream,
+			size_t          OutputStride,
+			const Float3* pInputStream,
+			size_t          InputStride,
+			size_t          VectorCount,
+			float           ViewportX,
+			float           ViewportY,
+			float           ViewportWidth,
+			float           ViewportHeight,
+			float           ViewportMinZ,
+			float           ViewportMaxZ,
+			FMatrix       Projection,
+			CMatrix       View,
+			CMatrix       World)
 		{
 			assert(pOutputStream != nullptr);
 			assert(pInputStream != nullptr);
@@ -17054,7 +17053,7 @@ namespace At0
 			else if (!r)
 			{
 				CR = XM_CRMASK_CR6FALSE;
-		}
+			}
 			return CR;
 #elif defined(_XM_SSE_INTRINSICS_)
 			Vector vTemp = _mm_cmpeq_ps(V1, V2);
@@ -18508,16 +18507,16 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Float4* XM_CALLCONV Vector4TransformStream
-			(
-				Float4* pOutputStream,
-				size_t          OutputStride,
-				const Float4* pInputStream,
-				size_t          InputStride,
-				size_t          VectorCount,
-				FMatrix       M
-			)
+
+		inline Float4* XM_CALLCONV Vector4TransformStream
+		(
+			Float4* pOutputStream,
+			size_t          OutputStride,
+			const Float4* pInputStream,
+			size_t          InputStride,
+			size_t          VectorCount,
+			FMatrix       M
+		)
 		{
 			assert(pOutputStream != nullptr);
 			assert(pInputStream != nullptr);
@@ -19629,12 +19628,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Return the inverse and the determinant of a 4x4 matrix
-		_Use_decl_annotations_
-			inline Matrix XM_CALLCONV MatrixInverse
-			(
-				Vector* pDeterminant,
-				FMatrix  M
-			)
+
+		inline Matrix XM_CALLCONV MatrixInverse
+		(
+			Vector* pDeterminant,
+			FMatrix  M
+		)
 		{
 #if defined(_XM_NO_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
 
@@ -19942,14 +19941,14 @@ namespace At0
 
 #define XM3_DECOMP_EPSILON 0.0001f
 
-		_Use_decl_annotations_
-			inline bool XM_CALLCONV MatrixDecompose
-			(
-				Vector* outScale,
-				Vector* outRotQuat,
-				Vector* outTrans,
-				FMatrix M
-			)
+
+		inline bool XM_CALLCONV MatrixDecompose
+		(
+			Vector* outScale,
+			Vector* outRotQuat,
+			Vector* outTrans,
+			FMatrix M
+		)
 		{
 			static const Vector* pvCanonicalBasis[3] = {
 				&g_XMIdentityR0.v,
@@ -21954,11 +21953,11 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Matrix::Matrix
-			(
-				const float* pArray
-			)
+
+		inline Matrix::Matrix
+		(
+			const float* pArray
+		)
 		{
 			assert(pArray != nullptr);
 			r[0] = LoadFloat4(reinterpret_cast<const Float4*>(pArray));
@@ -22176,11 +22175,11 @@ namespace At0
 		 ****************************************************************************/
 
 		 //------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Float3X3::Float3X3
-			(
-				const float* pArray
-			)
+
+		inline Float3X3::Float3X3
+		(
+			const float* pArray
+		)
 		{
 			assert(pArray != nullptr);
 			for (size_t Row = 0; Row < 3; Row++)
@@ -22199,11 +22198,11 @@ namespace At0
 		 ****************************************************************************/
 
 		 //------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Float4X3::Float4X3
-			(
-				const float* pArray
-			)
+
+		inline Float4X3::Float4X3
+		(
+			const float* pArray
+		)
 		{
 			assert(pArray != nullptr);
 
@@ -22231,11 +22230,11 @@ namespace At0
 		****************************************************************************/
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Float3X4::Float3X4
-			(
-				const float* pArray
-			)
+
+		inline Float3X4::Float3X4
+		(
+			const float* pArray
+		)
 		{
 			assert(pArray != nullptr);
 
@@ -22262,11 +22261,11 @@ namespace At0
 		 ****************************************************************************/
 
 		 //------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Float4X4::Float4X4
-			(
-				const float* pArray
-			)
+
+		inline Float4X4::Float4X4
+		(
+			const float* pArray
+		)
 		{
 			assert(pArray != nullptr);
 
@@ -22771,17 +22770,17 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV QuaternionSquadSetup
-			(
-				Vector* pA,
-				Vector* pB,
-				Vector* pC,
-				FVector  Q0,
-				FVector  Q1,
-				FVector  Q2,
-				GVector  Q3
-			)
+
+		inline void XM_CALLCONV QuaternionSquadSetup
+		(
+			Vector* pA,
+			Vector* pB,
+			Vector* pC,
+			FVector  Q0,
+			FVector  Q1,
+			FVector  Q2,
+			GVector  Q3
+		)
 		{
 			assert(pA);
 			assert(pB);
@@ -23245,13 +23244,13 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV QuaternionToAxisAngle
-			(
-				Vector* pAxis,
-				float* pAngle,
-				FVector  Q
-			)
+
+		inline void XM_CALLCONV QuaternionToAxisAngle
+		(
+			Vector* pAxis,
+			float* pAngle,
+			FVector  Q
+		)
 		{
 			assert(pAxis);
 			assert(pAngle);
@@ -23490,14 +23489,14 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline void XM_CALLCONV PlaneIntersectPlane
-			(
-				Vector* pLinePoint1,
-				Vector* pLinePoint2,
-				FVector  P1,
-				FVector  P2
-			)
+
+		inline void XM_CALLCONV PlaneIntersectPlane
+		(
+			Vector* pLinePoint1,
+			Vector* pLinePoint2,
+			FVector  P1,
+			FVector  P2
+		)
 		{
 			assert(pLinePoint1);
 			assert(pLinePoint2);
@@ -23546,16 +23545,16 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		_Use_decl_annotations_
-			inline Float4* XM_CALLCONV PlaneTransformStream
-			(
-				Float4* pOutputStream,
-				size_t          OutputStride,
-				const Float4* pInputStream,
-				size_t          InputStride,
-				size_t          PlaneCount,
-				FMatrix       M
-			)
+
+		inline Float4* XM_CALLCONV PlaneTransformStream
+		(
+			Float4* pOutputStream,
+			size_t          OutputStride,
+			const Float4* pInputStream,
+			size_t          InputStride,
+			size_t          PlaneCount,
+			FMatrix       M
+		)
 		{
 			return Vector4TransformStream(pOutputStream,
 				OutputStride,
@@ -24600,13 +24599,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		_Use_decl_annotations_
-			inline void ScalarSinCos
-			(
-				float* pSin,
-				float* pCos,
-				float  Value
-			)
+
+		inline void ScalarSinCos
+		(
+			float* pSin,
+			float* pCos,
+			float  Value
+		)
 		{
 			assert(pSin);
 			assert(pCos);
@@ -24652,13 +24651,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		_Use_decl_annotations_
-			inline void ScalarSinCosEst
-			(
-				float* pSin,
-				float* pCos,
-				float  Value
-			)
+
+		inline void ScalarSinCosEst
+		(
+			float* pSin,
+			float* pCos,
+			float  Value
+		)
 		{
 			assert(pSin);
 			assert(pCos);
