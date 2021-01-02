@@ -4,8 +4,10 @@
 #include "Bindable.h"
 #include "RayRender/GraphicsResource.h"
 
-#include <DirectXMath.h>
+#include <../../RayUtil/include/RayUtil/RMath.h>
+
 #include <d3d11.h>
+
 
 
 namespace At0::Ray
@@ -98,8 +100,8 @@ namespace At0::Ray
 	private:
 		struct Transforms
 		{
-			DirectX::XMMATRIX modelViewProj;
-			DirectX::XMMATRIX model;
+			Matrix modelViewProj;
+			Matrix model;
 		};
 
 		const Drawable& m_Parent;

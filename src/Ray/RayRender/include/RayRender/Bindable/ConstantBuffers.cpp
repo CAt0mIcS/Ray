@@ -20,8 +20,8 @@ namespace At0::Ray
 		const auto model = m_Parent.GetTransform();
 		const Transforms tf =
 		{
-			DirectX::XMMatrixTranspose(model),
-			DirectX::XMMatrixTranspose(
+			MatrixTranspose(model),
+			MatrixTranspose(
 				model *
 				m_Renderer.GetCamera() *
 				m_Renderer.GetProjection()

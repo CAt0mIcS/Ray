@@ -6,7 +6,7 @@
 #include <../../RayDebug/include/RayDebug/RAssert.h>
 #include <../../RayUtil/include/RayUtil/RMath.h>
 
-#include <DirectXMath.h>
+//#include <DirectXMath.h>
 #include <vector>
 #include <../../extern/entt/src/entt/entt.hpp>
 
@@ -15,36 +15,52 @@ namespace At0::Ray
 {
 	struct TranslationComponent
 	{
-		glm::vec3 Translation;
+		float x, y, z;
 
 		TranslationComponent(float x, float y, float z)
-			: Translation{ x, y, z } {}
+			: x(x), y(y), z(z) {}
+
+		TranslationComponent()
+			: x(0.0f), y(0.0f), z(0.0f) {}
 	};
 
 	struct ScaleComponent
 	{
-		glm::vec3 Scale;
+		float x, y, z;
 
 		ScaleComponent(float x, float y, float z)
-			: Scale{ x, y, z } {}
+			: x(x), y(y), z(z) {}
+
+		ScaleComponent()
+			: x(1.0f), y(1.0f), z(1.0f) {}
 	};
 
 	struct RotationComponent
 	{
-		glm::quat Quaternion;
+		float x, y, z, w;
 
 		RotationComponent()
-			: Quaternion{} {}
+			: x(0.0f), y(0.0f), z(0.0f), w(1.0f) {}
+
+		RotationComponent(float x, float y, float z, float w)
+			: x(x), y(y), z(z), w(w) {}
 	};
 
 	struct TransformComponent
 	{
-		glm::vec3 Translation;
-		glm::vec3 Scale;
-		glm::quat Rotation;
+		TranslationComponent Translation;
+		ScaleComponent Scale;
+		RotationComponent Rotation;
 
 		TransformComponent()
-			: Translation{}, Scale{ 1.0f, 1.0f, 1.0f }, Rotation{} {}
+			: Translation{}, Scale{}, Rotation{} {}
+
+		TransformComponent(
+			const TranslationComponent& transform,
+			const ScaleComponent& scale,
+			const RotationComponent& rotation
+		)
+			: Translation(transform), Scale(scale), Rotation(rotation) {}
 	};
 
 
@@ -61,7 +77,7 @@ namespace At0::Ray
 		Drawable& operator=(Drawable&&) noexcept = default;
 
 		virtual void Update() = 0;
-		DirectX::XMMATRIX GetTransform() const;
+		Matrix GetTransform() const;
 
 		virtual void Draw(Renderer3D* renderer);
 		void Bind();

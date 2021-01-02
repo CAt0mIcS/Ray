@@ -154,7 +154,7 @@ namespace At0::Layers
 			{
 				Ray::TransformComponent& tform = cubes[i].GetComponent<Ray::TransformComponent>();
 
-				DirectX::XMVECTOR quaternion = DirectX::XMQuaternionRotationRollPitchYaw(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine));
+				Ray::Vector quaternion = DirectX::XMQuaternionRotationRollPitchYaw(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine));
 				tform.Rotation = { quaternion.m128_f32[0], quaternion.m128_f32[1], quaternion.m128_f32[2], quaternion.m128_f32[3] };
 				tform.Translation = { posDist(mtEngine), posDist(mtEngine), posDist(mtEngine) - 20.0f };
 				tform.Scale = { scaleDist(mtEngine), scaleDist(mtEngine), scaleDist(mtEngine) };
@@ -162,7 +162,7 @@ namespace At0::Layers
 		}
 
 		//model = Ray::Model("Resources/nanosuit.obj", face_colors, GetMainWindow().GetRenderer3D());
-		GetMainWindow().GetRenderer3D().SetCamera(DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f));
+		GetMainWindow().GetRenderer3D().SetCamera(Ray::MatrixTranslation(0.0f, 0.0f, 5.0f));
 
 #endif
 	}
@@ -232,7 +232,7 @@ namespace At0::Layers
 			for (uint32_t i = 0; i < cubes.size() - 1; ++i)
 			{
 				Ray::TransformComponent& tform = cubes[i].GetComponent<Ray::TransformComponent>();
-				DirectX::XMVECTOR quaternion = DirectX::XMQuaternionRotationRollPitchYaw(pitch + i, yaw + i, roll + i);
+				Ray::Vector quaternion = DirectX::XMQuaternionRotationRollPitchYaw(pitch + i, yaw + i, roll + i);
 				tform.Rotation = { quaternion.m128_f32[0], quaternion.m128_f32[1], quaternion.m128_f32[2], quaternion.m128_f32[3] };
 			}
 

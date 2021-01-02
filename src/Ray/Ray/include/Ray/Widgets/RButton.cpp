@@ -64,7 +64,7 @@ namespace At0::Ray
 		newPos = transformer.ToNormalizedDeviceCoordinate(newPos);
 
 		TransformComponent& tform = m_DrawObject->GetComponent<TransformComponent>();
-		tform.Translation = { newPos, 0.0f };
+		tform.Translation = { newPos.x, newPos.y, 0.0f };
 	}
 
 	void PushButton::Resize(const Size2& size)
@@ -78,7 +78,7 @@ namespace At0::Ray
 		newSize.y /= (rc.bottom - rc.top);
 
 		TransformComponent& tform = m_DrawObject->GetComponent<TransformComponent>();
-		tform.Scale = { newSize, 0.0f };
+		tform.Scale = { newSize.x, newSize.y, 0.0f };
 	}
 
 	Point2 PushButton::GetPos() const

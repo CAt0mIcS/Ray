@@ -12,7 +12,6 @@
 #include "../Bindable/VertexShader.h"
 #include "../Bindable/PixelShader.h"
 
-namespace dx = DirectX;
 
 namespace At0::Ray
 {
@@ -32,23 +31,23 @@ namespace At0::Ray
 				auto& v0 = vertices[indices[i]];
 				auto& v1 = vertices[indices[i + 1]];
 				auto& v2 = vertices[indices[i + 2]];
-				auto p0 = DirectX::XMLoadFloat3(&v0.pos);
-				auto p1 = DirectX::XMLoadFloat3(&v1.pos);
-				auto p2 = DirectX::XMLoadFloat3(&v2.pos);
+				auto p0 = LoadFloat3(&v0.pos);
+				auto p1 = LoadFloat3(&v1.pos);
+				auto p2 = LoadFloat3(&v2.pos);
 
-				DirectX::XMVECTOR vec1{};
+				Vector vec1{};
 				for (uint32_t i = 0; i < 4; ++i)
 				{
 					vec1.m128_f32[i] = p1.m128_f32[i] - p0.m128_f32[i];
 				}
 
-				DirectX::XMVECTOR vec2{};
+				Vector vec2{};
 				for (uint32_t i = 0; i < 4; ++i)
 				{
 					vec2.m128_f32[i] = p2.m128_f32[i] - p0.m128_f32[i];
 				}
 
-				auto n = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(vec1, vec2));
+				auto n = Vector3Normalize(Vector3Cross(vec1, vec2));
 
 				XMStoreFloat3(&v0.n, n);
 				XMStoreFloat3(&v1.n, n);
@@ -56,14 +55,14 @@ namespace At0::Ray
 			}
 		}
 
-		void Transform(DirectX::FXMMATRIX matrix)
+		void Transform(const Matrix& matrix)
 		{
 			for (auto& v : vertices)
 			{
-				const DirectX::XMVECTOR pos = DirectX::XMLoadFloat3(&v.pos);
-				DirectX::XMStoreFloat3(
+				const Vector pos = LoadFloat3(&v.pos);
+				StoreFloat3(
 					&v.pos,
-					DirectX::XMVector3Transform(pos, matrix)
+					Vector3Transform(pos, matrix)
 				);
 			}
 		}
@@ -81,40 +80,39 @@ namespace At0::Ray
 		{
 			static constexpr float PI = 3.14159265359f;
 
-			namespace dx = DirectX;
 			assert(latDiv >= 3);
 			assert(longDiv >= 3);
 
 			constexpr float radius = 1.0f;
-			const auto base = dx::XMVectorSet(0.0f, 0.0f, radius, 0.0f);
+			const auto base = VectorSet(0.0f, 0.0f, radius, 0.0f);
 			const float lattitudeAngle = PI / latDiv;
 			const float longitudeAngle = 2.0f * PI / longDiv;
 
 			std::vector<V> vertices;
 			for (int iLat = 1; iLat < latDiv; iLat++)
 			{
-				const auto latBase = dx::XMVector3Transform(
+				const auto latBase = Vector3Transform(
 					base,
-					dx::XMMatrixRotationX(lattitudeAngle * iLat)
+					MatrixRotationX(lattitudeAngle * iLat)
 				);
 				for (int iLong = 0; iLong < longDiv; iLong++)
 				{
 					vertices.emplace_back();
-					auto v = dx::XMVector3Transform(
+					auto v = Vector3Transform(
 						latBase,
-						dx::XMMatrixRotationZ(longitudeAngle * iLong)
+						MatrixRotationZ(longitudeAngle * iLong)
 					);
-					dx::XMStoreFloat3(&vertices.back().pos, v);
+					StoreFloat3(&vertices.back().pos, v);
 				}
 			}
 
 			// add the cap vertices
 			const auto iNorthPole = (unsigned short)vertices.size();
 			vertices.emplace_back();
-			dx::XMStoreFloat3(&vertices.back().pos, base);
+			StoreFloat3(&vertices.back().pos, base);
 			const auto iSouthPole = (unsigned short)vertices.size();
 			vertices.emplace_back();
-			dx::XMStoreFloat3(&vertices.back().pos, dx::XMVectorNegate(base));
+			StoreFloat3(&vertices.back().pos, VectorNegate(base));
 
 			const auto calcIdx = [latDiv, longDiv](unsigned short iLat, unsigned short iLong)
 			{ return iLat * longDiv + iLong; };
@@ -179,10 +177,10 @@ namespace At0::Ray
 		{
 			struct Vertex
 			{
-				dx::XMFLOAT3 pos;
+				Float3 pos;
 			};
 			auto model = Sphere::Make<Vertex>();
-			model.Transform(dx::XMMatrixScaling(radius, radius, radius));
+			model.Transform(MatrixScaling(radius, radius, radius));
 			AddStaticBind(MakeScope<VertexBuffer>(model.vertices));
 			AddStaticIndexBuffer(MakeScope<IndexBuffer>(model.indices));
 
@@ -194,7 +192,7 @@ namespace At0::Ray
 
 			struct PSColorConstant
 			{
-				dx::XMFLOAT3 color = { 1.0f,1.0f,1.0f };
+				Float3 color = { 1.0f,1.0f,1.0f };
 				float padding;
 			} colorConst;
 			AddStaticBind(MakeScope<PixelConstantBuffer<PSColorConstant>>(colorConst));

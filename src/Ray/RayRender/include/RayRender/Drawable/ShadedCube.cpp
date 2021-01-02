@@ -31,27 +31,27 @@ namespace At0::Ray
 				auto& v0 = vertices[indices[i]];
 				auto& v1 = vertices[indices[i + 1]];
 				auto& v2 = vertices[indices[i + 2]];
-				auto p0 = DirectX::XMLoadFloat3(&v0.pos);
-				auto p1 = DirectX::XMLoadFloat3(&v1.pos);
-				auto p2 = DirectX::XMLoadFloat3(&v2.pos);
+				auto p0 = LoadFloat3(&v0.pos);
+				auto p1 = LoadFloat3(&v1.pos);
+				auto p2 = LoadFloat3(&v2.pos);
 
-				DirectX::XMVECTOR vec1{};
+				Vector vec1{};
 				for (uint32_t i = 0; i < 4; ++i)
 				{
 					vec1.m128_f32[i] = p1.m128_f32[i] - p0.m128_f32[i];
 				}
 
-				DirectX::XMVECTOR vec2{};
+				Vector vec2{};
 				for (uint32_t i = 0; i < 4; ++i)
 				{
 					vec2.m128_f32[i] = p2.m128_f32[i] - p0.m128_f32[i];
 				}
 
-				auto n = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(vec1, vec2));
+				auto n = Vector3Normalize(Vector3Cross(vec1, vec2));
 
-				XMStoreFloat3(&v0.n, n);
-				XMStoreFloat3(&v1.n, n);
-				XMStoreFloat3(&v2.n, n);
+				StoreFloat3(&v0.n, n);
+				StoreFloat3(&v1.n, n);
+				StoreFloat3(&v2.n, n);
 			}
 		}
 
@@ -111,8 +111,8 @@ namespace At0::Ray
 	{
 		struct Vertex
 		{
-			DirectX::XMFLOAT3 pos;
-			DirectX::XMFLOAT3 n;
+			Float3 pos;
+			Float3 n;
 		};
 
 		if (s_StaticBinds.empty())
