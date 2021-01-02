@@ -1923,8 +1923,11 @@ namespace At0
 		 // separate math routine it would be reloaded.
 
 #ifndef XMGLOBALCONST
-		// RAY_TODO: (LINUX) Compatibility
+#ifdef _WIN32
 #define XMGLOBALCONST extern const __declspec(selectany)
+#elif defined(__linux__)
+#define XMGLOBALCONST extern const __attribute__ ((selectany))
+#endif
 #endif
 
 		XMGLOBALCONST VectorF32 g_XMSinCoefficients0 = { { { -0.16666667f, +0.0083333310f, -0.00019840874f, +2.7525562e-06f } } };
