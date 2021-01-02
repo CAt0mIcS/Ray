@@ -74,6 +74,10 @@
 #endif
 #endif
 
+#ifndef _Analysis_assume_
+#define _Analysis_assume_(x)
+#endif
+
 #ifndef XM_DEPRECATED
 #define XM_DEPRECATED [[deprecated("This is deprecated and will be removed in a future version.")]]
 #endif
@@ -327,8 +331,8 @@ namespace At0
 			{
 				float       vector4_f32[4];
 				uint32_t    vector4_u32[4];
-			};
-		};
+	};
+};
 #endif // _XM_NO_INTRINSICS_
 
 		//------------------------------------------------------------------------------
@@ -1453,8 +1457,7 @@ namespace At0
 		Matrix    XM_CALLCONV     MatrixTranspose(FMatrix M);
 		Matrix    XM_CALLCONV     MatrixInverse(/*_Out_opt_ */Vector* pDeterminant, /*_In_ */FMatrix M);
 		Vector    XM_CALLCONV     MatrixDeterminant(FMatrix M);
-		_Success_(return)
-			bool        XM_CALLCONV     MatrixDecompose(/*_Out_ */ Vector* outScale, /*_Out_ */ Vector* outRotQuat, /*_Out_ */ Vector* outTrans, /*_In_ */FMatrix M);
+		bool        XM_CALLCONV     MatrixDecompose(/*_Out_ */ Vector* outScale, /*_Out_ */ Vector* outRotQuat, /*_Out_ */ Vector* outTrans, /*_In_ */FMatrix M);
 
 		Matrix    XM_CALLCONV     MatrixIdentity();
 		Matrix    XM_CALLCONV     MatrixSet(float m00, float m01, float m02, float m03,
@@ -2130,7 +2133,7 @@ namespace At0
 			assert(DivExponent < 32);
 #if defined(_XM_NO_INTRINSICS_)
 
-			using DirectX::ConvertVectorIntToFloat;
+			using At0::Ray::ConvertVectorIntToFloat;
 
 			VectorI32 V = { { { IntConstant, IntConstant, IntConstant, IntConstant } } };
 			return ConvertVectorIntToFloat(V.v, DivExponent);
@@ -8121,7 +8124,7 @@ namespace At0
 				s = vshrq_n_u32(v, 1);
 				r = vorrq_s32(r, s);
 				return r;
-			}
+		}
 
 		} // namespace Internal
 
@@ -12160,7 +12163,7 @@ namespace At0
 
 				vst1q_f32(reinterpret_cast<float*>(pOutputVector), vResult);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -12490,7 +12493,7 @@ namespace At0
 
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), V);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -12846,7 +12849,7 @@ namespace At0
 				V = vget_low_f32(vResult);
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), V);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -14635,7 +14638,7 @@ namespace At0
 
 				vst1q_f32(reinterpret_cast<float*>(pOutputVector), vResult);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -15051,7 +15054,7 @@ namespace At0
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 				vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -15541,7 +15544,7 @@ namespace At0
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 				vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -16027,8 +16030,8 @@ namespace At0
 					vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 					vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 					pOutputVector += OutputStride;
-				}
-			}
+		}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -16628,8 +16631,8 @@ namespace At0
 					vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 					vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 					pOutputVector += OutputStride;
-				}
-			}
+		}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -18669,7 +18672,7 @@ namespace At0
 
 				vst1q_f32(reinterpret_cast<float*>(pOutputVector), vResult);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -24816,6 +24819,6 @@ namespace At0
 
 #pragma warning(pop)
 
-	}
+		}
 }
 
