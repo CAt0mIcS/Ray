@@ -19,30 +19,30 @@ namespace At0::Ray
 
 		// --------------------------------------------------------------------
 		// Operators
-		Float2& operator=(const Float2&) = default;
-		Float2& operator=(Float2&&) = default;
+		Float2& RAYMATH_CALLCONV operator=(const Float2&) = default;
+		Float2& RAYMATH_CALLCONV operator=(Float2&&) = default;
 
-		Float2 operator+(const Float2& other) const;
-		Float2 operator-(const Float2& other) const;
-		Float2 operator*(const Float2& other) const;
-		Float2 operator/(const Float2& other) const;
+		Float2 RAYMATH_CALLCONV operator+(const Float2& other) const;
+		Float2 RAYMATH_CALLCONV operator-(const Float2& other) const;
+		Float2 RAYMATH_CALLCONV operator*(const Float2& other) const;
+		Float2 RAYMATH_CALLCONV operator/(const Float2& other) const;
 
-		Float2& operator+=(const Float2& other);
-		Float2& operator-=(const Float2& other);
-		Float2& operator*=(const Float2& other);
-		Float2& operator/=(const Float2& other);
+		Float2& RAYMATH_CALLCONV operator+=(const Float2& other);
+		Float2& RAYMATH_CALLCONV operator-=(const Float2& other);
+		Float2& RAYMATH_CALLCONV operator*=(const Float2& other);
+		Float2& RAYMATH_CALLCONV operator/=(const Float2& other);
 
-		Float2& operator++();
-		Float2& operator--();
-		Float2 operator++(int);
-		Float2 operator--(int);
+		Float2& RAYMATH_CALLCONV operator++();
+		Float2& RAYMATH_CALLCONV operator--();
+		Float2 RAYMATH_CALLCONV operator++(int);
+		Float2 RAYMATH_CALLCONV operator--(int);
 
-		bool operator==(const Float2& other) const;
-		bool operator!=(const Float2& other) const;
-		bool operator>(const Float2& other) const;
-		bool operator<(const Float2& other) const;
-		bool operator>=(const Float2& other) const;
-		bool operator<=(const Float2& other) const;
+		bool RAYMATH_CALLCONV operator==(const Float2& other) const;
+		bool RAYMATH_CALLCONV operator!=(const Float2& other) const;
+		bool RAYMATH_CALLCONV operator>(const Float2& other) const;
+		bool RAYMATH_CALLCONV operator<(const Float2& other) const;
+		bool RAYMATH_CALLCONV operator>=(const Float2& other) const;
+		bool RAYMATH_CALLCONV operator<=(const Float2& other) const;
 	};
 
 	// --------------------------------------------------------------------

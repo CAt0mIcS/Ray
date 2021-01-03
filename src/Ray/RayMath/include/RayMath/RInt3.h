@@ -22,30 +22,30 @@ namespace At0::Ray
 
 		// --------------------------------------------------------------------
 		// Operators
-		Int3& operator=(const Int3&) = default;
-		Int3& operator=(Int3&&) = default;
+		Int3& RAYMATH_CALLCONV operator=(const Int3&) = default;
+		Int3& RAYMATH_CALLCONV operator=(Int3&&) = default;
 
-		Int3 operator+(const Int3& other) const;
-		Int3 operator-(const Int3& other) const;
-		Int3 operator*(const Int3& other) const;
-		Int3 operator/(const Int3& other) const;
+		Int3 RAYMATH_CALLCONV operator+(const Int3& other) const;
+		Int3 RAYMATH_CALLCONV operator-(const Int3& other) const;
+		Int3 RAYMATH_CALLCONV operator*(const Int3& other) const;
+		Int3 RAYMATH_CALLCONV operator/(const Int3& other) const;
 
-		Int3& operator+=(const Int3& other);
-		Int3& operator-=(const Int3& other);
-		Int3& operator*=(const Int3& other);
-		Int3& operator/=(const Int3& other);
+		Int3& RAYMATH_CALLCONV operator+=(const Int3& other);
+		Int3& RAYMATH_CALLCONV operator-=(const Int3& other);
+		Int3& RAYMATH_CALLCONV operator*=(const Int3& other);
+		Int3& RAYMATH_CALLCONV operator/=(const Int3& other);
 
-		Int3& operator++();
-		Int3& operator--();
-		Int3 operator++(int);
-		Int3 operator--(int);
+		Int3& RAYMATH_CALLCONV operator++();
+		Int3& RAYMATH_CALLCONV operator--();
+		Int3 RAYMATH_CALLCONV operator++(int);
+		Int3 RAYMATH_CALLCONV operator--(int);
 
-		bool operator==(const Int3& other) const;
-		bool operator!=(const Int3& other) const;
-		bool operator>(const Int3& other) const;
-		bool operator<(const Int3& other) const;
-		bool operator>=(const Int3& other) const;
-		bool operator<=(const Int3& other) const;
+		bool RAYMATH_CALLCONV operator==(const Int3& other) const;
+		bool RAYMATH_CALLCONV operator!=(const Int3& other) const;
+		bool RAYMATH_CALLCONV operator>(const Int3& other) const;
+		bool RAYMATH_CALLCONV operator<(const Int3& other) const;
+		bool RAYMATH_CALLCONV operator>=(const Int3& other) const;
+		bool RAYMATH_CALLCONV operator<=(const Int3& other) const;
 	};
 
 	// --------------------------------------------------------------------

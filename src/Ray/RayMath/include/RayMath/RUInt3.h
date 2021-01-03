@@ -22,30 +22,30 @@ namespace At0::Ray
 
 		// --------------------------------------------------------------------
 		// Operators
-		UInt3& operator=(const UInt3&) = default;
-		UInt3& operator=(UInt3&&) = default;
+		UInt3& RAYMATH_CALLCONV operator=(const UInt3&) = default;
+		UInt3& RAYMATH_CALLCONV operator=(UInt3&&) = default;
 
-		UInt3 operator+(const UInt3& other) const;
-		UInt3 operator-(const UInt3& other) const;
-		UInt3 operator*(const UInt3& other) const;
-		UInt3 operator/(const UInt3& other) const;
+		UInt3 RAYMATH_CALLCONV operator+(const UInt3& other) const;
+		UInt3 RAYMATH_CALLCONV operator-(const UInt3& other) const;
+		UInt3 RAYMATH_CALLCONV operator*(const UInt3& other) const;
+		UInt3 RAYMATH_CALLCONV operator/(const UInt3& other) const;
 
-		UInt3& operator+=(const UInt3& other);
-		UInt3& operator-=(const UInt3& other);
-		UInt3& operator*=(const UInt3& other);
-		UInt3& operator/=(const UInt3& other);
+		UInt3& RAYMATH_CALLCONV operator+=(const UInt3& other);
+		UInt3& RAYMATH_CALLCONV operator-=(const UInt3& other);
+		UInt3& RAYMATH_CALLCONV operator*=(const UInt3& other);
+		UInt3& RAYMATH_CALLCONV operator/=(const UInt3& other);
 
-		UInt3& operator++();
-		UInt3& operator--();
-		UInt3 operator++(int);
-		UInt3 operator--(int);
+		UInt3& RAYMATH_CALLCONV operator++();
+		UInt3& RAYMATH_CALLCONV operator--();
+		UInt3 RAYMATH_CALLCONV operator++(int);
+		UInt3 RAYMATH_CALLCONV operator--(int);
 
-		bool operator==(const UInt3& other) const;
-		bool operator!=(const UInt3& other) const;
-		bool operator>(const UInt3& other) const;
-		bool operator<(const UInt3& other) const;
-		bool operator>=(const UInt3& other) const;
-		bool operator<=(const UInt3& other) const;
+		bool RAYMATH_CALLCONV operator==(const UInt3& other) const;
+		bool RAYMATH_CALLCONV operator!=(const UInt3& other) const;
+		bool RAYMATH_CALLCONV operator>(const UInt3& other) const;
+		bool RAYMATH_CALLCONV operator<(const UInt3& other) const;
+		bool RAYMATH_CALLCONV operator>=(const UInt3& other) const;
+		bool RAYMATH_CALLCONV operator<=(const UInt3& other) const;
 	};
 
 	// --------------------------------------------------------------------

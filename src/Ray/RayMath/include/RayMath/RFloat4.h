@@ -26,30 +26,30 @@ namespace At0::Ray
 
 		// --------------------------------------------------------------------
 		// Operators
-		Float4& operator=(const Float4&) = default;
-		Float4& operator=(Float4&&) = default;
+		Float4& RAYMATH_CALLCONV operator=(const Float4&) = default;
+		Float4& RAYMATH_CALLCONV operator=(Float4&&) = default;
 
-		Float4 operator+(const Float4& other) const;
-		Float4 operator-(const Float4& other) const;
-		Float4 operator*(const Float4& other) const;
-		Float4 operator/(const Float4& other) const;
+		Float4 RAYMATH_CALLCONV operator+(const Float4& other) const;
+		Float4 RAYMATH_CALLCONV operator-(const Float4& other) const;
+		Float4 RAYMATH_CALLCONV operator*(const Float4& other) const;
+		Float4 RAYMATH_CALLCONV operator/(const Float4& other) const;
 
-		Float4& operator+=(const Float4& other);
-		Float4& operator-=(const Float4& other);
-		Float4& operator*=(const Float4& other);
-		Float4& operator/=(const Float4& other);
+		Float4& RAYMATH_CALLCONV operator+=(const Float4& other);
+		Float4& RAYMATH_CALLCONV operator-=(const Float4& other);
+		Float4& RAYMATH_CALLCONV operator*=(const Float4& other);
+		Float4& RAYMATH_CALLCONV operator/=(const Float4& other);
 
-		Float4& operator++();
-		Float4& operator--();
-		Float4 operator++(int);
-		Float4 operator--(int);
+		Float4& RAYMATH_CALLCONV operator++();
+		Float4& RAYMATH_CALLCONV operator--();
+		Float4 RAYMATH_CALLCONV operator++(int);
+		Float4 RAYMATH_CALLCONV operator--(int);
 
-		bool operator==(const Float4& other) const;
-		bool operator!=(const Float4& other) const;
-		bool operator>(const Float4& other) const;
-		bool operator<(const Float4& other) const;
-		bool operator>=(const Float4& other) const;
-		bool operator<=(const Float4& other) const;
+		bool RAYMATH_CALLCONV operator==(const Float4& other) const;
+		bool RAYMATH_CALLCONV operator!=(const Float4& other) const;
+		bool RAYMATH_CALLCONV operator>(const Float4& other) const;
+		bool RAYMATH_CALLCONV operator<(const Float4& other) const;
+		bool RAYMATH_CALLCONV operator>=(const Float4& other) const;
+		bool RAYMATH_CALLCONV operator<=(const Float4& other) const;
 	};
 
 

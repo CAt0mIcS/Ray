@@ -1,7 +1,15 @@
 #pragma once
 
+// RAY_TODO: Implement intrinsics (remove this to use them)
+#define RAY_NO_INTRINSICS
 
-#if defined(_MSC_VER) && !defined(_M_ARM) && !defined(_M_ARM64) && !defined(_M_HYBRID_X86_ARM64) && (!_MANAGED) && (!_M_CEE) && (!defined(_M_IX86_FP) || (_M_IX86_FP > 1)) && !defined(RAY_NO_INTRINSICS)
+// Disable intrinsics for linux (temporary) (RAY_TODO)
+#if defined(__linux__) && !defined(RAY_NO_INTRINSICS)
+#define RAY_NO_INTRINSICS
+#endif
+
+
+#if defined(_MSC_VER) && !defined(_M_ARM) && !defined(_M_ARM64) && !defined(_M_HYBRID_X86_ARM64) && (!_MANAGED) && (!_M_CEE) && (!defined(_M_IX86_FP) || (_M_IX86_FP > 1))
 #define RAYMATH_CALLCONV __vectorcall
 #else
 #define RAYMATH_CALLCONV
@@ -26,11 +34,11 @@
 #define RAY_F16C_INTRINSICS
 #endif
 
-#if defined(RAY_FMA3_INTRINSICS) && !defined(RAY_AVX_INTRINSICS)
+#if defined(RAY_FMA3_INTRINSICS) && !defined(RAY_AVX_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 #define RAY_AVX_INTRINSICS
 #endif
 
-#if defined(RAY_F16C_INTRINSICS) && !defined(RAY_AVX_INTRINSICS)
+#if defined(RAY_F16C_INTRINSICS) && !defined(RAY_AVX_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 #define RAY_AVX_INTRINSICS
 #endif
 
@@ -38,15 +46,15 @@
 #define RAY_AVX_INTRINSICS
 #endif
 
-#if defined(RAY_AVX_INTRINSICS) && !defined(RAY_SSE4_INTRINSICS)
+#if defined(RAY_AVX_INTRINSICS) && !defined(RAY_SSE4_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 #define RAY_SSE4_INTRINSICS
 #endif
 
-#if defined(RAY_SSE4_INTRINSICS) && !defined(RAY_SSE3_INTRINSICS)
+#if defined(RAY_SSE4_INTRINSICS) && !defined(RAY_SSE3_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 #define RAY_SSE3_INTRINSICS
 #endif
 
-#if defined(RAY_SSE3_INTRINSICS) && !defined(RAY_SSE_INTRINSICS)
+#if defined(RAY_SSE3_INTRINSICS) && !defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 #define RAY_SSE_INTRINSICS
 #endif
 
@@ -63,6 +71,7 @@
 #include <float.h>
 #include <malloc.h>
 
+// __cpuid on windows
 #ifdef _WIN32
 #include <intrin.h>
 #endif
