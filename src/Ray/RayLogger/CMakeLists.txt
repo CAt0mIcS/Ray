@@ -10,6 +10,8 @@ set(SRC
     "include/RayLogger/RLogLevel.h"
 
     "include/RayLogger/RLog.h"
+
+    "RayLoggerStatic.cpp"
 )
 
 # set(INC
@@ -17,15 +19,12 @@ set(SRC
 # )
 
 
-add_library("RayLogger" INTERFACE)
+add_library("RayLogger" STATIC "${SRC}")
+set_target_properties("RayLogger" PROPERTIES FOLDER "RayUtilities")
 
-add_custom_target("IRayLogger"
-    SOURCES "${SRC}"
-)
-set_target_properties("IRayLogger" PROPERTIES FOLDER "RayUtilities")
-
-# target_include_directories("RayLogger" INTERFACE "${INC}")
-target_link_libraries("RayLogger" INTERFACE "RayUtil")
+# target_include_directories("RayLogger" PRIVATE "${INC}")
+target_link_libraries("RayLogger" PRIVATE "RayUtil")
 
 AddRecursiveFilters("${SRC}")
 SetWorkingDirectory("RayLogger" "")
+SetOutputDirectory("RayLogger" "")
