@@ -12,6 +12,8 @@ set(SRC
 	"include/RayMath/RFloat3x4.h"
 	"include/RayMath/RFloat3x3.h"
 	"include/RayMath/RFloat3.h"
+	"include/RayMath/RFloat4.h"
+	"include/RayMath/RQuaternion.h"
 
 	"RMathStatic.cpp"
 )

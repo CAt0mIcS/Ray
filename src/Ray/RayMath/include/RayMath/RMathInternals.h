@@ -67,20 +67,20 @@
 #include <intrin.h>
 #endif
 
-#ifndef _XM_NO_INTRINSICS
-#ifdef _XM_SSE_INTRINSICS
+#ifndef RAY_NO_INTRINSICS
+#ifdef RAY_SSE_INTRINSICS
 #include <xmmintrin.h>
 #include <emmintrin.h>
 
-#ifdef _XM_SSE3_INTRINSICS
+#ifdef RAY_SSE3_INTRINSICS
 #include <pmmintrin.h>
 #endif
 
-#ifdef _XM_SSE4_INTRINSICS
+#ifdef RAY_SSE4_INTRINSICS
 #include <smmintrin.h>
 #endif
 
-#ifdef _XM_AVX_INTRINSICS
+#ifdef RAY_AVX_INTRINSICS
 #include <immintrin.h>
 #endif
 
@@ -104,5 +104,11 @@ namespace At0::Ray
 		constexpr float PIDIV2 = 1.570796327f;
 		constexpr float PIDIV4 = 0.785398163f;
 	}
+
+	template<typename T = float>
+	constexpr T ConvertToRadians(T degrees) { return degrees * (PI / static_cast<T>(180)) }
+
+	template<typename T = float>
+	constexpr T ConvertToDegrees(T radians) { return radians * (static_cast<T>(180) / PI) }
 
 }

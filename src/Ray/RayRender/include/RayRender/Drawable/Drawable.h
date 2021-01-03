@@ -52,7 +52,7 @@ namespace At0::Ray
 		Float4 Rotation;
 
 		TransformComponent()
-			: Translation{}, Scale{}, Rotation{} {}
+			: Translation{ 0.0f, 0.0f, 0.0f }, Scale{ 1.0f, 1.0f, 1.0f }, Rotation{ 0.0f, 0.0f, 0.0f, 1.0f } {}
 
 		TransformComponent(
 			const Float3& transform,

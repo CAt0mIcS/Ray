@@ -5,5 +5,8 @@
 
 namespace At0::Ray
 {
+	struct Matrix
+	{
 
+	};
 }

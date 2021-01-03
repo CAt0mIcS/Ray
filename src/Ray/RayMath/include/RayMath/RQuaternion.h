@@ -1,10 +1,12 @@
 #pragma once
 
 #include "RMathInternals.h"
-#include "RFloat4.h"
 
 
 namespace At0::Ray
 {
+	struct Quaternion
+	{
 
+	};
 }
