@@ -12,14 +12,14 @@ set(SRC
 	"include/RayMath/RFloat3x4.h"
 	"include/RayMath/RFloat3x3.h"
 	"include/RayMath/RFloat3.h"
+
+	"RMathStatic.cpp"
 )
 
-add_library("RayMath" INTERFACE)
+# Cannot set CXX17 for INTERFACE libraries. Adding temporary cpp file and making it a static library
+add_library("RayMath" STATIC "${SRC}")
 
-add_custom_target("IRayMath"
-    SOURCES "${SRC}"
-)
-
-set_target_properties("IRayMath" PROPERTIES FOLDER "RayUtilities")
+set_target_properties("RayMath" PROPERTIES FOLDER "RayUtilities")
 AddRecursiveFilters("${SRC}")
 SetWorkingDirectory("RayMath" "")
+SetOutputDirectory("RayUtil" "")

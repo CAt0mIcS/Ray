@@ -1,6 +1,8 @@
 #pragma once
 
 #include <../../RayUtil/include/RayUtil/RMath.h>
+#include <../../extern/glm/glm/glm.hpp>
+#include <../../extern/glm/glm/gtc/quaternion.hpp>
 
 #include <iostream>
 #include <memory>
@@ -26,43 +28,43 @@ namespace At0::Ray
 	}
 
 
-	using Point2 = Float2;
-	using Size2 = Float2;
+	using Point2 = glm::vec2;
+	using Size2 = glm::vec2;
 
-	using Point3 = Float3;
-	using Size3 = Float3;
+	using Point3 = glm::vec3;
+	using Size3 = glm::vec3;
 
-	inline std::wostream& operator<<(std::wostream& os, const Float2& vec)
+	inline std::wostream& operator<<(std::wostream& os, const glm::vec2& vec)
 	{
 		os << L"{x=" << vec.x << L", y=" << vec.y << L"}";
 		return os;
 	}
 
-	inline std::ostream& operator<<(std::ostream& os, const Float2& vec)
+	inline std::ostream& operator<<(std::ostream& os, const glm::vec2& vec)
 	{
 		os << "{x=" << vec.x << ", y=" << vec.y << "}";
 		return os;
 	}
 
-	inline std::wostream& operator<<(std::wostream& os, const Float3& vec)
+	inline std::wostream& operator<<(std::wostream& os, const glm::vec3& vec)
 	{
 		os << L"{x=" << vec.x << L", y=" << vec.y << L", z=" << vec.z << L"}";
 		return os;
 	}
 
-	inline std::ostream& operator<<(std::ostream& os, const Float3& vec)
+	inline std::ostream& operator<<(std::ostream& os, const glm::vec3& vec)
 	{
 		os << "{x=" << vec.x << ", y=" << vec.y << ", z=" << vec.z << "}";
 		return os;
 	}
 
-	inline std::wostream& operator<<(std::wostream& os, const Float4& vec)
+	inline std::wostream& operator<<(std::wostream& os, const glm::vec4& vec)
 	{
 		os << L"{x=" << vec.x << L", y=" << vec.y << L", z=" << vec.z << L", w=" << vec.w << L"}";
 		return os;
 	}
 
-	inline std::ostream& operator<<(std::ostream& os, const Float4& vec)
+	inline std::ostream& operator<<(std::ostream& os, const glm::vec4& vec)
 	{
 		os << "{x=" << vec.x << ", y=" << vec.y << ", z=" << vec.z << ", w=" << vec.w << "}";
 		return os;
