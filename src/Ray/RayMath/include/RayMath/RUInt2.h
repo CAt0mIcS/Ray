@@ -48,49 +48,49 @@ namespace At0::Ray
 
 	// --------------------------------------------------------------------
 	// Operators
-	UInt2 UInt2::operator+(const UInt2& other) const
+	inline UInt2 UInt2::operator+(const UInt2& other) const
 	{
 		return { x + other.x, y + other.y };
 	}
 
-	UInt2 UInt2::operator-(const UInt2& other) const
+	inline UInt2 UInt2::operator-(const UInt2& other) const
 	{
 		return { x - other.x, y - other.y };
 	}
 
-	UInt2 UInt2::operator*(const UInt2& other) const
+	inline UInt2 UInt2::operator*(const UInt2& other) const
 	{
 		return { x * other.x, y * other.y };
 	}
 
-	UInt2 UInt2::operator/(const UInt2& other) const
+	inline UInt2 UInt2::operator/(const UInt2& other) const
 	{
 		return { x / other.x, y / other.y };
 	}
 
 
-	UInt2& UInt2::operator+=(const UInt2& other)
+	inline UInt2& UInt2::operator+=(const UInt2& other)
 	{
 		x += other.x;
 		y += other.y;
 		return *this;
 	}
 
-	UInt2& UInt2::operator-=(const UInt2& other)
+	inline UInt2& UInt2::operator-=(const UInt2& other)
 	{
 		x -= other.x;
 		y -= other.y;
 		return *this;
 	}
 
-	UInt2& UInt2::operator*=(const UInt2& other)
+	inline UInt2& UInt2::operator*=(const UInt2& other)
 	{
 		x *= other.x;
 		y *= other.y;
 		return *this;
 	}
 
-	UInt2& UInt2::operator/=(const UInt2& other)
+	inline UInt2& UInt2::operator/=(const UInt2& other)
 	{
 		x /= other.x;
 		y /= other.y;
@@ -98,26 +98,26 @@ namespace At0::Ray
 	}
 
 
-	UInt2& UInt2::operator++()
+	inline UInt2& UInt2::operator++()
 	{
 		*this += 1;
 		return *this;
 	}
 
-	UInt2& UInt2::operator--()
+	inline UInt2& UInt2::operator--()
 	{
 		*this -= 1;
 		return *this;
 	}
 
-	UInt2 UInt2::operator++(int)
+	inline UInt2 UInt2::operator++(int)
 	{
 		UInt2 result(*this);
 		++* this;
 		return result;
 	}
 
-	UInt2 UInt2::operator--(int)
+	inline UInt2 UInt2::operator--(int)
 	{
 		UInt2 result(*this);
 		--* this;
@@ -125,32 +125,32 @@ namespace At0::Ray
 	}
 
 
-	bool UInt2::operator==(const UInt2& other) const
+	inline bool UInt2::operator==(const UInt2& other) const
 	{
 		return x == other.x && y == other.y;
 	}
 
-	bool UInt2::operator!=(const UInt2& other) const
+	inline bool UInt2::operator!=(const UInt2& other) const
 	{
 		return !(*this == other);
 	}
 
-	bool UInt2::operator>(const UInt2& other) const
+	inline bool UInt2::operator>(const UInt2& other) const
 	{
 		return x > other.x && y > other.y;
 	}
 
-	bool UInt2::operator<(const UInt2& other) const
+	inline bool UInt2::operator<(const UInt2& other) const
 	{
 		return x < other.x&& y < other.y;
 	}
 
-	bool UInt2::operator>=(const UInt2& other) const
+	inline bool UInt2::operator>=(const UInt2& other) const
 	{
 		return !(*this < other);
 	}
 
-	bool UInt2::operator<=(const UInt2& other) const
+	inline bool UInt2::operator<=(const UInt2& other) const
 	{
 		return !(*this > other);
 	}

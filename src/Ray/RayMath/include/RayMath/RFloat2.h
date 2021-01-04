@@ -47,49 +47,49 @@ namespace At0::Ray
 
 	// --------------------------------------------------------------------
 	// Operators
-	Float2 Float2::operator+(const Float2& other) const
+	inline Float2 Float2::operator+(const Float2& other) const
 	{
 		return { x + other.x, y + other.y };
 	}
 
-	Float2 Float2::operator-(const Float2& other) const
+	inline Float2 Float2::operator-(const Float2& other) const
 	{
 		return { x - other.x, y - other.y };
 	}
 
-	Float2 Float2::operator*(const Float2& other) const
+	inline Float2 Float2::operator*(const Float2& other) const
 	{
 		return { x * other.x, y * other.y };
 	}
 
-	Float2 Float2::operator/(const Float2& other) const
+	inline Float2 Float2::operator/(const Float2& other) const
 	{
 		return { x / other.x, y / other.y };
 	}
 
 
-	Float2& Float2::operator+=(const Float2& other)
+	inline Float2& Float2::operator+=(const Float2& other)
 	{
 		x += other.x;
 		y += other.y;
 		return *this;
 	}
 
-	Float2& Float2::operator-=(const Float2& other)
+	inline Float2& Float2::operator-=(const Float2& other)
 	{
 		x -= other.x;
 		y -= other.y;
 		return *this;
 	}
 
-	Float2& Float2::operator*=(const Float2& other)
+	inline Float2& Float2::operator*=(const Float2& other)
 	{
 		x *= other.x;
 		y *= other.y;
 		return *this;
 	}
 
-	Float2& Float2::operator/=(const Float2& other)
+	inline Float2& Float2::operator/=(const Float2& other)
 	{
 		x /= other.x;
 		y /= other.y;
@@ -97,26 +97,26 @@ namespace At0::Ray
 	}
 
 
-	Float2& Float2::operator++()
+	inline Float2& Float2::operator++()
 	{
 		*this += 1.0f;
 		return *this;
 	}
 
-	Float2& Float2::operator--()
+	inline Float2& Float2::operator--()
 	{
 		*this -= 1.0f;
 		return *this;
 	}
 
-	Float2 Float2::operator++(int)
+	inline Float2 Float2::operator++(int)
 	{
 		Float2 result(*this);
 		++* this;
 		return result;
 	}
 
-	Float2 Float2::operator--(int)
+	inline Float2 Float2::operator--(int)
 	{
 		Float2 result(*this);
 		--* this;
@@ -124,32 +124,32 @@ namespace At0::Ray
 	}
 
 
-	bool Float2::operator==(const Float2& other) const
+	inline bool Float2::operator==(const Float2& other) const
 	{
 		return x == other.x && y == other.y;
 	}
 
-	bool Float2::operator!=(const Float2& other) const
+	inline bool Float2::operator!=(const Float2& other) const
 	{
 		return !(*this == other);
 	}
 
-	bool Float2::operator>(const Float2& other) const
+	inline bool Float2::operator>(const Float2& other) const
 	{
 		return x > other.x && y > other.y;
 	}
 
-	bool Float2::operator<(const Float2& other) const
+	inline bool Float2::operator<(const Float2& other) const
 	{
 		return x < other.x&& y < other.y;
 	}
 
-	bool Float2::operator>=(const Float2& other) const
+	inline bool Float2::operator>=(const Float2& other) const
 	{
 		return !(*this < other);
 	}
 
-	bool Float2::operator<=(const Float2& other) const
+	inline bool Float2::operator<=(const Float2& other) const
 	{
 		return !(*this > other);
 	}

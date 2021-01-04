@@ -16,10 +16,10 @@
 #endif
 
 
-#if defined(_MSVC_VER)
+#if defined(_MSC_VER)
 #define RAY_ALIGNED(x) __declspec(align(x))
 #elif defined(__GNUC__)
-#define XM_ALIGNED(x) __attribute__ ((aligned(x)))
+#define RAY_ALIGNED(x) __attribute__ ((aligned(x)))
 #endif
 
 #if !defined(RAY_AVX2_INTRINSICS) && defined(__AVX2__) && !defined(RAY_NO_INTRINSICS)

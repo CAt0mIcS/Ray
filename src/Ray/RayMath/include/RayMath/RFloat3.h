@@ -51,28 +51,28 @@ namespace At0::Ray
 
 	// --------------------------------------------------------------------
 	// Operators
-	Float3 Float3::operator+(const Float3& other) const
+	inline Float3 Float3::operator+(const Float3& other) const
 	{
 		return { x + other.x, y + other.y, z + other.z };
 	}
 
-	Float3 Float3::operator-(const Float3& other) const
+	inline Float3 Float3::operator-(const Float3& other) const
 	{
 		return { x - other.x, y - other.y, z - other.z };
 	}
 
-	Float3 Float3::operator*(const Float3& other) const
+	inline Float3 Float3::operator*(const Float3& other) const
 	{
 		return { x * other.x, y * other.y, z * other.z };
 	}
 
-	Float3 Float3::operator/(const Float3& other) const
+	inline Float3 Float3::operator/(const Float3& other) const
 	{
 		return { x / other.x, y / other.y, z / other.z };
 	}
 
 
-	Float3& Float3::operator+=(const Float3& other)
+	inline Float3& Float3::operator+=(const Float3& other)
 	{
 		x += other.x;
 		y += other.y;
@@ -80,7 +80,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Float3& Float3::operator-=(const Float3& other)
+	inline Float3& Float3::operator-=(const Float3& other)
 	{
 		x -= other.x;
 		y -= other.y;
@@ -88,7 +88,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Float3& Float3::operator*=(const Float3& other)
+	inline Float3& Float3::operator*=(const Float3& other)
 	{
 		x *= other.x;
 		y *= other.y;
@@ -96,7 +96,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Float3& Float3::operator/=(const Float3& other)
+	inline Float3& Float3::operator/=(const Float3& other)
 	{
 		x /= other.x;
 		y /= other.y;
@@ -105,58 +105,58 @@ namespace At0::Ray
 	}
 
 
-	Float3& Float3::operator++()
+	inline Float3& Float3::operator++()
 	{
 		*this += 1.0f;
 		return *this;
 	}
 
-	Float3& Float3::operator--()
+	inline Float3& Float3::operator--()
 	{
 		*this -= 1.0f;
 		return *this;
 	}
 
-	Float3 Float3::operator++(int)
+	inline Float3 Float3::operator++(int)
 	{
 		Float3 result(*this);
 		++* this;
 		return result;
 	}
 
-	Float3 Float3::operator--(int)
+	inline Float3 Float3::operator--(int)
 	{
 		Float3 result(*this);
 		--* this;
 		return result;
 	}
 
-	bool Float3::operator==(const Float3& other) const
+	inline bool Float3::operator==(const Float3& other) const
 	{
 		return x == other.x && y == other.y && z == other.z;
 	}
 
-	bool Float3::operator!=(const Float3& other) const
+	inline bool Float3::operator!=(const Float3& other) const
 	{
 		return !(*this == other);
 	}
 
-	bool Float3::operator>(const Float3& other) const
+	inline bool Float3::operator>(const Float3& other) const
 	{
 		return x > other.x && y > other.y && z > other.z;
 	}
 
-	bool Float3::operator<(const Float3& other) const
+	inline bool Float3::operator<(const Float3& other) const
 	{
 		return x < other.x&& y < other.y&& z < other.z;
 	}
 
-	bool Float3::operator>=(const Float3& other) const
+	inline bool Float3::operator>=(const Float3& other) const
 	{
 		return !(*this < other);
 	}
 
-	bool Float3::operator<=(const Float3& other) const
+	inline bool Float3::operator<=(const Float3& other) const
 	{
 		return !(*this > other);
 	}

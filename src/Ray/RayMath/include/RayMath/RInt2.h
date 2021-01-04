@@ -47,49 +47,49 @@ namespace At0::Ray
 
 	// --------------------------------------------------------------------
 	// Operators
-	Int2 Int2::operator+(const Int2& other) const
+	inline Int2 Int2::operator+(const Int2& other) const
 	{
 		return { x + other.x, y + other.y };
 	}
 
-	Int2 Int2::operator-(const Int2& other) const
+	inline Int2 Int2::operator-(const Int2& other) const
 	{
 		return { x - other.x, y - other.y };
 	}
 
-	Int2 Int2::operator*(const Int2& other) const
+	inline Int2 Int2::operator*(const Int2& other) const
 	{
 		return { x * other.x, y * other.y };
 	}
 
-	Int2 Int2::operator/(const Int2& other) const
+	inline Int2 Int2::operator/(const Int2& other) const
 	{
 		return { x / other.x, y / other.y };
 	}
 
 
-	Int2& Int2::operator+=(const Int2& other)
+	inline Int2& Int2::operator+=(const Int2& other)
 	{
 		x += other.x;
 		y += other.y;
 		return *this;
 	}
 
-	Int2& Int2::operator-=(const Int2& other)
+	inline Int2& Int2::operator-=(const Int2& other)
 	{
 		x -= other.x;
 		y -= other.y;
 		return *this;
 	}
 
-	Int2& Int2::operator*=(const Int2& other)
+	inline Int2& Int2::operator*=(const Int2& other)
 	{
 		x *= other.x;
 		y *= other.y;
 		return *this;
 	}
 
-	Int2& Int2::operator/=(const Int2& other)
+	inline Int2& Int2::operator/=(const Int2& other)
 	{
 		x /= other.x;
 		y /= other.y;
@@ -97,26 +97,26 @@ namespace At0::Ray
 	}
 
 
-	Int2& Int2::operator++()
+	inline Int2& Int2::operator++()
 	{
 		*this += 1;
 		return *this;
 	}
 
-	Int2& Int2::operator--()
+	inline Int2& Int2::operator--()
 	{
 		*this -= 1;
 		return *this;
 	}
 
-	Int2 Int2::operator++(int)
+	inline Int2 Int2::operator++(int)
 	{
 		Int2 result(*this);
 		++* this;
 		return result;
 	}
 
-	Int2 Int2::operator--(int)
+	inline Int2 Int2::operator--(int)
 	{
 		Int2 result(*this);
 		--* this;
@@ -124,32 +124,32 @@ namespace At0::Ray
 	}
 
 
-	bool Int2::operator==(const Int2& other) const
+	inline bool Int2::operator==(const Int2& other) const
 	{
 		return x == other.x && y == other.y;
 	}
 
-	bool Int2::operator!=(const Int2& other) const
+	inline bool Int2::operator!=(const Int2& other) const
 	{
 		return !(*this == other);
 	}
 
-	bool Int2::operator>(const Int2& other) const
+	inline bool Int2::operator>(const Int2& other) const
 	{
 		return x > other.x && y > other.y;
 	}
 
-	bool Int2::operator<(const Int2& other) const
+	inline bool Int2::operator<(const Int2& other) const
 	{
 		return x < other.x&& y < other.y;
 	}
 
-	bool Int2::operator>=(const Int2& other) const
+	inline bool Int2::operator>=(const Int2& other) const
 	{
 		return !(*this < other);
 	}
 
-	bool Int2::operator<=(const Int2& other) const
+	inline bool Int2::operator<=(const Int2& other) const
 	{
 		return !(*this > other);
 	}

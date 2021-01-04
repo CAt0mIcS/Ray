@@ -50,28 +50,28 @@ namespace At0::Ray
 
 	// --------------------------------------------------------------------
 	// Operators
-	UInt3 UInt3::operator+(const UInt3& other) const
+	inline UInt3 UInt3::operator+(const UInt3& other) const
 	{
 		return { x + other.x, y + other.y, z + other.z };
 	}
 
-	UInt3 UInt3::operator-(const UInt3& other) const
+	inline UInt3 UInt3::operator-(const UInt3& other) const
 	{
 		return { x - other.x, y - other.y, z - other.z };
 	}
 
-	UInt3 UInt3::operator*(const UInt3& other) const
+	inline UInt3 UInt3::operator*(const UInt3& other) const
 	{
 		return { x * other.x, y * other.y, z * other.z };
 	}
 
-	UInt3 UInt3::operator/(const UInt3& other) const
+	inline UInt3 UInt3::operator/(const UInt3& other) const
 	{
 		return { x / other.x, y / other.y, z / other.z };
 	}
 
 
-	UInt3& UInt3::operator+=(const UInt3& other)
+	inline UInt3& UInt3::operator+=(const UInt3& other)
 	{
 		x += other.x;
 		y += other.y;
@@ -79,7 +79,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	UInt3& UInt3::operator-=(const UInt3& other)
+	inline UInt3& UInt3::operator-=(const UInt3& other)
 	{
 		x -= other.x;
 		y -= other.y;
@@ -87,7 +87,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	UInt3& UInt3::operator*=(const UInt3& other)
+	inline UInt3& UInt3::operator*=(const UInt3& other)
 	{
 		x *= other.x;
 		y *= other.y;
@@ -95,7 +95,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	UInt3& UInt3::operator/=(const UInt3& other)
+	inline UInt3& UInt3::operator/=(const UInt3& other)
 	{
 		x /= other.x;
 		y /= other.y;
@@ -104,58 +104,58 @@ namespace At0::Ray
 	}
 
 
-	UInt3& UInt3::operator++()
+	inline UInt3& UInt3::operator++()
 	{
 		*this += 1;
 		return *this;
 	}
 
-	UInt3& UInt3::operator--()
+	inline UInt3& UInt3::operator--()
 	{
 		*this -= 1;
 		return *this;
 	}
 
-	UInt3 UInt3::operator++(int)
+	inline UInt3 UInt3::operator++(int)
 	{
 		UInt3 result(*this);
 		++* this;
 		return result;
 	}
 
-	UInt3 UInt3::operator--(int)
+	inline UInt3 UInt3::operator--(int)
 	{
 		UInt3 result(*this);
 		--* this;
 		return result;
 	}
 
-	bool UInt3::operator==(const UInt3& other) const
+	inline bool UInt3::operator==(const UInt3& other) const
 	{
 		return x == other.x && y == other.y && z == other.z;
 	}
 
-	bool UInt3::operator!=(const UInt3& other) const
+	inline bool UInt3::operator!=(const UInt3& other) const
 	{
 		return !(*this == other);
 	}
 
-	bool UInt3::operator>(const UInt3& other) const
+	inline bool UInt3::operator>(const UInt3& other) const
 	{
 		return x > other.x && y > other.y && z > other.z;
 	}
 
-	bool UInt3::operator<(const UInt3& other) const
+	inline bool UInt3::operator<(const UInt3& other) const
 	{
 		return x < other.x&& y < other.y&& z < other.z;
 	}
 
-	bool UInt3::operator>=(const UInt3& other) const
+	inline bool UInt3::operator>=(const UInt3& other) const
 	{
 		return !(*this < other);
 	}
 
-	bool UInt3::operator<=(const UInt3& other) const
+	inline bool UInt3::operator<=(const UInt3& other) const
 	{
 		return !(*this > other);
 	}

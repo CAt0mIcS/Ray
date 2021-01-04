@@ -56,28 +56,28 @@ namespace At0::Ray
 	// RAY_TODO: Float4::w component should maybe be modified when adding/... Float4s
 	// --------------------------------------------------------------------
 	// Operators
-	Float4 Float4::operator+(const Float4& other) const
+	inline Float4 Float4::operator+(const Float4& other) const
 	{
 		return { x + other.x, y + other.y, z + other.z };
 	}
 
-	Float4 Float4::operator-(const Float4& other) const
+	inline Float4 Float4::operator-(const Float4& other) const
 	{
 		return { x - other.x, y - other.y, z - other.z };
 	}
 
-	Float4 Float4::operator*(const Float4& other) const
+	inline Float4 Float4::operator*(const Float4& other) const
 	{
 		return { x * other.x, y * other.y, z * other.z };
 	}
 
-	Float4 Float4::operator/(const Float4& other) const
+	inline Float4 Float4::operator/(const Float4& other) const
 	{
 		return { x / other.x, y / other.y, z / other.z };
 	}
 
 
-	Float4& Float4::operator+=(const Float4& other)
+	inline Float4& Float4::operator+=(const Float4& other)
 	{
 		x += other.x;
 		y += other.y;
@@ -85,7 +85,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Float4& Float4::operator-=(const Float4& other)
+	inline Float4& Float4::operator-=(const Float4& other)
 	{
 		x -= other.x;
 		y -= other.y;
@@ -93,7 +93,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Float4& Float4::operator*=(const Float4& other)
+	inline Float4& Float4::operator*=(const Float4& other)
 	{
 		x *= other.x;
 		y *= other.y;
@@ -101,7 +101,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Float4& Float4::operator/=(const Float4& other)
+	inline Float4& Float4::operator/=(const Float4& other)
 	{
 		x /= other.x;
 		y /= other.y;
@@ -110,58 +110,58 @@ namespace At0::Ray
 	}
 
 
-	Float4& Float4::operator++()
+	inline Float4& Float4::operator++()
 	{
 		*this += 1.0f;
 		return *this;
 	}
 
-	Float4& Float4::operator--()
+	inline Float4& Float4::operator--()
 	{
 		*this -= 1.0f;
 		return *this;
 	}
 
-	Float4 Float4::operator++(int)
+	inline Float4 Float4::operator++(int)
 	{
 		Float4 result(*this);
 		++* this;
 		return result;
 	}
 
-	Float4 Float4::operator--(int)
+	inline Float4 Float4::operator--(int)
 	{
 		Float4 result(*this);
 		--* this;
 		return result;
 	}
 
-	bool Float4::operator==(const Float4& other) const
+	inline bool Float4::operator==(const Float4& other) const
 	{
 		return x == other.x && y == other.y && z == other.z;
 	}
 
-	bool Float4::operator!=(const Float4& other) const
+	inline bool Float4::operator!=(const Float4& other) const
 	{
 		return !(*this == other);
 	}
 
-	bool Float4::operator>(const Float4& other) const
+	inline bool Float4::operator>(const Float4& other) const
 	{
 		return x > other.x && y > other.y && z > other.z;
 	}
 
-	bool Float4::operator<(const Float4& other) const
+	inline bool Float4::operator<(const Float4& other) const
 	{
 		return x < other.x&& y < other.y&& z < other.z;
 	}
 
-	bool Float4::operator>=(const Float4& other) const
+	inline bool Float4::operator>=(const Float4& other) const
 	{
 		return !(*this < other);
 	}
 
-	bool Float4::operator<=(const Float4& other) const
+	inline bool Float4::operator<=(const Float4& other) const
 	{
 		return !(*this > other);
 	}

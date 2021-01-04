@@ -50,28 +50,28 @@ namespace At0::Ray
 
 	// --------------------------------------------------------------------
 	// Operators
-	Int3 Int3::operator+(const Int3& other) const
+	inline Int3 Int3::operator+(const Int3& other) const
 	{
 		return { x + other.x, y + other.y, z + other.z };
 	}
 
-	Int3 Int3::operator-(const Int3& other) const
+	inline Int3 Int3::operator-(const Int3& other) const
 	{
 		return { x - other.x, y - other.y, z - other.z };
 	}
 
-	Int3 Int3::operator*(const Int3& other) const
+	inline Int3 Int3::operator*(const Int3& other) const
 	{
 		return { x * other.x, y * other.y, z * other.z };
 	}
 
-	Int3 Int3::operator/(const Int3& other) const
+	inline Int3 Int3::operator/(const Int3& other) const
 	{
 		return { x / other.x, y / other.y, z / other.z };
 	}
 
 
-	Int3& Int3::operator+=(const Int3& other)
+	inline Int3& Int3::operator+=(const Int3& other)
 	{
 		x += other.x;
 		y += other.y;
@@ -79,7 +79,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Int3& Int3::operator-=(const Int3& other)
+	inline Int3& Int3::operator-=(const Int3& other)
 	{
 		x -= other.x;
 		y -= other.y;
@@ -87,7 +87,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Int3& Int3::operator*=(const Int3& other)
+	inline Int3& Int3::operator*=(const Int3& other)
 	{
 		x *= other.x;
 		y *= other.y;
@@ -95,7 +95,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Int3& Int3::operator/=(const Int3& other)
+	inline Int3& Int3::operator/=(const Int3& other)
 	{
 		x /= other.x;
 		y /= other.y;
@@ -104,58 +104,58 @@ namespace At0::Ray
 	}
 
 
-	Int3& Int3::operator++()
+	inline Int3& Int3::operator++()
 	{
 		*this += 1;
 		return *this;
 	}
 
-	Int3& Int3::operator--()
+	inline Int3& Int3::operator--()
 	{
 		*this -= 1;
 		return *this;
 	}
 
-	Int3 Int3::operator++(int)
+	inline Int3 Int3::operator++(int)
 	{
 		Int3 result(*this);
 		++* this;
 		return result;
 	}
 
-	Int3 Int3::operator--(int)
+	inline Int3 Int3::operator--(int)
 	{
 		Int3 result(*this);
 		--* this;
 		return result;
 	}
 
-	bool Int3::operator==(const Int3& other) const
+	inline bool Int3::operator==(const Int3& other) const
 	{
 		return x == other.x && y == other.y && z == other.z;
 	}
 
-	bool Int3::operator!=(const Int3& other) const
+	inline bool Int3::operator!=(const Int3& other) const
 	{
 		return !(*this == other);
 	}
 
-	bool Int3::operator>(const Int3& other) const
+	inline bool Int3::operator>(const Int3& other) const
 	{
 		return x > other.x && y > other.y && z > other.z;
 	}
 
-	bool Int3::operator<(const Int3& other) const
+	inline bool Int3::operator<(const Int3& other) const
 	{
 		return x < other.x&& y < other.y&& z < other.z;
 	}
 
-	bool Int3::operator>=(const Int3& other) const
+	inline bool Int3::operator>=(const Int3& other) const
 	{
 		return !(*this < other);
 	}
 
-	bool Int3::operator<=(const Int3& other) const
+	inline bool Int3::operator<=(const Int3& other) const
 	{
 		return !(*this > other);
 	}

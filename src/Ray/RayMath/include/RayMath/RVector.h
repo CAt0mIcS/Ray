@@ -2,6 +2,8 @@
 
 #include "RMathInternals.h"
 #include "RFloat4.h"
+#include <assert.h>
+#include <utility>
 
 namespace At0::Ray
 {
@@ -42,10 +44,27 @@ namespace At0::Ray
 #else
 		float v[4];
 #endif
+		Vector() = default;
+
+		Vector(float x);
+		Vector(float x, float y);
+		Vector(float x, float y, float z);
+		Vector(float x, float y, float z, float w);
+
+		Vector(const Float3& xyz);
+		Vector(const Float3& xyz, float w);
+		Vector(const Float2& xy, const Float2& zw);
+
+		Vector(const Vector&) = default;
+
+		Vector& operator=(const Vector&) = default;
+
+		Vector(Vector&&) = default;
+		Vector& operator=(Vector&&) = default;
+
 		// --------------------------------------------------------------------
 		// Operators
-		Vector& RAYMATH_CALLCONV operator=(const Vector&) = default;
-		Vector& RAYMATH_CALLCONV operator=(Vector&&) = default;
+		Vector RAYMATH_CALLCONV operator-() const;
 
 		Vector RAYMATH_CALLCONV operator+(FVector other) const;
 		Vector RAYMATH_CALLCONV operator-(FVector other) const;
@@ -59,15 +78,201 @@ namespace At0::Ray
 
 		Vector& RAYMATH_CALLCONV operator++();
 		Vector& RAYMATH_CALLCONV operator--();
-		Vector RAYMATH_CALLCONV operator++(int);
-		Vector RAYMATH_CALLCONV operator--(int);
+		//Vector RAYMATH_CALLCONV operator++(int);
+		//Vector RAYMATH_CALLCONV operator--(int);
 
 		bool RAYMATH_CALLCONV operator==(FVector other) const;
 		bool RAYMATH_CALLCONV operator!=(FVector other) const;
-		bool RAYMATH_CALLCONV operator>(FVector other) const;
-		bool RAYMATH_CALLCONV operator<(FVector other) const;
-		bool RAYMATH_CALLCONV operator>=(FVector other) const;
-		bool RAYMATH_CALLCONV operator<=(FVector other) const;
+		//bool RAYMATH_CALLCONV operator>(FVector other) const;
+		//bool RAYMATH_CALLCONV operator<(FVector other) const;
+		//bool RAYMATH_CALLCONV operator>=(FVector other) const;
+		//bool RAYMATH_CALLCONV operator<=(FVector other) const;
 
+		const float& operator[](uint32_t idx) const { assert(idx < 4 && "Index Out Of Range"); return v[idx]; }
+		float& operator[](uint32_t idx) { return const_cast<float&>(std::as_const(*this)[idx]); }
 	};
+
+	inline Vector::Vector(float x)
+	{
+		v[0] = x;
+		v[1] = 0.0f;
+		v[2] = 0.0f;
+		v[3] = 0.0f;
+	}
+
+	inline Vector::Vector(float x, float y)
+	{
+		v[0] = x;
+		v[1] = y;
+		v[2] = 0.0f;
+		v[3] = 0.0f;
+	}
+
+	inline Vector::Vector(float x, float y, float z)
+	{
+		v[0] = x;
+		v[1] = y;
+		v[2] = z;
+		v[3] = 0.0f;
+	}
+
+	inline Vector::Vector(float x, float y, float z, float w)
+	{
+		v[0] = x;
+		v[1] = y;
+		v[2] = z;
+		v[3] = w;
+	}
+
+	inline Vector::Vector(const Float3& xyz)
+	{
+		v[0] = xyz.x;
+		v[1] = xyz.y;
+		v[2] = xyz.z;
+		v[3] = 0.0f;
+	}
+
+	inline Vector::Vector(const Float3& xyz, float w)
+	{
+		v[0] = xyz.x;
+		v[1] = xyz.y;
+		v[2] = xyz.z;
+		v[3] = w;
+	}
+
+	inline Vector::Vector(const Float2& xy, const Float2& zw)
+	{
+		v[0] = xy.x;
+		v[1] = xy.y;
+		v[2] = zw.x;
+		v[3] = zw.y;
+	}
+
+
+	inline Vector Vector::operator-() const
+	{
+		Vector vec{};
+		vec[0] = -v[0];
+		vec[1] = -v[1];
+		vec[2] = -v[2];
+		vec[3] = -v[3];
+		return vec;
+	}
+
+	inline Vector Vector::operator+(FVector other) const
+	{
+		Vector v = *this;
+		v[0] += other[0];
+		v[1] += other[1];
+		v[2] += other[2];
+		v[3] += other[3];
+		return v;
+	}
+
+	inline Vector Vector::operator-(FVector other) const
+	{
+		Vector v = *this;
+		v[0] -= other[0];
+		v[1] -= other[1];
+		v[2] -= other[2];
+		v[3] -= other[3];
+		return v;
+	}
+
+	inline Vector Vector::operator*(FVector other) const
+	{
+		Vector v = *this;
+		v[0] *= other[0];
+		v[1] *= other[1];
+		v[2] *= other[2];
+		v[3] *= other[3];
+		return v;
+	}
+
+	inline Vector Vector::operator/(FVector other) const
+	{
+		Vector v = *this;
+		v[0] /= other[0];
+		v[1] /= other[1];
+		v[2] /= other[2];
+		v[3] /= other[3];
+		return v;
+	}
+
+
+	inline Vector& Vector::operator+=(FVector other)
+	{
+		v[0] += other[0];
+		v[1] += other[1];
+		v[2] += other[2];
+		v[3] += other[3];
+		return *this;
+	}
+
+	inline Vector& Vector::operator-=(FVector other)
+	{
+		v[0] -= other[0];
+		v[1] -= other[1];
+		v[2] -= other[2];
+		v[3] -= other[3];
+		return *this;
+	}
+
+	inline Vector& Vector::operator*=(FVector other)
+	{
+		v[0] *= other[0];
+		v[1] *= other[1];
+		v[2] *= other[2];
+		v[3] *= other[3];
+		return *this;
+	}
+
+	inline Vector& Vector::operator/=(FVector other)
+	{
+		v[0] /= other[0];
+		v[1] /= other[1];
+		v[2] /= other[2];
+		v[3] /= other[3];
+		return *this;
+	}
+
+
+	inline Vector& Vector::operator++()
+	{
+		++v[0];
+		++v[1];
+		++v[2];
+		++v[3];
+		return *this;
+	}
+
+	inline Vector& Vector::operator--()
+	{
+		--v[0];
+		--v[1];
+		--v[2];
+		--v[3];
+		return *this;
+	}
+
+	//inline Vector Vector::operator++(int)
+	//{
+
+	//}
+
+	//inline Vector Vector::operator--(int)
+	//{
+
+	//}
+
+
+	inline bool Vector::operator==(FVector other) const
+	{
+		return v[0] == other[0] && v[1] == other[1] && v[2] == other[2] && v[3] == other[3];
+	}
+
+	inline bool Vector::operator!=(FVector other) const
+	{
+		return !(*this == other);
+	}
 }
