@@ -542,15 +542,58 @@ namespace At0
 			bool XM_CALLCONV IsNaN() const;
 			bool XM_CALLCONV IsInfinite() const;
 			bool XM_CALLCONV IsIdentity() const;
-			static Matrix XM_CALLCONV Identity();
+			Matrix XM_CALLCONV Transpose() const;
+			Matrix XM_CALLCONV Inverse(/*_Out_opt_ */Vector* pDeterminant = nullptr) const;
+			Vector XM_CALLCONV Determinant() const;
+			bool XM_CALLCONV Decompose(/*_Out_ */ Vector* outScale, /*_Out_ */ Vector* outRotQuat, /*_Out_ */ Vector* outTrans) const;
 
+			static Matrix XM_CALLCONV Identity();
 			static Matrix XM_CALLCONV PerspectiveLH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
 			static Matrix XM_CALLCONV PerspectiveRH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
 			static Matrix XM_CALLCONV PerspectiveFovLH(float FovAngleY, float AspectRatio, float NearZ, float FarZ);
 			static Matrix XM_CALLCONV PerspectiveFovRH(float FovAngleY, float AspectRatio, float NearZ, float FarZ);
 			static Matrix XM_CALLCONV PerspectiveOffCenterLH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
 			static Matrix XM_CALLCONV PerspectiveOffCenterRH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
-			Matrix XM_CALLCONV Transpose() const;
+			static Matrix XM_CALLCONV LookAtLH(FVector EyePosition, FVector FocusPosition, FVector UpDirection);
+			static Matrix XM_CALLCONV LookAtRH(FVector EyePosition, FVector FocusPosition, FVector UpDirection);
+			static Matrix XM_CALLCONV LookToLH(FVector EyePosition, FVector EyeDirection, FVector UpDirection);
+			static Matrix XM_CALLCONV LookToRH(FVector EyePosition, FVector EyeDirection, FVector UpDirection);
+			static Matrix XM_CALLCONV OrthographicLH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
+			static Matrix XM_CALLCONV OrthographicRH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
+			static Matrix XM_CALLCONV OrthographicOffCenterLH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
+			static Matrix XM_CALLCONV OrthographicOffCenterRH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
+			static Matrix XM_CALLCONV RotationX(float Angle);
+			static Matrix XM_CALLCONV RotationY(float Angle);
+			static Matrix XM_CALLCONV RotationZ(float Angle);
+			static Matrix XM_CALLCONV RotationRollPitchYaw(float Pitch, float Yaw, float Roll);
+			static Matrix XM_CALLCONV RotationRollPitchYawFromVector(FVector Angles);
+			static Matrix XM_CALLCONV Translation(float OffsetX, float OffsetY, float OffsetZ);
+			static Matrix XM_CALLCONV Translation(FVector Offset);
+			static Matrix XM_CALLCONV Scaling(float ScaleX, float ScaleY, float ScaleZ);
+			static Matrix XM_CALLCONV Scaling(FVector Scale);
+			static Matrix XM_CALLCONV AffineTransformation2D(FVector Scaling, FVector RotationOrigin, float Rotation, FVector Translation);
+			static Matrix XM_CALLCONV AffineTransformation(FVector Scaling, FVector RotationOrigin, FVector RotationQuaternion, GVector Translation);
+			static Matrix XM_CALLCONV Reflect(FVector ReflectionPlane);
+			static Matrix XM_CALLCONV Shadow(FVector ShadowPlane, FVector LightPosition);
+		};
+
+		struct Quaternion
+		{
+			union
+			{
+				Vector v;
+				float x, y, z, w;
+			};
+
+			Quaternion() = default;
+
+			Quaternion(const Quaternion&) = default;
+			Quaternion& operator=(const Quaternion&) = default;
+
+			Quaternion(Quaternion&&) = default;
+			Quaternion& operator=(Quaternion&&) = default;
+
+
 		};
 
 		//------------------------------------------------------------------------------
@@ -1464,23 +1507,11 @@ namespace At0
 
 		Matrix    XM_CALLCONV     MatrixMultiply(FMatrix M1, CMatrix M2);
 		Matrix    XM_CALLCONV     MatrixMultiplyTranspose(FMatrix M1, CMatrix M2);
-		Matrix    XM_CALLCONV     MatrixInverse(/*_Out_opt_ */Vector* pDeterminant, /*_In_ */FMatrix M);
-		Vector    XM_CALLCONV     MatrixDeterminant(FMatrix M);
-		bool        XM_CALLCONV     MatrixDecompose(/*_Out_ */ Vector* outScale, /*_Out_ */ Vector* outRotQuat, /*_Out_ */ Vector* outTrans, /*_In_ */FMatrix M);
 
 		Matrix    XM_CALLCONV     MatrixSet(float m00, float m01, float m02, float m03,
 			float m10, float m11, float m12, float m13,
 			float m20, float m21, float m22, float m23,
 			float m30, float m31, float m32, float m33);
-		Matrix    XM_CALLCONV     MatrixTranslation(float OffsetX, float OffsetY, float OffsetZ);
-		Matrix    XM_CALLCONV     MatrixTranslationFromVector(FVector Offset);
-		Matrix    XM_CALLCONV     MatrixScaling(float ScaleX, float ScaleY, float ScaleZ);
-		Matrix    XM_CALLCONV     MatrixScalingFromVector(FVector Scale);
-		Matrix    XM_CALLCONV     MatrixRotationX(float Angle);
-		Matrix    XM_CALLCONV     MatrixRotationY(float Angle);
-		Matrix    XM_CALLCONV     MatrixRotationZ(float Angle);
-		Matrix    XM_CALLCONV     MatrixRotationRollPitchYaw(float Pitch, float Yaw, float Roll);
-		Matrix    XM_CALLCONV     MatrixRotationRollPitchYawFromVector(FVector Angles);
 		Matrix    XM_CALLCONV     MatrixRotationNormal(FVector NormalAxis, float Angle);
 		Matrix    XM_CALLCONV     MatrixRotationAxis(FVector Axis, float Angle);
 		Matrix    XM_CALLCONV     MatrixRotationQuaternion(FVector Quaternion);
@@ -1488,19 +1519,7 @@ namespace At0
 			FVector RotationOrigin, float Rotation, GVector Translation);
 		Matrix    XM_CALLCONV     MatrixTransformation(FVector ScalingOrigin, FVector ScalingOrientationQuaternion, FVector Scaling,
 			GVector RotationOrigin, HVector RotationQuaternion, HVector Translation);
-		Matrix    XM_CALLCONV     MatrixAffineTransformation2D(FVector Scaling, FVector RotationOrigin, float Rotation, FVector Translation);
-		Matrix    XM_CALLCONV     MatrixAffineTransformation(FVector Scaling, FVector RotationOrigin, FVector RotationQuaternion, GVector Translation);
-		Matrix    XM_CALLCONV     MatrixReflect(FVector ReflectionPlane);
-		Matrix    XM_CALLCONV     MatrixShadow(FVector ShadowPlane, FVector LightPosition);
 
-		Matrix    XM_CALLCONV     MatrixLookAtLH(FVector EyePosition, FVector FocusPosition, FVector UpDirection);
-		Matrix    XM_CALLCONV     MatrixLookAtRH(FVector EyePosition, FVector FocusPosition, FVector UpDirection);
-		Matrix    XM_CALLCONV     MatrixLookToLH(FVector EyePosition, FVector EyeDirection, FVector UpDirection);
-		Matrix    XM_CALLCONV     MatrixLookToRH(FVector EyePosition, FVector EyeDirection, FVector UpDirection);
-		Matrix    XM_CALLCONV     MatrixOrthographicLH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
-		Matrix    XM_CALLCONV     MatrixOrthographicRH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
-		Matrix    XM_CALLCONV     MatrixOrthographicOffCenterLH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
-		Matrix    XM_CALLCONV     MatrixOrthographicOffCenterRH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
 
 
 		/****************************************************************************
@@ -2165,7 +2184,7 @@ namespace At0
 			vResult = _mm_mul_ps(vResult, _mm_castsi128_ps(vScale));
 			return vResult;
 #endif
-		}
+	}
 
 		//------------------------------------------------------------------------------
 
@@ -2184,7 +2203,7 @@ namespace At0
 			__m128i V = _mm_set1_epi32(IntConstant);
 			return _mm_castsi128_ps(V);
 #endif
-		}
+}
 
 
 		//-------------------------------------------------------------------------------------
@@ -4422,7 +4441,7 @@ namespace At0
 #elif defined(_XM_SSE_INTRINSICS_)
 			return _mm_setzero_ps();
 #endif
-		}
+}
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with four floating point values
@@ -5200,7 +5219,8 @@ namespace At0
 					V.vector4_f32[2],
 					w
 				}
- } };
+ }
+			};
 			return U.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vsetq_lane_f32(w, V, 3);
@@ -5249,7 +5269,9 @@ namespace At0
 					V.vector4_f32[1],
 					V.vector4_f32[2],
 					V.vector4_f32[3]
-				} } };
+				}
+ }
+			};
 			return U.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vld1q_lane_f32(x, V, 0);
@@ -8132,7 +8154,7 @@ namespace At0
 				s = vshrq_n_u32(v, 1);
 				r = vorrq_s32(r, s);
 				return r;
-			}
+		}
 
 		} // namespace Internal
 
@@ -12172,7 +12194,7 @@ namespace At0
 
 				vst1q_f32(reinterpret_cast<float*>(pOutputVector), vResult);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -12502,7 +12524,7 @@ namespace At0
 
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), V);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -12858,7 +12880,7 @@ namespace At0
 				V = vget_low_f32(vResult);
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), V);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -14649,7 +14671,7 @@ namespace At0
 
 				vst1q_f32(reinterpret_cast<float*>(pOutputVector), vResult);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -15065,7 +15087,7 @@ namespace At0
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 				vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -15555,7 +15577,7 @@ namespace At0
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 				vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -16041,8 +16063,8 @@ namespace At0
 					vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 					vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 					pOutputVector += OutputStride;
-				}
-			}
+		}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -16420,7 +16442,7 @@ namespace At0
 
 			Matrix Transform = MatrixMultiply(World, View);
 			Transform = MatrixMultiply(Transform, Projection);
-			Transform = MatrixInverse(nullptr, Transform);
+			Transform = Transform.Inverse();
 
 			Vector Result = VectorMultiplyAdd(V, Scale, Offset);
 
@@ -16473,7 +16495,7 @@ namespace At0
 
 			Matrix Transform = MatrixMultiply(World, View);
 			Transform = MatrixMultiply(Transform, Projection);
-			Transform = MatrixInverse(nullptr, Transform);
+			Transform = Transform.Inverse();
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
@@ -16497,7 +16519,7 @@ namespace At0
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			Matrix Transform = MatrixMultiply(World, View);
 			Transform = MatrixMultiply(Transform, Projection);
-			Transform = MatrixInverse(nullptr, Transform);
+			Transform = Transform.Inverse();
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
@@ -16642,8 +16664,8 @@ namespace At0
 					vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 					vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 					pOutputVector += OutputStride;
-				}
-			}
+		}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -16658,7 +16680,7 @@ namespace At0
 
 			Matrix Transform = MatrixMultiply(World, View);
 			Transform = MatrixMultiply(Transform, Projection);
-			Transform = MatrixInverse(nullptr, Transform);
+			Transform = Transform.Inverse();
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
@@ -18683,7 +18705,7 @@ namespace At0
 
 				vst1q_f32(reinterpret_cast<float*>(pOutputVector), vResult);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -19638,15 +19660,11 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Return the inverse and the determinant of a 4x4 matrix
 
-		inline Matrix XM_CALLCONV MatrixInverse
-		(
-			Vector* pDeterminant,
-			FMatrix  M
-		)
+		inline Matrix XM_CALLCONV Matrix::Inverse(Vector* pDeterminant) const
 		{
 #if defined(_XM_NO_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
 
-			Matrix MT = M.Transpose();
+			Matrix MT = Transpose();
 
 			Vector V0[4], V1[4];
 			V0[0] = VectorSwizzle<XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(MT.r[2]);
@@ -19738,7 +19756,7 @@ namespace At0
 			return Result;
 
 #elif defined(_XM_SSE_INTRINSICS_)
-			Matrix MT = M.Transpose();
+			Matrix MT = Transpose();
 			Vector V00 = XM_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(1, 1, 0, 0));
 			Vector V10 = XM_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(3, 2, 3, 2));
 			Vector V01 = XM_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(1, 1, 0, 0));
@@ -19857,40 +19875,37 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV MatrixDeterminant
-		(
-			FMatrix M
-		)
+		inline Vector XM_CALLCONV Matrix::Determinant() const
 		{
 			static const VectorF32 Sign = { { { 1.0f, -1.0f, 1.0f, -1.0f } } };
 
-			Vector V0 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(M.r[2]);
-			Vector V1 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(M.r[3]);
-			Vector V2 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(M.r[2]);
-			Vector V3 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(M.r[3]);
-			Vector V4 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(M.r[2]);
-			Vector V5 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(M.r[3]);
+			Vector V0 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(r[2]);
+			Vector V1 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(r[3]);
+			Vector V2 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(r[2]);
+			Vector V3 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(r[3]);
+			Vector V4 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(r[2]);
+			Vector V5 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(r[3]);
 
 			Vector P0 = VectorMultiply(V0, V1);
 			Vector P1 = VectorMultiply(V2, V3);
 			Vector P2 = VectorMultiply(V4, V5);
 
-			V0 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(M.r[2]);
-			V1 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(M.r[3]);
-			V2 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(M.r[2]);
-			V3 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(M.r[3]);
-			V4 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(M.r[2]);
-			V5 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(M.r[3]);
+			V0 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(r[2]);
+			V1 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(r[3]);
+			V2 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(r[2]);
+			V3 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(r[3]);
+			V4 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(r[2]);
+			V5 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(r[3]);
 
 			P0 = VectorNegativeMultiplySubtract(V0, V1, P0);
 			P1 = VectorNegativeMultiplySubtract(V2, V3, P1);
 			P2 = VectorNegativeMultiplySubtract(V4, V5, P2);
 
-			V0 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(M.r[1]);
-			V1 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(M.r[1]);
-			V2 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(M.r[1]);
+			V0 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(r[1]);
+			V1 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(r[1]);
+			V2 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(r[1]);
 
-			Vector S = VectorMultiply(M.r[0], Sign.v);
+			Vector S = VectorMultiply(r[0], Sign.v);
 			Vector R = VectorMultiply(V0, P0);
 			R = VectorNegativeMultiplySubtract(V1, P1, R);
 			R = VectorMultiplyAdd(V2, P2, R);
@@ -19951,13 +19966,12 @@ namespace At0
 #define XM3_DECOMP_EPSILON 0.0001f
 
 
-		inline bool XM_CALLCONV MatrixDecompose
+		inline bool XM_CALLCONV Matrix::Decompose
 		(
 			Vector* outScale,
 			Vector* outRotQuat,
-			Vector* outTrans,
-			FMatrix M
-		)
+			Vector* outTrans
+		) const
 		{
 			static const Vector* pvCanonicalBasis[3] = {
 				&g_XMIdentityR0.v,
@@ -19970,7 +19984,7 @@ namespace At0
 			assert(outTrans != nullptr);
 
 			// Get the translation
-			outTrans[0] = M.r[3];
+			outTrans[0] = r[3];
 
 			Vector* ppvBasis[3];
 			Matrix matTemp;
@@ -19978,9 +19992,9 @@ namespace At0
 			ppvBasis[1] = &matTemp.r[1];
 			ppvBasis[2] = &matTemp.r[2];
 
-			matTemp.r[0] = M.r[0];
-			matTemp.r[1] = M.r[1];
-			matTemp.r[2] = M.r[2];
+			matTemp.r[0] = r[0];
+			matTemp.r[1] = r[1];
+			matTemp.r[2] = r[2];
 			matTemp.r[3] = g_XMIdentityR3.v;
 
 			auto pfScales = reinterpret_cast<float*>(outScale);
@@ -20022,7 +20036,7 @@ namespace At0
 
 			ppvBasis[c][0] = Vector3Normalize(ppvBasis[c][0]);
 
-			float fDet = VectorGetX(MatrixDeterminant(matTemp));
+			float fDet = VectorGetX(matTemp.Determinant());
 
 			// use Kramer's rule to check for handedness of coordinate system
 			if (fDet < 0.0f)
@@ -20094,7 +20108,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixTranslation
+		inline Matrix XM_CALLCONV Matrix::Translation
 		(
 			float OffsetX,
 			float OffsetY,
@@ -20138,7 +20152,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixTranslationFromVector
+		inline Matrix XM_CALLCONV Matrix::Translation
 		(
 			FVector Offset
 		)
@@ -20179,7 +20193,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixScaling
+		inline Matrix XM_CALLCONV Matrix::Scaling
 		(
 			float ScaleX,
 			float ScaleY,
@@ -20230,7 +20244,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixScalingFromVector
+		inline Matrix XM_CALLCONV Matrix::Scaling
 		(
 			FVector Scale
 		)
@@ -20278,7 +20292,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixRotationX
+		inline Matrix XM_CALLCONV Matrix::RotationX
 		(
 			float Angle
 		)
@@ -20354,7 +20368,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixRotationY
+		inline Matrix XM_CALLCONV Matrix::RotationY
 		(
 			float Angle
 		)
@@ -20430,7 +20444,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixRotationZ
+		inline Matrix XM_CALLCONV Matrix::RotationZ
 		(
 			float Angle
 		)
@@ -20506,7 +20520,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixRotationRollPitchYaw
+		inline Matrix XM_CALLCONV Matrix::RotationRollPitchYaw
 		(
 			float Pitch,
 			float Yaw,
@@ -20514,12 +20528,12 @@ namespace At0
 		)
 		{
 			Vector Angles = VectorSet(Pitch, Yaw, Roll, 0.0f);
-			return MatrixRotationRollPitchYawFromVector(Angles);
+			return Matrix::RotationRollPitchYawFromVector(Angles);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixRotationRollPitchYawFromVector
+		inline Matrix XM_CALLCONV Matrix::RotationRollPitchYawFromVector
 		(
 			FVector Angles // <Pitch, Yaw, Roll, undefined>
 		)
@@ -20737,13 +20751,13 @@ namespace At0
 			Vector VScalingOrigin = VectorSelect(g_XMSelect1100.v, ScalingOrigin, g_XMSelect1100.v);
 			Vector NegScalingOrigin = VectorNegate(VScalingOrigin);
 
-			Matrix MScalingOriginI = MatrixTranslationFromVector(NegScalingOrigin);
-			Matrix MScalingOrientation = MatrixRotationZ(ScalingOrientation);
+			Matrix MScalingOriginI = Matrix::Translation(NegScalingOrigin);
+			Matrix MScalingOrientation = Matrix::RotationZ(ScalingOrientation);
 			Matrix MScalingOrientationT = MScalingOrientation.Transpose();
 			Vector VScaling = VectorSelect(g_XMOne.v, Scaling, g_XMSelect1100.v);
-			Matrix MScaling = MatrixScalingFromVector(VScaling);
+			Matrix MScaling = Matrix::Scaling(VScaling);
 			Vector VRotationOrigin = VectorSelect(g_XMSelect1100.v, RotationOrigin, g_XMSelect1100.v);
-			Matrix MRotation = MatrixRotationZ(Rotation);
+			Matrix MRotation = Matrix::RotationZ(Rotation);
 			Vector VTranslation = VectorSelect(g_XMSelect1100.v, Translation, g_XMSelect1100.v);
 
 			Matrix M = MatrixMultiply(MScalingOriginI, MScalingOrientationT);
@@ -20776,10 +20790,10 @@ namespace At0
 			Vector VScalingOrigin = VectorSelect(g_XMSelect1110.v, ScalingOrigin, g_XMSelect1110.v);
 			Vector NegScalingOrigin = VectorNegate(ScalingOrigin);
 
-			Matrix MScalingOriginI = MatrixTranslationFromVector(NegScalingOrigin);
+			Matrix MScalingOriginI = Matrix::Translation(NegScalingOrigin);
 			Matrix MScalingOrientation = MatrixRotationQuaternion(ScalingOrientationQuaternion);
 			Matrix MScalingOrientationT = MScalingOrientation.Transpose();
-			Matrix MScaling = MatrixScalingFromVector(Scaling);
+			Matrix MScaling = Matrix::Scaling(Scaling);
 			Vector VRotationOrigin = VectorSelect(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
 			Matrix MRotation = MatrixRotationQuaternion(RotationQuaternion);
 			Vector VTranslation = VectorSelect(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
@@ -20798,7 +20812,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixAffineTransformation2D
+		inline Matrix XM_CALLCONV Matrix::AffineTransformation2D
 		(
 			FVector Scaling,
 			FVector RotationOrigin,
@@ -20809,9 +20823,9 @@ namespace At0
 			// M = MScaling * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
 			Vector VScaling = VectorSelect(g_XMOne.v, Scaling, g_XMSelect1100.v);
-			Matrix MScaling = MatrixScalingFromVector(VScaling);
+			Matrix MScaling = Matrix::Scaling(VScaling);
 			Vector VRotationOrigin = VectorSelect(g_XMSelect1100.v, RotationOrigin, g_XMSelect1100.v);
-			Matrix MRotation = MatrixRotationZ(Rotation);
+			Matrix MRotation = Matrix::RotationZ(Rotation);
 			Vector VTranslation = VectorSelect(g_XMSelect1100.v, Translation, g_XMSelect1100.v);
 
 			Matrix M;
@@ -20825,7 +20839,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixAffineTransformation
+		inline Matrix XM_CALLCONV Matrix::AffineTransformation
 		(
 			FVector Scaling,
 			FVector RotationOrigin,
@@ -20835,7 +20849,7 @@ namespace At0
 		{
 			// M = MScaling * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
-			Matrix MScaling = MatrixScalingFromVector(Scaling);
+			Matrix MScaling = Matrix::Scaling(Scaling);
 			Vector VRotationOrigin = VectorSelect(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
 			Matrix MRotation = MatrixRotationQuaternion(RotationQuaternion);
 			Vector VTranslation = VectorSelect(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
@@ -20851,7 +20865,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixReflect
+		inline Matrix XM_CALLCONV Matrix::Reflect
 		(
 			FVector ReflectionPlane
 		)
@@ -20879,7 +20893,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixShadow
+		inline Matrix XM_CALLCONV Matrix::Shadow
 		(
 			FVector ShadowPlane,
 			FVector LightPosition
@@ -20914,7 +20928,7 @@ namespace At0
 		// View and projection initialization operations
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixLookAtLH
+		inline Matrix XM_CALLCONV Matrix::LookAtLH
 		(
 			FVector EyePosition,
 			FVector FocusPosition,
@@ -20922,12 +20936,12 @@ namespace At0
 		)
 		{
 			Vector EyeDirection = VectorSubtract(FocusPosition, EyePosition);
-			return MatrixLookToLH(EyePosition, EyeDirection, UpDirection);
+			return Matrix::LookToLH(EyePosition, EyeDirection, UpDirection);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixLookAtRH
+		inline Matrix XM_CALLCONV Matrix::LookAtRH
 		(
 			FVector EyePosition,
 			FVector FocusPosition,
@@ -20935,12 +20949,12 @@ namespace At0
 		)
 		{
 			Vector NegEyeDirection = VectorSubtract(EyePosition, FocusPosition);
-			return MatrixLookToLH(EyePosition, NegEyeDirection, UpDirection);
+			return Matrix::LookToLH(EyePosition, NegEyeDirection, UpDirection);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixLookToLH
+		inline Matrix XM_CALLCONV Matrix::LookToLH
 		(
 			FVector EyePosition,
 			FVector EyeDirection,
@@ -20978,7 +20992,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixLookToRH
+		inline Matrix XM_CALLCONV Matrix::LookToRH
 		(
 			FVector EyePosition,
 			FVector EyeDirection,
@@ -20986,7 +21000,7 @@ namespace At0
 		)
 		{
 			Vector NegEyeDirection = VectorNegate(EyeDirection);
-			return MatrixLookToLH(EyePosition, NegEyeDirection, UpDirection);
+			return Matrix::LookToLH(EyePosition, NegEyeDirection, UpDirection);
 		}
 
 		//------------------------------------------------------------------------------
@@ -21569,7 +21583,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixOrthographicLH
+		inline Matrix XM_CALLCONV Matrix::OrthographicLH
 		(
 			float ViewWidth,
 			float ViewHeight,
@@ -21653,7 +21667,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixOrthographicRH
+		inline Matrix XM_CALLCONV Matrix::OrthographicRH
 		(
 			float ViewWidth,
 			float ViewHeight,
@@ -21737,7 +21751,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixOrthographicOffCenterLH
+		inline Matrix XM_CALLCONV Matrix::OrthographicOffCenterLH
 		(
 			float ViewLeft,
 			float ViewRight,
@@ -21837,7 +21851,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixOrthographicOffCenterRH
+		inline Matrix XM_CALLCONV Matrix::OrthographicOffCenterRH
 		(
 			float ViewLeft,
 			float ViewRight,
@@ -24818,5 +24832,5 @@ namespace At0
 
 #pragma warning(pop)
 
-	}
+		}
 }

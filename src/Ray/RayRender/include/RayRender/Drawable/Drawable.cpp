@@ -38,9 +38,9 @@ namespace At0::Ray
 	Matrix Drawable::GetTransform() const
 	{
 		TransformComponent& transform = GetComponent<TransformComponent>();
-		return MatrixScaling(transform.Scale.x, transform.Scale.y, transform.Scale.z) *
+		return Matrix::Scaling(transform.Scale.x, transform.Scale.y, transform.Scale.z) *
 			MatrixRotationQuaternion({ transform.Rotation.x, transform.Rotation.y, transform.Rotation.z, transform.Rotation.w }) *
-			MatrixTranslation(transform.Translation.x, transform.Translation.y, transform.Translation.z);
+			Matrix::Translation(transform.Translation.x, transform.Translation.y, transform.Translation.z);
 	}
 
 	void Drawable::Draw(Renderer3D* renderer)

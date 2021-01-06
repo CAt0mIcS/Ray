@@ -8,12 +8,12 @@ namespace At0::Ray
 	{
 		const auto pos = Vector3Transform(
 			{ 0.0f, 0.0f, -z, 0.0f },
-			MatrixRotationRollPitchYaw(phi, -theta, 0.0f)
+			Matrix::RotationRollPitchYaw(phi, -theta, 0.0f)
 		);
 
-		return MatrixLookAtLH(
+		return Matrix::LookAtLH(
 			pos, VectorZero(), VectorSet(0.0f, 1.0f, 0.0f, 0.0f)
-		) * MatrixRotationRollPitchYaw(pitch, yaw, roll) * MatrixTranslation(x, y, 0.0f);
+		) * Matrix::RotationRollPitchYaw(pitch, yaw, roll) * Matrix::Translation(x, y, 0.0f);
 	}
 }
 

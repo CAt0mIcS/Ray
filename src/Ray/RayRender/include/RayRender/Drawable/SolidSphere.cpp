@@ -93,14 +93,14 @@ namespace At0::Ray
 			{
 				const auto latBase = Vector3Transform(
 					base,
-					MatrixRotationX(lattitudeAngle * iLat)
+					Matrix::RotationX(lattitudeAngle * iLat)
 				);
 				for (int iLong = 0; iLong < longDiv; iLong++)
 				{
 					vertices.emplace_back();
 					auto v = Vector3Transform(
 						latBase,
-						MatrixRotationZ(longitudeAngle * iLong)
+						Matrix::RotationZ(longitudeAngle * iLong)
 					);
 					StoreFloat3(&vertices.back().pos, v);
 				}
@@ -180,7 +180,7 @@ namespace At0::Ray
 				Float3 pos;
 			};
 			auto model = Sphere::Make<Vertex>();
-			model.Transform(MatrixScaling(radius, radius, radius));
+			model.Transform(Matrix::Scaling(radius, radius, radius));
 			AddStaticBind(MakeScope<VertexBuffer>(model.vertices));
 			AddStaticIndexBuffer(MakeScope<IndexBuffer>(model.indices));
 
