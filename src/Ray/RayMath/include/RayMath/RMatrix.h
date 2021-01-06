@@ -36,10 +36,10 @@ namespace At0::Ray
 			Vector r[4];
 			struct
 			{
-				float _11, _12, _13, _14;
-				float _21, _22, _23, _24;
-				float _31, _32, _33, _34;
-				float _41, _42, _43, _44;
+				float f00, f01, f02, f03;
+				float f10, f11, f12, f13;
+				float f20, f21, f22, f23;
+				float f30, f31, f32, f33;
 			};
 			float m[4][4];
 		};
@@ -56,8 +56,8 @@ namespace At0::Ray
 		Matrix(Matrix&&) = default;
 		Matrix& operator=(Matrix&&) = default;
 
-		Matrix(FVector R0, FVector R1, FVector R2, CVector R3) : r{ R0,R1,R2,R3 } {}
-		Matrix(float m00, float m01, float m02, float m03,
+		constexpr Matrix(FVector R0, FVector R1, FVector R2, CVector R3) : r{ R0,R1,R2,R3 } {}
+		constexpr Matrix(float m00, float m01, float m02, float m03,
 			float m10, float m11, float m12, float m13,
 			float m20, float m21, float m22, float m23,
 			float m30, float m31, float m32, float m33);
@@ -93,16 +93,17 @@ namespace At0::Ray
 	};
 
 
-	inline Matrix::Matrix(float m00, float m01, float m02, float m03,
+	inline constexpr Matrix::Matrix(float m00, float m01, float m02, float m03,
 		float m10, float m11, float m12, float m13,
 		float m20, float m21, float m22, float m23,
 		float m30, float m31, float m32, float m33
 	)
+		:
+		f00(m00), f01(m01), f02(m02), f03(m03),
+		f10(m10), f11(m11), f12(m12), f13(m13),
+		f20(m20), f21(m21), f22(m22), f23(m23),
+		f30(m30), f31(m31), f32(m32), f33(m33)
 	{
-		r[0] = { m00, m01, m02, m03 };
-		r[1] = { m10, m11, m12, m13 };
-		r[2] = { m20, m21, m22, m23 };
-		r[3] = { m30, m31, m32, m33 };
 	}
 
 
