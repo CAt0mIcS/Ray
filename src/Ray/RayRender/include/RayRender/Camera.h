@@ -4,14 +4,13 @@
 
 #include <../../RayUtil/include/RayUtil/RMath.h>
 
-#include <DirectXMath.h>
 
 namespace At0::Ray
 {
 	class RR_API Camera
 	{
 	public:
-		DirectX::XMMATRIX GetMatrix() const;
+		Matrix GetMatrix() const;
 
 	public:
 		float x = 0.0f;

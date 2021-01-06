@@ -35,12 +35,12 @@ namespace At0::Ray
 		s_Registry.destroy(m_Entity);
 	}
 
-	DirectX::XMMATRIX Drawable::GetTransform() const
+	Matrix Drawable::GetTransform() const
 	{
 		TransformComponent& transform = GetComponent<TransformComponent>();
-		return DirectX::XMMatrixScaling(transform.Scale.x, transform.Scale.y, transform.Scale.z) *
-			DirectX::XMMatrixRotationQuaternion({ transform.Rotation.x, transform.Rotation.y, transform.Rotation.z, transform.Rotation.w }) *
-			DirectX::XMMatrixTranslation(transform.Translation.x, transform.Translation.y, transform.Translation.z);
+		return MatrixScaling(transform.Scale.x, transform.Scale.y, transform.Scale.z) *
+			MatrixRotationQuaternion({ transform.Rotation.x, transform.Rotation.y, transform.Rotation.z, transform.Rotation.w }) *
+			MatrixTranslation(transform.Translation.x, transform.Translation.y, transform.Translation.z);
 	}
 
 	void Drawable::Draw(Renderer3D* renderer)

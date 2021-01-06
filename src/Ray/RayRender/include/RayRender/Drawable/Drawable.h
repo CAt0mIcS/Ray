@@ -78,7 +78,7 @@ namespace At0::Ray
 		Drawable& operator=(Drawable&&) noexcept = default;
 
 		virtual void Update() = 0;
-		DirectX::XMMATRIX GetTransform() const;
+		Matrix GetTransform() const;
 
 		virtual void Draw(Renderer3D* renderer);
 		void Bind();

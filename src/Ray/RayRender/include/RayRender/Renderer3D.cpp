@@ -12,7 +12,7 @@ namespace WRL = Microsoft::WRL;
 namespace At0::Ray
 {
 	Renderer3D::Renderer3D(EventDispatcher<WindowResizeEvent>& dispatcher)
-		: m_Projection(DirectX::XMMatrixIdentity()), m_pSwapChain(nullptr), m_pTarget(nullptr), m_hWnd(0),
+		: m_Projection(Matrix::Identity()), m_pSwapChain(nullptr), m_pTarget(nullptr), m_hWnd(0),
 		EventListener<WindowResizeEvent>(dispatcher)
 	{
 		RAY_PROFILE_FUNCTION();
@@ -219,6 +219,6 @@ namespace At0::Ray
 		context->RSSetViewports(1, &vp);
 
 		// TEMPORARY! Need customization for near and far
-		SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, size.y / size.x, 0.5f, 500.0f));
+		SetProjection(Matrix::PerspectiveLH(1.0f, size.y / size.x, 0.5f, 500.0f));
 	}
 }

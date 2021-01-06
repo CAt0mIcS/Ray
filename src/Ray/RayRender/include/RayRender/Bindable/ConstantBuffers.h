@@ -5,7 +5,6 @@
 #include "RayRender/GraphicsResource.h"
 
 #include <d3d11.h>
-#include <DirectXMath.h>
 
 
 
@@ -99,8 +98,8 @@ namespace At0::Ray
 	private:
 		struct Transforms
 		{
-			DirectX::XMMATRIX modelViewProj;
-			DirectX::XMMATRIX model;
+			Matrix modelViewProj;
+			Matrix model;
 		};
 
 		const Drawable& m_Parent;

@@ -38,13 +38,13 @@ namespace At0::Ray
 				Vector vec1{};
 				for (uint32_t i = 0; i < 4; ++i)
 				{
-					vec1[i] = p1[i] - p0[i];
+					vec1.m128_f32[i] = p1.m128_f32[i] - p0.m128_f32[i];
 				}
 
 				Vector vec2{};
 				for (uint32_t i = 0; i < 4; ++i)
 				{
-					vec2[i] = p2[i] - p0[i];
+					vec2.m128_f32[i] = p2.m128_f32[i] - p0.m128_f32[i];
 				}
 
 				auto n = Vector3Normalize(Vector3Cross(vec1, vec2));
