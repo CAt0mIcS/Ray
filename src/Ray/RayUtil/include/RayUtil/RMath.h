@@ -592,7 +592,10 @@ namespace At0
 			union
 			{
 				Vector v;
-				float x, y, z, w;
+				struct
+				{
+					float x, y, z, w;
+				};
 			};
 
 			Quaternion() = default;
@@ -604,6 +607,7 @@ namespace At0
 			Quaternion& operator=(Quaternion&&) = default;
 
 			constexpr Quaternion(FVector v) : v(v) {}
+			constexpr Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 
 			operator FVector() const { return v; }
 
@@ -625,6 +629,8 @@ namespace At0
 			Quaternion XM_CALLCONV Inverse() const;
 			Quaternion XM_CALLCONV Ln() const;
 			Quaternion XM_CALLCONV Exp() const;
+			void XM_CALLCONV ToAxisAngle(/*_Out_ */ Vector* pAxis, /*_Out_ */ float* pAngle) const;
+
 
 			static Quaternion XM_CALLCONV Dot(FQuaternion Q1, FQuaternion Q2);
 			static Quaternion XM_CALLCONV Multiply(FQuaternion Q1, FQuaternion Q2);
@@ -635,6 +641,13 @@ namespace At0
 			static void XM_CALLCONV SquadSetup(/*_Out_ */ Vector* pA, /*_Out_ */ Vector* pB, /*_Out_ */ Vector* pC, /*_In_ */FQuaternion Q0, /*_In_ */FQuaternion Q1, /*_In_ */FQuaternion Q2, /*_In_ */GQuaternion Q3);
 			static Quaternion XM_CALLCONV BaryCentric(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, float f, float g);
 			static Quaternion XM_CALLCONV BaryCentricV(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, GQuaternion F, HQuaternion G);
+
+			static Quaternion XM_CALLCONV Identity();
+			static Quaternion XM_CALLCONV RotationRollPitchYaw(float Pitch, float Yaw, float Roll);
+			static Quaternion XM_CALLCONV RotationRollPitchYawFromVector(FVector Angles);
+			static Quaternion XM_CALLCONV RotationNormal(FVector NormalAxis, float Angle);
+			static Quaternion XM_CALLCONV RotationAxis(FVector Axis, float Angle);
+			static Quaternion XM_CALLCONV RotationMatrix(FMatrix M);
 		};
 
 		//------------------------------------------------------------------------------
@@ -1561,22 +1574,6 @@ namespace At0
 		Matrix    XM_CALLCONV     MatrixTransformation(FVector ScalingOrigin, FVector ScalingOrientationQuaternion, FVector Scaling,
 			GVector RotationOrigin, HVector RotationQuaternion, HVector Translation);
 
-
-
-		/****************************************************************************
-		 *
-		 * Quaternion operations
-		 *
-		 ****************************************************************************/
-
-		Vector    XM_CALLCONV     QuaternionIdentity();
-		Vector    XM_CALLCONV     QuaternionRotationRollPitchYaw(float Pitch, float Yaw, float Roll);
-		Vector    XM_CALLCONV     QuaternionRotationRollPitchYawFromVector(FVector Angles);
-		Vector    XM_CALLCONV     QuaternionRotationNormal(FVector NormalAxis, float Angle);
-		Vector    XM_CALLCONV     QuaternionRotationAxis(FVector Axis, float Angle);
-		Vector    XM_CALLCONV     QuaternionRotationMatrix(FMatrix M);
-
-		void        XM_CALLCONV     QuaternionToAxisAngle(/*_Out_ */ Vector* pAxis, /*_Out_ */ float* pAngle, /*_In_ */FVector Q);
 
 		/****************************************************************************
 		 *
@@ -20073,7 +20070,7 @@ namespace At0
 			}
 
 			// generate the quaternion from the matrix
-			outRotQuat[0] = QuaternionRotationMatrix(matTemp);
+			outRotQuat[0] = Quaternion::RotationMatrix(matTemp);
 			return true;
 		}
 
@@ -20553,7 +20550,7 @@ namespace At0
 			FVector Angles // <Pitch, Yaw, Roll, undefined>
 		)
 		{
-			Vector Q = QuaternionRotationRollPitchYawFromVector(Angles);
+			Vector Q = Quaternion::RotationRollPitchYawFromVector(Angles);
 			return MatrixRotationQuaternion(Q);
 		}
 
@@ -22902,14 +22899,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionIdentity()
+		inline Quaternion XM_CALLCONV Quaternion::Identity()
 		{
 			return g_XMIdentityR3.v;
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionRotationRollPitchYaw
+		inline Quaternion XM_CALLCONV Quaternion::RotationRollPitchYaw
 		(
 			float Pitch,
 			float Yaw,
@@ -22917,13 +22914,13 @@ namespace At0
 		)
 		{
 			Vector Angles = VectorSet(Pitch, Yaw, Roll, 0.0f);
-			Vector Q = QuaternionRotationRollPitchYawFromVector(Angles);
+			Vector Q = RotationRollPitchYawFromVector(Angles);
 			return Q;
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionRotationRollPitchYawFromVector
+		inline Quaternion XM_CALLCONV Quaternion::RotationRollPitchYawFromVector
 		(
 			FVector Angles // <Pitch, Yaw, Roll, 0>
 		)
@@ -22953,7 +22950,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionRotationNormal
+		inline Quaternion XM_CALLCONV Quaternion::RotationNormal
 		(
 			FVector NormalAxis,
 			float    Angle
@@ -22985,7 +22982,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionRotationAxis
+		inline Quaternion XM_CALLCONV Quaternion::RotationAxis
 		(
 			FVector Axis,
 			float    Angle
@@ -22995,13 +22992,13 @@ namespace At0
 			assert(!Vector3IsInfinite(Axis));
 
 			Vector Normal = Vector3Normalize(Axis);
-			Vector Q = QuaternionRotationNormal(Normal, Angle);
+			Vector Q = RotationNormal(Normal, Angle);
 			return Q;
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionRotationMatrix
+		inline Quaternion XM_CALLCONV Quaternion::RotationMatrix
 		(
 			FMatrix M
 		)
@@ -23249,19 +23246,18 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV QuaternionToAxisAngle
+		inline void XM_CALLCONV Quaternion::ToAxisAngle
 		(
 			Vector* pAxis,
-			float* pAngle,
-			FVector  Q
-		)
+			float* pAngle
+		) const
 		{
 			assert(pAxis);
 			assert(pAngle);
 
-			*pAxis = Q;
+			*pAxis = *this;
 
-			*pAngle = 2.0f * ScalarACos(VectorGetW(Q));
+			*pAngle = 2.0f * ScalarACos(VectorGetW(*this));
 		}
 
 		/****************************************************************************

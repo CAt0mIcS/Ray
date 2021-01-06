@@ -153,8 +153,8 @@ namespace At0::Layers
 			{
 				Ray::TransformComponent& tform = cubes[i].GetComponent<Ray::TransformComponent>();
 
-				Ray::Vector quaternion = Ray::QuaternionRotationRollPitchYaw(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine));
-				tform.Rotation = { quaternion.m128_f32[0], quaternion.m128_f32[1], quaternion.m128_f32[2], quaternion.m128_f32[3] };
+				Ray::Quaternion quaternion = Ray::Quaternion::RotationRollPitchYaw(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine));
+				tform.Rotation = { quaternion.x, quaternion.y, quaternion.z, quaternion.w };
 				tform.Translation = { posDist(mtEngine), posDist(mtEngine), posDist(mtEngine) - 20.0f };
 				tform.Scale = { scaleDist(mtEngine), scaleDist(mtEngine), scaleDist(mtEngine) };
 			}
@@ -231,8 +231,8 @@ namespace At0::Layers
 			for (uint32_t i = 0; i < cubes.size() - 1; ++i)
 			{
 				Ray::TransformComponent& tform = cubes[i].GetComponent<Ray::TransformComponent>();
-				Ray::Vector quaternion = Ray::QuaternionRotationRollPitchYaw(pitch + i, yaw + i, roll + i);
-				tform.Rotation = { quaternion.m128_f32[0], quaternion.m128_f32[1], quaternion.m128_f32[2], quaternion.m128_f32[3] };
+				Ray::Quaternion quaternion = Ray::Quaternion::RotationRollPitchYaw(pitch + i, yaw + i, roll + i);
+				tform.Rotation = { quaternion.x, quaternion.y, quaternion.z, quaternion.w };
 			}
 
 			//cubes.back().SetRotation(pitch, yaw, roll);

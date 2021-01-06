@@ -51,15 +51,15 @@ namespace At0::Ray
 	{
 		Float3 Translation;
 		Float3 Scale;
-		Float4 Rotation;
+		Quaternion Rotation;
 
 		TransformComponent()
-			: Translation{ 0.0f, 0.0f, 0.0f }, Scale{ 1.0f, 1.0f, 1.0f }, Rotation{ 0.0f, 0.0f, 0.0f, 1.0f } {}
+			: Translation{ 0.0f, 0.0f, 0.0f }, Scale{ 1.0f, 1.0f, 1.0f }, Rotation{ Quaternion::Identity() } {}
 
 		TransformComponent(
 			const Float3& transform,
 			const Float3& scale,
-			const Float4& rotation
+			const Quaternion& rotation
 		)
 			: Translation(transform), Scale(scale), Rotation(rotation) {}
 	};
