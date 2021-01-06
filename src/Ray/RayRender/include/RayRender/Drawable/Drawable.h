@@ -9,6 +9,8 @@
 #include <vector>
 #include <../../extern/entt/src/entt/entt.hpp>
 
+#include <DirectXMath.h>
+
 
 namespace At0::Ray
 {
@@ -76,7 +78,7 @@ namespace At0::Ray
 		Drawable& operator=(Drawable&&) noexcept = default;
 
 		virtual void Update() = 0;
-		Matrix GetTransform() const;
+		DirectX::XMMATRIX GetTransform() const;
 
 		virtual void Draw(Renderer3D* renderer);
 		void Bind();

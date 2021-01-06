@@ -161,7 +161,7 @@ namespace At0::Layers
 		}
 
 		//model = Ray::Model("Resources/nanosuit.obj", face_colors, GetMainWindow().GetRenderer3D());
-		GetMainWindow().GetRenderer3D().SetCamera(Ray::MatrixTranslation(0.0f, 0.0f, 5.0f));
+		GetMainWindow().GetRenderer3D().SetCamera(DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f));
 
 #endif
 	}

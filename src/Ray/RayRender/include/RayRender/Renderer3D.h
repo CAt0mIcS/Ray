@@ -16,6 +16,8 @@
 #include <../../RayEvent/include/RayEvent/Events/RApplicationEvent.h>
 #include <../../RayUtil/include/RayUtil/RMath.h>
 
+#include <DirectXMath.h>
+
 
 struct IDXGISwapChain;
 struct ID3D11RenderTargetView;
@@ -35,10 +37,10 @@ namespace At0::Ray
 		void DrawIndexed(uint32_t indicesCount);
 		void ClearBuffer(float red, float green, float blue);
 		void EndDraw();
-		void SetProjection(const Matrix& mat) { m_Projection = mat; }
-		const Matrix& GetProjection() const { return m_Projection; }
+		void SetProjection(const DirectX::XMMATRIX& mat) { m_Projection = mat; }
+		const DirectX::XMMATRIX& GetProjection() const { return m_Projection; }
 		~Renderer3D();
-		void SetCamera(const Matrix& cam) { m_Camera = cam; }
+		void SetCamera(const DirectX::XMMATRIX& cam) { m_Camera = cam; }
 		const auto GetCamera() const { return m_Camera; }
 
 	private:
@@ -55,8 +57,8 @@ namespace At0::Ray
 		std::mutex m_RenderTargetViewMutex;
 		std::mutex m_SwapChainMutex;
 
-		Matrix m_Projection;
-		Matrix m_Camera;
+		DirectX::XMMATRIX m_Projection;
+		DirectX::XMMATRIX m_Camera;
 		HWND m_hWnd;
 	};
 }

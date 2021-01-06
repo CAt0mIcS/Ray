@@ -6,6 +6,8 @@
 #include "RayRender/Renderer3D.h"
 #include "RayRender/Drawable/Drawable.h"
 
+#include <DirectXMath.h>
+
 
 namespace At0::Ray
 {
@@ -20,8 +22,8 @@ namespace At0::Ray
 		const auto model = m_Parent.GetTransform();
 		const Transforms tf =
 		{
-			MatrixTranspose(model),
-			MatrixTranspose(
+			DirectX::XMMatrixTranspose(model),
+			DirectX::XMMatrixTranspose(
 				model *
 				m_Renderer.GetCamera() *
 				m_Renderer.GetProjection()

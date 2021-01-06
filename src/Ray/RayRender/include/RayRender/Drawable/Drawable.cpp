@@ -8,6 +8,8 @@
 #include "RayRender/Bindable/IndexBuffer.h"
 #include "RayRender/Renderer3D.h"
 
+#include <DirectXMath.h>
+
 
 namespace At0::Ray
 {
@@ -33,12 +35,12 @@ namespace At0::Ray
 		s_Registry.destroy(m_Entity);
 	}
 
-	Matrix Drawable::GetTransform() const
+	DirectX::XMMATRIX Drawable::GetTransform() const
 	{
 		TransformComponent& transform = GetComponent<TransformComponent>();
-		return MatrixScaling(transform.Scale.x, transform.Scale.y, transform.Scale.z) *
-			MatrixRotationQuaternion({ transform.Rotation.x, transform.Rotation.y, transform.Rotation.z, transform.Rotation.w }) *
-			MatrixTranslation(transform.Translation.x, transform.Translation.y, transform.Translation.z);
+		return DirectX::XMMatrixScaling(transform.Scale.x, transform.Scale.y, transform.Scale.z) *
+			DirectX::XMMatrixRotationQuaternion({ transform.Rotation.x, transform.Rotation.y, transform.Rotation.z, transform.Rotation.w }) *
+			DirectX::XMMatrixTranslation(transform.Translation.x, transform.Translation.y, transform.Translation.z);
 	}
 
 	void Drawable::Draw(Renderer3D* renderer)
