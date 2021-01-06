@@ -208,24 +208,6 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-#if defined(__XNAMATH_H__)
-#undef XM_SELECT_0
-#undef XM_SELECT_1
-#undef XM_PERMUTE_0X
-#undef XM_PERMUTE_0Y
-#undef XM_PERMUTE_0Z
-#undef XM_PERMUTE_0W
-#undef XM_PERMUTE_1X
-#undef XM_PERMUTE_1Y
-#undef XM_PERMUTE_1Z
-#undef XM_PERMUTE_1W
-#undef XM_CRMASK_CR6
-#undef XM_CRMASK_CR6TRUE
-#undef XM_CRMASK_CR6FALSE
-#undef XM_CRMASK_CR6BOUNDS
-#undef XM_CACHE_LINE_SIZE
-#endif
-
 		namespace Constants
 		{
 			RAYMATH_CONST float PI = 3.141592654f;
@@ -237,29 +219,29 @@ namespace At0
 		}
 
 
-		RAYMATH_CONST uint32_t XM_SELECT_0 = 0x00000000;
-		RAYMATH_CONST uint32_t XM_SELECT_1 = 0xFFFFFFFF;
+		RAYMATH_CONST uint32_t RAYMATH_SELECT_0 = 0x00000000;
+		RAYMATH_CONST uint32_t RAYMATH_SELECT_1 = 0xFFFFFFFF;
 
-		RAYMATH_CONST uint32_t XM_PERMUTE_0X = 0;
-		RAYMATH_CONST uint32_t XM_PERMUTE_0Y = 1;
-		RAYMATH_CONST uint32_t XM_PERMUTE_0Z = 2;
-		RAYMATH_CONST uint32_t XM_PERMUTE_0W = 3;
-		RAYMATH_CONST uint32_t XM_PERMUTE_1X = 4;
-		RAYMATH_CONST uint32_t XM_PERMUTE_1Y = 5;
-		RAYMATH_CONST uint32_t XM_PERMUTE_1Z = 6;
-		RAYMATH_CONST uint32_t XM_PERMUTE_1W = 7;
+		RAYMATH_CONST uint32_t RAYMATH_PERMUTE_0X = 0;
+		RAYMATH_CONST uint32_t RAYMATH_PERMUTE_0Y = 1;
+		RAYMATH_CONST uint32_t RAYMATH_PERMUTE_0Z = 2;
+		RAYMATH_CONST uint32_t RAYMATH_PERMUTE_0W = 3;
+		RAYMATH_CONST uint32_t RAYMATH_PERMUTE_1X = 4;
+		RAYMATH_CONST uint32_t RAYMATH_PERMUTE_1Y = 5;
+		RAYMATH_CONST uint32_t RAYMATH_PERMUTE_1Z = 6;
+		RAYMATH_CONST uint32_t RAYMATH_PERMUTE_1W = 7;
 
-		RAYMATH_CONST uint32_t XM_SWIZZLE_X = 0;
-		RAYMATH_CONST uint32_t XM_SWIZZLE_Y = 1;
-		RAYMATH_CONST uint32_t XM_SWIZZLE_Z = 2;
-		RAYMATH_CONST uint32_t XM_SWIZZLE_W = 3;
+		RAYMATH_CONST uint32_t RAYMATH_SWIZZLE_X = 0;
+		RAYMATH_CONST uint32_t RAYMATH_SWIZZLE_Y = 1;
+		RAYMATH_CONST uint32_t RAYMATH_SWIZZLE_Z = 2;
+		RAYMATH_CONST uint32_t RAYMATH_SWIZZLE_W = 3;
 
-		RAYMATH_CONST uint32_t XM_CRMASK_CR6 = 0x000000F0;
-		RAYMATH_CONST uint32_t XM_CRMASK_CR6TRUE = 0x00000080;
-		RAYMATH_CONST uint32_t XM_CRMASK_CR6FALSE = 0x00000020;
-		RAYMATH_CONST uint32_t XM_CRMASK_CR6BOUNDS = XM_CRMASK_CR6FALSE;
+		RAYMATH_CONST uint32_t RAYMATH_CRMASK_CR6 = 0x000000F0;
+		RAYMATH_CONST uint32_t RAYMATH_CRMASK_CR6TRUE = 0x00000080;
+		RAYMATH_CONST uint32_t RAYMATH_CRMASK_CR6FALSE = 0x00000020;
+		RAYMATH_CONST uint32_t RAYMATH_CRMASK_CR6BOUNDS = RAYMATH_CRMASK_CR6FALSE;
 
-		RAYMATH_CONST size_t XM_CACHE_LINE_SIZE = 64;
+		RAYMATH_CONST size_t RAYMATH_CACHE_LINE_SIZE = 64;
 
 
 		/****************************************************************************
@@ -285,13 +267,13 @@ namespace At0
 
 		// Condition register evaluation proceeding a recording (R) comparison
 
-		inline bool ComparisonAllTrue(uint32_t CR) { return (((CR)&XM_CRMASK_CR6TRUE) == XM_CRMASK_CR6TRUE); }
-		inline bool ComparisonAnyTrue(uint32_t CR) { return (((CR)&XM_CRMASK_CR6FALSE) != XM_CRMASK_CR6FALSE); }
-		inline bool ComparisonAllFalse(uint32_t CR) { return (((CR)&XM_CRMASK_CR6FALSE) == XM_CRMASK_CR6FALSE); }
-		inline bool ComparisonAnyFalse(uint32_t CR) { return (((CR)&XM_CRMASK_CR6TRUE) != XM_CRMASK_CR6TRUE); }
-		inline bool ComparisonMixed(uint32_t CR) { return (((CR)&XM_CRMASK_CR6) == 0); }
-		inline bool ComparisonAllInBounds(uint32_t CR) { return (((CR)&XM_CRMASK_CR6BOUNDS) == XM_CRMASK_CR6BOUNDS); }
-		inline bool ComparisonAnyOutOfBounds(uint32_t CR) { return (((CR)&XM_CRMASK_CR6BOUNDS) != XM_CRMASK_CR6BOUNDS); }
+		inline bool ComparisonAllTrue(uint32_t CR) { return (((CR)&RAYMATH_CRMASK_CR6TRUE) == RAYMATH_CRMASK_CR6TRUE); }
+		inline bool ComparisonAnyTrue(uint32_t CR) { return (((CR)&RAYMATH_CRMASK_CR6FALSE) != RAYMATH_CRMASK_CR6FALSE); }
+		inline bool ComparisonAllFalse(uint32_t CR) { return (((CR)&RAYMATH_CRMASK_CR6FALSE) == RAYMATH_CRMASK_CR6FALSE); }
+		inline bool ComparisonAnyFalse(uint32_t CR) { return (((CR)&RAYMATH_CRMASK_CR6TRUE) != RAYMATH_CRMASK_CR6TRUE); }
+		inline bool ComparisonMixed(uint32_t CR) { return (((CR)&RAYMATH_CRMASK_CR6) == 0); }
+		inline bool ComparisonAllInBounds(uint32_t CR) { return (((CR)&RAYMATH_CRMASK_CR6BOUNDS) == RAYMATH_CRMASK_CR6BOUNDS); }
+		inline bool ComparisonAnyOutOfBounds(uint32_t CR) { return (((CR)&RAYMATH_CRMASK_CR6BOUNDS) != RAYMATH_CRMASK_CR6BOUNDS); }
 
 
 		/****************************************************************************
@@ -510,7 +492,7 @@ namespace At0
 			Matrix& operator=(Matrix&&) = default;
 #endif
 
-			constexpr Matrix(FVector R0, FVector R1, FVector R2, CVector R3) : r{ R0,R1,R2,R3 } {}
+			RAYMATH_CONSTEXPR Matrix(FVector R0, FVector R1, FVector R2, CVector R3) : r{ R0,R1,R2,R3 } {}
 			Matrix(float m00, float m01, float m02, float m03,
 				float m10, float m11, float m12, float m13,
 				float m20, float m21, float m22, float m23,
@@ -522,20 +504,20 @@ namespace At0
 			float& operator() (size_t Row, size_t Column) { return m[Row][Column]; }
 #endif
 
-			Matrix    operator+ () const { return *this; }
-			Matrix    operator- () const;
+			Matrix RAYMATH_CALLCONV operator+() const { return *this; }
+			Matrix RAYMATH_CALLCONV operator-() const;
 
-			Matrix& RAYMATH_CALLCONV     operator+= (FMatrix M);
-			Matrix& RAYMATH_CALLCONV     operator-= (FMatrix M);
-			Matrix& RAYMATH_CALLCONV     operator*= (FMatrix M);
-			Matrix& operator*= (float S);
-			Matrix& operator/= (float S);
+			Matrix& RAYMATH_CALLCONV operator+= (FMatrix M);
+			Matrix& RAYMATH_CALLCONV operator-= (FMatrix M);
+			Matrix& RAYMATH_CALLCONV operator*= (FMatrix M);
+			Matrix& RAYMATH_CALLCONV operator*= (float S);
+			Matrix& RAYMATH_CALLCONV operator/= (float S);
 
-			Matrix    RAYMATH_CALLCONV     operator+ (FMatrix M) const;
-			Matrix    RAYMATH_CALLCONV     operator- (FMatrix M) const;
-			Matrix    RAYMATH_CALLCONV     operator* (FMatrix M) const;
-			Matrix    operator* (float S) const;
-			Matrix    operator/ (float S) const;
+			Matrix RAYMATH_CALLCONV operator+ (FMatrix M) const;
+			Matrix RAYMATH_CALLCONV operator- (FMatrix M) const;
+			Matrix RAYMATH_CALLCONV operator* (FMatrix M) const;
+			Matrix RAYMATH_CALLCONV operator* (float S) const;
+			Matrix RAYMATH_CALLCONV operator/ (float S) const;
 
 			friend Matrix     RAYMATH_CALLCONV     operator* (float S, FMatrix M);
 
@@ -612,8 +594,8 @@ namespace At0
 			Quaternion(Quaternion&&) = default;
 			Quaternion& operator=(Quaternion&&) = default;
 
-			constexpr Quaternion(FVector v) : v(v) {}
-			constexpr Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
+			RAYMATH_CONSTEXPR Quaternion(FVector v) : v(v) {}
+			RAYMATH_CONSTEXPR Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 
 			operator FVector() const { return v; }
 
@@ -2029,13 +2011,13 @@ namespace At0
 		XMGLOBALCONST VectorF32 g_XMNegateY = { { { 1.0f, -1.0f, 1.0f, 1.0f } } };
 		XMGLOBALCONST VectorF32 g_XMNegateZ = { { { 1.0f, 1.0f, -1.0f, 1.0f } } };
 		XMGLOBALCONST VectorF32 g_XMNegateW = { { { 1.0f, 1.0f, 1.0f, -1.0f } } };
-		XMGLOBALCONST VectorU32 g_XMSelect0101 = { { { XM_SELECT_0, XM_SELECT_1, XM_SELECT_0, XM_SELECT_1 } } };
-		XMGLOBALCONST VectorU32 g_XMSelect1010 = { { { XM_SELECT_1, XM_SELECT_0, XM_SELECT_1, XM_SELECT_0 } } };
+		XMGLOBALCONST VectorU32 g_XMSelect0101 = { { { RAYMATH_SELECT_0, RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_1 } } };
+		XMGLOBALCONST VectorU32 g_XMSelect1010 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_1, RAYMATH_SELECT_0 } } };
 		XMGLOBALCONST VectorI32 g_XMOneHalfMinusEpsilon = { { { 0x3EFFFFFD, 0x3EFFFFFD, 0x3EFFFFFD, 0x3EFFFFFD } } };
-		XMGLOBALCONST VectorU32 g_XMSelect1000 = { { { XM_SELECT_1, XM_SELECT_0, XM_SELECT_0, XM_SELECT_0 } } };
-		XMGLOBALCONST VectorU32 g_XMSelect1100 = { { { XM_SELECT_1, XM_SELECT_1, XM_SELECT_0, XM_SELECT_0 } } };
-		XMGLOBALCONST VectorU32 g_XMSelect1110 = { { { XM_SELECT_1, XM_SELECT_1, XM_SELECT_1, XM_SELECT_0 } } };
-		XMGLOBALCONST VectorU32 g_XMSelect1011 = { { { XM_SELECT_1, XM_SELECT_0, XM_SELECT_1, XM_SELECT_1 } } };
+		XMGLOBALCONST VectorU32 g_XMSelect1000 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_0, RAYMATH_SELECT_0 } } };
+		XMGLOBALCONST VectorU32 g_XMSelect1100 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_0 } } };
+		XMGLOBALCONST VectorU32 g_XMSelect1110 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_1, RAYMATH_SELECT_1, RAYMATH_SELECT_0 } } };
+		XMGLOBALCONST VectorU32 g_XMSelect1011 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_1, RAYMATH_SELECT_1 } } };
 		XMGLOBALCONST VectorF32 g_XMFixupY16 = { { { 1.0f, 1.0f / 65536.0f, 0.0f, 0.0f } } };
 		XMGLOBALCONST VectorF32 g_XMFixupY16W16 = { { { 1.0f, 1.0f, 1.0f / 65536.0f, 1.0f / 65536.0f } } };
 		XMGLOBALCONST VectorU32 g_XMFlipY = { { { 0, 0x80000000, 0, 0 } } };
@@ -2129,7 +2111,7 @@ namespace At0
 			vResult.u[2] = (0 - (C2 & 1)) & 0x3F800000;
 			vResult.u[3] = (0 - (C3 & 1)) & 0x3F800000;
 			return vResult.v;
-#else // XM_SSE_INTRINSICS_
+#else // RAYMATH_SSE_INTRINSICS_
 			static const VectorU32 g_vMask1 = { { { 1, 1, 1, 1 } } };
 			// Move the parms to a vector
 			__m128i vTemp = _mm_set_epi32(static_cast<int>(C3), static_cast<int>(C2), static_cast<int>(C1), static_cast<int>(C0));
@@ -2168,7 +2150,7 @@ namespace At0
 			// Multiply by the reciprocal (Perform a right shift by DivExponent)
 			vResult = vmulq_f32(vResult, reinterpret_cast<const float32x4_t*>(&vScale)[0]);
 			return vResult;
-#else // XM_SSE_INTRINSICS_
+#else // RAYMATH_SSE_INTRINSICS_
 			// Splat the int
 			__m128i vScale = _mm_set1_epi32(IntConstant);
 			// Convert to a float
@@ -2196,7 +2178,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			int32x4_t V = vdupq_n_s32(IntConstant);
 			return reinterpret_cast<float32x4_t*>(&V)[0];
-#else // XM_SSE_INTRINSICS_
+#else // RAYMATH_SSE_INTRINSICS_
 			__m128i V = _mm_set1_epi32(IntConstant);
 			return _mm_castsi128_ps(V);
 #endif
@@ -5628,10 +5610,10 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const uint32_t ControlElement[4] =
 			{
-				0x03020100, // XM_SWIZZLE_X
-				0x07060504, // XM_SWIZZLE_Y
-				0x0B0A0908, // XM_SWIZZLE_Z
-				0x0F0E0D0C, // XM_SWIZZLE_W
+				0x03020100, // RAYMATH_SWIZZLE_X
+				0x07060504, // RAYMATH_SWIZZLE_Y
+				0x0B0A0908, // RAYMATH_SWIZZLE_Z
+				0x0F0E0D0C, // RAYMATH_SWIZZLE_W
 			};
 
 			int8x8x2_t tbl;
@@ -5680,14 +5662,14 @@ namespace At0
 #if defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 			static const uint32_t ControlElement[8] =
 			{
-				0x03020100, // XM_PERMUTE_0X
-				0x07060504, // XM_PERMUTE_0Y
-				0x0B0A0908, // XM_PERMUTE_0Z
-				0x0F0E0D0C, // XM_PERMUTE_0W
-				0x13121110, // XM_PERMUTE_1X
-				0x17161514, // XM_PERMUTE_1Y
-				0x1B1A1918, // XM_PERMUTE_1Z
-				0x1F1E1D1C, // XM_PERMUTE_1W
+				0x03020100, // RAYMATH_PERMUTE_0X
+				0x07060504, // RAYMATH_PERMUTE_0Y
+				0x0B0A0908, // RAYMATH_PERMUTE_0Z
+				0x0F0E0D0C, // RAYMATH_PERMUTE_0W
+				0x13121110, // RAYMATH_PERMUTE_1X
+				0x17161514, // RAYMATH_PERMUTE_1Y
+				0x1B1A1918, // RAYMATH_PERMUTE_1Z
+				0x1F1E1D1C, // RAYMATH_PERMUTE_1W
 			};
 
 			int8x8x4_t tbl;
@@ -5783,8 +5765,8 @@ namespace At0
 			Vector    ControlVector;
 			const uint32_t  ControlElement[] =
 			{
-				XM_SELECT_0,
-				XM_SELECT_1
+				RAYMATH_SELECT_0,
+				RAYMATH_SELECT_1
 			};
 
 			assert(VectorIndex0 < 2);
@@ -5962,12 +5944,12 @@ namespace At0
 			if (ux & uy & uz & uw)
 			{
 				// All elements are greater
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!(ux | uy | uz | uw))
 			{
 				// All elements are not greater
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			*pCR = CR;
 
@@ -5983,12 +5965,12 @@ namespace At0
 			if (r == 0xFFFFFFFFU)
 			{
 				// All elements are equal
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
 				// All elements are not equal
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			*pCR = CR;
 			return vResult;
@@ -5998,12 +5980,12 @@ namespace At0
 			int iTest = _mm_movemask_ps(vTemp);
 			if (iTest == 0xf)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTest)
 			{
 				// All elements are not greater
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			*pCR = CR;
 			return vTemp;
@@ -6061,12 +6043,12 @@ namespace At0
 			if (Vector4EqualInt(Control, VectorTrueInt()))
 			{
 				// All elements are equal
-				*pCR |= XM_CRMASK_CR6TRUE;
+				*pCR |= RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (Vector4EqualInt(Control, VectorFalseInt()))
 			{
 				// All elements are not equal
-				*pCR |= XM_CRMASK_CR6FALSE;
+				*pCR |= RAYMATH_CRMASK_CR6FALSE;
 			}
 			return Control;
 
@@ -6079,12 +6061,12 @@ namespace At0
 			if (r == 0xFFFFFFFFU)
 			{
 				// All elements are equal
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
 				// All elements are not equal
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			*pCR = CR;
 			return vResult;
@@ -6094,11 +6076,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (iTemp == 0x0F)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTemp)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			*pCR = CR;
 			return _mm_castsi128_ps(V);
@@ -6246,12 +6228,12 @@ namespace At0
 			if (ux & uy & uz & uw)
 			{
 				// All elements are greater
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!(ux | uy | uz | uw))
 			{
 				// All elements are not greater
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			*pCR = CR;
 
@@ -6267,12 +6249,12 @@ namespace At0
 			if (r == 0xFFFFFFFFU)
 			{
 				// All elements are greater
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
 				// All elements are not greater
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			*pCR = CR;
 			return vResult;
@@ -6282,12 +6264,12 @@ namespace At0
 			int iTest = _mm_movemask_ps(vTemp);
 			if (iTest == 0xf)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTest)
 			{
 				// All elements are not greater
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			*pCR = CR;
 			return vTemp;
@@ -6341,12 +6323,12 @@ namespace At0
 			if (ux & uy & uz & uw)
 			{
 				// All elements are greater
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!(ux | uy | uz | uw))
 			{
 				// All elements are not greater
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			*pCR = CR;
 
@@ -6362,12 +6344,12 @@ namespace At0
 			if (r == 0xFFFFFFFFU)
 			{
 				// All elements are greater or equal
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
 				// All elements are not greater or equal
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			*pCR = CR;
 			return vResult;
@@ -6377,12 +6359,12 @@ namespace At0
 			int iTest = _mm_movemask_ps(vTemp);
 			if (iTest == 0xf)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTest)
 			{
 				// All elements are not greater
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			*pCR = CR;
 			return vTemp;
@@ -6503,7 +6485,7 @@ namespace At0
 			if (ux & uy & uz & uw)
 			{
 				// All elements are in bounds
-				CR = XM_CRMASK_CR6BOUNDS;
+				CR = RAYMATH_CRMASK_CR6BOUNDS;
 			}
 			*pCR = CR;
 
@@ -6526,7 +6508,7 @@ namespace At0
 			if (r == 0xFFFFFFFFU)
 			{
 				// All elements are in bounds
-				CR = XM_CRMASK_CR6BOUNDS;
+				CR = RAYMATH_CRMASK_CR6BOUNDS;
 			}
 			*pCR = CR;
 			return vTemp1;
@@ -6543,7 +6525,7 @@ namespace At0
 			uint32_t CR = 0;
 			if (_mm_movemask_ps(vTemp1) == 0xf) {
 				// All elements are in bounds
-				CR = XM_CRMASK_CR6BOUNDS;
+				CR = RAYMATH_CRMASK_CR6BOUNDS;
 			}
 			*pCR = CR;
 			return vTemp1;
@@ -10731,12 +10713,12 @@ namespace At0
 			if ((V1.vector4_f32[0] == V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] == V2.vector4_f32[1]))
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if ((V1.vector4_f32[0] != V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] != V2.vector4_f32[1]))
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 
@@ -10746,11 +10728,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (r == 0xFFFFFFFFFFFFFFFFU)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -10760,11 +10742,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (iTest == 3)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTest)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #endif
@@ -10803,12 +10785,12 @@ namespace At0
 			if ((V1.vector4_u32[0] == V2.vector4_u32[0]) &&
 				(V1.vector4_u32[1] == V2.vector4_u32[1]))
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if ((V1.vector4_u32[0] != V2.vector4_u32[0]) &&
 				(V1.vector4_u32[1] != V2.vector4_u32[1]))
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 
@@ -10818,11 +10800,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (r == 0xFFFFFFFFFFFFFFFFU)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -10831,11 +10813,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (iTest == 3)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTest)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #endif
@@ -10946,12 +10928,12 @@ namespace At0
 			if ((V1.vector4_f32[0] > V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] > V2.vector4_f32[1]))
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if ((V1.vector4_f32[0] <= V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] <= V2.vector4_f32[1]))
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 
@@ -10961,11 +10943,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (r == 0xFFFFFFFFFFFFFFFFU)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -10974,11 +10956,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (iTest == 3)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTest)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #endif
@@ -11017,12 +10999,12 @@ namespace At0
 			if ((V1.vector4_f32[0] >= V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] >= V2.vector4_f32[1]))
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if ((V1.vector4_f32[0] < V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] < V2.vector4_f32[1]))
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 
@@ -11032,11 +11014,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (r == 0xFFFFFFFFFFFFFFFFU)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -11045,11 +11027,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (iTest == 3)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTest)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #endif
@@ -12133,19 +12115,19 @@ namespace At0
 						Vector vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Cx+O
 						Vector vResult3 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
 
-						__prefetch(pInputVector + XM_CACHE_LINE_SIZE);
+						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
 						r = vget_low_f32(row1);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[1], r, 0); // Ax+Ey+M
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[1], r, 1); // Bx+Fy+N
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 2));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 2));
 
 						r = vget_high_f32(row1);
 						vResult2 = vmlaq_lane_f32(vResult2, V.val[1], r, 0); // Cx+Gy+O
 						vResult3 = vmlaq_lane_f32(vResult3, V.val[1], r, 1); // Dx+Hy+P
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 3));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 3));
 
 						float32x4x4_t R;
 						R.val[0] = vResult0;
@@ -12434,18 +12416,18 @@ namespace At0
 						r = vget_high_f32(row0);
 						Vector W = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
 
-						__prefetch(pInputVector + XM_CACHE_LINE_SIZE);
+						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
 						r = vget_low_f32(row1);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[1], r, 0); // Ax+Ey+M
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[1], r, 1); // Bx+Fy+N
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 2));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 2));
 
 						r = vget_high_f32(row1);
 						W = vmlaq_lane_f32(W, V.val[1], r, 1); // Dx+Hy+P
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 3));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 3));
 
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 						V.val[0] = vdivq_f32(vResult0, W);
@@ -12820,14 +12802,14 @@ namespace At0
 						Vector vResult1 = vmulq_lane_f32(V.val[0], r, 1); // Bx
 
 						__prefetch(pInputVector);
-						__prefetch(pInputVector + XM_CACHE_LINE_SIZE);
+						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
 						r = vget_low_f32(row1);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[1], r, 0); // Ax+Ey
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[1], r, 1); // Bx+Fy
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 2));
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 3));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 2));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 3));
 
 						V.val[0] = vResult0;
 						V.val[1] = vResult1;
@@ -13069,13 +13051,13 @@ namespace At0
 				(V1.vector4_f32[1] == V2.vector4_f32[1]) &&
 				(V1.vector4_f32[2] == V2.vector4_f32[2]))
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if ((V1.vector4_f32[0] != V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] != V2.vector4_f32[1]) &&
 				(V1.vector4_f32[2] != V2.vector4_f32[2]))
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
@@ -13087,11 +13069,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (r == 0xFFFFFFU)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -13100,11 +13082,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (iTest == 7)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTest)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #endif
@@ -13145,13 +13127,13 @@ namespace At0
 				(V1.vector4_u32[1] == V2.vector4_u32[1]) &&
 				(V1.vector4_u32[2] == V2.vector4_u32[2]))
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if ((V1.vector4_u32[0] != V2.vector4_u32[0]) &&
 				(V1.vector4_u32[1] != V2.vector4_u32[1]) &&
 				(V1.vector4_u32[2] != V2.vector4_u32[2]))
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
@@ -13163,11 +13145,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (r == 0xFFFFFFU)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -13176,11 +13158,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (iTemp == 7)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTemp)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #endif
@@ -13300,13 +13282,13 @@ namespace At0
 				(V1.vector4_f32[1] > V2.vector4_f32[1]) &&
 				(V1.vector4_f32[2] > V2.vector4_f32[2]))
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if ((V1.vector4_f32[0] <= V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] <= V2.vector4_f32[1]) &&
 				(V1.vector4_f32[2] <= V2.vector4_f32[2]))
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 
@@ -13319,11 +13301,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (r == 0xFFFFFFU)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -13332,11 +13314,11 @@ namespace At0
 			int iTest = _mm_movemask_ps(vTemp) & 7;
 			if (iTest == 7)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTest)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #endif
@@ -13378,13 +13360,13 @@ namespace At0
 				(V1.vector4_f32[1] >= V2.vector4_f32[1]) &&
 				(V1.vector4_f32[2] >= V2.vector4_f32[2]))
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if ((V1.vector4_f32[0] < V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] < V2.vector4_f32[1]) &&
 				(V1.vector4_f32[2] < V2.vector4_f32[2]))
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 
@@ -13397,11 +13379,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (r == 0xFFFFFFU)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -13410,11 +13392,11 @@ namespace At0
 			int iTest = _mm_movemask_ps(vTemp) & 7;
 			if (iTest == 7)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTest)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #endif
@@ -14313,7 +14295,7 @@ namespace At0
 		{
 			Vector Zero = VectorZero();
 			Vector Z = VectorSplatZ(V);
-			Vector YZYY = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(V);
+			Vector YZYY = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(V);
 
 			Vector NegativeV = VectorSubtract(Zero, V);
 
@@ -14325,8 +14307,8 @@ namespace At0
 
 			Vector Select = VectorEqualInt(ZIsNegative, YZYYIsNegative);
 
-			Vector R0 = VectorPermute<XM_PERMUTE_1X, XM_PERMUTE_0X, XM_PERMUTE_0X, XM_PERMUTE_0X>(NegativeV, S);
-			Vector R1 = VectorPermute<XM_PERMUTE_1X, XM_PERMUTE_0X, XM_PERMUTE_0X, XM_PERMUTE_0X>(V, D);
+			Vector R0 = VectorPermute<RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X>(NegativeV, S);
+			Vector R1 = VectorPermute<RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X>(V, D);
 
 			return VectorSelect(R1, R0, Select);
 		}
@@ -14586,31 +14568,31 @@ namespace At0
 						Vector vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Cx+O
 						Vector vResult3 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
 
-						__prefetch(pInputVector + XM_CACHE_LINE_SIZE);
+						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
 						r = vget_low_f32(row1);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[1], r, 0); // Ax+Ey+M
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[1], r, 1); // Bx+Fy+N
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 2));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 2));
 
 						r = vget_high_f32(row1);
 						vResult2 = vmlaq_lane_f32(vResult2, V.val[1], r, 0); // Cx+Gy+O
 						vResult3 = vmlaq_lane_f32(vResult3, V.val[1], r, 1); // Dx+Hy+P
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 3));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 3));
 
 						r = vget_low_f32(row2);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[2], r, 0); // Ax+Ey+Iz+M
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[2], r, 1); // Bx+Fy+Jz+N
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 4));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 4));
 
 						r = vget_high_f32(row2);
 						vResult2 = vmlaq_lane_f32(vResult2, V.val[2], r, 0); // Cx+Gy+Kz+O
 						vResult3 = vmlaq_lane_f32(vResult3, V.val[2], r, 1); // Dx+Hy+Lz+P
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 5));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 5));
 
 						float32x4x4_t R;
 						R.val[0] = vResult0;
@@ -14970,31 +14952,31 @@ namespace At0
 						Vector vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Cx+O
 						Vector W = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
 
-						__prefetch(pInputVector + XM_CACHE_LINE_SIZE);
+						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
 						r = vget_low_f32(row1);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[1], r, 0); // Ax+Ey+M
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[1], r, 1); // Bx+Fy+N
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 2));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 2));
 
 						r = vget_high_f32(row1);
 						vResult2 = vmlaq_lane_f32(vResult2, V.val[1], r, 0); // Cx+Gy+O
 						W = vmlaq_lane_f32(W, V.val[1], r, 1); // Dx+Hy+P
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 3));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 3));
 
 						r = vget_low_f32(row2);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[2], r, 0); // Ax+Ey+Iz+M
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[2], r, 1); // Bx+Fy+Jz+N
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 4));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 4));
 
 						r = vget_high_f32(row2);
 						vResult2 = vmlaq_lane_f32(vResult2, V.val[2], r, 0); // Cx+Gy+Kz+O
 						W = vmlaq_lane_f32(W, V.val[2], r, 1); // Dx+Hy+Lz+P
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 5));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 5));
 
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 						V.val[0] = vdivq_f32(vResult0, W);
@@ -15488,29 +15470,29 @@ namespace At0
 						r = vget_high_f32(row0);
 						Vector vResult2 = vmulq_lane_f32(V.val[0], r, 0); // Cx
 
-						__prefetch(pInputVector + XM_CACHE_LINE_SIZE);
+						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
 						r = vget_low_f32(row1);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[1], r, 0); // Ax+Ey
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[1], r, 1); // Bx+Fy
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 2));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 2));
 
 						r = vget_high_f32(row1);
 						vResult2 = vmlaq_lane_f32(vResult2, V.val[1], r, 0); // Cx+Gy
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 3));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 3));
 
 						r = vget_low_f32(row2);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[2], r, 0); // Ax+Ey+Iz
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[2], r, 1); // Bx+Fy+Jz
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 4));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 4));
 
 						r = vget_high_f32(row2);
 						vResult2 = vmlaq_lane_f32(vResult2, V.val[2], r, 0); // Cx+Gy+Kz
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 5));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 5));
 
 						V.val[0] = vResult0;
 						V.val[1] = vResult1;
@@ -15929,31 +15911,31 @@ namespace At0
 						Vector vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Cx+O
 						Vector W = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
 
-						__prefetch(pInputVector + XM_CACHE_LINE_SIZE);
+						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
 						r = vget_low_f32(Transform.r[1]);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[1], r, 0); // Ax+Ey+M
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[1], r, 1); // Bx+Fy+N
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 2));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 2));
 
 						r = vget_high_f32(Transform.r[1]);
 						vResult2 = vmlaq_lane_f32(vResult2, V.val[1], r, 0); // Cx+Gy+O
 						W = vmlaq_lane_f32(W, V.val[1], r, 1); // Dx+Hy+P
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 3));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 3));
 
 						r = vget_low_f32(Transform.r[2]);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[2], r, 0); // Ax+Ey+Iz+M
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[2], r, 1); // Bx+Fy+Jz+N
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 4));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 4));
 
 						r = vget_high_f32(Transform.r[2]);
 						vResult2 = vmlaq_lane_f32(vResult2, V.val[2], r, 0); // Cx+Gy+Kz+O
 						W = vmlaq_lane_f32(W, V.val[2], r, 1); // Dx+Hy+Lz+P
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 5));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 5));
 
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 						vResult0 = vdivq_f32(vResult0, W);
@@ -16515,7 +16497,7 @@ namespace At0
 						Vector vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), VX, r, 0); // Cx+O
 						Vector W = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), VX, r, 1); // Dx+P
 
-						__prefetch(pInputVector + XM_CACHE_LINE_SIZE);
+						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
 						Vector ScaleY = vdupq_n_f32(sy);
 						Vector OffsetY = vdupq_n_f32(oy);
@@ -16525,13 +16507,13 @@ namespace At0
 						vResult0 = vmlaq_lane_f32(vResult0, VY, r, 0); // Ax+Ey+M
 						vResult1 = vmlaq_lane_f32(vResult1, VY, r, 1); // Bx+Fy+N
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 2));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 2));
 
 						r = vget_high_f32(Transform.r[1]);
 						vResult2 = vmlaq_lane_f32(vResult2, VY, r, 0); // Cx+Gy+O
 						W = vmlaq_lane_f32(W, VY, r, 1); // Dx+Hy+P
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 3));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 3));
 
 						Vector ScaleZ = vdupq_n_f32(sz);
 						Vector OffsetZ = vdupq_n_f32(oz);
@@ -16541,13 +16523,13 @@ namespace At0
 						vResult0 = vmlaq_lane_f32(vResult0, VZ, r, 0); // Ax+Ey+Iz+M
 						vResult1 = vmlaq_lane_f32(vResult1, VZ, r, 1); // Bx+Fy+Jz+N
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 4));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 4));
 
 						r = vget_high_f32(Transform.r[2]);
 						vResult2 = vmlaq_lane_f32(vResult2, VZ, r, 0); // Cx+Gy+Kz+O
 						W = vmlaq_lane_f32(W, VZ, r, 1); // Dx+Hy+Lz+P
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 5));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 5));
 
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 						V.val[0] = vdivq_f32(vResult0, W);
@@ -17027,14 +17009,14 @@ namespace At0
 				(V1.vector4_f32[2] == V2.vector4_f32[2]) &&
 				(V1.vector4_f32[3] == V2.vector4_f32[3]))
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if ((V1.vector4_f32[0] != V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] != V2.vector4_f32[1]) &&
 				(V1.vector4_f32[2] != V2.vector4_f32[2]) &&
 				(V1.vector4_f32[3] != V2.vector4_f32[3]))
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 
@@ -17047,11 +17029,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (r == 0xFFFFFFFFU)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -17060,11 +17042,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (iTest == 0xf)     // All equal?
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (iTest == 0)  // All not equal?
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #endif
@@ -17108,14 +17090,14 @@ namespace At0
 				V1.vector4_u32[2] == V2.vector4_u32[2] &&
 				V1.vector4_u32[3] == V2.vector4_u32[3])
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (V1.vector4_u32[0] != V2.vector4_u32[0] &&
 				V1.vector4_u32[1] != V2.vector4_u32[1] &&
 				V1.vector4_u32[2] != V2.vector4_u32[2] &&
 				V1.vector4_u32[3] != V2.vector4_u32[3])
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 
@@ -17128,11 +17110,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (r == 0xFFFFFFFFU)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -17141,11 +17123,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (iTest == 0xf)     // All equal?
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (iTest == 0)  // All not equal?
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #endif
@@ -17271,14 +17253,14 @@ namespace At0
 				V1.vector4_f32[2] > V2.vector4_f32[2] &&
 				V1.vector4_f32[3] > V2.vector4_f32[3])
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (V1.vector4_f32[0] <= V2.vector4_f32[0] &&
 				V1.vector4_f32[1] <= V2.vector4_f32[1] &&
 				V1.vector4_f32[2] <= V2.vector4_f32[2] &&
 				V1.vector4_f32[3] <= V2.vector4_f32[3])
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 
@@ -17291,11 +17273,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (r == 0xFFFFFFFFU)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -17303,11 +17285,11 @@ namespace At0
 			Vector vTemp = _mm_cmpgt_ps(V1, V2);
 			int iTest = _mm_movemask_ps(vTemp);
 			if (iTest == 0xf) {
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTest)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #endif
@@ -17351,14 +17333,14 @@ namespace At0
 				(V1.vector4_f32[2] >= V2.vector4_f32[2]) &&
 				(V1.vector4_f32[3] >= V2.vector4_f32[3]))
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if ((V1.vector4_f32[0] < V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] < V2.vector4_f32[1]) &&
 				(V1.vector4_f32[2] < V2.vector4_f32[2]) &&
 				(V1.vector4_f32[3] < V2.vector4_f32[3]))
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 
@@ -17371,11 +17353,11 @@ namespace At0
 			uint32_t CR = 0;
 			if (r == 0xFFFFFFFFU)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!r)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -17384,11 +17366,11 @@ namespace At0
 			int iTest = _mm_movemask_ps(vTemp);
 			if (iTest == 0x0f)
 			{
-				CR = XM_CRMASK_CR6TRUE;
+				CR = RAYMATH_CRMASK_CR6TRUE;
 			}
 			else if (!iTest)
 			{
-				CR = XM_CRMASK_CR6FALSE;
+				CR = RAYMATH_CRMASK_CR6FALSE;
 			}
 			return CR;
 #endif
@@ -18593,43 +18575,43 @@ namespace At0
 						Vector vResult2 = vmulq_lane_f32(V.val[0], r, 0); // Cx
 						Vector vResult3 = vmulq_lane_f32(V.val[0], r, 1); // Dx
 
-						__prefetch(pInputVector + XM_CACHE_LINE_SIZE);
+						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
 						r = vget_low_f32(row1);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[1], r, 0); // Ax+Ey
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[1], r, 1); // Bx+Fy
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 2));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 2));
 
 						r = vget_high_f32(row1);
 						vResult2 = vmlaq_lane_f32(vResult2, V.val[1], r, 0); // Cx+Gy
 						vResult3 = vmlaq_lane_f32(vResult3, V.val[1], r, 1); // Dx+Hy
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 3));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 3));
 
 						r = vget_low_f32(row2);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[2], r, 0); // Ax+Ey+Iz
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[2], r, 1); // Bx+Fy+Jz
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 4));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 4));
 
 						r = vget_high_f32(row2);
 						vResult2 = vmlaq_lane_f32(vResult2, V.val[2], r, 0); // Cx+Gy+Kz
 						vResult3 = vmlaq_lane_f32(vResult3, V.val[2], r, 1); // Dx+Hy+Lz
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 5));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 5));
 
 						r = vget_low_f32(row3);
 						vResult0 = vmlaq_lane_f32(vResult0, V.val[3], r, 0); // Ax+Ey+Iz+Mw
 						vResult1 = vmlaq_lane_f32(vResult1, V.val[3], r, 1); // Bx+Fy+Jz+Nw
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 6));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 6));
 
 						r = vget_high_f32(row3);
 						vResult2 = vmlaq_lane_f32(vResult2, V.val[3], r, 0); // Cx+Gy+Kz+Ow
 						vResult3 = vmlaq_lane_f32(vResult3, V.val[3], r, 1); // Dx+Hy+Lz+Pw
 
-						__prefetch(pInputVector + (XM_CACHE_LINE_SIZE * 7));
+						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 7));
 
 						V.val[0] = vResult0;
 						V.val[1] = vResult1;
@@ -19620,64 +19602,64 @@ namespace At0
 			Matrix MT = Transpose();
 
 			Vector V0[4], V1[4];
-			V0[0] = VectorSwizzle<XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(MT.r[2]);
-			V1[0] = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_W, XM_SWIZZLE_Z, XM_SWIZZLE_W>(MT.r[3]);
-			V0[1] = VectorSwizzle<XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(MT.r[0]);
-			V1[1] = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_W, XM_SWIZZLE_Z, XM_SWIZZLE_W>(MT.r[1]);
-			V0[2] = VectorPermute<XM_PERMUTE_0X, XM_PERMUTE_0Z, XM_PERMUTE_1X, XM_PERMUTE_1Z>(MT.r[2], MT.r[0]);
-			V1[2] = VectorPermute<XM_PERMUTE_0Y, XM_PERMUTE_0W, XM_PERMUTE_1Y, XM_PERMUTE_1W>(MT.r[3], MT.r[1]);
+			V0[0] = VectorSwizzle<RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(MT.r[2]);
+			V1[0] = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W>(MT.r[3]);
+			V0[1] = VectorSwizzle<RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(MT.r[0]);
+			V1[1] = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W>(MT.r[1]);
+			V0[2] = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Z>(MT.r[2], MT.r[0]);
+			V1[2] = VectorPermute<RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1W>(MT.r[3], MT.r[1]);
 
 			Vector D0 = VectorMultiply(V0[0], V1[0]);
 			Vector D1 = VectorMultiply(V0[1], V1[1]);
 			Vector D2 = VectorMultiply(V0[2], V1[2]);
 
-			V0[0] = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_W, XM_SWIZZLE_Z, XM_SWIZZLE_W>(MT.r[2]);
-			V1[0] = VectorSwizzle<XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(MT.r[3]);
-			V0[1] = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_W, XM_SWIZZLE_Z, XM_SWIZZLE_W>(MT.r[0]);
-			V1[1] = VectorSwizzle<XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(MT.r[1]);
-			V0[2] = VectorPermute<XM_PERMUTE_0Y, XM_PERMUTE_0W, XM_PERMUTE_1Y, XM_PERMUTE_1W>(MT.r[2], MT.r[0]);
-			V1[2] = VectorPermute<XM_PERMUTE_0X, XM_PERMUTE_0Z, XM_PERMUTE_1X, XM_PERMUTE_1Z>(MT.r[3], MT.r[1]);
+			V0[0] = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W>(MT.r[2]);
+			V1[0] = VectorSwizzle<RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(MT.r[3]);
+			V0[1] = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W>(MT.r[0]);
+			V1[1] = VectorSwizzle<RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(MT.r[1]);
+			V0[2] = VectorPermute<RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1W>(MT.r[2], MT.r[0]);
+			V1[2] = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Z>(MT.r[3], MT.r[1]);
 
 			D0 = VectorNegativeMultiplySubtract(V0[0], V1[0], D0);
 			D1 = VectorNegativeMultiplySubtract(V0[1], V1[1], D1);
 			D2 = VectorNegativeMultiplySubtract(V0[2], V1[2], D2);
 
-			V0[0] = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_Z, XM_SWIZZLE_X, XM_SWIZZLE_Y>(MT.r[1]);
-			V1[0] = VectorPermute<XM_PERMUTE_1Y, XM_PERMUTE_0Y, XM_PERMUTE_0W, XM_PERMUTE_0X>(D0, D2);
-			V0[1] = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_X, XM_SWIZZLE_Y, XM_SWIZZLE_X>(MT.r[0]);
-			V1[1] = VectorPermute<XM_PERMUTE_0W, XM_PERMUTE_1Y, XM_PERMUTE_0Y, XM_PERMUTE_0Z>(D0, D2);
-			V0[2] = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_Z, XM_SWIZZLE_X, XM_SWIZZLE_Y>(MT.r[3]);
-			V1[2] = VectorPermute<XM_PERMUTE_1W, XM_PERMUTE_0Y, XM_PERMUTE_0W, XM_PERMUTE_0X>(D1, D2);
-			V0[3] = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_X, XM_SWIZZLE_Y, XM_SWIZZLE_X>(MT.r[2]);
-			V1[3] = VectorPermute<XM_PERMUTE_0W, XM_PERMUTE_1W, XM_PERMUTE_0Y, XM_PERMUTE_0Z>(D1, D2);
+			V0[0] = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y>(MT.r[1]);
+			V1[0] = VectorPermute<RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_0X>(D0, D2);
+			V0[1] = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X>(MT.r[0]);
+			V1[1] = VectorPermute<RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_0Z>(D0, D2);
+			V0[2] = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y>(MT.r[3]);
+			V1[2] = VectorPermute<RAYMATH_PERMUTE_1W, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_0X>(D1, D2);
+			V0[3] = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X>(MT.r[2]);
+			V1[3] = VectorPermute<RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_1W, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_0Z>(D1, D2);
 
 			Vector C0 = VectorMultiply(V0[0], V1[0]);
 			Vector C2 = VectorMultiply(V0[1], V1[1]);
 			Vector C4 = VectorMultiply(V0[2], V1[2]);
 			Vector C6 = VectorMultiply(V0[3], V1[3]);
 
-			V0[0] = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_W, XM_SWIZZLE_Y, XM_SWIZZLE_Z>(MT.r[1]);
-			V1[0] = VectorPermute<XM_PERMUTE_0W, XM_PERMUTE_0X, XM_PERMUTE_0Y, XM_PERMUTE_1X>(D0, D2);
-			V0[1] = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_Z, XM_SWIZZLE_W, XM_SWIZZLE_Y>(MT.r[0]);
-			V1[1] = VectorPermute<XM_PERMUTE_0Z, XM_PERMUTE_0Y, XM_PERMUTE_1X, XM_PERMUTE_0X>(D0, D2);
-			V0[2] = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_W, XM_SWIZZLE_Y, XM_SWIZZLE_Z>(MT.r[3]);
-			V1[2] = VectorPermute<XM_PERMUTE_0W, XM_PERMUTE_0X, XM_PERMUTE_0Y, XM_PERMUTE_1Z>(D1, D2);
-			V0[3] = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_Z, XM_SWIZZLE_W, XM_SWIZZLE_Y>(MT.r[2]);
-			V1[3] = VectorPermute<XM_PERMUTE_0Z, XM_PERMUTE_0Y, XM_PERMUTE_1Z, XM_PERMUTE_0X>(D1, D2);
+			V0[0] = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z>(MT.r[1]);
+			V1[0] = VectorPermute<RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X>(D0, D2);
+			V0[1] = VectorSwizzle<RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Y>(MT.r[0]);
+			V1[1] = VectorPermute<RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0X>(D0, D2);
+			V0[2] = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z>(MT.r[3]);
+			V1[2] = VectorPermute<RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1Z>(D1, D2);
+			V0[3] = VectorSwizzle<RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Y>(MT.r[2]);
+			V1[3] = VectorPermute<RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0X>(D1, D2);
 
 			C0 = VectorNegativeMultiplySubtract(V0[0], V1[0], C0);
 			C2 = VectorNegativeMultiplySubtract(V0[1], V1[1], C2);
 			C4 = VectorNegativeMultiplySubtract(V0[2], V1[2], C4);
 			C6 = VectorNegativeMultiplySubtract(V0[3], V1[3], C6);
 
-			V0[0] = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_X, XM_SWIZZLE_W, XM_SWIZZLE_X>(MT.r[1]);
-			V1[0] = VectorPermute<XM_PERMUTE_0Z, XM_PERMUTE_1Y, XM_PERMUTE_1X, XM_PERMUTE_0Z>(D0, D2);
-			V0[1] = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_W, XM_SWIZZLE_X, XM_SWIZZLE_Z>(MT.r[0]);
-			V1[1] = VectorPermute<XM_PERMUTE_1Y, XM_PERMUTE_0X, XM_PERMUTE_0W, XM_PERMUTE_1X>(D0, D2);
-			V0[2] = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_X, XM_SWIZZLE_W, XM_SWIZZLE_X>(MT.r[3]);
-			V1[2] = VectorPermute<XM_PERMUTE_0Z, XM_PERMUTE_1W, XM_PERMUTE_1Z, XM_PERMUTE_0Z>(D1, D2);
-			V0[3] = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_W, XM_SWIZZLE_X, XM_SWIZZLE_Z>(MT.r[2]);
-			V1[3] = VectorPermute<XM_PERMUTE_1W, XM_PERMUTE_0X, XM_PERMUTE_0W, XM_PERMUTE_1Z>(D1, D2);
+			V0[0] = VectorSwizzle<RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_X>(MT.r[1]);
+			V1[0] = VectorPermute<RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0Z>(D0, D2);
+			V0[1] = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Z>(MT.r[0]);
+			V1[1] = VectorPermute<RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_1X>(D0, D2);
+			V0[2] = VectorSwizzle<RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_X>(MT.r[3]);
+			V1[2] = VectorPermute<RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1W, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0Z>(D1, D2);
+			V0[3] = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Z>(MT.r[2]);
+			V1[3] = VectorPermute<RAYMATH_PERMUTE_1W, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_1Z>(D1, D2);
 
 			Vector C1 = VectorNegativeMultiplySubtract(V0[0], V1[0], C0);
 			C0 = VectorMultiplyAdd(V0[0], V1[0], C0);
@@ -19832,31 +19814,31 @@ namespace At0
 		{
 			static const VectorF32 Sign = { { { 1.0f, -1.0f, 1.0f, -1.0f } } };
 
-			Vector V0 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(r[2]);
-			Vector V1 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(r[3]);
-			Vector V2 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(r[2]);
-			Vector V3 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(r[3]);
-			Vector V4 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(r[2]);
-			Vector V5 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(r[3]);
+			Vector V0 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X>(r[2]);
+			Vector V1 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(r[3]);
+			Vector V2 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X>(r[2]);
+			Vector V3 = VectorSwizzle<RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z>(r[3]);
+			Vector V4 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(r[2]);
+			Vector V5 = VectorSwizzle<RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z>(r[3]);
 
 			Vector P0 = VectorMultiply(V0, V1);
 			Vector P1 = VectorMultiply(V2, V3);
 			Vector P2 = VectorMultiply(V4, V5);
 
-			V0 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(r[2]);
-			V1 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(r[3]);
-			V2 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(r[2]);
-			V3 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(r[3]);
-			V4 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(r[2]);
-			V5 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(r[3]);
+			V0 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(r[2]);
+			V1 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X>(r[3]);
+			V2 = VectorSwizzle<RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z>(r[2]);
+			V3 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X>(r[3]);
+			V4 = VectorSwizzle<RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z>(r[2]);
+			V5 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(r[3]);
 
 			P0 = VectorNegativeMultiplySubtract(V0, V1, P0);
 			P1 = VectorNegativeMultiplySubtract(V2, V3, P1);
 			P2 = VectorNegativeMultiplySubtract(V4, V5, P2);
 
-			V0 = VectorSwizzle<XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_W, XM_SWIZZLE_Z>(r[1]);
-			V1 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(r[1]);
-			V2 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(r[1]);
+			V0 = VectorSwizzle<RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z>(r[1]);
+			V1 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(r[1]);
+			V2 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X>(r[1]);
 
 			Vector S = VectorMultiply(r[0], Sign.v);
 			Vector R = VectorMultiply(V0, P0);
@@ -20515,8 +20497,8 @@ namespace At0
 			Vector C1 = VectorSplatY(A);
 			Vector C0 = VectorSplatX(A);
 
-			Vector N0 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_Z, XM_SWIZZLE_X, XM_SWIZZLE_W>(NormalAxis);
-			Vector N1 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_X, XM_SWIZZLE_Y, XM_SWIZZLE_W>(NormalAxis);
+			Vector N0 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_W>(NormalAxis);
+			Vector N1 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_W>(NormalAxis);
 
 			Vector V0 = VectorMultiply(C2, N0);
 			V0 = VectorMultiply(V0, N1);
@@ -20528,13 +20510,13 @@ namespace At0
 			Vector R2 = VectorNegativeMultiplySubtract(C0, NormalAxis, V0);
 
 			V0 = VectorSelect(A, R0, g_XMSelect1110.v);
-			Vector V1 = VectorPermute<XM_PERMUTE_0Z, XM_PERMUTE_1Y, XM_PERMUTE_1Z, XM_PERMUTE_0X>(R1, R2);
-			Vector V2 = VectorPermute<XM_PERMUTE_0Y, XM_PERMUTE_1X, XM_PERMUTE_0Y, XM_PERMUTE_1X>(R1, R2);
+			Vector V1 = VectorPermute<RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0X>(R1, R2);
+			Vector V2 = VectorPermute<RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X>(R1, R2);
 
 			Matrix M;
-			M.r[0] = VectorPermute<XM_PERMUTE_0X, XM_PERMUTE_1X, XM_PERMUTE_1Y, XM_PERMUTE_0W>(V0, V1);
-			M.r[1] = VectorPermute<XM_PERMUTE_1Z, XM_PERMUTE_0Y, XM_PERMUTE_1W, XM_PERMUTE_0W>(V0, V1);
-			M.r[2] = VectorPermute<XM_PERMUTE_1X, XM_PERMUTE_1Y, XM_PERMUTE_0Z, XM_PERMUTE_0W>(V0, V2);
+			M.r[0] = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0W>(V0, V1);
+			M.r[1] = VectorPermute<RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1W, RAYMATH_PERMUTE_0W>(V0, V1);
+			M.r[2] = VectorPermute<RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_0W>(V0, V2);
 			M.r[3] = g_XMIdentityR3.v;
 			return M;
 
@@ -20614,29 +20596,29 @@ namespace At0
 			Vector Q0 = VectorAdd(Quaternion, Quaternion);
 			Vector Q1 = VectorMultiply(Quaternion, Q0);
 
-			Vector V0 = VectorPermute<XM_PERMUTE_0Y, XM_PERMUTE_0X, XM_PERMUTE_0X, XM_PERMUTE_1W>(Q1, Constant1110.v);
-			Vector V1 = VectorPermute<XM_PERMUTE_0Z, XM_PERMUTE_0Z, XM_PERMUTE_0Y, XM_PERMUTE_1W>(Q1, Constant1110.v);
+			Vector V0 = VectorPermute<RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1W>(Q1, Constant1110.v);
+			Vector V1 = VectorPermute<RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1W>(Q1, Constant1110.v);
 			Vector R0 = VectorSubtract(Constant1110, V0);
 			R0 = VectorSubtract(R0, V1);
 
-			V0 = VectorSwizzle<XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_Y, XM_SWIZZLE_W>(Quaternion);
-			V1 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Z, XM_SWIZZLE_W>(Q0);
+			V0 = VectorSwizzle<RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_W>(Quaternion);
+			V1 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W>(Q0);
 			V0 = VectorMultiply(V0, V1);
 
 			V1 = VectorSplatW(Quaternion);
-			Vector V2 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_Z, XM_SWIZZLE_X, XM_SWIZZLE_W>(Q0);
+			Vector V2 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_W>(Q0);
 			V1 = VectorMultiply(V1, V2);
 
 			Vector R1 = VectorAdd(V0, V1);
 			Vector R2 = VectorSubtract(V0, V1);
 
-			V0 = VectorPermute<XM_PERMUTE_0Y, XM_PERMUTE_1X, XM_PERMUTE_1Y, XM_PERMUTE_0Z>(R1, R2);
-			V1 = VectorPermute<XM_PERMUTE_0X, XM_PERMUTE_1Z, XM_PERMUTE_0X, XM_PERMUTE_1Z>(R1, R2);
+			V0 = VectorPermute<RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Z>(R1, R2);
+			V1 = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1Z>(R1, R2);
 
 			Matrix M;
-			M.r[0] = VectorPermute<XM_PERMUTE_0X, XM_PERMUTE_1X, XM_PERMUTE_1Y, XM_PERMUTE_0W>(R0, V0);
-			M.r[1] = VectorPermute<XM_PERMUTE_1Z, XM_PERMUTE_0Y, XM_PERMUTE_1W, XM_PERMUTE_0W>(R0, V0);
-			M.r[2] = VectorPermute<XM_PERMUTE_1X, XM_PERMUTE_1Y, XM_PERMUTE_0Z, XM_PERMUTE_0W>(R0, V1);
+			M.r[0] = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0W>(R0, V0);
+			M.r[1] = VectorPermute<RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1W, RAYMATH_PERMUTE_0W>(R0, V0);
+			M.r[2] = VectorPermute<RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_0W>(R0, V1);
 			M.r[3] = g_XMIdentityR3.v;
 			return M;
 
@@ -20852,7 +20834,7 @@ namespace At0
 			FVector LightPosition
 		)
 		{
-			static const VectorU32 Select0001 = { { { XM_SELECT_0, XM_SELECT_0, XM_SELECT_0, XM_SELECT_1 } } };
+			static const VectorU32 Select0001 = { { { RAYMATH_SELECT_0, RAYMATH_SELECT_0, RAYMATH_SELECT_0, RAYMATH_SELECT_1 } } };
 
 			assert(!Vector3Equal(ShadowPlane, VectorZero()));
 			assert(!PlaneIsInfinite(ShadowPlane));
@@ -22873,12 +22855,12 @@ namespace At0
 			Vector SinAngles, CosAngles;
 			VectorSinCos(&SinAngles, &CosAngles, HalfAngles);
 
-			Vector P0 = VectorPermute<XM_PERMUTE_0X, XM_PERMUTE_1X, XM_PERMUTE_1X, XM_PERMUTE_1X>(SinAngles, CosAngles);
-			Vector Y0 = VectorPermute<XM_PERMUTE_1Y, XM_PERMUTE_0Y, XM_PERMUTE_1Y, XM_PERMUTE_1Y>(SinAngles, CosAngles);
-			Vector R0 = VectorPermute<XM_PERMUTE_1Z, XM_PERMUTE_1Z, XM_PERMUTE_0Z, XM_PERMUTE_1Z>(SinAngles, CosAngles);
-			Vector P1 = VectorPermute<XM_PERMUTE_0X, XM_PERMUTE_1X, XM_PERMUTE_1X, XM_PERMUTE_1X>(CosAngles, SinAngles);
-			Vector Y1 = VectorPermute<XM_PERMUTE_1Y, XM_PERMUTE_0Y, XM_PERMUTE_1Y, XM_PERMUTE_1Y>(CosAngles, SinAngles);
-			Vector R1 = VectorPermute<XM_PERMUTE_1Z, XM_PERMUTE_1Z, XM_PERMUTE_0Z, XM_PERMUTE_1Z>(CosAngles, SinAngles);
+			Vector P0 = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1X>(SinAngles, CosAngles);
+			Vector Y0 = VectorPermute<RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1Y>(SinAngles, CosAngles);
+			Vector R0 = VectorPermute<RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1Z>(SinAngles, CosAngles);
+			Vector P1 = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1X>(CosAngles, SinAngles);
+			Vector Y1 = VectorPermute<RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1Y>(CosAngles, SinAngles);
+			Vector R1 = VectorPermute<RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1Z>(CosAngles, SinAngles);
 
 			Vector Q1 = VectorMultiply(P1, Sign.v);
 			Vector Q0 = VectorMultiply(P0, Y0);
@@ -23000,8 +22982,8 @@ namespace At0
 			static const VectorF32 XMPMMP = { { { +1.0f, -1.0f, -1.0f, +1.0f } } };
 			static const VectorF32 XMMPMP = { { { -1.0f, +1.0f, -1.0f, +1.0f } } };
 			static const VectorF32 XMMMPP = { { { -1.0f, -1.0f, +1.0f, +1.0f } } };
-			static const VectorU32 Select0110 = { { { XM_SELECT_0, XM_SELECT_1, XM_SELECT_1, XM_SELECT_0 } } };
-			static const VectorU32 Select0010 = { { { XM_SELECT_0, XM_SELECT_0, XM_SELECT_1, XM_SELECT_0 } } };
+			static const VectorU32 Select0110 = { { { RAYMATH_SELECT_0, RAYMATH_SELECT_1, RAYMATH_SELECT_1, RAYMATH_SELECT_0 } } };
+			static const VectorU32 Select0010 = { { { RAYMATH_SELECT_0, RAYMATH_SELECT_0, RAYMATH_SELECT_1, RAYMATH_SELECT_0 } } };
 
 			Vector r0 = M.r[0];
 			Vector r1 = M.r[1];
