@@ -78,10 +78,6 @@
 #define _Analysis_assume_(x)
 #endif
 
-#ifndef XM_DEPRECATED
-#define XM_DEPRECATED [[deprecated("This is deprecated and will be removed in a future version.")]]
-#endif
-
 #if !defined(_XM_AVX2_INTRINSICS_) && defined(__AVX2__) && !defined(_XM_NO_INTRINSICS_)
 #define _XM_AVX2_INTRINSICS_
 #endif
@@ -600,7 +596,7 @@ namespace At0
 				FVector RotationOrigin, float Rotation, GVector Translation);
 			static Matrix XM_CALLCONV Transformation(FVector ScalingOrigin, FVector ScalingOrientationQuaternion, FVector Scaling,
 				GVector RotationOrigin, HVector RotationQuaternion, HVector Translation);
-		};
+			};
 
 		struct Quaternion
 		{
@@ -5150,7 +5146,7 @@ namespace At0
 			vResult = _mm_move_ss(V, vResult);
 			return vResult;
 #endif
-		}
+				}
 
 		// Sets the Y component of a vector to a passed floating point value
 		inline Vector XM_CALLCONV VectorSetY(FVector V, float y)
@@ -5182,7 +5178,7 @@ namespace At0
 			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
 			return vResult;
 #endif
-		}
+				}
 		// Sets the Z component of a vector to a passed floating point value
 		inline Vector XM_CALLCONV VectorSetZ(FVector V, float z)
 		{
@@ -5213,7 +5209,7 @@ namespace At0
 			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
 			return vResult;
 #endif
-		}
+				}
 
 		// Sets the W component of a vector to a passed floating point value
 		inline Vector XM_CALLCONV VectorSetW(FVector V, float w)
@@ -5245,7 +5241,7 @@ namespace At0
 			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -5286,7 +5282,7 @@ namespace At0
 			vResult = _mm_move_ss(V, vResult);
 			return vResult;
 #endif
-		}
+				}
 
 		// Sets the Y component of a vector to a floating point value passed by pointer
 
@@ -5314,7 +5310,7 @@ namespace At0
 			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
 			return vResult;
 #endif
-		}
+				}
 
 		// Sets the Z component of a vector to a floating point value passed by pointer
 
@@ -5342,7 +5338,7 @@ namespace At0
 			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
 			return vResult;
 #endif
-		}
+				}
 
 		// Sets the W component of a vector to a floating point value passed by pointer
 
@@ -5370,7 +5366,7 @@ namespace At0
 			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -5405,7 +5401,7 @@ namespace At0
 			Vector vResult = _mm_move_ss(V, _mm_castsi128_ps(vTemp));
 			return vResult;
 #endif
-		}
+				}
 
 		// Sets the Y component of a vector to an integer passed by value
 		inline Vector XM_CALLCONV VectorSetIntY(FVector V, uint32_t y)
@@ -5435,7 +5431,7 @@ namespace At0
 			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
 			return vResult;
 #endif
-		}
+				}
 
 		// Sets the Z component of a vector to an integer passed by value
 		inline Vector XM_CALLCONV VectorSetIntZ(FVector V, uint32_t z)
@@ -5465,7 +5461,7 @@ namespace At0
 			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
 			return vResult;
 #endif
-		}
+				}
 
 		// Sets the W component of a vector to an integer passed by value
 		inline Vector XM_CALLCONV VectorSetIntW(FVector V, uint32_t w)
@@ -5495,7 +5491,7 @@ namespace At0
 			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -5534,7 +5530,7 @@ namespace At0
 			Vector vResult = _mm_move_ss(V, vTemp);
 			return vResult;
 #endif
-		}
+				}
 
 		// Sets the Y component of a vector to an integer value passed by pointer
 
@@ -5562,7 +5558,7 @@ namespace At0
 			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
 			return vResult;
 #endif
-		}
+				}
 
 		// Sets the Z component of a vector to an integer value passed by pointer
 
@@ -5590,7 +5586,7 @@ namespace At0
 			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
 			return vResult;
 #endif
-		}
+				}
 
 		// Sets the W component of a vector to an integer value passed by pointer
 
@@ -5618,7 +5614,7 @@ namespace At0
 			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -5680,7 +5676,7 @@ namespace At0
 
 			return Result;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 		inline Vector XM_CALLCONV VectorPermute
@@ -5765,7 +5761,7 @@ namespace At0
 
 			return Result;
 #endif
-		}
+			}
 
 		//------------------------------------------------------------------------------
 		// Define a control vector to be used in VectorSelect 
@@ -5851,7 +5847,7 @@ namespace At0
 			Vector vTemp2 = _mm_and_ps(V2, Control);
 			return _mm_or_ps(vTemp1, vTemp2);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -6066,7 +6062,7 @@ namespace At0
 			__m128i V = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return _mm_castsi128_ps(V);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -6224,7 +6220,7 @@ namespace At0
 			__m128i V = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return _mm_xor_ps(_mm_castsi128_ps(V), g_XMNegOneMask);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -6505,7 +6501,7 @@ namespace At0
 			vTemp1 = _mm_and_ps(vTemp1, vTemp2);
 			return vTemp1;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -6602,7 +6598,7 @@ namespace At0
 			// Test against itself. NaN is always not equal
 			return _mm_cmpneq_ps(V, V);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -6636,7 +6632,7 @@ namespace At0
 			// If any are infinity, the signs are true.
 			return vTemp;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 		// Rounding and clamping operations
@@ -6765,7 +6761,7 @@ namespace At0
 			Vector vResult = _mm_xor_ps(R1, R2);
 			return vResult;
 #endif
-		}
+				}
 
 #if !defined(_XM_NO_INTRINSICS_) && !defined(__clang__) && !defined(__INTEL_COMPILER)
 #pragma float_control(pop)
@@ -6891,7 +6887,7 @@ namespace At0
 			vResult = _mm_or_ps(vResult, _mm_castsi128_ps(vTest));
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -6946,7 +6942,7 @@ namespace At0
 			vResult = _mm_or_ps(vResult, _mm_castsi128_ps(vTest));
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -7056,7 +7052,7 @@ namespace At0
 			__m128i V = _mm_andnot_si128(_mm_castps_si128(V2), _mm_castps_si128(V1));
 			return _mm_castsi128_ps(V);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -7082,7 +7078,7 @@ namespace At0
 			__m128i V = _mm_or_si128(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return _mm_castsi128_ps(V);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -7111,7 +7107,7 @@ namespace At0
 			Result = _mm_andnot_si128(Result, g_XMNegOneMask);
 			return _mm_castsi128_ps(Result);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -7137,7 +7133,7 @@ namespace At0
 			__m128i V = _mm_xor_si128(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return _mm_castsi128_ps(V);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 		// Computation operations
@@ -7169,7 +7165,7 @@ namespace At0
 
 			return _mm_sub_ps(Z, V);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -7430,7 +7426,7 @@ namespace At0
 			Vector vResult = _mm_mul_ps(V1, V2);
 			return _mm_add_ps(vResult, V3);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -7494,7 +7490,7 @@ namespace At0
 			Vector R = _mm_mul_ps(V1, V2);
 			return _mm_sub_ps(V3, R);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -7518,7 +7514,7 @@ namespace At0
 			Vector vResult = _mm_set_ps1(ScaleFactor);
 			return _mm_mul_ps(vResult, V);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -7700,7 +7696,7 @@ namespace At0
 			vResult = _mm_div_ps(g_XMOne, vResult);
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -7845,7 +7841,7 @@ namespace At0
 
 			return _mm_castsi128_ps(vResult);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -7997,7 +7993,7 @@ namespace At0
 
 			return _mm_castsi128_ps(vResult);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -8506,7 +8502,7 @@ namespace At0
 
 			return _mm_castsi128_ps(result);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -8556,7 +8552,7 @@ namespace At0
 				powf(a[3], b[3]));
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -8581,7 +8577,7 @@ namespace At0
 			vResult = _mm_max_ps(vResult, V);
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -8738,7 +8734,7 @@ namespace At0
 			Result = _mm_mul_ps(Result, x);
 			return Result;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -8834,7 +8830,7 @@ namespace At0
 			Result = _mm_mul_ps(Result, sign);
 			return Result;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -8987,7 +8983,7 @@ namespace At0
 			Result = _mm_mul_ps(Result, sign);
 			*pCos = Result;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -9082,7 +9078,7 @@ namespace At0
 			return Result;
 
 #endif
-		}
+			}
 
 		//------------------------------------------------------------------------------
 
@@ -9120,7 +9116,7 @@ namespace At0
 
 			return _mm_sub_ps(E1, E2);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -9156,7 +9152,7 @@ namespace At0
 			Vector E2 = VectorExp(V2);
 			return _mm_add_ps(E1, E2);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -9191,7 +9187,7 @@ namespace At0
 			E = _mm_div_ps(g_XMOne.v, E);
 			return _mm_sub_ps(g_XMOne.v, E);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -9299,7 +9295,7 @@ namespace At0
 			t0 = _mm_sub_ps(g_XMHalfPi, t0);
 			return t0;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -9405,7 +9401,7 @@ namespace At0
 			t0 = _mm_or_ps(t0, t1);
 			return t0;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -9529,7 +9525,7 @@ namespace At0
 			Result = _mm_or_ps(select0, select1);
 			return Result;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -9602,7 +9598,7 @@ namespace At0
 			return VectorSelect(Result, R2, ATanResultValid);
 
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -9679,7 +9675,7 @@ namespace At0
 			Result = _mm_mul_ps(Result, x);
 			return Result;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -9760,7 +9756,7 @@ namespace At0
 			Result = _mm_mul_ps(Result, sign);
 			return Result;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -9883,7 +9879,7 @@ namespace At0
 			Result = _mm_mul_ps(Result, sign);
 			*pCos = Result;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -9924,7 +9920,7 @@ namespace At0
 			return VectorMultiply(N, D);
 
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -10077,7 +10073,7 @@ namespace At0
 			t0 = _mm_or_ps(t0, t1);
 			return t0;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -10174,7 +10170,7 @@ namespace At0
 			Result = _mm_or_ps(select0, select1);
 			return Result;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -10237,7 +10233,7 @@ namespace At0
 			return Result;
 
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -11882,7 +11878,7 @@ namespace At0
 			vResult = _mm_mul_ps(vResult, g_XMNegateX);
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -13699,7 +13695,7 @@ namespace At0
 			// Set w to zero
 			return _mm_and_ps(vResult, g_XMMask3);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -17785,7 +17781,7 @@ namespace At0
 			vResult = _mm_add_ps(vResult, vTemp3);
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -18461,7 +18457,7 @@ namespace At0
 			vResult = _mm_mul_ps(vResult, FlipZW);
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -19107,7 +19103,7 @@ namespace At0
 			return (_mm_movemask_ps(vX) != 0);
 #else
 #endif
-		}
+			}
 
 		//------------------------------------------------------------------------------
 
@@ -19167,7 +19163,7 @@ namespace At0
 			// If any are infinity, the signs are true.
 			return (_mm_movemask_ps(vTemp1) != 0);
 #endif
-		}
+			}
 
 		//------------------------------------------------------------------------------
 
@@ -22477,7 +22473,7 @@ namespace At0
 			vResult = _mm_add_ps(vResult, Q2Y);
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -22547,7 +22543,7 @@ namespace At0
 			static const VectorF32 NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
 			return _mm_mul_ps(*this, NegativeOne3);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -23722,7 +23718,7 @@ namespace At0
 			// Add 1,1,1,0 to -x,-y,-z,w
 			return _mm_add_ps(vTemp, g_XMOne3);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -23807,7 +23803,7 @@ namespace At0
 			vResult = _mm_shuffle_ps(vResult, vScale, _MM_SHUFFLE(3, 0, 1, 0));  // x = vResult.x,y = vResult.y,z = vResult.z,w=vColor.w
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -24803,5 +24799,5 @@ namespace At0
 
 #pragma warning(pop)
 
-	}
-}
+		}
+				}
