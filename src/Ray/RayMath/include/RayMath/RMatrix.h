@@ -2,6 +2,7 @@
 
 #include "RMathInternals.h"
 #include "RVector.h"
+#include "RQuaternion.h"
 
 #include <utility>
 
@@ -56,7 +57,6 @@ namespace At0::Ray
 		Matrix(Matrix&&) = default;
 		Matrix& operator=(Matrix&&) = default;
 
-		constexpr Matrix(FVector R0, FVector R1, FVector R2, CVector R3) : r{ R0,R1,R2,R3 } {}
 		constexpr Matrix(float m00, float m01, float m02, float m03,
 			float m10, float m11, float m12, float m13,
 			float m20, float m21, float m22, float m23,
@@ -86,7 +86,14 @@ namespace At0::Ray
 
 		// --------------------------------------------------------------------
 		// Helper Functions
+		Matrix Transpose() const;
 		static Matrix Identity();
+		static Matrix Translation(float x, float y, float z);
+		static Matrix RotationRollPitchYaw(float pitch, float yaw, float roll);
+		static Matrix Scale(float x, float y, float z);
+		static Matrix FromQuaternion(const Quaternion& quat);
+		static Matrix LookAtLH(FVector eyePosition, FVector focusPosition, FVector upDirection);
+		static Matrix LookToLH(FVector eyePosition, FVector eyeDirection, FVector upDirection);
 
 	private:
 		static Matrix Multiply(FMatrix M1, CMatrix M2);
@@ -208,6 +215,22 @@ namespace At0::Ray
 
 	//friend Matrix     XM_CALLCONV     operator* (float S, FMatrix M);
 
+	inline Matrix Matrix::Transpose() const
+	{
+		Matrix P;
+		P.r[0] = Vector::MergeXY(r[0], r[2]);
+		P.r[1] = Vector::MergeXY(r[1], r[3]);
+		P.r[2] = Vector::MergeZW(r[0], r[2]);
+		P.r[3] = Vector::MergeZW(r[1], r[3]);
+
+		Matrix MT;
+		MT.r[0] = Vector::MergeXY(P.r[0], P.r[1]);
+		MT.r[1] = Vector::MergeZW(P.r[0], P.r[1]);
+		MT.r[2] = Vector::MergeXY(P.r[2], P.r[3]);
+		MT.r[3] = Vector::MergeZW(P.r[2], P.r[3]);
+		return MT;
+	}
+
 	// --------------------------------------------------------------------
 	// Helper Functions
 	inline Matrix Matrix::Identity()
@@ -218,6 +241,60 @@ namespace At0::Ray
 			0.0f, 0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f
 		};
+	}
+
+	inline Matrix Matrix::Translation(float x, float y, float z)
+	{
+		Matrix mat(Matrix::Identity());
+		mat[3][0] = x;
+		mat[3][1] = y;
+		mat[3][2] = z;
+		return mat;
+	}
+
+	inline Matrix Matrix::RotationRollPitchYaw(float pitch, float yaw, float roll)
+	{
+		assert(false);
+	}
+
+	inline Matrix Matrix::Scale(float x, float y, float z)
+	{
+		assert(false);
+	}
+
+	inline Matrix Matrix::FromQuaternion(const Quaternion& quat)
+	{
+		float pitch, yaw, roll;
+		quat.ToEulerAngles(&pitch, &yaw, &roll);
+		return RotationRollPitchYaw(pitch, yaw, roll);
+	}
+
+	inline Matrix Matrix::LookAtLH(FVector eyePosition, FVector focusPosition, FVector upDirection)
+	{
+		Vector eyeDirection = focusPosition - eyePosition;
+		return LookToLH(eyePosition, eyeDirection, upDirection);
+	}
+
+	inline Matrix Matrix::LookToLH(FVector eyePosition, FVector eyeDirection, FVector upDirection)
+	{
+		Vector r2 = Vector::Normalize(eyeDirection);
+		Vector r0 = Vector::CrossProduct(upDirection, r2);
+		r0 = Vector::Normalize(r0);
+
+		Vector r1 = Vector::CrossProduct(r2, r0);
+		Vector negEyePositiion = -eyePosition;
+
+		Vector d0 = Vector::DotProduct(r0, negEyePositiion);
+		Vector d1 = Vector::DotProduct(r1, negEyePositiion);
+		Vector d2 = Vector::DotProduct(r2, negEyePositiion);
+
+		Matrix m;
+		m[0] = Vector::Select(d0, r0, Constants::Select1110);
+		m[1] = Vector::Select(d1, r1, Constants::Select1110);
+		m[2] = Vector::Select(d2, r2, Constants::Select1110);
+		m[3] = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+		return m.Transpose();
 	}
 
 	inline Matrix Matrix::Multiply(FMatrix M1, CMatrix M2)

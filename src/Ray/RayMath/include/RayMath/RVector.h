@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <utility>
 
+
 namespace At0::Ray
 {
 	struct Vector;
@@ -42,7 +43,11 @@ namespace At0::Ray
 #elif defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 		float32x4_t v;
 #else
-		float v[4];
+		union
+		{
+			float v[4];
+			float x, y, z, w;
+		};
 #endif
 		Vector() = default;
 
@@ -90,7 +95,28 @@ namespace At0::Ray
 
 		const float& operator[](uint32_t idx) const { assert(idx < 4 && "Index Out Of Range"); return v[idx]; }
 		float& operator[](uint32_t idx) { return const_cast<float&>(std::as_const(*this)[idx]); }
+
+		// ---------------------------------------------------
+		// Helper Functions
+		Vector Length() const;
+		Vector Sqrt() const;
+		static void SinCos(Vector* pSin, Vector* pCos, Vector v);
+		static Vector SplatX(FVector v);
+		static Vector SplatY(FVector v);
+		static Vector SplatZ(FVector v);
+		static Vector Normalize(FVector v);
+		static Vector DotProduct(FVector v1, FVector v2);
+		static Vector CrossProduct(FVector v1, FVector v2);
+
+		static Vector MergeXY(FVector v1, FVector v2);
+		static Vector MergeZW(FVector v1, FVector v2);
+		static Vector Select(FVector v1, FVector v2, FVector control);
 	};
+
+	namespace Constants
+	{
+		RAY_GLOBALCONST Vector Select1110 = { (float)SELECT_1, (float)SELECT_1, (float)SELECT_1, (float)SELECT_0 };
+	}
 
 	inline Vector::Vector(float x)
 	{
@@ -275,4 +301,155 @@ namespace At0::Ray
 	{
 		return !(*this == other);
 	}
+
+	inline void Vector::SinCos(Vector* pSin, Vector* pCos, Vector v)
+	{
+		*pSin = {
+			sinf(v[0]),
+			sinf(v[1]),
+			sinf(v[2]),
+			sinf(v[3])
+		};
+
+		*pCos = {
+			cosf(v[0]),
+			cosf(v[1]),
+			cosf(v[2]),
+			cosf(v[3])
+		};
+	}
+
+	inline Vector Vector::SplatX(FVector v)
+	{
+		Vector result;
+		result[0] =
+			result[1] =
+			result[2] =
+			result[3] = v[0];
+		return result;
+	}
+
+	inline Vector Vector::SplatY(FVector v)
+	{
+		Vector result;
+		result[0] =
+			result[1] =
+			result[2] =
+			result[3] = v[1];
+		return result;
+	}
+
+	inline Vector Vector::SplatZ(FVector v)
+	{
+		Vector result;
+		result[0] =
+			result[1] =
+			result[2] =
+			result[3] = v[2];
+		return result;
+	}
+
+	inline Vector Vector::Normalize(FVector v)
+	{
+		float length;
+		Vector result;
+
+		result = v.Length();
+		length = result[0];
+
+		if (length > 0)
+			length = 1.0f / length;
+
+		result[0] = v[0] * length;
+		result[1] = v[1] * length;
+		result[2] = v[2] * length;
+		result[3] = v[3] * length;
+		return result;
+	}
+
+	inline Vector Vector::DotProduct(FVector v1, FVector v2)
+	{
+		float value = v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
+		Vector result;
+		result[0] =
+			result[1] =
+			result[2] =
+			result[3] = value;
+		return result;
+	}
+
+	inline Vector Vector::CrossProduct(FVector v1, FVector v2)
+	{
+		return {
+			(v1[1] * v2[2]) - (v1[2] * v2[1]),
+			(v1[2] * v2[0]) - (v1[0] * v2[2]),
+			(v1[0] * v2[1]) - (v1[1] * v2[0]),
+			0.0f
+		};
+	}
+
+	inline Vector Vector::Length() const
+	{
+		Vector result = DotProduct(*this, *this);
+		return result.Sqrt();
+	}
+
+	inline Vector Vector::Sqrt() const
+	{
+		return {
+			sqrtf(v[0]),
+			sqrtf(v[1]),
+			sqrtf(v[2]),
+			sqrtf(v[3])
+		};
+	}
+
+	inline Vector Vector::MergeXY(FVector v1, FVector v2)
+	{
+		return {
+			v1[0],
+			v2[0],
+			v1[1],
+			v2[1],
+		};
+	}
+
+	inline Vector Vector::MergeZW(FVector v1, FVector v2)
+	{
+		return {
+			v1[2],
+			v2[2],
+			v1[3],
+			v2[3]
+		};
+	}
+
+	inline Vector Vector::Select(FVector v1, FVector v2, FVector control)
+	{
+		struct Vec
+		{
+			union
+			{
+				uint32_t x, y, z, w;
+				uint32_t r[4];
+			};
+
+			Vec(uint32_t x, uint32_t y, uint32_t z, uint32_t w) : x(x), y(y), z(z), w(w) {}
+			uint32_t operator[](uint32_t idx) { return r[idx]; }
+		};
+
+		Vec vec1{ (float)v1.x, (float)v1.y, (float)v1.z, (float)v1.w };
+		Vec vec2{ (float)v2.x, (float)v2.y, (float)v2.z, (float)v2.w };
+		Vec vecControl{ (float)control.x, (float)control.y, (float)control.z, (float)control.w };
+
+		Vec result{
+			(vec1[0] & ~vecControl[0]) | (vec2[0] & vecControl[0]),
+			(vec1[1] & ~vecControl[1]) | (vec2[1] & vecControl[1]),
+			(vec1[2] & ~vecControl[2]) | (vec2[2] & vecControl[2]),
+			(vec1[3] & ~vecControl[3]) | (vec2[3] & vecControl[3]),
+		};
+
+		return { (float)result.x, (float)result.y, (float)result.z, (float)result.w };
+	}
+
 }

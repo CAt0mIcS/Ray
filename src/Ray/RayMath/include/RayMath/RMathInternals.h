@@ -102,6 +102,16 @@
 #endif
 #endif // !_XM_NO_INTRINSICS
 
+#ifndef RAY_GLOBALCONST
+#ifdef _MSC_VER
+#define RAY_GLOBALCONST extern const __declspec(selectany)
+#elif defined(__GNUC__)
+#define RAY_GLOBALCONST extern const __attribute__((selectany))
+#endif
+#endif // ! RAY_GLOBALCONST
+
+
+
 namespace At0::Ray
 {
 	namespace Constants
@@ -112,6 +122,9 @@ namespace At0::Ray
 		constexpr float M1DIV2PI = 0.159154943f;
 		constexpr float PIDIV2 = 1.570796327f;
 		constexpr float PIDIV4 = 0.785398163f;
+
+		constexpr uint32_t SELECT_0 = 0x00000000;
+		constexpr uint32_t SELECT_1 = 0xFFFFFFFF;
 	}
 
 	template<typename T = float>

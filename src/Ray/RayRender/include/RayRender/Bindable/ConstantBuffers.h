@@ -4,8 +4,6 @@
 #include "Bindable.h"
 #include "RayRender/GraphicsResource.h"
 
-#include <../../RayUtil/include/RayUtil/RMath.h>
-
 #include <d3d11.h>
 
 
