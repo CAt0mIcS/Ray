@@ -14,27 +14,6 @@
 #include <RayRender/Drawable/Model.h>
 #include <RayRender/Camera.h>
 
-namespace Test
-{
-#include <../../RayMath/include/RayMath/RFloat2.h>
-#include <../../RayMath/include/RayMath/RFloat3.h>
-#include <../../RayMath/include/RayMath/RFloat3x3.h>
-#include <../../RayMath/include/RayMath/RFloat3x4.h>
-#include <../../RayMath/include/RayMath/RFloat4.h>
-#include <../../RayMath/include/RayMath/RFloat4x3.h>
-#include <../../RayMath/include/RayMath/RFloat4x4.h>
-#include <../../RayMath/include/RayMath/RInt2.h>
-#include <../../RayMath/include/RayMath/RInt3.h>
-#include <../../RayMath/include/RayMath/RMathInternals.h>
-#include <../../RayMath/include/RayMath/RMatrix.h>
-#include <../../RayMath/include/RayMath/RQuaternion.h>
-#include <../../RayMath/include/RayMath/RUInt2.h>
-#include <../../RayMath/include/RayMath/RUInt3.h>
-#include <../../RayMath/include/RayMath/RVector.h>
-}
-
-
-
 
 class FPS
 {

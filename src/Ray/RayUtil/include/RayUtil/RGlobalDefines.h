@@ -1,9 +1,6 @@
 #pragma once
 
-#include <../../RayMath/include/RayMath/RMatrix.h>
-#include <../../RayMath/include/RayMath/RFloat4.h>
-#include <../../RayMath/include/RayMath/RVector.h>
-#include <../../RayMath/include/RayMath/RQuaternion.h>
+#include <../../RayUtil/include/RayUtil/RMath.h>
 
 #include <../../extern/glm/glm/glm.hpp>
 #include <../../extern/glm/glm/gtc/quaternion.hpp>

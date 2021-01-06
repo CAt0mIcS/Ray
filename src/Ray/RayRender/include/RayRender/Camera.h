@@ -2,8 +2,7 @@
 
 #include "RlRBase.h"
 
-#include <../../RayMath/include/RayMath/RMatrix.h>
-
+#include <../../RayUtil/include/RayUtil/RMath.h>
 
 namespace At0::Ray
 {

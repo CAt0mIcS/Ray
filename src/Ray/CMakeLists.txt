@@ -5,7 +5,6 @@ add_subdirectory("RayRender")
 add_subdirectory("RayEvent")
 add_subdirectory("Ray")
 add_subdirectory("RayEditor")
-add_subdirectory("RayMath")
 
 # =============================================================
 # Dependencies
