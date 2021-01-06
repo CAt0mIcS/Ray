@@ -35,19 +35,7 @@ namespace At0::Ray
 				auto p1 = LoadFloat3(&v1.pos);
 				auto p2 = LoadFloat3(&v2.pos);
 
-				Vector vec1{};
-				for (uint32_t i = 0; i < 4; ++i)
-				{
-					vec1.m128_f32[i] = p1.m128_f32[i] - p0.m128_f32[i];
-				}
-
-				Vector vec2{};
-				for (uint32_t i = 0; i < 4; ++i)
-				{
-					vec2.m128_f32[i] = p2.m128_f32[i] - p0.m128_f32[i];
-				}
-
-				auto n = Vector3Normalize(Vector3Cross(vec1, vec2));
+				auto n = Vector3Normalize(Vector3Cross(p1 - p0, p2 - p0));
 
 				StoreFloat3(&v0.n, n);
 				StoreFloat3(&v1.n, n);

@@ -22534,15 +22534,15 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 			VectorF32 Result = { { {
-					-Q.vector4_f32[0],
-					-Q.vector4_f32[1],
-					-Q.vector4_f32[2],
-					Q.vector4_f32[3]
+					-v.vector4_f32[0],
+					-v.vector4_f32[1],
+					-v.vector4_f32[2],
+					v.vector4_f32[3]
 				} } };
 			return Result.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			static const VectorF32 NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
-			return vmulq_f32(Q, NegativeOne3.v);
+			return vmulq_f32(*this, NegativeOne3.v);
 #elif defined(_XM_SSE_INTRINSICS_)
 			static const VectorF32 NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
 			return _mm_mul_ps(*this, NegativeOne3);
