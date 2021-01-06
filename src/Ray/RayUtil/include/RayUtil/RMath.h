@@ -335,6 +335,9 @@ namespace At0
 		};
 #endif // _XM_NO_INTRINSICS_
 
+
+		struct Quaternion;
+
 		//------------------------------------------------------------------------------
 		// Vector intrinsic: Four 32 bit floating point components aligned on a 16 byte
 		// boundary and mapped to hardware vector registers
@@ -349,26 +352,33 @@ namespace At0
 		// Fix-up for (1st-3rd) Vector parameters that are pass-in-register for x86, ARM, ARM64, and vector call; by reference otherwise
 #if ( defined(_M_IX86) || defined(_M_ARM) || defined(_M_ARM64) || _XM_VECTORCALL_ ) && !defined(_XM_NO_INTRINSICS_)
 		typedef const Vector FVector;
+		typedef const Quaternion FQuaternion;
 #else
 		typedef const Vector& FVector;
+		typedef const Quaternion& FQuaternion;
 #endif
 
 		// Fix-up for (4th) Vector parameter to pass in-register for ARM, ARM64, and x64 vector call; by reference otherwise
 #if ( defined(_M_ARM) || defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || (_XM_VECTORCALL_ && !defined(_M_IX86) ) ) && !defined(_XM_NO_INTRINSICS_)
 		typedef const Vector GVector;
+		typedef const Quaternion GQuaternion;
 #else
 		typedef const Vector& GVector;
+		typedef const Quaternion& GQuaternion;
 #endif
 
 		// Fix-up for (5th & 6th) Vector parameter to pass in-register for ARM64 and vector call; by reference otherwise
 #if ( defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || _XM_VECTORCALL_ ) && !defined(_XM_NO_INTRINSICS_)
 		typedef const Vector HVector;
+		typedef const Quaternion HQuaternion;
 #else
 		typedef const Vector& HVector;
+		typedef const Quaternion& HQuaternion;
 #endif
 
 		// Fix-up for (7th+) Vector parameters to pass by reference
 		typedef const Vector& CVector;
+		typedef const Quaternion& CQuaternion;
 
 		//------------------------------------------------------------------------------
 		// Conversion types for constants
@@ -593,7 +603,38 @@ namespace At0
 			Quaternion(Quaternion&&) = default;
 			Quaternion& operator=(Quaternion&&) = default;
 
+			constexpr Quaternion(FVector v) : v(v) {}
 
+			operator FVector() const { return v; }
+
+			bool XM_CALLCONV operator==(FQuaternion other) const;
+			bool XM_CALLCONV operator!=(FQuaternion other) const;
+
+			Quaternion XM_CALLCONV operator*(FQuaternion other) const;
+			Quaternion& XM_CALLCONV operator*=(FQuaternion other);
+
+			bool XM_CALLCONV IsNaN() const;
+			bool XM_CALLCONV IsInfinite() const;
+			bool XM_CALLCONV IsIdentity() const;
+			Quaternion XM_CALLCONV LengthSq() const;
+			Quaternion XM_CALLCONV ReciprocalLength() const;
+			Quaternion XM_CALLCONV Length() const;
+			Quaternion XM_CALLCONV NormalizeEst() const;
+			Quaternion XM_CALLCONV Normalize() const;
+			Quaternion XM_CALLCONV Conjugate() const;
+			Quaternion XM_CALLCONV Inverse() const;
+			Quaternion XM_CALLCONV Ln() const;
+			Quaternion XM_CALLCONV Exp() const;
+
+			static Quaternion XM_CALLCONV Dot(FQuaternion Q1, FQuaternion Q2);
+			static Quaternion XM_CALLCONV Multiply(FQuaternion Q1, FQuaternion Q2);
+			static Quaternion XM_CALLCONV Slerp(FQuaternion Q0, FQuaternion Q1, float t);
+			static Quaternion XM_CALLCONV SlerpV(FQuaternion Q0, FQuaternion Q1, FQuaternion T);
+			static Quaternion XM_CALLCONV Squad(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, GQuaternion Q3, float t);
+			static Quaternion XM_CALLCONV SquadV(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, GQuaternion Q3, HQuaternion T);
+			static void XM_CALLCONV SquadSetup(/*_Out_ */ Vector* pA, /*_Out_ */ Vector* pB, /*_Out_ */ Vector* pC, /*_In_ */FQuaternion Q0, /*_In_ */FQuaternion Q1, /*_In_ */FQuaternion Q2, /*_In_ */GQuaternion Q3);
+			static Quaternion XM_CALLCONV BaryCentric(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, float f, float g);
+			static Quaternion XM_CALLCONV BaryCentricV(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, GQuaternion F, HQuaternion G);
 		};
 
 		//------------------------------------------------------------------------------
@@ -1417,8 +1458,8 @@ namespace At0
 		Vector    XM_CALLCONV     Vector3AngleBetweenVectors(FVector V1, FVector V2);
 		Vector    XM_CALLCONV     Vector3LinePointDistance(FVector LinePoint1, FVector LinePoint2, FVector Point);
 		void        XM_CALLCONV     Vector3ComponentsFromNormal(/*_Out_ */ Vector* pParallel, /*_Out_ */ Vector* pPerpendicular, /*_In_ */FVector V, /*_In_ */FVector Normal);
-		Vector    XM_CALLCONV     Vector3Rotate(FVector V, FVector RotationQuaternion);
-		Vector    XM_CALLCONV     Vector3InverseRotate(FVector V, FVector RotationQuaternion);
+		Vector    XM_CALLCONV     Vector3Rotate(FVector V, FQuaternion RotationQuaternion);
+		Vector    XM_CALLCONV     Vector3InverseRotate(FVector V, FQuaternion RotationQuaternion);
 		Vector    XM_CALLCONV     Vector3Transform(FVector V, FMatrix M);
 		Float4* XM_CALLCONV     Vector3TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
@@ -1527,32 +1568,6 @@ namespace At0
 		 * Quaternion operations
 		 *
 		 ****************************************************************************/
-
-		bool        XM_CALLCONV     QuaternionEqual(FVector Q1, FVector Q2);
-		bool        XM_CALLCONV     QuaternionNotEqual(FVector Q1, FVector Q2);
-
-		bool        XM_CALLCONV     QuaternionIsNaN(FVector Q);
-		bool        XM_CALLCONV     QuaternionIsInfinite(FVector Q);
-		bool        XM_CALLCONV     QuaternionIsIdentity(FVector Q);
-
-		Vector    XM_CALLCONV     QuaternionDot(FVector Q1, FVector Q2);
-		Vector    XM_CALLCONV     QuaternionMultiply(FVector Q1, FVector Q2);
-		Vector    XM_CALLCONV     QuaternionLengthSq(FVector Q);
-		Vector    XM_CALLCONV     QuaternionReciprocalLength(FVector Q);
-		Vector    XM_CALLCONV     QuaternionLength(FVector Q);
-		Vector    XM_CALLCONV     QuaternionNormalizeEst(FVector Q);
-		Vector    XM_CALLCONV     QuaternionNormalize(FVector Q);
-		Vector    XM_CALLCONV     QuaternionConjugate(FVector Q);
-		Vector    XM_CALLCONV     QuaternionInverse(FVector Q);
-		Vector    XM_CALLCONV     QuaternionLn(FVector Q);
-		Vector    XM_CALLCONV     QuaternionExp(FVector Q);
-		Vector    XM_CALLCONV     QuaternionSlerp(FVector Q0, FVector Q1, float t);
-		Vector    XM_CALLCONV     QuaternionSlerpV(FVector Q0, FVector Q1, FVector T);
-		Vector    XM_CALLCONV     QuaternionSquad(FVector Q0, FVector Q1, FVector Q2, GVector Q3, float t);
-		Vector    XM_CALLCONV     QuaternionSquadV(FVector Q0, FVector Q1, FVector Q2, GVector Q3, HVector T);
-		void        XM_CALLCONV     QuaternionSquadSetup(/*_Out_ */ Vector* pA, /*_Out_ */ Vector* pB, /*_Out_ */ Vector* pC, /*_In_ */FVector Q0, /*_In_ */FVector Q1, /*_In_ */FVector Q2, /*_In_ */GVector Q3);
-		Vector    XM_CALLCONV     QuaternionBaryCentric(FVector Q0, FVector Q1, FVector Q2, float f, float g);
-		Vector    XM_CALLCONV     QuaternionBaryCentricV(FVector Q0, FVector Q1, FVector Q2, GVector F, HVector G);
 
 		Vector    XM_CALLCONV     QuaternionIdentity();
 		Vector    XM_CALLCONV     QuaternionRotationRollPitchYaw(float Pitch, float Yaw, float Roll);
@@ -2184,7 +2199,7 @@ namespace At0
 			vResult = _mm_mul_ps(vResult, _mm_castsi128_ps(vScale));
 			return vResult;
 #endif
-	}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -2203,7 +2218,7 @@ namespace At0
 			__m128i V = _mm_set1_epi32(IntConstant);
 			return _mm_castsi128_ps(V);
 #endif
-}
+		}
 
 
 		//-------------------------------------------------------------------------------------
@@ -4441,7 +4456,7 @@ namespace At0
 #elif defined(_XM_SSE_INTRINSICS_)
 			return _mm_setzero_ps();
 #endif
-}
+		}
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with four floating point values
@@ -8154,7 +8169,7 @@ namespace At0
 				s = vshrq_n_u32(v, 1);
 				r = vorrq_s32(r, s);
 				return r;
-		}
+			}
 
 		} // namespace Internal
 
@@ -12194,7 +12209,7 @@ namespace At0
 
 				vst1q_f32(reinterpret_cast<float*>(pOutputVector), vResult);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -12524,7 +12539,7 @@ namespace At0
 
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), V);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -12880,7 +12895,7 @@ namespace At0
 				V = vget_low_f32(vResult);
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), V);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -14467,13 +14482,13 @@ namespace At0
 		inline Vector XM_CALLCONV Vector3Rotate
 		(
 			FVector V,
-			FVector RotationQuaternion
+			FQuaternion RotationQuaternion
 		)
 		{
 			Vector A = VectorSelect(g_XMSelect1110.v, V, g_XMSelect1110.v);
-			Vector Q = QuaternionConjugate(RotationQuaternion);
-			Vector Result = QuaternionMultiply(Q, A);
-			return QuaternionMultiply(Result, RotationQuaternion);
+			Vector Q = RotationQuaternion.Conjugate();
+			Vector Result = Quaternion::Multiply(Q, A);
+			return Quaternion::Multiply(Result, RotationQuaternion);
 		}
 
 		//------------------------------------------------------------------------------
@@ -14482,13 +14497,13 @@ namespace At0
 		inline Vector XM_CALLCONV Vector3InverseRotate
 		(
 			FVector V,
-			FVector RotationQuaternion
+			FQuaternion RotationQuaternion
 		)
 		{
 			Vector A = VectorSelect(g_XMSelect1110.v, V, g_XMSelect1110.v);
-			Vector Result = QuaternionMultiply(RotationQuaternion, A);
-			Vector Q = QuaternionConjugate(RotationQuaternion);
-			return QuaternionMultiply(Result, Q);
+			Quaternion Result = Quaternion::Multiply(RotationQuaternion, A);
+			Vector Q = RotationQuaternion.Conjugate();
+			return Quaternion::Multiply(Result, Q);
 		}
 
 		//------------------------------------------------------------------------------
@@ -14671,7 +14686,7 @@ namespace At0
 
 				vst1q_f32(reinterpret_cast<float*>(pOutputVector), vResult);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -15087,7 +15102,7 @@ namespace At0
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 				vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -15577,7 +15592,7 @@ namespace At0
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 				vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -16063,8 +16078,8 @@ namespace At0
 					vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 					vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 					pOutputVector += OutputStride;
-		}
-		}
+				}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -16664,8 +16679,8 @@ namespace At0
 					vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 					vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 					pOutputVector += OutputStride;
-		}
-		}
+				}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -18705,7 +18720,7 @@ namespace At0
 
 				vst1q_f32(reinterpret_cast<float*>(pOutputVector), vResult);
 				pOutputVector += OutputStride;
-		}
+			}
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
@@ -22336,54 +22351,37 @@ namespace At0
 
 		 //------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV QuaternionEqual
-		(
-			FVector Q1,
-			FVector Q2
-		)
+		inline bool XM_CALLCONV Quaternion::operator==(FQuaternion other) const
 		{
-			return Vector4Equal(Q1, Q2);
+			return Vector4Equal(*this, other);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV QuaternionNotEqual
-		(
-			FVector Q1,
-			FVector Q2
-		)
+		inline bool XM_CALLCONV Quaternion::operator!=(FQuaternion other) const
 		{
-			return Vector4NotEqual(Q1, Q2);
+			return Vector4NotEqual(*this, other);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV QuaternionIsNaN
-		(
-			FVector Q
-		)
+		inline bool XM_CALLCONV Quaternion::IsNaN() const
 		{
-			return Vector4IsNaN(Q);
+			return Vector4IsNaN(*this);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV QuaternionIsInfinite
-		(
-			FVector Q
-		)
+		inline bool XM_CALLCONV Quaternion::IsInfinite() const
 		{
-			return Vector4IsInfinite(Q);
+			return Vector4IsInfinite(*this);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV QuaternionIsIdentity
-		(
-			FVector Q
-		)
+		inline bool XM_CALLCONV Quaternion::IsIdentity() const
 		{
-			return Vector4Equal(Q, g_XMIdentityR3.v);
+			return Vector4Equal(*this, g_XMIdentityR3.v);
 		}
 
 		//------------------------------------------------------------------------------
@@ -22392,10 +22390,10 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionDot
+		inline Quaternion XM_CALLCONV Quaternion::Dot
 		(
-			FVector Q1,
-			FVector Q2
+			FQuaternion Q1,
+			FQuaternion Q2
 		)
 		{
 			return Vector4Dot(Q1, Q2);
@@ -22403,11 +22401,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionMultiply
-		(
-			FVector Q1,
-			FVector Q2
-		)
+		inline Quaternion XM_CALLCONV Quaternion::Multiply(FQuaternion Q1, FQuaternion Q2)
 		{
 			// Returns the product Q2*Q1 (which is the concatenation of a rotation Q1 followed by the rotation Q2)
 
@@ -22418,10 +22412,10 @@ namespace At0
 
 #if defined(_XM_NO_INTRINSICS_)
 			VectorF32 Result = { { {
-					(Q2.vector4_f32[3] * Q1.vector4_f32[0]) + (Q2.vector4_f32[0] * Q1.vector4_f32[3]) + (Q2.vector4_f32[1] * Q1.vector4_f32[2]) - (Q2.vector4_f32[2] * Q1.vector4_f32[1]),
-					(Q2.vector4_f32[3] * Q1.vector4_f32[1]) - (Q2.vector4_f32[0] * Q1.vector4_f32[2]) + (Q2.vector4_f32[1] * Q1.vector4_f32[3]) + (Q2.vector4_f32[2] * Q1.vector4_f32[0]),
-					(Q2.vector4_f32[3] * Q1.vector4_f32[2]) + (Q2.vector4_f32[0] * Q1.vector4_f32[1]) - (Q2.vector4_f32[1] * Q1.vector4_f32[0]) + (Q2.vector4_f32[2] * Q1.vector4_f32[3]),
-					(Q2.vector4_f32[3] * Q1.vector4_f32[3]) - (Q2.vector4_f32[0] * Q1.vector4_f32[0]) - (Q2.vector4_f32[1] * Q1.vector4_f32[1]) - (Q2.vector4_f32[2] * Q1.vector4_f32[2])
+					(Q2.v.vector4_f32[3] * Q1.v.vector4_f32[0]) + (Q2.v.vector4_f32[0] * Q1.v.vector4_f32[3]) + (Q2.v.vector4_f32[1] * Q1.v.vector4_f32[2]) - (Q2.v.vector4_f32[2] * Q1.v.vector4_f32[1]),
+					(Q2.v.vector4_f32[3] * Q1.v.vector4_f32[1]) - (Q2.v.vector4_f32[0] * Q1.v.vector4_f32[2]) + (Q2.v.vector4_f32[1] * Q1.v.vector4_f32[3]) + (Q2.v.vector4_f32[2] * Q1.v.vector4_f32[0]),
+					(Q2.v.vector4_f32[3] * Q1.v.vector4_f32[2]) + (Q2.v.vector4_f32[0] * Q1.v.vector4_f32[1]) - (Q2.v.vector4_f32[1] * Q1.v.vector4_f32[0]) + (Q2.v.vector4_f32[2] * Q1.v.vector4_f32[3]),
+					(Q2.v.vector4_f32[3] * Q1.v.vector4_f32[3]) - (Q2.v.vector4_f32[0] * Q1.v.vector4_f32[0]) - (Q2.v.vector4_f32[1] * Q1.v.vector4_f32[1]) - (Q2.v.vector4_f32[2] * Q1.v.vector4_f32[2])
 				} } };
 			return Result.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
@@ -22496,60 +22490,56 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionLengthSq
-		(
-			FVector Q
-		)
+		inline Quaternion XM_CALLCONV Quaternion::operator*(FQuaternion Q2) const
 		{
-			return Vector4LengthSq(Q);
+			return Multiply(*this, Q2);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionReciprocalLength
-		(
-			FVector Q
-		)
+		inline Quaternion& XM_CALLCONV Quaternion::operator*=(FQuaternion other)
 		{
-			return Vector4ReciprocalLength(Q);
+			*this = *this * other;
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionLength
-		(
-			FVector Q
-		)
+		inline Quaternion XM_CALLCONV Quaternion::LengthSq() const
 		{
-			return Vector4Length(Q);
+			return Vector4LengthSq(*this);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionNormalizeEst
-		(
-			FVector Q
-		)
+		inline Quaternion XM_CALLCONV Quaternion::ReciprocalLength() const
 		{
-			return Vector4NormalizeEst(Q);
+			return Vector4ReciprocalLength(*this);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionNormalize
-		(
-			FVector Q
-		)
+		inline Quaternion XM_CALLCONV Quaternion::Length() const
 		{
-			return Vector4Normalize(Q);
+			return Vector4Length(*this);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionConjugate
-		(
-			FVector Q
-		)
+		inline Quaternion XM_CALLCONV Quaternion::NormalizeEst() const
+		{
+			return Vector4NormalizeEst(*this);
+		}
+
+		//------------------------------------------------------------------------------
+
+		inline Quaternion XM_CALLCONV Quaternion::Normalize() const
+		{
+			return Vector4Normalize(*this);
+		}
+
+		//------------------------------------------------------------------------------
+
+		inline Quaternion XM_CALLCONV Quaternion::Conjugate() const
 		{
 #if defined(_XM_NO_INTRINSICS_)
 			VectorF32 Result = { { {
@@ -22564,25 +22554,22 @@ namespace At0
 			return vmulq_f32(Q, NegativeOne3.v);
 #elif defined(_XM_SSE_INTRINSICS_)
 			static const VectorF32 NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
-			return _mm_mul_ps(Q, NegativeOne3);
+			return _mm_mul_ps(*this, NegativeOne3);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionInverse
-		(
-			FVector Q
-		)
+		inline Quaternion XM_CALLCONV Quaternion::Inverse() const
 		{
 			const Vector  Zero = VectorZero();
 
-			Vector L = Vector4LengthSq(Q);
-			Vector Conjugate = QuaternionConjugate(Q);
+			Vector L = Vector4LengthSq(*this);
+			Quaternion Conjugated = Conjugate();
 
 			Vector Control = VectorLessOrEqual(L, g_XMEpsilon.v);
 
-			Vector Result = VectorDivide(Conjugate, L);
+			Vector Result = VectorDivide(Conjugated, L);
 
 			Result = VectorSelect(Result, Zero, Control);
 
@@ -22591,15 +22578,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionLn
-		(
-			FVector Q
-		)
+		inline Quaternion XM_CALLCONV Quaternion::Ln() const
 		{
 			static const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 
-			Vector QW = VectorSplatW(Q);
-			Vector Q0 = VectorSelect(g_XMSelect1110.v, Q, g_XMSelect1110.v);
+			Vector QW = VectorSplatW(*this);
+			Vector Q0 = VectorSelect(g_XMSelect1110.v, *this, g_XMSelect1110.v);
 
 			Vector ControlW = VectorInBounds(QW, OneMinusEpsilon.v);
 
@@ -22616,23 +22600,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionExp
-		(
-			FVector Q
-		)
+		inline Quaternion XM_CALLCONV Quaternion::Exp() const
 		{
-			Vector Theta = Vector3Length(Q);
+			Vector Theta = Vector3Length(*this);
 
 			Vector SinTheta, CosTheta;
 			VectorSinCos(&SinTheta, &CosTheta, Theta);
 
 			Vector S = VectorDivide(SinTheta, Theta);
 
-			Vector Result = VectorMultiply(Q, S);
+			Vector Result = VectorMultiply(*this, S);
 
 			const Vector Zero = VectorZero();
 			Vector Control = VectorNearEqual(Theta, Zero, g_XMEpsilon.v);
-			Result = VectorSelect(Result, Q, Control);
+			Result = VectorSelect(Result, *this, Control);
 
 			Result = VectorSelect(CosTheta, Result, g_XMSelect1110.v);
 
@@ -22641,24 +22622,24 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionSlerp
+		inline Quaternion XM_CALLCONV Quaternion::Slerp
 		(
-			FVector Q0,
-			FVector Q1,
+			FQuaternion Q0,
+			FQuaternion Q1,
 			float    t
 		)
 		{
 			Vector T = VectorReplicate(t);
-			return QuaternionSlerpV(Q0, Q1, T);
+			return Quaternion::SlerpV(Q0, Q1, T);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionSlerpV
+		inline Quaternion XM_CALLCONV Quaternion::SlerpV
 		(
-			FVector Q0,
-			FVector Q1,
-			FVector T
+			FQuaternion Q0,
+			FQuaternion Q1,
+			FQuaternion T
 		)
 		{
 			assert((VectorGetY(T) == VectorGetX(T)) && (VectorGetZ(T) == VectorGetX(T)) && (VectorGetW(T) == VectorGetX(T)));
@@ -22669,7 +22650,7 @@ namespace At0
 
 			const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 
-			Vector CosOmega = QuaternionDot(Q0, Q1);
+			Vector CosOmega = Quaternion::Dot(Q0, Q1);
 
 			const Vector Zero = VectorZero();
 			Vector Control = VectorLess(CosOmega, Zero);
@@ -22712,7 +22693,7 @@ namespace At0
 			static const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 			static const VectorU32 SignMask2 = { { { 0x80000000, 0x00000000, 0x00000000, 0x00000000 } } };
 
-			Vector CosOmega = QuaternionDot(Q0, Q1);
+			Vector CosOmega = Quaternion::Dot(Q0, Q1);
 
 			const Vector Zero = VectorZero();
 			Vector Control = VectorLess(CosOmega, Zero);
@@ -22752,28 +22733,28 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionSquad
+		inline Quaternion XM_CALLCONV Quaternion::Squad
 		(
-			FVector Q0,
-			FVector Q1,
-			FVector Q2,
-			GVector Q3,
+			FQuaternion Q0,
+			FQuaternion Q1,
+			FQuaternion Q2,
+			GQuaternion Q3,
 			float    t
 		)
 		{
 			Vector T = VectorReplicate(t);
-			return QuaternionSquadV(Q0, Q1, Q2, Q3, T);
+			return Quaternion::SquadV(Q0, Q1, Q2, Q3, T);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionSquadV
+		inline Quaternion XM_CALLCONV Quaternion::SquadV
 		(
-			FVector Q0,
-			FVector Q1,
-			FVector Q2,
-			GVector Q3,
-			HVector T
+			FQuaternion Q0,
+			FQuaternion Q1,
+			FQuaternion Q2,
+			GQuaternion Q3,
+			HQuaternion T
 		)
 		{
 			assert((VectorGetY(T) == VectorGetX(T)) && (VectorGetZ(T) == VectorGetX(T)) && (VectorGetW(T) == VectorGetX(T)));
@@ -22781,47 +22762,47 @@ namespace At0
 			Vector TP = T;
 			const Vector Two = VectorSplatConstant(2, 0);
 
-			Vector Q03 = QuaternionSlerpV(Q0, Q3, T);
-			Vector Q12 = QuaternionSlerpV(Q1, Q2, T);
+			Vector Q03 = Quaternion::SlerpV(Q0, Q3, T);
+			Vector Q12 = Quaternion::SlerpV(Q1, Q2, T);
 
 			TP = VectorNegativeMultiplySubtract(TP, TP, TP);
 			TP = VectorMultiply(TP, Two);
 
-			Vector Result = QuaternionSlerpV(Q03, Q12, TP);
+			Vector Result = Quaternion::SlerpV(Q03, Q12, TP);
 
 			return Result;
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV QuaternionSquadSetup
+		inline void XM_CALLCONV Quaternion::SquadSetup
 		(
 			Vector* pA,
 			Vector* pB,
 			Vector* pC,
-			FVector  Q0,
-			FVector  Q1,
-			FVector  Q2,
-			GVector  Q3
+			FQuaternion  Q0,
+			FQuaternion  Q1,
+			FQuaternion  Q2,
+			GQuaternion  Q3
 		)
 		{
 			assert(pA);
 			assert(pB);
 			assert(pC);
 
-			Vector LS12 = QuaternionLengthSq(VectorAdd(Q1, Q2));
-			Vector LD12 = QuaternionLengthSq(VectorSubtract(Q1, Q2));
-			Vector SQ2 = VectorNegate(Q2);
+			Quaternion LS12 = Quaternion(VectorAdd(Q1, Q2)).LengthSq();
+			Quaternion LD12 = Quaternion(VectorSubtract(Q1, Q2)).LengthSq();
+			Quaternion SQ2 = VectorNegate(Q2);
 
 			Vector Control1 = VectorLess(LS12, LD12);
 			SQ2 = VectorSelect(Q2, SQ2, Control1);
 
-			Vector LS01 = QuaternionLengthSq(VectorAdd(Q0, Q1));
-			Vector LD01 = QuaternionLengthSq(VectorSubtract(Q0, Q1));
-			Vector SQ0 = VectorNegate(Q0);
+			Quaternion LS01 = Quaternion(VectorAdd(Q0, Q1)).LengthSq();
+			Quaternion LD01 = Quaternion(VectorSubtract(Q0, Q1)).LengthSq();
+			Quaternion SQ0 = VectorNegate(Q0);
 
-			Vector LS23 = QuaternionLengthSq(VectorAdd(SQ2, Q3));
-			Vector LD23 = QuaternionLengthSq(VectorSubtract(SQ2, Q3));
+			Quaternion LS23 = Quaternion(VectorAdd(SQ2, Q3)).LengthSq();
+			Quaternion LD23 = Quaternion(VectorSubtract(SQ2, Q3)).LengthSq();
 			Vector SQ3 = VectorNegate(Q3);
 
 			Vector Control0 = VectorLess(LS01, LD01);
@@ -22830,33 +22811,33 @@ namespace At0
 			SQ0 = VectorSelect(Q0, SQ0, Control0);
 			SQ3 = VectorSelect(Q3, SQ3, Control2);
 
-			Vector InvQ1 = QuaternionInverse(Q1);
-			Vector InvQ2 = QuaternionInverse(SQ2);
+			Vector InvQ1 = Q1.Inverse();
+			Vector InvQ2 = SQ2.Inverse();
 
-			Vector LnQ0 = QuaternionLn(QuaternionMultiply(InvQ1, SQ0));
-			Vector LnQ2 = QuaternionLn(QuaternionMultiply(InvQ1, SQ2));
-			Vector LnQ1 = QuaternionLn(QuaternionMultiply(InvQ2, Q1));
-			Vector LnQ3 = QuaternionLn(QuaternionMultiply(InvQ2, SQ3));
+			Vector LnQ0 = Quaternion::Multiply(InvQ1, SQ0).Ln();
+			Vector LnQ2 = Quaternion::Multiply(InvQ1, SQ2).Ln();
+			Vector LnQ1 = Quaternion::Multiply(InvQ2, Q1).Ln();
+			Vector LnQ3 = Quaternion::Multiply(InvQ2, SQ3).Ln();
 
 			const Vector NegativeOneQuarter = VectorSplatConstant(-1, 2);
 
-			Vector ExpQ02 = VectorMultiply(VectorAdd(LnQ0, LnQ2), NegativeOneQuarter);
-			Vector ExpQ13 = VectorMultiply(VectorAdd(LnQ1, LnQ3), NegativeOneQuarter);
-			ExpQ02 = QuaternionExp(ExpQ02);
-			ExpQ13 = QuaternionExp(ExpQ13);
+			Quaternion ExpQ02 = VectorMultiply(VectorAdd(LnQ0, LnQ2), NegativeOneQuarter);
+			Quaternion ExpQ13 = VectorMultiply(VectorAdd(LnQ1, LnQ3), NegativeOneQuarter);
+			ExpQ02 = ExpQ02.Exp();
+			ExpQ13 = ExpQ13.Exp();
 
-			*pA = QuaternionMultiply(Q1, ExpQ02);
-			*pB = QuaternionMultiply(SQ2, ExpQ13);
+			*pA = Quaternion::Multiply(Q1, ExpQ02);
+			*pB = Quaternion::Multiply(SQ2, ExpQ13);
 			*pC = SQ2;
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionBaryCentric
+		inline Quaternion XM_CALLCONV Quaternion::BaryCentric
 		(
-			FVector Q0,
-			FVector Q1,
-			FVector Q2,
+			FQuaternion Q0,
+			FQuaternion Q1,
+			FQuaternion Q2,
 			float    f,
 			float    g
 		)
@@ -22870,10 +22851,10 @@ namespace At0
 			}
 			else
 			{
-				Vector Q01 = QuaternionSlerp(Q0, Q1, s);
-				Vector Q02 = QuaternionSlerp(Q0, Q2, s);
+				Vector Q01 = Quaternion::Slerp(Q0, Q1, s);
+				Vector Q02 = Quaternion::Slerp(Q0, Q2, s);
 
-				Result = QuaternionSlerp(Q01, Q02, g / s);
+				Result = Quaternion::Slerp(Q01, Q02, g / s);
 			}
 
 			return Result;
@@ -22881,13 +22862,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV QuaternionBaryCentricV
+		inline Quaternion XM_CALLCONV Quaternion::BaryCentricV
 		(
-			FVector Q0,
-			FVector Q1,
-			FVector Q2,
-			GVector F,
-			HVector G
+			FQuaternion Q0,
+			FQuaternion Q1,
+			FQuaternion Q2,
+			GQuaternion F,
+			HQuaternion G
 		)
 		{
 			assert((VectorGetY(F) == VectorGetX(F)) && (VectorGetZ(F) == VectorGetX(F)) && (VectorGetW(F) == VectorGetX(F)));
@@ -22904,12 +22885,12 @@ namespace At0
 			}
 			else
 			{
-				Vector Q01 = QuaternionSlerpV(Q0, Q1, S);
-				Vector Q02 = QuaternionSlerpV(Q0, Q2, S);
+				Quaternion Q01 = Quaternion::SlerpV(Q0, Q1, S);
+				Quaternion Q02 = Quaternion::SlerpV(Q0, Q2, S);
 				Vector GS = VectorReciprocal(S);
 				GS = VectorMultiply(G, GS);
 
-				Result = QuaternionSlerpV(Q01, Q02, GS);
+				Result = Quaternion::SlerpV(Q01, Q02, GS);
 			}
 
 			return Result;
@@ -24832,5 +24813,5 @@ namespace At0
 
 #pragma warning(pop)
 
-		}
+	}
 }
