@@ -41,89 +41,84 @@
 #error DirectX Math requires C++
 #endif
 
-#define DIRECTX_MATH_VERSION 313
 
-
-#if defined(_MSC_VER) && !defined(_M_ARM) && !defined(_M_ARM64) && !defined(_M_HYBRID_X86_ARM64) && (!_MANAGED) && (!_M_CEE) && (!defined(_M_IX86_FP) || (_M_IX86_FP > 1)) && !defined(_XM_NO_INTRINSICS_) && !defined(_XM_VECTORCALL_)
-#define _XM_VECTORCALL_ 1
+#if defined(_MSC_VER) && !defined(_M_ARM) && !defined(_M_ARM64) && !defined(_M_HYBRID_X86_ARM64) && (!_MANAGED) && (!_M_CEE) && (!defined(_M_IX86_FP) || (_M_IX86_FP > 1)) && !defined(RAY_NO_INTRINSICS) && !defined(RAYMATH_VECTORCALL)
+#define RAYMATH_VECTORCALL 1
 #endif
 
 #ifdef __linux__
-#define _XM_NO_INTRINSICS_
+#define RAY_NO_INTRINSICS
 #endif
 
-#if _XM_VECTORCALL_
-#define XM_CALLCONV __vectorcall
+#if RAYMATH_VECTORCALL
+#define RAYMATH_CALLCONV __vectorcall
 #else
-#define XM_CALLCONV
+#define RAYMATH_CALLCONV
 #endif
 
 #if defined(_MSC_VER) && (_MSC_FULL_VER < 190023506)
-#define XM_CONST const
-#define XM_CONSTEXPR
+#define RAYMATH_CONST const
+#define RAYMATH_CONSTEXPR
 #else
-#define XM_CONST constexpr
-#define XM_CONSTEXPR constexpr
+#define RAYMATH_CONST constexpr
+#define RAYMATH_CONSTEXPR constexpr
 #endif
 
 #if defined(_MSC_VER)
-#define XM_ALIGNED(x) __declspec(align(x))
+#define RAY_ALIGNED(x) __declspec(align(x))
 #else
 #if defined(__GNUC__)
-#define XM_ALIGNED(x) __attribute__ ((aligned(x)))
+#define RAY_ALIGNED(x) __attribute__ ((aligned(x)))
 #endif
 #endif
 
-#ifndef _Analysis_assume_
-#define _Analysis_assume_(x)
+#if !defined(RAY_AVX2_INTRINSICS) && defined(__AVX2__) && !defined(RAY_NO_INTRINSICS)
+#define RAY_AVX2_INTRINSICS
 #endif
 
-#if !defined(_XM_AVX2_INTRINSICS_) && defined(__AVX2__) && !defined(_XM_NO_INTRINSICS_)
-#define _XM_AVX2_INTRINSICS_
+#if !defined(RAY_FMA3_INTRINSICS) && defined(RAY_AVX2_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
+#define RAY_FMA3_INTRINSICS
 #endif
 
-#if !defined(_XM_FMA3_INTRINSICS_) && defined(_XM_AVX2_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
-#define _XM_FMA3_INTRINSICS_
+#if !defined(RAY_F16C_INTRINSICS) && defined(RAY_AVX2_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
+#define RAY_F16C_INTRINSICS
 #endif
 
-#if !defined(_XM_F16C_INTRINSICS_) && defined(_XM_AVX2_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
-#define _XM_F16C_INTRINSICS_
+#if defined(RAY_FMA3_INTRINSICS) && !defined(RAY_AVC_INTRINSICS)
+#define RAY_AVC_INTRINSICS
 #endif
 
-#if defined(_XM_FMA3_INTRINSICS_) && !defined(_XM_AVX_INTRINSICS_)
-#define _XM_AVX_INTRINSICS_
+#if defined(RAY_F16C_INTRINSICS) && !defined(RAY_AVC_INTRINSICS)
+#define RAY_AVC_INTRINSICS
 #endif
 
-#if defined(_XM_F16C_INTRINSICS_) && !defined(_XM_AVX_INTRINSICS_)
-#define _XM_AVX_INTRINSICS_
+#if !defined(RAY_AVC_INTRINSICS) && defined(__AVX__) && !defined(RAY_NO_INTRINSICS)
+#define RAY_AVC_INTRINSICS
 #endif
 
-#if !defined(_XM_AVX_INTRINSICS_) && defined(__AVX__) && !defined(_XM_NO_INTRINSICS_)
-#define _XM_AVX_INTRINSICS_
+#if defined(RAY_AVC_INTRINSICS) && !defined(RAY_SSE4_INTRINSICS)
+#define RAY_SSE4_INTRINSICS
 #endif
 
-#if defined(_XM_AVX_INTRINSICS_) && !defined(_XM_SSE4_INTRINSICS_)
-#define _XM_SSE4_INTRINSICS_
+#if defined(RAY_SSE4_INTRINSICS) && !defined(RAY_SSE3_INTRINSICS)
+#define RAY_SSE3_INTRINSICS
 #endif
 
-#if defined(_XM_SSE4_INTRINSICS_) && !defined(_XM_SSE3_INTRINSICS_)
-#define _XM_SSE3_INTRINSICS_
+#if defined(RAY_SSE3_INTRINSICS) && !defined(RAY_SSE_INTRINSICS)
+#define RAY_SSE_INTRINSICS
 #endif
 
-#if defined(_XM_SSE3_INTRINSICS_) && !defined(_XM_SSE_INTRINSICS_)
-#define _XM_SSE_INTRINSICS_
-#endif
-
-#if !defined(_XM_ARM_NEON_INTRINSICS_) && !defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#if !defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 #if (defined(_M_IX86) || defined(_M_X64)) && !defined(_M_HYBRID_X86_ARM64)
-#define _XM_SSE_INTRINSICS_
+#define RAY_SSE_INTRINSICS
 #elif defined(_M_ARM) || defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
-#define _XM_ARM_NEON_INTRINSICS_
+#define RAY_ARM_NEON_INTRINSICS
 #endif
-#endif // !_XM_ARM_NEON_INTRINSICS_ && !_XM_SSE_INTRINSICS_ && !_XM_NO_INTRINSICS_
+#endif // !RAY_ARM_NEON_INTRINSICS && !RAY_SSE_INTRINSICS && !RAY_NO_INTRINSICS
 
-#if !defined(_XM_NO_Vector_OVERLOADS_) && defined(__clang__)
-#define _XM_NO_Vector_OVERLOADS_
+// RAY_TODO: Test clang with overloads
+#if !defined(RAYMATH_NO_VECTOR_OVERLOADS) && defined(__clang__)
+#define RAYMATH_NO_VECTOR_OVERLOADS
 #endif
 
 #pragma warning(push)
@@ -134,7 +129,7 @@
 #include <malloc.h>
 #pragma warning(pop)
 
-#ifndef _XM_NO_INTRINSICS_
+#ifndef RAY_NO_INTRINSICS
 #pragma warning(push)
 #pragma warning(disable : 4987)
 // C4987: Off by default noise
@@ -144,30 +139,30 @@
 #include <intrin.h>
 #endif
 
-#ifdef _XM_SSE_INTRINSICS_
+#ifdef RAY_SSE_INTRINSICS
 #include <xmmintrin.h>
 #include <emmintrin.h>
 
-#ifdef _XM_SSE3_INTRINSICS_
+#ifdef RAY_SSE3_INTRINSICS
 #include <pmmintrin.h>
 #endif
 
-#ifdef _XM_SSE4_INTRINSICS_
+#ifdef RAY_SSE4_INTRINSICS
 #include <smmintrin.h>
 #endif
 
-#ifdef _XM_AVX_INTRINSICS_
+#ifdef RAY_AVC_INTRINSICS
 #include <immintrin.h>
 #endif
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 #include <arm64_neon.h>
 #else
 #include <arm_neon.h>
 #endif
 #endif
-#endif // !_XM_NO_INTRINSICS_
+#endif // !RAY_NO_INTRINSICS
 
 #include <assert.h>
 
@@ -183,23 +178,23 @@
  *
  ****************************************************************************/
 
-#if defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 
-#if defined(_XM_NO_MOVNT_)
-#define XM_STREAM_PS( p, a ) _mm_store_ps( p, a )
-#define XM_SFENCE()
+#if defined(RAYMATH_NO_MOVNT)
+#define RAYMATH_STREAM_PS( p, a ) _mm_store_ps( p, a )
+#define RAYMATH_SFENCE()
 #else
-#define XM_STREAM_PS( p, a ) _mm_stream_ps( p, a )
-#define XM_SFENCE() _mm_sfence()
+#define RAYMATH_STREAM_PS( p, a ) _mm_stream_ps( p, a )
+#define RAYMATH_SFENCE() _mm_sfence()
 #endif
 
-#if defined(_XM_AVX_INTRINSICS_)
-#define XM_PERMUTE_PS( v, c ) _mm_permute_ps( v, c )
+#if defined(RAY_AVC_INTRINSICS)
+#define RAYMATH_PERMUTE_PS( v, c ) _mm_permute_ps( v, c )
 #else
-#define XM_PERMUTE_PS( v, c ) _mm_shuffle_ps( v, v, c )
+#define RAYMATH_PERMUTE_PS( v, c ) _mm_shuffle_ps( v, v, c )
 #endif
 
-#endif // _XM_SSE_INTRINSICS_ && !_XM_NO_INTRINSICS_
+#endif // RAY_SSE_INTRINSICS && !RAY_NO_INTRINSICS
 
 namespace At0
 {
@@ -213,13 +208,7 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-#if defined(__XNAMATH_H__) && defined(XM_PI)
-#undef XM_PI
-#undef XM_2PI
-#undef XM_1DIVPI
-#undef XM_1DIV2PI
-#undef XM_PIDIV2
-#undef XM_PIDIV4
+#if defined(__XNAMATH_H__)
 #undef XM_SELECT_0
 #undef XM_SELECT_1
 #undef XM_PERMUTE_0X
@@ -237,36 +226,40 @@ namespace At0
 #undef XM_CACHE_LINE_SIZE
 #endif
 
-		XM_CONST float XM_PI = 3.141592654f;
-		XM_CONST float XM_2PI = 6.283185307f;
-		XM_CONST float XM_1DIVPI = 0.318309886f;
-		XM_CONST float XM_1DIV2PI = 0.159154943f;
-		XM_CONST float XM_PIDIV2 = 1.570796327f;
-		XM_CONST float XM_PIDIV4 = 0.785398163f;
+		namespace Constants
+		{
+			RAYMATH_CONST float PI = 3.141592654f;
+			RAYMATH_CONST float RAY_2PI = 6.283185307f;
+			RAYMATH_CONST float RAY_1DIVPI = 0.318309886f;
+			RAYMATH_CONST float RAY_1DIV2PI = 0.159154943f;
+			RAYMATH_CONST float PIDIV2 = 1.570796327f;
+			RAYMATH_CONST float PIDIV4 = 0.785398163f;
+		}
 
-		XM_CONST uint32_t XM_SELECT_0 = 0x00000000;
-		XM_CONST uint32_t XM_SELECT_1 = 0xFFFFFFFF;
 
-		XM_CONST uint32_t XM_PERMUTE_0X = 0;
-		XM_CONST uint32_t XM_PERMUTE_0Y = 1;
-		XM_CONST uint32_t XM_PERMUTE_0Z = 2;
-		XM_CONST uint32_t XM_PERMUTE_0W = 3;
-		XM_CONST uint32_t XM_PERMUTE_1X = 4;
-		XM_CONST uint32_t XM_PERMUTE_1Y = 5;
-		XM_CONST uint32_t XM_PERMUTE_1Z = 6;
-		XM_CONST uint32_t XM_PERMUTE_1W = 7;
+		RAYMATH_CONST uint32_t XM_SELECT_0 = 0x00000000;
+		RAYMATH_CONST uint32_t XM_SELECT_1 = 0xFFFFFFFF;
 
-		XM_CONST uint32_t XM_SWIZZLE_X = 0;
-		XM_CONST uint32_t XM_SWIZZLE_Y = 1;
-		XM_CONST uint32_t XM_SWIZZLE_Z = 2;
-		XM_CONST uint32_t XM_SWIZZLE_W = 3;
+		RAYMATH_CONST uint32_t XM_PERMUTE_0X = 0;
+		RAYMATH_CONST uint32_t XM_PERMUTE_0Y = 1;
+		RAYMATH_CONST uint32_t XM_PERMUTE_0Z = 2;
+		RAYMATH_CONST uint32_t XM_PERMUTE_0W = 3;
+		RAYMATH_CONST uint32_t XM_PERMUTE_1X = 4;
+		RAYMATH_CONST uint32_t XM_PERMUTE_1Y = 5;
+		RAYMATH_CONST uint32_t XM_PERMUTE_1Z = 6;
+		RAYMATH_CONST uint32_t XM_PERMUTE_1W = 7;
 
-		XM_CONST uint32_t XM_CRMASK_CR6 = 0x000000F0;
-		XM_CONST uint32_t XM_CRMASK_CR6TRUE = 0x00000080;
-		XM_CONST uint32_t XM_CRMASK_CR6FALSE = 0x00000020;
-		XM_CONST uint32_t XM_CRMASK_CR6BOUNDS = XM_CRMASK_CR6FALSE;
+		RAYMATH_CONST uint32_t XM_SWIZZLE_X = 0;
+		RAYMATH_CONST uint32_t XM_SWIZZLE_Y = 1;
+		RAYMATH_CONST uint32_t XM_SWIZZLE_Z = 2;
+		RAYMATH_CONST uint32_t XM_SWIZZLE_W = 3;
 
-		XM_CONST size_t XM_CACHE_LINE_SIZE = 64;
+		RAYMATH_CONST uint32_t XM_CRMASK_CR6 = 0x000000F0;
+		RAYMATH_CONST uint32_t XM_CRMASK_CR6TRUE = 0x00000080;
+		RAYMATH_CONST uint32_t XM_CRMASK_CR6FALSE = 0x00000020;
+		RAYMATH_CONST uint32_t XM_CRMASK_CR6BOUNDS = XM_CRMASK_CR6FALSE;
+
+		RAYMATH_CONST size_t XM_CACHE_LINE_SIZE = 64;
 
 
 		/****************************************************************************
@@ -287,8 +280,8 @@ namespace At0
 
 		 // Unit conversion
 
-		inline XM_CONSTEXPR float ConvertToRadians(float fDegrees) { return fDegrees * (XM_PI / 180.0f); }
-		inline XM_CONSTEXPR float ConvertToDegrees(float fRadians) { return fRadians * (180.0f / XM_PI); }
+		inline RAYMATH_CONSTEXPR float ConvertToRadians(float fDegrees) { return fDegrees * (Constants::PI / 180.0f); }
+		inline RAYMATH_CONSTEXPR float ConvertToDegrees(float fRadians) { return fRadians * (180.0f / Constants::PI); }
 
 		// Condition register evaluation proceeding a recording (R) comparison
 
@@ -320,7 +313,7 @@ namespace At0
 #endif
 
 //------------------------------------------------------------------------------
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 		struct __vector4
 		{
 			union
@@ -329,7 +322,7 @@ namespace At0
 				uint32_t    vector4_u32[4];
 			};
 		};
-#endif // _XM_NO_INTRINSICS_
+#endif // RAY_NO_INTRINSICS
 
 
 		struct Quaternion;
@@ -337,16 +330,16 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Vector intrinsic: Four 32 bit floating point components aligned on a 16 byte
 		// boundary and mapped to hardware vector registers
-#if defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 		typedef __m128 Vector;
-#elif defined(_XM_ARM_NEON_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 		typedef float32x4_t Vector;
 #else
 		typedef __vector4 Vector;
 #endif
 
 		// Fix-up for (1st-3rd) Vector parameters that are pass-in-register for x86, ARM, ARM64, and vector call; by reference otherwise
-#if ( defined(_M_IX86) || defined(_M_ARM) || defined(_M_ARM64) || _XM_VECTORCALL_ ) && !defined(_XM_NO_INTRINSICS_)
+#if ( defined(_M_IX86) || defined(_M_ARM) || defined(_M_ARM64) || RAYMATH_VECTORCALL ) && !defined(RAY_NO_INTRINSICS)
 		typedef const Vector FVector;
 		typedef const Quaternion FQuaternion;
 #else
@@ -355,7 +348,7 @@ namespace At0
 #endif
 
 		// Fix-up for (4th) Vector parameter to pass in-register for ARM, ARM64, and x64 vector call; by reference otherwise
-#if ( defined(_M_ARM) || defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || (_XM_VECTORCALL_ && !defined(_M_IX86) ) ) && !defined(_XM_NO_INTRINSICS_)
+#if ( defined(_M_ARM) || defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || (RAYMATH_VECTORCALL && !defined(_M_IX86) ) ) && !defined(RAY_NO_INTRINSICS)
 		typedef const Vector GVector;
 		typedef const Quaternion GQuaternion;
 #else
@@ -364,7 +357,7 @@ namespace At0
 #endif
 
 		// Fix-up for (5th & 6th) Vector parameter to pass in-register for ARM64 and vector call; by reference otherwise
-#if ( defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || _XM_VECTORCALL_ ) && !defined(_XM_NO_INTRINSICS_)
+#if ( defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || RAYMATH_VECTORCALL ) && !defined(RAY_NO_INTRINSICS)
 		typedef const Vector HVector;
 		typedef const Quaternion HQuaternion;
 #else
@@ -378,7 +371,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Conversion types for constants
-		XM_ALIGNED(16) struct VectorF32
+		RAY_ALIGNED(16) struct VectorF32
 		{
 			union
 			{
@@ -388,13 +381,13 @@ namespace At0
 
 			inline operator Vector() const { return v; }
 			inline operator const float* () const { return f; }
-#if !defined(_XM_NO_INTRINSICS_) && defined(_XM_SSE_INTRINSICS_)
+#if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
 			inline operator __m128i() const { return _mm_castps_si128(v); }
 			inline operator __m128d() const { return _mm_castps_pd(v); }
 #endif
 		};
 
-		XM_ALIGNED(16) struct VectorI32
+		RAY_ALIGNED(16) struct VectorI32
 		{
 			union
 			{
@@ -403,13 +396,13 @@ namespace At0
 			};
 
 			inline operator Vector() const { return v; }
-#if !defined(_XM_NO_INTRINSICS_) && defined(_XM_SSE_INTRINSICS_)
+#if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
 			inline operator __m128i() const { return _mm_castps_si128(v); }
 			inline operator __m128d() const { return _mm_castps_pd(v); }
 #endif
 		};
 
-		XM_ALIGNED(16) struct VectorU8
+		RAY_ALIGNED(16) struct VectorU8
 		{
 			union
 			{
@@ -418,13 +411,13 @@ namespace At0
 			};
 
 			inline operator Vector() const { return v; }
-#if !defined(_XM_NO_INTRINSICS_) && defined(_XM_SSE_INTRINSICS_)
+#if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
 			inline operator __m128i() const { return _mm_castps_si128(v); }
 			inline operator __m128d() const { return _mm_castps_pd(v); }
 #endif
 		};
 
-		XM_ALIGNED(16) struct VectorU32
+		RAY_ALIGNED(16) struct VectorU32
 		{
 			union
 			{
@@ -433,7 +426,7 @@ namespace At0
 			};
 
 			inline operator Vector() const { return v; }
-#if !defined(_XM_NO_INTRINSICS_) && defined(_XM_SSE_INTRINSICS_)
+#if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
 			inline operator __m128i() const { return _mm_castps_si128(v); }
 			inline operator __m128d() const { return _mm_castps_pd(v); }
 #endif
@@ -442,26 +435,28 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Vector operators
 
-#ifndef _XM_NO_Vector_OVERLOADS_
-		Vector    XM_CALLCONV     operator+ (FVector V);
-		Vector    XM_CALLCONV     operator- (FVector V);
+#ifndef RAYMATH_NO_VECTOR_OVERLOADS
 
-		Vector& XM_CALLCONV     operator+= (Vector& V1, FVector V2);
-		Vector& XM_CALLCONV     operator-= (Vector& V1, FVector V2);
-		Vector& XM_CALLCONV     operator*= (Vector& V1, FVector V2);
-		Vector& XM_CALLCONV     operator/= (Vector& V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     operator+ (FVector V);
+		Vector    RAYMATH_CALLCONV     operator- (FVector V);
+
+		Vector& RAYMATH_CALLCONV     operator+= (Vector& V1, FVector V2);
+		Vector& RAYMATH_CALLCONV     operator-= (Vector& V1, FVector V2);
+		Vector& RAYMATH_CALLCONV     operator*= (Vector& V1, FVector V2);
+		Vector& RAYMATH_CALLCONV     operator/= (Vector& V1, FVector V2);
 
 		Vector& operator*= (Vector& V, float S);
 		Vector& operator/= (Vector& V, float S);
 
-		Vector    XM_CALLCONV     operator+ (FVector V1, FVector V2);
-		Vector    XM_CALLCONV     operator- (FVector V1, FVector V2);
-		Vector    XM_CALLCONV     operator* (FVector V1, FVector V2);
-		Vector    XM_CALLCONV     operator/ (FVector V1, FVector V2);
-		Vector    XM_CALLCONV     operator* (FVector V, float S);
-		Vector    XM_CALLCONV     operator* (float S, FVector V);
-		Vector    XM_CALLCONV     operator/ (FVector V, float S);
-#endif /* !_XM_NO_Vector_OVERLOADS_ */
+		Vector    RAYMATH_CALLCONV     operator+ (FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     operator- (FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     operator* (FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     operator/ (FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     operator* (FVector V, float S);
+		Vector    RAYMATH_CALLCONV     operator* (float S, FVector V);
+		Vector    RAYMATH_CALLCONV     operator/ (FVector V, float S);
+
+#endif
 
 		//------------------------------------------------------------------------------
 		// Matrix type: Sixteen 32 bit floating point components aligned on a
@@ -470,7 +465,7 @@ namespace At0
 		struct Matrix;
 
 		// Fix-up for (1st) Matrix parameter to pass in-register for ARM64 and vector call; by reference otherwise
-#if ( defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || _XM_VECTORCALL_ ) && !defined(_XM_NO_INTRINSICS_)
+#if ( defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || RAYMATH_VECTORCALL ) && !defined(RAY_NO_INTRINSICS)
 		typedef const Matrix FMatrix;
 #else
 		typedef const Matrix& FMatrix;
@@ -479,13 +474,13 @@ namespace At0
 		// Fix-up for (2nd+) Matrix parameters to pass by reference
 		typedef const Matrix& CMatrix;
 
-#ifdef _XM_NO_INTRINSICS_
+#ifdef RAY_NO_INTRINSICS
 		struct Matrix
 #else
-		XM_ALIGNED(16) struct Matrix
+		RAY_ALIGNED(16) struct Matrix
 #endif
 		{
-#ifdef _XM_NO_INTRINSICS_
+#ifdef RAY_NO_INTRINSICS
 			union
 			{
 				Vector r[4];
@@ -522,7 +517,7 @@ namespace At0
 				float m30, float m31, float m32, float m33);
 			explicit Matrix(/*_In_reads_(16) */const float* pArray);
 
-#ifdef _XM_NO_INTRINSICS_
+#ifdef RAY_NO_INTRINSICS
 			float       operator() (size_t Row, size_t Column) const { return m[Row][Column]; }
 			float& operator() (size_t Row, size_t Column) { return m[Row][Column]; }
 #endif
@@ -530,73 +525,73 @@ namespace At0
 			Matrix    operator+ () const { return *this; }
 			Matrix    operator- () const;
 
-			Matrix& XM_CALLCONV     operator+= (FMatrix M);
-			Matrix& XM_CALLCONV     operator-= (FMatrix M);
-			Matrix& XM_CALLCONV     operator*= (FMatrix M);
+			Matrix& RAYMATH_CALLCONV     operator+= (FMatrix M);
+			Matrix& RAYMATH_CALLCONV     operator-= (FMatrix M);
+			Matrix& RAYMATH_CALLCONV     operator*= (FMatrix M);
 			Matrix& operator*= (float S);
 			Matrix& operator/= (float S);
 
-			Matrix    XM_CALLCONV     operator+ (FMatrix M) const;
-			Matrix    XM_CALLCONV     operator- (FMatrix M) const;
-			Matrix    XM_CALLCONV     operator* (FMatrix M) const;
+			Matrix    RAYMATH_CALLCONV     operator+ (FMatrix M) const;
+			Matrix    RAYMATH_CALLCONV     operator- (FMatrix M) const;
+			Matrix    RAYMATH_CALLCONV     operator* (FMatrix M) const;
 			Matrix    operator* (float S) const;
 			Matrix    operator/ (float S) const;
 
-			friend Matrix     XM_CALLCONV     operator* (float S, FMatrix M);
+			friend Matrix     RAYMATH_CALLCONV     operator* (float S, FMatrix M);
 
 
-			bool XM_CALLCONV IsNaN() const;
-			bool XM_CALLCONV IsInfinite() const;
-			bool XM_CALLCONV IsIdentity() const;
-			Matrix XM_CALLCONV Transpose() const;
-			Matrix XM_CALLCONV Inverse(/*_Out_opt_ */Vector* pDeterminant = nullptr) const;
-			Vector XM_CALLCONV Determinant() const;
-			bool XM_CALLCONV Decompose(/*_Out_ */ Vector* outScale, /*_Out_ */ Vector* outRotQuat, /*_Out_ */ Vector* outTrans) const;
+			bool RAYMATH_CALLCONV IsNaN() const;
+			bool RAYMATH_CALLCONV IsInfinite() const;
+			bool RAYMATH_CALLCONV IsIdentity() const;
+			Matrix RAYMATH_CALLCONV Transpose() const;
+			Matrix RAYMATH_CALLCONV Inverse(/*_Out_opt_ */Vector* pDeterminant = nullptr) const;
+			Vector RAYMATH_CALLCONV Determinant() const;
+			bool RAYMATH_CALLCONV Decompose(/*_Out_ */ Vector* outScale, /*_Out_ */ Vector* outRotQuat, /*_Out_ */ Vector* outTrans) const;
 
-			static Matrix XM_CALLCONV Identity();
-			static Matrix XM_CALLCONV PerspectiveLH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
-			static Matrix XM_CALLCONV PerspectiveRH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
-			static Matrix XM_CALLCONV PerspectiveFovLH(float FovAngleY, float AspectRatio, float NearZ, float FarZ);
-			static Matrix XM_CALLCONV PerspectiveFovRH(float FovAngleY, float AspectRatio, float NearZ, float FarZ);
-			static Matrix XM_CALLCONV PerspectiveOffCenterLH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
-			static Matrix XM_CALLCONV PerspectiveOffCenterRH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
-			static Matrix XM_CALLCONV LookAtLH(FVector EyePosition, FVector FocusPosition, FVector UpDirection);
-			static Matrix XM_CALLCONV LookAtRH(FVector EyePosition, FVector FocusPosition, FVector UpDirection);
-			static Matrix XM_CALLCONV LookToLH(FVector EyePosition, FVector EyeDirection, FVector UpDirection);
-			static Matrix XM_CALLCONV LookToRH(FVector EyePosition, FVector EyeDirection, FVector UpDirection);
-			static Matrix XM_CALLCONV OrthographicLH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
-			static Matrix XM_CALLCONV OrthographicRH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
-			static Matrix XM_CALLCONV OrthographicOffCenterLH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
-			static Matrix XM_CALLCONV OrthographicOffCenterRH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
-			static Matrix XM_CALLCONV RotationX(float Angle);
-			static Matrix XM_CALLCONV RotationY(float Angle);
-			static Matrix XM_CALLCONV RotationZ(float Angle);
-			static Matrix XM_CALLCONV RotationRollPitchYaw(float Pitch, float Yaw, float Roll);
-			static Matrix XM_CALLCONV RotationRollPitchYawFromVector(FVector Angles);
-			static Matrix XM_CALLCONV Translation(float OffsetX, float OffsetY, float OffsetZ);
-			static Matrix XM_CALLCONV Translation(FVector Offset);
-			static Matrix XM_CALLCONV Scaling(float ScaleX, float ScaleY, float ScaleZ);
-			static Matrix XM_CALLCONV Scaling(FVector Scale);
-			static Matrix XM_CALLCONV AffineTransformation2D(FVector Scaling, FVector RotationOrigin, float Rotation, FVector Translation);
-			static Matrix XM_CALLCONV AffineTransformation(FVector Scaling, FVector RotationOrigin, FVector RotationQuaternion, GVector Translation);
-			static Matrix XM_CALLCONV Reflect(FVector ReflectionPlane);
-			static Matrix XM_CALLCONV Shadow(FVector ShadowPlane, FVector LightPosition);
+			static Matrix RAYMATH_CALLCONV Identity();
+			static Matrix RAYMATH_CALLCONV PerspectiveLH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
+			static Matrix RAYMATH_CALLCONV PerspectiveRH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
+			static Matrix RAYMATH_CALLCONV PerspectiveFovLH(float FovAngleY, float AspectRatio, float NearZ, float FarZ);
+			static Matrix RAYMATH_CALLCONV PerspectiveFovRH(float FovAngleY, float AspectRatio, float NearZ, float FarZ);
+			static Matrix RAYMATH_CALLCONV PerspectiveOffCenterLH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
+			static Matrix RAYMATH_CALLCONV PerspectiveOffCenterRH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
+			static Matrix RAYMATH_CALLCONV LookAtLH(FVector EyePosition, FVector FocusPosition, FVector UpDirection);
+			static Matrix RAYMATH_CALLCONV LookAtRH(FVector EyePosition, FVector FocusPosition, FVector UpDirection);
+			static Matrix RAYMATH_CALLCONV LookToLH(FVector EyePosition, FVector EyeDirection, FVector UpDirection);
+			static Matrix RAYMATH_CALLCONV LookToRH(FVector EyePosition, FVector EyeDirection, FVector UpDirection);
+			static Matrix RAYMATH_CALLCONV OrthographicLH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
+			static Matrix RAYMATH_CALLCONV OrthographicRH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
+			static Matrix RAYMATH_CALLCONV OrthographicOffCenterLH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
+			static Matrix RAYMATH_CALLCONV OrthographicOffCenterRH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
+			static Matrix RAYMATH_CALLCONV RotationX(float Angle);
+			static Matrix RAYMATH_CALLCONV RotationY(float Angle);
+			static Matrix RAYMATH_CALLCONV RotationZ(float Angle);
+			static Matrix RAYMATH_CALLCONV RotationRollPitchYaw(float Pitch, float Yaw, float Roll);
+			static Matrix RAYMATH_CALLCONV RotationRollPitchYawFromVector(FVector Angles);
+			static Matrix RAYMATH_CALLCONV Translation(float OffsetX, float OffsetY, float OffsetZ);
+			static Matrix RAYMATH_CALLCONV Translation(FVector Offset);
+			static Matrix RAYMATH_CALLCONV Scaling(float ScaleX, float ScaleY, float ScaleZ);
+			static Matrix RAYMATH_CALLCONV Scaling(FVector Scale);
+			static Matrix RAYMATH_CALLCONV AffineTransformation2D(FVector Scaling, FVector RotationOrigin, float Rotation, FVector Translation);
+			static Matrix RAYMATH_CALLCONV AffineTransformation(FVector Scaling, FVector RotationOrigin, FVector RotationQuaternion, GVector Translation);
+			static Matrix RAYMATH_CALLCONV Reflect(FVector ReflectionPlane);
+			static Matrix RAYMATH_CALLCONV Shadow(FVector ShadowPlane, FVector LightPosition);
 
-			static Matrix XM_CALLCONV Multiply(FMatrix M1, CMatrix M2);
-			static Matrix XM_CALLCONV MultiplyTranspose(FMatrix M1, CMatrix M2);
+			static Matrix RAYMATH_CALLCONV Multiply(FMatrix M1, CMatrix M2);
+			static Matrix RAYMATH_CALLCONV MultiplyTranspose(FMatrix M1, CMatrix M2);
 
-			static Matrix XM_CALLCONV Set(float m00, float m01, float m02, float m03,
+			static Matrix RAYMATH_CALLCONV Set(float m00, float m01, float m02, float m03,
 				float m10, float m11, float m12, float m13,
 				float m20, float m21, float m22, float m23,
 				float m30, float m31, float m32, float m33);
-			static Matrix XM_CALLCONV RotationNormal(FVector NormalAxis, float Angle);
-			static Matrix XM_CALLCONV RotationAxis(FVector Axis, float Angle);
-			static Matrix XM_CALLCONV RotationQuaternion(const Quaternion& Quaternion);
-			static Matrix XM_CALLCONV Transformation2D(FVector ScalingOrigin, float ScalingOrientation, FVector Scaling,
+			static Matrix RAYMATH_CALLCONV RotationNormal(FVector NormalAxis, float Angle);
+			static Matrix RAYMATH_CALLCONV RotationAxis(FVector Axis, float Angle);
+			static Matrix RAYMATH_CALLCONV RotationQuaternion(const Quaternion& Quaternion);
+			static Matrix RAYMATH_CALLCONV Transformation2D(FVector ScalingOrigin, float ScalingOrientation, FVector Scaling,
 				FVector RotationOrigin, float Rotation, GVector Translation);
-			static Matrix XM_CALLCONV Transformation(FVector ScalingOrigin, FVector ScalingOrientationQuaternion, FVector Scaling,
+			static Matrix RAYMATH_CALLCONV Transformation(FVector ScalingOrigin, FVector ScalingOrientationQuaternion, FVector Scaling,
 				GVector RotationOrigin, HVector RotationQuaternion, HVector Translation);
-			};
+		};
 
 		struct Quaternion
 		{
@@ -622,43 +617,43 @@ namespace At0
 
 			operator FVector() const { return v; }
 
-			bool XM_CALLCONV operator==(FQuaternion other) const;
-			bool XM_CALLCONV operator!=(FQuaternion other) const;
+			bool RAYMATH_CALLCONV operator==(FQuaternion other) const;
+			bool RAYMATH_CALLCONV operator!=(FQuaternion other) const;
 
-			Quaternion XM_CALLCONV operator*(FQuaternion other) const;
-			Quaternion& XM_CALLCONV operator*=(FQuaternion other);
+			Quaternion RAYMATH_CALLCONV operator*(FQuaternion other) const;
+			Quaternion& RAYMATH_CALLCONV operator*=(FQuaternion other);
 
-			bool XM_CALLCONV IsNaN() const;
-			bool XM_CALLCONV IsInfinite() const;
-			bool XM_CALLCONV IsIdentity() const;
-			Quaternion XM_CALLCONV LengthSq() const;
-			Quaternion XM_CALLCONV ReciprocalLength() const;
-			Quaternion XM_CALLCONV Length() const;
-			Quaternion XM_CALLCONV NormalizeEst() const;
-			Quaternion XM_CALLCONV Normalize() const;
-			Quaternion XM_CALLCONV Conjugate() const;
-			Quaternion XM_CALLCONV Inverse() const;
-			Quaternion XM_CALLCONV Ln() const;
-			Quaternion XM_CALLCONV Exp() const;
-			void XM_CALLCONV ToAxisAngle(/*_Out_ */ Vector* pAxis, /*_Out_ */ float* pAngle) const;
+			bool RAYMATH_CALLCONV IsNaN() const;
+			bool RAYMATH_CALLCONV IsInfinite() const;
+			bool RAYMATH_CALLCONV IsIdentity() const;
+			Quaternion RAYMATH_CALLCONV LengthSq() const;
+			Quaternion RAYMATH_CALLCONV ReciprocalLength() const;
+			Quaternion RAYMATH_CALLCONV Length() const;
+			Quaternion RAYMATH_CALLCONV NormalizeEst() const;
+			Quaternion RAYMATH_CALLCONV Normalize() const;
+			Quaternion RAYMATH_CALLCONV Conjugate() const;
+			Quaternion RAYMATH_CALLCONV Inverse() const;
+			Quaternion RAYMATH_CALLCONV Ln() const;
+			Quaternion RAYMATH_CALLCONV Exp() const;
+			void RAYMATH_CALLCONV ToAxisAngle(/*_Out_ */ Vector* pAxis, /*_Out_ */ float* pAngle) const;
 
 
-			static Quaternion XM_CALLCONV Dot(FQuaternion Q1, FQuaternion Q2);
-			static Quaternion XM_CALLCONV Multiply(FQuaternion Q1, FQuaternion Q2);
-			static Quaternion XM_CALLCONV Slerp(FQuaternion Q0, FQuaternion Q1, float t);
-			static Quaternion XM_CALLCONV SlerpV(FQuaternion Q0, FQuaternion Q1, FQuaternion T);
-			static Quaternion XM_CALLCONV Squad(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, GQuaternion Q3, float t);
-			static Quaternion XM_CALLCONV SquadV(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, GQuaternion Q3, HQuaternion T);
-			static void XM_CALLCONV SquadSetup(/*_Out_ */ Vector* pA, /*_Out_ */ Vector* pB, /*_Out_ */ Vector* pC, /*_In_ */FQuaternion Q0, /*_In_ */FQuaternion Q1, /*_In_ */FQuaternion Q2, /*_In_ */GQuaternion Q3);
-			static Quaternion XM_CALLCONV BaryCentric(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, float f, float g);
-			static Quaternion XM_CALLCONV BaryCentricV(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, GQuaternion F, HQuaternion G);
+			static Quaternion RAYMATH_CALLCONV Dot(FQuaternion Q1, FQuaternion Q2);
+			static Quaternion RAYMATH_CALLCONV Multiply(FQuaternion Q1, FQuaternion Q2);
+			static Quaternion RAYMATH_CALLCONV Slerp(FQuaternion Q0, FQuaternion Q1, float t);
+			static Quaternion RAYMATH_CALLCONV SlerpV(FQuaternion Q0, FQuaternion Q1, FQuaternion T);
+			static Quaternion RAYMATH_CALLCONV Squad(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, GQuaternion Q3, float t);
+			static Quaternion RAYMATH_CALLCONV SquadV(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, GQuaternion Q3, HQuaternion T);
+			static void RAYMATH_CALLCONV SquadSetup(/*_Out_ */ Vector* pA, /*_Out_ */ Vector* pB, /*_Out_ */ Vector* pC, /*_In_ */FQuaternion Q0, /*_In_ */FQuaternion Q1, /*_In_ */FQuaternion Q2, /*_In_ */GQuaternion Q3);
+			static Quaternion RAYMATH_CALLCONV BaryCentric(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, float f, float g);
+			static Quaternion RAYMATH_CALLCONV BaryCentricV(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, GQuaternion F, HQuaternion G);
 
-			static Quaternion XM_CALLCONV Identity();
-			static Quaternion XM_CALLCONV RotationRollPitchYaw(float Pitch, float Yaw, float Roll);
-			static Quaternion XM_CALLCONV RotationRollPitchYawFromVector(FVector Angles);
-			static Quaternion XM_CALLCONV RotationNormal(FVector NormalAxis, float Angle);
-			static Quaternion XM_CALLCONV RotationAxis(FVector Axis, float Angle);
-			static Quaternion XM_CALLCONV RotationMatrix(FMatrix M);
+			static Quaternion RAYMATH_CALLCONV Identity();
+			static Quaternion RAYMATH_CALLCONV RotationRollPitchYaw(float Pitch, float Yaw, float Roll);
+			static Quaternion RAYMATH_CALLCONV RotationRollPitchYawFromVector(FVector Angles);
+			static Quaternion RAYMATH_CALLCONV RotationNormal(FVector NormalAxis, float Angle);
+			static Quaternion RAYMATH_CALLCONV RotationAxis(FVector Axis, float Angle);
+			static Quaternion RAYMATH_CALLCONV RotationMatrix(FMatrix M);
 		};
 
 		//------------------------------------------------------------------------------
@@ -676,12 +671,12 @@ namespace At0
 			Float2(Float2&&) = default;
 			Float2& operator=(Float2&&) = default;
 
-			XM_CONSTEXPR Float2(float _x, float _y) : x(_x), y(_y) {}
+			RAYMATH_CONSTEXPR Float2(float _x, float _y) : x(_x), y(_y) {}
 			explicit Float2(/*_In_reads_(2) */const float* pArray) : x(pArray[0]), y(pArray[1]) {}
 		};
 
 		// 2D Vector; 32 bit floating point components aligned on a 16 byte boundary
-		XM_ALIGNED(16) struct Float2A : public Float2
+		RAY_ALIGNED(16) struct Float2A : public Float2
 		{
 			Float2A() = default;
 
@@ -691,7 +686,7 @@ namespace At0
 			Float2A(Float2A&&) = default;
 			Float2A& operator=(Float2A&&) = default;
 
-			XM_CONSTEXPR Float2A(float _x, float _y) : Float2(_x, _y) {}
+			RAYMATH_CONSTEXPR Float2A(float _x, float _y) : Float2(_x, _y) {}
 			explicit Float2A(/*_In_reads_(2) */const float* pArray) : Float2(pArray) {}
 		};
 
@@ -710,7 +705,7 @@ namespace At0
 			Int2(Int2&&) = default;
 			Int2& operator=(Int2&&) = default;
 
-			XM_CONSTEXPR Int2(int32_t _x, int32_t _y) : x(_x), y(_y) {}
+			RAYMATH_CONSTEXPR Int2(int32_t _x, int32_t _y) : x(_x), y(_y) {}
 			explicit Int2(/*_In_reads_(2) */const int32_t* pArray) : x(pArray[0]), y(pArray[1]) {}
 		};
 
@@ -728,7 +723,7 @@ namespace At0
 			UInt2(UInt2&&) = default;
 			UInt2& operator=(UInt2&&) = default;
 
-			XM_CONSTEXPR UInt2(uint32_t _x, uint32_t _y) : x(_x), y(_y) {}
+			RAYMATH_CONSTEXPR UInt2(uint32_t _x, uint32_t _y) : x(_x), y(_y) {}
 			explicit UInt2(/*_In_reads_(2) */const uint32_t* pArray) : x(pArray[0]), y(pArray[1]) {}
 		};
 
@@ -748,12 +743,12 @@ namespace At0
 			Float3(Float3&&) = default;
 			Float3& operator=(Float3&&) = default;
 
-			XM_CONSTEXPR Float3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
+			RAYMATH_CONSTEXPR Float3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
 			explicit Float3(/*_In_reads_(3) */const float* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
 		};
 
 		// 3D Vector; 32 bit floating point components aligned on a 16 byte boundary
-		XM_ALIGNED(16) struct Float3A : public Float3
+		RAY_ALIGNED(16) struct Float3A : public Float3
 		{
 			Float3A() = default;
 
@@ -763,7 +758,7 @@ namespace At0
 			Float3A(Float3A&&) = default;
 			Float3A& operator=(Float3A&&) = default;
 
-			XM_CONSTEXPR Float3A(float _x, float _y, float _z) : Float3(_x, _y, _z) {}
+			RAYMATH_CONSTEXPR Float3A(float _x, float _y, float _z) : Float3(_x, _y, _z) {}
 			explicit Float3A(/*_In_reads_(3) */const float* pArray) : Float3(pArray) {}
 		};
 
@@ -783,7 +778,7 @@ namespace At0
 			Int3(Int3&&) = default;
 			Int3& operator=(Int3&&) = default;
 
-			XM_CONSTEXPR Int3(int32_t _x, int32_t _y, int32_t _z) : x(_x), y(_y), z(_z) {}
+			RAYMATH_CONSTEXPR Int3(int32_t _x, int32_t _y, int32_t _z) : x(_x), y(_y), z(_z) {}
 			explicit Int3(/*_In_reads_(3) */const int32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
 		};
 
@@ -802,7 +797,7 @@ namespace At0
 			UInt3(UInt3&&) = default;
 			UInt3& operator=(UInt3&&) = default;
 
-			XM_CONSTEXPR UInt3(uint32_t _x, uint32_t _y, uint32_t _z) : x(_x), y(_y), z(_z) {}
+			RAYMATH_CONSTEXPR UInt3(uint32_t _x, uint32_t _y, uint32_t _z) : x(_x), y(_y), z(_z) {}
 			explicit UInt3(/*_In_reads_(3) */const uint32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
 		};
 
@@ -823,12 +818,12 @@ namespace At0
 			Float4(Float4&&) = default;
 			Float4& operator=(Float4&&) = default;
 
-			XM_CONSTEXPR Float4(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) {}
+			RAYMATH_CONSTEXPR Float4(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) {}
 			explicit Float4(/*_In_reads_(4) */const float* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
 		};
 
 		// 4D Vector; 32 bit floating point components aligned on a 16 byte boundary
-		XM_ALIGNED(16) struct Float4A : public Float4
+		RAY_ALIGNED(16) struct Float4A : public Float4
 		{
 			Float4A() = default;
 
@@ -838,7 +833,7 @@ namespace At0
 			Float4A(Float4A&&) = default;
 			Float4A& operator=(Float4A&&) = default;
 
-			XM_CONSTEXPR Float4A(float _x, float _y, float _z, float _w) : Float4(_x, _y, _z, _w) {}
+			RAYMATH_CONSTEXPR Float4A(float _x, float _y, float _z, float _w) : Float4(_x, _y, _z, _w) {}
 			explicit Float4A(/*_In_reads_(4) */const float* pArray) : Float4(pArray) {}
 		};
 
@@ -859,7 +854,7 @@ namespace At0
 			Int4(Int4&&) = default;
 			Int4& operator=(Int4&&) = default;
 
-			XM_CONSTEXPR Int4(int32_t _x, int32_t _y, int32_t _z, int32_t _w) : x(_x), y(_y), z(_z), w(_w) {}
+			RAYMATH_CONSTEXPR Int4(int32_t _x, int32_t _y, int32_t _z, int32_t _w) : x(_x), y(_y), z(_z), w(_w) {}
 			explicit Int4(/*_In_reads_(4) */const int32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
 		};
 
@@ -879,7 +874,7 @@ namespace At0
 			UInt4(UInt4&&) = default;
 			UInt4& operator=(UInt4&&) = default;
 
-			XM_CONSTEXPR UInt4(uint32_t _x, uint32_t _y, uint32_t _z, uint32_t _w) : x(_x), y(_y), z(_z), w(_w) {}
+			RAYMATH_CONSTEXPR UInt4(uint32_t _x, uint32_t _y, uint32_t _z, uint32_t _w) : x(_x), y(_y), z(_z), w(_w) {}
 			explicit UInt4(/*_In_reads_(4) */const uint32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
 		};
 
@@ -906,7 +901,7 @@ namespace At0
 			Float3X3(Float3X3&&) = default;
 			Float3X3& operator=(Float3X3&&) = default;
 
-			XM_CONSTEXPR Float3X3(float m00, float m01, float m02,
+			RAYMATH_CONSTEXPR Float3X3(float m00, float m01, float m02,
 				float m10, float m11, float m12,
 				float m20, float m21, float m22)
 				: _11(m00), _12(m01), _13(m02),
@@ -943,7 +938,7 @@ namespace At0
 			Float4X3(Float4X3&&) = default;
 			Float4X3& operator=(Float4X3&&) = default;
 
-			XM_CONSTEXPR Float4X3(float m00, float m01, float m02,
+			RAYMATH_CONSTEXPR Float4X3(float m00, float m01, float m02,
 				float m10, float m11, float m12,
 				float m20, float m21, float m22,
 				float m30, float m31, float m32)
@@ -958,7 +953,7 @@ namespace At0
 		};
 
 		// 4x3 Row-major Matrix: 32 bit floating point components aligned on a 16 byte boundary
-		XM_ALIGNED(16) struct Float4X3A : public Float4X3
+		RAY_ALIGNED(16) struct Float4X3A : public Float4X3
 		{
 			Float4X3A() = default;
 
@@ -968,7 +963,7 @@ namespace At0
 			Float4X3A(Float4X3A&&) = default;
 			Float4X3A& operator=(Float4X3A&&) = default;
 
-			XM_CONSTEXPR Float4X3A(float m00, float m01, float m02,
+			RAYMATH_CONSTEXPR Float4X3A(float m00, float m01, float m02,
 				float m10, float m11, float m12,
 				float m20, float m21, float m22,
 				float m30, float m31, float m32) :
@@ -1000,7 +995,7 @@ namespace At0
 			Float3X4(Float3X4&&) = default;
 			Float3X4& operator=(Float3X4&&) = default;
 
-			XM_CONSTEXPR Float3X4(float m00, float m01, float m02, float m03,
+			RAYMATH_CONSTEXPR Float3X4(float m00, float m01, float m02, float m03,
 				float m10, float m11, float m12, float m13,
 				float m20, float m21, float m22, float m23)
 				: _11(m00), _12(m01), _13(m02), _14(m03),
@@ -1013,7 +1008,7 @@ namespace At0
 		};
 
 		// 3x4 Column-major Matrix: 32 bit floating point components aligned on a 16 byte boundary
-		XM_ALIGNED(16) struct Float3X4A : public Float3X4
+		RAY_ALIGNED(16) struct Float3X4A : public Float3X4
 		{
 			Float3X4A() = default;
 
@@ -1023,7 +1018,7 @@ namespace At0
 			Float3X4A(Float3X4A&&) = default;
 			Float3X4A& operator=(Float3X4A&&) = default;
 
-			XM_CONSTEXPR Float3X4A(float m00, float m01, float m02, float m03,
+			RAYMATH_CONSTEXPR Float3X4A(float m00, float m01, float m02, float m03,
 				float m10, float m11, float m12, float m13,
 				float m20, float m21, float m22, float m23) :
 				Float3X4(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23) {}
@@ -1054,7 +1049,7 @@ namespace At0
 			Float4X4(Float4X4&&) = default;
 			Float4X4& operator=(Float4X4&&) = default;
 
-			XM_CONSTEXPR Float4X4(float m00, float m01, float m02, float m03,
+			RAYMATH_CONSTEXPR Float4X4(float m00, float m01, float m02, float m03,
 				float m10, float m11, float m12, float m13,
 				float m20, float m21, float m22, float m23,
 				float m30, float m31, float m32, float m33)
@@ -1069,7 +1064,7 @@ namespace At0
 		};
 
 		// 4x4 Matrix: 32 bit floating point components aligned on a 16 byte boundary
-		XM_ALIGNED(16) struct Float4X4A : public Float4X4
+		RAY_ALIGNED(16) struct Float4X4A : public Float4X4
 		{
 			Float4X4A() = default;
 
@@ -1079,7 +1074,7 @@ namespace At0
 			Float4X4A(Float4X4A&&) = default;
 			Float4X4A& operator=(Float4X4A&&) = default;
 
-			XM_CONSTEXPR Float4X4A(float m00, float m01, float m02, float m03,
+			RAYMATH_CONSTEXPR Float4X4A(float m00, float m01, float m02, float m03,
 				float m10, float m11, float m12, float m13,
 				float m20, float m21, float m22, float m23,
 				float m30, float m31, float m32, float m33)
@@ -1101,10 +1096,10 @@ namespace At0
  *
  ****************************************************************************/
 
-		Vector    XM_CALLCONV     ConvertVectorIntToFloat(FVector VInt, uint32_t DivExponent);
-		Vector    XM_CALLCONV     ConvertVectorFloatToInt(FVector VFloat, uint32_t MulExponent);
-		Vector    XM_CALLCONV     ConvertVectorUIntToFloat(FVector VUInt, uint32_t DivExponent);
-		Vector    XM_CALLCONV     ConvertVectorFloatToUInt(FVector VFloat, uint32_t MulExponent);
+		Vector    RAYMATH_CALLCONV     ConvertVectorIntToFloat(FVector VInt, uint32_t DivExponent);
+		Vector    RAYMATH_CALLCONV     ConvertVectorFloatToInt(FVector VFloat, uint32_t MulExponent);
+		Vector    RAYMATH_CALLCONV     ConvertVectorUIntToFloat(FVector VUInt, uint32_t DivExponent);
+		Vector    RAYMATH_CALLCONV     ConvertVectorFloatToUInt(FVector VFloat, uint32_t MulExponent);
 
 #if defined(__XNAMATH_H__) && defined(VectorSetBinaryConstant)
 #undef VectorSetBinaryConstant
@@ -1112,9 +1107,9 @@ namespace At0
 #undef VectorSplatConstantInt
 #endif
 
-		Vector    XM_CALLCONV     VectorSetBinaryConstant(uint32_t C0, uint32_t C1, uint32_t C2, uint32_t C3);
-		Vector    XM_CALLCONV     VectorSplatConstant(int32_t IntConstant, uint32_t DivExponent);
-		Vector    XM_CALLCONV     VectorSplatConstantInt(int32_t IntConstant);
+		Vector    RAYMATH_CALLCONV     VectorSetBinaryConstant(uint32_t C0, uint32_t C1, uint32_t C2, uint32_t C3);
+		Vector    RAYMATH_CALLCONV     VectorSplatConstant(int32_t IntConstant, uint32_t DivExponent);
+		Vector    RAYMATH_CALLCONV     VectorSplatConstantInt(int32_t IntConstant);
 
 		/****************************************************************************
 		 *
@@ -1122,37 +1117,37 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		Vector    XM_CALLCONV     LoadInt(/*_In_ */const uint32_t* pSource);
-		Vector    XM_CALLCONV     LoadFloat(/*_In_ */const float* pSource);
+		Vector    RAYMATH_CALLCONV     LoadInt(/*_In_ */const uint32_t* pSource);
+		Vector    RAYMATH_CALLCONV     LoadFloat(/*_In_ */const float* pSource);
 
-		Vector    XM_CALLCONV     LoadInt2(/*_In_reads_(2) */const uint32_t* pSource);
-		Vector    XM_CALLCONV     LoadInt2A(/*_In_reads_(2) */const uint32_t* PSource);
-		Vector    XM_CALLCONV     LoadFloat2(/*_In_ */const Float2* pSource);
-		Vector    XM_CALLCONV     LoadFloat2A(/*_In_ */const Float2A* pSource);
-		Vector    XM_CALLCONV     LoadSInt2(/*_In_ */const Int2* pSource);
-		Vector    XM_CALLCONV     LoadUInt2(/*_In_ */const UInt2* pSource);
+		Vector    RAYMATH_CALLCONV     LoadInt2(/*_In_reads_(2) */const uint32_t* pSource);
+		Vector    RAYMATH_CALLCONV     LoadInt2A(/*_In_reads_(2) */const uint32_t* PSource);
+		Vector    RAYMATH_CALLCONV     LoadFloat2(/*_In_ */const Float2* pSource);
+		Vector    RAYMATH_CALLCONV     LoadFloat2A(/*_In_ */const Float2A* pSource);
+		Vector    RAYMATH_CALLCONV     LoadSInt2(/*_In_ */const Int2* pSource);
+		Vector    RAYMATH_CALLCONV     LoadUInt2(/*_In_ */const UInt2* pSource);
 
-		Vector    XM_CALLCONV     LoadInt3(/*_In_reads_(3) */const uint32_t* pSource);
-		Vector    XM_CALLCONV     LoadInt3A(/*_In_reads_(3) */const uint32_t* pSource);
-		Vector    XM_CALLCONV     LoadFloat3(/*_In_ */const Float3* pSource);
-		Vector    XM_CALLCONV     LoadFloat3A(/*_In_ */const Float3A* pSource);
-		Vector    XM_CALLCONV     LoadSInt3(/*_In_ */const Int3* pSource);
-		Vector    XM_CALLCONV     LoadUInt3(/*_In_ */const UInt3* pSource);
+		Vector    RAYMATH_CALLCONV     LoadInt3(/*_In_reads_(3) */const uint32_t* pSource);
+		Vector    RAYMATH_CALLCONV     LoadInt3A(/*_In_reads_(3) */const uint32_t* pSource);
+		Vector    RAYMATH_CALLCONV     LoadFloat3(/*_In_ */const Float3* pSource);
+		Vector    RAYMATH_CALLCONV     LoadFloat3A(/*_In_ */const Float3A* pSource);
+		Vector    RAYMATH_CALLCONV     LoadSInt3(/*_In_ */const Int3* pSource);
+		Vector    RAYMATH_CALLCONV     LoadUInt3(/*_In_ */const UInt3* pSource);
 
-		Vector    XM_CALLCONV     LoadInt4(/*_In_reads_(4) */const uint32_t* pSource);
-		Vector    XM_CALLCONV     LoadInt4A(/*_In_reads_(4) */const uint32_t* pSource);
-		Vector    XM_CALLCONV     LoadFloat4(/*_In_ */const Float4* pSource);
-		Vector    XM_CALLCONV     LoadFloat4A(/*_In_ */const Float4A* pSource);
-		Vector    XM_CALLCONV     LoadSInt4(/*_In_ */const Int4* pSource);
-		Vector    XM_CALLCONV     LoadUInt4(/*_In_ */const UInt4* pSource);
+		Vector    RAYMATH_CALLCONV     LoadInt4(/*_In_reads_(4) */const uint32_t* pSource);
+		Vector    RAYMATH_CALLCONV     LoadInt4A(/*_In_reads_(4) */const uint32_t* pSource);
+		Vector    RAYMATH_CALLCONV     LoadFloat4(/*_In_ */const Float4* pSource);
+		Vector    RAYMATH_CALLCONV     LoadFloat4A(/*_In_ */const Float4A* pSource);
+		Vector    RAYMATH_CALLCONV     LoadSInt4(/*_In_ */const Int4* pSource);
+		Vector    RAYMATH_CALLCONV     LoadUInt4(/*_In_ */const UInt4* pSource);
 
-		Matrix    XM_CALLCONV     LoadFloat3x3(/*_In_ */const Float3X3* pSource);
-		Matrix    XM_CALLCONV     LoadFloat4x3(/*_In_ */const Float4X3* pSource);
-		Matrix    XM_CALLCONV     LoadFloat4x3A(/*_In_ */const Float4X3A* pSource);
-		Matrix    XM_CALLCONV     LoadFloat3x4(/*_In_ */const Float3X4* pSource);
-		Matrix    XM_CALLCONV     LoadFloat3x4A(/*_In_ */const Float3X4A* pSource);
-		Matrix    XM_CALLCONV     LoadFloat4x4(/*_In_ */const Float4X4* pSource);
-		Matrix    XM_CALLCONV     LoadFloat4x4A(/*_In_ */const Float4X4A* pSource);
+		Matrix    RAYMATH_CALLCONV     LoadFloat3x3(/*_In_ */const Float3X3* pSource);
+		Matrix    RAYMATH_CALLCONV     LoadFloat4x3(/*_In_ */const Float4X3* pSource);
+		Matrix    RAYMATH_CALLCONV     LoadFloat4x3A(/*_In_ */const Float4X3A* pSource);
+		Matrix    RAYMATH_CALLCONV     LoadFloat3x4(/*_In_ */const Float3X4* pSource);
+		Matrix    RAYMATH_CALLCONV     LoadFloat3x4A(/*_In_ */const Float3X4A* pSource);
+		Matrix    RAYMATH_CALLCONV     LoadFloat4x4(/*_In_ */const Float4X4* pSource);
+		Matrix    RAYMATH_CALLCONV     LoadFloat4x4A(/*_In_ */const Float4X4A* pSource);
 
 		/****************************************************************************
 		 *
@@ -1160,37 +1155,37 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		void        XM_CALLCONV     StoreInt(/*_Out_ */ uint32_t* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreFloat(/*_Out_ */ float* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreInt(/*_Out_ */ uint32_t* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreFloat(/*_Out_ */ float* pDestination, /*_In_ */FVector V);
 
-		void        XM_CALLCONV     StoreInt2(/*_Out_writes_(2)*/ uint32_t* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreInt2A(/*_Out_writes_(2)*/ uint32_t* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreFloat2(/*_Out_ */ Float2* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreFloat2A(/*_Out_ */ Float2A* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreSInt2(/*_Out_ */ Int2* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreUInt2(/*_Out_ */ UInt2* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreInt2(/*_Out_writes_(2)*/ uint32_t* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreInt2A(/*_Out_writes_(2)*/ uint32_t* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreFloat2(/*_Out_ */ Float2* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreFloat2A(/*_Out_ */ Float2A* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreSInt2(/*_Out_ */ Int2* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreUInt2(/*_Out_ */ UInt2* pDestination, /*_In_ */FVector V);
 
-		void        XM_CALLCONV     StoreInt3(/*_Out_writes_(3) */uint32_t* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreInt3A(/*_Out_writes_(3)*/ uint32_t* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreFloat3(/*_Out_ */ Float3* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreFloat3A(/*_Out_ */ Float3A* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreSInt3(/*_Out_ */ Int3* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreUInt3(/*_Out_ */ UInt3* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreInt3(/*_Out_writes_(3) */uint32_t* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreInt3A(/*_Out_writes_(3)*/ uint32_t* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreFloat3(/*_Out_ */ Float3* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreFloat3A(/*_Out_ */ Float3A* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreSInt3(/*_Out_ */ Int3* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreUInt3(/*_Out_ */ UInt3* pDestination, /*_In_ */FVector V);
 
-		void        XM_CALLCONV     StoreInt4(/*_Out_writes_(4) */uint32_t* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreInt4A(/*_Out_writes_(4) */uint32_t* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreFloat4(/*_Out_ */ Float4* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreFloat4A(/*_Out_ */ Float4A* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreSInt4(/*_Out_ */ Int4* pDestination, /*_In_ */FVector V);
-		void        XM_CALLCONV     StoreUInt4(/*_Out_ */ UInt4* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreInt4(/*_Out_writes_(4) */uint32_t* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreInt4A(/*_Out_writes_(4) */uint32_t* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreFloat4(/*_Out_ */ Float4* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreFloat4A(/*_Out_ */ Float4A* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreSInt4(/*_Out_ */ Int4* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreUInt4(/*_Out_ */ UInt4* pDestination, /*_In_ */FVector V);
 
-		void        XM_CALLCONV     StoreFloat3x3(/*_Out_ */ Float3X3* pDestination, /*_In_ */FMatrix M);
-		void        XM_CALLCONV     StoreFloat4x3(/*_Out_ */ Float4X3* pDestination, /*_In_ */FMatrix M);
-		void        XM_CALLCONV     StoreFloat4x3A(/*_Out_ */ Float4X3A* pDestination, /*_In_ */FMatrix M);
-		void        XM_CALLCONV     StoreFloat3x4(/*_Out_ */ Float3X4* pDestination, /*_In_ */FMatrix M);
-		void        XM_CALLCONV     StoreFloat3x4A(/*_Out_ */ Float3X4A* pDestination, /*_In_ */FMatrix M);
-		void        XM_CALLCONV     StoreFloat4x4(/*_Out_ */ Float4X4* pDestination, /*_In_ */FMatrix M);
-		void        XM_CALLCONV     StoreFloat4x4A(/*_Out_ */ Float4X4A* pDestination, /*_In_ */FMatrix M);
+		void        RAYMATH_CALLCONV     StoreFloat3x3(/*_Out_ */ Float3X3* pDestination, /*_In_ */FMatrix M);
+		void        RAYMATH_CALLCONV     StoreFloat4x3(/*_Out_ */ Float4X3* pDestination, /*_In_ */FMatrix M);
+		void        RAYMATH_CALLCONV     StoreFloat4x3A(/*_Out_ */ Float4X3A* pDestination, /*_In_ */FMatrix M);
+		void        RAYMATH_CALLCONV     StoreFloat3x4(/*_Out_ */ Float3X4* pDestination, /*_In_ */FMatrix M);
+		void        RAYMATH_CALLCONV     StoreFloat3x4A(/*_Out_ */ Float3X4A* pDestination, /*_In_ */FMatrix M);
+		void        RAYMATH_CALLCONV     StoreFloat4x4(/*_Out_ */ Float4X4* pDestination, /*_In_ */FMatrix M);
+		void        RAYMATH_CALLCONV     StoreFloat4x4A(/*_Out_ */ Float4X4A* pDestination, /*_In_ */FMatrix M);
 
 		/****************************************************************************
 		 *
@@ -1198,83 +1193,83 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		Vector    XM_CALLCONV     VectorZero();
-		Vector    XM_CALLCONV     VectorSet(float x, float y, float z, float w);
-		Vector    XM_CALLCONV     VectorSetInt(uint32_t x, uint32_t y, uint32_t z, uint32_t w);
-		Vector    XM_CALLCONV     VectorReplicate(float Value);
-		Vector    XM_CALLCONV     VectorReplicatePtr(/*_In_ */const float* pValue);
-		Vector    XM_CALLCONV     VectorReplicateInt(uint32_t Value);
-		Vector    XM_CALLCONV     VectorReplicateIntPtr(/*_In_ */const uint32_t* pValue);
-		Vector    XM_CALLCONV     VectorTrueInt();
-		Vector    XM_CALLCONV     VectorFalseInt();
-		Vector    XM_CALLCONV     VectorSplatX(FVector V);
-		Vector    XM_CALLCONV     VectorSplatY(FVector V);
-		Vector    XM_CALLCONV     VectorSplatZ(FVector V);
-		Vector    XM_CALLCONV     VectorSplatW(FVector V);
-		Vector    XM_CALLCONV     VectorSplatOne();
-		Vector    XM_CALLCONV     VectorSplatInfinity();
-		Vector    XM_CALLCONV     VectorSplatQNaN();
-		Vector    XM_CALLCONV     VectorSplatEpsilon();
-		Vector    XM_CALLCONV     VectorSplatSignMask();
+		Vector    RAYMATH_CALLCONV     VectorZero();
+		Vector    RAYMATH_CALLCONV     VectorSet(float x, float y, float z, float w);
+		Vector    RAYMATH_CALLCONV     VectorSetInt(uint32_t x, uint32_t y, uint32_t z, uint32_t w);
+		Vector    RAYMATH_CALLCONV     VectorReplicate(float Value);
+		Vector    RAYMATH_CALLCONV     VectorReplicatePtr(/*_In_ */const float* pValue);
+		Vector    RAYMATH_CALLCONV     VectorReplicateInt(uint32_t Value);
+		Vector    RAYMATH_CALLCONV     VectorReplicateIntPtr(/*_In_ */const uint32_t* pValue);
+		Vector    RAYMATH_CALLCONV     VectorTrueInt();
+		Vector    RAYMATH_CALLCONV     VectorFalseInt();
+		Vector    RAYMATH_CALLCONV     VectorSplatX(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorSplatY(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorSplatZ(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorSplatW(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorSplatOne();
+		Vector    RAYMATH_CALLCONV     VectorSplatInfinity();
+		Vector    RAYMATH_CALLCONV     VectorSplatQNaN();
+		Vector    RAYMATH_CALLCONV     VectorSplatEpsilon();
+		Vector    RAYMATH_CALLCONV     VectorSplatSignMask();
 
-		float       XM_CALLCONV     VectorGetByIndex(FVector V, size_t i);
-		float       XM_CALLCONV     VectorGetX(FVector V);
-		float       XM_CALLCONV     VectorGetY(FVector V);
-		float       XM_CALLCONV     VectorGetZ(FVector V);
-		float       XM_CALLCONV     VectorGetW(FVector V);
+		float       RAYMATH_CALLCONV     VectorGetByIndex(FVector V, size_t i);
+		float       RAYMATH_CALLCONV     VectorGetX(FVector V);
+		float       RAYMATH_CALLCONV     VectorGetY(FVector V);
+		float       RAYMATH_CALLCONV     VectorGetZ(FVector V);
+		float       RAYMATH_CALLCONV     VectorGetW(FVector V);
 
-		void        XM_CALLCONV     VectorGetByIndexPtr(/*_Out_ */ float* f, /*_In_ */FVector V, /*_In_ */size_t i);
-		void        XM_CALLCONV     VectorGetXPtr(/*_Out_ */ float* x, /*_In_ */FVector V);
-		void        XM_CALLCONV     VectorGetYPtr(/*_Out_ */ float* y, /*_In_ */FVector V);
-		void        XM_CALLCONV     VectorGetZPtr(/*_Out_ */ float* z, /*_In_ */FVector V);
-		void        XM_CALLCONV     VectorGetWPtr(/*_Out_ */ float* w, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     VectorGetByIndexPtr(/*_Out_ */ float* f, /*_In_ */FVector V, /*_In_ */size_t i);
+		void        RAYMATH_CALLCONV     VectorGetXPtr(/*_Out_ */ float* x, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     VectorGetYPtr(/*_Out_ */ float* y, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     VectorGetZPtr(/*_Out_ */ float* z, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     VectorGetWPtr(/*_Out_ */ float* w, /*_In_ */FVector V);
 
-		uint32_t    XM_CALLCONV     VectorGetIntByIndex(FVector V, size_t i);
-		uint32_t    XM_CALLCONV     VectorGetIntX(FVector V);
-		uint32_t    XM_CALLCONV     VectorGetIntY(FVector V);
-		uint32_t    XM_CALLCONV     VectorGetIntZ(FVector V);
-		uint32_t    XM_CALLCONV     VectorGetIntW(FVector V);
+		uint32_t    RAYMATH_CALLCONV     VectorGetIntByIndex(FVector V, size_t i);
+		uint32_t    RAYMATH_CALLCONV     VectorGetIntX(FVector V);
+		uint32_t    RAYMATH_CALLCONV     VectorGetIntY(FVector V);
+		uint32_t    RAYMATH_CALLCONV     VectorGetIntZ(FVector V);
+		uint32_t    RAYMATH_CALLCONV     VectorGetIntW(FVector V);
 
-		void        XM_CALLCONV     VectorGetIntByIndexPtr(/*_Out_ */ uint32_t* x, /*_In_ */FVector V, /*_In_ */size_t i);
-		void        XM_CALLCONV     VectorGetIntXPtr(/*_Out_ */ uint32_t* x, /*_In_ */FVector V);
-		void        XM_CALLCONV     VectorGetIntYPtr(/*_Out_ */ uint32_t* y, /*_In_ */FVector V);
-		void        XM_CALLCONV     VectorGetIntZPtr(/*_Out_ */ uint32_t* z, /*_In_ */FVector V);
-		void        XM_CALLCONV     VectorGetIntWPtr(/*_Out_ */ uint32_t* w, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     VectorGetIntByIndexPtr(/*_Out_ */ uint32_t* x, /*_In_ */FVector V, /*_In_ */size_t i);
+		void        RAYMATH_CALLCONV     VectorGetIntXPtr(/*_Out_ */ uint32_t* x, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     VectorGetIntYPtr(/*_Out_ */ uint32_t* y, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     VectorGetIntZPtr(/*_Out_ */ uint32_t* z, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     VectorGetIntWPtr(/*_Out_ */ uint32_t* w, /*_In_ */FVector V);
 
-		Vector    XM_CALLCONV     VectorSetByIndex(FVector V, float f, size_t i);
-		Vector    XM_CALLCONV     VectorSetX(FVector V, float x);
-		Vector    XM_CALLCONV     VectorSetY(FVector V, float y);
-		Vector    XM_CALLCONV     VectorSetZ(FVector V, float z);
-		Vector    XM_CALLCONV     VectorSetW(FVector V, float w);
+		Vector    RAYMATH_CALLCONV     VectorSetByIndex(FVector V, float f, size_t i);
+		Vector    RAYMATH_CALLCONV     VectorSetX(FVector V, float x);
+		Vector    RAYMATH_CALLCONV     VectorSetY(FVector V, float y);
+		Vector    RAYMATH_CALLCONV     VectorSetZ(FVector V, float z);
+		Vector    RAYMATH_CALLCONV     VectorSetW(FVector V, float w);
 
-		Vector    XM_CALLCONV     VectorSetByIndexPtr(/*_In_ */FVector V, /*_In_ */const float* f, /*_In_ */size_t i);
-		Vector    XM_CALLCONV     VectorSetXPtr(/*_In_ */FVector V, /*_In_ */const float* x);
-		Vector    XM_CALLCONV     VectorSetYPtr(/*_In_ */FVector V, /*_In_ */const float* y);
-		Vector    XM_CALLCONV     VectorSetZPtr(/*_In_ */FVector V, /*_In_ */const float* z);
-		Vector    XM_CALLCONV     VectorSetWPtr(/*_In_ */FVector V, /*_In_ */const float* w);
+		Vector    RAYMATH_CALLCONV     VectorSetByIndexPtr(/*_In_ */FVector V, /*_In_ */const float* f, /*_In_ */size_t i);
+		Vector    RAYMATH_CALLCONV     VectorSetXPtr(/*_In_ */FVector V, /*_In_ */const float* x);
+		Vector    RAYMATH_CALLCONV     VectorSetYPtr(/*_In_ */FVector V, /*_In_ */const float* y);
+		Vector    RAYMATH_CALLCONV     VectorSetZPtr(/*_In_ */FVector V, /*_In_ */const float* z);
+		Vector    RAYMATH_CALLCONV     VectorSetWPtr(/*_In_ */FVector V, /*_In_ */const float* w);
 
-		Vector    XM_CALLCONV     VectorSetIntByIndex(FVector V, uint32_t x, size_t i);
-		Vector    XM_CALLCONV     VectorSetIntX(FVector V, uint32_t x);
-		Vector    XM_CALLCONV     VectorSetIntY(FVector V, uint32_t y);
-		Vector    XM_CALLCONV     VectorSetIntZ(FVector V, uint32_t z);
-		Vector    XM_CALLCONV     VectorSetIntW(FVector V, uint32_t w);
+		Vector    RAYMATH_CALLCONV     VectorSetIntByIndex(FVector V, uint32_t x, size_t i);
+		Vector    RAYMATH_CALLCONV     VectorSetIntX(FVector V, uint32_t x);
+		Vector    RAYMATH_CALLCONV     VectorSetIntY(FVector V, uint32_t y);
+		Vector    RAYMATH_CALLCONV     VectorSetIntZ(FVector V, uint32_t z);
+		Vector    RAYMATH_CALLCONV     VectorSetIntW(FVector V, uint32_t w);
 
-		Vector    XM_CALLCONV     VectorSetIntByIndexPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* x, /*_In_ */size_t i);
-		Vector    XM_CALLCONV     VectorSetIntXPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* x);
-		Vector    XM_CALLCONV     VectorSetIntYPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* y);
-		Vector    XM_CALLCONV     VectorSetIntZPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* z);
-		Vector    XM_CALLCONV     VectorSetIntWPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* w);
+		Vector    RAYMATH_CALLCONV     VectorSetIntByIndexPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* x, /*_In_ */size_t i);
+		Vector    RAYMATH_CALLCONV     VectorSetIntXPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* x);
+		Vector    RAYMATH_CALLCONV     VectorSetIntYPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* y);
+		Vector    RAYMATH_CALLCONV     VectorSetIntZPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* z);
+		Vector    RAYMATH_CALLCONV     VectorSetIntWPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* w);
 
 #if defined(__XNAMATH_H__) && defined(VectorSwizzle)
 #undef VectorSwizzle
 #endif
 
-		Vector    XM_CALLCONV     VectorSwizzle(FVector V, uint32_t E0, uint32_t E1, uint32_t E2, uint32_t E3);
-		Vector    XM_CALLCONV     VectorPermute(FVector V1, FVector V2, uint32_t PermuteX, uint32_t PermuteY, uint32_t PermuteZ, uint32_t PermuteW);
-		Vector    XM_CALLCONV     VectorSelectControl(uint32_t VectorIndex0, uint32_t VectorIndex1, uint32_t VectorIndex2, uint32_t VectorIndex3);
-		Vector    XM_CALLCONV     VectorSelect(FVector V1, FVector V2, FVector Control);
-		Vector    XM_CALLCONV     VectorMergeXY(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorMergeZW(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorSwizzle(FVector V, uint32_t E0, uint32_t E1, uint32_t E2, uint32_t E3);
+		Vector    RAYMATH_CALLCONV     VectorPermute(FVector V1, FVector V2, uint32_t PermuteX, uint32_t PermuteY, uint32_t PermuteZ, uint32_t PermuteW);
+		Vector    RAYMATH_CALLCONV     VectorSelectControl(uint32_t VectorIndex0, uint32_t VectorIndex1, uint32_t VectorIndex2, uint32_t VectorIndex3);
+		Vector    RAYMATH_CALLCONV     VectorSelect(FVector V1, FVector V2, FVector Control);
+		Vector    RAYMATH_CALLCONV     VectorMergeXY(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorMergeZW(FVector V1, FVector V2);
 
 #if defined(__XNAMATH_H__) && defined(VectorShiftLeft)
 #undef VectorShiftLeft
@@ -1283,100 +1278,100 @@ namespace At0
 #undef VectorInsert
 #endif
 
-		Vector    XM_CALLCONV     VectorShiftLeft(FVector V1, FVector V2, uint32_t Elements);
-		Vector    XM_CALLCONV     VectorRotateLeft(FVector V, uint32_t Elements);
-		Vector    XM_CALLCONV     VectorRotateRight(FVector V, uint32_t Elements);
-		Vector    XM_CALLCONV     VectorInsert(FVector VD, FVector VS, uint32_t VSLeftRotateElements,
+		Vector    RAYMATH_CALLCONV     VectorShiftLeft(FVector V1, FVector V2, uint32_t Elements);
+		Vector    RAYMATH_CALLCONV     VectorRotateLeft(FVector V, uint32_t Elements);
+		Vector    RAYMATH_CALLCONV     VectorRotateRight(FVector V, uint32_t Elements);
+		Vector    RAYMATH_CALLCONV     VectorInsert(FVector VD, FVector VS, uint32_t VSLeftRotateElements,
 			uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3);
 
-		Vector    XM_CALLCONV     VectorEqual(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
-		Vector    XM_CALLCONV     VectorEqualInt(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorEqualIntR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V, /*_In_ */FVector V2);
-		Vector    XM_CALLCONV     VectorNearEqual(FVector V1, FVector V2, FVector Epsilon);
-		Vector    XM_CALLCONV     VectorNotEqual(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorNotEqualInt(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorGreater(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorGreaterR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
-		Vector    XM_CALLCONV     VectorGreaterOrEqual(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorGreaterOrEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
-		Vector    XM_CALLCONV     VectorLess(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorLessOrEqual(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorInBounds(FVector V, FVector Bounds);
-		Vector    XM_CALLCONV     VectorInBoundsR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V, /*_In_ */FVector Bounds);
+		Vector    RAYMATH_CALLCONV     VectorEqual(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorEqualInt(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorEqualIntR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V, /*_In_ */FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorNearEqual(FVector V1, FVector V2, FVector Epsilon);
+		Vector    RAYMATH_CALLCONV     VectorNotEqual(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorNotEqualInt(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorGreater(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorGreaterR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorGreaterOrEqual(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorGreaterOrEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorLess(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorLessOrEqual(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorInBounds(FVector V, FVector Bounds);
+		Vector    RAYMATH_CALLCONV     VectorInBoundsR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V, /*_In_ */FVector Bounds);
 
-		Vector    XM_CALLCONV     VectorIsNaN(FVector V);
-		Vector    XM_CALLCONV     VectorIsInfinite(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorIsNaN(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorIsInfinite(FVector V);
 
-		Vector    XM_CALLCONV     VectorMin(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorMax(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorRound(FVector V);
-		Vector    XM_CALLCONV     VectorTruncate(FVector V);
-		Vector    XM_CALLCONV     VectorFloor(FVector V);
-		Vector    XM_CALLCONV     VectorCeiling(FVector V);
-		Vector    XM_CALLCONV     VectorClamp(FVector V, FVector Min, FVector Max);
-		Vector    XM_CALLCONV     VectorSaturate(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorMin(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorMax(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorRound(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorTruncate(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorFloor(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorCeiling(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorClamp(FVector V, FVector Min, FVector Max);
+		Vector    RAYMATH_CALLCONV     VectorSaturate(FVector V);
 
-		Vector    XM_CALLCONV     VectorAndInt(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorAndCInt(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorOrInt(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorNorInt(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorXorInt(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorAndInt(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorAndCInt(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorOrInt(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorNorInt(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorXorInt(FVector V1, FVector V2);
 
-		Vector    XM_CALLCONV     VectorNegate(FVector V);
-		Vector    XM_CALLCONV     VectorAdd(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorSum(FVector V);
-		Vector    XM_CALLCONV     VectorAddAngles(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorSubtract(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorSubtractAngles(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorMultiply(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorMultiplyAdd(FVector V1, FVector V2, FVector V3);
-		Vector    XM_CALLCONV     VectorDivide(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorNegativeMultiplySubtract(FVector V1, FVector V2, FVector V3);
-		Vector    XM_CALLCONV     VectorScale(FVector V, float ScaleFactor);
-		Vector    XM_CALLCONV     VectorReciprocalEst(FVector V);
-		Vector    XM_CALLCONV     VectorReciprocal(FVector V);
-		Vector    XM_CALLCONV     VectorSqrtEst(FVector V);
-		Vector    XM_CALLCONV     VectorSqrt(FVector V);
-		Vector    XM_CALLCONV     VectorReciprocalSqrtEst(FVector V);
-		Vector    XM_CALLCONV     VectorReciprocalSqrt(FVector V);
-		Vector    XM_CALLCONV     VectorExp2(FVector V);
-		Vector    XM_CALLCONV     VectorExpE(FVector V);
-		Vector    XM_CALLCONV     VectorExp(FVector V);
-		Vector    XM_CALLCONV     VectorLog2(FVector V);
-		Vector    XM_CALLCONV     VectorLogE(FVector V);
-		Vector    XM_CALLCONV     VectorLog(FVector V);
-		Vector    XM_CALLCONV     VectorPow(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorAbs(FVector V);
-		Vector    XM_CALLCONV     VectorMod(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     VectorModAngles(FVector Angles);
-		Vector    XM_CALLCONV     VectorSin(FVector V);
-		Vector    XM_CALLCONV     VectorSinEst(FVector V);
-		Vector    XM_CALLCONV     VectorCos(FVector V);
-		Vector    XM_CALLCONV     VectorCosEst(FVector V);
-		void        XM_CALLCONV     VectorSinCos(/*_Out_ */ Vector* pSin, /*_Out_ */ Vector* pCos, /*_In_ */FVector V);
-		void        XM_CALLCONV     VectorSinCosEst(/*_Out_ */ Vector* pSin, /*_Out_ */ Vector* pCos, /*_In_ */FVector V);
-		Vector    XM_CALLCONV     VectorTan(FVector V);
-		Vector    XM_CALLCONV     VectorTanEst(FVector V);
-		Vector    XM_CALLCONV     VectorSinH(FVector V);
-		Vector    XM_CALLCONV     VectorCosH(FVector V);
-		Vector    XM_CALLCONV     VectorTanH(FVector V);
-		Vector    XM_CALLCONV     VectorASin(FVector V);
-		Vector    XM_CALLCONV     VectorASinEst(FVector V);
-		Vector    XM_CALLCONV     VectorACos(FVector V);
-		Vector    XM_CALLCONV     VectorACosEst(FVector V);
-		Vector    XM_CALLCONV     VectorATan(FVector V);
-		Vector    XM_CALLCONV     VectorATanEst(FVector V);
-		Vector    XM_CALLCONV     VectorATan2(FVector Y, FVector X);
-		Vector    XM_CALLCONV     VectorATan2Est(FVector Y, FVector X);
-		Vector    XM_CALLCONV     VectorLerp(FVector V0, FVector V1, float t);
-		Vector    XM_CALLCONV     VectorLerpV(FVector V0, FVector V1, FVector T);
-		Vector    XM_CALLCONV     VectorHermite(FVector Position0, FVector Tangent0, FVector Position1, GVector Tangent1, float t);
-		Vector    XM_CALLCONV     VectorHermiteV(FVector Position0, FVector Tangent0, FVector Position1, GVector Tangent1, HVector T);
-		Vector    XM_CALLCONV     VectorCatmullRom(FVector Position0, FVector Position1, FVector Position2, GVector Position3, float t);
-		Vector    XM_CALLCONV     VectorCatmullRomV(FVector Position0, FVector Position1, FVector Position2, GVector Position3, HVector T);
-		Vector    XM_CALLCONV     VectorBaryCentric(FVector Position0, FVector Position1, FVector Position2, float f, float g);
-		Vector    XM_CALLCONV     VectorBaryCentricV(FVector Position0, FVector Position1, FVector Position2, GVector F, HVector G);
+		Vector    RAYMATH_CALLCONV     VectorNegate(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorAdd(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorSum(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorAddAngles(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorSubtract(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorSubtractAngles(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorMultiply(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorMultiplyAdd(FVector V1, FVector V2, FVector V3);
+		Vector    RAYMATH_CALLCONV     VectorDivide(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorNegativeMultiplySubtract(FVector V1, FVector V2, FVector V3);
+		Vector    RAYMATH_CALLCONV     VectorScale(FVector V, float ScaleFactor);
+		Vector    RAYMATH_CALLCONV     VectorReciprocalEst(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorReciprocal(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorSqrtEst(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorSqrt(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorReciprocalSqrtEst(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorReciprocalSqrt(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorExp2(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorExpE(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorExp(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorLog2(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorLogE(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorLog(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorPow(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorAbs(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorMod(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     VectorModAngles(FVector Angles);
+		Vector    RAYMATH_CALLCONV     VectorSin(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorSinEst(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorCos(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorCosEst(FVector V);
+		void        RAYMATH_CALLCONV     VectorSinCos(/*_Out_ */ Vector* pSin, /*_Out_ */ Vector* pCos, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     VectorSinCosEst(/*_Out_ */ Vector* pSin, /*_Out_ */ Vector* pCos, /*_In_ */FVector V);
+		Vector    RAYMATH_CALLCONV     VectorTan(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorTanEst(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorSinH(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorCosH(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorTanH(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorASin(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorASinEst(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorACos(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorACosEst(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorATan(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorATanEst(FVector V);
+		Vector    RAYMATH_CALLCONV     VectorATan2(FVector Y, FVector X);
+		Vector    RAYMATH_CALLCONV     VectorATan2Est(FVector Y, FVector X);
+		Vector    RAYMATH_CALLCONV     VectorLerp(FVector V0, FVector V1, float t);
+		Vector    RAYMATH_CALLCONV     VectorLerpV(FVector V0, FVector V1, FVector T);
+		Vector    RAYMATH_CALLCONV     VectorHermite(FVector Position0, FVector Tangent0, FVector Position1, GVector Tangent1, float t);
+		Vector    RAYMATH_CALLCONV     VectorHermiteV(FVector Position0, FVector Tangent0, FVector Position1, GVector Tangent1, HVector T);
+		Vector    RAYMATH_CALLCONV     VectorCatmullRom(FVector Position0, FVector Position1, FVector Position2, GVector Position3, float t);
+		Vector    RAYMATH_CALLCONV     VectorCatmullRomV(FVector Position0, FVector Position1, FVector Position2, GVector Position3, HVector T);
+		Vector    RAYMATH_CALLCONV     VectorBaryCentric(FVector Position0, FVector Position1, FVector Position2, float f, float g);
+		Vector    RAYMATH_CALLCONV     VectorBaryCentricV(FVector Position0, FVector Position1, FVector Position2, GVector F, HVector G);
 
 		/****************************************************************************
 		 *
@@ -1384,56 +1379,56 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		bool        XM_CALLCONV     Vector2Equal(FVector V1, FVector V2);
-		uint32_t    XM_CALLCONV     Vector2EqualR(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector2EqualInt(FVector V1, FVector V2);
-		uint32_t    XM_CALLCONV     Vector2EqualIntR(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector2NearEqual(FVector V1, FVector V2, FVector Epsilon);
-		bool        XM_CALLCONV     Vector2NotEqual(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector2NotEqualInt(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector2Greater(FVector V1, FVector V2);
-		uint32_t    XM_CALLCONV     Vector2GreaterR(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector2GreaterOrEqual(FVector V1, FVector V2);
-		uint32_t    XM_CALLCONV     Vector2GreaterOrEqualR(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector2Less(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector2LessOrEqual(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector2InBounds(FVector V, FVector Bounds);
+		bool        RAYMATH_CALLCONV     Vector2Equal(FVector V1, FVector V2);
+		uint32_t    RAYMATH_CALLCONV     Vector2EqualR(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector2EqualInt(FVector V1, FVector V2);
+		uint32_t    RAYMATH_CALLCONV     Vector2EqualIntR(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector2NearEqual(FVector V1, FVector V2, FVector Epsilon);
+		bool        RAYMATH_CALLCONV     Vector2NotEqual(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector2NotEqualInt(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector2Greater(FVector V1, FVector V2);
+		uint32_t    RAYMATH_CALLCONV     Vector2GreaterR(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector2GreaterOrEqual(FVector V1, FVector V2);
+		uint32_t    RAYMATH_CALLCONV     Vector2GreaterOrEqualR(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector2Less(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector2LessOrEqual(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector2InBounds(FVector V, FVector Bounds);
 
-		bool        XM_CALLCONV     Vector2IsNaN(FVector V);
-		bool        XM_CALLCONV     Vector2IsInfinite(FVector V);
+		bool        RAYMATH_CALLCONV     Vector2IsNaN(FVector V);
+		bool        RAYMATH_CALLCONV     Vector2IsInfinite(FVector V);
 
-		Vector    XM_CALLCONV     Vector2Dot(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     Vector2Cross(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     Vector2LengthSq(FVector V);
-		Vector    XM_CALLCONV     Vector2ReciprocalLengthEst(FVector V);
-		Vector    XM_CALLCONV     Vector2ReciprocalLength(FVector V);
-		Vector    XM_CALLCONV     Vector2LengthEst(FVector V);
-		Vector    XM_CALLCONV     Vector2Length(FVector V);
-		Vector    XM_CALLCONV     Vector2NormalizeEst(FVector V);
-		Vector    XM_CALLCONV     Vector2Normalize(FVector V);
-		Vector    XM_CALLCONV     Vector2ClampLength(FVector V, float LengthMin, float LengthMax);
-		Vector    XM_CALLCONV     Vector2ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
-		Vector    XM_CALLCONV     Vector2Reflect(FVector Incident, FVector Normal);
-		Vector    XM_CALLCONV     Vector2Refract(FVector Incident, FVector Normal, float RefractionIndex);
-		Vector    XM_CALLCONV     Vector2RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
-		Vector    XM_CALLCONV     Vector2Orthogonal(FVector V);
-		Vector    XM_CALLCONV     Vector2AngleBetweenNormalsEst(FVector N1, FVector N2);
-		Vector    XM_CALLCONV     Vector2AngleBetweenNormals(FVector N1, FVector N2);
-		Vector    XM_CALLCONV     Vector2AngleBetweenVectors(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     Vector2LinePointDistance(FVector LinePoint1, FVector LinePoint2, FVector Point);
-		Vector    XM_CALLCONV     Vector2IntersectLine(FVector Line1Point1, FVector Line1Point2, FVector Line2Point1, GVector Line2Point2);
-		Vector    XM_CALLCONV     Vector2Transform(FVector V, FMatrix M);
-		Float4* XM_CALLCONV     Vector2TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
+		Vector    RAYMATH_CALLCONV     Vector2Dot(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     Vector2Cross(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     Vector2LengthSq(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector2ReciprocalLengthEst(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector2ReciprocalLength(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector2LengthEst(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector2Length(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector2NormalizeEst(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector2Normalize(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector2ClampLength(FVector V, float LengthMin, float LengthMax);
+		Vector    RAYMATH_CALLCONV     Vector2ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
+		Vector    RAYMATH_CALLCONV     Vector2Reflect(FVector Incident, FVector Normal);
+		Vector    RAYMATH_CALLCONV     Vector2Refract(FVector Incident, FVector Normal, float RefractionIndex);
+		Vector    RAYMATH_CALLCONV     Vector2RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
+		Vector    RAYMATH_CALLCONV     Vector2Orthogonal(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector2AngleBetweenNormalsEst(FVector N1, FVector N2);
+		Vector    RAYMATH_CALLCONV     Vector2AngleBetweenNormals(FVector N1, FVector N2);
+		Vector    RAYMATH_CALLCONV     Vector2AngleBetweenVectors(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     Vector2LinePointDistance(FVector LinePoint1, FVector LinePoint2, FVector Point);
+		Vector    RAYMATH_CALLCONV     Vector2IntersectLine(FVector Line1Point1, FVector Line1Point2, FVector Line2Point1, GVector Line2Point2);
+		Vector    RAYMATH_CALLCONV     Vector2Transform(FVector V, FMatrix M);
+		Float4* RAYMATH_CALLCONV     Vector2TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) */const Float2* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		Vector    XM_CALLCONV     Vector2TransformCoord(FVector V, FMatrix M);
-		Float2* XM_CALLCONV     Vector2TransformCoordStream(/*_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) */Float2* pOutputStream,
+		Vector    RAYMATH_CALLCONV     Vector2TransformCoord(FVector V, FMatrix M);
+		Float2* RAYMATH_CALLCONV     Vector2TransformCoordStream(/*_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) */Float2* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) */const Float2* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		Vector    XM_CALLCONV     Vector2TransformNormal(FVector V, FMatrix M);
-		Float2* XM_CALLCONV     Vector2TransformNormalStream(/*_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) */Float2* pOutputStream,
+		Vector    RAYMATH_CALLCONV     Vector2TransformNormal(FVector V, FMatrix M);
+		Float2* RAYMATH_CALLCONV     Vector2TransformNormalStream(/*_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) */Float2* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) */const Float2* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
@@ -1444,72 +1439,72 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		bool        XM_CALLCONV     Vector3Equal(FVector V1, FVector V2);
-		uint32_t    XM_CALLCONV     Vector3EqualR(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector3EqualInt(FVector V1, FVector V2);
-		uint32_t    XM_CALLCONV     Vector3EqualIntR(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector3NearEqual(FVector V1, FVector V2, FVector Epsilon);
-		bool        XM_CALLCONV     Vector3NotEqual(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector3NotEqualInt(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector3Greater(FVector V1, FVector V2);
-		uint32_t    XM_CALLCONV     Vector3GreaterR(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector3GreaterOrEqual(FVector V1, FVector V2);
-		uint32_t    XM_CALLCONV     Vector3GreaterOrEqualR(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector3Less(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector3LessOrEqual(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector3InBounds(FVector V, FVector Bounds);
+		bool        RAYMATH_CALLCONV     Vector3Equal(FVector V1, FVector V2);
+		uint32_t    RAYMATH_CALLCONV     Vector3EqualR(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector3EqualInt(FVector V1, FVector V2);
+		uint32_t    RAYMATH_CALLCONV     Vector3EqualIntR(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector3NearEqual(FVector V1, FVector V2, FVector Epsilon);
+		bool        RAYMATH_CALLCONV     Vector3NotEqual(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector3NotEqualInt(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector3Greater(FVector V1, FVector V2);
+		uint32_t    RAYMATH_CALLCONV     Vector3GreaterR(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector3GreaterOrEqual(FVector V1, FVector V2);
+		uint32_t    RAYMATH_CALLCONV     Vector3GreaterOrEqualR(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector3Less(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector3LessOrEqual(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector3InBounds(FVector V, FVector Bounds);
 
-		bool        XM_CALLCONV     Vector3IsNaN(FVector V);
-		bool        XM_CALLCONV     Vector3IsInfinite(FVector V);
+		bool        RAYMATH_CALLCONV     Vector3IsNaN(FVector V);
+		bool        RAYMATH_CALLCONV     Vector3IsInfinite(FVector V);
 
-		Vector    XM_CALLCONV     Vector3Dot(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     Vector3Cross(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     Vector3LengthSq(FVector V);
-		Vector    XM_CALLCONV     Vector3ReciprocalLengthEst(FVector V);
-		Vector    XM_CALLCONV     Vector3ReciprocalLength(FVector V);
-		Vector    XM_CALLCONV     Vector3LengthEst(FVector V);
-		Vector    XM_CALLCONV     Vector3Length(FVector V);
-		Vector    XM_CALLCONV     Vector3NormalizeEst(FVector V);
-		Vector    XM_CALLCONV     Vector3Normalize(FVector V);
-		Vector    XM_CALLCONV     Vector3ClampLength(FVector V, float LengthMin, float LengthMax);
-		Vector    XM_CALLCONV     Vector3ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
-		Vector    XM_CALLCONV     Vector3Reflect(FVector Incident, FVector Normal);
-		Vector    XM_CALLCONV     Vector3Refract(FVector Incident, FVector Normal, float RefractionIndex);
-		Vector    XM_CALLCONV     Vector3RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
-		Vector    XM_CALLCONV     Vector3Orthogonal(FVector V);
-		Vector    XM_CALLCONV     Vector3AngleBetweenNormalsEst(FVector N1, FVector N2);
-		Vector    XM_CALLCONV     Vector3AngleBetweenNormals(FVector N1, FVector N2);
-		Vector    XM_CALLCONV     Vector3AngleBetweenVectors(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     Vector3LinePointDistance(FVector LinePoint1, FVector LinePoint2, FVector Point);
-		void        XM_CALLCONV     Vector3ComponentsFromNormal(/*_Out_ */ Vector* pParallel, /*_Out_ */ Vector* pPerpendicular, /*_In_ */FVector V, /*_In_ */FVector Normal);
-		Vector    XM_CALLCONV     Vector3Rotate(FVector V, FQuaternion RotationQuaternion);
-		Vector    XM_CALLCONV     Vector3InverseRotate(FVector V, FQuaternion RotationQuaternion);
-		Vector    XM_CALLCONV     Vector3Transform(FVector V, FMatrix M);
-		Float4* XM_CALLCONV     Vector3TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
+		Vector    RAYMATH_CALLCONV     Vector3Dot(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     Vector3Cross(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     Vector3LengthSq(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector3ReciprocalLengthEst(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector3ReciprocalLength(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector3LengthEst(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector3Length(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector3NormalizeEst(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector3Normalize(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector3ClampLength(FVector V, float LengthMin, float LengthMax);
+		Vector    RAYMATH_CALLCONV     Vector3ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
+		Vector    RAYMATH_CALLCONV     Vector3Reflect(FVector Incident, FVector Normal);
+		Vector    RAYMATH_CALLCONV     Vector3Refract(FVector Incident, FVector Normal, float RefractionIndex);
+		Vector    RAYMATH_CALLCONV     Vector3RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
+		Vector    RAYMATH_CALLCONV     Vector3Orthogonal(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector3AngleBetweenNormalsEst(FVector N1, FVector N2);
+		Vector    RAYMATH_CALLCONV     Vector3AngleBetweenNormals(FVector N1, FVector N2);
+		Vector    RAYMATH_CALLCONV     Vector3AngleBetweenVectors(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     Vector3LinePointDistance(FVector LinePoint1, FVector LinePoint2, FVector Point);
+		void        RAYMATH_CALLCONV     Vector3ComponentsFromNormal(/*_Out_ */ Vector* pParallel, /*_Out_ */ Vector* pPerpendicular, /*_In_ */FVector V, /*_In_ */FVector Normal);
+		Vector    RAYMATH_CALLCONV     Vector3Rotate(FVector V, FQuaternion RotationQuaternion);
+		Vector    RAYMATH_CALLCONV     Vector3InverseRotate(FVector V, FQuaternion RotationQuaternion);
+		Vector    RAYMATH_CALLCONV     Vector3Transform(FVector V, FMatrix M);
+		Float4* RAYMATH_CALLCONV     Vector3TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		Vector    XM_CALLCONV     Vector3TransformCoord(FVector V, FMatrix M);
-		Float3* XM_CALLCONV     Vector3TransformCoordStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
+		Vector    RAYMATH_CALLCONV     Vector3TransformCoord(FVector V, FMatrix M);
+		Float3* RAYMATH_CALLCONV     Vector3TransformCoordStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		Vector    XM_CALLCONV     Vector3TransformNormal(FVector V, FMatrix M);
-		Float3* XM_CALLCONV     Vector3TransformNormalStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
+		Vector    RAYMATH_CALLCONV     Vector3TransformNormal(FVector V, FMatrix M);
+		Float3* RAYMATH_CALLCONV     Vector3TransformNormalStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		Vector    XM_CALLCONV     Vector3Project(FVector V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
+		Vector    RAYMATH_CALLCONV     Vector3Project(FVector V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
 			FMatrix Projection, CMatrix View, CMatrix World);
-		Float3* XM_CALLCONV     Vector3ProjectStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
+		Float3* RAYMATH_CALLCONV     Vector3ProjectStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount,
 			/*_In_ */float ViewportX, /*_In_ */float ViewportY, /*_In_ */float ViewportWidth, /*_In_ */float ViewportHeight, /*_In_ */float ViewportMinZ, /*_In_ */float ViewportMaxZ,
 			/*_In_ */FMatrix Projection, /*_In_ */CMatrix View, /*_In_ */CMatrix World);
-		Vector    XM_CALLCONV     Vector3Unproject(FVector V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
+		Vector    RAYMATH_CALLCONV     Vector3Unproject(FVector V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
 			FMatrix Projection, CMatrix View, CMatrix World);
-		Float3* XM_CALLCONV     Vector3UnprojectStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
+		Float3* RAYMATH_CALLCONV     Vector3UnprojectStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount,
@@ -1522,44 +1517,44 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		bool        XM_CALLCONV     Vector4Equal(FVector V1, FVector V2);
-		uint32_t    XM_CALLCONV     Vector4EqualR(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector4EqualInt(FVector V1, FVector V2);
-		uint32_t    XM_CALLCONV     Vector4EqualIntR(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector4NearEqual(FVector V1, FVector V2, FVector Epsilon);
-		bool        XM_CALLCONV     Vector4NotEqual(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector4NotEqualInt(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector4Greater(FVector V1, FVector V2);
-		uint32_t    XM_CALLCONV     Vector4GreaterR(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector4GreaterOrEqual(FVector V1, FVector V2);
-		uint32_t    XM_CALLCONV     Vector4GreaterOrEqualR(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector4Less(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector4LessOrEqual(FVector V1, FVector V2);
-		bool        XM_CALLCONV     Vector4InBounds(FVector V, FVector Bounds);
+		bool        RAYMATH_CALLCONV     Vector4Equal(FVector V1, FVector V2);
+		uint32_t    RAYMATH_CALLCONV     Vector4EqualR(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector4EqualInt(FVector V1, FVector V2);
+		uint32_t    RAYMATH_CALLCONV     Vector4EqualIntR(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector4NearEqual(FVector V1, FVector V2, FVector Epsilon);
+		bool        RAYMATH_CALLCONV     Vector4NotEqual(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector4NotEqualInt(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector4Greater(FVector V1, FVector V2);
+		uint32_t    RAYMATH_CALLCONV     Vector4GreaterR(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector4GreaterOrEqual(FVector V1, FVector V2);
+		uint32_t    RAYMATH_CALLCONV     Vector4GreaterOrEqualR(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector4Less(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector4LessOrEqual(FVector V1, FVector V2);
+		bool        RAYMATH_CALLCONV     Vector4InBounds(FVector V, FVector Bounds);
 
-		bool        XM_CALLCONV     Vector4IsNaN(FVector V);
-		bool        XM_CALLCONV     Vector4IsInfinite(FVector V);
+		bool        RAYMATH_CALLCONV     Vector4IsNaN(FVector V);
+		bool        RAYMATH_CALLCONV     Vector4IsInfinite(FVector V);
 
-		Vector    XM_CALLCONV     Vector4Dot(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     Vector4Cross(FVector V1, FVector V2, FVector V3);
-		Vector    XM_CALLCONV     Vector4LengthSq(FVector V);
-		Vector    XM_CALLCONV     Vector4ReciprocalLengthEst(FVector V);
-		Vector    XM_CALLCONV     Vector4ReciprocalLength(FVector V);
-		Vector    XM_CALLCONV     Vector4LengthEst(FVector V);
-		Vector    XM_CALLCONV     Vector4Length(FVector V);
-		Vector    XM_CALLCONV     Vector4NormalizeEst(FVector V);
-		Vector    XM_CALLCONV     Vector4Normalize(FVector V);
-		Vector    XM_CALLCONV     Vector4ClampLength(FVector V, float LengthMin, float LengthMax);
-		Vector    XM_CALLCONV     Vector4ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
-		Vector    XM_CALLCONV     Vector4Reflect(FVector Incident, FVector Normal);
-		Vector    XM_CALLCONV     Vector4Refract(FVector Incident, FVector Normal, float RefractionIndex);
-		Vector    XM_CALLCONV     Vector4RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
-		Vector    XM_CALLCONV     Vector4Orthogonal(FVector V);
-		Vector    XM_CALLCONV     Vector4AngleBetweenNormalsEst(FVector N1, FVector N2);
-		Vector    XM_CALLCONV     Vector4AngleBetweenNormals(FVector N1, FVector N2);
-		Vector    XM_CALLCONV     Vector4AngleBetweenVectors(FVector V1, FVector V2);
-		Vector    XM_CALLCONV     Vector4Transform(FVector V, FMatrix M);
-		Float4* XM_CALLCONV     Vector4TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
+		Vector    RAYMATH_CALLCONV     Vector4Dot(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     Vector4Cross(FVector V1, FVector V2, FVector V3);
+		Vector    RAYMATH_CALLCONV     Vector4LengthSq(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector4ReciprocalLengthEst(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector4ReciprocalLength(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector4LengthEst(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector4Length(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector4NormalizeEst(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector4Normalize(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector4ClampLength(FVector V, float LengthMin, float LengthMax);
+		Vector    RAYMATH_CALLCONV     Vector4ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
+		Vector    RAYMATH_CALLCONV     Vector4Reflect(FVector Incident, FVector Normal);
+		Vector    RAYMATH_CALLCONV     Vector4Refract(FVector Incident, FVector Normal, float RefractionIndex);
+		Vector    RAYMATH_CALLCONV     Vector4RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
+		Vector    RAYMATH_CALLCONV     Vector4Orthogonal(FVector V);
+		Vector    RAYMATH_CALLCONV     Vector4AngleBetweenNormalsEst(FVector N1, FVector N2);
+		Vector    RAYMATH_CALLCONV     Vector4AngleBetweenNormals(FVector N1, FVector N2);
+		Vector    RAYMATH_CALLCONV     Vector4AngleBetweenVectors(FVector V1, FVector V2);
+		Vector    RAYMATH_CALLCONV     Vector4Transform(FVector V, FMatrix M);
+		Float4* RAYMATH_CALLCONV     Vector4TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float4) + InputStride * (VectorCount - 1)) */const Float4* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
@@ -1571,28 +1566,28 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		bool        XM_CALLCONV     PlaneEqual(FVector P1, FVector P2);
-		bool        XM_CALLCONV     PlaneNearEqual(FVector P1, FVector P2, FVector Epsilon);
-		bool        XM_CALLCONV     PlaneNotEqual(FVector P1, FVector P2);
+		bool        RAYMATH_CALLCONV     PlaneEqual(FVector P1, FVector P2);
+		bool        RAYMATH_CALLCONV     PlaneNearEqual(FVector P1, FVector P2, FVector Epsilon);
+		bool        RAYMATH_CALLCONV     PlaneNotEqual(FVector P1, FVector P2);
 
-		bool        XM_CALLCONV     PlaneIsNaN(FVector P);
-		bool        XM_CALLCONV     PlaneIsInfinite(FVector P);
+		bool        RAYMATH_CALLCONV     PlaneIsNaN(FVector P);
+		bool        RAYMATH_CALLCONV     PlaneIsInfinite(FVector P);
 
-		Vector    XM_CALLCONV     PlaneDot(FVector P, FVector V);
-		Vector    XM_CALLCONV     PlaneDotCoord(FVector P, FVector V);
-		Vector    XM_CALLCONV     PlaneDotNormal(FVector P, FVector V);
-		Vector    XM_CALLCONV     PlaneNormalizeEst(FVector P);
-		Vector    XM_CALLCONV     PlaneNormalize(FVector P);
-		Vector    XM_CALLCONV     PlaneIntersectLine(FVector P, FVector LinePoint1, FVector LinePoint2);
-		void        XM_CALLCONV     PlaneIntersectPlane(/*_Out_ */ Vector* pLinePoint1, /*_Out_ */ Vector* pLinePoint2, /*_In_ */FVector P1, /*_In_ */FVector P2);
-		Vector    XM_CALLCONV     PlaneTransform(FVector P, FMatrix M);
-		Float4* XM_CALLCONV     PlaneTransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (PlaneCount - 1)) */Float4* pOutputStream,
+		Vector    RAYMATH_CALLCONV     PlaneDot(FVector P, FVector V);
+		Vector    RAYMATH_CALLCONV     PlaneDotCoord(FVector P, FVector V);
+		Vector    RAYMATH_CALLCONV     PlaneDotNormal(FVector P, FVector V);
+		Vector    RAYMATH_CALLCONV     PlaneNormalizeEst(FVector P);
+		Vector    RAYMATH_CALLCONV     PlaneNormalize(FVector P);
+		Vector    RAYMATH_CALLCONV     PlaneIntersectLine(FVector P, FVector LinePoint1, FVector LinePoint2);
+		void        RAYMATH_CALLCONV     PlaneIntersectPlane(/*_Out_ */ Vector* pLinePoint1, /*_Out_ */ Vector* pLinePoint2, /*_In_ */FVector P1, /*_In_ */FVector P2);
+		Vector    RAYMATH_CALLCONV     PlaneTransform(FVector P, FMatrix M);
+		Float4* RAYMATH_CALLCONV     PlaneTransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (PlaneCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float4) + InputStride * (PlaneCount - 1)) */const Float4* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t PlaneCount, /*_In_ */FMatrix M);
 
-		Vector    XM_CALLCONV     PlaneFromPointNormal(FVector Point, FVector Normal);
-		Vector    XM_CALLCONV     PlaneFromPoints(FVector Point1, FVector Point2, FVector Point3);
+		Vector    RAYMATH_CALLCONV     PlaneFromPointNormal(FVector Point, FVector Normal);
+		Vector    RAYMATH_CALLCONV     PlaneFromPoints(FVector Point1, FVector Point2, FVector Point3);
 
 		/****************************************************************************
 		 *
@@ -1600,41 +1595,41 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		bool        XM_CALLCONV     ColorEqual(FVector C1, FVector C2);
-		bool        XM_CALLCONV     ColorNotEqual(FVector C1, FVector C2);
-		bool        XM_CALLCONV     ColorGreater(FVector C1, FVector C2);
-		bool        XM_CALLCONV     ColorGreaterOrEqual(FVector C1, FVector C2);
-		bool        XM_CALLCONV     ColorLess(FVector C1, FVector C2);
-		bool        XM_CALLCONV     ColorLessOrEqual(FVector C1, FVector C2);
+		bool        RAYMATH_CALLCONV     ColorEqual(FVector C1, FVector C2);
+		bool        RAYMATH_CALLCONV     ColorNotEqual(FVector C1, FVector C2);
+		bool        RAYMATH_CALLCONV     ColorGreater(FVector C1, FVector C2);
+		bool        RAYMATH_CALLCONV     ColorGreaterOrEqual(FVector C1, FVector C2);
+		bool        RAYMATH_CALLCONV     ColorLess(FVector C1, FVector C2);
+		bool        RAYMATH_CALLCONV     ColorLessOrEqual(FVector C1, FVector C2);
 
-		bool        XM_CALLCONV     ColorIsNaN(FVector C);
-		bool        XM_CALLCONV     ColorIsInfinite(FVector C);
+		bool        RAYMATH_CALLCONV     ColorIsNaN(FVector C);
+		bool        RAYMATH_CALLCONV     ColorIsInfinite(FVector C);
 
-		Vector    XM_CALLCONV     ColorNegative(FVector C);
-		Vector    XM_CALLCONV     ColorModulate(FVector C1, FVector C2);
-		Vector    XM_CALLCONV     ColorAdjustSaturation(FVector C, float Saturation);
-		Vector    XM_CALLCONV     ColorAdjustContrast(FVector C, float Contrast);
+		Vector    RAYMATH_CALLCONV     ColorNegative(FVector C);
+		Vector    RAYMATH_CALLCONV     ColorModulate(FVector C1, FVector C2);
+		Vector    RAYMATH_CALLCONV     ColorAdjustSaturation(FVector C, float Saturation);
+		Vector    RAYMATH_CALLCONV     ColorAdjustContrast(FVector C, float Contrast);
 
-		Vector    XM_CALLCONV     ColorRGBToHSL(FVector rgb);
-		Vector    XM_CALLCONV     ColorHSLToRGB(FVector hsl);
+		Vector    RAYMATH_CALLCONV     ColorRGBToHSL(FVector rgb);
+		Vector    RAYMATH_CALLCONV     ColorHSLToRGB(FVector hsl);
 
-		Vector    XM_CALLCONV     ColorRGBToHSV(FVector rgb);
-		Vector    XM_CALLCONV     ColorHSVToRGB(FVector hsv);
+		Vector    RAYMATH_CALLCONV     ColorRGBToHSV(FVector rgb);
+		Vector    RAYMATH_CALLCONV     ColorHSVToRGB(FVector hsv);
 
-		Vector    XM_CALLCONV     ColorRGBToYUV(FVector rgb);
-		Vector    XM_CALLCONV     ColorYUVToRGB(FVector yuv);
+		Vector    RAYMATH_CALLCONV     ColorRGBToYUV(FVector rgb);
+		Vector    RAYMATH_CALLCONV     ColorYUVToRGB(FVector yuv);
 
-		Vector    XM_CALLCONV     ColorRGBToYUV_HD(FVector rgb);
-		Vector    XM_CALLCONV     ColorYUVToRGB_HD(FVector yuv);
+		Vector    RAYMATH_CALLCONV     ColorRGBToYUV_HD(FVector rgb);
+		Vector    RAYMATH_CALLCONV     ColorYUVToRGB_HD(FVector yuv);
 
-		Vector    XM_CALLCONV     ColorRGBToXYZ(FVector rgb);
-		Vector    XM_CALLCONV     ColorXYZToRGB(FVector xyz);
+		Vector    RAYMATH_CALLCONV     ColorRGBToXYZ(FVector rgb);
+		Vector    RAYMATH_CALLCONV     ColorXYZToRGB(FVector xyz);
 
-		Vector    XM_CALLCONV     ColorXYZToSRGB(FVector xyz);
-		Vector    XM_CALLCONV     ColorSRGBToXYZ(FVector srgb);
+		Vector    RAYMATH_CALLCONV     ColorXYZToSRGB(FVector xyz);
+		Vector    RAYMATH_CALLCONV     ColorSRGBToXYZ(FVector srgb);
 
-		Vector    XM_CALLCONV     ColorRGBToSRGB(FVector rgb);
-		Vector    XM_CALLCONV     ColorSRGBToRGB(FVector srgb);
+		Vector    RAYMATH_CALLCONV     ColorRGBToSRGB(FVector rgb);
+		Vector    RAYMATH_CALLCONV     ColorSRGBToRGB(FVector srgb);
 
 
 		/****************************************************************************
@@ -1645,7 +1640,7 @@ namespace At0
 
 		bool            VerifyCPUSupport();
 
-		Vector    XM_CALLCONV     FresnelTerm(FVector CosIncidentAngle, FVector RefractionIndex);
+		Vector    RAYMATH_CALLCONV     FresnelTerm(FVector CosIncidentAngle, FVector RefractionIndex);
 
 		bool            ScalarNearEqual(float S1, float S2, float Epsilon);
 		float           ScalarModAngle(float Value);
@@ -1681,7 +1676,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-#if defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 
 // PermuteHelper internal template (SSE only)
 		namespace Internal
@@ -1689,7 +1684,7 @@ namespace At0
 			// Slow path fallback for permutes that do not map to a single SSE shuffle opcode.
 			template<uint32_t Shuffle, bool WhichX, bool WhichY, bool WhichZ, bool WhichW> struct PermuteHelper
 			{
-				static Vector     XM_CALLCONV     Permute(FVector v1, FVector v2)
+				static Vector     RAYMATH_CALLCONV     Permute(FVector v1, FVector v2)
 				{
 					static const VectorU32 selectMask =
 					{ { {
@@ -1699,8 +1694,8 @@ namespace At0
 							WhichW ? 0xFFFFFFFF : 0,
 					} } };
 
-					Vector shuffled1 = XM_PERMUTE_PS(v1, Shuffle);
-					Vector shuffled2 = XM_PERMUTE_PS(v2, Shuffle);
+					Vector shuffled1 = RAYMATH_PERMUTE_PS(v1, Shuffle);
+					Vector shuffled2 = RAYMATH_PERMUTE_PS(v2, Shuffle);
 
 					Vector masked1 = _mm_andnot_ps(selectMask, shuffled1);
 					Vector masked2 = _mm_and_ps(selectMask, shuffled2);
@@ -1712,40 +1707,40 @@ namespace At0
 			// Fast path for permutes that only read from the first vector.
 			template<uint32_t Shuffle> struct PermuteHelper<Shuffle, false, false, false, false>
 			{
-				static Vector     XM_CALLCONV     Permute(FVector v1, FVector) { return XM_PERMUTE_PS(v1, Shuffle); }
+				static Vector     RAYMATH_CALLCONV     Permute(FVector v1, FVector) { return RAYMATH_PERMUTE_PS(v1, Shuffle); }
 			};
 
 			// Fast path for permutes that only read from the second vector.
 			template<uint32_t Shuffle> struct PermuteHelper<Shuffle, true, true, true, true>
 			{
-				static Vector     XM_CALLCONV     Permute(FVector, FVector v2) { return XM_PERMUTE_PS(v2, Shuffle); }
+				static Vector     RAYMATH_CALLCONV     Permute(FVector, FVector v2) { return RAYMATH_PERMUTE_PS(v2, Shuffle); }
 			};
 
 			// Fast path for permutes that read XY from the first vector, ZW from the second.
 			template<uint32_t Shuffle> struct PermuteHelper<Shuffle, false, false, true, true>
 			{
-				static Vector     XM_CALLCONV     Permute(FVector v1, FVector v2) { return _mm_shuffle_ps(v1, v2, Shuffle); }
+				static Vector     RAYMATH_CALLCONV     Permute(FVector v1, FVector v2) { return _mm_shuffle_ps(v1, v2, Shuffle); }
 			};
 
 			// Fast path for permutes that read XY from the second vector, ZW from the first.
 			template<uint32_t Shuffle> struct PermuteHelper<Shuffle, true, true, false, false>
 			{
-				static Vector     XM_CALLCONV     Permute(FVector v1, FVector v2) { return _mm_shuffle_ps(v2, v1, Shuffle); }
+				static Vector     RAYMATH_CALLCONV     Permute(FVector v1, FVector v2) { return _mm_shuffle_ps(v2, v1, Shuffle); }
 			};
 		}
 
-#endif // _XM_SSE_INTRINSICS_ && !_XM_NO_INTRINSICS_
+#endif // RAY_SSE_INTRINSICS && !RAY_NO_INTRINSICS
 
 		// General permute template
 		template<uint32_t PermuteX, uint32_t PermuteY, uint32_t PermuteZ, uint32_t PermuteW>
-		inline Vector     XM_CALLCONV     VectorPermute(FVector V1, FVector V2)
+		inline Vector     RAYMATH_CALLCONV     VectorPermute(FVector V1, FVector V2)
 		{
 			static_assert(PermuteX <= 7, "PermuteX template parameter out of range");
 			static_assert(PermuteY <= 7, "PermuteY template parameter out of range");
 			static_assert(PermuteZ <= 7, "PermuteZ template parameter out of range");
 			static_assert(PermuteW <= 7, "PermuteW template parameter out of range");
 
-#if defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 			const uint32_t Shuffle = _MM_SHUFFLE(PermuteW & 3, PermuteZ & 3, PermuteY & 3, PermuteX & 3);
 
 			const bool WhichX = PermuteX > 3;
@@ -1762,87 +1757,87 @@ namespace At0
 		}
 
 		// Special-case permute templates
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 1, 2, 3>(FVector V1, FVector) { return V1; }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<4, 5, 6, 7>(FVector, FVector V2) { return V2; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 2, 3>(FVector V1, FVector) { return V1; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 5, 6, 7>(FVector, FVector V2) { return V2; }
 
-#if defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 1, 4, 5>(FVector V1, FVector V2) { return _mm_movelh_ps(V1, V2); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<6, 7, 2, 3>(FVector V1, FVector V2) { return _mm_movehl_ps(V1, V2); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 4, 1, 5>(FVector V1, FVector V2) { return _mm_unpacklo_ps(V1, V2); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<2, 6, 3, 7>(FVector V1, FVector V2) { return _mm_unpackhi_ps(V1, V2); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<2, 3, 6, 7>(FVector V1, FVector V2) { return _mm_castpd_ps(_mm_unpackhi_pd(_mm_castps_pd(V1), _mm_castps_pd(V2))); }
+#if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 4, 5>(FVector V1, FVector V2) { return _mm_movelh_ps(V1, V2); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<6, 7, 2, 3>(FVector V1, FVector V2) { return _mm_movehl_ps(V1, V2); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 4, 1, 5>(FVector V1, FVector V2) { return _mm_unpacklo_ps(V1, V2); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 6, 3, 7>(FVector V1, FVector V2) { return _mm_unpackhi_ps(V1, V2); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 3, 6, 7>(FVector V1, FVector V2) { return _mm_castpd_ps(_mm_unpackhi_pd(_mm_castps_pd(V1), _mm_castps_pd(V2))); }
 #endif
 
-#if defined(_XM_SSE4_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
-		template<> inline Vector      XM_CALLCONV     VectorPermute<4, 1, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x1); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 5, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x2); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<4, 5, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x3); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 1, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x4); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<4, 1, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x5); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 5, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x6); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<4, 5, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x7); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 1, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x8); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<4, 1, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x9); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 5, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xA); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<4, 5, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xB); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 1, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xC); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<4, 1, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xD); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 5, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xE); }
+#if defined(RAY_SSE4_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 1, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x1); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 5, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x2); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 5, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x3); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x4); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 1, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x5); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 5, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x6); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 5, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x7); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x8); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 1, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x9); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 5, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xA); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 5, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xB); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xC); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 1, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xD); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 5, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xE); }
 #endif
 
-#if defined(_XM_ARM_NEON_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 
 		// If the indices are all in the range 0-3 or 4-7, then use VectorSwizzle instead
 		// The mirror cases are not spelled out here as the programmer can always swap the arguments
 		// (i.e. prefer permutes where the X element comes from the V1 vector instead of the V2 vector)
 
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 1, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vget_low_f32(V2)); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<1, 0, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vget_low_f32(V2)); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 1, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vrev64_f32(vget_low_f32(V2))); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<1, 0, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vrev64_f32(vget_low_f32(V2))); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vget_low_f32(V2)); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 0, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vget_low_f32(V2)); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vrev64_f32(vget_low_f32(V2))); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 0, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vrev64_f32(vget_low_f32(V2))); }
 
-		template<> inline Vector      XM_CALLCONV     VectorPermute<2, 3, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vget_high_f32(V2)); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<3, 2, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vget_high_f32(V2)); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<2, 3, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vrev64_f32(vget_high_f32(V2))); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<3, 2, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vrev64_f32(vget_high_f32(V2))); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 3, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vget_high_f32(V2)); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<3, 2, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vget_high_f32(V2)); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 3, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vrev64_f32(vget_high_f32(V2))); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<3, 2, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vrev64_f32(vget_high_f32(V2))); }
 
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 1, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vget_high_f32(V2)); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<1, 0, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vget_high_f32(V2)); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 1, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vrev64_f32(vget_high_f32(V2))); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<1, 0, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vrev64_f32(vget_high_f32(V2))); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vget_high_f32(V2)); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 0, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vget_high_f32(V2)); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vrev64_f32(vget_high_f32(V2))); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 0, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vrev64_f32(vget_high_f32(V2))); }
 
-		template<> inline Vector      XM_CALLCONV     VectorPermute<3, 2, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vget_low_f32(V2)); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<2, 3, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vrev64_f32(vget_low_f32(V2))); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<3, 2, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vrev64_f32(vget_low_f32(V2))); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<3, 2, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vget_low_f32(V2)); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 3, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vrev64_f32(vget_low_f32(V2))); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<3, 2, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vrev64_f32(vget_low_f32(V2))); }
 
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 4, 2, 6>(FVector V1, FVector V2) { return vtrnq_f32(V1, V2).val[0]; }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<1, 5, 3, 7>(FVector V1, FVector V2) { return vtrnq_f32(V1, V2).val[1]; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 4, 2, 6>(FVector V1, FVector V2) { return vtrnq_f32(V1, V2).val[0]; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 5, 3, 7>(FVector V1, FVector V2) { return vtrnq_f32(V1, V2).val[1]; }
 
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 4, 1, 5>(FVector V1, FVector V2) { return vzipq_f32(V1, V2).val[0]; }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<2, 6, 3, 7>(FVector V1, FVector V2) { return vzipq_f32(V1, V2).val[1]; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 4, 1, 5>(FVector V1, FVector V2) { return vzipq_f32(V1, V2).val[0]; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 6, 3, 7>(FVector V1, FVector V2) { return vzipq_f32(V1, V2).val[1]; }
 
-		template<> inline Vector      XM_CALLCONV     VectorPermute<0, 2, 4, 6>(FVector V1, FVector V2) { return vuzpq_f32(V1, V2).val[0]; }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<1, 3, 5, 7>(FVector V1, FVector V2) { return vuzpq_f32(V1, V2).val[1]; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 2, 4, 6>(FVector V1, FVector V2) { return vuzpq_f32(V1, V2).val[0]; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 3, 5, 7>(FVector V1, FVector V2) { return vuzpq_f32(V1, V2).val[1]; }
 
-		template<> inline Vector      XM_CALLCONV     VectorPermute<1, 2, 3, 4>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 1); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<2, 3, 4, 5>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 2); }
-		template<> inline Vector      XM_CALLCONV     VectorPermute<3, 4, 5, 6>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 3); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 2, 3, 4>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 1); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 3, 4, 5>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 2); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<3, 4, 5, 6>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 3); }
 
-#endif // _XM_ARM_NEON_INTRINSICS_ && !_XM_NO_INTRINSICS_
+#endif // RAY_ARM_NEON_INTRINSICS && !RAY_NO_INTRINSICS
 
 		//------------------------------------------------------------------------------
 
 		// General swizzle template
 		template<uint32_t SwizzleX, uint32_t SwizzleY, uint32_t SwizzleZ, uint32_t SwizzleW>
-		inline Vector     XM_CALLCONV     VectorSwizzle(FVector V)
+		inline Vector     RAYMATH_CALLCONV     VectorSwizzle(FVector V)
 		{
 			static_assert(SwizzleX <= 3, "SwizzleX template parameter out of range");
 			static_assert(SwizzleY <= 3, "SwizzleY template parameter out of range");
 			static_assert(SwizzleZ <= 3, "SwizzleZ template parameter out of range");
 			static_assert(SwizzleW <= 3, "SwizzleW template parameter out of range");
 
-#if defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
-			return XM_PERMUTE_PS(V, _MM_SHUFFLE(SwizzleW, SwizzleZ, SwizzleY, SwizzleX));
+#if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
+			return RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(SwizzleW, SwizzleZ, SwizzleY, SwizzleX));
 #else
 
 			return VectorSwizzle(V, SwizzleX, SwizzleY, SwizzleZ, SwizzleW);
@@ -1851,84 +1846,84 @@ namespace At0
 		}
 
 		// Specialized swizzles
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<0, 1, 2, 3>(FVector V) { return V; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 2, 3>(FVector V) { return V; }
 
-#if defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<0, 1, 0, 1>(FVector V) { return _mm_movelh_ps(V, V); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<2, 3, 2, 3>(FVector V) { return _mm_movehl_ps(V, V); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<0, 0, 1, 1>(FVector V) { return _mm_unpacklo_ps(V, V); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<2, 2, 3, 3>(FVector V) { return _mm_unpackhi_ps(V, V); }
+#if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 0, 1>(FVector V) { return _mm_movelh_ps(V, V); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 2, 3>(FVector V) { return _mm_movehl_ps(V, V); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 1, 1>(FVector V) { return _mm_unpacklo_ps(V, V); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 3, 3>(FVector V) { return _mm_unpackhi_ps(V, V); }
 #endif
 
-#if defined(_XM_SSE3_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<0, 0, 2, 2>(FVector V) { return _mm_moveldup_ps(V); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<1, 1, 3, 3>(FVector V) { return _mm_movehdup_ps(V); }
+#if defined(RAY_SSE3_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 2, 2>(FVector V) { return _mm_moveldup_ps(V); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 3, 3>(FVector V) { return _mm_movehdup_ps(V); }
 #endif
 
-#if defined(_XM_AVX2_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<0, 0, 0, 0>(FVector V) { return _mm_broadcastss_ps(V); }
+#if defined(RAY_AVX2_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 0, 0>(FVector V) { return _mm_broadcastss_ps(V); }
 #endif
 
-#if defined(_XM_ARM_NEON_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<0, 0, 0, 0>(FVector V) { return vdupq_lane_f32(vget_low_f32(V), 0); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<1, 1, 1, 1>(FVector V) { return vdupq_lane_f32(vget_low_f32(V), 1); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<2, 2, 2, 2>(FVector V) { return vdupq_lane_f32(vget_high_f32(V), 0); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<3, 3, 3, 3>(FVector V) { return vdupq_lane_f32(vget_high_f32(V), 1); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 0, 0>(FVector V) { return vdupq_lane_f32(vget_low_f32(V), 0); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 1, 1>(FVector V) { return vdupq_lane_f32(vget_low_f32(V), 1); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 2, 2>(FVector V) { return vdupq_lane_f32(vget_high_f32(V), 0); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<3, 3, 3, 3>(FVector V) { return vdupq_lane_f32(vget_high_f32(V), 1); }
 
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<1, 0, 3, 2>(FVector V) { return vrev64q_f32(V); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 3, 2>(FVector V) { return vrev64q_f32(V); }
 
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<0, 1, 0, 1>(FVector V) { float32x2_t vt = vget_low_f32(V); return vcombine_f32(vt, vt); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<2, 3, 2, 3>(FVector V) { float32x2_t vt = vget_high_f32(V); return vcombine_f32(vt, vt); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<1, 0, 1, 0>(FVector V) { float32x2_t vt = vrev64_f32(vget_low_f32(V)); return vcombine_f32(vt, vt); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<3, 2, 3, 2>(FVector V) { float32x2_t vt = vrev64_f32(vget_high_f32(V)); return vcombine_f32(vt, vt); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 0, 1>(FVector V) { float32x2_t vt = vget_low_f32(V); return vcombine_f32(vt, vt); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 2, 3>(FVector V) { float32x2_t vt = vget_high_f32(V); return vcombine_f32(vt, vt); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 1, 0>(FVector V) { float32x2_t vt = vrev64_f32(vget_low_f32(V)); return vcombine_f32(vt, vt); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 3, 2>(FVector V) { float32x2_t vt = vrev64_f32(vget_high_f32(V)); return vcombine_f32(vt, vt); }
 
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<0, 1, 3, 2>(FVector V) { return vcombine_f32(vget_low_f32(V), vrev64_f32(vget_high_f32(V))); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<1, 0, 2, 3>(FVector V) { return vcombine_f32(vrev64_f32(vget_low_f32(V)), vget_high_f32(V)); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<2, 3, 1, 0>(FVector V) { return vcombine_f32(vget_high_f32(V), vrev64_f32(vget_low_f32(V))); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<3, 2, 0, 1>(FVector V) { return vcombine_f32(vrev64_f32(vget_high_f32(V)), vget_low_f32(V)); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<3, 2, 1, 0>(FVector V) { return vcombine_f32(vrev64_f32(vget_high_f32(V)), vrev64_f32(vget_low_f32(V))); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 3, 2>(FVector V) { return vcombine_f32(vget_low_f32(V), vrev64_f32(vget_high_f32(V))); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 2, 3>(FVector V) { return vcombine_f32(vrev64_f32(vget_low_f32(V)), vget_high_f32(V)); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 1, 0>(FVector V) { return vcombine_f32(vget_high_f32(V), vrev64_f32(vget_low_f32(V))); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 0, 1>(FVector V) { return vcombine_f32(vrev64_f32(vget_high_f32(V)), vget_low_f32(V)); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 1, 0>(FVector V) { return vcombine_f32(vrev64_f32(vget_high_f32(V)), vrev64_f32(vget_low_f32(V))); }
 
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<0, 0, 2, 2>(FVector V) { return vtrnq_f32(V, V).val[0]; }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<1, 1, 3, 3>(FVector V) { return vtrnq_f32(V, V).val[1]; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 2, 2>(FVector V) { return vtrnq_f32(V, V).val[0]; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 3, 3>(FVector V) { return vtrnq_f32(V, V).val[1]; }
 
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<0, 0, 1, 1>(FVector V) { return vzipq_f32(V, V).val[0]; }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<2, 2, 3, 3>(FVector V) { return vzipq_f32(V, V).val[1]; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 1, 1>(FVector V) { return vzipq_f32(V, V).val[0]; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 3, 3>(FVector V) { return vzipq_f32(V, V).val[1]; }
 
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<0, 2, 0, 2>(FVector V) { return vuzpq_f32(V, V).val[0]; }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<1, 3, 1, 3>(FVector V) { return vuzpq_f32(V, V).val[1]; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 2, 0, 2>(FVector V) { return vuzpq_f32(V, V).val[0]; }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 3, 1, 3>(FVector V) { return vuzpq_f32(V, V).val[1]; }
 
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<1, 2, 3, 0>(FVector V) { return vextq_f32(V, V, 1); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<2, 3, 0, 1>(FVector V) { return vextq_f32(V, V, 2); }
-		template<> inline Vector      XM_CALLCONV     VectorSwizzle<3, 0, 1, 2>(FVector V) { return vextq_f32(V, V, 3); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 2, 3, 0>(FVector V) { return vextq_f32(V, V, 1); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 0, 1>(FVector V) { return vextq_f32(V, V, 2); }
+		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<3, 0, 1, 2>(FVector V) { return vextq_f32(V, V, 3); }
 
-#endif // _XM_ARM_NEON_INTRINSICS_ && !_XM_NO_INTRINSICS_
+#endif // RAY_ARM_NEON_INTRINSICS && !RAY_NO_INTRINSICS
 
 		//------------------------------------------------------------------------------
 
 		template<uint32_t Elements>
-		inline Vector     XM_CALLCONV     VectorShiftLeft(FVector V1, FVector V2)
+		inline Vector     RAYMATH_CALLCONV     VectorShiftLeft(FVector V1, FVector V2)
 		{
 			static_assert(Elements < 4, "Elements template parameter out of range");
 			return VectorPermute<Elements, (Elements + 1), (Elements + 2), (Elements + 3)>(V1, V2);
 		}
 
 		template<uint32_t Elements>
-		inline Vector     XM_CALLCONV     VectorRotateLeft(FVector V)
+		inline Vector     RAYMATH_CALLCONV     VectorRotateLeft(FVector V)
 		{
 			static_assert(Elements < 4, "Elements template parameter out of range");
 			return VectorSwizzle<Elements & 3, (Elements + 1) & 3, (Elements + 2) & 3, (Elements + 3) & 3>(V);
 		}
 
 		template<uint32_t Elements>
-		inline Vector     XM_CALLCONV     VectorRotateRight(FVector V)
+		inline Vector     RAYMATH_CALLCONV     VectorRotateRight(FVector V)
 		{
 			static_assert(Elements < 4, "Elements template parameter out of range");
 			return VectorSwizzle<(4 - Elements) & 3, (5 - Elements) & 3, (6 - Elements) & 3, (7 - Elements) & 3>(V);
 		}
 
 		template<uint32_t VSLeftRotateElements, uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3>
-		inline Vector     XM_CALLCONV     VectorInsert(FVector VD, FVector VS)
+		inline Vector     RAYMATH_CALLCONV     VectorInsert(FVector VD, FVector VS)
 		{
 			Vector Control = VectorSelectControl(Select0 & 1, Select1 & 1, Select2 & 1, Select3 & 1);
 			return VectorSelect(VD, VectorRotateLeft<VSLeftRotateElements>(VS), Control);
@@ -1969,9 +1964,9 @@ namespace At0
 		XMGLOBALCONST VectorF32 g_XMATanCoefficients1 = { { { -0.0752896400f, +0.0429096138f, -0.0161657367f, +0.0028662257f } } };
 		XMGLOBALCONST VectorF32 g_XMATanEstCoefficients0 = { { { +0.999866f, +0.999866f, +0.999866f, +0.999866f } } };
 		XMGLOBALCONST VectorF32 g_XMATanEstCoefficients1 = { { { -0.3302995f, +0.180141f, -0.085133f, +0.0208351f } } };
-		XMGLOBALCONST VectorF32 g_XMTanEstCoefficients = { { { 2.484f, -1.954923183e-1f, 2.467401101f, XM_1DIVPI } } };
+		XMGLOBALCONST VectorF32 g_XMTanEstCoefficients = { { { 2.484f, -1.954923183e-1f, 2.467401101f, Constants::RAY_1DIVPI } } };
 		XMGLOBALCONST VectorF32 g_XMArcEstCoefficients = { { { +1.5707288f, -0.2121144f, +0.0742610f, -0.0187293f } } };
-		XMGLOBALCONST VectorF32 g_XMPiConstants0 = { { { XM_PI, XM_2PI, XM_1DIVPI, XM_1DIV2PI } } };
+		XMGLOBALCONST VectorF32 g_XMPiConstants0 = { { { Constants::PI, Constants::RAY_2PI, Constants::RAY_1DIVPI, Constants::RAY_1DIV2PI } } };
 		XMGLOBALCONST VectorF32 g_XMIdentityR0 = { { { 1.0f, 0.0f, 0.0f, 0.0f } } };
 		XMGLOBALCONST VectorF32 g_XMIdentityR1 = { { { 0.0f, 1.0f, 0.0f, 0.0f } } };
 		XMGLOBALCONST VectorF32 g_XMIdentityR2 = { { { 0.0f, 0.0f, 1.0f, 0.0f } } };
@@ -1997,13 +1992,13 @@ namespace At0
 		XMGLOBALCONST VectorF32 g_XMNegativeOne = { { { -1.0f, -1.0f, -1.0f, -1.0f } } };
 		XMGLOBALCONST VectorF32 g_XMOneHalf = { { { 0.5f, 0.5f, 0.5f, 0.5f } } };
 		XMGLOBALCONST VectorF32 g_XMNegativeOneHalf = { { { -0.5f, -0.5f, -0.5f, -0.5f } } };
-		XMGLOBALCONST VectorF32 g_XMNegativeTwoPi = { { { -XM_2PI, -XM_2PI, -XM_2PI, -XM_2PI } } };
-		XMGLOBALCONST VectorF32 g_XMNegativePi = { { { -XM_PI, -XM_PI, -XM_PI, -XM_PI } } };
-		XMGLOBALCONST VectorF32 g_XMHalfPi = { { { XM_PIDIV2, XM_PIDIV2, XM_PIDIV2, XM_PIDIV2 } } };
-		XMGLOBALCONST VectorF32 g_XMPi = { { { XM_PI, XM_PI, XM_PI, XM_PI } } };
-		XMGLOBALCONST VectorF32 g_XMReciprocalPi = { { { XM_1DIVPI, XM_1DIVPI, XM_1DIVPI, XM_1DIVPI } } };
-		XMGLOBALCONST VectorF32 g_XMTwoPi = { { { XM_2PI, XM_2PI, XM_2PI, XM_2PI } } };
-		XMGLOBALCONST VectorF32 g_XMReciprocalTwoPi = { { { XM_1DIV2PI, XM_1DIV2PI, XM_1DIV2PI, XM_1DIV2PI } } };
+		XMGLOBALCONST VectorF32 g_XMNegativeTwoPi = { { { -Constants::RAY_2PI, -Constants::RAY_2PI, -Constants::RAY_2PI, -Constants::RAY_2PI } } };
+		XMGLOBALCONST VectorF32 g_XMNegativePi = { { { -Constants::PI, -Constants::PI, -Constants::PI, -Constants::PI } } };
+		XMGLOBALCONST VectorF32 g_XMHalfPi = { { { Constants::PIDIV2, Constants::PIDIV2, Constants::PIDIV2, Constants::PIDIV2 } } };
+		XMGLOBALCONST VectorF32 g_XMPi = { { { Constants::PI, Constants::PI, Constants::PI, Constants::PI } } };
+		XMGLOBALCONST VectorF32 g_XMReciprocalPi = { { { Constants::RAY_1DIVPI, Constants::RAY_1DIVPI, Constants::RAY_1DIVPI, Constants::RAY_1DIVPI } } };
+		XMGLOBALCONST VectorF32 g_XMTwoPi = { { { Constants::RAY_2PI, Constants::RAY_2PI, Constants::RAY_2PI, Constants::RAY_2PI } } };
+		XMGLOBALCONST VectorF32 g_XMReciprocalTwoPi = { { { Constants::RAY_1DIV2PI, Constants::RAY_1DIV2PI, Constants::RAY_1DIV2PI, Constants::RAY_1DIV2PI } } };
 		XMGLOBALCONST VectorF32 g_XMEpsilon = { { { 1.192092896e-7f, 1.192092896e-7f, 1.192092896e-7f, 1.192092896e-7f } } };
 		XMGLOBALCONST VectorI32 g_XMInfinity = { { { 0x7F800000, 0x7F800000, 0x7F800000, 0x7F800000 } } };
 		XMGLOBALCONST VectorI32 g_XMQNaN = { { { 0x7FC00000, 0x7FC00000, 0x7FC00000, 0x7FC00000 } } };
@@ -2118,16 +2113,16 @@ namespace At0
 
 //------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorSetBinaryConstant(uint32_t C0, uint32_t C1, uint32_t C2, uint32_t C3)
+		inline Vector RAYMATH_CALLCONV VectorSetBinaryConstant(uint32_t C0, uint32_t C1, uint32_t C2, uint32_t C3)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult;
 			vResult.u[0] = (0 - (C0 & 1)) & 0x3F800000;
 			vResult.u[1] = (0 - (C1 & 1)) & 0x3F800000;
 			vResult.u[2] = (0 - (C2 & 1)) & 0x3F800000;
 			vResult.u[3] = (0 - (C3 & 1)) & 0x3F800000;
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			VectorU32 vResult;
 			vResult.u[0] = (0 - (C0 & 1)) & 0x3F800000;
 			vResult.u[1] = (0 - (C1 & 1)) & 0x3F800000;
@@ -2150,18 +2145,18 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorSplatConstant(int32_t IntConstant, uint32_t DivExponent)
+		inline Vector RAYMATH_CALLCONV VectorSplatConstant(int32_t IntConstant, uint32_t DivExponent)
 		{
 			assert(IntConstant >= -16 && IntConstant <= 15);
 			assert(DivExponent < 32);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			using At0::Ray::ConvertVectorIntToFloat;
 
 			VectorI32 V = { { { IntConstant, IntConstant, IntConstant, IntConstant } } };
 			return ConvertVectorIntToFloat(V.v, DivExponent);
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Splat the int
 			int32x4_t vScale = vdupq_n_s32(IntConstant);
 			// Convert to a float
@@ -2190,15 +2185,15 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorSplatConstantInt(int32_t IntConstant)
+		inline Vector RAYMATH_CALLCONV VectorSplatConstantInt(int32_t IntConstant)
 		{
 			assert(IntConstant >= -16 && IntConstant <= 15);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorI32 V = { { { IntConstant, IntConstant, IntConstant, IntConstant } } };
 			return V.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			int32x4_t V = vdupq_n_s32(IntConstant);
 			return reinterpret_cast<float32x4_t*>(&V)[0];
 #else // XM_SSE_INTRINSICS_
@@ -2229,14 +2224,14 @@ namespace At0
 #pragma warning(disable:4701)
 // C4701: false positives
 
-		inline Vector XM_CALLCONV ConvertVectorIntToFloat
+		inline Vector RAYMATH_CALLCONV ConvertVectorIntToFloat
 		(
 			FVector    VInt,
 			uint32_t     DivExponent
 		)
 		{
 			assert(DivExponent < 32);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			float fScale = 1.0f / static_cast<float>(1U << DivExponent);
 			uint32_t ElementIndex = 0;
 			Vector Result;
@@ -2245,11 +2240,11 @@ namespace At0
 				Result.vector4_f32[ElementIndex] = static_cast<float>(iTemp) * fScale;
 			} while (++ElementIndex < 4);
 			return Result;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float fScale = 1.0f / (float)(1U << DivExponent);
 			float32x4_t vResult = vcvtq_f32_s32(VInt);
 			return vmulq_n_f32(vResult, fScale);
-#else // _XM_SSE_INTRINSICS_
+#else // RAY_SSE_INTRINSICS
 			// Convert to floats
 			Vector vResult = _mm_cvtepi32_ps(_mm_castps_si128(VInt));
 			// Convert DivExponent into 1.0f/(1<<DivExponent)
@@ -2263,14 +2258,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ConvertVectorFloatToInt
+		inline Vector RAYMATH_CALLCONV ConvertVectorFloatToInt
 		(
 			FVector    VFloat,
 			uint32_t     MulExponent
 		)
 		{
 			assert(MulExponent < 32);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			// Get the scalar factor.
 			auto fScale = static_cast<float>(1U << MulExponent);
 			uint32_t ElementIndex = 0;
@@ -2290,7 +2285,7 @@ namespace At0
 				Result.vector4_u32[ElementIndex] = static_cast<uint32_t>(iResult);
 			} while (++ElementIndex < 4);
 			return Result;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t vResult = vmulq_n_f32(VFloat, (float)(1U << MulExponent));
 			// In case of positive overflow, detect it
 			uint32x4_t vOverflow = vcgtq_f32(vResult, g_XMMaxInt);
@@ -2301,7 +2296,7 @@ namespace At0
 			vOverflow = vbicq_u32(vResulti, vOverflow);
 			vOverflow = vorrq_u32(vOverflow, vResult);
 			return vOverflow;
-#else // _XM_SSE_INTRINSICS_
+#else // RAY_SSE_INTRINSICS
 			Vector vResult = _mm_set_ps1(static_cast<float>(1U << MulExponent));
 			vResult = _mm_mul_ps(vResult, VFloat);
 			// In case of positive overflow, detect it
@@ -2318,14 +2313,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ConvertVectorUIntToFloat
+		inline Vector RAYMATH_CALLCONV ConvertVectorUIntToFloat
 		(
 			FVector     VUInt,
 			uint32_t      DivExponent
 		)
 		{
 			assert(DivExponent < 32);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			float fScale = 1.0f / static_cast<float>(1U << DivExponent);
 			uint32_t ElementIndex = 0;
 			Vector Result;
@@ -2333,11 +2328,11 @@ namespace At0
 				Result.vector4_f32[ElementIndex] = static_cast<float>(VUInt.vector4_u32[ElementIndex]) * fScale;
 			} while (++ElementIndex < 4);
 			return Result;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float fScale = 1.0f / (float)(1U << DivExponent);
 			float32x4_t vResult = vcvtq_f32_u32(VUInt);
 			return vmulq_n_f32(vResult, fScale);
-#else // _XM_SSE_INTRINSICS_
+#else // RAY_SSE_INTRINSICS
 			// For the values that are higher than 0x7FFFFFFF, a fixup is needed
 			// Determine which ones need the fix.
 			Vector vMask = _mm_and_ps(VUInt, g_XMNegativeZero);
@@ -2361,14 +2356,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ConvertVectorFloatToUInt
+		inline Vector RAYMATH_CALLCONV ConvertVectorFloatToUInt
 		(
 			FVector     VFloat,
 			uint32_t      MulExponent
 		)
 		{
 			assert(MulExponent < 32);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			// Get the scalar factor.
 			auto fScale = static_cast<float>(1U << MulExponent);
 			uint32_t ElementIndex = 0;
@@ -2388,7 +2383,7 @@ namespace At0
 				Result.vector4_u32[ElementIndex] = uResult;
 			} while (++ElementIndex < 4);
 			return Result;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t vResult = vmulq_n_f32(VFloat, (float)(1U << MulExponent));
 			// In case of overflow, detect it
 			uint32x4_t vOverflow = vcgtq_f32(vResult, g_XMMaxUInt);
@@ -2398,7 +2393,7 @@ namespace At0
 			vResult = vbicq_u32(vResulti, vOverflow);
 			vOverflow = vorrq_u32(vOverflow, vResult);
 			return vOverflow;
-#else // _XM_SSE_INTRINSICS_
+#else // RAY_SSE_INTRINSICS
 			Vector vResult = _mm_set_ps1(static_cast<float>(1U << MulExponent));
 			vResult = _mm_mul_ps(vResult, VFloat);
 			// Clamp to >=0
@@ -2431,64 +2426,64 @@ namespace At0
 		 ****************************************************************************/
 
 		 //------------------------------------------------------------------------------
-		inline Vector XM_CALLCONV LoadInt(const uint32_t* pSource)
+		inline Vector RAYMATH_CALLCONV LoadInt(const uint32_t* pSource)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_u32[0] = *pSource;
 			V.vector4_u32[1] = 0;
 			V.vector4_u32[2] = 0;
 			V.vector4_u32[3] = 0;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t zero = vdupq_n_u32(0);
 			return vld1q_lane_u32(pSource, zero, 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_load_ss(reinterpret_cast<const float*>(pSource));
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadFloat(const float* pSource)
+		inline Vector RAYMATH_CALLCONV LoadFloat(const float* pSource)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_f32[0] = *pSource;
 			V.vector4_f32[1] = 0.f;
 			V.vector4_f32[2] = 0.f;
 			V.vector4_f32[3] = 0.f;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t zero = vdupq_n_f32(0);
 			return vld1q_lane_f32(pSource, zero, 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_load_ss(pSource);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadInt2
+		inline Vector RAYMATH_CALLCONV LoadInt2
 		(
 			const uint32_t* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_u32[0] = pSource[0];
 			V.vector4_u32[1] = pSource[1];
 			V.vector4_u32[2] = 0;
 			V.vector4_u32[3] = 0;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t x = vld1_u32(pSource);
 			uint32x2_t zero = vdup_n_u32(0);
 			return vcombine_u32(x, zero);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 x = _mm_load_ss(reinterpret_cast<const float*>(pSource));
 			__m128 y = _mm_load_ss(reinterpret_cast<const float*>(pSource + 1));
 			return _mm_unpacklo_ps(x, y);
@@ -2497,25 +2492,25 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadInt2A
+		inline Vector RAYMATH_CALLCONV LoadInt2A
 		(
 			const uint32_t* pSource
 		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_u32[0] = pSource[0];
 			V.vector4_u32[1] = pSource[1];
 			V.vector4_u32[2] = 0;
 			V.vector4_u32[3] = 0;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t x = vld1_u32_ex(pSource, 64);
 			uint32x2_t zero = vdup_n_u32(0);
 			return vcombine_u32(x, zero);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(pSource));
 			return _mm_castsi128_ps(V);
 #endif
@@ -2523,24 +2518,24 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadFloat2
+		inline Vector RAYMATH_CALLCONV LoadFloat2
 		(
 			const Float2* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_f32[0] = pSource->x;
 			V.vector4_f32[1] = pSource->y;
 			V.vector4_f32[2] = 0.f;
 			V.vector4_f32[3] = 0.f;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t x = vld1_f32(reinterpret_cast<const float*>(pSource));
 			float32x2_t zero = vdup_n_f32(0);
 			return vcombine_f32(x, zero);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 x = _mm_load_ss(&pSource->x);
 			__m128 y = _mm_load_ss(&pSource->y);
 			return _mm_unpacklo_ps(x, y);
@@ -2549,25 +2544,25 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadFloat2A
+		inline Vector RAYMATH_CALLCONV LoadFloat2A
 		(
 			const Float2A* pSource
 		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_f32[0] = pSource->x;
 			V.vector4_f32[1] = pSource->y;
 			V.vector4_f32[2] = 0.f;
 			V.vector4_f32[3] = 0.f;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t x = vld1_f32_ex(reinterpret_cast<const float*>(pSource), 64);
 			float32x2_t zero = vdup_n_f32(0);
 			return vcombine_f32(x, zero);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(pSource));
 			return _mm_castsi128_ps(V);
 #endif
@@ -2575,25 +2570,25 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadSInt2
+		inline Vector RAYMATH_CALLCONV LoadSInt2
 		(
 			const Int2* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_f32[0] = static_cast<float>(pSource->x);
 			V.vector4_f32[1] = static_cast<float>(pSource->y);
 			V.vector4_f32[2] = 0.f;
 			V.vector4_f32[3] = 0.f;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			int32x2_t x = vld1_s32(reinterpret_cast<const int32_t*>(pSource));
 			float32x2_t v = vcvt_f32_s32(x);
 			float32x2_t zero = vdup_n_f32(0);
 			return vcombine_f32(v, zero);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 x = _mm_load_ss(reinterpret_cast<const float*>(&pSource->x));
 			__m128 y = _mm_load_ss(reinterpret_cast<const float*>(&pSource->y));
 			__m128 V = _mm_unpacklo_ps(x, y);
@@ -2603,25 +2598,25 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadUInt2
+		inline Vector RAYMATH_CALLCONV LoadUInt2
 		(
 			const UInt2* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_f32[0] = static_cast<float>(pSource->x);
 			V.vector4_f32[1] = static_cast<float>(pSource->y);
 			V.vector4_f32[2] = 0.f;
 			V.vector4_f32[3] = 0.f;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t x = vld1_u32(reinterpret_cast<const uint32_t*>(pSource));
 			float32x2_t v = vcvt_f32_u32(x);
 			float32x2_t zero = vdup_n_f32(0);
 			return vcombine_f32(v, zero);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 x = _mm_load_ss(reinterpret_cast<const float*>(&pSource->x));
 			__m128 y = _mm_load_ss(reinterpret_cast<const float*>(&pSource->y));
 			__m128 V = _mm_unpacklo_ps(x, y);
@@ -2643,25 +2638,25 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadInt3
+		inline Vector RAYMATH_CALLCONV LoadInt3
 		(
 			const uint32_t* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_u32[0] = pSource[0];
 			V.vector4_u32[1] = pSource[1];
 			V.vector4_u32[2] = pSource[2];
 			V.vector4_u32[3] = 0;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t x = vld1_u32(pSource);
 			uint32x2_t zero = vdup_n_u32(0);
 			uint32x2_t y = vld1_lane_u32(pSource + 2, zero, 0);
 			return vcombine_u32(x, y);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 x = _mm_load_ss(reinterpret_cast<const float*>(pSource));
 			__m128 y = _mm_load_ss(reinterpret_cast<const float*>(pSource + 1));
 			__m128 z = _mm_load_ss(reinterpret_cast<const float*>(pSource + 2));
@@ -2672,25 +2667,25 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadInt3A
+		inline Vector RAYMATH_CALLCONV LoadInt3A
 		(
 			const uint32_t* pSource
 		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_u32[0] = pSource[0];
 			V.vector4_u32[1] = pSource[1];
 			V.vector4_u32[2] = pSource[2];
 			V.vector4_u32[3] = 0;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Reads an extra integer which is zero'd
 			uint32x4_t V = vld1q_u32_ex(pSource, 128);
 			return vsetq_lane_u32(0, V, 3);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Reads an extra integer which is zero'd
 			__m128i V = _mm_load_si128(reinterpret_cast<const __m128i*>(pSource));
 			V = _mm_and_si128(V, g_XMMask3);
@@ -2700,25 +2695,25 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadFloat3
+		inline Vector RAYMATH_CALLCONV LoadFloat3
 		(
 			const Float3* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_f32[0] = pSource->x;
 			V.vector4_f32[1] = pSource->y;
 			V.vector4_f32[2] = pSource->z;
 			V.vector4_f32[3] = 0.f;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t x = vld1_f32(reinterpret_cast<const float*>(pSource));
 			float32x2_t zero = vdup_n_f32(0);
 			float32x2_t y = vld1_lane_f32(reinterpret_cast<const float*>(pSource) + 2, zero, 0);
 			return vcombine_f32(x, y);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 x = _mm_load_ss(&pSource->x);
 			__m128 y = _mm_load_ss(&pSource->y);
 			__m128 z = _mm_load_ss(&pSource->z);
@@ -2729,25 +2724,25 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadFloat3A
+		inline Vector RAYMATH_CALLCONV LoadFloat3A
 		(
 			const Float3A* pSource
 		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_f32[0] = pSource->x;
 			V.vector4_f32[1] = pSource->y;
 			V.vector4_f32[2] = pSource->z;
 			V.vector4_f32[3] = 0.f;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Reads an extra float which is zero'd
 			float32x4_t V = vld1q_f32_ex(reinterpret_cast<const float*>(pSource), 128);
 			return vsetq_lane_f32(0, V, 3);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Reads an extra float which is zero'd
 			__m128 V = _mm_load_ps(&pSource->x);
 			return _mm_and_ps(V, g_XMMask3);
@@ -2756,13 +2751,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadSInt3
+		inline Vector RAYMATH_CALLCONV LoadSInt3
 		(
 			const Int3* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector V;
 			V.vector4_f32[0] = static_cast<float>(pSource->x);
@@ -2771,13 +2766,13 @@ namespace At0
 			V.vector4_f32[3] = 0.f;
 			return V;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			int32x2_t x = vld1_s32(reinterpret_cast<const int32_t*>(pSource));
 			int32x2_t zero = vdup_n_s32(0);
 			int32x2_t y = vld1_lane_s32(reinterpret_cast<const int32_t*>(pSource) + 2, zero, 0);
 			int32x4_t v = vcombine_s32(x, y);
 			return vcvtq_f32_s32(v);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 x = _mm_load_ss(reinterpret_cast<const float*>(&pSource->x));
 			__m128 y = _mm_load_ss(reinterpret_cast<const float*>(&pSource->y));
 			__m128 z = _mm_load_ss(reinterpret_cast<const float*>(&pSource->z));
@@ -2789,26 +2784,26 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadUInt3
+		inline Vector RAYMATH_CALLCONV LoadUInt3
 		(
 			const UInt3* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_f32[0] = static_cast<float>(pSource->x);
 			V.vector4_f32[1] = static_cast<float>(pSource->y);
 			V.vector4_f32[2] = static_cast<float>(pSource->z);
 			V.vector4_f32[3] = 0.f;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t x = vld1_u32(reinterpret_cast<const uint32_t*>(pSource));
 			uint32x2_t zero = vdup_n_u32(0);
 			uint32x2_t y = vld1_lane_u32(reinterpret_cast<const uint32_t*>(pSource) + 2, zero, 0);
 			uint32x4_t v = vcombine_u32(x, y);
 			return vcvtq_f32_u32(v);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 x = _mm_load_ss(reinterpret_cast<const float*>(&pSource->x));
 			__m128 y = _mm_load_ss(reinterpret_cast<const float*>(&pSource->y));
 			__m128 z = _mm_load_ss(reinterpret_cast<const float*>(&pSource->z));
@@ -2832,23 +2827,23 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadInt4
+		inline Vector RAYMATH_CALLCONV LoadInt4
 		(
 			const uint32_t* pSource
 		)
 		{
 			assert(pSource);
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_u32[0] = pSource[0];
 			V.vector4_u32[1] = pSource[1];
 			V.vector4_u32[2] = pSource[2];
 			V.vector4_u32[3] = pSource[3];
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_u32(pSource);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_loadu_si128(reinterpret_cast<const __m128i*>(pSource));
 			return _mm_castsi128_ps(V);
 #endif
@@ -2856,23 +2851,23 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadInt4A
+		inline Vector RAYMATH_CALLCONV LoadInt4A
 		(
 			const uint32_t* pSource
 		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_u32[0] = pSource[0];
 			V.vector4_u32[1] = pSource[1];
 			V.vector4_u32[2] = pSource[2];
 			V.vector4_u32[3] = pSource[3];
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_u32_ex(pSource, 128);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_load_si128(reinterpret_cast<const __m128i*>(pSource));
 			return _mm_castsi128_ps(V);
 #endif
@@ -2880,58 +2875,58 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadFloat4
+		inline Vector RAYMATH_CALLCONV LoadFloat4
 		(
 			const Float4* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_f32[0] = pSource->x;
 			V.vector4_f32[1] = pSource->y;
 			V.vector4_f32[2] = pSource->z;
 			V.vector4_f32[3] = pSource->w;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_f32(reinterpret_cast<const float*>(pSource));
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_loadu_ps(&pSource->x);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadFloat4A
+		inline Vector RAYMATH_CALLCONV LoadFloat4A
 		(
 			const Float4A* pSource
 		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_f32[0] = pSource->x;
 			V.vector4_f32[1] = pSource->y;
 			V.vector4_f32[2] = pSource->z;
 			V.vector4_f32[3] = pSource->w;
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_f32_ex(reinterpret_cast<const float*>(pSource), 128);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_load_ps(&pSource->x);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadSInt4
+		inline Vector RAYMATH_CALLCONV LoadSInt4
 		(
 			const Int4* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector V;
 			V.vector4_f32[0] = static_cast<float>(pSource->x);
@@ -2940,10 +2935,10 @@ namespace At0
 			V.vector4_f32[3] = static_cast<float>(pSource->w);
 			return V;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			int32x4_t v = vld1q_s32(reinterpret_cast<const int32_t*>(pSource));
 			return vcvtq_f32_s32(v);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_loadu_si128(reinterpret_cast<const __m128i*>(pSource));
 			return _mm_cvtepi32_ps(V);
 #endif
@@ -2951,23 +2946,23 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV LoadUInt4
+		inline Vector RAYMATH_CALLCONV LoadUInt4
 		(
 			const UInt4* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector V;
 			V.vector4_f32[0] = static_cast<float>(pSource->x);
 			V.vector4_f32[1] = static_cast<float>(pSource->y);
 			V.vector4_f32[2] = static_cast<float>(pSource->z);
 			V.vector4_f32[3] = static_cast<float>(pSource->w);
 			return V;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t v = vld1q_u32(reinterpret_cast<const uint32_t*>(pSource));
 			return vcvtq_f32_u32(v);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_loadu_si128(reinterpret_cast<const __m128i*>(pSource));
 			// For the values that are higher than 0x7FFFFFFF, a fixup is needed
 			// Determine which ones need the fix.
@@ -2987,13 +2982,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV LoadFloat3x3
+		inline Matrix RAYMATH_CALLCONV LoadFloat3x3
 		(
 			const Float3X3* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Matrix M;
 			M.r[0].vector4_f32[0] = pSource->m[0][0];
@@ -3016,7 +3011,7 @@ namespace At0
 			M.r[3].vector4_f32[3] = 1.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t v0 = vld1q_f32(&pSource->m[0][0]);
 			float32x4_t v1 = vld1q_f32(&pSource->m[1][1]);
 			float32x2_t v2 = vcreate_f32(static_cast<uint64_t>(*reinterpret_cast<const uint32_t*>(&pSource->m[2][2])));
@@ -3028,7 +3023,7 @@ namespace At0
 			M.r[2] = vcombine_f32(vget_high_f32(v1), v2);
 			M.r[3] = g_XMIdentityR3;
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 Z = _mm_setzero_ps();
 
 			__m128 V1 = _mm_loadu_ps(&pSource->m[0][0]);
@@ -3052,13 +3047,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV LoadFloat4x3
+		inline Matrix RAYMATH_CALLCONV LoadFloat4x3
 		(
 			const Float4X3* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Matrix M;
 			M.r[0].vector4_f32[0] = pSource->m[0][0];
@@ -3082,7 +3077,7 @@ namespace At0
 			M.r[3].vector4_f32[3] = 1.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t v0 = vld1q_f32(&pSource->m[0][0]);
 			float32x4_t v1 = vld1q_f32(&pSource->m[1][1]);
 			float32x4_t v2 = vld1q_f32(&pSource->m[2][2]);
@@ -3097,7 +3092,7 @@ namespace At0
 			M.r[2] = vandq_u32(T2, g_XMMask3);
 			M.r[3] = vsetq_lane_f32(1.f, T3, 3);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Use unaligned load instructions to 
 			// load the 12 floats
 			// vTemp1 = x1,y1,z1,x2
@@ -3111,7 +3106,7 @@ namespace At0
 			// vTemp2 = y2,z2,x2,x2
 			vTemp2 = _mm_shuffle_ps(vTemp2, vTemp1, _MM_SHUFFLE(3, 3, 1, 0));
 			// vTemp2 = x2,y2,z2,z2
-			vTemp2 = XM_PERMUTE_PS(vTemp2, _MM_SHUFFLE(1, 1, 0, 2));
+			vTemp2 = RAYMATH_PERMUTE_PS(vTemp2, _MM_SHUFFLE(1, 1, 0, 2));
 			// vTemp1 = x1,y1,z1,0
 			vTemp1 = _mm_and_ps(vTemp1, g_XMMask3);
 			// vTemp2 = x2,y2,z2,0
@@ -3132,14 +3127,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV LoadFloat4x3A
+		inline Matrix RAYMATH_CALLCONV LoadFloat4x3A
 		(
 			const Float4X3A* pSource
 		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Matrix M;
 			M.r[0].vector4_f32[0] = pSource->m[0][0];
@@ -3163,7 +3158,7 @@ namespace At0
 			M.r[3].vector4_f32[3] = 1.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t v0 = vld1q_f32_ex(&pSource->m[0][0], 128);
 			float32x4_t v1 = vld1q_f32_ex(&pSource->m[1][1], 128);
 			float32x4_t v2 = vld1q_f32_ex(&pSource->m[2][2], 128);
@@ -3178,7 +3173,7 @@ namespace At0
 			M.r[2] = vandq_u32(T2, g_XMMask3);
 			M.r[3] = vsetq_lane_f32(1.f, T3, 3);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Use aligned load instructions to 
 			// load the 12 floats
 			// vTemp1 = x1,y1,z1,x2
@@ -3192,7 +3187,7 @@ namespace At0
 			// vTemp2 = y2,z2,x2,x2
 			vTemp2 = _mm_shuffle_ps(vTemp2, vTemp1, _MM_SHUFFLE(3, 3, 1, 0));
 			// vTemp2 = x2,y2,z2,z2
-			vTemp2 = XM_PERMUTE_PS(vTemp2, _MM_SHUFFLE(1, 1, 0, 2));
+			vTemp2 = RAYMATH_PERMUTE_PS(vTemp2, _MM_SHUFFLE(1, 1, 0, 2));
 			// vTemp1 = x1,y1,z1,0
 			vTemp1 = _mm_and_ps(vTemp1, g_XMMask3);
 			// vTemp2 = x2,y2,z2,0
@@ -3213,13 +3208,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV LoadFloat3x4
+		inline Matrix RAYMATH_CALLCONV LoadFloat3x4
 		(
 			const Float3X4* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Matrix M;
 			M.r[0].vector4_f32[0] = pSource->m[0][0];
@@ -3243,7 +3238,7 @@ namespace At0
 			M.r[3].vector4_f32[3] = 1.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2x4_t vTemp0 = vld4_f32(&pSource->_11);
 			float32x4_t vTemp1 = vld1q_f32(&pSource->_31);
 
@@ -3263,7 +3258,7 @@ namespace At0
 			M.r[2] = vandq_u32(T2, g_XMMask3);
 			M.r[3] = vsetq_lane_f32(1.f, T3, 3);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			M.r[0] = _mm_loadu_ps(&pSource->_11);
 			M.r[1] = _mm_loadu_ps(&pSource->_21);
@@ -3294,14 +3289,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV LoadFloat3x4A
+		inline Matrix RAYMATH_CALLCONV LoadFloat3x4A
 		(
 			const Float3X4A* pSource
 		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Matrix M;
 			M.r[0].vector4_f32[0] = pSource->m[0][0];
@@ -3325,7 +3320,7 @@ namespace At0
 			M.r[3].vector4_f32[3] = 1.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2x4_t vTemp0 = vld4_f32_ex(&pSource->_11, 128);
 			float32x4_t vTemp1 = vld1q_f32_ex(&pSource->_31, 128);
 
@@ -3345,7 +3340,7 @@ namespace At0
 			M.r[2] = vandq_u32(T2, g_XMMask3);
 			M.r[3] = vsetq_lane_f32(1.f, T3, 3);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			M.r[0] = _mm_load_ps(&pSource->_11);
 			M.r[1] = _mm_load_ps(&pSource->_21);
@@ -3376,13 +3371,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV LoadFloat4x4
+		inline Matrix RAYMATH_CALLCONV LoadFloat4x4
 		(
 			const Float4X4* pSource
 		)
 		{
 			assert(pSource);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Matrix M;
 			M.r[0].vector4_f32[0] = pSource->m[0][0];
@@ -3406,14 +3401,14 @@ namespace At0
 			M.r[3].vector4_f32[3] = pSource->m[3][3];
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Matrix M;
 			M.r[0] = vld1q_f32(reinterpret_cast<const float*>(&pSource->_11));
 			M.r[1] = vld1q_f32(reinterpret_cast<const float*>(&pSource->_21));
 			M.r[2] = vld1q_f32(reinterpret_cast<const float*>(&pSource->_31));
 			M.r[3] = vld1q_f32(reinterpret_cast<const float*>(&pSource->_41));
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			M.r[0] = _mm_loadu_ps(&pSource->_11);
 			M.r[1] = _mm_loadu_ps(&pSource->_21);
@@ -3425,14 +3420,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV LoadFloat4x4A
+		inline Matrix RAYMATH_CALLCONV LoadFloat4x4A
 		(
 			const Float4X4A* pSource
 		)
 		{
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Matrix M;
 			M.r[0].vector4_f32[0] = pSource->m[0][0];
@@ -3456,14 +3451,14 @@ namespace At0
 			M.r[3].vector4_f32[3] = pSource->m[3][3];
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Matrix M;
 			M.r[0] = vld1q_f32_ex(reinterpret_cast<const float*>(&pSource->_11), 128);
 			M.r[1] = vld1q_f32_ex(reinterpret_cast<const float*>(&pSource->_21), 128);
 			M.r[2] = vld1q_f32_ex(reinterpret_cast<const float*>(&pSource->_31), 128);
 			M.r[3] = vld1q_f32_ex(reinterpret_cast<const float*>(&pSource->_41), 128);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			M.r[0] = _mm_load_ps(&pSource->_11);
 			M.r[1] = _mm_load_ps(&pSource->_21);
@@ -3479,57 +3474,57 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		inline void XM_CALLCONV StoreInt
+		inline void RAYMATH_CALLCONV StoreInt
 		(
 			uint32_t* pDestination,
 			FVector V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			*pDestination = VectorGetIntX(V);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_lane_u32(pDestination, *reinterpret_cast<const uint32x4_t*>(&V), 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			_mm_store_ss(reinterpret_cast<float*>(pDestination), V);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat
+		inline void RAYMATH_CALLCONV StoreFloat
 		(
 			float* pDestination,
 			FVector V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			*pDestination = VectorGetX(V);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_lane_f32(pDestination, V, 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			_mm_store_ss(pDestination, V);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreInt2
+		inline void RAYMATH_CALLCONV StoreInt2
 		(
 			uint32_t* pDestination,
 			FVector V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination[0] = V.vector4_u32[0];
 			pDestination[1] = V.vector4_u32[1];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t VL = vget_low_u32(V);
 			vst1_u32(pDestination, VL);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector T = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector T = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination[0]), V);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination[1]), T);
 #endif
@@ -3537,7 +3532,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreInt2A
+		inline void RAYMATH_CALLCONV StoreInt2A
 		(
 			uint32_t* pDestination,
 			FVector V
@@ -3545,34 +3540,34 @@ namespace At0
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination[0] = V.vector4_u32[0];
 			pDestination[1] = V.vector4_u32[1];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t VL = vget_low_u32(V);
 			vst1_u32_ex(pDestination, VL, 64);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			_mm_storel_epi64(reinterpret_cast<__m128i*>(pDestination), _mm_castps_si128(V));
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat2
+		inline void RAYMATH_CALLCONV StoreFloat2
 		(
 			Float2* pDestination,
 			FVector  V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination->x = V.vector4_f32[0];
 			pDestination->y = V.vector4_f32[1];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			vst1_f32(reinterpret_cast<float*>(pDestination), VL);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector T = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector T = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			_mm_store_ss(&pDestination->x, V);
 			_mm_store_ss(&pDestination->y, T);
 #endif
@@ -3580,7 +3575,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat2A
+		inline void RAYMATH_CALLCONV StoreFloat2A
 		(
 			Float2A* pDestination,
 			FVector     V
@@ -3588,34 +3583,34 @@ namespace At0
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination->x = V.vector4_f32[0];
 			pDestination->y = V.vector4_f32[1];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			vst1_f32_ex(reinterpret_cast<float*>(pDestination), VL, 64);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			_mm_storel_epi64(reinterpret_cast<__m128i*>(pDestination), _mm_castps_si128(V));
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreSInt2
+		inline void RAYMATH_CALLCONV StoreSInt2
 		(
 			Int2* pDestination,
 			FVector V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination->x = static_cast<int32_t>(V.vector4_f32[0]);
 			pDestination->y = static_cast<int32_t>(V.vector4_f32[1]);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			int32x2_t v = vget_low_s32(V);
 			v = vcvt_s32_f32(v);
 			vst1_s32(reinterpret_cast<int32_t*>(pDestination), v);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// In case of positive overflow, detect it
 			Vector vOverflow = _mm_cmpgt_ps(V, g_XMMaxInt);
 			// Float to int conversion
@@ -3625,7 +3620,7 @@ namespace At0
 			vOverflow = _mm_andnot_ps(vOverflow, _mm_castsi128_ps(vResulti));
 			vOverflow = _mm_or_ps(vOverflow, vResult);
 			// Write two ints
-			Vector T = XM_PERMUTE_PS(vOverflow, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector T = RAYMATH_PERMUTE_PS(vOverflow, _MM_SHUFFLE(1, 1, 1, 1));
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->x), vOverflow);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->y), T);
 #endif
@@ -3633,21 +3628,21 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreUInt2
+		inline void RAYMATH_CALLCONV StoreUInt2
 		(
 			UInt2* pDestination,
 			FVector V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination->x = static_cast<uint32_t>(V.vector4_f32[0]);
 			pDestination->y = static_cast<uint32_t>(V.vector4_f32[1]);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t v = vget_low_f32(V);
 			uint32x2_t iv = vcvt_u32_f32(v);
 			vst1_u32(reinterpret_cast<uint32_t*>(pDestination), iv);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Clamp to >=0
 			Vector vResult = _mm_max_ps(V, g_XMZero);
 			// Any numbers that are too big, set to 0xFFFFFFFFU
@@ -3666,7 +3661,7 @@ namespace At0
 			// On those that are too large, set to 0xFFFFFFFF
 			vResult = _mm_or_ps(vResult, vOverflow);
 			// Write two uints
-			Vector T = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector T = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(1, 1, 1, 1));
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->x), vResult);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->y), T);
 #endif
@@ -3674,24 +3669,24 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreInt3
+		inline void RAYMATH_CALLCONV StoreInt3
 		(
 			uint32_t* pDestination,
 			FVector V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination[0] = V.vector4_u32[0];
 			pDestination[1] = V.vector4_u32[1];
 			pDestination[2] = V.vector4_u32[2];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t VL = vget_low_u32(V);
 			vst1_u32(pDestination, VL);
 			vst1q_lane_u32(pDestination + 2, *reinterpret_cast<const uint32x4_t*>(&V), 2);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector T1 = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector T2 = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector T1 = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector T2 = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_store_ss(reinterpret_cast<float*>(pDestination), V);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination[1]), T1);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination[2]), T2);
@@ -3700,7 +3695,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreInt3A
+		inline void RAYMATH_CALLCONV StoreInt3A
 		(
 			uint32_t* pDestination,
 			FVector V
@@ -3708,16 +3703,16 @@ namespace At0
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination[0] = V.vector4_u32[0];
 			pDestination[1] = V.vector4_u32[1];
 			pDestination[2] = V.vector4_u32[2];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t VL = vget_low_u32(V);
 			vst1_u32_ex(pDestination, VL, 64);
 			vst1q_lane_u32(pDestination + 2, *reinterpret_cast<const uint32x4_t*>(&V), 2);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector T = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector T = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_storel_epi64(reinterpret_cast<__m128i*>(pDestination), _mm_castps_si128(V));
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination[2]), T);
 #endif
@@ -3725,24 +3720,24 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat3
+		inline void RAYMATH_CALLCONV StoreFloat3
 		(
 			Float3* pDestination,
 			FVector V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination->x = V.vector4_f32[0];
 			pDestination->y = V.vector4_f32[1];
 			pDestination->z = V.vector4_f32[2];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			vst1_f32(reinterpret_cast<float*>(pDestination), VL);
 			vst1q_lane_f32(reinterpret_cast<float*>(pDestination) + 2, V, 2);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector T1 = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector T2 = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector T1 = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector T2 = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_store_ss(&pDestination->x, V);
 			_mm_store_ss(&pDestination->y, T1);
 			_mm_store_ss(&pDestination->z, T2);
@@ -3751,7 +3746,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat3A
+		inline void RAYMATH_CALLCONV StoreFloat3A
 		(
 			Float3A* pDestination,
 			FVector     V
@@ -3759,16 +3754,16 @@ namespace At0
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination->x = V.vector4_f32[0];
 			pDestination->y = V.vector4_f32[1];
 			pDestination->z = V.vector4_f32[2];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			vst1_f32_ex(reinterpret_cast<float*>(pDestination), VL, 64);
 			vst1q_lane_f32(reinterpret_cast<float*>(pDestination) + 2, V, 2);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector T = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector T = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_storel_epi64(reinterpret_cast<__m128i*>(pDestination), _mm_castps_si128(V));
 			_mm_store_ss(&pDestination->z, T);
 #endif
@@ -3776,23 +3771,23 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreSInt3
+		inline void RAYMATH_CALLCONV StoreSInt3
 		(
 			Int3* pDestination,
 			FVector V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination->x = static_cast<int32_t>(V.vector4_f32[0]);
 			pDestination->y = static_cast<int32_t>(V.vector4_f32[1]);
 			pDestination->z = static_cast<int32_t>(V.vector4_f32[2]);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			int32x4_t v = vcvtq_s32_f32(V);
 			int32x2_t vL = vget_low_s32(v);
 			vst1_s32(reinterpret_cast<int32_t*>(pDestination), vL);
 			vst1q_lane_s32(reinterpret_cast<int32_t*>(pDestination) + 2, v, 2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// In case of positive overflow, detect it
 			Vector vOverflow = _mm_cmpgt_ps(V, g_XMMaxInt);
 			// Float to int conversion
@@ -3802,8 +3797,8 @@ namespace At0
 			vOverflow = _mm_andnot_ps(vOverflow, _mm_castsi128_ps(vResulti));
 			vOverflow = _mm_or_ps(vOverflow, vResult);
 			// Write 3 uints
-			Vector T1 = XM_PERMUTE_PS(vOverflow, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector T2 = XM_PERMUTE_PS(vOverflow, _MM_SHUFFLE(2, 2, 2, 2));
+			Vector T1 = RAYMATH_PERMUTE_PS(vOverflow, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector T2 = RAYMATH_PERMUTE_PS(vOverflow, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->x), vOverflow);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->y), T1);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->z), T2);
@@ -3812,23 +3807,23 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreUInt3
+		inline void RAYMATH_CALLCONV StoreUInt3
 		(
 			UInt3* pDestination,
 			FVector V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination->x = static_cast<uint32_t>(V.vector4_f32[0]);
 			pDestination->y = static_cast<uint32_t>(V.vector4_f32[1]);
 			pDestination->z = static_cast<uint32_t>(V.vector4_f32[2]);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t v = vcvtq_u32_f32(V);
 			uint32x2_t vL = vget_low_u32(v);
 			vst1_u32(reinterpret_cast<uint32_t*>(pDestination), vL);
 			vst1q_lane_u32(reinterpret_cast<uint32_t*>(pDestination) + 2, v, 2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Clamp to >=0
 			Vector vResult = _mm_max_ps(V, g_XMZero);
 			// Any numbers that are too big, set to 0xFFFFFFFFU
@@ -3847,8 +3842,8 @@ namespace At0
 			// On those that are too large, set to 0xFFFFFFFF
 			vResult = _mm_or_ps(vResult, vOverflow);
 			// Write 3 uints
-			Vector T1 = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector T2 = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(2, 2, 2, 2));
+			Vector T1 = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector T2 = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->x), vResult);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->y), T1);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->z), T2);
@@ -3857,28 +3852,28 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreInt4
+		inline void RAYMATH_CALLCONV StoreInt4
 		(
 			uint32_t* pDestination,
 			FVector V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination[0] = V.vector4_u32[0];
 			pDestination[1] = V.vector4_u32[1];
 			pDestination[2] = V.vector4_u32[2];
 			pDestination[3] = V.vector4_u32[3];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_u32(pDestination, V);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(pDestination), _mm_castps_si128(V));
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreInt4A
+		inline void RAYMATH_CALLCONV StoreInt4A
 		(
 			uint32_t* pDestination,
 			FVector V
@@ -3886,42 +3881,42 @@ namespace At0
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination[0] = V.vector4_u32[0];
 			pDestination[1] = V.vector4_u32[1];
 			pDestination[2] = V.vector4_u32[2];
 			pDestination[3] = V.vector4_u32[3];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_u32_ex(pDestination, V, 128);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			_mm_store_si128(reinterpret_cast<__m128i*>(pDestination), _mm_castps_si128(V));
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat4
+		inline void RAYMATH_CALLCONV StoreFloat4
 		(
 			Float4* pDestination,
 			FVector  V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination->x = V.vector4_f32[0];
 			pDestination->y = V.vector4_f32[1];
 			pDestination->z = V.vector4_f32[2];
 			pDestination->w = V.vector4_f32[3];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_f32(reinterpret_cast<float*>(pDestination), V);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			_mm_storeu_ps(&pDestination->x, V);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat4A
+		inline void RAYMATH_CALLCONV StoreFloat4A
 		(
 			Float4A* pDestination,
 			FVector     V
@@ -3929,36 +3924,36 @@ namespace At0
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination->x = V.vector4_f32[0];
 			pDestination->y = V.vector4_f32[1];
 			pDestination->z = V.vector4_f32[2];
 			pDestination->w = V.vector4_f32[3];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_f32_ex(reinterpret_cast<float*>(pDestination), V, 128);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			_mm_store_ps(&pDestination->x, V);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreSInt4
+		inline void RAYMATH_CALLCONV StoreSInt4
 		(
 			Int4* pDestination,
 			FVector V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination->x = static_cast<int32_t>(V.vector4_f32[0]);
 			pDestination->y = static_cast<int32_t>(V.vector4_f32[1]);
 			pDestination->z = static_cast<int32_t>(V.vector4_f32[2]);
 			pDestination->w = static_cast<int32_t>(V.vector4_f32[3]);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			int32x4_t v = vcvtq_s32_f32(V);
 			vst1q_s32(reinterpret_cast<int32_t*>(pDestination), v);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// In case of positive overflow, detect it
 			Vector vOverflow = _mm_cmpgt_ps(V, g_XMMaxInt);
 			// Float to int conversion
@@ -3973,22 +3968,22 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreUInt4
+		inline void RAYMATH_CALLCONV StoreUInt4
 		(
 			UInt4* pDestination,
 			FVector V
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			pDestination->x = static_cast<uint32_t>(V.vector4_f32[0]);
 			pDestination->y = static_cast<uint32_t>(V.vector4_f32[1]);
 			pDestination->z = static_cast<uint32_t>(V.vector4_f32[2]);
 			pDestination->w = static_cast<uint32_t>(V.vector4_f32[3]);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t v = vcvtq_u32_f32(V);
 			vst1q_u32(reinterpret_cast<uint32_t*>(pDestination), v);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Clamp to >=0
 			Vector vResult = _mm_max_ps(V, g_XMZero);
 			// Any numbers that are too big, set to 0xFFFFFFFFU
@@ -4012,14 +4007,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat3x3
+		inline void RAYMATH_CALLCONV StoreFloat3x3
 		(
 			Float3X3* pDestination,
 			FMatrix	M
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			pDestination->m[0][0] = M.r[0].vector4_f32[0];
 			pDestination->m[0][1] = M.r[0].vector4_f32[1];
@@ -4033,7 +4028,7 @@ namespace At0
 			pDestination->m[2][1] = M.r[2].vector4_f32[1];
 			pDestination->m[2][2] = M.r[2].vector4_f32[2];
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t T1 = vextq_f32(M.r[0], M.r[1], 1);
 			float32x4_t T2 = vbslq_f32(g_XMMask3, M.r[0], T1);
 			vst1q_f32(&pDestination->m[0][0], T2);
@@ -4043,7 +4038,7 @@ namespace At0
 			vst1q_f32(&pDestination->m[1][1], T2);
 
 			vst1q_lane_f32(&pDestination->m[2][2], M.r[2], 2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp1 = M.r[0];
 			Vector vTemp2 = M.r[1];
 			Vector vTemp3 = M.r[2];
@@ -4052,21 +4047,21 @@ namespace At0
 			_mm_storeu_ps(&pDestination->m[0][0], vTemp1);
 			vTemp2 = _mm_shuffle_ps(vTemp2, vTemp3, _MM_SHUFFLE(1, 0, 2, 1));
 			_mm_storeu_ps(&pDestination->m[1][1], vTemp2);
-			vTemp3 = XM_PERMUTE_PS(vTemp3, _MM_SHUFFLE(2, 2, 2, 2));
+			vTemp3 = RAYMATH_PERMUTE_PS(vTemp3, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_store_ss(&pDestination->m[2][2], vTemp3);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat4x3
+		inline void RAYMATH_CALLCONV StoreFloat4x3
 		(
 			Float4X3* pDestination,
 			FMatrix M
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			pDestination->m[0][0] = M.r[0].vector4_f32[0];
 			pDestination->m[0][1] = M.r[0].vector4_f32[1];
@@ -4084,7 +4079,7 @@ namespace At0
 			pDestination->m[3][1] = M.r[3].vector4_f32[1];
 			pDestination->m[3][2] = M.r[3].vector4_f32[2];
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t T1 = vextq_f32(M.r[0], M.r[1], 1);
 			float32x4_t T2 = vbslq_f32(g_XMMask3, M.r[0], T1);
 			vst1q_f32(&pDestination->m[0][0], T2);
@@ -4096,7 +4091,7 @@ namespace At0
 			T1 = vdupq_lane_f32(vget_high_f32(M.r[2]), 0);
 			T2 = vextq_f32(T1, M.r[3], 3);
 			vst1q_f32(&pDestination->m[2][2], T2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp1 = M.r[0];
 			Vector vTemp2 = M.r[1];
 			Vector vTemp3 = M.r[2];
@@ -4114,7 +4109,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat4x3A
+		inline void RAYMATH_CALLCONV StoreFloat4x3A
 		(
 			Float4X3A* pDestination,
 			FMatrix		M
@@ -4122,7 +4117,7 @@ namespace At0
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			pDestination->m[0][0] = M.r[0].vector4_f32[0];
 			pDestination->m[0][1] = M.r[0].vector4_f32[1];
@@ -4140,7 +4135,7 @@ namespace At0
 			pDestination->m[3][1] = M.r[3].vector4_f32[1];
 			pDestination->m[3][2] = M.r[3].vector4_f32[2];
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t T1 = vextq_f32(M.r[0], M.r[1], 1);
 			float32x4_t T2 = vbslq_f32(g_XMMask3, M.r[0], T1);
 			vst1q_f32_ex(&pDestination->m[0][0], T2, 128);
@@ -4152,7 +4147,7 @@ namespace At0
 			T1 = vdupq_lane_f32(vget_high_f32(M.r[2]), 0);
 			T2 = vextq_f32(T1, M.r[3], 3);
 			vst1q_f32_ex(&pDestination->m[2][2], T2, 128);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// x1,y1,z1,w1
 			Vector vTemp1 = M.r[0];
 			// x2,y2,z2,w2
@@ -4180,14 +4175,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat3x4
+		inline void RAYMATH_CALLCONV StoreFloat3x4
 		(
 			Float3X4* pDestination,
 			FMatrix M
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			pDestination->m[0][0] = M.r[0].vector4_f32[0];
 			pDestination->m[0][1] = M.r[1].vector4_f32[0];
@@ -4204,7 +4199,7 @@ namespace At0
 			pDestination->m[2][2] = M.r[2].vector4_f32[2];
 			pDestination->m[2][3] = M.r[3].vector4_f32[2];
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4x2_t P0 = vzipq_f32(M.r[0], M.r[2]);
 			float32x4x2_t P1 = vzipq_f32(M.r[1], M.r[3]);
 
@@ -4214,7 +4209,7 @@ namespace At0
 			vst1q_f32(&pDestination->m[0][0], T0.val[0]);
 			vst1q_f32(&pDestination->m[1][0], T0.val[1]);
 			vst1q_f32(&pDestination->m[2][0], T1.val[0]);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// x.x,x.y,y.x,y.y
 			Vector vTemp1 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(1, 0, 1, 0));
 			// x.z,x.w,y.z,y.w
@@ -4239,7 +4234,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat3x4A
+		inline void RAYMATH_CALLCONV StoreFloat3x4A
 		(
 			Float3X4A* pDestination,
 			FMatrix M
@@ -4247,7 +4242,7 @@ namespace At0
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			pDestination->m[0][0] = M.r[0].vector4_f32[0];
 			pDestination->m[0][1] = M.r[1].vector4_f32[0];
@@ -4264,7 +4259,7 @@ namespace At0
 			pDestination->m[2][2] = M.r[2].vector4_f32[2];
 			pDestination->m[2][3] = M.r[3].vector4_f32[2];
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4x2_t P0 = vzipq_f32(M.r[0], M.r[2]);
 			float32x4x2_t P1 = vzipq_f32(M.r[1], M.r[3]);
 
@@ -4274,7 +4269,7 @@ namespace At0
 			vst1q_f32_ex(&pDestination->m[0][0], T0.val[0], 128);
 			vst1q_f32_ex(&pDestination->m[1][0], T0.val[1], 128);
 			vst1q_f32_ex(&pDestination->m[2][0], T1.val[0], 128);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// x.x,x.y,y.x,y.y
 			Vector vTemp1 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(1, 0, 1, 0));
 			// x.z,x.w,y.z,y.w
@@ -4299,14 +4294,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat4x4
+		inline void RAYMATH_CALLCONV StoreFloat4x4
 		(
 			Float4X4* pDestination,
 			FMatrix M
 		)
 		{
 			assert(pDestination);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			pDestination->m[0][0] = M.r[0].vector4_f32[0];
 			pDestination->m[0][1] = M.r[0].vector4_f32[1];
@@ -4328,12 +4323,12 @@ namespace At0
 			pDestination->m[3][2] = M.r[3].vector4_f32[2];
 			pDestination->m[3][3] = M.r[3].vector4_f32[3];
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_f32(reinterpret_cast<float*>(&pDestination->_11), M.r[0]);
 			vst1q_f32(reinterpret_cast<float*>(&pDestination->_21), M.r[1]);
 			vst1q_f32(reinterpret_cast<float*>(&pDestination->_31), M.r[2]);
 			vst1q_f32(reinterpret_cast<float*>(&pDestination->_41), M.r[3]);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			_mm_storeu_ps(&pDestination->_11, M.r[0]);
 			_mm_storeu_ps(&pDestination->_21, M.r[1]);
 			_mm_storeu_ps(&pDestination->_31, M.r[2]);
@@ -4343,7 +4338,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV StoreFloat4x4A
+		inline void RAYMATH_CALLCONV StoreFloat4x4A
 		(
 			Float4X4A* pDestination,
 			FMatrix		M
@@ -4351,7 +4346,7 @@ namespace At0
 		{
 			assert(pDestination);
 			assert((reinterpret_cast<uintptr_t>(pDestination) & 0xF) == 0);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			pDestination->m[0][0] = M.r[0].vector4_f32[0];
 			pDestination->m[0][1] = M.r[0].vector4_f32[1];
@@ -4373,12 +4368,12 @@ namespace At0
 			pDestination->m[3][2] = M.r[3].vector4_f32[2];
 			pDestination->m[3][3] = M.r[3].vector4_f32[3];
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_f32_ex(reinterpret_cast<float*>(&pDestination->_11), M.r[0], 128);
 			vst1q_f32_ex(reinterpret_cast<float*>(&pDestination->_21), M.r[1], 128);
 			vst1q_f32_ex(reinterpret_cast<float*>(&pDestination->_31), M.r[2], 128);
 			vst1q_f32_ex(reinterpret_cast<float*>(&pDestination->_41), M.r[3], 128);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			_mm_store_ps(&pDestination->_11, M.r[0]);
 			_mm_store_ps(&pDestination->_21, M.r[1]);
 			_mm_store_ps(&pDestination->_31, M.r[2]);
@@ -4399,17 +4394,17 @@ namespace At0
 	//-------------------------------------------------------------------------------------
 
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 #define XMISNAN(x)  ((*(const uint32_t*)&(x) & 0x7F800000) == 0x7F800000 && (*(const uint32_t*)&(x) & 0x7FFFFF) != 0)
 #define XMISINF(x)  ((*(const uint32_t*)&(x) & 0x7FFFFFFF) == 0x7F800000)
 #endif
 
-#if defined(_XM_SSE_INTRINSICS_)
+#if defined(RAY_SSE_INTRINSICS)
 
 #define XM3UNPACK3INTO4(l1,l2,l3) \
     Vector V3 = _mm_shuffle_ps(l2,l3,_MM_SHUFFLE(0,0,3,2));\
     Vector V2 = _mm_shuffle_ps(l2,l1,_MM_SHUFFLE(3,3,1,0));\
-    V2 = XM_PERMUTE_PS(V2,_MM_SHUFFLE(1,1,0,2));\
+    V2 = RAYMATH_PERMUTE_PS(V2,_MM_SHUFFLE(1,1,0,2));\
     Vector V4 = _mm_castsi128_ps( _mm_srli_si128(_mm_castps_si128(L3),32/8) );
 
 #define XM3PACK4INTO3(v2x) \
@@ -4433,21 +4428,21 @@ namespace At0
 
  //------------------------------------------------------------------------------
  // Return a vector with all elements equaling zero
-		inline Vector XM_CALLCONV VectorZero()
+		inline Vector RAYMATH_CALLCONV VectorZero()
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult = { { { 0.0f, 0.0f, 0.0f, 0.0f } } };
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_f32(0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_setzero_ps();
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with four floating point values
-		inline Vector XM_CALLCONV VectorSet
+		inline Vector RAYMATH_CALLCONV VectorSet
 		(
 			float x,
 			float y,
@@ -4455,10 +4450,10 @@ namespace At0
 			float w
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult = { { { x, y, z, w } } };
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t V0 = vcreate_f32(
 				static_cast<uint64_t>(*reinterpret_cast<const uint32_t*>(&x))
 				| (static_cast<uint64_t>(*reinterpret_cast<const uint32_t*>(&y)) << 32));
@@ -4466,14 +4461,14 @@ namespace At0
 				static_cast<uint64_t>(*reinterpret_cast<const uint32_t*>(&z))
 				| (static_cast<uint64_t>(*reinterpret_cast<const uint32_t*>(&w)) << 32));
 			return vcombine_f32(V0, V1);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_set_ps(w, z, y, x);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with four integer values
-		inline Vector XM_CALLCONV VectorSetInt
+		inline Vector RAYMATH_CALLCONV VectorSetInt
 		(
 			uint32_t x,
 			uint32_t y,
@@ -4481,14 +4476,14 @@ namespace At0
 			uint32_t w
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult = { { { x, y, z, w } } };
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t V0 = vcreate_u32(static_cast<uint64_t>(x) | (static_cast<uint64_t>(y) << 32));
 			uint32x2_t V1 = vcreate_u32(static_cast<uint64_t>(z) | (static_cast<uint64_t>(w) << 32));
 			return vcombine_u32(V0, V1);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_set_epi32(static_cast<int>(w), static_cast<int>(z), static_cast<int>(y), static_cast<int>(x));
 			return _mm_castsi128_ps(V);
 #endif
@@ -4496,21 +4491,21 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with a replicated floating point value
-		inline Vector XM_CALLCONV VectorReplicate
+		inline Vector RAYMATH_CALLCONV VectorReplicate
 		(
 			float Value
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
 				vResult.f[3] = Value;
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_f32(Value);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_set_ps1(Value);
 #endif
 		}
@@ -4518,12 +4513,12 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Initialize a vector with a replicated floating point value passed by pointer
 
-		inline Vector XM_CALLCONV VectorReplicatePtr
+		inline Vector RAYMATH_CALLCONV VectorReplicatePtr
 		(
 			const float* pValue
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			float Value = pValue[0];
 			VectorF32 vResult;
 			vResult.f[0] =
@@ -4531,32 +4526,32 @@ namespace At0
 				vResult.f[2] =
 				vResult.f[3] = Value;
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_dup_f32(pValue);
-#elif defined(_XM_AVX_INTRINSICS_)
+#elif defined(RAY_AVC_INTRINSICS)
 			return _mm_broadcast_ss(pValue);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_load_ps1(pValue);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with a replicated integer value
-		inline Vector XM_CALLCONV VectorReplicateInt
+		inline Vector RAYMATH_CALLCONV VectorReplicateInt
 		(
 			uint32_t Value
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult;
 			vResult.u[0] =
 				vResult.u[1] =
 				vResult.u[2] =
 				vResult.u[3] = Value;
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_u32(Value);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vTemp = _mm_set1_epi32(static_cast<int>(Value));
 			return _mm_castsi128_ps(vTemp);
 #endif
@@ -4565,12 +4560,12 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Initialize a vector with a replicated integer value passed by pointer
 
-		inline Vector XM_CALLCONV VectorReplicateIntPtr
+		inline Vector RAYMATH_CALLCONV VectorReplicateIntPtr
 		(
 			const uint32_t* pValue
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			uint32_t Value = pValue[0];
 			VectorU32 vResult;
 			vResult.u[0] =
@@ -4578,23 +4573,23 @@ namespace At0
 				vResult.u[2] =
 				vResult.u[3] = Value;
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_dup_u32(pValue);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_load_ps1(reinterpret_cast<const float*>(pValue));
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with all bits set (true mask)
-		inline Vector XM_CALLCONV VectorTrueInt()
+		inline Vector RAYMATH_CALLCONV VectorTrueInt()
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult = { { { 0xFFFFFFFFU, 0xFFFFFFFFU, 0xFFFFFFFFU, 0xFFFFFFFFU } } };
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_s32(-1);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_set1_epi32(-1);
 			return _mm_castsi128_ps(V);
 #endif
@@ -4602,190 +4597,190 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with all bits clear (false mask)
-		inline Vector XM_CALLCONV VectorFalseInt()
+		inline Vector RAYMATH_CALLCONV VectorFalseInt()
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult = { { { 0.0f, 0.0f, 0.0f, 0.0f } } };
 			return vResult;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_u32(0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_setzero_ps();
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Replicate the x component of the vector
-		inline Vector XM_CALLCONV VectorSplatX
+		inline Vector RAYMATH_CALLCONV VectorSplatX
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
 				vResult.f[3] = V.vector4_f32[0];
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_lane_f32(vget_low_f32(V), 0);
-#elif defined(_XM_AVX2_INTRINSICS_)
+#elif defined(RAY_AVX2_INTRINSICS)
 			return _mm_broadcastss_ps(V);
-#elif defined(_XM_SSE_INTRINSICS_)
-			return XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+#elif defined(RAY_SSE_INTRINSICS)
+			return RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Replicate the y component of the vector
-		inline Vector XM_CALLCONV VectorSplatY
+		inline Vector RAYMATH_CALLCONV VectorSplatY
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
 				vResult.f[3] = V.vector4_f32[1];
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_lane_f32(vget_low_f32(V), 1);
-#elif defined(_XM_SSE_INTRINSICS_)
-			return XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+#elif defined(RAY_SSE_INTRINSICS)
+			return RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Replicate the z component of the vector
-		inline Vector XM_CALLCONV VectorSplatZ
+		inline Vector RAYMATH_CALLCONV VectorSplatZ
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
 				vResult.f[3] = V.vector4_f32[2];
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_lane_f32(vget_high_f32(V), 0);
-#elif defined(_XM_SSE_INTRINSICS_)
-			return XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+#elif defined(RAY_SSE_INTRINSICS)
+			return RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Replicate the w component of the vector
-		inline Vector XM_CALLCONV VectorSplatW
+		inline Vector RAYMATH_CALLCONV VectorSplatW
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
 				vResult.f[3] = V.vector4_f32[3];
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_lane_f32(vget_high_f32(V), 1);
-#elif defined(_XM_SSE_INTRINSICS_)
-			return XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+#elif defined(RAY_SSE_INTRINSICS)
+			return RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Return a vector of 1.0f,1.0f,1.0f,1.0f
-		inline Vector XM_CALLCONV VectorSplatOne()
+		inline Vector RAYMATH_CALLCONV VectorSplatOne()
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
 				vResult.f[3] = 1.0f;
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_f32(1.0f);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return g_XMOne;
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Return a vector of INF,INF,INF,INF
-		inline Vector XM_CALLCONV VectorSplatInfinity()
+		inline Vector RAYMATH_CALLCONV VectorSplatInfinity()
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult;
 			vResult.u[0] =
 				vResult.u[1] =
 				vResult.u[2] =
 				vResult.u[3] = 0x7F800000;
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_u32(0x7F800000);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return g_XMInfinity;
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Return a vector of Q_NAN,Q_NAN,Q_NAN,Q_NAN
-		inline Vector XM_CALLCONV VectorSplatQNaN()
+		inline Vector RAYMATH_CALLCONV VectorSplatQNaN()
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult;
 			vResult.u[0] =
 				vResult.u[1] =
 				vResult.u[2] =
 				vResult.u[3] = 0x7FC00000;
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_u32(0x7FC00000);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return g_XMQNaN;
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Return a vector of 1.192092896e-7f,1.192092896e-7f,1.192092896e-7f,1.192092896e-7f
-		inline Vector XM_CALLCONV VectorSplatEpsilon()
+		inline Vector RAYMATH_CALLCONV VectorSplatEpsilon()
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult;
 			vResult.u[0] =
 				vResult.u[1] =
 				vResult.u[2] =
 				vResult.u[3] = 0x34000000;
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_u32(0x34000000);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return g_XMEpsilon;
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Return a vector of -0.0f (0x80000000),-0.0f,-0.0f,-0.0f
-		inline Vector XM_CALLCONV VectorSplatSignMask()
+		inline Vector RAYMATH_CALLCONV VectorSplatSignMask()
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult;
 			vResult.u[0] =
 				vResult.u[1] =
 				vResult.u[2] =
 				vResult.u[3] = 0x80000000U;
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_u32(0x80000000U);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_set1_epi32(static_cast<int>(0x80000000));
 			return _mm_castsi128_ps(V);
 #endif
@@ -4794,11 +4789,10 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Return a floating point value via an index. This is not a recommended
 		// function to use due to performance loss.
-		inline float XM_CALLCONV VectorGetByIndex(FVector V, size_t i)
+		inline float RAYMATH_CALLCONV VectorGetByIndex(FVector V, size_t i)
 		{
 			assert(i < 4);
-			_Analysis_assume_(i < 4);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return V.vector4_f32[i];
 #else
 			VectorF32 U;
@@ -4809,52 +4803,52 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Return the X component in an FPU register. 
-		inline float XM_CALLCONV VectorGetX(FVector V)
+		inline float RAYMATH_CALLCONV VectorGetX(FVector V)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return V.vector4_f32[0];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vgetq_lane_f32(V, 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_cvtss_f32(V);
 #endif
 		}
 
 		// Return the Y component in an FPU register. 
-		inline float XM_CALLCONV VectorGetY(FVector V)
+		inline float RAYMATH_CALLCONV VectorGetY(FVector V)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return V.vector4_f32[1];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vgetq_lane_f32(V, 1);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vTemp = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			return _mm_cvtss_f32(vTemp);
 #endif
 		}
 
 		// Return the Z component in an FPU register. 
-		inline float XM_CALLCONV VectorGetZ(FVector V)
+		inline float RAYMATH_CALLCONV VectorGetZ(FVector V)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return V.vector4_f32[2];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vgetq_lane_f32(V, 2);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vTemp = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			return _mm_cvtss_f32(vTemp);
 #endif
 		}
 
 		// Return the W component in an FPU register. 
-		inline float XM_CALLCONV VectorGetW(FVector V)
+		inline float RAYMATH_CALLCONV VectorGetW(FVector V)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return V.vector4_f32[3];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vgetq_lane_f32(V, 3);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vTemp = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 			return _mm_cvtss_f32(vTemp);
 #endif
 		}
@@ -4863,12 +4857,11 @@ namespace At0
 
 		// Store a component indexed by i into a 32 bit float location in memory.
 
-		inline void XM_CALLCONV VectorGetByIndexPtr(float* f, FVector V, size_t i)
+		inline void RAYMATH_CALLCONV VectorGetByIndexPtr(float* f, FVector V, size_t i)
 		{
 			assert(f != nullptr);
 			assert(i < 4);
-			_Analysis_assume_(i < 4);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			*f = V.vector4_f32[i];
 #else
 			VectorF32 U;
@@ -4881,65 +4874,65 @@ namespace At0
 
 		// Store the X component into a 32 bit float location in memory.
 
-		inline void XM_CALLCONV VectorGetXPtr(float* x, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetXPtr(float* x, FVector V)
 		{
 			assert(x != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			*x = V.vector4_f32[0];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_lane_f32(x, V, 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			_mm_store_ss(x, V);
 #endif
 		}
 
 		// Store the Y component into a 32 bit float location in memory.
 
-		inline void XM_CALLCONV VectorGetYPtr(float* y, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetYPtr(float* y, FVector V)
 		{
 			assert(y != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			*y = V.vector4_f32[1];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_lane_f32(y, V, 1);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			* (reinterpret_cast<int*>(y)) = _mm_extract_ps(V, 1);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			_mm_store_ss(y, vResult);
 #endif
 		}
 
 		// Store the Z component into a 32 bit float location in memory.
 
-		inline void XM_CALLCONV VectorGetZPtr(float* z, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetZPtr(float* z, FVector V)
 		{
 			assert(z != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			*z = V.vector4_f32[2];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_lane_f32(z, V, 2);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			* (reinterpret_cast<int*>(z)) = _mm_extract_ps(V, 2);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_store_ss(z, vResult);
 #endif
 		}
 
 		// Store the W component into a 32 bit float location in memory.
 
-		inline void XM_CALLCONV VectorGetWPtr(float* w, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetWPtr(float* w, FVector V)
 		{
 			assert(w != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			*w = V.vector4_f32[3];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_lane_f32(w, V, 3);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			* (reinterpret_cast<int*>(w)) = _mm_extract_ps(V, 3);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 			_mm_store_ss(w, vResult);
 #endif
 		}
@@ -4948,11 +4941,10 @@ namespace At0
 
 		// Return an integer value via an index. This is not a recommended
 		// function to use due to performance loss.
-		inline uint32_t XM_CALLCONV VectorGetIntByIndex(FVector V, size_t i)
+		inline uint32_t RAYMATH_CALLCONV VectorGetIntByIndex(FVector V, size_t i)
 		{
 			assert(i < 4);
-			_Analysis_assume_(i < 4);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return V.vector4_u32[i];
 #else
 			VectorU32 U;
@@ -4964,60 +4956,60 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Return the X component in an integer register. 
-		inline uint32_t XM_CALLCONV VectorGetIntX(FVector V)
+		inline uint32_t RAYMATH_CALLCONV VectorGetIntX(FVector V)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return V.vector4_u32[0];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vgetq_lane_u32(V, 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return static_cast<uint32_t>(_mm_cvtsi128_si32(_mm_castps_si128(V)));
 #endif
 		}
 
 		// Return the Y component in an integer register. 
-		inline uint32_t XM_CALLCONV VectorGetIntY(FVector V)
+		inline uint32_t RAYMATH_CALLCONV VectorGetIntY(FVector V)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return V.vector4_u32[1];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vgetq_lane_u32(V, 1);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			__m128i V1 = _mm_castps_si128(V);
 			return static_cast<uint32_t>(_mm_extract_epi32(V1, 1));
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vResulti = _mm_shuffle_epi32(_mm_castps_si128(V), _MM_SHUFFLE(1, 1, 1, 1));
 			return static_cast<uint32_t>(_mm_cvtsi128_si32(vResulti));
 #endif
 		}
 
 		// Return the Z component in an integer register. 
-		inline uint32_t XM_CALLCONV VectorGetIntZ(FVector V)
+		inline uint32_t RAYMATH_CALLCONV VectorGetIntZ(FVector V)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return V.vector4_u32[2];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vgetq_lane_u32(V, 2);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			__m128i V1 = _mm_castps_si128(V);
 			return static_cast<uint32_t>(_mm_extract_epi32(V1, 2));
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vResulti = _mm_shuffle_epi32(_mm_castps_si128(V), _MM_SHUFFLE(2, 2, 2, 2));
 			return static_cast<uint32_t>(_mm_cvtsi128_si32(vResulti));
 #endif
 		}
 
 		// Return the W component in an integer register. 
-		inline uint32_t XM_CALLCONV VectorGetIntW(FVector V)
+		inline uint32_t RAYMATH_CALLCONV VectorGetIntW(FVector V)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return V.vector4_u32[3];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vgetq_lane_u32(V, 3);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			__m128i V1 = _mm_castps_si128(V);
 			return static_cast<uint32_t>(_mm_extract_epi32(V1, 3));
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vResulti = _mm_shuffle_epi32(_mm_castps_si128(V), _MM_SHUFFLE(3, 3, 3, 3));
 			return static_cast<uint32_t>(_mm_cvtsi128_si32(vResulti));
 #endif
@@ -5027,12 +5019,11 @@ namespace At0
 
 		// Store a component indexed by i into a 32 bit integer location in memory.
 
-		inline void XM_CALLCONV VectorGetIntByIndexPtr(uint32_t* x, FVector V, size_t i)
+		inline void RAYMATH_CALLCONV VectorGetIntByIndexPtr(uint32_t* x, FVector V, size_t i)
 		{
 			assert(x != nullptr);
 			assert(i < 4);
-			_Analysis_assume_(i < 4);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			*x = V.vector4_u32[i];
 #else
 			VectorU32 U;
@@ -5045,68 +5036,68 @@ namespace At0
 
 		// Store the X component into a 32 bit integer location in memory.
 
-		inline void XM_CALLCONV VectorGetIntXPtr(uint32_t* x, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetIntXPtr(uint32_t* x, FVector V)
 		{
 			assert(x != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			*x = V.vector4_u32[0];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_lane_u32(x, *reinterpret_cast<const uint32x4_t*>(&V), 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			_mm_store_ss(reinterpret_cast<float*>(x), V);
 #endif
 		}
 
 		// Store the Y component into a 32 bit integer location in memory.
 
-		inline void XM_CALLCONV VectorGetIntYPtr(uint32_t* y, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetIntYPtr(uint32_t* y, FVector V)
 		{
 			assert(y != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			*y = V.vector4_u32[1];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_lane_u32(y, *reinterpret_cast<const uint32x4_t*>(&V), 1);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			__m128i V1 = _mm_castps_si128(V);
 			*y = static_cast<uint32_t>(_mm_extract_epi32(V1, 1));
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			_mm_store_ss(reinterpret_cast<float*>(y), vResult);
 #endif
 		}
 
 		// Store the Z component into a 32 bit integer locaCantion in memory.
 
-		inline void XM_CALLCONV VectorGetIntZPtr(uint32_t* z, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetIntZPtr(uint32_t* z, FVector V)
 		{
 			assert(z != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			*z = V.vector4_u32[2];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_lane_u32(z, *reinterpret_cast<const uint32x4_t*>(&V), 2);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			__m128i V1 = _mm_castps_si128(V);
 			*z = static_cast<uint32_t>(_mm_extract_epi32(V1, 2));
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_store_ss(reinterpret_cast<float*>(z), vResult);
 #endif
 		}
 
 		// Store the W component into a 32 bit integer location in memory.
 
-		inline void XM_CALLCONV VectorGetIntWPtr(uint32_t* w, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetIntWPtr(uint32_t* w, FVector V)
 		{
 			assert(w != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			*w = V.vector4_u32[3];
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_lane_u32(w, *reinterpret_cast<const uint32x4_t*>(&V), 3);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			__m128i V1 = _mm_castps_si128(V);
 			*w = static_cast<uint32_t>(_mm_extract_epi32(V1, 3));
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 			_mm_store_ss(reinterpret_cast<float*>(w), vResult);
 #endif
 		}
@@ -5114,10 +5105,9 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Set a single indexed floating point component
-		inline Vector XM_CALLCONV VectorSetByIndex(FVector V, float f, size_t i)
+		inline Vector RAYMATH_CALLCONV VectorSetByIndex(FVector V, float f, size_t i)
 		{
 			assert(i < 4);
-			_Analysis_assume_(i < 4);
 			VectorF32 U;
 			U.v = V;
 			U.f[i] = f;
@@ -5127,9 +5117,9 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Sets the X component of a vector to a passed floating point value
-		inline Vector XM_CALLCONV VectorSetX(FVector V, float x)
+		inline Vector RAYMATH_CALLCONV VectorSetX(FVector V, float x)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
 					x,
 					V.vector4_f32[1],
@@ -5139,19 +5129,19 @@ namespace At0
  }
 			};
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vsetq_lane_f32(x, V, 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vResult = _mm_set_ss(x);
 			vResult = _mm_move_ss(V, vResult);
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the Y component of a vector to a passed floating point value
-		inline Vector XM_CALLCONV VectorSetY(FVector V, float y)
+		inline Vector RAYMATH_CALLCONV VectorSetY(FVector V, float y)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
 					V.vector4_f32[0],
 					y,
@@ -5161,28 +5151,28 @@ namespace At0
  }
 			};
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vsetq_lane_f32(y, V, 1);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vResult = _mm_set_ss(y);
 			vResult = _mm_insert_ps(V, vResult, 0x10);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Swap y and x
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
 			// Convert input to vector
 			Vector vTemp = _mm_set_ss(y);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap y and x again
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
 			return vResult;
 #endif
-				}
+		}
 		// Sets the Z component of a vector to a passed floating point value
-		inline Vector XM_CALLCONV VectorSetZ(FVector V, float z)
+		inline Vector RAYMATH_CALLCONV VectorSetZ(FVector V, float z)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
 					V.vector4_f32[0],
 					V.vector4_f32[1],
@@ -5192,29 +5182,29 @@ namespace At0
  }
 			};
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vsetq_lane_f32(z, V, 2);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vResult = _mm_set_ss(z);
 			vResult = _mm_insert_ps(V, vResult, 0x20);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Swap z and x
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
 			// Convert input to vector
 			Vector vTemp = _mm_set_ss(z);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap z and x again
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the W component of a vector to a passed floating point value
-		inline Vector XM_CALLCONV VectorSetW(FVector V, float w)
+		inline Vector RAYMATH_CALLCONV VectorSetW(FVector V, float w)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
 					V.vector4_f32[0],
 					V.vector4_f32[1],
@@ -5224,34 +5214,33 @@ namespace At0
  }
 			};
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vsetq_lane_f32(w, V, 3);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vResult = _mm_set_ss(w);
 			vResult = _mm_insert_ps(V, vResult, 0x30);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Swap w and x
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
 			// Convert input to vector
 			Vector vTemp = _mm_set_ss(w);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap w and x again
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
 		// Sets a component of a vector to a floating point value passed by pointer
 
-		inline Vector XM_CALLCONV VectorSetByIndexPtr(FVector V, const float* f, size_t i)
+		inline Vector RAYMATH_CALLCONV VectorSetByIndexPtr(FVector V, const float* f, size_t i)
 		{
 			assert(f != nullptr);
 			assert(i < 4);
-			_Analysis_assume_(i < 4);
 			VectorF32 U;
 			U.v = V;
 			U.f[i] = *f;
@@ -5262,10 +5251,10 @@ namespace At0
 
 		// Sets the X component of a vector to a floating point value passed by pointer
 
-		inline Vector XM_CALLCONV VectorSetXPtr(FVector V, const float* x)
+		inline Vector RAYMATH_CALLCONV VectorSetXPtr(FVector V, const float* x)
 		{
 			assert(x != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
 					*x,
 					V.vector4_f32[1],
@@ -5275,21 +5264,21 @@ namespace At0
  }
 			};
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_lane_f32(x, V, 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vResult = _mm_load_ss(x);
 			vResult = _mm_move_ss(V, vResult);
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the Y component of a vector to a floating point value passed by pointer
 
-		inline Vector XM_CALLCONV VectorSetYPtr(FVector V, const float* y)
+		inline Vector RAYMATH_CALLCONV VectorSetYPtr(FVector V, const float* y)
 		{
 			assert(y != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
 					V.vector4_f32[0],
 					*y,
@@ -5297,27 +5286,27 @@ namespace At0
 					V.vector4_f32[3]
 				} } };
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_lane_f32(y, V, 1);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Swap y and x
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
 			// Convert input to vector
 			Vector vTemp = _mm_load_ss(y);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap y and x again
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the Z component of a vector to a floating point value passed by pointer
 
-		inline Vector XM_CALLCONV VectorSetZPtr(FVector V, const float* z)
+		inline Vector RAYMATH_CALLCONV VectorSetZPtr(FVector V, const float* z)
 		{
 			assert(z != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
 					V.vector4_f32[0],
 					V.vector4_f32[1],
@@ -5325,27 +5314,27 @@ namespace At0
 					V.vector4_f32[3]
 				} } };
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_lane_f32(z, V, 2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Swap z and x
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
 			// Convert input to vector
 			Vector vTemp = _mm_load_ss(z);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap z and x again
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the W component of a vector to a floating point value passed by pointer
 
-		inline Vector XM_CALLCONV VectorSetWPtr(FVector V, const float* w)
+		inline Vector RAYMATH_CALLCONV VectorSetWPtr(FVector V, const float* w)
 		{
 			assert(w != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
 					V.vector4_f32[0],
 					V.vector4_f32[1],
@@ -5353,28 +5342,27 @@ namespace At0
 					*w
 				} } };
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_lane_f32(w, V, 3);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Swap w and x
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
 			// Convert input to vector
 			Vector vTemp = _mm_load_ss(w);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap w and x again
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
 		// Sets a component of a vector to an integer passed by value
-		inline Vector XM_CALLCONV VectorSetIntByIndex(FVector V, uint32_t x, size_t i)
+		inline Vector RAYMATH_CALLCONV VectorSetIntByIndex(FVector V, uint32_t x, size_t i)
 		{
 			assert(i < 4);
-			_Analysis_assume_(i < 4);
 			VectorU32 tmp;
 			tmp.v = V;
 			tmp.u[i] = x;
@@ -5384,9 +5372,9 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Sets the X component of a vector to an integer passed by value
-		inline Vector XM_CALLCONV VectorSetIntX(FVector V, uint32_t x)
+		inline Vector RAYMATH_CALLCONV VectorSetIntX(FVector V, uint32_t x)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
 					x,
 					V.vector4_u32[1],
@@ -5394,19 +5382,19 @@ namespace At0
 					V.vector4_u32[3]
 				} } };
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vsetq_lane_u32(x, V, 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vTemp = _mm_cvtsi32_si128(static_cast<int>(x));
 			Vector vResult = _mm_move_ss(V, _mm_castsi128_ps(vTemp));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the Y component of a vector to an integer passed by value
-		inline Vector XM_CALLCONV VectorSetIntY(FVector V, uint32_t y)
+		inline Vector RAYMATH_CALLCONV VectorSetIntY(FVector V, uint32_t y)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
 					V.vector4_u32[0],
 					y,
@@ -5414,29 +5402,29 @@ namespace At0
 					V.vector4_u32[3]
 				} } };
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vsetq_lane_u32(y, V, 1);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			__m128i vResult = _mm_castps_si128(V);
 			vResult = _mm_insert_epi32(vResult, static_cast<int>(y), 1);
 			return _mm_castsi128_ps(vResult);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Swap y and x
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
 			// Convert input to vector
 			__m128i vTemp = _mm_cvtsi32_si128(static_cast<int>(y));
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, _mm_castsi128_ps(vTemp));
 			// Swap y and x again
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the Z component of a vector to an integer passed by value
-		inline Vector XM_CALLCONV VectorSetIntZ(FVector V, uint32_t z)
+		inline Vector RAYMATH_CALLCONV VectorSetIntZ(FVector V, uint32_t z)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
 					V.vector4_u32[0],
 					V.vector4_u32[1],
@@ -5444,29 +5432,29 @@ namespace At0
 					V.vector4_u32[3]
 				} } };
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vsetq_lane_u32(z, V, 2);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			__m128i vResult = _mm_castps_si128(V);
 			vResult = _mm_insert_epi32(vResult, static_cast<int>(z), 2);
 			return _mm_castsi128_ps(vResult);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Swap z and x
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
 			// Convert input to vector
 			__m128i vTemp = _mm_cvtsi32_si128(static_cast<int>(z));
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, _mm_castsi128_ps(vTemp));
 			// Swap z and x again
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the W component of a vector to an integer passed by value
-		inline Vector XM_CALLCONV VectorSetIntW(FVector V, uint32_t w)
+		inline Vector RAYMATH_CALLCONV VectorSetIntW(FVector V, uint32_t w)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
 					V.vector4_u32[0],
 					V.vector4_u32[1],
@@ -5474,34 +5462,33 @@ namespace At0
 					w
 				} } };
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vsetq_lane_u32(w, V, 3);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			__m128i vResult = _mm_castps_si128(V);
 			vResult = _mm_insert_epi32(vResult, static_cast<int>(w), 3);
 			return _mm_castsi128_ps(vResult);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Swap w and x
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
 			// Convert input to vector
 			__m128i vTemp = _mm_cvtsi32_si128(static_cast<int>(w));
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, _mm_castsi128_ps(vTemp));
 			// Swap w and x again
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
 		// Sets a component of a vector to an integer value passed by pointer
 
-		inline Vector XM_CALLCONV VectorSetIntByIndexPtr(FVector V, const uint32_t* x, size_t i)
+		inline Vector RAYMATH_CALLCONV VectorSetIntByIndexPtr(FVector V, const uint32_t* x, size_t i)
 		{
 			assert(x != nullptr);
 			assert(i < 4);
-			_Analysis_assume_(i < 4);
 			VectorU32 tmp;
 			tmp.v = V;
 			tmp.u[i] = *x;
@@ -5512,10 +5499,10 @@ namespace At0
 
 		// Sets the X component of a vector to an integer value passed by pointer
 
-		inline Vector XM_CALLCONV VectorSetIntXPtr(FVector V, const uint32_t* x)
+		inline Vector RAYMATH_CALLCONV VectorSetIntXPtr(FVector V, const uint32_t* x)
 		{
 			assert(x != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
 					*x,
 					V.vector4_u32[1],
@@ -5523,21 +5510,21 @@ namespace At0
 					V.vector4_u32[3]
 				} } };
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_lane_u32(x, *reinterpret_cast<const uint32x4_t*>(&V), 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_load_ss(reinterpret_cast<const float*>(x));
 			Vector vResult = _mm_move_ss(V, vTemp);
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the Y component of a vector to an integer value passed by pointer
 
-		inline Vector XM_CALLCONV VectorSetIntYPtr(FVector V, const uint32_t* y)
+		inline Vector RAYMATH_CALLCONV VectorSetIntYPtr(FVector V, const uint32_t* y)
 		{
 			assert(y != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
 					V.vector4_u32[0],
 					*y,
@@ -5545,27 +5532,27 @@ namespace At0
 					V.vector4_u32[3]
 				} } };
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_lane_u32(y, *reinterpret_cast<const uint32x4_t*>(&V), 1);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Swap y and x
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
 			// Convert input to vector
 			Vector vTemp = _mm_load_ss(reinterpret_cast<const float*>(y));
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap y and x again
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the Z component of a vector to an integer value passed by pointer
 
-		inline Vector XM_CALLCONV VectorSetIntZPtr(FVector V, const uint32_t* z)
+		inline Vector RAYMATH_CALLCONV VectorSetIntZPtr(FVector V, const uint32_t* z)
 		{
 			assert(z != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
 					V.vector4_u32[0],
 					V.vector4_u32[1],
@@ -5573,27 +5560,27 @@ namespace At0
 					V.vector4_u32[3]
 				} } };
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_lane_u32(z, *reinterpret_cast<const uint32x4_t*>(&V), 2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Swap z and x
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
 			// Convert input to vector
 			Vector vTemp = _mm_load_ss(reinterpret_cast<const float*>(z));
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap z and x again
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the W component of a vector to an integer value passed by pointer
 
-		inline Vector XM_CALLCONV VectorSetIntWPtr(FVector V, const uint32_t* w)
+		inline Vector RAYMATH_CALLCONV VectorSetIntWPtr(FVector V, const uint32_t* w)
 		{
 			assert(w != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
 					V.vector4_u32[0],
 					V.vector4_u32[1],
@@ -5601,24 +5588,24 @@ namespace At0
 					*w
 				} } };
 			return U.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_lane_u32(w, *reinterpret_cast<const uint32x4_t*>(&V), 3);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Swap w and x
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
 			// Convert input to vector
 			Vector vTemp = _mm_load_ss(reinterpret_cast<const float*>(w));
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap w and x again
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorSwizzle
+		inline Vector RAYMATH_CALLCONV VectorSwizzle
 		(
 			FVector V,
 			uint32_t E0,
@@ -5628,8 +5615,7 @@ namespace At0
 		)
 		{
 			assert((E0 < 4) && (E1 < 4) && (E2 < 4) && (E3 < 4));
-			_Analysis_assume_((E0 < 4) && (E1 < 4) && (E2 < 4) && (E3 < 4));
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					V.vector4_f32[E0],
@@ -5639,7 +5625,7 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const uint32_t ControlElement[4] =
 			{
 				0x03020100, // XM_SWIZZLE_X
@@ -5659,7 +5645,7 @@ namespace At0
 			const uint8x8_t rH = vtbl2_u8(tbl, idx);
 
 			return vcombine_f32(rL, rH);
-#elif defined(_XM_AVX_INTRINSICS_)
+#elif defined(RAY_AVC_INTRINSICS)
 			unsigned int elem[4] = { E0, E1, E2, E3 };
 			__m128i vControl = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&elem[0]));
 			return _mm_permutevar_ps(V, vControl);
@@ -5676,10 +5662,10 @@ namespace At0
 
 			return Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
-		inline Vector XM_CALLCONV VectorPermute
+		inline Vector RAYMATH_CALLCONV VectorPermute
 		(
 			FVector V1,
 			FVector V2,
@@ -5690,9 +5676,8 @@ namespace At0
 		)
 		{
 			assert(PermuteX <= 7 && PermuteY <= 7 && PermuteZ <= 7 && PermuteW <= 7);
-			_Analysis_assume_(PermuteX <= 7 && PermuteY <= 7 && PermuteZ <= 7 && PermuteW <= 7);
 
-#if defined(_XM_ARM_NEON_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 			static const uint32_t ControlElement[8] =
 			{
 				0x03020100, // XM_PERMUTE_0X
@@ -5718,10 +5703,10 @@ namespace At0
 			const uint8x8_t rH = vtbl4_u8(tbl, idx);
 
 			return vcombine_f32(rL, rH);
-#elif defined(_XM_AVX_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#elif defined(RAY_AVC_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 			static const VectorU32 three = { { { 3, 3, 3, 3 } } };
 
-			XM_ALIGNED(16) unsigned int elem[4] = { PermuteX, PermuteY, PermuteZ, PermuteW };
+			RAY_ALIGNED(16) unsigned int elem[4] = { PermuteX, PermuteY, PermuteZ, PermuteW };
 			__m128i vControl = _mm_load_si128(reinterpret_cast<const __m128i*>(&elem[0]));
 
 			__m128i vSelect = _mm_cmpgt_epi32(vControl, three);
@@ -5761,7 +5746,7 @@ namespace At0
 
 			return Result;
 #endif
-			}
+		}
 
 		//------------------------------------------------------------------------------
 		// Define a control vector to be used in VectorSelect 
@@ -5774,7 +5759,7 @@ namespace At0
 		// vector to be selected whereas a one causes the component from the
 		// second vector to be selected instead.
 
-		inline Vector XM_CALLCONV VectorSelectControl
+		inline Vector RAYMATH_CALLCONV VectorSelectControl
 		(
 			uint32_t VectorIndex0,
 			uint32_t VectorIndex1,
@@ -5782,13 +5767,13 @@ namespace At0
 			uint32_t VectorIndex3
 		)
 		{
-#if defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 			// x=Index0,y=Index1,z=Index2,w=Index3
 			__m128i vTemp = _mm_set_epi32(static_cast<int>(VectorIndex3), static_cast<int>(VectorIndex2), static_cast<int>(VectorIndex1), static_cast<int>(VectorIndex0));
 			// Any non-zero entries become 0xFFFFFFFF else 0
 			vTemp = _mm_cmpgt_epi32(vTemp, g_XMZero);
 			return _mm_castsi128_ps(vTemp);
-#elif defined(_XM_ARM_NEON_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 			int32x2_t V0 = vcreate_s32(static_cast<uint64_t>(VectorIndex0) | (static_cast<uint64_t>(VectorIndex1) << 32));
 			int32x2_t V1 = vcreate_s32(static_cast<uint64_t>(VectorIndex2) | (static_cast<uint64_t>(VectorIndex3) << 32));
 			int32x4_t vTemp = vcombine_s32(V0, V1);
@@ -5806,10 +5791,6 @@ namespace At0
 			assert(VectorIndex1 < 2);
 			assert(VectorIndex2 < 2);
 			assert(VectorIndex3 < 2);
-			_Analysis_assume_(VectorIndex0 < 2);
-			_Analysis_assume_(VectorIndex1 < 2);
-			_Analysis_assume_(VectorIndex2 < 2);
-			_Analysis_assume_(VectorIndex3 < 2);
 
 			ControlVector.vector4_u32[0] = ControlElement[VectorIndex0];
 			ControlVector.vector4_u32[1] = ControlElement[VectorIndex1];
@@ -5823,14 +5804,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorSelect
+		inline Vector RAYMATH_CALLCONV VectorSelect
 		(
 			FVector V1,
 			FVector V2,
 			FVector Control
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Result = { { {
 					(V1.vector4_u32[0] & ~Control.vector4_u32[0]) | (V2.vector4_u32[0] & Control.vector4_u32[0]),
@@ -5840,24 +5821,24 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vbslq_f32(Control, V2, V1);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp1 = _mm_andnot_ps(Control, V1);
 			Vector vTemp2 = _mm_and_ps(V2, Control);
 			return _mm_or_ps(vTemp1, vTemp2);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorMergeXY
+		inline Vector RAYMATH_CALLCONV VectorMergeXY
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Result = { { {
 					V1.vector4_u32[0],
@@ -5867,22 +5848,22 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vzipq_f32(V1, V2).val[0];
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_unpacklo_ps(V1, V2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorMergeZW
+		inline Vector RAYMATH_CALLCONV VectorMergeZW
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Result = { { {
 					V1.vector4_u32[2],
@@ -5892,43 +5873,40 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vzipq_f32(V1, V2).val[1];
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_unpackhi_ps(V1, V2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorShiftLeft(FVector V1, FVector V2, uint32_t Elements)
+		inline Vector RAYMATH_CALLCONV VectorShiftLeft(FVector V1, FVector V2, uint32_t Elements)
 		{
 			assert(Elements < 4);
-			_Analysis_assume_(Elements < 4);
 			return VectorPermute(V1, V2, Elements, ((Elements)+1), ((Elements)+2), ((Elements)+3));
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorRotateLeft(FVector V, uint32_t Elements)
+		inline Vector RAYMATH_CALLCONV VectorRotateLeft(FVector V, uint32_t Elements)
 		{
 			assert(Elements < 4);
-			_Analysis_assume_(Elements < 4);
 			return VectorSwizzle(V, Elements & 3, (Elements + 1) & 3, (Elements + 2) & 3, (Elements + 3) & 3);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorRotateRight(FVector V, uint32_t Elements)
+		inline Vector RAYMATH_CALLCONV VectorRotateRight(FVector V, uint32_t Elements)
 		{
 			assert(Elements < 4);
-			_Analysis_assume_(Elements < 4);
 			return VectorSwizzle(V, (4 - (Elements)) & 3, (5 - (Elements)) & 3, (6 - (Elements)) & 3, (7 - (Elements)) & 3);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorInsert(FVector VD, FVector VS, uint32_t VSLeftRotateElements,
+		inline Vector RAYMATH_CALLCONV VectorInsert(FVector VD, FVector VS, uint32_t VSLeftRotateElements,
 			uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3)
 		{
 			Vector Control = VectorSelectControl(Select0 & 1, Select1 & 1, Select2 & 1, Select3 & 1);
@@ -5941,13 +5919,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorEqual
+		inline Vector RAYMATH_CALLCONV VectorEqual
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Control = { { {
 					(V1.vector4_f32[0] == V2.vector4_f32[0]) ? 0xFFFFFFFF : 0,
@@ -5957,9 +5935,9 @@ namespace At0
 				} } };
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vceqq_f32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_cmpeq_ps(V1, V2);
 #endif
 		}
@@ -5967,7 +5945,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 
-		inline Vector XM_CALLCONV VectorEqualR
+		inline Vector RAYMATH_CALLCONV VectorEqualR
 		(
 			uint32_t* pCR,
 			FVector V1,
@@ -5975,7 +5953,7 @@ namespace At0
 		)
 		{
 			assert(pCR != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			uint32_t ux = (V1.vector4_f32[0] == V2.vector4_f32[0]) ? 0xFFFFFFFFU : 0;
 			uint32_t uy = (V1.vector4_f32[1] == V2.vector4_f32[1]) ? 0xFFFFFFFFU : 0;
 			uint32_t uz = (V1.vector4_f32[2] == V2.vector4_f32[2]) ? 0xFFFFFFFFU : 0;
@@ -5996,7 +5974,7 @@ namespace At0
 			VectorU32 Control = { { { ux, uy, uz, uw } } };
 			return Control;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
@@ -6014,7 +5992,7 @@ namespace At0
 			}
 			*pCR = CR;
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpeq_ps(V1, V2);
 			uint32_t CR = 0;
 			int iTest = _mm_movemask_ps(vTemp);
@@ -6038,13 +6016,13 @@ namespace At0
 		// comparing control vectors and result vectors returned from
 		// other comparison operations.
 
-		inline Vector XM_CALLCONV VectorEqualInt
+		inline Vector RAYMATH_CALLCONV VectorEqualInt
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Control = { { {
 					(V1.vector4_u32[0] == V2.vector4_u32[0]) ? 0xFFFFFFFF : 0,
@@ -6056,18 +6034,18 @@ namespace At0
 			};
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vceqq_u32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return _mm_castsi128_ps(V);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
 
-		inline Vector XM_CALLCONV VectorEqualIntR
+		inline Vector RAYMATH_CALLCONV VectorEqualIntR
 		(
 			uint32_t* pCR,
 			FVector V1,
@@ -6075,7 +6053,7 @@ namespace At0
 		)
 		{
 			assert(pCR != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Control = VectorEqualInt(V1, V2);
 
@@ -6092,7 +6070,7 @@ namespace At0
 			}
 			return Control;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_u32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
@@ -6110,7 +6088,7 @@ namespace At0
 			}
 			*pCR = CR;
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			int iTemp = _mm_movemask_ps(_mm_castsi128_ps(V));
 			uint32_t CR = 0;
@@ -6129,14 +6107,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorNearEqual
+		inline Vector RAYMATH_CALLCONV VectorNearEqual
 		(
 			FVector V1,
 			FVector V2,
 			FVector Epsilon
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float fDeltax = V1.vector4_f32[0] - V2.vector4_f32[0];
 			float fDeltay = V1.vector4_f32[1] - V2.vector4_f32[1];
@@ -6156,10 +6134,10 @@ namespace At0
 				} } };
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector vDelta = vsubq_f32(V1, V2);
 			return vacleq_f32(vDelta, Epsilon);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Get the difference
 			Vector vDelta = _mm_sub_ps(V1, V2);
 			// Get the absolute value of the difference
@@ -6173,13 +6151,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorNotEqual
+		inline Vector RAYMATH_CALLCONV VectorNotEqual
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Control = { { {
 					(V1.vector4_f32[0] != V2.vector4_f32[0]) ? 0xFFFFFFFF : 0,
@@ -6189,22 +6167,22 @@ namespace At0
 				} } };
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vmvnq_u32(vceqq_f32(V1, V2));
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_cmpneq_ps(V1, V2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorNotEqualInt
+		inline Vector RAYMATH_CALLCONV VectorNotEqualInt
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Control = { { {
 					(V1.vector4_u32[0] != V2.vector4_u32[0]) ? 0xFFFFFFFFU : 0,
@@ -6214,23 +6192,23 @@ namespace At0
 				} } };
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vmvnq_u32(vceqq_u32(V1, V2));
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return _mm_xor_ps(_mm_castsi128_ps(V), g_XMNegOneMask);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorGreater
+		inline Vector RAYMATH_CALLCONV VectorGreater
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Control = { { {
 					(V1.vector4_f32[0] > V2.vector4_f32[0]) ? 0xFFFFFFFF : 0,
@@ -6240,9 +6218,9 @@ namespace At0
 				} } };
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vcgtq_f32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_cmpgt_ps(V1, V2);
 #endif
 		}
@@ -6250,7 +6228,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 
-		inline Vector XM_CALLCONV VectorGreaterR
+		inline Vector RAYMATH_CALLCONV VectorGreaterR
 		(
 			uint32_t* pCR,
 			FVector V1,
@@ -6258,7 +6236,7 @@ namespace At0
 		)
 		{
 			assert(pCR != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			uint32_t ux = (V1.vector4_f32[0] > V2.vector4_f32[0]) ? 0xFFFFFFFFU : 0;
 			uint32_t uy = (V1.vector4_f32[1] > V2.vector4_f32[1]) ? 0xFFFFFFFFU : 0;
@@ -6280,7 +6258,7 @@ namespace At0
 			VectorU32 Control = { { { ux, uy, uz, uw } } };
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcgtq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
@@ -6298,7 +6276,7 @@ namespace At0
 			}
 			*pCR = CR;
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpgt_ps(V1, V2);
 			uint32_t CR = 0;
 			int iTest = _mm_movemask_ps(vTemp);
@@ -6318,13 +6296,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorGreaterOrEqual
+		inline Vector RAYMATH_CALLCONV VectorGreaterOrEqual
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Control = { { {
 					(V1.vector4_f32[0] >= V2.vector4_f32[0]) ? 0xFFFFFFFF : 0,
@@ -6335,9 +6313,9 @@ namespace At0
 			};
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vcgeq_f32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_cmpge_ps(V1, V2);
 #endif
 		}
@@ -6345,7 +6323,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 
-		inline Vector XM_CALLCONV VectorGreaterOrEqualR
+		inline Vector RAYMATH_CALLCONV VectorGreaterOrEqualR
 		(
 			uint32_t* pCR,
 			FVector V1,
@@ -6353,7 +6331,7 @@ namespace At0
 		)
 		{
 			assert(pCR != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			uint32_t ux = (V1.vector4_f32[0] >= V2.vector4_f32[0]) ? 0xFFFFFFFFU : 0;
 			uint32_t uy = (V1.vector4_f32[1] >= V2.vector4_f32[1]) ? 0xFFFFFFFFU : 0;
@@ -6375,7 +6353,7 @@ namespace At0
 			VectorU32 Control = { { { ux, uy, uz, uw } } };
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcgeq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
@@ -6393,7 +6371,7 @@ namespace At0
 			}
 			*pCR = CR;
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpge_ps(V1, V2);
 			uint32_t CR = 0;
 			int iTest = _mm_movemask_ps(vTemp);
@@ -6413,13 +6391,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorLess
+		inline Vector RAYMATH_CALLCONV VectorLess
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Control = { { {
 					(V1.vector4_f32[0] < V2.vector4_f32[0]) ? 0xFFFFFFFF : 0,
@@ -6429,22 +6407,22 @@ namespace At0
 				} } };
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vcltq_f32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_cmplt_ps(V1, V2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorLessOrEqual
+		inline Vector RAYMATH_CALLCONV VectorLessOrEqual
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Control = { { {
 					(V1.vector4_f32[0] <= V2.vector4_f32[0]) ? 0xFFFFFFFF : 0,
@@ -6455,22 +6433,22 @@ namespace At0
  } };
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vcleq_f32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_cmple_ps(V1, V2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorInBounds
+		inline Vector RAYMATH_CALLCONV VectorInBounds
 		(
 			FVector V,
 			FVector Bounds
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Control = { { {
 					(V.vector4_f32[0] <= Bounds.vector4_f32[0] && V.vector4_f32[0] >= -Bounds.vector4_f32[0]) ? 0xFFFFFFFF : 0,
@@ -6480,7 +6458,7 @@ namespace At0
 				} } };
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Test if less than or equal
 			Vector vTemp1 = vcleq_f32(V, Bounds);
 			// Negate the bounds
@@ -6490,7 +6468,7 @@ namespace At0
 			// Blend answers
 			vTemp1 = vandq_u32(vTemp1, vTemp2);
 			return vTemp1;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Test if less than or equal
 			Vector vTemp1 = _mm_cmple_ps(V, Bounds);
 			// Negate the bounds
@@ -6501,12 +6479,12 @@ namespace At0
 			vTemp1 = _mm_and_ps(vTemp1, vTemp2);
 			return vTemp1;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
 
-		inline Vector XM_CALLCONV VectorInBoundsR
+		inline Vector RAYMATH_CALLCONV VectorInBoundsR
 		(
 			uint32_t* pCR,
 			FVector V,
@@ -6514,7 +6492,7 @@ namespace At0
 		)
 		{
 			assert(pCR != nullptr);
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			uint32_t ux = (V.vector4_f32[0] <= Bounds.vector4_f32[0] && V.vector4_f32[0] >= -Bounds.vector4_f32[0]) ? 0xFFFFFFFFU : 0;
 			uint32_t uy = (V.vector4_f32[1] <= Bounds.vector4_f32[1] && V.vector4_f32[1] >= -Bounds.vector4_f32[1]) ? 0xFFFFFFFFU : 0;
@@ -6532,7 +6510,7 @@ namespace At0
 			VectorU32 Control = { { { ux, uy, uz, uw } } };
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Test if less than or equal
 			Vector vTemp1 = vcleq_f32(V, Bounds);
 			// Negate the bounds
@@ -6552,7 +6530,7 @@ namespace At0
 			}
 			*pCR = CR;
 			return vTemp1;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Test if less than or equal
 			Vector vTemp1 = _mm_cmple_ps(V, Bounds);
 			// Negate the bounds
@@ -6574,12 +6552,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorIsNaN
+		inline Vector RAYMATH_CALLCONV VectorIsNaN
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Control = { { {
 					XMISNAN(V.vector4_f32[0]) ? 0xFFFFFFFFU : 0,
@@ -6589,25 +6567,25 @@ namespace At0
 				} } };
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Test against itself. NaN is always not equal
 			uint32x4_t vTempNan = vceqq_f32(V, V);
 			// Flip results
 			return vmvnq_u32(vTempNan);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Test against itself. NaN is always not equal
 			return _mm_cmpneq_ps(V, V);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorIsInfinite
+		inline Vector RAYMATH_CALLCONV VectorIsInfinite
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Control = { { {
 					XMISINF(V.vector4_f32[0]) ? 0xFFFFFFFFU : 0,
@@ -6617,14 +6595,14 @@ namespace At0
 				} } };
 			return Control.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Mask off the sign bit
 			uint32x4_t vTemp = vandq_u32(V, g_XMAbsMask);
 			// Compare to infinity
 			vTemp = vceqq_f32(vTemp, g_XMInfinity);
 			// If any are infinity, the signs are true.
 			return vTemp;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Mask off the sign bit
 			__m128 vTemp = _mm_and_ps(V, g_XMAbsMask);
 			// Compare to infinity
@@ -6632,7 +6610,7 @@ namespace At0
 			// If any are infinity, the signs are true.
 			return vTemp;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 		// Rounding and clamping operations
@@ -6640,13 +6618,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorMin
+		inline Vector RAYMATH_CALLCONV VectorMin
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					(V1.vector4_f32[0] < V2.vector4_f32[0]) ? V1.vector4_f32[0] : V2.vector4_f32[0],
@@ -6656,22 +6634,22 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vminq_f32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_min_ps(V1, V2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorMax
+		inline Vector RAYMATH_CALLCONV VectorMax
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					(V1.vector4_f32[0] > V2.vector4_f32[0]) ? V1.vector4_f32[0] : V2.vector4_f32[0],
@@ -6681,9 +6659,9 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vmaxq_f32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_max_ps(V1, V2);
 #endif
 		}
@@ -6713,17 +6691,17 @@ namespace At0
 			}
 		}
 
-#if !defined(_XM_NO_INTRINSICS_) && !defined(__clang__) && !defined(__INTEL_COMPILER)
+#if !defined(RAY_NO_INTRINSICS) && !defined(__clang__) && !defined(__INTEL_COMPILER)
 #pragma float_control(push)
 #pragma float_control(precise, on)
 #endif
 
-		inline Vector XM_CALLCONV VectorRound
+		inline Vector RAYMATH_CALLCONV VectorRound
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					Internal::round_to_nearest(V.vector4_f32[0]),
@@ -6734,7 +6712,7 @@ namespace At0
  } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 			return vrndnq_f32(V);
 #else
@@ -6747,9 +6725,9 @@ namespace At0
 			Vector vResult = vbslq_f32(mask, R1, V);
 			return vResult;
 #endif
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			return _mm_round_ps(V, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 sign = _mm_and_ps(V, g_XMNegativeZero);
 			__m128 sMagic = _mm_or_ps(g_XMNoFraction, sign);
 			__m128 R1 = _mm_add_ps(V, sMagic);
@@ -6761,20 +6739,20 @@ namespace At0
 			Vector vResult = _mm_xor_ps(R1, R2);
 			return vResult;
 #endif
-				}
+		}
 
-#if !defined(_XM_NO_INTRINSICS_) && !defined(__clang__) && !defined(__INTEL_COMPILER)
+#if !defined(RAY_NO_INTRINSICS) && !defined(__clang__) && !defined(__INTEL_COMPILER)
 #pragma float_control(pop)
 #endif
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorTruncate
+		inline Vector RAYMATH_CALLCONV VectorTruncate
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector Result;
 			uint32_t     i;
 
@@ -6798,7 +6776,7 @@ namespace At0
 			}
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 			return vrndq_f32(V);
 #else
@@ -6812,9 +6790,9 @@ namespace At0
 			// All others, use the ORIGINAL value
 			return vbslq_f32(vTest, vResult, V);
 #endif
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			return _mm_round_ps(V, _MM_FROUND_TO_ZERO | _MM_FROUND_NO_EXC);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// To handle NAN, INF and numbers greater than 8388608, use masking
 			// Get the abs value
 			__m128i vTest = _mm_and_si128(_mm_castps_si128(V), g_XMAbsMask);
@@ -6835,12 +6813,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorFloor
+		inline Vector RAYMATH_CALLCONV VectorFloor
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					floorf(V.vector4_f32[0]),
 					floorf(V.vector4_f32[1]),
@@ -6850,7 +6828,7 @@ namespace At0
  }
 			};
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 			return vrndmq_f32(V);
 #else
@@ -6867,9 +6845,9 @@ namespace At0
 			// All others, use the ORIGINAL value
 			return vbslq_f32(vTest, vResult, V);
 #endif
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			return _mm_floor_ps(V);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// To handle NAN, INF and numbers greater than 8388608, use masking
 			__m128i vTest = _mm_and_si128(_mm_castps_si128(V), g_XMAbsMask);
 			vTest = _mm_cmplt_epi32(vTest, g_XMNoFraction);
@@ -6887,16 +6865,16 @@ namespace At0
 			vResult = _mm_or_ps(vResult, _mm_castsi128_ps(vTest));
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorCeiling
+		inline Vector RAYMATH_CALLCONV VectorCeiling
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					ceilf(V.vector4_f32[0]),
 					ceilf(V.vector4_f32[1]),
@@ -6905,7 +6883,7 @@ namespace At0
 				} }
 			};
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 			return vrndpq_f32(V);
 #else
@@ -6922,9 +6900,9 @@ namespace At0
 			// All others, use the ORIGINAL value
 			return vbslq_f32(vTest, vResult, V);
 #endif
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			return _mm_ceil_ps(V);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// To handle NAN, INF and numbers greater than 8388608, use masking
 			__m128i vTest = _mm_and_si128(_mm_castps_si128(V), g_XMAbsMask);
 			vTest = _mm_cmplt_epi32(vTest, g_XMNoFraction);
@@ -6942,11 +6920,11 @@ namespace At0
 			vResult = _mm_or_ps(vResult, _mm_castsi128_ps(vTest));
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorClamp
+		inline Vector RAYMATH_CALLCONV VectorClamp
 		(
 			FVector V,
 			FVector Min,
@@ -6955,19 +6933,19 @@ namespace At0
 		{
 			assert(Vector4LessOrEqual(Min, Max));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 			Result = VectorMax(Min, V);
 			Result = VectorMin(Max, Result);
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector vResult;
 			vResult = vmaxq_f32(Min, V);
 			vResult = vminq_f32(Max, vResult);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vResult;
 			vResult = _mm_max_ps(Min, V);
 			vResult = _mm_min_ps(Max, vResult);
@@ -6977,23 +6955,23 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorSaturate
+		inline Vector RAYMATH_CALLCONV VectorSaturate
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			const Vector Zero = VectorZero();
 
 			return VectorClamp(V, Zero, g_XMOne.v);
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Set <0 to 0
 			Vector vResult = vmaxq_f32(V, vdupq_n_f32(0));
 			// Set>1 to 1
 			return vminq_f32(vResult, vdupq_n_f32(1.0f));
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Set <0 to 0
 			Vector vResult = _mm_max_ps(V, g_XMZero);
 			// Set>1 to 1
@@ -7005,13 +6983,13 @@ namespace At0
 		// Bitwise logical operations
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorAndInt
+		inline Vector RAYMATH_CALLCONV VectorAndInt
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Result = { { {
 					V1.vector4_u32[0] & V2.vector4_u32[0],
@@ -7021,22 +6999,22 @@ namespace At0
 				} } };
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vandq_u32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_and_ps(V1, V2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorAndCInt
+		inline Vector RAYMATH_CALLCONV VectorAndCInt
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Result = { { {
 					V1.vector4_u32[0] & ~V2.vector4_u32[0],
@@ -7046,23 +7024,23 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vbicq_u32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_andnot_si128(_mm_castps_si128(V2), _mm_castps_si128(V1));
 			return _mm_castsi128_ps(V);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorOrInt
+		inline Vector RAYMATH_CALLCONV VectorOrInt
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Result = { { {
 					V1.vector4_u32[0] | V2.vector4_u32[0],
@@ -7072,23 +7050,23 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vorrq_u32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_or_si128(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return _mm_castsi128_ps(V);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorNorInt
+		inline Vector RAYMATH_CALLCONV VectorNorInt
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Result = { { {
 					~(V1.vector4_u32[0] | V2.vector4_u32[0]),
@@ -7098,26 +7076,26 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t Result = vorrq_u32(V1, V2);
 			return vbicq_u32(g_XMNegOneMask, Result);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i Result;
 			Result = _mm_or_si128(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			Result = _mm_andnot_si128(Result, g_XMNegOneMask);
 			return _mm_castsi128_ps(Result);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorXorInt
+		inline Vector RAYMATH_CALLCONV VectorXorInt
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Result = { { {
 					V1.vector4_u32[0] ^ V2.vector4_u32[0],
@@ -7127,13 +7105,13 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return veorq_u32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_xor_si128(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return _mm_castsi128_ps(V);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 		// Computation operations
@@ -7141,12 +7119,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorNegate
+		inline Vector RAYMATH_CALLCONV VectorNegate
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					-V.vector4_f32[0],
@@ -7156,26 +7134,26 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vnegq_f32(V);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector Z;
 
 			Z = _mm_setzero_ps();
 
 			return _mm_sub_ps(Z, V);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorAdd
+		inline Vector RAYMATH_CALLCONV VectorAdd
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					V1.vector4_f32[0] + V2.vector4_f32[0],
@@ -7185,21 +7163,21 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vaddq_f32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_add_ps(V1, V2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorSum
+		inline Vector RAYMATH_CALLCONV VectorSum
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result;
 			Result.f[0] =
@@ -7208,7 +7186,7 @@ namespace At0
 				Result.f[3] = V.vector4_f32[0] + V.vector4_f32[1] + V.vector4_f32[2] + V.vector4_f32[3];
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 			Vector vTemp = vpaddq_f32(V, V);
 			return vpaddq_f32(vTemp, vTemp);
@@ -7219,26 +7197,26 @@ namespace At0
 			v1 = vpadd_f32(v1, v1);
 			return vcombine_f32(v1, v1);
 #endif
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vTemp = _mm_hadd_ps(V, V);
 			return _mm_hadd_ps(vTemp, vTemp);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vTemp = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 3, 0, 1));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 3, 0, 1));
 			Vector vTemp2 = _mm_add_ps(V, vTemp);
-			vTemp = XM_PERMUTE_PS(vTemp2, _MM_SHUFFLE(1, 0, 3, 2));
+			vTemp = RAYMATH_PERMUTE_PS(vTemp2, _MM_SHUFFLE(1, 0, 3, 2));
 			return _mm_add_ps(vTemp, vTemp2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorAddAngles
+		inline Vector RAYMATH_CALLCONV VectorAddAngles
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			const Vector Zero = VectorZero();
 
@@ -7258,7 +7236,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Adjust the angles
 			Vector vResult = vaddq_f32(V1, V2);
 			// Less than Pi?
@@ -7272,7 +7250,7 @@ namespace At0
 			// Sub 2Pi to all entries greater than Pi
 			vResult = vsubq_f32(vResult, vOffset);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Adjust the angles
 			Vector vResult = _mm_add_ps(V1, V2);
 			// Less than Pi?
@@ -7291,13 +7269,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorSubtract
+		inline Vector RAYMATH_CALLCONV VectorSubtract
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					V1.vector4_f32[0] - V2.vector4_f32[0],
@@ -7308,22 +7286,22 @@ namespace At0
  } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vsubq_f32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_sub_ps(V1, V2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorSubtractAngles
+		inline Vector RAYMATH_CALLCONV VectorSubtractAngles
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			const Vector Zero = VectorZero();
 
@@ -7343,7 +7321,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Adjust the angles
 			Vector vResult = vsubq_f32(V1, V2);
 			// Less than Pi?
@@ -7357,7 +7335,7 @@ namespace At0
 			// Sub 2Pi to all entries greater than Pi
 			vResult = vsubq_f32(vResult, vOffset);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Adjust the angles
 			Vector vResult = _mm_sub_ps(V1, V2);
 			// Less than Pi?
@@ -7376,13 +7354,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorMultiply
+		inline Vector RAYMATH_CALLCONV VectorMultiply
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					V1.vector4_f32[0] * V2.vector4_f32[0],
 					V1.vector4_f32[1] * V2.vector4_f32[1],
@@ -7390,23 +7368,23 @@ namespace At0
 					V1.vector4_f32[3] * V2.vector4_f32[3]
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vmulq_f32(V1, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_mul_ps(V1, V2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorMultiplyAdd
+		inline Vector RAYMATH_CALLCONV VectorMultiplyAdd
 		(
 			FVector V1,
 			FVector V2,
 			FVector V3
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					V1.vector4_f32[0] * V2.vector4_f32[0] + V3.vector4_f32[0],
 					V1.vector4_f32[1] * V2.vector4_f32[1] + V3.vector4_f32[1],
@@ -7414,29 +7392,29 @@ namespace At0
 					V1.vector4_f32[3] * V2.vector4_f32[3] + V3.vector4_f32[3]
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 			return vfmaq_f32(V3, V1, V2);
 #else
 			return vmlaq_f32(V3, V1, V2);
 #endif
-#elif defined(_XM_FMA3_INTRINSICS_)
+#elif defined(RAY_FMA3_INTRINSICS)
 			return _mm_fmadd_ps(V1, V2, V3);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vResult = _mm_mul_ps(V1, V2);
 			return _mm_add_ps(vResult, V3);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorDivide
+		inline Vector RAYMATH_CALLCONV VectorDivide
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					V1.vector4_f32[0] / V2.vector4_f32[0],
 					V1.vector4_f32[1] / V2.vector4_f32[1],
@@ -7444,7 +7422,7 @@ namespace At0
 					V1.vector4_f32[3] / V2.vector4_f32[3]
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 			return vdivq_f32(V1, V2);
 #else
@@ -7456,21 +7434,21 @@ namespace At0
 			Reciprocal = vmulq_f32(S, Reciprocal);
 			return vmulq_f32(V1, Reciprocal);
 #endif
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_div_ps(V1, V2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorNegativeMultiplySubtract
+		inline Vector RAYMATH_CALLCONV VectorNegativeMultiplySubtract
 		(
 			FVector V1,
 			FVector V2,
 			FVector V3
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					V3.vector4_f32[0] - (V1.vector4_f32[0] * V2.vector4_f32[0]),
 					V3.vector4_f32[1] - (V1.vector4_f32[1] * V2.vector4_f32[1]),
@@ -7478,29 +7456,29 @@ namespace At0
 					V3.vector4_f32[3] - (V1.vector4_f32[3] * V2.vector4_f32[3])
 				} } };
 			return Result;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 			return vfmsq_f32(V3, V1, V2);
 #else
 			return vmlsq_f32(V3, V1, V2);
 #endif
-#elif defined(_XM_FMA3_INTRINSICS_)
+#elif defined(RAY_FMA3_INTRINSICS)
 			return _mm_fnmadd_ps(V1, V2, V3);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector R = _mm_mul_ps(V1, V2);
 			return _mm_sub_ps(V3, R);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorScale
+		inline Vector RAYMATH_CALLCONV VectorScale
 		(
 			FVector V,
 			float    ScaleFactor
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					V.vector4_f32[0] * ScaleFactor,
 					V.vector4_f32[1] * ScaleFactor,
@@ -7508,22 +7486,22 @@ namespace At0
 					V.vector4_f32[3] * ScaleFactor
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vmulq_n_f32(V, ScaleFactor);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vResult = _mm_set_ps1(ScaleFactor);
 			return _mm_mul_ps(vResult, V);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorReciprocalEst
+		inline Vector RAYMATH_CALLCONV VectorReciprocalEst
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					1.f / V.vector4_f32[0],
 					1.f / V.vector4_f32[1],
@@ -7531,21 +7509,21 @@ namespace At0
 					1.f / V.vector4_f32[3]
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vrecpeq_f32(V);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_rcp_ps(V);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorReciprocal
+		inline Vector RAYMATH_CALLCONV VectorReciprocal
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					1.f / V.vector4_f32[0],
 					1.f / V.vector4_f32[1],
@@ -7553,7 +7531,7 @@ namespace At0
 					1.f / V.vector4_f32[3]
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 			float32x4_t one = vdupq_n_f32(1.0f);
 			return vdivq_f32(one, V);
@@ -7565,19 +7543,19 @@ namespace At0
 			S = vrecpsq_f32(Reciprocal, V);
 			return vmulq_f32(S, Reciprocal);
 #endif
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_div_ps(g_XMOne, V);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Return an estimated square root
-		inline Vector XM_CALLCONV VectorSqrtEst
+		inline Vector RAYMATH_CALLCONV VectorSqrtEst
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					sqrtf(V.vector4_f32[0]),
 					sqrtf(V.vector4_f32[1]),
@@ -7585,7 +7563,7 @@ namespace At0
 					sqrtf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// 1 iteration of Newton-Raphson refinment of sqrt
 			float32x4_t S0 = vrsqrteq_f32(V);
 			float32x4_t P0 = vmulq_f32(V, S0);
@@ -7597,19 +7575,19 @@ namespace At0
 			Vector Result = vmulq_f32(V, S1);
 			Vector Select = VectorEqualInt(VEqualsInfinity, VEqualsZero);
 			return VectorSelect(V, Result, Select);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_sqrt_ps(V);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorSqrt
+		inline Vector RAYMATH_CALLCONV VectorSqrt
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					sqrtf(V.vector4_f32[0]),
 					sqrtf(V.vector4_f32[1]),
@@ -7619,7 +7597,7 @@ namespace At0
  }
 			};
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// 3 iterations of Newton-Raphson refinment of sqrt
 			float32x4_t S0 = vrsqrteq_f32(V);
 			float32x4_t P0 = vmulq_f32(V, S0);
@@ -7637,19 +7615,19 @@ namespace At0
 			Vector Result = vmulq_f32(V, S3);
 			Vector Select = VectorEqualInt(VEqualsInfinity, VEqualsZero);
 			return VectorSelect(V, Result, Select);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_sqrt_ps(V);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorReciprocalSqrtEst
+		inline Vector RAYMATH_CALLCONV VectorReciprocalSqrtEst
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					1.f / sqrtf(V.vector4_f32[0]),
 					1.f / sqrtf(V.vector4_f32[1]),
@@ -7657,21 +7635,21 @@ namespace At0
 					1.f / sqrtf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vrsqrteq_f32(V);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			return _mm_rsqrt_ps(V);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorReciprocalSqrt
+		inline Vector RAYMATH_CALLCONV VectorReciprocalSqrt
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					1.f / sqrtf(V.vector4_f32[0]),
 					1.f / sqrtf(V.vector4_f32[1]),
@@ -7679,7 +7657,7 @@ namespace At0
 					1.f / sqrtf(V.vector4_f32[3])
 				} } };
 			return Result;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// 2 iterations of Newton-Raphson refinement of reciprocal
 			float32x4_t S0 = vrsqrteq_f32(V);
 
@@ -7691,21 +7669,21 @@ namespace At0
 			float32x4_t R1 = vrsqrtsq_f32(P1, S1);
 
 			return vmulq_f32(S1, R1);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vResult = _mm_sqrt_ps(V);
 			vResult = _mm_div_ps(g_XMOne, vResult);
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorExp2
+		inline Vector RAYMATH_CALLCONV VectorExp2
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					powf(2.0f, V.vector4_f32[0]),
@@ -7715,7 +7693,7 @@ namespace At0
 				} } };
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			int32x4_t itrunc = vcvtq_s32_f32(V);
 			float32x4_t ftrunc = vcvtq_f32_s32(itrunc);
 			float32x4_t y = vsubq_f32(V, ftrunc);
@@ -7769,7 +7747,7 @@ namespace At0
 
 			float32x4_t vResult = vbslq_f32(isNaN, g_XMQNaN, result5);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i itrunc = _mm_cvttps_epi32(V);
 			__m128 ftrunc = _mm_cvtepi32_ps(itrunc);
 			__m128 y = _mm_sub_ps(V, ftrunc);
@@ -7841,16 +7819,16 @@ namespace At0
 
 			return _mm_castsi128_ps(vResult);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorExpE
+		inline Vector RAYMATH_CALLCONV VectorExpE
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					expf(V.vector4_f32[0]),
@@ -7860,7 +7838,7 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// expE(V) = exp2(vin*log2(e))
 			float32x4_t Ve = vmulq_f32(g_XMLgE, V);
 
@@ -7918,7 +7896,7 @@ namespace At0
 
 			float32x4_t vResult = vbslq_f32(isNaN, g_XMQNaN, result5);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// expE(V) = exp2(vin*log2(e))
 			__m128 Ve = _mm_mul_ps(g_XMLgE, V);
 
@@ -7993,11 +7971,11 @@ namespace At0
 
 			return _mm_castsi128_ps(vResult);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorExp
+		inline Vector RAYMATH_CALLCONV VectorExp
 		(
 			FVector V
 		)
@@ -8007,7 +7985,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-#if defined(_XM_SSE_INTRINSICS_)
+#if defined(RAY_SSE_INTRINSICS)
 
 		namespace Internal
 		{
@@ -8111,9 +8089,9 @@ namespace At0
 			}
 		} // namespace Internal
 
-#endif // _XM_SSE_INTRINSICS_
+#endif // RAY_SSE_INTRINSICS
 
-#if defined(_XM_ARM_NEON_INTRINSICS_)
+#if defined(RAY_ARM_NEON_INTRINSICS)
 
 		namespace Internal
 		{
@@ -8164,12 +8142,12 @@ namespace At0
 
 //------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorLog2
+		inline Vector RAYMATH_CALLCONV VectorLog2
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			const float fScale = 1.4426950f; // (1.0f / logf(2.0f));
 
@@ -8181,7 +8159,7 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			int32x4_t rawBiased = vandq_s32(V, g_XMInfinity);
 			int32x4_t trailing = vandq_s32(V, g_XMQNaNTest);
 			int32x4_t isExponentZero = vceqq_s32(g_XMZero, rawBiased);
@@ -8242,7 +8220,7 @@ namespace At0
 			result = vbslq_f32(isPositive, result, tmp);
 			result = vbslq_f32(isNaN, g_XMQNaN, result);
 			return result;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i rawBiased = _mm_and_si128(_mm_castps_si128(V), g_XMInfinity);
 			__m128i trailing = _mm_and_si128(_mm_castps_si128(V), g_XMQNaNTest);
 			__m128i isExponentZero = _mm_cmpeq_epi32(g_XMZero, rawBiased);
@@ -8334,12 +8312,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorLogE
+		inline Vector RAYMATH_CALLCONV VectorLogE
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					logf(V.vector4_f32[0]),
@@ -8349,7 +8327,7 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			int32x4_t rawBiased = vandq_s32(V, g_XMInfinity);
 			int32x4_t trailing = vandq_s32(V, g_XMQNaNTest);
 			int32x4_t isExponentZero = vceqq_s32(g_XMZero, rawBiased);
@@ -8412,7 +8390,7 @@ namespace At0
 			result = vbslq_f32(isPositive, result, tmp);
 			result = vbslq_f32(isNaN, g_XMQNaN, result);
 			return result;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i rawBiased = _mm_and_si128(_mm_castps_si128(V), g_XMInfinity);
 			__m128i trailing = _mm_and_si128(_mm_castps_si128(V), g_XMQNaNTest);
 			__m128i isExponentZero = _mm_cmpeq_epi32(g_XMZero, rawBiased);
@@ -8502,11 +8480,11 @@ namespace At0
 
 			return _mm_castsi128_ps(result);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorLog
+		inline Vector RAYMATH_CALLCONV VectorLog
 		(
 			FVector V
 		)
@@ -8516,13 +8494,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorPow
+		inline Vector RAYMATH_CALLCONV VectorPow
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					powf(V1.vector4_f32[0], V2.vector4_f32[0]),
@@ -8532,7 +8510,7 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			VectorF32 vResult = { { {
 					powf(vgetq_lane_f32(V1, 0), vgetq_lane_f32(V2, 0)),
 					powf(vgetq_lane_f32(V1, 1), vgetq_lane_f32(V2, 1)),
@@ -8540,9 +8518,9 @@ namespace At0
 					powf(vgetq_lane_f32(V1, 3), vgetq_lane_f32(V2, 3))
 				} } };
 			return vResult.v;
-#elif defined(_XM_SSE_INTRINSICS_)
-			XM_ALIGNED(16) float a[4];
-			XM_ALIGNED(16) float b[4];
+#elif defined(RAY_SSE_INTRINSICS)
+			RAY_ALIGNED(16) float a[4];
+			RAY_ALIGNED(16) float b[4];
 			_mm_store_ps(a, V1);
 			_mm_store_ps(b, V2);
 			Vector vResult = _mm_setr_ps(
@@ -8552,16 +8530,16 @@ namespace At0
 				powf(a[3], b[3]));
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorAbs
+		inline Vector RAYMATH_CALLCONV VectorAbs
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult = { { {
 					fabsf(V.vector4_f32[0]),
 					fabsf(V.vector4_f32[1]),
@@ -8569,19 +8547,19 @@ namespace At0
 					fabsf(V.vector4_f32[3])
 				} } };
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vabsq_f32(V);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vResult = _mm_setzero_ps();
 			vResult = _mm_sub_ps(vResult, V);
 			vResult = _mm_max_ps(vResult, V);
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorMod
+		inline Vector RAYMATH_CALLCONV VectorMod
 		(
 			FVector V1,
 			FVector V2
@@ -8589,18 +8567,18 @@ namespace At0
 		{
 			// V1 % V2 = V1 - V2 * truncate(V1 / V2)
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Quotient = VectorDivide(V1, V2);
 			Quotient = VectorTruncate(Quotient);
 			Vector Result = VectorNegativeMultiplySubtract(V2, Quotient, V1);
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector vResult = VectorDivide(V1, V2);
 			vResult = VectorTruncate(vResult);
 			return vmlsq_f32(V1, vResult, V2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vResult = _mm_div_ps(V1, V2);
 			vResult = VectorTruncate(vResult);
 			vResult = _mm_mul_ps(vResult, V2);
@@ -8611,30 +8589,30 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorModAngles
+		inline Vector RAYMATH_CALLCONV VectorModAngles
 		(
 			FVector Angles
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector V;
 			Vector Result;
 
-			// Modulo the range of the given angles such that -XM_PI <= Angles < XM_PI
+			// Modulo the range of the given angles such that -Constants::PI <= Angles < Constants::PI
 			V = VectorMultiply(Angles, g_XMReciprocalTwoPi.v);
 			V = VectorRound(V);
 			Result = VectorNegativeMultiplySubtract(g_XMTwoPi.v, V, Angles);
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
-			// Modulo the range of the given angles such that -XM_PI <= Angles < XM_PI
+#elif defined(RAY_ARM_NEON_INTRINSICS)
+			// Modulo the range of the given angles such that -Constants::PI <= Angles < Constants::PI
 			Vector vResult = vmulq_f32(Angles, g_XMReciprocalTwoPi);
 			// Use the inline function due to complexity for rounding
 			vResult = VectorRound(vResult);
 			return vmlsq_f32(Angles, vResult, g_XMTwoPi);
-#elif defined(_XM_SSE_INTRINSICS_)
-			// Modulo the range of the given angles such that -XM_PI <= Angles < XM_PI
+#elif defined(RAY_SSE_INTRINSICS)
+			// Modulo the range of the given angles such that -Constants::PI <= Angles < Constants::PI
 			Vector vResult = _mm_mul_ps(Angles, g_XMReciprocalTwoPi);
 			// Use the inline function due to complexity for rounding
 			vResult = VectorRound(vResult);
@@ -8646,14 +8624,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorSin
+		inline Vector RAYMATH_CALLCONV VectorSin
 		(
 			FVector V
 		)
 		{
 			// 11-degree minimax approximation
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					sinf(V.vector4_f32[0]),
 					sinf(V.vector4_f32[1]),
@@ -8661,7 +8639,7 @@ namespace At0
 					sinf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 	// Force the value within the bounds of pi
 			Vector x = VectorModAngles(V);
 
@@ -8693,7 +8671,7 @@ namespace At0
 			Result = vmlaq_f32(g_XMOne, Result, x2);
 			Result = vmulq_f32(Result, x);
 			return Result;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 	// Force the value within the bounds of pi
 			Vector x = VectorModAngles(V);
 
@@ -8711,41 +8689,41 @@ namespace At0
 
 			// Compute polynomial approximation
 			const Vector SC1 = g_XMSinCoefficients1;
-			Vector vConstants = XM_PERMUTE_PS(SC1, _MM_SHUFFLE(0, 0, 0, 0));
+			Vector vConstants = RAYMATH_PERMUTE_PS(SC1, _MM_SHUFFLE(0, 0, 0, 0));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
 			const Vector SC0 = g_XMSinCoefficients0;
-			vConstants = XM_PERMUTE_PS(SC0, _MM_SHUFFLE(3, 3, 3, 3));
+			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(SC0, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(2, 2, 2, 2));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(SC0, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(1, 1, 1, 1));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(SC0, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 			Result = _mm_add_ps(Result, g_XMOne);
 			Result = _mm_mul_ps(Result, x);
 			return Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorCos
+		inline Vector RAYMATH_CALLCONV VectorCos
 		(
 			FVector V
 		)
 		{
 			// 10-degree minimax approximation
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					cosf(V.vector4_f32[0]),
 					cosf(V.vector4_f32[1]),
@@ -8753,7 +8731,7 @@ namespace At0
 					cosf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 	// Map V to x in [-pi,pi].
 			Vector x = VectorModAngles(V);
 
@@ -8786,7 +8764,7 @@ namespace At0
 			Result = vmlaq_f32(g_XMOne, Result, x2);
 			Result = vmulq_f32(Result, sign);
 			return Result;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 	// Map V to x in [-pi,pi].
 			Vector x = VectorModAngles(V);
 
@@ -8807,35 +8785,35 @@ namespace At0
 
 			// Compute polynomial approximation
 			const Vector CC1 = g_XMCosCoefficients1;
-			Vector vConstants = XM_PERMUTE_PS(CC1, _MM_SHUFFLE(0, 0, 0, 0));
+			Vector vConstants = RAYMATH_PERMUTE_PS(CC1, _MM_SHUFFLE(0, 0, 0, 0));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
 			const Vector CC0 = g_XMCosCoefficients0;
-			vConstants = XM_PERMUTE_PS(CC0, _MM_SHUFFLE(3, 3, 3, 3));
+			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(CC0, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(2, 2, 2, 2));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(CC0, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(1, 1, 1, 1));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(CC0, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 			Result = _mm_add_ps(Result, g_XMOne);
 			Result = _mm_mul_ps(Result, sign);
 			return Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
 
-		inline void XM_CALLCONV VectorSinCos
+		inline void RAYMATH_CALLCONV VectorSinCos
 		(
 			Vector* pSin,
 			Vector* pCos,
@@ -8847,7 +8825,7 @@ namespace At0
 
 			// 11/10-degree minimax approximation
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Sin = { { {
 					sinf(V.vector4_f32[0]),
 					sinf(V.vector4_f32[1]),
@@ -8864,7 +8842,7 @@ namespace At0
 
 			*pSin = Sin.v;
 			*pCos = Cos.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 	// Force the value within the bounds of pi
 			Vector x = VectorModAngles(V);
 
@@ -8914,7 +8892,7 @@ namespace At0
 
 			Result = vmlaq_f32(g_XMOne, Result, x2);
 			*pCos = vmulq_f32(Result, sign);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 	// Force the value within the bounds of pi
 			Vector x = VectorModAngles(V);
 
@@ -8935,23 +8913,23 @@ namespace At0
 
 			// Compute polynomial approximation of sine
 			const Vector SC1 = g_XMSinCoefficients1;
-			Vector vConstants = XM_PERMUTE_PS(SC1, _MM_SHUFFLE(0, 0, 0, 0));
+			Vector vConstants = RAYMATH_PERMUTE_PS(SC1, _MM_SHUFFLE(0, 0, 0, 0));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
 			const Vector SC0 = g_XMSinCoefficients0;
-			vConstants = XM_PERMUTE_PS(SC0, _MM_SHUFFLE(3, 3, 3, 3));
+			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(SC0, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(2, 2, 2, 2));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(SC0, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(1, 1, 1, 1));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(SC0, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 			Result = _mm_add_ps(Result, g_XMOne);
@@ -8960,41 +8938,41 @@ namespace At0
 
 			// Compute polynomial approximation of cosine
 			const Vector CC1 = g_XMCosCoefficients1;
-			vConstants = XM_PERMUTE_PS(CC1, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(CC1, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_mul_ps(vConstants, x2);
 
 			const Vector CC0 = g_XMCosCoefficients0;
-			vConstants = XM_PERMUTE_PS(CC0, _MM_SHUFFLE(3, 3, 3, 3));
+			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(CC0, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(2, 2, 2, 2));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(CC0, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(1, 1, 1, 1));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(CC0, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 			Result = _mm_add_ps(Result, g_XMOne);
 			Result = _mm_mul_ps(Result, sign);
 			*pCos = Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorTan
+		inline Vector RAYMATH_CALLCONV VectorTan
 		(
 			FVector V
 		)
 		{
 			// Cody and Waite algorithm to compute tangent.
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					tanf(V.vector4_f32[0]),
 					tanf(V.vector4_f32[1]),
@@ -9002,7 +8980,7 @@ namespace At0
 					tanf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_SSE_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_) 
+#elif defined(RAY_SSE_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS) 
 
 			static const VectorF32 TanCoefficients0 = { { { 1.0f, -4.667168334e-1f, 2.566383229e-2f, -3.118153191e-4f } } };
 			static const VectorF32 TanCoefficients1 = { { { 4.981943399e-7f, -1.333835001e-1f, 3.424887824e-3f, -1.786170734e-5f } } };
@@ -9027,9 +9005,9 @@ namespace At0
 
 			VC = VectorNegativeMultiplySubtract(VA, C1, VC);
 
-#if defined(_XM_ARM_NEON_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 			VB = vcvtq_u32_f32(VB);
-#elif defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 			reinterpret_cast<__m128i*>(&VB)[0] = _mm_cvttps_epi32(VB);
 #else
 			for (size_t i = 0; i < 4; i++)
@@ -9078,16 +9056,16 @@ namespace At0
 			return Result;
 
 #endif
-			}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorSinH
+		inline Vector RAYMATH_CALLCONV VectorSinH
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					sinhf(V.vector4_f32[0]),
 					sinhf(V.vector4_f32[1]),
@@ -9095,7 +9073,7 @@ namespace At0
 					sinhf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
 			Vector V1 = vmlaq_f32(g_XMNegativeOne.v, V, Scale.v);
@@ -9104,7 +9082,7 @@ namespace At0
 			Vector E2 = VectorExp(V2);
 
 			return vsubq_f32(E1, E2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
 			Vector V1 = _mm_mul_ps(V, Scale);
@@ -9116,16 +9094,16 @@ namespace At0
 
 			return _mm_sub_ps(E1, E2);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorCosH
+		inline Vector RAYMATH_CALLCONV VectorCosH
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					coshf(V.vector4_f32[0]),
 					coshf(V.vector4_f32[1]),
@@ -9133,7 +9111,7 @@ namespace At0
 					coshf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
 			Vector V1 = vmlaq_f32(g_XMNegativeOne.v, V, Scale.v);
@@ -9141,7 +9119,7 @@ namespace At0
 			Vector E1 = VectorExp(V1);
 			Vector E2 = VectorExp(V2);
 			return vaddq_f32(E1, E2);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
 			Vector V1 = _mm_mul_ps(V, Scale.v);
@@ -9152,16 +9130,16 @@ namespace At0
 			Vector E2 = VectorExp(V2);
 			return _mm_add_ps(E1, E2);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorTanH
+		inline Vector RAYMATH_CALLCONV VectorTanH
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					tanhf(V.vector4_f32[0]),
 					tanhf(V.vector4_f32[1]),
@@ -9169,7 +9147,7 @@ namespace At0
 					tanhf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 Scale = { { { 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f } } }; // 2.0f / ln(2.0f)
 
 			Vector E = vmulq_f32(V, Scale.v);
@@ -9177,7 +9155,7 @@ namespace At0
 			E = vmlaq_f32(g_XMOneHalf.v, E, g_XMOneHalf.v);
 			E = VectorReciprocal(E);
 			return vsubq_f32(g_XMOne.v, E);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 Scale = { { { 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f } } }; // 2.0f / ln(2.0f)
 
 			Vector E = _mm_mul_ps(V, Scale.v);
@@ -9187,18 +9165,18 @@ namespace At0
 			E = _mm_div_ps(g_XMOne.v, E);
 			return _mm_sub_ps(g_XMOne.v, E);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorASin
+		inline Vector RAYMATH_CALLCONV VectorASin
 		(
 			FVector V
 		)
 		{
 			// 7-degree minimax approximation
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					asinf(V.vector4_f32[0]),
 					asinf(V.vector4_f32[1]),
@@ -9206,7 +9184,7 @@ namespace At0
 					asinf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t nonnegative = vcgeq_f32(V, g_XMZero);
 			float32x4_t x = vabsq_f32(V);
 
@@ -9244,7 +9222,7 @@ namespace At0
 			t0 = vbslq_f32(nonnegative, t0, t1);
 			t0 = vsubq_f32(g_XMHalfPi, t0);
 			return t0;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 nonnegative = _mm_cmpge_ps(V, g_XMZero);
 			__m128 mvalue = _mm_sub_ps(g_XMZero, V);
 			__m128 x = _mm_max_ps(V, mvalue);  // |V|
@@ -9256,35 +9234,35 @@ namespace At0
 
 			// Compute polynomial approximation
 			const Vector AC1 = g_XMArcCoefficients1;
-			Vector vConstants = XM_PERMUTE_PS(AC1, _MM_SHUFFLE(3, 3, 3, 3));
+			Vector vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 t0 = _mm_mul_ps(vConstants, x);
 
-			vConstants = XM_PERMUTE_PS(AC1, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(2, 2, 2, 2));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AC1, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(1, 1, 1, 1));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AC1, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(0, 0, 0, 0));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
 			const Vector AC0 = g_XMArcCoefficients0;
-			vConstants = XM_PERMUTE_PS(AC0, _MM_SHUFFLE(3, 3, 3, 3));
+			vConstants = RAYMATH_PERMUTE_PS(AC0, _MM_SHUFFLE(3, 3, 3, 3));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AC0, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(AC0, _MM_SHUFFLE(2, 2, 2, 2));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AC0, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(AC0, _MM_SHUFFLE(1, 1, 1, 1));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AC0, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(AC0, _MM_SHUFFLE(0, 0, 0, 0));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, root);
 
@@ -9295,18 +9273,18 @@ namespace At0
 			t0 = _mm_sub_ps(g_XMHalfPi, t0);
 			return t0;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorACos
+		inline Vector RAYMATH_CALLCONV VectorACos
 		(
 			FVector V
 		)
 		{
 			// 7-degree minimax approximation
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					acosf(V.vector4_f32[0]),
 					acosf(V.vector4_f32[1]),
@@ -9314,7 +9292,7 @@ namespace At0
 					acosf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t nonnegative = vcgeq_f32(V, g_XMZero);
 			float32x4_t x = vabsq_f32(V);
 
@@ -9351,7 +9329,7 @@ namespace At0
 			float32x4_t t1 = vsubq_f32(g_XMPi, t0);
 			t0 = vbslq_f32(nonnegative, t0, t1);
 			return t0;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 nonnegative = _mm_cmpge_ps(V, g_XMZero);
 			__m128 mvalue = _mm_sub_ps(g_XMZero, V);
 			__m128 x = _mm_max_ps(V, mvalue);  // |V|
@@ -9363,35 +9341,35 @@ namespace At0
 
 			// Compute polynomial approximation
 			const Vector AC1 = g_XMArcCoefficients1;
-			Vector vConstants = XM_PERMUTE_PS(AC1, _MM_SHUFFLE(3, 3, 3, 3));
+			Vector vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 t0 = _mm_mul_ps(vConstants, x);
 
-			vConstants = XM_PERMUTE_PS(AC1, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(2, 2, 2, 2));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AC1, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(1, 1, 1, 1));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AC1, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(0, 0, 0, 0));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
 			const Vector AC0 = g_XMArcCoefficients0;
-			vConstants = XM_PERMUTE_PS(AC0, _MM_SHUFFLE(3, 3, 3, 3));
+			vConstants = RAYMATH_PERMUTE_PS(AC0, _MM_SHUFFLE(3, 3, 3, 3));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AC0, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(AC0, _MM_SHUFFLE(2, 2, 2, 2));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AC0, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(AC0, _MM_SHUFFLE(1, 1, 1, 1));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AC0, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(AC0, _MM_SHUFFLE(0, 0, 0, 0));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, root);
 
@@ -9401,18 +9379,18 @@ namespace At0
 			t0 = _mm_or_ps(t0, t1);
 			return t0;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorATan
+		inline Vector RAYMATH_CALLCONV VectorATan
 		(
 			FVector V
 		)
 		{
 			// 17-degree minimax approximation
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					atanf(V.vector4_f32[0]),
 					atanf(V.vector4_f32[1]),
@@ -9420,7 +9398,7 @@ namespace At0
 					atanf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t absV = vabsq_f32(V);
 			float32x4_t invV = VectorReciprocal(V);
 			uint32x4_t comp = vcgtq_f32(V, g_XMOne);
@@ -9464,7 +9442,7 @@ namespace At0
 			comp = vceqq_f32(sign, g_XMZero);
 			Result = vbslq_f32(comp, Result, result1);
 			return Result;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 absV = VectorAbs(V);
 			__m128 invV = _mm_div_ps(g_XMOne, V);
 			__m128 comp = _mm_cmpgt_ps(V, g_XMOne);
@@ -9483,35 +9461,35 @@ namespace At0
 
 			// Compute polynomial approximation
 			const Vector TC1 = g_XMATanCoefficients1;
-			Vector vConstants = XM_PERMUTE_PS(TC1, _MM_SHUFFLE(3, 3, 3, 3));
+			Vector vConstants = RAYMATH_PERMUTE_PS(TC1, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
-			vConstants = XM_PERMUTE_PS(TC1, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(TC1, _MM_SHUFFLE(2, 2, 2, 2));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(TC1, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(TC1, _MM_SHUFFLE(1, 1, 1, 1));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(TC1, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(TC1, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
 			const Vector TC0 = g_XMATanCoefficients0;
-			vConstants = XM_PERMUTE_PS(TC0, _MM_SHUFFLE(3, 3, 3, 3));
+			vConstants = RAYMATH_PERMUTE_PS(TC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(TC0, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(TC0, _MM_SHUFFLE(2, 2, 2, 2));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(TC0, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(TC0, _MM_SHUFFLE(1, 1, 1, 1));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(TC0, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(TC0, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 			Result = _mm_add_ps(Result, g_XMOne);
@@ -9525,17 +9503,17 @@ namespace At0
 			Result = _mm_or_ps(select0, select1);
 			return Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorATan2
+		inline Vector RAYMATH_CALLCONV VectorATan2
 		(
 			FVector Y,
 			FVector X
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					atan2f(Y.vector4_f32[0], X.vector4_f32[0]),
 					atan2f(Y.vector4_f32[1], X.vector4_f32[1]),
@@ -9557,7 +9535,7 @@ namespace At0
 			//     Y == Infinity and X == -Infinity -> 3Pi / 4 with the sign of Y
 			//     Y == Infinity and X == +Infinity -> Pi / 4 with the sign of Y
 
-			static const VectorF32 ATan2Constants = { { { XM_PI, XM_PIDIV2, XM_PIDIV4, XM_PI * 3.0f / 4.0f } } };
+			static const VectorF32 ATan2Constants = { { { Constants::PI, Constants::PIDIV2, Constants::PIDIV4, Constants::PI * 3.0f / 4.0f } } };
 
 			Vector Zero = VectorZero();
 			Vector ATanResultValid = VectorTrueInt();
@@ -9598,18 +9576,18 @@ namespace At0
 			return VectorSelect(Result, R2, ATanResultValid);
 
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorSinEst
+		inline Vector RAYMATH_CALLCONV VectorSinEst
 		(
 			FVector V
 		)
 		{
 			// 7-degree minimax approximation
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					sinf(V.vector4_f32[0]),
 					sinf(V.vector4_f32[1]),
@@ -9617,7 +9595,7 @@ namespace At0
 					sinf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 	// Force the value within the bounds of pi
 			Vector x = VectorModAngles(V);
 
@@ -9642,7 +9620,7 @@ namespace At0
 			Result = vmlaq_f32(g_XMOne, Result, x2);
 			Result = vmulq_f32(Result, x);
 			return Result;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 	// Force the value within the bounds of pi
 			Vector x = VectorModAngles(V);
 
@@ -9660,14 +9638,14 @@ namespace At0
 
 			// Compute polynomial approximation
 			const Vector SEC = g_XMSinCoefficients1;
-			Vector vConstants = XM_PERMUTE_PS(SEC, _MM_SHUFFLE(3, 3, 3, 3));
+			Vector vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
-			vConstants = XM_PERMUTE_PS(SEC, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(2, 2, 2, 2));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(SEC, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(1, 1, 1, 1));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
@@ -9675,18 +9653,18 @@ namespace At0
 			Result = _mm_mul_ps(Result, x);
 			return Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorCosEst
+		inline Vector RAYMATH_CALLCONV VectorCosEst
 		(
 			FVector V
 		)
 		{
 			// 6-degree minimax approximation
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					cosf(V.vector4_f32[0]),
 					cosf(V.vector4_f32[1]),
@@ -9694,7 +9672,7 @@ namespace At0
 					cosf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 	// Map V to x in [-pi,pi].
 			Vector x = VectorModAngles(V);
 
@@ -9720,7 +9698,7 @@ namespace At0
 			Result = vmlaq_f32(g_XMOne, Result, x2);
 			Result = vmulq_f32(Result, sign);
 			return Result;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 	// Map V to x in [-pi,pi].
 			Vector x = VectorModAngles(V);
 
@@ -9741,14 +9719,14 @@ namespace At0
 
 			// Compute polynomial approximation
 			const Vector CEC = g_XMCosCoefficients1;
-			Vector vConstants = XM_PERMUTE_PS(CEC, _MM_SHUFFLE(3, 3, 3, 3));
+			Vector vConstants = RAYMATH_PERMUTE_PS(CEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
-			vConstants = XM_PERMUTE_PS(CEC, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(CEC, _MM_SHUFFLE(2, 2, 2, 2));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(CEC, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(CEC, _MM_SHUFFLE(1, 1, 1, 1));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
@@ -9756,12 +9734,12 @@ namespace At0
 			Result = _mm_mul_ps(Result, sign);
 			return Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
 
-		inline void XM_CALLCONV VectorSinCosEst
+		inline void RAYMATH_CALLCONV VectorSinCosEst
 		(
 			Vector* pSin,
 			Vector* pCos,
@@ -9773,7 +9751,7 @@ namespace At0
 
 			// 7/6-degree minimax approximation
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Sin = { { {
 					sinf(V.vector4_f32[0]),
 					sinf(V.vector4_f32[1]),
@@ -9790,7 +9768,7 @@ namespace At0
 
 			*pSin = Sin.v;
 			*pCos = Cos.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 	// Force the value within the bounds of pi
 			Vector x = VectorModAngles(V);
 
@@ -9826,7 +9804,7 @@ namespace At0
 
 			Result = vmlaq_f32(g_XMOne, Result, x2);
 			*pCos = vmulq_f32(Result, sign);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 	// Force the value within the bounds of pi
 			Vector x = VectorModAngles(V);
 
@@ -9847,14 +9825,14 @@ namespace At0
 
 			// Compute polynomial approximation for sine
 			const Vector SEC = g_XMSinCoefficients1;
-			Vector vConstants = XM_PERMUTE_PS(SEC, _MM_SHUFFLE(3, 3, 3, 3));
+			Vector vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
-			vConstants = XM_PERMUTE_PS(SEC, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(2, 2, 2, 2));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(SEC, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(1, 1, 1, 1));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
@@ -9864,14 +9842,14 @@ namespace At0
 
 			// Compute polynomial approximation for cosine
 			const Vector CEC = g_XMCosCoefficients1;
-			vConstants = XM_PERMUTE_PS(CEC, _MM_SHUFFLE(3, 3, 3, 3));
+			vConstants = RAYMATH_PERMUTE_PS(CEC, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_mul_ps(vConstants, x2);
 
-			vConstants = XM_PERMUTE_PS(CEC, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(CEC, _MM_SHUFFLE(2, 2, 2, 2));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(CEC, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(CEC, _MM_SHUFFLE(1, 1, 1, 1));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
@@ -9879,16 +9857,16 @@ namespace At0
 			Result = _mm_mul_ps(Result, sign);
 			*pCos = Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorTanEst
+		inline Vector RAYMATH_CALLCONV VectorTanEst
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					tanf(V.vector4_f32[0]),
 					tanf(V.vector4_f32[1]),
@@ -9920,25 +9898,25 @@ namespace At0
 			return VectorMultiply(N, D);
 
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorASinEst
+		inline Vector RAYMATH_CALLCONV VectorASinEst
 		(
 			FVector V
 		)
 		{
 			// 3-degree minimax approximation
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result;
 			Result.f[0] = asinf(V.vector4_f32[0]);
 			Result.f[1] = asinf(V.vector4_f32[1]);
 			Result.f[2] = asinf(V.vector4_f32[2]);
 			Result.f[3] = asinf(V.vector4_f32[3]);
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t nonnegative = vcgeq_f32(V, g_XMZero);
 			float32x4_t x = vabsq_f32(V);
 
@@ -9963,7 +9941,7 @@ namespace At0
 			t0 = vbslq_f32(nonnegative, t0, t1);
 			t0 = vsubq_f32(g_XMHalfPi, t0);
 			return t0;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 nonnegative = _mm_cmpge_ps(V, g_XMZero);
 			__m128 mvalue = _mm_sub_ps(g_XMZero, V);
 			__m128 x = _mm_max_ps(V, mvalue);  // |V|
@@ -9975,18 +9953,18 @@ namespace At0
 
 			// Compute polynomial approximation
 			const Vector AEC = g_XMArcEstCoefficients;
-			Vector vConstants = XM_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
+			Vector vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 t0 = _mm_mul_ps(vConstants, x);
 
-			vConstants = XM_PERMUTE_PS(AEC, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(2, 2, 2, 2));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AEC, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(1, 1, 1, 1));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AEC, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(0, 0, 0, 0));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, root);
 
@@ -10001,14 +9979,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorACosEst
+		inline Vector RAYMATH_CALLCONV VectorACosEst
 		(
 			FVector V
 		)
 		{
 			// 3-degree minimax approximation
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					acosf(V.vector4_f32[0]),
 					acosf(V.vector4_f32[1]),
@@ -10016,7 +9994,7 @@ namespace At0
 					acosf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t nonnegative = vcgeq_f32(V, g_XMZero);
 			float32x4_t x = vabsq_f32(V);
 
@@ -10040,7 +10018,7 @@ namespace At0
 			float32x4_t t1 = vsubq_f32(g_XMPi, t0);
 			t0 = vbslq_f32(nonnegative, t0, t1);
 			return t0;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 nonnegative = _mm_cmpge_ps(V, g_XMZero);
 			__m128 mvalue = _mm_sub_ps(g_XMZero, V);
 			__m128 x = _mm_max_ps(V, mvalue);  // |V|
@@ -10052,18 +10030,18 @@ namespace At0
 
 			// Compute polynomial approximation
 			const Vector AEC = g_XMArcEstCoefficients;
-			Vector vConstants = XM_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
+			Vector vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 t0 = _mm_mul_ps(vConstants, x);
 
-			vConstants = XM_PERMUTE_PS(AEC, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(2, 2, 2, 2));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AEC, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(1, 1, 1, 1));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			vConstants = XM_PERMUTE_PS(AEC, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(0, 0, 0, 0));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, root);
 
@@ -10073,18 +10051,18 @@ namespace At0
 			t0 = _mm_or_ps(t0, t1);
 			return t0;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorATanEst
+		inline Vector RAYMATH_CALLCONV VectorATanEst
 		(
 			FVector V
 		)
 		{
 			// 9-degree minimax approximation
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					atanf(V.vector4_f32[0]),
 					atanf(V.vector4_f32[1]),
@@ -10092,7 +10070,7 @@ namespace At0
 					atanf(V.vector4_f32[3])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t absV = vabsq_f32(V);
 			float32x4_t invV = VectorReciprocalEst(V);
 			uint32x4_t comp = vcgtq_f32(V, g_XMOne);
@@ -10124,7 +10102,7 @@ namespace At0
 			comp = vceqq_f32(sign, g_XMZero);
 			Result = vbslq_f32(comp, Result, result1);
 			return Result;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 absV = VectorAbs(V);
 			__m128 invV = _mm_div_ps(g_XMOne, V);
 			__m128 comp = _mm_cmpgt_ps(V, g_XMOne);
@@ -10143,18 +10121,18 @@ namespace At0
 
 			// Compute polynomial approximation
 			const Vector AEC = g_XMATanEstCoefficients1;
-			Vector vConstants = XM_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
+			Vector vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
-			vConstants = XM_PERMUTE_PS(AEC, _MM_SHUFFLE(2, 2, 2, 2));
+			vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(2, 2, 2, 2));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(AEC, _MM_SHUFFLE(1, 1, 1, 1));
+			vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(1, 1, 1, 1));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			vConstants = XM_PERMUTE_PS(AEC, _MM_SHUFFLE(0, 0, 0, 0));
+			vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
@@ -10170,17 +10148,17 @@ namespace At0
 			Result = _mm_or_ps(select0, select1);
 			return Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorATan2Est
+		inline Vector RAYMATH_CALLCONV VectorATan2Est
 		(
 			FVector Y,
 			FVector X
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					atan2f(Y.vector4_f32[0], X.vector4_f32[0]),
 					atan2f(Y.vector4_f32[1], X.vector4_f32[1]),
@@ -10190,7 +10168,7 @@ namespace At0
 			return Result.v;
 #else
 
-			static const VectorF32 ATan2Constants = { { { XM_PI, XM_PIDIV2, XM_PIDIV4, 2.3561944905f /* Pi*3/4 */ } } };
+			static const VectorF32 ATan2Constants = { { { Constants::PI, Constants::PIDIV2, Constants::PIDIV4, 2.3561944905f /* Pi*3/4 */ } } };
 
 			const Vector Zero = VectorZero();
 			Vector ATanResultValid = VectorTrueInt();
@@ -10233,11 +10211,11 @@ namespace At0
 			return Result;
 
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorLerp
+		inline Vector RAYMATH_CALLCONV VectorLerp
 		(
 			FVector V0,
 			FVector V1,
@@ -10246,16 +10224,16 @@ namespace At0
 		{
 			// V0 + t * (V1 - V0)
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Scale = VectorReplicate(t);
 			Vector Length = VectorSubtract(V1, V0);
 			return VectorMultiplyAdd(Length, Scale, V0);
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector L = vsubq_f32(V1, V0);
 			return vmlaq_n_f32(V0, L, t);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector L = _mm_sub_ps(V1, V0);
 			Vector S = _mm_set_ps1(t);
 			Vector Result = _mm_mul_ps(L, S);
@@ -10265,7 +10243,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorLerpV
+		inline Vector RAYMATH_CALLCONV VectorLerpV
 		(
 			FVector V0,
 			FVector V1,
@@ -10274,15 +10252,15 @@ namespace At0
 		{
 			// V0 + T * (V1 - V0)
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Length = VectorSubtract(V1, V0);
 			return VectorMultiplyAdd(Length, T, V0);
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector L = vsubq_f32(V1, V0);
 			return vmlaq_f32(V0, L, T);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector Length = _mm_sub_ps(V1, V0);
 			Vector Result = _mm_mul_ps(Length, T);
 			return _mm_add_ps(Result, V0);
@@ -10291,7 +10269,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorHermite
+		inline Vector RAYMATH_CALLCONV VectorHermite
 		(
 			FVector Position0,
 			FVector Tangent0,
@@ -10305,7 +10283,7 @@ namespace At0
 			//          (-2 * t^3 + 3 * t^2) * Position1 +
 			//          (t^3 - t^2) * Tangent1
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float t2 = t * t;
 			float t3 = t * t2;
@@ -10322,7 +10300,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float t2 = t * t;
 			float t3 = t * t2;
 
@@ -10336,7 +10314,7 @@ namespace At0
 			vResult = vmlaq_n_f32(vResult, Position1, p1);
 			vResult = vmlaq_n_f32(vResult, Tangent1, t1);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			float t2 = t * t;
 			float t3 = t * t2;
 
@@ -10358,7 +10336,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorHermiteV
+		inline Vector RAYMATH_CALLCONV VectorHermiteV
 		(
 			FVector Position0,
 			FVector Tangent0,
@@ -10372,7 +10350,7 @@ namespace At0
 			//          (-2 * t^3 + 3 * t^2) * Position1 +
 			//          (t^3 - t^2) * Tangent1
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector T2 = VectorMultiply(T, T);
 			Vector T3 = VectorMultiply(T, T2);
@@ -10389,7 +10367,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 CatMulT2 = { { { -3.0f, -2.0f, 3.0f, -1.0f } } };
 			static const VectorF32 CatMulT3 = { { { 2.0f, 1.0f, -2.0f, 1.0f } } };
 
@@ -10415,7 +10393,7 @@ namespace At0
 			// Mul the w constant to Tangent1
 			vResult = vmlaq_lane_f32(vResult, Tangent1, vget_high_f32(T3), 1); // T3[3]
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 CatMulT2 = { { { -3.0f, -2.0f, 3.0f, -1.0f } } };
 			static const VectorF32 CatMulT3 = { { { 2.0f, 1.0f, -2.0f, 1.0f } } };
 
@@ -10434,18 +10412,18 @@ namespace At0
 			T3 = _mm_add_ps(T3, g_XMIdentityR0);
 			// Now, I have the constants created
 			// Mul the x constant to Position0
-			Vector vResult = XM_PERMUTE_PS(T3, _MM_SHUFFLE(0, 0, 0, 0));
+			Vector vResult = RAYMATH_PERMUTE_PS(T3, _MM_SHUFFLE(0, 0, 0, 0));
 			vResult = _mm_mul_ps(vResult, Position0);
 			// Mul the y constant to Tangent0
-			T2 = XM_PERMUTE_PS(T3, _MM_SHUFFLE(1, 1, 1, 1));
+			T2 = RAYMATH_PERMUTE_PS(T3, _MM_SHUFFLE(1, 1, 1, 1));
 			T2 = _mm_mul_ps(T2, Tangent0);
 			vResult = _mm_add_ps(vResult, T2);
 			// Mul the z constant to Position1
-			T2 = XM_PERMUTE_PS(T3, _MM_SHUFFLE(2, 2, 2, 2));
+			T2 = RAYMATH_PERMUTE_PS(T3, _MM_SHUFFLE(2, 2, 2, 2));
 			T2 = _mm_mul_ps(T2, Position1);
 			vResult = _mm_add_ps(vResult, T2);
 			// Mul the w constant to Tangent1
-			T3 = XM_PERMUTE_PS(T3, _MM_SHUFFLE(3, 3, 3, 3));
+			T3 = RAYMATH_PERMUTE_PS(T3, _MM_SHUFFLE(3, 3, 3, 3));
 			T3 = _mm_mul_ps(T3, Tangent1);
 			vResult = _mm_add_ps(vResult, T3);
 			return vResult;
@@ -10454,7 +10432,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorCatmullRom
+		inline Vector RAYMATH_CALLCONV VectorCatmullRom
 		(
 			FVector Position0,
 			FVector Position1,
@@ -10468,7 +10446,7 @@ namespace At0
 			//           (-3 * t^3 + 4 * t^2 + t) * Position2 +
 			//           (t^3 - t^2) * Position3) * 0.5
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float t2 = t * t;
 			float t3 = t * t2;
@@ -10485,7 +10463,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float t2 = t * t;
 			float t3 = t * t2;
 
@@ -10500,7 +10478,7 @@ namespace At0
 			Vector P2 = vmlaq_n_f32(P3, Position2, p2);
 			P0 = vaddq_f32(P0, P2);
 			return P0;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			float t2 = t * t;
 			float t3 = t * t2;
 
@@ -10522,7 +10500,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorCatmullRomV
+		inline Vector RAYMATH_CALLCONV VectorCatmullRomV
 		(
 			FVector Position0,
 			FVector Position1,
@@ -10531,7 +10509,7 @@ namespace At0
 			HVector T
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			float fx = T.vector4_f32[0];
 			float fy = T.vector4_f32[1];
 			float fz = T.vector4_f32[2];
@@ -10559,7 +10537,7 @@ namespace At0
 				}
  } };
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 Catmul2 = { { { 2.0f, 2.0f, 2.0f, 2.0f } } };
 			static const VectorF32 Catmul3 = { { { 3.0f, 3.0f, 3.0f, 3.0f } } };
 			static const VectorF32 Catmul4 = { { { 4.0f, 4.0f, 4.0f, 4.0f } } };
@@ -10588,7 +10566,7 @@ namespace At0
 			// Multiply by 0.5f and exit
 			vResult = vmulq_f32(vResult, g_XMOneHalf);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 Catmul2 = { { { 2.0f, 2.0f, 2.0f, 2.0f } } };
 			static const VectorF32 Catmul3 = { { { 3.0f, 3.0f, 3.0f, 3.0f } } };
 			static const VectorF32 Catmul4 = { { { 4.0f, 4.0f, 4.0f, 4.0f } } };
@@ -10627,7 +10605,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorBaryCentric
+		inline Vector RAYMATH_CALLCONV VectorBaryCentric
 		(
 			FVector Position0,
 			FVector Position1,
@@ -10638,7 +10616,7 @@ namespace At0
 		{
 			// Result = Position0 + f * (Position1 - Position0) + g * (Position2 - Position0)
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector P10 = VectorSubtract(Position1, Position0);
 			Vector ScaleF = VectorReplicate(f);
@@ -10651,12 +10629,12 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector R1 = vsubq_f32(Position1, Position0);
 			Vector R2 = vsubq_f32(Position2, Position0);
 			R1 = vmlaq_n_f32(Position0, R1, f);
 			return vmlaq_n_f32(R1, R2, g);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector R1 = _mm_sub_ps(Position1, Position0);
 			Vector SF = _mm_set_ps1(f);
 			Vector R2 = _mm_sub_ps(Position2, Position0);
@@ -10671,7 +10649,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV VectorBaryCentricV
+		inline Vector RAYMATH_CALLCONV VectorBaryCentricV
 		(
 			FVector Position0,
 			FVector Position1,
@@ -10682,7 +10660,7 @@ namespace At0
 		{
 			// Result = Position0 + f * (Position1 - Position0) + g * (Position2 - Position0)
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector P10 = VectorSubtract(Position1, Position0);
 			Vector P20 = VectorSubtract(Position2, Position0);
@@ -10692,12 +10670,12 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector R1 = vsubq_f32(Position1, Position0);
 			Vector R2 = vsubq_f32(Position2, Position0);
 			R1 = vmlaq_f32(Position0, R1, F);
 			return vmlaq_f32(R1, R2, G);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector R1 = _mm_sub_ps(Position1, Position0);
 			Vector R2 = _mm_sub_ps(Position2, Position0);
 			R1 = _mm_mul_ps(R1, F);
@@ -10720,18 +10698,18 @@ namespace At0
 
 		 //------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector2Equal
+		inline bool RAYMATH_CALLCONV Vector2Equal
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] == V2.vector4_f32[0]) && (V1.vector4_f32[1] == V2.vector4_f32[1])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t vTemp = vceq_f32(vget_low_f32(V1), vget_low_f32(V2));
 			return (vget_lane_u64(vTemp, 0) == 0xFFFFFFFFFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpeq_ps(V1, V2);
 			// z and w are don't care
 			return (((_mm_movemask_ps(vTemp) & 3) == 3) != 0);
@@ -10741,13 +10719,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline uint32_t XM_CALLCONV Vector2EqualR
+		inline uint32_t RAYMATH_CALLCONV Vector2EqualR
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			uint32_t CR = 0;
 			if ((V1.vector4_f32[0] == V2.vector4_f32[0]) &&
@@ -10762,7 +10740,7 @@ namespace At0
 			}
 			return CR;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t vTemp = vceq_f32(vget_low_f32(V1), vget_low_f32(V2));
 			uint64_t r = vget_lane_u64(vTemp, 0);
 			uint32_t CR = 0;
@@ -10775,7 +10753,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpeq_ps(V1, V2);
 			// z and w are don't care
 			int iTest = _mm_movemask_ps(vTemp) & 3;
@@ -10794,18 +10772,18 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector2EqualInt
+		inline bool RAYMATH_CALLCONV Vector2EqualInt
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_u32[0] == V2.vector4_u32[0]) && (V1.vector4_u32[1] == V2.vector4_u32[1])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t vTemp = vceq_u32(vget_low_u32(V1), vget_low_u32(V2));
 			return (vget_lane_u64(vTemp, 0) == 0xFFFFFFFFFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vTemp = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return (((_mm_movemask_ps(_mm_castsi128_ps(vTemp)) & 3) == 3) != 0);
 #endif
@@ -10813,13 +10791,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline uint32_t XM_CALLCONV Vector2EqualIntR
+		inline uint32_t RAYMATH_CALLCONV Vector2EqualIntR
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			uint32_t CR = 0;
 			if ((V1.vector4_u32[0] == V2.vector4_u32[0]) &&
@@ -10834,7 +10812,7 @@ namespace At0
 			}
 			return CR;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t vTemp = vceq_u32(vget_low_u32(V1), vget_low_u32(V2));
 			uint64_t r = vget_lane_u64(vTemp, 0);
 			uint32_t CR = 0;
@@ -10847,7 +10825,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vTemp = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			int iTest = _mm_movemask_ps(_mm_castsi128_ps(vTemp)) & 3;
 			uint32_t CR = 0;
@@ -10865,24 +10843,24 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector2NearEqual
+		inline bool RAYMATH_CALLCONV Vector2NearEqual
 		(
 			FVector V1,
 			FVector V2,
 			FVector Epsilon
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			float dx = fabsf(V1.vector4_f32[0] - V2.vector4_f32[0]);
 			float dy = fabsf(V1.vector4_f32[1] - V2.vector4_f32[1]);
 			return ((dx <= Epsilon.vector4_f32[0]) &&
 				(dy <= Epsilon.vector4_f32[1]));
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t vDelta = vsub_f32(vget_low_u32(V1), vget_low_u32(V2));
 			uint32x2_t vTemp = vacle_f32(vDelta, vget_low_u32(Epsilon));
 			uint64_t r = vget_lane_u64(vTemp, 0);
 			return (r == 0xFFFFFFFFFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Get the difference
 			Vector vDelta = _mm_sub_ps(V1, V2);
 			// Get the absolute value of the difference
@@ -10897,18 +10875,18 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector2NotEqual
+		inline bool RAYMATH_CALLCONV Vector2NotEqual
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] != V2.vector4_f32[0]) || (V1.vector4_f32[1] != V2.vector4_f32[1])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t vTemp = vceq_f32(vget_low_f32(V1), vget_low_f32(V2));
 			return (vget_lane_u64(vTemp, 0) != 0xFFFFFFFFFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpeq_ps(V1, V2);
 			// z and w are don't care
 			return (((_mm_movemask_ps(vTemp) & 3) != 3) != 0);
@@ -10917,18 +10895,18 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector2NotEqualInt
+		inline bool RAYMATH_CALLCONV Vector2NotEqualInt
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_u32[0] != V2.vector4_u32[0]) || (V1.vector4_u32[1] != V2.vector4_u32[1])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t vTemp = vceq_u32(vget_low_u32(V1), vget_low_u32(V2));
 			return (vget_lane_u64(vTemp, 0) != 0xFFFFFFFFFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vTemp = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return (((_mm_movemask_ps(_mm_castsi128_ps(vTemp)) & 3) != 3) != 0);
 #endif
@@ -10936,18 +10914,18 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector2Greater
+		inline bool RAYMATH_CALLCONV Vector2Greater
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] > V2.vector4_f32[0]) && (V1.vector4_f32[1] > V2.vector4_f32[1])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t vTemp = vcgt_f32(vget_low_f32(V1), vget_low_f32(V2));
 			return (vget_lane_u64(vTemp, 0) == 0xFFFFFFFFFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpgt_ps(V1, V2);
 			// z and w are don't care
 			return (((_mm_movemask_ps(vTemp) & 3) == 3) != 0);
@@ -10956,13 +10934,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline uint32_t XM_CALLCONV Vector2GreaterR
+		inline uint32_t RAYMATH_CALLCONV Vector2GreaterR
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			uint32_t CR = 0;
 			if ((V1.vector4_f32[0] > V2.vector4_f32[0]) &&
@@ -10977,7 +10955,7 @@ namespace At0
 			}
 			return CR;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t vTemp = vcgt_f32(vget_low_f32(V1), vget_low_f32(V2));
 			uint64_t r = vget_lane_u64(vTemp, 0);
 			uint32_t CR = 0;
@@ -10990,7 +10968,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpgt_ps(V1, V2);
 			int iTest = _mm_movemask_ps(vTemp) & 3;
 			uint32_t CR = 0;
@@ -11008,18 +10986,18 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector2GreaterOrEqual
+		inline bool RAYMATH_CALLCONV Vector2GreaterOrEqual
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] >= V2.vector4_f32[0]) && (V1.vector4_f32[1] >= V2.vector4_f32[1])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t vTemp = vcge_f32(vget_low_f32(V1), vget_low_f32(V2));
 			return (vget_lane_u64(vTemp, 0) == 0xFFFFFFFFFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpge_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 3) == 3) != 0);
 #endif
@@ -11027,13 +11005,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline uint32_t XM_CALLCONV Vector2GreaterOrEqualR
+		inline uint32_t RAYMATH_CALLCONV Vector2GreaterOrEqualR
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			uint32_t CR = 0;
 			if ((V1.vector4_f32[0] >= V2.vector4_f32[0]) &&
@@ -11048,7 +11026,7 @@ namespace At0
 			}
 			return CR;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t vTemp = vcge_f32(vget_low_f32(V1), vget_low_f32(V2));
 			uint64_t r = vget_lane_u64(vTemp, 0);
 			uint32_t CR = 0;
@@ -11061,7 +11039,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpge_ps(V1, V2);
 			int iTest = _mm_movemask_ps(vTemp) & 3;
 			uint32_t CR = 0;
@@ -11079,18 +11057,18 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector2Less
+		inline bool RAYMATH_CALLCONV Vector2Less
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] < V2.vector4_f32[0]) && (V1.vector4_f32[1] < V2.vector4_f32[1])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t vTemp = vclt_f32(vget_low_f32(V1), vget_low_f32(V2));
 			return (vget_lane_u64(vTemp, 0) == 0xFFFFFFFFFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmplt_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 3) == 3) != 0);
 #endif
@@ -11098,18 +11076,18 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector2LessOrEqual
+		inline bool RAYMATH_CALLCONV Vector2LessOrEqual
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] <= V2.vector4_f32[0]) && (V1.vector4_f32[1] <= V2.vector4_f32[1])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x2_t vTemp = vcle_f32(vget_low_f32(V1), vget_low_f32(V2));
 			return (vget_lane_u64(vTemp, 0) == 0xFFFFFFFFFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmple_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 3) == 3) != 0);
 #endif
@@ -11117,16 +11095,16 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector2InBounds
+		inline bool RAYMATH_CALLCONV Vector2InBounds
 		(
 			FVector V,
 			FVector Bounds
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V.vector4_f32[0] <= Bounds.vector4_f32[0] && V.vector4_f32[0] >= -Bounds.vector4_f32[0]) &&
 				(V.vector4_f32[1] <= Bounds.vector4_f32[1] && V.vector4_f32[1] >= -Bounds.vector4_f32[1])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			float32x2_t B = vget_low_f32(Bounds);
 			// Test if less than or equal
@@ -11139,7 +11117,7 @@ namespace At0
 			ivTemp1 = vand_u32(ivTemp1, ivTemp2);
 			// x and y in bounds?
 			return (vget_lane_u64(ivTemp1, 0) == 0xFFFFFFFFFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Test if less than or equal
 			Vector vTemp1 = _mm_cmple_ps(V, Bounds);
 			// Negate the bounds
@@ -11155,21 +11133,21 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector2IsNaN
+		inline bool RAYMATH_CALLCONV Vector2IsNaN
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (XMISNAN(V.vector4_f32[0]) ||
 				XMISNAN(V.vector4_f32[1]));
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			// Test against itself. NaN is always not equal
 			uint32x2_t vTempNan = vceq_f32(VL, VL);
 			// If x or y are NaN, the mask is zero
 			return (vget_lane_u64(vTempNan, 0) != 0xFFFFFFFFFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Test against itself. NaN is always not equal
 			Vector vTempNan = _mm_cmpneq_ps(V, V);
 			// If x or y are NaN, the mask is non-zero
@@ -11179,23 +11157,23 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector2IsInfinite
+		inline bool RAYMATH_CALLCONV Vector2IsInfinite
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			return (XMISINF(V.vector4_f32[0]) ||
 				XMISINF(V.vector4_f32[1]));
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Mask off the sign bit
 			uint32x2_t vTemp = vand_u32(vget_low_f32(V), vget_low_f32(g_XMAbsMask));
 			// Compare to infinity
 			vTemp = vceq_f32(vTemp, vget_low_f32(g_XMInfinity));
 			// If any are infinity, the signs are true.
 			return vget_lane_u64(vTemp, 0) != 0;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Mask off the sign bit
 			__m128 vTemp = _mm_and_ps(V, g_XMAbsMask);
 			// Compare to infinity
@@ -11211,13 +11189,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2Dot
+		inline Vector RAYMATH_CALLCONV Vector2Dot
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result;
 			Result.f[0] =
@@ -11226,33 +11204,33 @@ namespace At0
 				Result.f[3] = V1.vector4_f32[0] * V2.vector4_f32[0] + V1.vector4_f32[1] * V2.vector4_f32[1];
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Perform the dot product on x and y
 			float32x2_t vTemp = vmul_f32(vget_low_f32(V1), vget_low_f32(V2));
 			vTemp = vpadd_f32(vTemp, vTemp);
 			return vcombine_f32(vTemp, vTemp);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			return _mm_dp_ps(V1, V2, 0x3f);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vDot = _mm_mul_ps(V1, V2);
 			vDot = _mm_hadd_ps(vDot, vDot);
 			vDot = _mm_moveldup_ps(vDot);
 			return vDot;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y
 			Vector vLengthSq = _mm_mul_ps(V1, V2);
 			// vTemp has y splatted
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2Cross
+		inline Vector RAYMATH_CALLCONV Vector2Cross
 		(
 			FVector V1,
 			FVector V2
@@ -11260,7 +11238,7 @@ namespace At0
 		{
 			// [ V1.x*V2.y - V1.y*V2.x, V1.x*V2.y - V1.y*V2.x ]
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			float fCross = (V1.vector4_f32[0] * V2.vector4_f32[1]) - (V1.vector4_f32[1] * V2.vector4_f32[0]);
 			VectorF32 vResult;
 			vResult.f[0] =
@@ -11268,31 +11246,31 @@ namespace At0
 				vResult.f[2] =
 				vResult.f[3] = fCross;
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 Negate = { { { 1.f, -1.f, 0, 0 } } };
 
 			float32x2_t vTemp = vmul_f32(vget_low_f32(V1), vrev64_f32(vget_low_f32(V2)));
 			vTemp = vmul_f32(vTemp, vget_low_f32(Negate));
 			vTemp = vpadd_f32(vTemp, vTemp);
 			return vcombine_f32(vTemp, vTemp);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 	// Swap x and y
-			Vector vResult = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 1, 0, 1));
+			Vector vResult = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 1, 0, 1));
 			// Perform the muls
 			vResult = _mm_mul_ps(vResult, V1);
 			// Splat y
-			Vector vTemp = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(1, 1, 1, 1));
 			// Sub the values
 			vResult = _mm_sub_ss(vResult, vTemp);
 			// Splat the cross product
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 0, 0, 0));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 0, 0, 0));
 			return vResult;
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2LengthSq
+		inline Vector RAYMATH_CALLCONV Vector2LengthSq
 		(
 			FVector V
 		)
@@ -11302,19 +11280,19 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2ReciprocalLengthEst
+		inline Vector RAYMATH_CALLCONV Vector2ReciprocalLengthEst
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 			Result = Vector2LengthSq(V);
 			Result = VectorReciprocalSqrtEst(Result);
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			// Dot2
 			float32x2_t vTemp = vmul_f32(VL, VL);
@@ -11322,43 +11300,43 @@ namespace At0
 			// Reciprocal sqrt (estimate)
 			vTemp = vrsqrte_f32(vTemp);
 			return vcombine_f32(vTemp, vTemp);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0x3f);
 			return _mm_rsqrt_ps(vTemp);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			Vector vTemp = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_rsqrt_ss(vTemp);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has y splatted
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = _mm_rsqrt_ss(vLengthSq);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2ReciprocalLength
+		inline Vector RAYMATH_CALLCONV Vector2ReciprocalLength
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 			Result = Vector2LengthSq(V);
 			Result = VectorReciprocalSqrt(Result);
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			// Dot2
 			float32x2_t vTemp = vmul_f32(VL, VL);
@@ -11372,46 +11350,46 @@ namespace At0
 			float32x2_t  R1 = vrsqrts_f32(P1, S1);
 			float32x2_t Result = vmul_f32(S1, R1);
 			return vcombine_f32(Result, Result);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0x3f);
 			Vector vLengthSq = _mm_sqrt_ps(vTemp);
 			return _mm_div_ps(g_XMOne, vLengthSq);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			Vector vTemp = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ss(vTemp);
 			vLengthSq = _mm_div_ss(g_XMOne, vLengthSq);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has y splatted
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = _mm_sqrt_ss(vLengthSq);
 			vLengthSq = _mm_div_ss(g_XMOne, vLengthSq);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2LengthEst
+		inline Vector RAYMATH_CALLCONV Vector2LengthEst
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 			Result = Vector2LengthSq(V);
 			Result = VectorSqrtEst(Result);
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			// Dot2
 			float32x2_t vTemp = vmul_f32(VL, VL);
@@ -11423,43 +11401,43 @@ namespace At0
 			Result = vmul_f32(vTemp, Result);
 			Result = vbsl_f32(VEqualsZero, zero, Result);
 			return vcombine_f32(Result, Result);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0x3f);
 			return _mm_sqrt_ps(vTemp);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			Vector vTemp = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ss(vTemp);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has y splatted
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = _mm_sqrt_ss(vLengthSq);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2Length
+		inline Vector RAYMATH_CALLCONV Vector2Length
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 			Result = Vector2LengthSq(V);
 			Result = VectorSqrt(Result);
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			// Dot2
 			float32x2_t vTemp = vmul_f32(VL, VL);
@@ -11477,23 +11455,23 @@ namespace At0
 			Result = vmul_f32(vTemp, Result);
 			Result = vbsl_f32(VEqualsZero, zero, Result);
 			return vcombine_f32(Result, Result);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0x3f);
 			return _mm_sqrt_ps(vTemp);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			Vector vTemp = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ss(vTemp);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has y splatted
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			return vLengthSq;
 #endif
@@ -11503,19 +11481,19 @@ namespace At0
 		// Vector2NormalizeEst uses a reciprocal estimate and
 		// returns QNaN on zero and infinite vectors.
 
-		inline Vector XM_CALLCONV Vector2NormalizeEst
+		inline Vector RAYMATH_CALLCONV Vector2NormalizeEst
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 			Result = Vector2ReciprocalLength(V);
 			Result = VectorMultiply(V, Result);
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			// Dot2
 			float32x2_t vTemp = vmul_f32(VL, VL);
@@ -11525,26 +11503,26 @@ namespace At0
 			// Normalize
 			float32x2_t Result = vmul_f32(VL, vTemp);
 			return vcombine_f32(Result, Result);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0x3f);
 			Vector vResult = _mm_rsqrt_ps(vTemp);
 			return _mm_mul_ps(vResult, V);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_rsqrt_ss(vLengthSq);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			vLengthSq = _mm_mul_ps(vLengthSq, V);
 			return vLengthSq;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has y splatted
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = _mm_rsqrt_ss(vLengthSq);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			vLengthSq = _mm_mul_ps(vLengthSq, V);
 			return vLengthSq;
 #endif
@@ -11552,12 +11530,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2Normalize
+		inline Vector RAYMATH_CALLCONV Vector2Normalize
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector vResult = Vector2Length(V);
 			float fLength = vResult.vector4_f32[0];
@@ -11573,7 +11551,7 @@ namespace At0
 			vResult.vector4_f32[3] = V.vector4_f32[3] * fLength;
 			return vResult;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			// Dot2
 			float32x2_t vTemp = vmul_f32(VL, VL);
@@ -11593,7 +11571,7 @@ namespace At0
 			Result = vbsl_f32(VEqualsZero, vdup_n_f32(0), Result);
 			Result = vbsl_f32(VEqualsInf, vget_low_f32(g_XMQNaN), Result);
 			return vcombine_f32(Result, Result);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vLengthSq = _mm_dp_ps(V, V, 0x3f);
 			// Prepare for the division
 			Vector vResult = _mm_sqrt_ps(vLengthSq);
@@ -11613,7 +11591,7 @@ namespace At0
 			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			// Perform the dot product on x and y only
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
@@ -11636,12 +11614,12 @@ namespace At0
 			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y only
 			Vector vLengthSq = _mm_mul_ps(V, V);
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			// Prepare for the division
 			Vector vResult = _mm_sqrt_ps(vLengthSq);
 			// Create zero with a single instruction
@@ -11665,7 +11643,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2ClampLength
+		inline Vector RAYMATH_CALLCONV Vector2ClampLength
 		(
 			FVector V,
 			float    LengthMin,
@@ -11679,7 +11657,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2ClampLengthV
+		inline Vector RAYMATH_CALLCONV Vector2ClampLengthV
 		(
 			FVector V,
 			FVector LengthMin,
@@ -11726,7 +11704,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2Reflect
+		inline Vector RAYMATH_CALLCONV Vector2Reflect
 		(
 			FVector Incident,
 			FVector Normal
@@ -11743,7 +11721,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2Refract
+		inline Vector RAYMATH_CALLCONV Vector2Refract
 		(
 			FVector Incident,
 			FVector Normal,
@@ -11757,7 +11735,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Return the refraction of a 2D vector
-		inline Vector XM_CALLCONV Vector2RefractV
+		inline Vector RAYMATH_CALLCONV Vector2RefractV
 		(
 			FVector Incident,
 			FVector Normal,
@@ -11767,7 +11745,7 @@ namespace At0
 			// Result = RefractionIndex * Incident - Normal * (RefractionIndex * dot(Incident, Normal) + 
 			// sqrt(1 - RefractionIndex * RefractionIndex * (1 - dot(Incident, Normal) * dot(Incident, Normal))))
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float IDotN = (Incident.vector4_f32[0] * Normal.vector4_f32[0]) + (Incident.vector4_f32[1] * Normal.vector4_f32[1]);
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
@@ -11794,7 +11772,7 @@ namespace At0
 			vResult.vector4_f32[3] = 0.0f;
 			return vResult;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t IL = vget_low_f32(Incident);
 			float32x2_t NL = vget_low_f32(Normal);
 			float32x2_t RIL = vget_low_f32(RefractionIndex);
@@ -11823,7 +11801,7 @@ namespace At0
 			vResult = vmls_f32(vResult, vTemp, NL);
 			vResult = vand_u32(vResult, vMask);
 			return vcombine_f32(vResult, vResult);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 	// Result = RefractionIndex * Incident - Normal * (RefractionIndex * dot(Incident, Normal) + 
 	// sqrt(1 - RefractionIndex * RefractionIndex * (1 - dot(Incident, Normal) * dot(Incident, Normal))))
 	// Get the 2D Dot product of Incident-Normal
@@ -11851,12 +11829,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2Orthogonal
+		inline Vector RAYMATH_CALLCONV Vector2Orthogonal
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					-V.vector4_f32[1],
@@ -11866,23 +11844,23 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 Negate = { { { -1.f, 1.f, 0, 0 } } };
 			const float32x2_t zero = vdup_n_f32(0);
 
 			float32x2_t VL = vget_low_f32(V);
 			float32x2_t Result = vmul_f32(vrev64_f32(VL), vget_low_f32(Negate));
 			return vcombine_f32(Result, zero);
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
 			vResult = _mm_mul_ps(vResult, g_XMNegateX);
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2AngleBetweenNormalsEst
+		inline Vector RAYMATH_CALLCONV Vector2AngleBetweenNormalsEst
 		(
 			FVector N1,
 			FVector N2
@@ -11896,7 +11874,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2AngleBetweenNormals
+		inline Vector RAYMATH_CALLCONV Vector2AngleBetweenNormals
 		(
 			FVector N1,
 			FVector N2
@@ -11910,7 +11888,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2AngleBetweenVectors
+		inline Vector RAYMATH_CALLCONV Vector2AngleBetweenVectors
 		(
 			FVector V1,
 			FVector V2
@@ -11931,7 +11909,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2LinePointDistance
+		inline Vector RAYMATH_CALLCONV Vector2LinePointDistance
 		(
 			FVector LinePoint1,
 			FVector LinePoint2,
@@ -11961,7 +11939,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2IntersectLine
+		inline Vector RAYMATH_CALLCONV Vector2IntersectLine
 		(
 			FVector Line1Point1,
 			FVector Line1Point2,
@@ -11969,7 +11947,7 @@ namespace At0
 			GVector Line2Point2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
 			Vector V1 = VectorSubtract(Line1Point2, Line1Point1);
 			Vector V2 = VectorSubtract(Line2Point2, Line2Point1);
@@ -12003,7 +11981,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector V1 = _mm_sub_ps(Line1Point2, Line1Point1);
 			Vector V2 = _mm_sub_ps(Line2Point2, Line2Point1);
 			Vector V3 = _mm_sub_ps(Line1Point1, Line2Point1);
@@ -12039,13 +12017,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2Transform
+		inline Vector RAYMATH_CALLCONV Vector2Transform
 		(
 			FVector V,
 			FMatrix M
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Y = VectorSplatY(V);
 			Vector X = VectorSplatX(V);
@@ -12055,14 +12033,14 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			float32x4_t Result = vmlaq_lane_f32(M.r[3], M.r[1], VL, 1); // Y
 			return vmlaq_lane_f32(Result, M.r[0], VL, 0); // X
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 			vResult = _mm_mul_ps(vResult, M.r[0]);
-			Vector vTemp = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			vTemp = _mm_mul_ps(vTemp, M.r[1]);
 			vResult = _mm_add_ps(vResult, vTemp);
 			vResult = _mm_add_ps(vResult, M.r[3]);
@@ -12073,7 +12051,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 
-		inline Float4* XM_CALLCONV Vector2TransformStream
+		inline Float4* RAYMATH_CALLCONV Vector2TransformStream
 		(
 			Float4* pOutputStream,
 			size_t          OutputStride,
@@ -12087,12 +12065,9 @@ namespace At0
 			assert(pInputStream != nullptr);
 
 			assert(InputStride >= sizeof(Float2));
-			_Analysis_assume_(InputStride >= sizeof(Float2));
-
 			assert(OutputStride >= sizeof(Float4));
-			_Analysis_assume_(OutputStride >= sizeof(Float4));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
@@ -12127,7 +12102,7 @@ namespace At0
 
 			return pOutputStream;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -12199,7 +12174,7 @@ namespace At0
 			}
 
 			return pOutputStream;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -12221,26 +12196,26 @@ namespace At0
 							Vector V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 							pInputVector += sizeof(Float2) * 2;
 
-							Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+							Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+							Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 							Vector vTemp = _mm_mul_ps(Y, row1);
 							Vector vTemp2 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 
-							XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
+							RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
 							pOutputVector += OutputStride;
 
-							Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
-							X = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+							X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 
 							vTemp = _mm_mul_ps(Y, row1);
 							vTemp2 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 
-							XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
+							RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
 							pOutputVector += OutputStride;
 
 							i += 2;
@@ -12254,8 +12229,8 @@ namespace At0
 							Vector V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 							pInputVector += sizeof(Float2) * 2;
 
-							Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+							Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+							Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 							Vector vTemp = _mm_mul_ps(Y, row1);
 							Vector vTemp2 = _mm_mul_ps(X, row0);
@@ -12265,8 +12240,8 @@ namespace At0
 							_mm_storeu_ps(reinterpret_cast<float*>(pOutputVector), vTemp);
 							pOutputVector += OutputStride;
 
-							Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
-							X = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+							X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 
 							vTemp = _mm_mul_ps(Y, row1);
 							vTemp2 = _mm_mul_ps(X, row0);
@@ -12292,15 +12267,15 @@ namespace At0
 						Vector V = _mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(pInputVector)));
 						pInputVector += InputStride;
 
-						Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-						Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+						Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+						Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 						Vector vTemp = _mm_mul_ps(Y, row1);
 						Vector vTemp2 = _mm_mul_ps(X, row0);
 						vTemp = _mm_add_ps(vTemp, row3);
 						vTemp = _mm_add_ps(vTemp, vTemp2);
 
-						XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
+						RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
 						pOutputVector += OutputStride;
 					}
 				}
@@ -12312,8 +12287,8 @@ namespace At0
 						Vector V = _mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(pInputVector)));
 						pInputVector += InputStride;
 
-						Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-						Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+						Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+						Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 						Vector vTemp = _mm_mul_ps(Y, row1);
 						Vector vTemp2 = _mm_mul_ps(X, row0);
@@ -12334,8 +12309,8 @@ namespace At0
 					__m128 y = _mm_load_ss(reinterpret_cast<const float*>(pInputVector + 4));
 					pInputVector += InputStride;
 
-					Vector Y = XM_PERMUTE_PS(y, _MM_SHUFFLE(0, 0, 0, 0));
-					Vector X = XM_PERMUTE_PS(x, _MM_SHUFFLE(0, 0, 0, 0));
+					Vector Y = RAYMATH_PERMUTE_PS(y, _MM_SHUFFLE(0, 0, 0, 0));
+					Vector X = RAYMATH_PERMUTE_PS(x, _MM_SHUFFLE(0, 0, 0, 0));
 
 					Vector vTemp = _mm_mul_ps(Y, row1);
 					Vector vTemp2 = _mm_mul_ps(X, row0);
@@ -12347,7 +12322,7 @@ namespace At0
 				}
 			}
 
-			XM_SFENCE();
+			RAYMATH_SFENCE();
 
 			return pOutputStream;
 #endif
@@ -12355,7 +12330,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2TransformCoord
+		inline Vector RAYMATH_CALLCONV Vector2TransformCoord
 		(
 			FVector V,
 			FMatrix M
@@ -12374,7 +12349,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 
-		inline Float2* XM_CALLCONV Vector2TransformCoordStream
+		inline Float2* RAYMATH_CALLCONV Vector2TransformCoordStream
 		(
 			Float2* pOutputStream,
 			size_t          OutputStride,
@@ -12388,12 +12363,9 @@ namespace At0
 			assert(pInputStream != nullptr);
 
 			assert(InputStride >= sizeof(Float2));
-			_Analysis_assume_(InputStride >= sizeof(Float2));
-
 			assert(OutputStride >= sizeof(Float2));
-			_Analysis_assume_(OutputStride >= sizeof(Float2));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
@@ -12432,7 +12404,7 @@ namespace At0
 
 			return pOutputStream;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -12529,7 +12501,7 @@ namespace At0
 			}
 
 			return pOutputStream;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -12554,34 +12526,34 @@ namespace At0
 								pInputVector += sizeof(Float2) * 2;
 
 								// Result 1
-								Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+								Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+								Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 								Vector vTemp = _mm_mul_ps(Y, row1);
 								Vector vTemp2 = _mm_mul_ps(X, row0);
 								vTemp = _mm_add_ps(vTemp, row3);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 
-								Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								Vector V1 = _mm_div_ps(vTemp, W);
 
 								// Result 2
-								Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
-								X = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+								X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 
 								vTemp = _mm_mul_ps(Y, row1);
 								vTemp2 = _mm_mul_ps(X, row0);
 								vTemp = _mm_add_ps(vTemp, row3);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								Vector V2 = _mm_div_ps(vTemp, W);
 
 								vTemp = _mm_movelh_ps(V1, V2);
 
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
 								pOutputVector += sizeof(Float2) * 2;
 
 								i += 2;
@@ -12596,28 +12568,28 @@ namespace At0
 								pInputVector += sizeof(Float2) * 2;
 
 								// Result 1
-								Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+								Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+								Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 								Vector vTemp = _mm_mul_ps(Y, row1);
 								Vector vTemp2 = _mm_mul_ps(X, row0);
 								vTemp = _mm_add_ps(vTemp, row3);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 
-								Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								Vector V1 = _mm_div_ps(vTemp, W);
 
 								// Result 2
-								Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
-								X = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+								X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 
 								vTemp = _mm_mul_ps(Y, row1);
 								vTemp2 = _mm_mul_ps(X, row0);
 								vTemp = _mm_add_ps(vTemp, row3);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								Vector V2 = _mm_div_ps(vTemp, W);
 
@@ -12639,36 +12611,36 @@ namespace At0
 							pInputVector += sizeof(Float2) * 2;
 
 							// Result 1
-							Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+							Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+							Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 							Vector vTemp = _mm_mul_ps(Y, row1);
 							Vector vTemp2 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 
-							Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 							vTemp = _mm_div_ps(vTemp, W);
-							vTemp2 = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+							vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 
 							_mm_store_ss(reinterpret_cast<float*>(pOutputVector), vTemp);
 							_mm_store_ss(reinterpret_cast<float*>(pOutputVector + 4), vTemp2);
 							pOutputVector += OutputStride;
 
 							// Result 2
-							Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
-							X = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+							X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 
 							vTemp = _mm_mul_ps(Y, row1);
 							vTemp2 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 
-							W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 							vTemp = _mm_div_ps(vTemp, W);
-							vTemp2 = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+							vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 
 							_mm_store_ss(reinterpret_cast<float*>(pOutputVector), vTemp);
 							_mm_store_ss(reinterpret_cast<float*>(pOutputVector + 4), vTemp2);
@@ -12688,18 +12660,18 @@ namespace At0
 					Vector V = _mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(pInputVector)));
 					pInputVector += InputStride;
 
-					Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-					Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+					Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+					Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 					Vector vTemp = _mm_mul_ps(Y, row1);
 					Vector vTemp2 = _mm_mul_ps(X, row0);
 					vTemp = _mm_add_ps(vTemp, row3);
 					vTemp = _mm_add_ps(vTemp, vTemp2);
 
-					Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+					Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 					vTemp = _mm_div_ps(vTemp, W);
-					vTemp2 = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+					vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 
 					_mm_store_ss(reinterpret_cast<float*>(pOutputVector), vTemp);
 					_mm_store_ss(reinterpret_cast<float*>(pOutputVector + 4), vTemp2);
@@ -12715,18 +12687,18 @@ namespace At0
 					__m128 y = _mm_load_ss(reinterpret_cast<const float*>(pInputVector + 4));
 					pInputVector += InputStride;
 
-					Vector Y = XM_PERMUTE_PS(y, _MM_SHUFFLE(0, 0, 0, 0));
-					Vector X = XM_PERMUTE_PS(x, _MM_SHUFFLE(0, 0, 0, 0));
+					Vector Y = RAYMATH_PERMUTE_PS(y, _MM_SHUFFLE(0, 0, 0, 0));
+					Vector X = RAYMATH_PERMUTE_PS(x, _MM_SHUFFLE(0, 0, 0, 0));
 
 					Vector vTemp = _mm_mul_ps(Y, row1);
 					Vector vTemp2 = _mm_mul_ps(X, row0);
 					vTemp = _mm_add_ps(vTemp, row3);
 					vTemp = _mm_add_ps(vTemp, vTemp2);
 
-					Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+					Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 					vTemp = _mm_div_ps(vTemp, W);
-					vTemp2 = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+					vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 
 					_mm_store_ss(reinterpret_cast<float*>(pOutputVector), vTemp);
 					_mm_store_ss(reinterpret_cast<float*>(pOutputVector + 4), vTemp2);
@@ -12734,7 +12706,7 @@ namespace At0
 				}
 			}
 
-			XM_SFENCE();
+			RAYMATH_SFENCE();
 
 			return pOutputStream;
 #endif
@@ -12742,13 +12714,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector2TransformNormal
+		inline Vector RAYMATH_CALLCONV Vector2TransformNormal
 		(
 			FVector V,
 			FMatrix M
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Y = VectorSplatY(V);
 			Vector X = VectorSplatX(V);
@@ -12758,14 +12730,14 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			float32x4_t Result = vmulq_lane_f32(M.r[1], VL, 1); // Y
 			return vmlaq_lane_f32(Result, M.r[0], VL, 0); // X
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 			vResult = _mm_mul_ps(vResult, M.r[0]);
-			Vector vTemp = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			vTemp = _mm_mul_ps(vTemp, M.r[1]);
 			vResult = _mm_add_ps(vResult, vTemp);
 			return vResult;
@@ -12775,7 +12747,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 
-		inline Float2* XM_CALLCONV Vector2TransformNormalStream
+		inline Float2* RAYMATH_CALLCONV Vector2TransformNormalStream
 		(
 			Float2* pOutputStream,
 			size_t          OutputStride,
@@ -12789,12 +12761,9 @@ namespace At0
 			assert(pInputStream != nullptr);
 
 			assert(InputStride >= sizeof(Float2));
-			_Analysis_assume_(InputStride >= sizeof(Float2));
-
 			assert(OutputStride >= sizeof(Float2));
-			_Analysis_assume_(OutputStride >= sizeof(Float2));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
@@ -12828,7 +12797,7 @@ namespace At0
 
 			return pOutputStream;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -12885,7 +12854,7 @@ namespace At0
 			}
 
 			return pOutputStream;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -12909,16 +12878,16 @@ namespace At0
 								pInputVector += sizeof(Float2) * 2;
 
 								// Result 1
-								Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+								Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+								Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 								Vector vTemp = _mm_mul_ps(Y, row1);
 								Vector vTemp2 = _mm_mul_ps(X, row0);
 								Vector V1 = _mm_add_ps(vTemp, vTemp2);
 
 								// Result 2
-								Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
-								X = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+								X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 
 								vTemp = _mm_mul_ps(Y, row1);
 								vTemp2 = _mm_mul_ps(X, row0);
@@ -12926,7 +12895,7 @@ namespace At0
 
 								vTemp = _mm_movelh_ps(V1, V2);
 
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
 								pOutputVector += sizeof(Float2) * 2;
 
 								i += 2;
@@ -12941,16 +12910,16 @@ namespace At0
 								pInputVector += sizeof(Float2) * 2;
 
 								// Result 1
-								Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+								Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+								Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 								Vector vTemp = _mm_mul_ps(Y, row1);
 								Vector vTemp2 = _mm_mul_ps(X, row0);
 								Vector V1 = _mm_add_ps(vTemp, vTemp2);
 
 								// Result 2
-								Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
-								X = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+								X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 
 								vTemp = _mm_mul_ps(Y, row1);
 								vTemp2 = _mm_mul_ps(X, row0);
@@ -12974,26 +12943,26 @@ namespace At0
 							pInputVector += sizeof(Float2) * 2;
 
 							// Result 1
-							Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+							Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+							Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 							Vector vTemp = _mm_mul_ps(Y, row1);
 							Vector vTemp2 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
-							vTemp2 = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+							vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 
 							_mm_store_ss(reinterpret_cast<float*>(pOutputVector), vTemp);
 							_mm_store_ss(reinterpret_cast<float*>(pOutputVector + 4), vTemp2);
 							pOutputVector += OutputStride;
 
 							// Result 2
-							Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
-							X = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+							X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 
 							vTemp = _mm_mul_ps(Y, row1);
 							vTemp2 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
-							vTemp2 = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+							vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 
 							_mm_store_ss(reinterpret_cast<float*>(pOutputVector), vTemp);
 							_mm_store_ss(reinterpret_cast<float*>(pOutputVector + 4), vTemp2);
@@ -13013,13 +12982,13 @@ namespace At0
 					Vector V = _mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(pInputVector)));
 					pInputVector += InputStride;
 
-					Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-					Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+					Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+					Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 					Vector vTemp = _mm_mul_ps(Y, row1);
 					Vector vTemp2 = _mm_mul_ps(X, row0);
 					vTemp = _mm_add_ps(vTemp, vTemp2);
-					vTemp2 = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+					vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 
 					_mm_store_ss(reinterpret_cast<float*>(pOutputVector), vTemp);
 					_mm_store_ss(reinterpret_cast<float*>(pOutputVector + 4), vTemp2);
@@ -13035,13 +13004,13 @@ namespace At0
 					__m128 y = _mm_load_ss(reinterpret_cast<const float*>(pInputVector + 4));
 					pInputVector += InputStride;
 
-					Vector Y = XM_PERMUTE_PS(y, _MM_SHUFFLE(0, 0, 0, 0));
-					Vector X = XM_PERMUTE_PS(x, _MM_SHUFFLE(0, 0, 0, 0));
+					Vector Y = RAYMATH_PERMUTE_PS(y, _MM_SHUFFLE(0, 0, 0, 0));
+					Vector X = RAYMATH_PERMUTE_PS(x, _MM_SHUFFLE(0, 0, 0, 0));
 
 					Vector vTemp = _mm_mul_ps(Y, row1);
 					Vector vTemp2 = _mm_mul_ps(X, row0);
 					vTemp = _mm_add_ps(vTemp, vTemp2);
-					vTemp2 = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+					vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 
 					_mm_store_ss(reinterpret_cast<float*>(pOutputVector), vTemp);
 					_mm_store_ss(reinterpret_cast<float*>(pOutputVector + 4), vTemp2);
@@ -13049,7 +13018,7 @@ namespace At0
 				}
 			}
 
-			XM_SFENCE();
+			RAYMATH_SFENCE();
 
 			return pOutputStream;
 #endif
@@ -13067,20 +13036,20 @@ namespace At0
 
 		 //------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector3Equal
+		inline bool RAYMATH_CALLCONV Vector3Equal
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] == V2.vector4_f32[0]) && (V1.vector4_f32[1] == V2.vector4_f32[1]) && (V1.vector4_f32[2] == V2.vector4_f32[2])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpeq_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 7) == 7) != 0);
 #endif
@@ -13088,13 +13057,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline uint32_t XM_CALLCONV Vector3EqualR
+		inline uint32_t RAYMATH_CALLCONV Vector3EqualR
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			uint32_t CR = 0;
 			if ((V1.vector4_f32[0] == V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] == V2.vector4_f32[1]) &&
@@ -13109,7 +13078,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
@@ -13125,7 +13094,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpeq_ps(V1, V2);
 			int iTest = _mm_movemask_ps(vTemp) & 7;
 			uint32_t CR = 0;
@@ -13143,20 +13112,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector3EqualInt
+		inline bool RAYMATH_CALLCONV Vector3EqualInt
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_u32[0] == V2.vector4_u32[0]) && (V1.vector4_u32[1] == V2.vector4_u32[1]) && (V1.vector4_u32[2] == V2.vector4_u32[2])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_u32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vTemp = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return (((_mm_movemask_ps(_mm_castsi128_ps(vTemp)) & 7) == 7) != 0);
 #endif
@@ -13164,13 +13133,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline uint32_t XM_CALLCONV Vector3EqualIntR
+		inline uint32_t RAYMATH_CALLCONV Vector3EqualIntR
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			uint32_t CR = 0;
 			if ((V1.vector4_u32[0] == V2.vector4_u32[0]) &&
 				(V1.vector4_u32[1] == V2.vector4_u32[1]) &&
@@ -13185,7 +13154,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_u32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
@@ -13201,7 +13170,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vTemp = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			int iTemp = _mm_movemask_ps(_mm_castsi128_ps(vTemp)) & 7;
 			uint32_t CR = 0;
@@ -13219,14 +13188,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector3NearEqual
+		inline bool RAYMATH_CALLCONV Vector3NearEqual
 		(
 			FVector V1,
 			FVector V2,
 			FVector Epsilon
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			float dx, dy, dz;
 
 			dx = fabsf(V1.vector4_f32[0] - V2.vector4_f32[0]);
@@ -13235,13 +13204,13 @@ namespace At0
 			return (((dx <= Epsilon.vector4_f32[0]) &&
 				(dy <= Epsilon.vector4_f32[1]) &&
 				(dz <= Epsilon.vector4_f32[2])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t vDelta = vsubq_f32(V1, V2);
 			uint32x4_t vResult = vacleq_f32(vDelta, Epsilon);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Get the difference
 			Vector vDelta = _mm_sub_ps(V1, V2);
 			// Get the absolute value of the difference
@@ -13256,20 +13225,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector3NotEqual
+		inline bool RAYMATH_CALLCONV Vector3NotEqual
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] != V2.vector4_f32[0]) || (V1.vector4_f32[1] != V2.vector4_f32[1]) || (V1.vector4_f32[2] != V2.vector4_f32[2])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) != 0xFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpeq_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 7) != 7) != 0);
 #endif
@@ -13277,20 +13246,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector3NotEqualInt
+		inline bool RAYMATH_CALLCONV Vector3NotEqualInt
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_u32[0] != V2.vector4_u32[0]) || (V1.vector4_u32[1] != V2.vector4_u32[1]) || (V1.vector4_u32[2] != V2.vector4_u32[2])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_u32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) != 0xFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vTemp = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return (((_mm_movemask_ps(_mm_castsi128_ps(vTemp)) & 7) != 7) != 0);
 #endif
@@ -13298,20 +13267,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector3Greater
+		inline bool RAYMATH_CALLCONV Vector3Greater
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] > V2.vector4_f32[0]) && (V1.vector4_f32[1] > V2.vector4_f32[1]) && (V1.vector4_f32[2] > V2.vector4_f32[2])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcgtq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpgt_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 7) == 7) != 0);
 #endif
@@ -13319,13 +13288,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline uint32_t XM_CALLCONV Vector3GreaterR
+		inline uint32_t RAYMATH_CALLCONV Vector3GreaterR
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			uint32_t CR = 0;
 			if ((V1.vector4_f32[0] > V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] > V2.vector4_f32[1]) &&
@@ -13341,7 +13310,7 @@ namespace At0
 			}
 			return CR;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcgtq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
@@ -13357,7 +13326,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpgt_ps(V1, V2);
 			uint32_t CR = 0;
 			int iTest = _mm_movemask_ps(vTemp) & 7;
@@ -13375,20 +13344,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector3GreaterOrEqual
+		inline bool RAYMATH_CALLCONV Vector3GreaterOrEqual
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] >= V2.vector4_f32[0]) && (V1.vector4_f32[1] >= V2.vector4_f32[1]) && (V1.vector4_f32[2] >= V2.vector4_f32[2])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcgeq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpge_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 7) == 7) != 0);
 #endif
@@ -13396,13 +13365,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline uint32_t XM_CALLCONV Vector3GreaterOrEqualR
+		inline uint32_t RAYMATH_CALLCONV Vector3GreaterOrEqualR
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			uint32_t CR = 0;
 			if ((V1.vector4_f32[0] >= V2.vector4_f32[0]) &&
@@ -13419,7 +13388,7 @@ namespace At0
 			}
 			return CR;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcgeq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
@@ -13435,7 +13404,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpge_ps(V1, V2);
 			uint32_t CR = 0;
 			int iTest = _mm_movemask_ps(vTemp) & 7;
@@ -13453,20 +13422,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector3Less
+		inline bool RAYMATH_CALLCONV Vector3Less
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] < V2.vector4_f32[0]) && (V1.vector4_f32[1] < V2.vector4_f32[1]) && (V1.vector4_f32[2] < V2.vector4_f32[2])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcltq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmplt_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 7) == 7) != 0);
 #endif
@@ -13474,20 +13443,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector3LessOrEqual
+		inline bool RAYMATH_CALLCONV Vector3LessOrEqual
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] <= V2.vector4_f32[0]) && (V1.vector4_f32[1] <= V2.vector4_f32[1]) && (V1.vector4_f32[2] <= V2.vector4_f32[2])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcleq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmple_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 7) == 7) != 0);
 #endif
@@ -13495,17 +13464,17 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector3InBounds
+		inline bool RAYMATH_CALLCONV Vector3InBounds
 		(
 			FVector V,
 			FVector Bounds
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V.vector4_f32[0] <= Bounds.vector4_f32[0] && V.vector4_f32[0] >= -Bounds.vector4_f32[0]) &&
 				(V.vector4_f32[1] <= Bounds.vector4_f32[1] && V.vector4_f32[1] >= -Bounds.vector4_f32[1]) &&
 				(V.vector4_f32[2] <= Bounds.vector4_f32[2] && V.vector4_f32[2] >= -Bounds.vector4_f32[2])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Test if less than or equal
 			uint32x4_t ivTemp1 = vcleq_f32(V, Bounds);
 			// Negate the bounds
@@ -13518,7 +13487,7 @@ namespace At0
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(ivTemp1), vget_high_u8(ivTemp1));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Test if less than or equal
 			Vector vTemp1 = _mm_cmple_ps(V, Bounds);
 			// Negate the bounds
@@ -13536,25 +13505,25 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector3IsNaN
+		inline bool RAYMATH_CALLCONV Vector3IsNaN
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			return (XMISNAN(V.vector4_f32[0]) ||
 				XMISNAN(V.vector4_f32[1]) ||
 				XMISNAN(V.vector4_f32[2]));
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Test against itself. NaN is always not equal
 			uint32x4_t vTempNan = vceqq_f32(V, V);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vTempNan), vget_high_u8(vTempNan));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			// If x or y or z are NaN, the mask is zero
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) != 0xFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Test against itself. NaN is always not equal
 			Vector vTempNan = _mm_cmpneq_ps(V, V);
 			// If x or y or z are NaN, the mask is non-zero
@@ -13564,16 +13533,16 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector3IsInfinite
+		inline bool RAYMATH_CALLCONV Vector3IsInfinite
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (XMISINF(V.vector4_f32[0]) ||
 				XMISINF(V.vector4_f32[1]) ||
 				XMISINF(V.vector4_f32[2]));
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Mask off the sign bit
 			uint32x4_t vTempInf = vandq_u32(V, g_XMAbsMask);
 			// Compare to infinity
@@ -13582,7 +13551,7 @@ namespace At0
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vTempInf), vget_high_u8(vTempInf));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) != 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Mask off the sign bit
 			__m128 vTemp = _mm_and_ps(V, g_XMAbsMask);
 			// Compare to infinity
@@ -13598,13 +13567,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3Dot
+		inline Vector RAYMATH_CALLCONV Vector3Dot
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			float fValue = V1.vector4_f32[0] * V2.vector4_f32[0] + V1.vector4_f32[1] * V2.vector4_f32[1] + V1.vector4_f32[2] * V2.vector4_f32[2];
 			VectorF32 vResult;
 			vResult.f[0] =
@@ -13612,7 +13581,7 @@ namespace At0
 				vResult.f[2] =
 				vResult.f[3] = fValue;
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t vTemp = vmulq_f32(V1, V2);
 			float32x2_t v1 = vget_low_f32(vTemp);
 			float32x2_t v2 = vget_high_f32(vTemp);
@@ -13620,32 +13589,32 @@ namespace At0
 			v2 = vdup_lane_f32(v2, 0);
 			v1 = vadd_f32(v1, v2);
 			return vcombine_f32(v1, v1);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			return _mm_dp_ps(V1, V2, 0x7f);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vTemp = _mm_mul_ps(V1, V2);
 			vTemp = _mm_and_ps(vTemp, g_XMMask3);
 			vTemp = _mm_hadd_ps(vTemp, vTemp);
 			return _mm_hadd_ps(vTemp, vTemp);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product
 			Vector vDot = _mm_mul_ps(V1, V2);
 			// x=Dot.vector4_f32[1], y=Dot.vector4_f32[2]
-			Vector vTemp = XM_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
 			// Result.vector4_f32[0] = x+y
 			vDot = _mm_add_ss(vDot, vTemp);
 			// x=Dot.vector4_f32[2]
-			vTemp = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+			vTemp = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 			// Result.vector4_f32[0] = (x+y)+z
 			vDot = _mm_add_ss(vDot, vTemp);
 			// Splat x
-			return XM_PERMUTE_PS(vDot, _MM_SHUFFLE(0, 0, 0, 0));
+			return RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(0, 0, 0, 0));
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3Cross
+		inline Vector RAYMATH_CALLCONV Vector3Cross
 		(
 			FVector V1,
 			FVector V2
@@ -13653,7 +13622,7 @@ namespace At0
 		{
 			// [ V1.y*V2.z - V1.z*V2.y, V1.z*V2.x - V1.x*V2.z, V1.x*V2.y - V1.y*V2.x ]
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult = { { {
 					(V1.vector4_f32[1] * V2.vector4_f32[2]) - (V1.vector4_f32[2] * V2.vector4_f32[1]),
 					(V1.vector4_f32[2] * V2.vector4_f32[0]) - (V1.vector4_f32[0] * V2.vector4_f32[2]),
@@ -13663,7 +13632,7 @@ namespace At0
  }
 			};
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t v1xy = vget_low_f32(V1);
 			float32x2_t v2xy = vget_low_f32(V2);
 
@@ -13677,17 +13646,17 @@ namespace At0
 			vResult = vmlsq_f32(vResult, vcombine_f32(v1zz, v1yx), vcombine_f32(v2yx, v2xy));
 			vResult = veorq_u32(vResult, g_XMFlipY);
 			return vandq_u32(vResult, g_XMMask3);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 	// y1,z1,x1,w1
-			Vector vTemp1 = XM_PERMUTE_PS(V1, _MM_SHUFFLE(3, 0, 2, 1));
+			Vector vTemp1 = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(3, 0, 2, 1));
 			// z2,x2,y2,w2
-			Vector vTemp2 = XM_PERMUTE_PS(V2, _MM_SHUFFLE(3, 1, 0, 2));
+			Vector vTemp2 = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(3, 1, 0, 2));
 			// Perform the left operation
 			Vector vResult = _mm_mul_ps(vTemp1, vTemp2);
 			// z1,x1,y1,w1
-			vTemp1 = XM_PERMUTE_PS(vTemp1, _MM_SHUFFLE(3, 0, 2, 1));
+			vTemp1 = RAYMATH_PERMUTE_PS(vTemp1, _MM_SHUFFLE(3, 0, 2, 1));
 			// y2,z2,x2,w2
-			vTemp2 = XM_PERMUTE_PS(vTemp2, _MM_SHUFFLE(3, 1, 0, 2));
+			vTemp2 = RAYMATH_PERMUTE_PS(vTemp2, _MM_SHUFFLE(3, 1, 0, 2));
 			// Perform the right operation
 			vTemp1 = _mm_mul_ps(vTemp1, vTemp2);
 			// Subract the right from left, and return answer
@@ -13695,11 +13664,11 @@ namespace At0
 			// Set w to zero
 			return _mm_and_ps(vResult, g_XMMask3);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3LengthSq
+		inline Vector RAYMATH_CALLCONV Vector3LengthSq
 		(
 			FVector V
 		)
@@ -13709,12 +13678,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3ReciprocalLengthEst
+		inline Vector RAYMATH_CALLCONV Vector3ReciprocalLengthEst
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 
@@ -13723,7 +13692,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Dot3
 			float32x4_t vTemp = vmulq_f32(V, V);
 			float32x2_t v1 = vget_low_f32(vTemp);
@@ -13734,29 +13703,29 @@ namespace At0
 			// Reciprocal sqrt (estimate)
 			v2 = vrsqrte_f32(v1);
 			return vcombine_f32(v2, v2);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0x7f);
 			return _mm_rsqrt_ps(vTemp);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_and_ps(vLengthSq, g_XMMask3);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_rsqrt_ps(vLengthSq);
 			return vLengthSq;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y and z
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and y
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 2, 1, 2));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 2, 1, 2));
 			// x+z, y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			// y,y,y,y
-			vTemp = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+			vTemp = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+z+y,??,??,??
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			// Splat the length squared
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			// Get the reciprocal
 			vLengthSq = _mm_rsqrt_ps(vLengthSq);
 			return vLengthSq;
@@ -13765,12 +13734,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3ReciprocalLength
+		inline Vector RAYMATH_CALLCONV Vector3ReciprocalLength
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 
@@ -13779,7 +13748,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Dot3
 			float32x4_t vTemp = vmulq_f32(V, V);
 			float32x2_t v1 = vget_low_f32(vTemp);
@@ -13796,11 +13765,11 @@ namespace At0
 			float32x2_t  R1 = vrsqrts_f32(P1, S1);
 			float32x2_t Result = vmul_f32(S1, R1);
 			return vcombine_f32(Result, Result);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0x7f);
 			Vector vLengthSq = _mm_sqrt_ps(vTemp);
 			return _mm_div_ps(g_XMOne, vLengthSq);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vDot = _mm_mul_ps(V, V);
 			vDot = _mm_and_ps(vDot, g_XMMask3);
 			vDot = _mm_hadd_ps(vDot, vDot);
@@ -13808,19 +13777,19 @@ namespace At0
 			vDot = _mm_sqrt_ps(vDot);
 			vDot = _mm_div_ps(g_XMOne, vDot);
 			return vDot;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product
 			Vector vDot = _mm_mul_ps(V, V);
 			// x=Dot.y, y=Dot.z
-			Vector vTemp = XM_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
 			// Result.x = x+y
 			vDot = _mm_add_ss(vDot, vTemp);
 			// x=Dot.z
-			vTemp = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+			vTemp = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 			// Result.x = (x+y)+z
 			vDot = _mm_add_ss(vDot, vTemp);
 			// Splat x
-			vDot = XM_PERMUTE_PS(vDot, _MM_SHUFFLE(0, 0, 0, 0));
+			vDot = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(0, 0, 0, 0));
 			// Get the reciprocal
 			vDot = _mm_sqrt_ps(vDot);
 			// Get the reciprocal
@@ -13831,12 +13800,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3LengthEst
+		inline Vector RAYMATH_CALLCONV Vector3LengthEst
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 
@@ -13845,7 +13814,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Dot3
 			float32x4_t vTemp = vmulq_f32(V, V);
 			float32x2_t v1 = vget_low_f32(vTemp);
@@ -13860,29 +13829,29 @@ namespace At0
 			Result = vmul_f32(v1, Result);
 			Result = vbsl_f32(VEqualsZero, zero, Result);
 			return vcombine_f32(Result, Result);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0x7f);
 			return _mm_sqrt_ps(vTemp);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_and_ps(vLengthSq, g_XMMask3);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			return vLengthSq;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y and z
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and y
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 2, 1, 2));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 2, 1, 2));
 			// x+z, y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			// y,y,y,y
-			vTemp = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+			vTemp = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+z+y,??,??,??
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			// Splat the length squared
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			// Get the length
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			return vLengthSq;
@@ -13891,12 +13860,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3Length
+		inline Vector RAYMATH_CALLCONV Vector3Length
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 
@@ -13905,7 +13874,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Dot3
 			float32x4_t vTemp = vmulq_f32(V, V);
 			float32x2_t v1 = vget_low_f32(vTemp);
@@ -13926,29 +13895,29 @@ namespace At0
 			Result = vmul_f32(v1, Result);
 			Result = vbsl_f32(VEqualsZero, zero, Result);
 			return vcombine_f32(Result, Result);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0x7f);
 			return _mm_sqrt_ps(vTemp);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_and_ps(vLengthSq, g_XMMask3);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			return vLengthSq;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y and z
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and y
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 2, 1, 2));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 2, 1, 2));
 			// x+z, y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			// y,y,y,y
-			vTemp = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+			vTemp = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+z+y,??,??,??
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			// Splat the length squared
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			// Get the length
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			return vLengthSq;
@@ -13959,19 +13928,19 @@ namespace At0
 		// Vector3NormalizeEst uses a reciprocal estimate and
 		// returns QNaN on zero and infinite vectors.
 
-		inline Vector XM_CALLCONV Vector3NormalizeEst
+		inline Vector RAYMATH_CALLCONV Vector3NormalizeEst
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 			Result = Vector3ReciprocalLength(V);
 			Result = VectorMultiply(V, Result);
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Dot3
 			float32x4_t vTemp = vmulq_f32(V, V);
 			float32x2_t v1 = vget_low_f32(vTemp);
@@ -13983,11 +13952,11 @@ namespace At0
 			v2 = vrsqrte_f32(v1);
 			// Normalize
 			return vmulq_f32(V, vcombine_f32(v2, v2));
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0x7f);
 			Vector vResult = _mm_rsqrt_ps(vTemp);
 			return _mm_mul_ps(vResult, V);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vDot = _mm_mul_ps(V, V);
 			vDot = _mm_and_ps(vDot, g_XMMask3);
 			vDot = _mm_hadd_ps(vDot, vDot);
@@ -13995,19 +13964,19 @@ namespace At0
 			vDot = _mm_rsqrt_ps(vDot);
 			vDot = _mm_mul_ps(vDot, V);
 			return vDot;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product
 			Vector vDot = _mm_mul_ps(V, V);
 			// x=Dot.y, y=Dot.z
-			Vector vTemp = XM_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
 			// Result.x = x+y
 			vDot = _mm_add_ss(vDot, vTemp);
 			// x=Dot.z
-			vTemp = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+			vTemp = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 			// Result.x = (x+y)+z
 			vDot = _mm_add_ss(vDot, vTemp);
 			// Splat x
-			vDot = XM_PERMUTE_PS(vDot, _MM_SHUFFLE(0, 0, 0, 0));
+			vDot = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(0, 0, 0, 0));
 			// Get the reciprocal
 			vDot = _mm_rsqrt_ps(vDot);
 			// Perform the normalization
@@ -14018,12 +13987,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3Normalize
+		inline Vector RAYMATH_CALLCONV Vector3Normalize
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			float fLength;
 			Vector vResult;
 
@@ -14041,7 +14010,7 @@ namespace At0
 			vResult.vector4_f32[3] = V.vector4_f32[3] * fLength;
 			return vResult;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Dot3
 			float32x4_t vTemp = vmulq_f32(V, V);
 			float32x2_t v1 = vget_low_f32(vTemp);
@@ -14063,7 +14032,7 @@ namespace At0
 			Vector vResult = vmulq_f32(V, vcombine_f32(v2, v2));
 			vResult = vbslq_f32(vcombine_f32(VEqualsZero, VEqualsZero), vdupq_n_f32(0), vResult);
 			return vbslq_f32(vcombine_f32(VEqualsInf, VEqualsInf), g_XMQNaN, vResult);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vLengthSq = _mm_dp_ps(V, V, 0x7f);
 			// Prepare for the division
 			Vector vResult = _mm_sqrt_ps(vLengthSq);
@@ -14083,7 +14052,7 @@ namespace At0
 			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			// Perform the dot product on x,y and z only
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_and_ps(vLengthSq, g_XMMask3);
@@ -14107,14 +14076,14 @@ namespace At0
 			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y and z only
 			Vector vLengthSq = _mm_mul_ps(V, V);
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 1, 2, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 1, 2, 1));
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
-			vTemp = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+			vTemp = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			// Prepare for the division
 			Vector vResult = _mm_sqrt_ps(vLengthSq);
 			// Create zero with a single instruction
@@ -14138,7 +14107,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3ClampLength
+		inline Vector RAYMATH_CALLCONV Vector3ClampLength
 		(
 			FVector V,
 			float    LengthMin,
@@ -14153,7 +14122,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3ClampLengthV
+		inline Vector RAYMATH_CALLCONV Vector3ClampLengthV
 		(
 			FVector V,
 			FVector LengthMin,
@@ -14200,7 +14169,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3Reflect
+		inline Vector RAYMATH_CALLCONV Vector3Reflect
 		(
 			FVector Incident,
 			FVector Normal
@@ -14217,7 +14186,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3Refract
+		inline Vector RAYMATH_CALLCONV Vector3Refract
 		(
 			FVector Incident,
 			FVector Normal,
@@ -14230,7 +14199,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3RefractV
+		inline Vector RAYMATH_CALLCONV Vector3RefractV
 		(
 			FVector Incident,
 			FVector Normal,
@@ -14240,7 +14209,7 @@ namespace At0
 			// Result = RefractionIndex * Incident - Normal * (RefractionIndex * dot(Incident, Normal) + 
 			// sqrt(1 - RefractionIndex * RefractionIndex * (1 - dot(Incident, Normal) * dot(Incident, Normal))))
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			const Vector  Zero = VectorZero();
 
@@ -14269,7 +14238,7 @@ namespace At0
 				return Result;
 			}
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector IDotN = Vector3Dot(Incident, Normal);
 
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
@@ -14303,7 +14272,7 @@ namespace At0
 				vResult = vmlsq_f32(vResult, R, Normal);
 			}
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 	// Result = RefractionIndex * Incident - Normal * (RefractionIndex * dot(Incident, Normal) + 
 	// sqrt(1 - RefractionIndex * RefractionIndex * (1 - dot(Incident, Normal) * dot(Incident, Normal))))
 			Vector IDotN = Vector3Dot(Incident, Normal);
@@ -14337,7 +14306,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3Orthogonal
+		inline Vector RAYMATH_CALLCONV Vector3Orthogonal
 		(
 			FVector V
 		)
@@ -14364,7 +14333,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3AngleBetweenNormalsEst
+		inline Vector RAYMATH_CALLCONV Vector3AngleBetweenNormalsEst
 		(
 			FVector N1,
 			FVector N2
@@ -14378,7 +14347,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3AngleBetweenNormals
+		inline Vector RAYMATH_CALLCONV Vector3AngleBetweenNormals
 		(
 			FVector N1,
 			FVector N2
@@ -14392,7 +14361,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3AngleBetweenVectors
+		inline Vector RAYMATH_CALLCONV Vector3AngleBetweenVectors
 		(
 			FVector V1,
 			FVector V2
@@ -14413,7 +14382,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3LinePointDistance
+		inline Vector RAYMATH_CALLCONV Vector3LinePointDistance
 		(
 			FVector LinePoint1,
 			FVector LinePoint2,
@@ -14444,7 +14413,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 
-		inline void XM_CALLCONV Vector3ComponentsFromNormal
+		inline void RAYMATH_CALLCONV Vector3ComponentsFromNormal
 		(
 			Vector* pParallel,
 			Vector* pPerpendicular,
@@ -14466,7 +14435,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Transform a vector using a rotation expressed as a unit quaternion
 
-		inline Vector XM_CALLCONV Vector3Rotate
+		inline Vector RAYMATH_CALLCONV Vector3Rotate
 		(
 			FVector V,
 			FQuaternion RotationQuaternion
@@ -14481,7 +14450,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Transform a vector using the inverse of a rotation expressed as a unit quaternion
 
-		inline Vector XM_CALLCONV Vector3InverseRotate
+		inline Vector RAYMATH_CALLCONV Vector3InverseRotate
 		(
 			FVector V,
 			FQuaternion RotationQuaternion
@@ -14495,13 +14464,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3Transform
+		inline Vector RAYMATH_CALLCONV Vector3Transform
 		(
 			FVector V,
 			FMatrix M
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Z = VectorSplatZ(V);
 			Vector Y = VectorSplatY(V);
@@ -14513,18 +14482,18 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			Vector vResult = vmlaq_lane_f32(M.r[3], M.r[0], VL, 0); // X
 			vResult = vmlaq_lane_f32(vResult, M.r[1], VL, 1); // Y
 			return vmlaq_lane_f32(vResult, M.r[2], vget_high_f32(V), 0); // Z
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 			vResult = _mm_mul_ps(vResult, M.r[0]);
-			Vector vTemp = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			vTemp = _mm_mul_ps(vTemp, M.r[1]);
 			vResult = _mm_add_ps(vResult, vTemp);
-			vTemp = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+			vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			vTemp = _mm_mul_ps(vTemp, M.r[2]);
 			vResult = _mm_add_ps(vResult, vTemp);
 			vResult = _mm_add_ps(vResult, M.r[3]);
@@ -14540,7 +14509,7 @@ namespace At0
 #endif
 
 
-		inline Float4* XM_CALLCONV Vector3TransformStream
+		inline Float4* RAYMATH_CALLCONV Vector3TransformStream
 		(
 			Float4* pOutputStream,
 			size_t          OutputStride,
@@ -14554,12 +14523,9 @@ namespace At0
 			assert(pInputStream != nullptr);
 
 			assert(InputStride >= sizeof(Float3));
-			_Analysis_assume_(InputStride >= sizeof(Float3));
-
 			assert(OutputStride >= sizeof(Float4));
-			_Analysis_assume_(OutputStride >= sizeof(Float4));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
@@ -14588,7 +14554,7 @@ namespace At0
 
 			return pOutputStream;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -14676,7 +14642,7 @@ namespace At0
 			}
 
 			return pOutputStream;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -14705,9 +14671,9 @@ namespace At0
 							XM3UNPACK3INTO4(V1, L2, L3);
 
 							// Result 1
-							Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-							Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+							Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+							Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+							Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 							Vector vTemp = _mm_mul_ps(Z, row2);
 							Vector vTemp2 = _mm_mul_ps(Y, row1);
@@ -14715,13 +14681,13 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
-							XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
+							RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
 							pOutputVector += OutputStride;
 
 							// Result 2
-							Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, row2);
 							vTemp2 = _mm_mul_ps(Y, row1);
@@ -14729,13 +14695,13 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
-							XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
+							RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
 							pOutputVector += OutputStride;
 
 							// Result 3
-							Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, row2);
 							vTemp2 = _mm_mul_ps(Y, row1);
@@ -14743,13 +14709,13 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
-							XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
+							RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
 							pOutputVector += OutputStride;
 
 							// Result 4
-							Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, row2);
 							vTemp2 = _mm_mul_ps(Y, row1);
@@ -14757,7 +14723,7 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
-							XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
+							RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
 							pOutputVector += OutputStride;
 
 							i += 4;
@@ -14777,9 +14743,9 @@ namespace At0
 							XM3UNPACK3INTO4(V1, L2, L3);
 
 							// Result 1
-							Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-							Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+							Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+							Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+							Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 							Vector vTemp = _mm_mul_ps(Z, row2);
 							Vector vTemp2 = _mm_mul_ps(Y, row1);
@@ -14791,9 +14757,9 @@ namespace At0
 							pOutputVector += OutputStride;
 
 							// Result 2
-							Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, row2);
 							vTemp2 = _mm_mul_ps(Y, row1);
@@ -14805,9 +14771,9 @@ namespace At0
 							pOutputVector += OutputStride;
 
 							// Result 3
-							Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, row2);
 							vTemp2 = _mm_mul_ps(Y, row1);
@@ -14819,9 +14785,9 @@ namespace At0
 							pOutputVector += OutputStride;
 
 							// Result 4
-							Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, row2);
 							vTemp2 = _mm_mul_ps(Y, row1);
@@ -14846,9 +14812,9 @@ namespace At0
 					Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
 					pInputVector += InputStride;
 
-					Vector Z = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-					Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-					Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+					Vector Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+					Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+					Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 					Vector vTemp = _mm_mul_ps(Z, row2);
 					Vector vTemp2 = _mm_mul_ps(Y, row1);
@@ -14857,7 +14823,7 @@ namespace At0
 					vTemp = _mm_add_ps(vTemp, vTemp2);
 					vTemp = _mm_add_ps(vTemp, vTemp3);
 
-					XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
+					RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTemp);
 					pOutputVector += OutputStride;
 				}
 			}
@@ -14869,9 +14835,9 @@ namespace At0
 					Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
 					pInputVector += InputStride;
 
-					Vector Z = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-					Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-					Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+					Vector Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+					Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+					Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 					Vector vTemp = _mm_mul_ps(Z, row2);
 					Vector vTemp2 = _mm_mul_ps(Y, row1);
@@ -14885,7 +14851,7 @@ namespace At0
 				}
 			}
 
-			XM_SFENCE();
+			RAYMATH_SFENCE();
 
 			return pOutputStream;
 #endif
@@ -14897,7 +14863,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3TransformCoord
+		inline Vector RAYMATH_CALLCONV Vector3TransformCoord
 		(
 			FVector V,
 			FMatrix M
@@ -14923,7 +14889,7 @@ namespace At0
 #endif
 
 
-		inline Float3* XM_CALLCONV Vector3TransformCoordStream
+		inline Float3* RAYMATH_CALLCONV Vector3TransformCoordStream
 		(
 			Float3* pOutputStream,
 			size_t          OutputStride,
@@ -14937,12 +14903,9 @@ namespace At0
 			assert(pInputStream != nullptr);
 
 			assert(InputStride >= sizeof(Float3));
-			_Analysis_assume_(InputStride >= sizeof(Float3));
-
 			assert(OutputStride >= sizeof(Float3));
-			_Analysis_assume_(OutputStride >= sizeof(Float3));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
@@ -14975,7 +14938,7 @@ namespace At0
 
 			return pOutputStream;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -15092,7 +15055,7 @@ namespace At0
 			}
 
 			return pOutputStream;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -15123,9 +15086,9 @@ namespace At0
 								XM3UNPACK3INTO4(V1, L2, L3);
 
 								// Result 1
-								Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 								Vector vTemp = _mm_mul_ps(Z, row2);
 								Vector vTemp2 = _mm_mul_ps(Y, row1);
@@ -15134,14 +15097,14 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								V1 = _mm_div_ps(vTemp, W);
 
 								// Result 2
-								Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, row2);
 								vTemp2 = _mm_mul_ps(Y, row1);
@@ -15150,14 +15113,14 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								V2 = _mm_div_ps(vTemp, W);
 
 								// Result 3
-								Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, row2);
 								vTemp2 = _mm_mul_ps(Y, row1);
@@ -15166,14 +15129,14 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								V3 = _mm_div_ps(vTemp, W);
 
 								// Result 4
-								Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, row2);
 								vTemp2 = _mm_mul_ps(Y, row1);
@@ -15182,15 +15145,15 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								V4 = _mm_div_ps(vTemp, W);
 
 								// Pack and store the vectors
 								XM3PACK4INTO3(vTemp);
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), V1);
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 32), V3);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), V1);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 32), V3);
 								pOutputVector += sizeof(Float3) * 4;
 								i += 4;
 							}
@@ -15209,9 +15172,9 @@ namespace At0
 								XM3UNPACK3INTO4(V1, L2, L3);
 
 								// Result 1
-								Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 								Vector vTemp = _mm_mul_ps(Z, row2);
 								Vector vTemp2 = _mm_mul_ps(Y, row1);
@@ -15220,14 +15183,14 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								V1 = _mm_div_ps(vTemp, W);
 
 								// Result 2
-								Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, row2);
 								vTemp2 = _mm_mul_ps(Y, row1);
@@ -15236,14 +15199,14 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								V2 = _mm_div_ps(vTemp, W);
 
 								// Result 3
-								Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, row2);
 								vTemp2 = _mm_mul_ps(Y, row1);
@@ -15252,14 +15215,14 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								V3 = _mm_div_ps(vTemp, W);
 
 								// Result 4
-								Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, row2);
 								vTemp2 = _mm_mul_ps(Y, row1);
@@ -15268,7 +15231,7 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								V4 = _mm_div_ps(vTemp, W);
 
@@ -15296,9 +15259,9 @@ namespace At0
 							XM3UNPACK3INTO4(V1, L2, L3);
 
 							// Result 1
-							Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-							Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+							Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+							Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+							Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 							Vector vTemp = _mm_mul_ps(Z, row2);
 							Vector vTemp2 = _mm_mul_ps(Y, row1);
@@ -15307,16 +15270,16 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 							vTemp = _mm_div_ps(vTemp, W);
 							StoreFloat3(reinterpret_cast<Float3*>(pOutputVector), vTemp);
 							pOutputVector += OutputStride;
 
 							// Result 2
-							Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, row2);
 							vTemp2 = _mm_mul_ps(Y, row1);
@@ -15325,16 +15288,16 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 							vTemp = _mm_div_ps(vTemp, W);
 							StoreFloat3(reinterpret_cast<Float3*>(pOutputVector), vTemp);
 							pOutputVector += OutputStride;
 
 							// Result 3
-							Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, row2);
 							vTemp2 = _mm_mul_ps(Y, row1);
@@ -15343,16 +15306,16 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 							vTemp = _mm_div_ps(vTemp, W);
 							StoreFloat3(reinterpret_cast<Float3*>(pOutputVector), vTemp);
 							pOutputVector += OutputStride;
 
 							// Result 4
-							Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, row2);
 							vTemp2 = _mm_mul_ps(Y, row1);
@@ -15361,7 +15324,7 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 							vTemp = _mm_div_ps(vTemp, W);
 							StoreFloat3(reinterpret_cast<Float3*>(pOutputVector), vTemp);
@@ -15378,9 +15341,9 @@ namespace At0
 				Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
 				pInputVector += InputStride;
 
-				Vector Z = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-				Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-				Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+				Vector Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+				Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+				Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 				Vector vTemp = _mm_mul_ps(Z, row2);
 				Vector vTemp2 = _mm_mul_ps(Y, row1);
@@ -15389,7 +15352,7 @@ namespace At0
 				vTemp = _mm_add_ps(vTemp, vTemp2);
 				vTemp = _mm_add_ps(vTemp, vTemp3);
 
-				Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+				Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 				vTemp = _mm_div_ps(vTemp, W);
 
@@ -15397,7 +15360,7 @@ namespace At0
 				pOutputVector += OutputStride;
 			}
 
-			XM_SFENCE();
+			RAYMATH_SFENCE();
 
 			return pOutputStream;
 #endif
@@ -15409,13 +15372,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3TransformNormal
+		inline Vector RAYMATH_CALLCONV Vector3TransformNormal
 		(
 			FVector V,
 			FMatrix M
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Z = VectorSplatZ(V);
 			Vector Y = VectorSplatY(V);
@@ -15427,18 +15390,18 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			Vector vResult = vmulq_lane_f32(M.r[0], VL, 0); // X
 			vResult = vmlaq_lane_f32(vResult, M.r[1], VL, 1); // Y
 			return vmlaq_lane_f32(vResult, M.r[2], vget_high_f32(V), 0); // Z
-#elif defined(_XM_SSE_INTRINSICS_)
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+#elif defined(RAY_SSE_INTRINSICS)
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 			vResult = _mm_mul_ps(vResult, M.r[0]);
-			Vector vTemp = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			vTemp = _mm_mul_ps(vTemp, M.r[1]);
 			vResult = _mm_add_ps(vResult, vTemp);
-			vTemp = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+			vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			vTemp = _mm_mul_ps(vTemp, M.r[2]);
 			vResult = _mm_add_ps(vResult, vTemp);
 			return vResult;
@@ -15453,7 +15416,7 @@ namespace At0
 #endif
 
 
-		inline Float3* XM_CALLCONV Vector3TransformNormalStream
+		inline Float3* RAYMATH_CALLCONV Vector3TransformNormalStream
 		(
 			Float3* pOutputStream,
 			size_t          OutputStride,
@@ -15467,12 +15430,9 @@ namespace At0
 			assert(pInputStream != nullptr);
 
 			assert(InputStride >= sizeof(Float3));
-			_Analysis_assume_(InputStride >= sizeof(Float3));
-
 			assert(OutputStride >= sizeof(Float3));
-			_Analysis_assume_(OutputStride >= sizeof(Float3));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
@@ -15500,7 +15460,7 @@ namespace At0
 
 			return pOutputStream;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -15582,7 +15542,7 @@ namespace At0
 			}
 
 			return pOutputStream;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -15612,9 +15572,9 @@ namespace At0
 								XM3UNPACK3INTO4(V1, L2, L3);
 
 								// Result 1
-								Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 								Vector vTemp = _mm_mul_ps(Z, row2);
 								Vector vTemp2 = _mm_mul_ps(Y, row1);
@@ -15623,9 +15583,9 @@ namespace At0
 								V1 = _mm_add_ps(vTemp, vTemp3);
 
 								// Result 2
-								Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, row2);
 								vTemp2 = _mm_mul_ps(Y, row1);
@@ -15634,9 +15594,9 @@ namespace At0
 								V2 = _mm_add_ps(vTemp, vTemp3);
 
 								// Result 3
-								Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, row2);
 								vTemp2 = _mm_mul_ps(Y, row1);
@@ -15645,9 +15605,9 @@ namespace At0
 								V3 = _mm_add_ps(vTemp, vTemp3);
 
 								// Result 4
-								Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, row2);
 								vTemp2 = _mm_mul_ps(Y, row1);
@@ -15657,9 +15617,9 @@ namespace At0
 
 								// Pack and store the vectors
 								XM3PACK4INTO3(vTemp);
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), V1);
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 32), V3);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), V1);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 32), V3);
 								pOutputVector += sizeof(Float3) * 4;
 								i += 4;
 							}
@@ -15678,9 +15638,9 @@ namespace At0
 								XM3UNPACK3INTO4(V1, L2, L3);
 
 								// Result 1
-								Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 								Vector vTemp = _mm_mul_ps(Z, row2);
 								Vector vTemp2 = _mm_mul_ps(Y, row1);
@@ -15689,9 +15649,9 @@ namespace At0
 								V1 = _mm_add_ps(vTemp, vTemp3);
 
 								// Result 2
-								Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, row2);
 								vTemp2 = _mm_mul_ps(Y, row1);
@@ -15700,9 +15660,9 @@ namespace At0
 								V2 = _mm_add_ps(vTemp, vTemp3);
 
 								// Result 3
-								Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, row2);
 								vTemp2 = _mm_mul_ps(Y, row1);
@@ -15711,9 +15671,9 @@ namespace At0
 								V3 = _mm_add_ps(vTemp, vTemp3);
 
 								// Result 4
-								Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, row2);
 								vTemp2 = _mm_mul_ps(Y, row1);
@@ -15745,9 +15705,9 @@ namespace At0
 							XM3UNPACK3INTO4(V1, L2, L3);
 
 							// Result 1
-							Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-							Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+							Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+							Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+							Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 							Vector vTemp = _mm_mul_ps(Z, row2);
 							Vector vTemp2 = _mm_mul_ps(Y, row1);
@@ -15759,9 +15719,9 @@ namespace At0
 							pOutputVector += OutputStride;
 
 							// Result 2
-							Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, row2);
 							vTemp2 = _mm_mul_ps(Y, row1);
@@ -15773,9 +15733,9 @@ namespace At0
 							pOutputVector += OutputStride;
 
 							// Result 3
-							Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, row2);
 							vTemp2 = _mm_mul_ps(Y, row1);
@@ -15787,9 +15747,9 @@ namespace At0
 							pOutputVector += OutputStride;
 
 							// Result 4
-							Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, row2);
 							vTemp2 = _mm_mul_ps(Y, row1);
@@ -15811,9 +15771,9 @@ namespace At0
 				Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
 				pInputVector += InputStride;
 
-				Vector Z = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-				Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-				Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+				Vector Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+				Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+				Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 				Vector vTemp = _mm_mul_ps(Z, row2);
 				Vector vTemp2 = _mm_mul_ps(Y, row1);
@@ -15825,7 +15785,7 @@ namespace At0
 				pOutputVector += OutputStride;
 			}
 
-			XM_SFENCE();
+			RAYMATH_SFENCE();
 
 			return pOutputStream;
 #endif
@@ -15837,7 +15797,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3Project
+		inline Vector RAYMATH_CALLCONV Vector3Project
 		(
 			FVector V,
 			float    ViewportX,
@@ -15875,7 +15835,7 @@ namespace At0
 #endif
 
 
-		inline Float3* XM_CALLCONV Vector3ProjectStream
+		inline Float3* RAYMATH_CALLCONV Vector3ProjectStream
 		(
 			Float3* pOutputStream,
 			size_t          OutputStride,
@@ -15897,12 +15857,9 @@ namespace At0
 			assert(pInputStream != nullptr);
 
 			assert(InputStride >= sizeof(Float3));
-			_Analysis_assume_(InputStride >= sizeof(Float3));
-
 			assert(OutputStride >= sizeof(Float3));
-			_Analysis_assume_(OutputStride >= sizeof(Float3));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			const float HalfViewportWidth = ViewportWidth * 0.5f;
 			const float HalfViewportHeight = ViewportHeight * 0.5f;
@@ -15931,7 +15888,7 @@ namespace At0
 
 			return pOutputStream;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			const float HalfViewportWidth = ViewportWidth * 0.5f;
 			const float HalfViewportHeight = ViewportHeight * 0.5f;
 
@@ -16069,7 +16026,7 @@ namespace At0
 			}
 
 			return pOutputStream;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			const float HalfViewportWidth = ViewportWidth * 0.5f;
 			const float HalfViewportHeight = ViewportHeight * 0.5f;
 
@@ -16104,9 +16061,9 @@ namespace At0
 								XM3UNPACK3INTO4(V1, L2, L3);
 
 								// Result 1
-								Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 								Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16115,16 +16072,16 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								vTemp = _mm_div_ps(vTemp, W);
 
 								vTemp = _mm_mul_ps(vTemp, Scale);
 								V1 = _mm_add_ps(vTemp, Offset);
 
 								// Result 2
-								Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16133,16 +16090,16 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								vTemp = _mm_div_ps(vTemp, W);
 
 								vTemp = _mm_mul_ps(vTemp, Scale);
 								V2 = _mm_add_ps(vTemp, Offset);
 
 								// Result 3
-								Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16151,16 +16108,16 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								vTemp = _mm_div_ps(vTemp, W);
 
 								vTemp = _mm_mul_ps(vTemp, Scale);
 								V3 = _mm_add_ps(vTemp, Offset);
 
 								// Result 4
-								Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16169,7 +16126,7 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								vTemp = _mm_div_ps(vTemp, W);
 
 								vTemp = _mm_mul_ps(vTemp, Scale);
@@ -16177,9 +16134,9 @@ namespace At0
 
 								// Pack and store the vectors
 								XM3PACK4INTO3(vTemp);
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), V1);
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 32), V3);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), V1);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 32), V3);
 								pOutputVector += sizeof(Float3) * 4;
 								i += 4;
 							}
@@ -16198,9 +16155,9 @@ namespace At0
 								XM3UNPACK3INTO4(V1, L2, L3);
 
 								// Result 1
-								Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 								Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16209,16 +16166,16 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								vTemp = _mm_div_ps(vTemp, W);
 
 								vTemp = _mm_mul_ps(vTemp, Scale);
 								V1 = _mm_add_ps(vTemp, Offset);
 
 								// Result 2
-								Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16227,16 +16184,16 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								vTemp = _mm_div_ps(vTemp, W);
 
 								vTemp = _mm_mul_ps(vTemp, Scale);
 								V2 = _mm_add_ps(vTemp, Offset);
 
 								// Result 3
-								Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16245,16 +16202,16 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								vTemp = _mm_div_ps(vTemp, W);
 
 								vTemp = _mm_mul_ps(vTemp, Scale);
 								V3 = _mm_add_ps(vTemp, Offset);
 
 								// Result 4
-								Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16263,7 +16220,7 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								vTemp = _mm_div_ps(vTemp, W);
 
 								vTemp = _mm_mul_ps(vTemp, Scale);
@@ -16293,9 +16250,9 @@ namespace At0
 							XM3UNPACK3INTO4(V1, L2, L3);
 
 							// Result 1
-							Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-							Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+							Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+							Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+							Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 							Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
 							Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16304,7 +16261,7 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 							vTemp = _mm_div_ps(vTemp, W);
 
 							vTemp = _mm_mul_ps(vTemp, Scale);
@@ -16314,9 +16271,9 @@ namespace At0
 							pOutputVector += OutputStride;
 
 							// Result 2
-							Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, Transform.r[2]);
 							vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16325,7 +16282,7 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 							vTemp = _mm_div_ps(vTemp, W);
 
 							vTemp = _mm_mul_ps(vTemp, Scale);
@@ -16335,9 +16292,9 @@ namespace At0
 							pOutputVector += OutputStride;
 
 							// Result 3
-							Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, Transform.r[2]);
 							vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16346,7 +16303,7 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 							vTemp = _mm_div_ps(vTemp, W);
 
 							vTemp = _mm_mul_ps(vTemp, Scale);
@@ -16356,9 +16313,9 @@ namespace At0
 							pOutputVector += OutputStride;
 
 							// Result 4
-							Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, Transform.r[2]);
 							vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16367,7 +16324,7 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 							vTemp = _mm_div_ps(vTemp, W);
 
 							vTemp = _mm_mul_ps(vTemp, Scale);
@@ -16387,9 +16344,9 @@ namespace At0
 				Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
 				pInputVector += InputStride;
 
-				Vector Z = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-				Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-				Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+				Vector Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+				Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+				Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 				Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
 				Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16398,7 +16355,7 @@ namespace At0
 				vTemp = _mm_add_ps(vTemp, vTemp2);
 				vTemp = _mm_add_ps(vTemp, vTemp3);
 
-				Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+				Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 				vTemp = _mm_div_ps(vTemp, W);
 
 				vTemp = _mm_mul_ps(vTemp, Scale);
@@ -16408,7 +16365,7 @@ namespace At0
 				pOutputVector += OutputStride;
 			}
 
-			XM_SFENCE();
+			RAYMATH_SFENCE();
 
 			return pOutputStream;
 #endif
@@ -16420,7 +16377,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector3Unproject
+		inline Vector RAYMATH_CALLCONV Vector3Unproject
 		(
 			FVector V,
 			float     ViewportX,
@@ -16459,7 +16416,7 @@ namespace At0
 #endif
 
 
-		inline Float3* XM_CALLCONV Vector3UnprojectStream
+		inline Float3* RAYMATH_CALLCONV Vector3UnprojectStream
 		(
 			Float3* pOutputStream,
 			size_t          OutputStride,
@@ -16480,12 +16437,9 @@ namespace At0
 			assert(pInputStream != nullptr);
 
 			assert(InputStride >= sizeof(Float3));
-			_Analysis_assume_(InputStride >= sizeof(Float3));
-
 			assert(OutputStride >= sizeof(Float3));
-			_Analysis_assume_(OutputStride >= sizeof(Float3));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			static const VectorF32 D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
 
@@ -16518,7 +16472,7 @@ namespace At0
 
 			return pOutputStream;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Matrix Transform = Matrix::Multiply(World, View);
 			Transform = Matrix::Multiply(Transform, Projection);
 			Transform = Transform.Inverse();
@@ -16670,7 +16624,7 @@ namespace At0
 			}
 
 			return pOutputStream;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
 
 			Vector Scale = VectorSet(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
@@ -16712,9 +16666,9 @@ namespace At0
 								V1 = _mm_mul_ps(V1, Scale);
 								V1 = _mm_add_ps(V1, Offset);
 
-								Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 								Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16723,16 +16677,16 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								V1 = _mm_div_ps(vTemp, W);
 
 								// Result 2
 								V2 = _mm_mul_ps(V2, Scale);
 								V2 = _mm_add_ps(V2, Offset);
 
-								Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16741,16 +16695,16 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								V2 = _mm_div_ps(vTemp, W);
 
 								// Result 3
 								V3 = _mm_mul_ps(V3, Scale);
 								V3 = _mm_add_ps(V3, Offset);
 
-								Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16759,16 +16713,16 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								V3 = _mm_div_ps(vTemp, W);
 
 								// Result 4
 								V4 = _mm_mul_ps(V4, Scale);
 								V4 = _mm_add_ps(V4, Offset);
 
-								Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16777,14 +16731,14 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								V4 = _mm_div_ps(vTemp, W);
 
 								// Pack and store the vectors
 								XM3PACK4INTO3(vTemp);
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), V1);
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
-								XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 32), V3);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), V1);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
+								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 32), V3);
 								pOutputVector += sizeof(Float3) * 4;
 								i += 4;
 							}
@@ -16806,9 +16760,9 @@ namespace At0
 								V1 = _mm_mul_ps(V1, Scale);
 								V1 = _mm_add_ps(V1, Offset);
 
-								Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 								Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16817,16 +16771,16 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								V1 = _mm_div_ps(vTemp, W);
 
 								// Result 2
 								V2 = _mm_mul_ps(V2, Scale);
 								V2 = _mm_add_ps(V2, Offset);
 
-								Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16835,16 +16789,16 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								V2 = _mm_div_ps(vTemp, W);
 
 								// Result 3
 								V3 = _mm_mul_ps(V3, Scale);
 								V3 = _mm_add_ps(V3, Offset);
 
-								Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16853,16 +16807,16 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								V3 = _mm_div_ps(vTemp, W);
 
 								// Result 4
 								V4 = _mm_mul_ps(V4, Scale);
 								V4 = _mm_add_ps(V4, Offset);
 
-								Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-								Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-								X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+								Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+								Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+								X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 								vTemp = _mm_mul_ps(Z, Transform.r[2]);
 								vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16871,7 +16825,7 @@ namespace At0
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								V4 = _mm_div_ps(vTemp, W);
 
 								// Pack and store the vectors
@@ -16901,9 +16855,9 @@ namespace At0
 							V1 = _mm_mul_ps(V1, Scale);
 							V1 = _mm_add_ps(V1, Offset);
 
-							Vector Z = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-							Vector Y = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+							Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+							Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+							Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
 							Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
 							Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16912,7 +16866,7 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 							vTemp = _mm_div_ps(vTemp, W);
 
 							StoreFloat3(reinterpret_cast<Float3*>(pOutputVector), vTemp);
@@ -16922,9 +16876,9 @@ namespace At0
 							V2 = _mm_mul_ps(V2, Scale);
 							V2 = _mm_add_ps(V2, Offset);
 
-							Z = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, Transform.r[2]);
 							vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16933,7 +16887,7 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 							vTemp = _mm_div_ps(vTemp, W);
 
 							StoreFloat3(reinterpret_cast<Float3*>(pOutputVector), vTemp);
@@ -16943,9 +16897,9 @@ namespace At0
 							V3 = _mm_mul_ps(V3, Scale);
 							V3 = _mm_add_ps(V3, Offset);
 
-							Z = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, Transform.r[2]);
 							vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16954,7 +16908,7 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 							vTemp = _mm_div_ps(vTemp, W);
 
 							StoreFloat3(reinterpret_cast<Float3*>(pOutputVector), vTemp);
@@ -16964,9 +16918,9 @@ namespace At0
 							V4 = _mm_mul_ps(V4, Scale);
 							V4 = _mm_add_ps(V4, Offset);
 
-							Z = XM_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
-							Y = XM_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
-							X = XM_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
+							Z = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(2, 2, 2, 2));
+							Y = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(1, 1, 1, 1));
+							X = RAYMATH_PERMUTE_PS(V4, _MM_SHUFFLE(0, 0, 0, 0));
 
 							vTemp = _mm_mul_ps(Z, Transform.r[2]);
 							vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -16975,7 +16929,7 @@ namespace At0
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 							vTemp = _mm_div_ps(vTemp, W);
 
 							StoreFloat3(reinterpret_cast<Float3*>(pOutputVector), vTemp);
@@ -16995,9 +16949,9 @@ namespace At0
 				V = _mm_mul_ps(V, Scale);
 				V = _mm_add_ps(V, Offset);
 
-				Vector Z = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-				Vector Y = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-				Vector X = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+				Vector Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+				Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+				Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
 				Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
 				Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
@@ -17006,14 +16960,14 @@ namespace At0
 				vTemp = _mm_add_ps(vTemp, vTemp2);
 				vTemp = _mm_add_ps(vTemp, vTemp3);
 
-				Vector W = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+				Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 				vTemp = _mm_div_ps(vTemp, W);
 
 				StoreFloat3(reinterpret_cast<Float3*>(pOutputVector), vTemp);
 				pOutputVector += OutputStride;
 			}
 
-			XM_SFENCE();
+			RAYMATH_SFENCE();
 
 			return pOutputStream;
 #endif
@@ -17035,20 +16989,20 @@ namespace At0
 
 		 //------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector4Equal
+		inline bool RAYMATH_CALLCONV Vector4Equal
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] == V2.vector4_f32[0]) && (V1.vector4_f32[1] == V2.vector4_f32[1]) && (V1.vector4_f32[2] == V2.vector4_f32[2]) && (V1.vector4_f32[3] == V2.vector4_f32[3])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpeq_ps(V1, V2);
 			return ((_mm_movemask_ps(vTemp) == 0x0f) != 0);
 #else
@@ -17058,13 +17012,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline uint32_t XM_CALLCONV Vector4EqualR
+		inline uint32_t RAYMATH_CALLCONV Vector4EqualR
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			uint32_t CR = 0;
 
@@ -17084,7 +17038,7 @@ namespace At0
 			}
 			return CR;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
@@ -17100,7 +17054,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpeq_ps(V1, V2);
 			int iTest = _mm_movemask_ps(vTemp);
 			uint32_t CR = 0;
@@ -17118,20 +17072,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector4EqualInt
+		inline bool RAYMATH_CALLCONV Vector4EqualInt
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_u32[0] == V2.vector4_u32[0]) && (V1.vector4_u32[1] == V2.vector4_u32[1]) && (V1.vector4_u32[2] == V2.vector4_u32[2]) && (V1.vector4_u32[3] == V2.vector4_u32[3])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_u32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vTemp = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return ((_mm_movemask_ps(_mm_castsi128_ps(vTemp)) == 0xf) != 0);
 #else
@@ -17141,13 +17095,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline uint32_t XM_CALLCONV Vector4EqualIntR
+		inline uint32_t RAYMATH_CALLCONV Vector4EqualIntR
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			uint32_t CR = 0;
 			if (V1.vector4_u32[0] == V2.vector4_u32[0] &&
 				V1.vector4_u32[1] == V2.vector4_u32[1] &&
@@ -17165,7 +17119,7 @@ namespace At0
 			}
 			return CR;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_u32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
@@ -17181,7 +17135,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vTemp = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			int iTest = _mm_movemask_ps(_mm_castsi128_ps(vTemp));
 			uint32_t CR = 0;
@@ -17197,14 +17151,14 @@ namespace At0
 #endif
 		}
 
-		inline bool XM_CALLCONV Vector4NearEqual
+		inline bool RAYMATH_CALLCONV Vector4NearEqual
 		(
 			FVector V1,
 			FVector V2,
 			FVector Epsilon
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			float dx, dy, dz, dw;
 
 			dx = fabsf(V1.vector4_f32[0] - V2.vector4_f32[0]);
@@ -17215,13 +17169,13 @@ namespace At0
 				(dy <= Epsilon.vector4_f32[1]) &&
 				(dz <= Epsilon.vector4_f32[2]) &&
 				(dw <= Epsilon.vector4_f32[3])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t vDelta = vsubq_f32(V1, V2);
 			uint32x4_t vResult = vacleq_f32(vDelta, Epsilon);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Get the difference
 			Vector vDelta = _mm_sub_ps(V1, V2);
 			// Get the absolute value of the difference
@@ -17235,20 +17189,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector4NotEqual
+		inline bool RAYMATH_CALLCONV Vector4NotEqual
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] != V2.vector4_f32[0]) || (V1.vector4_f32[1] != V2.vector4_f32[1]) || (V1.vector4_f32[2] != V2.vector4_f32[2]) || (V1.vector4_f32[3] != V2.vector4_f32[3])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) != 0xFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpneq_ps(V1, V2);
 			return ((_mm_movemask_ps(vTemp)) != 0);
 #else
@@ -17258,20 +17212,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector4NotEqualInt
+		inline bool RAYMATH_CALLCONV Vector4NotEqualInt
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_u32[0] != V2.vector4_u32[0]) || (V1.vector4_u32[1] != V2.vector4_u32[1]) || (V1.vector4_u32[2] != V2.vector4_u32[2]) || (V1.vector4_u32[3] != V2.vector4_u32[3])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_u32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) != 0xFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128i vTemp = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
 			return ((_mm_movemask_ps(_mm_castsi128_ps(vTemp)) != 0xF) != 0);
 #else
@@ -17281,20 +17235,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector4Greater
+		inline bool RAYMATH_CALLCONV Vector4Greater
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] > V2.vector4_f32[0]) && (V1.vector4_f32[1] > V2.vector4_f32[1]) && (V1.vector4_f32[2] > V2.vector4_f32[2]) && (V1.vector4_f32[3] > V2.vector4_f32[3])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcgtq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpgt_ps(V1, V2);
 			return ((_mm_movemask_ps(vTemp) == 0x0f) != 0);
 #else
@@ -17304,13 +17258,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline uint32_t XM_CALLCONV Vector4GreaterR
+		inline uint32_t RAYMATH_CALLCONV Vector4GreaterR
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			uint32_t CR = 0;
 			if (V1.vector4_f32[0] > V2.vector4_f32[0] &&
 				V1.vector4_f32[1] > V2.vector4_f32[1] &&
@@ -17328,7 +17282,7 @@ namespace At0
 			}
 			return CR;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcgtq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
@@ -17344,7 +17298,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			uint32_t CR = 0;
 			Vector vTemp = _mm_cmpgt_ps(V1, V2);
 			int iTest = _mm_movemask_ps(vTemp);
@@ -17361,20 +17315,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector4GreaterOrEqual
+		inline bool RAYMATH_CALLCONV Vector4GreaterOrEqual
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] >= V2.vector4_f32[0]) && (V1.vector4_f32[1] >= V2.vector4_f32[1]) && (V1.vector4_f32[2] >= V2.vector4_f32[2]) && (V1.vector4_f32[3] >= V2.vector4_f32[3])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcgeq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmpge_ps(V1, V2);
 			return ((_mm_movemask_ps(vTemp) == 0x0f) != 0);
 #else
@@ -17384,13 +17338,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline uint32_t XM_CALLCONV Vector4GreaterOrEqualR
+		inline uint32_t RAYMATH_CALLCONV Vector4GreaterOrEqualR
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			uint32_t CR = 0;
 			if ((V1.vector4_f32[0] >= V2.vector4_f32[0]) &&
 				(V1.vector4_f32[1] >= V2.vector4_f32[1]) &&
@@ -17408,7 +17362,7 @@ namespace At0
 			}
 			return CR;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcgeq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
@@ -17424,7 +17378,7 @@ namespace At0
 				CR = XM_CRMASK_CR6FALSE;
 			}
 			return CR;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			uint32_t CR = 0;
 			Vector vTemp = _mm_cmpge_ps(V1, V2);
 			int iTest = _mm_movemask_ps(vTemp);
@@ -17442,20 +17396,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector4Less
+		inline bool RAYMATH_CALLCONV Vector4Less
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] < V2.vector4_f32[0]) && (V1.vector4_f32[1] < V2.vector4_f32[1]) && (V1.vector4_f32[2] < V2.vector4_f32[2]) && (V1.vector4_f32[3] < V2.vector4_f32[3])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcltq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmplt_ps(V1, V2);
 			return ((_mm_movemask_ps(vTemp) == 0x0f) != 0);
 #else
@@ -17465,20 +17419,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector4LessOrEqual
+		inline bool RAYMATH_CALLCONV Vector4LessOrEqual
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V1.vector4_f32[0] <= V2.vector4_f32[0]) && (V1.vector4_f32[1] <= V2.vector4_f32[1]) && (V1.vector4_f32[2] <= V2.vector4_f32[2]) && (V1.vector4_f32[3] <= V2.vector4_f32[3])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vcleq_f32(V1, V2);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp = _mm_cmple_ps(V1, V2);
 			return ((_mm_movemask_ps(vTemp) == 0x0f) != 0);
 #else
@@ -17488,18 +17442,18 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector4InBounds
+		inline bool RAYMATH_CALLCONV Vector4InBounds
 		(
 			FVector V,
 			FVector Bounds
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (((V.vector4_f32[0] <= Bounds.vector4_f32[0] && V.vector4_f32[0] >= -Bounds.vector4_f32[0]) &&
 				(V.vector4_f32[1] <= Bounds.vector4_f32[1] && V.vector4_f32[1] >= -Bounds.vector4_f32[1]) &&
 				(V.vector4_f32[2] <= Bounds.vector4_f32[2] && V.vector4_f32[2] >= -Bounds.vector4_f32[2]) &&
 				(V.vector4_f32[3] <= Bounds.vector4_f32[3] && V.vector4_f32[3] >= -Bounds.vector4_f32[3])) != 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Test if less than or equal
 			uint32x4_t ivTemp1 = vcleq_f32(V, Bounds);
 			// Negate the bounds
@@ -17512,7 +17466,7 @@ namespace At0
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(ivTemp1), vget_high_u8(ivTemp1));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Test if less than or equal
 			Vector vTemp1 = _mm_cmple_ps(V, Bounds);
 			// Negate the bounds
@@ -17530,24 +17484,24 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector4IsNaN
+		inline bool RAYMATH_CALLCONV Vector4IsNaN
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			return (XMISNAN(V.vector4_f32[0]) ||
 				XMISNAN(V.vector4_f32[1]) ||
 				XMISNAN(V.vector4_f32[2]) ||
 				XMISNAN(V.vector4_f32[3]));
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Test against itself. NaN is always not equal
 			uint32x4_t vTempNan = vceqq_f32(V, V);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vTempNan), vget_high_u8(vTempNan));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			// If any are NaN, the mask is zero
 			return (vget_lane_u32(vTemp.val[1], 1) != 0xFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Test against itself. NaN is always not equal
 			Vector vTempNan = _mm_cmpneq_ps(V, V);
 			// If any are NaN, the mask is non-zero
@@ -17557,19 +17511,19 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Vector4IsInfinite
+		inline bool RAYMATH_CALLCONV Vector4IsInfinite
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			return (XMISINF(V.vector4_f32[0]) ||
 				XMISINF(V.vector4_f32[1]) ||
 				XMISINF(V.vector4_f32[2]) ||
 				XMISINF(V.vector4_f32[3]));
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Mask off the sign bit
 			uint32x4_t vTempInf = vandq_u32(V, g_XMAbsMask);
 			// Compare to infinity
@@ -17578,7 +17532,7 @@ namespace At0
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vTempInf), vget_high_u8(vTempInf));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) != 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Mask off the sign bit
 			Vector vTemp = _mm_and_ps(V, g_XMAbsMask);
 			// Compare to infinity
@@ -17594,13 +17548,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4Dot
+		inline Vector RAYMATH_CALLCONV Vector4Dot
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result;
 			Result.f[0] =
@@ -17609,33 +17563,33 @@ namespace At0
 				Result.f[3] = V1.vector4_f32[0] * V2.vector4_f32[0] + V1.vector4_f32[1] * V2.vector4_f32[1] + V1.vector4_f32[2] * V2.vector4_f32[2] + V1.vector4_f32[3] * V2.vector4_f32[3];
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t vTemp = vmulq_f32(V1, V2);
 			float32x2_t v1 = vget_low_f32(vTemp);
 			float32x2_t v2 = vget_high_f32(vTemp);
 			v1 = vadd_f32(v1, v2);
 			v1 = vpadd_f32(v1, v1);
 			return vcombine_f32(v1, v1);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			return _mm_dp_ps(V1, V2, 0xff);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vTemp = _mm_mul_ps(V1, V2);
 			vTemp = _mm_hadd_ps(vTemp, vTemp);
 			return _mm_hadd_ps(vTemp, vTemp);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp2 = V2;
 			Vector vTemp = _mm_mul_ps(V1, vTemp2);
 			vTemp2 = _mm_shuffle_ps(vTemp2, vTemp, _MM_SHUFFLE(1, 0, 0, 0)); // Copy X to the Z position and Y to the W position
 			vTemp2 = _mm_add_ps(vTemp2, vTemp);          // Add Z = X+Z; W = Y+W;
 			vTemp = _mm_shuffle_ps(vTemp, vTemp2, _MM_SHUFFLE(0, 3, 0, 0));  // Copy W to the Z position
 			vTemp = _mm_add_ps(vTemp, vTemp2);           // Add Z and W together
-			return XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(2, 2, 2, 2));    // Splat Z and return
+			return RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(2, 2, 2, 2));    // Splat Z and return
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4Cross
+		inline Vector RAYMATH_CALLCONV Vector4Cross
 		(
 			FVector V1,
 			FVector V2,
@@ -17647,7 +17601,7 @@ namespace At0
 			//   ((v2.y*v3.w-v2.w*v3.y)*v1.x)-((v2.x*v3.w-v2.w*v3.x)*v1.y)+((v2.x*v3.y-v2.y*v3.x)*v1.w),
 			//   ((v2.z*v3.y-v2.y*v3.z)*v1.x)-((v2.z*v3.x-v2.x*v3.z)*v1.y)+((v2.y*v3.x-v2.x*v3.y)*v1.z) ]
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					(((V2.vector4_f32[2] * V3.vector4_f32[3]) - (V2.vector4_f32[3] * V3.vector4_f32[2])) * V1.vector4_f32[1]) - (((V2.vector4_f32[1] * V3.vector4_f32[3]) - (V2.vector4_f32[3] * V3.vector4_f32[1])) * V1.vector4_f32[2]) + (((V2.vector4_f32[1] * V3.vector4_f32[2]) - (V2.vector4_f32[2] * V3.vector4_f32[1])) * V1.vector4_f32[3]),
@@ -17657,7 +17611,7 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			const float32x2_t select = vget_low_f32(g_XMMaskX);
 
 			// Term1: V2zwyz * V3wzwy
@@ -17738,54 +17692,54 @@ namespace At0
 
 			vTemp1 = vcombine_f32(vdup_lane_f32(v1wz, 0), v1wz);
 			return vmlaq_f32(vResult, vTerm, vTemp1);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 	// V2zwyz * V3wzwy
-			Vector vResult = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 1, 3, 2));
-			Vector vTemp3 = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 3, 2, 3));
+			Vector vResult = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 1, 3, 2));
+			Vector vTemp3 = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 3, 2, 3));
 			vResult = _mm_mul_ps(vResult, vTemp3);
 			// - V2wzwy * V3zwyz
-			Vector vTemp2 = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 3, 2, 3));
-			vTemp3 = XM_PERMUTE_PS(vTemp3, _MM_SHUFFLE(1, 3, 0, 1));
+			Vector vTemp2 = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 3, 2, 3));
+			vTemp3 = RAYMATH_PERMUTE_PS(vTemp3, _MM_SHUFFLE(1, 3, 0, 1));
 			vTemp2 = _mm_mul_ps(vTemp2, vTemp3);
 			vResult = _mm_sub_ps(vResult, vTemp2);
 			// term1 * V1yxxx
-			Vector vTemp1 = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 1));
+			Vector vTemp1 = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 1));
 			vResult = _mm_mul_ps(vResult, vTemp1);
 
 			// V2ywxz * V3wxwx
-			vTemp2 = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 0, 3, 1));
-			vTemp3 = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 3, 0, 3));
+			vTemp2 = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 0, 3, 1));
+			vTemp3 = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 3, 0, 3));
 			vTemp3 = _mm_mul_ps(vTemp3, vTemp2);
 			// - V2wxwx * V3ywxz
-			vTemp2 = XM_PERMUTE_PS(vTemp2, _MM_SHUFFLE(2, 1, 2, 1));
-			vTemp1 = XM_PERMUTE_PS(V3, _MM_SHUFFLE(2, 0, 3, 1));
+			vTemp2 = RAYMATH_PERMUTE_PS(vTemp2, _MM_SHUFFLE(2, 1, 2, 1));
+			vTemp1 = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(2, 0, 3, 1));
 			vTemp2 = _mm_mul_ps(vTemp2, vTemp1);
 			vTemp3 = _mm_sub_ps(vTemp3, vTemp2);
 			// vResult - temp * V1zzyy
-			vTemp1 = XM_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 2, 2));
+			vTemp1 = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 2, 2));
 			vTemp1 = _mm_mul_ps(vTemp1, vTemp3);
 			vResult = _mm_sub_ps(vResult, vTemp1);
 
 			// V2yzxy * V3zxyx
-			vTemp2 = XM_PERMUTE_PS(V2, _MM_SHUFFLE(1, 0, 2, 1));
-			vTemp3 = XM_PERMUTE_PS(V3, _MM_SHUFFLE(0, 1, 0, 2));
+			vTemp2 = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 0, 2, 1));
+			vTemp3 = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(0, 1, 0, 2));
 			vTemp3 = _mm_mul_ps(vTemp3, vTemp2);
 			// - V2zxyx * V3yzxy
-			vTemp2 = XM_PERMUTE_PS(vTemp2, _MM_SHUFFLE(2, 0, 2, 1));
-			vTemp1 = XM_PERMUTE_PS(V3, _MM_SHUFFLE(1, 0, 2, 1));
+			vTemp2 = RAYMATH_PERMUTE_PS(vTemp2, _MM_SHUFFLE(2, 0, 2, 1));
+			vTemp1 = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 0, 2, 1));
 			vTemp1 = _mm_mul_ps(vTemp1, vTemp2);
 			vTemp3 = _mm_sub_ps(vTemp3, vTemp1);
 			// vResult + term * V1wwwz
-			vTemp1 = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 3, 3, 3));
+			vTemp1 = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 3, 3, 3));
 			vTemp3 = _mm_mul_ps(vTemp3, vTemp1);
 			vResult = _mm_add_ps(vResult, vTemp3);
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4LengthSq
+		inline Vector RAYMATH_CALLCONV Vector4LengthSq
 		(
 			FVector V
 		)
@@ -17795,12 +17749,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4ReciprocalLengthEst
+		inline Vector RAYMATH_CALLCONV Vector4ReciprocalLengthEst
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 
@@ -17809,7 +17763,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Dot4
 			float32x4_t vTemp = vmulq_f32(V, V);
 			float32x2_t v1 = vget_low_f32(vTemp);
@@ -17819,30 +17773,30 @@ namespace At0
 			// Reciprocal sqrt (estimate)
 			v2 = vrsqrte_f32(v1);
 			return vcombine_f32(v2, v2);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0xff);
 			return _mm_rsqrt_ps(vTemp);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_rsqrt_ps(vLengthSq);
 			return vLengthSq;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y,z and w
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and w
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
 			// x+z, y+w
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// x+z,x+z,x+z,y+w
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 0, 0, 0));
 			// ??,??,y+w,y+w
 			vTemp = _mm_shuffle_ps(vTemp, vLengthSq, _MM_SHUFFLE(3, 3, 0, 0));
 			// ??,??,x+z+y+w,??
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// Splat the length
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
 			// Get the reciprocal
 			vLengthSq = _mm_rsqrt_ps(vLengthSq);
 			return vLengthSq;
@@ -17851,12 +17805,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4ReciprocalLength
+		inline Vector RAYMATH_CALLCONV Vector4ReciprocalLength
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 
@@ -17865,7 +17819,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Dot4
 			float32x4_t vTemp = vmulq_f32(V, V);
 			float32x2_t v1 = vget_low_f32(vTemp);
@@ -17881,32 +17835,32 @@ namespace At0
 			float32x2_t  R1 = vrsqrts_f32(P1, S1);
 			float32x2_t Result = vmul_f32(S1, R1);
 			return vcombine_f32(Result, Result);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0xff);
 			Vector vLengthSq = _mm_sqrt_ps(vTemp);
 			return _mm_div_ps(g_XMOne, vLengthSq);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			vLengthSq = _mm_div_ps(g_XMOne, vLengthSq);
 			return vLengthSq;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y,z and w
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and w
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
 			// x+z, y+w
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// x+z,x+z,x+z,y+w
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 0, 0, 0));
 			// ??,??,y+w,y+w
 			vTemp = _mm_shuffle_ps(vTemp, vLengthSq, _MM_SHUFFLE(3, 3, 0, 0));
 			// ??,??,x+z+y+w,??
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// Splat the length
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
 			// Get the reciprocal
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			// Accurate!
@@ -17917,12 +17871,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4LengthEst
+		inline Vector RAYMATH_CALLCONV Vector4LengthEst
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 
@@ -17931,7 +17885,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Dot4
 			float32x4_t vTemp = vmulq_f32(V, V);
 			float32x2_t v1 = vget_low_f32(vTemp);
@@ -17945,30 +17899,30 @@ namespace At0
 			Result = vmul_f32(v1, Result);
 			Result = vbsl_f32(VEqualsZero, zero, Result);
 			return vcombine_f32(Result, Result);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0xff);
 			return _mm_sqrt_ps(vTemp);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			return vLengthSq;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y,z and w
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and w
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
 			// x+z, y+w
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// x+z,x+z,x+z,y+w
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 0, 0, 0));
 			// ??,??,y+w,y+w
 			vTemp = _mm_shuffle_ps(vTemp, vLengthSq, _MM_SHUFFLE(3, 3, 0, 0));
 			// ??,??,x+z+y+w,??
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// Splat the length
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
 			// Get the length
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			return vLengthSq;
@@ -17977,12 +17931,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4Length
+		inline Vector RAYMATH_CALLCONV Vector4Length
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_) 
+#if defined(RAY_NO_INTRINSICS) 
 
 			Vector Result;
 
@@ -17991,7 +17945,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Dot4
 			float32x4_t vTemp = vmulq_f32(V, V);
 			float32x2_t v1 = vget_low_f32(vTemp);
@@ -18011,30 +17965,30 @@ namespace At0
 			Result = vmul_f32(v1, Result);
 			Result = vbsl_f32(VEqualsZero, zero, Result);
 			return vcombine_f32(Result, Result);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0xff);
 			return _mm_sqrt_ps(vTemp);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			return vLengthSq;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y,z and w
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and w
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
 			// x+z, y+w
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// x+z,x+z,x+z,y+w
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 0, 0, 0));
 			// ??,??,y+w,y+w
 			vTemp = _mm_shuffle_ps(vTemp, vLengthSq, _MM_SHUFFLE(3, 3, 0, 0));
 			// ??,??,x+z+y+w,??
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// Splat the length
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
 			// Get the length
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			return vLengthSq;
@@ -18045,19 +17999,19 @@ namespace At0
 		// Vector4NormalizeEst uses a reciprocal estimate and
 		// returns QNaN on zero and infinite vectors.
 
-		inline Vector XM_CALLCONV Vector4NormalizeEst
+		inline Vector RAYMATH_CALLCONV Vector4NormalizeEst
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector Result;
 			Result = Vector4ReciprocalLength(V);
 			Result = VectorMultiply(V, Result);
 			return Result;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Dot4
 			float32x4_t vTemp = vmulq_f32(V, V);
 			float32x2_t v1 = vget_low_f32(vTemp);
@@ -18068,32 +18022,32 @@ namespace At0
 			v2 = vrsqrte_f32(v1);
 			// Normalize
 			return vmulq_f32(V, vcombine_f32(v2, v2));
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(V, V, 0xff);
 			Vector vResult = _mm_rsqrt_ps(vTemp);
 			return _mm_mul_ps(vResult, V);
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			Vector vDot = _mm_mul_ps(V, V);
 			vDot = _mm_hadd_ps(vDot, vDot);
 			vDot = _mm_hadd_ps(vDot, vDot);
 			vDot = _mm_rsqrt_ps(vDot);
 			vDot = _mm_mul_ps(vDot, V);
 			return vDot;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y,z and w
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and w
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
 			// x+z, y+w
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// x+z,x+z,x+z,y+w
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 0, 0, 0));
 			// ??,??,y+w,y+w
 			vTemp = _mm_shuffle_ps(vTemp, vLengthSq, _MM_SHUFFLE(3, 3, 0, 0));
 			// ??,??,x+z+y+w,??
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// Splat the length
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
 			// Get the reciprocal
 			Vector vResult = _mm_rsqrt_ps(vLengthSq);
 			// Reciprocal mul to perform the normalization
@@ -18104,12 +18058,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4Normalize
+		inline Vector RAYMATH_CALLCONV Vector4Normalize
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			float fLength;
 			Vector vResult;
 
@@ -18127,7 +18081,7 @@ namespace At0
 			vResult.vector4_f32[3] = V.vector4_f32[3] * fLength;
 			return vResult;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Dot4
 			float32x4_t vTemp = vmulq_f32(V, V);
 			float32x2_t v1 = vget_low_f32(vTemp);
@@ -18148,7 +18102,7 @@ namespace At0
 			Vector vResult = vmulq_f32(V, vcombine_f32(v2, v2));
 			vResult = vbslq_f32(vcombine_f32(VEqualsZero, VEqualsZero), vdupq_n_f32(0), vResult);
 			return vbslq_f32(vcombine_f32(VEqualsInf, VEqualsInf), g_XMQNaN, vResult);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vLengthSq = _mm_dp_ps(V, V, 0xff);
 			// Prepare for the division
 			Vector vResult = _mm_sqrt_ps(vLengthSq);
@@ -18168,7 +18122,7 @@ namespace At0
 			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			// Perform the dot product on x,y,z and w
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
@@ -18191,21 +18145,21 @@ namespace At0
 			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y,z and w
 			Vector vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and w
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
 			// x+z, y+w
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// x+z,x+z,x+z,y+w
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 0, 0, 0));
 			// ??,??,y+w,y+w
 			vTemp = _mm_shuffle_ps(vTemp, vLengthSq, _MM_SHUFFLE(3, 3, 0, 0));
 			// ??,??,x+z+y+w,??
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// Splat the length
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
 			// Prepare for the division
 			Vector vResult = _mm_sqrt_ps(vLengthSq);
 			// Create zero with a single instruction
@@ -18229,7 +18183,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4ClampLength
+		inline Vector RAYMATH_CALLCONV Vector4ClampLength
 		(
 			FVector V,
 			float    LengthMin,
@@ -18244,7 +18198,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4ClampLengthV
+		inline Vector RAYMATH_CALLCONV Vector4ClampLengthV
 		(
 			FVector V,
 			FVector LengthMin,
@@ -18291,7 +18245,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4Reflect
+		inline Vector RAYMATH_CALLCONV Vector4Reflect
 		(
 			FVector Incident,
 			FVector Normal
@@ -18308,7 +18262,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4Refract
+		inline Vector RAYMATH_CALLCONV Vector4Refract
 		(
 			FVector Incident,
 			FVector Normal,
@@ -18321,14 +18275,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4RefractV
+		inline Vector RAYMATH_CALLCONV Vector4RefractV
 		(
 			FVector Incident,
 			FVector Normal,
 			FVector RefractionIndex
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Vector        IDotN;
 			Vector        R;
@@ -18364,7 +18318,7 @@ namespace At0
 				return Result;
 			}
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector IDotN = Vector4Dot(Incident, Normal);
 
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
@@ -18398,7 +18352,7 @@ namespace At0
 				vResult = vmlsq_f32(vResult, R, Normal);
 			}
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector IDotN = Vector4Dot(Incident, Normal);
 
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
@@ -18431,12 +18385,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4Orthogonal
+		inline Vector RAYMATH_CALLCONV Vector4Orthogonal
 		(
 			FVector V
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
 					V.vector4_f32[2],
@@ -18446,22 +18400,22 @@ namespace At0
 				} } };
 			return Result.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 Negate = { { { 1.f, 1.f, -1.f, -1.f } } };
 
 			float32x4_t Result = vcombine_f32(vget_high_f32(V), vget_low_f32(V));
 			return vmulq_f32(Result, Negate);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 FlipZW = { { { 1.0f, 1.0f, -1.0f, -1.0f } } };
-			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 0, 3, 2));
+			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 0, 3, 2));
 			vResult = _mm_mul_ps(vResult, FlipZW);
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4AngleBetweenNormalsEst
+		inline Vector RAYMATH_CALLCONV Vector4AngleBetweenNormalsEst
 		(
 			FVector N1,
 			FVector N2
@@ -18475,7 +18429,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4AngleBetweenNormals
+		inline Vector RAYMATH_CALLCONV Vector4AngleBetweenNormals
 		(
 			FVector N1,
 			FVector N2
@@ -18489,7 +18443,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4AngleBetweenVectors
+		inline Vector RAYMATH_CALLCONV Vector4AngleBetweenVectors
 		(
 			FVector V1,
 			FVector V2
@@ -18510,13 +18464,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Vector4Transform
+		inline Vector RAYMATH_CALLCONV Vector4Transform
 		(
 			FVector V,
 			FMatrix M
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float fX = (M.m[0][0] * V.vector4_f32[0]) + (M.m[1][0] * V.vector4_f32[1]) + (M.m[2][0] * V.vector4_f32[2]) + (M.m[3][0] * V.vector4_f32[3]);
 			float fY = (M.m[0][1] * V.vector4_f32[0]) + (M.m[1][1] * V.vector4_f32[1]) + (M.m[2][1] * V.vector4_f32[2]) + (M.m[3][1] * V.vector4_f32[3]);
@@ -18525,19 +18479,19 @@ namespace At0
 			VectorF32 vResult = { { { fX, fY, fZ, fW } } };
 			return vResult.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			Vector vResult = vmulq_lane_f32(M.r[0], VL, 0); // X
 			vResult = vmlaq_lane_f32(vResult, M.r[1], VL, 1); // Y
 			float32x2_t VH = vget_high_f32(V);
 			vResult = vmlaq_lane_f32(vResult, M.r[2], VH, 0); // Z
 			return vmlaq_lane_f32(vResult, M.r[3], VH, 1); // W
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Splat x,y,z and w
-			Vector vTempX = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
-			Vector vTempY = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector vTempZ = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-			Vector vTempW = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+			Vector vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+			Vector vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+			Vector vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 			// Mul by the matrix
 			vTempX = _mm_mul_ps(vTempX, M.r[0]);
 			vTempY = _mm_mul_ps(vTempY, M.r[1]);
@@ -18553,7 +18507,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Float4* XM_CALLCONV Vector4TransformStream
+		inline Float4* RAYMATH_CALLCONV Vector4TransformStream
 		(
 			Float4* pOutputStream,
 			size_t          OutputStride,
@@ -18567,12 +18521,9 @@ namespace At0
 			assert(pInputStream != nullptr);
 
 			assert(InputStride >= sizeof(Float4));
-			_Analysis_assume_(InputStride >= sizeof(Float4));
-
 			assert(OutputStride >= sizeof(Float4));
-			_Analysis_assume_(OutputStride >= sizeof(Float4));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
@@ -18612,7 +18563,7 @@ namespace At0
 
 			return pOutputStream;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -18710,7 +18661,7 @@ namespace At0
 			}
 
 			return pOutputStream;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
@@ -18729,10 +18680,10 @@ namespace At0
 						__m128 V = _mm_load_ps(reinterpret_cast<const float*>(pInputVector));
 						pInputVector += InputStride;
 
-						Vector vTempX = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
-						Vector vTempY = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-						Vector vTempZ = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-						Vector vTempW = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+						Vector vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+						Vector vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+						Vector vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+						Vector vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 
 						vTempX = _mm_mul_ps(vTempX, row0);
 						vTempY = _mm_mul_ps(vTempY, row1);
@@ -18743,7 +18694,7 @@ namespace At0
 						vTempZ = _mm_add_ps(vTempZ, vTempW);
 						vTempX = _mm_add_ps(vTempX, vTempZ);
 
-						XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTempX);
+						RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTempX);
 						pOutputVector += OutputStride;
 					}
 				}
@@ -18755,10 +18706,10 @@ namespace At0
 						__m128 V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 						pInputVector += InputStride;
 
-						Vector vTempX = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
-						Vector vTempY = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-						Vector vTempZ = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-						Vector vTempW = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+						Vector vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+						Vector vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+						Vector vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+						Vector vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 
 						vTempX = _mm_mul_ps(vTempX, row0);
 						vTempY = _mm_mul_ps(vTempY, row1);
@@ -18769,7 +18720,7 @@ namespace At0
 						vTempZ = _mm_add_ps(vTempZ, vTempW);
 						vTempX = _mm_add_ps(vTempX, vTempZ);
 
-						XM_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTempX);
+						RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), vTempX);
 						pOutputVector += OutputStride;
 					}
 				}
@@ -18784,10 +18735,10 @@ namespace At0
 						__m128 V = _mm_load_ps(reinterpret_cast<const float*>(pInputVector));
 						pInputVector += InputStride;
 
-						Vector vTempX = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
-						Vector vTempY = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-						Vector vTempZ = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-						Vector vTempW = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+						Vector vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+						Vector vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+						Vector vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+						Vector vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 
 						vTempX = _mm_mul_ps(vTempX, row0);
 						vTempY = _mm_mul_ps(vTempY, row1);
@@ -18810,10 +18761,10 @@ namespace At0
 						__m128 V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 						pInputVector += InputStride;
 
-						Vector vTempX = XM_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
-						Vector vTempY = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-						Vector vTempZ = XM_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-						Vector vTempW = XM_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+						Vector vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+						Vector vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+						Vector vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+						Vector vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 
 						vTempX = _mm_mul_ps(vTempX, row0);
 						vTempY = _mm_mul_ps(vTempY, row1);
@@ -18830,7 +18781,7 @@ namespace At0
 				}
 			}
 
-			XM_SFENCE();
+			RAYMATH_SFENCE();
 
 			return pOutputStream;
 #endif
@@ -18842,25 +18793,25 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-#ifndef _XM_NO_Vector_OVERLOADS_
+#ifndef RAYMATH_NO_VECTOR_OVERLOADS
 
 		 //------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV operator+ (FVector V)
+		inline Vector RAYMATH_CALLCONV operator+ (FVector V)
 		{
 			return V;
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV operator- (FVector V)
+		inline Vector RAYMATH_CALLCONV operator- (FVector V)
 		{
 			return VectorNegate(V);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector& XM_CALLCONV operator+=
+		inline Vector& RAYMATH_CALLCONV operator+=
 			(
 				Vector& V1,
 				FVector       V2
@@ -18872,7 +18823,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector& XM_CALLCONV operator-=
+		inline Vector& RAYMATH_CALLCONV operator-=
 			(
 				Vector& V1,
 				FVector       V2
@@ -18884,7 +18835,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector& XM_CALLCONV operator*=
+		inline Vector& RAYMATH_CALLCONV operator*=
 			(
 				Vector& V1,
 				FVector       V2
@@ -18896,7 +18847,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector& XM_CALLCONV operator/=
+		inline Vector& RAYMATH_CALLCONV operator/=
 			(
 				Vector& V1,
 				FVector       V2
@@ -18933,7 +18884,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV operator+
+		inline Vector RAYMATH_CALLCONV operator+
 			(
 				FVector V1,
 				FVector V2
@@ -18944,7 +18895,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV operator-
+		inline Vector RAYMATH_CALLCONV operator-
 			(
 				FVector V1,
 				FVector V2
@@ -18955,7 +18906,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV operator*
+		inline Vector RAYMATH_CALLCONV operator*
 			(
 				FVector V1,
 				FVector V2
@@ -18966,7 +18917,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV operator/
+		inline Vector RAYMATH_CALLCONV operator/
 			(
 				FVector V1,
 				FVector V2
@@ -18977,7 +18928,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV operator*
+		inline Vector RAYMATH_CALLCONV operator*
 			(
 				FVector      V,
 				const float    S
@@ -18988,7 +18939,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV operator/
+		inline Vector RAYMATH_CALLCONV operator/
 			(
 				FVector      V,
 				const float    S
@@ -19000,7 +18951,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV operator*
+		inline Vector RAYMATH_CALLCONV operator*
 			(
 				float           S,
 				FVector  	    V
@@ -19009,14 +18960,14 @@ namespace At0
 			return VectorScale(V, S);
 		}
 
-#endif /* !_XM_NO_Vector_OVERLOADS_ */
+#endif /* !RAYMATH_NO_VECTOR_OVERLOADS */
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 #undef XMISNAN
 #undef XMISINF
 #endif
 
-#if defined(_XM_SSE_INTRINSICS_)
+#if defined(RAY_SSE_INTRINSICS)
 #undef XM3UNPACK3INTO4
 #undef XM3PACK4INTO3
 #endif
@@ -19046,9 +18997,9 @@ namespace At0
 	 //------------------------------------------------------------------------------
 
 	 // Return true if any entry in the matrix is NaN
-		inline bool XM_CALLCONV Matrix::IsNaN() const
+		inline bool RAYMATH_CALLCONV Matrix::IsNaN() const
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			size_t i = 16;
 			auto pWork = reinterpret_cast<const uint32_t*>(&m[0][0]);
 			do {
@@ -19064,7 +19015,7 @@ namespace At0
 				++pWork;        // Next entry
 			} while (--i);
 			return (i != 0);      // i == 0 if nothing matched
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Load in registers
 			Vector vX = r[0];
 			Vector vY = r[1];
@@ -19084,7 +19035,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			uint32_t r = vget_lane_u32(vTemp.val[1], 1);
 			return (r != 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Load in registers
 			Vector vX = r[0];
 			Vector vY = r[1];
@@ -19103,14 +19054,14 @@ namespace At0
 			return (_mm_movemask_ps(vX) != 0);
 #else
 #endif
-			}
+		}
 
 		//------------------------------------------------------------------------------
 
 		// Return true if any entry in the matrix is +/-INF
-		inline bool XM_CALLCONV Matrix::IsInfinite() const
+		inline bool RAYMATH_CALLCONV Matrix::IsInfinite() const
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			size_t i = 16;
 			auto pWork = reinterpret_cast<const uint32_t*>(&m[0][0]);
 			do {
@@ -19125,7 +19076,7 @@ namespace At0
 				++pWork;        // Next entry
 			} while (--i);
 			return (i != 0);      // i == 0 if nothing matched
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Mask off the sign bits
 			Vector vTemp1 = vandq_u32(r[0], g_XMAbsMask);
 			Vector vTemp2 = vandq_u32(r[1], g_XMAbsMask);
@@ -19145,7 +19096,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			uint32_t r = vget_lane_u32(vTemp.val[1], 1);
 			return (r != 0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Mask off the sign bits
 			Vector vTemp1 = _mm_and_ps(r[0], g_XMAbsMask);
 			Vector vTemp2 = _mm_and_ps(r[1], g_XMAbsMask);
@@ -19163,14 +19114,14 @@ namespace At0
 			// If any are infinity, the signs are true.
 			return (_mm_movemask_ps(vTemp1) != 0);
 #endif
-			}
+		}
 
 		//------------------------------------------------------------------------------
 
 		// Return true if the Matrix is equal to identity
-		inline bool XM_CALLCONV Matrix::IsIdentity() const
+		inline bool RAYMATH_CALLCONV Matrix::IsIdentity() const
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			// Use the integer pipeline to reduce branching to a minimum
 			auto pWork = reinterpret_cast<const uint32_t*>(&m[0][0]);
 			// Convert 1.0f to zero and or them together
@@ -19199,7 +19150,7 @@ namespace At0
 			// If all 1.0f entries are 1.0f, then uOne==0
 			uOne |= uZero;
 			return (uOne == 0);
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector vTemp1 = vceqq_f32(r[0], g_XMIdentityR0);
 			Vector vTemp2 = vceqq_f32(r[1], g_XMIdentityR1);
 			Vector vTemp3 = vceqq_f32(r[2], g_XMIdentityR2);
@@ -19211,7 +19162,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			uint32_t r = vget_lane_u32(vTemp.val[1], 1);
 			return (r == 0xFFFFFFFFU);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vTemp1 = _mm_cmpeq_ps(r[0], g_XMIdentityR0);
 			Vector vTemp2 = _mm_cmpeq_ps(r[1], g_XMIdentityR1);
 			Vector vTemp3 = _mm_cmpeq_ps(r[2], g_XMIdentityR2);
@@ -19229,13 +19180,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Perform a 4x4 matrix multiply by a 4x4 matrix
-		inline Matrix XM_CALLCONV Matrix::Multiply
+		inline Matrix RAYMATH_CALLCONV Matrix::Multiply
 		(
 			FMatrix M1,
 			CMatrix M2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Matrix mResult;
 			// Cache the invariants in registers
 			float x = M1.m[0][0];
@@ -19273,7 +19224,7 @@ namespace At0
 			mResult.m[3][2] = (M2.m[0][2] * x) + (M2.m[1][2] * y) + (M2.m[2][2] * z) + (M2.m[3][2] * w);
 			mResult.m[3][3] = (M2.m[0][3] * x) + (M2.m[1][3] * y) + (M2.m[2][3] * z) + (M2.m[3][3] * w);
 			return mResult;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Matrix mResult;
 			float32x2_t VL = vget_low_f32(M1.r[0]);
 			float32x2_t VH = vget_high_f32(M1.r[0]);
@@ -19306,10 +19257,10 @@ namespace At0
 			vW = vmlaq_lane_f32(vY, M2.r[3], VH, 1);
 			mResult.r[3] = vaddq_f32(vZ, vW);
 			return mResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix mResult;
 			// Splat the component X,Y,Z then W
-#if defined(_XM_AVX_INTRINSICS_)
+#if defined(RAY_AVC_INTRINSICS)
 			Vector vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 0);
 			Vector vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 1);
 			Vector vZ = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 2);
@@ -19317,10 +19268,10 @@ namespace At0
 #else
 	// Use vW to hold the original row
 			Vector vW = M1.r[0];
-			Vector vX = XM_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
-			Vector vY = XM_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector vZ = XM_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
-			vW = XM_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
+			Vector vX = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
+			Vector vY = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vZ = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
+			vW = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
 #endif
 			// Perform the operation on the first row
 			vX = _mm_mul_ps(vX, M2.r[0]);
@@ -19333,17 +19284,17 @@ namespace At0
 			vX = _mm_add_ps(vX, vY);
 			mResult.r[0] = vX;
 			// Repeat for the other 3 rows
-#if defined(_XM_AVX_INTRINSICS_)
+#if defined(RAY_AVC_INTRINSICS)
 			vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[1]) + 0);
 			vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[1]) + 1);
 			vZ = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[1]) + 2);
 			vW = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[1]) + 3);
 #else
 			vW = M1.r[1];
-			vX = XM_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
-			vY = XM_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
-			vZ = XM_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
-			vW = XM_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
+			vX = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
+			vY = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
+			vZ = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
+			vW = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
 #endif
 			vX = _mm_mul_ps(vX, M2.r[0]);
 			vY = _mm_mul_ps(vY, M2.r[1]);
@@ -19353,17 +19304,17 @@ namespace At0
 			vY = _mm_add_ps(vY, vW);
 			vX = _mm_add_ps(vX, vY);
 			mResult.r[1] = vX;
-#if defined(_XM_AVX_INTRINSICS_)
+#if defined(RAY_AVC_INTRINSICS)
 			vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[2]) + 0);
 			vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[2]) + 1);
 			vZ = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[2]) + 2);
 			vW = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[2]) + 3);
 #else
 			vW = M1.r[2];
-			vX = XM_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
-			vY = XM_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
-			vZ = XM_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
-			vW = XM_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
+			vX = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
+			vY = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
+			vZ = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
+			vW = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
 #endif
 			vX = _mm_mul_ps(vX, M2.r[0]);
 			vY = _mm_mul_ps(vY, M2.r[1]);
@@ -19373,17 +19324,17 @@ namespace At0
 			vY = _mm_add_ps(vY, vW);
 			vX = _mm_add_ps(vX, vY);
 			mResult.r[2] = vX;
-#if defined(_XM_AVX_INTRINSICS_)
+#if defined(RAY_AVC_INTRINSICS)
 			vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[3]) + 0);
 			vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[3]) + 1);
 			vZ = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[3]) + 2);
 			vW = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[3]) + 3);
 #else
 			vW = M1.r[3];
-			vX = XM_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
-			vY = XM_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
-			vZ = XM_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
-			vW = XM_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
+			vX = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
+			vY = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
+			vZ = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
+			vW = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
 #endif
 			vX = _mm_mul_ps(vX, M2.r[0]);
 			vY = _mm_mul_ps(vY, M2.r[1]);
@@ -19399,13 +19350,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::MultiplyTranspose
+		inline Matrix RAYMATH_CALLCONV Matrix::MultiplyTranspose
 		(
 			FMatrix M1,
 			CMatrix M2
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Matrix mResult;
 			// Cache the invariants in registers
 			float x = M2.m[0][0];
@@ -19443,7 +19394,7 @@ namespace At0
 			mResult.m[3][2] = (M1.m[2][0] * x) + (M1.m[2][1] * y) + (M1.m[2][2] * z) + (M1.m[2][3] * w);
 			mResult.m[3][3] = (M1.m[3][0] * x) + (M1.m[3][1] * y) + (M1.m[3][2] * z) + (M1.m[3][3] * w);
 			return mResult;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(M1.r[0]);
 			float32x2_t VH = vget_high_f32(M1.r[0]);
 			// Perform the operation on the first row
@@ -19488,9 +19439,9 @@ namespace At0
 			mResult.r[2] = T1.val[0];
 			mResult.r[3] = T1.val[1];
 			return mResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Splat the component X,Y,Z then W
-#if defined(_XM_AVX_INTRINSICS_)
+#if defined(RAY_AVC_INTRINSICS)
 			Vector vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 0);
 			Vector vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 1);
 			Vector vZ = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 2);
@@ -19498,10 +19449,10 @@ namespace At0
 #else
 	// Use vW to hold the original row
 			Vector vW = M1.r[0];
-			Vector vX = XM_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
-			Vector vY = XM_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector vZ = XM_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
-			vW = XM_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
+			Vector vX = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
+			Vector vY = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector vZ = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
+			vW = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
 #endif
 			// Perform the operation on the first row
 			vX = _mm_mul_ps(vX, M2.r[0]);
@@ -19514,17 +19465,17 @@ namespace At0
 			vX = _mm_add_ps(vX, vY);
 			Vector r0 = vX;
 			// Repeat for the other 3 rows
-#if defined(_XM_AVX_INTRINSICS_)
+#if defined(RAY_AVC_INTRINSICS)
 			vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[1]) + 0);
 			vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[1]) + 1);
 			vZ = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[1]) + 2);
 			vW = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[1]) + 3);
 #else
 			vW = M1.r[1];
-			vX = XM_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
-			vY = XM_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
-			vZ = XM_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
-			vW = XM_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
+			vX = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
+			vY = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
+			vZ = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
+			vW = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
 #endif
 			vX = _mm_mul_ps(vX, M2.r[0]);
 			vY = _mm_mul_ps(vY, M2.r[1]);
@@ -19534,17 +19485,17 @@ namespace At0
 			vY = _mm_add_ps(vY, vW);
 			vX = _mm_add_ps(vX, vY);
 			Vector r1 = vX;
-#if defined(_XM_AVX_INTRINSICS_)
+#if defined(RAY_AVC_INTRINSICS)
 			vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[2]) + 0);
 			vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[2]) + 1);
 			vZ = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[2]) + 2);
 			vW = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[2]) + 3);
 #else
 			vW = M1.r[2];
-			vX = XM_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
-			vY = XM_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
-			vZ = XM_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
-			vW = XM_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
+			vX = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
+			vY = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
+			vZ = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
+			vW = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
 #endif
 			vX = _mm_mul_ps(vX, M2.r[0]);
 			vY = _mm_mul_ps(vY, M2.r[1]);
@@ -19554,17 +19505,17 @@ namespace At0
 			vY = _mm_add_ps(vY, vW);
 			vX = _mm_add_ps(vX, vY);
 			Vector r2 = vX;
-#if defined(_XM_AVX_INTRINSICS_)
+#if defined(RAY_AVC_INTRINSICS)
 			vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[3]) + 0);
 			vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[3]) + 1);
 			vZ = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[3]) + 2);
 			vW = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[3]) + 3);
 #else
 			vW = M1.r[3];
-			vX = XM_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
-			vY = XM_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
-			vZ = XM_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
-			vW = XM_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
+			vX = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
+			vY = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
+			vZ = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
+			vW = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
 #endif
 			vX = _mm_mul_ps(vX, M2.r[0]);
 			vY = _mm_mul_ps(vY, M2.r[1]);
@@ -19599,9 +19550,9 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::Transpose() const
+		inline Matrix RAYMATH_CALLCONV Matrix::Transpose() const
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			// Original matrix:
 			//
@@ -19623,7 +19574,7 @@ namespace At0
 			MT.r[3] = VectorMergeZW(P.r[2], P.r[3]); // m03m13m23m33
 			return MT;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4x2_t P0 = vzipq_f32(r[0], r[2]);
 			float32x4x2_t P1 = vzipq_f32(r[1], r[3]);
 
@@ -19636,7 +19587,7 @@ namespace At0
 			mResult.r[2] = T1.val[0];
 			mResult.r[3] = T1.val[1];
 			return mResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// x.x,x.y,y.x,y.y
 			Vector vTemp1 = _mm_shuffle_ps(r[0], r[1], _MM_SHUFFLE(1, 0, 1, 0));
 			// x.z,x.w,y.z,y.w
@@ -19662,9 +19613,9 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Return the inverse and the determinant of a 4x4 matrix
 
-		inline Matrix XM_CALLCONV Matrix::Inverse(Vector* pDeterminant) const
+		inline Matrix RAYMATH_CALLCONV Matrix::Inverse(Vector* pDeterminant) const
 		{
-#if defined(_XM_NO_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
 			Matrix MT = Transpose();
 
@@ -19757,12 +19708,12 @@ namespace At0
 			Result.r[3] = VectorMultiply(R.r[3], Reciprocal);
 			return Result;
 
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix MT = Transpose();
-			Vector V00 = XM_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(1, 1, 0, 0));
-			Vector V10 = XM_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(3, 2, 3, 2));
-			Vector V01 = XM_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(1, 1, 0, 0));
-			Vector V11 = XM_PERMUTE_PS(MT.r[1], _MM_SHUFFLE(3, 2, 3, 2));
+			Vector V00 = RAYMATH_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(1, 1, 0, 0));
+			Vector V10 = RAYMATH_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(3, 2, 3, 2));
+			Vector V01 = RAYMATH_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(1, 1, 0, 0));
+			Vector V11 = RAYMATH_PERMUTE_PS(MT.r[1], _MM_SHUFFLE(3, 2, 3, 2));
 			Vector V02 = _mm_shuffle_ps(MT.r[2], MT.r[0], _MM_SHUFFLE(2, 0, 2, 0));
 			Vector V12 = _mm_shuffle_ps(MT.r[3], MT.r[1], _MM_SHUFFLE(3, 1, 3, 1));
 
@@ -19770,10 +19721,10 @@ namespace At0
 			Vector D1 = _mm_mul_ps(V01, V11);
 			Vector D2 = _mm_mul_ps(V02, V12);
 
-			V00 = XM_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(3, 2, 3, 2));
-			V10 = XM_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(1, 1, 0, 0));
-			V01 = XM_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(3, 2, 3, 2));
-			V11 = XM_PERMUTE_PS(MT.r[1], _MM_SHUFFLE(1, 1, 0, 0));
+			V00 = RAYMATH_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(3, 2, 3, 2));
+			V10 = RAYMATH_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(1, 1, 0, 0));
+			V01 = RAYMATH_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(3, 2, 3, 2));
+			V11 = RAYMATH_PERMUTE_PS(MT.r[1], _MM_SHUFFLE(1, 1, 0, 0));
 			V02 = _mm_shuffle_ps(MT.r[2], MT.r[0], _MM_SHUFFLE(3, 1, 3, 1));
 			V12 = _mm_shuffle_ps(MT.r[3], MT.r[1], _MM_SHUFFLE(2, 0, 2, 0));
 
@@ -19785,15 +19736,15 @@ namespace At0
 			D2 = _mm_sub_ps(D2, V02);
 			// V11 = D0Y,D0W,D2Y,D2Y
 			V11 = _mm_shuffle_ps(D0, D2, _MM_SHUFFLE(1, 1, 3, 1));
-			V00 = XM_PERMUTE_PS(MT.r[1], _MM_SHUFFLE(1, 0, 2, 1));
+			V00 = RAYMATH_PERMUTE_PS(MT.r[1], _MM_SHUFFLE(1, 0, 2, 1));
 			V10 = _mm_shuffle_ps(V11, D0, _MM_SHUFFLE(0, 3, 0, 2));
-			V01 = XM_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(0, 1, 0, 2));
+			V01 = RAYMATH_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(0, 1, 0, 2));
 			V11 = _mm_shuffle_ps(V11, D0, _MM_SHUFFLE(2, 1, 2, 1));
 			// V13 = D1Y,D1W,D2W,D2W
 			Vector V13 = _mm_shuffle_ps(D1, D2, _MM_SHUFFLE(3, 3, 3, 1));
-			V02 = XM_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(1, 0, 2, 1));
+			V02 = RAYMATH_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(1, 0, 2, 1));
 			V12 = _mm_shuffle_ps(V13, D1, _MM_SHUFFLE(0, 3, 0, 2));
-			Vector V03 = XM_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(0, 1, 0, 2));
+			Vector V03 = RAYMATH_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(0, 1, 0, 2));
 			V13 = _mm_shuffle_ps(V13, D1, _MM_SHUFFLE(2, 1, 2, 1));
 
 			Vector C0 = _mm_mul_ps(V00, V10);
@@ -19803,15 +19754,15 @@ namespace At0
 
 			// V11 = D0X,D0Y,D2X,D2X
 			V11 = _mm_shuffle_ps(D0, D2, _MM_SHUFFLE(0, 0, 1, 0));
-			V00 = XM_PERMUTE_PS(MT.r[1], _MM_SHUFFLE(2, 1, 3, 2));
+			V00 = RAYMATH_PERMUTE_PS(MT.r[1], _MM_SHUFFLE(2, 1, 3, 2));
 			V10 = _mm_shuffle_ps(D0, V11, _MM_SHUFFLE(2, 1, 0, 3));
-			V01 = XM_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(1, 3, 2, 3));
+			V01 = RAYMATH_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(1, 3, 2, 3));
 			V11 = _mm_shuffle_ps(D0, V11, _MM_SHUFFLE(0, 2, 1, 2));
 			// V13 = D1X,D1Y,D2Z,D2Z
 			V13 = _mm_shuffle_ps(D1, D2, _MM_SHUFFLE(2, 2, 1, 0));
-			V02 = XM_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(2, 1, 3, 2));
+			V02 = RAYMATH_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(2, 1, 3, 2));
 			V12 = _mm_shuffle_ps(D1, V13, _MM_SHUFFLE(2, 1, 0, 3));
-			V03 = XM_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(1, 3, 2, 3));
+			V03 = RAYMATH_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(1, 3, 2, 3));
 			V13 = _mm_shuffle_ps(D1, V13, _MM_SHUFFLE(0, 2, 1, 2));
 
 			V00 = _mm_mul_ps(V00, V10);
@@ -19823,22 +19774,22 @@ namespace At0
 			C4 = _mm_sub_ps(C4, V02);
 			C6 = _mm_sub_ps(C6, V03);
 
-			V00 = XM_PERMUTE_PS(MT.r[1], _MM_SHUFFLE(0, 3, 0, 3));
+			V00 = RAYMATH_PERMUTE_PS(MT.r[1], _MM_SHUFFLE(0, 3, 0, 3));
 			// V10 = D0Z,D0Z,D2X,D2Y
 			V10 = _mm_shuffle_ps(D0, D2, _MM_SHUFFLE(1, 0, 2, 2));
-			V10 = XM_PERMUTE_PS(V10, _MM_SHUFFLE(0, 2, 3, 0));
-			V01 = XM_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(2, 0, 3, 1));
+			V10 = RAYMATH_PERMUTE_PS(V10, _MM_SHUFFLE(0, 2, 3, 0));
+			V01 = RAYMATH_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(2, 0, 3, 1));
 			// V11 = D0X,D0W,D2X,D2Y
 			V11 = _mm_shuffle_ps(D0, D2, _MM_SHUFFLE(1, 0, 3, 0));
-			V11 = XM_PERMUTE_PS(V11, _MM_SHUFFLE(2, 1, 0, 3));
-			V02 = XM_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(0, 3, 0, 3));
+			V11 = RAYMATH_PERMUTE_PS(V11, _MM_SHUFFLE(2, 1, 0, 3));
+			V02 = RAYMATH_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(0, 3, 0, 3));
 			// V12 = D1Z,D1Z,D2Z,D2W
 			V12 = _mm_shuffle_ps(D1, D2, _MM_SHUFFLE(3, 2, 2, 2));
-			V12 = XM_PERMUTE_PS(V12, _MM_SHUFFLE(0, 2, 3, 0));
-			V03 = XM_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(2, 0, 3, 1));
+			V12 = RAYMATH_PERMUTE_PS(V12, _MM_SHUFFLE(0, 2, 3, 0));
+			V03 = RAYMATH_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(2, 0, 3, 1));
 			// V13 = D1X,D1W,D2Z,D2W
 			V13 = _mm_shuffle_ps(D1, D2, _MM_SHUFFLE(3, 2, 3, 0));
-			V13 = XM_PERMUTE_PS(V13, _MM_SHUFFLE(2, 1, 0, 3));
+			V13 = RAYMATH_PERMUTE_PS(V13, _MM_SHUFFLE(2, 1, 0, 3));
 
 			V00 = _mm_mul_ps(V00, V10);
 			V01 = _mm_mul_ps(V01, V11);
@@ -19857,10 +19808,10 @@ namespace At0
 			C2 = _mm_shuffle_ps(C2, C3, _MM_SHUFFLE(3, 1, 2, 0));
 			C4 = _mm_shuffle_ps(C4, C5, _MM_SHUFFLE(3, 1, 2, 0));
 			C6 = _mm_shuffle_ps(C6, C7, _MM_SHUFFLE(3, 1, 2, 0));
-			C0 = XM_PERMUTE_PS(C0, _MM_SHUFFLE(3, 1, 2, 0));
-			C2 = XM_PERMUTE_PS(C2, _MM_SHUFFLE(3, 1, 2, 0));
-			C4 = XM_PERMUTE_PS(C4, _MM_SHUFFLE(3, 1, 2, 0));
-			C6 = XM_PERMUTE_PS(C6, _MM_SHUFFLE(3, 1, 2, 0));
+			C0 = RAYMATH_PERMUTE_PS(C0, _MM_SHUFFLE(3, 1, 2, 0));
+			C2 = RAYMATH_PERMUTE_PS(C2, _MM_SHUFFLE(3, 1, 2, 0));
+			C4 = RAYMATH_PERMUTE_PS(C4, _MM_SHUFFLE(3, 1, 2, 0));
+			C6 = RAYMATH_PERMUTE_PS(C6, _MM_SHUFFLE(3, 1, 2, 0));
 			// Get the determinate
 			Vector vTemp = Vector4Dot(C0, MT.r[0]);
 			if (pDeterminant != nullptr)
@@ -19877,7 +19828,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV Matrix::Determinant() const
+		inline Vector RAYMATH_CALLCONV Matrix::Determinant() const
 		{
 			static const VectorF32 Sign = { { { 1.0f, -1.0f, 1.0f, -1.0f } } };
 
@@ -19968,7 +19919,7 @@ namespace At0
 #define XM3_DECOMP_EPSILON 0.0001f
 
 
-		inline bool XM_CALLCONV Matrix::Decompose
+		inline bool RAYMATH_CALLCONV Matrix::Decompose
 		(
 			Vector* outScale,
 			Vector* outRotQuat,
@@ -20073,7 +20024,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::Identity()
+		inline Matrix RAYMATH_CALLCONV Matrix::Identity()
 		{
 			Matrix M;
 			M.r[0] = g_XMIdentityR0.v;
@@ -20085,7 +20036,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::Set
+		inline Matrix RAYMATH_CALLCONV Matrix::Set
 		(
 			float m00, float m01, float m02, float m03,
 			float m10, float m11, float m12, float m13,
@@ -20094,7 +20045,7 @@ namespace At0
 		)
 		{
 			Matrix M;
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			M.m[0][0] = m00; M.m[0][1] = m01; M.m[0][2] = m02; M.m[0][3] = m03;
 			M.m[1][0] = m10; M.m[1][1] = m11; M.m[1][2] = m12; M.m[1][3] = m13;
 			M.m[2][0] = m20; M.m[2][1] = m21; M.m[2][2] = m22; M.m[2][3] = m23;
@@ -20110,14 +20061,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::Translation
+		inline Matrix RAYMATH_CALLCONV Matrix::Translation
 		(
 			float OffsetX,
 			float OffsetY,
 			float OffsetZ
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Matrix M;
 			M.m[0][0] = 1.0f;
@@ -20141,7 +20092,7 @@ namespace At0
 			M.m[3][3] = 1.0f;
 			return M;
 
-#elif defined(_XM_SSE_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 			Matrix M;
 			M.r[0] = g_XMIdentityR0.v;
 			M.r[1] = g_XMIdentityR1.v;
@@ -20154,12 +20105,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::Translation
+		inline Matrix RAYMATH_CALLCONV Matrix::Translation
 		(
 			FVector Offset
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Matrix M;
 			M.m[0][0] = 1.0f;
@@ -20183,7 +20134,7 @@ namespace At0
 			M.m[3][3] = 1.0f;
 			return M;
 
-#elif defined(_XM_SSE_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 			Matrix M;
 			M.r[0] = g_XMIdentityR0.v;
 			M.r[1] = g_XMIdentityR1.v;
@@ -20195,14 +20146,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::Scaling
+		inline Matrix RAYMATH_CALLCONV Matrix::Scaling
 		(
 			float ScaleX,
 			float ScaleY,
 			float ScaleZ
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Matrix M;
 			M.m[0][0] = ScaleX;
@@ -20226,7 +20177,7 @@ namespace At0
 			M.m[3][3] = 1.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			const Vector Zero = vdupq_n_f32(0);
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(ScaleX, Zero, 0);
@@ -20234,7 +20185,7 @@ namespace At0
 			M.r[2] = vsetq_lane_f32(ScaleZ, Zero, 2);
 			M.r[3] = g_XMIdentityR3.v;
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			M.r[0] = _mm_set_ps(0, 0, 0, ScaleX);
 			M.r[1] = _mm_set_ps(0, 0, ScaleY, 0);
@@ -20246,12 +20197,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::Scaling
+		inline Matrix RAYMATH_CALLCONV Matrix::Scaling
 		(
 			FVector Scale
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			Matrix M;
 			M.m[0][0] = Scale.vector4_f32[0];
@@ -20275,14 +20226,14 @@ namespace At0
 			M.m[3][3] = 1.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Matrix M;
 			M.r[0] = vandq_u32(Scale, g_XMMaskX);
 			M.r[1] = vandq_u32(Scale, g_XMMaskY);
 			M.r[2] = vandq_u32(Scale, g_XMMaskZ);
 			M.r[3] = g_XMIdentityR3.v;
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			M.r[0] = _mm_and_ps(Scale, g_XMMaskX);
 			M.r[1] = _mm_and_ps(Scale, g_XMMaskY);
@@ -20294,12 +20245,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::RotationX
+		inline Matrix RAYMATH_CALLCONV Matrix::RotationX
 		(
 			float Angle
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float    fSinAngle;
 			float    fCosAngle;
@@ -20327,7 +20278,7 @@ namespace At0
 			M.m[3][3] = 1.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float    fSinAngle;
 			float    fCosAngle;
 			ScalarSinCos(&fSinAngle, &fCosAngle, Angle);
@@ -20346,7 +20297,7 @@ namespace At0
 			M.r[2] = T2;
 			M.r[3] = g_XMIdentityR3.v;
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			float    SinAngle;
 			float    CosAngle;
 			ScalarSinCos(&SinAngle, &CosAngle, Angle);
@@ -20359,7 +20310,7 @@ namespace At0
 			M.r[0] = g_XMIdentityR0;
 			M.r[1] = vCos;
 			// x = 0,y = sin,z = cos, w = 0
-			vCos = XM_PERMUTE_PS(vCos, _MM_SHUFFLE(3, 1, 2, 0));
+			vCos = RAYMATH_PERMUTE_PS(vCos, _MM_SHUFFLE(3, 1, 2, 0));
 			// x = 0,y = -sin,z = cos, w = 0
 			vCos = _mm_mul_ps(vCos, g_XMNegateY);
 			M.r[2] = vCos;
@@ -20370,12 +20321,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::RotationY
+		inline Matrix RAYMATH_CALLCONV Matrix::RotationY
 		(
 			float Angle
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float    fSinAngle;
 			float    fCosAngle;
@@ -20403,7 +20354,7 @@ namespace At0
 			M.m[3][3] = 1.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float    fSinAngle;
 			float    fCosAngle;
 			ScalarSinCos(&fSinAngle, &fCosAngle, Angle);
@@ -20422,7 +20373,7 @@ namespace At0
 			M.r[2] = T2;
 			M.r[3] = g_XMIdentityR3.v;
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			float    SinAngle;
 			float    CosAngle;
 			ScalarSinCos(&SinAngle, &CosAngle, Angle);
@@ -20435,7 +20386,7 @@ namespace At0
 			M.r[2] = vSin;
 			M.r[1] = g_XMIdentityR1;
 			// x = cos,y = 0,z = sin, w = 0
-			vSin = XM_PERMUTE_PS(vSin, _MM_SHUFFLE(3, 0, 1, 2));
+			vSin = RAYMATH_PERMUTE_PS(vSin, _MM_SHUFFLE(3, 0, 1, 2));
 			// x = cos,y = 0,z = -sin, w = 0
 			vSin = _mm_mul_ps(vSin, g_XMNegateZ);
 			M.r[0] = vSin;
@@ -20446,12 +20397,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::RotationZ
+		inline Matrix RAYMATH_CALLCONV Matrix::RotationZ
 		(
 			float Angle
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float    fSinAngle;
 			float    fCosAngle;
@@ -20479,7 +20430,7 @@ namespace At0
 			M.m[3][3] = 1.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float    fSinAngle;
 			float    fCosAngle;
 			ScalarSinCos(&fSinAngle, &fCosAngle, Angle);
@@ -20498,7 +20449,7 @@ namespace At0
 			M.r[2] = g_XMIdentityR2.v;
 			M.r[3] = g_XMIdentityR3.v;
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			float    SinAngle;
 			float    CosAngle;
 			ScalarSinCos(&SinAngle, &CosAngle, Angle);
@@ -20510,7 +20461,7 @@ namespace At0
 			Matrix M;
 			M.r[0] = vCos;
 			// x = sin,y = cos,z = 0, w = 0
-			vCos = XM_PERMUTE_PS(vCos, _MM_SHUFFLE(3, 2, 0, 1));
+			vCos = RAYMATH_PERMUTE_PS(vCos, _MM_SHUFFLE(3, 2, 0, 1));
 			// x = cos,y = -sin,z = 0, w = 0
 			vCos = _mm_mul_ps(vCos, g_XMNegateX);
 			M.r[1] = vCos;
@@ -20522,7 +20473,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::RotationRollPitchYaw
+		inline Matrix RAYMATH_CALLCONV Matrix::RotationRollPitchYaw
 		(
 			float Pitch,
 			float Yaw,
@@ -20535,7 +20486,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::RotationRollPitchYawFromVector
+		inline Matrix RAYMATH_CALLCONV Matrix::RotationRollPitchYawFromVector
 		(
 			FVector Angles // <Pitch, Yaw, Roll, undefined>
 		)
@@ -20546,13 +20497,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::RotationNormal
+		inline Matrix RAYMATH_CALLCONV Matrix::RotationNormal
 		(
 			FVector NormalAxis,
 			float     Angle
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
 			float    fSinAngle;
 			float    fCosAngle;
@@ -20587,7 +20538,7 @@ namespace At0
 			M.r[3] = g_XMIdentityR3.v;
 			return M;
 
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			float    fSinAngle;
 			float    fCosAngle;
 			ScalarSinCos(&fSinAngle, &fCosAngle, Angle);
@@ -20596,8 +20547,8 @@ namespace At0
 			Vector C1 = _mm_set_ps1(fCosAngle);
 			Vector C0 = _mm_set_ps1(fSinAngle);
 
-			Vector N0 = XM_PERMUTE_PS(NormalAxis, _MM_SHUFFLE(3, 0, 2, 1));
-			Vector N1 = XM_PERMUTE_PS(NormalAxis, _MM_SHUFFLE(3, 1, 0, 2));
+			Vector N0 = RAYMATH_PERMUTE_PS(NormalAxis, _MM_SHUFFLE(3, 0, 2, 1));
+			Vector N1 = RAYMATH_PERMUTE_PS(NormalAxis, _MM_SHUFFLE(3, 1, 0, 2));
 
 			Vector V0 = _mm_mul_ps(C2, N0);
 			V0 = _mm_mul_ps(V0, N1);
@@ -20613,18 +20564,18 @@ namespace At0
 
 			V0 = _mm_and_ps(R0, g_XMMask3);
 			Vector V1 = _mm_shuffle_ps(R1, R2, _MM_SHUFFLE(2, 1, 2, 0));
-			V1 = XM_PERMUTE_PS(V1, _MM_SHUFFLE(0, 3, 2, 1));
+			V1 = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 3, 2, 1));
 			Vector V2 = _mm_shuffle_ps(R1, R2, _MM_SHUFFLE(0, 0, 1, 1));
-			V2 = XM_PERMUTE_PS(V2, _MM_SHUFFLE(2, 0, 2, 0));
+			V2 = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 0, 2, 0));
 
 			R2 = _mm_shuffle_ps(V0, V1, _MM_SHUFFLE(1, 0, 3, 0));
-			R2 = XM_PERMUTE_PS(R2, _MM_SHUFFLE(1, 3, 2, 0));
+			R2 = RAYMATH_PERMUTE_PS(R2, _MM_SHUFFLE(1, 3, 2, 0));
 
 			Matrix M;
 			M.r[0] = R2;
 
 			R2 = _mm_shuffle_ps(V0, V1, _MM_SHUFFLE(3, 2, 3, 1));
-			R2 = XM_PERMUTE_PS(R2, _MM_SHUFFLE(1, 3, 0, 2));
+			R2 = RAYMATH_PERMUTE_PS(R2, _MM_SHUFFLE(1, 3, 0, 2));
 			M.r[1] = R2;
 
 			V2 = _mm_shuffle_ps(V2, V0, _MM_SHUFFLE(3, 2, 1, 0));
@@ -20636,7 +20587,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::RotationAxis
+		inline Matrix RAYMATH_CALLCONV Matrix::RotationAxis
 		(
 			FVector Axis,
 			float     Angle
@@ -20651,12 +20602,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::RotationQuaternion
+		inline Matrix RAYMATH_CALLCONV Matrix::RotationQuaternion
 		(
 			const Quaternion& Quaternion
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
 			static const VectorF32 Constant1110 = { { { 1.0f, 1.0f, 1.0f, 0.0f } } };
 
@@ -20689,43 +20640,43 @@ namespace At0
 			M.r[3] = g_XMIdentityR3.v;
 			return M;
 
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32  Constant1110 = { { { 1.0f, 1.0f, 1.0f, 0.0f } } };
 
 			Vector Q0 = _mm_add_ps(Quaternion, Quaternion);
 			Vector Q1 = _mm_mul_ps(Quaternion, Q0);
 
-			Vector V0 = XM_PERMUTE_PS(Q1, _MM_SHUFFLE(3, 0, 0, 1));
+			Vector V0 = RAYMATH_PERMUTE_PS(Q1, _MM_SHUFFLE(3, 0, 0, 1));
 			V0 = _mm_and_ps(V0, g_XMMask3);
-			Vector V1 = XM_PERMUTE_PS(Q1, _MM_SHUFFLE(3, 1, 2, 2));
+			Vector V1 = RAYMATH_PERMUTE_PS(Q1, _MM_SHUFFLE(3, 1, 2, 2));
 			V1 = _mm_and_ps(V1, g_XMMask3);
 			Vector R0 = _mm_sub_ps(Constant1110, V0);
 			R0 = _mm_sub_ps(R0, V1);
 
-			V0 = XM_PERMUTE_PS(Quaternion, _MM_SHUFFLE(3, 1, 0, 0));
-			V1 = XM_PERMUTE_PS(Q0, _MM_SHUFFLE(3, 2, 1, 2));
+			V0 = RAYMATH_PERMUTE_PS(Quaternion, _MM_SHUFFLE(3, 1, 0, 0));
+			V1 = RAYMATH_PERMUTE_PS(Q0, _MM_SHUFFLE(3, 2, 1, 2));
 			V0 = _mm_mul_ps(V0, V1);
 
-			V1 = XM_PERMUTE_PS(Quaternion, _MM_SHUFFLE(3, 3, 3, 3));
-			Vector V2 = XM_PERMUTE_PS(Q0, _MM_SHUFFLE(3, 0, 2, 1));
+			V1 = RAYMATH_PERMUTE_PS(Quaternion, _MM_SHUFFLE(3, 3, 3, 3));
+			Vector V2 = RAYMATH_PERMUTE_PS(Q0, _MM_SHUFFLE(3, 0, 2, 1));
 			V1 = _mm_mul_ps(V1, V2);
 
 			Vector R1 = _mm_add_ps(V0, V1);
 			Vector R2 = _mm_sub_ps(V0, V1);
 
 			V0 = _mm_shuffle_ps(R1, R2, _MM_SHUFFLE(1, 0, 2, 1));
-			V0 = XM_PERMUTE_PS(V0, _MM_SHUFFLE(1, 3, 2, 0));
+			V0 = RAYMATH_PERMUTE_PS(V0, _MM_SHUFFLE(1, 3, 2, 0));
 			V1 = _mm_shuffle_ps(R1, R2, _MM_SHUFFLE(2, 2, 0, 0));
-			V1 = XM_PERMUTE_PS(V1, _MM_SHUFFLE(2, 0, 2, 0));
+			V1 = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 0, 2, 0));
 
 			Q1 = _mm_shuffle_ps(R0, V0, _MM_SHUFFLE(1, 0, 3, 0));
-			Q1 = XM_PERMUTE_PS(Q1, _MM_SHUFFLE(1, 3, 2, 0));
+			Q1 = RAYMATH_PERMUTE_PS(Q1, _MM_SHUFFLE(1, 3, 2, 0));
 
 			Matrix M;
 			M.r[0] = Q1;
 
 			Q1 = _mm_shuffle_ps(R0, V0, _MM_SHUFFLE(3, 2, 3, 1));
-			Q1 = XM_PERMUTE_PS(Q1, _MM_SHUFFLE(1, 3, 0, 2));
+			Q1 = RAYMATH_PERMUTE_PS(Q1, _MM_SHUFFLE(1, 3, 0, 2));
 			M.r[1] = Q1;
 
 			Q1 = _mm_shuffle_ps(V1, R0, _MM_SHUFFLE(3, 2, 1, 0));
@@ -20737,7 +20688,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::Transformation2D
+		inline Matrix RAYMATH_CALLCONV Matrix::Transformation2D
 		(
 			FVector ScalingOrigin,
 			float     ScalingOrientation,
@@ -20776,7 +20727,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::Transformation
+		inline Matrix RAYMATH_CALLCONV Matrix::Transformation
 		(
 			FVector ScalingOrigin,
 			FVector ScalingOrientationQuaternion,
@@ -20814,7 +20765,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::AffineTransformation2D
+		inline Matrix RAYMATH_CALLCONV Matrix::AffineTransformation2D
 		(
 			FVector Scaling,
 			FVector RotationOrigin,
@@ -20841,7 +20792,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::AffineTransformation
+		inline Matrix RAYMATH_CALLCONV Matrix::AffineTransformation
 		(
 			FVector Scaling,
 			FVector RotationOrigin,
@@ -20867,7 +20818,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::Reflect
+		inline Matrix RAYMATH_CALLCONV Matrix::Reflect
 		(
 			FVector ReflectionPlane
 		)
@@ -20895,7 +20846,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::Shadow
+		inline Matrix RAYMATH_CALLCONV Matrix::Shadow
 		(
 			FVector ShadowPlane,
 			FVector LightPosition
@@ -20930,7 +20881,7 @@ namespace At0
 		// View and projection initialization operations
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::LookAtLH
+		inline Matrix RAYMATH_CALLCONV Matrix::LookAtLH
 		(
 			FVector EyePosition,
 			FVector FocusPosition,
@@ -20943,7 +20894,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::LookAtRH
+		inline Matrix RAYMATH_CALLCONV Matrix::LookAtRH
 		(
 			FVector EyePosition,
 			FVector FocusPosition,
@@ -20956,7 +20907,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::LookToLH
+		inline Matrix RAYMATH_CALLCONV Matrix::LookToLH
 		(
 			FVector EyePosition,
 			FVector EyeDirection,
@@ -20994,7 +20945,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::LookToRH
+		inline Matrix RAYMATH_CALLCONV Matrix::LookToRH
 		(
 			FVector EyePosition,
 			FVector EyeDirection,
@@ -21012,7 +20963,7 @@ namespace At0
 #pragma prefast(disable:28931, "PREfast noise: Esp:1266")
 #endif
 
-		inline Matrix XM_CALLCONV Matrix::PerspectiveLH
+		inline Matrix RAYMATH_CALLCONV Matrix::PerspectiveLH
 		(
 			float ViewWidth,
 			float ViewHeight,
@@ -21025,7 +20976,7 @@ namespace At0
 			assert(!ScalarNearEqual(ViewHeight, 0.0f, 0.00001f));
 			assert(!ScalarNearEqual(FarZ, NearZ, 0.00001f));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float TwoNearZ = NearZ + NearZ;
 			float fRange = FarZ / (FarZ - NearZ);
@@ -21052,7 +21003,7 @@ namespace At0
 			M.m[3][3] = 0.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float TwoNearZ = NearZ + NearZ;
 			float fRange = FarZ / (FarZ - NearZ);
 			const Vector Zero = vdupq_n_f32(0);
@@ -21062,7 +21013,7 @@ namespace At0
 			M.r[2] = vsetq_lane_f32(fRange, g_XMIdentityR3.v, 2);
 			M.r[3] = vsetq_lane_f32(-fRange * NearZ, Zero, 2);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			float TwoNearZ = NearZ + NearZ;
 			float fRange = FarZ / (FarZ - NearZ);
@@ -21099,7 +21050,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::PerspectiveRH
+		inline Matrix RAYMATH_CALLCONV Matrix::PerspectiveRH
 		(
 			float ViewWidth,
 			float ViewHeight,
@@ -21112,7 +21063,7 @@ namespace At0
 			assert(!ScalarNearEqual(ViewHeight, 0.0f, 0.00001f));
 			assert(!ScalarNearEqual(FarZ, NearZ, 0.00001f));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float TwoNearZ = NearZ + NearZ;
 			float fRange = FarZ / (NearZ - FarZ);
@@ -21139,7 +21090,7 @@ namespace At0
 			M.m[3][3] = 0.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float TwoNearZ = NearZ + NearZ;
 			float fRange = FarZ / (NearZ - FarZ);
 			const Vector Zero = vdupq_n_f32(0);
@@ -21150,7 +21101,7 @@ namespace At0
 			M.r[2] = vsetq_lane_f32(fRange, g_XMNegIdentityR3.v, 2);
 			M.r[3] = vsetq_lane_f32(fRange * NearZ, Zero, 2);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			float TwoNearZ = NearZ + NearZ;
 			float fRange = FarZ / (NearZ - FarZ);
@@ -21187,7 +21138,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::PerspectiveFovLH
+		inline Matrix RAYMATH_CALLCONV Matrix::PerspectiveFovLH
 		(
 			float FovAngleY,
 			float AspectRatio,
@@ -21200,7 +21151,7 @@ namespace At0
 			assert(!ScalarNearEqual(AspectRatio, 0.0f, 0.00001f));
 			assert(!ScalarNearEqual(FarZ, NearZ, 0.00001f));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float    SinFov;
 			float    CosFov;
@@ -21232,7 +21183,7 @@ namespace At0
 			M.m[3][3] = 0.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float    SinFov;
 			float    CosFov;
 			ScalarSinCos(&SinFov, &CosFov, 0.5f * FovAngleY);
@@ -21248,7 +21199,7 @@ namespace At0
 			M.r[2] = vsetq_lane_f32(fRange, g_XMIdentityR3.v, 2);
 			M.r[3] = vsetq_lane_f32(-fRange * NearZ, Zero, 2);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			float    SinFov;
 			float    CosFov;
 			ScalarSinCos(&SinFov, &CosFov, 0.5f * FovAngleY);
@@ -21289,7 +21240,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::PerspectiveFovRH
+		inline Matrix RAYMATH_CALLCONV Matrix::PerspectiveFovRH
 		(
 			float FovAngleY,
 			float AspectRatio,
@@ -21302,7 +21253,7 @@ namespace At0
 			assert(!ScalarNearEqual(AspectRatio, 0.0f, 0.00001f));
 			assert(!ScalarNearEqual(FarZ, NearZ, 0.00001f));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float    SinFov;
 			float    CosFov;
@@ -21334,7 +21285,7 @@ namespace At0
 			M.m[3][3] = 0.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float    SinFov;
 			float    CosFov;
 			ScalarSinCos(&SinFov, &CosFov, 0.5f * FovAngleY);
@@ -21349,7 +21300,7 @@ namespace At0
 			M.r[2] = vsetq_lane_f32(fRange, g_XMNegIdentityR3.v, 2);
 			M.r[3] = vsetq_lane_f32(fRange * NearZ, Zero, 2);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			float    SinFov;
 			float    CosFov;
 			ScalarSinCos(&SinFov, &CosFov, 0.5f * FovAngleY);
@@ -21389,7 +21340,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::PerspectiveOffCenterLH
+		inline Matrix RAYMATH_CALLCONV Matrix::PerspectiveOffCenterLH
 		(
 			float ViewLeft,
 			float ViewRight,
@@ -21404,7 +21355,7 @@ namespace At0
 			assert(!ScalarNearEqual(ViewTop, ViewBottom, 0.00001f));
 			assert(!ScalarNearEqual(FarZ, NearZ, 0.00001f));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float TwoNearZ = NearZ + NearZ;
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
@@ -21433,7 +21384,7 @@ namespace At0
 			M.m[3][3] = 0.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float TwoNearZ = NearZ + NearZ;
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
 			float ReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
@@ -21449,7 +21400,7 @@ namespace At0
 				1.0f);
 			M.r[3] = vsetq_lane_f32(-fRange * NearZ, Zero, 2);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			float TwoNearZ = NearZ + NearZ;
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
@@ -21487,7 +21438,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::PerspectiveOffCenterRH
+		inline Matrix RAYMATH_CALLCONV Matrix::PerspectiveOffCenterRH
 		(
 			float ViewLeft,
 			float ViewRight,
@@ -21502,7 +21453,7 @@ namespace At0
 			assert(!ScalarNearEqual(ViewTop, ViewBottom, 0.00001f));
 			assert(!ScalarNearEqual(FarZ, NearZ, 0.00001f));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float TwoNearZ = NearZ + NearZ;
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
@@ -21531,7 +21482,7 @@ namespace At0
 			M.m[3][3] = 0.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float TwoNearZ = NearZ + NearZ;
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
 			float ReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
@@ -21547,7 +21498,7 @@ namespace At0
 				-1.0f);
 			M.r[3] = vsetq_lane_f32(fRange * NearZ, Zero, 2);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			float TwoNearZ = NearZ + NearZ;
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
@@ -21585,7 +21536,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::OrthographicLH
+		inline Matrix RAYMATH_CALLCONV Matrix::OrthographicLH
 		(
 			float ViewWidth,
 			float ViewHeight,
@@ -21597,7 +21548,7 @@ namespace At0
 			assert(!ScalarNearEqual(ViewHeight, 0.0f, 0.00001f));
 			assert(!ScalarNearEqual(FarZ, NearZ, 0.00001f));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float fRange = 1.0f / (FarZ - NearZ);
 
@@ -21623,7 +21574,7 @@ namespace At0
 			M.m[3][3] = 1.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float fRange = 1.0f / (FarZ - NearZ);
 
 			const Vector Zero = vdupq_n_f32(0);
@@ -21633,7 +21584,7 @@ namespace At0
 			M.r[2] = vsetq_lane_f32(fRange, Zero, 2);
 			M.r[3] = vsetq_lane_f32(-fRange * NearZ, g_XMIdentityR3.v, 2);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			float fRange = 1.0f / (FarZ - NearZ);
 			// Note: This is recorded on the stack
@@ -21669,7 +21620,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::OrthographicRH
+		inline Matrix RAYMATH_CALLCONV Matrix::OrthographicRH
 		(
 			float ViewWidth,
 			float ViewHeight,
@@ -21681,7 +21632,7 @@ namespace At0
 			assert(!ScalarNearEqual(ViewHeight, 0.0f, 0.00001f));
 			assert(!ScalarNearEqual(FarZ, NearZ, 0.00001f));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float fRange = 1.0f / (NearZ - FarZ);
 
@@ -21707,7 +21658,7 @@ namespace At0
 			M.m[3][3] = 1.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float fRange = 1.0f / (NearZ - FarZ);
 
 			const Vector Zero = vdupq_n_f32(0);
@@ -21717,7 +21668,7 @@ namespace At0
 			M.r[2] = vsetq_lane_f32(fRange, Zero, 2);
 			M.r[3] = vsetq_lane_f32(fRange * NearZ, g_XMIdentityR3.v, 2);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			float fRange = 1.0f / (NearZ - FarZ);
 			// Note: This is recorded on the stack
@@ -21753,7 +21704,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::OrthographicOffCenterLH
+		inline Matrix RAYMATH_CALLCONV Matrix::OrthographicOffCenterLH
 		(
 			float ViewLeft,
 			float ViewRight,
@@ -21767,7 +21718,7 @@ namespace At0
 			assert(!ScalarNearEqual(ViewTop, ViewBottom, 0.00001f));
 			assert(!ScalarNearEqual(FarZ, NearZ, 0.00001f));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
 			float ReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
@@ -21795,7 +21746,7 @@ namespace At0
 			M.m[3][3] = 1.0f;
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
 			float ReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
 			float fRange = 1.0f / (FarZ - NearZ);
@@ -21809,7 +21760,7 @@ namespace At0
 				-fRange * NearZ,
 				1.0f);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			float fReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
 			float fReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
@@ -21853,7 +21804,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::OrthographicOffCenterRH
+		inline Matrix RAYMATH_CALLCONV Matrix::OrthographicOffCenterRH
 		(
 			float ViewLeft,
 			float ViewRight,
@@ -21867,7 +21818,7 @@ namespace At0
 			assert(!ScalarNearEqual(ViewTop, ViewBottom, 0.00001f));
 			assert(!ScalarNearEqual(FarZ, NearZ, 0.00001f));
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
 			float ReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
@@ -21895,7 +21846,7 @@ namespace At0
 				1.0f);
 			return M;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
 			float ReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
 			float fRange = 1.0f / (NearZ - FarZ);
@@ -21909,7 +21860,7 @@ namespace At0
 				fRange * NearZ,
 				1.0f);
 			return M;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			float fReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
 			float fReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
@@ -22005,7 +21956,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix& XM_CALLCONV Matrix::operator+= (FMatrix M)
+		inline Matrix& RAYMATH_CALLCONV Matrix::operator+= (FMatrix M)
 		{
 			r[0] = VectorAdd(r[0], M.r[0]);
 			r[1] = VectorAdd(r[1], M.r[1]);
@@ -22016,7 +21967,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix& XM_CALLCONV Matrix::operator-= (FMatrix M)
+		inline Matrix& RAYMATH_CALLCONV Matrix::operator-= (FMatrix M)
 		{
 			r[0] = VectorSubtract(r[0], M.r[0]);
 			r[1] = VectorSubtract(r[1], M.r[1]);
@@ -22027,7 +21978,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix& XM_CALLCONV Matrix::operator*=(FMatrix M)
+		inline Matrix& RAYMATH_CALLCONV Matrix::operator*=(FMatrix M)
 		{
 			*this = Matrix::Multiply(*this, M);
 			return *this;
@@ -22048,14 +21999,14 @@ namespace At0
 
 		inline Matrix& Matrix::operator/= (float S)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector vS = VectorReplicate(S);
 			r[0] = VectorDivide(r[0], vS);
 			r[1] = VectorDivide(r[1], vS);
 			r[2] = VectorDivide(r[2], vS);
 			r[3] = VectorDivide(r[3], vS);
 			return *this;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 			float32x4_t vS = vdupq_n_f32(S);
 			r[0] = vdivq_f32(r[0], vS);
@@ -22077,7 +22028,7 @@ namespace At0
 			r[3] = vmulq_f32(r[3], Reciprocal);
 #endif
 			return *this;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 vS = _mm_set_ps1(S);
 			r[0] = _mm_div_ps(r[0], vS);
 			r[1] = _mm_div_ps(r[1], vS);
@@ -22089,7 +22040,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::operator+ (FMatrix M) const
+		inline Matrix RAYMATH_CALLCONV Matrix::operator+ (FMatrix M) const
 		{
 			Matrix R;
 			R.r[0] = VectorAdd(r[0], M.r[0]);
@@ -22101,7 +22052,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::operator- (FMatrix M) const
+		inline Matrix RAYMATH_CALLCONV Matrix::operator- (FMatrix M) const
 		{
 			Matrix R;
 			R.r[0] = VectorSubtract(r[0], M.r[0]);
@@ -22113,7 +22064,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV Matrix::operator*(FMatrix M) const
+		inline Matrix RAYMATH_CALLCONV Matrix::operator*(FMatrix M) const
 		{
 			return Matrix::Multiply(*this, M);
 		}
@@ -22134,7 +22085,7 @@ namespace At0
 
 		inline Matrix Matrix::operator/ (float S) const
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			Vector vS = VectorReplicate(S);
 			Matrix R;
 			R.r[0] = VectorDivide(r[0], vS);
@@ -22142,7 +22093,7 @@ namespace At0
 			R.r[2] = VectorDivide(r[2], vS);
 			R.r[3] = VectorDivide(r[3], vS);
 			return R;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 			float32x4_t vS = vdupq_n_f32(S);
 			Matrix R;
@@ -22166,7 +22117,7 @@ namespace At0
 			R.r[3] = vmulq_f32(r[3], Reciprocal);
 #endif
 			return R;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			__m128 vS = _mm_set_ps1(S);
 			Matrix R;
 			R.r[0] = _mm_div_ps(r[0], vS);
@@ -22179,7 +22130,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV operator*
+		inline Matrix RAYMATH_CALLCONV operator*
 			(
 				float S,
 				FMatrix M
@@ -22338,35 +22289,35 @@ namespace At0
 
 		 //------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Quaternion::operator==(FQuaternion other) const
+		inline bool RAYMATH_CALLCONV Quaternion::operator==(FQuaternion other) const
 		{
 			return Vector4Equal(*this, other);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Quaternion::operator!=(FQuaternion other) const
+		inline bool RAYMATH_CALLCONV Quaternion::operator!=(FQuaternion other) const
 		{
 			return Vector4NotEqual(*this, other);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Quaternion::IsNaN() const
+		inline bool RAYMATH_CALLCONV Quaternion::IsNaN() const
 		{
 			return Vector4IsNaN(*this);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Quaternion::IsInfinite() const
+		inline bool RAYMATH_CALLCONV Quaternion::IsInfinite() const
 		{
 			return Vector4IsInfinite(*this);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV Quaternion::IsIdentity() const
+		inline bool RAYMATH_CALLCONV Quaternion::IsIdentity() const
 		{
 			return Vector4Equal(*this, g_XMIdentityR3.v);
 		}
@@ -22377,7 +22328,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::Dot
+		inline Quaternion RAYMATH_CALLCONV Quaternion::Dot
 		(
 			FQuaternion Q1,
 			FQuaternion Q2
@@ -22388,7 +22339,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::Multiply(FQuaternion Q1, FQuaternion Q2)
+		inline Quaternion RAYMATH_CALLCONV Quaternion::Multiply(FQuaternion Q1, FQuaternion Q2)
 		{
 			// Returns the product Q2*Q1 (which is the concatenation of a rotation Q1 followed by the rotation Q2)
 
@@ -22397,7 +22348,7 @@ namespace At0
 			//   (Q2.w * Q1.z) + (Q2.x * Q1.y) - (Q2.y * Q1.x) + (Q2.z * Q1.w),
 			//   (Q2.w * Q1.w) - (Q2.x * Q1.x) - (Q2.y * Q1.y) - (Q2.z * Q1.z) ]
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					(Q2.v.vector4_f32[3] * Q1.v.vector4_f32[0]) + (Q2.v.vector4_f32[0] * Q1.v.vector4_f32[3]) + (Q2.v.vector4_f32[1] * Q1.v.vector4_f32[2]) - (Q2.v.vector4_f32[2] * Q1.v.vector4_f32[1]),
 					(Q2.v.vector4_f32[3] * Q1.v.vector4_f32[1]) - (Q2.v.vector4_f32[0] * Q1.v.vector4_f32[2]) + (Q2.v.vector4_f32[1] * Q1.v.vector4_f32[3]) + (Q2.v.vector4_f32[2] * Q1.v.vector4_f32[0]),
@@ -22405,7 +22356,7 @@ namespace At0
 					(Q2.v.vector4_f32[3] * Q1.v.vector4_f32[3]) - (Q2.v.vector4_f32[0] * Q1.v.vector4_f32[0]) - (Q2.v.vector4_f32[1] * Q1.v.vector4_f32[1]) - (Q2.v.vector4_f32[2] * Q1.v.vector4_f32[2])
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 ControlWZYX = { { { 1.0f, -1.0f, 1.0f, -1.0f } } };
 			static const VectorF32 ControlZWXY = { { { 1.0f, 1.0f, -1.0f, -1.0f } } };
 			static const VectorF32 ControlYXWZ = { { { -1.0f, 1.0f, 1.0f, -1.0f } } };
@@ -22435,7 +22386,7 @@ namespace At0
 			Q2Z = vmulq_f32(Q2Z, vTemp);
 			vResult = vmlaq_f32(vResult, Q2Z, ControlYXWZ);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 ControlWZYX = { { { 1.0f, -1.0f, 1.0f, -1.0f } } };
 			static const VectorF32 ControlZWXY = { { { 1.0f, 1.0f, -1.0f, -1.0f } } };
 			static const VectorF32 ControlYXWZ = { { { -1.0f, 1.0f, 1.0f, -1.0f } } };
@@ -22445,23 +22396,23 @@ namespace At0
 			Vector Q2Z = Q2;
 			Vector vResult = Q2;
 			// Splat with one instruction
-			vResult = XM_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 3, 3, 3));
-			Q2X = XM_PERMUTE_PS(Q2X, _MM_SHUFFLE(0, 0, 0, 0));
-			Q2Y = XM_PERMUTE_PS(Q2Y, _MM_SHUFFLE(1, 1, 1, 1));
-			Q2Z = XM_PERMUTE_PS(Q2Z, _MM_SHUFFLE(2, 2, 2, 2));
+			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 3, 3, 3));
+			Q2X = RAYMATH_PERMUTE_PS(Q2X, _MM_SHUFFLE(0, 0, 0, 0));
+			Q2Y = RAYMATH_PERMUTE_PS(Q2Y, _MM_SHUFFLE(1, 1, 1, 1));
+			Q2Z = RAYMATH_PERMUTE_PS(Q2Z, _MM_SHUFFLE(2, 2, 2, 2));
 			// Retire Q1 and perform Q1*Q2W
 			vResult = _mm_mul_ps(vResult, Q1);
 			Vector Q1Shuffle = Q1;
 			// Shuffle the copies of Q1
-			Q1Shuffle = XM_PERMUTE_PS(Q1Shuffle, _MM_SHUFFLE(0, 1, 2, 3));
+			Q1Shuffle = RAYMATH_PERMUTE_PS(Q1Shuffle, _MM_SHUFFLE(0, 1, 2, 3));
 			// Mul by Q1WZYX
 			Q2X = _mm_mul_ps(Q2X, Q1Shuffle);
-			Q1Shuffle = XM_PERMUTE_PS(Q1Shuffle, _MM_SHUFFLE(2, 3, 0, 1));
+			Q1Shuffle = RAYMATH_PERMUTE_PS(Q1Shuffle, _MM_SHUFFLE(2, 3, 0, 1));
 			// Flip the signs on y and z
 			Q2X = _mm_mul_ps(Q2X, ControlWZYX);
 			// Mul by Q1ZWXY
 			Q2Y = _mm_mul_ps(Q2Y, Q1Shuffle);
-			Q1Shuffle = XM_PERMUTE_PS(Q1Shuffle, _MM_SHUFFLE(0, 1, 2, 3));
+			Q1Shuffle = RAYMATH_PERMUTE_PS(Q1Shuffle, _MM_SHUFFLE(0, 1, 2, 3));
 			// Flip the signs on z and w
 			Q2Y = _mm_mul_ps(Q2Y, ControlZWXY);
 			// Mul by Q1YXWZ
@@ -22473,62 +22424,62 @@ namespace At0
 			vResult = _mm_add_ps(vResult, Q2Y);
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::operator*(FQuaternion Q2) const
+		inline Quaternion RAYMATH_CALLCONV Quaternion::operator*(FQuaternion Q2) const
 		{
 			return Multiply(*this, Q2);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion& XM_CALLCONV Quaternion::operator*=(FQuaternion other)
+		inline Quaternion& RAYMATH_CALLCONV Quaternion::operator*=(FQuaternion other)
 		{
 			*this = *this * other;
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::LengthSq() const
+		inline Quaternion RAYMATH_CALLCONV Quaternion::LengthSq() const
 		{
 			return Vector4LengthSq(*this);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::ReciprocalLength() const
+		inline Quaternion RAYMATH_CALLCONV Quaternion::ReciprocalLength() const
 		{
 			return Vector4ReciprocalLength(*this);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::Length() const
+		inline Quaternion RAYMATH_CALLCONV Quaternion::Length() const
 		{
 			return Vector4Length(*this);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::NormalizeEst() const
+		inline Quaternion RAYMATH_CALLCONV Quaternion::NormalizeEst() const
 		{
 			return Vector4NormalizeEst(*this);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::Normalize() const
+		inline Quaternion RAYMATH_CALLCONV Quaternion::Normalize() const
 		{
 			return Vector4Normalize(*this);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::Conjugate() const
+		inline Quaternion RAYMATH_CALLCONV Quaternion::Conjugate() const
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
 					-v.vector4_f32[0],
 					-v.vector4_f32[1],
@@ -22536,18 +22487,18 @@ namespace At0
 					v.vector4_f32[3]
 				} } };
 			return Result.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
 			return vmulq_f32(*this, NegativeOne3.v);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
 			return _mm_mul_ps(*this, NegativeOne3);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::Inverse() const
+		inline Quaternion RAYMATH_CALLCONV Quaternion::Inverse() const
 		{
 			const Vector  Zero = VectorZero();
 
@@ -22565,7 +22516,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::Ln() const
+		inline Quaternion RAYMATH_CALLCONV Quaternion::Ln() const
 		{
 			static const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 
@@ -22587,7 +22538,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::Exp() const
+		inline Quaternion RAYMATH_CALLCONV Quaternion::Exp() const
 		{
 			Vector Theta = Vector3Length(*this);
 
@@ -22609,7 +22560,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::Slerp
+		inline Quaternion RAYMATH_CALLCONV Quaternion::Slerp
 		(
 			FQuaternion Q0,
 			FQuaternion Q1,
@@ -22622,7 +22573,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::SlerpV
+		inline Quaternion RAYMATH_CALLCONV Quaternion::SlerpV
 		(
 			FQuaternion Q0,
 			FQuaternion Q1,
@@ -22633,7 +22584,7 @@ namespace At0
 
 			// Result = Q0 * sin((1.0 - t) * Omega) / sin(Omega) + Q1 * sin(t * Omega) / sin(Omega)
 
-#if defined(_XM_NO_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
 			const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 
@@ -22676,7 +22627,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 			static const VectorU32 SignMask2 = { { { 0x80000000, 0x00000000, 0x00000000, 0x00000000 } } };
 
@@ -22696,7 +22647,7 @@ namespace At0
 
 			Vector Omega = VectorATan2(SinOmega, CosOmega);
 
-			Vector V01 = XM_PERMUTE_PS(T, _MM_SHUFFLE(2, 3, 0, 1));
+			Vector V01 = RAYMATH_PERMUTE_PS(T, _MM_SHUFFLE(2, 3, 0, 1));
 			V01 = _mm_and_ps(V01, g_XMMaskXY);
 			V01 = _mm_xor_ps(V01, SignMask2);
 			V01 = _mm_add_ps(g_XMIdentityR0, V01);
@@ -22720,7 +22671,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::Squad
+		inline Quaternion RAYMATH_CALLCONV Quaternion::Squad
 		(
 			FQuaternion Q0,
 			FQuaternion Q1,
@@ -22735,7 +22686,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::SquadV
+		inline Quaternion RAYMATH_CALLCONV Quaternion::SquadV
 		(
 			FQuaternion Q0,
 			FQuaternion Q1,
@@ -22762,7 +22713,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV Quaternion::SquadSetup
+		inline void RAYMATH_CALLCONV Quaternion::SquadSetup
 		(
 			Vector* pA,
 			Vector* pB,
@@ -22820,7 +22771,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::BaryCentric
+		inline Quaternion RAYMATH_CALLCONV Quaternion::BaryCentric
 		(
 			FQuaternion Q0,
 			FQuaternion Q1,
@@ -22849,7 +22800,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::BaryCentricV
+		inline Quaternion RAYMATH_CALLCONV Quaternion::BaryCentricV
 		(
 			FQuaternion Q0,
 			FQuaternion Q1,
@@ -22889,14 +22840,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::Identity()
+		inline Quaternion RAYMATH_CALLCONV Quaternion::Identity()
 		{
 			return g_XMIdentityR3.v;
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::RotationRollPitchYaw
+		inline Quaternion RAYMATH_CALLCONV Quaternion::RotationRollPitchYaw
 		(
 			float Pitch,
 			float Yaw,
@@ -22910,7 +22861,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::RotationRollPitchYawFromVector
+		inline Quaternion RAYMATH_CALLCONV Quaternion::RotationRollPitchYawFromVector
 		(
 			FVector Angles // <Pitch, Yaw, Roll, 0>
 		)
@@ -22940,13 +22891,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::RotationNormal
+		inline Quaternion RAYMATH_CALLCONV Quaternion::RotationNormal
 		(
 			FVector NormalAxis,
 			float    Angle
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
 			Vector N = VectorSelect(g_XMOne.v, NormalAxis, g_XMSelect1110.v);
 
@@ -22955,7 +22906,7 @@ namespace At0
 
 			Vector Scale = VectorSet(SinV, SinV, SinV, CosV);
 			return VectorMultiply(N, Scale);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector N = _mm_and_ps(NormalAxis, g_XMMask3);
 			N = _mm_or_ps(N, g_XMIdentityR3);
 			Vector Scale = _mm_set_ps1(0.5f * Angle);
@@ -22972,7 +22923,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::RotationAxis
+		inline Quaternion RAYMATH_CALLCONV Quaternion::RotationAxis
 		(
 			FVector Axis,
 			float    Angle
@@ -22988,12 +22939,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Quaternion XM_CALLCONV Quaternion::RotationMatrix
+		inline Quaternion RAYMATH_CALLCONV Quaternion::RotationMatrix
 		(
 			FMatrix M
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 q;
 			float r22 = M.m[2][2];
@@ -23045,7 +22996,7 @@ namespace At0
 			}
 			return q.v;
 
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 XMPMMP = { { { +1.0f, -1.0f, -1.0f, +1.0f } } };
 			static const VectorF32 XMMPMP = { { { -1.0f, +1.0f, -1.0f, +1.0f } } };
 			static const VectorF32 XMMMPP = { { { -1.0f, -1.0f, +1.0f, +1.0f } } };
@@ -23132,7 +23083,7 @@ namespace At0
 			// the quaternion).
 			t0 = Vector4Length(t2);
 			return VectorDivide(t2, t0);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 XMPMMP = { { { +1.0f, -1.0f, -1.0f, +1.0f } } };
 			static const VectorF32 XMMPMP = { { { -1.0f, +1.0f, -1.0f, +1.0f } } };
 			static const VectorF32 XMMMPP = { { { -1.0f, -1.0f, +1.0f, +1.0f } } };
@@ -23142,11 +23093,11 @@ namespace At0
 			Vector r2 = M.r[2];  // (r20, r21, r22, 0)
 
 			// (r00, r00, r00, r00)
-			Vector r00 = XM_PERMUTE_PS(r0, _MM_SHUFFLE(0, 0, 0, 0));
+			Vector r00 = RAYMATH_PERMUTE_PS(r0, _MM_SHUFFLE(0, 0, 0, 0));
 			// (r11, r11, r11, r11)
-			Vector r11 = XM_PERMUTE_PS(r1, _MM_SHUFFLE(1, 1, 1, 1));
+			Vector r11 = RAYMATH_PERMUTE_PS(r1, _MM_SHUFFLE(1, 1, 1, 1));
 			// (r22, r22, r22, r22)
-			Vector r22 = XM_PERMUTE_PS(r2, _MM_SHUFFLE(2, 2, 2, 2));
+			Vector r22 = RAYMATH_PERMUTE_PS(r2, _MM_SHUFFLE(2, 2, 2, 2));
 
 			// x^2 >= y^2 equivalent to r11 - r00 <= 0
 			// (r11 - r00, r11 - r00, r11 - r00, r11 - r00)
@@ -23180,7 +23131,7 @@ namespace At0
 			// (r10, r10, r20, r21)
 			t1 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(1, 0, 0, 0));
 			// (r10, r20, r21, r10)
-			t1 = XM_PERMUTE_PS(t1, _MM_SHUFFLE(1, 3, 2, 0));
+			t1 = RAYMATH_PERMUTE_PS(t1, _MM_SHUFFLE(1, 3, 2, 0));
 			// (4*x*y, 4*x*z, 4*y*z, unused)
 			Vector xyxzyz = _mm_add_ps(t0, t1);
 
@@ -23189,7 +23140,7 @@ namespace At0
 			// (r12, r12, r02, r01)
 			t1 = _mm_shuffle_ps(r1, r0, _MM_SHUFFLE(1, 2, 2, 2));
 			// (r12, r02, r01, r12)
-			t1 = XM_PERMUTE_PS(t1, _MM_SHUFFLE(1, 3, 2, 0));
+			t1 = RAYMATH_PERMUTE_PS(t1, _MM_SHUFFLE(1, 3, 2, 0));
 			// (4*x*w, 4*y*w, 4*z*w, unused)
 			Vector xwywzw = _mm_sub_ps(t0, t1);
 			xwywzw = _mm_mul_ps(XMMPMP, xwywzw);
@@ -23236,7 +23187,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV Quaternion::ToAxisAngle
+		inline void RAYMATH_CALLCONV Quaternion::ToAxisAngle
 		(
 			Vector* pAxis,
 			float* pAngle
@@ -23262,7 +23213,7 @@ namespace At0
 
 		 //------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV PlaneEqual
+		inline bool RAYMATH_CALLCONV PlaneEqual
 		(
 			FVector P1,
 			FVector P2
@@ -23273,7 +23224,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV PlaneNearEqual
+		inline bool RAYMATH_CALLCONV PlaneNearEqual
 		(
 			FVector P1,
 			FVector P2,
@@ -23287,7 +23238,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV PlaneNotEqual
+		inline bool RAYMATH_CALLCONV PlaneNotEqual
 		(
 			FVector P1,
 			FVector P2
@@ -23298,7 +23249,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV PlaneIsNaN
+		inline bool RAYMATH_CALLCONV PlaneIsNaN
 		(
 			FVector P
 		)
@@ -23308,7 +23259,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV PlaneIsInfinite
+		inline bool RAYMATH_CALLCONV PlaneIsInfinite
 		(
 			FVector P
 		)
@@ -23322,7 +23273,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV PlaneDot
+		inline Vector RAYMATH_CALLCONV PlaneDot
 		(
 			FVector P,
 			FVector V
@@ -23333,7 +23284,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV PlaneDotCoord
+		inline Vector RAYMATH_CALLCONV PlaneDotCoord
 		(
 			FVector P,
 			FVector V
@@ -23348,7 +23299,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV PlaneDotNormal
+		inline Vector RAYMATH_CALLCONV PlaneDotNormal
 		(
 			FVector P,
 			FVector V
@@ -23361,33 +23312,33 @@ namespace At0
 		// PlaneNormalizeEst uses a reciprocal estimate and
 		// returns QNaN on zero and infinite vectors.
 
-		inline Vector XM_CALLCONV PlaneNormalizeEst
+		inline Vector RAYMATH_CALLCONV PlaneNormalizeEst
 		(
 			FVector P
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
 			Vector Result = Vector3ReciprocalLengthEst(P);
 			return VectorMultiply(P, Result);
 
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vTemp = _mm_dp_ps(P, P, 0x7f);
 			Vector vResult = _mm_rsqrt_ps(vTemp);
 			return _mm_mul_ps(vResult, P);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product
 			Vector vDot = _mm_mul_ps(P, P);
 			// x=Dot.y, y=Dot.z
-			Vector vTemp = XM_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
 			// Result.x = x+y
 			vDot = _mm_add_ss(vDot, vTemp);
 			// x=Dot.z
-			vTemp = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+			vTemp = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 			// Result.x = (x+y)+z
 			vDot = _mm_add_ss(vDot, vTemp);
 			// Splat x
-			vDot = XM_PERMUTE_PS(vDot, _MM_SHUFFLE(0, 0, 0, 0));
+			vDot = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(0, 0, 0, 0));
 			// Get the reciprocal
 			vDot = _mm_rsqrt_ps(vDot);
 			// Get the reciprocal
@@ -23398,12 +23349,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV PlaneNormalize
+		inline Vector RAYMATH_CALLCONV PlaneNormalize
 		(
 			FVector P
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			float fLengthSq = sqrtf((P.vector4_f32[0] * P.vector4_f32[0]) + (P.vector4_f32[1] * P.vector4_f32[1]) + (P.vector4_f32[2] * P.vector4_f32[2]));
 			// Prevent divide by zero
 			if (fLengthSq > 0)
@@ -23417,10 +23368,10 @@ namespace At0
 					P.vector4_f32[3] * fLengthSq
 				} } };
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector vLength = Vector3ReciprocalLength(P);
 			return VectorMultiply(P, vLength);
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			Vector vLengthSq = _mm_dp_ps(P, P, 0x7f);
 			// Prepare for the division
 			Vector vResult = _mm_sqrt_ps(vLengthSq);
@@ -23432,14 +23383,14 @@ namespace At0
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vLengthSq);
 			return vResult;
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y and z only
 			Vector vLengthSq = _mm_mul_ps(P, P);
-			Vector vTemp = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 1, 2, 1));
+			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 1, 2, 1));
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
-			vTemp = XM_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
+			vTemp = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
-			vLengthSq = XM_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
+			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			// Prepare for the division
 			Vector vResult = _mm_sqrt_ps(vLengthSq);
 			// Failsafe on zero (Or epsilon) length planes
@@ -23455,7 +23406,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV PlaneIntersectLine
+		inline Vector RAYMATH_CALLCONV PlaneIntersectLine
 		(
 			FVector P,
 			FVector LinePoint1,
@@ -23480,7 +23431,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline void XM_CALLCONV PlaneIntersectPlane
+		inline void RAYMATH_CALLCONV PlaneIntersectPlane
 		(
 			Vector* pLinePoint1,
 			Vector* pLinePoint2,
@@ -23516,7 +23467,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV PlaneTransform
+		inline Vector RAYMATH_CALLCONV PlaneTransform
 		(
 			FVector P,
 			FMatrix M
@@ -23536,7 +23487,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Float4* XM_CALLCONV PlaneTransformStream
+		inline Float4* RAYMATH_CALLCONV PlaneTransformStream
 		(
 			Float4* pOutputStream,
 			size_t          OutputStride,
@@ -23560,7 +23511,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV PlaneFromPointNormal
+		inline Vector RAYMATH_CALLCONV PlaneFromPointNormal
 		(
 			FVector Point,
 			FVector Normal
@@ -23573,7 +23524,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV PlaneFromPoints
+		inline Vector RAYMATH_CALLCONV PlaneFromPoints
 		(
 			FVector Point1,
 			FVector Point2,
@@ -23606,7 +23557,7 @@ namespace At0
 
 		 //------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV ColorEqual
+		inline bool RAYMATH_CALLCONV ColorEqual
 		(
 			FVector C1,
 			FVector C2
@@ -23617,7 +23568,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV ColorNotEqual
+		inline bool RAYMATH_CALLCONV ColorNotEqual
 		(
 			FVector C1,
 			FVector C2
@@ -23628,7 +23579,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV ColorGreater
+		inline bool RAYMATH_CALLCONV ColorGreater
 		(
 			FVector C1,
 			FVector C2
@@ -23639,7 +23590,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV ColorGreaterOrEqual
+		inline bool RAYMATH_CALLCONV ColorGreaterOrEqual
 		(
 			FVector C1,
 			FVector C2
@@ -23650,7 +23601,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV ColorLess
+		inline bool RAYMATH_CALLCONV ColorLess
 		(
 			FVector C1,
 			FVector C2
@@ -23661,7 +23612,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV ColorLessOrEqual
+		inline bool RAYMATH_CALLCONV ColorLessOrEqual
 		(
 			FVector C1,
 			FVector C2
@@ -23672,7 +23623,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV ColorIsNaN
+		inline bool RAYMATH_CALLCONV ColorIsNaN
 		(
 			FVector C
 		)
@@ -23682,7 +23633,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline bool XM_CALLCONV ColorIsInfinite
+		inline bool RAYMATH_CALLCONV ColorIsInfinite
 		(
 			FVector C
 		)
@@ -23696,12 +23647,12 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorNegative
+		inline Vector RAYMATH_CALLCONV ColorNegative
 		(
 			FVector vColor
 		)
 		{
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult = { { {
 					1.0f - vColor.vector4_f32[0],
 					1.0f - vColor.vector4_f32[1],
@@ -23709,20 +23660,20 @@ namespace At0
 					vColor.vector4_f32[3]
 				} } };
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector vTemp = veorq_u32(vColor, g_XMNegate3);
 			return vaddq_f32(vTemp, g_XMOne3);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			// Negate only x,y and z.
 			Vector vTemp = _mm_xor_ps(vColor, g_XMNegate3);
 			// Add 1,1,1,0 to -x,-y,-z,w
 			return _mm_add_ps(vTemp, g_XMOne3);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorModulate
+		inline Vector RAYMATH_CALLCONV ColorModulate
 		(
 			FVector C1,
 			FVector C2
@@ -23733,7 +23684,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorAdjustSaturation
+		inline Vector RAYMATH_CALLCONV ColorAdjustSaturation
 		(
 			FVector vColor,
 			float    fSaturation
@@ -23743,7 +23694,7 @@ namespace At0
 			// Result = (C - Luminance) * Saturation + Luminance;
 
 			const VectorF32 gvLuminance = { { { 0.2125f, 0.7154f, 0.0721f, 0.0f } } };
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			float fLuminance = (vColor.vector4_f32[0] * gvLuminance.f[0]) + (vColor.vector4_f32[1] * gvLuminance.f[1]) + (vColor.vector4_f32[2] * gvLuminance.f[2]);
 			Vector vResult;
 			vResult.vector4_f32[0] = ((vColor.vector4_f32[0] - fLuminance) * fSaturation) + fLuminance;
@@ -23751,12 +23702,12 @@ namespace At0
 			vResult.vector4_f32[2] = ((vColor.vector4_f32[2] - fLuminance) * fSaturation) + fLuminance;
 			vResult.vector4_f32[3] = vColor.vector4_f32[3];
 			return vResult;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector vLuminance = Vector3Dot(vColor, gvLuminance);
 			Vector vResult = vsubq_f32(vColor, vLuminance);
 			vResult = vmlaq_n_f32(vLuminance, vResult, fSaturation);
 			return vbslq_f32(g_XMSelect1110, vResult, vColor);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vLuminance = Vector3Dot(vColor, gvLuminance);
 			// Splat fSaturation
 			Vector vSaturation = _mm_set_ps1(fSaturation);
@@ -23773,7 +23724,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorAdjustContrast
+		inline Vector RAYMATH_CALLCONV ColorAdjustContrast
 		(
 			FVector vColor,
 			float    fContrast
@@ -23781,7 +23732,7 @@ namespace At0
 		{
 			// Result = (vColor - 0.5f) * fContrast + 0.5f;
 
-#if defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult = { { {
 					((vColor.vector4_f32[0] - 0.5f) * fContrast) + 0.5f,
 					((vColor.vector4_f32[1] - 0.5f) * fContrast) + 0.5f,
@@ -23789,11 +23740,11 @@ namespace At0
 					vColor.vector4_f32[3]        // Leave W untouched
 				} } };
 			return vResult.v;
-#elif defined(_XM_ARM_NEON_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS)
 			Vector vResult = vsubq_f32(vColor, g_XMOneHalf.v);
 			vResult = vmlaq_n_f32(g_XMOneHalf.v, vResult, fContrast);
 			return vbslq_f32(g_XMSelect1110, vResult, vColor);
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 			Vector vScale = _mm_set_ps1(fContrast);           // Splat the scale
 			Vector vResult = _mm_sub_ps(vColor, g_XMOneHalf);  // Subtract 0.5f from the source (Saving source)
 			vResult = _mm_mul_ps(vResult, vScale);               // Mul by scale
@@ -23803,11 +23754,11 @@ namespace At0
 			vResult = _mm_shuffle_ps(vResult, vScale, _MM_SHUFFLE(3, 0, 1, 0));  // x = vResult.x,y = vResult.y,z = vResult.z,w=vColor.w
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorRGBToHSL(FVector rgb)
+		inline Vector RAYMATH_CALLCONV ColorRGBToHSL(FVector rgb)
 		{
 			Vector r = VectorSplatX(rgb);
 			Vector g = VectorSplatY(rgb);
@@ -23877,7 +23828,7 @@ namespace At0
 		namespace Internal
 		{
 
-			inline Vector XM_CALLCONV ColorHue2Clr(FVector p, FVector q, FVector h)
+			inline Vector RAYMATH_CALLCONV ColorHue2Clr(FVector p, FVector q, FVector h)
 			{
 				static const VectorF32 oneSixth = { { { 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f } } };
 				static const VectorF32 twoThirds = { { { 2.0f / 3.0f, 2.0f / 3.0f, 2.0f / 3.0f, 2.0f / 3.0f } } };
@@ -23914,7 +23865,7 @@ namespace At0
 
 		} // namespace Internal
 
-		inline Vector XM_CALLCONV ColorHSLToRGB(FVector hsl)
+		inline Vector RAYMATH_CALLCONV ColorHSLToRGB(FVector hsl)
 		{
 			static const VectorF32 oneThird = { { { 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f } } };
 
@@ -23955,7 +23906,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorRGBToHSV(FVector rgb)
+		inline Vector RAYMATH_CALLCONV ColorRGBToHSV(FVector rgb)
 		{
 			Vector r = VectorSplatX(rgb);
 			Vector g = VectorSplatY(rgb);
@@ -24010,7 +23961,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorHSVToRGB(FVector hsv)
+		inline Vector RAYMATH_CALLCONV ColorHSVToRGB(FVector hsv)
 		{
 			Vector h = VectorSplatX(hsv);
 			Vector s = VectorSplatY(hsv);
@@ -24079,7 +24030,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorRGBToYUV(FVector rgb)
+		inline Vector RAYMATH_CALLCONV ColorRGBToYUV(FVector rgb)
 		{
 			static const VectorF32 Scale0 = { { { 0.299f, -0.147f, 0.615f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { 0.587f, -0.289f, -0.515f, 0.0f } } };
@@ -24093,7 +24044,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorYUVToRGB(FVector yuv)
+		inline Vector RAYMATH_CALLCONV ColorYUVToRGB(FVector yuv)
 		{
 			static const VectorF32 Scale1 = { { { 0.0f, -0.395f, 2.032f, 0.0f } } };
 			static const VectorF32 Scale2 = { { { 1.140f, -0.581f, 0.0f, 0.0f } } };
@@ -24106,7 +24057,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorRGBToYUV_HD(FVector rgb)
+		inline Vector RAYMATH_CALLCONV ColorRGBToYUV_HD(FVector rgb)
 		{
 			static const VectorF32 Scale0 = { { { 0.2126f, -0.0997f, 0.6150f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { 0.7152f, -0.3354f, -0.5586f, 0.0f } } };
@@ -24120,7 +24071,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorYUVToRGB_HD(FVector yuv)
+		inline Vector RAYMATH_CALLCONV ColorYUVToRGB_HD(FVector yuv)
 		{
 			static const VectorF32 Scale1 = { { { 0.0f, -0.2153f, 2.1324f, 0.0f } } };
 			static const VectorF32 Scale2 = { { { 1.2803f, -0.3806f, 0.0f, 0.0f } } };
@@ -24133,7 +24084,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorRGBToXYZ(FVector rgb)
+		inline Vector RAYMATH_CALLCONV ColorRGBToXYZ(FVector rgb)
 		{
 			static const VectorF32 Scale0 = { { { 0.4887180f, 0.1762044f, 0.0000000f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { 0.3106803f, 0.8129847f, 0.0102048f, 0.0f } } };
@@ -24146,7 +24097,7 @@ namespace At0
 			return VectorSelect(rgb, clr, g_XMSelect1110);
 		}
 
-		inline Vector XM_CALLCONV ColorXYZToRGB(FVector xyz)
+		inline Vector RAYMATH_CALLCONV ColorXYZToRGB(FVector xyz)
 		{
 			static const VectorF32 Scale0 = { { { 2.3706743f, -0.5138850f, 0.0052982f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { -0.9000405f, 1.4253036f, -0.0146949f, 0.0f } } };
@@ -24161,7 +24112,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorXYZToSRGB(FVector xyz)
+		inline Vector RAYMATH_CALLCONV ColorXYZToSRGB(FVector xyz)
 		{
 			static const VectorF32 Scale0 = { { { 3.2406f, -0.9689f, 0.0557f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { -1.5372f, 1.8758f, -0.2040f, 0.0f } } };
@@ -24187,7 +24138,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorSRGBToXYZ(FVector srgb)
+		inline Vector RAYMATH_CALLCONV ColorSRGBToXYZ(FVector srgb)
 		{
 			static const VectorF32 Scale0 = { { { 0.4124f, 0.2126f, 0.0193f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { 0.3576f, 0.7152f, 0.1192f, 0.0f } } };
@@ -24213,7 +24164,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorRGBToSRGB(FVector rgb)
+		inline Vector RAYMATH_CALLCONV ColorRGBToSRGB(FVector rgb)
 		{
 			static const VectorF32 Cutoff = { { { 0.0031308f, 0.0031308f, 0.0031308f, 1.f } } };
 			static const VectorF32 Linear = { { { 12.92f, 12.92f, 12.92f, 1.f } } };
@@ -24231,7 +24182,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV ColorSRGBToRGB(FVector srgb)
+		inline Vector RAYMATH_CALLCONV ColorSRGBToRGB(FVector srgb)
 		{
 			static const VectorF32 Cutoff = { { { 0.04045f, 0.04045f, 0.04045f, 1.f } } };
 			static const VectorF32 ILinear = { { { 1.f / 12.92f, 1.f / 12.92f, 1.f / 12.92f, 1.f } } };
@@ -24257,7 +24208,7 @@ namespace At0
 
 		inline bool VerifyCPUSupport()
 		{
-#if defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 			int CPUInfo[4] = { -1 };
 			__cpuid(CPUInfo, 0);
 
@@ -24271,26 +24222,26 @@ namespace At0
 
 			__cpuid(CPUInfo, 1);
 
-#if defined(__AVX2__) || defined(_XM_AVX2_INTRINSICS_)
+#if defined(__AVX2__) || defined(RAY_AVX2_INTRINSICS)
 			// The compiler can emit FMA3 instructions even without explicit intrinsics use
 			if ((CPUInfo[2] & 0x38081001) != 0x38081001)
 				return false; // No F16C/AVX/OSXSAVE/SSE4.1/FMA3/SSE3 support
-#elif defined(_XM_FMA3_INTRINSICS_) && defined(_XM_F16C_INTRINSICS_)
+#elif defined(RAY_FMA3_INTRINSICS) && defined(RAY_F16C_INTRINSICS)
 			if ((CPUInfo[2] & 0x38081001) != 0x38081001)
 				return false; // No F16C/AVX/OSXSAVE/SSE4.1/FMA3/SSE3 support
-#elif defined(_XM_FMA3_INTRINSICS_)
+#elif defined(RAY_FMA3_INTRINSICS)
 			if ((CPUInfo[2] & 0x18081001) != 0x18081001)
 				return false; // No AVX/OSXSAVE/SSE4.1/FMA3/SSE3 support
-#elif defined(_XM_F16C_INTRINSICS_)
+#elif defined(RAY_F16C_INTRINSICS)
 			if ((CPUInfo[2] & 0x38080001) != 0x38080001)
 				return false; // No F16C/AVX/OSXSAVE/SSE4.1/SSE3 support
-#elif defined(__AVX__) || defined(_XM_AVX_INTRINSICS_)
+#elif defined(__AVX__) || defined(RAY_AVC_INTRINSICS)
 			if ((CPUInfo[2] & 0x18080001) != 0x18080001)
 				return false; // No AVX/OSXSAVE/SSE4.1/SSE3 support
-#elif defined(_XM_SSE4_INTRINSICS_)
+#elif defined(RAY_SSE4_INTRINSICS)
 			if ((CPUInfo[2] & 0x80001) != 0x80001)
 				return false; // No SSE3/SSE4.1 support
-#elif defined(_XM_SSE3_INTRINSICS_)
+#elif defined(RAY_SSE3_INTRINSICS)
 			if (!(CPUInfo[2] & 0x1))
 				return false; // No SSE3 support  
 #endif
@@ -24299,14 +24250,14 @@ namespace At0
 			if ((CPUInfo[3] & 0x6000000) != 0x6000000)
 				return false; // No SSE2/SSE support
 
-#if defined(__AVX2__) || defined(_XM_AVX2_INTRINSICS_)
+#if defined(__AVX2__) || defined(RAY_AVX2_INTRINSICS)
 			__cpuidex(CPUInfo, 7, 0);
 			if (!(CPUInfo[1] & 0x20))
 				return false; // No AVX2 support
 #endif
 
 			return true;
-#elif defined(_XM_ARM_NEON_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+#elif defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 			// ARM-NEON support is required for the Windows on ARM platform
 			return true;
 #else
@@ -24317,7 +24268,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector XM_CALLCONV FresnelTerm
+		inline Vector RAYMATH_CALLCONV FresnelTerm
 		(
 			FVector CosIncidentAngle,
 			FVector RefractionIndex
@@ -24329,7 +24280,7 @@ namespace At0
 			// c = CosIncidentAngle
 			// g = sqrt(c^2 + RefractionIndex^2 - 1)
 
-#if defined(_XM_NO_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
+#if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
 			Vector G = VectorMultiplyAdd(RefractionIndex, RefractionIndex, g_XMNegativeOne.v);
 			G = VectorMultiplyAdd(CosIncidentAngle, CosIncidentAngle, G);
@@ -24358,7 +24309,7 @@ namespace At0
 
 			return Result;
 
-#elif defined(_XM_SSE_INTRINSICS_)
+#elif defined(RAY_SSE_INTRINSICS)
 	// G = sqrt(abs((RefractionIndex^2-1) + CosIncidentAngle^2))
 			Vector G = _mm_mul_ps(RefractionIndex, RefractionIndex);
 			Vector vTemp = _mm_mul_ps(CosIncidentAngle, CosIncidentAngle);
@@ -24412,7 +24363,7 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		// Modulo the range of the given angle such that -XM_PI <= Angle < XM_PI
+		// Modulo the range of the given angle such that -Constants::PI <= Angle < Constants::PI
 		inline float ScalarModAngle
 		(
 			float Angle
@@ -24421,13 +24372,13 @@ namespace At0
 			// Note: The modulo is performed with unsigned math only to work
 			// around a precision error on numbers that are close to PI
 
-			// Normalize the range from 0.0f to XM_2PI
-			Angle = Angle + XM_PI;
+			// Normalize the range from 0.0f to Constants::RAY_2PI
+			Angle = Angle + Constants::PI;
 			// Perform the modulo, unsigned
 			float fTemp = fabsf(Angle);
-			fTemp = fTemp - (XM_2PI * static_cast<float>(static_cast<int32_t>(fTemp / XM_2PI)));
-			// Restore the number to the range of -XM_PI to XM_PI-epsilon
-			fTemp = fTemp - XM_PI;
+			fTemp = fTemp - (Constants::RAY_2PI * static_cast<float>(static_cast<int32_t>(fTemp / Constants::RAY_2PI)));
+			// Restore the number to the range of -Constants::PI to Constants::PI-epsilon
+			fTemp = fTemp - Constants::PI;
 			// If the modulo'd value was negative, restore negation
 			if (Angle < 0.0f) {
 				fTemp = -fTemp;
@@ -24443,7 +24394,7 @@ namespace At0
 		)
 		{
 			// Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-			float quotient = XM_1DIV2PI * Value;
+			float quotient = Constants::RAY_1DIV2PI * Value;
 			if (Value >= 0.0f)
 			{
 				quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
@@ -24452,16 +24403,16 @@ namespace At0
 			{
 				quotient = static_cast<float>(static_cast<int>(quotient - 0.5f));
 			}
-			float y = Value - XM_2PI * quotient;
+			float y = Value - Constants::RAY_2PI * quotient;
 
 			// Map y to [-pi/2,pi/2] with sin(y) = sin(Value).
-			if (y > XM_PIDIV2)
+			if (y > Constants::PIDIV2)
 			{
-				y = XM_PI - y;
+				y = Constants::PI - y;
 			}
-			else if (y < -XM_PIDIV2)
+			else if (y < -Constants::PIDIV2)
 			{
-				y = -XM_PI - y;
+				y = -Constants::PI - y;
 			}
 
 			// 11-degree minimax approximation
@@ -24477,7 +24428,7 @@ namespace At0
 		)
 		{
 			// Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-			float quotient = XM_1DIV2PI * Value;
+			float quotient = Constants::RAY_1DIV2PI * Value;
 			if (Value >= 0.0f)
 			{
 				quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
@@ -24486,16 +24437,16 @@ namespace At0
 			{
 				quotient = static_cast<float>(static_cast<int>(quotient - 0.5f));
 			}
-			float y = Value - XM_2PI * quotient;
+			float y = Value - Constants::RAY_2PI * quotient;
 
 			// Map y to [-pi/2,pi/2] with sin(y) = sin(Value).
-			if (y > XM_PIDIV2)
+			if (y > Constants::PIDIV2)
 			{
-				y = XM_PI - y;
+				y = Constants::PI - y;
 			}
-			else if (y < -XM_PIDIV2)
+			else if (y < -Constants::PIDIV2)
 			{
-				y = -XM_PI - y;
+				y = -Constants::PI - y;
 			}
 
 			// 7-degree minimax approximation
@@ -24511,7 +24462,7 @@ namespace At0
 		)
 		{
 			// Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-			float quotient = XM_1DIV2PI * Value;
+			float quotient = Constants::RAY_1DIV2PI * Value;
 			if (Value >= 0.0f)
 			{
 				quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
@@ -24520,18 +24471,18 @@ namespace At0
 			{
 				quotient = static_cast<float>(static_cast<int>(quotient - 0.5f));
 			}
-			float y = Value - XM_2PI * quotient;
+			float y = Value - Constants::RAY_2PI * quotient;
 
 			// Map y to [-pi/2,pi/2] with cos(y) = sign*cos(x).
 			float sign;
-			if (y > XM_PIDIV2)
+			if (y > Constants::PIDIV2)
 			{
-				y = XM_PI - y;
+				y = Constants::PI - y;
 				sign = -1.0f;
 			}
-			else if (y < -XM_PIDIV2)
+			else if (y < -Constants::PIDIV2)
 			{
-				y = -XM_PI - y;
+				y = -Constants::PI - y;
 				sign = -1.0f;
 			}
 			else
@@ -24553,7 +24504,7 @@ namespace At0
 		)
 		{
 			// Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-			float quotient = XM_1DIV2PI * Value;
+			float quotient = Constants::RAY_1DIV2PI * Value;
 			if (Value >= 0.0f)
 			{
 				quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
@@ -24562,18 +24513,18 @@ namespace At0
 			{
 				quotient = static_cast<float>(static_cast<int>(quotient - 0.5f));
 			}
-			float y = Value - XM_2PI * quotient;
+			float y = Value - Constants::RAY_2PI * quotient;
 
 			// Map y to [-pi/2,pi/2] with cos(y) = sign*cos(x).
 			float sign;
-			if (y > XM_PIDIV2)
+			if (y > Constants::PIDIV2)
 			{
-				y = XM_PI - y;
+				y = Constants::PI - y;
 				sign = -1.0f;
 			}
-			else if (y < -XM_PIDIV2)
+			else if (y < -Constants::PIDIV2)
 			{
-				y = -XM_PI - y;
+				y = -Constants::PI - y;
 				sign = -1.0f;
 			}
 			else
@@ -24601,7 +24552,7 @@ namespace At0
 			assert(pCos);
 
 			// Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-			float quotient = XM_1DIV2PI * Value;
+			float quotient = Constants::RAY_1DIV2PI * Value;
 			if (Value >= 0.0f)
 			{
 				quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
@@ -24610,18 +24561,18 @@ namespace At0
 			{
 				quotient = static_cast<float>(static_cast<int>(quotient - 0.5f));
 			}
-			float y = Value - XM_2PI * quotient;
+			float y = Value - Constants::RAY_2PI * quotient;
 
 			// Map y to [-pi/2,pi/2] with sin(y) = sin(Value).
 			float sign;
-			if (y > XM_PIDIV2)
+			if (y > Constants::PIDIV2)
 			{
-				y = XM_PI - y;
+				y = Constants::PI - y;
 				sign = -1.0f;
 			}
-			else if (y < -XM_PIDIV2)
+			else if (y < -Constants::PIDIV2)
 			{
-				y = -XM_PI - y;
+				y = -Constants::PI - y;
 				sign = -1.0f;
 			}
 			else
@@ -24653,7 +24604,7 @@ namespace At0
 			assert(pCos);
 
 			// Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-			float quotient = XM_1DIV2PI * Value;
+			float quotient = Constants::RAY_1DIV2PI * Value;
 			if (Value >= 0.0f)
 			{
 				quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
@@ -24662,18 +24613,18 @@ namespace At0
 			{
 				quotient = static_cast<float>(static_cast<int>(quotient - 0.5f));
 			}
-			float y = Value - XM_2PI * quotient;
+			float y = Value - Constants::RAY_2PI * quotient;
 
 			// Map y to [-pi/2,pi/2] with sin(y) = sin(Value).
 			float sign;
-			if (y > XM_PIDIV2)
+			if (y > Constants::PIDIV2)
 			{
-				y = XM_PI - y;
+				y = Constants::PI - y;
 				sign = -1.0f;
 			}
-			else if (y < -XM_PIDIV2)
+			else if (y < -Constants::PIDIV2)
 			{
-				y = -XM_PI - y;
+				y = -Constants::PI - y;
 				sign = -1.0f;
 			}
 			else
@@ -24713,7 +24664,7 @@ namespace At0
 			result *= root;  // acos(|x|)
 
 			// acos(x) = pi - acos(-x) when x < 0, asin(x) = pi/2 - acos(x)
-			return (nonnegative ? XM_PIDIV2 - result : result - XM_PIDIV2);
+			return (nonnegative ? Constants::PIDIV2 - result : result - Constants::PIDIV2);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24738,7 +24689,7 @@ namespace At0
 			result *= root;  // acos(|x|)
 
 			// acos(x) = pi - acos(-x) when x < 0, asin(x) = pi/2 - acos(x)
-			return (nonnegative ? XM_PIDIV2 - result : result - XM_PIDIV2);
+			return (nonnegative ? Constants::PIDIV2 - result : result - Constants::PIDIV2);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24763,7 +24714,7 @@ namespace At0
 			result *= root;
 
 			// acos(x) = pi - acos(-x) when x < 0
-			return (nonnegative ? result : XM_PI - result);
+			return (nonnegative ? result : Constants::PI - result);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24788,7 +24739,7 @@ namespace At0
 			result *= root;
 
 			// acos(x) = pi - acos(-x) when x < 0
-			return (nonnegative ? result : XM_PI - result);
+			return (nonnegative ? result : Constants::PI - result);
 		}
 
 
@@ -24799,5 +24750,5 @@ namespace At0
 
 #pragma warning(pop)
 
-		}
-				}
+	}
+}
