@@ -575,6 +575,8 @@ namespace At0
 				GVector RotationOrigin, HVector RotationQuaternion, HVector Translation);
 		};
 
+		//------------------------------------------------------------------------------
+		// Quaternion, can be used interchangeably with Vector
 		struct Quaternion
 		{
 			union
