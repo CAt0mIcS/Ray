@@ -181,6 +181,8 @@
 #include <stdint.h>
 #pragma warning(pop)
 
+#include <utility>
+
 /****************************************************************************
  *
  * Conditional intrinsics
@@ -335,52 +337,75 @@ namespace At0
 		};
 #endif // _XM_NO_INTRINSICS_
 
+		struct Vector;
+
 		//------------------------------------------------------------------------------
 		// Vector intrinsic: Four 32 bit floating point components aligned on a 16 byte
 		// boundary and mapped to hardware vector registers
 #if defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
-		typedef __m128 Vector;
+		typedef __m128 VectorType;
 #elif defined(_XM_ARM_NEON_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
-		typedef float32x4_t Vector;
+		typedef float32x4_t VectorType;
 #else
-		typedef __vector4 Vector;
+		typedef __vector4 VectorType;
 #endif
 
 		// Fix-up for (1st-3rd) Vector parameters that are pass-in-register for x86, ARM, ARM64, and vector call; by reference otherwise
 #if ( defined(_M_IX86) || defined(_M_ARM) || defined(_M_ARM64) || _XM_VECTORCALL_ ) && !defined(_XM_NO_INTRINSICS_)
+		typedef const VectorType FVectorType;
 		typedef const Vector FVector;
 #else
+		typedef const VectorType& FVectorType;
 		typedef const Vector& FVector;
 #endif
 
 		// Fix-up for (4th) Vector parameter to pass in-register for ARM, ARM64, and x64 vector call; by reference otherwise
 #if ( defined(_M_ARM) || defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || (_XM_VECTORCALL_ && !defined(_M_IX86) ) ) && !defined(_XM_NO_INTRINSICS_)
+		typedef const VectorType GVectorType;
 		typedef const Vector GVector;
 #else
-		typedef const Vector& GVector;
+		typedef const VectorType& GVectorType;
+		typedef const Vecto& GVector;
 #endif
 
 		// Fix-up for (5th & 6th) Vector parameter to pass in-register for ARM64 and vector call; by reference otherwise
 #if ( defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || _XM_VECTORCALL_ ) && !defined(_XM_NO_INTRINSICS_)
+		typedef const VectorType HVectorType;
 		typedef const Vector HVector;
 #else
+		typedef const VectorType& HVectorType;
 		typedef const Vector& HVector;
 #endif
 
 		// Fix-up for (7th+) Vector parameters to pass by reference
+		typedef const VectorType& CVectorType;
 		typedef const Vector& CVector;
+
 
 		//------------------------------------------------------------------------------
 		// Conversion types for constants
-		XM_ALIGNED(16) struct VectorF32
+		XM_ALIGNED(16) struct Vector
 		{
 			union
 			{
 				float f[4];
-				Vector v;
+				VectorType v;
 			};
 
-			inline operator Vector() const { return v; }
+			Vector() = default;
+
+			Vector(const Vector&) = default;
+			Vector& operator=(const Vector&) = default;
+			Vector(Vector&&) = default;
+			Vector& operator=(Vector&&) = default;
+
+			Vector(FVectorType v) : v(v) {}
+			Vector(float x, float y, float z, float w);
+
+			const float& operator[](uint8_t idx) const;
+			float& operator[](uint8_t idx) { return const_cast<float&>(std::as_const(*this)[idx]); }
+
+			inline operator VectorType() const { return v; }
 			inline operator const float* () const { return f; }
 #if !defined(_XM_NO_INTRINSICS_) && defined(_XM_SSE_INTRINSICS_)
 			inline operator __m128i() const { return _mm_castps_si128(v); }
@@ -393,10 +418,10 @@ namespace At0
 			union
 			{
 				int32_t i[4];
-				Vector v;
+				VectorType v;
 			};
 
-			inline operator Vector() const { return v; }
+			inline operator VectorType() const { return v; }
 #if !defined(_XM_NO_INTRINSICS_) && defined(_XM_SSE_INTRINSICS_)
 			inline operator __m128i() const { return _mm_castps_si128(v); }
 			inline operator __m128d() const { return _mm_castps_pd(v); }
@@ -408,10 +433,10 @@ namespace At0
 			union
 			{
 				uint8_t u[16];
-				Vector v;
+				VectorType v;
 			};
 
-			inline operator Vector() const { return v; }
+			inline operator VectorType() const { return v; }
 #if !defined(_XM_NO_INTRINSICS_) && defined(_XM_SSE_INTRINSICS_)
 			inline operator __m128i() const { return _mm_castps_si128(v); }
 			inline operator __m128d() const { return _mm_castps_pd(v); }
@@ -423,10 +448,10 @@ namespace At0
 			union
 			{
 				uint32_t u[4];
-				Vector v;
+				VectorType v;
 			};
 
-			inline operator Vector() const { return v; }
+			inline operator VectorType() const { return v; }
 #if !defined(_XM_NO_INTRINSICS_) && defined(_XM_SSE_INTRINSICS_)
 			inline operator __m128i() const { return _mm_castps_si128(v); }
 			inline operator __m128d() const { return _mm_castps_pd(v); }
@@ -456,6 +481,34 @@ namespace At0
 		Vector    XM_CALLCONV     operator* (float S, FVector V);
 		Vector    XM_CALLCONV     operator/ (FVector V, float S);
 #endif /* !_XM_NO_Vector_OVERLOADS_ */
+
+
+		//------------------------------------------------------------------------------
+		// Vector type implementations
+		inline Vector::Vector(float x, float y, float z, float w)
+		{
+#if !defined(_XM_NO_INTRINSICS_) && defined(_XM_SSE_INTRINSICS_)
+			v = _mm_set_ps(x, y, z, w);
+#elif defined(_XM_ARM_NEON_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
+			const float init[4] = { x, y, z, w };
+			v = vld1q_f32(init);
+#else
+			f[0] = x;
+			f[1] = y;
+			f[2] = z;
+			f[3] = w;
+#endif
+		}
+
+		inline const float& Vector::operator[](uint8_t idx) const
+		{
+			return f[idx];
+		}
+
+
+
+
+
 
 		//------------------------------------------------------------------------------
 		// Matrix type: Sixteen 32 bit floating point components aligned on a
@@ -509,7 +562,7 @@ namespace At0
 			Matrix& operator=(Matrix&&) = default;
 #endif
 
-			constexpr Matrix(FVector R0, FVector R1, FVector R2, CVector R3) : r{ R0,R1,R2,R3 } {}
+			Matrix(FVector R0, FVector R1, FVector R2, CVector R3) : r{ R0,R1,R2,R3 } {}
 			Matrix(float m00, float m01, float m02, float m03,
 				float m10, float m11, float m12, float m13,
 				float m20, float m21, float m22, float m23,
@@ -1162,7 +1215,7 @@ namespace At0
 		Vector    XM_CALLCONV     VectorSwizzle(FVector V, uint32_t E0, uint32_t E1, uint32_t E2, uint32_t E3);
 		Vector    XM_CALLCONV     VectorPermute(FVector V1, FVector V2, uint32_t PermuteX, uint32_t PermuteY, uint32_t PermuteZ, uint32_t PermuteW);
 		Vector    XM_CALLCONV     VectorSelectControl(uint32_t VectorIndex0, uint32_t VectorIndex1, uint32_t VectorIndex2, uint32_t VectorIndex3);
-		Vector    XM_CALLCONV     VectorSelect(FVector V1, FVector V2, FVector Control);
+		Vector    XM_CALLCONV     VectorSelect(FVectorType V1, FVectorType V2, FVectorType Control);
 		Vector    XM_CALLCONV     VectorMergeXY(FVector V1, FVector V2);
 		Vector    XM_CALLCONV     VectorMergeZW(FVector V1, FVector V2);
 
@@ -1945,30 +1998,30 @@ namespace At0
 #endif
 #endif
 
-		XMGLOBALCONST VectorF32 g_XMSinCoefficients0 = { { { -0.16666667f, +0.0083333310f, -0.00019840874f, +2.7525562e-06f } } };
-		XMGLOBALCONST VectorF32 g_XMSinCoefficients1 = { { { -2.3889859e-08f, -0.16665852f /*Est1*/, +0.0083139502f /*Est2*/, -0.00018524670f /*Est3*/ } } };
-		XMGLOBALCONST VectorF32 g_XMCosCoefficients0 = { { { -0.5f, +0.041666638f, -0.0013888378f, +2.4760495e-05f } } };
-		XMGLOBALCONST VectorF32 g_XMCosCoefficients1 = { { { -2.6051615e-07f, -0.49992746f /*Est1*/, +0.041493919f /*Est2*/, -0.0012712436f /*Est3*/ } } };
-		XMGLOBALCONST VectorF32 g_XMTanCoefficients0 = { { { 1.0f, 0.333333333f, 0.133333333f, 5.396825397e-2f } } };
-		XMGLOBALCONST VectorF32 g_XMTanCoefficients1 = { { { 2.186948854e-2f, 8.863235530e-3f, 3.592128167e-3f, 1.455834485e-3f } } };
-		XMGLOBALCONST VectorF32 g_XMTanCoefficients2 = { { { 5.900274264e-4f, 2.391290764e-4f, 9.691537707e-5f, 3.927832950e-5f } } };
-		XMGLOBALCONST VectorF32 g_XMArcCoefficients0 = { { { +1.5707963050f, -0.2145988016f, +0.0889789874f, -0.0501743046f } } };
-		XMGLOBALCONST VectorF32 g_XMArcCoefficients1 = { { { +0.0308918810f, -0.0170881256f, +0.0066700901f, -0.0012624911f } } };
-		XMGLOBALCONST VectorF32 g_XMATanCoefficients0 = { { { -0.3333314528f, +0.1999355085f, -0.1420889944f, +0.1065626393f } } };
-		XMGLOBALCONST VectorF32 g_XMATanCoefficients1 = { { { -0.0752896400f, +0.0429096138f, -0.0161657367f, +0.0028662257f } } };
-		XMGLOBALCONST VectorF32 g_XMATanEstCoefficients0 = { { { +0.999866f, +0.999866f, +0.999866f, +0.999866f } } };
-		XMGLOBALCONST VectorF32 g_XMATanEstCoefficients1 = { { { -0.3302995f, +0.180141f, -0.085133f, +0.0208351f } } };
-		XMGLOBALCONST VectorF32 g_XMTanEstCoefficients = { { { 2.484f, -1.954923183e-1f, 2.467401101f, XM_1DIVPI } } };
-		XMGLOBALCONST VectorF32 g_XMArcEstCoefficients = { { { +1.5707288f, -0.2121144f, +0.0742610f, -0.0187293f } } };
-		XMGLOBALCONST VectorF32 g_XMPiConstants0 = { { { XM_PI, XM_2PI, XM_1DIVPI, XM_1DIV2PI } } };
-		XMGLOBALCONST VectorF32 g_XMIdentityR0 = { { { 1.0f, 0.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMIdentityR1 = { { { 0.0f, 1.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMIdentityR2 = { { { 0.0f, 0.0f, 1.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMIdentityR3 = { { { 0.0f, 0.0f, 0.0f, 1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegIdentityR0 = { { { -1.0f, 0.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegIdentityR1 = { { { 0.0f, -1.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegIdentityR2 = { { { 0.0f, 0.0f, -1.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegIdentityR3 = { { { 0.0f, 0.0f, 0.0f, -1.0f } } };
+		XMGLOBALCONST Vector g_XMSinCoefficients0 = { { { -0.16666667f, +0.0083333310f, -0.00019840874f, +2.7525562e-06f } } };
+		XMGLOBALCONST Vector g_XMSinCoefficients1 = { { { -2.3889859e-08f, -0.16665852f /*Est1*/, +0.0083139502f /*Est2*/, -0.00018524670f /*Est3*/ } } };
+		XMGLOBALCONST Vector g_XMCosCoefficients0 = { { { -0.5f, +0.041666638f, -0.0013888378f, +2.4760495e-05f } } };
+		XMGLOBALCONST Vector g_XMCosCoefficients1 = { { { -2.6051615e-07f, -0.49992746f /*Est1*/, +0.041493919f /*Est2*/, -0.0012712436f /*Est3*/ } } };
+		XMGLOBALCONST Vector g_XMTanCoefficients0 = { { { 1.0f, 0.333333333f, 0.133333333f, 5.396825397e-2f } } };
+		XMGLOBALCONST Vector g_XMTanCoefficients1 = { { { 2.186948854e-2f, 8.863235530e-3f, 3.592128167e-3f, 1.455834485e-3f } } };
+		XMGLOBALCONST Vector g_XMTanCoefficients2 = { { { 5.900274264e-4f, 2.391290764e-4f, 9.691537707e-5f, 3.927832950e-5f } } };
+		XMGLOBALCONST Vector g_XMArcCoefficients0 = { { { +1.5707963050f, -0.2145988016f, +0.0889789874f, -0.0501743046f } } };
+		XMGLOBALCONST Vector g_XMArcCoefficients1 = { { { +0.0308918810f, -0.0170881256f, +0.0066700901f, -0.0012624911f } } };
+		XMGLOBALCONST Vector g_XMATanCoefficients0 = { { { -0.3333314528f, +0.1999355085f, -0.1420889944f, +0.1065626393f } } };
+		XMGLOBALCONST Vector g_XMATanCoefficients1 = { { { -0.0752896400f, +0.0429096138f, -0.0161657367f, +0.0028662257f } } };
+		XMGLOBALCONST Vector g_XMATanEstCoefficients0 = { { { +0.999866f, +0.999866f, +0.999866f, +0.999866f } } };
+		XMGLOBALCONST Vector g_XMATanEstCoefficients1 = { { { -0.3302995f, +0.180141f, -0.085133f, +0.0208351f } } };
+		XMGLOBALCONST Vector g_XMTanEstCoefficients = { { { 2.484f, -1.954923183e-1f, 2.467401101f, XM_1DIVPI } } };
+		XMGLOBALCONST Vector g_XMArcEstCoefficients = { { { +1.5707288f, -0.2121144f, +0.0742610f, -0.0187293f } } };
+		XMGLOBALCONST Vector g_XMPiConstants0 = { { { XM_PI, XM_2PI, XM_1DIVPI, XM_1DIV2PI } } };
+		XMGLOBALCONST Vector g_XMIdentityR0 = { { { 1.0f, 0.0f, 0.0f, 0.0f } } };
+		XMGLOBALCONST Vector g_XMIdentityR1 = { { { 0.0f, 1.0f, 0.0f, 0.0f } } };
+		XMGLOBALCONST Vector g_XMIdentityR2 = { { { 0.0f, 0.0f, 1.0f, 0.0f } } };
+		XMGLOBALCONST Vector g_XMIdentityR3 = { { { 0.0f, 0.0f, 0.0f, 1.0f } } };
+		XMGLOBALCONST Vector g_XMNegIdentityR0 = { { { -1.0f, 0.0f, 0.0f, 0.0f } } };
+		XMGLOBALCONST Vector g_XMNegIdentityR1 = { { { 0.0f, -1.0f, 0.0f, 0.0f } } };
+		XMGLOBALCONST Vector g_XMNegIdentityR2 = { { { 0.0f, 0.0f, -1.0f, 0.0f } } };
+		XMGLOBALCONST Vector g_XMNegIdentityR3 = { { { 0.0f, 0.0f, 0.0f, -1.0f } } };
 		XMGLOBALCONST VectorU32 g_XMNegativeZero = { { { 0x80000000, 0x80000000, 0x80000000, 0x80000000 } } };
 		XMGLOBALCONST VectorU32 g_XMNegate3 = { { { 0x80000000, 0x80000000, 0x80000000, 0x00000000 } } };
 		XMGLOBALCONST VectorU32 g_XMMaskXY = { { { 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000 } } };
@@ -1977,23 +2030,23 @@ namespace At0
 		XMGLOBALCONST VectorU32 g_XMMaskY = { { { 0x00000000, 0xFFFFFFFF, 0x00000000, 0x00000000 } } };
 		XMGLOBALCONST VectorU32 g_XMMaskZ = { { { 0x00000000, 0x00000000, 0xFFFFFFFF, 0x00000000 } } };
 		XMGLOBALCONST VectorU32 g_XMMaskW = { { { 0x00000000, 0x00000000, 0x00000000, 0xFFFFFFFF } } };
-		XMGLOBALCONST VectorF32 g_XMOne = { { { 1.0f, 1.0f, 1.0f, 1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMOne3 = { { { 1.0f, 1.0f, 1.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMZero = { { { 0.0f, 0.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMTwo = { { { 2.f, 2.f, 2.f, 2.f } } };
-		XMGLOBALCONST VectorF32 g_XMFour = { { { 4.f, 4.f, 4.f, 4.f } } };
-		XMGLOBALCONST VectorF32 g_XMSix = { { { 6.f, 6.f, 6.f, 6.f } } };
-		XMGLOBALCONST VectorF32 g_XMNegativeOne = { { { -1.0f, -1.0f, -1.0f, -1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMOneHalf = { { { 0.5f, 0.5f, 0.5f, 0.5f } } };
-		XMGLOBALCONST VectorF32 g_XMNegativeOneHalf = { { { -0.5f, -0.5f, -0.5f, -0.5f } } };
-		XMGLOBALCONST VectorF32 g_XMNegativeTwoPi = { { { -XM_2PI, -XM_2PI, -XM_2PI, -XM_2PI } } };
-		XMGLOBALCONST VectorF32 g_XMNegativePi = { { { -XM_PI, -XM_PI, -XM_PI, -XM_PI } } };
-		XMGLOBALCONST VectorF32 g_XMHalfPi = { { { XM_PIDIV2, XM_PIDIV2, XM_PIDIV2, XM_PIDIV2 } } };
-		XMGLOBALCONST VectorF32 g_XMPi = { { { XM_PI, XM_PI, XM_PI, XM_PI } } };
-		XMGLOBALCONST VectorF32 g_XMReciprocalPi = { { { XM_1DIVPI, XM_1DIVPI, XM_1DIVPI, XM_1DIVPI } } };
-		XMGLOBALCONST VectorF32 g_XMTwoPi = { { { XM_2PI, XM_2PI, XM_2PI, XM_2PI } } };
-		XMGLOBALCONST VectorF32 g_XMReciprocalTwoPi = { { { XM_1DIV2PI, XM_1DIV2PI, XM_1DIV2PI, XM_1DIV2PI } } };
-		XMGLOBALCONST VectorF32 g_XMEpsilon = { { { 1.192092896e-7f, 1.192092896e-7f, 1.192092896e-7f, 1.192092896e-7f } } };
+		XMGLOBALCONST Vector g_XMOne = { { { 1.0f, 1.0f, 1.0f, 1.0f } } };
+		XMGLOBALCONST Vector g_XMOne3 = { { { 1.0f, 1.0f, 1.0f, 0.0f } } };
+		XMGLOBALCONST Vector g_XMZero = { { { 0.0f, 0.0f, 0.0f, 0.0f } } };
+		XMGLOBALCONST Vector g_XMTwo = { { { 2.f, 2.f, 2.f, 2.f } } };
+		XMGLOBALCONST Vector g_XMFour = { { { 4.f, 4.f, 4.f, 4.f } } };
+		XMGLOBALCONST Vector g_XMSix = { { { 6.f, 6.f, 6.f, 6.f } } };
+		XMGLOBALCONST Vector g_XMNegativeOne = { { { -1.0f, -1.0f, -1.0f, -1.0f } } };
+		XMGLOBALCONST Vector g_XMOneHalf = { { { 0.5f, 0.5f, 0.5f, 0.5f } } };
+		XMGLOBALCONST Vector g_XMNegativeOneHalf = { { { -0.5f, -0.5f, -0.5f, -0.5f } } };
+		XMGLOBALCONST Vector g_XMNegativeTwoPi = { { { -XM_2PI, -XM_2PI, -XM_2PI, -XM_2PI } } };
+		XMGLOBALCONST Vector g_XMNegativePi = { { { -XM_PI, -XM_PI, -XM_PI, -XM_PI } } };
+		XMGLOBALCONST Vector g_XMHalfPi = { { { XM_PIDIV2, XM_PIDIV2, XM_PIDIV2, XM_PIDIV2 } } };
+		XMGLOBALCONST Vector g_XMPi = { { { XM_PI, XM_PI, XM_PI, XM_PI } } };
+		XMGLOBALCONST Vector g_XMReciprocalPi = { { { XM_1DIVPI, XM_1DIVPI, XM_1DIVPI, XM_1DIVPI } } };
+		XMGLOBALCONST Vector g_XMTwoPi = { { { XM_2PI, XM_2PI, XM_2PI, XM_2PI } } };
+		XMGLOBALCONST Vector g_XMReciprocalTwoPi = { { { XM_1DIV2PI, XM_1DIV2PI, XM_1DIV2PI, XM_1DIV2PI } } };
+		XMGLOBALCONST Vector g_XMEpsilon = { { { 1.192092896e-7f, 1.192092896e-7f, 1.192092896e-7f, 1.192092896e-7f } } };
 		XMGLOBALCONST VectorI32 g_XMInfinity = { { { 0x7F800000, 0x7F800000, 0x7F800000, 0x7F800000 } } };
 		XMGLOBALCONST VectorI32 g_XMQNaN = { { { 0x7FC00000, 0x7FC00000, 0x7FC00000, 0x7FC00000 } } };
 		XMGLOBALCONST VectorI32 g_XMQNaNTest = { { { 0x007FFFFF, 0x007FFFFF, 0x007FFFFF, 0x007FFFFF } } };
@@ -2003,26 +2056,26 @@ namespace At0
 		XMGLOBALCONST VectorU32 g_XMNegOneMask = { { { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF } } };
 		XMGLOBALCONST VectorU32 g_XMMaskA8R8G8B8 = { { { 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000 } } };
 		XMGLOBALCONST VectorU32 g_XMFlipA8R8G8B8 = { { { 0x00000000, 0x00000000, 0x00000000, 0x80000000 } } };
-		XMGLOBALCONST VectorF32 g_XMFixAA8R8G8B8 = { { { 0.0f, 0.0f, 0.0f, float(0x80000000U) } } };
-		XMGLOBALCONST VectorF32 g_XMNormalizeA8R8G8B8 = { { { 1.0f / (255.0f * float(0x10000)), 1.0f / (255.0f * float(0x100)), 1.0f / 255.0f, 1.0f / (255.0f * float(0x1000000)) } } };
+		XMGLOBALCONST Vector g_XMFixAA8R8G8B8 = { { { 0.0f, 0.0f, 0.0f, float(0x80000000U) } } };
+		XMGLOBALCONST Vector g_XMNormalizeA8R8G8B8 = { { { 1.0f / (255.0f * float(0x10000)), 1.0f / (255.0f * float(0x100)), 1.0f / 255.0f, 1.0f / (255.0f * float(0x1000000)) } } };
 		XMGLOBALCONST VectorU32 g_XMMaskA2B10G10R10 = { { { 0x000003FF, 0x000FFC00, 0x3FF00000, 0xC0000000 } } };
 		XMGLOBALCONST VectorU32 g_XMFlipA2B10G10R10 = { { { 0x00000200, 0x00080000, 0x20000000, 0x80000000 } } };
-		XMGLOBALCONST VectorF32 g_XMFixAA2B10G10R10 = { { { -512.0f, -512.0f * float(0x400), -512.0f * float(0x100000), float(0x80000000U) } } };
-		XMGLOBALCONST VectorF32 g_XMNormalizeA2B10G10R10 = { { { 1.0f / 511.0f, 1.0f / (511.0f * float(0x400)), 1.0f / (511.0f * float(0x100000)), 1.0f / (3.0f * float(0x40000000)) } } };
+		XMGLOBALCONST Vector g_XMFixAA2B10G10R10 = { { { -512.0f, -512.0f * float(0x400), -512.0f * float(0x100000), float(0x80000000U) } } };
+		XMGLOBALCONST Vector g_XMNormalizeA2B10G10R10 = { { { 1.0f / 511.0f, 1.0f / (511.0f * float(0x400)), 1.0f / (511.0f * float(0x100000)), 1.0f / (3.0f * float(0x40000000)) } } };
 		XMGLOBALCONST VectorU32 g_XMMaskX16Y16 = { { { 0x0000FFFF, 0xFFFF0000, 0x00000000, 0x00000000 } } };
 		XMGLOBALCONST VectorI32 g_XMFlipX16Y16 = { { { 0x00008000, 0x00000000, 0x00000000, 0x00000000 } } };
-		XMGLOBALCONST VectorF32 g_XMFixX16Y16 = { { { -32768.0f, 0.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNormalizeX16Y16 = { { { 1.0f / 32767.0f, 1.0f / (32767.0f * 65536.0f), 0.0f, 0.0f } } };
+		XMGLOBALCONST Vector g_XMFixX16Y16 = { { { -32768.0f, 0.0f, 0.0f, 0.0f } } };
+		XMGLOBALCONST Vector g_XMNormalizeX16Y16 = { { { 1.0f / 32767.0f, 1.0f / (32767.0f * 65536.0f), 0.0f, 0.0f } } };
 		XMGLOBALCONST VectorU32 g_XMMaskX16Y16Z16W16 = { { { 0x0000FFFF, 0x0000FFFF, 0xFFFF0000, 0xFFFF0000 } } };
 		XMGLOBALCONST VectorI32 g_XMFlipX16Y16Z16W16 = { { { 0x00008000, 0x00008000, 0x00000000, 0x00000000 } } };
-		XMGLOBALCONST VectorF32 g_XMFixX16Y16Z16W16 = { { { -32768.0f, -32768.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNormalizeX16Y16Z16W16 = { { { 1.0f / 32767.0f, 1.0f / 32767.0f, 1.0f / (32767.0f * 65536.0f), 1.0f / (32767.0f * 65536.0f) } } };
-		XMGLOBALCONST VectorF32 g_XMNoFraction = { { { 8388608.0f, 8388608.0f, 8388608.0f, 8388608.0f } } };
+		XMGLOBALCONST Vector g_XMFixX16Y16Z16W16 = { { { -32768.0f, -32768.0f, 0.0f, 0.0f } } };
+		XMGLOBALCONST Vector g_XMNormalizeX16Y16Z16W16 = { { { 1.0f / 32767.0f, 1.0f / 32767.0f, 1.0f / (32767.0f * 65536.0f), 1.0f / (32767.0f * 65536.0f) } } };
+		XMGLOBALCONST Vector g_XMNoFraction = { { { 8388608.0f, 8388608.0f, 8388608.0f, 8388608.0f } } };
 		XMGLOBALCONST VectorI32 g_XMMaskByte = { { { 0x000000FF, 0x000000FF, 0x000000FF, 0x000000FF } } };
-		XMGLOBALCONST VectorF32 g_XMNegateX = { { { -1.0f, 1.0f, 1.0f, 1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegateY = { { { 1.0f, -1.0f, 1.0f, 1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegateZ = { { { 1.0f, 1.0f, -1.0f, 1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegateW = { { { 1.0f, 1.0f, 1.0f, -1.0f } } };
+		XMGLOBALCONST Vector g_XMNegateX = { { { -1.0f, 1.0f, 1.0f, 1.0f } } };
+		XMGLOBALCONST Vector g_XMNegateY = { { { 1.0f, -1.0f, 1.0f, 1.0f } } };
+		XMGLOBALCONST Vector g_XMNegateZ = { { { 1.0f, 1.0f, -1.0f, 1.0f } } };
+		XMGLOBALCONST Vector g_XMNegateW = { { { 1.0f, 1.0f, 1.0f, -1.0f } } };
 		XMGLOBALCONST VectorU32 g_XMSelect0101 = { { { XM_SELECT_0, XM_SELECT_1, XM_SELECT_0, XM_SELECT_1 } } };
 		XMGLOBALCONST VectorU32 g_XMSelect1010 = { { { XM_SELECT_1, XM_SELECT_0, XM_SELECT_1, XM_SELECT_0 } } };
 		XMGLOBALCONST VectorI32 g_XMOneHalfMinusEpsilon = { { { 0x3EFFFFFD, 0x3EFFFFFD, 0x3EFFFFFD, 0x3EFFFFFD } } };
@@ -2030,8 +2083,8 @@ namespace At0
 		XMGLOBALCONST VectorU32 g_XMSelect1100 = { { { XM_SELECT_1, XM_SELECT_1, XM_SELECT_0, XM_SELECT_0 } } };
 		XMGLOBALCONST VectorU32 g_XMSelect1110 = { { { XM_SELECT_1, XM_SELECT_1, XM_SELECT_1, XM_SELECT_0 } } };
 		XMGLOBALCONST VectorU32 g_XMSelect1011 = { { { XM_SELECT_1, XM_SELECT_0, XM_SELECT_1, XM_SELECT_1 } } };
-		XMGLOBALCONST VectorF32 g_XMFixupY16 = { { { 1.0f, 1.0f / 65536.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMFixupY16W16 = { { { 1.0f, 1.0f, 1.0f / 65536.0f, 1.0f / 65536.0f } } };
+		XMGLOBALCONST Vector g_XMFixupY16 = { { { 1.0f, 1.0f / 65536.0f, 0.0f, 0.0f } } };
+		XMGLOBALCONST Vector g_XMFixupY16W16 = { { { 1.0f, 1.0f, 1.0f / 65536.0f, 1.0f / 65536.0f } } };
 		XMGLOBALCONST VectorU32 g_XMFlipY = { { { 0, 0x80000000, 0, 0 } } };
 		XMGLOBALCONST VectorU32 g_XMFlipZ = { { { 0, 0, 0x80000000, 0 } } };
 		XMGLOBALCONST VectorU32 g_XMFlipW = { { { 0, 0, 0, 0x80000000 } } };
@@ -2040,19 +2093,19 @@ namespace At0
 		XMGLOBALCONST VectorU32 g_XMFlipYW = { { { 0, 0x80000000, 0, 0x80000000 } } };
 		XMGLOBALCONST VectorI32 g_XMMaskDec4 = { { { 0x3FF, 0x3FF << 10, 0x3FF << 20, static_cast<int>(0xC0000000) } } };
 		XMGLOBALCONST VectorI32 g_XMXorDec4 = { { { 0x200, 0x200 << 10, 0x200 << 20, 0 } } };
-		XMGLOBALCONST VectorF32 g_XMAddUDec4 = { { { 0, 0, 0, 32768.0f * 65536.0f } } };
-		XMGLOBALCONST VectorF32 g_XMAddDec4 = { { { -512.0f, -512.0f * 1024.0f, -512.0f * 1024.0f * 1024.0f, 0 } } };
-		XMGLOBALCONST VectorF32 g_XMMulDec4 = { { { 1.0f, 1.0f / 1024.0f, 1.0f / (1024.0f * 1024.0f), 1.0f / (1024.0f * 1024.0f * 1024.0f) } } };
+		XMGLOBALCONST Vector g_XMAddUDec4 = { { { 0, 0, 0, 32768.0f * 65536.0f } } };
+		XMGLOBALCONST Vector g_XMAddDec4 = { { { -512.0f, -512.0f * 1024.0f, -512.0f * 1024.0f * 1024.0f, 0 } } };
+		XMGLOBALCONST Vector g_XMMulDec4 = { { { 1.0f, 1.0f / 1024.0f, 1.0f / (1024.0f * 1024.0f), 1.0f / (1024.0f * 1024.0f * 1024.0f) } } };
 		XMGLOBALCONST VectorU32 g_XMMaskByte4 = { { { 0xFF, 0xFF00, 0xFF0000, 0xFF000000 } } };
 		XMGLOBALCONST VectorI32 g_XMXorByte4 = { { { 0x80, 0x8000, 0x800000, 0x00000000 } } };
-		XMGLOBALCONST VectorF32 g_XMAddByte4 = { { { -128.0f, -128.0f * 256.0f, -128.0f * 65536.0f, 0 } } };
-		XMGLOBALCONST VectorF32 g_XMFixUnsigned = { { { 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f } } };
-		XMGLOBALCONST VectorF32 g_XMMaxInt = { { { 65536.0f * 32768.0f - 128.0f, 65536.0f * 32768.0f - 128.0f, 65536.0f * 32768.0f - 128.0f, 65536.0f * 32768.0f - 128.0f } } };
-		XMGLOBALCONST VectorF32 g_XMMaxUInt = { { { 65536.0f * 65536.0f - 256.0f, 65536.0f * 65536.0f - 256.0f, 65536.0f * 65536.0f - 256.0f, 65536.0f * 65536.0f - 256.0f } } };
-		XMGLOBALCONST VectorF32 g_XMUnsignedFix = { { { 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f } } };
-		XMGLOBALCONST VectorF32 g_XMsrgbScale = { { { 12.92f, 12.92f, 12.92f, 1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMsrgbA = { { { 0.055f, 0.055f, 0.055f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMsrgbA1 = { { { 1.055f, 1.055f, 1.055f, 1.0f } } };
+		XMGLOBALCONST Vector g_XMAddByte4 = { { { -128.0f, -128.0f * 256.0f, -128.0f * 65536.0f, 0 } } };
+		XMGLOBALCONST Vector g_XMFixUnsigned = { { { 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f } } };
+		XMGLOBALCONST Vector g_XMMaxInt = { { { 65536.0f * 32768.0f - 128.0f, 65536.0f * 32768.0f - 128.0f, 65536.0f * 32768.0f - 128.0f, 65536.0f * 32768.0f - 128.0f } } };
+		XMGLOBALCONST Vector g_XMMaxUInt = { { { 65536.0f * 65536.0f - 256.0f, 65536.0f * 65536.0f - 256.0f, 65536.0f * 65536.0f - 256.0f, 65536.0f * 65536.0f - 256.0f } } };
+		XMGLOBALCONST Vector g_XMUnsignedFix = { { { 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f } } };
+		XMGLOBALCONST Vector g_XMsrgbScale = { { { 12.92f, 12.92f, 12.92f, 1.0f } } };
+		XMGLOBALCONST Vector g_XMsrgbA = { { { 0.055f, 0.055f, 0.055f, 0.0f } } };
+		XMGLOBALCONST Vector g_XMsrgbA1 = { { { 1.055f, 1.055f, 1.055f, 1.0f } } };
 		XMGLOBALCONST VectorI32 g_XMExponentBias = { { { 127, 127, 127, 127 } } };
 		XMGLOBALCONST VectorI32 g_XMSubnormalExponent = { { { -126, -126, -126, -126 } } };
 		XMGLOBALCONST VectorI32 g_XMNumTrailing = { { { 23, 23, 23, 23 } } };
@@ -2062,29 +2115,29 @@ namespace At0
 		XMGLOBALCONST VectorI32 g_XMBin128 = { { { 0x43000000, 0x43000000, 0x43000000, 0x43000000 } } };
 		XMGLOBALCONST VectorU32 g_XMBinNeg150 = { { { 0xC3160000, 0xC3160000, 0xC3160000, 0xC3160000 } } };
 		XMGLOBALCONST VectorI32 g_XM253 = { { { 253, 253, 253, 253 } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst1 = { { { -6.93147182e-1f, -6.93147182e-1f, -6.93147182e-1f, -6.93147182e-1f } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst2 = { { { +2.40226462e-1f, +2.40226462e-1f, +2.40226462e-1f, +2.40226462e-1f } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst3 = { { { -5.55036440e-2f, -5.55036440e-2f, -5.55036440e-2f, -5.55036440e-2f } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst4 = { { { +9.61597636e-3f, +9.61597636e-3f, +9.61597636e-3f, +9.61597636e-3f } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst5 = { { { -1.32823968e-3f, -1.32823968e-3f, -1.32823968e-3f, -1.32823968e-3f } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst6 = { { { +1.47491097e-4f, +1.47491097e-4f, +1.47491097e-4f, +1.47491097e-4f } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst7 = { { { -1.08635004e-5f, -1.08635004e-5f, -1.08635004e-5f, -1.08635004e-5f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst0 = { { { +1.442693f, +1.442693f, +1.442693f, +1.442693f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst1 = { { { -0.721242f, -0.721242f, -0.721242f, -0.721242f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst2 = { { { +0.479384f, +0.479384f, +0.479384f, +0.479384f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst3 = { { { -0.350295f, -0.350295f, -0.350295f, -0.350295f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst4 = { { { +0.248590f, +0.248590f, +0.248590f, +0.248590f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst5 = { { { -0.145700f, -0.145700f, -0.145700f, -0.145700f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst6 = { { { +0.057148f, +0.057148f, +0.057148f, +0.057148f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst7 = { { { -0.010578f, -0.010578f, -0.010578f, -0.010578f } } };
-		XMGLOBALCONST VectorF32 g_XMLgE = { { { +1.442695f, +1.442695f, +1.442695f, +1.442695f } } };
-		XMGLOBALCONST VectorF32 g_XMInvLgE = { { { +6.93147182e-1f, +6.93147182e-1f, +6.93147182e-1f, +6.93147182e-1f } } };
-		XMGLOBALCONST VectorF32 g_UByteMax = { { { 255.0f, 255.0f, 255.0f, 255.0f } } };
-		XMGLOBALCONST VectorF32 g_ByteMin = { { { -127.0f, -127.0f, -127.0f, -127.0f } } };
-		XMGLOBALCONST VectorF32 g_ByteMax = { { { 127.0f, 127.0f, 127.0f, 127.0f } } };
-		XMGLOBALCONST VectorF32 g_ShortMin = { { { -32767.0f, -32767.0f, -32767.0f, -32767.0f } } };
-		XMGLOBALCONST VectorF32 g_ShortMax = { { { 32767.0f, 32767.0f, 32767.0f, 32767.0f } } };
-		XMGLOBALCONST VectorF32 g_UShortMax = { { { 65535.0f, 65535.0f, 65535.0f, 65535.0f } } };
+		XMGLOBALCONST Vector g_XMExpEst1 = { { { -6.93147182e-1f, -6.93147182e-1f, -6.93147182e-1f, -6.93147182e-1f } } };
+		XMGLOBALCONST Vector g_XMExpEst2 = { { { +2.40226462e-1f, +2.40226462e-1f, +2.40226462e-1f, +2.40226462e-1f } } };
+		XMGLOBALCONST Vector g_XMExpEst3 = { { { -5.55036440e-2f, -5.55036440e-2f, -5.55036440e-2f, -5.55036440e-2f } } };
+		XMGLOBALCONST Vector g_XMExpEst4 = { { { +9.61597636e-3f, +9.61597636e-3f, +9.61597636e-3f, +9.61597636e-3f } } };
+		XMGLOBALCONST Vector g_XMExpEst5 = { { { -1.32823968e-3f, -1.32823968e-3f, -1.32823968e-3f, -1.32823968e-3f } } };
+		XMGLOBALCONST Vector g_XMExpEst6 = { { { +1.47491097e-4f, +1.47491097e-4f, +1.47491097e-4f, +1.47491097e-4f } } };
+		XMGLOBALCONST Vector g_XMExpEst7 = { { { -1.08635004e-5f, -1.08635004e-5f, -1.08635004e-5f, -1.08635004e-5f } } };
+		XMGLOBALCONST Vector g_XMLogEst0 = { { { +1.442693f, +1.442693f, +1.442693f, +1.442693f } } };
+		XMGLOBALCONST Vector g_XMLogEst1 = { { { -0.721242f, -0.721242f, -0.721242f, -0.721242f } } };
+		XMGLOBALCONST Vector g_XMLogEst2 = { { { +0.479384f, +0.479384f, +0.479384f, +0.479384f } } };
+		XMGLOBALCONST Vector g_XMLogEst3 = { { { -0.350295f, -0.350295f, -0.350295f, -0.350295f } } };
+		XMGLOBALCONST Vector g_XMLogEst4 = { { { +0.248590f, +0.248590f, +0.248590f, +0.248590f } } };
+		XMGLOBALCONST Vector g_XMLogEst5 = { { { -0.145700f, -0.145700f, -0.145700f, -0.145700f } } };
+		XMGLOBALCONST Vector g_XMLogEst6 = { { { +0.057148f, +0.057148f, +0.057148f, +0.057148f } } };
+		XMGLOBALCONST Vector g_XMLogEst7 = { { { -0.010578f, -0.010578f, -0.010578f, -0.010578f } } };
+		XMGLOBALCONST Vector g_XMLgE = { { { +1.442695f, +1.442695f, +1.442695f, +1.442695f } } };
+		XMGLOBALCONST Vector g_XMInvLgE = { { { +6.93147182e-1f, +6.93147182e-1f, +6.93147182e-1f, +6.93147182e-1f } } };
+		XMGLOBALCONST Vector g_UByteMax = { { { 255.0f, 255.0f, 255.0f, 255.0f } } };
+		XMGLOBALCONST Vector g_ByteMin = { { { -127.0f, -127.0f, -127.0f, -127.0f } } };
+		XMGLOBALCONST Vector g_ByteMax = { { { 127.0f, 127.0f, 127.0f, 127.0f } } };
+		XMGLOBALCONST Vector g_ShortMin = { { { -32767.0f, -32767.0f, -32767.0f, -32767.0f } } };
+		XMGLOBALCONST Vector g_ShortMax = { { { 32767.0f, 32767.0f, 32767.0f, 32767.0f } } };
+		XMGLOBALCONST Vector g_UShortMax = { { { 65535.0f, 65535.0f, 65535.0f, 65535.0f } } };
 
 		/****************************************************************************
 		 *
@@ -4425,7 +4478,7 @@ namespace At0
 		inline Vector XM_CALLCONV VectorZero()
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 vResult = { { { 0.0f, 0.0f, 0.0f, 0.0f } } };
+			Vector vResult = { { { 0.0f, 0.0f, 0.0f, 0.0f } } };
 			return vResult.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vdupq_n_f32(0);
@@ -4445,7 +4498,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 vResult = { { { x, y, z, w } } };
+			Vector vResult = { { { x, y, z, w } } };
 			return vResult.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			float32x2_t V0 = vcreate_f32(
@@ -4491,7 +4544,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 vResult;
+			Vector vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
@@ -4514,7 +4567,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 			float Value = pValue[0];
-			VectorF32 vResult;
+			Vector vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
@@ -4594,7 +4647,7 @@ namespace At0
 		inline Vector XM_CALLCONV VectorFalseInt()
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 vResult = { { { 0.0f, 0.0f, 0.0f, 0.0f } } };
+			Vector vResult = { { { 0.0f, 0.0f, 0.0f, 0.0f } } };
 			return vResult;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vdupq_n_u32(0);
@@ -4611,7 +4664,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 vResult;
+			Vector vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
@@ -4634,7 +4687,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 vResult;
+			Vector vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
@@ -4655,7 +4708,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 vResult;
+			Vector vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
@@ -4676,7 +4729,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 vResult;
+			Vector vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
@@ -4694,7 +4747,7 @@ namespace At0
 		inline Vector XM_CALLCONV VectorSplatOne()
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 vResult;
+			Vector vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
@@ -4721,7 +4774,7 @@ namespace At0
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vdupq_n_u32(0x7F800000);
 #elif defined(_XM_SSE_INTRINSICS_)
-			return g_XMInfinity;
+			return (VectorType)g_XMInfinity;
 #endif
 		}
 
@@ -4739,7 +4792,7 @@ namespace At0
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vdupq_n_u32(0x7FC00000);
 #elif defined(_XM_SSE_INTRINSICS_)
-			return g_XMQNaN;
+			return (VectorType)g_XMQNaN;
 #endif
 		}
 
@@ -4757,7 +4810,7 @@ namespace At0
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vdupq_n_u32(0x34000000);
 #elif defined(_XM_SSE_INTRINSICS_)
-			return g_XMEpsilon;
+			return (VectorType)g_XMEpsilon;
 #endif
 		}
 
@@ -4790,7 +4843,7 @@ namespace At0
 #if defined(_XM_NO_INTRINSICS_)
 			return V.vector4_f32[i];
 #else
-			VectorF32 U;
+			Vector U;
 			U.v = V;
 			return U.f[i];
 #endif
@@ -4860,7 +4913,7 @@ namespace At0
 #if defined(_XM_NO_INTRINSICS_)
 			*f = V.vector4_f32[i];
 #else
-			VectorF32 U;
+			Vector U;
 			U.v = V;
 			*f = U.f[i];
 #endif
@@ -5107,7 +5160,7 @@ namespace At0
 		{
 			assert(i < 4);
 			_Analysis_assume_(i < 4);
-			VectorF32 U;
+			Vector U;
 			U.v = V;
 			U.f[i] = f;
 			return U.v;
@@ -5119,7 +5172,7 @@ namespace At0
 		inline Vector XM_CALLCONV VectorSetX(FVector V, float x)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 U = { { {
+			Vector U = { { {
 					x,
 					V.vector4_f32[1],
 					V.vector4_f32[2],
@@ -5141,7 +5194,7 @@ namespace At0
 		inline Vector XM_CALLCONV VectorSetY(FVector V, float y)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 U = { { {
+			Vector U = { { {
 					V.vector4_f32[0],
 					y,
 					V.vector4_f32[2],
@@ -5172,7 +5225,7 @@ namespace At0
 		inline Vector XM_CALLCONV VectorSetZ(FVector V, float z)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 U = { { {
+			Vector U = { { {
 					V.vector4_f32[0],
 					V.vector4_f32[1],
 					z,
@@ -5204,13 +5257,14 @@ namespace At0
 		inline Vector XM_CALLCONV VectorSetW(FVector V, float w)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 U = { { {
+			Vector U = { { {
 					V.vector4_f32[0],
 					V.vector4_f32[1],
 					V.vector4_f32[2],
 					w
 				}
- } };
+ }
+			};
 			return U.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vsetq_lane_f32(w, V, 3);
@@ -5240,7 +5294,7 @@ namespace At0
 			assert(f != nullptr);
 			assert(i < 4);
 			_Analysis_assume_(i < 4);
-			VectorF32 U;
+			Vector U;
 			U.v = V;
 			U.f[i] = *f;
 			return U.v;
@@ -5254,7 +5308,7 @@ namespace At0
 		{
 			assert(x != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 U = { { {
+			Vector U = { { {
 					*x,
 					V.vector4_f32[1],
 					V.vector4_f32[2],
@@ -5278,7 +5332,7 @@ namespace At0
 		{
 			assert(y != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 U = { { {
+			Vector U = { { {
 					V.vector4_f32[0],
 					*y,
 					V.vector4_f32[2],
@@ -5306,12 +5360,14 @@ namespace At0
 		{
 			assert(z != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 U = { { {
+			Vector U = { { {
 					V.vector4_f32[0],
 					V.vector4_f32[1],
 					*z,
 					V.vector4_f32[3]
-				} } };
+				}
+ }
+			};
 			return U.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vld1q_lane_f32(z, V, 2);
@@ -5334,12 +5390,14 @@ namespace At0
 		{
 			assert(w != nullptr);
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 U = { { {
+			Vector U = { { {
 					V.vector4_f32[0],
 					V.vector4_f32[1],
 					V.vector4_f32[2],
 					*w
-				} } };
+				}
+ }
+			};
 			return U.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vld1q_lane_f32(w, V, 3);
@@ -5366,7 +5424,7 @@ namespace At0
 			VectorU32 tmp;
 			tmp.v = V;
 			tmp.u[i] = x;
-			return tmp;
+			return (VectorType)tmp;
 		}
 
 		//------------------------------------------------------------------------------
@@ -5430,7 +5488,9 @@ namespace At0
 					V.vector4_u32[1],
 					z,
 					V.vector4_u32[3]
-				} } };
+				}
+ }
+			};
 			return U.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vsetq_lane_u32(z, V, 2);
@@ -5460,7 +5520,9 @@ namespace At0
 					V.vector4_u32[1],
 					V.vector4_u32[2],
 					w
-				} } };
+				}
+ }
+			};
 			return U.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vsetq_lane_u32(w, V, 3);
@@ -5493,7 +5555,7 @@ namespace At0
 			VectorU32 tmp;
 			tmp.v = V;
 			tmp.u[i] = *x;
-			return tmp;
+			return (VectorType)tmp;
 		}
 
 		//------------------------------------------------------------------------------
@@ -5561,7 +5623,9 @@ namespace At0
 					V.vector4_u32[1],
 					*z,
 					V.vector4_u32[3]
-				} } };
+				}
+ }
+			};
 			return U.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vld1q_lane_u32(z, *reinterpret_cast<const uint32x4_t*>(&V), 2);
@@ -5589,7 +5653,9 @@ namespace At0
 					V.vector4_u32[1],
 					V.vector4_u32[2],
 					*w
-				} } };
+				}
+ }
+			};
 			return U.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vld1q_lane_u32(w, *reinterpret_cast<const uint32x4_t*>(&V), 3);
@@ -5621,7 +5687,7 @@ namespace At0
 			_Analysis_assume_((E0 < 4) && (E1 < 4) && (E2 < 4) && (E3 < 4));
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					V.vector4_f32[E0],
 					V.vector4_f32[E1],
 					V.vector4_f32[E2],
@@ -5815,9 +5881,9 @@ namespace At0
 
 		inline Vector XM_CALLCONV VectorSelect
 		(
-			FVector V1,
-			FVector V2,
-			FVector Control
+			FVectorType V1,
+			FVectorType V2,
+			FVectorType Control
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
@@ -6174,7 +6240,8 @@ namespace At0
 					(V1.vector4_f32[1] != V2.vector4_f32[1]) ? 0xFFFFFFFF : 0,
 					(V1.vector4_f32[2] != V2.vector4_f32[2]) ? 0xFFFFFFFF : 0,
 					(V1.vector4_f32[3] != V2.vector4_f32[3]) ? 0xFFFFFFFF : 0,
-				} } };
+				}
+ } };
 			return Control.v;
 
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
@@ -6634,7 +6701,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					(V1.vector4_f32[0] < V2.vector4_f32[0]) ? V1.vector4_f32[0] : V2.vector4_f32[0],
 					(V1.vector4_f32[1] < V2.vector4_f32[1]) ? V1.vector4_f32[1] : V2.vector4_f32[1],
 					(V1.vector4_f32[2] < V2.vector4_f32[2]) ? V1.vector4_f32[2] : V2.vector4_f32[2],
@@ -6659,7 +6726,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					(V1.vector4_f32[0] > V2.vector4_f32[0]) ? V1.vector4_f32[0] : V2.vector4_f32[0],
 					(V1.vector4_f32[1] > V2.vector4_f32[1]) ? V1.vector4_f32[1] : V2.vector4_f32[1],
 					(V1.vector4_f32[2] > V2.vector4_f32[2]) ? V1.vector4_f32[2] : V2.vector4_f32[2],
@@ -6711,7 +6778,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					Internal::round_to_nearest(V.vector4_f32[0]),
 					Internal::round_to_nearest(V.vector4_f32[1]),
 					Internal::round_to_nearest(V.vector4_f32[2]),
@@ -6827,13 +6894,14 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					floorf(V.vector4_f32[0]),
 					floorf(V.vector4_f32[1]),
 					floorf(V.vector4_f32[2]),
 					floorf(V.vector4_f32[3])
 				}
- } };
+ }
+			};
 			return Result.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
@@ -6882,7 +6950,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					ceilf(V.vector4_f32[0]),
 					ceilf(V.vector4_f32[1]),
 					ceilf(V.vector4_f32[2]),
@@ -7003,7 +7071,9 @@ namespace At0
 					V1.vector4_u32[1] & V2.vector4_u32[1],
 					V1.vector4_u32[2] & V2.vector4_u32[2],
 					V1.vector4_u32[3] & V2.vector4_u32[3]
-				} } };
+				}
+ }
+			};
 			return Result;
 
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
@@ -7134,7 +7204,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					-V.vector4_f32[0],
 					-V.vector4_f32[1],
 					-V.vector4_f32[2],
@@ -7163,7 +7233,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					V1.vector4_f32[0] + V2.vector4_f32[0],
 					V1.vector4_f32[1] + V2.vector4_f32[1],
 					V1.vector4_f32[2] + V2.vector4_f32[2],
@@ -7187,7 +7257,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result;
+			Vector Result;
 			Result.f[0] =
 				Result.f[1] =
 				Result.f[2] =
@@ -7285,7 +7355,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					V1.vector4_f32[0] - V2.vector4_f32[0],
 					V1.vector4_f32[1] - V2.vector4_f32[1],
 					V1.vector4_f32[2] - V2.vector4_f32[2],
@@ -7368,7 +7438,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					V1.vector4_f32[0] * V2.vector4_f32[0],
 					V1.vector4_f32[1] * V2.vector4_f32[1],
 					V1.vector4_f32[2] * V2.vector4_f32[2],
@@ -7392,7 +7462,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					V1.vector4_f32[0] * V2.vector4_f32[0] + V3.vector4_f32[0],
 					V1.vector4_f32[1] * V2.vector4_f32[1] + V3.vector4_f32[1],
 					V1.vector4_f32[2] * V2.vector4_f32[2] + V3.vector4_f32[2],
@@ -7422,7 +7492,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					V1.vector4_f32[0] / V2.vector4_f32[0],
 					V1.vector4_f32[1] / V2.vector4_f32[1],
 					V1.vector4_f32[2] / V2.vector4_f32[2],
@@ -7456,7 +7526,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					V3.vector4_f32[0] - (V1.vector4_f32[0] * V2.vector4_f32[0]),
 					V3.vector4_f32[1] - (V1.vector4_f32[1] * V2.vector4_f32[1]),
 					V3.vector4_f32[2] - (V1.vector4_f32[2] * V2.vector4_f32[2]),
@@ -7486,7 +7556,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					V.vector4_f32[0] * ScaleFactor,
 					V.vector4_f32[1] * ScaleFactor,
 					V.vector4_f32[2] * ScaleFactor,
@@ -7509,7 +7579,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					1.f / V.vector4_f32[0],
 					1.f / V.vector4_f32[1],
 					1.f / V.vector4_f32[2],
@@ -7531,7 +7601,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					1.f / V.vector4_f32[0],
 					1.f / V.vector4_f32[1],
 					1.f / V.vector4_f32[2],
@@ -7563,12 +7633,14 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					sqrtf(V.vector4_f32[0]),
 					sqrtf(V.vector4_f32[1]),
 					sqrtf(V.vector4_f32[2]),
 					sqrtf(V.vector4_f32[3])
-				} } };
+				}
+ }
+			};
 			return Result.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			// 1 iteration of Newton-Raphson refinment of sqrt
@@ -7595,7 +7667,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					sqrtf(V.vector4_f32[0]),
 					sqrtf(V.vector4_f32[1]),
 					sqrtf(V.vector4_f32[2]),
@@ -7635,7 +7707,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					1.f / sqrtf(V.vector4_f32[0]),
 					1.f / sqrtf(V.vector4_f32[1]),
 					1.f / sqrtf(V.vector4_f32[2]),
@@ -7657,7 +7729,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					1.f / sqrtf(V.vector4_f32[0]),
 					1.f / sqrtf(V.vector4_f32[1]),
 					1.f / sqrtf(V.vector4_f32[2]),
@@ -7692,7 +7764,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					powf(2.0f, V.vector4_f32[0]),
 					powf(2.0f, V.vector4_f32[1]),
 					powf(2.0f, V.vector4_f32[2]),
@@ -7837,7 +7909,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					expf(V.vector4_f32[0]),
 					expf(V.vector4_f32[1]),
 					expf(V.vector4_f32[2]),
@@ -8158,12 +8230,13 @@ namespace At0
 
 			const float fScale = 1.4426950f; // (1.0f / logf(2.0f));
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					logf(V.vector4_f32[0]) * fScale,
 					logf(V.vector4_f32[1]) * fScale,
 					logf(V.vector4_f32[2]) * fScale,
 					logf(V.vector4_f32[3]) * fScale
-				} } };
+				}
+ } };
 			return Result.v;
 
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
@@ -8326,7 +8399,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					logf(V.vector4_f32[0]),
 					logf(V.vector4_f32[1]),
 					logf(V.vector4_f32[2]),
@@ -8509,7 +8582,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					powf(V1.vector4_f32[0], V2.vector4_f32[0]),
 					powf(V1.vector4_f32[1], V2.vector4_f32[1]),
 					powf(V1.vector4_f32[2], V2.vector4_f32[2]),
@@ -8518,7 +8591,7 @@ namespace At0
 			return Result.v;
 
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-			VectorF32 vResult = { { {
+			Vector vResult = { { {
 					powf(vgetq_lane_f32(V1, 0), vgetq_lane_f32(V2, 0)),
 					powf(vgetq_lane_f32(V1, 1), vgetq_lane_f32(V2, 1)),
 					powf(vgetq_lane_f32(V1, 2), vgetq_lane_f32(V2, 2)),
@@ -8547,12 +8620,13 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 vResult = { { {
+			Vector vResult = { { {
 					fabsf(V.vector4_f32[0]),
 					fabsf(V.vector4_f32[1]),
 					fabsf(V.vector4_f32[2]),
 					fabsf(V.vector4_f32[3])
-				} } };
+				}
+ } };
 			return vResult.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
 			return vabsq_f32(V);
@@ -8639,7 +8713,7 @@ namespace At0
 			// 11-degree minimax approximation
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					sinf(V.vector4_f32[0]),
 					sinf(V.vector4_f32[1]),
 					sinf(V.vector4_f32[2]),
@@ -8731,7 +8805,7 @@ namespace At0
 			// 10-degree minimax approximation
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					cosf(V.vector4_f32[0]),
 					cosf(V.vector4_f32[1]),
 					cosf(V.vector4_f32[2]),
@@ -8833,14 +8907,14 @@ namespace At0
 			// 11/10-degree minimax approximation
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Sin = { { {
+			Vector Sin = { { {
 					sinf(V.vector4_f32[0]),
 					sinf(V.vector4_f32[1]),
 					sinf(V.vector4_f32[2]),
 					sinf(V.vector4_f32[3])
 				} } };
 
-			VectorF32 Cos = { { {
+			Vector Cos = { { {
 					cosf(V.vector4_f32[0]),
 					cosf(V.vector4_f32[1]),
 					cosf(V.vector4_f32[2]),
@@ -8980,7 +9054,7 @@ namespace At0
 			// Cody and Waite algorithm to compute tangent.
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					tanf(V.vector4_f32[0]),
 					tanf(V.vector4_f32[1]),
 					tanf(V.vector4_f32[2]),
@@ -8989,9 +9063,9 @@ namespace At0
 			return Result.v;
 #elif defined(_XM_SSE_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_) 
 
-			static const VectorF32 TanCoefficients0 = { { { 1.0f, -4.667168334e-1f, 2.566383229e-2f, -3.118153191e-4f } } };
-			static const VectorF32 TanCoefficients1 = { { { 4.981943399e-7f, -1.333835001e-1f, 3.424887824e-3f, -1.786170734e-5f } } };
-			static const VectorF32 TanConstants = { { { 1.570796371f, 6.077100628e-11f, 0.000244140625f, 0.63661977228f /*2 / Pi*/ } } };
+			static const Vector TanCoefficients0 = { { { 1.0f, -4.667168334e-1f, 2.566383229e-2f, -3.118153191e-4f } } };
+			static const Vector TanCoefficients1 = { { { 4.981943399e-7f, -1.333835001e-1f, 3.424887824e-3f, -1.786170734e-5f } } };
+			static const Vector TanConstants = { { { 1.570796371f, 6.077100628e-11f, 0.000244140625f, 0.63661977228f /*2 / Pi*/ } } };
 			static const VectorU32 Mask = { { { 0x1, 0x1, 0x1, 0x1 } } };
 
 			Vector TwoDivPi = VectorSplatW(TanConstants.v);
@@ -9073,7 +9147,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					sinhf(V.vector4_f32[0]),
 					sinhf(V.vector4_f32[1]),
 					sinhf(V.vector4_f32[2]),
@@ -9081,7 +9155,7 @@ namespace At0
 				} } };
 			return Result.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
+			static const Vector Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
 			Vector V1 = vmlaq_f32(g_XMNegativeOne.v, V, Scale.v);
 			Vector V2 = vmlsq_f32(g_XMNegativeOne.v, V, Scale.v);
@@ -9090,7 +9164,7 @@ namespace At0
 
 			return vsubq_f32(E1, E2);
 #elif defined(_XM_SSE_INTRINSICS_)
-			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
+			static const Vector Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
 			Vector V1 = _mm_mul_ps(V, Scale);
 			V1 = _mm_add_ps(V1, g_XMNegativeOne);
@@ -9111,7 +9185,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					coshf(V.vector4_f32[0]),
 					coshf(V.vector4_f32[1]),
 					coshf(V.vector4_f32[2]),
@@ -9119,7 +9193,7 @@ namespace At0
 				} } };
 			return Result.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
+			static const Vector Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
 			Vector V1 = vmlaq_f32(g_XMNegativeOne.v, V, Scale.v);
 			Vector V2 = vmlsq_f32(g_XMNegativeOne.v, V, Scale.v);
@@ -9127,7 +9201,7 @@ namespace At0
 			Vector E2 = VectorExp(V2);
 			return vaddq_f32(E1, E2);
 #elif defined(_XM_SSE_INTRINSICS_)
-			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
+			static const Vector Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
 			Vector V1 = _mm_mul_ps(V, Scale.v);
 			V1 = _mm_add_ps(V1, g_XMNegativeOne.v);
@@ -9147,7 +9221,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					tanhf(V.vector4_f32[0]),
 					tanhf(V.vector4_f32[1]),
 					tanhf(V.vector4_f32[2]),
@@ -9157,7 +9231,7 @@ namespace At0
 			};
 			return Result.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-			static const VectorF32 Scale = { { { 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f } } }; // 2.0f / ln(2.0f)
+			static const Vector Scale = { { { 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f } } }; // 2.0f / ln(2.0f)
 
 			Vector E = vmulq_f32(V, Scale.v);
 			E = VectorExp(E);
@@ -9165,7 +9239,7 @@ namespace At0
 			E = VectorReciprocal(E);
 			return vsubq_f32(g_XMOne.v, E);
 #elif defined(_XM_SSE_INTRINSICS_)
-			static const VectorF32 Scale = { { { 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f } } }; // 2.0f / ln(2.0f)
+			static const Vector Scale = { { { 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f } } }; // 2.0f / ln(2.0f)
 
 			Vector E = _mm_mul_ps(V, Scale.v);
 			E = VectorExp(E);
@@ -9186,7 +9260,7 @@ namespace At0
 			// 7-degree minimax approximation
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					asinf(V.vector4_f32[0]),
 					asinf(V.vector4_f32[1]),
 					asinf(V.vector4_f32[2]),
@@ -9294,7 +9368,7 @@ namespace At0
 			// 7-degree minimax approximation
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					acosf(V.vector4_f32[0]),
 					acosf(V.vector4_f32[1]),
 					acosf(V.vector4_f32[2]),
@@ -9400,7 +9474,7 @@ namespace At0
 			// 17-degree minimax approximation
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					atanf(V.vector4_f32[0]),
 					atanf(V.vector4_f32[1]),
 					atanf(V.vector4_f32[2]),
@@ -9523,7 +9597,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					atan2f(Y.vector4_f32[0], X.vector4_f32[0]),
 					atan2f(Y.vector4_f32[1], X.vector4_f32[1]),
 					atan2f(Y.vector4_f32[2], X.vector4_f32[2]),
@@ -9544,7 +9618,7 @@ namespace At0
 			//     Y == Infinity and X == -Infinity -> 3Pi / 4 with the sign of Y
 			//     Y == Infinity and X == +Infinity -> Pi / 4 with the sign of Y
 
-			static const VectorF32 ATan2Constants = { { { XM_PI, XM_PIDIV2, XM_PIDIV4, XM_PI * 3.0f / 4.0f } } };
+			static const Vector ATan2Constants = { { { XM_PI, XM_PIDIV2, XM_PIDIV4, XM_PI * 3.0f / 4.0f } } };
 
 			Vector Zero = VectorZero();
 			Vector ATanResultValid = VectorTrueInt();
@@ -9597,7 +9671,7 @@ namespace At0
 			// 7-degree minimax approximation
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					sinf(V.vector4_f32[0]),
 					sinf(V.vector4_f32[1]),
 					sinf(V.vector4_f32[2]),
@@ -9674,7 +9748,7 @@ namespace At0
 			// 6-degree minimax approximation
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					cosf(V.vector4_f32[0]),
 					cosf(V.vector4_f32[1]),
 					cosf(V.vector4_f32[2]),
@@ -9761,14 +9835,14 @@ namespace At0
 			// 7/6-degree minimax approximation
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Sin = { { {
+			Vector Sin = { { {
 					sinf(V.vector4_f32[0]),
 					sinf(V.vector4_f32[1]),
 					sinf(V.vector4_f32[2]),
 					sinf(V.vector4_f32[3])
 				} } };
 
-			VectorF32 Cos = { { {
+			Vector Cos = { { {
 					cosf(V.vector4_f32[0]),
 					cosf(V.vector4_f32[1]),
 					cosf(V.vector4_f32[2]),
@@ -9876,7 +9950,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					tanf(V.vector4_f32[0]),
 					tanf(V.vector4_f32[1]),
 					tanf(V.vector4_f32[2]),
@@ -9919,7 +9993,7 @@ namespace At0
 			// 3-degree minimax approximation
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result;
+			Vector Result;
 			Result.f[0] = asinf(V.vector4_f32[0]);
 			Result.f[1] = asinf(V.vector4_f32[1]);
 			Result.f[2] = asinf(V.vector4_f32[2]);
@@ -9996,7 +10070,7 @@ namespace At0
 			// 3-degree minimax approximation
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					acosf(V.vector4_f32[0]),
 					acosf(V.vector4_f32[1]),
 					acosf(V.vector4_f32[2]),
@@ -10072,7 +10146,7 @@ namespace At0
 			// 9-degree minimax approximation
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					atanf(V.vector4_f32[0]),
 					atanf(V.vector4_f32[1]),
 					atanf(V.vector4_f32[2]),
@@ -10168,7 +10242,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					atan2f(Y.vector4_f32[0], X.vector4_f32[0]),
 					atan2f(Y.vector4_f32[1], X.vector4_f32[1]),
 					atan2f(Y.vector4_f32[2], X.vector4_f32[2]),
@@ -10177,7 +10251,7 @@ namespace At0
 			return Result.v;
 #else
 
-			static const VectorF32 ATan2Constants = { { { XM_PI, XM_PIDIV2, XM_PIDIV4, 2.3561944905f /* Pi*3/4 */ } } };
+			static const Vector ATan2Constants = { { { XM_PI, XM_PIDIV2, XM_PIDIV4, 2.3561944905f /* Pi*3/4 */ } } };
 
 			const Vector Zero = VectorZero();
 			Vector ATanResultValid = VectorTrueInt();
@@ -10377,8 +10451,8 @@ namespace At0
 			return Result;
 
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-			static const VectorF32 CatMulT2 = { { { -3.0f, -2.0f, 3.0f, -1.0f } } };
-			static const VectorF32 CatMulT3 = { { { 2.0f, 1.0f, -2.0f, 1.0f } } };
+			static const Vector CatMulT2 = { { { -3.0f, -2.0f, 3.0f, -1.0f } } };
+			static const Vector CatMulT3 = { { { 2.0f, 1.0f, -2.0f, 1.0f } } };
 
 			Vector T2 = vmulq_f32(T, T);
 			Vector T3 = vmulq_f32(T, T2);
@@ -10403,8 +10477,8 @@ namespace At0
 			vResult = vmlaq_lane_f32(vResult, Tangent1, vget_high_f32(T3), 1); // T3[3]
 			return vResult;
 #elif defined(_XM_SSE_INTRINSICS_)
-			static const VectorF32 CatMulT2 = { { { -3.0f, -2.0f, 3.0f, -1.0f } } };
-			static const VectorF32 CatMulT3 = { { { 2.0f, 1.0f, -2.0f, 1.0f } } };
+			static const Vector CatMulT2 = { { { -3.0f, -2.0f, 3.0f, -1.0f } } };
+			static const Vector CatMulT3 = { { { 2.0f, 1.0f, -2.0f, 1.0f } } };
 
 			Vector T2 = _mm_mul_ps(T, T);
 			Vector T3 = _mm_mul_ps(T, T2);
@@ -10523,7 +10597,7 @@ namespace At0
 			float fy = T.vector4_f32[1];
 			float fz = T.vector4_f32[2];
 			float fw = T.vector4_f32[3];
-			VectorF32 vResult = { { {
+			Vector vResult = { { {
 					0.5f * ((-fx * fx * fx + 2 * fx * fx - fx) * Position0.vector4_f32[0]
 					+ (3 * fx * fx * fx - 5 * fx * fx + 2) * Position1.vector4_f32[0]
 					+ (-3 * fx * fx * fx + 4 * fx * fx + fx) * Position2.vector4_f32[0]
@@ -10546,10 +10620,10 @@ namespace At0
 				} } };
 			return vResult.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-			static const VectorF32 Catmul2 = { { { 2.0f, 2.0f, 2.0f, 2.0f } } };
-			static const VectorF32 Catmul3 = { { { 3.0f, 3.0f, 3.0f, 3.0f } } };
-			static const VectorF32 Catmul4 = { { { 4.0f, 4.0f, 4.0f, 4.0f } } };
-			static const VectorF32 Catmul5 = { { { 5.0f, 5.0f, 5.0f, 5.0f } } };
+			static const Vector Catmul2 = { { { 2.0f, 2.0f, 2.0f, 2.0f } } };
+			static const Vector Catmul3 = { { { 3.0f, 3.0f, 3.0f, 3.0f } } };
+			static const Vector Catmul4 = { { { 4.0f, 4.0f, 4.0f, 4.0f } } };
+			static const Vector Catmul5 = { { { 5.0f, 5.0f, 5.0f, 5.0f } } };
 			// Cache T^2 and T^3
 			Vector T2 = vmulq_f32(T, T);
 			Vector T3 = vmulq_f32(T, T2);
@@ -10575,10 +10649,10 @@ namespace At0
 			vResult = vmulq_f32(vResult, g_XMOneHalf);
 			return vResult;
 #elif defined(_XM_SSE_INTRINSICS_)
-			static const VectorF32 Catmul2 = { { { 2.0f, 2.0f, 2.0f, 2.0f } } };
-			static const VectorF32 Catmul3 = { { { 3.0f, 3.0f, 3.0f, 3.0f } } };
-			static const VectorF32 Catmul4 = { { { 4.0f, 4.0f, 4.0f, 4.0f } } };
-			static const VectorF32 Catmul5 = { { { 5.0f, 5.0f, 5.0f, 5.0f } } };
+			static const Vector Catmul2 = { { { 2.0f, 2.0f, 2.0f, 2.0f } } };
+			static const Vector Catmul3 = { { { 3.0f, 3.0f, 3.0f, 3.0f } } };
+			static const Vector Catmul4 = { { { 4.0f, 4.0f, 4.0f, 4.0f } } };
+			static const Vector Catmul5 = { { { 5.0f, 5.0f, 5.0f, 5.0f } } };
 			// Cache T^2 and T^3
 			Vector T2 = _mm_mul_ps(T, T);
 			Vector T3 = _mm_mul_ps(T, T2);
@@ -11205,7 +11279,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result;
+			Vector Result;
 			Result.f[0] =
 				Result.f[1] =
 				Result.f[2] =
@@ -11248,14 +11322,14 @@ namespace At0
 
 #if defined(_XM_NO_INTRINSICS_)
 			float fCross = (V1.vector4_f32[0] * V2.vector4_f32[1]) - (V1.vector4_f32[1] * V2.vector4_f32[0]);
-			VectorF32 vResult;
+			Vector vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
 				vResult.f[3] = fCross;
 			return vResult.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-			static const VectorF32 Negate = { { { 1.f, -1.f, 0, 0 } } };
+			static const Vector Negate = { { { 1.f, -1.f, 0, 0 } } };
 
 			float32x2_t vTemp = vmul_f32(vget_low_f32(V1), vrev64_f32(vget_low_f32(V2)));
 			vTemp = vmul_f32(vTemp, vget_low_f32(Negate));
@@ -11844,7 +11918,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					-V.vector4_f32[1],
 					V.vector4_f32[0],
 					0.f,
@@ -11853,7 +11927,7 @@ namespace At0
 			return Result.v;
 
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-			static const VectorF32 Negate = { { { -1.f, 1.f, 0, 0 } } };
+			static const Vector Negate = { { { -1.f, 1.f, 0, 0 } } };
 			const float32x2_t zero = vdup_n_f32(0);
 
 			float32x2_t VL = vget_low_f32(V);
@@ -13592,7 +13666,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 			float fValue = V1.vector4_f32[0] * V2.vector4_f32[0] + V1.vector4_f32[1] * V2.vector4_f32[1] + V1.vector4_f32[2] * V2.vector4_f32[2];
-			VectorF32 vResult;
+			Vector vResult;
 			vResult.f[0] =
 				vResult.f[1] =
 				vResult.f[2] =
@@ -13640,7 +13714,7 @@ namespace At0
 			// [ V1.y*V2.z - V1.z*V2.y, V1.z*V2.x - V1.x*V2.z, V1.x*V2.y - V1.y*V2.x ]
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 vResult = { { {
+			Vector vResult = { { {
 					(V1.vector4_f32[1] * V2.vector4_f32[2]) - (V1.vector4_f32[2] * V2.vector4_f32[1]),
 					(V1.vector4_f32[2] * V2.vector4_f32[0]) - (V1.vector4_f32[0] * V2.vector4_f32[2]),
 					(V1.vector4_f32[0] * V2.vector4_f32[1]) - (V1.vector4_f32[1] * V2.vector4_f32[0]),
@@ -16418,7 +16492,7 @@ namespace At0
 			CMatrix World
 		)
 		{
-			static const VectorF32 D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
+			static const Vector D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
 
 			Vector Scale = VectorSet(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
 			Scale = VectorReciprocal(Scale);
@@ -16471,7 +16545,7 @@ namespace At0
 
 #if defined(_XM_NO_INTRINSICS_)
 
-			static const VectorF32 D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
+			static const Vector D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
 
 			Vector Scale = VectorSet(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
 			Scale = VectorReciprocal(Scale);
@@ -16655,7 +16729,7 @@ namespace At0
 
 			return pOutputStream;
 #elif defined(_XM_SSE_INTRINSICS_)
-			static const VectorF32 D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
+			static const Vector D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
 
 			Vector Scale = VectorSet(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
 			Scale = VectorReciprocal(Scale);
@@ -17586,7 +17660,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result;
+			Vector Result;
 			Result.f[0] =
 				Result.f[1] =
 				Result.f[2] =
@@ -17633,7 +17707,7 @@ namespace At0
 
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					(((V2.vector4_f32[2] * V3.vector4_f32[3]) - (V2.vector4_f32[3] * V3.vector4_f32[2])) * V1.vector4_f32[1]) - (((V2.vector4_f32[1] * V3.vector4_f32[3]) - (V2.vector4_f32[3] * V3.vector4_f32[1])) * V1.vector4_f32[2]) + (((V2.vector4_f32[1] * V3.vector4_f32[2]) - (V2.vector4_f32[2] * V3.vector4_f32[1])) * V1.vector4_f32[3]),
 					(((V2.vector4_f32[3] * V3.vector4_f32[2]) - (V2.vector4_f32[2] * V3.vector4_f32[3])) * V1.vector4_f32[0]) - (((V2.vector4_f32[3] * V3.vector4_f32[0]) - (V2.vector4_f32[0] * V3.vector4_f32[3])) * V1.vector4_f32[2]) + (((V2.vector4_f32[2] * V3.vector4_f32[0]) - (V2.vector4_f32[0] * V3.vector4_f32[2])) * V1.vector4_f32[3]),
 					(((V2.vector4_f32[1] * V3.vector4_f32[3]) - (V2.vector4_f32[3] * V3.vector4_f32[1])) * V1.vector4_f32[0]) - (((V2.vector4_f32[0] * V3.vector4_f32[3]) - (V2.vector4_f32[3] * V3.vector4_f32[0])) * V1.vector4_f32[1]) + (((V2.vector4_f32[0] * V3.vector4_f32[1]) - (V2.vector4_f32[1] * V3.vector4_f32[0])) * V1.vector4_f32[3]),
@@ -18422,7 +18496,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					V.vector4_f32[2],
 					V.vector4_f32[3],
 					-V.vector4_f32[0],
@@ -18431,12 +18505,12 @@ namespace At0
 			return Result.v;
 
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-			static const VectorF32 Negate = { { { 1.f, 1.f, -1.f, -1.f } } };
+			static const Vector Negate = { { { 1.f, 1.f, -1.f, -1.f } } };
 
 			float32x4_t Result = vcombine_f32(vget_high_f32(V), vget_low_f32(V));
 			return vmulq_f32(Result, Negate);
 #elif defined(_XM_SSE_INTRINSICS_)
-			static const VectorF32 FlipZW = { { { 1.0f, 1.0f, -1.0f, -1.0f } } };
+			static const Vector FlipZW = { { { 1.0f, 1.0f, -1.0f, -1.0f } } };
 			Vector vResult = XM_PERMUTE_PS(V, _MM_SHUFFLE(1, 0, 3, 2));
 			vResult = _mm_mul_ps(vResult, FlipZW);
 			return vResult;
@@ -18506,7 +18580,7 @@ namespace At0
 			float fY = (M.m[0][1] * V.vector4_f32[0]) + (M.m[1][1] * V.vector4_f32[1]) + (M.m[2][1] * V.vector4_f32[2]) + (M.m[3][1] * V.vector4_f32[3]);
 			float fZ = (M.m[0][2] * V.vector4_f32[0]) + (M.m[1][2] * V.vector4_f32[1]) + (M.m[2][2] * V.vector4_f32[2]) + (M.m[3][2] * V.vector4_f32[3]);
 			float fW = (M.m[0][3] * V.vector4_f32[0]) + (M.m[1][3] * V.vector4_f32[1]) + (M.m[2][3] * V.vector4_f32[2]) + (M.m[3][3] * V.vector4_f32[3]);
-			VectorF32 vResult = { { { fX, fY, fZ, fW } } };
+			Vector vResult = { { { fX, fY, fZ, fW } } };
 			return vResult.v;
 
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
@@ -19882,7 +19956,7 @@ namespace At0
 			FMatrix M
 		)
 		{
-			static const VectorF32 Sign = { { { 1.0f, -1.0f, 1.0f, -1.0f } } };
+			static const Vector Sign = { { { 1.0f, -1.0f, 1.0f, -1.0f } } };
 
 			Vector V0 = VectorSwizzle<XM_SWIZZLE_Y, XM_SWIZZLE_X, XM_SWIZZLE_X, XM_SWIZZLE_X>(M.r[2]);
 			Vector V1 = VectorSwizzle<XM_SWIZZLE_Z, XM_SWIZZLE_Z, XM_SWIZZLE_Y, XM_SWIZZLE_Y>(M.r[3]);
@@ -19980,9 +20054,9 @@ namespace At0
 		)
 		{
 			static const Vector* pvCanonicalBasis[3] = {
-				&g_XMIdentityR0.v,
-				&g_XMIdentityR1.v,
-				&g_XMIdentityR2.v
+				(Vector*)&g_XMIdentityR0.v,
+				(Vector*)&g_XMIdentityR1.v,
+				(Vector*)&g_XMIdentityR2.v
 			};
 
 			assert(outScale != nullptr);
@@ -20662,7 +20736,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
 
-			static const VectorF32 Constant1110 = { { { 1.0f, 1.0f, 1.0f, 0.0f } } };
+			static const Vector Constant1110 = { { { 1.0f, 1.0f, 1.0f, 0.0f } } };
 
 			Vector Q0 = VectorAdd(Quaternion, Quaternion);
 			Vector Q1 = VectorMultiply(Quaternion, Q0);
@@ -20694,7 +20768,7 @@ namespace At0
 			return M;
 
 #elif defined(_XM_SSE_INTRINSICS_)
-			static const VectorF32  Constant1110 = { { { 1.0f, 1.0f, 1.0f, 0.0f } } };
+			static const Vector  Constant1110 = { { { 1.0f, 1.0f, 1.0f, 0.0f } } };
 
 			Vector Q0 = _mm_add_ps(Quaternion, Quaternion);
 			Vector Q1 = _mm_mul_ps(Quaternion, Q0);
@@ -20879,7 +20953,7 @@ namespace At0
 			assert(!Vector3Equal(ReflectionPlane, VectorZero()));
 			assert(!PlaneIsInfinite(ReflectionPlane));
 
-			static const VectorF32 NegativeTwo = { { { -2.0f, -2.0f, -2.0f, 0.0f } } };
+			static const Vector NegativeTwo = { { { -2.0f, -2.0f, -2.0f, 0.0f } } };
 
 			Vector P = PlaneNormalize(ReflectionPlane);
 			Vector S = VectorMultiply(P, NegativeTwo);
@@ -22423,7 +22497,7 @@ namespace At0
 			//   (Q2.w * Q1.w) - (Q2.x * Q1.x) - (Q2.y * Q1.y) - (Q2.z * Q1.z) ]
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					(Q2.vector4_f32[3] * Q1.vector4_f32[0]) + (Q2.vector4_f32[0] * Q1.vector4_f32[3]) + (Q2.vector4_f32[1] * Q1.vector4_f32[2]) - (Q2.vector4_f32[2] * Q1.vector4_f32[1]),
 					(Q2.vector4_f32[3] * Q1.vector4_f32[1]) - (Q2.vector4_f32[0] * Q1.vector4_f32[2]) + (Q2.vector4_f32[1] * Q1.vector4_f32[3]) + (Q2.vector4_f32[2] * Q1.vector4_f32[0]),
 					(Q2.vector4_f32[3] * Q1.vector4_f32[2]) + (Q2.vector4_f32[0] * Q1.vector4_f32[1]) - (Q2.vector4_f32[1] * Q1.vector4_f32[0]) + (Q2.vector4_f32[2] * Q1.vector4_f32[3]),
@@ -22431,9 +22505,9 @@ namespace At0
 				} } };
 			return Result.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-			static const VectorF32 ControlWZYX = { { { 1.0f, -1.0f, 1.0f, -1.0f } } };
-			static const VectorF32 ControlZWXY = { { { 1.0f, 1.0f, -1.0f, -1.0f } } };
-			static const VectorF32 ControlYXWZ = { { { -1.0f, 1.0f, 1.0f, -1.0f } } };
+			static const Vector ControlWZYX = { { { 1.0f, -1.0f, 1.0f, -1.0f } } };
+			static const Vector ControlZWXY = { { { 1.0f, 1.0f, -1.0f, -1.0f } } };
+			static const Vector ControlYXWZ = { { { -1.0f, 1.0f, 1.0f, -1.0f } } };
 
 			float32x2_t Q2L = vget_low_f32(Q2);
 			float32x2_t Q2H = vget_high_f32(Q2);
@@ -22461,9 +22535,9 @@ namespace At0
 			vResult = vmlaq_f32(vResult, Q2Z, ControlYXWZ);
 			return vResult;
 #elif defined(_XM_SSE_INTRINSICS_)
-			static const VectorF32 ControlWZYX = { { { 1.0f, -1.0f, 1.0f, -1.0f } } };
-			static const VectorF32 ControlZWXY = { { { 1.0f, 1.0f, -1.0f, -1.0f } } };
-			static const VectorF32 ControlYXWZ = { { { -1.0f, 1.0f, 1.0f, -1.0f } } };
+			static const Vector ControlWZYX = { { { 1.0f, -1.0f, 1.0f, -1.0f } } };
+			static const Vector ControlZWXY = { { { 1.0f, 1.0f, -1.0f, -1.0f } } };
+			static const Vector ControlYXWZ = { { { -1.0f, 1.0f, 1.0f, -1.0f } } };
 			// Copy to SSE registers and use as few as possible for x86
 			Vector Q2X = Q2;
 			Vector Q2Y = Q2;
@@ -22558,7 +22632,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 Result = { { {
+			Vector Result = { { {
 					-Q.vector4_f32[0],
 					-Q.vector4_f32[1],
 					-Q.vector4_f32[2],
@@ -22567,10 +22641,10 @@ namespace At0
  } };
 			return Result.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-			static const VectorF32 NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
+			static const Vector NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
 			return vmulq_f32(Q, NegativeOne3.v);
 #elif defined(_XM_SSE_INTRINSICS_)
-			static const VectorF32 NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
+			static const Vector NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
 			return _mm_mul_ps(Q, NegativeOne3);
 #endif
 		}
@@ -22603,7 +22677,7 @@ namespace At0
 			FVector Q
 		)
 		{
-			static const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
+			static const Vector OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 
 			Vector QW = VectorSplatW(Q);
 			Vector Q0 = VectorSelect(g_XMSelect1110.v, Q, g_XMSelect1110.v);
@@ -22674,7 +22748,7 @@ namespace At0
 
 #if defined(_XM_NO_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
 
-			const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
+			const Vector OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 
 			Vector CosOmega = QuaternionDot(Q0, Q1);
 
@@ -22716,7 +22790,7 @@ namespace At0
 			return Result;
 
 #elif defined(_XM_SSE_INTRINSICS_)
-			static const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
+			static const Vector OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 			static const VectorU32 SignMask2 = { { { 0x80000000, 0x00000000, 0x00000000, 0x00000000 } } };
 
 			Vector CosOmega = QuaternionDot(Q0, Q1);
@@ -22954,7 +23028,7 @@ namespace At0
 			FVector Angles // <Pitch, Yaw, Roll, 0>
 		)
 		{
-			static const VectorF32  Sign = { { { 1.0f, -1.0f, -1.0f, 1.0f } } };
+			static const Vector  Sign = { { { 1.0f, -1.0f, -1.0f, 1.0f } } };
 
 			Vector HalfAngles = VectorMultiply(Angles, g_XMOneHalf.v);
 
@@ -23034,7 +23108,7 @@ namespace At0
 		{
 #if defined(_XM_NO_INTRINSICS_)
 
-			VectorF32 q;
+			Vector q;
 			float r22 = M.m[2][2];
 			if (r22 <= 0.f)  // x^2 + y^2 >= z^2 + w^2
 			{
@@ -23085,9 +23159,9 @@ namespace At0
 			return q.v;
 
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-			static const VectorF32 XMPMMP = { { { +1.0f, -1.0f, -1.0f, +1.0f } } };
-			static const VectorF32 XMMPMP = { { { -1.0f, +1.0f, -1.0f, +1.0f } } };
-			static const VectorF32 XMMMPP = { { { -1.0f, -1.0f, +1.0f, +1.0f } } };
+			static const Vector XMPMMP = { { { +1.0f, -1.0f, -1.0f, +1.0f } } };
+			static const Vector XMMPMP = { { { -1.0f, +1.0f, -1.0f, +1.0f } } };
+			static const Vector XMMMPP = { { { -1.0f, -1.0f, +1.0f, +1.0f } } };
 			static const VectorU32 Select0110 = { { { XM_SELECT_0, XM_SELECT_1, XM_SELECT_1, XM_SELECT_0 } } };
 			static const VectorU32 Select0010 = { { { XM_SELECT_0, XM_SELECT_0, XM_SELECT_1, XM_SELECT_0 } } };
 
@@ -23172,9 +23246,9 @@ namespace At0
 			t0 = Vector4Length(t2);
 			return VectorDivide(t2, t0);
 #elif defined(_XM_SSE_INTRINSICS_)
-			static const VectorF32 XMPMMP = { { { +1.0f, -1.0f, -1.0f, +1.0f } } };
-			static const VectorF32 XMMPMP = { { { -1.0f, +1.0f, -1.0f, +1.0f } } };
-			static const VectorF32 XMMMPP = { { { -1.0f, -1.0f, +1.0f, +1.0f } } };
+			static const Vector XMPMMP = { { { +1.0f, -1.0f, -1.0f, +1.0f } } };
+			static const Vector XMMPMP = { { { -1.0f, +1.0f, -1.0f, +1.0f } } };
+			static const Vector XMMMPP = { { { -1.0f, -1.0f, +1.0f, +1.0f } } };
 
 			Vector r0 = M.r[0];  // (r00, r01, r02, 0)
 			Vector r1 = M.r[1];  // (r10, r11, r12, 0)
@@ -23450,7 +23524,7 @@ namespace At0
 			{
 				fLengthSq = 1.0f / fLengthSq;
 			}
-			VectorF32 vResult = { { {
+			Vector vResult = { { {
 					P.vector4_f32[0] * fLengthSq,
 					P.vector4_f32[1] * fLengthSq,
 					P.vector4_f32[2] * fLengthSq,
@@ -23742,7 +23816,7 @@ namespace At0
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 vResult = { { {
+			Vector vResult = { { {
 					1.0f - vColor.vector4_f32[0],
 					1.0f - vColor.vector4_f32[1],
 					1.0f - vColor.vector4_f32[2],
@@ -23782,7 +23856,7 @@ namespace At0
 			// Luminance = 0.2125f * C[0] + 0.7154f * C[1] + 0.0721f * C[2];
 			// Result = (C - Luminance) * Saturation + Luminance;
 
-			const VectorF32 gvLuminance = { { { 0.2125f, 0.7154f, 0.0721f, 0.0f } } };
+			const Vector gvLuminance = { { { 0.2125f, 0.7154f, 0.0721f, 0.0f } } };
 #if defined(_XM_NO_INTRINSICS_)
 			float fLuminance = (vColor.vector4_f32[0] * gvLuminance.f[0]) + (vColor.vector4_f32[1] * gvLuminance.f[1]) + (vColor.vector4_f32[2] * gvLuminance.f[2]);
 			Vector vResult;
@@ -23822,7 +23896,7 @@ namespace At0
 			// Result = (vColor - 0.5f) * fContrast + 0.5f;
 
 #if defined(_XM_NO_INTRINSICS_)
-			VectorF32 vResult = { { {
+			Vector vResult = { { {
 					((vColor.vector4_f32[0] - 0.5f) * fContrast) + 0.5f,
 					((vColor.vector4_f32[1] - 0.5f) * fContrast) + 0.5f,
 					((vColor.vector4_f32[2] - 0.5f) * fContrast) + 0.5f,
@@ -23919,8 +23993,8 @@ namespace At0
 
 			inline Vector XM_CALLCONV ColorHue2Clr(FVector p, FVector q, FVector h)
 			{
-				static const VectorF32 oneSixth = { { { 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f } } };
-				static const VectorF32 twoThirds = { { { 2.0f / 3.0f, 2.0f / 3.0f, 2.0f / 3.0f, 2.0f / 3.0f } } };
+				static const Vector oneSixth = { { { 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f } } };
+				static const Vector twoThirds = { { { 2.0f / 3.0f, 2.0f / 3.0f, 2.0f / 3.0f, 2.0f / 3.0f } } };
 
 				Vector t = h;
 
@@ -23956,7 +24030,7 @@ namespace At0
 
 		inline Vector XM_CALLCONV ColorHSLToRGB(FVector hsl)
 		{
-			static const VectorF32 oneThird = { { { 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f } } };
+			static const Vector oneThird = { { { 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f } } };
 
 			Vector s = VectorSplatY(hsl);
 			Vector l = VectorSplatZ(hsl);
@@ -24121,9 +24195,9 @@ namespace At0
 
 		inline Vector XM_CALLCONV ColorRGBToYUV(FVector rgb)
 		{
-			static const VectorF32 Scale0 = { { { 0.299f, -0.147f, 0.615f, 0.0f } } };
-			static const VectorF32 Scale1 = { { { 0.587f, -0.289f, -0.515f, 0.0f } } };
-			static const VectorF32 Scale2 = { { { 0.114f, 0.436f, -0.100f, 0.0f } } };
+			static const Vector Scale0 = { { { 0.299f, -0.147f, 0.615f, 0.0f } } };
+			static const Vector Scale1 = { { { 0.587f, -0.289f, -0.515f, 0.0f } } };
+			static const Vector Scale2 = { { { 0.114f, 0.436f, -0.100f, 0.0f } } };
 
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
 			Vector clr = Vector3Transform(rgb, M);
@@ -24135,8 +24209,8 @@ namespace At0
 
 		inline Vector XM_CALLCONV ColorYUVToRGB(FVector yuv)
 		{
-			static const VectorF32 Scale1 = { { { 0.0f, -0.395f, 2.032f, 0.0f } } };
-			static const VectorF32 Scale2 = { { { 1.140f, -0.581f, 0.0f, 0.0f } } };
+			static const Vector Scale1 = { { { 0.0f, -0.395f, 2.032f, 0.0f } } };
+			static const Vector Scale2 = { { { 1.140f, -0.581f, 0.0f, 0.0f } } };
 
 			Matrix M(g_XMOne, Scale1, Scale2, g_XMZero);
 			Vector clr = Vector3Transform(yuv, M);
@@ -24148,9 +24222,9 @@ namespace At0
 
 		inline Vector XM_CALLCONV ColorRGBToYUV_HD(FVector rgb)
 		{
-			static const VectorF32 Scale0 = { { { 0.2126f, -0.0997f, 0.6150f, 0.0f } } };
-			static const VectorF32 Scale1 = { { { 0.7152f, -0.3354f, -0.5586f, 0.0f } } };
-			static const VectorF32 Scale2 = { { { 0.0722f, 0.4351f, -0.0564f, 0.0f } } };
+			static const Vector Scale0 = { { { 0.2126f, -0.0997f, 0.6150f, 0.0f } } };
+			static const Vector Scale1 = { { { 0.7152f, -0.3354f, -0.5586f, 0.0f } } };
+			static const Vector Scale2 = { { { 0.0722f, 0.4351f, -0.0564f, 0.0f } } };
 
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
 			Vector clr = Vector3Transform(rgb, M);
@@ -24162,8 +24236,8 @@ namespace At0
 
 		inline Vector XM_CALLCONV ColorYUVToRGB_HD(FVector yuv)
 		{
-			static const VectorF32 Scale1 = { { { 0.0f, -0.2153f, 2.1324f, 0.0f } } };
-			static const VectorF32 Scale2 = { { { 1.2803f, -0.3806f, 0.0f, 0.0f } } };
+			static const Vector Scale1 = { { { 0.0f, -0.2153f, 2.1324f, 0.0f } } };
+			static const Vector Scale2 = { { { 1.2803f, -0.3806f, 0.0f, 0.0f } } };
 
 			Matrix M(g_XMOne, Scale1, Scale2, g_XMZero);
 			Vector clr = Vector3Transform(yuv, M);
@@ -24175,10 +24249,10 @@ namespace At0
 
 		inline Vector XM_CALLCONV ColorRGBToXYZ(FVector rgb)
 		{
-			static const VectorF32 Scale0 = { { { 0.4887180f, 0.1762044f, 0.0000000f, 0.0f } } };
-			static const VectorF32 Scale1 = { { { 0.3106803f, 0.8129847f, 0.0102048f, 0.0f } } };
-			static const VectorF32 Scale2 = { { { 0.2006017f, 0.0108109f, 0.9897952f, 0.0f } } };
-			static const VectorF32 Scale = { { { 1.f / 0.17697f, 1.f / 0.17697f, 1.f / 0.17697f, 0.0f } } };
+			static const Vector Scale0 = { { { 0.4887180f, 0.1762044f, 0.0000000f, 0.0f } } };
+			static const Vector Scale1 = { { { 0.3106803f, 0.8129847f, 0.0102048f, 0.0f } } };
+			static const Vector Scale2 = { { { 0.2006017f, 0.0108109f, 0.9897952f, 0.0f } } };
+			static const Vector Scale = { { { 1.f / 0.17697f, 1.f / 0.17697f, 1.f / 0.17697f, 0.0f } } };
 
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
 			Vector clr = VectorMultiply(Vector3Transform(rgb, M), Scale);
@@ -24188,10 +24262,10 @@ namespace At0
 
 		inline Vector XM_CALLCONV ColorXYZToRGB(FVector xyz)
 		{
-			static const VectorF32 Scale0 = { { { 2.3706743f, -0.5138850f, 0.0052982f, 0.0f } } };
-			static const VectorF32 Scale1 = { { { -0.9000405f, 1.4253036f, -0.0146949f, 0.0f } } };
-			static const VectorF32 Scale2 = { { { -0.4706338f, 0.0885814f, 1.0093968f, 0.0f } } };
-			static const VectorF32 Scale = { { { 0.17697f, 0.17697f, 0.17697f, 0.0f } } };
+			static const Vector Scale0 = { { { 2.3706743f, -0.5138850f, 0.0052982f, 0.0f } } };
+			static const Vector Scale1 = { { { -0.9000405f, 1.4253036f, -0.0146949f, 0.0f } } };
+			static const Vector Scale2 = { { { -0.4706338f, 0.0885814f, 1.0093968f, 0.0f } } };
+			static const Vector Scale = { { { 0.17697f, 0.17697f, 0.17697f, 0.0f } } };
 
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
 			Vector clr = Vector3Transform(VectorMultiply(xyz, Scale), M);
@@ -24203,11 +24277,11 @@ namespace At0
 
 		inline Vector XM_CALLCONV ColorXYZToSRGB(FVector xyz)
 		{
-			static const VectorF32 Scale0 = { { { 3.2406f, -0.9689f, 0.0557f, 0.0f } } };
-			static const VectorF32 Scale1 = { { { -1.5372f, 1.8758f, -0.2040f, 0.0f } } };
-			static const VectorF32 Scale2 = { { { -0.4986f, 0.0415f, 1.0570f, 0.0f } } };
-			static const VectorF32 Cutoff = { { { 0.0031308f, 0.0031308f, 0.0031308f, 0.0f } } };
-			static const VectorF32 Exp = { { { 1.0f / 2.4f, 1.0f / 2.4f, 1.0f / 2.4f, 1.0f } } };
+			static const Vector Scale0 = { { { 3.2406f, -0.9689f, 0.0557f, 0.0f } } };
+			static const Vector Scale1 = { { { -1.5372f, 1.8758f, -0.2040f, 0.0f } } };
+			static const Vector Scale2 = { { { -0.4986f, 0.0415f, 1.0570f, 0.0f } } };
+			static const Vector Cutoff = { { { 0.0031308f, 0.0031308f, 0.0031308f, 0.0f } } };
+			static const Vector Exp = { { { 1.0f / 2.4f, 1.0f / 2.4f, 1.0f / 2.4f, 1.0f } } };
 
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
 			Vector lclr = Vector3Transform(xyz, M);
@@ -24229,11 +24303,11 @@ namespace At0
 
 		inline Vector XM_CALLCONV ColorSRGBToXYZ(FVector srgb)
 		{
-			static const VectorF32 Scale0 = { { { 0.4124f, 0.2126f, 0.0193f, 0.0f } } };
-			static const VectorF32 Scale1 = { { { 0.3576f, 0.7152f, 0.1192f, 0.0f } } };
-			static const VectorF32 Scale2 = { { { 0.1805f, 0.0722f, 0.9505f, 0.0f } } };
-			static const VectorF32 Cutoff = { { { 0.04045f, 0.04045f, 0.04045f, 0.0f } } };
-			static const VectorF32 Exp = { { { 2.4f, 2.4f, 2.4f, 1.0f } } };
+			static const Vector Scale0 = { { { 0.4124f, 0.2126f, 0.0193f, 0.0f } } };
+			static const Vector Scale1 = { { { 0.3576f, 0.7152f, 0.1192f, 0.0f } } };
+			static const Vector Scale2 = { { { 0.1805f, 0.0722f, 0.9505f, 0.0f } } };
+			static const Vector Cutoff = { { { 0.04045f, 0.04045f, 0.04045f, 0.0f } } };
+			static const Vector Exp = { { { 2.4f, 2.4f, 2.4f, 1.0f } } };
 
 			Vector sel = VectorGreater(srgb, Cutoff);
 
@@ -24255,11 +24329,11 @@ namespace At0
 
 		inline Vector XM_CALLCONV ColorRGBToSRGB(FVector rgb)
 		{
-			static const VectorF32 Cutoff = { { { 0.0031308f, 0.0031308f, 0.0031308f, 1.f } } };
-			static const VectorF32 Linear = { { { 12.92f, 12.92f, 12.92f, 1.f } } };
-			static const VectorF32 Scale = { { { 1.055f, 1.055f, 1.055f, 1.f } } };
-			static const VectorF32 Bias = { { { 0.055f, 0.055f, 0.055f, 0.f } } };
-			static const VectorF32 InvGamma = { { { 1.0f / 2.4f, 1.0f / 2.4f, 1.0f / 2.4f, 1.f } } };
+			static const Vector Cutoff = { { { 0.0031308f, 0.0031308f, 0.0031308f, 1.f } } };
+			static const Vector Linear = { { { 12.92f, 12.92f, 12.92f, 1.f } } };
+			static const Vector Scale = { { { 1.055f, 1.055f, 1.055f, 1.f } } };
+			static const Vector Bias = { { { 0.055f, 0.055f, 0.055f, 0.f } } };
+			static const Vector InvGamma = { { { 1.0f / 2.4f, 1.0f / 2.4f, 1.0f / 2.4f, 1.f } } };
 
 			Vector V = VectorSaturate(rgb);
 			Vector V0 = VectorMultiply(V, Linear);
@@ -24273,11 +24347,11 @@ namespace At0
 
 		inline Vector XM_CALLCONV ColorSRGBToRGB(FVector srgb)
 		{
-			static const VectorF32 Cutoff = { { { 0.04045f, 0.04045f, 0.04045f, 1.f } } };
-			static const VectorF32 ILinear = { { { 1.f / 12.92f, 1.f / 12.92f, 1.f / 12.92f, 1.f } } };
-			static const VectorF32 Scale = { { { 1.f / 1.055f, 1.f / 1.055f, 1.f / 1.055f, 1.f } } };
-			static const VectorF32 Bias = { { { 0.055f, 0.055f, 0.055f, 0.f } } };
-			static const VectorF32 Gamma = { { { 2.4f, 2.4f, 2.4f, 1.f } } };
+			static const Vector Cutoff = { { { 0.04045f, 0.04045f, 0.04045f, 1.f } } };
+			static const Vector ILinear = { { { 1.f / 12.92f, 1.f / 12.92f, 1.f / 12.92f, 1.f } } };
+			static const Vector Scale = { { { 1.f / 1.055f, 1.f / 1.055f, 1.f / 1.055f, 1.f } } };
+			static const Vector Bias = { { { 0.055f, 0.055f, 0.055f, 0.f } } };
+			static const Vector Gamma = { { { 2.4f, 2.4f, 2.4f, 1.f } } };
 
 			Vector V = VectorSaturate(srgb);
 			Vector V0 = VectorMultiply(V, ILinear);

@@ -154,7 +154,7 @@ namespace At0::Layers
 				Ray::TransformComponent& tform = cubes[i].GetComponent<Ray::TransformComponent>();
 
 				Ray::Vector quaternion = DirectX::XMQuaternionRotationRollPitchYaw(posDist(mtEngine), posDist(mtEngine), posDist(mtEngine));
-				tform.Rotation = { quaternion.m128_f32[0], quaternion.m128_f32[1], quaternion.m128_f32[2], quaternion.m128_f32[3] };
+				tform.Rotation = { quaternion[0], quaternion[1], quaternion[2], quaternion[3] };
 				tform.Translation = { posDist(mtEngine), posDist(mtEngine), posDist(mtEngine) - 20.0f };
 				tform.Scale = { scaleDist(mtEngine), scaleDist(mtEngine), scaleDist(mtEngine) };
 			}
@@ -232,7 +232,7 @@ namespace At0::Layers
 			{
 				Ray::TransformComponent& tform = cubes[i].GetComponent<Ray::TransformComponent>();
 				Ray::Vector quaternion = DirectX::XMQuaternionRotationRollPitchYaw(pitch + i, yaw + i, roll + i);
-				tform.Rotation = { quaternion.m128_f32[0], quaternion.m128_f32[1], quaternion.m128_f32[2], quaternion.m128_f32[3] };
+				tform.Rotation = { quaternion[0], quaternion[1], quaternion[2], quaternion[3] };
 			}
 
 			//cubes.back().SetRotation(pitch, yaw, roll);
