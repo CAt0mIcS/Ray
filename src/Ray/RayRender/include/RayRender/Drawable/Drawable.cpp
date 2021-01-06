@@ -39,7 +39,7 @@ namespace At0::Ray
 	{
 		TransformComponent& transform = GetComponent<TransformComponent>();
 		return Matrix::Scaling(transform.Scale.x, transform.Scale.y, transform.Scale.z) *
-			MatrixRotationQuaternion({ transform.Rotation.x, transform.Rotation.y, transform.Rotation.z, transform.Rotation.w }) *
+			Matrix::RotationQuaternion({ transform.Rotation.x, transform.Rotation.y, transform.Rotation.z, transform.Rotation.w }) *
 			Matrix::Translation(transform.Translation.x, transform.Translation.y, transform.Translation.z);
 	}
 

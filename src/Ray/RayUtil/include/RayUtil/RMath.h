@@ -585,6 +585,21 @@ namespace At0
 			static Matrix XM_CALLCONV AffineTransformation(FVector Scaling, FVector RotationOrigin, FVector RotationQuaternion, GVector Translation);
 			static Matrix XM_CALLCONV Reflect(FVector ReflectionPlane);
 			static Matrix XM_CALLCONV Shadow(FVector ShadowPlane, FVector LightPosition);
+
+			static Matrix XM_CALLCONV Multiply(FMatrix M1, CMatrix M2);
+			static Matrix XM_CALLCONV MultiplyTranspose(FMatrix M1, CMatrix M2);
+
+			static Matrix XM_CALLCONV Set(float m00, float m01, float m02, float m03,
+				float m10, float m11, float m12, float m13,
+				float m20, float m21, float m22, float m23,
+				float m30, float m31, float m32, float m33);
+			static Matrix XM_CALLCONV RotationNormal(FVector NormalAxis, float Angle);
+			static Matrix XM_CALLCONV RotationAxis(FVector Axis, float Angle);
+			static Matrix XM_CALLCONV RotationQuaternion(const Quaternion& Quaternion);
+			static Matrix XM_CALLCONV Transformation2D(FVector ScalingOrigin, float ScalingOrientation, FVector Scaling,
+				FVector RotationOrigin, float Rotation, GVector Translation);
+			static Matrix XM_CALLCONV Transformation(FVector ScalingOrigin, FVector ScalingOrientationQuaternion, FVector Scaling,
+				GVector RotationOrigin, HVector RotationQuaternion, HVector Translation);
 		};
 
 		struct Quaternion
@@ -1552,27 +1567,6 @@ namespace At0
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float4) + InputStride * (VectorCount - 1)) */const Float4* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-
-		/****************************************************************************
-		 *
-		 * Matrix operations
-		 *
-		 ****************************************************************************/
-
-		Matrix    XM_CALLCONV     MatrixMultiply(FMatrix M1, CMatrix M2);
-		Matrix    XM_CALLCONV     MatrixMultiplyTranspose(FMatrix M1, CMatrix M2);
-
-		Matrix    XM_CALLCONV     MatrixSet(float m00, float m01, float m02, float m03,
-			float m10, float m11, float m12, float m13,
-			float m20, float m21, float m22, float m23,
-			float m30, float m31, float m32, float m33);
-		Matrix    XM_CALLCONV     MatrixRotationNormal(FVector NormalAxis, float Angle);
-		Matrix    XM_CALLCONV     MatrixRotationAxis(FVector Axis, float Angle);
-		Matrix    XM_CALLCONV     MatrixRotationQuaternion(FVector Quaternion);
-		Matrix    XM_CALLCONV     MatrixTransformation2D(FVector ScalingOrigin, float ScalingOrientation, FVector Scaling,
-			FVector RotationOrigin, float Rotation, GVector Translation);
-		Matrix    XM_CALLCONV     MatrixTransformation(FVector ScalingOrigin, FVector ScalingOrientationQuaternion, FVector Scaling,
-			GVector RotationOrigin, HVector RotationQuaternion, HVector Translation);
 
 
 		/****************************************************************************
@@ -15867,8 +15861,8 @@ namespace At0
 			Vector Scale = VectorSet(HalfViewportWidth, -HalfViewportHeight, ViewportMaxZ - ViewportMinZ, 0.0f);
 			Vector Offset = VectorSet(ViewportX + HalfViewportWidth, ViewportY + HalfViewportHeight, ViewportMinZ, 0.0f);
 
-			Matrix Transform = MatrixMultiply(World, View);
-			Transform = MatrixMultiply(Transform, Projection);
+			Matrix Transform = Matrix::Multiply(World, View);
+			Transform = Matrix::Multiply(Transform, Projection);
 
 			Vector Result = Vector3TransformCoord(V, Transform);
 
@@ -15920,8 +15914,8 @@ namespace At0
 			Vector Scale = VectorSet(HalfViewportWidth, -HalfViewportHeight, ViewportMaxZ - ViewportMinZ, 1.0f);
 			Vector Offset = VectorSet(ViewportX + HalfViewportWidth, ViewportY + HalfViewportHeight, ViewportMinZ, 0.0f);
 
-			Matrix Transform = MatrixMultiply(World, View);
-			Transform = MatrixMultiply(Transform, Projection);
+			Matrix Transform = Matrix::Multiply(World, View);
+			Transform = Matrix::Multiply(Transform, Projection);
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
@@ -15945,8 +15939,8 @@ namespace At0
 			const float HalfViewportWidth = ViewportWidth * 0.5f;
 			const float HalfViewportHeight = ViewportHeight * 0.5f;
 
-			Matrix Transform = MatrixMultiply(World, View);
-			Transform = MatrixMultiply(Transform, Projection);
+			Matrix Transform = Matrix::Multiply(World, View);
+			Transform = Matrix::Multiply(Transform, Projection);
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
@@ -16086,8 +16080,8 @@ namespace At0
 			Vector Scale = VectorSet(HalfViewportWidth, -HalfViewportHeight, ViewportMaxZ - ViewportMinZ, 1.0f);
 			Vector Offset = VectorSet(ViewportX + HalfViewportWidth, ViewportY + HalfViewportHeight, ViewportMinZ, 0.0f);
 
-			Matrix Transform = MatrixMultiply(World, View);
-			Transform = MatrixMultiply(Transform, Projection);
+			Matrix Transform = Matrix::Multiply(World, View);
+			Transform = Matrix::Multiply(Transform, Projection);
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
@@ -16452,8 +16446,8 @@ namespace At0
 			Vector Offset = VectorSet(-ViewportX, -ViewportY, -ViewportMinZ, 0.0f);
 			Offset = VectorMultiplyAdd(Scale, Offset, D.v);
 
-			Matrix Transform = MatrixMultiply(World, View);
-			Transform = MatrixMultiply(Transform, Projection);
+			Matrix Transform = Matrix::Multiply(World, View);
+			Transform = Matrix::Multiply(Transform, Projection);
 			Transform = Transform.Inverse();
 
 			Vector Result = VectorMultiplyAdd(V, Scale, Offset);
@@ -16505,8 +16499,8 @@ namespace At0
 			Vector Offset = VectorSet(-ViewportX, -ViewportY, -ViewportMinZ, 0.0f);
 			Offset = VectorMultiplyAdd(Scale, Offset, D.v);
 
-			Matrix Transform = MatrixMultiply(World, View);
-			Transform = MatrixMultiply(Transform, Projection);
+			Matrix Transform = Matrix::Multiply(World, View);
+			Transform = Matrix::Multiply(Transform, Projection);
 			Transform = Transform.Inverse();
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
@@ -16529,8 +16523,8 @@ namespace At0
 			return pOutputStream;
 
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-			Matrix Transform = MatrixMultiply(World, View);
-			Transform = MatrixMultiply(Transform, Projection);
+			Matrix Transform = Matrix::Multiply(World, View);
+			Transform = Matrix::Multiply(Transform, Projection);
 			Transform = Transform.Inverse();
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
@@ -16690,8 +16684,8 @@ namespace At0
 			Offset = _mm_mul_ps(Scale, Offset);
 			Offset = _mm_add_ps(Offset, D);
 
-			Matrix Transform = MatrixMultiply(World, View);
-			Transform = MatrixMultiply(Transform, Projection);
+			Matrix Transform = Matrix::Multiply(World, View);
+			Transform = Matrix::Multiply(Transform, Projection);
 			Transform = Transform.Inverse();
 
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
@@ -19239,7 +19233,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Perform a 4x4 matrix multiply by a 4x4 matrix
-		inline Matrix XM_CALLCONV MatrixMultiply
+		inline Matrix XM_CALLCONV Matrix::Multiply
 		(
 			FMatrix M1,
 			CMatrix M2
@@ -19409,7 +19403,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixMultiplyTranspose
+		inline Matrix XM_CALLCONV Matrix::MultiplyTranspose
 		(
 			FMatrix M1,
 			CMatrix M2
@@ -20095,7 +20089,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixSet
+		inline Matrix XM_CALLCONV Matrix::Set
 		(
 			float m00, float m01, float m02, float m03,
 			float m10, float m11, float m12, float m13,
@@ -20551,12 +20545,12 @@ namespace At0
 		)
 		{
 			Vector Q = Quaternion::RotationRollPitchYawFromVector(Angles);
-			return MatrixRotationQuaternion(Q);
+			return Matrix::RotationQuaternion(Q);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixRotationNormal
+		inline Matrix XM_CALLCONV Matrix::RotationNormal
 		(
 			FVector NormalAxis,
 			float     Angle
@@ -20646,7 +20640,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixRotationAxis
+		inline Matrix XM_CALLCONV Matrix::RotationAxis
 		(
 			FVector Axis,
 			float     Angle
@@ -20656,14 +20650,14 @@ namespace At0
 			assert(!Vector3IsInfinite(Axis));
 
 			Vector Normal = Vector3Normalize(Axis);
-			return MatrixRotationNormal(Normal, Angle);
+			return Matrix::RotationNormal(Normal, Angle);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixRotationQuaternion
+		inline Matrix XM_CALLCONV Matrix::RotationQuaternion
 		(
-			FVector Quaternion
+			const Quaternion& Quaternion
 		)
 		{
 #if defined(_XM_NO_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
@@ -20747,7 +20741,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixTransformation2D
+		inline Matrix XM_CALLCONV Matrix::Transformation2D
 		(
 			FVector ScalingOrigin,
 			float     ScalingOrientation,
@@ -20772,12 +20766,12 @@ namespace At0
 			Matrix MRotation = Matrix::RotationZ(Rotation);
 			Vector VTranslation = VectorSelect(g_XMSelect1100.v, Translation, g_XMSelect1100.v);
 
-			Matrix M = MatrixMultiply(MScalingOriginI, MScalingOrientationT);
-			M = MatrixMultiply(M, MScaling);
-			M = MatrixMultiply(M, MScalingOrientation);
+			Matrix M = Matrix::Multiply(MScalingOriginI, MScalingOrientationT);
+			M = Matrix::Multiply(M, MScaling);
+			M = Matrix::Multiply(M, MScalingOrientation);
 			M.r[3] = VectorAdd(M.r[3], VScalingOrigin);
 			M.r[3] = VectorSubtract(M.r[3], VRotationOrigin);
-			M = MatrixMultiply(M, MRotation);
+			M = Matrix::Multiply(M, MRotation);
 			M.r[3] = VectorAdd(M.r[3], VRotationOrigin);
 			M.r[3] = VectorAdd(M.r[3], VTranslation);
 
@@ -20786,7 +20780,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix XM_CALLCONV MatrixTransformation
+		inline Matrix XM_CALLCONV Matrix::Transformation
 		(
 			FVector ScalingOrigin,
 			FVector ScalingOrientationQuaternion,
@@ -20803,20 +20797,20 @@ namespace At0
 			Vector NegScalingOrigin = VectorNegate(ScalingOrigin);
 
 			Matrix MScalingOriginI = Matrix::Translation(NegScalingOrigin);
-			Matrix MScalingOrientation = MatrixRotationQuaternion(ScalingOrientationQuaternion);
+			Matrix MScalingOrientation = Matrix::RotationQuaternion(ScalingOrientationQuaternion);
 			Matrix MScalingOrientationT = MScalingOrientation.Transpose();
 			Matrix MScaling = Matrix::Scaling(Scaling);
 			Vector VRotationOrigin = VectorSelect(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
-			Matrix MRotation = MatrixRotationQuaternion(RotationQuaternion);
+			Matrix MRotation = Matrix::RotationQuaternion(RotationQuaternion);
 			Vector VTranslation = VectorSelect(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
 
 			Matrix M;
-			M = MatrixMultiply(MScalingOriginI, MScalingOrientationT);
-			M = MatrixMultiply(M, MScaling);
-			M = MatrixMultiply(M, MScalingOrientation);
+			M = Matrix::Multiply(MScalingOriginI, MScalingOrientationT);
+			M = Matrix::Multiply(M, MScaling);
+			M = Matrix::Multiply(M, MScalingOrientation);
 			M.r[3] = VectorAdd(M.r[3], VScalingOrigin);
 			M.r[3] = VectorSubtract(M.r[3], VRotationOrigin);
-			M = MatrixMultiply(M, MRotation);
+			M = Matrix::Multiply(M, MRotation);
 			M.r[3] = VectorAdd(M.r[3], VRotationOrigin);
 			M.r[3] = VectorAdd(M.r[3], VTranslation);
 			return M;
@@ -20843,7 +20837,7 @@ namespace At0
 			Matrix M;
 			M = MScaling;
 			M.r[3] = VectorSubtract(M.r[3], VRotationOrigin);
-			M = MatrixMultiply(M, MRotation);
+			M = Matrix::Multiply(M, MRotation);
 			M.r[3] = VectorAdd(M.r[3], VRotationOrigin);
 			M.r[3] = VectorAdd(M.r[3], VTranslation);
 			return M;
@@ -20863,13 +20857,13 @@ namespace At0
 
 			Matrix MScaling = Matrix::Scaling(Scaling);
 			Vector VRotationOrigin = VectorSelect(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
-			Matrix MRotation = MatrixRotationQuaternion(RotationQuaternion);
+			Matrix MRotation = Matrix::RotationQuaternion(RotationQuaternion);
 			Vector VTranslation = VectorSelect(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
 
 			Matrix M;
 			M = MScaling;
 			M.r[3] = VectorSubtract(M.r[3], VRotationOrigin);
-			M = MatrixMultiply(M, MRotation);
+			M = Matrix::Multiply(M, MRotation);
 			M.r[3] = VectorAdd(M.r[3], VRotationOrigin);
 			M.r[3] = VectorAdd(M.r[3], VTranslation);
 			return M;
@@ -22039,7 +22033,7 @@ namespace At0
 
 		inline Matrix& XM_CALLCONV Matrix::operator*=(FMatrix M)
 		{
-			*this = MatrixMultiply(*this, M);
+			*this = Matrix::Multiply(*this, M);
 			return *this;
 		}
 
@@ -22125,7 +22119,7 @@ namespace At0
 
 		inline Matrix XM_CALLCONV Matrix::operator*(FMatrix M) const
 		{
-			return MatrixMultiply(*this, M);
+			return Matrix::Multiply(*this, M);
 		}
 
 		//------------------------------------------------------------------------------
