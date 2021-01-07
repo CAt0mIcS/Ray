@@ -112,7 +112,7 @@ namespace At0::Ray
 			StoreFloat3(&vertices.back().pos, base);
 			const auto iSouthPole = (unsigned short)vertices.size();
 			vertices.emplace_back();
-			StoreFloat3(&vertices.back().pos, VectorNegate(base));
+			StoreFloat3(&vertices.back().pos, -base);
 
 			const auto calcIdx = [latDiv, longDiv](unsigned short iLat, unsigned short iLong)
 			{ return iLat * longDiv + iLong; };
