@@ -291,7 +291,7 @@ namespace At0
 
 #ifdef _PREFAST_
 #pragma prefast(push)
-#pragma prefast(disable : 25000, "FVector is 16 bytes")
+#pragma prefast(disable : 25000, "FVectorType is 16 bytes")
 #endif
 
 //------------------------------------------------------------------------------
@@ -308,6 +308,7 @@ namespace At0
 
 
 		struct Quaternion;
+		struct Vector;
 
 		//------------------------------------------------------------------------------
 		// VectorType intrinsic: Four 32 bit floating point components aligned on a 16 byte
@@ -322,34 +323,41 @@ namespace At0
 
 		// Fix-up for (1st-3rd) VectorType parameters that are pass-in-register for x86, ARM, ARM64, and vector call; by reference otherwise
 #if ( defined(_M_IX86) || defined(_M_ARM) || defined(_M_ARM64) || RAYMATH_VECTORCALL ) && !defined(RAY_NO_INTRINSICS)
-		typedef const VectorType FVector;
+		typedef const VectorType FVectorType;
 		typedef const Quaternion FQuaternion;
+		typedef const Vector FVector;
 #else
-		typedef const VectorType& FVector;
+		typedef const VectorType& FVectorType;
 		typedef const Quaternion& FQuaternion;
+		typedef const Vector& FVector;
 #endif
 
 		// Fix-up for (4th) VectorType parameter to pass in-register for ARM, ARM64, and x64 vector call; by reference otherwise
 #if ( defined(_M_ARM) || defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || (RAYMATH_VECTORCALL && !defined(_M_IX86) ) ) && !defined(RAY_NO_INTRINSICS)
-		typedef const VectorType GVector;
+		typedef const VectorType GVectorType;
 		typedef const Quaternion GQuaternion;
+		typedef const Vector GVector;
 #else
-		typedef const VectorType& GVector;
+		typedef const VectorType& GVectorType;
 		typedef const Quaternion& GQuaternion;
+		typedef const Vector& GVector;
 #endif
 
 		// Fix-up for (5th & 6th) VectorType parameter to pass in-register for ARM64 and vector call; by reference otherwise
 #if ( defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || RAYMATH_VECTORCALL ) && !defined(RAY_NO_INTRINSICS)
-		typedef const VectorType HVector;
+		typedef const VectorType HVectorType;
 		typedef const Quaternion HQuaternion;
+		typedef const Vector HVector;
 #else
-		typedef const VectorType& HVector;
+		typedef const VectorType& HVectorType;
 		typedef const Quaternion& HQuaternion;
+		typedef const Vector& HVector;
 #endif
 
 		// Fix-up for (7th+) VectorType parameters to pass by reference
-		typedef const VectorType& CVector;
+		typedef const VectorType& CVectorType;
 		typedef const Quaternion& CQuaternion;
+		typedef const Vector& CVector;
 
 		//------------------------------------------------------------------------------
 		// Conversion types for constants
@@ -419,24 +427,24 @@ namespace At0
 
 #ifndef RAYMATH_NO_VECTOR_OVERLOADS
 
-		VectorType    RAYMATH_CALLCONV     operator+ (FVector V);
-		VectorType    RAYMATH_CALLCONV     operator- (FVector V);
+		VectorType    RAYMATH_CALLCONV     operator+ (FVectorType V);
+		VectorType    RAYMATH_CALLCONV     operator- (FVectorType V);
 
-		VectorType& RAYMATH_CALLCONV     operator+= (VectorType& V1, FVector V2);
-		VectorType& RAYMATH_CALLCONV     operator-= (VectorType& V1, FVector V2);
-		VectorType& RAYMATH_CALLCONV     operator*= (VectorType& V1, FVector V2);
-		VectorType& RAYMATH_CALLCONV     operator/= (VectorType& V1, FVector V2);
+		VectorType& RAYMATH_CALLCONV     operator+= (VectorType& V1, FVectorType V2);
+		VectorType& RAYMATH_CALLCONV     operator-= (VectorType& V1, FVectorType V2);
+		VectorType& RAYMATH_CALLCONV     operator*= (VectorType& V1, FVectorType V2);
+		VectorType& RAYMATH_CALLCONV     operator/= (VectorType& V1, FVectorType V2);
 
 		VectorType& operator*= (VectorType& V, float S);
 		VectorType& operator/= (VectorType& V, float S);
 
-		VectorType    RAYMATH_CALLCONV     operator+ (FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     operator- (FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     operator* (FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     operator/ (FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     operator* (FVector V, float S);
-		VectorType    RAYMATH_CALLCONV     operator* (float S, FVector V);
-		VectorType    RAYMATH_CALLCONV     operator/ (FVector V, float S);
+		VectorType    RAYMATH_CALLCONV     operator+ (FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     operator- (FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     operator* (FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     operator/ (FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     operator* (FVectorType V, float S);
+		VectorType    RAYMATH_CALLCONV     operator* (float S, FVectorType V);
+		VectorType    RAYMATH_CALLCONV     operator/ (FVectorType V, float S);
 
 #endif
 
@@ -492,7 +500,7 @@ namespace At0
 			Matrix& operator=(Matrix&&) = default;
 #endif
 
-			RAYMATH_CONSTEXPR Matrix(FVector R0, FVector R1, FVector R2, CVector R3) : r{ R0,R1,R2,R3 } {}
+			RAYMATH_CONSTEXPR Matrix(FVectorType R0, FVectorType R1, FVectorType R2, CVectorType R3) : r{ R0,R1,R2,R3 } {}
 			Matrix(float m00, float m01, float m02, float m03,
 				float m10, float m11, float m12, float m13,
 				float m20, float m21, float m22, float m23,
@@ -537,10 +545,10 @@ namespace At0
 			static Matrix RAYMATH_CALLCONV PerspectiveFovRH(float FovAngleY, float AspectRatio, float NearZ, float FarZ);
 			static Matrix RAYMATH_CALLCONV PerspectiveOffCenterLH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
 			static Matrix RAYMATH_CALLCONV PerspectiveOffCenterRH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
-			static Matrix RAYMATH_CALLCONV LookAtLH(FVector EyePosition, FVector FocusPosition, FVector UpDirection);
-			static Matrix RAYMATH_CALLCONV LookAtRH(FVector EyePosition, FVector FocusPosition, FVector UpDirection);
-			static Matrix RAYMATH_CALLCONV LookToLH(FVector EyePosition, FVector EyeDirection, FVector UpDirection);
-			static Matrix RAYMATH_CALLCONV LookToRH(FVector EyePosition, FVector EyeDirection, FVector UpDirection);
+			static Matrix RAYMATH_CALLCONV LookAtLH(FVectorType EyePosition, FVectorType FocusPosition, FVectorType UpDirection);
+			static Matrix RAYMATH_CALLCONV LookAtRH(FVectorType EyePosition, FVectorType FocusPosition, FVectorType UpDirection);
+			static Matrix RAYMATH_CALLCONV LookToLH(FVectorType EyePosition, FVectorType EyeDirection, FVectorType UpDirection);
+			static Matrix RAYMATH_CALLCONV LookToRH(FVectorType EyePosition, FVectorType EyeDirection, FVectorType UpDirection);
 			static Matrix RAYMATH_CALLCONV OrthographicLH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
 			static Matrix RAYMATH_CALLCONV OrthographicRH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
 			static Matrix RAYMATH_CALLCONV OrthographicOffCenterLH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ);
@@ -549,15 +557,15 @@ namespace At0
 			static Matrix RAYMATH_CALLCONV RotationY(float Angle);
 			static Matrix RAYMATH_CALLCONV RotationZ(float Angle);
 			static Matrix RAYMATH_CALLCONV RotationRollPitchYaw(float Pitch, float Yaw, float Roll);
-			static Matrix RAYMATH_CALLCONV RotationRollPitchYawFromVector(FVector Angles);
+			static Matrix RAYMATH_CALLCONV RotationRollPitchYawFromVector(FVectorType Angles);
 			static Matrix RAYMATH_CALLCONV Translation(float OffsetX, float OffsetY, float OffsetZ);
-			static Matrix RAYMATH_CALLCONV Translation(FVector Offset);
+			static Matrix RAYMATH_CALLCONV Translation(FVectorType Offset);
 			static Matrix RAYMATH_CALLCONV Scaling(float ScaleX, float ScaleY, float ScaleZ);
-			static Matrix RAYMATH_CALLCONV Scaling(FVector Scale);
-			static Matrix RAYMATH_CALLCONV AffineTransformation2D(FVector Scaling, FVector RotationOrigin, float Rotation, FVector Translation);
-			static Matrix RAYMATH_CALLCONV AffineTransformation(FVector Scaling, FVector RotationOrigin, FVector RotationQuaternion, GVector Translation);
-			static Matrix RAYMATH_CALLCONV Reflect(FVector ReflectionPlane);
-			static Matrix RAYMATH_CALLCONV Shadow(FVector ShadowPlane, FVector LightPosition);
+			static Matrix RAYMATH_CALLCONV Scaling(FVectorType Scale);
+			static Matrix RAYMATH_CALLCONV AffineTransformation2D(FVectorType Scaling, FVectorType RotationOrigin, float Rotation, FVectorType Translation);
+			static Matrix RAYMATH_CALLCONV AffineTransformation(FVectorType Scaling, FVectorType RotationOrigin, FVectorType RotationQuaternion, GVectorType Translation);
+			static Matrix RAYMATH_CALLCONV Reflect(FVectorType ReflectionPlane);
+			static Matrix RAYMATH_CALLCONV Shadow(FVectorType ShadowPlane, FVectorType LightPosition);
 
 			static Matrix RAYMATH_CALLCONV Multiply(FMatrix M1, CMatrix M2);
 			static Matrix RAYMATH_CALLCONV MultiplyTranspose(FMatrix M1, CMatrix M2);
@@ -566,13 +574,13 @@ namespace At0
 				float m10, float m11, float m12, float m13,
 				float m20, float m21, float m22, float m23,
 				float m30, float m31, float m32, float m33);
-			static Matrix RAYMATH_CALLCONV RotationNormal(FVector NormalAxis, float Angle);
-			static Matrix RAYMATH_CALLCONV RotationAxis(FVector Axis, float Angle);
+			static Matrix RAYMATH_CALLCONV RotationNormal(FVectorType NormalAxis, float Angle);
+			static Matrix RAYMATH_CALLCONV RotationAxis(FVectorType Axis, float Angle);
 			static Matrix RAYMATH_CALLCONV RotationQuaternion(const Quaternion& Quaternion);
-			static Matrix RAYMATH_CALLCONV Transformation2D(FVector ScalingOrigin, float ScalingOrientation, FVector Scaling,
-				FVector RotationOrigin, float Rotation, GVector Translation);
-			static Matrix RAYMATH_CALLCONV Transformation(FVector ScalingOrigin, FVector ScalingOrientationQuaternion, FVector Scaling,
-				GVector RotationOrigin, HVector RotationQuaternion, HVector Translation);
+			static Matrix RAYMATH_CALLCONV Transformation2D(FVectorType ScalingOrigin, float ScalingOrientation, FVectorType Scaling,
+				FVectorType RotationOrigin, float Rotation, GVectorType Translation);
+			static Matrix RAYMATH_CALLCONV Transformation(FVectorType ScalingOrigin, FVectorType ScalingOrientationQuaternion, FVectorType Scaling,
+				GVectorType RotationOrigin, HVectorType RotationQuaternion, HVectorType Translation);
 		};
 
 		//------------------------------------------------------------------------------
@@ -596,10 +604,10 @@ namespace At0
 			Quaternion(Quaternion&&) = default;
 			Quaternion& operator=(Quaternion&&) = default;
 
-			RAYMATH_CONSTEXPR Quaternion(FVector v) : v(v) {}
+			RAYMATH_CONSTEXPR Quaternion(FVectorType v) : v(v) {}
 			RAYMATH_CONSTEXPR Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 
-			operator FVector() const { return v; }
+			operator FVectorType() const { return v; }
 
 			bool RAYMATH_CALLCONV operator==(FQuaternion other) const;
 			bool RAYMATH_CALLCONV operator!=(FQuaternion other) const;
@@ -634,9 +642,9 @@ namespace At0
 
 			static Quaternion RAYMATH_CALLCONV Identity();
 			static Quaternion RAYMATH_CALLCONV RotationRollPitchYaw(float Pitch, float Yaw, float Roll);
-			static Quaternion RAYMATH_CALLCONV RotationRollPitchYawFromVector(FVector Angles);
-			static Quaternion RAYMATH_CALLCONV RotationNormal(FVector NormalAxis, float Angle);
-			static Quaternion RAYMATH_CALLCONV RotationAxis(FVector Axis, float Angle);
+			static Quaternion RAYMATH_CALLCONV RotationRollPitchYawFromVector(FVectorType Angles);
+			static Quaternion RAYMATH_CALLCONV RotationNormal(FVectorType NormalAxis, float Angle);
+			static Quaternion RAYMATH_CALLCONV RotationAxis(FVectorType Axis, float Angle);
 			static Quaternion RAYMATH_CALLCONV RotationMatrix(FMatrix M);
 		};
 
@@ -1080,10 +1088,10 @@ namespace At0
  *
  ****************************************************************************/
 
-		VectorType    RAYMATH_CALLCONV     ConvertVectorIntToFloat(FVector VInt, uint32_t DivExponent);
-		VectorType    RAYMATH_CALLCONV     ConvertVectorFloatToInt(FVector VFloat, uint32_t MulExponent);
-		VectorType    RAYMATH_CALLCONV     ConvertVectorUIntToFloat(FVector VUInt, uint32_t DivExponent);
-		VectorType    RAYMATH_CALLCONV     ConvertVectorFloatToUInt(FVector VFloat, uint32_t MulExponent);
+		VectorType    RAYMATH_CALLCONV     ConvertVectorIntToFloat(FVectorType VInt, uint32_t DivExponent);
+		VectorType    RAYMATH_CALLCONV     ConvertVectorFloatToInt(FVectorType VFloat, uint32_t MulExponent);
+		VectorType    RAYMATH_CALLCONV     ConvertVectorUIntToFloat(FVectorType VUInt, uint32_t DivExponent);
+		VectorType    RAYMATH_CALLCONV     ConvertVectorFloatToUInt(FVectorType VFloat, uint32_t MulExponent);
 
 #if defined(__XNAMATH_H__) && defined(VectorSetBinaryConstant)
 #undef VectorSetBinaryConstant
@@ -1139,29 +1147,29 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		void        RAYMATH_CALLCONV     StoreInt(/*_Out_ */ uint32_t* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreFloat(/*_Out_ */ float* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreInt(/*_Out_ */ uint32_t* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreFloat(/*_Out_ */ float* pDestination, /*_In_ */FVectorType V);
 
-		void        RAYMATH_CALLCONV     StoreInt2(/*_Out_writes_(2)*/ uint32_t* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreInt2A(/*_Out_writes_(2)*/ uint32_t* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreFloat2(/*_Out_ */ Float2* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreFloat2A(/*_Out_ */ Float2A* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreSInt2(/*_Out_ */ Int2* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreUInt2(/*_Out_ */ UInt2* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreInt2(/*_Out_writes_(2)*/ uint32_t* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreInt2A(/*_Out_writes_(2)*/ uint32_t* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreFloat2(/*_Out_ */ Float2* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreFloat2A(/*_Out_ */ Float2A* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreSInt2(/*_Out_ */ Int2* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreUInt2(/*_Out_ */ UInt2* pDestination, /*_In_ */FVectorType V);
 
-		void        RAYMATH_CALLCONV     StoreInt3(/*_Out_writes_(3) */uint32_t* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreInt3A(/*_Out_writes_(3)*/ uint32_t* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreFloat3(/*_Out_ */ Float3* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreFloat3A(/*_Out_ */ Float3A* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreSInt3(/*_Out_ */ Int3* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreUInt3(/*_Out_ */ UInt3* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreInt3(/*_Out_writes_(3) */uint32_t* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreInt3A(/*_Out_writes_(3)*/ uint32_t* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreFloat3(/*_Out_ */ Float3* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreFloat3A(/*_Out_ */ Float3A* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreSInt3(/*_Out_ */ Int3* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreUInt3(/*_Out_ */ UInt3* pDestination, /*_In_ */FVectorType V);
 
-		void        RAYMATH_CALLCONV     StoreInt4(/*_Out_writes_(4) */uint32_t* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreInt4A(/*_Out_writes_(4) */uint32_t* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreFloat4(/*_Out_ */ Float4* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreFloat4A(/*_Out_ */ Float4A* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreSInt4(/*_Out_ */ Int4* pDestination, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     StoreUInt4(/*_Out_ */ UInt4* pDestination, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     StoreInt4(/*_Out_writes_(4) */uint32_t* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreInt4A(/*_Out_writes_(4) */uint32_t* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreFloat4(/*_Out_ */ Float4* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreFloat4A(/*_Out_ */ Float4A* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreSInt4(/*_Out_ */ Int4* pDestination, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     StoreUInt4(/*_Out_ */ UInt4* pDestination, /*_In_ */FVectorType V);
 
 		void        RAYMATH_CALLCONV     StoreFloat3x3(/*_Out_ */ Float3X3* pDestination, /*_In_ */FMatrix M);
 		void        RAYMATH_CALLCONV     StoreFloat4x3(/*_Out_ */ Float4X3* pDestination, /*_In_ */FMatrix M);
@@ -1186,74 +1194,74 @@ namespace At0
 		VectorType    RAYMATH_CALLCONV     VectorReplicateIntPtr(/*_In_ */const uint32_t* pValue);
 		VectorType    RAYMATH_CALLCONV     VectorTrueInt();
 		VectorType    RAYMATH_CALLCONV     VectorFalseInt();
-		VectorType    RAYMATH_CALLCONV     VectorSplatX(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorSplatY(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorSplatZ(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorSplatW(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorSplatX(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorSplatY(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorSplatZ(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorSplatW(FVectorType V);
 		VectorType    RAYMATH_CALLCONV     VectorSplatOne();
 		VectorType    RAYMATH_CALLCONV     VectorSplatInfinity();
 		VectorType    RAYMATH_CALLCONV     VectorSplatQNaN();
 		VectorType    RAYMATH_CALLCONV     VectorSplatEpsilon();
 		VectorType    RAYMATH_CALLCONV     VectorSplatSignMask();
 
-		float       RAYMATH_CALLCONV     VectorGetByIndex(FVector V, size_t i);
-		float       RAYMATH_CALLCONV     VectorGetX(FVector V);
-		float       RAYMATH_CALLCONV     VectorGetY(FVector V);
-		float       RAYMATH_CALLCONV     VectorGetZ(FVector V);
-		float       RAYMATH_CALLCONV     VectorGetW(FVector V);
+		float       RAYMATH_CALLCONV     VectorGetByIndex(FVectorType V, size_t i);
+		float       RAYMATH_CALLCONV     VectorGetX(FVectorType V);
+		float       RAYMATH_CALLCONV     VectorGetY(FVectorType V);
+		float       RAYMATH_CALLCONV     VectorGetZ(FVectorType V);
+		float       RAYMATH_CALLCONV     VectorGetW(FVectorType V);
 
-		void        RAYMATH_CALLCONV     VectorGetByIndexPtr(/*_Out_ */ float* f, /*_In_ */FVector V, /*_In_ */size_t i);
-		void        RAYMATH_CALLCONV     VectorGetXPtr(/*_Out_ */ float* x, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     VectorGetYPtr(/*_Out_ */ float* y, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     VectorGetZPtr(/*_Out_ */ float* z, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     VectorGetWPtr(/*_Out_ */ float* w, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     VectorGetByIndexPtr(/*_Out_ */ float* f, /*_In_ */FVectorType V, /*_In_ */size_t i);
+		void        RAYMATH_CALLCONV     VectorGetXPtr(/*_Out_ */ float* x, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     VectorGetYPtr(/*_Out_ */ float* y, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     VectorGetZPtr(/*_Out_ */ float* z, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     VectorGetWPtr(/*_Out_ */ float* w, /*_In_ */FVectorType V);
 
-		uint32_t    RAYMATH_CALLCONV     VectorGetIntByIndex(FVector V, size_t i);
-		uint32_t    RAYMATH_CALLCONV     VectorGetIntX(FVector V);
-		uint32_t    RAYMATH_CALLCONV     VectorGetIntY(FVector V);
-		uint32_t    RAYMATH_CALLCONV     VectorGetIntZ(FVector V);
-		uint32_t    RAYMATH_CALLCONV     VectorGetIntW(FVector V);
+		uint32_t    RAYMATH_CALLCONV     VectorGetIntByIndex(FVectorType V, size_t i);
+		uint32_t    RAYMATH_CALLCONV     VectorGetIntX(FVectorType V);
+		uint32_t    RAYMATH_CALLCONV     VectorGetIntY(FVectorType V);
+		uint32_t    RAYMATH_CALLCONV     VectorGetIntZ(FVectorType V);
+		uint32_t    RAYMATH_CALLCONV     VectorGetIntW(FVectorType V);
 
-		void        RAYMATH_CALLCONV     VectorGetIntByIndexPtr(/*_Out_ */ uint32_t* x, /*_In_ */FVector V, /*_In_ */size_t i);
-		void        RAYMATH_CALLCONV     VectorGetIntXPtr(/*_Out_ */ uint32_t* x, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     VectorGetIntYPtr(/*_Out_ */ uint32_t* y, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     VectorGetIntZPtr(/*_Out_ */ uint32_t* z, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     VectorGetIntWPtr(/*_Out_ */ uint32_t* w, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     VectorGetIntByIndexPtr(/*_Out_ */ uint32_t* x, /*_In_ */FVectorType V, /*_In_ */size_t i);
+		void        RAYMATH_CALLCONV     VectorGetIntXPtr(/*_Out_ */ uint32_t* x, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     VectorGetIntYPtr(/*_Out_ */ uint32_t* y, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     VectorGetIntZPtr(/*_Out_ */ uint32_t* z, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     VectorGetIntWPtr(/*_Out_ */ uint32_t* w, /*_In_ */FVectorType V);
 
-		VectorType    RAYMATH_CALLCONV     VectorSetByIndex(FVector V, float f, size_t i);
-		VectorType    RAYMATH_CALLCONV     VectorSetX(FVector V, float x);
-		VectorType    RAYMATH_CALLCONV     VectorSetY(FVector V, float y);
-		VectorType    RAYMATH_CALLCONV     VectorSetZ(FVector V, float z);
-		VectorType    RAYMATH_CALLCONV     VectorSetW(FVector V, float w);
+		VectorType    RAYMATH_CALLCONV     VectorSetByIndex(FVectorType V, float f, size_t i);
+		VectorType    RAYMATH_CALLCONV     VectorSetX(FVectorType V, float x);
+		VectorType    RAYMATH_CALLCONV     VectorSetY(FVectorType V, float y);
+		VectorType    RAYMATH_CALLCONV     VectorSetZ(FVectorType V, float z);
+		VectorType    RAYMATH_CALLCONV     VectorSetW(FVectorType V, float w);
 
-		VectorType    RAYMATH_CALLCONV     VectorSetByIndexPtr(/*_In_ */FVector V, /*_In_ */const float* f, /*_In_ */size_t i);
-		VectorType    RAYMATH_CALLCONV     VectorSetXPtr(/*_In_ */FVector V, /*_In_ */const float* x);
-		VectorType    RAYMATH_CALLCONV     VectorSetYPtr(/*_In_ */FVector V, /*_In_ */const float* y);
-		VectorType    RAYMATH_CALLCONV     VectorSetZPtr(/*_In_ */FVector V, /*_In_ */const float* z);
-		VectorType    RAYMATH_CALLCONV     VectorSetWPtr(/*_In_ */FVector V, /*_In_ */const float* w);
+		VectorType    RAYMATH_CALLCONV     VectorSetByIndexPtr(/*_In_ */FVectorType V, /*_In_ */const float* f, /*_In_ */size_t i);
+		VectorType    RAYMATH_CALLCONV     VectorSetXPtr(/*_In_ */FVectorType V, /*_In_ */const float* x);
+		VectorType    RAYMATH_CALLCONV     VectorSetYPtr(/*_In_ */FVectorType V, /*_In_ */const float* y);
+		VectorType    RAYMATH_CALLCONV     VectorSetZPtr(/*_In_ */FVectorType V, /*_In_ */const float* z);
+		VectorType    RAYMATH_CALLCONV     VectorSetWPtr(/*_In_ */FVectorType V, /*_In_ */const float* w);
 
-		VectorType    RAYMATH_CALLCONV     VectorSetIntByIndex(FVector V, uint32_t x, size_t i);
-		VectorType    RAYMATH_CALLCONV     VectorSetIntX(FVector V, uint32_t x);
-		VectorType    RAYMATH_CALLCONV     VectorSetIntY(FVector V, uint32_t y);
-		VectorType    RAYMATH_CALLCONV     VectorSetIntZ(FVector V, uint32_t z);
-		VectorType    RAYMATH_CALLCONV     VectorSetIntW(FVector V, uint32_t w);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntByIndex(FVectorType V, uint32_t x, size_t i);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntX(FVectorType V, uint32_t x);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntY(FVectorType V, uint32_t y);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntZ(FVectorType V, uint32_t z);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntW(FVectorType V, uint32_t w);
 
-		VectorType    RAYMATH_CALLCONV     VectorSetIntByIndexPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* x, /*_In_ */size_t i);
-		VectorType    RAYMATH_CALLCONV     VectorSetIntXPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* x);
-		VectorType    RAYMATH_CALLCONV     VectorSetIntYPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* y);
-		VectorType    RAYMATH_CALLCONV     VectorSetIntZPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* z);
-		VectorType    RAYMATH_CALLCONV     VectorSetIntWPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* w);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntByIndexPtr(/*_In_ */FVectorType V, /*_In_ */const uint32_t* x, /*_In_ */size_t i);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntXPtr(/*_In_ */FVectorType V, /*_In_ */const uint32_t* x);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntYPtr(/*_In_ */FVectorType V, /*_In_ */const uint32_t* y);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntZPtr(/*_In_ */FVectorType V, /*_In_ */const uint32_t* z);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntWPtr(/*_In_ */FVectorType V, /*_In_ */const uint32_t* w);
 
 #if defined(__XNAMATH_H__) && defined(VectorSwizzle)
 #undef VectorSwizzle
 #endif
 
-		VectorType    RAYMATH_CALLCONV     VectorSwizzle(FVector V, uint32_t E0, uint32_t E1, uint32_t E2, uint32_t E3);
-		VectorType    RAYMATH_CALLCONV     VectorPermute(FVector V1, FVector V2, uint32_t PermuteX, uint32_t PermuteY, uint32_t PermuteZ, uint32_t PermuteW);
+		VectorType    RAYMATH_CALLCONV     VectorSwizzle(FVectorType V, uint32_t E0, uint32_t E1, uint32_t E2, uint32_t E3);
+		VectorType    RAYMATH_CALLCONV     VectorPermute(FVectorType V1, FVectorType V2, uint32_t PermuteX, uint32_t PermuteY, uint32_t PermuteZ, uint32_t PermuteW);
 		VectorType    RAYMATH_CALLCONV     VectorSelectControl(uint32_t VectorIndex0, uint32_t VectorIndex1, uint32_t VectorIndex2, uint32_t VectorIndex3);
-		VectorType    RAYMATH_CALLCONV     VectorSelect(FVector V1, FVector V2, FVector Control);
-		VectorType    RAYMATH_CALLCONV     VectorMergeXY(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorMergeZW(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorSelect(FVectorType V1, FVectorType V2, FVectorType Control);
+		VectorType    RAYMATH_CALLCONV     VectorMergeXY(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorMergeZW(FVectorType V1, FVectorType V2);
 
 #if defined(__XNAMATH_H__) && defined(VectorShiftLeft)
 #undef VectorShiftLeft
@@ -1262,100 +1270,100 @@ namespace At0
 #undef VectorInsert
 #endif
 
-		VectorType    RAYMATH_CALLCONV     VectorShiftLeft(FVector V1, FVector V2, uint32_t Elements);
-		VectorType    RAYMATH_CALLCONV     VectorRotateLeft(FVector V, uint32_t Elements);
-		VectorType    RAYMATH_CALLCONV     VectorRotateRight(FVector V, uint32_t Elements);
-		VectorType    RAYMATH_CALLCONV     VectorInsert(FVector VD, FVector VS, uint32_t VSLeftRotateElements,
+		VectorType    RAYMATH_CALLCONV     VectorShiftLeft(FVectorType V1, FVectorType V2, uint32_t Elements);
+		VectorType    RAYMATH_CALLCONV     VectorRotateLeft(FVectorType V, uint32_t Elements);
+		VectorType    RAYMATH_CALLCONV     VectorRotateRight(FVectorType V, uint32_t Elements);
+		VectorType    RAYMATH_CALLCONV     VectorInsert(FVectorType VD, FVectorType VS, uint32_t VSLeftRotateElements,
 			uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3);
 
-		VectorType    RAYMATH_CALLCONV     VectorEqual(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorEqualInt(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorEqualIntR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V, /*_In_ */FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorNearEqual(FVector V1, FVector V2, FVector Epsilon);
-		VectorType    RAYMATH_CALLCONV     VectorNotEqual(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorNotEqualInt(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorGreater(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorGreaterR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorGreaterOrEqual(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorGreaterOrEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorLess(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorLessOrEqual(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorInBounds(FVector V, FVector Bounds);
-		VectorType    RAYMATH_CALLCONV     VectorInBoundsR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V, /*_In_ */FVector Bounds);
+		VectorType    RAYMATH_CALLCONV     VectorEqual(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVectorType V1, /*_In_ */FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorEqualInt(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorEqualIntR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVectorType V, /*_In_ */FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorNearEqual(FVectorType V1, FVectorType V2, FVectorType Epsilon);
+		VectorType    RAYMATH_CALLCONV     VectorNotEqual(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorNotEqualInt(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorGreater(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorGreaterR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVectorType V1, /*_In_ */FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorGreaterOrEqual(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorGreaterOrEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVectorType V1, /*_In_ */FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorLess(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorLessOrEqual(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorInBounds(FVectorType V, FVectorType Bounds);
+		VectorType    RAYMATH_CALLCONV     VectorInBoundsR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVectorType V, /*_In_ */FVectorType Bounds);
 
-		VectorType    RAYMATH_CALLCONV     VectorIsNaN(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorIsInfinite(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorIsNaN(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorIsInfinite(FVectorType V);
 
-		VectorType    RAYMATH_CALLCONV     VectorMin(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorMax(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorRound(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorTruncate(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorFloor(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorCeiling(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorClamp(FVector V, FVector Min, FVector Max);
-		VectorType    RAYMATH_CALLCONV     VectorSaturate(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorMin(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorMax(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorRound(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorTruncate(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorFloor(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorCeiling(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorClamp(FVectorType V, FVectorType Min, FVectorType Max);
+		VectorType    RAYMATH_CALLCONV     VectorSaturate(FVectorType V);
 
-		VectorType    RAYMATH_CALLCONV     VectorAndInt(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorAndCInt(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorOrInt(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorNorInt(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorXorInt(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorAndInt(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorAndCInt(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorOrInt(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorNorInt(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorXorInt(FVectorType V1, FVectorType V2);
 
-		VectorType    RAYMATH_CALLCONV     VectorNegate(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorAdd(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorSum(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorAddAngles(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorSubtract(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorSubtractAngles(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorMultiply(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorMultiplyAdd(FVector V1, FVector V2, FVector V3);
-		VectorType    RAYMATH_CALLCONV     VectorDivide(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorNegativeMultiplySubtract(FVector V1, FVector V2, FVector V3);
-		VectorType    RAYMATH_CALLCONV     VectorScale(FVector V, float ScaleFactor);
-		VectorType    RAYMATH_CALLCONV     VectorReciprocalEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorReciprocal(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorSqrtEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorSqrt(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorReciprocalSqrtEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorReciprocalSqrt(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorExp2(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorExpE(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorExp(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorLog2(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorLogE(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorLog(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorPow(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorAbs(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorMod(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     VectorModAngles(FVector Angles);
-		VectorType    RAYMATH_CALLCONV     VectorSin(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorSinEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorCos(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorCosEst(FVector V);
-		void        RAYMATH_CALLCONV     VectorSinCos(/*_Out_ */ VectorType* pSin, /*_Out_ */ VectorType* pCos, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     VectorSinCosEst(/*_Out_ */ VectorType* pSin, /*_Out_ */ VectorType* pCos, /*_In_ */FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorTan(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorTanEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorSinH(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorCosH(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorTanH(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorASin(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorASinEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorACos(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorACosEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorATan(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorATanEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     VectorATan2(FVector Y, FVector X);
-		VectorType    RAYMATH_CALLCONV     VectorATan2Est(FVector Y, FVector X);
-		VectorType    RAYMATH_CALLCONV     VectorLerp(FVector V0, FVector V1, float t);
-		VectorType    RAYMATH_CALLCONV     VectorLerpV(FVector V0, FVector V1, FVector T);
-		VectorType    RAYMATH_CALLCONV     VectorHermite(FVector Position0, FVector Tangent0, FVector Position1, GVector Tangent1, float t);
-		VectorType    RAYMATH_CALLCONV     VectorHermiteV(FVector Position0, FVector Tangent0, FVector Position1, GVector Tangent1, HVector T);
-		VectorType    RAYMATH_CALLCONV     VectorCatmullRom(FVector Position0, FVector Position1, FVector Position2, GVector Position3, float t);
-		VectorType    RAYMATH_CALLCONV     VectorCatmullRomV(FVector Position0, FVector Position1, FVector Position2, GVector Position3, HVector T);
-		VectorType    RAYMATH_CALLCONV     VectorBaryCentric(FVector Position0, FVector Position1, FVector Position2, float f, float g);
-		VectorType    RAYMATH_CALLCONV     VectorBaryCentricV(FVector Position0, FVector Position1, FVector Position2, GVector F, HVector G);
+		VectorType    RAYMATH_CALLCONV     VectorNegate(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorAdd(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorSum(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorAddAngles(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorSubtract(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorSubtractAngles(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorMultiply(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorMultiplyAdd(FVectorType V1, FVectorType V2, FVectorType V3);
+		VectorType    RAYMATH_CALLCONV     VectorDivide(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorNegativeMultiplySubtract(FVectorType V1, FVectorType V2, FVectorType V3);
+		VectorType    RAYMATH_CALLCONV     VectorScale(FVectorType V, float ScaleFactor);
+		VectorType    RAYMATH_CALLCONV     VectorReciprocalEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorReciprocal(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorSqrtEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorSqrt(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorReciprocalSqrtEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorReciprocalSqrt(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorExp2(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorExpE(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorExp(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorLog2(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorLogE(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorLog(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorPow(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorAbs(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorMod(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     VectorModAngles(FVectorType Angles);
+		VectorType    RAYMATH_CALLCONV     VectorSin(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorSinEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorCos(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorCosEst(FVectorType V);
+		void        RAYMATH_CALLCONV     VectorSinCos(/*_Out_ */ VectorType* pSin, /*_Out_ */ VectorType* pCos, /*_In_ */FVectorType V);
+		void        RAYMATH_CALLCONV     VectorSinCosEst(/*_Out_ */ VectorType* pSin, /*_Out_ */ VectorType* pCos, /*_In_ */FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorTan(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorTanEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorSinH(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorCosH(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorTanH(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorASin(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorASinEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorACos(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorACosEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorATan(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorATanEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     VectorATan2(FVectorType Y, FVectorType X);
+		VectorType    RAYMATH_CALLCONV     VectorATan2Est(FVectorType Y, FVectorType X);
+		VectorType    RAYMATH_CALLCONV     VectorLerp(FVectorType V0, FVectorType V1, float t);
+		VectorType    RAYMATH_CALLCONV     VectorLerpV(FVectorType V0, FVectorType V1, FVectorType T);
+		VectorType    RAYMATH_CALLCONV     VectorHermite(FVectorType Position0, FVectorType Tangent0, FVectorType Position1, GVectorType Tangent1, float t);
+		VectorType    RAYMATH_CALLCONV     VectorHermiteV(FVectorType Position0, FVectorType Tangent0, FVectorType Position1, GVectorType Tangent1, HVectorType T);
+		VectorType    RAYMATH_CALLCONV     VectorCatmullRom(FVectorType Position0, FVectorType Position1, FVectorType Position2, GVectorType Position3, float t);
+		VectorType    RAYMATH_CALLCONV     VectorCatmullRomV(FVectorType Position0, FVectorType Position1, FVectorType Position2, GVectorType Position3, HVectorType T);
+		VectorType    RAYMATH_CALLCONV     VectorBaryCentric(FVectorType Position0, FVectorType Position1, FVectorType Position2, float f, float g);
+		VectorType    RAYMATH_CALLCONV     VectorBaryCentricV(FVectorType Position0, FVectorType Position1, FVectorType Position2, GVectorType F, HVectorType G);
 
 		/****************************************************************************
 		 *
@@ -1363,55 +1371,55 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		bool        RAYMATH_CALLCONV     Vector2Equal(FVector V1, FVector V2);
-		uint32_t    RAYMATH_CALLCONV     Vector2EqualR(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector2EqualInt(FVector V1, FVector V2);
-		uint32_t    RAYMATH_CALLCONV     Vector2EqualIntR(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector2NearEqual(FVector V1, FVector V2, FVector Epsilon);
-		bool        RAYMATH_CALLCONV     Vector2NotEqual(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector2NotEqualInt(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector2Greater(FVector V1, FVector V2);
-		uint32_t    RAYMATH_CALLCONV     Vector2GreaterR(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector2GreaterOrEqual(FVector V1, FVector V2);
-		uint32_t    RAYMATH_CALLCONV     Vector2GreaterOrEqualR(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector2Less(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector2LessOrEqual(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector2InBounds(FVector V, FVector Bounds);
+		bool        RAYMATH_CALLCONV     Vector2Equal(FVectorType V1, FVectorType V2);
+		uint32_t    RAYMATH_CALLCONV     Vector2EqualR(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector2EqualInt(FVectorType V1, FVectorType V2);
+		uint32_t    RAYMATH_CALLCONV     Vector2EqualIntR(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector2NearEqual(FVectorType V1, FVectorType V2, FVectorType Epsilon);
+		bool        RAYMATH_CALLCONV     Vector2NotEqual(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector2NotEqualInt(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector2Greater(FVectorType V1, FVectorType V2);
+		uint32_t    RAYMATH_CALLCONV     Vector2GreaterR(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector2GreaterOrEqual(FVectorType V1, FVectorType V2);
+		uint32_t    RAYMATH_CALLCONV     Vector2GreaterOrEqualR(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector2Less(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector2LessOrEqual(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector2InBounds(FVectorType V, FVectorType Bounds);
 
-		bool        RAYMATH_CALLCONV     Vector2IsNaN(FVector V);
-		bool        RAYMATH_CALLCONV     Vector2IsInfinite(FVector V);
+		bool        RAYMATH_CALLCONV     Vector2IsNaN(FVectorType V);
+		bool        RAYMATH_CALLCONV     Vector2IsInfinite(FVectorType V);
 
-		VectorType    RAYMATH_CALLCONV     Vector2Dot(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     Vector2Cross(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     Vector2LengthSq(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector2ReciprocalLengthEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector2ReciprocalLength(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector2LengthEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector2Length(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector2NormalizeEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector2Normalize(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector2ClampLength(FVector V, float LengthMin, float LengthMax);
-		VectorType    RAYMATH_CALLCONV     Vector2ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
-		VectorType    RAYMATH_CALLCONV     Vector2Reflect(FVector Incident, FVector Normal);
-		VectorType    RAYMATH_CALLCONV     Vector2Refract(FVector Incident, FVector Normal, float RefractionIndex);
-		VectorType    RAYMATH_CALLCONV     Vector2RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
-		VectorType    RAYMATH_CALLCONV     Vector2Orthogonal(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector2AngleBetweenNormalsEst(FVector N1, FVector N2);
-		VectorType    RAYMATH_CALLCONV     Vector2AngleBetweenNormals(FVector N1, FVector N2);
-		VectorType    RAYMATH_CALLCONV     Vector2AngleBetweenVectors(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     Vector2LinePointDistance(FVector LinePoint1, FVector LinePoint2, FVector Point);
-		VectorType    RAYMATH_CALLCONV     Vector2IntersectLine(FVector Line1Point1, FVector Line1Point2, FVector Line2Point1, GVector Line2Point2);
-		VectorType    RAYMATH_CALLCONV     Vector2Transform(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector2Dot(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     Vector2Cross(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     Vector2LengthSq(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector2ReciprocalLengthEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector2ReciprocalLength(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector2LengthEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector2Length(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector2NormalizeEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector2Normalize(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector2ClampLength(FVectorType V, float LengthMin, float LengthMax);
+		VectorType    RAYMATH_CALLCONV     Vector2ClampLengthV(FVectorType V, FVectorType LengthMin, FVectorType LengthMax);
+		VectorType    RAYMATH_CALLCONV     Vector2Reflect(FVectorType Incident, FVectorType Normal);
+		VectorType    RAYMATH_CALLCONV     Vector2Refract(FVectorType Incident, FVectorType Normal, float RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     Vector2RefractV(FVectorType Incident, FVectorType Normal, FVectorType RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     Vector2Orthogonal(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector2AngleBetweenNormalsEst(FVectorType N1, FVectorType N2);
+		VectorType    RAYMATH_CALLCONV     Vector2AngleBetweenNormals(FVectorType N1, FVectorType N2);
+		VectorType    RAYMATH_CALLCONV     Vector2AngleBetweenVectors(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     Vector2LinePointDistance(FVectorType LinePoint1, FVectorType LinePoint2, FVectorType Point);
+		VectorType    RAYMATH_CALLCONV     Vector2IntersectLine(FVectorType Line1Point1, FVectorType Line1Point2, FVectorType Line2Point1, GVectorType Line2Point2);
+		VectorType    RAYMATH_CALLCONV     Vector2Transform(FVectorType V, FMatrix M);
 		Float4* RAYMATH_CALLCONV     Vector2TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) */const Float2* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		VectorType    RAYMATH_CALLCONV     Vector2TransformCoord(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector2TransformCoord(FVectorType V, FMatrix M);
 		Float2* RAYMATH_CALLCONV     Vector2TransformCoordStream(/*_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) */Float2* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) */const Float2* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		VectorType    RAYMATH_CALLCONV     Vector2TransformNormal(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector2TransformNormal(FVectorType V, FMatrix M);
 		Float2* RAYMATH_CALLCONV     Vector2TransformNormalStream(/*_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) */Float2* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) */const Float2* pInputStream,
@@ -1423,62 +1431,62 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		bool        RAYMATH_CALLCONV     Vector3Equal(FVector V1, FVector V2);
-		uint32_t    RAYMATH_CALLCONV     Vector3EqualR(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector3EqualInt(FVector V1, FVector V2);
-		uint32_t    RAYMATH_CALLCONV     Vector3EqualIntR(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector3NearEqual(FVector V1, FVector V2, FVector Epsilon);
-		bool        RAYMATH_CALLCONV     Vector3NotEqual(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector3NotEqualInt(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector3Greater(FVector V1, FVector V2);
-		uint32_t    RAYMATH_CALLCONV     Vector3GreaterR(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector3GreaterOrEqual(FVector V1, FVector V2);
-		uint32_t    RAYMATH_CALLCONV     Vector3GreaterOrEqualR(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector3Less(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector3LessOrEqual(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector3InBounds(FVector V, FVector Bounds);
+		bool        RAYMATH_CALLCONV     Vector3Equal(FVectorType V1, FVectorType V2);
+		uint32_t    RAYMATH_CALLCONV     Vector3EqualR(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector3EqualInt(FVectorType V1, FVectorType V2);
+		uint32_t    RAYMATH_CALLCONV     Vector3EqualIntR(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector3NearEqual(FVectorType V1, FVectorType V2, FVectorType Epsilon);
+		bool        RAYMATH_CALLCONV     Vector3NotEqual(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector3NotEqualInt(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector3Greater(FVectorType V1, FVectorType V2);
+		uint32_t    RAYMATH_CALLCONV     Vector3GreaterR(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector3GreaterOrEqual(FVectorType V1, FVectorType V2);
+		uint32_t    RAYMATH_CALLCONV     Vector3GreaterOrEqualR(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector3Less(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector3LessOrEqual(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector3InBounds(FVectorType V, FVectorType Bounds);
 
-		bool        RAYMATH_CALLCONV     Vector3IsNaN(FVector V);
-		bool        RAYMATH_CALLCONV     Vector3IsInfinite(FVector V);
+		bool        RAYMATH_CALLCONV     Vector3IsNaN(FVectorType V);
+		bool        RAYMATH_CALLCONV     Vector3IsInfinite(FVectorType V);
 
-		VectorType    RAYMATH_CALLCONV     Vector3Dot(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     Vector3Cross(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     Vector3LengthSq(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector3ReciprocalLengthEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector3ReciprocalLength(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector3LengthEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector3Length(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector3NormalizeEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector3Normalize(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector3ClampLength(FVector V, float LengthMin, float LengthMax);
-		VectorType    RAYMATH_CALLCONV     Vector3ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
-		VectorType    RAYMATH_CALLCONV     Vector3Reflect(FVector Incident, FVector Normal);
-		VectorType    RAYMATH_CALLCONV     Vector3Refract(FVector Incident, FVector Normal, float RefractionIndex);
-		VectorType    RAYMATH_CALLCONV     Vector3RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
-		VectorType    RAYMATH_CALLCONV     Vector3Orthogonal(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector3AngleBetweenNormalsEst(FVector N1, FVector N2);
-		VectorType    RAYMATH_CALLCONV     Vector3AngleBetweenNormals(FVector N1, FVector N2);
-		VectorType    RAYMATH_CALLCONV     Vector3AngleBetweenVectors(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     Vector3LinePointDistance(FVector LinePoint1, FVector LinePoint2, FVector Point);
-		void        RAYMATH_CALLCONV     Vector3ComponentsFromNormal(/*_Out_ */ VectorType* pParallel, /*_Out_ */ VectorType* pPerpendicular, /*_In_ */FVector V, /*_In_ */FVector Normal);
-		VectorType    RAYMATH_CALLCONV     Vector3Rotate(FVector V, FQuaternion RotationQuaternion);
-		VectorType    RAYMATH_CALLCONV     Vector3InverseRotate(FVector V, FQuaternion RotationQuaternion);
-		VectorType    RAYMATH_CALLCONV     Vector3Transform(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector3Dot(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     Vector3Cross(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     Vector3LengthSq(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector3ReciprocalLengthEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector3ReciprocalLength(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector3LengthEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector3Length(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector3NormalizeEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector3Normalize(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector3ClampLength(FVectorType V, float LengthMin, float LengthMax);
+		VectorType    RAYMATH_CALLCONV     Vector3ClampLengthV(FVectorType V, FVectorType LengthMin, FVectorType LengthMax);
+		VectorType    RAYMATH_CALLCONV     Vector3Reflect(FVectorType Incident, FVectorType Normal);
+		VectorType    RAYMATH_CALLCONV     Vector3Refract(FVectorType Incident, FVectorType Normal, float RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     Vector3RefractV(FVectorType Incident, FVectorType Normal, FVectorType RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     Vector3Orthogonal(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector3AngleBetweenNormalsEst(FVectorType N1, FVectorType N2);
+		VectorType    RAYMATH_CALLCONV     Vector3AngleBetweenNormals(FVectorType N1, FVectorType N2);
+		VectorType    RAYMATH_CALLCONV     Vector3AngleBetweenVectors(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     Vector3LinePointDistance(FVectorType LinePoint1, FVectorType LinePoint2, FVectorType Point);
+		void        RAYMATH_CALLCONV     Vector3ComponentsFromNormal(/*_Out_ */ VectorType* pParallel, /*_Out_ */ VectorType* pPerpendicular, /*_In_ */FVectorType V, /*_In_ */FVectorType Normal);
+		VectorType    RAYMATH_CALLCONV     Vector3Rotate(FVectorType V, FQuaternion RotationQuaternion);
+		VectorType    RAYMATH_CALLCONV     Vector3InverseRotate(FVectorType V, FQuaternion RotationQuaternion);
+		VectorType    RAYMATH_CALLCONV     Vector3Transform(FVectorType V, FMatrix M);
 		Float4* RAYMATH_CALLCONV     Vector3TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		VectorType    RAYMATH_CALLCONV     Vector3TransformCoord(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector3TransformCoord(FVectorType V, FMatrix M);
 		Float3* RAYMATH_CALLCONV     Vector3TransformCoordStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		VectorType    RAYMATH_CALLCONV     Vector3TransformNormal(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector3TransformNormal(FVectorType V, FMatrix M);
 		Float3* RAYMATH_CALLCONV     Vector3TransformNormalStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		VectorType    RAYMATH_CALLCONV     Vector3Project(FVector V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
+		VectorType    RAYMATH_CALLCONV     Vector3Project(FVectorType V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
 			FMatrix Projection, CMatrix View, CMatrix World);
 		Float3* RAYMATH_CALLCONV     Vector3ProjectStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
@@ -1486,7 +1494,7 @@ namespace At0
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount,
 			/*_In_ */float ViewportX, /*_In_ */float ViewportY, /*_In_ */float ViewportWidth, /*_In_ */float ViewportHeight, /*_In_ */float ViewportMinZ, /*_In_ */float ViewportMaxZ,
 			/*_In_ */FMatrix Projection, /*_In_ */CMatrix View, /*_In_ */CMatrix World);
-		VectorType    RAYMATH_CALLCONV     Vector3Unproject(FVector V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
+		VectorType    RAYMATH_CALLCONV     Vector3Unproject(FVectorType V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
 			FMatrix Projection, CMatrix View, CMatrix World);
 		Float3* RAYMATH_CALLCONV     Vector3UnprojectStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
@@ -1501,43 +1509,43 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		bool        RAYMATH_CALLCONV     Vector4Equal(FVector V1, FVector V2);
-		uint32_t    RAYMATH_CALLCONV     Vector4EqualR(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector4EqualInt(FVector V1, FVector V2);
-		uint32_t    RAYMATH_CALLCONV     Vector4EqualIntR(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector4NearEqual(FVector V1, FVector V2, FVector Epsilon);
-		bool        RAYMATH_CALLCONV     Vector4NotEqual(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector4NotEqualInt(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector4Greater(FVector V1, FVector V2);
-		uint32_t    RAYMATH_CALLCONV     Vector4GreaterR(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector4GreaterOrEqual(FVector V1, FVector V2);
-		uint32_t    RAYMATH_CALLCONV     Vector4GreaterOrEqualR(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector4Less(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector4LessOrEqual(FVector V1, FVector V2);
-		bool        RAYMATH_CALLCONV     Vector4InBounds(FVector V, FVector Bounds);
+		bool        RAYMATH_CALLCONV     Vector4Equal(FVectorType V1, FVectorType V2);
+		uint32_t    RAYMATH_CALLCONV     Vector4EqualR(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector4EqualInt(FVectorType V1, FVectorType V2);
+		uint32_t    RAYMATH_CALLCONV     Vector4EqualIntR(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector4NearEqual(FVectorType V1, FVectorType V2, FVectorType Epsilon);
+		bool        RAYMATH_CALLCONV     Vector4NotEqual(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector4NotEqualInt(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector4Greater(FVectorType V1, FVectorType V2);
+		uint32_t    RAYMATH_CALLCONV     Vector4GreaterR(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector4GreaterOrEqual(FVectorType V1, FVectorType V2);
+		uint32_t    RAYMATH_CALLCONV     Vector4GreaterOrEqualR(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector4Less(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector4LessOrEqual(FVectorType V1, FVectorType V2);
+		bool        RAYMATH_CALLCONV     Vector4InBounds(FVectorType V, FVectorType Bounds);
 
-		bool        RAYMATH_CALLCONV     Vector4IsNaN(FVector V);
-		bool        RAYMATH_CALLCONV     Vector4IsInfinite(FVector V);
+		bool        RAYMATH_CALLCONV     Vector4IsNaN(FVectorType V);
+		bool        RAYMATH_CALLCONV     Vector4IsInfinite(FVectorType V);
 
-		VectorType    RAYMATH_CALLCONV     Vector4Dot(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     Vector4Cross(FVector V1, FVector V2, FVector V3);
-		VectorType    RAYMATH_CALLCONV     Vector4LengthSq(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector4ReciprocalLengthEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector4ReciprocalLength(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector4LengthEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector4Length(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector4NormalizeEst(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector4Normalize(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector4ClampLength(FVector V, float LengthMin, float LengthMax);
-		VectorType    RAYMATH_CALLCONV     Vector4ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
-		VectorType    RAYMATH_CALLCONV     Vector4Reflect(FVector Incident, FVector Normal);
-		VectorType    RAYMATH_CALLCONV     Vector4Refract(FVector Incident, FVector Normal, float RefractionIndex);
-		VectorType    RAYMATH_CALLCONV     Vector4RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
-		VectorType    RAYMATH_CALLCONV     Vector4Orthogonal(FVector V);
-		VectorType    RAYMATH_CALLCONV     Vector4AngleBetweenNormalsEst(FVector N1, FVector N2);
-		VectorType    RAYMATH_CALLCONV     Vector4AngleBetweenNormals(FVector N1, FVector N2);
-		VectorType    RAYMATH_CALLCONV     Vector4AngleBetweenVectors(FVector V1, FVector V2);
-		VectorType    RAYMATH_CALLCONV     Vector4Transform(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector4Dot(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     Vector4Cross(FVectorType V1, FVectorType V2, FVectorType V3);
+		VectorType    RAYMATH_CALLCONV     Vector4LengthSq(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector4ReciprocalLengthEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector4ReciprocalLength(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector4LengthEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector4Length(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector4NormalizeEst(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector4Normalize(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector4ClampLength(FVectorType V, float LengthMin, float LengthMax);
+		VectorType    RAYMATH_CALLCONV     Vector4ClampLengthV(FVectorType V, FVectorType LengthMin, FVectorType LengthMax);
+		VectorType    RAYMATH_CALLCONV     Vector4Reflect(FVectorType Incident, FVectorType Normal);
+		VectorType    RAYMATH_CALLCONV     Vector4Refract(FVectorType Incident, FVectorType Normal, float RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     Vector4RefractV(FVectorType Incident, FVectorType Normal, FVectorType RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     Vector4Orthogonal(FVectorType V);
+		VectorType    RAYMATH_CALLCONV     Vector4AngleBetweenNormalsEst(FVectorType N1, FVectorType N2);
+		VectorType    RAYMATH_CALLCONV     Vector4AngleBetweenNormals(FVectorType N1, FVectorType N2);
+		VectorType    RAYMATH_CALLCONV     Vector4AngleBetweenVectors(FVectorType V1, FVectorType V2);
+		VectorType    RAYMATH_CALLCONV     Vector4Transform(FVectorType V, FMatrix M);
 		Float4* RAYMATH_CALLCONV     Vector4TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float4) + InputStride * (VectorCount - 1)) */const Float4* pInputStream,
@@ -1550,28 +1558,28 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		bool        RAYMATH_CALLCONV     PlaneEqual(FVector P1, FVector P2);
-		bool        RAYMATH_CALLCONV     PlaneNearEqual(FVector P1, FVector P2, FVector Epsilon);
-		bool        RAYMATH_CALLCONV     PlaneNotEqual(FVector P1, FVector P2);
+		bool        RAYMATH_CALLCONV     PlaneEqual(FVectorType P1, FVectorType P2);
+		bool        RAYMATH_CALLCONV     PlaneNearEqual(FVectorType P1, FVectorType P2, FVectorType Epsilon);
+		bool        RAYMATH_CALLCONV     PlaneNotEqual(FVectorType P1, FVectorType P2);
 
-		bool        RAYMATH_CALLCONV     PlaneIsNaN(FVector P);
-		bool        RAYMATH_CALLCONV     PlaneIsInfinite(FVector P);
+		bool        RAYMATH_CALLCONV     PlaneIsNaN(FVectorType P);
+		bool        RAYMATH_CALLCONV     PlaneIsInfinite(FVectorType P);
 
-		VectorType    RAYMATH_CALLCONV     PlaneDot(FVector P, FVector V);
-		VectorType    RAYMATH_CALLCONV     PlaneDotCoord(FVector P, FVector V);
-		VectorType    RAYMATH_CALLCONV     PlaneDotNormal(FVector P, FVector V);
-		VectorType    RAYMATH_CALLCONV     PlaneNormalizeEst(FVector P);
-		VectorType    RAYMATH_CALLCONV     PlaneNormalize(FVector P);
-		VectorType    RAYMATH_CALLCONV     PlaneIntersectLine(FVector P, FVector LinePoint1, FVector LinePoint2);
-		void        RAYMATH_CALLCONV     PlaneIntersectPlane(/*_Out_ */ VectorType* pLinePoint1, /*_Out_ */ VectorType* pLinePoint2, /*_In_ */FVector P1, /*_In_ */FVector P2);
-		VectorType    RAYMATH_CALLCONV     PlaneTransform(FVector P, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     PlaneDot(FVectorType P, FVectorType V);
+		VectorType    RAYMATH_CALLCONV     PlaneDotCoord(FVectorType P, FVectorType V);
+		VectorType    RAYMATH_CALLCONV     PlaneDotNormal(FVectorType P, FVectorType V);
+		VectorType    RAYMATH_CALLCONV     PlaneNormalizeEst(FVectorType P);
+		VectorType    RAYMATH_CALLCONV     PlaneNormalize(FVectorType P);
+		VectorType    RAYMATH_CALLCONV     PlaneIntersectLine(FVectorType P, FVectorType LinePoint1, FVectorType LinePoint2);
+		void        RAYMATH_CALLCONV     PlaneIntersectPlane(/*_Out_ */ VectorType* pLinePoint1, /*_Out_ */ VectorType* pLinePoint2, /*_In_ */FVectorType P1, /*_In_ */FVectorType P2);
+		VectorType    RAYMATH_CALLCONV     PlaneTransform(FVectorType P, FMatrix M);
 		Float4* RAYMATH_CALLCONV     PlaneTransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (PlaneCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float4) + InputStride * (PlaneCount - 1)) */const Float4* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t PlaneCount, /*_In_ */FMatrix M);
 
-		VectorType    RAYMATH_CALLCONV     PlaneFromPointNormal(FVector Point, FVector Normal);
-		VectorType    RAYMATH_CALLCONV     PlaneFromPoints(FVector Point1, FVector Point2, FVector Point3);
+		VectorType    RAYMATH_CALLCONV     PlaneFromPointNormal(FVectorType Point, FVectorType Normal);
+		VectorType    RAYMATH_CALLCONV     PlaneFromPoints(FVectorType Point1, FVectorType Point2, FVectorType Point3);
 
 		/****************************************************************************
 		 *
@@ -1579,41 +1587,41 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		bool        RAYMATH_CALLCONV     ColorEqual(FVector C1, FVector C2);
-		bool        RAYMATH_CALLCONV     ColorNotEqual(FVector C1, FVector C2);
-		bool        RAYMATH_CALLCONV     ColorGreater(FVector C1, FVector C2);
-		bool        RAYMATH_CALLCONV     ColorGreaterOrEqual(FVector C1, FVector C2);
-		bool        RAYMATH_CALLCONV     ColorLess(FVector C1, FVector C2);
-		bool        RAYMATH_CALLCONV     ColorLessOrEqual(FVector C1, FVector C2);
+		bool        RAYMATH_CALLCONV     ColorEqual(FVectorType C1, FVectorType C2);
+		bool        RAYMATH_CALLCONV     ColorNotEqual(FVectorType C1, FVectorType C2);
+		bool        RAYMATH_CALLCONV     ColorGreater(FVectorType C1, FVectorType C2);
+		bool        RAYMATH_CALLCONV     ColorGreaterOrEqual(FVectorType C1, FVectorType C2);
+		bool        RAYMATH_CALLCONV     ColorLess(FVectorType C1, FVectorType C2);
+		bool        RAYMATH_CALLCONV     ColorLessOrEqual(FVectorType C1, FVectorType C2);
 
-		bool        RAYMATH_CALLCONV     ColorIsNaN(FVector C);
-		bool        RAYMATH_CALLCONV     ColorIsInfinite(FVector C);
+		bool        RAYMATH_CALLCONV     ColorIsNaN(FVectorType C);
+		bool        RAYMATH_CALLCONV     ColorIsInfinite(FVectorType C);
 
-		VectorType    RAYMATH_CALLCONV     ColorNegative(FVector C);
-		VectorType    RAYMATH_CALLCONV     ColorModulate(FVector C1, FVector C2);
-		VectorType    RAYMATH_CALLCONV     ColorAdjustSaturation(FVector C, float Saturation);
-		VectorType    RAYMATH_CALLCONV     ColorAdjustContrast(FVector C, float Contrast);
+		VectorType    RAYMATH_CALLCONV     ColorNegative(FVectorType C);
+		VectorType    RAYMATH_CALLCONV     ColorModulate(FVectorType C1, FVectorType C2);
+		VectorType    RAYMATH_CALLCONV     ColorAdjustSaturation(FVectorType C, float Saturation);
+		VectorType    RAYMATH_CALLCONV     ColorAdjustContrast(FVectorType C, float Contrast);
 
-		VectorType    RAYMATH_CALLCONV     ColorRGBToHSL(FVector rgb);
-		VectorType    RAYMATH_CALLCONV     ColorHSLToRGB(FVector hsl);
+		VectorType    RAYMATH_CALLCONV     ColorRGBToHSL(FVectorType rgb);
+		VectorType    RAYMATH_CALLCONV     ColorHSLToRGB(FVectorType hsl);
 
-		VectorType    RAYMATH_CALLCONV     ColorRGBToHSV(FVector rgb);
-		VectorType    RAYMATH_CALLCONV     ColorHSVToRGB(FVector hsv);
+		VectorType    RAYMATH_CALLCONV     ColorRGBToHSV(FVectorType rgb);
+		VectorType    RAYMATH_CALLCONV     ColorHSVToRGB(FVectorType hsv);
 
-		VectorType    RAYMATH_CALLCONV     ColorRGBToYUV(FVector rgb);
-		VectorType    RAYMATH_CALLCONV     ColorYUVToRGB(FVector yuv);
+		VectorType    RAYMATH_CALLCONV     ColorRGBToYUV(FVectorType rgb);
+		VectorType    RAYMATH_CALLCONV     ColorYUVToRGB(FVectorType yuv);
 
-		VectorType    RAYMATH_CALLCONV     ColorRGBToYUV_HD(FVector rgb);
-		VectorType    RAYMATH_CALLCONV     ColorYUVToRGB_HD(FVector yuv);
+		VectorType    RAYMATH_CALLCONV     ColorRGBToYUV_HD(FVectorType rgb);
+		VectorType    RAYMATH_CALLCONV     ColorYUVToRGB_HD(FVectorType yuv);
 
-		VectorType    RAYMATH_CALLCONV     ColorRGBToXYZ(FVector rgb);
-		VectorType    RAYMATH_CALLCONV     ColorXYZToRGB(FVector xyz);
+		VectorType    RAYMATH_CALLCONV     ColorRGBToXYZ(FVectorType rgb);
+		VectorType    RAYMATH_CALLCONV     ColorXYZToRGB(FVectorType xyz);
 
-		VectorType    RAYMATH_CALLCONV     ColorXYZToSRGB(FVector xyz);
-		VectorType    RAYMATH_CALLCONV     ColorSRGBToXYZ(FVector srgb);
+		VectorType    RAYMATH_CALLCONV     ColorXYZToSRGB(FVectorType xyz);
+		VectorType    RAYMATH_CALLCONV     ColorSRGBToXYZ(FVectorType srgb);
 
-		VectorType    RAYMATH_CALLCONV     ColorRGBToSRGB(FVector rgb);
-		VectorType    RAYMATH_CALLCONV     ColorSRGBToRGB(FVector srgb);
+		VectorType    RAYMATH_CALLCONV     ColorRGBToSRGB(FVectorType rgb);
+		VectorType    RAYMATH_CALLCONV     ColorSRGBToRGB(FVectorType srgb);
 
 
 		/****************************************************************************
@@ -1624,7 +1632,7 @@ namespace At0
 
 		bool            VerifyCPUSupport();
 
-		VectorType    RAYMATH_CALLCONV     FresnelTerm(FVector CosIncidentAngle, FVector RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     FresnelTerm(FVectorType CosIncidentAngle, FVectorType RefractionIndex);
 
 		bool            ScalarNearEqual(float S1, float S2, float Epsilon);
 		float           ScalarModAngle(float Value);
@@ -1668,7 +1676,7 @@ namespace At0
 			// Slow path fallback for permutes that do not map to a single SSE shuffle opcode.
 			template<uint32_t Shuffle, bool WhichX, bool WhichY, bool WhichZ, bool WhichW> struct PermuteHelper
 			{
-				static VectorType     RAYMATH_CALLCONV     Permute(FVector v1, FVector v2)
+				static VectorType     RAYMATH_CALLCONV     Permute(FVectorType v1, FVectorType v2)
 				{
 					static const VectorU32 selectMask =
 					{ { {
@@ -1691,25 +1699,25 @@ namespace At0
 			// Fast path for permutes that only read from the first vector.
 			template<uint32_t Shuffle> struct PermuteHelper<Shuffle, false, false, false, false>
 			{
-				static VectorType     RAYMATH_CALLCONV     Permute(FVector v1, FVector) { return RAYMATH_PERMUTE_PS(v1, Shuffle); }
+				static VectorType     RAYMATH_CALLCONV     Permute(FVectorType v1, FVectorType) { return RAYMATH_PERMUTE_PS(v1, Shuffle); }
 			};
 
 			// Fast path for permutes that only read from the second vector.
 			template<uint32_t Shuffle> struct PermuteHelper<Shuffle, true, true, true, true>
 			{
-				static VectorType     RAYMATH_CALLCONV     Permute(FVector, FVector v2) { return RAYMATH_PERMUTE_PS(v2, Shuffle); }
+				static VectorType     RAYMATH_CALLCONV     Permute(FVectorType, FVectorType v2) { return RAYMATH_PERMUTE_PS(v2, Shuffle); }
 			};
 
 			// Fast path for permutes that read XY from the first vector, ZW from the second.
 			template<uint32_t Shuffle> struct PermuteHelper<Shuffle, false, false, true, true>
 			{
-				static VectorType     RAYMATH_CALLCONV     Permute(FVector v1, FVector v2) { return _mm_shuffle_ps(v1, v2, Shuffle); }
+				static VectorType     RAYMATH_CALLCONV     Permute(FVectorType v1, FVectorType v2) { return _mm_shuffle_ps(v1, v2, Shuffle); }
 			};
 
 			// Fast path for permutes that read XY from the second vector, ZW from the first.
 			template<uint32_t Shuffle> struct PermuteHelper<Shuffle, true, true, false, false>
 			{
-				static VectorType     RAYMATH_CALLCONV     Permute(FVector v1, FVector v2) { return _mm_shuffle_ps(v2, v1, Shuffle); }
+				static VectorType     RAYMATH_CALLCONV     Permute(FVectorType v1, FVectorType v2) { return _mm_shuffle_ps(v2, v1, Shuffle); }
 			};
 		}
 
@@ -1717,7 +1725,7 @@ namespace At0
 
 		// General permute template
 		template<uint32_t PermuteX, uint32_t PermuteY, uint32_t PermuteZ, uint32_t PermuteW>
-		inline VectorType     RAYMATH_CALLCONV     VectorPermute(FVector V1, FVector V2)
+		inline VectorType     RAYMATH_CALLCONV     VectorPermute(FVectorType V1, FVectorType V2)
 		{
 			static_assert(PermuteX <= 7, "PermuteX template parameter out of range");
 			static_assert(PermuteY <= 7, "PermuteY template parameter out of range");
@@ -1741,32 +1749,32 @@ namespace At0
 		}
 
 		// Special-case permute templates
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 2, 3>(FVector V1, FVector) { return V1; }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 5, 6, 7>(FVector, FVector V2) { return V2; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 2, 3>(FVectorType V1, FVectorType) { return V1; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 5, 6, 7>(FVectorType, FVectorType V2) { return V2; }
 
 #if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 4, 5>(FVector V1, FVector V2) { return _mm_movelh_ps(V1, V2); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<6, 7, 2, 3>(FVector V1, FVector V2) { return _mm_movehl_ps(V1, V2); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 4, 1, 5>(FVector V1, FVector V2) { return _mm_unpacklo_ps(V1, V2); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 6, 3, 7>(FVector V1, FVector V2) { return _mm_unpackhi_ps(V1, V2); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 6, 7>(FVector V1, FVector V2) { return _mm_castpd_ps(_mm_unpackhi_pd(_mm_castps_pd(V1), _mm_castps_pd(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 4, 5>(FVectorType V1, FVectorType V2) { return _mm_movelh_ps(V1, V2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<6, 7, 2, 3>(FVectorType V1, FVectorType V2) { return _mm_movehl_ps(V1, V2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 4, 1, 5>(FVectorType V1, FVectorType V2) { return _mm_unpacklo_ps(V1, V2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 6, 3, 7>(FVectorType V1, FVectorType V2) { return _mm_unpackhi_ps(V1, V2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 6, 7>(FVectorType V1, FVectorType V2) { return _mm_castpd_ps(_mm_unpackhi_pd(_mm_castps_pd(V1), _mm_castps_pd(V2))); }
 #endif
 
 #if defined(RAY_SSE4_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 1, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x1); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 5, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x2); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 5, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x3); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x4); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 1, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x5); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 5, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x6); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 5, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x7); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x8); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 1, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x9); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 5, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xA); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 5, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xB); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xC); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 1, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xD); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 5, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xE); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 1, 2, 3>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0x1); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 5, 2, 3>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0x2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 5, 2, 3>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0x3); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 3>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0x4); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 1, 6, 3>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0x5); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 5, 6, 3>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0x6); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 5, 6, 3>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0x7); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 2, 7>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0x8); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 1, 2, 7>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0x9); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 5, 2, 7>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0xA); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 5, 2, 7>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0xB); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 7>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0xC); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 1, 6, 7>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0xD); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 5, 6, 7>(FVectorType V1, FVectorType V2) { return _mm_blend_ps(V1, V2, 0xE); }
 #endif
 
 #if defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
@@ -1775,37 +1783,37 @@ namespace At0
 		// The mirror cases are not spelled out here as the programmer can always swap the arguments
 		// (i.e. prefer permutes where the X element comes from the V1 vector instead of the V2 vector)
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vget_low_f32(V2)); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 0, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vget_low_f32(V2)); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vrev64_f32(vget_low_f32(V2))); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 0, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vrev64_f32(vget_low_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 4, 5>(FVectorType V1, FVectorType V2) { return vcombine_f32(vget_low_f32(V1), vget_low_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 0, 4, 5>(FVectorType V1, FVectorType V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vget_low_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 5, 4>(FVectorType V1, FVectorType V2) { return vcombine_f32(vget_low_f32(V1), vrev64_f32(vget_low_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 0, 5, 4>(FVectorType V1, FVectorType V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vrev64_f32(vget_low_f32(V2))); }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vget_high_f32(V2)); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 2, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vget_high_f32(V2)); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vrev64_f32(vget_high_f32(V2))); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 2, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vrev64_f32(vget_high_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 6, 7>(FVectorType V1, FVectorType V2) { return vcombine_f32(vget_high_f32(V1), vget_high_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 2, 6, 7>(FVectorType V1, FVectorType V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vget_high_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 7, 6>(FVectorType V1, FVectorType V2) { return vcombine_f32(vget_high_f32(V1), vrev64_f32(vget_high_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 2, 7, 6>(FVectorType V1, FVectorType V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vrev64_f32(vget_high_f32(V2))); }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vget_high_f32(V2)); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 0, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vget_high_f32(V2)); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vrev64_f32(vget_high_f32(V2))); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 0, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vrev64_f32(vget_high_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 7>(FVectorType V1, FVectorType V2) { return vcombine_f32(vget_low_f32(V1), vget_high_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 0, 6, 7>(FVectorType V1, FVectorType V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vget_high_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 7, 6>(FVectorType V1, FVectorType V2) { return vcombine_f32(vget_low_f32(V1), vrev64_f32(vget_high_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 0, 7, 6>(FVectorType V1, FVectorType V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vrev64_f32(vget_high_f32(V2))); }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 2, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vget_low_f32(V2)); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vrev64_f32(vget_low_f32(V2))); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 2, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vrev64_f32(vget_low_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 2, 4, 5>(FVectorType V1, FVectorType V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vget_low_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 5, 4>(FVectorType V1, FVectorType V2) { return vcombine_f32(vget_high_f32(V1), vrev64_f32(vget_low_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 2, 5, 4>(FVectorType V1, FVectorType V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vrev64_f32(vget_low_f32(V2))); }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 4, 2, 6>(FVector V1, FVector V2) { return vtrnq_f32(V1, V2).val[0]; }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 5, 3, 7>(FVector V1, FVector V2) { return vtrnq_f32(V1, V2).val[1]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 4, 2, 6>(FVectorType V1, FVectorType V2) { return vtrnq_f32(V1, V2).val[0]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 5, 3, 7>(FVectorType V1, FVectorType V2) { return vtrnq_f32(V1, V2).val[1]; }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 4, 1, 5>(FVector V1, FVector V2) { return vzipq_f32(V1, V2).val[0]; }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 6, 3, 7>(FVector V1, FVector V2) { return vzipq_f32(V1, V2).val[1]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 4, 1, 5>(FVectorType V1, FVectorType V2) { return vzipq_f32(V1, V2).val[0]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 6, 3, 7>(FVectorType V1, FVectorType V2) { return vzipq_f32(V1, V2).val[1]; }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 2, 4, 6>(FVector V1, FVector V2) { return vuzpq_f32(V1, V2).val[0]; }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 3, 5, 7>(FVector V1, FVector V2) { return vuzpq_f32(V1, V2).val[1]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 2, 4, 6>(FVectorType V1, FVectorType V2) { return vuzpq_f32(V1, V2).val[0]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 3, 5, 7>(FVectorType V1, FVectorType V2) { return vuzpq_f32(V1, V2).val[1]; }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 2, 3, 4>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 1); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 4, 5>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 2); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 4, 5, 6>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 3); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 2, 3, 4>(FVectorType V1, FVectorType V2) { return vextq_f32(V1, V2, 1); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 4, 5>(FVectorType V1, FVectorType V2) { return vextq_f32(V1, V2, 2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 4, 5, 6>(FVectorType V1, FVectorType V2) { return vextq_f32(V1, V2, 3); }
 
 #endif // RAY_ARM_NEON_INTRINSICS && !RAY_NO_INTRINSICS
 
@@ -1813,7 +1821,7 @@ namespace At0
 
 		// General swizzle template
 		template<uint32_t SwizzleX, uint32_t SwizzleY, uint32_t SwizzleZ, uint32_t SwizzleW>
-		inline VectorType     RAYMATH_CALLCONV     VectorSwizzle(FVector V)
+		inline VectorType     RAYMATH_CALLCONV     VectorSwizzle(FVectorType V)
 		{
 			static_assert(SwizzleX <= 3, "SwizzleX template parameter out of range");
 			static_assert(SwizzleY <= 3, "SwizzleY template parameter out of range");
@@ -1830,84 +1838,84 @@ namespace At0
 		}
 
 		// Specialized swizzles
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 2, 3>(FVector V) { return V; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 2, 3>(FVectorType V) { return V; }
 
 #if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 0, 1>(FVector V) { return _mm_movelh_ps(V, V); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 2, 3>(FVector V) { return _mm_movehl_ps(V, V); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 1, 1>(FVector V) { return _mm_unpacklo_ps(V, V); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 3, 3>(FVector V) { return _mm_unpackhi_ps(V, V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 0, 1>(FVectorType V) { return _mm_movelh_ps(V, V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 2, 3>(FVectorType V) { return _mm_movehl_ps(V, V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 1, 1>(FVectorType V) { return _mm_unpacklo_ps(V, V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 3, 3>(FVectorType V) { return _mm_unpackhi_ps(V, V); }
 #endif
 
 #if defined(RAY_SSE3_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 2, 2>(FVector V) { return _mm_moveldup_ps(V); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 3, 3>(FVector V) { return _mm_movehdup_ps(V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 2, 2>(FVectorType V) { return _mm_moveldup_ps(V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 3, 3>(FVectorType V) { return _mm_movehdup_ps(V); }
 #endif
 
 #if defined(RAY_AVX2_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 0, 0>(FVector V) { return _mm_broadcastss_ps(V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 0, 0>(FVectorType V) { return _mm_broadcastss_ps(V); }
 #endif
 
 #if defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 0, 0>(FVector V) { return vdupq_lane_f32(vget_low_f32(V), 0); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 1, 1>(FVector V) { return vdupq_lane_f32(vget_low_f32(V), 1); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 2, 2>(FVector V) { return vdupq_lane_f32(vget_high_f32(V), 0); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 3, 3, 3>(FVector V) { return vdupq_lane_f32(vget_high_f32(V), 1); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 0, 0>(FVectorType V) { return vdupq_lane_f32(vget_low_f32(V), 0); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 1, 1>(FVectorType V) { return vdupq_lane_f32(vget_low_f32(V), 1); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 2, 2>(FVectorType V) { return vdupq_lane_f32(vget_high_f32(V), 0); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 3, 3, 3>(FVectorType V) { return vdupq_lane_f32(vget_high_f32(V), 1); }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 3, 2>(FVector V) { return vrev64q_f32(V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 3, 2>(FVectorType V) { return vrev64q_f32(V); }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 0, 1>(FVector V) { float32x2_t vt = vget_low_f32(V); return vcombine_f32(vt, vt); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 2, 3>(FVector V) { float32x2_t vt = vget_high_f32(V); return vcombine_f32(vt, vt); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 1, 0>(FVector V) { float32x2_t vt = vrev64_f32(vget_low_f32(V)); return vcombine_f32(vt, vt); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 3, 2>(FVector V) { float32x2_t vt = vrev64_f32(vget_high_f32(V)); return vcombine_f32(vt, vt); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 0, 1>(FVectorType V) { float32x2_t vt = vget_low_f32(V); return vcombine_f32(vt, vt); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 2, 3>(FVectorType V) { float32x2_t vt = vget_high_f32(V); return vcombine_f32(vt, vt); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 1, 0>(FVectorType V) { float32x2_t vt = vrev64_f32(vget_low_f32(V)); return vcombine_f32(vt, vt); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 3, 2>(FVectorType V) { float32x2_t vt = vrev64_f32(vget_high_f32(V)); return vcombine_f32(vt, vt); }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 3, 2>(FVector V) { return vcombine_f32(vget_low_f32(V), vrev64_f32(vget_high_f32(V))); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 2, 3>(FVector V) { return vcombine_f32(vrev64_f32(vget_low_f32(V)), vget_high_f32(V)); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 1, 0>(FVector V) { return vcombine_f32(vget_high_f32(V), vrev64_f32(vget_low_f32(V))); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 0, 1>(FVector V) { return vcombine_f32(vrev64_f32(vget_high_f32(V)), vget_low_f32(V)); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 1, 0>(FVector V) { return vcombine_f32(vrev64_f32(vget_high_f32(V)), vrev64_f32(vget_low_f32(V))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 3, 2>(FVectorType V) { return vcombine_f32(vget_low_f32(V), vrev64_f32(vget_high_f32(V))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 2, 3>(FVectorType V) { return vcombine_f32(vrev64_f32(vget_low_f32(V)), vget_high_f32(V)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 1, 0>(FVectorType V) { return vcombine_f32(vget_high_f32(V), vrev64_f32(vget_low_f32(V))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 0, 1>(FVectorType V) { return vcombine_f32(vrev64_f32(vget_high_f32(V)), vget_low_f32(V)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 1, 0>(FVectorType V) { return vcombine_f32(vrev64_f32(vget_high_f32(V)), vrev64_f32(vget_low_f32(V))); }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 2, 2>(FVector V) { return vtrnq_f32(V, V).val[0]; }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 3, 3>(FVector V) { return vtrnq_f32(V, V).val[1]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 2, 2>(FVectorType V) { return vtrnq_f32(V, V).val[0]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 3, 3>(FVectorType V) { return vtrnq_f32(V, V).val[1]; }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 1, 1>(FVector V) { return vzipq_f32(V, V).val[0]; }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 3, 3>(FVector V) { return vzipq_f32(V, V).val[1]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 1, 1>(FVectorType V) { return vzipq_f32(V, V).val[0]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 3, 3>(FVectorType V) { return vzipq_f32(V, V).val[1]; }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 2, 0, 2>(FVector V) { return vuzpq_f32(V, V).val[0]; }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 3, 1, 3>(FVector V) { return vuzpq_f32(V, V).val[1]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 2, 0, 2>(FVectorType V) { return vuzpq_f32(V, V).val[0]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 3, 1, 3>(FVectorType V) { return vuzpq_f32(V, V).val[1]; }
 
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 2, 3, 0>(FVector V) { return vextq_f32(V, V, 1); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 0, 1>(FVector V) { return vextq_f32(V, V, 2); }
-		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 0, 1, 2>(FVector V) { return vextq_f32(V, V, 3); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 2, 3, 0>(FVectorType V) { return vextq_f32(V, V, 1); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 0, 1>(FVectorType V) { return vextq_f32(V, V, 2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 0, 1, 2>(FVectorType V) { return vextq_f32(V, V, 3); }
 
 #endif // RAY_ARM_NEON_INTRINSICS && !RAY_NO_INTRINSICS
 
 		//------------------------------------------------------------------------------
 
 		template<uint32_t Elements>
-		inline VectorType     RAYMATH_CALLCONV     VectorShiftLeft(FVector V1, FVector V2)
+		inline VectorType     RAYMATH_CALLCONV     VectorShiftLeft(FVectorType V1, FVectorType V2)
 		{
 			static_assert(Elements < 4, "Elements template parameter out of range");
 			return VectorPermute<Elements, (Elements + 1), (Elements + 2), (Elements + 3)>(V1, V2);
 		}
 
 		template<uint32_t Elements>
-		inline VectorType     RAYMATH_CALLCONV     VectorRotateLeft(FVector V)
+		inline VectorType     RAYMATH_CALLCONV     VectorRotateLeft(FVectorType V)
 		{
 			static_assert(Elements < 4, "Elements template parameter out of range");
 			return VectorSwizzle<Elements & 3, (Elements + 1) & 3, (Elements + 2) & 3, (Elements + 3) & 3>(V);
 		}
 
 		template<uint32_t Elements>
-		inline VectorType     RAYMATH_CALLCONV     VectorRotateRight(FVector V)
+		inline VectorType     RAYMATH_CALLCONV     VectorRotateRight(FVectorType V)
 		{
 			static_assert(Elements < 4, "Elements template parameter out of range");
 			return VectorSwizzle<(4 - Elements) & 3, (5 - Elements) & 3, (6 - Elements) & 3, (7 - Elements) & 3>(V);
 		}
 
 		template<uint32_t VSLeftRotateElements, uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3>
-		inline VectorType     RAYMATH_CALLCONV     VectorInsert(FVector VD, FVector VS)
+		inline VectorType     RAYMATH_CALLCONV     VectorInsert(FVectorType VD, FVectorType VS)
 		{
 			VectorType Control = VectorSelectControl(Select0 & 1, Select1 & 1, Select2 & 1, Select3 & 1);
 			return VectorSelect(VD, VectorRotateLeft<VSLeftRotateElements>(VS), Control);
@@ -2091,7 +2099,7 @@ namespace At0
 
 #ifdef _PREFAST_
 #pragma prefast(push)
-#pragma prefast(disable : 25000, "FVector is 16 bytes")
+#pragma prefast(disable : 25000, "FVectorType is 16 bytes")
 #pragma prefast(disable : 26495, "Union initialization confuses /analyze")
 #endif
 
@@ -2210,7 +2218,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV ConvertVectorIntToFloat
 		(
-			FVector    VInt,
+			FVectorType    VInt,
 			uint32_t     DivExponent
 		)
 		{
@@ -2244,7 +2252,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV ConvertVectorFloatToInt
 		(
-			FVector    VFloat,
+			FVectorType    VFloat,
 			uint32_t     MulExponent
 		)
 		{
@@ -2299,7 +2307,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV ConvertVectorUIntToFloat
 		(
-			FVector     VUInt,
+			FVectorType     VUInt,
 			uint32_t      DivExponent
 		)
 		{
@@ -2342,7 +2350,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV ConvertVectorFloatToUInt
 		(
-			FVector     VFloat,
+			FVectorType     VFloat,
 			uint32_t      MulExponent
 		)
 		{
@@ -3461,7 +3469,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreInt
 		(
 			uint32_t* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3479,7 +3487,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreFloat
 		(
 			float* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3497,7 +3505,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreInt2
 		(
 			uint32_t* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3519,7 +3527,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreInt2A
 		(
 			uint32_t* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3540,7 +3548,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreFloat2
 		(
 			Float2* pDestination,
-			FVector  V
+			FVectorType  V
 		)
 		{
 			assert(pDestination);
@@ -3562,7 +3570,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreFloat2A
 		(
 			Float2A* pDestination,
-			FVector     V
+			FVectorType     V
 		)
 		{
 			assert(pDestination);
@@ -3583,7 +3591,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreSInt2
 		(
 			Int2* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3615,7 +3623,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreUInt2
 		(
 			UInt2* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3656,7 +3664,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreInt3
 		(
 			uint32_t* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3682,7 +3690,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreInt3A
 		(
 			uint32_t* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3707,7 +3715,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreFloat3
 		(
 			Float3* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3733,7 +3741,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreFloat3A
 		(
 			Float3A* pDestination,
-			FVector     V
+			FVectorType     V
 		)
 		{
 			assert(pDestination);
@@ -3758,7 +3766,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreSInt3
 		(
 			Int3* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3794,7 +3802,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreUInt3
 		(
 			UInt3* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3839,7 +3847,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreInt4
 		(
 			uint32_t* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3860,7 +3868,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreInt4A
 		(
 			uint32_t* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3882,7 +3890,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreFloat4
 		(
 			Float4* pDestination,
-			FVector  V
+			FVectorType  V
 		)
 		{
 			assert(pDestination);
@@ -3903,7 +3911,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreFloat4A
 		(
 			Float4A* pDestination,
-			FVector     V
+			FVectorType     V
 		)
 		{
 			assert(pDestination);
@@ -3925,7 +3933,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreSInt4
 		(
 			Int4* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -3955,7 +3963,7 @@ namespace At0
 		inline void RAYMATH_CALLCONV StoreUInt4
 		(
 			UInt4* pDestination,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pDestination);
@@ -4597,7 +4605,7 @@ namespace At0
 		// Replicate the x component of the vector
 		inline VectorType RAYMATH_CALLCONV VectorSplatX
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -4620,7 +4628,7 @@ namespace At0
 		// Replicate the y component of the vector
 		inline VectorType RAYMATH_CALLCONV VectorSplatY
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -4641,7 +4649,7 @@ namespace At0
 		// Replicate the z component of the vector
 		inline VectorType RAYMATH_CALLCONV VectorSplatZ
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -4662,7 +4670,7 @@ namespace At0
 		// Replicate the w component of the vector
 		inline VectorType RAYMATH_CALLCONV VectorSplatW
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -4773,7 +4781,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Return a floating point value via an index. This is not a recommended
 		// function to use due to performance loss.
-		inline float RAYMATH_CALLCONV VectorGetByIndex(FVector V, size_t i)
+		inline float RAYMATH_CALLCONV VectorGetByIndex(FVectorType V, size_t i)
 		{
 			assert(i < 4);
 #if defined(RAY_NO_INTRINSICS)
@@ -4787,7 +4795,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Return the X component in an FPU register. 
-		inline float RAYMATH_CALLCONV VectorGetX(FVector V)
+		inline float RAYMATH_CALLCONV VectorGetX(FVectorType V)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			return V.vector4_f32[0];
@@ -4799,7 +4807,7 @@ namespace At0
 		}
 
 		// Return the Y component in an FPU register. 
-		inline float RAYMATH_CALLCONV VectorGetY(FVector V)
+		inline float RAYMATH_CALLCONV VectorGetY(FVectorType V)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			return V.vector4_f32[1];
@@ -4812,7 +4820,7 @@ namespace At0
 		}
 
 		// Return the Z component in an FPU register. 
-		inline float RAYMATH_CALLCONV VectorGetZ(FVector V)
+		inline float RAYMATH_CALLCONV VectorGetZ(FVectorType V)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			return V.vector4_f32[2];
@@ -4825,7 +4833,7 @@ namespace At0
 		}
 
 		// Return the W component in an FPU register. 
-		inline float RAYMATH_CALLCONV VectorGetW(FVector V)
+		inline float RAYMATH_CALLCONV VectorGetW(FVectorType V)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			return V.vector4_f32[3];
@@ -4841,7 +4849,7 @@ namespace At0
 
 		// Store a component indexed by i into a 32 bit float location in memory.
 
-		inline void RAYMATH_CALLCONV VectorGetByIndexPtr(float* f, FVector V, size_t i)
+		inline void RAYMATH_CALLCONV VectorGetByIndexPtr(float* f, FVectorType V, size_t i)
 		{
 			assert(f != nullptr);
 			assert(i < 4);
@@ -4858,7 +4866,7 @@ namespace At0
 
 		// Store the X component into a 32 bit float location in memory.
 
-		inline void RAYMATH_CALLCONV VectorGetXPtr(float* x, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetXPtr(float* x, FVectorType V)
 		{
 			assert(x != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -4872,7 +4880,7 @@ namespace At0
 
 		// Store the Y component into a 32 bit float location in memory.
 
-		inline void RAYMATH_CALLCONV VectorGetYPtr(float* y, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetYPtr(float* y, FVectorType V)
 		{
 			assert(y != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -4889,7 +4897,7 @@ namespace At0
 
 		// Store the Z component into a 32 bit float location in memory.
 
-		inline void RAYMATH_CALLCONV VectorGetZPtr(float* z, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetZPtr(float* z, FVectorType V)
 		{
 			assert(z != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -4906,7 +4914,7 @@ namespace At0
 
 		// Store the W component into a 32 bit float location in memory.
 
-		inline void RAYMATH_CALLCONV VectorGetWPtr(float* w, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetWPtr(float* w, FVectorType V)
 		{
 			assert(w != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -4925,7 +4933,7 @@ namespace At0
 
 		// Return an integer value via an index. This is not a recommended
 		// function to use due to performance loss.
-		inline uint32_t RAYMATH_CALLCONV VectorGetIntByIndex(FVector V, size_t i)
+		inline uint32_t RAYMATH_CALLCONV VectorGetIntByIndex(FVectorType V, size_t i)
 		{
 			assert(i < 4);
 #if defined(RAY_NO_INTRINSICS)
@@ -4940,7 +4948,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Return the X component in an integer register. 
-		inline uint32_t RAYMATH_CALLCONV VectorGetIntX(FVector V)
+		inline uint32_t RAYMATH_CALLCONV VectorGetIntX(FVectorType V)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			return V.vector4_u32[0];
@@ -4952,7 +4960,7 @@ namespace At0
 		}
 
 		// Return the Y component in an integer register. 
-		inline uint32_t RAYMATH_CALLCONV VectorGetIntY(FVector V)
+		inline uint32_t RAYMATH_CALLCONV VectorGetIntY(FVectorType V)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			return V.vector4_u32[1];
@@ -4968,7 +4976,7 @@ namespace At0
 		}
 
 		// Return the Z component in an integer register. 
-		inline uint32_t RAYMATH_CALLCONV VectorGetIntZ(FVector V)
+		inline uint32_t RAYMATH_CALLCONV VectorGetIntZ(FVectorType V)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			return V.vector4_u32[2];
@@ -4984,7 +4992,7 @@ namespace At0
 		}
 
 		// Return the W component in an integer register. 
-		inline uint32_t RAYMATH_CALLCONV VectorGetIntW(FVector V)
+		inline uint32_t RAYMATH_CALLCONV VectorGetIntW(FVectorType V)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			return V.vector4_u32[3];
@@ -5003,7 +5011,7 @@ namespace At0
 
 		// Store a component indexed by i into a 32 bit integer location in memory.
 
-		inline void RAYMATH_CALLCONV VectorGetIntByIndexPtr(uint32_t* x, FVector V, size_t i)
+		inline void RAYMATH_CALLCONV VectorGetIntByIndexPtr(uint32_t* x, FVectorType V, size_t i)
 		{
 			assert(x != nullptr);
 			assert(i < 4);
@@ -5020,7 +5028,7 @@ namespace At0
 
 		// Store the X component into a 32 bit integer location in memory.
 
-		inline void RAYMATH_CALLCONV VectorGetIntXPtr(uint32_t* x, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetIntXPtr(uint32_t* x, FVectorType V)
 		{
 			assert(x != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5034,7 +5042,7 @@ namespace At0
 
 		// Store the Y component into a 32 bit integer location in memory.
 
-		inline void RAYMATH_CALLCONV VectorGetIntYPtr(uint32_t* y, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetIntYPtr(uint32_t* y, FVectorType V)
 		{
 			assert(y != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5052,7 +5060,7 @@ namespace At0
 
 		// Store the Z component into a 32 bit integer locaCantion in memory.
 
-		inline void RAYMATH_CALLCONV VectorGetIntZPtr(uint32_t* z, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetIntZPtr(uint32_t* z, FVectorType V)
 		{
 			assert(z != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5070,7 +5078,7 @@ namespace At0
 
 		// Store the W component into a 32 bit integer location in memory.
 
-		inline void RAYMATH_CALLCONV VectorGetIntWPtr(uint32_t* w, FVector V)
+		inline void RAYMATH_CALLCONV VectorGetIntWPtr(uint32_t* w, FVectorType V)
 		{
 			assert(w != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5089,7 +5097,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Set a single indexed floating point component
-		inline VectorType RAYMATH_CALLCONV VectorSetByIndex(FVector V, float f, size_t i)
+		inline VectorType RAYMATH_CALLCONV VectorSetByIndex(FVectorType V, float f, size_t i)
 		{
 			assert(i < 4);
 			VectorF32 U;
@@ -5101,7 +5109,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Sets the X component of a vector to a passed floating point value
-		inline VectorType RAYMATH_CALLCONV VectorSetX(FVector V, float x)
+		inline VectorType RAYMATH_CALLCONV VectorSetX(FVectorType V, float x)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
@@ -5123,7 +5131,7 @@ namespace At0
 		}
 
 		// Sets the Y component of a vector to a passed floating point value
-		inline VectorType RAYMATH_CALLCONV VectorSetY(FVector V, float y)
+		inline VectorType RAYMATH_CALLCONV VectorSetY(FVectorType V, float y)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
@@ -5154,7 +5162,7 @@ namespace At0
 #endif
 		}
 		// Sets the Z component of a vector to a passed floating point value
-		inline VectorType RAYMATH_CALLCONV VectorSetZ(FVector V, float z)
+		inline VectorType RAYMATH_CALLCONV VectorSetZ(FVectorType V, float z)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
@@ -5186,7 +5194,7 @@ namespace At0
 		}
 
 		// Sets the W component of a vector to a passed floating point value
-		inline VectorType RAYMATH_CALLCONV VectorSetW(FVector V, float w)
+		inline VectorType RAYMATH_CALLCONV VectorSetW(FVectorType V, float w)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
@@ -5221,7 +5229,7 @@ namespace At0
 
 		// Sets a component of a vector to a floating point value passed by pointer
 
-		inline VectorType RAYMATH_CALLCONV VectorSetByIndexPtr(FVector V, const float* f, size_t i)
+		inline VectorType RAYMATH_CALLCONV VectorSetByIndexPtr(FVectorType V, const float* f, size_t i)
 		{
 			assert(f != nullptr);
 			assert(i < 4);
@@ -5235,7 +5243,7 @@ namespace At0
 
 		// Sets the X component of a vector to a floating point value passed by pointer
 
-		inline VectorType RAYMATH_CALLCONV VectorSetXPtr(FVector V, const float* x)
+		inline VectorType RAYMATH_CALLCONV VectorSetXPtr(FVectorType V, const float* x)
 		{
 			assert(x != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5259,7 +5267,7 @@ namespace At0
 
 		// Sets the Y component of a vector to a floating point value passed by pointer
 
-		inline VectorType RAYMATH_CALLCONV VectorSetYPtr(FVector V, const float* y)
+		inline VectorType RAYMATH_CALLCONV VectorSetYPtr(FVectorType V, const float* y)
 		{
 			assert(y != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5287,7 +5295,7 @@ namespace At0
 
 		// Sets the Z component of a vector to a floating point value passed by pointer
 
-		inline VectorType RAYMATH_CALLCONV VectorSetZPtr(FVector V, const float* z)
+		inline VectorType RAYMATH_CALLCONV VectorSetZPtr(FVectorType V, const float* z)
 		{
 			assert(z != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5315,7 +5323,7 @@ namespace At0
 
 		// Sets the W component of a vector to a floating point value passed by pointer
 
-		inline VectorType RAYMATH_CALLCONV VectorSetWPtr(FVector V, const float* w)
+		inline VectorType RAYMATH_CALLCONV VectorSetWPtr(FVectorType V, const float* w)
 		{
 			assert(w != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5344,7 +5352,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Sets a component of a vector to an integer passed by value
-		inline VectorType RAYMATH_CALLCONV VectorSetIntByIndex(FVector V, uint32_t x, size_t i)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntByIndex(FVectorType V, uint32_t x, size_t i)
 		{
 			assert(i < 4);
 			VectorU32 tmp;
@@ -5356,7 +5364,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Sets the X component of a vector to an integer passed by value
-		inline VectorType RAYMATH_CALLCONV VectorSetIntX(FVector V, uint32_t x)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntX(FVectorType V, uint32_t x)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
@@ -5376,7 +5384,7 @@ namespace At0
 		}
 
 		// Sets the Y component of a vector to an integer passed by value
-		inline VectorType RAYMATH_CALLCONV VectorSetIntY(FVector V, uint32_t y)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntY(FVectorType V, uint32_t y)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
@@ -5406,7 +5414,7 @@ namespace At0
 		}
 
 		// Sets the Z component of a vector to an integer passed by value
-		inline VectorType RAYMATH_CALLCONV VectorSetIntZ(FVector V, uint32_t z)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntZ(FVectorType V, uint32_t z)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
@@ -5436,7 +5444,7 @@ namespace At0
 		}
 
 		// Sets the W component of a vector to an integer passed by value
-		inline VectorType RAYMATH_CALLCONV VectorSetIntW(FVector V, uint32_t w)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntW(FVectorType V, uint32_t w)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
@@ -5469,7 +5477,7 @@ namespace At0
 
 		// Sets a component of a vector to an integer value passed by pointer
 
-		inline VectorType RAYMATH_CALLCONV VectorSetIntByIndexPtr(FVector V, const uint32_t* x, size_t i)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntByIndexPtr(FVectorType V, const uint32_t* x, size_t i)
 		{
 			assert(x != nullptr);
 			assert(i < 4);
@@ -5483,7 +5491,7 @@ namespace At0
 
 		// Sets the X component of a vector to an integer value passed by pointer
 
-		inline VectorType RAYMATH_CALLCONV VectorSetIntXPtr(FVector V, const uint32_t* x)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntXPtr(FVectorType V, const uint32_t* x)
 		{
 			assert(x != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5505,7 +5513,7 @@ namespace At0
 
 		// Sets the Y component of a vector to an integer value passed by pointer
 
-		inline VectorType RAYMATH_CALLCONV VectorSetIntYPtr(FVector V, const uint32_t* y)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntYPtr(FVectorType V, const uint32_t* y)
 		{
 			assert(y != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5533,7 +5541,7 @@ namespace At0
 
 		// Sets the Z component of a vector to an integer value passed by pointer
 
-		inline VectorType RAYMATH_CALLCONV VectorSetIntZPtr(FVector V, const uint32_t* z)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntZPtr(FVectorType V, const uint32_t* z)
 		{
 			assert(z != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5561,7 +5569,7 @@ namespace At0
 
 		// Sets the W component of a vector to an integer value passed by pointer
 
-		inline VectorType RAYMATH_CALLCONV VectorSetIntWPtr(FVector V, const uint32_t* w)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntWPtr(FVectorType V, const uint32_t* w)
 		{
 			assert(w != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5591,7 +5599,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorSwizzle
 		(
-			FVector V,
+			FVectorType V,
 			uint32_t E0,
 			uint32_t E1,
 			uint32_t E2,
@@ -5651,8 +5659,8 @@ namespace At0
 		//------------------------------------------------------------------------------
 		inline VectorType RAYMATH_CALLCONV VectorPermute
 		(
-			FVector V1,
-			FVector V2,
+			FVectorType V1,
+			FVectorType V2,
 			uint32_t PermuteX,
 			uint32_t PermuteY,
 			uint32_t PermuteZ,
@@ -5790,9 +5798,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorSelect
 		(
-			FVector V1,
-			FVector V2,
-			FVector Control
+			FVectorType V1,
+			FVectorType V2,
+			FVectorType Control
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -5818,8 +5826,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorMergeXY
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -5843,8 +5851,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorMergeZW
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -5866,7 +5874,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorShiftLeft(FVector V1, FVector V2, uint32_t Elements)
+		inline VectorType RAYMATH_CALLCONV VectorShiftLeft(FVectorType V1, FVectorType V2, uint32_t Elements)
 		{
 			assert(Elements < 4);
 			return VectorPermute(V1, V2, Elements, ((Elements)+1), ((Elements)+2), ((Elements)+3));
@@ -5874,7 +5882,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorRotateLeft(FVector V, uint32_t Elements)
+		inline VectorType RAYMATH_CALLCONV VectorRotateLeft(FVectorType V, uint32_t Elements)
 		{
 			assert(Elements < 4);
 			return VectorSwizzle(V, Elements & 3, (Elements + 1) & 3, (Elements + 2) & 3, (Elements + 3) & 3);
@@ -5882,7 +5890,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorRotateRight(FVector V, uint32_t Elements)
+		inline VectorType RAYMATH_CALLCONV VectorRotateRight(FVectorType V, uint32_t Elements)
 		{
 			assert(Elements < 4);
 			return VectorSwizzle(V, (4 - (Elements)) & 3, (5 - (Elements)) & 3, (6 - (Elements)) & 3, (7 - (Elements)) & 3);
@@ -5890,7 +5898,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorInsert(FVector VD, FVector VS, uint32_t VSLeftRotateElements,
+		inline VectorType RAYMATH_CALLCONV VectorInsert(FVectorType VD, FVectorType VS, uint32_t VSLeftRotateElements,
 			uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3)
 		{
 			VectorType Control = VectorSelectControl(Select0 & 1, Select1 & 1, Select2 & 1, Select3 & 1);
@@ -5905,8 +5913,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorEqual
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -5932,8 +5940,8 @@ namespace At0
 		inline VectorType RAYMATH_CALLCONV VectorEqualR
 		(
 			uint32_t* pCR,
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 			assert(pCR != nullptr);
@@ -6002,8 +6010,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorEqualInt
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6032,8 +6040,8 @@ namespace At0
 		inline VectorType RAYMATH_CALLCONV VectorEqualIntR
 		(
 			uint32_t* pCR,
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 			assert(pCR != nullptr);
@@ -6093,9 +6101,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorNearEqual
 		(
-			FVector V1,
-			FVector V2,
-			FVector Epsilon
+			FVectorType V1,
+			FVectorType V2,
+			FVectorType Epsilon
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6137,8 +6145,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorNotEqual
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6162,8 +6170,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorNotEqualInt
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6188,8 +6196,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorGreater
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6215,8 +6223,8 @@ namespace At0
 		inline VectorType RAYMATH_CALLCONV VectorGreaterR
 		(
 			uint32_t* pCR,
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 			assert(pCR != nullptr);
@@ -6282,8 +6290,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorGreaterOrEqual
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6310,8 +6318,8 @@ namespace At0
 		inline VectorType RAYMATH_CALLCONV VectorGreaterOrEqualR
 		(
 			uint32_t* pCR,
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 			assert(pCR != nullptr);
@@ -6377,8 +6385,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorLess
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6402,8 +6410,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorLessOrEqual
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6428,8 +6436,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorInBounds
 		(
-			FVector V,
-			FVector Bounds
+			FVectorType V,
+			FVectorType Bounds
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6471,8 +6479,8 @@ namespace At0
 		inline VectorType RAYMATH_CALLCONV VectorInBoundsR
 		(
 			uint32_t* pCR,
-			FVector V,
-			FVector Bounds
+			FVectorType V,
+			FVectorType Bounds
 		)
 		{
 			assert(pCR != nullptr);
@@ -6538,7 +6546,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorIsNaN
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6566,7 +6574,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorIsInfinite
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6604,8 +6612,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorMin
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6629,8 +6637,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorMax
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6682,7 +6690,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorRound
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6733,7 +6741,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorTruncate
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6799,7 +6807,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorFloor
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6855,7 +6863,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorCeiling
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6910,9 +6918,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorClamp
 		(
-			FVector V,
-			FVector Min,
-			FVector Max
+			FVectorType V,
+			FVectorType Min,
+			FVectorType Max
 		)
 		{
 			assert(Vector4LessOrEqual(Min, Max));
@@ -6941,7 +6949,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorSaturate
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6969,8 +6977,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorAndInt
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -6994,8 +7002,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorAndCInt
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7020,8 +7028,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorOrInt
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7046,8 +7054,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorNorInt
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7075,8 +7083,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorXorInt
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7105,7 +7113,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorNegate
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7133,8 +7141,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorAdd
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7158,7 +7166,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorSum
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7196,8 +7204,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorAddAngles
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7255,8 +7263,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorSubtract
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7281,8 +7289,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorSubtractAngles
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7340,8 +7348,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorMultiply
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7363,9 +7371,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorMultiplyAdd
 		(
-			FVector V1,
-			FVector V2,
-			FVector V3
+			FVectorType V1,
+			FVectorType V2,
+			FVectorType V3
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7394,8 +7402,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorDivide
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7427,9 +7435,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorNegativeMultiplySubtract
 		(
-			FVector V1,
-			FVector V2,
-			FVector V3
+			FVectorType V1,
+			FVectorType V2,
+			FVectorType V3
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7458,7 +7466,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorScale
 		(
-			FVector V,
+			FVectorType V,
 			float    ScaleFactor
 		)
 		{
@@ -7482,7 +7490,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorReciprocalEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7504,7 +7512,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorReciprocal
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7536,7 +7544,7 @@ namespace At0
 		// Return an estimated square root
 		inline VectorType RAYMATH_CALLCONV VectorSqrtEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7568,7 +7576,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorSqrt
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7608,7 +7616,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorReciprocalSqrtEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7630,7 +7638,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorReciprocalSqrt
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7664,7 +7672,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorExp2
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7809,7 +7817,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorExpE
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -7961,7 +7969,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorExp
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			return VectorExp2(V);
@@ -8128,7 +8136,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorLog2
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -8298,7 +8306,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorLogE
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -8470,7 +8478,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorLog
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			return VectorLog2(V);
@@ -8480,8 +8488,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorPow
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -8520,7 +8528,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorAbs
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -8545,8 +8553,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorMod
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 			// V1 % V2 = V1 - V2 * truncate(V1 / V2)
@@ -8575,7 +8583,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorModAngles
 		(
-			FVector Angles
+			FVectorType Angles
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -8610,7 +8618,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorSin
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			// 11-degree minimax approximation
@@ -8702,7 +8710,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorCos
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			// 10-degree minimax approximation
@@ -8801,7 +8809,7 @@ namespace At0
 		(
 			VectorType* pSin,
 			VectorType* pCos,
-			FVector V
+			FVectorType V
 		)
 		{
 			assert(pSin != nullptr);
@@ -8951,7 +8959,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorTan
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			// Cody and Waite algorithm to compute tangent.
@@ -9046,7 +9054,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorSinH
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -9084,7 +9092,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorCosH
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -9120,7 +9128,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorTanH
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -9155,7 +9163,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorASin
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			// 7-degree minimax approximation
@@ -9263,7 +9271,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorACos
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			// 7-degree minimax approximation
@@ -9369,7 +9377,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorATan
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			// 17-degree minimax approximation
@@ -9493,8 +9501,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorATan2
 		(
-			FVector Y,
-			FVector X
+			FVectorType Y,
+			FVectorType X
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -9566,7 +9574,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorSinEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			// 7-degree minimax approximation
@@ -9643,7 +9651,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorCosEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			// 6-degree minimax approximation
@@ -9727,7 +9735,7 @@ namespace At0
 		(
 			VectorType* pSin,
 			VectorType* pCos,
-			FVector  V
+			FVectorType  V
 		)
 		{
 			assert(pSin != nullptr);
@@ -9847,7 +9855,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorTanEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -9888,7 +9896,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorASinEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			// 3-degree minimax approximation
@@ -9965,7 +9973,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorACosEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			// 3-degree minimax approximation
@@ -10041,7 +10049,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorATanEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			// 9-degree minimax approximation
@@ -10138,8 +10146,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorATan2Est
 		(
-			FVector Y,
-			FVector X
+			FVectorType Y,
+			FVectorType X
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -10201,8 +10209,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorLerp
 		(
-			FVector V0,
-			FVector V1,
+			FVectorType V0,
+			FVectorType V1,
 			float    t
 		)
 		{
@@ -10229,9 +10237,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorLerpV
 		(
-			FVector V0,
-			FVector V1,
-			FVector T
+			FVectorType V0,
+			FVectorType V1,
+			FVectorType T
 		)
 		{
 			// V0 + T * (V1 - V0)
@@ -10255,10 +10263,10 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorHermite
 		(
-			FVector Position0,
-			FVector Tangent0,
-			FVector Position1,
-			GVector Tangent1,
+			FVectorType Position0,
+			FVectorType Tangent0,
+			FVectorType Position1,
+			GVectorType Tangent1,
 			float    t
 		)
 		{
@@ -10322,11 +10330,11 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorHermiteV
 		(
-			FVector Position0,
-			FVector Tangent0,
-			FVector Position1,
-			GVector Tangent1,
-			HVector T
+			FVectorType Position0,
+			FVectorType Tangent0,
+			FVectorType Position1,
+			GVectorType Tangent1,
+			HVectorType T
 		)
 		{
 			// Result = (2 * t^3 - 3 * t^2 + 1) * Position0 +
@@ -10418,10 +10426,10 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorCatmullRom
 		(
-			FVector Position0,
-			FVector Position1,
-			FVector Position2,
-			GVector Position3,
+			FVectorType Position0,
+			FVectorType Position1,
+			FVectorType Position2,
+			GVectorType Position3,
 			float    t
 		)
 		{
@@ -10486,11 +10494,11 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorCatmullRomV
 		(
-			FVector Position0,
-			FVector Position1,
-			FVector Position2,
-			GVector Position3,
-			HVector T
+			FVectorType Position0,
+			FVectorType Position1,
+			FVectorType Position2,
+			GVectorType Position3,
+			HVectorType T
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -10591,9 +10599,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorBaryCentric
 		(
-			FVector Position0,
-			FVector Position1,
-			FVector Position2,
+			FVectorType Position0,
+			FVectorType Position1,
+			FVectorType Position2,
 			float    f,
 			float    g
 		)
@@ -10635,11 +10643,11 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV VectorBaryCentricV
 		(
-			FVector Position0,
-			FVector Position1,
-			FVector Position2,
-			GVector F,
-			HVector G
+			FVectorType Position0,
+			FVectorType Position1,
+			FVectorType Position2,
+			GVectorType F,
+			HVectorType G
 		)
 		{
 			// Result = Position0 + f * (Position1 - Position0) + g * (Position2 - Position0)
@@ -10684,8 +10692,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector2Equal
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -10705,8 +10713,8 @@ namespace At0
 
 		inline uint32_t RAYMATH_CALLCONV Vector2EqualR
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -10758,8 +10766,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector2EqualInt
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -10777,8 +10785,8 @@ namespace At0
 
 		inline uint32_t RAYMATH_CALLCONV Vector2EqualIntR
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -10829,9 +10837,9 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector2NearEqual
 		(
-			FVector V1,
-			FVector V2,
-			FVector Epsilon
+			FVectorType V1,
+			FVectorType V2,
+			FVectorType Epsilon
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -10861,8 +10869,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector2NotEqual
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -10881,8 +10889,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector2NotEqualInt
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -10900,8 +10908,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector2Greater
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -10920,8 +10928,8 @@ namespace At0
 
 		inline uint32_t RAYMATH_CALLCONV Vector2GreaterR
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -10972,8 +10980,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector2GreaterOrEqual
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -10991,8 +10999,8 @@ namespace At0
 
 		inline uint32_t RAYMATH_CALLCONV Vector2GreaterOrEqualR
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11043,8 +11051,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector2Less
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11062,8 +11070,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector2LessOrEqual
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11081,8 +11089,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector2InBounds
 		(
-			FVector V,
-			FVector Bounds
+			FVectorType V,
+			FVectorType Bounds
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11119,7 +11127,7 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector2IsNaN
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11143,7 +11151,7 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector2IsInfinite
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11175,8 +11183,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2Dot
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11216,8 +11224,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2Cross
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 			// [ V1.x*V2.y - V1.y*V2.x, V1.x*V2.y - V1.y*V2.x ]
@@ -11256,7 +11264,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2LengthSq
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			return Vector2Dot(V, V);
@@ -11266,7 +11274,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2ReciprocalLengthEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11310,7 +11318,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2ReciprocalLength
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11363,7 +11371,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2LengthEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11411,7 +11419,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2Length
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11467,7 +11475,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2NormalizeEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11516,7 +11524,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2Normalize
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11629,7 +11637,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2ClampLength
 		(
-			FVector V,
+			FVectorType V,
 			float    LengthMin,
 			float    LengthMax
 		)
@@ -11643,9 +11651,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2ClampLengthV
 		(
-			FVector V,
-			FVector LengthMin,
-			FVector LengthMax
+			FVectorType V,
+			FVectorType LengthMin,
+			FVectorType LengthMax
 		)
 		{
 			assert((VectorGetY(LengthMin) == VectorGetX(LengthMin)));
@@ -11690,8 +11698,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2Reflect
 		(
-			FVector Incident,
-			FVector Normal
+			FVectorType Incident,
+			FVectorType Normal
 		)
 		{
 			// Result = Incident - (2 * dot(Incident, Normal)) * Normal
@@ -11707,8 +11715,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2Refract
 		(
-			FVector Incident,
-			FVector Normal,
+			FVectorType Incident,
+			FVectorType Normal,
 			float    RefractionIndex
 		)
 		{
@@ -11721,9 +11729,9 @@ namespace At0
 		// Return the refraction of a 2D vector
 		inline VectorType RAYMATH_CALLCONV Vector2RefractV
 		(
-			FVector Incident,
-			FVector Normal,
-			FVector RefractionIndex
+			FVectorType Incident,
+			FVectorType Normal,
+			FVectorType RefractionIndex
 		)
 		{
 			// Result = RefractionIndex * Incident - Normal * (RefractionIndex * dot(Incident, Normal) + 
@@ -11815,7 +11823,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2Orthogonal
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -11846,8 +11854,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2AngleBetweenNormalsEst
 		(
-			FVector N1,
-			FVector N2
+			FVectorType N1,
+			FVectorType N2
 		)
 		{
 			VectorType Result = Vector2Dot(N1, N2);
@@ -11860,8 +11868,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2AngleBetweenNormals
 		(
-			FVector N1,
-			FVector N2
+			FVectorType N1,
+			FVectorType N2
 		)
 		{
 			VectorType Result = Vector2Dot(N1, N2);
@@ -11874,8 +11882,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2AngleBetweenVectors
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 			VectorType L1 = Vector2ReciprocalLength(V1);
@@ -11895,9 +11903,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2LinePointDistance
 		(
-			FVector LinePoint1,
-			FVector LinePoint2,
-			FVector Point
+			FVectorType LinePoint1,
+			FVectorType LinePoint2,
+			FVectorType Point
 		)
 		{
 			// Given a vector PointVector from LinePoint1 to Point and a vector
@@ -11925,10 +11933,10 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2IntersectLine
 		(
-			FVector Line1Point1,
-			FVector Line1Point2,
-			FVector Line2Point1,
-			GVector Line2Point2
+			FVectorType Line1Point1,
+			FVectorType Line1Point2,
+			FVectorType Line2Point1,
+			GVectorType Line2Point2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
@@ -12003,7 +12011,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2Transform
 		(
-			FVector V,
+			FVectorType V,
 			FMatrix M
 		)
 		{
@@ -12316,7 +12324,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2TransformCoord
 		(
-			FVector V,
+			FVectorType V,
 			FMatrix M
 		)
 		{
@@ -12700,7 +12708,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector2TransformNormal
 		(
-			FVector V,
+			FVectorType V,
 			FMatrix M
 		)
 		{
@@ -13022,8 +13030,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector3Equal
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13043,8 +13051,8 @@ namespace At0
 
 		inline uint32_t RAYMATH_CALLCONV Vector3EqualR
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13098,8 +13106,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector3EqualInt
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13119,8 +13127,8 @@ namespace At0
 
 		inline uint32_t RAYMATH_CALLCONV Vector3EqualIntR
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13174,9 +13182,9 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector3NearEqual
 		(
-			FVector V1,
-			FVector V2,
-			FVector Epsilon
+			FVectorType V1,
+			FVectorType V2,
+			FVectorType Epsilon
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13211,8 +13219,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector3NotEqual
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13232,8 +13240,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector3NotEqualInt
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13253,8 +13261,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector3Greater
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13274,8 +13282,8 @@ namespace At0
 
 		inline uint32_t RAYMATH_CALLCONV Vector3GreaterR
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13330,8 +13338,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector3GreaterOrEqual
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13351,8 +13359,8 @@ namespace At0
 
 		inline uint32_t RAYMATH_CALLCONV Vector3GreaterOrEqualR
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13408,8 +13416,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector3Less
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13429,8 +13437,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector3LessOrEqual
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13450,8 +13458,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector3InBounds
 		(
-			FVector V,
-			FVector Bounds
+			FVectorType V,
+			FVectorType Bounds
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13491,7 +13499,7 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector3IsNaN
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13519,7 +13527,7 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector3IsInfinite
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13553,8 +13561,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3Dot
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13600,8 +13608,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3Cross
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 			// [ V1.y*V2.z - V1.z*V2.y, V1.z*V2.x - V1.x*V2.z, V1.x*V2.y - V1.y*V2.x ]
@@ -13654,7 +13662,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3LengthSq
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			return Vector3Dot(V, V);
@@ -13664,7 +13672,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3ReciprocalLengthEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13720,7 +13728,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3ReciprocalLength
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13786,7 +13794,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3LengthEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13846,7 +13854,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3Length
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13914,7 +13922,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3NormalizeEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -13973,7 +13981,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3Normalize
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -14093,7 +14101,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3ClampLength
 		(
-			FVector V,
+			FVectorType V,
 			float    LengthMin,
 			float    LengthMax
 		)
@@ -14108,9 +14116,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3ClampLengthV
 		(
-			FVector V,
-			FVector LengthMin,
-			FVector LengthMax
+			FVectorType V,
+			FVectorType LengthMin,
+			FVectorType LengthMax
 		)
 		{
 			assert((VectorGetY(LengthMin) == VectorGetX(LengthMin)) && (VectorGetZ(LengthMin) == VectorGetX(LengthMin)));
@@ -14155,8 +14163,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3Reflect
 		(
-			FVector Incident,
-			FVector Normal
+			FVectorType Incident,
+			FVectorType Normal
 		)
 		{
 			// Result = Incident - (2 * dot(Incident, Normal)) * Normal
@@ -14172,8 +14180,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3Refract
 		(
-			FVector Incident,
-			FVector Normal,
+			FVectorType Incident,
+			FVectorType Normal,
 			float    RefractionIndex
 		)
 		{
@@ -14185,9 +14193,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3RefractV
 		(
-			FVector Incident,
-			FVector Normal,
-			FVector RefractionIndex
+			FVectorType Incident,
+			FVectorType Normal,
+			FVectorType RefractionIndex
 		)
 		{
 			// Result = RefractionIndex * Incident - Normal * (RefractionIndex * dot(Incident, Normal) + 
@@ -14292,7 +14300,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3Orthogonal
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			VectorType Zero = VectorZero();
@@ -14319,8 +14327,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3AngleBetweenNormalsEst
 		(
-			FVector N1,
-			FVector N2
+			FVectorType N1,
+			FVectorType N2
 		)
 		{
 			VectorType Result = Vector3Dot(N1, N2);
@@ -14333,8 +14341,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3AngleBetweenNormals
 		(
-			FVector N1,
-			FVector N2
+			FVectorType N1,
+			FVectorType N2
 		)
 		{
 			VectorType Result = Vector3Dot(N1, N2);
@@ -14347,8 +14355,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3AngleBetweenVectors
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 			VectorType L1 = Vector3ReciprocalLength(V1);
@@ -14368,9 +14376,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3LinePointDistance
 		(
-			FVector LinePoint1,
-			FVector LinePoint2,
-			FVector Point
+			FVectorType LinePoint1,
+			FVectorType LinePoint2,
+			FVectorType Point
 		)
 		{
 			// Given a vector PointVector from LinePoint1 to Point and a vector
@@ -14401,8 +14409,8 @@ namespace At0
 		(
 			VectorType* pParallel,
 			VectorType* pPerpendicular,
-			FVector  V,
-			FVector  Normal
+			FVectorType  V,
+			FVectorType  Normal
 		)
 		{
 			assert(pParallel != nullptr);
@@ -14421,7 +14429,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3Rotate
 		(
-			FVector V,
+			FVectorType V,
 			FQuaternion RotationQuaternion
 		)
 		{
@@ -14436,7 +14444,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3InverseRotate
 		(
-			FVector V,
+			FVectorType V,
 			FQuaternion RotationQuaternion
 		)
 		{
@@ -14450,7 +14458,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3Transform
 		(
-			FVector V,
+			FVectorType V,
 			FMatrix M
 		)
 		{
@@ -14849,7 +14857,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3TransformCoord
 		(
-			FVector V,
+			FVectorType V,
 			FMatrix M
 		)
 		{
@@ -15358,7 +15366,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3TransformNormal
 		(
-			FVector V,
+			FVectorType V,
 			FMatrix M
 		)
 		{
@@ -15783,7 +15791,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3Project
 		(
-			FVector V,
+			FVectorType V,
 			float    ViewportX,
 			float    ViewportY,
 			float    ViewportWidth,
@@ -16363,7 +16371,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector3Unproject
 		(
-			FVector V,
+			FVectorType V,
 			float     ViewportX,
 			float     ViewportY,
 			float     ViewportWidth,
@@ -16975,8 +16983,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector4Equal
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -16998,8 +17006,8 @@ namespace At0
 
 		inline uint32_t RAYMATH_CALLCONV Vector4EqualR
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17058,8 +17066,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector4EqualInt
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17081,8 +17089,8 @@ namespace At0
 
 		inline uint32_t RAYMATH_CALLCONV Vector4EqualIntR
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17137,9 +17145,9 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector4NearEqual
 		(
-			FVector V1,
-			FVector V2,
-			FVector Epsilon
+			FVectorType V1,
+			FVectorType V2,
+			FVectorType Epsilon
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17175,8 +17183,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector4NotEqual
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17198,8 +17206,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector4NotEqualInt
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17221,8 +17229,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector4Greater
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17244,8 +17252,8 @@ namespace At0
 
 		inline uint32_t RAYMATH_CALLCONV Vector4GreaterR
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17301,8 +17309,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector4GreaterOrEqual
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17324,8 +17332,8 @@ namespace At0
 
 		inline uint32_t RAYMATH_CALLCONV Vector4GreaterOrEqualR
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17382,8 +17390,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector4Less
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17405,8 +17413,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector4LessOrEqual
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17428,8 +17436,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector4InBounds
 		(
-			FVector V,
-			FVector Bounds
+			FVectorType V,
+			FVectorType Bounds
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17470,7 +17478,7 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector4IsNaN
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17497,7 +17505,7 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Vector4IsInfinite
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17534,8 +17542,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4Dot
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17575,9 +17583,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4Cross
 		(
-			FVector V1,
-			FVector V2,
-			FVector V3
+			FVectorType V1,
+			FVectorType V2,
+			FVectorType V3
 		)
 		{
 			// [ ((v2.z*v3.w-v2.w*v3.z)*v1.y)-((v2.y*v3.w-v2.w*v3.y)*v1.z)+((v2.y*v3.z-v2.z*v3.y)*v1.w),
@@ -17725,7 +17733,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4LengthSq
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 			return Vector4Dot(V, V);
@@ -17735,7 +17743,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4ReciprocalLengthEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17791,7 +17799,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4ReciprocalLength
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17857,7 +17865,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4LengthEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -17917,7 +17925,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4Length
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS) 
@@ -17985,7 +17993,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4NormalizeEst
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -18044,7 +18052,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4Normalize
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -18169,7 +18177,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4ClampLength
 		(
-			FVector V,
+			FVectorType V,
 			float    LengthMin,
 			float    LengthMax
 		)
@@ -18184,9 +18192,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4ClampLengthV
 		(
-			FVector V,
-			FVector LengthMin,
-			FVector LengthMax
+			FVectorType V,
+			FVectorType LengthMin,
+			FVectorType LengthMax
 		)
 		{
 			assert((VectorGetY(LengthMin) == VectorGetX(LengthMin)) && (VectorGetZ(LengthMin) == VectorGetX(LengthMin)) && (VectorGetW(LengthMin) == VectorGetX(LengthMin)));
@@ -18231,8 +18239,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4Reflect
 		(
-			FVector Incident,
-			FVector Normal
+			FVectorType Incident,
+			FVectorType Normal
 		)
 		{
 			// Result = Incident - (2 * dot(Incident, Normal)) * Normal
@@ -18248,8 +18256,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4Refract
 		(
-			FVector Incident,
-			FVector Normal,
+			FVectorType Incident,
+			FVectorType Normal,
 			float    RefractionIndex
 		)
 		{
@@ -18261,9 +18269,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4RefractV
 		(
-			FVector Incident,
-			FVector Normal,
-			FVector RefractionIndex
+			FVectorType Incident,
+			FVectorType Normal,
+			FVectorType RefractionIndex
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -18371,7 +18379,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4Orthogonal
 		(
-			FVector V
+			FVectorType V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -18401,8 +18409,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4AngleBetweenNormalsEst
 		(
-			FVector N1,
-			FVector N2
+			FVectorType N1,
+			FVectorType N2
 		)
 		{
 			VectorType Result = Vector4Dot(N1, N2);
@@ -18415,8 +18423,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4AngleBetweenNormals
 		(
-			FVector N1,
-			FVector N2
+			FVectorType N1,
+			FVectorType N2
 		)
 		{
 			VectorType Result = Vector4Dot(N1, N2);
@@ -18429,8 +18437,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4AngleBetweenVectors
 		(
-			FVector V1,
-			FVector V2
+			FVectorType V1,
+			FVectorType V2
 		)
 		{
 			VectorType L1 = Vector4ReciprocalLength(V1);
@@ -18450,7 +18458,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV Vector4Transform
 		(
-			FVector V,
+			FVectorType V,
 			FMatrix M
 		)
 		{
@@ -18781,14 +18789,14 @@ namespace At0
 
 		 //------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV operator+ (FVector V)
+		inline VectorType RAYMATH_CALLCONV operator+ (FVectorType V)
 		{
 			return V;
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV operator- (FVector V)
+		inline VectorType RAYMATH_CALLCONV operator- (FVectorType V)
 		{
 			return VectorNegate(V);
 		}
@@ -18798,7 +18806,7 @@ namespace At0
 		inline VectorType& RAYMATH_CALLCONV operator+=
 			(
 				VectorType& V1,
-				FVector       V2
+				FVectorType       V2
 				)
 		{
 			V1 = VectorAdd(V1, V2);
@@ -18810,7 +18818,7 @@ namespace At0
 		inline VectorType& RAYMATH_CALLCONV operator-=
 			(
 				VectorType& V1,
-				FVector       V2
+				FVectorType       V2
 				)
 		{
 			V1 = VectorSubtract(V1, V2);
@@ -18822,7 +18830,7 @@ namespace At0
 		inline VectorType& RAYMATH_CALLCONV operator*=
 			(
 				VectorType& V1,
-				FVector       V2
+				FVectorType       V2
 				)
 		{
 			V1 = VectorMultiply(V1, V2);
@@ -18834,7 +18842,7 @@ namespace At0
 		inline VectorType& RAYMATH_CALLCONV operator/=
 			(
 				VectorType& V1,
-				FVector       V2
+				FVectorType       V2
 				)
 		{
 			V1 = VectorDivide(V1, V2);
@@ -18870,8 +18878,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV operator+
 			(
-				FVector V1,
-				FVector V2
+				FVectorType V1,
+				FVectorType V2
 				)
 		{
 			return VectorAdd(V1, V2);
@@ -18881,8 +18889,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV operator-
 			(
-				FVector V1,
-				FVector V2
+				FVectorType V1,
+				FVectorType V2
 				)
 		{
 			return VectorSubtract(V1, V2);
@@ -18892,8 +18900,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV operator*
 			(
-				FVector V1,
-				FVector V2
+				FVectorType V1,
+				FVectorType V2
 				)
 		{
 			return VectorMultiply(V1, V2);
@@ -18903,8 +18911,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV operator/
 			(
-				FVector V1,
-				FVector V2
+				FVectorType V1,
+				FVectorType V2
 				)
 		{
 			return VectorDivide(V1, V2);
@@ -18914,7 +18922,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV operator*
 			(
-				FVector      V,
+				FVectorType      V,
 				const float    S
 				)
 		{
@@ -18925,7 +18933,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV operator/
 			(
-				FVector      V,
+				FVectorType      V,
 				const float    S
 				)
 		{
@@ -18938,7 +18946,7 @@ namespace At0
 		inline VectorType RAYMATH_CALLCONV operator*
 			(
 				float           S,
-				FVector  	    V
+				FVectorType  	    V
 				)
 		{
 			return VectorScale(V, S);
@@ -20091,7 +20099,7 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::Translation
 		(
-			FVector Offset
+			FVectorType Offset
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -20183,7 +20191,7 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::Scaling
 		(
-			FVector Scale
+			FVectorType Scale
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -20472,7 +20480,7 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::RotationRollPitchYawFromVector
 		(
-			FVector Angles // <Pitch, Yaw, Roll, undefined>
+			FVectorType Angles // <Pitch, Yaw, Roll, undefined>
 		)
 		{
 			VectorType Q = Quaternion::RotationRollPitchYawFromVector(Angles);
@@ -20483,7 +20491,7 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::RotationNormal
 		(
-			FVector NormalAxis,
+			FVectorType NormalAxis,
 			float     Angle
 		)
 		{
@@ -20573,7 +20581,7 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::RotationAxis
 		(
-			FVector Axis,
+			FVectorType Axis,
 			float     Angle
 		)
 		{
@@ -20674,12 +20682,12 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::Transformation2D
 		(
-			FVector ScalingOrigin,
+			FVectorType ScalingOrigin,
 			float     ScalingOrientation,
-			FVector Scaling,
-			FVector RotationOrigin,
+			FVectorType Scaling,
+			FVectorType RotationOrigin,
 			float     Rotation,
-			GVector Translation
+			GVectorType Translation
 		)
 		{
 			// M = Inverse(MScalingOrigin) * Transpose(MScalingOrientation) * MScaling * MScalingOrientation *
@@ -20713,12 +20721,12 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::Transformation
 		(
-			FVector ScalingOrigin,
-			FVector ScalingOrientationQuaternion,
-			FVector Scaling,
-			GVector RotationOrigin,
-			HVector RotationQuaternion,
-			HVector Translation
+			FVectorType ScalingOrigin,
+			FVectorType ScalingOrientationQuaternion,
+			FVectorType Scaling,
+			GVectorType RotationOrigin,
+			HVectorType RotationQuaternion,
+			HVectorType Translation
 		)
 		{
 			// M = Inverse(MScalingOrigin) * Transpose(MScalingOrientation) * MScaling * MScalingOrientation *
@@ -20751,10 +20759,10 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::AffineTransformation2D
 		(
-			FVector Scaling,
-			FVector RotationOrigin,
+			FVectorType Scaling,
+			FVectorType RotationOrigin,
 			float     Rotation,
-			FVector Translation
+			FVectorType Translation
 		)
 		{
 			// M = MScaling * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
@@ -20778,10 +20786,10 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::AffineTransformation
 		(
-			FVector Scaling,
-			FVector RotationOrigin,
-			FVector RotationQuaternion,
-			GVector Translation
+			FVectorType Scaling,
+			FVectorType RotationOrigin,
+			FVectorType RotationQuaternion,
+			GVectorType Translation
 		)
 		{
 			// M = MScaling * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
@@ -20804,7 +20812,7 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::Reflect
 		(
-			FVector ReflectionPlane
+			FVectorType ReflectionPlane
 		)
 		{
 			assert(!Vector3Equal(ReflectionPlane, VectorZero()));
@@ -20832,8 +20840,8 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::Shadow
 		(
-			FVector ShadowPlane,
-			FVector LightPosition
+			FVectorType ShadowPlane,
+			FVectorType LightPosition
 		)
 		{
 			static const VectorU32 Select0001 = { { { RAYMATH_SELECT_0, RAYMATH_SELECT_0, RAYMATH_SELECT_0, RAYMATH_SELECT_1 } } };
@@ -20867,9 +20875,9 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::LookAtLH
 		(
-			FVector EyePosition,
-			FVector FocusPosition,
-			FVector UpDirection
+			FVectorType EyePosition,
+			FVectorType FocusPosition,
+			FVectorType UpDirection
 		)
 		{
 			VectorType EyeDirection = VectorSubtract(FocusPosition, EyePosition);
@@ -20880,9 +20888,9 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::LookAtRH
 		(
-			FVector EyePosition,
-			FVector FocusPosition,
-			FVector UpDirection
+			FVectorType EyePosition,
+			FVectorType FocusPosition,
+			FVectorType UpDirection
 		)
 		{
 			VectorType NegEyeDirection = VectorSubtract(EyePosition, FocusPosition);
@@ -20893,9 +20901,9 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::LookToLH
 		(
-			FVector EyePosition,
-			FVector EyeDirection,
-			FVector UpDirection
+			FVectorType EyePosition,
+			FVectorType EyeDirection,
+			FVectorType UpDirection
 		)
 		{
 			assert(!Vector3Equal(EyeDirection, VectorZero()));
@@ -20931,9 +20939,9 @@ namespace At0
 
 		inline Matrix RAYMATH_CALLCONV Matrix::LookToRH
 		(
-			FVector EyePosition,
-			FVector EyeDirection,
-			FVector UpDirection
+			FVectorType EyePosition,
+			FVectorType EyeDirection,
+			FVectorType UpDirection
 		)
 		{
 			VectorType NegEyeDirection = VectorNegate(EyeDirection);
@@ -22847,7 +22855,7 @@ namespace At0
 
 		inline Quaternion RAYMATH_CALLCONV Quaternion::RotationRollPitchYawFromVector
 		(
-			FVector Angles // <Pitch, Yaw, Roll, 0>
+			FVectorType Angles // <Pitch, Yaw, Roll, 0>
 		)
 		{
 			static const VectorF32  Sign = { { { 1.0f, -1.0f, -1.0f, 1.0f } } };
@@ -22877,7 +22885,7 @@ namespace At0
 
 		inline Quaternion RAYMATH_CALLCONV Quaternion::RotationNormal
 		(
-			FVector NormalAxis,
+			FVectorType NormalAxis,
 			float    Angle
 		)
 		{
@@ -22909,7 +22917,7 @@ namespace At0
 
 		inline Quaternion RAYMATH_CALLCONV Quaternion::RotationAxis
 		(
-			FVector Axis,
+			FVectorType Axis,
 			float    Angle
 		)
 		{
@@ -23199,8 +23207,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV PlaneEqual
 		(
-			FVector P1,
-			FVector P2
+			FVectorType P1,
+			FVectorType P2
 		)
 		{
 			return Vector4Equal(P1, P2);
@@ -23210,9 +23218,9 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV PlaneNearEqual
 		(
-			FVector P1,
-			FVector P2,
-			FVector Epsilon
+			FVectorType P1,
+			FVectorType P2,
+			FVectorType Epsilon
 		)
 		{
 			VectorType NP1 = PlaneNormalize(P1);
@@ -23224,8 +23232,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV PlaneNotEqual
 		(
-			FVector P1,
-			FVector P2
+			FVectorType P1,
+			FVectorType P2
 		)
 		{
 			return Vector4NotEqual(P1, P2);
@@ -23235,7 +23243,7 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV PlaneIsNaN
 		(
-			FVector P
+			FVectorType P
 		)
 		{
 			return Vector4IsNaN(P);
@@ -23245,7 +23253,7 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV PlaneIsInfinite
 		(
-			FVector P
+			FVectorType P
 		)
 		{
 			return Vector4IsInfinite(P);
@@ -23259,8 +23267,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV PlaneDot
 		(
-			FVector P,
-			FVector V
+			FVectorType P,
+			FVectorType V
 		)
 		{
 			return Vector4Dot(P, V);
@@ -23270,8 +23278,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV PlaneDotCoord
 		(
-			FVector P,
-			FVector V
+			FVectorType P,
+			FVectorType V
 		)
 		{
 			// Result = P[0] * V[0] + P[1] * V[1] + P[2] * V[2] + P[3]
@@ -23285,8 +23293,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV PlaneDotNormal
 		(
-			FVector P,
-			FVector V
+			FVectorType P,
+			FVectorType V
 		)
 		{
 			return Vector3Dot(P, V);
@@ -23298,7 +23306,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV PlaneNormalizeEst
 		(
-			FVector P
+			FVectorType P
 		)
 		{
 #if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
@@ -23335,7 +23343,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV PlaneNormalize
 		(
-			FVector P
+			FVectorType P
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -23392,9 +23400,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV PlaneIntersectLine
 		(
-			FVector P,
-			FVector LinePoint1,
-			FVector LinePoint2
+			FVectorType P,
+			FVectorType LinePoint1,
+			FVectorType LinePoint2
 		)
 		{
 			VectorType V1 = Vector3Dot(P, LinePoint1);
@@ -23419,8 +23427,8 @@ namespace At0
 		(
 			VectorType* pLinePoint1,
 			VectorType* pLinePoint2,
-			FVector  P1,
-			FVector  P2
+			FVectorType  P1,
+			FVectorType  P2
 		)
 		{
 			assert(pLinePoint1);
@@ -23453,7 +23461,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV PlaneTransform
 		(
-			FVector P,
+			FVectorType P,
 			FMatrix M
 		)
 		{
@@ -23497,8 +23505,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV PlaneFromPointNormal
 		(
-			FVector Point,
-			FVector Normal
+			FVectorType Point,
+			FVectorType Normal
 		)
 		{
 			VectorType W = Vector3Dot(Point, Normal);
@@ -23510,9 +23518,9 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV PlaneFromPoints
 		(
-			FVector Point1,
-			FVector Point2,
-			FVector Point3
+			FVectorType Point1,
+			FVectorType Point2,
+			FVectorType Point3
 		)
 		{
 			VectorType V21 = VectorSubtract(Point1, Point2);
@@ -23543,8 +23551,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV ColorEqual
 		(
-			FVector C1,
-			FVector C2
+			FVectorType C1,
+			FVectorType C2
 		)
 		{
 			return Vector4Equal(C1, C2);
@@ -23554,8 +23562,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV ColorNotEqual
 		(
-			FVector C1,
-			FVector C2
+			FVectorType C1,
+			FVectorType C2
 		)
 		{
 			return Vector4NotEqual(C1, C2);
@@ -23565,8 +23573,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV ColorGreater
 		(
-			FVector C1,
-			FVector C2
+			FVectorType C1,
+			FVectorType C2
 		)
 		{
 			return Vector4Greater(C1, C2);
@@ -23576,8 +23584,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV ColorGreaterOrEqual
 		(
-			FVector C1,
-			FVector C2
+			FVectorType C1,
+			FVectorType C2
 		)
 		{
 			return Vector4GreaterOrEqual(C1, C2);
@@ -23587,8 +23595,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV ColorLess
 		(
-			FVector C1,
-			FVector C2
+			FVectorType C1,
+			FVectorType C2
 		)
 		{
 			return Vector4Less(C1, C2);
@@ -23598,8 +23606,8 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV ColorLessOrEqual
 		(
-			FVector C1,
-			FVector C2
+			FVectorType C1,
+			FVectorType C2
 		)
 		{
 			return Vector4LessOrEqual(C1, C2);
@@ -23609,7 +23617,7 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV ColorIsNaN
 		(
-			FVector C
+			FVectorType C
 		)
 		{
 			return Vector4IsNaN(C);
@@ -23619,7 +23627,7 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV ColorIsInfinite
 		(
-			FVector C
+			FVectorType C
 		)
 		{
 			return Vector4IsInfinite(C);
@@ -23633,7 +23641,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV ColorNegative
 		(
-			FVector vColor
+			FVectorType vColor
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
@@ -23659,8 +23667,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV ColorModulate
 		(
-			FVector C1,
-			FVector C2
+			FVectorType C1,
+			FVectorType C2
 		)
 		{
 			return VectorMultiply(C1, C2);
@@ -23670,7 +23678,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV ColorAdjustSaturation
 		(
-			FVector vColor,
+			FVectorType vColor,
 			float    fSaturation
 		)
 		{
@@ -23710,7 +23718,7 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV ColorAdjustContrast
 		(
-			FVector vColor,
+			FVectorType vColor,
 			float    fContrast
 		)
 		{
@@ -23742,7 +23750,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV ColorRGBToHSL(FVector rgb)
+		inline VectorType RAYMATH_CALLCONV ColorRGBToHSL(FVectorType rgb)
 		{
 			VectorType r = VectorSplatX(rgb);
 			VectorType g = VectorSplatY(rgb);
@@ -23812,7 +23820,7 @@ namespace At0
 		namespace Internal
 		{
 
-			inline VectorType RAYMATH_CALLCONV ColorHue2Clr(FVector p, FVector q, FVector h)
+			inline VectorType RAYMATH_CALLCONV ColorHue2Clr(FVectorType p, FVectorType q, FVectorType h)
 			{
 				static const VectorF32 oneSixth = { { { 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f } } };
 				static const VectorF32 twoThirds = { { { 2.0f / 3.0f, 2.0f / 3.0f, 2.0f / 3.0f, 2.0f / 3.0f } } };
@@ -23849,7 +23857,7 @@ namespace At0
 
 		} // namespace Internal
 
-		inline VectorType RAYMATH_CALLCONV ColorHSLToRGB(FVector hsl)
+		inline VectorType RAYMATH_CALLCONV ColorHSLToRGB(FVectorType hsl)
 		{
 			static const VectorF32 oneThird = { { { 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f } } };
 
@@ -23890,7 +23898,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV ColorRGBToHSV(FVector rgb)
+		inline VectorType RAYMATH_CALLCONV ColorRGBToHSV(FVectorType rgb)
 		{
 			VectorType r = VectorSplatX(rgb);
 			VectorType g = VectorSplatY(rgb);
@@ -23945,7 +23953,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV ColorHSVToRGB(FVector hsv)
+		inline VectorType RAYMATH_CALLCONV ColorHSVToRGB(FVectorType hsv)
 		{
 			VectorType h = VectorSplatX(hsv);
 			VectorType s = VectorSplatY(hsv);
@@ -24014,7 +24022,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV ColorRGBToYUV(FVector rgb)
+		inline VectorType RAYMATH_CALLCONV ColorRGBToYUV(FVectorType rgb)
 		{
 			static const VectorF32 Scale0 = { { { 0.299f, -0.147f, 0.615f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { 0.587f, -0.289f, -0.515f, 0.0f } } };
@@ -24028,7 +24036,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV ColorYUVToRGB(FVector yuv)
+		inline VectorType RAYMATH_CALLCONV ColorYUVToRGB(FVectorType yuv)
 		{
 			static const VectorF32 Scale1 = { { { 0.0f, -0.395f, 2.032f, 0.0f } } };
 			static const VectorF32 Scale2 = { { { 1.140f, -0.581f, 0.0f, 0.0f } } };
@@ -24041,7 +24049,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV ColorRGBToYUV_HD(FVector rgb)
+		inline VectorType RAYMATH_CALLCONV ColorRGBToYUV_HD(FVectorType rgb)
 		{
 			static const VectorF32 Scale0 = { { { 0.2126f, -0.0997f, 0.6150f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { 0.7152f, -0.3354f, -0.5586f, 0.0f } } };
@@ -24055,7 +24063,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV ColorYUVToRGB_HD(FVector yuv)
+		inline VectorType RAYMATH_CALLCONV ColorYUVToRGB_HD(FVectorType yuv)
 		{
 			static const VectorF32 Scale1 = { { { 0.0f, -0.2153f, 2.1324f, 0.0f } } };
 			static const VectorF32 Scale2 = { { { 1.2803f, -0.3806f, 0.0f, 0.0f } } };
@@ -24068,7 +24076,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV ColorRGBToXYZ(FVector rgb)
+		inline VectorType RAYMATH_CALLCONV ColorRGBToXYZ(FVectorType rgb)
 		{
 			static const VectorF32 Scale0 = { { { 0.4887180f, 0.1762044f, 0.0000000f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { 0.3106803f, 0.8129847f, 0.0102048f, 0.0f } } };
@@ -24081,7 +24089,7 @@ namespace At0
 			return VectorSelect(rgb, clr, g_XMSelect1110);
 		}
 
-		inline VectorType RAYMATH_CALLCONV ColorXYZToRGB(FVector xyz)
+		inline VectorType RAYMATH_CALLCONV ColorXYZToRGB(FVectorType xyz)
 		{
 			static const VectorF32 Scale0 = { { { 2.3706743f, -0.5138850f, 0.0052982f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { -0.9000405f, 1.4253036f, -0.0146949f, 0.0f } } };
@@ -24096,7 +24104,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV ColorXYZToSRGB(FVector xyz)
+		inline VectorType RAYMATH_CALLCONV ColorXYZToSRGB(FVectorType xyz)
 		{
 			static const VectorF32 Scale0 = { { { 3.2406f, -0.9689f, 0.0557f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { -1.5372f, 1.8758f, -0.2040f, 0.0f } } };
@@ -24122,7 +24130,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV ColorSRGBToXYZ(FVector srgb)
+		inline VectorType RAYMATH_CALLCONV ColorSRGBToXYZ(FVectorType srgb)
 		{
 			static const VectorF32 Scale0 = { { { 0.4124f, 0.2126f, 0.0193f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { 0.3576f, 0.7152f, 0.1192f, 0.0f } } };
@@ -24148,7 +24156,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV ColorRGBToSRGB(FVector rgb)
+		inline VectorType RAYMATH_CALLCONV ColorRGBToSRGB(FVectorType rgb)
 		{
 			static const VectorF32 Cutoff = { { { 0.0031308f, 0.0031308f, 0.0031308f, 1.f } } };
 			static const VectorF32 Linear = { { { 12.92f, 12.92f, 12.92f, 1.f } } };
@@ -24166,7 +24174,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV ColorSRGBToRGB(FVector srgb)
+		inline VectorType RAYMATH_CALLCONV ColorSRGBToRGB(FVectorType srgb)
 		{
 			static const VectorF32 Cutoff = { { { 0.04045f, 0.04045f, 0.04045f, 1.f } } };
 			static const VectorF32 ILinear = { { { 1.f / 12.92f, 1.f / 12.92f, 1.f / 12.92f, 1.f } } };
@@ -24254,8 +24262,8 @@ namespace At0
 
 		inline VectorType RAYMATH_CALLCONV FresnelTerm
 		(
-			FVector CosIncidentAngle,
-			FVector RefractionIndex
+			FVectorType CosIncidentAngle,
+			FVectorType RefractionIndex
 		)
 		{
 			assert(!Vector4IsInfinite(CosIncidentAngle));
