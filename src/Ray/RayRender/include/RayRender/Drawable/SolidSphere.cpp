@@ -59,7 +59,7 @@ namespace At0::Ray
 		{
 			for (auto& v : vertices)
 			{
-				const Vector pos = LoadFloat3(&v.pos);
+				const VectorType pos = LoadFloat3(&v.pos);
 				StoreFloat3(
 					&v.pos,
 					Vector3Transform(pos, matrix)

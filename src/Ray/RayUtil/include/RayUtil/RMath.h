@@ -310,45 +310,45 @@ namespace At0
 		struct Quaternion;
 
 		//------------------------------------------------------------------------------
-		// Vector intrinsic: Four 32 bit floating point components aligned on a 16 byte
+		// VectorType intrinsic: Four 32 bit floating point components aligned on a 16 byte
 		// boundary and mapped to hardware vector registers
 #if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
-		typedef __m128 Vector;
+		typedef __m128 VectorType;
 #elif defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
-		typedef float32x4_t Vector;
+		typedef float32x4_t VectorType;
 #else
-		typedef __vector4 Vector;
+		typedef __vector4 VectorType;
 #endif
 
-		// Fix-up for (1st-3rd) Vector parameters that are pass-in-register for x86, ARM, ARM64, and vector call; by reference otherwise
+		// Fix-up for (1st-3rd) VectorType parameters that are pass-in-register for x86, ARM, ARM64, and vector call; by reference otherwise
 #if ( defined(_M_IX86) || defined(_M_ARM) || defined(_M_ARM64) || RAYMATH_VECTORCALL ) && !defined(RAY_NO_INTRINSICS)
-		typedef const Vector FVector;
+		typedef const VectorType FVector;
 		typedef const Quaternion FQuaternion;
 #else
-		typedef const Vector& FVector;
+		typedef const VectorType& FVector;
 		typedef const Quaternion& FQuaternion;
 #endif
 
-		// Fix-up for (4th) Vector parameter to pass in-register for ARM, ARM64, and x64 vector call; by reference otherwise
+		// Fix-up for (4th) VectorType parameter to pass in-register for ARM, ARM64, and x64 vector call; by reference otherwise
 #if ( defined(_M_ARM) || defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || (RAYMATH_VECTORCALL && !defined(_M_IX86) ) ) && !defined(RAY_NO_INTRINSICS)
-		typedef const Vector GVector;
+		typedef const VectorType GVector;
 		typedef const Quaternion GQuaternion;
 #else
-		typedef const Vector& GVector;
+		typedef const VectorType& GVector;
 		typedef const Quaternion& GQuaternion;
 #endif
 
-		// Fix-up for (5th & 6th) Vector parameter to pass in-register for ARM64 and vector call; by reference otherwise
+		// Fix-up for (5th & 6th) VectorType parameter to pass in-register for ARM64 and vector call; by reference otherwise
 #if ( defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || RAYMATH_VECTORCALL ) && !defined(RAY_NO_INTRINSICS)
-		typedef const Vector HVector;
+		typedef const VectorType HVector;
 		typedef const Quaternion HQuaternion;
 #else
-		typedef const Vector& HVector;
+		typedef const VectorType& HVector;
 		typedef const Quaternion& HQuaternion;
 #endif
 
-		// Fix-up for (7th+) Vector parameters to pass by reference
-		typedef const Vector& CVector;
+		// Fix-up for (7th+) VectorType parameters to pass by reference
+		typedef const VectorType& CVector;
 		typedef const Quaternion& CQuaternion;
 
 		//------------------------------------------------------------------------------
@@ -358,10 +358,10 @@ namespace At0
 			union
 			{
 				float f[4];
-				Vector v;
+				VectorType v;
 			};
 
-			inline operator Vector() const { return v; }
+			inline operator VectorType() const { return v; }
 			inline operator const float* () const { return f; }
 #if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
 			inline operator __m128i() const { return _mm_castps_si128(v); }
@@ -374,10 +374,10 @@ namespace At0
 			union
 			{
 				int32_t i[4];
-				Vector v;
+				VectorType v;
 			};
 
-			inline operator Vector() const { return v; }
+			inline operator VectorType() const { return v; }
 #if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
 			inline operator __m128i() const { return _mm_castps_si128(v); }
 			inline operator __m128d() const { return _mm_castps_pd(v); }
@@ -389,10 +389,10 @@ namespace At0
 			union
 			{
 				uint8_t u[16];
-				Vector v;
+				VectorType v;
 			};
 
-			inline operator Vector() const { return v; }
+			inline operator VectorType() const { return v; }
 #if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
 			inline operator __m128i() const { return _mm_castps_si128(v); }
 			inline operator __m128d() const { return _mm_castps_pd(v); }
@@ -404,10 +404,10 @@ namespace At0
 			union
 			{
 				uint32_t u[4];
-				Vector v;
+				VectorType v;
 			};
 
-			inline operator Vector() const { return v; }
+			inline operator VectorType() const { return v; }
 #if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
 			inline operator __m128i() const { return _mm_castps_si128(v); }
 			inline operator __m128d() const { return _mm_castps_pd(v); }
@@ -415,28 +415,28 @@ namespace At0
 		};
 
 		//------------------------------------------------------------------------------
-		// Vector operators
+		// VectorType operators
 
 #ifndef RAYMATH_NO_VECTOR_OVERLOADS
 
-		Vector    RAYMATH_CALLCONV     operator+ (FVector V);
-		Vector    RAYMATH_CALLCONV     operator- (FVector V);
+		VectorType    RAYMATH_CALLCONV     operator+ (FVector V);
+		VectorType    RAYMATH_CALLCONV     operator- (FVector V);
 
-		Vector& RAYMATH_CALLCONV     operator+= (Vector& V1, FVector V2);
-		Vector& RAYMATH_CALLCONV     operator-= (Vector& V1, FVector V2);
-		Vector& RAYMATH_CALLCONV     operator*= (Vector& V1, FVector V2);
-		Vector& RAYMATH_CALLCONV     operator/= (Vector& V1, FVector V2);
+		VectorType& RAYMATH_CALLCONV     operator+= (VectorType& V1, FVector V2);
+		VectorType& RAYMATH_CALLCONV     operator-= (VectorType& V1, FVector V2);
+		VectorType& RAYMATH_CALLCONV     operator*= (VectorType& V1, FVector V2);
+		VectorType& RAYMATH_CALLCONV     operator/= (VectorType& V1, FVector V2);
 
-		Vector& operator*= (Vector& V, float S);
-		Vector& operator/= (Vector& V, float S);
+		VectorType& operator*= (VectorType& V, float S);
+		VectorType& operator/= (VectorType& V, float S);
 
-		Vector    RAYMATH_CALLCONV     operator+ (FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     operator- (FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     operator* (FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     operator/ (FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     operator* (FVector V, float S);
-		Vector    RAYMATH_CALLCONV     operator* (float S, FVector V);
-		Vector    RAYMATH_CALLCONV     operator/ (FVector V, float S);
+		VectorType    RAYMATH_CALLCONV     operator+ (FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     operator- (FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     operator* (FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     operator/ (FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     operator* (FVector V, float S);
+		VectorType    RAYMATH_CALLCONV     operator* (float S, FVector V);
+		VectorType    RAYMATH_CALLCONV     operator/ (FVector V, float S);
 
 #endif
 
@@ -465,7 +465,7 @@ namespace At0
 #ifdef RAY_NO_INTRINSICS
 			union
 			{
-				Vector r[4];
+				VectorType r[4];
 				struct
 				{
 					float _11, _12, _13, _14;
@@ -476,7 +476,7 @@ namespace At0
 				float m[4][4];
 			};
 #else
-			Vector r[4];
+			VectorType r[4];
 #endif
 
 			Matrix() = default;
@@ -526,9 +526,9 @@ namespace At0
 			bool RAYMATH_CALLCONV IsInfinite() const;
 			bool RAYMATH_CALLCONV IsIdentity() const;
 			Matrix RAYMATH_CALLCONV Transpose() const;
-			Matrix RAYMATH_CALLCONV Inverse(/*_Out_opt_ */Vector* pDeterminant = nullptr) const;
-			Vector RAYMATH_CALLCONV Determinant() const;
-			bool RAYMATH_CALLCONV Decompose(/*_Out_ */ Vector* outScale, /*_Out_ */ Vector* outRotQuat, /*_Out_ */ Vector* outTrans) const;
+			Matrix RAYMATH_CALLCONV Inverse(/*_Out_opt_ */VectorType* pDeterminant = nullptr) const;
+			VectorType RAYMATH_CALLCONV Determinant() const;
+			bool RAYMATH_CALLCONV Decompose(/*_Out_ */ VectorType* outScale, /*_Out_ */ VectorType* outRotQuat, /*_Out_ */ VectorType* outTrans) const;
 
 			static Matrix RAYMATH_CALLCONV Identity();
 			static Matrix RAYMATH_CALLCONV PerspectiveLH(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
@@ -576,12 +576,12 @@ namespace At0
 		};
 
 		//------------------------------------------------------------------------------
-		// Quaternion, can be used interchangeably with Vector
+		// Quaternion, can be used interchangeably with VectorType
 		struct Quaternion
 		{
 			union
 			{
-				Vector v;
+				VectorType v;
 				struct
 				{
 					float x, y, z, w;
@@ -619,7 +619,7 @@ namespace At0
 			Quaternion RAYMATH_CALLCONV Inverse() const;
 			Quaternion RAYMATH_CALLCONV Ln() const;
 			Quaternion RAYMATH_CALLCONV Exp() const;
-			void RAYMATH_CALLCONV ToAxisAngle(/*_Out_ */ Vector* pAxis, /*_Out_ */ float* pAngle) const;
+			void RAYMATH_CALLCONV ToAxisAngle(/*_Out_ */ VectorType* pAxis, /*_Out_ */ float* pAngle) const;
 
 
 			static Quaternion RAYMATH_CALLCONV Dot(FQuaternion Q1, FQuaternion Q2);
@@ -628,7 +628,7 @@ namespace At0
 			static Quaternion RAYMATH_CALLCONV SlerpV(FQuaternion Q0, FQuaternion Q1, FQuaternion T);
 			static Quaternion RAYMATH_CALLCONV Squad(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, GQuaternion Q3, float t);
 			static Quaternion RAYMATH_CALLCONV SquadV(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, GQuaternion Q3, HQuaternion T);
-			static void RAYMATH_CALLCONV SquadSetup(/*_Out_ */ Vector* pA, /*_Out_ */ Vector* pB, /*_Out_ */ Vector* pC, /*_In_ */FQuaternion Q0, /*_In_ */FQuaternion Q1, /*_In_ */FQuaternion Q2, /*_In_ */GQuaternion Q3);
+			static void RAYMATH_CALLCONV SquadSetup(/*_Out_ */ VectorType* pA, /*_Out_ */ VectorType* pB, /*_Out_ */ VectorType* pC, /*_In_ */FQuaternion Q0, /*_In_ */FQuaternion Q1, /*_In_ */FQuaternion Q2, /*_In_ */GQuaternion Q3);
 			static Quaternion RAYMATH_CALLCONV BaryCentric(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, float f, float g);
 			static Quaternion RAYMATH_CALLCONV BaryCentricV(FQuaternion Q0, FQuaternion Q1, FQuaternion Q2, GQuaternion F, HQuaternion G);
 
@@ -641,7 +641,7 @@ namespace At0
 		};
 
 		//------------------------------------------------------------------------------
-		// 2D Vector; 32 bit floating point components
+		// 2D VectorType; 32 bit floating point components
 		struct Float2
 		{
 			float x;
@@ -659,7 +659,7 @@ namespace At0
 			explicit Float2(/*_In_reads_(2) */const float* pArray) : x(pArray[0]), y(pArray[1]) {}
 		};
 
-		// 2D Vector; 32 bit floating point components aligned on a 16 byte boundary
+		// 2D VectorType; 32 bit floating point components aligned on a 16 byte boundary
 		RAY_ALIGNED(16) struct Float2A : public Float2
 		{
 			Float2A() = default;
@@ -675,7 +675,7 @@ namespace At0
 		};
 
 		//------------------------------------------------------------------------------
-		// 2D Vector; 32 bit signed integer components
+		// 2D VectorType; 32 bit signed integer components
 		struct Int2
 		{
 			int32_t x;
@@ -693,7 +693,7 @@ namespace At0
 			explicit Int2(/*_In_reads_(2) */const int32_t* pArray) : x(pArray[0]), y(pArray[1]) {}
 		};
 
-		// 2D Vector; 32 bit unsigned integer components
+		// 2D VectorType; 32 bit unsigned integer components
 		struct UInt2
 		{
 			uint32_t x;
@@ -712,7 +712,7 @@ namespace At0
 		};
 
 		//------------------------------------------------------------------------------
-		// 3D Vector; 32 bit floating point components
+		// 3D VectorType; 32 bit floating point components
 		struct Float3
 		{
 			float x;
@@ -731,7 +731,7 @@ namespace At0
 			explicit Float3(/*_In_reads_(3) */const float* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
 		};
 
-		// 3D Vector; 32 bit floating point components aligned on a 16 byte boundary
+		// 3D VectorType; 32 bit floating point components aligned on a 16 byte boundary
 		RAY_ALIGNED(16) struct Float3A : public Float3
 		{
 			Float3A() = default;
@@ -747,7 +747,7 @@ namespace At0
 		};
 
 		//------------------------------------------------------------------------------
-		// 3D Vector; 32 bit signed integer components
+		// 3D VectorType; 32 bit signed integer components
 		struct Int3
 		{
 			int32_t x;
@@ -766,7 +766,7 @@ namespace At0
 			explicit Int3(/*_In_reads_(3) */const int32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
 		};
 
-		// 3D Vector; 32 bit unsigned integer components
+		// 3D VectorType; 32 bit unsigned integer components
 		struct UInt3
 		{
 			uint32_t x;
@@ -786,7 +786,7 @@ namespace At0
 		};
 
 		//------------------------------------------------------------------------------
-		// 4D Vector; 32 bit floating point components
+		// 4D VectorType; 32 bit floating point components
 		struct Float4
 		{
 			float x;
@@ -806,7 +806,7 @@ namespace At0
 			explicit Float4(/*_In_reads_(4) */const float* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
 		};
 
-		// 4D Vector; 32 bit floating point components aligned on a 16 byte boundary
+		// 4D VectorType; 32 bit floating point components aligned on a 16 byte boundary
 		RAY_ALIGNED(16) struct Float4A : public Float4
 		{
 			Float4A() = default;
@@ -822,7 +822,7 @@ namespace At0
 		};
 
 		//------------------------------------------------------------------------------
-		// 4D Vector; 32 bit signed integer components
+		// 4D VectorType; 32 bit signed integer components
 		struct Int4
 		{
 			int32_t x;
@@ -842,7 +842,7 @@ namespace At0
 			explicit Int4(/*_In_reads_(4) */const int32_t* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]), w(pArray[3]) {}
 		};
 
-		// 4D Vector; 32 bit unsigned integer components
+		// 4D VectorType; 32 bit unsigned integer components
 		struct UInt4
 		{
 			uint32_t x;
@@ -1080,10 +1080,10 @@ namespace At0
  *
  ****************************************************************************/
 
-		Vector    RAYMATH_CALLCONV     ConvertVectorIntToFloat(FVector VInt, uint32_t DivExponent);
-		Vector    RAYMATH_CALLCONV     ConvertVectorFloatToInt(FVector VFloat, uint32_t MulExponent);
-		Vector    RAYMATH_CALLCONV     ConvertVectorUIntToFloat(FVector VUInt, uint32_t DivExponent);
-		Vector    RAYMATH_CALLCONV     ConvertVectorFloatToUInt(FVector VFloat, uint32_t MulExponent);
+		VectorType    RAYMATH_CALLCONV     ConvertVectorIntToFloat(FVector VInt, uint32_t DivExponent);
+		VectorType    RAYMATH_CALLCONV     ConvertVectorFloatToInt(FVector VFloat, uint32_t MulExponent);
+		VectorType    RAYMATH_CALLCONV     ConvertVectorUIntToFloat(FVector VUInt, uint32_t DivExponent);
+		VectorType    RAYMATH_CALLCONV     ConvertVectorFloatToUInt(FVector VFloat, uint32_t MulExponent);
 
 #if defined(__XNAMATH_H__) && defined(VectorSetBinaryConstant)
 #undef VectorSetBinaryConstant
@@ -1091,9 +1091,9 @@ namespace At0
 #undef VectorSplatConstantInt
 #endif
 
-		Vector    RAYMATH_CALLCONV     VectorSetBinaryConstant(uint32_t C0, uint32_t C1, uint32_t C2, uint32_t C3);
-		Vector    RAYMATH_CALLCONV     VectorSplatConstant(int32_t IntConstant, uint32_t DivExponent);
-		Vector    RAYMATH_CALLCONV     VectorSplatConstantInt(int32_t IntConstant);
+		VectorType    RAYMATH_CALLCONV     VectorSetBinaryConstant(uint32_t C0, uint32_t C1, uint32_t C2, uint32_t C3);
+		VectorType    RAYMATH_CALLCONV     VectorSplatConstant(int32_t IntConstant, uint32_t DivExponent);
+		VectorType    RAYMATH_CALLCONV     VectorSplatConstantInt(int32_t IntConstant);
 
 		/****************************************************************************
 		 *
@@ -1101,29 +1101,29 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		Vector    RAYMATH_CALLCONV     LoadInt(/*_In_ */const uint32_t* pSource);
-		Vector    RAYMATH_CALLCONV     LoadFloat(/*_In_ */const float* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadInt(/*_In_ */const uint32_t* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadFloat(/*_In_ */const float* pSource);
 
-		Vector    RAYMATH_CALLCONV     LoadInt2(/*_In_reads_(2) */const uint32_t* pSource);
-		Vector    RAYMATH_CALLCONV     LoadInt2A(/*_In_reads_(2) */const uint32_t* PSource);
-		Vector    RAYMATH_CALLCONV     LoadFloat2(/*_In_ */const Float2* pSource);
-		Vector    RAYMATH_CALLCONV     LoadFloat2A(/*_In_ */const Float2A* pSource);
-		Vector    RAYMATH_CALLCONV     LoadSInt2(/*_In_ */const Int2* pSource);
-		Vector    RAYMATH_CALLCONV     LoadUInt2(/*_In_ */const UInt2* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadInt2(/*_In_reads_(2) */const uint32_t* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadInt2A(/*_In_reads_(2) */const uint32_t* PSource);
+		VectorType    RAYMATH_CALLCONV     LoadFloat2(/*_In_ */const Float2* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadFloat2A(/*_In_ */const Float2A* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadSInt2(/*_In_ */const Int2* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadUInt2(/*_In_ */const UInt2* pSource);
 
-		Vector    RAYMATH_CALLCONV     LoadInt3(/*_In_reads_(3) */const uint32_t* pSource);
-		Vector    RAYMATH_CALLCONV     LoadInt3A(/*_In_reads_(3) */const uint32_t* pSource);
-		Vector    RAYMATH_CALLCONV     LoadFloat3(/*_In_ */const Float3* pSource);
-		Vector    RAYMATH_CALLCONV     LoadFloat3A(/*_In_ */const Float3A* pSource);
-		Vector    RAYMATH_CALLCONV     LoadSInt3(/*_In_ */const Int3* pSource);
-		Vector    RAYMATH_CALLCONV     LoadUInt3(/*_In_ */const UInt3* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadInt3(/*_In_reads_(3) */const uint32_t* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadInt3A(/*_In_reads_(3) */const uint32_t* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadFloat3(/*_In_ */const Float3* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadFloat3A(/*_In_ */const Float3A* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadSInt3(/*_In_ */const Int3* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadUInt3(/*_In_ */const UInt3* pSource);
 
-		Vector    RAYMATH_CALLCONV     LoadInt4(/*_In_reads_(4) */const uint32_t* pSource);
-		Vector    RAYMATH_CALLCONV     LoadInt4A(/*_In_reads_(4) */const uint32_t* pSource);
-		Vector    RAYMATH_CALLCONV     LoadFloat4(/*_In_ */const Float4* pSource);
-		Vector    RAYMATH_CALLCONV     LoadFloat4A(/*_In_ */const Float4A* pSource);
-		Vector    RAYMATH_CALLCONV     LoadSInt4(/*_In_ */const Int4* pSource);
-		Vector    RAYMATH_CALLCONV     LoadUInt4(/*_In_ */const UInt4* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadInt4(/*_In_reads_(4) */const uint32_t* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadInt4A(/*_In_reads_(4) */const uint32_t* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadFloat4(/*_In_ */const Float4* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadFloat4A(/*_In_ */const Float4A* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadSInt4(/*_In_ */const Int4* pSource);
+		VectorType    RAYMATH_CALLCONV     LoadUInt4(/*_In_ */const UInt4* pSource);
 
 		Matrix    RAYMATH_CALLCONV     LoadFloat3x3(/*_In_ */const Float3X3* pSource);
 		Matrix    RAYMATH_CALLCONV     LoadFloat4x3(/*_In_ */const Float4X3* pSource);
@@ -1177,24 +1177,24 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-		Vector    RAYMATH_CALLCONV     VectorZero();
-		Vector    RAYMATH_CALLCONV     VectorSet(float x, float y, float z, float w);
-		Vector    RAYMATH_CALLCONV     VectorSetInt(uint32_t x, uint32_t y, uint32_t z, uint32_t w);
-		Vector    RAYMATH_CALLCONV     VectorReplicate(float Value);
-		Vector    RAYMATH_CALLCONV     VectorReplicatePtr(/*_In_ */const float* pValue);
-		Vector    RAYMATH_CALLCONV     VectorReplicateInt(uint32_t Value);
-		Vector    RAYMATH_CALLCONV     VectorReplicateIntPtr(/*_In_ */const uint32_t* pValue);
-		Vector    RAYMATH_CALLCONV     VectorTrueInt();
-		Vector    RAYMATH_CALLCONV     VectorFalseInt();
-		Vector    RAYMATH_CALLCONV     VectorSplatX(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorSplatY(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorSplatZ(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorSplatW(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorSplatOne();
-		Vector    RAYMATH_CALLCONV     VectorSplatInfinity();
-		Vector    RAYMATH_CALLCONV     VectorSplatQNaN();
-		Vector    RAYMATH_CALLCONV     VectorSplatEpsilon();
-		Vector    RAYMATH_CALLCONV     VectorSplatSignMask();
+		VectorType    RAYMATH_CALLCONV     VectorZero();
+		VectorType    RAYMATH_CALLCONV     VectorSet(float x, float y, float z, float w);
+		VectorType    RAYMATH_CALLCONV     VectorSetInt(uint32_t x, uint32_t y, uint32_t z, uint32_t w);
+		VectorType    RAYMATH_CALLCONV     VectorReplicate(float Value);
+		VectorType    RAYMATH_CALLCONV     VectorReplicatePtr(/*_In_ */const float* pValue);
+		VectorType    RAYMATH_CALLCONV     VectorReplicateInt(uint32_t Value);
+		VectorType    RAYMATH_CALLCONV     VectorReplicateIntPtr(/*_In_ */const uint32_t* pValue);
+		VectorType    RAYMATH_CALLCONV     VectorTrueInt();
+		VectorType    RAYMATH_CALLCONV     VectorFalseInt();
+		VectorType    RAYMATH_CALLCONV     VectorSplatX(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorSplatY(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorSplatZ(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorSplatW(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorSplatOne();
+		VectorType    RAYMATH_CALLCONV     VectorSplatInfinity();
+		VectorType    RAYMATH_CALLCONV     VectorSplatQNaN();
+		VectorType    RAYMATH_CALLCONV     VectorSplatEpsilon();
+		VectorType    RAYMATH_CALLCONV     VectorSplatSignMask();
 
 		float       RAYMATH_CALLCONV     VectorGetByIndex(FVector V, size_t i);
 		float       RAYMATH_CALLCONV     VectorGetX(FVector V);
@@ -1220,40 +1220,40 @@ namespace At0
 		void        RAYMATH_CALLCONV     VectorGetIntZPtr(/*_Out_ */ uint32_t* z, /*_In_ */FVector V);
 		void        RAYMATH_CALLCONV     VectorGetIntWPtr(/*_Out_ */ uint32_t* w, /*_In_ */FVector V);
 
-		Vector    RAYMATH_CALLCONV     VectorSetByIndex(FVector V, float f, size_t i);
-		Vector    RAYMATH_CALLCONV     VectorSetX(FVector V, float x);
-		Vector    RAYMATH_CALLCONV     VectorSetY(FVector V, float y);
-		Vector    RAYMATH_CALLCONV     VectorSetZ(FVector V, float z);
-		Vector    RAYMATH_CALLCONV     VectorSetW(FVector V, float w);
+		VectorType    RAYMATH_CALLCONV     VectorSetByIndex(FVector V, float f, size_t i);
+		VectorType    RAYMATH_CALLCONV     VectorSetX(FVector V, float x);
+		VectorType    RAYMATH_CALLCONV     VectorSetY(FVector V, float y);
+		VectorType    RAYMATH_CALLCONV     VectorSetZ(FVector V, float z);
+		VectorType    RAYMATH_CALLCONV     VectorSetW(FVector V, float w);
 
-		Vector    RAYMATH_CALLCONV     VectorSetByIndexPtr(/*_In_ */FVector V, /*_In_ */const float* f, /*_In_ */size_t i);
-		Vector    RAYMATH_CALLCONV     VectorSetXPtr(/*_In_ */FVector V, /*_In_ */const float* x);
-		Vector    RAYMATH_CALLCONV     VectorSetYPtr(/*_In_ */FVector V, /*_In_ */const float* y);
-		Vector    RAYMATH_CALLCONV     VectorSetZPtr(/*_In_ */FVector V, /*_In_ */const float* z);
-		Vector    RAYMATH_CALLCONV     VectorSetWPtr(/*_In_ */FVector V, /*_In_ */const float* w);
+		VectorType    RAYMATH_CALLCONV     VectorSetByIndexPtr(/*_In_ */FVector V, /*_In_ */const float* f, /*_In_ */size_t i);
+		VectorType    RAYMATH_CALLCONV     VectorSetXPtr(/*_In_ */FVector V, /*_In_ */const float* x);
+		VectorType    RAYMATH_CALLCONV     VectorSetYPtr(/*_In_ */FVector V, /*_In_ */const float* y);
+		VectorType    RAYMATH_CALLCONV     VectorSetZPtr(/*_In_ */FVector V, /*_In_ */const float* z);
+		VectorType    RAYMATH_CALLCONV     VectorSetWPtr(/*_In_ */FVector V, /*_In_ */const float* w);
 
-		Vector    RAYMATH_CALLCONV     VectorSetIntByIndex(FVector V, uint32_t x, size_t i);
-		Vector    RAYMATH_CALLCONV     VectorSetIntX(FVector V, uint32_t x);
-		Vector    RAYMATH_CALLCONV     VectorSetIntY(FVector V, uint32_t y);
-		Vector    RAYMATH_CALLCONV     VectorSetIntZ(FVector V, uint32_t z);
-		Vector    RAYMATH_CALLCONV     VectorSetIntW(FVector V, uint32_t w);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntByIndex(FVector V, uint32_t x, size_t i);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntX(FVector V, uint32_t x);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntY(FVector V, uint32_t y);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntZ(FVector V, uint32_t z);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntW(FVector V, uint32_t w);
 
-		Vector    RAYMATH_CALLCONV     VectorSetIntByIndexPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* x, /*_In_ */size_t i);
-		Vector    RAYMATH_CALLCONV     VectorSetIntXPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* x);
-		Vector    RAYMATH_CALLCONV     VectorSetIntYPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* y);
-		Vector    RAYMATH_CALLCONV     VectorSetIntZPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* z);
-		Vector    RAYMATH_CALLCONV     VectorSetIntWPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* w);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntByIndexPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* x, /*_In_ */size_t i);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntXPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* x);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntYPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* y);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntZPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* z);
+		VectorType    RAYMATH_CALLCONV     VectorSetIntWPtr(/*_In_ */FVector V, /*_In_ */const uint32_t* w);
 
 #if defined(__XNAMATH_H__) && defined(VectorSwizzle)
 #undef VectorSwizzle
 #endif
 
-		Vector    RAYMATH_CALLCONV     VectorSwizzle(FVector V, uint32_t E0, uint32_t E1, uint32_t E2, uint32_t E3);
-		Vector    RAYMATH_CALLCONV     VectorPermute(FVector V1, FVector V2, uint32_t PermuteX, uint32_t PermuteY, uint32_t PermuteZ, uint32_t PermuteW);
-		Vector    RAYMATH_CALLCONV     VectorSelectControl(uint32_t VectorIndex0, uint32_t VectorIndex1, uint32_t VectorIndex2, uint32_t VectorIndex3);
-		Vector    RAYMATH_CALLCONV     VectorSelect(FVector V1, FVector V2, FVector Control);
-		Vector    RAYMATH_CALLCONV     VectorMergeXY(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorMergeZW(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorSwizzle(FVector V, uint32_t E0, uint32_t E1, uint32_t E2, uint32_t E3);
+		VectorType    RAYMATH_CALLCONV     VectorPermute(FVector V1, FVector V2, uint32_t PermuteX, uint32_t PermuteY, uint32_t PermuteZ, uint32_t PermuteW);
+		VectorType    RAYMATH_CALLCONV     VectorSelectControl(uint32_t VectorIndex0, uint32_t VectorIndex1, uint32_t VectorIndex2, uint32_t VectorIndex3);
+		VectorType    RAYMATH_CALLCONV     VectorSelect(FVector V1, FVector V2, FVector Control);
+		VectorType    RAYMATH_CALLCONV     VectorMergeXY(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorMergeZW(FVector V1, FVector V2);
 
 #if defined(__XNAMATH_H__) && defined(VectorShiftLeft)
 #undef VectorShiftLeft
@@ -1262,100 +1262,100 @@ namespace At0
 #undef VectorInsert
 #endif
 
-		Vector    RAYMATH_CALLCONV     VectorShiftLeft(FVector V1, FVector V2, uint32_t Elements);
-		Vector    RAYMATH_CALLCONV     VectorRotateLeft(FVector V, uint32_t Elements);
-		Vector    RAYMATH_CALLCONV     VectorRotateRight(FVector V, uint32_t Elements);
-		Vector    RAYMATH_CALLCONV     VectorInsert(FVector VD, FVector VS, uint32_t VSLeftRotateElements,
+		VectorType    RAYMATH_CALLCONV     VectorShiftLeft(FVector V1, FVector V2, uint32_t Elements);
+		VectorType    RAYMATH_CALLCONV     VectorRotateLeft(FVector V, uint32_t Elements);
+		VectorType    RAYMATH_CALLCONV     VectorRotateRight(FVector V, uint32_t Elements);
+		VectorType    RAYMATH_CALLCONV     VectorInsert(FVector VD, FVector VS, uint32_t VSLeftRotateElements,
 			uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3);
 
-		Vector    RAYMATH_CALLCONV     VectorEqual(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorEqualInt(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorEqualIntR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V, /*_In_ */FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorNearEqual(FVector V1, FVector V2, FVector Epsilon);
-		Vector    RAYMATH_CALLCONV     VectorNotEqual(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorNotEqualInt(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorGreater(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorGreaterR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorGreaterOrEqual(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorGreaterOrEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorLess(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorLessOrEqual(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorInBounds(FVector V, FVector Bounds);
-		Vector    RAYMATH_CALLCONV     VectorInBoundsR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V, /*_In_ */FVector Bounds);
+		VectorType    RAYMATH_CALLCONV     VectorEqual(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorEqualInt(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorEqualIntR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V, /*_In_ */FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorNearEqual(FVector V1, FVector V2, FVector Epsilon);
+		VectorType    RAYMATH_CALLCONV     VectorNotEqual(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorNotEqualInt(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorGreater(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorGreaterR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorGreaterOrEqual(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorGreaterOrEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V1, /*_In_ */FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorLess(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorLessOrEqual(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorInBounds(FVector V, FVector Bounds);
+		VectorType    RAYMATH_CALLCONV     VectorInBoundsR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVector V, /*_In_ */FVector Bounds);
 
-		Vector    RAYMATH_CALLCONV     VectorIsNaN(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorIsInfinite(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorIsNaN(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorIsInfinite(FVector V);
 
-		Vector    RAYMATH_CALLCONV     VectorMin(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorMax(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorRound(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorTruncate(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorFloor(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorCeiling(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorClamp(FVector V, FVector Min, FVector Max);
-		Vector    RAYMATH_CALLCONV     VectorSaturate(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorMin(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorMax(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorRound(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorTruncate(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorFloor(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorCeiling(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorClamp(FVector V, FVector Min, FVector Max);
+		VectorType    RAYMATH_CALLCONV     VectorSaturate(FVector V);
 
-		Vector    RAYMATH_CALLCONV     VectorAndInt(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorAndCInt(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorOrInt(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorNorInt(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorXorInt(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorAndInt(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorAndCInt(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorOrInt(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorNorInt(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorXorInt(FVector V1, FVector V2);
 
-		Vector    RAYMATH_CALLCONV     VectorNegate(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorAdd(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorSum(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorAddAngles(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorSubtract(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorSubtractAngles(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorMultiply(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorMultiplyAdd(FVector V1, FVector V2, FVector V3);
-		Vector    RAYMATH_CALLCONV     VectorDivide(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorNegativeMultiplySubtract(FVector V1, FVector V2, FVector V3);
-		Vector    RAYMATH_CALLCONV     VectorScale(FVector V, float ScaleFactor);
-		Vector    RAYMATH_CALLCONV     VectorReciprocalEst(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorReciprocal(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorSqrtEst(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorSqrt(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorReciprocalSqrtEst(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorReciprocalSqrt(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorExp2(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorExpE(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorExp(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorLog2(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorLogE(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorLog(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorPow(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorAbs(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorMod(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     VectorModAngles(FVector Angles);
-		Vector    RAYMATH_CALLCONV     VectorSin(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorSinEst(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorCos(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorCosEst(FVector V);
-		void        RAYMATH_CALLCONV     VectorSinCos(/*_Out_ */ Vector* pSin, /*_Out_ */ Vector* pCos, /*_In_ */FVector V);
-		void        RAYMATH_CALLCONV     VectorSinCosEst(/*_Out_ */ Vector* pSin, /*_Out_ */ Vector* pCos, /*_In_ */FVector V);
-		Vector    RAYMATH_CALLCONV     VectorTan(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorTanEst(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorSinH(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorCosH(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorTanH(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorASin(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorASinEst(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorACos(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorACosEst(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorATan(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorATanEst(FVector V);
-		Vector    RAYMATH_CALLCONV     VectorATan2(FVector Y, FVector X);
-		Vector    RAYMATH_CALLCONV     VectorATan2Est(FVector Y, FVector X);
-		Vector    RAYMATH_CALLCONV     VectorLerp(FVector V0, FVector V1, float t);
-		Vector    RAYMATH_CALLCONV     VectorLerpV(FVector V0, FVector V1, FVector T);
-		Vector    RAYMATH_CALLCONV     VectorHermite(FVector Position0, FVector Tangent0, FVector Position1, GVector Tangent1, float t);
-		Vector    RAYMATH_CALLCONV     VectorHermiteV(FVector Position0, FVector Tangent0, FVector Position1, GVector Tangent1, HVector T);
-		Vector    RAYMATH_CALLCONV     VectorCatmullRom(FVector Position0, FVector Position1, FVector Position2, GVector Position3, float t);
-		Vector    RAYMATH_CALLCONV     VectorCatmullRomV(FVector Position0, FVector Position1, FVector Position2, GVector Position3, HVector T);
-		Vector    RAYMATH_CALLCONV     VectorBaryCentric(FVector Position0, FVector Position1, FVector Position2, float f, float g);
-		Vector    RAYMATH_CALLCONV     VectorBaryCentricV(FVector Position0, FVector Position1, FVector Position2, GVector F, HVector G);
+		VectorType    RAYMATH_CALLCONV     VectorNegate(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorAdd(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorSum(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorAddAngles(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorSubtract(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorSubtractAngles(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorMultiply(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorMultiplyAdd(FVector V1, FVector V2, FVector V3);
+		VectorType    RAYMATH_CALLCONV     VectorDivide(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorNegativeMultiplySubtract(FVector V1, FVector V2, FVector V3);
+		VectorType    RAYMATH_CALLCONV     VectorScale(FVector V, float ScaleFactor);
+		VectorType    RAYMATH_CALLCONV     VectorReciprocalEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorReciprocal(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorSqrtEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorSqrt(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorReciprocalSqrtEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorReciprocalSqrt(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorExp2(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorExpE(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorExp(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorLog2(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorLogE(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorLog(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorPow(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorAbs(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorMod(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     VectorModAngles(FVector Angles);
+		VectorType    RAYMATH_CALLCONV     VectorSin(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorSinEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorCos(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorCosEst(FVector V);
+		void        RAYMATH_CALLCONV     VectorSinCos(/*_Out_ */ VectorType* pSin, /*_Out_ */ VectorType* pCos, /*_In_ */FVector V);
+		void        RAYMATH_CALLCONV     VectorSinCosEst(/*_Out_ */ VectorType* pSin, /*_Out_ */ VectorType* pCos, /*_In_ */FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorTan(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorTanEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorSinH(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorCosH(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorTanH(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorASin(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorASinEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorACos(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorACosEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorATan(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorATanEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     VectorATan2(FVector Y, FVector X);
+		VectorType    RAYMATH_CALLCONV     VectorATan2Est(FVector Y, FVector X);
+		VectorType    RAYMATH_CALLCONV     VectorLerp(FVector V0, FVector V1, float t);
+		VectorType    RAYMATH_CALLCONV     VectorLerpV(FVector V0, FVector V1, FVector T);
+		VectorType    RAYMATH_CALLCONV     VectorHermite(FVector Position0, FVector Tangent0, FVector Position1, GVector Tangent1, float t);
+		VectorType    RAYMATH_CALLCONV     VectorHermiteV(FVector Position0, FVector Tangent0, FVector Position1, GVector Tangent1, HVector T);
+		VectorType    RAYMATH_CALLCONV     VectorCatmullRom(FVector Position0, FVector Position1, FVector Position2, GVector Position3, float t);
+		VectorType    RAYMATH_CALLCONV     VectorCatmullRomV(FVector Position0, FVector Position1, FVector Position2, GVector Position3, HVector T);
+		VectorType    RAYMATH_CALLCONV     VectorBaryCentric(FVector Position0, FVector Position1, FVector Position2, float f, float g);
+		VectorType    RAYMATH_CALLCONV     VectorBaryCentricV(FVector Position0, FVector Position1, FVector Position2, GVector F, HVector G);
 
 		/****************************************************************************
 		 *
@@ -1381,37 +1381,37 @@ namespace At0
 		bool        RAYMATH_CALLCONV     Vector2IsNaN(FVector V);
 		bool        RAYMATH_CALLCONV     Vector2IsInfinite(FVector V);
 
-		Vector    RAYMATH_CALLCONV     Vector2Dot(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     Vector2Cross(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     Vector2LengthSq(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector2ReciprocalLengthEst(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector2ReciprocalLength(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector2LengthEst(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector2Length(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector2NormalizeEst(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector2Normalize(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector2ClampLength(FVector V, float LengthMin, float LengthMax);
-		Vector    RAYMATH_CALLCONV     Vector2ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
-		Vector    RAYMATH_CALLCONV     Vector2Reflect(FVector Incident, FVector Normal);
-		Vector    RAYMATH_CALLCONV     Vector2Refract(FVector Incident, FVector Normal, float RefractionIndex);
-		Vector    RAYMATH_CALLCONV     Vector2RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
-		Vector    RAYMATH_CALLCONV     Vector2Orthogonal(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector2AngleBetweenNormalsEst(FVector N1, FVector N2);
-		Vector    RAYMATH_CALLCONV     Vector2AngleBetweenNormals(FVector N1, FVector N2);
-		Vector    RAYMATH_CALLCONV     Vector2AngleBetweenVectors(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     Vector2LinePointDistance(FVector LinePoint1, FVector LinePoint2, FVector Point);
-		Vector    RAYMATH_CALLCONV     Vector2IntersectLine(FVector Line1Point1, FVector Line1Point2, FVector Line2Point1, GVector Line2Point2);
-		Vector    RAYMATH_CALLCONV     Vector2Transform(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector2Dot(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     Vector2Cross(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     Vector2LengthSq(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector2ReciprocalLengthEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector2ReciprocalLength(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector2LengthEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector2Length(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector2NormalizeEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector2Normalize(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector2ClampLength(FVector V, float LengthMin, float LengthMax);
+		VectorType    RAYMATH_CALLCONV     Vector2ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
+		VectorType    RAYMATH_CALLCONV     Vector2Reflect(FVector Incident, FVector Normal);
+		VectorType    RAYMATH_CALLCONV     Vector2Refract(FVector Incident, FVector Normal, float RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     Vector2RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     Vector2Orthogonal(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector2AngleBetweenNormalsEst(FVector N1, FVector N2);
+		VectorType    RAYMATH_CALLCONV     Vector2AngleBetweenNormals(FVector N1, FVector N2);
+		VectorType    RAYMATH_CALLCONV     Vector2AngleBetweenVectors(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     Vector2LinePointDistance(FVector LinePoint1, FVector LinePoint2, FVector Point);
+		VectorType    RAYMATH_CALLCONV     Vector2IntersectLine(FVector Line1Point1, FVector Line1Point2, FVector Line2Point1, GVector Line2Point2);
+		VectorType    RAYMATH_CALLCONV     Vector2Transform(FVector V, FMatrix M);
 		Float4* RAYMATH_CALLCONV     Vector2TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) */const Float2* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		Vector    RAYMATH_CALLCONV     Vector2TransformCoord(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector2TransformCoord(FVector V, FMatrix M);
 		Float2* RAYMATH_CALLCONV     Vector2TransformCoordStream(/*_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) */Float2* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) */const Float2* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		Vector    RAYMATH_CALLCONV     Vector2TransformNormal(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector2TransformNormal(FVector V, FMatrix M);
 		Float2* RAYMATH_CALLCONV     Vector2TransformNormalStream(/*_Out_writes_bytes_(sizeof(Float2) + OutputStride * (VectorCount - 1)) */Float2* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float2) + InputStride * (VectorCount - 1)) */const Float2* pInputStream,
@@ -1441,44 +1441,44 @@ namespace At0
 		bool        RAYMATH_CALLCONV     Vector3IsNaN(FVector V);
 		bool        RAYMATH_CALLCONV     Vector3IsInfinite(FVector V);
 
-		Vector    RAYMATH_CALLCONV     Vector3Dot(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     Vector3Cross(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     Vector3LengthSq(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector3ReciprocalLengthEst(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector3ReciprocalLength(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector3LengthEst(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector3Length(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector3NormalizeEst(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector3Normalize(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector3ClampLength(FVector V, float LengthMin, float LengthMax);
-		Vector    RAYMATH_CALLCONV     Vector3ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
-		Vector    RAYMATH_CALLCONV     Vector3Reflect(FVector Incident, FVector Normal);
-		Vector    RAYMATH_CALLCONV     Vector3Refract(FVector Incident, FVector Normal, float RefractionIndex);
-		Vector    RAYMATH_CALLCONV     Vector3RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
-		Vector    RAYMATH_CALLCONV     Vector3Orthogonal(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector3AngleBetweenNormalsEst(FVector N1, FVector N2);
-		Vector    RAYMATH_CALLCONV     Vector3AngleBetweenNormals(FVector N1, FVector N2);
-		Vector    RAYMATH_CALLCONV     Vector3AngleBetweenVectors(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     Vector3LinePointDistance(FVector LinePoint1, FVector LinePoint2, FVector Point);
-		void        RAYMATH_CALLCONV     Vector3ComponentsFromNormal(/*_Out_ */ Vector* pParallel, /*_Out_ */ Vector* pPerpendicular, /*_In_ */FVector V, /*_In_ */FVector Normal);
-		Vector    RAYMATH_CALLCONV     Vector3Rotate(FVector V, FQuaternion RotationQuaternion);
-		Vector    RAYMATH_CALLCONV     Vector3InverseRotate(FVector V, FQuaternion RotationQuaternion);
-		Vector    RAYMATH_CALLCONV     Vector3Transform(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector3Dot(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     Vector3Cross(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     Vector3LengthSq(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector3ReciprocalLengthEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector3ReciprocalLength(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector3LengthEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector3Length(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector3NormalizeEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector3Normalize(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector3ClampLength(FVector V, float LengthMin, float LengthMax);
+		VectorType    RAYMATH_CALLCONV     Vector3ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
+		VectorType    RAYMATH_CALLCONV     Vector3Reflect(FVector Incident, FVector Normal);
+		VectorType    RAYMATH_CALLCONV     Vector3Refract(FVector Incident, FVector Normal, float RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     Vector3RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     Vector3Orthogonal(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector3AngleBetweenNormalsEst(FVector N1, FVector N2);
+		VectorType    RAYMATH_CALLCONV     Vector3AngleBetweenNormals(FVector N1, FVector N2);
+		VectorType    RAYMATH_CALLCONV     Vector3AngleBetweenVectors(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     Vector3LinePointDistance(FVector LinePoint1, FVector LinePoint2, FVector Point);
+		void        RAYMATH_CALLCONV     Vector3ComponentsFromNormal(/*_Out_ */ VectorType* pParallel, /*_Out_ */ VectorType* pPerpendicular, /*_In_ */FVector V, /*_In_ */FVector Normal);
+		VectorType    RAYMATH_CALLCONV     Vector3Rotate(FVector V, FQuaternion RotationQuaternion);
+		VectorType    RAYMATH_CALLCONV     Vector3InverseRotate(FVector V, FQuaternion RotationQuaternion);
+		VectorType    RAYMATH_CALLCONV     Vector3Transform(FVector V, FMatrix M);
 		Float4* RAYMATH_CALLCONV     Vector3TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		Vector    RAYMATH_CALLCONV     Vector3TransformCoord(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector3TransformCoord(FVector V, FMatrix M);
 		Float3* RAYMATH_CALLCONV     Vector3TransformCoordStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		Vector    RAYMATH_CALLCONV     Vector3TransformNormal(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector3TransformNormal(FVector V, FMatrix M);
 		Float3* RAYMATH_CALLCONV     Vector3TransformNormalStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/* _In_reads_bytes_(sizeof(Float3) + InputStride * (VectorCount - 1)) */const Float3* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount, /*_In_ */FMatrix M);
-		Vector    RAYMATH_CALLCONV     Vector3Project(FVector V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
+		VectorType    RAYMATH_CALLCONV     Vector3Project(FVector V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
 			FMatrix Projection, CMatrix View, CMatrix World);
 		Float3* RAYMATH_CALLCONV     Vector3ProjectStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
@@ -1486,7 +1486,7 @@ namespace At0
 			/*_In_ */size_t InputStride, /*_In_ */size_t VectorCount,
 			/*_In_ */float ViewportX, /*_In_ */float ViewportY, /*_In_ */float ViewportWidth, /*_In_ */float ViewportHeight, /*_In_ */float ViewportMinZ, /*_In_ */float ViewportMaxZ,
 			/*_In_ */FMatrix Projection, /*_In_ */CMatrix View, /*_In_ */CMatrix World);
-		Vector    RAYMATH_CALLCONV     Vector3Unproject(FVector V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
+		VectorType    RAYMATH_CALLCONV     Vector3Unproject(FVector V, float ViewportX, float ViewportY, float ViewportWidth, float ViewportHeight, float ViewportMinZ, float ViewportMaxZ,
 			FMatrix Projection, CMatrix View, CMatrix World);
 		Float3* RAYMATH_CALLCONV     Vector3UnprojectStream(/*_Out_writes_bytes_(sizeof(Float3) + OutputStride * (VectorCount - 1)) */Float3* pOutputStream,
 			/*_In_ */size_t OutputStride,
@@ -1519,25 +1519,25 @@ namespace At0
 		bool        RAYMATH_CALLCONV     Vector4IsNaN(FVector V);
 		bool        RAYMATH_CALLCONV     Vector4IsInfinite(FVector V);
 
-		Vector    RAYMATH_CALLCONV     Vector4Dot(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     Vector4Cross(FVector V1, FVector V2, FVector V3);
-		Vector    RAYMATH_CALLCONV     Vector4LengthSq(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector4ReciprocalLengthEst(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector4ReciprocalLength(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector4LengthEst(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector4Length(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector4NormalizeEst(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector4Normalize(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector4ClampLength(FVector V, float LengthMin, float LengthMax);
-		Vector    RAYMATH_CALLCONV     Vector4ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
-		Vector    RAYMATH_CALLCONV     Vector4Reflect(FVector Incident, FVector Normal);
-		Vector    RAYMATH_CALLCONV     Vector4Refract(FVector Incident, FVector Normal, float RefractionIndex);
-		Vector    RAYMATH_CALLCONV     Vector4RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
-		Vector    RAYMATH_CALLCONV     Vector4Orthogonal(FVector V);
-		Vector    RAYMATH_CALLCONV     Vector4AngleBetweenNormalsEst(FVector N1, FVector N2);
-		Vector    RAYMATH_CALLCONV     Vector4AngleBetweenNormals(FVector N1, FVector N2);
-		Vector    RAYMATH_CALLCONV     Vector4AngleBetweenVectors(FVector V1, FVector V2);
-		Vector    RAYMATH_CALLCONV     Vector4Transform(FVector V, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     Vector4Dot(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     Vector4Cross(FVector V1, FVector V2, FVector V3);
+		VectorType    RAYMATH_CALLCONV     Vector4LengthSq(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector4ReciprocalLengthEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector4ReciprocalLength(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector4LengthEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector4Length(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector4NormalizeEst(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector4Normalize(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector4ClampLength(FVector V, float LengthMin, float LengthMax);
+		VectorType    RAYMATH_CALLCONV     Vector4ClampLengthV(FVector V, FVector LengthMin, FVector LengthMax);
+		VectorType    RAYMATH_CALLCONV     Vector4Reflect(FVector Incident, FVector Normal);
+		VectorType    RAYMATH_CALLCONV     Vector4Refract(FVector Incident, FVector Normal, float RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     Vector4RefractV(FVector Incident, FVector Normal, FVector RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     Vector4Orthogonal(FVector V);
+		VectorType    RAYMATH_CALLCONV     Vector4AngleBetweenNormalsEst(FVector N1, FVector N2);
+		VectorType    RAYMATH_CALLCONV     Vector4AngleBetweenNormals(FVector N1, FVector N2);
+		VectorType    RAYMATH_CALLCONV     Vector4AngleBetweenVectors(FVector V1, FVector V2);
+		VectorType    RAYMATH_CALLCONV     Vector4Transform(FVector V, FMatrix M);
 		Float4* RAYMATH_CALLCONV     Vector4TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float4) + InputStride * (VectorCount - 1)) */const Float4* pInputStream,
@@ -1557,21 +1557,21 @@ namespace At0
 		bool        RAYMATH_CALLCONV     PlaneIsNaN(FVector P);
 		bool        RAYMATH_CALLCONV     PlaneIsInfinite(FVector P);
 
-		Vector    RAYMATH_CALLCONV     PlaneDot(FVector P, FVector V);
-		Vector    RAYMATH_CALLCONV     PlaneDotCoord(FVector P, FVector V);
-		Vector    RAYMATH_CALLCONV     PlaneDotNormal(FVector P, FVector V);
-		Vector    RAYMATH_CALLCONV     PlaneNormalizeEst(FVector P);
-		Vector    RAYMATH_CALLCONV     PlaneNormalize(FVector P);
-		Vector    RAYMATH_CALLCONV     PlaneIntersectLine(FVector P, FVector LinePoint1, FVector LinePoint2);
-		void        RAYMATH_CALLCONV     PlaneIntersectPlane(/*_Out_ */ Vector* pLinePoint1, /*_Out_ */ Vector* pLinePoint2, /*_In_ */FVector P1, /*_In_ */FVector P2);
-		Vector    RAYMATH_CALLCONV     PlaneTransform(FVector P, FMatrix M);
+		VectorType    RAYMATH_CALLCONV     PlaneDot(FVector P, FVector V);
+		VectorType    RAYMATH_CALLCONV     PlaneDotCoord(FVector P, FVector V);
+		VectorType    RAYMATH_CALLCONV     PlaneDotNormal(FVector P, FVector V);
+		VectorType    RAYMATH_CALLCONV     PlaneNormalizeEst(FVector P);
+		VectorType    RAYMATH_CALLCONV     PlaneNormalize(FVector P);
+		VectorType    RAYMATH_CALLCONV     PlaneIntersectLine(FVector P, FVector LinePoint1, FVector LinePoint2);
+		void        RAYMATH_CALLCONV     PlaneIntersectPlane(/*_Out_ */ VectorType* pLinePoint1, /*_Out_ */ VectorType* pLinePoint2, /*_In_ */FVector P1, /*_In_ */FVector P2);
+		VectorType    RAYMATH_CALLCONV     PlaneTransform(FVector P, FMatrix M);
 		Float4* RAYMATH_CALLCONV     PlaneTransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (PlaneCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
 			/*_In_reads_bytes_(sizeof(Float4) + InputStride * (PlaneCount - 1)) */const Float4* pInputStream,
 			/*_In_ */size_t InputStride, /*_In_ */size_t PlaneCount, /*_In_ */FMatrix M);
 
-		Vector    RAYMATH_CALLCONV     PlaneFromPointNormal(FVector Point, FVector Normal);
-		Vector    RAYMATH_CALLCONV     PlaneFromPoints(FVector Point1, FVector Point2, FVector Point3);
+		VectorType    RAYMATH_CALLCONV     PlaneFromPointNormal(FVector Point, FVector Normal);
+		VectorType    RAYMATH_CALLCONV     PlaneFromPoints(FVector Point1, FVector Point2, FVector Point3);
 
 		/****************************************************************************
 		 *
@@ -1589,31 +1589,31 @@ namespace At0
 		bool        RAYMATH_CALLCONV     ColorIsNaN(FVector C);
 		bool        RAYMATH_CALLCONV     ColorIsInfinite(FVector C);
 
-		Vector    RAYMATH_CALLCONV     ColorNegative(FVector C);
-		Vector    RAYMATH_CALLCONV     ColorModulate(FVector C1, FVector C2);
-		Vector    RAYMATH_CALLCONV     ColorAdjustSaturation(FVector C, float Saturation);
-		Vector    RAYMATH_CALLCONV     ColorAdjustContrast(FVector C, float Contrast);
+		VectorType    RAYMATH_CALLCONV     ColorNegative(FVector C);
+		VectorType    RAYMATH_CALLCONV     ColorModulate(FVector C1, FVector C2);
+		VectorType    RAYMATH_CALLCONV     ColorAdjustSaturation(FVector C, float Saturation);
+		VectorType    RAYMATH_CALLCONV     ColorAdjustContrast(FVector C, float Contrast);
 
-		Vector    RAYMATH_CALLCONV     ColorRGBToHSL(FVector rgb);
-		Vector    RAYMATH_CALLCONV     ColorHSLToRGB(FVector hsl);
+		VectorType    RAYMATH_CALLCONV     ColorRGBToHSL(FVector rgb);
+		VectorType    RAYMATH_CALLCONV     ColorHSLToRGB(FVector hsl);
 
-		Vector    RAYMATH_CALLCONV     ColorRGBToHSV(FVector rgb);
-		Vector    RAYMATH_CALLCONV     ColorHSVToRGB(FVector hsv);
+		VectorType    RAYMATH_CALLCONV     ColorRGBToHSV(FVector rgb);
+		VectorType    RAYMATH_CALLCONV     ColorHSVToRGB(FVector hsv);
 
-		Vector    RAYMATH_CALLCONV     ColorRGBToYUV(FVector rgb);
-		Vector    RAYMATH_CALLCONV     ColorYUVToRGB(FVector yuv);
+		VectorType    RAYMATH_CALLCONV     ColorRGBToYUV(FVector rgb);
+		VectorType    RAYMATH_CALLCONV     ColorYUVToRGB(FVector yuv);
 
-		Vector    RAYMATH_CALLCONV     ColorRGBToYUV_HD(FVector rgb);
-		Vector    RAYMATH_CALLCONV     ColorYUVToRGB_HD(FVector yuv);
+		VectorType    RAYMATH_CALLCONV     ColorRGBToYUV_HD(FVector rgb);
+		VectorType    RAYMATH_CALLCONV     ColorYUVToRGB_HD(FVector yuv);
 
-		Vector    RAYMATH_CALLCONV     ColorRGBToXYZ(FVector rgb);
-		Vector    RAYMATH_CALLCONV     ColorXYZToRGB(FVector xyz);
+		VectorType    RAYMATH_CALLCONV     ColorRGBToXYZ(FVector rgb);
+		VectorType    RAYMATH_CALLCONV     ColorXYZToRGB(FVector xyz);
 
-		Vector    RAYMATH_CALLCONV     ColorXYZToSRGB(FVector xyz);
-		Vector    RAYMATH_CALLCONV     ColorSRGBToXYZ(FVector srgb);
+		VectorType    RAYMATH_CALLCONV     ColorXYZToSRGB(FVector xyz);
+		VectorType    RAYMATH_CALLCONV     ColorSRGBToXYZ(FVector srgb);
 
-		Vector    RAYMATH_CALLCONV     ColorRGBToSRGB(FVector rgb);
-		Vector    RAYMATH_CALLCONV     ColorSRGBToRGB(FVector srgb);
+		VectorType    RAYMATH_CALLCONV     ColorRGBToSRGB(FVector rgb);
+		VectorType    RAYMATH_CALLCONV     ColorSRGBToRGB(FVector srgb);
 
 
 		/****************************************************************************
@@ -1624,7 +1624,7 @@ namespace At0
 
 		bool            VerifyCPUSupport();
 
-		Vector    RAYMATH_CALLCONV     FresnelTerm(FVector CosIncidentAngle, FVector RefractionIndex);
+		VectorType    RAYMATH_CALLCONV     FresnelTerm(FVector CosIncidentAngle, FVector RefractionIndex);
 
 		bool            ScalarNearEqual(float S1, float S2, float Epsilon);
 		float           ScalarModAngle(float Value);
@@ -1668,7 +1668,7 @@ namespace At0
 			// Slow path fallback for permutes that do not map to a single SSE shuffle opcode.
 			template<uint32_t Shuffle, bool WhichX, bool WhichY, bool WhichZ, bool WhichW> struct PermuteHelper
 			{
-				static Vector     RAYMATH_CALLCONV     Permute(FVector v1, FVector v2)
+				static VectorType     RAYMATH_CALLCONV     Permute(FVector v1, FVector v2)
 				{
 					static const VectorU32 selectMask =
 					{ { {
@@ -1678,11 +1678,11 @@ namespace At0
 							WhichW ? 0xFFFFFFFF : 0,
 					} } };
 
-					Vector shuffled1 = RAYMATH_PERMUTE_PS(v1, Shuffle);
-					Vector shuffled2 = RAYMATH_PERMUTE_PS(v2, Shuffle);
+					VectorType shuffled1 = RAYMATH_PERMUTE_PS(v1, Shuffle);
+					VectorType shuffled2 = RAYMATH_PERMUTE_PS(v2, Shuffle);
 
-					Vector masked1 = _mm_andnot_ps(selectMask, shuffled1);
-					Vector masked2 = _mm_and_ps(selectMask, shuffled2);
+					VectorType masked1 = _mm_andnot_ps(selectMask, shuffled1);
+					VectorType masked2 = _mm_and_ps(selectMask, shuffled2);
 
 					return _mm_or_ps(masked1, masked2);
 				}
@@ -1691,25 +1691,25 @@ namespace At0
 			// Fast path for permutes that only read from the first vector.
 			template<uint32_t Shuffle> struct PermuteHelper<Shuffle, false, false, false, false>
 			{
-				static Vector     RAYMATH_CALLCONV     Permute(FVector v1, FVector) { return RAYMATH_PERMUTE_PS(v1, Shuffle); }
+				static VectorType     RAYMATH_CALLCONV     Permute(FVector v1, FVector) { return RAYMATH_PERMUTE_PS(v1, Shuffle); }
 			};
 
 			// Fast path for permutes that only read from the second vector.
 			template<uint32_t Shuffle> struct PermuteHelper<Shuffle, true, true, true, true>
 			{
-				static Vector     RAYMATH_CALLCONV     Permute(FVector, FVector v2) { return RAYMATH_PERMUTE_PS(v2, Shuffle); }
+				static VectorType     RAYMATH_CALLCONV     Permute(FVector, FVector v2) { return RAYMATH_PERMUTE_PS(v2, Shuffle); }
 			};
 
 			// Fast path for permutes that read XY from the first vector, ZW from the second.
 			template<uint32_t Shuffle> struct PermuteHelper<Shuffle, false, false, true, true>
 			{
-				static Vector     RAYMATH_CALLCONV     Permute(FVector v1, FVector v2) { return _mm_shuffle_ps(v1, v2, Shuffle); }
+				static VectorType     RAYMATH_CALLCONV     Permute(FVector v1, FVector v2) { return _mm_shuffle_ps(v1, v2, Shuffle); }
 			};
 
 			// Fast path for permutes that read XY from the second vector, ZW from the first.
 			template<uint32_t Shuffle> struct PermuteHelper<Shuffle, true, true, false, false>
 			{
-				static Vector     RAYMATH_CALLCONV     Permute(FVector v1, FVector v2) { return _mm_shuffle_ps(v2, v1, Shuffle); }
+				static VectorType     RAYMATH_CALLCONV     Permute(FVector v1, FVector v2) { return _mm_shuffle_ps(v2, v1, Shuffle); }
 			};
 		}
 
@@ -1717,7 +1717,7 @@ namespace At0
 
 		// General permute template
 		template<uint32_t PermuteX, uint32_t PermuteY, uint32_t PermuteZ, uint32_t PermuteW>
-		inline Vector     RAYMATH_CALLCONV     VectorPermute(FVector V1, FVector V2)
+		inline VectorType     RAYMATH_CALLCONV     VectorPermute(FVector V1, FVector V2)
 		{
 			static_assert(PermuteX <= 7, "PermuteX template parameter out of range");
 			static_assert(PermuteY <= 7, "PermuteY template parameter out of range");
@@ -1741,32 +1741,32 @@ namespace At0
 		}
 
 		// Special-case permute templates
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 2, 3>(FVector V1, FVector) { return V1; }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 5, 6, 7>(FVector, FVector V2) { return V2; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 2, 3>(FVector V1, FVector) { return V1; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 5, 6, 7>(FVector, FVector V2) { return V2; }
 
 #if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 4, 5>(FVector V1, FVector V2) { return _mm_movelh_ps(V1, V2); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<6, 7, 2, 3>(FVector V1, FVector V2) { return _mm_movehl_ps(V1, V2); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 4, 1, 5>(FVector V1, FVector V2) { return _mm_unpacklo_ps(V1, V2); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 6, 3, 7>(FVector V1, FVector V2) { return _mm_unpackhi_ps(V1, V2); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 3, 6, 7>(FVector V1, FVector V2) { return _mm_castpd_ps(_mm_unpackhi_pd(_mm_castps_pd(V1), _mm_castps_pd(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 4, 5>(FVector V1, FVector V2) { return _mm_movelh_ps(V1, V2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<6, 7, 2, 3>(FVector V1, FVector V2) { return _mm_movehl_ps(V1, V2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 4, 1, 5>(FVector V1, FVector V2) { return _mm_unpacklo_ps(V1, V2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 6, 3, 7>(FVector V1, FVector V2) { return _mm_unpackhi_ps(V1, V2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 6, 7>(FVector V1, FVector V2) { return _mm_castpd_ps(_mm_unpackhi_pd(_mm_castps_pd(V1), _mm_castps_pd(V2))); }
 #endif
 
 #if defined(RAY_SSE4_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 1, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x1); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 5, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x2); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 5, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x3); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x4); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 1, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x5); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 5, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x6); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 5, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x7); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x8); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 1, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x9); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 5, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xA); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 5, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xB); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xC); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<4, 1, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xD); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 5, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xE); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 1, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x1); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 5, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 5, 2, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x3); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x4); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 1, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x5); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 5, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x6); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 5, 6, 3>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x7); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x8); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 1, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0x9); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 5, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xA); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 5, 2, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xB); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xC); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<4, 1, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xD); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 5, 6, 7>(FVector V1, FVector V2) { return _mm_blend_ps(V1, V2, 0xE); }
 #endif
 
 #if defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
@@ -1775,37 +1775,37 @@ namespace At0
 		// The mirror cases are not spelled out here as the programmer can always swap the arguments
 		// (i.e. prefer permutes where the X element comes from the V1 vector instead of the V2 vector)
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vget_low_f32(V2)); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 0, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vget_low_f32(V2)); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vrev64_f32(vget_low_f32(V2))); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 0, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vrev64_f32(vget_low_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vget_low_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 0, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vget_low_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vrev64_f32(vget_low_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 0, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vrev64_f32(vget_low_f32(V2))); }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 3, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vget_high_f32(V2)); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<3, 2, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vget_high_f32(V2)); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 3, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vrev64_f32(vget_high_f32(V2))); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<3, 2, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vrev64_f32(vget_high_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vget_high_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 2, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vget_high_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vrev64_f32(vget_high_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 2, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vrev64_f32(vget_high_f32(V2))); }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vget_high_f32(V2)); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 0, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vget_high_f32(V2)); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 1, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vrev64_f32(vget_high_f32(V2))); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 0, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vrev64_f32(vget_high_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vget_high_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 0, 6, 7>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vget_high_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 1, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vget_low_f32(V1), vrev64_f32(vget_high_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 0, 7, 6>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_low_f32(V1)), vrev64_f32(vget_high_f32(V2))); }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<3, 2, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vget_low_f32(V2)); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 3, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vrev64_f32(vget_low_f32(V2))); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<3, 2, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vrev64_f32(vget_low_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 2, 4, 5>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vget_low_f32(V2)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vget_high_f32(V1), vrev64_f32(vget_low_f32(V2))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 2, 5, 4>(FVector V1, FVector V2) { return vcombine_f32(vrev64_f32(vget_high_f32(V1)), vrev64_f32(vget_low_f32(V2))); }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 4, 2, 6>(FVector V1, FVector V2) { return vtrnq_f32(V1, V2).val[0]; }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 5, 3, 7>(FVector V1, FVector V2) { return vtrnq_f32(V1, V2).val[1]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 4, 2, 6>(FVector V1, FVector V2) { return vtrnq_f32(V1, V2).val[0]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 5, 3, 7>(FVector V1, FVector V2) { return vtrnq_f32(V1, V2).val[1]; }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 4, 1, 5>(FVector V1, FVector V2) { return vzipq_f32(V1, V2).val[0]; }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 6, 3, 7>(FVector V1, FVector V2) { return vzipq_f32(V1, V2).val[1]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 4, 1, 5>(FVector V1, FVector V2) { return vzipq_f32(V1, V2).val[0]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 6, 3, 7>(FVector V1, FVector V2) { return vzipq_f32(V1, V2).val[1]; }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<0, 2, 4, 6>(FVector V1, FVector V2) { return vuzpq_f32(V1, V2).val[0]; }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 3, 5, 7>(FVector V1, FVector V2) { return vuzpq_f32(V1, V2).val[1]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<0, 2, 4, 6>(FVector V1, FVector V2) { return vuzpq_f32(V1, V2).val[0]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 3, 5, 7>(FVector V1, FVector V2) { return vuzpq_f32(V1, V2).val[1]; }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<1, 2, 3, 4>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 1); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<2, 3, 4, 5>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 2); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorPermute<3, 4, 5, 6>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 3); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<1, 2, 3, 4>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 1); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<2, 3, 4, 5>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorPermute<3, 4, 5, 6>(FVector V1, FVector V2) { return vextq_f32(V1, V2, 3); }
 
 #endif // RAY_ARM_NEON_INTRINSICS && !RAY_NO_INTRINSICS
 
@@ -1813,7 +1813,7 @@ namespace At0
 
 		// General swizzle template
 		template<uint32_t SwizzleX, uint32_t SwizzleY, uint32_t SwizzleZ, uint32_t SwizzleW>
-		inline Vector     RAYMATH_CALLCONV     VectorSwizzle(FVector V)
+		inline VectorType     RAYMATH_CALLCONV     VectorSwizzle(FVector V)
 		{
 			static_assert(SwizzleX <= 3, "SwizzleX template parameter out of range");
 			static_assert(SwizzleY <= 3, "SwizzleY template parameter out of range");
@@ -1830,86 +1830,86 @@ namespace At0
 		}
 
 		// Specialized swizzles
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 2, 3>(FVector V) { return V; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 2, 3>(FVector V) { return V; }
 
 #if defined(RAY_SSE_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 0, 1>(FVector V) { return _mm_movelh_ps(V, V); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 2, 3>(FVector V) { return _mm_movehl_ps(V, V); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 1, 1>(FVector V) { return _mm_unpacklo_ps(V, V); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 3, 3>(FVector V) { return _mm_unpackhi_ps(V, V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 0, 1>(FVector V) { return _mm_movelh_ps(V, V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 2, 3>(FVector V) { return _mm_movehl_ps(V, V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 1, 1>(FVector V) { return _mm_unpacklo_ps(V, V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 3, 3>(FVector V) { return _mm_unpackhi_ps(V, V); }
 #endif
 
 #if defined(RAY_SSE3_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 2, 2>(FVector V) { return _mm_moveldup_ps(V); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 3, 3>(FVector V) { return _mm_movehdup_ps(V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 2, 2>(FVector V) { return _mm_moveldup_ps(V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 3, 3>(FVector V) { return _mm_movehdup_ps(V); }
 #endif
 
 #if defined(RAY_AVX2_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 0, 0>(FVector V) { return _mm_broadcastss_ps(V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 0, 0>(FVector V) { return _mm_broadcastss_ps(V); }
 #endif
 
 #if defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 0, 0>(FVector V) { return vdupq_lane_f32(vget_low_f32(V), 0); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 1, 1>(FVector V) { return vdupq_lane_f32(vget_low_f32(V), 1); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 2, 2>(FVector V) { return vdupq_lane_f32(vget_high_f32(V), 0); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<3, 3, 3, 3>(FVector V) { return vdupq_lane_f32(vget_high_f32(V), 1); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 0, 0>(FVector V) { return vdupq_lane_f32(vget_low_f32(V), 0); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 1, 1>(FVector V) { return vdupq_lane_f32(vget_low_f32(V), 1); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 2, 2>(FVector V) { return vdupq_lane_f32(vget_high_f32(V), 0); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 3, 3, 3>(FVector V) { return vdupq_lane_f32(vget_high_f32(V), 1); }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 3, 2>(FVector V) { return vrev64q_f32(V); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 3, 2>(FVector V) { return vrev64q_f32(V); }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 0, 1>(FVector V) { float32x2_t vt = vget_low_f32(V); return vcombine_f32(vt, vt); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 2, 3>(FVector V) { float32x2_t vt = vget_high_f32(V); return vcombine_f32(vt, vt); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 1, 0>(FVector V) { float32x2_t vt = vrev64_f32(vget_low_f32(V)); return vcombine_f32(vt, vt); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 3, 2>(FVector V) { float32x2_t vt = vrev64_f32(vget_high_f32(V)); return vcombine_f32(vt, vt); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 0, 1>(FVector V) { float32x2_t vt = vget_low_f32(V); return vcombine_f32(vt, vt); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 2, 3>(FVector V) { float32x2_t vt = vget_high_f32(V); return vcombine_f32(vt, vt); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 1, 0>(FVector V) { float32x2_t vt = vrev64_f32(vget_low_f32(V)); return vcombine_f32(vt, vt); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 3, 2>(FVector V) { float32x2_t vt = vrev64_f32(vget_high_f32(V)); return vcombine_f32(vt, vt); }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 3, 2>(FVector V) { return vcombine_f32(vget_low_f32(V), vrev64_f32(vget_high_f32(V))); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 2, 3>(FVector V) { return vcombine_f32(vrev64_f32(vget_low_f32(V)), vget_high_f32(V)); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 1, 0>(FVector V) { return vcombine_f32(vget_high_f32(V), vrev64_f32(vget_low_f32(V))); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 0, 1>(FVector V) { return vcombine_f32(vrev64_f32(vget_high_f32(V)), vget_low_f32(V)); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 1, 0>(FVector V) { return vcombine_f32(vrev64_f32(vget_high_f32(V)), vrev64_f32(vget_low_f32(V))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 1, 3, 2>(FVector V) { return vcombine_f32(vget_low_f32(V), vrev64_f32(vget_high_f32(V))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 0, 2, 3>(FVector V) { return vcombine_f32(vrev64_f32(vget_low_f32(V)), vget_high_f32(V)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 1, 0>(FVector V) { return vcombine_f32(vget_high_f32(V), vrev64_f32(vget_low_f32(V))); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 0, 1>(FVector V) { return vcombine_f32(vrev64_f32(vget_high_f32(V)), vget_low_f32(V)); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 2, 1, 0>(FVector V) { return vcombine_f32(vrev64_f32(vget_high_f32(V)), vrev64_f32(vget_low_f32(V))); }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 2, 2>(FVector V) { return vtrnq_f32(V, V).val[0]; }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 3, 3>(FVector V) { return vtrnq_f32(V, V).val[1]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 2, 2>(FVector V) { return vtrnq_f32(V, V).val[0]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 1, 3, 3>(FVector V) { return vtrnq_f32(V, V).val[1]; }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 1, 1>(FVector V) { return vzipq_f32(V, V).val[0]; }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 3, 3>(FVector V) { return vzipq_f32(V, V).val[1]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 0, 1, 1>(FVector V) { return vzipq_f32(V, V).val[0]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 2, 3, 3>(FVector V) { return vzipq_f32(V, V).val[1]; }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<0, 2, 0, 2>(FVector V) { return vuzpq_f32(V, V).val[0]; }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 3, 1, 3>(FVector V) { return vuzpq_f32(V, V).val[1]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<0, 2, 0, 2>(FVector V) { return vuzpq_f32(V, V).val[0]; }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 3, 1, 3>(FVector V) { return vuzpq_f32(V, V).val[1]; }
 
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<1, 2, 3, 0>(FVector V) { return vextq_f32(V, V, 1); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 0, 1>(FVector V) { return vextq_f32(V, V, 2); }
-		template<> inline Vector      RAYMATH_CALLCONV     VectorSwizzle<3, 0, 1, 2>(FVector V) { return vextq_f32(V, V, 3); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<1, 2, 3, 0>(FVector V) { return vextq_f32(V, V, 1); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<2, 3, 0, 1>(FVector V) { return vextq_f32(V, V, 2); }
+		template<> inline VectorType      RAYMATH_CALLCONV     VectorSwizzle<3, 0, 1, 2>(FVector V) { return vextq_f32(V, V, 3); }
 
 #endif // RAY_ARM_NEON_INTRINSICS && !RAY_NO_INTRINSICS
 
 		//------------------------------------------------------------------------------
 
 		template<uint32_t Elements>
-		inline Vector     RAYMATH_CALLCONV     VectorShiftLeft(FVector V1, FVector V2)
+		inline VectorType     RAYMATH_CALLCONV     VectorShiftLeft(FVector V1, FVector V2)
 		{
 			static_assert(Elements < 4, "Elements template parameter out of range");
 			return VectorPermute<Elements, (Elements + 1), (Elements + 2), (Elements + 3)>(V1, V2);
 		}
 
 		template<uint32_t Elements>
-		inline Vector     RAYMATH_CALLCONV     VectorRotateLeft(FVector V)
+		inline VectorType     RAYMATH_CALLCONV     VectorRotateLeft(FVector V)
 		{
 			static_assert(Elements < 4, "Elements template parameter out of range");
 			return VectorSwizzle<Elements & 3, (Elements + 1) & 3, (Elements + 2) & 3, (Elements + 3) & 3>(V);
 		}
 
 		template<uint32_t Elements>
-		inline Vector     RAYMATH_CALLCONV     VectorRotateRight(FVector V)
+		inline VectorType     RAYMATH_CALLCONV     VectorRotateRight(FVector V)
 		{
 			static_assert(Elements < 4, "Elements template parameter out of range");
 			return VectorSwizzle<(4 - Elements) & 3, (5 - Elements) & 3, (6 - Elements) & 3, (7 - Elements) & 3>(V);
 		}
 
 		template<uint32_t VSLeftRotateElements, uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3>
-		inline Vector     RAYMATH_CALLCONV     VectorInsert(FVector VD, FVector VS)
+		inline VectorType     RAYMATH_CALLCONV     VectorInsert(FVector VD, FVector VS)
 		{
-			Vector Control = VectorSelectControl(Select0 & 1, Select1 & 1, Select2 & 1, Select3 & 1);
+			VectorType Control = VectorSelectControl(Select0 & 1, Select1 & 1, Select2 & 1, Select3 & 1);
 			return VectorSelect(VD, VectorRotateLeft<VSLeftRotateElements>(VS), Control);
 		}
 
@@ -2097,7 +2097,7 @@ namespace At0
 
 //------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorSetBinaryConstant(uint32_t C0, uint32_t C1, uint32_t C2, uint32_t C3)
+		inline VectorType RAYMATH_CALLCONV VectorSetBinaryConstant(uint32_t C0, uint32_t C1, uint32_t C2, uint32_t C3)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult;
@@ -2129,7 +2129,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorSplatConstant(int32_t IntConstant, uint32_t DivExponent)
+		inline VectorType RAYMATH_CALLCONV VectorSplatConstant(int32_t IntConstant, uint32_t DivExponent)
 		{
 			assert(IntConstant >= -16 && IntConstant <= 15);
 			assert(DivExponent < 32);
@@ -2144,7 +2144,7 @@ namespace At0
 			// Splat the int
 			int32x4_t vScale = vdupq_n_s32(IntConstant);
 			// Convert to a float
-			Vector vResult = vcvtq_f32_s32(vScale);
+			VectorType vResult = vcvtq_f32_s32(vScale);
 			// Convert DivExponent into 1.0f/(1<<DivExponent)
 			uint32_t uScale = 0x3F800000U - (DivExponent << 23);
 			// Splat the scalar value (It's really a float)
@@ -2156,7 +2156,7 @@ namespace At0
 			// Splat the int
 			__m128i vScale = _mm_set1_epi32(IntConstant);
 			// Convert to a float
-			Vector vResult = _mm_cvtepi32_ps(vScale);
+			VectorType vResult = _mm_cvtepi32_ps(vScale);
 			// Convert DivExponent into 1.0f/(1<<DivExponent)
 			uint32_t uScale = 0x3F800000U - (DivExponent << 23);
 			// Splat the scalar value (It's really a float)
@@ -2169,7 +2169,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorSplatConstantInt(int32_t IntConstant)
+		inline VectorType RAYMATH_CALLCONV VectorSplatConstantInt(int32_t IntConstant)
 		{
 			assert(IntConstant >= -16 && IntConstant <= 15);
 #if defined(RAY_NO_INTRINSICS)
@@ -2208,7 +2208,7 @@ namespace At0
 #pragma warning(disable:4701)
 // C4701: false positives
 
-		inline Vector RAYMATH_CALLCONV ConvertVectorIntToFloat
+		inline VectorType RAYMATH_CALLCONV ConvertVectorIntToFloat
 		(
 			FVector    VInt,
 			uint32_t     DivExponent
@@ -2218,7 +2218,7 @@ namespace At0
 #if defined(RAY_NO_INTRINSICS)
 			float fScale = 1.0f / static_cast<float>(1U << DivExponent);
 			uint32_t ElementIndex = 0;
-			Vector Result;
+			VectorType Result;
 			do {
 				auto iTemp = static_cast<int32_t>(VInt.vector4_u32[ElementIndex]);
 				Result.vector4_f32[ElementIndex] = static_cast<float>(iTemp) * fScale;
@@ -2230,7 +2230,7 @@ namespace At0
 			return vmulq_n_f32(vResult, fScale);
 #else // RAY_SSE_INTRINSICS
 			// Convert to floats
-			Vector vResult = _mm_cvtepi32_ps(_mm_castps_si128(VInt));
+			VectorType vResult = _mm_cvtepi32_ps(_mm_castps_si128(VInt));
 			// Convert DivExponent into 1.0f/(1<<DivExponent)
 			uint32_t uScale = 0x3F800000U - (DivExponent << 23);
 			// Splat the scalar value
@@ -2242,7 +2242,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ConvertVectorFloatToInt
+		inline VectorType RAYMATH_CALLCONV ConvertVectorFloatToInt
 		(
 			FVector    VFloat,
 			uint32_t     MulExponent
@@ -2253,7 +2253,7 @@ namespace At0
 			// Get the scalar factor.
 			auto fScale = static_cast<float>(1U << MulExponent);
 			uint32_t ElementIndex = 0;
-			Vector Result;
+			VectorType Result;
 			do {
 				int32_t iResult;
 				float fTemp = VFloat.vector4_f32[ElementIndex] * fScale;
@@ -2281,10 +2281,10 @@ namespace At0
 			vOverflow = vorrq_u32(vOverflow, vResult);
 			return vOverflow;
 #else // RAY_SSE_INTRINSICS
-			Vector vResult = _mm_set_ps1(static_cast<float>(1U << MulExponent));
+			VectorType vResult = _mm_set_ps1(static_cast<float>(1U << MulExponent));
 			vResult = _mm_mul_ps(vResult, VFloat);
 			// In case of positive overflow, detect it
-			Vector vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxInt);
+			VectorType vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxInt);
 			// Float to int conversion
 			__m128i vResulti = _mm_cvttps_epi32(vResult);
 			// If there was positive overflow, set to 0x7FFFFFFF
@@ -2297,7 +2297,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ConvertVectorUIntToFloat
+		inline VectorType RAYMATH_CALLCONV ConvertVectorUIntToFloat
 		(
 			FVector     VUInt,
 			uint32_t      DivExponent
@@ -2307,7 +2307,7 @@ namespace At0
 #if defined(RAY_NO_INTRINSICS)
 			float fScale = 1.0f / static_cast<float>(1U << DivExponent);
 			uint32_t ElementIndex = 0;
-			Vector Result;
+			VectorType Result;
 			do {
 				Result.vector4_f32[ElementIndex] = static_cast<float>(VUInt.vector4_u32[ElementIndex]) * fScale;
 			} while (++ElementIndex < 4);
@@ -2319,9 +2319,9 @@ namespace At0
 #else // RAY_SSE_INTRINSICS
 			// For the values that are higher than 0x7FFFFFFF, a fixup is needed
 			// Determine which ones need the fix.
-			Vector vMask = _mm_and_ps(VUInt, g_XMNegativeZero);
+			VectorType vMask = _mm_and_ps(VUInt, g_XMNegativeZero);
 			// Force all values positive
-			Vector vResult = _mm_xor_ps(VUInt, vMask);
+			VectorType vResult = _mm_xor_ps(VUInt, vMask);
 			// Convert to floats
 			vResult = _mm_cvtepi32_ps(_mm_castps_si128(vResult));
 			// Convert 0x80000000 -> 0xFFFFFFFF
@@ -2340,7 +2340,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ConvertVectorFloatToUInt
+		inline VectorType RAYMATH_CALLCONV ConvertVectorFloatToUInt
 		(
 			FVector     VFloat,
 			uint32_t      MulExponent
@@ -2351,7 +2351,7 @@ namespace At0
 			// Get the scalar factor.
 			auto fScale = static_cast<float>(1U << MulExponent);
 			uint32_t ElementIndex = 0;
-			Vector Result;
+			VectorType Result;
 			do {
 				uint32_t uResult;
 				float fTemp = VFloat.vector4_f32[ElementIndex] * fScale;
@@ -2378,15 +2378,15 @@ namespace At0
 			vOverflow = vorrq_u32(vOverflow, vResult);
 			return vOverflow;
 #else // RAY_SSE_INTRINSICS
-			Vector vResult = _mm_set_ps1(static_cast<float>(1U << MulExponent));
+			VectorType vResult = _mm_set_ps1(static_cast<float>(1U << MulExponent));
 			vResult = _mm_mul_ps(vResult, VFloat);
 			// Clamp to >=0
 			vResult = _mm_max_ps(vResult, g_XMZero);
 			// Any numbers that are too big, set to 0xFFFFFFFFU
-			Vector vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxUInt);
-			Vector vValue = g_XMUnsignedFix;
+			VectorType vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxUInt);
+			VectorType vValue = g_XMUnsignedFix;
 			// Too large for a signed integer?
-			Vector vMask = _mm_cmpge_ps(vResult, vValue);
+			VectorType vMask = _mm_cmpge_ps(vResult, vValue);
 			// Zero for number's lower than 0x80000000, 32768.0f*65536.0f otherwise
 			vValue = _mm_and_ps(vValue, vMask);
 			// Perform fixup only on numbers too large (Keeps low bit precision)
@@ -2405,16 +2405,16 @@ namespace At0
 
 		/****************************************************************************
 		 *
-		 * Vector and matrix load operations
+		 * VectorType and matrix load operations
 		 *
 		 ****************************************************************************/
 
 		 //------------------------------------------------------------------------------
-		inline Vector RAYMATH_CALLCONV LoadInt(const uint32_t* pSource)
+		inline VectorType RAYMATH_CALLCONV LoadInt(const uint32_t* pSource)
 		{
 			assert(pSource);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_u32[0] = *pSource;
 			V.vector4_u32[1] = 0;
 			V.vector4_u32[2] = 0;
@@ -2430,11 +2430,11 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadFloat(const float* pSource)
+		inline VectorType RAYMATH_CALLCONV LoadFloat(const float* pSource)
 		{
 			assert(pSource);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_f32[0] = *pSource;
 			V.vector4_f32[1] = 0.f;
 			V.vector4_f32[2] = 0.f;
@@ -2450,14 +2450,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadInt2
+		inline VectorType RAYMATH_CALLCONV LoadInt2
 		(
 			const uint32_t* pSource
 		)
 		{
 			assert(pSource);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_u32[0] = pSource[0];
 			V.vector4_u32[1] = pSource[1];
 			V.vector4_u32[2] = 0;
@@ -2476,7 +2476,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadInt2A
+		inline VectorType RAYMATH_CALLCONV LoadInt2A
 		(
 			const uint32_t* pSource
 		)
@@ -2484,7 +2484,7 @@ namespace At0
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_u32[0] = pSource[0];
 			V.vector4_u32[1] = pSource[1];
 			V.vector4_u32[2] = 0;
@@ -2502,14 +2502,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadFloat2
+		inline VectorType RAYMATH_CALLCONV LoadFloat2
 		(
 			const Float2* pSource
 		)
 		{
 			assert(pSource);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_f32[0] = pSource->x;
 			V.vector4_f32[1] = pSource->y;
 			V.vector4_f32[2] = 0.f;
@@ -2528,7 +2528,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadFloat2A
+		inline VectorType RAYMATH_CALLCONV LoadFloat2A
 		(
 			const Float2A* pSource
 		)
@@ -2536,7 +2536,7 @@ namespace At0
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_f32[0] = pSource->x;
 			V.vector4_f32[1] = pSource->y;
 			V.vector4_f32[2] = 0.f;
@@ -2554,14 +2554,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadSInt2
+		inline VectorType RAYMATH_CALLCONV LoadSInt2
 		(
 			const Int2* pSource
 		)
 		{
 			assert(pSource);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_f32[0] = static_cast<float>(pSource->x);
 			V.vector4_f32[1] = static_cast<float>(pSource->y);
 			V.vector4_f32[2] = 0.f;
@@ -2582,14 +2582,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadUInt2
+		inline VectorType RAYMATH_CALLCONV LoadUInt2
 		(
 			const UInt2* pSource
 		)
 		{
 			assert(pSource);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_f32[0] = static_cast<float>(pSource->x);
 			V.vector4_f32[1] = static_cast<float>(pSource->y);
 			V.vector4_f32[2] = 0.f;
@@ -2606,9 +2606,9 @@ namespace At0
 			__m128 V = _mm_unpacklo_ps(x, y);
 			// For the values that are higher than 0x7FFFFFFF, a fixup is needed
 			// Determine which ones need the fix.
-			Vector vMask = _mm_and_ps(V, g_XMNegativeZero);
+			VectorType vMask = _mm_and_ps(V, g_XMNegativeZero);
 			// Force all values positive
-			Vector vResult = _mm_xor_ps(V, vMask);
+			VectorType vResult = _mm_xor_ps(V, vMask);
 			// Convert to floats
 			vResult = _mm_cvtepi32_ps(_mm_castps_si128(vResult));
 			// Convert 0x80000000 -> 0xFFFFFFFF
@@ -2622,14 +2622,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadInt3
+		inline VectorType RAYMATH_CALLCONV LoadInt3
 		(
 			const uint32_t* pSource
 		)
 		{
 			assert(pSource);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_u32[0] = pSource[0];
 			V.vector4_u32[1] = pSource[1];
 			V.vector4_u32[2] = pSource[2];
@@ -2651,7 +2651,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadInt3A
+		inline VectorType RAYMATH_CALLCONV LoadInt3A
 		(
 			const uint32_t* pSource
 		)
@@ -2659,7 +2659,7 @@ namespace At0
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_u32[0] = pSource[0];
 			V.vector4_u32[1] = pSource[1];
 			V.vector4_u32[2] = pSource[2];
@@ -2679,14 +2679,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadFloat3
+		inline VectorType RAYMATH_CALLCONV LoadFloat3
 		(
 			const Float3* pSource
 		)
 		{
 			assert(pSource);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_f32[0] = pSource->x;
 			V.vector4_f32[1] = pSource->y;
 			V.vector4_f32[2] = pSource->z;
@@ -2708,7 +2708,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadFloat3A
+		inline VectorType RAYMATH_CALLCONV LoadFloat3A
 		(
 			const Float3A* pSource
 		)
@@ -2716,7 +2716,7 @@ namespace At0
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_f32[0] = pSource->x;
 			V.vector4_f32[1] = pSource->y;
 			V.vector4_f32[2] = pSource->z;
@@ -2735,7 +2735,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadSInt3
+		inline VectorType RAYMATH_CALLCONV LoadSInt3
 		(
 			const Int3* pSource
 		)
@@ -2743,7 +2743,7 @@ namespace At0
 			assert(pSource);
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector V;
+			VectorType V;
 			V.vector4_f32[0] = static_cast<float>(pSource->x);
 			V.vector4_f32[1] = static_cast<float>(pSource->y);
 			V.vector4_f32[2] = static_cast<float>(pSource->z);
@@ -2768,14 +2768,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadUInt3
+		inline VectorType RAYMATH_CALLCONV LoadUInt3
 		(
 			const UInt3* pSource
 		)
 		{
 			assert(pSource);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_f32[0] = static_cast<float>(pSource->x);
 			V.vector4_f32[1] = static_cast<float>(pSource->y);
 			V.vector4_f32[2] = static_cast<float>(pSource->z);
@@ -2795,9 +2795,9 @@ namespace At0
 			__m128 V = _mm_movelh_ps(xy, z);
 			// For the values that are higher than 0x7FFFFFFF, a fixup is needed
 			// Determine which ones need the fix.
-			Vector vMask = _mm_and_ps(V, g_XMNegativeZero);
+			VectorType vMask = _mm_and_ps(V, g_XMNegativeZero);
 			// Force all values positive
-			Vector vResult = _mm_xor_ps(V, vMask);
+			VectorType vResult = _mm_xor_ps(V, vMask);
 			// Convert to floats
 			vResult = _mm_cvtepi32_ps(_mm_castps_si128(vResult));
 			// Convert 0x80000000 -> 0xFFFFFFFF
@@ -2811,7 +2811,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadInt4
+		inline VectorType RAYMATH_CALLCONV LoadInt4
 		(
 			const uint32_t* pSource
 		)
@@ -2819,7 +2819,7 @@ namespace At0
 			assert(pSource);
 
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_u32[0] = pSource[0];
 			V.vector4_u32[1] = pSource[1];
 			V.vector4_u32[2] = pSource[2];
@@ -2835,7 +2835,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadInt4A
+		inline VectorType RAYMATH_CALLCONV LoadInt4A
 		(
 			const uint32_t* pSource
 		)
@@ -2843,7 +2843,7 @@ namespace At0
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_u32[0] = pSource[0];
 			V.vector4_u32[1] = pSource[1];
 			V.vector4_u32[2] = pSource[2];
@@ -2859,14 +2859,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadFloat4
+		inline VectorType RAYMATH_CALLCONV LoadFloat4
 		(
 			const Float4* pSource
 		)
 		{
 			assert(pSource);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_f32[0] = pSource->x;
 			V.vector4_f32[1] = pSource->y;
 			V.vector4_f32[2] = pSource->z;
@@ -2881,7 +2881,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadFloat4A
+		inline VectorType RAYMATH_CALLCONV LoadFloat4A
 		(
 			const Float4A* pSource
 		)
@@ -2889,7 +2889,7 @@ namespace At0
 			assert(pSource);
 			assert((reinterpret_cast<uintptr_t>(pSource) & 0xF) == 0);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_f32[0] = pSource->x;
 			V.vector4_f32[1] = pSource->y;
 			V.vector4_f32[2] = pSource->z;
@@ -2904,7 +2904,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadSInt4
+		inline VectorType RAYMATH_CALLCONV LoadSInt4
 		(
 			const Int4* pSource
 		)
@@ -2912,7 +2912,7 @@ namespace At0
 			assert(pSource);
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector V;
+			VectorType V;
 			V.vector4_f32[0] = static_cast<float>(pSource->x);
 			V.vector4_f32[1] = static_cast<float>(pSource->y);
 			V.vector4_f32[2] = static_cast<float>(pSource->z);
@@ -2930,14 +2930,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV LoadUInt4
+		inline VectorType RAYMATH_CALLCONV LoadUInt4
 		(
 			const UInt4* pSource
 		)
 		{
 			assert(pSource);
 #if defined(RAY_NO_INTRINSICS)
-			Vector V;
+			VectorType V;
 			V.vector4_f32[0] = static_cast<float>(pSource->x);
 			V.vector4_f32[1] = static_cast<float>(pSource->y);
 			V.vector4_f32[2] = static_cast<float>(pSource->z);
@@ -2950,9 +2950,9 @@ namespace At0
 			__m128i V = _mm_loadu_si128(reinterpret_cast<const __m128i*>(pSource));
 			// For the values that are higher than 0x7FFFFFFF, a fixup is needed
 			// Determine which ones need the fix.
-			Vector vMask = _mm_and_ps(_mm_castsi128_ps(V), g_XMNegativeZero);
+			VectorType vMask = _mm_and_ps(_mm_castsi128_ps(V), g_XMNegativeZero);
 			// Force all values positive
-			Vector vResult = _mm_xor_ps(_mm_castsi128_ps(V), vMask);
+			VectorType vResult = _mm_xor_ps(_mm_castsi128_ps(V), vMask);
 			// Convert to floats
 			vResult = _mm_cvtepi32_ps(_mm_castps_si128(vResult));
 			// Convert 0x80000000 -> 0xFFFFFFFF
@@ -3080,13 +3080,13 @@ namespace At0
 			// Use unaligned load instructions to 
 			// load the 12 floats
 			// vTemp1 = x1,y1,z1,x2
-			Vector vTemp1 = _mm_loadu_ps(&pSource->m[0][0]);
+			VectorType vTemp1 = _mm_loadu_ps(&pSource->m[0][0]);
 			// vTemp2 = y2,z2,x3,y3
-			Vector vTemp2 = _mm_loadu_ps(&pSource->m[1][1]);
+			VectorType vTemp2 = _mm_loadu_ps(&pSource->m[1][1]);
 			// vTemp4 = z3,x4,y4,z4
-			Vector vTemp4 = _mm_loadu_ps(&pSource->m[2][2]);
+			VectorType vTemp4 = _mm_loadu_ps(&pSource->m[2][2]);
 			// vTemp3 = x3,y3,z3,z3
-			Vector vTemp3 = _mm_shuffle_ps(vTemp2, vTemp4, _MM_SHUFFLE(0, 0, 3, 2));
+			VectorType vTemp3 = _mm_shuffle_ps(vTemp2, vTemp4, _MM_SHUFFLE(0, 0, 3, 2));
 			// vTemp2 = y2,z2,x2,x2
 			vTemp2 = _mm_shuffle_ps(vTemp2, vTemp1, _MM_SHUFFLE(3, 3, 1, 0));
 			// vTemp2 = x2,y2,z2,z2
@@ -3161,13 +3161,13 @@ namespace At0
 			// Use aligned load instructions to 
 			// load the 12 floats
 			// vTemp1 = x1,y1,z1,x2
-			Vector vTemp1 = _mm_load_ps(&pSource->m[0][0]);
+			VectorType vTemp1 = _mm_load_ps(&pSource->m[0][0]);
 			// vTemp2 = y2,z2,x3,y3
-			Vector vTemp2 = _mm_load_ps(&pSource->m[1][1]);
+			VectorType vTemp2 = _mm_load_ps(&pSource->m[1][1]);
 			// vTemp4 = z3,x4,y4,z4
-			Vector vTemp4 = _mm_load_ps(&pSource->m[2][2]);
+			VectorType vTemp4 = _mm_load_ps(&pSource->m[2][2]);
 			// vTemp3 = x3,y3,z3,z3
-			Vector vTemp3 = _mm_shuffle_ps(vTemp2, vTemp4, _MM_SHUFFLE(0, 0, 3, 2));
+			VectorType vTemp3 = _mm_shuffle_ps(vTemp2, vTemp4, _MM_SHUFFLE(0, 0, 3, 2));
 			// vTemp2 = y2,z2,x2,x2
 			vTemp2 = _mm_shuffle_ps(vTemp2, vTemp1, _MM_SHUFFLE(3, 3, 1, 0));
 			// vTemp2 = x2,y2,z2,z2
@@ -3250,13 +3250,13 @@ namespace At0
 			M.r[3] = g_XMIdentityR3;
 
 			// x.x,x.y,y.x,y.y
-			Vector vTemp1 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(1, 0, 1, 0));
+			VectorType vTemp1 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(1, 0, 1, 0));
 			// x.z,x.w,y.z,y.w
-			Vector vTemp3 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp3 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(3, 2, 3, 2));
 			// z.x,z.y,w.x,w.y
-			Vector vTemp2 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(1, 0, 1, 0));
+			VectorType vTemp2 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(1, 0, 1, 0));
 			// z.z,z.w,w.z,w.w
-			Vector vTemp4 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp4 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(3, 2, 3, 2));
 			Matrix mResult;
 
 			// x.x,y.x,z.x,w.x
@@ -3332,13 +3332,13 @@ namespace At0
 			M.r[3] = g_XMIdentityR3;
 
 			// x.x,x.y,y.x,y.y
-			Vector vTemp1 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(1, 0, 1, 0));
+			VectorType vTemp1 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(1, 0, 1, 0));
 			// x.z,x.w,y.z,y.w
-			Vector vTemp3 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp3 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(3, 2, 3, 2));
 			// z.x,z.y,w.x,w.y
-			Vector vTemp2 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(1, 0, 1, 0));
+			VectorType vTemp2 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(1, 0, 1, 0));
 			// z.z,z.w,w.z,w.w
-			Vector vTemp4 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp4 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(3, 2, 3, 2));
 			Matrix mResult;
 
 			// x.x,y.x,z.x,w.x
@@ -3454,7 +3454,7 @@ namespace At0
 
 		/****************************************************************************
 		 *
-		 * Vector and matrix store operations
+		 * VectorType and matrix store operations
 		 *
 		 ****************************************************************************/
 
@@ -3508,7 +3508,7 @@ namespace At0
 			uint32x2_t VL = vget_low_u32(V);
 			vst1_u32(pDestination, VL);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector T = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType T = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination[0]), V);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination[1]), T);
 #endif
@@ -3551,7 +3551,7 @@ namespace At0
 			float32x2_t VL = vget_low_f32(V);
 			vst1_f32(reinterpret_cast<float*>(pDestination), VL);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector T = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType T = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			_mm_store_ss(&pDestination->x, V);
 			_mm_store_ss(&pDestination->y, T);
 #endif
@@ -3596,15 +3596,15 @@ namespace At0
 			vst1_s32(reinterpret_cast<int32_t*>(pDestination), v);
 #elif defined(RAY_SSE_INTRINSICS)
 			// In case of positive overflow, detect it
-			Vector vOverflow = _mm_cmpgt_ps(V, g_XMMaxInt);
+			VectorType vOverflow = _mm_cmpgt_ps(V, g_XMMaxInt);
 			// Float to int conversion
 			__m128i vResulti = _mm_cvttps_epi32(V);
 			// If there was positive overflow, set to 0x7FFFFFFF
-			Vector vResult = _mm_and_ps(vOverflow, g_XMAbsMask);
+			VectorType vResult = _mm_and_ps(vOverflow, g_XMAbsMask);
 			vOverflow = _mm_andnot_ps(vOverflow, _mm_castsi128_ps(vResulti));
 			vOverflow = _mm_or_ps(vOverflow, vResult);
 			// Write two ints
-			Vector T = RAYMATH_PERMUTE_PS(vOverflow, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType T = RAYMATH_PERMUTE_PS(vOverflow, _MM_SHUFFLE(1, 1, 1, 1));
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->x), vOverflow);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->y), T);
 #endif
@@ -3628,12 +3628,12 @@ namespace At0
 			vst1_u32(reinterpret_cast<uint32_t*>(pDestination), iv);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Clamp to >=0
-			Vector vResult = _mm_max_ps(V, g_XMZero);
+			VectorType vResult = _mm_max_ps(V, g_XMZero);
 			// Any numbers that are too big, set to 0xFFFFFFFFU
-			Vector vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxUInt);
-			Vector vValue = g_XMUnsignedFix;
+			VectorType vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxUInt);
+			VectorType vValue = g_XMUnsignedFix;
 			// Too large for a signed integer?
-			Vector vMask = _mm_cmpge_ps(vResult, vValue);
+			VectorType vMask = _mm_cmpge_ps(vResult, vValue);
 			// Zero for number's lower than 0x80000000, 32768.0f*65536.0f otherwise
 			vValue = _mm_and_ps(vValue, vMask);
 			// Perform fixup only on numbers too large (Keeps low bit precision)
@@ -3645,7 +3645,7 @@ namespace At0
 			// On those that are too large, set to 0xFFFFFFFF
 			vResult = _mm_or_ps(vResult, vOverflow);
 			// Write two uints
-			Vector T = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType T = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(1, 1, 1, 1));
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->x), vResult);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->y), T);
 #endif
@@ -3669,8 +3669,8 @@ namespace At0
 			vst1_u32(pDestination, VL);
 			vst1q_lane_u32(pDestination + 2, *reinterpret_cast<const uint32x4_t*>(&V), 2);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector T1 = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector T2 = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType T1 = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType T2 = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_store_ss(reinterpret_cast<float*>(pDestination), V);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination[1]), T1);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination[2]), T2);
@@ -3696,7 +3696,7 @@ namespace At0
 			vst1_u32_ex(pDestination, VL, 64);
 			vst1q_lane_u32(pDestination + 2, *reinterpret_cast<const uint32x4_t*>(&V), 2);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector T = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType T = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_storel_epi64(reinterpret_cast<__m128i*>(pDestination), _mm_castps_si128(V));
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination[2]), T);
 #endif
@@ -3720,8 +3720,8 @@ namespace At0
 			vst1_f32(reinterpret_cast<float*>(pDestination), VL);
 			vst1q_lane_f32(reinterpret_cast<float*>(pDestination) + 2, V, 2);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector T1 = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector T2 = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType T1 = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType T2 = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_store_ss(&pDestination->x, V);
 			_mm_store_ss(&pDestination->y, T1);
 			_mm_store_ss(&pDestination->z, T2);
@@ -3747,7 +3747,7 @@ namespace At0
 			vst1_f32_ex(reinterpret_cast<float*>(pDestination), VL, 64);
 			vst1q_lane_f32(reinterpret_cast<float*>(pDestination) + 2, V, 2);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector T = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType T = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_storel_epi64(reinterpret_cast<__m128i*>(pDestination), _mm_castps_si128(V));
 			_mm_store_ss(&pDestination->z, T);
 #endif
@@ -3773,16 +3773,16 @@ namespace At0
 			vst1q_lane_s32(reinterpret_cast<int32_t*>(pDestination) + 2, v, 2);
 #elif defined(RAY_SSE_INTRINSICS)
 			// In case of positive overflow, detect it
-			Vector vOverflow = _mm_cmpgt_ps(V, g_XMMaxInt);
+			VectorType vOverflow = _mm_cmpgt_ps(V, g_XMMaxInt);
 			// Float to int conversion
 			__m128i vResulti = _mm_cvttps_epi32(V);
 			// If there was positive overflow, set to 0x7FFFFFFF
-			Vector vResult = _mm_and_ps(vOverflow, g_XMAbsMask);
+			VectorType vResult = _mm_and_ps(vOverflow, g_XMAbsMask);
 			vOverflow = _mm_andnot_ps(vOverflow, _mm_castsi128_ps(vResulti));
 			vOverflow = _mm_or_ps(vOverflow, vResult);
 			// Write 3 uints
-			Vector T1 = RAYMATH_PERMUTE_PS(vOverflow, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector T2 = RAYMATH_PERMUTE_PS(vOverflow, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType T1 = RAYMATH_PERMUTE_PS(vOverflow, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType T2 = RAYMATH_PERMUTE_PS(vOverflow, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->x), vOverflow);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->y), T1);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->z), T2);
@@ -3809,12 +3809,12 @@ namespace At0
 			vst1q_lane_u32(reinterpret_cast<uint32_t*>(pDestination) + 2, v, 2);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Clamp to >=0
-			Vector vResult = _mm_max_ps(V, g_XMZero);
+			VectorType vResult = _mm_max_ps(V, g_XMZero);
 			// Any numbers that are too big, set to 0xFFFFFFFFU
-			Vector vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxUInt);
-			Vector vValue = g_XMUnsignedFix;
+			VectorType vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxUInt);
+			VectorType vValue = g_XMUnsignedFix;
 			// Too large for a signed integer?
-			Vector vMask = _mm_cmpge_ps(vResult, vValue);
+			VectorType vMask = _mm_cmpge_ps(vResult, vValue);
 			// Zero for number's lower than 0x80000000, 32768.0f*65536.0f otherwise
 			vValue = _mm_and_ps(vValue, vMask);
 			// Perform fixup only on numbers too large (Keeps low bit precision)
@@ -3826,8 +3826,8 @@ namespace At0
 			// On those that are too large, set to 0xFFFFFFFF
 			vResult = _mm_or_ps(vResult, vOverflow);
 			// Write 3 uints
-			Vector T1 = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector T2 = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType T1 = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType T2 = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->x), vResult);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->y), T1);
 			_mm_store_ss(reinterpret_cast<float*>(&pDestination->z), T2);
@@ -3939,11 +3939,11 @@ namespace At0
 			vst1q_s32(reinterpret_cast<int32_t*>(pDestination), v);
 #elif defined(RAY_SSE_INTRINSICS)
 			// In case of positive overflow, detect it
-			Vector vOverflow = _mm_cmpgt_ps(V, g_XMMaxInt);
+			VectorType vOverflow = _mm_cmpgt_ps(V, g_XMMaxInt);
 			// Float to int conversion
 			__m128i vResulti = _mm_cvttps_epi32(V);
 			// If there was positive overflow, set to 0x7FFFFFFF
-			Vector vResult = _mm_and_ps(vOverflow, g_XMAbsMask);
+			VectorType vResult = _mm_and_ps(vOverflow, g_XMAbsMask);
 			vOverflow = _mm_andnot_ps(vOverflow, _mm_castsi128_ps(vResulti));
 			vOverflow = _mm_or_ps(vOverflow, vResult);
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(pDestination), _mm_castps_si128(vOverflow));
@@ -3969,12 +3969,12 @@ namespace At0
 			vst1q_u32(reinterpret_cast<uint32_t*>(pDestination), v);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Clamp to >=0
-			Vector vResult = _mm_max_ps(V, g_XMZero);
+			VectorType vResult = _mm_max_ps(V, g_XMZero);
 			// Any numbers that are too big, set to 0xFFFFFFFFU
-			Vector vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxUInt);
-			Vector vValue = g_XMUnsignedFix;
+			VectorType vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxUInt);
+			VectorType vValue = g_XMUnsignedFix;
 			// Too large for a signed integer?
-			Vector vMask = _mm_cmpge_ps(vResult, vValue);
+			VectorType vMask = _mm_cmpge_ps(vResult, vValue);
 			// Zero for number's lower than 0x80000000, 32768.0f*65536.0f otherwise
 			vValue = _mm_and_ps(vValue, vMask);
 			// Perform fixup only on numbers too large (Keeps low bit precision)
@@ -4023,10 +4023,10 @@ namespace At0
 
 			vst1q_lane_f32(&pDestination->m[2][2], M.r[2], 2);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp1 = M.r[0];
-			Vector vTemp2 = M.r[1];
-			Vector vTemp3 = M.r[2];
-			Vector vWork = _mm_shuffle_ps(vTemp1, vTemp2, _MM_SHUFFLE(0, 0, 2, 2));
+			VectorType vTemp1 = M.r[0];
+			VectorType vTemp2 = M.r[1];
+			VectorType vTemp3 = M.r[2];
+			VectorType vWork = _mm_shuffle_ps(vTemp1, vTemp2, _MM_SHUFFLE(0, 0, 2, 2));
 			vTemp1 = _mm_shuffle_ps(vTemp1, vWork, _MM_SHUFFLE(2, 0, 1, 0));
 			_mm_storeu_ps(&pDestination->m[0][0], vTemp1);
 			vTemp2 = _mm_shuffle_ps(vTemp2, vTemp3, _MM_SHUFFLE(1, 0, 2, 1));
@@ -4076,11 +4076,11 @@ namespace At0
 			T2 = vextq_f32(T1, M.r[3], 3);
 			vst1q_f32(&pDestination->m[2][2], T2);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp1 = M.r[0];
-			Vector vTemp2 = M.r[1];
-			Vector vTemp3 = M.r[2];
-			Vector vTemp4 = M.r[3];
-			Vector vTemp2x = _mm_shuffle_ps(vTemp2, vTemp3, _MM_SHUFFLE(1, 0, 2, 1));
+			VectorType vTemp1 = M.r[0];
+			VectorType vTemp2 = M.r[1];
+			VectorType vTemp3 = M.r[2];
+			VectorType vTemp4 = M.r[3];
+			VectorType vTemp2x = _mm_shuffle_ps(vTemp2, vTemp3, _MM_SHUFFLE(1, 0, 2, 1));
 			vTemp2 = _mm_shuffle_ps(vTemp2, vTemp1, _MM_SHUFFLE(2, 2, 0, 0));
 			vTemp1 = _mm_shuffle_ps(vTemp1, vTemp2, _MM_SHUFFLE(0, 2, 1, 0));
 			vTemp3 = _mm_shuffle_ps(vTemp3, vTemp4, _MM_SHUFFLE(0, 0, 2, 2));
@@ -4133,15 +4133,15 @@ namespace At0
 			vst1q_f32_ex(&pDestination->m[2][2], T2, 128);
 #elif defined(RAY_SSE_INTRINSICS)
 			// x1,y1,z1,w1
-			Vector vTemp1 = M.r[0];
+			VectorType vTemp1 = M.r[0];
 			// x2,y2,z2,w2
-			Vector vTemp2 = M.r[1];
+			VectorType vTemp2 = M.r[1];
 			// x3,y3,z3,w3
-			Vector vTemp3 = M.r[2];
+			VectorType vTemp3 = M.r[2];
 			// x4,y4,z4,w4
-			Vector vTemp4 = M.r[3];
+			VectorType vTemp4 = M.r[3];
 			// z1,z1,x2,y2
-			Vector vTemp = _mm_shuffle_ps(vTemp1, vTemp2, _MM_SHUFFLE(1, 0, 2, 2));
+			VectorType vTemp = _mm_shuffle_ps(vTemp1, vTemp2, _MM_SHUFFLE(1, 0, 2, 2));
 			// y2,z2,x3,y3 (Final)
 			vTemp2 = _mm_shuffle_ps(vTemp2, vTemp3, _MM_SHUFFLE(1, 0, 2, 1));
 			// x1,y1,z1,x2 (Final)
@@ -4195,20 +4195,20 @@ namespace At0
 			vst1q_f32(&pDestination->m[2][0], T1.val[0]);
 #elif defined(RAY_SSE_INTRINSICS)
 			// x.x,x.y,y.x,y.y
-			Vector vTemp1 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(1, 0, 1, 0));
+			VectorType vTemp1 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(1, 0, 1, 0));
 			// x.z,x.w,y.z,y.w
-			Vector vTemp3 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp3 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(3, 2, 3, 2));
 			// z.x,z.y,w.x,w.y
-			Vector vTemp2 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(1, 0, 1, 0));
+			VectorType vTemp2 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(1, 0, 1, 0));
 			// z.z,z.w,w.z,w.w
-			Vector vTemp4 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp4 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(3, 2, 3, 2));
 
 			// x.x,y.x,z.x,w.x
-			Vector r0 = _mm_shuffle_ps(vTemp1, vTemp2, _MM_SHUFFLE(2, 0, 2, 0));
+			VectorType r0 = _mm_shuffle_ps(vTemp1, vTemp2, _MM_SHUFFLE(2, 0, 2, 0));
 			// x.y,y.y,z.y,w.y
-			Vector r1 = _mm_shuffle_ps(vTemp1, vTemp2, _MM_SHUFFLE(3, 1, 3, 1));
+			VectorType r1 = _mm_shuffle_ps(vTemp1, vTemp2, _MM_SHUFFLE(3, 1, 3, 1));
 			// x.z,y.z,z.z,w.z
-			Vector r2 = _mm_shuffle_ps(vTemp3, vTemp4, _MM_SHUFFLE(2, 0, 2, 0));
+			VectorType r2 = _mm_shuffle_ps(vTemp3, vTemp4, _MM_SHUFFLE(2, 0, 2, 0));
 
 			_mm_storeu_ps(&pDestination->m[0][0], r0);
 			_mm_storeu_ps(&pDestination->m[1][0], r1);
@@ -4255,20 +4255,20 @@ namespace At0
 			vst1q_f32_ex(&pDestination->m[2][0], T1.val[0], 128);
 #elif defined(RAY_SSE_INTRINSICS)
 			// x.x,x.y,y.x,y.y
-			Vector vTemp1 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(1, 0, 1, 0));
+			VectorType vTemp1 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(1, 0, 1, 0));
 			// x.z,x.w,y.z,y.w
-			Vector vTemp3 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp3 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(3, 2, 3, 2));
 			// z.x,z.y,w.x,w.y
-			Vector vTemp2 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(1, 0, 1, 0));
+			VectorType vTemp2 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(1, 0, 1, 0));
 			// z.z,z.w,w.z,w.w
-			Vector vTemp4 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp4 = _mm_shuffle_ps(M.r[2], M.r[3], _MM_SHUFFLE(3, 2, 3, 2));
 
 			// x.x,y.x,z.x,w.x
-			Vector r0 = _mm_shuffle_ps(vTemp1, vTemp2, _MM_SHUFFLE(2, 0, 2, 0));
+			VectorType r0 = _mm_shuffle_ps(vTemp1, vTemp2, _MM_SHUFFLE(2, 0, 2, 0));
 			// x.y,y.y,z.y,w.y
-			Vector r1 = _mm_shuffle_ps(vTemp1, vTemp2, _MM_SHUFFLE(3, 1, 3, 1));
+			VectorType r1 = _mm_shuffle_ps(vTemp1, vTemp2, _MM_SHUFFLE(3, 1, 3, 1));
 			// x.z,y.z,z.z,w.z
-			Vector r2 = _mm_shuffle_ps(vTemp3, vTemp4, _MM_SHUFFLE(2, 0, 2, 0));
+			VectorType r2 = _mm_shuffle_ps(vTemp3, vTemp4, _MM_SHUFFLE(2, 0, 2, 0));
 
 			_mm_store_ps(&pDestination->m[0][0], r0);
 			_mm_store_ps(&pDestination->m[1][0], r1);
@@ -4386,10 +4386,10 @@ namespace At0
 #if defined(RAY_SSE_INTRINSICS)
 
 #define XM3UNPACK3INTO4(l1,l2,l3) \
-    Vector V3 = _mm_shuffle_ps(l2,l3,_MM_SHUFFLE(0,0,3,2));\
-    Vector V2 = _mm_shuffle_ps(l2,l1,_MM_SHUFFLE(3,3,1,0));\
+    VectorType V3 = _mm_shuffle_ps(l2,l3,_MM_SHUFFLE(0,0,3,2));\
+    VectorType V2 = _mm_shuffle_ps(l2,l1,_MM_SHUFFLE(3,3,1,0));\
     V2 = RAYMATH_PERMUTE_PS(V2,_MM_SHUFFLE(1,1,0,2));\
-    Vector V4 = _mm_castsi128_ps( _mm_srli_si128(_mm_castps_si128(L3),32/8) );
+    VectorType V4 = _mm_castsi128_ps( _mm_srli_si128(_mm_castps_si128(L3),32/8) );
 
 #define XM3PACK4INTO3(v2x) \
     v2x = _mm_shuffle_ps(V2,V3,_MM_SHUFFLE(1,0,2,1));\
@@ -4402,7 +4402,7 @@ namespace At0
 
 /****************************************************************************
  *
- * General Vector
+ * General VectorType
  *
  ****************************************************************************/
 
@@ -4412,7 +4412,7 @@ namespace At0
 
  //------------------------------------------------------------------------------
  // Return a vector with all elements equaling zero
-		inline Vector RAYMATH_CALLCONV VectorZero()
+		inline VectorType RAYMATH_CALLCONV VectorZero()
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult = { { { 0.0f, 0.0f, 0.0f, 0.0f } } };
@@ -4426,7 +4426,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with four floating point values
-		inline Vector RAYMATH_CALLCONV VectorSet
+		inline VectorType RAYMATH_CALLCONV VectorSet
 		(
 			float x,
 			float y,
@@ -4452,7 +4452,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with four integer values
-		inline Vector RAYMATH_CALLCONV VectorSetInt
+		inline VectorType RAYMATH_CALLCONV VectorSetInt
 		(
 			uint32_t x,
 			uint32_t y,
@@ -4475,7 +4475,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with a replicated floating point value
-		inline Vector RAYMATH_CALLCONV VectorReplicate
+		inline VectorType RAYMATH_CALLCONV VectorReplicate
 		(
 			float Value
 		)
@@ -4497,7 +4497,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Initialize a vector with a replicated floating point value passed by pointer
 
-		inline Vector RAYMATH_CALLCONV VectorReplicatePtr
+		inline VectorType RAYMATH_CALLCONV VectorReplicatePtr
 		(
 			const float* pValue
 		)
@@ -4521,7 +4521,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with a replicated integer value
-		inline Vector RAYMATH_CALLCONV VectorReplicateInt
+		inline VectorType RAYMATH_CALLCONV VectorReplicateInt
 		(
 			uint32_t Value
 		)
@@ -4544,7 +4544,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Initialize a vector with a replicated integer value passed by pointer
 
-		inline Vector RAYMATH_CALLCONV VectorReplicateIntPtr
+		inline VectorType RAYMATH_CALLCONV VectorReplicateIntPtr
 		(
 			const uint32_t* pValue
 		)
@@ -4566,7 +4566,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with all bits set (true mask)
-		inline Vector RAYMATH_CALLCONV VectorTrueInt()
+		inline VectorType RAYMATH_CALLCONV VectorTrueInt()
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult = { { { 0xFFFFFFFFU, 0xFFFFFFFFU, 0xFFFFFFFFU, 0xFFFFFFFFU } } };
@@ -4581,7 +4581,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with all bits clear (false mask)
-		inline Vector RAYMATH_CALLCONV VectorFalseInt()
+		inline VectorType RAYMATH_CALLCONV VectorFalseInt()
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult = { { { 0.0f, 0.0f, 0.0f, 0.0f } } };
@@ -4595,7 +4595,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Replicate the x component of the vector
-		inline Vector RAYMATH_CALLCONV VectorSplatX
+		inline VectorType RAYMATH_CALLCONV VectorSplatX
 		(
 			FVector V
 		)
@@ -4618,7 +4618,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Replicate the y component of the vector
-		inline Vector RAYMATH_CALLCONV VectorSplatY
+		inline VectorType RAYMATH_CALLCONV VectorSplatY
 		(
 			FVector V
 		)
@@ -4639,7 +4639,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Replicate the z component of the vector
-		inline Vector RAYMATH_CALLCONV VectorSplatZ
+		inline VectorType RAYMATH_CALLCONV VectorSplatZ
 		(
 			FVector V
 		)
@@ -4660,7 +4660,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Replicate the w component of the vector
-		inline Vector RAYMATH_CALLCONV VectorSplatW
+		inline VectorType RAYMATH_CALLCONV VectorSplatW
 		(
 			FVector V
 		)
@@ -4681,7 +4681,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Return a vector of 1.0f,1.0f,1.0f,1.0f
-		inline Vector RAYMATH_CALLCONV VectorSplatOne()
+		inline VectorType RAYMATH_CALLCONV VectorSplatOne()
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 vResult;
@@ -4699,7 +4699,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Return a vector of INF,INF,INF,INF
-		inline Vector RAYMATH_CALLCONV VectorSplatInfinity()
+		inline VectorType RAYMATH_CALLCONV VectorSplatInfinity()
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult;
@@ -4717,7 +4717,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Return a vector of Q_NAN,Q_NAN,Q_NAN,Q_NAN
-		inline Vector RAYMATH_CALLCONV VectorSplatQNaN()
+		inline VectorType RAYMATH_CALLCONV VectorSplatQNaN()
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult;
@@ -4735,7 +4735,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Return a vector of 1.192092896e-7f,1.192092896e-7f,1.192092896e-7f,1.192092896e-7f
-		inline Vector RAYMATH_CALLCONV VectorSplatEpsilon()
+		inline VectorType RAYMATH_CALLCONV VectorSplatEpsilon()
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult;
@@ -4753,7 +4753,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Return a vector of -0.0f (0x80000000),-0.0f,-0.0f,-0.0f
-		inline Vector RAYMATH_CALLCONV VectorSplatSignMask()
+		inline VectorType RAYMATH_CALLCONV VectorSplatSignMask()
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 vResult;
@@ -4806,7 +4806,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vgetq_lane_f32(V, 1);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			return _mm_cvtss_f32(vTemp);
 #endif
 		}
@@ -4819,7 +4819,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vgetq_lane_f32(V, 2);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			return _mm_cvtss_f32(vTemp);
 #endif
 		}
@@ -4832,7 +4832,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vgetq_lane_f32(V, 3);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 			return _mm_cvtss_f32(vTemp);
 #endif
 		}
@@ -4882,7 +4882,7 @@ namespace At0
 #elif defined(RAY_SSE4_INTRINSICS)
 			* (reinterpret_cast<int*>(y)) = _mm_extract_ps(V, 1);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			_mm_store_ss(y, vResult);
 #endif
 		}
@@ -4899,7 +4899,7 @@ namespace At0
 #elif defined(RAY_SSE4_INTRINSICS)
 			* (reinterpret_cast<int*>(z)) = _mm_extract_ps(V, 2);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_store_ss(z, vResult);
 #endif
 		}
@@ -4916,7 +4916,7 @@ namespace At0
 #elif defined(RAY_SSE4_INTRINSICS)
 			* (reinterpret_cast<int*>(w)) = _mm_extract_ps(V, 3);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 			_mm_store_ss(w, vResult);
 #endif
 		}
@@ -5045,7 +5045,7 @@ namespace At0
 			__m128i V1 = _mm_castps_si128(V);
 			*y = static_cast<uint32_t>(_mm_extract_epi32(V1, 1));
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			_mm_store_ss(reinterpret_cast<float*>(y), vResult);
 #endif
 		}
@@ -5063,7 +5063,7 @@ namespace At0
 			__m128i V1 = _mm_castps_si128(V);
 			*z = static_cast<uint32_t>(_mm_extract_epi32(V1, 2));
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
 			_mm_store_ss(reinterpret_cast<float*>(z), vResult);
 #endif
 		}
@@ -5081,7 +5081,7 @@ namespace At0
 			__m128i V1 = _mm_castps_si128(V);
 			*w = static_cast<uint32_t>(_mm_extract_epi32(V1, 3));
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 			_mm_store_ss(reinterpret_cast<float*>(w), vResult);
 #endif
 		}
@@ -5089,7 +5089,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Set a single indexed floating point component
-		inline Vector RAYMATH_CALLCONV VectorSetByIndex(FVector V, float f, size_t i)
+		inline VectorType RAYMATH_CALLCONV VectorSetByIndex(FVector V, float f, size_t i)
 		{
 			assert(i < 4);
 			VectorF32 U;
@@ -5101,7 +5101,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Sets the X component of a vector to a passed floating point value
-		inline Vector RAYMATH_CALLCONV VectorSetX(FVector V, float x)
+		inline VectorType RAYMATH_CALLCONV VectorSetX(FVector V, float x)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
@@ -5116,14 +5116,14 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vsetq_lane_f32(x, V, 0);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = _mm_set_ss(x);
+			VectorType vResult = _mm_set_ss(x);
 			vResult = _mm_move_ss(V, vResult);
 			return vResult;
 #endif
 		}
 
 		// Sets the Y component of a vector to a passed floating point value
-		inline Vector RAYMATH_CALLCONV VectorSetY(FVector V, float y)
+		inline VectorType RAYMATH_CALLCONV VectorSetY(FVector V, float y)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
@@ -5138,14 +5138,14 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vsetq_lane_f32(y, V, 1);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vResult = _mm_set_ss(y);
+			VectorType vResult = _mm_set_ss(y);
 			vResult = _mm_insert_ps(V, vResult, 0x10);
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap y and x
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
 			// Convert input to vector
-			Vector vTemp = _mm_set_ss(y);
+			VectorType vTemp = _mm_set_ss(y);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap y and x again
@@ -5154,7 +5154,7 @@ namespace At0
 #endif
 		}
 		// Sets the Z component of a vector to a passed floating point value
-		inline Vector RAYMATH_CALLCONV VectorSetZ(FVector V, float z)
+		inline VectorType RAYMATH_CALLCONV VectorSetZ(FVector V, float z)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
@@ -5169,14 +5169,14 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vsetq_lane_f32(z, V, 2);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vResult = _mm_set_ss(z);
+			VectorType vResult = _mm_set_ss(z);
 			vResult = _mm_insert_ps(V, vResult, 0x20);
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap z and x
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
 			// Convert input to vector
-			Vector vTemp = _mm_set_ss(z);
+			VectorType vTemp = _mm_set_ss(z);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap z and x again
@@ -5186,7 +5186,7 @@ namespace At0
 		}
 
 		// Sets the W component of a vector to a passed floating point value
-		inline Vector RAYMATH_CALLCONV VectorSetW(FVector V, float w)
+		inline VectorType RAYMATH_CALLCONV VectorSetW(FVector V, float w)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 U = { { {
@@ -5201,14 +5201,14 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vsetq_lane_f32(w, V, 3);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vResult = _mm_set_ss(w);
+			VectorType vResult = _mm_set_ss(w);
 			vResult = _mm_insert_ps(V, vResult, 0x30);
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap w and x
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
 			// Convert input to vector
-			Vector vTemp = _mm_set_ss(w);
+			VectorType vTemp = _mm_set_ss(w);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap w and x again
@@ -5221,7 +5221,7 @@ namespace At0
 
 		// Sets a component of a vector to a floating point value passed by pointer
 
-		inline Vector RAYMATH_CALLCONV VectorSetByIndexPtr(FVector V, const float* f, size_t i)
+		inline VectorType RAYMATH_CALLCONV VectorSetByIndexPtr(FVector V, const float* f, size_t i)
 		{
 			assert(f != nullptr);
 			assert(i < 4);
@@ -5235,7 +5235,7 @@ namespace At0
 
 		// Sets the X component of a vector to a floating point value passed by pointer
 
-		inline Vector RAYMATH_CALLCONV VectorSetXPtr(FVector V, const float* x)
+		inline VectorType RAYMATH_CALLCONV VectorSetXPtr(FVector V, const float* x)
 		{
 			assert(x != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5251,7 +5251,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_lane_f32(x, V, 0);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = _mm_load_ss(x);
+			VectorType vResult = _mm_load_ss(x);
 			vResult = _mm_move_ss(V, vResult);
 			return vResult;
 #endif
@@ -5259,7 +5259,7 @@ namespace At0
 
 		// Sets the Y component of a vector to a floating point value passed by pointer
 
-		inline Vector RAYMATH_CALLCONV VectorSetYPtr(FVector V, const float* y)
+		inline VectorType RAYMATH_CALLCONV VectorSetYPtr(FVector V, const float* y)
 		{
 			assert(y != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5274,9 +5274,9 @@ namespace At0
 			return vld1q_lane_f32(y, V, 1);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap y and x
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
 			// Convert input to vector
-			Vector vTemp = _mm_load_ss(y);
+			VectorType vTemp = _mm_load_ss(y);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap y and x again
@@ -5287,7 +5287,7 @@ namespace At0
 
 		// Sets the Z component of a vector to a floating point value passed by pointer
 
-		inline Vector RAYMATH_CALLCONV VectorSetZPtr(FVector V, const float* z)
+		inline VectorType RAYMATH_CALLCONV VectorSetZPtr(FVector V, const float* z)
 		{
 			assert(z != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5302,9 +5302,9 @@ namespace At0
 			return vld1q_lane_f32(z, V, 2);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap z and x
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
 			// Convert input to vector
-			Vector vTemp = _mm_load_ss(z);
+			VectorType vTemp = _mm_load_ss(z);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap z and x again
@@ -5315,7 +5315,7 @@ namespace At0
 
 		// Sets the W component of a vector to a floating point value passed by pointer
 
-		inline Vector RAYMATH_CALLCONV VectorSetWPtr(FVector V, const float* w)
+		inline VectorType RAYMATH_CALLCONV VectorSetWPtr(FVector V, const float* w)
 		{
 			assert(w != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5330,9 +5330,9 @@ namespace At0
 			return vld1q_lane_f32(w, V, 3);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap w and x
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
 			// Convert input to vector
-			Vector vTemp = _mm_load_ss(w);
+			VectorType vTemp = _mm_load_ss(w);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap w and x again
@@ -5344,7 +5344,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Sets a component of a vector to an integer passed by value
-		inline Vector RAYMATH_CALLCONV VectorSetIntByIndex(FVector V, uint32_t x, size_t i)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntByIndex(FVector V, uint32_t x, size_t i)
 		{
 			assert(i < 4);
 			VectorU32 tmp;
@@ -5356,7 +5356,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Sets the X component of a vector to an integer passed by value
-		inline Vector RAYMATH_CALLCONV VectorSetIntX(FVector V, uint32_t x)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntX(FVector V, uint32_t x)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
@@ -5370,13 +5370,13 @@ namespace At0
 			return vsetq_lane_u32(x, V, 0);
 #elif defined(RAY_SSE_INTRINSICS)
 			__m128i vTemp = _mm_cvtsi32_si128(static_cast<int>(x));
-			Vector vResult = _mm_move_ss(V, _mm_castsi128_ps(vTemp));
+			VectorType vResult = _mm_move_ss(V, _mm_castsi128_ps(vTemp));
 			return vResult;
 #endif
 		}
 
 		// Sets the Y component of a vector to an integer passed by value
-		inline Vector RAYMATH_CALLCONV VectorSetIntY(FVector V, uint32_t y)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntY(FVector V, uint32_t y)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
@@ -5394,7 +5394,7 @@ namespace At0
 			return _mm_castsi128_ps(vResult);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap y and x
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
 			// Convert input to vector
 			__m128i vTemp = _mm_cvtsi32_si128(static_cast<int>(y));
 			// Replace the x component
@@ -5406,7 +5406,7 @@ namespace At0
 		}
 
 		// Sets the Z component of a vector to an integer passed by value
-		inline Vector RAYMATH_CALLCONV VectorSetIntZ(FVector V, uint32_t z)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntZ(FVector V, uint32_t z)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
@@ -5424,7 +5424,7 @@ namespace At0
 			return _mm_castsi128_ps(vResult);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap z and x
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
 			// Convert input to vector
 			__m128i vTemp = _mm_cvtsi32_si128(static_cast<int>(z));
 			// Replace the x component
@@ -5436,7 +5436,7 @@ namespace At0
 		}
 
 		// Sets the W component of a vector to an integer passed by value
-		inline Vector RAYMATH_CALLCONV VectorSetIntW(FVector V, uint32_t w)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntW(FVector V, uint32_t w)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorU32 U = { { {
@@ -5454,7 +5454,7 @@ namespace At0
 			return _mm_castsi128_ps(vResult);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap w and x
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
 			// Convert input to vector
 			__m128i vTemp = _mm_cvtsi32_si128(static_cast<int>(w));
 			// Replace the x component
@@ -5469,7 +5469,7 @@ namespace At0
 
 		// Sets a component of a vector to an integer value passed by pointer
 
-		inline Vector RAYMATH_CALLCONV VectorSetIntByIndexPtr(FVector V, const uint32_t* x, size_t i)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntByIndexPtr(FVector V, const uint32_t* x, size_t i)
 		{
 			assert(x != nullptr);
 			assert(i < 4);
@@ -5483,7 +5483,7 @@ namespace At0
 
 		// Sets the X component of a vector to an integer value passed by pointer
 
-		inline Vector RAYMATH_CALLCONV VectorSetIntXPtr(FVector V, const uint32_t* x)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntXPtr(FVector V, const uint32_t* x)
 		{
 			assert(x != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5497,15 +5497,15 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vld1q_lane_u32(x, *reinterpret_cast<const uint32x4_t*>(&V), 0);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_load_ss(reinterpret_cast<const float*>(x));
-			Vector vResult = _mm_move_ss(V, vTemp);
+			VectorType vTemp = _mm_load_ss(reinterpret_cast<const float*>(x));
+			VectorType vResult = _mm_move_ss(V, vTemp);
 			return vResult;
 #endif
 		}
 
 		// Sets the Y component of a vector to an integer value passed by pointer
 
-		inline Vector RAYMATH_CALLCONV VectorSetIntYPtr(FVector V, const uint32_t* y)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntYPtr(FVector V, const uint32_t* y)
 		{
 			assert(y != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5520,9 +5520,9 @@ namespace At0
 			return vld1q_lane_u32(y, *reinterpret_cast<const uint32x4_t*>(&V), 1);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap y and x
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
 			// Convert input to vector
-			Vector vTemp = _mm_load_ss(reinterpret_cast<const float*>(y));
+			VectorType vTemp = _mm_load_ss(reinterpret_cast<const float*>(y));
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap y and x again
@@ -5533,7 +5533,7 @@ namespace At0
 
 		// Sets the Z component of a vector to an integer value passed by pointer
 
-		inline Vector RAYMATH_CALLCONV VectorSetIntZPtr(FVector V, const uint32_t* z)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntZPtr(FVector V, const uint32_t* z)
 		{
 			assert(z != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5548,9 +5548,9 @@ namespace At0
 			return vld1q_lane_u32(z, *reinterpret_cast<const uint32x4_t*>(&V), 2);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap z and x
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
 			// Convert input to vector
-			Vector vTemp = _mm_load_ss(reinterpret_cast<const float*>(z));
+			VectorType vTemp = _mm_load_ss(reinterpret_cast<const float*>(z));
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap z and x again
@@ -5561,7 +5561,7 @@ namespace At0
 
 		// Sets the W component of a vector to an integer value passed by pointer
 
-		inline Vector RAYMATH_CALLCONV VectorSetIntWPtr(FVector V, const uint32_t* w)
+		inline VectorType RAYMATH_CALLCONV VectorSetIntWPtr(FVector V, const uint32_t* w)
 		{
 			assert(w != nullptr);
 #if defined(RAY_NO_INTRINSICS)
@@ -5576,9 +5576,9 @@ namespace At0
 			return vld1q_lane_u32(w, *reinterpret_cast<const uint32x4_t*>(&V), 3);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap w and x
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
 			// Convert input to vector
-			Vector vTemp = _mm_load_ss(reinterpret_cast<const float*>(w));
+			VectorType vTemp = _mm_load_ss(reinterpret_cast<const float*>(w));
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap w and x again
@@ -5589,7 +5589,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorSwizzle
+		inline VectorType RAYMATH_CALLCONV VectorSwizzle
 		(
 			FVector V,
 			uint32_t E0,
@@ -5636,7 +5636,7 @@ namespace At0
 #else
 			auto aPtr = reinterpret_cast<const uint32_t*>(&V);
 
-			Vector Result;
+			VectorType Result;
 			auto pWork = reinterpret_cast<uint32_t*>(&Result);
 
 			pWork[0] = aPtr[E0];
@@ -5649,7 +5649,7 @@ namespace At0
 		}
 
 		//------------------------------------------------------------------------------
-		inline Vector RAYMATH_CALLCONV VectorPermute
+		inline VectorType RAYMATH_CALLCONV VectorPermute
 		(
 			FVector V1,
 			FVector V2,
@@ -5709,7 +5709,7 @@ namespace At0
 			aPtr[0] = reinterpret_cast<const uint32_t*>(&V1);
 			aPtr[1] = reinterpret_cast<const uint32_t*>(&V2);
 
-			Vector Result;
+			VectorType Result;
 			auto pWork = reinterpret_cast<uint32_t*>(&Result);
 
 			const uint32_t i0 = PermuteX & 3;
@@ -5743,7 +5743,7 @@ namespace At0
 		// vector to be selected whereas a one causes the component from the
 		// second vector to be selected instead.
 
-		inline Vector RAYMATH_CALLCONV VectorSelectControl
+		inline VectorType RAYMATH_CALLCONV VectorSelectControl
 		(
 			uint32_t VectorIndex0,
 			uint32_t VectorIndex1,
@@ -5764,7 +5764,7 @@ namespace At0
 			// Any non-zero entries become 0xFFFFFFFF else 0
 			return vcgtq_s32(vTemp, g_XMZero);
 #else
-			Vector    ControlVector;
+			VectorType    ControlVector;
 			const uint32_t  ControlElement[] =
 			{
 				RAYMATH_SELECT_0,
@@ -5788,7 +5788,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorSelect
+		inline VectorType RAYMATH_CALLCONV VectorSelect
 		(
 			FVector V1,
 			FVector V2,
@@ -5808,15 +5808,15 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vbslq_f32(Control, V2, V1);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp1 = _mm_andnot_ps(Control, V1);
-			Vector vTemp2 = _mm_and_ps(V2, Control);
+			VectorType vTemp1 = _mm_andnot_ps(Control, V1);
+			VectorType vTemp2 = _mm_and_ps(V2, Control);
 			return _mm_or_ps(vTemp1, vTemp2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorMergeXY
+		inline VectorType RAYMATH_CALLCONV VectorMergeXY
 		(
 			FVector V1,
 			FVector V2
@@ -5841,7 +5841,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorMergeZW
+		inline VectorType RAYMATH_CALLCONV VectorMergeZW
 		(
 			FVector V1,
 			FVector V2
@@ -5866,7 +5866,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorShiftLeft(FVector V1, FVector V2, uint32_t Elements)
+		inline VectorType RAYMATH_CALLCONV VectorShiftLeft(FVector V1, FVector V2, uint32_t Elements)
 		{
 			assert(Elements < 4);
 			return VectorPermute(V1, V2, Elements, ((Elements)+1), ((Elements)+2), ((Elements)+3));
@@ -5874,7 +5874,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorRotateLeft(FVector V, uint32_t Elements)
+		inline VectorType RAYMATH_CALLCONV VectorRotateLeft(FVector V, uint32_t Elements)
 		{
 			assert(Elements < 4);
 			return VectorSwizzle(V, Elements & 3, (Elements + 1) & 3, (Elements + 2) & 3, (Elements + 3) & 3);
@@ -5882,7 +5882,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorRotateRight(FVector V, uint32_t Elements)
+		inline VectorType RAYMATH_CALLCONV VectorRotateRight(FVector V, uint32_t Elements)
 		{
 			assert(Elements < 4);
 			return VectorSwizzle(V, (4 - (Elements)) & 3, (5 - (Elements)) & 3, (6 - (Elements)) & 3, (7 - (Elements)) & 3);
@@ -5890,10 +5890,10 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorInsert(FVector VD, FVector VS, uint32_t VSLeftRotateElements,
+		inline VectorType RAYMATH_CALLCONV VectorInsert(FVector VD, FVector VS, uint32_t VSLeftRotateElements,
 			uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3)
 		{
-			Vector Control = VectorSelectControl(Select0 & 1, Select1 & 1, Select2 & 1, Select3 & 1);
+			VectorType Control = VectorSelectControl(Select0 & 1, Select1 & 1, Select2 & 1, Select3 & 1);
 			return VectorSelect(VD, VectorRotateLeft(VS, VSLeftRotateElements), Control);
 		}
 
@@ -5903,7 +5903,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorEqual
+		inline VectorType RAYMATH_CALLCONV VectorEqual
 		(
 			FVector V1,
 			FVector V2
@@ -5929,7 +5929,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 
-		inline Vector RAYMATH_CALLCONV VectorEqualR
+		inline VectorType RAYMATH_CALLCONV VectorEqualR
 		(
 			uint32_t* pCR,
 			FVector V1,
@@ -5977,7 +5977,7 @@ namespace At0
 			*pCR = CR;
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpeq_ps(V1, V2);
+			VectorType vTemp = _mm_cmpeq_ps(V1, V2);
 			uint32_t CR = 0;
 			int iTest = _mm_movemask_ps(vTemp);
 			if (iTest == 0xf)
@@ -6000,7 +6000,7 @@ namespace At0
 		// comparing control vectors and result vectors returned from
 		// other comparison operations.
 
-		inline Vector RAYMATH_CALLCONV VectorEqualInt
+		inline VectorType RAYMATH_CALLCONV VectorEqualInt
 		(
 			FVector V1,
 			FVector V2
@@ -6029,7 +6029,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 
-		inline Vector RAYMATH_CALLCONV VectorEqualIntR
+		inline VectorType RAYMATH_CALLCONV VectorEqualIntR
 		(
 			uint32_t* pCR,
 			FVector V1,
@@ -6039,7 +6039,7 @@ namespace At0
 			assert(pCR != nullptr);
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Control = VectorEqualInt(V1, V2);
+			VectorType Control = VectorEqualInt(V1, V2);
 
 			*pCR = 0;
 			if (Vector4EqualInt(Control, VectorTrueInt()))
@@ -6091,7 +6091,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorNearEqual
+		inline VectorType RAYMATH_CALLCONV VectorNearEqual
 		(
 			FVector V1,
 			FVector V2,
@@ -6119,13 +6119,13 @@ namespace At0
 			return Control.v;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector vDelta = vsubq_f32(V1, V2);
+			VectorType vDelta = vsubq_f32(V1, V2);
 			return vacleq_f32(vDelta, Epsilon);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Get the difference
-			Vector vDelta = _mm_sub_ps(V1, V2);
+			VectorType vDelta = _mm_sub_ps(V1, V2);
 			// Get the absolute value of the difference
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vTemp = _mm_setzero_ps();
 			vTemp = _mm_sub_ps(vTemp, vDelta);
 			vTemp = _mm_max_ps(vTemp, vDelta);
 			vTemp = _mm_cmple_ps(vTemp, Epsilon);
@@ -6135,7 +6135,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorNotEqual
+		inline VectorType RAYMATH_CALLCONV VectorNotEqual
 		(
 			FVector V1,
 			FVector V2
@@ -6160,7 +6160,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorNotEqualInt
+		inline VectorType RAYMATH_CALLCONV VectorNotEqualInt
 		(
 			FVector V1,
 			FVector V2
@@ -6186,7 +6186,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorGreater
+		inline VectorType RAYMATH_CALLCONV VectorGreater
 		(
 			FVector V1,
 			FVector V2
@@ -6212,7 +6212,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 
-		inline Vector RAYMATH_CALLCONV VectorGreaterR
+		inline VectorType RAYMATH_CALLCONV VectorGreaterR
 		(
 			uint32_t* pCR,
 			FVector V1,
@@ -6261,7 +6261,7 @@ namespace At0
 			*pCR = CR;
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpgt_ps(V1, V2);
+			VectorType vTemp = _mm_cmpgt_ps(V1, V2);
 			uint32_t CR = 0;
 			int iTest = _mm_movemask_ps(vTemp);
 			if (iTest == 0xf)
@@ -6280,7 +6280,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorGreaterOrEqual
+		inline VectorType RAYMATH_CALLCONV VectorGreaterOrEqual
 		(
 			FVector V1,
 			FVector V2
@@ -6307,7 +6307,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 
-		inline Vector RAYMATH_CALLCONV VectorGreaterOrEqualR
+		inline VectorType RAYMATH_CALLCONV VectorGreaterOrEqualR
 		(
 			uint32_t* pCR,
 			FVector V1,
@@ -6356,7 +6356,7 @@ namespace At0
 			*pCR = CR;
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpge_ps(V1, V2);
+			VectorType vTemp = _mm_cmpge_ps(V1, V2);
 			uint32_t CR = 0;
 			int iTest = _mm_movemask_ps(vTemp);
 			if (iTest == 0xf)
@@ -6375,7 +6375,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorLess
+		inline VectorType RAYMATH_CALLCONV VectorLess
 		(
 			FVector V1,
 			FVector V2
@@ -6400,7 +6400,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorLessOrEqual
+		inline VectorType RAYMATH_CALLCONV VectorLessOrEqual
 		(
 			FVector V1,
 			FVector V2
@@ -6426,7 +6426,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorInBounds
+		inline VectorType RAYMATH_CALLCONV VectorInBounds
 		(
 			FVector V,
 			FVector Bounds
@@ -6444,9 +6444,9 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Test if less than or equal
-			Vector vTemp1 = vcleq_f32(V, Bounds);
+			VectorType vTemp1 = vcleq_f32(V, Bounds);
 			// Negate the bounds
-			Vector vTemp2 = vnegq_f32(Bounds);
+			VectorType vTemp2 = vnegq_f32(Bounds);
 			// Test if greater or equal (Reversed)
 			vTemp2 = vcleq_f32(vTemp2, V);
 			// Blend answers
@@ -6454,9 +6454,9 @@ namespace At0
 			return vTemp1;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Test if less than or equal
-			Vector vTemp1 = _mm_cmple_ps(V, Bounds);
+			VectorType vTemp1 = _mm_cmple_ps(V, Bounds);
 			// Negate the bounds
-			Vector vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
+			VectorType vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
 			// Test if greater or equal (Reversed)
 			vTemp2 = _mm_cmple_ps(vTemp2, V);
 			// Blend answers
@@ -6468,7 +6468,7 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 
-		inline Vector RAYMATH_CALLCONV VectorInBoundsR
+		inline VectorType RAYMATH_CALLCONV VectorInBoundsR
 		(
 			uint32_t* pCR,
 			FVector V,
@@ -6496,9 +6496,9 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Test if less than or equal
-			Vector vTemp1 = vcleq_f32(V, Bounds);
+			VectorType vTemp1 = vcleq_f32(V, Bounds);
 			// Negate the bounds
-			Vector vTemp2 = vnegq_f32(Bounds);
+			VectorType vTemp2 = vnegq_f32(Bounds);
 			// Test if greater or equal (Reversed)
 			vTemp2 = vcleq_f32(vTemp2, V);
 			// Blend answers
@@ -6516,9 +6516,9 @@ namespace At0
 			return vTemp1;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Test if less than or equal
-			Vector vTemp1 = _mm_cmple_ps(V, Bounds);
+			VectorType vTemp1 = _mm_cmple_ps(V, Bounds);
 			// Negate the bounds
-			Vector vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
+			VectorType vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
 			// Test if greater or equal (Reversed)
 			vTemp2 = _mm_cmple_ps(vTemp2, V);
 			// Blend answers
@@ -6536,7 +6536,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorIsNaN
+		inline VectorType RAYMATH_CALLCONV VectorIsNaN
 		(
 			FVector V
 		)
@@ -6564,7 +6564,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorIsInfinite
+		inline VectorType RAYMATH_CALLCONV VectorIsInfinite
 		(
 			FVector V
 		)
@@ -6602,7 +6602,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorMin
+		inline VectorType RAYMATH_CALLCONV VectorMin
 		(
 			FVector V1,
 			FVector V2
@@ -6627,7 +6627,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorMax
+		inline VectorType RAYMATH_CALLCONV VectorMax
 		(
 			FVector V1,
 			FVector V2
@@ -6680,7 +6680,7 @@ namespace At0
 #pragma float_control(precise, on)
 #endif
 
-		inline Vector RAYMATH_CALLCONV VectorRound
+		inline VectorType RAYMATH_CALLCONV VectorRound
 		(
 			FVector V
 		)
@@ -6706,7 +6706,7 @@ namespace At0
 			R1 = vsubq_f32(R1, sMagic);
 			float32x4_t R2 = vabsq_f32(V);
 			uint32x4_t mask = vcleq_f32(R2, g_XMNoFraction);
-			Vector vResult = vbslq_f32(mask, R1, V);
+			VectorType vResult = vbslq_f32(mask, R1, V);
 			return vResult;
 #endif
 #elif defined(RAY_SSE4_INTRINSICS)
@@ -6720,7 +6720,7 @@ namespace At0
 			__m128 mask = _mm_cmple_ps(R2, g_XMNoFraction);
 			R2 = _mm_andnot_ps(mask, V);
 			R1 = _mm_and_ps(R1, mask);
-			Vector vResult = _mm_xor_ps(R1, R2);
+			VectorType vResult = _mm_xor_ps(R1, R2);
 			return vResult;
 #endif
 		}
@@ -6731,13 +6731,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorTruncate
+		inline VectorType RAYMATH_CALLCONV VectorTruncate
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
-			Vector Result;
+			VectorType Result;
 			uint32_t     i;
 
 			// Avoid C4701
@@ -6768,7 +6768,7 @@ namespace At0
 			vTest = vcltq_f32(vTest, g_XMNoFraction);
 
 			int32x4_t vInt = vcvtq_s32_f32(V);
-			Vector vResult = vcvtq_f32_s32(vInt);
+			VectorType vResult = vcvtq_f32_s32(vInt);
 
 			// All numbers less than 8388608 will use the round to int
 			// All others, use the ORIGINAL value
@@ -6785,7 +6785,7 @@ namespace At0
 			// Convert to int and back to float for rounding with truncation
 			__m128i vInt = _mm_cvttps_epi32(V);
 			// Convert back to floats
-			Vector vResult = _mm_cvtepi32_ps(vInt);
+			VectorType vResult = _mm_cvtepi32_ps(vInt);
 			// All numbers less than 8388608 will use the round to int
 			vResult = _mm_and_ps(vResult, _mm_castsi128_ps(vTest));
 			// All others, use the ORIGINAL value
@@ -6797,7 +6797,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorFloor
+		inline VectorType RAYMATH_CALLCONV VectorFloor
 		(
 			FVector V
 		)
@@ -6820,8 +6820,8 @@ namespace At0
 			vTest = vcltq_f32(vTest, g_XMNoFraction);
 			// Truncate
 			int32x4_t vInt = vcvtq_s32_f32(V);
-			Vector vResult = vcvtq_f32_s32(vInt);
-			Vector vLarger = vcgtq_f32(vResult, V);
+			VectorType vResult = vcvtq_f32_s32(vInt);
+			VectorType vLarger = vcgtq_f32(vResult, V);
 			// 0 -> 0, 0xffffffff -> -1.0f
 			vLarger = vcvtq_f32_s32(vLarger);
 			vResult = vaddq_f32(vResult, vLarger);
@@ -6837,7 +6837,7 @@ namespace At0
 			vTest = _mm_cmplt_epi32(vTest, g_XMNoFraction);
 			// Truncate
 			__m128i vInt = _mm_cvttps_epi32(V);
-			Vector vResult = _mm_cvtepi32_ps(vInt);
+			VectorType vResult = _mm_cvtepi32_ps(vInt);
 			__m128 vLarger = _mm_cmpgt_ps(vResult, V);
 			// 0 -> 0, 0xffffffff -> -1.0f
 			vLarger = _mm_cvtepi32_ps(_mm_castps_si128(vLarger));
@@ -6853,7 +6853,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorCeiling
+		inline VectorType RAYMATH_CALLCONV VectorCeiling
 		(
 			FVector V
 		)
@@ -6875,8 +6875,8 @@ namespace At0
 			vTest = vcltq_f32(vTest, g_XMNoFraction);
 			// Truncate
 			int32x4_t vInt = vcvtq_s32_f32(V);
-			Vector vResult = vcvtq_f32_s32(vInt);
-			Vector vSmaller = vcltq_f32(vResult, V);
+			VectorType vResult = vcvtq_f32_s32(vInt);
+			VectorType vSmaller = vcltq_f32(vResult, V);
 			// 0 -> 0, 0xffffffff -> -1.0f
 			vSmaller = vcvtq_f32_s32(vSmaller);
 			vResult = vsubq_f32(vResult, vSmaller);
@@ -6892,7 +6892,7 @@ namespace At0
 			vTest = _mm_cmplt_epi32(vTest, g_XMNoFraction);
 			// Truncate
 			__m128i vInt = _mm_cvttps_epi32(V);
-			Vector vResult = _mm_cvtepi32_ps(vInt);
+			VectorType vResult = _mm_cvtepi32_ps(vInt);
 			__m128 vSmaller = _mm_cmplt_ps(vResult, V);
 			// 0 -> 0, 0xffffffff -> -1.0f
 			vSmaller = _mm_cvtepi32_ps(_mm_castps_si128(vSmaller));
@@ -6908,7 +6908,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorClamp
+		inline VectorType RAYMATH_CALLCONV VectorClamp
 		(
 			FVector V,
 			FVector Min,
@@ -6919,18 +6919,18 @@ namespace At0
 
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 			Result = VectorMax(Min, V);
 			Result = VectorMin(Max, Result);
 			return Result;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector vResult;
+			VectorType vResult;
 			vResult = vmaxq_f32(Min, V);
 			vResult = vminq_f32(Max, vResult);
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult;
+			VectorType vResult;
 			vResult = _mm_max_ps(Min, V);
 			vResult = _mm_min_ps(Max, vResult);
 			return vResult;
@@ -6939,25 +6939,25 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorSaturate
+		inline VectorType RAYMATH_CALLCONV VectorSaturate
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			const Vector Zero = VectorZero();
+			const VectorType Zero = VectorZero();
 
 			return VectorClamp(V, Zero, g_XMOne.v);
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Set <0 to 0
-			Vector vResult = vmaxq_f32(V, vdupq_n_f32(0));
+			VectorType vResult = vmaxq_f32(V, vdupq_n_f32(0));
 			// Set>1 to 1
 			return vminq_f32(vResult, vdupq_n_f32(1.0f));
 #elif defined(RAY_SSE_INTRINSICS)
 			// Set <0 to 0
-			Vector vResult = _mm_max_ps(V, g_XMZero);
+			VectorType vResult = _mm_max_ps(V, g_XMZero);
 			// Set>1 to 1
 			return _mm_min_ps(vResult, g_XMOne);
 #endif
@@ -6967,7 +6967,7 @@ namespace At0
 		// Bitwise logical operations
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorAndInt
+		inline VectorType RAYMATH_CALLCONV VectorAndInt
 		(
 			FVector V1,
 			FVector V2
@@ -6992,7 +6992,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorAndCInt
+		inline VectorType RAYMATH_CALLCONV VectorAndCInt
 		(
 			FVector V1,
 			FVector V2
@@ -7018,7 +7018,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorOrInt
+		inline VectorType RAYMATH_CALLCONV VectorOrInt
 		(
 			FVector V1,
 			FVector V2
@@ -7044,7 +7044,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorNorInt
+		inline VectorType RAYMATH_CALLCONV VectorNorInt
 		(
 			FVector V1,
 			FVector V2
@@ -7073,7 +7073,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorXorInt
+		inline VectorType RAYMATH_CALLCONV VectorXorInt
 		(
 			FVector V1,
 			FVector V2
@@ -7103,7 +7103,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorNegate
+		inline VectorType RAYMATH_CALLCONV VectorNegate
 		(
 			FVector V
 		)
@@ -7121,7 +7121,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vnegq_f32(V);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector Z;
+			VectorType Z;
 
 			Z = _mm_setzero_ps();
 
@@ -7131,7 +7131,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorAdd
+		inline VectorType RAYMATH_CALLCONV VectorAdd
 		(
 			FVector V1,
 			FVector V2
@@ -7156,7 +7156,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorSum
+		inline VectorType RAYMATH_CALLCONV VectorSum
 		(
 			FVector V
 		)
@@ -7172,7 +7172,7 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
-			Vector vTemp = vpaddq_f32(V, V);
+			VectorType vTemp = vpaddq_f32(V, V);
 			return vpaddq_f32(vTemp, vTemp);
 #else
 			float32x2_t v1 = vget_low_f32(V);
@@ -7182,11 +7182,11 @@ namespace At0
 			return vcombine_f32(v1, v1);
 #endif
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vTemp = _mm_hadd_ps(V, V);
+			VectorType vTemp = _mm_hadd_ps(V, V);
 			return _mm_hadd_ps(vTemp, vTemp);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 3, 0, 1));
-			Vector vTemp2 = _mm_add_ps(V, vTemp);
+			VectorType vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 3, 0, 1));
+			VectorType vTemp2 = _mm_add_ps(V, vTemp);
 			vTemp = RAYMATH_PERMUTE_PS(vTemp2, _MM_SHUFFLE(1, 0, 3, 2));
 			return _mm_add_ps(vTemp, vTemp2);
 #endif
@@ -7194,7 +7194,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorAddAngles
+		inline VectorType RAYMATH_CALLCONV VectorAddAngles
 		(
 			FVector V1,
 			FVector V2
@@ -7202,16 +7202,16 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			const Vector Zero = VectorZero();
+			const VectorType Zero = VectorZero();
 
 			// Add the given angles together.  If the range of V1 is such
 			// that -Pi <= V1 < Pi and the range of V2 is such that
 			// -2Pi <= V2 <= 2Pi, then the range of the resulting angle
 			// will be -Pi <= Result < Pi.
-			Vector Result = VectorAdd(V1, V2);
+			VectorType Result = VectorAdd(V1, V2);
 
-			Vector Mask = VectorLess(Result, g_XMNegativePi.v);
-			Vector Offset = VectorSelect(Zero, g_XMTwoPi.v, Mask);
+			VectorType Mask = VectorLess(Result, g_XMNegativePi.v);
+			VectorType Offset = VectorSelect(Zero, g_XMTwoPi.v, Mask);
 
 			Mask = VectorGreaterOrEqual(Result, g_XMPi.v);
 			Offset = VectorSelect(Offset, g_XMNegativeTwoPi.v, Mask);
@@ -7222,7 +7222,7 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Adjust the angles
-			Vector vResult = vaddq_f32(V1, V2);
+			VectorType vResult = vaddq_f32(V1, V2);
 			// Less than Pi?
 			uint32x4_t vOffset = vcltq_f32(vResult, g_XMNegativePi);
 			vOffset = vandq_u32(vOffset, g_XMTwoPi);
@@ -7236,9 +7236,9 @@ namespace At0
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Adjust the angles
-			Vector vResult = _mm_add_ps(V1, V2);
+			VectorType vResult = _mm_add_ps(V1, V2);
 			// Less than Pi?
-			Vector vOffset = _mm_cmplt_ps(vResult, g_XMNegativePi);
+			VectorType vOffset = _mm_cmplt_ps(vResult, g_XMNegativePi);
 			vOffset = _mm_and_ps(vOffset, g_XMTwoPi);
 			// Add 2Pi to all entries less than -Pi
 			vResult = _mm_add_ps(vResult, vOffset);
@@ -7253,7 +7253,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorSubtract
+		inline VectorType RAYMATH_CALLCONV VectorSubtract
 		(
 			FVector V1,
 			FVector V2
@@ -7279,7 +7279,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorSubtractAngles
+		inline VectorType RAYMATH_CALLCONV VectorSubtractAngles
 		(
 			FVector V1,
 			FVector V2
@@ -7287,16 +7287,16 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			const Vector Zero = VectorZero();
+			const VectorType Zero = VectorZero();
 
 			// Subtract the given angles.  If the range of V1 is such
 			// that -Pi <= V1 < Pi and the range of V2 is such that
 			// -2Pi <= V2 <= 2Pi, then the range of the resulting angle
 			// will be -Pi <= Result < Pi.
-			Vector Result = VectorSubtract(V1, V2);
+			VectorType Result = VectorSubtract(V1, V2);
 
-			Vector Mask = VectorLess(Result, g_XMNegativePi.v);
-			Vector Offset = VectorSelect(Zero, g_XMTwoPi.v, Mask);
+			VectorType Mask = VectorLess(Result, g_XMNegativePi.v);
+			VectorType Offset = VectorSelect(Zero, g_XMTwoPi.v, Mask);
 
 			Mask = VectorGreaterOrEqual(Result, g_XMPi.v);
 			Offset = VectorSelect(Offset, g_XMNegativeTwoPi.v, Mask);
@@ -7307,7 +7307,7 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Adjust the angles
-			Vector vResult = vsubq_f32(V1, V2);
+			VectorType vResult = vsubq_f32(V1, V2);
 			// Less than Pi?
 			uint32x4_t vOffset = vcltq_f32(vResult, g_XMNegativePi);
 			vOffset = vandq_u32(vOffset, g_XMTwoPi);
@@ -7321,9 +7321,9 @@ namespace At0
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Adjust the angles
-			Vector vResult = _mm_sub_ps(V1, V2);
+			VectorType vResult = _mm_sub_ps(V1, V2);
 			// Less than Pi?
-			Vector vOffset = _mm_cmplt_ps(vResult, g_XMNegativePi);
+			VectorType vOffset = _mm_cmplt_ps(vResult, g_XMNegativePi);
 			vOffset = _mm_and_ps(vOffset, g_XMTwoPi);
 			// Add 2Pi to all entries less than -Pi
 			vResult = _mm_add_ps(vResult, vOffset);
@@ -7338,7 +7338,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorMultiply
+		inline VectorType RAYMATH_CALLCONV VectorMultiply
 		(
 			FVector V1,
 			FVector V2
@@ -7361,7 +7361,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorMultiplyAdd
+		inline VectorType RAYMATH_CALLCONV VectorMultiplyAdd
 		(
 			FVector V1,
 			FVector V2,
@@ -7385,14 +7385,14 @@ namespace At0
 #elif defined(RAY_FMA3_INTRINSICS)
 			return _mm_fmadd_ps(V1, V2, V3);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = _mm_mul_ps(V1, V2);
+			VectorType vResult = _mm_mul_ps(V1, V2);
 			return _mm_add_ps(vResult, V3);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorDivide
+		inline VectorType RAYMATH_CALLCONV VectorDivide
 		(
 			FVector V1,
 			FVector V2
@@ -7425,7 +7425,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorNegativeMultiplySubtract
+		inline VectorType RAYMATH_CALLCONV VectorNegativeMultiplySubtract
 		(
 			FVector V1,
 			FVector V2,
@@ -7449,14 +7449,14 @@ namespace At0
 #elif defined(RAY_FMA3_INTRINSICS)
 			return _mm_fnmadd_ps(V1, V2, V3);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector R = _mm_mul_ps(V1, V2);
+			VectorType R = _mm_mul_ps(V1, V2);
 			return _mm_sub_ps(V3, R);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorScale
+		inline VectorType RAYMATH_CALLCONV VectorScale
 		(
 			FVector V,
 			float    ScaleFactor
@@ -7473,14 +7473,14 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vmulq_n_f32(V, ScaleFactor);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = _mm_set_ps1(ScaleFactor);
+			VectorType vResult = _mm_set_ps1(ScaleFactor);
 			return _mm_mul_ps(vResult, V);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorReciprocalEst
+		inline VectorType RAYMATH_CALLCONV VectorReciprocalEst
 		(
 			FVector V
 		)
@@ -7502,7 +7502,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorReciprocal
+		inline VectorType RAYMATH_CALLCONV VectorReciprocal
 		(
 			FVector V
 		)
@@ -7534,7 +7534,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Return an estimated square root
-		inline Vector RAYMATH_CALLCONV VectorSqrtEst
+		inline VectorType RAYMATH_CALLCONV VectorSqrtEst
 		(
 			FVector V
 		)
@@ -7554,10 +7554,10 @@ namespace At0
 			float32x4_t R0 = vrsqrtsq_f32(P0, S0);
 			float32x4_t S1 = vmulq_f32(S0, R0);
 
-			Vector VEqualsInfinity = VectorEqualInt(V, g_XMInfinity.v);
-			Vector VEqualsZero = VectorEqual(V, vdupq_n_f32(0));
-			Vector Result = vmulq_f32(V, S1);
-			Vector Select = VectorEqualInt(VEqualsInfinity, VEqualsZero);
+			VectorType VEqualsInfinity = VectorEqualInt(V, g_XMInfinity.v);
+			VectorType VEqualsZero = VectorEqual(V, vdupq_n_f32(0));
+			VectorType Result = vmulq_f32(V, S1);
+			VectorType Select = VectorEqualInt(VEqualsInfinity, VEqualsZero);
 			return VectorSelect(V, Result, Select);
 #elif defined(RAY_SSE_INTRINSICS)
 			return _mm_sqrt_ps(V);
@@ -7566,7 +7566,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorSqrt
+		inline VectorType RAYMATH_CALLCONV VectorSqrt
 		(
 			FVector V
 		)
@@ -7594,10 +7594,10 @@ namespace At0
 			float32x4_t R2 = vrsqrtsq_f32(P2, S2);
 			float32x4_t S3 = vmulq_f32(S2, R2);
 
-			Vector VEqualsInfinity = VectorEqualInt(V, g_XMInfinity.v);
-			Vector VEqualsZero = VectorEqual(V, vdupq_n_f32(0));
-			Vector Result = vmulq_f32(V, S3);
-			Vector Select = VectorEqualInt(VEqualsInfinity, VEqualsZero);
+			VectorType VEqualsInfinity = VectorEqualInt(V, g_XMInfinity.v);
+			VectorType VEqualsZero = VectorEqual(V, vdupq_n_f32(0));
+			VectorType Result = vmulq_f32(V, S3);
+			VectorType Select = VectorEqualInt(VEqualsInfinity, VEqualsZero);
 			return VectorSelect(V, Result, Select);
 #elif defined(RAY_SSE_INTRINSICS)
 			return _mm_sqrt_ps(V);
@@ -7606,7 +7606,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorReciprocalSqrtEst
+		inline VectorType RAYMATH_CALLCONV VectorReciprocalSqrtEst
 		(
 			FVector V
 		)
@@ -7628,7 +7628,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorReciprocalSqrt
+		inline VectorType RAYMATH_CALLCONV VectorReciprocalSqrt
 		(
 			FVector V
 		)
@@ -7654,7 +7654,7 @@ namespace At0
 
 			return vmulq_f32(S1, R1);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = _mm_sqrt_ps(V);
+			VectorType vResult = _mm_sqrt_ps(V);
 			vResult = _mm_div_ps(g_XMOne, vResult);
 			return vResult;
 #endif
@@ -7662,7 +7662,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorExp2
+		inline VectorType RAYMATH_CALLCONV VectorExp2
 		(
 			FVector V
 		)
@@ -7807,7 +7807,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorExpE
+		inline VectorType RAYMATH_CALLCONV VectorExpE
 		(
 			FVector V
 		)
@@ -7959,7 +7959,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorExp
+		inline VectorType RAYMATH_CALLCONV VectorExp
 		(
 			FVector V
 		)
@@ -8126,7 +8126,7 @@ namespace At0
 
 //------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorLog2
+		inline VectorType RAYMATH_CALLCONV VectorLog2
 		(
 			FVector V
 		)
@@ -8296,7 +8296,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorLogE
+		inline VectorType RAYMATH_CALLCONV VectorLogE
 		(
 			FVector V
 		)
@@ -8468,7 +8468,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorLog
+		inline VectorType RAYMATH_CALLCONV VectorLog
 		(
 			FVector V
 		)
@@ -8478,7 +8478,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorPow
+		inline VectorType RAYMATH_CALLCONV VectorPow
 		(
 			FVector V1,
 			FVector V2
@@ -8507,7 +8507,7 @@ namespace At0
 			RAY_ALIGNED(16) float b[4];
 			_mm_store_ps(a, V1);
 			_mm_store_ps(b, V2);
-			Vector vResult = _mm_setr_ps(
+			VectorType vResult = _mm_setr_ps(
 				powf(a[0], b[0]),
 				powf(a[1], b[1]),
 				powf(a[2], b[2]),
@@ -8518,7 +8518,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorAbs
+		inline VectorType RAYMATH_CALLCONV VectorAbs
 		(
 			FVector V
 		)
@@ -8534,7 +8534,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vabsq_f32(V);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = _mm_setzero_ps();
+			VectorType vResult = _mm_setzero_ps();
 			vResult = _mm_sub_ps(vResult, V);
 			vResult = _mm_max_ps(vResult, V);
 			return vResult;
@@ -8543,7 +8543,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorMod
+		inline VectorType RAYMATH_CALLCONV VectorMod
 		(
 			FVector V1,
 			FVector V2
@@ -8553,17 +8553,17 @@ namespace At0
 
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Quotient = VectorDivide(V1, V2);
+			VectorType Quotient = VectorDivide(V1, V2);
 			Quotient = VectorTruncate(Quotient);
-			Vector Result = VectorNegativeMultiplySubtract(V2, Quotient, V1);
+			VectorType Result = VectorNegativeMultiplySubtract(V2, Quotient, V1);
 			return Result;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector vResult = VectorDivide(V1, V2);
+			VectorType vResult = VectorDivide(V1, V2);
 			vResult = VectorTruncate(vResult);
 			return vmlsq_f32(V1, vResult, V2);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = _mm_div_ps(V1, V2);
+			VectorType vResult = _mm_div_ps(V1, V2);
 			vResult = VectorTruncate(vResult);
 			vResult = _mm_mul_ps(vResult, V2);
 			vResult = _mm_sub_ps(V1, vResult);
@@ -8573,15 +8573,15 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorModAngles
+		inline VectorType RAYMATH_CALLCONV VectorModAngles
 		(
 			FVector Angles
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector V;
-			Vector Result;
+			VectorType V;
+			VectorType Result;
 
 			// Modulo the range of the given angles such that -Constants::PI <= Angles < Constants::PI
 			V = VectorMultiply(Angles, g_XMReciprocalTwoPi.v);
@@ -8591,13 +8591,13 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Modulo the range of the given angles such that -Constants::PI <= Angles < Constants::PI
-			Vector vResult = vmulq_f32(Angles, g_XMReciprocalTwoPi);
+			VectorType vResult = vmulq_f32(Angles, g_XMReciprocalTwoPi);
 			// Use the inline function due to complexity for rounding
 			vResult = VectorRound(vResult);
 			return vmlsq_f32(Angles, vResult, g_XMTwoPi);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Modulo the range of the given angles such that -Constants::PI <= Angles < Constants::PI
-			Vector vResult = _mm_mul_ps(Angles, g_XMReciprocalTwoPi);
+			VectorType vResult = _mm_mul_ps(Angles, g_XMReciprocalTwoPi);
 			// Use the inline function due to complexity for rounding
 			vResult = VectorRound(vResult);
 			vResult = _mm_mul_ps(vResult, g_XMTwoPi);
@@ -8608,7 +8608,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorSin
+		inline VectorType RAYMATH_CALLCONV VectorSin
 		(
 			FVector V
 		)
@@ -8625,7 +8625,7 @@ namespace At0
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 	// Force the value within the bounds of pi
-			Vector x = VectorModAngles(V);
+			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with sin(y) = sin(x).
 			uint32x4_t sign = vandq_u32(x, g_XMNegativeZero);
@@ -8638,10 +8638,10 @@ namespace At0
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation
-			const Vector SC1 = g_XMSinCoefficients1;
-			const Vector SC0 = g_XMSinCoefficients0;
-			Vector vConstants = vdupq_lane_f32(vget_high_f32(SC0), 1);
-			Vector Result = vmlaq_lane_f32(vConstants, x2, vget_low_f32(SC1), 0);
+			const VectorType SC1 = g_XMSinCoefficients1;
+			const VectorType SC0 = g_XMSinCoefficients0;
+			VectorType vConstants = vdupq_lane_f32(vget_high_f32(SC0), 1);
+			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_low_f32(SC1), 0);
 
 			vConstants = vdupq_lane_f32(vget_high_f32(SC0), 0);
 			Result = vmlaq_f32(vConstants, Result, x2);
@@ -8657,7 +8657,7 @@ namespace At0
 			return Result;
 #elif defined(RAY_SSE_INTRINSICS)
 	// Force the value within the bounds of pi
-			Vector x = VectorModAngles(V);
+			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with sin(y) = sin(x).
 			__m128 sign = _mm_and_ps(x, g_XMNegativeZero);
@@ -8672,11 +8672,11 @@ namespace At0
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation
-			const Vector SC1 = g_XMSinCoefficients1;
-			Vector vConstants = RAYMATH_PERMUTE_PS(SC1, _MM_SHUFFLE(0, 0, 0, 0));
+			const VectorType SC1 = g_XMSinCoefficients1;
+			VectorType vConstants = RAYMATH_PERMUTE_PS(SC1, _MM_SHUFFLE(0, 0, 0, 0));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
-			const Vector SC0 = g_XMSinCoefficients0;
+			const VectorType SC0 = g_XMSinCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
@@ -8700,7 +8700,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorCos
+		inline VectorType RAYMATH_CALLCONV VectorCos
 		(
 			FVector V
 		)
@@ -8717,7 +8717,7 @@ namespace At0
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 	// Map V to x in [-pi,pi].
-			Vector x = VectorModAngles(V);
+			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with cos(y) = sign*cos(x).
 			uint32x4_t sign = vandq_u32(x, g_XMNegativeZero);
@@ -8731,10 +8731,10 @@ namespace At0
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation
-			const Vector CC1 = g_XMCosCoefficients1;
-			const Vector CC0 = g_XMCosCoefficients0;
-			Vector vConstants = vdupq_lane_f32(vget_high_f32(CC0), 1);
-			Vector Result = vmlaq_lane_f32(vConstants, x2, vget_low_f32(CC1), 0);
+			const VectorType CC1 = g_XMCosCoefficients1;
+			const VectorType CC0 = g_XMCosCoefficients0;
+			VectorType vConstants = vdupq_lane_f32(vget_high_f32(CC0), 1);
+			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_low_f32(CC1), 0);
 
 			vConstants = vdupq_lane_f32(vget_high_f32(CC0), 0);
 			Result = vmlaq_f32(vConstants, Result, x2);
@@ -8750,10 +8750,10 @@ namespace At0
 			return Result;
 #elif defined(RAY_SSE_INTRINSICS)
 	// Map V to x in [-pi,pi].
-			Vector x = VectorModAngles(V);
+			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with cos(y) = sign*cos(x).
-			Vector sign = _mm_and_ps(x, g_XMNegativeZero);
+			VectorType sign = _mm_and_ps(x, g_XMNegativeZero);
 			__m128 c = _mm_or_ps(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
 			__m128 absx = _mm_andnot_ps(sign, x);  // |x|
 			__m128 rflx = _mm_sub_ps(c, x);
@@ -8768,11 +8768,11 @@ namespace At0
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation
-			const Vector CC1 = g_XMCosCoefficients1;
-			Vector vConstants = RAYMATH_PERMUTE_PS(CC1, _MM_SHUFFLE(0, 0, 0, 0));
+			const VectorType CC1 = g_XMCosCoefficients1;
+			VectorType vConstants = RAYMATH_PERMUTE_PS(CC1, _MM_SHUFFLE(0, 0, 0, 0));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
-			const Vector CC0 = g_XMCosCoefficients0;
+			const VectorType CC0 = g_XMCosCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
@@ -8799,8 +8799,8 @@ namespace At0
 
 		inline void RAYMATH_CALLCONV VectorSinCos
 		(
-			Vector* pSin,
-			Vector* pCos,
+			VectorType* pSin,
+			VectorType* pCos,
 			FVector V
 		)
 		{
@@ -8828,7 +8828,7 @@ namespace At0
 			*pCos = Cos.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 	// Force the value within the bounds of pi
-			Vector x = VectorModAngles(V);
+			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with cos(y) = sign*cos(x).
 			uint32x4_t sign = vandq_u32(x, g_XMNegativeZero);
@@ -8842,10 +8842,10 @@ namespace At0
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation for sine
-			const Vector SC1 = g_XMSinCoefficients1;
-			const Vector SC0 = g_XMSinCoefficients0;
-			Vector vConstants = vdupq_lane_f32(vget_high_f32(SC0), 1);
-			Vector Result = vmlaq_lane_f32(vConstants, x2, vget_low_f32(SC1), 0);
+			const VectorType SC1 = g_XMSinCoefficients1;
+			const VectorType SC0 = g_XMSinCoefficients0;
+			VectorType vConstants = vdupq_lane_f32(vget_high_f32(SC0), 1);
+			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_low_f32(SC1), 0);
 
 			vConstants = vdupq_lane_f32(vget_high_f32(SC0), 0);
 			Result = vmlaq_f32(vConstants, Result, x2);
@@ -8860,8 +8860,8 @@ namespace At0
 			*pSin = vmulq_f32(Result, x);
 
 			// Compute polynomial approximation for cosine
-			const Vector CC1 = g_XMCosCoefficients1;
-			const Vector CC0 = g_XMCosCoefficients0;
+			const VectorType CC1 = g_XMCosCoefficients1;
+			const VectorType CC0 = g_XMCosCoefficients0;
 			vConstants = vdupq_lane_f32(vget_high_f32(CC0), 1);
 			Result = vmlaq_lane_f32(vConstants, x2, vget_low_f32(CC1), 0);
 
@@ -8878,10 +8878,10 @@ namespace At0
 			*pCos = vmulq_f32(Result, sign);
 #elif defined(RAY_SSE_INTRINSICS)
 	// Force the value within the bounds of pi
-			Vector x = VectorModAngles(V);
+			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with sin(y) = sin(x), cos(y) = sign*cos(x).
-			Vector sign = _mm_and_ps(x, g_XMNegativeZero);
+			VectorType sign = _mm_and_ps(x, g_XMNegativeZero);
 			__m128 c = _mm_or_ps(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
 			__m128 absx = _mm_andnot_ps(sign, x);  // |x|
 			__m128 rflx = _mm_sub_ps(c, x);
@@ -8896,11 +8896,11 @@ namespace At0
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation of sine
-			const Vector SC1 = g_XMSinCoefficients1;
-			Vector vConstants = RAYMATH_PERMUTE_PS(SC1, _MM_SHUFFLE(0, 0, 0, 0));
+			const VectorType SC1 = g_XMSinCoefficients1;
+			VectorType vConstants = RAYMATH_PERMUTE_PS(SC1, _MM_SHUFFLE(0, 0, 0, 0));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
-			const Vector SC0 = g_XMSinCoefficients0;
+			const VectorType SC0 = g_XMSinCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
@@ -8921,11 +8921,11 @@ namespace At0
 			*pSin = Result;
 
 			// Compute polynomial approximation of cosine
-			const Vector CC1 = g_XMCosCoefficients1;
+			const VectorType CC1 = g_XMCosCoefficients1;
 			vConstants = RAYMATH_PERMUTE_PS(CC1, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_mul_ps(vConstants, x2);
 
-			const Vector CC0 = g_XMCosCoefficients0;
+			const VectorType CC0 = g_XMCosCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
@@ -8949,7 +8949,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorTan
+		inline VectorType RAYMATH_CALLCONV VectorTan
 		(
 			FVector V
 		)
@@ -8971,21 +8971,21 @@ namespace At0
 			static const VectorF32 TanConstants = { { { 1.570796371f, 6.077100628e-11f, 0.000244140625f, 0.63661977228f /*2 / Pi*/ } } };
 			static const VectorU32 Mask = { { { 0x1, 0x1, 0x1, 0x1 } } };
 
-			Vector TwoDivPi = VectorSplatW(TanConstants.v);
+			VectorType TwoDivPi = VectorSplatW(TanConstants.v);
 
-			Vector Zero = VectorZero();
+			VectorType Zero = VectorZero();
 
-			Vector C0 = VectorSplatX(TanConstants.v);
-			Vector C1 = VectorSplatY(TanConstants.v);
-			Vector Epsilon = VectorSplatZ(TanConstants.v);
+			VectorType C0 = VectorSplatX(TanConstants.v);
+			VectorType C1 = VectorSplatY(TanConstants.v);
+			VectorType Epsilon = VectorSplatZ(TanConstants.v);
 
-			Vector VA = VectorMultiply(V, TwoDivPi);
+			VectorType VA = VectorMultiply(V, TwoDivPi);
 
 			VA = VectorRound(VA);
 
-			Vector VC = VectorNegativeMultiplySubtract(VA, C0, V);
+			VectorType VC = VectorNegativeMultiplySubtract(VA, C0, V);
 
-			Vector VB = VectorAbs(VA);
+			VectorType VB = VectorAbs(VA);
 
 			VC = VectorNegativeMultiplySubtract(VA, C1, VC);
 
@@ -9000,40 +9000,40 @@ namespace At0
 			}
 #endif
 
-			Vector VC2 = VectorMultiply(VC, VC);
+			VectorType VC2 = VectorMultiply(VC, VC);
 
-			Vector T7 = VectorSplatW(TanCoefficients1.v);
-			Vector T6 = VectorSplatZ(TanCoefficients1.v);
-			Vector T4 = VectorSplatX(TanCoefficients1.v);
-			Vector T3 = VectorSplatW(TanCoefficients0.v);
-			Vector T5 = VectorSplatY(TanCoefficients1.v);
-			Vector T2 = VectorSplatZ(TanCoefficients0.v);
-			Vector T1 = VectorSplatY(TanCoefficients0.v);
-			Vector T0 = VectorSplatX(TanCoefficients0.v);
+			VectorType T7 = VectorSplatW(TanCoefficients1.v);
+			VectorType T6 = VectorSplatZ(TanCoefficients1.v);
+			VectorType T4 = VectorSplatX(TanCoefficients1.v);
+			VectorType T3 = VectorSplatW(TanCoefficients0.v);
+			VectorType T5 = VectorSplatY(TanCoefficients1.v);
+			VectorType T2 = VectorSplatZ(TanCoefficients0.v);
+			VectorType T1 = VectorSplatY(TanCoefficients0.v);
+			VectorType T0 = VectorSplatX(TanCoefficients0.v);
 
-			Vector VBIsEven = VectorAndInt(VB, Mask.v);
+			VectorType VBIsEven = VectorAndInt(VB, Mask.v);
 			VBIsEven = VectorEqualInt(VBIsEven, Zero);
 
-			Vector N = VectorMultiplyAdd(VC2, T7, T6);
-			Vector D = VectorMultiplyAdd(VC2, T4, T3);
+			VectorType N = VectorMultiplyAdd(VC2, T7, T6);
+			VectorType D = VectorMultiplyAdd(VC2, T4, T3);
 			N = VectorMultiplyAdd(VC2, N, T5);
 			D = VectorMultiplyAdd(VC2, D, T2);
 			N = VectorMultiply(VC2, N);
 			D = VectorMultiplyAdd(VC2, D, T1);
 			N = VectorMultiplyAdd(VC, N, VC);
-			Vector VCNearZero = VectorInBounds(VC, Epsilon);
+			VectorType VCNearZero = VectorInBounds(VC, Epsilon);
 			D = VectorMultiplyAdd(VC2, D, T0);
 
 			N = VectorSelect(N, VC, VCNearZero);
 			D = VectorSelect(D, g_XMOne.v, VCNearZero);
 
-			Vector R0 = VectorNegate(N);
-			Vector R1 = VectorDivide(N, D);
+			VectorType R0 = VectorNegate(N);
+			VectorType R1 = VectorDivide(N, D);
 			R0 = VectorDivide(D, R0);
 
-			Vector VIsZero = VectorEqual(V, Zero);
+			VectorType VIsZero = VectorEqual(V, Zero);
 
-			Vector Result = VectorSelect(R0, R1, VBIsEven);
+			VectorType Result = VectorSelect(R0, R1, VBIsEven);
 
 			Result = VectorSelect(Result, Zero, VIsZero);
 
@@ -9044,7 +9044,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorSinH
+		inline VectorType RAYMATH_CALLCONV VectorSinH
 		(
 			FVector V
 		)
@@ -9060,21 +9060,21 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
-			Vector V1 = vmlaq_f32(g_XMNegativeOne.v, V, Scale.v);
-			Vector V2 = vmlsq_f32(g_XMNegativeOne.v, V, Scale.v);
-			Vector E1 = VectorExp(V1);
-			Vector E2 = VectorExp(V2);
+			VectorType V1 = vmlaq_f32(g_XMNegativeOne.v, V, Scale.v);
+			VectorType V2 = vmlsq_f32(g_XMNegativeOne.v, V, Scale.v);
+			VectorType E1 = VectorExp(V1);
+			VectorType E2 = VectorExp(V2);
 
 			return vsubq_f32(E1, E2);
 #elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
-			Vector V1 = _mm_mul_ps(V, Scale);
+			VectorType V1 = _mm_mul_ps(V, Scale);
 			V1 = _mm_add_ps(V1, g_XMNegativeOne);
-			Vector V2 = _mm_mul_ps(V, Scale);
+			VectorType V2 = _mm_mul_ps(V, Scale);
 			V2 = _mm_sub_ps(g_XMNegativeOne, V2);
-			Vector E1 = VectorExp(V1);
-			Vector E2 = VectorExp(V2);
+			VectorType E1 = VectorExp(V1);
+			VectorType E2 = VectorExp(V2);
 
 			return _mm_sub_ps(E1, E2);
 #endif
@@ -9082,7 +9082,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorCosH
+		inline VectorType RAYMATH_CALLCONV VectorCosH
 		(
 			FVector V
 		)
@@ -9098,27 +9098,27 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
-			Vector V1 = vmlaq_f32(g_XMNegativeOne.v, V, Scale.v);
-			Vector V2 = vmlsq_f32(g_XMNegativeOne.v, V, Scale.v);
-			Vector E1 = VectorExp(V1);
-			Vector E2 = VectorExp(V2);
+			VectorType V1 = vmlaq_f32(g_XMNegativeOne.v, V, Scale.v);
+			VectorType V2 = vmlsq_f32(g_XMNegativeOne.v, V, Scale.v);
+			VectorType E1 = VectorExp(V1);
+			VectorType E2 = VectorExp(V2);
 			return vaddq_f32(E1, E2);
 #elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
-			Vector V1 = _mm_mul_ps(V, Scale.v);
+			VectorType V1 = _mm_mul_ps(V, Scale.v);
 			V1 = _mm_add_ps(V1, g_XMNegativeOne.v);
-			Vector V2 = _mm_mul_ps(V, Scale.v);
+			VectorType V2 = _mm_mul_ps(V, Scale.v);
 			V2 = _mm_sub_ps(g_XMNegativeOne.v, V2);
-			Vector E1 = VectorExp(V1);
-			Vector E2 = VectorExp(V2);
+			VectorType E1 = VectorExp(V1);
+			VectorType E2 = VectorExp(V2);
 			return _mm_add_ps(E1, E2);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorTanH
+		inline VectorType RAYMATH_CALLCONV VectorTanH
 		(
 			FVector V
 		)
@@ -9134,7 +9134,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 Scale = { { { 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f } } }; // 2.0f / ln(2.0f)
 
-			Vector E = vmulq_f32(V, Scale.v);
+			VectorType E = vmulq_f32(V, Scale.v);
 			E = VectorExp(E);
 			E = vmlaq_f32(g_XMOneHalf.v, E, g_XMOneHalf.v);
 			E = VectorReciprocal(E);
@@ -9142,7 +9142,7 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 Scale = { { { 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f } } }; // 2.0f / ln(2.0f)
 
-			Vector E = _mm_mul_ps(V, Scale.v);
+			VectorType E = _mm_mul_ps(V, Scale.v);
 			E = VectorExp(E);
 			E = _mm_mul_ps(E, g_XMOneHalf.v);
 			E = _mm_add_ps(E, g_XMOneHalf.v);
@@ -9153,7 +9153,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorASin
+		inline VectorType RAYMATH_CALLCONV VectorASin
 		(
 			FVector V
 		)
@@ -9178,9 +9178,9 @@ namespace At0
 			float32x4_t root = VectorSqrt(clampOneMValue);
 
 			// Compute polynomial approximation
-			const Vector AC1 = g_XMArcCoefficients1;
-			Vector vConstants = vdupq_lane_f32(vget_high_f32(AC1), 0);
-			Vector t0 = vmlaq_lane_f32(vConstants, x, vget_high_f32(AC1), 1);
+			const VectorType AC1 = g_XMArcCoefficients1;
+			VectorType vConstants = vdupq_lane_f32(vget_high_f32(AC1), 0);
+			VectorType t0 = vmlaq_lane_f32(vConstants, x, vget_high_f32(AC1), 1);
 
 			vConstants = vdupq_lane_f32(vget_low_f32(AC1), 1);
 			t0 = vmlaq_f32(vConstants, t0, x);
@@ -9188,7 +9188,7 @@ namespace At0
 			vConstants = vdupq_lane_f32(vget_low_f32(AC1), 0);
 			t0 = vmlaq_f32(vConstants, t0, x);
 
-			const Vector AC0 = g_XMArcCoefficients0;
+			const VectorType AC0 = g_XMArcCoefficients0;
 			vConstants = vdupq_lane_f32(vget_high_f32(AC0), 1);
 			t0 = vmlaq_f32(vConstants, t0, x);
 
@@ -9217,8 +9217,8 @@ namespace At0
 			__m128 root = _mm_sqrt_ps(clampOneMValue);  // sqrt(1-|V|)
 
 			// Compute polynomial approximation
-			const Vector AC1 = g_XMArcCoefficients1;
-			Vector vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(3, 3, 3, 3));
+			const VectorType AC1 = g_XMArcCoefficients1;
+			VectorType vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 t0 = _mm_mul_ps(vConstants, x);
 
 			vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -9233,7 +9233,7 @@ namespace At0
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			const Vector AC0 = g_XMArcCoefficients0;
+			const VectorType AC0 = g_XMArcCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(AC0, _MM_SHUFFLE(3, 3, 3, 3));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
@@ -9261,7 +9261,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorACos
+		inline VectorType RAYMATH_CALLCONV VectorACos
 		(
 			FVector V
 		)
@@ -9286,9 +9286,9 @@ namespace At0
 			float32x4_t root = VectorSqrt(clampOneMValue);
 
 			// Compute polynomial approximation
-			const Vector AC1 = g_XMArcCoefficients1;
-			Vector vConstants = vdupq_lane_f32(vget_high_f32(AC1), 0);
-			Vector t0 = vmlaq_lane_f32(vConstants, x, vget_high_f32(AC1), 1);
+			const VectorType AC1 = g_XMArcCoefficients1;
+			VectorType vConstants = vdupq_lane_f32(vget_high_f32(AC1), 0);
+			VectorType t0 = vmlaq_lane_f32(vConstants, x, vget_high_f32(AC1), 1);
 
 			vConstants = vdupq_lane_f32(vget_low_f32(AC1), 1);
 			t0 = vmlaq_f32(vConstants, t0, x);
@@ -9296,7 +9296,7 @@ namespace At0
 			vConstants = vdupq_lane_f32(vget_low_f32(AC1), 0);
 			t0 = vmlaq_f32(vConstants, t0, x);
 
-			const Vector AC0 = g_XMArcCoefficients0;
+			const VectorType AC0 = g_XMArcCoefficients0;
 			vConstants = vdupq_lane_f32(vget_high_f32(AC0), 1);
 			t0 = vmlaq_f32(vConstants, t0, x);
 
@@ -9324,8 +9324,8 @@ namespace At0
 			__m128 root = _mm_sqrt_ps(clampOneMValue);  // sqrt(1-|V|)
 
 			// Compute polynomial approximation
-			const Vector AC1 = g_XMArcCoefficients1;
-			Vector vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(3, 3, 3, 3));
+			const VectorType AC1 = g_XMArcCoefficients1;
+			VectorType vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 t0 = _mm_mul_ps(vConstants, x);
 
 			vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -9340,7 +9340,7 @@ namespace At0
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			const Vector AC0 = g_XMArcCoefficients0;
+			const VectorType AC0 = g_XMArcCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(AC0, _MM_SHUFFLE(3, 3, 3, 3));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
@@ -9367,7 +9367,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorATan
+		inline VectorType RAYMATH_CALLCONV VectorATan
 		(
 			FVector V
 		)
@@ -9394,9 +9394,9 @@ namespace At0
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation
-			const Vector TC1 = g_XMATanCoefficients1;
-			Vector vConstants = vdupq_lane_f32(vget_high_f32(TC1), 0);
-			Vector Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(TC1), 1);
+			const VectorType TC1 = g_XMATanCoefficients1;
+			VectorType vConstants = vdupq_lane_f32(vget_high_f32(TC1), 0);
+			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(TC1), 1);
 
 			vConstants = vdupq_lane_f32(vget_low_f32(TC1), 1);
 			Result = vmlaq_f32(vConstants, Result, x2);
@@ -9404,7 +9404,7 @@ namespace At0
 			vConstants = vdupq_lane_f32(vget_low_f32(TC1), 0);
 			Result = vmlaq_f32(vConstants, Result, x2);
 
-			const Vector TC0 = g_XMATanCoefficients0;
+			const VectorType TC0 = g_XMATanCoefficients0;
 			vConstants = vdupq_lane_f32(vget_high_f32(TC0), 1);
 			Result = vmlaq_f32(vConstants, Result, x2);
 
@@ -9444,8 +9444,8 @@ namespace At0
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation
-			const Vector TC1 = g_XMATanCoefficients1;
-			Vector vConstants = RAYMATH_PERMUTE_PS(TC1, _MM_SHUFFLE(3, 3, 3, 3));
+			const VectorType TC1 = g_XMATanCoefficients1;
+			VectorType vConstants = RAYMATH_PERMUTE_PS(TC1, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
 			vConstants = RAYMATH_PERMUTE_PS(TC1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -9460,7 +9460,7 @@ namespace At0
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			const Vector TC0 = g_XMATanCoefficients0;
+			const VectorType TC0 = g_XMATanCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(TC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
@@ -9491,7 +9491,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorATan2
+		inline VectorType RAYMATH_CALLCONV VectorATan2
 		(
 			FVector Y,
 			FVector X
@@ -9521,38 +9521,38 @@ namespace At0
 
 			static const VectorF32 ATan2Constants = { { { Constants::PI, Constants::PIDIV2, Constants::PIDIV4, Constants::PI * 3.0f / 4.0f } } };
 
-			Vector Zero = VectorZero();
-			Vector ATanResultValid = VectorTrueInt();
+			VectorType Zero = VectorZero();
+			VectorType ATanResultValid = VectorTrueInt();
 
-			Vector Pi = VectorSplatX(ATan2Constants);
-			Vector PiOverTwo = VectorSplatY(ATan2Constants);
-			Vector PiOverFour = VectorSplatZ(ATan2Constants);
-			Vector ThreePiOverFour = VectorSplatW(ATan2Constants);
+			VectorType Pi = VectorSplatX(ATan2Constants);
+			VectorType PiOverTwo = VectorSplatY(ATan2Constants);
+			VectorType PiOverFour = VectorSplatZ(ATan2Constants);
+			VectorType ThreePiOverFour = VectorSplatW(ATan2Constants);
 
-			Vector YEqualsZero = VectorEqual(Y, Zero);
-			Vector XEqualsZero = VectorEqual(X, Zero);
-			Vector XIsPositive = VectorAndInt(X, g_XMNegativeZero.v);
+			VectorType YEqualsZero = VectorEqual(Y, Zero);
+			VectorType XEqualsZero = VectorEqual(X, Zero);
+			VectorType XIsPositive = VectorAndInt(X, g_XMNegativeZero.v);
 			XIsPositive = VectorEqualInt(XIsPositive, Zero);
-			Vector YEqualsInfinity = VectorIsInfinite(Y);
-			Vector XEqualsInfinity = VectorIsInfinite(X);
+			VectorType YEqualsInfinity = VectorIsInfinite(Y);
+			VectorType XEqualsInfinity = VectorIsInfinite(X);
 
-			Vector YSign = VectorAndInt(Y, g_XMNegativeZero.v);
+			VectorType YSign = VectorAndInt(Y, g_XMNegativeZero.v);
 			Pi = VectorOrInt(Pi, YSign);
 			PiOverTwo = VectorOrInt(PiOverTwo, YSign);
 			PiOverFour = VectorOrInt(PiOverFour, YSign);
 			ThreePiOverFour = VectorOrInt(ThreePiOverFour, YSign);
 
-			Vector R1 = VectorSelect(Pi, YSign, XIsPositive);
-			Vector R2 = VectorSelect(ATanResultValid, PiOverTwo, XEqualsZero);
-			Vector R3 = VectorSelect(R2, R1, YEqualsZero);
-			Vector R4 = VectorSelect(ThreePiOverFour, PiOverFour, XIsPositive);
-			Vector R5 = VectorSelect(PiOverTwo, R4, XEqualsInfinity);
-			Vector Result = VectorSelect(R3, R5, YEqualsInfinity);
+			VectorType R1 = VectorSelect(Pi, YSign, XIsPositive);
+			VectorType R2 = VectorSelect(ATanResultValid, PiOverTwo, XEqualsZero);
+			VectorType R3 = VectorSelect(R2, R1, YEqualsZero);
+			VectorType R4 = VectorSelect(ThreePiOverFour, PiOverFour, XIsPositive);
+			VectorType R5 = VectorSelect(PiOverTwo, R4, XEqualsInfinity);
+			VectorType Result = VectorSelect(R3, R5, YEqualsInfinity);
 			ATanResultValid = VectorEqualInt(Result, ATanResultValid);
 
-			Vector V = VectorDivide(Y, X);
+			VectorType V = VectorDivide(Y, X);
 
-			Vector R0 = VectorATan(V);
+			VectorType R0 = VectorATan(V);
 
 			R1 = VectorSelect(Pi, g_XMNegativeZero, XIsPositive);
 			R2 = VectorAdd(R0, R1);
@@ -9564,7 +9564,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorSinEst
+		inline VectorType RAYMATH_CALLCONV VectorSinEst
 		(
 			FVector V
 		)
@@ -9581,7 +9581,7 @@ namespace At0
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 	// Force the value within the bounds of pi
-			Vector x = VectorModAngles(V);
+			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with sin(y) = sin(x).
 			uint32x4_t sign = vandq_u32(x, g_XMNegativeZero);
@@ -9594,9 +9594,9 @@ namespace At0
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation
-			const Vector SEC = g_XMSinCoefficients1;
-			Vector vConstants = vdupq_lane_f32(vget_high_f32(SEC), 0);
-			Vector Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(SEC), 1);
+			const VectorType SEC = g_XMSinCoefficients1;
+			VectorType vConstants = vdupq_lane_f32(vget_high_f32(SEC), 0);
+			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(SEC), 1);
 
 			vConstants = vdupq_lane_f32(vget_low_f32(SEC), 1);
 			Result = vmlaq_f32(vConstants, Result, x2);
@@ -9606,7 +9606,7 @@ namespace At0
 			return Result;
 #elif defined(RAY_SSE_INTRINSICS)
 	// Force the value within the bounds of pi
-			Vector x = VectorModAngles(V);
+			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with sin(y) = sin(x).
 			__m128 sign = _mm_and_ps(x, g_XMNegativeZero);
@@ -9621,8 +9621,8 @@ namespace At0
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation
-			const Vector SEC = g_XMSinCoefficients1;
-			Vector vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(3, 3, 3, 3));
+			const VectorType SEC = g_XMSinCoefficients1;
+			VectorType vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
 			vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(2, 2, 2, 2));
@@ -9641,7 +9641,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorCosEst
+		inline VectorType RAYMATH_CALLCONV VectorCosEst
 		(
 			FVector V
 		)
@@ -9658,7 +9658,7 @@ namespace At0
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 	// Map V to x in [-pi,pi].
-			Vector x = VectorModAngles(V);
+			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with cos(y) = sign*cos(x).
 			uint32x4_t sign = vandq_u32(x, g_XMNegativeZero);
@@ -9672,9 +9672,9 @@ namespace At0
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation
-			const Vector CEC = g_XMCosCoefficients1;
-			Vector vConstants = vdupq_lane_f32(vget_high_f32(CEC), 0);
-			Vector Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(CEC), 1);
+			const VectorType CEC = g_XMCosCoefficients1;
+			VectorType vConstants = vdupq_lane_f32(vget_high_f32(CEC), 0);
+			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(CEC), 1);
 
 			vConstants = vdupq_lane_f32(vget_low_f32(CEC), 1);
 			Result = vmlaq_f32(vConstants, Result, x2);
@@ -9684,10 +9684,10 @@ namespace At0
 			return Result;
 #elif defined(RAY_SSE_INTRINSICS)
 	// Map V to x in [-pi,pi].
-			Vector x = VectorModAngles(V);
+			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with cos(y) = sign*cos(x).
-			Vector sign = _mm_and_ps(x, g_XMNegativeZero);
+			VectorType sign = _mm_and_ps(x, g_XMNegativeZero);
 			__m128 c = _mm_or_ps(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
 			__m128 absx = _mm_andnot_ps(sign, x);  // |x|
 			__m128 rflx = _mm_sub_ps(c, x);
@@ -9702,8 +9702,8 @@ namespace At0
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation
-			const Vector CEC = g_XMCosCoefficients1;
-			Vector vConstants = RAYMATH_PERMUTE_PS(CEC, _MM_SHUFFLE(3, 3, 3, 3));
+			const VectorType CEC = g_XMCosCoefficients1;
+			VectorType vConstants = RAYMATH_PERMUTE_PS(CEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
 			vConstants = RAYMATH_PERMUTE_PS(CEC, _MM_SHUFFLE(2, 2, 2, 2));
@@ -9725,8 +9725,8 @@ namespace At0
 
 		inline void RAYMATH_CALLCONV VectorSinCosEst
 		(
-			Vector* pSin,
-			Vector* pCos,
+			VectorType* pSin,
+			VectorType* pCos,
 			FVector  V
 		)
 		{
@@ -9754,7 +9754,7 @@ namespace At0
 			*pCos = Cos.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 	// Force the value within the bounds of pi
-			Vector x = VectorModAngles(V);
+			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with cos(y) = sign*cos(x).
 			uint32x4_t sign = vandq_u32(x, g_XMNegativeZero);
@@ -9768,9 +9768,9 @@ namespace At0
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation for sine
-			const Vector SEC = g_XMSinCoefficients1;
-			Vector vConstants = vdupq_lane_f32(vget_high_f32(SEC), 0);
-			Vector Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(SEC), 1);
+			const VectorType SEC = g_XMSinCoefficients1;
+			VectorType vConstants = vdupq_lane_f32(vget_high_f32(SEC), 0);
+			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(SEC), 1);
 
 			vConstants = vdupq_lane_f32(vget_low_f32(SEC), 1);
 			Result = vmlaq_f32(vConstants, Result, x2);
@@ -9779,7 +9779,7 @@ namespace At0
 			*pSin = vmulq_f32(Result, x);
 
 			// Compute polynomial approximation
-			const Vector CEC = g_XMCosCoefficients1;
+			const VectorType CEC = g_XMCosCoefficients1;
 			vConstants = vdupq_lane_f32(vget_high_f32(CEC), 0);
 			Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(CEC), 1);
 
@@ -9790,10 +9790,10 @@ namespace At0
 			*pCos = vmulq_f32(Result, sign);
 #elif defined(RAY_SSE_INTRINSICS)
 	// Force the value within the bounds of pi
-			Vector x = VectorModAngles(V);
+			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with sin(y) = sin(x), cos(y) = sign*cos(x).
-			Vector sign = _mm_and_ps(x, g_XMNegativeZero);
+			VectorType sign = _mm_and_ps(x, g_XMNegativeZero);
 			__m128 c = _mm_or_ps(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
 			__m128 absx = _mm_andnot_ps(sign, x);  // |x|
 			__m128 rflx = _mm_sub_ps(c, x);
@@ -9808,8 +9808,8 @@ namespace At0
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation for sine
-			const Vector SEC = g_XMSinCoefficients1;
-			Vector vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(3, 3, 3, 3));
+			const VectorType SEC = g_XMSinCoefficients1;
+			VectorType vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
 			vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(2, 2, 2, 2));
@@ -9825,7 +9825,7 @@ namespace At0
 			*pSin = Result;
 
 			// Compute polynomial approximation for cosine
-			const Vector CEC = g_XMCosCoefficients1;
+			const VectorType CEC = g_XMCosCoefficients1;
 			vConstants = RAYMATH_PERMUTE_PS(CEC, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_mul_ps(vConstants, x2);
 
@@ -9845,7 +9845,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorTanEst
+		inline VectorType RAYMATH_CALLCONV VectorTanEst
 		(
 			FVector V
 		)
@@ -9860,24 +9860,24 @@ namespace At0
 			return Result.v;
 #else
 
-			Vector OneOverPi = VectorSplatW(g_XMTanEstCoefficients.v);
+			VectorType OneOverPi = VectorSplatW(g_XMTanEstCoefficients.v);
 
-			Vector V1 = VectorMultiply(V, OneOverPi);
+			VectorType V1 = VectorMultiply(V, OneOverPi);
 			V1 = VectorRound(V1);
 
 			V1 = VectorNegativeMultiplySubtract(g_XMPi.v, V1, V);
 
-			Vector T0 = VectorSplatX(g_XMTanEstCoefficients.v);
-			Vector T1 = VectorSplatY(g_XMTanEstCoefficients.v);
-			Vector T2 = VectorSplatZ(g_XMTanEstCoefficients.v);
+			VectorType T0 = VectorSplatX(g_XMTanEstCoefficients.v);
+			VectorType T1 = VectorSplatY(g_XMTanEstCoefficients.v);
+			VectorType T2 = VectorSplatZ(g_XMTanEstCoefficients.v);
 
-			Vector V2T2 = VectorNegativeMultiplySubtract(V1, V1, T2);
-			Vector V2 = VectorMultiply(V1, V1);
-			Vector V1T0 = VectorMultiply(V1, T0);
-			Vector V1T1 = VectorMultiply(V1, T1);
+			VectorType V2T2 = VectorNegativeMultiplySubtract(V1, V1, T2);
+			VectorType V2 = VectorMultiply(V1, V1);
+			VectorType V1T0 = VectorMultiply(V1, T0);
+			VectorType V1T1 = VectorMultiply(V1, T1);
 
-			Vector D = VectorReciprocalEst(V2T2);
-			Vector N = VectorMultiplyAdd(V2, V1T1, V1T0);
+			VectorType D = VectorReciprocalEst(V2T2);
+			VectorType N = VectorMultiplyAdd(V2, V1T1, V1T0);
 
 			return VectorMultiply(N, D);
 
@@ -9886,7 +9886,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorASinEst
+		inline VectorType RAYMATH_CALLCONV VectorASinEst
 		(
 			FVector V
 		)
@@ -9910,9 +9910,9 @@ namespace At0
 			float32x4_t root = VectorSqrt(clampOneMValue);
 
 			// Compute polynomial approximation
-			const Vector AEC = g_XMArcEstCoefficients;
-			Vector vConstants = vdupq_lane_f32(vget_high_f32(AEC), 0);
-			Vector t0 = vmlaq_lane_f32(vConstants, x, vget_high_f32(AEC), 1);
+			const VectorType AEC = g_XMArcEstCoefficients;
+			VectorType vConstants = vdupq_lane_f32(vget_high_f32(AEC), 0);
+			VectorType t0 = vmlaq_lane_f32(vConstants, x, vget_high_f32(AEC), 1);
 
 			vConstants = vdupq_lane_f32(vget_low_f32(AEC), 1);
 			t0 = vmlaq_f32(vConstants, t0, x);
@@ -9936,8 +9936,8 @@ namespace At0
 			__m128 root = _mm_sqrt_ps(clampOneMValue);  // sqrt(1-|V|)
 
 			// Compute polynomial approximation
-			const Vector AEC = g_XMArcEstCoefficients;
-			Vector vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
+			const VectorType AEC = g_XMArcEstCoefficients;
+			VectorType vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 t0 = _mm_mul_ps(vConstants, x);
 
 			vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(2, 2, 2, 2));
@@ -9963,7 +9963,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorACosEst
+		inline VectorType RAYMATH_CALLCONV VectorACosEst
 		(
 			FVector V
 		)
@@ -9988,9 +9988,9 @@ namespace At0
 			float32x4_t root = VectorSqrt(clampOneMValue);
 
 			// Compute polynomial approximation
-			const Vector AEC = g_XMArcEstCoefficients;
-			Vector vConstants = vdupq_lane_f32(vget_high_f32(AEC), 0);
-			Vector t0 = vmlaq_lane_f32(vConstants, x, vget_high_f32(AEC), 1);
+			const VectorType AEC = g_XMArcEstCoefficients;
+			VectorType vConstants = vdupq_lane_f32(vget_high_f32(AEC), 0);
+			VectorType t0 = vmlaq_lane_f32(vConstants, x, vget_high_f32(AEC), 1);
 
 			vConstants = vdupq_lane_f32(vget_low_f32(AEC), 1);
 			t0 = vmlaq_f32(vConstants, t0, x);
@@ -10013,8 +10013,8 @@ namespace At0
 			__m128 root = _mm_sqrt_ps(clampOneMValue);  // sqrt(1-|V|)
 
 			// Compute polynomial approximation
-			const Vector AEC = g_XMArcEstCoefficients;
-			Vector vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
+			const VectorType AEC = g_XMArcEstCoefficients;
+			VectorType vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 t0 = _mm_mul_ps(vConstants, x);
 
 			vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(2, 2, 2, 2));
@@ -10039,7 +10039,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorATanEst
+		inline VectorType RAYMATH_CALLCONV VectorATanEst
 		(
 			FVector V
 		)
@@ -10066,9 +10066,9 @@ namespace At0
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation
-			const Vector AEC = g_XMATanEstCoefficients1;
-			Vector vConstants = vdupq_lane_f32(vget_high_f32(AEC), 0);
-			Vector Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(AEC), 1);
+			const VectorType AEC = g_XMATanEstCoefficients1;
+			VectorType vConstants = vdupq_lane_f32(vget_high_f32(AEC), 0);
+			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(AEC), 1);
 
 			vConstants = vdupq_lane_f32(vget_low_f32(AEC), 1);
 			Result = vmlaq_f32(vConstants, Result, x2);
@@ -10104,8 +10104,8 @@ namespace At0
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation
-			const Vector AEC = g_XMATanEstCoefficients1;
-			Vector vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
+			const VectorType AEC = g_XMATanEstCoefficients1;
+			VectorType vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
 			vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(2, 2, 2, 2));
@@ -10136,7 +10136,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorATan2Est
+		inline VectorType RAYMATH_CALLCONV VectorATan2Est
 		(
 			FVector Y,
 			FVector X
@@ -10154,38 +10154,38 @@ namespace At0
 
 			static const VectorF32 ATan2Constants = { { { Constants::PI, Constants::PIDIV2, Constants::PIDIV4, 2.3561944905f /* Pi*3/4 */ } } };
 
-			const Vector Zero = VectorZero();
-			Vector ATanResultValid = VectorTrueInt();
+			const VectorType Zero = VectorZero();
+			VectorType ATanResultValid = VectorTrueInt();
 
-			Vector Pi = VectorSplatX(ATan2Constants);
-			Vector PiOverTwo = VectorSplatY(ATan2Constants);
-			Vector PiOverFour = VectorSplatZ(ATan2Constants);
-			Vector ThreePiOverFour = VectorSplatW(ATan2Constants);
+			VectorType Pi = VectorSplatX(ATan2Constants);
+			VectorType PiOverTwo = VectorSplatY(ATan2Constants);
+			VectorType PiOverFour = VectorSplatZ(ATan2Constants);
+			VectorType ThreePiOverFour = VectorSplatW(ATan2Constants);
 
-			Vector YEqualsZero = VectorEqual(Y, Zero);
-			Vector XEqualsZero = VectorEqual(X, Zero);
-			Vector XIsPositive = VectorAndInt(X, g_XMNegativeZero.v);
+			VectorType YEqualsZero = VectorEqual(Y, Zero);
+			VectorType XEqualsZero = VectorEqual(X, Zero);
+			VectorType XIsPositive = VectorAndInt(X, g_XMNegativeZero.v);
 			XIsPositive = VectorEqualInt(XIsPositive, Zero);
-			Vector YEqualsInfinity = VectorIsInfinite(Y);
-			Vector XEqualsInfinity = VectorIsInfinite(X);
+			VectorType YEqualsInfinity = VectorIsInfinite(Y);
+			VectorType XEqualsInfinity = VectorIsInfinite(X);
 
-			Vector YSign = VectorAndInt(Y, g_XMNegativeZero.v);
+			VectorType YSign = VectorAndInt(Y, g_XMNegativeZero.v);
 			Pi = VectorOrInt(Pi, YSign);
 			PiOverTwo = VectorOrInt(PiOverTwo, YSign);
 			PiOverFour = VectorOrInt(PiOverFour, YSign);
 			ThreePiOverFour = VectorOrInt(ThreePiOverFour, YSign);
 
-			Vector R1 = VectorSelect(Pi, YSign, XIsPositive);
-			Vector R2 = VectorSelect(ATanResultValid, PiOverTwo, XEqualsZero);
-			Vector R3 = VectorSelect(R2, R1, YEqualsZero);
-			Vector R4 = VectorSelect(ThreePiOverFour, PiOverFour, XIsPositive);
-			Vector R5 = VectorSelect(PiOverTwo, R4, XEqualsInfinity);
-			Vector Result = VectorSelect(R3, R5, YEqualsInfinity);
+			VectorType R1 = VectorSelect(Pi, YSign, XIsPositive);
+			VectorType R2 = VectorSelect(ATanResultValid, PiOverTwo, XEqualsZero);
+			VectorType R3 = VectorSelect(R2, R1, YEqualsZero);
+			VectorType R4 = VectorSelect(ThreePiOverFour, PiOverFour, XIsPositive);
+			VectorType R5 = VectorSelect(PiOverTwo, R4, XEqualsInfinity);
+			VectorType Result = VectorSelect(R3, R5, YEqualsInfinity);
 			ATanResultValid = VectorEqualInt(Result, ATanResultValid);
 
-			Vector Reciprocal = VectorReciprocalEst(X);
-			Vector V = VectorMultiply(Y, Reciprocal);
-			Vector R0 = VectorATanEst(V);
+			VectorType Reciprocal = VectorReciprocalEst(X);
+			VectorType V = VectorMultiply(Y, Reciprocal);
+			VectorType R0 = VectorATanEst(V);
 
 			R1 = VectorSelect(Pi, g_XMNegativeZero, XIsPositive);
 			R2 = VectorAdd(R0, R1);
@@ -10199,7 +10199,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorLerp
+		inline VectorType RAYMATH_CALLCONV VectorLerp
 		(
 			FVector V0,
 			FVector V1,
@@ -10210,24 +10210,24 @@ namespace At0
 
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Scale = VectorReplicate(t);
-			Vector Length = VectorSubtract(V1, V0);
+			VectorType Scale = VectorReplicate(t);
+			VectorType Length = VectorSubtract(V1, V0);
 			return VectorMultiplyAdd(Length, Scale, V0);
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector L = vsubq_f32(V1, V0);
+			VectorType L = vsubq_f32(V1, V0);
 			return vmlaq_n_f32(V0, L, t);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector L = _mm_sub_ps(V1, V0);
-			Vector S = _mm_set_ps1(t);
-			Vector Result = _mm_mul_ps(L, S);
+			VectorType L = _mm_sub_ps(V1, V0);
+			VectorType S = _mm_set_ps1(t);
+			VectorType Result = _mm_mul_ps(L, S);
 			return _mm_add_ps(Result, V0);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorLerpV
+		inline VectorType RAYMATH_CALLCONV VectorLerpV
 		(
 			FVector V0,
 			FVector V1,
@@ -10238,22 +10238,22 @@ namespace At0
 
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Length = VectorSubtract(V1, V0);
+			VectorType Length = VectorSubtract(V1, V0);
 			return VectorMultiplyAdd(Length, T, V0);
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector L = vsubq_f32(V1, V0);
+			VectorType L = vsubq_f32(V1, V0);
 			return vmlaq_f32(V0, L, T);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector Length = _mm_sub_ps(V1, V0);
-			Vector Result = _mm_mul_ps(Length, T);
+			VectorType Length = _mm_sub_ps(V1, V0);
+			VectorType Result = _mm_mul_ps(Length, T);
 			return _mm_add_ps(Result, V0);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorHermite
+		inline VectorType RAYMATH_CALLCONV VectorHermite
 		(
 			FVector Position0,
 			FVector Tangent0,
@@ -10272,12 +10272,12 @@ namespace At0
 			float t2 = t * t;
 			float t3 = t * t2;
 
-			Vector P0 = VectorReplicate(2.0f * t3 - 3.0f * t2 + 1.0f);
-			Vector T0 = VectorReplicate(t3 - 2.0f * t2 + t);
-			Vector P1 = VectorReplicate(-2.0f * t3 + 3.0f * t2);
-			Vector T1 = VectorReplicate(t3 - t2);
+			VectorType P0 = VectorReplicate(2.0f * t3 - 3.0f * t2 + 1.0f);
+			VectorType T0 = VectorReplicate(t3 - 2.0f * t2 + t);
+			VectorType P1 = VectorReplicate(-2.0f * t3 + 3.0f * t2);
+			VectorType T1 = VectorReplicate(t3 - t2);
 
-			Vector Result = VectorMultiply(P0, Position0);
+			VectorType Result = VectorMultiply(P0, Position0);
 			Result = VectorMultiplyAdd(T0, Tangent0, Result);
 			Result = VectorMultiplyAdd(P1, Position1, Result);
 			Result = VectorMultiplyAdd(T1, Tangent1, Result);
@@ -10293,7 +10293,7 @@ namespace At0
 			float p1 = -2.0f * t3 + 3.0f * t2;
 			float t1 = t3 - t2;
 
-			Vector vResult = vmulq_n_f32(Position0, p0);
+			VectorType vResult = vmulq_n_f32(Position0, p0);
 			vResult = vmlaq_n_f32(vResult, Tangent0, t0);
 			vResult = vmlaq_n_f32(vResult, Position1, p1);
 			vResult = vmlaq_n_f32(vResult, Tangent1, t1);
@@ -10302,13 +10302,13 @@ namespace At0
 			float t2 = t * t;
 			float t3 = t * t2;
 
-			Vector P0 = _mm_set_ps1(2.0f * t3 - 3.0f * t2 + 1.0f);
-			Vector T0 = _mm_set_ps1(t3 - 2.0f * t2 + t);
-			Vector P1 = _mm_set_ps1(-2.0f * t3 + 3.0f * t2);
-			Vector T1 = _mm_set_ps1(t3 - t2);
+			VectorType P0 = _mm_set_ps1(2.0f * t3 - 3.0f * t2 + 1.0f);
+			VectorType T0 = _mm_set_ps1(t3 - 2.0f * t2 + t);
+			VectorType P1 = _mm_set_ps1(-2.0f * t3 + 3.0f * t2);
+			VectorType T1 = _mm_set_ps1(t3 - t2);
 
-			Vector vResult = _mm_mul_ps(P0, Position0);
-			Vector vTemp = _mm_mul_ps(T0, Tangent0);
+			VectorType vResult = _mm_mul_ps(P0, Position0);
+			VectorType vTemp = _mm_mul_ps(T0, Tangent0);
 			vResult = _mm_add_ps(vResult, vTemp);
 			vTemp = _mm_mul_ps(P1, Position1);
 			vResult = _mm_add_ps(vResult, vTemp);
@@ -10320,7 +10320,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorHermiteV
+		inline VectorType RAYMATH_CALLCONV VectorHermiteV
 		(
 			FVector Position0,
 			FVector Tangent0,
@@ -10336,15 +10336,15 @@ namespace At0
 
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector T2 = VectorMultiply(T, T);
-			Vector T3 = VectorMultiply(T, T2);
+			VectorType T2 = VectorMultiply(T, T);
+			VectorType T3 = VectorMultiply(T, T2);
 
-			Vector P0 = VectorReplicate(2.0f * T3.vector4_f32[0] - 3.0f * T2.vector4_f32[0] + 1.0f);
-			Vector T0 = VectorReplicate(T3.vector4_f32[1] - 2.0f * T2.vector4_f32[1] + T.vector4_f32[1]);
-			Vector P1 = VectorReplicate(-2.0f * T3.vector4_f32[2] + 3.0f * T2.vector4_f32[2]);
-			Vector T1 = VectorReplicate(T3.vector4_f32[3] - T2.vector4_f32[3]);
+			VectorType P0 = VectorReplicate(2.0f * T3.vector4_f32[0] - 3.0f * T2.vector4_f32[0] + 1.0f);
+			VectorType T0 = VectorReplicate(T3.vector4_f32[1] - 2.0f * T2.vector4_f32[1] + T.vector4_f32[1]);
+			VectorType P1 = VectorReplicate(-2.0f * T3.vector4_f32[2] + 3.0f * T2.vector4_f32[2]);
+			VectorType T1 = VectorReplicate(T3.vector4_f32[3] - T2.vector4_f32[3]);
 
-			Vector Result = VectorMultiply(P0, Position0);
+			VectorType Result = VectorMultiply(P0, Position0);
 			Result = VectorMultiplyAdd(T0, Tangent0, Result);
 			Result = VectorMultiplyAdd(P1, Position1, Result);
 			Result = VectorMultiplyAdd(T1, Tangent1, Result);
@@ -10355,8 +10355,8 @@ namespace At0
 			static const VectorF32 CatMulT2 = { { { -3.0f, -2.0f, 3.0f, -1.0f } } };
 			static const VectorF32 CatMulT3 = { { { 2.0f, 1.0f, -2.0f, 1.0f } } };
 
-			Vector T2 = vmulq_f32(T, T);
-			Vector T3 = vmulq_f32(T, T2);
+			VectorType T2 = vmulq_f32(T, T);
+			VectorType T3 = vmulq_f32(T, T2);
 			// Mul by the constants against t^2
 			T2 = vmulq_f32(T2, CatMulT2);
 			// Mul by the constants against t^3
@@ -10369,7 +10369,7 @@ namespace At0
 			T3 = vaddq_f32(T3, g_XMIdentityR0);
 			// Now, I have the constants created
 			// Mul the x constant to Position0
-			Vector vResult = vmulq_lane_f32(Position0, vget_low_f32(T3), 0); // T3[0]
+			VectorType vResult = vmulq_lane_f32(Position0, vget_low_f32(T3), 0); // T3[0]
 			// Mul the y constant to Tangent0
 			vResult = vmlaq_lane_f32(vResult, Tangent0, vget_low_f32(T3), 1); // T3[1]
 			// Mul the z constant to Position1
@@ -10381,8 +10381,8 @@ namespace At0
 			static const VectorF32 CatMulT2 = { { { -3.0f, -2.0f, 3.0f, -1.0f } } };
 			static const VectorF32 CatMulT3 = { { { 2.0f, 1.0f, -2.0f, 1.0f } } };
 
-			Vector T2 = _mm_mul_ps(T, T);
-			Vector T3 = _mm_mul_ps(T, T2);
+			VectorType T2 = _mm_mul_ps(T, T);
+			VectorType T3 = _mm_mul_ps(T, T2);
 			// Mul by the constants against t^2
 			T2 = _mm_mul_ps(T2, CatMulT2);
 			// Mul by the constants against t^3
@@ -10396,7 +10396,7 @@ namespace At0
 			T3 = _mm_add_ps(T3, g_XMIdentityR0);
 			// Now, I have the constants created
 			// Mul the x constant to Position0
-			Vector vResult = RAYMATH_PERMUTE_PS(T3, _MM_SHUFFLE(0, 0, 0, 0));
+			VectorType vResult = RAYMATH_PERMUTE_PS(T3, _MM_SHUFFLE(0, 0, 0, 0));
 			vResult = _mm_mul_ps(vResult, Position0);
 			// Mul the y constant to Tangent0
 			T2 = RAYMATH_PERMUTE_PS(T3, _MM_SHUFFLE(1, 1, 1, 1));
@@ -10416,7 +10416,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorCatmullRom
+		inline VectorType RAYMATH_CALLCONV VectorCatmullRom
 		(
 			FVector Position0,
 			FVector Position1,
@@ -10435,12 +10435,12 @@ namespace At0
 			float t2 = t * t;
 			float t3 = t * t2;
 
-			Vector P0 = VectorReplicate((-t3 + 2.0f * t2 - t) * 0.5f);
-			Vector P1 = VectorReplicate((3.0f * t3 - 5.0f * t2 + 2.0f) * 0.5f);
-			Vector P2 = VectorReplicate((-3.0f * t3 + 4.0f * t2 + t) * 0.5f);
-			Vector P3 = VectorReplicate((t3 - t2) * 0.5f);
+			VectorType P0 = VectorReplicate((-t3 + 2.0f * t2 - t) * 0.5f);
+			VectorType P1 = VectorReplicate((3.0f * t3 - 5.0f * t2 + 2.0f) * 0.5f);
+			VectorType P2 = VectorReplicate((-3.0f * t3 + 4.0f * t2 + t) * 0.5f);
+			VectorType P3 = VectorReplicate((t3 - t2) * 0.5f);
 
-			Vector Result = VectorMultiply(P0, Position0);
+			VectorType Result = VectorMultiply(P0, Position0);
 			Result = VectorMultiplyAdd(P1, Position1, Result);
 			Result = VectorMultiplyAdd(P2, Position2, Result);
 			Result = VectorMultiplyAdd(P3, Position3, Result);
@@ -10456,20 +10456,20 @@ namespace At0
 			float p2 = (-3.0f * t3 + 4.0f * t2 + t) * 0.5f;
 			float p3 = (t3 - t2) * 0.5f;
 
-			Vector P1 = vmulq_n_f32(Position1, p1);
-			Vector P0 = vmlaq_n_f32(P1, Position0, p0);
-			Vector P3 = vmulq_n_f32(Position3, p3);
-			Vector P2 = vmlaq_n_f32(P3, Position2, p2);
+			VectorType P1 = vmulq_n_f32(Position1, p1);
+			VectorType P0 = vmlaq_n_f32(P1, Position0, p0);
+			VectorType P3 = vmulq_n_f32(Position3, p3);
+			VectorType P2 = vmlaq_n_f32(P3, Position2, p2);
 			P0 = vaddq_f32(P0, P2);
 			return P0;
 #elif defined(RAY_SSE_INTRINSICS)
 			float t2 = t * t;
 			float t3 = t * t2;
 
-			Vector P0 = _mm_set_ps1((-t3 + 2.0f * t2 - t) * 0.5f);
-			Vector P1 = _mm_set_ps1((3.0f * t3 - 5.0f * t2 + 2.0f) * 0.5f);
-			Vector P2 = _mm_set_ps1((-3.0f * t3 + 4.0f * t2 + t) * 0.5f);
-			Vector P3 = _mm_set_ps1((t3 - t2) * 0.5f);
+			VectorType P0 = _mm_set_ps1((-t3 + 2.0f * t2 - t) * 0.5f);
+			VectorType P1 = _mm_set_ps1((3.0f * t3 - 5.0f * t2 + 2.0f) * 0.5f);
+			VectorType P2 = _mm_set_ps1((-3.0f * t3 + 4.0f * t2 + t) * 0.5f);
+			VectorType P3 = _mm_set_ps1((t3 - t2) * 0.5f);
 
 			P0 = _mm_mul_ps(P0, Position0);
 			P1 = _mm_mul_ps(P1, Position1);
@@ -10484,7 +10484,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorCatmullRomV
+		inline VectorType RAYMATH_CALLCONV VectorCatmullRomV
 		(
 			FVector Position0,
 			FVector Position1,
@@ -10527,15 +10527,15 @@ namespace At0
 			static const VectorF32 Catmul4 = { { { 4.0f, 4.0f, 4.0f, 4.0f } } };
 			static const VectorF32 Catmul5 = { { { 5.0f, 5.0f, 5.0f, 5.0f } } };
 			// Cache T^2 and T^3
-			Vector T2 = vmulq_f32(T, T);
-			Vector T3 = vmulq_f32(T, T2);
+			VectorType T2 = vmulq_f32(T, T);
+			VectorType T3 = vmulq_f32(T, T2);
 			// Perform the Position0 term
-			Vector vResult = vaddq_f32(T2, T2);
+			VectorType vResult = vaddq_f32(T2, T2);
 			vResult = vsubq_f32(vResult, T);
 			vResult = vsubq_f32(vResult, T3);
 			vResult = vmulq_f32(vResult, Position0);
 			// Perform the Position1 term and add
-			Vector vTemp = vmulq_f32(T3, Catmul3);
+			VectorType vTemp = vmulq_f32(T3, Catmul3);
 			vTemp = vmlsq_f32(vTemp, T2, Catmul5);
 			vTemp = vaddq_f32(vTemp, Catmul2);
 			vResult = vmlaq_f32(vResult, vTemp, Position1);
@@ -10556,16 +10556,16 @@ namespace At0
 			static const VectorF32 Catmul4 = { { { 4.0f, 4.0f, 4.0f, 4.0f } } };
 			static const VectorF32 Catmul5 = { { { 5.0f, 5.0f, 5.0f, 5.0f } } };
 			// Cache T^2 and T^3
-			Vector T2 = _mm_mul_ps(T, T);
-			Vector T3 = _mm_mul_ps(T, T2);
+			VectorType T2 = _mm_mul_ps(T, T);
+			VectorType T3 = _mm_mul_ps(T, T2);
 			// Perform the Position0 term
-			Vector vResult = _mm_add_ps(T2, T2);
+			VectorType vResult = _mm_add_ps(T2, T2);
 			vResult = _mm_sub_ps(vResult, T);
 			vResult = _mm_sub_ps(vResult, T3);
 			vResult = _mm_mul_ps(vResult, Position0);
 			// Perform the Position1 term and add
-			Vector vTemp = _mm_mul_ps(T3, Catmul3);
-			Vector vTemp2 = _mm_mul_ps(T2, Catmul5);
+			VectorType vTemp = _mm_mul_ps(T3, Catmul3);
+			VectorType vTemp2 = _mm_mul_ps(T2, Catmul5);
 			vTemp = _mm_sub_ps(vTemp, vTemp2);
 			vTemp = _mm_add_ps(vTemp, Catmul2);
 			vTemp = _mm_mul_ps(vTemp, Position1);
@@ -10589,7 +10589,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorBaryCentric
+		inline VectorType RAYMATH_CALLCONV VectorBaryCentric
 		(
 			FVector Position0,
 			FVector Position1,
@@ -10602,27 +10602,27 @@ namespace At0
 
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector P10 = VectorSubtract(Position1, Position0);
-			Vector ScaleF = VectorReplicate(f);
+			VectorType P10 = VectorSubtract(Position1, Position0);
+			VectorType ScaleF = VectorReplicate(f);
 
-			Vector P20 = VectorSubtract(Position2, Position0);
-			Vector ScaleG = VectorReplicate(g);
+			VectorType P20 = VectorSubtract(Position2, Position0);
+			VectorType ScaleG = VectorReplicate(g);
 
-			Vector Result = VectorMultiplyAdd(P10, ScaleF, Position0);
+			VectorType Result = VectorMultiplyAdd(P10, ScaleF, Position0);
 			Result = VectorMultiplyAdd(P20, ScaleG, Result);
 
 			return Result;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector R1 = vsubq_f32(Position1, Position0);
-			Vector R2 = vsubq_f32(Position2, Position0);
+			VectorType R1 = vsubq_f32(Position1, Position0);
+			VectorType R2 = vsubq_f32(Position2, Position0);
 			R1 = vmlaq_n_f32(Position0, R1, f);
 			return vmlaq_n_f32(R1, R2, g);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector R1 = _mm_sub_ps(Position1, Position0);
-			Vector SF = _mm_set_ps1(f);
-			Vector R2 = _mm_sub_ps(Position2, Position0);
-			Vector SG = _mm_set_ps1(g);
+			VectorType R1 = _mm_sub_ps(Position1, Position0);
+			VectorType SF = _mm_set_ps1(f);
+			VectorType R2 = _mm_sub_ps(Position2, Position0);
+			VectorType SG = _mm_set_ps1(g);
 			R1 = _mm_mul_ps(R1, SF);
 			R2 = _mm_mul_ps(R2, SG);
 			R1 = _mm_add_ps(R1, Position0);
@@ -10633,7 +10633,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV VectorBaryCentricV
+		inline VectorType RAYMATH_CALLCONV VectorBaryCentricV
 		(
 			FVector Position0,
 			FVector Position1,
@@ -10646,22 +10646,22 @@ namespace At0
 
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector P10 = VectorSubtract(Position1, Position0);
-			Vector P20 = VectorSubtract(Position2, Position0);
+			VectorType P10 = VectorSubtract(Position1, Position0);
+			VectorType P20 = VectorSubtract(Position2, Position0);
 
-			Vector Result = VectorMultiplyAdd(P10, F, Position0);
+			VectorType Result = VectorMultiplyAdd(P10, F, Position0);
 			Result = VectorMultiplyAdd(P20, G, Result);
 
 			return Result;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector R1 = vsubq_f32(Position1, Position0);
-			Vector R2 = vsubq_f32(Position2, Position0);
+			VectorType R1 = vsubq_f32(Position1, Position0);
+			VectorType R2 = vsubq_f32(Position2, Position0);
 			R1 = vmlaq_f32(Position0, R1, F);
 			return vmlaq_f32(R1, R2, G);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector R1 = _mm_sub_ps(Position1, Position0);
-			Vector R2 = _mm_sub_ps(Position2, Position0);
+			VectorType R1 = _mm_sub_ps(Position1, Position0);
+			VectorType R2 = _mm_sub_ps(Position2, Position0);
 			R1 = _mm_mul_ps(R1, F);
 			R2 = _mm_mul_ps(R2, G);
 			R1 = _mm_add_ps(R1, Position0);
@@ -10672,7 +10672,7 @@ namespace At0
 
 		/****************************************************************************
 		 *
-		 * 2D Vector
+		 * 2D VectorType
 		 *
 		 ****************************************************************************/
 
@@ -10694,7 +10694,7 @@ namespace At0
 			uint32x2_t vTemp = vceq_f32(vget_low_f32(V1), vget_low_f32(V2));
 			return (vget_lane_u64(vTemp, 0) == 0xFFFFFFFFFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpeq_ps(V1, V2);
+			VectorType vTemp = _mm_cmpeq_ps(V1, V2);
 			// z and w are don't care
 			return (((_mm_movemask_ps(vTemp) & 3) == 3) != 0);
 #endif
@@ -10738,7 +10738,7 @@ namespace At0
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpeq_ps(V1, V2);
+			VectorType vTemp = _mm_cmpeq_ps(V1, V2);
 			// z and w are don't care
 			int iTest = _mm_movemask_ps(vTemp) & 3;
 			uint32_t CR = 0;
@@ -10846,9 +10846,9 @@ namespace At0
 			return (r == 0xFFFFFFFFFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Get the difference
-			Vector vDelta = _mm_sub_ps(V1, V2);
+			VectorType vDelta = _mm_sub_ps(V1, V2);
 			// Get the absolute value of the difference
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vTemp = _mm_setzero_ps();
 			vTemp = _mm_sub_ps(vTemp, vDelta);
 			vTemp = _mm_max_ps(vTemp, vDelta);
 			vTemp = _mm_cmple_ps(vTemp, Epsilon);
@@ -10871,7 +10871,7 @@ namespace At0
 			uint32x2_t vTemp = vceq_f32(vget_low_f32(V1), vget_low_f32(V2));
 			return (vget_lane_u64(vTemp, 0) != 0xFFFFFFFFFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpeq_ps(V1, V2);
+			VectorType vTemp = _mm_cmpeq_ps(V1, V2);
 			// z and w are don't care
 			return (((_mm_movemask_ps(vTemp) & 3) != 3) != 0);
 #endif
@@ -10910,7 +10910,7 @@ namespace At0
 			uint32x2_t vTemp = vcgt_f32(vget_low_f32(V1), vget_low_f32(V2));
 			return (vget_lane_u64(vTemp, 0) == 0xFFFFFFFFFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpgt_ps(V1, V2);
+			VectorType vTemp = _mm_cmpgt_ps(V1, V2);
 			// z and w are don't care
 			return (((_mm_movemask_ps(vTemp) & 3) == 3) != 0);
 #endif
@@ -10953,7 +10953,7 @@ namespace At0
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpgt_ps(V1, V2);
+			VectorType vTemp = _mm_cmpgt_ps(V1, V2);
 			int iTest = _mm_movemask_ps(vTemp) & 3;
 			uint32_t CR = 0;
 			if (iTest == 3)
@@ -10982,7 +10982,7 @@ namespace At0
 			uint32x2_t vTemp = vcge_f32(vget_low_f32(V1), vget_low_f32(V2));
 			return (vget_lane_u64(vTemp, 0) == 0xFFFFFFFFFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpge_ps(V1, V2);
+			VectorType vTemp = _mm_cmpge_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 3) == 3) != 0);
 #endif
 		}
@@ -11024,7 +11024,7 @@ namespace At0
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpge_ps(V1, V2);
+			VectorType vTemp = _mm_cmpge_ps(V1, V2);
 			int iTest = _mm_movemask_ps(vTemp) & 3;
 			uint32_t CR = 0;
 			if (iTest == 3)
@@ -11053,7 +11053,7 @@ namespace At0
 			uint32x2_t vTemp = vclt_f32(vget_low_f32(V1), vget_low_f32(V2));
 			return (vget_lane_u64(vTemp, 0) == 0xFFFFFFFFFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmplt_ps(V1, V2);
+			VectorType vTemp = _mm_cmplt_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 3) == 3) != 0);
 #endif
 		}
@@ -11072,7 +11072,7 @@ namespace At0
 			uint32x2_t vTemp = vcle_f32(vget_low_f32(V1), vget_low_f32(V2));
 			return (vget_lane_u64(vTemp, 0) == 0xFFFFFFFFFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmple_ps(V1, V2);
+			VectorType vTemp = _mm_cmple_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 3) == 3) != 0);
 #endif
 		}
@@ -11103,9 +11103,9 @@ namespace At0
 			return (vget_lane_u64(ivTemp1, 0) == 0xFFFFFFFFFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Test if less than or equal
-			Vector vTemp1 = _mm_cmple_ps(V, Bounds);
+			VectorType vTemp1 = _mm_cmple_ps(V, Bounds);
 			// Negate the bounds
-			Vector vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
+			VectorType vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
 			// Test if greater or equal (Reversed)
 			vTemp2 = _mm_cmple_ps(vTemp2, V);
 			// Blend answers
@@ -11133,7 +11133,7 @@ namespace At0
 			return (vget_lane_u64(vTempNan, 0) != 0xFFFFFFFFFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Test against itself. NaN is always not equal
-			Vector vTempNan = _mm_cmpneq_ps(V, V);
+			VectorType vTempNan = _mm_cmpneq_ps(V, V);
 			// If x or y are NaN, the mask is non-zero
 			return ((_mm_movemask_ps(vTempNan) & 3) != 0);
 #endif
@@ -11173,7 +11173,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2Dot
+		inline VectorType RAYMATH_CALLCONV Vector2Dot
 		(
 			FVector V1,
 			FVector V2
@@ -11196,15 +11196,15 @@ namespace At0
 #elif defined(RAY_SSE4_INTRINSICS)
 			return _mm_dp_ps(V1, V2, 0x3f);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vDot = _mm_mul_ps(V1, V2);
+			VectorType vDot = _mm_mul_ps(V1, V2);
 			vDot = _mm_hadd_ps(vDot, vDot);
 			vDot = _mm_moveldup_ps(vDot);
 			return vDot;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y
-			Vector vLengthSq = _mm_mul_ps(V1, V2);
+			VectorType vLengthSq = _mm_mul_ps(V1, V2);
 			// vTemp has y splatted
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
@@ -11214,7 +11214,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2Cross
+		inline VectorType RAYMATH_CALLCONV Vector2Cross
 		(
 			FVector V1,
 			FVector V2
@@ -11239,11 +11239,11 @@ namespace At0
 			return vcombine_f32(vTemp, vTemp);
 #elif defined(RAY_SSE_INTRINSICS)
 	// Swap x and y
-			Vector vResult = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 1, 0, 1));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(0, 1, 0, 1));
 			// Perform the muls
 			vResult = _mm_mul_ps(vResult, V1);
 			// Splat y
-			Vector vTemp = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(1, 1, 1, 1));
 			// Sub the values
 			vResult = _mm_sub_ss(vResult, vTemp);
 			// Splat the cross product
@@ -11254,7 +11254,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2LengthSq
+		inline VectorType RAYMATH_CALLCONV Vector2LengthSq
 		(
 			FVector V
 		)
@@ -11264,14 +11264,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2ReciprocalLengthEst
+		inline VectorType RAYMATH_CALLCONV Vector2ReciprocalLengthEst
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 			Result = Vector2LengthSq(V);
 			Result = VectorReciprocalSqrtEst(Result);
 			return Result;
@@ -11285,19 +11285,19 @@ namespace At0
 			vTemp = vrsqrte_f32(vTemp);
 			return vcombine_f32(vTemp, vTemp);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0x3f);
+			VectorType vTemp = _mm_dp_ps(V, V, 0x3f);
 			return _mm_rsqrt_ps(vTemp);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vLengthSq = _mm_mul_ps(V, V);
-			Vector vTemp = _mm_hadd_ps(vLengthSq, vLengthSq);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
+			VectorType vTemp = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_rsqrt_ss(vTemp);
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has y splatted
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = _mm_rsqrt_ss(vLengthSq);
@@ -11308,14 +11308,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2ReciprocalLength
+		inline VectorType RAYMATH_CALLCONV Vector2ReciprocalLength
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 			Result = Vector2LengthSq(V);
 			Result = VectorReciprocalSqrt(Result);
 			return Result;
@@ -11335,21 +11335,21 @@ namespace At0
 			float32x2_t Result = vmul_f32(S1, R1);
 			return vcombine_f32(Result, Result);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0x3f);
-			Vector vLengthSq = _mm_sqrt_ps(vTemp);
+			VectorType vTemp = _mm_dp_ps(V, V, 0x3f);
+			VectorType vLengthSq = _mm_sqrt_ps(vTemp);
 			return _mm_div_ps(g_XMOne, vLengthSq);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vLengthSq = _mm_mul_ps(V, V);
-			Vector vTemp = _mm_hadd_ps(vLengthSq, vLengthSq);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
+			VectorType vTemp = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ss(vTemp);
 			vLengthSq = _mm_div_ss(g_XMOne, vLengthSq);
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has y splatted
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = _mm_sqrt_ss(vLengthSq);
@@ -11361,14 +11361,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2LengthEst
+		inline VectorType RAYMATH_CALLCONV Vector2LengthEst
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 			Result = Vector2LengthSq(V);
 			Result = VectorSqrtEst(Result);
 			return Result;
@@ -11386,19 +11386,19 @@ namespace At0
 			Result = vbsl_f32(VEqualsZero, zero, Result);
 			return vcombine_f32(Result, Result);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0x3f);
+			VectorType vTemp = _mm_dp_ps(V, V, 0x3f);
 			return _mm_sqrt_ps(vTemp);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vLengthSq = _mm_mul_ps(V, V);
-			Vector vTemp = _mm_hadd_ps(vLengthSq, vLengthSq);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
+			VectorType vTemp = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ss(vTemp);
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has y splatted
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = _mm_sqrt_ss(vLengthSq);
@@ -11409,14 +11409,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2Length
+		inline VectorType RAYMATH_CALLCONV Vector2Length
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 			Result = Vector2LengthSq(V);
 			Result = VectorSqrt(Result);
 			return Result;
@@ -11440,19 +11440,19 @@ namespace At0
 			Result = vbsl_f32(VEqualsZero, zero, Result);
 			return vcombine_f32(Result, Result);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0x3f);
+			VectorType vTemp = _mm_dp_ps(V, V, 0x3f);
 			return _mm_sqrt_ps(vTemp);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vLengthSq = _mm_mul_ps(V, V);
-			Vector vTemp = _mm_hadd_ps(vLengthSq, vLengthSq);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
+			VectorType vTemp = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ss(vTemp);
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has y splatted
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
@@ -11465,14 +11465,14 @@ namespace At0
 		// Vector2NormalizeEst uses a reciprocal estimate and
 		// returns QNaN on zero and infinite vectors.
 
-		inline Vector RAYMATH_CALLCONV Vector2NormalizeEst
+		inline VectorType RAYMATH_CALLCONV Vector2NormalizeEst
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 			Result = Vector2ReciprocalLength(V);
 			Result = VectorMultiply(V, Result);
 			return Result;
@@ -11488,11 +11488,11 @@ namespace At0
 			float32x2_t Result = vmul_f32(VL, vTemp);
 			return vcombine_f32(Result, Result);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0x3f);
-			Vector vResult = _mm_rsqrt_ps(vTemp);
+			VectorType vTemp = _mm_dp_ps(V, V, 0x3f);
+			VectorType vResult = _mm_rsqrt_ps(vTemp);
 			return _mm_mul_ps(vResult, V);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_rsqrt_ss(vLengthSq);
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
@@ -11500,9 +11500,9 @@ namespace At0
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has y splatted
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			// x+y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = _mm_rsqrt_ss(vLengthSq);
@@ -11514,14 +11514,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2Normalize
+		inline VectorType RAYMATH_CALLCONV Vector2Normalize
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector vResult = Vector2Length(V);
+			VectorType vResult = Vector2Length(V);
 			float fLength = vResult.vector4_f32[0];
 
 			// Prevent divide by zero
@@ -11556,11 +11556,11 @@ namespace At0
 			Result = vbsl_f32(VEqualsInf, vget_low_f32(g_XMQNaN), Result);
 			return vcombine_f32(Result, Result);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vLengthSq = _mm_dp_ps(V, V, 0x3f);
+			VectorType vLengthSq = _mm_dp_ps(V, V, 0x3f);
 			// Prepare for the division
-			Vector vResult = _mm_sqrt_ps(vLengthSq);
+			VectorType vResult = _mm_sqrt_ps(vLengthSq);
 			// Create zero with a single instruction
-			Vector vZeroMask = _mm_setzero_ps();
+			VectorType vZeroMask = _mm_setzero_ps();
 			// Test for a divide by zero (Must be FP to detect -0.0)
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
@@ -11571,19 +11571,19 @@ namespace At0
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			Vector vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
-			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
 #elif defined(RAY_SSE3_INTRINSICS)
 			// Perform the dot product on x and y only
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_moveldup_ps(vLengthSq);
 			// Prepare for the division
-			Vector vResult = _mm_sqrt_ps(vLengthSq);
+			VectorType vResult = _mm_sqrt_ps(vLengthSq);
 			// Create zero with a single instruction
-			Vector vZeroMask = _mm_setzero_ps();
+			VectorType vZeroMask = _mm_setzero_ps();
 			// Test for a divide by zero (Must be FP to detect -0.0)
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
@@ -11594,20 +11594,20 @@ namespace At0
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			Vector vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
-			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x and y only
-			Vector vLengthSq = _mm_mul_ps(V, V);
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vLengthSq = _mm_mul_ps(V, V);
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 1, 1, 1));
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			// Prepare for the division
-			Vector vResult = _mm_sqrt_ps(vLengthSq);
+			VectorType vResult = _mm_sqrt_ps(vLengthSq);
 			// Create zero with a single instruction
-			Vector vZeroMask = _mm_setzero_ps();
+			VectorType vZeroMask = _mm_setzero_ps();
 			// Test for a divide by zero (Must be FP to detect -0.0)
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
@@ -11618,8 +11618,8 @@ namespace At0
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			Vector vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
-			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
 #endif
@@ -11627,21 +11627,21 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2ClampLength
+		inline VectorType RAYMATH_CALLCONV Vector2ClampLength
 		(
 			FVector V,
 			float    LengthMin,
 			float    LengthMax
 		)
 		{
-			Vector ClampMax = VectorReplicate(LengthMax);
-			Vector ClampMin = VectorReplicate(LengthMin);
+			VectorType ClampMax = VectorReplicate(LengthMax);
+			VectorType ClampMin = VectorReplicate(LengthMin);
 			return Vector2ClampLengthV(V, ClampMin, ClampMax);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2ClampLengthV
+		inline VectorType RAYMATH_CALLCONV Vector2ClampLengthV
 		(
 			FVector V,
 			FVector LengthMin,
@@ -11654,33 +11654,33 @@ namespace At0
 			assert(Vector2GreaterOrEqual(LengthMax, g_XMZero));
 			assert(Vector2GreaterOrEqual(LengthMax, LengthMin));
 
-			Vector LengthSq = Vector2LengthSq(V);
+			VectorType LengthSq = Vector2LengthSq(V);
 
-			const Vector Zero = VectorZero();
+			const VectorType Zero = VectorZero();
 
-			Vector RcpLength = VectorReciprocalSqrt(LengthSq);
+			VectorType RcpLength = VectorReciprocalSqrt(LengthSq);
 
-			Vector InfiniteLength = VectorEqualInt(LengthSq, g_XMInfinity.v);
-			Vector ZeroLength = VectorEqual(LengthSq, Zero);
+			VectorType InfiniteLength = VectorEqualInt(LengthSq, g_XMInfinity.v);
+			VectorType ZeroLength = VectorEqual(LengthSq, Zero);
 
-			Vector Length = VectorMultiply(LengthSq, RcpLength);
+			VectorType Length = VectorMultiply(LengthSq, RcpLength);
 
-			Vector Normal = VectorMultiply(V, RcpLength);
+			VectorType Normal = VectorMultiply(V, RcpLength);
 
-			Vector Select = VectorEqualInt(InfiniteLength, ZeroLength);
+			VectorType Select = VectorEqualInt(InfiniteLength, ZeroLength);
 			Length = VectorSelect(LengthSq, Length, Select);
 			Normal = VectorSelect(LengthSq, Normal, Select);
 
-			Vector ControlMax = VectorGreater(Length, LengthMax);
-			Vector ControlMin = VectorLess(Length, LengthMin);
+			VectorType ControlMax = VectorGreater(Length, LengthMax);
+			VectorType ControlMin = VectorLess(Length, LengthMin);
 
-			Vector ClampLength = VectorSelect(Length, LengthMax, ControlMax);
+			VectorType ClampLength = VectorSelect(Length, LengthMax, ControlMax);
 			ClampLength = VectorSelect(ClampLength, LengthMin, ControlMin);
 
-			Vector Result = VectorMultiply(Normal, ClampLength);
+			VectorType Result = VectorMultiply(Normal, ClampLength);
 
 			// Preserve the original vector (with no precision loss) if the length falls within the given range
-			Vector Control = VectorEqualInt(ControlMax, ControlMin);
+			VectorType Control = VectorEqualInt(ControlMax, ControlMin);
 			Result = VectorSelect(Result, V, Control);
 
 			return Result;
@@ -11688,7 +11688,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2Reflect
+		inline VectorType RAYMATH_CALLCONV Vector2Reflect
 		(
 			FVector Incident,
 			FVector Normal
@@ -11696,7 +11696,7 @@ namespace At0
 		{
 			// Result = Incident - (2 * dot(Incident, Normal)) * Normal
 
-			Vector Result;
+			VectorType Result;
 			Result = Vector2Dot(Incident, Normal);
 			Result = VectorAdd(Result, Result);
 			Result = VectorNegativeMultiplySubtract(Result, Normal, Incident);
@@ -11705,21 +11705,21 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2Refract
+		inline VectorType RAYMATH_CALLCONV Vector2Refract
 		(
 			FVector Incident,
 			FVector Normal,
 			float    RefractionIndex
 		)
 		{
-			Vector Index = VectorReplicate(RefractionIndex);
+			VectorType Index = VectorReplicate(RefractionIndex);
 			return Vector2RefractV(Incident, Normal, Index);
 		}
 
 		//------------------------------------------------------------------------------
 
 		// Return the refraction of a 2D vector
-		inline Vector RAYMATH_CALLCONV Vector2RefractV
+		inline VectorType RAYMATH_CALLCONV Vector2RefractV
 		(
 			FVector Incident,
 			FVector Normal,
@@ -11749,7 +11749,7 @@ namespace At0
 				RY = 0.0f;
 			}
 
-			Vector vResult;
+			VectorType vResult;
 			vResult.vector4_f32[0] = RX;
 			vResult.vector4_f32[1] = RY;
 			vResult.vector4_f32[2] = 0.0f;
@@ -11789,18 +11789,18 @@ namespace At0
 	// Result = RefractionIndex * Incident - Normal * (RefractionIndex * dot(Incident, Normal) + 
 	// sqrt(1 - RefractionIndex * RefractionIndex * (1 - dot(Incident, Normal) * dot(Incident, Normal))))
 	// Get the 2D Dot product of Incident-Normal
-			Vector IDotN = Vector2Dot(Incident, Normal);
+			VectorType IDotN = Vector2Dot(Incident, Normal);
 			// vTemp = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
-			Vector vTemp = _mm_mul_ps(IDotN, IDotN);
+			VectorType vTemp = _mm_mul_ps(IDotN, IDotN);
 			vTemp = _mm_sub_ps(g_XMOne, vTemp);
 			vTemp = _mm_mul_ps(vTemp, RefractionIndex);
 			vTemp = _mm_mul_ps(vTemp, RefractionIndex);
 			vTemp = _mm_sub_ps(g_XMOne, vTemp);
 			// If any terms are <=0, sqrt() will fail, punt to zero
-			Vector vMask = _mm_cmpgt_ps(vTemp, g_XMZero);
+			VectorType vMask = _mm_cmpgt_ps(vTemp, g_XMZero);
 			// R = RefractionIndex * IDotN + sqrt(R)
 			vTemp = _mm_sqrt_ps(vTemp);
-			Vector vResult = _mm_mul_ps(RefractionIndex, IDotN);
+			VectorType vResult = _mm_mul_ps(RefractionIndex, IDotN);
 			vTemp = _mm_add_ps(vTemp, vResult);
 			// Result = RefractionIndex * Incident - Normal * R
 			vResult = _mm_mul_ps(RefractionIndex, Incident);
@@ -11813,7 +11813,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2Orthogonal
+		inline VectorType RAYMATH_CALLCONV Vector2Orthogonal
 		(
 			FVector V
 		)
@@ -11836,7 +11836,7 @@ namespace At0
 			float32x2_t Result = vmul_f32(vrev64_f32(VL), vget_low_f32(Negate));
 			return vcombine_f32(Result, zero);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
 			vResult = _mm_mul_ps(vResult, g_XMNegateX);
 			return vResult;
 #endif
@@ -11844,13 +11844,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2AngleBetweenNormalsEst
+		inline VectorType RAYMATH_CALLCONV Vector2AngleBetweenNormalsEst
 		(
 			FVector N1,
 			FVector N2
 		)
 		{
-			Vector Result = Vector2Dot(N1, N2);
+			VectorType Result = Vector2Dot(N1, N2);
 			Result = VectorClamp(Result, g_XMNegativeOne.v, g_XMOne.v);
 			Result = VectorACosEst(Result);
 			return Result;
@@ -11858,13 +11858,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2AngleBetweenNormals
+		inline VectorType RAYMATH_CALLCONV Vector2AngleBetweenNormals
 		(
 			FVector N1,
 			FVector N2
 		)
 		{
-			Vector Result = Vector2Dot(N1, N2);
+			VectorType Result = Vector2Dot(N1, N2);
 			Result = VectorClamp(Result, g_XMNegativeOne, g_XMOne);
 			Result = VectorACos(Result);
 			return Result;
@@ -11872,20 +11872,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2AngleBetweenVectors
+		inline VectorType RAYMATH_CALLCONV Vector2AngleBetweenVectors
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-			Vector L1 = Vector2ReciprocalLength(V1);
-			Vector L2 = Vector2ReciprocalLength(V2);
+			VectorType L1 = Vector2ReciprocalLength(V1);
+			VectorType L2 = Vector2ReciprocalLength(V2);
 
-			Vector Dot = Vector2Dot(V1, V2);
+			VectorType Dot = Vector2Dot(V1, V2);
 
 			L1 = VectorMultiply(L1, L2);
 
-			Vector CosAngle = VectorMultiply(Dot, L1);
+			VectorType CosAngle = VectorMultiply(Dot, L1);
 			CosAngle = VectorClamp(CosAngle, g_XMNegativeOne.v, g_XMOne.v);
 
 			return VectorACos(CosAngle);
@@ -11893,7 +11893,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2LinePointDistance
+		inline VectorType RAYMATH_CALLCONV Vector2LinePointDistance
 		(
 			FVector LinePoint1,
 			FVector LinePoint2,
@@ -11907,15 +11907,15 @@ namespace At0
 			//
 			//     PointProjectionScale = dot(PointVector, LineVector) / LengthSq(LineVector)
 
-			Vector PointVector = VectorSubtract(Point, LinePoint1);
-			Vector LineVector = VectorSubtract(LinePoint2, LinePoint1);
+			VectorType PointVector = VectorSubtract(Point, LinePoint1);
+			VectorType LineVector = VectorSubtract(LinePoint2, LinePoint1);
 
-			Vector LengthSq = Vector2LengthSq(LineVector);
+			VectorType LengthSq = Vector2LengthSq(LineVector);
 
-			Vector PointProjectionScale = Vector2Dot(PointVector, LineVector);
+			VectorType PointProjectionScale = Vector2Dot(PointVector, LineVector);
 			PointProjectionScale = VectorDivide(PointProjectionScale, LengthSq);
 
-			Vector DistanceVector = VectorMultiply(LineVector, PointProjectionScale);
+			VectorType DistanceVector = VectorMultiply(LineVector, PointProjectionScale);
 			DistanceVector = VectorSubtract(PointVector, DistanceVector);
 
 			return Vector2Length(DistanceVector);
@@ -11923,7 +11923,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2IntersectLine
+		inline VectorType RAYMATH_CALLCONV Vector2IntersectLine
 		(
 			FVector Line1Point1,
 			FVector Line1Point2,
@@ -11933,15 +11933,15 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
-			Vector V1 = VectorSubtract(Line1Point2, Line1Point1);
-			Vector V2 = VectorSubtract(Line2Point2, Line2Point1);
-			Vector V3 = VectorSubtract(Line1Point1, Line2Point1);
+			VectorType V1 = VectorSubtract(Line1Point2, Line1Point1);
+			VectorType V2 = VectorSubtract(Line2Point2, Line2Point1);
+			VectorType V3 = VectorSubtract(Line1Point1, Line2Point1);
 
-			Vector C1 = Vector2Cross(V1, V2);
-			Vector C2 = Vector2Cross(V2, V3);
+			VectorType C1 = Vector2Cross(V1, V2);
+			VectorType C2 = Vector2Cross(V2, V3);
 
-			Vector Result;
-			const Vector Zero = VectorZero();
+			VectorType Result;
+			const VectorType Zero = VectorZero();
 			if (Vector2NearEqual(C1, Zero, g_XMEpsilon.v))
 			{
 				if (Vector2NearEqual(C2, Zero, g_XMEpsilon.v))
@@ -11958,7 +11958,7 @@ namespace At0
 			else
 			{
 				// Intersection point = Line1Point1 + V1 * (C2 / C1)
-				Vector Scale = VectorReciprocal(C1);
+				VectorType Scale = VectorReciprocal(C1);
 				Scale = VectorMultiply(C2, Scale);
 				Result = VectorMultiplyAdd(V1, Scale, Line1Point1);
 			}
@@ -11966,29 +11966,29 @@ namespace At0
 			return Result;
 
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector V1 = _mm_sub_ps(Line1Point2, Line1Point1);
-			Vector V2 = _mm_sub_ps(Line2Point2, Line2Point1);
-			Vector V3 = _mm_sub_ps(Line1Point1, Line2Point1);
+			VectorType V1 = _mm_sub_ps(Line1Point2, Line1Point1);
+			VectorType V2 = _mm_sub_ps(Line2Point2, Line2Point1);
+			VectorType V3 = _mm_sub_ps(Line1Point1, Line2Point1);
 			// Generate the cross products
-			Vector C1 = Vector2Cross(V1, V2);
-			Vector C2 = Vector2Cross(V2, V3);
+			VectorType C1 = Vector2Cross(V1, V2);
+			VectorType C2 = Vector2Cross(V2, V3);
 			// If C1 is not close to epsilon, use the calculated value
-			Vector vResultMask = _mm_setzero_ps();
+			VectorType vResultMask = _mm_setzero_ps();
 			vResultMask = _mm_sub_ps(vResultMask, C1);
 			vResultMask = _mm_max_ps(vResultMask, C1);
 			// 0xFFFFFFFF if the calculated value is to be used
 			vResultMask = _mm_cmpgt_ps(vResultMask, g_XMEpsilon);
 			// If C1 is close to epsilon, which fail type is it? INFINITY or NAN?
-			Vector vFailMask = _mm_setzero_ps();
+			VectorType vFailMask = _mm_setzero_ps();
 			vFailMask = _mm_sub_ps(vFailMask, C2);
 			vFailMask = _mm_max_ps(vFailMask, C2);
 			vFailMask = _mm_cmple_ps(vFailMask, g_XMEpsilon);
-			Vector vFail = _mm_and_ps(vFailMask, g_XMInfinity);
+			VectorType vFail = _mm_and_ps(vFailMask, g_XMInfinity);
 			vFailMask = _mm_andnot_ps(vFailMask, g_XMQNaN);
 			// vFail is NAN or INF
 			vFail = _mm_or_ps(vFail, vFailMask);
 			// Intersection point = Line1Point1 + V1 * (C2 / C1)
-			Vector vResult = _mm_div_ps(C2, C1);
+			VectorType vResult = _mm_div_ps(C2, C1);
 			vResult = _mm_mul_ps(vResult, V1);
 			vResult = _mm_add_ps(vResult, Line1Point1);
 			// Use result, or failure value
@@ -12001,7 +12001,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2Transform
+		inline VectorType RAYMATH_CALLCONV Vector2Transform
 		(
 			FVector V,
 			FMatrix M
@@ -12009,10 +12009,10 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Y = VectorSplatY(V);
-			Vector X = VectorSplatX(V);
+			VectorType Y = VectorSplatY(V);
+			VectorType X = VectorSplatX(V);
 
-			Vector Result = VectorMultiplyAdd(Y, M.r[1], M.r[3]);
+			VectorType Result = VectorMultiplyAdd(Y, M.r[1], M.r[3]);
 			Result = VectorMultiplyAdd(X, M.r[0], Result);
 
 			return Result;
@@ -12022,9 +12022,9 @@ namespace At0
 			float32x4_t Result = vmlaq_lane_f32(M.r[3], M.r[1], VL, 1); // Y
 			return vmlaq_lane_f32(Result, M.r[0], VL, 0); // X
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 			vResult = _mm_mul_ps(vResult, M.r[0]);
-			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			vTemp = _mm_mul_ps(vTemp, M.r[1]);
 			vResult = _mm_add_ps(vResult, vTemp);
 			vResult = _mm_add_ps(vResult, M.r[3]);
@@ -12056,17 +12056,17 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row3 = M.r[3];
 
 			for (size_t i = 0; i < VectorCount; i++)
 			{
-				Vector V = LoadFloat2(reinterpret_cast<const Float2*>(pInputVector));
-				Vector Y = VectorSplatY(V);
-				Vector X = VectorSplatX(V);
+				VectorType V = LoadFloat2(reinterpret_cast<const Float2*>(pInputVector));
+				VectorType Y = VectorSplatY(V);
+				VectorType X = VectorSplatX(V);
 
-				Vector Result = VectorMultiplyAdd(Y, row1, row3);
+				VectorType Result = VectorMultiplyAdd(Y, row1, row3);
 				Result = VectorMultiplyAdd(X, row0, Result);
 
 #ifdef _PREFAST_
@@ -12090,9 +12090,9 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row3 = M.r[3];
 
 			size_t i = 0;
 			size_t four = VectorCount >> 2;
@@ -12107,15 +12107,15 @@ namespace At0
 
 						float32x2_t r3 = vget_low_f32(row3);
 						float32x2_t r = vget_low_f32(row0);
-						Vector vResult0 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Ax+M
-						Vector vResult1 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Bx+N
+						VectorType vResult0 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Ax+M
+						VectorType vResult1 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Bx+N
 
 						__prefetch(pInputVector);
 
 						r3 = vget_high_f32(row3);
 						r = vget_high_f32(row0);
-						Vector vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Cx+O
-						Vector vResult3 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
+						VectorType vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Cx+O
+						VectorType vResult3 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
 
 						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
@@ -12150,7 +12150,7 @@ namespace At0
 				float32x2_t V = vld1_f32(reinterpret_cast<const float*>(pInputVector));
 				pInputVector += InputStride;
 
-				Vector vResult = vmlaq_lane_f32(row3, row0, V, 0); // X
+				VectorType vResult = vmlaq_lane_f32(row3, row0, V, 0); // X
 				vResult = vmlaq_lane_f32(vResult, row1, V, 1); // Y
 
 				vst1q_f32(reinterpret_cast<float*>(pOutputVector), vResult);
@@ -12162,9 +12162,9 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row3 = M.r[3];
 
 			size_t i = 0;
 			size_t two = VectorCount >> 1;
@@ -12177,14 +12177,14 @@ namespace At0
 						// Packed input, aligned output
 						for (size_t j = 0; j < two; ++j)
 						{
-							Vector V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
+							VectorType V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 							pInputVector += sizeof(Float2) * 2;
 
-							Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+							VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+							VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-							Vector vTemp = _mm_mul_ps(Y, row1);
-							Vector vTemp2 = _mm_mul_ps(X, row0);
+							VectorType vTemp = _mm_mul_ps(Y, row1);
+							VectorType vTemp2 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 
@@ -12210,14 +12210,14 @@ namespace At0
 						// Packed input, unaligned output
 						for (size_t j = 0; j < two; ++j)
 						{
-							Vector V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
+							VectorType V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 							pInputVector += sizeof(Float2) * 2;
 
-							Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+							VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+							VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-							Vector vTemp = _mm_mul_ps(Y, row1);
-							Vector vTemp2 = _mm_mul_ps(X, row0);
+							VectorType vTemp = _mm_mul_ps(Y, row1);
+							VectorType vTemp2 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 
@@ -12248,14 +12248,14 @@ namespace At0
 					// Aligned input, aligned output
 					for (; i < VectorCount; i++)
 					{
-						Vector V = _mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(pInputVector)));
+						VectorType V = _mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(pInputVector)));
 						pInputVector += InputStride;
 
-						Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-						Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+						VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+						VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-						Vector vTemp = _mm_mul_ps(Y, row1);
-						Vector vTemp2 = _mm_mul_ps(X, row0);
+						VectorType vTemp = _mm_mul_ps(Y, row1);
+						VectorType vTemp2 = _mm_mul_ps(X, row0);
 						vTemp = _mm_add_ps(vTemp, row3);
 						vTemp = _mm_add_ps(vTemp, vTemp2);
 
@@ -12268,14 +12268,14 @@ namespace At0
 					// Aligned input, unaligned output
 					for (; i < VectorCount; i++)
 					{
-						Vector V = _mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(pInputVector)));
+						VectorType V = _mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(pInputVector)));
 						pInputVector += InputStride;
 
-						Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-						Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+						VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+						VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-						Vector vTemp = _mm_mul_ps(Y, row1);
-						Vector vTemp2 = _mm_mul_ps(X, row0);
+						VectorType vTemp = _mm_mul_ps(Y, row1);
+						VectorType vTemp2 = _mm_mul_ps(X, row0);
 						vTemp = _mm_add_ps(vTemp, row3);
 						vTemp = _mm_add_ps(vTemp, vTemp2);
 
@@ -12293,11 +12293,11 @@ namespace At0
 					__m128 y = _mm_load_ss(reinterpret_cast<const float*>(pInputVector + 4));
 					pInputVector += InputStride;
 
-					Vector Y = RAYMATH_PERMUTE_PS(y, _MM_SHUFFLE(0, 0, 0, 0));
-					Vector X = RAYMATH_PERMUTE_PS(x, _MM_SHUFFLE(0, 0, 0, 0));
+					VectorType Y = RAYMATH_PERMUTE_PS(y, _MM_SHUFFLE(0, 0, 0, 0));
+					VectorType X = RAYMATH_PERMUTE_PS(x, _MM_SHUFFLE(0, 0, 0, 0));
 
-					Vector vTemp = _mm_mul_ps(Y, row1);
-					Vector vTemp2 = _mm_mul_ps(X, row0);
+					VectorType vTemp = _mm_mul_ps(Y, row1);
+					VectorType vTemp2 = _mm_mul_ps(X, row0);
 					vTemp = _mm_add_ps(vTemp, row3);
 					vTemp = _mm_add_ps(vTemp, vTemp2);
 
@@ -12314,19 +12314,19 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2TransformCoord
+		inline VectorType RAYMATH_CALLCONV Vector2TransformCoord
 		(
 			FVector V,
 			FMatrix M
 		)
 		{
-			Vector Y = VectorSplatY(V);
-			Vector X = VectorSplatX(V);
+			VectorType Y = VectorSplatY(V);
+			VectorType X = VectorSplatX(V);
 
-			Vector Result = VectorMultiplyAdd(Y, M.r[1], M.r[3]);
+			VectorType Result = VectorMultiplyAdd(Y, M.r[1], M.r[3]);
 			Result = VectorMultiplyAdd(X, M.r[0], Result);
 
-			Vector W = VectorSplatW(Result);
+			VectorType W = VectorSplatW(Result);
 			return VectorDivide(Result, W);
 		}
 
@@ -12354,20 +12354,20 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row3 = M.r[3];
 
 			for (size_t i = 0; i < VectorCount; i++)
 			{
-				Vector V = LoadFloat2(reinterpret_cast<const Float2*>(pInputVector));
-				Vector Y = VectorSplatY(V);
-				Vector X = VectorSplatX(V);
+				VectorType V = LoadFloat2(reinterpret_cast<const Float2*>(pInputVector));
+				VectorType Y = VectorSplatY(V);
+				VectorType X = VectorSplatX(V);
 
-				Vector Result = VectorMultiplyAdd(Y, row1, row3);
+				VectorType Result = VectorMultiplyAdd(Y, row1, row3);
 				Result = VectorMultiplyAdd(X, row0, Result);
 
-				Vector W = VectorSplatW(Result);
+				VectorType W = VectorSplatW(Result);
 
 				Result = VectorDivide(Result, W);
 
@@ -12392,9 +12392,9 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row3 = M.r[3];
 
 			size_t i = 0;
 			size_t four = VectorCount >> 2;
@@ -12409,14 +12409,14 @@ namespace At0
 
 						float32x2_t r3 = vget_low_f32(row3);
 						float32x2_t r = vget_low_f32(row0);
-						Vector vResult0 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Ax+M
-						Vector vResult1 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Bx+N
+						VectorType vResult0 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Ax+M
+						VectorType vResult1 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Bx+N
 
 						__prefetch(pInputVector);
 
 						r3 = vget_high_f32(row3);
 						r = vget_high_f32(row0);
-						Vector W = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
+						VectorType W = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
 
 						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
@@ -12459,7 +12459,7 @@ namespace At0
 				float32x2_t V = vld1_f32(reinterpret_cast<const float*>(pInputVector));
 				pInputVector += InputStride;
 
-				Vector vResult = vmlaq_lane_f32(row3, row0, V, 0); // X
+				VectorType vResult = vmlaq_lane_f32(row3, row0, V, 0); // X
 				vResult = vmlaq_lane_f32(vResult, row1, V, 1); // Y
 
 				V = vget_high_f32(vResult);
@@ -12489,9 +12489,9 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row3 = M.r[3];
 
 			size_t i = 0;
 			size_t two = VectorCount >> 1;
@@ -12506,21 +12506,21 @@ namespace At0
 							// Packed input, aligned & packed output
 							for (size_t j = 0; j < two; ++j)
 							{
-								Vector V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
+								VectorType V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 								pInputVector += sizeof(Float2) * 2;
 
 								// Result 1
-								Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+								VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+								VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-								Vector vTemp = _mm_mul_ps(Y, row1);
-								Vector vTemp2 = _mm_mul_ps(X, row0);
+								VectorType vTemp = _mm_mul_ps(Y, row1);
+								VectorType vTemp2 = _mm_mul_ps(X, row0);
 								vTemp = _mm_add_ps(vTemp, row3);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 
-								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
-								Vector V1 = _mm_div_ps(vTemp, W);
+								VectorType V1 = _mm_div_ps(vTemp, W);
 
 								// Result 2
 								Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
@@ -12533,7 +12533,7 @@ namespace At0
 
 								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
-								Vector V2 = _mm_div_ps(vTemp, W);
+								VectorType V2 = _mm_div_ps(vTemp, W);
 
 								vTemp = _mm_movelh_ps(V1, V2);
 
@@ -12548,21 +12548,21 @@ namespace At0
 							// Packed input, unaligned & packed output
 							for (size_t j = 0; j < two; ++j)
 							{
-								Vector V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
+								VectorType V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 								pInputVector += sizeof(Float2) * 2;
 
 								// Result 1
-								Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+								VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+								VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-								Vector vTemp = _mm_mul_ps(Y, row1);
-								Vector vTemp2 = _mm_mul_ps(X, row0);
+								VectorType vTemp = _mm_mul_ps(Y, row1);
+								VectorType vTemp2 = _mm_mul_ps(X, row0);
 								vTemp = _mm_add_ps(vTemp, row3);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 
-								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
-								Vector V1 = _mm_div_ps(vTemp, W);
+								VectorType V1 = _mm_div_ps(vTemp, W);
 
 								// Result 2
 								Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
@@ -12575,7 +12575,7 @@ namespace At0
 
 								W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
-								Vector V2 = _mm_div_ps(vTemp, W);
+								VectorType V2 = _mm_div_ps(vTemp, W);
 
 								vTemp = _mm_movelh_ps(V1, V2);
 
@@ -12591,19 +12591,19 @@ namespace At0
 						// Packed input, unpacked output
 						for (size_t j = 0; j < two; ++j)
 						{
-							Vector V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
+							VectorType V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 							pInputVector += sizeof(Float2) * 2;
 
 							// Result 1
-							Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+							VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+							VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-							Vector vTemp = _mm_mul_ps(Y, row1);
-							Vector vTemp2 = _mm_mul_ps(X, row0);
+							VectorType vTemp = _mm_mul_ps(Y, row1);
+							VectorType vTemp2 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 
-							Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 							vTemp = _mm_div_ps(vTemp, W);
 							vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
@@ -12641,18 +12641,18 @@ namespace At0
 				// Aligned input
 				for (; i < VectorCount; i++)
 				{
-					Vector V = _mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(pInputVector)));
+					VectorType V = _mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(pInputVector)));
 					pInputVector += InputStride;
 
-					Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-					Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+					VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+					VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-					Vector vTemp = _mm_mul_ps(Y, row1);
-					Vector vTemp2 = _mm_mul_ps(X, row0);
+					VectorType vTemp = _mm_mul_ps(Y, row1);
+					VectorType vTemp2 = _mm_mul_ps(X, row0);
 					vTemp = _mm_add_ps(vTemp, row3);
 					vTemp = _mm_add_ps(vTemp, vTemp2);
 
-					Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+					VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 					vTemp = _mm_div_ps(vTemp, W);
 					vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
@@ -12671,15 +12671,15 @@ namespace At0
 					__m128 y = _mm_load_ss(reinterpret_cast<const float*>(pInputVector + 4));
 					pInputVector += InputStride;
 
-					Vector Y = RAYMATH_PERMUTE_PS(y, _MM_SHUFFLE(0, 0, 0, 0));
-					Vector X = RAYMATH_PERMUTE_PS(x, _MM_SHUFFLE(0, 0, 0, 0));
+					VectorType Y = RAYMATH_PERMUTE_PS(y, _MM_SHUFFLE(0, 0, 0, 0));
+					VectorType X = RAYMATH_PERMUTE_PS(x, _MM_SHUFFLE(0, 0, 0, 0));
 
-					Vector vTemp = _mm_mul_ps(Y, row1);
-					Vector vTemp2 = _mm_mul_ps(X, row0);
+					VectorType vTemp = _mm_mul_ps(Y, row1);
+					VectorType vTemp2 = _mm_mul_ps(X, row0);
 					vTemp = _mm_add_ps(vTemp, row3);
 					vTemp = _mm_add_ps(vTemp, vTemp2);
 
-					Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+					VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 					vTemp = _mm_div_ps(vTemp, W);
 					vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
@@ -12698,7 +12698,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector2TransformNormal
+		inline VectorType RAYMATH_CALLCONV Vector2TransformNormal
 		(
 			FVector V,
 			FMatrix M
@@ -12706,10 +12706,10 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Y = VectorSplatY(V);
-			Vector X = VectorSplatX(V);
+			VectorType Y = VectorSplatY(V);
+			VectorType X = VectorSplatX(V);
 
-			Vector Result = VectorMultiply(Y, M.r[1]);
+			VectorType Result = VectorMultiply(Y, M.r[1]);
 			Result = VectorMultiplyAdd(X, M.r[0], Result);
 
 			return Result;
@@ -12719,9 +12719,9 @@ namespace At0
 			float32x4_t Result = vmulq_lane_f32(M.r[1], VL, 1); // Y
 			return vmlaq_lane_f32(Result, M.r[0], VL, 0); // X
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 			vResult = _mm_mul_ps(vResult, M.r[0]);
-			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			vTemp = _mm_mul_ps(vTemp, M.r[1]);
 			vResult = _mm_add_ps(vResult, vTemp);
 			return vResult;
@@ -12752,16 +12752,16 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
 
 			for (size_t i = 0; i < VectorCount; i++)
 			{
-				Vector V = LoadFloat2(reinterpret_cast<const Float2*>(pInputVector));
-				Vector Y = VectorSplatY(V);
-				Vector X = VectorSplatX(V);
+				VectorType V = LoadFloat2(reinterpret_cast<const Float2*>(pInputVector));
+				VectorType Y = VectorSplatY(V);
+				VectorType X = VectorSplatX(V);
 
-				Vector Result = VectorMultiply(Y, row1);
+				VectorType Result = VectorMultiply(Y, row1);
 				Result = VectorMultiplyAdd(X, row0, Result);
 
 #ifdef _PREFAST_
@@ -12785,8 +12785,8 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
 
 			size_t i = 0;
 			size_t four = VectorCount >> 2;
@@ -12800,8 +12800,8 @@ namespace At0
 						pInputVector += sizeof(Float2) * 4;
 
 						float32x2_t r = vget_low_f32(row0);
-						Vector vResult0 = vmulq_lane_f32(V.val[0], r, 0); // Ax
-						Vector vResult1 = vmulq_lane_f32(V.val[0], r, 1); // Bx
+						VectorType vResult0 = vmulq_lane_f32(V.val[0], r, 0); // Ax
+						VectorType vResult1 = vmulq_lane_f32(V.val[0], r, 1); // Bx
 
 						__prefetch(pInputVector);
 						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
@@ -12829,7 +12829,7 @@ namespace At0
 				float32x2_t V = vld1_f32(reinterpret_cast<const float*>(pInputVector));
 				pInputVector += InputStride;
 
-				Vector vResult = vmulq_lane_f32(row0, V, 0); // X
+				VectorType vResult = vmulq_lane_f32(row0, V, 0); // X
 				vResult = vmlaq_lane_f32(vResult, row1, V, 1); // Y
 
 				V = vget_low_f32(vResult);
@@ -12842,8 +12842,8 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
 
 			size_t i = 0;
 			size_t two = VectorCount >> 1;
@@ -12858,16 +12858,16 @@ namespace At0
 							// Packed input, aligned & packed output
 							for (size_t j = 0; j < two; ++j)
 							{
-								Vector V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
+								VectorType V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 								pInputVector += sizeof(Float2) * 2;
 
 								// Result 1
-								Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+								VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+								VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-								Vector vTemp = _mm_mul_ps(Y, row1);
-								Vector vTemp2 = _mm_mul_ps(X, row0);
-								Vector V1 = _mm_add_ps(vTemp, vTemp2);
+								VectorType vTemp = _mm_mul_ps(Y, row1);
+								VectorType vTemp2 = _mm_mul_ps(X, row0);
+								VectorType V1 = _mm_add_ps(vTemp, vTemp2);
 
 								// Result 2
 								Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
@@ -12875,7 +12875,7 @@ namespace At0
 
 								vTemp = _mm_mul_ps(Y, row1);
 								vTemp2 = _mm_mul_ps(X, row0);
-								Vector V2 = _mm_add_ps(vTemp, vTemp2);
+								VectorType V2 = _mm_add_ps(vTemp, vTemp2);
 
 								vTemp = _mm_movelh_ps(V1, V2);
 
@@ -12890,16 +12890,16 @@ namespace At0
 							// Packed input, unaligned & packed output
 							for (size_t j = 0; j < two; ++j)
 							{
-								Vector V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
+								VectorType V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 								pInputVector += sizeof(Float2) * 2;
 
 								// Result 1
-								Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+								VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+								VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-								Vector vTemp = _mm_mul_ps(Y, row1);
-								Vector vTemp2 = _mm_mul_ps(X, row0);
-								Vector V1 = _mm_add_ps(vTemp, vTemp2);
+								VectorType vTemp = _mm_mul_ps(Y, row1);
+								VectorType vTemp2 = _mm_mul_ps(X, row0);
+								VectorType V1 = _mm_add_ps(vTemp, vTemp2);
 
 								// Result 2
 								Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
@@ -12907,7 +12907,7 @@ namespace At0
 
 								vTemp = _mm_mul_ps(Y, row1);
 								vTemp2 = _mm_mul_ps(X, row0);
-								Vector V2 = _mm_add_ps(vTemp, vTemp2);
+								VectorType V2 = _mm_add_ps(vTemp, vTemp2);
 
 								vTemp = _mm_movelh_ps(V1, V2);
 
@@ -12923,15 +12923,15 @@ namespace At0
 						// Packed input, unpacked output
 						for (size_t j = 0; j < two; ++j)
 						{
-							Vector V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
+							VectorType V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 							pInputVector += sizeof(Float2) * 2;
 
 							// Result 1
-							Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+							VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+							VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-							Vector vTemp = _mm_mul_ps(Y, row1);
-							Vector vTemp2 = _mm_mul_ps(X, row0);
+							VectorType vTemp = _mm_mul_ps(Y, row1);
+							VectorType vTemp2 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 
@@ -12963,14 +12963,14 @@ namespace At0
 				// Aligned input
 				for (; i < VectorCount; i++)
 				{
-					Vector V = _mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(pInputVector)));
+					VectorType V = _mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<const __m128i*>(pInputVector)));
 					pInputVector += InputStride;
 
-					Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-					Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+					VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+					VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-					Vector vTemp = _mm_mul_ps(Y, row1);
-					Vector vTemp2 = _mm_mul_ps(X, row0);
+					VectorType vTemp = _mm_mul_ps(Y, row1);
+					VectorType vTemp2 = _mm_mul_ps(X, row0);
 					vTemp = _mm_add_ps(vTemp, vTemp2);
 					vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 
@@ -12988,11 +12988,11 @@ namespace At0
 					__m128 y = _mm_load_ss(reinterpret_cast<const float*>(pInputVector + 4));
 					pInputVector += InputStride;
 
-					Vector Y = RAYMATH_PERMUTE_PS(y, _MM_SHUFFLE(0, 0, 0, 0));
-					Vector X = RAYMATH_PERMUTE_PS(x, _MM_SHUFFLE(0, 0, 0, 0));
+					VectorType Y = RAYMATH_PERMUTE_PS(y, _MM_SHUFFLE(0, 0, 0, 0));
+					VectorType X = RAYMATH_PERMUTE_PS(x, _MM_SHUFFLE(0, 0, 0, 0));
 
-					Vector vTemp = _mm_mul_ps(Y, row1);
-					Vector vTemp2 = _mm_mul_ps(X, row0);
+					VectorType vTemp = _mm_mul_ps(Y, row1);
+					VectorType vTemp2 = _mm_mul_ps(X, row0);
 					vTemp = _mm_add_ps(vTemp, vTemp2);
 					vTemp2 = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 
@@ -13010,7 +13010,7 @@ namespace At0
 
 		/****************************************************************************
 		 *
-		 * 3D Vector
+		 * 3D VectorType
 		 *
 		 ****************************************************************************/
 
@@ -13034,7 +13034,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpeq_ps(V1, V2);
+			VectorType vTemp = _mm_cmpeq_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 7) == 7) != 0);
 #endif
 		}
@@ -13079,7 +13079,7 @@ namespace At0
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpeq_ps(V1, V2);
+			VectorType vTemp = _mm_cmpeq_ps(V1, V2);
 			int iTest = _mm_movemask_ps(vTemp) & 7;
 			uint32_t CR = 0;
 			if (iTest == 7)
@@ -13196,9 +13196,9 @@ namespace At0
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Get the difference
-			Vector vDelta = _mm_sub_ps(V1, V2);
+			VectorType vDelta = _mm_sub_ps(V1, V2);
 			// Get the absolute value of the difference
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vTemp = _mm_setzero_ps();
 			vTemp = _mm_sub_ps(vTemp, vDelta);
 			vTemp = _mm_max_ps(vTemp, vDelta);
 			vTemp = _mm_cmple_ps(vTemp, Epsilon);
@@ -13223,7 +13223,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) != 0xFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpeq_ps(V1, V2);
+			VectorType vTemp = _mm_cmpeq_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 7) != 7) != 0);
 #endif
 		}
@@ -13265,7 +13265,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpgt_ps(V1, V2);
+			VectorType vTemp = _mm_cmpgt_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 7) == 7) != 0);
 #endif
 		}
@@ -13311,7 +13311,7 @@ namespace At0
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpgt_ps(V1, V2);
+			VectorType vTemp = _mm_cmpgt_ps(V1, V2);
 			uint32_t CR = 0;
 			int iTest = _mm_movemask_ps(vTemp) & 7;
 			if (iTest == 7)
@@ -13342,7 +13342,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpge_ps(V1, V2);
+			VectorType vTemp = _mm_cmpge_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 7) == 7) != 0);
 #endif
 		}
@@ -13389,7 +13389,7 @@ namespace At0
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpge_ps(V1, V2);
+			VectorType vTemp = _mm_cmpge_ps(V1, V2);
 			uint32_t CR = 0;
 			int iTest = _mm_movemask_ps(vTemp) & 7;
 			if (iTest == 7)
@@ -13420,7 +13420,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmplt_ps(V1, V2);
+			VectorType vTemp = _mm_cmplt_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 7) == 7) != 0);
 #endif
 		}
@@ -13441,7 +13441,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmple_ps(V1, V2);
+			VectorType vTemp = _mm_cmple_ps(V1, V2);
 			return (((_mm_movemask_ps(vTemp) & 7) == 7) != 0);
 #endif
 		}
@@ -13473,9 +13473,9 @@ namespace At0
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) == 0xFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Test if less than or equal
-			Vector vTemp1 = _mm_cmple_ps(V, Bounds);
+			VectorType vTemp1 = _mm_cmple_ps(V, Bounds);
 			// Negate the bounds
-			Vector vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
+			VectorType vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
 			// Test if greater or equal (Reversed)
 			vTemp2 = _mm_cmple_ps(vTemp2, V);
 			// Blend answers
@@ -13509,7 +13509,7 @@ namespace At0
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) != 0xFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Test against itself. NaN is always not equal
-			Vector vTempNan = _mm_cmpneq_ps(V, V);
+			VectorType vTempNan = _mm_cmpneq_ps(V, V);
 			// If x or y or z are NaN, the mask is non-zero
 			return ((_mm_movemask_ps(vTempNan) & 7) != 0);
 #endif
@@ -13551,7 +13551,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3Dot
+		inline VectorType RAYMATH_CALLCONV Vector3Dot
 		(
 			FVector V1,
 			FVector V2
@@ -13576,15 +13576,15 @@ namespace At0
 #elif defined(RAY_SSE4_INTRINSICS)
 			return _mm_dp_ps(V1, V2, 0x7f);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vTemp = _mm_mul_ps(V1, V2);
+			VectorType vTemp = _mm_mul_ps(V1, V2);
 			vTemp = _mm_and_ps(vTemp, g_XMMask3);
 			vTemp = _mm_hadd_ps(vTemp, vTemp);
 			return _mm_hadd_ps(vTemp, vTemp);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product
-			Vector vDot = _mm_mul_ps(V1, V2);
+			VectorType vDot = _mm_mul_ps(V1, V2);
 			// x=Dot.vector4_f32[1], y=Dot.vector4_f32[2]
-			Vector vTemp = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
 			// Result.vector4_f32[0] = x+y
 			vDot = _mm_add_ss(vDot, vTemp);
 			// x=Dot.vector4_f32[2]
@@ -13598,7 +13598,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3Cross
+		inline VectorType RAYMATH_CALLCONV Vector3Cross
 		(
 			FVector V1,
 			FVector V2
@@ -13626,17 +13626,17 @@ namespace At0
 			float32x2_t v1zz = vdup_lane_f32(vget_high_f32(V1), 0);
 			float32x2_t v2zz = vdup_lane_f32(vget_high_f32(V2), 0);
 
-			Vector vResult = vmulq_f32(vcombine_f32(v1yx, v1xy), vcombine_f32(v2zz, v2yx));
+			VectorType vResult = vmulq_f32(vcombine_f32(v1yx, v1xy), vcombine_f32(v2zz, v2yx));
 			vResult = vmlsq_f32(vResult, vcombine_f32(v1zz, v1yx), vcombine_f32(v2yx, v2xy));
 			vResult = veorq_u32(vResult, g_XMFlipY);
 			return vandq_u32(vResult, g_XMMask3);
 #elif defined(RAY_SSE_INTRINSICS)
 	// y1,z1,x1,w1
-			Vector vTemp1 = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(3, 0, 2, 1));
+			VectorType vTemp1 = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(3, 0, 2, 1));
 			// z2,x2,y2,w2
-			Vector vTemp2 = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(3, 1, 0, 2));
+			VectorType vTemp2 = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(3, 1, 0, 2));
 			// Perform the left operation
-			Vector vResult = _mm_mul_ps(vTemp1, vTemp2);
+			VectorType vResult = _mm_mul_ps(vTemp1, vTemp2);
 			// z1,x1,y1,w1
 			vTemp1 = RAYMATH_PERMUTE_PS(vTemp1, _MM_SHUFFLE(3, 0, 2, 1));
 			// y2,z2,x2,w2
@@ -13652,7 +13652,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3LengthSq
+		inline VectorType RAYMATH_CALLCONV Vector3LengthSq
 		(
 			FVector V
 		)
@@ -13662,14 +13662,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3ReciprocalLengthEst
+		inline VectorType RAYMATH_CALLCONV Vector3ReciprocalLengthEst
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 
 			Result = Vector3LengthSq(V);
 			Result = VectorReciprocalSqrtEst(Result);
@@ -13688,10 +13688,10 @@ namespace At0
 			v2 = vrsqrte_f32(v1);
 			return vcombine_f32(v2, v2);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0x7f);
+			VectorType vTemp = _mm_dp_ps(V, V, 0x7f);
 			return _mm_rsqrt_ps(vTemp);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_and_ps(vLengthSq, g_XMMask3);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
@@ -13699,9 +13699,9 @@ namespace At0
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y and z
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and y
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 2, 1, 2));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 2, 1, 2));
 			// x+z, y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			// y,y,y,y
@@ -13718,14 +13718,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3ReciprocalLength
+		inline VectorType RAYMATH_CALLCONV Vector3ReciprocalLength
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 
 			Result = Vector3LengthSq(V);
 			Result = VectorReciprocalSqrt(Result);
@@ -13750,11 +13750,11 @@ namespace At0
 			float32x2_t Result = vmul_f32(S1, R1);
 			return vcombine_f32(Result, Result);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0x7f);
-			Vector vLengthSq = _mm_sqrt_ps(vTemp);
+			VectorType vTemp = _mm_dp_ps(V, V, 0x7f);
+			VectorType vLengthSq = _mm_sqrt_ps(vTemp);
 			return _mm_div_ps(g_XMOne, vLengthSq);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vDot = _mm_mul_ps(V, V);
+			VectorType vDot = _mm_mul_ps(V, V);
 			vDot = _mm_and_ps(vDot, g_XMMask3);
 			vDot = _mm_hadd_ps(vDot, vDot);
 			vDot = _mm_hadd_ps(vDot, vDot);
@@ -13763,9 +13763,9 @@ namespace At0
 			return vDot;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product
-			Vector vDot = _mm_mul_ps(V, V);
+			VectorType vDot = _mm_mul_ps(V, V);
 			// x=Dot.y, y=Dot.z
-			Vector vTemp = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
 			// Result.x = x+y
 			vDot = _mm_add_ss(vDot, vTemp);
 			// x=Dot.z
@@ -13784,14 +13784,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3LengthEst
+		inline VectorType RAYMATH_CALLCONV Vector3LengthEst
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 
 			Result = Vector3LengthSq(V);
 			Result = VectorSqrtEst(Result);
@@ -13814,10 +13814,10 @@ namespace At0
 			Result = vbsl_f32(VEqualsZero, zero, Result);
 			return vcombine_f32(Result, Result);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0x7f);
+			VectorType vTemp = _mm_dp_ps(V, V, 0x7f);
 			return _mm_sqrt_ps(vTemp);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_and_ps(vLengthSq, g_XMMask3);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
@@ -13825,9 +13825,9 @@ namespace At0
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y and z
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and y
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 2, 1, 2));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 2, 1, 2));
 			// x+z, y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			// y,y,y,y
@@ -13844,14 +13844,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3Length
+		inline VectorType RAYMATH_CALLCONV Vector3Length
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 
 			Result = Vector3LengthSq(V);
 			Result = VectorSqrt(Result);
@@ -13880,10 +13880,10 @@ namespace At0
 			Result = vbsl_f32(VEqualsZero, zero, Result);
 			return vcombine_f32(Result, Result);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0x7f);
+			VectorType vTemp = _mm_dp_ps(V, V, 0x7f);
 			return _mm_sqrt_ps(vTemp);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_and_ps(vLengthSq, g_XMMask3);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
@@ -13891,9 +13891,9 @@ namespace At0
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y and z
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and y
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 2, 1, 2));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(1, 2, 1, 2));
 			// x+z, y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			// y,y,y,y
@@ -13912,14 +13912,14 @@ namespace At0
 		// Vector3NormalizeEst uses a reciprocal estimate and
 		// returns QNaN on zero and infinite vectors.
 
-		inline Vector RAYMATH_CALLCONV Vector3NormalizeEst
+		inline VectorType RAYMATH_CALLCONV Vector3NormalizeEst
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 			Result = Vector3ReciprocalLength(V);
 			Result = VectorMultiply(V, Result);
 			return Result;
@@ -13937,11 +13937,11 @@ namespace At0
 			// Normalize
 			return vmulq_f32(V, vcombine_f32(v2, v2));
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0x7f);
-			Vector vResult = _mm_rsqrt_ps(vTemp);
+			VectorType vTemp = _mm_dp_ps(V, V, 0x7f);
+			VectorType vResult = _mm_rsqrt_ps(vTemp);
 			return _mm_mul_ps(vResult, V);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vDot = _mm_mul_ps(V, V);
+			VectorType vDot = _mm_mul_ps(V, V);
 			vDot = _mm_and_ps(vDot, g_XMMask3);
 			vDot = _mm_hadd_ps(vDot, vDot);
 			vDot = _mm_hadd_ps(vDot, vDot);
@@ -13950,9 +13950,9 @@ namespace At0
 			return vDot;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product
-			Vector vDot = _mm_mul_ps(V, V);
+			VectorType vDot = _mm_mul_ps(V, V);
 			// x=Dot.y, y=Dot.z
-			Vector vTemp = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
 			// Result.x = x+y
 			vDot = _mm_add_ss(vDot, vTemp);
 			// x=Dot.z
@@ -13971,14 +13971,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3Normalize
+		inline VectorType RAYMATH_CALLCONV Vector3Normalize
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			float fLength;
-			Vector vResult;
+			VectorType vResult;
 
 			vResult = Vector3Length(V);
 			fLength = vResult.vector4_f32[0];
@@ -14013,15 +14013,15 @@ namespace At0
 			float32x2_t R1 = vrsqrts_f32(P1, S1);
 			v2 = vmul_f32(S1, R1);
 			// Normalize
-			Vector vResult = vmulq_f32(V, vcombine_f32(v2, v2));
+			VectorType vResult = vmulq_f32(V, vcombine_f32(v2, v2));
 			vResult = vbslq_f32(vcombine_f32(VEqualsZero, VEqualsZero), vdupq_n_f32(0), vResult);
 			return vbslq_f32(vcombine_f32(VEqualsInf, VEqualsInf), g_XMQNaN, vResult);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vLengthSq = _mm_dp_ps(V, V, 0x7f);
+			VectorType vLengthSq = _mm_dp_ps(V, V, 0x7f);
 			// Prepare for the division
-			Vector vResult = _mm_sqrt_ps(vLengthSq);
+			VectorType vResult = _mm_sqrt_ps(vLengthSq);
 			// Create zero with a single instruction
-			Vector vZeroMask = _mm_setzero_ps();
+			VectorType vZeroMask = _mm_setzero_ps();
 			// Test for a divide by zero (Must be FP to detect -0.0)
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
@@ -14032,20 +14032,20 @@ namespace At0
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			Vector vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
-			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
 #elif defined(RAY_SSE3_INTRINSICS)
 			// Perform the dot product on x,y and z only
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_and_ps(vLengthSq, g_XMMask3);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			// Prepare for the division
-			Vector vResult = _mm_sqrt_ps(vLengthSq);
+			VectorType vResult = _mm_sqrt_ps(vLengthSq);
 			// Create zero with a single instruction
-			Vector vZeroMask = _mm_setzero_ps();
+			VectorType vZeroMask = _mm_setzero_ps();
 			// Test for a divide by zero (Must be FP to detect -0.0)
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
@@ -14056,22 +14056,22 @@ namespace At0
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			Vector vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
-			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y and z only
-			Vector vLengthSq = _mm_mul_ps(V, V);
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 1, 2, 1));
+			VectorType vLengthSq = _mm_mul_ps(V, V);
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 1, 2, 1));
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vTemp = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			// Prepare for the division
-			Vector vResult = _mm_sqrt_ps(vLengthSq);
+			VectorType vResult = _mm_sqrt_ps(vLengthSq);
 			// Create zero with a single instruction
-			Vector vZeroMask = _mm_setzero_ps();
+			VectorType vZeroMask = _mm_setzero_ps();
 			// Test for a divide by zero (Must be FP to detect -0.0)
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
@@ -14082,8 +14082,8 @@ namespace At0
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			Vector vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
-			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
 #endif
@@ -14091,22 +14091,22 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3ClampLength
+		inline VectorType RAYMATH_CALLCONV Vector3ClampLength
 		(
 			FVector V,
 			float    LengthMin,
 			float    LengthMax
 		)
 		{
-			Vector ClampMax = VectorReplicate(LengthMax);
-			Vector ClampMin = VectorReplicate(LengthMin);
+			VectorType ClampMax = VectorReplicate(LengthMax);
+			VectorType ClampMin = VectorReplicate(LengthMin);
 
 			return Vector3ClampLengthV(V, ClampMin, ClampMax);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3ClampLengthV
+		inline VectorType RAYMATH_CALLCONV Vector3ClampLengthV
 		(
 			FVector V,
 			FVector LengthMin,
@@ -14119,33 +14119,33 @@ namespace At0
 			assert(Vector3GreaterOrEqual(LengthMax, VectorZero()));
 			assert(Vector3GreaterOrEqual(LengthMax, LengthMin));
 
-			Vector LengthSq = Vector3LengthSq(V);
+			VectorType LengthSq = Vector3LengthSq(V);
 
-			const Vector Zero = VectorZero();
+			const VectorType Zero = VectorZero();
 
-			Vector RcpLength = VectorReciprocalSqrt(LengthSq);
+			VectorType RcpLength = VectorReciprocalSqrt(LengthSq);
 
-			Vector InfiniteLength = VectorEqualInt(LengthSq, g_XMInfinity.v);
-			Vector ZeroLength = VectorEqual(LengthSq, Zero);
+			VectorType InfiniteLength = VectorEqualInt(LengthSq, g_XMInfinity.v);
+			VectorType ZeroLength = VectorEqual(LengthSq, Zero);
 
-			Vector Normal = VectorMultiply(V, RcpLength);
+			VectorType Normal = VectorMultiply(V, RcpLength);
 
-			Vector Length = VectorMultiply(LengthSq, RcpLength);
+			VectorType Length = VectorMultiply(LengthSq, RcpLength);
 
-			Vector Select = VectorEqualInt(InfiniteLength, ZeroLength);
+			VectorType Select = VectorEqualInt(InfiniteLength, ZeroLength);
 			Length = VectorSelect(LengthSq, Length, Select);
 			Normal = VectorSelect(LengthSq, Normal, Select);
 
-			Vector ControlMax = VectorGreater(Length, LengthMax);
-			Vector ControlMin = VectorLess(Length, LengthMin);
+			VectorType ControlMax = VectorGreater(Length, LengthMax);
+			VectorType ControlMin = VectorLess(Length, LengthMin);
 
-			Vector ClampLength = VectorSelect(Length, LengthMax, ControlMax);
+			VectorType ClampLength = VectorSelect(Length, LengthMax, ControlMax);
 			ClampLength = VectorSelect(ClampLength, LengthMin, ControlMin);
 
-			Vector Result = VectorMultiply(Normal, ClampLength);
+			VectorType Result = VectorMultiply(Normal, ClampLength);
 
 			// Preserve the original vector (with no precision loss) if the length falls within the given range
-			Vector Control = VectorEqualInt(ControlMax, ControlMin);
+			VectorType Control = VectorEqualInt(ControlMax, ControlMin);
 			Result = VectorSelect(Result, V, Control);
 
 			return Result;
@@ -14153,7 +14153,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3Reflect
+		inline VectorType RAYMATH_CALLCONV Vector3Reflect
 		(
 			FVector Incident,
 			FVector Normal
@@ -14161,7 +14161,7 @@ namespace At0
 		{
 			// Result = Incident - (2 * dot(Incident, Normal)) * Normal
 
-			Vector Result = Vector3Dot(Incident, Normal);
+			VectorType Result = Vector3Dot(Incident, Normal);
 			Result = VectorAdd(Result, Result);
 			Result = VectorNegativeMultiplySubtract(Result, Normal, Incident);
 
@@ -14170,20 +14170,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3Refract
+		inline VectorType RAYMATH_CALLCONV Vector3Refract
 		(
 			FVector Incident,
 			FVector Normal,
 			float    RefractionIndex
 		)
 		{
-			Vector Index = VectorReplicate(RefractionIndex);
+			VectorType Index = VectorReplicate(RefractionIndex);
 			return Vector3RefractV(Incident, Normal, Index);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3RefractV
+		inline VectorType RAYMATH_CALLCONV Vector3RefractV
 		(
 			FVector Incident,
 			FVector Normal,
@@ -14195,12 +14195,12 @@ namespace At0
 
 #if defined(RAY_NO_INTRINSICS)
 
-			const Vector  Zero = VectorZero();
+			const VectorType  Zero = VectorZero();
 
-			Vector IDotN = Vector3Dot(Incident, Normal);
+			VectorType IDotN = Vector3Dot(Incident, Normal);
 
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
-			Vector R = VectorNegativeMultiplySubtract(IDotN, IDotN, g_XMOne.v);
+			VectorType R = VectorNegativeMultiplySubtract(IDotN, IDotN, g_XMOne.v);
 			R = VectorMultiply(R, RefractionIndex);
 			R = VectorNegativeMultiplySubtract(R, RefractionIndex, g_XMOne.v);
 
@@ -14216,14 +14216,14 @@ namespace At0
 				R = VectorMultiplyAdd(RefractionIndex, IDotN, R);
 
 				// Result = RefractionIndex * Incident - Normal * R
-				Vector Result = VectorMultiply(RefractionIndex, Incident);
+				VectorType Result = VectorMultiply(RefractionIndex, Incident);
 				Result = VectorNegativeMultiplySubtract(Normal, R, Result);
 
 				return Result;
 			}
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector IDotN = Vector3Dot(Incident, Normal);
+			VectorType IDotN = Vector3Dot(Incident, Normal);
 
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
 			float32x4_t R = vmlsq_f32(g_XMOne, IDotN, IDotN);
@@ -14259,15 +14259,15 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 	// Result = RefractionIndex * Incident - Normal * (RefractionIndex * dot(Incident, Normal) + 
 	// sqrt(1 - RefractionIndex * RefractionIndex * (1 - dot(Incident, Normal) * dot(Incident, Normal))))
-			Vector IDotN = Vector3Dot(Incident, Normal);
+			VectorType IDotN = Vector3Dot(Incident, Normal);
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
-			Vector R = _mm_mul_ps(IDotN, IDotN);
+			VectorType R = _mm_mul_ps(IDotN, IDotN);
 			R = _mm_sub_ps(g_XMOne, R);
 			R = _mm_mul_ps(R, RefractionIndex);
 			R = _mm_mul_ps(R, RefractionIndex);
 			R = _mm_sub_ps(g_XMOne, R);
 
-			Vector vResult = _mm_cmple_ps(R, g_XMZero);
+			VectorType vResult = _mm_cmple_ps(R, g_XMZero);
 			if (_mm_movemask_ps(vResult) == 0x0f)
 			{
 				// Total internal reflection
@@ -14290,40 +14290,40 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3Orthogonal
+		inline VectorType RAYMATH_CALLCONV Vector3Orthogonal
 		(
 			FVector V
 		)
 		{
-			Vector Zero = VectorZero();
-			Vector Z = VectorSplatZ(V);
-			Vector YZYY = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(V);
+			VectorType Zero = VectorZero();
+			VectorType Z = VectorSplatZ(V);
+			VectorType YZYY = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(V);
 
-			Vector NegativeV = VectorSubtract(Zero, V);
+			VectorType NegativeV = VectorSubtract(Zero, V);
 
-			Vector ZIsNegative = VectorLess(Z, Zero);
-			Vector YZYYIsNegative = VectorLess(YZYY, Zero);
+			VectorType ZIsNegative = VectorLess(Z, Zero);
+			VectorType YZYYIsNegative = VectorLess(YZYY, Zero);
 
-			Vector S = VectorAdd(YZYY, Z);
-			Vector D = VectorSubtract(YZYY, Z);
+			VectorType S = VectorAdd(YZYY, Z);
+			VectorType D = VectorSubtract(YZYY, Z);
 
-			Vector Select = VectorEqualInt(ZIsNegative, YZYYIsNegative);
+			VectorType Select = VectorEqualInt(ZIsNegative, YZYYIsNegative);
 
-			Vector R0 = VectorPermute<RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X>(NegativeV, S);
-			Vector R1 = VectorPermute<RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X>(V, D);
+			VectorType R0 = VectorPermute<RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X>(NegativeV, S);
+			VectorType R1 = VectorPermute<RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X>(V, D);
 
 			return VectorSelect(R1, R0, Select);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3AngleBetweenNormalsEst
+		inline VectorType RAYMATH_CALLCONV Vector3AngleBetweenNormalsEst
 		(
 			FVector N1,
 			FVector N2
 		)
 		{
-			Vector Result = Vector3Dot(N1, N2);
+			VectorType Result = Vector3Dot(N1, N2);
 			Result = VectorClamp(Result, g_XMNegativeOne.v, g_XMOne.v);
 			Result = VectorACosEst(Result);
 			return Result;
@@ -14331,13 +14331,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3AngleBetweenNormals
+		inline VectorType RAYMATH_CALLCONV Vector3AngleBetweenNormals
 		(
 			FVector N1,
 			FVector N2
 		)
 		{
-			Vector Result = Vector3Dot(N1, N2);
+			VectorType Result = Vector3Dot(N1, N2);
 			Result = VectorClamp(Result, g_XMNegativeOne.v, g_XMOne.v);
 			Result = VectorACos(Result);
 			return Result;
@@ -14345,20 +14345,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3AngleBetweenVectors
+		inline VectorType RAYMATH_CALLCONV Vector3AngleBetweenVectors
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-			Vector L1 = Vector3ReciprocalLength(V1);
-			Vector L2 = Vector3ReciprocalLength(V2);
+			VectorType L1 = Vector3ReciprocalLength(V1);
+			VectorType L2 = Vector3ReciprocalLength(V2);
 
-			Vector Dot = Vector3Dot(V1, V2);
+			VectorType Dot = Vector3Dot(V1, V2);
 
 			L1 = VectorMultiply(L1, L2);
 
-			Vector CosAngle = VectorMultiply(Dot, L1);
+			VectorType CosAngle = VectorMultiply(Dot, L1);
 			CosAngle = VectorClamp(CosAngle, g_XMNegativeOne.v, g_XMOne.v);
 
 			return VectorACos(CosAngle);
@@ -14366,7 +14366,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3LinePointDistance
+		inline VectorType RAYMATH_CALLCONV Vector3LinePointDistance
 		(
 			FVector LinePoint1,
 			FVector LinePoint2,
@@ -14380,15 +14380,15 @@ namespace At0
 			//
 			//     PointProjectionScale = dot(PointVector, LineVector) / LengthSq(LineVector)
 
-			Vector PointVector = VectorSubtract(Point, LinePoint1);
-			Vector LineVector = VectorSubtract(LinePoint2, LinePoint1);
+			VectorType PointVector = VectorSubtract(Point, LinePoint1);
+			VectorType LineVector = VectorSubtract(LinePoint2, LinePoint1);
 
-			Vector LengthSq = Vector3LengthSq(LineVector);
+			VectorType LengthSq = Vector3LengthSq(LineVector);
 
-			Vector PointProjectionScale = Vector3Dot(PointVector, LineVector);
+			VectorType PointProjectionScale = Vector3Dot(PointVector, LineVector);
 			PointProjectionScale = VectorDivide(PointProjectionScale, LengthSq);
 
-			Vector DistanceVector = VectorMultiply(LineVector, PointProjectionScale);
+			VectorType DistanceVector = VectorMultiply(LineVector, PointProjectionScale);
 			DistanceVector = VectorSubtract(PointVector, DistanceVector);
 
 			return Vector3Length(DistanceVector);
@@ -14399,8 +14399,8 @@ namespace At0
 
 		inline void RAYMATH_CALLCONV Vector3ComponentsFromNormal
 		(
-			Vector* pParallel,
-			Vector* pPerpendicular,
+			VectorType* pParallel,
+			VectorType* pPerpendicular,
 			FVector  V,
 			FVector  Normal
 		)
@@ -14408,9 +14408,9 @@ namespace At0
 			assert(pParallel != nullptr);
 			assert(pPerpendicular != nullptr);
 
-			Vector Scale = Vector3Dot(V, Normal);
+			VectorType Scale = Vector3Dot(V, Normal);
 
-			Vector Parallel = VectorMultiply(Normal, Scale);
+			VectorType Parallel = VectorMultiply(Normal, Scale);
 
 			*pParallel = Parallel;
 			*pPerpendicular = VectorSubtract(V, Parallel);
@@ -14419,36 +14419,36 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Transform a vector using a rotation expressed as a unit quaternion
 
-		inline Vector RAYMATH_CALLCONV Vector3Rotate
+		inline VectorType RAYMATH_CALLCONV Vector3Rotate
 		(
 			FVector V,
 			FQuaternion RotationQuaternion
 		)
 		{
-			Vector A = VectorSelect(g_XMSelect1110.v, V, g_XMSelect1110.v);
-			Vector Q = RotationQuaternion.Conjugate();
-			Vector Result = Quaternion::Multiply(Q, A);
+			VectorType A = VectorSelect(g_XMSelect1110.v, V, g_XMSelect1110.v);
+			VectorType Q = RotationQuaternion.Conjugate();
+			VectorType Result = Quaternion::Multiply(Q, A);
 			return Quaternion::Multiply(Result, RotationQuaternion);
 		}
 
 		//------------------------------------------------------------------------------
 		// Transform a vector using the inverse of a rotation expressed as a unit quaternion
 
-		inline Vector RAYMATH_CALLCONV Vector3InverseRotate
+		inline VectorType RAYMATH_CALLCONV Vector3InverseRotate
 		(
 			FVector V,
 			FQuaternion RotationQuaternion
 		)
 		{
-			Vector A = VectorSelect(g_XMSelect1110.v, V, g_XMSelect1110.v);
+			VectorType A = VectorSelect(g_XMSelect1110.v, V, g_XMSelect1110.v);
 			Quaternion Result = Quaternion::Multiply(RotationQuaternion, A);
-			Vector Q = RotationQuaternion.Conjugate();
+			VectorType Q = RotationQuaternion.Conjugate();
 			return Quaternion::Multiply(Result, Q);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3Transform
+		inline VectorType RAYMATH_CALLCONV Vector3Transform
 		(
 			FVector V,
 			FMatrix M
@@ -14456,11 +14456,11 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Z = VectorSplatZ(V);
-			Vector Y = VectorSplatY(V);
-			Vector X = VectorSplatX(V);
+			VectorType Z = VectorSplatZ(V);
+			VectorType Y = VectorSplatY(V);
+			VectorType X = VectorSplatX(V);
 
-			Vector Result = VectorMultiplyAdd(Z, M.r[2], M.r[3]);
+			VectorType Result = VectorMultiplyAdd(Z, M.r[2], M.r[3]);
 			Result = VectorMultiplyAdd(Y, M.r[1], Result);
 			Result = VectorMultiplyAdd(X, M.r[0], Result);
 
@@ -14468,13 +14468,13 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
-			Vector vResult = vmlaq_lane_f32(M.r[3], M.r[0], VL, 0); // X
+			VectorType vResult = vmlaq_lane_f32(M.r[3], M.r[0], VL, 0); // X
 			vResult = vmlaq_lane_f32(vResult, M.r[1], VL, 1); // Y
 			return vmlaq_lane_f32(vResult, M.r[2], vget_high_f32(V), 0); // Z
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 			vResult = _mm_mul_ps(vResult, M.r[0]);
-			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			vTemp = _mm_mul_ps(vTemp, M.r[1]);
 			vResult = _mm_add_ps(vResult, vTemp);
 			vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
@@ -14514,19 +14514,19 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row2 = M.r[2];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row2 = M.r[2];
+			const VectorType row3 = M.r[3];
 
 			for (size_t i = 0; i < VectorCount; i++)
 			{
-				Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
-				Vector Z = VectorSplatZ(V);
-				Vector Y = VectorSplatY(V);
-				Vector X = VectorSplatX(V);
+				VectorType V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
+				VectorType Z = VectorSplatZ(V);
+				VectorType Y = VectorSplatY(V);
+				VectorType X = VectorSplatX(V);
 
-				Vector Result = VectorMultiplyAdd(Z, row2, row3);
+				VectorType Result = VectorMultiplyAdd(Z, row2, row3);
 				Result = VectorMultiplyAdd(Y, row1, Result);
 				Result = VectorMultiplyAdd(X, row0, Result);
 
@@ -14542,10 +14542,10 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row2 = M.r[2];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row2 = M.r[2];
+			const VectorType row3 = M.r[3];
 
 			size_t i = 0;
 			size_t four = VectorCount >> 2;
@@ -14560,15 +14560,15 @@ namespace At0
 
 						float32x2_t r3 = vget_low_f32(row3);
 						float32x2_t r = vget_low_f32(row0);
-						Vector vResult0 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Ax+M
-						Vector vResult1 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Bx+N
+						VectorType vResult0 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Ax+M
+						VectorType vResult1 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Bx+N
 
 						__prefetch(pInputVector);
 
 						r3 = vget_high_f32(row3);
 						r = vget_high_f32(row0);
-						Vector vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Cx+O
-						Vector vResult3 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
+						VectorType vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Cx+O
+						VectorType vResult3 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
 
 						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
@@ -14617,7 +14617,7 @@ namespace At0
 				float32x2_t VH = vld1_lane_f32(reinterpret_cast<const float*>(pInputVector) + 2, zero, 0);
 				pInputVector += InputStride;
 
-				Vector vResult = vmlaq_lane_f32(row3, row0, VL, 0); // X
+				VectorType vResult = vmlaq_lane_f32(row3, row0, VL, 0); // X
 				vResult = vmlaq_lane_f32(vResult, row1, VL, 1); // Y
 				vResult = vmlaq_lane_f32(vResult, row2, VH, 0); // Z
 
@@ -14630,10 +14630,10 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row2 = M.r[2];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row2 = M.r[2];
+			const VectorType row3 = M.r[3];
 
 			size_t i = 0;
 			size_t four = VectorCount >> 2;
@@ -14655,13 +14655,13 @@ namespace At0
 							XM3UNPACK3INTO4(V1, L2, L3);
 
 							// Result 1
-							Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-							Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+							VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+							VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+							VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-							Vector vTemp = _mm_mul_ps(Z, row2);
-							Vector vTemp2 = _mm_mul_ps(Y, row1);
-							Vector vTemp3 = _mm_mul_ps(X, row0);
+							VectorType vTemp = _mm_mul_ps(Z, row2);
+							VectorType vTemp2 = _mm_mul_ps(Y, row1);
+							VectorType vTemp3 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
@@ -14727,13 +14727,13 @@ namespace At0
 							XM3UNPACK3INTO4(V1, L2, L3);
 
 							// Result 1
-							Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-							Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+							VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+							VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+							VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-							Vector vTemp = _mm_mul_ps(Z, row2);
-							Vector vTemp2 = _mm_mul_ps(Y, row1);
-							Vector vTemp3 = _mm_mul_ps(X, row0);
+							VectorType vTemp = _mm_mul_ps(Z, row2);
+							VectorType vTemp2 = _mm_mul_ps(Y, row1);
+							VectorType vTemp3 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
@@ -14793,16 +14793,16 @@ namespace At0
 				// Aligned output
 				for (; i < VectorCount; ++i)
 				{
-					Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
+					VectorType V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
 					pInputVector += InputStride;
 
-					Vector Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-					Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-					Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+					VectorType Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+					VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+					VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-					Vector vTemp = _mm_mul_ps(Z, row2);
-					Vector vTemp2 = _mm_mul_ps(Y, row1);
-					Vector vTemp3 = _mm_mul_ps(X, row0);
+					VectorType vTemp = _mm_mul_ps(Z, row2);
+					VectorType vTemp2 = _mm_mul_ps(Y, row1);
+					VectorType vTemp3 = _mm_mul_ps(X, row0);
 					vTemp = _mm_add_ps(vTemp, row3);
 					vTemp = _mm_add_ps(vTemp, vTemp2);
 					vTemp = _mm_add_ps(vTemp, vTemp3);
@@ -14816,16 +14816,16 @@ namespace At0
 				// Unaligned output
 				for (; i < VectorCount; ++i)
 				{
-					Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
+					VectorType V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
 					pInputVector += InputStride;
 
-					Vector Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-					Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-					Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+					VectorType Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+					VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+					VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-					Vector vTemp = _mm_mul_ps(Z, row2);
-					Vector vTemp2 = _mm_mul_ps(Y, row1);
-					Vector vTemp3 = _mm_mul_ps(X, row0);
+					VectorType vTemp = _mm_mul_ps(Z, row2);
+					VectorType vTemp2 = _mm_mul_ps(Y, row1);
+					VectorType vTemp3 = _mm_mul_ps(X, row0);
 					vTemp = _mm_add_ps(vTemp, row3);
 					vTemp = _mm_add_ps(vTemp, vTemp2);
 					vTemp = _mm_add_ps(vTemp, vTemp3);
@@ -14847,21 +14847,21 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3TransformCoord
+		inline VectorType RAYMATH_CALLCONV Vector3TransformCoord
 		(
 			FVector V,
 			FMatrix M
 		)
 		{
-			Vector Z = VectorSplatZ(V);
-			Vector Y = VectorSplatY(V);
-			Vector X = VectorSplatX(V);
+			VectorType Z = VectorSplatZ(V);
+			VectorType Y = VectorSplatY(V);
+			VectorType X = VectorSplatX(V);
 
-			Vector Result = VectorMultiplyAdd(Z, M.r[2], M.r[3]);
+			VectorType Result = VectorMultiplyAdd(Z, M.r[2], M.r[3]);
 			Result = VectorMultiplyAdd(Y, M.r[1], Result);
 			Result = VectorMultiplyAdd(X, M.r[0], Result);
 
-			Vector W = VectorSplatW(Result);
+			VectorType W = VectorSplatW(Result);
 			return VectorDivide(Result, W);
 		}
 
@@ -14894,23 +14894,23 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row2 = M.r[2];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row2 = M.r[2];
+			const VectorType row3 = M.r[3];
 
 			for (size_t i = 0; i < VectorCount; i++)
 			{
-				Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
-				Vector Z = VectorSplatZ(V);
-				Vector Y = VectorSplatY(V);
-				Vector X = VectorSplatX(V);
+				VectorType V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
+				VectorType Z = VectorSplatZ(V);
+				VectorType Y = VectorSplatY(V);
+				VectorType X = VectorSplatX(V);
 
-				Vector Result = VectorMultiplyAdd(Z, row2, row3);
+				VectorType Result = VectorMultiplyAdd(Z, row2, row3);
 				Result = VectorMultiplyAdd(Y, row1, Result);
 				Result = VectorMultiplyAdd(X, row0, Result);
 
-				Vector W = VectorSplatW(Result);
+				VectorType W = VectorSplatW(Result);
 
 				Result = VectorDivide(Result, W);
 
@@ -14926,10 +14926,10 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row2 = M.r[2];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row2 = M.r[2];
+			const VectorType row3 = M.r[3];
 
 			size_t i = 0;
 			size_t four = VectorCount >> 2;
@@ -14944,15 +14944,15 @@ namespace At0
 
 						float32x2_t r3 = vget_low_f32(row3);
 						float32x2_t r = vget_low_f32(row0);
-						Vector vResult0 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Ax+M
-						Vector vResult1 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Bx+N
+						VectorType vResult0 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Ax+M
+						VectorType vResult1 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Bx+N
 
 						__prefetch(pInputVector);
 
 						r3 = vget_high_f32(row3);
 						r = vget_high_f32(row0);
-						Vector vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Cx+O
-						Vector W = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
+						VectorType vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Cx+O
+						VectorType W = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
 
 						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
@@ -15012,12 +15012,12 @@ namespace At0
 				float32x2_t VH = vld1_lane_f32(reinterpret_cast<const float*>(pInputVector) + 2, zero, 0);
 				pInputVector += InputStride;
 
-				Vector vResult = vmlaq_lane_f32(row3, row0, VL, 0); // X
+				VectorType vResult = vmlaq_lane_f32(row3, row0, VL, 0); // X
 				vResult = vmlaq_lane_f32(vResult, row1, VL, 1); // Y
 				vResult = vmlaq_lane_f32(vResult, row2, VH, 0); // Z
 
 				VH = vget_high_f32(vResult);
-				Vector W = vdupq_lane_f32(VH, 1);
+				VectorType W = vdupq_lane_f32(VH, 1);
 
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 				vResult = vdivq_f32(vResult, W);
@@ -15043,10 +15043,10 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row2 = M.r[2];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row2 = M.r[2];
+			const VectorType row3 = M.r[3];
 
 			size_t i = 0;
 			size_t four = VectorCount >> 2;
@@ -15070,18 +15070,18 @@ namespace At0
 								XM3UNPACK3INTO4(V1, L2, L3);
 
 								// Result 1
-								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-								Vector vTemp = _mm_mul_ps(Z, row2);
-								Vector vTemp2 = _mm_mul_ps(Y, row1);
-								Vector vTemp3 = _mm_mul_ps(X, row0);
+								VectorType vTemp = _mm_mul_ps(Z, row2);
+								VectorType vTemp2 = _mm_mul_ps(Y, row1);
+								VectorType vTemp3 = _mm_mul_ps(X, row0);
 								vTemp = _mm_add_ps(vTemp, row3);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								V1 = _mm_div_ps(vTemp, W);
 
@@ -15156,18 +15156,18 @@ namespace At0
 								XM3UNPACK3INTO4(V1, L2, L3);
 
 								// Result 1
-								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-								Vector vTemp = _mm_mul_ps(Z, row2);
-								Vector vTemp2 = _mm_mul_ps(Y, row1);
-								Vector vTemp3 = _mm_mul_ps(X, row0);
+								VectorType vTemp = _mm_mul_ps(Z, row2);
+								VectorType vTemp2 = _mm_mul_ps(Y, row1);
+								VectorType vTemp3 = _mm_mul_ps(X, row0);
 								vTemp = _mm_add_ps(vTemp, row3);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 								V1 = _mm_div_ps(vTemp, W);
 
@@ -15243,18 +15243,18 @@ namespace At0
 							XM3UNPACK3INTO4(V1, L2, L3);
 
 							// Result 1
-							Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-							Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+							VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+							VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+							VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-							Vector vTemp = _mm_mul_ps(Z, row2);
-							Vector vTemp2 = _mm_mul_ps(Y, row1);
-							Vector vTemp3 = _mm_mul_ps(X, row0);
+							VectorType vTemp = _mm_mul_ps(Z, row2);
+							VectorType vTemp2 = _mm_mul_ps(Y, row1);
+							VectorType vTemp3 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, row3);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 							vTemp = _mm_div_ps(vTemp, W);
 							StoreFloat3(reinterpret_cast<Float3*>(pOutputVector), vTemp);
@@ -15322,21 +15322,21 @@ namespace At0
 
 			for (; i < VectorCount; i++)
 			{
-				Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
+				VectorType V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
 				pInputVector += InputStride;
 
-				Vector Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-				Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-				Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+				VectorType Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+				VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+				VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-				Vector vTemp = _mm_mul_ps(Z, row2);
-				Vector vTemp2 = _mm_mul_ps(Y, row1);
-				Vector vTemp3 = _mm_mul_ps(X, row0);
+				VectorType vTemp = _mm_mul_ps(Z, row2);
+				VectorType vTemp2 = _mm_mul_ps(Y, row1);
+				VectorType vTemp3 = _mm_mul_ps(X, row0);
 				vTemp = _mm_add_ps(vTemp, row3);
 				vTemp = _mm_add_ps(vTemp, vTemp2);
 				vTemp = _mm_add_ps(vTemp, vTemp3);
 
-				Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+				VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 
 				vTemp = _mm_div_ps(vTemp, W);
 
@@ -15356,7 +15356,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3TransformNormal
+		inline VectorType RAYMATH_CALLCONV Vector3TransformNormal
 		(
 			FVector V,
 			FMatrix M
@@ -15364,11 +15364,11 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Z = VectorSplatZ(V);
-			Vector Y = VectorSplatY(V);
-			Vector X = VectorSplatX(V);
+			VectorType Z = VectorSplatZ(V);
+			VectorType Y = VectorSplatY(V);
+			VectorType X = VectorSplatX(V);
 
-			Vector Result = VectorMultiply(Z, M.r[2]);
+			VectorType Result = VectorMultiply(Z, M.r[2]);
 			Result = VectorMultiplyAdd(Y, M.r[1], Result);
 			Result = VectorMultiplyAdd(X, M.r[0], Result);
 
@@ -15376,13 +15376,13 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
-			Vector vResult = vmulq_lane_f32(M.r[0], VL, 0); // X
+			VectorType vResult = vmulq_lane_f32(M.r[0], VL, 0); // X
 			vResult = vmlaq_lane_f32(vResult, M.r[1], VL, 1); // Y
 			return vmlaq_lane_f32(vResult, M.r[2], vget_high_f32(V), 0); // Z
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 			vResult = _mm_mul_ps(vResult, M.r[0]);
-			Vector vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
 			vTemp = _mm_mul_ps(vTemp, M.r[1]);
 			vResult = _mm_add_ps(vResult, vTemp);
 			vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
@@ -15421,18 +15421,18 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row2 = M.r[2];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row2 = M.r[2];
 
 			for (size_t i = 0; i < VectorCount; i++)
 			{
-				Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
-				Vector Z = VectorSplatZ(V);
-				Vector Y = VectorSplatY(V);
-				Vector X = VectorSplatX(V);
+				VectorType V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
+				VectorType Z = VectorSplatZ(V);
+				VectorType Y = VectorSplatY(V);
+				VectorType X = VectorSplatX(V);
 
-				Vector Result = VectorMultiply(Z, row2);
+				VectorType Result = VectorMultiply(Z, row2);
 				Result = VectorMultiplyAdd(Y, row1, Result);
 				Result = VectorMultiplyAdd(X, row0, Result);
 
@@ -15448,9 +15448,9 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row2 = M.r[2];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row2 = M.r[2];
 
 			size_t i = 0;
 			size_t four = VectorCount >> 2;
@@ -15464,13 +15464,13 @@ namespace At0
 						pInputVector += sizeof(Float3) * 4;
 
 						float32x2_t r = vget_low_f32(row0);
-						Vector vResult0 = vmulq_lane_f32(V.val[0], r, 0); // Ax
-						Vector vResult1 = vmulq_lane_f32(V.val[0], r, 1); // Bx
+						VectorType vResult0 = vmulq_lane_f32(V.val[0], r, 0); // Ax
+						VectorType vResult1 = vmulq_lane_f32(V.val[0], r, 1); // Bx
 
 						__prefetch(pInputVector);
 
 						r = vget_high_f32(row0);
-						Vector vResult2 = vmulq_lane_f32(V.val[0], r, 0); // Cx
+						VectorType vResult2 = vmulq_lane_f32(V.val[0], r, 0); // Cx
 
 						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
@@ -15515,7 +15515,7 @@ namespace At0
 				float32x2_t VH = vld1_lane_f32(reinterpret_cast<const float*>(pInputVector) + 2, zero, 0);
 				pInputVector += InputStride;
 
-				Vector vResult = vmulq_lane_f32(row0, VL, 0); // X
+				VectorType vResult = vmulq_lane_f32(row0, VL, 0); // X
 				vResult = vmlaq_lane_f32(vResult, row1, VL, 1); // Y
 				vResult = vmlaq_lane_f32(vResult, row2, VH, 0); // Z
 
@@ -15530,9 +15530,9 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row2 = M.r[2];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row2 = M.r[2];
 
 			size_t i = 0;
 			size_t four = VectorCount >> 2;
@@ -15556,13 +15556,13 @@ namespace At0
 								XM3UNPACK3INTO4(V1, L2, L3);
 
 								// Result 1
-								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-								Vector vTemp = _mm_mul_ps(Z, row2);
-								Vector vTemp2 = _mm_mul_ps(Y, row1);
-								Vector vTemp3 = _mm_mul_ps(X, row0);
+								VectorType vTemp = _mm_mul_ps(Z, row2);
+								VectorType vTemp2 = _mm_mul_ps(Y, row1);
+								VectorType vTemp3 = _mm_mul_ps(X, row0);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								V1 = _mm_add_ps(vTemp, vTemp3);
 
@@ -15622,13 +15622,13 @@ namespace At0
 								XM3UNPACK3INTO4(V1, L2, L3);
 
 								// Result 1
-								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-								Vector vTemp = _mm_mul_ps(Z, row2);
-								Vector vTemp2 = _mm_mul_ps(Y, row1);
-								Vector vTemp3 = _mm_mul_ps(X, row0);
+								VectorType vTemp = _mm_mul_ps(Z, row2);
+								VectorType vTemp2 = _mm_mul_ps(Y, row1);
+								VectorType vTemp3 = _mm_mul_ps(X, row0);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								V1 = _mm_add_ps(vTemp, vTemp3);
 
@@ -15689,13 +15689,13 @@ namespace At0
 							XM3UNPACK3INTO4(V1, L2, L3);
 
 							// Result 1
-							Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-							Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+							VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+							VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+							VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-							Vector vTemp = _mm_mul_ps(Z, row2);
-							Vector vTemp2 = _mm_mul_ps(Y, row1);
-							Vector vTemp3 = _mm_mul_ps(X, row0);
+							VectorType vTemp = _mm_mul_ps(Z, row2);
+							VectorType vTemp2 = _mm_mul_ps(Y, row1);
+							VectorType vTemp3 = _mm_mul_ps(X, row0);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
@@ -15752,16 +15752,16 @@ namespace At0
 
 			for (; i < VectorCount; i++)
 			{
-				Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
+				VectorType V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
 				pInputVector += InputStride;
 
-				Vector Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-				Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-				Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+				VectorType Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+				VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+				VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-				Vector vTemp = _mm_mul_ps(Z, row2);
-				Vector vTemp2 = _mm_mul_ps(Y, row1);
-				Vector vTemp3 = _mm_mul_ps(X, row0);
+				VectorType vTemp = _mm_mul_ps(Z, row2);
+				VectorType vTemp2 = _mm_mul_ps(Y, row1);
+				VectorType vTemp3 = _mm_mul_ps(X, row0);
 				vTemp = _mm_add_ps(vTemp, vTemp2);
 				vTemp = _mm_add_ps(vTemp, vTemp3);
 
@@ -15781,7 +15781,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3Project
+		inline VectorType RAYMATH_CALLCONV Vector3Project
 		(
 			FVector V,
 			float    ViewportX,
@@ -15798,13 +15798,13 @@ namespace At0
 			const float HalfViewportWidth = ViewportWidth * 0.5f;
 			const float HalfViewportHeight = ViewportHeight * 0.5f;
 
-			Vector Scale = VectorSet(HalfViewportWidth, -HalfViewportHeight, ViewportMaxZ - ViewportMinZ, 0.0f);
-			Vector Offset = VectorSet(ViewportX + HalfViewportWidth, ViewportY + HalfViewportHeight, ViewportMinZ, 0.0f);
+			VectorType Scale = VectorSet(HalfViewportWidth, -HalfViewportHeight, ViewportMaxZ - ViewportMinZ, 0.0f);
+			VectorType Offset = VectorSet(ViewportX + HalfViewportWidth, ViewportY + HalfViewportHeight, ViewportMinZ, 0.0f);
 
 			Matrix Transform = Matrix::Multiply(World, View);
 			Transform = Matrix::Multiply(Transform, Projection);
 
-			Vector Result = Vector3TransformCoord(V, Transform);
+			VectorType Result = Vector3TransformCoord(V, Transform);
 
 			Result = VectorMultiplyAdd(Result, Scale, Offset);
 
@@ -15848,8 +15848,8 @@ namespace At0
 			const float HalfViewportWidth = ViewportWidth * 0.5f;
 			const float HalfViewportHeight = ViewportHeight * 0.5f;
 
-			Vector Scale = VectorSet(HalfViewportWidth, -HalfViewportHeight, ViewportMaxZ - ViewportMinZ, 1.0f);
-			Vector Offset = VectorSet(ViewportX + HalfViewportWidth, ViewportY + HalfViewportHeight, ViewportMinZ, 0.0f);
+			VectorType Scale = VectorSet(HalfViewportWidth, -HalfViewportHeight, ViewportMaxZ - ViewportMinZ, 1.0f);
+			VectorType Offset = VectorSet(ViewportX + HalfViewportWidth, ViewportY + HalfViewportHeight, ViewportMinZ, 0.0f);
 
 			Matrix Transform = Matrix::Multiply(World, View);
 			Transform = Matrix::Multiply(Transform, Projection);
@@ -15859,9 +15859,9 @@ namespace At0
 
 			for (size_t i = 0; i < VectorCount; i++)
 			{
-				Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
+				VectorType V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
 
-				Vector Result = Vector3TransformCoord(V, Transform);
+				VectorType Result = Vector3TransformCoord(V, Transform);
 				Result = VectorMultiplyAdd(Result, Scale, Offset);
 
 				StoreFloat3(reinterpret_cast<Float3*>(pOutputVector), Result);
@@ -15888,13 +15888,13 @@ namespace At0
 			{
 				if ((InputStride == sizeof(Float3)) && (OutputStride == sizeof(Float3)))
 				{
-					Vector ScaleX = vdupq_n_f32(HalfViewportWidth);
-					Vector ScaleY = vdupq_n_f32(-HalfViewportHeight);
-					Vector ScaleZ = vdupq_n_f32(ViewportMaxZ - ViewportMinZ);
+					VectorType ScaleX = vdupq_n_f32(HalfViewportWidth);
+					VectorType ScaleY = vdupq_n_f32(-HalfViewportHeight);
+					VectorType ScaleZ = vdupq_n_f32(ViewportMaxZ - ViewportMinZ);
 
-					Vector OffsetX = vdupq_n_f32(ViewportX + HalfViewportWidth);
-					Vector OffsetY = vdupq_n_f32(ViewportY + HalfViewportHeight);
-					Vector OffsetZ = vdupq_n_f32(ViewportMinZ);
+					VectorType OffsetX = vdupq_n_f32(ViewportX + HalfViewportWidth);
+					VectorType OffsetY = vdupq_n_f32(ViewportY + HalfViewportHeight);
+					VectorType OffsetZ = vdupq_n_f32(ViewportMinZ);
 
 					for (size_t j = 0; j < four; ++j)
 					{
@@ -15903,15 +15903,15 @@ namespace At0
 
 						float32x2_t r3 = vget_low_f32(Transform.r[3]);
 						float32x2_t r = vget_low_f32(Transform.r[0]);
-						Vector vResult0 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Ax+M
-						Vector vResult1 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Bx+N
+						VectorType vResult0 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Ax+M
+						VectorType vResult1 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Bx+N
 
 						__prefetch(pInputVector);
 
 						r3 = vget_high_f32(Transform.r[3]);
 						r = vget_high_f32(Transform.r[0]);
-						Vector vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Cx+O
-						Vector W = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
+						VectorType vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), V.val[0], r, 0); // Cx+O
+						VectorType W = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), V.val[0], r, 1); // Dx+P
 
 						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
@@ -15970,8 +15970,8 @@ namespace At0
 
 			if (i < VectorCount)
 			{
-				Vector Scale = VectorSet(HalfViewportWidth, -HalfViewportHeight, ViewportMaxZ - ViewportMinZ, 1.0f);
-				Vector Offset = VectorSet(ViewportX + HalfViewportWidth, ViewportY + HalfViewportHeight, ViewportMinZ, 0.0f);
+				VectorType Scale = VectorSet(HalfViewportWidth, -HalfViewportHeight, ViewportMaxZ - ViewportMinZ, 1.0f);
+				VectorType Offset = VectorSet(ViewportX + HalfViewportWidth, ViewportY + HalfViewportHeight, ViewportMinZ, 0.0f);
 
 				for (; i < VectorCount; i++)
 				{
@@ -15980,12 +15980,12 @@ namespace At0
 					float32x2_t VH = vld1_lane_f32(reinterpret_cast<const float*>(pInputVector) + 2, zero, 0);
 					pInputVector += InputStride;
 
-					Vector vResult = vmlaq_lane_f32(Transform.r[3], Transform.r[0], VL, 0); // X
+					VectorType vResult = vmlaq_lane_f32(Transform.r[3], Transform.r[0], VL, 0); // X
 					vResult = vmlaq_lane_f32(vResult, Transform.r[1], VL, 1); // Y
 					vResult = vmlaq_lane_f32(vResult, Transform.r[2], VH, 0); // Z
 
 					VH = vget_high_f32(vResult);
-					Vector W = vdupq_lane_f32(VH, 1);
+					VectorType W = vdupq_lane_f32(VH, 1);
 
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 					vResult = vdivq_f32(vResult, W);
@@ -16014,8 +16014,8 @@ namespace At0
 			const float HalfViewportWidth = ViewportWidth * 0.5f;
 			const float HalfViewportHeight = ViewportHeight * 0.5f;
 
-			Vector Scale = VectorSet(HalfViewportWidth, -HalfViewportHeight, ViewportMaxZ - ViewportMinZ, 1.0f);
-			Vector Offset = VectorSet(ViewportX + HalfViewportWidth, ViewportY + HalfViewportHeight, ViewportMinZ, 0.0f);
+			VectorType Scale = VectorSet(HalfViewportWidth, -HalfViewportHeight, ViewportMaxZ - ViewportMinZ, 1.0f);
+			VectorType Offset = VectorSet(ViewportX + HalfViewportWidth, ViewportY + HalfViewportHeight, ViewportMinZ, 0.0f);
 
 			Matrix Transform = Matrix::Multiply(World, View);
 			Transform = Matrix::Multiply(Transform, Projection);
@@ -16045,18 +16045,18 @@ namespace At0
 								XM3UNPACK3INTO4(V1, L2, L3);
 
 								// Result 1
-								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-								Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
-								Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
-								Vector vTemp3 = _mm_mul_ps(X, Transform.r[0]);
+								VectorType vTemp = _mm_mul_ps(Z, Transform.r[2]);
+								VectorType vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
+								VectorType vTemp3 = _mm_mul_ps(X, Transform.r[0]);
 								vTemp = _mm_add_ps(vTemp, Transform.r[3]);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								vTemp = _mm_div_ps(vTemp, W);
 
 								vTemp = _mm_mul_ps(vTemp, Scale);
@@ -16139,18 +16139,18 @@ namespace At0
 								XM3UNPACK3INTO4(V1, L2, L3);
 
 								// Result 1
-								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-								Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
-								Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
-								Vector vTemp3 = _mm_mul_ps(X, Transform.r[0]);
+								VectorType vTemp = _mm_mul_ps(Z, Transform.r[2]);
+								VectorType vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
+								VectorType vTemp3 = _mm_mul_ps(X, Transform.r[0]);
 								vTemp = _mm_add_ps(vTemp, Transform.r[3]);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								vTemp = _mm_div_ps(vTemp, W);
 
 								vTemp = _mm_mul_ps(vTemp, Scale);
@@ -16234,18 +16234,18 @@ namespace At0
 							XM3UNPACK3INTO4(V1, L2, L3);
 
 							// Result 1
-							Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-							Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+							VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+							VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+							VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-							Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
-							Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
-							Vector vTemp3 = _mm_mul_ps(X, Transform.r[0]);
+							VectorType vTemp = _mm_mul_ps(Z, Transform.r[2]);
+							VectorType vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
+							VectorType vTemp3 = _mm_mul_ps(X, Transform.r[0]);
 							vTemp = _mm_add_ps(vTemp, Transform.r[3]);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 							vTemp = _mm_div_ps(vTemp, W);
 
 							vTemp = _mm_mul_ps(vTemp, Scale);
@@ -16325,21 +16325,21 @@ namespace At0
 
 			for (; i < VectorCount; i++)
 			{
-				Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
+				VectorType V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
 				pInputVector += InputStride;
 
-				Vector Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-				Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-				Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+				VectorType Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+				VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+				VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-				Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
-				Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
-				Vector vTemp3 = _mm_mul_ps(X, Transform.r[0]);
+				VectorType vTemp = _mm_mul_ps(Z, Transform.r[2]);
+				VectorType vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
+				VectorType vTemp3 = _mm_mul_ps(X, Transform.r[0]);
 				vTemp = _mm_add_ps(vTemp, Transform.r[3]);
 				vTemp = _mm_add_ps(vTemp, vTemp2);
 				vTemp = _mm_add_ps(vTemp, vTemp3);
 
-				Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+				VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 				vTemp = _mm_div_ps(vTemp, W);
 
 				vTemp = _mm_mul_ps(vTemp, Scale);
@@ -16361,7 +16361,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector3Unproject
+		inline VectorType RAYMATH_CALLCONV Vector3Unproject
 		(
 			FVector V,
 			float     ViewportX,
@@ -16377,17 +16377,17 @@ namespace At0
 		{
 			static const VectorF32 D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
 
-			Vector Scale = VectorSet(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
+			VectorType Scale = VectorSet(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
 			Scale = VectorReciprocal(Scale);
 
-			Vector Offset = VectorSet(-ViewportX, -ViewportY, -ViewportMinZ, 0.0f);
+			VectorType Offset = VectorSet(-ViewportX, -ViewportY, -ViewportMinZ, 0.0f);
 			Offset = VectorMultiplyAdd(Scale, Offset, D.v);
 
 			Matrix Transform = Matrix::Multiply(World, View);
 			Transform = Matrix::Multiply(Transform, Projection);
 			Transform = Transform.Inverse();
 
-			Vector Result = VectorMultiplyAdd(V, Scale, Offset);
+			VectorType Result = VectorMultiplyAdd(V, Scale, Offset);
 
 			return Vector3TransformCoord(Result, Transform);
 		}
@@ -16427,10 +16427,10 @@ namespace At0
 
 			static const VectorF32 D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
 
-			Vector Scale = VectorSet(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
+			VectorType Scale = VectorSet(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
 			Scale = VectorReciprocal(Scale);
 
-			Vector Offset = VectorSet(-ViewportX, -ViewportY, -ViewportMinZ, 0.0f);
+			VectorType Offset = VectorSet(-ViewportX, -ViewportY, -ViewportMinZ, 0.0f);
 			Offset = VectorMultiplyAdd(Scale, Offset, D.v);
 
 			Matrix Transform = Matrix::Multiply(World, View);
@@ -16442,9 +16442,9 @@ namespace At0
 
 			for (size_t i = 0; i < VectorCount; i++)
 			{
-				Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
+				VectorType V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
 
-				Vector Result = VectorMultiplyAdd(V, Scale, Offset);
+				VectorType Result = VectorMultiplyAdd(V, Scale, Offset);
 
 				Result = Vector3TransformCoord(Result, Transform);
 
@@ -16483,27 +16483,27 @@ namespace At0
 						float32x4x3_t V = vld3q_f32(reinterpret_cast<const float*>(pInputVector));
 						pInputVector += sizeof(Float3) * 4;
 
-						Vector ScaleX = vdupq_n_f32(sx);
-						Vector OffsetX = vdupq_n_f32(ox);
-						Vector VX = vmlaq_f32(OffsetX, ScaleX, V.val[0]);
+						VectorType ScaleX = vdupq_n_f32(sx);
+						VectorType OffsetX = vdupq_n_f32(ox);
+						VectorType VX = vmlaq_f32(OffsetX, ScaleX, V.val[0]);
 
 						float32x2_t r3 = vget_low_f32(Transform.r[3]);
 						float32x2_t r = vget_low_f32(Transform.r[0]);
-						Vector vResult0 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), VX, r, 0); // Ax+M
-						Vector vResult1 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), VX, r, 1); // Bx+N
+						VectorType vResult0 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), VX, r, 0); // Ax+M
+						VectorType vResult1 = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), VX, r, 1); // Bx+N
 
 						__prefetch(pInputVector);
 
 						r3 = vget_high_f32(Transform.r[3]);
 						r = vget_high_f32(Transform.r[0]);
-						Vector vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), VX, r, 0); // Cx+O
-						Vector W = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), VX, r, 1); // Dx+P
+						VectorType vResult2 = vmlaq_lane_f32(vdupq_lane_f32(r3, 0), VX, r, 0); // Cx+O
+						VectorType W = vmlaq_lane_f32(vdupq_lane_f32(r3, 1), VX, r, 1); // Dx+P
 
 						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
-						Vector ScaleY = vdupq_n_f32(sy);
-						Vector OffsetY = vdupq_n_f32(oy);
-						Vector VY = vmlaq_f32(OffsetY, ScaleY, V.val[1]);
+						VectorType ScaleY = vdupq_n_f32(sy);
+						VectorType OffsetY = vdupq_n_f32(oy);
+						VectorType VY = vmlaq_f32(OffsetY, ScaleY, V.val[1]);
 
 						r = vget_low_f32(Transform.r[1]);
 						vResult0 = vmlaq_lane_f32(vResult0, VY, r, 0); // Ax+Ey+M
@@ -16517,9 +16517,9 @@ namespace At0
 
 						__prefetch(pInputVector + (RAYMATH_CACHE_LINE_SIZE * 3));
 
-						Vector ScaleZ = vdupq_n_f32(sz);
-						Vector OffsetZ = vdupq_n_f32(oz);
-						Vector VZ = vmlaq_f32(OffsetZ, ScaleZ, V.val[2]);
+						VectorType ScaleZ = vdupq_n_f32(sz);
+						VectorType OffsetZ = vdupq_n_f32(oz);
+						VectorType VZ = vmlaq_f32(OffsetZ, ScaleZ, V.val[2]);
 
 						r = vget_low_f32(Transform.r[2]);
 						vResult0 = vmlaq_lane_f32(vResult0, VZ, r, 0); // Ax+Ey+Iz+M
@@ -16580,12 +16580,12 @@ namespace At0
 					VL = vmla_f32(OffsetL, VL, ScaleL);
 					VH = vmla_f32(OffsetH, VH, ScaleH);
 
-					Vector vResult = vmlaq_lane_f32(Transform.r[3], Transform.r[0], VL, 0); // X
+					VectorType vResult = vmlaq_lane_f32(Transform.r[3], Transform.r[0], VL, 0); // X
 					vResult = vmlaq_lane_f32(vResult, Transform.r[1], VL, 1); // Y
 					vResult = vmlaq_lane_f32(vResult, Transform.r[2], VH, 0); // Z
 
 					VH = vget_high_f32(vResult);
-					Vector W = vdupq_lane_f32(VH, 1);
+					VectorType W = vdupq_lane_f32(VH, 1);
 
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 					vResult = vdivq_f32(vResult, W);
@@ -16611,10 +16611,10 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
 
-			Vector Scale = VectorSet(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
+			VectorType Scale = VectorSet(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
 			Scale = VectorReciprocal(Scale);
 
-			Vector Offset = VectorSet(-ViewportX, -ViewportY, -ViewportMinZ, 0.0f);
+			VectorType Offset = VectorSet(-ViewportX, -ViewportY, -ViewportMinZ, 0.0f);
 			Offset = _mm_mul_ps(Scale, Offset);
 			Offset = _mm_add_ps(Offset, D);
 
@@ -16650,18 +16650,18 @@ namespace At0
 								V1 = _mm_mul_ps(V1, Scale);
 								V1 = _mm_add_ps(V1, Offset);
 
-								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-								Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
-								Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
-								Vector vTemp3 = _mm_mul_ps(X, Transform.r[0]);
+								VectorType vTemp = _mm_mul_ps(Z, Transform.r[2]);
+								VectorType vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
+								VectorType vTemp3 = _mm_mul_ps(X, Transform.r[0]);
 								vTemp = _mm_add_ps(vTemp, Transform.r[3]);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								V1 = _mm_div_ps(vTemp, W);
 
 								// Result 2
@@ -16744,18 +16744,18 @@ namespace At0
 								V1 = _mm_mul_ps(V1, Scale);
 								V1 = _mm_add_ps(V1, Offset);
 
-								Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-								Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-								Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+								VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+								VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-								Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
-								Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
-								Vector vTemp3 = _mm_mul_ps(X, Transform.r[0]);
+								VectorType vTemp = _mm_mul_ps(Z, Transform.r[2]);
+								VectorType vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
+								VectorType vTemp3 = _mm_mul_ps(X, Transform.r[0]);
 								vTemp = _mm_add_ps(vTemp, Transform.r[3]);
 								vTemp = _mm_add_ps(vTemp, vTemp2);
 								vTemp = _mm_add_ps(vTemp, vTemp3);
 
-								Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+								VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 								V1 = _mm_div_ps(vTemp, W);
 
 								// Result 2
@@ -16839,18 +16839,18 @@ namespace At0
 							V1 = _mm_mul_ps(V1, Scale);
 							V1 = _mm_add_ps(V1, Offset);
 
-							Vector Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
-							Vector Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
-							Vector X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
+							VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
+							VectorType Y = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(1, 1, 1, 1));
+							VectorType X = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 0));
 
-							Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
-							Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
-							Vector vTemp3 = _mm_mul_ps(X, Transform.r[0]);
+							VectorType vTemp = _mm_mul_ps(Z, Transform.r[2]);
+							VectorType vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
+							VectorType vTemp3 = _mm_mul_ps(X, Transform.r[0]);
 							vTemp = _mm_add_ps(vTemp, Transform.r[3]);
 							vTemp = _mm_add_ps(vTemp, vTemp2);
 							vTemp = _mm_add_ps(vTemp, vTemp3);
 
-							Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+							VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 							vTemp = _mm_div_ps(vTemp, W);
 
 							StoreFloat3(reinterpret_cast<Float3*>(pOutputVector), vTemp);
@@ -16927,24 +16927,24 @@ namespace At0
 
 			for (; i < VectorCount; i++)
 			{
-				Vector V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
+				VectorType V = LoadFloat3(reinterpret_cast<const Float3*>(pInputVector));
 				pInputVector += InputStride;
 
 				V = _mm_mul_ps(V, Scale);
 				V = _mm_add_ps(V, Offset);
 
-				Vector Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-				Vector Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-				Vector X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+				VectorType Z = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+				VectorType Y = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+				VectorType X = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
 
-				Vector vTemp = _mm_mul_ps(Z, Transform.r[2]);
-				Vector vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
-				Vector vTemp3 = _mm_mul_ps(X, Transform.r[0]);
+				VectorType vTemp = _mm_mul_ps(Z, Transform.r[2]);
+				VectorType vTemp2 = _mm_mul_ps(Y, Transform.r[1]);
+				VectorType vTemp3 = _mm_mul_ps(X, Transform.r[0]);
 				vTemp = _mm_add_ps(vTemp, Transform.r[3]);
 				vTemp = _mm_add_ps(vTemp, vTemp2);
 				vTemp = _mm_add_ps(vTemp, vTemp3);
 
-				Vector W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
+				VectorType W = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(3, 3, 3, 3));
 				vTemp = _mm_div_ps(vTemp, W);
 
 				StoreFloat3(reinterpret_cast<Float3*>(pOutputVector), vTemp);
@@ -16963,7 +16963,7 @@ namespace At0
 
 		/****************************************************************************
 		 *
-		 * 4D Vector
+		 * 4D VectorType
 		 *
 		 ****************************************************************************/
 
@@ -16987,7 +16987,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpeq_ps(V1, V2);
+			VectorType vTemp = _mm_cmpeq_ps(V1, V2);
 			return ((_mm_movemask_ps(vTemp) == 0x0f) != 0);
 #else
 			return ComparisonAllTrue(Vector4EqualR(V1, V2));
@@ -17039,7 +17039,7 @@ namespace At0
 			}
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpeq_ps(V1, V2);
+			VectorType vTemp = _mm_cmpeq_ps(V1, V2);
 			int iTest = _mm_movemask_ps(vTemp);
 			uint32_t CR = 0;
 			if (iTest == 0xf)     // All equal?
@@ -17161,9 +17161,9 @@ namespace At0
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Get the difference
-			Vector vDelta = _mm_sub_ps(V1, V2);
+			VectorType vDelta = _mm_sub_ps(V1, V2);
 			// Get the absolute value of the difference
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vTemp = _mm_setzero_ps();
 			vTemp = _mm_sub_ps(vTemp, vDelta);
 			vTemp = _mm_max_ps(vTemp, vDelta);
 			vTemp = _mm_cmple_ps(vTemp, Epsilon);
@@ -17187,7 +17187,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) != 0xFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpneq_ps(V1, V2);
+			VectorType vTemp = _mm_cmpneq_ps(V1, V2);
 			return ((_mm_movemask_ps(vTemp)) != 0);
 #else
 			return ComparisonAnyFalse(Vector4EqualR(V1, V2));
@@ -17233,7 +17233,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpgt_ps(V1, V2);
+			VectorType vTemp = _mm_cmpgt_ps(V1, V2);
 			return ((_mm_movemask_ps(vTemp) == 0x0f) != 0);
 #else
 			return ComparisonAllTrue(Vector4GreaterR(V1, V2));
@@ -17284,7 +17284,7 @@ namespace At0
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
 			uint32_t CR = 0;
-			Vector vTemp = _mm_cmpgt_ps(V1, V2);
+			VectorType vTemp = _mm_cmpgt_ps(V1, V2);
 			int iTest = _mm_movemask_ps(vTemp);
 			if (iTest == 0xf) {
 				CR = RAYMATH_CRMASK_CR6TRUE;
@@ -17313,7 +17313,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmpge_ps(V1, V2);
+			VectorType vTemp = _mm_cmpge_ps(V1, V2);
 			return ((_mm_movemask_ps(vTemp) == 0x0f) != 0);
 #else
 			return ComparisonAllTrue(Vector4GreaterOrEqualR(V1, V2));
@@ -17364,7 +17364,7 @@ namespace At0
 			return CR;
 #elif defined(RAY_SSE_INTRINSICS)
 			uint32_t CR = 0;
-			Vector vTemp = _mm_cmpge_ps(V1, V2);
+			VectorType vTemp = _mm_cmpge_ps(V1, V2);
 			int iTest = _mm_movemask_ps(vTemp);
 			if (iTest == 0x0f)
 			{
@@ -17394,7 +17394,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmplt_ps(V1, V2);
+			VectorType vTemp = _mm_cmplt_ps(V1, V2);
 			return ((_mm_movemask_ps(vTemp) == 0x0f) != 0);
 #else
 			return ComparisonAllTrue(Vector4GreaterR(V2, V1));
@@ -17417,7 +17417,7 @@ namespace At0
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp = _mm_cmple_ps(V1, V2);
+			VectorType vTemp = _mm_cmple_ps(V1, V2);
 			return ((_mm_movemask_ps(vTemp) == 0x0f) != 0);
 #else
 			return ComparisonAllTrue(Vector4GreaterOrEqualR(V2, V1));
@@ -17452,9 +17452,9 @@ namespace At0
 			return (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Test if less than or equal
-			Vector vTemp1 = _mm_cmple_ps(V, Bounds);
+			VectorType vTemp1 = _mm_cmple_ps(V, Bounds);
 			// Negate the bounds
-			Vector vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
+			VectorType vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
 			// Test if greater or equal (Reversed)
 			vTemp2 = _mm_cmple_ps(vTemp2, V);
 			// Blend answers
@@ -17487,7 +17487,7 @@ namespace At0
 			return (vget_lane_u32(vTemp.val[1], 1) != 0xFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Test against itself. NaN is always not equal
-			Vector vTempNan = _mm_cmpneq_ps(V, V);
+			VectorType vTempNan = _mm_cmpneq_ps(V, V);
 			// If any are NaN, the mask is non-zero
 			return (_mm_movemask_ps(vTempNan) != 0);
 #endif
@@ -17518,7 +17518,7 @@ namespace At0
 			return (vget_lane_u32(vTemp.val[1], 1) != 0);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Mask off the sign bit
-			Vector vTemp = _mm_and_ps(V, g_XMAbsMask);
+			VectorType vTemp = _mm_and_ps(V, g_XMAbsMask);
 			// Compare to infinity
 			vTemp = _mm_cmpeq_ps(vTemp, g_XMInfinity);
 			// If any are infinity, the signs are true.
@@ -17532,7 +17532,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4Dot
+		inline VectorType RAYMATH_CALLCONV Vector4Dot
 		(
 			FVector V1,
 			FVector V2
@@ -17557,12 +17557,12 @@ namespace At0
 #elif defined(RAY_SSE4_INTRINSICS)
 			return _mm_dp_ps(V1, V2, 0xff);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vTemp = _mm_mul_ps(V1, V2);
+			VectorType vTemp = _mm_mul_ps(V1, V2);
 			vTemp = _mm_hadd_ps(vTemp, vTemp);
 			return _mm_hadd_ps(vTemp, vTemp);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp2 = V2;
-			Vector vTemp = _mm_mul_ps(V1, vTemp2);
+			VectorType vTemp2 = V2;
+			VectorType vTemp = _mm_mul_ps(V1, vTemp2);
 			vTemp2 = _mm_shuffle_ps(vTemp2, vTemp, _MM_SHUFFLE(1, 0, 0, 0)); // Copy X to the Z position and Y to the W position
 			vTemp2 = _mm_add_ps(vTemp2, vTemp);          // Add Z = X+Z; W = Y+W;
 			vTemp = _mm_shuffle_ps(vTemp, vTemp2, _MM_SHUFFLE(0, 3, 0, 0));  // Copy W to the Z position
@@ -17573,7 +17573,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4Cross
+		inline VectorType RAYMATH_CALLCONV Vector4Cross
 		(
 			FVector V1,
 			FVector V2,
@@ -17612,7 +17612,7 @@ namespace At0
 
 			float32x4_t vTemp1 = vcombine_f32(v2zw, v2yz);
 			float32x4_t vTemp2 = vcombine_f32(v3wz, v3wy);
-			Vector vResult = vmulq_f32(vTemp1, vTemp2);
+			VectorType vResult = vmulq_f32(vTemp1, vTemp2);
 
 			// - V2wzwy * V3zwyz
 			const float32x2_t v2wy = vbsl_f32(select, v2wz, v2xy);
@@ -17678,16 +17678,16 @@ namespace At0
 			return vmlaq_f32(vResult, vTerm, vTemp1);
 #elif defined(RAY_SSE_INTRINSICS)
 	// V2zwyz * V3wzwy
-			Vector vResult = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 1, 3, 2));
-			Vector vTemp3 = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 3, 2, 3));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 1, 3, 2));
+			VectorType vTemp3 = RAYMATH_PERMUTE_PS(V3, _MM_SHUFFLE(1, 3, 2, 3));
 			vResult = _mm_mul_ps(vResult, vTemp3);
 			// - V2wzwy * V3zwyz
-			Vector vTemp2 = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 3, 2, 3));
+			VectorType vTemp2 = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(1, 3, 2, 3));
 			vTemp3 = RAYMATH_PERMUTE_PS(vTemp3, _MM_SHUFFLE(1, 3, 0, 1));
 			vTemp2 = _mm_mul_ps(vTemp2, vTemp3);
 			vResult = _mm_sub_ps(vResult, vTemp2);
 			// term1 * V1yxxx
-			Vector vTemp1 = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 1));
+			VectorType vTemp1 = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 0, 0, 1));
 			vResult = _mm_mul_ps(vResult, vTemp1);
 
 			// V2ywxz * V3wxwx
@@ -17723,7 +17723,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4LengthSq
+		inline VectorType RAYMATH_CALLCONV Vector4LengthSq
 		(
 			FVector V
 		)
@@ -17733,14 +17733,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4ReciprocalLengthEst
+		inline VectorType RAYMATH_CALLCONV Vector4ReciprocalLengthEst
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 
 			Result = Vector4LengthSq(V);
 			Result = VectorReciprocalSqrtEst(Result);
@@ -17758,19 +17758,19 @@ namespace At0
 			v2 = vrsqrte_f32(v1);
 			return vcombine_f32(v2, v2);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0xff);
+			VectorType vTemp = _mm_dp_ps(V, V, 0xff);
 			return _mm_rsqrt_ps(vTemp);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_rsqrt_ps(vLengthSq);
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y,z and w
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and w
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
 			// x+z, y+w
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// x+z,x+z,x+z,y+w
@@ -17789,14 +17789,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4ReciprocalLength
+		inline VectorType RAYMATH_CALLCONV Vector4ReciprocalLength
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 
 			Result = Vector4LengthSq(V);
 			Result = VectorReciprocalSqrt(Result);
@@ -17820,11 +17820,11 @@ namespace At0
 			float32x2_t Result = vmul_f32(S1, R1);
 			return vcombine_f32(Result, Result);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0xff);
-			Vector vLengthSq = _mm_sqrt_ps(vTemp);
+			VectorType vTemp = _mm_dp_ps(V, V, 0xff);
+			VectorType vLengthSq = _mm_sqrt_ps(vTemp);
 			return _mm_div_ps(g_XMOne, vLengthSq);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
@@ -17832,9 +17832,9 @@ namespace At0
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y,z and w
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and w
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
 			// x+z, y+w
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// x+z,x+z,x+z,y+w
@@ -17855,14 +17855,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4LengthEst
+		inline VectorType RAYMATH_CALLCONV Vector4LengthEst
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 
 			Result = Vector4LengthSq(V);
 			Result = VectorSqrtEst(Result);
@@ -17884,19 +17884,19 @@ namespace At0
 			Result = vbsl_f32(VEqualsZero, zero, Result);
 			return vcombine_f32(Result, Result);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0xff);
+			VectorType vTemp = _mm_dp_ps(V, V, 0xff);
 			return _mm_sqrt_ps(vTemp);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y,z and w
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and w
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
 			// x+z, y+w
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// x+z,x+z,x+z,y+w
@@ -17915,14 +17915,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4Length
+		inline VectorType RAYMATH_CALLCONV Vector4Length
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS) 
 
-			Vector Result;
+			VectorType Result;
 
 			Result = Vector4LengthSq(V);
 			Result = VectorSqrt(Result);
@@ -17950,19 +17950,19 @@ namespace At0
 			Result = vbsl_f32(VEqualsZero, zero, Result);
 			return vcombine_f32(Result, Result);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0xff);
+			VectorType vTemp = _mm_dp_ps(V, V, 0xff);
 			return _mm_sqrt_ps(vTemp);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y,z and w
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and w
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
 			// x+z, y+w
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// x+z,x+z,x+z,y+w
@@ -17983,14 +17983,14 @@ namespace At0
 		// Vector4NormalizeEst uses a reciprocal estimate and
 		// returns QNaN on zero and infinite vectors.
 
-		inline Vector RAYMATH_CALLCONV Vector4NormalizeEst
+		inline VectorType RAYMATH_CALLCONV Vector4NormalizeEst
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector Result;
+			VectorType Result;
 			Result = Vector4ReciprocalLength(V);
 			Result = VectorMultiply(V, Result);
 			return Result;
@@ -18007,11 +18007,11 @@ namespace At0
 			// Normalize
 			return vmulq_f32(V, vcombine_f32(v2, v2));
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(V, V, 0xff);
-			Vector vResult = _mm_rsqrt_ps(vTemp);
+			VectorType vTemp = _mm_dp_ps(V, V, 0xff);
+			VectorType vResult = _mm_rsqrt_ps(vTemp);
 			return _mm_mul_ps(vResult, V);
 #elif defined(RAY_SSE3_INTRINSICS)
-			Vector vDot = _mm_mul_ps(V, V);
+			VectorType vDot = _mm_mul_ps(V, V);
 			vDot = _mm_hadd_ps(vDot, vDot);
 			vDot = _mm_hadd_ps(vDot, vDot);
 			vDot = _mm_rsqrt_ps(vDot);
@@ -18019,9 +18019,9 @@ namespace At0
 			return vDot;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y,z and w
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and w
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
 			// x+z, y+w
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// x+z,x+z,x+z,y+w
@@ -18033,7 +18033,7 @@ namespace At0
 			// Splat the length
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
 			// Get the reciprocal
-			Vector vResult = _mm_rsqrt_ps(vLengthSq);
+			VectorType vResult = _mm_rsqrt_ps(vLengthSq);
 			// Reciprocal mul to perform the normalization
 			vResult = _mm_mul_ps(vResult, V);
 			return vResult;
@@ -18042,14 +18042,14 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4Normalize
+		inline VectorType RAYMATH_CALLCONV Vector4Normalize
 		(
 			FVector V
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
 			float fLength;
-			Vector vResult;
+			VectorType vResult;
 
 			vResult = Vector4Length(V);
 			fLength = vResult.vector4_f32[0];
@@ -18083,15 +18083,15 @@ namespace At0
 			float32x2_t R1 = vrsqrts_f32(P1, S1);
 			v2 = vmul_f32(S1, R1);
 			// Normalize
-			Vector vResult = vmulq_f32(V, vcombine_f32(v2, v2));
+			VectorType vResult = vmulq_f32(V, vcombine_f32(v2, v2));
 			vResult = vbslq_f32(vcombine_f32(VEqualsZero, VEqualsZero), vdupq_n_f32(0), vResult);
 			return vbslq_f32(vcombine_f32(VEqualsInf, VEqualsInf), g_XMQNaN, vResult);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vLengthSq = _mm_dp_ps(V, V, 0xff);
+			VectorType vLengthSq = _mm_dp_ps(V, V, 0xff);
 			// Prepare for the division
-			Vector vResult = _mm_sqrt_ps(vLengthSq);
+			VectorType vResult = _mm_sqrt_ps(vLengthSq);
 			// Create zero with a single instruction
-			Vector vZeroMask = _mm_setzero_ps();
+			VectorType vZeroMask = _mm_setzero_ps();
 			// Test for a divide by zero (Must be FP to detect -0.0)
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
@@ -18102,19 +18102,19 @@ namespace At0
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			Vector vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
-			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
 #elif defined(RAY_SSE3_INTRINSICS)
 			// Perform the dot product on x,y,z and w
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			// Prepare for the division
-			Vector vResult = _mm_sqrt_ps(vLengthSq);
+			VectorType vResult = _mm_sqrt_ps(vLengthSq);
 			// Create zero with a single instruction
-			Vector vZeroMask = _mm_setzero_ps();
+			VectorType vZeroMask = _mm_setzero_ps();
 			// Test for a divide by zero (Must be FP to detect -0.0)
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
@@ -18125,15 +18125,15 @@ namespace At0
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			Vector vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
-			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y,z and w
-			Vector vLengthSq = _mm_mul_ps(V, V);
+			VectorType vLengthSq = _mm_mul_ps(V, V);
 			// vTemp has z and w
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(3, 2, 3, 2));
 			// x+z, y+w
 			vLengthSq = _mm_add_ps(vLengthSq, vTemp);
 			// x+z,x+z,x+z,y+w
@@ -18145,9 +18145,9 @@ namespace At0
 			// Splat the length
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 2, 2, 2));
 			// Prepare for the division
-			Vector vResult = _mm_sqrt_ps(vLengthSq);
+			VectorType vResult = _mm_sqrt_ps(vLengthSq);
 			// Create zero with a single instruction
-			Vector vZeroMask = _mm_setzero_ps();
+			VectorType vZeroMask = _mm_setzero_ps();
 			// Test for a divide by zero (Must be FP to detect -0.0)
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
@@ -18158,8 +18158,8 @@ namespace At0
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			Vector vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
-			Vector vTemp2 = _mm_and_ps(vResult, vLengthSq);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
 #endif
@@ -18167,22 +18167,22 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4ClampLength
+		inline VectorType RAYMATH_CALLCONV Vector4ClampLength
 		(
 			FVector V,
 			float    LengthMin,
 			float    LengthMax
 		)
 		{
-			Vector ClampMax = VectorReplicate(LengthMax);
-			Vector ClampMin = VectorReplicate(LengthMin);
+			VectorType ClampMax = VectorReplicate(LengthMax);
+			VectorType ClampMin = VectorReplicate(LengthMin);
 
 			return Vector4ClampLengthV(V, ClampMin, ClampMax);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4ClampLengthV
+		inline VectorType RAYMATH_CALLCONV Vector4ClampLengthV
 		(
 			FVector V,
 			FVector LengthMin,
@@ -18195,33 +18195,33 @@ namespace At0
 			assert(Vector4GreaterOrEqual(LengthMax, VectorZero()));
 			assert(Vector4GreaterOrEqual(LengthMax, LengthMin));
 
-			Vector LengthSq = Vector4LengthSq(V);
+			VectorType LengthSq = Vector4LengthSq(V);
 
-			const Vector Zero = VectorZero();
+			const VectorType Zero = VectorZero();
 
-			Vector RcpLength = VectorReciprocalSqrt(LengthSq);
+			VectorType RcpLength = VectorReciprocalSqrt(LengthSq);
 
-			Vector InfiniteLength = VectorEqualInt(LengthSq, g_XMInfinity.v);
-			Vector ZeroLength = VectorEqual(LengthSq, Zero);
+			VectorType InfiniteLength = VectorEqualInt(LengthSq, g_XMInfinity.v);
+			VectorType ZeroLength = VectorEqual(LengthSq, Zero);
 
-			Vector Normal = VectorMultiply(V, RcpLength);
+			VectorType Normal = VectorMultiply(V, RcpLength);
 
-			Vector Length = VectorMultiply(LengthSq, RcpLength);
+			VectorType Length = VectorMultiply(LengthSq, RcpLength);
 
-			Vector Select = VectorEqualInt(InfiniteLength, ZeroLength);
+			VectorType Select = VectorEqualInt(InfiniteLength, ZeroLength);
 			Length = VectorSelect(LengthSq, Length, Select);
 			Normal = VectorSelect(LengthSq, Normal, Select);
 
-			Vector ControlMax = VectorGreater(Length, LengthMax);
-			Vector ControlMin = VectorLess(Length, LengthMin);
+			VectorType ControlMax = VectorGreater(Length, LengthMax);
+			VectorType ControlMin = VectorLess(Length, LengthMin);
 
-			Vector ClampLength = VectorSelect(Length, LengthMax, ControlMax);
+			VectorType ClampLength = VectorSelect(Length, LengthMax, ControlMax);
 			ClampLength = VectorSelect(ClampLength, LengthMin, ControlMin);
 
-			Vector Result = VectorMultiply(Normal, ClampLength);
+			VectorType Result = VectorMultiply(Normal, ClampLength);
 
 			// Preserve the original vector (with no precision loss) if the length falls within the given range
-			Vector Control = VectorEqualInt(ControlMax, ControlMin);
+			VectorType Control = VectorEqualInt(ControlMax, ControlMin);
 			Result = VectorSelect(Result, V, Control);
 
 			return Result;
@@ -18229,7 +18229,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4Reflect
+		inline VectorType RAYMATH_CALLCONV Vector4Reflect
 		(
 			FVector Incident,
 			FVector Normal
@@ -18237,7 +18237,7 @@ namespace At0
 		{
 			// Result = Incident - (2 * dot(Incident, Normal)) * Normal
 
-			Vector Result = Vector4Dot(Incident, Normal);
+			VectorType Result = Vector4Dot(Incident, Normal);
 			Result = VectorAdd(Result, Result);
 			Result = VectorNegativeMultiplySubtract(Result, Normal, Incident);
 
@@ -18246,20 +18246,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4Refract
+		inline VectorType RAYMATH_CALLCONV Vector4Refract
 		(
 			FVector Incident,
 			FVector Normal,
 			float    RefractionIndex
 		)
 		{
-			Vector Index = VectorReplicate(RefractionIndex);
+			VectorType Index = VectorReplicate(RefractionIndex);
 			return Vector4RefractV(Incident, Normal, Index);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4RefractV
+		inline VectorType RAYMATH_CALLCONV Vector4RefractV
 		(
 			FVector Incident,
 			FVector Normal,
@@ -18268,9 +18268,9 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			Vector        IDotN;
-			Vector        R;
-			const Vector  Zero = VectorZero();
+			VectorType        IDotN;
+			VectorType        R;
+			const VectorType  Zero = VectorZero();
 
 			// Result = RefractionIndex * Incident - Normal * (RefractionIndex * dot(Incident, Normal) + 
 			// sqrt(1 - RefractionIndex * RefractionIndex * (1 - dot(Incident, Normal) * dot(Incident, Normal))))
@@ -18289,7 +18289,7 @@ namespace At0
 			}
 			else
 			{
-				Vector Result;
+				VectorType Result;
 
 				// R = RefractionIndex * IDotN + sqrt(R)
 				R = VectorSqrt(R);
@@ -18303,7 +18303,7 @@ namespace At0
 			}
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector IDotN = Vector4Dot(Incident, Normal);
+			VectorType IDotN = Vector4Dot(Incident, Normal);
 
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
 			float32x4_t R = vmlsq_f32(g_XMOne, IDotN, IDotN);
@@ -18337,16 +18337,16 @@ namespace At0
 			}
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector IDotN = Vector4Dot(Incident, Normal);
+			VectorType IDotN = Vector4Dot(Incident, Normal);
 
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
-			Vector R = _mm_mul_ps(IDotN, IDotN);
+			VectorType R = _mm_mul_ps(IDotN, IDotN);
 			R = _mm_sub_ps(g_XMOne, R);
 			R = _mm_mul_ps(R, RefractionIndex);
 			R = _mm_mul_ps(R, RefractionIndex);
 			R = _mm_sub_ps(g_XMOne, R);
 
-			Vector vResult = _mm_cmple_ps(R, g_XMZero);
+			VectorType vResult = _mm_cmple_ps(R, g_XMZero);
 			if (_mm_movemask_ps(vResult) == 0x0f)
 			{
 				// Total internal reflection
@@ -18369,7 +18369,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4Orthogonal
+		inline VectorType RAYMATH_CALLCONV Vector4Orthogonal
 		(
 			FVector V
 		)
@@ -18391,7 +18391,7 @@ namespace At0
 			return vmulq_f32(Result, Negate);
 #elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 FlipZW = { { { 1.0f, 1.0f, -1.0f, -1.0f } } };
-			Vector vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 0, 3, 2));
+			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 0, 3, 2));
 			vResult = _mm_mul_ps(vResult, FlipZW);
 			return vResult;
 #endif
@@ -18399,13 +18399,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4AngleBetweenNormalsEst
+		inline VectorType RAYMATH_CALLCONV Vector4AngleBetweenNormalsEst
 		(
 			FVector N1,
 			FVector N2
 		)
 		{
-			Vector Result = Vector4Dot(N1, N2);
+			VectorType Result = Vector4Dot(N1, N2);
 			Result = VectorClamp(Result, g_XMNegativeOne.v, g_XMOne.v);
 			Result = VectorACosEst(Result);
 			return Result;
@@ -18413,13 +18413,13 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4AngleBetweenNormals
+		inline VectorType RAYMATH_CALLCONV Vector4AngleBetweenNormals
 		(
 			FVector N1,
 			FVector N2
 		)
 		{
-			Vector Result = Vector4Dot(N1, N2);
+			VectorType Result = Vector4Dot(N1, N2);
 			Result = VectorClamp(Result, g_XMNegativeOne.v, g_XMOne.v);
 			Result = VectorACos(Result);
 			return Result;
@@ -18427,20 +18427,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4AngleBetweenVectors
+		inline VectorType RAYMATH_CALLCONV Vector4AngleBetweenVectors
 		(
 			FVector V1,
 			FVector V2
 		)
 		{
-			Vector L1 = Vector4ReciprocalLength(V1);
-			Vector L2 = Vector4ReciprocalLength(V2);
+			VectorType L1 = Vector4ReciprocalLength(V1);
+			VectorType L2 = Vector4ReciprocalLength(V2);
 
-			Vector Dot = Vector4Dot(V1, V2);
+			VectorType Dot = Vector4Dot(V1, V2);
 
 			L1 = VectorMultiply(L1, L2);
 
-			Vector CosAngle = VectorMultiply(Dot, L1);
+			VectorType CosAngle = VectorMultiply(Dot, L1);
 			CosAngle = VectorClamp(CosAngle, g_XMNegativeOne.v, g_XMOne.v);
 
 			return VectorACos(CosAngle);
@@ -18448,7 +18448,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Vector4Transform
+		inline VectorType RAYMATH_CALLCONV Vector4Transform
 		(
 			FVector V,
 			FMatrix M
@@ -18465,17 +18465,17 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
-			Vector vResult = vmulq_lane_f32(M.r[0], VL, 0); // X
+			VectorType vResult = vmulq_lane_f32(M.r[0], VL, 0); // X
 			vResult = vmlaq_lane_f32(vResult, M.r[1], VL, 1); // Y
 			float32x2_t VH = vget_high_f32(V);
 			vResult = vmlaq_lane_f32(vResult, M.r[2], VH, 0); // Z
 			return vmlaq_lane_f32(vResult, M.r[3], VH, 1); // W
 #elif defined(RAY_SSE_INTRINSICS)
 			// Splat x,y,z and w
-			Vector vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
-			Vector vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-			Vector vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+			VectorType vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+			VectorType vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 			// Mul by the matrix
 			vTempX = _mm_mul_ps(vTempX, M.r[0]);
 			vTempY = _mm_mul_ps(vTempY, M.r[1]);
@@ -18512,20 +18512,20 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row2 = M.r[2];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row2 = M.r[2];
+			const VectorType row3 = M.r[3];
 
 			for (size_t i = 0; i < VectorCount; i++)
 			{
-				Vector V = LoadFloat4(reinterpret_cast<const Float4*>(pInputVector));
-				Vector W = VectorSplatW(V);
-				Vector Z = VectorSplatZ(V);
-				Vector Y = VectorSplatY(V);
-				Vector X = VectorSplatX(V);
+				VectorType V = LoadFloat4(reinterpret_cast<const Float4*>(pInputVector));
+				VectorType W = VectorSplatW(V);
+				VectorType Z = VectorSplatZ(V);
+				VectorType Y = VectorSplatY(V);
+				VectorType X = VectorSplatX(V);
 
-				Vector Result = VectorMultiply(W, row3);
+				VectorType Result = VectorMultiply(W, row3);
 				Result = VectorMultiplyAdd(Z, row2, Result);
 				Result = VectorMultiplyAdd(Y, row1, Result);
 				Result = VectorMultiplyAdd(X, row0, Result);
@@ -18551,10 +18551,10 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row2 = M.r[2];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row2 = M.r[2];
+			const VectorType row3 = M.r[3];
 
 			size_t i = 0;
 			size_t four = VectorCount >> 2;
@@ -18568,14 +18568,14 @@ namespace At0
 						pInputVector += sizeof(Float4) * 4;
 
 						float32x2_t r = vget_low_f32(row0);
-						Vector vResult0 = vmulq_lane_f32(V.val[0], r, 0); // Ax
-						Vector vResult1 = vmulq_lane_f32(V.val[0], r, 1); // Bx
+						VectorType vResult0 = vmulq_lane_f32(V.val[0], r, 0); // Ax
+						VectorType vResult1 = vmulq_lane_f32(V.val[0], r, 1); // Bx
 
 						__prefetch(pInputVector);
 
 						r = vget_high_f32(row0);
-						Vector vResult2 = vmulq_lane_f32(V.val[0], r, 0); // Cx
-						Vector vResult3 = vmulq_lane_f32(V.val[0], r, 1); // Dx
+						VectorType vResult2 = vmulq_lane_f32(V.val[0], r, 0); // Cx
+						VectorType vResult3 = vmulq_lane_f32(V.val[0], r, 1); // Dx
 
 						__prefetch(pInputVector + RAYMATH_CACHE_LINE_SIZE);
 
@@ -18630,11 +18630,11 @@ namespace At0
 
 			for (; i < VectorCount; i++)
 			{
-				Vector V = vld1q_f32(reinterpret_cast<const float*>(pInputVector));
+				VectorType V = vld1q_f32(reinterpret_cast<const float*>(pInputVector));
 				pInputVector += InputStride;
 
 				float32x2_t VL = vget_low_f32(V);
-				Vector vResult = vmulq_lane_f32(row0, VL, 0); // X
+				VectorType vResult = vmulq_lane_f32(row0, VL, 0); // X
 				vResult = vmlaq_lane_f32(vResult, row1, VL, 1); // Y
 				float32x2_t VH = vget_high_f32(V);
 				vResult = vmlaq_lane_f32(vResult, row2, VH, 0); // Z
@@ -18649,10 +18649,10 @@ namespace At0
 			auto pInputVector = reinterpret_cast<const uint8_t*>(pInputStream);
 			auto pOutputVector = reinterpret_cast<uint8_t*>(pOutputStream);
 
-			const Vector row0 = M.r[0];
-			const Vector row1 = M.r[1];
-			const Vector row2 = M.r[2];
-			const Vector row3 = M.r[3];
+			const VectorType row0 = M.r[0];
+			const VectorType row1 = M.r[1];
+			const VectorType row2 = M.r[2];
+			const VectorType row3 = M.r[3];
 
 			if (!(reinterpret_cast<uintptr_t>(pOutputStream) & 0xF) && !(OutputStride & 0xF))
 			{
@@ -18664,10 +18664,10 @@ namespace At0
 						__m128 V = _mm_load_ps(reinterpret_cast<const float*>(pInputVector));
 						pInputVector += InputStride;
 
-						Vector vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
-						Vector vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-						Vector vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-						Vector vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+						VectorType vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+						VectorType vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+						VectorType vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+						VectorType vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 
 						vTempX = _mm_mul_ps(vTempX, row0);
 						vTempY = _mm_mul_ps(vTempY, row1);
@@ -18690,10 +18690,10 @@ namespace At0
 						__m128 V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 						pInputVector += InputStride;
 
-						Vector vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
-						Vector vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-						Vector vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-						Vector vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+						VectorType vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+						VectorType vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+						VectorType vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+						VectorType vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 
 						vTempX = _mm_mul_ps(vTempX, row0);
 						vTempY = _mm_mul_ps(vTempY, row1);
@@ -18719,10 +18719,10 @@ namespace At0
 						__m128 V = _mm_load_ps(reinterpret_cast<const float*>(pInputVector));
 						pInputVector += InputStride;
 
-						Vector vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
-						Vector vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-						Vector vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-						Vector vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+						VectorType vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+						VectorType vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+						VectorType vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+						VectorType vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 
 						vTempX = _mm_mul_ps(vTempX, row0);
 						vTempY = _mm_mul_ps(vTempY, row1);
@@ -18745,10 +18745,10 @@ namespace At0
 						__m128 V = _mm_loadu_ps(reinterpret_cast<const float*>(pInputVector));
 						pInputVector += InputStride;
 
-						Vector vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
-						Vector vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
-						Vector vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
-						Vector vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+						VectorType vTempX = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 0, 0, 0));
+						VectorType vTempY = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+						VectorType vTempZ = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+						VectorType vTempW = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
 
 						vTempX = _mm_mul_ps(vTempX, row0);
 						vTempY = _mm_mul_ps(vTempY, row1);
@@ -18773,7 +18773,7 @@ namespace At0
 
 		/****************************************************************************
 		 *
-		 * Vector operators
+		 * VectorType operators
 		 *
 		 ****************************************************************************/
 
@@ -18781,23 +18781,23 @@ namespace At0
 
 		 //------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV operator+ (FVector V)
+		inline VectorType RAYMATH_CALLCONV operator+ (FVector V)
 		{
 			return V;
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV operator- (FVector V)
+		inline VectorType RAYMATH_CALLCONV operator- (FVector V)
 		{
 			return VectorNegate(V);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector& RAYMATH_CALLCONV operator+=
+		inline VectorType& RAYMATH_CALLCONV operator+=
 			(
-				Vector& V1,
+				VectorType& V1,
 				FVector       V2
 				)
 		{
@@ -18807,9 +18807,9 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector& RAYMATH_CALLCONV operator-=
+		inline VectorType& RAYMATH_CALLCONV operator-=
 			(
-				Vector& V1,
+				VectorType& V1,
 				FVector       V2
 				)
 		{
@@ -18819,9 +18819,9 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector& RAYMATH_CALLCONV operator*=
+		inline VectorType& RAYMATH_CALLCONV operator*=
 			(
-				Vector& V1,
+				VectorType& V1,
 				FVector       V2
 				)
 		{
@@ -18831,9 +18831,9 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector& RAYMATH_CALLCONV operator/=
+		inline VectorType& RAYMATH_CALLCONV operator/=
 			(
-				Vector& V1,
+				VectorType& V1,
 				FVector       V2
 				)
 		{
@@ -18843,9 +18843,9 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector& operator*=
+		inline VectorType& operator*=
 			(
-				Vector& V,
+				VectorType& V,
 				const float S
 				)
 		{
@@ -18855,20 +18855,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector& operator/=
+		inline VectorType& operator/=
 			(
-				Vector& V,
+				VectorType& V,
 				const float S
 				)
 		{
-			Vector vS = VectorReplicate(S);
+			VectorType vS = VectorReplicate(S);
 			V = VectorDivide(V, vS);
 			return V;
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV operator+
+		inline VectorType RAYMATH_CALLCONV operator+
 			(
 				FVector V1,
 				FVector V2
@@ -18879,7 +18879,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV operator-
+		inline VectorType RAYMATH_CALLCONV operator-
 			(
 				FVector V1,
 				FVector V2
@@ -18890,7 +18890,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV operator*
+		inline VectorType RAYMATH_CALLCONV operator*
 			(
 				FVector V1,
 				FVector V2
@@ -18901,7 +18901,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV operator/
+		inline VectorType RAYMATH_CALLCONV operator/
 			(
 				FVector V1,
 				FVector V2
@@ -18912,7 +18912,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV operator*
+		inline VectorType RAYMATH_CALLCONV operator*
 			(
 				FVector      V,
 				const float    S
@@ -18923,19 +18923,19 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV operator/
+		inline VectorType RAYMATH_CALLCONV operator/
 			(
 				FVector      V,
 				const float    S
 				)
 		{
-			Vector vS = VectorReplicate(S);
+			VectorType vS = VectorReplicate(S);
 			return VectorDivide(V, vS);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV operator*
+		inline VectorType RAYMATH_CALLCONV operator*
 			(
 				float           S,
 				FVector  	    V
@@ -19001,10 +19001,10 @@ namespace At0
 			return (i != 0);      // i == 0 if nothing matched
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Load in registers
-			Vector vX = r[0];
-			Vector vY = r[1];
-			Vector vZ = r[2];
-			Vector vW = r[3];
+			VectorType vX = r[0];
+			VectorType vY = r[1];
+			VectorType vZ = r[2];
+			VectorType vW = r[3];
 			// Test themselves to check for NaN
 			vX = vmvnq_u32(vceqq_f32(vX, vX));
 			vY = vmvnq_u32(vceqq_f32(vY, vY));
@@ -19021,10 +19021,10 @@ namespace At0
 			return (r != 0);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Load in registers
-			Vector vX = r[0];
-			Vector vY = r[1];
-			Vector vZ = r[2];
-			Vector vW = r[3];
+			VectorType vX = r[0];
+			VectorType vY = r[1];
+			VectorType vZ = r[2];
+			VectorType vW = r[3];
 			// Test themselves to check for NaN
 			vX = _mm_cmpneq_ps(vX, vX);
 			vY = _mm_cmpneq_ps(vY, vY);
@@ -19062,10 +19062,10 @@ namespace At0
 			return (i != 0);      // i == 0 if nothing matched
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Mask off the sign bits
-			Vector vTemp1 = vandq_u32(r[0], g_XMAbsMask);
-			Vector vTemp2 = vandq_u32(r[1], g_XMAbsMask);
-			Vector vTemp3 = vandq_u32(r[2], g_XMAbsMask);
-			Vector vTemp4 = vandq_u32(r[3], g_XMAbsMask);
+			VectorType vTemp1 = vandq_u32(r[0], g_XMAbsMask);
+			VectorType vTemp2 = vandq_u32(r[1], g_XMAbsMask);
+			VectorType vTemp3 = vandq_u32(r[2], g_XMAbsMask);
+			VectorType vTemp4 = vandq_u32(r[3], g_XMAbsMask);
 			// Compare to infinity
 			vTemp1 = vceqq_f32(vTemp1, g_XMInfinity);
 			vTemp2 = vceqq_f32(vTemp2, g_XMInfinity);
@@ -19082,10 +19082,10 @@ namespace At0
 			return (r != 0);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Mask off the sign bits
-			Vector vTemp1 = _mm_and_ps(r[0], g_XMAbsMask);
-			Vector vTemp2 = _mm_and_ps(r[1], g_XMAbsMask);
-			Vector vTemp3 = _mm_and_ps(r[2], g_XMAbsMask);
-			Vector vTemp4 = _mm_and_ps(r[3], g_XMAbsMask);
+			VectorType vTemp1 = _mm_and_ps(r[0], g_XMAbsMask);
+			VectorType vTemp2 = _mm_and_ps(r[1], g_XMAbsMask);
+			VectorType vTemp3 = _mm_and_ps(r[2], g_XMAbsMask);
+			VectorType vTemp4 = _mm_and_ps(r[3], g_XMAbsMask);
 			// Compare to infinity
 			vTemp1 = _mm_cmpeq_ps(vTemp1, g_XMInfinity);
 			vTemp2 = _mm_cmpeq_ps(vTemp2, g_XMInfinity);
@@ -19135,10 +19135,10 @@ namespace At0
 			uOne |= uZero;
 			return (uOne == 0);
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector vTemp1 = vceqq_f32(r[0], g_XMIdentityR0);
-			Vector vTemp2 = vceqq_f32(r[1], g_XMIdentityR1);
-			Vector vTemp3 = vceqq_f32(r[2], g_XMIdentityR2);
-			Vector vTemp4 = vceqq_f32(r[3], g_XMIdentityR3);
+			VectorType vTemp1 = vceqq_f32(r[0], g_XMIdentityR0);
+			VectorType vTemp2 = vceqq_f32(r[1], g_XMIdentityR1);
+			VectorType vTemp3 = vceqq_f32(r[2], g_XMIdentityR2);
+			VectorType vTemp4 = vceqq_f32(r[3], g_XMIdentityR3);
 			vTemp1 = vandq_u32(vTemp1, vTemp2);
 			vTemp3 = vandq_u32(vTemp3, vTemp4);
 			vTemp1 = vandq_u32(vTemp1, vTemp3);
@@ -19147,10 +19147,10 @@ namespace At0
 			uint32_t r = vget_lane_u32(vTemp.val[1], 1);
 			return (r == 0xFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vTemp1 = _mm_cmpeq_ps(r[0], g_XMIdentityR0);
-			Vector vTemp2 = _mm_cmpeq_ps(r[1], g_XMIdentityR1);
-			Vector vTemp3 = _mm_cmpeq_ps(r[2], g_XMIdentityR2);
-			Vector vTemp4 = _mm_cmpeq_ps(r[3], g_XMIdentityR3);
+			VectorType vTemp1 = _mm_cmpeq_ps(r[0], g_XMIdentityR0);
+			VectorType vTemp2 = _mm_cmpeq_ps(r[1], g_XMIdentityR1);
+			VectorType vTemp3 = _mm_cmpeq_ps(r[2], g_XMIdentityR2);
+			VectorType vTemp4 = _mm_cmpeq_ps(r[3], g_XMIdentityR3);
 			vTemp1 = _mm_and_ps(vTemp1, vTemp2);
 			vTemp3 = _mm_and_ps(vTemp3, vTemp4);
 			vTemp1 = _mm_and_ps(vTemp1, vTemp3);
@@ -19213,10 +19213,10 @@ namespace At0
 			float32x2_t VL = vget_low_f32(M1.r[0]);
 			float32x2_t VH = vget_high_f32(M1.r[0]);
 			// Perform the operation on the first row
-			Vector vX = vmulq_lane_f32(M2.r[0], VL, 0);
-			Vector vY = vmulq_lane_f32(M2.r[1], VL, 1);
-			Vector vZ = vmlaq_lane_f32(vX, M2.r[2], VH, 0);
-			Vector vW = vmlaq_lane_f32(vY, M2.r[3], VH, 1);
+			VectorType vX = vmulq_lane_f32(M2.r[0], VL, 0);
+			VectorType vY = vmulq_lane_f32(M2.r[1], VL, 1);
+			VectorType vZ = vmlaq_lane_f32(vX, M2.r[2], VH, 0);
+			VectorType vW = vmlaq_lane_f32(vY, M2.r[3], VH, 1);
 			mResult.r[0] = vaddq_f32(vZ, vW);
 			// Repeat for the other 3 rows
 			VL = vget_low_f32(M1.r[1]);
@@ -19245,16 +19245,16 @@ namespace At0
 			Matrix mResult;
 			// Splat the component X,Y,Z then W
 #if defined(RAY_AVC_INTRINSICS)
-			Vector vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 0);
-			Vector vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 1);
-			Vector vZ = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 2);
-			Vector vW = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 3);
+			VectorType vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 0);
+			VectorType vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 1);
+			VectorType vZ = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 2);
+			VectorType vW = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 3);
 #else
 	// Use vW to hold the original row
-			Vector vW = M1.r[0];
-			Vector vX = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
-			Vector vY = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector vZ = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType vW = M1.r[0];
+			VectorType vX = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
+			VectorType vY = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vZ = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
 			vW = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
 #endif
 			// Perform the operation on the first row
@@ -19382,10 +19382,10 @@ namespace At0
 			float32x2_t VL = vget_low_f32(M1.r[0]);
 			float32x2_t VH = vget_high_f32(M1.r[0]);
 			// Perform the operation on the first row
-			Vector vX = vmulq_lane_f32(M2.r[0], VL, 0);
-			Vector vY = vmulq_lane_f32(M2.r[1], VL, 1);
-			Vector vZ = vmlaq_lane_f32(vX, M2.r[2], VH, 0);
-			Vector vW = vmlaq_lane_f32(vY, M2.r[3], VH, 1);
+			VectorType vX = vmulq_lane_f32(M2.r[0], VL, 0);
+			VectorType vY = vmulq_lane_f32(M2.r[1], VL, 1);
+			VectorType vZ = vmlaq_lane_f32(vX, M2.r[2], VH, 0);
+			VectorType vW = vmlaq_lane_f32(vY, M2.r[3], VH, 1);
 			float32x4_t r0 = vaddq_f32(vZ, vW);
 			// Repeat for the other 3 rows
 			VL = vget_low_f32(M1.r[1]);
@@ -19426,16 +19426,16 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			// Splat the component X,Y,Z then W
 #if defined(RAY_AVC_INTRINSICS)
-			Vector vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 0);
-			Vector vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 1);
-			Vector vZ = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 2);
-			Vector vW = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 3);
+			VectorType vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 0);
+			VectorType vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 1);
+			VectorType vZ = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 2);
+			VectorType vW = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[0]) + 3);
 #else
 	// Use vW to hold the original row
-			Vector vW = M1.r[0];
-			Vector vX = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
-			Vector vY = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
-			Vector vZ = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType vW = M1.r[0];
+			VectorType vX = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(0, 0, 0, 0));
+			VectorType vY = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vZ = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(2, 2, 2, 2));
 			vW = RAYMATH_PERMUTE_PS(vW, _MM_SHUFFLE(3, 3, 3, 3));
 #endif
 			// Perform the operation on the first row
@@ -19447,7 +19447,7 @@ namespace At0
 			vX = _mm_add_ps(vX, vZ);
 			vY = _mm_add_ps(vY, vW);
 			vX = _mm_add_ps(vX, vY);
-			Vector r0 = vX;
+			VectorType r0 = vX;
 			// Repeat for the other 3 rows
 #if defined(RAY_AVC_INTRINSICS)
 			vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[1]) + 0);
@@ -19468,7 +19468,7 @@ namespace At0
 			vX = _mm_add_ps(vX, vZ);
 			vY = _mm_add_ps(vY, vW);
 			vX = _mm_add_ps(vX, vY);
-			Vector r1 = vX;
+			VectorType r1 = vX;
 #if defined(RAY_AVC_INTRINSICS)
 			vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[2]) + 0);
 			vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[2]) + 1);
@@ -19488,7 +19488,7 @@ namespace At0
 			vX = _mm_add_ps(vX, vZ);
 			vY = _mm_add_ps(vY, vW);
 			vX = _mm_add_ps(vX, vY);
-			Vector r2 = vX;
+			VectorType r2 = vX;
 #if defined(RAY_AVC_INTRINSICS)
 			vX = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[3]) + 0);
 			vY = _mm_broadcast_ss(reinterpret_cast<const float*>(&M1.r[3]) + 1);
@@ -19508,16 +19508,16 @@ namespace At0
 			vX = _mm_add_ps(vX, vZ);
 			vY = _mm_add_ps(vY, vW);
 			vX = _mm_add_ps(vX, vY);
-			Vector r3 = vX;
+			VectorType r3 = vX;
 
 			// x.x,x.y,y.x,y.y
-			Vector vTemp1 = _mm_shuffle_ps(r0, r1, _MM_SHUFFLE(1, 0, 1, 0));
+			VectorType vTemp1 = _mm_shuffle_ps(r0, r1, _MM_SHUFFLE(1, 0, 1, 0));
 			// x.z,x.w,y.z,y.w
-			Vector vTemp3 = _mm_shuffle_ps(r0, r1, _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp3 = _mm_shuffle_ps(r0, r1, _MM_SHUFFLE(3, 2, 3, 2));
 			// z.x,z.y,w.x,w.y
-			Vector vTemp2 = _mm_shuffle_ps(r2, r3, _MM_SHUFFLE(1, 0, 1, 0));
+			VectorType vTemp2 = _mm_shuffle_ps(r2, r3, _MM_SHUFFLE(1, 0, 1, 0));
 			// z.z,z.w,w.z,w.w
-			Vector vTemp4 = _mm_shuffle_ps(r2, r3, _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp4 = _mm_shuffle_ps(r2, r3, _MM_SHUFFLE(3, 2, 3, 2));
 
 			Matrix mResult;
 			// x.x,y.x,z.x,w.x
@@ -19573,13 +19573,13 @@ namespace At0
 			return mResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			// x.x,x.y,y.x,y.y
-			Vector vTemp1 = _mm_shuffle_ps(r[0], r[1], _MM_SHUFFLE(1, 0, 1, 0));
+			VectorType vTemp1 = _mm_shuffle_ps(r[0], r[1], _MM_SHUFFLE(1, 0, 1, 0));
 			// x.z,x.w,y.z,y.w
-			Vector vTemp3 = _mm_shuffle_ps(r[0], r[1], _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp3 = _mm_shuffle_ps(r[0], r[1], _MM_SHUFFLE(3, 2, 3, 2));
 			// z.x,z.y,w.x,w.y
-			Vector vTemp2 = _mm_shuffle_ps(r[2], r[3], _MM_SHUFFLE(1, 0, 1, 0));
+			VectorType vTemp2 = _mm_shuffle_ps(r[2], r[3], _MM_SHUFFLE(1, 0, 1, 0));
 			// z.z,z.w,w.z,w.w
-			Vector vTemp4 = _mm_shuffle_ps(r[2], r[3], _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType vTemp4 = _mm_shuffle_ps(r[2], r[3], _MM_SHUFFLE(3, 2, 3, 2));
 			Matrix mResult;
 
 			// x.x,y.x,z.x,w.x
@@ -19597,13 +19597,13 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Return the inverse and the determinant of a 4x4 matrix
 
-		inline Matrix RAYMATH_CALLCONV Matrix::Inverse(Vector* pDeterminant) const
+		inline Matrix RAYMATH_CALLCONV Matrix::Inverse(VectorType* pDeterminant) const
 		{
 #if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
 			Matrix MT = Transpose();
 
-			Vector V0[4], V1[4];
+			VectorType V0[4], V1[4];
 			V0[0] = VectorSwizzle<RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(MT.r[2]);
 			V1[0] = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W>(MT.r[3]);
 			V0[1] = VectorSwizzle<RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(MT.r[0]);
@@ -19611,9 +19611,9 @@ namespace At0
 			V0[2] = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Z>(MT.r[2], MT.r[0]);
 			V1[2] = VectorPermute<RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1W>(MT.r[3], MT.r[1]);
 
-			Vector D0 = VectorMultiply(V0[0], V1[0]);
-			Vector D1 = VectorMultiply(V0[1], V1[1]);
-			Vector D2 = VectorMultiply(V0[2], V1[2]);
+			VectorType D0 = VectorMultiply(V0[0], V1[0]);
+			VectorType D1 = VectorMultiply(V0[1], V1[1]);
+			VectorType D2 = VectorMultiply(V0[2], V1[2]);
 
 			V0[0] = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W>(MT.r[2]);
 			V1[0] = VectorSwizzle<RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(MT.r[3]);
@@ -19635,10 +19635,10 @@ namespace At0
 			V0[3] = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X>(MT.r[2]);
 			V1[3] = VectorPermute<RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_1W, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_0Z>(D1, D2);
 
-			Vector C0 = VectorMultiply(V0[0], V1[0]);
-			Vector C2 = VectorMultiply(V0[1], V1[1]);
-			Vector C4 = VectorMultiply(V0[2], V1[2]);
-			Vector C6 = VectorMultiply(V0[3], V1[3]);
+			VectorType C0 = VectorMultiply(V0[0], V1[0]);
+			VectorType C2 = VectorMultiply(V0[1], V1[1]);
+			VectorType C4 = VectorMultiply(V0[2], V1[2]);
+			VectorType C6 = VectorMultiply(V0[3], V1[3]);
 
 			V0[0] = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z>(MT.r[1]);
 			V1[0] = VectorPermute<RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X>(D0, D2);
@@ -19663,13 +19663,13 @@ namespace At0
 			V0[3] = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Z>(MT.r[2]);
 			V1[3] = VectorPermute<RAYMATH_PERMUTE_1W, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0W, RAYMATH_PERMUTE_1Z>(D1, D2);
 
-			Vector C1 = VectorNegativeMultiplySubtract(V0[0], V1[0], C0);
+			VectorType C1 = VectorNegativeMultiplySubtract(V0[0], V1[0], C0);
 			C0 = VectorMultiplyAdd(V0[0], V1[0], C0);
-			Vector C3 = VectorMultiplyAdd(V0[1], V1[1], C2);
+			VectorType C3 = VectorMultiplyAdd(V0[1], V1[1], C2);
 			C2 = VectorNegativeMultiplySubtract(V0[1], V1[1], C2);
-			Vector C5 = VectorNegativeMultiplySubtract(V0[2], V1[2], C4);
+			VectorType C5 = VectorNegativeMultiplySubtract(V0[2], V1[2], C4);
 			C4 = VectorMultiplyAdd(V0[2], V1[2], C4);
-			Vector C7 = VectorMultiplyAdd(V0[3], V1[3], C6);
+			VectorType C7 = VectorMultiplyAdd(V0[3], V1[3], C6);
 			C6 = VectorNegativeMultiplySubtract(V0[3], V1[3], C6);
 
 			Matrix R;
@@ -19678,12 +19678,12 @@ namespace At0
 			R.r[2] = VectorSelect(C4, C5, g_XMSelect0101.v);
 			R.r[3] = VectorSelect(C6, C7, g_XMSelect0101.v);
 
-			Vector Determinant = Vector4Dot(R.r[0], MT.r[0]);
+			VectorType Determinant = Vector4Dot(R.r[0], MT.r[0]);
 
 			if (pDeterminant != nullptr)
 				*pDeterminant = Determinant;
 
-			Vector Reciprocal = VectorReciprocal(Determinant);
+			VectorType Reciprocal = VectorReciprocal(Determinant);
 
 			Matrix Result;
 			Result.r[0] = VectorMultiply(R.r[0], Reciprocal);
@@ -19694,16 +19694,16 @@ namespace At0
 
 #elif defined(RAY_SSE_INTRINSICS)
 			Matrix MT = Transpose();
-			Vector V00 = RAYMATH_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(1, 1, 0, 0));
-			Vector V10 = RAYMATH_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(3, 2, 3, 2));
-			Vector V01 = RAYMATH_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(1, 1, 0, 0));
-			Vector V11 = RAYMATH_PERMUTE_PS(MT.r[1], _MM_SHUFFLE(3, 2, 3, 2));
-			Vector V02 = _mm_shuffle_ps(MT.r[2], MT.r[0], _MM_SHUFFLE(2, 0, 2, 0));
-			Vector V12 = _mm_shuffle_ps(MT.r[3], MT.r[1], _MM_SHUFFLE(3, 1, 3, 1));
+			VectorType V00 = RAYMATH_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(1, 1, 0, 0));
+			VectorType V10 = RAYMATH_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType V01 = RAYMATH_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(1, 1, 0, 0));
+			VectorType V11 = RAYMATH_PERMUTE_PS(MT.r[1], _MM_SHUFFLE(3, 2, 3, 2));
+			VectorType V02 = _mm_shuffle_ps(MT.r[2], MT.r[0], _MM_SHUFFLE(2, 0, 2, 0));
+			VectorType V12 = _mm_shuffle_ps(MT.r[3], MT.r[1], _MM_SHUFFLE(3, 1, 3, 1));
 
-			Vector D0 = _mm_mul_ps(V00, V10);
-			Vector D1 = _mm_mul_ps(V01, V11);
-			Vector D2 = _mm_mul_ps(V02, V12);
+			VectorType D0 = _mm_mul_ps(V00, V10);
+			VectorType D1 = _mm_mul_ps(V01, V11);
+			VectorType D2 = _mm_mul_ps(V02, V12);
 
 			V00 = RAYMATH_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(3, 2, 3, 2));
 			V10 = RAYMATH_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(1, 1, 0, 0));
@@ -19725,16 +19725,16 @@ namespace At0
 			V01 = RAYMATH_PERMUTE_PS(MT.r[0], _MM_SHUFFLE(0, 1, 0, 2));
 			V11 = _mm_shuffle_ps(V11, D0, _MM_SHUFFLE(2, 1, 2, 1));
 			// V13 = D1Y,D1W,D2W,D2W
-			Vector V13 = _mm_shuffle_ps(D1, D2, _MM_SHUFFLE(3, 3, 3, 1));
+			VectorType V13 = _mm_shuffle_ps(D1, D2, _MM_SHUFFLE(3, 3, 3, 1));
 			V02 = RAYMATH_PERMUTE_PS(MT.r[3], _MM_SHUFFLE(1, 0, 2, 1));
 			V12 = _mm_shuffle_ps(V13, D1, _MM_SHUFFLE(0, 3, 0, 2));
-			Vector V03 = RAYMATH_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(0, 1, 0, 2));
+			VectorType V03 = RAYMATH_PERMUTE_PS(MT.r[2], _MM_SHUFFLE(0, 1, 0, 2));
 			V13 = _mm_shuffle_ps(V13, D1, _MM_SHUFFLE(2, 1, 2, 1));
 
-			Vector C0 = _mm_mul_ps(V00, V10);
-			Vector C2 = _mm_mul_ps(V01, V11);
-			Vector C4 = _mm_mul_ps(V02, V12);
-			Vector C6 = _mm_mul_ps(V03, V13);
+			VectorType C0 = _mm_mul_ps(V00, V10);
+			VectorType C2 = _mm_mul_ps(V01, V11);
+			VectorType C4 = _mm_mul_ps(V02, V12);
+			VectorType C6 = _mm_mul_ps(V03, V13);
 
 			// V11 = D0X,D0Y,D2X,D2X
 			V11 = _mm_shuffle_ps(D0, D2, _MM_SHUFFLE(0, 0, 1, 0));
@@ -19779,13 +19779,13 @@ namespace At0
 			V01 = _mm_mul_ps(V01, V11);
 			V02 = _mm_mul_ps(V02, V12);
 			V03 = _mm_mul_ps(V03, V13);
-			Vector C1 = _mm_sub_ps(C0, V00);
+			VectorType C1 = _mm_sub_ps(C0, V00);
 			C0 = _mm_add_ps(C0, V00);
-			Vector C3 = _mm_add_ps(C2, V01);
+			VectorType C3 = _mm_add_ps(C2, V01);
 			C2 = _mm_sub_ps(C2, V01);
-			Vector C5 = _mm_sub_ps(C4, V02);
+			VectorType C5 = _mm_sub_ps(C4, V02);
 			C4 = _mm_add_ps(C4, V02);
-			Vector C7 = _mm_add_ps(C6, V03);
+			VectorType C7 = _mm_add_ps(C6, V03);
 			C6 = _mm_sub_ps(C6, V03);
 
 			C0 = _mm_shuffle_ps(C0, C1, _MM_SHUFFLE(3, 1, 2, 0));
@@ -19797,7 +19797,7 @@ namespace At0
 			C4 = RAYMATH_PERMUTE_PS(C4, _MM_SHUFFLE(3, 1, 2, 0));
 			C6 = RAYMATH_PERMUTE_PS(C6, _MM_SHUFFLE(3, 1, 2, 0));
 			// Get the determinate
-			Vector vTemp = Vector4Dot(C0, MT.r[0]);
+			VectorType vTemp = Vector4Dot(C0, MT.r[0]);
 			if (pDeterminant != nullptr)
 				*pDeterminant = vTemp;
 			vTemp = _mm_div_ps(g_XMOne, vTemp);
@@ -19812,20 +19812,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV Matrix::Determinant() const
+		inline VectorType RAYMATH_CALLCONV Matrix::Determinant() const
 		{
 			static const VectorF32 Sign = { { { 1.0f, -1.0f, 1.0f, -1.0f } } };
 
-			Vector V0 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X>(r[2]);
-			Vector V1 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(r[3]);
-			Vector V2 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X>(r[2]);
-			Vector V3 = VectorSwizzle<RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z>(r[3]);
-			Vector V4 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(r[2]);
-			Vector V5 = VectorSwizzle<RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z>(r[3]);
+			VectorType V0 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X>(r[2]);
+			VectorType V1 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(r[3]);
+			VectorType V2 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X>(r[2]);
+			VectorType V3 = VectorSwizzle<RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z>(r[3]);
+			VectorType V4 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(r[2]);
+			VectorType V5 = VectorSwizzle<RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_W, RAYMATH_SWIZZLE_Z>(r[3]);
 
-			Vector P0 = VectorMultiply(V0, V1);
-			Vector P1 = VectorMultiply(V2, V3);
-			Vector P2 = VectorMultiply(V4, V5);
+			VectorType P0 = VectorMultiply(V0, V1);
+			VectorType P1 = VectorMultiply(V2, V3);
+			VectorType P2 = VectorMultiply(V4, V5);
 
 			V0 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(r[2]);
 			V1 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X>(r[3]);
@@ -19842,8 +19842,8 @@ namespace At0
 			V1 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Y>(r[1]);
 			V2 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X>(r[1]);
 
-			Vector S = VectorMultiply(r[0], Sign.v);
-			Vector R = VectorMultiply(V0, P0);
+			VectorType S = VectorMultiply(r[0], Sign.v);
+			VectorType R = VectorMultiply(V0, P0);
 			R = VectorNegativeMultiplySubtract(V1, P1, R);
 			R = VectorMultiplyAdd(V2, P2, R);
 
@@ -19905,12 +19905,12 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Matrix::Decompose
 		(
-			Vector* outScale,
-			Vector* outRotQuat,
-			Vector* outTrans
+			VectorType* outScale,
+			VectorType* outRotQuat,
+			VectorType* outTrans
 		) const
 		{
-			static const Vector* pvCanonicalBasis[3] = {
+			static const VectorType* pvCanonicalBasis[3] = {
 				&g_XMIdentityR0.v,
 				&g_XMIdentityR1.v,
 				&g_XMIdentityR2.v
@@ -19923,7 +19923,7 @@ namespace At0
 			// Get the translation
 			outTrans[0] = r[3];
 
-			Vector* ppvBasis[3];
+			VectorType* ppvBasis[3];
 			Matrix matTemp;
 			ppvBasis[0] = &matTemp.r[0];
 			ppvBasis[1] = &matTemp.r[1];
@@ -20162,7 +20162,7 @@ namespace At0
 			return M;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(ScaleX, Zero, 0);
 			M.r[1] = vsetq_lane_f32(ScaleY, Zero, 1);
@@ -20267,12 +20267,12 @@ namespace At0
 			float    fCosAngle;
 			ScalarSinCos(&fSinAngle, &fCosAngle, Angle);
 
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 
-			Vector T1 = vsetq_lane_f32(fCosAngle, Zero, 1);
+			VectorType T1 = vsetq_lane_f32(fCosAngle, Zero, 1);
 			T1 = vsetq_lane_f32(fSinAngle, T1, 2);
 
-			Vector T2 = vsetq_lane_f32(-fSinAngle, Zero, 1);
+			VectorType T2 = vsetq_lane_f32(-fSinAngle, Zero, 1);
 			T2 = vsetq_lane_f32(fCosAngle, T2, 2);
 
 			Matrix M;
@@ -20286,8 +20286,8 @@ namespace At0
 			float    CosAngle;
 			ScalarSinCos(&SinAngle, &CosAngle, Angle);
 
-			Vector vSin = _mm_set_ss(SinAngle);
-			Vector vCos = _mm_set_ss(CosAngle);
+			VectorType vSin = _mm_set_ss(SinAngle);
+			VectorType vCos = _mm_set_ss(CosAngle);
 			// x = 0,y = cos,z = sin, w = 0
 			vCos = _mm_shuffle_ps(vCos, vSin, _MM_SHUFFLE(3, 0, 0, 3));
 			Matrix M;
@@ -20343,12 +20343,12 @@ namespace At0
 			float    fCosAngle;
 			ScalarSinCos(&fSinAngle, &fCosAngle, Angle);
 
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 
-			Vector T0 = vsetq_lane_f32(fCosAngle, Zero, 0);
+			VectorType T0 = vsetq_lane_f32(fCosAngle, Zero, 0);
 			T0 = vsetq_lane_f32(-fSinAngle, T0, 2);
 
-			Vector T2 = vsetq_lane_f32(fSinAngle, Zero, 0);
+			VectorType T2 = vsetq_lane_f32(fSinAngle, Zero, 0);
 			T2 = vsetq_lane_f32(fCosAngle, T2, 2);
 
 			Matrix M;
@@ -20362,8 +20362,8 @@ namespace At0
 			float    CosAngle;
 			ScalarSinCos(&SinAngle, &CosAngle, Angle);
 
-			Vector vSin = _mm_set_ss(SinAngle);
-			Vector vCos = _mm_set_ss(CosAngle);
+			VectorType vSin = _mm_set_ss(SinAngle);
+			VectorType vCos = _mm_set_ss(CosAngle);
 			// x = sin,y = 0,z = cos, w = 0
 			vSin = _mm_shuffle_ps(vSin, vCos, _MM_SHUFFLE(3, 0, 3, 0));
 			Matrix M;
@@ -20419,12 +20419,12 @@ namespace At0
 			float    fCosAngle;
 			ScalarSinCos(&fSinAngle, &fCosAngle, Angle);
 
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 
-			Vector T0 = vsetq_lane_f32(fCosAngle, Zero, 0);
+			VectorType T0 = vsetq_lane_f32(fCosAngle, Zero, 0);
 			T0 = vsetq_lane_f32(fSinAngle, T0, 1);
 
-			Vector T1 = vsetq_lane_f32(-fSinAngle, Zero, 0);
+			VectorType T1 = vsetq_lane_f32(-fSinAngle, Zero, 0);
 			T1 = vsetq_lane_f32(fCosAngle, T1, 1);
 
 			Matrix M;
@@ -20438,8 +20438,8 @@ namespace At0
 			float    CosAngle;
 			ScalarSinCos(&SinAngle, &CosAngle, Angle);
 
-			Vector vSin = _mm_set_ss(SinAngle);
-			Vector vCos = _mm_set_ss(CosAngle);
+			VectorType vSin = _mm_set_ss(SinAngle);
+			VectorType vCos = _mm_set_ss(CosAngle);
 			// x = cos,y = sin,z = 0, w = 0
 			vCos = _mm_unpacklo_ps(vCos, vSin);
 			Matrix M;
@@ -20464,7 +20464,7 @@ namespace At0
 			float Roll
 		)
 		{
-			Vector Angles = VectorSet(Pitch, Yaw, Roll, 0.0f);
+			VectorType Angles = VectorSet(Pitch, Yaw, Roll, 0.0f);
 			return Matrix::RotationRollPitchYawFromVector(Angles);
 		}
 
@@ -20475,7 +20475,7 @@ namespace At0
 			FVector Angles // <Pitch, Yaw, Roll, undefined>
 		)
 		{
-			Vector Q = Quaternion::RotationRollPitchYawFromVector(Angles);
+			VectorType Q = Quaternion::RotationRollPitchYawFromVector(Angles);
 			return Matrix::RotationQuaternion(Q);
 		}
 
@@ -20493,27 +20493,27 @@ namespace At0
 			float    fCosAngle;
 			ScalarSinCos(&fSinAngle, &fCosAngle, Angle);
 
-			Vector A = VectorSet(fSinAngle, fCosAngle, 1.0f - fCosAngle, 0.0f);
+			VectorType A = VectorSet(fSinAngle, fCosAngle, 1.0f - fCosAngle, 0.0f);
 
-			Vector C2 = VectorSplatZ(A);
-			Vector C1 = VectorSplatY(A);
-			Vector C0 = VectorSplatX(A);
+			VectorType C2 = VectorSplatZ(A);
+			VectorType C1 = VectorSplatY(A);
+			VectorType C0 = VectorSplatX(A);
 
-			Vector N0 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_W>(NormalAxis);
-			Vector N1 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_W>(NormalAxis);
+			VectorType N0 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_W>(NormalAxis);
+			VectorType N1 = VectorSwizzle<RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_W>(NormalAxis);
 
-			Vector V0 = VectorMultiply(C2, N0);
+			VectorType V0 = VectorMultiply(C2, N0);
 			V0 = VectorMultiply(V0, N1);
 
-			Vector R0 = VectorMultiply(C2, NormalAxis);
+			VectorType R0 = VectorMultiply(C2, NormalAxis);
 			R0 = VectorMultiplyAdd(R0, NormalAxis, C1);
 
-			Vector R1 = VectorMultiplyAdd(C0, NormalAxis, V0);
-			Vector R2 = VectorNegativeMultiplySubtract(C0, NormalAxis, V0);
+			VectorType R1 = VectorMultiplyAdd(C0, NormalAxis, V0);
+			VectorType R2 = VectorNegativeMultiplySubtract(C0, NormalAxis, V0);
 
 			V0 = VectorSelect(A, R0, g_XMSelect1110.v);
-			Vector V1 = VectorPermute<RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0X>(R1, R2);
-			Vector V2 = VectorPermute<RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X>(R1, R2);
+			VectorType V1 = VectorPermute<RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0X>(R1, R2);
+			VectorType V2 = VectorPermute<RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X>(R1, R2);
 
 			Matrix M;
 			M.r[0] = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0W>(V0, V1);
@@ -20527,29 +20527,29 @@ namespace At0
 			float    fCosAngle;
 			ScalarSinCos(&fSinAngle, &fCosAngle, Angle);
 
-			Vector C2 = _mm_set_ps1(1.0f - fCosAngle);
-			Vector C1 = _mm_set_ps1(fCosAngle);
-			Vector C0 = _mm_set_ps1(fSinAngle);
+			VectorType C2 = _mm_set_ps1(1.0f - fCosAngle);
+			VectorType C1 = _mm_set_ps1(fCosAngle);
+			VectorType C0 = _mm_set_ps1(fSinAngle);
 
-			Vector N0 = RAYMATH_PERMUTE_PS(NormalAxis, _MM_SHUFFLE(3, 0, 2, 1));
-			Vector N1 = RAYMATH_PERMUTE_PS(NormalAxis, _MM_SHUFFLE(3, 1, 0, 2));
+			VectorType N0 = RAYMATH_PERMUTE_PS(NormalAxis, _MM_SHUFFLE(3, 0, 2, 1));
+			VectorType N1 = RAYMATH_PERMUTE_PS(NormalAxis, _MM_SHUFFLE(3, 1, 0, 2));
 
-			Vector V0 = _mm_mul_ps(C2, N0);
+			VectorType V0 = _mm_mul_ps(C2, N0);
 			V0 = _mm_mul_ps(V0, N1);
 
-			Vector R0 = _mm_mul_ps(C2, NormalAxis);
+			VectorType R0 = _mm_mul_ps(C2, NormalAxis);
 			R0 = _mm_mul_ps(R0, NormalAxis);
 			R0 = _mm_add_ps(R0, C1);
 
-			Vector R1 = _mm_mul_ps(C0, NormalAxis);
+			VectorType R1 = _mm_mul_ps(C0, NormalAxis);
 			R1 = _mm_add_ps(R1, V0);
-			Vector R2 = _mm_mul_ps(C0, NormalAxis);
+			VectorType R2 = _mm_mul_ps(C0, NormalAxis);
 			R2 = _mm_sub_ps(V0, R2);
 
 			V0 = _mm_and_ps(R0, g_XMMask3);
-			Vector V1 = _mm_shuffle_ps(R1, R2, _MM_SHUFFLE(2, 1, 2, 0));
+			VectorType V1 = _mm_shuffle_ps(R1, R2, _MM_SHUFFLE(2, 1, 2, 0));
 			V1 = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 3, 2, 1));
-			Vector V2 = _mm_shuffle_ps(R1, R2, _MM_SHUFFLE(0, 0, 1, 1));
+			VectorType V2 = _mm_shuffle_ps(R1, R2, _MM_SHUFFLE(0, 0, 1, 1));
 			V2 = RAYMATH_PERMUTE_PS(V2, _MM_SHUFFLE(2, 0, 2, 0));
 
 			R2 = _mm_shuffle_ps(V0, V1, _MM_SHUFFLE(1, 0, 3, 0));
@@ -20580,7 +20580,7 @@ namespace At0
 			assert(!Vector3Equal(Axis, VectorZero()));
 			assert(!Vector3IsInfinite(Axis));
 
-			Vector Normal = Vector3Normalize(Axis);
+			VectorType Normal = Vector3Normalize(Axis);
 			return Matrix::RotationNormal(Normal, Angle);
 		}
 
@@ -20595,12 +20595,12 @@ namespace At0
 
 			static const VectorF32 Constant1110 = { { { 1.0f, 1.0f, 1.0f, 0.0f } } };
 
-			Vector Q0 = VectorAdd(Quaternion, Quaternion);
-			Vector Q1 = VectorMultiply(Quaternion, Q0);
+			VectorType Q0 = VectorAdd(Quaternion, Quaternion);
+			VectorType Q1 = VectorMultiply(Quaternion, Q0);
 
-			Vector V0 = VectorPermute<RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1W>(Q1, Constant1110.v);
-			Vector V1 = VectorPermute<RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1W>(Q1, Constant1110.v);
-			Vector R0 = VectorSubtract(Constant1110, V0);
+			VectorType V0 = VectorPermute<RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1W>(Q1, Constant1110.v);
+			VectorType V1 = VectorPermute<RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1W>(Q1, Constant1110.v);
+			VectorType R0 = VectorSubtract(Constant1110, V0);
 			R0 = VectorSubtract(R0, V1);
 
 			V0 = VectorSwizzle<RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_W>(Quaternion);
@@ -20608,11 +20608,11 @@ namespace At0
 			V0 = VectorMultiply(V0, V1);
 
 			V1 = VectorSplatW(Quaternion);
-			Vector V2 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_W>(Q0);
+			VectorType V2 = VectorSwizzle<RAYMATH_SWIZZLE_Y, RAYMATH_SWIZZLE_Z, RAYMATH_SWIZZLE_X, RAYMATH_SWIZZLE_W>(Q0);
 			V1 = VectorMultiply(V1, V2);
 
-			Vector R1 = VectorAdd(V0, V1);
-			Vector R2 = VectorSubtract(V0, V1);
+			VectorType R1 = VectorAdd(V0, V1);
+			VectorType R2 = VectorSubtract(V0, V1);
 
 			V0 = VectorPermute<RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Z>(R1, R2);
 			V1 = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1Z>(R1, R2);
@@ -20627,14 +20627,14 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32  Constant1110 = { { { 1.0f, 1.0f, 1.0f, 0.0f } } };
 
-			Vector Q0 = _mm_add_ps(Quaternion, Quaternion);
-			Vector Q1 = _mm_mul_ps(Quaternion, Q0);
+			VectorType Q0 = _mm_add_ps(Quaternion, Quaternion);
+			VectorType Q1 = _mm_mul_ps(Quaternion, Q0);
 
-			Vector V0 = RAYMATH_PERMUTE_PS(Q1, _MM_SHUFFLE(3, 0, 0, 1));
+			VectorType V0 = RAYMATH_PERMUTE_PS(Q1, _MM_SHUFFLE(3, 0, 0, 1));
 			V0 = _mm_and_ps(V0, g_XMMask3);
-			Vector V1 = RAYMATH_PERMUTE_PS(Q1, _MM_SHUFFLE(3, 1, 2, 2));
+			VectorType V1 = RAYMATH_PERMUTE_PS(Q1, _MM_SHUFFLE(3, 1, 2, 2));
 			V1 = _mm_and_ps(V1, g_XMMask3);
-			Vector R0 = _mm_sub_ps(Constant1110, V0);
+			VectorType R0 = _mm_sub_ps(Constant1110, V0);
 			R0 = _mm_sub_ps(R0, V1);
 
 			V0 = RAYMATH_PERMUTE_PS(Quaternion, _MM_SHUFFLE(3, 1, 0, 0));
@@ -20642,11 +20642,11 @@ namespace At0
 			V0 = _mm_mul_ps(V0, V1);
 
 			V1 = RAYMATH_PERMUTE_PS(Quaternion, _MM_SHUFFLE(3, 3, 3, 3));
-			Vector V2 = RAYMATH_PERMUTE_PS(Q0, _MM_SHUFFLE(3, 0, 2, 1));
+			VectorType V2 = RAYMATH_PERMUTE_PS(Q0, _MM_SHUFFLE(3, 0, 2, 1));
 			V1 = _mm_mul_ps(V1, V2);
 
-			Vector R1 = _mm_add_ps(V0, V1);
-			Vector R2 = _mm_sub_ps(V0, V1);
+			VectorType R1 = _mm_add_ps(V0, V1);
+			VectorType R2 = _mm_sub_ps(V0, V1);
 
 			V0 = _mm_shuffle_ps(R1, R2, _MM_SHUFFLE(1, 0, 2, 1));
 			V0 = RAYMATH_PERMUTE_PS(V0, _MM_SHUFFLE(1, 3, 2, 0));
@@ -20685,17 +20685,17 @@ namespace At0
 			// M = Inverse(MScalingOrigin) * Transpose(MScalingOrientation) * MScaling * MScalingOrientation *
 			//         MScalingOrigin * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
-			Vector VScalingOrigin = VectorSelect(g_XMSelect1100.v, ScalingOrigin, g_XMSelect1100.v);
-			Vector NegScalingOrigin = VectorNegate(VScalingOrigin);
+			VectorType VScalingOrigin = VectorSelect(g_XMSelect1100.v, ScalingOrigin, g_XMSelect1100.v);
+			VectorType NegScalingOrigin = VectorNegate(VScalingOrigin);
 
 			Matrix MScalingOriginI = Matrix::Translation(NegScalingOrigin);
 			Matrix MScalingOrientation = Matrix::RotationZ(ScalingOrientation);
 			Matrix MScalingOrientationT = MScalingOrientation.Transpose();
-			Vector VScaling = VectorSelect(g_XMOne.v, Scaling, g_XMSelect1100.v);
+			VectorType VScaling = VectorSelect(g_XMOne.v, Scaling, g_XMSelect1100.v);
 			Matrix MScaling = Matrix::Scaling(VScaling);
-			Vector VRotationOrigin = VectorSelect(g_XMSelect1100.v, RotationOrigin, g_XMSelect1100.v);
+			VectorType VRotationOrigin = VectorSelect(g_XMSelect1100.v, RotationOrigin, g_XMSelect1100.v);
 			Matrix MRotation = Matrix::RotationZ(Rotation);
-			Vector VTranslation = VectorSelect(g_XMSelect1100.v, Translation, g_XMSelect1100.v);
+			VectorType VTranslation = VectorSelect(g_XMSelect1100.v, Translation, g_XMSelect1100.v);
 
 			Matrix M = Matrix::Multiply(MScalingOriginI, MScalingOrientationT);
 			M = Matrix::Multiply(M, MScaling);
@@ -20724,16 +20724,16 @@ namespace At0
 			// M = Inverse(MScalingOrigin) * Transpose(MScalingOrientation) * MScaling * MScalingOrientation *
 			//         MScalingOrigin * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
-			Vector VScalingOrigin = VectorSelect(g_XMSelect1110.v, ScalingOrigin, g_XMSelect1110.v);
-			Vector NegScalingOrigin = VectorNegate(ScalingOrigin);
+			VectorType VScalingOrigin = VectorSelect(g_XMSelect1110.v, ScalingOrigin, g_XMSelect1110.v);
+			VectorType NegScalingOrigin = VectorNegate(ScalingOrigin);
 
 			Matrix MScalingOriginI = Matrix::Translation(NegScalingOrigin);
 			Matrix MScalingOrientation = Matrix::RotationQuaternion(ScalingOrientationQuaternion);
 			Matrix MScalingOrientationT = MScalingOrientation.Transpose();
 			Matrix MScaling = Matrix::Scaling(Scaling);
-			Vector VRotationOrigin = VectorSelect(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
+			VectorType VRotationOrigin = VectorSelect(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
 			Matrix MRotation = Matrix::RotationQuaternion(RotationQuaternion);
-			Vector VTranslation = VectorSelect(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
+			VectorType VTranslation = VectorSelect(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
 
 			Matrix M;
 			M = Matrix::Multiply(MScalingOriginI, MScalingOrientationT);
@@ -20759,11 +20759,11 @@ namespace At0
 		{
 			// M = MScaling * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
-			Vector VScaling = VectorSelect(g_XMOne.v, Scaling, g_XMSelect1100.v);
+			VectorType VScaling = VectorSelect(g_XMOne.v, Scaling, g_XMSelect1100.v);
 			Matrix MScaling = Matrix::Scaling(VScaling);
-			Vector VRotationOrigin = VectorSelect(g_XMSelect1100.v, RotationOrigin, g_XMSelect1100.v);
+			VectorType VRotationOrigin = VectorSelect(g_XMSelect1100.v, RotationOrigin, g_XMSelect1100.v);
 			Matrix MRotation = Matrix::RotationZ(Rotation);
-			Vector VTranslation = VectorSelect(g_XMSelect1100.v, Translation, g_XMSelect1100.v);
+			VectorType VTranslation = VectorSelect(g_XMSelect1100.v, Translation, g_XMSelect1100.v);
 
 			Matrix M;
 			M = MScaling;
@@ -20787,9 +20787,9 @@ namespace At0
 			// M = MScaling * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
 			Matrix MScaling = Matrix::Scaling(Scaling);
-			Vector VRotationOrigin = VectorSelect(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
+			VectorType VRotationOrigin = VectorSelect(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
 			Matrix MRotation = Matrix::RotationQuaternion(RotationQuaternion);
-			Vector VTranslation = VectorSelect(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
+			VectorType VTranslation = VectorSelect(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
 
 			Matrix M;
 			M = MScaling;
@@ -20812,13 +20812,13 @@ namespace At0
 
 			static const VectorF32 NegativeTwo = { { { -2.0f, -2.0f, -2.0f, 0.0f } } };
 
-			Vector P = PlaneNormalize(ReflectionPlane);
-			Vector S = VectorMultiply(P, NegativeTwo);
+			VectorType P = PlaneNormalize(ReflectionPlane);
+			VectorType S = VectorMultiply(P, NegativeTwo);
 
-			Vector A = VectorSplatX(P);
-			Vector B = VectorSplatY(P);
-			Vector C = VectorSplatZ(P);
-			Vector D = VectorSplatW(P);
+			VectorType A = VectorSplatX(P);
+			VectorType B = VectorSplatY(P);
+			VectorType C = VectorSplatZ(P);
+			VectorType D = VectorSplatW(P);
 
 			Matrix M;
 			M.r[0] = VectorMultiplyAdd(A, S, g_XMIdentityR0.v);
@@ -20841,13 +20841,13 @@ namespace At0
 			assert(!Vector3Equal(ShadowPlane, VectorZero()));
 			assert(!PlaneIsInfinite(ShadowPlane));
 
-			Vector P = PlaneNormalize(ShadowPlane);
-			Vector Dot = PlaneDot(P, LightPosition);
+			VectorType P = PlaneNormalize(ShadowPlane);
+			VectorType Dot = PlaneDot(P, LightPosition);
 			P = VectorNegate(P);
-			Vector D = VectorSplatW(P);
-			Vector C = VectorSplatZ(P);
-			Vector B = VectorSplatY(P);
-			Vector A = VectorSplatX(P);
+			VectorType D = VectorSplatW(P);
+			VectorType C = VectorSplatZ(P);
+			VectorType B = VectorSplatY(P);
+			VectorType A = VectorSplatX(P);
 			Dot = VectorSelect(Select0001.v, Dot, Select0001.v);
 
 			Matrix M;
@@ -20872,7 +20872,7 @@ namespace At0
 			FVector UpDirection
 		)
 		{
-			Vector EyeDirection = VectorSubtract(FocusPosition, EyePosition);
+			VectorType EyeDirection = VectorSubtract(FocusPosition, EyePosition);
 			return Matrix::LookToLH(EyePosition, EyeDirection, UpDirection);
 		}
 
@@ -20885,7 +20885,7 @@ namespace At0
 			FVector UpDirection
 		)
 		{
-			Vector NegEyeDirection = VectorSubtract(EyePosition, FocusPosition);
+			VectorType NegEyeDirection = VectorSubtract(EyePosition, FocusPosition);
 			return Matrix::LookToLH(EyePosition, NegEyeDirection, UpDirection);
 		}
 
@@ -20903,18 +20903,18 @@ namespace At0
 			assert(!Vector3Equal(UpDirection, VectorZero()));
 			assert(!Vector3IsInfinite(UpDirection));
 
-			Vector R2 = Vector3Normalize(EyeDirection);
+			VectorType R2 = Vector3Normalize(EyeDirection);
 
-			Vector R0 = Vector3Cross(UpDirection, R2);
+			VectorType R0 = Vector3Cross(UpDirection, R2);
 			R0 = Vector3Normalize(R0);
 
-			Vector R1 = Vector3Cross(R2, R0);
+			VectorType R1 = Vector3Cross(R2, R0);
 
-			Vector NegEyePosition = VectorNegate(EyePosition);
+			VectorType NegEyePosition = VectorNegate(EyePosition);
 
-			Vector D0 = Vector3Dot(R0, NegEyePosition);
-			Vector D1 = Vector3Dot(R1, NegEyePosition);
-			Vector D2 = Vector3Dot(R2, NegEyePosition);
+			VectorType D0 = Vector3Dot(R0, NegEyePosition);
+			VectorType D1 = Vector3Dot(R1, NegEyePosition);
+			VectorType D2 = Vector3Dot(R2, NegEyePosition);
 
 			Matrix M;
 			M.r[0] = VectorSelect(D0, R0, g_XMSelect1110.v);
@@ -20936,7 +20936,7 @@ namespace At0
 			FVector UpDirection
 		)
 		{
-			Vector NegEyeDirection = VectorNegate(EyeDirection);
+			VectorType NegEyeDirection = VectorNegate(EyeDirection);
 			return Matrix::LookToLH(EyePosition, NegEyeDirection, UpDirection);
 		}
 
@@ -20990,7 +20990,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float TwoNearZ = NearZ + NearZ;
 			float fRange = FarZ / (FarZ - NearZ);
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(TwoNearZ / ViewWidth, Zero, 0);
 			M.r[1] = vsetq_lane_f32(TwoNearZ / ViewHeight, Zero, 1);
@@ -21002,15 +21002,15 @@ namespace At0
 			float TwoNearZ = NearZ + NearZ;
 			float fRange = FarZ / (FarZ - NearZ);
 			// Note: This is recorded on the stack
-			Vector rMem = {
+			VectorType rMem = {
 				TwoNearZ / ViewWidth,
 				TwoNearZ / ViewHeight,
 				fRange,
 				-fRange * NearZ
 			};
 			// Copy from memory to SSE register
-			Vector vValues = rMem;
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vValues = rMem;
+			VectorType vTemp = _mm_setzero_ps();
 			// Copy x only
 			vTemp = _mm_move_ss(vTemp, vValues);
 			// TwoNearZ / ViewWidth,0,0,0
@@ -21077,7 +21077,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float TwoNearZ = NearZ + NearZ;
 			float fRange = FarZ / (NearZ - FarZ);
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(TwoNearZ / ViewWidth, Zero, 0);
@@ -21090,15 +21090,15 @@ namespace At0
 			float TwoNearZ = NearZ + NearZ;
 			float fRange = FarZ / (NearZ - FarZ);
 			// Note: This is recorded on the stack
-			Vector rMem = {
+			VectorType rMem = {
 				TwoNearZ / ViewWidth,
 				TwoNearZ / ViewHeight,
 				fRange,
 				fRange * NearZ
 			};
 			// Copy from memory to SSE register
-			Vector vValues = rMem;
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vValues = rMem;
+			VectorType vTemp = _mm_setzero_ps();
 			// Copy x only
 			vTemp = _mm_move_ss(vTemp, vValues);
 			// TwoNearZ / ViewWidth,0,0,0
@@ -21175,7 +21175,7 @@ namespace At0
 			float fRange = FarZ / (FarZ - NearZ);
 			float Height = CosFov / SinFov;
 			float Width = Height / AspectRatio;
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(Width, Zero, 0);
@@ -21191,15 +21191,15 @@ namespace At0
 			float fRange = FarZ / (FarZ - NearZ);
 			// Note: This is recorded on the stack
 			float Height = CosFov / SinFov;
-			Vector rMem = {
+			VectorType rMem = {
 				Height / AspectRatio,
 				Height,
 				fRange,
 				-fRange * NearZ
 			};
 			// Copy from memory to SSE register
-			Vector vValues = rMem;
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vValues = rMem;
+			VectorType vTemp = _mm_setzero_ps();
 			// Copy x only
 			vTemp = _mm_move_ss(vTemp, vValues);
 			// CosFov / SinFov,0,0,0
@@ -21276,7 +21276,7 @@ namespace At0
 			float fRange = FarZ / (NearZ - FarZ);
 			float Height = CosFov / SinFov;
 			float Width = Height / AspectRatio;
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(Width, Zero, 0);
@@ -21291,15 +21291,15 @@ namespace At0
 			float fRange = FarZ / (NearZ - FarZ);
 			// Note: This is recorded on the stack
 			float Height = CosFov / SinFov;
-			Vector rMem = {
+			VectorType rMem = {
 				Height / AspectRatio,
 				Height,
 				fRange,
 				fRange * NearZ
 			};
 			// Copy from memory to SSE register
-			Vector vValues = rMem;
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vValues = rMem;
+			VectorType vTemp = _mm_setzero_ps();
 			// Copy x only
 			vTemp = _mm_move_ss(vTemp, vValues);
 			// CosFov / SinFov,0,0,0
@@ -21373,7 +21373,7 @@ namespace At0
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
 			float ReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
 			float fRange = FarZ / (FarZ - NearZ);
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(TwoNearZ * ReciprocalWidth, Zero, 0);
@@ -21391,15 +21391,15 @@ namespace At0
 			float ReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
 			float fRange = FarZ / (FarZ - NearZ);
 			// Note: This is recorded on the stack
-			Vector rMem = {
+			VectorType rMem = {
 				TwoNearZ * ReciprocalWidth,
 				TwoNearZ * ReciprocalHeight,
 				-fRange * NearZ,
 				0
 			};
 			// Copy from memory to SSE register
-			Vector vValues = rMem;
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vValues = rMem;
+			VectorType vTemp = _mm_setzero_ps();
 			// Copy x only
 			vTemp = _mm_move_ss(vTemp, vValues);
 			// TwoNearZ*ReciprocalWidth,0,0,0
@@ -21471,7 +21471,7 @@ namespace At0
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
 			float ReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
 			float fRange = FarZ / (NearZ - FarZ);
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(TwoNearZ * ReciprocalWidth, Zero, 0);
@@ -21489,15 +21489,15 @@ namespace At0
 			float ReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
 			float fRange = FarZ / (NearZ - FarZ);
 			// Note: This is recorded on the stack
-			Vector rMem = {
+			VectorType rMem = {
 				TwoNearZ * ReciprocalWidth,
 				TwoNearZ * ReciprocalHeight,
 				fRange * NearZ,
 				0
 			};
 			// Copy from memory to SSE register
-			Vector vValues = rMem;
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vValues = rMem;
+			VectorType vTemp = _mm_setzero_ps();
 			// Copy x only
 			vTemp = _mm_move_ss(vTemp, vValues);
 			// TwoNearZ*ReciprocalWidth,0,0,0
@@ -21561,7 +21561,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float fRange = 1.0f / (FarZ - NearZ);
 
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(2.0f / ViewWidth, Zero, 0);
 			M.r[1] = vsetq_lane_f32(2.0f / ViewHeight, Zero, 1);
@@ -21572,15 +21572,15 @@ namespace At0
 			Matrix M;
 			float fRange = 1.0f / (FarZ - NearZ);
 			// Note: This is recorded on the stack
-			Vector rMem = {
+			VectorType rMem = {
 				2.0f / ViewWidth,
 				2.0f / ViewHeight,
 				fRange,
 				-fRange * NearZ
 			};
 			// Copy from memory to SSE register
-			Vector vValues = rMem;
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vValues = rMem;
+			VectorType vTemp = _mm_setzero_ps();
 			// Copy x only
 			vTemp = _mm_move_ss(vTemp, vValues);
 			// 2.0f / ViewWidth,0,0,0
@@ -21645,7 +21645,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float fRange = 1.0f / (NearZ - FarZ);
 
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(2.0f / ViewWidth, Zero, 0);
 			M.r[1] = vsetq_lane_f32(2.0f / ViewHeight, Zero, 1);
@@ -21656,15 +21656,15 @@ namespace At0
 			Matrix M;
 			float fRange = 1.0f / (NearZ - FarZ);
 			// Note: This is recorded on the stack
-			Vector rMem = {
+			VectorType rMem = {
 				2.0f / ViewWidth,
 				2.0f / ViewHeight,
 				fRange,
 				fRange * NearZ
 			};
 			// Copy from memory to SSE register
-			Vector vValues = rMem;
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vValues = rMem;
+			VectorType vTemp = _mm_setzero_ps();
 			// Copy x only
 			vTemp = _mm_move_ss(vTemp, vValues);
 			// 2.0f / ViewWidth,0,0,0
@@ -21734,7 +21734,7 @@ namespace At0
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
 			float ReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
 			float fRange = 1.0f / (FarZ - NearZ);
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(ReciprocalWidth + ReciprocalWidth, Zero, 0);
 			M.r[1] = vsetq_lane_f32(ReciprocalHeight + ReciprocalHeight, Zero, 1);
@@ -21750,21 +21750,21 @@ namespace At0
 			float fReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
 			float fRange = 1.0f / (FarZ - NearZ);
 			// Note: This is recorded on the stack
-			Vector rMem = {
+			VectorType rMem = {
 				fReciprocalWidth,
 				fReciprocalHeight,
 				fRange,
 				1.0f
 			};
-			Vector rMem2 = {
+			VectorType rMem2 = {
 				-(ViewLeft + ViewRight),
 				-(ViewTop + ViewBottom),
 				-NearZ,
 				1.0f
 			};
 			// Copy from memory to SSE register
-			Vector vValues = rMem;
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vValues = rMem;
+			VectorType vTemp = _mm_setzero_ps();
 			// Copy x only
 			vTemp = _mm_move_ss(vTemp, vValues);
 			// fReciprocalWidth*2,0,0,0
@@ -21834,7 +21834,7 @@ namespace At0
 			float ReciprocalWidth = 1.0f / (ViewRight - ViewLeft);
 			float ReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
 			float fRange = 1.0f / (NearZ - FarZ);
-			const Vector Zero = vdupq_n_f32(0);
+			const VectorType Zero = vdupq_n_f32(0);
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(ReciprocalWidth + ReciprocalWidth, Zero, 0);
 			M.r[1] = vsetq_lane_f32(ReciprocalHeight + ReciprocalHeight, Zero, 1);
@@ -21850,21 +21850,21 @@ namespace At0
 			float fReciprocalHeight = 1.0f / (ViewTop - ViewBottom);
 			float fRange = 1.0f / (NearZ - FarZ);
 			// Note: This is recorded on the stack
-			Vector rMem = {
+			VectorType rMem = {
 				fReciprocalWidth,
 				fReciprocalHeight,
 				fRange,
 				1.0f
 			};
-			Vector rMem2 = {
+			VectorType rMem2 = {
 				-(ViewLeft + ViewRight),
 				-(ViewTop + ViewBottom),
 				NearZ,
 				1.0f
 			};
 			// Copy from memory to SSE register
-			Vector vValues = rMem;
-			Vector vTemp = _mm_setzero_ps();
+			VectorType vValues = rMem;
+			VectorType vTemp = _mm_setzero_ps();
 			// Copy x only
 			vTemp = _mm_move_ss(vTemp, vValues);
 			// fReciprocalWidth*2,0,0,0
@@ -21984,7 +21984,7 @@ namespace At0
 		inline Matrix& Matrix::operator/= (float S)
 		{
 #if defined(RAY_NO_INTRINSICS)
-			Vector vS = VectorReplicate(S);
+			VectorType vS = VectorReplicate(S);
 			r[0] = VectorDivide(r[0], vS);
 			r[1] = VectorDivide(r[1], vS);
 			r[2] = VectorDivide(r[2], vS);
@@ -22070,7 +22070,7 @@ namespace At0
 		inline Matrix Matrix::operator/ (float S) const
 		{
 #if defined(RAY_NO_INTRINSICS)
-			Vector vS = VectorReplicate(S);
+			VectorType vS = VectorReplicate(S);
 			Matrix R;
 			R.r[0] = VectorDivide(r[0], vS);
 			R.r[1] = VectorDivide(r[1], vS);
@@ -22351,7 +22351,7 @@ namespace At0
 			float32x4_t Q2X = vdupq_lane_f32(Q2L, 0);
 			float32x4_t Q2Y = vdupq_lane_f32(Q2L, 1);
 			float32x4_t Q2Z = vdupq_lane_f32(Q2H, 0);
-			Vector vResult = vmulq_lane_f32(Q1, Q2H, 1);
+			VectorType vResult = vmulq_lane_f32(Q1, Q2H, 1);
 
 			// Mul by Q1WZYX
 			float32x4_t vTemp = vrev64q_f32(Q1);
@@ -22375,10 +22375,10 @@ namespace At0
 			static const VectorF32 ControlZWXY = { { { 1.0f, 1.0f, -1.0f, -1.0f } } };
 			static const VectorF32 ControlYXWZ = { { { -1.0f, 1.0f, 1.0f, -1.0f } } };
 			// Copy to SSE registers and use as few as possible for x86
-			Vector Q2X = Q2;
-			Vector Q2Y = Q2;
-			Vector Q2Z = Q2;
-			Vector vResult = Q2;
+			VectorType Q2X = Q2;
+			VectorType Q2Y = Q2;
+			VectorType Q2Z = Q2;
+			VectorType vResult = Q2;
 			// Splat with one instruction
 			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 3, 3, 3));
 			Q2X = RAYMATH_PERMUTE_PS(Q2X, _MM_SHUFFLE(0, 0, 0, 0));
@@ -22386,7 +22386,7 @@ namespace At0
 			Q2Z = RAYMATH_PERMUTE_PS(Q2Z, _MM_SHUFFLE(2, 2, 2, 2));
 			// Retire Q1 and perform Q1*Q2W
 			vResult = _mm_mul_ps(vResult, Q1);
-			Vector Q1Shuffle = Q1;
+			VectorType Q1Shuffle = Q1;
 			// Shuffle the copies of Q1
 			Q1Shuffle = RAYMATH_PERMUTE_PS(Q1Shuffle, _MM_SHUFFLE(0, 1, 2, 3));
 			// Mul by Q1WZYX
@@ -22484,14 +22484,14 @@ namespace At0
 
 		inline Quaternion RAYMATH_CALLCONV Quaternion::Inverse() const
 		{
-			const Vector  Zero = VectorZero();
+			const VectorType  Zero = VectorZero();
 
-			Vector L = Vector4LengthSq(*this);
+			VectorType L = Vector4LengthSq(*this);
 			Quaternion Conjugated = Conjugate();
 
-			Vector Control = VectorLessOrEqual(L, g_XMEpsilon.v);
+			VectorType Control = VectorLessOrEqual(L, g_XMEpsilon.v);
 
-			Vector Result = VectorDivide(Conjugated, L);
+			VectorType Result = VectorDivide(Conjugated, L);
 
 			Result = VectorSelect(Result, Zero, Control);
 
@@ -22504,17 +22504,17 @@ namespace At0
 		{
 			static const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 
-			Vector QW = VectorSplatW(*this);
-			Vector Q0 = VectorSelect(g_XMSelect1110.v, *this, g_XMSelect1110.v);
+			VectorType QW = VectorSplatW(*this);
+			VectorType Q0 = VectorSelect(g_XMSelect1110.v, *this, g_XMSelect1110.v);
 
-			Vector ControlW = VectorInBounds(QW, OneMinusEpsilon.v);
+			VectorType ControlW = VectorInBounds(QW, OneMinusEpsilon.v);
 
-			Vector Theta = VectorACos(QW);
-			Vector SinTheta = VectorSin(Theta);
+			VectorType Theta = VectorACos(QW);
+			VectorType SinTheta = VectorSin(Theta);
 
-			Vector S = VectorDivide(Theta, SinTheta);
+			VectorType S = VectorDivide(Theta, SinTheta);
 
-			Vector Result = VectorMultiply(Q0, S);
+			VectorType Result = VectorMultiply(Q0, S);
 			Result = VectorSelect(Q0, Result, ControlW);
 
 			return Result;
@@ -22524,17 +22524,17 @@ namespace At0
 
 		inline Quaternion RAYMATH_CALLCONV Quaternion::Exp() const
 		{
-			Vector Theta = Vector3Length(*this);
+			VectorType Theta = Vector3Length(*this);
 
-			Vector SinTheta, CosTheta;
+			VectorType SinTheta, CosTheta;
 			VectorSinCos(&SinTheta, &CosTheta, Theta);
 
-			Vector S = VectorDivide(SinTheta, Theta);
+			VectorType S = VectorDivide(SinTheta, Theta);
 
-			Vector Result = VectorMultiply(*this, S);
+			VectorType Result = VectorMultiply(*this, S);
 
-			const Vector Zero = VectorZero();
-			Vector Control = VectorNearEqual(Theta, Zero, g_XMEpsilon.v);
+			const VectorType Zero = VectorZero();
+			VectorType Control = VectorNearEqual(Theta, Zero, g_XMEpsilon.v);
 			Result = VectorSelect(Result, *this, Control);
 
 			Result = VectorSelect(CosTheta, Result, g_XMSelect1110.v);
@@ -22551,7 +22551,7 @@ namespace At0
 			float    t
 		)
 		{
-			Vector T = VectorReplicate(t);
+			VectorType T = VectorReplicate(t);
 			return Quaternion::SlerpV(Q0, Q1, T);
 		}
 
@@ -22572,41 +22572,41 @@ namespace At0
 
 			const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 
-			Vector CosOmega = Quaternion::Dot(Q0, Q1);
+			VectorType CosOmega = Quaternion::Dot(Q0, Q1);
 
-			const Vector Zero = VectorZero();
-			Vector Control = VectorLess(CosOmega, Zero);
-			Vector Sign = VectorSelect(g_XMOne.v, g_XMNegativeOne.v, Control);
+			const VectorType Zero = VectorZero();
+			VectorType Control = VectorLess(CosOmega, Zero);
+			VectorType Sign = VectorSelect(g_XMOne.v, g_XMNegativeOne.v, Control);
 
 			CosOmega = VectorMultiply(CosOmega, Sign);
 
 			Control = VectorLess(CosOmega, OneMinusEpsilon);
 
-			Vector SinOmega = VectorNegativeMultiplySubtract(CosOmega, CosOmega, g_XMOne.v);
+			VectorType SinOmega = VectorNegativeMultiplySubtract(CosOmega, CosOmega, g_XMOne.v);
 			SinOmega = VectorSqrt(SinOmega);
 
-			Vector Omega = VectorATan2(SinOmega, CosOmega);
+			VectorType Omega = VectorATan2(SinOmega, CosOmega);
 
-			Vector SignMask = VectorSplatSignMask();
-			Vector V01 = VectorShiftLeft(T, Zero, 2);
+			VectorType SignMask = VectorSplatSignMask();
+			VectorType V01 = VectorShiftLeft(T, Zero, 2);
 			SignMask = VectorShiftLeft(SignMask, Zero, 3);
 			V01 = VectorXorInt(V01, SignMask);
 			V01 = VectorAdd(g_XMIdentityR0.v, V01);
 
-			Vector InvSinOmega = VectorReciprocal(SinOmega);
+			VectorType InvSinOmega = VectorReciprocal(SinOmega);
 
-			Vector S0 = VectorMultiply(V01, Omega);
+			VectorType S0 = VectorMultiply(V01, Omega);
 			S0 = VectorSin(S0);
 			S0 = VectorMultiply(S0, InvSinOmega);
 
 			S0 = VectorSelect(V01, S0, Control);
 
-			Vector S1 = VectorSplatY(S0);
+			VectorType S1 = VectorSplatY(S0);
 			S0 = VectorSplatX(S0);
 
 			S1 = VectorMultiply(S1, Sign);
 
-			Vector Result = VectorMultiply(Q0, S0);
+			VectorType Result = VectorMultiply(Q0, S0);
 			Result = VectorMultiplyAdd(Q1, S1, Result);
 
 			return Result;
@@ -22615,38 +22615,38 @@ namespace At0
 			static const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 			static const VectorU32 SignMask2 = { { { 0x80000000, 0x00000000, 0x00000000, 0x00000000 } } };
 
-			Vector CosOmega = Quaternion::Dot(Q0, Q1);
+			VectorType CosOmega = Quaternion::Dot(Q0, Q1);
 
-			const Vector Zero = VectorZero();
-			Vector Control = VectorLess(CosOmega, Zero);
-			Vector Sign = VectorSelect(g_XMOne, g_XMNegativeOne, Control);
+			const VectorType Zero = VectorZero();
+			VectorType Control = VectorLess(CosOmega, Zero);
+			VectorType Sign = VectorSelect(g_XMOne, g_XMNegativeOne, Control);
 
 			CosOmega = _mm_mul_ps(CosOmega, Sign);
 
 			Control = VectorLess(CosOmega, OneMinusEpsilon);
 
-			Vector SinOmega = _mm_mul_ps(CosOmega, CosOmega);
+			VectorType SinOmega = _mm_mul_ps(CosOmega, CosOmega);
 			SinOmega = _mm_sub_ps(g_XMOne, SinOmega);
 			SinOmega = _mm_sqrt_ps(SinOmega);
 
-			Vector Omega = VectorATan2(SinOmega, CosOmega);
+			VectorType Omega = VectorATan2(SinOmega, CosOmega);
 
-			Vector V01 = RAYMATH_PERMUTE_PS(T, _MM_SHUFFLE(2, 3, 0, 1));
+			VectorType V01 = RAYMATH_PERMUTE_PS(T, _MM_SHUFFLE(2, 3, 0, 1));
 			V01 = _mm_and_ps(V01, g_XMMaskXY);
 			V01 = _mm_xor_ps(V01, SignMask2);
 			V01 = _mm_add_ps(g_XMIdentityR0, V01);
 
-			Vector S0 = _mm_mul_ps(V01, Omega);
+			VectorType S0 = _mm_mul_ps(V01, Omega);
 			S0 = VectorSin(S0);
 			S0 = _mm_div_ps(S0, SinOmega);
 
 			S0 = VectorSelect(V01, S0, Control);
 
-			Vector S1 = VectorSplatY(S0);
+			VectorType S1 = VectorSplatY(S0);
 			S0 = VectorSplatX(S0);
 
 			S1 = _mm_mul_ps(S1, Sign);
-			Vector Result = _mm_mul_ps(Q0, S0);
+			VectorType Result = _mm_mul_ps(Q0, S0);
 			S1 = _mm_mul_ps(S1, Q1);
 			Result = _mm_add_ps(Result, S1);
 			return Result;
@@ -22664,7 +22664,7 @@ namespace At0
 			float    t
 		)
 		{
-			Vector T = VectorReplicate(t);
+			VectorType T = VectorReplicate(t);
 			return Quaternion::SquadV(Q0, Q1, Q2, Q3, T);
 		}
 
@@ -22681,16 +22681,16 @@ namespace At0
 		{
 			assert((VectorGetY(T) == VectorGetX(T)) && (VectorGetZ(T) == VectorGetX(T)) && (VectorGetW(T) == VectorGetX(T)));
 
-			Vector TP = T;
-			const Vector Two = VectorSplatConstant(2, 0);
+			VectorType TP = T;
+			const VectorType Two = VectorSplatConstant(2, 0);
 
-			Vector Q03 = Quaternion::SlerpV(Q0, Q3, T);
-			Vector Q12 = Quaternion::SlerpV(Q1, Q2, T);
+			VectorType Q03 = Quaternion::SlerpV(Q0, Q3, T);
+			VectorType Q12 = Quaternion::SlerpV(Q1, Q2, T);
 
 			TP = VectorNegativeMultiplySubtract(TP, TP, TP);
 			TP = VectorMultiply(TP, Two);
 
-			Vector Result = Quaternion::SlerpV(Q03, Q12, TP);
+			VectorType Result = Quaternion::SlerpV(Q03, Q12, TP);
 
 			return Result;
 		}
@@ -22699,9 +22699,9 @@ namespace At0
 
 		inline void RAYMATH_CALLCONV Quaternion::SquadSetup
 		(
-			Vector* pA,
-			Vector* pB,
-			Vector* pC,
+			VectorType* pA,
+			VectorType* pB,
+			VectorType* pC,
 			FQuaternion  Q0,
 			FQuaternion  Q1,
 			FQuaternion  Q2,
@@ -22716,7 +22716,7 @@ namespace At0
 			Quaternion LD12 = Quaternion(VectorSubtract(Q1, Q2)).LengthSq();
 			Quaternion SQ2 = VectorNegate(Q2);
 
-			Vector Control1 = VectorLess(LS12, LD12);
+			VectorType Control1 = VectorLess(LS12, LD12);
 			SQ2 = VectorSelect(Q2, SQ2, Control1);
 
 			Quaternion LS01 = Quaternion(VectorAdd(Q0, Q1)).LengthSq();
@@ -22725,23 +22725,23 @@ namespace At0
 
 			Quaternion LS23 = Quaternion(VectorAdd(SQ2, Q3)).LengthSq();
 			Quaternion LD23 = Quaternion(VectorSubtract(SQ2, Q3)).LengthSq();
-			Vector SQ3 = VectorNegate(Q3);
+			VectorType SQ3 = VectorNegate(Q3);
 
-			Vector Control0 = VectorLess(LS01, LD01);
-			Vector Control2 = VectorLess(LS23, LD23);
+			VectorType Control0 = VectorLess(LS01, LD01);
+			VectorType Control2 = VectorLess(LS23, LD23);
 
 			SQ0 = VectorSelect(Q0, SQ0, Control0);
 			SQ3 = VectorSelect(Q3, SQ3, Control2);
 
-			Vector InvQ1 = Q1.Inverse();
-			Vector InvQ2 = SQ2.Inverse();
+			VectorType InvQ1 = Q1.Inverse();
+			VectorType InvQ2 = SQ2.Inverse();
 
-			Vector LnQ0 = Quaternion::Multiply(InvQ1, SQ0).Ln();
-			Vector LnQ2 = Quaternion::Multiply(InvQ1, SQ2).Ln();
-			Vector LnQ1 = Quaternion::Multiply(InvQ2, Q1).Ln();
-			Vector LnQ3 = Quaternion::Multiply(InvQ2, SQ3).Ln();
+			VectorType LnQ0 = Quaternion::Multiply(InvQ1, SQ0).Ln();
+			VectorType LnQ2 = Quaternion::Multiply(InvQ1, SQ2).Ln();
+			VectorType LnQ1 = Quaternion::Multiply(InvQ2, Q1).Ln();
+			VectorType LnQ3 = Quaternion::Multiply(InvQ2, SQ3).Ln();
 
-			const Vector NegativeOneQuarter = VectorSplatConstant(-1, 2);
+			const VectorType NegativeOneQuarter = VectorSplatConstant(-1, 2);
 
 			Quaternion ExpQ02 = VectorMultiply(VectorAdd(LnQ0, LnQ2), NegativeOneQuarter);
 			Quaternion ExpQ13 = VectorMultiply(VectorAdd(LnQ1, LnQ3), NegativeOneQuarter);
@@ -22766,15 +22766,15 @@ namespace At0
 		{
 			float s = f + g;
 
-			Vector Result;
+			VectorType Result;
 			if ((s < 0.00001f) && (s > -0.00001f))
 			{
 				Result = Q0;
 			}
 			else
 			{
-				Vector Q01 = Quaternion::Slerp(Q0, Q1, s);
-				Vector Q02 = Quaternion::Slerp(Q0, Q2, s);
+				VectorType Q01 = Quaternion::Slerp(Q0, Q1, s);
+				VectorType Q02 = Quaternion::Slerp(Q0, Q2, s);
 
 				Result = Quaternion::Slerp(Q01, Q02, g / s);
 			}
@@ -22796,11 +22796,11 @@ namespace At0
 			assert((VectorGetY(F) == VectorGetX(F)) && (VectorGetZ(F) == VectorGetX(F)) && (VectorGetW(F) == VectorGetX(F)));
 			assert((VectorGetY(G) == VectorGetX(G)) && (VectorGetZ(G) == VectorGetX(G)) && (VectorGetW(G) == VectorGetX(G)));
 
-			const Vector Epsilon = VectorSplatConstant(1, 16);
+			const VectorType Epsilon = VectorSplatConstant(1, 16);
 
-			Vector S = VectorAdd(F, G);
+			VectorType S = VectorAdd(F, G);
 
-			Vector Result;
+			VectorType Result;
 			if (Vector4InBounds(S, Epsilon))
 			{
 				Result = Q0;
@@ -22809,7 +22809,7 @@ namespace At0
 			{
 				Quaternion Q01 = Quaternion::SlerpV(Q0, Q1, S);
 				Quaternion Q02 = Quaternion::SlerpV(Q0, Q2, S);
-				Vector GS = VectorReciprocal(S);
+				VectorType GS = VectorReciprocal(S);
 				GS = VectorMultiply(G, GS);
 
 				Result = Quaternion::SlerpV(Q01, Q02, GS);
@@ -22838,8 +22838,8 @@ namespace At0
 			float Roll
 		)
 		{
-			Vector Angles = VectorSet(Pitch, Yaw, Roll, 0.0f);
-			Vector Q = RotationRollPitchYawFromVector(Angles);
+			VectorType Angles = VectorSet(Pitch, Yaw, Roll, 0.0f);
+			VectorType Q = RotationRollPitchYawFromVector(Angles);
 			return Q;
 		}
 
@@ -22852,23 +22852,23 @@ namespace At0
 		{
 			static const VectorF32  Sign = { { { 1.0f, -1.0f, -1.0f, 1.0f } } };
 
-			Vector HalfAngles = VectorMultiply(Angles, g_XMOneHalf.v);
+			VectorType HalfAngles = VectorMultiply(Angles, g_XMOneHalf.v);
 
-			Vector SinAngles, CosAngles;
+			VectorType SinAngles, CosAngles;
 			VectorSinCos(&SinAngles, &CosAngles, HalfAngles);
 
-			Vector P0 = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1X>(SinAngles, CosAngles);
-			Vector Y0 = VectorPermute<RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1Y>(SinAngles, CosAngles);
-			Vector R0 = VectorPermute<RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1Z>(SinAngles, CosAngles);
-			Vector P1 = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1X>(CosAngles, SinAngles);
-			Vector Y1 = VectorPermute<RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1Y>(CosAngles, SinAngles);
-			Vector R1 = VectorPermute<RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1Z>(CosAngles, SinAngles);
+			VectorType P0 = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1X>(SinAngles, CosAngles);
+			VectorType Y0 = VectorPermute<RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1Y>(SinAngles, CosAngles);
+			VectorType R0 = VectorPermute<RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1Z>(SinAngles, CosAngles);
+			VectorType P1 = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1X>(CosAngles, SinAngles);
+			VectorType Y1 = VectorPermute<RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1Y>(CosAngles, SinAngles);
+			VectorType R1 = VectorPermute<RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1Z>(CosAngles, SinAngles);
 
-			Vector Q1 = VectorMultiply(P1, Sign.v);
-			Vector Q0 = VectorMultiply(P0, Y0);
+			VectorType Q1 = VectorMultiply(P1, Sign.v);
+			VectorType Q0 = VectorMultiply(P0, Y0);
 			Q1 = VectorMultiply(Q1, Y1);
 			Q0 = VectorMultiply(Q0, R0);
-			Vector Q = VectorMultiplyAdd(Q1, R1, Q0);
+			VectorType Q = VectorMultiplyAdd(Q1, R1, Q0);
 
 			return Q;
 		}
@@ -22883,19 +22883,19 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
-			Vector N = VectorSelect(g_XMOne.v, NormalAxis, g_XMSelect1110.v);
+			VectorType N = VectorSelect(g_XMOne.v, NormalAxis, g_XMSelect1110.v);
 
 			float SinV, CosV;
 			ScalarSinCos(&SinV, &CosV, 0.5f * Angle);
 
-			Vector Scale = VectorSet(SinV, SinV, SinV, CosV);
+			VectorType Scale = VectorSet(SinV, SinV, SinV, CosV);
 			return VectorMultiply(N, Scale);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector N = _mm_and_ps(NormalAxis, g_XMMask3);
+			VectorType N = _mm_and_ps(NormalAxis, g_XMMask3);
 			N = _mm_or_ps(N, g_XMIdentityR3);
-			Vector Scale = _mm_set_ps1(0.5f * Angle);
-			Vector vSine;
-			Vector vCosine;
+			VectorType Scale = _mm_set_ps1(0.5f * Angle);
+			VectorType vSine;
+			VectorType vCosine;
 			VectorSinCos(&vSine, &vCosine, Scale);
 			Scale = _mm_and_ps(vSine, g_XMMask3);
 			vCosine = _mm_and_ps(vCosine, g_XMMaskW);
@@ -22916,8 +22916,8 @@ namespace At0
 			assert(!Vector3Equal(Axis, VectorZero()));
 			assert(!Vector3IsInfinite(Axis));
 
-			Vector Normal = Vector3Normalize(Axis);
-			Vector Q = RotationNormal(Normal, Angle);
+			VectorType Normal = Vector3Normalize(Axis);
+			VectorType Q = RotationNormal(Normal, Angle);
 			return Q;
 		}
 
@@ -22987,74 +22987,74 @@ namespace At0
 			static const VectorU32 Select0110 = { { { RAYMATH_SELECT_0, RAYMATH_SELECT_1, RAYMATH_SELECT_1, RAYMATH_SELECT_0 } } };
 			static const VectorU32 Select0010 = { { { RAYMATH_SELECT_0, RAYMATH_SELECT_0, RAYMATH_SELECT_1, RAYMATH_SELECT_0 } } };
 
-			Vector r0 = M.r[0];
-			Vector r1 = M.r[1];
-			Vector r2 = M.r[2];
+			VectorType r0 = M.r[0];
+			VectorType r1 = M.r[1];
+			VectorType r2 = M.r[2];
 
-			Vector r00 = vdupq_lane_f32(vget_low_f32(r0), 0);
-			Vector r11 = vdupq_lane_f32(vget_low_f32(r1), 1);
-			Vector r22 = vdupq_lane_f32(vget_high_f32(r2), 0);
+			VectorType r00 = vdupq_lane_f32(vget_low_f32(r0), 0);
+			VectorType r11 = vdupq_lane_f32(vget_low_f32(r1), 1);
+			VectorType r22 = vdupq_lane_f32(vget_high_f32(r2), 0);
 
 			// x^2 >= y^2 equivalent to r11 - r00 <= 0
-			Vector r11mr00 = vsubq_f32(r11, r00);
-			Vector x2gey2 = vcleq_f32(r11mr00, g_XMZero);
+			VectorType r11mr00 = vsubq_f32(r11, r00);
+			VectorType x2gey2 = vcleq_f32(r11mr00, g_XMZero);
 
 			// z^2 >= w^2 equivalent to r11 + r00 <= 0
-			Vector r11pr00 = vaddq_f32(r11, r00);
-			Vector z2gew2 = vcleq_f32(r11pr00, g_XMZero);
+			VectorType r11pr00 = vaddq_f32(r11, r00);
+			VectorType z2gew2 = vcleq_f32(r11pr00, g_XMZero);
 
 			// x^2 + y^2 >= z^2 + w^2 equivalent to r22 <= 0
-			Vector x2py2gez2pw2 = vcleq_f32(r22, g_XMZero);
+			VectorType x2py2gez2pw2 = vcleq_f32(r22, g_XMZero);
 
 			// (4*x^2, 4*y^2, 4*z^2, 4*w^2)
-			Vector t0 = vmulq_f32(XMPMMP, r00);
-			Vector x2y2z2w2 = vmlaq_f32(t0, XMMPMP, r11);
+			VectorType t0 = vmulq_f32(XMPMMP, r00);
+			VectorType x2y2z2w2 = vmlaq_f32(t0, XMMPMP, r11);
 			x2y2z2w2 = vmlaq_f32(x2y2z2w2, XMMMPP, r22);
 			x2y2z2w2 = vaddq_f32(x2y2z2w2, g_XMOne);
 
 			// (r01, r02, r12, r11)
 			t0 = vextq_f32(r0, r0, 1);
-			Vector t1 = vextq_f32(r1, r1, 1);
+			VectorType t1 = vextq_f32(r1, r1, 1);
 			t0 = vcombine_f32(vget_low_f32(t0), vrev64_f32(vget_low_f32(t1)));
 
 			// (r10, r20, r21, r10)
 			t1 = vextq_f32(r2, r2, 3);
-			Vector r10 = vdupq_lane_f32(vget_low_f32(r1), 0);
+			VectorType r10 = vdupq_lane_f32(vget_low_f32(r1), 0);
 			t1 = vbslq_f32(Select0110, t1, r10);
 
 			// (4*x*y, 4*x*z, 4*y*z, unused)
-			Vector xyxzyz = vaddq_f32(t0, t1);
+			VectorType xyxzyz = vaddq_f32(t0, t1);
 
 			// (r21, r20, r10, r10)
 			t0 = vcombine_f32(vrev64_f32(vget_low_f32(r2)), vget_low_f32(r10));
 
 			// (r12, r02, r01, r12)
-			Vector t2 = vcombine_f32(vrev64_f32(vget_high_f32(r0)), vrev64_f32(vget_low_f32(r0)));
-			Vector t3 = vdupq_lane_f32(vget_high_f32(r1), 0);
+			VectorType t2 = vcombine_f32(vrev64_f32(vget_high_f32(r0)), vrev64_f32(vget_low_f32(r0)));
+			VectorType t3 = vdupq_lane_f32(vget_high_f32(r1), 0);
 			t1 = vbslq_f32(Select0110, t2, t3);
 
 			// (4*x*w, 4*y*w, 4*z*w, unused)
-			Vector xwywzw = vsubq_f32(t0, t1);
+			VectorType xwywzw = vsubq_f32(t0, t1);
 			xwywzw = vmulq_f32(XMMPMP, xwywzw);
 
 			// (4*x*x, 4*x*y, 4*x*z, 4*x*w)
 			t0 = vextq_f32(xyxzyz, xyxzyz, 3);
 			t1 = vbslq_f32(Select0110, t0, x2y2z2w2);
 			t2 = vdupq_lane_f32(vget_low_f32(xwywzw), 0);
-			Vector tensor0 = vbslq_f32(g_XMSelect1110, t1, t2);
+			VectorType tensor0 = vbslq_f32(g_XMSelect1110, t1, t2);
 
 			// (4*y*x, 4*y*y, 4*y*z, 4*y*w)
 			t0 = vbslq_f32(g_XMSelect1011, xyxzyz, x2y2z2w2);
 			t1 = vdupq_lane_f32(vget_low_f32(xwywzw), 1);
-			Vector tensor1 = vbslq_f32(g_XMSelect1110, t0, t1);
+			VectorType tensor1 = vbslq_f32(g_XMSelect1110, t0, t1);
 
 			// (4*z*x, 4*z*y, 4*z*z, 4*z*w)
 			t0 = vextq_f32(xyxzyz, xyxzyz, 1);
 			t1 = vcombine_f32(vget_low_f32(t0), vrev64_f32(vget_high_f32(xwywzw)));
-			Vector tensor2 = vbslq_f32(Select0010, x2y2z2w2, t1);
+			VectorType tensor2 = vbslq_f32(Select0010, x2y2z2w2, t1);
 
 			// (4*w*x, 4*w*y, 4*w*z, 4*w*w)
-			Vector tensor3 = vbslq_f32(g_XMSelect1110, xwywzw, x2y2z2w2);
+			VectorType tensor3 = vbslq_f32(g_XMSelect1110, xwywzw, x2y2z2w2);
 
 			// Select the row of the tensor-product matrix that has the largest
 			// magnitude.
@@ -23072,41 +23072,41 @@ namespace At0
 			static const VectorF32 XMMPMP = { { { -1.0f, +1.0f, -1.0f, +1.0f } } };
 			static const VectorF32 XMMMPP = { { { -1.0f, -1.0f, +1.0f, +1.0f } } };
 
-			Vector r0 = M.r[0];  // (r00, r01, r02, 0)
-			Vector r1 = M.r[1];  // (r10, r11, r12, 0)
-			Vector r2 = M.r[2];  // (r20, r21, r22, 0)
+			VectorType r0 = M.r[0];  // (r00, r01, r02, 0)
+			VectorType r1 = M.r[1];  // (r10, r11, r12, 0)
+			VectorType r2 = M.r[2];  // (r20, r21, r22, 0)
 
 			// (r00, r00, r00, r00)
-			Vector r00 = RAYMATH_PERMUTE_PS(r0, _MM_SHUFFLE(0, 0, 0, 0));
+			VectorType r00 = RAYMATH_PERMUTE_PS(r0, _MM_SHUFFLE(0, 0, 0, 0));
 			// (r11, r11, r11, r11)
-			Vector r11 = RAYMATH_PERMUTE_PS(r1, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType r11 = RAYMATH_PERMUTE_PS(r1, _MM_SHUFFLE(1, 1, 1, 1));
 			// (r22, r22, r22, r22)
-			Vector r22 = RAYMATH_PERMUTE_PS(r2, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType r22 = RAYMATH_PERMUTE_PS(r2, _MM_SHUFFLE(2, 2, 2, 2));
 
 			// x^2 >= y^2 equivalent to r11 - r00 <= 0
 			// (r11 - r00, r11 - r00, r11 - r00, r11 - r00)
-			Vector r11mr00 = _mm_sub_ps(r11, r00);
-			Vector x2gey2 = _mm_cmple_ps(r11mr00, g_XMZero);
+			VectorType r11mr00 = _mm_sub_ps(r11, r00);
+			VectorType x2gey2 = _mm_cmple_ps(r11mr00, g_XMZero);
 
 			// z^2 >= w^2 equivalent to r11 + r00 <= 0
 			// (r11 + r00, r11 + r00, r11 + r00, r11 + r00)
-			Vector r11pr00 = _mm_add_ps(r11, r00);
-			Vector z2gew2 = _mm_cmple_ps(r11pr00, g_XMZero);
+			VectorType r11pr00 = _mm_add_ps(r11, r00);
+			VectorType z2gew2 = _mm_cmple_ps(r11pr00, g_XMZero);
 
 			// x^2 + y^2 >= z^2 + w^2 equivalent to r22 <= 0
-			Vector x2py2gez2pw2 = _mm_cmple_ps(r22, g_XMZero);
+			VectorType x2py2gez2pw2 = _mm_cmple_ps(r22, g_XMZero);
 
 			// (+r00, -r00, -r00, +r00)
-			Vector t0 = _mm_mul_ps(XMPMMP, r00);
+			VectorType t0 = _mm_mul_ps(XMPMMP, r00);
 
 			// (-r11, +r11, -r11, +r11)
-			Vector t1 = _mm_mul_ps(XMMPMP, r11);
+			VectorType t1 = _mm_mul_ps(XMMPMP, r11);
 
 			// (-r22, -r22, +r22, +r22)
-			Vector t2 = _mm_mul_ps(XMMMPP, r22);
+			VectorType t2 = _mm_mul_ps(XMMMPP, r22);
 
 			// (4*x^2, 4*y^2, 4*z^2, 4*w^2)
-			Vector x2y2z2w2 = _mm_add_ps(t0, t1);
+			VectorType x2y2z2w2 = _mm_add_ps(t0, t1);
 			x2y2z2w2 = _mm_add_ps(t2, x2y2z2w2);
 			x2y2z2w2 = _mm_add_ps(x2y2z2w2, g_XMOne);
 
@@ -23117,7 +23117,7 @@ namespace At0
 			// (r10, r20, r21, r10)
 			t1 = RAYMATH_PERMUTE_PS(t1, _MM_SHUFFLE(1, 3, 2, 0));
 			// (4*x*y, 4*x*z, 4*y*z, unused)
-			Vector xyxzyz = _mm_add_ps(t0, t1);
+			VectorType xyxzyz = _mm_add_ps(t0, t1);
 
 			// (r21, r20, r10, r10)
 			t0 = _mm_shuffle_ps(r2, r1, _MM_SHUFFLE(0, 0, 0, 1));
@@ -23126,7 +23126,7 @@ namespace At0
 			// (r12, r02, r01, r12)
 			t1 = RAYMATH_PERMUTE_PS(t1, _MM_SHUFFLE(1, 3, 2, 0));
 			// (4*x*w, 4*y*w, 4*z*w, unused)
-			Vector xwywzw = _mm_sub_ps(t0, t1);
+			VectorType xwywzw = _mm_sub_ps(t0, t1);
 			xwywzw = _mm_mul_ps(XMMPMP, xwywzw);
 
 			// (4*x^2, 4*y^2, 4*x*y, unused)
@@ -23137,13 +23137,13 @@ namespace At0
 			t2 = _mm_shuffle_ps(xyxzyz, xwywzw, _MM_SHUFFLE(1, 0, 2, 1));
 
 			// (4*x*x, 4*x*y, 4*x*z, 4*x*w)
-			Vector tensor0 = _mm_shuffle_ps(t0, t2, _MM_SHUFFLE(2, 0, 2, 0));
+			VectorType tensor0 = _mm_shuffle_ps(t0, t2, _MM_SHUFFLE(2, 0, 2, 0));
 			// (4*y*x, 4*y*y, 4*y*z, 4*y*w)
-			Vector tensor1 = _mm_shuffle_ps(t0, t2, _MM_SHUFFLE(3, 1, 1, 2));
+			VectorType tensor1 = _mm_shuffle_ps(t0, t2, _MM_SHUFFLE(3, 1, 1, 2));
 			// (4*z*x, 4*z*y, 4*z*z, 4*z*w)
-			Vector tensor2 = _mm_shuffle_ps(t2, t1, _MM_SHUFFLE(2, 0, 1, 0));
+			VectorType tensor2 = _mm_shuffle_ps(t2, t1, _MM_SHUFFLE(2, 0, 1, 0));
 			// (4*w*x, 4*w*y, 4*w*z, 4*w*w)
-			Vector tensor3 = _mm_shuffle_ps(t2, t1, _MM_SHUFFLE(1, 2, 3, 2));
+			VectorType tensor3 = _mm_shuffle_ps(t2, t1, _MM_SHUFFLE(1, 2, 3, 2));
 
 			// Select the row of the tensor-product matrix that has the largest
 			// magnitude.
@@ -23173,7 +23173,7 @@ namespace At0
 
 		inline void RAYMATH_CALLCONV Quaternion::ToAxisAngle
 		(
-			Vector* pAxis,
+			VectorType* pAxis,
 			float* pAngle
 		) const
 		{
@@ -23215,8 +23215,8 @@ namespace At0
 			FVector Epsilon
 		)
 		{
-			Vector NP1 = PlaneNormalize(P1);
-			Vector NP2 = PlaneNormalize(P2);
+			VectorType NP1 = PlaneNormalize(P1);
+			VectorType NP2 = PlaneNormalize(P2);
 			return Vector4NearEqual(NP1, NP2, Epsilon);
 		}
 
@@ -23257,7 +23257,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV PlaneDot
+		inline VectorType RAYMATH_CALLCONV PlaneDot
 		(
 			FVector P,
 			FVector V
@@ -23268,7 +23268,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV PlaneDotCoord
+		inline VectorType RAYMATH_CALLCONV PlaneDotCoord
 		(
 			FVector P,
 			FVector V
@@ -23276,14 +23276,14 @@ namespace At0
 		{
 			// Result = P[0] * V[0] + P[1] * V[1] + P[2] * V[2] + P[3]
 
-			Vector V3 = VectorSelect(g_XMOne.v, V, g_XMSelect1110.v);
-			Vector Result = Vector4Dot(P, V3);
+			VectorType V3 = VectorSelect(g_XMOne.v, V, g_XMSelect1110.v);
+			VectorType Result = Vector4Dot(P, V3);
 			return Result;
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV PlaneDotNormal
+		inline VectorType RAYMATH_CALLCONV PlaneDotNormal
 		(
 			FVector P,
 			FVector V
@@ -23296,25 +23296,25 @@ namespace At0
 		// PlaneNormalizeEst uses a reciprocal estimate and
 		// returns QNaN on zero and infinite vectors.
 
-		inline Vector RAYMATH_CALLCONV PlaneNormalizeEst
+		inline VectorType RAYMATH_CALLCONV PlaneNormalizeEst
 		(
 			FVector P
 		)
 		{
 #if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
-			Vector Result = Vector3ReciprocalLengthEst(P);
+			VectorType Result = Vector3ReciprocalLengthEst(P);
 			return VectorMultiply(P, Result);
 
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vTemp = _mm_dp_ps(P, P, 0x7f);
-			Vector vResult = _mm_rsqrt_ps(vTemp);
+			VectorType vTemp = _mm_dp_ps(P, P, 0x7f);
+			VectorType vResult = _mm_rsqrt_ps(vTemp);
 			return _mm_mul_ps(vResult, P);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product
-			Vector vDot = _mm_mul_ps(P, P);
+			VectorType vDot = _mm_mul_ps(P, P);
 			// x=Dot.y, y=Dot.z
-			Vector vTemp = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vDot, _MM_SHUFFLE(2, 1, 2, 1));
 			// Result.x = x+y
 			vDot = _mm_add_ss(vDot, vTemp);
 			// x=Dot.z
@@ -23333,7 +23333,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV PlaneNormalize
+		inline VectorType RAYMATH_CALLCONV PlaneNormalize
 		(
 			FVector P
 		)
@@ -23353,12 +23353,12 @@ namespace At0
 				} } };
 			return vResult.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector vLength = Vector3ReciprocalLength(P);
+			VectorType vLength = Vector3ReciprocalLength(P);
 			return VectorMultiply(P, vLength);
 #elif defined(RAY_SSE4_INTRINSICS)
-			Vector vLengthSq = _mm_dp_ps(P, P, 0x7f);
+			VectorType vLengthSq = _mm_dp_ps(P, P, 0x7f);
 			// Prepare for the division
-			Vector vResult = _mm_sqrt_ps(vLengthSq);
+			VectorType vResult = _mm_sqrt_ps(vLengthSq);
 			// Failsafe on zero (Or epsilon) length planes
 			// If the length is infinity, set the elements to zero
 			vLengthSq = _mm_cmpneq_ps(vLengthSq, g_XMInfinity);
@@ -23369,14 +23369,14 @@ namespace At0
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y and z only
-			Vector vLengthSq = _mm_mul_ps(P, P);
-			Vector vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 1, 2, 1));
+			VectorType vLengthSq = _mm_mul_ps(P, P);
+			VectorType vTemp = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(2, 1, 2, 1));
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vTemp = RAYMATH_PERMUTE_PS(vTemp, _MM_SHUFFLE(1, 1, 1, 1));
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			// Prepare for the division
-			Vector vResult = _mm_sqrt_ps(vLengthSq);
+			VectorType vResult = _mm_sqrt_ps(vLengthSq);
 			// Failsafe on zero (Or epsilon) length planes
 			// If the length is infinity, set the elements to zero
 			vLengthSq = _mm_cmpneq_ps(vLengthSq, g_XMInfinity);
@@ -23390,25 +23390,25 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV PlaneIntersectLine
+		inline VectorType RAYMATH_CALLCONV PlaneIntersectLine
 		(
 			FVector P,
 			FVector LinePoint1,
 			FVector LinePoint2
 		)
 		{
-			Vector V1 = Vector3Dot(P, LinePoint1);
-			Vector V2 = Vector3Dot(P, LinePoint2);
-			Vector D = VectorSubtract(V1, V2);
+			VectorType V1 = Vector3Dot(P, LinePoint1);
+			VectorType V2 = Vector3Dot(P, LinePoint2);
+			VectorType D = VectorSubtract(V1, V2);
 
-			Vector VT = PlaneDotCoord(P, LinePoint1);
+			VectorType VT = PlaneDotCoord(P, LinePoint1);
 			VT = VectorDivide(VT, D);
 
-			Vector Point = VectorSubtract(LinePoint2, LinePoint1);
+			VectorType Point = VectorSubtract(LinePoint2, LinePoint1);
 			Point = VectorMultiplyAdd(Point, VT, LinePoint1);
 
-			const Vector Zero = VectorZero();
-			Vector Control = VectorNearEqual(D, Zero, g_XMEpsilon.v);
+			const VectorType Zero = VectorZero();
+			VectorType Control = VectorNearEqual(D, Zero, g_XMEpsilon.v);
 
 			return VectorSelect(Point, g_XMQNaN.v, Control);
 		}
@@ -23417,8 +23417,8 @@ namespace At0
 
 		inline void RAYMATH_CALLCONV PlaneIntersectPlane
 		(
-			Vector* pLinePoint1,
-			Vector* pLinePoint2,
+			VectorType* pLinePoint1,
+			VectorType* pLinePoint2,
 			FVector  P1,
 			FVector  P2
 		)
@@ -23426,43 +23426,43 @@ namespace At0
 			assert(pLinePoint1);
 			assert(pLinePoint2);
 
-			Vector V1 = Vector3Cross(P2, P1);
+			VectorType V1 = Vector3Cross(P2, P1);
 
-			Vector LengthSq = Vector3LengthSq(V1);
+			VectorType LengthSq = Vector3LengthSq(V1);
 
-			Vector V2 = Vector3Cross(P2, V1);
+			VectorType V2 = Vector3Cross(P2, V1);
 
-			Vector P1W = VectorSplatW(P1);
-			Vector Point = VectorMultiply(V2, P1W);
+			VectorType P1W = VectorSplatW(P1);
+			VectorType Point = VectorMultiply(V2, P1W);
 
-			Vector V3 = Vector3Cross(V1, P1);
+			VectorType V3 = Vector3Cross(V1, P1);
 
-			Vector P2W = VectorSplatW(P2);
+			VectorType P2W = VectorSplatW(P2);
 			Point = VectorMultiplyAdd(V3, P2W, Point);
 
-			Vector LinePoint1 = VectorDivide(Point, LengthSq);
+			VectorType LinePoint1 = VectorDivide(Point, LengthSq);
 
-			Vector LinePoint2 = VectorAdd(LinePoint1, V1);
+			VectorType LinePoint2 = VectorAdd(LinePoint1, V1);
 
-			Vector Control = VectorLessOrEqual(LengthSq, g_XMEpsilon.v);
+			VectorType Control = VectorLessOrEqual(LengthSq, g_XMEpsilon.v);
 			*pLinePoint1 = VectorSelect(LinePoint1, g_XMQNaN.v, Control);
 			*pLinePoint2 = VectorSelect(LinePoint2, g_XMQNaN.v, Control);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV PlaneTransform
+		inline VectorType RAYMATH_CALLCONV PlaneTransform
 		(
 			FVector P,
 			FMatrix M
 		)
 		{
-			Vector W = VectorSplatW(P);
-			Vector Z = VectorSplatZ(P);
-			Vector Y = VectorSplatY(P);
-			Vector X = VectorSplatX(P);
+			VectorType W = VectorSplatW(P);
+			VectorType Z = VectorSplatZ(P);
+			VectorType Y = VectorSplatY(P);
+			VectorType X = VectorSplatX(P);
 
-			Vector Result = VectorMultiply(W, M.r[3]);
+			VectorType Result = VectorMultiply(W, M.r[3]);
 			Result = VectorMultiplyAdd(Z, M.r[2], Result);
 			Result = VectorMultiplyAdd(Y, M.r[1], Result);
 			Result = VectorMultiplyAdd(X, M.r[0], Result);
@@ -23495,36 +23495,36 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV PlaneFromPointNormal
+		inline VectorType RAYMATH_CALLCONV PlaneFromPointNormal
 		(
 			FVector Point,
 			FVector Normal
 		)
 		{
-			Vector W = Vector3Dot(Point, Normal);
+			VectorType W = Vector3Dot(Point, Normal);
 			W = VectorNegate(W);
 			return VectorSelect(W, Normal, g_XMSelect1110.v);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV PlaneFromPoints
+		inline VectorType RAYMATH_CALLCONV PlaneFromPoints
 		(
 			FVector Point1,
 			FVector Point2,
 			FVector Point3
 		)
 		{
-			Vector V21 = VectorSubtract(Point1, Point2);
-			Vector V31 = VectorSubtract(Point1, Point3);
+			VectorType V21 = VectorSubtract(Point1, Point2);
+			VectorType V31 = VectorSubtract(Point1, Point3);
 
-			Vector N = Vector3Cross(V21, V31);
+			VectorType N = Vector3Cross(V21, V31);
 			N = Vector3Normalize(N);
 
-			Vector D = PlaneDotNormal(N, Point1);
+			VectorType D = PlaneDotNormal(N, Point1);
 			D = VectorNegate(D);
 
-			Vector Result = VectorSelect(D, N, g_XMSelect1110.v);
+			VectorType Result = VectorSelect(D, N, g_XMSelect1110.v);
 
 			return Result;
 		}
@@ -23631,7 +23631,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorNegative
+		inline VectorType RAYMATH_CALLCONV ColorNegative
 		(
 			FVector vColor
 		)
@@ -23645,11 +23645,11 @@ namespace At0
 				} } };
 			return vResult.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector vTemp = veorq_u32(vColor, g_XMNegate3);
+			VectorType vTemp = veorq_u32(vColor, g_XMNegate3);
 			return vaddq_f32(vTemp, g_XMOne3);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Negate only x,y and z.
-			Vector vTemp = _mm_xor_ps(vColor, g_XMNegate3);
+			VectorType vTemp = _mm_xor_ps(vColor, g_XMNegate3);
 			// Add 1,1,1,0 to -x,-y,-z,w
 			return _mm_add_ps(vTemp, g_XMOne3);
 #endif
@@ -23657,7 +23657,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorModulate
+		inline VectorType RAYMATH_CALLCONV ColorModulate
 		(
 			FVector C1,
 			FVector C2
@@ -23668,7 +23668,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorAdjustSaturation
+		inline VectorType RAYMATH_CALLCONV ColorAdjustSaturation
 		(
 			FVector vColor,
 			float    fSaturation
@@ -23680,23 +23680,23 @@ namespace At0
 			const VectorF32 gvLuminance = { { { 0.2125f, 0.7154f, 0.0721f, 0.0f } } };
 #if defined(RAY_NO_INTRINSICS)
 			float fLuminance = (vColor.vector4_f32[0] * gvLuminance.f[0]) + (vColor.vector4_f32[1] * gvLuminance.f[1]) + (vColor.vector4_f32[2] * gvLuminance.f[2]);
-			Vector vResult;
+			VectorType vResult;
 			vResult.vector4_f32[0] = ((vColor.vector4_f32[0] - fLuminance) * fSaturation) + fLuminance;
 			vResult.vector4_f32[1] = ((vColor.vector4_f32[1] - fLuminance) * fSaturation) + fLuminance;
 			vResult.vector4_f32[2] = ((vColor.vector4_f32[2] - fLuminance) * fSaturation) + fLuminance;
 			vResult.vector4_f32[3] = vColor.vector4_f32[3];
 			return vResult;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector vLuminance = Vector3Dot(vColor, gvLuminance);
-			Vector vResult = vsubq_f32(vColor, vLuminance);
+			VectorType vLuminance = Vector3Dot(vColor, gvLuminance);
+			VectorType vResult = vsubq_f32(vColor, vLuminance);
 			vResult = vmlaq_n_f32(vLuminance, vResult, fSaturation);
 			return vbslq_f32(g_XMSelect1110, vResult, vColor);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vLuminance = Vector3Dot(vColor, gvLuminance);
+			VectorType vLuminance = Vector3Dot(vColor, gvLuminance);
 			// Splat fSaturation
-			Vector vSaturation = _mm_set_ps1(fSaturation);
+			VectorType vSaturation = _mm_set_ps1(fSaturation);
 			// vResult = ((vColor-vLuminance)*vSaturation)+vLuminance;
-			Vector vResult = _mm_sub_ps(vColor, vLuminance);
+			VectorType vResult = _mm_sub_ps(vColor, vLuminance);
 			vResult = _mm_mul_ps(vResult, vSaturation);
 			vResult = _mm_add_ps(vResult, vLuminance);
 			// Retain w from the source color
@@ -23708,7 +23708,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorAdjustContrast
+		inline VectorType RAYMATH_CALLCONV ColorAdjustContrast
 		(
 			FVector vColor,
 			float    fContrast
@@ -23725,12 +23725,12 @@ namespace At0
 				} } };
 			return vResult.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			Vector vResult = vsubq_f32(vColor, g_XMOneHalf.v);
+			VectorType vResult = vsubq_f32(vColor, g_XMOneHalf.v);
 			vResult = vmlaq_n_f32(g_XMOneHalf.v, vResult, fContrast);
 			return vbslq_f32(g_XMSelect1110, vResult, vColor);
 #elif defined(RAY_SSE_INTRINSICS)
-			Vector vScale = _mm_set_ps1(fContrast);           // Splat the scale
-			Vector vResult = _mm_sub_ps(vColor, g_XMOneHalf);  // Subtract 0.5f from the source (Saving source)
+			VectorType vScale = _mm_set_ps1(fContrast);           // Splat the scale
+			VectorType vResult = _mm_sub_ps(vColor, g_XMOneHalf);  // Subtract 0.5f from the source (Saving source)
 			vResult = _mm_mul_ps(vResult, vScale);               // Mul by scale
 			vResult = _mm_add_ps(vResult, g_XMOneHalf);          // Add 0.5f
 		// Retain w from the source color
@@ -23742,20 +23742,20 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorRGBToHSL(FVector rgb)
+		inline VectorType RAYMATH_CALLCONV ColorRGBToHSL(FVector rgb)
 		{
-			Vector r = VectorSplatX(rgb);
-			Vector g = VectorSplatY(rgb);
-			Vector b = VectorSplatZ(rgb);
+			VectorType r = VectorSplatX(rgb);
+			VectorType g = VectorSplatY(rgb);
+			VectorType b = VectorSplatZ(rgb);
 
-			Vector min = VectorMin(r, VectorMin(g, b));
-			Vector max = VectorMax(r, VectorMax(g, b));
+			VectorType min = VectorMin(r, VectorMin(g, b));
+			VectorType max = VectorMax(r, VectorMax(g, b));
 
-			Vector l = VectorMultiply(VectorAdd(min, max), g_XMOneHalf);
+			VectorType l = VectorMultiply(VectorAdd(min, max), g_XMOneHalf);
 
-			Vector d = VectorSubtract(max, min);
+			VectorType d = VectorSubtract(max, min);
 
-			Vector la = VectorSelect(rgb, l, g_XMSelect1110);
+			VectorType la = VectorSelect(rgb, l, g_XMSelect1110);
 
 			if (Vector3Less(d, g_XMEpsilon))
 			{
@@ -23764,9 +23764,9 @@ namespace At0
 			}
 			else
 			{
-				Vector s, h;
+				VectorType s, h;
 
-				Vector d2 = VectorAdd(min, max);
+				VectorType d2 = VectorAdd(min, max);
 
 				if (Vector3Greater(l, g_XMOneHalf))
 				{
@@ -23802,7 +23802,7 @@ namespace At0
 				if (Vector3Less(h, g_XMZero))
 					h = VectorAdd(h, g_XMOne);
 
-				Vector lha = VectorSelect(la, h, g_XMSelect1100);
+				VectorType lha = VectorSelect(la, h, g_XMSelect1100);
 				return VectorSelect(s, lha, g_XMSelect1011);
 			}
 		}
@@ -23812,12 +23812,12 @@ namespace At0
 		namespace Internal
 		{
 
-			inline Vector RAYMATH_CALLCONV ColorHue2Clr(FVector p, FVector q, FVector h)
+			inline VectorType RAYMATH_CALLCONV ColorHue2Clr(FVector p, FVector q, FVector h)
 			{
 				static const VectorF32 oneSixth = { { { 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f } } };
 				static const VectorF32 twoThirds = { { { 2.0f / 3.0f, 2.0f / 3.0f, 2.0f / 3.0f, 2.0f / 3.0f } } };
 
-				Vector t = h;
+				VectorType t = h;
 
 				if (Vector3Less(t, g_XMZero))
 					t = VectorAdd(t, g_XMOne);
@@ -23828,8 +23828,8 @@ namespace At0
 				if (Vector3Less(t, oneSixth))
 				{
 					// p + (q - p) * 6 * t
-					Vector t1 = VectorSubtract(q, p);
-					Vector t2 = VectorMultiply(g_XMSix, t);
+					VectorType t1 = VectorSubtract(q, p);
+					VectorType t2 = VectorMultiply(g_XMSix, t);
 					return VectorMultiplyAdd(t1, t2, p);
 				}
 
@@ -23839,8 +23839,8 @@ namespace At0
 				if (Vector3Less(t, twoThirds))
 				{
 					// p + (q - p) * 6 * (2/3 - t)
-					Vector t1 = VectorSubtract(q, p);
-					Vector t2 = VectorMultiply(g_XMSix, VectorSubtract(twoThirds, t));
+					VectorType t1 = VectorSubtract(q, p);
+					VectorType t2 = VectorMultiply(g_XMSix, VectorSubtract(twoThirds, t));
 					return VectorMultiplyAdd(t1, t2, p);
 				}
 
@@ -23849,12 +23849,12 @@ namespace At0
 
 		} // namespace Internal
 
-		inline Vector RAYMATH_CALLCONV ColorHSLToRGB(FVector hsl)
+		inline VectorType RAYMATH_CALLCONV ColorHSLToRGB(FVector hsl)
 		{
 			static const VectorF32 oneThird = { { { 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f } } };
 
-			Vector s = VectorSplatY(hsl);
-			Vector l = VectorSplatZ(hsl);
+			VectorType s = VectorSplatY(hsl);
+			VectorType l = VectorSplatZ(hsl);
 
 			if (Vector3NearEqual(s, g_XMZero, g_XMEpsilon))
 			{
@@ -23863,9 +23863,9 @@ namespace At0
 			}
 			else
 			{
-				Vector h = VectorSplatX(hsl);
+				VectorType h = VectorSplatX(hsl);
 
-				Vector q;
+				VectorType q;
 				if (Vector3Less(l, g_XMOneHalf))
 				{
 					q = VectorMultiply(l, VectorAdd(g_XMOne, s));
@@ -23875,14 +23875,14 @@ namespace At0
 					q = VectorSubtract(VectorAdd(l, s), VectorMultiply(l, s));
 				}
 
-				Vector p = VectorSubtract(VectorMultiply(g_XMTwo, l), q);
+				VectorType p = VectorSubtract(VectorMultiply(g_XMTwo, l), q);
 
-				Vector r = Internal::ColorHue2Clr(p, q, VectorAdd(h, oneThird));
-				Vector g = Internal::ColorHue2Clr(p, q, h);
-				Vector b = Internal::ColorHue2Clr(p, q, VectorSubtract(h, oneThird));
+				VectorType r = Internal::ColorHue2Clr(p, q, VectorAdd(h, oneThird));
+				VectorType g = Internal::ColorHue2Clr(p, q, h);
+				VectorType b = Internal::ColorHue2Clr(p, q, VectorSubtract(h, oneThird));
 
-				Vector rg = VectorSelect(g, r, g_XMSelect1000);
-				Vector ba = VectorSelect(hsl, b, g_XMSelect1110);
+				VectorType rg = VectorSelect(g, r, g_XMSelect1000);
+				VectorType ba = VectorSelect(hsl, b, g_XMSelect1110);
 
 				return VectorSelect(ba, rg, g_XMSelect1100);
 			}
@@ -23890,29 +23890,29 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorRGBToHSV(FVector rgb)
+		inline VectorType RAYMATH_CALLCONV ColorRGBToHSV(FVector rgb)
 		{
-			Vector r = VectorSplatX(rgb);
-			Vector g = VectorSplatY(rgb);
-			Vector b = VectorSplatZ(rgb);
+			VectorType r = VectorSplatX(rgb);
+			VectorType g = VectorSplatY(rgb);
+			VectorType b = VectorSplatZ(rgb);
 
-			Vector min = VectorMin(r, VectorMin(g, b));
-			Vector v = VectorMax(r, VectorMax(g, b));
+			VectorType min = VectorMin(r, VectorMin(g, b));
+			VectorType v = VectorMax(r, VectorMax(g, b));
 
-			Vector d = VectorSubtract(v, min);
+			VectorType d = VectorSubtract(v, min);
 
-			Vector s = (Vector3NearEqual(v, g_XMZero, g_XMEpsilon)) ? g_XMZero : VectorDivide(d, v);
+			VectorType s = (Vector3NearEqual(v, g_XMZero, g_XMEpsilon)) ? g_XMZero : VectorDivide(d, v);
 
 			if (Vector3Less(d, g_XMEpsilon))
 			{
 				// Achromatic, assume H of 0
-				Vector hv = VectorSelect(v, g_XMZero, g_XMSelect1000);
-				Vector hva = VectorSelect(rgb, hv, g_XMSelect1110);
+				VectorType hv = VectorSelect(v, g_XMZero, g_XMSelect1000);
+				VectorType hva = VectorSelect(rgb, hv, g_XMSelect1110);
 				return VectorSelect(s, hva, g_XMSelect1011);
 			}
 			else
 			{
-				Vector h;
+				VectorType h;
 
 				if (Vector3Equal(r, v))
 				{
@@ -23937,73 +23937,73 @@ namespace At0
 
 				h = VectorDivide(h, g_XMSix);
 
-				Vector hv = VectorSelect(v, h, g_XMSelect1000);
-				Vector hva = VectorSelect(rgb, hv, g_XMSelect1110);
+				VectorType hv = VectorSelect(v, h, g_XMSelect1000);
+				VectorType hva = VectorSelect(rgb, hv, g_XMSelect1110);
 				return VectorSelect(s, hva, g_XMSelect1011);
 			}
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorHSVToRGB(FVector hsv)
+		inline VectorType RAYMATH_CALLCONV ColorHSVToRGB(FVector hsv)
 		{
-			Vector h = VectorSplatX(hsv);
-			Vector s = VectorSplatY(hsv);
-			Vector v = VectorSplatZ(hsv);
+			VectorType h = VectorSplatX(hsv);
+			VectorType s = VectorSplatY(hsv);
+			VectorType v = VectorSplatZ(hsv);
 
-			Vector h6 = VectorMultiply(h, g_XMSix);
+			VectorType h6 = VectorMultiply(h, g_XMSix);
 
-			Vector i = VectorFloor(h6);
-			Vector f = VectorSubtract(h6, i);
+			VectorType i = VectorFloor(h6);
+			VectorType f = VectorSubtract(h6, i);
 
 			// p = v* (1-s)
-			Vector p = VectorMultiply(v, VectorSubtract(g_XMOne, s));
+			VectorType p = VectorMultiply(v, VectorSubtract(g_XMOne, s));
 
 			// q = v*(1-f*s)
-			Vector q = VectorMultiply(v, VectorSubtract(g_XMOne, VectorMultiply(f, s)));
+			VectorType q = VectorMultiply(v, VectorSubtract(g_XMOne, VectorMultiply(f, s)));
 
 			// t = v*(1 - (1-f)*s)
-			Vector t = VectorMultiply(v, VectorSubtract(g_XMOne, VectorMultiply(VectorSubtract(g_XMOne, f), s)));
+			VectorType t = VectorMultiply(v, VectorSubtract(g_XMOne, VectorMultiply(VectorSubtract(g_XMOne, f), s)));
 
 			auto ii = static_cast<int>(VectorGetX(VectorMod(i, g_XMSix)));
 
-			Vector _rgb;
+			VectorType _rgb;
 
 			switch (ii)
 			{
 			case 0: // rgb = vtp
 			{
-				Vector vt = VectorSelect(t, v, g_XMSelect1000);
+				VectorType vt = VectorSelect(t, v, g_XMSelect1000);
 				_rgb = VectorSelect(p, vt, g_XMSelect1100);
 			}
 			break;
 			case 1: // rgb = qvp
 			{
-				Vector qv = VectorSelect(v, q, g_XMSelect1000);
+				VectorType qv = VectorSelect(v, q, g_XMSelect1000);
 				_rgb = VectorSelect(p, qv, g_XMSelect1100);
 			}
 			break;
 			case 2: // rgb = pvt
 			{
-				Vector pv = VectorSelect(v, p, g_XMSelect1000);
+				VectorType pv = VectorSelect(v, p, g_XMSelect1000);
 				_rgb = VectorSelect(t, pv, g_XMSelect1100);
 			}
 			break;
 			case 3: // rgb = pqv
 			{
-				Vector pq = VectorSelect(q, p, g_XMSelect1000);
+				VectorType pq = VectorSelect(q, p, g_XMSelect1000);
 				_rgb = VectorSelect(v, pq, g_XMSelect1100);
 			}
 			break;
 			case 4: // rgb = tpv
 			{
-				Vector tp = VectorSelect(p, t, g_XMSelect1000);
+				VectorType tp = VectorSelect(p, t, g_XMSelect1000);
 				_rgb = VectorSelect(v, tp, g_XMSelect1100);
 			}
 			break;
 			default: // rgb = vpq
 			{
-				Vector vp = VectorSelect(p, v, g_XMSelect1000);
+				VectorType vp = VectorSelect(p, v, g_XMSelect1000);
 				_rgb = VectorSelect(q, vp, g_XMSelect1100);
 			}
 			break;
@@ -24014,61 +24014,61 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorRGBToYUV(FVector rgb)
+		inline VectorType RAYMATH_CALLCONV ColorRGBToYUV(FVector rgb)
 		{
 			static const VectorF32 Scale0 = { { { 0.299f, -0.147f, 0.615f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { 0.587f, -0.289f, -0.515f, 0.0f } } };
 			static const VectorF32 Scale2 = { { { 0.114f, 0.436f, -0.100f, 0.0f } } };
 
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
-			Vector clr = Vector3Transform(rgb, M);
+			VectorType clr = Vector3Transform(rgb, M);
 
 			return VectorSelect(rgb, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorYUVToRGB(FVector yuv)
+		inline VectorType RAYMATH_CALLCONV ColorYUVToRGB(FVector yuv)
 		{
 			static const VectorF32 Scale1 = { { { 0.0f, -0.395f, 2.032f, 0.0f } } };
 			static const VectorF32 Scale2 = { { { 1.140f, -0.581f, 0.0f, 0.0f } } };
 
 			Matrix M(g_XMOne, Scale1, Scale2, g_XMZero);
-			Vector clr = Vector3Transform(yuv, M);
+			VectorType clr = Vector3Transform(yuv, M);
 
 			return VectorSelect(yuv, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorRGBToYUV_HD(FVector rgb)
+		inline VectorType RAYMATH_CALLCONV ColorRGBToYUV_HD(FVector rgb)
 		{
 			static const VectorF32 Scale0 = { { { 0.2126f, -0.0997f, 0.6150f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { 0.7152f, -0.3354f, -0.5586f, 0.0f } } };
 			static const VectorF32 Scale2 = { { { 0.0722f, 0.4351f, -0.0564f, 0.0f } } };
 
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
-			Vector clr = Vector3Transform(rgb, M);
+			VectorType clr = Vector3Transform(rgb, M);
 
 			return VectorSelect(rgb, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorYUVToRGB_HD(FVector yuv)
+		inline VectorType RAYMATH_CALLCONV ColorYUVToRGB_HD(FVector yuv)
 		{
 			static const VectorF32 Scale1 = { { { 0.0f, -0.2153f, 2.1324f, 0.0f } } };
 			static const VectorF32 Scale2 = { { { 1.2803f, -0.3806f, 0.0f, 0.0f } } };
 
 			Matrix M(g_XMOne, Scale1, Scale2, g_XMZero);
-			Vector clr = Vector3Transform(yuv, M);
+			VectorType clr = Vector3Transform(yuv, M);
 
 			return VectorSelect(yuv, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorRGBToXYZ(FVector rgb)
+		inline VectorType RAYMATH_CALLCONV ColorRGBToXYZ(FVector rgb)
 		{
 			static const VectorF32 Scale0 = { { { 0.4887180f, 0.1762044f, 0.0000000f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { 0.3106803f, 0.8129847f, 0.0102048f, 0.0f } } };
@@ -24076,12 +24076,12 @@ namespace At0
 			static const VectorF32 Scale = { { { 1.f / 0.17697f, 1.f / 0.17697f, 1.f / 0.17697f, 0.0f } } };
 
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
-			Vector clr = VectorMultiply(Vector3Transform(rgb, M), Scale);
+			VectorType clr = VectorMultiply(Vector3Transform(rgb, M), Scale);
 
 			return VectorSelect(rgb, clr, g_XMSelect1110);
 		}
 
-		inline Vector RAYMATH_CALLCONV ColorXYZToRGB(FVector xyz)
+		inline VectorType RAYMATH_CALLCONV ColorXYZToRGB(FVector xyz)
 		{
 			static const VectorF32 Scale0 = { { { 2.3706743f, -0.5138850f, 0.0052982f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { -0.9000405f, 1.4253036f, -0.0146949f, 0.0f } } };
@@ -24089,14 +24089,14 @@ namespace At0
 			static const VectorF32 Scale = { { { 0.17697f, 0.17697f, 0.17697f, 0.0f } } };
 
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
-			Vector clr = Vector3Transform(VectorMultiply(xyz, Scale), M);
+			VectorType clr = Vector3Transform(VectorMultiply(xyz, Scale), M);
 
 			return VectorSelect(xyz, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorXYZToSRGB(FVector xyz)
+		inline VectorType RAYMATH_CALLCONV ColorXYZToSRGB(FVector xyz)
 		{
 			static const VectorF32 Scale0 = { { { 3.2406f, -0.9689f, 0.0557f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { -1.5372f, 1.8758f, -0.2040f, 0.0f } } };
@@ -24105,24 +24105,24 @@ namespace At0
 			static const VectorF32 Exp = { { { 1.0f / 2.4f, 1.0f / 2.4f, 1.0f / 2.4f, 1.0f } } };
 
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
-			Vector lclr = Vector3Transform(xyz, M);
+			VectorType lclr = Vector3Transform(xyz, M);
 
-			Vector sel = VectorGreater(lclr, Cutoff);
+			VectorType sel = VectorGreater(lclr, Cutoff);
 
 			// clr = 12.92 * lclr for lclr <= 0.0031308f
-			Vector smallC = VectorMultiply(lclr, g_XMsrgbScale);
+			VectorType smallC = VectorMultiply(lclr, g_XMsrgbScale);
 
 			// clr = (1+a)*pow(lclr, 1/2.4) - a for lclr > 0.0031308 (where a = 0.055)
-			Vector largeC = VectorSubtract(VectorMultiply(g_XMsrgbA1, VectorPow(lclr, Exp)), g_XMsrgbA);
+			VectorType largeC = VectorSubtract(VectorMultiply(g_XMsrgbA1, VectorPow(lclr, Exp)), g_XMsrgbA);
 
-			Vector clr = VectorSelect(smallC, largeC, sel);
+			VectorType clr = VectorSelect(smallC, largeC, sel);
 
 			return VectorSelect(xyz, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorSRGBToXYZ(FVector srgb)
+		inline VectorType RAYMATH_CALLCONV ColorSRGBToXYZ(FVector srgb)
 		{
 			static const VectorF32 Scale0 = { { { 0.4124f, 0.2126f, 0.0193f, 0.0f } } };
 			static const VectorF32 Scale1 = { { { 0.3576f, 0.7152f, 0.1192f, 0.0f } } };
@@ -24130,25 +24130,25 @@ namespace At0
 			static const VectorF32 Cutoff = { { { 0.04045f, 0.04045f, 0.04045f, 0.0f } } };
 			static const VectorF32 Exp = { { { 2.4f, 2.4f, 2.4f, 1.0f } } };
 
-			Vector sel = VectorGreater(srgb, Cutoff);
+			VectorType sel = VectorGreater(srgb, Cutoff);
 
 			// lclr = clr / 12.92
-			Vector smallC = VectorDivide(srgb, g_XMsrgbScale);
+			VectorType smallC = VectorDivide(srgb, g_XMsrgbScale);
 
 			// lclr = pow( (clr + a) / (1+a), 2.4 )
-			Vector largeC = VectorPow(VectorDivide(VectorAdd(srgb, g_XMsrgbA), g_XMsrgbA1), Exp);
+			VectorType largeC = VectorPow(VectorDivide(VectorAdd(srgb, g_XMsrgbA), g_XMsrgbA1), Exp);
 
-			Vector lclr = VectorSelect(smallC, largeC, sel);
+			VectorType lclr = VectorSelect(smallC, largeC, sel);
 
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
-			Vector clr = Vector3Transform(lclr, M);
+			VectorType clr = Vector3Transform(lclr, M);
 
 			return VectorSelect(srgb, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorRGBToSRGB(FVector rgb)
+		inline VectorType RAYMATH_CALLCONV ColorRGBToSRGB(FVector rgb)
 		{
 			static const VectorF32 Cutoff = { { { 0.0031308f, 0.0031308f, 0.0031308f, 1.f } } };
 			static const VectorF32 Linear = { { { 12.92f, 12.92f, 12.92f, 1.f } } };
@@ -24156,17 +24156,17 @@ namespace At0
 			static const VectorF32 Bias = { { { 0.055f, 0.055f, 0.055f, 0.f } } };
 			static const VectorF32 InvGamma = { { { 1.0f / 2.4f, 1.0f / 2.4f, 1.0f / 2.4f, 1.f } } };
 
-			Vector V = VectorSaturate(rgb);
-			Vector V0 = VectorMultiply(V, Linear);
-			Vector V1 = VectorSubtract(VectorMultiply(Scale, VectorPow(V, InvGamma)), Bias);
-			Vector select = VectorLess(V, Cutoff);
+			VectorType V = VectorSaturate(rgb);
+			VectorType V0 = VectorMultiply(V, Linear);
+			VectorType V1 = VectorSubtract(VectorMultiply(Scale, VectorPow(V, InvGamma)), Bias);
+			VectorType select = VectorLess(V, Cutoff);
 			V = VectorSelect(V1, V0, select);
 			return VectorSelect(rgb, V, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV ColorSRGBToRGB(FVector srgb)
+		inline VectorType RAYMATH_CALLCONV ColorSRGBToRGB(FVector srgb)
 		{
 			static const VectorF32 Cutoff = { { { 0.04045f, 0.04045f, 0.04045f, 1.f } } };
 			static const VectorF32 ILinear = { { { 1.f / 12.92f, 1.f / 12.92f, 1.f / 12.92f, 1.f } } };
@@ -24174,10 +24174,10 @@ namespace At0
 			static const VectorF32 Bias = { { { 0.055f, 0.055f, 0.055f, 0.f } } };
 			static const VectorF32 Gamma = { { { 2.4f, 2.4f, 2.4f, 1.f } } };
 
-			Vector V = VectorSaturate(srgb);
-			Vector V0 = VectorMultiply(V, ILinear);
-			Vector V1 = VectorPow(VectorMultiply(VectorAdd(V, Bias), Scale), Gamma);
-			Vector select = VectorGreater(V, Cutoff);
+			VectorType V = VectorSaturate(srgb);
+			VectorType V0 = VectorMultiply(V, ILinear);
+			VectorType V1 = VectorPow(VectorMultiply(VectorAdd(V, Bias), Scale), Gamma);
+			VectorType select = VectorGreater(V, Cutoff);
 			V = VectorSelect(V0, V1, select);
 			return VectorSelect(srgb, V, g_XMSelect1110);
 		}
@@ -24252,7 +24252,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Vector RAYMATH_CALLCONV FresnelTerm
+		inline VectorType RAYMATH_CALLCONV FresnelTerm
 		(
 			FVector CosIncidentAngle,
 			FVector RefractionIndex
@@ -24266,28 +24266,28 @@ namespace At0
 
 #if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
-			Vector G = VectorMultiplyAdd(RefractionIndex, RefractionIndex, g_XMNegativeOne.v);
+			VectorType G = VectorMultiplyAdd(RefractionIndex, RefractionIndex, g_XMNegativeOne.v);
 			G = VectorMultiplyAdd(CosIncidentAngle, CosIncidentAngle, G);
 			G = VectorAbs(G);
 			G = VectorSqrt(G);
 
-			Vector S = VectorAdd(G, CosIncidentAngle);
-			Vector D = VectorSubtract(G, CosIncidentAngle);
+			VectorType S = VectorAdd(G, CosIncidentAngle);
+			VectorType D = VectorSubtract(G, CosIncidentAngle);
 
-			Vector V0 = VectorMultiply(D, D);
-			Vector V1 = VectorMultiply(S, S);
+			VectorType V0 = VectorMultiply(D, D);
+			VectorType V1 = VectorMultiply(S, S);
 			V1 = VectorReciprocal(V1);
 			V0 = VectorMultiply(g_XMOneHalf.v, V0);
 			V0 = VectorMultiply(V0, V1);
 
-			Vector V2 = VectorMultiplyAdd(CosIncidentAngle, S, g_XMNegativeOne.v);
-			Vector V3 = VectorMultiplyAdd(CosIncidentAngle, D, g_XMOne.v);
+			VectorType V2 = VectorMultiplyAdd(CosIncidentAngle, S, g_XMNegativeOne.v);
+			VectorType V3 = VectorMultiplyAdd(CosIncidentAngle, D, g_XMOne.v);
 			V2 = VectorMultiply(V2, V2);
 			V3 = VectorMultiply(V3, V3);
 			V3 = VectorReciprocal(V3);
 			V2 = VectorMultiplyAdd(V2, V3, g_XMOne.v);
 
-			Vector Result = VectorMultiply(V0, V2);
+			VectorType Result = VectorMultiply(V0, V2);
 
 			Result = VectorSaturate(Result);
 
@@ -24295,8 +24295,8 @@ namespace At0
 
 #elif defined(RAY_SSE_INTRINSICS)
 	// G = sqrt(abs((RefractionIndex^2-1) + CosIncidentAngle^2))
-			Vector G = _mm_mul_ps(RefractionIndex, RefractionIndex);
-			Vector vTemp = _mm_mul_ps(CosIncidentAngle, CosIncidentAngle);
+			VectorType G = _mm_mul_ps(RefractionIndex, RefractionIndex);
+			VectorType vTemp = _mm_mul_ps(CosIncidentAngle, CosIncidentAngle);
 			G = _mm_sub_ps(G, g_XMOne);
 			vTemp = _mm_add_ps(vTemp, G);
 			// max((0-vTemp),vTemp) == abs(vTemp)
@@ -24308,10 +24308,10 @@ namespace At0
 			G = _mm_sqrt_ps(G);
 
 			// Calc G-C and G+C
-			Vector GAddC = _mm_add_ps(G, CosIncidentAngle);
-			Vector GSubC = _mm_sub_ps(G, CosIncidentAngle);
+			VectorType GAddC = _mm_add_ps(G, CosIncidentAngle);
+			VectorType GSubC = _mm_sub_ps(G, CosIncidentAngle);
 			// Perform the term (0.5f *(g - c)^2) / (g + c)^2 
-			Vector vResult = _mm_mul_ps(GSubC, GSubC);
+			VectorType vResult = _mm_mul_ps(GSubC, GSubC);
 			vTemp = _mm_mul_ps(GAddC, GAddC);
 			vResult = _mm_mul_ps(vResult, g_XMOneHalf);
 			vResult = _mm_div_ps(vResult, vTemp);
