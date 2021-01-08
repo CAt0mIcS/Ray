@@ -426,7 +426,24 @@ namespace At0
 			Vector RAYMATH_CALLCONV NotEqualInt(FVectorType V1) { return NotEqualInt(*this, V1); }
 			Vector RAYMATH_CALLCONV Greater(FVectorType V1) { return Greater(*this, V1); }
 			Vector RAYMATH_CALLCONV GreaterR(/*_In_ */FVectorType V1, /*_Out_ */ uint32_t* pCR) { return GreaterR(pCR, *this, V1); }
-
+			float RAYMATH_CALLCONV GetByIndex(size_t i) const;
+			float RAYMATH_CALLCONV GetX() const;
+			float RAYMATH_CALLCONV GetY() const;
+			float RAYMATH_CALLCONV GetZ() const;
+			float RAYMATH_CALLCONV GetW() const;
+			Vector RAYMATH_CALLCONV Round() const;
+			Vector RAYMATH_CALLCONV Truncate() const;
+			Vector RAYMATH_CALLCONV Floor() const;
+			Vector RAYMATH_CALLCONV Ceiling() const;
+			Vector RAYMATH_CALLCONV Clamp(FVectorType Min, FVectorType Max) const;
+			Vector RAYMATH_CALLCONV Saturate() const;
+			Vector RAYMATH_CALLCONV Min(FVectorType other) const { return Min(*this, other); }
+			Vector RAYMATH_CALLCONV Max(FVectorType other) const { return Max(*this, other); }
+			void RAYMATH_CALLCONV SetByIndex(float f, size_t i);
+			void RAYMATH_CALLCONV SetX(float x);
+			void RAYMATH_CALLCONV SetY(float y);
+			void RAYMATH_CALLCONV SetZ(float z);
+			void RAYMATH_CALLCONV SetW(float w);
 
 			static Vector RAYMATH_CALLCONV Equal(FVectorType V1, FVectorType V2);
 			static Vector RAYMATH_CALLCONV EqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVectorType V1, /*_In_ */FVectorType V2);
@@ -442,6 +459,21 @@ namespace At0
 			static Vector RAYMATH_CALLCONV Subtract(FVectorType V1, FVectorType V2);
 			static Vector RAYMATH_CALLCONV Multiply(FVectorType V1, FVectorType V2);
 			static Vector RAYMATH_CALLCONV Divide(FVectorType V1, FVectorType V2);
+
+			static Vector RAYMATH_CALLCONV ShiftLeft(FVectorType V1, FVectorType V2, uint32_t Elements);
+			static Vector RAYMATH_CALLCONV RotateLeft(FVectorType V, uint32_t Elements);
+			static Vector RAYMATH_CALLCONV RotateRight(FVectorType V, uint32_t Elements);
+			static Vector RAYMATH_CALLCONV Insert(FVectorType VD, FVectorType VS, uint32_t VSLeftRotateElements,
+				uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3);
+			static Vector RAYMATH_CALLCONV Swizzle(FVectorType V, uint32_t E0, uint32_t E1, uint32_t E2, uint32_t E3);
+			static Vector RAYMATH_CALLCONV Permute(FVectorType V1, FVectorType V2, uint32_t PermuteX, uint32_t PermuteY, uint32_t PermuteZ, uint32_t PermuteW);
+			static Vector RAYMATH_CALLCONV SelectControl(uint32_t VectorIndex0, uint32_t VectorIndex1, uint32_t VectorIndex2, uint32_t VectorIndex3);
+			static Vector RAYMATH_CALLCONV Select(FVectorType V1, FVectorType V2, FVectorType Control);
+			static Vector RAYMATH_CALLCONV MergeXY(FVectorType V1, FVectorType V2);
+			static Vector RAYMATH_CALLCONV MergeZW(FVectorType V1, FVectorType V2);
+			static Vector RAYMATH_CALLCONV Min(FVectorType V1, FVectorType V2);
+			static Vector RAYMATH_CALLCONV Max(FVectorType V1, FVectorType V2);
+
 		};
 
 		RAY_ALIGNED(16) struct VectorI32
@@ -602,7 +634,7 @@ namespace At0
 			bool RAYMATH_CALLCONV IsIdentity() const;
 			Matrix RAYMATH_CALLCONV Transpose() const;
 			Matrix RAYMATH_CALLCONV Inverse(/*_Out_opt_ */VectorType* pDeterminant = nullptr) const;
-			VectorType RAYMATH_CALLCONV Determinant() const;
+			Vector RAYMATH_CALLCONV Determinant() const;
 			bool RAYMATH_CALLCONV Decompose(/*_Out_ */ VectorType* outScale, /*_Out_ */ VectorType* outRotQuat, /*_Out_ */ VectorType* outTrans) const;
 
 			static Matrix RAYMATH_CALLCONV Identity();
@@ -672,6 +704,7 @@ namespace At0
 			Quaternion& operator=(Quaternion&&) = default;
 
 			RAYMATH_CONSTEXPR Quaternion(FVectorType v) : v(v) {}
+			RAYMATH_CONSTEXPR Quaternion(FVector v) : v(v.v) {}
 			RAYMATH_CONSTEXPR Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 
 			operator FVectorType() const { return v; }
@@ -1271,12 +1304,6 @@ namespace At0
 		VectorType    RAYMATH_CALLCONV     VectorSplatEpsilon();
 		VectorType    RAYMATH_CALLCONV     VectorSplatSignMask();
 
-		float       RAYMATH_CALLCONV     VectorGetByIndex(FVectorType V, size_t i);
-		float       RAYMATH_CALLCONV     VectorGetX(FVectorType V);
-		float       RAYMATH_CALLCONV     VectorGetY(FVectorType V);
-		float       RAYMATH_CALLCONV     VectorGetZ(FVectorType V);
-		float       RAYMATH_CALLCONV     VectorGetW(FVectorType V);
-
 		void        RAYMATH_CALLCONV     VectorGetByIndexPtr(/*_Out_ */ float* f, /*_In_ */FVectorType V, /*_In_ */size_t i);
 		void        RAYMATH_CALLCONV     VectorGetXPtr(/*_Out_ */ float* x, /*_In_ */FVectorType V);
 		void        RAYMATH_CALLCONV     VectorGetYPtr(/*_Out_ */ float* y, /*_In_ */FVectorType V);
@@ -1294,12 +1321,6 @@ namespace At0
 		void        RAYMATH_CALLCONV     VectorGetIntYPtr(/*_Out_ */ uint32_t* y, /*_In_ */FVectorType V);
 		void        RAYMATH_CALLCONV     VectorGetIntZPtr(/*_Out_ */ uint32_t* z, /*_In_ */FVectorType V);
 		void        RAYMATH_CALLCONV     VectorGetIntWPtr(/*_Out_ */ uint32_t* w, /*_In_ */FVectorType V);
-
-		VectorType    RAYMATH_CALLCONV     VectorSetByIndex(FVectorType V, float f, size_t i);
-		VectorType    RAYMATH_CALLCONV     VectorSetX(FVectorType V, float x);
-		VectorType    RAYMATH_CALLCONV     VectorSetY(FVectorType V, float y);
-		VectorType    RAYMATH_CALLCONV     VectorSetZ(FVectorType V, float z);
-		VectorType    RAYMATH_CALLCONV     VectorSetW(FVectorType V, float w);
 
 		VectorType    RAYMATH_CALLCONV     VectorSetByIndexPtr(/*_In_ */FVectorType V, /*_In_ */const float* f, /*_In_ */size_t i);
 		VectorType    RAYMATH_CALLCONV     VectorSetXPtr(/*_In_ */FVectorType V, /*_In_ */const float* x);
@@ -1319,30 +1340,6 @@ namespace At0
 		VectorType    RAYMATH_CALLCONV     VectorSetIntZPtr(/*_In_ */FVectorType V, /*_In_ */const uint32_t* z);
 		VectorType    RAYMATH_CALLCONV     VectorSetIntWPtr(/*_In_ */FVectorType V, /*_In_ */const uint32_t* w);
 
-#if defined(__XNAMATH_H__) && defined(VectorSwizzle)
-#undef VectorSwizzle
-#endif
-
-		VectorType    RAYMATH_CALLCONV     VectorSwizzle(FVectorType V, uint32_t E0, uint32_t E1, uint32_t E2, uint32_t E3);
-		VectorType    RAYMATH_CALLCONV     VectorPermute(FVectorType V1, FVectorType V2, uint32_t PermuteX, uint32_t PermuteY, uint32_t PermuteZ, uint32_t PermuteW);
-		VectorType    RAYMATH_CALLCONV     VectorSelectControl(uint32_t VectorIndex0, uint32_t VectorIndex1, uint32_t VectorIndex2, uint32_t VectorIndex3);
-		VectorType    RAYMATH_CALLCONV     VectorSelect(FVectorType V1, FVectorType V2, FVectorType Control);
-		VectorType    RAYMATH_CALLCONV     VectorMergeXY(FVectorType V1, FVectorType V2);
-		VectorType    RAYMATH_CALLCONV     VectorMergeZW(FVectorType V1, FVectorType V2);
-
-#if defined(__XNAMATH_H__) && defined(VectorShiftLeft)
-#undef VectorShiftLeft
-#undef VectorRotateLeft
-#undef VectorRotateRight
-#undef VectorInsert
-#endif
-
-		VectorType    RAYMATH_CALLCONV     VectorShiftLeft(FVectorType V1, FVectorType V2, uint32_t Elements);
-		VectorType    RAYMATH_CALLCONV     VectorRotateLeft(FVectorType V, uint32_t Elements);
-		VectorType    RAYMATH_CALLCONV     VectorRotateRight(FVectorType V, uint32_t Elements);
-		VectorType    RAYMATH_CALLCONV     VectorInsert(FVectorType VD, FVectorType VS, uint32_t VSLeftRotateElements,
-			uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3);
-
 		VectorType    RAYMATH_CALLCONV     GreaterOrEqual(FVectorType V1, FVectorType V2);
 		VectorType    RAYMATH_CALLCONV     GreaterOrEqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVectorType V1, /*_In_ */FVectorType V2);
 		VectorType    RAYMATH_CALLCONV     VectorLess(FVectorType V1, FVectorType V2);
@@ -1352,15 +1349,6 @@ namespace At0
 
 		VectorType    RAYMATH_CALLCONV     VectorIsNaN(FVectorType V);
 		VectorType    RAYMATH_CALLCONV     VectorIsInfinite(FVectorType V);
-
-		VectorType    RAYMATH_CALLCONV     VectorMin(FVectorType V1, FVectorType V2);
-		VectorType    RAYMATH_CALLCONV     VectorMax(FVectorType V1, FVectorType V2);
-		VectorType    RAYMATH_CALLCONV     VectorRound(FVectorType V);
-		VectorType    RAYMATH_CALLCONV     VectorTruncate(FVectorType V);
-		VectorType    RAYMATH_CALLCONV     VectorFloor(FVectorType V);
-		VectorType    RAYMATH_CALLCONV     VectorCeiling(FVectorType V);
-		VectorType    RAYMATH_CALLCONV     VectorClamp(FVectorType V, FVectorType Min, FVectorType Max);
-		VectorType    RAYMATH_CALLCONV     VectorSaturate(FVectorType V);
 
 		VectorType    RAYMATH_CALLCONV     VectorAndInt(FVectorType V1, FVectorType V2);
 		VectorType    RAYMATH_CALLCONV     VectorAndCInt(FVectorType V1, FVectorType V2);
@@ -1796,7 +1784,7 @@ namespace At0
 			return Internal::PermuteHelper<Shuffle, WhichX, WhichY, WhichZ, WhichW>::Permute(V1, V2);
 #else
 
-			return VectorPermute(V1, V2, PermuteX, PermuteY, PermuteZ, PermuteW);
+			return Vector::Permute(V1, V2, PermuteX, PermuteY, PermuteZ, PermuteW);
 
 #endif
 		}
@@ -1832,7 +1820,7 @@ namespace At0
 
 #if defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 
-		// If the indices are all in the range 0-3 or 4-7, then use VectorSwizzle instead
+		// If the indices are all in the range 0-3 or 4-7, then use Vector::Swizzle instead
 		// The mirror cases are not spelled out here as the programmer can always swap the arguments
 		// (i.e. prefer permutes where the X element comes from the V1 vector instead of the V2 vector)
 
@@ -1885,7 +1873,7 @@ namespace At0
 			return RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(SwizzleW, SwizzleZ, SwizzleY, SwizzleX));
 #else
 
-			return VectorSwizzle(V, SwizzleX, SwizzleY, SwizzleZ, SwizzleW);
+			return Vector::Swizzle(V, SwizzleX, SwizzleY, SwizzleZ, SwizzleW);
 
 #endif
 		}
@@ -1970,8 +1958,8 @@ namespace At0
 		template<uint32_t VSLeftRotateElements, uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3>
 		inline VectorType     RAYMATH_CALLCONV     VectorInsert(FVectorType VD, FVectorType VS)
 		{
-			VectorType Control = VectorSelectControl(Select0 & 1, Select1 & 1, Select2 & 1, Select3 & 1);
-			return VectorSelect(VD, VectorRotateLeft<VSLeftRotateElements>(VS), Control);
+			VectorType Control = Vector::SelectControl(Select0 & 1, Select1 & 1, Select2 & 1, Select3 & 1);
+			return Vector::Select(VD, VectorRotateLeft<VSLeftRotateElements>(VS), Control);
 		}
 
 		/****************************************************************************
@@ -2323,13 +2311,13 @@ namespace At0
 				}
 				else if (fTemp > (65536.0f * 32768.0f) - 128.0f) {
 					iResult = 0x7FFFFFFF;
-				}
+		}
 				else {
 					iResult = static_cast<int32_t>(fTemp);
 				}
 				Result.vector4_u32[ElementIndex] = static_cast<uint32_t>(iResult);
-			} while (++ElementIndex < 4);
-			return Result;
+		} while (++ElementIndex < 4);
+		return Result;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t vResult = vmulq_n_f32(VFloat, (float)(1U << MulExponent));
 			// In case of positive overflow, detect it
@@ -2426,8 +2414,8 @@ namespace At0
 					uResult = static_cast<uint32_t>(fTemp);
 				}
 				Result.vector4_u32[ElementIndex] = uResult;
-			} while (++ElementIndex < 4);
-			return Result;
+		} while (++ElementIndex < 4);
+		return Result;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t vResult = vmulq_n_f32(VFloat, (float)(1U << MulExponent));
 			// In case of overflow, detect it
@@ -3545,7 +3533,7 @@ namespace At0
 		{
 			assert(pDestination);
 #if defined(RAY_NO_INTRINSICS)
-			*pDestination = VectorGetX(V);
+			*pDestination = Vector::GetX(V);
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			vst1q_lane_f32(pDestination, V, 0);
 #elif defined(RAY_SSE_INTRINSICS)
@@ -4834,66 +4822,66 @@ namespace At0
 		//------------------------------------------------------------------------------
 		// Return a floating point value via an index. This is not a recommended
 		// function to use due to performance loss.
-		inline float RAYMATH_CALLCONV VectorGetByIndex(FVectorType V, size_t i)
+		inline float RAYMATH_CALLCONV Vector::GetByIndex(size_t i) const
 		{
 			assert(i < 4);
 #if defined(RAY_NO_INTRINSICS)
-			return V.vector4_f32[i];
+			return v.vector4_f32[i];
 #else
 			VectorF32 U;
-			U.v = V;
+			U.v = *this;
 			return U.f[i];
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Return the X component in an FPU register. 
-		inline float RAYMATH_CALLCONV VectorGetX(FVectorType V)
+		inline float RAYMATH_CALLCONV Vector::GetX() const
 		{
 #if defined(RAY_NO_INTRINSICS)
-			return V.vector4_f32[0];
+			return v.vector4_f32[0];
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			return vgetq_lane_f32(V, 0);
+			return vgetq_lane_f32(v, 0);
 #elif defined(RAY_SSE_INTRINSICS)
-			return _mm_cvtss_f32(V);
+			return _mm_cvtss_f32(v);
 #endif
 		}
 
 		// Return the Y component in an FPU register. 
-		inline float RAYMATH_CALLCONV VectorGetY(FVectorType V)
+		inline float RAYMATH_CALLCONV Vector::GetY() const
 		{
 #if defined(RAY_NO_INTRINSICS)
-			return V.vector4_f32[1];
+			return v.vector4_f32[1];
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			return vgetq_lane_f32(V, 1);
+			return vgetq_lane_f32(v, 1);
 #elif defined(RAY_SSE_INTRINSICS)
-			VectorType vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(1, 1, 1, 1));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(v, _MM_SHUFFLE(1, 1, 1, 1));
 			return _mm_cvtss_f32(vTemp);
 #endif
 		}
 
 		// Return the Z component in an FPU register. 
-		inline float RAYMATH_CALLCONV VectorGetZ(FVectorType V)
+		inline float RAYMATH_CALLCONV Vector::GetZ() const
 		{
 #if defined(RAY_NO_INTRINSICS)
-			return V.vector4_f32[2];
+			return v.vector4_f32[2];
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			return vgetq_lane_f32(V, 2);
+			return vgetq_lane_f32(v, 2);
 #elif defined(RAY_SSE_INTRINSICS)
-			VectorType vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 2, 2, 2));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(v, _MM_SHUFFLE(2, 2, 2, 2));
 			return _mm_cvtss_f32(vTemp);
 #endif
 		}
 
 		// Return the W component in an FPU register. 
-		inline float RAYMATH_CALLCONV VectorGetW(FVectorType V)
+		inline float RAYMATH_CALLCONV Vector::GetW() const
 		{
 #if defined(RAY_NO_INTRINSICS)
-			return V.vector4_f32[3];
+			return v.vector4_f32[3];
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			return vgetq_lane_f32(V, 3);
+			return vgetq_lane_f32(v, 3);
 #elif defined(RAY_SSE_INTRINSICS)
-			VectorType vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 3, 3, 3));
+			VectorType vTemp = RAYMATH_PERMUTE_PS(v, _MM_SHUFFLE(3, 3, 3, 3));
 			return _mm_cvtss_f32(vTemp);
 #endif
 		}
@@ -5150,131 +5138,89 @@ namespace At0
 		//------------------------------------------------------------------------------
 
 		// Set a single indexed floating point component
-		inline VectorType RAYMATH_CALLCONV VectorSetByIndex(FVectorType V, float f, size_t i)
+		inline void RAYMATH_CALLCONV Vector::SetByIndex(float f, size_t i)
 		{
 			assert(i < 4);
-			VectorF32 U;
-			U.v = V;
-			U.f[i] = f;
-			return U.v;
+			this->f[i] = f;
 		}
 
 		//------------------------------------------------------------------------------
 
 		// Sets the X component of a vector to a passed floating point value
-		inline VectorType RAYMATH_CALLCONV VectorSetX(FVectorType V, float x)
+		inline void RAYMATH_CALLCONV Vector::SetX(float x)
 		{
 #if defined(RAY_NO_INTRINSICS)
-			VectorF32 U = { { {
-					x,
-					V.vector4_f32[1],
-					V.vector4_f32[2],
-					V.vector4_f32[3]
-				}
- }
-			};
-			return U.v;
+			this->x = x;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			return vsetq_lane_f32(x, V, 0);
+			*this = vsetq_lane_f32(x, v, 0);
 #elif defined(RAY_SSE_INTRINSICS)
 			VectorType vResult = _mm_set_ss(x);
-			vResult = _mm_move_ss(V, vResult);
-			return vResult;
+			*this = _mm_move_ss(v, vResult);
 #endif
 		}
 
 		// Sets the Y component of a vector to a passed floating point value
-		inline VectorType RAYMATH_CALLCONV VectorSetY(FVectorType V, float y)
+		inline void RAYMATH_CALLCONV Vector::SetY(float y)
 		{
 #if defined(RAY_NO_INTRINSICS)
-			VectorF32 U = { { {
-					V.vector4_f32[0],
-					y,
-					V.vector4_f32[2],
-					V.vector4_f32[3]
-				}
- }
-			};
-			return U.v;
+			this->y = y;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			return vsetq_lane_f32(y, V, 1);
+			*this = vsetq_lane_f32(y, v, 1);
 #elif defined(RAY_SSE4_INTRINSICS)
 			VectorType vResult = _mm_set_ss(y);
-			vResult = _mm_insert_ps(V, vResult, 0x10);
-			return vResult;
+			*this = _mm_insert_ps(v, vResult, 0x10);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap y and x
-			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
+			VectorType vResult = RAYMATH_PERMUTE_PS(v, _MM_SHUFFLE(3, 2, 0, 1));
 			// Convert input to vector
 			VectorType vTemp = _mm_set_ss(y);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap y and x again
-			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
-			return vResult;
+			*this = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
 #endif
 		}
 		// Sets the Z component of a vector to a passed floating point value
-		inline VectorType RAYMATH_CALLCONV VectorSetZ(FVectorType V, float z)
+		inline void RAYMATH_CALLCONV Vector::SetZ(float z)
 		{
 #if defined(RAY_NO_INTRINSICS)
-			VectorF32 U = { { {
-					V.vector4_f32[0],
-					V.vector4_f32[1],
-					z,
-					V.vector4_f32[3]
-				}
- }
-			};
-			return U.v;
+			this->z = z;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			return vsetq_lane_f32(z, V, 2);
+			*this = vsetq_lane_f32(z, v, 2);
 #elif defined(RAY_SSE4_INTRINSICS)
 			VectorType vResult = _mm_set_ss(z);
-			vResult = _mm_insert_ps(V, vResult, 0x20);
-			return vResult;
+			*this = _mm_insert_ps(v, vResult, 0x20);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap z and x
-			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 0, 1, 2));
+			VectorType vResult = RAYMATH_PERMUTE_PS(v, _MM_SHUFFLE(3, 0, 1, 2));
 			// Convert input to vector
 			VectorType vTemp = _mm_set_ss(z);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap z and x again
-			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
-			return vResult;
+			*this = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
 #endif
 		}
 
 		// Sets the W component of a vector to a passed floating point value
-		inline VectorType RAYMATH_CALLCONV VectorSetW(FVectorType V, float w)
+		inline void RAYMATH_CALLCONV Vector::SetW(float w)
 		{
 #if defined(RAY_NO_INTRINSICS)
-			VectorF32 U = { { {
-					V.vector4_f32[0],
-					V.vector4_f32[1],
-					V.vector4_f32[2],
-					w
-				}
- }
-			};
-			return U.v;
+			this->w = w;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			return vsetq_lane_f32(w, V, 3);
+			*this = vsetq_lane_f32(w, v, 3);
 #elif defined(RAY_SSE4_INTRINSICS)
 			VectorType vResult = _mm_set_ss(w);
-			vResult = _mm_insert_ps(V, vResult, 0x30);
-			return vResult;
+			*this = _mm_insert_ps(v, vResult, 0x30);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Swap w and x
-			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(0, 2, 1, 3));
+			VectorType vResult = RAYMATH_PERMUTE_PS(v, _MM_SHUFFLE(0, 2, 1, 3));
 			// Convert input to vector
 			VectorType vTemp = _mm_set_ss(w);
 			// Replace the x component
 			vResult = _mm_move_ss(vResult, vTemp);
 			// Swap w and x again
-			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
-			return vResult;
+			*this = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
 #endif
 		}
 
@@ -5316,7 +5262,7 @@ namespace At0
 			vResult = _mm_move_ss(V, vResult);
 			return vResult;
 #endif
-		}
+				}
 
 		// Sets the Y component of a vector to a floating point value passed by pointer
 
@@ -5538,7 +5484,7 @@ namespace At0
 			tmp.v = V;
 			tmp.u[i] = *x;
 			return tmp;
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -5562,7 +5508,7 @@ namespace At0
 			VectorType vResult = _mm_move_ss(V, vTemp);
 			return vResult;
 #endif
-		}
+				}
 
 		// Sets the Y component of a vector to an integer value passed by pointer
 
@@ -5677,7 +5623,7 @@ namespace At0
 				0x07060504, // RAYMATH_SWIZZLE_Y
 				0x0B0A0908, // RAYMATH_SWIZZLE_Z
 				0x0F0E0D0C, // RAYMATH_SWIZZLE_W
-			};
+		};
 
 			int8x8x2_t tbl;
 			tbl.val[0] = vget_low_f32(V);
@@ -5791,11 +5737,11 @@ namespace At0
 
 			return Result;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
-		// Define a control vector to be used in VectorSelect 
-		// operations.  The four integers specified in VectorSelectControl
+		// Define a control vector to be used in Vector::Select 
+		// operations.  The four integers specified in Vector::SelectControl
 		// serve as indices to select between components in two vectors.
 		// The first index controls selection for the first component of 
 		// the vectors involved in a select operation, the second index 
@@ -5804,7 +5750,7 @@ namespace At0
 		// vector to be selected whereas a one causes the component from the
 		// second vector to be selected instead.
 
-		inline VectorType RAYMATH_CALLCONV VectorSelectControl
+		inline Vector RAYMATH_CALLCONV Vector::SelectControl
 		(
 			uint32_t VectorIndex0,
 			uint32_t VectorIndex1,
@@ -5849,7 +5795,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorSelect
+		inline Vector RAYMATH_CALLCONV Vector::Select
 		(
 			FVectorType V1,
 			FVectorType V2,
@@ -5877,7 +5823,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorMergeXY
+		inline Vector RAYMATH_CALLCONV Vector::MergeXY
 		(
 			FVectorType V1,
 			FVectorType V2
@@ -5902,7 +5848,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorMergeZW
+		inline Vector RAYMATH_CALLCONV Vector::MergeZW
 		(
 			FVectorType V1,
 			FVectorType V2
@@ -5927,35 +5873,35 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorShiftLeft(FVectorType V1, FVectorType V2, uint32_t Elements)
+		inline Vector RAYMATH_CALLCONV Vector::ShiftLeft(FVectorType V1, FVectorType V2, uint32_t Elements)
 		{
 			assert(Elements < 4);
-			return VectorPermute(V1, V2, Elements, ((Elements)+1), ((Elements)+2), ((Elements)+3));
+			return Vector::Permute(V1, V2, Elements, ((Elements)+1), ((Elements)+2), ((Elements)+3));
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorRotateLeft(FVectorType V, uint32_t Elements)
+		inline Vector RAYMATH_CALLCONV Vector::RotateLeft(FVectorType V, uint32_t Elements)
 		{
 			assert(Elements < 4);
-			return VectorSwizzle(V, Elements & 3, (Elements + 1) & 3, (Elements + 2) & 3, (Elements + 3) & 3);
+			return Vector::Swizzle(V, Elements & 3, (Elements + 1) & 3, (Elements + 2) & 3, (Elements + 3) & 3);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorRotateRight(FVectorType V, uint32_t Elements)
+		inline Vector RAYMATH_CALLCONV Vector::RotateRight(FVectorType V, uint32_t Elements)
 		{
 			assert(Elements < 4);
-			return VectorSwizzle(V, (4 - (Elements)) & 3, (5 - (Elements)) & 3, (6 - (Elements)) & 3, (7 - (Elements)) & 3);
+			return Vector::Swizzle(V, (4 - (Elements)) & 3, (5 - (Elements)) & 3, (6 - (Elements)) & 3, (7 - (Elements)) & 3);
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorInsert(FVectorType VD, FVectorType VS, uint32_t VSLeftRotateElements,
+		inline Vector RAYMATH_CALLCONV Vector::Insert(FVectorType VD, FVectorType VS, uint32_t VSLeftRotateElements,
 			uint32_t Select0, uint32_t Select1, uint32_t Select2, uint32_t Select3)
 		{
-			VectorType Control = VectorSelectControl(Select0 & 1, Select1 & 1, Select2 & 1, Select3 & 1);
-			return VectorSelect(VD, VectorRotateLeft(VS, VSLeftRotateElements), Control);
+			VectorType Control = Vector::SelectControl(Select0 & 1, Select1 & 1, Select2 & 1, Select3 & 1);
+			return Vector::Select(VD, Vector::RotateLeft(VS, VSLeftRotateElements), Control);
 		}
 
 		//------------------------------------------------------------------------------
@@ -6663,7 +6609,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorMin
+		inline Vector RAYMATH_CALLCONV Vector::Min
 		(
 			FVectorType V1,
 			FVectorType V2
@@ -6688,7 +6634,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorMax
+		inline Vector RAYMATH_CALLCONV Vector::Max
 		(
 			FVectorType V1,
 			FVectorType V2
@@ -6741,45 +6687,42 @@ namespace At0
 #pragma float_control(precise, on)
 #endif
 
-		inline VectorType RAYMATH_CALLCONV VectorRound
-		(
-			FVectorType V
-		)
+		inline Vector RAYMATH_CALLCONV Vector::Round() const
 		{
 #if defined(RAY_NO_INTRINSICS)
 
 			VectorF32 Result = { { {
-					Internal::round_to_nearest(V.vector4_f32[0]),
-					Internal::round_to_nearest(V.vector4_f32[1]),
-					Internal::round_to_nearest(V.vector4_f32[2]),
-					Internal::round_to_nearest(V.vector4_f32[3])
+					Internal::round_to_nearest(v.vector4_f32[0]),
+					Internal::round_to_nearest(v.vector4_f32[1]),
+					Internal::round_to_nearest(v.vector4_f32[2]),
+					Internal::round_to_nearest(v.vector4_f32[3])
 				}
  } };
 			return Result.v;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
-			return vrndnq_f32(V);
+			return vrndnq_f32(v);
 #else
-			uint32x4_t sign = vandq_u32(V, g_XMNegativeZero);
+			uint32x4_t sign = vandq_u32(v, g_XMNegativeZero);
 			uint32x4_t sMagic = vorrq_u32(g_XMNoFraction, sign);
-			float32x4_t R1 = vaddq_f32(V, sMagic);
+			float32x4_t R1 = vaddq_f32(v, sMagic);
 			R1 = vsubq_f32(R1, sMagic);
-			float32x4_t R2 = vabsq_f32(V);
+			float32x4_t R2 = vabsq_f32(v);
 			uint32x4_t mask = vcleq_f32(R2, g_XMNoFraction);
-			VectorType vResult = vbslq_f32(mask, R1, V);
+			VectorType vResult = vbslq_f32(mask, R1, v);
 			return vResult;
 #endif
 #elif defined(RAY_SSE4_INTRINSICS)
-			return _mm_round_ps(V, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC);
+			return _mm_round_ps(v, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC);
 #elif defined(RAY_SSE_INTRINSICS)
-			__m128 sign = _mm_and_ps(V, g_XMNegativeZero);
+			__m128 sign = _mm_and_ps(v, g_XMNegativeZero);
 			__m128 sMagic = _mm_or_ps(g_XMNoFraction, sign);
-			__m128 R1 = _mm_add_ps(V, sMagic);
+			__m128 R1 = _mm_add_ps(v, sMagic);
 			R1 = _mm_sub_ps(R1, sMagic);
-			__m128 R2 = _mm_and_ps(V, g_XMAbsMask);
+			__m128 R2 = _mm_and_ps(v, g_XMAbsMask);
 			__m128 mask = _mm_cmple_ps(R2, g_XMNoFraction);
-			R2 = _mm_andnot_ps(mask, V);
+			R2 = _mm_andnot_ps(mask, v);
 			R1 = _mm_and_ps(R1, mask);
 			VectorType vResult = _mm_xor_ps(R1, R2);
 			return vResult;
@@ -6792,10 +6735,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorTruncate
-		(
-			FVectorType V
-		)
+		inline Vector RAYMATH_CALLCONV Vector::Truncate() const
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorType Result;
@@ -6806,51 +6746,51 @@ namespace At0
 
 			for (i = 0; i < 4; i++)
 			{
-				if (XMISNAN(V.vector4_f32[i]))
+				if (XMISNAN(v.vector4_f32[i]))
 				{
 					Result.vector4_u32[i] = 0x7FC00000;
 				}
-				else if (fabsf(V.vector4_f32[i]) < 8388608.0f)
+				else if (fabsf(v.vector4_f32[i]) < 8388608.0f)
 				{
-					Result.vector4_f32[i] = static_cast<float>(static_cast<int32_t>(V.vector4_f32[i]));
+					Result.vector4_f32[i] = static_cast<float>(static_cast<int32_t>(v.vector4_f32[i]));
 				}
 				else
 				{
-					Result.vector4_f32[i] = V.vector4_f32[i];
+					Result.vector4_f32[i] = v.vector4_f32[i];
 				}
-			}
+				}
 			return Result;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
-			return vrndq_f32(V);
+			return vrndq_f32(v);
 #else
-			float32x4_t vTest = vabsq_f32(V);
+			float32x4_t vTest = vabsq_f32(v);
 			vTest = vcltq_f32(vTest, g_XMNoFraction);
 
-			int32x4_t vInt = vcvtq_s32_f32(V);
+			int32x4_t vInt = vcvtq_s32_f32(v);
 			VectorType vResult = vcvtq_f32_s32(vInt);
 
 			// All numbers less than 8388608 will use the round to int
 			// All others, use the ORIGINAL value
-			return vbslq_f32(vTest, vResult, V);
+			return vbslq_f32(vTest, vResult, v);
 #endif
 #elif defined(RAY_SSE4_INTRINSICS)
-			return _mm_round_ps(V, _MM_FROUND_TO_ZERO | _MM_FROUND_NO_EXC);
+			return _mm_round_ps(v, _MM_FROUND_TO_ZERO | _MM_FROUND_NO_EXC);
 #elif defined(RAY_SSE_INTRINSICS)
 			// To handle NAN, INF and numbers greater than 8388608, use masking
 			// Get the abs value
-			__m128i vTest = _mm_and_si128(_mm_castps_si128(V), g_XMAbsMask);
+			__m128i vTest = _mm_and_si128(_mm_castps_si128(v), g_XMAbsMask);
 			// Test for greater than 8388608 (All floats with NO fractionals, NAN and INF
 			vTest = _mm_cmplt_epi32(vTest, g_XMNoFraction);
 			// Convert to int and back to float for rounding with truncation
-			__m128i vInt = _mm_cvttps_epi32(V);
+			__m128i vInt = _mm_cvttps_epi32(v);
 			// Convert back to floats
 			VectorType vResult = _mm_cvtepi32_ps(vInt);
 			// All numbers less than 8388608 will use the round to int
 			vResult = _mm_and_ps(vResult, _mm_castsi128_ps(vTest));
 			// All others, use the ORIGINAL value
-			vTest = _mm_andnot_si128(vTest, _mm_castps_si128(V));
+			vTest = _mm_andnot_si128(vTest, _mm_castps_si128(v));
 			vResult = _mm_or_ps(vResult, _mm_castsi128_ps(vTest));
 			return vResult;
 #endif
@@ -6858,55 +6798,52 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorFloor
-		(
-			FVectorType V
-		)
+		inline Vector RAYMATH_CALLCONV Vector::Floor() const
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
-					floorf(V.vector4_f32[0]),
-					floorf(V.vector4_f32[1]),
-					floorf(V.vector4_f32[2]),
-					floorf(V.vector4_f32[3])
+					floorf(v.vector4_f32[0]),
+					floorf(v.vector4_f32[1]),
+					floorf(v.vector4_f32[2]),
+					floorf(v.vector4_f32[3])
 				}
  }
 			};
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
-			return vrndmq_f32(V);
+			return vrndmq_f32(v);
 #else
-			float32x4_t vTest = vabsq_f32(V);
+			float32x4_t vTest = vabsq_f32(v);
 			vTest = vcltq_f32(vTest, g_XMNoFraction);
 			// Truncate
-			int32x4_t vInt = vcvtq_s32_f32(V);
+			int32x4_t vInt = vcvtq_s32_f32(v);
 			VectorType vResult = vcvtq_f32_s32(vInt);
-			VectorType vLarger = vcgtq_f32(vResult, V);
+			VectorType vLarger = vcgtq_f32(vResult, v);
 			// 0 -> 0, 0xffffffff -> -1.0f
 			vLarger = vcvtq_f32_s32(vLarger);
 			vResult = vaddq_f32(vResult, vLarger);
 			// All numbers less than 8388608 will use the round to int
 			// All others, use the ORIGINAL value
-			return vbslq_f32(vTest, vResult, V);
+			return vbslq_f32(vTest, vResult, v);
 #endif
 #elif defined(RAY_SSE4_INTRINSICS)
-			return _mm_floor_ps(V);
+			return _mm_floor_ps(v);
 #elif defined(RAY_SSE_INTRINSICS)
 			// To handle NAN, INF and numbers greater than 8388608, use masking
-			__m128i vTest = _mm_and_si128(_mm_castps_si128(V), g_XMAbsMask);
+			__m128i vTest = _mm_and_si128(_mm_castps_si128(v), g_XMAbsMask);
 			vTest = _mm_cmplt_epi32(vTest, g_XMNoFraction);
 			// Truncate
-			__m128i vInt = _mm_cvttps_epi32(V);
+			__m128i vInt = _mm_cvttps_epi32(v);
 			VectorType vResult = _mm_cvtepi32_ps(vInt);
-			__m128 vLarger = _mm_cmpgt_ps(vResult, V);
+			__m128 vLarger = _mm_cmpgt_ps(vResult, v);
 			// 0 -> 0, 0xffffffff -> -1.0f
 			vLarger = _mm_cvtepi32_ps(_mm_castps_si128(vLarger));
 			vResult = _mm_add_ps(vResult, vLarger);
 			// All numbers less than 8388608 will use the round to int
 			vResult = _mm_and_ps(vResult, _mm_castsi128_ps(vTest));
 			// All others, use the ORIGINAL value
-			vTest = _mm_andnot_si128(vTest, _mm_castps_si128(V));
+			vTest = _mm_andnot_si128(vTest, _mm_castps_si128(v));
 			vResult = _mm_or_ps(vResult, _mm_castsi128_ps(vTest));
 			return vResult;
 #endif
@@ -6914,54 +6851,51 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorCeiling
-		(
-			FVectorType V
-		)
+		inline Vector RAYMATH_CALLCONV Vector::Ceiling() const
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
-					ceilf(V.vector4_f32[0]),
-					ceilf(V.vector4_f32[1]),
-					ceilf(V.vector4_f32[2]),
-					ceilf(V.vector4_f32[3])
+					ceilf(v.vector4_f32[0]),
+					ceilf(v.vector4_f32[1]),
+					ceilf(v.vector4_f32[2]),
+					ceilf(v.vector4_f32[3])
 				} }
 			};
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
-			return vrndpq_f32(V);
+			return vrndpq_f32(v);
 #else
-			float32x4_t vTest = vabsq_f32(V);
+			float32x4_t vTest = vabsq_f32(v);
 			vTest = vcltq_f32(vTest, g_XMNoFraction);
 			// Truncate
-			int32x4_t vInt = vcvtq_s32_f32(V);
+			int32x4_t vInt = vcvtq_s32_f32(v);
 			VectorType vResult = vcvtq_f32_s32(vInt);
-			VectorType vSmaller = vcltq_f32(vResult, V);
+			VectorType vSmaller = vcltq_f32(vResult, v);
 			// 0 -> 0, 0xffffffff -> -1.0f
 			vSmaller = vcvtq_f32_s32(vSmaller);
 			vResult = vsubq_f32(vResult, vSmaller);
 			// All numbers less than 8388608 will use the round to int
 			// All others, use the ORIGINAL value
-			return vbslq_f32(vTest, vResult, V);
+			return vbslq_f32(vTest, vResult, v);
 #endif
 #elif defined(RAY_SSE4_INTRINSICS)
-			return _mm_ceil_ps(V);
+			return _mm_ceil_ps(v);
 #elif defined(RAY_SSE_INTRINSICS)
 			// To handle NAN, INF and numbers greater than 8388608, use masking
-			__m128i vTest = _mm_and_si128(_mm_castps_si128(V), g_XMAbsMask);
+			__m128i vTest = _mm_and_si128(_mm_castps_si128(v), g_XMAbsMask);
 			vTest = _mm_cmplt_epi32(vTest, g_XMNoFraction);
 			// Truncate
-			__m128i vInt = _mm_cvttps_epi32(V);
+			__m128i vInt = _mm_cvttps_epi32(v);
 			VectorType vResult = _mm_cvtepi32_ps(vInt);
-			__m128 vSmaller = _mm_cmplt_ps(vResult, V);
+			__m128 vSmaller = _mm_cmplt_ps(vResult, v);
 			// 0 -> 0, 0xffffffff -> -1.0f
 			vSmaller = _mm_cvtepi32_ps(_mm_castps_si128(vSmaller));
 			vResult = _mm_sub_ps(vResult, vSmaller);
 			// All numbers less than 8388608 will use the round to int
 			vResult = _mm_and_ps(vResult, _mm_castsi128_ps(vTest));
 			// All others, use the ORIGINAL value
-			vTest = _mm_andnot_si128(vTest, _mm_castps_si128(V));
+			vTest = _mm_andnot_si128(vTest, _mm_castps_si128(v));
 			vResult = _mm_or_ps(vResult, _mm_castsi128_ps(vTest));
 			return vResult;
 #endif
@@ -6969,30 +6903,29 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorClamp
+		inline Vector RAYMATH_CALLCONV Vector::Clamp
 		(
-			FVectorType V,
 			FVectorType Min,
 			FVectorType Max
-		)
+		) const
 		{
 			assert(Vector4LessOrEqual(Min, Max));
 
 #if defined(RAY_NO_INTRINSICS)
 
 			VectorType Result;
-			Result = VectorMax(Min, V);
-			Result = VectorMin(Max, Result);
+			Result = Vector::Max(Min, v);
+			Result = Vector::Min(Max, Result);
 			return Result;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			VectorType vResult;
-			vResult = vmaxq_f32(Min, V);
+			vResult = vmaxq_f32(Min, v);
 			vResult = vminq_f32(Max, vResult);
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			VectorType vResult;
-			vResult = _mm_max_ps(Min, V);
+			vResult = _mm_max_ps(Min, v);
 			vResult = _mm_min_ps(Max, vResult);
 			return vResult;
 #endif
@@ -7000,25 +6933,22 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorSaturate
-		(
-			FVectorType V
-		)
+		inline Vector RAYMATH_CALLCONV Vector::Saturate() const
 		{
 #if defined(RAY_NO_INTRINSICS)
 
 			const VectorType Zero = VectorZero();
 
-			return VectorClamp(V, Zero, g_XMOne.v);
+			return VectorClamp(v, Zero, g_XMOne.v);
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Set <0 to 0
-			VectorType vResult = vmaxq_f32(V, vdupq_n_f32(0));
+			VectorType vResult = vmaxq_f32(v, vdupq_n_f32(0));
 			// Set>1 to 1
 			return vminq_f32(vResult, vdupq_n_f32(1.0f));
 #elif defined(RAY_SSE_INTRINSICS)
 			// Set <0 to 0
-			VectorType vResult = _mm_max_ps(V, g_XMZero);
+			VectorType vResult = _mm_max_ps(v, g_XMZero);
 			// Set>1 to 1
 			return _mm_min_ps(vResult, g_XMOne);
 #endif
@@ -7272,10 +7202,10 @@ namespace At0
 			VectorType Result = Vector::Add(V1, V2);
 
 			VectorType Mask = VectorLess(Result, g_XMNegativePi.v);
-			VectorType Offset = VectorSelect(Zero, g_XMTwoPi.v, Mask);
+			VectorType Offset = Vector::Select(Zero, g_XMTwoPi.v, Mask);
 
 			Mask = Vector::GreaterOrEqual(Result, g_XMPi.v);
-			Offset = VectorSelect(Offset, g_XMNegativeTwoPi.v, Mask);
+			Offset = Vector::Select(Offset, g_XMNegativeTwoPi.v, Mask);
 
 			Result = Vector::Add(Result, Offset);
 
@@ -7357,10 +7287,10 @@ namespace At0
 			VectorType Result = Vector::Subtract(V1, V2);
 
 			VectorType Mask = VectorLess(Result, g_XMNegativePi.v);
-			VectorType Offset = VectorSelect(Zero, g_XMTwoPi.v, Mask);
+			VectorType Offset = Vector::Select(Zero, g_XMTwoPi.v, Mask);
 
 			Mask = Vector::GreaterOrEqual(Result, g_XMPi.v);
-			Offset = VectorSelect(Offset, g_XMNegativeTwoPi.v, Mask);
+			Offset = Vector::Select(Offset, g_XMNegativeTwoPi.v, Mask);
 
 			Result = Vector::Add(Result, Offset);
 
@@ -7537,7 +7467,7 @@ namespace At0
 			VectorType vResult = _mm_set_ps1(ScaleFactor);
 			return _mm_mul_ps(vResult, V);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -7619,7 +7549,7 @@ namespace At0
 			VectorType VEqualsZero = Vector::Equal(V, vdupq_n_f32(0));
 			VectorType Result = vmulq_f32(V, S1);
 			VectorType Select = Vector::EqualInt(VEqualsInfinity, VEqualsZero);
-			return VectorSelect(V, Result, Select);
+			return Vector::Select(V, Result, Select);
 #elif defined(RAY_SSE_INTRINSICS)
 			return _mm_sqrt_ps(V);
 #endif
@@ -7659,11 +7589,11 @@ namespace At0
 			VectorType VEqualsZero = Vector::Equal(V, vdupq_n_f32(0));
 			VectorType Result = vmulq_f32(V, S3);
 			VectorType Select = Vector::EqualInt(VEqualsInfinity, VEqualsZero);
-			return VectorSelect(V, Result, Select);
+			return Vector::Select(V, Result, Select);
 #elif defined(RAY_SSE_INTRINSICS)
 			return _mm_sqrt_ps(V);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -8016,7 +7946,7 @@ namespace At0
 
 			return _mm_castsi128_ps(vResult);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -8525,7 +8455,7 @@ namespace At0
 
 			return _mm_castsi128_ps(result);
 #endif
-		}
+			}
 
 		//------------------------------------------------------------------------------
 
@@ -8615,17 +8545,17 @@ namespace At0
 #if defined(RAY_NO_INTRINSICS)
 
 			VectorType Quotient = Vector::Divide(V1, V2);
-			Quotient = VectorTruncate(Quotient);
+			Quotient = Vector::Truncate(Quotient);
 			VectorType Result = VectorNegativeMultiplySubtract(V2, Quotient, V1);
 			return Result;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			VectorType vResult = Vector::Divide(V1, V2);
-			vResult = VectorTruncate(vResult);
+			vResult = Vector::Truncate(vResult);
 			return vmlsq_f32(V1, vResult, V2);
 #elif defined(RAY_SSE_INTRINSICS)
-			VectorType vResult = _mm_div_ps(V1, V2);
-			vResult = VectorTruncate(vResult);
+			Vector vResult = _mm_div_ps(V1, V2);
+			vResult = vResult.Truncate();
 			vResult = _mm_mul_ps(vResult, V2);
 			vResult = _mm_sub_ps(V1, vResult);
 			return vResult;
@@ -8646,7 +8576,7 @@ namespace At0
 
 			// Modulo the range of the given angles such that -Constants::PI <= Angles < Constants::PI
 			V = Vector::Multiply(Angles, g_XMReciprocalTwoPi.v);
-			V = VectorRound(V);
+			V = Vector::Round(V);
 			Result = VectorNegativeMultiplySubtract(g_XMTwoPi.v, V, Angles);
 			return Result;
 
@@ -8654,13 +8584,13 @@ namespace At0
 			// Modulo the range of the given angles such that -Constants::PI <= Angles < Constants::PI
 			VectorType vResult = vmulq_f32(Angles, g_XMReciprocalTwoPi);
 			// Use the inline function due to complexity for rounding
-			vResult = VectorRound(vResult);
+			vResult = Vector::Round(vResult);
 			return vmlsq_f32(Angles, vResult, g_XMTwoPi);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Modulo the range of the given angles such that -Constants::PI <= Angles < Constants::PI
-			VectorType vResult = _mm_mul_ps(Angles, g_XMReciprocalTwoPi);
+			Vector vResult = _mm_mul_ps(Angles, g_XMReciprocalTwoPi);
 			// Use the inline function due to complexity for rounding
-			vResult = VectorRound(vResult);
+			vResult = vResult.Round();
 			vResult = _mm_mul_ps(vResult, g_XMTwoPi);
 			vResult = _mm_sub_ps(Angles, vResult);
 			return vResult;
@@ -9040,9 +8970,9 @@ namespace At0
 			VectorType C1 = VectorSplatY(TanConstants.v);
 			VectorType Epsilon = VectorSplatZ(TanConstants.v);
 
-			VectorType VA = Vector::Multiply(V, TwoDivPi);
+			Vector VA = Vector::Multiply(V, TwoDivPi);
 
-			VA = VectorRound(VA);
+			VA = VA.Round();
 
 			VectorType VC = VectorNegativeMultiplySubtract(VA, C0, V);
 
@@ -9085,8 +9015,8 @@ namespace At0
 			VectorType VCNearZero = VectorInBounds(VC, Epsilon);
 			D = VectorMultiplyAdd(VC2, D, T0);
 
-			N = VectorSelect(N, VC, VCNearZero);
-			D = VectorSelect(D, g_XMOne.v, VCNearZero);
+			N = Vector::Select(N, VC, VCNearZero);
+			D = Vector::Select(D, g_XMOne.v, VCNearZero);
 
 			VectorType R0 = Vector::Negate(N);
 			VectorType R1 = Vector::Divide(N, D);
@@ -9094,9 +9024,9 @@ namespace At0
 
 			VectorType VIsZero = Vector::Equal(V, Zero);
 
-			VectorType Result = VectorSelect(R0, R1, VBIsEven);
+			VectorType Result = Vector::Select(R0, R1, VBIsEven);
 
-			Result = VectorSelect(Result, Zero, VIsZero);
+			Result = Vector::Select(Result, Zero, VIsZero);
 
 			return Result;
 
@@ -9603,22 +9533,22 @@ namespace At0
 			PiOverFour = VectorOrInt(PiOverFour, YSign);
 			ThreePiOverFour = VectorOrInt(ThreePiOverFour, YSign);
 
-			VectorType R1 = VectorSelect(Pi, YSign, XIsPositive);
-			VectorType R2 = VectorSelect(ATanResultValid, PiOverTwo, XEqualsZero);
-			VectorType R3 = VectorSelect(R2, R1, YEqualsZero);
-			VectorType R4 = VectorSelect(ThreePiOverFour, PiOverFour, XIsPositive);
-			VectorType R5 = VectorSelect(PiOverTwo, R4, XEqualsInfinity);
-			VectorType Result = VectorSelect(R3, R5, YEqualsInfinity);
+			VectorType R1 = Vector::Select(Pi, YSign, XIsPositive);
+			VectorType R2 = Vector::Select(ATanResultValid, PiOverTwo, XEqualsZero);
+			VectorType R3 = Vector::Select(R2, R1, YEqualsZero);
+			VectorType R4 = Vector::Select(ThreePiOverFour, PiOverFour, XIsPositive);
+			VectorType R5 = Vector::Select(PiOverTwo, R4, XEqualsInfinity);
+			VectorType Result = Vector::Select(R3, R5, YEqualsInfinity);
 			ATanResultValid = Vector::EqualInt(Result, ATanResultValid);
 
 			VectorType V = Vector::Divide(Y, X);
 
 			VectorType R0 = VectorATan(V);
 
-			R1 = VectorSelect(Pi, g_XMNegativeZero, XIsPositive);
+			R1 = Vector::Select(Pi, g_XMNegativeZero, XIsPositive);
 			R2 = Vector::Add(R0, R1);
 
-			return VectorSelect(Result, R2, ATanResultValid);
+			return Vector::Select(Result, R2, ATanResultValid);
 
 #endif
 		}
@@ -9923,8 +9853,8 @@ namespace At0
 
 			VectorType OneOverPi = VectorSplatW(g_XMTanEstCoefficients.v);
 
-			VectorType V1 = Vector::Multiply(V, OneOverPi);
-			V1 = VectorRound(V1);
+			Vector V1 = Vector::Multiply(V, OneOverPi);
+			V1 = V1.Round();
 
 			V1 = VectorNegativeMultiplySubtract(g_XMPi.v, V1, V);
 
@@ -10236,22 +10166,22 @@ namespace At0
 			PiOverFour = VectorOrInt(PiOverFour, YSign);
 			ThreePiOverFour = VectorOrInt(ThreePiOverFour, YSign);
 
-			VectorType R1 = VectorSelect(Pi, YSign, XIsPositive);
-			VectorType R2 = VectorSelect(ATanResultValid, PiOverTwo, XEqualsZero);
-			VectorType R3 = VectorSelect(R2, R1, YEqualsZero);
-			VectorType R4 = VectorSelect(ThreePiOverFour, PiOverFour, XIsPositive);
-			VectorType R5 = VectorSelect(PiOverTwo, R4, XEqualsInfinity);
-			VectorType Result = VectorSelect(R3, R5, YEqualsInfinity);
+			VectorType R1 = Vector::Select(Pi, YSign, XIsPositive);
+			VectorType R2 = Vector::Select(ATanResultValid, PiOverTwo, XEqualsZero);
+			VectorType R3 = Vector::Select(R2, R1, YEqualsZero);
+			VectorType R4 = Vector::Select(ThreePiOverFour, PiOverFour, XIsPositive);
+			VectorType R5 = Vector::Select(PiOverTwo, R4, XEqualsInfinity);
+			VectorType Result = Vector::Select(R3, R5, YEqualsInfinity);
 			ATanResultValid = Vector::EqualInt(Result, ATanResultValid);
 
 			VectorType Reciprocal = VectorReciprocalEst(X);
 			VectorType V = Vector::Multiply(Y, Reciprocal);
 			VectorType R0 = VectorATanEst(V);
 
-			R1 = VectorSelect(Pi, g_XMNegativeZero, XIsPositive);
+			R1 = Vector::Select(Pi, g_XMNegativeZero, XIsPositive);
 			R2 = Vector::Add(R0, R1);
 
-			Result = VectorSelect(Result, R2, ATanResultValid);
+			Result = Vector::Select(Result, R2, ATanResultValid);
 
 			return Result;
 
@@ -10810,7 +10740,7 @@ namespace At0
 			else if (!iTest)
 			{
 				CR = RAYMATH_CRMASK_CR6FALSE;
-			}
+		}
 			return CR;
 #endif
 		}
@@ -11024,10 +10954,10 @@ namespace At0
 			else if (!iTest)
 			{
 				CR = RAYMATH_CRMASK_CR6FALSE;
-			}
+		}
 			return CR;
 #endif
-		}
+			}
 
 		//------------------------------------------------------------------------------
 
@@ -11095,7 +11025,7 @@ namespace At0
 			else if (!iTest)
 			{
 				CR = RAYMATH_CRMASK_CR6FALSE;
-			}
+		}
 			return CR;
 #endif
 		}
@@ -11709,8 +11639,8 @@ namespace At0
 			FVectorType LengthMax
 		)
 		{
-			assert((VectorGetY(LengthMin) == VectorGetX(LengthMin)));
-			assert((VectorGetY(LengthMax) == VectorGetX(LengthMax)));
+			assert((Vector::GetY(LengthMin) == Vector::GetX(LengthMin)));
+			assert((Vector::GetY(LengthMax) == Vector::GetX(LengthMax)));
 			assert(Vector2GreaterOrEqual(LengthMin, g_XMZero));
 			assert(Vector2GreaterOrEqual(LengthMax, g_XMZero));
 			assert(Vector2GreaterOrEqual(LengthMax, LengthMin));
@@ -11729,20 +11659,20 @@ namespace At0
 			VectorType Normal = Vector::Multiply(V, RcpLength);
 
 			VectorType Select = Vector::EqualInt(InfiniteLength, ZeroLength);
-			Length = VectorSelect(LengthSq, Length, Select);
-			Normal = VectorSelect(LengthSq, Normal, Select);
+			Length = Vector::Select(LengthSq, Length, Select);
+			Normal = Vector::Select(LengthSq, Normal, Select);
 
 			VectorType ControlMax = Vector::Greater(Length, LengthMax);
 			VectorType ControlMin = VectorLess(Length, LengthMin);
 
-			VectorType ClampLength = VectorSelect(Length, LengthMax, ControlMax);
-			ClampLength = VectorSelect(ClampLength, LengthMin, ControlMin);
+			VectorType ClampLength = Vector::Select(Length, LengthMax, ControlMax);
+			ClampLength = Vector::Select(ClampLength, LengthMin, ControlMin);
 
 			VectorType Result = Vector::Multiply(Normal, ClampLength);
 
 			// Preserve the original vector (with no precision loss) if the length falls within the given range
 			VectorType Control = Vector::EqualInt(ControlMax, ControlMin);
-			Result = VectorSelect(Result, V, Control);
+			Result = Vector::Select(Result, V, Control);
 
 			return Result;
 		}
@@ -11911,8 +11841,8 @@ namespace At0
 			FVectorType N2
 		)
 		{
-			VectorType Result = Vector2Dot(N1, N2);
-			Result = VectorClamp(Result, g_XMNegativeOne.v, g_XMOne.v);
+			Vector Result = Vector2Dot(N1, N2);
+			Result = Result.Clamp(g_XMNegativeOne.v, g_XMOne.v);
 			Result = VectorACosEst(Result);
 			return Result;
 		}
@@ -11925,8 +11855,8 @@ namespace At0
 			FVectorType N2
 		)
 		{
-			VectorType Result = Vector2Dot(N1, N2);
-			Result = VectorClamp(Result, g_XMNegativeOne, g_XMOne);
+			Vector Result = Vector2Dot(N1, N2);
+			Result = Result.Clamp(g_XMNegativeOne, g_XMOne);
 			Result = VectorACos(Result);
 			return Result;
 		}
@@ -11946,8 +11876,8 @@ namespace At0
 
 			L1 = Vector::Multiply(L1, L2);
 
-			VectorType CosAngle = Vector::Multiply(Dot, L1);
-			CosAngle = VectorClamp(CosAngle, g_XMNegativeOne.v, g_XMOne.v);
+			Vector CosAngle = Vector::Multiply(Dot, L1);
+			CosAngle = CosAngle.Clamp(g_XMNegativeOne.v, g_XMOne.v);
 
 			return VectorACos(CosAngle);
 		}
@@ -12009,13 +11939,13 @@ namespace At0
 				{
 					// Coincident
 					Result = g_XMInfinity.v;
-				}
+		}
 				else
 				{
 					// Parallel
 					Result = g_XMQNaN.v;
 				}
-			}
+		}
 			else
 			{
 				// Intersection point = Line1Point1 + V1 * (C2 / C1)
@@ -12202,9 +12132,9 @@ namespace At0
 						pOutputVector += sizeof(Float4) * 4;
 
 						i += 4;
-					}
-				}
-			}
+		}
+		}
+		}
 
 			for (; i < VectorCount; i++)
 			{
@@ -12543,7 +12473,7 @@ namespace At0
 
 				vst1_f32(reinterpret_cast<float*>(pOutputVector), V);
 				pOutputVector += OutputStride;
-			}
+		}
 
 			return pOutputStream;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -12881,9 +12811,9 @@ namespace At0
 						pOutputVector += sizeof(Float2) * 4;
 
 						i += 4;
-					}
 				}
 			}
+		}
 
 			for (; i < VectorCount; i++)
 			{
@@ -13121,7 +13051,7 @@ namespace At0
 				(V1.vector4_f32[2] != V2.vector4_f32[2]))
 			{
 				CR = RAYMATH_CRMASK_CR6FALSE;
-			}
+		}
 			return CR;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_f32(V1, V2);
@@ -13197,7 +13127,7 @@ namespace At0
 				(V1.vector4_u32[2] != V2.vector4_u32[2]))
 			{
 				CR = RAYMATH_CRMASK_CR6FALSE;
-			}
+		}
 			return CR;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t vResult = vceqq_u32(V1, V2);
@@ -13352,7 +13282,7 @@ namespace At0
 				(V1.vector4_f32[2] <= V2.vector4_f32[2]))
 			{
 				CR = RAYMATH_CRMASK_CR6FALSE;
-			}
+		}
 			return CR;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
@@ -13385,7 +13315,7 @@ namespace At0
 			}
 			return CR;
 #endif
-		}
+			}
 
 		//------------------------------------------------------------------------------
 
@@ -13430,7 +13360,7 @@ namespace At0
 				(V1.vector4_f32[2] < V2.vector4_f32[2]))
 			{
 				CR = RAYMATH_CRMASK_CR6FALSE;
-			}
+		}
 			return CR;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
@@ -13675,7 +13605,7 @@ namespace At0
 					0.0f
 				}
  }
-			};
+		};
 			return vResult.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t v1xy = vget_low_f32(V1);
@@ -14174,8 +14104,8 @@ namespace At0
 			FVectorType LengthMax
 		)
 		{
-			assert((VectorGetY(LengthMin) == VectorGetX(LengthMin)) && (VectorGetZ(LengthMin) == VectorGetX(LengthMin)));
-			assert((VectorGetY(LengthMax) == VectorGetX(LengthMax)) && (VectorGetZ(LengthMax) == VectorGetX(LengthMax)));
+			assert((Vector::GetY(LengthMin) == Vector::GetX(LengthMin)) && (Vector::GetZ(LengthMin) == Vector::GetX(LengthMin)));
+			assert((Vector::GetY(LengthMax) == Vector::GetX(LengthMax)) && (Vector::GetZ(LengthMax) == Vector::GetX(LengthMax)));
 			assert(Vector3GreaterOrEqual(LengthMin, VectorZero()));
 			assert(Vector3GreaterOrEqual(LengthMax, VectorZero()));
 			assert(Vector3GreaterOrEqual(LengthMax, LengthMin));
@@ -14194,20 +14124,20 @@ namespace At0
 			VectorType Length = Vector::Multiply(LengthSq, RcpLength);
 
 			VectorType Select = Vector::EqualInt(InfiniteLength, ZeroLength);
-			Length = VectorSelect(LengthSq, Length, Select);
-			Normal = VectorSelect(LengthSq, Normal, Select);
+			Length = Vector::Select(LengthSq, Length, Select);
+			Normal = Vector::Select(LengthSq, Normal, Select);
 
 			VectorType ControlMax = Vector::Greater(Length, LengthMax);
 			VectorType ControlMin = VectorLess(Length, LengthMin);
 
-			VectorType ClampLength = VectorSelect(Length, LengthMax, ControlMax);
-			ClampLength = VectorSelect(ClampLength, LengthMin, ControlMin);
+			VectorType ClampLength = Vector::Select(Length, LengthMax, ControlMax);
+			ClampLength = Vector::Select(ClampLength, LengthMin, ControlMin);
 
 			VectorType Result = Vector::Multiply(Normal, ClampLength);
 
 			// Preserve the original vector (with no precision loss) if the length falls within the given range
 			VectorType Control = Vector::EqualInt(ControlMax, ControlMin);
-			Result = VectorSelect(Result, V, Control);
+			Result = Vector::Select(Result, V, Control);
 
 			return Result;
 		}
@@ -14298,7 +14228,7 @@ namespace At0
 			{
 				// Total internal reflection
 				vResult = g_XMZero;
-			}
+		}
 			else
 			{
 				// Sqrt(R)
@@ -14347,7 +14277,7 @@ namespace At0
 			}
 			return vResult;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -14373,7 +14303,7 @@ namespace At0
 			VectorType R0 = VectorPermute<RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X>(NegativeV, S);
 			VectorType R1 = VectorPermute<RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_0X>(V, D);
 
-			return VectorSelect(R1, R0, Select);
+			return Vector::Select(R1, R0, Select);
 		}
 
 		//------------------------------------------------------------------------------
@@ -14384,8 +14314,8 @@ namespace At0
 			FVectorType N2
 		)
 		{
-			VectorType Result = Vector3Dot(N1, N2);
-			Result = VectorClamp(Result, g_XMNegativeOne.v, g_XMOne.v);
+			Vector Result = Vector3Dot(N1, N2);
+			Result = Result.Clamp(g_XMNegativeOne.v, g_XMOne.v);
 			Result = VectorACosEst(Result);
 			return Result;
 		}
@@ -14398,8 +14328,8 @@ namespace At0
 			FVectorType N2
 		)
 		{
-			VectorType Result = Vector3Dot(N1, N2);
-			Result = VectorClamp(Result, g_XMNegativeOne.v, g_XMOne.v);
+			Vector Result = Vector3Dot(N1, N2);
+			Result = Result.Clamp(g_XMNegativeOne.v, g_XMOne.v);
 			Result = VectorACos(Result);
 			return Result;
 		}
@@ -14419,8 +14349,8 @@ namespace At0
 
 			L1 = Vector::Multiply(L1, L2);
 
-			VectorType CosAngle = Vector::Multiply(Dot, L1);
-			CosAngle = VectorClamp(CosAngle, g_XMNegativeOne.v, g_XMOne.v);
+			Vector CosAngle = Vector::Multiply(Dot, L1);
+			CosAngle = CosAngle.Clamp(g_XMNegativeOne.v, g_XMOne.v);
 
 			return VectorACos(CosAngle);
 		}
@@ -14486,7 +14416,7 @@ namespace At0
 			FQuaternion RotationQuaternion
 		)
 		{
-			VectorType A = VectorSelect(g_XMSelect1110.v, V, g_XMSelect1110.v);
+			VectorType A = Vector::Select(g_XMSelect1110.v, V, g_XMSelect1110.v);
 			VectorType Q = RotationQuaternion.Conjugate();
 			VectorType Result = Quaternion::Multiply(Q, A);
 			return Quaternion::Multiply(Result, RotationQuaternion);
@@ -14501,7 +14431,7 @@ namespace At0
 			FQuaternion RotationQuaternion
 		)
 		{
-			VectorType A = VectorSelect(g_XMSelect1110.v, V, g_XMSelect1110.v);
+			VectorType A = Vector::Select(g_XMSelect1110.v, V, g_XMSelect1110.v);
 			Quaternion Result = Quaternion::Multiply(RotationQuaternion, A);
 			VectorType Q = RotationQuaternion.Conjugate();
 			return Quaternion::Multiply(Result, Q);
@@ -14668,8 +14598,8 @@ namespace At0
 
 						i += 4;
 					}
-				}
 			}
+		}
 
 			for (; i < VectorCount; i++)
 			{
@@ -14900,7 +14830,7 @@ namespace At0
 
 			return pOutputStream;
 #endif
-		}
+				}
 
 #ifdef _PREFAST_
 #pragma prefast(pop)
@@ -15870,7 +15800,7 @@ namespace At0
 			Result = VectorMultiplyAdd(Result, Scale, Offset);
 
 			return Result;
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -16067,8 +15997,8 @@ namespace At0
 					vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 					vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 					pOutputVector += OutputStride;
-				}
 			}
+		}
 
 			return pOutputStream;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -16665,8 +16595,8 @@ namespace At0
 					vst1_f32(reinterpret_cast<float*>(pOutputVector), VL);
 					vst1q_lane_f32(reinterpret_cast<float*>(pOutputVector) + 2, vResult, 2);
 					pOutputVector += OutputStride;
+		}
 				}
-			}
 
 			return pOutputStream;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -17016,7 +16946,7 @@ namespace At0
 
 			return pOutputStream;
 #endif
-		}
+				}
 
 #ifdef _PREFAST_
 #pragma prefast(pop)
@@ -17080,7 +17010,7 @@ namespace At0
 				(V1.vector4_f32[3] != V2.vector4_f32[3]))
 			{
 				CR = RAYMATH_CRMASK_CR6FALSE;
-			}
+		}
 			return CR;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
@@ -17113,7 +17043,7 @@ namespace At0
 			}
 			return CR;
 #endif
-		}
+			}
 
 		//------------------------------------------------------------------------------
 
@@ -17161,7 +17091,7 @@ namespace At0
 				V1.vector4_u32[3] != V2.vector4_u32[3])
 			{
 				CR = RAYMATH_CRMASK_CR6FALSE;
-			}
+		}
 			return CR;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
@@ -17324,7 +17254,7 @@ namespace At0
 				V1.vector4_f32[3] <= V2.vector4_f32[3])
 			{
 				CR = RAYMATH_CRMASK_CR6FALSE;
-			}
+		}
 			return CR;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
@@ -17404,7 +17334,7 @@ namespace At0
 				(V1.vector4_f32[3] < V2.vector4_f32[3]))
 			{
 				CR = RAYMATH_CRMASK_CR6FALSE;
-			}
+		}
 			return CR;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
@@ -17437,7 +17367,7 @@ namespace At0
 			}
 			return CR;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -18250,8 +18180,8 @@ namespace At0
 			FVectorType LengthMax
 		)
 		{
-			assert((VectorGetY(LengthMin) == VectorGetX(LengthMin)) && (VectorGetZ(LengthMin) == VectorGetX(LengthMin)) && (VectorGetW(LengthMin) == VectorGetX(LengthMin)));
-			assert((VectorGetY(LengthMax) == VectorGetX(LengthMax)) && (VectorGetZ(LengthMax) == VectorGetX(LengthMax)) && (VectorGetW(LengthMax) == VectorGetX(LengthMax)));
+			assert((Vector::GetY(LengthMin) == Vector::GetX(LengthMin)) && (Vector::GetZ(LengthMin) == Vector::GetX(LengthMin)) && (Vector::GetW(LengthMin) == Vector::GetX(LengthMin)));
+			assert((Vector::GetY(LengthMax) == Vector::GetX(LengthMax)) && (Vector::GetZ(LengthMax) == Vector::GetX(LengthMax)) && (Vector::GetW(LengthMax) == Vector::GetX(LengthMax)));
 			assert(Vector4GreaterOrEqual(LengthMin, VectorZero()));
 			assert(Vector4GreaterOrEqual(LengthMax, VectorZero()));
 			assert(Vector4GreaterOrEqual(LengthMax, LengthMin));
@@ -18270,20 +18200,20 @@ namespace At0
 			VectorType Length = Vector::Multiply(LengthSq, RcpLength);
 
 			VectorType Select = Vector::EqualInt(InfiniteLength, ZeroLength);
-			Length = VectorSelect(LengthSq, Length, Select);
-			Normal = VectorSelect(LengthSq, Normal, Select);
+			Length = Vector::Select(LengthSq, Length, Select);
+			Normal = Vector::Select(LengthSq, Normal, Select);
 
 			VectorType ControlMax = Vector::Greater(Length, LengthMax);
 			VectorType ControlMin = VectorLess(Length, LengthMin);
 
-			VectorType ClampLength = VectorSelect(Length, LengthMax, ControlMax);
-			ClampLength = VectorSelect(ClampLength, LengthMin, ControlMin);
+			VectorType ClampLength = Vector::Select(Length, LengthMax, ControlMax);
+			ClampLength = Vector::Select(ClampLength, LengthMin, ControlMin);
 
 			VectorType Result = Vector::Multiply(Normal, ClampLength);
 
 			// Preserve the original vector (with no precision loss) if the length falls within the given range
 			VectorType Control = Vector::EqualInt(ControlMax, ControlMin);
-			Result = VectorSelect(Result, V, Control);
+			Result = Vector::Select(Result, V, Control);
 
 			return Result;
 		}
@@ -18378,7 +18308,7 @@ namespace At0
 			{
 				// Total internal reflection
 				vResult = g_XMZero;
-			}
+		}
 			else
 			{
 				// Sqrt(R)
@@ -18466,8 +18396,8 @@ namespace At0
 			FVectorType N2
 		)
 		{
-			VectorType Result = Vector4Dot(N1, N2);
-			Result = VectorClamp(Result, g_XMNegativeOne.v, g_XMOne.v);
+			Vector Result = Vector4Dot(N1, N2);
+			Result = Result.Clamp(g_XMNegativeOne.v, g_XMOne.v);
 			Result = VectorACosEst(Result);
 			return Result;
 		}
@@ -18480,8 +18410,8 @@ namespace At0
 			FVectorType N2
 		)
 		{
-			VectorType Result = Vector4Dot(N1, N2);
-			Result = VectorClamp(Result, g_XMNegativeOne.v, g_XMOne.v);
+			Vector Result = Vector4Dot(N1, N2);
+			Result = Result.Clamp(g_XMNegativeOne.v, g_XMOne.v);
 			Result = VectorACos(Result);
 			return Result;
 		}
@@ -18501,8 +18431,8 @@ namespace At0
 
 			L1 = Vector::Multiply(L1, L2);
 
-			VectorType CosAngle = Vector::Multiply(Dot, L1);
-			CosAngle = VectorClamp(CosAngle, g_XMNegativeOne.v, g_XMOne.v);
+			Vector CosAngle = Vector::Multiply(Dot, L1);
+			CosAngle = CosAngle.Clamp(g_XMNegativeOne.v, g_XMOne.v);
 
 			return VectorACos(CosAngle);
 		}
@@ -18687,7 +18617,7 @@ namespace At0
 						i += 4;
 					}
 				}
-			}
+		}
 
 			for (; i < VectorCount; i++)
 			{
@@ -18830,7 +18760,7 @@ namespace At0
 
 			return pOutputStream;
 #endif
-		}
+			}
 
 		/****************************************************************************
 		 *
@@ -19607,16 +19537,16 @@ namespace At0
 			//     m30m31m32m33
 
 			Matrix P;
-			P.r[0] = VectorMergeXY(r[0], r[2]); // m00m20m01m21
-			P.r[1] = VectorMergeXY(r[1], r[3]); // m10m30m11m31
-			P.r[2] = VectorMergeZW(r[0], r[2]); // m02m22m03m23
-			P.r[3] = VectorMergeZW(r[1], r[3]); // m12m32m13m33
+			P.r[0] = Vector::MergeXY(r[0], r[2]); // m00m20m01m21
+			P.r[1] = Vector::MergeXY(r[1], r[3]); // m10m30m11m31
+			P.r[2] = Vector::MergeZW(r[0], r[2]); // m02m22m03m23
+			P.r[3] = Vector::MergeZW(r[1], r[3]); // m12m32m13m33
 
 			Matrix MT;
-			MT.r[0] = VectorMergeXY(P.r[0], P.r[1]); // m00m10m20m30
-			MT.r[1] = VectorMergeZW(P.r[0], P.r[1]); // m01m11m21m31
-			MT.r[2] = VectorMergeXY(P.r[2], P.r[3]); // m02m12m22m32
-			MT.r[3] = VectorMergeZW(P.r[2], P.r[3]); // m03m13m23m33
+			MT.r[0] = Vector::MergeXY(P.r[0], P.r[1]); // m00m10m20m30
+			MT.r[1] = Vector::MergeZW(P.r[0], P.r[1]); // m01m11m21m31
+			MT.r[2] = Vector::MergeXY(P.r[2], P.r[3]); // m02m12m22m32
+			MT.r[3] = Vector::MergeZW(P.r[2], P.r[3]); // m03m13m23m33
 			return MT;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
@@ -19734,10 +19664,10 @@ namespace At0
 			C6 = VectorNegativeMultiplySubtract(V0[3], V1[3], C6);
 
 			Matrix R;
-			R.r[0] = VectorSelect(C0, C1, g_XMSelect0101.v);
-			R.r[1] = VectorSelect(C2, C3, g_XMSelect0101.v);
-			R.r[2] = VectorSelect(C4, C5, g_XMSelect0101.v);
-			R.r[3] = VectorSelect(C6, C7, g_XMSelect0101.v);
+			R.r[0] = Vector::Select(C0, C1, g_XMSelect0101.v);
+			R.r[1] = Vector::Select(C2, C3, g_XMSelect0101.v);
+			R.r[2] = Vector::Select(C4, C5, g_XMSelect0101.v);
+			R.r[3] = Vector::Select(C6, C7, g_XMSelect0101.v);
 
 			VectorType Determinant = Vector4Dot(R.r[0], MT.r[0]);
 
@@ -19873,7 +19803,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV Matrix::Determinant() const
+		inline Vector RAYMATH_CALLCONV Matrix::Determinant() const
 		{
 			static const VectorF32 Sign = { { { 1.0f, -1.0f, 1.0f, -1.0f } } };
 
@@ -19984,11 +19914,12 @@ namespace At0
 			// Get the translation
 			outTrans[0] = r[3];
 
-			VectorType* ppvBasis[3];
+			Vector* ppvBasis[3];
 			Matrix matTemp;
-			ppvBasis[0] = &matTemp.r[0];
-			ppvBasis[1] = &matTemp.r[1];
-			ppvBasis[2] = &matTemp.r[2];
+			// RAYMATH_TODO: Cast possibly invalid
+			ppvBasis[0] = (Vector*)&matTemp.r[0];
+			ppvBasis[1] = (Vector*)&matTemp.r[1];
+			ppvBasis[2] = (Vector*)&matTemp.r[2];
 
 			matTemp.r[0] = r[0];
 			matTemp.r[1] = r[1];
@@ -20016,9 +19947,9 @@ namespace At0
 				size_t aa, bb, cc;
 				float fAbsX, fAbsY, fAbsZ;
 
-				fAbsX = fabsf(VectorGetX(ppvBasis[a][0]));
-				fAbsY = fabsf(VectorGetY(ppvBasis[a][0]));
-				fAbsZ = fabsf(VectorGetZ(ppvBasis[a][0]));
+				fAbsX = fabsf(ppvBasis[a][0].GetX());
+				fAbsY = fabsf(ppvBasis[a][0].GetY());
+				fAbsZ = fabsf(ppvBasis[a][0].GetZ());
 
 				XM3RANKDECOMPOSE(aa, bb, cc, fAbsX, fAbsY, fAbsZ)
 
@@ -20034,7 +19965,7 @@ namespace At0
 
 			ppvBasis[c][0] = Vector3Normalize(ppvBasis[c][0]);
 
-			float fDet = VectorGetX(matTemp.Determinant());
+			float fDet = matTemp.Determinant().GetX();
 
 			// use Kramer's rule to check for handedness of coordinate system
 			if (fDet < 0.0f)
@@ -20184,7 +20115,7 @@ namespace At0
 			M.r[0] = g_XMIdentityR0.v;
 			M.r[1] = g_XMIdentityR1.v;
 			M.r[2] = g_XMIdentityR2.v;
-			M.r[3] = VectorSelect(g_XMIdentityR3.v, Offset, g_XMSelect1110.v);
+			M.r[3] = Vector::Select(g_XMIdentityR3.v, Offset, g_XMSelect1110.v);
 			return M;
 #endif
 		}
@@ -20572,7 +20503,7 @@ namespace At0
 			VectorType R1 = VectorMultiplyAdd(C0, NormalAxis, V0);
 			VectorType R2 = VectorNegativeMultiplySubtract(C0, NormalAxis, V0);
 
-			V0 = VectorSelect(A, R0, g_XMSelect1110.v);
+			V0 = Vector::Select(A, R0, g_XMSelect1110.v);
 			VectorType V1 = VectorPermute<RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0X>(R1, R2);
 			VectorType V2 = VectorPermute<RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X>(R1, R2);
 
@@ -20628,7 +20559,7 @@ namespace At0
 			M.r[3] = g_XMIdentityR3.v;
 			return M;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -20729,7 +20660,7 @@ namespace At0
 			M.r[3] = g_XMIdentityR3;
 			return M;
 #endif
-		}
+			}
 
 		//------------------------------------------------------------------------------
 
@@ -20746,17 +20677,17 @@ namespace At0
 			// M = Inverse(MScalingOrigin) * Transpose(MScalingOrientation) * MScaling * MScalingOrientation *
 			//         MScalingOrigin * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
-			VectorType VScalingOrigin = VectorSelect(g_XMSelect1100.v, ScalingOrigin, g_XMSelect1100.v);
+			VectorType VScalingOrigin = Vector::Select(g_XMSelect1100.v, ScalingOrigin, g_XMSelect1100.v);
 			VectorType NegScalingOrigin = Vector::Negate(VScalingOrigin);
 
 			Matrix MScalingOriginI = Matrix::Translation(NegScalingOrigin);
 			Matrix MScalingOrientation = Matrix::RotationZ(ScalingOrientation);
 			Matrix MScalingOrientationT = MScalingOrientation.Transpose();
-			VectorType VScaling = VectorSelect(g_XMOne.v, Scaling, g_XMSelect1100.v);
+			VectorType VScaling = Vector::Select(g_XMOne.v, Scaling, g_XMSelect1100.v);
 			Matrix MScaling = Matrix::Scaling(VScaling);
-			VectorType VRotationOrigin = VectorSelect(g_XMSelect1100.v, RotationOrigin, g_XMSelect1100.v);
+			VectorType VRotationOrigin = Vector::Select(g_XMSelect1100.v, RotationOrigin, g_XMSelect1100.v);
 			Matrix MRotation = Matrix::RotationZ(Rotation);
-			VectorType VTranslation = VectorSelect(g_XMSelect1100.v, Translation, g_XMSelect1100.v);
+			VectorType VTranslation = Vector::Select(g_XMSelect1100.v, Translation, g_XMSelect1100.v);
 
 			Matrix M = Matrix::Multiply(MScalingOriginI, MScalingOrientationT);
 			M = Matrix::Multiply(M, MScaling);
@@ -20785,16 +20716,16 @@ namespace At0
 			// M = Inverse(MScalingOrigin) * Transpose(MScalingOrientation) * MScaling * MScalingOrientation *
 			//         MScalingOrigin * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
-			VectorType VScalingOrigin = VectorSelect(g_XMSelect1110.v, ScalingOrigin, g_XMSelect1110.v);
+			VectorType VScalingOrigin = Vector::Select(g_XMSelect1110.v, ScalingOrigin, g_XMSelect1110.v);
 			VectorType NegScalingOrigin = Vector::Negate(ScalingOrigin);
 
 			Matrix MScalingOriginI = Matrix::Translation(NegScalingOrigin);
 			Matrix MScalingOrientation = Matrix::RotationQuaternion(ScalingOrientationQuaternion);
 			Matrix MScalingOrientationT = MScalingOrientation.Transpose();
 			Matrix MScaling = Matrix::Scaling(Scaling);
-			VectorType VRotationOrigin = VectorSelect(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
+			VectorType VRotationOrigin = Vector::Select(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
 			Matrix MRotation = Matrix::RotationQuaternion(RotationQuaternion);
-			VectorType VTranslation = VectorSelect(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
+			VectorType VTranslation = Vector::Select(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
 
 			Matrix M;
 			M = Matrix::Multiply(MScalingOriginI, MScalingOrientationT);
@@ -20820,11 +20751,11 @@ namespace At0
 		{
 			// M = MScaling * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
-			VectorType VScaling = VectorSelect(g_XMOne.v, Scaling, g_XMSelect1100.v);
+			VectorType VScaling = Vector::Select(g_XMOne.v, Scaling, g_XMSelect1100.v);
 			Matrix MScaling = Matrix::Scaling(VScaling);
-			VectorType VRotationOrigin = VectorSelect(g_XMSelect1100.v, RotationOrigin, g_XMSelect1100.v);
+			VectorType VRotationOrigin = Vector::Select(g_XMSelect1100.v, RotationOrigin, g_XMSelect1100.v);
 			Matrix MRotation = Matrix::RotationZ(Rotation);
-			VectorType VTranslation = VectorSelect(g_XMSelect1100.v, Translation, g_XMSelect1100.v);
+			VectorType VTranslation = Vector::Select(g_XMSelect1100.v, Translation, g_XMSelect1100.v);
 
 			Matrix M;
 			M = MScaling;
@@ -20848,9 +20779,9 @@ namespace At0
 			// M = MScaling * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
 			Matrix MScaling = Matrix::Scaling(Scaling);
-			VectorType VRotationOrigin = VectorSelect(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
+			VectorType VRotationOrigin = Vector::Select(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
 			Matrix MRotation = Matrix::RotationQuaternion(RotationQuaternion);
-			VectorType VTranslation = VectorSelect(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
+			VectorType VTranslation = Vector::Select(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
 
 			Matrix M;
 			M = MScaling;
@@ -20909,15 +20840,15 @@ namespace At0
 			VectorType C = VectorSplatZ(P);
 			VectorType B = VectorSplatY(P);
 			VectorType A = VectorSplatX(P);
-			Dot = VectorSelect(Select0001.v, Dot, Select0001.v);
+			Dot = Vector::Select(Select0001.v, Dot, Select0001.v);
 
 			Matrix M;
 			M.r[3] = VectorMultiplyAdd(D, LightPosition, Dot);
-			Dot = VectorRotateLeft(Dot, 1);
+			Dot = Vector::RotateLeft(Dot, 1);
 			M.r[2] = VectorMultiplyAdd(C, LightPosition, Dot);
-			Dot = VectorRotateLeft(Dot, 1);
+			Dot = Vector::RotateLeft(Dot, 1);
 			M.r[1] = VectorMultiplyAdd(B, LightPosition, Dot);
-			Dot = VectorRotateLeft(Dot, 1);
+			Dot = Vector::RotateLeft(Dot, 1);
 			M.r[0] = VectorMultiplyAdd(A, LightPosition, Dot);
 			return M;
 		}
@@ -20978,9 +20909,9 @@ namespace At0
 			VectorType D2 = Vector3Dot(R2, NegEyePosition);
 
 			Matrix M;
-			M.r[0] = VectorSelect(D0, R0, g_XMSelect1110.v);
-			M.r[1] = VectorSelect(D1, R1, g_XMSelect1110.v);
-			M.r[2] = VectorSelect(D2, R2, g_XMSelect1110.v);
+			M.r[0] = Vector::Select(D0, R0, g_XMSelect1110.v);
+			M.r[1] = Vector::Select(D1, R1, g_XMSelect1110.v);
+			M.r[2] = Vector::Select(D2, R2, g_XMSelect1110.v);
 			M.r[3] = g_XMIdentityR3.v;
 
 			M = M.Transpose();
@@ -22554,7 +22485,7 @@ namespace At0
 
 			VectorType Result = Vector::Divide(Conjugated, L);
 
-			Result = VectorSelect(Result, Zero, Control);
+			Result = Vector::Select(Result, Zero, Control);
 
 			return Result;
 		}
@@ -22566,7 +22497,7 @@ namespace At0
 			static const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 
 			VectorType QW = VectorSplatW(*this);
-			VectorType Q0 = VectorSelect(g_XMSelect1110.v, *this, g_XMSelect1110.v);
+			VectorType Q0 = Vector::Select(g_XMSelect1110.v, *this, g_XMSelect1110.v);
 
 			VectorType ControlW = VectorInBounds(QW, OneMinusEpsilon.v);
 
@@ -22576,7 +22507,7 @@ namespace At0
 			VectorType S = Vector::Divide(Theta, SinTheta);
 
 			VectorType Result = Vector::Multiply(Q0, S);
-			Result = VectorSelect(Q0, Result, ControlW);
+			Result = Vector::Select(Q0, Result, ControlW);
 
 			return Result;
 		}
@@ -22596,9 +22527,9 @@ namespace At0
 
 			const VectorType Zero = VectorZero();
 			VectorType Control = Vector::NearEqual(Theta, Zero, g_XMEpsilon.v);
-			Result = VectorSelect(Result, *this, Control);
+			Result = Vector::Select(Result, *this, Control);
 
-			Result = VectorSelect(CosTheta, Result, g_XMSelect1110.v);
+			Result = Vector::Select(CosTheta, Result, g_XMSelect1110.v);
 
 			return Result;
 		}
@@ -22625,7 +22556,7 @@ namespace At0
 			FQuaternion T
 		)
 		{
-			assert((VectorGetY(T) == VectorGetX(T)) && (VectorGetZ(T) == VectorGetX(T)) && (VectorGetW(T) == VectorGetX(T)));
+			assert((Vector::GetY(T) == Vector::GetX(T)) && (Vector::GetZ(T) == Vector::GetX(T)) && (Vector::GetW(T) == Vector::GetX(T)));
 
 			// Result = Q0 * sin((1.0 - t) * Omega) / sin(Omega) + Q1 * sin(t * Omega) / sin(Omega)
 
@@ -22637,7 +22568,7 @@ namespace At0
 
 			const VectorType Zero = VectorZero();
 			VectorType Control = VectorLess(CosOmega, Zero);
-			VectorType Sign = VectorSelect(g_XMOne.v, g_XMNegativeOne.v, Control);
+			VectorType Sign = Vector::Select(g_XMOne.v, g_XMNegativeOne.v, Control);
 
 			CosOmega = Vector::Multiply(CosOmega, Sign);
 
@@ -22649,8 +22580,8 @@ namespace At0
 			VectorType Omega = VectorATan2(SinOmega, CosOmega);
 
 			VectorType SignMask = VectorSplatSignMask();
-			VectorType V01 = VectorShiftLeft(T, Zero, 2);
-			SignMask = VectorShiftLeft(SignMask, Zero, 3);
+			VectorType V01 = Vector::ShiftLeft(T, Zero, 2);
+			SignMask = Vector::ShiftLeft(SignMask, Zero, 3);
 			V01 = VectorXorInt(V01, SignMask);
 			V01 = Vector::Add(g_XMIdentityR0.v, V01);
 
@@ -22660,7 +22591,7 @@ namespace At0
 			S0 = VectorSin(S0);
 			S0 = Vector::Multiply(S0, InvSinOmega);
 
-			S0 = VectorSelect(V01, S0, Control);
+			S0 = Vector::Select(V01, S0, Control);
 
 			VectorType S1 = VectorSplatY(S0);
 			S0 = VectorSplatX(S0);
@@ -22680,7 +22611,7 @@ namespace At0
 
 			const VectorType Zero = VectorZero();
 			VectorType Control = VectorLess(CosOmega, Zero);
-			VectorType Sign = VectorSelect(g_XMOne, g_XMNegativeOne, Control);
+			VectorType Sign = Vector::Select(g_XMOne, g_XMNegativeOne, Control);
 
 			CosOmega = _mm_mul_ps(CosOmega, Sign);
 
@@ -22701,7 +22632,7 @@ namespace At0
 			S0 = VectorSin(S0);
 			S0 = _mm_div_ps(S0, SinOmega);
 
-			S0 = VectorSelect(V01, S0, Control);
+			S0 = Vector::Select(V01, S0, Control);
 
 			VectorType S1 = VectorSplatY(S0);
 			S0 = VectorSplatX(S0);
@@ -22712,7 +22643,7 @@ namespace At0
 			Result = _mm_add_ps(Result, S1);
 			return Result;
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 
@@ -22740,7 +22671,7 @@ namespace At0
 			HQuaternion T
 		)
 		{
-			assert((VectorGetY(T) == VectorGetX(T)) && (VectorGetZ(T) == VectorGetX(T)) && (VectorGetW(T) == VectorGetX(T)));
+			assert((Vector::GetY(T) == Vector::GetX(T)) && (Vector::GetZ(T) == Vector::GetX(T)) && (Vector::GetW(T) == Vector::GetX(T)));
 
 			VectorType TP = T;
 			const VectorType Two = VectorSplatConstant(2, 0);
@@ -22778,7 +22709,7 @@ namespace At0
 			Quaternion SQ2 = Vector::Negate(Q2);
 
 			VectorType Control1 = VectorLess(LS12, LD12);
-			SQ2 = VectorSelect(Q2, SQ2, Control1);
+			SQ2 = Vector::Select(Q2, SQ2, Control1);
 
 			Quaternion LS01 = Quaternion(Vector::Add(Q0, Q1)).LengthSq();
 			Quaternion LD01 = Quaternion(Vector::Subtract(Q0, Q1)).LengthSq();
@@ -22791,8 +22722,8 @@ namespace At0
 			VectorType Control0 = VectorLess(LS01, LD01);
 			VectorType Control2 = VectorLess(LS23, LD23);
 
-			SQ0 = VectorSelect(Q0, SQ0, Control0);
-			SQ3 = VectorSelect(Q3, SQ3, Control2);
+			SQ0 = Vector::Select(Q0, SQ0, Control0);
+			SQ3 = Vector::Select(Q3, SQ3, Control2);
 
 			VectorType InvQ1 = Q1.Inverse();
 			VectorType InvQ2 = SQ2.Inverse();
@@ -22854,8 +22785,8 @@ namespace At0
 			HQuaternion G
 		)
 		{
-			assert((VectorGetY(F) == VectorGetX(F)) && (VectorGetZ(F) == VectorGetX(F)) && (VectorGetW(F) == VectorGetX(F)));
-			assert((VectorGetY(G) == VectorGetX(G)) && (VectorGetZ(G) == VectorGetX(G)) && (VectorGetW(G) == VectorGetX(G)));
+			assert((Vector::GetY(F) == Vector::GetX(F)) && (Vector::GetZ(F) == Vector::GetX(F)) && (Vector::GetW(F) == Vector::GetX(F)));
+			assert((Vector::GetY(G) == Vector::GetX(G)) && (Vector::GetZ(G) == Vector::GetX(G)) && (Vector::GetW(G) == Vector::GetX(G)));
 
 			const VectorType Epsilon = VectorSplatConstant(1, 16);
 
@@ -22944,7 +22875,7 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
-			VectorType N = VectorSelect(g_XMOne.v, NormalAxis, g_XMSelect1110.v);
+			VectorType N = Vector::Select(g_XMOne.v, NormalAxis, g_XMSelect1110.v);
 
 			float SinV, CosV;
 			ScalarSinCos(&SinV, &CosV, 0.5f * Angle);
@@ -23224,7 +23155,7 @@ namespace At0
 			t0 = Vector4Length(t2);
 			return _mm_div_ps(t2, t0);
 #endif
-		}
+				}
 
 		//------------------------------------------------------------------------------
 		// Conversion operations
@@ -23243,7 +23174,7 @@ namespace At0
 
 			*pAxis = *this;
 
-			*pAngle = 2.0f * ScalarACos(VectorGetW(*this));
+			*pAngle = 2.0f * ScalarACos(w);
 		}
 
 		/****************************************************************************
@@ -23337,7 +23268,7 @@ namespace At0
 		{
 			// Result = P[0] * V[0] + P[1] * V[1] + P[2] * V[2] + P[3]
 
-			VectorType V3 = VectorSelect(g_XMOne.v, V, g_XMSelect1110.v);
+			VectorType V3 = Vector::Select(g_XMOne.v, V, g_XMSelect1110.v);
 			VectorType Result = Vector4Dot(P, V3);
 			return Result;
 		}
@@ -23411,7 +23342,8 @@ namespace At0
 					P.vector4_f32[1] * fLengthSq,
 					P.vector4_f32[2] * fLengthSq,
 					P.vector4_f32[3] * fLengthSq
-				} } };
+				} }
+		};
 			return vResult.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			VectorType vLength = Vector3ReciprocalLength(P);
@@ -23471,7 +23403,7 @@ namespace At0
 			const VectorType Zero = VectorZero();
 			VectorType Control = Vector::NearEqual(D, Zero, g_XMEpsilon.v);
 
-			return VectorSelect(Point, g_XMQNaN.v, Control);
+			return Vector::Select(Point, g_XMQNaN.v, Control);
 		}
 
 		//------------------------------------------------------------------------------
@@ -23506,8 +23438,8 @@ namespace At0
 			VectorType LinePoint2 = Vector::Add(LinePoint1, V1);
 
 			VectorType Control = VectorLessOrEqual(LengthSq, g_XMEpsilon.v);
-			*pLinePoint1 = VectorSelect(LinePoint1, g_XMQNaN.v, Control);
-			*pLinePoint2 = VectorSelect(LinePoint2, g_XMQNaN.v, Control);
+			*pLinePoint1 = Vector::Select(LinePoint1, g_XMQNaN.v, Control);
+			*pLinePoint2 = Vector::Select(LinePoint2, g_XMQNaN.v, Control);
 		}
 
 		//------------------------------------------------------------------------------
@@ -23564,7 +23496,7 @@ namespace At0
 		{
 			VectorType W = Vector3Dot(Point, Normal);
 			W = Vector::Negate(W);
-			return VectorSelect(W, Normal, g_XMSelect1110.v);
+			return Vector::Select(W, Normal, g_XMSelect1110.v);
 		}
 
 		//------------------------------------------------------------------------------
@@ -23585,7 +23517,7 @@ namespace At0
 			VectorType D = PlaneDotNormal(N, Point1);
 			D = Vector::Negate(D);
 
-			VectorType Result = VectorSelect(D, N, g_XMSelect1110.v);
+			VectorType Result = Vector::Select(D, N, g_XMSelect1110.v);
 
 			return Result;
 		}
@@ -23809,19 +23741,19 @@ namespace At0
 			VectorType g = VectorSplatY(rgb);
 			VectorType b = VectorSplatZ(rgb);
 
-			VectorType min = VectorMin(r, VectorMin(g, b));
-			VectorType max = VectorMax(r, VectorMax(g, b));
+			VectorType min = Vector::Min(r, Vector::Min(g, b));
+			VectorType max = Vector::Max(r, Vector::Max(g, b));
 
 			VectorType l = Vector::Multiply(Vector::Add(min, max), g_XMOneHalf);
 
 			VectorType d = Vector::Subtract(max, min);
 
-			VectorType la = VectorSelect(rgb, l, g_XMSelect1110);
+			VectorType la = Vector::Select(rgb, l, g_XMSelect1110);
 
 			if (Vector3Less(d, g_XMEpsilon))
 			{
 				// Achromatic, assume H and S of 0
-				return VectorSelect(la, g_XMZero, g_XMSelect1100);
+				return Vector::Select(la, g_XMZero, g_XMSelect1100);
 			}
 			else
 			{
@@ -23863,8 +23795,8 @@ namespace At0
 				if (Vector3Less(h, g_XMZero))
 					h = Vector::Add(h, g_XMOne);
 
-				VectorType lha = VectorSelect(la, h, g_XMSelect1100);
-				return VectorSelect(s, lha, g_XMSelect1011);
+				VectorType lha = Vector::Select(la, h, g_XMSelect1100);
+				return Vector::Select(s, lha, g_XMSelect1011);
 			}
 		}
 
@@ -23920,7 +23852,7 @@ namespace At0
 			if (Vector3NearEqual(s, g_XMZero, g_XMEpsilon))
 			{
 				// Achromatic
-				return VectorSelect(hsl, l, g_XMSelect1110);
+				return Vector::Select(hsl, l, g_XMSelect1110);
 			}
 			else
 			{
@@ -23942,10 +23874,10 @@ namespace At0
 				VectorType g = Internal::ColorHue2Clr(p, q, h);
 				VectorType b = Internal::ColorHue2Clr(p, q, Vector::Subtract(h, oneThird));
 
-				VectorType rg = VectorSelect(g, r, g_XMSelect1000);
-				VectorType ba = VectorSelect(hsl, b, g_XMSelect1110);
+				VectorType rg = Vector::Select(g, r, g_XMSelect1000);
+				VectorType ba = Vector::Select(hsl, b, g_XMSelect1110);
 
-				return VectorSelect(ba, rg, g_XMSelect1100);
+				return Vector::Select(ba, rg, g_XMSelect1100);
 			}
 		}
 
@@ -23957,8 +23889,8 @@ namespace At0
 			VectorType g = VectorSplatY(rgb);
 			VectorType b = VectorSplatZ(rgb);
 
-			VectorType min = VectorMin(r, VectorMin(g, b));
-			VectorType v = VectorMax(r, VectorMax(g, b));
+			VectorType min = Vector::Min(r, Vector::Min(g, b));
+			VectorType v = Vector::Max(r, Vector::Max(g, b));
 
 			VectorType d = Vector::Subtract(v, min);
 
@@ -23967,9 +23899,9 @@ namespace At0
 			if (Vector3Less(d, g_XMEpsilon))
 			{
 				// Achromatic, assume H of 0
-				VectorType hv = VectorSelect(v, g_XMZero, g_XMSelect1000);
-				VectorType hva = VectorSelect(rgb, hv, g_XMSelect1110);
-				return VectorSelect(s, hva, g_XMSelect1011);
+				VectorType hv = Vector::Select(v, g_XMZero, g_XMSelect1000);
+				VectorType hva = Vector::Select(rgb, hv, g_XMSelect1110);
+				return Vector::Select(s, hva, g_XMSelect1011);
 			}
 			else
 			{
@@ -23998,9 +23930,9 @@ namespace At0
 
 				h = Vector::Divide(h, g_XMSix);
 
-				VectorType hv = VectorSelect(v, h, g_XMSelect1000);
-				VectorType hva = VectorSelect(rgb, hv, g_XMSelect1110);
-				return VectorSelect(s, hva, g_XMSelect1011);
+				VectorType hv = Vector::Select(v, h, g_XMSelect1000);
+				VectorType hva = Vector::Select(rgb, hv, g_XMSelect1110);
+				return Vector::Select(s, hva, g_XMSelect1011);
 			}
 		}
 
@@ -24012,9 +23944,9 @@ namespace At0
 			VectorType s = VectorSplatY(hsv);
 			VectorType v = VectorSplatZ(hsv);
 
-			VectorType h6 = Vector::Multiply(h, g_XMSix);
+			Vector h6 = Vector::Multiply(h, g_XMSix);
 
-			VectorType i = VectorFloor(h6);
+			VectorType i = h6.Floor();
 			VectorType f = Vector::Subtract(h6, i);
 
 			// p = v* (1-s)
@@ -24026,7 +23958,7 @@ namespace At0
 			// t = v*(1 - (1-f)*s)
 			VectorType t = Vector::Multiply(v, Vector::Subtract(g_XMOne, Vector::Multiply(Vector::Subtract(g_XMOne, f), s)));
 
-			auto ii = static_cast<int>(VectorGetX(VectorMod(i, g_XMSix)));
+			auto ii = static_cast<int>(Vector(VectorMod(i, g_XMSix)).GetX());
 
 			VectorType _rgb;
 
@@ -24034,43 +23966,43 @@ namespace At0
 			{
 			case 0: // rgb = vtp
 			{
-				VectorType vt = VectorSelect(t, v, g_XMSelect1000);
-				_rgb = VectorSelect(p, vt, g_XMSelect1100);
+				VectorType vt = Vector::Select(t, v, g_XMSelect1000);
+				_rgb = Vector::Select(p, vt, g_XMSelect1100);
 			}
 			break;
 			case 1: // rgb = qvp
 			{
-				VectorType qv = VectorSelect(v, q, g_XMSelect1000);
-				_rgb = VectorSelect(p, qv, g_XMSelect1100);
+				VectorType qv = Vector::Select(v, q, g_XMSelect1000);
+				_rgb = Vector::Select(p, qv, g_XMSelect1100);
 			}
 			break;
 			case 2: // rgb = pvt
 			{
-				VectorType pv = VectorSelect(v, p, g_XMSelect1000);
-				_rgb = VectorSelect(t, pv, g_XMSelect1100);
+				VectorType pv = Vector::Select(v, p, g_XMSelect1000);
+				_rgb = Vector::Select(t, pv, g_XMSelect1100);
 			}
 			break;
 			case 3: // rgb = pqv
 			{
-				VectorType pq = VectorSelect(q, p, g_XMSelect1000);
-				_rgb = VectorSelect(v, pq, g_XMSelect1100);
+				VectorType pq = Vector::Select(q, p, g_XMSelect1000);
+				_rgb = Vector::Select(v, pq, g_XMSelect1100);
 			}
 			break;
 			case 4: // rgb = tpv
 			{
-				VectorType tp = VectorSelect(p, t, g_XMSelect1000);
-				_rgb = VectorSelect(v, tp, g_XMSelect1100);
+				VectorType tp = Vector::Select(p, t, g_XMSelect1000);
+				_rgb = Vector::Select(v, tp, g_XMSelect1100);
 			}
 			break;
 			default: // rgb = vpq
 			{
-				VectorType vp = VectorSelect(p, v, g_XMSelect1000);
-				_rgb = VectorSelect(q, vp, g_XMSelect1100);
+				VectorType vp = Vector::Select(p, v, g_XMSelect1000);
+				_rgb = Vector::Select(q, vp, g_XMSelect1100);
 			}
 			break;
 			}
 
-			return VectorSelect(hsv, _rgb, g_XMSelect1110);
+			return Vector::Select(hsv, _rgb, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24084,7 +24016,7 @@ namespace At0
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
 			VectorType clr = Vector3Transform(rgb, M);
 
-			return VectorSelect(rgb, clr, g_XMSelect1110);
+			return Vector::Select(rgb, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24097,7 +24029,7 @@ namespace At0
 			Matrix M(g_XMOne, Scale1, Scale2, g_XMZero);
 			VectorType clr = Vector3Transform(yuv, M);
 
-			return VectorSelect(yuv, clr, g_XMSelect1110);
+			return Vector::Select(yuv, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24111,7 +24043,7 @@ namespace At0
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
 			VectorType clr = Vector3Transform(rgb, M);
 
-			return VectorSelect(rgb, clr, g_XMSelect1110);
+			return Vector::Select(rgb, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24124,7 +24056,7 @@ namespace At0
 			Matrix M(g_XMOne, Scale1, Scale2, g_XMZero);
 			VectorType clr = Vector3Transform(yuv, M);
 
-			return VectorSelect(yuv, clr, g_XMSelect1110);
+			return Vector::Select(yuv, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24139,7 +24071,7 @@ namespace At0
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
 			VectorType clr = Vector::Multiply(Vector3Transform(rgb, M), Scale);
 
-			return VectorSelect(rgb, clr, g_XMSelect1110);
+			return Vector::Select(rgb, clr, g_XMSelect1110);
 		}
 
 		inline VectorType RAYMATH_CALLCONV ColorXYZToRGB(FVectorType xyz)
@@ -24152,7 +24084,7 @@ namespace At0
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
 			VectorType clr = Vector3Transform(Vector::Multiply(xyz, Scale), M);
 
-			return VectorSelect(xyz, clr, g_XMSelect1110);
+			return Vector::Select(xyz, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24176,9 +24108,9 @@ namespace At0
 			// clr = (1+a)*pow(lclr, 1/2.4) - a for lclr > 0.0031308 (where a = 0.055)
 			VectorType largeC = Vector::Subtract(Vector::Multiply(g_XMsrgbA1, VectorPow(lclr, Exp)), g_XMsrgbA);
 
-			VectorType clr = VectorSelect(smallC, largeC, sel);
+			VectorType clr = Vector::Select(smallC, largeC, sel);
 
-			return VectorSelect(xyz, clr, g_XMSelect1110);
+			return Vector::Select(xyz, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24199,12 +24131,12 @@ namespace At0
 			// lclr = pow( (clr + a) / (1+a), 2.4 )
 			VectorType largeC = VectorPow(Vector::Divide(Vector::Add(srgb, g_XMsrgbA), g_XMsrgbA1), Exp);
 
-			VectorType lclr = VectorSelect(smallC, largeC, sel);
+			VectorType lclr = Vector::Select(smallC, largeC, sel);
 
 			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
 			VectorType clr = Vector3Transform(lclr, M);
 
-			return VectorSelect(srgb, clr, g_XMSelect1110);
+			return Vector::Select(srgb, clr, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24217,12 +24149,12 @@ namespace At0
 			static const VectorF32 Bias = { { { 0.055f, 0.055f, 0.055f, 0.f } } };
 			static const VectorF32 InvGamma = { { { 1.0f / 2.4f, 1.0f / 2.4f, 1.0f / 2.4f, 1.f } } };
 
-			VectorType V = VectorSaturate(rgb);
+			VectorType V = Vector(rgb).Saturate();
 			VectorType V0 = Vector::Multiply(V, Linear);
 			VectorType V1 = Vector::Subtract(Vector::Multiply(Scale, VectorPow(V, InvGamma)), Bias);
 			VectorType select = VectorLess(V, Cutoff);
-			V = VectorSelect(V1, V0, select);
-			return VectorSelect(rgb, V, g_XMSelect1110);
+			V = Vector::Select(V1, V0, select);
+			return Vector::Select(rgb, V, g_XMSelect1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24235,12 +24167,12 @@ namespace At0
 			static const VectorF32 Bias = { { { 0.055f, 0.055f, 0.055f, 0.f } } };
 			static const VectorF32 Gamma = { { { 2.4f, 2.4f, 2.4f, 1.f } } };
 
-			VectorType V = VectorSaturate(srgb);
+			VectorType V = Vector(srgb).Saturate();
 			VectorType V0 = Vector::Multiply(V, ILinear);
 			VectorType V1 = VectorPow(Vector::Multiply(Vector::Add(V, Bias), Scale), Gamma);
 			VectorType select = Vector::Greater(V, Cutoff);
-			V = VectorSelect(V0, V1, select);
-			return VectorSelect(srgb, V, g_XMSelect1110);
+			V = Vector::Select(V0, V1, select);
+			return Vector::Select(srgb, V, g_XMSelect1110);
 		}
 
 		/****************************************************************************
@@ -24795,5 +24727,5 @@ namespace At0
 
 #pragma warning(pop)
 
-	}
-}
+		}
+		}
