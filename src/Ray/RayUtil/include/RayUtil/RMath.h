@@ -32,7 +32,8 @@
 
 //-------------------------------------------------------------------------------------
 // NOTICE
-// This file has been modified to assure platform compatibility and correct namespacing.
+// This file has been modified to assure platform compatibility, correct namespacing
+// and easier usage.
 //-------------------------------------------------------------------------------------
 
 #pragma once
@@ -46,7 +47,7 @@
 #define RAYMATH_VECTORCALL 1
 #endif
 
-#ifdef __linux__
+#if defined(__linux__) && !defined(RAY_NO_INTRINSICS)
 #define RAY_NO_INTRINSICS
 #endif
 
@@ -5263,7 +5264,7 @@ namespace At0
 			vResult = _mm_move_ss(V, vResult);
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the Y component of a vector to a floating point value passed by pointer
 
@@ -5291,7 +5292,7 @@ namespace At0
 			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the Z component of a vector to a floating point value passed by pointer
 
@@ -5319,7 +5320,7 @@ namespace At0
 			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the W component of a vector to a floating point value passed by pointer
 
@@ -5347,7 +5348,7 @@ namespace At0
 			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -5381,7 +5382,7 @@ namespace At0
 			VectorType vResult = _mm_move_ss(V, _mm_castsi128_ps(vTemp));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the Y component of a vector to an integer passed by value
 		inline VectorType RAYMATH_CALLCONV VectorSetIntY(FVectorType V, uint32_t y)
@@ -5411,7 +5412,7 @@ namespace At0
 			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the Z component of a vector to an integer passed by value
 		inline VectorType RAYMATH_CALLCONV VectorSetIntZ(FVectorType V, uint32_t z)
@@ -5441,7 +5442,7 @@ namespace At0
 			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the W component of a vector to an integer passed by value
 		inline VectorType RAYMATH_CALLCONV VectorSetIntW(FVectorType V, uint32_t w)
@@ -5471,7 +5472,7 @@ namespace At0
 			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -5509,7 +5510,7 @@ namespace At0
 			VectorType vResult = _mm_move_ss(V, vTemp);
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the Y component of a vector to an integer value passed by pointer
 
@@ -5537,7 +5538,7 @@ namespace At0
 			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 2, 0, 1));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the Z component of a vector to an integer value passed by pointer
 
@@ -5565,7 +5566,7 @@ namespace At0
 			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(3, 0, 1, 2));
 			return vResult;
 #endif
-				}
+		}
 
 		// Sets the W component of a vector to an integer value passed by pointer
 
@@ -5593,7 +5594,7 @@ namespace At0
 			vResult = RAYMATH_PERMUTE_PS(vResult, _MM_SHUFFLE(0, 2, 1, 3));
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -6834,7 +6835,7 @@ namespace At0
 			vResult = _mm_or_ps(vResult, _mm_castsi128_ps(vTest));
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -6886,7 +6887,7 @@ namespace At0
 			vResult = _mm_or_ps(vResult, _mm_castsi128_ps(vTest));
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -7335,7 +7336,7 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			return _mm_mul_ps(V1, V2);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -7366,7 +7367,7 @@ namespace At0
 			VectorType vResult = _mm_mul_ps(V1, V2);
 			return _mm_add_ps(vResult, V3);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -7399,7 +7400,7 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			return _mm_div_ps(V1, V2);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -7430,7 +7431,7 @@ namespace At0
 			VectorType R = _mm_mul_ps(V1, V2);
 			return _mm_sub_ps(V3, R);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -7454,7 +7455,7 @@ namespace At0
 			VectorType vResult = _mm_set_ps1(ScaleFactor);
 			return _mm_mul_ps(vResult, V);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -7476,7 +7477,7 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			return _mm_rcp_ps(V);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -7508,7 +7509,7 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			return _mm_div_ps(g_XMOne, V);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 		// Return an estimated square root
@@ -7540,7 +7541,7 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			return _mm_sqrt_ps(V);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -7580,7 +7581,7 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			return _mm_sqrt_ps(V);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -7602,7 +7603,7 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			return _mm_rsqrt_ps(V);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -7636,7 +7637,7 @@ namespace At0
 			vResult = _mm_div_ps(g_XMOne, vResult);
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -8517,7 +8518,7 @@ namespace At0
 			vResult = _mm_max_ps(vResult, V);
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -8674,7 +8675,7 @@ namespace At0
 			Result = _mm_mul_ps(Result, x);
 			return Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -8770,7 +8771,7 @@ namespace At0
 			Result = _mm_mul_ps(Result, sign);
 			return Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -8923,7 +8924,7 @@ namespace At0
 			Result = _mm_mul_ps(Result, sign);
 			*pCos = Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -9018,7 +9019,7 @@ namespace At0
 			return Result;
 
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -9056,7 +9057,7 @@ namespace At0
 
 			return _mm_sub_ps(E1, E2);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -9092,7 +9093,7 @@ namespace At0
 			VectorType E2 = VectorExp(V2);
 			return _mm_add_ps(E1, E2);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -9127,7 +9128,7 @@ namespace At0
 			E = _mm_div_ps(g_XMOne.v, E);
 			return _mm_sub_ps(g_XMOne.v, E);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -9235,7 +9236,7 @@ namespace At0
 			t0 = _mm_sub_ps(g_XMHalfPi, t0);
 			return t0;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -9341,7 +9342,7 @@ namespace At0
 			t0 = _mm_or_ps(t0, t1);
 			return t0;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -9465,7 +9466,7 @@ namespace At0
 			Result = _mm_or_ps(select0, select1);
 			return Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -9538,7 +9539,7 @@ namespace At0
 			return Vector::Select(Result, R2, ATanResultValid);
 
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -9615,7 +9616,7 @@ namespace At0
 			Result = _mm_mul_ps(Result, x);
 			return Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -9696,7 +9697,7 @@ namespace At0
 			Result = _mm_mul_ps(Result, sign);
 			return Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -9819,7 +9820,7 @@ namespace At0
 			Result = _mm_mul_ps(Result, sign);
 			*pCos = Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -9860,7 +9861,7 @@ namespace At0
 			return Vector::Multiply(N, D);
 
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -10013,7 +10014,7 @@ namespace At0
 			t0 = _mm_or_ps(t0, t1);
 			return t0;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -10110,7 +10111,7 @@ namespace At0
 			Result = _mm_or_ps(select0, select1);
 			return Result;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -10173,7 +10174,7 @@ namespace At0
 			return Result;
 
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -13626,7 +13627,7 @@ namespace At0
 			// Set w to zero
 			return _mm_and_ps(vResult, g_XMMask3);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -22387,7 +22388,7 @@ namespace At0
 			vResult = _mm_add_ps(vResult, Q2Y);
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -22457,7 +22458,7 @@ namespace At0
 			static const VectorF32 NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
 			return _mm_mul_ps(*this, NegativeOne3);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -23633,7 +23634,7 @@ namespace At0
 			// Add 1,1,1,0 to -x,-y,-z,w
 			return _mm_add_ps(vTemp, g_XMOne3);
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -23718,7 +23719,7 @@ namespace At0
 			vResult = _mm_shuffle_ps(vResult, vScale, _MM_SHUFFLE(3, 0, 1, 0));  // x = vResult.x,y = vResult.y,z = vResult.z,w=vColor.w
 			return vResult;
 #endif
-				}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -24714,5 +24715,5 @@ namespace At0
 
 #pragma warning(pop)
 
-		}
-				}
+	}
+}
