@@ -400,22 +400,30 @@ namespace At0
 			operator const VectorType& () const { return v; }
 
 			Vector(const Vector&) = default;
-			Vector& operator=(const Vector&) = default;
+			Vector& RAYMATH_CALLCONV operator=(const Vector&) = default;
 
 			Vector(Vector&&) = default;
-			Vector& operator=(Vector&&) = default;
+			Vector& RAYMATH_CALLCONV operator=(Vector&&) = default;
 
-			Vector RAYMATH_CALLCONV operator-() const { return Negate(*this); }
-			Vector RAYMATH_CALLCONV operator+(FVector v1) const { return Add(*this, v1); }
+			Vector  RAYMATH_CALLCONV operator-() const { return Negate(*this); }
+			Vector  RAYMATH_CALLCONV operator+(FVector v1) const { return Add(*this, v1); }
+			Vector  RAYMATH_CALLCONV operator+(float value) const { return Add(*this, { value, value, value, value }); }
 			Vector& RAYMATH_CALLCONV operator+=(FVector v1) { v = Add(*this, v1); return *this; }
+			Vector& RAYMATH_CALLCONV operator+=(float value) { v = Add(*this, { value, value, value, value }); return *this; }
 			Vector& RAYMATH_CALLCONV operator++() { v = Add(*this, { 1.0f, 1.0f, 1.0f, 1.0f }); return *this; }
-			Vector RAYMATH_CALLCONV operator-(FVector v1) const { return Subtract(*this, v1); }
+			Vector  RAYMATH_CALLCONV operator-(FVector v1) const { return Subtract(*this, v1); }
+			Vector  RAYMATH_CALLCONV operator-(float value) const { return Subtract(*this, { value, value, value, value }); }
 			Vector& RAYMATH_CALLCONV operator-=(FVector v1) { v = Add(*this, v1); return *this; }
+			Vector& RAYMATH_CALLCONV operator-=(float value) { v = Add(*this, { value, value, value, value }); return *this; }
 			Vector& RAYMATH_CALLCONV operator--() { v = Subtract(*this, { 1.0f, 1.0f, 1.0f, 1.0f }); return *this; }
-			Vector RAYMATH_CALLCONV operator*(FVector v1) const { return Multiply(*this, v1); }
+			Vector  RAYMATH_CALLCONV operator*(FVector v1) const { return Multiply(*this, v1); }
+			Vector  RAYMATH_CALLCONV operator*(float value) const { return Multiply(*this, { value, value, value, value }); }
 			Vector& RAYMATH_CALLCONV operator*=(FVector v1) { v = Multiply(*this, v1); return *this; }
-			Vector RAYMATH_CALLCONV operator/(FVector v1) const { return Divide(*this, v1); }
+			Vector& RAYMATH_CALLCONV operator*=(float value) { v = Multiply(*this, { value, value, value, value }); return *this; }
+			Vector  RAYMATH_CALLCONV operator/(FVector v1) const { return Divide(*this, v1); }
+			Vector  RAYMATH_CALLCONV operator/(float value) const { return Divide(*this, { value, value, value, value }); }
 			Vector& RAYMATH_CALLCONV operator/=(FVector v1) { v = Divide(*this, v1); return *this; }
+			Vector& RAYMATH_CALLCONV operator/=(float value) { v = Divide(*this, { value, value, value, value }); return *this; }
 
 			Vector RAYMATH_CALLCONV Equal(FVectorType vec) { return Equal(*this, vec); }
 			Vector RAYMATH_CALLCONV EqualR(FVectorType vec, /*_Out_ */ uint32_t* pCR) { return EqualR(pCR, *this, vec); }
@@ -426,11 +434,11 @@ namespace At0
 			Vector RAYMATH_CALLCONV NotEqualInt(FVectorType V1) { return NotEqualInt(*this, V1); }
 			Vector RAYMATH_CALLCONV Greater(FVectorType V1) { return Greater(*this, V1); }
 			Vector RAYMATH_CALLCONV GreaterR(/*_In_ */FVectorType V1, /*_Out_ */ uint32_t* pCR) { return GreaterR(pCR, *this, V1); }
-			float RAYMATH_CALLCONV GetByIndex(size_t i) const;
-			float RAYMATH_CALLCONV GetX() const;
-			float RAYMATH_CALLCONV GetY() const;
-			float RAYMATH_CALLCONV GetZ() const;
-			float RAYMATH_CALLCONV GetW() const;
+			float  RAYMATH_CALLCONV GetByIndex(size_t i) const;
+			float  RAYMATH_CALLCONV GetX() const;
+			float  RAYMATH_CALLCONV GetY() const;
+			float  RAYMATH_CALLCONV GetZ() const;
+			float  RAYMATH_CALLCONV GetW() const;
 			Vector RAYMATH_CALLCONV Round() const;
 			Vector RAYMATH_CALLCONV Truncate() const;
 			Vector RAYMATH_CALLCONV Floor() const;
@@ -439,11 +447,11 @@ namespace At0
 			Vector RAYMATH_CALLCONV Saturate() const;
 			Vector RAYMATH_CALLCONV Min(FVectorType other) const { return Min(*this, other); }
 			Vector RAYMATH_CALLCONV Max(FVectorType other) const { return Max(*this, other); }
-			void RAYMATH_CALLCONV SetByIndex(float f, size_t i);
-			void RAYMATH_CALLCONV SetX(float x);
-			void RAYMATH_CALLCONV SetY(float y);
-			void RAYMATH_CALLCONV SetZ(float z);
-			void RAYMATH_CALLCONV SetW(float w);
+			void   RAYMATH_CALLCONV SetByIndex(float f, size_t i);
+			void   RAYMATH_CALLCONV SetX(float x);
+			void   RAYMATH_CALLCONV SetY(float y);
+			void   RAYMATH_CALLCONV SetZ(float z);
+			void   RAYMATH_CALLCONV SetW(float w);
 
 			static Vector RAYMATH_CALLCONV Equal(FVectorType V1, FVectorType V2);
 			static Vector RAYMATH_CALLCONV EqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVectorType V1, /*_In_ */FVectorType V2);
