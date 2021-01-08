@@ -462,6 +462,17 @@ namespace At0
 			Vector RAYMATH_CALLCONV IsNaN() const;
 			Vector RAYMATH_CALLCONV IsInfinite() const;
 
+			Vector RAYMATH_CALLCONV AddAngles(FVectorType V2) const;
+			Vector RAYMATH_CALLCONV Sum() const;
+			Vector RAYMATH_CALLCONV SubtractAngles(FVectorType V2) const;
+			Vector RAYMATH_CALLCONV Scale(float ScaleFactor) const;
+			Vector RAYMATH_CALLCONV ReciprocalEst() const;
+			Vector RAYMATH_CALLCONV Reciprocal() const;
+			Vector RAYMATH_CALLCONV SqrtEst() const;
+			Vector RAYMATH_CALLCONV Sqrt() const;
+			Vector RAYMATH_CALLCONV ReciprocalSqrtEst() const;
+			Vector RAYMATH_CALLCONV ReciprocalSqrt() const;
+
 			static Vector RAYMATH_CALLCONV Equal(FVectorType V1, FVectorType V2);
 			static Vector RAYMATH_CALLCONV EqualR(/*_Out_ */ uint32_t* pCR, /*_In_ */FVectorType V1, /*_In_ */FVectorType V2);
 			static Vector RAYMATH_CALLCONV EqualInt(FVectorType V1, FVectorType V2);
@@ -1358,18 +1369,8 @@ namespace At0
 		VectorType    RAYMATH_CALLCONV     VectorNorInt(FVectorType V1, FVectorType V2);
 		VectorType    RAYMATH_CALLCONV     VectorXorInt(FVectorType V1, FVectorType V2);
 
-		VectorType    RAYMATH_CALLCONV     VectorAddAngles(FVectorType V1, FVectorType V2);
-		VectorType    RAYMATH_CALLCONV     VectorSum(FVectorType V);
-		VectorType    RAYMATH_CALLCONV     VectorSubtractAngles(FVectorType V1, FVectorType V2);
 		VectorType    RAYMATH_CALLCONV     VectorMultiplyAdd(FVectorType V1, FVectorType V2, FVectorType V3);
 		VectorType    RAYMATH_CALLCONV     VectorNegativeMultiplySubtract(FVectorType V1, FVectorType V2, FVectorType V3);
-		VectorType    RAYMATH_CALLCONV     VectorScale(FVectorType V, float ScaleFactor);
-		VectorType    RAYMATH_CALLCONV     VectorReciprocalEst(FVectorType V);
-		VectorType    RAYMATH_CALLCONV     VectorReciprocal(FVectorType V);
-		VectorType    RAYMATH_CALLCONV     VectorSqrtEst(FVectorType V);
-		VectorType    RAYMATH_CALLCONV     VectorSqrt(FVectorType V);
-		VectorType    RAYMATH_CALLCONV     VectorReciprocalSqrtEst(FVectorType V);
-		VectorType    RAYMATH_CALLCONV     VectorReciprocalSqrt(FVectorType V);
 		VectorType    RAYMATH_CALLCONV     VectorExp2(FVectorType V);
 		VectorType    RAYMATH_CALLCONV     VectorExpE(FVectorType V);
 		VectorType    RAYMATH_CALLCONV     VectorExp(FVectorType V);
@@ -7135,10 +7136,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorSum
-		(
-			FVectorType V
-		)
+		inline Vector RAYMATH_CALLCONV Vector::Sum() const
 		{
 #if defined(RAY_NO_INTRINSICS)
 
@@ -7146,26 +7144,26 @@ namespace At0
 			Result.f[0] =
 				Result.f[1] =
 				Result.f[2] =
-				Result.f[3] = V.vector4_f32[0] + V.vector4_f32[1] + V.vector4_f32[2] + V.vector4_f32[3];
+				Result.f[3] = v.vector4_f32[0] + v.vector4_f32[1] + v.vector4_f32[2] + v.vector4_f32[3];
 			return Result.v;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
-			VectorType vTemp = vpaddq_f32(V, V);
+			VectorType vTemp = vpaddq_f32(v, v);
 			return vpaddq_f32(vTemp, vTemp);
 #else
-			float32x2_t v1 = vget_low_f32(V);
-			float32x2_t v2 = vget_high_f32(V);
+			float32x2_t v1 = vget_low_f32(v);
+			float32x2_t v2 = vget_high_f32(v);
 			v1 = vadd_f32(v1, v2);
 			v1 = vpadd_f32(v1, v1);
 			return vcombine_f32(v1, v1);
 #endif
 #elif defined(RAY_SSE3_INTRINSICS)
-			VectorType vTemp = _mm_hadd_ps(V, V);
+			VectorType vTemp = _mm_hadd_ps(v, v);
 			return _mm_hadd_ps(vTemp, vTemp);
 #elif defined(RAY_SSE_INTRINSICS)
-			VectorType vTemp = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(2, 3, 0, 1));
-			VectorType vTemp2 = _mm_add_ps(V, vTemp);
+			VectorType vTemp = RAYMATH_PERMUTE_PS(v, _MM_SHUFFLE(2, 3, 0, 1));
+			VectorType vTemp2 = _mm_add_ps(v, vTemp);
 			vTemp = RAYMATH_PERMUTE_PS(vTemp2, _MM_SHUFFLE(1, 0, 3, 2));
 			return _mm_add_ps(vTemp, vTemp2);
 #endif
@@ -7173,11 +7171,10 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorAddAngles
+		inline Vector RAYMATH_CALLCONV Vector::AddAngles
 		(
-			FVectorType V1,
 			FVectorType V2
-		)
+		) const
 		{
 #if defined(RAY_NO_INTRINSICS)
 
@@ -7187,7 +7184,7 @@ namespace At0
 			// that -Pi <= V1 < Pi and the range of V2 is such that
 			// -2Pi <= V2 <= 2Pi, then the range of the resulting angle
 			// will be -Pi <= Result < Pi.
-			Vector Result = Vector::Add(V1, V2);
+			Vector Result = Vector::Add(v, V2);
 
 			VectorType Mask = Result.Less(g_XMNegativePi.v);
 			VectorType Offset = Vector::Select(Zero, g_XMTwoPi.v, Mask);
@@ -7201,7 +7198,7 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Adjust the angles
-			VectorType vResult = vaddq_f32(V1, V2);
+			VectorType vResult = vaddq_f32(v, V2);
 			// Less than Pi?
 			uint32x4_t vOffset = vcltq_f32(vResult, g_XMNegativePi);
 			vOffset = vandq_u32(vOffset, g_XMTwoPi);
@@ -7215,7 +7212,7 @@ namespace At0
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Adjust the angles
-			VectorType vResult = _mm_add_ps(V1, V2);
+			VectorType vResult = _mm_add_ps(v, V2);
 			// Less than Pi?
 			VectorType vOffset = _mm_cmplt_ps(vResult, g_XMNegativePi);
 			vOffset = _mm_and_ps(vOffset, g_XMTwoPi);
@@ -7258,11 +7255,10 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorSubtractAngles
+		inline Vector RAYMATH_CALLCONV Vector::SubtractAngles
 		(
-			FVectorType V1,
 			FVectorType V2
-		)
+		) const
 		{
 #if defined(RAY_NO_INTRINSICS)
 
@@ -7272,7 +7268,7 @@ namespace At0
 			// that -Pi <= V1 < Pi and the range of V2 is such that
 			// -2Pi <= V2 <= 2Pi, then the range of the resulting angle
 			// will be -Pi <= Result < Pi.
-			Vector Result = Vector::Subtract(V1, V2);
+			Vector Result = Vector::Subtract(v, V2);
 
 			VectorType Mask = Result.Less(g_XMNegativePi.v);
 			VectorType Offset = Vector::Select(Zero, g_XMTwoPi.v, Mask);
@@ -7286,7 +7282,7 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Adjust the angles
-			VectorType vResult = vsubq_f32(V1, V2);
+			VectorType vResult = vsubq_f32(v, V2);
 			// Less than Pi?
 			uint32x4_t vOffset = vcltq_f32(vResult, g_XMNegativePi);
 			vOffset = vandq_u32(vOffset, g_XMTwoPi);
@@ -7300,7 +7296,7 @@ namespace At0
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Adjust the angles
-			VectorType vResult = _mm_sub_ps(V1, V2);
+			VectorType vResult = _mm_sub_ps(v, V2);
 			// Less than Pi?
 			VectorType vOffset = _mm_cmplt_ps(vResult, g_XMNegativePi);
 			vOffset = _mm_and_ps(vOffset, g_XMTwoPi);
@@ -7435,205 +7431,186 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorScale
+		inline Vector RAYMATH_CALLCONV Vector::Scale
 		(
-			FVectorType V,
-			float    ScaleFactor
-		)
+			float ScaleFactor
+		) const
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
-					V.vector4_f32[0] * ScaleFactor,
-					V.vector4_f32[1] * ScaleFactor,
-					V.vector4_f32[2] * ScaleFactor,
-					V.vector4_f32[3] * ScaleFactor
+					v.vector4_f32[0] * ScaleFactor,
+					v.vector4_f32[1] * ScaleFactor,
+					v.vector4_f32[2] * ScaleFactor,
+					v.vector4_f32[3] * ScaleFactor
 				} } };
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			return vmulq_n_f32(V, ScaleFactor);
+			return vmulq_n_f32(v, ScaleFactor);
 #elif defined(RAY_SSE_INTRINSICS)
 			VectorType vResult = _mm_set_ps1(ScaleFactor);
-			return _mm_mul_ps(vResult, V);
+			return _mm_mul_ps(vResult, v);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorReciprocalEst
-		(
-			FVectorType V
-		)
+		inline Vector RAYMATH_CALLCONV Vector::ReciprocalEst() const
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
-					1.f / V.vector4_f32[0],
-					1.f / V.vector4_f32[1],
-					1.f / V.vector4_f32[2],
-					1.f / V.vector4_f32[3]
+					1.f / v.vector4_f32[0],
+					1.f / v.vector4_f32[1],
+					1.f / v.vector4_f32[2],
+					1.f / v.vector4_f32[3]
 				} } };
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			return vrecpeq_f32(V);
+			return vrecpeq_f32(v);
 #elif defined(RAY_SSE_INTRINSICS)
-			return _mm_rcp_ps(V);
+			return _mm_rcp_ps(v);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorReciprocal
-		(
-			FVectorType V
-		)
+		inline Vector RAYMATH_CALLCONV Vector::Reciprocal() const
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
-					1.f / V.vector4_f32[0],
-					1.f / V.vector4_f32[1],
-					1.f / V.vector4_f32[2],
-					1.f / V.vector4_f32[3]
+					1.f / v.vector4_f32[0],
+					1.f / v.vector4_f32[1],
+					1.f / v.vector4_f32[2],
+					1.f / v.vector4_f32[3]
 				} } };
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 			float32x4_t one = vdupq_n_f32(1.0f);
-			return vdivq_f32(one, V);
+			return vdivq_f32(one, v);
 #else
 			// 2 iterations of Newton-Raphson refinement
-			float32x4_t Reciprocal = vrecpeq_f32(V);
-			float32x4_t S = vrecpsq_f32(Reciprocal, V);
+			float32x4_t Reciprocal = vrecpeq_f32(v);
+			float32x4_t S = vrecpsq_f32(Reciprocal, v);
 			Reciprocal = vmulq_f32(S, Reciprocal);
-			S = vrecpsq_f32(Reciprocal, V);
+			S = vrecpsq_f32(Reciprocal, v);
 			return vmulq_f32(S, Reciprocal);
 #endif
 #elif defined(RAY_SSE_INTRINSICS)
-			return _mm_div_ps(g_XMOne, V);
+			return _mm_div_ps(g_XMOne, v);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 		// Return an estimated square root
-		inline VectorType RAYMATH_CALLCONV VectorSqrtEst
-		(
-			FVectorType V
-		)
+		inline Vector RAYMATH_CALLCONV Vector::SqrtEst() const
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
-					sqrtf(V.vector4_f32[0]),
-					sqrtf(V.vector4_f32[1]),
-					sqrtf(V.vector4_f32[2]),
-					sqrtf(V.vector4_f32[3])
+					sqrtf(v.vector4_f32[0]),
+					sqrtf(v.vector4_f32[1]),
+					sqrtf(v.vector4_f32[2]),
+					sqrtf(v.vector4_f32[3])
 				} } };
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// 1 iteration of Newton-Raphson refinment of sqrt
-			float32x4_t S0 = vrsqrteq_f32(V);
-			float32x4_t P0 = vmulq_f32(V, S0);
+			float32x4_t S0 = vrsqrteq_f32(v);
+			float32x4_t P0 = vmulq_f32(v, S0);
 			float32x4_t R0 = vrsqrtsq_f32(P0, S0);
 			float32x4_t S1 = vmulq_f32(S0, R0);
 
-			VectorType VEqualsInfinity = Vector::EqualInt(V, g_XMInfinity.v);
-			VectorType VEqualsZero = Vector::Equal(V, vdupq_n_f32(0));
-			VectorType Result = vmulq_f32(V, S1);
+			VectorType VEqualsInfinity = Vector::EqualInt(v, g_XMInfinity.v);
+			VectorType VEqualsZero = Vector::Equal(v, vdupq_n_f32(0));
+			VectorType Result = vmulq_f32(v, S1);
 			VectorType Select = Vector::EqualInt(VEqualsInfinity, VEqualsZero);
-			return Vector::Select(V, Result, Select);
+			return Vector::Select(v, Result, Select);
 #elif defined(RAY_SSE_INTRINSICS)
-			return _mm_sqrt_ps(V);
+			return _mm_sqrt_ps(v);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorSqrt
-		(
-			FVectorType V
-		)
+		inline Vector RAYMATH_CALLCONV Vector::Sqrt() const
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
-					sqrtf(V.vector4_f32[0]),
-					sqrtf(V.vector4_f32[1]),
-					sqrtf(V.vector4_f32[2]),
-					sqrtf(V.vector4_f32[3])
+					sqrtf(v.vector4_f32[0]),
+					sqrtf(v.vector4_f32[1]),
+					sqrtf(v.vector4_f32[2]),
+					sqrtf(v.vector4_f32[3])
 				}
  }
 			};
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// 3 iterations of Newton-Raphson refinment of sqrt
-			float32x4_t S0 = vrsqrteq_f32(V);
-			float32x4_t P0 = vmulq_f32(V, S0);
+			float32x4_t S0 = vrsqrteq_f32(v);
+			float32x4_t P0 = vmulq_f32(v, S0);
 			float32x4_t R0 = vrsqrtsq_f32(P0, S0);
 			float32x4_t S1 = vmulq_f32(S0, R0);
-			float32x4_t P1 = vmulq_f32(V, S1);
+			float32x4_t P1 = vmulq_f32(v, S1);
 			float32x4_t R1 = vrsqrtsq_f32(P1, S1);
 			float32x4_t S2 = vmulq_f32(S1, R1);
-			float32x4_t P2 = vmulq_f32(V, S2);
+			float32x4_t P2 = vmulq_f32(v, S2);
 			float32x4_t R2 = vrsqrtsq_f32(P2, S2);
 			float32x4_t S3 = vmulq_f32(S2, R2);
 
-			VectorType VEqualsInfinity = Vector::EqualInt(V, g_XMInfinity.v);
-			VectorType VEqualsZero = Vector::Equal(V, vdupq_n_f32(0));
-			VectorType Result = vmulq_f32(V, S3);
+			VectorType VEqualsInfinity = Vector::EqualInt(v, g_XMInfinity.v);
+			VectorType VEqualsZero = Vector::Equal(v, vdupq_n_f32(0));
+			VectorType Result = vmulq_f32(v, S3);
 			VectorType Select = Vector::EqualInt(VEqualsInfinity, VEqualsZero);
-			return Vector::Select(V, Result, Select);
+			return Vector::Select(v, Result, Select);
 #elif defined(RAY_SSE_INTRINSICS)
-			return _mm_sqrt_ps(V);
+			return _mm_sqrt_ps(v);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorReciprocalSqrtEst
-		(
-			FVectorType V
-		)
+		inline Vector RAYMATH_CALLCONV Vector::ReciprocalSqrtEst() const
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
-					1.f / sqrtf(V.vector4_f32[0]),
-					1.f / sqrtf(V.vector4_f32[1]),
-					1.f / sqrtf(V.vector4_f32[2]),
-					1.f / sqrtf(V.vector4_f32[3])
+					1.f / sqrtf(v.vector4_f32[0]),
+					1.f / sqrtf(v.vector4_f32[1]),
+					1.f / sqrtf(v.vector4_f32[2]),
+					1.f / sqrtf(v.vector4_f32[3])
 				} } };
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			return vrsqrteq_f32(V);
+			return vrsqrteq_f32(v);
 #elif defined(RAY_SSE_INTRINSICS)
-			return _mm_rsqrt_ps(V);
+			return _mm_rsqrt_ps(v);
 #endif
 		}
 
 		//------------------------------------------------------------------------------
 
-		inline VectorType RAYMATH_CALLCONV VectorReciprocalSqrt
-		(
-			FVectorType V
-		)
+		inline Vector RAYMATH_CALLCONV Vector::ReciprocalSqrt() const
 		{
 #if defined(RAY_NO_INTRINSICS)
 			VectorF32 Result = { { {
-					1.f / sqrtf(V.vector4_f32[0]),
-					1.f / sqrtf(V.vector4_f32[1]),
-					1.f / sqrtf(V.vector4_f32[2]),
-					1.f / sqrtf(V.vector4_f32[3])
+					1.f / sqrtf(v.vector4_f32[0]),
+					1.f / sqrtf(v.vector4_f32[1]),
+					1.f / sqrtf(v.vector4_f32[2]),
+					1.f / sqrtf(v.vector4_f32[3])
 				} } };
 			return Result;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// 2 iterations of Newton-Raphson refinement of reciprocal
-			float32x4_t S0 = vrsqrteq_f32(V);
+			float32x4_t S0 = vrsqrteq_f32(v);
 
-			float32x4_t P0 = vmulq_f32(V, S0);
+			float32x4_t P0 = vmulq_f32(v, S0);
 			float32x4_t R0 = vrsqrtsq_f32(P0, S0);
 
 			float32x4_t S1 = vmulq_f32(S0, R0);
-			float32x4_t P1 = vmulq_f32(V, S1);
+			float32x4_t P1 = vmulq_f32(v, S1);
 			float32x4_t R1 = vrsqrtsq_f32(P1, S1);
 
 			return vmulq_f32(S1, R1);
 #elif defined(RAY_SSE_INTRINSICS)
-			VectorType vResult = _mm_sqrt_ps(V);
+			VectorType vResult = _mm_sqrt_ps(v);
 			vResult = _mm_div_ps(g_XMOne, vResult);
 			return vResult;
 #endif
@@ -9113,10 +9090,10 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 Scale = { { { 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f } } }; // 2.0f / ln(2.0f)
 
-			VectorType E = vmulq_f32(V, Scale.v);
+			Vector E = vmulq_f32(V, Scale.v);
 			E = VectorExp(E);
 			E = vmlaq_f32(g_XMOneHalf.v, E, g_XMOneHalf.v);
-			E = VectorReciprocal(E);
+			E = E.Reciprocal();
 			return vsubq_f32(g_XMOne.v, E);
 #elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 Scale = { { { 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f } } }; // 2.0f / ln(2.0f)
@@ -9153,8 +9130,8 @@ namespace At0
 
 			// Compute (1-|V|), clamp to zero to avoid sqrt of negative number.
 			float32x4_t oneMValue = vsubq_f32(g_XMOne, x);
-			float32x4_t clampOneMValue = vmaxq_f32(g_XMZero, oneMValue);
-			float32x4_t root = VectorSqrt(clampOneMValue);
+			Vector clampOneMValue = vmaxq_f32(g_XMZero, oneMValue);
+			float32x4_t root = clampOneMValue.Sqrt();
 
 			// Compute polynomial approximation
 			const VectorType AC1 = g_XMArcCoefficients1;
@@ -9261,8 +9238,8 @@ namespace At0
 
 			// Compute (1-|V|), clamp to zero to avoid sqrt of negative number.
 			float32x4_t oneMValue = vsubq_f32(g_XMOne, x);
-			float32x4_t clampOneMValue = vmaxq_f32(g_XMZero, oneMValue);
-			float32x4_t root = VectorSqrt(clampOneMValue);
+			Vector clampOneMValue = vmaxq_f32(g_XMZero, oneMValue);
+			float32x4_t root = clampOneMValue.Sqrt();
 
 			// Compute polynomial approximation
 			const VectorType AC1 = g_XMArcCoefficients1;
@@ -9363,7 +9340,7 @@ namespace At0
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t absV = vabsq_f32(V);
-			float32x4_t invV = VectorReciprocal(V);
+			float32x4_t invV = Vector(V).Reciprocal();
 			uint32x4_t comp = vcgtq_f32(V, g_XMOne);
 			uint32x4_t sign = vbslq_f32(comp, g_XMOne, g_XMNegativeOne);
 			comp = vcleq_f32(absV, g_XMOne);
@@ -9855,7 +9832,7 @@ namespace At0
 			VectorType V1T0 = Vector::Multiply(V1, T0);
 			VectorType V1T1 = Vector::Multiply(V1, T1);
 
-			VectorType D = VectorReciprocalEst(V2T2);
+			VectorType D = Vector(V2T2).ReciprocalEst();
 			VectorType N = VectorMultiplyAdd(V2, V1T1, V1T0);
 
 			return Vector::Multiply(N, D);
@@ -9885,8 +9862,8 @@ namespace At0
 
 			// Compute (1-|V|), clamp to zero to avoid sqrt of negative number.
 			float32x4_t oneMValue = vsubq_f32(g_XMOne, x);
-			float32x4_t clampOneMValue = vmaxq_f32(g_XMZero, oneMValue);
-			float32x4_t root = VectorSqrt(clampOneMValue);
+			Vector clampOneMValue = vmaxq_f32(g_XMZero, oneMValue);
+			float32x4_t root = clampOneMValue.Sqrt();
 
 			// Compute polynomial approximation
 			const VectorType AEC = g_XMArcEstCoefficients;
@@ -9963,8 +9940,8 @@ namespace At0
 
 			// Compute (1-|V|), clamp to zero to avoid sqrt of negative number.
 			float32x4_t oneMValue = vsubq_f32(g_XMOne, x);
-			float32x4_t clampOneMValue = vmaxq_f32(g_XMZero, oneMValue);
-			float32x4_t root = VectorSqrt(clampOneMValue);
+			Vector clampOneMValue = vmaxq_f32(g_XMZero, oneMValue);
+			float32x4_t root = clampOneMValue.Sqrt();
 
 			// Compute polynomial approximation
 			const VectorType AEC = g_XMArcEstCoefficients;
@@ -10035,7 +10012,7 @@ namespace At0
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t absV = vabsq_f32(V);
-			float32x4_t invV = VectorReciprocalEst(V);
+			float32x4_t invV = Vector(V).ReciprocalEst();
 			uint32x4_t comp = vcgtq_f32(V, g_XMOne);
 			uint32x4_t sign = vbslq_f32(comp, g_XMOne, g_XMNegativeOne);
 			comp = vcleq_f32(absV, g_XMOne);
@@ -10162,7 +10139,7 @@ namespace At0
 			VectorType Result = Vector::Select(R3, R5, YEqualsInfinity);
 			ATanResultValid = Vector::EqualInt(Result, ATanResultValid);
 
-			VectorType Reciprocal = VectorReciprocalEst(X);
+			VectorType Reciprocal = Vector(X).ReciprocalEst();
 			VectorType V = Vector::Multiply(Y, Reciprocal);
 			VectorType R0 = VectorATanEst(V);
 
@@ -11250,9 +11227,9 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			VectorType Result;
+			Vector Result;
 			Result = Vector2LengthSq(V);
-			Result = VectorReciprocalSqrtEst(Result);
+			Result = Result.ReciprocalSqrtEst();
 			return Result;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
@@ -11294,9 +11271,9 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			VectorType Result;
+			Vector Result;
 			Result = Vector2LengthSq(V);
-			Result = VectorReciprocalSqrt(Result);
+			Result = Result.ReciprocalSqrt();
 			return Result;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
@@ -11347,9 +11324,9 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			VectorType Result;
+			Vector Result;
 			Result = Vector2LengthSq(V);
-			Result = VectorSqrtEst(Result);
+			Result = Result.SqrtEst();
 			return Result;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
@@ -11395,9 +11372,9 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			VectorType Result;
+			Vector Result;
 			Result = Vector2LengthSq(V);
-			Result = VectorSqrt(Result);
+			Result = Result.Sqrt();
 			return Result;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
@@ -11633,11 +11610,11 @@ namespace At0
 			assert(Vector2GreaterOrEqual(LengthMax, g_XMZero));
 			assert(Vector2GreaterOrEqual(LengthMax, LengthMin));
 
-			VectorType LengthSq = Vector2LengthSq(V);
+			Vector LengthSq = Vector2LengthSq(V);
 
 			const VectorType Zero = Vector::Zero();
 
-			VectorType RcpLength = VectorReciprocalSqrt(LengthSq);
+			VectorType RcpLength = LengthSq.ReciprocalSqrt();
 
 			VectorType InfiniteLength = Vector::EqualInt(LengthSq, g_XMInfinity.v);
 			VectorType ZeroLength = Vector::Equal(LengthSq, Zero);
@@ -11916,7 +11893,7 @@ namespace At0
 			VectorType V2 = Vector::Subtract(Line2Point2, Line2Point1);
 			VectorType V3 = Vector::Subtract(Line1Point1, Line2Point1);
 
-			VectorType C1 = Vector2Cross(V1, V2);
+			Vector C1 = Vector2Cross(V1, V2);
 			VectorType C2 = Vector2Cross(V2, V3);
 
 			VectorType Result;
@@ -11937,7 +11914,7 @@ namespace At0
 			else
 			{
 				// Intersection point = Line1Point1 + V1 * (C2 / C1)
-				VectorType Scale = VectorReciprocal(C1);
+				VectorType Scale = C1.Reciprocal();
 				Scale = Vector::Multiply(C2, Scale);
 				Result = VectorMultiplyAdd(V1, Scale, Line1Point1);
 			}
@@ -13648,10 +13625,10 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			VectorType Result;
+			Vector Result;
 
 			Result = Vector3LengthSq(V);
-			Result = VectorReciprocalSqrtEst(Result);
+			Result = Result.ReciprocalSqrtEst();
 
 			return Result;
 
@@ -13704,10 +13681,10 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			VectorType Result;
+			Vector Result;
 
 			Result = Vector3LengthSq(V);
-			Result = VectorReciprocalSqrt(Result);
+			Result = Result.ReciprocalSqrt();
 
 			return Result;
 
@@ -13770,10 +13747,10 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			VectorType Result;
+			Vector Result;
 
 			Result = Vector3LengthSq(V);
-			Result = VectorSqrtEst(Result);
+			Result = Result.SqrtEst();
 
 			return Result;
 
@@ -13830,10 +13807,10 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			VectorType Result;
+			Vector Result;
 
 			Result = Vector3LengthSq(V);
-			Result = VectorSqrt(Result);
+			Result = Result.Sqrt();
 
 			return Result;
 
@@ -14098,11 +14075,11 @@ namespace At0
 			assert(Vector3GreaterOrEqual(LengthMax, Vector::Zero()));
 			assert(Vector3GreaterOrEqual(LengthMax, LengthMin));
 
-			VectorType LengthSq = Vector3LengthSq(V);
+			Vector LengthSq = Vector3LengthSq(V);
 
 			const VectorType Zero = Vector::Zero();
 
-			VectorType RcpLength = VectorReciprocalSqrt(LengthSq);
+			VectorType RcpLength = LengthSq.ReciprocalSqrt();
 
 			VectorType InfiniteLength = Vector::EqualInt(LengthSq, g_XMInfinity.v);
 			VectorType ZeroLength = Vector::Equal(LengthSq, Zero);
@@ -14179,7 +14156,7 @@ namespace At0
 			VectorType IDotN = Vector3Dot(Incident, Normal);
 
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
-			VectorType R = VectorNegativeMultiplySubtract(IDotN, IDotN, g_XMOne.v);
+			Vector R = VectorNegativeMultiplySubtract(IDotN, IDotN, g_XMOne.v);
 			R = Vector::Multiply(R, RefractionIndex);
 			R = VectorNegativeMultiplySubtract(R, RefractionIndex, g_XMOne.v);
 
@@ -14191,7 +14168,7 @@ namespace At0
 			else
 			{
 				// R = RefractionIndex * IDotN + sqrt(R)
-				R = VectorSqrt(R);
+				R = R.Sqrt();
 				R = VectorMultiplyAdd(RefractionIndex, IDotN, R);
 
 				// Result = RefractionIndex * Incident - Normal * R
@@ -16356,8 +16333,8 @@ namespace At0
 		{
 			static const VectorF32 D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
 
-			VectorType Scale = Vector::Set(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
-			Scale = VectorReciprocal(Scale);
+			Vector Scale = Vector::Set(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
+			Scale = Scale.Reciprocal();
 
 			VectorType Offset = Vector::Set(-ViewportX, -ViewportY, -ViewportMinZ, 0.0f);
 			Offset = VectorMultiplyAdd(Scale, Offset, D.v);
@@ -16406,8 +16383,8 @@ namespace At0
 
 			static const VectorF32 D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
 
-			VectorType Scale = Vector::Set(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
-			Scale = VectorReciprocal(Scale);
+			Vector Scale = Vector::Set(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
+			Scale = Scale.Reciprocal();
 
 			VectorType Offset = Vector::Set(-ViewportX, -ViewportY, -ViewportMinZ, 0.0f);
 			Offset = VectorMultiplyAdd(Scale, Offset, D.v);
@@ -16590,8 +16567,8 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 D = { { { -1.0f, 1.0f, 0.0f, 0.0f } } };
 
-			VectorType Scale = Vector::Set(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
-			Scale = VectorReciprocal(Scale);
+			Vector Scale = Vector::Set(ViewportWidth * 0.5f, -ViewportHeight * 0.5f, ViewportMaxZ - ViewportMinZ, 1.0f);
+			Scale = Scale.Reciprocal();
 
 			VectorType Offset = Vector::Set(-ViewportX, -ViewportY, -ViewportMinZ, 0.0f);
 			Offset = _mm_mul_ps(Scale, Offset);
@@ -17719,10 +17696,10 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			VectorType Result;
+			Vector Result;
 
 			Result = Vector4LengthSq(V);
-			Result = VectorReciprocalSqrtEst(Result);
+			Result = Result.ReciprocalSqrtEst();
 
 			return Result;
 
@@ -17775,10 +17752,10 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			VectorType Result;
+			Vector Result;
 
 			Result = Vector4LengthSq(V);
-			Result = VectorReciprocalSqrt(Result);
+			Result = Result.ReciprocalSqrt();
 
 			return Result;
 
@@ -17841,10 +17818,10 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			VectorType Result;
+			Vector Result;
 
 			Result = Vector4LengthSq(V);
-			Result = VectorSqrtEst(Result);
+			Result = Result.SqrtEst();
 
 			return Result;
 
@@ -17901,10 +17878,10 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS) 
 
-			VectorType Result;
+			Vector Result;
 
 			Result = Vector4LengthSq(V);
-			Result = VectorSqrt(Result);
+			Result = Result.Sqrt();
 
 			return Result;
 
@@ -18174,11 +18151,11 @@ namespace At0
 			assert(Vector4GreaterOrEqual(LengthMax, Vector::Zero()));
 			assert(Vector4GreaterOrEqual(LengthMax, LengthMin));
 
-			VectorType LengthSq = Vector4LengthSq(V);
+			Vector LengthSq = Vector4LengthSq(V);
 
 			const VectorType Zero = Vector::Zero();
 
-			VectorType RcpLength = VectorReciprocalSqrt(LengthSq);
+			VectorType RcpLength = LengthSq.ReciprocalSqrt();
 
 			VectorType InfiniteLength = Vector::EqualInt(LengthSq, g_XMInfinity.v);
 			VectorType ZeroLength = Vector::Equal(LengthSq, Zero);
@@ -18248,7 +18225,7 @@ namespace At0
 #if defined(RAY_NO_INTRINSICS)
 
 			VectorType        IDotN;
-			VectorType        R;
+			Vector			  R;
 			const VectorType  Zero = Vector::Zero();
 
 			// Result = RefractionIndex * Incident - Normal * (RefractionIndex * dot(Incident, Normal) + 
@@ -18271,7 +18248,7 @@ namespace At0
 				VectorType Result;
 
 				// R = RefractionIndex * IDotN + sqrt(R)
-				R = VectorSqrt(R);
+				R = R.Sqrt();
 				R = VectorMultiplyAdd(RefractionIndex, IDotN, R);
 
 				// Result = RefractionIndex * Incident - Normal * R
@@ -18828,7 +18805,7 @@ namespace At0
 				const float S
 				)
 		{
-			V = VectorScale(V, S);
+			V = Vector(V).Scale(S);
 			return V;
 		}
 
@@ -18897,7 +18874,7 @@ namespace At0
 				const float    S
 				)
 		{
-			return VectorScale(V, S);
+			return Vector(V).Scale(S);
 		}
 
 		//------------------------------------------------------------------------------
@@ -18920,7 +18897,7 @@ namespace At0
 				FVectorType  	    V
 				)
 		{
-			return VectorScale(V, S);
+			return Vector(V).Scale(S);
 		}
 
 #endif /* !RAYMATH_NO_VECTOR_OVERLOADS */
@@ -19657,12 +19634,12 @@ namespace At0
 			R.r[2] = Vector::Select(C4, C5, g_XMSelect0101.v);
 			R.r[3] = Vector::Select(C6, C7, g_XMSelect0101.v);
 
-			VectorType Determinant = Vector4Dot(R.r[0], MT.r[0]);
+			Vector Determinant = Vector4Dot(R.r[0], MT.r[0]);
 
 			if (pDeterminant != nullptr)
 				*pDeterminant = Determinant;
 
-			VectorType Reciprocal = VectorReciprocal(Determinant);
+			VectorType Reciprocal = Determinant.Reciprocal();
 
 			Matrix Result;
 			Result.r[0] = Vector::Multiply(R.r[0], Reciprocal);
@@ -21952,10 +21929,10 @@ namespace At0
 
 		inline Matrix& Matrix::operator*= (float S)
 		{
-			r[0] = VectorScale(r[0], S);
-			r[1] = VectorScale(r[1], S);
-			r[2] = VectorScale(r[2], S);
-			r[3] = VectorScale(r[3], S);
+			r[0] = Vector(r[0]).Scale(S);
+			r[1] = Vector(r[1]).Scale(S);
+			r[2] = Vector(r[2]).Scale(S);
+			r[3] = Vector(r[3]).Scale(S);
 			return *this;
 		}
 
@@ -22038,10 +22015,10 @@ namespace At0
 		inline Matrix Matrix::operator* (float S) const
 		{
 			Matrix R;
-			R.r[0] = VectorScale(r[0], S);
-			R.r[1] = VectorScale(r[1], S);
-			R.r[2] = VectorScale(r[2], S);
-			R.r[3] = VectorScale(r[3], S);
+			R.r[0] = Vector(r[0]).Scale(S);
+			R.r[1] = Vector(r[1]).Scale(S);
+			R.r[2] = Vector(r[2]).Scale(S);
+			R.r[3] = Vector(r[3]).Scale(S);
 			return R;
 		}
 
@@ -22101,10 +22078,10 @@ namespace At0
 				)
 		{
 			Matrix R;
-			R.r[0] = VectorScale(M.r[0], S);
-			R.r[1] = VectorScale(M.r[1], S);
-			R.r[2] = VectorScale(M.r[2], S);
-			R.r[3] = VectorScale(M.r[3], S);
+			R.r[0] = Vector(M.r[0]).Scale(S);
+			R.r[1] = Vector(M.r[1]).Scale(S);
+			R.r[2] = Vector(M.r[2]).Scale(S);
+			R.r[3] = Vector(M.r[3]).Scale(S);
 			return R;
 		}
 
@@ -22562,8 +22539,8 @@ namespace At0
 
 			Control = CosOmega.Less(OneMinusEpsilon);
 
-			VectorType SinOmega = VectorNegativeMultiplySubtract(CosOmega, CosOmega, g_XMOne.v);
-			SinOmega = VectorSqrt(SinOmega);
+			Vector SinOmega = VectorNegativeMultiplySubtract(CosOmega, CosOmega, g_XMOne.v);
+			SinOmega = SinOmega.Sqrt();
 
 			VectorType Omega = VectorATan2(SinOmega, CosOmega);
 
@@ -22573,7 +22550,7 @@ namespace At0
 			V01 = VectorXorInt(V01, SignMask);
 			V01 = Vector::Add(g_XMIdentityR0.v, V01);
 
-			VectorType InvSinOmega = VectorReciprocal(SinOmega);
+			VectorType InvSinOmega = SinOmega.Reciprocal();
 
 			VectorType S0 = Vector::Multiply(V01, Omega);
 			S0 = VectorSin(S0);
@@ -22778,7 +22755,7 @@ namespace At0
 
 			const VectorType Epsilon = VectorSplatConstant(1, 16);
 
-			VectorType S = Vector::Add(F, G);
+			Vector S = Vector::Add(F, G);
 
 			VectorType Result;
 			if (Vector4InBounds(S, Epsilon))
@@ -22789,7 +22766,7 @@ namespace At0
 			{
 				Quaternion Q01 = Quaternion::SlerpV(Q0, Q1, S);
 				Quaternion Q02 = Quaternion::SlerpV(Q0, Q2, S);
-				VectorType GS = VectorReciprocal(S);
+				VectorType GS = S.Reciprocal();
 				GS = Vector::Multiply(G, GS);
 
 				Result = Quaternion::SlerpV(Q01, Q02, GS);
@@ -24247,25 +24224,25 @@ namespace At0
 
 #if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
-			VectorType G = VectorMultiplyAdd(RefractionIndex, RefractionIndex, g_XMNegativeOne.v);
+			Vector G = VectorMultiplyAdd(RefractionIndex, RefractionIndex, g_XMNegativeOne.v);
 			G = VectorMultiplyAdd(CosIncidentAngle, CosIncidentAngle, G);
 			G = VectorAbs(G);
-			G = VectorSqrt(G);
+			G = G.Sqrt();
 
 			VectorType S = Vector::Add(G, CosIncidentAngle);
 			VectorType D = Vector::Subtract(G, CosIncidentAngle);
 
 			VectorType V0 = Vector::Multiply(D, D);
-			VectorType V1 = Vector::Multiply(S, S);
-			V1 = VectorReciprocal(V1);
+			Vector V1 = Vector::Multiply(S, S);
+			V1 = V1.Reciprocal();
 			V0 = Vector::Multiply(g_XMOneHalf.v, V0);
 			V0 = Vector::Multiply(V0, V1);
 
 			VectorType V2 = VectorMultiplyAdd(CosIncidentAngle, S, g_XMNegativeOne.v);
-			VectorType V3 = VectorMultiplyAdd(CosIncidentAngle, D, g_XMOne.v);
+			Vector V3 = VectorMultiplyAdd(CosIncidentAngle, D, g_XMOne.v);
 			V2 = Vector::Multiply(V2, V2);
 			V3 = Vector::Multiply(V3, V3);
-			V3 = VectorReciprocal(V3);
+			V3 = V3.Reciprocal();
 			V2 = VectorMultiplyAdd(V2, V3, g_XMOne.v);
 
 			Vector Result = Vector::Multiply(V0, V2);
