@@ -1702,13 +1702,8 @@ namespace At0
 		 *
 		 ****************************************************************************/
 
-#if defined(__XNAMATH_H__) && defined(XMMin)
-#undef XMMin
-#undef XMMax
-#endif
-
-		template<class T> inline T XMMin(T a, T b) { return (a < b) ? a : b; }
-		template<class T> inline T XMMax(T a, T b) { return (a > b) ? a : b; }
+		template<class T> inline T RayMathMin(T a, T b) { return (a < b) ? a : b; }
+		template<class T> inline T RayMathMax(T a, T b) { return (a > b) ? a : b; }
 
 		//------------------------------------------------------------------------------
 
@@ -1979,155 +1974,158 @@ namespace At0
 		 // times in a function, but if the constant is used (and declared) in a
 		 // separate math routine it would be reloaded.
 
-#ifndef XMGLOBALCONST
+		namespace Constants
+		{
+#ifndef RAYMATH_GLOBALCONST
 #ifdef _WIN32
-#define XMGLOBALCONST extern const __declspec(selectany)
+#define RAYMATH_GLOBALCONST extern const __declspec(selectany)
 #elif defined(__linux__)
-#define XMGLOBALCONST extern const __attribute__ ((selectany))
+#define RAYMATH_GLOBALCONST extern const __attribute__ ((selectany))
 #endif
 #endif
 
-		XMGLOBALCONST VectorF32 g_XMSinCoefficients0 = { { { -0.16666667f, +0.0083333310f, -0.00019840874f, +2.7525562e-06f } } };
-		XMGLOBALCONST VectorF32 g_XMSinCoefficients1 = { { { -2.3889859e-08f, -0.16665852f /*Est1*/, +0.0083139502f /*Est2*/, -0.00018524670f /*Est3*/ } } };
-		XMGLOBALCONST VectorF32 g_XMCosCoefficients0 = { { { -0.5f, +0.041666638f, -0.0013888378f, +2.4760495e-05f } } };
-		XMGLOBALCONST VectorF32 g_XMCosCoefficients1 = { { { -2.6051615e-07f, -0.49992746f /*Est1*/, +0.041493919f /*Est2*/, -0.0012712436f /*Est3*/ } } };
-		XMGLOBALCONST VectorF32 g_XMTanCoefficients0 = { { { 1.0f, 0.333333333f, 0.133333333f, 5.396825397e-2f } } };
-		XMGLOBALCONST VectorF32 g_XMTanCoefficients1 = { { { 2.186948854e-2f, 8.863235530e-3f, 3.592128167e-3f, 1.455834485e-3f } } };
-		XMGLOBALCONST VectorF32 g_XMTanCoefficients2 = { { { 5.900274264e-4f, 2.391290764e-4f, 9.691537707e-5f, 3.927832950e-5f } } };
-		XMGLOBALCONST VectorF32 g_XMArcCoefficients0 = { { { +1.5707963050f, -0.2145988016f, +0.0889789874f, -0.0501743046f } } };
-		XMGLOBALCONST VectorF32 g_XMArcCoefficients1 = { { { +0.0308918810f, -0.0170881256f, +0.0066700901f, -0.0012624911f } } };
-		XMGLOBALCONST VectorF32 g_XMATanCoefficients0 = { { { -0.3333314528f, +0.1999355085f, -0.1420889944f, +0.1065626393f } } };
-		XMGLOBALCONST VectorF32 g_XMATanCoefficients1 = { { { -0.0752896400f, +0.0429096138f, -0.0161657367f, +0.0028662257f } } };
-		XMGLOBALCONST VectorF32 g_XMATanEstCoefficients0 = { { { +0.999866f, +0.999866f, +0.999866f, +0.999866f } } };
-		XMGLOBALCONST VectorF32 g_XMATanEstCoefficients1 = { { { -0.3302995f, +0.180141f, -0.085133f, +0.0208351f } } };
-		XMGLOBALCONST VectorF32 g_XMTanEstCoefficients = { { { 2.484f, -1.954923183e-1f, 2.467401101f, Constants::RAY_1DIVPI } } };
-		XMGLOBALCONST VectorF32 g_XMArcEstCoefficients = { { { +1.5707288f, -0.2121144f, +0.0742610f, -0.0187293f } } };
-		XMGLOBALCONST VectorF32 g_XMPiConstants0 = { { { Constants::PI, Constants::RAY_2PI, Constants::RAY_1DIVPI, Constants::RAY_1DIV2PI } } };
-		XMGLOBALCONST VectorF32 g_XMIdentityR0 = { { { 1.0f, 0.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMIdentityR1 = { { { 0.0f, 1.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMIdentityR2 = { { { 0.0f, 0.0f, 1.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMIdentityR3 = { { { 0.0f, 0.0f, 0.0f, 1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegIdentityR0 = { { { -1.0f, 0.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegIdentityR1 = { { { 0.0f, -1.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegIdentityR2 = { { { 0.0f, 0.0f, -1.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegIdentityR3 = { { { 0.0f, 0.0f, 0.0f, -1.0f } } };
-		XMGLOBALCONST VectorU32 g_XMNegativeZero = { { { 0x80000000, 0x80000000, 0x80000000, 0x80000000 } } };
-		XMGLOBALCONST VectorU32 g_XMNegate3 = { { { 0x80000000, 0x80000000, 0x80000000, 0x00000000 } } };
-		XMGLOBALCONST VectorU32 g_XMMaskXY = { { { 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000 } } };
-		XMGLOBALCONST VectorU32 g_XMMask3 = { { { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000 } } };
-		XMGLOBALCONST VectorU32 g_XMMaskX = { { { 0xFFFFFFFF, 0x00000000, 0x00000000, 0x00000000 } } };
-		XMGLOBALCONST VectorU32 g_XMMaskY = { { { 0x00000000, 0xFFFFFFFF, 0x00000000, 0x00000000 } } };
-		XMGLOBALCONST VectorU32 g_XMMaskZ = { { { 0x00000000, 0x00000000, 0xFFFFFFFF, 0x00000000 } } };
-		XMGLOBALCONST VectorU32 g_XMMaskW = { { { 0x00000000, 0x00000000, 0x00000000, 0xFFFFFFFF } } };
-		XMGLOBALCONST VectorF32 g_XMOne = { { { 1.0f, 1.0f, 1.0f, 1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMOne3 = { { { 1.0f, 1.0f, 1.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMZero = { { { 0.0f, 0.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMTwo = { { { 2.f, 2.f, 2.f, 2.f } } };
-		XMGLOBALCONST VectorF32 g_XMFour = { { { 4.f, 4.f, 4.f, 4.f } } };
-		XMGLOBALCONST VectorF32 g_XMSix = { { { 6.f, 6.f, 6.f, 6.f } } };
-		XMGLOBALCONST VectorF32 g_XMNegativeOne = { { { -1.0f, -1.0f, -1.0f, -1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMOneHalf = { { { 0.5f, 0.5f, 0.5f, 0.5f } } };
-		XMGLOBALCONST VectorF32 g_XMNegativeOneHalf = { { { -0.5f, -0.5f, -0.5f, -0.5f } } };
-		XMGLOBALCONST VectorF32 g_XMNegativeTwoPi = { { { -Constants::RAY_2PI, -Constants::RAY_2PI, -Constants::RAY_2PI, -Constants::RAY_2PI } } };
-		XMGLOBALCONST VectorF32 g_XMNegativePi = { { { -Constants::PI, -Constants::PI, -Constants::PI, -Constants::PI } } };
-		XMGLOBALCONST VectorF32 g_XMHalfPi = { { { Constants::PIDIV2, Constants::PIDIV2, Constants::PIDIV2, Constants::PIDIV2 } } };
-		XMGLOBALCONST VectorF32 g_XMPi = { { { Constants::PI, Constants::PI, Constants::PI, Constants::PI } } };
-		XMGLOBALCONST VectorF32 g_XMReciprocalPi = { { { Constants::RAY_1DIVPI, Constants::RAY_1DIVPI, Constants::RAY_1DIVPI, Constants::RAY_1DIVPI } } };
-		XMGLOBALCONST VectorF32 g_XMTwoPi = { { { Constants::RAY_2PI, Constants::RAY_2PI, Constants::RAY_2PI, Constants::RAY_2PI } } };
-		XMGLOBALCONST VectorF32 g_XMReciprocalTwoPi = { { { Constants::RAY_1DIV2PI, Constants::RAY_1DIV2PI, Constants::RAY_1DIV2PI, Constants::RAY_1DIV2PI } } };
-		XMGLOBALCONST VectorF32 g_XMEpsilon = { { { 1.192092896e-7f, 1.192092896e-7f, 1.192092896e-7f, 1.192092896e-7f } } };
-		XMGLOBALCONST VectorI32 g_XMInfinity = { { { 0x7F800000, 0x7F800000, 0x7F800000, 0x7F800000 } } };
-		XMGLOBALCONST VectorI32 g_XMQNaN = { { { 0x7FC00000, 0x7FC00000, 0x7FC00000, 0x7FC00000 } } };
-		XMGLOBALCONST VectorI32 g_XMQNaNTest = { { { 0x007FFFFF, 0x007FFFFF, 0x007FFFFF, 0x007FFFFF } } };
-		XMGLOBALCONST VectorI32 g_XMAbsMask = { { { 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF } } };
-		XMGLOBALCONST VectorI32 g_XMFltMin = { { { 0x00800000, 0x00800000, 0x00800000, 0x00800000 } } };
-		XMGLOBALCONST VectorI32 g_XMFltMax = { { { 0x7F7FFFFF, 0x7F7FFFFF, 0x7F7FFFFF, 0x7F7FFFFF } } };
-		XMGLOBALCONST VectorU32 g_XMNegOneMask = { { { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF } } };
-		XMGLOBALCONST VectorU32 g_XMMaskA8R8G8B8 = { { { 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000 } } };
-		XMGLOBALCONST VectorU32 g_XMFlipA8R8G8B8 = { { { 0x00000000, 0x00000000, 0x00000000, 0x80000000 } } };
-		XMGLOBALCONST VectorF32 g_XMFixAA8R8G8B8 = { { { 0.0f, 0.0f, 0.0f, float(0x80000000U) } } };
-		XMGLOBALCONST VectorF32 g_XMNormalizeA8R8G8B8 = { { { 1.0f / (255.0f * float(0x10000)), 1.0f / (255.0f * float(0x100)), 1.0f / 255.0f, 1.0f / (255.0f * float(0x1000000)) } } };
-		XMGLOBALCONST VectorU32 g_XMMaskA2B10G10R10 = { { { 0x000003FF, 0x000FFC00, 0x3FF00000, 0xC0000000 } } };
-		XMGLOBALCONST VectorU32 g_XMFlipA2B10G10R10 = { { { 0x00000200, 0x00080000, 0x20000000, 0x80000000 } } };
-		XMGLOBALCONST VectorF32 g_XMFixAA2B10G10R10 = { { { -512.0f, -512.0f * float(0x400), -512.0f * float(0x100000), float(0x80000000U) } } };
-		XMGLOBALCONST VectorF32 g_XMNormalizeA2B10G10R10 = { { { 1.0f / 511.0f, 1.0f / (511.0f * float(0x400)), 1.0f / (511.0f * float(0x100000)), 1.0f / (3.0f * float(0x40000000)) } } };
-		XMGLOBALCONST VectorU32 g_XMMaskX16Y16 = { { { 0x0000FFFF, 0xFFFF0000, 0x00000000, 0x00000000 } } };
-		XMGLOBALCONST VectorI32 g_XMFlipX16Y16 = { { { 0x00008000, 0x00000000, 0x00000000, 0x00000000 } } };
-		XMGLOBALCONST VectorF32 g_XMFixX16Y16 = { { { -32768.0f, 0.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNormalizeX16Y16 = { { { 1.0f / 32767.0f, 1.0f / (32767.0f * 65536.0f), 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorU32 g_XMMaskX16Y16Z16W16 = { { { 0x0000FFFF, 0x0000FFFF, 0xFFFF0000, 0xFFFF0000 } } };
-		XMGLOBALCONST VectorI32 g_XMFlipX16Y16Z16W16 = { { { 0x00008000, 0x00008000, 0x00000000, 0x00000000 } } };
-		XMGLOBALCONST VectorF32 g_XMFixX16Y16Z16W16 = { { { -32768.0f, -32768.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNormalizeX16Y16Z16W16 = { { { 1.0f / 32767.0f, 1.0f / 32767.0f, 1.0f / (32767.0f * 65536.0f), 1.0f / (32767.0f * 65536.0f) } } };
-		XMGLOBALCONST VectorF32 g_XMNoFraction = { { { 8388608.0f, 8388608.0f, 8388608.0f, 8388608.0f } } };
-		XMGLOBALCONST VectorI32 g_XMMaskByte = { { { 0x000000FF, 0x000000FF, 0x000000FF, 0x000000FF } } };
-		XMGLOBALCONST VectorF32 g_XMNegateX = { { { -1.0f, 1.0f, 1.0f, 1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegateY = { { { 1.0f, -1.0f, 1.0f, 1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegateZ = { { { 1.0f, 1.0f, -1.0f, 1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMNegateW = { { { 1.0f, 1.0f, 1.0f, -1.0f } } };
-		XMGLOBALCONST VectorU32 g_XMSelect0101 = { { { RAYMATH_SELECT_0, RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_1 } } };
-		XMGLOBALCONST VectorU32 g_XMSelect1010 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_1, RAYMATH_SELECT_0 } } };
-		XMGLOBALCONST VectorI32 g_XMOneHalfMinusEpsilon = { { { 0x3EFFFFFD, 0x3EFFFFFD, 0x3EFFFFFD, 0x3EFFFFFD } } };
-		XMGLOBALCONST VectorU32 g_XMSelect1000 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_0, RAYMATH_SELECT_0 } } };
-		XMGLOBALCONST VectorU32 g_XMSelect1100 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_0 } } };
-		XMGLOBALCONST VectorU32 g_XMSelect1110 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_1, RAYMATH_SELECT_1, RAYMATH_SELECT_0 } } };
-		XMGLOBALCONST VectorU32 g_XMSelect1011 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_1, RAYMATH_SELECT_1 } } };
-		XMGLOBALCONST VectorF32 g_XMFixupY16 = { { { 1.0f, 1.0f / 65536.0f, 0.0f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMFixupY16W16 = { { { 1.0f, 1.0f, 1.0f / 65536.0f, 1.0f / 65536.0f } } };
-		XMGLOBALCONST VectorU32 g_XMFlipY = { { { 0, 0x80000000, 0, 0 } } };
-		XMGLOBALCONST VectorU32 g_XMFlipZ = { { { 0, 0, 0x80000000, 0 } } };
-		XMGLOBALCONST VectorU32 g_XMFlipW = { { { 0, 0, 0, 0x80000000 } } };
-		XMGLOBALCONST VectorU32 g_XMFlipYZ = { { { 0, 0x80000000, 0x80000000, 0 } } };
-		XMGLOBALCONST VectorU32 g_XMFlipZW = { { { 0, 0, 0x80000000, 0x80000000 } } };
-		XMGLOBALCONST VectorU32 g_XMFlipYW = { { { 0, 0x80000000, 0, 0x80000000 } } };
-		XMGLOBALCONST VectorI32 g_XMMaskDec4 = { { { 0x3FF, 0x3FF << 10, 0x3FF << 20, static_cast<int>(0xC0000000) } } };
-		XMGLOBALCONST VectorI32 g_XMXorDec4 = { { { 0x200, 0x200 << 10, 0x200 << 20, 0 } } };
-		XMGLOBALCONST VectorF32 g_XMAddUDec4 = { { { 0, 0, 0, 32768.0f * 65536.0f } } };
-		XMGLOBALCONST VectorF32 g_XMAddDec4 = { { { -512.0f, -512.0f * 1024.0f, -512.0f * 1024.0f * 1024.0f, 0 } } };
-		XMGLOBALCONST VectorF32 g_XMMulDec4 = { { { 1.0f, 1.0f / 1024.0f, 1.0f / (1024.0f * 1024.0f), 1.0f / (1024.0f * 1024.0f * 1024.0f) } } };
-		XMGLOBALCONST VectorU32 g_XMMaskByte4 = { { { 0xFF, 0xFF00, 0xFF0000, 0xFF000000 } } };
-		XMGLOBALCONST VectorI32 g_XMXorByte4 = { { { 0x80, 0x8000, 0x800000, 0x00000000 } } };
-		XMGLOBALCONST VectorF32 g_XMAddByte4 = { { { -128.0f, -128.0f * 256.0f, -128.0f * 65536.0f, 0 } } };
-		XMGLOBALCONST VectorF32 g_XMFixUnsigned = { { { 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f } } };
-		XMGLOBALCONST VectorF32 g_XMMaxInt = { { { 65536.0f * 32768.0f - 128.0f, 65536.0f * 32768.0f - 128.0f, 65536.0f * 32768.0f - 128.0f, 65536.0f * 32768.0f - 128.0f } } };
-		XMGLOBALCONST VectorF32 g_XMMaxUInt = { { { 65536.0f * 65536.0f - 256.0f, 65536.0f * 65536.0f - 256.0f, 65536.0f * 65536.0f - 256.0f, 65536.0f * 65536.0f - 256.0f } } };
-		XMGLOBALCONST VectorF32 g_XMUnsignedFix = { { { 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f } } };
-		XMGLOBALCONST VectorF32 g_XMsrgbScale = { { { 12.92f, 12.92f, 12.92f, 1.0f } } };
-		XMGLOBALCONST VectorF32 g_XMsrgbA = { { { 0.055f, 0.055f, 0.055f, 0.0f } } };
-		XMGLOBALCONST VectorF32 g_XMsrgbA1 = { { { 1.055f, 1.055f, 1.055f, 1.0f } } };
-		XMGLOBALCONST VectorI32 g_XMExponentBias = { { { 127, 127, 127, 127 } } };
-		XMGLOBALCONST VectorI32 g_XMSubnormalExponent = { { { -126, -126, -126, -126 } } };
-		XMGLOBALCONST VectorI32 g_XMNumTrailing = { { { 23, 23, 23, 23 } } };
-		XMGLOBALCONST VectorI32 g_XMMinNormal = { { { 0x00800000, 0x00800000, 0x00800000, 0x00800000 } } };
-		XMGLOBALCONST VectorU32 g_XMNegInfinity = { { { 0xFF800000, 0xFF800000, 0xFF800000, 0xFF800000 } } };
-		XMGLOBALCONST VectorU32 g_XMNegQNaN = { { { 0xFFC00000, 0xFFC00000, 0xFFC00000, 0xFFC00000 } } };
-		XMGLOBALCONST VectorI32 g_XMBin128 = { { { 0x43000000, 0x43000000, 0x43000000, 0x43000000 } } };
-		XMGLOBALCONST VectorU32 g_XMBinNeg150 = { { { 0xC3160000, 0xC3160000, 0xC3160000, 0xC3160000 } } };
-		XMGLOBALCONST VectorI32 g_XM253 = { { { 253, 253, 253, 253 } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst1 = { { { -6.93147182e-1f, -6.93147182e-1f, -6.93147182e-1f, -6.93147182e-1f } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst2 = { { { +2.40226462e-1f, +2.40226462e-1f, +2.40226462e-1f, +2.40226462e-1f } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst3 = { { { -5.55036440e-2f, -5.55036440e-2f, -5.55036440e-2f, -5.55036440e-2f } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst4 = { { { +9.61597636e-3f, +9.61597636e-3f, +9.61597636e-3f, +9.61597636e-3f } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst5 = { { { -1.32823968e-3f, -1.32823968e-3f, -1.32823968e-3f, -1.32823968e-3f } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst6 = { { { +1.47491097e-4f, +1.47491097e-4f, +1.47491097e-4f, +1.47491097e-4f } } };
-		XMGLOBALCONST VectorF32 g_XMExpEst7 = { { { -1.08635004e-5f, -1.08635004e-5f, -1.08635004e-5f, -1.08635004e-5f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst0 = { { { +1.442693f, +1.442693f, +1.442693f, +1.442693f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst1 = { { { -0.721242f, -0.721242f, -0.721242f, -0.721242f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst2 = { { { +0.479384f, +0.479384f, +0.479384f, +0.479384f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst3 = { { { -0.350295f, -0.350295f, -0.350295f, -0.350295f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst4 = { { { +0.248590f, +0.248590f, +0.248590f, +0.248590f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst5 = { { { -0.145700f, -0.145700f, -0.145700f, -0.145700f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst6 = { { { +0.057148f, +0.057148f, +0.057148f, +0.057148f } } };
-		XMGLOBALCONST VectorF32 g_XMLogEst7 = { { { -0.010578f, -0.010578f, -0.010578f, -0.010578f } } };
-		XMGLOBALCONST VectorF32 g_XMLgE = { { { +1.442695f, +1.442695f, +1.442695f, +1.442695f } } };
-		XMGLOBALCONST VectorF32 g_XMInvLgE = { { { +6.93147182e-1f, +6.93147182e-1f, +6.93147182e-1f, +6.93147182e-1f } } };
-		XMGLOBALCONST VectorF32 g_UByteMax = { { { 255.0f, 255.0f, 255.0f, 255.0f } } };
-		XMGLOBALCONST VectorF32 g_ByteMin = { { { -127.0f, -127.0f, -127.0f, -127.0f } } };
-		XMGLOBALCONST VectorF32 g_ByteMax = { { { 127.0f, 127.0f, 127.0f, 127.0f } } };
-		XMGLOBALCONST VectorF32 g_ShortMin = { { { -32767.0f, -32767.0f, -32767.0f, -32767.0f } } };
-		XMGLOBALCONST VectorF32 g_ShortMax = { { { 32767.0f, 32767.0f, 32767.0f, 32767.0f } } };
-		XMGLOBALCONST VectorF32 g_UShortMax = { { { 65535.0f, 65535.0f, 65535.0f, 65535.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 SinCoefficients0 = { { { -0.16666667f, +0.0083333310f, -0.00019840874f, +2.7525562e-06f } } };
+			RAYMATH_GLOBALCONST VectorF32 SinCoefficients1 = { { { -2.3889859e-08f, -0.16665852f /*Est1*/, +0.0083139502f /*Est2*/, -0.00018524670f /*Est3*/ } } };
+			RAYMATH_GLOBALCONST VectorF32 CosCoefficients0 = { { { -0.5f, +0.041666638f, -0.0013888378f, +2.4760495e-05f } } };
+			RAYMATH_GLOBALCONST VectorF32 CosCoefficients1 = { { { -2.6051615e-07f, -0.49992746f /*Est1*/, +0.041493919f /*Est2*/, -0.0012712436f /*Est3*/ } } };
+			RAYMATH_GLOBALCONST VectorF32 TanCoefficients0 = { { { 1.0f, 0.333333333f, 0.133333333f, 5.396825397e-2f } } };
+			RAYMATH_GLOBALCONST VectorF32 TanCoefficients1 = { { { 2.186948854e-2f, 8.863235530e-3f, 3.592128167e-3f, 1.455834485e-3f } } };
+			RAYMATH_GLOBALCONST VectorF32 TanCoefficients2 = { { { 5.900274264e-4f, 2.391290764e-4f, 9.691537707e-5f, 3.927832950e-5f } } };
+			RAYMATH_GLOBALCONST VectorF32 ArcCoefficients0 = { { { +1.5707963050f, -0.2145988016f, +0.0889789874f, -0.0501743046f } } };
+			RAYMATH_GLOBALCONST VectorF32 ArcCoefficients1 = { { { +0.0308918810f, -0.0170881256f, +0.0066700901f, -0.0012624911f } } };
+			RAYMATH_GLOBALCONST VectorF32 ATanCoefficients0 = { { { -0.3333314528f, +0.1999355085f, -0.1420889944f, +0.1065626393f } } };
+			RAYMATH_GLOBALCONST VectorF32 ATanCoefficients1 = { { { -0.0752896400f, +0.0429096138f, -0.0161657367f, +0.0028662257f } } };
+			RAYMATH_GLOBALCONST VectorF32 ATanEstCoefficients0 = { { { +0.999866f, +0.999866f, +0.999866f, +0.999866f } } };
+			RAYMATH_GLOBALCONST VectorF32 ATanEstCoefficients1 = { { { -0.3302995f, +0.180141f, -0.085133f, +0.0208351f } } };
+			RAYMATH_GLOBALCONST VectorF32 TanEstCoefficients = { { { 2.484f, -1.954923183e-1f, 2.467401101f, Constants::RAY_1DIVPI } } };
+			RAYMATH_GLOBALCONST VectorF32 ArcEstCoefficients = { { { +1.5707288f, -0.2121144f, +0.0742610f, -0.0187293f } } };
+			RAYMATH_GLOBALCONST VectorF32 PiConstants0 = { { { Constants::PI, Constants::RAY_2PI, Constants::RAY_1DIVPI, Constants::RAY_1DIV2PI } } };
+			RAYMATH_GLOBALCONST VectorF32 IdentityR0 = { { { 1.0f, 0.0f, 0.0f, 0.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 IdentityR1 = { { { 0.0f, 1.0f, 0.0f, 0.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 IdentityR2 = { { { 0.0f, 0.0f, 1.0f, 0.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 IdentityR3 = { { { 0.0f, 0.0f, 0.0f, 1.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 NegIdentityR0 = { { { -1.0f, 0.0f, 0.0f, 0.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 NegIdentityR1 = { { { 0.0f, -1.0f, 0.0f, 0.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 NegIdentityR2 = { { { 0.0f, 0.0f, -1.0f, 0.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 NegIdentityR3 = { { { 0.0f, 0.0f, 0.0f, -1.0f } } };
+			RAYMATH_GLOBALCONST VectorU32 NegativeZero = { { { 0x80000000, 0x80000000, 0x80000000, 0x80000000 } } };
+			RAYMATH_GLOBALCONST VectorU32 Negate3 = { { { 0x80000000, 0x80000000, 0x80000000, 0x00000000 } } };
+			RAYMATH_GLOBALCONST VectorU32 MaskXY = { { { 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000 } } };
+			RAYMATH_GLOBALCONST VectorU32 Mask3 = { { { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000 } } };
+			RAYMATH_GLOBALCONST VectorU32 MaskX = { { { 0xFFFFFFFF, 0x00000000, 0x00000000, 0x00000000 } } };
+			RAYMATH_GLOBALCONST VectorU32 MaskY = { { { 0x00000000, 0xFFFFFFFF, 0x00000000, 0x00000000 } } };
+			RAYMATH_GLOBALCONST VectorU32 MaskZ = { { { 0x00000000, 0x00000000, 0xFFFFFFFF, 0x00000000 } } };
+			RAYMATH_GLOBALCONST VectorU32 MaskW = { { { 0x00000000, 0x00000000, 0x00000000, 0xFFFFFFFF } } };
+			RAYMATH_GLOBALCONST VectorF32 One = { { { 1.0f, 1.0f, 1.0f, 1.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 One3 = { { { 1.0f, 1.0f, 1.0f, 0.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 Zero = { { { 0.0f, 0.0f, 0.0f, 0.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 Two = { { { 2.f, 2.f, 2.f, 2.f } } };
+			RAYMATH_GLOBALCONST VectorF32 Four = { { { 4.f, 4.f, 4.f, 4.f } } };
+			RAYMATH_GLOBALCONST VectorF32 Six = { { { 6.f, 6.f, 6.f, 6.f } } };
+			RAYMATH_GLOBALCONST VectorF32 NegativeOne = { { { -1.0f, -1.0f, -1.0f, -1.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 OneHalf = { { { 0.5f, 0.5f, 0.5f, 0.5f } } };
+			RAYMATH_GLOBALCONST VectorF32 NegativeOneHalf = { { { -0.5f, -0.5f, -0.5f, -0.5f } } };
+			RAYMATH_GLOBALCONST VectorF32 NegativeTwoPi = { { { -Constants::RAY_2PI, -Constants::RAY_2PI, -Constants::RAY_2PI, -Constants::RAY_2PI } } };
+			RAYMATH_GLOBALCONST VectorF32 NegativePi = { { { -Constants::PI, -Constants::PI, -Constants::PI, -Constants::PI } } };
+			RAYMATH_GLOBALCONST VectorF32 HalfPi = { { { Constants::PIDIV2, Constants::PIDIV2, Constants::PIDIV2, Constants::PIDIV2 } } };
+			RAYMATH_GLOBALCONST VectorF32 Pi = { { { Constants::PI, Constants::PI, Constants::PI, Constants::PI } } };
+			RAYMATH_GLOBALCONST VectorF32 ReciprocalPi = { { { Constants::RAY_1DIVPI, Constants::RAY_1DIVPI, Constants::RAY_1DIVPI, Constants::RAY_1DIVPI } } };
+			RAYMATH_GLOBALCONST VectorF32 TwoPi = { { { Constants::RAY_2PI, Constants::RAY_2PI, Constants::RAY_2PI, Constants::RAY_2PI } } };
+			RAYMATH_GLOBALCONST VectorF32 ReciprocalTwoPi = { { { Constants::RAY_1DIV2PI, Constants::RAY_1DIV2PI, Constants::RAY_1DIV2PI, Constants::RAY_1DIV2PI } } };
+			RAYMATH_GLOBALCONST VectorF32 Epsilon = { { { 1.192092896e-7f, 1.192092896e-7f, 1.192092896e-7f, 1.192092896e-7f } } };
+			RAYMATH_GLOBALCONST VectorI32 Infinity = { { { 0x7F800000, 0x7F800000, 0x7F800000, 0x7F800000 } } };
+			RAYMATH_GLOBALCONST VectorI32 QNaN = { { { 0x7FC00000, 0x7FC00000, 0x7FC00000, 0x7FC00000 } } };
+			RAYMATH_GLOBALCONST VectorI32 QNaNTest = { { { 0x007FFFFF, 0x007FFFFF, 0x007FFFFF, 0x007FFFFF } } };
+			RAYMATH_GLOBALCONST VectorI32 AbsMask = { { { 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF } } };
+			RAYMATH_GLOBALCONST VectorI32 FltMin = { { { 0x00800000, 0x00800000, 0x00800000, 0x00800000 } } };
+			RAYMATH_GLOBALCONST VectorI32 FltMax = { { { 0x7F7FFFFF, 0x7F7FFFFF, 0x7F7FFFFF, 0x7F7FFFFF } } };
+			RAYMATH_GLOBALCONST VectorU32 NegOneMask = { { { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF } } };
+			RAYMATH_GLOBALCONST VectorU32 MaskA8R8G8B8 = { { { 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000 } } };
+			RAYMATH_GLOBALCONST VectorU32 FlipA8R8G8B8 = { { { 0x00000000, 0x00000000, 0x00000000, 0x80000000 } } };
+			RAYMATH_GLOBALCONST VectorF32 FixAA8R8G8B8 = { { { 0.0f, 0.0f, 0.0f, float(0x80000000U) } } };
+			RAYMATH_GLOBALCONST VectorF32 NormalizeA8R8G8B8 = { { { 1.0f / (255.0f * float(0x10000)), 1.0f / (255.0f * float(0x100)), 1.0f / 255.0f, 1.0f / (255.0f * float(0x1000000)) } } };
+			RAYMATH_GLOBALCONST VectorU32 MaskA2B10G10R10 = { { { 0x000003FF, 0x000FFC00, 0x3FF00000, 0xC0000000 } } };
+			RAYMATH_GLOBALCONST VectorU32 FlipA2B10G10R10 = { { { 0x00000200, 0x00080000, 0x20000000, 0x80000000 } } };
+			RAYMATH_GLOBALCONST VectorF32 FixAA2B10G10R10 = { { { -512.0f, -512.0f * float(0x400), -512.0f * float(0x100000), float(0x80000000U) } } };
+			RAYMATH_GLOBALCONST VectorF32 NormalizeA2B10G10R10 = { { { 1.0f / 511.0f, 1.0f / (511.0f * float(0x400)), 1.0f / (511.0f * float(0x100000)), 1.0f / (3.0f * float(0x40000000)) } } };
+			RAYMATH_GLOBALCONST VectorU32 MaskX16Y16 = { { { 0x0000FFFF, 0xFFFF0000, 0x00000000, 0x00000000 } } };
+			RAYMATH_GLOBALCONST VectorI32 FlipX16Y16 = { { { 0x00008000, 0x00000000, 0x00000000, 0x00000000 } } };
+			RAYMATH_GLOBALCONST VectorF32 FixX16Y16 = { { { -32768.0f, 0.0f, 0.0f, 0.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 NormalizeX16Y16 = { { { 1.0f / 32767.0f, 1.0f / (32767.0f * 65536.0f), 0.0f, 0.0f } } };
+			RAYMATH_GLOBALCONST VectorU32 MaskX16Y16Z16W16 = { { { 0x0000FFFF, 0x0000FFFF, 0xFFFF0000, 0xFFFF0000 } } };
+			RAYMATH_GLOBALCONST VectorI32 FlipX16Y16Z16W16 = { { { 0x00008000, 0x00008000, 0x00000000, 0x00000000 } } };
+			RAYMATH_GLOBALCONST VectorF32 FixX16Y16Z16W16 = { { { -32768.0f, -32768.0f, 0.0f, 0.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 NormalizeX16Y16Z16W16 = { { { 1.0f / 32767.0f, 1.0f / 32767.0f, 1.0f / (32767.0f * 65536.0f), 1.0f / (32767.0f * 65536.0f) } } };
+			RAYMATH_GLOBALCONST VectorF32 NoFraction = { { { 8388608.0f, 8388608.0f, 8388608.0f, 8388608.0f } } };
+			RAYMATH_GLOBALCONST VectorI32 MaskByte = { { { 0x000000FF, 0x000000FF, 0x000000FF, 0x000000FF } } };
+			RAYMATH_GLOBALCONST VectorF32 NegateX = { { { -1.0f, 1.0f, 1.0f, 1.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 NegateY = { { { 1.0f, -1.0f, 1.0f, 1.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 NegateZ = { { { 1.0f, 1.0f, -1.0f, 1.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 NegateW = { { { 1.0f, 1.0f, 1.0f, -1.0f } } };
+			RAYMATH_GLOBALCONST VectorU32 Select0101 = { { { RAYMATH_SELECT_0, RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_1 } } };
+			RAYMATH_GLOBALCONST VectorU32 Select1010 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_1, RAYMATH_SELECT_0 } } };
+			RAYMATH_GLOBALCONST VectorI32 OneHalfMinusEpsilon = { { { 0x3EFFFFFD, 0x3EFFFFFD, 0x3EFFFFFD, 0x3EFFFFFD } } };
+			RAYMATH_GLOBALCONST VectorU32 Select1000 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_0, RAYMATH_SELECT_0 } } };
+			RAYMATH_GLOBALCONST VectorU32 Select1100 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_0 } } };
+			RAYMATH_GLOBALCONST VectorU32 Select1110 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_1, RAYMATH_SELECT_1, RAYMATH_SELECT_0 } } };
+			RAYMATH_GLOBALCONST VectorU32 Select1011 = { { { RAYMATH_SELECT_1, RAYMATH_SELECT_0, RAYMATH_SELECT_1, RAYMATH_SELECT_1 } } };
+			RAYMATH_GLOBALCONST VectorF32 FixupY16 = { { { 1.0f, 1.0f / 65536.0f, 0.0f, 0.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 FixupY16W16 = { { { 1.0f, 1.0f, 1.0f / 65536.0f, 1.0f / 65536.0f } } };
+			RAYMATH_GLOBALCONST VectorU32 FlipY = { { { 0, 0x80000000, 0, 0 } } };
+			RAYMATH_GLOBALCONST VectorU32 FlipZ = { { { 0, 0, 0x80000000, 0 } } };
+			RAYMATH_GLOBALCONST VectorU32 FlipW = { { { 0, 0, 0, 0x80000000 } } };
+			RAYMATH_GLOBALCONST VectorU32 FlipYZ = { { { 0, 0x80000000, 0x80000000, 0 } } };
+			RAYMATH_GLOBALCONST VectorU32 FlipZW = { { { 0, 0, 0x80000000, 0x80000000 } } };
+			RAYMATH_GLOBALCONST VectorU32 FlipYW = { { { 0, 0x80000000, 0, 0x80000000 } } };
+			RAYMATH_GLOBALCONST VectorI32 MaskDec4 = { { { 0x3FF, 0x3FF << 10, 0x3FF << 20, static_cast<int>(0xC0000000) } } };
+			RAYMATH_GLOBALCONST VectorI32 XorDec4 = { { { 0x200, 0x200 << 10, 0x200 << 20, 0 } } };
+			RAYMATH_GLOBALCONST VectorF32 AddUDec4 = { { { 0, 0, 0, 32768.0f * 65536.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 AddDec4 = { { { -512.0f, -512.0f * 1024.0f, -512.0f * 1024.0f * 1024.0f, 0 } } };
+			RAYMATH_GLOBALCONST VectorF32 MulDec4 = { { { 1.0f, 1.0f / 1024.0f, 1.0f / (1024.0f * 1024.0f), 1.0f / (1024.0f * 1024.0f * 1024.0f) } } };
+			RAYMATH_GLOBALCONST VectorU32 MaskByte4 = { { { 0xFF, 0xFF00, 0xFF0000, 0xFF000000 } } };
+			RAYMATH_GLOBALCONST VectorI32 XorByte4 = { { { 0x80, 0x8000, 0x800000, 0x00000000 } } };
+			RAYMATH_GLOBALCONST VectorF32 AddByte4 = { { { -128.0f, -128.0f * 256.0f, -128.0f * 65536.0f, 0 } } };
+			RAYMATH_GLOBALCONST VectorF32 FixUnsigned = { { { 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 MaxInt = { { { 65536.0f * 32768.0f - 128.0f, 65536.0f * 32768.0f - 128.0f, 65536.0f * 32768.0f - 128.0f, 65536.0f * 32768.0f - 128.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 MaxUInt = { { { 65536.0f * 65536.0f - 256.0f, 65536.0f * 65536.0f - 256.0f, 65536.0f * 65536.0f - 256.0f, 65536.0f * 65536.0f - 256.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 UnsignedFix = { { { 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f, 32768.0f * 65536.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 srgbScale = { { { 12.92f, 12.92f, 12.92f, 1.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 srgbA = { { { 0.055f, 0.055f, 0.055f, 0.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 srgbA1 = { { { 1.055f, 1.055f, 1.055f, 1.0f } } };
+			RAYMATH_GLOBALCONST VectorI32 ExponentBias = { { { 127, 127, 127, 127 } } };
+			RAYMATH_GLOBALCONST VectorI32 SubnormalExponent = { { { -126, -126, -126, -126 } } };
+			RAYMATH_GLOBALCONST VectorI32 NumTrailing = { { { 23, 23, 23, 23 } } };
+			RAYMATH_GLOBALCONST VectorI32 MinNormal = { { { 0x00800000, 0x00800000, 0x00800000, 0x00800000 } } };
+			RAYMATH_GLOBALCONST VectorU32 NegInfinity = { { { 0xFF800000, 0xFF800000, 0xFF800000, 0xFF800000 } } };
+			RAYMATH_GLOBALCONST VectorU32 NegQNaN = { { { 0xFFC00000, 0xFFC00000, 0xFFC00000, 0xFFC00000 } } };
+			RAYMATH_GLOBALCONST VectorI32 Bin128 = { { { 0x43000000, 0x43000000, 0x43000000, 0x43000000 } } };
+			RAYMATH_GLOBALCONST VectorU32 BinNeg150 = { { { 0xC3160000, 0xC3160000, 0xC3160000, 0xC3160000 } } };
+			RAYMATH_GLOBALCONST VectorI32 Vector253 = { { { 253, 253, 253, 253 } } };
+			RAYMATH_GLOBALCONST VectorF32 ExpEst1 = { { { -6.93147182e-1f, -6.93147182e-1f, -6.93147182e-1f, -6.93147182e-1f } } };
+			RAYMATH_GLOBALCONST VectorF32 ExpEst2 = { { { +2.40226462e-1f, +2.40226462e-1f, +2.40226462e-1f, +2.40226462e-1f } } };
+			RAYMATH_GLOBALCONST VectorF32 ExpEst3 = { { { -5.55036440e-2f, -5.55036440e-2f, -5.55036440e-2f, -5.55036440e-2f } } };
+			RAYMATH_GLOBALCONST VectorF32 ExpEst4 = { { { +9.61597636e-3f, +9.61597636e-3f, +9.61597636e-3f, +9.61597636e-3f } } };
+			RAYMATH_GLOBALCONST VectorF32 ExpEst5 = { { { -1.32823968e-3f, -1.32823968e-3f, -1.32823968e-3f, -1.32823968e-3f } } };
+			RAYMATH_GLOBALCONST VectorF32 ExpEst6 = { { { +1.47491097e-4f, +1.47491097e-4f, +1.47491097e-4f, +1.47491097e-4f } } };
+			RAYMATH_GLOBALCONST VectorF32 ExpEst7 = { { { -1.08635004e-5f, -1.08635004e-5f, -1.08635004e-5f, -1.08635004e-5f } } };
+			RAYMATH_GLOBALCONST VectorF32 LogEst0 = { { { +1.442693f, +1.442693f, +1.442693f, +1.442693f } } };
+			RAYMATH_GLOBALCONST VectorF32 LogEst1 = { { { -0.721242f, -0.721242f, -0.721242f, -0.721242f } } };
+			RAYMATH_GLOBALCONST VectorF32 LogEst2 = { { { +0.479384f, +0.479384f, +0.479384f, +0.479384f } } };
+			RAYMATH_GLOBALCONST VectorF32 LogEst3 = { { { -0.350295f, -0.350295f, -0.350295f, -0.350295f } } };
+			RAYMATH_GLOBALCONST VectorF32 LogEst4 = { { { +0.248590f, +0.248590f, +0.248590f, +0.248590f } } };
+			RAYMATH_GLOBALCONST VectorF32 LogEst5 = { { { -0.145700f, -0.145700f, -0.145700f, -0.145700f } } };
+			RAYMATH_GLOBALCONST VectorF32 LogEst6 = { { { +0.057148f, +0.057148f, +0.057148f, +0.057148f } } };
+			RAYMATH_GLOBALCONST VectorF32 LogEst7 = { { { -0.010578f, -0.010578f, -0.010578f, -0.010578f } } };
+			RAYMATH_GLOBALCONST VectorF32 LgE = { { { +1.442695f, +1.442695f, +1.442695f, +1.442695f } } };
+			RAYMATH_GLOBALCONST VectorF32 InvLgE = { { { +6.93147182e-1f, +6.93147182e-1f, +6.93147182e-1f, +6.93147182e-1f } } };
+			RAYMATH_GLOBALCONST VectorF32 UByteMax = { { { 255.0f, 255.0f, 255.0f, 255.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 ByteMin = { { { -127.0f, -127.0f, -127.0f, -127.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 ByteMax = { { { 127.0f, 127.0f, 127.0f, 127.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 ShortMin = { { { -32767.0f, -32767.0f, -32767.0f, -32767.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 ShortMax = { { { 32767.0f, 32767.0f, 32767.0f, 32767.0f } } };
+			RAYMATH_GLOBALCONST VectorF32 UShortMax = { { { 65535.0f, 65535.0f, 65535.0f, 65535.0f } } };
 
+		}
 		/****************************************************************************
 		 *
 		 * Implementation
@@ -2166,15 +2164,15 @@ namespace At0
 			vResult.u[3] = (0 - (C3 & 1)) & 0x3F800000;
 			return vResult.v;
 #else // RAYMATH_SSE_INTRINSICS_
-			static const VectorU32 g_vMask1 = { { { 1, 1, 1, 1 } } };
+			static const VectorU32 vMask1 = { { { 1, 1, 1, 1 } } };
 			// Move the parms to a vector
 			__m128i vTemp = _mm_set_epi32(static_cast<int>(C3), static_cast<int>(C2), static_cast<int>(C1), static_cast<int>(C0));
 			// Mask off the low bits
-			vTemp = _mm_and_si128(vTemp, g_vMask1);
+			vTemp = _mm_and_si128(vTemp, vMask1);
 			// 0xFFFFFFFF on true bits
-			vTemp = _mm_cmpeq_epi32(vTemp, g_vMask1);
+			vTemp = _mm_cmpeq_epi32(vTemp, vMask1);
 			// 0xFFFFFFFF -> 1.0f, 0x00000000 -> 0.0f
-			vTemp = _mm_and_si128(vTemp, g_XMOne);
+			vTemp = _mm_and_si128(vTemp, Constants::One);
 			return _mm_castsi128_ps(vTemp);
 #endif
 		}
@@ -2324,11 +2322,11 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t vResult = vmulq_n_f32(VFloat, (float)(1U << MulExponent));
 			// In case of positive overflow, detect it
-			uint32x4_t vOverflow = vcgtq_f32(vResult, g_XMMaxInt);
+			uint32x4_t vOverflow = vcgtq_f32(vResult, Constants::MaxInt);
 			// Float to int conversion
 			int32x4_t vResulti = vcvtq_s32_f32(vResult);
 			// If there was positive overflow, set to 0x7FFFFFFF
-			vResult = vandq_u32(vOverflow, g_XMAbsMask);
+			vResult = vandq_u32(vOverflow, Constants::AbsMask);
 			vOverflow = vbicq_u32(vResulti, vOverflow);
 			vOverflow = vorrq_u32(vOverflow, vResult);
 			return vOverflow;
@@ -2336,11 +2334,11 @@ namespace At0
 			VectorType vResult = _mm_set_ps1(static_cast<float>(1U << MulExponent));
 			vResult = _mm_mul_ps(vResult, VFloat);
 			// In case of positive overflow, detect it
-			VectorType vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxInt);
+			VectorType vOverflow = _mm_cmpgt_ps(vResult, Constants::MaxInt);
 			// Float to int conversion
 			__m128i vResulti = _mm_cvttps_epi32(vResult);
 			// If there was positive overflow, set to 0x7FFFFFFF
-			vResult = _mm_and_ps(vOverflow, g_XMAbsMask);
+			vResult = _mm_and_ps(vOverflow, Constants::AbsMask);
 			vOverflow = _mm_andnot_ps(vOverflow, _mm_castsi128_ps(vResulti));
 			vOverflow = _mm_or_ps(vOverflow, vResult);
 			return vOverflow;
@@ -2371,7 +2369,7 @@ namespace At0
 #else // RAY_SSE_INTRINSICS
 			// For the values that are higher than 0x7FFFFFFF, a fixup is needed
 			// Determine which ones need the fix.
-			VectorType vMask = _mm_and_ps(VUInt, g_XMNegativeZero);
+			VectorType vMask = _mm_and_ps(VUInt, Constants::NegativeZero);
 			// Force all values positive
 			VectorType vResult = _mm_xor_ps(VUInt, vMask);
 			// Convert to floats
@@ -2379,7 +2377,7 @@ namespace At0
 			// Convert 0x80000000 -> 0xFFFFFFFF
 			__m128i iMask = _mm_srai_epi32(_mm_castps_si128(vMask), 31);
 			// For only the ones that are too big, add the fixup
-			vMask = _mm_and_ps(_mm_castsi128_ps(iMask), g_XMFixUnsigned);
+			vMask = _mm_and_ps(_mm_castsi128_ps(iMask), Constants::FixUnsigned);
 			vResult = _mm_add_ps(vResult, vMask);
 			// Convert DivExponent into 1.0f/(1<<DivExponent)
 			uint32_t uScale = 0x3F800000U - (DivExponent << 23);
@@ -2422,7 +2420,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t vResult = vmulq_n_f32(VFloat, (float)(1U << MulExponent));
 			// In case of overflow, detect it
-			uint32x4_t vOverflow = vcgtq_f32(vResult, g_XMMaxUInt);
+			uint32x4_t vOverflow = vcgtq_f32(vResult, Constants::MaxUInt);
 			// Float to int conversion
 			uint32x4_t vResulti = vcvtq_u32_f32(vResult);
 			// If there was overflow, set to 0xFFFFFFFFU
@@ -2433,10 +2431,10 @@ namespace At0
 			VectorType vResult = _mm_set_ps1(static_cast<float>(1U << MulExponent));
 			vResult = _mm_mul_ps(vResult, VFloat);
 			// Clamp to >=0
-			vResult = _mm_max_ps(vResult, g_XMZero);
+			vResult = _mm_max_ps(vResult, Constants::Zero);
 			// Any numbers that are too big, set to 0xFFFFFFFFU
-			VectorType vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxUInt);
-			VectorType vValue = g_XMUnsignedFix;
+			VectorType vOverflow = _mm_cmpgt_ps(vResult, Constants::MaxUInt);
+			VectorType vValue = Constants::UnsignedFix;
 			// Too large for a signed integer?
 			VectorType vMask = _mm_cmpge_ps(vResult, vValue);
 			// Zero for number's lower than 0x80000000, 32768.0f*65536.0f otherwise
@@ -2445,7 +2443,7 @@ namespace At0
 			vResult = _mm_sub_ps(vResult, vValue);
 			__m128i vResulti = _mm_cvttps_epi32(vResult);
 			// Convert from signed to unsigned pnly if greater than 0x80000000
-			vMask = _mm_and_ps(vMask, g_XMNegativeZero);
+			vMask = _mm_and_ps(vMask, Constants::NegativeZero);
 			vResult = _mm_xor_ps(_mm_castsi128_ps(vResulti), vMask);
 			// On those that are too large, set to 0xFFFFFFFF
 			vResult = _mm_or_ps(vResult, vOverflow);
@@ -2658,7 +2656,7 @@ namespace At0
 			__m128 V = _mm_unpacklo_ps(x, y);
 			// For the values that are higher than 0x7FFFFFFF, a fixup is needed
 			// Determine which ones need the fix.
-			VectorType vMask = _mm_and_ps(V, g_XMNegativeZero);
+			VectorType vMask = _mm_and_ps(V, Constants::NegativeZero);
 			// Force all values positive
 			VectorType vResult = _mm_xor_ps(V, vMask);
 			// Convert to floats
@@ -2666,7 +2664,7 @@ namespace At0
 			// Convert 0x80000000 -> 0xFFFFFFFF
 			__m128i iMask = _mm_srai_epi32(_mm_castps_si128(vMask), 31);
 			// For only the ones that are too big, add the fixup
-			vMask = _mm_and_ps(_mm_castsi128_ps(iMask), g_XMFixUnsigned);
+			vMask = _mm_and_ps(_mm_castsi128_ps(iMask), Constants::FixUnsigned);
 			vResult = _mm_add_ps(vResult, vMask);
 			return vResult;
 #endif
@@ -2724,7 +2722,7 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			// Reads an extra integer which is zero'd
 			__m128i V = _mm_load_si128(reinterpret_cast<const __m128i*>(pSource));
-			V = _mm_and_si128(V, g_XMMask3);
+			V = _mm_and_si128(V, Constants::Mask3);
 			return _mm_castsi128_ps(V);
 #endif
 		}
@@ -2781,7 +2779,7 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			// Reads an extra float which is zero'd
 			__m128 V = _mm_load_ps(&pSource->x);
-			return _mm_and_ps(V, g_XMMask3);
+			return _mm_and_ps(V, Constants::Mask3);
 #endif
 		}
 
@@ -2847,7 +2845,7 @@ namespace At0
 			__m128 V = _mm_movelh_ps(xy, z);
 			// For the values that are higher than 0x7FFFFFFF, a fixup is needed
 			// Determine which ones need the fix.
-			VectorType vMask = _mm_and_ps(V, g_XMNegativeZero);
+			VectorType vMask = _mm_and_ps(V, Constants::NegativeZero);
 			// Force all values positive
 			VectorType vResult = _mm_xor_ps(V, vMask);
 			// Convert to floats
@@ -2855,7 +2853,7 @@ namespace At0
 			// Convert 0x80000000 -> 0xFFFFFFFF
 			__m128i iMask = _mm_srai_epi32(_mm_castps_si128(vMask), 31);
 			// For only the ones that are too big, add the fixup
-			vMask = _mm_and_ps(_mm_castsi128_ps(iMask), g_XMFixUnsigned);
+			vMask = _mm_and_ps(_mm_castsi128_ps(iMask), Constants::FixUnsigned);
 			vResult = _mm_add_ps(vResult, vMask);
 			return vResult;
 #endif
@@ -3002,7 +3000,7 @@ namespace At0
 			__m128i V = _mm_loadu_si128(reinterpret_cast<const __m128i*>(pSource));
 			// For the values that are higher than 0x7FFFFFFF, a fixup is needed
 			// Determine which ones need the fix.
-			VectorType vMask = _mm_and_ps(_mm_castsi128_ps(V), g_XMNegativeZero);
+			VectorType vMask = _mm_and_ps(_mm_castsi128_ps(V), Constants::NegativeZero);
 			// Force all values positive
 			VectorType vResult = _mm_xor_ps(_mm_castsi128_ps(V), vMask);
 			// Convert to floats
@@ -3010,7 +3008,7 @@ namespace At0
 			// Convert 0x80000000 -> 0xFFFFFFFF
 			__m128i iMask = _mm_srai_epi32(_mm_castps_si128(vMask), 31);
 			// For only the ones that are too big, add the fixup
-			vMask = _mm_and_ps(_mm_castsi128_ps(iMask), g_XMFixUnsigned);
+			vMask = _mm_and_ps(_mm_castsi128_ps(iMask), Constants::FixUnsigned);
 			vResult = _mm_add_ps(vResult, vMask);
 			return vResult;
 #endif
@@ -3054,10 +3052,10 @@ namespace At0
 			float32x4_t T = vextq_f32(v0, v1, 3);
 
 			Matrix M;
-			M.r[0] = vandq_u32(v0, g_XMMask3);
-			M.r[1] = vandq_u32(T, g_XMMask3);
+			M.r[0] = vandq_u32(v0, Constants::Mask3);
+			M.r[1] = vandq_u32(T, Constants::Mask3);
 			M.r[2] = vcombine_f32(vget_high_f32(v1), v2);
-			M.r[3] = g_XMIdentityR3;
+			M.r[3] = Constants::IdentityR3;
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
 			__m128 Z = _mm_setzero_ps();
@@ -3076,7 +3074,7 @@ namespace At0
 			M.r[0] = _mm_movelh_ps(V1, T1);
 			M.r[1] = _mm_add_ps(T4, T5);
 			M.r[2] = _mm_shuffle_ps(V2, V3, _MM_SHUFFLE(1, 0, 3, 2));
-			M.r[3] = g_XMIdentityR3;
+			M.r[3] = Constants::IdentityR3;
 			return M;
 #endif
 		}
@@ -3123,9 +3121,9 @@ namespace At0
 			float32x4_t T3 = vextq_f32(v2, v2, 1);
 
 			Matrix M;
-			M.r[0] = vandq_u32(v0, g_XMMask3);
-			M.r[1] = vandq_u32(T1, g_XMMask3);
-			M.r[2] = vandq_u32(T2, g_XMMask3);
+			M.r[0] = vandq_u32(v0, Constants::Mask3);
+			M.r[1] = vandq_u32(T1, Constants::Mask3);
+			M.r[2] = vandq_u32(T2, Constants::Mask3);
 			M.r[3] = vsetq_lane_f32(1.f, T3, 3);
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -3144,15 +3142,15 @@ namespace At0
 			// vTemp2 = x2,y2,z2,z2
 			vTemp2 = RAYMATH_PERMUTE_PS(vTemp2, _MM_SHUFFLE(1, 1, 0, 2));
 			// vTemp1 = x1,y1,z1,0
-			vTemp1 = _mm_and_ps(vTemp1, g_XMMask3);
+			vTemp1 = _mm_and_ps(vTemp1, Constants::Mask3);
 			// vTemp2 = x2,y2,z2,0
-			vTemp2 = _mm_and_ps(vTemp2, g_XMMask3);
+			vTemp2 = _mm_and_ps(vTemp2, Constants::Mask3);
 			// vTemp3 = x3,y3,z3,0
-			vTemp3 = _mm_and_ps(vTemp3, g_XMMask3);
+			vTemp3 = _mm_and_ps(vTemp3, Constants::Mask3);
 			// vTemp4i = x4,y4,z4,0
 			__m128i vTemp4i = _mm_srli_si128(_mm_castps_si128(vTemp4), 32 / 8);
 			// vTemp4i = x4,y4,z4,1.0f
-			vTemp4i = _mm_or_si128(vTemp4i, g_XMIdentityR3);
+			vTemp4i = _mm_or_si128(vTemp4i, Constants::IdentityR3);
 			Matrix M(vTemp1,
 				vTemp2,
 				vTemp3,
@@ -3204,9 +3202,9 @@ namespace At0
 			float32x4_t T3 = vextq_f32(v2, v2, 1);
 
 			Matrix M;
-			M.r[0] = vandq_u32(v0, g_XMMask3);
-			M.r[1] = vandq_u32(T1, g_XMMask3);
-			M.r[2] = vandq_u32(T2, g_XMMask3);
+			M.r[0] = vandq_u32(v0, Constants::Mask3);
+			M.r[1] = vandq_u32(T1, Constants::Mask3);
+			M.r[2] = vandq_u32(T2, Constants::Mask3);
 			M.r[3] = vsetq_lane_f32(1.f, T3, 3);
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -3225,15 +3223,15 @@ namespace At0
 			// vTemp2 = x2,y2,z2,z2
 			vTemp2 = RAYMATH_PERMUTE_PS(vTemp2, _MM_SHUFFLE(1, 1, 0, 2));
 			// vTemp1 = x1,y1,z1,0
-			vTemp1 = _mm_and_ps(vTemp1, g_XMMask3);
+			vTemp1 = _mm_and_ps(vTemp1, Constants::Mask3);
 			// vTemp2 = x2,y2,z2,0
-			vTemp2 = _mm_and_ps(vTemp2, g_XMMask3);
+			vTemp2 = _mm_and_ps(vTemp2, Constants::Mask3);
 			// vTemp3 = x3,y3,z3,0
-			vTemp3 = _mm_and_ps(vTemp3, g_XMMask3);
+			vTemp3 = _mm_and_ps(vTemp3, Constants::Mask3);
 			// vTemp4i = x4,y4,z4,0
 			__m128i vTemp4i = _mm_srli_si128(_mm_castps_si128(vTemp4), 32 / 8);
 			// vTemp4i = x4,y4,z4,1.0f
-			vTemp4i = _mm_or_si128(vTemp4i, g_XMIdentityR3);
+			vTemp4i = _mm_or_si128(vTemp4i, Constants::IdentityR3);
 			Matrix M(vTemp1,
 				vTemp2,
 				vTemp3,
@@ -3289,9 +3287,9 @@ namespace At0
 			float32x4_t T3 = vcombine_f32(vTemp0.val[3], rh);
 
 			Matrix M = {};
-			M.r[0] = vandq_u32(T0, g_XMMask3);
-			M.r[1] = vandq_u32(T1, g_XMMask3);
-			M.r[2] = vandq_u32(T2, g_XMMask3);
+			M.r[0] = vandq_u32(T0, Constants::Mask3);
+			M.r[1] = vandq_u32(T1, Constants::Mask3);
+			M.r[2] = vandq_u32(T2, Constants::Mask3);
 			M.r[3] = vsetq_lane_f32(1.f, T3, 3);
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -3299,7 +3297,7 @@ namespace At0
 			M.r[0] = _mm_loadu_ps(&pSource->_11);
 			M.r[1] = _mm_loadu_ps(&pSource->_21);
 			M.r[2] = _mm_loadu_ps(&pSource->_31);
-			M.r[3] = g_XMIdentityR3;
+			M.r[3] = Constants::IdentityR3;
 
 			// x.x,x.y,y.x,y.y
 			VectorType vTemp1 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(1, 0, 1, 0));
@@ -3371,9 +3369,9 @@ namespace At0
 			float32x4_t T3 = vcombine_f32(vTemp0.val[3], rh);
 
 			Matrix M = {};
-			M.r[0] = vandq_u32(T0, g_XMMask3);
-			M.r[1] = vandq_u32(T1, g_XMMask3);
-			M.r[2] = vandq_u32(T2, g_XMMask3);
+			M.r[0] = vandq_u32(T0, Constants::Mask3);
+			M.r[1] = vandq_u32(T1, Constants::Mask3);
+			M.r[2] = vandq_u32(T2, Constants::Mask3);
 			M.r[3] = vsetq_lane_f32(1.f, T3, 3);
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -3381,7 +3379,7 @@ namespace At0
 			M.r[0] = _mm_load_ps(&pSource->_11);
 			M.r[1] = _mm_load_ps(&pSource->_21);
 			M.r[2] = _mm_load_ps(&pSource->_31);
-			M.r[3] = g_XMIdentityR3;
+			M.r[3] = Constants::IdentityR3;
 
 			// x.x,x.y,y.x,y.y
 			VectorType vTemp1 = _mm_shuffle_ps(M.r[0], M.r[1], _MM_SHUFFLE(1, 0, 1, 0));
@@ -3648,11 +3646,11 @@ namespace At0
 			vst1_s32(reinterpret_cast<int32_t*>(pDestination), v);
 #elif defined(RAY_SSE_INTRINSICS)
 			// In case of positive overflow, detect it
-			VectorType vOverflow = _mm_cmpgt_ps(V, g_XMMaxInt);
+			VectorType vOverflow = _mm_cmpgt_ps(V, Constants::MaxInt);
 			// Float to int conversion
 			__m128i vResulti = _mm_cvttps_epi32(V);
 			// If there was positive overflow, set to 0x7FFFFFFF
-			VectorType vResult = _mm_and_ps(vOverflow, g_XMAbsMask);
+			VectorType vResult = _mm_and_ps(vOverflow, Constants::AbsMask);
 			vOverflow = _mm_andnot_ps(vOverflow, _mm_castsi128_ps(vResulti));
 			vOverflow = _mm_or_ps(vOverflow, vResult);
 			// Write two ints
@@ -3680,10 +3678,10 @@ namespace At0
 			vst1_u32(reinterpret_cast<uint32_t*>(pDestination), iv);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Clamp to >=0
-			VectorType vResult = _mm_max_ps(V, g_XMZero);
+			VectorType vResult = _mm_max_ps(V, Constants::Zero);
 			// Any numbers that are too big, set to 0xFFFFFFFFU
-			VectorType vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxUInt);
-			VectorType vValue = g_XMUnsignedFix;
+			VectorType vOverflow = _mm_cmpgt_ps(vResult, Constants::MaxUInt);
+			VectorType vValue = Constants::UnsignedFix;
 			// Too large for a signed integer?
 			VectorType vMask = _mm_cmpge_ps(vResult, vValue);
 			// Zero for number's lower than 0x80000000, 32768.0f*65536.0f otherwise
@@ -3692,7 +3690,7 @@ namespace At0
 			vResult = _mm_sub_ps(vResult, vValue);
 			__m128i vResulti = _mm_cvttps_epi32(vResult);
 			// Convert from signed to unsigned pnly if greater than 0x80000000
-			vMask = _mm_and_ps(vMask, g_XMNegativeZero);
+			vMask = _mm_and_ps(vMask, Constants::NegativeZero);
 			vResult = _mm_xor_ps(_mm_castsi128_ps(vResulti), vMask);
 			// On those that are too large, set to 0xFFFFFFFF
 			vResult = _mm_or_ps(vResult, vOverflow);
@@ -3825,11 +3823,11 @@ namespace At0
 			vst1q_lane_s32(reinterpret_cast<int32_t*>(pDestination) + 2, v, 2);
 #elif defined(RAY_SSE_INTRINSICS)
 			// In case of positive overflow, detect it
-			VectorType vOverflow = _mm_cmpgt_ps(V, g_XMMaxInt);
+			VectorType vOverflow = _mm_cmpgt_ps(V, Constants::MaxInt);
 			// Float to int conversion
 			__m128i vResulti = _mm_cvttps_epi32(V);
 			// If there was positive overflow, set to 0x7FFFFFFF
-			VectorType vResult = _mm_and_ps(vOverflow, g_XMAbsMask);
+			VectorType vResult = _mm_and_ps(vOverflow, Constants::AbsMask);
 			vOverflow = _mm_andnot_ps(vOverflow, _mm_castsi128_ps(vResulti));
 			vOverflow = _mm_or_ps(vOverflow, vResult);
 			// Write 3 uints
@@ -3861,10 +3859,10 @@ namespace At0
 			vst1q_lane_u32(reinterpret_cast<uint32_t*>(pDestination) + 2, v, 2);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Clamp to >=0
-			VectorType vResult = _mm_max_ps(V, g_XMZero);
+			VectorType vResult = _mm_max_ps(V, Constants::Zero);
 			// Any numbers that are too big, set to 0xFFFFFFFFU
-			VectorType vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxUInt);
-			VectorType vValue = g_XMUnsignedFix;
+			VectorType vOverflow = _mm_cmpgt_ps(vResult, Constants::MaxUInt);
+			VectorType vValue = Constants::UnsignedFix;
 			// Too large for a signed integer?
 			VectorType vMask = _mm_cmpge_ps(vResult, vValue);
 			// Zero for number's lower than 0x80000000, 32768.0f*65536.0f otherwise
@@ -3873,7 +3871,7 @@ namespace At0
 			vResult = _mm_sub_ps(vResult, vValue);
 			__m128i vResulti = _mm_cvttps_epi32(vResult);
 			// Convert from signed to unsigned pnly if greater than 0x80000000
-			vMask = _mm_and_ps(vMask, g_XMNegativeZero);
+			vMask = _mm_and_ps(vMask, Constants::NegativeZero);
 			vResult = _mm_xor_ps(_mm_castsi128_ps(vResulti), vMask);
 			// On those that are too large, set to 0xFFFFFFFF
 			vResult = _mm_or_ps(vResult, vOverflow);
@@ -3991,11 +3989,11 @@ namespace At0
 			vst1q_s32(reinterpret_cast<int32_t*>(pDestination), v);
 #elif defined(RAY_SSE_INTRINSICS)
 			// In case of positive overflow, detect it
-			VectorType vOverflow = _mm_cmpgt_ps(V, g_XMMaxInt);
+			VectorType vOverflow = _mm_cmpgt_ps(V, Constants::MaxInt);
 			// Float to int conversion
 			__m128i vResulti = _mm_cvttps_epi32(V);
 			// If there was positive overflow, set to 0x7FFFFFFF
-			VectorType vResult = _mm_and_ps(vOverflow, g_XMAbsMask);
+			VectorType vResult = _mm_and_ps(vOverflow, Constants::AbsMask);
 			vOverflow = _mm_andnot_ps(vOverflow, _mm_castsi128_ps(vResulti));
 			vOverflow = _mm_or_ps(vOverflow, vResult);
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(pDestination), _mm_castps_si128(vOverflow));
@@ -4021,10 +4019,10 @@ namespace At0
 			vst1q_u32(reinterpret_cast<uint32_t*>(pDestination), v);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Clamp to >=0
-			VectorType vResult = _mm_max_ps(V, g_XMZero);
+			VectorType vResult = _mm_max_ps(V, Constants::Zero);
 			// Any numbers that are too big, set to 0xFFFFFFFFU
-			VectorType vOverflow = _mm_cmpgt_ps(vResult, g_XMMaxUInt);
-			VectorType vValue = g_XMUnsignedFix;
+			VectorType vOverflow = _mm_cmpgt_ps(vResult, Constants::MaxUInt);
+			VectorType vValue = Constants::UnsignedFix;
 			// Too large for a signed integer?
 			VectorType vMask = _mm_cmpge_ps(vResult, vValue);
 			// Zero for number's lower than 0x80000000, 32768.0f*65536.0f otherwise
@@ -4033,7 +4031,7 @@ namespace At0
 			vResult = _mm_sub_ps(vResult, vValue);
 			__m128i vResulti = _mm_cvttps_epi32(vResult);
 			// Convert from signed to unsigned pnly if greater than 0x80000000
-			vMask = _mm_and_ps(vMask, g_XMNegativeZero);
+			vMask = _mm_and_ps(vMask, Constants::NegativeZero);
 			vResult = _mm_xor_ps(_mm_castsi128_ps(vResulti), vMask);
 			// On those that are too large, set to 0xFFFFFFFF
 			vResult = _mm_or_ps(vResult, vOverflow);
@@ -4066,7 +4064,7 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t T1 = vextq_f32(M.r[0], M.r[1], 1);
-			float32x4_t T2 = vbslq_f32(g_XMMask3, M.r[0], T1);
+			float32x4_t T2 = vbslq_f32(Constants::Mask3, M.r[0], T1);
 			vst1q_f32(&pDestination->m[0][0], T2);
 
 			T1 = vextq_f32(M.r[1], M.r[1], 1);
@@ -4117,7 +4115,7 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t T1 = vextq_f32(M.r[0], M.r[1], 1);
-			float32x4_t T2 = vbslq_f32(g_XMMask3, M.r[0], T1);
+			float32x4_t T2 = vbslq_f32(Constants::Mask3, M.r[0], T1);
 			vst1q_f32(&pDestination->m[0][0], T2);
 
 			T1 = vextq_f32(M.r[1], M.r[1], 1);
@@ -4173,7 +4171,7 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t T1 = vextq_f32(M.r[0], M.r[1], 1);
-			float32x4_t T2 = vbslq_f32(g_XMMask3, M.r[0], T1);
+			float32x4_t T2 = vbslq_f32(Constants::Mask3, M.r[0], T1);
 			vst1q_f32_ex(&pDestination->m[0][0], T2, 128);
 
 			T1 = vextq_f32(M.r[1], M.r[1], 1);
@@ -4431,19 +4429,19 @@ namespace At0
 
 
 #if defined(RAY_NO_INTRINSICS)
-#define XMISNAN(x)  ((*(const uint32_t*)&(x) & 0x7F800000) == 0x7F800000 && (*(const uint32_t*)&(x) & 0x7FFFFF) != 0)
-#define XMISINF(x)  ((*(const uint32_t*)&(x) & 0x7FFFFFFF) == 0x7F800000)
+#define RAYMATH_ISNAN(x)  ((*(const uint32_t*)&(x) & 0x7F800000) == 0x7F800000 && (*(const uint32_t*)&(x) & 0x7FFFFF) != 0)
+#define RAYMATH_ISINF(x)  ((*(const uint32_t*)&(x) & 0x7FFFFFFF) == 0x7F800000)
 #endif
 
 #if defined(RAY_SSE_INTRINSICS)
 
-#define XM3UNPACK3INTO4(l1,l2,l3) \
+#define RAYMATH3_UNPACK3_INTO4(l1,l2,l3) \
     VectorType V3 = _mm_shuffle_ps(l2,l3,_MM_SHUFFLE(0,0,3,2));\
     VectorType V2 = _mm_shuffle_ps(l2,l1,_MM_SHUFFLE(3,3,1,0));\
     V2 = RAYMATH_PERMUTE_PS(V2,_MM_SHUFFLE(1,1,0,2));\
     VectorType V4 = _mm_castsi128_ps( _mm_srli_si128(_mm_castps_si128(L3),32/8) );
 
-#define XM3PACK4INTO3(v2x) \
+#define RAYMATH3_PACK4_INTO3(v2x) \
     v2x = _mm_shuffle_ps(V2,V3,_MM_SHUFFLE(1,0,2,1));\
     V2 = _mm_shuffle_ps(V2,V1,_MM_SHUFFLE(2,2,0,0));\
     V1 = _mm_shuffle_ps(V1,V2,_MM_SHUFFLE(0,2,1,0));\
@@ -4745,7 +4743,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_f32(1.0f);
 #elif defined(RAY_SSE_INTRINSICS)
-			return Vector(g_XMOne);
+			return Vector(Constants::One);
 #endif
 		}
 
@@ -4763,7 +4761,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_u32(0x7F800000);
 #elif defined(RAY_SSE_INTRINSICS)
-			return Vector(g_XMInfinity);
+			return Vector(Constants::Infinity);
 #endif
 		}
 
@@ -4781,7 +4779,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_u32(0x7FC00000);
 #elif defined(RAY_SSE_INTRINSICS)
-			return Vector(g_XMQNaN);
+			return Vector(Constants::QNaN);
 #endif
 		}
 
@@ -4799,7 +4797,7 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			return vdupq_n_u32(0x34000000);
 #elif defined(RAY_SSE_INTRINSICS)
-			return Vector(g_XMEpsilon);
+			return Vector(Constants::Epsilon);
 #endif
 		}
 
@@ -5765,14 +5763,14 @@ namespace At0
 			// x=Index0,y=Index1,z=Index2,w=Index3
 			__m128i vTemp = _mm_set_epi32(static_cast<int>(VectorIndex3), static_cast<int>(VectorIndex2), static_cast<int>(VectorIndex1), static_cast<int>(VectorIndex0));
 			// Any non-zero entries become 0xFFFFFFFF else 0
-			vTemp = _mm_cmpgt_epi32(vTemp, g_XMZero);
+			vTemp = _mm_cmpgt_epi32(vTemp, Constants::Zero);
 			return _mm_castsi128_ps(vTemp);
 #elif defined(RAY_ARM_NEON_INTRINSICS) && !defined(RAY_NO_INTRINSICS)
 			int32x2_t V0 = vcreate_s32(static_cast<uint64_t>(VectorIndex0) | (static_cast<uint64_t>(VectorIndex1) << 32));
 			int32x2_t V1 = vcreate_s32(static_cast<uint64_t>(VectorIndex2) | (static_cast<uint64_t>(VectorIndex3) << 32));
 			int32x4_t vTemp = vcombine_s32(V0, V1);
 			// Any non-zero entries become 0xFFFFFFFF else 0
-			return vcgtq_s32(vTemp, g_XMZero);
+			return vcgtq_s32(vTemp, Constants::Zero);
 #else
 			VectorType    ControlVector;
 			const uint32_t  ControlElement[] =
@@ -6190,7 +6188,7 @@ namespace At0
 			return vmvnq_u32(vceqq_u32(V1, V2));
 #elif defined(RAY_SSE_INTRINSICS)
 			__m128i V = _mm_cmpeq_epi32(_mm_castps_si128(V1), _mm_castps_si128(V2));
-			return _mm_xor_ps(_mm_castsi128_ps(V), g_XMNegOneMask);
+			return _mm_xor_ps(_mm_castsi128_ps(V), Constants::NegOneMask);
 #endif
 		}
 
@@ -6459,7 +6457,7 @@ namespace At0
 			// Test if less than or equal
 			VectorType vTemp1 = _mm_cmple_ps(v, Bounds);
 			// Negate the bounds
-			VectorType vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
+			VectorType vTemp2 = _mm_mul_ps(Bounds, Constants::NegativeOne);
 			// Test if greater or equal (Reversed)
 			vTemp2 = _mm_cmple_ps(vTemp2, v);
 			// Blend answers
@@ -6520,7 +6518,7 @@ namespace At0
 			// Test if less than or equal
 			VectorType vTemp1 = _mm_cmple_ps(v, Bounds);
 			// Negate the bounds
-			VectorType vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
+			VectorType vTemp2 = _mm_mul_ps(Bounds, Constants::NegativeOne);
 			// Test if greater or equal (Reversed)
 			vTemp2 = _mm_cmple_ps(vTemp2, v);
 			// Blend answers
@@ -6543,10 +6541,10 @@ namespace At0
 #if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Control = { { {
-					XMISNAN(v.vector4_f32[0]) ? 0xFFFFFFFFU : 0,
-					XMISNAN(v.vector4_f32[1]) ? 0xFFFFFFFFU : 0,
-					XMISNAN(v.vector4_f32[2]) ? 0xFFFFFFFFU : 0,
-					XMISNAN(v.vector4_f32[3]) ? 0xFFFFFFFFU : 0
+					RAYMATH_ISNAN(v.vector4_f32[0]) ? 0xFFFFFFFFU : 0,
+					RAYMATH_ISNAN(v.vector4_f32[1]) ? 0xFFFFFFFFU : 0,
+					RAYMATH_ISNAN(v.vector4_f32[2]) ? 0xFFFFFFFFU : 0,
+					RAYMATH_ISNAN(v.vector4_f32[3]) ? 0xFFFFFFFFU : 0
 				} } };
 			return Control.v;
 
@@ -6568,25 +6566,25 @@ namespace At0
 #if defined(RAY_NO_INTRINSICS)
 
 			VectorU32 Control = { { {
-					XMISINF(v.vector4_f32[0]) ? 0xFFFFFFFFU : 0,
-					XMISINF(v.vector4_f32[1]) ? 0xFFFFFFFFU : 0,
-					XMISINF(v.vector4_f32[2]) ? 0xFFFFFFFFU : 0,
-					XMISINF(v.vector4_f32[3]) ? 0xFFFFFFFFU : 0
+					RAYMATH_ISINF(v.vector4_f32[0]) ? 0xFFFFFFFFU : 0,
+					RAYMATH_ISINF(v.vector4_f32[1]) ? 0xFFFFFFFFU : 0,
+					RAYMATH_ISINF(v.vector4_f32[2]) ? 0xFFFFFFFFU : 0,
+					RAYMATH_ISINF(v.vector4_f32[3]) ? 0xFFFFFFFFU : 0
 				} } };
 			return Control.v;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Mask off the sign bit
-			uint32x4_t vTemp = vandq_u32(v, g_XMAbsMask);
+			uint32x4_t vTemp = vandq_u32(v, Constants::AbsMask);
 			// Compare to infinity
-			vTemp = vceqq_f32(vTemp, g_XMInfinity);
+			vTemp = vceqq_f32(vTemp, Constants::Infinity);
 			// If any are infinity, the signs are true.
 			return vTemp;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Mask off the sign bit
-			__m128 vTemp = _mm_and_ps(v, g_XMAbsMask);
+			__m128 vTemp = _mm_and_ps(v, Constants::AbsMask);
 			// Compare to infinity
-			vTemp = _mm_cmpeq_ps(vTemp, g_XMInfinity);
+			vTemp = _mm_cmpeq_ps(vTemp, Constants::Infinity);
 			// If any are infinity, the signs are true.
 			return vTemp;
 #endif
@@ -6693,24 +6691,24 @@ namespace At0
 #if defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
 			return vrndnq_f32(v);
 #else
-			uint32x4_t sign = vandq_u32(v, g_XMNegativeZero);
-			uint32x4_t sMagic = vorrq_u32(g_XMNoFraction, sign);
+			uint32x4_t sign = vandq_u32(v, Constants::NegativeZero);
+			uint32x4_t sMagic = vorrq_u32(Constants::NoFraction, sign);
 			float32x4_t R1 = vaddq_f32(v, sMagic);
 			R1 = vsubq_f32(R1, sMagic);
 			float32x4_t R2 = vabsq_f32(v);
-			uint32x4_t mask = vcleq_f32(R2, g_XMNoFraction);
+			uint32x4_t mask = vcleq_f32(R2, Constants::NoFraction);
 			VectorType vResult = vbslq_f32(mask, R1, v);
 			return vResult;
 #endif
 #elif defined(RAY_SSE4_INTRINSICS)
 			return _mm_round_ps(v, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC);
 #elif defined(RAY_SSE_INTRINSICS)
-			__m128 sign = _mm_and_ps(v, g_XMNegativeZero);
-			__m128 sMagic = _mm_or_ps(g_XMNoFraction, sign);
+			__m128 sign = _mm_and_ps(v, Constants::NegativeZero);
+			__m128 sMagic = _mm_or_ps(Constants::NoFraction, sign);
 			__m128 R1 = _mm_add_ps(v, sMagic);
 			R1 = _mm_sub_ps(R1, sMagic);
-			__m128 R2 = _mm_and_ps(v, g_XMAbsMask);
-			__m128 mask = _mm_cmple_ps(R2, g_XMNoFraction);
+			__m128 R2 = _mm_and_ps(v, Constants::AbsMask);
+			__m128 mask = _mm_cmple_ps(R2, Constants::NoFraction);
 			R2 = _mm_andnot_ps(mask, v);
 			R1 = _mm_and_ps(R1, mask);
 			VectorType vResult = _mm_xor_ps(R1, R2);
@@ -6735,7 +6733,7 @@ namespace At0
 
 			for (i = 0; i < 4; i++)
 			{
-				if (XMISNAN(v.vector4_f32[i]))
+				if (RAYMATH_ISNAN(v.vector4_f32[i]))
 				{
 					Result.vector4_u32[i] = 0x7FC00000;
 				}
@@ -6755,7 +6753,7 @@ namespace At0
 			return vrndq_f32(v);
 #else
 			float32x4_t vTest = vabsq_f32(v);
-			vTest = vcltq_f32(vTest, g_XMNoFraction);
+			vTest = vcltq_f32(vTest, Constants::NoFraction);
 
 			int32x4_t vInt = vcvtq_s32_f32(v);
 			VectorType vResult = vcvtq_f32_s32(vInt);
@@ -6769,9 +6767,9 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			// To handle NAN, INF and numbers greater than 8388608, use masking
 			// Get the abs value
-			__m128i vTest = _mm_and_si128(_mm_castps_si128(v), g_XMAbsMask);
+			__m128i vTest = _mm_and_si128(_mm_castps_si128(v), Constants::AbsMask);
 			// Test for greater than 8388608 (All floats with NO fractionals, NAN and INF
-			vTest = _mm_cmplt_epi32(vTest, g_XMNoFraction);
+			vTest = _mm_cmplt_epi32(vTest, Constants::NoFraction);
 			// Convert to int and back to float for rounding with truncation
 			__m128i vInt = _mm_cvttps_epi32(v);
 			// Convert back to floats
@@ -6804,7 +6802,7 @@ namespace At0
 			return vrndmq_f32(v);
 #else
 			float32x4_t vTest = vabsq_f32(v);
-			vTest = vcltq_f32(vTest, g_XMNoFraction);
+			vTest = vcltq_f32(vTest, Constants::NoFraction);
 			// Truncate
 			int32x4_t vInt = vcvtq_s32_f32(v);
 			VectorType vResult = vcvtq_f32_s32(vInt);
@@ -6820,8 +6818,8 @@ namespace At0
 			return _mm_floor_ps(v);
 #elif defined(RAY_SSE_INTRINSICS)
 			// To handle NAN, INF and numbers greater than 8388608, use masking
-			__m128i vTest = _mm_and_si128(_mm_castps_si128(v), g_XMAbsMask);
-			vTest = _mm_cmplt_epi32(vTest, g_XMNoFraction);
+			__m128i vTest = _mm_and_si128(_mm_castps_si128(v), Constants::AbsMask);
+			vTest = _mm_cmplt_epi32(vTest, Constants::NoFraction);
 			// Truncate
 			__m128i vInt = _mm_cvttps_epi32(v);
 			VectorType vResult = _mm_cvtepi32_ps(vInt);
@@ -6856,7 +6854,7 @@ namespace At0
 			return vrndpq_f32(v);
 #else
 			float32x4_t vTest = vabsq_f32(v);
-			vTest = vcltq_f32(vTest, g_XMNoFraction);
+			vTest = vcltq_f32(vTest, Constants::NoFraction);
 			// Truncate
 			int32x4_t vInt = vcvtq_s32_f32(v);
 			VectorType vResult = vcvtq_f32_s32(vInt);
@@ -6872,8 +6870,8 @@ namespace At0
 			return _mm_ceil_ps(v);
 #elif defined(RAY_SSE_INTRINSICS)
 			// To handle NAN, INF and numbers greater than 8388608, use masking
-			__m128i vTest = _mm_and_si128(_mm_castps_si128(v), g_XMAbsMask);
-			vTest = _mm_cmplt_epi32(vTest, g_XMNoFraction);
+			__m128i vTest = _mm_and_si128(_mm_castps_si128(v), Constants::AbsMask);
+			vTest = _mm_cmplt_epi32(vTest, Constants::NoFraction);
 			// Truncate
 			__m128i vInt = _mm_cvttps_epi32(v);
 			VectorType vResult = _mm_cvtepi32_ps(vInt);
@@ -6928,7 +6926,7 @@ namespace At0
 
 			const VectorType Zero = Vector::Zero();
 
-			return Clamp(Zero, g_XMOne.v);
+			return Clamp(Zero, Constants::One.v);
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Set <0 to 0
@@ -6937,9 +6935,9 @@ namespace At0
 			return vminq_f32(vResult, vdupq_n_f32(1.0f));
 #elif defined(RAY_SSE_INTRINSICS)
 			// Set <0 to 0
-			VectorType vResult = _mm_max_ps(v, g_XMZero);
+			VectorType vResult = _mm_max_ps(v, Constants::Zero);
 			// Set>1 to 1
-			return _mm_min_ps(vResult, g_XMOne);
+			return _mm_min_ps(vResult, Constants::One);
 #endif
 		}
 
@@ -7042,11 +7040,11 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			uint32x4_t Result = vorrq_u32(V1, V2);
-			return vbicq_u32(g_XMNegOneMask, Result);
+			return vbicq_u32(Constants::NegOneMask, Result);
 #elif defined(RAY_SSE_INTRINSICS)
 			__m128i Result;
 			Result = _mm_or_si128(_mm_castps_si128(V1), _mm_castps_si128(V2));
-			Result = _mm_andnot_si128(Result, g_XMNegOneMask);
+			Result = _mm_andnot_si128(Result, Constants::NegOneMask);
 			return _mm_castsi128_ps(Result);
 #endif
 		}
@@ -7186,11 +7184,11 @@ namespace At0
 			// will be -Pi <= Result < Pi.
 			Vector Result = Vector::Add(v, V2);
 
-			VectorType Mask = Result.Less(g_XMNegativePi.v);
-			VectorType Offset = Vector::Select(Zero, g_XMTwoPi.v, Mask);
+			VectorType Mask = Result.Less(Constants::NegativePi.v);
+			VectorType Offset = Vector::Select(Zero, Constants::TwoPi.v, Mask);
 
-			Mask = Result.GreaterOrEqual(g_XMPi.v);
-			Offset = Vector::Select(Offset, g_XMNegativeTwoPi.v, Mask);
+			Mask = Result.GreaterOrEqual(Constants::Pi.v);
+			Offset = Vector::Select(Offset, Constants::NegativeTwoPi.v, Mask);
 
 			Result = Vector::Add(Result, Offset);
 
@@ -7200,13 +7198,13 @@ namespace At0
 			// Adjust the angles
 			VectorType vResult = vaddq_f32(v, V2);
 			// Less than Pi?
-			uint32x4_t vOffset = vcltq_f32(vResult, g_XMNegativePi);
-			vOffset = vandq_u32(vOffset, g_XMTwoPi);
+			uint32x4_t vOffset = vcltq_f32(vResult, Constants::NegativePi);
+			vOffset = vandq_u32(vOffset, Constants::TwoPi);
 			// Add 2Pi to all entries less than -Pi
 			vResult = vaddq_f32(vResult, vOffset);
 			// Greater than or equal to Pi?
-			vOffset = vcgeq_f32(vResult, g_XMPi);
-			vOffset = vandq_u32(vOffset, g_XMTwoPi);
+			vOffset = vcgeq_f32(vResult, Constants::Pi);
+			vOffset = vandq_u32(vOffset, Constants::TwoPi);
 			// Sub 2Pi to all entries greater than Pi
 			vResult = vsubq_f32(vResult, vOffset);
 			return vResult;
@@ -7214,13 +7212,13 @@ namespace At0
 			// Adjust the angles
 			VectorType vResult = _mm_add_ps(v, V2);
 			// Less than Pi?
-			VectorType vOffset = _mm_cmplt_ps(vResult, g_XMNegativePi);
-			vOffset = _mm_and_ps(vOffset, g_XMTwoPi);
+			VectorType vOffset = _mm_cmplt_ps(vResult, Constants::NegativePi);
+			vOffset = _mm_and_ps(vOffset, Constants::TwoPi);
 			// Add 2Pi to all entries less than -Pi
 			vResult = _mm_add_ps(vResult, vOffset);
 			// Greater than or equal to Pi?
-			vOffset = _mm_cmpge_ps(vResult, g_XMPi);
-			vOffset = _mm_and_ps(vOffset, g_XMTwoPi);
+			vOffset = _mm_cmpge_ps(vResult, Constants::Pi);
+			vOffset = _mm_and_ps(vOffset, Constants::TwoPi);
 			// Sub 2Pi to all entries greater than Pi
 			vResult = _mm_sub_ps(vResult, vOffset);
 			return vResult;
@@ -7270,11 +7268,11 @@ namespace At0
 			// will be -Pi <= Result < Pi.
 			Vector Result = Vector::Subtract(v, V2);
 
-			VectorType Mask = Result.Less(g_XMNegativePi.v);
-			VectorType Offset = Vector::Select(Zero, g_XMTwoPi.v, Mask);
+			VectorType Mask = Result.Less(Constants::NegativePi.v);
+			VectorType Offset = Vector::Select(Zero, Constants::TwoPi.v, Mask);
 
-			Mask = Result.GreaterOrEqual(g_XMPi.v);
-			Offset = Vector::Select(Offset, g_XMNegativeTwoPi.v, Mask);
+			Mask = Result.GreaterOrEqual(Constants::Pi.v);
+			Offset = Vector::Select(Offset, Constants::NegativeTwoPi.v, Mask);
 
 			Result = Vector::Add(Result, Offset);
 
@@ -7284,13 +7282,13 @@ namespace At0
 			// Adjust the angles
 			VectorType vResult = vsubq_f32(v, V2);
 			// Less than Pi?
-			uint32x4_t vOffset = vcltq_f32(vResult, g_XMNegativePi);
-			vOffset = vandq_u32(vOffset, g_XMTwoPi);
+			uint32x4_t vOffset = vcltq_f32(vResult, Constants::NegativePi);
+			vOffset = vandq_u32(vOffset, Constants::TwoPi);
 			// Add 2Pi to all entries less than -Pi
 			vResult = vaddq_f32(vResult, vOffset);
 			// Greater than or equal to Pi?
-			vOffset = vcgeq_f32(vResult, g_XMPi);
-			vOffset = vandq_u32(vOffset, g_XMTwoPi);
+			vOffset = vcgeq_f32(vResult, Constants::Pi);
+			vOffset = vandq_u32(vOffset, Constants::TwoPi);
 			// Sub 2Pi to all entries greater than Pi
 			vResult = vsubq_f32(vResult, vOffset);
 			return vResult;
@@ -7298,13 +7296,13 @@ namespace At0
 			// Adjust the angles
 			VectorType vResult = _mm_sub_ps(v, V2);
 			// Less than Pi?
-			VectorType vOffset = _mm_cmplt_ps(vResult, g_XMNegativePi);
-			vOffset = _mm_and_ps(vOffset, g_XMTwoPi);
+			VectorType vOffset = _mm_cmplt_ps(vResult, Constants::NegativePi);
+			vOffset = _mm_and_ps(vOffset, Constants::TwoPi);
 			// Add 2Pi to all entries less than -Pi
 			vResult = _mm_add_ps(vResult, vOffset);
 			// Greater than or equal to Pi?
-			vOffset = _mm_cmpge_ps(vResult, g_XMPi);
-			vOffset = _mm_and_ps(vOffset, g_XMTwoPi);
+			vOffset = _mm_cmpge_ps(vResult, Constants::Pi);
+			vOffset = _mm_and_ps(vOffset, Constants::TwoPi);
 			// Sub 2Pi to all entries greater than Pi
 			vResult = _mm_sub_ps(vResult, vOffset);
 			return vResult;
@@ -7496,7 +7494,7 @@ namespace At0
 			return vmulq_f32(S, Reciprocal);
 #endif
 #elif defined(RAY_SSE_INTRINSICS)
-			return _mm_div_ps(g_XMOne, v);
+			return _mm_div_ps(Constants::One, v);
 #endif
 		}
 
@@ -7519,7 +7517,7 @@ namespace At0
 			float32x4_t R0 = vrsqrtsq_f32(P0, S0);
 			float32x4_t S1 = vmulq_f32(S0, R0);
 
-			VectorType VEqualsInfinity = Vector::EqualInt(v, g_XMInfinity.v);
+			VectorType VEqualsInfinity = Vector::EqualInt(v, Constants::Infinity.v);
 			VectorType VEqualsZero = Vector::Equal(v, vdupq_n_f32(0));
 			VectorType Result = vmulq_f32(v, S1);
 			VectorType Select = Vector::EqualInt(VEqualsInfinity, VEqualsZero);
@@ -7556,7 +7554,7 @@ namespace At0
 			float32x4_t R2 = vrsqrtsq_f32(P2, S2);
 			float32x4_t S3 = vmulq_f32(S2, R2);
 
-			VectorType VEqualsInfinity = Vector::EqualInt(v, g_XMInfinity.v);
+			VectorType VEqualsInfinity = Vector::EqualInt(v, Constants::Infinity.v);
 			VectorType VEqualsZero = Vector::Equal(v, vdupq_n_f32(0));
 			VectorType Result = vmulq_f32(v, S3);
 			VectorType Select = Vector::EqualInt(VEqualsInfinity, VEqualsZero);
@@ -7611,7 +7609,7 @@ namespace At0
 			return vmulq_f32(S1, R1);
 #elif defined(RAY_SSE_INTRINSICS)
 			VectorType vResult = _mm_sqrt_ps(v);
-			vResult = _mm_div_ps(g_XMOne, vResult);
+			vResult = _mm_div_ps(Constants::One, vResult);
 			return vResult;
 #endif
 		}
@@ -7638,22 +7636,22 @@ namespace At0
 			float32x4_t ftrunc = vcvtq_f32_s32(itrunc);
 			float32x4_t y = vsubq_f32(V, ftrunc);
 
-			float32x4_t poly = vmlaq_f32(g_XMExpEst6, g_XMExpEst7, y);
-			poly = vmlaq_f32(g_XMExpEst5, poly, y);
-			poly = vmlaq_f32(g_XMExpEst4, poly, y);
-			poly = vmlaq_f32(g_XMExpEst3, poly, y);
-			poly = vmlaq_f32(g_XMExpEst2, poly, y);
-			poly = vmlaq_f32(g_XMExpEst1, poly, y);
-			poly = vmlaq_f32(g_XMOne, poly, y);
+			float32x4_t poly = vmlaq_f32(Constants::ExpEst6, Constants::ExpEst7, y);
+			poly = vmlaq_f32(Constants::ExpEst5, poly, y);
+			poly = vmlaq_f32(Constants::ExpEst4, poly, y);
+			poly = vmlaq_f32(Constants::ExpEst3, poly, y);
+			poly = vmlaq_f32(Constants::ExpEst2, poly, y);
+			poly = vmlaq_f32(Constants::ExpEst1, poly, y);
+			poly = vmlaq_f32(Constants::One, poly, y);
 
-			int32x4_t biased = vaddq_s32(itrunc, g_XMExponentBias);
+			int32x4_t biased = vaddq_s32(itrunc, Constants::ExponentBias);
 			biased = vshlq_n_s32(biased, 23);
 			float32x4_t result0 = Vector::Divide(biased, poly);
 
-			biased = vaddq_s32(itrunc, g_XM253);
+			biased = vaddq_s32(itrunc, Constants::Vector253);
 			biased = vshlq_n_s32(biased, 23);
 			float32x4_t result1 = Vector::Divide(biased, poly);
-			result1 = vmulq_f32(g_XMMinNormal.v, result1);
+			result1 = vmulq_f32(Constants::MinNormal.v, result1);
 
 			// Use selection to handle the cases
 			//  if (V is NaN) -> QNaN;
@@ -7666,54 +7664,54 @@ namespace At0
 			//      if (V < 128) -> result0
 			//      else -> +inf
 
-			int32x4_t comp = vcltq_s32(V, g_XMBin128);
-			float32x4_t result2 = vbslq_f32(comp, result0, g_XMInfinity);
+			int32x4_t comp = vcltq_s32(V, Constants::Bin128);
+			float32x4_t result2 = vbslq_f32(comp, result0, Constants::Infinity);
 
-			comp = vcltq_s32(itrunc, g_XMSubnormalExponent);
+			comp = vcltq_s32(itrunc, Constants::SubnormalExponent);
 			float32x4_t result3 = vbslq_f32(comp, result1, result0);
 
-			comp = vcltq_s32(V, g_XMBinNeg150);
-			float32x4_t result4 = vbslq_f32(comp, result3, g_XMZero);
+			comp = vcltq_s32(V, Constants::BinNeg150);
+			float32x4_t result4 = vbslq_f32(comp, result3, Constants::Zero);
 
-			int32x4_t sign = vandq_s32(V, g_XMNegativeZero);
-			comp = vceqq_s32(sign, g_XMNegativeZero);
+			int32x4_t sign = vandq_s32(V, Constants::NegativeZero);
+			comp = vceqq_s32(sign, Constants::NegativeZero);
 			float32x4_t result5 = vbslq_f32(comp, result4, result2);
 
-			int32x4_t t0 = vandq_s32(V, g_XMQNaNTest);
-			int32x4_t t1 = vandq_s32(V, g_XMInfinity);
-			t0 = vceqq_s32(t0, g_XMZero);
-			t1 = vceqq_s32(t1, g_XMInfinity);
+			int32x4_t t0 = vandq_s32(V, Constants::QNaNTest);
+			int32x4_t t1 = vandq_s32(V, Constants::Infinity);
+			t0 = vceqq_s32(t0, Constants::Zero);
+			t1 = vceqq_s32(t1, Constants::Infinity);
 			int32x4_t isNaN = vbicq_s32(t1, t0);
 
-			float32x4_t vResult = vbslq_f32(isNaN, g_XMQNaN, result5);
+			float32x4_t vResult = vbslq_f32(isNaN, Constants::QNaN, result5);
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			__m128i itrunc = _mm_cvttps_epi32(V);
 			__m128 ftrunc = _mm_cvtepi32_ps(itrunc);
 			__m128 y = _mm_sub_ps(V, ftrunc);
-			__m128 poly = _mm_mul_ps(g_XMExpEst7, y);
-			poly = _mm_add_ps(g_XMExpEst6, poly);
+			__m128 poly = _mm_mul_ps(Constants::ExpEst7, y);
+			poly = _mm_add_ps(Constants::ExpEst6, poly);
 			poly = _mm_mul_ps(poly, y);
-			poly = _mm_add_ps(g_XMExpEst5, poly);
+			poly = _mm_add_ps(Constants::ExpEst5, poly);
 			poly = _mm_mul_ps(poly, y);
-			poly = _mm_add_ps(g_XMExpEst4, poly);
+			poly = _mm_add_ps(Constants::ExpEst4, poly);
 			poly = _mm_mul_ps(poly, y);
-			poly = _mm_add_ps(g_XMExpEst3, poly);
+			poly = _mm_add_ps(Constants::ExpEst3, poly);
 			poly = _mm_mul_ps(poly, y);
-			poly = _mm_add_ps(g_XMExpEst2, poly);
+			poly = _mm_add_ps(Constants::ExpEst2, poly);
 			poly = _mm_mul_ps(poly, y);
-			poly = _mm_add_ps(g_XMExpEst1, poly);
+			poly = _mm_add_ps(Constants::ExpEst1, poly);
 			poly = _mm_mul_ps(poly, y);
-			poly = _mm_add_ps(g_XMOne, poly);
+			poly = _mm_add_ps(Constants::One, poly);
 
-			__m128i biased = _mm_add_epi32(itrunc, g_XMExponentBias);
+			__m128i biased = _mm_add_epi32(itrunc, Constants::ExponentBias);
 			biased = _mm_slli_epi32(biased, 23);
 			__m128 result0 = _mm_div_ps(_mm_castsi128_ps(biased), poly);
 
-			biased = _mm_add_epi32(itrunc, g_XM253);
+			biased = _mm_add_epi32(itrunc, Constants::Vector253);
 			biased = _mm_slli_epi32(biased, 23);
 			__m128 result1 = _mm_div_ps(_mm_castsi128_ps(biased), poly);
-			result1 = _mm_mul_ps(g_XMMinNormal.v, result1);
+			result1 = _mm_mul_ps(Constants::MinNormal.v, result1);
 
 			// Use selection to handle the cases
 			//  if (V is NaN) -> QNaN;
@@ -7726,34 +7724,34 @@ namespace At0
 			//      if (V < 128) -> result0
 			//      else -> +inf
 
-			__m128i comp = _mm_cmplt_epi32(_mm_castps_si128(V), g_XMBin128);
+			__m128i comp = _mm_cmplt_epi32(_mm_castps_si128(V), Constants::Bin128);
 			__m128i select0 = _mm_and_si128(comp, _mm_castps_si128(result0));
-			__m128i select1 = _mm_andnot_si128(comp, g_XMInfinity);
+			__m128i select1 = _mm_andnot_si128(comp, Constants::Infinity);
 			__m128i result2 = _mm_or_si128(select0, select1);
 
-			comp = _mm_cmplt_epi32(itrunc, g_XMSubnormalExponent);
+			comp = _mm_cmplt_epi32(itrunc, Constants::SubnormalExponent);
 			select1 = _mm_and_si128(comp, _mm_castps_si128(result1));
 			select0 = _mm_andnot_si128(comp, _mm_castps_si128(result0));
 			__m128i result3 = _mm_or_si128(select0, select1);
 
-			comp = _mm_cmplt_epi32(_mm_castps_si128(V), g_XMBinNeg150);
+			comp = _mm_cmplt_epi32(_mm_castps_si128(V), Constants::BinNeg150);
 			select0 = _mm_and_si128(comp, result3);
-			select1 = _mm_andnot_si128(comp, g_XMZero);
+			select1 = _mm_andnot_si128(comp, Constants::Zero);
 			__m128i result4 = _mm_or_si128(select0, select1);
 
-			__m128i sign = _mm_and_si128(_mm_castps_si128(V), g_XMNegativeZero);
-			comp = _mm_cmpeq_epi32(sign, g_XMNegativeZero);
+			__m128i sign = _mm_and_si128(_mm_castps_si128(V), Constants::NegativeZero);
+			comp = _mm_cmpeq_epi32(sign, Constants::NegativeZero);
 			select0 = _mm_and_si128(comp, result4);
 			select1 = _mm_andnot_si128(comp, result2);
 			__m128i result5 = _mm_or_si128(select0, select1);
 
-			__m128i t0 = _mm_and_si128(_mm_castps_si128(V), g_XMQNaNTest);
-			__m128i t1 = _mm_and_si128(_mm_castps_si128(V), g_XMInfinity);
-			t0 = _mm_cmpeq_epi32(t0, g_XMZero);
-			t1 = _mm_cmpeq_epi32(t1, g_XMInfinity);
+			__m128i t0 = _mm_and_si128(_mm_castps_si128(V), Constants::QNaNTest);
+			__m128i t1 = _mm_and_si128(_mm_castps_si128(V), Constants::Infinity);
+			t0 = _mm_cmpeq_epi32(t0, Constants::Zero);
+			t1 = _mm_cmpeq_epi32(t1, Constants::Infinity);
 			__m128i isNaN = _mm_andnot_si128(t0, t1);
 
-			select0 = _mm_and_si128(isNaN, g_XMQNaN);
+			select0 = _mm_and_si128(isNaN, Constants::QNaN);
 			select1 = _mm_andnot_si128(isNaN, result5);
 			__m128i vResult = _mm_or_si128(select0, select1);
 
@@ -7780,29 +7778,29 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// expE(V) = exp2(vin*log2(e))
-			float32x4_t Ve = vmulq_f32(g_XMLgE, V);
+			float32x4_t Ve = vmulq_f32(Constants::LgE, V);
 
 			int32x4_t itrunc = vcvtq_s32_f32(Ve);
 			float32x4_t ftrunc = vcvtq_f32_s32(itrunc);
 			float32x4_t y = vsubq_f32(Ve, ftrunc);
 
 
-			float32x4_t poly = vmlaq_f32(g_XMExpEst6, g_XMExpEst7, y);
-			poly = vmlaq_f32(g_XMExpEst5, poly, y);
-			poly = vmlaq_f32(g_XMExpEst4, poly, y);
-			poly = vmlaq_f32(g_XMExpEst3, poly, y);
-			poly = vmlaq_f32(g_XMExpEst2, poly, y);
-			poly = vmlaq_f32(g_XMExpEst1, poly, y);
-			poly = vmlaq_f32(g_XMOne, poly, y);
+			float32x4_t poly = vmlaq_f32(Constants::ExpEst6, Constants::ExpEst7, y);
+			poly = vmlaq_f32(Constants::ExpEst5, poly, y);
+			poly = vmlaq_f32(Constants::ExpEst4, poly, y);
+			poly = vmlaq_f32(Constants::ExpEst3, poly, y);
+			poly = vmlaq_f32(Constants::ExpEst2, poly, y);
+			poly = vmlaq_f32(Constants::ExpEst1, poly, y);
+			poly = vmlaq_f32(Constants::One, poly, y);
 
-			int32x4_t biased = vaddq_s32(itrunc, g_XMExponentBias);
+			int32x4_t biased = vaddq_s32(itrunc, Constants::ExponentBias);
 			biased = vshlq_n_s32(biased, 23);
 			float32x4_t result0 = Vector::Divide(biased, poly);
 
-			biased = vaddq_s32(itrunc, g_XM253);
+			biased = vaddq_s32(itrunc, Constants::Vector253);
 			biased = vshlq_n_s32(biased, 23);
 			float32x4_t result1 = Vector::Divide(biased, poly);
-			result1 = vmulq_f32(g_XMMinNormal.v, result1);
+			result1 = vmulq_f32(Constants::MinNormal.v, result1);
 
 			// Use selection to handle the cases
 			//  if (V is NaN) -> QNaN;
@@ -7815,57 +7813,57 @@ namespace At0
 			//      if (V < 128) -> result0
 			//      else -> +inf
 
-			int32x4_t comp = vcltq_s32(Ve, g_XMBin128);
-			float32x4_t result2 = vbslq_f32(comp, result0, g_XMInfinity);
+			int32x4_t comp = vcltq_s32(Ve, Constants::Bin128);
+			float32x4_t result2 = vbslq_f32(comp, result0, Constants::Infinity);
 
-			comp = vcltq_s32(itrunc, g_XMSubnormalExponent);
+			comp = vcltq_s32(itrunc, Constants::SubnormalExponent);
 			float32x4_t result3 = vbslq_f32(comp, result1, result0);
 
-			comp = vcltq_s32(Ve, g_XMBinNeg150);
-			float32x4_t result4 = vbslq_f32(comp, result3, g_XMZero);
+			comp = vcltq_s32(Ve, Constants::BinNeg150);
+			float32x4_t result4 = vbslq_f32(comp, result3, Constants::Zero);
 
-			int32x4_t sign = vandq_s32(Ve, g_XMNegativeZero);
-			comp = vceqq_s32(sign, g_XMNegativeZero);
+			int32x4_t sign = vandq_s32(Ve, Constants::NegativeZero);
+			comp = vceqq_s32(sign, Constants::NegativeZero);
 			float32x4_t result5 = vbslq_f32(comp, result4, result2);
 
-			int32x4_t t0 = vandq_s32(Ve, g_XMQNaNTest);
-			int32x4_t t1 = vandq_s32(Ve, g_XMInfinity);
-			t0 = vceqq_s32(t0, g_XMZero);
-			t1 = vceqq_s32(t1, g_XMInfinity);
+			int32x4_t t0 = vandq_s32(Ve, Constants::QNaNTest);
+			int32x4_t t1 = vandq_s32(Ve, Constants::Infinity);
+			t0 = vceqq_s32(t0, Constants::Zero);
+			t1 = vceqq_s32(t1, Constants::Infinity);
 			int32x4_t isNaN = vbicq_s32(t1, t0);
 
-			float32x4_t vResult = vbslq_f32(isNaN, g_XMQNaN, result5);
+			float32x4_t vResult = vbslq_f32(isNaN, Constants::QNaN, result5);
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			// expE(V) = exp2(vin*log2(e))
-			__m128 Ve = _mm_mul_ps(g_XMLgE, V);
+			__m128 Ve = _mm_mul_ps(Constants::LgE, V);
 
 			__m128i itrunc = _mm_cvttps_epi32(Ve);
 			__m128 ftrunc = _mm_cvtepi32_ps(itrunc);
 			__m128 y = _mm_sub_ps(Ve, ftrunc);
-			__m128 poly = _mm_mul_ps(g_XMExpEst7, y);
-			poly = _mm_add_ps(g_XMExpEst6, poly);
+			__m128 poly = _mm_mul_ps(Constants::ExpEst7, y);
+			poly = _mm_add_ps(Constants::ExpEst6, poly);
 			poly = _mm_mul_ps(poly, y);
-			poly = _mm_add_ps(g_XMExpEst5, poly);
+			poly = _mm_add_ps(Constants::ExpEst5, poly);
 			poly = _mm_mul_ps(poly, y);
-			poly = _mm_add_ps(g_XMExpEst4, poly);
+			poly = _mm_add_ps(Constants::ExpEst4, poly);
 			poly = _mm_mul_ps(poly, y);
-			poly = _mm_add_ps(g_XMExpEst3, poly);
+			poly = _mm_add_ps(Constants::ExpEst3, poly);
 			poly = _mm_mul_ps(poly, y);
-			poly = _mm_add_ps(g_XMExpEst2, poly);
+			poly = _mm_add_ps(Constants::ExpEst2, poly);
 			poly = _mm_mul_ps(poly, y);
-			poly = _mm_add_ps(g_XMExpEst1, poly);
+			poly = _mm_add_ps(Constants::ExpEst1, poly);
 			poly = _mm_mul_ps(poly, y);
-			poly = _mm_add_ps(g_XMOne, poly);
+			poly = _mm_add_ps(Constants::One, poly);
 
-			__m128i biased = _mm_add_epi32(itrunc, g_XMExponentBias);
+			__m128i biased = _mm_add_epi32(itrunc, Constants::ExponentBias);
 			biased = _mm_slli_epi32(biased, 23);
 			__m128 result0 = _mm_div_ps(_mm_castsi128_ps(biased), poly);
 
-			biased = _mm_add_epi32(itrunc, g_XM253);
+			biased = _mm_add_epi32(itrunc, Constants::Vector253);
 			biased = _mm_slli_epi32(biased, 23);
 			__m128 result1 = _mm_div_ps(_mm_castsi128_ps(biased), poly);
-			result1 = _mm_mul_ps(g_XMMinNormal.v, result1);
+			result1 = _mm_mul_ps(Constants::MinNormal.v, result1);
 
 			// Use selection to handle the cases
 			//  if (V is NaN) -> QNaN;
@@ -7878,34 +7876,34 @@ namespace At0
 			//      if (V < 128) -> result0
 			//      else -> +inf
 
-			__m128i comp = _mm_cmplt_epi32(_mm_castps_si128(Ve), g_XMBin128);
+			__m128i comp = _mm_cmplt_epi32(_mm_castps_si128(Ve), Constants::Bin128);
 			__m128i select0 = _mm_and_si128(comp, _mm_castps_si128(result0));
-			__m128i select1 = _mm_andnot_si128(comp, g_XMInfinity);
+			__m128i select1 = _mm_andnot_si128(comp, Constants::Infinity);
 			__m128i result2 = _mm_or_si128(select0, select1);
 
-			comp = _mm_cmplt_epi32(itrunc, g_XMSubnormalExponent);
+			comp = _mm_cmplt_epi32(itrunc, Constants::SubnormalExponent);
 			select1 = _mm_and_si128(comp, _mm_castps_si128(result1));
 			select0 = _mm_andnot_si128(comp, _mm_castps_si128(result0));
 			__m128i result3 = _mm_or_si128(select0, select1);
 
-			comp = _mm_cmplt_epi32(_mm_castps_si128(Ve), g_XMBinNeg150);
+			comp = _mm_cmplt_epi32(_mm_castps_si128(Ve), Constants::BinNeg150);
 			select0 = _mm_and_si128(comp, result3);
-			select1 = _mm_andnot_si128(comp, g_XMZero);
+			select1 = _mm_andnot_si128(comp, Constants::Zero);
 			__m128i result4 = _mm_or_si128(select0, select1);
 
-			__m128i sign = _mm_and_si128(_mm_castps_si128(Ve), g_XMNegativeZero);
-			comp = _mm_cmpeq_epi32(sign, g_XMNegativeZero);
+			__m128i sign = _mm_and_si128(_mm_castps_si128(Ve), Constants::NegativeZero);
+			comp = _mm_cmpeq_epi32(sign, Constants::NegativeZero);
 			select0 = _mm_and_si128(comp, result4);
 			select1 = _mm_andnot_si128(comp, result2);
 			__m128i result5 = _mm_or_si128(select0, select1);
 
-			__m128i t0 = _mm_and_si128(_mm_castps_si128(Ve), g_XMQNaNTest);
-			__m128i t1 = _mm_and_si128(_mm_castps_si128(Ve), g_XMInfinity);
-			t0 = _mm_cmpeq_epi32(t0, g_XMZero);
-			t1 = _mm_cmpeq_epi32(t1, g_XMInfinity);
+			__m128i t0 = _mm_and_si128(_mm_castps_si128(Ve), Constants::QNaNTest);
+			__m128i t1 = _mm_and_si128(_mm_castps_si128(Ve), Constants::Infinity);
+			t0 = _mm_cmpeq_epi32(t0, Constants::Zero);
+			t1 = _mm_cmpeq_epi32(t1, Constants::Infinity);
 			__m128i isNaN = _mm_andnot_si128(t0, t1);
 
-			select0 = _mm_and_si128(isNaN, g_XMQNaN);
+			select0 = _mm_and_si128(isNaN, Constants::QNaN);
 			select1 = _mm_andnot_si128(isNaN, result5);
 			__m128i vResult = _mm_or_si128(select0, select1);
 
@@ -7933,22 +7931,22 @@ namespace At0
 			{
 				__m128i v = _mm_shuffle_epi32(value, _MM_SHUFFLE(0, 0, 0, 0));
 				__m128i c = _mm_shuffle_epi32(count, _MM_SHUFFLE(0, 0, 0, 0));
-				c = _mm_and_si128(c, g_XMMaskX);
+				c = _mm_and_si128(c, Constants::MaskX);
 				__m128i r0 = _mm_sll_epi32(v, c);
 
 				v = _mm_shuffle_epi32(value, _MM_SHUFFLE(1, 1, 1, 1));
 				c = _mm_shuffle_epi32(count, _MM_SHUFFLE(1, 1, 1, 1));
-				c = _mm_and_si128(c, g_XMMaskX);
+				c = _mm_and_si128(c, Constants::MaskX);
 				__m128i r1 = _mm_sll_epi32(v, c);
 
 				v = _mm_shuffle_epi32(value, _MM_SHUFFLE(2, 2, 2, 2));
 				c = _mm_shuffle_epi32(count, _MM_SHUFFLE(2, 2, 2, 2));
-				c = _mm_and_si128(c, g_XMMaskX);
+				c = _mm_and_si128(c, Constants::MaskX);
 				__m128i r2 = _mm_sll_epi32(v, c);
 
 				v = _mm_shuffle_epi32(value, _MM_SHUFFLE(3, 3, 3, 3));
 				c = _mm_shuffle_epi32(count, _MM_SHUFFLE(3, 3, 3, 3));
-				c = _mm_and_si128(c, g_XMMaskX);
+				c = _mm_and_si128(c, Constants::MaskX);
 				__m128i r3 = _mm_sll_epi32(v, c);
 
 				// (r0,r0,r1,r1)
@@ -7964,22 +7962,22 @@ namespace At0
 			{
 				__m128i v = _mm_shuffle_epi32(value, _MM_SHUFFLE(0, 0, 0, 0));
 				__m128i c = _mm_shuffle_epi32(count, _MM_SHUFFLE(0, 0, 0, 0));
-				c = _mm_and_si128(c, g_XMMaskX);
+				c = _mm_and_si128(c, Constants::MaskX);
 				__m128i r0 = _mm_srl_epi32(v, c);
 
 				v = _mm_shuffle_epi32(value, _MM_SHUFFLE(1, 1, 1, 1));
 				c = _mm_shuffle_epi32(count, _MM_SHUFFLE(1, 1, 1, 1));
-				c = _mm_and_si128(c, g_XMMaskX);
+				c = _mm_and_si128(c, Constants::MaskX);
 				__m128i r1 = _mm_srl_epi32(v, c);
 
 				v = _mm_shuffle_epi32(value, _MM_SHUFFLE(2, 2, 2, 2));
 				c = _mm_shuffle_epi32(count, _MM_SHUFFLE(2, 2, 2, 2));
-				c = _mm_and_si128(c, g_XMMaskX);
+				c = _mm_and_si128(c, Constants::MaskX);
 				__m128i r2 = _mm_srl_epi32(v, c);
 
 				v = _mm_shuffle_epi32(value, _MM_SHUFFLE(3, 3, 3, 3));
 				c = _mm_shuffle_epi32(count, _MM_SHUFFLE(3, 3, 3, 3));
-				c = _mm_and_si128(c, g_XMMaskX);
+				c = _mm_and_si128(c, Constants::MaskX);
 				__m128i r3 = _mm_srl_epi32(v, c);
 
 				// (r0,r0,r1,r1)
@@ -7993,31 +7991,31 @@ namespace At0
 
 			inline __m128i GetLeadingBit(const __m128i value)
 			{
-				static const VectorI32 g_XM0000FFFF = { { { 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF } } };
-				static const VectorI32 g_XM000000FF = { { { 0x000000FF, 0x000000FF, 0x000000FF, 0x000000FF } } };
-				static const VectorI32 g_XM0000000F = { { { 0x0000000F, 0x0000000F, 0x0000000F, 0x0000000F } } };
-				static const VectorI32 g_XM00000003 = { { { 0x00000003, 0x00000003, 0x00000003, 0x00000003 } } };
+				static const VectorI32 vec0000FFFF = { { { 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF } } };
+				static const VectorI32 vec000000FF = { { { 0x000000FF, 0x000000FF, 0x000000FF, 0x000000FF } } };
+				static const VectorI32 vec0000000F = { { { 0x0000000F, 0x0000000F, 0x0000000F, 0x0000000F } } };
+				static const VectorI32 vec00000003 = { { { 0x00000003, 0x00000003, 0x00000003, 0x00000003 } } };
 
 				__m128i v = value, r, c, b, s;
 
-				c = _mm_cmpgt_epi32(v, g_XM0000FFFF);   // c = (v > 0xFFFF)
+				c = _mm_cmpgt_epi32(v, vec0000FFFF);   // c = (v > 0xFFFF)
 				b = _mm_srli_epi32(c, 31);              // b = (c ? 1 : 0)
 				r = _mm_slli_epi32(b, 4);               // r = (b << 4)
 				v = multi_srl_epi32(v, r);              // v = (v >> r)
 
-				c = _mm_cmpgt_epi32(v, g_XM000000FF);   // c = (v > 0xFF)
+				c = _mm_cmpgt_epi32(v, vec000000FF);   // c = (v > 0xFF)
 				b = _mm_srli_epi32(c, 31);              // b = (c ? 1 : 0)
 				s = _mm_slli_epi32(b, 3);               // s = (b << 3)
 				v = multi_srl_epi32(v, s);              // v = (v >> s)
 				r = _mm_or_si128(r, s);                 // r = (r | s)
 
-				c = _mm_cmpgt_epi32(v, g_XM0000000F);   // c = (v > 0xF)
+				c = _mm_cmpgt_epi32(v, vec0000000F);   // c = (v > 0xF)
 				b = _mm_srli_epi32(c, 31);              // b = (c ? 1 : 0)
 				s = _mm_slli_epi32(b, 2);               // s = (b << 2)
 				v = multi_srl_epi32(v, s);              // v = (v >> s)
 				r = _mm_or_si128(r, s);                 // r = (r | s)
 
-				c = _mm_cmpgt_epi32(v, g_XM00000003);   // c = (v > 0x3)
+				c = _mm_cmpgt_epi32(v, vec00000003);   // c = (v > 0x3)
 				b = _mm_srli_epi32(c, 31);              // b = (c ? 1 : 0)
 				s = _mm_slli_epi32(b, 1);               // s = (b << 1)
 				v = multi_srl_epi32(v, s);              // v = (v >> s)
@@ -8037,34 +8035,34 @@ namespace At0
 		{
 			inline int32x4_t GetLeadingBit(const int32x4_t value)
 			{
-				static const VectorI32 g_XM0000FFFF = { { { 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF } } };
-				static const VectorI32 g_XM000000FF = { { { 0x000000FF, 0x000000FF, 0x000000FF, 0x000000FF } } };
-				static const VectorI32 g_XM0000000F = { { { 0x0000000F, 0x0000000F, 0x0000000F, 0x0000000F } } };
-				static const VectorI32 g_XM00000003 = { { { 0x00000003, 0x00000003, 0x00000003, 0x00000003 } } };
+				static const VectorI32 vec0000FFFF = { { { 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF } } };
+				static const VectorI32 vec000000FF = { { { 0x000000FF, 0x000000FF, 0x000000FF, 0x000000FF } } };
+				static const VectorI32 vec0000000F = { { { 0x0000000F, 0x0000000F, 0x0000000F, 0x0000000F } } };
+				static const VectorI32 vec00000003 = { { { 0x00000003, 0x00000003, 0x00000003, 0x00000003 } } };
 
 				int32x4_t v = value, r, c, b, s;
 
-				c = vcgtq_s32(v, g_XM0000FFFF);     // c = (v > 0xFFFF)
+				c = vcgtq_s32(v, vec0000FFFF);     // c = (v > 0xFFFF)
 				b = vshrq_n_u32(c, 31);             // b = (c ? 1 : 0)
 				r = vshlq_n_s32(b, 4);              // r = (b << 4)
 				r = vnegq_s32(r);
 				v = vshlq_u32(v, r);              // v = (v >> r)
 
-				c = vcgtq_s32(v, g_XM000000FF);     // c = (v > 0xFF)
+				c = vcgtq_s32(v, vec000000FF);     // c = (v > 0xFF)
 				b = vshrq_n_u32(c, 31);             // b = (c ? 1 : 0)
 				s = vshlq_n_s32(b, 3);              // s = (b << 3)
 				s = vnegq_s32(s);
 				v = vshlq_u32(v, s);                // v = (v >> s)
 				r = vorrq_s32(r, s);                // r = (r | s)
 
-				c = vcgtq_s32(v, g_XM0000000F);     // c = (v > 0xF)
+				c = vcgtq_s32(v, vec0000000F);     // c = (v > 0xF)
 				b = vshrq_n_u32(c, 31);             // b = (c ? 1 : 0)
 				s = vshlq_n_s32(b, 2);              // s = (b << 2)
 				s = vnegq_s32(s);
 				v = vshlq_u32(v, s);                // v = (v >> s)
 				r = vorrq_s32(r, s);                // r = (r | s)
 
-				c = vcgtq_s32(v, g_XM00000003);     // c = (v > 0x3)
+				c = vcgtq_s32(v, vec00000003);     // c = (v > 0x3)
 				b = vshrq_n_u32(c, 31);             // b = (c ? 1 : 0)
 				s = vshlq_n_s32(b, 1);              // s = (b << 1)
 				s = vnegq_s32(s);
@@ -8100,35 +8098,35 @@ namespace At0
 			return Result.v;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			int32x4_t rawBiased = vandq_s32(V, g_XMInfinity);
-			int32x4_t trailing = vandq_s32(V, g_XMQNaNTest);
-			int32x4_t isExponentZero = vceqq_s32(g_XMZero, rawBiased);
+			int32x4_t rawBiased = vandq_s32(V, Constants::Infinity);
+			int32x4_t trailing = vandq_s32(V, Constants::QNaNTest);
+			int32x4_t isExponentZero = vceqq_s32(Constants::Zero, rawBiased);
 
 			// Compute exponent and significand for normals.
 			int32x4_t biased = vshrq_n_u32(rawBiased, 23);
-			int32x4_t exponentNor = vsubq_s32(biased, g_XMExponentBias);
+			int32x4_t exponentNor = vsubq_s32(biased, Constants::ExponentBias);
 			int32x4_t trailingNor = trailing;
 
 			// Compute exponent and significand for subnormals.
 			int32x4_t leading = Internal::GetLeadingBit(trailing);
-			int32x4_t shift = vsubq_s32(g_XMNumTrailing, leading);
-			int32x4_t exponentSub = vsubq_s32(g_XMSubnormalExponent, shift);
+			int32x4_t shift = vsubq_s32(Constants::NumTrailing, leading);
+			int32x4_t exponentSub = vsubq_s32(Constants::SubnormalExponent, shift);
 			int32x4_t trailingSub = vshlq_u32(trailing, shift);
-			trailingSub = vandq_s32(trailingSub, g_XMQNaNTest);
+			trailingSub = vandq_s32(trailingSub, Constants::QNaNTest);
 			int32x4_t e = vbslq_f32(isExponentZero, exponentSub, exponentNor);
 			int32x4_t t = vbslq_f32(isExponentZero, trailingSub, trailingNor);
 
 			// Compute the approximation.
-			int32x4_t tmp = vorrq_s32(g_XMOne, t);
-			float32x4_t y = vsubq_f32(tmp, g_XMOne);
+			int32x4_t tmp = vorrq_s32(Constants::One, t);
+			float32x4_t y = vsubq_f32(tmp, Constants::One);
 
-			float32x4_t log2 = vmlaq_f32(g_XMLogEst6, g_XMLogEst7, y);
-			log2 = vmlaq_f32(g_XMLogEst5, log2, y);
-			log2 = vmlaq_f32(g_XMLogEst4, log2, y);
-			log2 = vmlaq_f32(g_XMLogEst3, log2, y);
-			log2 = vmlaq_f32(g_XMLogEst2, log2, y);
-			log2 = vmlaq_f32(g_XMLogEst1, log2, y);
-			log2 = vmlaq_f32(g_XMLogEst0, log2, y);
+			float32x4_t log2 = vmlaq_f32(Constants::LogEst6, Constants::LogEst7, y);
+			log2 = vmlaq_f32(Constants::LogEst5, log2, y);
+			log2 = vmlaq_f32(Constants::LogEst4, log2, y);
+			log2 = vmlaq_f32(Constants::LogEst3, log2, y);
+			log2 = vmlaq_f32(Constants::LogEst2, log2, y);
+			log2 = vmlaq_f32(Constants::LogEst1, log2, y);
+			log2 = vmlaq_f32(Constants::LogEst0, log2, y);
 			log2 = vmlaq_f32(vcvtq_f32_s32(e), log2, y);
 
 			//  if (x is NaN) -> QNaN
@@ -8139,43 +8137,43 @@ namespace At0
 			//      if (V is zero) -> -inf
 			//      else -> -QNaN
 
-			int32x4_t isInfinite = vandq_s32((V), g_XMAbsMask);
-			isInfinite = vceqq_s32(isInfinite, g_XMInfinity);
+			int32x4_t isInfinite = vandq_s32((V), Constants::AbsMask);
+			isInfinite = vceqq_s32(isInfinite, Constants::Infinity);
 
-			int32x4_t isGreaterZero = vcgtq_s32((V), g_XMZero);
-			int32x4_t isNotFinite = vcgtq_s32((V), g_XMInfinity);
+			int32x4_t isGreaterZero = vcgtq_s32((V), Constants::Zero);
+			int32x4_t isNotFinite = vcgtq_s32((V), Constants::Infinity);
 			int32x4_t isPositive = vbicq_s32(isGreaterZero, isNotFinite);
 
-			int32x4_t isZero = vandq_s32((V), g_XMAbsMask);
-			isZero = vceqq_s32(isZero, g_XMZero);
+			int32x4_t isZero = vandq_s32((V), Constants::AbsMask);
+			isZero = vceqq_s32(isZero, Constants::Zero);
 
-			int32x4_t t0 = vandq_s32((V), g_XMQNaNTest);
-			int32x4_t t1 = vandq_s32((V), g_XMInfinity);
-			t0 = vceqq_s32(t0, g_XMZero);
-			t1 = vceqq_s32(t1, g_XMInfinity);
+			int32x4_t t0 = vandq_s32((V), Constants::QNaNTest);
+			int32x4_t t1 = vandq_s32((V), Constants::Infinity);
+			t0 = vceqq_s32(t0, Constants::Zero);
+			t1 = vceqq_s32(t1, Constants::Infinity);
 			int32x4_t isNaN = vbicq_s32(t1, t0);
 
-			float32x4_t result = vbslq_f32(isInfinite, g_XMInfinity, log2);
-			tmp = vbslq_f32(isZero, g_XMNegInfinity, g_XMNegQNaN);
+			float32x4_t result = vbslq_f32(isInfinite, Constants::Infinity, log2);
+			tmp = vbslq_f32(isZero, Constants::NegInfinity, Constants::NegQNaN);
 			result = vbslq_f32(isPositive, result, tmp);
-			result = vbslq_f32(isNaN, g_XMQNaN, result);
+			result = vbslq_f32(isNaN, Constants::QNaN, result);
 			return result;
 #elif defined(RAY_SSE_INTRINSICS)
-			__m128i rawBiased = _mm_and_si128(_mm_castps_si128(V), g_XMInfinity);
-			__m128i trailing = _mm_and_si128(_mm_castps_si128(V), g_XMQNaNTest);
-			__m128i isExponentZero = _mm_cmpeq_epi32(g_XMZero, rawBiased);
+			__m128i rawBiased = _mm_and_si128(_mm_castps_si128(V), Constants::Infinity);
+			__m128i trailing = _mm_and_si128(_mm_castps_si128(V), Constants::QNaNTest);
+			__m128i isExponentZero = _mm_cmpeq_epi32(Constants::Zero, rawBiased);
 
 			// Compute exponent and significand for normals.
 			__m128i biased = _mm_srli_epi32(rawBiased, 23);
-			__m128i exponentNor = _mm_sub_epi32(biased, g_XMExponentBias);
+			__m128i exponentNor = _mm_sub_epi32(biased, Constants::ExponentBias);
 			__m128i trailingNor = trailing;
 
 			// Compute exponent and significand for subnormals.
 			__m128i leading = Internal::GetLeadingBit(trailing);
-			__m128i shift = _mm_sub_epi32(g_XMNumTrailing, leading);
-			__m128i exponentSub = _mm_sub_epi32(g_XMSubnormalExponent, shift);
+			__m128i shift = _mm_sub_epi32(Constants::NumTrailing, leading);
+			__m128i exponentSub = _mm_sub_epi32(Constants::SubnormalExponent, shift);
 			__m128i trailingSub = Internal::multi_sll_epi32(trailing, shift);
-			trailingSub = _mm_and_si128(trailingSub, g_XMQNaNTest);
+			trailingSub = _mm_and_si128(trailingSub, Constants::QNaNTest);
 
 			__m128i select0 = _mm_and_si128(isExponentZero, exponentSub);
 			__m128i select1 = _mm_andnot_si128(isExponentZero, exponentNor);
@@ -8186,23 +8184,23 @@ namespace At0
 			__m128i t = _mm_or_si128(select0, select1);
 
 			// Compute the approximation.
-			__m128i tmp = _mm_or_si128(g_XMOne, t);
-			__m128 y = _mm_sub_ps(_mm_castsi128_ps(tmp), g_XMOne);
+			__m128i tmp = _mm_or_si128(Constants::One, t);
+			__m128 y = _mm_sub_ps(_mm_castsi128_ps(tmp), Constants::One);
 
-			__m128 log2 = _mm_mul_ps(g_XMLogEst7, y);
-			log2 = _mm_add_ps(g_XMLogEst6, log2);
+			__m128 log2 = _mm_mul_ps(Constants::LogEst7, y);
+			log2 = _mm_add_ps(Constants::LogEst6, log2);
 			log2 = _mm_mul_ps(log2, y);
-			log2 = _mm_add_ps(g_XMLogEst5, log2);
+			log2 = _mm_add_ps(Constants::LogEst5, log2);
 			log2 = _mm_mul_ps(log2, y);
-			log2 = _mm_add_ps(g_XMLogEst4, log2);
+			log2 = _mm_add_ps(Constants::LogEst4, log2);
 			log2 = _mm_mul_ps(log2, y);
-			log2 = _mm_add_ps(g_XMLogEst3, log2);
+			log2 = _mm_add_ps(Constants::LogEst3, log2);
 			log2 = _mm_mul_ps(log2, y);
-			log2 = _mm_add_ps(g_XMLogEst2, log2);
+			log2 = _mm_add_ps(Constants::LogEst2, log2);
 			log2 = _mm_mul_ps(log2, y);
-			log2 = _mm_add_ps(g_XMLogEst1, log2);
+			log2 = _mm_add_ps(Constants::LogEst1, log2);
 			log2 = _mm_mul_ps(log2, y);
-			log2 = _mm_add_ps(g_XMLogEst0, log2);
+			log2 = _mm_add_ps(Constants::LogEst0, log2);
 			log2 = _mm_mul_ps(log2, y);
 			log2 = _mm_add_ps(log2, _mm_cvtepi32_ps(e));
 
@@ -8214,35 +8212,35 @@ namespace At0
 			//      if (V is zero) -> -inf
 			//      else -> -QNaN
 
-			__m128i isInfinite = _mm_and_si128(_mm_castps_si128(V), g_XMAbsMask);
-			isInfinite = _mm_cmpeq_epi32(isInfinite, g_XMInfinity);
+			__m128i isInfinite = _mm_and_si128(_mm_castps_si128(V), Constants::AbsMask);
+			isInfinite = _mm_cmpeq_epi32(isInfinite, Constants::Infinity);
 
-			__m128i isGreaterZero = _mm_cmpgt_epi32(_mm_castps_si128(V), g_XMZero);
-			__m128i isNotFinite = _mm_cmpgt_epi32(_mm_castps_si128(V), g_XMInfinity);
+			__m128i isGreaterZero = _mm_cmpgt_epi32(_mm_castps_si128(V), Constants::Zero);
+			__m128i isNotFinite = _mm_cmpgt_epi32(_mm_castps_si128(V), Constants::Infinity);
 			__m128i isPositive = _mm_andnot_si128(isNotFinite, isGreaterZero);
 
-			__m128i isZero = _mm_and_si128(_mm_castps_si128(V), g_XMAbsMask);
-			isZero = _mm_cmpeq_epi32(isZero, g_XMZero);
+			__m128i isZero = _mm_and_si128(_mm_castps_si128(V), Constants::AbsMask);
+			isZero = _mm_cmpeq_epi32(isZero, Constants::Zero);
 
-			__m128i t0 = _mm_and_si128(_mm_castps_si128(V), g_XMQNaNTest);
-			__m128i t1 = _mm_and_si128(_mm_castps_si128(V), g_XMInfinity);
-			t0 = _mm_cmpeq_epi32(t0, g_XMZero);
-			t1 = _mm_cmpeq_epi32(t1, g_XMInfinity);
+			__m128i t0 = _mm_and_si128(_mm_castps_si128(V), Constants::QNaNTest);
+			__m128i t1 = _mm_and_si128(_mm_castps_si128(V), Constants::Infinity);
+			t0 = _mm_cmpeq_epi32(t0, Constants::Zero);
+			t1 = _mm_cmpeq_epi32(t1, Constants::Infinity);
 			__m128i isNaN = _mm_andnot_si128(t0, t1);
 
-			select0 = _mm_and_si128(isInfinite, g_XMInfinity);
+			select0 = _mm_and_si128(isInfinite, Constants::Infinity);
 			select1 = _mm_andnot_si128(isInfinite, _mm_castps_si128(log2));
 			__m128i result = _mm_or_si128(select0, select1);
 
-			select0 = _mm_and_si128(isZero, g_XMNegInfinity);
-			select1 = _mm_andnot_si128(isZero, g_XMNegQNaN);
+			select0 = _mm_and_si128(isZero, Constants::NegInfinity);
+			select1 = _mm_andnot_si128(isZero, Constants::NegQNaN);
 			tmp = _mm_or_si128(select0, select1);
 
 			select0 = _mm_and_si128(isPositive, result);
 			select1 = _mm_andnot_si128(isPositive, tmp);
 			result = _mm_or_si128(select0, select1);
 
-			select0 = _mm_and_si128(isNaN, g_XMQNaN);
+			select0 = _mm_and_si128(isNaN, Constants::QNaN);
 			select1 = _mm_andnot_si128(isNaN, result);
 			result = _mm_or_si128(select0, select1);
 
@@ -8268,38 +8266,38 @@ namespace At0
 			return Result.v;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			int32x4_t rawBiased = vandq_s32(V, g_XMInfinity);
-			int32x4_t trailing = vandq_s32(V, g_XMQNaNTest);
-			int32x4_t isExponentZero = vceqq_s32(g_XMZero, rawBiased);
+			int32x4_t rawBiased = vandq_s32(V, Constants::Infinity);
+			int32x4_t trailing = vandq_s32(V, Constants::QNaNTest);
+			int32x4_t isExponentZero = vceqq_s32(Constants::Zero, rawBiased);
 
 			// Compute exponent and significand for normals.
 			int32x4_t biased = vshrq_n_u32(rawBiased, 23);
-			int32x4_t exponentNor = vsubq_s32(biased, g_XMExponentBias);
+			int32x4_t exponentNor = vsubq_s32(biased, Constants::ExponentBias);
 			int32x4_t trailingNor = trailing;
 
 			// Compute exponent and significand for subnormals.
 			int32x4_t leading = Internal::GetLeadingBit(trailing);
-			int32x4_t shift = vsubq_s32(g_XMNumTrailing, leading);
-			int32x4_t exponentSub = vsubq_s32(g_XMSubnormalExponent, shift);
+			int32x4_t shift = vsubq_s32(Constants::NumTrailing, leading);
+			int32x4_t exponentSub = vsubq_s32(Constants::SubnormalExponent, shift);
 			int32x4_t trailingSub = vshlq_u32(trailing, shift);
-			trailingSub = vandq_s32(trailingSub, g_XMQNaNTest);
+			trailingSub = vandq_s32(trailingSub, Constants::QNaNTest);
 			int32x4_t e = vbslq_f32(isExponentZero, exponentSub, exponentNor);
 			int32x4_t t = vbslq_f32(isExponentZero, trailingSub, trailingNor);
 
 			// Compute the approximation.
-			int32x4_t tmp = vorrq_s32(g_XMOne, t);
-			float32x4_t y = vsubq_f32(tmp, g_XMOne);
+			int32x4_t tmp = vorrq_s32(Constants::One, t);
+			float32x4_t y = vsubq_f32(tmp, Constants::One);
 
-			float32x4_t log2 = vmlaq_f32(g_XMLogEst6, g_XMLogEst7, y);
-			log2 = vmlaq_f32(g_XMLogEst5, log2, y);
-			log2 = vmlaq_f32(g_XMLogEst4, log2, y);
-			log2 = vmlaq_f32(g_XMLogEst3, log2, y);
-			log2 = vmlaq_f32(g_XMLogEst2, log2, y);
-			log2 = vmlaq_f32(g_XMLogEst1, log2, y);
-			log2 = vmlaq_f32(g_XMLogEst0, log2, y);
+			float32x4_t log2 = vmlaq_f32(Constants::LogEst6, Constants::LogEst7, y);
+			log2 = vmlaq_f32(Constants::LogEst5, log2, y);
+			log2 = vmlaq_f32(Constants::LogEst4, log2, y);
+			log2 = vmlaq_f32(Constants::LogEst3, log2, y);
+			log2 = vmlaq_f32(Constants::LogEst2, log2, y);
+			log2 = vmlaq_f32(Constants::LogEst1, log2, y);
+			log2 = vmlaq_f32(Constants::LogEst0, log2, y);
 			log2 = vmlaq_f32(vcvtq_f32_s32(e), log2, y);
 
-			log2 = vmulq_f32(g_XMInvLgE, log2);
+			log2 = vmulq_f32(Constants::InvLgE, log2);
 
 			//  if (x is NaN) -> QNaN
 			//  else if (V is positive)
@@ -8309,43 +8307,43 @@ namespace At0
 			//      if (V is zero) -> -inf
 			//      else -> -QNaN
 
-			int32x4_t isInfinite = vandq_s32((V), g_XMAbsMask);
-			isInfinite = vceqq_s32(isInfinite, g_XMInfinity);
+			int32x4_t isInfinite = vandq_s32((V), Constants::AbsMask);
+			isInfinite = vceqq_s32(isInfinite, Constants::Infinity);
 
-			int32x4_t isGreaterZero = vcgtq_s32((V), g_XMZero);
-			int32x4_t isNotFinite = vcgtq_s32((V), g_XMInfinity);
+			int32x4_t isGreaterZero = vcgtq_s32((V), Constants::Zero);
+			int32x4_t isNotFinite = vcgtq_s32((V), Constants::Infinity);
 			int32x4_t isPositive = vbicq_s32(isGreaterZero, isNotFinite);
 
-			int32x4_t isZero = vandq_s32((V), g_XMAbsMask);
-			isZero = vceqq_s32(isZero, g_XMZero);
+			int32x4_t isZero = vandq_s32((V), Constants::AbsMask);
+			isZero = vceqq_s32(isZero, Constants::Zero);
 
-			int32x4_t t0 = vandq_s32((V), g_XMQNaNTest);
-			int32x4_t t1 = vandq_s32((V), g_XMInfinity);
-			t0 = vceqq_s32(t0, g_XMZero);
-			t1 = vceqq_s32(t1, g_XMInfinity);
+			int32x4_t t0 = vandq_s32((V), Constants::QNaNTest);
+			int32x4_t t1 = vandq_s32((V), Constants::Infinity);
+			t0 = vceqq_s32(t0, Constants::Zero);
+			t1 = vceqq_s32(t1, Constants::Infinity);
 			int32x4_t isNaN = vbicq_s32(t1, t0);
 
-			float32x4_t result = vbslq_f32(isInfinite, g_XMInfinity, log2);
-			tmp = vbslq_f32(isZero, g_XMNegInfinity, g_XMNegQNaN);
+			float32x4_t result = vbslq_f32(isInfinite, Constants::Infinity, log2);
+			tmp = vbslq_f32(isZero, Constants::NegInfinity, Constants::NegQNaN);
 			result = vbslq_f32(isPositive, result, tmp);
-			result = vbslq_f32(isNaN, g_XMQNaN, result);
+			result = vbslq_f32(isNaN, Constants::QNaN, result);
 			return result;
 #elif defined(RAY_SSE_INTRINSICS)
-			__m128i rawBiased = _mm_and_si128(_mm_castps_si128(V), g_XMInfinity);
-			__m128i trailing = _mm_and_si128(_mm_castps_si128(V), g_XMQNaNTest);
-			__m128i isExponentZero = _mm_cmpeq_epi32(g_XMZero, rawBiased);
+			__m128i rawBiased = _mm_and_si128(_mm_castps_si128(V), Constants::Infinity);
+			__m128i trailing = _mm_and_si128(_mm_castps_si128(V), Constants::QNaNTest);
+			__m128i isExponentZero = _mm_cmpeq_epi32(Constants::Zero, rawBiased);
 
 			// Compute exponent and significand for normals.
 			__m128i biased = _mm_srli_epi32(rawBiased, 23);
-			__m128i exponentNor = _mm_sub_epi32(biased, g_XMExponentBias);
+			__m128i exponentNor = _mm_sub_epi32(biased, Constants::ExponentBias);
 			__m128i trailingNor = trailing;
 
 			// Compute exponent and significand for subnormals.
 			__m128i leading = Internal::GetLeadingBit(trailing);
-			__m128i shift = _mm_sub_epi32(g_XMNumTrailing, leading);
-			__m128i exponentSub = _mm_sub_epi32(g_XMSubnormalExponent, shift);
+			__m128i shift = _mm_sub_epi32(Constants::NumTrailing, leading);
+			__m128i exponentSub = _mm_sub_epi32(Constants::SubnormalExponent, shift);
 			__m128i trailingSub = Internal::multi_sll_epi32(trailing, shift);
-			trailingSub = _mm_and_si128(trailingSub, g_XMQNaNTest);
+			trailingSub = _mm_and_si128(trailingSub, Constants::QNaNTest);
 
 			__m128i select0 = _mm_and_si128(isExponentZero, exponentSub);
 			__m128i select1 = _mm_andnot_si128(isExponentZero, exponentNor);
@@ -8356,27 +8354,27 @@ namespace At0
 			__m128i t = _mm_or_si128(select0, select1);
 
 			// Compute the approximation.
-			__m128i tmp = _mm_or_si128(g_XMOne, t);
-			__m128 y = _mm_sub_ps(_mm_castsi128_ps(tmp), g_XMOne);
+			__m128i tmp = _mm_or_si128(Constants::One, t);
+			__m128 y = _mm_sub_ps(_mm_castsi128_ps(tmp), Constants::One);
 
-			__m128 log2 = _mm_mul_ps(g_XMLogEst7, y);
-			log2 = _mm_add_ps(g_XMLogEst6, log2);
+			__m128 log2 = _mm_mul_ps(Constants::LogEst7, y);
+			log2 = _mm_add_ps(Constants::LogEst6, log2);
 			log2 = _mm_mul_ps(log2, y);
-			log2 = _mm_add_ps(g_XMLogEst5, log2);
+			log2 = _mm_add_ps(Constants::LogEst5, log2);
 			log2 = _mm_mul_ps(log2, y);
-			log2 = _mm_add_ps(g_XMLogEst4, log2);
+			log2 = _mm_add_ps(Constants::LogEst4, log2);
 			log2 = _mm_mul_ps(log2, y);
-			log2 = _mm_add_ps(g_XMLogEst3, log2);
+			log2 = _mm_add_ps(Constants::LogEst3, log2);
 			log2 = _mm_mul_ps(log2, y);
-			log2 = _mm_add_ps(g_XMLogEst2, log2);
+			log2 = _mm_add_ps(Constants::LogEst2, log2);
 			log2 = _mm_mul_ps(log2, y);
-			log2 = _mm_add_ps(g_XMLogEst1, log2);
+			log2 = _mm_add_ps(Constants::LogEst1, log2);
 			log2 = _mm_mul_ps(log2, y);
-			log2 = _mm_add_ps(g_XMLogEst0, log2);
+			log2 = _mm_add_ps(Constants::LogEst0, log2);
 			log2 = _mm_mul_ps(log2, y);
 			log2 = _mm_add_ps(log2, _mm_cvtepi32_ps(e));
 
-			log2 = _mm_mul_ps(g_XMInvLgE, log2);
+			log2 = _mm_mul_ps(Constants::InvLgE, log2);
 
 			//  if (x is NaN) -> QNaN
 			//  else if (V is positive)
@@ -8386,35 +8384,35 @@ namespace At0
 			//      if (V is zero) -> -inf
 			//      else -> -QNaN
 
-			__m128i isInfinite = _mm_and_si128(_mm_castps_si128(V), g_XMAbsMask);
-			isInfinite = _mm_cmpeq_epi32(isInfinite, g_XMInfinity);
+			__m128i isInfinite = _mm_and_si128(_mm_castps_si128(V), Constants::AbsMask);
+			isInfinite = _mm_cmpeq_epi32(isInfinite, Constants::Infinity);
 
-			__m128i isGreaterZero = _mm_cmpgt_epi32(_mm_castps_si128(V), g_XMZero);
-			__m128i isNotFinite = _mm_cmpgt_epi32(_mm_castps_si128(V), g_XMInfinity);
+			__m128i isGreaterZero = _mm_cmpgt_epi32(_mm_castps_si128(V), Constants::Zero);
+			__m128i isNotFinite = _mm_cmpgt_epi32(_mm_castps_si128(V), Constants::Infinity);
 			__m128i isPositive = _mm_andnot_si128(isNotFinite, isGreaterZero);
 
-			__m128i isZero = _mm_and_si128(_mm_castps_si128(V), g_XMAbsMask);
-			isZero = _mm_cmpeq_epi32(isZero, g_XMZero);
+			__m128i isZero = _mm_and_si128(_mm_castps_si128(V), Constants::AbsMask);
+			isZero = _mm_cmpeq_epi32(isZero, Constants::Zero);
 
-			__m128i t0 = _mm_and_si128(_mm_castps_si128(V), g_XMQNaNTest);
-			__m128i t1 = _mm_and_si128(_mm_castps_si128(V), g_XMInfinity);
-			t0 = _mm_cmpeq_epi32(t0, g_XMZero);
-			t1 = _mm_cmpeq_epi32(t1, g_XMInfinity);
+			__m128i t0 = _mm_and_si128(_mm_castps_si128(V), Constants::QNaNTest);
+			__m128i t1 = _mm_and_si128(_mm_castps_si128(V), Constants::Infinity);
+			t0 = _mm_cmpeq_epi32(t0, Constants::Zero);
+			t1 = _mm_cmpeq_epi32(t1, Constants::Infinity);
 			__m128i isNaN = _mm_andnot_si128(t0, t1);
 
-			select0 = _mm_and_si128(isInfinite, g_XMInfinity);
+			select0 = _mm_and_si128(isInfinite, Constants::Infinity);
 			select1 = _mm_andnot_si128(isInfinite, _mm_castps_si128(log2));
 			__m128i result = _mm_or_si128(select0, select1);
 
-			select0 = _mm_and_si128(isZero, g_XMNegInfinity);
-			select1 = _mm_andnot_si128(isZero, g_XMNegQNaN);
+			select0 = _mm_and_si128(isZero, Constants::NegInfinity);
+			select1 = _mm_andnot_si128(isZero, Constants::NegQNaN);
 			tmp = _mm_or_si128(select0, select1);
 
 			select0 = _mm_and_si128(isPositive, result);
 			select1 = _mm_andnot_si128(isPositive, tmp);
 			result = _mm_or_si128(select0, select1);
 
-			select0 = _mm_and_si128(isNaN, g_XMQNaN);
+			select0 = _mm_and_si128(isNaN, Constants::QNaN);
 			select1 = _mm_andnot_si128(isNaN, result);
 			result = _mm_or_si128(select0, select1);
 
@@ -8540,23 +8538,23 @@ namespace At0
 			VectorType Result;
 
 			// Modulo the range of the given angles such that -Constants::PI <= Angles < Constants::PI
-			V = Vector::Multiply(Angles, g_XMReciprocalTwoPi.v);
+			V = Vector::Multiply(Angles, Constants::ReciprocalTwoPi.v);
 			V = V.Round();
-			Result = VectorNegativeMultiplySubtract(g_XMTwoPi.v, V, Angles);
+			Result = VectorNegativeMultiplySubtract(Constants::TwoPi.v, V, Angles);
 			return Result;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Modulo the range of the given angles such that -Constants::PI <= Angles < Constants::PI
-			VectorType vResult = vmulq_f32(Angles, g_XMReciprocalTwoPi);
+			VectorType vResult = vmulq_f32(Angles, Constants::ReciprocalTwoPi);
 			// Use the inline function due to complexity for rounding
 			vResult = Vector::Round(vResult);
-			return vmlsq_f32(Angles, vResult, g_XMTwoPi);
+			return vmlsq_f32(Angles, vResult, Constants::TwoPi);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Modulo the range of the given angles such that -Constants::PI <= Angles < Constants::PI
-			Vector vResult = _mm_mul_ps(Angles, g_XMReciprocalTwoPi);
+			Vector vResult = _mm_mul_ps(Angles, Constants::ReciprocalTwoPi);
 			// Use the inline function due to complexity for rounding
 			vResult = vResult.Round();
-			vResult = _mm_mul_ps(vResult, g_XMTwoPi);
+			vResult = _mm_mul_ps(vResult, Constants::TwoPi);
 			vResult = _mm_sub_ps(Angles, vResult);
 			return vResult;
 #endif
@@ -8584,18 +8582,18 @@ namespace At0
 			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with sin(y) = sin(x).
-			uint32x4_t sign = vandq_u32(x, g_XMNegativeZero);
-			uint32x4_t c = vorrq_u32(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
+			uint32x4_t sign = vandq_u32(x, Constants::NegativeZero);
+			uint32x4_t c = vorrq_u32(Constants::Pi, sign);  // pi when x >= 0, -pi when x < 0
 			float32x4_t absx = vabsq_f32(x);
 			float32x4_t rflx = vsubq_f32(c, x);
-			uint32x4_t comp = vcleq_f32(absx, g_XMHalfPi);
+			uint32x4_t comp = vcleq_f32(absx, Constants::HalfPi);
 			x = vbslq_f32(comp, x, rflx);
 
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation
-			const VectorType SC1 = g_XMSinCoefficients1;
-			const VectorType SC0 = g_XMSinCoefficients0;
+			const VectorType SC1 = Constants::SinCoefficients1;
+			const VectorType SC0 = Constants::SinCoefficients0;
 			VectorType vConstants = vdupq_lane_f32(vget_high_f32(SC0), 1);
 			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_low_f32(SC1), 0);
 
@@ -8608,7 +8606,7 @@ namespace At0
 			vConstants = vdupq_lane_f32(vget_low_f32(SC0), 0);
 			Result = vmlaq_f32(vConstants, Result, x2);
 
-			Result = vmlaq_f32(g_XMOne, Result, x2);
+			Result = vmlaq_f32(Constants::One, Result, x2);
 			Result = vmulq_f32(Result, x);
 			return Result;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -8616,11 +8614,11 @@ namespace At0
 			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with sin(y) = sin(x).
-			__m128 sign = _mm_and_ps(x, g_XMNegativeZero);
-			__m128 c = _mm_or_ps(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
+			__m128 sign = _mm_and_ps(x, Constants::NegativeZero);
+			__m128 c = _mm_or_ps(Constants::Pi, sign);  // pi when x >= 0, -pi when x < 0
 			__m128 absx = _mm_andnot_ps(sign, x);  // |x|
 			__m128 rflx = _mm_sub_ps(c, x);
-			__m128 comp = _mm_cmple_ps(absx, g_XMHalfPi);
+			__m128 comp = _mm_cmple_ps(absx, Constants::HalfPi);
 			__m128 select0 = _mm_and_ps(comp, x);
 			__m128 select1 = _mm_andnot_ps(comp, rflx);
 			x = _mm_or_ps(select0, select1);
@@ -8628,11 +8626,11 @@ namespace At0
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation
-			const VectorType SC1 = g_XMSinCoefficients1;
+			const VectorType SC1 = Constants::SinCoefficients1;
 			VectorType vConstants = RAYMATH_PERMUTE_PS(SC1, _MM_SHUFFLE(0, 0, 0, 0));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
-			const VectorType SC0 = g_XMSinCoefficients0;
+			const VectorType SC0 = Constants::SinCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
@@ -8648,7 +8646,7 @@ namespace At0
 			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
-			Result = _mm_add_ps(Result, g_XMOne);
+			Result = _mm_add_ps(Result, Constants::One);
 			Result = _mm_mul_ps(Result, x);
 			return Result;
 #endif
@@ -8676,19 +8674,19 @@ namespace At0
 			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with cos(y) = sign*cos(x).
-			uint32x4_t sign = vandq_u32(x, g_XMNegativeZero);
-			uint32x4_t c = vorrq_u32(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
+			uint32x4_t sign = vandq_u32(x, Constants::NegativeZero);
+			uint32x4_t c = vorrq_u32(Constants::Pi, sign);  // pi when x >= 0, -pi when x < 0
 			float32x4_t absx = vabsq_f32(x);
 			float32x4_t rflx = vsubq_f32(c, x);
-			uint32x4_t comp = vcleq_f32(absx, g_XMHalfPi);
+			uint32x4_t comp = vcleq_f32(absx, Constants::HalfPi);
 			x = vbslq_f32(comp, x, rflx);
-			sign = vbslq_f32(comp, g_XMOne, g_XMNegativeOne);
+			sign = vbslq_f32(comp, Constants::One, Constants::NegativeOne);
 
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation
-			const VectorType CC1 = g_XMCosCoefficients1;
-			const VectorType CC0 = g_XMCosCoefficients0;
+			const VectorType CC1 = Constants::CosCoefficients1;
+			const VectorType CC0 = Constants::CosCoefficients0;
 			VectorType vConstants = vdupq_lane_f32(vget_high_f32(CC0), 1);
 			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_low_f32(CC1), 0);
 
@@ -8701,7 +8699,7 @@ namespace At0
 			vConstants = vdupq_lane_f32(vget_low_f32(CC0), 0);
 			Result = vmlaq_f32(vConstants, Result, x2);
 
-			Result = vmlaq_f32(g_XMOne, Result, x2);
+			Result = vmlaq_f32(Constants::One, Result, x2);
 			Result = vmulq_f32(Result, sign);
 			return Result;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -8709,26 +8707,26 @@ namespace At0
 			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with cos(y) = sign*cos(x).
-			VectorType sign = _mm_and_ps(x, g_XMNegativeZero);
-			__m128 c = _mm_or_ps(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
+			VectorType sign = _mm_and_ps(x, Constants::NegativeZero);
+			__m128 c = _mm_or_ps(Constants::Pi, sign);  // pi when x >= 0, -pi when x < 0
 			__m128 absx = _mm_andnot_ps(sign, x);  // |x|
 			__m128 rflx = _mm_sub_ps(c, x);
-			__m128 comp = _mm_cmple_ps(absx, g_XMHalfPi);
+			__m128 comp = _mm_cmple_ps(absx, Constants::HalfPi);
 			__m128 select0 = _mm_and_ps(comp, x);
 			__m128 select1 = _mm_andnot_ps(comp, rflx);
 			x = _mm_or_ps(select0, select1);
-			select0 = _mm_and_ps(comp, g_XMOne);
-			select1 = _mm_andnot_ps(comp, g_XMNegativeOne);
+			select0 = _mm_and_ps(comp, Constants::One);
+			select1 = _mm_andnot_ps(comp, Constants::NegativeOne);
 			sign = _mm_or_ps(select0, select1);
 
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation
-			const VectorType CC1 = g_XMCosCoefficients1;
+			const VectorType CC1 = Constants::CosCoefficients1;
 			VectorType vConstants = RAYMATH_PERMUTE_PS(CC1, _MM_SHUFFLE(0, 0, 0, 0));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
-			const VectorType CC0 = g_XMCosCoefficients0;
+			const VectorType CC0 = Constants::CosCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
@@ -8744,7 +8742,7 @@ namespace At0
 			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
-			Result = _mm_add_ps(Result, g_XMOne);
+			Result = _mm_add_ps(Result, Constants::One);
 			Result = _mm_mul_ps(Result, sign);
 			return Result;
 #endif
@@ -8787,19 +8785,19 @@ namespace At0
 			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with cos(y) = sign*cos(x).
-			uint32x4_t sign = vandq_u32(x, g_XMNegativeZero);
-			uint32x4_t c = vorrq_u32(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
+			uint32x4_t sign = vandq_u32(x, Constants::NegativeZero);
+			uint32x4_t c = vorrq_u32(Constants::Pi, sign);  // pi when x >= 0, -pi when x < 0
 			float32x4_t absx = vabsq_f32(x);
 			float32x4_t  rflx = vsubq_f32(c, x);
-			uint32x4_t comp = vcleq_f32(absx, g_XMHalfPi);
+			uint32x4_t comp = vcleq_f32(absx, Constants::HalfPi);
 			x = vbslq_f32(comp, x, rflx);
-			sign = vbslq_f32(comp, g_XMOne, g_XMNegativeOne);
+			sign = vbslq_f32(comp, Constants::One, Constants::NegativeOne);
 
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation for sine
-			const VectorType SC1 = g_XMSinCoefficients1;
-			const VectorType SC0 = g_XMSinCoefficients0;
+			const VectorType SC1 = Constants::SinCoefficients1;
+			const VectorType SC0 = Constants::SinCoefficients0;
 			VectorType vConstants = vdupq_lane_f32(vget_high_f32(SC0), 1);
 			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_low_f32(SC1), 0);
 
@@ -8812,12 +8810,12 @@ namespace At0
 			vConstants = vdupq_lane_f32(vget_low_f32(SC0), 0);
 			Result = vmlaq_f32(vConstants, Result, x2);
 
-			Result = vmlaq_f32(g_XMOne, Result, x2);
+			Result = vmlaq_f32(Constants::One, Result, x2);
 			*pSin = vmulq_f32(Result, x);
 
 			// Compute polynomial approximation for cosine
-			const VectorType CC1 = g_XMCosCoefficients1;
-			const VectorType CC0 = g_XMCosCoefficients0;
+			const VectorType CC1 = Constants::CosCoefficients1;
+			const VectorType CC0 = Constants::CosCoefficients0;
 			vConstants = vdupq_lane_f32(vget_high_f32(CC0), 1);
 			Result = vmlaq_lane_f32(vConstants, x2, vget_low_f32(CC1), 0);
 
@@ -8830,33 +8828,33 @@ namespace At0
 			vConstants = vdupq_lane_f32(vget_low_f32(CC0), 0);
 			Result = vmlaq_f32(vConstants, Result, x2);
 
-			Result = vmlaq_f32(g_XMOne, Result, x2);
+			Result = vmlaq_f32(Constants::One, Result, x2);
 			*pCos = vmulq_f32(Result, sign);
 #elif defined(RAY_SSE_INTRINSICS)
 	// Force the value within the bounds of pi
 			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with sin(y) = sin(x), cos(y) = sign*cos(x).
-			VectorType sign = _mm_and_ps(x, g_XMNegativeZero);
-			__m128 c = _mm_or_ps(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
+			VectorType sign = _mm_and_ps(x, Constants::NegativeZero);
+			__m128 c = _mm_or_ps(Constants::Pi, sign);  // pi when x >= 0, -pi when x < 0
 			__m128 absx = _mm_andnot_ps(sign, x);  // |x|
 			__m128 rflx = _mm_sub_ps(c, x);
-			__m128 comp = _mm_cmple_ps(absx, g_XMHalfPi);
+			__m128 comp = _mm_cmple_ps(absx, Constants::HalfPi);
 			__m128 select0 = _mm_and_ps(comp, x);
 			__m128 select1 = _mm_andnot_ps(comp, rflx);
 			x = _mm_or_ps(select0, select1);
-			select0 = _mm_and_ps(comp, g_XMOne);
-			select1 = _mm_andnot_ps(comp, g_XMNegativeOne);
+			select0 = _mm_and_ps(comp, Constants::One);
+			select1 = _mm_andnot_ps(comp, Constants::NegativeOne);
 			sign = _mm_or_ps(select0, select1);
 
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation of sine
-			const VectorType SC1 = g_XMSinCoefficients1;
+			const VectorType SC1 = Constants::SinCoefficients1;
 			VectorType vConstants = RAYMATH_PERMUTE_PS(SC1, _MM_SHUFFLE(0, 0, 0, 0));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
-			const VectorType SC0 = g_XMSinCoefficients0;
+			const VectorType SC0 = Constants::SinCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
@@ -8872,16 +8870,16 @@ namespace At0
 			vConstants = RAYMATH_PERMUTE_PS(SC0, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
-			Result = _mm_add_ps(Result, g_XMOne);
+			Result = _mm_add_ps(Result, Constants::One);
 			Result = _mm_mul_ps(Result, x);
 			*pSin = Result;
 
 			// Compute polynomial approximation of cosine
-			const VectorType CC1 = g_XMCosCoefficients1;
+			const VectorType CC1 = Constants::CosCoefficients1;
 			vConstants = RAYMATH_PERMUTE_PS(CC1, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_mul_ps(vConstants, x2);
 
-			const VectorType CC0 = g_XMCosCoefficients0;
+			const VectorType CC0 = Constants::CosCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
@@ -8897,7 +8895,7 @@ namespace At0
 			vConstants = RAYMATH_PERMUTE_PS(CC0, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
-			Result = _mm_add_ps(Result, g_XMOne);
+			Result = _mm_add_ps(Result, Constants::One);
 			Result = _mm_mul_ps(Result, sign);
 			*pCos = Result;
 #endif
@@ -8981,7 +8979,7 @@ namespace At0
 			D = VectorMultiplyAdd(VC2, D, T0);
 
 			N = Vector::Select(N, VC, VCNearZero);
-			D = Vector::Select(D, g_XMOne.v, VCNearZero);
+			D = Vector::Select(D, Constants::One.v, VCNearZero);
 
 			VectorType R0 = Vector::Negate(N);
 			VectorType R1 = Vector::Divide(N, D);
@@ -9016,8 +9014,8 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
-			VectorType V1 = vmlaq_f32(g_XMNegativeOne.v, V, Scale.v);
-			VectorType V2 = vmlsq_f32(g_XMNegativeOne.v, V, Scale.v);
+			VectorType V1 = vmlaq_f32(Constants::NegativeOne.v, V, Scale.v);
+			VectorType V2 = vmlsq_f32(Constants::NegativeOne.v, V, Scale.v);
 			VectorType E1 = VectorExp(V1);
 			VectorType E2 = VectorExp(V2);
 
@@ -9026,9 +9024,9 @@ namespace At0
 			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
 			VectorType V1 = _mm_mul_ps(V, Scale);
-			V1 = _mm_add_ps(V1, g_XMNegativeOne);
+			V1 = _mm_add_ps(V1, Constants::NegativeOne);
 			VectorType V2 = _mm_mul_ps(V, Scale);
-			V2 = _mm_sub_ps(g_XMNegativeOne, V2);
+			V2 = _mm_sub_ps(Constants::NegativeOne, V2);
 			VectorType E1 = VectorExp(V1);
 			VectorType E2 = VectorExp(V2);
 
@@ -9054,8 +9052,8 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
-			VectorType V1 = vmlaq_f32(g_XMNegativeOne.v, V, Scale.v);
-			VectorType V2 = vmlsq_f32(g_XMNegativeOne.v, V, Scale.v);
+			VectorType V1 = vmlaq_f32(Constants::NegativeOne.v, V, Scale.v);
+			VectorType V2 = vmlsq_f32(Constants::NegativeOne.v, V, Scale.v);
 			VectorType E1 = VectorExp(V1);
 			VectorType E2 = VectorExp(V2);
 			return vaddq_f32(E1, E2);
@@ -9063,9 +9061,9 @@ namespace At0
 			static const VectorF32 Scale = { { { 1.442695040888963f, 1.442695040888963f, 1.442695040888963f, 1.442695040888963f } } }; // 1.0f / ln(2.0f)
 
 			VectorType V1 = _mm_mul_ps(V, Scale.v);
-			V1 = _mm_add_ps(V1, g_XMNegativeOne.v);
+			V1 = _mm_add_ps(V1, Constants::NegativeOne.v);
 			VectorType V2 = _mm_mul_ps(V, Scale.v);
-			V2 = _mm_sub_ps(g_XMNegativeOne.v, V2);
+			V2 = _mm_sub_ps(Constants::NegativeOne.v, V2);
 			VectorType E1 = VectorExp(V1);
 			VectorType E2 = VectorExp(V2);
 			return _mm_add_ps(E1, E2);
@@ -9092,18 +9090,18 @@ namespace At0
 
 			Vector E = vmulq_f32(V, Scale.v);
 			E = VectorExp(E);
-			E = vmlaq_f32(g_XMOneHalf.v, E, g_XMOneHalf.v);
+			E = vmlaq_f32(Constants::OneHalf.v, E, Constants::OneHalf.v);
 			E = E.Reciprocal();
-			return vsubq_f32(g_XMOne.v, E);
+			return vsubq_f32(Constants::One.v, E);
 #elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 Scale = { { { 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f, 2.8853900817779268f } } }; // 2.0f / ln(2.0f)
 
 			VectorType E = _mm_mul_ps(V, Scale.v);
 			E = VectorExp(E);
-			E = _mm_mul_ps(E, g_XMOneHalf.v);
-			E = _mm_add_ps(E, g_XMOneHalf.v);
-			E = _mm_div_ps(g_XMOne.v, E);
-			return _mm_sub_ps(g_XMOne.v, E);
+			E = _mm_mul_ps(E, Constants::OneHalf.v);
+			E = _mm_add_ps(E, Constants::OneHalf.v);
+			E = _mm_div_ps(Constants::One.v, E);
+			return _mm_sub_ps(Constants::One.v, E);
 #endif
 		}
 
@@ -9125,16 +9123,16 @@ namespace At0
 				} } };
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			uint32x4_t nonnegative = vcgeq_f32(V, g_XMZero);
+			uint32x4_t nonnegative = vcgeq_f32(V, Constants::Zero);
 			float32x4_t x = vabsq_f32(V);
 
 			// Compute (1-|V|), clamp to zero to avoid sqrt of negative number.
-			float32x4_t oneMValue = vsubq_f32(g_XMOne, x);
-			Vector clampOneMValue = vmaxq_f32(g_XMZero, oneMValue);
+			float32x4_t oneMValue = vsubq_f32(Constants::One, x);
+			Vector clampOneMValue = vmaxq_f32(Constants::Zero, oneMValue);
 			float32x4_t root = clampOneMValue.Sqrt();
 
 			// Compute polynomial approximation
-			const VectorType AC1 = g_XMArcCoefficients1;
+			const VectorType AC1 = Constants::ArcCoefficients1;
 			VectorType vConstants = vdupq_lane_f32(vget_high_f32(AC1), 0);
 			VectorType t0 = vmlaq_lane_f32(vConstants, x, vget_high_f32(AC1), 1);
 
@@ -9144,7 +9142,7 @@ namespace At0
 			vConstants = vdupq_lane_f32(vget_low_f32(AC1), 0);
 			t0 = vmlaq_f32(vConstants, t0, x);
 
-			const VectorType AC0 = g_XMArcCoefficients0;
+			const VectorType AC0 = Constants::ArcCoefficients0;
 			vConstants = vdupq_lane_f32(vget_high_f32(AC0), 1);
 			t0 = vmlaq_f32(vConstants, t0, x);
 
@@ -9158,22 +9156,22 @@ namespace At0
 			t0 = vmlaq_f32(vConstants, t0, x);
 			t0 = vmulq_f32(t0, root);
 
-			float32x4_t t1 = vsubq_f32(g_XMPi, t0);
+			float32x4_t t1 = vsubq_f32(Constants::Pi, t0);
 			t0 = vbslq_f32(nonnegative, t0, t1);
-			t0 = vsubq_f32(g_XMHalfPi, t0);
+			t0 = vsubq_f32(Constants::HalfPi, t0);
 			return t0;
 #elif defined(RAY_SSE_INTRINSICS)
-			__m128 nonnegative = _mm_cmpge_ps(V, g_XMZero);
-			__m128 mvalue = _mm_sub_ps(g_XMZero, V);
+			__m128 nonnegative = _mm_cmpge_ps(V, Constants::Zero);
+			__m128 mvalue = _mm_sub_ps(Constants::Zero, V);
 			__m128 x = _mm_max_ps(V, mvalue);  // |V|
 
 			// Compute (1-|V|), clamp to zero to avoid sqrt of negative number.
-			__m128 oneMValue = _mm_sub_ps(g_XMOne, x);
-			__m128 clampOneMValue = _mm_max_ps(g_XMZero, oneMValue);
+			__m128 oneMValue = _mm_sub_ps(Constants::One, x);
+			__m128 clampOneMValue = _mm_max_ps(Constants::Zero, oneMValue);
 			__m128 root = _mm_sqrt_ps(clampOneMValue);  // sqrt(1-|V|)
 
 			// Compute polynomial approximation
-			const VectorType AC1 = g_XMArcCoefficients1;
+			const VectorType AC1 = Constants::ArcCoefficients1;
 			VectorType vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 t0 = _mm_mul_ps(vConstants, x);
 
@@ -9189,7 +9187,7 @@ namespace At0
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			const VectorType AC0 = g_XMArcCoefficients0;
+			const VectorType AC0 = Constants::ArcCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(AC0, _MM_SHUFFLE(3, 3, 3, 3));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
@@ -9206,11 +9204,11 @@ namespace At0
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, root);
 
-			__m128 t1 = _mm_sub_ps(g_XMPi, t0);
+			__m128 t1 = _mm_sub_ps(Constants::Pi, t0);
 			t0 = _mm_and_ps(nonnegative, t0);
 			t1 = _mm_andnot_ps(nonnegative, t1);
 			t0 = _mm_or_ps(t0, t1);
-			t0 = _mm_sub_ps(g_XMHalfPi, t0);
+			t0 = _mm_sub_ps(Constants::HalfPi, t0);
 			return t0;
 #endif
 		}
@@ -9233,16 +9231,16 @@ namespace At0
 				} } };
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			uint32x4_t nonnegative = vcgeq_f32(V, g_XMZero);
+			uint32x4_t nonnegative = vcgeq_f32(V, Constants::Zero);
 			float32x4_t x = vabsq_f32(V);
 
 			// Compute (1-|V|), clamp to zero to avoid sqrt of negative number.
-			float32x4_t oneMValue = vsubq_f32(g_XMOne, x);
-			Vector clampOneMValue = vmaxq_f32(g_XMZero, oneMValue);
+			float32x4_t oneMValue = vsubq_f32(Constants::One, x);
+			Vector clampOneMValue = vmaxq_f32(Constants::Zero, oneMValue);
 			float32x4_t root = clampOneMValue.Sqrt();
 
 			// Compute polynomial approximation
-			const VectorType AC1 = g_XMArcCoefficients1;
+			const VectorType AC1 = Constants::ArcCoefficients1;
 			VectorType vConstants = vdupq_lane_f32(vget_high_f32(AC1), 0);
 			VectorType t0 = vmlaq_lane_f32(vConstants, x, vget_high_f32(AC1), 1);
 
@@ -9252,7 +9250,7 @@ namespace At0
 			vConstants = vdupq_lane_f32(vget_low_f32(AC1), 0);
 			t0 = vmlaq_f32(vConstants, t0, x);
 
-			const VectorType AC0 = g_XMArcCoefficients0;
+			const VectorType AC0 = Constants::ArcCoefficients0;
 			vConstants = vdupq_lane_f32(vget_high_f32(AC0), 1);
 			t0 = vmlaq_f32(vConstants, t0, x);
 
@@ -9266,21 +9264,21 @@ namespace At0
 			t0 = vmlaq_f32(vConstants, t0, x);
 			t0 = vmulq_f32(t0, root);
 
-			float32x4_t t1 = vsubq_f32(g_XMPi, t0);
+			float32x4_t t1 = vsubq_f32(Constants::Pi, t0);
 			t0 = vbslq_f32(nonnegative, t0, t1);
 			return t0;
 #elif defined(RAY_SSE_INTRINSICS)
-			__m128 nonnegative = _mm_cmpge_ps(V, g_XMZero);
-			__m128 mvalue = _mm_sub_ps(g_XMZero, V);
+			__m128 nonnegative = _mm_cmpge_ps(V, Constants::Zero);
+			__m128 mvalue = _mm_sub_ps(Constants::Zero, V);
 			__m128 x = _mm_max_ps(V, mvalue);  // |V|
 
 			// Compute (1-|V|), clamp to zero to avoid sqrt of negative number.
-			__m128 oneMValue = _mm_sub_ps(g_XMOne, x);
-			__m128 clampOneMValue = _mm_max_ps(g_XMZero, oneMValue);
+			__m128 oneMValue = _mm_sub_ps(Constants::One, x);
+			__m128 clampOneMValue = _mm_max_ps(Constants::Zero, oneMValue);
 			__m128 root = _mm_sqrt_ps(clampOneMValue);  // sqrt(1-|V|)
 
 			// Compute polynomial approximation
-			const VectorType AC1 = g_XMArcCoefficients1;
+			const VectorType AC1 = Constants::ArcCoefficients1;
 			VectorType vConstants = RAYMATH_PERMUTE_PS(AC1, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 t0 = _mm_mul_ps(vConstants, x);
 
@@ -9296,7 +9294,7 @@ namespace At0
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
 
-			const VectorType AC0 = g_XMArcCoefficients0;
+			const VectorType AC0 = Constants::ArcCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(AC0, _MM_SHUFFLE(3, 3, 3, 3));
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, x);
@@ -9313,7 +9311,7 @@ namespace At0
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, root);
 
-			__m128 t1 = _mm_sub_ps(g_XMPi, t0);
+			__m128 t1 = _mm_sub_ps(Constants::Pi, t0);
 			t0 = _mm_and_ps(nonnegative, t0);
 			t1 = _mm_andnot_ps(nonnegative, t1);
 			t0 = _mm_or_ps(t0, t1);
@@ -9341,16 +9339,16 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t absV = vabsq_f32(V);
 			float32x4_t invV = Vector(V).Reciprocal();
-			uint32x4_t comp = vcgtq_f32(V, g_XMOne);
-			uint32x4_t sign = vbslq_f32(comp, g_XMOne, g_XMNegativeOne);
-			comp = vcleq_f32(absV, g_XMOne);
-			sign = vbslq_f32(comp, g_XMZero, sign);
+			uint32x4_t comp = vcgtq_f32(V, Constants::One);
+			uint32x4_t sign = vbslq_f32(comp, Constants::One, Constants::NegativeOne);
+			comp = vcleq_f32(absV, Constants::One);
+			sign = vbslq_f32(comp, Constants::Zero, sign);
 			uint32x4_t x = vbslq_f32(comp, V, invV);
 
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation
-			const VectorType TC1 = g_XMATanCoefficients1;
+			const VectorType TC1 = Constants::ATanCoefficients1;
 			VectorType vConstants = vdupq_lane_f32(vget_high_f32(TC1), 0);
 			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(TC1), 1);
 
@@ -9360,7 +9358,7 @@ namespace At0
 			vConstants = vdupq_lane_f32(vget_low_f32(TC1), 0);
 			Result = vmlaq_f32(vConstants, Result, x2);
 
-			const VectorType TC0 = g_XMATanCoefficients0;
+			const VectorType TC0 = Constants::ATanCoefficients0;
 			vConstants = vdupq_lane_f32(vget_high_f32(TC0), 1);
 			Result = vmlaq_f32(vConstants, Result, x2);
 
@@ -9373,24 +9371,24 @@ namespace At0
 			vConstants = vdupq_lane_f32(vget_low_f32(TC0), 0);
 			Result = vmlaq_f32(vConstants, Result, x2);
 
-			Result = vmlaq_f32(g_XMOne, Result, x2);
+			Result = vmlaq_f32(Constants::One, Result, x2);
 			Result = vmulq_f32(Result, x);
 
-			float32x4_t result1 = vmulq_f32(sign, g_XMHalfPi);
+			float32x4_t result1 = vmulq_f32(sign, Constants::HalfPi);
 			result1 = vsubq_f32(result1, Result);
 
-			comp = vceqq_f32(sign, g_XMZero);
+			comp = vceqq_f32(sign, Constants::Zero);
 			Result = vbslq_f32(comp, Result, result1);
 			return Result;
 #elif defined(RAY_SSE_INTRINSICS)
 			__m128 absV = VectorAbs(V);
-			__m128 invV = _mm_div_ps(g_XMOne, V);
-			__m128 comp = _mm_cmpgt_ps(V, g_XMOne);
-			__m128 select0 = _mm_and_ps(comp, g_XMOne);
-			__m128 select1 = _mm_andnot_ps(comp, g_XMNegativeOne);
+			__m128 invV = _mm_div_ps(Constants::One, V);
+			__m128 comp = _mm_cmpgt_ps(V, Constants::One);
+			__m128 select0 = _mm_and_ps(comp, Constants::One);
+			__m128 select1 = _mm_andnot_ps(comp, Constants::NegativeOne);
 			__m128 sign = _mm_or_ps(select0, select1);
-			comp = _mm_cmple_ps(absV, g_XMOne);
-			select0 = _mm_and_ps(comp, g_XMZero);
+			comp = _mm_cmple_ps(absV, Constants::One);
+			select0 = _mm_and_ps(comp, Constants::Zero);
 			select1 = _mm_andnot_ps(comp, sign);
 			sign = _mm_or_ps(select0, select1);
 			select0 = _mm_and_ps(comp, V);
@@ -9400,7 +9398,7 @@ namespace At0
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation
-			const VectorType TC1 = g_XMATanCoefficients1;
+			const VectorType TC1 = Constants::ATanCoefficients1;
 			VectorType vConstants = RAYMATH_PERMUTE_PS(TC1, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
@@ -9416,7 +9414,7 @@ namespace At0
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			const VectorType TC0 = g_XMATanCoefficients0;
+			const VectorType TC0 = Constants::ATanCoefficients0;
 			vConstants = RAYMATH_PERMUTE_PS(TC0, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
@@ -9432,12 +9430,12 @@ namespace At0
 			vConstants = RAYMATH_PERMUTE_PS(TC0, _MM_SHUFFLE(0, 0, 0, 0));
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
-			Result = _mm_add_ps(Result, g_XMOne);
+			Result = _mm_add_ps(Result, Constants::One);
 			Result = _mm_mul_ps(Result, x);
-			__m128 result1 = _mm_mul_ps(sign, g_XMHalfPi);
+			__m128 result1 = _mm_mul_ps(sign, Constants::HalfPi);
 			result1 = _mm_sub_ps(result1, Result);
 
-			comp = _mm_cmpeq_ps(sign, g_XMZero);
+			comp = _mm_cmpeq_ps(sign, Constants::Zero);
 			select0 = _mm_and_ps(comp, Result);
 			select1 = _mm_andnot_ps(comp, result1);
 			Result = _mm_or_ps(select0, select1);
@@ -9487,12 +9485,12 @@ namespace At0
 
 			VectorType YEqualsZero = Vector::Equal(Y, Zero);
 			VectorType XEqualsZero = Vector::Equal(X, Zero);
-			VectorType XIsPositive = VectorAndInt(X, g_XMNegativeZero.v);
+			VectorType XIsPositive = VectorAndInt(X, Constants::NegativeZero.v);
 			XIsPositive = Vector::EqualInt(XIsPositive, Zero);
 			VectorType YEqualsInfinity = Vector(Y).IsInfinite();
 			VectorType XEqualsInfinity = Vector(X).IsInfinite();
 
-			VectorType YSign = VectorAndInt(Y, g_XMNegativeZero.v);
+			VectorType YSign = VectorAndInt(Y, Constants::NegativeZero.v);
 			Pi = VectorOrInt(Pi, YSign);
 			PiOverTwo = VectorOrInt(PiOverTwo, YSign);
 			PiOverFour = VectorOrInt(PiOverFour, YSign);
@@ -9510,7 +9508,7 @@ namespace At0
 
 			VectorType R0 = VectorATan(V);
 
-			R1 = Vector::Select(Pi, g_XMNegativeZero, XIsPositive);
+			R1 = Vector::Select(Pi, Constants::NegativeZero, XIsPositive);
 			R2 = Vector::Add(R0, R1);
 
 			return Vector::Select(Result, R2, ATanResultValid);
@@ -9540,24 +9538,24 @@ namespace At0
 			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with sin(y) = sin(x).
-			uint32x4_t sign = vandq_u32(x, g_XMNegativeZero);
-			uint32x4_t c = vorrq_u32(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
+			uint32x4_t sign = vandq_u32(x, Constants::NegativeZero);
+			uint32x4_t c = vorrq_u32(Constants::Pi, sign);  // pi when x >= 0, -pi when x < 0
 			float32x4_t absx = vabsq_f32(x);
 			float32x4_t rflx = vsubq_f32(c, x);
-			uint32x4_t comp = vcleq_f32(absx, g_XMHalfPi);
+			uint32x4_t comp = vcleq_f32(absx, Constants::HalfPi);
 			x = vbslq_f32(comp, x, rflx);
 
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation
-			const VectorType SEC = g_XMSinCoefficients1;
+			const VectorType SEC = Constants::SinCoefficients1;
 			VectorType vConstants = vdupq_lane_f32(vget_high_f32(SEC), 0);
 			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(SEC), 1);
 
 			vConstants = vdupq_lane_f32(vget_low_f32(SEC), 1);
 			Result = vmlaq_f32(vConstants, Result, x2);
 
-			Result = vmlaq_f32(g_XMOne, Result, x2);
+			Result = vmlaq_f32(Constants::One, Result, x2);
 			Result = vmulq_f32(Result, x);
 			return Result;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -9565,11 +9563,11 @@ namespace At0
 			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with sin(y) = sin(x).
-			__m128 sign = _mm_and_ps(x, g_XMNegativeZero);
-			__m128 c = _mm_or_ps(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
+			__m128 sign = _mm_and_ps(x, Constants::NegativeZero);
+			__m128 c = _mm_or_ps(Constants::Pi, sign);  // pi when x >= 0, -pi when x < 0
 			__m128 absx = _mm_andnot_ps(sign, x);  // |x|
 			__m128 rflx = _mm_sub_ps(c, x);
-			__m128 comp = _mm_cmple_ps(absx, g_XMHalfPi);
+			__m128 comp = _mm_cmple_ps(absx, Constants::HalfPi);
 			__m128 select0 = _mm_and_ps(comp, x);
 			__m128 select1 = _mm_andnot_ps(comp, rflx);
 			x = _mm_or_ps(select0, select1);
@@ -9577,7 +9575,7 @@ namespace At0
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation
-			const VectorType SEC = g_XMSinCoefficients1;
+			const VectorType SEC = Constants::SinCoefficients1;
 			VectorType vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
@@ -9589,7 +9587,7 @@ namespace At0
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			Result = _mm_add_ps(Result, g_XMOne);
+			Result = _mm_add_ps(Result, Constants::One);
 			Result = _mm_mul_ps(Result, x);
 			return Result;
 #endif
@@ -9617,25 +9615,25 @@ namespace At0
 			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with cos(y) = sign*cos(x).
-			uint32x4_t sign = vandq_u32(x, g_XMNegativeZero);
-			uint32x4_t c = vorrq_u32(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
+			uint32x4_t sign = vandq_u32(x, Constants::NegativeZero);
+			uint32x4_t c = vorrq_u32(Constants::Pi, sign);  // pi when x >= 0, -pi when x < 0
 			float32x4_t absx = vabsq_f32(x);
 			float32x4_t rflx = vsubq_f32(c, x);
-			uint32x4_t comp = vcleq_f32(absx, g_XMHalfPi);
+			uint32x4_t comp = vcleq_f32(absx, Constants::HalfPi);
 			x = vbslq_f32(comp, x, rflx);
-			sign = vbslq_f32(comp, g_XMOne, g_XMNegativeOne);
+			sign = vbslq_f32(comp, Constants::One, Constants::NegativeOne);
 
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation
-			const VectorType CEC = g_XMCosCoefficients1;
+			const VectorType CEC = Constants::CosCoefficients1;
 			VectorType vConstants = vdupq_lane_f32(vget_high_f32(CEC), 0);
 			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(CEC), 1);
 
 			vConstants = vdupq_lane_f32(vget_low_f32(CEC), 1);
 			Result = vmlaq_f32(vConstants, Result, x2);
 
-			Result = vmlaq_f32(g_XMOne, Result, x2);
+			Result = vmlaq_f32(Constants::One, Result, x2);
 			Result = vmulq_f32(Result, sign);
 			return Result;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -9643,22 +9641,22 @@ namespace At0
 			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with cos(y) = sign*cos(x).
-			VectorType sign = _mm_and_ps(x, g_XMNegativeZero);
-			__m128 c = _mm_or_ps(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
+			VectorType sign = _mm_and_ps(x, Constants::NegativeZero);
+			__m128 c = _mm_or_ps(Constants::Pi, sign);  // pi when x >= 0, -pi when x < 0
 			__m128 absx = _mm_andnot_ps(sign, x);  // |x|
 			__m128 rflx = _mm_sub_ps(c, x);
-			__m128 comp = _mm_cmple_ps(absx, g_XMHalfPi);
+			__m128 comp = _mm_cmple_ps(absx, Constants::HalfPi);
 			__m128 select0 = _mm_and_ps(comp, x);
 			__m128 select1 = _mm_andnot_ps(comp, rflx);
 			x = _mm_or_ps(select0, select1);
-			select0 = _mm_and_ps(comp, g_XMOne);
-			select1 = _mm_andnot_ps(comp, g_XMNegativeOne);
+			select0 = _mm_and_ps(comp, Constants::One);
+			select1 = _mm_andnot_ps(comp, Constants::NegativeOne);
 			sign = _mm_or_ps(select0, select1);
 
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation
-			const VectorType CEC = g_XMCosCoefficients1;
+			const VectorType CEC = Constants::CosCoefficients1;
 			VectorType vConstants = RAYMATH_PERMUTE_PS(CEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
@@ -9670,7 +9668,7 @@ namespace At0
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			Result = _mm_add_ps(Result, g_XMOne);
+			Result = _mm_add_ps(Result, Constants::One);
 			Result = _mm_mul_ps(Result, sign);
 			return Result;
 #endif
@@ -9713,58 +9711,58 @@ namespace At0
 			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with cos(y) = sign*cos(x).
-			uint32x4_t sign = vandq_u32(x, g_XMNegativeZero);
-			uint32x4_t c = vorrq_u32(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
+			uint32x4_t sign = vandq_u32(x, Constants::NegativeZero);
+			uint32x4_t c = vorrq_u32(Constants::Pi, sign);  // pi when x >= 0, -pi when x < 0
 			float32x4_t absx = vabsq_f32(x);
 			float32x4_t rflx = vsubq_f32(c, x);
-			uint32x4_t comp = vcleq_f32(absx, g_XMHalfPi);
+			uint32x4_t comp = vcleq_f32(absx, Constants::HalfPi);
 			x = vbslq_f32(comp, x, rflx);
-			sign = vbslq_f32(comp, g_XMOne, g_XMNegativeOne);
+			sign = vbslq_f32(comp, Constants::One, Constants::NegativeOne);
 
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation for sine
-			const VectorType SEC = g_XMSinCoefficients1;
+			const VectorType SEC = Constants::SinCoefficients1;
 			VectorType vConstants = vdupq_lane_f32(vget_high_f32(SEC), 0);
 			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(SEC), 1);
 
 			vConstants = vdupq_lane_f32(vget_low_f32(SEC), 1);
 			Result = vmlaq_f32(vConstants, Result, x2);
 
-			Result = vmlaq_f32(g_XMOne, Result, x2);
+			Result = vmlaq_f32(Constants::One, Result, x2);
 			*pSin = vmulq_f32(Result, x);
 
 			// Compute polynomial approximation
-			const VectorType CEC = g_XMCosCoefficients1;
+			const VectorType CEC = Constants::CosCoefficients1;
 			vConstants = vdupq_lane_f32(vget_high_f32(CEC), 0);
 			Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(CEC), 1);
 
 			vConstants = vdupq_lane_f32(vget_low_f32(CEC), 1);
 			Result = vmlaq_f32(vConstants, Result, x2);
 
-			Result = vmlaq_f32(g_XMOne, Result, x2);
+			Result = vmlaq_f32(Constants::One, Result, x2);
 			*pCos = vmulq_f32(Result, sign);
 #elif defined(RAY_SSE_INTRINSICS)
 	// Force the value within the bounds of pi
 			VectorType x = VectorModAngles(V);
 
 			// Map in [-pi/2,pi/2] with sin(y) = sin(x), cos(y) = sign*cos(x).
-			VectorType sign = _mm_and_ps(x, g_XMNegativeZero);
-			__m128 c = _mm_or_ps(g_XMPi, sign);  // pi when x >= 0, -pi when x < 0
+			VectorType sign = _mm_and_ps(x, Constants::NegativeZero);
+			__m128 c = _mm_or_ps(Constants::Pi, sign);  // pi when x >= 0, -pi when x < 0
 			__m128 absx = _mm_andnot_ps(sign, x);  // |x|
 			__m128 rflx = _mm_sub_ps(c, x);
-			__m128 comp = _mm_cmple_ps(absx, g_XMHalfPi);
+			__m128 comp = _mm_cmple_ps(absx, Constants::HalfPi);
 			__m128 select0 = _mm_and_ps(comp, x);
 			__m128 select1 = _mm_andnot_ps(comp, rflx);
 			x = _mm_or_ps(select0, select1);
-			select0 = _mm_and_ps(comp, g_XMOne);
-			select1 = _mm_andnot_ps(comp, g_XMNegativeOne);
+			select0 = _mm_and_ps(comp, Constants::One);
+			select1 = _mm_andnot_ps(comp, Constants::NegativeOne);
 			sign = _mm_or_ps(select0, select1);
 
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation for sine
-			const VectorType SEC = g_XMSinCoefficients1;
+			const VectorType SEC = Constants::SinCoefficients1;
 			VectorType vConstants = RAYMATH_PERMUTE_PS(SEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
@@ -9776,12 +9774,12 @@ namespace At0
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			Result = _mm_add_ps(Result, g_XMOne);
+			Result = _mm_add_ps(Result, Constants::One);
 			Result = _mm_mul_ps(Result, x);
 			*pSin = Result;
 
 			// Compute polynomial approximation for cosine
-			const VectorType CEC = g_XMCosCoefficients1;
+			const VectorType CEC = Constants::CosCoefficients1;
 			vConstants = RAYMATH_PERMUTE_PS(CEC, _MM_SHUFFLE(3, 3, 3, 3));
 			Result = _mm_mul_ps(vConstants, x2);
 
@@ -9793,7 +9791,7 @@ namespace At0
 			Result = _mm_add_ps(Result, vConstants);
 			Result = _mm_mul_ps(Result, x2);
 
-			Result = _mm_add_ps(Result, g_XMOne);
+			Result = _mm_add_ps(Result, Constants::One);
 			Result = _mm_mul_ps(Result, sign);
 			*pCos = Result;
 #endif
@@ -9816,16 +9814,16 @@ namespace At0
 			return Result.v;
 #else
 
-			VectorType OneOverPi = Vector::SplatW(g_XMTanEstCoefficients.v);
+			VectorType OneOverPi = Vector::SplatW(Constants::TanEstCoefficients.v);
 
 			Vector V1 = Vector::Multiply(V, OneOverPi);
 			V1 = V1.Round();
 
-			V1 = VectorNegativeMultiplySubtract(g_XMPi.v, V1, V);
+			V1 = VectorNegativeMultiplySubtract(Constants::Pi.v, V1, V);
 
-			VectorType T0 = Vector::SplatX(g_XMTanEstCoefficients.v);
-			VectorType T1 = Vector::SplatY(g_XMTanEstCoefficients.v);
-			VectorType T2 = Vector::SplatZ(g_XMTanEstCoefficients.v);
+			VectorType T0 = Vector::SplatX(Constants::TanEstCoefficients.v);
+			VectorType T1 = Vector::SplatY(Constants::TanEstCoefficients.v);
+			VectorType T2 = Vector::SplatZ(Constants::TanEstCoefficients.v);
 
 			VectorType V2T2 = VectorNegativeMultiplySubtract(V1, V1, T2);
 			VectorType V2 = Vector::Multiply(V1, V1);
@@ -9857,16 +9855,16 @@ namespace At0
 			Result.f[3] = asinf(V.vector4_f32[3]);
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			uint32x4_t nonnegative = vcgeq_f32(V, g_XMZero);
+			uint32x4_t nonnegative = vcgeq_f32(V, Constants::Zero);
 			float32x4_t x = vabsq_f32(V);
 
 			// Compute (1-|V|), clamp to zero to avoid sqrt of negative number.
-			float32x4_t oneMValue = vsubq_f32(g_XMOne, x);
-			Vector clampOneMValue = vmaxq_f32(g_XMZero, oneMValue);
+			float32x4_t oneMValue = vsubq_f32(Constants::One, x);
+			Vector clampOneMValue = vmaxq_f32(Constants::Zero, oneMValue);
 			float32x4_t root = clampOneMValue.Sqrt();
 
 			// Compute polynomial approximation
-			const VectorType AEC = g_XMArcEstCoefficients;
+			const VectorType AEC = Constants::ArcEstCoefficients;
 			VectorType vConstants = vdupq_lane_f32(vget_high_f32(AEC), 0);
 			VectorType t0 = vmlaq_lane_f32(vConstants, x, vget_high_f32(AEC), 1);
 
@@ -9877,22 +9875,22 @@ namespace At0
 			t0 = vmlaq_f32(vConstants, t0, x);
 			t0 = vmulq_f32(t0, root);
 
-			float32x4_t t1 = vsubq_f32(g_XMPi, t0);
+			float32x4_t t1 = vsubq_f32(Constants::Pi, t0);
 			t0 = vbslq_f32(nonnegative, t0, t1);
-			t0 = vsubq_f32(g_XMHalfPi, t0);
+			t0 = vsubq_f32(Constants::HalfPi, t0);
 			return t0;
 #elif defined(RAY_SSE_INTRINSICS)
-			__m128 nonnegative = _mm_cmpge_ps(V, g_XMZero);
-			__m128 mvalue = _mm_sub_ps(g_XMZero, V);
+			__m128 nonnegative = _mm_cmpge_ps(V, Constants::Zero);
+			__m128 mvalue = _mm_sub_ps(Constants::Zero, V);
 			__m128 x = _mm_max_ps(V, mvalue);  // |V|
 
 			// Compute (1-|V|), clamp to zero to avoid sqrt of negative number.
-			__m128 oneMValue = _mm_sub_ps(g_XMOne, x);
-			__m128 clampOneMValue = _mm_max_ps(g_XMZero, oneMValue);
+			__m128 oneMValue = _mm_sub_ps(Constants::One, x);
+			__m128 clampOneMValue = _mm_max_ps(Constants::Zero, oneMValue);
 			__m128 root = _mm_sqrt_ps(clampOneMValue);  // sqrt(1-|V|)
 
 			// Compute polynomial approximation
-			const VectorType AEC = g_XMArcEstCoefficients;
+			const VectorType AEC = Constants::ArcEstCoefficients;
 			VectorType vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 t0 = _mm_mul_ps(vConstants, x);
 
@@ -9908,11 +9906,11 @@ namespace At0
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, root);
 
-			__m128 t1 = _mm_sub_ps(g_XMPi, t0);
+			__m128 t1 = _mm_sub_ps(Constants::Pi, t0);
 			t0 = _mm_and_ps(nonnegative, t0);
 			t1 = _mm_andnot_ps(nonnegative, t1);
 			t0 = _mm_or_ps(t0, t1);
-			t0 = _mm_sub_ps(g_XMHalfPi, t0);
+			t0 = _mm_sub_ps(Constants::HalfPi, t0);
 			return t0;
 #endif
 		}
@@ -9935,16 +9933,16 @@ namespace At0
 				} } };
 			return Result.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			uint32x4_t nonnegative = vcgeq_f32(V, g_XMZero);
+			uint32x4_t nonnegative = vcgeq_f32(V, Constants::Zero);
 			float32x4_t x = vabsq_f32(V);
 
 			// Compute (1-|V|), clamp to zero to avoid sqrt of negative number.
-			float32x4_t oneMValue = vsubq_f32(g_XMOne, x);
-			Vector clampOneMValue = vmaxq_f32(g_XMZero, oneMValue);
+			float32x4_t oneMValue = vsubq_f32(Constants::One, x);
+			Vector clampOneMValue = vmaxq_f32(Constants::Zero, oneMValue);
 			float32x4_t root = clampOneMValue.Sqrt();
 
 			// Compute polynomial approximation
-			const VectorType AEC = g_XMArcEstCoefficients;
+			const VectorType AEC = Constants::ArcEstCoefficients;
 			VectorType vConstants = vdupq_lane_f32(vget_high_f32(AEC), 0);
 			VectorType t0 = vmlaq_lane_f32(vConstants, x, vget_high_f32(AEC), 1);
 
@@ -9955,21 +9953,21 @@ namespace At0
 			t0 = vmlaq_f32(vConstants, t0, x);
 			t0 = vmulq_f32(t0, root);
 
-			float32x4_t t1 = vsubq_f32(g_XMPi, t0);
+			float32x4_t t1 = vsubq_f32(Constants::Pi, t0);
 			t0 = vbslq_f32(nonnegative, t0, t1);
 			return t0;
 #elif defined(RAY_SSE_INTRINSICS)
-			__m128 nonnegative = _mm_cmpge_ps(V, g_XMZero);
-			__m128 mvalue = _mm_sub_ps(g_XMZero, V);
+			__m128 nonnegative = _mm_cmpge_ps(V, Constants::Zero);
+			__m128 mvalue = _mm_sub_ps(Constants::Zero, V);
 			__m128 x = _mm_max_ps(V, mvalue);  // |V|
 
 			// Compute (1-|V|), clamp to zero to avoid sqrt of negative number.
-			__m128 oneMValue = _mm_sub_ps(g_XMOne, x);
-			__m128 clampOneMValue = _mm_max_ps(g_XMZero, oneMValue);
+			__m128 oneMValue = _mm_sub_ps(Constants::One, x);
+			__m128 clampOneMValue = _mm_max_ps(Constants::Zero, oneMValue);
 			__m128 root = _mm_sqrt_ps(clampOneMValue);  // sqrt(1-|V|)
 
 			// Compute polynomial approximation
-			const VectorType AEC = g_XMArcEstCoefficients;
+			const VectorType AEC = Constants::ArcEstCoefficients;
 			VectorType vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 t0 = _mm_mul_ps(vConstants, x);
 
@@ -9985,7 +9983,7 @@ namespace At0
 			t0 = _mm_add_ps(t0, vConstants);
 			t0 = _mm_mul_ps(t0, root);
 
-			__m128 t1 = _mm_sub_ps(g_XMPi, t0);
+			__m128 t1 = _mm_sub_ps(Constants::Pi, t0);
 			t0 = _mm_and_ps(nonnegative, t0);
 			t1 = _mm_andnot_ps(nonnegative, t1);
 			t0 = _mm_or_ps(t0, t1);
@@ -10013,16 +10011,16 @@ namespace At0
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x4_t absV = vabsq_f32(V);
 			float32x4_t invV = Vector(V).ReciprocalEst();
-			uint32x4_t comp = vcgtq_f32(V, g_XMOne);
-			uint32x4_t sign = vbslq_f32(comp, g_XMOne, g_XMNegativeOne);
-			comp = vcleq_f32(absV, g_XMOne);
-			sign = vbslq_f32(comp, g_XMZero, sign);
+			uint32x4_t comp = vcgtq_f32(V, Constants::One);
+			uint32x4_t sign = vbslq_f32(comp, Constants::One, Constants::NegativeOne);
+			comp = vcleq_f32(absV, Constants::One);
+			sign = vbslq_f32(comp, Constants::Zero, sign);
 			uint32x4_t x = vbslq_f32(comp, V, invV);
 
 			float32x4_t x2 = vmulq_f32(x, x);
 
 			// Compute polynomial approximation
-			const VectorType AEC = g_XMATanEstCoefficients1;
+			const VectorType AEC = Constants::ATanEstCoefficients1;
 			VectorType vConstants = vdupq_lane_f32(vget_high_f32(AEC), 0);
 			VectorType Result = vmlaq_lane_f32(vConstants, x2, vget_high_f32(AEC), 1);
 
@@ -10033,24 +10031,24 @@ namespace At0
 			Result = vmlaq_f32(vConstants, Result, x2);
 
 			// ATanEstCoefficients0 is already splatted
-			Result = vmlaq_f32(g_XMATanEstCoefficients0, Result, x2);
+			Result = vmlaq_f32(Constants::ATanEstCoefficients0, Result, x2);
 			Result = vmulq_f32(Result, x);
 
-			float32x4_t result1 = vmulq_f32(sign, g_XMHalfPi);
+			float32x4_t result1 = vmulq_f32(sign, Constants::HalfPi);
 			result1 = vsubq_f32(result1, Result);
 
-			comp = vceqq_f32(sign, g_XMZero);
+			comp = vceqq_f32(sign, Constants::Zero);
 			Result = vbslq_f32(comp, Result, result1);
 			return Result;
 #elif defined(RAY_SSE_INTRINSICS)
 			__m128 absV = VectorAbs(V);
-			__m128 invV = _mm_div_ps(g_XMOne, V);
-			__m128 comp = _mm_cmpgt_ps(V, g_XMOne);
-			__m128 select0 = _mm_and_ps(comp, g_XMOne);
-			__m128 select1 = _mm_andnot_ps(comp, g_XMNegativeOne);
+			__m128 invV = _mm_div_ps(Constants::One, V);
+			__m128 comp = _mm_cmpgt_ps(V, Constants::One);
+			__m128 select0 = _mm_and_ps(comp, Constants::One);
+			__m128 select1 = _mm_andnot_ps(comp, Constants::NegativeOne);
 			__m128 sign = _mm_or_ps(select0, select1);
-			comp = _mm_cmple_ps(absV, g_XMOne);
-			select0 = _mm_and_ps(comp, g_XMZero);
+			comp = _mm_cmple_ps(absV, Constants::One);
+			select0 = _mm_and_ps(comp, Constants::Zero);
 			select1 = _mm_andnot_ps(comp, sign);
 			sign = _mm_or_ps(select0, select1);
 			select0 = _mm_and_ps(comp, V);
@@ -10060,7 +10058,7 @@ namespace At0
 			__m128 x2 = _mm_mul_ps(x, x);
 
 			// Compute polynomial approximation
-			const VectorType AEC = g_XMATanEstCoefficients1;
+			const VectorType AEC = Constants::ATanEstCoefficients1;
 			VectorType vConstants = RAYMATH_PERMUTE_PS(AEC, _MM_SHUFFLE(3, 3, 3, 3));
 			__m128 Result = _mm_mul_ps(vConstants, x2);
 
@@ -10077,12 +10075,12 @@ namespace At0
 			Result = _mm_mul_ps(Result, x2);
 
 			// ATanEstCoefficients0 is already splatted
-			Result = _mm_add_ps(Result, g_XMATanEstCoefficients0);
+			Result = _mm_add_ps(Result, Constants::ATanEstCoefficients0);
 			Result = _mm_mul_ps(Result, x);
-			__m128 result1 = _mm_mul_ps(sign, g_XMHalfPi);
+			__m128 result1 = _mm_mul_ps(sign, Constants::HalfPi);
 			result1 = _mm_sub_ps(result1, Result);
 
-			comp = _mm_cmpeq_ps(sign, g_XMZero);
+			comp = _mm_cmpeq_ps(sign, Constants::Zero);
 			select0 = _mm_and_ps(comp, Result);
 			select1 = _mm_andnot_ps(comp, result1);
 			Result = _mm_or_ps(select0, select1);
@@ -10120,12 +10118,12 @@ namespace At0
 
 			VectorType YEqualsZero = Vector::Equal(Y, Zero);
 			VectorType XEqualsZero = Vector::Equal(X, Zero);
-			VectorType XIsPositive = VectorAndInt(X, g_XMNegativeZero.v);
+			VectorType XIsPositive = VectorAndInt(X, Constants::NegativeZero.v);
 			XIsPositive = Vector::EqualInt(XIsPositive, Zero);
 			VectorType YEqualsInfinity = Vector(Y).IsInfinite();
 			VectorType XEqualsInfinity = Vector(X).IsInfinite();
 
-			VectorType YSign = VectorAndInt(Y, g_XMNegativeZero.v);
+			VectorType YSign = VectorAndInt(Y, Constants::NegativeZero.v);
 			Pi = VectorOrInt(Pi, YSign);
 			PiOverTwo = VectorOrInt(PiOverTwo, YSign);
 			PiOverFour = VectorOrInt(PiOverFour, YSign);
@@ -10143,7 +10141,7 @@ namespace At0
 			VectorType V = Vector::Multiply(Y, Reciprocal);
 			VectorType R0 = VectorATanEst(V);
 
-			R1 = Vector::Select(Pi, g_XMNegativeZero, XIsPositive);
+			R1 = Vector::Select(Pi, Constants::NegativeZero, XIsPositive);
 			R2 = Vector::Add(R0, R1);
 
 			Result = Vector::Select(Result, R2, ATanResultValid);
@@ -10319,10 +10317,10 @@ namespace At0
 			T3 = vmlaq_f32(T2, T3, CatMulT3);
 			// T3 now has the pre-result.
 			// I need to add t.y only
-			T2 = vandq_u32(T, g_XMMaskY);
+			T2 = vandq_u32(T, Constants::MaskY);
 			T3 = vaddq_f32(T3, T2);
 			// Add 1.0f to x
-			T3 = vaddq_f32(T3, g_XMIdentityR0);
+			T3 = vaddq_f32(T3, Constants::IdentityR0);
 			// Now, I have the constants created
 			// Mul the x constant to Position0
 			VectorType vResult = vmulq_lane_f32(Position0, vget_low_f32(T3), 0); // T3[0]
@@ -10346,10 +10344,10 @@ namespace At0
 			// T3 now has the pre-result.
 			T3 = _mm_add_ps(T3, T2);
 			// I need to add t.y only
-			T2 = _mm_and_ps(T, g_XMMaskY);
+			T2 = _mm_and_ps(T, Constants::MaskY);
 			T3 = _mm_add_ps(T3, T2);
 			// Add 1.0f to x
-			T3 = _mm_add_ps(T3, g_XMIdentityR0);
+			T3 = _mm_add_ps(T3, Constants::IdentityR0);
 			// Now, I have the constants created
 			// Mul the x constant to Position0
 			VectorType vResult = RAYMATH_PERMUTE_PS(T3, _MM_SHUFFLE(0, 0, 0, 0));
@@ -10504,7 +10502,7 @@ namespace At0
 			T3 = vsubq_f32(T3, T2);
 			vResult = vmlaq_f32(vResult, T3, Position3);
 			// Multiply by 0.5f and exit
-			vResult = vmulq_f32(vResult, g_XMOneHalf);
+			vResult = vmulq_f32(vResult, Constants::OneHalf);
 			return vResult;
 #elif defined(RAY_SSE_INTRINSICS)
 			static const VectorF32 Catmul2 = { { { 2.0f, 2.0f, 2.0f, 2.0f } } };
@@ -10538,7 +10536,7 @@ namespace At0
 			T3 = _mm_mul_ps(T3, Position3);
 			vResult = _mm_add_ps(vResult, T3);
 			// Multiply by 0.5f and exit
-			vResult = _mm_mul_ps(vResult, g_XMOneHalf);
+			vResult = _mm_mul_ps(vResult, Constants::OneHalf);
 			return vResult;
 #endif
 		}
@@ -11061,7 +11059,7 @@ namespace At0
 			// Test if less than or equal
 			VectorType vTemp1 = _mm_cmple_ps(V, Bounds);
 			// Negate the bounds
-			VectorType vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
+			VectorType vTemp2 = _mm_mul_ps(Bounds, Constants::NegativeOne);
 			// Test if greater or equal (Reversed)
 			vTemp2 = _mm_cmple_ps(vTemp2, V);
 			// Blend answers
@@ -11079,8 +11077,8 @@ namespace At0
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
-			return (XMISNAN(V.vector4_f32[0]) ||
-				XMISNAN(V.vector4_f32[1]));
+			return (RAYMATH_ISNAN(V.vector4_f32[0]) ||
+				RAYMATH_ISNAN(V.vector4_f32[1]));
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			float32x2_t VL = vget_low_f32(V);
 			// Test against itself. NaN is always not equal
@@ -11104,20 +11102,20 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			return (XMISINF(V.vector4_f32[0]) ||
-				XMISINF(V.vector4_f32[1]));
+			return (RAYMATH_ISINF(V.vector4_f32[0]) ||
+				RAYMATH_ISINF(V.vector4_f32[1]));
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Mask off the sign bit
-			uint32x2_t vTemp = vand_u32(vget_low_f32(V), vget_low_f32(g_XMAbsMask));
+			uint32x2_t vTemp = vand_u32(vget_low_f32(V), vget_low_f32(Constants::AbsMask));
 			// Compare to infinity
-			vTemp = vceq_f32(vTemp, vget_low_f32(g_XMInfinity));
+			vTemp = vceq_f32(vTemp, vget_low_f32(Constants::Infinity));
 			// If any are infinity, the signs are true.
 			return vget_lane_u64(vTemp, 0) != 0;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Mask off the sign bit
-			__m128 vTemp = _mm_and_ps(V, g_XMAbsMask);
+			__m128 vTemp = _mm_and_ps(V, Constants::AbsMask);
 			// Compare to infinity
-			vTemp = _mm_cmpeq_ps(vTemp, g_XMInfinity);
+			vTemp = _mm_cmpeq_ps(vTemp, Constants::Infinity);
 			// If x or z are infinity, the signs are true.
 			return ((_mm_movemask_ps(vTemp) & 3) != 0);
 #endif
@@ -11293,12 +11291,12 @@ namespace At0
 #elif defined(RAY_SSE4_INTRINSICS)
 			VectorType vTemp = _mm_dp_ps(V, V, 0x3f);
 			VectorType vLengthSq = _mm_sqrt_ps(vTemp);
-			return _mm_div_ps(g_XMOne, vLengthSq);
+			return _mm_div_ps(Constants::One, vLengthSq);
 #elif defined(RAY_SSE3_INTRINSICS)
 			VectorType vLengthSq = _mm_mul_ps(V, V);
 			VectorType vTemp = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ss(vTemp);
-			vLengthSq = _mm_div_ss(g_XMOne, vLengthSq);
+			vLengthSq = _mm_div_ss(Constants::One, vLengthSq);
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -11309,7 +11307,7 @@ namespace At0
 			// x+y
 			vLengthSq = _mm_add_ss(vLengthSq, vTemp);
 			vLengthSq = _mm_sqrt_ss(vLengthSq);
-			vLengthSq = _mm_div_ss(g_XMOne, vLengthSq);
+			vLengthSq = _mm_div_ss(Constants::One, vLengthSq);
 			vLengthSq = RAYMATH_PERMUTE_PS(vLengthSq, _MM_SHUFFLE(0, 0, 0, 0));
 			return vLengthSq;
 #endif
@@ -11497,7 +11495,7 @@ namespace At0
 			float32x2_t vTemp = vmul_f32(VL, VL);
 			vTemp = vpadd_f32(vTemp, vTemp);
 			uint32x2_t VEqualsZero = vceq_f32(vTemp, vdup_n_f32(0));
-			uint32x2_t VEqualsInf = vceq_f32(vTemp, vget_low_f32(g_XMInfinity));
+			uint32x2_t VEqualsInf = vceq_f32(vTemp, vget_low_f32(Constants::Infinity));
 			// Reciprocal sqrt (2 iterations of Newton-Raphson)
 			float32x2_t S0 = vrsqrte_f32(vTemp);
 			float32x2_t P0 = vmul_f32(vTemp, S0);
@@ -11509,7 +11507,7 @@ namespace At0
 			// Normalize
 			float32x2_t Result = vmul_f32(VL, vTemp);
 			Result = vbsl_f32(VEqualsZero, vdup_n_f32(0), Result);
-			Result = vbsl_f32(VEqualsInf, vget_low_f32(g_XMQNaN), Result);
+			Result = vbsl_f32(VEqualsInf, vget_low_f32(Constants::QNaN), Result);
 			return vcombine_f32(Result, Result);
 #elif defined(RAY_SSE4_INTRINSICS)
 			VectorType vLengthSq = _mm_dp_ps(V, V, 0x3f);
@@ -11521,13 +11519,13 @@ namespace At0
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
 			// If the length is infinity, set the elements to zero
-			vLengthSq = _mm_cmpneq_ps(vLengthSq, g_XMInfinity);
+			vLengthSq = _mm_cmpneq_ps(vLengthSq, Constants::Infinity);
 			// Reciprocal mul to perform the normalization
 			vResult = _mm_div_ps(V, vResult);
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, Constants::QNaN);
 			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
@@ -11544,13 +11542,13 @@ namespace At0
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
 			// If the length is infinity, set the elements to zero
-			vLengthSq = _mm_cmpneq_ps(vLengthSq, g_XMInfinity);
+			vLengthSq = _mm_cmpneq_ps(vLengthSq, Constants::Infinity);
 			// Reciprocal mul to perform the normalization
 			vResult = _mm_div_ps(V, vResult);
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, Constants::QNaN);
 			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
@@ -11568,13 +11566,13 @@ namespace At0
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
 			// If the length is infinity, set the elements to zero
-			vLengthSq = _mm_cmpneq_ps(vLengthSq, g_XMInfinity);
+			vLengthSq = _mm_cmpneq_ps(vLengthSq, Constants::Infinity);
 			// Reciprocal mul to perform the normalization
 			vResult = _mm_div_ps(V, vResult);
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, Constants::QNaN);
 			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
@@ -11606,8 +11604,8 @@ namespace At0
 		{
 			assert((Vector::GetY(LengthMin) == Vector::GetX(LengthMin)));
 			assert((Vector::GetY(LengthMax) == Vector::GetX(LengthMax)));
-			assert(Vector2GreaterOrEqual(LengthMin, g_XMZero));
-			assert(Vector2GreaterOrEqual(LengthMax, g_XMZero));
+			assert(Vector2GreaterOrEqual(LengthMin, Constants::Zero));
+			assert(Vector2GreaterOrEqual(LengthMax, Constants::Zero));
 			assert(Vector2GreaterOrEqual(LengthMax, LengthMin));
 
 			Vector LengthSq = Vector2LengthSq(V);
@@ -11616,7 +11614,7 @@ namespace At0
 
 			VectorType RcpLength = LengthSq.ReciprocalSqrt();
 
-			VectorType InfiniteLength = Vector::EqualInt(LengthSq, g_XMInfinity.v);
+			VectorType InfiniteLength = Vector::EqualInt(LengthSq, Constants::Infinity.v);
 			VectorType ZeroLength = Vector::Equal(LengthSq, Zero);
 
 			Vector Length = Vector::Multiply(LengthSq, RcpLength);
@@ -11720,11 +11718,11 @@ namespace At0
 			float32x2_t vTemp = vmul_f32(IL, NL);
 			float32x2_t IDotN = vpadd_f32(vTemp, vTemp);
 			// vTemp = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
-			vTemp = vmls_f32(vget_low_f32(g_XMOne), IDotN, IDotN);
+			vTemp = vmls_f32(vget_low_f32(Constants::One), IDotN, IDotN);
 			vTemp = vmul_f32(vTemp, RIL);
-			vTemp = vmls_f32(vget_low_f32(g_XMOne), vTemp, RIL);
+			vTemp = vmls_f32(vget_low_f32(Constants::One), vTemp, RIL);
 			// If any terms are <=0, sqrt() will fail, punt to zero
-			uint32x2_t vMask = vcgt_f32(vTemp, vget_low_f32(g_XMZero));
+			uint32x2_t vMask = vcgt_f32(vTemp, vget_low_f32(Constants::Zero));
 			// Sqrt(vTemp)
 			float32x2_t S0 = vrsqrte_f32(vTemp);
 			float32x2_t P0 = vmul_f32(vTemp, S0);
@@ -11748,12 +11746,12 @@ namespace At0
 			VectorType IDotN = Vector2Dot(Incident, Normal);
 			// vTemp = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
 			VectorType vTemp = _mm_mul_ps(IDotN, IDotN);
-			vTemp = _mm_sub_ps(g_XMOne, vTemp);
+			vTemp = _mm_sub_ps(Constants::One, vTemp);
 			vTemp = _mm_mul_ps(vTemp, RefractionIndex);
 			vTemp = _mm_mul_ps(vTemp, RefractionIndex);
-			vTemp = _mm_sub_ps(g_XMOne, vTemp);
+			vTemp = _mm_sub_ps(Constants::One, vTemp);
 			// If any terms are <=0, sqrt() will fail, punt to zero
-			VectorType vMask = _mm_cmpgt_ps(vTemp, g_XMZero);
+			VectorType vMask = _mm_cmpgt_ps(vTemp, Constants::Zero);
 			// R = RefractionIndex * IDotN + sqrt(R)
 			vTemp = _mm_sqrt_ps(vTemp);
 			VectorType vResult = _mm_mul_ps(RefractionIndex, IDotN);
@@ -11793,7 +11791,7 @@ namespace At0
 			return vcombine_f32(Result, zero);
 #elif defined(RAY_SSE_INTRINSICS)
 			VectorType vResult = RAYMATH_PERMUTE_PS(V, _MM_SHUFFLE(3, 2, 0, 1));
-			vResult = _mm_mul_ps(vResult, g_XMNegateX);
+			vResult = _mm_mul_ps(vResult, Constants::NegateX);
 			return vResult;
 #endif
 		}
@@ -11807,7 +11805,7 @@ namespace At0
 		)
 		{
 			Vector Result = Vector2Dot(N1, N2);
-			Result = Result.Clamp(g_XMNegativeOne.v, g_XMOne.v);
+			Result = Result.Clamp(Constants::NegativeOne.v, Constants::One.v);
 			Result = VectorACosEst(Result);
 			return Result;
 		}
@@ -11821,7 +11819,7 @@ namespace At0
 		)
 		{
 			Vector Result = Vector2Dot(N1, N2);
-			Result = Result.Clamp(g_XMNegativeOne, g_XMOne);
+			Result = Result.Clamp(Constants::NegativeOne, Constants::One);
 			Result = VectorACos(Result);
 			return Result;
 		}
@@ -11842,7 +11840,7 @@ namespace At0
 			L1 = Vector::Multiply(L1, L2);
 
 			Vector CosAngle = Vector::Multiply(Dot, L1);
-			CosAngle = CosAngle.Clamp(g_XMNegativeOne.v, g_XMOne.v);
+			CosAngle = CosAngle.Clamp(Constants::NegativeOne.v, Constants::One.v);
 
 			return VectorACos(CosAngle);
 		}
@@ -11898,17 +11896,17 @@ namespace At0
 
 			VectorType Result;
 			const VectorType Zero = Vector::Zero();
-			if (Vector2NearEqual(C1, Zero, g_XMEpsilon.v))
+			if (Vector2NearEqual(C1, Zero, Constants::Epsilon.v))
 			{
-				if (Vector2NearEqual(C2, Zero, g_XMEpsilon.v))
+				if (Vector2NearEqual(C2, Zero, Constants::Epsilon.v))
 				{
 					// Coincident
-					Result = g_XMInfinity.v;
+					Result = Constants::Infinity.v;
 				}
 				else
 				{
 					// Parallel
-					Result = g_XMQNaN.v;
+					Result = Constants::QNaN.v;
 				}
 			}
 			else
@@ -11933,14 +11931,14 @@ namespace At0
 			vResultMask = _mm_sub_ps(vResultMask, C1);
 			vResultMask = _mm_max_ps(vResultMask, C1);
 			// 0xFFFFFFFF if the calculated value is to be used
-			vResultMask = _mm_cmpgt_ps(vResultMask, g_XMEpsilon);
+			vResultMask = _mm_cmpgt_ps(vResultMask, Constants::Epsilon);
 			// If C1 is close to epsilon, which fail type is it? INFINITY or NAN?
 			VectorType vFailMask = _mm_setzero_ps();
 			vFailMask = _mm_sub_ps(vFailMask, C2);
 			vFailMask = _mm_max_ps(vFailMask, C2);
-			vFailMask = _mm_cmple_ps(vFailMask, g_XMEpsilon);
-			VectorType vFail = _mm_and_ps(vFailMask, g_XMInfinity);
-			vFailMask = _mm_andnot_ps(vFailMask, g_XMQNaN);
+			vFailMask = _mm_cmple_ps(vFailMask, Constants::Epsilon);
+			VectorType vFail = _mm_and_ps(vFailMask, Constants::Infinity);
+			vFailMask = _mm_andnot_ps(vFailMask, Constants::QNaN);
 			// vFail is NAN or INF
 			vFail = _mm_or_ps(vFail, vFailMask);
 			// Intersection point = Line1Point1 + V1 * (C2 / C1)
@@ -13431,7 +13429,7 @@ namespace At0
 			// Test if less than or equal
 			VectorType vTemp1 = _mm_cmple_ps(V, Bounds);
 			// Negate the bounds
-			VectorType vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
+			VectorType vTemp2 = _mm_mul_ps(Bounds, Constants::NegativeOne);
 			// Test if greater or equal (Reversed)
 			vTemp2 = _mm_cmple_ps(vTemp2, V);
 			// Blend answers
@@ -13452,9 +13450,9 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			return (XMISNAN(V.vector4_f32[0]) ||
-				XMISNAN(V.vector4_f32[1]) ||
-				XMISNAN(V.vector4_f32[2]));
+			return (RAYMATH_ISNAN(V.vector4_f32[0]) ||
+				RAYMATH_ISNAN(V.vector4_f32[1]) ||
+				RAYMATH_ISNAN(V.vector4_f32[2]));
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Test against itself. NaN is always not equal
@@ -13479,23 +13477,23 @@ namespace At0
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
-			return (XMISINF(V.vector4_f32[0]) ||
-				XMISINF(V.vector4_f32[1]) ||
-				XMISINF(V.vector4_f32[2]));
+			return (RAYMATH_ISINF(V.vector4_f32[0]) ||
+				RAYMATH_ISINF(V.vector4_f32[1]) ||
+				RAYMATH_ISINF(V.vector4_f32[2]));
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Mask off the sign bit
-			uint32x4_t vTempInf = vandq_u32(V, g_XMAbsMask);
+			uint32x4_t vTempInf = vandq_u32(V, Constants::AbsMask);
 			// Compare to infinity
-			vTempInf = vceqq_f32(vTempInf, g_XMInfinity);
+			vTempInf = vceqq_f32(vTempInf, Constants::Infinity);
 			// If any are infinity, the signs are true.
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vTempInf), vget_high_u8(vTempInf));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return ((vget_lane_u32(vTemp.val[1], 1) & 0xFFFFFFU) != 0);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Mask off the sign bit
-			__m128 vTemp = _mm_and_ps(V, g_XMAbsMask);
+			__m128 vTemp = _mm_and_ps(V, Constants::AbsMask);
 			// Compare to infinity
-			vTemp = _mm_cmpeq_ps(vTemp, g_XMInfinity);
+			vTemp = _mm_cmpeq_ps(vTemp, Constants::Infinity);
 			// If x,y or z are infinity, the signs are true.
 			return ((_mm_movemask_ps(vTemp) & 7) != 0);
 #endif
@@ -13533,7 +13531,7 @@ namespace At0
 			return _mm_dp_ps(V1, V2, 0x7f);
 #elif defined(RAY_SSE3_INTRINSICS)
 			VectorType vTemp = _mm_mul_ps(V1, V2);
-			vTemp = _mm_and_ps(vTemp, g_XMMask3);
+			vTemp = _mm_and_ps(vTemp, Constants::Mask3);
 			vTemp = _mm_hadd_ps(vTemp, vTemp);
 			return _mm_hadd_ps(vTemp, vTemp);
 #elif defined(RAY_SSE_INTRINSICS)
@@ -13584,8 +13582,8 @@ namespace At0
 
 			VectorType vResult = vmulq_f32(vcombine_f32(v1yx, v1xy), vcombine_f32(v2zz, v2yx));
 			vResult = vmlsq_f32(vResult, vcombine_f32(v1zz, v1yx), vcombine_f32(v2yx, v2xy));
-			vResult = veorq_u32(vResult, g_XMFlipY);
-			return vandq_u32(vResult, g_XMMask3);
+			vResult = veorq_u32(vResult, Constants::FlipY);
+			return vandq_u32(vResult, Constants::Mask3);
 #elif defined(RAY_SSE_INTRINSICS)
 	// y1,z1,x1,w1
 			VectorType vTemp1 = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(3, 0, 2, 1));
@@ -13602,7 +13600,7 @@ namespace At0
 			// Subract the right from left, and return answer
 			vResult = _mm_sub_ps(vResult, vTemp1);
 			// Set w to zero
-			return _mm_and_ps(vResult, g_XMMask3);
+			return _mm_and_ps(vResult, Constants::Mask3);
 #endif
 		}
 
@@ -13648,7 +13646,7 @@ namespace At0
 			return _mm_rsqrt_ps(vTemp);
 #elif defined(RAY_SSE3_INTRINSICS)
 			VectorType vLengthSq = _mm_mul_ps(V, V);
-			vLengthSq = _mm_and_ps(vLengthSq, g_XMMask3);
+			vLengthSq = _mm_and_ps(vLengthSq, Constants::Mask3);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_rsqrt_ps(vLengthSq);
@@ -13708,14 +13706,14 @@ namespace At0
 #elif defined(RAY_SSE4_INTRINSICS)
 			VectorType vTemp = _mm_dp_ps(V, V, 0x7f);
 			VectorType vLengthSq = _mm_sqrt_ps(vTemp);
-			return _mm_div_ps(g_XMOne, vLengthSq);
+			return _mm_div_ps(Constants::One, vLengthSq);
 #elif defined(RAY_SSE3_INTRINSICS)
 			VectorType vDot = _mm_mul_ps(V, V);
-			vDot = _mm_and_ps(vDot, g_XMMask3);
+			vDot = _mm_and_ps(vDot, Constants::Mask3);
 			vDot = _mm_hadd_ps(vDot, vDot);
 			vDot = _mm_hadd_ps(vDot, vDot);
 			vDot = _mm_sqrt_ps(vDot);
-			vDot = _mm_div_ps(g_XMOne, vDot);
+			vDot = _mm_div_ps(Constants::One, vDot);
 			return vDot;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product
@@ -13733,7 +13731,7 @@ namespace At0
 			// Get the reciprocal
 			vDot = _mm_sqrt_ps(vDot);
 			// Get the reciprocal
-			vDot = _mm_div_ps(g_XMOne, vDot);
+			vDot = _mm_div_ps(Constants::One, vDot);
 			return vDot;
 #endif
 		}
@@ -13774,7 +13772,7 @@ namespace At0
 			return _mm_sqrt_ps(vTemp);
 #elif defined(RAY_SSE3_INTRINSICS)
 			VectorType vLengthSq = _mm_mul_ps(V, V);
-			vLengthSq = _mm_and_ps(vLengthSq, g_XMMask3);
+			vLengthSq = _mm_and_ps(vLengthSq, Constants::Mask3);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
@@ -13840,7 +13838,7 @@ namespace At0
 			return _mm_sqrt_ps(vTemp);
 #elif defined(RAY_SSE3_INTRINSICS)
 			VectorType vLengthSq = _mm_mul_ps(V, V);
-			vLengthSq = _mm_and_ps(vLengthSq, g_XMMask3);
+			vLengthSq = _mm_and_ps(vLengthSq, Constants::Mask3);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
@@ -13898,7 +13896,7 @@ namespace At0
 			return _mm_mul_ps(vResult, V);
 #elif defined(RAY_SSE3_INTRINSICS)
 			VectorType vDot = _mm_mul_ps(V, V);
-			vDot = _mm_and_ps(vDot, g_XMMask3);
+			vDot = _mm_and_ps(vDot, Constants::Mask3);
 			vDot = _mm_hadd_ps(vDot, vDot);
 			vDot = _mm_hadd_ps(vDot, vDot);
 			vDot = _mm_rsqrt_ps(vDot);
@@ -13959,7 +13957,7 @@ namespace At0
 			v2 = vdup_lane_f32(v2, 0);
 			v1 = vadd_f32(v1, v2);
 			uint32x2_t VEqualsZero = vceq_f32(v1, vdup_n_f32(0));
-			uint32x2_t VEqualsInf = vceq_f32(v1, vget_low_f32(g_XMInfinity));
+			uint32x2_t VEqualsInf = vceq_f32(v1, vget_low_f32(Constants::Infinity));
 			// Reciprocal sqrt (2 iterations of Newton-Raphson)
 			float32x2_t S0 = vrsqrte_f32(v1);
 			float32x2_t P0 = vmul_f32(v1, S0);
@@ -13971,7 +13969,7 @@ namespace At0
 			// Normalize
 			VectorType vResult = vmulq_f32(V, vcombine_f32(v2, v2));
 			vResult = vbslq_f32(vcombine_f32(VEqualsZero, VEqualsZero), vdupq_n_f32(0), vResult);
-			return vbslq_f32(vcombine_f32(VEqualsInf, VEqualsInf), g_XMQNaN, vResult);
+			return vbslq_f32(vcombine_f32(VEqualsInf, VEqualsInf), Constants::QNaN, vResult);
 #elif defined(RAY_SSE4_INTRINSICS)
 			VectorType vLengthSq = _mm_dp_ps(V, V, 0x7f);
 			// Prepare for the division
@@ -13982,20 +13980,20 @@ namespace At0
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
 			// If the length is infinity, set the elements to zero
-			vLengthSq = _mm_cmpneq_ps(vLengthSq, g_XMInfinity);
+			vLengthSq = _mm_cmpneq_ps(vLengthSq, Constants::Infinity);
 			// Divide to perform the normalization
 			vResult = _mm_div_ps(V, vResult);
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, Constants::QNaN);
 			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
 #elif defined(RAY_SSE3_INTRINSICS)
 			// Perform the dot product on x,y and z only
 			VectorType vLengthSq = _mm_mul_ps(V, V);
-			vLengthSq = _mm_and_ps(vLengthSq, g_XMMask3);
+			vLengthSq = _mm_and_ps(vLengthSq, Constants::Mask3);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			// Prepare for the division
@@ -14006,13 +14004,13 @@ namespace At0
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
 			// If the length is infinity, set the elements to zero
-			vLengthSq = _mm_cmpneq_ps(vLengthSq, g_XMInfinity);
+			vLengthSq = _mm_cmpneq_ps(vLengthSq, Constants::Infinity);
 			// Divide to perform the normalization
 			vResult = _mm_div_ps(V, vResult);
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, Constants::QNaN);
 			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
@@ -14032,13 +14030,13 @@ namespace At0
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
 			// If the length is infinity, set the elements to zero
-			vLengthSq = _mm_cmpneq_ps(vLengthSq, g_XMInfinity);
+			vLengthSq = _mm_cmpneq_ps(vLengthSq, Constants::Infinity);
 			// Divide to perform the normalization
 			vResult = _mm_div_ps(V, vResult);
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, Constants::QNaN);
 			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
@@ -14081,7 +14079,7 @@ namespace At0
 
 			VectorType RcpLength = LengthSq.ReciprocalSqrt();
 
-			VectorType InfiniteLength = Vector::EqualInt(LengthSq, g_XMInfinity.v);
+			VectorType InfiniteLength = Vector::EqualInt(LengthSq, Constants::Infinity.v);
 			VectorType ZeroLength = Vector::Equal(LengthSq, Zero);
 
 			VectorType Normal = Vector::Multiply(V, RcpLength);
@@ -14156,9 +14154,9 @@ namespace At0
 			VectorType IDotN = Vector3Dot(Incident, Normal);
 
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
-			Vector R = VectorNegativeMultiplySubtract(IDotN, IDotN, g_XMOne.v);
+			Vector R = VectorNegativeMultiplySubtract(IDotN, IDotN, Constants::One.v);
 			R = Vector::Multiply(R, RefractionIndex);
-			R = VectorNegativeMultiplySubtract(R, RefractionIndex, g_XMOne.v);
+			R = VectorNegativeMultiplySubtract(R, RefractionIndex, Constants::One.v);
 
 			if (Vector4LessOrEqual(R, Zero))
 			{
@@ -14182,17 +14180,17 @@ namespace At0
 			VectorType IDotN = Vector3Dot(Incident, Normal);
 
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
-			float32x4_t R = vmlsq_f32(g_XMOne, IDotN, IDotN);
+			float32x4_t R = vmlsq_f32(Constants::One, IDotN, IDotN);
 			R = vmulq_f32(R, RefractionIndex);
-			R = vmlsq_f32(g_XMOne, R, RefractionIndex);
+			R = vmlsq_f32(Constants::One, R, RefractionIndex);
 
-			uint32x4_t vResult = vcleq_f32(R, g_XMZero);
+			uint32x4_t vResult = vcleq_f32(R, Constants::Zero);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			if (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU)
 			{
 				// Total internal reflection
-				vResult = g_XMZero;
+				vResult = Constants::Zero;
 			}
 			else
 			{
@@ -14218,16 +14216,16 @@ namespace At0
 			VectorType IDotN = Vector3Dot(Incident, Normal);
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
 			VectorType R = _mm_mul_ps(IDotN, IDotN);
-			R = _mm_sub_ps(g_XMOne, R);
+			R = _mm_sub_ps(Constants::One, R);
 			R = _mm_mul_ps(R, RefractionIndex);
 			R = _mm_mul_ps(R, RefractionIndex);
-			R = _mm_sub_ps(g_XMOne, R);
+			R = _mm_sub_ps(Constants::One, R);
 
-			VectorType vResult = _mm_cmple_ps(R, g_XMZero);
+			VectorType vResult = _mm_cmple_ps(R, Constants::Zero);
 			if (_mm_movemask_ps(vResult) == 0x0f)
 			{
 				// Total internal reflection
-				vResult = g_XMZero;
+				vResult = Constants::Zero;
 			}
 			else
 			{
@@ -14280,7 +14278,7 @@ namespace At0
 		)
 		{
 			Vector Result = Vector3Dot(N1, N2);
-			Result = Result.Clamp(g_XMNegativeOne.v, g_XMOne.v);
+			Result = Result.Clamp(Constants::NegativeOne.v, Constants::One.v);
 			Result = VectorACosEst(Result);
 			return Result;
 		}
@@ -14294,7 +14292,7 @@ namespace At0
 		)
 		{
 			Vector Result = Vector3Dot(N1, N2);
-			Result = Result.Clamp(g_XMNegativeOne.v, g_XMOne.v);
+			Result = Result.Clamp(Constants::NegativeOne.v, Constants::One.v);
 			Result = VectorACos(Result);
 			return Result;
 		}
@@ -14315,7 +14313,7 @@ namespace At0
 			L1 = Vector::Multiply(L1, L2);
 
 			Vector CosAngle = Vector::Multiply(Dot, L1);
-			CosAngle = CosAngle.Clamp(g_XMNegativeOne.v, g_XMOne.v);
+			CosAngle = CosAngle.Clamp(Constants::NegativeOne.v, Constants::One.v);
 
 			return VectorACos(CosAngle);
 		}
@@ -14381,7 +14379,7 @@ namespace At0
 			FQuaternion RotationQuaternion
 		)
 		{
-			VectorType A = Vector::Select(g_XMSelect1110.v, V, g_XMSelect1110.v);
+			VectorType A = Vector::Select(Constants::Select1110.v, V, Constants::Select1110.v);
 			VectorType Q = RotationQuaternion.Conjugate();
 			VectorType Result = Quaternion::Multiply(Q, A);
 			return Quaternion::Multiply(Result, RotationQuaternion);
@@ -14396,7 +14394,7 @@ namespace At0
 			FQuaternion RotationQuaternion
 		)
 		{
-			VectorType A = Vector::Select(g_XMSelect1110.v, V, g_XMSelect1110.v);
+			VectorType A = Vector::Select(Constants::Select1110.v, V, Constants::Select1110.v);
 			Quaternion Result = Quaternion::Multiply(RotationQuaternion, A);
 			VectorType Q = RotationQuaternion.Conjugate();
 			return Quaternion::Multiply(Result, Q);
@@ -14608,7 +14606,7 @@ namespace At0
 							pInputVector += sizeof(Float3) * 4;
 
 							// Unpack the 4 vectors (.w components are junk)
-							XM3UNPACK3INTO4(V1, L2, L3);
+							RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 							// Result 1
 							VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -14680,7 +14678,7 @@ namespace At0
 							pInputVector += sizeof(Float3) * 4;
 
 							// Unpack the 4 vectors (.w components are junk)
-							XM3UNPACK3INTO4(V1, L2, L3);
+							RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 							// Result 1
 							VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -15023,7 +15021,7 @@ namespace At0
 								pInputVector += sizeof(Float3) * 4;
 
 								// Unpack the 4 vectors (.w components are junk)
-								XM3UNPACK3INTO4(V1, L2, L3);
+								RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 								// Result 1
 								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -15090,7 +15088,7 @@ namespace At0
 								V4 = _mm_div_ps(vTemp, W);
 
 								// Pack and store the vectors
-								XM3PACK4INTO3(vTemp);
+								RAYMATH3_PACK4_INTO3(vTemp);
 								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), V1);
 								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
 								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 32), V3);
@@ -15109,7 +15107,7 @@ namespace At0
 								pInputVector += sizeof(Float3) * 4;
 
 								// Unpack the 4 vectors (.w components are junk)
-								XM3UNPACK3INTO4(V1, L2, L3);
+								RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 								// Result 1
 								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -15176,7 +15174,7 @@ namespace At0
 								V4 = _mm_div_ps(vTemp, W);
 
 								// Pack and store the vectors
-								XM3PACK4INTO3(vTemp);
+								RAYMATH3_PACK4_INTO3(vTemp);
 								_mm_storeu_ps(reinterpret_cast<float*>(pOutputVector), V1);
 								_mm_storeu_ps(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
 								_mm_storeu_ps(reinterpret_cast<float*>(pOutputVector + 32), V3);
@@ -15196,7 +15194,7 @@ namespace At0
 							pInputVector += sizeof(Float3) * 4;
 
 							// Unpack the 4 vectors (.w components are junk)
-							XM3UNPACK3INTO4(V1, L2, L3);
+							RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 							// Result 1
 							VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -15509,7 +15507,7 @@ namespace At0
 								pInputVector += sizeof(Float3) * 4;
 
 								// Unpack the 4 vectors (.w components are junk)
-								XM3UNPACK3INTO4(V1, L2, L3);
+								RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 								// Result 1
 								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -15556,7 +15554,7 @@ namespace At0
 								V4 = _mm_add_ps(vTemp, vTemp3);
 
 								// Pack and store the vectors
-								XM3PACK4INTO3(vTemp);
+								RAYMATH3_PACK4_INTO3(vTemp);
 								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), V1);
 								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
 								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 32), V3);
@@ -15575,7 +15573,7 @@ namespace At0
 								pInputVector += sizeof(Float3) * 4;
 
 								// Unpack the 4 vectors (.w components are junk)
-								XM3UNPACK3INTO4(V1, L2, L3);
+								RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 								// Result 1
 								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -15622,7 +15620,7 @@ namespace At0
 								V4 = _mm_add_ps(vTemp, vTemp3);
 
 								// Pack and store the vectors
-								XM3PACK4INTO3(vTemp);
+								RAYMATH3_PACK4_INTO3(vTemp);
 								_mm_storeu_ps(reinterpret_cast<float*>(pOutputVector), V1);
 								_mm_storeu_ps(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
 								_mm_storeu_ps(reinterpret_cast<float*>(pOutputVector + 32), V3);
@@ -15642,7 +15640,7 @@ namespace At0
 							pInputVector += sizeof(Float3) * 4;
 
 							// Unpack the 4 vectors (.w components are junk)
-							XM3UNPACK3INTO4(V1, L2, L3);
+							RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 							// Result 1
 							VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -15998,7 +15996,7 @@ namespace At0
 								pInputVector += sizeof(Float3) * 4;
 
 								// Unpack the 4 vectors (.w components are junk)
-								XM3UNPACK3INTO4(V1, L2, L3);
+								RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 								// Result 1
 								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -16073,7 +16071,7 @@ namespace At0
 								V4 = _mm_add_ps(vTemp, Offset);
 
 								// Pack and store the vectors
-								XM3PACK4INTO3(vTemp);
+								RAYMATH3_PACK4_INTO3(vTemp);
 								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), V1);
 								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
 								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 32), V3);
@@ -16092,7 +16090,7 @@ namespace At0
 								pInputVector += sizeof(Float3) * 4;
 
 								// Unpack the 4 vectors (.w components are junk)
-								XM3UNPACK3INTO4(V1, L2, L3);
+								RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 								// Result 1
 								VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -16167,7 +16165,7 @@ namespace At0
 								V4 = _mm_add_ps(vTemp, Offset);
 
 								// Pack and store the vectors
-								XM3PACK4INTO3(vTemp);
+								RAYMATH3_PACK4_INTO3(vTemp);
 								_mm_storeu_ps(reinterpret_cast<float*>(pOutputVector), V1);
 								_mm_storeu_ps(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
 								_mm_storeu_ps(reinterpret_cast<float*>(pOutputVector + 32), V3);
@@ -16187,7 +16185,7 @@ namespace At0
 							pInputVector += sizeof(Float3) * 4;
 
 							// Unpack the 4 vectors (.w components are junk)
-							XM3UNPACK3INTO4(V1, L2, L3);
+							RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 							// Result 1
 							VectorType Z = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(2, 2, 2, 2));
@@ -16600,7 +16598,7 @@ namespace At0
 								pInputVector += sizeof(Float3) * 4;
 
 								// Unpack the 4 vectors (.w components are junk)
-								XM3UNPACK3INTO4(V1, L2, L3);
+								RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 								// Result 1
 								V1 = _mm_mul_ps(V1, Scale);
@@ -16675,7 +16673,7 @@ namespace At0
 								V4 = _mm_div_ps(vTemp, W);
 
 								// Pack and store the vectors
-								XM3PACK4INTO3(vTemp);
+								RAYMATH3_PACK4_INTO3(vTemp);
 								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector), V1);
 								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
 								RAYMATH_STREAM_PS(reinterpret_cast<float*>(pOutputVector + 32), V3);
@@ -16694,7 +16692,7 @@ namespace At0
 								pInputVector += sizeof(Float3) * 4;
 
 								// Unpack the 4 vectors (.w components are junk)
-								XM3UNPACK3INTO4(V1, L2, L3);
+								RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 								// Result 1
 								V1 = _mm_mul_ps(V1, Scale);
@@ -16769,7 +16767,7 @@ namespace At0
 								V4 = _mm_div_ps(vTemp, W);
 
 								// Pack and store the vectors
-								XM3PACK4INTO3(vTemp);
+								RAYMATH3_PACK4_INTO3(vTemp);
 								_mm_storeu_ps(reinterpret_cast<float*>(pOutputVector), V1);
 								_mm_storeu_ps(reinterpret_cast<float*>(pOutputVector + 16), vTemp);
 								_mm_storeu_ps(reinterpret_cast<float*>(pOutputVector + 32), V3);
@@ -16789,7 +16787,7 @@ namespace At0
 							pInputVector += sizeof(Float3) * 4;
 
 							// Unpack the 4 vectors (.w components are junk)
-							XM3UNPACK3INTO4(V1, L2, L3);
+							RAYMATH3_UNPACK3_INTO4(V1, L2, L3);
 
 							// Result 1
 							V1 = _mm_mul_ps(V1, Scale);
@@ -17410,7 +17408,7 @@ namespace At0
 			// Test if less than or equal
 			VectorType vTemp1 = _mm_cmple_ps(V, Bounds);
 			// Negate the bounds
-			VectorType vTemp2 = _mm_mul_ps(Bounds, g_XMNegativeOne);
+			VectorType vTemp2 = _mm_mul_ps(Bounds, Constants::NegativeOne);
 			// Test if greater or equal (Reversed)
 			vTemp2 = _mm_cmple_ps(vTemp2, V);
 			// Blend answers
@@ -17430,10 +17428,10 @@ namespace At0
 		)
 		{
 #if defined(RAY_NO_INTRINSICS)
-			return (XMISNAN(V.vector4_f32[0]) ||
-				XMISNAN(V.vector4_f32[1]) ||
-				XMISNAN(V.vector4_f32[2]) ||
-				XMISNAN(V.vector4_f32[3]));
+			return (RAYMATH_ISNAN(V.vector4_f32[0]) ||
+				RAYMATH_ISNAN(V.vector4_f32[1]) ||
+				RAYMATH_ISNAN(V.vector4_f32[2]) ||
+				RAYMATH_ISNAN(V.vector4_f32[3]));
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Test against itself. NaN is always not equal
 			uint32x4_t vTempNan = vceqq_f32(V, V);
@@ -17458,25 +17456,25 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS)
 
-			return (XMISINF(V.vector4_f32[0]) ||
-				XMISINF(V.vector4_f32[1]) ||
-				XMISINF(V.vector4_f32[2]) ||
-				XMISINF(V.vector4_f32[3]));
+			return (RAYMATH_ISINF(V.vector4_f32[0]) ||
+				RAYMATH_ISINF(V.vector4_f32[1]) ||
+				RAYMATH_ISINF(V.vector4_f32[2]) ||
+				RAYMATH_ISINF(V.vector4_f32[3]));
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Mask off the sign bit
-			uint32x4_t vTempInf = vandq_u32(V, g_XMAbsMask);
+			uint32x4_t vTempInf = vandq_u32(V, Constants::AbsMask);
 			// Compare to infinity
-			vTempInf = vceqq_f32(vTempInf, g_XMInfinity);
+			vTempInf = vceqq_f32(vTempInf, Constants::Infinity);
 			// If any are infinity, the signs are true.
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vTempInf), vget_high_u8(vTempInf));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			return (vget_lane_u32(vTemp.val[1], 1) != 0);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Mask off the sign bit
-			VectorType vTemp = _mm_and_ps(V, g_XMAbsMask);
+			VectorType vTemp = _mm_and_ps(V, Constants::AbsMask);
 			// Compare to infinity
-			vTemp = _mm_cmpeq_ps(vTemp, g_XMInfinity);
+			vTemp = _mm_cmpeq_ps(vTemp, Constants::Infinity);
 			// If any are infinity, the signs are true.
 			return (_mm_movemask_ps(vTemp) != 0);
 #endif
@@ -17552,7 +17550,7 @@ namespace At0
 			return Result.v;
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			const float32x2_t select = vget_low_f32(g_XMMaskX);
+			const float32x2_t select = vget_low_f32(Constants::MaskX);
 
 			// Term1: V2zwyz * V3wzwy
 			const float32x2_t v2xy = vget_low_f32(V2);
@@ -17778,13 +17776,13 @@ namespace At0
 #elif defined(RAY_SSE4_INTRINSICS)
 			VectorType vTemp = _mm_dp_ps(V, V, 0xff);
 			VectorType vLengthSq = _mm_sqrt_ps(vTemp);
-			return _mm_div_ps(g_XMOne, vLengthSq);
+			return _mm_div_ps(Constants::One, vLengthSq);
 #elif defined(RAY_SSE3_INTRINSICS)
 			VectorType vLengthSq = _mm_mul_ps(V, V);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_hadd_ps(vLengthSq, vLengthSq);
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
-			vLengthSq = _mm_div_ps(g_XMOne, vLengthSq);
+			vLengthSq = _mm_div_ps(Constants::One, vLengthSq);
 			return vLengthSq;
 #elif defined(RAY_SSE_INTRINSICS)
 			// Perform the dot product on x,y,z and w
@@ -17804,7 +17802,7 @@ namespace At0
 			// Get the reciprocal
 			vLengthSq = _mm_sqrt_ps(vLengthSq);
 			// Accurate!
-			vLengthSq = _mm_div_ps(g_XMOne, vLengthSq);
+			vLengthSq = _mm_div_ps(Constants::One, vLengthSq);
 			return vLengthSq;
 #endif
 		}
@@ -18029,7 +18027,7 @@ namespace At0
 			v1 = vadd_f32(v1, v2);
 			v1 = vpadd_f32(v1, v1);
 			uint32x2_t VEqualsZero = vceq_f32(v1, vdup_n_f32(0));
-			uint32x2_t VEqualsInf = vceq_f32(v1, vget_low_f32(g_XMInfinity));
+			uint32x2_t VEqualsInf = vceq_f32(v1, vget_low_f32(Constants::Infinity));
 			// Reciprocal sqrt (2 iterations of Newton-Raphson)
 			float32x2_t S0 = vrsqrte_f32(v1);
 			float32x2_t P0 = vmul_f32(v1, S0);
@@ -18041,7 +18039,7 @@ namespace At0
 			// Normalize
 			VectorType vResult = vmulq_f32(V, vcombine_f32(v2, v2));
 			vResult = vbslq_f32(vcombine_f32(VEqualsZero, VEqualsZero), vdupq_n_f32(0), vResult);
-			return vbslq_f32(vcombine_f32(VEqualsInf, VEqualsInf), g_XMQNaN, vResult);
+			return vbslq_f32(vcombine_f32(VEqualsInf, VEqualsInf), Constants::QNaN, vResult);
 #elif defined(RAY_SSE4_INTRINSICS)
 			VectorType vLengthSq = _mm_dp_ps(V, V, 0xff);
 			// Prepare for the division
@@ -18052,13 +18050,13 @@ namespace At0
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
 			// If the length is infinity, set the elements to zero
-			vLengthSq = _mm_cmpneq_ps(vLengthSq, g_XMInfinity);
+			vLengthSq = _mm_cmpneq_ps(vLengthSq, Constants::Infinity);
 			// Divide to perform the normalization
 			vResult = _mm_div_ps(V, vResult);
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, Constants::QNaN);
 			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
@@ -18075,13 +18073,13 @@ namespace At0
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
 			// If the length is infinity, set the elements to zero
-			vLengthSq = _mm_cmpneq_ps(vLengthSq, g_XMInfinity);
+			vLengthSq = _mm_cmpneq_ps(vLengthSq, Constants::Infinity);
 			// Divide to perform the normalization
 			vResult = _mm_div_ps(V, vResult);
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, Constants::QNaN);
 			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
@@ -18108,13 +18106,13 @@ namespace At0
 			vZeroMask = _mm_cmpneq_ps(vZeroMask, vResult);
 			// Failsafe on zero (Or epsilon) length planes
 			// If the length is infinity, set the elements to zero
-			vLengthSq = _mm_cmpneq_ps(vLengthSq, g_XMInfinity);
+			vLengthSq = _mm_cmpneq_ps(vLengthSq, Constants::Infinity);
 			// Divide to perform the normalization
 			vResult = _mm_div_ps(V, vResult);
 			// Any that are infinity, set to zero
 			vResult = _mm_and_ps(vResult, vZeroMask);
 			// Select qnan or result based on infinite length
-			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, g_XMQNaN);
+			VectorType vTemp1 = _mm_andnot_ps(vLengthSq, Constants::QNaN);
 			VectorType vTemp2 = _mm_and_ps(vResult, vLengthSq);
 			vResult = _mm_or_ps(vTemp1, vTemp2);
 			return vResult;
@@ -18157,7 +18155,7 @@ namespace At0
 
 			VectorType RcpLength = LengthSq.ReciprocalSqrt();
 
-			VectorType InfiniteLength = Vector::EqualInt(LengthSq, g_XMInfinity.v);
+			VectorType InfiniteLength = Vector::EqualInt(LengthSq, Constants::Infinity.v);
 			VectorType ZeroLength = Vector::Equal(LengthSq, Zero);
 
 			VectorType Normal = Vector::Multiply(V, RcpLength);
@@ -18234,9 +18232,9 @@ namespace At0
 			IDotN = Vector4Dot(Incident, Normal);
 
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
-			R = VectorNegativeMultiplySubtract(IDotN, IDotN, g_XMOne.v);
+			R = VectorNegativeMultiplySubtract(IDotN, IDotN, Constants::One.v);
 			R = Vector::Multiply(R, RefractionIndex);
-			R = VectorNegativeMultiplySubtract(R, RefractionIndex, g_XMOne.v);
+			R = VectorNegativeMultiplySubtract(R, RefractionIndex, Constants::One.v);
 
 			if (Vector4LessOrEqual(R, Zero))
 			{
@@ -18262,17 +18260,17 @@ namespace At0
 			VectorType IDotN = Vector4Dot(Incident, Normal);
 
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
-			float32x4_t R = vmlsq_f32(g_XMOne, IDotN, IDotN);
+			float32x4_t R = vmlsq_f32(Constants::One, IDotN, IDotN);
 			R = vmulq_f32(R, RefractionIndex);
-			R = vmlsq_f32(g_XMOne, R, RefractionIndex);
+			R = vmlsq_f32(Constants::One, R, RefractionIndex);
 
-			uint32x4_t vResult = vcleq_f32(R, g_XMZero);
+			uint32x4_t vResult = vcleq_f32(R, Constants::Zero);
 			int8x8x2_t vTemp = vzip_u8(vget_low_u8(vResult), vget_high_u8(vResult));
 			vTemp = vzip_u16(vTemp.val[0], vTemp.val[1]);
 			if (vget_lane_u32(vTemp.val[1], 1) == 0xFFFFFFFFU)
 			{
 				// Total internal reflection
-				vResult = g_XMZero;
+				vResult = Constants::Zero;
 			}
 			else
 			{
@@ -18297,16 +18295,16 @@ namespace At0
 
 			// R = 1.0f - RefractionIndex * RefractionIndex * (1.0f - IDotN * IDotN)
 			VectorType R = _mm_mul_ps(IDotN, IDotN);
-			R = _mm_sub_ps(g_XMOne, R);
+			R = _mm_sub_ps(Constants::One, R);
 			R = _mm_mul_ps(R, RefractionIndex);
 			R = _mm_mul_ps(R, RefractionIndex);
-			R = _mm_sub_ps(g_XMOne, R);
+			R = _mm_sub_ps(Constants::One, R);
 
-			VectorType vResult = _mm_cmple_ps(R, g_XMZero);
+			VectorType vResult = _mm_cmple_ps(R, Constants::Zero);
 			if (_mm_movemask_ps(vResult) == 0x0f)
 			{
 				// Total internal reflection
-				vResult = g_XMZero;
+				vResult = Constants::Zero;
 			}
 			else
 			{
@@ -18362,7 +18360,7 @@ namespace At0
 		)
 		{
 			Vector Result = Vector4Dot(N1, N2);
-			Result = Result.Clamp(g_XMNegativeOne.v, g_XMOne.v);
+			Result = Result.Clamp(Constants::NegativeOne.v, Constants::One.v);
 			Result = VectorACosEst(Result);
 			return Result;
 		}
@@ -18376,7 +18374,7 @@ namespace At0
 		)
 		{
 			Vector Result = Vector4Dot(N1, N2);
-			Result = Result.Clamp(g_XMNegativeOne.v, g_XMOne.v);
+			Result = Result.Clamp(Constants::NegativeOne.v, Constants::One.v);
 			Result = VectorACos(Result);
 			return Result;
 		}
@@ -18397,7 +18395,7 @@ namespace At0
 			L1 = Vector::Multiply(L1, L2);
 
 			Vector CosAngle = Vector::Multiply(Dot, L1);
-			CosAngle = CosAngle.Clamp(g_XMNegativeOne.v, g_XMOne.v);
+			CosAngle = CosAngle.Clamp(Constants::NegativeOne.v, Constants::One.v);
 
 			return VectorACos(CosAngle);
 		}
@@ -18903,13 +18901,13 @@ namespace At0
 #endif /* !RAYMATH_NO_VECTOR_OVERLOADS */
 
 #if defined(RAY_NO_INTRINSICS)
-#undef XMISNAN
-#undef XMISINF
+#undef RAYMATH_ISNAN
+#undef RAYMATH_ISINF
 #endif
 
 #if defined(RAY_SSE_INTRINSICS)
-#undef XM3UNPACK3INTO4
-#undef XM3PACK4INTO3
+#undef RAYMATH3_UNPACK3_INTO4
+#undef RAYMATH3_PACK4_INTO3
 #endif
 
 
@@ -19018,15 +19016,15 @@ namespace At0
 			return (i != 0);      // i == 0 if nothing matched
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			// Mask off the sign bits
-			VectorType vTemp1 = vandq_u32(r[0], g_XMAbsMask);
-			VectorType vTemp2 = vandq_u32(r[1], g_XMAbsMask);
-			VectorType vTemp3 = vandq_u32(r[2], g_XMAbsMask);
-			VectorType vTemp4 = vandq_u32(r[3], g_XMAbsMask);
+			VectorType vTemp1 = vandq_u32(r[0], Constants::AbsMask);
+			VectorType vTemp2 = vandq_u32(r[1], Constants::AbsMask);
+			VectorType vTemp3 = vandq_u32(r[2], Constants::AbsMask);
+			VectorType vTemp4 = vandq_u32(r[3], Constants::AbsMask);
 			// Compare to infinity
-			vTemp1 = vceqq_f32(vTemp1, g_XMInfinity);
-			vTemp2 = vceqq_f32(vTemp2, g_XMInfinity);
-			vTemp3 = vceqq_f32(vTemp3, g_XMInfinity);
-			vTemp4 = vceqq_f32(vTemp4, g_XMInfinity);
+			vTemp1 = vceqq_f32(vTemp1, Constants::Infinity);
+			vTemp2 = vceqq_f32(vTemp2, Constants::Infinity);
+			vTemp3 = vceqq_f32(vTemp3, Constants::Infinity);
+			vTemp4 = vceqq_f32(vTemp4, Constants::Infinity);
 			// Or the answers together
 			vTemp1 = vorrq_u32(vTemp1, vTemp2);
 			vTemp3 = vorrq_u32(vTemp3, vTemp4);
@@ -19038,15 +19036,15 @@ namespace At0
 			return (r != 0);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Mask off the sign bits
-			VectorType vTemp1 = _mm_and_ps(r[0], g_XMAbsMask);
-			VectorType vTemp2 = _mm_and_ps(r[1], g_XMAbsMask);
-			VectorType vTemp3 = _mm_and_ps(r[2], g_XMAbsMask);
-			VectorType vTemp4 = _mm_and_ps(r[3], g_XMAbsMask);
+			VectorType vTemp1 = _mm_and_ps(r[0], Constants::AbsMask);
+			VectorType vTemp2 = _mm_and_ps(r[1], Constants::AbsMask);
+			VectorType vTemp3 = _mm_and_ps(r[2], Constants::AbsMask);
+			VectorType vTemp4 = _mm_and_ps(r[3], Constants::AbsMask);
 			// Compare to infinity
-			vTemp1 = _mm_cmpeq_ps(vTemp1, g_XMInfinity);
-			vTemp2 = _mm_cmpeq_ps(vTemp2, g_XMInfinity);
-			vTemp3 = _mm_cmpeq_ps(vTemp3, g_XMInfinity);
-			vTemp4 = _mm_cmpeq_ps(vTemp4, g_XMInfinity);
+			vTemp1 = _mm_cmpeq_ps(vTemp1, Constants::Infinity);
+			vTemp2 = _mm_cmpeq_ps(vTemp2, Constants::Infinity);
+			vTemp3 = _mm_cmpeq_ps(vTemp3, Constants::Infinity);
+			vTemp4 = _mm_cmpeq_ps(vTemp4, Constants::Infinity);
 			// Or the answers together
 			vTemp1 = _mm_or_ps(vTemp1, vTemp2);
 			vTemp3 = _mm_or_ps(vTemp3, vTemp4);
@@ -19091,10 +19089,10 @@ namespace At0
 			uOne |= uZero;
 			return (uOne == 0);
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			VectorType vTemp1 = vceqq_f32(r[0], g_XMIdentityR0);
-			VectorType vTemp2 = vceqq_f32(r[1], g_XMIdentityR1);
-			VectorType vTemp3 = vceqq_f32(r[2], g_XMIdentityR2);
-			VectorType vTemp4 = vceqq_f32(r[3], g_XMIdentityR3);
+			VectorType vTemp1 = vceqq_f32(r[0], Constants::IdentityR0);
+			VectorType vTemp2 = vceqq_f32(r[1], Constants::IdentityR1);
+			VectorType vTemp3 = vceqq_f32(r[2], Constants::IdentityR2);
+			VectorType vTemp4 = vceqq_f32(r[3], Constants::IdentityR3);
 			vTemp1 = vandq_u32(vTemp1, vTemp2);
 			vTemp3 = vandq_u32(vTemp3, vTemp4);
 			vTemp1 = vandq_u32(vTemp1, vTemp3);
@@ -19103,10 +19101,10 @@ namespace At0
 			uint32_t r = vget_lane_u32(vTemp.val[1], 1);
 			return (r == 0xFFFFFFFFU);
 #elif defined(RAY_SSE_INTRINSICS)
-			VectorType vTemp1 = _mm_cmpeq_ps(r[0], g_XMIdentityR0);
-			VectorType vTemp2 = _mm_cmpeq_ps(r[1], g_XMIdentityR1);
-			VectorType vTemp3 = _mm_cmpeq_ps(r[2], g_XMIdentityR2);
-			VectorType vTemp4 = _mm_cmpeq_ps(r[3], g_XMIdentityR3);
+			VectorType vTemp1 = _mm_cmpeq_ps(r[0], Constants::IdentityR0);
+			VectorType vTemp2 = _mm_cmpeq_ps(r[1], Constants::IdentityR1);
+			VectorType vTemp3 = _mm_cmpeq_ps(r[2], Constants::IdentityR2);
+			VectorType vTemp4 = _mm_cmpeq_ps(r[3], Constants::IdentityR3);
 			vTemp1 = _mm_and_ps(vTemp1, vTemp2);
 			vTemp3 = _mm_and_ps(vTemp3, vTemp4);
 			vTemp1 = _mm_and_ps(vTemp1, vTemp3);
@@ -19629,10 +19627,10 @@ namespace At0
 			C6 = VectorNegativeMultiplySubtract(V0[3], V1[3], C6);
 
 			Matrix R;
-			R.r[0] = Vector::Select(C0, C1, g_XMSelect0101.v);
-			R.r[1] = Vector::Select(C2, C3, g_XMSelect0101.v);
-			R.r[2] = Vector::Select(C4, C5, g_XMSelect0101.v);
-			R.r[3] = Vector::Select(C6, C7, g_XMSelect0101.v);
+			R.r[0] = Vector::Select(C0, C1, Constants::Select0101.v);
+			R.r[1] = Vector::Select(C2, C3, Constants::Select0101.v);
+			R.r[2] = Vector::Select(C4, C5, Constants::Select0101.v);
+			R.r[3] = Vector::Select(C6, C7, Constants::Select0101.v);
 
 			Vector Determinant = Vector4Dot(R.r[0], MT.r[0]);
 
@@ -19756,7 +19754,7 @@ namespace At0
 			VectorType vTemp = Vector4Dot(C0, MT.r[0]);
 			if (pDeterminant != nullptr)
 				*pDeterminant = vTemp;
-			vTemp = _mm_div_ps(g_XMOne, vTemp);
+			vTemp = _mm_div_ps(Constants::One, vTemp);
 			Matrix mResult;
 			mResult.r[0] = _mm_mul_ps(C0, vTemp);
 			mResult.r[1] = _mm_mul_ps(C2, vTemp);
@@ -19806,7 +19804,7 @@ namespace At0
 			return Vector4Dot(S, R);
 		}
 
-#define XM3RANKDECOMPOSE(a, b, c, x, y, z)      \
+#define RAYMATH3_RANKED_DECOMPOSE(a, b, c, x, y, z)      \
     if((x) < (y))                   \
     {                               \
         if((y) < (z))               \
@@ -19856,7 +19854,7 @@ namespace At0
         }                           \
     }
 
-#define XM3_DECOMP_EPSILON 0.0001f
+#define RAYMATH3_DECOMP_EPSILON 0.0001f
 
 
 		inline bool RAYMATH_CALLCONV Matrix::Decompose
@@ -19867,9 +19865,9 @@ namespace At0
 		) const
 		{
 			static const VectorType* pvCanonicalBasis[3] = {
-				&g_XMIdentityR0.v,
-				&g_XMIdentityR1.v,
-				&g_XMIdentityR2.v
+				&Constants::IdentityR0.v,
+				&Constants::IdentityR1.v,
+				&Constants::IdentityR2.v
 			};
 
 			assert(outScale != nullptr);
@@ -19889,7 +19887,7 @@ namespace At0
 			matTemp.r[0] = r[0];
 			matTemp.r[1] = r[1];
 			matTemp.r[2] = r[2];
-			matTemp.r[3] = g_XMIdentityR3.v;
+			matTemp.r[3] = Constants::IdentityR3.v;
 
 			auto pfScales = reinterpret_cast<float*>(outScale);
 
@@ -19899,15 +19897,15 @@ namespace At0
 			VectorGetXPtr(&pfScales[2], Vector3Length(ppvBasis[2][0]));
 			pfScales[3] = 0.f;
 
-			XM3RANKDECOMPOSE(a, b, c, pfScales[0], pfScales[1], pfScales[2])
+			RAYMATH3_RANKED_DECOMPOSE(a, b, c, pfScales[0], pfScales[1], pfScales[2])
 
-				if (pfScales[a] < XM3_DECOMP_EPSILON)
+				if (pfScales[a] < RAYMATH3_DECOMP_EPSILON)
 				{
 					ppvBasis[a][0] = pvCanonicalBasis[a][0];
 				}
 			ppvBasis[a][0] = Vector3Normalize(ppvBasis[a][0]);
 
-			if (pfScales[b] < XM3_DECOMP_EPSILON)
+			if (pfScales[b] < RAYMATH3_DECOMP_EPSILON)
 			{
 				size_t aa, bb, cc;
 				float fAbsX, fAbsY, fAbsZ;
@@ -19916,14 +19914,14 @@ namespace At0
 				fAbsY = fabsf(ppvBasis[a][0].GetY());
 				fAbsZ = fabsf(ppvBasis[a][0].GetZ());
 
-				XM3RANKDECOMPOSE(aa, bb, cc, fAbsX, fAbsY, fAbsZ)
+				RAYMATH3_RANKED_DECOMPOSE(aa, bb, cc, fAbsX, fAbsY, fAbsZ)
 
 					ppvBasis[b][0] = Vector3Cross(ppvBasis[a][0], pvCanonicalBasis[cc][0]);
 			}
 
 			ppvBasis[b][0] = Vector3Normalize(ppvBasis[b][0]);
 
-			if (pfScales[c] < XM3_DECOMP_EPSILON)
+			if (pfScales[c] < RAYMATH3_DECOMP_EPSILON)
 			{
 				ppvBasis[c][0] = Vector3Cross(ppvBasis[a][0], ppvBasis[b][0]);
 			}
@@ -19945,7 +19943,7 @@ namespace At0
 			fDet -= 1.0f;
 			fDet *= fDet;
 
-			if (XM3_DECOMP_EPSILON < fDet)
+			if (RAYMATH3_DECOMP_EPSILON < fDet)
 			{
 				// Non-SRT matrix encountered
 				return false;
@@ -19956,8 +19954,8 @@ namespace At0
 			return true;
 		}
 
-#undef XM3_DECOMP_EPSILON
-#undef XM3RANKDECOMPOSE
+#undef RAYMATH3_DECOMP_EPSILON
+#undef RAYMATH3_RANKED_DECOMPOSE
 
 		//------------------------------------------------------------------------------
 		// Transformation operations
@@ -19968,10 +19966,10 @@ namespace At0
 		inline Matrix RAYMATH_CALLCONV Matrix::Identity()
 		{
 			Matrix M;
-			M.r[0] = g_XMIdentityR0.v;
-			M.r[1] = g_XMIdentityR1.v;
-			M.r[2] = g_XMIdentityR2.v;
-			M.r[3] = g_XMIdentityR3.v;
+			M.r[0] = Constants::IdentityR0.v;
+			M.r[1] = Constants::IdentityR1.v;
+			M.r[2] = Constants::IdentityR2.v;
+			M.r[3] = Constants::IdentityR3.v;
 			return M;
 		}
 
@@ -20035,9 +20033,9 @@ namespace At0
 
 #elif defined(RAY_SSE_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 			Matrix M;
-			M.r[0] = g_XMIdentityR0.v;
-			M.r[1] = g_XMIdentityR1.v;
-			M.r[2] = g_XMIdentityR2.v;
+			M.r[0] = Constants::IdentityR0.v;
+			M.r[1] = Constants::IdentityR1.v;
+			M.r[2] = Constants::IdentityR2.v;
 			M.r[3] = Vector::Set(OffsetX, OffsetY, OffsetZ, 1.f);
 			return M;
 #endif
@@ -20077,10 +20075,10 @@ namespace At0
 
 #elif defined(RAY_SSE_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 			Matrix M;
-			M.r[0] = g_XMIdentityR0.v;
-			M.r[1] = g_XMIdentityR1.v;
-			M.r[2] = g_XMIdentityR2.v;
-			M.r[3] = Vector::Select(g_XMIdentityR3.v, Offset, g_XMSelect1110.v);
+			M.r[0] = Constants::IdentityR0.v;
+			M.r[1] = Constants::IdentityR1.v;
+			M.r[2] = Constants::IdentityR2.v;
+			M.r[3] = Vector::Select(Constants::IdentityR3.v, Offset, Constants::Select1110.v);
 			return M;
 #endif
 		}
@@ -20124,14 +20122,14 @@ namespace At0
 			M.r[0] = vsetq_lane_f32(ScaleX, Zero, 0);
 			M.r[1] = vsetq_lane_f32(ScaleY, Zero, 1);
 			M.r[2] = vsetq_lane_f32(ScaleZ, Zero, 2);
-			M.r[3] = g_XMIdentityR3.v;
+			M.r[3] = Constants::IdentityR3.v;
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
 			M.r[0] = _mm_set_ps(0, 0, 0, ScaleX);
 			M.r[1] = _mm_set_ps(0, 0, ScaleY, 0);
 			M.r[2] = _mm_set_ps(0, ScaleZ, 0, 0);
-			M.r[3] = g_XMIdentityR3.v;
+			M.r[3] = Constants::IdentityR3.v;
 			return M;
 #endif
 		}
@@ -20169,17 +20167,17 @@ namespace At0
 
 #elif defined(RAY_ARM_NEON_INTRINSICS)
 			Matrix M;
-			M.r[0] = vandq_u32(Scale, g_XMMaskX);
-			M.r[1] = vandq_u32(Scale, g_XMMaskY);
-			M.r[2] = vandq_u32(Scale, g_XMMaskZ);
-			M.r[3] = g_XMIdentityR3.v;
+			M.r[0] = vandq_u32(Scale, Constants::MaskX);
+			M.r[1] = vandq_u32(Scale, Constants::MaskY);
+			M.r[2] = vandq_u32(Scale, Constants::MaskZ);
+			M.r[3] = Constants::IdentityR3.v;
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
-			M.r[0] = _mm_and_ps(Scale, g_XMMaskX);
-			M.r[1] = _mm_and_ps(Scale, g_XMMaskY);
-			M.r[2] = _mm_and_ps(Scale, g_XMMaskZ);
-			M.r[3] = g_XMIdentityR3.v;
+			M.r[0] = _mm_and_ps(Scale, Constants::MaskX);
+			M.r[1] = _mm_and_ps(Scale, Constants::MaskY);
+			M.r[2] = _mm_and_ps(Scale, Constants::MaskZ);
+			M.r[3] = Constants::IdentityR3.v;
 			return M;
 #endif
 		}
@@ -20233,10 +20231,10 @@ namespace At0
 			T2 = vsetq_lane_f32(fCosAngle, T2, 2);
 
 			Matrix M;
-			M.r[0] = g_XMIdentityR0.v;
+			M.r[0] = Constants::IdentityR0.v;
 			M.r[1] = T1;
 			M.r[2] = T2;
-			M.r[3] = g_XMIdentityR3.v;
+			M.r[3] = Constants::IdentityR3.v;
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
 			float    SinAngle;
@@ -20248,14 +20246,14 @@ namespace At0
 			// x = 0,y = cos,z = sin, w = 0
 			vCos = _mm_shuffle_ps(vCos, vSin, _MM_SHUFFLE(3, 0, 0, 3));
 			Matrix M;
-			M.r[0] = g_XMIdentityR0;
+			M.r[0] = Constants::IdentityR0;
 			M.r[1] = vCos;
 			// x = 0,y = sin,z = cos, w = 0
 			vCos = RAYMATH_PERMUTE_PS(vCos, _MM_SHUFFLE(3, 1, 2, 0));
 			// x = 0,y = -sin,z = cos, w = 0
-			vCos = _mm_mul_ps(vCos, g_XMNegateY);
+			vCos = _mm_mul_ps(vCos, Constants::NegateY);
 			M.r[2] = vCos;
-			M.r[3] = g_XMIdentityR3;
+			M.r[3] = Constants::IdentityR3;
 			return M;
 #endif
 		}
@@ -20310,9 +20308,9 @@ namespace At0
 
 			Matrix M;
 			M.r[0] = T0;
-			M.r[1] = g_XMIdentityR1.v;
+			M.r[1] = Constants::IdentityR1.v;
 			M.r[2] = T2;
-			M.r[3] = g_XMIdentityR3.v;
+			M.r[3] = Constants::IdentityR3.v;
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
 			float    SinAngle;
@@ -20325,13 +20323,13 @@ namespace At0
 			vSin = _mm_shuffle_ps(vSin, vCos, _MM_SHUFFLE(3, 0, 3, 0));
 			Matrix M;
 			M.r[2] = vSin;
-			M.r[1] = g_XMIdentityR1;
+			M.r[1] = Constants::IdentityR1;
 			// x = cos,y = 0,z = sin, w = 0
 			vSin = RAYMATH_PERMUTE_PS(vSin, _MM_SHUFFLE(3, 0, 1, 2));
 			// x = cos,y = 0,z = -sin, w = 0
-			vSin = _mm_mul_ps(vSin, g_XMNegateZ);
+			vSin = _mm_mul_ps(vSin, Constants::NegateZ);
 			M.r[0] = vSin;
-			M.r[3] = g_XMIdentityR3;
+			M.r[3] = Constants::IdentityR3;
 			return M;
 #endif
 		}
@@ -20387,8 +20385,8 @@ namespace At0
 			Matrix M;
 			M.r[0] = T0;
 			M.r[1] = T1;
-			M.r[2] = g_XMIdentityR2.v;
-			M.r[3] = g_XMIdentityR3.v;
+			M.r[2] = Constants::IdentityR2.v;
+			M.r[3] = Constants::IdentityR3.v;
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
 			float    SinAngle;
@@ -20404,10 +20402,10 @@ namespace At0
 			// x = sin,y = cos,z = 0, w = 0
 			vCos = RAYMATH_PERMUTE_PS(vCos, _MM_SHUFFLE(3, 2, 0, 1));
 			// x = cos,y = -sin,z = 0, w = 0
-			vCos = _mm_mul_ps(vCos, g_XMNegateX);
+			vCos = _mm_mul_ps(vCos, Constants::NegateX);
 			M.r[1] = vCos;
-			M.r[2] = g_XMIdentityR2;
-			M.r[3] = g_XMIdentityR3;
+			M.r[2] = Constants::IdentityR2;
+			M.r[3] = Constants::IdentityR3;
 			return M;
 #endif
 		}
@@ -20468,7 +20466,7 @@ namespace At0
 			VectorType R1 = VectorMultiplyAdd(C0, NormalAxis, V0);
 			VectorType R2 = VectorNegativeMultiplySubtract(C0, NormalAxis, V0);
 
-			V0 = Vector::Select(A, R0, g_XMSelect1110.v);
+			V0 = Vector::Select(A, R0, Constants::Select1110.v);
 			VectorType V1 = VectorPermute<RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0X>(R1, R2);
 			VectorType V2 = VectorPermute<RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1X>(R1, R2);
 
@@ -20476,7 +20474,7 @@ namespace At0
 			M.r[0] = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0W>(V0, V1);
 			M.r[1] = VectorPermute<RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1W, RAYMATH_PERMUTE_0W>(V0, V1);
 			M.r[2] = VectorPermute<RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_0W>(V0, V2);
-			M.r[3] = g_XMIdentityR3.v;
+			M.r[3] = Constants::IdentityR3.v;
 			return M;
 
 #elif defined(RAY_SSE_INTRINSICS)
@@ -20503,7 +20501,7 @@ namespace At0
 			VectorType R2 = _mm_mul_ps(C0, NormalAxis);
 			R2 = _mm_sub_ps(V0, R2);
 
-			V0 = _mm_and_ps(R0, g_XMMask3);
+			V0 = _mm_and_ps(R0, Constants::Mask3);
 			VectorType V1 = _mm_shuffle_ps(R1, R2, _MM_SHUFFLE(2, 1, 2, 0));
 			V1 = RAYMATH_PERMUTE_PS(V1, _MM_SHUFFLE(0, 3, 2, 1));
 			VectorType V2 = _mm_shuffle_ps(R1, R2, _MM_SHUFFLE(0, 0, 1, 1));
@@ -20521,7 +20519,7 @@ namespace At0
 
 			V2 = _mm_shuffle_ps(V2, V0, _MM_SHUFFLE(3, 2, 1, 0));
 			M.r[2] = V2;
-			M.r[3] = g_XMIdentityR3.v;
+			M.r[3] = Constants::IdentityR3.v;
 			return M;
 #endif
 		}
@@ -20578,7 +20576,7 @@ namespace At0
 			M.r[0] = VectorPermute<RAYMATH_PERMUTE_0X, RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0W>(R0, V0);
 			M.r[1] = VectorPermute<RAYMATH_PERMUTE_1Z, RAYMATH_PERMUTE_0Y, RAYMATH_PERMUTE_1W, RAYMATH_PERMUTE_0W>(R0, V0);
 			M.r[2] = VectorPermute<RAYMATH_PERMUTE_1X, RAYMATH_PERMUTE_1Y, RAYMATH_PERMUTE_0Z, RAYMATH_PERMUTE_0W>(R0, V1);
-			M.r[3] = g_XMIdentityR3.v;
+			M.r[3] = Constants::IdentityR3.v;
 			return M;
 
 #elif defined(RAY_SSE_INTRINSICS)
@@ -20588,9 +20586,9 @@ namespace At0
 			VectorType Q1 = _mm_mul_ps(Quaternion, Q0);
 
 			VectorType V0 = RAYMATH_PERMUTE_PS(Q1, _MM_SHUFFLE(3, 0, 0, 1));
-			V0 = _mm_and_ps(V0, g_XMMask3);
+			V0 = _mm_and_ps(V0, Constants::Mask3);
 			VectorType V1 = RAYMATH_PERMUTE_PS(Q1, _MM_SHUFFLE(3, 1, 2, 2));
-			V1 = _mm_and_ps(V1, g_XMMask3);
+			V1 = _mm_and_ps(V1, Constants::Mask3);
 			VectorType R0 = _mm_sub_ps(Constant1110, V0);
 			R0 = _mm_sub_ps(R0, V1);
 
@@ -20622,7 +20620,7 @@ namespace At0
 
 			Q1 = _mm_shuffle_ps(V1, R0, _MM_SHUFFLE(3, 2, 1, 0));
 			M.r[2] = Q1;
-			M.r[3] = g_XMIdentityR3;
+			M.r[3] = Constants::IdentityR3;
 			return M;
 #endif
 		}
@@ -20642,17 +20640,17 @@ namespace At0
 			// M = Inverse(MScalingOrigin) * Transpose(MScalingOrientation) * MScaling * MScalingOrientation *
 			//         MScalingOrigin * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
-			VectorType VScalingOrigin = Vector::Select(g_XMSelect1100.v, ScalingOrigin, g_XMSelect1100.v);
+			VectorType VScalingOrigin = Vector::Select(Constants::Select1100.v, ScalingOrigin, Constants::Select1100.v);
 			VectorType NegScalingOrigin = Vector::Negate(VScalingOrigin);
 
 			Matrix MScalingOriginI = Matrix::Translation(NegScalingOrigin);
 			Matrix MScalingOrientation = Matrix::RotationZ(ScalingOrientation);
 			Matrix MScalingOrientationT = MScalingOrientation.Transpose();
-			VectorType VScaling = Vector::Select(g_XMOne.v, Scaling, g_XMSelect1100.v);
+			VectorType VScaling = Vector::Select(Constants::One.v, Scaling, Constants::Select1100.v);
 			Matrix MScaling = Matrix::Scaling(VScaling);
-			VectorType VRotationOrigin = Vector::Select(g_XMSelect1100.v, RotationOrigin, g_XMSelect1100.v);
+			VectorType VRotationOrigin = Vector::Select(Constants::Select1100.v, RotationOrigin, Constants::Select1100.v);
 			Matrix MRotation = Matrix::RotationZ(Rotation);
-			VectorType VTranslation = Vector::Select(g_XMSelect1100.v, Translation, g_XMSelect1100.v);
+			VectorType VTranslation = Vector::Select(Constants::Select1100.v, Translation, Constants::Select1100.v);
 
 			Matrix M = Matrix::Multiply(MScalingOriginI, MScalingOrientationT);
 			M = Matrix::Multiply(M, MScaling);
@@ -20681,16 +20679,16 @@ namespace At0
 			// M = Inverse(MScalingOrigin) * Transpose(MScalingOrientation) * MScaling * MScalingOrientation *
 			//         MScalingOrigin * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
-			VectorType VScalingOrigin = Vector::Select(g_XMSelect1110.v, ScalingOrigin, g_XMSelect1110.v);
+			VectorType VScalingOrigin = Vector::Select(Constants::Select1110.v, ScalingOrigin, Constants::Select1110.v);
 			VectorType NegScalingOrigin = Vector::Negate(ScalingOrigin);
 
 			Matrix MScalingOriginI = Matrix::Translation(NegScalingOrigin);
 			Matrix MScalingOrientation = Matrix::RotationQuaternion(ScalingOrientationQuaternion);
 			Matrix MScalingOrientationT = MScalingOrientation.Transpose();
 			Matrix MScaling = Matrix::Scaling(Scaling);
-			VectorType VRotationOrigin = Vector::Select(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
+			VectorType VRotationOrigin = Vector::Select(Constants::Select1110.v, RotationOrigin, Constants::Select1110.v);
 			Matrix MRotation = Matrix::RotationQuaternion(RotationQuaternion);
-			VectorType VTranslation = Vector::Select(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
+			VectorType VTranslation = Vector::Select(Constants::Select1110.v, Translation, Constants::Select1110.v);
 
 			Matrix M;
 			M = Matrix::Multiply(MScalingOriginI, MScalingOrientationT);
@@ -20716,11 +20714,11 @@ namespace At0
 		{
 			// M = MScaling * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
-			VectorType VScaling = Vector::Select(g_XMOne.v, Scaling, g_XMSelect1100.v);
+			VectorType VScaling = Vector::Select(Constants::One.v, Scaling, Constants::Select1100.v);
 			Matrix MScaling = Matrix::Scaling(VScaling);
-			VectorType VRotationOrigin = Vector::Select(g_XMSelect1100.v, RotationOrigin, g_XMSelect1100.v);
+			VectorType VRotationOrigin = Vector::Select(Constants::Select1100.v, RotationOrigin, Constants::Select1100.v);
 			Matrix MRotation = Matrix::RotationZ(Rotation);
-			VectorType VTranslation = Vector::Select(g_XMSelect1100.v, Translation, g_XMSelect1100.v);
+			VectorType VTranslation = Vector::Select(Constants::Select1100.v, Translation, Constants::Select1100.v);
 
 			Matrix M;
 			M = MScaling;
@@ -20744,9 +20742,9 @@ namespace At0
 			// M = MScaling * Inverse(MRotationOrigin) * MRotation * MRotationOrigin * MTranslation;
 
 			Matrix MScaling = Matrix::Scaling(Scaling);
-			VectorType VRotationOrigin = Vector::Select(g_XMSelect1110.v, RotationOrigin, g_XMSelect1110.v);
+			VectorType VRotationOrigin = Vector::Select(Constants::Select1110.v, RotationOrigin, Constants::Select1110.v);
 			Matrix MRotation = Matrix::RotationQuaternion(RotationQuaternion);
-			VectorType VTranslation = Vector::Select(g_XMSelect1110.v, Translation, g_XMSelect1110.v);
+			VectorType VTranslation = Vector::Select(Constants::Select1110.v, Translation, Constants::Select1110.v);
 
 			Matrix M;
 			M = MScaling;
@@ -20778,10 +20776,10 @@ namespace At0
 			VectorType D = Vector::SplatW(P);
 
 			Matrix M;
-			M.r[0] = VectorMultiplyAdd(A, S, g_XMIdentityR0.v);
-			M.r[1] = VectorMultiplyAdd(B, S, g_XMIdentityR1.v);
-			M.r[2] = VectorMultiplyAdd(C, S, g_XMIdentityR2.v);
-			M.r[3] = VectorMultiplyAdd(D, S, g_XMIdentityR3.v);
+			M.r[0] = VectorMultiplyAdd(A, S, Constants::IdentityR0.v);
+			M.r[1] = VectorMultiplyAdd(B, S, Constants::IdentityR1.v);
+			M.r[2] = VectorMultiplyAdd(C, S, Constants::IdentityR2.v);
+			M.r[3] = VectorMultiplyAdd(D, S, Constants::IdentityR3.v);
 			return M;
 		}
 
@@ -20874,10 +20872,10 @@ namespace At0
 			VectorType D2 = Vector3Dot(R2, NegEyePosition);
 
 			Matrix M;
-			M.r[0] = Vector::Select(D0, R0, g_XMSelect1110.v);
-			M.r[1] = Vector::Select(D1, R1, g_XMSelect1110.v);
-			M.r[2] = Vector::Select(D2, R2, g_XMSelect1110.v);
-			M.r[3] = g_XMIdentityR3.v;
+			M.r[0] = Vector::Select(D0, R0, Constants::Select1110.v);
+			M.r[1] = Vector::Select(D1, R1, Constants::Select1110.v);
+			M.r[2] = Vector::Select(D2, R2, Constants::Select1110.v);
+			M.r[3] = Constants::IdentityR3.v;
 
 			M = M.Transpose();
 
@@ -20951,7 +20949,7 @@ namespace At0
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(TwoNearZ / ViewWidth, Zero, 0);
 			M.r[1] = vsetq_lane_f32(TwoNearZ / ViewHeight, Zero, 1);
-			M.r[2] = vsetq_lane_f32(fRange, g_XMIdentityR3.v, 2);
+			M.r[2] = vsetq_lane_f32(fRange, Constants::IdentityR3.v, 2);
 			M.r[3] = vsetq_lane_f32(-fRange * NearZ, Zero, 2);
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -20974,10 +20972,10 @@ namespace At0
 			M.r[0] = vTemp;
 			// 0,TwoNearZ / ViewHeight,0,0
 			vTemp = vValues;
-			vTemp = _mm_and_ps(vTemp, g_XMMaskY);
+			vTemp = _mm_and_ps(vTemp, Constants::MaskY);
 			M.r[1] = vTemp;
 			// x=fRange,y=-fRange * NearZ,0,1.0f
-			vValues = _mm_shuffle_ps(vValues, g_XMIdentityR3, _MM_SHUFFLE(3, 2, 3, 2));
+			vValues = _mm_shuffle_ps(vValues, Constants::IdentityR3, _MM_SHUFFLE(3, 2, 3, 2));
 			// 0,0,fRange,1.0f
 			vTemp = _mm_setzero_ps();
 			vTemp = _mm_shuffle_ps(vTemp, vValues, _MM_SHUFFLE(3, 0, 0, 0));
@@ -21039,7 +21037,7 @@ namespace At0
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(TwoNearZ / ViewWidth, Zero, 0);
 			M.r[1] = vsetq_lane_f32(TwoNearZ / ViewHeight, Zero, 1);
-			M.r[2] = vsetq_lane_f32(fRange, g_XMNegIdentityR3.v, 2);
+			M.r[2] = vsetq_lane_f32(fRange, Constants::NegIdentityR3.v, 2);
 			M.r[3] = vsetq_lane_f32(fRange * NearZ, Zero, 2);
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -21062,10 +21060,10 @@ namespace At0
 			M.r[0] = vTemp;
 			// 0,TwoNearZ / ViewHeight,0,0
 			vTemp = vValues;
-			vTemp = _mm_and_ps(vTemp, g_XMMaskY);
+			vTemp = _mm_and_ps(vTemp, Constants::MaskY);
 			M.r[1] = vTemp;
 			// x=fRange,y=-fRange * NearZ,0,-1.0f
-			vValues = _mm_shuffle_ps(vValues, g_XMNegIdentityR3, _MM_SHUFFLE(3, 2, 3, 2));
+			vValues = _mm_shuffle_ps(vValues, Constants::NegIdentityR3, _MM_SHUFFLE(3, 2, 3, 2));
 			// 0,0,fRange,-1.0f
 			vTemp = _mm_setzero_ps();
 			vTemp = _mm_shuffle_ps(vTemp, vValues, _MM_SHUFFLE(3, 0, 0, 0));
@@ -21137,7 +21135,7 @@ namespace At0
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(Width, Zero, 0);
 			M.r[1] = vsetq_lane_f32(Height, Zero, 1);
-			M.r[2] = vsetq_lane_f32(fRange, g_XMIdentityR3.v, 2);
+			M.r[2] = vsetq_lane_f32(fRange, Constants::IdentityR3.v, 2);
 			M.r[3] = vsetq_lane_f32(-fRange * NearZ, Zero, 2);
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -21164,11 +21162,11 @@ namespace At0
 			M.r[0] = vTemp;
 			// 0,Height / AspectRatio,0,0
 			vTemp = vValues;
-			vTemp = _mm_and_ps(vTemp, g_XMMaskY);
+			vTemp = _mm_and_ps(vTemp, Constants::MaskY);
 			M.r[1] = vTemp;
 			// x=fRange,y=-fRange * NearZ,0,1.0f
 			vTemp = _mm_setzero_ps();
-			vValues = _mm_shuffle_ps(vValues, g_XMIdentityR3, _MM_SHUFFLE(3, 2, 3, 2));
+			vValues = _mm_shuffle_ps(vValues, Constants::IdentityR3, _MM_SHUFFLE(3, 2, 3, 2));
 			// 0,0,fRange,1.0f
 			vTemp = _mm_shuffle_ps(vTemp, vValues, _MM_SHUFFLE(3, 0, 0, 0));
 			M.r[2] = vTemp;
@@ -21238,7 +21236,7 @@ namespace At0
 			Matrix M;
 			M.r[0] = vsetq_lane_f32(Width, Zero, 0);
 			M.r[1] = vsetq_lane_f32(Height, Zero, 1);
-			M.r[2] = vsetq_lane_f32(fRange, g_XMNegIdentityR3.v, 2);
+			M.r[2] = vsetq_lane_f32(fRange, Constants::NegIdentityR3.v, 2);
 			M.r[3] = vsetq_lane_f32(fRange * NearZ, Zero, 2);
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
@@ -21264,11 +21262,11 @@ namespace At0
 			M.r[0] = vTemp;
 			// 0,Height / AspectRatio,0,0
 			vTemp = vValues;
-			vTemp = _mm_and_ps(vTemp, g_XMMaskY);
+			vTemp = _mm_and_ps(vTemp, Constants::MaskY);
 			M.r[1] = vTemp;
 			// x=fRange,y=-fRange * NearZ,0,-1.0f
 			vTemp = _mm_setzero_ps();
-			vValues = _mm_shuffle_ps(vValues, g_XMNegIdentityR3, _MM_SHUFFLE(3, 2, 3, 2));
+			vValues = _mm_shuffle_ps(vValues, Constants::NegIdentityR3, _MM_SHUFFLE(3, 2, 3, 2));
 			// 0,0,fRange,-1.0f
 			vTemp = _mm_shuffle_ps(vTemp, vValues, _MM_SHUFFLE(3, 0, 0, 0));
 			M.r[2] = vTemp;
@@ -21363,7 +21361,7 @@ namespace At0
 			M.r[0] = vTemp;
 			// 0,TwoNearZ*ReciprocalHeight,0,0
 			vTemp = vValues;
-			vTemp = _mm_and_ps(vTemp, g_XMMaskY);
+			vTemp = _mm_and_ps(vTemp, Constants::MaskY);
 			M.r[1] = vTemp;
 			// 0,0,fRange,1.0f
 			M.r[2] = Vector::Set(-(ViewLeft + ViewRight) * ReciprocalWidth,
@@ -21371,7 +21369,7 @@ namespace At0
 				fRange,
 				1.0f);
 			// 0,0,-fRange * NearZ,0.0f
-			vValues = _mm_and_ps(vValues, g_XMMaskZ);
+			vValues = _mm_and_ps(vValues, Constants::MaskZ);
 			M.r[3] = vValues;
 			return M;
 #endif
@@ -21461,7 +21459,7 @@ namespace At0
 			M.r[0] = vTemp;
 			// 0,TwoNearZ*ReciprocalHeight,0,0
 			vTemp = vValues;
-			vTemp = _mm_and_ps(vTemp, g_XMMaskY);
+			vTemp = _mm_and_ps(vTemp, Constants::MaskY);
 			M.r[1] = vTemp;
 			// 0,0,fRange,1.0f
 			M.r[2] = Vector::Set((ViewLeft + ViewRight) * ReciprocalWidth,
@@ -21469,7 +21467,7 @@ namespace At0
 				fRange,
 				-1.0f);
 			// 0,0,-fRange * NearZ,0.0f
-			vValues = _mm_and_ps(vValues, g_XMMaskZ);
+			vValues = _mm_and_ps(vValues, Constants::MaskZ);
 			M.r[3] = vValues;
 			return M;
 #endif
@@ -21523,7 +21521,7 @@ namespace At0
 			M.r[0] = vsetq_lane_f32(2.0f / ViewWidth, Zero, 0);
 			M.r[1] = vsetq_lane_f32(2.0f / ViewHeight, Zero, 1);
 			M.r[2] = vsetq_lane_f32(fRange, Zero, 2);
-			M.r[3] = vsetq_lane_f32(-fRange * NearZ, g_XMIdentityR3.v, 2);
+			M.r[3] = vsetq_lane_f32(-fRange * NearZ, Constants::IdentityR3.v, 2);
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
@@ -21544,11 +21542,11 @@ namespace At0
 			M.r[0] = vTemp;
 			// 0,2.0f / ViewHeight,0,0
 			vTemp = vValues;
-			vTemp = _mm_and_ps(vTemp, g_XMMaskY);
+			vTemp = _mm_and_ps(vTemp, Constants::MaskY);
 			M.r[1] = vTemp;
 			// x=fRange,y=-fRange * NearZ,0,1.0f
 			vTemp = _mm_setzero_ps();
-			vValues = _mm_shuffle_ps(vValues, g_XMIdentityR3, _MM_SHUFFLE(3, 2, 3, 2));
+			vValues = _mm_shuffle_ps(vValues, Constants::IdentityR3, _MM_SHUFFLE(3, 2, 3, 2));
 			// 0,0,fRange,0.0f
 			vTemp = _mm_shuffle_ps(vTemp, vValues, _MM_SHUFFLE(2, 0, 0, 0));
 			M.r[2] = vTemp;
@@ -21607,7 +21605,7 @@ namespace At0
 			M.r[0] = vsetq_lane_f32(2.0f / ViewWidth, Zero, 0);
 			M.r[1] = vsetq_lane_f32(2.0f / ViewHeight, Zero, 1);
 			M.r[2] = vsetq_lane_f32(fRange, Zero, 2);
-			M.r[3] = vsetq_lane_f32(fRange * NearZ, g_XMIdentityR3.v, 2);
+			M.r[3] = vsetq_lane_f32(fRange * NearZ, Constants::IdentityR3.v, 2);
 			return M;
 #elif defined(RAY_SSE_INTRINSICS)
 			Matrix M;
@@ -21628,11 +21626,11 @@ namespace At0
 			M.r[0] = vTemp;
 			// 0,2.0f / ViewHeight,0,0
 			vTemp = vValues;
-			vTemp = _mm_and_ps(vTemp, g_XMMaskY);
+			vTemp = _mm_and_ps(vTemp, Constants::MaskY);
 			M.r[1] = vTemp;
 			// x=fRange,y=fRange * NearZ,0,1.0f
 			vTemp = _mm_setzero_ps();
-			vValues = _mm_shuffle_ps(vValues, g_XMIdentityR3, _MM_SHUFFLE(3, 2, 3, 2));
+			vValues = _mm_shuffle_ps(vValues, Constants::IdentityR3, _MM_SHUFFLE(3, 2, 3, 2));
 			// 0,0,fRange,0.0f
 			vTemp = _mm_shuffle_ps(vTemp, vValues, _MM_SHUFFLE(2, 0, 0, 0));
 			M.r[2] = vTemp;
@@ -21729,12 +21727,12 @@ namespace At0
 			M.r[0] = vTemp;
 			// 0,fReciprocalHeight*2,0,0
 			vTemp = vValues;
-			vTemp = _mm_and_ps(vTemp, g_XMMaskY);
+			vTemp = _mm_and_ps(vTemp, Constants::MaskY);
 			vTemp = _mm_add_ps(vTemp, vTemp);
 			M.r[1] = vTemp;
 			// 0,0,fRange,0.0f
 			vTemp = vValues;
-			vTemp = _mm_and_ps(vTemp, g_XMMaskZ);
+			vTemp = _mm_and_ps(vTemp, Constants::MaskZ);
 			M.r[2] = vTemp;
 			// -(ViewLeft + ViewRight)*fReciprocalWidth,-(ViewTop + ViewBottom)*fReciprocalHeight,fRange*-NearZ,1.0f
 			vValues = _mm_mul_ps(vValues, rMem2);
@@ -21829,12 +21827,12 @@ namespace At0
 			M.r[0] = vTemp;
 			// 0,fReciprocalHeight*2,0,0
 			vTemp = vValues;
-			vTemp = _mm_and_ps(vTemp, g_XMMaskY);
+			vTemp = _mm_and_ps(vTemp, Constants::MaskY);
 			vTemp = _mm_add_ps(vTemp, vTemp);
 			M.r[1] = vTemp;
 			// 0,0,fRange,0.0f
 			vTemp = vValues;
-			vTemp = _mm_and_ps(vTemp, g_XMMaskZ);
+			vTemp = _mm_and_ps(vTemp, Constants::MaskZ);
 			M.r[2] = vTemp;
 			// -(ViewLeft + ViewRight)*fReciprocalWidth,-(ViewTop + ViewBottom)*fReciprocalHeight,fRange*-NearZ,1.0f
 			vValues = _mm_mul_ps(vValues, rMem2);
@@ -22260,7 +22258,7 @@ namespace At0
 
 		inline bool RAYMATH_CALLCONV Quaternion::IsIdentity() const
 		{
-			return Vector4Equal(*this, g_XMIdentityR3.v);
+			return Vector4Equal(*this, Constants::IdentityR3.v);
 		}
 
 		//------------------------------------------------------------------------------
@@ -22446,7 +22444,7 @@ namespace At0
 			Vector L = Vector4LengthSq(*this);
 			Quaternion Conjugated = Conjugate();
 
-			VectorType Control = L.LessOrEqual(g_XMEpsilon.v);
+			VectorType Control = L.LessOrEqual(Constants::Epsilon.v);
 
 			VectorType Result = Vector::Divide(Conjugated, L);
 
@@ -22462,7 +22460,7 @@ namespace At0
 			static const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 
 			Vector QW = Vector::SplatW(*this);
-			VectorType Q0 = Vector::Select(g_XMSelect1110.v, *this, g_XMSelect1110.v);
+			VectorType Q0 = Vector::Select(Constants::Select1110.v, *this, Constants::Select1110.v);
 
 			VectorType ControlW = QW.InBounds(OneMinusEpsilon.v);
 
@@ -22491,10 +22489,10 @@ namespace At0
 			VectorType Result = Vector::Multiply(*this, S);
 
 			const VectorType Zero = Vector::Zero();
-			VectorType Control = Vector::NearEqual(Theta, Zero, g_XMEpsilon.v);
+			VectorType Control = Vector::NearEqual(Theta, Zero, Constants::Epsilon.v);
 			Result = Vector::Select(Result, *this, Control);
 
-			Result = Vector::Select(CosTheta, Result, g_XMSelect1110.v);
+			Result = Vector::Select(CosTheta, Result, Constants::Select1110.v);
 
 			return Result;
 		}
@@ -22533,13 +22531,13 @@ namespace At0
 
 			const VectorType Zero = Vector::Zero();
 			VectorType Control = CosOmega.Less(Zero);
-			VectorType Sign = Vector::Select(g_XMOne.v, g_XMNegativeOne.v, Control);
+			VectorType Sign = Vector::Select(Constants::One.v, Constants::NegativeOne.v, Control);
 
 			CosOmega = Vector::Multiply(CosOmega, Sign);
 
 			Control = CosOmega.Less(OneMinusEpsilon);
 
-			Vector SinOmega = VectorNegativeMultiplySubtract(CosOmega, CosOmega, g_XMOne.v);
+			Vector SinOmega = VectorNegativeMultiplySubtract(CosOmega, CosOmega, Constants::One.v);
 			SinOmega = SinOmega.Sqrt();
 
 			VectorType Omega = VectorATan2(SinOmega, CosOmega);
@@ -22548,7 +22546,7 @@ namespace At0
 			VectorType V01 = Vector::ShiftLeft(T, Zero, 2);
 			SignMask = Vector::ShiftLeft(SignMask, Zero, 3);
 			V01 = VectorXorInt(V01, SignMask);
-			V01 = Vector::Add(g_XMIdentityR0.v, V01);
+			V01 = Vector::Add(Constants::IdentityR0.v, V01);
 
 			VectorType InvSinOmega = SinOmega.Reciprocal();
 
@@ -22576,22 +22574,22 @@ namespace At0
 
 			const VectorType Zero = Vector::Zero();
 			VectorType Control = CosOmega.Less(Zero);
-			VectorType Sign = Vector::Select(g_XMOne, g_XMNegativeOne, Control);
+			VectorType Sign = Vector::Select(Constants::One, Constants::NegativeOne, Control);
 
 			CosOmega = _mm_mul_ps(CosOmega, Sign);
 
 			Control = CosOmega.Less(OneMinusEpsilon);
 
 			VectorType SinOmega = _mm_mul_ps(CosOmega, CosOmega);
-			SinOmega = _mm_sub_ps(g_XMOne, SinOmega);
+			SinOmega = _mm_sub_ps(Constants::One, SinOmega);
 			SinOmega = _mm_sqrt_ps(SinOmega);
 
 			VectorType Omega = VectorATan2(SinOmega, CosOmega);
 
 			VectorType V01 = RAYMATH_PERMUTE_PS(T, _MM_SHUFFLE(2, 3, 0, 1));
-			V01 = _mm_and_ps(V01, g_XMMaskXY);
+			V01 = _mm_and_ps(V01, Constants::MaskXY);
 			V01 = _mm_xor_ps(V01, SignMask2);
-			V01 = _mm_add_ps(g_XMIdentityR0, V01);
+			V01 = _mm_add_ps(Constants::IdentityR0, V01);
 
 			VectorType S0 = _mm_mul_ps(V01, Omega);
 			S0 = VectorSin(S0);
@@ -22783,7 +22781,7 @@ namespace At0
 
 		inline Quaternion RAYMATH_CALLCONV Quaternion::Identity()
 		{
-			return g_XMIdentityR3.v;
+			return Constants::IdentityR3.v;
 		}
 
 		//------------------------------------------------------------------------------
@@ -22809,7 +22807,7 @@ namespace At0
 		{
 			static const VectorF32  Sign = { { { 1.0f, -1.0f, -1.0f, 1.0f } } };
 
-			VectorType HalfAngles = Vector::Multiply(Angles, g_XMOneHalf.v);
+			VectorType HalfAngles = Vector::Multiply(Angles, Constants::OneHalf.v);
 
 			VectorType SinAngles, CosAngles;
 			VectorSinCos(&SinAngles, &CosAngles, HalfAngles);
@@ -22840,7 +22838,7 @@ namespace At0
 		{
 #if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
-			VectorType N = Vector::Select(g_XMOne.v, NormalAxis, g_XMSelect1110.v);
+			VectorType N = Vector::Select(Constants::One.v, NormalAxis, Constants::Select1110.v);
 
 			float SinV, CosV;
 			ScalarSinCos(&SinV, &CosV, 0.5f * Angle);
@@ -22848,14 +22846,14 @@ namespace At0
 			VectorType Scale = Vector::Set(SinV, SinV, SinV, CosV);
 			return Vector::Multiply(N, Scale);
 #elif defined(RAY_SSE_INTRINSICS)
-			VectorType N = _mm_and_ps(NormalAxis, g_XMMask3);
-			N = _mm_or_ps(N, g_XMIdentityR3);
+			VectorType N = _mm_and_ps(NormalAxis, Constants::Mask3);
+			N = _mm_or_ps(N, Constants::IdentityR3);
 			VectorType Scale = _mm_set_ps1(0.5f * Angle);
 			VectorType vSine;
 			VectorType vCosine;
 			VectorSinCos(&vSine, &vCosine, Scale);
-			Scale = _mm_and_ps(vSine, g_XMMask3);
-			vCosine = _mm_and_ps(vCosine, g_XMMaskW);
+			Scale = _mm_and_ps(vSine, Constants::Mask3);
+			vCosine = _mm_and_ps(vCosine, Constants::MaskW);
 			Scale = _mm_or_ps(Scale, vCosine);
 			N = _mm_mul_ps(N, Scale);
 			return N;
@@ -22954,20 +22952,20 @@ namespace At0
 
 			// x^2 >= y^2 equivalent to r11 - r00 <= 0
 			VectorType r11mr00 = vsubq_f32(r11, r00);
-			VectorType x2gey2 = vcleq_f32(r11mr00, g_XMZero);
+			VectorType x2gey2 = vcleq_f32(r11mr00, Constants::Zero);
 
 			// z^2 >= w^2 equivalent to r11 + r00 <= 0
 			VectorType r11pr00 = vaddq_f32(r11, r00);
-			VectorType z2gew2 = vcleq_f32(r11pr00, g_XMZero);
+			VectorType z2gew2 = vcleq_f32(r11pr00, Constants::Zero);
 
 			// x^2 + y^2 >= z^2 + w^2 equivalent to r22 <= 0
-			VectorType x2py2gez2pw2 = vcleq_f32(r22, g_XMZero);
+			VectorType x2py2gez2pw2 = vcleq_f32(r22, Constants::Zero);
 
 			// (4*x^2, 4*y^2, 4*z^2, 4*w^2)
 			VectorType t0 = vmulq_f32(XMPMMP, r00);
 			VectorType x2y2z2w2 = vmlaq_f32(t0, XMMPMP, r11);
 			x2y2z2w2 = vmlaq_f32(x2y2z2w2, XMMMPP, r22);
-			x2y2z2w2 = vaddq_f32(x2y2z2w2, g_XMOne);
+			x2y2z2w2 = vaddq_f32(x2y2z2w2, Constants::One);
 
 			// (r01, r02, r12, r11)
 			t0 = vextq_f32(r0, r0, 1);
@@ -22998,12 +22996,12 @@ namespace At0
 			t0 = vextq_f32(xyxzyz, xyxzyz, 3);
 			t1 = vbslq_f32(Select0110, t0, x2y2z2w2);
 			t2 = vdupq_lane_f32(vget_low_f32(xwywzw), 0);
-			VectorType tensor0 = vbslq_f32(g_XMSelect1110, t1, t2);
+			VectorType tensor0 = vbslq_f32(Constants::Select1110, t1, t2);
 
 			// (4*y*x, 4*y*y, 4*y*z, 4*y*w)
-			t0 = vbslq_f32(g_XMSelect1011, xyxzyz, x2y2z2w2);
+			t0 = vbslq_f32(Constants::Select1011, xyxzyz, x2y2z2w2);
 			t1 = vdupq_lane_f32(vget_low_f32(xwywzw), 1);
-			VectorType tensor1 = vbslq_f32(g_XMSelect1110, t0, t1);
+			VectorType tensor1 = vbslq_f32(Constants::Select1110, t0, t1);
 
 			// (4*z*x, 4*z*y, 4*z*z, 4*z*w)
 			t0 = vextq_f32(xyxzyz, xyxzyz, 1);
@@ -23011,7 +23009,7 @@ namespace At0
 			VectorType tensor2 = vbslq_f32(Select0010, x2y2z2w2, t1);
 
 			// (4*w*x, 4*w*y, 4*w*z, 4*w*w)
-			VectorType tensor3 = vbslq_f32(g_XMSelect1110, xwywzw, x2y2z2w2);
+			VectorType tensor3 = vbslq_f32(Constants::Select1110, xwywzw, x2y2z2w2);
 
 			// Select the row of the tensor-product matrix that has the largest
 			// magnitude.
@@ -23043,15 +23041,15 @@ namespace At0
 			// x^2 >= y^2 equivalent to r11 - r00 <= 0
 			// (r11 - r00, r11 - r00, r11 - r00, r11 - r00)
 			VectorType r11mr00 = _mm_sub_ps(r11, r00);
-			VectorType x2gey2 = _mm_cmple_ps(r11mr00, g_XMZero);
+			VectorType x2gey2 = _mm_cmple_ps(r11mr00, Constants::Zero);
 
 			// z^2 >= w^2 equivalent to r11 + r00 <= 0
 			// (r11 + r00, r11 + r00, r11 + r00, r11 + r00)
 			VectorType r11pr00 = _mm_add_ps(r11, r00);
-			VectorType z2gew2 = _mm_cmple_ps(r11pr00, g_XMZero);
+			VectorType z2gew2 = _mm_cmple_ps(r11pr00, Constants::Zero);
 
 			// x^2 + y^2 >= z^2 + w^2 equivalent to r22 <= 0
-			VectorType x2py2gez2pw2 = _mm_cmple_ps(r22, g_XMZero);
+			VectorType x2py2gez2pw2 = _mm_cmple_ps(r22, Constants::Zero);
 
 			// (+r00, -r00, -r00, +r00)
 			VectorType t0 = _mm_mul_ps(XMPMMP, r00);
@@ -23065,7 +23063,7 @@ namespace At0
 			// (4*x^2, 4*y^2, 4*z^2, 4*w^2)
 			VectorType x2y2z2w2 = _mm_add_ps(t0, t1);
 			x2y2z2w2 = _mm_add_ps(t2, x2y2z2w2);
-			x2y2z2w2 = _mm_add_ps(x2y2z2w2, g_XMOne);
+			x2y2z2w2 = _mm_add_ps(x2y2z2w2, Constants::One);
 
 			// (r01, r02, r12, r11)
 			t0 = _mm_shuffle_ps(r0, r1, _MM_SHUFFLE(1, 2, 2, 1));
@@ -23233,7 +23231,7 @@ namespace At0
 		{
 			// Result = P[0] * V[0] + P[1] * V[1] + P[2] * V[2] + P[3]
 
-			VectorType V3 = Vector::Select(g_XMOne.v, V, g_XMSelect1110.v);
+			VectorType V3 = Vector::Select(Constants::One.v, V, Constants::Select1110.v);
 			VectorType Result = Vector4Dot(P, V3);
 			return Result;
 		}
@@ -23319,7 +23317,7 @@ namespace At0
 			VectorType vResult = _mm_sqrt_ps(vLengthSq);
 			// Failsafe on zero (Or epsilon) length planes
 			// If the length is infinity, set the elements to zero
-			vLengthSq = _mm_cmpneq_ps(vLengthSq, g_XMInfinity);
+			vLengthSq = _mm_cmpneq_ps(vLengthSq, Constants::Infinity);
 			// Reciprocal mul to perform the normalization
 			vResult = _mm_div_ps(P, vResult);
 			// Any that are infinity, set to zero
@@ -23337,7 +23335,7 @@ namespace At0
 			VectorType vResult = _mm_sqrt_ps(vLengthSq);
 			// Failsafe on zero (Or epsilon) length planes
 			// If the length is infinity, set the elements to zero
-			vLengthSq = _mm_cmpneq_ps(vLengthSq, g_XMInfinity);
+			vLengthSq = _mm_cmpneq_ps(vLengthSq, Constants::Infinity);
 			// Reciprocal mul to perform the normalization
 			vResult = _mm_div_ps(P, vResult);
 			// Any that are infinity, set to zero
@@ -23366,9 +23364,9 @@ namespace At0
 			Point = VectorMultiplyAdd(Point, VT, LinePoint1);
 
 			const VectorType Zero = Vector::Zero();
-			VectorType Control = Vector::NearEqual(D, Zero, g_XMEpsilon.v);
+			VectorType Control = Vector::NearEqual(D, Zero, Constants::Epsilon.v);
 
-			return Vector::Select(Point, g_XMQNaN.v, Control);
+			return Vector::Select(Point, Constants::QNaN.v, Control);
 		}
 
 		//------------------------------------------------------------------------------
@@ -23402,9 +23400,9 @@ namespace At0
 
 			VectorType LinePoint2 = Vector::Add(LinePoint1, V1);
 
-			VectorType Control = LengthSq.LessOrEqual(g_XMEpsilon.v);
-			*pLinePoint1 = Vector::Select(LinePoint1, g_XMQNaN.v, Control);
-			*pLinePoint2 = Vector::Select(LinePoint2, g_XMQNaN.v, Control);
+			VectorType Control = LengthSq.LessOrEqual(Constants::Epsilon.v);
+			*pLinePoint1 = Vector::Select(LinePoint1, Constants::QNaN.v, Control);
+			*pLinePoint2 = Vector::Select(LinePoint2, Constants::QNaN.v, Control);
 		}
 
 		//------------------------------------------------------------------------------
@@ -23461,7 +23459,7 @@ namespace At0
 		{
 			VectorType W = Vector3Dot(Point, Normal);
 			W = Vector::Negate(W);
-			return Vector::Select(W, Normal, g_XMSelect1110.v);
+			return Vector::Select(W, Normal, Constants::Select1110.v);
 		}
 
 		//------------------------------------------------------------------------------
@@ -23482,7 +23480,7 @@ namespace At0
 			VectorType D = PlaneDotNormal(N, Point1);
 			D = Vector::Negate(D);
 
-			VectorType Result = Vector::Select(D, N, g_XMSelect1110.v);
+			VectorType Result = Vector::Select(D, N, Constants::Select1110.v);
 
 			return Result;
 		}
@@ -23603,13 +23601,13 @@ namespace At0
 				} } };
 			return vResult.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			VectorType vTemp = veorq_u32(vColor, g_XMNegate3);
-			return vaddq_f32(vTemp, g_XMOne3);
+			VectorType vTemp = veorq_u32(vColor, Constants::Negate3);
+			return vaddq_f32(vTemp, Constants::One3);
 #elif defined(RAY_SSE_INTRINSICS)
 			// Negate only x,y and z.
-			VectorType vTemp = _mm_xor_ps(vColor, g_XMNegate3);
+			VectorType vTemp = _mm_xor_ps(vColor, Constants::Negate3);
 			// Add 1,1,1,0 to -x,-y,-z,w
-			return _mm_add_ps(vTemp, g_XMOne3);
+			return _mm_add_ps(vTemp, Constants::One3);
 #endif
 		}
 
@@ -23648,7 +23646,7 @@ namespace At0
 			VectorType vLuminance = Vector3Dot(vColor, gvLuminance);
 			VectorType vResult = vsubq_f32(vColor, vLuminance);
 			vResult = vmlaq_n_f32(vLuminance, vResult, fSaturation);
-			return vbslq_f32(g_XMSelect1110, vResult, vColor);
+			return vbslq_f32(Constants::Select1110, vResult, vColor);
 #elif defined(RAY_SSE_INTRINSICS)
 			VectorType vLuminance = Vector3Dot(vColor, gvLuminance);
 			// Splat fSaturation
@@ -23683,14 +23681,14 @@ namespace At0
 				} } };
 			return vResult.v;
 #elif defined(RAY_ARM_NEON_INTRINSICS)
-			VectorType vResult = vsubq_f32(vColor, g_XMOneHalf.v);
-			vResult = vmlaq_n_f32(g_XMOneHalf.v, vResult, fContrast);
-			return vbslq_f32(g_XMSelect1110, vResult, vColor);
+			VectorType vResult = vsubq_f32(vColor, Constants::OneHalf.v);
+			vResult = vmlaq_n_f32(Constants::OneHalf.v, vResult, fContrast);
+			return vbslq_f32(Constants::Select1110, vResult, vColor);
 #elif defined(RAY_SSE_INTRINSICS)
 			VectorType vScale = _mm_set_ps1(fContrast);           // Splat the scale
-			VectorType vResult = _mm_sub_ps(vColor, g_XMOneHalf);  // Subtract 0.5f from the source (Saving source)
+			VectorType vResult = _mm_sub_ps(vColor, Constants::OneHalf);  // Subtract 0.5f from the source (Saving source)
 			vResult = _mm_mul_ps(vResult, vScale);               // Mul by scale
-			vResult = _mm_add_ps(vResult, g_XMOneHalf);          // Add 0.5f
+			vResult = _mm_add_ps(vResult, Constants::OneHalf);          // Add 0.5f
 		// Retain w from the source color
 			vScale = _mm_shuffle_ps(vResult, vColor, _MM_SHUFFLE(3, 2, 2, 2));   // x = vResult.z,y = vResult.z,z = vColor.z,w=vColor.w
 			vResult = _mm_shuffle_ps(vResult, vScale, _MM_SHUFFLE(3, 0, 1, 0));  // x = vResult.x,y = vResult.y,z = vResult.z,w=vColor.w
@@ -23709,16 +23707,16 @@ namespace At0
 			VectorType min = Vector::Min(r, Vector::Min(g, b));
 			VectorType max = Vector::Max(r, Vector::Max(g, b));
 
-			VectorType l = Vector::Multiply(Vector::Add(min, max), g_XMOneHalf);
+			VectorType l = Vector::Multiply(Vector::Add(min, max), Constants::OneHalf);
 
 			VectorType d = Vector::Subtract(max, min);
 
-			VectorType la = Vector::Select(rgb, l, g_XMSelect1110);
+			VectorType la = Vector::Select(rgb, l, Constants::Select1110);
 
-			if (Vector3Less(d, g_XMEpsilon))
+			if (Vector3Less(d, Constants::Epsilon))
 			{
 				// Achromatic, assume H and S of 0
-				return Vector::Select(la, g_XMZero, g_XMSelect1100);
+				return Vector::Select(la, Constants::Zero, Constants::Select1100);
 			}
 			else
 			{
@@ -23726,10 +23724,10 @@ namespace At0
 
 				VectorType d2 = Vector::Add(min, max);
 
-				if (Vector3Greater(l, g_XMOneHalf))
+				if (Vector3Greater(l, Constants::OneHalf))
 				{
 					// d / (2-max-min)
-					s = Vector::Divide(d, Vector::Subtract(g_XMTwo, d2));
+					s = Vector::Divide(d, Vector::Subtract(Constants::Two, d2));
 				}
 				else
 				{
@@ -23746,22 +23744,22 @@ namespace At0
 				{
 					// Green is max
 					h = Vector::Divide(Vector::Subtract(b, r), d);
-					h = Vector::Add(h, g_XMTwo);
+					h = Vector::Add(h, Constants::Two);
 				}
 				else
 				{
 					// Blue is max
 					h = Vector::Divide(Vector::Subtract(r, g), d);
-					h = Vector::Add(h, g_XMFour);
+					h = Vector::Add(h, Constants::Four);
 				}
 
-				h = Vector::Divide(h, g_XMSix);
+				h = Vector::Divide(h, Constants::Six);
 
-				if (Vector3Less(h, g_XMZero))
-					h = Vector::Add(h, g_XMOne);
+				if (Vector3Less(h, Constants::Zero))
+					h = Vector::Add(h, Constants::One);
 
-				VectorType lha = Vector::Select(la, h, g_XMSelect1100);
-				return Vector::Select(s, lha, g_XMSelect1011);
+				VectorType lha = Vector::Select(la, h, Constants::Select1100);
+				return Vector::Select(s, lha, Constants::Select1011);
 			}
 		}
 
@@ -23777,28 +23775,28 @@ namespace At0
 
 				VectorType t = h;
 
-				if (Vector3Less(t, g_XMZero))
-					t = Vector::Add(t, g_XMOne);
+				if (Vector3Less(t, Constants::Zero))
+					t = Vector::Add(t, Constants::One);
 
-				if (Vector3Greater(t, g_XMOne))
-					t = Vector::Subtract(t, g_XMOne);
+				if (Vector3Greater(t, Constants::One))
+					t = Vector::Subtract(t, Constants::One);
 
 				if (Vector3Less(t, oneSixth))
 				{
 					// p + (q - p) * 6 * t
 					VectorType t1 = Vector::Subtract(q, p);
-					VectorType t2 = Vector::Multiply(g_XMSix, t);
+					VectorType t2 = Vector::Multiply(Constants::Six, t);
 					return VectorMultiplyAdd(t1, t2, p);
 				}
 
-				if (Vector3Less(t, g_XMOneHalf))
+				if (Vector3Less(t, Constants::OneHalf))
 					return q;
 
 				if (Vector3Less(t, twoThirds))
 				{
 					// p + (q - p) * 6 * (2/3 - t)
 					VectorType t1 = Vector::Subtract(q, p);
-					VectorType t2 = Vector::Multiply(g_XMSix, Vector::Subtract(twoThirds, t));
+					VectorType t2 = Vector::Multiply(Constants::Six, Vector::Subtract(twoThirds, t));
 					return VectorMultiplyAdd(t1, t2, p);
 				}
 
@@ -23814,35 +23812,35 @@ namespace At0
 			VectorType s = Vector::SplatY(hsl);
 			VectorType l = Vector::SplatZ(hsl);
 
-			if (Vector3NearEqual(s, g_XMZero, g_XMEpsilon))
+			if (Vector3NearEqual(s, Constants::Zero, Constants::Epsilon))
 			{
 				// Achromatic
-				return Vector::Select(hsl, l, g_XMSelect1110);
+				return Vector::Select(hsl, l, Constants::Select1110);
 			}
 			else
 			{
 				VectorType h = Vector::SplatX(hsl);
 
 				VectorType q;
-				if (Vector3Less(l, g_XMOneHalf))
+				if (Vector3Less(l, Constants::OneHalf))
 				{
-					q = Vector::Multiply(l, Vector::Add(g_XMOne, s));
+					q = Vector::Multiply(l, Vector::Add(Constants::One, s));
 				}
 				else
 				{
 					q = Vector::Subtract(Vector::Add(l, s), Vector::Multiply(l, s));
 				}
 
-				VectorType p = Vector::Subtract(Vector::Multiply(g_XMTwo, l), q);
+				VectorType p = Vector::Subtract(Vector::Multiply(Constants::Two, l), q);
 
 				VectorType r = Internal::ColorHue2Clr(p, q, Vector::Add(h, oneThird));
 				VectorType g = Internal::ColorHue2Clr(p, q, h);
 				VectorType b = Internal::ColorHue2Clr(p, q, Vector::Subtract(h, oneThird));
 
-				VectorType rg = Vector::Select(g, r, g_XMSelect1000);
-				VectorType ba = Vector::Select(hsl, b, g_XMSelect1110);
+				VectorType rg = Vector::Select(g, r, Constants::Select1000);
+				VectorType ba = Vector::Select(hsl, b, Constants::Select1110);
 
-				return Vector::Select(ba, rg, g_XMSelect1100);
+				return Vector::Select(ba, rg, Constants::Select1100);
 			}
 		}
 
@@ -23859,14 +23857,14 @@ namespace At0
 
 			VectorType d = Vector::Subtract(v, min);
 
-			VectorType s = (Vector3NearEqual(v, g_XMZero, g_XMEpsilon)) ? g_XMZero : Vector::Divide(d, v);
+			VectorType s = (Vector3NearEqual(v, Constants::Zero, Constants::Epsilon)) ? Constants::Zero : Vector::Divide(d, v);
 
-			if (Vector3Less(d, g_XMEpsilon))
+			if (Vector3Less(d, Constants::Epsilon))
 			{
 				// Achromatic, assume H of 0
-				VectorType hv = Vector::Select(v, g_XMZero, g_XMSelect1000);
-				VectorType hva = Vector::Select(rgb, hv, g_XMSelect1110);
-				return Vector::Select(s, hva, g_XMSelect1011);
+				VectorType hv = Vector::Select(v, Constants::Zero, Constants::Select1000);
+				VectorType hva = Vector::Select(rgb, hv, Constants::Select1110);
+				return Vector::Select(s, hva, Constants::Select1011);
 			}
 			else
 			{
@@ -23878,26 +23876,26 @@ namespace At0
 					h = Vector::Divide(Vector::Subtract(g, b), d);
 
 					if (Vector3Less(g, b))
-						h = Vector::Add(h, g_XMSix);
+						h = Vector::Add(h, Constants::Six);
 				}
 				else if (Vector3Equal(g, v))
 				{
 					// Green is max
 					h = Vector::Divide(Vector::Subtract(b, r), d);
-					h = Vector::Add(h, g_XMTwo);
+					h = Vector::Add(h, Constants::Two);
 				}
 				else
 				{
 					// Blue is max
 					h = Vector::Divide(Vector::Subtract(r, g), d);
-					h = Vector::Add(h, g_XMFour);
+					h = Vector::Add(h, Constants::Four);
 				}
 
-				h = Vector::Divide(h, g_XMSix);
+				h = Vector::Divide(h, Constants::Six);
 
-				VectorType hv = Vector::Select(v, h, g_XMSelect1000);
-				VectorType hva = Vector::Select(rgb, hv, g_XMSelect1110);
-				return Vector::Select(s, hva, g_XMSelect1011);
+				VectorType hv = Vector::Select(v, h, Constants::Select1000);
+				VectorType hva = Vector::Select(rgb, hv, Constants::Select1110);
+				return Vector::Select(s, hva, Constants::Select1011);
 			}
 		}
 
@@ -23909,21 +23907,21 @@ namespace At0
 			VectorType s = Vector::SplatY(hsv);
 			VectorType v = Vector::SplatZ(hsv);
 
-			Vector h6 = Vector::Multiply(h, g_XMSix);
+			Vector h6 = Vector::Multiply(h, Constants::Six);
 
 			VectorType i = h6.Floor();
 			VectorType f = Vector::Subtract(h6, i);
 
 			// p = v* (1-s)
-			VectorType p = Vector::Multiply(v, Vector::Subtract(g_XMOne, s));
+			VectorType p = Vector::Multiply(v, Vector::Subtract(Constants::One, s));
 
 			// q = v*(1-f*s)
-			VectorType q = Vector::Multiply(v, Vector::Subtract(g_XMOne, Vector::Multiply(f, s)));
+			VectorType q = Vector::Multiply(v, Vector::Subtract(Constants::One, Vector::Multiply(f, s)));
 
 			// t = v*(1 - (1-f)*s)
-			VectorType t = Vector::Multiply(v, Vector::Subtract(g_XMOne, Vector::Multiply(Vector::Subtract(g_XMOne, f), s)));
+			VectorType t = Vector::Multiply(v, Vector::Subtract(Constants::One, Vector::Multiply(Vector::Subtract(Constants::One, f), s)));
 
-			auto ii = static_cast<int>(Vector(VectorMod(i, g_XMSix)).GetX());
+			auto ii = static_cast<int>(Vector(VectorMod(i, Constants::Six)).GetX());
 
 			VectorType _rgb;
 
@@ -23931,43 +23929,43 @@ namespace At0
 			{
 			case 0: // rgb = vtp
 			{
-				VectorType vt = Vector::Select(t, v, g_XMSelect1000);
-				_rgb = Vector::Select(p, vt, g_XMSelect1100);
+				VectorType vt = Vector::Select(t, v, Constants::Select1000);
+				_rgb = Vector::Select(p, vt, Constants::Select1100);
 			}
 			break;
 			case 1: // rgb = qvp
 			{
-				VectorType qv = Vector::Select(v, q, g_XMSelect1000);
-				_rgb = Vector::Select(p, qv, g_XMSelect1100);
+				VectorType qv = Vector::Select(v, q, Constants::Select1000);
+				_rgb = Vector::Select(p, qv, Constants::Select1100);
 			}
 			break;
 			case 2: // rgb = pvt
 			{
-				VectorType pv = Vector::Select(v, p, g_XMSelect1000);
-				_rgb = Vector::Select(t, pv, g_XMSelect1100);
+				VectorType pv = Vector::Select(v, p, Constants::Select1000);
+				_rgb = Vector::Select(t, pv, Constants::Select1100);
 			}
 			break;
 			case 3: // rgb = pqv
 			{
-				VectorType pq = Vector::Select(q, p, g_XMSelect1000);
-				_rgb = Vector::Select(v, pq, g_XMSelect1100);
+				VectorType pq = Vector::Select(q, p, Constants::Select1000);
+				_rgb = Vector::Select(v, pq, Constants::Select1100);
 			}
 			break;
 			case 4: // rgb = tpv
 			{
-				VectorType tp = Vector::Select(p, t, g_XMSelect1000);
-				_rgb = Vector::Select(v, tp, g_XMSelect1100);
+				VectorType tp = Vector::Select(p, t, Constants::Select1000);
+				_rgb = Vector::Select(v, tp, Constants::Select1100);
 			}
 			break;
 			default: // rgb = vpq
 			{
-				VectorType vp = Vector::Select(p, v, g_XMSelect1000);
-				_rgb = Vector::Select(q, vp, g_XMSelect1100);
+				VectorType vp = Vector::Select(p, v, Constants::Select1000);
+				_rgb = Vector::Select(q, vp, Constants::Select1100);
 			}
 			break;
 			}
 
-			return Vector::Select(hsv, _rgb, g_XMSelect1110);
+			return Vector::Select(hsv, _rgb, Constants::Select1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -23978,10 +23976,10 @@ namespace At0
 			static const VectorF32 Scale1 = { { { 0.587f, -0.289f, -0.515f, 0.0f } } };
 			static const VectorF32 Scale2 = { { { 0.114f, 0.436f, -0.100f, 0.0f } } };
 
-			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
+			Matrix M(Scale0, Scale1, Scale2, Constants::Zero);
 			VectorType clr = Vector3Transform(rgb, M);
 
-			return Vector::Select(rgb, clr, g_XMSelect1110);
+			return Vector::Select(rgb, clr, Constants::Select1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -23991,10 +23989,10 @@ namespace At0
 			static const VectorF32 Scale1 = { { { 0.0f, -0.395f, 2.032f, 0.0f } } };
 			static const VectorF32 Scale2 = { { { 1.140f, -0.581f, 0.0f, 0.0f } } };
 
-			Matrix M(g_XMOne, Scale1, Scale2, g_XMZero);
+			Matrix M(Constants::One, Scale1, Scale2, Constants::Zero);
 			VectorType clr = Vector3Transform(yuv, M);
 
-			return Vector::Select(yuv, clr, g_XMSelect1110);
+			return Vector::Select(yuv, clr, Constants::Select1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24005,10 +24003,10 @@ namespace At0
 			static const VectorF32 Scale1 = { { { 0.7152f, -0.3354f, -0.5586f, 0.0f } } };
 			static const VectorF32 Scale2 = { { { 0.0722f, 0.4351f, -0.0564f, 0.0f } } };
 
-			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
+			Matrix M(Scale0, Scale1, Scale2, Constants::Zero);
 			VectorType clr = Vector3Transform(rgb, M);
 
-			return Vector::Select(rgb, clr, g_XMSelect1110);
+			return Vector::Select(rgb, clr, Constants::Select1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24018,10 +24016,10 @@ namespace At0
 			static const VectorF32 Scale1 = { { { 0.0f, -0.2153f, 2.1324f, 0.0f } } };
 			static const VectorF32 Scale2 = { { { 1.2803f, -0.3806f, 0.0f, 0.0f } } };
 
-			Matrix M(g_XMOne, Scale1, Scale2, g_XMZero);
+			Matrix M(Constants::One, Scale1, Scale2, Constants::Zero);
 			VectorType clr = Vector3Transform(yuv, M);
 
-			return Vector::Select(yuv, clr, g_XMSelect1110);
+			return Vector::Select(yuv, clr, Constants::Select1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24033,10 +24031,10 @@ namespace At0
 			static const VectorF32 Scale2 = { { { 0.2006017f, 0.0108109f, 0.9897952f, 0.0f } } };
 			static const VectorF32 Scale = { { { 1.f / 0.17697f, 1.f / 0.17697f, 1.f / 0.17697f, 0.0f } } };
 
-			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
+			Matrix M(Scale0, Scale1, Scale2, Constants::Zero);
 			VectorType clr = Vector::Multiply(Vector3Transform(rgb, M), Scale);
 
-			return Vector::Select(rgb, clr, g_XMSelect1110);
+			return Vector::Select(rgb, clr, Constants::Select1110);
 		}
 
 		inline VectorType RAYMATH_CALLCONV ColorXYZToRGB(FVectorType xyz)
@@ -24046,10 +24044,10 @@ namespace At0
 			static const VectorF32 Scale2 = { { { -0.4706338f, 0.0885814f, 1.0093968f, 0.0f } } };
 			static const VectorF32 Scale = { { { 0.17697f, 0.17697f, 0.17697f, 0.0f } } };
 
-			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
+			Matrix M(Scale0, Scale1, Scale2, Constants::Zero);
 			VectorType clr = Vector3Transform(Vector::Multiply(xyz, Scale), M);
 
-			return Vector::Select(xyz, clr, g_XMSelect1110);
+			return Vector::Select(xyz, clr, Constants::Select1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24062,20 +24060,20 @@ namespace At0
 			static const VectorF32 Cutoff = { { { 0.0031308f, 0.0031308f, 0.0031308f, 0.0f } } };
 			static const VectorF32 Exp = { { { 1.0f / 2.4f, 1.0f / 2.4f, 1.0f / 2.4f, 1.0f } } };
 
-			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
+			Matrix M(Scale0, Scale1, Scale2, Constants::Zero);
 			Vector lclr = Vector3Transform(xyz, M);
 
 			VectorType sel = lclr.Greater(Cutoff);
 
 			// clr = 12.92 * lclr for lclr <= 0.0031308f
-			VectorType smallC = Vector::Multiply(lclr, g_XMsrgbScale);
+			VectorType smallC = Vector::Multiply(lclr, Constants::srgbScale);
 
 			// clr = (1+a)*pow(lclr, 1/2.4) - a for lclr > 0.0031308 (where a = 0.055)
-			VectorType largeC = Vector::Subtract(Vector::Multiply(g_XMsrgbA1, VectorPow(lclr, Exp)), g_XMsrgbA);
+			VectorType largeC = Vector::Subtract(Vector::Multiply(Constants::srgbA1, VectorPow(lclr, Exp)), Constants::srgbA);
 
 			VectorType clr = Vector::Select(smallC, largeC, sel);
 
-			return Vector::Select(xyz, clr, g_XMSelect1110);
+			return Vector::Select(xyz, clr, Constants::Select1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24091,17 +24089,17 @@ namespace At0
 			VectorType sel = Vector(srgb).Greater(Cutoff);
 
 			// lclr = clr / 12.92
-			VectorType smallC = Vector::Divide(srgb, g_XMsrgbScale);
+			VectorType smallC = Vector::Divide(srgb, Constants::srgbScale);
 
 			// lclr = pow( (clr + a) / (1+a), 2.4 )
-			VectorType largeC = VectorPow(Vector::Divide(Vector::Add(srgb, g_XMsrgbA), g_XMsrgbA1), Exp);
+			VectorType largeC = VectorPow(Vector::Divide(Vector::Add(srgb, Constants::srgbA), Constants::srgbA1), Exp);
 
 			VectorType lclr = Vector::Select(smallC, largeC, sel);
 
-			Matrix M(Scale0, Scale1, Scale2, g_XMZero);
+			Matrix M(Scale0, Scale1, Scale2, Constants::Zero);
 			VectorType clr = Vector3Transform(lclr, M);
 
-			return Vector::Select(srgb, clr, g_XMSelect1110);
+			return Vector::Select(srgb, clr, Constants::Select1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24119,7 +24117,7 @@ namespace At0
 			VectorType V1 = Vector::Subtract(Vector::Multiply(Scale, VectorPow(V, InvGamma)), Bias);
 			VectorType select = V.Less(Cutoff);
 			V = Vector::Select(V1, V0, select);
-			return Vector::Select(rgb, V, g_XMSelect1110);
+			return Vector::Select(rgb, V, Constants::Select1110);
 		}
 
 		//------------------------------------------------------------------------------
@@ -24137,7 +24135,7 @@ namespace At0
 			VectorType V1 = VectorPow(Vector::Multiply(Vector::Add(V, Bias), Scale), Gamma);
 			VectorType select = V.Greater(Cutoff);
 			V = Vector::Select(V0, V1, select);
-			return Vector::Select(srgb, V, g_XMSelect1110);
+			return Vector::Select(srgb, V, Constants::Select1110);
 		}
 
 		/****************************************************************************
@@ -24224,7 +24222,7 @@ namespace At0
 
 #if defined(RAY_NO_INTRINSICS) || defined(RAY_ARM_NEON_INTRINSICS)
 
-			Vector G = VectorMultiplyAdd(RefractionIndex, RefractionIndex, g_XMNegativeOne.v);
+			Vector G = VectorMultiplyAdd(RefractionIndex, RefractionIndex, Constants::NegativeOne.v);
 			G = VectorMultiplyAdd(CosIncidentAngle, CosIncidentAngle, G);
 			G = VectorAbs(G);
 			G = G.Sqrt();
@@ -24235,15 +24233,15 @@ namespace At0
 			VectorType V0 = Vector::Multiply(D, D);
 			Vector V1 = Vector::Multiply(S, S);
 			V1 = V1.Reciprocal();
-			V0 = Vector::Multiply(g_XMOneHalf.v, V0);
+			V0 = Vector::Multiply(Constants::OneHalf.v, V0);
 			V0 = Vector::Multiply(V0, V1);
 
-			VectorType V2 = VectorMultiplyAdd(CosIncidentAngle, S, g_XMNegativeOne.v);
-			Vector V3 = VectorMultiplyAdd(CosIncidentAngle, D, g_XMOne.v);
+			VectorType V2 = VectorMultiplyAdd(CosIncidentAngle, S, Constants::NegativeOne.v);
+			Vector V3 = VectorMultiplyAdd(CosIncidentAngle, D, Constants::One.v);
 			V2 = Vector::Multiply(V2, V2);
 			V3 = Vector::Multiply(V3, V3);
 			V3 = V3.Reciprocal();
-			V2 = VectorMultiplyAdd(V2, V3, g_XMOne.v);
+			V2 = VectorMultiplyAdd(V2, V3, Constants::One.v);
 
 			Vector Result = Vector::Multiply(V0, V2);
 
@@ -24255,7 +24253,7 @@ namespace At0
 	// G = sqrt(abs((RefractionIndex^2-1) + CosIncidentAngle^2))
 			VectorType G = _mm_mul_ps(RefractionIndex, RefractionIndex);
 			VectorType vTemp = _mm_mul_ps(CosIncidentAngle, CosIncidentAngle);
-			G = _mm_sub_ps(G, g_XMOne);
+			G = _mm_sub_ps(G, Constants::One);
 			vTemp = _mm_add_ps(vTemp, G);
 			// max((0-vTemp),vTemp) == abs(vTemp)
 			// The abs is needed to deal with refraction and cosine being zero
@@ -24271,22 +24269,22 @@ namespace At0
 			// Perform the term (0.5f *(g - c)^2) / (g + c)^2 
 			VectorType vResult = _mm_mul_ps(GSubC, GSubC);
 			vTemp = _mm_mul_ps(GAddC, GAddC);
-			vResult = _mm_mul_ps(vResult, g_XMOneHalf);
+			vResult = _mm_mul_ps(vResult, Constants::OneHalf);
 			vResult = _mm_div_ps(vResult, vTemp);
 			// Perform the term ((c * (g + c) - 1)^2 / (c * (g - c) + 1)^2 + 1)
 			GAddC = _mm_mul_ps(GAddC, CosIncidentAngle);
 			GSubC = _mm_mul_ps(GSubC, CosIncidentAngle);
-			GAddC = _mm_sub_ps(GAddC, g_XMOne);
-			GSubC = _mm_add_ps(GSubC, g_XMOne);
+			GAddC = _mm_sub_ps(GAddC, Constants::One);
+			GSubC = _mm_add_ps(GSubC, Constants::One);
 			GAddC = _mm_mul_ps(GAddC, GAddC);
 			GSubC = _mm_mul_ps(GSubC, GSubC);
 			GAddC = _mm_div_ps(GAddC, GSubC);
-			GAddC = _mm_add_ps(GAddC, g_XMOne);
+			GAddC = _mm_add_ps(GAddC, Constants::One);
 			// Multiply the two term parts
 			vResult = _mm_mul_ps(vResult, GAddC);
 			// Clamp to 0.0 - 1.0f
-			vResult = _mm_max_ps(vResult, g_XMZero);
-			vResult = _mm_min_ps(vResult, g_XMOne);
+			vResult = _mm_max_ps(vResult, Constants::Zero);
+			vResult = _mm_min_ps(vResult, Constants::One);
 			return vResult;
 #endif
 		}
