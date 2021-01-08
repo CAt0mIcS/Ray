@@ -12,7 +12,7 @@ namespace At0::Ray
 		);
 
 		return Matrix::LookAtLH(
-			pos, VectorZero(), VectorSet(0.0f, 1.0f, 0.0f, 0.0f)
+			pos, Vector::Zero(), Vector::Set(0.0f, 1.0f, 0.0f, 0.0f)
 		) * Matrix::RotationRollPitchYaw(pitch, yaw, roll) * Matrix::Translation(x, y, 0.0f);
 	}
 }

@@ -84,7 +84,7 @@ namespace At0::Ray
 			assert(longDiv >= 3);
 
 			constexpr float radius = 1.0f;
-			const auto base = VectorSet(0.0f, 0.0f, radius, 0.0f);
+			const auto base = Vector::Set(0.0f, 0.0f, radius, 0.0f);
 			const float lattitudeAngle = PI / latDiv;
 			const float longitudeAngle = 2.0f * PI / longDiv;
 
