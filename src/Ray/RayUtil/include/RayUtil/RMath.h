@@ -22380,6 +22380,7 @@ namespace At0
 		inline Quaternion& RAYMATH_CALLCONV Quaternion::operator*=(FQuaternion other)
 		{
 			*this = *this * other;
+			return *this;
 		}
 
 		//------------------------------------------------------------------------------
@@ -22436,7 +22437,7 @@ namespace At0
 			static const VectorF32 NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
 			return _mm_mul_ps(*this, NegativeOne3);
 #endif
-		}
+	}
 
 		//------------------------------------------------------------------------------
 
@@ -22861,7 +22862,7 @@ namespace At0
 			N = _mm_mul_ps(N, Scale);
 			return N;
 #endif
-		}
+}
 
 		//------------------------------------------------------------------------------
 
