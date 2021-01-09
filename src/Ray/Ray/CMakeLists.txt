@@ -1,7 +1,7 @@
 set(SRC
 	"include/Ray/RApplication.h"
 	"include/Ray/RApplication.cpp"
-	"include/Ray/rpch.h"
+	"include/Ray/Rpch.h"
 	"include/Ray/Ray.h"
 	"include/Ray/RBase.h"
 	"include/Ray/REntryPoint.h"

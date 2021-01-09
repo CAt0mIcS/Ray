@@ -1,4 +1,4 @@
-#include "Ray/rpch.h"
+#include "Ray/Rpch.h"
 #include "ROpenGLWindow.h"
 
 #ifdef _WIN32

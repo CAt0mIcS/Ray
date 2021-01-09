@@ -119,7 +119,7 @@ target_link_libraries("RayRender"
 
 # add_dependencies("RayRender" "RlDebug")
 target_compile_definitions("RayRender" PRIVATE "RR_BUILD")
-target_precompile_headers("RayRender" PRIVATE "include/RayRender/rlrpch.h")
+target_precompile_headers("RayRender" PRIVATE "include/RayRender/rlRpch.h")
 
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("RayRender" "")
