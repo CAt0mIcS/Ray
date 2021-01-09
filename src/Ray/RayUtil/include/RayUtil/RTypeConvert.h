@@ -6,7 +6,6 @@
 
 #ifdef _WIN32
 #include <Windows.h>
-#include <../../extern/glm/glm/mat4x4.hpp>
 #endif
 
 
