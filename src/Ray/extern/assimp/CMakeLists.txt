@@ -106,6 +106,5 @@ target_link_directories("assimp" INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/lib/x64/
 target_link_libraries("assimp" INTERFACE "${LIB}")
 target_include_directories("assimp" INTERFACE "${INC}")
 AddRecursiveFilters("${SRC}")
-SetOutputDirectory("assimp" "")
 
 
