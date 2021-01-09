@@ -22530,7 +22530,7 @@ namespace At0
 
 			const VectorF32 OneMinusEpsilon = { { { 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f, 1.0f - 0.00001f } } };
 
-			Vector CosOmega = Quaternion::Dot(Q0, Q1);
+			Vector CosOmega = Vector(Quaternion::Dot(Q0, Q1));
 
 			const VectorType Zero = Vector::Zero();
 			VectorType Control = CosOmega.Less(Zero);
