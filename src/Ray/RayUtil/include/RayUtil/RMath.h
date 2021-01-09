@@ -462,8 +462,8 @@ namespace At0
 			Vector& RAYMATH_CALLCONV operator++() { v = Add(*this, { 1.0f, 1.0f, 1.0f, 1.0f }); return *this; }
 			Vector  RAYMATH_CALLCONV operator-(FVector v1) const { return Subtract(*this, v1); }
 			Vector  RAYMATH_CALLCONV operator-(float value) const { return Subtract(*this, { value, value, value, value }); }
-			Vector& RAYMATH_CALLCONV operator-=(FVector v1) { v = Add(*this, v1); return *this; }
-			Vector& RAYMATH_CALLCONV operator-=(float value) { v = Add(*this, { value, value, value, value }); return *this; }
+			Vector& RAYMATH_CALLCONV operator-=(FVector v1) { v = Subtract(*this, v1); return *this; }
+			Vector& RAYMATH_CALLCONV operator-=(float value) { v = Subtract(*this, { value, value, value, value }); return *this; }
 			Vector& RAYMATH_CALLCONV operator--() { v = Subtract(*this, { 1.0f, 1.0f, 1.0f, 1.0f }); return *this; }
 			Vector  RAYMATH_CALLCONV operator*(FVector v1) const { return Multiply(*this, v1); }
 			Vector  RAYMATH_CALLCONV operator*(float value) const { return Multiply(*this, { value, value, value, value }); }
@@ -810,6 +810,27 @@ namespace At0
 
 			RAYMATH_CONSTEXPR Float2(float _x, float _y) : x(_x), y(_y) {}
 			explicit Float2(/*_In_reads_(2) */const float* pArray) : x(pArray[0]), y(pArray[1]) {}
+
+
+			Float2  RAYMATH_CALLCONV operator-() const { return { -x, -y }; }
+			Float2  RAYMATH_CALLCONV operator+(const Float2& v1) const { return { x + v1.x, y + v1.y }; }
+			Float2  RAYMATH_CALLCONV operator+(float value) const { return { x + value, y + value }; }
+			Float2& RAYMATH_CALLCONV operator+=(const Float2& v1) { *this = *this + v1; return *this; }
+			Float2& RAYMATH_CALLCONV operator+=(float value) { *this = *this + value; return *this; }
+			Float2& RAYMATH_CALLCONV operator++() { *this = *this + 1.0f; return *this; }
+			Float2  RAYMATH_CALLCONV operator-(const Float2& v1) const { return { x - v1.x, y - v1.y }; }
+			Float2  RAYMATH_CALLCONV operator-(float value) const { return { x - value, y - value }; }
+			Float2& RAYMATH_CALLCONV operator-=(const Float2& v1) { *this = *this - v1; return *this; }
+			Float2& RAYMATH_CALLCONV operator-=(float value) { *this = *this - value; return *this; }
+			Float2& RAYMATH_CALLCONV operator--() { *this = *this - 1.0f; return *this; }
+			Float2  RAYMATH_CALLCONV operator*(const Float2& v1) const { return { x * v1.x, y * v1.y }; }
+			Float2  RAYMATH_CALLCONV operator*(float value) const { return { x * value, y * value }; }
+			Float2& RAYMATH_CALLCONV operator*=(const Float2& v1) { *this = *this * v1; return *this; }
+			Float2& RAYMATH_CALLCONV operator*=(float value) { *this = *this * value; return *this; }
+			Float2  RAYMATH_CALLCONV operator/(const Float2& v1) const { return { x / v1.x, y / v1.y }; }
+			Float2  RAYMATH_CALLCONV operator/(float value) const { return { x / value, y / value }; }
+			Float2& RAYMATH_CALLCONV operator/=(const Float2& v1) { *this = *this / v1; return *this; }
+			Float2& RAYMATH_CALLCONV operator/=(float value) { *this = *this / value; return *this; }
 		};
 
 		// 2D VectorType; 32 bit floating point components aligned on a 16 byte boundary
@@ -882,6 +903,26 @@ namespace At0
 
 			RAYMATH_CONSTEXPR Float3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
 			explicit Float3(/*_In_reads_(3) */const float* pArray) : x(pArray[0]), y(pArray[1]), z(pArray[2]) {}
+
+			Float3  RAYMATH_CALLCONV operator-() const { return { -x, -y, -z }; }
+			Float3  RAYMATH_CALLCONV operator+(const Float3& v1) const { return { x + v1.x, y + v1.y, z + v1.z }; }
+			Float3  RAYMATH_CALLCONV operator+(float value) const { return { x + value, y + value, z + value }; }
+			Float3& RAYMATH_CALLCONV operator+=(const Float3& v1) { *this = *this + v1; return *this; }
+			Float3& RAYMATH_CALLCONV operator+=(float value) { *this = *this + value; return *this; }
+			Float3& RAYMATH_CALLCONV operator++() { *this = *this + 1.0f; return *this; }
+			Float3  RAYMATH_CALLCONV operator-(const Float3& v1) const { return { x - v1.x, y - v1.y, z - v1.z }; }
+			Float3  RAYMATH_CALLCONV operator-(float value) const { return { x - value, y - value, z - value }; }
+			Float3& RAYMATH_CALLCONV operator-=(const Float3& v1) { *this = *this - v1; return *this; }
+			Float3& RAYMATH_CALLCONV operator-=(float value) { *this = *this - value; return *this; }
+			Float3& RAYMATH_CALLCONV operator--() { *this = *this - 1.0f; return *this; }
+			Float3  RAYMATH_CALLCONV operator*(const Float3& v1) const { return { x * v1.x, y * v1.y, z * v1.z }; }
+			Float3  RAYMATH_CALLCONV operator*(float value) const { return { x * value, y * value, z * value }; }
+			Float3& RAYMATH_CALLCONV operator*=(const Float3& v1) { *this = *this * v1; return *this; }
+			Float3& RAYMATH_CALLCONV operator*=(float value) { *this = *this * value; return *this; }
+			Float3  RAYMATH_CALLCONV operator/(const Float3& v1) const { return { x / v1.x, y / v1.y, z / v1.z }; }
+			Float3  RAYMATH_CALLCONV operator/(float value) const { return { x / value, y / value, z / value }; }
+			Float3& RAYMATH_CALLCONV operator/=(const Float3& v1) { *this = *this / v1; return *this; }
+			Float3& RAYMATH_CALLCONV operator/=(float value) { *this = *this / value; return *this; }
 		};
 
 		// 3D VectorType; 32 bit floating point components aligned on a 16 byte boundary
@@ -22437,7 +22478,7 @@ namespace At0
 			static const VectorF32 NegativeOne3 = { { { -1.0f, -1.0f, -1.0f, 1.0f } } };
 			return _mm_mul_ps(*this, NegativeOne3);
 #endif
-	}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -22862,7 +22903,7 @@ namespace At0
 			N = _mm_mul_ps(N, Scale);
 			return N;
 #endif
-}
+		}
 
 		//------------------------------------------------------------------------------
 
