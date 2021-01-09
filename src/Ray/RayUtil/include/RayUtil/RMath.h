@@ -378,6 +378,51 @@ namespace At0
 #endif
 		};
 
+		RAY_ALIGNED(16) struct VectorI32
+		{
+			union
+			{
+				int32_t i[4];
+				VectorType v;
+			};
+
+			inline operator VectorType() const { return v; }
+#if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
+			inline operator __m128i() const { return _mm_castps_si128(v); }
+			inline operator __m128d() const { return _mm_castps_pd(v); }
+#endif
+		};
+
+		RAY_ALIGNED(16) struct VectorU8
+		{
+			union
+			{
+				uint8_t u[16];
+				VectorType v;
+			};
+
+			inline operator VectorType() const { return v; }
+#if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
+			inline operator __m128i() const { return _mm_castps_si128(v); }
+			inline operator __m128d() const { return _mm_castps_pd(v); }
+#endif
+		};
+
+		RAY_ALIGNED(16) struct VectorU32
+		{
+			union
+			{
+				uint32_t u[4];
+				VectorType v;
+			};
+
+			inline operator VectorType() const { return v; }
+#if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
+			inline operator __m128i() const { return _mm_castps_si128(v); }
+			inline operator __m128d() const { return _mm_castps_pd(v); }
+#endif
+		};
+
 		//------------------------------------------------------------------------------
 		// Basic Vector
 		struct Vector
@@ -395,9 +440,12 @@ namespace At0
 			Vector() = default;
 			Vector(FVectorType v) : v(v) {}
 			Vector(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
+			Vector(const VectorF32& vec) : v(vec.v) {}
+			Vector(const VectorI32& vec) : v(vec.v) {}
+			Vector(const VectorU8& vec) : v(vec.v) {}
+			Vector(const VectorU32& vec) : v(vec.v) {}
 
 			operator VectorType& () { return v; }
-			operator VectorF32() const { return VectorF32{ x, y, z, w }; }
 			operator const VectorType& () const { return v; }
 
 			Vector(const Vector&) = default;
@@ -516,51 +564,6 @@ namespace At0
 			static Vector RAYMATH_CALLCONV SplatQNaN();
 			static Vector RAYMATH_CALLCONV SplatEpsilon();
 			static Vector RAYMATH_CALLCONV SplatSignMask();
-		};
-
-		RAY_ALIGNED(16) struct VectorI32
-		{
-			union
-			{
-				int32_t i[4];
-				VectorType v;
-			};
-
-			inline operator VectorType() const { return v; }
-#if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
-			inline operator __m128i() const { return _mm_castps_si128(v); }
-			inline operator __m128d() const { return _mm_castps_pd(v); }
-#endif
-		};
-
-		RAY_ALIGNED(16) struct VectorU8
-		{
-			union
-			{
-				uint8_t u[16];
-				VectorType v;
-			};
-
-			inline operator VectorType() const { return v; }
-#if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
-			inline operator __m128i() const { return _mm_castps_si128(v); }
-			inline operator __m128d() const { return _mm_castps_pd(v); }
-#endif
-		};
-
-		RAY_ALIGNED(16) struct VectorU32
-		{
-			union
-			{
-				uint32_t u[4];
-				VectorType v;
-			};
-
-			inline operator VectorType() const { return v; }
-#if !defined(RAY_NO_INTRINSICS) && defined(RAY_SSE_INTRINSICS)
-			inline operator __m128i() const { return _mm_castps_si128(v); }
-			inline operator __m128d() const { return _mm_castps_pd(v); }
-#endif
 		};
 
 		//------------------------------------------------------------------------------
@@ -11602,8 +11605,8 @@ namespace At0
 			FVectorType LengthMax
 		)
 		{
-			assert((Vector::GetY(LengthMin) == Vector::GetX(LengthMin)));
-			assert((Vector::GetY(LengthMax) == Vector::GetX(LengthMax)));
+			assert((Vector(LengthMin).GetY() == Vector(LengthMin).GetX()));
+			assert((Vector(LengthMax).GetY() == Vector(LengthMax).GetX()));
 			assert(Vector2GreaterOrEqual(LengthMin, Constants::Zero));
 			assert(Vector2GreaterOrEqual(LengthMax, Constants::Zero));
 			assert(Vector2GreaterOrEqual(LengthMax, LengthMin));
@@ -14067,8 +14070,8 @@ namespace At0
 			FVectorType LengthMax
 		)
 		{
-			assert((Vector::GetY(LengthMin) == Vector::GetX(LengthMin)) && (Vector::GetZ(LengthMin) == Vector::GetX(LengthMin)));
-			assert((Vector::GetY(LengthMax) == Vector::GetX(LengthMax)) && (Vector::GetZ(LengthMax) == Vector::GetX(LengthMax)));
+			assert((Vector(LengthMin).GetY() == Vector(LengthMin).GetX()) && (Vector(LengthMin).GetZ() == Vector(LengthMin).GetX()));
+			assert((Vector(LengthMax).GetY() == Vector(LengthMax).GetX()) && (Vector(LengthMax).GetZ() == Vector(LengthMax).GetX()));
 			assert(Vector3GreaterOrEqual(LengthMin, Vector::Zero()));
 			assert(Vector3GreaterOrEqual(LengthMax, Vector::Zero()));
 			assert(Vector3GreaterOrEqual(LengthMax, LengthMin));
@@ -18143,8 +18146,8 @@ namespace At0
 			FVectorType LengthMax
 		)
 		{
-			assert((Vector::GetY(LengthMin) == Vector::GetX(LengthMin)) && (Vector::GetZ(LengthMin) == Vector::GetX(LengthMin)) && (Vector::GetW(LengthMin) == Vector::GetX(LengthMin)));
-			assert((Vector::GetY(LengthMax) == Vector::GetX(LengthMax)) && (Vector::GetZ(LengthMax) == Vector::GetX(LengthMax)) && (Vector::GetW(LengthMax) == Vector::GetX(LengthMax)));
+			assert((Vector(LengthMin).GetY() == Vector(LengthMin).GetX()) && (Vector(LengthMin).GetZ() == Vector(LengthMin).GetX()) && (Vector(LengthMin).GetW() == Vector(LengthMin).GetX()));
+			assert((Vector(LengthMax).GetY() == Vector(LengthMax).GetX()) && (Vector(LengthMax).GetZ() == Vector(LengthMax).GetX()) && (Vector(LengthMax).GetW() == Vector(LengthMax).GetX()));
 			assert(Vector4GreaterOrEqual(LengthMin, Vector::Zero()));
 			assert(Vector4GreaterOrEqual(LengthMax, Vector::Zero()));
 			assert(Vector4GreaterOrEqual(LengthMax, LengthMin));
@@ -22519,7 +22522,7 @@ namespace At0
 			FQuaternion T
 		)
 		{
-			assert((Vector::GetY(T) == Vector::GetX(T)) && (Vector::GetZ(T) == Vector::GetX(T)) && (Vector::GetW(T) == Vector::GetX(T)));
+			assert((Vector(T).GetY() == Vector(T).GetX()) && (Vector(T).GetZ() == Vector(T).GetX()) && (Vector(T).GetW() == Vector(T).GetX()));
 
 			// Result = Q0 * sin((1.0 - t) * Omega) / sin(Omega) + Q1 * sin(t * Omega) / sin(Omega)
 
@@ -22634,7 +22637,7 @@ namespace At0
 			HQuaternion T
 		)
 		{
-			assert((Vector::GetY(T) == Vector::GetX(T)) && (Vector::GetZ(T) == Vector::GetX(T)) && (Vector::GetW(T) == Vector::GetX(T)));
+			assert((Vector(T).GetY() == Vector(T).GetX()) && (Vector(T).GetZ() == Vector(T).GetX()) && (Vector(T).GetW() == Vector(T).GetX()));
 
 			VectorType TP = T;
 			const VectorType Two = VectorSplatConstant(2, 0);
@@ -22748,8 +22751,8 @@ namespace At0
 			HQuaternion G
 		)
 		{
-			assert((Vector::GetY(F) == Vector::GetX(F)) && (Vector::GetZ(F) == Vector::GetX(F)) && (Vector::GetW(F) == Vector::GetX(F)));
-			assert((Vector::GetY(G) == Vector::GetX(G)) && (Vector::GetZ(G) == Vector::GetX(G)) && (Vector::GetW(G) == Vector::GetX(G)));
+			assert((Vector(F).GetY() == Vector(F).GetX()) && (Vector(F).GetZ() == Vector(F).GetX()) && (Vector(F).GetW() == Vector(F).GetX()));
+			assert((Vector(G).GetY() == Vector(G).GetX()) && (Vector(G).GetZ() == Vector(G).GetX()) && (Vector(G).GetW() == Vector(G).GetX()));
 
 			const VectorType Epsilon = VectorSplatConstant(1, 16);
 
