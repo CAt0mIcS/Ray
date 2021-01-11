@@ -13,6 +13,12 @@
 
 namespace At0::Ray
 {
+	Ref<Renderer3D> Widget::GetRenderer3D() const
+	{
+		RAY_MEXPECTS(m_Parent, "[Button::GetRenderer3D] No parent was found at 0x{0}", m_Parent);
+		return m_Parent->GetRenderer3D();
+	}
+
 	Widget& Widget::FindChildByName(std::string_view name)
 	{
 		RAY_PROFILE_FUNCTION();

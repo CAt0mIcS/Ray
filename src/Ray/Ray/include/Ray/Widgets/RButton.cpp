@@ -18,12 +18,6 @@ namespace At0::Ray
 
 	}
 
-	Renderer3D& Button::GetRenderer3D() const
-	{
-		RAY_MEXPECTS(m_Parent, "[Button::GetRenderer3D] No parent was found at 0x{0}", m_Parent);
-		return m_Parent->GetRenderer3D();
-	}
-
 	Button::~Button()
 	{
 		Log::Info("[Button] '{0}' destroyed", GetName());

@@ -1,6 +1,15 @@
 set(SRC
     "include/RayRender/RRBase.h"
     "include/RayRender/RRpch.h"
+    "include/RayRender/RRendererAPI.h"
+
+    # Abstract classes
+    "include/RayRender/RRenderer3D.h"
+    "include/RayRender/RRenderer3D.cpp"
+
+    # DirectX11 classes
+    "include/RayRender/Platform/DX11/RDX11Renderer3D.h"
+    "include/RayRender/Platform/DX11/RDX11Renderer3D.cpp"
 )
 
 set(PUBLIC_INC

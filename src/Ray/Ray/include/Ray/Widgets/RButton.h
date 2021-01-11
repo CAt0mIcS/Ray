@@ -18,9 +18,6 @@ namespace At0::Ray
 		void SetText(const std::string_view text) { m_Text = text; }
 		std::string_view GetText() const { return m_Text; }
 
-		/// <returns>The renderer of the parent. This function will recursively go up until the Window which has the renderer</returns>
-		virtual Renderer3D& GetRenderer3D() const override;
-
 		virtual ~Button();
 
 	private:

@@ -5,8 +5,8 @@
 #include <RayDebug/RInstrumentor.h>
 #include <RayDebug/RLogger.h>
 
-#include <RayRender/RendererAPI.h>
-#include <RayRender/Renderer3D.h>
+#include <RayRender/RRendererAPI.h>
+#include <RayRender/RRenderer3D.h>
 //#include <RayRender/Renderer2D.h>
 
 #include "RWinAPIWindow.h"
@@ -34,7 +34,7 @@ namespace At0::Ray
 		return nullptr;
 	}
 
-	Renderer3D& Window::GetRenderer3D() const
+	Ref<Renderer3D> Window::GetRenderer3D() const
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -43,7 +43,7 @@ namespace At0::Ray
 			return GetParent()->GetRenderer3D();
 		}
 		RAY_MEXPECTS(m_Renderer3D.get() != nullptr, "[Window::GetRenderer3D] Renderer was not initialized.");
-		return *m_Renderer3D.get();
+		return m_Renderer3D;
 	}
 
 	Window::Window(std::string_view name, Widget* parent)

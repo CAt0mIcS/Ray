@@ -19,7 +19,7 @@
 #include "Ray/Input/RKeyboard.h"
 #include "Ray/Input/RMouse.h"
 
-#include <RayRender/Renderer3D.h>
+#include <RayRender/RRenderer3D.h>
 
 #include <RayDebug/RAssert.h>
 #include <RayDebug/RLogger.h>
@@ -59,6 +59,8 @@ namespace At0::Ray
 
 		m_hWnd = glfwCreateWindow((int)size.x, (int)size.y, "", nullptr, nullptr);
 		glfwSetWindowUserPointer(m_hWnd, this);
+
+		//m_Renderer3D = Renderer3D::Create();
 
 		glfwSetWindowPos(m_hWnd, (int)pos.x, (int)pos.y);
 		m_IsOpen = true;

@@ -23,7 +23,7 @@ namespace At0::Ray
 		Widget(Widget&&) noexcept = default;
 
 		std::string_view GetName() const { return m_Name; }
-		virtual Renderer3D& GetRenderer3D() const = 0;
+		virtual Ref<Renderer3D> GetRenderer3D() const;
 		Widget* GetParent() const { return m_Parent; }
 
 		/// <summary>

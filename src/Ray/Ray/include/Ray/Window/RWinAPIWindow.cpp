@@ -12,7 +12,7 @@
 #include <RayUtil/RRandom.h>
 #include <RayUtil/RKeyCodes.h>
 
-#include <RayRender/Renderer3D.h>
+#include <RayRender/RRenderer3D.h>
 
 #include <stb_image/stb_image.h>
 
@@ -35,8 +35,7 @@ namespace At0::Ray
 		if (s_KeycodeMap[0] == (Key)0)
 			SetKeycodeMap();
 
-		m_Renderer3D = MakeScope<Renderer3D>(*this);
-		m_Renderer3D->Init(m_hWnd);
+		m_Renderer3D = Renderer3D::Create();
 	}
 
 	WinAPIWindow::~WinAPIWindow()

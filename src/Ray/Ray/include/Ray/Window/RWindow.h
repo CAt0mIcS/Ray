@@ -60,7 +60,7 @@ namespace At0::Ray
 		virtual bool IsOpen() const = 0;
 		virtual void SetIcon(std::string_view path) = 0;
 
-		virtual Renderer3D& GetRenderer3D() const override;
+		virtual Ref<Renderer3D> GetRenderer3D() const override;
 
 		virtual ~Window();
 
@@ -97,7 +97,7 @@ namespace At0::Ray
 		Size2 m_OldSize;
 		Point2 m_OldPos;
 
-		Scope<Renderer3D> m_Renderer3D;
+		Ref<Renderer3D> m_Renderer3D;
 	};
 }
 

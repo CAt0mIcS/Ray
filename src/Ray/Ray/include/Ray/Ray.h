@@ -21,3 +21,5 @@
 #include <../../RayDebug/include/RayDebug/RAssert.h>
 #include <../../RayDebug/include/RayDebug/RLogger.h>
 
+#include <../../RayRender/include/RayRender/RRendererAPI.h>
+

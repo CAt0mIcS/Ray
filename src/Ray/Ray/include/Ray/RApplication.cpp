@@ -5,7 +5,7 @@
 #include "Ray/Core/RThreadPool.h"
 
 // Include Renderer because of incomplete type in Window
-#include <RayRender/Renderer3D.h>
+#include <RayRender/RRenderer3D.h>
 
 #include <RayDebug/RAssert.h>
 #include <RayDebug/RInstrumentor.h>
