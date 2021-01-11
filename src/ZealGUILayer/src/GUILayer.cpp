@@ -69,7 +69,7 @@ namespace At0::Layers
 #define RENDER 1
 
 	std::vector<Ray::ShadedCube> cubes;
-	static constexpr uint64_t numCubes = 4000;
+	static constexpr uint64_t numCubes = 0;
 	//Ray::Model model;
 	std::mt19937 mtEngine;
 	Ray::Camera cam;

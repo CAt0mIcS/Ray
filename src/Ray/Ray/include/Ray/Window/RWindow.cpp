@@ -73,6 +73,9 @@ namespace At0::Ray
 			}
 		};
 
+		if (!m_CurrentlyHovering)
+			m_CurrentlyHovering = this;
+
 		for (Scope<Widget>& child : m_Children)
 		{
 			if (Mouse.IsOnWidget(*child) && *m_CurrentlyHovering != *child)
@@ -82,12 +85,10 @@ namespace At0::Ray
 			}
 		}
 
-		if (m_CurrentlyHovering && *m_CurrentlyHovering != *this && !Mouse.IsOnWidget(*m_CurrentlyHovering))
+		if (*m_CurrentlyHovering != *this && !Mouse.IsOnWidget(*m_CurrentlyHovering))
 		{
 			generateEvents(this);
 		}
-		else
-			m_CurrentlyHovering = this;
 	}
 
 	Window::~Window()
