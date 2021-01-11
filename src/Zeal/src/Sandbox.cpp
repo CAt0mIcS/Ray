@@ -62,7 +62,6 @@ namespace At0::Zeal
 #include <Ray/REntryPoint.h>
 
 #include <RayUtil/RException.h>
-#include <RayRender/RendererAPI.h>
 
 
 ///////////////////////////////////////////////////////////////////////////

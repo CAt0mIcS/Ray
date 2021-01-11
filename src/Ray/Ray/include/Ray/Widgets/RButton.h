@@ -8,9 +8,6 @@
 
 namespace At0::Ray
 {
-	class Rectangle;
-
-	// QUESTION: AddPaintEventListener is needed to add listener for paint events?
 	class RAY_API Button : public Widget
 	{
 	public:
@@ -59,8 +56,5 @@ namespace At0::Ray
 
 		/// <returns>Width and height of the widget</returns>
 		virtual Size2 GetSize() const override;
-
-	private:
-		Rectangle* m_DrawObject;
 	};
 }
