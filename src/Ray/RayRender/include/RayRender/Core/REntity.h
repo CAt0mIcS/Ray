@@ -28,24 +28,34 @@ namespace At0::Ray
 		/// Removes the specified component. Function will assert false if 
 		/// the component does not exist.
 		/// </summary>
-		template<typename Component>
+		template<typename... Component>
 		void Remove()
 		{
-			assert(Has<Component>() && "[Entity::Remove] Entity does not have component.");
-			s_Registry.remove<Component>(m_Entity);
+			assert(Has<Component...>() && "[Entity::Remove] Entity does not have component.");
+			s_Registry.remove<Component...>(m_Entity);
 		}
 
 		/// <summary>
 		/// Checks if the entity already has the component
 		/// </summary>
-		template<typename Component>
+		template<typename... Component>
 		bool Has() const
 		{
-			return s_Registry.has<Component>(m_Entity);
+			return s_Registry.has<Component...>(m_Entity);
+		}
+
+		/// <summary>
+		/// Gets any number of components from the entity
+		/// </summary>
+		template<typename... Component>
+		decltype(auto) Get()
+		{
+			assert(Has<Component...>() && "[Entity::Get] Entity does not have component.");
+			return s_Registry.get<Component...>(m_Entity);
 		}
 
 	private:
 		entt::entity m_Entity;
-		inline static entt::registry s_Registry;
+		static entt::registry s_Registry;
 	};
 }

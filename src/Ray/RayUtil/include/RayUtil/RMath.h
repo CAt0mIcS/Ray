@@ -894,6 +894,7 @@ namespace At0
 			float z;
 
 			Float3() = default;
+			Float3(float xyz) : x(xyz), y(xyz), z(xyz) { }
 
 			Float3(const Float3&) = default;
 			Float3& operator=(const Float3&) = default;
@@ -2219,7 +2220,7 @@ namespace At0
 			vTemp = _mm_and_si128(vTemp, Constants::One);
 			return _mm_castsi128_ps(vTemp);
 #endif
-		}
+	}
 
 		//------------------------------------------------------------------------------
 
@@ -4516,7 +4517,7 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			return _mm_setzero_ps();
 #endif
-		}
+}
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with four floating point values
@@ -8995,7 +8996,7 @@ namespace At0
 			for (size_t i = 0; i < 4; i++)
 			{
 				VB.vector4_u32[i] = static_cast<uint32_t>(VB.vector4_f32[i]);
-			}
+		}
 #endif
 
 			VectorType VC2 = Vector::Multiply(VC, VC);

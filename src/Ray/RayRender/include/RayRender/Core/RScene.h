@@ -22,7 +22,7 @@ namespace At0::Ray
 		/// Submit a drawable to store in the scene which will be rendered
 		/// when the scene is submitted to the Renderer.
 		/// </summary>
-		void Submit(Drawable&& drawable);
+		void Submit(const Drawable& drawable);
 
 		Iterator				begin() { return m_Drawables.begin(); }
 		Iterator				end() { return m_Drawables.end(); }

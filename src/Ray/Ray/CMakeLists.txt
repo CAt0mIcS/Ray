@@ -13,7 +13,6 @@ set(SRC
 	"include/Ray/Core/RRect.cpp"	
 	"include/Ray/Core/RStack.h"
 	"include/Ray/Core/RTimestep.h"
-	"include/Ray/Core/RComponents.h"
 	
 	"include/Ray/Input/RKeyboard.h"
 	"include/Ray/Input/RKeyboard.cpp"

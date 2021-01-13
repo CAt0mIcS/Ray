@@ -17,9 +17,11 @@
 #include <../../RayUtil/include/RayUtil/RMessageBox.h>
 #include <../../RayUtil/include/RayUtil/RHelper.h>
 #include <../../RayUtil/include/RayUtil/RGlobalDefines.h>
+#include <../../RayUtil/include/RayUtil/RComponents.h>
 
 #include <../../RayDebug/include/RayDebug/RAssert.h>
 #include <../../RayDebug/include/RayDebug/RLogger.h>
 
 #include <../../RayRender/include/RayRender/RRendererAPI.h>
+
 

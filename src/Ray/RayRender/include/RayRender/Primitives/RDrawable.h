@@ -15,16 +15,22 @@ namespace At0::Ray
 			m_Entity.Emplace<Component>(std::forward<Args>(args)...);
 		}
 
-		template<typename Component>
-		void RemoveComponent()
+		template<typename... Component>
+		decltype(auto) GetComponent()
 		{
-			m_Entity.Remove<Component>();
+			return m_Entity.Get<Component...>();
 		}
 
-		template<typename Component>
+		template<typename... Component>
+		void RemoveComponent()
+		{
+			m_Entity.Remove<Component...>();
+		}
+
+		template<typename... Component>
 		bool HasComponent() const
 		{
-			return m_Entity.Has<Component>();
+			return m_Entity.Has<Component...>();
 		}
 
 		virtual ~Drawable() = default;

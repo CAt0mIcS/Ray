@@ -4,13 +4,19 @@
 
 #include "../Primitives/RDrawable.h"
 
+#include <string_view>
+
 
 namespace At0::Ray
 {
 	class RR_API Quad : public Drawable
 	{
 	public:
-
+		/// <summary>
+		/// Sets up buffers/... for drawing and adds TagComponent and TransformComponent
+		/// to the Drawable Quad
+		/// </summary>
+		Quad(std::string_view tag);
 
 	private:
 
