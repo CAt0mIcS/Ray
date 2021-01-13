@@ -6,8 +6,10 @@
 
 namespace At0::Ray
 {
-	Quad::Quad(std::string_view tag)
+	Quad::Quad(Entity entity)
+		: Drawable(entity)
 	{
+
 	}
 }
 

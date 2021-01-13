@@ -7,11 +7,14 @@
 
 namespace At0::Ray
 {
+	class Scene;
+
 	class RR_API Entity
 	{
-		friend class Scene;
 	public:
-		Entity();
+		Entity() = default;
+		Entity(entt::entity handle, Scene* scene);
+		Entity(const Entity& other) = default;
 
 		/// <summary>
 		/// Adds any component to the entity and initializes it with the arguments
@@ -20,8 +23,8 @@ namespace At0::Ray
 		template<typename Component, typename... Args>
 		decltype(auto) Emplace(Args&&... args)
 		{
-			assert(!Has<Component>() && "[Entity::Remove] Entity already has the specified component.");
-			//m_Registry.emplace<Component>(m_Entity, std::forward<Args>(args)...);
+			assert(!Has<Component>() && "[Entity::Emplace] Entity already has the specified component.");
+			return m_Scene->m_Registry.emplace<Component>(m_Entity, std::forward<Args>(args)...);
 		}
 
 		/// <summary>
@@ -32,7 +35,7 @@ namespace At0::Ray
 		void Remove()
 		{
 			assert(Has<Component...>() && "[Entity::Remove] Entity does not have component.");
-			//m_Registry.remove<Component...>(m_Entity);
+			m_Scene->m_Registry.remove<Component...>(m_Entity);
 		}
 
 		/// <summary>
@@ -41,8 +44,7 @@ namespace At0::Ray
 		template<typename... Component>
 		bool Has() const
 		{
-			//return m_Registry.has<Component...>(m_Entity);
-			return false;
+			return m_Scene->m_Registry.has<Component...>(m_Entity);
 		}
 
 		/// <summary>
@@ -52,7 +54,7 @@ namespace At0::Ray
 		decltype(auto) Get()
 		{
 			assert(Has<Component...>() && "[Entity::Get] Entity does not have component.");
-			//return m_Registry.get<Component...>(m_Entity);
+			return m_Scene->m_Registry.get<Component...>(m_Entity);
 		}
 
 		operator bool() const { return m_Entity != entt::null; }
@@ -60,6 +62,6 @@ namespace At0::Ray
 
 	private:
 		entt::entity m_Entity;
-		//entt::registry& m_Registry;
+		Scene* m_Scene;
 	};
 }

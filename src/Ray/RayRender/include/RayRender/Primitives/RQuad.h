@@ -3,6 +3,7 @@
 #include "../RRBase.h"
 
 #include "../Primitives/RDrawable.h"
+#include "../Core/REntity.h"
 
 #include <string_view>
 
@@ -18,7 +19,7 @@ namespace At0::Ray
 		/// Sets up buffers/... for drawing and adds TagComponent and TransformComponent
 		/// to the Drawable Quad
 		/// </summary>
-		Quad(std::string_view tag);
+		Quad(Entity entity);
 
 	private:
 

@@ -13,6 +13,9 @@ namespace At0::Ray
 	class RR_API Drawable
 	{
 	public:
+		Drawable(Entity e);
+		Drawable() = default;
+
 		template<typename Component, typename... Args>
 		decltype(auto) AddComponent(Args&&... args)
 		{

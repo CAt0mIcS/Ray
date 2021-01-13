@@ -27,6 +27,9 @@ namespace At0::Ray
 		/// </summary>
 		void Submit(const Drawable& drawable);
 
+		Entity CreateEntity(std::string_view tag = "Entity");
+		void DestroyEntity(Entity entity);
+
 		Iterator				begin() { return m_Drawables.begin(); }
 		Iterator				end() { return m_Drawables.end(); }
 		ConstIterator			begin() const { return m_Drawables.cbegin(); }

@@ -19,4 +19,17 @@ namespace At0::Ray
 	{
 		m_Drawables.emplace_back(drawable);
 	}
+
+	Entity Scene::CreateEntity(std::string_view tag)
+	{
+		Entity e{ m_Registry.create(), this };
+		e.Emplace<TransformComponent>();
+		e.Emplace<TagComponent>(tag);
+		return e;
+	}
+
+	void Scene::DestroyEntity(Entity entity)
+	{
+		m_Registry.destroy(entity);
+	}
 }

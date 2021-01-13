@@ -90,11 +90,11 @@ namespace At0::Layers
 			for (uint64_t i = 0; i < AmountOfCubes; ++i)
 			{
 				// Create quad with name Quad[i]
-				Ray::Quad quad("Quad" + std::to_string(i));
+				Ray::Quad quad(m_CubeScene.CreateEntity("Quad" + std::to_string(i)));
 
 				// Set transformation
-				//Ray::TransformComponent& tform = quad.GetComponent<Ray::TransformComponent>();
-				//tform.Rotation = { 54.4f, 32.34f, 3.54f };
+				Ray::TransformComponent& tform = quad.GetComponent<Ray::TransformComponent>();
+				tform.Rotation = { 54.4f, 32.34f, 3.54f };
 
 				// Add texture to the quad using ecs
 				//quad.AddComponent<TextureComponent>("path");
