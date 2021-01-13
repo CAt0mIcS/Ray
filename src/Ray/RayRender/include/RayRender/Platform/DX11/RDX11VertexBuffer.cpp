@@ -6,21 +6,27 @@
 
 namespace At0::Ray
 {
-	DX11VertexBuffer::DX11VertexBuffer()
+	DX11VertexBuffer::DX11VertexBuffer(const std::vector<Vertex>& data)
+		: m_Strides(sizeof(Vertex))
 	{
 		D3D11_BUFFER_DESC bd{};
-
+		bd.Usage = D3D11_USAGE_DEFAULT;
+		bd.ByteWidth = sizeof(Vertex) * data.size();
+		bd.StructureByteStride = sizeof(Vertex);
+		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bd.CPUAccessFlags = 0;
+		bd.MiscFlags = 0;
 
 		D3D11_SUBRESOURCE_DATA sd{};
+		sd.pSysMem = data.data();
 
 		RAY_GFX_THROW_FAILED(GetDevice()->CreateBuffer(&bd, &sd, &m_pBuffer));
 	}
 
 	void DX11VertexBuffer::Bind()
 	{
-		UINT stride = 0;
 		UINT offset = 0;
-		GetContext()->IASetVertexBuffers(0, 1, m_pBuffer.GetAddressOf(), &stride, &offset);
+		GetContext()->IASetVertexBuffers(0, 1, m_pBuffer.GetAddressOf(), &m_Strides, &offset);
 	}
 }
 

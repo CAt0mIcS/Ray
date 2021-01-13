@@ -10,13 +10,13 @@
 
 namespace At0::Ray
 {
-	Ref<VertexBuffer> VertexBuffer::Create()
+	Ref<VertexBuffer> VertexBuffer::Create(const std::vector<Vertex>& data)
 	{
 		RAY_MEXPECTS(RendererAPI::Valid(), "[VertexBuffer::Create] Invalid RendererAPI selected");
 
 		switch (RendererAPI::GetAPI())
 		{
-		case RendererAPI::D3D11: return MakeRef<DX11VertexBuffer>();
+		case RendererAPI::D3D11: return MakeRef<DX11VertexBuffer>(data);
 		case RendererAPI::OpenGL: return nullptr;
 		}
 
