@@ -7,11 +7,13 @@
 #include <Windows.h>
 #include <d3d11.h>
 #include <dxgi.h>
+#include <wrl.h>
 #endif
 
 #include <memory>
 #include <fstream>
 #include <vector>
 #include <string>
+#include <atomic>
 #include <random>
 

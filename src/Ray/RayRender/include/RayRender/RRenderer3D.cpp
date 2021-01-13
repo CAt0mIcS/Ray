@@ -12,7 +12,7 @@
 
 namespace At0::Ray
 {
-	Ref<Renderer3D> Renderer3D::Create()
+	Ref<Renderer3D> Renderer3D::Create(void* window)
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -24,7 +24,7 @@ namespace At0::Ray
 		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::D3D11:
-			return MakeRef<DX11Renderer3D>();
+			return MakeRef<DX11Renderer3D>((HWND)window);
 		case RendererAPI::OpenGL:
 			break;
 		}

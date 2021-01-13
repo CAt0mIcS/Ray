@@ -10,6 +10,8 @@ set(SRC
     # DirectX11 classes
     "include/RayRender/Platform/DX11/RDX11Renderer3D.h"
     "include/RayRender/Platform/DX11/RDX11Renderer3D.cpp"
+    "include/RayRender/Platform/DX11/RDX11GraphicsResources.h"
+    "include/RayRender/Platform/DX11/RDX11GraphicsResources.cpp"
 )
 
 set(PUBLIC_INC
