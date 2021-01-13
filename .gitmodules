@@ -1,3 +1,6 @@
 [submodule "extern/glfw"]
 	path = src/Ray/extern/glfw
 	url = https://github.com/CAt0mIcS/glfw.git
+[submodule "src/Ray/RayRender/extern/entt"]
+	path = src/Ray/RayRender/extern/entt
+	url = https://github.com/skypjack/entt.git
