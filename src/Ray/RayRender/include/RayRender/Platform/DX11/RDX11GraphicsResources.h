@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <stdint.h>
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;
@@ -24,6 +25,6 @@ namespace At0::Ray
 		static ID3D11DeviceContext* s_pContext;
 		static IDXGIFactory* s_pDXGIFactory;
 
-		static std::atomic<uint32_t> s_RefCount;
+		static std::atomic<uint64_t> s_RefCount;
 	};
 }

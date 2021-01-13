@@ -10,7 +10,7 @@ namespace At0::Ray
 	ID3D11DeviceContext* DX11GraphicsResources::s_pContext = nullptr;
 	IDXGIFactory* DX11GraphicsResources::s_pDXGIFactory = nullptr;
 
-	std::atomic<uint32_t> DX11GraphicsResources::s_RefCount = 0;
+	std::atomic<uint64_t> DX11GraphicsResources::s_RefCount = 0;
 
 	DX11GraphicsResources::DX11GraphicsResources()
 	{
