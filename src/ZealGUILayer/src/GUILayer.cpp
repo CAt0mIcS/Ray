@@ -100,7 +100,7 @@ namespace At0::Layers
 				//quad.AddComponent<TextureComponent>("path");
 
 				// Add it to the scene for rendering later on
-				m_CubeScene.Submit(std::move(quad));
+				m_CubeScene.Submit(quad);
 			}
 		}
 #endif

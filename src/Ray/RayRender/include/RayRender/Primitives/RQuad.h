@@ -9,6 +9,8 @@
 
 namespace At0::Ray
 {
+	class Scene;
+
 	class RR_API Quad : public Drawable
 	{
 	public:

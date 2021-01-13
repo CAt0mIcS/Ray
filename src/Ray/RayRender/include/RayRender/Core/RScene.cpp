@@ -1,6 +1,8 @@
 #include "../RRpch.h"
 #include "RScene.h"
 
+#include <RayUtil/RComponents.h>
+
 
 namespace At0::Ray
 {
@@ -15,6 +17,6 @@ namespace At0::Ray
 
 	void Scene::Submit(const Drawable& drawable)
 	{
-		m_Drawables.push_back(std::move(drawable));
+		m_Drawables.emplace_back(drawable);
 	}
 }

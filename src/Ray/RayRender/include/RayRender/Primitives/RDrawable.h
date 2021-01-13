@@ -3,9 +3,13 @@
 #include "../RRBase.h"
 #include "../Core/REntity.h"
 
+#include <string>
+
 
 namespace At0::Ray
 {
+	class Scene;
+
 	class RR_API Drawable
 	{
 	public:
@@ -34,8 +38,6 @@ namespace At0::Ray
 		}
 
 		virtual ~Drawable() = default;
-	protected:
-
 
 	private:
 		Entity m_Entity;

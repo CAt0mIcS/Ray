@@ -3,11 +3,14 @@
 #include "../RRBase.h"
 #include "../Primitives/RDrawable.h"
 
+#include "../extern/entt/src/entt/entt.hpp"
+
 
 namespace At0::Ray
 {
 	class RR_API Scene
 	{
+		friend class Entity;
 	public:
 		using Iterator = typename std::vector<Drawable>::iterator;
 		using ReverseIterator = typename std::vector<Drawable>::reverse_iterator;
@@ -35,5 +38,6 @@ namespace At0::Ray
 
 	private:
 		std::vector<Drawable> m_Drawables;
+		entt::registry m_Registry;
 	};
 }
