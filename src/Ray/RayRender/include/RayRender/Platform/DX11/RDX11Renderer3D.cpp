@@ -102,6 +102,16 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 	}
+
+	void DX11Renderer3D::Draw(const Scene& scene)
+	{
+		RAY_PROFILE_FUNCTION();
+
+		for (const Drawable& d : scene)
+		{
+
+		}
+	}
 }
 
 

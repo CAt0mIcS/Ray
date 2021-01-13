@@ -4,8 +4,12 @@ set(SRC
     "include/RayRender/RRendererAPI.h"
 
     # Core functionality classes
-    "include/RayRender/RScene.h"
-    "include/RayRender/RScene.cpp"
+    "include/RayRender/Core/RScene.h"
+    "include/RayRender/Core/RScene.cpp"
+
+    # Render Primitives
+    "include/RayRender/Primitives/RDrawable.h"
+    "include/RayRender/Primitives/RDrawable.cpp"
 
     # Abstract classes
     "include/RayRender/RRenderer3D.h"

@@ -19,7 +19,7 @@ namespace At0::Ray
 	public:
 		using Iterator = typename std::deque<T>::iterator;
 		using ReverseIterator = typename std::deque<T>::reverse_iterator;
-		using ConstInterator = typename std::deque<T>::const_iterator;
+		using ConstIterator = typename std::deque<T>::const_iterator;
 		using ConstReverseIterator = typename std::deque<T>::const_reverse_iterator;
 
 	public:
@@ -115,36 +115,36 @@ namespace At0::Ray
 			return m_Queue.begin();
 		}
 
-		Iterator end() 
+		Iterator end()
 		{
 			return m_Queue.end();
 		}
-		ReverseIterator rbegin() 
+		ReverseIterator rbegin()
 		{
 			return m_Queue.rbegin();
 		}
 
-		ReverseIterator rend() 
+		ReverseIterator rend()
 		{
 			return m_Queue.rend();
 		}
 
-		ConstInterator cbegin() 
+		ConstIterator cbegin()
 		{
 			return m_Queue.cbegin();
 		}
 
-		ConstInterator cend() 
+		ConstIterator cend()
 		{
 			return m_Queue.cend();
 		}
 
-		ConstReverseIterator crbegin() 
+		ConstReverseIterator crbegin()
 		{
 			return m_Queue.crbegin();
 		}
 
-		ConstReverseIterator crend() 
+		ConstReverseIterator crend()
 		{
 			return m_Queue.crend();
 		}

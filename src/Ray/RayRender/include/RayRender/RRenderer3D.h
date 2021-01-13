@@ -2,6 +2,9 @@
 
 #include "RRBase.h"
 
+#include "Core/RScene.h"
+
+
 namespace At0::Ray
 {
 	class RR_API Renderer3D
@@ -11,6 +14,7 @@ namespace At0::Ray
 
 		virtual ~Renderer3D() = default;
 
+		virtual void Draw(const Scene& scene) = 0;
 	protected:
 		Renderer3D() = default;
 	};

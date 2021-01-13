@@ -15,7 +15,7 @@ namespace At0::Ray
 	public:
 		using Iterator = typename std::vector<T>::iterator;
 		using ReverseIterator = typename std::vector<T>::reverse_iterator;
-		using ConstInterator = typename std::vector<T>::const_iterator;
+		using ConstIterator = typename std::vector<T>::const_iterator;
 		using ConstReverseIterator = typename std::vector<T>::const_reverse_iterator;
 
 	public:
@@ -135,12 +135,12 @@ namespace At0::Ray
 			return m_Stack.rend();
 		}
 
-		ConstInterator cbegin() const
+		ConstIterator begin() const
 		{
 			std::scoped_lock lock(m_Mutex);
 			return m_Stack.cbegin();
 		}
-		ConstInterator cend() const
+		ConstIterator end() const
 		{
 			std::scoped_lock lock(m_Mutex);
 			return m_Stack.cend();

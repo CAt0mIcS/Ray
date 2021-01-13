@@ -20,6 +20,8 @@ namespace At0::Ray
 		DX11Renderer3D(HWND hWnd);
 		~DX11Renderer3D();
 
+		virtual void Draw(const Scene& scene) override;
+
 	private:
 		HWND m_hWnd;
 
