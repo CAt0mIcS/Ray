@@ -61,6 +61,8 @@ namespace At0::Layers
 {
 #define RENDER 1
 
+	static constexpr uint64_t AmountOfCubes = 4000;
+
 	GUILayer::GUILayer(std::string_view name)
 		: Ray::Layer(name),
 		EventListener<Ray::WindowCloseEvent>(GetMainWindow()),
@@ -83,6 +85,24 @@ namespace At0::Layers
 		RAY_PROFILE_FUNCTION();
 
 #if RENDER
+		if constexpr (AmountOfCubes > 0)
+		{
+			for (uint64_t i = 0; i < AmountOfCubes; ++i)
+			{
+				//// Create quad with name Quad[i] and transform
+				//Ray::Quad quad("Quad" + std::to_string(i),
+				//	Ray::Matrix::Scaling(1.0f, 1.0f, 1.0f) *
+				//	Ray::Matrix::Translation(0.0f, 0.0f, 0.0f) *
+				//	Ray::Matrix::RotationRollPitchYaw(30.4f, 2.43f, 180.32f)
+				//);
+
+				//// Add texture to the quad using ecs
+				//quad.AddComponent<TextureComponent>("path");
+
+				//// Add it to the scene for rendering later on
+				//m_CubeScene.Submit(std::move(quad));
+			}
+		}
 #endif
 	}
 
@@ -91,7 +111,8 @@ namespace At0::Layers
 	{
 #if RENDER
 
-
+		Ray::Ref<Ray::Renderer3D> renderer = GetMainWindow().GetRenderer3D();
+		renderer->Draw(m_CubeScene);
 
 #endif
 		g_FPS.Update();

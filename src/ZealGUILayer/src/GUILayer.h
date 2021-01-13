@@ -3,6 +3,7 @@
 #include "glbase.h"
 
 #include <Ray/Ray.h>
+#include <RayRender/RayRender.h>
 
 
 namespace At0::Layers
@@ -45,6 +46,9 @@ namespace At0::Layers
 		virtual void OnEvent(Ray::Widget& receiver, Ray::MouseWheelDownEvent& e) override;
 		virtual void OnEvent(Ray::Widget& receiver, Ray::MouseWheelLeftEvent& e) override;
 		virtual void OnEvent(Ray::Widget& receiver, Ray::MouseWheelRightEvent& e) override;
+
+	private:
+		Ray::Scene m_CubeScene;
 	};
 }
 
