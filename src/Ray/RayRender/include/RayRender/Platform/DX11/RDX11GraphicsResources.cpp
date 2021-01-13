@@ -17,12 +17,19 @@ namespace At0::Ray
 		// RAY_TODO: Better check whether DDX11GraphicsResources are initialized
 		if (!s_pDevice)
 		{
+			uint32_t flags =
+#ifndef NDEBUG
+				D3D11_CREATE_DEVICE_DEBUG;
+#else
+				0;
+#endif
+
 			// Create the device
 			RAY_GFX_THROW_FAILED(D3D11CreateDevice(
 				nullptr,
 				D3D_DRIVER_TYPE_HARDWARE,
 				NULL,
-				0,
+				flags,
 				nullptr,
 				0,
 				D3D11_SDK_VERSION,
@@ -52,9 +59,9 @@ namespace At0::Ray
 		--s_RefCount;
 		if (s_RefCount == 0)
 		{
-			while (s_pDevice->Release());
-			while (s_pContext->Release());
-			while (s_pDXGIFactory->Release());
+			s_pDevice->Release();
+			s_pContext->Release();
+			s_pDXGIFactory->Release();
 		}
 	}
 }
