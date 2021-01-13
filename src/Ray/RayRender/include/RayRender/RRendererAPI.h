@@ -16,6 +16,15 @@ namespace At0::Ray
 		static API GetAPI() { return s_API; }
 		static void SetAPI(API newAPI) { s_API = newAPI; }
 
+		static bool Valid()
+		{
+			return RendererAPI::GetAPI() >= RendererAPI::API::FIRST && RendererAPI::GetAPI() <= RendererAPI::API::LAST
+#ifndef _WIN32
+				&& RendererAPI::GetAPI() != API::D3D11
+#endif
+				;
+		}
+
 	private:
 		static API s_API;
 	};

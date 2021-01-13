@@ -3,15 +3,23 @@ set(SRC
     "include/RayRender/RRpch.h"
     "include/RayRender/RRendererAPI.h"
 
+    # Core functionality classes
+    "include/RayRender/RScene.h"
+    "include/RayRender/RScene.cpp"
+
     # Abstract classes
     "include/RayRender/RRenderer3D.h"
     "include/RayRender/RRenderer3D.cpp"
+    "include/RayRender/RVertexBuffer.h"
+    "include/RayRender/RVertexBuffer.cpp"
 
     # DirectX11 classes
     "include/RayRender/Platform/DX11/RDX11Renderer3D.h"
     "include/RayRender/Platform/DX11/RDX11Renderer3D.cpp"
     "include/RayRender/Platform/DX11/RDX11GraphicsResources.h"
     "include/RayRender/Platform/DX11/RDX11GraphicsResources.cpp"
+    "include/RayRender/Platform/DX11/RDX11VertexBuffer.h"
+    "include/RayRender/Platform/DX11/RDX11VertexBuffer.cpp"
 )
 
 set(PUBLIC_INC

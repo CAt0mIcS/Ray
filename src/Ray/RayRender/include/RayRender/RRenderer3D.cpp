@@ -16,10 +16,7 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		RAY_MEXPECTS(RendererAPI::GetAPI() >= RendererAPI::API::FIRST && RendererAPI::GetAPI() <= RendererAPI::API::LAST, "[Renderer3D::Create] Invalid RendererAPI selected");
-#ifndef _WIN32
-		RAY_MEXPECTS(RendererAPI::GetAPI() != RendererAPI::API::D3D11, "[Renderer3D::Create] Cannot use Direct3D if platform is not Windows.");
-#endif
+		RAY_MEXPECTS(RendererAPI::Valid(), "[Renderer3D::Create] Invalid RendererAPI selected");
 
 		switch (RendererAPI::GetAPI())
 		{
