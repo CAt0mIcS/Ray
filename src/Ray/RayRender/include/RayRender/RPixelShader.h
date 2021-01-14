@@ -12,6 +12,8 @@ namespace At0::Ray
 		static Ref<PixelShader> CreateFromCompiled(std::string_view filepath);
 		static Ref<PixelShader> CreateFromSource(std::string_view filepath);
 
+		virtual void Bind() = 0;
+
 		virtual ~PixelShader() = default;
 	};
 }

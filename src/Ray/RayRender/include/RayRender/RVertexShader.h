@@ -12,6 +12,8 @@ namespace At0::Ray
 		static Ref<VertexShader> CreateFromCompiled(std::string_view filepath);
 		static Ref<VertexShader> CreateFromSource(std::string_view filepath);
 
+		virtual void Bind() = 0;
+
 		virtual ~VertexShader() = default;
 	};
 }
