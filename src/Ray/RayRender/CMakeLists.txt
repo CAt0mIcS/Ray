@@ -21,6 +21,10 @@ set(SRC
     "include/RayRender/RRenderer3D.cpp"
     "include/RayRender/RVertexBuffer.h"
     "include/RayRender/RVertexBuffer.cpp"
+    "include/RayRender/RVertexShader.h"
+    "include/RayRender/RVertexShader.cpp"
+    "include/RayRender/RPixelShader.h"
+    "include/RayRender/RPixelShader.cpp"
 
     # DirectX11 classes
     "include/RayRender/Platform/DX11/RDX11Renderer3D.h"
@@ -29,6 +33,10 @@ set(SRC
     "include/RayRender/Platform/DX11/RDX11GraphicsResources.cpp"
     "include/RayRender/Platform/DX11/RDX11VertexBuffer.h"
     "include/RayRender/Platform/DX11/RDX11VertexBuffer.cpp"
+    "include/RayRender/Platform/DX11/RDX11VertexShader.h"
+    "include/RayRender/Platform/DX11/RDX11VertexShader.cpp"
+    "include/RayRender/Platform/DX11/RDX11PixelShader.h"
+    "include/RayRender/Platform/DX11/RDX11PixelShader.cpp"
 )
 
 set(PUBLIC_INC
