@@ -2,6 +2,8 @@
 
 #include "RRenderer3D.h"
 #include "RRendererAPI.h"
+#include "RVertexShader.h"
+#include "RPixelShader.h"
 
 #include "Core/RScene.h"
 

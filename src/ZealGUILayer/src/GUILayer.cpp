@@ -93,8 +93,20 @@ namespace At0::Layers
 				Ray::Quad quad(m_CubeScene.CreateEntity("Quad" + std::to_string(i)));
 
 				// Set transformation
+				// This step is optional
 				Ray::TransformComponent& tform = quad.GetComponent<Ray::TransformComponent>();
 				tform.Rotation = { 54.4f, 32.34f, 3.54f };
+
+				//// Overwrite existing basic vertex shader with my own.
+				//// This step is optional
+				//Ray::VertexShaderComponent& vShader = quad.GetComponent<Ray::VertexShaderComponent>();
+				//vShader.Shader = Ray::VertexShader::CreateFromSource("shaderFilePath");
+
+				//// Overwrite existing basic pixel shader with my own.
+				//// This step is optional
+				//Ray::PixelShaderComponent& pShader = quad.GetComponent<Ray::PixelShaderComponent>();
+				//pShader.Shader = Ray::PixelShader::CreateFromSource("shaderFilePath");
+
 
 				// Add texture to the quad using ecs
 				//quad.AddComponent<TextureComponent>("path");

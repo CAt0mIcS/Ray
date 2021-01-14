@@ -37,6 +37,10 @@ set(SRC
     "include/RayRender/Platform/DX11/RDX11VertexShader.cpp"
     "include/RayRender/Platform/DX11/RDX11PixelShader.h"
     "include/RayRender/Platform/DX11/RDX11PixelShader.cpp"
+
+    # DirectX11 Shaders
+    "shaders/QuadVertexShader.hlsl"
+    "shaders/QuadPixelShader.hlsl"
 )
 
 set(PUBLIC_INC
@@ -103,17 +107,17 @@ add_custom_command(TARGET "RayRender" POST_BUILD
 
 
 # Set Pixel and Vertex Shaders to compile in VS
-# if(MSVC)
-#     set_property(SOURCE "Shaders/PixelShader-p.hlsl" PROPERTY VS_SHADER_TYPE Pixel)
-#     set_property(SOURCE "Shaders/PixelShader-p.hlsl" PROPERTY VS_SHADER_ENTRYPOINT "main")
-#     set_property(SOURCE "Shaders/PixelShader-p.hlsl" PROPERTY VS_SHADER_MODEL 5.0)
-#     set_property(SOURCE "Shaders/PixelShader-p.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
-#     set_property(SOURCE "Shaders/PixelShader-p.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
-#     
-#     set_property(SOURCE "Shaders/VertexShader-v.hlsl" PROPERTY VS_SHADER_TYPE Vertex)
-#     set_property(SOURCE "Shaders/VertexShader-v.hlsl" PROPERTY VS_SHADER_ENTRYPOINT "main")
-#     set_property(SOURCE "Shaders/VertexShader-v.hlsl" PROPERTY VS_SHADER_MODEL 5.0)
-#     set_property(SOURCE "Shaders/VertexShader-v.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
-#     set_property(SOURCE "Shaders/VertexShader-v.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
-#     set_property(SOURCE "Shaders/VertexShader-v.hlsl" PROPERTY VS_SETTINGS "$<$<CONFIG:DEBUG>:SourceProperty1=SourceProperty1Value>")
-# endif()
+if(MSVC)
+    set_property(SOURCE "shaders/QuadPixelShader.hlsl" PROPERTY VS_SHADER_TYPE Pixel)
+    set_property(SOURCE "shaders/QuadPixelShader.hlsl" PROPERTY VS_SHADER_ENTRYPOINT "main")
+    set_property(SOURCE "shaders/QuadPixelShader.hlsl" PROPERTY VS_SHADER_MODEL 5.0)
+    set_property(SOURCE "shaders/QuadPixelShader.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
+    set_property(SOURCE "shaders/QuadPixelShader.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
+    
+    set_property(SOURCE "shaders/QuadVertexShader.hlsl" PROPERTY VS_SHADER_TYPE Vertex)
+    set_property(SOURCE "shaders/QuadVertexShader.hlsl" PROPERTY VS_SHADER_ENTRYPOINT "main")
+    set_property(SOURCE "shaders/QuadVertexShader.hlsl" PROPERTY VS_SHADER_MODEL 5.0)
+    set_property(SOURCE "shaders/QuadVertexShader.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
+    set_property(SOURCE "shaders/QuadVertexShader.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
+    set_property(SOURCE "shaders/QuadVertexShader.hlsl" PROPERTY VS_SETTINGS "$<$<CONFIG:DEBUG>:SourceProperty1=SourceProperty1Value>")
+endif()

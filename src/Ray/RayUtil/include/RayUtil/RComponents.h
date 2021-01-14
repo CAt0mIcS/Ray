@@ -37,4 +37,28 @@ namespace At0::Ray
 				Ray::Matrix::RotationRollPitchYawFromVector({ Rotation.x, Rotation.y, Rotation.z, 0.0f });
 		}
 	};
+
+	class VertexShader;
+	struct VertexShaderComponent
+	{
+		Ref<VertexShader> Shader;
+
+		VertexShaderComponent(Ref<VertexShader> shader)
+			: Shader(shader) {}
+
+		VertexShaderComponent()
+			: Shader(nullptr) {}
+	};
+
+	class PixelShader;
+	struct PixelShaderComponent
+	{
+		Ref<PixelShader> Shader;
+
+		PixelShaderComponent(Ref<PixelShader> shader)
+			: Shader(shader) {}
+
+		PixelShaderComponent()
+			: Shader(nullptr) {}
+	};
 }
