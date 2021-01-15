@@ -15,6 +15,8 @@ set(SRC
     "include/RayRender/Primitives/RDrawable.cpp"
     "include/RayRender/Primitives/RQuad.h"
     "include/RayRender/Primitives/RQuad.cpp"
+    "include/RayRender/Primitives/RTriangle.h"
+    "include/RayRender/Primitives/RTriangle.cpp"
 
     # Abstract classes
     "include/RayRender/RRenderer3D.h"
@@ -132,4 +134,17 @@ if(MSVC)
     set_property(SOURCE "shaders/QuadVertexShader.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
     set_property(SOURCE "shaders/QuadVertexShader.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
     set_property(SOURCE "shaders/QuadVertexShader.hlsl" PROPERTY VS_SETTINGS "$<$<CONFIG:DEBUG>:SourceProperty1=SourceProperty1Value>")
+
+    set_property(SOURCE "shaders/TrianglePixelShader.hlsl" PROPERTY VS_SHADER_TYPE Pixel)
+    set_property(SOURCE "shaders/TrianglePixelShader.hlsl" PROPERTY VS_SHADER_ENTRYPOINT "main")
+    set_property(SOURCE "shaders/TrianglePixelShader.hlsl" PROPERTY VS_SHADER_MODEL 5.0)
+    set_property(SOURCE "shaders/TrianglePixelShader.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
+    set_property(SOURCE "shaders/TrianglePixelShader.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
+    
+    set_property(SOURCE "shaders/TriangleVertexShader.hlsl" PROPERTY VS_SHADER_TYPE Vertex)
+    set_property(SOURCE "shaders/TriangleVertexShader.hlsl" PROPERTY VS_SHADER_ENTRYPOINT "main")
+    set_property(SOURCE "shaders/TriangleVertexShader.hlsl" PROPERTY VS_SHADER_MODEL 5.0)
+    set_property(SOURCE "shaders/TriangleVertexShader.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
+    set_property(SOURCE "shaders/TriangleVertexShader.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
+    set_property(SOURCE "shaders/TriangleVertexShader.hlsl" PROPERTY VS_SETTINGS "$<$<CONFIG:DEBUG>:SourceProperty1=SourceProperty1Value>")
 endif()

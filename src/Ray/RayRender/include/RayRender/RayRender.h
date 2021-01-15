@@ -9,3 +9,4 @@
 
 #include "Primitives/RDrawable.h"
 #include "Primitives/RQuad.h"
+#include "Primitives/RTriangle.h"
