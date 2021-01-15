@@ -73,4 +73,16 @@ namespace At0::Ray
 		InputLayoutComponent()
 			: Layout(nullptr) {}
 	};
+
+	class IndexBuffer;
+	struct IndexBufferComponent
+	{
+		Ref<IndexBuffer> Buffer;
+
+		IndexBufferComponent(Ref<IndexBuffer> buffer)
+			: Buffer(buffer) {}
+
+		IndexBufferComponent()
+			: Buffer(nullptr) {}
+	};
 }

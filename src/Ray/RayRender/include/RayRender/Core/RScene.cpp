@@ -8,11 +8,17 @@ namespace At0::Ray
 {
 	Scene::Scene()
 	{
-		m_Drawables.resize(1000);
 	}
 
 	Scene::~Scene()
 	{
+		// We can get all entities using the TransformComponent
+		// because all entities must have one
+		m_Registry.view<TransformComponent>().each([this](const auto entity, auto &&...)
+			{
+				m_Registry.destroy(entity);
+			}
+		);
 	}
 
 	void Scene::Submit(const Drawable& drawable)
