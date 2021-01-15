@@ -25,6 +25,8 @@ set(SRC
     "include/RayRender/RVertexShader.cpp"
     "include/RayRender/RPixelShader.h"
     "include/RayRender/RPixelShader.cpp"
+    "include/RayRender/RInputLayout.h"
+    "include/RayRender/RInputLayout.cpp"
 
     # DirectX11 classes
     "include/RayRender/Platform/DX11/RDX11Renderer3D.h"
@@ -37,6 +39,8 @@ set(SRC
     "include/RayRender/Platform/DX11/RDX11VertexShader.cpp"
     "include/RayRender/Platform/DX11/RDX11PixelShader.h"
     "include/RayRender/Platform/DX11/RDX11PixelShader.cpp"
+    "include/RayRender/Platform/DX11/RDX11InputLayout.h"
+    "include/RayRender/Platform/DX11/RDX11InputLayout.cpp"
 
     # DirectX11 Shaders
     "shaders/QuadVertexShader.hlsl"

@@ -6,6 +6,7 @@
 #include "../Core/RScene.h"
 #include "../RVertexShader.h"
 #include "../RPixelShader.h"
+#include "../RInputLayout.h"
 
 
 namespace At0::Ray
@@ -16,9 +17,18 @@ namespace At0::Ray
 		// Default Vertex and Pixel Shader for quads
 		Ref<VertexShader> pVShader = VertexShader::CreateFromCompiled("QuadVertexShader.cso");
 		Ref<PixelShader> pPShader = PixelShader::CreateFromCompiled("QuadPixelShader.cso");
+		Ref<InputLayout> pInputLayout = InputLayout::Create(
+			{ { "POSITION", ShaderDataType::Float3 } },
+			pVShader
+		);
+
+		pVShader->Bind();
+		pPShader->Bind();
+		pInputLayout->Bind();
 
 		AddComponent<VertexShaderComponent>(pVShader);
 		AddComponent<PixelShaderComponent>(pPShader);
+		AddComponent<InputLayoutComponent>(pInputLayout);
 	}
 }
 

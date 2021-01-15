@@ -46,6 +46,16 @@ namespace At0::Ray
 	{
 		GetContext()->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
 	}
+
+	void* DX11VertexShader::GetBufferPointer() const
+	{
+		return m_pBlob->GetBufferPointer();
+	}
+
+	size_t DX11VertexShader::GetBufferSize() const
+	{
+		return m_pBlob->GetBufferSize();
+	}
 }
 
 

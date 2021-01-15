@@ -61,4 +61,16 @@ namespace At0::Ray
 		PixelShaderComponent()
 			: Shader(nullptr) {}
 	};
+
+	class InputLayout;
+	struct InputLayoutComponent
+	{
+		Ref<InputLayout> Layout;
+
+		InputLayoutComponent(Ref<InputLayout> layout)
+			: Layout(layout) {}
+
+		InputLayoutComponent()
+			: Layout(nullptr) {}
+	};
 }
