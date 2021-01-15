@@ -14,7 +14,7 @@ namespace At0::Ray
 
 		virtual ~Renderer3D() = default;
 
-		virtual void Draw(const Scene& scene) = 0;
+		virtual void Draw(Scene& scene) = 0;
 		virtual void ClearBuffer(float red, float green, float blue) = 0;
 		virtual void EndDraw() = 0;
 

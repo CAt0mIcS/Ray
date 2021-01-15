@@ -2,6 +2,7 @@
 #include "RDX11GraphicsResources.h"
 
 #include <RayUtil/RException.h>
+#include <RayDebug/RLogger.h>
 
 
 namespace At0::Ray
@@ -24,7 +25,6 @@ namespace At0::Ray
 				0;
 #endif
 
-			// Create the device
 			RAY_GFX_THROW_FAILED(D3D11CreateDevice(
 				nullptr,
 				D3D_DRIVER_TYPE_HARDWARE,
@@ -38,17 +38,34 @@ namespace At0::Ray
 				&s_pContext
 			));
 
-			// Create IDXGIDevice to create swap chains in the Renderer constructor
-			IDXGIDevice* pDevice;
+			Microsoft::WRL::ComPtr<IDXGIDevice> pDevice;
 			RAY_GFX_THROW_FAILED(s_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDevice));
 
-			IDXGIAdapter* pAdapter;
-			RAY_GFX_THROW_FAILED(pDevice->GetAdapter(&pAdapter));
+			Microsoft::WRL::ComPtr<IDXGIAdapter> pAdapter;
+			RAY_GFX_THROW_FAILED(pDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&pAdapter));
 
 			RAY_GFX_THROW_FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&s_pDXGIFactory));
 
-			pDevice->Release();
-			pAdapter->Release();
+			for (auto i = 0; s_pDXGIFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
+			{
+				DXGI_ADAPTER_DESC adapterDesc;
+				RAY_GFX_THROW_FAILED(pAdapter->GetDesc(&adapterDesc));
+				Log::Info("[Renderer3D] Found DXGIAdapter: "
+					"\n\tDescription: {0}\n\tVendorID: {1}\n\tDeviceID: {2}\n\tSubSysID: {3}"
+					"\n\tRevision: {4}\n\tDedicated Video Memory: {5}\n\tDedicated System Memory: {6}"
+					"\n\tShared System Memory: {7}\n\tAdapterLuid::LowPart: {8}\n\tAdapterLuid::HighPart: {9}\n",
+					adapterDesc.Description,
+					adapterDesc.VendorId,
+					adapterDesc.DeviceId,
+					adapterDesc.SubSysId,
+					adapterDesc.Revision,
+					adapterDesc.DedicatedVideoMemory,
+					adapterDesc.DedicatedSystemMemory,
+					adapterDesc.SharedSystemMemory,
+					adapterDesc.AdapterLuid.LowPart,
+					adapterDesc.AdapterLuid.HighPart
+				);
+			}
 		}
 
 		++s_RefCount;

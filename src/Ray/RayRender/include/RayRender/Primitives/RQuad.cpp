@@ -34,12 +34,12 @@ namespace At0::Ray
 
 		Ref<IndexBuffer> pIdxBuffer = IndexBuffer::Create(
 			{
-				0,2,1, 2,3,1,
-				1,3,5, 3,7,5,
-				2,6,3, 3,6,7,
-				4,5,7, 4,7,6,
-				0,4,2, 2,4,6,
-				0,1,4, 1,5,4
+				0, 2, 1,  2, 3, 1,
+				1, 3, 5,  3, 7, 5,
+				2, 6, 3,  3, 6, 7,
+				4, 5, 7,  4, 7, 6,
+				0, 4, 2,  2, 4, 6,
+				0, 1, 4,  1, 5, 4
 			}
 		);
 		m_IndexBufferCount = 36;
@@ -50,13 +50,14 @@ namespace At0::Ray
 
 		// Matching input layout
 		Ref<InputLayout> pInputLayout = InputLayout::Create(
-			{ { "POSITION", ShaderDataType::Float3 } },
+			{ { "Position", ShaderDataType::Float3 } },
 			pVShader
 		);
 
 		// topology
 		Ref<Topology> pTopology = Topology::Create(Topology::TriangleList);
 
+		// bind everything
 		pVertexBuffer->Bind();
 		pIdxBuffer->Bind();
 		pVShader->Bind();

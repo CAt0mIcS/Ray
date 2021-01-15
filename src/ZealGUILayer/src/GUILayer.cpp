@@ -95,7 +95,8 @@ namespace At0::Layers
 				// Set transformation
 				// This step is optional
 				Ray::TransformComponent& tform = quad.GetComponent<Ray::TransformComponent>();
-				tform.Rotation = { 54.4f, 32.34f, 3.54f };
+				//tform.Rotation = { 54.4f, 32.34f, 3.54f };
+				tform.Translation.z = 1.0f;
 
 				//// Overwrite existing basic vertex shader with my own.
 				//// This step is optional
