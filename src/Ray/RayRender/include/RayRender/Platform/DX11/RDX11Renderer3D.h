@@ -21,6 +21,8 @@ namespace At0::Ray
 		~DX11Renderer3D();
 
 		virtual void Draw(const Scene& scene) override;
+		virtual void ClearBuffer(float red, float green, float blue) override;
+		virtual void EndDraw() override;
 
 	private:
 		HWND m_hWnd;

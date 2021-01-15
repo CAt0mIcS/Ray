@@ -61,7 +61,7 @@ namespace At0::Layers
 {
 #define RENDER 1
 
-	static constexpr uint64_t AmountOfCubes = 4000;
+	static constexpr uint64_t AmountOfCubes = 1;
 
 	GUILayer::GUILayer(std::string_view name)
 		: Ray::Layer(name),
@@ -122,10 +122,11 @@ namespace At0::Layers
 	void GUILayer::OnUpdate(Ray::Timestep ts)
 	{
 #if RENDER
-
 		Ray::Ref<Ray::Renderer3D> renderer = GetMainWindow().GetRenderer3D();
-		renderer->Draw(m_CubeScene);
+		renderer->ClearBuffer(0.07f, 0.0f, 0.12f);
 
+		renderer->Draw(m_CubeScene);
+		renderer->EndDraw();
 #endif
 		g_FPS.Update();
 	}

@@ -85,4 +85,16 @@ namespace At0::Ray
 		IndexBufferComponent()
 			: Buffer(nullptr) {}
 	};
+
+	class VertexBuffer;
+	struct VertexBufferComponent
+	{
+		Ref<VertexBuffer> Buffer;
+
+		VertexBufferComponent(Ref<VertexBuffer> buffer)
+			: Buffer(buffer) {}
+
+		VertexBufferComponent()
+			: Buffer(nullptr) {}
+	};
 }

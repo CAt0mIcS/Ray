@@ -13,7 +13,7 @@ namespace At0::Ray
 	class RR_API DX11VertexBuffer : public VertexBuffer, DX11GraphicsResources
 	{
 	public:
-		DX11VertexBuffer(const std::vector<Vertex>& data);
+		DX11VertexBuffer(std::initializer_list<Vertex> data);
 
 		virtual void Bind() override;
 

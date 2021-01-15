@@ -6,7 +6,7 @@
 
 namespace At0::Ray
 {
-	DX11VertexBuffer::DX11VertexBuffer(const std::vector<Vertex>& data)
+	DX11VertexBuffer::DX11VertexBuffer(std::initializer_list<Vertex> data)
 		: m_Strides(sizeof(Vertex))
 	{
 		D3D11_BUFFER_DESC bd{};
@@ -18,7 +18,7 @@ namespace At0::Ray
 		bd.MiscFlags = 0;
 
 		D3D11_SUBRESOURCE_DATA sd{};
-		sd.pSysMem = data.data();
+		sd.pSysMem = data.begin();
 
 		RAY_GFX_THROW_FAILED(GetDevice()->CreateBuffer(&bd, &sd, &m_pBuffer));
 	}

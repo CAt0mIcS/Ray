@@ -1,23 +1,23 @@
 #pragma once
 
 #include "RRBase.h"
-#include <vector>
+#include <initializer_list>
 
 
 namespace At0::Ray
 {
-	// Inherit your Vertex class from this one
-	class RR_API Vertex
+	struct Vertex
 	{
-	protected:
-		Vertex() = default;
-		virtual ~Vertex() = default;
+		struct
+		{
+			float x, y, z;
+		} pos;
 	};
 
 	class RR_API VertexBuffer
 	{
 	public:
-		static Ref<VertexBuffer> Create(const std::vector<Vertex>& data);
+		static Ref<VertexBuffer> Create(std::initializer_list<Vertex> data);
 
 		virtual void Bind() = 0;
 		virtual ~VertexBuffer() = default;

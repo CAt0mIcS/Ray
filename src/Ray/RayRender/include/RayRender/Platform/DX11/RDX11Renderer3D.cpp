@@ -103,13 +103,29 @@ namespace At0::Ray
 		RAY_PROFILE_FUNCTION();
 	}
 
+	void DX11Renderer3D::ClearBuffer(float red, float green, float blue)
+	{
+		float color[] = { red, green, blue, 1.0f };
+		GetContext()->ClearRenderTargetView(m_pTargetView.Get(), color);
+		GetContext()->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+	}
+
+	void DX11Renderer3D::EndDraw()
+	{
+		// VSYNC on
+		//RAY_GFX_THROW_FAILED(m_pSwapChain->Present(1, 0));
+
+		// VSYNC off
+		RAY_GFX_THROW_FAILED(m_pSwapChain->Present(0, 0));
+	}
+
 	void DX11Renderer3D::Draw(const Scene& scene)
 	{
 		RAY_PROFILE_FUNCTION();
 
 		for (const Drawable& d : scene)
 		{
-
+			GetContext()->DrawIndexed(d.GetIndexBufferCount(), 0, 0);
 		}
 	}
 }

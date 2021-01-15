@@ -8,6 +8,7 @@
 #include "../RPixelShader.h"
 #include "../RInputLayout.h"
 #include "../RIndexBuffer.h"
+#include "../RVertexBuffer.h"
 
 
 namespace At0::Ray
@@ -15,29 +16,21 @@ namespace At0::Ray
 	Quad::Quad(Entity entity)
 		: Drawable(entity)
 	{
-
-		struct Vertex
-		{
-			struct
-			{
-				float x, y, z;
-			} pos;
-		};
-
 		constexpr float side = 1.0f / 2.0f;
-		const std::vector<Vertex> vertices
-		{
-			{ -side, -side, -side },
-			{  side, -side, -side },
-			{ -side,  side, -side },
-			{  side,  side, -side },
-			{ -side, -side,  side },
-			{  side, -side,  side },
-			{ -side,  side,  side },
-			{  side,  side,  side },
-		};
-
 		// Vertices
+		Ref<VertexBuffer> pVertexBuffer = VertexBuffer::Create(
+			{
+				{ -side, -side, -side },
+				{  side, -side, -side },
+				{ -side,  side, -side },
+				{  side,  side, -side },
+				{ -side, -side,  side },
+				{  side, -side,  side },
+				{ -side,  side,  side },
+				{  side,  side,  side },
+			}
+		);
+
 		Ref<IndexBuffer> pIdxBuffer = IndexBuffer::Create(
 			{
 				0,2,1, 2,3,1,
@@ -48,6 +41,7 @@ namespace At0::Ray
 				0,1,4, 1,5,4
 			}
 		);
+		m_IndexBufferCount = 36;
 
 		// Default Vertex and Pixel Shader for quads
 		Ref<VertexShader> pVShader = VertexShader::CreateFromCompiled("QuadVertexShader.cso");
@@ -59,11 +53,13 @@ namespace At0::Ray
 			pVShader
 		);
 
+		pVertexBuffer->Bind();
 		pIdxBuffer->Bind();
 		pVShader->Bind();
 		pPShader->Bind();
 		pInputLayout->Bind();
 
+		AddComponent<VertexBufferComponent>(pVertexBuffer);
 		AddComponent<IndexBufferComponent>(pIdxBuffer);
 		AddComponent<VertexShaderComponent>(pVShader);
 		AddComponent<PixelShaderComponent>(pPShader);
