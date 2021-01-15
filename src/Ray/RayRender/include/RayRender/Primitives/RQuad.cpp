@@ -9,6 +9,7 @@
 #include "../RInputLayout.h"
 #include "../RIndexBuffer.h"
 #include "../RVertexBuffer.h"
+#include "../RTopology.h"
 
 
 namespace At0::Ray
@@ -53,17 +54,22 @@ namespace At0::Ray
 			pVShader
 		);
 
+		// topology
+		Ref<Topology> pTopology = Topology::Create(Topology::TriangleList);
+
 		pVertexBuffer->Bind();
 		pIdxBuffer->Bind();
 		pVShader->Bind();
 		pPShader->Bind();
 		pInputLayout->Bind();
+		pTopology->Bind();
 
 		AddComponent<VertexBufferComponent>(pVertexBuffer);
 		AddComponent<IndexBufferComponent>(pIdxBuffer);
 		AddComponent<VertexShaderComponent>(pVShader);
 		AddComponent<PixelShaderComponent>(pPShader);
 		AddComponent<InputLayoutComponent>(pInputLayout);
+		AddComponent<TopologyComponent>(pTopology);
 	}
 }
 

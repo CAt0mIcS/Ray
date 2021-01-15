@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RMath.h"
+#include "RGlobalDefines.h"
 
 #include <string>
 
@@ -96,5 +97,17 @@ namespace At0::Ray
 
 		VertexBufferComponent()
 			: Buffer(nullptr) {}
+	};
+
+	class Topology;
+	struct TopologyComponent
+	{
+		TopologyComponent(Ref<Topology> layout)
+			: Topology(layout) {}
+
+		TopologyComponent()
+			: Topology(nullptr) {}
+
+		Ref<Topology> Topology;
 	};
 }

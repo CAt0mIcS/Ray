@@ -29,6 +29,8 @@ set(SRC
     "include/RayRender/RInputLayout.cpp"
     "include/RayRender/RIndexBuffer.h"
     "include/RayRender/RIndexBuffer.cpp"
+    "include/RayRender/RTopology.h"
+    "include/RayRender/RTopology.cpp"
 
     # DirectX11 classes
     "include/RayRender/Platform/DX11/RDX11Renderer3D.h"
@@ -45,6 +47,8 @@ set(SRC
     "include/RayRender/Platform/DX11/RDX11InputLayout.cpp"
     "include/RayRender/Platform/DX11/RDX11IndexBuffer.h"
     "include/RayRender/Platform/DX11/RDX11IndexBuffer.cpp"
+    "include/RayRender/Platform/DX11/RDX11Topology.h"
+    "include/RayRender/Platform/DX11/RDX11Topology.cpp"
 
     # DirectX11 Shaders
     "shaders/QuadVertexShader.hlsl"
