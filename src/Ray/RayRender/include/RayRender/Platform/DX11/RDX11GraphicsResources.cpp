@@ -75,9 +75,16 @@ namespace At0::Ray
 
 	DX11GraphicsResources::~DX11GraphicsResources()
 	{
+		// RAY_TODO: Some graphics resources are left at the end of the program!
+
 		--s_RefCount;
 		if (s_RefCount == 0)
 		{
+			OutputDebugStringA("\n------------ DirectX11 Debug Information ------------\n");
+			Microsoft::WRL::ComPtr<ID3D11Debug> pDebug;
+			s_pDevice->QueryInterface(__uuidof(ID3D11Debug), &pDebug);
+			pDebug->ReportLiveDeviceObjects(D3D11_RLDO_IGNORE_INTERNAL);
+
 			s_pDevice->Release();
 			s_pContext->Release();
 			s_pDXGIFactory->Release();

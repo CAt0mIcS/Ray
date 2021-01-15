@@ -55,6 +55,8 @@ set(SRC
     # DirectX11 Shaders
     "shaders/QuadVertexShader.hlsl"
     "shaders/QuadPixelShader.hlsl"
+    "shaders/TriangleVertexShader.hlsl"
+    "shaders/TrianglePixelShader.hlsl"
 )
 
 set(PUBLIC_INC
