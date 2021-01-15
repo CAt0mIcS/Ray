@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef _WIN32
 #include "../../RVertexShader.h"
 #include "RDX11GraphicsResources.h"
 
@@ -29,3 +30,5 @@ namespace At0::Ray
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_pVertexShader;
 	};
 }
+
+#endif // _WIN32

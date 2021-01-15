@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef _WIN32
 #include "../../RVertexBuffer.h"
 #include "RDX11GraphicsResources.h"
 
@@ -22,3 +23,5 @@ namespace At0::Ray
 		uint32_t m_Strides;
 	};
 }
+
+#endif // _WIN32

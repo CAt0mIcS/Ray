@@ -1,4 +1,6 @@
 #include "RayRender/RRpch.h"
+
+#ifdef _WIN32
 #include "RDX11VertexBuffer.h"
 
 #include <RayUtil/RException.h>
@@ -29,5 +31,7 @@ namespace At0::Ray
 		GetContext()->IASetVertexBuffers(0, 1, m_pBuffer.GetAddressOf(), &m_Strides, &offset);
 	}
 }
+
+#endif // _WIN32
 
 

@@ -1,4 +1,6 @@
 #include "../../RRpch.h"
+
+#ifdef _WIN32
 #include "RDX11InputLayout.h"
 #include "RDX11VertexShader.h"
 
@@ -91,6 +93,8 @@ namespace At0::Ray
 		GetContext()->IASetInputLayout(m_pLayout.Get());
 	}
 }
+
+#endif // _WIN32
 
 
 

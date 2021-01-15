@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef _WIN32
 #include "../../RRBase.h"
 #include "../../RRenderer3D.h"
 
@@ -32,3 +33,5 @@ namespace At0::Ray
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDSV;
 	};
 }
+
+#endif // _WIN32

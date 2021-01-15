@@ -1,4 +1,6 @@
 #include "../../RRpch.h"
+
+#ifdef _WIN32
 #include "RDX11IndexBuffer.h"
 
 #include <RayUtil/RException.h>
@@ -27,5 +29,7 @@ namespace At0::Ray
 		GetContext()->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 	}
 }
+
+#endif // _WIN32
 
 

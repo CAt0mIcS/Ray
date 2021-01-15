@@ -92,10 +92,10 @@ namespace At0::Layers
 				// Create quad with name Quad[i]
 				Ray::Quad quad(m_CubeScene.CreateEntity("Quad" + std::to_string(i)));
 
-				// Set transformation
+				// Set transformation (RAY_TODO: TransformConstantBuffers)
 				// This step is optional
 				Ray::TransformComponent& tform = quad.GetComponent<Ray::TransformComponent>();
-				//tform.Rotation = { 54.4f, 32.34f, 3.54f };
+				tform.Rotation = { 54.4f, 32.34f, 3.54f };
 				tform.Translation.z = 1.0f;
 
 				//// Overwrite existing basic vertex shader with my own.

@@ -1,4 +1,6 @@
 #include "../../RRpch.h"
+
+#ifdef _WIN32
 #include "RDX11VertexShader.h"
 
 #include <RayUtil/RException.h>
@@ -57,6 +59,8 @@ namespace At0::Ray
 		return m_pBlob->GetBufferSize();
 	}
 }
+
+#endif // _WIN32
 
 
 

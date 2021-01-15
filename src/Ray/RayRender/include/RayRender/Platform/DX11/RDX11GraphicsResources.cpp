@@ -1,4 +1,6 @@
 #include "RayRender/RRpch.h"
+
+#ifdef _WIN32
 #include "RDX11GraphicsResources.h"
 
 #include <RayUtil/RException.h>
@@ -82,3 +84,5 @@ namespace At0::Ray
 		}
 	}
 }
+
+#endif // _WIN32

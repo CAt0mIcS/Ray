@@ -1,4 +1,6 @@
 #include "../../RRpch.h"
+
+#ifdef _WIN32
 #include "RDX11PixelShader.h"
 
 #include <RayUtil/RTypeConvert.h>
@@ -47,6 +49,8 @@ namespace At0::Ray
 		GetContext()->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
 	}
 }
+
+#endif // _WIN32
 
 
 

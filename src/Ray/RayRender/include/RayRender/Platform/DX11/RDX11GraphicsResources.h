@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef _WIN32
 #include <atomic>
 #include <stdint.h>
 
@@ -32,3 +33,5 @@ namespace At0::Ray
 		static std::atomic<uint64_t> s_RefCount;
 	};
 }
+
+#endif // _WIN32

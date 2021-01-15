@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef _WIN32
 #include "../../RIndexBuffer.h"
 #include "RDX11GraphicsResources.h"
 
@@ -21,3 +22,5 @@ namespace At0::Ray
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pIndexBuffer;
 	};
 }
+
+#endif // _WIN32

@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef _WIN32
 #include "../../RTopology.h"
 #include "RDX11GraphicsResources.h"
 
@@ -18,3 +19,5 @@ namespace At0::Ray
 		Type m_Type;
 	};
 }
+
+#endif // _WIN32

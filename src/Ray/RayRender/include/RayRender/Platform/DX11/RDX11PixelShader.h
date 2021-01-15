@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef _WIN32
 #include "../../RPixelShader.h"
 #include "RDX11GraphicsResources.h"
 
@@ -24,3 +25,5 @@ namespace At0::Ray
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pPixelShader;
 	};
 }
+
+#endif // _WIN32

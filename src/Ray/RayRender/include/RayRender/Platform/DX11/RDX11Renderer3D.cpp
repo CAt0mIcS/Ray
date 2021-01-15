@@ -1,4 +1,6 @@
 #include "RayRender/RRpch.h"
+
+#ifdef _WIN32
 #include "RDX11Renderer3D.h"
 
 #include "../../RVertexBuffer.h"
@@ -148,6 +150,8 @@ namespace At0::Ray
 		}
 	}
 }
+
+#endif // _WIN32
 
 
 

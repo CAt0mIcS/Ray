@@ -1,4 +1,6 @@
 #include "../../RRpch.h"
+
+#ifdef _WIN32
 #include "RDX11Topology.h"
 
 #include <RayDebug/RAssert.h>
@@ -28,3 +30,5 @@ namespace At0::Ray
 		GetContext()->IASetPrimitiveTopology(ToDX11Topology(m_Type));
 	}
 }
+
+#endif // _WIN32
