@@ -19,7 +19,9 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
+#ifdef _WIN32
 		case RendererAPI::D3D11:	return MakeRef<DX11InputLayout>(inputElements, vShader.get());
+#endif
 		case RendererAPI::OpenGL:	return MakeRef<OpenGLInputLayout>(inputElements, vShader.get());
 		}
 

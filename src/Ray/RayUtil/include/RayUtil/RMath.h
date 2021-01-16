@@ -2022,10 +2022,10 @@ namespace At0
 		namespace Constants
 		{
 #ifndef RAYMATH_GLOBALCONST
-#ifdef _WIN32
+#ifdef _MSC_VER
 #define RAYMATH_GLOBALCONST extern const __declspec(selectany)
-#elif defined(__linux__)
-#define RAYMATH_GLOBALCONST extern const __attribute__ ((selectany))
+#elif defined(__GNUC__)
+#define RAYMATH_GLOBALCONST extern const __attribute__ ((selectany)) inline
 #endif
 #endif
 

@@ -18,7 +18,9 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
+#ifdef _WIN32
 		case RendererAPI::D3D11:	return MakeRef<DX11Topology>(type);
+#endif
 		case RendererAPI::OpenGL:	return MakeRef<OpenGLTopology>(type);
 		}
 

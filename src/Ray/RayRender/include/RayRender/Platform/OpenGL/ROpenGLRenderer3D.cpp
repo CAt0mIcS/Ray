@@ -14,8 +14,6 @@
 #include <RayDebug/RInstrumentor.h>
 #include <RayUtil/RComponents.h>
 
-namespace WRL = Microsoft::WRL;
-
 
 namespace At0::Ray
 {
@@ -51,7 +49,7 @@ namespace At0::Ray
 			d.GetComponent<VertexShaderComponent>().Shader->Bind();
 			d.GetComponent<PixelShaderComponent>().Shader->Bind();
 			d.GetComponent<InputLayoutComponent>().Layout->Bind();
-			d.GetComponent<TopologyComponent>().Topology->Bind();
+			d.GetComponent<TopologyComponent>().PrimitiveTopology->Bind();
 
 
 		}

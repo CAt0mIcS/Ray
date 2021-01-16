@@ -19,7 +19,9 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
+#ifdef _WIN32
 		case RendererAPI::D3D11:	return MakeRef<DX11PixelShader>(filepath, true);
+#endif
 		case RendererAPI::OpenGL:	return MakeRef<OpenGLPixelShader>(filepath, true);
 			break;
 		}
@@ -34,7 +36,9 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
+#ifdef _WIN32
 		case RendererAPI::D3D11:	return MakeRef<DX11PixelShader>(filepath, false);
+#endif
 		case RendererAPI::OpenGL:	return MakeRef<OpenGLPixelShader>(filepath, false);
 		}
 

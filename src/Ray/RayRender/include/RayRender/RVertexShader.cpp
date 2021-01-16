@@ -19,7 +19,9 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
+#ifdef _WIN32
 		case RendererAPI::D3D11:	return MakeRef<DX11VertexShader>(filepath, true);
+#endif
 		case RendererAPI::OpenGL:	return MakeRef<OpenGLVertexShader>(filepath, true);
 			break;
 		}
@@ -34,7 +36,9 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
+#ifdef _WIN32
 		case RendererAPI::D3D11:	return MakeRef<DX11VertexShader>(filepath, false);
+#endif
 		case RendererAPI::OpenGL:	return MakeRef<OpenGLVertexShader>(filepath, false);
 			break;
 		}

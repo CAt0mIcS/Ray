@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <type_traits>
+#include <assert.h>
 #include "RTypeConvert.h"
 
 #include "RUBase.h"
@@ -86,7 +87,8 @@ namespace At0::Ray::Util
 		}
 		else
 		{
-			static_assert(false, "No output stream can convert the specified type T.");
+			// static_assert(false, "No output stream can convert the specified type T.");
+			assert(false && "No output stream can convert the specified type T.");
 		}
 	}
 

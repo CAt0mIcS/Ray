@@ -144,7 +144,7 @@ namespace At0::Ray
 			d.GetComponent<VertexShaderComponent>().Shader->Bind();
 			d.GetComponent<PixelShaderComponent>().Shader->Bind();
 			d.GetComponent<InputLayoutComponent>().Layout->Bind();
-			d.GetComponent<TopologyComponent>().Topology->Bind();
+			d.GetComponent<TopologyComponent>().PrimitiveTopology->Bind();
 
 			GetContext()->DrawIndexed(d.GetIndexBufferCount(), 0, 0);
 		}

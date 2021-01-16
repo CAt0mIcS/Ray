@@ -20,7 +20,9 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
+#ifdef _WIN32
 		case RendererAPI::D3D11:	return MakeRef<DX11Renderer3D>((HWND)window);
+#endif
 		case RendererAPI::OpenGL:	return MakeRef<OpenGLRenderer3D>((GLFWwindow*)window);
 			break;
 		}

@@ -102,12 +102,12 @@ namespace At0::Ray
 	class Topology;
 	struct TopologyComponent
 	{
-		TopologyComponent(Ref<Topology> layout)
-			: Topology(layout) {}
+		Ref<Topology> PrimitiveTopology;
+		
+		TopologyComponent(Ref<Topology> topology)
+			: PrimitiveTopology(topology) {}
 
 		TopologyComponent()
-			: Topology(nullptr) {}
-
-		Ref<Topology> Topology;
+			: PrimitiveTopology(nullptr) {}
 	};
 }

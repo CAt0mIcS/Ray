@@ -28,7 +28,7 @@ namespace At0::Ray
 
 	Entity Scene::CreateEntity(std::string_view tag)
 	{
-		Entity e{ m_Registry.create(), this };
+		Entity e{ m_Registry.create(), &m_Registry };
 		e.Emplace<TransformComponent>();
 		e.Emplace<TagComponent>(tag);
 		return e;

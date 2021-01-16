@@ -1,6 +1,6 @@
 #pragma once
 
-#include <../../RayUtil/include/RayUtil/RMath.h>
+#include "RMath.h"
 
 #include <iostream>
 #include <memory>
