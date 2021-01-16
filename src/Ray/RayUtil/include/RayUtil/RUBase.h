@@ -13,16 +13,12 @@
 	#ifdef RU_BUILD
 		#if defined(_MSC_VER)
 			#define RU_API __declspec(dllexport)
-		#elif defined(__GNUC__) || defined(__clang__)
-			#define RU_API __attribute__((dllexport))
 		#else
 			#define RU_API
 		#endif
 	#else
 		#if defined(_MSC_VER)
 			#define RU_API __declspec(dllimport)
-		#elif defined(__GNUC__) || defined(__clang__)
-			#define RU_API __attribute__((dllimport))
 		#else
 			#define RU_API
 		#endif

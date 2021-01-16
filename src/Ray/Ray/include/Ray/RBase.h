@@ -9,21 +9,17 @@
 #endif
 
 #ifdef RAY_BUILD
-#if defined(_MSC_VER)
-#define RAY_API __declspec(dllexport)
-#elif defined(__GNUC__) || defined(__clang__)
-#define RAY_API __attribute__((dllexport))
+    #if defined(_MSC_VER)
+        #define RAY_API __declspec(dllexport)
+    #else
+        #define RAY_API
+    #endif
 #else
-#define RAY_API
-#endif
-#else
-#if defined(_MSC_VER)
-#define RAY_API __declspec(dllimport)
-#elif defined(__GNUC__) || defined(__clang__)
-#define RAY_API __attribute__((dllimport))
-#else
-#define RAY_API
-#endif
+    #if defined(_MSC_VER)
+        #define RAY_API __declspec(dllimport)
+    #else
+        #define RAY_API
+    #endif
 #endif
 
 

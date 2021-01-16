@@ -23,6 +23,10 @@ set(PRIVATE_LIB
     "RayRender"
 )
 
+if(UNIX)
+	list(APPEND PRIVATE_LIB "RayUtil")
+endif()
+
 add_library("ZealGUILayer" SHARED "${SRC}")
 target_include_directories("ZealGUILayer"
     PRIVATE

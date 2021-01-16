@@ -20,6 +20,10 @@ set(PRIVATE_LIB
 	"Ray"
 )
 
+if(UNIX)
+	list(APPEND PRIVATE_LIB "RayUtil")
+	list(APPEND PRIVATE_LIB "RayRender")
+endif()
 
 add_executable("RayEditor" WIN32 "${SRC}")
 target_include_directories("RayEditor"
