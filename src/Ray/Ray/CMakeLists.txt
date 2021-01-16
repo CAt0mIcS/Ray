@@ -34,7 +34,7 @@ set(SRC
 	"include/Ray/Window/RWindow.h"
 	"include/Ray/Window/RWindow.cpp"
 
-	# "Ray.def"
+	"Ray.def"
 )
 
 set(PUBLIC_INC

@@ -25,12 +25,12 @@ set(PUBLIC_LIB
 
 set(PRIVATE_LIB
     "Ray"
-    "RayUtil"
-    "RayRender"
 )
 
 if(UNIX)
     list(APPEND PRIVATE_LIB "dl")
+    list(APPEND PRIVATE_LIB "RayRender")
+    list(APPEND PRIVATE_LIB "RayUtil")
 endif()
 
 
