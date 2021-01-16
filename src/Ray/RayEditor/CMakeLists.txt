@@ -23,6 +23,7 @@ set(PRIVATE_LIB
 if(UNIX)
 	list(APPEND PRIVATE_LIB "RayUtil")
 	list(APPEND PRIVATE_LIB "RayRender")
+	list(APPEND PRIVATE_LIB "RayDebug")
 endif()
 
 add_executable("RayEditor" WIN32 "${SRC}")
