@@ -93,9 +93,15 @@ set(INC
 	"include"
 )
 
+if(WIN32)
 set(LIB
 	"assimp-vc142-mt"
 )
+else()
+set(LIB
+	"libassimp.so"
+)
+endif()
 
 add_library("assimp" INTERFACE)
 

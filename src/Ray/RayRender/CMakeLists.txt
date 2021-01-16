@@ -136,6 +136,7 @@ add_subdirectory("extern")
 
 # ------------------------------------------------------------------------------------------------
 # Copy pre-compiled assimp dll into output directory
+if(WIN32)
 add_custom_command(TARGET "RayRender" POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CMAKE_CURRENT_SOURCE_DIR}/extern/assimp/lib/${RL_ARCHITECTURE}/assimp-vc142-mt.dll"
@@ -143,6 +144,15 @@ add_custom_command(TARGET "RayRender" POST_BUILD
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
 )
+else()
+add_custom_command(TARGET "RayRender" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/extern/assimp/lib/${RL_ARCHITECTURE}/libassimp.so"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
+)
+endif()
 
 # ------------------------------------------------------------------------------------------------
 # Copy glsl shaders to the output directory
