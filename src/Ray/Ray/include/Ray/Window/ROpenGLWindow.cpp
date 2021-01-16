@@ -65,8 +65,7 @@ namespace At0::Ray
 		glfwSetWindowPos(m_hWnd, (int)pos.x, (int)pos.y);
 		m_IsOpen = true;
 
-		//m_Renderer3D = MakeScope<Renderer3D>(*this);
-		//m_Renderer3D->Init(m_hWnd);
+		m_Renderer3D = Renderer3D::Create((void*)m_hWnd);
 
 		// Context initialization
 		glfwMakeContextCurrent(m_hWnd);
