@@ -68,6 +68,8 @@ namespace At0::Ray
 		/// <param name="path">Is the path to the .ico file</param>
 		virtual void SetIcon(std::string_view path);
 
+		virtual void SetVSync(bool enabled) override;
+
 	protected:
 		virtual void* GetNativeWindow() const override { return (void*)m_hWnd; }
 

@@ -13,6 +13,7 @@
 #include <RayUtil/RKeyCodes.h>
 
 #include <RayRender/RRenderer3D.h>
+#include <RayRender/Platform/DX11/RDX11Renderer3D.h>
 
 #include <stb_image/stb_image.h>
 
@@ -673,6 +674,10 @@ namespace At0::Ray
 	// End Icon/Image loading
 	// -------------------------------------------------------------------------------
 
+	void WinAPIWindow::SetVSync(bool enabled)
+	{
+		((DX11Renderer3D*)m_Renderer3D.get())->SetSyncInterval((uint32_t)enabled);
+	}
 
 	void WinAPIWindow::SetKeycodeMap()
 	{

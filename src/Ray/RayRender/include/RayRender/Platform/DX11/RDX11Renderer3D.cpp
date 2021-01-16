@@ -21,7 +21,7 @@ namespace WRL = Microsoft::WRL;
 namespace At0::Ray
 {
 	DX11Renderer3D::DX11Renderer3D(HWND hWnd)
-		: m_hWnd(hWnd)
+		: m_hWnd(hWnd), m_SyncInterval{ 0 }
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -126,11 +126,7 @@ namespace At0::Ray
 
 	void DX11Renderer3D::EndDraw()
 	{
-		// VSYNC on
-		//RAY_GFX_THROW_FAILED(m_pSwapChain->Present(1, 0));
-
-		// VSYNC off
-		RAY_GFX_THROW_FAILED(m_pSwapChain->Present(0, 0));
+		RAY_GFX_THROW_FAILED(m_pSwapChain->Present(m_SyncInterval, 0));
 	}
 
 	void DX11Renderer3D::Draw(Scene& scene)
@@ -148,6 +144,11 @@ namespace At0::Ray
 
 			GetContext()->DrawIndexed(d.GetIndexBufferCount(), 0, 0);
 		}
+	}
+
+	void DX11Renderer3D::SetSyncInterval(uint32_t interval)
+	{
+		m_SyncInterval = interval;
 	}
 }
 

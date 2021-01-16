@@ -236,6 +236,11 @@ namespace At0::Ray
 		stbi_image_free(images[0].pixels);
 	}
 
+	void OpenGLWindow::SetVSync(bool enabled)
+	{
+		glfwSwapInterval((int)enabled);
+	}
+
 	void OpenGLWindow::SetUpEventCallbacks()
 	{
 		RAY_PROFILE_FUNCTION();
