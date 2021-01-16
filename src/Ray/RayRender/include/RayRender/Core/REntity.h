@@ -2,7 +2,7 @@
 
 #include "../RRBase.h"
 
-#include <../../../extern/entt/src/entt/entt.hpp>
+#include <../extern/entt/src/entt/entt.hpp>
 
 
 namespace At0::Ray
