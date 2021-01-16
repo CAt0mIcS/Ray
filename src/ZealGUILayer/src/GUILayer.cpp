@@ -16,9 +16,9 @@ class FPS
 {
 public:
 	FPS()
-		: m_FPS(0), m_FPSCount(0),
+		: m_FPS(0), m_FPSCount(0)
 #ifdef _WIN32
-		m_InitialInterval(GetTickCount64())
+		,m_InitialInterval(GetTickCount64())
 #endif
 	{
 #ifdef __linux__
@@ -51,7 +51,9 @@ public:
 			std::ostringstream oss;
 			oss << GetFPS() << " FPS";
 			// RAY_TODO: Abort when trying to set the title on an unopened window!
+#ifdef _WIN32
 			At0::Ray::Application::Get().GetMainWindow().SetTitle(oss.str());
+#endif
 		}
 	}
 
