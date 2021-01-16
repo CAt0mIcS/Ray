@@ -176,7 +176,7 @@ namespace At0::Ray
 #endif
 }
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 
 #define RAY_WND_THROW_FAILED(expr) \
 if(HRESULT RL___HRES___RL = expr; FAILED(RL___HRES___RL)) throw ::At0::Ray::WindowsException(RL___HRES___RL, (uint16_t)__LINE__, __FILE__)
@@ -190,12 +190,13 @@ throw ::At0::Ray::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE_
 
 #define RAY_THROW_RUNTIME(msg, ...) throw ::At0::Ray::RuntimeException(::At0::Ray::Util::SerializeString(msg, __VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
 
-#elif defined(__linux__)
+#elif defined(__GNUC__)
 
 #define RAY_WND_THROW_FAILED(expr) expr
 #define RAY_WND_THROW_LAST_FAILED2()
 #define RAY_WND_THROW_LAST_FAILED(expr) expr
-#define RAY_THROW_RUNTIME(msg, ...) throw ::At0::Ray::RuntimeException(::At0::Ray::Util::SerializeString(msg, ## __VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
+// #define RAY_THROW_RUNTIME(msg, ...) throw ::At0::Ray::RuntimeException(::At0::Ray::Util::SerializeString(msg, ## __VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
+#define RAY_THROW_RUNTIME(msg, ...)
 
 #endif
 

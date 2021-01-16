@@ -7,7 +7,7 @@
 
 #include <Ray/Ray.h>
 
-
+#ifdef _WIN32
 class FPS
 {
 public:
@@ -54,6 +54,7 @@ private:
 };
 
 FPS g_FPS;
+#endif
 
 
 
@@ -129,7 +130,9 @@ namespace At0::Layers
 		renderer->Draw(m_CubeScene);
 		renderer->EndDraw();
 #endif
+#ifdef _WIN32
 		g_FPS.Update();
+#endif
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::MouseMoveEvent& e)

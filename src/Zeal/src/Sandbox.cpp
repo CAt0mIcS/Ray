@@ -61,7 +61,7 @@ namespace At0::Zeal
 
 #include <Ray/REntryPoint.h>
 
-#include <RayUtil/RException.h>
+// #include <RayUtil/RException.h>
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -71,8 +71,8 @@ int At0::Ray::Awake(std::string commandLineArguments)
 {
 	using namespace At0;
 
-	try
-	{
+	// try
+	// {
 		Ray::Log::Begin("../../Zeal.log", Log::LogLevel::Trace);
 
 		Ray::Profile::BeginSession("Startup", "../../Profiling/Profile-Startup.json");
@@ -90,22 +90,22 @@ int At0::Ray::Awake(std::string commandLineArguments)
 
 		Ray::Log::End();
 		return exitCode;
-	}
-	catch (At0::Ray::Exception& e)
-	{
-		Ray::RMessageBox(e.GetType(), e.what(), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
-		Ray::Log::Critical("[Awake] Exception occured: {0}", e.what());
-	}
-	catch (std::exception& e)
-	{
-		Ray::RMessageBox("Standard Exception", e.what(), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
-		Ray::Log::Critical("[Awake] Exception occured: {0}", e.what());
-	}
-	catch (...)
-	{
-		Ray::RMessageBox("Unknown Exception", "An unknown exception occurred", Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
-		Ray::Log::Critical("[Awake] Unknown Exception occured");
-	}
+	// }
+	// catch (At0::Ray::Exception& e)
+	// {
+	// 	Ray::RMessageBox(e.GetType(), e.what(), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
+	// 	Ray::Log::Critical("[Awake] Exception occured: {0}", e.what());
+	// }
+	// catch (std::exception& e)
+	// {
+	// 	Ray::RMessageBox("Standard Exception", e.what(), Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
+	// 	Ray::Log::Critical("[Awake] Exception occured: {0}", e.what());
+	// }
+	// catch (...)
+	// {
+	// 	Ray::RMessageBox("Unknown Exception", "An unknown exception occurred", Ray::RMessageBox::Button::Ok, Ray::RMessageBox::Icon::Error, Ray::RMessageBox::Flags::DefaultDesktop);
+	// 	Ray::Log::Critical("[Awake] Unknown Exception occured");
+	// }
 	Ray::Log::End();
 	return -1;
 }
