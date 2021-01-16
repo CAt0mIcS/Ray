@@ -4,6 +4,7 @@
 #include "RRendererAPI.h"
 
 #include "Platform/DX11/RDX11IndexBuffer.h"
+#include "Platform/OpenGL/ROpenGLIndexBuffer.h"
 
 #include <RayDebug/RInstrumentor.h>
 #include <RayDebug/RAssert.h>
@@ -18,8 +19,8 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
-		case RendererAPI::D3D11: return MakeRef<DX11IndexBuffer>(indices);
-		case RendererAPI::OpenGL: break;
+		case RendererAPI::D3D11:	return MakeRef<DX11IndexBuffer>(indices);
+		case RendererAPI::OpenGL:	return MakeRef<OpenGLIndexBuffer>(indices);
 		}
 
 		return nullptr;

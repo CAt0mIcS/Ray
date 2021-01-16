@@ -7,6 +7,7 @@
 #include <RayDebug/RInstrumentor.h>
 
 #include "Platform/DX11/RDX11InputLayout.h"
+#include "Platform/OpenGL/ROpenGLInputLayout.h"
 
 
 namespace At0::Ray
@@ -18,8 +19,8 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
-		case RendererAPI::D3D11: return MakeRef<DX11InputLayout>(inputElements, vShader.get());
-		case RendererAPI::OpenGL: break;
+		case RendererAPI::D3D11:	return MakeRef<DX11InputLayout>(inputElements, vShader.get());
+		case RendererAPI::OpenGL:	return MakeRef<OpenGLInputLayout>(inputElements, vShader.get());
 		}
 
 		return nullptr;

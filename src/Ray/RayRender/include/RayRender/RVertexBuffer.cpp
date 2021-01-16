@@ -6,6 +6,7 @@
 #include <RayDebug/RAssert.h>
 
 #include "Platform/DX11/RDX11VertexBuffer.h"
+#include "Platform/OpenGL/ROpenGLVertexBuffer.h"
 
 
 namespace At0::Ray
@@ -16,8 +17,8 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
-		case RendererAPI::D3D11: return MakeRef<DX11VertexBuffer>(data);
-		case RendererAPI::OpenGL: return nullptr;
+		case RendererAPI::D3D11:	return MakeRef<DX11VertexBuffer>(data);
+		case RendererAPI::OpenGL:	return MakeRef<OpenGLVertexBuffer>(data);
 		}
 
 		return nullptr;

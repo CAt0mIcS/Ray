@@ -3,6 +3,7 @@
 
 #include "RRendererAPI.h"
 #include "Platform/DX11/RDX11PixelShader.h"
+#include "Platform/OpenGL/ROpenGLPixelShader.h"
 
 #include <RayDebug/RAssert.h>
 #include <RayDebug/RInstrumentor.h>
@@ -18,9 +19,8 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
-		case RendererAPI::D3D11:
-			return MakeRef<DX11PixelShader>(filepath, true);
-		case RendererAPI::OpenGL:
+		case RendererAPI::D3D11:	return MakeRef<DX11PixelShader>(filepath, true);
+		case RendererAPI::OpenGL:	return MakeRef<OpenGLPixelShader>(filepath, true);
 			break;
 		}
 
@@ -34,10 +34,8 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
-		case RendererAPI::D3D11:
-			return MakeRef<DX11PixelShader>(filepath, false);
-		case RendererAPI::OpenGL:
-			break;
+		case RendererAPI::D3D11:	return MakeRef<DX11PixelShader>(filepath, false);
+		case RendererAPI::OpenGL:	return MakeRef<OpenGLPixelShader>(filepath, false);
 		}
 
 		return nullptr;

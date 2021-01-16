@@ -10,6 +10,7 @@
 #include "../RIndexBuffer.h"
 #include "../RVertexBuffer.h"
 #include "../RTopology.h"
+#include "../RRendererAPI.h"
 
 
 namespace At0::Ray
@@ -45,8 +46,23 @@ namespace At0::Ray
 		m_IndexBufferCount = 36;
 
 		// Default Vertex and Pixel Shader for quads
-		Ref<VertexShader> pVShader = VertexShader::CreateFromCompiled("QuadVertexShader.cso");
-		Ref<PixelShader> pPShader = PixelShader::CreateFromCompiled("QuadPixelShader.cso");
+		Ref<VertexShader> pVShader;
+		Ref<PixelShader> pPShader;
+		switch (RendererAPI::GetAPI())
+		{
+		case RendererAPI::D3D11:
+		{
+			pVShader = VertexShader::CreateFromCompiled("QuadVertexShader.cso");
+			pPShader = PixelShader::CreateFromCompiled("QuadPixelShader.cso");
+			break;
+		}
+		case RendererAPI::OpenGL:
+		{
+			pVShader = VertexShader::CreateFromSource("QuadVertexShader.glsl");
+			pPShader = PixelShader::CreateFromSource("QuadPixelShader.glsl");
+			break;
+		}
+		}
 
 		// Matching input layout
 		Ref<InputLayout> pInputLayout = InputLayout::Create(

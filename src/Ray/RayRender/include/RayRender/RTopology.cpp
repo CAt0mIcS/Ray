@@ -3,6 +3,7 @@
 
 #include "RRendererAPI.h"
 #include "Platform/DX11/RDX11Topology.h"
+#include "Platform/OpenGL/ROpenGLTopology.h"
 
 #include <RayDebug/RAssert.h>
 #include <RayDebug/RInstrumentor.h>
@@ -17,8 +18,8 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
-		case RendererAPI::D3D11: return MakeRef<DX11Topology>(type);
-		case RendererAPI::OpenGL: break;
+		case RendererAPI::D3D11:	return MakeRef<DX11Topology>(type);
+		case RendererAPI::OpenGL:	return MakeRef<OpenGLTopology>(type);
 		}
 
 		return nullptr;

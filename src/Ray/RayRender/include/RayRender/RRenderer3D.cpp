@@ -7,7 +7,7 @@
 #include <RayDebug/RInstrumentor.h>
 
 #include "Platform/DX11/RDX11Renderer3D.h"
-//#include "Platform/OpenGL/ROpenGLRenderer3D.h"
+#include "Platform/OpenGL/ROpenGLRenderer3D.h"
 
 
 namespace At0::Ray
@@ -20,9 +20,8 @@ namespace At0::Ray
 
 		switch (RendererAPI::GetAPI())
 		{
-		case RendererAPI::D3D11:
-			return MakeRef<DX11Renderer3D>((HWND)window);
-		case RendererAPI::OpenGL:
+		case RendererAPI::D3D11:	return MakeRef<DX11Renderer3D>((HWND)window);
+		case RendererAPI::OpenGL:	return MakeRef<OpenGLRenderer3D>((GLFWwindow*)window);
 			break;
 		}
 

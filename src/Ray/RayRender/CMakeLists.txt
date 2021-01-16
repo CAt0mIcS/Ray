@@ -52,11 +52,33 @@ set(SRC
     "include/RayRender/Platform/DX11/RDX11Topology.h"
     "include/RayRender/Platform/DX11/RDX11Topology.cpp"
 
+    # OpenGL classes
+    "include/RayRender/Platform/OpenGL/ROpenGLRenderer3D.h"
+    "include/RayRender/Platform/OpenGL/ROpenGLRenderer3D.cpp"
+    "include/RayRender/Platform/OpenGL/ROpenGLVertexBuffer.h"
+    "include/RayRender/Platform/OpenGL/ROpenGLVertexBuffer.cpp"
+    "include/RayRender/Platform/OpenGL/ROpenGLVertexShader.h"
+    "include/RayRender/Platform/OpenGL/ROpenGLVertexShader.cpp"
+    "include/RayRender/Platform/OpenGL/ROpenGLPixelShader.h"
+    "include/RayRender/Platform/OpenGL/ROpenGLPixelShader.cpp"
+    "include/RayRender/Platform/OpenGL/ROpenGLInputLayout.h"
+    "include/RayRender/Platform/OpenGL/ROpenGLInputLayout.cpp"
+    "include/RayRender/Platform/OpenGL/ROpenGLIndexBuffer.h"
+    "include/RayRender/Platform/OpenGL/ROpenGLIndexBuffer.cpp"
+    "include/RayRender/Platform/OpenGL/ROpenGLTopology.h"
+    "include/RayRender/Platform/OpenGL/ROpenGLTopology.cpp"
+
     # DirectX11 Shaders
     "shaders/QuadVertexShader.hlsl"
     "shaders/QuadPixelShader.hlsl"
     "shaders/TriangleVertexShader.hlsl"
     "shaders/TrianglePixelShader.hlsl"
+
+    # OpenGL Shaders
+    "shaders/QuadVertexShader.glsl"
+    "shaders/QuadPixelShader.glsl"
+    "shaders/TriangleVertexShader.glsl"
+    "shaders/TrianglePixelShader.glsl"
 )
 
 set(PUBLIC_INC
@@ -116,6 +138,37 @@ add_subdirectory("extern")
 add_custom_command(TARGET "RayRender" POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CMAKE_CURRENT_SOURCE_DIR}/extern/assimp/lib/${RL_ARCHITECTURE}/assimp-vc142-mt.dll"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
+)
+
+# ------------------------------------------------------------------------------------------------
+# Copy glsl shaders to the output directory
+add_custom_command(TARGET "RayRender" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/QuadVertexShader.glsl"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
+)
+add_custom_command(TARGET "RayRender" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/QuadPixelShader.glsl"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
+)
+add_custom_command(TARGET "RayRender" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/TriangleVertexShader.glsl"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
+)
+add_custom_command(TARGET "RayRender" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/TrianglePixelShader.glsl"
     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
