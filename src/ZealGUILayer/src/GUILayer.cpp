@@ -7,13 +7,25 @@
 
 #include <Ray/Ray.h>
 
-#ifdef _WIN32
+#ifdef __linux__
+#include <time.h>
+#endif
+
+
 class FPS
 {
 public:
 	FPS()
-		: m_FPS(0), m_FPSCount(0), m_InitialInterval(GetTickCount64())
+		: m_FPS(0), m_FPSCount(0),
+#ifdef _WIN32
+		m_InitialInterval(GetTickCount64())
+#endif
 	{
+#ifdef __linux__
+		timespec ts;
+		clock_gettime(CLOCK_MONOTONIC, &ts);
+		m_InitialInterval = ts.tv_nsec;
+#endif
 	}
 
 	void Update()
@@ -28,7 +40,13 @@ public:
 
 			// reset the counter and the interval
 			m_FPSCount = 0;
+#ifdef _WIN32
 			m_InitialInterval = GetTickCount64();
+#elif defined(__linux__)
+			timespec ts;
+			clock_gettime(CLOCK_MONOTONIC, &ts);
+			m_InitialInterval = ts.tv_nsec;
+#endif
 
 			std::ostringstream oss;
 			oss << GetFPS() << " FPS";
@@ -44,7 +62,13 @@ public:
 
 	uint32_t IntervalValue() const
 	{
+#ifdef _WIN32
 		return GetTickCount64() - m_InitialInterval;
+#elif defined(__linux__)
+		timespec ts;
+		clock_gettime(CLOCK_MONOTONIC, &ts);
+		return ts.tv_nsec - m_InitialInterval;
+#endif
 	}
 
 private:
@@ -54,7 +78,6 @@ private:
 };
 
 FPS g_FPS;
-#endif
 
 
 
@@ -130,9 +153,8 @@ namespace At0::Layers
 		renderer->Draw(m_CubeScene);
 		renderer->EndDraw();
 #endif
-#ifdef _WIN32
+
 		g_FPS.Update();
-#endif
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::MouseMoveEvent& e)
