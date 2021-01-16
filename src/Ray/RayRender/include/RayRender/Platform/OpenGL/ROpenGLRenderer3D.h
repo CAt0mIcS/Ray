@@ -20,5 +20,7 @@ namespace At0::Ray
 
 	private:
 		GLFWwindow* m_hWnd;
+
+		static bool s_GLFWInitialized;
 	};
 }

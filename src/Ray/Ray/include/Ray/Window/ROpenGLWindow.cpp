@@ -51,6 +51,7 @@ namespace At0::Ray
 
 		if (!s_GLFWInitialized)
 		{
+			s_GLFWInitialized = true;
 			int success = glfwInit();
 			RAY_ASSERT(success, "Failed to initialize GLFW");
 			Log::Info("[OpenGLWindow] Successfully initialized GLFW");
@@ -68,18 +69,18 @@ namespace At0::Ray
 		// Context initialization
 		glfwMakeContextCurrent(m_hWnd);
 
-		// Initialize Glad
-		if (!s_GLFWInitialized)
-		{
-			s_GLFWInitialized = true;
+		//// Initialize Glad
+		//if (!s_GLFWInitialized)
+		//{
+		//	s_GLFWInitialized = true;
 
-			int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-			RAY_ASSERT(status, "Failed to initialize Glad!");
+		//	int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		//	RAY_ASSERT(status, "Failed to initialize Glad!");
 
-			Log::Info("[OpenGLWindow] Successfully initialized Glad");
-			Log::Info("[OpenGLWindow] OpenGL Info:"
-				"\n\tVendor:\t{0}\n\tRenderer: {1}\n\tVersion:{2}", glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION));
-		}
+		//	Log::Info("[OpenGLWindow] Successfully initialized Glad");
+		//	Log::Info("[OpenGLWindow] OpenGL Info:"
+		//		"\n\tVendor:\t{0}\n\tRenderer: {1}\n\tVersion:{2}", glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION));
+		//}
 
 		SetUpEventCallbacks();
 	}
@@ -212,12 +213,8 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		glfwMakeContextCurrent(m_hWnd);
-
-		// --------------------------------------------------------
-		// Rendering (RAY_TODO)
-		glfwSwapBuffers(m_hWnd);
-		// --------------------------------------------------------
+		// RAY_TODO: Multiple windows
+		//glfwMakeContextCurrent(m_hWnd);
 
 		glfwPollEvents();
 	}
