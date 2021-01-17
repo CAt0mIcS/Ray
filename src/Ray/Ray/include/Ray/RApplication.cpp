@@ -42,32 +42,33 @@ namespace At0::Ray
 
 	int Application::Run()
 	{
-		std::thread appThread([this]()
-			{
-				auto lastFrameTime = std::chrono::high_resolution_clock::now();
-				while (GetMainWindow().IsOpen())
-				{
-					// -------------------------------------------------------------------------------------
-					// Setting timestep
-					auto tNow = std::chrono::high_resolution_clock::now();
-					Timestep timestep = ((float)(tNow - lastFrameTime).count()) / 1000.0f / 1000.0f / 1000.0f;
-					lastFrameTime = tNow;
+		//std::thread appThread([this]()
+		//	{
+		//		auto lastFrameTime = std::chrono::high_resolution_clock::now();
+		//		while (GetMainWindow().IsOpen())
+		//		{
+		//			// -------------------------------------------------------------------------------------
+		//			// Setting timestep
+		//			auto tNow = std::chrono::high_resolution_clock::now();
+		//			Timestep timestep = ((float)(tNow - lastFrameTime).count()) / 1000.0f / 1000.0f / 1000.0f;
+		//			lastFrameTime = tNow;
 
-					// -------------------------------------------------------------------------------------
-					// Update Layers
-					for (Layer* layer : m_LayerStack)
-					{
-						layer->OnUpdate(timestep);
-					}
+		//			// -------------------------------------------------------------------------------------
+		//			// Update Layers
+		//			for (Layer* layer : m_LayerStack)
+		//			{
+		//				layer->OnUpdate(timestep);
+		//			}
 
-					//CPU Usage too high without it (not ideal)
-					//std::this_thread::sleep_for(std::chrono::nanoseconds(1500));
-				}
-			}
-		);
+		//			//CPU Usage too high without it (not ideal)
+		//			//std::this_thread::sleep_for(std::chrono::nanoseconds(1500));
+		//		}
+		//	}
+		//);
 
 		// -----------------------------------------------------------------------------------------
 		// Main Application Loop
+		auto lastFrameTime = std::chrono::high_resolution_clock::now();
 		while (GetMainWindow().IsOpen())
 		{
 			for (int16_t i = m_WindowStack.Size() - 1; i >= 0; --i)
@@ -81,11 +82,24 @@ namespace At0::Ray
 					m_WindowStack.PopIndexed(i);
 				}
 			}
+
+			// -------------------------------------------------------------------------------------
+			// Setting timestep
+			auto tNow = std::chrono::high_resolution_clock::now();
+			Timestep timestep = ((float)(tNow - lastFrameTime).count()) / 1000.0f / 1000.0f / 1000.0f;
+			lastFrameTime = tNow;
+
+			// -------------------------------------------------------------------------------------
+			// Update Layers
+			for (Layer* layer : m_LayerStack)
+			{
+				layer->OnUpdate(timestep);
+			}
 		}
 		Cleanup();
 
-		if (appThread.joinable())
-			appThread.join();
+		//if (appThread.joinable())
+		//	appThread.join();
 
 		return 0;
 	}

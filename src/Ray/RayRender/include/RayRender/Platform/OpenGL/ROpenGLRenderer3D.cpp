@@ -20,7 +20,7 @@
 
 namespace At0::Ray
 {
-	bool OpenGLRenderer3D::s_GLFWInitialized = false;
+	bool OpenGLRenderer3D::s_GladInitialized = false;
 
 	static void GLFWErrorCallback(int error, const char* description)
 	{
@@ -36,21 +36,13 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		if (!s_GLFWInitialized)
-		{
-			int success = glfwInit();
-			RAY_ASSERT(success, "Failed to initialize GLFW");
-			Log::Info("[OpenGLWindow] Successfully initialized GLFW");
-			glfwSetErrorCallback(GLFWErrorCallback);
-		}
-
 		// Context initialization
 		glfwMakeContextCurrent(m_hWnd);
 
 		// Initialize Glad
-		if (!s_GLFWInitialized)
+		if (!s_GladInitialized)
 		{
-			s_GLFWInitialized = true;
+			s_GladInitialized = true;
 
 			int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 			RAY_ASSERT(status, "Failed to initialize Glad!");
