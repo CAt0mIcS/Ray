@@ -10,6 +10,7 @@ namespace At0::Ray
 	{
 	public:
 		OpenGLIndexBuffer(std::initializer_list<uint32_t> indices);
+		~OpenGLIndexBuffer();
 
 		virtual void Bind() override;
 		virtual uint32_t GetIndicesCount() const override;

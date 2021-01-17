@@ -9,10 +9,11 @@ namespace At0::Ray
 	{
 	public:
 		OpenGLVertexBuffer(std::initializer_list<Vertex> data);
+		~OpenGLVertexBuffer();
 
 		virtual void Bind() override;
-		
+
 	private:
-		uint32_t m_Strides;
+		uint32_t m_Buffer;
 	};
 }
