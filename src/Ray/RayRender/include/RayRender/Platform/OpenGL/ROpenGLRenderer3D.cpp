@@ -56,6 +56,9 @@ namespace At0::Ray
 		int width, height;
 		glfwGetWindowSize(m_hWnd, &width, &height);
 		glViewport(0, 0, width, height);
+
+		glEnable(GL_DEPTH_TEST);
+		//glDepthFunc(GL_LESS);
 	}
 
 	OpenGLRenderer3D::~OpenGLRenderer3D()
@@ -66,7 +69,7 @@ namespace At0::Ray
 	void OpenGLRenderer3D::ClearBuffer(float red, float green, float blue)
 	{
 		glClearColor(red, green, blue, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	void OpenGLRenderer3D::EndDraw()

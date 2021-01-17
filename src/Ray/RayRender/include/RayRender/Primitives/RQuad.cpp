@@ -20,29 +20,73 @@ namespace At0::Ray
 	{
 		constexpr float side = 1.0f / 2.0f;
 		// Vertices
-		Ref<VertexBuffer> pVertexBuffer = VertexBuffer::Create(
-			{
-				{ -side, -side, -side },
-				{  side, -side, -side },
-				{ -side,  side, -side },
-				{  side,  side, -side },
-				{ -side, -side,  side },
-				{  side, -side,  side },
-				{ -side,  side,  side },
-				{  side,  side,  side },
-			}
-		);
 
-		Ref<IndexBuffer> pIdxBuffer = IndexBuffer::Create(
-			{
-				0, 2, 1,  2, 3, 1,
-				1, 3, 5,  3, 7, 5,
-				2, 6, 3,  3, 6, 7,
-				4, 5, 7,  4, 7, 6,
-				0, 4, 2,  2, 4, 6,
-				0, 1, 4,  1, 5, 4
-			}
-		);
+		Ref<VertexBuffer> pVertexBuffer;
+		Ref<IndexBuffer> pIdxBuffer;
+		if (RendererAPI::GetAPI() == RendererAPI::D3D11)
+		{
+			pVertexBuffer = VertexBuffer::Create(
+				{
+					{ -side, -side, -side },
+					{  side, -side, -side },
+					{ -side,  side, -side },
+					{  side,  side, -side },
+					{ -side, -side,  side },
+					{  side, -side,  side },
+					{ -side,  side,  side },
+					{  side,  side,  side },
+				}
+			);
+
+			pIdxBuffer = IndexBuffer::Create(
+				{
+					0, 2, 1,  2, 3, 1,
+					1, 3, 5,  3, 7, 5,
+					2, 6, 3,  3, 6, 7,
+					4, 5, 7,  4, 7, 6,
+					0, 4, 2,  2, 4, 6,
+					0, 1, 4,  1, 5, 4
+				}
+			);
+		}
+		else if (RendererAPI::GetAPI() == RendererAPI::OpenGL)
+		{
+			pVertexBuffer = VertexBuffer::Create(
+				{
+					{ -side, -side,  side },
+					{  side, -side,  side },
+					{  side,  side,  side },
+					{ -side,  side,  side },
+					{ -side, -side, -side },
+					{  side, -side, -side },
+					{  side,  side, -side },
+					{ -side,  side, -side }
+				}
+			);
+
+			pIdxBuffer = IndexBuffer::Create(
+				{
+					// front
+					0, 1, 2,
+					2, 3, 0,
+					// right
+					1, 5, 6,
+					6, 2, 1,
+					// back
+					7, 6, 5,
+					5, 4, 7,
+					// left
+					4, 0, 3,
+					3, 7, 4,
+					// bottom
+					4, 5, 1,
+					1, 0, 4,
+					// top
+					3, 2, 6,
+					6, 7, 3
+				}
+			);
+		}
 
 		// Default Vertex and Pixel Shader for quads
 		Ref<VertexShader> pVShader;
@@ -57,8 +101,8 @@ namespace At0::Ray
 		}
 		case RendererAPI::OpenGL:
 		{
-			pVShader = VertexShader::CreateFromSource("QuadVertexShader.glsl");
-			pPShader = PixelShader::CreateFromSource("QuadPixelShader.glsl");
+			//pVShader = VertexShader::CreateFromSource("QuadVertexShader.glsl");
+			//pPShader = PixelShader::CreateFromSource("QuadPixelShader.glsl");
 			break;
 		}
 		}
@@ -75,8 +119,11 @@ namespace At0::Ray
 		// bind everything
 		pVertexBuffer->Bind();
 		pIdxBuffer->Bind();
-		pVShader->Bind();
-		pPShader->Bind();
+		if (RendererAPI::GetAPI() == RendererAPI::D3D11)
+		{
+			pVShader->Bind();
+			pPShader->Bind();
+		}
 		pInputLayout->Bind();
 		pTopology->Bind();
 

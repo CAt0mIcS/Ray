@@ -56,49 +56,45 @@ namespace At0::Ray
 		RAY_GFX_THROW_FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
 		RAY_GFX_THROW_FAILED(GetDevice()->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pTargetView));
 
-		// DEBUG
-		GetContext()->OMSetRenderTargets(1u, m_pTargetView.GetAddressOf(), nullptr);
+		// ----------------------------------------------------------------------------------------------------
+		// create depth stensil state
+		D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+		dsDesc.DepthEnable = TRUE;
+		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+		WRL::ComPtr<ID3D11DepthStencilState> pDSState;
+		RAY_GFX_THROW_FAILED(GetDevice()->CreateDepthStencilState(&dsDesc, &pDSState));
 
+		// ----------------------------------------------------------------------------------------------------
+		// bind depth state
+		GetContext()->OMSetDepthStencilState(pDSState.Get(), 1u);
 
-		//// ----------------------------------------------------------------------------------------------------
-		//// create depth stensil state
-		//D3D11_DEPTH_STENCIL_DESC dsDesc = {};
-		//dsDesc.DepthEnable = TRUE;
-		//dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		//dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
-		//WRL::ComPtr<ID3D11DepthStencilState> pDSState;
-		//RAY_GFX_THROW_FAILED(GetDevice()->CreateDepthStencilState(&dsDesc, &pDSState));
+		// ----------------------------------------------------------------------------------------------------
+		// create depth stensil texture
+		WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
+		D3D11_TEXTURE2D_DESC descDepth = {};
+		descDepth.Width = clientWindowRect.right - clientWindowRect.left;
+		descDepth.Height = clientWindowRect.bottom - clientWindowRect.top;
+		descDepth.MipLevels = 1u;
+		descDepth.ArraySize = 1u;
+		descDepth.Format = DXGI_FORMAT_D32_FLOAT;
+		descDepth.SampleDesc.Count = 1u;
+		descDepth.SampleDesc.Quality = 0u;
+		descDepth.Usage = D3D11_USAGE_DEFAULT;
+		descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		RAY_GFX_THROW_FAILED(GetDevice()->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));
 
-		//// ----------------------------------------------------------------------------------------------------
-		//// bind depth state
-		//GetContext()->OMSetDepthStencilState(pDSState.Get(), 1u);
+		// ----------------------------------------------------------------------------------------------------
+		// create view of depth stensil texture
+		D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
+		descDSV.Format = DXGI_FORMAT_D32_FLOAT;
+		descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		descDSV.Texture2D.MipSlice = 0u;
+		RAY_GFX_THROW_FAILED(GetDevice()->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &m_pDSV));
 
-		//// ----------------------------------------------------------------------------------------------------
-		//// create depth stensil texture
-		//WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
-		//D3D11_TEXTURE2D_DESC descDepth = {};
-		//descDepth.Width = clientWindowRect.right - clientWindowRect.left;
-		//descDepth.Height = clientWindowRect.bottom - clientWindowRect.top;
-		//descDepth.MipLevels = 1u;
-		//descDepth.ArraySize = 1u;
-		//descDepth.Format = DXGI_FORMAT_D32_FLOAT;
-		//descDepth.SampleDesc.Count = 1u;
-		//descDepth.SampleDesc.Quality = 0u;
-		//descDepth.Usage = D3D11_USAGE_DEFAULT;
-		//descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		//RAY_GFX_THROW_FAILED(GetDevice()->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));
-
-		//// ----------------------------------------------------------------------------------------------------
-		//// create view of depth stensil texture
-		//D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
-		//descDSV.Format = DXGI_FORMAT_D32_FLOAT;
-		//descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		//descDSV.Texture2D.MipSlice = 0u;
-		//RAY_GFX_THROW_FAILED(GetDevice()->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &m_pDSV));
-
-		//// ----------------------------------------------------------------------------------------------------
-		//// bind depth stensil view to OM
-		//GetContext()->OMSetRenderTargets(1u, m_pTargetView.GetAddressOf(), m_pDSV.Get());
+		// ----------------------------------------------------------------------------------------------------
+		// bind depth stensil view to OM
+		GetContext()->OMSetRenderTargets(1u, m_pTargetView.GetAddressOf(), m_pDSV.Get());
 
 		// ----------------------------------------------------------------------------------------------------
 		// configure viewport
@@ -121,7 +117,7 @@ namespace At0::Ray
 	{
 		float color[] = { red, green, blue, 1.0f };
 		GetContext()->ClearRenderTargetView(m_pTargetView.Get(), color);
-		//GetContext()->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+		GetContext()->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 	}
 
 	void DX11Renderer3D::EndDraw()
