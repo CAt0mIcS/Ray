@@ -20,8 +20,9 @@ namespace WRL = Microsoft::WRL;
 
 namespace At0::Ray
 {
-	DX11Renderer3D::DX11Renderer3D(HWND hWnd)
-		: m_hWnd(hWnd), m_SyncInterval{ 0 }
+	DX11Renderer3D::DX11Renderer3D(HWND hWnd, EventDispatcher<WindowResizeEvent>& resizeDispatcher)
+		: m_hWnd(hWnd), m_SyncInterval{ 0 },
+		EventListener<WindowResizeEvent>(resizeDispatcher)
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -147,6 +148,10 @@ namespace At0::Ray
 	void DX11Renderer3D::SetSyncInterval(uint32_t interval)
 	{
 		m_SyncInterval = interval;
+	}
+
+	void DX11Renderer3D::OnEvent(Widget& receiver, WindowResizeEvent& e)
+	{
 	}
 }
 

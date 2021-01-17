@@ -33,8 +33,9 @@ namespace At0::Ray
 	}
 
 
-	OpenGLRenderer3D::OpenGLRenderer3D(GLFWwindow* hWnd)
-		: m_hWnd(hWnd)
+	OpenGLRenderer3D::OpenGLRenderer3D(GLFWwindow* hWnd, EventDispatcher<WindowResizeEvent>& resizeDispatcher)
+		: m_hWnd(hWnd),
+		EventListener<WindowResizeEvent>(resizeDispatcher)
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -96,6 +97,11 @@ namespace At0::Ray
 
 			glDrawElements(pTopology->Get(), idxBuff->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
 		}
+	}
+
+	void OpenGLRenderer3D::OnEvent(Widget& receiver, WindowResizeEvent& e)
+	{
+		glViewport(0, 0, (int)e.GetSize().x, (int)e.GetSize().y);
 	}
 }
 

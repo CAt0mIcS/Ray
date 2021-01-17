@@ -12,7 +12,7 @@
 
 namespace At0::Ray
 {
-	Ref<Renderer3D> Renderer3D::Create(void* window)
+	Ref<Renderer3D> Renderer3D::Create(void* window, EventDispatcher<WindowResizeEvent>& resizeDispatcher)
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -21,9 +21,9 @@ namespace At0::Ray
 		switch (RendererAPI::GetAPI())
 		{
 #ifdef _WIN32
-		case RendererAPI::D3D11:	return MakeRef<DX11Renderer3D>((HWND)window);
+		case RendererAPI::D3D11:	return MakeRef<DX11Renderer3D>((HWND)window, resizeDispatcher);
 #endif
-		case RendererAPI::OpenGL:	return MakeRef<OpenGLRenderer3D>((GLFWwindow*)window);
+		case RendererAPI::OpenGL:	return MakeRef<OpenGLRenderer3D>((GLFWwindow*)window, resizeDispatcher);
 			break;
 		}
 

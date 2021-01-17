@@ -6,6 +6,7 @@
 
 #include "RDX11GraphicsResources.h"
 
+#include <../../RayEvent/include/RayEvent/REventListener.h>
 #include <wrl.h>
 
 struct ID3D11DepthStencilView;
@@ -15,10 +16,11 @@ struct IDXGISwapChain;
 
 namespace At0::Ray
 {
-	class RR_API DX11Renderer3D : public Renderer3D, DX11GraphicsResources
+	class RR_API DX11Renderer3D : public Renderer3D, DX11GraphicsResources,
+		EventListener<WindowResizeEvent>
 	{
 	public:
-		DX11Renderer3D(HWND hWnd);
+		DX11Renderer3D(HWND hWnd, EventDispatcher<WindowResizeEvent>& resizeDispatcher);
 		~DX11Renderer3D();
 
 		virtual void Draw(Scene& scene) override;
@@ -31,6 +33,12 @@ namespace At0::Ray
 		void SetSyncInterval(uint32_t interval);
 
 		virtual void* GetNativeWindow() const { return (void*)m_hWnd; }
+
+		/// <summary>
+		/// Handles viewport resizing
+		/// </summary>
+		virtual void OnEvent(Widget& receiver, WindowResizeEvent& e);
+
 	private:
 		HWND m_hWnd;
 		uint32_t m_SyncInterval;

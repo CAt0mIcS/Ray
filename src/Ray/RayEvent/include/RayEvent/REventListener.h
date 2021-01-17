@@ -1,6 +1,9 @@
 #pragma once
 
 #include "REventDispatcher.h"
+#include "Events/RApplicationEvent.h"
+#include "Events/RKeyboardEvent.h"
+#include "Events/RMouseEvent.h"
 
 
 namespace At0::Ray

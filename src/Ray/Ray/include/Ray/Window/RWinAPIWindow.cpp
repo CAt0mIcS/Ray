@@ -36,7 +36,7 @@ namespace At0::Ray
 		if (s_KeycodeMap[0] == (Key)0)
 			SetKeycodeMap();
 
-		m_Renderer3D = Renderer3D::Create((void*)m_hWnd);
+		m_Renderer3D = Renderer3D::Create((void*)m_hWnd, *this);
 	}
 
 	WinAPIWindow::~WinAPIWindow()

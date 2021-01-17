@@ -4,13 +4,16 @@
 
 #include "Core/RScene.h"
 
+#include <../../RayEvent/include/RayEvent/REventDispatcher.h>
+#include <../../RayEvent/include/RayEvent/Events/RApplicationEvent.h>
+
 
 namespace At0::Ray
 {
 	class RR_API Renderer3D
 	{
 	public:
-		static Ref<Renderer3D> Create(void* window);
+		static Ref<Renderer3D> Create(void* window, EventDispatcher<WindowResizeEvent>& resizeDispatcher);
 
 		virtual ~Renderer3D() = default;
 
