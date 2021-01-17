@@ -18,7 +18,7 @@ public:
 	FPS()
 		: m_FPS(0), m_FPSCount(0)
 #ifdef _WIN32
-		,m_InitialInterval(GetTickCount64())
+		, m_InitialInterval(GetTickCount64())
 #endif
 	{
 #ifdef __linux__
@@ -45,7 +45,7 @@ public:
 #elif defined(__linux__)
 			timespec ts;
 			clock_gettime(CLOCK_MONOTONIC, &ts);
-			m_InitialInterval = ts.tv_nsec;
+			m_InitialInterval = ts.tv_nsec / 1000000;
 #endif
 
 			std::ostringstream oss;
@@ -69,7 +69,7 @@ public:
 #elif defined(__linux__)
 		timespec ts;
 		clock_gettime(CLOCK_MONOTONIC, &ts);
-		return ts.tv_nsec - m_InitialInterval;
+		return (ts.tv_nsec / 1000000) - m_InitialInterval;
 #endif
 	}
 
