@@ -37,9 +37,9 @@ namespace At0::Ray
 		{
 			pVertexBuffer = VertexBuffer::Create(
 				{
-					{ -0.5f, -0.5f, 0.0f },
-					{  0.5f, -0.5f, 0.0f },
-					{  0.0f,  0.5f, 0.0f }
+					{ -0.5f, -0.5f},
+					{  0.0f,  0.5f},
+					{  0.5f, -0.5f}
 				}
 			);
 		}
@@ -47,7 +47,7 @@ namespace At0::Ray
 
 		Ref<IndexBuffer> pIdxBuffer = IndexBuffer::Create(
 			{
-				1, 2, 3
+				0, 1, 2
 			}
 		);
 

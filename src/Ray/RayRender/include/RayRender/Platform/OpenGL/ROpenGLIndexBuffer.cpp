@@ -14,22 +14,19 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		glCreateBuffers(1, &m_ElementBuffer);
-
-		// GL_ELEMENT_ARRAY_BUFFER is not valid without an actively bound VAO
-		// Binding with GL_ARRAY_BUFFER allows the data to be loaded regardless of VAO state. 
-		glBindBuffer(GL_ARRAY_BUFFER, m_ElementBuffer);
-		glBufferData(GL_ARRAY_BUFFER, m_NumIndices * sizeof(uint32_t), indices.begin(), GL_STATIC_DRAW);
+		glGenBuffers(1, &m_Buffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Buffer);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint32_t), indices.begin(), GL_STATIC_DRAW);
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
-		glDeleteBuffers(1, &m_ElementBuffer);
+		glDeleteBuffers(1, &m_Buffer);
 	}
 
 	void OpenGLIndexBuffer::Bind()
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ElementBuffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Buffer);
 	}
 
 	uint32_t OpenGLIndexBuffer::GetIndicesCount() const

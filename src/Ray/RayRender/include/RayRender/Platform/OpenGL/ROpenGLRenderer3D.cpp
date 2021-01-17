@@ -84,14 +84,12 @@ namespace At0::Ray
 			Ref<IndexBuffer> idxBuff = d.GetComponent<IndexBufferComponent>().Buffer;
 			idxBuff->Bind();
 
-			d.GetComponent<VertexShaderComponent>().Shader->Bind();
-			d.GetComponent<PixelShaderComponent>().Shader->Bind();
-			d.GetComponent<InputLayoutComponent>().Layout->Bind();
-			d.GetComponent<TopologyComponent>().PrimitiveTopology->Bind();
+			//d.GetComponent<VertexShaderComponent>().Shader->Bind();
+			//d.GetComponent<PixelShaderComponent>().Shader->Bind();
+			//d.GetComponent<InputLayoutComponent>().Layout->Bind();
+			//d.GetComponent<TopologyComponent>().PrimitiveTopology->Bind();
 
-			//glDrawElements(GL_TRIANGLES, idxBuff->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
-
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glDrawElements(GL_TRIANGLES, idxBuff->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
 		}
 	}
 }

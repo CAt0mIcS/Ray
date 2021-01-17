@@ -16,7 +16,7 @@ namespace At0::Ray
 		virtual uint32_t GetIndicesCount() const override;
 
 	private:
-		uint32_t m_ElementBuffer;
+		uint32_t m_Buffer;
 		uint32_t m_NumIndices;
 	};
 }
