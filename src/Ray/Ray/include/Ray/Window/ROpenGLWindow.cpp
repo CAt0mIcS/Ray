@@ -39,7 +39,7 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		Log::Critical("[OpenGLWindow] GLFW Error ({0}): {1}", error, description);
+		RAY_ASSERT(false, "[OpenGLWindow] GLFW Error ({0}): {1}", error, description);
 		Log::Flush();
 	}
 
@@ -68,6 +68,19 @@ namespace At0::Ray
 
 		// Context initialization
 		glfwMakeContextCurrent(m_hWnd);
+
+		// Initialize Glad
+		//if (!s_GLFWInitialized)
+		//{
+		//	s_GLFWInitialized = true;
+
+		//	int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		//	RAY_ASSERT(status, "Failed to initialize Glad!");
+
+		//	Log::Info("[OpenGLWindow] Successfully initialized Glad");
+		//	Log::Info("[OpenGLWindow] OpenGL Info:"
+		//		"\n\tVendor:\t{0}\n\tRenderer: {1}\n\tVersion:{2}", glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION));
+		//}
 
 		SetUpEventCallbacks();
 	}
@@ -130,7 +143,7 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 		glfwShowWindow(m_hWnd);
-}
+	}
 
 	void OpenGLWindow::Hide() const
 	{
@@ -196,9 +209,20 @@ namespace At0::Ray
 		return m_IsOpen;
 	}
 
+	void OpenGLWindow::TestDraw()
+	{
+		m_Renderer3D->ClearBuffer(1.0f, 0.3f, 0.0f);
+		m_Renderer3D->EndDraw();
+	}
+
 	void OpenGLWindow::Update()
 	{
 		RAY_PROFILE_FUNCTION();
+
+		//glClearColor(1.0f, 0.3f, 0.0f, 1.0f);
+		//glClear(GL_COLOR_BUFFER_BIT);
+		//glfwSwapBuffers(m_hWnd);
+
 
 		// RAY_TODO: Multiple windows
 		//glfwMakeContextCurrent(m_hWnd);

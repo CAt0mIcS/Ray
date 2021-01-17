@@ -6,6 +6,7 @@
 #include <RayDebug/RInstrumentor.h>
 
 #include <Ray/Ray.h>
+#include <Ray/Window/ROpenGLWindow.h>
 
 #ifdef __linux__
 #include <time.h>
@@ -77,7 +78,7 @@ private:
 	uint32_t m_FPS;
 	uint32_t m_FPSCount;
 	uint64_t m_InitialInterval;
-};
+	};
 
 FPS g_FPS;
 
@@ -150,10 +151,14 @@ namespace At0::Layers
 	{
 #if RENDER
 		Ray::Ref<Ray::Renderer3D> renderer = GetMainWindow().GetRenderer3D();
-		renderer->ClearBuffer(0.07f, 0.0f, 0.12f);
+		//renderer->ClearBuffer(0.07f, 0.0f, 0.12f);
+		//renderer->ClearBuffer(1.0f, 0.3f, 0.0f);
 
-		renderer->Draw(m_CubeScene);
-		renderer->EndDraw();
+		//renderer->Draw(m_CubeScene);
+		//renderer->EndDraw();
+
+		Ray::OpenGLWindow* window = (Ray::OpenGLWindow*)&GetMainWindow();
+		window->TestDraw();
 #endif
 
 		g_FPS.Update();

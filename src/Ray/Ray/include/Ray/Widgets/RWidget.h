@@ -27,6 +27,11 @@ namespace At0::Ray
 		Widget* GetParent() const { return m_Parent; }
 
 		/// <summary>
+		/// Goes up the parent chain until the window which has the window handle
+		/// </summary>
+		virtual void* GetNativeWindow() const;
+
+		/// <summary>
 		/// Searches through all children and finds the one with name
 		/// </summary>
 		/// <param name="name">Is the child's name</param>
@@ -78,11 +83,6 @@ namespace At0::Ray
 		/// <param name="mouse">Is the mouse of the window the widget is in</param>
 		/// <returns>The Widget which should receive the event</returns>
 		Widget* GetEventReceiver(const Event& e, const MouseInput& mouse);
-
-		/// <summary>
-		/// Goes up the parent chain until the window which has the window handle
-		/// </summary>
-		virtual void* GetNativeWindow() const;
 
 	protected:
 		Widget* m_Parent;
