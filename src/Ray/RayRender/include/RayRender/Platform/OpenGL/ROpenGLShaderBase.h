@@ -14,6 +14,7 @@ namespace At0::Ray
 	protected:
 		void AttachVertexShader(uint32_t shaderID);
 		void AttachPixelShader(uint32_t shaderID);
+		void BindProgram();
 
 		void OnShaderCompilationFailed(int success);
 

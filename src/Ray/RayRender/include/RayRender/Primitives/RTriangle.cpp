@@ -23,6 +23,8 @@ namespace At0::Ray
 		// Vertices
 		// RAY_TODO: Different vertex layout depending on opengl or directx
 		Ref<VertexBuffer> pVertexBuffer;
+		Ref<VertexShader> pVShader;
+		Ref<PixelShader> pPShader;
 		if (RendererAPI::GetAPI() == RendererAPI::D3D11)
 		{
 			pVertexBuffer = VertexBuffer::Create(
@@ -32,6 +34,10 @@ namespace At0::Ray
 					{ -0.5f, -0.5f, 1.0f },
 				}
 			);
+
+			// Default Vertex and Pixel Shader for quads
+			pVShader = VertexShader::CreateFromCompiled("TriangleVertexShader.cso");
+			pPShader = PixelShader::CreateFromCompiled("TrianglePixelShader.cso");
 		}
 		else if (RendererAPI::GetAPI() == RendererAPI::OpenGL)
 		{
@@ -42,18 +48,17 @@ namespace At0::Ray
 					{  0.5f, -0.5f}
 				}
 			);
-		}
 
+			// Default Vertex and Pixel Shader for quads
+			pVShader = VertexShader::CreateFromSource("TriangleVertexShader.glsl");
+			pPShader = PixelShader::CreateFromSource("TrianglePixelShader.glsl");
+		}
 
 		Ref<IndexBuffer> pIdxBuffer = IndexBuffer::Create(
 			{
 				0, 1, 2
 			}
 		);
-
-		// Default Vertex and Pixel Shader for quads
-		Ref<VertexShader> pVShader = VertexShader::CreateFromCompiled("TriangleVertexShader.cso");
-		Ref<PixelShader> pPShader = PixelShader::CreateFromCompiled("TrianglePixelShader.cso");
 
 		// Matching input layout
 		Ref<InputLayout> pInputLayout = InputLayout::Create(

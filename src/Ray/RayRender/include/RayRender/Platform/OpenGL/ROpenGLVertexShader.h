@@ -15,11 +15,6 @@ namespace At0::Ray
 		virtual void Bind() override;
 
 	private:
-		//// Shader buffer access functions for the InputLayout
-		//void* GetBufferPointer() const;
-		//size_t GetBufferSize() const;
-
-	private:
 		uint32_t m_VertexShader;
 	};
 }

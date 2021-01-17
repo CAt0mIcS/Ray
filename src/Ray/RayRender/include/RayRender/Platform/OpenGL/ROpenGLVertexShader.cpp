@@ -32,18 +32,8 @@ namespace At0::Ray
 
 	void OpenGLVertexShader::Bind()
 	{
-
+		BindProgram();
 	}
-
-	//void* OpenGLVertexShader::GetBufferPointer() const
-	//{
-	//	return nullptr;
-	//}
-
-	//size_t OpenGLVertexShader::GetBufferSize() const
-	//{
-	//	return 0;
-	//}
 }
 
 

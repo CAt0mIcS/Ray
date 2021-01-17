@@ -84,7 +84,8 @@ namespace At0::Ray
 			Ref<IndexBuffer> idxBuff = d.GetComponent<IndexBufferComponent>().Buffer;
 			idxBuff->Bind();
 
-			//d.GetComponent<VertexShaderComponent>().Shader->Bind();
+			// binding one shader is enough
+			d.GetComponent<VertexShaderComponent>().Shader->Bind();
 			//d.GetComponent<PixelShaderComponent>().Shader->Bind();
 			//d.GetComponent<InputLayoutComponent>().Layout->Bind();
 			//d.GetComponent<TopologyComponent>().PrimitiveTopology->Bind();

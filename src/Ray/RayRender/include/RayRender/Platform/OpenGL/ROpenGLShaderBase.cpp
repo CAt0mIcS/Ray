@@ -28,6 +28,11 @@ namespace At0::Ray
 		}
 	}
 
+	void OpenGLShaderBase::BindProgram()
+	{
+		glUseProgram(m_ShaderProgram);
+	}
+
 	void OpenGLShaderBase::OnShaderCompilationFailed(int success)
 	{
 		if (!success)
