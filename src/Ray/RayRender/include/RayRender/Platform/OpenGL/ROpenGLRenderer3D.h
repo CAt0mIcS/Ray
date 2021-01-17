@@ -18,6 +18,8 @@ namespace At0::Ray
 		virtual void ClearBuffer(float red, float green, float blue) override;
 		virtual void EndDraw() override;
 
+		virtual void* GetNativeWindow() const { return (void*)m_hWnd; }
+
 	private:
 		GLFWwindow* m_hWnd;
 

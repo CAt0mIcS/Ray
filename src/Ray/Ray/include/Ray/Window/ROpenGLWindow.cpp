@@ -69,19 +69,6 @@ namespace At0::Ray
 		// Context initialization
 		glfwMakeContextCurrent(m_hWnd);
 
-		//// Initialize Glad
-		//if (!s_GLFWInitialized)
-		//{
-		//	s_GLFWInitialized = true;
-
-		//	int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		//	RAY_ASSERT(status, "Failed to initialize Glad!");
-
-		//	Log::Info("[OpenGLWindow] Successfully initialized Glad");
-		//	Log::Info("[OpenGLWindow] OpenGL Info:"
-		//		"\n\tVendor:\t{0}\n\tRenderer: {1}\n\tVersion:{2}", glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION));
-		//}
-
 		SetUpEventCallbacks();
 	}
 
@@ -143,7 +130,7 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 		glfwShowWindow(m_hWnd);
-	}
+}
 
 	void OpenGLWindow::Hide() const
 	{

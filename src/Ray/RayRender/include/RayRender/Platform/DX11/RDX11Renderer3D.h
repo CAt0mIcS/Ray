@@ -30,6 +30,7 @@ namespace At0::Ray
 		/// </summary>
 		void SetSyncInterval(uint32_t interval);
 
+		virtual void* GetNativeWindow() const { return (void*)m_hWnd; }
 	private:
 		HWND m_hWnd;
 		uint32_t m_SyncInterval;

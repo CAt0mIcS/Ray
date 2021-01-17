@@ -18,6 +18,8 @@ namespace At0::Ray
 		virtual void ClearBuffer(float red, float green, float blue) = 0;
 		virtual void EndDraw() = 0;
 
+		virtual void* GetNativeWindow() const = 0;
+
 	protected:
 		Renderer3D() = default;
 	};
