@@ -12,6 +12,8 @@ namespace At0::Ray
 
 		virtual void Bind() override;
 
+		int Get() const;
+
 	private:
 		Type m_Type;
 	};

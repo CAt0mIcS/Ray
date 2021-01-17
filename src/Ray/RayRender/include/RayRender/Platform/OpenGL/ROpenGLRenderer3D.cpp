@@ -8,6 +8,7 @@
 #include "../../RPixelShader.h"
 #include "../../RInputLayout.h"
 #include "../../RTopology.h"
+#include "../../Platform/OpenGL/ROpenGLTopology.h"
 
 #include <RayDebug/RAssert.h>
 #include <RayUtil/RException.h>
@@ -91,9 +92,9 @@ namespace At0::Ray
 			//d.GetComponent<VertexShaderComponent>().Shader->Bind();
 			//d.GetComponent<PixelShaderComponent>().Shader->Bind();
 			//d.GetComponent<InputLayoutComponent>().Layout->Bind();
-			//d.GetComponent<TopologyComponent>().PrimitiveTopology->Bind();
+			OpenGLTopology* pTopology = (OpenGLTopology*)d.GetComponent<TopologyComponent>().PrimitiveTopology.get();
 
-			glDrawElements(GL_TRIANGLES, idxBuff->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
+			glDrawElements(pTopology->Get(), idxBuff->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
 		}
 	}
 }
