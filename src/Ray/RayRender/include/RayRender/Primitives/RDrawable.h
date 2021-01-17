@@ -42,11 +42,6 @@ namespace At0::Ray
 
 		virtual ~Drawable() = default;
 
-		uint32_t GetIndexBufferCount() const;
-
-	protected:
-		uint32_t m_IndexBufferCount = 0;
-
 	private:
 		Entity m_Entity;
 	};

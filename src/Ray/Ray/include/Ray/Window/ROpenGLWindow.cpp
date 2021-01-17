@@ -40,6 +40,7 @@ namespace At0::Ray
 		RAY_PROFILE_FUNCTION();
 
 		RAY_ASSERT(false, "[OpenGLWindow] GLFW Error ({0}): {1}", error, description);
+		Log::Critical("[OpenGLRenderer3D] GLFW Error ({0}): {1}", error, description);
 		Log::Flush();
 	}
 
@@ -428,6 +429,6 @@ namespace At0::Ray
 			}
 		);
 	}
-	}
+}
 
 

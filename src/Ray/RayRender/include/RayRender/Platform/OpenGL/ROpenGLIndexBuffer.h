@@ -12,6 +12,11 @@ namespace At0::Ray
 		OpenGLIndexBuffer(std::initializer_list<uint32_t> indices);
 
 		virtual void Bind() override;
+		virtual uint32_t GetIndicesCount() const override;
+
+	private:
+		uint32_t m_ElementBuffer;
+		uint32_t m_NumIndices;
 	};
 }
 

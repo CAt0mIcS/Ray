@@ -32,7 +32,6 @@ namespace At0::Ray
 				1, 2, 3
 			}
 		);
-		m_IndexBufferCount = 3;
 
 		// Default Vertex and Pixel Shader for quads
 		Ref<VertexShader> pVShader = VertexShader::CreateFromCompiled("TriangleVertexShader.cso");

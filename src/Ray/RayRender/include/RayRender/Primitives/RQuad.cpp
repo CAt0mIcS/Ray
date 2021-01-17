@@ -43,7 +43,6 @@ namespace At0::Ray
 				0, 1, 4,  1, 5, 4
 			}
 		);
-		m_IndexBufferCount = 36;
 
 		// Default Vertex and Pixel Shader for quads
 		Ref<VertexShader> pVShader;

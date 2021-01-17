@@ -4,6 +4,7 @@
 #include "RDX11IndexBuffer.h"
 
 #include <RayUtil/RException.h>
+#include <RayDebug/RInstrumentor.h>
 
 
 namespace At0::Ray
@@ -27,6 +28,16 @@ namespace At0::Ray
 	void DX11IndexBuffer::Bind()
 	{
 		GetContext()->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	}
+
+	uint32_t DX11IndexBuffer::GetIndicesCount() const
+	{
+		RAY_PROFILE_FUNCTION();
+		// RAY_TODO: Test if it's faster to store indexcount as member variable
+
+		D3D11_BUFFER_DESC bd{};
+		m_pIndexBuffer->GetDesc(&bd);
+		return bd.ByteWidth / sizeof(uint32_t);
 	}
 }
 

@@ -11,5 +11,6 @@ namespace At0::Ray
 		static Ref<IndexBuffer> Create(std::initializer_list<uint32_t> indices);
 
 		virtual void Bind() = 0;
+		virtual uint32_t GetIndicesCount() const = 0;
 	};
 }

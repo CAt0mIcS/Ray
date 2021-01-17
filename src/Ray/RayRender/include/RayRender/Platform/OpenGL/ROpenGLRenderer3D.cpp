@@ -27,6 +27,7 @@ namespace At0::Ray
 		RAY_PROFILE_FUNCTION();
 
 		RAY_ASSERT(false, "[OpenGLRenderer3D] GLFW Error ({0}): {1}", error, description);
+		Log::Critical("[OpenGLRenderer3D] GLFW Error ({0}): {1}", error, description);
 		Log::Flush();
 	}
 
@@ -76,13 +77,15 @@ namespace At0::Ray
 		for (Drawable& d : scene)
 		{
 			d.GetComponent<VertexBufferComponent>().Buffer->Bind();
-			d.GetComponent<IndexBufferComponent>().Buffer->Bind();
+			Ref<IndexBuffer> idxBuff = d.GetComponent<IndexBufferComponent>().Buffer;
+			idxBuff->Bind();
+
 			d.GetComponent<VertexShaderComponent>().Shader->Bind();
 			d.GetComponent<PixelShaderComponent>().Shader->Bind();
 			d.GetComponent<InputLayoutComponent>().Layout->Bind();
 			d.GetComponent<TopologyComponent>().PrimitiveTopology->Bind();
 
-
+			glDrawElements(GL_TRIANGLES, idxBuff->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
 		}
 	}
 }
