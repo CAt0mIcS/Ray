@@ -52,6 +52,10 @@ namespace At0::Ray
 			Log::Info("[OpenGLWindow] OpenGL Info:"
 				"\n\tVendor:\t{0}\n\tRenderer: {1}\n\tVersion:{2}", glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION));
 		}
+
+		int width, height;
+		glfwGetWindowSize(m_hWnd, &width, &height);
+		glViewport(0, 0, width, height);
 	}
 
 	OpenGLRenderer3D::~OpenGLRenderer3D()
@@ -85,7 +89,9 @@ namespace At0::Ray
 			d.GetComponent<InputLayoutComponent>().Layout->Bind();
 			d.GetComponent<TopologyComponent>().PrimitiveTopology->Bind();
 
-			glDrawElements(GL_TRIANGLES, idxBuff->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
+			//glDrawElements(GL_TRIANGLES, idxBuff->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
+
+			glDrawArrays(GL_TRIANGLES, 0, 3);
 		}
 	}
 }

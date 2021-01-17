@@ -68,6 +68,8 @@ set(SRC
     "include/RayRender/Platform/OpenGL/ROpenGLIndexBuffer.cpp"
     "include/RayRender/Platform/OpenGL/ROpenGLTopology.h"
     "include/RayRender/Platform/OpenGL/ROpenGLTopology.cpp"
+    "include/RayRender/Platform/OpenGL/ROpenGLShaderBase.h"
+    "include/RayRender/Platform/OpenGL/ROpenGLShaderBase.cpp"
 
     # DirectX11 Shaders
     "shaders/QuadVertexShader.hlsl"

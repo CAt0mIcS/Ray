@@ -11,6 +11,8 @@
 #include "../RVertexBuffer.h"
 #include "../RTopology.h"
 
+#include "../RRendererAPI.h"
+
 
 namespace At0::Ray
 {
@@ -19,13 +21,29 @@ namespace At0::Ray
 	{
 		constexpr float side = 1.0f / 2.0f;
 		// Vertices
-		Ref<VertexBuffer> pVertexBuffer = VertexBuffer::Create(
-			{
-				{  0.0f,  0.5f, 1.0f },
-				{  0.5f, -0.5f, 1.0f },
-				{ -0.5f, -0.5f, 1.0f },
-			}
-		);
+		// RAY_TODO: Different vertex layout depending on opengl or directx
+		Ref<VertexBuffer> pVertexBuffer;
+		if (RendererAPI::GetAPI() == RendererAPI::D3D11)
+		{
+			pVertexBuffer = VertexBuffer::Create(
+				{
+					{  0.0f,  0.5f, 1.0f },
+					{  0.5f, -0.5f, 1.0f },
+					{ -0.5f, -0.5f, 1.0f },
+				}
+			);
+		}
+		else if (RendererAPI::GetAPI() == RendererAPI::OpenGL)
+		{
+			pVertexBuffer = VertexBuffer::Create(
+				{
+					{ -0.5f, -0.5f, 0.0f },
+					{  0.5f, -0.5f, 0.0f },
+					{  0.0f,  0.5f, 0.0f }
+				}
+			);
+		}
+
 
 		Ref<IndexBuffer> pIdxBuffer = IndexBuffer::Create(
 			{

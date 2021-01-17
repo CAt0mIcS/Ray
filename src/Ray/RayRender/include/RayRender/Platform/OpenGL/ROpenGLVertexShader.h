@@ -1,11 +1,12 @@
 #pragma once
 
 #include "../../RVertexShader.h"
+#include "ROpenGLShaderBase.h"
 
 
 namespace At0::Ray
 {
-	class RR_API OpenGLVertexShader : public VertexShader
+	class RR_API OpenGLVertexShader : public VertexShader, OpenGLShaderBase
 	{
 		friend class OpenGLInputLayout;
 	public:
@@ -14,8 +15,11 @@ namespace At0::Ray
 		virtual void Bind() override;
 
 	private:
-		// Shader buffer access functions for the InputLayout
-		void* GetBufferPointer() const;
-		size_t GetBufferSize() const;
+		//// Shader buffer access functions for the InputLayout
+		//void* GetBufferPointer() const;
+		//size_t GetBufferSize() const;
+
+	private:
+		uint32_t m_VertexShader;
 	};
 }

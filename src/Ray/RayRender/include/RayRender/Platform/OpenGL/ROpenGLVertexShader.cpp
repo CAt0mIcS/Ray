@@ -2,15 +2,32 @@
 
 #include "ROpenGLVertexShader.h"
 
-#include <RayUtil/RException.h>
-#include <RayUtil/RTypeConvert.h>
+#include <RayDebug/RLogger.h>
+#include <RayDebug/RAssert.h>
+
+#include <glad/glad.h>
 
 
 namespace At0::Ray
 {
 	OpenGLVertexShader::OpenGLVertexShader(std::string_view filepath, bool compiled)
 	{
+		if (compiled)
+		{
 
+		}
+		else
+		{
+			m_VertexShader = glCreateShader(GL_VERTEX_SHADER);
+			const char* shaderSource = filepath.data();
+			glShaderSource(m_VertexShader, 1, &shaderSource, NULL);
+			glCompileShader(m_VertexShader);
+
+			int success;
+			glGetShaderiv(m_VertexShader, GL_COMPILE_STATUS, &success);
+
+			OnShaderCompilationFailed(success);
+		}
 	}
 
 	void OpenGLVertexShader::Bind()
@@ -18,15 +35,15 @@ namespace At0::Ray
 
 	}
 
-	void* OpenGLVertexShader::GetBufferPointer() const
-	{
-		return nullptr;
-}
+	//void* OpenGLVertexShader::GetBufferPointer() const
+	//{
+	//	return nullptr;
+	//}
 
-	size_t OpenGLVertexShader::GetBufferSize() const
-	{
-		return 0;
-	}
+	//size_t OpenGLVertexShader::GetBufferSize() const
+	//{
+	//	return 0;
+	//}
 }
 
 
