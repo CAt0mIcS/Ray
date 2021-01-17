@@ -152,6 +152,7 @@ namespace At0::Ray
 
 	void DX11Renderer3D::OnEvent(Widget& receiver, WindowResizeEvent& e)
 	{
+		Log::Warn("[DX11Renderer3D::OnEvent(WindowResizeEvent)] Missing implementation.");
 	}
 }
 
