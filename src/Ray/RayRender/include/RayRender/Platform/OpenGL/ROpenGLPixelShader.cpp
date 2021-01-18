@@ -21,12 +21,12 @@ namespace At0::Ray
 			std::string source = ReadShaderSource(filepath);
 			const char* shaderSource = source.c_str();
 
-			m_PixelShader = glCreateShader(GL_FRAGMENT_SHADER);
-			glShaderSource(m_PixelShader, 1, &shaderSource, nullptr);
-			glCompileShader(m_PixelShader);
+			m_Shader = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(m_Shader, 1, &shaderSource, nullptr);
+			glCompileShader(m_Shader);
 
 			int success;
-			glGetShaderiv(m_PixelShader, GL_COMPILE_STATUS, &success);
+			glGetShaderiv(m_Shader, GL_COMPILE_STATUS, &success);
 
 			OnShaderCompilationFailed(success);
 			CreateProgram();

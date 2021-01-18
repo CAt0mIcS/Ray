@@ -18,7 +18,7 @@ namespace At0::Ray
 		if (!success)
 		{
 			char infoLog[512];
-			glGetShaderInfoLog(m_VertexShader, 512, NULL, infoLog);
+			glGetShaderInfoLog(m_Shader, 512, NULL, infoLog);
 			Log::Critical("[OpenGLVertexShader] Vertex Shader Compilation failed: {0}", infoLog);
 			RAY_ASSERT(false, "[OpenGLVertexShader] Vertex Shader Compilation failed: {0}", infoLog);
 		}
@@ -51,20 +51,9 @@ namespace At0::Ray
 
 	void OpenGLShaderBase::CreateProgram()
 	{
-		//if (m_VertexShader == (uint32_t)-1 || m_PixelShader == (uint32_t)-1)
-		//	return;
-
 		m_ShaderProgram = glCreateProgram();
 
-		if (m_VertexShader != (uint32_t)-1)
-		{
-			glAttachShader(m_ShaderProgram, m_VertexShader);
-		}
-		else
-		{
-			glAttachShader(m_ShaderProgram, m_PixelShader);
-		}
-
+		glAttachShader(m_ShaderProgram, m_Shader);
 		glLinkProgram(m_ShaderProgram);
 
 		int success;
@@ -73,13 +62,6 @@ namespace At0::Ray
 
 		glUseProgram(m_ShaderProgram);
 
-		if (m_VertexShader != (uint32_t)-1)
-		{
-			glDeleteShader(m_VertexShader);
-		}
-		else
-		{
-			glDeleteShader(m_PixelShader);
-		}
+		glDeleteShader(m_Shader);
 	}
 }

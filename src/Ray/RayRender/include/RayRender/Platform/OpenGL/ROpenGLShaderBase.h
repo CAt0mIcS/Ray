@@ -23,8 +23,7 @@ namespace At0::Ray
 		void OnShaderLinkageFailed(int success);
 
 	protected:
-		uint32_t m_VertexShader = (uint32_t)-1;
-		uint32_t m_PixelShader = (uint32_t)-1;
+		uint32_t m_Shader = (uint32_t)-1;
 
 	private:
 		uint32_t m_ShaderProgram;
