@@ -73,16 +73,17 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		for (Drawable& d : scene)
+		for (Scope<Drawable>& d : scene)
 		{
-			d.GetComponent<VertexBufferComponent>().Buffer->Bind();
-			Ref<IndexBuffer> idxBuff = d.GetComponent<IndexBufferComponent>().Buffer;
+			d->GetVertexBuffer()->Bind();
+
+			Ref<IndexBuffer> idxBuff = d->GetIndexBuffer();
 			idxBuff->Bind();
 
-			d.GetComponent<VertexShaderComponent>().Shader->Bind();
-			d.GetComponent<PixelShaderComponent>().Shader->Bind();
-			//d.GetComponent<InputLayoutComponent>().Layout->Bind();
-			OpenGLTopology* pTopology = (OpenGLTopology*)d.GetComponent<TopologyComponent>().PrimitiveTopology.get();
+			d->GetVertexShader()->Bind();
+			d->GetPixelShader()->Bind();
+
+			OpenGLTopology* pTopology = (OpenGLTopology*)d->GetTopology().get();
 
 			glDrawElements(pTopology->Get(), idxBuff->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
 		}

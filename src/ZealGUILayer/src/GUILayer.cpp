@@ -117,11 +117,11 @@ namespace At0::Layers
 			for (uint64_t i = 0; i < AmountOfCubes; ++i)
 			{
 				// Create quad with name Quad[i]
-				Ray::Triangle quad(m_CubeScene.CreateEntity("Quad" + std::to_string(i)));
+				Ray::Scope<Ray::Quad> quad = Ray::MakeScope<Ray::Quad>(m_CubeScene.CreateEntity("Quad" + std::to_string(i)));
 
 				// Set transformation (RAY_TODO: TransformConstantBuffers)
 				// This step is optional
-				Ray::TransformComponent& tform = quad.GetComponent<Ray::TransformComponent>();
+				Ray::TransformComponent& tform = quad->GetComponent<Ray::TransformComponent>();
 				tform.Rotation = { 54.4f, 32.34f, 3.54f };
 				tform.Translation.z = 1.0f;
 
@@ -140,7 +140,7 @@ namespace At0::Layers
 				//quad.AddComponent<TextureComponent>("path");
 
 				// Add it to the scene for rendering later on
-				m_CubeScene.Submit(quad);
+				m_CubeScene.Submit(std::move(quad));
 			}
 		}
 #endif

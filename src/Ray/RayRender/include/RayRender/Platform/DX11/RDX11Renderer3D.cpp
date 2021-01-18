@@ -130,16 +130,16 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		for (Drawable& d : scene)
+		for (Scope<Drawable>& d : scene)
 		{
-			d.GetComponent<VertexBufferComponent>().Buffer->Bind();
-			Ref<IndexBuffer> idxBuff = d.GetComponent<IndexBufferComponent>().Buffer;
+			d->GetVertexBuffer()->Bind();
+			Ref<IndexBuffer> idxBuff = d->GetIndexBuffer();
 			idxBuff->Bind();
 
-			d.GetComponent<VertexShaderComponent>().Shader->Bind();
-			d.GetComponent<PixelShaderComponent>().Shader->Bind();
-			d.GetComponent<InputLayoutComponent>().Layout->Bind();
-			d.GetComponent<TopologyComponent>().PrimitiveTopology->Bind();
+			d->GetVertexShader()->Bind();
+			d->GetPixelShader()->Bind();
+			d->GetInputLayout()->Bind();
+			d->GetTopology()->Bind();
 
 			GetContext()->DrawIndexed(idxBuff->GetIndicesCount(), 0, 0);
 		}

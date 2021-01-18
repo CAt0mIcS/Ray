@@ -12,7 +12,7 @@ namespace At0::Ray
 {
 	class Scene;
 
-	class RR_API Triangle : public Drawable
+	class RR_API Triangle : public DrawableBase<Triangle>
 	{
 	public:
 		/// <summary>

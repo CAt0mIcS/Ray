@@ -21,9 +21,9 @@ namespace At0::Ray
 		);
 	}
 
-	void Scene::Submit(const Drawable& drawable)
+	void Scene::Submit(Scope<Drawable>&& drawable)
 	{
-		m_Drawables.emplace_back(drawable);
+		m_Drawables.push_back(std::move(drawable));
 	}
 
 	Entity Scene::CreateEntity(std::string_view tag)

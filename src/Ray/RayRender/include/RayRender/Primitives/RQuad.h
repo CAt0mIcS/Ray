@@ -12,7 +12,7 @@ namespace At0::Ray
 {
 	class Scene;
 
-	class RR_API Quad : public Drawable
+	class RR_API Quad : public DrawableBase<Quad>
 	{
 	public:
 		/// <summary>
@@ -20,8 +20,5 @@ namespace At0::Ray
 		/// to the Drawable Quad
 		/// </summary>
 		Quad(Entity entity);
-
-	private:
-
 	};
 }

@@ -16,121 +16,96 @@
 namespace At0::Ray
 {
 	Quad::Quad(Entity entity)
-		: Drawable(entity)
+		: DrawableBase(entity)
 	{
-		constexpr float side = 1.0f / 2.0f;
-		// Vertices
-
-		Ref<VertexBuffer> pVertexBuffer;
-		Ref<IndexBuffer> pIdxBuffer;
-		if (RendererAPI::GetAPI() == RendererAPI::D3D11)
+		// Assume that the other resources are not allocated if the VBuff is not
+		if (!s_VertexBuffer)
 		{
-			pVertexBuffer = VertexBuffer::Create(
-				{
-					{ -side, -side, -side },
-					{  side, -side, -side },
-					{ -side,  side, -side },
-					{  side,  side, -side },
-					{ -side, -side,  side },
-					{  side, -side,  side },
-					{ -side,  side,  side },
-					{  side,  side,  side },
-				}
+			RAY_MEXPECTS(!s_VertexShader && !s_PixelShader && !s_InputLayout && !s_IndexBuffer && !s_Topology, "[Quad] Only the VertexBuffer was nullptr.");
+
+			constexpr float side = 1.0f / 2.0f;
+			// Vertices
+			if (RendererAPI::GetAPI() == RendererAPI::D3D11)
+			{
+				s_VertexBuffer = VertexBuffer::Create(
+					{
+						{ -side, -side, -side },
+						{  side, -side, -side },
+						{ -side,  side, -side },
+						{  side,  side, -side },
+						{ -side, -side,  side },
+						{  side, -side,  side },
+						{ -side,  side,  side },
+						{  side,  side,  side },
+					}
+				);
+
+				s_IndexBuffer = IndexBuffer::Create(
+					{
+						0, 2, 1,  2, 3, 1,
+						1, 3, 5,  3, 7, 5,
+						2, 6, 3,  3, 6, 7,
+						4, 5, 7,  4, 7, 6,
+						0, 4, 2,  2, 4, 6,
+						0, 1, 4,  1, 5, 4
+					}
+				);
+			}
+			else if (RendererAPI::GetAPI() == RendererAPI::OpenGL)
+			{
+				s_VertexBuffer = VertexBuffer::Create(
+					{
+						{ -side, -side,  side },
+						{  side, -side,  side },
+						{  side,  side,  side },
+						{ -side,  side,  side },
+						{ -side, -side, -side },
+						{  side, -side, -side },
+						{  side,  side, -side },
+						{ -side,  side, -side }
+					}
+				);
+
+				s_IndexBuffer = IndexBuffer::Create(
+					{
+						0, 1, 2,  2, 3, 0,
+						1, 5, 6,  6, 2, 1,
+						7, 6, 5,  5, 4, 7,
+						4, 0, 3,  3, 7, 4,
+						4, 5, 1,  1, 0, 4,
+						3, 2, 6,  6, 7, 3
+					}
+				);
+			}
+
+			// Default Vertex and Pixel Shader for quads
+			switch (RendererAPI::GetAPI())
+			{
+			case RendererAPI::D3D11:
+			{
+				s_VertexShader = VertexShader::CreateFromCompiled("QuadVertexShader.cso");
+				s_PixelShader = PixelShader::CreateFromCompiled("QuadPixelShader.cso");
+				break;
+			}
+			case RendererAPI::OpenGL:
+			{
+				s_VertexShader = VertexShader::CreateFromSource("QuadVertexShader.glsl");
+				s_PixelShader = PixelShader::CreateFromSource("QuadPixelShader.glsl");
+				break;
+			}
+			}
+
+			// Matching input layout
+			s_InputLayout = InputLayout::Create(
+				{ { "Position", ShaderDataType::Float3 } },
+				s_VertexShader
 			);
 
-			pIdxBuffer = IndexBuffer::Create(
-				{
-					0, 2, 1,  2, 3, 1,
-					1, 3, 5,  3, 7, 5,
-					2, 6, 3,  3, 6, 7,
-					4, 5, 7,  4, 7, 6,
-					0, 4, 2,  2, 4, 6,
-					0, 1, 4,  1, 5, 4
-				}
-			);
-		}
-		else if (RendererAPI::GetAPI() == RendererAPI::OpenGL)
-		{
-			pVertexBuffer = VertexBuffer::Create(
-				{
-					{ -side, -side,  side },
-					{  side, -side,  side },
-					{  side,  side,  side },
-					{ -side,  side,  side },
-					{ -side, -side, -side },
-					{  side, -side, -side },
-					{  side,  side, -side },
-					{ -side,  side, -side }
-				}
-			);
-
-			pIdxBuffer = IndexBuffer::Create(
-				{
-					// front
-					0, 1, 2,
-					2, 3, 0,
-					// right
-					1, 5, 6,
-					6, 2, 1,
-					// back
-					7, 6, 5,
-					5, 4, 7,
-					// left
-					4, 0, 3,
-					3, 7, 4,
-					// bottom
-					4, 5, 1,
-					1, 0, 4,
-					// top
-					3, 2, 6,
-					6, 7, 3
-				}
-			);
+			// topology
+			s_Topology = Topology::Create(Topology::TriangleList);
 		}
 
-		// Default Vertex and Pixel Shader for quads
-		Ref<VertexShader> pVShader;
-		Ref<PixelShader> pPShader;
-		switch (RendererAPI::GetAPI())
-		{
-		case RendererAPI::D3D11:
-		{
-			pVShader = VertexShader::CreateFromCompiled("QuadVertexShader.cso");
-			pPShader = PixelShader::CreateFromCompiled("QuadPixelShader.cso");
-			break;
-		}
-		case RendererAPI::OpenGL:
-		{
-			pVShader = VertexShader::CreateFromSource("QuadVertexShader.glsl");
-			pPShader = PixelShader::CreateFromSource("QuadPixelShader.glsl");
-			break;
-		}
-		}
-
-		// Matching input layout
-		Ref<InputLayout> pInputLayout = InputLayout::Create(
-			{ { "Position", ShaderDataType::Float3 } },
-			pVShader
-		);
-
-		// topology
-		Ref<Topology> pTopology = Topology::Create(Topology::TriangleList);
-
-		// bind everything
-		pVertexBuffer->Bind();
-		pIdxBuffer->Bind();
-		pVShader->Bind();
-		if (RendererAPI::GetAPI() == RendererAPI::D3D11)
-			pPShader->Bind();
-		pInputLayout->Bind();
-		pTopology->Bind();
-
-		AddComponent<VertexBufferComponent>(pVertexBuffer);
-		AddComponent<IndexBufferComponent>(pIdxBuffer);
-		AddComponent<VertexShaderComponent>(pVShader);
-		AddComponent<PixelShaderComponent>(pPShader);
-		AddComponent<InputLayoutComponent>(pInputLayout);
-		AddComponent<TopologyComponent>(pTopology);
+		// RAY_TODO: ConstantBuffers/uniforms as non-static data
 	}
 }
 
