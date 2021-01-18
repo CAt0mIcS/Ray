@@ -50,6 +50,7 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
+		// GLFW should only be initialized once
 		if (!s_GLFWInitialized)
 		{
 			s_GLFWInitialized = true;
@@ -59,13 +60,17 @@ namespace At0::Ray
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}
 
+		// Create the window and move it to the specified position
 		m_hWnd = glfwCreateWindow((int)size.x, (int)size.y, "", nullptr, nullptr);
 		glfwSetWindowUserPointer(m_hWnd, this);
-
 		glfwSetWindowPos(m_hWnd, (int)pos.x, (int)pos.y);
 		m_IsOpen = true;
 
+		// Create the renderer, also sets the context
 		m_Renderer3D = Renderer3D::Create((void*)m_hWnd, *this);
+
+		// Disable VSync by default
+		SetVSync(false);
 
 		SetUpEventCallbacks();
 	}
@@ -98,8 +103,7 @@ namespace At0::Ray
 		}
 		else
 		{
-			//error
-			Log::Warn("[OpenGLWindow] Failed to retrieve the Window Title");
+			RAY_THROW_RUNTIME("[OpenGLWindow] Failed to retrieve the Window Title");
 		}
 
 		return buff;
@@ -110,8 +114,7 @@ namespace At0::Ray
 		XTextProperty prop;
 		if (XGetWMName(glfwGetX11Display(), hWnd, &prop) == 0)
 		{
-			// error
-			Log::Warn("[OpenGLWindow] Failed to retrieve the Window Title");
+			RAY_THROW_RUNTIME("[OpenGLWindow] Failed to retrieve the Window Title");
 		}
 		return (char*)prop.value;
 #endif

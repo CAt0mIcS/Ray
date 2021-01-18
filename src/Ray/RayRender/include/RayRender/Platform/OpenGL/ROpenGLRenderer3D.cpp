@@ -23,16 +23,6 @@ namespace At0::Ray
 {
 	bool OpenGLRenderer3D::s_GladInitialized = false;
 
-	static void GLFWErrorCallback(int error, const char* description)
-	{
-		RAY_PROFILE_FUNCTION();
-
-		RAY_ASSERT(false, "[OpenGLRenderer3D] GLFW Error ({0}): {1}", error, description);
-		Log::Critical("[OpenGLRenderer3D] GLFW Error ({0}): {1}", error, description);
-		Log::Flush();
-	}
-
-
 	OpenGLRenderer3D::OpenGLRenderer3D(GLFWwindow* hWnd, EventDispatcher<WindowResizeEvent>& resizeDispatcher)
 		: m_hWnd(hWnd),
 		EventListener<WindowResizeEvent>(resizeDispatcher)
