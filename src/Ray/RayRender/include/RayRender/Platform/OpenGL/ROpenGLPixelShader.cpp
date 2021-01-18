@@ -19,14 +19,15 @@ namespace At0::Ray
 		else
 		{
 			std::string source = ReadShaderSource(filepath);
-			const char* pixelShaderSource = source.c_str();
+			const char* shaderSource = source.c_str();
 
 			m_PixelShader = glCreateShader(GL_FRAGMENT_SHADER);
-			glShaderSource(m_PixelShader, 1, &pixelShaderSource, nullptr);
+			glShaderSource(m_PixelShader, 1, &shaderSource, nullptr);
 			glCompileShader(m_PixelShader);
 
 			int success;
 			glGetShaderiv(m_PixelShader, GL_COMPILE_STATUS, &success);
+
 			OnShaderCompilationFailed(success);
 			CreateProgram();
 		}
@@ -34,7 +35,7 @@ namespace At0::Ray
 
 	void OpenGLPixelShader::Bind()
 	{
-
+		BindProgram();
 	}
 }
 

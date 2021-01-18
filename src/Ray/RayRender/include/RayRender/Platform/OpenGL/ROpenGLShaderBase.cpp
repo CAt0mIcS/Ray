@@ -51,12 +51,19 @@ namespace At0::Ray
 
 	void OpenGLShaderBase::CreateProgram()
 	{
-		if (m_VertexShader == (uint32_t)-1 && m_PixelShader == (uint32_t)-1)
-			return;
+		//if (m_VertexShader == (uint32_t)-1 || m_PixelShader == (uint32_t)-1)
+		//	return;
 
 		m_ShaderProgram = glCreateProgram();
-		glAttachShader(m_ShaderProgram, m_VertexShader);
-		glAttachShader(m_ShaderProgram, m_PixelShader);
+
+		if (m_VertexShader != (uint32_t)-1)
+		{
+			glAttachShader(m_ShaderProgram, m_VertexShader);
+		}
+		else
+		{
+			glAttachShader(m_ShaderProgram, m_PixelShader);
+		}
 
 		glLinkProgram(m_ShaderProgram);
 
@@ -66,7 +73,13 @@ namespace At0::Ray
 
 		glUseProgram(m_ShaderProgram);
 
-		glDeleteShader(m_VertexShader);
-		glDeleteShader(m_PixelShader);
+		if (m_VertexShader != (uint32_t)-1)
+		{
+			glDeleteShader(m_VertexShader);
+		}
+		else
+		{
+			glDeleteShader(m_PixelShader);
+		}
 	}
 }
