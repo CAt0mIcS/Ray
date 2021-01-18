@@ -2,6 +2,8 @@
 
 #include "../../RRBase.h"
 
+#include <string_view>
+
 
 namespace At0::Ray
 {
@@ -12,20 +14,19 @@ namespace At0::Ray
 		virtual ~OpenGLShaderBase() = default;
 
 	protected:
-		void AttachVertexShader(uint32_t shaderID);
-		void AttachPixelShader(uint32_t shaderID);
 		void BindProgram();
-
 		void OnShaderCompilationFailed(int success);
+		void CreateProgram();
+		std::string ReadShaderSource(std::string_view filepath);
 
 	private:
 		void OnShaderLinkageFailed(int success);
-		void CreateProgram();
 
-	private:
+	protected:
 		uint32_t m_VertexShader = (uint32_t)-1;
 		uint32_t m_PixelShader = (uint32_t)-1;
 
+	private:
 		uint32_t m_ShaderProgram;
 	};
 }

@@ -12,8 +12,5 @@ namespace At0::Ray
 		OpenGLPixelShader(std::string_view filepath, bool compiled);
 
 		virtual void Bind() override;
-
-	private:
-		uint32_t m_PixelShader;
 	};
 }

@@ -50,8 +50,8 @@ namespace At0::Ray
 			);
 
 			// Default Vertex and Pixel Shader for quads
-			//pVShader = VertexShader::CreateFromSource("TriangleVertexShader.glsl");
-			//pPShader = PixelShader::CreateFromSource("TrianglePixelShader.glsl");
+			pVShader = VertexShader::CreateFromSource("TriangleVertexShader.glsl");
+			pPShader = PixelShader::CreateFromSource("TrianglePixelShader.glsl");
 		}
 
 		Ref<IndexBuffer> pIdxBuffer = IndexBuffer::Create(
@@ -72,11 +72,9 @@ namespace At0::Ray
 		// bind everything
 		pVertexBuffer->Bind();
 		pIdxBuffer->Bind();
+		pVShader->Bind();
 		if (RendererAPI::GetAPI() == RendererAPI::D3D11)
-		{
-			pVShader->Bind();
 			pPShader->Bind();
-		}
 		pInputLayout->Bind();
 		pTopology->Bind();
 

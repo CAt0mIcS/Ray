@@ -101,8 +101,8 @@ namespace At0::Ray
 		}
 		case RendererAPI::OpenGL:
 		{
-			//pVShader = VertexShader::CreateFromSource("QuadVertexShader.glsl");
-			//pPShader = PixelShader::CreateFromSource("QuadPixelShader.glsl");
+			pVShader = VertexShader::CreateFromSource("QuadVertexShader.glsl");
+			pPShader = PixelShader::CreateFromSource("QuadPixelShader.glsl");
 			break;
 		}
 		}
@@ -119,11 +119,9 @@ namespace At0::Ray
 		// bind everything
 		pVertexBuffer->Bind();
 		pIdxBuffer->Bind();
+		pVShader->Bind();
 		if (RendererAPI::GetAPI() == RendererAPI::D3D11)
-		{
-			pVShader->Bind();
 			pPShader->Bind();
-		}
 		pInputLayout->Bind();
 		pTopology->Bind();
 

@@ -8,26 +8,6 @@
 
 namespace At0::Ray
 {
-	void OpenGLShaderBase::AttachVertexShader(uint32_t shaderID)
-	{
-		m_VertexShader = shaderID;
-
-		if (m_PixelShader != (uint32_t)-1)
-		{
-			CreateProgram();
-		}
-	}
-
-	void OpenGLShaderBase::AttachPixelShader(uint32_t shaderID)
-	{
-		m_PixelShader = shaderID;
-
-		if (m_VertexShader != (uint32_t)-1)
-		{
-			CreateProgram();
-		}
-	}
-
 	void OpenGLShaderBase::BindProgram()
 	{
 		glUseProgram(m_ShaderProgram);
@@ -44,6 +24,20 @@ namespace At0::Ray
 		}
 	}
 
+	std::string OpenGLShaderBase::ReadShaderSource(std::string_view filepath)
+	{
+		std::fstream reader(filepath.data());
+
+		std::string line;
+		std::string source;
+		while (std::getline(reader, line))
+		{
+			source += line;
+			source += '\n';
+		}
+		return source;
+	}
+
 	void OpenGLShaderBase::OnShaderLinkageFailed(int success)
 	{
 		if (!success)
@@ -57,6 +51,9 @@ namespace At0::Ray
 
 	void OpenGLShaderBase::CreateProgram()
 	{
+		if (m_VertexShader == (uint32_t)-1 && m_PixelShader == (uint32_t)-1)
+			return;
+
 		m_ShaderProgram = glCreateProgram();
 		glAttachShader(m_ShaderProgram, m_VertexShader);
 		glAttachShader(m_ShaderProgram, m_PixelShader);

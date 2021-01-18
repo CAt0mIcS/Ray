@@ -117,7 +117,7 @@ namespace At0::Layers
 			for (uint64_t i = 0; i < AmountOfCubes; ++i)
 			{
 				// Create quad with name Quad[i]
-				Ray::Quad quad(m_CubeScene.CreateEntity("Quad" + std::to_string(i)));
+				Ray::Triangle quad(m_CubeScene.CreateEntity("Quad" + std::to_string(i)));
 
 				// Set transformation (RAY_TODO: TransformConstantBuffers)
 				// This step is optional

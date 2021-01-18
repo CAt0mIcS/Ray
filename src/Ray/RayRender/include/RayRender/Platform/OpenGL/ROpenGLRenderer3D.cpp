@@ -90,7 +90,7 @@ namespace At0::Ray
 			idxBuff->Bind();
 
 			// binding one shader is enough
-			//d.GetComponent<VertexShaderComponent>().Shader->Bind();
+			d.GetComponent<VertexShaderComponent>().Shader->Bind();
 			//d.GetComponent<PixelShaderComponent>().Shader->Bind();
 			//d.GetComponent<InputLayoutComponent>().Layout->Bind();
 			OpenGLTopology* pTopology = (OpenGLTopology*)d.GetComponent<TopologyComponent>().PrimitiveTopology.get();
