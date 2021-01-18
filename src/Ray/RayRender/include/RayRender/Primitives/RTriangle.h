@@ -20,8 +20,5 @@ namespace At0::Ray
 		/// to the Drawable Quad
 		/// </summary>
 		Triangle(Entity entity);
-
-	private:
-
 	};
 }

@@ -19,71 +19,67 @@ namespace At0::Ray
 	Triangle::Triangle(Entity entity)
 		: DrawableBase(entity)
 	{
-		//constexpr float side = 1.0f / 2.0f;
-		//// Vertices
-		//// RAY_TODO: Different vertex layout depending on opengl or directx
-		//Ref<VertexBuffer> pVertexBuffer;
-		//Ref<VertexShader> pVShader;
-		//Ref<PixelShader> pPShader;
-		//if (RendererAPI::GetAPI() == RendererAPI::D3D11)
-		//{
-		//	pVertexBuffer = VertexBuffer::Create(
-		//		{
-		//			{  0.0f,  0.5f, 0.5f },
-		//			{  0.5f, -0.5f, 0.5f },
-		//			{ -0.5f, -0.5f, 0.5f },
-		//		}
-		//	);
+		// RAY_TODO: Different vertex layout depending on opengl or directx
+		// Assume that the other resources are not allocated if the VBuff is not
+		if (!s_VertexBuffer)
+		{
+			RAY_MEXPECTS(!s_VertexShader && !s_PixelShader && !s_InputLayout && !s_IndexBuffer && !s_Topology, "[Quad] Only the VertexBuffer was nullptr.");
 
-		//	// Default Vertex and Pixel Shader for quads
-		//	pVShader = VertexShader::CreateFromCompiled("TriangleVertexShader.cso");
-		//	pPShader = PixelShader::CreateFromCompiled("TrianglePixelShader.cso");
-		//}
-		//else if (RendererAPI::GetAPI() == RendererAPI::OpenGL)
-		//{
-		//	pVertexBuffer = VertexBuffer::Create(
-		//		{
-		//			{ -0.5f, -0.5f, 0.5f },
-		//			{  0.0f,  0.5f, 0.5f },
-		//			{  0.5f, -0.5f, 0.5f }
-		//		}
-		//	);
+			constexpr float side = 1.0f / 2.0f;
+			// Vertices
+			if (RendererAPI::GetAPI() == RendererAPI::D3D11)
+			{
+				s_VertexBuffer = VertexBuffer::Create(
+					{
+						{  0.0f,  0.5f, 0.5f },
+						{  0.5f, -0.5f, 0.5f },
+						{ -0.5f, -0.5f, 0.5f },
+					}
+				);
+			}
+			else if (RendererAPI::GetAPI() == RendererAPI::OpenGL)
+			{
+				s_VertexBuffer = VertexBuffer::Create(
+					{
+						{ -0.5f, -0.5f, 0.5f },
+						{  0.0f,  0.5f, 0.5f },
+						{  0.5f, -0.5f, 0.5f }
+					}
+				);
+			}
 
-		//	// Default Vertex and Pixel Shader for quads
-		//	pVShader = VertexShader::CreateFromSource("TriangleVertexShader.glsl");
-		//	pPShader = PixelShader::CreateFromSource("TrianglePixelShader.glsl");
-		//}
+			s_IndexBuffer = IndexBuffer::Create(
+				{
+					0, 1, 2
+				}
+			);
 
-		//Ref<IndexBuffer> pIdxBuffer = IndexBuffer::Create(
-		//	{
-		//		0, 1, 2
-		//	}
-		//);
+			// Default Vertex and Pixel Shader for quads
+			switch (RendererAPI::GetAPI())
+			{
+			case RendererAPI::D3D11:
+			{
+				s_VertexShader = VertexShader::CreateFromCompiled("TriangleVertexShader.cso");
+				s_PixelShader = PixelShader::CreateFromCompiled("TrianglePixelShader.cso");
+				break;
+			}
+			case RendererAPI::OpenGL:
+			{
+				s_VertexShader = VertexShader::CreateFromSource("TriangleVertexShader.glsl");
+				s_PixelShader = PixelShader::CreateFromSource("TrianglePixelShader.glsl");
+				break;
+			}
+			}
 
-		//// Matching input layout
-		//Ref<InputLayout> pInputLayout = InputLayout::Create(
-		//	{ { "Position", ShaderDataType::Float3 } },
-		//	pVShader
-		//);
+			// Matching input layout
+			s_InputLayout = InputLayout::Create(
+				{ { "Position", ShaderDataType::Float3 } },
+				s_VertexShader
+			);
 
-		//// topology
-		//Ref<Topology> pTopology = Topology::Create(Topology::TriangleList);
-
-		//// bind everything
-		//pVertexBuffer->Bind();
-		//pIdxBuffer->Bind();
-		//pVShader->Bind();
-		//if (RendererAPI::GetAPI() == RendererAPI::D3D11)
-		//	pPShader->Bind();
-		//pInputLayout->Bind();
-		//pTopology->Bind();
-
-		//AddComponent<VertexBufferComponent>(pVertexBuffer);
-		//AddComponent<IndexBufferComponent>(pIdxBuffer);
-		//AddComponent<VertexShaderComponent>(pVShader);
-		//AddComponent<PixelShaderComponent>(pPShader);
-		//AddComponent<InputLayoutComponent>(pInputLayout);
-		//AddComponent<TopologyComponent>(pTopology);
+			// topology
+			s_Topology = Topology::Create(Topology::TriangleList);
+		}
 	}
 }
 
