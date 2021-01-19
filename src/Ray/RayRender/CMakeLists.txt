@@ -36,6 +36,8 @@ set(SRC
     "include/RayRender/RIndexBuffer.cpp"
     "include/RayRender/RTopology.h"
     "include/RayRender/RTopology.cpp"
+    "include/RayRender/RConstantBuffers.h"
+    "include/RayRender/RConstantBuffers.cpp"
 
     # DirectX11 classes
     "include/RayRender/Platform/DX11/RDX11Renderer3D.h"
@@ -54,6 +56,8 @@ set(SRC
     "include/RayRender/Platform/DX11/RDX11IndexBuffer.cpp"
     "include/RayRender/Platform/DX11/RDX11Topology.h"
     "include/RayRender/Platform/DX11/RDX11Topology.cpp"
+    "include/RayRender/Platform/DX11/RDX11ConstantBuffers.h"
+    "include/RayRender/Platform/DX11/RDX11ConstantBuffers.cpp"
 
     # OpenGL classes
     "include/RayRender/Platform/OpenGL/ROpenGLRenderer3D.h"
@@ -72,6 +76,8 @@ set(SRC
     "include/RayRender/Platform/OpenGL/ROpenGLTopology.cpp"
     "include/RayRender/Platform/OpenGL/ROpenGLShaderBase.h"
     "include/RayRender/Platform/OpenGL/ROpenGLShaderBase.cpp"
+    "include/RayRender/Platform/OpenGL/ROpenGLConstantBuffers.h"
+    "include/RayRender/Platform/OpenGL/ROpenGLConstantBuffers.cpp"
 
     # DirectX11 Shaders
     "shaders/QuadVertexShader.hlsl"

@@ -78,7 +78,7 @@ private:
 	uint32_t m_FPS;
 	uint32_t m_FPSCount;
 	uint64_t m_InitialInterval;
-};
+	};
 
 FPS g_FPS;
 

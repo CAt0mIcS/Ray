@@ -15,7 +15,6 @@ namespace At0::Ray
 	Ref<Renderer3D> Renderer3D::Create(void* window, EventDispatcher<WindowResizeEvent>& resizeDispatcher)
 	{
 		RAY_PROFILE_FUNCTION();
-
 		RAY_MEXPECTS(RendererAPI::Valid(), "[Renderer3D::Create] Invalid RendererAPI selected");
 
 		switch (RendererAPI::GetAPI())
