@@ -6,12 +6,19 @@
 #include <RayUtil/RException.h>
 #include <RayDebug/RAssert.h>
 
+#include <glad/glad.h>
+#include "../../RVertexBuffer.h"
+
 
 namespace At0::Ray
 {
 	OpenGLInputLayout::OpenGLInputLayout(std::initializer_list<InputElement> inputElements, const VertexShader* vShader)
 	{
-
+		for (uint32_t i = 0; i < inputElements.size(); ++i)
+		{
+			glEnableVertexAttribArray(i);
+			glVertexAttribPointer(i, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
+		}
 	}
 
 	void OpenGLInputLayout::Bind()
