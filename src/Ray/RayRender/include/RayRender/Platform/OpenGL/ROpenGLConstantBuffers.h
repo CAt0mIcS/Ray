@@ -11,6 +11,7 @@ namespace At0::Ray
 	{
 	public:
 		OpenGLConstantBuffer(const T& data);
+		OpenGLConstantBuffer();
 
 		virtual void Update(const Matrix& data) override;
 		virtual void Update(const Float3& data) override;

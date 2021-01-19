@@ -7,7 +7,6 @@
 
 #include <Ray/Ray.h>
 #include <Ray/Window/ROpenGLWindow.h>
-#include <RayRender/RConstantBuffers.h>
 
 #ifdef __linux__
 #include <time.h>
@@ -90,6 +89,7 @@ namespace At0::Layers
 #define RENDER 1
 
 	static constexpr uint64_t AmountOfCubes = 1;
+	Ray::Ref<Ray::Quad> Quad;
 
 	GUILayer::GUILayer(std::string_view name)
 		: Ray::Layer(name),
@@ -118,8 +118,8 @@ namespace At0::Layers
 			for (uint64_t i = 0; i < AmountOfCubes; ++i)
 			{
 				// Create quad with name Quad[i]
-				Ray::Scope<Ray::Quad> quad = Ray::MakeScope<Ray::Quad>(m_CubeScene.CreateEntity("Quad" + std::to_string(i)));
-
+				Ray::Ref<Ray::Quad> quad = Ray::MakeRef<Ray::Quad>(m_CubeScene.CreateEntity("Quad" + std::to_string(i)));
+				Quad = quad;
 				// Set transformation (RAY_TODO: TransformConstantBuffers)
 				// This step is optional
 				Ray::TransformComponent& tform = quad->GetComponent<Ray::TransformComponent>();
@@ -141,13 +141,9 @@ namespace At0::Layers
 				//quad.AddComponent<TextureComponent>("path");
 
 				// Add it to the scene for rendering later on
-				m_CubeScene.Submit(std::move(quad));
+				m_CubeScene.Submit(quad);
 			}
 		}
-
-		Ray::Float3 color{ 1.0f, 0.4f, 1.0f };
-		Ray::Scope<Ray::ConstantBuffer> pCBuff = Ray::PixelConstantBuffer::Create(color);
-		pCBuff->Bind();
 #endif
 	}
 
@@ -223,12 +219,18 @@ namespace At0::Layers
 	{
 		RAY_PROFILE_FUNCTION();
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
+
+		Ray::TransformComponent& tform = Quad->GetComponent<Ray::TransformComponent>();
+		--tform.Translation.z;
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::MouseWheelDownEvent& e)
 	{
 		RAY_PROFILE_FUNCTION();
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
+
+		Ray::TransformComponent& tform = Quad->GetComponent<Ray::TransformComponent>();
+		++tform.Translation.z;
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::MouseWheelLeftEvent& e)

@@ -9,24 +9,45 @@ namespace At0::Ray
 	template<typename T>
 	DX11ConstantBuffer<T>::DX11ConstantBuffer(const T& data)
 	{
-		RAY_ALIGNED(16) struct AlignedData
-		{
-			T data;
-		};
+		//RAY_ALIGNED(16) struct AlignedData
+		//{
+		//	T data;
+		//};
 
 		D3D11_BUFFER_DESC bd{};
 		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		bd.Usage = D3D11_USAGE_DYNAMIC;
 		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		bd.MiscFlags = 0;
-		bd.ByteWidth = sizeof(AlignedData);
+		//bd.ByteWidth = sizeof(AlignedData);
+		bd.ByteWidth = sizeof(T);
 		bd.StructureByteStride = 0;
 
 		D3D11_SUBRESOURCE_DATA sd{};
 
-		AlignedData alignedData{ data };
-		sd.pSysMem = &alignedData;
+		//AlignedData alignedData{ data };
+		//sd.pSysMem = &alignedData;
+		sd.pSysMem = &data;
 		RAY_GFX_THROW_FAILED(GetDevice()->CreateBuffer(&bd, &sd, &m_pConstantBuffer));
+	}
+
+	template<typename T>
+	DX11ConstantBuffer<T>::DX11ConstantBuffer()
+	{
+		//RAY_ALIGNED(16) struct AlignedData
+		//{
+		//	T data;
+		//};
+
+		D3D11_BUFFER_DESC bd{};
+		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		bd.Usage = D3D11_USAGE_DYNAMIC;
+		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		bd.MiscFlags = 0;
+		//bd.ByteWidth = sizeof(AlignedData);
+		bd.ByteWidth = sizeof(T);
+		bd.StructureByteStride = 0;
+		RAY_GFX_THROW_FAILED(GetDevice()->CreateBuffer(&bd, nullptr, &m_pConstantBuffer));
 	}
 
 	template<typename T>

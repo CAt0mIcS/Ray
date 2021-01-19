@@ -45,5 +45,40 @@ namespace At0::Ray
 
 		return nullptr;
 	}
+
+
+	template<typename T>
+	Scope<ConstantBuffer> PixelConstantBuffer::Create()
+	{
+		RAY_PROFILE_FUNCTION();
+		RAY_MEXPECTS(RendererAPI::Valid(), "[ConstantBuffer::Create(Matrix)] Invalid RendererAPI selected");
+
+		switch (RendererAPI::GetAPI())
+		{
+#ifdef _WIN32
+		case RendererAPI::D3D11:	return MakeScope<DX11PixelConstantBuffer<T>>();
+#endif
+		case RendererAPI::OpenGL:	return MakeScope<OpenGLPixelConstantBuffer<T>>();
+		}
+
+		return nullptr;
+	}
+
+	template<typename T>
+	Scope<ConstantBuffer> VertexConstantBuffer::Create()
+	{
+		RAY_PROFILE_FUNCTION();
+		RAY_MEXPECTS(RendererAPI::Valid(), "[ConstantBuffer::Create(Matrix)] Invalid RendererAPI selected");
+
+		switch (RendererAPI::GetAPI())
+		{
+#ifdef _WIN32
+		case RendererAPI::D3D11:	return MakeScope<DX11VertexConstantBuffer<T>>();
+#endif
+		case RendererAPI::OpenGL:	return MakeScope<OpenGLVertexConstantBuffer<T>>();
+		}
+
+		return nullptr;
+	}
 }
 

@@ -2,6 +2,7 @@
 
 #include "../RRBase.h"
 #include "../Core/REntity.h"
+#include "../RConstantBuffers.h"
 
 #include <string>
 
@@ -16,7 +17,6 @@ namespace At0::Ray
 	class IndexBuffer;
 	class VertexBuffer;
 	class Topology;
-	class ConstantBuffer;
 
 	class RR_API Drawable
 	{
@@ -56,7 +56,7 @@ namespace At0::Ray
 		virtual PixelShader* GetPixelShader() = 0;
 		virtual InputLayout* GetInputLayout() = 0;
 		virtual Topology* GetTopology() = 0;
-		//virtual std::vector<Scope<ConstantBuffer>>& GetConstantBuffers() = 0;
+		virtual ConstantBuffer* GetVertexConstantBuffer() = 0;
 
 	private:
 		Entity m_Entity;

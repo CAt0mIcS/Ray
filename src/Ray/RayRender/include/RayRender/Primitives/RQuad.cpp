@@ -106,7 +106,10 @@ namespace At0::Ray
 			s_Topology = Topology::Create(Topology::TriangleList);
 		}
 
-		// RAY_TODO: ConstantBuffers/uniforms as non-static data
+		// RAY_TODO: Update mvp with camera
+		Matrix quadTransform = GetComponent<TransformComponent>().ToMatrix();
+		Matrix mvp = quadTransform;
+		m_TransformConstantBuffer = VertexConstantBuffer::Create<Matrix>(mvp);
 	}
 }
 

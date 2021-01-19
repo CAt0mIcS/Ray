@@ -11,6 +11,11 @@ namespace At0::Ray
 	}
 
 	template<typename T>
+	OpenGLConstantBuffer<T>::OpenGLConstantBuffer()
+	{
+	}
+
+	template<typename T>
 	void OpenGLConstantBuffer<T>::Update(const Matrix& data)
 	{
 

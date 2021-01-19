@@ -34,8 +34,8 @@ namespace At0::Ray
 		Ray::Matrix ToMatrix() const
 		{
 			return Ray::Matrix::Scaling(Scale.x, Scale.y, Scale.z) *
-				Ray::Matrix::Translation(Translation.x, Translation.y, Translation.z) *
-				Ray::Matrix::RotationRollPitchYawFromVector({ Rotation.x, Rotation.y, Rotation.z, 0.0f });
+				Ray::Matrix::Translation(Translation.x, Translation.y, Translation.z);/* **/
+				//Ray::Matrix::RotationRollPitchYawFromVector({ Rotation.x, Rotation.y, Rotation.z, 0.0f });
 		}
 	};
 }

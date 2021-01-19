@@ -8,6 +8,7 @@
 #include "../../RPixelShader.h"
 #include "../../RInputLayout.h"
 #include "../../RTopology.h"
+#include "../../RConstantBuffers.h"
 #include "../../Platform/OpenGL/ROpenGLTopology.h"
 
 #include <RayDebug/RAssert.h>
@@ -73,7 +74,7 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		for (Scope<Drawable>& d : scene)
+		for (Ref<Drawable>& d : scene)
 		{
 			d->GetVertexBuffer()->Bind();
 
@@ -82,6 +83,10 @@ namespace At0::Ray
 
 			d->GetVertexShader()->Bind();
 			d->GetPixelShader()->Bind();
+
+			// RAY_TEMPORARY
+			d->GetVertexConstantBuffer()->Update(d->GetComponent<TransformComponent>().ToMatrix());
+			d->GetVertexConstantBuffer()->Bind();
 
 			OpenGLTopology* pTopology = (OpenGLTopology*)d->GetTopology();
 

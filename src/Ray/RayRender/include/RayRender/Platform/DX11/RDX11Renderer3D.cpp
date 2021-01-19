@@ -9,6 +9,7 @@
 #include "../../RPixelShader.h"
 #include "../../RInputLayout.h"
 #include "../../RTopology.h"
+#include "../../RConstantBuffers.h"
 
 #include <RayDebug/RAssert.h>
 #include <RayUtil/RException.h>
@@ -130,7 +131,7 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		for (Scope<Drawable>& d : scene)
+		for (Ref<Drawable>& d : scene)
 		{
 			d->GetVertexBuffer()->Bind();
 			IndexBuffer* idxBuff = d->GetIndexBuffer();
@@ -140,6 +141,10 @@ namespace At0::Ray
 			d->GetPixelShader()->Bind();
 			d->GetInputLayout()->Bind();
 			d->GetTopology()->Bind();
+
+			// RAY_TEMPORARY
+			d->GetVertexConstantBuffer()->Update(d->GetComponent<TransformComponent>().ToMatrix());
+			d->GetVertexConstantBuffer()->Bind();
 
 			GetContext()->DrawIndexed(idxBuff->GetIndicesCount(), 0, 0);
 		}

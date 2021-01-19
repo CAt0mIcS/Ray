@@ -21,9 +21,9 @@ namespace At0::Ray
 		/// </summary>
 		Quad(Entity entity);
 
-		//virtual std::vector<Scope<ConstantBuffer>>& GetConstantBuffers() override { return m_ConstantBuffers; }
+		virtual ConstantBuffer* GetVertexConstantBuffer() override { return m_TransformConstantBuffer.get(); }
 
 	private:
-		//std::vector<Scope<ConstantBuffer>> m_ConstantBuffers;
+		Scope<ConstantBuffer> m_TransformConstantBuffer;
 	};
 }

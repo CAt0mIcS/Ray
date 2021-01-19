@@ -12,10 +12,10 @@ namespace At0::Ray
 	{
 		friend class Entity;
 	public:
-		using Iterator = typename std::vector<Scope<Drawable>>::iterator;
-		using ReverseIterator = typename std::vector<Scope<Drawable>>::reverse_iterator;
-		using ConstIterator = typename std::vector<Scope<Drawable>>::const_iterator;
-		using ConstReverseIterator = typename std::vector<Scope<Drawable>>::const_reverse_iterator;
+		using Iterator = typename std::vector<Ref<Drawable>>::iterator;
+		using ReverseIterator = typename std::vector<Ref<Drawable>>::reverse_iterator;
+		using ConstIterator = typename std::vector<Ref<Drawable>>::const_iterator;
+		using ConstReverseIterator = typename std::vector<Ref<Drawable>>::const_reverse_iterator;
 
 	public:
 		Scene();
@@ -25,7 +25,7 @@ namespace At0::Ray
 		/// Submit a drawable to store in the scene which will be rendered
 		/// when the scene is submitted to the Renderer.
 		/// </summary>
-		void Submit(Scope<Drawable>&& drawable);
+		void Submit(Ref<Drawable> drawable);
 
 		Entity CreateEntity(std::string_view tag = "Entity");
 		void DestroyEntity(Entity entity);
@@ -40,7 +40,7 @@ namespace At0::Ray
 		ConstReverseIterator	crend() const { return m_Drawables.crend(); }
 
 	private:
-		std::vector<Scope<Drawable>> m_Drawables;
+		std::vector<Ref<Drawable>> m_Drawables;
 		entt::registry m_Registry;
 	};
 }

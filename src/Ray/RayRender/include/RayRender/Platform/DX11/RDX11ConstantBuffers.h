@@ -16,6 +16,7 @@ namespace At0::Ray
 	{
 	public:
 		DX11ConstantBuffer(const T& data);
+		DX11ConstantBuffer();
 
 		virtual void Update(const T& data) override;
 

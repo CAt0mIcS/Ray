@@ -26,6 +26,9 @@ namespace At0::Ray
 	public:
 		template<typename T>
 		static Scope<ConstantBuffer> Create(const T & data);
+
+		template<typename T>
+		static Scope<ConstantBuffer> Create();
 	};
 
 	// -----------------------------------------------------------------
@@ -34,6 +37,9 @@ namespace At0::Ray
 	public:
 		template<typename T>
 		static Scope<ConstantBuffer> Create(const T & data);
+
+		template<typename T>
+		static Scope<ConstantBuffer> Create();
 	};
 
 	// RAY_TODO: Add more data
@@ -43,8 +49,12 @@ namespace At0::Ray
 	// PixelConstantBuffer
 	template RR_API Scope<ConstantBuffer> PixelConstantBuffer::Create<Matrix>(const Matrix& data);
 	template RR_API Scope<ConstantBuffer> PixelConstantBuffer::Create<Float3>(const Float3& data);
+	template RR_API Scope<ConstantBuffer> PixelConstantBuffer::Create<Matrix>();
+	template RR_API Scope<ConstantBuffer> PixelConstantBuffer::Create<Float3>();
 
 	// VertexConstantBuffer
 	template RR_API Scope<ConstantBuffer> VertexConstantBuffer::Create<Matrix>(const Matrix& data);
 	template RR_API Scope<ConstantBuffer> VertexConstantBuffer::Create<Float3>(const Float3& data);
+	template RR_API Scope<ConstantBuffer> VertexConstantBuffer::Create<Matrix>();
+	template RR_API Scope<ConstantBuffer> VertexConstantBuffer::Create<Float3>();
 }
