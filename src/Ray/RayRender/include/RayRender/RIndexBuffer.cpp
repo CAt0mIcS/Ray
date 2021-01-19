@@ -12,7 +12,7 @@
 
 namespace At0::Ray
 {
-	Ref<IndexBuffer> IndexBuffer::Create(std::initializer_list<uint32_t> indices)
+	Scope<IndexBuffer> IndexBuffer::Create(std::initializer_list<uint32_t> indices)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_MEXPECTS(RendererAPI::Valid(), "[PixelShader::Create] Invalid RendererAPI selected");
@@ -20,9 +20,9 @@ namespace At0::Ray
 		switch (RendererAPI::GetAPI())
 		{
 #ifdef _WIN32
-		case RendererAPI::D3D11:	return MakeRef<DX11IndexBuffer>(indices);
+		case RendererAPI::D3D11:	return MakeScope<DX11IndexBuffer>(indices);
 #endif
-		case RendererAPI::OpenGL:	return MakeRef<OpenGLIndexBuffer>(indices);
+		case RendererAPI::OpenGL:	return MakeScope<OpenGLIndexBuffer>(indices);
 		}
 
 		return nullptr;

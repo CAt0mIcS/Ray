@@ -11,7 +11,7 @@
 
 namespace At0::Ray
 {
-	Ref<Topology> Topology::Create(Type type)
+	Scope<Topology> Topology::Create(Type type)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_MEXPECTS(RendererAPI::Valid(), "[Topology::Create] Invalid RendererAPI selected");
@@ -19,9 +19,9 @@ namespace At0::Ray
 		switch (RendererAPI::GetAPI())
 		{
 #ifdef _WIN32
-		case RendererAPI::D3D11:	return MakeRef<DX11Topology>(type);
+		case RendererAPI::D3D11:	return MakeScope<DX11Topology>(type);
 #endif
-		case RendererAPI::OpenGL:	return MakeRef<OpenGLTopology>(type);
+		case RendererAPI::OpenGL:	return MakeScope<OpenGLTopology>(type);
 		}
 
 		return nullptr;

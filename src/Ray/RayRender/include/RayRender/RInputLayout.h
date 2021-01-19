@@ -56,7 +56,7 @@ namespace At0::Ray
 	class RR_API InputLayout
 	{
 	public:
-		static Ref<InputLayout> Create(std::initializer_list<InputElement> inputElements, const Ref<VertexShader>& vShader);
+		static Scope<InputLayout> Create(std::initializer_list<InputElement> inputElements, const Scope<VertexShader>& vShader);
 
 		virtual void Bind() = 0;
 

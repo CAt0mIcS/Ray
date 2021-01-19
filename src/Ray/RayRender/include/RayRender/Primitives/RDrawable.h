@@ -49,29 +49,29 @@ namespace At0::Ray
 
 		virtual ~Drawable() = default;
 
-		virtual Ref<VertexBuffer>	GetVertexBuffer() = 0;
-		virtual Ref<IndexBuffer>	GetIndexBuffer() = 0;
-		virtual Ref<VertexShader>	GetVertexShader() = 0;
-		virtual Ref<PixelShader>	GetPixelShader() = 0;
-		virtual Ref<InputLayout>	GetInputLayout() = 0;
-		virtual Ref<Topology>		GetTopology() = 0;
+		virtual VertexBuffer* GetVertexBuffer() = 0;
+		virtual IndexBuffer* GetIndexBuffer() = 0;
+		virtual VertexShader* GetVertexShader() = 0;
+		virtual PixelShader* GetPixelShader() = 0;
+		virtual InputLayout* GetInputLayout() = 0;
+		virtual Topology* GetTopology() = 0;
 
 	private:
 		Entity m_Entity;
 	};
 
 	// Static bindables. Generate templated class for every type of drawable (DrawableBase<Quad> && DrawableBase<Triangle>)
-	// RAY_TODO: Virtual function call, possible performance overhead
+	// RAY_TODO: Virtual function calls, possible performance overhead
 	template<typename T>
 	class RR_API DrawableBase : public Drawable
 	{
 	public:
-		virtual Ref<VertexBuffer>	GetVertexBuffer() override { return s_VertexBuffer; }
-		virtual Ref<IndexBuffer>	GetIndexBuffer() override { return s_IndexBuffer; }
-		virtual Ref<VertexShader>	GetVertexShader() override { return s_VertexShader; }
-		virtual Ref<PixelShader>	GetPixelShader() override { return s_PixelShader; }
-		virtual Ref<InputLayout>	GetInputLayout() override { return s_InputLayout; }
-		virtual Ref<Topology>		GetTopology() override { return s_Topology; }
+		virtual VertexBuffer* GetVertexBuffer() override { return s_VertexBuffer.get(); }
+		virtual IndexBuffer* GetIndexBuffer() override { return s_IndexBuffer.get(); }
+		virtual VertexShader* GetVertexShader() override { return s_VertexShader.get(); }
+		virtual PixelShader* GetPixelShader() override { return s_PixelShader.get(); }
+		virtual InputLayout* GetInputLayout() override { return s_InputLayout.get(); }
+		virtual Topology* GetTopology() override { return s_Topology.get(); }
 
 		virtual ~DrawableBase() = default;
 
@@ -84,11 +84,11 @@ namespace At0::Ray
 		DrawableBase() = default;
 
 	protected:
-		inline static Ref<VertexBuffer> s_VertexBuffer = nullptr;
-		inline static Ref<IndexBuffer> s_IndexBuffer = nullptr;
-		inline static Ref<VertexShader> s_VertexShader = nullptr;
-		inline static Ref<PixelShader> s_PixelShader = nullptr;
-		inline static Ref<InputLayout> s_InputLayout = nullptr;
-		inline static Ref<Topology> s_Topology = nullptr;
+		inline static Scope<VertexBuffer> s_VertexBuffer = nullptr;
+		inline static Scope<IndexBuffer> s_IndexBuffer = nullptr;
+		inline static Scope<VertexShader> s_VertexShader = nullptr;
+		inline static Scope<PixelShader> s_PixelShader = nullptr;
+		inline static Scope<InputLayout> s_InputLayout = nullptr;
+		inline static Scope<Topology> s_Topology = nullptr;
 	};
 }

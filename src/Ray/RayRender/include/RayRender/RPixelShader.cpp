@@ -12,7 +12,7 @@
 
 namespace At0::Ray
 {
-	Ref<PixelShader> PixelShader::CreateFromCompiled(std::string_view filepath)
+	Scope<PixelShader> PixelShader::CreateFromCompiled(std::string_view filepath)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_MEXPECTS(RendererAPI::Valid(), "[PixelShader::Create] Invalid RendererAPI selected");
@@ -20,16 +20,16 @@ namespace At0::Ray
 		switch (RendererAPI::GetAPI())
 		{
 #ifdef _WIN32
-		case RendererAPI::D3D11:	return MakeRef<DX11PixelShader>(filepath, true);
+		case RendererAPI::D3D11:	return MakeScope<DX11PixelShader>(filepath, true);
 #endif
-		case RendererAPI::OpenGL:	return MakeRef<OpenGLPixelShader>(filepath, true);
+		case RendererAPI::OpenGL:	return MakeScope<OpenGLPixelShader>(filepath, true);
 			break;
 		}
 
 		return nullptr;
 	}
 
-	Ref<PixelShader> PixelShader::CreateFromSource(std::string_view filepath)
+	Scope<PixelShader> PixelShader::CreateFromSource(std::string_view filepath)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_MEXPECTS(RendererAPI::Valid(), "[PixelShader::Create] Invalid RendererAPI selected");
@@ -37,9 +37,9 @@ namespace At0::Ray
 		switch (RendererAPI::GetAPI())
 		{
 #ifdef _WIN32
-		case RendererAPI::D3D11:	return MakeRef<DX11PixelShader>(filepath, false);
+		case RendererAPI::D3D11:	return MakeScope<DX11PixelShader>(filepath, false);
 #endif
-		case RendererAPI::OpenGL:	return MakeRef<OpenGLPixelShader>(filepath, false);
+		case RendererAPI::OpenGL:	return MakeScope<OpenGLPixelShader>(filepath, false);
 		}
 
 		return nullptr;

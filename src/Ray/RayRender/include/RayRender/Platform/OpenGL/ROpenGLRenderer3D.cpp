@@ -77,13 +77,13 @@ namespace At0::Ray
 		{
 			d->GetVertexBuffer()->Bind();
 
-			Ref<IndexBuffer> idxBuff = d->GetIndexBuffer();
+			IndexBuffer* idxBuff = d->GetIndexBuffer();
 			idxBuff->Bind();
 
 			d->GetVertexShader()->Bind();
 			d->GetPixelShader()->Bind();
 
-			OpenGLTopology* pTopology = (OpenGLTopology*)d->GetTopology().get();
+			OpenGLTopology* pTopology = (OpenGLTopology*)d->GetTopology();
 
 			glDrawElements(pTopology->Get(), idxBuff->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
 		}

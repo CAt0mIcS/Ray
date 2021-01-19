@@ -8,7 +8,7 @@ namespace At0::Ray
 	class RR_API IndexBuffer
 	{
 	public:
-		static Ref<IndexBuffer> Create(std::initializer_list<uint32_t> indices);
+		static Scope<IndexBuffer> Create(std::initializer_list<uint32_t> indices);
 
 		virtual void Bind() = 0;
 		virtual uint32_t GetIndicesCount() const = 0;

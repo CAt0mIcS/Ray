@@ -133,7 +133,7 @@ namespace At0::Ray
 		for (Scope<Drawable>& d : scene)
 		{
 			d->GetVertexBuffer()->Bind();
-			Ref<IndexBuffer> idxBuff = d->GetIndexBuffer();
+			IndexBuffer* idxBuff = d->GetIndexBuffer();
 			idxBuff->Bind();
 
 			d->GetVertexShader()->Bind();

@@ -12,7 +12,7 @@
 
 namespace At0::Ray
 {
-	Ref<InputLayout> InputLayout::Create(std::initializer_list<InputElement> inputElements, const Ref<VertexShader>& vShader)
+	Scope<InputLayout> InputLayout::Create(std::initializer_list<InputElement> inputElements, const Scope<VertexShader>& vShader)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_MEXPECTS(RendererAPI::Valid(), "[InputLayout::Create] Invalid RendererAPI selected");
@@ -20,9 +20,9 @@ namespace At0::Ray
 		switch (RendererAPI::GetAPI())
 		{
 #ifdef _WIN32
-		case RendererAPI::D3D11:	return MakeRef<DX11InputLayout>(inputElements, vShader.get());
+		case RendererAPI::D3D11:	return MakeScope<DX11InputLayout>(inputElements, vShader.get());
 #endif
-		case RendererAPI::OpenGL:	return MakeRef<OpenGLInputLayout>(inputElements, vShader.get());
+		case RendererAPI::OpenGL:	return MakeScope<OpenGLInputLayout>(inputElements, vShader.get());
 		}
 
 		return nullptr;

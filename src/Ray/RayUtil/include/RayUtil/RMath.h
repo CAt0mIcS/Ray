@@ -425,6 +425,9 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 		// Basic Vector
+		struct Float3;
+		VectorType    RAYMATH_CALLCONV     LoadFloat3(/*_In_ */const Float3* pSource);
+
 		struct Vector
 		{
 			union
@@ -451,7 +454,7 @@ namespace At0
 			Vector(const Vector&) = default;
 			Vector& RAYMATH_CALLCONV operator=(const Vector&) = default;
 
-			Vector& RAYMATH_CALLCONV operator=(const Float3& float3) { *this = LoadFloat3(&float3); }
+			Vector& RAYMATH_CALLCONV operator=(const Float3& float3) { *this = LoadFloat3(&float3); return *this; }
 
 			Vector(Vector&&) = default;
 			Vector& RAYMATH_CALLCONV operator=(Vector&&) = default;

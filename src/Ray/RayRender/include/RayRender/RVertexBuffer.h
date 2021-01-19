@@ -17,7 +17,7 @@ namespace At0::Ray
 	class RR_API VertexBuffer
 	{
 	public:
-		static Ref<VertexBuffer> Create(std::initializer_list<Vertex> data);
+		static Scope<VertexBuffer> Create(std::initializer_list<Vertex> data);
 
 		virtual void Bind() = 0;
 		virtual ~VertexBuffer() = default;

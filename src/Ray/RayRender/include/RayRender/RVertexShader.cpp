@@ -12,7 +12,7 @@
 
 namespace At0::Ray
 {
-	Ref<VertexShader> VertexShader::CreateFromCompiled(std::string_view filepath)
+	Scope<VertexShader> VertexShader::CreateFromCompiled(std::string_view filepath)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_MEXPECTS(RendererAPI::Valid(), "[VertexShader::Create] Invalid RendererAPI selected");
@@ -20,16 +20,16 @@ namespace At0::Ray
 		switch (RendererAPI::GetAPI())
 		{
 #ifdef _WIN32
-		case RendererAPI::D3D11:	return MakeRef<DX11VertexShader>(filepath, true);
+		case RendererAPI::D3D11:	return MakeScope<DX11VertexShader>(filepath, true);
 #endif
-		case RendererAPI::OpenGL:	return MakeRef<OpenGLVertexShader>(filepath, true);
+		case RendererAPI::OpenGL:	return MakeScope<OpenGLVertexShader>(filepath, true);
 			break;
 		}
 
 		return nullptr;
 	}
 
-	Ref<VertexShader> VertexShader::CreateFromSource(std::string_view filepath)
+	Scope<VertexShader> VertexShader::CreateFromSource(std::string_view filepath)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_MEXPECTS(RendererAPI::Valid(), "[VertexShader::Create] Invalid RendererAPI selected");
@@ -37,9 +37,9 @@ namespace At0::Ray
 		switch (RendererAPI::GetAPI())
 		{
 #ifdef _WIN32
-		case RendererAPI::D3D11:	return MakeRef<DX11VertexShader>(filepath, false);
+		case RendererAPI::D3D11:	return MakeScope<DX11VertexShader>(filepath, false);
 #endif
-		case RendererAPI::OpenGL:	return MakeRef<OpenGLVertexShader>(filepath, false);
+		case RendererAPI::OpenGL:	return MakeScope<OpenGLVertexShader>(filepath, false);
 			break;
 		}
 

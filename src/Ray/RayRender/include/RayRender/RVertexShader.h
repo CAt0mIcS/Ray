@@ -9,8 +9,8 @@ namespace At0::Ray
 	class RR_API VertexShader
 	{
 	public:
-		static Ref<VertexShader> CreateFromCompiled(std::string_view filepath);
-		static Ref<VertexShader> CreateFromSource(std::string_view filepath);
+		static Scope<VertexShader> CreateFromCompiled(std::string_view filepath);
+		static Scope<VertexShader> CreateFromSource(std::string_view filepath);
 
 		virtual void Bind() = 0;
 

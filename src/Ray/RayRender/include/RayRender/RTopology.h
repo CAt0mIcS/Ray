@@ -13,7 +13,7 @@ namespace At0::Ray
 		};
 
 	public:
-		static Ref<Topology> Create(Type type);
+		static Scope<Topology> Create(Type type);
 
 		virtual void Bind() = 0;
 	};
