@@ -20,5 +20,10 @@ namespace At0::Ray
 		/// to the Drawable Quad
 		/// </summary>
 		Quad(Entity entity);
+
+		//virtual std::vector<Scope<ConstantBuffer>>& GetConstantBuffers() override { return m_ConstantBuffers; }
+
+	private:
+		//std::vector<Scope<ConstantBuffer>> m_ConstantBuffers;
 	};
 }

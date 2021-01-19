@@ -7,6 +7,7 @@
 
 #include <Ray/Ray.h>
 #include <Ray/Window/ROpenGLWindow.h>
+#include <RayRender/RConstantBuffers.h>
 
 #ifdef __linux__
 #include <time.h>
@@ -78,7 +79,7 @@ private:
 	uint32_t m_FPS;
 	uint32_t m_FPSCount;
 	uint64_t m_InitialInterval;
-	};
+};
 
 FPS g_FPS;
 
@@ -143,6 +144,10 @@ namespace At0::Layers
 				m_CubeScene.Submit(std::move(quad));
 			}
 		}
+
+		Ray::Float3 color{ 1.0f, 0.4f, 1.0f };
+		Ray::Scope<Ray::ConstantBuffer> pCBuff = Ray::PixelConstantBuffer::Create(color);
+		pCBuff->Bind();
 #endif
 	}
 
