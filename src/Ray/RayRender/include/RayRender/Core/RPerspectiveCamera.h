@@ -15,6 +15,11 @@ namespace At0::Ray
 		const Matrix& GetViewMatrix() const;
 		const Matrix& GetProjectionMatrix() const;
 
+		void SetPosition(const Float3& pos) { m_Position = pos; m_PositionVector = pos; UpdateMatrix(); }
+		void SetRotation(const Float3& rot) { m_Rotation = rot; m_RotationVector = rot; UpdateMatrix(); }
+		const Float3& GetPosition() const { return m_Position; }
+		const Float3& GetRotation() const { return m_Rotation; }
+
 	private:
 		void UpdateMatrix();
 
