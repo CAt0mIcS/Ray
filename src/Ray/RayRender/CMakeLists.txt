@@ -10,6 +10,8 @@ set(SRC
     "include/RayRender/Core/RScene.cpp"
     "include/RayRender/Core/REntity.h"
     "include/RayRender/Core/REntity.cpp"
+    "include/RayRender/Core/RPerspectiveCamera.h"
+    "include/RayRender/Core/RPerspectiveCamera.cpp"
 
     # Render Primitives
     "include/RayRender/Primitives/RDrawable.h"

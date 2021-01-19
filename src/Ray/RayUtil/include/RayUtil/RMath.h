@@ -451,6 +451,8 @@ namespace At0
 			Vector(const Vector&) = default;
 			Vector& RAYMATH_CALLCONV operator=(const Vector&) = default;
 
+			Vector& RAYMATH_CALLCONV operator=(const Float3& float3) { *this = LoadFloat3(&float3); }
+
 			Vector(Vector&&) = default;
 			Vector& RAYMATH_CALLCONV operator=(Vector&&) = default;
 
@@ -1263,17 +1265,27 @@ namespace At0
 
 		////////////////////////////////////////////////////////////////////////////////
 
+		// Constants that require structs from aboce
+		namespace Constants
+		{
+			inline const Vector DefaultForwardVector = { 0.0f, 0.0f, 1.0f, 0.0f };
+			inline const Vector DefaultUpVector = { 0.0f, 1.0f, 0.0f, 0.0f };
+			inline const Vector DefaultBackwardVector = { 0.0f, 0.0f, -1.0f, 0.0f };
+			inline const Vector DefaultLeftVector = { -1.0f, 0.0f, 0.0f, 0.0f };
+			inline const Vector DefaultRightVector = { 1.0f, 0.0f, 0.0f, 0.0f };
+		}
+
 #ifdef _PREFAST_
 #pragma prefast(pop)
 #endif
 
 #pragma warning(pop)
 
-/****************************************************************************
- *
- * Data conversion operations
- *
- ****************************************************************************/
+		/****************************************************************************
+		 *
+		 * Data conversion operations
+		 *
+		 ****************************************************************************/
 
 		VectorType    RAYMATH_CALLCONV     ConvertVectorIntToFloat(FVectorType VInt, uint32_t DivExponent);
 		VectorType    RAYMATH_CALLCONV     ConvertVectorFloatToInt(FVectorType VFloat, uint32_t MulExponent);
@@ -2220,7 +2232,7 @@ namespace At0
 			vTemp = _mm_and_si128(vTemp, Constants::One);
 			return _mm_castsi128_ps(vTemp);
 #endif
-	}
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -4517,7 +4529,7 @@ namespace At0
 #elif defined(RAY_SSE_INTRINSICS)
 			return _mm_setzero_ps();
 #endif
-}
+		}
 
 		//------------------------------------------------------------------------------
 		// Initialize a vector with four floating point values
@@ -8996,7 +9008,7 @@ namespace At0
 			for (size_t i = 0; i < 4; i++)
 			{
 				VB.vector4_u32[i] = static_cast<uint32_t>(VB.vector4_f32[i]);
-		}
+			}
 #endif
 
 			VectorType VC2 = Vector::Multiply(VC, VC);

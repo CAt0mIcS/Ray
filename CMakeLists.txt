@@ -58,7 +58,7 @@ set(GLFW_BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 
 # ------------------------------------------------------------------------------------------------
 # Initialize the Solution Project
-project("NodePlanningEditor")
+project("Ray")
 
 # ------------------------------------------------------------------------------------------------
 # Required for Solution Folders

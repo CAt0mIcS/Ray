@@ -5,6 +5,7 @@
 #include "../../RRenderer3D.h"
 
 #include "RDX11GraphicsResources.h"
+#include "../../Core/RPerspectiveCamera.h"
 
 #include <../../RayEvent/include/RayEvent/REventListener.h>
 #include <wrl.h>
@@ -38,6 +39,10 @@ namespace At0::Ray
 		/// Handles viewport resizing
 		/// </summary>
 		virtual void OnEvent(Widget& receiver, WindowResizeEvent& e);
+
+		// RAY_DEBUG
+	public:
+		PerspectiveCamera m_Camera;
 
 	private:
 		HWND m_hWnd;
