@@ -33,8 +33,8 @@ namespace At0::Ray
 		// ----------------------------------------------------------------------------------------------------
 		// Create the Swap Chain
 		DXGI_SWAP_CHAIN_DESC scdesc{};
-		scdesc.BufferDesc.Width = clientWindowRect.right - clientWindowRect.left;
-		scdesc.BufferDesc.Height = clientWindowRect.bottom - clientWindowRect.top;
+		scdesc.BufferDesc.Width = clientWindowRect.right;
+		scdesc.BufferDesc.Height = clientWindowRect.bottom;
 		scdesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		scdesc.BufferDesc.RefreshRate = { 0, 0 };
 		scdesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
@@ -143,7 +143,7 @@ namespace At0::Ray
 			d->GetTopology()->Bind();
 
 			// RAY_TEMPORARY
-			d->GetVertexConstantBuffer()->Update(d->GetComponent<TransformComponent>().ToMatrix());
+			d->GetVertexConstantBuffer()->Update(d->GetComponent<TransformComponent>().ToMatrix().Transpose());
 			d->GetVertexConstantBuffer()->Bind();
 
 			GetContext()->DrawIndexed(idxBuff->GetIndicesCount(), 0, 0);

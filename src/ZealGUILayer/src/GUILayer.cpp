@@ -123,7 +123,7 @@ namespace At0::Layers
 				// Set transformation (RAY_TODO: TransformConstantBuffers)
 				// This step is optional
 				Ray::TransformComponent& tform = quad->GetComponent<Ray::TransformComponent>();
-				tform.Rotation = Ray::Quaternion::RotationRollPitchYaw(0.0f, 1.0f, 0.0f);
+				tform.Rotation = Ray::Quaternion::RotationRollPitchYaw(100.0f, 0.0f, 50.0f);
 				tform.Translation.z = 1.0f;
 
 				//// Overwrite existing basic vertex shader with my own.
@@ -157,6 +157,16 @@ namespace At0::Layers
 		renderer->Draw(m_CubeScene);
 		renderer->EndDraw();
 
+		static float pitch = 0.0f;
+		static float yaw = 0.0f;
+		static float roll = 0.0f;
+
+		pitch += 0.5f * ts;
+		yaw += 0.5f * ts;
+		roll += 0.5f * ts;
+
+		auto& tform = Quad->GetComponent<Ray::TransformComponent>();
+		tform.Rotation = Ray::Quaternion::RotationRollPitchYaw(pitch, yaw, roll);
 #endif
 
 		g_FPS.Update();
