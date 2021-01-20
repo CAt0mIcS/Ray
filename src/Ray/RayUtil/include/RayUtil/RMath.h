@@ -602,6 +602,7 @@ namespace At0
 		// 16 byte boundary and mapped to four hardware vector registers
 
 		struct Matrix;
+		struct Float3;
 
 		// Fix-up for (1st) Matrix parameter to pass in-register for ARM64 and vector call; by reference otherwise
 #if ( defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || RAYMATH_VECTORCALL ) && !defined(RAY_NO_INTRINSICS)
@@ -708,11 +709,13 @@ namespace At0
 			static Matrix RAYMATH_CALLCONV RotationRollPitchYaw(float Pitch, float Yaw, float Roll);
 			static Matrix RAYMATH_CALLCONV RotationRollPitchYawFromVector(FVectorType Angles);
 			static Matrix RAYMATH_CALLCONV Translation(float OffsetX, float OffsetY, float OffsetZ);
+			static Matrix RAYMATH_CALLCONV Translation(const Float3& d);
 			static Matrix RAYMATH_CALLCONV Translation(FVectorType Offset);
 			static Matrix RAYMATH_CALLCONV Scaling(float ScaleX, float ScaleY, float ScaleZ);
+			static Matrix RAYMATH_CALLCONV Scaling(const Float3& d);
 			static Matrix RAYMATH_CALLCONV Scaling(FVectorType Scale);
 			static Matrix RAYMATH_CALLCONV AffineTransformation2D(FVectorType Scaling, FVectorType RotationOrigin, float Rotation, FVectorType Translation);
-			static Matrix RAYMATH_CALLCONV AffineTransformation(FVectorType Scaling, FVectorType RotationOrigin, FVectorType RotationQuaternion, GVectorType Translation);
+			static Matrix RAYMATH_CALLCONV AffineTransformation(FVectorType Scaling, FVectorType RotationOrigin, FVectorType RotationFromQuaternion, GVectorType Translation);
 			static Matrix RAYMATH_CALLCONV Reflect(FVectorType ReflectionPlane);
 			static Matrix RAYMATH_CALLCONV Shadow(FVectorType ShadowPlane, FVectorType LightPosition);
 
@@ -725,11 +728,11 @@ namespace At0
 				float m30, float m31, float m32, float m33);
 			static Matrix RAYMATH_CALLCONV RotationNormal(FVectorType NormalAxis, float Angle);
 			static Matrix RAYMATH_CALLCONV RotationAxis(FVectorType Axis, float Angle);
-			static Matrix RAYMATH_CALLCONV RotationQuaternion(const Quaternion& Quaternion);
+			static Matrix RAYMATH_CALLCONV RotationFromQuaternion(const Quaternion& Quaternion);
 			static Matrix RAYMATH_CALLCONV Transformation2D(FVectorType ScalingOrigin, float ScalingOrientation, FVectorType Scaling,
 				FVectorType RotationOrigin, float Rotation, GVectorType Translation);
 			static Matrix RAYMATH_CALLCONV Transformation(FVectorType ScalingOrigin, FVectorType ScalingOrientationQuaternion, FVectorType Scaling,
-				GVectorType RotationOrigin, HVectorType RotationQuaternion, HVectorType Translation);
+				GVectorType RotationOrigin, HVectorType RotationFromQuaternion, HVectorType Translation);
 		};
 
 		//------------------------------------------------------------------------------
@@ -1573,8 +1576,8 @@ namespace At0
 		VectorType    RAYMATH_CALLCONV     Vector3AngleBetweenVectors(FVectorType V1, FVectorType V2);
 		VectorType    RAYMATH_CALLCONV     Vector3LinePointDistance(FVectorType LinePoint1, FVectorType LinePoint2, FVectorType Point);
 		void        RAYMATH_CALLCONV     Vector3ComponentsFromNormal(/*_Out_ */ VectorType* pParallel, /*_Out_ */ VectorType* pPerpendicular, /*_In_ */FVectorType V, /*_In_ */FVectorType Normal);
-		VectorType    RAYMATH_CALLCONV     Vector3Rotate(FVectorType V, FQuaternion RotationQuaternion);
-		VectorType    RAYMATH_CALLCONV     Vector3InverseRotate(FVectorType V, FQuaternion RotationQuaternion);
+		VectorType    RAYMATH_CALLCONV     Vector3Rotate(FVectorType V, FQuaternion RotationFromQuaternion);
+		VectorType    RAYMATH_CALLCONV     Vector3InverseRotate(FVectorType V, FQuaternion RotationFromQuaternion);
 		VectorType    RAYMATH_CALLCONV     Vector3Transform(FVectorType V, FMatrix M);
 		Float4* RAYMATH_CALLCONV     Vector3TransformStream(/*_Out_writes_bytes_(sizeof(Float4) + OutputStride * (VectorCount - 1)) */Float4* pOutputStream,
 			/*_In_ */size_t OutputStride,
@@ -14436,13 +14439,13 @@ namespace At0
 		inline VectorType RAYMATH_CALLCONV Vector3Rotate
 		(
 			FVectorType V,
-			FQuaternion RotationQuaternion
+			FQuaternion RotationFromQuaternion
 		)
 		{
 			VectorType A = Vector::Select(Constants::Select1110.v, V, Constants::Select1110.v);
-			VectorType Q = RotationQuaternion.Conjugate();
+			VectorType Q = RotationFromQuaternion.Conjugate();
 			VectorType Result = Quaternion::Multiply(Q, A);
-			return Quaternion::Multiply(Result, RotationQuaternion);
+			return Quaternion::Multiply(Result, RotationFromQuaternion);
 		}
 
 		//------------------------------------------------------------------------------
@@ -14451,12 +14454,12 @@ namespace At0
 		inline VectorType RAYMATH_CALLCONV Vector3InverseRotate
 		(
 			FVectorType V,
-			FQuaternion RotationQuaternion
+			FQuaternion RotationFromQuaternion
 		)
 		{
 			VectorType A = Vector::Select(Constants::Select1110.v, V, Constants::Select1110.v);
-			Quaternion Result = Quaternion::Multiply(RotationQuaternion, A);
-			VectorType Q = RotationQuaternion.Conjugate();
+			Quaternion Result = Quaternion::Multiply(RotationFromQuaternion, A);
+			VectorType Q = RotationFromQuaternion.Conjugate();
 			return Quaternion::Multiply(Result, Q);
 		}
 
@@ -20101,6 +20104,19 @@ namespace At0
 #endif
 		}
 
+		//------------------------------------------------------------------------------
+
+		inline Matrix RAYMATH_CALLCONV Matrix::Translation(const Float3& d)
+		{
+			return Translation(d.x, d.y, d.z);
+		}
+
+		//------------------------------------------------------------------------------
+
+		inline Matrix RAYMATH_CALLCONV Matrix::Scaling(const Float3& d)
+		{
+			return Scaling(d.x, d.y, d.z);
+		}
 
 		//------------------------------------------------------------------------------
 
@@ -20491,7 +20507,7 @@ namespace At0
 		)
 		{
 			VectorType Q = Quaternion::RotationRollPitchYawFromVector(Angles);
-			return Matrix::RotationQuaternion(Q);
+			return Matrix::RotationFromQuaternion(Q);
 		}
 
 		//------------------------------------------------------------------------------
@@ -20601,7 +20617,7 @@ namespace At0
 
 		//------------------------------------------------------------------------------
 
-		inline Matrix RAYMATH_CALLCONV Matrix::RotationQuaternion
+		inline Matrix RAYMATH_CALLCONV Matrix::RotationFromQuaternion
 		(
 			const Quaternion& Quaternion
 		)
@@ -20732,7 +20748,7 @@ namespace At0
 			FVectorType ScalingOrientationQuaternion,
 			FVectorType Scaling,
 			GVectorType RotationOrigin,
-			HVectorType RotationQuaternion,
+			HVectorType RotationFromQuaternion,
 			HVectorType Translation
 		)
 		{
@@ -20743,11 +20759,11 @@ namespace At0
 			VectorType NegScalingOrigin = Vector::Negate(ScalingOrigin);
 
 			Matrix MScalingOriginI = Matrix::Translation(NegScalingOrigin);
-			Matrix MScalingOrientation = Matrix::RotationQuaternion(ScalingOrientationQuaternion);
+			Matrix MScalingOrientation = Matrix::RotationFromQuaternion(ScalingOrientationQuaternion);
 			Matrix MScalingOrientationT = MScalingOrientation.Transpose();
 			Matrix MScaling = Matrix::Scaling(Scaling);
 			VectorType VRotationOrigin = Vector::Select(Constants::Select1110.v, RotationOrigin, Constants::Select1110.v);
-			Matrix MRotation = Matrix::RotationQuaternion(RotationQuaternion);
+			Matrix MRotation = Matrix::RotationFromQuaternion(RotationFromQuaternion);
 			VectorType VTranslation = Vector::Select(Constants::Select1110.v, Translation, Constants::Select1110.v);
 
 			Matrix M;
@@ -20795,7 +20811,7 @@ namespace At0
 		(
 			FVectorType Scaling,
 			FVectorType RotationOrigin,
-			FVectorType RotationQuaternion,
+			FVectorType RotationFromQuaternion,
 			GVectorType Translation
 		)
 		{
@@ -20803,7 +20819,7 @@ namespace At0
 
 			Matrix MScaling = Matrix::Scaling(Scaling);
 			VectorType VRotationOrigin = Vector::Select(Constants::Select1110.v, RotationOrigin, Constants::Select1110.v);
-			Matrix MRotation = Matrix::RotationQuaternion(RotationQuaternion);
+			Matrix MRotation = Matrix::RotationFromQuaternion(RotationFromQuaternion);
 			VectorType VTranslation = Vector::Select(Constants::Select1110.v, Translation, Constants::Select1110.v);
 
 			Matrix M;

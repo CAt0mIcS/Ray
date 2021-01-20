@@ -123,7 +123,7 @@ namespace At0::Layers
 				// Set transformation (RAY_TODO: TransformConstantBuffers)
 				// This step is optional
 				Ray::TransformComponent& tform = quad->GetComponent<Ray::TransformComponent>();
-				tform.Rotation = { 54.4f, 32.34f, 3.54f };
+				tform.Rotation = Ray::Quaternion::RotationRollPitchYaw(0.0f, 1.0f, 0.0f);
 				tform.Translation.z = 1.0f;
 
 				//// Overwrite existing basic vertex shader with my own.
