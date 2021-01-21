@@ -86,10 +86,10 @@ set(SRC
     "shaders/TrianglePixelShader.hlsl"
 
     # OpenGL Shaders
-    "shaders/QuadVertexShader.glsl"
-    "shaders/QuadPixelShader.glsl"
-    "shaders/TriangleVertexShader.glsl"
-    "shaders/TrianglePixelShader.glsl"
+    # "shaders/QuadVertexShader.glsl"
+    # "shaders/QuadPixelShader.glsl"
+    # "shaders/TriangleVertexShader.glsl"
+    # "shaders/TrianglePixelShader.glsl"
 )
 
 set(PUBLIC_INC
@@ -110,6 +110,7 @@ set(PRIVATE_LIB
     "RayDebug"
     "RayEvent"
     "assimp"
+    "ShaderConductor"
 )
 
 if(WIN32)
@@ -146,6 +147,12 @@ add_subdirectory("extern")
 
 # ------------------------------------------------------------------------------------------------
 # Copy pre-compiled assimp dll into output directory
+# set(RAY_OUT_DIR
+#     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
+#     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
+#     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
+# )
+
 if(WIN32)
 add_custom_command(TARGET "RayRender" POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -154,42 +161,64 @@ add_custom_command(TARGET "RayRender" POST_BUILD
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
 )
-elseif(UNIX)
 add_custom_command(TARGET "RayRender" POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${CMAKE_CURRENT_SOURCE_DIR}/extern/assimp/lib/${RL_ARCHITECTURE}/libassimp.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/extern/ShaderConductor/lib/${RL_ARCHITECTURE}/ShaderConductor.dll"
     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
+)
+add_custom_command(TARGET "RayRender" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/extern/ShaderConductor/lib/${RL_ARCHITECTURE}/dxcompiler.dll"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
+)
+elseif(UNIX)
+add_custom_command(TARGET "RayRender" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/extern/ShaderConductor/lib/${RL_ARCHITECTURE}/libShaderConductor.so"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
+)
+add_custom_command(TARGET "RayRender" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/extern/ShaderConductor/lib/${RL_ARCHITECTURE}/libdxcompiler.so"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
+
 )
 endif()
 
 # ------------------------------------------------------------------------------------------------
-# Copy glsl shaders to the output directory
+# Copy HLSL shaders to the output directory
 add_custom_command(TARGET "RayRender" POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/QuadVertexShader.glsl"
+    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/QuadVertexShader.hlsl"
     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
 )
 add_custom_command(TARGET "RayRender" POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/QuadPixelShader.glsl"
+    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/QuadPixelShader.hlsl"
     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
 )
 add_custom_command(TARGET "RayRender" POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/TriangleVertexShader.glsl"
+    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/TriangleVertexShader.hlsl"
     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
 )
 add_custom_command(TARGET "RayRender" POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/TrianglePixelShader.glsl"
+    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/TrianglePixelShader.hlsl"
     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
@@ -210,7 +239,7 @@ if(MSVC)
     set_property(SOURCE "shaders/QuadVertexShader.hlsl" PROPERTY VS_SHADER_FLAGS "/DFLAGS_ADDED")
     set_property(SOURCE "shaders/QuadVertexShader.hlsl" PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "$(OutDir)%(Filename).h")
     set_property(SOURCE "shaders/QuadVertexShader.hlsl" PROPERTY VS_SETTINGS "$<$<CONFIG:DEBUG>:SourceProperty1=SourceProperty1Value>")
-
+    
     set_property(SOURCE "shaders/TrianglePixelShader.hlsl" PROPERTY VS_SHADER_TYPE Pixel)
     set_property(SOURCE "shaders/TrianglePixelShader.hlsl" PROPERTY VS_SHADER_ENTRYPOINT "main")
     set_property(SOURCE "shaders/TrianglePixelShader.hlsl" PROPERTY VS_SHADER_MODEL 5.0)

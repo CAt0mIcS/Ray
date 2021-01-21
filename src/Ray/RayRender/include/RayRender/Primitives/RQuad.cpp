@@ -80,21 +80,9 @@ namespace At0::Ray
 			}
 
 			// Default Vertex and Pixel Shader for quads
-			switch (RendererAPI::GetAPI())
-			{
-			case RendererAPI::D3D11:
-			{
-				s_VertexShader = VertexShader::CreateFromCompiled("QuadVertexShader.cso");
-				s_PixelShader = PixelShader::CreateFromCompiled("QuadPixelShader.cso");
-				break;
-			}
-			case RendererAPI::OpenGL:
-			{
-				s_VertexShader = VertexShader::CreateFromSource("QuadVertexShader.glsl");
-				s_PixelShader = PixelShader::CreateFromSource("QuadPixelShader.glsl");
-				break;
-			}
-			}
+			s_VertexShader = VertexShader::CreateFromSource("QuadVertexShader.hlsl");
+			s_PixelShader = PixelShader::CreateFromSource("QuadPixelShader.hlsl");
+
 
 			// Matching input layout
 			s_InputLayout = InputLayout::Create(

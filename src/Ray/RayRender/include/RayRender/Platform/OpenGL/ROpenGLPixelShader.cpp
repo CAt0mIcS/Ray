@@ -6,7 +6,8 @@
 #include <RayUtil/RException.h>
 
 #include <glad/glad.h>
-
+#include <ShaderConductor/ShaderConductor.hpp>
+namespace SC = ShaderConductor;
 
 namespace At0::Ray
 {
@@ -18,8 +19,23 @@ namespace At0::Ray
 		}
 		else
 		{
+
 			std::string source = ReadShaderSource(filepath);
-			const char* shaderSource = source.c_str();
+			SC::Compiler::SourceDesc sd{};
+
+			sd.fileName = filepath.data();
+			sd.stage = SC::ShaderStage::PixelShader;
+			sd.source = source.c_str();
+
+			SC::Compiler::Options options{};
+			SC::Compiler::TargetDesc td{};
+			td.language = SC::ShadingLanguage::Glsl;
+
+			SC::Compiler::ResultDesc rd = SC::Compiler::Compile(sd, options, td);
+			if (rd.hasError)
+				RAY_THROW_RUNTIME("[OpenGLPixelShader] Shader Transcompilation failed with message: {0}", (char*)rd.errorWarningMsg.Data());
+
+			const char* shaderSource = (const char*)rd.target.Data();
 
 			m_Shader = glCreateShader(GL_FRAGMENT_SHADER);
 			glShaderSource(m_Shader, 1, &shaderSource, nullptr);
