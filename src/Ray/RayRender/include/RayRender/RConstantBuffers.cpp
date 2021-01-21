@@ -80,5 +80,26 @@ namespace At0::Ray
 
 		return nullptr;
 	}
+	
+	
+#ifdef __GNUC__
+	// RAY_TODO: Add more data
+	// -----------------------------------------------------------------
+	// explicit template instantiation
+
+	// PixelConstantBuffer
+	template Scope<ConstantBuffer> PixelConstantBuffer::Create<Matrix>(const Matrix& data);
+	template Scope<ConstantBuffer> PixelConstantBuffer::Create<Float3>(const Float3& data);
+	template Scope<ConstantBuffer> PixelConstantBuffer::Create<Matrix>();
+	template Scope<ConstantBuffer> PixelConstantBuffer::Create<Float3>();
+
+	// VertexConstantBuffer
+	template Scope<ConstantBuffer> VertexConstantBuffer::Create<Matrix>(const Matrix& data);
+	template Scope<ConstantBuffer> VertexConstantBuffer::Create<Float3>(const Float3& data);
+	template Scope<ConstantBuffer> VertexConstantBuffer::Create<Matrix>();
+	template Scope<ConstantBuffer> VertexConstantBuffer::Create<Float3>();
+	
+#endif
+	
 }
 
