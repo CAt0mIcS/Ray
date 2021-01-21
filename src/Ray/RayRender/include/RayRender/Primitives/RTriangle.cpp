@@ -27,30 +27,17 @@ namespace At0::Ray
 
 			constexpr float side = 1.0f / 2.0f;
 			// Vertices
-			if (RendererAPI::GetAPI() == RendererAPI::D3D11)
-			{
-				s_VertexBuffer = VertexBuffer::Create(
-					{
-						{  0.0f,  0.5f, 0.5f },
-						{  0.5f, -0.5f, 0.5f },
-						{ -0.5f, -0.5f, 0.5f },
-					}
-				);
-			}
-			else if (RendererAPI::GetAPI() == RendererAPI::OpenGL)
-			{
-				s_VertexBuffer = VertexBuffer::Create(
-					{
-						{ -0.5f, -0.5f, 0.5f },
-						{  0.0f,  0.5f, 0.5f },
-						{  0.5f, -0.5f, 0.5f }
-					}
-				);
-			}
-
 			s_IndexBuffer = IndexBuffer::Create(
 				{
 					0, 1, 2
+				}
+			);
+
+			s_VertexBuffer = VertexBuffer::Create(
+				{
+					{  0.0f,  0.5f, 0.5f },
+					{  0.5f, -0.5f, 0.5f },
+					{ -0.5f, -0.5f, 0.5f },
 				}
 			);
 

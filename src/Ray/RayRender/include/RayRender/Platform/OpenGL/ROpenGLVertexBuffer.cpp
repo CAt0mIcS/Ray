@@ -10,18 +10,28 @@
 
 namespace At0::Ray
 {
+	static std::vector<Vertex> FlipVerticesToRightHandedCoordinateSystem(std::initializer_list<Vertex>&& data)
+	{
+		std::vector<Vertex> vertices = std::move(data);
+
+		for (uint32_t i = 0; i < vertices.size() && i > vertices.size() - i; i += 2)
+		{
+			vertices.insert(vertices.begin() + i, { *(vertices.end() - i) });
+			vertices.erase(vertices.end() - i);
+		}
+
+		return vertices;
+	}
+
 	OpenGLVertexBuffer::OpenGLVertexBuffer(std::initializer_list<Vertex> data)
 	{
 		RAY_PROFILE_FUNCTION();
 
-		//glCreateBuffers(1, &m_Buffer);
-		//glBindBuffer(GL_ARRAY_BUFFER, m_Buffer);
-		//glBufferData(GL_ARRAY_BUFFER, data.size(), data.begin(), GL_STATIC_DRAW);
-		// RAY_TODO: Might need to be GL_DYNAMIC_DRAW
+		std::vector<Vertex> convertedData = FlipVerticesToRightHandedCoordinateSystem(std::move(data));
 
 		glGenBuffers(1, &m_Buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, m_Buffer);
-		glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(Vertex), data.begin(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, convertedData.size() * sizeof(Vertex), convertedData.data(), GL_STATIC_DRAW);
 	}
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()

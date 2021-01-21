@@ -25,59 +25,30 @@ namespace At0::Ray
 			RAY_MEXPECTS(!s_VertexShader && !s_PixelShader && !s_InputLayout && !s_IndexBuffer && !s_Topology, "[Quad] Only the VertexBuffer was nullptr.");
 
 			constexpr float side = 1.0f / 2.0f;
-			// Vertices
-			if (RendererAPI::GetAPI() == RendererAPI::D3D11)
-			{
-				s_VertexBuffer = VertexBuffer::Create(
-					{
-						{ -side, -side, -side },
-						{  side, -side, -side },
-						{ -side,  side, -side },
-						{  side,  side, -side },
-						{ -side, -side,  side },
-						{  side, -side,  side },
-						{ -side,  side,  side },
-						{  side,  side,  side },
-					}
-				);
+			// Vertices (automatically converted to right handed coordinate system when using opengl
+			s_VertexBuffer = VertexBuffer::Create(
+				{
+					{ -side, -side, -side },
+					{  side, -side, -side },
+					{ -side,  side, -side },
+					{  side,  side, -side },
+					{ -side, -side,  side },
+					{  side, -side,  side },
+					{ -side,  side,  side },
+					{  side,  side,  side },
+				}
+			);
 
-				s_IndexBuffer = IndexBuffer::Create(
-					{
-						0, 2, 1,  2, 3, 1,
-						1, 3, 5,  3, 7, 5,
-						2, 6, 3,  3, 6, 7,
-						4, 5, 7,  4, 7, 6,
-						0, 4, 2,  2, 4, 6,
-						0, 1, 4,  1, 5, 4
-					}
-				);
-			}
-			else if (RendererAPI::GetAPI() == RendererAPI::OpenGL)
-			{
-				s_VertexBuffer = VertexBuffer::Create(
-					{
-						{ -side, -side,  side },
-						{  side, -side,  side },
-						{  side,  side,  side },
-						{ -side,  side,  side },
-						{ -side, -side, -side },
-						{  side, -side, -side },
-						{  side,  side, -side },
-						{ -side,  side, -side }
-					}
-				);
-
-				s_IndexBuffer = IndexBuffer::Create(
-					{
-						0, 1, 2,  2, 3, 0,
-						1, 5, 6,  6, 2, 1,
-						7, 6, 5,  5, 4, 7,
-						4, 0, 3,  3, 7, 4,
-						4, 5, 1,  1, 0, 4,
-						3, 2, 6,  6, 7, 3
-					}
-				);
-			}
+			s_IndexBuffer = IndexBuffer::Create(
+				{
+					0, 2, 1,  2, 3, 1,
+					1, 3, 5,  3, 7, 5,
+					2, 6, 3,  3, 6, 7,
+					4, 5, 7,  4, 7, 6,
+					0, 4, 2,  2, 4, 6,
+					0, 1, 4,  1, 5, 4
+				}
+			);
 
 			// Default Vertex and Pixel Shader for quads
 			s_VertexShader = VertexShader::CreateFromSource("QuadVertexShader.hlsl");
