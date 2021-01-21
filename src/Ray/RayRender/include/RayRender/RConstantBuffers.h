@@ -42,6 +42,7 @@ namespace At0::Ray
 		static Scope<ConstantBuffer> Create();
 	};
 
+#ifdef _MSC_VER
 	// RAY_TODO: Add more data
 	// -----------------------------------------------------------------
 	// explicit template instantiation
@@ -57,4 +58,5 @@ namespace At0::Ray
 	template RR_API Scope<ConstantBuffer> VertexConstantBuffer::Create<Float3>(const Float3& data);
 	template RR_API Scope<ConstantBuffer> VertexConstantBuffer::Create<Matrix>();
 	template RR_API Scope<ConstantBuffer> VertexConstantBuffer::Create<Float3>();
+#endif
 }

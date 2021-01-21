@@ -4,6 +4,15 @@
 #include "../Core/REntity.h"
 #include "../RConstantBuffers.h"
 
+#ifdef __GNUC__
+#include "../RVertexShader.h"
+#include "../RPixelShader.h"
+#include "../RInputLayout.h"
+#include "../RIndexBuffer.h"
+#include "../RVertexBuffer.h"
+#include "../RTopology.h"
+#endif
+
 #include <string>
 
 

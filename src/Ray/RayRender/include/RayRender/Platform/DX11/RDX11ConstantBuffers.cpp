@@ -1,4 +1,7 @@
 #include "../../RRpch.h"
+
+
+#ifdef _WIN32
 #include "RDX11ConstantBuffers.h"
 
 #include <RayUtil/RException.h>
@@ -86,3 +89,5 @@ namespace At0::Ray
 	template class DX11VertexConstantBuffer<Matrix>;
 	template class DX11VertexConstantBuffer<Float3>;
 }
+
+#endif // _WIN32
