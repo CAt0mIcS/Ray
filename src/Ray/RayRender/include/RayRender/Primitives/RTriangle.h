@@ -20,5 +20,10 @@ namespace At0::Ray
 		/// to the Drawable Quad
 		/// </summary>
 		Triangle(Entity entity);
+
+		virtual ConstantBuffer* GetVertexConstantBuffer() override { return m_TransformConstantBuffer.get(); }
+
+	private:
+		Scope<ConstantBuffer> m_TransformConstantBuffer;
 	};
 }

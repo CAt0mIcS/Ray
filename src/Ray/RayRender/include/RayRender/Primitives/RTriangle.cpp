@@ -53,6 +53,8 @@ namespace At0::Ray
 			// topology
 			s_Topology = Topology::Create(Topology::TriangleList);
 		}
+
+		m_TransformConstantBuffer = VertexConstantBuffer::Create(GetComponent<TransformComponent>().ToMatrix());
 	}
 }
 

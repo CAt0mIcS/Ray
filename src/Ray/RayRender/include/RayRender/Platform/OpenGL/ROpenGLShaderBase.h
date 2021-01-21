@@ -15,7 +15,8 @@ namespace At0::Ray
 
 	protected:
 		void BindProgram();
-		void OnShaderCompilationFailed(int success);
+		void OnVertexShaderCompilationFailed(int success);
+		void OnPixelShaderCompilationFailed(int success);
 		void CreateProgram();
 		std::string ReadShaderSource(std::string_view filepath);
 

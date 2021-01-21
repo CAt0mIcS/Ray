@@ -4,6 +4,7 @@
 
 #include <RayUtil/RTypeConvert.h>
 #include <RayUtil/RException.h>
+#include <RayDebug/RAssert.h>
 
 #include <glad/glad.h>
 #include <ShaderConductor/ShaderConductor.hpp>
@@ -35,7 +36,12 @@ namespace At0::Ray
 			if (rd.hasError)
 				RAY_THROW_RUNTIME("[OpenGLPixelShader] Shader Transcompilation failed with message: {0}", (char*)rd.errorWarningMsg.Data());
 
-			const char* shaderSource = (const char*)rd.target.Data();
+			// Strip any weird characters at the end
+			source = (char*)rd.target.Data();
+			source.resize(rd.target.Size());
+			const char* shaderSource = source.c_str();
+
+			Log::Debug("[OpenGLPixelShader] Converted PixelShader {0} to:\n{1}", filepath, shaderSource);
 
 			m_Shader = glCreateShader(GL_FRAGMENT_SHADER);
 			glShaderSource(m_Shader, 1, &shaderSource, nullptr);
@@ -44,7 +50,7 @@ namespace At0::Ray
 			int success;
 			glGetShaderiv(m_Shader, GL_COMPILE_STATUS, &success);
 
-			OnShaderCompilationFailed(success);
+			OnPixelShaderCompilationFailed(success);
 			CreateProgram();
 		}
 	}

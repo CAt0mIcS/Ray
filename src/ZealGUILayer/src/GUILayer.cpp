@@ -13,7 +13,7 @@
 #endif
 
 
-#define RENDEROBJECT Quad
+#define RENDEROBJECT Triangle
 
 
 

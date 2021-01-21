@@ -143,8 +143,8 @@ namespace At0::Ray
 			d->GetTopology()->Bind();
 
 			// RAY_TEMPORARY
-			//d->GetVertexConstantBuffer()->Update(d->GetComponent<TransformComponent>().ToMatrix().Transpose());
-			//d->GetVertexConstantBuffer()->Bind();
+			d->GetVertexConstantBuffer()->Update(d->GetComponent<TransformComponent>().ToMatrix().Transpose());
+			d->GetVertexConstantBuffer()->Bind();
 
 			GetContext()->DrawIndexed(idxBuff->GetIndicesCount(), 0, 0);
 		}
