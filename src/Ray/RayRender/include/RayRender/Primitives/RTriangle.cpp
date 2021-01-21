@@ -19,7 +19,6 @@ namespace At0::Ray
 	Triangle::Triangle(Entity entity)
 		: DrawableBase(entity)
 	{
-		// RAY_TODO: Different vertex layout depending on opengl or directx
 		// Assume that the other resources are not allocated if the VBuff is not
 		if (!s_VertexBuffer)
 		{

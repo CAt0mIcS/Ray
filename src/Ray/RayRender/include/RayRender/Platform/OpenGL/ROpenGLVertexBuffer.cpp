@@ -12,6 +12,9 @@ namespace At0::Ray
 {
 	static std::vector<Vertex> FlipVerticesToRightHandedCoordinateSystem(std::initializer_list<Vertex>&& data)
 	{
+		RAY_PROFILE_FUNCTION();
+
+		// RAY_TODO: Performance: possible vector reallocation
 		std::vector<Vertex> vertices = std::move(data);
 
 		for (uint32_t i = 0; i < vertices.size() && i > vertices.size() - i; i += 2)
