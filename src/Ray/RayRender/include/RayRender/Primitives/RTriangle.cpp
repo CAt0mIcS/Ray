@@ -54,22 +54,9 @@ namespace At0::Ray
 				}
 			);
 
-			// Default Vertex and Pixel Shader for quads
-			switch (RendererAPI::GetAPI())
-			{
-			case RendererAPI::D3D11:
-			{
-				s_VertexShader = VertexShader::CreateFromCompiled("TriangleVertexShader.cso");
-				s_PixelShader = PixelShader::CreateFromCompiled("TrianglePixelShader.cso");
-				break;
-			}
-			case RendererAPI::OpenGL:
-			{
-				s_VertexShader = VertexShader::CreateFromSource("TriangleVertexShader.glsl");
-				s_PixelShader = PixelShader::CreateFromSource("TrianglePixelShader.glsl");
-				break;
-			}
-			}
+			// Default Vertex and Pixel Shader for triangles
+			s_VertexShader = VertexShader::CreateFromSource("TriangleVertexShader.hlsl");
+			s_PixelShader = PixelShader::CreateFromSource("TrianglePixelShader.hlsl");
 
 			// Matching input layout
 			s_InputLayout = InputLayout::Create(

@@ -65,7 +65,7 @@ namespace At0::Ray
 		virtual PixelShader* GetPixelShader() = 0;
 		virtual InputLayout* GetInputLayout() = 0;
 		virtual Topology* GetTopology() = 0;
-		virtual ConstantBuffer* GetVertexConstantBuffer() = 0;
+		//virtual ConstantBuffer* GetVertexConstantBuffer() = 0;
 
 	private:
 		Entity m_Entity;

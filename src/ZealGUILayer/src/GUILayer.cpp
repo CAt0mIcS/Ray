@@ -13,6 +13,10 @@
 #endif
 
 
+#define RENDEROBJECT Triangle
+
+
+
 class FPS
 {
 public:
@@ -89,7 +93,7 @@ namespace At0::Layers
 #define RENDER 1
 
 	static constexpr uint64_t AmountOfCubes = 1;
-	Ray::Ref<Ray::Quad> Quad;
+	Ray::Ref<Ray::RENDEROBJECT> Quad;
 
 	GUILayer::GUILayer(std::string_view name)
 		: Ray::Layer(name),
@@ -118,7 +122,7 @@ namespace At0::Layers
 			for (uint64_t i = 0; i < AmountOfCubes; ++i)
 			{
 				// Create quad with name Quad[i]
-				Ray::Ref<Ray::Quad> quad = Ray::MakeRef<Ray::Quad>(m_CubeScene.CreateEntity("Quad" + std::to_string(i)));
+				Ray::Ref<Ray::RENDEROBJECT> quad = Ray::MakeRef<Ray::RENDEROBJECT>(m_CubeScene.CreateEntity("Quad" + std::to_string(i)));
 				Quad = quad;
 				// Set transformation (RAY_TODO: TransformConstantBuffers)
 				// This step is optional

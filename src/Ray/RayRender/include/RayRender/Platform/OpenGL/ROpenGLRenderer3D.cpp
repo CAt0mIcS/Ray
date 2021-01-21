@@ -85,8 +85,8 @@ namespace At0::Ray
 			d->GetPixelShader()->Bind();
 
 			// RAY_TEMPORARY
-			d->GetVertexConstantBuffer()->Update(d->GetComponent<TransformComponent>().ToMatrix());
-			d->GetVertexConstantBuffer()->Bind();
+			//d->GetVertexConstantBuffer()->Update(d->GetComponent<TransformComponent>().ToMatrix());
+			//d->GetVertexConstantBuffer()->Bind();
 
 			OpenGLTopology* pTopology = (OpenGLTopology*)d->GetTopology();
 

@@ -21,7 +21,7 @@ namespace At0::Ray
 		/// </summary>
 		Quad(Entity entity);
 
-		virtual ConstantBuffer* GetVertexConstantBuffer() override { return m_TransformConstantBuffer.get(); }
+		//virtual ConstantBuffer* GetVertexConstantBuffer() override { return m_TransformConstantBuffer.get(); }
 
 	private:
 		Scope<ConstantBuffer> m_TransformConstantBuffer;
