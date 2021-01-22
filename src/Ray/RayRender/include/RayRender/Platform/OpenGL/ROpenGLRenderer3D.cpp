@@ -9,7 +9,10 @@
 #include "../../RInputLayout.h"
 #include "../../RTopology.h"
 #include "../../RConstantBuffers.h"
-#include "../../Platform/OpenGL/ROpenGLTopology.h"
+
+#include "ROpenGLTopology.h"
+#include "ROpenGLPixelShader.h"
+#include "ROpenGLVertexShader.h"
 
 #include <RayDebug/RAssert.h>
 #include <RayUtil/RException.h>
@@ -81,8 +84,20 @@ namespace At0::Ray
 			IndexBuffer* idxBuff = d->GetIndexBuffer();
 			idxBuff->Bind();
 
+			auto* pShader = (OpenGLPixelShader*)d->GetPixelShader();
 			d->GetVertexShader()->Bind();
-			d->GetPixelShader()->Bind();
+			pShader->Bind();
+
+			float color[] = { 1.0f, 0.0f, 0.0f };
+
+			uint32_t buffer;
+			glGenBuffers(1, &buffer);
+			glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+			int blockIndex = glGetUniformBlockIndex(pShader->GetProgram(), "type_TriangleColor");
+			glUniformBlockBinding(pShader->GetProgram(), blockIndex, 1);
+			glBindBufferBase(GL_UNIFORM_BUFFER, 1, buffer);
+			glBufferData(GL_UNIFORM_BUFFER, sizeof(color), color, GL_DYNAMIC_DRAW);
+
 
 			// RAY_TEMPORARY
 			d->GetVertexConstantBuffer()->Update(d->GetComponent<TransformComponent>().ToMatrix());

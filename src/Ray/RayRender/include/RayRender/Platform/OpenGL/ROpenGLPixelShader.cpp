@@ -48,7 +48,15 @@ namespace At0::Ray
 			glCompileShader(m_Shader);
 
 			int success;
+			int infoLogLength;
 			glGetShaderiv(m_Shader, GL_COMPILE_STATUS, &success);
+			glGetShaderiv(m_Shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+			if (infoLogLength > 0)
+			{
+				std::vector<char> vShaderErrMsg(infoLogLength + 1);
+				glGetShaderInfoLog(m_Shader, infoLogLength, NULL, &vShaderErrMsg[0]);
+				printf("%s\n", &vShaderErrMsg[0]);
+			}
 
 			OnPixelShaderCompilationFailed(success);
 			CreateProgram();

@@ -6,7 +6,7 @@
 
 namespace At0::Ray
 {
-	class RR_API OpenGLVertexShader : public VertexShader, OpenGLShaderBase
+	class RR_API OpenGLVertexShader : public VertexShader, public OpenGLShaderBase
 	{
 		friend class OpenGLInputLayout;
 	public:

@@ -13,6 +13,8 @@ namespace At0::Ray
 		OpenGLShaderBase() = default;
 		virtual ~OpenGLShaderBase() = default;
 
+		uint32_t GetProgram() const { return m_ShaderProgram; }
+
 	protected:
 		void BindProgram();
 		void OnVertexShaderCompilationFailed(int success);
