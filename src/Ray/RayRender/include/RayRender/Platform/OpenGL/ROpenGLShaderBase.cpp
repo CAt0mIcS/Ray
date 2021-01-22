@@ -32,6 +32,8 @@ namespace At0::Ray
 			glGetShaderInfoLog(m_Shader, 512, NULL, infoLog);
 			Log::Critical("[OpenGLVertexShader] Pixel Shader Compilation failed: {0}", infoLog);
 			RAY_ASSERT(false, "[OpenGLVertexShader] Pixel Shader Compilation failed: {0}", infoLog);
+			glDeleteShader(m_Shader);
+			glDeleteProgram(m_ShaderProgram);
 		}
 	}
 
@@ -57,6 +59,8 @@ namespace At0::Ray
 			glGetProgramInfoLog(m_ShaderProgram, 512, NULL, infoLog);
 			Log::Critical("[OpenGLVertexShader] Vertex Shader Linkage failed: {0}", infoLog);
 			RAY_ASSERT(false, "[OpenGLVertexShader] Vertex Shader Linkage failed: {0}", infoLog);
+			glDeleteShader(m_Shader);
+			glDeleteProgram(m_ShaderProgram);
 		}
 	}
 

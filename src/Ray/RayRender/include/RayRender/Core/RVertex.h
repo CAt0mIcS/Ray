@@ -19,8 +19,9 @@ namespace At0::Ray
 	// Describes what VertexData::m_Data looks like
 	class VertexLayout
 	{
+		class Element;
 	public:
-		enum ElementType
+		enum ElementType : uint8_t
 		{
 			Position2D,
 			Position3D,
@@ -108,7 +109,7 @@ namespace At0::Ray
 			case Count:			return sizeof(long double);
 			}
 
-			RAY_ASSERT(false, "[VertexLayout::SizeOf] Type (ID={0}) is invalid.", (uint32_t)type);
+			RAY_ASSERT(false, "[VertexLayout::SizeOf] Type (ID={0}) is invalid.", (uint8_t)type);
 			return 0;
 		}
 
@@ -128,6 +129,17 @@ namespace At0::Ray
 			return QueryNextOffset();
 		}
 
+		/// <returns>The number of added ElementTypes</returns>
+		uint8_t Size() const
+		{
+			return (uint8_t)m_Elements.size();
+		}
+
+		Element& operator[](uint8_t i)
+		{
+			return m_Elements[i];
+		}
+
 		template<ElementType Type>
 		size_t QueryOffset() const
 		{
@@ -141,6 +153,31 @@ namespace At0::Ray
 			}
 
 			return offset;
+		}
+
+		/// <summary>
+		/// Gets the number of components in a specific type.
+		/// The number of components in e.g. Position3D is (float x, y, z) 3
+		/// </summary>
+		/// <returns>The number of components in type</returns>
+		constexpr uint8_t NumberOfComponentsInType(ElementType type) const
+		{
+			switch (type)
+			{
+			case Position2D:	return 2;
+			case Position3D:	return 3;
+			case Texture2D:		return 2;
+			case Normal:		return 3;
+			case Tangent:		return 3;
+			case Bitangent:		return 3;
+			case Float3Color:	return 3;
+			case Float4Color:	return 4;
+			case BGRAColor:		return 4;
+			case Count:			return 1;
+			}
+
+			RAY_ASSERT(false, "[VertexLayout::NumberOfComponentsInType] ElementType (ID={0}) is invalid.", (uint8_t)type);
+			return 0;
 		}
 
 	public:
@@ -162,6 +199,8 @@ namespace At0::Ray
 			{
 				return m_Type;
 			}
+
+
 
 		private:
 			size_t m_Offset;
@@ -270,6 +309,11 @@ namespace At0::Ray
 		size_t Size() const
 		{
 			return m_Data.size() / m_Layout.SizeBytes();
+		}
+
+		uint8_t NumberOfElementTypes() const
+		{
+			return m_Layout.Size();
 		}
 
 		Vertex operator[](size_t i)

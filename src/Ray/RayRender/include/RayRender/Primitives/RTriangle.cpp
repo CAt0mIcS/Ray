@@ -26,14 +26,7 @@ namespace At0::Ray
 		{
 			RAY_MEXPECTS(!s_VertexShader && !s_PixelShader && !s_InputLayout && !s_IndexBuffer && !s_Topology, "[Quad] Only the VertexBuffer was nullptr.");
 
-			constexpr float side = 1.0f / 2.0f;
 			// Vertices
-			s_IndexBuffer = IndexBuffer::Create(
-				{
-					0, 1, 2
-				}
-			);
-
 			VertexLayout layout;
 			layout.Append<VertexLayout::Position3D>();
 
@@ -41,16 +34,15 @@ namespace At0::Ray
 			data[0].Set<VertexLayout::Position3D>({ 0.0f,  0.5f, 0.5f });
 			data[1].Set<VertexLayout::Position3D>({ 0.5f, -0.5f, 0.5f });
 			data[2].Set<VertexLayout::Position3D>({ -0.5f, -0.5f, 0.5f });
-
-			//s_VertexBuffer = VertexBuffer::Create(
-			//	{
-			//		{  0.0f,  0.5f, 0.5f },
-			//		{  0.5f, -0.5f, 0.5f },
-			//		{ -0.5f, -0.5f, 0.5f },
-			//	}
-			//);
-
 			s_VertexBuffer = VertexBuffer::Create(data);
+
+
+			s_IndexBuffer = IndexBuffer::Create(
+				{
+					0, 1, 2
+				}
+			);
+
 
 			// Default Vertex and Pixel Shader for triangles
 			s_VertexShader = VertexShader::CreateFromSource("TriangleVertexShader.hlsl");

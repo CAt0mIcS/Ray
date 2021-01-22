@@ -32,6 +32,15 @@ namespace At0::Ray
 		glGenBuffers(1, &m_Buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, m_Buffer);
 		glBufferData(GL_ARRAY_BUFFER, convertedData.SizeBytes(), convertedData.Data(), GL_STATIC_DRAW);
+
+		for (uint32_t i = 0; i < convertedData.NumberOfElementTypes(); ++i)
+		{
+			glEnableVertexAttribArray(i);
+			glVertexAttribPointer(i,
+				convertedData.Layout().NumberOfComponentsInType(convertedData.Layout()[i].Type()),
+				GL_FLOAT, GL_FALSE, 0, nullptr
+			);
+		}
 	}
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
