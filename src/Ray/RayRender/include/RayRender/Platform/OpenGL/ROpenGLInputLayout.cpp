@@ -8,12 +8,14 @@
 
 #include <glad/glad.h>
 #include "../../RVertexBuffer.h"
+#include "../../Core/RVertex.h"
 
 
 namespace At0::Ray
 {
 	OpenGLInputLayout::OpenGLInputLayout(std::initializer_list<InputElement> inputElements, const VertexShader* vShader)
 	{
+		// RAY_TODO: Apply vertex changes
 		for (uint32_t i = 0; i < inputElements.size(); ++i)
 		{
 			glEnableVertexAttribArray(i);

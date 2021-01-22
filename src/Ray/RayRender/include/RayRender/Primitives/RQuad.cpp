@@ -3,7 +3,9 @@
 
 #include <RayUtil/RComponents.h>
 
+#include "../Core/RVertex.h"
 #include "../Core/RScene.h"
+
 #include "../RVertexShader.h"
 #include "../RPixelShader.h"
 #include "../RInputLayout.h"
@@ -25,19 +27,33 @@ namespace At0::Ray
 			RAY_MEXPECTS(!s_VertexShader && !s_PixelShader && !s_InputLayout && !s_IndexBuffer && !s_Topology, "[Quad] Only the VertexBuffer was nullptr.");
 
 			constexpr float side = 1.0f / 2.0f;
+			VertexLayout layout;
+			layout.Append<VertexLayout::Position3D>();
+			VertexData data(layout, 8);
+			data[0].Set<VertexLayout::Position3D>({ -side, -side, -side });
+			data[1].Set<VertexLayout::Position3D>({ side, -side, -side });
+			data[2].Set<VertexLayout::Position3D>({ -side,  side, -side });
+			data[3].Set<VertexLayout::Position3D>({ side,  side, -side });
+			data[4].Set<VertexLayout::Position3D>({ -side, -side,  side });
+			data[5].Set<VertexLayout::Position3D>({ side, -side,  side });
+			data[6].Set<VertexLayout::Position3D>({ -side,  side,  side });
+			data[7].Set<VertexLayout::Position3D>({ side,  side,  side });
+
 			// Vertices (automatically converted to right handed coordinate system when using opengl
-			s_VertexBuffer = VertexBuffer::Create(
-				{
-					{ -side, -side, -side },
-					{  side, -side, -side },
-					{ -side,  side, -side },
-					{  side,  side, -side },
-					{ -side, -side,  side },
-					{  side, -side,  side },
-					{ -side,  side,  side },
-					{  side,  side,  side },
-				}
-			);
+			//s_VertexBuffer = VertexBuffer::Create(
+			//	{
+			//		{ -side, -side, -side },
+			//		{  side, -side, -side },
+			//		{ -side,  side, -side },
+			//		{  side,  side, -side },
+			//		{ -side, -side,  side },
+			//		{  side, -side,  side },
+			//		{ -side,  side,  side },
+			//		{  side,  side,  side },
+			//	}
+			//);
+
+			s_VertexBuffer = VertexBuffer::Create(data);
 
 			s_IndexBuffer = IndexBuffer::Create(
 				{

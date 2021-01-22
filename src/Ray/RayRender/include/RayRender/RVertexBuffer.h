@@ -6,18 +6,12 @@
 
 namespace At0::Ray
 {
-	struct Vertex
-	{
-		struct
-		{
-			float x, y, z;
-		} pos;
-	};
+	class VertexData;
 
 	class RR_API VertexBuffer
 	{
 	public:
-		static Scope<VertexBuffer> Create(std::initializer_list<Vertex> data);
+		static Scope<VertexBuffer> Create(const VertexData& data);
 
 		virtual void Bind() = 0;
 		virtual ~VertexBuffer() = default;

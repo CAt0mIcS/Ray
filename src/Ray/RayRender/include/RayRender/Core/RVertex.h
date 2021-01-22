@@ -80,7 +80,7 @@ namespace At0::Ray
 			using SysType = Float4;
 			static constexpr size_t Size = sizeof(SysType);
 		};
-		template<> struct Map<Count>
+		template<> struct Map<BGRAColor>
 		{
 			using SysType = ::At0::Ray::BGRAColor;
 			static constexpr size_t Size = sizeof(SysType);
@@ -279,6 +279,22 @@ namespace At0::Ray
 		ConstVertex operator[](size_t i) const
 		{
 			return const_cast<VertexData&>(*this)[i];
+		}
+
+		VertexLayout& Layout() { return m_Layout; }
+		const VertexLayout& Layout() const { return m_Layout; }
+
+		void Swap(size_t i1, size_t i2)
+		{
+			char* data1 = m_Data.data() + i1;
+			char* data2 = m_Data.data() + i2;
+
+			std::swap_ranges(m_Data.begin() + i1, m_Data.begin() + i1 + m_Layout.SizeBytes(), m_Data.begin() + i2);
+		}
+
+		const char* Data() const
+		{
+			return m_Data.data();
 		}
 
 	private:

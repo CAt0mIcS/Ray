@@ -4,6 +4,8 @@
 #include <RayUtil/RComponents.h>
 
 #include "../Core/RScene.h"
+#include "../Core/RVertex.h"
+
 #include "../RVertexShader.h"
 #include "../RPixelShader.h"
 #include "../RInputLayout.h"
@@ -32,13 +34,23 @@ namespace At0::Ray
 				}
 			);
 
-			s_VertexBuffer = VertexBuffer::Create(
-				{
-					{  0.0f,  0.5f, 0.5f },
-					{  0.5f, -0.5f, 0.5f },
-					{ -0.5f, -0.5f, 0.5f },
-				}
-			);
+			VertexLayout layout;
+			layout.Append<VertexLayout::Position3D>();
+
+			VertexData data(layout, 3);
+			data[0].Set<VertexLayout::Position3D>({ 0.0f,  0.5f, 0.5f });
+			data[1].Set<VertexLayout::Position3D>({ 0.5f, -0.5f, 0.5f });
+			data[2].Set<VertexLayout::Position3D>({ -0.5f, -0.5f, 0.5f });
+
+			//s_VertexBuffer = VertexBuffer::Create(
+			//	{
+			//		{  0.0f,  0.5f, 0.5f },
+			//		{  0.5f, -0.5f, 0.5f },
+			//		{ -0.5f, -0.5f, 0.5f },
+			//	}
+			//);
+
+			s_VertexBuffer = VertexBuffer::Create(data);
 
 			// Default Vertex and Pixel Shader for triangles
 			s_VertexShader = VertexShader::CreateFromSource("TriangleVertexShader.hlsl");
