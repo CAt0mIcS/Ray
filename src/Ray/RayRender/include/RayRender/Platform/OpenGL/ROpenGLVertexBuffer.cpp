@@ -11,23 +11,16 @@
 
 namespace At0::Ray
 {
-	static VertexData FlipVerticesToRightHandedCoordinateSystem(const VertexData& data)
+	static VertexData FlipVerticesToRightHandedCoordinateSystem(VertexData data)
 	{
 		RAY_PROFILE_FUNCTION();
 
-		// RAY_TODO: Performance: possible vector reallocation
-		//std::vector<Vertex> vertices(data.Size());
-		VertexData newData = data;
-
-		for (uint32_t i = 0; i < newData.Size() && i > newData.Size() - i; i += 2)
+		for (uint32_t i = 0; i < data.Size() && i > data.Size() - i; i += 2)
 		{
-			//vertices.insert(vertices.begin() + i, { *(vertices.end() - i) });
-			//vertices.erase(vertices.end() - i);
-
-			newData.Swap(i, newData.Size() - i);
+			data.Swap(i, data.Size() - i);
 		}
 
-		return newData;
+		return data;
 	}
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(const VertexData& data)

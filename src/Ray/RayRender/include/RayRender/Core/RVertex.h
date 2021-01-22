@@ -122,6 +122,7 @@ namespace At0::Ray
 			return *this;
 		}
 
+		/// <returns>Gets the size in bytes of one vertex</returns>
 		size_t SizeBytes() const
 		{
 			return QueryNextOffset();

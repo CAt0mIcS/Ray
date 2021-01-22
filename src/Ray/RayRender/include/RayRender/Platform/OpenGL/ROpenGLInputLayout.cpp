@@ -19,7 +19,7 @@ namespace At0::Ray
 		for (uint32_t i = 0; i < inputElements.size(); ++i)
 		{
 			glEnableVertexAttribArray(i);
-			glVertexAttribPointer(i, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
+			glVertexAttribPointer(i, 3, GL_FLOAT, GL_FALSE, 12, nullptr);
 		}
 	}
 
