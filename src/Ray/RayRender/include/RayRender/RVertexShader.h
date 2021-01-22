@@ -15,5 +15,8 @@ namespace At0::Ray
 		virtual void Bind() = 0;
 
 		virtual ~VertexShader() = default;
+
+	protected:
+		VertexShader() = default;
 	};
 }

@@ -12,5 +12,8 @@ namespace At0::Ray
 
 		virtual void Bind() = 0;
 		virtual uint32_t GetIndicesCount() const = 0;
+
+	protected:
+		IndexBuffer() = default;
 	};
 }

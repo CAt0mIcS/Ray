@@ -16,5 +16,8 @@ namespace At0::Ray
 
 		virtual void Bind() = 0;
 		virtual ~VertexBuffer() = default;
+
+	protected:
+		VertexBuffer() = default;
 	};
 }

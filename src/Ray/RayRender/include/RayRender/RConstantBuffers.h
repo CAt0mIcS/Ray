@@ -17,6 +17,9 @@ namespace At0::Ray
 		virtual void Update(const Float3& data) {};
 
 		virtual ~ConstantBuffer() = default;
+
+	protected:
+		ConstantBuffer() = default;
 	};
 
 
@@ -29,6 +32,8 @@ namespace At0::Ray
 
 		template<typename T>
 		static Scope<ConstantBuffer> Create();
+
+		PixelConstantBuffer() = delete;
 	};
 
 	// -----------------------------------------------------------------
@@ -40,6 +45,8 @@ namespace At0::Ray
 
 		template<typename T>
 		static Scope<ConstantBuffer> Create();
+
+		VertexConstantBuffer() = delete;
 	};
 
 #ifdef _MSC_VER

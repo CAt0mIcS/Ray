@@ -16,5 +16,8 @@ namespace At0::Ray
 		static Scope<Topology> Create(Type type);
 
 		virtual void Bind() = 0;
+
+	protected:
+		Topology() = default;
 	};
 }
