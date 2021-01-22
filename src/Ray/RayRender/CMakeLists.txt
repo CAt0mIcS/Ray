@@ -6,6 +6,7 @@ set(SRC
     "include/RayRender/RRendererAPI.cpp"
 
     # Core functionality classes
+    "include/RayRender/Core/RVertex.h"
     "include/RayRender/Core/RScene.h"
     "include/RayRender/Core/RScene.cpp"
     "include/RayRender/Core/REntity.h"

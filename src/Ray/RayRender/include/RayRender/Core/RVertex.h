@@ -1,0 +1,292 @@
+#pragma once
+
+#include <vector>
+
+#include <../../RayUtil/include/RayUtil/RMath.h>
+#include <../../RayDebug/include/RayDebug/RAssert.h>
+
+
+namespace At0::Ray
+{
+	struct BGRAColor
+	{
+		uint8_t a;
+		uint8_t r;
+		uint8_t g;
+		uint8_t b;
+	};
+
+	// Describes what VertexData::m_Data looks like
+	class VertexLayout
+	{
+	public:
+		enum ElementType
+		{
+			Position2D,
+			Position3D,
+			Texture2D,
+			Normal,
+			Tangent,
+			Bitangent,
+			Float3Color,
+			Float4Color,
+			BGRAColor,
+			Count,
+		};
+
+	public:
+		VertexLayout()
+		{
+		}
+
+		template<ElementType Type> struct Map;
+		template<> struct Map<Position2D>
+		{
+			using SysType = Float2;
+			static constexpr size_t Size = sizeof(SysType);
+		};
+		template<> struct Map<Position3D>
+		{
+			using SysType = Float3;
+			static constexpr size_t Size = sizeof(SysType);
+		};
+		template<> struct Map<Texture2D>
+		{
+			using SysType = Float2;
+			static constexpr size_t Size = sizeof(SysType);
+		};
+		template<> struct Map<Normal>
+		{
+			using SysType = Float3;
+			static constexpr size_t Size = sizeof(SysType);
+		};
+		template<> struct Map<Tangent>
+		{
+			using SysType = Float3;
+			static constexpr size_t Size = sizeof(SysType);
+		};
+		template<> struct Map<Bitangent>
+		{
+			using SysType = Float3;
+			static constexpr size_t Size = sizeof(SysType);
+		};
+		template<> struct Map<Float3Color>
+		{
+			using SysType = Float3;
+			static constexpr size_t Size = sizeof(SysType);
+		};
+		template<> struct Map<Float4Color>
+		{
+			using SysType = Float4;
+			static constexpr size_t Size = sizeof(SysType);
+		};
+		template<> struct Map<Count>
+		{
+			using SysType = ::At0::Ray::BGRAColor;
+			static constexpr size_t Size = sizeof(SysType);
+		};
+		template<> struct Map<Count>
+		{
+			using SysType = long double;
+			static constexpr size_t Size = sizeof(SysType);
+		};
+
+		/// <returns>The size of the struct associated with the ElementType</returns>
+		static constexpr uint32_t SizeOf(ElementType type)
+		{
+			switch (type)
+			{
+			case Position2D:	return sizeof(Float2);
+			case Position3D:	return sizeof(Float3);
+			case Texture2D:		return sizeof(Float2);
+			case Normal:		return sizeof(Float3);
+			case Tangent:		return sizeof(Float3);
+			case Bitangent:		return sizeof(Float3);
+			case Float3Color:	return sizeof(Float3);
+			case Float4Color:	return sizeof(Float4);
+			case BGRAColor:		return sizeof(::At0::Ray::BGRAColor);
+			case Count:			return sizeof(long double);
+			}
+
+			RAY_ASSERT(false, "[VertexLayout::SizeOf] Type (ID={0}) is invalid.", (uint32_t)type);
+			return 0;
+		}
+
+		/// <summary>
+		/// Adds a new ElementType to the dynamic vertex
+		/// </summary>
+		template<ElementType... Type>
+		VertexLayout& Append()
+		{
+			(m_Elements.emplace_back(Type, QueryNextOffset()), ...);
+			return *this;
+		}
+
+		size_t SizeBytes() const
+		{
+			return QueryNextOffset();
+		}
+
+		template<ElementType Type>
+		size_t QueryOffset() const
+		{
+			size_t offset = 0;
+			for (const Element& elem : m_Elements)
+			{
+				offset += elem.Offset();
+
+				if (elem.Type() == Type)
+					break;
+			}
+
+			return offset;
+		}
+
+	public:
+		/// <summary>
+		/// Specifies all the appended ElementTypes
+		/// </summary>
+		class Element
+		{
+		public:
+			Element(ElementType type, size_t offset)
+				: m_Type(type), m_Offset(offset) {}
+
+			size_t Offset() const
+			{
+				return m_Offset;
+			}
+
+			ElementType Type() const
+			{
+				return m_Type;
+			}
+
+		private:
+			size_t m_Offset;
+			ElementType m_Type;
+		};
+
+	private:
+		size_t QueryNextOffset() const
+		{
+			size_t offset = 0;
+			for (const Element& elem : m_Elements)
+			{
+				offset += elem.Offset();
+			}
+
+			if (m_Elements.size() > 0)
+				offset += SizeOf(m_Elements.back().Type());
+
+			return offset;
+		}
+
+	private:
+		std::vector<Element> m_Elements;
+	};
+
+
+	// Basically a view into VertexData::m_Data
+	class Vertex
+	{
+		friend class VertexData;
+	public:
+		/// <summary>
+		/// Getter for the specified ElementType
+		/// </summary>
+		/// <returns>A view into the memory where the ElementType is stored</returns>
+		template<VertexLayout::ElementType Type>
+		auto& Attribute()
+		{
+			return *(typename VertexLayout::Map<Type>::SysType*)(m_VertexStart + m_Layout.QueryOffset<Type>());
+		}
+
+		/// <summary>
+		/// Sets the specified ElementType. Expect unexpected results when trying to set a ElementType
+		/// that was not added to the VertexLayout
+		/// </summary>
+		/// <param name="data">Is the data to set</param>
+		/// <returns>Reference to the location where the data was set</returns>
+		template<VertexLayout::ElementType Type>
+		auto& Set(const typename VertexLayout::Map<Type>::SysType& data)
+		{
+			using SysType = typename VertexLayout::Map<Type>::SysType;
+
+			SysType& type = *(SysType*)(m_VertexStart + m_Layout.QueryOffset<Type>());
+			type = data;
+			return type;
+		}
+
+	private:
+		Vertex(char* vertexStart, const VertexLayout& layout)
+			: m_VertexStart(vertexStart), m_Layout(layout) {}
+
+	private:
+		char* m_VertexStart;
+		const VertexLayout& m_Layout;
+	};
+
+	// Const version
+	class ConstVertex
+	{
+	public:
+		ConstVertex(const Vertex& v)
+			: m_V(v) {}
+
+		/// <summary>
+		/// Getter for the specified ElementType
+		/// </summary>
+		/// <returns>A constant view into the memory where the ElementType is stored</returns>
+		template<VertexLayout::ElementType Type>
+		const auto& Attribute() const
+		{
+			return const_cast<Vertex&>(m_V).Attribute<Type>();
+		}
+
+	private:
+		Vertex m_V;
+	};
+
+
+	// Vertices data storage
+	class VertexData
+	{
+	public:
+		VertexData(VertexLayout layout, size_t numVertices)
+			: m_Layout(std::move(layout))
+		{
+			m_Data.resize(m_Layout.SizeBytes() * numVertices);
+		}
+
+		/// <returns>The size of all vertices in bytes</returns>
+		size_t SizeBytes() const
+		{
+			return m_Data.size();
+		}
+
+		/// <returns>The number of vertices</returns>
+		size_t Size() const
+		{
+			return m_Data.size() / m_Layout.SizeBytes();
+		}
+
+		Vertex operator[](size_t i)
+		{
+			return { m_Data.data() + (m_Layout.SizeBytes() * i), m_Layout };
+		}
+
+		ConstVertex operator[](size_t i) const
+		{
+			return const_cast<VertexData&>(*this)[i];
+		}
+
+	private:
+		VertexLayout m_Layout;
+
+		// Holds all the vertex data.
+		// Location anf offset for a specific Vertex is stored in the layout
+		std::vector<char> m_Data;
+	};
+
+}
