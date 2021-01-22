@@ -10,6 +10,8 @@
 
 namespace At0::Ray
 {
+	class Camera;
+
 	class RR_API Renderer3D
 	{
 	public:
@@ -17,7 +19,7 @@ namespace At0::Ray
 
 		virtual ~Renderer3D() = default;
 
-		virtual void Draw(Scene& scene) = 0;
+		virtual void Draw(const Camera& camera, Scene& scene) = 0;
 		virtual void ClearBuffer(float red, float green, float blue) = 0;
 		virtual void EndDraw() = 0;
 

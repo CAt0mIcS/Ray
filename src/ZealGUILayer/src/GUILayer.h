@@ -24,7 +24,9 @@ namespace At0::Layers
 		Ray::EventListener<Ray::MouseWheelUpEvent>,
 		Ray::EventListener<Ray::MouseWheelDownEvent>,
 		Ray::EventListener<Ray::MouseWheelLeftEvent>,
-		Ray::EventListener<Ray::MouseWheelRightEvent>
+		Ray::EventListener<Ray::MouseWheelRightEvent>,
+
+		Ray::EventListener<Ray::WindowResizeEvent>
 	{
 	public:
 		GUILayer(std::string_view name);
@@ -47,8 +49,11 @@ namespace At0::Layers
 		virtual void OnEvent(Ray::Widget& receiver, Ray::MouseWheelLeftEvent& e) override;
 		virtual void OnEvent(Ray::Widget& receiver, Ray::MouseWheelRightEvent& e) override;
 
+		virtual void OnEvent(Ray::Widget& receiver, Ray::WindowResizeEvent& e) override;
+
 	private:
 		Ray::Scene m_CubeScene;
+		Ray::PerspectiveCamera m_Camera;
 	};
 }
 

@@ -148,6 +148,9 @@ namespace At0::Layers
 				m_CubeScene.Submit(quad);
 			}
 		}
+
+		Ray::Size2 size = GetMainWindow().GetSize();
+		m_Camera.Projection = Ray::Matrix::PerspectiveLH(1.0f, size.y / size.x, 0.5f, 500.0f);
 #endif
 	}
 
@@ -158,7 +161,7 @@ namespace At0::Layers
 		Ray::Ref<Ray::Renderer3D> renderer = GetMainWindow().GetRenderer3D();
 		renderer->ClearBuffer(0.07f, 0.0f, 0.12f);
 
-		renderer->Draw(m_CubeScene);
+		renderer->Draw(m_Camera, m_CubeScene);
 		renderer->EndDraw();
 
 		static float pitch = 0.0f;
@@ -234,17 +237,14 @@ namespace At0::Layers
 		RAY_PROFILE_FUNCTION();
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
 
-		Ray::TransformComponent& tform = Quad->GetComponent<Ray::TransformComponent>();
-		--tform.Translation.z;
+		m_Camera.z -= 2.0f;
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::MouseWheelDownEvent& e)
 	{
 		RAY_PROFILE_FUNCTION();
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
-
-		Ray::TransformComponent& tform = Quad->GetComponent<Ray::TransformComponent>();
-		++tform.Translation.z;
+		m_Camera.z += 2.0f;
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::MouseWheelLeftEvent& e)
@@ -257,6 +257,14 @@ namespace At0::Layers
 	{
 		RAY_PROFILE_FUNCTION();
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
+	}
+
+	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::WindowResizeEvent& e)
+	{
+		RAY_PROFILE_FUNCTION();
+		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
+
+		m_Camera.Projection = Ray::Matrix::PerspectiveLH(1.0f, e.GetSize().y / e.GetSize().x, 0.5f, 500.0f);
 	}
 
 }

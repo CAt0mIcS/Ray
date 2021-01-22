@@ -5,7 +5,6 @@
 #include "../../RRenderer3D.h"
 
 #include "RDX11GraphicsResources.h"
-#include "../../Core/RPerspectiveCamera.h"
 
 #include <../../RayEvent/include/RayEvent/REventListener.h>
 #include <wrl.h>
@@ -17,6 +16,8 @@ struct IDXGISwapChain;
 
 namespace At0::Ray
 {
+	class Camera;
+
 	class RR_API DX11Renderer3D : public Renderer3D, DX11GraphicsResources,
 		EventListener<WindowResizeEvent>
 	{
@@ -24,7 +25,7 @@ namespace At0::Ray
 		DX11Renderer3D(HWND hWnd, EventDispatcher<WindowResizeEvent>& resizeDispatcher);
 		~DX11Renderer3D();
 
-		virtual void Draw(Scene& scene) override;
+		virtual void Draw(const Camera& camera, Scene& scene) override;
 		virtual void ClearBuffer(float red, float green, float blue) override;
 		virtual void EndDraw() override;
 
@@ -39,10 +40,6 @@ namespace At0::Ray
 		/// Handles viewport resizing
 		/// </summary>
 		virtual void OnEvent(Widget& receiver, WindowResizeEvent& e);
-
-		// RAY_DEBUG
-	public:
-		PerspectiveCamera m_Camera;
 
 	private:
 		HWND m_hWnd;

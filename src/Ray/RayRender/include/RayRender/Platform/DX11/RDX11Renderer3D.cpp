@@ -10,6 +10,8 @@
 #include "../../RTopology.h"
 #include "../../RConstantBuffers.h"
 
+#include "../../Core/RCamera.h"
+
 #include <RayDebug/RAssert.h>
 #include <RayUtil/RException.h>
 #include <RayDebug/RInstrumentor.h>
@@ -126,7 +128,7 @@ namespace At0::Ray
 		RAY_GFX_THROW_FAILED(m_pSwapChain->Present(m_SyncInterval, 0));
 	}
 
-	void DX11Renderer3D::Draw(Scene& scene)
+	void DX11Renderer3D::Draw(const Camera& camera, Scene& scene)
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -141,7 +143,10 @@ namespace At0::Ray
 			d->GetTopology()->Bind();
 
 			// RAY_TEMPORARY
-			d->GetVertexConstantBuffer()->Update(d->GetComponent<TransformComponent>().ToMatrix().Transpose());
+			d->GetVertexConstantBuffer()->Update(
+				(d->GetComponent<TransformComponent>().ToMatrix() *
+					camera.GetMatrix() * camera.Projection).Transpose()
+			);
 			d->GetVertexConstantBuffer()->Bind();
 
 			GetContext()->DrawIndexed(idxBuff->GetIndicesCount(), 0, 0);

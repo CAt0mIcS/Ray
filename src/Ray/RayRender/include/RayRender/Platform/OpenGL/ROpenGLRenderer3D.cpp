@@ -13,6 +13,8 @@
 #include "ROpenGLPixelShader.h"
 #include "ROpenGLVertexShader.h"
 
+#include "../../Core/RCamera.h"
+
 #include <RayDebug/RAssert.h>
 #include <RayUtil/RException.h>
 #include <RayDebug/RInstrumentor.h>
@@ -72,7 +74,7 @@ namespace At0::Ray
 		glfwSwapBuffers(m_hWnd);
 	}
 
-	void OpenGLRenderer3D::Draw(Scene& scene)
+	void OpenGLRenderer3D::Draw(const Camera& camera, Scene& scene)
 	{
 		RAY_PROFILE_FUNCTION();
 

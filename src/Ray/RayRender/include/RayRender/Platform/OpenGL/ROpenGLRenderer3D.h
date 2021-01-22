@@ -10,6 +10,8 @@ struct GLFWwindow;
 
 namespace At0::Ray
 {
+	class Camera;
+
 	class RR_API OpenGLRenderer3D : public Renderer3D,
 		EventListener<WindowResizeEvent>
 	{
@@ -17,7 +19,7 @@ namespace At0::Ray
 		OpenGLRenderer3D(GLFWwindow* hWnd, EventDispatcher<WindowResizeEvent>& resizeDispatcher);
 		~OpenGLRenderer3D();
 
-		virtual void Draw(Scene& scene) override;
+		virtual void Draw(const Camera& camera, Scene& scene) override;
 		virtual void ClearBuffer(float red, float green, float blue) override;
 		virtual void EndDraw() override;
 

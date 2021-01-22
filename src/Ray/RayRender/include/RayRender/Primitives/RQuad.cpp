@@ -38,24 +38,9 @@ namespace At0::Ray
 			data[6].Set<VertexLayout::Position3D>({ -side,  side,  side });
 			data[7].Set<VertexLayout::Position3D>({ side,  side,  side });
 
-			// Vertices (automatically converted to right handed coordinate system when using opengl
-			//s_VertexBuffer = VertexBuffer::Create(
-			//	{
-			//		{ -side, -side, -side },
-			//		{  side, -side, -side },
-			//		{ -side,  side, -side },
-			//		{  side,  side, -side },
-			//		{ -side, -side,  side },
-			//		{  side, -side,  side },
-			//		{ -side,  side,  side },
-			//		{  side,  side,  side },
-			//	}
-			//);
-
 			// Default Vertex and Pixel Shader for quads
 			s_VertexShader = VertexShader::CreateFromSource("QuadVertexShader.hlsl");
 			s_PixelShader = PixelShader::CreateFromSource("QuadPixelShader.hlsl");
-
 
 			s_VertexBuffer = VertexBuffer::Create(data, s_VertexShader);
 
@@ -75,9 +60,7 @@ namespace At0::Ray
 		}
 
 		// RAY_TODO: Update mvp with camera
-		Matrix quadTransform = GetComponent<TransformComponent>().ToMatrix();
-		Matrix mvp = quadTransform;
-		m_TransformConstantBuffer = VertexConstantBuffer::Create<Matrix>(mvp);
+		m_TransformConstantBuffer = VertexConstantBuffer::Create<Matrix>(GetComponent<TransformComponent>().ToMatrix());
 	}
 }
 
