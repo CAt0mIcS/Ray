@@ -158,11 +158,19 @@ namespace At0::Layers
 	void GUILayer::OnUpdate(Ray::Timestep ts)
 	{
 #if RENDER
+		Ray::Window& window = GetMainWindow();
 		Ray::Ref<Ray::Renderer3D> renderer = GetMainWindow().GetRenderer3D();
 		renderer->ClearBuffer(0.07f, 0.0f, 0.12f);
 
 		renderer->Draw(m_Camera, m_CubeScene);
 		renderer->EndDraw();
+
+		static constexpr float baseSpeed = 9.0f;
+		float forwardSpeed;
+		if (window.Keyboard.IsKeyPressed(Ray::Key::LeftShift))
+			forwardSpeed = baseSpeed * 2.0f * ts;
+		else
+			forwardSpeed = baseSpeed * ts;
 
 		static float pitch = 0.0f;
 		static float yaw = 0.0f;
@@ -171,6 +179,16 @@ namespace At0::Layers
 		pitch += 0.5f * ts;
 		yaw += 0.5f * ts;
 		roll += 0.5f * ts;
+
+		// Camera movement
+		if (window.Keyboard.IsKeyPressed(Ray::Key::W))
+		{
+
+		}
+		else if (window.Keyboard.IsKeyPressed(Ray::Key::S))
+		{
+
+		}
 
 		auto& tform = Quad->GetComponent<Ray::TransformComponent>();
 		tform.Rotation = Ray::Quaternion::RotationRollPitchYaw(pitch, yaw, roll);
@@ -236,15 +254,12 @@ namespace At0::Layers
 	{
 		RAY_PROFILE_FUNCTION();
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
-
-		m_Camera.z -= 2.0f;
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::MouseWheelDownEvent& e)
 	{
 		RAY_PROFILE_FUNCTION();
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
-		m_Camera.z += 2.0f;
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::MouseWheelLeftEvent& e)

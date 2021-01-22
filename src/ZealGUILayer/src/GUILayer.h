@@ -54,6 +54,7 @@ namespace At0::Layers
 	private:
 		Ray::Scene m_CubeScene;
 		Ray::PerspectiveCamera m_Camera;
+		Ray::Point2 m_OldMousePos;
 	};
 }
 
