@@ -19,7 +19,6 @@ namespace At0::Ray
 	// Describes what VertexData::m_Data looks like
 	class VertexLayout
 	{
-		class Element;
 	public:
 		enum ElementType : uint8_t
 		{
@@ -35,67 +34,112 @@ namespace At0::Ray
 			Count,
 		};
 
+		/// <summary>
+		/// Specifies all the appended ElementTypes
+		/// </summary>
+		class Element
+		{
+		public:
+			Element(ElementType type, size_t offset)
+				: m_Type(type), m_Offset(offset) {}
+
+			size_t Offset() const
+			{
+				return m_Offset;
+			}
+
+			ElementType Type() const
+			{
+				return m_Type;
+			}
+
+			// RAY_TODO: Better way to get static data from the Maps
+			const char* SemanticName() const
+			{
+				switch (m_Type)
+				{
+				case Position2D:	return Map<Position2D>::Semantic;
+				case Position3D:	return Map<Position3D>::Semantic;
+				case Texture2D:		return Map<Texture2D>::Semantic;
+				case Normal:		return Map<Normal>::Semantic;
+				case Tangent:		return Map<Tangent>::Semantic;
+				case Bitangent:		return Map<Bitangent>::Semantic;
+				case Float3Color:	return Map<Float3Color>::Semantic;
+				case Float4Color:	return Map<Float4Color>::Semantic;
+				case BGRAColor:		return Map<BGRAColor>::Semantic;
+				case Count:			return Map<Count>::Semantic;
+				}
+
+				RAY_ASSERT(false, "[Element::SemanticName] Type (ID={0}) is invalid.", (uint8_t)m_Type);
+				return "";
+			}
+
+		private:
+			size_t m_Offset;
+			ElementType m_Type;
+		};
+
 	public:
 		VertexLayout()
 		{
 		}
 
-		template<ElementType Type> struct Map;
-		template<> struct Map<Position2D>
+		template<ElementType Type, typename FAKE = void> struct Map;
+		template<typename FAKE> struct Map<Position2D, FAKE>
 		{
 			using SysType = Float2;
 			static constexpr uint8_t Size = sizeof(SysType);
 			static constexpr const char* Semantic = "Position";
 		};
-		template<> struct Map<Position3D>
+		template<typename FAKE> struct Map<Position3D, FAKE>
 		{
 			using SysType = Float3;
 			static constexpr uint8_t Size = sizeof(SysType);
 			static constexpr const char* Semantic = "Position";
 		};
-		template<> struct Map<Texture2D>
+		template<typename FAKE> struct Map<Texture2D, FAKE>
 		{
 			using SysType = Float2;
 			static constexpr uint8_t Size = sizeof(SysType);
 			static constexpr const char* Semantic = "Texcoord";
 		};
-		template<> struct Map<Normal>
+		template<typename FAKE> struct Map<Normal, FAKE>
 		{
 			using SysType = Float3;
 			static constexpr uint8_t Size = sizeof(SysType);
 			static constexpr const char* Semantic = "Normal";
 		};
-		template<> struct Map<Tangent>
+		template<typename FAKE> struct Map<Tangent, FAKE>
 		{
 			using SysType = Float3;
 			static constexpr uint8_t Size = sizeof(SysType);
 			static constexpr const char* Semantic = "Tangent";
 		};
-		template<> struct Map<Bitangent>
+		template<typename FAKE> struct Map<Bitangent, FAKE>
 		{
 			using SysType = Float3;
 			static constexpr uint8_t Size = sizeof(SysType);
 			static constexpr const char* Semantic = "Bitangent";
 		};
-		template<> struct Map<Float3Color>
+		template<typename FAKE> struct Map<Float3Color, FAKE>
 		{
 			using SysType = Float3;
 			static constexpr uint8_t Size = sizeof(SysType);
 			static constexpr const char* Semantic = "Color";
 		};
-		template<> struct Map<Float4Color>
+		template<typename FAKE> struct Map<Float4Color, FAKE>
 		{
 			using SysType = Float4;
 			static constexpr uint8_t Size = sizeof(SysType);
 			static constexpr const char* Semantic = "Color";
 		};
-		template<> struct Map<BGRAColor>
+		template<typename FAKE> struct Map<BGRAColor, FAKE>
 		{
 			using SysType = ::At0::Ray::BGRAColor;
 			static constexpr uint8_t Size = sizeof(SysType);
 			static constexpr const char* Semantic = "Color";
 		};
-		template<> struct Map<Count>
+		template<typename FAKE> struct Map<Count, FAKE>
 		{
 			using SysType = long double;
 			static constexpr uint8_t Size = sizeof(SysType);
@@ -194,52 +238,6 @@ namespace At0::Ray
 			RAY_ASSERT(false, "[VertexLayout::NumberOfComponentsInType] ElementType (ID={0}) is invalid.", (uint8_t)type);
 			return 0;
 		}
-
-	public:
-		/// <summary>
-		/// Specifies all the appended ElementTypes
-		/// </summary>
-		class Element
-		{
-		public:
-			Element(ElementType type, size_t offset)
-				: m_Type(type), m_Offset(offset) {}
-
-			size_t Offset() const
-			{
-				return m_Offset;
-			}
-
-			ElementType Type() const
-			{
-				return m_Type;
-			}
-
-			// RAY_TODO: Better way to get static data from the Maps
-			const char* SemanticName() const
-			{
-				switch (m_Type)
-				{
-				case Position2D:	return Map<Position2D>::Semantic;
-				case Position3D:	return Map<Position3D>::Semantic;
-				case Texture2D:		return Map<Texture2D>::Semantic;
-				case Normal:		return Map<Normal>::Semantic;
-				case Tangent:		return Map<Tangent>::Semantic;
-				case Bitangent:		return Map<Bitangent>::Semantic;
-				case Float3Color:	return Map<Float3Color>::Semantic;
-				case Float4Color:	return Map<Float4Color>::Semantic;
-				case BGRAColor:		return Map<BGRAColor>::Semantic;
-				case Count:			return Map<Count>::Semantic;
-				}
-
-				RAY_ASSERT(false, "[Element::SemanticName] Type (ID={0}) is invalid.", (uint8_t)m_Type);
-				return "";
-			}
-
-		private:
-			size_t m_Offset;
-			ElementType m_Type;
-		};
 
 	private:
 		size_t QueryNextOffset() const
