@@ -1,6 +1,7 @@
 #include "RayRender/RRpch.h"
 
 #include "ROpenGLVertexBuffer.h"
+#include "ROpenGLVertexShader.h"
 #include "../../Core/RVertex.h"
 
 #include <RayUtil/RException.h>
@@ -23,7 +24,7 @@ namespace At0::Ray
 		return data;
 	}
 
-	OpenGLVertexBuffer::OpenGLVertexBuffer(const VertexData& data)
+	OpenGLVertexBuffer::OpenGLVertexBuffer(const VertexData& data, const Scope<VertexShader>& vShader)
 	{
 		RAY_PROFILE_FUNCTION();
 

@@ -6,7 +6,6 @@
 #include "../../RIndexBuffer.h"
 #include "../../RVertexShader.h"
 #include "../../RPixelShader.h"
-#include "../../RInputLayout.h"
 #include "../../RTopology.h"
 #include "../../RConstantBuffers.h"
 

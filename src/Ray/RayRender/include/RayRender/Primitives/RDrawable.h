@@ -7,7 +7,6 @@
 #ifdef __GNUC__
 #include "../RVertexShader.h"
 #include "../RPixelShader.h"
-#include "../RInputLayout.h"
 #include "../RIndexBuffer.h"
 #include "../RVertexBuffer.h"
 #include "../RTopology.h"
@@ -22,7 +21,6 @@ namespace At0::Ray
 
 	class VertexShader;
 	class PixelShader;
-	class InputLayout;
 	class IndexBuffer;
 	class VertexBuffer;
 	class Topology;
@@ -63,7 +61,6 @@ namespace At0::Ray
 		virtual IndexBuffer* GetIndexBuffer() = 0;
 		virtual VertexShader* GetVertexShader() = 0;
 		virtual PixelShader* GetPixelShader() = 0;
-		virtual InputLayout* GetInputLayout() = 0;
 		virtual Topology* GetTopology() = 0;
 		virtual ConstantBuffer* GetVertexConstantBuffer() = 0;
 
@@ -81,7 +78,6 @@ namespace At0::Ray
 		virtual IndexBuffer* GetIndexBuffer() override { return s_IndexBuffer.get(); }
 		virtual VertexShader* GetVertexShader() override { return s_VertexShader.get(); }
 		virtual PixelShader* GetPixelShader() override { return s_PixelShader.get(); }
-		virtual InputLayout* GetInputLayout() override { return s_InputLayout.get(); }
 		virtual Topology* GetTopology() override { return s_Topology.get(); }
 
 		virtual ~DrawableBase() = default;
@@ -99,7 +95,6 @@ namespace At0::Ray
 		inline static Scope<IndexBuffer> s_IndexBuffer = nullptr;
 		inline static Scope<VertexShader> s_VertexShader = nullptr;
 		inline static Scope<PixelShader> s_PixelShader = nullptr;
-		inline static Scope<InputLayout> s_InputLayout = nullptr;
 		inline static Scope<Topology> s_Topology = nullptr;
 	};
 }

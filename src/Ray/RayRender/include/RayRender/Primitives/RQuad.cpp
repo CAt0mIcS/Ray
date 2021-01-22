@@ -8,7 +8,6 @@
 
 #include "../RVertexShader.h"
 #include "../RPixelShader.h"
-#include "../RInputLayout.h"
 #include "../RIndexBuffer.h"
 #include "../RVertexBuffer.h"
 #include "../RTopology.h"
@@ -24,7 +23,7 @@ namespace At0::Ray
 		// Assume that the other resources are not allocated if the VBuff is not
 		if (!s_VertexBuffer)
 		{
-			RAY_MEXPECTS(!s_VertexShader && !s_PixelShader && !s_InputLayout && !s_IndexBuffer && !s_Topology, "[Quad] Only the VertexBuffer was nullptr.");
+			RAY_MEXPECTS(!s_VertexShader && !s_PixelShader && !s_IndexBuffer && !s_Topology, "[Quad] Only the VertexBuffer was nullptr.");
 
 			constexpr float side = 1.0f / 2.0f;
 			VertexLayout layout;
@@ -53,7 +52,12 @@ namespace At0::Ray
 			//	}
 			//);
 
-			s_VertexBuffer = VertexBuffer::Create(data);
+			// Default Vertex and Pixel Shader for quads
+			s_VertexShader = VertexShader::CreateFromSource("QuadVertexShader.hlsl");
+			s_PixelShader = PixelShader::CreateFromSource("QuadPixelShader.hlsl");
+
+
+			s_VertexBuffer = VertexBuffer::Create(data, s_VertexShader);
 
 			s_IndexBuffer = IndexBuffer::Create(
 				{
@@ -64,17 +68,6 @@ namespace At0::Ray
 					0, 4, 2,  2, 4, 6,
 					0, 1, 4,  1, 5, 4
 				}
-			);
-
-			// Default Vertex and Pixel Shader for quads
-			s_VertexShader = VertexShader::CreateFromSource("QuadVertexShader.hlsl");
-			s_PixelShader = PixelShader::CreateFromSource("QuadPixelShader.hlsl");
-
-
-			// Matching input layout
-			s_InputLayout = InputLayout::Create(
-				{ { "Position", ShaderDataType::Float3 } },
-				s_VertexShader
 			);
 
 			// topology

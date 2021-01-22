@@ -44,56 +44,66 @@ namespace At0::Ray
 		template<> struct Map<Position2D>
 		{
 			using SysType = Float2;
-			static constexpr size_t Size = sizeof(SysType);
+			static constexpr uint8_t Size = sizeof(SysType);
+			static constexpr const char* Semantic = "Position";
 		};
 		template<> struct Map<Position3D>
 		{
 			using SysType = Float3;
-			static constexpr size_t Size = sizeof(SysType);
+			static constexpr uint8_t Size = sizeof(SysType);
+			static constexpr const char* Semantic = "Position";
 		};
 		template<> struct Map<Texture2D>
 		{
 			using SysType = Float2;
-			static constexpr size_t Size = sizeof(SysType);
+			static constexpr uint8_t Size = sizeof(SysType);
+			static constexpr const char* Semantic = "Texcoord";
 		};
 		template<> struct Map<Normal>
 		{
 			using SysType = Float3;
-			static constexpr size_t Size = sizeof(SysType);
+			static constexpr uint8_t Size = sizeof(SysType);
+			static constexpr const char* Semantic = "Normal";
 		};
 		template<> struct Map<Tangent>
 		{
 			using SysType = Float3;
-			static constexpr size_t Size = sizeof(SysType);
+			static constexpr uint8_t Size = sizeof(SysType);
+			static constexpr const char* Semantic = "Tangent";
 		};
 		template<> struct Map<Bitangent>
 		{
 			using SysType = Float3;
-			static constexpr size_t Size = sizeof(SysType);
+			static constexpr uint8_t Size = sizeof(SysType);
+			static constexpr const char* Semantic = "Bitangent";
 		};
 		template<> struct Map<Float3Color>
 		{
 			using SysType = Float3;
-			static constexpr size_t Size = sizeof(SysType);
+			static constexpr uint8_t Size = sizeof(SysType);
+			static constexpr const char* Semantic = "Color";
 		};
 		template<> struct Map<Float4Color>
 		{
 			using SysType = Float4;
-			static constexpr size_t Size = sizeof(SysType);
+			static constexpr uint8_t Size = sizeof(SysType);
+			static constexpr const char* Semantic = "Color";
 		};
 		template<> struct Map<BGRAColor>
 		{
 			using SysType = ::At0::Ray::BGRAColor;
-			static constexpr size_t Size = sizeof(SysType);
+			static constexpr uint8_t Size = sizeof(SysType);
+			static constexpr const char* Semantic = "Color";
 		};
 		template<> struct Map<Count>
 		{
 			using SysType = long double;
-			static constexpr size_t Size = sizeof(SysType);
+			static constexpr uint8_t Size = sizeof(SysType);
+			static constexpr const char* Semantic = "!INVALID!";
 		};
 
 		/// <returns>The size of the struct associated with the ElementType</returns>
-		static constexpr uint32_t SizeOf(ElementType type)
+		static constexpr uint8_t SizeOf(ElementType type)
 		{
 			switch (type)
 			{
@@ -136,6 +146,11 @@ namespace At0::Ray
 		}
 
 		Element& operator[](uint8_t i)
+		{
+			return m_Elements[i];
+		}
+
+		const Element& operator[](uint8_t i) const
 		{
 			return m_Elements[i];
 		}
@@ -200,7 +215,26 @@ namespace At0::Ray
 				return m_Type;
 			}
 
+			// RAY_TODO: Better way to get static data from the Maps
+			const char* SemanticName() const
+			{
+				switch (m_Type)
+				{
+				case Position2D:	return Map<Position2D>::Semantic;
+				case Position3D:	return Map<Position3D>::Semantic;
+				case Texture2D:		return Map<Texture2D>::Semantic;
+				case Normal:		return Map<Normal>::Semantic;
+				case Tangent:		return Map<Tangent>::Semantic;
+				case Bitangent:		return Map<Bitangent>::Semantic;
+				case Float3Color:	return Map<Float3Color>::Semantic;
+				case Float4Color:	return Map<Float4Color>::Semantic;
+				case BGRAColor:		return Map<BGRAColor>::Semantic;
+				case Count:			return Map<Count>::Semantic;
+				}
 
+				RAY_ASSERT(false, "[Element::SemanticName] Type (ID={0}) is invalid.", (uint8_t)m_Type);
+				return "";
+			}
 
 		private:
 			size_t m_Offset;

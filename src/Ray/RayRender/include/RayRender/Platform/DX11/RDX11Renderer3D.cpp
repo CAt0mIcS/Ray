@@ -7,7 +7,6 @@
 #include "../../RIndexBuffer.h"
 #include "../../RVertexShader.h"
 #include "../../RPixelShader.h"
-#include "../../RInputLayout.h"
 #include "../../RTopology.h"
 #include "../../RConstantBuffers.h"
 
@@ -139,7 +138,6 @@ namespace At0::Ray
 
 			d->GetVertexShader()->Bind();
 			d->GetPixelShader()->Bind();
-			d->GetInputLayout()->Bind();
 			d->GetTopology()->Bind();
 
 			// RAY_TEMPORARY

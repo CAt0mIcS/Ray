@@ -14,7 +14,7 @@ namespace At0::Ray
 {
 	class RR_API DX11VertexShader : public VertexShader, DX11GraphicsResources
 	{
-		friend class DX11InputLayout;
+		friend class DX11VertexBuffer;
 	public:
 		DX11VertexShader(std::string_view filepath, bool compiled);
 

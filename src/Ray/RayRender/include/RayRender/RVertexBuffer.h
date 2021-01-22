@@ -7,11 +7,12 @@
 namespace At0::Ray
 {
 	class VertexData;
+	class VertexShader;
 
 	class RR_API VertexBuffer
 	{
 	public:
-		static Scope<VertexBuffer> Create(const VertexData& data);
+		static Scope<VertexBuffer> Create(const VertexData& data, const Scope<VertexShader>& vShader);
 
 		virtual void Bind() = 0;
 		virtual ~VertexBuffer() = default;
