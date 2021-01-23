@@ -89,23 +89,14 @@ namespace At0::Ray
 			d->GetVertexShader()->Bind();
 			pShader->Bind();
 
-			float color[] = { 1.0f, 0.0f, 0.0f };
-
-			uint32_t buffer;
-			glGenBuffers(1, &buffer);
-			glBindBuffer(GL_UNIFORM_BUFFER, buffer);
-			int blockIndex = glGetUniformBlockIndex(pShader->GetProgram(), "type_TriangleColor");
-			glUniformBlockBinding(pShader->GetProgram(), blockIndex, 1);
-			glBindBufferBase(GL_UNIFORM_BUFFER, 1, buffer);
-			glBufferData(GL_UNIFORM_BUFFER, sizeof(color), color, GL_DYNAMIC_DRAW);
-
-
 			// RAY_TEMPORARY
-			d->GetVertexConstantBuffer()->Update(d->GetComponent<TransformComponent>().ToMatrix());
+			d->GetVertexConstantBuffer()->Update(
+				d->GetComponent<TransformComponent>().ToMatrix() *
+				camera.GetMatrix() * camera.GetProjection()
+			);
 			d->GetVertexConstantBuffer()->Bind();
 
 			OpenGLTopology* pTopology = (OpenGLTopology*)d->GetTopology();
-
 			glDrawElements(pTopology->Get(), idxBuff->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
 		}
 	}

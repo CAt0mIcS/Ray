@@ -50,7 +50,11 @@ namespace At0::Ray
 			s_Topology = Topology::Create(Topology::TriangleList);
 		}
 
-		m_TransformConstantBuffer = VertexConstantBuffer::Create(GetComponent<TransformComponent>().ToMatrix());
+		m_TransformConstantBuffer = VertexConstantBuffer::Create(
+			"Projection",
+			s_VertexShader.get(),
+			GetComponent<TransformComponent>().ToMatrix()
+		);
 	}
 }
 
