@@ -11,7 +11,7 @@
 
 namespace At0::Ray
 {
-	Scope<VertexBuffer> VertexBuffer::Create(const VertexData& data, const Scope<VertexShader>& vShader)
+	Scope<VertexBuffer> VertexBuffer::Create(const VertexData& data, const Scope<Shader>& vShader)
 	{
 		RAY_MEXPECTS(RendererAPI::Valid(), "[VertexBuffer::Create] Invalid RendererAPI selected");
 

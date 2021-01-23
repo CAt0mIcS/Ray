@@ -13,7 +13,7 @@
 namespace At0::Ray
 {
 	template<typename T>
-	Scope<ConstantBuffer> PixelConstantBuffer::Create(std::string_view name, const PixelShader* pShader, const T& data)
+	Scope<ConstantBuffer> PixelConstantBuffer::Create(std::string_view name, const Shader* pShader, const T& data)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_MEXPECTS(RendererAPI::Valid(), "[ConstantBuffer::Create(Matrix)] Invalid RendererAPI selected");
@@ -30,7 +30,7 @@ namespace At0::Ray
 	}
 
 	template<typename T>
-	Scope<ConstantBuffer> VertexConstantBuffer::Create(std::string_view name, const VertexShader* pShader, const T& data)
+	Scope<ConstantBuffer> VertexConstantBuffer::Create(std::string_view name, const Shader* pShader, const T& data)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_MEXPECTS(RendererAPI::Valid(), "[ConstantBuffer::Create(Matrix)] Invalid RendererAPI selected");
@@ -48,7 +48,7 @@ namespace At0::Ray
 
 
 	template<typename T>
-	Scope<ConstantBuffer> PixelConstantBuffer::Create(std::string_view name, const PixelShader* pShader)
+	Scope<ConstantBuffer> PixelConstantBuffer::Create(std::string_view name, const Shader* pShader)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_MEXPECTS(RendererAPI::Valid(), "[ConstantBuffer::Create(Matrix)] Invalid RendererAPI selected");
@@ -65,7 +65,7 @@ namespace At0::Ray
 	}
 
 	template<typename T>
-	Scope<ConstantBuffer> VertexConstantBuffer::Create(std::string_view name, const VertexShader* pShader)
+	Scope<ConstantBuffer> VertexConstantBuffer::Create(std::string_view name, const Shader* pShader)
 	{
 		RAY_PROFILE_FUNCTION();
 		RAY_MEXPECTS(RendererAPI::Valid(), "[ConstantBuffer::Create(Matrix)] Invalid RendererAPI selected");
@@ -88,16 +88,16 @@ namespace At0::Ray
 	// explicit template instantiation
 
 	// PixelConstantBuffer
-	template Scope<ConstantBuffer> PixelConstantBuffer::Create<Matrix>(std::string_view name, const PixelShader* pShader, const Matrix& data);
-	template Scope<ConstantBuffer> PixelConstantBuffer::Create<Float3>(std::string_view name, const PixelShader* pShader, const Float3& data);
-	template Scope<ConstantBuffer> PixelConstantBuffer::Create<Matrix>(std::string_view name, const PixelShader* pShader);
-	template Scope<ConstantBuffer> PixelConstantBuffer::Create<Float3>(std::string_view name, const PixelShader* pShader);
+	template Scope<ConstantBuffer> PixelConstantBuffer::Create<Matrix>(std::string_view name, const Shader* pShader, const Matrix& data);
+	template Scope<ConstantBuffer> PixelConstantBuffer::Create<Float3>(std::string_view name, const Shader* pShader, const Float3& data);
+	template Scope<ConstantBuffer> PixelConstantBuffer::Create<Matrix>(std::string_view name, const Shader* pShader);
+	template Scope<ConstantBuffer> PixelConstantBuffer::Create<Float3>(std::string_view name, const Shader* pShader);
 
 	// VertexConstantBuffer
-	template Scope<ConstantBuffer> VertexConstantBuffer::Create<Matrix>(std::string_view name, const VertexShader* pShader, const Matrix& data);
-	template Scope<ConstantBuffer> VertexConstantBuffer::Create<Float3>(std::string_view name, const VertexShader* pShader, const Float3& data);
-	template Scope<ConstantBuffer> VertexConstantBuffer::Create<Matrix>(std::string_view name, const VertexShader* pShader);
-	template Scope<ConstantBuffer> VertexConstantBuffer::Create<Float3>(std::string_view name, const VertexShader* pShader);
+	template Scope<ConstantBuffer> VertexConstantBuffer::Create<Matrix>(std::string_view name, const Shader* pShader, const Matrix& data);
+	template Scope<ConstantBuffer> VertexConstantBuffer::Create<Float3>(std::string_view name, const Shader* pShader, const Float3& data);
+	template Scope<ConstantBuffer> VertexConstantBuffer::Create<Matrix>(std::string_view name, const Shader* pShader);
+	template Scope<ConstantBuffer> VertexConstantBuffer::Create<Float3>(std::string_view name, const Shader* pShader);
 
 #endif
 

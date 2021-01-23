@@ -5,8 +5,7 @@
 
 #include "../../RVertexBuffer.h"
 #include "../../RIndexBuffer.h"
-#include "../../RVertexShader.h"
-#include "../../RPixelShader.h"
+#include "../../RShader.h"
 #include "../../RTopology.h"
 #include "../../RConstantBuffers.h"
 
@@ -138,8 +137,7 @@ namespace At0::Ray
 			IndexBuffer* idxBuff = d->GetIndexBuffer();
 			idxBuff->Bind();
 
-			d->GetVertexShader()->Bind();
-			d->GetPixelShader()->Bind();
+			d->GetShader()->Bind();
 			d->GetTopology()->Bind();
 
 			// RAY_TEMPORARY

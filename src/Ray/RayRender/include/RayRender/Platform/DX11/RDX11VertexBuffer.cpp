@@ -2,7 +2,7 @@
 
 #ifdef _WIN32
 #include "RDX11VertexBuffer.h"
-#include "RDX11VertexShader.h"
+#include "RDX11Shader.h"
 
 #include "../../Core/RVertex.h"
 
@@ -13,7 +13,7 @@ namespace At0::Ray
 {
 	DXGI_FORMAT GetDXGIFormat(VertexLayout::ElementType type);
 
-	DX11VertexBuffer::DX11VertexBuffer(const VertexData& data, const Scope<VertexShader>& vShader)
+	DX11VertexBuffer::DX11VertexBuffer(const VertexData& data, const Scope<Shader>& vShader)
 		: m_Strides(data.Layout().SizeBytes())
 	{
 		D3D11_BUFFER_DESC bd = {};
@@ -29,7 +29,7 @@ namespace At0::Ray
 
 		RAY_GFX_THROW_FAILED(GetDevice()->CreateBuffer(&bd, &sd, &m_pBuffer));
 
-		SetInputLayout(data.Layout(), (DX11VertexShader*)vShader.get());
+		SetInputLayout(data.Layout(), (DX11Shader*)vShader.get());
 	}
 
 	void DX11VertexBuffer::Bind()
@@ -39,7 +39,7 @@ namespace At0::Ray
 		GetContext()->IASetInputLayout(m_pLayout.Get());
 	}
 
-	void DX11VertexBuffer::SetInputLayout(const VertexLayout& layout, const DX11VertexShader* vShader)
+	void DX11VertexBuffer::SetInputLayout(const VertexLayout& layout, const DX11Shader* vShader)
 	{
 		std::vector<D3D11_INPUT_ELEMENT_DESC> desc(layout.Size());
 
@@ -60,7 +60,7 @@ namespace At0::Ray
 		// RAY_TODO: RendererAPI could be changed between construction of objects, e.g.
 		// --> VertexShader: D3D11
 		// --> InputLayout:  OpenGL
-		const DX11VertexShader* pDxShader = (DX11VertexShader*)vShader;
+		const DX11Shader* pDxShader = (DX11Shader*)vShader;
 		RAY_GFX_THROW_FAILED(GetDevice()->CreateInputLayout(desc.data(), desc.size(), pDxShader->GetBufferPointer(), pDxShader->GetBufferSize(), &m_pLayout));
 	}
 

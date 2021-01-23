@@ -6,8 +6,7 @@
 #include "../Core/RVertex.h"
 #include "../Core/RScene.h"
 
-#include "../RVertexShader.h"
-#include "../RPixelShader.h"
+#include "../RShader.h"
 #include "../RIndexBuffer.h"
 #include "../RVertexBuffer.h"
 #include "../RTopology.h"
@@ -23,7 +22,7 @@ namespace At0::Ray
 		// Assume that the other resources are not allocated if the VBuff is not
 		if (!s_VertexBuffer)
 		{
-			RAY_MEXPECTS(!s_VertexShader && !s_PixelShader && !s_IndexBuffer && !s_Topology, "[Quad] Only the VertexBuffer was nullptr.");
+			RAY_MEXPECTS(!s_Shader && !s_IndexBuffer && !s_Topology, "[Quad] Only the VertexBuffer was nullptr.");
 
 			constexpr float side = 1.0f / 2.0f;
 			VertexLayout layout;
@@ -39,10 +38,11 @@ namespace At0::Ray
 			data[7].Set<VertexLayout::Position3D>({ side,  side,  side });
 
 			// Default Vertex and Pixel Shader for quads
-			s_VertexShader = VertexShader::CreateFromSource("QuadVertexShader.hlsl");
-			s_PixelShader = PixelShader::CreateFromSource("QuadPixelShader.hlsl");
+			//s_VertexShader = VertexShader::CreateFromSource("QuadVertexShader.hlsl");
+			//s_PixelShader = PixelShader::CreateFromSource("QuadPixelShader.hlsl");
+			s_Shader = Shader::Create("QuadVertexShader.hlsl", "QuadPixelShader.hlsl");
 
-			s_VertexBuffer = VertexBuffer::Create(data, s_VertexShader);
+			s_VertexBuffer = VertexBuffer::Create(data, s_Shader);
 
 			s_IndexBuffer = IndexBuffer::Create(
 				{
@@ -61,7 +61,7 @@ namespace At0::Ray
 
 		m_TransformConstantBuffer = VertexConstantBuffer::Create(
 			"Projection",
-			s_VertexShader.get(),
+			s_Shader.get(),
 			GetComponent<TransformComponent>().ToMatrix()
 		);
 	}

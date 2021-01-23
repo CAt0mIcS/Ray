@@ -12,19 +12,18 @@ struct ID3D11InputLayout;
 
 namespace At0::Ray
 {
-	class VertexShader;
-	class DX11VertexShader;
+	class DX11Shader;
 	class VertexLayout;
 
 	class RR_API DX11VertexBuffer : public VertexBuffer, DX11GraphicsResources
 	{
 	public:
-		DX11VertexBuffer(const VertexData& data, const Scope<VertexShader>& vShader);
+		DX11VertexBuffer(const VertexData& data, const Scope<Shader>& vShader);
 
 		virtual void Bind() override;
 
 	private:
-		void SetInputLayout(const VertexLayout& layout, const DX11VertexShader* vShader);
+		void SetInputLayout(const VertexLayout& layout, const DX11Shader* vShader);
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pBuffer;

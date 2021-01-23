@@ -5,11 +5,10 @@
 #include "../RConstantBuffers.h"
 
 #ifdef __GNUC__
-#include "../RVertexShader.h"
-#include "../RPixelShader.h"
 #include "../RIndexBuffer.h"
 #include "../RVertexBuffer.h"
 #include "../RTopology.h"
+#include "../RShader.h"
 #endif
 
 #include <string>
@@ -19,8 +18,7 @@ namespace At0::Ray
 {
 	class Scene;
 
-	class VertexShader;
-	class PixelShader;
+	class Shader;
 	class IndexBuffer;
 	class VertexBuffer;
 	class Topology;
@@ -59,8 +57,7 @@ namespace At0::Ray
 
 		virtual VertexBuffer* GetVertexBuffer() = 0;
 		virtual IndexBuffer* GetIndexBuffer() = 0;
-		virtual VertexShader* GetVertexShader() = 0;
-		virtual PixelShader* GetPixelShader() = 0;
+		virtual Shader* GetShader() = 0;
 		virtual Topology* GetTopology() = 0;
 		virtual ConstantBuffer* GetVertexConstantBuffer() = 0;
 
@@ -74,10 +71,9 @@ namespace At0::Ray
 	class RR_API DrawableBase : public Drawable
 	{
 	public:
-		virtual VertexBuffer* GetVertexBuffer() override { return s_VertexBuffer.get(); }
-		virtual IndexBuffer* GetIndexBuffer() override { return s_IndexBuffer.get(); }
-		virtual VertexShader* GetVertexShader() override { return s_VertexShader.get(); }
-		virtual PixelShader* GetPixelShader() override { return s_PixelShader.get(); }
+		virtual VertexBuffer* GetVertexBuffer() override { return s_VertexBuffer.get(); };
+		virtual IndexBuffer* GetIndexBuffer() override { return s_IndexBuffer.get(); };
+		virtual Shader* GetShader() override { return s_Shader.get(); }
 		virtual Topology* GetTopology() override { return s_Topology.get(); }
 
 		virtual ~DrawableBase() = default;
@@ -93,8 +89,7 @@ namespace At0::Ray
 	protected:
 		inline static Scope<VertexBuffer> s_VertexBuffer = nullptr;
 		inline static Scope<IndexBuffer> s_IndexBuffer = nullptr;
-		inline static Scope<VertexShader> s_VertexShader = nullptr;
-		inline static Scope<PixelShader> s_PixelShader = nullptr;
+		inline static Scope<Shader> s_Shader = nullptr;
 		inline static Scope<Topology> s_Topology = nullptr;
 	};
 }

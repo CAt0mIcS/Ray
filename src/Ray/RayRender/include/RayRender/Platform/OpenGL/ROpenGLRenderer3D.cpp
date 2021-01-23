@@ -4,14 +4,12 @@
 
 #include "../../RVertexBuffer.h"
 #include "../../RIndexBuffer.h"
-#include "../../RVertexShader.h"
-#include "../../RPixelShader.h"
+#include "../../RShader.h"
 #include "../../RTopology.h"
 #include "../../RConstantBuffers.h"
 
 #include "ROpenGLTopology.h"
-#include "ROpenGLPixelShader.h"
-#include "ROpenGLVertexShader.h"
+#include "ROpenGLShader.h"
 
 #include "../../Core/RCamera.h"
 
@@ -94,8 +92,8 @@ namespace At0::Ray
 			Matrix mvp = d->GetComponent<TransformComponent>().ToMatrix() *
 				camera.GetMatrix() * camera.GetProjection();
 
-			int blockIndex = glGetUniformBlockIndex(pShader->GetProgram(), "type_Projection");
-			glUniformBlockBinding(pShader->GetProgram(), blockIndex, 1);
+			int blockIndex = glGetUniformBlockIndex(pShader->GetShaderProgram(), "type_Projection");
+			glUniformBlockBinding(pShader->GetShaderProgram(), blockIndex, 1);
 			glBindBufferBase(GL_UNIFORM_BUFFER, 1, buffer);
 			glBufferData(GL_UNIFORM_BUFFER, sizeof(mvp), &mvp, GL_DYNAMIC_DRAW);
 
