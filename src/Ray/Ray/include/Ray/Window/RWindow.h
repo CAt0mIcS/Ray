@@ -61,6 +61,9 @@ namespace At0::Ray
 		virtual void SetIcon(std::string_view path) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 
+		virtual void SetMousePos(const Point2& pos) = 0;
+		virtual Point2 GetMousePos() const = 0;
+
 		virtual void EnableCursor() = 0;
 		virtual void DisableCursor() = 0;
 		virtual bool CursorEnabled() const = 0;

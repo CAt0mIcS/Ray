@@ -324,31 +324,33 @@ namespace At0::Ray
 		case WM_CHAR:
 		{
 			if (wParam >= 0xd800 && wParam <= 0xdbff)
-				m_HighSurrogate = (wchar_t)wParam;
+				m_HighSurrogate = (WCHAR)wParam;
 			else
 			{
-				uint16_t codepoint = 0;
+				uint32_t codepoint = 0;
 
 				if (wParam >= 0xdc00 && wParam <= 0xdfff)
 				{
 					if (m_HighSurrogate)
 					{
 						codepoint += (m_HighSurrogate - 0xd800) << 10;
-						codepoint += (wchar_t)wParam - 0xdc00;
+						codepoint += (WCHAR)wParam - 0xdc00;
 						codepoint += 0x10000;
 					}
 				}
 				else
-					codepoint = (wchar_t)wParam;
+					codepoint = (WCHAR)wParam;
 
 				m_HighSurrogate = 0;
+
+				if (codepoint < 32 || (codepoint > 126 && codepoint < 160))
+					return 0;
 
 				CharEvent e(codepoint);
 				for (auto* pListener : EventDispatcher<CharEvent>::Get())
 				{
 					pListener->OnEvent(*GetEventReceiver(e, Mouse), e);
 				}
-
 			}
 
 			return 0;
@@ -679,11 +681,25 @@ namespace At0::Ray
 		((DX11Renderer3D*)m_Renderer3D.get())->SetSyncInterval((uint32_t)enabled);
 	}
 
+	void WinAPIWindow::SetMousePos(const Point2& pos)
+	{
+		SetCursorPos((int)pos.x, (int)pos.y);
+	}
+
+	Point2 WinAPIWindow::GetMousePos() const
+	{
+		POINT pt;
+		GetCursorPos(&pt);
+
+		return { (float)pt.x, (float)pt.y };
+	}
+
 	void WinAPIWindow::EnableCursor()
 	{
 		ClipCursor(nullptr);
 
 		while (ShowCursor(TRUE) < 0);
+		SetMousePos(m_CursorDisabledPos);
 	}
 
 	void WinAPIWindow::DisableCursor()
@@ -694,6 +710,7 @@ namespace At0::Ray
 		ClipCursor(&rc);
 
 		while (ShowCursor(FALSE) >= 0);
+		m_CursorDisabledPos = GetMousePos();
 	}
 
 	bool WinAPIWindow::CursorEnabled() const

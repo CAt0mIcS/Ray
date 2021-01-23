@@ -226,6 +226,19 @@ namespace At0::Ray
 		glfwSwapInterval((int)enabled);
 	}
 
+	void OpenGLWindow::SetMousePos(const Point2& pos)
+	{
+		glfwSetCursorPos(m_hWnd, (double)pos.x, (double)pos.y);
+	}
+
+	Point2 OpenGLWindow::GetMousePos() const
+	{
+		double xPos, yPos;
+		glfwGetCursorPos(m_hWnd, &xPos, &yPos);
+
+		return { (float)xPos, (float)yPos };
+	}
+
 	void OpenGLWindow::EnableCursor()
 	{
 		glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

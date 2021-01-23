@@ -70,6 +70,9 @@ namespace At0::Ray
 
 		virtual void SetVSync(bool enabled) override;
 
+		virtual void SetMousePos(const Point2& pos) override;
+		virtual Point2 GetMousePos() const override;
+
 		virtual void EnableCursor() override;
 		virtual void DisableCursor() override;
 		virtual bool CursorEnabled() const override;
