@@ -27,7 +27,8 @@ namespace At0::Ray
 
 	void Camera::Rotate(float dx, float dy)
 	{
-		//m_Yaw =
+		m_Yaw = WrapAngle(m_Yaw * dx * m_RotationSpeed);
+		m_Pitch = std::clamp(m_Pitch + dy * m_RotationSpeed, 0.995f * -Constants::PIDIV2, 0.995f * Constants::PIDIV2);
 	}
 
 	void Camera::Translate(Float3 translation)
@@ -35,14 +36,22 @@ namespace At0::Ray
 		StoreFloat3(&translation, Vector3Transform(
 			LoadFloat3(&translation),
 			Matrix::RotationRollPitchYaw(m_Pitch, m_Yaw, 0.0f) *
-			Matrix::Scaling(m_Speed, m_Speed, m_Speed)
+			Matrix::Scaling(m_MovementSpeed, m_MovementSpeed, m_MovementSpeed)
 		));
 
 		m_Pos += translation;
 	}
 
-	Camera::Camera()
-		: m_Speed(10.0f)
+	void Camera::Reset()
 	{
+		m_Pos = { 0.0f, 7.5f, -18.0f };
+		m_Pitch = 0.0f;
+		m_Yaw = 0.0f;
+	}
+
+	Camera::Camera()
+		: m_MovementSpeed(10.0f), m_RotationSpeed(1.0f)
+	{
+		Reset();
 	}
 }

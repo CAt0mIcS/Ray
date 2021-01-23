@@ -212,6 +212,7 @@ namespace At0
 		namespace Constants
 		{
 			RAYMATH_CONST float PI = 3.141592654f;
+			RAYMATH_CONST double PI_D = 3.1415926535897932;
 			RAYMATH_CONST float RAY_2PI = 6.283185307f;
 			RAYMATH_CONST float RAY_1DIVPI = 0.318309886f;
 			RAYMATH_CONST float RAY_1DIV2PI = 0.159154943f;
@@ -266,6 +267,17 @@ namespace At0
 		inline RAYMATH_CONSTEXPR float ConvertToRadians(float fDegrees) { return fDegrees * (Constants::PI / 180.0f); }
 		inline RAYMATH_CONSTEXPR float ConvertToDegrees(float fRadians) { return fRadians * (180.0f / Constants::PI); }
 
+		// Utility functions
+
+		template<typename T>
+		inline RAYMATH_CONSTEXPR T WrapAngle(T fDegrees)
+		{
+			const T modded = fmod(fDegrees, (T)2.0 * (T)Constants::PI_D);
+			return (modded > (T)Constants::PI_D) ?
+				(modded - (T)2.0 * (T)Constants::PI_D) :
+				modded;
+		}
+
 		// Condition register evaluation proceeding a recording (R) comparison
 
 		inline bool ComparisonAllTrue(uint32_t CR) { return (((CR)&RAYMATH_CRMASK_CR6TRUE) == RAYMATH_CRMASK_CR6TRUE); }
@@ -304,7 +316,7 @@ namespace At0
 				float       vector4_f32[4];
 				uint32_t    vector4_u32[4];
 			};
-		};
+	};
 #endif // RAY_NO_INTRINSICS
 
 
@@ -632,7 +644,7 @@ namespace At0
 					float _41, _42, _43, _44;
 				};
 				float m[4][4];
-			};
+};
 #else
 			VectorType r[4];
 #endif
@@ -9014,7 +9026,7 @@ namespace At0
 			for (size_t i = 0; i < 4; i++)
 			{
 				VB.vector4_u32[i] = static_cast<uint32_t>(VB.vector4_f32[i]);
-			}
+		}
 #endif
 
 			VectorType VC2 = Vector::Multiply(VC, VC);

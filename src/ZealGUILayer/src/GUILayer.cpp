@@ -186,17 +186,25 @@ namespace At0::Layers
 		{
 			m_Camera.Translate({ 0.0f, 0.0f, ts });
 		}
-		else if (window.Keyboard.IsKeyPressed(Ray::Key::A))
+		if (window.Keyboard.IsKeyPressed(Ray::Key::A))
 		{
 			m_Camera.Translate({ -ts, 0.0f, 0.0f });
 		}
-		else if (window.Keyboard.IsKeyPressed(Ray::Key::S))
+		if (window.Keyboard.IsKeyPressed(Ray::Key::S))
 		{
 			m_Camera.Translate({ 0.0f, 0.0f, -ts });
 		}
-		else if (window.Keyboard.IsKeyPressed(Ray::Key::D))
+		if (window.Keyboard.IsKeyPressed(Ray::Key::D))
 		{
 			m_Camera.Translate({ ts, 0.0f, 0.0f });
+		}
+		if (window.Keyboard.IsKeyPressed(Ray::Key::Space))
+		{
+			m_Camera.Translate({ 0.0f,ts,0.0f });
+		}
+		if (window.Keyboard.IsKeyPressed(Ray::Key::LeftControl))
+		{
+			m_Camera.Translate({ 0.0f,-ts,0.0f });
 		}
 
 		auto& tform = Quad->GetComponent<Ray::TransformComponent>();

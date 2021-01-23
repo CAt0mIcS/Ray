@@ -28,9 +28,12 @@ namespace At0::Ray
 
 		void Rotate(float dx, float dy);
 		void Translate(Float3 translation);
-		void SetSpeed(float speed) { m_Speed = speed; }
+		void SetMovementSpeed(float speed) { m_MovementSpeed = speed; }
+		void SetRotationSpeed(float speed) { m_RotationSpeed = speed; }
 
 		const Matrix& GetProjection() const { return m_Projection; }
+
+		void Reset();
 
 	protected:
 		Camera();
@@ -38,7 +41,7 @@ namespace At0::Ray
 	protected:
 		Float3 m_Pos;
 		float m_Pitch, m_Yaw;
-		float m_Speed;
+		float m_MovementSpeed, m_RotationSpeed;
 
 		Matrix m_Projection;
 	};
