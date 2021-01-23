@@ -265,7 +265,7 @@ namespace At0::Ray
 				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
 				win.Mouse.SetPos({ (float)xPos, (float)yPos });
 
-				MouseMoveEvent e(Point2{ (float)xPos, (float)yPos });
+				MouseMoveEvent e(Point2{ (float)xPos, (float)yPos }, { 0.0f, 0.0f });
 				for (auto* pListener : win.EventDispatcher<MouseMoveEvent>::Get())
 				{
 					pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);

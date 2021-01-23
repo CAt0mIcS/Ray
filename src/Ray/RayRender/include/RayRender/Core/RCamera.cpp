@@ -27,8 +27,8 @@ namespace At0::Ray
 
 	void Camera::Rotate(float dx, float dy)
 	{
-		m_Yaw = WrapAngle(m_Yaw * dx * m_RotationSpeed);
-		m_Pitch = std::clamp(m_Pitch + dy * m_RotationSpeed, 0.995f * -Constants::PIDIV2, 0.995f * Constants::PIDIV2);
+		m_Yaw = WrapAngle(m_Yaw + dx * m_RotationSpeed);
+		m_Pitch = std::clamp(m_Pitch + dy * m_RotationSpeed, 0.995f * -Constants::PI / 2.0f, 0.995f * Constants::PI / 2.0f);
 	}
 
 	void Camera::Translate(Float3 translation)
@@ -44,13 +44,13 @@ namespace At0::Ray
 
 	void Camera::Reset()
 	{
-		m_Pos = { 0.0f, 7.5f, -18.0f };
+		m_Pos = { 0.0f, 0.0f, 0.0f };
 		m_Pitch = 0.0f;
 		m_Yaw = 0.0f;
 	}
 
 	Camera::Camera()
-		: m_MovementSpeed(10.0f), m_RotationSpeed(1.0f)
+		: m_MovementSpeed(10.0f), m_RotationSpeed(0.004f)
 	{
 		Reset();
 	}

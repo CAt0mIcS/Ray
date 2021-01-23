@@ -9,8 +9,8 @@ namespace At0::Ray
 	// -------------------------------------------------------------------
 	// MouseMoveEvent
 	// -------------------------------------------------------------------
-	MouseMoveEvent::MouseMoveEvent(const Point2& newPos)
-		: m_NewPos(newPos)
+	MouseMoveEvent::MouseMoveEvent(const Point2& newPos, const Point2& rawDelta)
+		: m_NewPos(newPos), m_RawDelta(rawDelta)
 	{
 	}
 

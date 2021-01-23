@@ -166,13 +166,6 @@ namespace At0::Layers
 		renderer->Draw(m_Camera, m_CubeScene);
 		renderer->EndDraw();
 
-		static constexpr float baseSpeed = 9.0f;
-		float forwardSpeed;
-		if (window.Keyboard.IsKeyPressed(Ray::Key::LeftShift))
-			forwardSpeed = baseSpeed * 2.0f * ts;
-		else
-			forwardSpeed = baseSpeed * ts;
-
 		static float pitch = 0.0f;
 		static float yaw = 0.0f;
 		static float roll = 0.0f;
@@ -182,30 +175,42 @@ namespace At0::Layers
 		roll += 0.5f * ts;
 
 		// Camera movement
-		if (window.Keyboard.IsKeyPressed(Ray::Key::W))
+		if (!window.CursorEnabled())
 		{
-			m_Camera.Translate({ 0.0f, 0.0f, ts });
+			static constexpr float baseSpeed = 9000.0f;
+			float forwardSpeed;
+			if (window.Keyboard.IsKeyPressed(Ray::Key::LeftShift))
+				forwardSpeed = baseSpeed * 5.0f * ts;
+			else
+				forwardSpeed = baseSpeed * ts;
+			m_Camera.SetMovementSpeed(forwardSpeed);
+
+			if (window.Keyboard.IsKeyPressed(Ray::Key::W))
+			{
+				m_Camera.Translate({ 0.0f, 0.0f, ts });
+			}
+			if (window.Keyboard.IsKeyPressed(Ray::Key::A))
+			{
+				m_Camera.Translate({ -ts, 0.0f, 0.0f });
+			}
+			if (window.Keyboard.IsKeyPressed(Ray::Key::S))
+			{
+				m_Camera.Translate({ 0.0f, 0.0f, -ts });
+			}
+			if (window.Keyboard.IsKeyPressed(Ray::Key::D))
+			{
+				m_Camera.Translate({ ts, 0.0f, 0.0f });
+			}
+			if (window.Keyboard.IsKeyPressed(Ray::Key::Space))
+			{
+				m_Camera.Translate({ 0.0f,ts,0.0f });
+			}
+			if (window.Keyboard.IsKeyPressed(Ray::Key::LeftControl))
+			{
+				m_Camera.Translate({ 0.0f,-ts,0.0f });
+			}
 		}
-		if (window.Keyboard.IsKeyPressed(Ray::Key::A))
-		{
-			m_Camera.Translate({ -ts, 0.0f, 0.0f });
-		}
-		if (window.Keyboard.IsKeyPressed(Ray::Key::S))
-		{
-			m_Camera.Translate({ 0.0f, 0.0f, -ts });
-		}
-		if (window.Keyboard.IsKeyPressed(Ray::Key::D))
-		{
-			m_Camera.Translate({ ts, 0.0f, 0.0f });
-		}
-		if (window.Keyboard.IsKeyPressed(Ray::Key::Space))
-		{
-			m_Camera.Translate({ 0.0f,ts,0.0f });
-		}
-		if (window.Keyboard.IsKeyPressed(Ray::Key::LeftControl))
-		{
-			m_Camera.Translate({ 0.0f,-ts,0.0f });
-		}
+
 
 		auto& tform = Quad->GetComponent<Ray::TransformComponent>();
 		tform.Rotation = Ray::Quaternion::RotationRollPitchYaw(pitch, yaw, roll);
@@ -217,6 +222,10 @@ namespace At0::Layers
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::MouseMoveEvent& e)
 	{
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
+
+		if (!GetMainWindow().CursorEnabled())
+			if (e.GetRawDelta().x != 0 || e.GetRawDelta().y != 0)
+				m_Camera.Rotate(e.GetRawDelta().x, e.GetRawDelta().y);
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::WindowCloseEvent& e)

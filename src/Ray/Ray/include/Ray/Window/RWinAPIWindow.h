@@ -117,6 +117,7 @@ namespace At0::Ray
 
 	private:
 		Point2 m_CursorDisabledPos;
+		Point2 m_CachedRawMouseInputDelta;
 		bool m_IsOpen;
 		HWND m_hWnd;
 		inline static Key s_KeycodeMap[512];

@@ -23,7 +23,7 @@
 namespace At0::Ray
 {
 	WinAPIWindow::WinAPIWindow(std::string_view name, const Point2 pos, const Size2 size, Widget* parent)
-		: Window{ name, parent }, m_hWnd{ 0 }, m_WindowStyles{ WS_OVERLAPPEDWINDOW }
+		: Window{ name, parent }, m_hWnd{ 0 }, m_WindowStyles{ WS_OVERLAPPEDWINDOW }, m_CachedRawMouseInputDelta{ 0.0f, 0.0f }
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -35,6 +35,13 @@ namespace At0::Ray
 
 		if (s_KeycodeMap[0] == (Key)0)
 			SetKeycodeMap();
+
+		RAWINPUTDEVICE rid;
+		rid.usUsagePage = 0x01; // mouse page
+		rid.usUsage = 0x02; // mouse usage
+		rid.dwFlags = 0;
+		rid.hwndTarget = nullptr;
+		RAY_WND_THROW_LAST_FAILED(RegisterRawInputDevices(&rid, 1, sizeof(rid)));
 
 		m_Renderer3D = Renderer3D::Create((void*)m_hWnd, *this);
 	}
@@ -140,13 +147,54 @@ namespace At0::Ray
 			// Loop over the widgets and determine the widget which should receive the mouse move event
 			SetHoveringWidget();
 
-			MouseMoveEvent e(Mouse.GetPos());
+			MouseMoveEvent e(Mouse.GetPos(), m_CachedRawMouseInputDelta);
+			m_CachedRawMouseInputDelta = Point2{};
 			for (auto* pListener : EventDispatcher<MouseMoveEvent>::Get())
 			{
 				pListener->OnEvent(*m_CurrentlyHovering, e);
 			}
 
 			return 0;
+		}
+		case WM_INPUT:
+		{
+			uint32_t size;
+
+			// Get the size of the input data
+			if (GetRawInputData(
+				(HRAWINPUT)lParam,
+				RID_INPUT,
+				nullptr,
+				&size,
+				sizeof(RAWINPUTHEADER)
+			) == -1)
+			{
+				// bail msg processing if error
+				break;
+			}
+
+			std::vector<char> rawInputData(size);
+
+			// Read the input data
+			if (GetRawInputData(
+				(HRAWINPUT)lParam,
+				RID_INPUT,
+				rawInputData.data(),
+				&size,
+				sizeof(RAWINPUTHEADER)) != size)
+			{
+				// bail msg processing if error
+				break;
+			}
+
+			auto& ri = (const RAWINPUT&)(*rawInputData.data());
+			if (ri.header.dwType == RIM_TYPEMOUSE &&
+				(ri.data.mouse.lLastX != 0 || ri.data.mouse.lLastY != 0))
+			{
+				m_CachedRawMouseInputDelta += { (float)ri.data.mouse.lLastX, (float)ri.data.mouse.lLastY };
+			}
+
+			break;
 		}
 		case WM_LBUTTONDOWN:
 		{
