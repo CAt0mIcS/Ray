@@ -12,7 +12,7 @@ namespace At0::Ray
 	template<typename T>
 	OpenGLConstantBuffer<T>::OpenGLConstantBuffer(const T& data)
 	{
-		glGenBuffers(1, &m_Buffer);
+		//glGenBuffers(1, &m_Buffer);
 		//glBindBuffer(GL_UNIFORM_BUFFER, m_Buffer);
 		//int blockIndex = glGetUniformBlockIndex(pShader->GetProgram(), "type_TriangleColor");
 		//glUniformBlockBinding(pShader->GetProgram(), blockIndex, 1);
@@ -23,14 +23,13 @@ namespace At0::Ray
 	template<typename T>
 	OpenGLConstantBuffer<T>::OpenGLConstantBuffer()
 	{
-		glGenBuffers(1, &m_Buffer);
+		//glGenBuffers(1, &m_Buffer);
 	}
 
 	template<typename T>
 	void OpenGLConstantBuffer<T>::Update(const T& data)
 	{
-		glBindBuffer(GL_UNIFORM_BUFFER, m_Buffer);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(data), (void*)&data, GL_DYNAMIC_DRAW);
+		m_Data = data;
 	}
 
 
@@ -38,46 +37,55 @@ namespace At0::Ray
 	OpenGLPixelConstantBuffer<T>::OpenGLPixelConstantBuffer(std::string_view name, const PixelShader* pShader, const T& data)
 		: m_Name(name), m_PShader(pShader)
 	{
+		m_Name.insert(0, "type_");
 	}
 
 	template<typename T>
 	OpenGLPixelConstantBuffer<T>::OpenGLPixelConstantBuffer(std::string_view name, const PixelShader* pShader)
 		: m_Name(name), m_PShader(pShader)
 	{
+		m_Name.insert(0, "type_");
 	}
 
 	template<typename T>
 	OpenGLVertexConstantBuffer<T>::OpenGLVertexConstantBuffer(std::string_view name, const VertexShader* pShader, const T& data)
 		: m_Name(name), m_VShader(pShader)
 	{
+		m_Name.insert(0, "type_");
 	}
 
 	template<typename T>
 	OpenGLVertexConstantBuffer<T>::OpenGLVertexConstantBuffer(std::string_view name, const VertexShader* pShader)
 		: m_Name(name), m_VShader(pShader)
 	{
+		m_Name.insert(0, "type_");
 	}
 
 	template<typename T>
 	void OpenGLPixelConstantBuffer<T>::Bind()
 	{
-		OpenGLPixelShader* shader = (OpenGLPixelShader*)m_PShader;
+		OpenGLPixelShader* pShader = (OpenGLPixelShader*)m_PShader;
 
-		glBindBuffer(GL_UNIFORM_BUFFER, m_Buffer);
-		int blockIndex = glGetUniformBlockIndex(shader->GetProgram(), m_Name.c_str());
-		glUniformBlockBinding(shader->GetProgram(), blockIndex, 1);
-		glBindBufferBase(GL_UNIFORM_BUFFER, 1, m_Buffer);
+		uint32_t buffer;
+		glGenBuffers(1, &buffer);
+		glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+		int blockIndex = glGetUniformBlockIndex(pShader->GetProgram(), m_Name.c_str());
+		glUniformBlockBinding(pShader->GetProgram(), blockIndex, 1);
+		glBindBufferBase(GL_UNIFORM_BUFFER, 1, buffer);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(m_Data), &m_Data, GL_DYNAMIC_DRAW);
 	}
 
 	template<typename T>
 	void OpenGLVertexConstantBuffer<T>::Bind()
 	{
-		OpenGLVertexShader* shader = (OpenGLVertexShader*)m_VShader;
+		OpenGLVertexShader* pShader = (OpenGLVertexShader*)m_VShader;
 
+		glGenBuffers(1, &m_Buffer);
 		glBindBuffer(GL_UNIFORM_BUFFER, m_Buffer);
-		int blockIndex = glGetUniformBlockIndex(shader->GetProgram(), m_Name.c_str());
-		glUniformBlockBinding(shader->GetProgram(), blockIndex, 1);
+		int blockIndex = glGetUniformBlockIndex(pShader->GetProgram(), m_Name.c_str());
+		glUniformBlockBinding(pShader->GetProgram(), blockIndex, 1);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 1, m_Buffer);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(m_Data), &m_Data, GL_DYNAMIC_DRAW);
 	}
 
 

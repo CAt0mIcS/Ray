@@ -20,6 +20,7 @@ namespace At0::Ray
 
 	protected:
 		uint32_t m_Buffer;
+		T m_Data;
 	};
 
 
