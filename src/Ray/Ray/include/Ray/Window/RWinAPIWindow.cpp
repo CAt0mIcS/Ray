@@ -126,6 +126,14 @@ namespace At0::Ray
 		{
 			// RAY_TODO: Classes need to be built in a hierachy and shouldn't depend on each other much
 
+			// RAY_TODO: Possibly bad performance
+			if (!CursorEnabled())
+			{
+				Point2 prevMousePos = m_CursorDisabledPos;
+				DisableCursor();
+				m_CursorDisabledPos = prevMousePos;
+			}
+
 			POINTS pt = MAKEPOINTS(lParam);
 			Mouse.SetPos({ (float)pt.x, (float)pt.y });
 
@@ -696,19 +704,14 @@ namespace At0::Ray
 
 	void WinAPIWindow::EnableCursor()
 	{
-		ClipCursor(nullptr);
-
+		FreeCursor();
 		while (ShowCursor(TRUE) < 0);
 		SetMousePos(m_CursorDisabledPos);
 	}
 
 	void WinAPIWindow::DisableCursor()
 	{
-		RECT rc;
-		GetClientRect(m_hWnd, &rc);
-		MapWindowPoints(m_hWnd, nullptr, (POINT*)&rc, 2);
-		ClipCursor(&rc);
-
+		ConfineCursor();
 		while (ShowCursor(FALSE) >= 0);
 		m_CursorDisabledPos = GetMousePos();
 	}
@@ -848,6 +851,19 @@ namespace At0::Ray
 		s_KeycodeMap[0x059] = Key::NumPadEqual;
 		s_KeycodeMap[0x037] = Key::NumPadMultiply;
 		s_KeycodeMap[0x04A] = Key::NumPadSubtract;
+	}
+
+	void WinAPIWindow::ConfineCursor()
+	{
+		RECT rc;
+		GetClientRect(m_hWnd, &rc);
+		MapWindowPoints(m_hWnd, nullptr, (POINT*)&rc, 2);
+		ClipCursor(&rc);
+	}
+
+	void WinAPIWindow::FreeCursor()
+	{
+		ClipCursor(nullptr);
 	}
 
 }

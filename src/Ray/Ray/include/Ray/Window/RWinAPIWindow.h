@@ -112,6 +112,9 @@ namespace At0::Ray
 		/// </summary>
 		static void SetKeycodeMap();
 
+		void ConfineCursor();
+		void FreeCursor();
+
 	private:
 		Point2 m_CursorDisabledPos;
 		bool m_IsOpen;
