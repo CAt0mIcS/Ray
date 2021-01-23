@@ -150,7 +150,8 @@ namespace At0::Layers
 		}
 
 		Ray::Size2 size = GetMainWindow().GetSize();
-		m_Camera.Projection = Ray::Matrix::PerspectiveLH(1.0f, size.y / size.x, 0.5f, 500.0f);
+		//m_Camera.Projection = Ray::Matrix::PerspectiveLH(1.0f, size.y / size.x, 0.5f, 500.0f);
+		m_Camera.SetProjectionValues(1.0f, size.y / size.x, 0.5f, 500.0f);
 #endif
 	}
 
@@ -183,11 +184,19 @@ namespace At0::Layers
 		// Camera movement
 		if (window.Keyboard.IsKeyPressed(Ray::Key::W))
 		{
-
+			m_Camera.Translate({ 0.0f, 0.0f, ts });
+		}
+		else if (window.Keyboard.IsKeyPressed(Ray::Key::A))
+		{
+			m_Camera.Translate({ -ts, 0.0f, 0.0f });
 		}
 		else if (window.Keyboard.IsKeyPressed(Ray::Key::S))
 		{
-
+			m_Camera.Translate({ 0.0f, 0.0f, -ts });
+		}
+		else if (window.Keyboard.IsKeyPressed(Ray::Key::D))
+		{
+			m_Camera.Translate({ ts, 0.0f, 0.0f });
 		}
 
 		auto& tform = Quad->GetComponent<Ray::TransformComponent>();
@@ -292,7 +301,7 @@ namespace At0::Layers
 		RAY_PROFILE_FUNCTION();
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
 
-		m_Camera.Projection = Ray::Matrix::PerspectiveLH(1.0f, e.GetSize().y / e.GetSize().x, 0.5f, 500.0f);
+		//m_Camera.Projection = Ray::Matrix::PerspectiveLH(1.0f, e.GetSize().y / e.GetSize().x, 0.5f, 500.0f);
 	}
 
 }

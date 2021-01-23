@@ -145,7 +145,7 @@ namespace At0::Ray
 			// RAY_TEMPORARY
 			d->GetVertexConstantBuffer()->Update(
 				(d->GetComponent<TransformComponent>().ToMatrix() *
-					camera.GetMatrix() * camera.Projection).Transpose()
+					camera.GetMatrix() * camera.GetProjection()).Transpose()
 			);
 			d->GetVertexConstantBuffer()->Bind();
 
