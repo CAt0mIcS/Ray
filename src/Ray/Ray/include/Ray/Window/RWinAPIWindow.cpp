@@ -679,6 +679,32 @@ namespace At0::Ray
 		((DX11Renderer3D*)m_Renderer3D.get())->SetSyncInterval((uint32_t)enabled);
 	}
 
+	void WinAPIWindow::EnableCursor()
+	{
+		ClipCursor(nullptr);
+
+		while (ShowCursor(TRUE) < 0);
+	}
+
+	void WinAPIWindow::DisableCursor()
+	{
+		RECT rc;
+		GetClientRect(m_hWnd, &rc);
+		MapWindowPoints(m_hWnd, nullptr, (POINT*)&rc, 2);
+		ClipCursor(&rc);
+
+		while (ShowCursor(FALSE) >= 0);
+	}
+
+	bool WinAPIWindow::CursorEnabled() const
+	{
+		CURSORINFO info;
+		info.cbSize = sizeof(CURSORINFO);
+		GetCursorInfo(&info);
+
+		return info.flags == CURSOR_SHOWING;
+	}
+
 	void WinAPIWindow::SetKeycodeMap()
 	{
 		memset(s_KeycodeMap, -1, sizeof(s_KeycodeMap));

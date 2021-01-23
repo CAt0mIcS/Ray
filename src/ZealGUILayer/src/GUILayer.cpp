@@ -212,6 +212,19 @@ namespace At0::Layers
 	{
 		RAY_PROFILE_FUNCTION();
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
+
+		if (e.GetKey() == Ray::Key::Escape)
+		{
+			if (GetMainWindow().CursorEnabled())
+			{
+				GetMainWindow().DisableCursor();
+			}
+			else
+			{
+				GetMainWindow().EnableCursor();
+			}
+		}
+
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::KeyReleasedEvent& e)

@@ -46,7 +46,7 @@ namespace At0::Ray
 
 
 	OpenGLWindow::OpenGLWindow(std::string_view name, const Point2& pos, const Size2& size, Widget* parent)
-		: Window(name, parent), m_hWnd(0)
+		: Window(name, parent), m_hWnd(0), m_CursorEnabled(true)
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -224,6 +224,23 @@ namespace At0::Ray
 	void OpenGLWindow::SetVSync(bool enabled)
 	{
 		glfwSwapInterval((int)enabled);
+	}
+
+	void OpenGLWindow::EnableCursor()
+	{
+		glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		m_CursorEnabled = true;
+	}
+
+	void OpenGLWindow::DisableCursor()
+	{
+		glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		m_CursorEnabled = false;
+	}
+
+	bool OpenGLWindow::CursorEnabled() const
+	{
+		return m_CursorEnabled;
 	}
 
 	void OpenGLWindow::SetUpEventCallbacks()

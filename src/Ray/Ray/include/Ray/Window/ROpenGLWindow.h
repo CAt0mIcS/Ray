@@ -69,6 +69,11 @@ namespace At0::Ray
 		virtual void SetIcon(std::string_view path);
 
 		virtual void SetVSync(bool enabled) override;
+
+		virtual void EnableCursor() override;
+		virtual void DisableCursor() override;
+		virtual bool CursorEnabled() const override;
+
 		virtual void* GetNativeWindow() const override { return (void*)m_hWnd; }
 
 	private:
@@ -81,6 +86,8 @@ namespace At0::Ray
 		static bool s_GLFWInitialized;
 
 		bool m_IsOpen;
+		bool m_CursorEnabled;
+
 		GLFWwindow* m_hWnd;
 	};
 }
