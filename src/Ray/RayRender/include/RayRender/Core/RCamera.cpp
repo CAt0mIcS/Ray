@@ -50,7 +50,7 @@ namespace At0::Ray
 	}
 
 	Camera::Camera()
-		: m_MovementSpeed(10.0f), m_RotationSpeed(0.004f)
+		: m_MovementSpeed(10.0f), m_RotationSpeed(0.002f)
 	{
 		Reset();
 	}

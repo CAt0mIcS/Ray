@@ -76,10 +76,6 @@ namespace At0::Ray
 	{
 		RAY_PROFILE_FUNCTION();
 
-		uint32_t buffer;
-		glGenBuffers(1, &buffer);
-		glBindBuffer(GL_UNIFORM_BUFFER, buffer);
-
 		for (Ref<Drawable>& d : scene)
 		{
 			d->GetVertexBuffer()->Bind();
@@ -92,17 +88,12 @@ namespace At0::Ray
 			Matrix mvp = d->GetComponent<TransformComponent>().ToMatrix() *
 				camera.GetMatrix() * camera.GetProjection();
 
-			int blockIndex = glGetUniformBlockIndex(pShader->GetShaderProgram(), "type_Projection");
-			glUniformBlockBinding(pShader->GetShaderProgram(), blockIndex, 1);
-			glBindBufferBase(GL_UNIFORM_BUFFER, 1, buffer);
-			glBufferData(GL_UNIFORM_BUFFER, sizeof(mvp), &mvp, GL_DYNAMIC_DRAW);
-
 			// RAY_TEMPORARY
-			//d->GetVertexConstantBuffer()->Update(
-			//	d->GetComponent<TransformComponent>().ToMatrix() *
-			//	camera.GetMatrix() * camera.GetProjection()
-			//);
-			//d->GetVertexConstantBuffer()->Bind();
+			d->GetVertexConstantBuffer()->Update(
+				d->GetComponent<TransformComponent>().ToMatrix() *
+				camera.GetMatrix() * camera.GetProjection()
+			);
+			d->GetVertexConstantBuffer()->Bind();
 
 			OpenGLTopology* pTopology = (OpenGLTopology*)d->GetTopology();
 			glDrawElements(pTopology->Get(), idxBuff->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);

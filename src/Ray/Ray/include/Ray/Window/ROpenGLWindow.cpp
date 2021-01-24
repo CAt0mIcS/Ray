@@ -330,9 +330,6 @@ namespace At0::Ray
 				{
 				case GLFW_PRESS:
 				{
-					Key k = (Key)key;
-					std::cout << KeyToString(k) << '\n';
-
 					KeyPressedEvent e((Key)key, 0);
 					win.Keyboard.SetKeyState((Key)key, true);
 					for (auto* pListener : win.EventDispatcher<KeyPressedEvent>::Get())

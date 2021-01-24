@@ -103,6 +103,11 @@ namespace At0::Ray
 		glUseProgram(m_Program);
 	}
 
+	OpenGLShader::~OpenGLShader()
+	{
+		glDeleteProgram(m_Program);
+	}
+
 	std::string OpenGLShader::TranscompileShader(std::string_view filepath, bool vertexShader)
 	{
 		std::string source = ReadShaderSource(filepath);

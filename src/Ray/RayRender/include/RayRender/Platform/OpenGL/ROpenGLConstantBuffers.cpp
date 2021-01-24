@@ -14,12 +14,16 @@ namespace At0::Ray
 	{
 		// Insert the prefix given to types when transcompiling shader with ShaderConductor
 		m_Name.insert(0, "type_");
-		//glGenBuffers(1, &m_Buffer);
-		//glBindBuffer(GL_UNIFORM_BUFFER, m_Buffer);
-		//int blockIndex = glGetUniformBlockIndex(pShader->GetProgram(), "type_TriangleColor");
-		//glUniformBlockBinding(pShader->GetProgram(), blockIndex, 1);
-		//glBindBufferBase(GL_UNIFORM_BUFFER, 1, m_Buffer);
-		//glBufferData(GL_UNIFORM_BUFFER, sizeof(color), color, GL_DYNAMIC_DRAW);
+
+		glGenBuffers(1, &m_Buffer);
+		glBindBuffer(GL_UNIFORM_BUFFER, m_Buffer);
+		int blockIndex = glGetUniformBlockIndex(((OpenGLShader*)pShader)->GetShaderProgram(), m_Name.c_str());
+		glUniformBlockBinding(((OpenGLShader*)pShader)->GetShaderProgram(), blockIndex, 1);
+
+		glBindBufferBase(GL_UNIFORM_BUFFER, 1, m_Buffer);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(data), &data, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
 	template<typename T>
@@ -28,13 +32,27 @@ namespace At0::Ray
 	{
 		// Insert the prefix given to types when transcompiling shader with ShaderConductor
 		m_Name.insert(0, "type_");
-		//glGenBuffers(1, &m_Buffer);
+
+		glGenBuffers(1, &m_Buffer);
+		glBindBuffer(GL_UNIFORM_BUFFER, m_Buffer);
+		int blockIndex = glGetUniformBlockIndex(((OpenGLShader*)pShader)->GetShaderProgram(), m_Name.c_str());
+		glUniformBlockBinding(((OpenGLShader*)pShader)->GetShaderProgram(), blockIndex, 1);
+
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
 	template<typename T>
 	void OpenGLConstantBuffer<T>::Update(const T& data)
 	{
-		m_Data = data;
+		glBindBuffer(GL_UNIFORM_BUFFER, m_Buffer);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(data), &data, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
+
+	template<typename T>
+	OpenGLConstantBuffer<T>::~OpenGLConstantBuffer()
+	{
+		glDeleteBuffers(1, &m_Buffer);
 	}
 
 	template<typename T>
@@ -42,13 +60,8 @@ namespace At0::Ray
 	{
 		const OpenGLShader* pShader = (const OpenGLShader*)m_Shader;
 
-		uint32_t buffer;
-		glGenBuffers(1, &buffer);
-		glBindBuffer(GL_UNIFORM_BUFFER, buffer);
-		int blockIndex = glGetUniformBlockIndex(pShader->GetShaderProgram(), m_Name.c_str());
-		glUniformBlockBinding(pShader->GetShaderProgram(), blockIndex, 1);
-		glBindBufferBase(GL_UNIFORM_BUFFER, 1, buffer);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(m_Data), &m_Data, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_UNIFORM_BUFFER, m_Buffer);
+		glBindBufferBase(GL_UNIFORM_BUFFER, 1, m_Buffer);
 	}
 
 	template<typename T>
@@ -56,12 +69,8 @@ namespace At0::Ray
 	{
 		const OpenGLShader* pShader = (const OpenGLShader*)m_Shader;
 
-		glGenBuffers(1, &m_Buffer);
 		glBindBuffer(GL_UNIFORM_BUFFER, m_Buffer);
-		int blockIndex = glGetUniformBlockIndex(pShader->GetShaderProgram(), m_Name.c_str());
-		glUniformBlockBinding(pShader->GetShaderProgram(), blockIndex, 1);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 1, m_Buffer);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(m_Data), &m_Data, GL_DYNAMIC_DRAW);
 	}
 
 

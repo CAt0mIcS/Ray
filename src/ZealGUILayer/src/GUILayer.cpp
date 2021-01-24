@@ -13,7 +13,7 @@
 #endif
 
 
-#define RENDEROBJECT Triangle
+#define RENDEROBJECT Quad
 
 
 
@@ -211,7 +211,6 @@ namespace At0::Layers
 			}
 		}
 
-
 		auto& tform = Quad->GetComponent<Ray::TransformComponent>();
 		tform.Rotation = Ray::Quaternion::RotationRollPitchYaw(pitch, yaw, roll);
 #endif
@@ -225,7 +224,6 @@ namespace At0::Layers
 
 		if (!GetMainWindow().CursorEnabled())
 		{
-			std::cout << e.GetRawDelta() << '\n';
 			if (e.GetRawDelta().x != 0 || e.GetRawDelta().y != 0)
 				m_Camera.Rotate(e.GetRawDelta().x, e.GetRawDelta().y);
 		}
@@ -246,13 +244,9 @@ namespace At0::Layers
 		if (e.GetKey() == Ray::Key::Escape)
 		{
 			if (GetMainWindow().CursorEnabled())
-			{
 				GetMainWindow().DisableCursor();
-			}
 			else
-			{
 				GetMainWindow().EnableCursor();
-			}
 		}
 
 	}
@@ -322,7 +316,7 @@ namespace At0::Layers
 		RAY_PROFILE_FUNCTION();
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
 
-		//m_Camera.Projection = Ray::Matrix::PerspectiveLH(1.0f, e.GetSize().y / e.GetSize().x, 0.5f, 500.0f);
+		m_Camera.SetProjectionValues(1.0f, e.GetSize().y / e.GetSize().x, 0.5f, 500.0f);
 	}
 
 }

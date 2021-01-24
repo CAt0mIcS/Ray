@@ -11,8 +11,9 @@ namespace At0::Ray
 		OpenGLShader(std::string_view vertexFilepath, std::string_view pixelFilepath);
 
 		virtual void Bind() override;
-
 		uint32_t GetShaderProgram() const { return m_Program; }
+
+		~OpenGLShader();
 
 	private:
 		std::string TranscompileShader(std::string_view filepath, bool vertexShader);

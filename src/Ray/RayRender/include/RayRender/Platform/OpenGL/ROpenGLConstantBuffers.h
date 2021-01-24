@@ -15,10 +15,11 @@ namespace At0::Ray
 
 		virtual void Update(const T& data) override;
 
+		~OpenGLConstantBuffer();
+
 	protected:
 		uint32_t m_Buffer;
 		const Shader* m_Shader;
-		T m_Data;
 		std::string m_Name;
 	};
 
