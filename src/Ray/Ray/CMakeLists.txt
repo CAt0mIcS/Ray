@@ -6,6 +6,7 @@ set(SRC
 	"include/Ray/RBase.h"
 	"include/Ray/REntryPoint.h"
 	
+	# Core classes
 	"include/Ray/Core/RThreadPool.h"
 	"include/Ray/Core/RThreadPool.cpp"
 	"include/Ray/Core/RRect.h"
@@ -13,7 +14,15 @@ set(SRC
 	"include/Ray/Core/RRect.cpp"	
 	"include/Ray/Core/RStack.h"
 	"include/Ray/Core/RTimestep.h"
+
+	# Predefined camera controllers
+	"include/Ray/CameraControllers/REditorCameraController.h"
+	"include/Ray/CameraControllers/REditorCameraController.cpp"
+	"include/Ray/CameraControllers/RFirstPersonCameraController.h"
+	"include/Ray/CameraControllers/RFirstPersonCameraController.cpp"
 	
+	
+	# Input handlers
 	"include/Ray/Input/RKeyboard.h"
 	"include/Ray/Input/RKeyboard.cpp"
 	"include/Ray/Input/RMouse.h"
@@ -22,11 +31,13 @@ set(SRC
 	"include/Ray/Layers/RLayer.h"
 	"include/Ray/Layers/RLayer.cpp"
 	
+	# Widgets and subclasses
 	"include/Ray/Widgets/RWidget.h"
 	"include/Ray/Widgets/RWidget.cpp"
 	"include/Ray/Widgets/RButton.h"
 	"include/Ray/Widgets/RButton.cpp"
 
+	# Windows
 	"include/Ray/Window/RWinAPIWindow.h"
 	"include/Ray/Window/RWinAPIWindow.cpp"
 	"include/Ray/Window/ROpenGLWindow.h"
@@ -86,7 +97,6 @@ target_link_libraries("Ray"
 )
 
 target_compile_definitions("Ray" PRIVATE "RAY_BUILD")
-# add_dependencies("Ray" "RayRender")
 
 target_precompile_headers("Ray" PRIVATE "include/Ray/Rpch.h")
 

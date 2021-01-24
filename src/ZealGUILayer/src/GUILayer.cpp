@@ -185,38 +185,7 @@ namespace At0::Layers
 				forwardSpeed = baseSpeed * ts;
 			m_Camera.SetMovementSpeed(forwardSpeed);
 
-			if (window.Keyboard.IsKeyPressed(Ray::Key::W))
-			{
-				m_Camera.Translate({ 0.0f, 0.0f, ts });
-			}
-			if (window.Keyboard.IsKeyPressed(Ray::Key::A))
-			{
-				m_Camera.Translate({ -ts, 0.0f, 0.0f });
-			}
-			if (window.Keyboard.IsKeyPressed(Ray::Key::S))
-			{
-				m_Camera.Translate({ 0.0f, 0.0f, -ts });
-			}
-			if (window.Keyboard.IsKeyPressed(Ray::Key::D))
-			{
-				m_Camera.Translate({ ts, 0.0f, 0.0f });
-			}
-			if (window.Keyboard.IsKeyPressed(Ray::Key::Space))
-			{
-				m_Camera.Translate({ 0.0f,ts,0.0f });
-			}
-			if (window.Keyboard.IsKeyPressed(Ray::Key::LeftControl))
-			{
-				m_Camera.Translate({ 0.0f,-ts,0.0f });
-			}
-			if (window.Keyboard.IsKeyPressed(Ray::Key::Q))
-			{
-				m_Camera.Rotate(0.0f, 0.0f, -1000.0f * ts);
-			}
-			if (window.Keyboard.IsKeyPressed(Ray::Key::E))
-			{
-				m_Camera.Rotate(0.0f, 0.0f, 1000.0f * ts);
-			}
+			m_CameraController.OnKeyboardUpdate(window.Keyboard, m_Camera, ts);
 		}
 
 		for (auto& obj : objects)
@@ -235,11 +204,7 @@ namespace At0::Layers
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
 
 		if (!GetMainWindow().CursorEnabled())
-		{
-			if (e.GetRawDelta().x != 0 || e.GetRawDelta().y != 0)
-				m_Camera.Rotate(e.GetRawDelta().x, e.GetRawDelta().y);
-		}
-
+			m_CameraController.OnMouseUpdate(e.GetRawDelta(), m_Camera);
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::WindowCloseEvent& e)

@@ -3,6 +3,8 @@
 #include "glbase.h"
 
 #include <Ray/Ray.h>
+#include <Ray/CameraControllers/RFirstPersonCameraController.h>
+#include <Ray/CameraControllers/REditorCameraController.h>
 #include <RayRender/RayRender.h>
 
 
@@ -54,6 +56,7 @@ namespace At0::Layers
 	private:
 		Ray::Scene m_CubeScene;
 		Ray::PerspectiveCamera m_Camera;
+		Ray::FirstPersonCameraController m_CameraController;
 		Ray::Point2 m_OldMousePos;
 	};
 }
