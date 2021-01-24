@@ -67,8 +67,6 @@ set(SRC
     "include/RayRender/Platform/OpenGL/ROpenGLIndexBuffer.cpp"
     "include/RayRender/Platform/OpenGL/ROpenGLTopology.h"
     "include/RayRender/Platform/OpenGL/ROpenGLTopology.cpp"
-    "include/RayRender/Platform/OpenGL/ROpenGLShaderBase.h"
-    "include/RayRender/Platform/OpenGL/ROpenGLShaderBase.cpp"
     "include/RayRender/Platform/OpenGL/ROpenGLConstantBuffers.h"
     "include/RayRender/Platform/OpenGL/ROpenGLConstantBuffers.cpp"
 
