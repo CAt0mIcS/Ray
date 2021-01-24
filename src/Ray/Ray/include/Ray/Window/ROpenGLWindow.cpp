@@ -46,7 +46,7 @@ namespace At0::Ray
 
 
 	OpenGLWindow::OpenGLWindow(std::string_view name, const Point2& pos, const Size2& size, Widget* parent)
-		: Window(name, parent), m_hWnd(0), m_CursorEnabled(true)
+		: Window(name, parent), m_hWnd(0), m_CachedRawDeltaMousePos{ 0.0f, 0.0f }
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -242,18 +242,16 @@ namespace At0::Ray
 	void OpenGLWindow::EnableCursor()
 	{
 		glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		m_CursorEnabled = true;
 	}
 
 	void OpenGLWindow::DisableCursor()
 	{
 		glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		m_CursorEnabled = false;
 	}
 
 	bool OpenGLWindow::CursorEnabled() const
 	{
-		return m_CursorEnabled;
+		return glfwGetInputMode(m_hWnd, GLFW_CURSOR) == GLFW_CURSOR_NORMAL;
 	}
 
 	void OpenGLWindow::SetUpEventCallbacks()
@@ -265,7 +263,13 @@ namespace At0::Ray
 				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
 				win.Mouse.SetPos({ (float)xPos, (float)yPos });
 
-				MouseMoveEvent e(Point2{ (float)xPos, (float)yPos }, { 0.0f, 0.0f });
+				Point2 rawDelta{ 0.0f, 0.0f };
+				if (!win.CursorEnabled())
+					rawDelta = Point2{ (float)xPos, (float)yPos } - win.m_CachedRawDeltaMousePos;
+
+				Point2 mousePos{ (float)xPos, (float)yPos };
+				win.m_CachedRawDeltaMousePos = mousePos;
+				MouseMoveEvent e(mousePos, rawDelta);
 				for (auto* pListener : win.EventDispatcher<MouseMoveEvent>::Get())
 				{
 					pListener->OnEvent(*win.GetEventReceiver(e, win.Mouse), e);

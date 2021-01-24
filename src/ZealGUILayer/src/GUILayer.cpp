@@ -224,8 +224,12 @@ namespace At0::Layers
 		Ray::Log::Debug("[GUILayer] [{0}]: {1}", receiver.GetName(), e.ToString());
 
 		if (!GetMainWindow().CursorEnabled())
+		{
+			std::cout << e.GetRawDelta() << '\n';
 			if (e.GetRawDelta().x != 0 || e.GetRawDelta().y != 0)
 				m_Camera.Rotate(e.GetRawDelta().x, e.GetRawDelta().y);
+		}
+
 	}
 
 	void GUILayer::OnEvent(Ray::Widget& receiver, Ray::WindowCloseEvent& e)

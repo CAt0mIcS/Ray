@@ -88,8 +88,8 @@ namespace At0::Ray
 	private:
 		static bool s_GLFWInitialized;
 
+		Point2 m_CachedRawDeltaMousePos;
 		bool m_IsOpen;
-		bool m_CursorEnabled;
 
 		GLFWwindow* m_hWnd;
 	};

@@ -148,7 +148,7 @@ namespace At0::Ray
 			SetHoveringWidget();
 
 			MouseMoveEvent e(Mouse.GetPos(), m_CachedRawMouseInputDelta);
-			m_CachedRawMouseInputDelta = Point2{};
+			m_CachedRawMouseInputDelta = Point2{ 0.0f, 0.0f };
 			for (auto* pListener : EventDispatcher<MouseMoveEvent>::Get())
 			{
 				pListener->OnEvent(*m_CurrentlyHovering, e);
