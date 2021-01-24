@@ -209,6 +209,14 @@ namespace At0::Layers
 			{
 				m_Camera.Translate({ 0.0f,-ts,0.0f });
 			}
+			if (window.Keyboard.IsKeyPressed(Ray::Key::Q))
+			{
+				m_Camera.Rotate(0.0f, 0.0f, -1000.0f * ts);
+			}
+			if (window.Keyboard.IsKeyPressed(Ray::Key::E))
+			{
+				m_Camera.Rotate(0.0f, 0.0f, 1000.0f * ts);
+			}
 		}
 
 		for (auto& obj : objects)

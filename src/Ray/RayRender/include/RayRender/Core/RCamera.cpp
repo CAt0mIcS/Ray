@@ -16,7 +16,8 @@ namespace At0::Ray
 		// generate camera transform which is applied to all objects
 		const auto camPos = LoadFloat3(&m_Pos);
 		const auto camTarget = camPos + lookVector;
-		return Matrix::LookAtLH(camPos, camTarget, Vector::Set(0.0f, 1.0f, 0.0f, 0.0f));
+		return Matrix::LookAtLH(camPos, camTarget, Vector::Set(0.0f, 1.0f, 0.0f, 0.0f)) *
+			Matrix::RotationRollPitchYaw(0.0f, 0.0f, m_Roll);
 	}
 
 	void Camera::SetProjectionValues(float viewWidth, float viewHeight, float nearZ, float farZ)
@@ -25,17 +26,18 @@ namespace At0::Ray
 		m_Projection = Matrix::PerspectiveLH(viewWidth, viewHeight, nearZ, farZ);
 	}
 
-	void Camera::Rotate(float dx, float dy)
+	void Camera::Rotate(float dx, float dy, float roll)
 	{
 		m_Yaw = WrapAngle(m_Yaw + dx * m_RotationSpeed);
 		m_Pitch = std::clamp(m_Pitch + dy * m_RotationSpeed, 0.995f * -Constants::PI / 2.0f, 0.995f * Constants::PI / 2.0f);
+		m_Roll = WrapAngle(m_Roll + roll * m_RotationSpeed);
 	}
 
 	void Camera::Translate(Float3 translation)
 	{
 		StoreFloat3(&translation, Vector3Transform(
 			LoadFloat3(&translation),
-			Matrix::RotationRollPitchYaw(m_Pitch, m_Yaw, 0.0f) *
+			Matrix::RotationRollPitchYaw(m_Pitch, m_Yaw, m_Roll) *
 			Matrix::Scaling(m_MovementSpeed, m_MovementSpeed, m_MovementSpeed)
 		));
 
@@ -47,6 +49,7 @@ namespace At0::Ray
 		m_Pos = { 0.0f, 0.0f, 0.0f };
 		m_Pitch = 0.0f;
 		m_Yaw = 0.0f;
+		m_Roll = 0.0f;
 	}
 
 	Camera::Camera()
