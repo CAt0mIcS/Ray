@@ -92,8 +92,8 @@ namespace At0::Layers
 {
 #define RENDER 1
 
-	static constexpr uint64_t AmountOfCubes = 1;
-	Ray::Ref<Ray::RENDEROBJECT> Quad;
+	static constexpr uint64_t AmountOfCubes = 2;
+	std::vector<Ray::Ref<Ray::RENDEROBJECT>> objects;
 
 	GUILayer::GUILayer(std::string_view name)
 		: Ray::Layer(name),
@@ -123,12 +123,12 @@ namespace At0::Layers
 			{
 				// Create quad with name Quad[i]
 				Ray::Ref<Ray::RENDEROBJECT> quad = Ray::MakeRef<Ray::RENDEROBJECT>(m_CubeScene.CreateEntity("Quad" + std::to_string(i)));
-				Quad = quad;
+				objects.emplace_back(quad);
 				// Set transformation (RAY_TODO: TransformConstantBuffers)
 				// This step is optional
 				Ray::TransformComponent& tform = quad->GetComponent<Ray::TransformComponent>();
 				tform.Rotation = Ray::Quaternion::RotationRollPitchYaw(100.0f, 0.0f, 50.0f);
-				tform.Translation.z = 1.0f;
+				tform.Translation.z = i + 2.0f;
 
 				//// Overwrite existing basic vertex shader with my own.
 				//// This step is optional
@@ -211,8 +211,12 @@ namespace At0::Layers
 			}
 		}
 
-		auto& tform = Quad->GetComponent<Ray::TransformComponent>();
-		tform.Rotation = Ray::Quaternion::RotationRollPitchYaw(pitch, yaw, roll);
+		for (auto& obj : objects)
+		{
+			auto& tform = obj->GetComponent<Ray::TransformComponent>();
+			tform.Rotation = Ray::Quaternion::RotationRollPitchYaw(pitch, yaw, roll);
+		}
+
 #endif
 
 		g_FPS.Update();
