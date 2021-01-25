@@ -11,21 +11,6 @@ namespace SC = ShaderConductor;
 
 namespace At0::Ray
 {
-	static std::string ReadShaderSource(std::string_view filepath)
-	{
-		std::ifstream reader(filepath.data());
-		std::streampos fileSize = reader.tellg();
-		reader.seekg(0, std::ios::end);
-		fileSize = reader.tellg() - fileSize;
-		reader.seekg(0, std::ios::beg);
-
-		std::string source;
-		source.resize(fileSize);
-		reader.read(source.data(), fileSize);
-
-		return source;
-	}
-
 
 	OpenGLShader::OpenGLShader(std::string_view vertexFilepath, std::string_view pixelFilepath)
 		: m_Program(0)
@@ -36,7 +21,7 @@ namespace At0::Ray
 		// --------------------------------------------------------------
 		// Vertex Shader
 		{
-			std::string shaderSource = TranscompileShader(vertexFilepath, true);
+			std::string shaderSource = TranscompileShader(vertexFilepath, SC::ShaderStage::VertexShader, SC::ShadingLanguage::Glsl);
 			const char* source = shaderSource.c_str();
 
 			vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -58,7 +43,7 @@ namespace At0::Ray
 		// --------------------------------------------------------------
 		// Pixel Shader
 		{
-			std::string shaderSource = TranscompileShader(pixelFilepath, false);
+			std::string shaderSource = TranscompileShader(pixelFilepath, SC::ShaderStage::PixelShader, SC::ShadingLanguage::Glsl);
 			const char* source = shaderSource.c_str();
 
 			pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -106,42 +91,5 @@ namespace At0::Ray
 	OpenGLShader::~OpenGLShader()
 	{
 		glDeleteProgram(m_Program);
-	}
-
-	std::string OpenGLShader::TranscompileShader(std::string_view filepath, bool vertexShader)
-	{
-		std::string source = ReadShaderSource(filepath);
-		SC::Compiler::SourceDesc sd{};
-
-		sd.fileName = filepath.data();
-		if (vertexShader)
-			sd.stage = SC::ShaderStage::VertexShader;
-		else
-			sd.stage = SC::ShaderStage::PixelShader;
-		sd.source = source.c_str();
-
-		SC::Compiler::Options options{};
-		SC::Compiler::TargetDesc td{};
-		td.language = SC::ShadingLanguage::Glsl;
-
-		SC::Compiler::ResultDesc rd = SC::Compiler::Compile(sd, options, td);
-		if (rd.hasError)
-			if (vertexShader)
-				RAY_THROW_RUNTIME("[OpenGLShader] Vertex Shader Transcompilation failed with message: {0}", (char*)rd.errorWarningMsg.Data());
-			else
-				RAY_THROW_RUNTIME("[OpenGLShader] Pixel Shader Transcompilation failed with message: {0}", (char*)rd.errorWarningMsg.Data());
-
-
-		// Strip any weird characters at the end
-		source = (char*)rd.target.Data();
-		source.resize(rd.target.Size());
-		const char* shaderSource = source.c_str();
-
-		if (vertexShader)
-			Log::Debug("[OpenGLShader] Converted VertexShader {0} to:\n{1}", filepath, shaderSource);
-		else
-			Log::Debug("[OpenGLShader] Converted PixelShader {0} to:\n{1}", filepath, shaderSource);
-
-		return source;
 	}
 }

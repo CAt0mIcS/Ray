@@ -71,6 +71,8 @@ set(SRC
     "include/RayRender/Platform/OpenGL/ROpenGLConstantBuffers.cpp"
 
     # Vulkan classes
+    "include/RayRender/Platform/Vulkan/RVulkanDevice.h"
+    "include/RayRender/Platform/Vulkan/RVulkanDevice.cpp"
     "include/RayRender/Platform/Vulkan/RVulkanRenderer3D.h"
     "include/RayRender/Platform/Vulkan/RVulkanRenderer3D.cpp"
     "include/RayRender/Platform/Vulkan/RVulkanVertexBuffer.h"

@@ -16,9 +16,6 @@ namespace At0::Ray
 		~OpenGLShader();
 
 	private:
-		std::string TranscompileShader(std::string_view filepath, bool vertexShader);
-
-	private:
 		uint32_t m_Program;
 	};
 }
