@@ -1,4 +1,4 @@
-#include "Ray/Rpch.h"
+﻿#include "Ray/Rpch.h"
 #include "RWindow.h"
 
 #include <RayDebug/RAssert.h>
@@ -10,7 +10,7 @@
 //#include <RayRender/Renderer2D.h>
 
 #include "RWinAPIWindow.h"
-#include "ROpenGLWindow.h"
+#include "RGLFWWindow.h"
 
 
 
@@ -27,7 +27,7 @@ namespace At0::Ray
 #ifdef _WIN32
 		case RendererAPI::API::D3D11:		return MakeRef<WinAPIWindow>(name, pos, size, parent);
 #endif
-		case RendererAPI::API::OpenGL:		return MakeRef<OpenGLWindow>(name, pos, size, parent);
+		case RendererAPI::API::OpenGL:		return MakeRef<GLFWWindow>(name, pos, size, parent);
 		}
 
 		RAY_ASSERT(false, "Failed to create the Window");
@@ -96,5 +96,3 @@ namespace At0::Ray
 		Log::Debug("[Window] '{0}' destroyed.", GetName());
 	}
 }
-
-

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../RBase.h"
 #include "RWindow.h"
@@ -11,16 +11,16 @@ namespace At0::Ray
 	class Renderer3D;
 	//class Renderer2D;
 
-	class RAY_API OpenGLWindow : public Window
+	class RAY_API GLFWWindow : public Window
 	{
 	public:
 		/// <summary>
 		/// Window Constructor
 		/// </summary>
 		/// <param name="name">Is the unique name of the window</param>
-		OpenGLWindow(std::string_view name, const Point2& pos, const Size2& size, Widget* parent = nullptr);
+		GLFWWindow(std::string_view name, const Point2& pos, const Size2& size, Widget* parent = nullptr);
 
-		~OpenGLWindow();
+		~GLFWWindow();
 
 		virtual std::string GetTitle() const override;
 		virtual void SetTitle(std::string_view title) override;
@@ -94,5 +94,3 @@ namespace At0::Ray
 		GLFWwindow* m_hWnd;
 	};
 }
-
-

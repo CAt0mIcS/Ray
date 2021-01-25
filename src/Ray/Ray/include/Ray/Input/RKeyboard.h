@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../RBase.h"
 #include <bitset>
@@ -12,7 +12,7 @@ namespace At0::Ray
 	class RAY_API KeyboardInput
 	{
 		friend class WinAPIWindow;
-		friend class OpenGLWindow;
+		friend class GLFWWindow;
 	public:
 		KeyboardInput() = default;
 		~KeyboardInput();
@@ -34,5 +34,3 @@ namespace At0::Ray
 		std::bitset<512> m_Keys;
 	};
 }
-
-

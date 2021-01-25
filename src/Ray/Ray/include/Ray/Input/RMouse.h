@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../RBase.h"
 
@@ -11,7 +11,7 @@ namespace At0::Ray
 	class RAY_API MouseInput
 	{
 		friend class WinAPIWindow;
-		friend class OpenGLWindow;
+		friend class GLFWWindow;
 	public:
 		MouseInput();
 		~MouseInput();
@@ -40,5 +40,3 @@ namespace At0::Ray
 		bool m_IsRightPressed;
 	};
 }
-
-

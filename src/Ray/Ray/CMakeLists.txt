@@ -40,8 +40,8 @@ set(SRC
 	# Windows
 	"include/Ray/Window/RWinAPIWindow.h"
 	"include/Ray/Window/RWinAPIWindow.cpp"
-	"include/Ray/Window/ROpenGLWindow.h"
-	"include/Ray/Window/ROpenGLWindow.cpp"
+	"include/Ray/Window/RGLFWWindow.h"
+	"include/Ray/Window/RGLFWWindow.cpp"
 	"include/Ray/Window/RWindow.h"
 	"include/Ray/Window/RWindow.cpp"
 

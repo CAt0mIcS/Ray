@@ -1,4 +1,4 @@
-#include "glpch.h"
+﻿#include "glpch.h"
 #include "GUILayer.h"
 
 // QUESTION: Should I add all includes that the client might need into Ray.h or let them include them on their own (but they will need to set additional include paths to other libraries)
@@ -6,7 +6,7 @@
 #include <RayDebug/RInstrumentor.h>
 
 #include <Ray/Ray.h>
-#include <Ray/Window/ROpenGLWindow.h>
+#include <Ray/Window/RGLFWWindow.h>
 
 #ifdef __linux__
 #include <time.h>

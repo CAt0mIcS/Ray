@@ -1,5 +1,5 @@
-#include "Ray/Rpch.h"
-#include "ROpenGLWindow.h"
+﻿#include "Ray/Rpch.h"
+#include "RGLFWWindow.h"
 
 #ifdef _WIN32
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -33,19 +33,19 @@
 
 namespace At0::Ray
 {
-	bool OpenGLWindow::s_GLFWInitialized = false;
+	bool GLFWWindow::s_GLFWInitialized = false;
 
 	static void GLFWErrorCallback(int error, const char* description)
 	{
 		RAY_PROFILE_FUNCTION();
 
-		RAY_ASSERT(false, "[OpenGLWindow] GLFW Error ({0}): {1}", error, description);
+		RAY_ASSERT(false, "[GLFWWindow] GLFW Error ({0}): {1}", error, description);
 		Log::Critical("[OpenGLRenderer3D] GLFW Error ({0}): {1}", error, description);
 		Log::Flush();
 	}
 
 
-	OpenGLWindow::OpenGLWindow(std::string_view name, const Point2& pos, const Size2& size, Widget* parent)
+	GLFWWindow::GLFWWindow(std::string_view name, const Point2& pos, const Size2& size, Widget* parent)
 		: Window(name, parent), m_hWnd(0), m_CachedRawDeltaMousePos{ 0.0f, 0.0f }
 	{
 		RAY_PROFILE_FUNCTION();
@@ -56,7 +56,7 @@ namespace At0::Ray
 			s_GLFWInitialized = true;
 			int success = glfwInit();
 			RAY_ASSERT(success, "Failed to initialize GLFW");
-			Log::Info("[OpenGLWindow] Successfully initialized GLFW");
+			Log::Info("[GLFWWindow] Successfully initialized GLFW");
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}
 
@@ -75,7 +75,7 @@ namespace At0::Ray
 		SetUpEventCallbacks();
 	}
 
-	OpenGLWindow::~OpenGLWindow()
+	GLFWWindow::~GLFWWindow()
 	{
 		RAY_PROFILE_FUNCTION();
 		if (m_hWnd)
@@ -83,10 +83,10 @@ namespace At0::Ray
 			Close();
 		}
 		glfwTerminate();
-		Log::Debug("[OpenGLWindow] '{0}' destroyed", this->GetName());
+		Log::Debug("[GLFWWindow] '{0}' destroyed", this->GetName());
 	}
 
-	std::string OpenGLWindow::GetTitle() const
+	std::string GLFWWindow::GetTitle() const
 	{
 		// GLFW doesn't have functionality to get the current window title
 		RAY_PROFILE_FUNCTION();
@@ -103,7 +103,7 @@ namespace At0::Ray
 		}
 		else
 		{
-			RAY_THROW_RUNTIME("[OpenGLWindow] Failed to retrieve the Window Title");
+			RAY_THROW_RUNTIME("[GLFWWindow] Failed to retrieve the Window Title");
 		}
 
 		return buff;
@@ -114,68 +114,68 @@ namespace At0::Ray
 		XTextProperty prop;
 		if (XGetWMName(glfwGetX11Display(), hWnd, &prop) == 0)
 		{
-			RAY_THROW_RUNTIME("[OpenGLWindow] Failed to retrieve the Window Title");
+			RAY_THROW_RUNTIME("[GLFWWindow] Failed to retrieve the Window Title");
 		}
 		return (char*)prop.value;
 #endif
 
 	}
 
-	void OpenGLWindow::SetTitle(std::string_view title)
+	void GLFWWindow::SetTitle(std::string_view title)
 	{
 		RAY_PROFILE_FUNCTION();
 		glfwSetWindowTitle(m_hWnd, title.data());
 	}
 
-	void OpenGLWindow::Show() const
+	void GLFWWindow::Show() const
 	{
 		RAY_PROFILE_FUNCTION();
 		glfwShowWindow(m_hWnd);
 	}
 
-	void OpenGLWindow::Hide() const
+	void GLFWWindow::Hide() const
 	{
 		RAY_PROFILE_FUNCTION();
 		glfwHideWindow(m_hWnd);
 	}
 
-	void OpenGLWindow::Maximize() const
+	void GLFWWindow::Maximize() const
 	{
 		RAY_PROFILE_FUNCTION();
 		glfwMaximizeWindow(m_hWnd);
 	}
 
-	void OpenGLWindow::Minimize() const
+	void GLFWWindow::Minimize() const
 	{
 		RAY_PROFILE_FUNCTION();
 		glfwIconifyWindow(m_hWnd);
 	}
 
-	void OpenGLWindow::Move(const Point2& pos)
+	void GLFWWindow::Move(const Point2& pos)
 	{
 		glfwSetWindowPos(m_hWnd, pos.x, pos.y);
 	}
 
-	void OpenGLWindow::Resize(const Size2& size)
+	void GLFWWindow::Resize(const Size2& size)
 	{
 		glfwSetWindowSize(m_hWnd, size.x, size.y);
 	}
 
-	Point2 OpenGLWindow::GetPos() const
+	Point2 GLFWWindow::GetPos() const
 	{
 		int x, y;
 		glfwGetWindowPos(m_hWnd, &x, &y);
 		return { (float)x, (float)y };
 	}
 
-	Size2 OpenGLWindow::GetSize() const
+	Size2 GLFWWindow::GetSize() const
 	{
 		int width, height;
 		glfwGetWindowSize(m_hWnd, &width, &height);
 		return { (float)width, (float)height };
 	}
 
-	void OpenGLWindow::Close()
+	void GLFWWindow::Close()
 	{
 		RAY_PROFILE_FUNCTION();
 		if (IsOpen())
@@ -192,12 +192,12 @@ namespace At0::Ray
 		}
 	}
 
-	bool OpenGLWindow::IsOpen() const
+	bool GLFWWindow::IsOpen() const
 	{
 		return m_IsOpen;
 	}
 
-	void OpenGLWindow::Update()
+	void GLFWWindow::Update()
 	{
 		RAY_PROFILE_FUNCTION();
 
@@ -207,10 +207,10 @@ namespace At0::Ray
 		glfwPollEvents();
 	}
 
-	void OpenGLWindow::SetIcon(std::string_view path)
+	void GLFWWindow::SetIcon(std::string_view path)
 	{
 		RAY_MEXPECTS(!Util::EndsWith(path, ".ico"),
-			"[OpenGLWindow::SetIcon] File '{0}' has an invalid extension. "
+			"[GLFWWindow::SetIcon] File '{0}' has an invalid extension. "
 			".ico files are currently not supported by the OpenGL implementation.",
 			path
 		);
@@ -221,17 +221,17 @@ namespace At0::Ray
 		stbi_image_free(images[0].pixels);
 	}
 
-	void OpenGLWindow::SetVSync(bool enabled)
+	void GLFWWindow::SetVSync(bool enabled)
 	{
 		glfwSwapInterval((int)enabled);
 	}
 
-	void OpenGLWindow::SetMousePos(const Point2& pos)
+	void GLFWWindow::SetMousePos(const Point2& pos)
 	{
 		glfwSetCursorPos(m_hWnd, (double)pos.x, (double)pos.y);
 	}
 
-	Point2 OpenGLWindow::GetMousePos() const
+	Point2 GLFWWindow::GetMousePos() const
 	{
 		double xPos, yPos;
 		glfwGetCursorPos(m_hWnd, &xPos, &yPos);
@@ -239,28 +239,28 @@ namespace At0::Ray
 		return { (float)xPos, (float)yPos };
 	}
 
-	void OpenGLWindow::EnableCursor()
+	void GLFWWindow::EnableCursor()
 	{
 		glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
-	void OpenGLWindow::DisableCursor()
+	void GLFWWindow::DisableCursor()
 	{
 		glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 
-	bool OpenGLWindow::CursorEnabled() const
+	bool GLFWWindow::CursorEnabled() const
 	{
 		return glfwGetInputMode(m_hWnd, GLFW_CURSOR) == GLFW_CURSOR_NORMAL;
 	}
 
-	void OpenGLWindow::SetUpEventCallbacks()
+	void GLFWWindow::SetUpEventCallbacks()
 	{
 		RAY_PROFILE_FUNCTION();
 
 		glfwSetCursorPosCallback(m_hWnd, [](GLFWwindow* window, double xPos, double yPos)
 			{
-				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+				GLFWWindow& win = *(GLFWWindow*)glfwGetWindowUserPointer(window);
 				win.Mouse.SetPos({ (float)xPos, (float)yPos });
 
 				Point2 rawDelta{ 0.0f, 0.0f };
@@ -279,7 +279,7 @@ namespace At0::Ray
 
 		glfwSetMouseButtonCallback(m_hWnd, [](GLFWwindow* window, int button, int action, int mods)
 			{
-				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+				GLFWWindow& win = *(GLFWWindow*)glfwGetWindowUserPointer(window);
 
 				switch (action)
 				{
@@ -324,7 +324,7 @@ namespace At0::Ray
 
 		glfwSetKeyCallback(m_hWnd, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
-				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+				GLFWWindow& win = *(GLFWWindow*)glfwGetWindowUserPointer(window);
 
 				switch (action)
 				{
@@ -366,7 +366,7 @@ namespace At0::Ray
 
 		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode)
 			{
-				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+				GLFWWindow& win = *(GLFWWindow*)glfwGetWindowUserPointer(window);
 
 				CharEvent e((uint16_t)keycode);
 				for (auto* pListener : win.EventDispatcher<CharEvent>::Get())
@@ -377,7 +377,7 @@ namespace At0::Ray
 
 		glfwSetScrollCallback(m_hWnd, [](GLFWwindow* window, double xOffset, double yOffset)
 			{
-				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+				GLFWWindow& win = *(GLFWWindow*)glfwGetWindowUserPointer(window);
 
 				if (yOffset > 0)
 				{
@@ -417,7 +417,7 @@ namespace At0::Ray
 
 		glfwSetWindowRefreshCallback(m_hWnd, [](GLFWwindow* window)
 			{
-				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+				GLFWWindow& win = *(GLFWWindow*)glfwGetWindowUserPointer(window);
 
 				PaintEvent e;
 				for (auto* pListener : win.EventDispatcher<PaintEvent>::Get())
@@ -429,7 +429,7 @@ namespace At0::Ray
 
 		glfwSetWindowSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height)
 			{
-				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+				GLFWWindow& win = *(GLFWWindow*)glfwGetWindowUserPointer(window);
 
 				//ResizeTo(Point2{ width, height });
 
@@ -443,7 +443,7 @@ namespace At0::Ray
 
 		glfwSetWindowPosCallback(m_hWnd, [](GLFWwindow* window, int x, int y)
 			{
-				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+				GLFWWindow& win = *(GLFWWindow*)glfwGetWindowUserPointer(window);
 
 				//MoveTo(Point2{ x, y });
 
@@ -457,12 +457,10 @@ namespace At0::Ray
 
 		glfwSetWindowCloseCallback(m_hWnd, [](GLFWwindow* window)
 			{
-				OpenGLWindow& win = *(OpenGLWindow*)glfwGetWindowUserPointer(window);
+				GLFWWindow& win = *(GLFWWindow*)glfwGetWindowUserPointer(window);
 
 				win.Close();
 			}
 		);
 	}
 }
-
-
