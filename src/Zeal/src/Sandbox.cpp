@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Sandbox.h"
 
 #include <Ray/Ray.h>
@@ -110,4 +110,3 @@ int At0::Ray::Awake(std::string commandLineArguments)
 	Ray::Log::End();
 	return -1;
 }
-

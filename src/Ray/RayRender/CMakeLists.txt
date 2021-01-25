@@ -43,8 +43,6 @@ set(SRC
     # DirectX11 classes
     "include/RayRender/Platform/DX11/RDX11Renderer3D.h"
     "include/RayRender/Platform/DX11/RDX11Renderer3D.cpp"
-    "include/RayRender/Platform/DX11/RDX11GraphicsResources.h"
-    "include/RayRender/Platform/DX11/RDX11GraphicsResources.cpp"
     "include/RayRender/Platform/DX11/RDX11VertexBuffer.h"
     "include/RayRender/Platform/DX11/RDX11VertexBuffer.cpp"
     "include/RayRender/Platform/DX11/RDX11Shader.h"
@@ -55,6 +53,8 @@ set(SRC
     "include/RayRender/Platform/DX11/RDX11Topology.cpp"
     "include/RayRender/Platform/DX11/RDX11ConstantBuffers.h"
     "include/RayRender/Platform/DX11/RDX11ConstantBuffers.cpp"
+    "include/RayRender/Platform/DX11/Internal/RDX11GraphicsResources.h"
+    "include/RayRender/Platform/DX11/Internal/RDX11GraphicsResources.cpp"
 
     # OpenGL classes
     "include/RayRender/Platform/OpenGL/ROpenGLRenderer3D.h"
@@ -71,8 +71,6 @@ set(SRC
     "include/RayRender/Platform/OpenGL/ROpenGLConstantBuffers.cpp"
 
     # Vulkan classes
-    "include/RayRender/Platform/Vulkan/RVulkanDevice.h"
-    "include/RayRender/Platform/Vulkan/RVulkanDevice.cpp"
     "include/RayRender/Platform/Vulkan/RVulkanRenderer3D.h"
     "include/RayRender/Platform/Vulkan/RVulkanRenderer3D.cpp"
     "include/RayRender/Platform/Vulkan/RVulkanVertexBuffer.h"
@@ -85,6 +83,8 @@ set(SRC
     "include/RayRender/Platform/Vulkan/RVulkanTopology.cpp"
     "include/RayRender/Platform/Vulkan/RVulkanConstantBuffers.h"
     "include/RayRender/Platform/Vulkan/RVulkanConstantBuffers.cpp"
+    "include/RayRender/Platform/Vulkan/Internal/RVulkanDevice.h"
+    "include/RayRender/Platform/Vulkan/Internal/RVulkanDevice.cpp"
 
     # DirectX11 Shaders
     "shaders/QuadVertexShader.hlsl"

@@ -2,7 +2,7 @@
 
 #ifdef _WIN32
 #include "../../RIndexBuffer.h"
-#include "RDX11GraphicsResources.h"
+#include "Internal/RDX11GraphicsResources.h"
 
 #include <wrl.h>
 

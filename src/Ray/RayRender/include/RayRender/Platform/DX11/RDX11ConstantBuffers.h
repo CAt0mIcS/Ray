@@ -1,9 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #ifdef _WIN32
 
 #include "../../RConstantBuffers.h"
-#include "RDX11GraphicsResources.h"
+#include "Internal/RDX11GraphicsResources.h"
 
 #include <wrl.h>
 

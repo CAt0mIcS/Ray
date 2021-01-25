@@ -4,7 +4,7 @@
 #include "../../RRBase.h"
 #include "../../RRenderer3D.h"
 
-#include "RDX11GraphicsResources.h"
+#include "Internal/RDX11GraphicsResources.h"
 
 #include <../../RayEvent/include/RayEvent/REventListener.h>
 #include <wrl.h>
