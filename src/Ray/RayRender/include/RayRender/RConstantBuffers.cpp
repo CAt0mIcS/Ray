@@ -8,6 +8,7 @@
 
 #include "Platform/DX11/RDX11ConstantBuffers.h"
 #include "Platform/OpenGL/ROpenGLConstantBuffers.h"
+#include "Platform/Vulkan/RVulkanConstantBuffers.h"
 
 
 namespace At0::Ray
@@ -24,6 +25,7 @@ namespace At0::Ray
 		case RendererAPI::D3D11:	return MakeScope<DX11PixelConstantBuffer<T>>(data);
 #endif
 		case RendererAPI::OpenGL:	return MakeScope<OpenGLPixelConstantBuffer<T>>(name, pShader, data);
+		case RendererAPI::Vulkan:	return MakeScope<VulkanPixelConstantBuffer<T>>();
 		}
 
 		return nullptr;
@@ -41,6 +43,7 @@ namespace At0::Ray
 		case RendererAPI::D3D11:	return MakeScope<DX11VertexConstantBuffer<T>>(data);
 #endif
 		case RendererAPI::OpenGL:	return MakeScope<OpenGLVertexConstantBuffer<T>>(name, pShader, data);
+		case RendererAPI::Vulkan:	return MakeScope<VulkanVertexConstantBuffer<T>>();
 		}
 
 		return nullptr;
@@ -59,6 +62,7 @@ namespace At0::Ray
 		case RendererAPI::D3D11:	return MakeScope<DX11PixelConstantBuffer<T>>();
 #endif
 		case RendererAPI::OpenGL:	return MakeScope<OpenGLPixelConstantBuffer<T>>(name, pShader);
+		case RendererAPI::Vulkan:	return MakeScope<VulkanPixelConstantBuffer<T>>();
 		}
 
 		return nullptr;
@@ -76,6 +80,7 @@ namespace At0::Ray
 		case RendererAPI::D3D11:	return MakeScope<DX11VertexConstantBuffer<T>>();
 #endif
 		case RendererAPI::OpenGL:	return MakeScope<OpenGLVertexConstantBuffer<T>>(name, pShader);
+		case RendererAPI::Vulkan:	return MakeScope<VulkanVertexConstantBuffer<T>>();
 		}
 
 		return nullptr;

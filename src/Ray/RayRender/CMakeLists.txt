@@ -70,6 +70,20 @@ set(SRC
     "include/RayRender/Platform/OpenGL/ROpenGLConstantBuffers.h"
     "include/RayRender/Platform/OpenGL/ROpenGLConstantBuffers.cpp"
 
+    # Vulkan classes
+    "include/RayRender/Platform/Vulkan/RVulkanRenderer3D.h"
+    "include/RayRender/Platform/Vulkan/RVulkanRenderer3D.cpp"
+    "include/RayRender/Platform/Vulkan/RVulkanVertexBuffer.h"
+    "include/RayRender/Platform/Vulkan/RVulkanVertexBuffer.cpp"
+    "include/RayRender/Platform/Vulkan/RVulkanShader.h"
+    "include/RayRender/Platform/Vulkan/RVulkanShader.cpp"
+    "include/RayRender/Platform/Vulkan/RVulkanIndexBuffer.h"
+    "include/RayRender/Platform/Vulkan/RVulkanIndexBuffer.cpp"
+    "include/RayRender/Platform/Vulkan/RVulkanTopology.h"
+    "include/RayRender/Platform/Vulkan/RVulkanTopology.cpp"
+    "include/RayRender/Platform/Vulkan/RVulkanConstantBuffers.h"
+    "include/RayRender/Platform/Vulkan/RVulkanConstantBuffers.cpp"
+
     # DirectX11 Shaders
     "shaders/QuadVertexShader.hlsl"
     "shaders/QuadPixelShader.hlsl"
@@ -83,12 +97,14 @@ set(SRC
     # "shaders/TrianglePixelShader.glsl"
 )
 
+find_package("Vulkan" REQUIRED FATAL_ERROR)
+
 set(PUBLIC_INC
     "include"
 )
 
 set(PRIVATE_INC
-    ""
+    "${Vulkan_INCLUDE_DIRS}"
 )
 
 set(PUBLIC_LIB
@@ -102,6 +118,7 @@ set(PRIVATE_LIB
     "RayEvent"
     "assimp"
     "ShaderConductor"
+    "${Vulkan_LIBRARIES}"
 )
 
 if(WIN32)

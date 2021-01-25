@@ -4,6 +4,7 @@
 #include "RRendererAPI.h"
 #include "Platform/DX11/RDX11Shader.h"
 #include "Platform/OpenGL/ROpenGLShader.h"
+#include "Platform/Vulkan/RVulkanShader.h"
 
 #include <RayDebug/RAssert.h>
 #include <RayDebug/RInstrumentor.h>
@@ -22,6 +23,7 @@ namespace At0::Ray
 		case RendererAPI::D3D11:	return MakeScope<DX11Shader>(vertexFilepath, pixelFilepath);
 #endif
 		case RendererAPI::OpenGL:	return MakeScope<OpenGLShader>(vertexFilepath, pixelFilepath);
+		case RendererAPI::Vulkan:	return MakeScope<VulkanShader>();
 			break;
 		}
 

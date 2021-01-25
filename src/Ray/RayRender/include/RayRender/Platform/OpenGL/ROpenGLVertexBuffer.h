@@ -8,7 +8,7 @@ namespace At0::Ray
 	class RR_API OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
-		OpenGLVertexBuffer(const VertexData& data, const Scope<Shader>& vShader);
+		OpenGLVertexBuffer(const VertexData& data);
 		~OpenGLVertexBuffer();
 
 		virtual void Bind() override;

@@ -24,7 +24,7 @@ namespace At0::Ray
 		return data;
 	}
 
-	OpenGLVertexBuffer::OpenGLVertexBuffer(const VertexData& data, const Scope<Shader>& vShader)
+	OpenGLVertexBuffer::OpenGLVertexBuffer(const VertexData& data)
 	{
 		RAY_PROFILE_FUNCTION();
 

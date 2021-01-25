@@ -7,6 +7,7 @@
 
 #include "Platform/DX11/RDX11VertexBuffer.h"
 #include "Platform/OpenGL/ROpenGLVertexBuffer.h"
+#include "Platform/Vulkan/RVulkanVertexBuffer.h"
 
 
 namespace At0::Ray
@@ -20,7 +21,8 @@ namespace At0::Ray
 #ifdef _WIN32
 		case RendererAPI::D3D11:	return MakeScope<DX11VertexBuffer>(data, vShader);
 #endif
-		case RendererAPI::OpenGL:	return MakeScope<OpenGLVertexBuffer>(data, vShader);
+		case RendererAPI::OpenGL:	return MakeScope<OpenGLVertexBuffer>(data);
+		case RendererAPI::Vulkan:	return MakeScope<VulkanVertexBuffer>();
 		}
 
 		return nullptr;

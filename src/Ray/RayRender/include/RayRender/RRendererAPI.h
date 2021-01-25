@@ -10,9 +10,9 @@ namespace At0::Ray
 	public:
 		enum API
 		{
-			D3D11, OpenGL,
+			D3D11, OpenGL, Vulkan,
 
-			FIRST = D3D11, LAST = OpenGL
+			FIRST = D3D11, LAST = Vulkan
 		};
 
 		static API GetAPI();

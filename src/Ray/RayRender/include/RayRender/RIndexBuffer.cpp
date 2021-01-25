@@ -5,6 +5,7 @@
 
 #include "Platform/DX11/RDX11IndexBuffer.h"
 #include "Platform/OpenGL/ROpenGLIndexBuffer.h"
+#include "Platform/Vulkan/RVulkanIndexBuffer.h"
 
 #include <RayDebug/RInstrumentor.h>
 #include <RayDebug/RAssert.h>
@@ -23,6 +24,7 @@ namespace At0::Ray
 		case RendererAPI::D3D11:	return MakeScope<DX11IndexBuffer>(indices);
 #endif
 		case RendererAPI::OpenGL:	return MakeScope<OpenGLIndexBuffer>(indices);
+		case RendererAPI::Vulkan:	return MakeScope<VulkanIndexBuffer>();
 		}
 
 		return nullptr;
