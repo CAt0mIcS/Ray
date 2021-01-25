@@ -20,6 +20,7 @@
 #include "Ray/Input/RMouse.h"
 
 #include <RayRender/RRenderer3D.h>
+#include <RayRender/RRendererAPI.h>
 
 #include <RayDebug/RAssert.h>
 #include <RayDebug/RLogger.h>
@@ -58,6 +59,12 @@ namespace At0::Ray
 			RAY_ASSERT(success, "Failed to initialize GLFW");
 			Log::Info("[GLFWWindow] Successfully initialized GLFW");
 			glfwSetErrorCallback(GLFWErrorCallback);
+
+			// Remove default OpenGL context from glfw
+			if (RendererAPI::GetAPI() == RendererAPI::Vulkan)
+			{
+				glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+			}
 		}
 
 		// Create the window and move it to the specified position
