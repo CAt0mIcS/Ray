@@ -19,7 +19,7 @@ namespace At0::Ray
 		// ------------------------------------------------------------
 		// Pixel shader compilation
 		Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
-		RAY_GFX_THROW_FAILED(D3DCompileFromFile(
+		RAY_DX_THROW_FAILED(D3DCompileFromFile(
 			Util::MultiByteToWideChar(pixelFilepath).c_str(),
 			nullptr,
 			D3D_COMPILE_STANDARD_FILE_INCLUDE,
@@ -34,11 +34,11 @@ namespace At0::Ray
 		if (errorBlob)
 			RAY_THROW_RUNTIME("[DX11Shader] Failed to compile Vertex Shader from file '{0}' with error: '{1}'", vertexFilepath, errorBlob->GetBufferPointer());
 
-		RAY_GFX_THROW_FAILED(GetDevice()->CreatePixelShader(m_VertexShaderBlob->GetBufferPointer(), m_VertexShaderBlob->GetBufferSize(), nullptr, &m_PixelShader));
+		RAY_DX_THROW_FAILED(GetDevice()->CreatePixelShader(m_VertexShaderBlob->GetBufferPointer(), m_VertexShaderBlob->GetBufferSize(), nullptr, &m_PixelShader));
 
 		// ------------------------------------------------------------
 		// Vertex shader compilation
-		RAY_GFX_THROW_FAILED(D3DCompileFromFile(
+		RAY_DX_THROW_FAILED(D3DCompileFromFile(
 			Util::MultiByteToWideChar(vertexFilepath).c_str(),
 			nullptr,
 			D3D_COMPILE_STANDARD_FILE_INCLUDE,
@@ -53,7 +53,7 @@ namespace At0::Ray
 		if (errorBlob)
 			RAY_THROW_RUNTIME("[DX11Shader] Failed to compile Vertex Shader from file '{0}' with error: '{1}'", vertexFilepath, errorBlob->GetBufferPointer());
 
-		RAY_GFX_THROW_FAILED(GetDevice()->CreateVertexShader(m_VertexShaderBlob->GetBufferPointer(), m_VertexShaderBlob->GetBufferSize(), nullptr, &m_VertexShader));
+		RAY_DX_THROW_FAILED(GetDevice()->CreateVertexShader(m_VertexShaderBlob->GetBufferPointer(), m_VertexShaderBlob->GetBufferSize(), nullptr, &m_VertexShader));
 	}
 
 	void DX11Shader::Bind()

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "RRBase.h"
 
@@ -15,5 +15,5 @@
 #include <vector>
 #include <string>
 #include <atomic>
+#include <set>
 #include <random>
-

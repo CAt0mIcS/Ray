@@ -27,7 +27,7 @@ namespace At0::Ray
 		D3D11_SUBRESOURCE_DATA sd = {};
 		sd.pSysMem = data.Data();
 
-		RAY_GFX_THROW_FAILED(GetDevice()->CreateBuffer(&bd, &sd, &m_pBuffer));
+		RAY_DX_THROW_FAILED(GetDevice()->CreateBuffer(&bd, &sd, &m_pBuffer));
 
 		SetInputLayout(data.Layout(), (DX11Shader*)vShader.get());
 	}
@@ -61,7 +61,7 @@ namespace At0::Ray
 		// --> VertexShader: D3D11
 		// --> InputLayout:  OpenGL
 		const DX11Shader* pDxShader = (DX11Shader*)vShader;
-		RAY_GFX_THROW_FAILED(GetDevice()->CreateInputLayout(desc.data(), desc.size(), pDxShader->GetBufferPointer(), pDxShader->GetBufferSize(), &m_pLayout));
+		RAY_DX_THROW_FAILED(GetDevice()->CreateInputLayout(desc.data(), desc.size(), pDxShader->GetBufferPointer(), pDxShader->GetBufferSize(), &m_pLayout));
 	}
 
 

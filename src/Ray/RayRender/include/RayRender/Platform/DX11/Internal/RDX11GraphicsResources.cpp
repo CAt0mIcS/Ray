@@ -27,7 +27,7 @@ namespace At0::Ray
 				0;
 #endif
 
-			RAY_GFX_THROW_FAILED(D3D11CreateDevice(
+			RAY_DX_THROW_FAILED(D3D11CreateDevice(
 				nullptr,
 				D3D_DRIVER_TYPE_HARDWARE,
 				NULL,
@@ -41,17 +41,17 @@ namespace At0::Ray
 			));
 
 			Microsoft::WRL::ComPtr<IDXGIDevice> pDevice;
-			RAY_GFX_THROW_FAILED(s_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDevice));
+			RAY_DX_THROW_FAILED(s_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDevice));
 
 			Microsoft::WRL::ComPtr<IDXGIAdapter> pAdapter;
-			RAY_GFX_THROW_FAILED(pDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&pAdapter));
+			RAY_DX_THROW_FAILED(pDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&pAdapter));
 
-			RAY_GFX_THROW_FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&s_pDXGIFactory));
+			RAY_DX_THROW_FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&s_pDXGIFactory));
 
 			for (auto i = 0; s_pDXGIFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
 			{
 				DXGI_ADAPTER_DESC adapterDesc;
-				RAY_GFX_THROW_FAILED(pAdapter->GetDesc(&adapterDesc));
+				RAY_DX_THROW_FAILED(pAdapter->GetDesc(&adapterDesc));
 				Log::Info("[Renderer3D] Found DXGIAdapter: "
 					"\n\tDescription: {0}\n\tVendorID: {1}\n\tDeviceID: {2}\n\tSubSysID: {3}"
 					"\n\tRevision: {4}\n\tDedicated Video Memory: {5}\n\tDedicated System Memory: {6}"

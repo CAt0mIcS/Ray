@@ -31,7 +31,7 @@ namespace At0::Ray
 		//AlignedData alignedData{ data };
 		//sd.pSysMem = &alignedData;
 		sd.pSysMem = &data;
-		RAY_GFX_THROW_FAILED(GetDevice()->CreateBuffer(&bd, &sd, &m_pConstantBuffer));
+		RAY_DX_THROW_FAILED(GetDevice()->CreateBuffer(&bd, &sd, &m_pConstantBuffer));
 	}
 
 	template<typename T>
@@ -50,14 +50,14 @@ namespace At0::Ray
 		//bd.ByteWidth = sizeof(AlignedData);
 		bd.ByteWidth = sizeof(T);
 		bd.StructureByteStride = 0;
-		RAY_GFX_THROW_FAILED(GetDevice()->CreateBuffer(&bd, nullptr, &m_pConstantBuffer));
+		RAY_DX_THROW_FAILED(GetDevice()->CreateBuffer(&bd, nullptr, &m_pConstantBuffer));
 	}
 
 	template<typename T>
 	void DX11ConstantBuffer<T>::Update(const T& data)
 	{
 		D3D11_MAPPED_SUBRESOURCE msr{};
-		RAY_GFX_THROW_FAILED(GetContext()->Map(
+		RAY_DX_THROW_FAILED(GetContext()->Map(
 			m_pConstantBuffer.Get(), 0,
 			D3D11_MAP_WRITE_DISCARD, 0, &msr
 		));

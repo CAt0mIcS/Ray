@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 
 #include <../../RayUtil/include/RayUtil/RCoreConfig.h>
@@ -123,7 +123,7 @@ namespace At0::Ray::Log
 		::At0::Ray::Debug::Logger::GetFileLogger().Info(msg, std::forward<Args>(args)...);
 	}
 	template<typename... Args>
-	inline void Warning(std::wstring_view msg, Args&&... args)
+	inline void Warn(std::wstring_view msg, Args&&... args)
 	{
 		::At0::Ray::Debug::Logger::GetFileLogger().Warn(msg, std::forward<Args>(args)...);
 	}
@@ -168,17 +168,16 @@ namespace At0::Ray::Log
 	inline void Critical(std::string_view msg, Args&&... args) {}
 
 	template<typename... Args>
-	inline void LogTrace(std::wstring_view msg, Args&&... args) {}
+	inline void Trace(std::wstring_view msg, Args&&... args) {}
 	template<typename... Args>
-	inline void LogDebug(std::wstring_view msg, Args&&... args) {}
+	inline void Debug(std::wstring_view msg, Args&&... args) {}
 	template<typename... Args>
-	inline void LogInfo(std::wstring_view msg, Args&&... args) {}
+	inline void Info(std::wstring_view msg, Args&&... args) {}
 	template<typename... Args>
-	inline void LogWarning(std::wstring_view msg, Args&&... args) {}
+	inline void Warning(std::wstring_view msg, Args&&... args) {}
 	template<typename... Args>
-	inline void LogError(std::wstring_view msg, Args&&... args) {}
+	inline void Error(std::wstring_view msg, Args&&... args) {}
 	template<typename... Args>
-	inline void LogCritical(std::wstring_view msg, Args&&... args) {}
+	inline void Critical(std::wstring_view msg, Args&&... args) {}
 }
 #endif
-

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <exception>
 #include <stdint.h>
@@ -97,6 +97,18 @@ namespace At0::Ray
 		std::string m_Message;
 	};
 
+	class RU_API VulkanException : public RuntimeException
+	{
+	public:
+		using RuntimeException::RuntimeException;
+
+		/// <summary>
+		/// Getter for string with Exception type
+		/// </summary>
+		/// <returns>The exception type string</returns>
+		virtual const char* GetType() const { return "Vulkan Exception"; };
+	};
+
 #ifdef _WIN32
 
 	class RU_API WindowsException : public Exception
@@ -186,7 +198,9 @@ throw ::At0::Ray::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE_
 
 #define RAY_WND_THROW_LAST_FAILED(expr) if(!(expr)) RAY_WND_THROW_LAST_FAILED_NO_EXPR()
 
-#define RAY_GFX_THROW_FAILED(expr) if(HRESULT RL___HRES___RL = (expr); FAILED(RL___HRES___RL)) throw ::At0::Ray::GraphicsException(RL___HRES___RL, (uint16_t)__LINE__, __FILE__)
+#define RAY_DX_THROW_FAILED(expr) if(HRESULT RL___HRES___RL = (expr); FAILED(RL___HRES___RL)) throw ::At0::Ray::GraphicsException(RL___HRES___RL, (uint16_t)__LINE__, __FILE__)
+#define RAY_VK_THROW_NO_EXPR(msg, ...) throw ::At0::Ray::VulkanException(::At0::Ray::Util::SerializeString(msg, __VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
+#define RAY_VK_THROW_FAILED(expr, msg, ...) if((expr) != VK_SUCCESS) RAY_VK_THROW_NO_EXPR(msg, __VA_ARGS__)
 
 #define RAY_THROW_RUNTIME(msg, ...) throw ::At0::Ray::RuntimeException(::At0::Ray::Util::SerializeString(msg, __VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
 
@@ -195,11 +209,10 @@ throw ::At0::Ray::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE_
 #define RAY_WND_THROW_FAILED(expr) expr
 #define RAY_WND_THROW_LAST_FAILED2()
 #define RAY_WND_THROW_LAST_FAILED(expr) expr
+// RAY_TODO: Enable for linux
 // #define RAY_THROW_RUNTIME(msg, ...) throw ::At0::Ray::RuntimeException(::At0::Ray::Util::SerializeString(msg, ## __VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
+#defube RAY_VK_THROW_NO_EXPR(msg, ...);
+#define RAY_VK_GFX_THROW_FAILED(expr, msg, ...)
 #define RAY_THROW_RUNTIME(msg, ...)
 
 #endif
-
-
-
-

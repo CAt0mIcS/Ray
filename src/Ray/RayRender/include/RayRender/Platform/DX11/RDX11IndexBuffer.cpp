@@ -22,7 +22,7 @@ namespace At0::Ray
 		D3D11_SUBRESOURCE_DATA sd{};
 		sd.pSysMem = indices.begin();
 
-		RAY_GFX_THROW_FAILED(GetDevice()->CreateBuffer(&bd, &sd, &m_pIndexBuffer));
+		RAY_DX_THROW_FAILED(GetDevice()->CreateBuffer(&bd, &sd, &m_pIndexBuffer));
 	}
 
 	void DX11IndexBuffer::Bind()

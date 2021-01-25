@@ -50,13 +50,13 @@ namespace At0::Ray
 		scdesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		scdesc.Flags = 0;
 
-		RAY_GFX_THROW_FAILED(GetDXGIFactory()->CreateSwapChain(GetDevice(), &scdesc, &m_pSwapChain));
+		RAY_DX_THROW_FAILED(GetDXGIFactory()->CreateSwapChain(GetDevice(), &scdesc, &m_pSwapChain));
 
 		// ----------------------------------------------------------------------------------------------------
 		// gain access to texture subresource in swap chain (back buffer)
 		WRL::ComPtr<ID3D11Resource> pBackBuffer;
-		RAY_GFX_THROW_FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
-		RAY_GFX_THROW_FAILED(GetDevice()->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pTargetView));
+		RAY_DX_THROW_FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
+		RAY_DX_THROW_FAILED(GetDevice()->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pTargetView));
 
 		// ----------------------------------------------------------------------------------------------------
 		// create depth stensil state
@@ -65,7 +65,7 @@ namespace At0::Ray
 		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
 		WRL::ComPtr<ID3D11DepthStencilState> pDSState;
-		RAY_GFX_THROW_FAILED(GetDevice()->CreateDepthStencilState(&dsDesc, &pDSState));
+		RAY_DX_THROW_FAILED(GetDevice()->CreateDepthStencilState(&dsDesc, &pDSState));
 
 		// ----------------------------------------------------------------------------------------------------
 		// bind depth state
@@ -84,7 +84,7 @@ namespace At0::Ray
 		descDepth.SampleDesc.Quality = 0u;
 		descDepth.Usage = D3D11_USAGE_DEFAULT;
 		descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		RAY_GFX_THROW_FAILED(GetDevice()->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));
+		RAY_DX_THROW_FAILED(GetDevice()->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));
 
 		// ----------------------------------------------------------------------------------------------------
 		// create view of depth stensil texture
@@ -92,7 +92,7 @@ namespace At0::Ray
 		descDSV.Format = DXGI_FORMAT_D32_FLOAT;
 		descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		descDSV.Texture2D.MipSlice = 0u;
-		RAY_GFX_THROW_FAILED(GetDevice()->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &m_pDSV));
+		RAY_DX_THROW_FAILED(GetDevice()->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &m_pDSV));
 
 		// ----------------------------------------------------------------------------------------------------
 		// bind depth stensil view to OM
@@ -124,7 +124,7 @@ namespace At0::Ray
 
 	void DX11Renderer3D::EndDraw()
 	{
-		RAY_GFX_THROW_FAILED(m_pSwapChain->Present(m_SyncInterval, 0));
+		RAY_DX_THROW_FAILED(m_pSwapChain->Present(m_SyncInterval, 0));
 	}
 
 	void DX11Renderer3D::Draw(const Camera& camera, Scene& scene)
