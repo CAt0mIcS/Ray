@@ -111,6 +111,17 @@ namespace At0::Ray
 		m_CurrentFrame = (m_CurrentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 	}
 
+	std::vector<VkExtensionProperties> VulkanDevice::QuerySupportedExtensions() const
+	{
+		uint32_t availableExtensionCount;
+		vkEnumerateInstanceExtensionProperties(nullptr, &availableExtensionCount, nullptr);
+
+		std::vector<VkExtensionProperties> availableExtensions(availableExtensionCount);
+		vkEnumerateInstanceExtensionProperties(nullptr, &availableExtensionCount, availableExtensions.data());
+
+		return availableExtensions;
+	}
+
 	void VulkanDevice::CreateInstance()
 	{
 		VkInstanceCreateInfo createInfo{};
@@ -147,8 +158,32 @@ namespace At0::Ray
 		const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
 		std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+		auto supportedExtensions = QuerySupportedExtensions();
 		if constexpr (s_EnableValidationLayers)
-			extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+		{
+			if (std::find_if(supportedExtensions.begin(), supportedExtensions.end(), [](VkExtensionProperties ext)
+				{
+					return ext.extensionName == VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
+				}) == supportedExtensions.end())
+			{
+				Log::Warn("[VulkanDevice::GetRequiredExtensions] The VK_EXT_debug_utils extension is not supported.");
+			}
+			else
+				extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+		}
+
+		// Check for unsupported but required extensions
+		for (const char* extension : extensions)
+		{
+			if (std::find_if(supportedExtensions.begin(), supportedExtensions.end(), [extension](const VkExtensionProperties& extProp)
+				{
+					return strcmp(extension, extProp.extensionName);
+				}
+			) == supportedExtensions.end())
+			{
+				RAY_THROW_RUNTIME("[VulkanDevice::GetRequiredExtensions] Extension {0} is required but not supported.", extension);
+			}
+		}
 
 		return extensions;
 	}

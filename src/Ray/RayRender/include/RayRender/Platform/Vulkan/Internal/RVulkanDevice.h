@@ -41,6 +41,7 @@ namespace At0::Ray
 		void Draw();
 
 	private:
+		std::vector<VkExtensionProperties> QuerySupportedExtensions() const;
 		void CreateInstance();
 		std::vector<const char*> GetRequiredExtensions() const;
 		void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
