@@ -1,6 +1,7 @@
-#include "RayRender/RRpch.h"
+﻿#include "RayRender/RRpch.h"
 
 #include "RVulkanRenderer3D.h"
+#include "Internal/RVulkanDevice.h"
 
 #include "../../RVertexBuffer.h"
 #include "../../RIndexBuffer.h"
@@ -17,10 +18,18 @@
 
 namespace At0::Ray
 {
-    void VulkanRenderer3D::OnEvent(Widget& receiver, WindowResizeEvent& e)
-    {
-    }
+	VulkanRenderer3D::VulkanRenderer3D(GLFWwindow* window, EventDispatcher<WindowResizeEvent>& resizeDispatcher)
+		: VulkanGraphicsResources(window), m_hWnd{ window },
+		EventListener<WindowResizeEvent>(resizeDispatcher)
+	{
+	}
+
+	void VulkanRenderer3D::EndDraw()
+	{
+		GetDevice().Draw();
+	}
+
+	void VulkanRenderer3D::OnEvent(Widget& receiver, WindowResizeEvent& e)
+	{
+	}
 }
-
-
-

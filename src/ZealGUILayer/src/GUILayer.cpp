@@ -13,7 +13,7 @@
 #endif
 
 
-#define RENDEROBJECT Quad
+#define RENDEROBJECT Triangle
 
 
 
@@ -90,7 +90,7 @@ FPS g_FPS;
 
 namespace At0::Layers
 {
-#define RENDER 1
+#define RENDER 0
 
 	static constexpr uint64_t AmountOfCubes = 2;
 	std::vector<Ray::Ref<Ray::RENDEROBJECT>> objects;
@@ -158,13 +158,12 @@ namespace At0::Layers
 	Ray::Point2 mousePos{};
 	void GUILayer::OnUpdate(Ray::Timestep ts)
 	{
-#if RENDER
 		Ray::Window& window = GetMainWindow();
 		Ray::Ref<Ray::Renderer3D> renderer = GetMainWindow().GetRenderer3D();
+#if RENDER
 		renderer->ClearBuffer(0.07f, 0.0f, 0.12f);
 
 		renderer->Draw(m_Camera, m_CubeScene);
-		renderer->EndDraw();
 
 		static float pitch = 0.0f;
 		static float yaw = 0.0f;
@@ -196,6 +195,7 @@ namespace At0::Layers
 
 #endif
 
+		renderer->EndDraw();
 		g_FPS.Update();
 	}
 

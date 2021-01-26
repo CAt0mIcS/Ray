@@ -25,9 +25,11 @@ namespace At0::Ray
 		switch (RendererAPI::GetAPI())
 		{
 #ifdef _WIN32
-		case RendererAPI::API::D3D11:		return MakeRef<WinAPIWindow>(name, pos, size, parent);
+		case RendererAPI::D3D11:	return MakeRef<WinAPIWindow>(name, pos, size, parent);
 #endif
-		case RendererAPI::API::OpenGL:		return MakeRef<GLFWWindow>(name, pos, size, parent);
+		case RendererAPI::OpenGL:
+		case RendererAPI::Vulkan:
+			return MakeRef<GLFWWindow>(name, pos, size, parent);
 		}
 
 		RAY_ASSERT(false, "Failed to create the Window");

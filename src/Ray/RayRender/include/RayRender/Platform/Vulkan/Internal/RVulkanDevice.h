@@ -34,6 +34,11 @@ namespace At0::Ray
 	{
 	public:
 		VulkanDevice(GLFWwindow* window);
+		~VulkanDevice();
+
+		VkDevice Device() { return m_LogicalDevice; }
+
+		void Draw();
 
 	private:
 		void CreateInstance();
@@ -54,6 +59,12 @@ namespace At0::Ray
 		void CreateImageViews();
 		void CreateRenderPass();
 		void CreateGraphicsPipeline();
+		VkShaderModule CreateShaderModule(const std::vector<char>& code);
+		void CreateFramebuffers();
+		void CreateCommandPool();
+		void CreateCommandBuffers();
+		void CreateSyncObjects();
+		void Cleanup();
 
 	private:
 #ifndef NDEBUG
@@ -84,5 +95,21 @@ namespace At0::Ray
 		std::vector<VkImageView> m_SwapChainImageViews;
 
 		VkRenderPass m_RenderPass;
+		VkPipelineLayout m_PipelineLayout;
+		VkPipeline m_GraphicsPipeline;
+
+		std::vector<VkFramebuffer> m_SwapChainFramebuffers;
+		VkCommandPool m_CommandPool;
+		std::vector<VkCommandBuffer> m_CommandBuffers;
+
+		std::vector<VkSemaphore> m_ImageAvailableSemaphores;
+		std::vector<VkSemaphore> m_RenderFinishedSemaphores;
+		std::vector<VkFence> m_InFlightFences;
+		std::vector<VkFence> m_ImagesInFlight;
+
+		VkQueue m_GraphicsQueue;
+		VkQueue m_PresentQueue;
+
+		size_t m_CurrentFrame = 0;
 	};
 }

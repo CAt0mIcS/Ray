@@ -76,8 +76,8 @@ namespace At0::Ray
 		// Create the renderer, also sets the context
 		m_Renderer3D = Renderer3D::Create((void*)m_hWnd, *this);
 
-		// Disable VSync by default
-		SetVSync(false);
+		// Disable VSync by default (RAY_TODO: Crashes with Vulkan)
+		//SetVSync(false);
 
 		SetUpEventCallbacks();
 	}

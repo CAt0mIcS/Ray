@@ -21,7 +21,7 @@ namespace At0::Zeal
 
 		GetMainWindow().SetTitle("Zeal");
 		GetMainWindow().Show();
-		GetMainWindow().SetIcon("Resources/Icon.png");
+		GetMainWindow().SetIcon("res/Icon.png");
 		//GetMainWindow().Resize({ 960.0f, 540.0f });
 
 		//Ray::Window& win = PushWindow(Ray::Window::Create("Win0", { 150, 150 }, { 960, 540 }));
@@ -77,7 +77,7 @@ int At0::Ray::Awake(std::string commandLineArguments)
 		Ray::Log::Begin("../../Zeal.log", Log::LogLevel::Trace);
 
 		Ray::Profile::BeginSession("Startup", "../../Profiling/Profile-Startup.json");
-		Ray::RendererAPI::SetAPI(Ray::RendererAPI::OpenGL);
+		Ray::RendererAPI::SetAPI(Ray::RendererAPI::Vulkan);
 		Zeal::Sandbox* app = new Zeal::Sandbox();
 		Ray::Profile::EndSession();
 

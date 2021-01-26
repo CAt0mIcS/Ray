@@ -85,6 +85,8 @@ set(SRC
     "include/RayRender/Platform/Vulkan/RVulkanConstantBuffers.cpp"
     "include/RayRender/Platform/Vulkan/Internal/RVulkanDevice.h"
     "include/RayRender/Platform/Vulkan/Internal/RVulkanDevice.cpp"
+    "include/RayRender/Platform/Vulkan/Internal/RVulkanGraphicsResources.h"
+    "include/RayRender/Platform/Vulkan/Internal/RVulkanGraphicsResources.cpp"
 
     # DirectX11 Shaders
     "shaders/QuadVertexShader.hlsl"
@@ -146,6 +148,7 @@ target_link_libraries("RayRender"
 
 target_compile_definitions("RayRender" PRIVATE "RR_BUILD")
 target_precompile_headers("RayRender" PRIVATE "include/RayRender/RRpch.h")
+add_dependencies("RayRender" "CustomCommandManager")
 
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("RayRender" "")
@@ -232,6 +235,23 @@ add_custom_command(TARGET "RayRender" POST_BUILD
     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/>"
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/>"
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/>"
+)
+
+
+# Vulkan test shaders
+add_custom_command(TARGET "RayRender" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/frag.spv"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/res/shaders/>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/res/shaders/>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/res/shaders/>"
+)
+add_custom_command(TARGET "RayRender" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    "${CMAKE_CURRENT_SOURCE_DIR}/shaders/vert.spv"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/res/shaders/>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/res/shaders/>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/res/shaders/>"
 )
 
 

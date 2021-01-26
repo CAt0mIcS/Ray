@@ -101,9 +101,9 @@ include("BuildFiles/macros.cmake")
 # Create necessary directories
 add_custom_target(CustomCommandManager ALL
      COMMAND ${CMAKE_COMMAND} -E make_directory 
-     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/Resources/>"
-     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/Resources/>"
-     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/Resources/>"
+     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/res/shaders/>"
+     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/res/shaders/>"
+     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/res/shaders/>"
 )
 set_target_properties(CustomCommandManager PROPERTIES FOLDER "CMakePredefinedTargets")
 

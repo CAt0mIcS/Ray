@@ -1,4 +1,4 @@
-#include "RRpch.h"
+﻿#include "RRpch.h"
 #include "RRenderer3D.h"
 
 #include "RRendererAPI.h"
@@ -24,12 +24,10 @@ namespace At0::Ray
 		case RendererAPI::D3D11:	return MakeRef<DX11Renderer3D>((HWND)window, resizeDispatcher);
 #endif
 		case RendererAPI::OpenGL:	return MakeRef<OpenGLRenderer3D>((GLFWwindow*)window, resizeDispatcher);
-		case RendererAPI::Vulkan:	return MakeRef<VulkanRenderer3D>();
+		case RendererAPI::Vulkan:	return MakeRef<VulkanRenderer3D>((GLFWwindow*)window, resizeDispatcher);
 			break;
 		}
 
 		return nullptr;
 	}
 }
-
-
