@@ -22,12 +22,16 @@ set(SRC
     "include/RayUtil/RHelper.cpp"
 )
 
+
+find_package("Vulkan" REQUIRED FATAL_ERROR)
+
 set(PUBLIC_INC
 	"include"
 )
 
 set(PRIVATE_INC
     "${CMAKE_CURRENT_SOURCE_DIR}/extern/dxerr/include"
+    "${Vulkan_INCLUDE_DIRS}"
 )
 
 set(PUBLIC_LIB

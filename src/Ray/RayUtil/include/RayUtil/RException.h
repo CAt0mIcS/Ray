@@ -14,9 +14,11 @@
 #pragma warning(disable : 4275)
 #pragma warning(disable : 4251)
 
+enum VkResult;
 
 namespace At0::Ray
 {
+
 	/// <summary>
 	/// Base Exception class
 	/// </summary>
@@ -93,20 +95,39 @@ namespace At0::Ray
 		/// <returns>More information about the error</returns>
 		virtual const char* what() const noexcept override;
 
-	private:
+	protected:
 		std::string m_Message;
 	};
 
 	class RU_API VulkanException : public RuntimeException
 	{
 	public:
-		using RuntimeException::RuntimeException;
+		/// <summary>
+		/// Exception contructor
+		/// </summary>
+		/// <param name="message">Is a message associated with the exception</param>
+		/// <param name="line">Is the line where the exception occured</param>
+		/// <param name="file">Is the file where the exception occured</param>
+		/// <param name="error">Is the Vulkan error code</param>
+		VulkanException(const char* message, uint16_t line, const char* file, VkResult error = (VkResult)-13); // VK_ERROR_UNKNOWN
+
+		/// <summary>
+		/// Getter for more information about the error
+		/// </summary>
+		/// <returns>More information about the error</returns>
+		virtual const char* what() const noexcept override;
 
 		/// <summary>
 		/// Getter for string with Exception type
 		/// </summary>
 		/// <returns>The exception type string</returns>
 		virtual const char* GetType() const { return "Vulkan Exception"; };
+
+	private:
+		std::string VkResultToString() const;
+
+	private:
+		VkResult m_Error;
 	};
 
 #ifdef _WIN32
@@ -200,7 +221,7 @@ throw ::At0::Ray::WindowsException(::GetLastError(), (uint16_t)__LINE__, __FILE_
 
 #define RAY_DX_THROW_FAILED(expr) if(HRESULT RL___HRES___RL = (expr); FAILED(RL___HRES___RL)) throw ::At0::Ray::GraphicsException(RL___HRES___RL, (uint16_t)__LINE__, __FILE__)
 #define RAY_VK_THROW_NO_EXPR(msg, ...) throw ::At0::Ray::VulkanException(::At0::Ray::Util::SerializeString(msg, __VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
-#define RAY_VK_THROW_FAILED(expr, msg, ...) if((expr) != VK_SUCCESS) RAY_VK_THROW_NO_EXPR(msg, __VA_ARGS__)
+#define RAY_VK_THROW_FAILED(expr, msg, ...) if(VkResult RL__VKRES__RL = (expr); RL__VKRES__RL != VK_SUCCESS) throw ::At0::Ray::VulkanException(::At0::Ray::Util::SerializeString(msg, __VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__, RL__VKRES__RL)
 
 #define RAY_THROW_RUNTIME(msg, ...) throw ::At0::Ray::RuntimeException(::At0::Ray::Util::SerializeString(msg, __VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
 
