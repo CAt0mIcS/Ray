@@ -4,7 +4,7 @@
 This repository is where I develop the Ray game engine. The source code as well as the product is available to anyone under the standard [MIT License](https://github.com/CAt0mIcS/Ray/blob/master/LICENSE.txt).
 
 <p align="center">
-  <img alt="Renderer test using temporary renderer", src="https://github.com/CAt0mIcS/Ray/blob/master/assets/Demonstration/DemonstrationPicture.jpg">
+  <img alt="Renderer test using temporary renderer", src="https://user-images.githubusercontent.com/56834429/102090604-f3c9e280-3e1d-11eb-8482-e8ffc9bbb311.png">
 </p>
 
 ## Planned Features
