@@ -1,14 +1,18 @@
 #pragma once
 
 #include "../../RConstantBuffers.h"
+#include "Internal/RVulkanGraphicsResources.h"
 
 
 namespace At0::Ray
 {
 	template<typename T>
-	class RR_API VulkanConstantBuffer : public ConstantBuffer
+	class RR_API VulkanConstantBuffer : public ConstantBuffer, protected VulkanGraphicsResources
 	{
 	public:
+		VulkanConstantBuffer(const T& data) {}
+		VulkanConstantBuffer() {}
+
 		virtual void Bind() override {}
 	};
 

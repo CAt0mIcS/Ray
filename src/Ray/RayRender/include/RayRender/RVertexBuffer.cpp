@@ -22,7 +22,7 @@ namespace At0::Ray
 		case RendererAPI::D3D11:	return MakeScope<DX11VertexBuffer>(data, vShader);
 #endif
 		case RendererAPI::OpenGL:	return MakeScope<OpenGLVertexBuffer>(data);
-		case RendererAPI::Vulkan:	return MakeScope<VulkanVertexBuffer>();
+		case RendererAPI::Vulkan:	return MakeScope<VulkanVertexBuffer>(data);
 		}
 
 		return nullptr;

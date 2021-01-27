@@ -9,7 +9,13 @@
 
 namespace At0::Ray
 {
-	
+	VulkanVertexBuffer::VulkanVertexBuffer(const VertexData& data)
+	{
+	}
+
+	void VulkanVertexBuffer::Bind()
+	{
+	}
 }
 
 
