@@ -32,10 +32,14 @@ namespace At0::Ray
 		return *s_Instance;
 	}
 
+	void Window::Show() const
+	{
+		glfwShowWindow(m_hWnd);
+	}
+
 	void Window::Close()
 	{
 		glfwDestroyWindow(m_hWnd);
-		m_hWnd = nullptr;
 	}
 
 	bool Window::CursorEnabled() const
@@ -51,6 +55,13 @@ namespace At0::Ray
 	void Window::DisableCursor() const
 	{
 		glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+
+	bool Window::Update()
+	{
+		glfwPollEvents();
+
+		return !glfwWindowShouldClose(m_hWnd);
 	}
 
 	Window::Window(uint32_t width, uint32_t height, std::string_view title)

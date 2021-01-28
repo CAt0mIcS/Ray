@@ -26,6 +26,11 @@ namespace At0::Ray
 		static Window& Get();
 
 		/**
+		* Shows the window
+		*/
+		void Show() const;
+
+		/**
 		* Closes the window
 		*/
 		void Close();
@@ -44,6 +49,12 @@ namespace At0::Ray
 		* Disables the cursor and clips the cursor to the window rect
 		*/
 		void DisableCursor() const;
+
+		/*
+		* Polls events and updates everything
+		* @returns If the window should stay open
+		*/
+		bool Update();
 
 	private:
 		Window(uint32_t width, uint32_t height, std::string_view title);

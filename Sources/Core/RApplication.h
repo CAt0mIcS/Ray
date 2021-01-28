@@ -12,6 +12,12 @@ namespace At0::Ray
 		*/
 		static Application& Get();
 
+		/**
+		* Starts the application run loop
+		* @returns the exit code
+		*/
+		int Run();
+
 	protected:
 		Application() = default;
 
