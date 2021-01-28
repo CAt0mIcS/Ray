@@ -163,7 +163,7 @@ namespace At0::Ray
 		{
 			if (std::find_if(supportedExtensions.begin(), supportedExtensions.end(), [](VkExtensionProperties ext)
 				{
-					return ext.extensionName == VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
+					return strcmp(ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0;
 				}) == supportedExtensions.end())
 			{
 				Log::Warn("[VulkanDevice::GetRequiredExtensions] The VK_EXT_debug_utils extension is not supported.");
@@ -177,7 +177,7 @@ namespace At0::Ray
 		{
 			if (std::find_if(supportedExtensions.begin(), supportedExtensions.end(), [extension](const VkExtensionProperties& extProp)
 				{
-					return strcmp(extension, extProp.extensionName);
+					return strcmp(extension, extProp.extensionName) == 0;
 				}
 			) == supportedExtensions.end())
 			{
@@ -217,7 +217,7 @@ namespace At0::Ray
 			return VK_ERROR_EXTENSION_NOT_PRESENT;
 		};
 
-		if (!createDebugUtilsMessenger())
+		if (createDebugUtilsMessenger() != VK_SUCCESS)
 			Log::Warn("[VulkanDevice::SetupDebugMessenger] Failed.");
 	}
 
