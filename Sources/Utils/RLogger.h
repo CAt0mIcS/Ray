@@ -15,6 +15,7 @@ namespace At0::Ray
 		static void Open(const char* filepath);
 		static void Close();
 		static void SetLogLevel(LogLevel lvl);
+		static void Flush();
 
 		template<typename... Args>
 		static void Trace(std::string_view msg, Args&&... args)

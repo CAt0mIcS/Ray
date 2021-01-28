@@ -7,27 +7,17 @@
 
 namespace At0::Ray
 {
-	MouseInput::MouseInput()
-		: m_IsLeftPressed(false), m_IsMiddlePressed(false), m_IsRightPressed(false), m_MousePos{}
-	{
-	}
-
-	MouseInput::~MouseInput()
-	{
-		Log::Debug("[MouseInput] Destroyed");
-	}
-
-	bool MouseInput::IsLeftPressed() const
+	bool Mouse::IsLeftPressed()
 	{
 		return m_IsLeftPressed;
 	}
 
-	bool MouseInput::IsMiddlePressed() const
+	bool Mouse::IsMiddlePressed()
 	{
 		return m_IsMiddlePressed;
 	}
 
-	bool MouseInput::IsRightPressed() const
+	bool Mouse::IsRightPressed()
 	{
 		return m_IsRightPressed;
 	}
@@ -55,12 +45,12 @@ namespace At0::Ray
 	//		(m_MousePos.y > widgetPos.y) && (m_MousePos.y < widgetPos.y + widgetSize.y);
 	//}
 
-	const Float2& MouseInput::GetPos() const
+	const Float2& Mouse::GetPos()
 	{
 		return m_MousePos;
 	}
 
-	void MouseInput::SetPos(const Float2& mousePos)
+	void Mouse::SetPos(const Float2& mousePos)
 	{
 		m_MousePos = mousePos;
 	}

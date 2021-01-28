@@ -16,6 +16,12 @@ set(SRC
 	"Input/RKeyCodes.h"
 	
 	# ------------------------------------------------------------------
+	# Devices
+	"Devices/RWindow.h"
+	"Devices/RWindow.cpp"
+
+
+	# ------------------------------------------------------------------
 	# Graphics
 	
 	
@@ -97,11 +103,11 @@ SetWorkingDirectory("Ray" "")
 
 # ------------------------------------------------------------------
 # Custom commands
-add_custom_command(TARGET "Ray" POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_SOURCE_DIR}/Resources"
-    "$<$<CONFIG:DEBUG>:RAY_OUTPUTPATH_Debug>"
-    "$<$<CONFIG:RELEASE>:RAY_OUTPUTPATH_Release>"
-    "$<$<CONFIG:RELWITHDEBINFO>:RAY_OUTPUTPATH_RelWithDebInfo>"
+add_custom_command(TARGET "Ray" PRE_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	"${CMAKE_SOURCE_DIR}/Resources/"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo>"
 )
 

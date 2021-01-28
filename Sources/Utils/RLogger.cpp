@@ -23,4 +23,10 @@ namespace At0::Ray
 		s_FileLogger.SetLogLevel(lvl);
 		s_ConsoleLogger.SetLogLevel(lvl);
 	}
+
+	void Log::Flush()
+	{
+		s_FileLogger.Flush();
+		s_ConsoleLogger.Flush();
+	}
 }

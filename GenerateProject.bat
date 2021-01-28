@@ -50,10 +50,10 @@ echo Starting CMake...
 echo.
 
 IF %architecture%==x64 (
-	call cmake .. -DCMAKE_BUILD_TYPE=%configuration% -A x64 -DRL_ARCHITECTURE=%architecture%
+	call cmake .. -DCMAKE_BUILD_TYPE=%configuration% -A x64 -DRAY_ARCHITECTURE=%architecture%
 )
 IF %architecture%==x86 (
-	call cmake .. -DCMAKE_BUILD_TYPE=%configuration% -A Win32 -DRL_ARCHITECTURE=%architecture%
+	call cmake .. -DCMAKE_BUILD_TYPE=%configuration% -A Win32 -DRAY_ARCHITECTURE=%architecture%
 )
 
 echo.

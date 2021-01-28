@@ -1,11 +1,9 @@
-﻿#include <Utils/RLogger.h>
+﻿#include <Devices/RWindow.h>
 
 
 using namespace At0;
 
 int main()
 {
-	Ray::Log::SetLogLevel(Ray::LogLevel::Trace);
-	Ray::Log::Open("../../Ray.log");
-	Ray::Log::Debug("Hello world\n");
+	Ray::Window::Create();
 }

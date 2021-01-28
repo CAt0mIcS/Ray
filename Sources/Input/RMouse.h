@@ -9,34 +9,31 @@ namespace At0::Ray
 	//class Widget;
 	//class Window;
 
-	class RAY_EXPORT MouseInput
+	class RAY_EXPORT Mouse
 	{
 		friend class Window;
 	public:
-		MouseInput();
-		~MouseInput();
+		static const Float2& GetPos();
 
-		const Float2& GetPos() const;
-
-		bool IsLeftPressed() const;
-		bool IsMiddlePressed() const;
-		bool IsRightPressed() const;
+		static bool IsLeftPressed();
+		static bool IsMiddlePressed();
+		static bool IsRightPressed();
 
 		//bool IsOnWidget(const Widget& widget) const;
 		//bool IsOnWindow(const Window& window) const;
 
 	private:
-		void SetPos(const Float2& mousePos);
+		static void SetPos(const Float2& mousePos);
 
-		void SetLeftPressed(bool isLeftPressed) { m_IsLeftPressed = isLeftPressed; }
-		void SetRightPressed(bool isRightPressed) { m_IsRightPressed = isRightPressed; }
-		void SetMiddlePressed(bool isMiddlePressed) { m_IsMiddlePressed = isMiddlePressed; }
+		static void SetLeftPressed(bool isLeftPressed) { m_IsLeftPressed = isLeftPressed; }
+		static void SetRightPressed(bool isRightPressed) { m_IsRightPressed = isRightPressed; }
+		static void SetMiddlePressed(bool isMiddlePressed) { m_IsMiddlePressed = isMiddlePressed; }
 
 	private:
-		Float2 m_MousePos;
+		inline static Float2 m_MousePos{};
 
-		bool m_IsLeftPressed;
-		bool m_IsMiddlePressed;
-		bool m_IsRightPressed;
+		inline static bool m_IsLeftPressed = false;
+		inline static bool m_IsMiddlePressed = false;
+		inline static bool m_IsRightPressed = false;
 	};
 }
