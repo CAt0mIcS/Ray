@@ -8,23 +8,24 @@ set(SRC
 	"Core/RApplication.cpp"
 	
 	# ------------------------------------------------------------------
-	# Input
-	"Input/RMouse.h"
-	"Input/RMouse.cpp"
-	"Input/RKeyboard.h"
-	"Input/RKeyboard.cpp"
-	"Input/RKeyCodes.h"
-	
-	# ------------------------------------------------------------------
 	# Devices
 	"Devices/RWindow.h"
 	"Devices/RWindow.cpp"
+	"Devices/RMouse.h"
+	"Devices/RMouse.cpp"
+	"Devices/RKeyboard.h"
+	"Devices/RKeyboard.cpp"
+	"Devices/RKeyCodes.h"
 
 
 	# ------------------------------------------------------------------
 	# Graphics
 	
-	
+
+	# ------------------------------------------------------------------
+	# GUI
+
+
 	# ------------------------------------------------------------------
 	# Utilities
 	"Utils/RSerialize.h"
@@ -39,7 +40,7 @@ set(SRC
 	"Utils/RThreadPool.h"
 	"Utils/RThreadPool.cpp"
 	"Utils/RMath.h"
-
+	"Utils/RNonCopyable.h"
 
 	# Logging
 	"Utils/Logger/Formatters/RBracketFormatter.h"

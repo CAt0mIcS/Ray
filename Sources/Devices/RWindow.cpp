@@ -1,8 +1,8 @@
 #include "Rpch.h"
 #include "RWindow.h"
 
-#include "Input/RMouse.h"
-#include "Input/RKeyboard.h"
+#include "Devices/RMouse.h"
+#include "Devices/RKeyboard.h"
 #include "Utils/RAssert.h"
 #include "Utils/RLogger.h"
 
@@ -120,6 +120,7 @@ namespace At0::Ray
 					case MouseButton::Right:	Mouse::SetRightPressed(true); break;
 					case MouseButton::Middle:	Mouse::SetMiddlePressed(true); break;
 					}
+					Log::Debug("Mouse Button {0} pressed.", String::Construct(btn));
 					break;
 				}
 				case GLFW_RELEASE:
@@ -132,6 +133,7 @@ namespace At0::Ray
 					case MouseButton::Right:	Mouse::SetRightPressed(false); break;
 					case MouseButton::Middle:	Mouse::SetMiddlePressed(false); break;
 					}
+					Log::Debug("Mouse Button {0} released.", String::Construct(btn));
 					break;
 				}
 				}
@@ -144,13 +146,17 @@ namespace At0::Ray
 				{
 				case GLFW_PRESS:
 				{
-					Keyboard::SetKeyState((Key)key, true);
+					Key k = (Key)key;
+					Keyboard::SetKeyState(k, true);
+					Log::Debug("Key {0} pressed.", String::Construct(k));
 					break;
 				}
 
 				case GLFW_RELEASE:
 				{
-					Keyboard::SetKeyState((Key)key, false);
+					Key k = (Key)key;
+					Keyboard::SetKeyState(k, false);
+					Log::Debug("Key {0} released.", String::Construct(k));
 					break;
 				}
 				case GLFW_REPEAT:
@@ -164,7 +170,7 @@ namespace At0::Ray
 
 		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode)
 			{
-
+				Log::Debug("Character {0} written.", (unsigned char)keycode);
 			}
 		);
 

@@ -106,7 +106,7 @@ endif()
 add_library("assimp" INTERFACE)
 
 add_custom_target("Iassimp" SOURCES "${SRC}")
-set_target_properties("Iassimp" PROPERTIES FOLDER "extern")
+set_target_properties("Iassimp" PROPERTIES FOLDER "Extern")
 
 target_link_directories("assimp" INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/lib/x64/")
 target_link_libraries("assimp" INTERFACE "${LIB}")

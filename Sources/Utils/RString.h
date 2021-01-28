@@ -1,20 +1,19 @@
 ﻿#pragma once
 
 #include "../RBase.h"
-#include "../Input/RKeyCodes.h"
+#include "../Devices/RKeyCodes.h"
+#include "RNonCopyable.h"
 
 #include <string>
-
-#ifdef _WIN32
-#include <Windows.h>
-#endif
 
 
 namespace At0::Ray
 {
-	class RAY_EXPORT String
+	class RAY_EXPORT String : NonCopyable
 	{
 	public:
+		String() = delete;
+
 		/**
 		* Constructs a string from a key
 		* @param key The key to strinify

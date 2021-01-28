@@ -2,6 +2,7 @@
 #include "RApplication.h"
 
 #include "Devices/RWindow.h"
+#include "Utils/RLogger.h"
 
 
 namespace At0::Ray
