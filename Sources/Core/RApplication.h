@@ -19,9 +19,9 @@ namespace At0::Ray
 		int Run();
 
 	protected:
-		Application() = default;
+		Application();
 
 	private:
-
+		static Application* s_Instance;
 	};
 }

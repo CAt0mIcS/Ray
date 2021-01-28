@@ -7,10 +7,12 @@
 
 namespace At0::Ray
 {
+	Application* Application::s_Instance = nullptr;
+
 	Application& Application::Get()
 	{
-		static Application instance;
-		return instance;
+		RAY_MEXPECTS(s_Instance, "[Application::Get] Application not initialized.");
+		return *s_Instance;
 	}
 
 	int Application::Run()
@@ -21,5 +23,11 @@ namespace At0::Ray
 		}
 
 		return 0;
+	}
+
+	Application::Application()
+	{
+		RAY_MEXPECTS(!s_Instance, "[Application] ALready initialized.");
+		s_Instance = this;
 	}
 }

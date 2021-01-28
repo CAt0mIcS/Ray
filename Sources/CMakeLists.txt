@@ -76,6 +76,7 @@ set(PUBLIC_LIB
 set(PRIVATE_LIB
     "glfw"
     "${Vulkan_LIBRARIES}"
+    "ShaderConductor"
 )
 
 
