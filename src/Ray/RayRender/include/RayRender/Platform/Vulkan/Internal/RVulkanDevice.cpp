@@ -22,7 +22,7 @@ namespace At0::Ray
 		switch (messageSeverity)
 		{
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
-			Log::Info("[VulkanValidationLayer] {0}", pCallbackData->pMessage);
+			Log::Debug("[VulkanValidationLayer] {0}", pCallbackData->pMessage);
 			break;
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
 			Log::Info("[VulkanValidationLayer] {0}", pCallbackData->pMessage);
@@ -90,9 +90,9 @@ namespace At0::Ray
 
 		vkResetFences(m_LogicalDevice, 1, &m_InFlightFences[m_CurrentFrame]);
 
-		if (vkQueueSubmit(m_GraphicsQueue, 1, &submitInfo, m_InFlightFences[m_CurrentFrame]) != VK_SUCCESS) {
-			throw std::runtime_error("failed to submit draw command buffer!");
-		}
+		RAY_VK_THROW_FAILED(vkQueueSubmit(m_GraphicsQueue, 1, &submitInfo, m_InFlightFences[m_CurrentFrame]),
+			"[VulkanDevice::Draw] Failed to submit draw command buffer."
+		);
 
 		VkPresentInfoKHR presentInfo{};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
