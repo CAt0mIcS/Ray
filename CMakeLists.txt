@@ -18,26 +18,27 @@ endif()
 
 # ------------------------------------------------------------------------------------------------
 # Options
-option(RL_ARCHITECTURE "Set the build architecture to either x64 or x86" "x64")
+option(RAY_ARCHITECTURE "Set the build architecture to either x64 or x86" "x64")
+option(RAY_BUILD_TESTS "Include tests into the solution/makefile" ON)
 
 # ------------------------------------------------------------------------------------------------
-# Set architecture acording to RL_ARCHITECTURE option above
+# Set architecture acording to RAY_ARCHITECTURE option above
 if(UNIX AND NOT APPLE)
-    message(STATUS "Setting Build Architecture (Linux) to ${RL_ARCHITECTURE}")
-    if("${RL_ARCHITECTURE}" STREQUAL "x64")
+    message(STATUS "Setting Build Architecture (Linux) to ${RAY_ARCHITECTURE}")
+    if("${RAY_ARCHITECTURE}" STREQUAL "x64")
         set(CMAKE_C_FLAGS "-m64")
         set(CMAKE_CXX_FLAGS "-m64")
-    elseif("${RL_ARCHITECTURE}" STREQUAL "x86")
+    elseif("${RAY_ARCHITECTURE}" STREQUAL "x86")
         set(CMAKE_C_FLAGS "-m32")
         set(CMAKE_CXX_FLAGS "-m32")
     endif()
 elseif(WIN32)
     # Should be automatically set using the -A switch in the .bat script
 elseif(APPLE)
-    message(STATUS "Setting Build Architecture (Apple) to ${RL_ARCHITECTURE}")
-    if("${RL_ARCHITECTURE}" STREQUAL "x64")
+    message(STATUS "Setting Build Architecture (Apple) to ${RAY_ARCHITECTURE}")
+    if("${RAY_ARCHITECTURE}" STREQUAL "x64")
         set(CMAKE_OSX_ARCHITECTURES "x86_64")
-    elseif("${RL_ARCHITECTURE}" STREQUAL "x86")
+    elseif("${RAY_ARCHITECTURE}" STREQUAL "x86")
         set(CMAKE_OSX_ARCHITECTURES "i386")
     endif()
 endif()
@@ -54,7 +55,7 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
+set(GLFW_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 # ------------------------------------------------------------------------------------------------
 # Initialize the Solution Project
@@ -78,9 +79,9 @@ endif()
 
 # ------------------------------------------------------------------------------------------------
 # Set the startup project for VS
-if(MSVC)
-    set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY VS_STARTUP_PROJECT "Zeal")
-endif()
+# if(MSVC)
+#     set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY VS_STARTUP_PROJECT "Zeal")
+# endif()
 
 # ------------------------------------------------------------------------------------------------
 # Set default string stuff to be unicode
@@ -95,20 +96,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # ------------------------------------------------------------------------------------------------
 # Helper Functions
-include("BuildFiles/macros.cmake")
+include("CMake/Macros.cmake")
 
-# ------------------------------------------------------------------------------------------------
-# Create necessary directories
-add_custom_target(CustomCommandManager ALL
-     COMMAND ${CMAKE_COMMAND} -E make_directory 
-     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/res/shaders/>"
-     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/res/shaders/>"
-     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/res/shaders/>"
-)
-set_target_properties(CustomCommandManager PROPERTIES FOLDER "CMakePredefinedTargets")
+add_subdirectory("Extern")
+add_subdirectory("Sources")
 
-
-add_subdirectory("src")
+if(RAY_BUILD_TESTS)
+    add_subdirectory("Tests")
+endif()
 
 
 
