@@ -43,7 +43,7 @@ namespace At0::Ray
 		 * @param milliseconds Number of milliseconds.
 		 * @return Time value constructed from the amount of milliseconds.
 		 */
-		template<typename Rep = int32_t>
+		template<typename Rep = float>
 		static constexpr Time Milliseconds(const Rep& milliseconds)
 		{
 			return Time(std::chrono::duration<Rep, std::micro>(milliseconds));
@@ -55,7 +55,7 @@ namespace At0::Ray
 		 * @param microseconds Number of microseconds.
 		 * @return Time value constructed from the amount of microseconds.
 		 */
-		template<typename Rep = int64_t>
+		template<typename Rep = float>
 		static constexpr Time Microseconds(const Rep& microseconds)
 		{
 			return Time(std::chrono::duration<Rep, std::micro>(microseconds));
@@ -77,7 +77,7 @@ namespace At0::Ray
 		 * @tparam T The type of value to be casted to.
 		 * @return Time in milliseconds.
 		 */
-		template<typename T = int32_t>
+		template<typename T = float>
 		constexpr auto AsMilliseconds() const
 		{
 			return (T)(m_Value.count()) / (T)(1000);
@@ -88,7 +88,7 @@ namespace At0::Ray
 		 * @tparam T The type of value to be casted to.
 		 * @return Time in microseconds.
 		 */
-		template<typename T = int64_t>
+		template<typename T = float>
 		constexpr auto AsMicroseconds() const
 		{
 			return (T)(m_Value.count());

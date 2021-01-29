@@ -9,6 +9,9 @@ class App : public Ray::Engine
 {
 public:
 private:
+	void Update() override
+	{ /*std::cout << Engine::Get().GetDelta().AsSeconds() << '\n';*/
+	}
 };
 
 

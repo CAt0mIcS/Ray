@@ -20,6 +20,7 @@ namespace At0::Ray
 		while (Window::Get().Update())
 		{
 			m_Delta.Update();
+			Update();
 		}
 
 		return 0;

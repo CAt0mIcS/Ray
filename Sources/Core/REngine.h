@@ -25,6 +25,11 @@ namespace At0::Ray
 		 */
 		Time GetDelta() const;
 
+		/**
+		 * First thing updated for now
+		 */
+		virtual void Update() = 0;
+
 	protected:
 		Engine();
 
