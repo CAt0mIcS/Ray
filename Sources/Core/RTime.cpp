@@ -4,173 +4,64 @@
 
 namespace At0::Ray
 {
-	constexpr Time::Time() : m_Seconds{ 0.0f }
+	constexpr bool Time::operator==(const Time& rhs) const { return m_Value == rhs.m_Value; }
+
+	constexpr bool Time::operator!=(const Time& rhs) const { return m_Value != rhs.m_Value; }
+
+	constexpr bool Time::operator<(const Time& rhs) const { return m_Value < rhs.m_Value; }
+
+	constexpr bool Time::operator<=(const Time& rhs) const { return m_Value <= rhs.m_Value; }
+
+	constexpr bool Time::operator>(const Time& rhs) const { return m_Value > rhs.m_Value; }
+
+	constexpr bool Time::operator>=(const Time& rhs) const { return m_Value >= rhs.m_Value; }
+
+	constexpr Time Time::operator-() const { return Time(-m_Value); }
+
+	constexpr Time operator+(const Time& lhs, const Time& rhs) { return lhs.m_Value + rhs.m_Value; }
+
+	constexpr Time operator-(const Time& lhs, const Time& rhs) { return lhs.m_Value - rhs.m_Value; }
+
+	constexpr Time operator*(const Time& lhs, float rhs) { return lhs.m_Value * rhs; }
+
+	constexpr Time operator*(const Time& lhs, int64_t rhs) { return lhs.m_Value * rhs; }
+
+	constexpr Time operator*(float lhs, const Time& rhs) { return rhs * lhs; }
+
+	constexpr Time operator*(int64_t lhs, const Time& rhs) { return rhs * lhs; }
+
+	constexpr Time operator/(const Time& lhs, float rhs) { return lhs.m_Value / rhs; }
+
+	constexpr Time operator/(const Time& lhs, int64_t rhs) { return lhs.m_Value / rhs; }
+
+	constexpr float operator/(const Time& lhs, const Time& rhs)
 	{
+		return float(lhs.m_Value.count()) / float(rhs.m_Value.count());
 	}
 
-	constexpr Time Time::Years(float year)
-	{
-		return { year * 365 * 24 * 60 * 60 };
-	}
+	constexpr Time& Time::operator+=(const Time& rhs) { return *this = *this + rhs; }
 
-	constexpr Time Time::Weeks(float w)
-	{
-		return { w * 7 * 24 * 60 * 60 };
-	}
+	constexpr Time& Time::operator-=(const Time& rhs) { return *this = *this - rhs; }
 
-	constexpr Time Time::Days(float d)
-	{
-		return { d * 24 * 60 * 60 };
-	}
+	constexpr Time& Time::operator*=(float rhs) { return *this = *this * rhs; }
 
-	constexpr Time Time::Hours(float h)
-	{
-		return { h * 60 * 60 };
-	}
+	constexpr Time& Time::operator*=(int64_t rhs) { return *this = *this * rhs; }
 
-	constexpr Time Time::Minutes(float min)
-	{
-		return { min * 60 };
-	}
+	constexpr Time& Time::operator/=(float rhs) { return *this = *this / rhs; }
 
-	constexpr Time Time::Seconds(float secs)
-	{
-		return { secs };
-	}
-
-	constexpr Time Time::Milliseconds(float ms)
-	{
-		return { ms / 1000.0f };
-	}
-
-	constexpr Time Time::Microseconds(float ms)
-	{
-		return { ms / 1e+6f };
-	}
-
-	constexpr Time Time::Nanoseconds(float ns)
-	{
-		return { ns / 1e+9f };
-	}
-
-	Time Time::Now()
-	{
-		return Time::Nanoseconds(
-			std::chrono::high_resolution_clock::now().time_since_epoch().count());
-	}
-
-	float Time::AsYears() const
-	{
-		return m_Seconds / 60.0f / 60.0f / 24.0f / 365.0f;
-	}
-
-	float Time::AsWeeks() const
-	{
-		return m_Seconds / 60.0f / 60.0f / 24.0f / 7.0f;
-	}
-
-	float Time::AsDays() const
-	{
-		return m_Seconds / 60.0f / 60.0f / 24.0f;
-	}
-
-	float Time::AsHours() const
-	{
-		return m_Seconds / 60.0f / 60.0f;
-	}
-
-	float Time::AsMinutes() const
-	{
-		return m_Seconds / 60.0f;
-	}
-
-	float Time::AsSeconds() const
-	{
-		return m_Seconds;
-	}
-
-	float Time::AsMilliseconds() const
-	{
-		return m_Seconds * 1000.0f;
-	}
-
-	float Time::AsMicroseconds() const
-	{
-		return m_Seconds * 1e+6;
-	}
-
-	float Time::AsNanoseconds() const
-	{
-		return m_Seconds * 1e+9;
-	}
-
-	Time& Time::operator+=(Time other)
-	{
-		m_Seconds += other.AsSeconds();
-		return *this;
-	}
-
-	Time& Time::operator-=(Time other)
-	{
-		m_Seconds -= other.AsSeconds();
-		return *this;
-	}
-
-	Time& Time::operator*=(Time other)
-	{
-		m_Seconds *= other.AsSeconds();
-		return *this;
-	}
-
-	Time& Time::operator/=(Time other)
-	{
-		m_Seconds /= other.AsSeconds();
-		return *this;
-	}
-
-	Time Time::operator+(Time other) const
-	{
-		return m_Seconds + other.AsSeconds();
-	}
-
-	Time Time::operator-(Time other) const
-	{
-		return m_Seconds - other.AsSeconds();
-	}
-
-	Time Time::operator*(Time other) const
-	{
-		return m_Seconds * other.AsSeconds();
-	}
-
-	Time Time::operator/(Time other) const
-	{
-		return m_Seconds / other.AsSeconds();
-	}
-
-	constexpr Time::Time(float secs) : m_Seconds(secs)
-	{
-	}
+	constexpr Time& Time::operator/=(int64_t rhs) { return *this = *this / rhs; }
 
 
-	Delta::Delta() : m_LastTime(Time::Now())
-	{
-	}
+	Delta::Delta() {}
 
 	void Delta::Update()
 	{
-		Time currentFrameTime = Time::Now();
-		m_Change = currentFrameTime - m_LastTime;
-		m_LastTime = currentFrameTime;
+		m_CurrentFrameTime = Time::Now();
+		m_Change = m_CurrentFrameTime - m_LastFrameTime;
+		m_LastFrameTime = m_CurrentFrameTime;
 	}
 
-	Delta::operator float() const
-	{
-		return m_Time.AsMilliseconds();
-	}
+	Delta::operator float() const { return m_Change.AsMilliseconds(); }
 
-	Time Delta::Change() const
-	{
-		return m_Change;
-	}
+	Time Delta::Change() const { return m_Change; }
 }  // namespace At0::Ray

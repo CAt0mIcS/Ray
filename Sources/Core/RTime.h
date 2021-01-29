@@ -3,6 +3,8 @@
 #include "../RBase.h"
 
 #include <chrono>
+#include <iomanip>
+#include <sstream>
 
 
 namespace At0::Ray
@@ -10,82 +12,155 @@ namespace At0::Ray
 	class RAY_EXPORT Time
 	{
 	public:
-		constexpr Time();
+		Time() = default;
+
+		/*
+		 * Creates a new time. This function is internal. To construct time values, use {@link
+		 * Time::Seconds}, {@link Time::Milliseconds} or {@link Time::Microseconds} instead.
+		 * @param duration The duration.
+		 */
+		template<typename Rep, typename Period>
+		constexpr Time(const std::chrono::duration<Rep, Period>& duration)
+			: m_Value(std::chrono::duration_cast<std::chrono::microseconds>(duration).count())
+		{
+		}
 
 		/**
-		 * Time object from years
+		 * Creates a time value from a number of seconds.
+		 * @tparam Rep The type of value to be casted to.
+		 * @param seconds Number of seconds.
+		 * @return Time value constructed from the amount of seconds.
 		 */
-		static constexpr Time Years(float year);
+		template<typename Rep = float>
+		static constexpr Time Seconds(const Rep& seconds)
+		{
+			return Time(std::chrono::duration<Rep>(seconds));
+		}
 
 		/**
-		 * Time object from weeks
+		 * Creates a time value from a number of milliseconds
+		 * @tparam Rep The type of value to be casted to.
+		 * @param milliseconds Number of milliseconds.
+		 * @return Time value constructed from the amount of milliseconds.
 		 */
-		static constexpr Time Weeks(float w);
+		template<typename Rep = int32_t>
+		static constexpr Time Milliseconds(const Rep& milliseconds)
+		{
+			return Time(std::chrono::duration<Rep, std::micro>(milliseconds));
+		}
 
 		/**
-		 * Time object from days
+		 * Creates a time value from a number of microseconds.
+		 * @tparam Rep The type of value to be casted to.
+		 * @param microseconds Number of microseconds.
+		 * @return Time value constructed from the amount of microseconds.
 		 */
-		static constexpr Time Days(float d);
+		template<typename Rep = int64_t>
+		static constexpr Time Microseconds(const Rep& microseconds)
+		{
+			return Time(std::chrono::duration<Rep, std::micro>(microseconds));
+		}
 
 		/**
-		 * Time object from hours
+		 * Gets the time value as a number of seconds.
+		 * @tparam T The type of value to be casted to.
+		 * @return Time in seconds.
 		 */
-		static constexpr Time Hours(float h);
+		template<typename T = float>
+		constexpr auto AsSeconds() const
+		{
+			return (T)(m_Value.count()) / (T)(1000000);
+		}
 
 		/**
-		 * Time object from minutes
+		 * Gets the time value as a number of milliseconds.
+		 * @tparam T The type of value to be casted to.
+		 * @return Time in milliseconds.
 		 */
-		static constexpr Time Minutes(float min);
+		template<typename T = int32_t>
+		constexpr auto AsMilliseconds() const
+		{
+			return (T)(m_Value.count()) / (T)(1000);
+		}
 
 		/**
-		 * Time object from seconds
+		 * Gets the time value as a number of microseconds.
+		 * @tparam T The type of value to be casted to.
+		 * @return Time in microseconds.
 		 */
-		static constexpr Time Seconds(float secs);
+		template<typename T = int64_t>
+		constexpr auto AsMicroseconds() const
+		{
+			return (T)(m_Value.count());
+		}
+
+		// template<typename Period = std::ratio<1, 1>>
+		/*float Mod(const Time &other) {
+			return std::modf(std::chrono::duration_cast<std::chrono::duration<double,
+		Period>>(value), std::chrono::duration_cast<std::chrono::duration<double,
+		Period>>(other.value));
+		}*/
 
 		/**
-		 * Time object from milliseconds
+		 * Gets the current time of this application.
+		 * @return The current time.
 		 */
-		static constexpr Time Milliseconds(float ms);
+		static Time Now()
+		{
+			static const auto LocalEpoch = std::chrono::high_resolution_clock::now();
+			return std::chrono::duration_cast<std::chrono::microseconds>(
+				std::chrono::high_resolution_clock::now() - LocalEpoch);
+		}
 
 		/**
-		 * Time object from microseconds
+		 * Gets the current system time as a string. "%d-%m-%Y %I:%M:%S"
+		 * @tparam format The format to put the time into.
+		 * @return The date time as a string.
 		 */
-		static constexpr Time Microseconds(float ms);
+		static std::string GetDateTime(const std::string& format = "%Y-%m-%d %H:%M:%S")
+		{
+			auto now = std::chrono::system_clock::now();
+			auto timeT = std::chrono::system_clock::to_time_t(now);
 
-		/**
-		 * Time object from nanoseconds
-		 */
-		static constexpr Time Nanoseconds(float ns);
+			std::stringstream ss;
+			ss << std::put_time(std::localtime(&timeT), format.c_str());
+			return ss.str();
+		}
 
-		/**
-		 * Current time since epoch
-		 */
-		static Time Now();
+		template<typename Rep, typename Period>
+		constexpr operator std::chrono::duration<Rep, Period>() const
+		{
+			return std::chrono::duration_cast<std::chrono::duration<Rep, Period>>(m_Value);
+		}
 
-		float AsYears() const;
-		float AsWeeks() const;
-		float AsDays() const;
-		float AsHours() const;
-		float AsMinutes() const;
-		float AsSeconds() const;
-		float AsMilliseconds() const;
-		float AsMicroseconds() const;
-		float AsNanoseconds() const;
+		constexpr bool operator==(const Time& rhs) const;
+		constexpr bool operator!=(const Time& rhs) const;
+		constexpr bool operator<(const Time& rhs) const;
+		constexpr bool operator<=(const Time& rhs) const;
+		constexpr bool operator>(const Time& rhs) const;
+		constexpr bool operator>=(const Time& rhs) const;
 
-		Time& operator+=(Time other);
-		Time& operator-=(Time other);
-		Time& operator*=(Time other);
-		Time& operator/=(Time other);
-		Time operator+(Time other) const;
-		Time operator-(Time other) const;
-		Time operator*(Time other) const;
-		Time operator/(Time other) const;
+		constexpr Time operator-() const;
+
+		friend constexpr Time operator+(const Time& lhs, const Time& rhs);
+		friend constexpr Time operator-(const Time& lhs, const Time& rhs);
+		friend constexpr Time operator*(const Time& lhs, float rhs);
+		friend constexpr Time operator*(const Time& lhs, int64_t rhs);
+		friend constexpr Time operator*(float lhs, const Time& rhs);
+		friend constexpr Time operator*(int64_t lhs, const Time& rhs);
+		friend constexpr Time operator/(const Time& lhs, float rhs);
+		friend constexpr Time operator/(const Time& lhs, int64_t rhs);
+		friend constexpr float operator/(const Time& lhs, const Time& rhs);
+
+		constexpr Time& operator+=(const Time& rhs);
+		constexpr Time& operator-=(const Time& rhs);
+		constexpr Time& operator*=(float rhs);
+		constexpr Time& operator*=(int64_t rhs);
+		constexpr Time& operator/=(float rhs);
+		constexpr Time& operator/=(int64_t rhs);
 
 	private:
-		constexpr Time(float secs);
-
-	private:
-		float m_Seconds;
+		std::chrono::microseconds m_Value{};
 	};
 
 	/**
@@ -112,8 +187,8 @@ namespace At0::Ray
 		Time Change() const;
 
 	private:
-		Time m_Time;
-		Time m_LastTime;
+		Time m_CurrentFrameTime;
+		Time m_LastFrameTime;
 		Time m_Change;
 	};
 

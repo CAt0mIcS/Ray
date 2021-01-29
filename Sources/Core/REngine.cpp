@@ -25,10 +25,7 @@ namespace At0::Ray
 		return 0;
 	}
 
-	Time Engine::GetDelta() const
-	{
-		return m_Delta.Change();
-	}
+	Time Engine::GetDelta() const { return m_Delta.Change(); }
 
 	Engine::Engine()
 	{
