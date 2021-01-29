@@ -6,6 +6,7 @@
 #include "Debug/RAssert.h"
 #include "Debug/RLogger.h"
 
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 
@@ -36,17 +37,37 @@ namespace At0::Ray
 
 	void Window::Close() { glfwDestroyWindow(m_hWnd); }
 
-	bool Window::CursorEnabled() const { return glfwGetInputMode(m_hWnd, GLFW_CURSOR) == GLFW_CURSOR_NORMAL; }
+	bool Window::CursorEnabled() const
+	{
+		return glfwGetInputMode(m_hWnd, GLFW_CURSOR) == GLFW_CURSOR_NORMAL;
+	}
 
 	void Window::EnableCursor() const { glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_NORMAL); }
 
-	void Window::DisableCursor() const { glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_DISABLED); }
+	void Window::DisableCursor() const
+	{
+		glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
 
 	bool Window::Update()
 	{
 		glfwPollEvents();
 
 		return !glfwWindowShouldClose(m_hWnd);
+	}
+
+	std::pair<const char**, uint32_t> Window::GetInstanceExtensions() const
+	{
+		uint32_t count;
+		const char** extensions = glfwGetRequiredInstanceExtensions(&count);
+		return std::make_pair(extensions, count);
+	}
+
+	void Window::CreateSurface(VkInstance_T* instance, const VkAllocationCallbacks* allocator,
+		VkSurfaceKHR_T** surface) const
+	{
+		if (!glfwCreateWindowSurface(instance, m_hWnd, allocator, surface))
+			throw 3;
 	}
 
 	Window::Window(uint32_t width, uint32_t height, std::string_view title)
@@ -69,7 +90,8 @@ namespace At0::Ray
 
 	Window::~Window()
 	{
-		if (m_hWnd) Close();
+		if (m_hWnd)
+			Close();
 		glfwTerminate();
 
 		delete s_Instance;
@@ -80,72 +102,78 @@ namespace At0::Ray
 		glfwSetCursorPosCallback(m_hWnd, [](GLFWwindow* window, double xPos, double yPos) {
 			Mouse::SetPos({ (float)xPos, (float)yPos });
 
-			Float2 rawDelta { 0.0f, 0.0f };
-			if (!Window::Get().CursorEnabled()) rawDelta = Float2 { (float)xPos, (float)yPos } - Window::Get().m_CachedRawDeltaMousePos;
+			Float2 rawDelta{ 0.0f, 0.0f };
+			if (!Window::Get().CursorEnabled())
+				rawDelta =
+					Float2{ (float)xPos, (float)yPos } - Window::Get().m_CachedRawDeltaMousePos;
 
-			Float2 mousePos { (float)xPos, (float)yPos };
+			Float2 mousePos{ (float)xPos, (float)yPos };
 			Window::Get().m_CachedRawDeltaMousePos = mousePos;
 		});
 
-		glfwSetMouseButtonCallback(m_hWnd, [](GLFWwindow* window, int button, int action, int mods) {
-			switch (action)
-			{
-			case GLFW_PRESS:
-			{
-				MouseButton btn = (MouseButton)(button + 1);
-
-				switch (btn)
+		glfwSetMouseButtonCallback(
+			m_hWnd, [](GLFWwindow* window, int button, int action, int mods) {
+				switch (action)
 				{
-				case MouseButton::Left: Mouse::SetLeftPressed(true); break;
-				case MouseButton::Right: Mouse::SetRightPressed(true); break;
-				case MouseButton::Middle: Mouse::SetMiddlePressed(true); break;
-				}
-				Log::Debug("Mouse Button {0} pressed.", String::Construct(btn));
-				break;
-			}
-			case GLFW_RELEASE:
-			{
-				MouseButton btn = (MouseButton)(button + 1);
-
-				switch (btn)
+				case GLFW_PRESS:
 				{
-				case MouseButton::Left: Mouse::SetLeftPressed(false); break;
-				case MouseButton::Right: Mouse::SetRightPressed(false); break;
-				case MouseButton::Middle: Mouse::SetMiddlePressed(false); break;
+					MouseButton btn = (MouseButton)(button + 1);
+
+					switch (btn)
+					{
+					case MouseButton::Left: Mouse::SetLeftPressed(true); break;
+					case MouseButton::Right: Mouse::SetRightPressed(true); break;
+					case MouseButton::Middle: Mouse::SetMiddlePressed(true); break;
+					}
+					Log::Debug("Mouse Button {0} pressed.", String::Construct(btn));
+					break;
 				}
-				Log::Debug("Mouse Button {0} released.", String::Construct(btn));
-				break;
-			}
-			}
+				case GLFW_RELEASE:
+				{
+					MouseButton btn = (MouseButton)(button + 1);
+
+					switch (btn)
+					{
+					case MouseButton::Left: Mouse::SetLeftPressed(false); break;
+					case MouseButton::Right: Mouse::SetRightPressed(false); break;
+					case MouseButton::Middle: Mouse::SetMiddlePressed(false); break;
+					}
+					Log::Debug("Mouse Button {0} released.", String::Construct(btn));
+					break;
+				}
+				}
+			});
+
+		glfwSetKeyCallback(
+			m_hWnd, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+				switch (action)
+				{
+				case GLFW_PRESS:
+				{
+					Key k = (Key)key;
+					Keyboard::SetKeyState(k, true);
+					Log::Debug("Key {0} pressed.", String::Construct(k));
+					break;
+				}
+
+				case GLFW_RELEASE:
+				{
+					Key k = (Key)key;
+					Keyboard::SetKeyState(k, false);
+					Log::Debug("Key {0} released.", String::Construct(k));
+					break;
+				}
+				case GLFW_REPEAT:
+				{
+
+					break;
+				}
+				}
+			});
+
+		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode) {
+			Log::Debug("Character {0} written.", (unsigned char)keycode);
 		});
-
-		glfwSetKeyCallback(m_hWnd, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-			switch (action)
-			{
-			case GLFW_PRESS:
-			{
-				Key k = (Key)key;
-				Keyboard::SetKeyState(k, true);
-				Log::Debug("Key {0} pressed.", String::Construct(k));
-				break;
-			}
-
-			case GLFW_RELEASE:
-			{
-				Key k = (Key)key;
-				Keyboard::SetKeyState(k, false);
-				Log::Debug("Key {0} released.", String::Construct(k));
-				break;
-			}
-			case GLFW_REPEAT:
-			{
-
-				break;
-			}
-			}
-		});
-
-		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode) { Log::Debug("Character {0} written.", (unsigned char)keycode); });
 
 		glfwSetScrollCallback(m_hWnd, [](GLFWwindow* window, double xOffset, double yOffset) {
 			if (yOffset > 0)

@@ -18,5 +18,8 @@
 #include <bitset>
 #include <condition_variable>
 #include <thread>
+#include <utility>
+#include <map>
+#include <optional>
 
 #include <assert.h>

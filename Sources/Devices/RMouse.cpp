@@ -7,20 +7,11 @@
 
 namespace At0::Ray
 {
-	bool Mouse::IsLeftPressed()
-	{
-		return m_IsLeftPressed;
-	}
+	bool Mouse::IsLeftPressed() { return m_IsLeftPressed; }
 
-	bool Mouse::IsMiddlePressed()
-	{
-		return m_IsMiddlePressed;
-	}
+	bool Mouse::IsMiddlePressed() { return m_IsMiddlePressed; }
 
-	bool Mouse::IsRightPressed()
-	{
-		return m_IsRightPressed;
-	}
+	bool Mouse::IsRightPressed() { return m_IsRightPressed; }
 
 	// bool MouseInput::IsOnWindow(const Window& window) const
 	//{
@@ -45,13 +36,7 @@ namespace At0::Ray
 	//		(m_MousePos.y > widgetPos.y) && (m_MousePos.y < widgetPos.y + widgetSize.y);
 	//}
 
-	const Float2& Mouse::GetPos()
-	{
-		return m_MousePos;
-	}
+	const Float2& Mouse::GetPos() { return m_MousePos; }
 
-	void Mouse::SetPos(const Float2& mousePos)
-	{
-		m_MousePos = mousePos;
-	}
+	void Mouse::SetPos(const Float2& mousePos) { m_MousePos = mousePos; }
 }  // namespace At0::Ray

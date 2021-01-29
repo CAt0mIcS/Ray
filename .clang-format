@@ -6,7 +6,7 @@ AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortBlocksOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: Inline
-AllowShortIfStatementsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakTemplateDeclarations: true
 AlignOperands: true
@@ -17,7 +17,7 @@ BreakInheritanceList: AfterColon
 BreakBeforeInheritanceComma: false
 BreakBeforeTernaryOperators: false
 BreakConstructorInitializers: BeforeColon
-SpaceBeforeCpp11BracedList: true
+SpaceBeforeCpp11BracedList: false
 SpaceAfterTemplateKeyword: false
 UseCRLF: true
 ColumnLimit: 100
@@ -30,7 +30,6 @@ AlignEscapedNewlines: Left
 AlignOperands: true
 BreakStringLiterals: true
 AlignTrailingComments: true
-AlignAfterOpenBracket: AlwaysBreak
 AllowAllConstructorInitializersOnNextLine: true
 IncludeBlocks: Regroup
 IncludeCategories:
@@ -50,3 +49,4 @@ Standard: Cpp11
 TabWidth: 4
 UseTab: Always
 IndentPPDirectives: BeforeHash
+AllowAllArgumentsOnNextLine: true

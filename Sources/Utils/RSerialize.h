@@ -21,7 +21,9 @@ namespace At0::Ray::Util
 		};
 
 		template<typename T>
-		struct HasOstreamOutputOperator<T, std::void_t<decltype(std::declval<std::ostream>() << std::declval<T>())>> : std::true_type
+		struct HasOstreamOutputOperator<T,
+			std::void_t<decltype(std::declval<std::ostream>() << std::declval<T>())>> :
+			std::true_type
 		{
 		};
 
@@ -31,7 +33,9 @@ namespace At0::Ray::Util
 		};
 
 		template<typename T>
-		struct HasWOstreamOutputOperator<T, std::void_t<decltype(std::declval<std::wostream>() << std::declval<T>())>> : std::true_type
+		struct HasWOstreamOutputOperator<T,
+			std::void_t<decltype(std::declval<std::wostream>() << std::declval<T>())>> :
+			std::true_type
 		{
 		};
 	}  // namespace Internal
@@ -40,7 +44,8 @@ namespace At0::Ray::Util
 	template<typename T>
 	void WideCharSerialize(std::string& message, T&& arg, int& argCount)
 	{
-		if (argCount == -1) return;
+		if (argCount == -1)
+			return;
 
 		std::wostringstream oss;
 		oss << arg;
@@ -54,14 +59,16 @@ namespace At0::Ray::Util
 			return;
 		}
 
-		message.replace(message.begin() + foundIdx, message.begin() + foundIdx + std::size(toFind), String::ConvertUtf8(oss.str()));
+		message.replace(message.begin() + foundIdx, message.begin() + foundIdx + std::size(toFind),
+			String::ConvertUtf8(oss.str()));
 		++argCount;
 	}
 
 	template<typename T>
 	void MultiByteSerialize(std::string& message, T&& arg, int& argCount)
 	{
-		if (argCount == -1) return;
+		if (argCount == -1)
+			return;
 
 		std::ostringstream oss;
 		oss << arg;
@@ -75,7 +82,8 @@ namespace At0::Ray::Util
 			return;
 		}
 
-		message.replace(message.begin() + foundIdx, message.begin() + foundIdx + std::size(toFind), oss.str());
+		message.replace(
+			message.begin() + foundIdx, message.begin() + foundIdx + std::size(toFind), oss.str());
 		++argCount;
 	}
 
@@ -93,12 +101,14 @@ namespace At0::Ray::Util
 		else
 		{
 			// static_assert(false, "No output stream can convert the specified type T.");
-			RAY_ASSERT(false, "No output stream can convert the specified type (typeid={0}).", typeid(T).name());
+			RAY_ASSERT(false, "No output stream can convert the specified type (typeid={0}).",
+				typeid(T).name());
 		}
 	}
 
 	/**
-	 * Takes a correct string possibly containing "{0}", "{1}", ... and fills these in with the corresponding argument
+	 * Takes a correct string possibly containing "{0}", "{1}", ... and fills these in with the
+	 * corresponding argument
 	 * @tparam Args Any list of arguments that have a output operator defined
 	 * @param serializedStr The string which should be serialized
 	 * @param args... The arguments to insert into the string

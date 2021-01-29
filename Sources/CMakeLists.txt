@@ -16,6 +16,14 @@ set(SRC
 	"Devices/RKeyboard.h"
 	"Devices/RKeyboard.cpp"
 	"Devices/RKeyCodes.h"
+	"Devices/Vulkan/RInstance.h"
+	"Devices/Vulkan/RInstance.cpp"
+	"Devices/Vulkan/RPhysicalDevice.h"
+	"Devices/Vulkan/RPhysicalDevice.cpp"
+	"Devices/Vulkan/RSurface.h"
+	"Devices/Vulkan/RSurface.cpp"
+	"Devices/Vulkan/RLogicalDevice.h"
+	"Devices/Vulkan/RLogicalDevice.cpp"
 
 
 	# ------------------------------------------------------------------

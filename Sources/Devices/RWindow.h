@@ -4,10 +4,13 @@
 #include "../Utils/RMath.h"
 
 #include <string_view>
+#include <utility>
 #include <stdint.h>
 
 struct GLFWwindow;
-
+struct VkInstance_T;
+struct VkAllocationCallbacks;
+struct VkSurfaceKHR_T;
 
 namespace At0::Ray
 {
@@ -17,7 +20,8 @@ namespace At0::Ray
 		/**
 		 * Creates the Window
 		 */
-		static Window& Create(uint32_t width = 960, uint32_t height = 540, std::string_view title = "Window");
+		static Window& Create(
+			uint32_t width = 960, uint32_t height = 540, std::string_view title = "Window");
 
 		/**
 		 * Getter for the static window instance.
@@ -56,6 +60,18 @@ namespace At0::Ray
 		 */
 		bool Update();
 
+		/**
+		 * Querys required extensions for Vulkan
+		 * @returns All extensions that the Vulkan instance needs
+		 */
+		std::pair<const char**, uint32_t> GetInstanceExtensions() const;
+
+		/**
+		 * Creates the surface to render to
+		 */
+		void CreateSurface(VkInstance_T* instance, const VkAllocationCallbacks* allocator,
+			VkSurfaceKHR_T** surface) const;
+
 	private:
 		Window(uint32_t width, uint32_t height, std::string_view title);
 		~Window();
@@ -64,6 +80,6 @@ namespace At0::Ray
 	private:
 		static Window* s_Instance;
 		GLFWwindow* m_hWnd = nullptr;
-		Float2 m_CachedRawDeltaMousePos {};
+		Float2 m_CachedRawDeltaMousePos{};
 	};
 }  // namespace At0::Ray
