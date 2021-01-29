@@ -3,9 +3,8 @@
 #ifndef NDEBUG
 
 #include "RLogger.h"
-#include "RString.h"
-#include "RSerialize.h"
-#include "RString.h"
+#include "../Utils/RSerialize.h"
+#include "../Utils/RString.h"
 
 #include <assert.h>
 
@@ -37,9 +36,9 @@ namespace At0::Ray
 #define RAY_WIDE(x) RAY_WIDEC2(x)
 
 #ifdef _WIN32
-#define RAY_ASSERT(condition, msg, ...)		if(!(condition)) _wassert(::At0::Ray::RlAssert::AssertW(msg, __VA_ARGS__).c_str(), RAY_WIDE(__FILE__), (unsigned int)__LINE__)
+#define RAY_ASSERT(condition, msg, ...)			if(!(condition)) _wassert(::At0::Ray::RlAssert::AssertW(msg, __VA_ARGS__).c_str(), RAY_WIDE(__FILE__), (unsigned int)__LINE__)
 #elif defined(__linux__)
-#define RAY_ASSERT(condition, msg, ...)		if(!(condition)) __assert(::At0::Ray::RlAssert::AssertA(msg, ## __VA_ARGS__).c_str(), __FILE__, (unsigned int)__LINE__)
+#define RAY_ASSERT(condition, msg, ...)			if(!(condition)) __assert(::At0::Ray::RlAssert::AssertA(msg, ## __VA_ARGS__).c_str(), __FILE__, (unsigned int)__LINE__)
 #endif
 
 #define RAY_MEXPECTS(expected, msg, ...)		RAY_ASSERT(expected, "[Expected] " #expected ":\n" msg, ## __VA_ARGS__)

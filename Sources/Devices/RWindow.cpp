@@ -3,8 +3,8 @@
 
 #include "Devices/RMouse.h"
 #include "Devices/RKeyboard.h"
-#include "Utils/RAssert.h"
-#include "Utils/RLogger.h"
+#include "Debug/RAssert.h"
+#include "Debug/RLogger.h"
 
 #include <GLFW/glfw3.h>
 

@@ -31,9 +31,6 @@ set(SRC
 	"Utils/RSerialize.h"
 	"Utils/RString.h"
 	"Utils/RString.cpp"
-	"Utils/RLogger.h"
-	"Utils/RLogger.cpp"
-	"Utils/RAssert.h"
 	"Utils/RTimestep.h"
 	"Utils/RStack.h"
 	"Utils/RQueue.h"
@@ -42,16 +39,20 @@ set(SRC
 	"Utils/RMath.h"
 	"Utils/RNonCopyable.h"
 
-	# Logging
-	"Utils/Logger/Formatters/RBracketFormatter.h"
-	"Utils/Logger/Formatters/RDateTimeFormatter.h"
-	"Utils/Logger/Formatters/RFormatter.h"
-	"Utils/Logger/Formatters/RLogLevelFormatter.h"
-	"Utils/Logger/Formatters/RNullTerminatorFormatter.h"
-	"Utils/Logger/Loggers/RBaseLogger.h"
-	"Utils/Logger/Loggers/RFileLogger.h"
-	"Utils/Logger/Loggers/RConsoleLogger.h"
-	"Utils/Logger/RLogLevel.h"
+	# ------------------------------------------------------------------
+	# Debug Utilities
+	"Debug/Logger/Formatters/RBracketFormatter.h"
+	"Debug/Logger/Formatters/RDateTimeFormatter.h"
+	"Debug/Logger/Formatters/RFormatter.h"
+	"Debug/Logger/Formatters/RLogLevelFormatter.h"
+	"Debug/Logger/Formatters/RNullTerminatorFormatter.h"
+	"Debug/Logger/Loggers/RBaseLogger.h"
+	"Debug/Logger/Loggers/RFileLogger.h"
+	"Debug/Logger/Loggers/RConsoleLogger.h"
+	"Debug/Logger/RLogLevel.h"
+	"Debug/RLogger.h"
+	"Debug/RLogger.cpp"
+	"Debug/RAssert.h"
 )
 
 # ------------------------------------------------------------------
