@@ -169,27 +169,53 @@ namespace At0::Ray
 	class Delta
 	{
 	public:
-		Delta();
-
 		/**
 		 * Updates time
 		 */
-		void Update();
+		void Update()
+		{
+			m_CurrentFrameTime = Time::Now();
+			m_Change = m_CurrentFrameTime - m_LastFrameTime;
+			m_LastFrameTime = m_CurrentFrameTime;
+		}
 
 		/**
 		 * Conversion operator for mathematical operations
 		 */
-		operator float() const;
+		operator float() const { return m_Change.AsMilliseconds(); }
 
 		/**
 		 * @returns The deltatime between two updates
 		 */
-		Time Change() const;
+		Time Change() const { return m_Change; }
 
 	private:
 		Time m_CurrentFrameTime;
 		Time m_LastFrameTime;
 		Time m_Change;
+	};
+
+	class ChangePerSecond
+	{
+	public:
+		void Update(Time time)
+		{
+			++m_ValueTemp;
+
+			if (std::floor(time.AsSeconds()) > std::floor(m_ValueTime.AsSeconds()))
+			{
+				m_Value = m_ValueTemp;
+				m_ValueTemp = 0;
+			}
+
+			m_ValueTime = time;
+		}
+
+		uint32_t Value() const { return m_Value; }
+
+	private:
+		uint32_t m_ValueTemp = 0, m_Value = 0;
+		Time m_ValueTime;
 	};
 
 }  // namespace At0::Ray

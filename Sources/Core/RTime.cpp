@@ -51,17 +51,4 @@ namespace At0::Ray
 
 	constexpr Time& Time::operator/=(int64_t rhs) { return *this = *this / rhs; }
 
-
-	Delta::Delta() {}
-
-	void Delta::Update()
-	{
-		m_CurrentFrameTime = Time::Now();
-		m_Change = m_CurrentFrameTime - m_LastFrameTime;
-		m_LastFrameTime = m_CurrentFrameTime;
-	}
-
-	Delta::operator float() const { return m_Change.AsMilliseconds(); }
-
-	Time Delta::Change() const { return m_Change; }
 }  // namespace At0::Ray

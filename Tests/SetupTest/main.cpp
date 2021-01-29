@@ -10,7 +10,9 @@ class App : public Ray::Engine
 public:
 private:
 	void Update() override
-	{ /*std::cout << Engine::Get().GetDelta().AsSeconds() << '\n';*/
+	{
+		// std::cout << Engine::Get().GetDelta().AsSeconds() << '\n';
+		// std::cout << Engine::Get().GetFPS() << '\n';
 	}
 };
 

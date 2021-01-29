@@ -20,13 +20,12 @@ namespace At0::Ray
 		while (Window::Get().Update())
 		{
 			m_Delta.Update();
+			m_FPS.Update(Time::Now());
 			Update();
 		}
 
 		return 0;
 	}
-
-	Time Engine::GetDelta() const { return m_Delta.Change(); }
 
 	Engine::Engine()
 	{

@@ -23,7 +23,12 @@ namespace At0::Ray
 		/**
 		 * @returns the time since the last frame
 		 */
-		Time GetDelta() const;
+		Time GetDelta() const { return m_Delta.Change(); }
+
+		/**
+		 * @returns The FPS
+		 */
+		uint32_t GetFPS() const { return m_FPS.Value(); }
 
 		/**
 		 * First thing updated for now
@@ -36,5 +41,6 @@ namespace At0::Ray
 	private:
 		static Engine* s_Instance;
 		Delta m_Delta;
+		ChangePerSecond m_FPS;
 	};
 }  // namespace At0::Ray
