@@ -18,39 +18,42 @@ namespace At0::Ray
 		/// </summary>
 		/// <typeparam name="F">Is any callable function without parameters or return type</typeparam>
 		/// <param name="func">Is the function to execute</param>
-		template<
-			typename F,
+
+		/**
+		 * Adds a new task to the queue to execute
+		 * @tparam F Any callable function without parameters
+		 * @param func The function concurrently
+		 */
+		template<typename F,
 			typename = std::enable_if_t<std::is_convertible_v<F, std::function<void()>>>>
 		void AddTask(F&& func);
 
-		/// <summary>
-		/// Getter for the ThreadPool
-		/// </summary>
-		/// <returns>The Thread Pool</returns>
+		/**
+		 * @returns The static ThreadPool object
+		 */
 		static ThreadPool& Get();
 
-		/// <summary>
-		/// Getter for the amount of available threads
-		/// </summary>
-		/// <returns>The amount of threads in the list</returns>
+		/**
+		 * @returns The number of threads
+		 */
 		uint32_t MaxThreads() const { return m_MaxThreads; }
 
-		/// <summary>
-		/// Waits until all threads have finnished
-		/// </summary>
+		/**
+		 * Waits for all tasks to finnish and destroys the pool
+		 */
 		void Shutdown();
 
-		/// <summary>
-		/// ThreadPool Deconstructor, automatically stops threads
-		/// </summary>
+		/**
+		 * Automatically joins the threads and destroys the pool
+		 */
 		~ThreadPool();
 
 	private:
 		ThreadPool();
 
-		/// <summary>
-		/// Function will wait for incomming tasks and execute them
-		/// </summary>
+		/**
+		 * Waits for new tasks to arrivess
+		 */
 		void InfiniteWait();
 
 	private:

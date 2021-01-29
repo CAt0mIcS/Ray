@@ -4,8 +4,10 @@ set(SRC
 	
 	# ------------------------------------------------------------------
 	# Core classes
-	"Core/RApplication.h"
-	"Core/RApplication.cpp"
+	"Core/REngine.h"
+	"Core/REngine.cpp"
+	"Core/RTime.h"
+	"Core/RTime.cpp"
 	
 	# ------------------------------------------------------------------
 	# Devices
@@ -39,7 +41,6 @@ set(SRC
 	"Utils/RSerialize.h"
 	"Utils/RString.h"
 	"Utils/RString.cpp"
-	"Utils/RTimestep.h"
 	"Utils/RStack.h"
 	"Utils/RQueue.h"
 	"Utils/RThreadPool.h"

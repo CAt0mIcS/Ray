@@ -19,34 +19,45 @@ namespace At0::Ray
 		using ConstReverseIterator = typename std::vector<T>::const_reverse_iterator;
 
 	public:
+		/**
+		 * Initializes an empty stack
+		 */
 		Stack() = default;
 
+		/**
+		 * @returns If the stack is empty
+		 */
 		bool Empty() const { return m_Stack.empty(); }
 
+		/**
+		 * @returns the size of the stack
+		 */
 		size_t Size() const { return m_Stack.size(); }
 
+		/**
+		 * @returns Element at the top of the staci
+		 */
 		T& Top() { return m_Stack.back(); }
 
+		/**
+		 * @returns Element at the top of the staci
+		 */
 		const T& Top() const { return m_Stack.back(); }
 
+		/**
+		 * Adds a new element to the top of the stack
+		 */
 		void PushBack(T&& val)
 		{
 			std::scoped_lock lock(m_Mutex);
 			m_Stack.push_back(std::move(val));
 		}
 
-		void PushBack(const T& val)
-		{
-			std::scoped_lock lock(m_Mutex);
-			m_Stack.push_back(val);
-		}
-
-		/// <summary>
-		/// Adds an element to the stack
-		/// </summary>
-		/// <typeparam name="...Args">Are initialization arguments for the object</typeparam>
-		/// <param name="...args">Are the arguments to pass to the contructor of T</param>
-		/// <returns>The added object</returns>
+		/**
+		 * Adds a new in-place constructed element to the top of the stack
+		 * @param args.. Are the arguments to create template T
+		 * @returns The added element
+		 */
 		template<typename... Args>
 		decltype(auto) EmplaceBack(Args&&... args)
 		{
@@ -54,11 +65,12 @@ namespace At0::Ray
 			return m_Stack.emplace_back(std::forward<Args>(args)...);
 		}
 
-		/// <summary>
-		/// Finds the element and removes it from the stack
-		/// </summary>
-		/// <param name="elem">Is the element to remove</param>
-		void Pop(const T& elem)
+		/**
+		 * Finds the element and removes it from the stack. If the element is not found the function
+		 * will do nothing
+		 * @param elem The element to remove
+		 */
+		void Pop(T&& elem)
 		{
 			std::scoped_lock lock(m_Mutex);
 			Iterator it = std::find(m_Stack.begin(), m_Stack.end(), elem);
@@ -68,16 +80,19 @@ namespace At0::Ray
 			}
 		}
 
-		/// <summary>
-		/// Removes element at index i
-		/// </summary>
-		/// <param name="i">Is the element index in the stack</param>
+		/**
+		 * Removes the element at index i
+		 * @param i The index of the elemen to remove
+		 */
 		void PopIndexed(uint32_t i)
 		{
 			std::scoped_lock lock(m_Mutex);
 			m_Stack.erase(m_Stack.begin() + i);
 		}
 
+		/**
+		 * Clears the entire stack
+		 */
 		void Clear()
 		{
 			std::scoped_lock lock(m_Mutex);

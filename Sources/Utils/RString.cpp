@@ -168,14 +168,16 @@ namespace At0::Ray
 
 	bool String::StartsWith(std::string_view str, std::string_view token)
 	{
-		if (token.length() > str.length()) return false;
+		if (token.length() > str.length())
+			return false;
 
 		return str.compare(0, token.length(), token) == 0;
 	}
 
 	bool String::EndsWith(std::string_view str, std::string_view token)
 	{
-		if (token.length() > str.length()) return false;
+		if (token.length() > str.length())
+			return false;
 
 		return str.compare(str.length() - token.length(), token.length(), token) == 0;
 	}

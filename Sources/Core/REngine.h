@@ -1,16 +1,18 @@
 ﻿#pragma once
 
 #include "../RBase.h"
+#include "RTime.h"
+
 
 namespace At0::Ray
 {
-	class RAY_EXPORT Application
+	class RAY_EXPORT Engine
 	{
 	public:
 		/**
 		 * @returns The static application instance
 		 */
-		static Application& Get();
+		static Engine& Get();
 
 		/**
 		 * Starts the application run loop
@@ -18,10 +20,16 @@ namespace At0::Ray
 		 */
 		int Run();
 
+		/**
+		 * @returns the time since the last frame
+		 */
+		Time GetDelta() const;
+
 	protected:
-		Application();
+		Engine();
 
 	private:
-		static Application* s_Instance;
+		static Engine* s_Instance;
+		Delta m_Delta;
 	};
 }  // namespace At0::Ray

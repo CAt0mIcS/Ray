@@ -57,8 +57,7 @@ namespace At0::Ray
 	{
 		while (!m_Shutdown)
 		{
-			Log::Info(
-				"[ThreadPool] Thread {0} entered ThreadPool::InfiniteWait",
+			Log::Info("[ThreadPool] Thread {0} entered ThreadPool::InfiniteWait",
 				std::this_thread::get_id());
 			std::function<void()> task;
 			{
@@ -66,16 +65,15 @@ namespace At0::Ray
 				m_TaskQueue.WaitFor([this]() { return !m_TaskQueue.Empty() || m_Shutdown; });
 
 				// Need to check again if waiting thread was restored because of m_Shutdown
-				if (!m_TaskQueue.Empty()) task = m_TaskQueue.PopFront();
+				if (!m_TaskQueue.Empty())
+					task = m_TaskQueue.PopFront();
 			}
 			if (task)
 			{
-				Log::Info(
-					"[ThreadPool] Thread {0} Task {1} Execution started",
+				Log::Info("[ThreadPool] Thread {0} Task {1} Execution started",
 					std::this_thread::get_id(), &task);
 				task();
-				Log::Info(
-					"[ThreadPool] Thread {0} Task {1} Execution finnished",
+				Log::Info("[ThreadPool] Thread {0} Task {1} Execution finnished",
 					std::this_thread::get_id(), &task);
 			}
 		}

@@ -1,11 +1,11 @@
-﻿#include <Core/RApplication.h>
+﻿#include <Core/REngine.h>
 #include <Debug/RLogger.h>
 #include <Devices/RWindow.h>
 
 using namespace At0;
 
 
-class App : public Ray::Application
+class App : public Ray::Engine
 {
 public:
 private:
