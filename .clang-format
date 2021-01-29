@@ -19,6 +19,7 @@ BreakBeforeTernaryOperators: false
 BreakConstructorInitializers: BeforeColon
 SpaceBeforeCpp11BracedList: true
 SpaceAfterTemplateKeyword: false
+UseCRLF: true
 ColumnLimit: 100
 IndentWrappedFunctionNames: true
 CommentPragmas:  '^/'
