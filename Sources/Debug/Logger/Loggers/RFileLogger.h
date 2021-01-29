@@ -50,8 +50,7 @@ namespace At0::Ray
 			std::scoped_lock lock(m_StreamMutex);
 
 #endif
-			if (!m_Writer.is_open())
-				m_Writer.open(filepath);
+			if (!m_Writer.is_open()) m_Writer.open(filepath);
 		}
 
 		/// <summary>
@@ -64,8 +63,7 @@ namespace At0::Ray
 			std::scoped_lock lock(m_StreamMutex);
 
 #endif
-			if (m_Writer.is_open())
-				m_Writer.flush();
+			if (m_Writer.is_open()) m_Writer.flush();
 		}
 
 		/// <summary>
@@ -78,8 +76,7 @@ namespace At0::Ray
 			std::scoped_lock lock(m_StreamMutex);
 
 #endif
-			if (m_Writer.is_open())
-				m_Writer.close();
+			if (m_Writer.is_open()) m_Writer.close();
 		}
 
 	private:
@@ -106,4 +103,4 @@ namespace At0::Ray
 
 #endif
 	};
-}
+}  // namespace At0::Ray

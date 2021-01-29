@@ -1,4 +1,4 @@
-#include "Rpch.h"
+﻿#include "Rpch.h"
 #include "RWindow.h"
 
 #include "Devices/RMouse.h"
@@ -32,30 +32,15 @@ namespace At0::Ray
 		return *s_Instance;
 	}
 
-	void Window::Show() const
-	{
-		glfwShowWindow(m_hWnd);
-	}
+	void Window::Show() const { glfwShowWindow(m_hWnd); }
 
-	void Window::Close()
-	{
-		glfwDestroyWindow(m_hWnd);
-	}
+	void Window::Close() { glfwDestroyWindow(m_hWnd); }
 
-	bool Window::CursorEnabled() const
-	{
-		return glfwGetInputMode(m_hWnd, GLFW_CURSOR) == GLFW_CURSOR_NORMAL;
-	}
+	bool Window::CursorEnabled() const { return glfwGetInputMode(m_hWnd, GLFW_CURSOR) == GLFW_CURSOR_NORMAL; }
 
-	void Window::EnableCursor() const
-	{
-		glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
+	void Window::EnableCursor() const { glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_NORMAL); }
 
-	void Window::DisableCursor() const
-	{
-		glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	}
+	void Window::DisableCursor() const { glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_DISABLED); }
 
 	bool Window::Update()
 	{
@@ -84,8 +69,7 @@ namespace At0::Ray
 
 	Window::~Window()
 	{
-		if (m_hWnd)
-			Close();
+		if (m_hWnd) Close();
 		glfwTerminate();
 
 		delete s_Instance;
@@ -93,126 +77,104 @@ namespace At0::Ray
 
 	void Window::SetEventCallbacks()
 	{
-		glfwSetCursorPosCallback(m_hWnd, [](GLFWwindow* window, double xPos, double yPos)
+		glfwSetCursorPosCallback(m_hWnd, [](GLFWwindow* window, double xPos, double yPos) {
+			Mouse::SetPos({ (float)xPos, (float)yPos });
+
+			Float2 rawDelta { 0.0f, 0.0f };
+			if (!Window::Get().CursorEnabled()) rawDelta = Float2 { (float)xPos, (float)yPos } - Window::Get().m_CachedRawDeltaMousePos;
+
+			Float2 mousePos { (float)xPos, (float)yPos };
+			Window::Get().m_CachedRawDeltaMousePos = mousePos;
+		});
+
+		glfwSetMouseButtonCallback(m_hWnd, [](GLFWwindow* window, int button, int action, int mods) {
+			switch (action)
 			{
-				Mouse::SetPos({ (float)xPos, (float)yPos });
-
-				Float2 rawDelta{ 0.0f, 0.0f };
-				if (!Window::Get().CursorEnabled())
-					rawDelta = Float2{ (float)xPos, (float)yPos } - Window::Get().m_CachedRawDeltaMousePos;
-
-				Float2 mousePos{ (float)xPos, (float)yPos };
-				Window::Get().m_CachedRawDeltaMousePos = mousePos;
-			}
-		);
-
-		glfwSetMouseButtonCallback(m_hWnd, [](GLFWwindow* window, int button, int action, int mods)
+			case GLFW_PRESS:
 			{
-				switch (action)
-				{
-				case GLFW_PRESS:
-				{
-					MouseButton btn = (MouseButton)(button + 1);
+				MouseButton btn = (MouseButton)(button + 1);
 
-					switch (btn)
-					{
-					case MouseButton::Left:		Mouse::SetLeftPressed(true); break;
-					case MouseButton::Right:	Mouse::SetRightPressed(true); break;
-					case MouseButton::Middle:	Mouse::SetMiddlePressed(true); break;
-					}
-					Log::Debug("Mouse Button {0} pressed.", String::Construct(btn));
-					break;
-				}
-				case GLFW_RELEASE:
+				switch (btn)
 				{
-					MouseButton btn = (MouseButton)(button + 1);
-
-					switch (btn)
-					{
-					case MouseButton::Left:		Mouse::SetLeftPressed(false); break;
-					case MouseButton::Right:	Mouse::SetRightPressed(false); break;
-					case MouseButton::Middle:	Mouse::SetMiddlePressed(false); break;
-					}
-					Log::Debug("Mouse Button {0} released.", String::Construct(btn));
-					break;
+				case MouseButton::Left: Mouse::SetLeftPressed(true); break;
+				case MouseButton::Right: Mouse::SetRightPressed(true); break;
+				case MouseButton::Middle: Mouse::SetMiddlePressed(true); break;
 				}
-				}
+				Log::Debug("Mouse Button {0} pressed.", String::Construct(btn));
+				break;
 			}
-		);
-
-		glfwSetKeyCallback(m_hWnd, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+			case GLFW_RELEASE:
 			{
-				switch (action)
-				{
-				case GLFW_PRESS:
-				{
-					Key k = (Key)key;
-					Keyboard::SetKeyState(k, true);
-					Log::Debug("Key {0} pressed.", String::Construct(k));
-					break;
-				}
+				MouseButton btn = (MouseButton)(button + 1);
 
-				case GLFW_RELEASE:
+				switch (btn)
 				{
-					Key k = (Key)key;
-					Keyboard::SetKeyState(k, false);
-					Log::Debug("Key {0} released.", String::Construct(k));
-					break;
+				case MouseButton::Left: Mouse::SetLeftPressed(false); break;
+				case MouseButton::Right: Mouse::SetRightPressed(false); break;
+				case MouseButton::Middle: Mouse::SetMiddlePressed(false); break;
 				}
-				case GLFW_REPEAT:
-				{
-
-					break;
-				}
-				}
+				Log::Debug("Mouse Button {0} released.", String::Construct(btn));
+				break;
 			}
-		);
+			}
+		});
 
-		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode)
+		glfwSetKeyCallback(m_hWnd, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+			switch (action)
 			{
-				Log::Debug("Character {0} written.", (unsigned char)keycode);
-			}
-		);
-
-		glfwSetScrollCallback(m_hWnd, [](GLFWwindow* window, double xOffset, double yOffset)
+			case GLFW_PRESS:
 			{
-				if (yOffset > 0)
-				{
-					// Mouse wheel up event
-				}
-				else if (yOffset < 0)
-				{
-					// Mouse wheel down event
-				}
-
-				if (xOffset > 0)
-				{
-					// Mouse wheel right event
-				}
-				else if (xOffset < 0)
-				{
-					// Mouse wheel left event
-				}
+				Key k = (Key)key;
+				Keyboard::SetKeyState(k, true);
+				Log::Debug("Key {0} pressed.", String::Construct(k));
+				break;
 			}
-		);
 
-		glfwSetWindowSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height)
+			case GLFW_RELEASE:
+			{
+				Key k = (Key)key;
+				Keyboard::SetKeyState(k, false);
+				Log::Debug("Key {0} released.", String::Construct(k));
+				break;
+			}
+			case GLFW_REPEAT:
 			{
 
+				break;
 			}
-		);
+			}
+		});
 
-		glfwSetWindowPosCallback(m_hWnd, [](GLFWwindow* window, int x, int y)
+		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode) { Log::Debug("Character {0} written.", (unsigned char)keycode); });
+
+		glfwSetScrollCallback(m_hWnd, [](GLFWwindow* window, double xOffset, double yOffset) {
+			if (yOffset > 0)
 			{
-
+				// Mouse wheel up event
 			}
-		);
-
-		glfwSetWindowCloseCallback(m_hWnd, [](GLFWwindow* window)
+			else if (yOffset < 0)
 			{
-				Window::Get().Close();
+				// Mouse wheel down event
 			}
-		);
 
+			if (xOffset > 0)
+			{
+				// Mouse wheel right event
+			}
+			else if (xOffset < 0)
+			{
+				// Mouse wheel left event
+			}
+		});
+
+		glfwSetWindowSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height) {
+
+		});
+
+		glfwSetWindowPosCallback(m_hWnd, [](GLFWwindow* window, int x, int y) {
+
+		});
+
+		glfwSetWindowCloseCallback(m_hWnd, [](GLFWwindow* window) { Window::Get().Close(); });
 	}
-}
+}  // namespace At0::Ray

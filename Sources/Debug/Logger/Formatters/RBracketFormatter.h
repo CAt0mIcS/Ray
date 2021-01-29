@@ -24,7 +24,7 @@ namespace At0::Ray
 
 			str.insert(0, "[] ");
 
-#endif // !ZL_NO_BRACKETS
+#endif	// !ZL_NO_BRACKETS
 		}
 	};
-}
+}  // namespace At0::Ray

@@ -29,4 +29,4 @@ namespace At0::Ray
 		s_FileLogger.Flush();
 		s_ConsoleLogger.Flush();
 	}
-}
+}  // namespace At0::Ray

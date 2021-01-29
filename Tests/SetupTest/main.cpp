@@ -1,7 +1,6 @@
 ﻿#include <Core/RApplication.h>
-#include <Devices/RWindow.h>
-
 #include <Debug/RLogger.h>
+#include <Devices/RWindow.h>
 
 using namespace At0;
 
@@ -9,9 +8,7 @@ using namespace At0;
 class App : public Ray::Application
 {
 public:
-
 private:
-
 };
 
 

@@ -28,4 +28,4 @@ namespace At0::Ray
 		/// </summary>
 		Formatter() = default;
 	};
-}
+}  // namespace At0::Ray

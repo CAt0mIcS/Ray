@@ -11,13 +11,14 @@ namespace At0::Ray
 	class RAY_EXPORT Keyboard
 	{
 		friend class Window;
+
 	public:
 		Keyboard() = delete;
 
 		/**
-		* @param keycode Is the key to check for
-		* @returns If the specified key is pressed
-		*/
+		 * @param keycode Is the key to check for
+		 * @returns If the specified key is pressed
+		 */
 		static bool IsKeyPressed(Key keycode);
 
 	private:
@@ -27,4 +28,4 @@ namespace At0::Ray
 		// Holds pressed-info about every keycode
 		inline static std::bitset<512> m_Keys;
 	};
-}
+}  // namespace At0::Ray

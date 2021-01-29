@@ -22,12 +22,12 @@ namespace At0::Ray
 			char color[6];
 			switch (type)
 			{
-			case LogMessageType::Trace:			strcpy(color, "\033[39m"); break;
-			case LogMessageType::Debug:			strcpy(color, "\033[37m"); break;
-			case LogMessageType::Information:	strcpy(color, "\033[92m"); break;
-			case LogMessageType::Warning:		strcpy(color, "\033[33m"); break;
-			case LogMessageType::Error:			strcpy(color, "\033[91m"); break;
-			case LogMessageType::Critical:		strcpy(color, "\033[31m"); break;
+			case LogMessageType::Trace: strcpy(color, "\033[39m"); break;
+			case LogMessageType::Debug: strcpy(color, "\033[37m"); break;
+			case LogMessageType::Information: strcpy(color, "\033[92m"); break;
+			case LogMessageType::Warning: strcpy(color, "\033[33m"); break;
+			case LogMessageType::Error: strcpy(color, "\033[91m"); break;
+			case LogMessageType::Critical: strcpy(color, "\033[31m"); break;
 			}
 
 			std::scoped_lock lock(m_CoutMutex);
@@ -37,4 +37,4 @@ namespace At0::Ray
 	private:
 		std::mutex m_CoutMutex;
 	};
-}
+}  // namespace At0::Ray

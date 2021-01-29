@@ -5,7 +5,7 @@
 #include <type_traits>
 
 #include "RString.h"
-#include "RAssert.h"
+#include "../Debug/RAssert.h"
 
 
 namespace At0::Ray::Util
@@ -16,24 +16,31 @@ namespace At0::Ray::Util
 		using BaseType = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
 		template<typename, typename = void>
-		struct HasOstreamOutputOperator : std::false_type {};
+		struct HasOstreamOutputOperator : std::false_type
+		{
+		};
 
 		template<typename T>
-		struct HasOstreamOutputOperator<T, std::void_t<decltype(std::declval<std::ostream>() << std::declval<T>())>> : std::true_type {};
+		struct HasOstreamOutputOperator<T, std::void_t<decltype(std::declval<std::ostream>() << std::declval<T>())>> : std::true_type
+		{
+		};
 
 		template<typename, typename = void>
-		struct HasWOstreamOutputOperator : std::false_type {};
+		struct HasWOstreamOutputOperator : std::false_type
+		{
+		};
 
 		template<typename T>
-		struct HasWOstreamOutputOperator<T, std::void_t<decltype(std::declval<std::wostream>() << std::declval<T>())>> : std::true_type {};
-	}
+		struct HasWOstreamOutputOperator<T, std::void_t<decltype(std::declval<std::wostream>() << std::declval<T>())>> : std::true_type
+		{
+		};
+	}  // namespace Internal
 
 
 	template<typename T>
 	void WideCharSerialize(std::string& message, T&& arg, int& argCount)
 	{
-		if (argCount == -1)
-			return;
+		if (argCount == -1) return;
 
 		std::wostringstream oss;
 		oss << arg;
@@ -54,8 +61,7 @@ namespace At0::Ray::Util
 	template<typename T>
 	void MultiByteSerialize(std::string& message, T&& arg, int& argCount)
 	{
-		if (argCount == -1)
-			return;
+		if (argCount == -1) return;
 
 		std::ostringstream oss;
 		oss << arg;
@@ -92,12 +98,12 @@ namespace At0::Ray::Util
 	}
 
 	/**
-	* Takes a correct string possibly containing "{0}", "{1}", ... and fills these in with the corresponding argument
-	* @tparam Args Any list of arguments that have a output operator defined
-	* @param serializedStr The string which should be serialized
-	* @param args... The arguments to insert into the string
-	* @returns The serialized string
-	*/
+	 * Takes a correct string possibly containing "{0}", "{1}", ... and fills these in with the corresponding argument
+	 * @tparam Args Any list of arguments that have a output operator defined
+	 * @param serializedStr The string which should be serialized
+	 * @param args... The arguments to insert into the string
+	 * @returns The serialized string
+	 */
 	template<typename... Args>
 	std::string SerializeString(std::string serializedStr, Args&&... args)
 	{
@@ -105,4 +111,4 @@ namespace At0::Ray::Util
 		(SerializeStringArg(serializedStr, args, argCount), ...);
 		return serializedStr;
 	}
-}
+}  // namespace At0::Ray::Util

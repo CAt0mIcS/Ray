@@ -1,5 +1,4 @@
-#pragma once
-
+﻿#pragma once
 
 
 namespace At0::Ray
@@ -11,8 +10,7 @@ namespace At0::Ray
 		/// Timestep Constructor
 		/// </summary>
 		/// <param name="time">Is the timestep time in seconds</param>
-		Timestep(float time = 0.0f)
-			: m_Time(time) { }
+		Timestep(float time = 0.0f) : m_Time(time) {}
 
 		/// <summary>
 		/// Conversion operator to float, returns the current time in seconds
@@ -25,4 +23,4 @@ namespace At0::Ray
 	private:
 		float m_Time;
 	};
-}
+}  // namespace At0::Ray

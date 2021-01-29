@@ -21,25 +21,13 @@ namespace At0::Ray
 	public:
 		Stack() = default;
 
-		bool Empty() const
-		{
-			return m_Stack.empty();
-		}
+		bool Empty() const { return m_Stack.empty(); }
 
-		size_t Size() const
-		{
-			return m_Stack.size();
-		}
+		size_t Size() const { return m_Stack.size(); }
 
-		T& Top()
-		{
-			return m_Stack.back();
-		}
+		T& Top() { return m_Stack.back(); }
 
-		const T& Top() const
-		{
-			return m_Stack.back();
-		}
+		const T& Top() const { return m_Stack.back(); }
 
 		void PushBack(T&& val)
 		{
@@ -59,7 +47,7 @@ namespace At0::Ray
 		/// <typeparam name="...Args">Are initialization arguments for the object</typeparam>
 		/// <param name="...args">Are the arguments to pass to the contructor of T</param>
 		/// <returns>The added object</returns>
-		template <typename... Args>
+		template<typename... Args>
 		decltype(auto) EmplaceBack(Args&&... args)
 		{
 			std::scoped_lock lock(m_Mutex);
@@ -102,15 +90,9 @@ namespace At0::Ray
 			m_Stack.clear();
 		}
 
-		decltype(auto) operator[](uint32_t i)
-		{
-			return std::as_const(*this).operator[](i);
-		}
+		decltype(auto) operator[](uint32_t i) { return std::as_const(*this).operator[](i); }
 
-		decltype(auto) operator[](uint32_t i) const
-		{
-			return m_Stack[i];
-		}
+		decltype(auto) operator[](uint32_t i) const { return m_Stack[i]; }
 
 		Iterator begin()
 		{
@@ -162,4 +144,4 @@ namespace At0::Ray
 		std::vector<T> m_Stack;
 		std::mutex m_Mutex;
 	};
-}
+}  // namespace At0::Ray

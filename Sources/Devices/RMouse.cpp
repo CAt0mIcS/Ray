@@ -22,7 +22,7 @@ namespace At0::Ray
 		return m_IsRightPressed;
 	}
 
-	//bool MouseInput::IsOnWindow(const Window& window) const
+	// bool MouseInput::IsOnWindow(const Window& window) const
 	//{
 	//	Float2 widgetPos = window.GetPos();
 	//	Float2 widgetSize = window.GetSize();
@@ -36,7 +36,7 @@ namespace At0::Ray
 	//		(m_MousePos.y > widgetPos.y) && (m_MousePos.y < widgetPos.y + widgetSize.y);
 	//}
 
-	//bool MouseInput::IsOnWidget(const Widget& widget) const
+	// bool MouseInput::IsOnWidget(const Widget& widget) const
 	//{
 	//	Float2 widgetPos = widget.GetPos();
 	//	Float2 widgetSize = widget.GetSize();
@@ -54,4 +54,4 @@ namespace At0::Ray
 	{
 		m_MousePos = mousePos;
 	}
-}
+}  // namespace At0::Ray

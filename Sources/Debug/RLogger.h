@@ -95,4 +95,4 @@ namespace At0::Ray
 		static FileLogger s_FileLogger;
 		static ConsoleLogger s_ConsoleLogger;
 	};
-}
+}  // namespace At0::Ray

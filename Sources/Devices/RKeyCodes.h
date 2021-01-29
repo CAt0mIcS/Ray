@@ -20,7 +20,8 @@ namespace At0::Ray
 		Right = Button1,
 		Middle = Button2,
 
-		FIRST = Button0, LAST = Button7
+		FIRST = Button0,
+		LAST = Button7
 	};
 
 
@@ -29,10 +30,10 @@ namespace At0::Ray
 		// From glfw3.h
 		Space = 32,
 		Apostrophe = 39, /* ' */
-		Comma = 44, /* , */
-		Minus = 45, /* - */
-		Period = 46, /* . */
-		Slash = 47, /* / */
+		Comma = 44,		 /* , */
+		Minus = 45,		 /* - */
+		Period = 46,	 /* . */
+		Slash = 47,		 /* / */
 
 		D0 = 48, /* 0 */
 		D1 = 49, /* 1 */
@@ -46,7 +47,7 @@ namespace At0::Ray
 		D9 = 57, /* 9 */
 
 		Semicolon = 59, /* ; */
-		Equal = 61, /* = */
+		Equal = 61,		/* = */
 
 		A = 65,
 		B = 66,
@@ -76,8 +77,8 @@ namespace At0::Ray
 		Z = 90,
 
 		LeftBracket = 91,  /* [ */
-		Backslash = 92,  /* \ */
-		RightBracket = 93,  /* ] */
+		Backslash = 92,	   /* \ */
+		RightBracket = 93, /* ] */
 		GraveAccent = 96,  /* ` */
 
 		World1 = 161, /* non-US #1 */
@@ -158,4 +159,4 @@ namespace At0::Ray
 		RightSuper = 347,
 		Menu = 348
 	};
-}
+}  // namespace At0::Ray

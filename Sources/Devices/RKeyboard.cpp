@@ -18,4 +18,4 @@ namespace At0::Ray
 		RAY_MEXPECTS((uint16_t)keycode <= 512, "The keycode was too large");
 		m_Keys[(uint16_t)keycode] = isPressed;
 	}
-}
+}  // namespace At0::Ray

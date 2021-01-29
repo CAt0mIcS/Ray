@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../RBase.h"
 
@@ -8,14 +8,14 @@ namespace At0::Ray
 	{
 	public:
 		/**
-		* @returns The static application instance
-		*/
+		 * @returns The static application instance
+		 */
 		static Application& Get();
 
 		/**
-		* Starts the application run loop
-		* @returns the exit code
-		*/
+		 * Starts the application run loop
+		 * @returns the exit code
+		 */
 		int Run();
 
 	protected:
@@ -24,4 +24,4 @@ namespace At0::Ray
 	private:
 		static Application* s_Instance;
 	};
-}
+}  // namespace At0::Ray

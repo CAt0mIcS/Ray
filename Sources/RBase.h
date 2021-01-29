@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #ifdef _MSC_VER
-#ifdef RAY_BUILD
-#define RAY_EXPORT __declspec(dllexport)
-#else
-#define RAY_EXPORT __declspec(dllimport)
-#endif
+	#ifdef RAY_BUILD
+		#define RAY_EXPORT __declspec(dllexport)
+	#else
+		#define RAY_EXPORT __declspec(dllimport)
+	#endif
 #endif
 
 
@@ -30,4 +30,4 @@ namespace At0::Ray
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
-}
+}  // namespace At0::Ray

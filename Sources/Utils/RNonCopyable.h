@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../RBase.h"
 
@@ -17,4 +17,4 @@ namespace At0::Ray
 	protected:
 		NonCopyable() = default;
 	};
-}
+}  // namespace At0::Ray

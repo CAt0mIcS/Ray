@@ -24,12 +24,12 @@ namespace At0::Ray
 		{
 #ifndef ZL_NO_DATETIME_OUT
 
-#ifdef ZL_NO_LOG_LEVEL_OUT
+	#ifdef ZL_NO_LOG_LEVEL_OUT
 			static constexpr unsigned int s_InsertIdx = 1;
-#else
+	#else
 			static constexpr unsigned int s_InsertIdx = 5;
 			str.insert(s_InsertIdx - 1, " ");
-#endif
+	#endif
 
 
 			time_t rawTime;
@@ -44,7 +44,8 @@ namespace At0::Ray
 			long long ms;
 			{
 				std::scoped_lock lock(s_ChronoMutex);
-				ms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()) % 1000).count();
+				ms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()) % 1000)
+						 .count();
 			}
 			std::ostringstream oss;
 			if (ms < 10)
@@ -69,8 +70,7 @@ namespace At0::Ray
 
 		std::mutex s_ChronoMutex;
 
-#endif // !ZL_LOG_NON_THREAD_SAVE || !ZL_NO_DATE_OUT
-
+#endif	// !ZL_LOG_NON_THREAD_SAVE || !ZL_NO_DATE_OUT
 	};
 
-}
+}  // namespace At0::Ray

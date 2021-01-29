@@ -8,8 +8,7 @@
 
 namespace At0::Ray
 {
-	ThreadPool::ThreadPool()
-		: m_Threads(MakeScope<std::thread[]>(m_MaxThreads)), m_Shutdown(false)
+	ThreadPool::ThreadPool() : m_Threads(MakeScope<std::thread[]>(m_MaxThreads)), m_Shutdown(false)
 	{
 		Log::Info("[ThreadPool] Initialized {0} threads", MaxThreads());
 		for (uint16_t i = 0; i < m_MaxThreads; ++i)
@@ -58,22 +57,27 @@ namespace At0::Ray
 	{
 		while (!m_Shutdown)
 		{
-			Log::Info("[ThreadPool] Thread {0} entered ThreadPool::InfiniteWait", std::this_thread::get_id());
+			Log::Info(
+				"[ThreadPool] Thread {0} entered ThreadPool::InfiniteWait",
+				std::this_thread::get_id());
 			std::function<void()> task;
 			{
 				std::scoped_lock lock(m_QueueMutex);
 				m_TaskQueue.WaitFor([this]() { return !m_TaskQueue.Empty() || m_Shutdown; });
 
 				// Need to check again if waiting thread was restored because of m_Shutdown
-				if (!m_TaskQueue.Empty())
-					task = m_TaskQueue.PopFront();
+				if (!m_TaskQueue.Empty()) task = m_TaskQueue.PopFront();
 			}
 			if (task)
 			{
-				Log::Info("[ThreadPool] Thread {0} Task {1} Execution started", std::this_thread::get_id(), &task);
+				Log::Info(
+					"[ThreadPool] Thread {0} Task {1} Execution started",
+					std::this_thread::get_id(), &task);
 				task();
-				Log::Info("[ThreadPool] Thread {0} Task {1} Execution finnished", std::this_thread::get_id(), &task);
+				Log::Info(
+					"[ThreadPool] Thread {0} Task {1} Execution finnished",
+					std::this_thread::get_id(), &task);
 			}
 		}
 	}
-}
+}  // namespace At0::Ray

@@ -19,7 +19,6 @@ namespace At0::Ray
 	{
 		while (Window::Get().Update())
 		{
-
 		}
 
 		return 0;
@@ -30,4 +29,4 @@ namespace At0::Ray
 		RAY_MEXPECTS(!s_Instance, "[Application] ALready initialized.");
 		s_Instance = this;
 	}
-}
+}  // namespace At0::Ray
