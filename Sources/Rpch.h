@@ -16,7 +16,9 @@
 #include <memory>
 #include <iomanip>
 #include <fstream>
+#include <limits>
 #include <bitset>
+#include <array>
 #include <condition_variable>
 #include <thread>
 #include <utility>

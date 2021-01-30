@@ -27,6 +27,9 @@ namespace At0::Ray
 		 */
 		operator const VkSurfaceKHR&() const { return m_Surface; }
 
+		const VkSurfaceCapabilitiesKHR& GetCapabilities() const { return m_Capabilities; }
+		const VkSurfaceFormatKHR& GetFormat() const { return m_Format; }
+
 	private:
 		const VulkanInstance* m_Instance;
 		const PhysicalDevice* m_PhysicalDevice;

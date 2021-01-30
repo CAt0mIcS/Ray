@@ -36,6 +36,17 @@ namespace At0::Ray
 		 */
 		static const std::vector<const char*>& DeviceExtensions() { return s_DeviceExtensions; }
 
+		const VkDevice& GetLogicalDevice() const { return m_LogicalDevice; }
+		const VkPhysicalDeviceFeatures& GetEnabledFeatures() const { return m_EnabledFeatures; }
+		const VkQueue& GetGraphicsQueue() const { return m_GraphicsQueue; }
+		const VkQueue& GetPresentQueue() const { return m_PresentQueue; }
+		const VkQueue& GetComputeQueue() const { return m_ComputeQueue; }
+		const VkQueue& GetTransferQueue() const { return m_TransferQueue; }
+		uint32_t GetGraphicsFamily() const { return m_GraphicsFamily; }
+		uint32_t GetPresentFamily() const { return m_PresentFamily; }
+		uint32_t GetComputeFamily() const { return m_ComputeFamily; }
+		uint32_t GetTransferFamily() const { return m_TransferFamily; }
+
 	private:
 		void CreateQueueIndices();
 		void CreateLogicalDevice();

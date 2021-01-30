@@ -30,7 +30,30 @@ set(SRC
 
 	# ------------------------------------------------------------------
 	# Graphics
-	
+	"Graphics/Pipelines/RPipeline.h"
+	"Graphics/Pipelines/RPipelineCompute.cpp"
+	"Graphics/Pipelines/RPipelineCompute.h"
+	"Graphics/Pipelines/RPipelineGraphics.cpp"
+	"Graphics/Pipelines/RPipelineGraphics.h"
+	"Graphics/RRenderStage.cpp"
+	"Graphics/RRenderStage.h"
+	"Graphics/RRenderer.cpp"
+	"Graphics/RRenderer.h"
+	"Graphics/Renderpass/RFramebuffers.cpp"
+	"Graphics/Renderpass/RFramebuffers.h"
+	"Graphics/Renderpass/RRenderpass.cpp"
+	"Graphics/Renderpass/RRenderpass.h"
+	"Graphics/Renderpass/RSwapchain.cpp"
+	"Graphics/Renderpass/RSwapchain.h"
+
+	# ------------------------------------------------------------------
+	# Resources
+	"Resources/RImage.cpp"
+	"Resources/RImage.h"
+	"Resources/RImage2D.cpp"
+	"Resources/RImage2D.h"
+	"Resources/RResource.h"
+
 
 	# ------------------------------------------------------------------
 	# GUI
