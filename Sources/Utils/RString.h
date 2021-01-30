@@ -6,9 +6,12 @@
 
 #include <string>
 
+enum VkResult;
+
 
 namespace At0::Ray
 {
+
 	class RAY_EXPORT String : NonCopyable
 	{
 	public:
@@ -27,6 +30,13 @@ namespace At0::Ray
 		 * @returns The string representation of the mouse button for debugging
 		 */
 		static std::string Construct(MouseButton button);
+
+		/**
+		 * Constructs a string from a Vulkan function result
+		 * @param res The result code
+		 * @returns The string representation of the resulting code
+		 */
+		static std::string Construct(VkResult res);
 
 		/**
 		 * Converts a string from UTF16 to UTF8

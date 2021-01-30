@@ -4,6 +4,7 @@
 #include "Debug/RAssert.h"
 #include "Debug/RLogger.h"
 #include "Devices/RWindow.h"
+#include "Debug/RException.h"
 
 #include <vulkan/vulkan.h>
 
@@ -108,7 +109,8 @@ namespace At0::Ray
 			createInfo.ppEnabledLayerNames = s_ValidationLayers.data();
 		}
 
-		vkCreateInstance(&createInfo, nullptr, &m_Instance);
+		RAY_VK_THROW_FAILED(vkCreateInstance(&createInfo, nullptr, &m_Instance),
+			"[VulkanInstance] Failed to create Vulkan instance.");
 	}
 
 	void VulkanInstance::CreateDebugMessenger()
@@ -126,7 +128,9 @@ namespace At0::Ray
 										  VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
 										  VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 		messengerCreateInfo.pfnUserCallback = &DebugCallback;
-		CreateDebugUtilsMessengerEXT(m_Instance, &messengerCreateInfo, nullptr, &m_DebugMessenger);
+		RAY_VK_THROW_FAILED(CreateDebugUtilsMessengerEXT(
+								m_Instance, &messengerCreateInfo, nullptr, &m_DebugMessenger),
+			"[VulkanInstance] Failed to create the Debug Messenger.");
 #endif
 	}
 

@@ -4,6 +4,7 @@
 #include "RInstance.h"
 #include "RPhysicalDevice.h"
 #include "Devices/RWindow.h"
+#include "Debug/RException.h"
 
 #include <vulkan/vulkan.h>
 
@@ -15,9 +16,9 @@ namespace At0::Ray
 	{
 		Window::Get().CreateSurface(*m_Instance, nullptr, &m_Surface);
 
-		if (!vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
-				*m_PhysicalDevice, m_Surface, &m_Capabilities))
-			throw 3;
+		RAY_VK_THROW_FAILED(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
+								*m_PhysicalDevice, m_Surface, &m_Capabilities),
+			"[Surface] Failed to get surface capabilities.");
 
 		// Query surface formats
 		uint32_t surfaceFormatCount = 0;

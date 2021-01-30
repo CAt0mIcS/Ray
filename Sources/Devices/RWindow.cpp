@@ -5,6 +5,7 @@
 #include "Devices/RKeyboard.h"
 #include "Debug/RAssert.h"
 #include "Debug/RLogger.h"
+#include "Debug/RException.h"
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -66,8 +67,8 @@ namespace At0::Ray
 	void Window::CreateSurface(VkInstance_T* instance, const VkAllocationCallbacks* allocator,
 		VkSurfaceKHR_T** surface) const
 	{
-		if (!glfwCreateWindowSurface(instance, m_hWnd, allocator, surface))
-			throw 3;
+		RAY_VK_THROW_FAILED(glfwCreateWindowSurface(instance, m_hWnd, allocator, surface),
+			"[Window] GLFW failed to create the window surface.");
 	}
 
 	Window::Window(uint32_t width, uint32_t height, std::string_view title)
@@ -125,7 +126,6 @@ namespace At0::Ray
 					case MouseButton::Right: Mouse::SetRightPressed(true); break;
 					case MouseButton::Middle: Mouse::SetMiddlePressed(true); break;
 					}
-					Log::Debug("Mouse Button {0} pressed.", String::Construct(btn));
 					break;
 				}
 				case GLFW_RELEASE:
@@ -138,7 +138,6 @@ namespace At0::Ray
 					case MouseButton::Right: Mouse::SetRightPressed(false); break;
 					case MouseButton::Middle: Mouse::SetMiddlePressed(false); break;
 					}
-					Log::Debug("Mouse Button {0} released.", String::Construct(btn));
 					break;
 				}
 				}
@@ -152,7 +151,6 @@ namespace At0::Ray
 				{
 					Key k = (Key)key;
 					Keyboard::SetKeyState(k, true);
-					Log::Debug("Key {0} pressed.", String::Construct(k));
 					break;
 				}
 
@@ -160,7 +158,6 @@ namespace At0::Ray
 				{
 					Key k = (Key)key;
 					Keyboard::SetKeyState(k, false);
-					Log::Debug("Key {0} released.", String::Construct(k));
 					break;
 				}
 				case GLFW_REPEAT:

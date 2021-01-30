@@ -3,6 +3,7 @@
 #include "RInstance.h"
 #include "RPhysicalDevice.h"
 #include "RSurface.h"
+#include "Debug/RException.h"
 
 #include "Debug/RLogger.h"
 
@@ -85,7 +86,7 @@ namespace At0::Ray
 
 		// We need a graphics queue
 		if (!graphicsFamily)
-			throw 3;
+			RAY_THROW_RUNTIME("[VulkanLogicalDevice] Failed to find a graphics family.");
 	}
 
 	void LogicalDevice::CreateLogicalDevice()
@@ -215,7 +216,9 @@ namespace At0::Ray
 		deviceCreateInfo.enabledExtensionCount = (uint32_t)DeviceExtensions().size();
 		deviceCreateInfo.ppEnabledExtensionNames = DeviceExtensions().data();
 		deviceCreateInfo.pEnabledFeatures = &enabledFeatures;
-		vkCreateDevice(*m_PhysicalDevice, &deviceCreateInfo, nullptr, &m_LogicalDevice);
+		RAY_VK_THROW_FAILED(
+			vkCreateDevice(*m_PhysicalDevice, &deviceCreateInfo, nullptr, &m_LogicalDevice),
+			"[VulkanLogicalDevice] Failed to create logical device.");
 
 		vkGetDeviceQueue(m_LogicalDevice, m_GraphicsFamily, 0, &m_GraphicsQueue);
 		vkGetDeviceQueue(m_LogicalDevice, m_PresentFamily, 0, &m_PresentQueue);

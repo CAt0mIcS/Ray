@@ -8,7 +8,7 @@
 #include "../Debug/RAssert.h"
 
 
-namespace At0::Ray::Util
+namespace At0::Ray
 {
 	namespace Internal
 	{
@@ -121,4 +121,4 @@ namespace At0::Ray::Util
 		(SerializeStringArg(serializedStr, args, argCount), ...);
 		return serializedStr;
 	}
-}  // namespace At0::Ray::Util
+}  // namespace At0::Ray

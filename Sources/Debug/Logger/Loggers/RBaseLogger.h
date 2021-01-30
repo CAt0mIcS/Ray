@@ -29,24 +29,18 @@ namespace At0::Ray
 		/// Sets the log severity level of this logger
 		/// </summary>
 		/// <param name="level">Is the new log level</param>
-		void SetLogLevel(LogLevel level)
-		{
-			m_LogLevel = level;
-		}
+		void SetLogLevel(LogLevel level) { m_LogLevel = level; }
 
 		/// <summary>
 		/// Getter for the current log level
 		/// </summary>
 		/// <returns>The current log level of this logger</returns>
-		LogLevel GetLogLevel() const
-		{
-			return m_LogLevel;
-		}
+		LogLevel GetLogLevel() const { return m_LogLevel; }
 
 		/// <summary>
 		/// Opens the stream to write to
 		/// </summary>
-		virtual void Open(const char* filepath) {};
+		virtual void Open(const char* filepath){};
 
 		/// <summary>
 		/// Flushes the output stream
@@ -56,7 +50,7 @@ namespace At0::Ray
 		/// <summary>
 		/// Closes the output stream
 		/// </summary>
-		virtual void Close() {};
+		virtual void Close(){};
 
 		/// <summary>
 		/// Logs a trace message, will only be logged if the loglevel is trace
@@ -67,9 +61,11 @@ namespace At0::Ray
 		template<typename... Args>
 		void Trace(std::string_view str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Trace)) return;
+			if (!ShouldLog(LogMessageType::Trace))
+				return;
 
-			Log(FormatMessage(str, LogMessageType::Trace, std::forward<Args>(args)...), LogMessageType::Trace);
+			Log(FormatMessage(str, LogMessageType::Trace, std::forward<Args>(args)...),
+				LogMessageType::Trace);
 		}
 
 		/// <summary>
@@ -81,9 +77,11 @@ namespace At0::Ray
 		template<typename... Args>
 		void Debug(std::string_view str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Debug)) return;
+			if (!ShouldLog(LogMessageType::Debug))
+				return;
 
-			Log(FormatMessage(str, LogMessageType::Debug, std::forward<Args>(args)...), LogMessageType::Debug);
+			Log(FormatMessage(str, LogMessageType::Debug, std::forward<Args>(args)...),
+				LogMessageType::Debug);
 		}
 
 		/// <summary>
@@ -95,9 +93,11 @@ namespace At0::Ray
 		template<typename... Args>
 		void Info(std::string_view str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Information)) return;
+			if (!ShouldLog(LogMessageType::Information))
+				return;
 
-			Log(FormatMessage(str, LogMessageType::Information, std::forward<Args>(args)...), LogMessageType::Information);
+			Log(FormatMessage(str, LogMessageType::Information, std::forward<Args>(args)...),
+				LogMessageType::Information);
 		}
 
 		/// <summary>
@@ -109,9 +109,11 @@ namespace At0::Ray
 		template<typename... Args>
 		void Warn(std::string_view str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Warning)) return;
+			if (!ShouldLog(LogMessageType::Warning))
+				return;
 
-			Log(FormatMessage(str, LogMessageType::Warning, std::forward<Args>(args)...), LogMessageType::Warning);
+			Log(FormatMessage(str, LogMessageType::Warning, std::forward<Args>(args)...),
+				LogMessageType::Warning);
 		}
 
 		/// <summary>
@@ -123,9 +125,11 @@ namespace At0::Ray
 		template<typename... Args>
 		void Error(std::string_view str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Error)) return;
+			if (!ShouldLog(LogMessageType::Error))
+				return;
 
-			Log(FormatMessage(str, LogMessageType::Error, std::forward<Args>(args)...), LogMessageType::Error);
+			Log(FormatMessage(str, LogMessageType::Error, std::forward<Args>(args)...),
+				LogMessageType::Error);
 		}
 
 		/// <summary>
@@ -137,9 +141,11 @@ namespace At0::Ray
 		template<typename... Args>
 		void Critical(std::string_view str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Critical)) return;
+			if (!ShouldLog(LogMessageType::Critical))
+				return;
 
-			Log(FormatMessage(str, LogMessageType::Critical, std::forward<Args>(args)...), LogMessageType::Critical);
+			Log(FormatMessage(str, LogMessageType::Critical, std::forward<Args>(args)...),
+				LogMessageType::Critical);
 		}
 
 
@@ -152,9 +158,12 @@ namespace At0::Ray
 		template<typename... Args>
 		void Trace(const std::wstring_view str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Trace)) return;
+			if (!ShouldLog(LogMessageType::Trace))
+				return;
 
-			Log(FormatMessage(String::ConvertUtf8(str), LogMessageType::Trace, std::forward<Args>(args)...), LogMessageType::Trace);
+			Log(FormatMessage(
+					String::ConvertUtf8(str), LogMessageType::Trace, std::forward<Args>(args)...),
+				LogMessageType::Trace);
 		}
 
 		/// <summary>
@@ -166,9 +175,12 @@ namespace At0::Ray
 		template<typename... Args>
 		void Debug(const std::wstring_view str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Debug)) return;
+			if (!ShouldLog(LogMessageType::Debug))
+				return;
 
-			Log(FormatMessage(String::ConvertUtf8(str), LogMessageType::Debug, std::forward<Args>(args)...), LogMessageType::Debug);
+			Log(FormatMessage(
+					String::ConvertUtf8(str), LogMessageType::Debug, std::forward<Args>(args)...),
+				LogMessageType::Debug);
 		}
 
 		/// <summary>
@@ -180,9 +192,12 @@ namespace At0::Ray
 		template<typename... Args>
 		void Info(const std::wstring_view str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Information)) return;
+			if (!ShouldLog(LogMessageType::Information))
+				return;
 
-			Log(FormatMessage(String::ConvertUtf8(str), LogMessageType::Information, std::forward<Args>(args)...), LogMessageType::Information);
+			Log(FormatMessage(String::ConvertUtf8(str), LogMessageType::Information,
+					std::forward<Args>(args)...),
+				LogMessageType::Information);
 		}
 
 		/// <summary>
@@ -194,9 +209,12 @@ namespace At0::Ray
 		template<typename... Args>
 		void Warn(const std::wstring_view str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Warning)) return;
+			if (!ShouldLog(LogMessageType::Warning))
+				return;
 
-			Log(FormatMessage(String::ConvertUtf8(str), LogMessageType::Warning, std::forward<Args>(args)...), LogMessageType::Warning);
+			Log(FormatMessage(
+					String::ConvertUtf8(str), LogMessageType::Warning, std::forward<Args>(args)...),
+				LogMessageType::Warning);
 		}
 
 		/// <summary>
@@ -208,9 +226,12 @@ namespace At0::Ray
 		template<typename... Args>
 		void Error(const std::wstring_view str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Error)) return;
+			if (!ShouldLog(LogMessageType::Error))
+				return;
 
-			Log(FormatMessage(String::ConvertUtf8(str), LogMessageType::Error, std::forward<Args>(args)...), LogMessageType::Error);
+			Log(FormatMessage(
+					String::ConvertUtf8(str), LogMessageType::Error, std::forward<Args>(args)...),
+				LogMessageType::Error);
 		}
 
 		/// <summary>
@@ -222,9 +243,12 @@ namespace At0::Ray
 		template<typename... Args>
 		void Critical(const std::wstring_view str, Args&&... args)
 		{
-			if (!ShouldLog(LogMessageType::Critical)) return;
+			if (!ShouldLog(LogMessageType::Critical))
+				return;
 
-			Log(FormatMessage(String::ConvertUtf8(str), LogMessageType::Critical, std::forward<Args>(args)...), LogMessageType::Critical);
+			Log(FormatMessage(String::ConvertUtf8(str), LogMessageType::Critical,
+					std::forward<Args>(args)...),
+				LogMessageType::Critical);
 		}
 
 	protected:
@@ -259,7 +283,8 @@ namespace At0::Ray
 		{
 			for (auto* formatter : m_Formatters)
 			{
-				if (formatter) delete formatter;
+				if (formatter)
+					delete formatter;
 			}
 		}
 
@@ -268,10 +293,7 @@ namespace At0::Ray
 		/// </summary>
 		/// <param name="msgType">Is the log message type of the message</param>
 		/// <returns>True if the message should be logged, false otherwise</returns>
-		bool ShouldLog(LogMessageType msgType)
-		{
-			return msgType >= m_LogLevel;
-		}
+		bool ShouldLog(LogMessageType msgType) { return msgType >= m_LogLevel; }
 
 	private:
 		/// <summary>
@@ -284,7 +306,7 @@ namespace At0::Ray
 		template<typename... Args>
 		std::string FormatMessage(std::string_view str, LogMessageType msgLvl, Args&&... args)
 		{
-			std::string msg = Util::SerializeString(str.data(), args...);
+			std::string msg = SerializeString(str.data(), args...);
 
 			for (auto formatter : m_Formatters)
 			{

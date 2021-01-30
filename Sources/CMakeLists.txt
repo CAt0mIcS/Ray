@@ -62,6 +62,8 @@ set(SRC
 	"Debug/RLogger.h"
 	"Debug/RLogger.cpp"
 	"Debug/RAssert.h"
+	"Debug/RException.h"
+	"Debug/RException.cpp"
 )
 
 # ------------------------------------------------------------------

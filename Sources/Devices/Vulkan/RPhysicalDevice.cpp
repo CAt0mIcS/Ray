@@ -5,6 +5,7 @@
 
 #include "Debug/RLogger.h"
 #include "Debug/RAssert.h"
+#include "Debug/RException.h"
 
 #include <vulkan/vulkan.h>
 
@@ -27,7 +28,7 @@ namespace At0::Ray
 
 		m_PhysicalDevice = ChoosePhysicalDevice(physicalDevices);
 		if (!m_PhysicalDevice)
-			throw 3;
+			RAY_THROW_RUNTIME("[VulkanPhysicalDevice] Failed to find suitable GPU.");
 
 		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &m_Properties);
 		vkGetPhysicalDeviceFeatures(m_PhysicalDevice, &m_Features);
