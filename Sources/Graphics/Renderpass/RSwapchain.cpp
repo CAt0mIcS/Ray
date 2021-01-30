@@ -4,6 +4,7 @@
 #include "Devices/Vulkan/RPhysicalDevice.h"
 #include "Devices/Vulkan/RLogicalDevice.h"
 #include "Devices/Vulkan/RSurface.h"
+#include "Graphics/RGraphics.h"
 
 #include "Debug/RException.h"
 #include "Resources/RImage.h"
@@ -118,10 +119,10 @@ namespace At0::Ray
 			vkGetSwapchainImagesKHR(logicalDevice, m_Swapchain, &m_ImageCount, m_Images.data()),
 			"[Swapchain] Failed to get image count.");
 
-		for (uint32_t i = 0; i < m_ImageCount, ++i)
+		for (uint32_t i = 0; i < m_ImageCount; ++i)
 		{
-			Image::CreateImageViews(m_Images[i], m_ImageViews[i], VK_IMAGE_VIEW_TYPE_2D,
-				surfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT, 1, 0, 1, 0);
+			Image::CreateImageView(m_Images[i], m_ImageViews[i], VK_IMAGE_VIEW_TYPE_2D,
+				surfaceFormat.format, (VkImageAspectFlags)VK_IMAGE_ASPECT_COLOR_BIT, 1, 0, 1, 0);
 		}
 
 		VkFenceCreateInfo fenceCreateInfo{};
@@ -132,15 +133,15 @@ namespace At0::Ray
 
 	Swapchain::~Swapchain()
 	{
-		auto logicalDevice = Graphics::Get()->GetLogicalDevice();
-		vkDestroySwapchainKHR(*logicalDevice, m_Swapchain, nullptr);
+		const LogicalDevice& logicalDevice = Graphics::Get().GetLogicalDevice();
+		vkDestroySwapchainKHR(logicalDevice, m_Swapchain, nullptr);
 
 		for (const VkImageView& imageView : m_ImageViews)
 		{
-			vkDestroyImageView(*logicalDevice, imageView, nullptr);
+			vkDestroyImageView(logicalDevice, imageView, nullptr);
 		}
 
-		vkDestroyFence(*logicalDevice, m_FenceImage, nullptr);
+		vkDestroyFence(logicalDevice, m_FenceImage, nullptr);
 	}
 
 	VkResult Swapchain::AcquireNextImage(const VkSemaphore& presentCompleteSemaphore, VkFence fence)
@@ -161,6 +162,8 @@ namespace At0::Ray
 		if (acquireResult != VK_SUCCESS && acquireResult != VK_SUBOPTIMAL_KHR &&
 			acquireResult != VK_ERROR_OUT_OF_DATE_KHR)
 			RAY_VK_THROW_NO_EXPR("[Swapchain] Failed to acquire next image.");
+
+		return acquireResult;
 	}
 
 	VkResult Swapchain::QueuePresent(const VkQueue& presentQueue, const VkSemaphore& waitSemaphore)

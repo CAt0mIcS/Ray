@@ -26,3 +26,5 @@
 #include <optional>
 
 #include <assert.h>
+
+#include <vulkan/vulkan.h>

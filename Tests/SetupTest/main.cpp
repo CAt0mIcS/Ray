@@ -1,6 +1,7 @@
 ﻿#include <Core/REngine.h>
 #include <Debug/RLogger.h>
 #include <Devices/RWindow.h>
+#include <Graphics/RGraphics.h>
 
 using namespace At0;
 
@@ -26,6 +27,7 @@ int main()
 
 	Ray::Window::Create();
 	Ray::Window::Get().Show();
+	Ray::Graphics::Get();
 
 	return app.Run();
 }

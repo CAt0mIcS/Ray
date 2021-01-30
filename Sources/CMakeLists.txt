@@ -30,6 +30,8 @@ set(SRC
 
 	# ------------------------------------------------------------------
 	# Graphics
+	"Graphics/RGraphics.h"
+	"Graphics/RGraphics.cpp"
 	"Graphics/Pipelines/RPipeline.h"
 	"Graphics/Pipelines/RPipelineCompute.cpp"
 	"Graphics/Pipelines/RPipelineCompute.h"
@@ -45,6 +47,11 @@ set(SRC
 	"Graphics/Renderpass/RRenderpass.h"
 	"Graphics/Renderpass/RSwapchain.cpp"
 	"Graphics/Renderpass/RSwapchain.h"
+	"Graphics/Commands/RCommandPool.cpp"
+	"Graphics/Commands/RCommandPool.h"
+	"Graphics/Commands/RCommandBuffer.cpp"
+	"Graphics/Commands/RCommandBuffer.h"
+
 
 	# ------------------------------------------------------------------
 	# Resources
