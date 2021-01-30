@@ -32,6 +32,8 @@ set(SRC
 	# Graphics
 	"Graphics/RGraphics.h"
 	"Graphics/RGraphics.cpp"
+	"Graphics/RRenderStage.h"
+	"Graphics/RRenderStage.cpp"
 	"Graphics/Pipelines/RPipeline.h"
 	"Graphics/Pipelines/RPipelineCompute.cpp"
 	"Graphics/Pipelines/RPipelineCompute.h"

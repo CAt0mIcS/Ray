@@ -8,6 +8,7 @@
 #include "Commands/RCommandBuffer.h"
 #include "Commands/RCommandPool.h"
 #include "Renderpass/RSwapchain.h"
+#include "RRenderer.h"
 
 #include "Debug/RLogger.h"
 #include "Debug/RException.h"

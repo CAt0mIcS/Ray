@@ -39,7 +39,7 @@ namespace At0::Ray
 		void CreatePipelineCache();
 
 	private:
-		// Scope<Renderer> m_Renderer;
+		Scope<Renderer> m_Renderer;
 		std::map<std::string, const Descriptor*> m_Attachments;
 		Scope<Swapchain> m_Swapchain;
 
