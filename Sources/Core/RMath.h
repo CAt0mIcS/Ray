@@ -1102,6 +1102,8 @@ namespace At0
 			Int2(Int2&&) = default;
 			Int2& operator=(Int2&&) = default;
 
+			bool operator==(const Int2& other) const { return x == other.x && y == other.y; }
+
 			RAYMATH_CONSTEXPR Int2(int32_t _x, int32_t _y) : x(_x), y(_y) {}
 			explicit Int2(/*_In_reads_(2) */ const int32_t* pArray) : x(pArray[0]), y(pArray[1]) {}
 		};
@@ -1113,12 +1115,15 @@ namespace At0
 			uint32_t y;
 
 			UInt2() = default;
+			UInt2(const Float2 flt) : x(flt.x), y(flt.y) {}
 
 			UInt2(const UInt2&) = default;
 			UInt2& operator=(const UInt2&) = default;
 
 			UInt2(UInt2&&) = default;
 			UInt2& operator=(UInt2&&) = default;
+
+			bool operator==(const UInt2& other) const { return x == other.x && y == other.y; }
 
 			RAYMATH_CONSTEXPR UInt2(uint32_t _x, uint32_t _y) : x(_x), y(_y) {}
 			explicit UInt2(/*_In_reads_(2) */ const uint32_t* pArray) : x(pArray[0]), y(pArray[1])

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "../RBase.h"
-#include "../Utils/RMath.h"
+#include "../Core/RMath.h"
 
 #include <string_view>
 #include <utility>
@@ -71,6 +71,11 @@ namespace At0::Ray
 		 */
 		void CreateSurface(VkInstance_T* instance, const VkAllocationCallbacks* allocator,
 			VkSurfaceKHR_T** surface) const;
+
+		/**
+		 * @returns the size in pixels of the window
+		 */
+		UInt2 GetSize() const;
 
 	private:
 		Window(uint32_t width, uint32_t height, std::string_view title);

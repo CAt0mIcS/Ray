@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "../RBase.h"
-#include "../Utils/RMath.h"
+#include "../Core/RMath.h"
 
 
 namespace At0::Ray

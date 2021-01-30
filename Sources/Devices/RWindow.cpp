@@ -71,6 +71,13 @@ namespace At0::Ray
 			"[Window] GLFW failed to create the window surface.");
 	}
 
+	UInt2 Window::GetSize() const
+	{
+		UInt2 size;
+		glfwGetWindowSize(m_hWnd, (int*)&size.x, (int*)&size.y);
+		return size;
+	}
+
 	Window::Window(uint32_t width, uint32_t height, std::string_view title)
 	{
 		RAY_MEXPECTS(glfwInit(), "[Window] Failed to initialize GLFW.");

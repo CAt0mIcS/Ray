@@ -30,6 +30,13 @@ namespace At0::Ray
 		 */
 		VkPhysicalDeviceFeatures GetFeatures() const { return m_Features; }
 
+		const VkSampleCountFlagBits& GetMsaaSamples() const { return m_MsaaSamples; }
+		const VkPhysicalDeviceMemoryProperties& GetMemoryProperties() const
+		{
+			return m_MemoryProperties;
+		}
+		const VkPhysicalDeviceProperties& GetProperties() const { return m_Properties; }
+
 	private:
 		VkPhysicalDevice ChoosePhysicalDevice(const std::vector<VkPhysicalDevice>& devices);
 		static uint32_t ScorePhysicalDevice(const VkPhysicalDevice& device);

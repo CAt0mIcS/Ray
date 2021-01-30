@@ -8,6 +8,8 @@ set(SRC
 	"Core/REngine.cpp"
 	"Core/RTime.h"
 	"Core/RTime.cpp"
+	"Core/RColor.h"
+	"Core/RMath.h"
 	
 	# ------------------------------------------------------------------
 	# Devices
@@ -53,6 +55,7 @@ set(SRC
 	"Graphics/Commands/RCommandPool.h"
 	"Graphics/Commands/RCommandBuffer.cpp"
 	"Graphics/Commands/RCommandBuffer.h"
+	"Graphics/Descriptors/RDescriptors.h"
 
 
 	# ------------------------------------------------------------------
@@ -62,6 +65,8 @@ set(SRC
 	"Resources/RImage2D.cpp"
 	"Resources/RImage2D.h"
 	"Resources/RResource.h"
+	"Resources/RImageDepth.h"
+	"Resources/RImageDepth.cpp"
 
 
 	# ------------------------------------------------------------------
@@ -77,7 +82,6 @@ set(SRC
 	"Utils/RQueue.h"
 	"Utils/RThreadPool.h"
 	"Utils/RThreadPool.cpp"
-	"Utils/RMath.h"
 	"Utils/RNonCopyable.h"
 
 	# ------------------------------------------------------------------
