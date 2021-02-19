@@ -3,9 +3,9 @@
 #include <string>
 #include <sstream>
 #include <type_traits>
+#include <assert.h>
 
 #include "RString.h"
-#include "../Debug/RAssert.h"
 
 
 namespace At0::Ray
@@ -101,8 +101,7 @@ namespace At0::Ray
 		else
 		{
 			// static_assert(false, "No output stream can convert the specified type T.");
-			RAY_ASSERT(false, "No output stream can convert the specified type (typeid={0}).",
-				typeid(T).name());
+			assert(false && "No output stream can convert the specified type T.");
 		}
 	}
 

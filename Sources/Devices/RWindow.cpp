@@ -3,9 +3,9 @@
 
 #include "Devices/RMouse.h"
 #include "Devices/RKeyboard.h"
-#include "Debug/RAssert.h"
-#include "Debug/RLogger.h"
-#include "Debug/RException.h"
+#include "Utils/RAssert.h"
+#include "Utils/RLogger.h"
+#include "Utils/RException.h"
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>

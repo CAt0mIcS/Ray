@@ -2,15 +2,17 @@ set(SRC
 	"Rpch.h"
 	"RBase.h"
 	
+
 	# ------------------------------------------------------------------
 	# Core classes
 	"Core/REngine.h"
 	"Core/REngine.cpp"
 	"Core/RTime.h"
 	"Core/RTime.cpp"
-	"Core/RColor.h"
 	"Core/RMath.h"
+	"Core/RKeyCodes.h"
 	
+
 	# ------------------------------------------------------------------
 	# Devices
 	"Devices/RWindow.h"
@@ -19,54 +21,12 @@ set(SRC
 	"Devices/RMouse.cpp"
 	"Devices/RKeyboard.h"
 	"Devices/RKeyboard.cpp"
-	"Devices/RKeyCodes.h"
-	"Devices/Vulkan/RInstance.h"
-	"Devices/Vulkan/RInstance.cpp"
-	"Devices/Vulkan/RPhysicalDevice.h"
-	"Devices/Vulkan/RPhysicalDevice.cpp"
-	"Devices/Vulkan/RSurface.h"
-	"Devices/Vulkan/RSurface.cpp"
-	"Devices/Vulkan/RLogicalDevice.h"
-	"Devices/Vulkan/RLogicalDevice.cpp"
 
 
 	# ------------------------------------------------------------------
 	# Graphics
 	"Graphics/RGraphics.h"
 	"Graphics/RGraphics.cpp"
-	"Graphics/RRenderStage.h"
-	"Graphics/RRenderStage.cpp"
-	"Graphics/Pipelines/RPipeline.h"
-	"Graphics/Pipelines/RPipelineCompute.cpp"
-	"Graphics/Pipelines/RPipelineCompute.h"
-	"Graphics/Pipelines/RPipelineGraphics.cpp"
-	"Graphics/Pipelines/RPipelineGraphics.h"
-	"Graphics/RRenderStage.cpp"
-	"Graphics/RRenderStage.h"
-	"Graphics/RRenderer.cpp"
-	"Graphics/RRenderer.h"
-	"Graphics/Renderpass/RFramebuffers.cpp"
-	"Graphics/Renderpass/RFramebuffers.h"
-	"Graphics/Renderpass/RRenderpass.cpp"
-	"Graphics/Renderpass/RRenderpass.h"
-	"Graphics/Renderpass/RSwapchain.cpp"
-	"Graphics/Renderpass/RSwapchain.h"
-	"Graphics/Commands/RCommandPool.cpp"
-	"Graphics/Commands/RCommandPool.h"
-	"Graphics/Commands/RCommandBuffer.cpp"
-	"Graphics/Commands/RCommandBuffer.h"
-	"Graphics/Descriptors/RDescriptors.h"
-
-
-	# ------------------------------------------------------------------
-	# Resources
-	"Resources/RImage.cpp"
-	"Resources/RImage.h"
-	"Resources/RImage2D.cpp"
-	"Resources/RImage2D.h"
-	"Resources/RResource.h"
-	"Resources/RImageDepth.h"
-	"Resources/RImageDepth.cpp"
 
 
 	# ------------------------------------------------------------------
@@ -78,28 +38,24 @@ set(SRC
 	"Utils/RSerialize.h"
 	"Utils/RString.h"
 	"Utils/RString.cpp"
-	"Utils/RStack.h"
-	"Utils/RQueue.h"
 	"Utils/RThreadPool.h"
 	"Utils/RThreadPool.cpp"
 	"Utils/RNonCopyable.h"
-
-	# ------------------------------------------------------------------
-	# Debug Utilities
-	"Debug/Logger/Formatters/RBracketFormatter.h"
-	"Debug/Logger/Formatters/RDateTimeFormatter.h"
-	"Debug/Logger/Formatters/RFormatter.h"
-	"Debug/Logger/Formatters/RLogLevelFormatter.h"
-	"Debug/Logger/Formatters/RNullTerminatorFormatter.h"
-	"Debug/Logger/Loggers/RBaseLogger.h"
-	"Debug/Logger/Loggers/RFileLogger.h"
-	"Debug/Logger/Loggers/RConsoleLogger.h"
-	"Debug/Logger/RLogLevel.h"
-	"Debug/RLogger.h"
-	"Debug/RLogger.cpp"
-	"Debug/RAssert.h"
-	"Debug/RException.h"
-	"Debug/RException.cpp"
+	"Utils/Logger/Formatters/RBracketFormatter.h"
+	"Utils/Logger/Formatters/RDateTimeFormatter.h"
+	"Utils/Logger/Formatters/RFormatter.h"
+	"Utils/Logger/Formatters/RLogLevelFormatter.h"
+	"Utils/Logger/Formatters/RNullTerminatorFormatter.h"
+	"Utils/Logger/Loggers/RBaseLogger.h"
+	"Utils/Logger/Loggers/RFileLogger.h"
+	"Utils/Logger/Loggers/RConsoleLogger.h"
+	"Utils/Logger/RLogLevel.h"
+	"Utils/RLogger.h"
+	"Utils/RLogger.cpp"
+	"Utils/RAssert.h"
+	"Utils/RQueue.h"
+	"Utils/RException.h"
+	"Utils/RException.cpp"
 )
 
 # ------------------------------------------------------------------
@@ -107,24 +63,24 @@ set(SRC
 find_package("Vulkan" REQUIRED FATAL_ERROR)
 
 set(PUBLIC_INC
-    ""
+    "${Vulkan_INCLUDE_DIRS}"
 )
 
 set(PRIVATE_INC
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${Vulkan_INCLUDE_DIRS}"
     "${CMAKE_SOURCE_DIR}/Extern/entt/src"
     "${CMAKE_SOURCE_DIR}/Extern/glfw/include"
 )
 
 set(PUBLIC_LIB
-    ""
+    "glm"
 )
 
 set(PRIVATE_LIB
     "glfw"
     "${Vulkan_LIBRARIES}"
-    "ShaderConductor"
+    "assimp"
+    "glslang"
 )
 
 
@@ -160,4 +116,14 @@ add_custom_command(TARGET "Ray" PRE_BUILD
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release>"
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo>"
 )
+
+if(WIN32)
+add_custom_command(TARGET "Ray" POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_SOURCE_DIR}/Extern/assimp/lib/x64/assimp-vc142-mt.dll"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo>"
+)
+endif()
 

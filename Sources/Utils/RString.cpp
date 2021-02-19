@@ -162,7 +162,7 @@ namespace At0::Ray
 		case VK_NOT_READY: return "Vulkan not ready.";
 		case VK_TIMEOUT: return "Vulkan timeout.";
 		case VK_EVENT_SET: return "Vulkan event set.";
-		case VK_EVENT_RESET: return "Vulkan event reset.h";
+		case VK_EVENT_RESET: return "Vulkan event reset.";
 		case VK_INCOMPLETE: return "Vulkan incomplete.";
 		case VK_ERROR_OUT_OF_HOST_MEMORY: return "Vulkan out of host memory.";
 		case VK_ERROR_OUT_OF_DEVICE_MEMORY: return "Vulkan out of device memory.";

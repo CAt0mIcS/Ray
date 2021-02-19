@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "../RBase.h"
-#include "RKeyCodes.h"
+#include "../Core/RKeyCodes.h"
 
 #include <bitset>
 

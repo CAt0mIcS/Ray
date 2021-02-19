@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "../RBase.h"
 
@@ -98,7 +98,8 @@ namespace At0::Ray
 		 * an item is added to the queue
 		 * @param pred Function to execute when wait condition is notified
 		 */
-		template<typename F, typename = std::enable_if_t<std::is_convertible_v<F, std::function<bool()>>>>
+		template<typename F,
+			typename = std::enable_if_t<std::is_convertible_v<F, std::function<bool()>>>>
 		void WaitFor(F&& pred)
 		{
 			std::unique_lock lock(m_Mutex);

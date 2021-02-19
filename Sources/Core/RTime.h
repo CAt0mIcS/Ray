@@ -94,13 +94,6 @@ namespace At0::Ray
 			return (T)(m_Value.count());
 		}
 
-		// template<typename Period = std::ratio<1, 1>>
-		/*float Mod(const Time &other) {
-			return std::modf(std::chrono::duration_cast<std::chrono::duration<double,
-		Period>>(value), std::chrono::duration_cast<std::chrono::duration<double,
-		Period>>(other.value));
-		}*/
-
 		/**
 		 * Gets the current time of this application.
 		 * @return The current time.

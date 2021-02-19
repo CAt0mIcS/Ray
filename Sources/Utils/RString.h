@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "../RBase.h"
-#include "../Devices/RKeyCodes.h"
+#include "../Core/RKeyCodes.h"
 #include "RNonCopyable.h"
 
 #include <string>
