@@ -135,15 +135,32 @@ namespace At0::Ray
 
 		constexpr Time operator-() const;
 
-		friend constexpr Time operator+(const Time& lhs, const Time& rhs);
-		friend constexpr Time operator-(const Time& lhs, const Time& rhs);
-		friend constexpr Time operator*(const Time& lhs, float rhs);
-		friend constexpr Time operator*(const Time& lhs, int64_t rhs);
-		friend constexpr Time operator*(float lhs, const Time& rhs);
-		friend constexpr Time operator*(int64_t lhs, const Time& rhs);
-		friend constexpr Time operator/(const Time& lhs, float rhs);
-		friend constexpr Time operator/(const Time& lhs, int64_t rhs);
-		friend constexpr float operator/(const Time& lhs, const Time& rhs);
+		friend constexpr Time operator+(const Time& lhs, const Time& rhs)
+		{
+			return lhs.m_Value + rhs.m_Value;
+		}
+
+		friend constexpr Time operator-(const Time& lhs, const Time& rhs)
+		{
+			return lhs.m_Value - rhs.m_Value;
+		}
+
+		friend constexpr Time operator*(const Time& lhs, float rhs) { return lhs.m_Value * rhs; }
+
+		friend constexpr Time operator*(const Time& lhs, int64_t rhs) { return lhs.m_Value * rhs; }
+
+		friend constexpr Time operator*(float lhs, const Time& rhs) { return rhs * lhs; }
+
+		friend constexpr Time operator*(int64_t lhs, const Time& rhs) { return rhs * lhs; }
+
+		friend constexpr Time operator/(const Time& lhs, float rhs) { return lhs.m_Value / rhs; }
+
+		friend constexpr Time operator/(const Time& lhs, int64_t rhs) { return lhs.m_Value / rhs; }
+
+		friend constexpr float operator/(const Time& lhs, const Time& rhs)
+		{
+			return float(lhs.m_Value.count()) / float(rhs.m_Value.count());
+		}
 
 		constexpr Time& operator+=(const Time& rhs);
 		constexpr Time& operator-=(const Time& rhs);

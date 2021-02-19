@@ -16,15 +16,15 @@ namespace At0::Ray
 	static void GLFWErrorCallback(int error, const char* description)
 	{
 		RAY_ASSERT(false, "[GLFWWindow] GLFW Error ({0}): {1}", error, description);
-		Log::Error("[OpenGLRenderer3D] GLFW Error ({0}): {1}", error, description);
+		Log::Error("[GLFWWindow] GLFW Error ({0}): {1}", error, description);
 		Log::Flush();
 	}
 
-	Window* Window::s_Instance = nullptr;
+	Scope<Window> Window::s_Instance = nullptr;
+
 	Window& Window::Create(uint32_t width, uint32_t height, std::string_view title)
 	{
-		// No ScopePtr because of private constructor
-		s_Instance = new Window(width, height, title);
+		s_Instance = Scope<Window>(new Window(width, height, title));
 		return *s_Instance;
 	}
 
@@ -80,7 +80,8 @@ namespace At0::Ray
 
 	Window::Window(uint32_t width, uint32_t height, std::string_view title)
 	{
-		RAY_MEXPECTS(glfwInit(), "[Window] Failed to initialize GLFW.");
+		int success = glfwInit();
+		RAY_MEXPECTS(success, "[Window] Failed to initialize GLFW.");
 		Log::Info("[Window] GLFW successfully initialized.");
 		glfwSetErrorCallback(GLFWErrorCallback);
 
@@ -101,8 +102,6 @@ namespace At0::Ray
 		if (m_hWnd)
 			Close();
 		glfwTerminate();
-
-		delete s_Instance;
 	}
 
 	void Window::SetEventCallbacks()

@@ -77,13 +77,17 @@ namespace At0::Ray
 		 */
 		UInt2 GetSize() const;
 
+		/**
+		 * Closes the window if it's still open and terminates glfw
+		 */
+		~Window();
+
 	private:
 		Window(uint32_t width, uint32_t height, std::string_view title);
-		~Window();
 		void SetEventCallbacks();
 
 	private:
-		static Window* s_Instance;
+		static Scope<Window> s_Instance;
 		GLFWwindow* m_hWnd = nullptr;
 		Float2 m_CachedRawDeltaMousePos{};
 	};
