@@ -27,6 +27,14 @@ set(SRC
 	# Graphics
 	"Graphics/RGraphics.h"
 	"Graphics/RGraphics.cpp"
+	
+	"Graphics/Core/RVulkanInstance.h"
+	"Graphics/Core/RVulkanInstance.cpp"
+	"Graphics/Core/RPhysicalDevice.h"
+	"Graphics/Core/RPhysicalDevice.cpp"
+	"Graphics/Core/RLogicalDevice.h"
+	"Graphics/Core/RLogicalDevice.cpp"
+
 
 
 	# ------------------------------------------------------------------
