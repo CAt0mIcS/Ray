@@ -22,12 +22,18 @@
 
 #include "Graphics/Buffers/RFramebuffer.h"
 
+#include "Graphics/Pipelines/RGraphicsPipeline.h"
+
 
 namespace At0::Ray
 {
 	Graphics::~Graphics()
 	{
 		m_LogicalDevice->WaitIdle();
+
+		m_CommandBuffers.clear();
+
+		m_GraphicsPipeline.reset();
 
 		m_Framebuffers.clear();
 		m_RenderPass.reset();
@@ -49,6 +55,8 @@ namespace At0::Ray
 			new Graphics();
 		return *s_Instance;
 	}
+
+	void Graphics::Update(Delta dt) {}
 
 	Graphics::Graphics()
 	{
@@ -94,6 +102,10 @@ namespace At0::Ray
 
 		CreateRenderPass();
 		CreateFramebuffers();
+
+		m_GraphicsPipeline = MakeScope<GraphicsPipeline>(
+			*m_RenderPass, std::vector<std::string>{ "Resources/Shaders/DefaultShader.vert.spv",
+							   "Resources/Shaders/DefaultShader.frag.spv" });
 
 		CreateCommandBuffers();
 		CreateSyncObjects();

@@ -7,3 +7,5 @@
 Doxygen/
 Doxyfile
 build*/
+*.spv
+.vscode/

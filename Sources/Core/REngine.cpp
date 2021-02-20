@@ -5,6 +5,8 @@
 #include "Utils/RLogger.h"
 #include "Utils/RAssert.h"
 
+#include "Graphics/RGraphics.h"
+
 
 namespace At0::Ray
 {
@@ -22,6 +24,7 @@ namespace At0::Ray
 		{
 			m_Delta.Update();
 			m_FPS.Update(Time::Now());
+			Graphics::Get().Update(m_Delta);
 			Update();
 		}
 

@@ -92,12 +92,6 @@ else()
 endif()
 
 # ------------------------------------------------------------------------------------------------
-# Set the startup project for VS
-# if(MSVC)
-#     set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY VS_STARTUP_PROJECT "Zeal")
-# endif()
-
-# ------------------------------------------------------------------------------------------------
 # Set default string stuff to be unicode
 add_definitions(-DUNICODE)
 add_definitions(-D_UNICODE)

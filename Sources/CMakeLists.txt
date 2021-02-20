@@ -161,9 +161,9 @@ SetWorkingDirectory("Ray" "")
 add_custom_command(TARGET "Ray" PRE_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
 	"${CMAKE_SOURCE_DIR}/Resources/"
-    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug>"
-    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release>"
-    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo>"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug/Resources>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/Resources>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/Resources>"
 )
 
 if(WIN32)

@@ -2,6 +2,8 @@
 
 #include "../RBase.h"
 #include "../Utils/RNonCopyable.h"
+#include "../Core/RTime.h"
+#include "../Core/RMath.h"
 
 #include <vulkan/vulkan_core.h>
 #include <vector>
@@ -18,6 +20,7 @@ namespace At0::Ray
 	class CommandBuffer;
 	class RenderPass;
 	class Framebuffer;
+	class GraphicsPipeline;
 
 	class RAY_EXPORT Graphics : NonCopyable
 	{
@@ -31,6 +34,12 @@ namespace At0::Ray
 		const LogicalDevice& GetDevice() const { return *m_LogicalDevice; }
 		const Swapchain& GetSwapchain() const { return *m_Swapchain; }
 		const CommandPool& GetCommandPool() const { return *m_CommandPool; }
+
+		/**
+		 * Acquires the next frame for rendering and presentation
+		 * @param dt is the time since the last frame
+		 */
+		void Update(Delta dt);
 
 	private:
 		Graphics();
@@ -60,6 +69,7 @@ namespace At0::Ray
 		Scope<Swapchain> m_Swapchain;
 		Scope<CommandPool> m_CommandPool;
 		Scope<RenderPass> m_RenderPass;
+		Scope<GraphicsPipeline> m_GraphicsPipeline;
 
 		std::vector<Scope<Framebuffer>> m_Framebuffers;
 		std::vector<Scope<CommandBuffer>> m_CommandBuffers;
