@@ -21,6 +21,7 @@ namespace At0::Ray
 		const VulkanInstance& GetInstance() const { return *m_VulkanInstance; }
 		const Surface& GetSurface() const { return *m_Surface; }
 		const PhysicalDevice& GetPhysicalDevice() const { return *m_PhysicalDevice; }
+		const LogicalDevice& GetDevice() const { return *m_LogicalDevice; }
 
 	private:
 		Graphics();
