@@ -1,4 +1,4 @@
-#include "Rpch.h"
+﻿#include "Rpch.h"
 #include "RPhysicalDevice.h"
 
 #include "Graphics/RGraphics.h"
@@ -26,6 +26,25 @@ namespace At0::Ray
 			RAY_THROW_RUNTIME("[VulkanInstance] Failed to find suitable GPU");
 
 		vkGetPhysicalDeviceFeatures(m_Device, &m_Features);
+		vkGetPhysicalDeviceMemoryProperties(m_Device, &m_MemoryProperties);
+	}
+
+	const VkPhysicalDeviceMemoryProperties& PhysicalDevice::GetMemoryProperties() const
+	{
+		return m_MemoryProperties;
+	}
+
+	uint32_t PhysicalDevice::FindMemoryType(
+		uint32_t typeFilter, VkMemoryPropertyFlags properties) const
+	{
+		for (uint32_t i = 0; i < m_MemoryProperties.memoryTypeCount; ++i)
+		{
+			if (typeFilter & (1 << i) &&
+				(m_MemoryProperties.memoryTypes[i].propertyFlags & properties) == properties)
+				return i;
+		}
+
+		RAY_THROW_RUNTIME("[PhysicalDevice] Failed to find suitable memory type.");
 	}
 
 	VkPhysicalDevice PhysicalDevice::ChoosePhysicalDevice(

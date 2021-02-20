@@ -24,9 +24,13 @@
 
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 
+#include "Primitives/RMesh.h"
+
 
 namespace At0::Ray
 {
+	Mesh* mesh;
+
 	Graphics::~Graphics()
 	{
 		m_LogicalDevice->WaitIdle();
@@ -34,6 +38,8 @@ namespace At0::Ray
 		m_CommandBuffers.clear();
 
 		m_GraphicsPipeline.reset();
+
+		delete mesh;
 
 		m_Framebuffers.clear();
 		m_RenderPass.reset();
@@ -106,6 +112,8 @@ namespace At0::Ray
 		m_GraphicsPipeline = MakeScope<GraphicsPipeline>(
 			*m_RenderPass, std::vector<std::string>{ "Resources/Shaders/DefaultShader.vert.spv",
 							   "Resources/Shaders/DefaultShader.frag.spv" });
+
+		mesh = new Mesh();
 
 		CreateCommandBuffers();
 		CreateSyncObjects();
@@ -193,13 +201,8 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		// m_Model->CmdDraw(cmdBuff);
-		// m_Model2->CmdDraw(cmdBuff);
-		// for (Scope<Drawable>& drawable : m_Drawables)
-		//{
-		//	drawable->CmdBind(cmdBuff);
-		//	drawable->CmdDraw(cmdBuff);
-		//}
+		mesh->CmdBind(cmdBuff);
+		mesh->CmdDraw(cmdBuff);
 
 		m_RenderPass->End(cmdBuff);
 

@@ -79,8 +79,11 @@ set(SRC
 
 
 	# ------------------------------------------------------------------
-	# GUI
-
+	# Primitives
+	"Primitives/RModel.h"
+	"Primitives/RModel.cpp"
+	"Primitives/RMesh.h"
+	"Primitives/RMesh.cpp"
 
 	# ------------------------------------------------------------------
 	# Utilities
