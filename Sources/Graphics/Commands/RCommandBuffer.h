@@ -17,7 +17,7 @@ namespace At0::Ray
 			VkCommandBufferLevel bufferLevel = VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 		~CommandBuffer();
 
-		void Begin(VkCommandBufferUsageFlags usageFlags) const;
+		void Begin(VkCommandBufferUsageFlags usageFlags = 0) const;
 		void End() const;
 
 		operator const VkCommandBuffer&() const { return m_CommandBuffer; }

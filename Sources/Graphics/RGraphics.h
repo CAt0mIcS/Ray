@@ -15,6 +15,7 @@ namespace At0::Ray
 	class LogicalDevice;
 	class Swapchain;
 	class CommandPool;
+	class CommandBuffer;
 	class RenderPass;
 	class Framebuffer;
 
@@ -34,14 +35,23 @@ namespace At0::Ray
 	private:
 		Graphics();
 
+		void UpdateViewport();
+		void UpdateScissor();
+
 		// -------------------------------------------------------------
 		// Vulkan object creation functions
 		void CreateVulkanObjects();
 		void CreateRenderPass();
 		void CreateFramebuffers();
+		void CreateCommandBuffers();
+		void RecordCommandBuffer(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer);
+		void CreateSyncObjects();
 
 	private:
 		inline static Graphics* s_Instance = nullptr;
+
+		VkViewport m_Viewport;
+		VkRect2D m_Scissor;
 
 		Scope<VulkanInstance> m_VulkanInstance;
 		Scope<PhysicalDevice> m_PhysicalDevice;
@@ -52,5 +62,6 @@ namespace At0::Ray
 		Scope<RenderPass> m_RenderPass;
 
 		std::vector<Scope<Framebuffer>> m_Framebuffers;
+		std::vector<Scope<CommandBuffer>> m_CommandBuffers;
 	};
 }  // namespace At0::Ray

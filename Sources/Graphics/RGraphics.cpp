@@ -4,6 +4,8 @@
 #include "Utils/RLogger.h"
 #include "Utils/RException.h"
 
+#include "Devices/RWindow.h"
+
 #include "Graphics/Core/RVulkanInstance.h"
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Core/RSurface.h"
@@ -54,7 +56,29 @@ namespace At0::Ray
 			RAY_THROW_RUNTIME("[Graphics] Object already creaed.");
 
 		s_Instance = this;
+
+		UpdateViewport();
+		UpdateScissor();
+
 		CreateVulkanObjects();
+	}
+
+	void Graphics::UpdateViewport()
+	{
+		UInt2 size = Window::Get().GetFramebufferSize();
+		m_Viewport.x = 0.0f;
+		m_Viewport.y = 0.0f;
+		m_Viewport.width = (float)size.x;
+		m_Viewport.height = (float)size.y;
+		m_Viewport.minDepth = 0.0f;
+		m_Viewport.maxDepth = 1.0f;
+	}
+
+	void Graphics::UpdateScissor()
+	{
+		UInt2 size = Window::Get().GetFramebufferSize();
+		m_Scissor.offset = { 0, 0 };
+		m_Scissor.extent = { (uint32_t)size.x, (uint32_t)size.y };
 	}
 
 	void Graphics::CreateVulkanObjects()
@@ -70,6 +94,9 @@ namespace At0::Ray
 
 		CreateRenderPass();
 		CreateFramebuffers();
+
+		CreateCommandBuffers();
+		CreateSyncObjects();
 	}
 
 	void Graphics::CreateRenderPass()
@@ -122,4 +149,50 @@ namespace At0::Ray
 				MakeScope<Framebuffer>(*m_RenderPass, std::vector<VkImageView>{ *imageView }));
 		}
 	}
+
+	void Graphics::CreateCommandBuffers()
+	{
+		m_CommandBuffers.resize(m_Framebuffers.size());
+
+		for (uint32_t i = 0; i < m_CommandBuffers.size(); ++i)
+		{
+			m_CommandBuffers[i] = MakeScope<CommandBuffer>(*m_CommandPool);
+
+			RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i]);
+		}
+	}
+
+	void Graphics::RecordCommandBuffer(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer)
+	{
+		cmdBuff.Begin();
+
+		VkClearValue clearColor{ 0.0137254f, 0.014117f, 0.0149019f };
+		// VkClearValue depthStencilClearColor{};
+		// depthStencilClearColor.depthStencil = { 1.0f, 0 };
+
+		std::vector<VkClearValue> clearValues;
+		clearValues.emplace_back(clearColor);
+		// clearValues.emplace_back(depthStencilClearColor);
+
+		m_RenderPass->Begin(cmdBuff, framebuffer, clearValues);
+
+		const VkViewport viewports[] = { m_Viewport };
+		const VkRect2D scissors[] = { m_Scissor };
+		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
+		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
+
+		// m_Model->CmdDraw(cmdBuff);
+		// m_Model2->CmdDraw(cmdBuff);
+		// for (Scope<Drawable>& drawable : m_Drawables)
+		//{
+		//	drawable->CmdBind(cmdBuff);
+		//	drawable->CmdDraw(cmdBuff);
+		//}
+
+		m_RenderPass->End(cmdBuff);
+
+		cmdBuff.End();
+	}
+
+	void Graphics::CreateSyncObjects() {}
 }  // namespace At0::Ray
