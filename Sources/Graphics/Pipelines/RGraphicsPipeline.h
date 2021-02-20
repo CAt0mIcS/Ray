@@ -1,6 +1,7 @@
-#pragma once
+﻿#pragma once
 
 #include "RPipeline.h"
+#include "RShader.h"
 
 #include <vector>
 #include <string>
@@ -25,5 +26,6 @@ namespace At0::Ray
 
 	private:
 		std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStages;
+		Shader m_Shader;
 	};
 }  // namespace At0::Ray

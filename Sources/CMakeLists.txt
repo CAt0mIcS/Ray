@@ -45,6 +45,8 @@ set(SRC
 	"Graphics/Pipelines/RGraphicsPipeline.cpp"
 	"Graphics/Pipelines/RComputePipeline.h"
 	"Graphics/Pipelines/RComputePipeline.cpp"
+	"Graphics/Pipelines/RShader.h"
+	"Graphics/Pipelines/RShader.cpp"
 
 	"Graphics/Buffers/RBuffer.h"
 	"Graphics/Buffers/RBuffer.cpp"
@@ -110,6 +112,11 @@ set(SRC
 	"Utils/RException.cpp"
 )
 
+set(SHADERS
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/DefaultShader.vert"
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/DefaultShader.frag"
+)
+
 # ------------------------------------------------------------------
 # Find required packages
 find_package("Vulkan" REQUIRED FATAL_ERROR)
@@ -133,12 +140,13 @@ set(PRIVATE_LIB
     "${Vulkan_LIBRARIES}"
     "assimp"
     "glslang"
+    "SPIRV"
 )
 
 
 # ------------------------------------------------------------------
 # Setup
-add_library("Ray" SHARED "${SRC}")
+add_library("Ray" SHARED "${SRC}" "${SHADERS}")
 target_include_directories("Ray"
 	PUBLIC
 		"${PUBLIC_INC}"

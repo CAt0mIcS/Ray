@@ -190,8 +190,8 @@ namespace At0::Ray
 		CreateFramebuffers();
 
 		m_GraphicsPipeline = MakeScope<GraphicsPipeline>(
-			*m_RenderPass, std::vector<std::string>{ "Resources/Shaders/DefaultShader.vert.spv",
-							   "Resources/Shaders/DefaultShader.frag.spv" });
+			*m_RenderPass, std::vector<std::string>{ "Resources/Shaders/DefaultShader.vert",
+							   "Resources/Shaders/DefaultShader.frag" });
 
 		mesh = new Mesh();
 

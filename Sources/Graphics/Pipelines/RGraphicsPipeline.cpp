@@ -12,30 +12,6 @@
 
 namespace At0::Ray
 {
-	std::vector<char> ReadShader(const std::string& filepath)
-	{
-		std::ifstream reader(filepath, std::ios::binary | std::ios::ate);
-
-		size_t filesize = (size_t)reader.tellg();
-		RAY_MEXPECTS(filesize > 0 && filesize != UINT64_MAX, "Failed to open file {0}", filepath);
-		reader.seekg(std::ios::beg);
-
-		std::vector<char> code(filesize);
-		reader.read(code.data(), filesize);
-
-		return code;
-	}
-
-	VkShaderStageFlagBits GetShaderStage(const std::string& filepath)
-	{
-		if (String::EndsWith(filepath, ".vert.spv"))
-			return VK_SHADER_STAGE_VERTEX_BIT;
-		else if (String::EndsWith(filepath, ".frag.spv"))
-			return VK_SHADER_STAGE_FRAGMENT_BIT;
-
-		return VK_SHADER_STAGE_ALL;
-	}
-
 	GraphicsPipeline::GraphicsPipeline(
 		const RenderPass& renderPass, const std::vector<std::string>& shaders)
 	{
@@ -51,21 +27,18 @@ namespace At0::Ray
 
 	void GraphicsPipeline::CreateShaderProgram(const std::vector<std::string>& shaders)
 	{
+		// std::ostringstream defineBlock;
+		// for (const auto& [defineName, defineValue] : m_Defines)
+		//	defineBlock << "#define " << defineName << " " << defineValue << '\n';
+
 		for (const std::string& shader : shaders)
 		{
-			std::vector<char> code = ReadShader(shader);
+			std::optional<std::string> shaderCode = ReadFile(shader);
 
-			VkShaderModuleCreateInfo createInfo{};
-			createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-			createInfo.codeSize = (uint32_t)code.size();
-			createInfo.pCode = reinterpret_cast<uint32_t*>(code.data());
+			VkShaderStageFlagBits stageFlag = Shader::GetShaderStage(shader);
 
-			VkShaderStageFlagBits stageFlag = GetShaderStage(shader);
-			VkShaderModule shaderModule;
-
-			RAY_VK_THROW_FAILED(vkCreateShaderModule(Graphics::Get().GetDevice(), &createInfo,
-									nullptr, &shaderModule),
-				"[GraphicsPipeline] Failed to create shader module.");
+			VkShaderModule shaderModule = m_Shader.CreateShaderModule(
+				shader, *shaderCode, /*defineBlock.str()*/ "", stageFlag);
 
 			VkPipelineShaderStageCreateInfo pipelineShaderStageCreateInfo{};
 			pipelineShaderStageCreateInfo.sType =
@@ -75,6 +48,8 @@ namespace At0::Ray
 			pipelineShaderStageCreateInfo.pName = "main";
 			m_ShaderStages.emplace_back(pipelineShaderStageCreateInfo);
 		}
+
+		m_Shader.CreateReflection();
 	}
 
 	void GraphicsPipeline::CreatePipelineLayout()
