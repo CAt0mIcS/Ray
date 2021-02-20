@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RBase.h"
+#include "../../RBase.h"
 
 #include <vulkan/vulkan_core.h>
 #include <vector>
@@ -20,6 +20,9 @@ namespace At0::Ray
 		PFN_vkVoidFunction LoadFunction(const char* name);
 
 		static const std::vector<const char*>& GetValidationLayers() { return s_ValidationLayers; }
+		operator const VkInstance&() const { return m_Instance; }
+
+		bool ValidationLayersEnabled() const { return m_ValidationLayersEnabled; }
 
 	private:
 		bool HasValidationLayerSupport() const;

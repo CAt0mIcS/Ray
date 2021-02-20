@@ -77,7 +77,7 @@ namespace At0::Ray
 		UInt2 GetSize() const;
 
 		/**
-		 * Closes the window if it's still open and terminates glfw
+		 * Terminates glfw
 		 */
 		~Window();
 

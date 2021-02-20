@@ -6,20 +6,45 @@
 
 #include "Graphics/Core/RVulkanInstance.h"
 #include "Graphics/Core/RPhysicalDevice.h"
+#include "Graphics/Core/RSurface.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
 
 namespace At0::Ray
 {
-	Graphics::~Graphics() {}
+	Graphics::~Graphics()
+	{
+		m_LogicalDevice->WaitIdle();
+
+		m_LogicalDevice.reset();
+		m_Surface.reset();
+		m_PhysicalDevice.reset();
+		m_VulkanInstance.reset();
+
+		delete s_Instance;
+	}
 
 	Graphics& Graphics::Get()
 	{
-		static Graphics graphics;
-		return graphics;
+		if (!s_Instance)
+			new Graphics();
+		return *s_Instance;
 	}
 
-	Graphics::Graphics() { CreateVulkanObjects(); }
+	Graphics::Graphics()
+	{
+		if (s_Instance)
+			RAY_THROW_RUNTIME("[Graphics] Object already creaed.");
 
-	void Graphics::CreateVulkanObjects() { m_VulkanInstance = MakeScope<VulkanInstance>(); }
+		s_Instance = this;
+		CreateVulkanObjects();
+	}
+
+	void Graphics::CreateVulkanObjects()
+	{
+		m_VulkanInstance = MakeScope<VulkanInstance>();
+		m_PhysicalDevice = MakeScope<PhysicalDevice>();
+		m_Surface = MakeScope<Surface>();
+		m_LogicalDevice = MakeScope<LogicalDevice>();
+	}
 }  // namespace At0::Ray

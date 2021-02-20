@@ -97,12 +97,7 @@ namespace At0::Ray
 		SetEventCallbacks();
 	}
 
-	Window::~Window()
-	{
-		if (m_hWnd)
-			Close();
-		glfwTerminate();
-	}
+	Window::~Window() { glfwTerminate(); }
 
 	void Window::SetEventCallbacks()
 	{

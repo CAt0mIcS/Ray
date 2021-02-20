@@ -32,6 +32,8 @@ set(SRC
 	"Graphics/Core/RVulkanInstance.cpp"
 	"Graphics/Core/RPhysicalDevice.h"
 	"Graphics/Core/RPhysicalDevice.cpp"
+	"Graphics/Core/RSurface.h"
+	"Graphics/Core/RSurface.cpp"
 	"Graphics/Core/RLogicalDevice.h"
 	"Graphics/Core/RLogicalDevice.cpp"
 
