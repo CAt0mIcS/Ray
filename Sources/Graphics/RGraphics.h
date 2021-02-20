@@ -7,6 +7,7 @@
 
 #include <vulkan/vulkan_core.h>
 #include <vector>
+#include <array>
 
 
 namespace At0::Ray
@@ -58,6 +59,7 @@ namespace At0::Ray
 
 	private:
 		inline static Graphics* s_Instance = nullptr;
+		inline static constexpr uint8_t s_MaxFramesInFlight = 2;
 
 		VkViewport m_Viewport;
 		VkRect2D m_Scissor;
@@ -73,5 +75,12 @@ namespace At0::Ray
 
 		std::vector<Scope<Framebuffer>> m_Framebuffers;
 		std::vector<Scope<CommandBuffer>> m_CommandBuffers;
+
+		std::array<VkFence, s_MaxFramesInFlight> m_InFlightFences;
+		std::array<VkSemaphore, s_MaxFramesInFlight> m_ImageAvailableSemaphore;
+		std::vector<VkFence> m_ImagesInFlight;
+		std::array<VkSemaphore, s_MaxFramesInFlight> m_RenderFinishedSemaphore;
+
+		uint32_t m_CurrentFrame = 0;
 	};
 }  // namespace At0::Ray

@@ -35,6 +35,13 @@ namespace At0::Ray
 	{
 		m_LogicalDevice->WaitIdle();
 
+		for (uint32_t i = 0; i < s_MaxFramesInFlight; ++i)
+		{
+			vkDestroySemaphore(*m_LogicalDevice, m_ImageAvailableSemaphore[i], nullptr);
+			vkDestroySemaphore(*m_LogicalDevice, m_RenderFinishedSemaphore[i], nullptr);
+			vkDestroyFence(*m_LogicalDevice, m_InFlightFences[i], nullptr);
+		}
+
 		m_CommandBuffers.clear();
 
 		m_GraphicsPipeline.reset();
@@ -62,7 +69,80 @@ namespace At0::Ray
 		return *s_Instance;
 	}
 
-	void Graphics::Update(Delta dt) {}
+	void Graphics::Update(Delta dt)
+	{
+		// Wait for fence in VkQueueSubmit to become signaled
+		// which means that the command buffer finished executing
+		vkWaitForFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
+
+		// Index representing the index of the next image to raw (0-2 in this case)
+		uint32_t imageIndex;
+		VkResult result = vkAcquireNextImageKHR(GetDevice(), GetSwapchain(), UINT64_MAX,
+			m_ImageAvailableSemaphore[m_CurrentFrame],	//  Signalled by this function when an image
+														//  is acquired
+			VK_NULL_HANDLE, &imageIndex);
+
+		if (result == VK_ERROR_OUT_OF_DATE_KHR)
+		{
+			return;
+		}
+		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+			RAY_THROW_RUNTIME("[Graphics] Failed to acquire next swapchain image.");
+
+		// Update drawables
+
+		// Check if previous frame is still using this imaage (e.g. there is its fence to wait on)
+		if (m_ImagesInFlight[imageIndex] != VK_NULL_HANDLE)
+			vkWaitForFences(GetDevice(), 1, &m_ImagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
+
+		// Mark the image as now being in use by this frame
+		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
+
+		VkSubmitInfo submitInfo{};
+		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+		submitInfo.waitSemaphoreCount = 1;
+		submitInfo.pWaitSemaphores =
+			&m_ImageAvailableSemaphore[m_CurrentFrame];	 // Wait unitl image was acquired
+		submitInfo.pWaitDstStageMask = waitStages;
+		submitInfo.commandBufferCount = 1;
+
+		VkCommandBuffer commandBuffer = *m_CommandBuffers[imageIndex];
+		submitInfo.pCommandBuffers = &commandBuffer;
+		submitInfo.signalSemaphoreCount = 1;
+		submitInfo.pSignalSemaphores =
+			&m_RenderFinishedSemaphore[m_CurrentFrame];	 // Signal when rendering finished and
+														 // presentation can happen
+
+		vkResetFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
+
+		// Fence will be signaled once the command buffer finishes executing
+		RAY_VK_THROW_FAILED(vkQueueSubmit(GetDevice().GetGraphicsQueue(), 1, &submitInfo,
+								m_InFlightFences[m_CurrentFrame]),
+			"[Graphics] Failed to submit image to queue for rendering.");
+
+		VkSwapchainKHR swapChain = GetSwapchain();
+		VkPresentInfoKHR presentInfo{};
+		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+		presentInfo.waitSemaphoreCount = 1;
+		presentInfo.pWaitSemaphores = &m_RenderFinishedSemaphore[m_CurrentFrame];
+		presentInfo.swapchainCount = 1;
+		presentInfo.pSwapchains = &swapChain;
+		presentInfo.pImageIndices = &imageIndex;
+		presentInfo.pResults = nullptr;
+
+		result = vkQueuePresentKHR(GetDevice().GetPresentQueue(), &presentInfo);
+
+		if (result == VK_ERROR_OUT_OF_DATE_KHR ||
+			result == VK_SUBOPTIMAL_KHR /* || m_FramebufferResized*/)
+		{
+		}
+		else if (result != VK_SUCCESS)
+			RAY_THROW_RUNTIME("[Graphics] Failed to present swapchain image.");
+
+		m_CurrentFrame = (m_CurrentFrame + 1) % s_MaxFramesInFlight;
+	}
 
 	Graphics::Graphics()
 	{
@@ -162,11 +242,11 @@ namespace At0::Ray
 
 	void Graphics::CreateFramebuffers()
 	{
-		m_Framebuffers.reserve(GetSwapchain().GetNumberOfImages());
-		for (const Scope<ImageView>& imageView : GetSwapchain().GetImageViews())
+		m_Framebuffers.resize(GetSwapchain().GetNumberOfImages());
+		for (uint32_t i = 0; i < m_Framebuffers.size(); ++i)
 		{
-			m_Framebuffers.emplace_back(
-				MakeScope<Framebuffer>(*m_RenderPass, std::vector<VkImageView>{ *imageView }));
+			m_Framebuffers[i] = MakeScope<Framebuffer>(
+				*m_RenderPass, std::vector<VkImageView>{ *GetSwapchain().GetImageViews()[i] });
 		}
 	}
 
@@ -201,6 +281,8 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
+		vkCmdBindPipeline(cmdBuff, m_GraphicsPipeline->GetBindPoint(), *m_GraphicsPipeline);
+
 		mesh->CmdBind(cmdBuff);
 		mesh->CmdDraw(cmdBuff);
 
@@ -209,5 +291,30 @@ namespace At0::Ray
 		cmdBuff.End();
 	}
 
-	void Graphics::CreateSyncObjects() {}
+	void Graphics::CreateSyncObjects()
+	{
+		m_ImagesInFlight.resize(m_Swapchain->GetNumberOfImages(), VK_NULL_HANDLE);
+
+		VkSemaphoreCreateInfo semaphoreCreateInfo{};
+		semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+		VkFenceCreateInfo fenceCreateInfo{};
+		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+		fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+		for (uint32_t i = 0; i < s_MaxFramesInFlight; ++i)
+		{
+			RAY_VK_THROW_FAILED(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
+									&m_ImageAvailableSemaphore[i]),
+				"[Graphics] Failed to semaphore to signal when an image is avaliable.");
+
+			RAY_VK_THROW_FAILED(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
+									&m_RenderFinishedSemaphore[i]),
+				"[Graphics] Failed to semaphore to signal when an image has finished rendering.");
+
+			RAY_VK_THROW_FAILED(
+				vkCreateFence(GetDevice(), &fenceCreateInfo, nullptr, &m_InFlightFences[i]),
+				"[Graphics] Failed to create in flight fence.");
+		}
+	}
 }  // namespace At0::Ray

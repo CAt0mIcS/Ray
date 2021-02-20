@@ -1,4 +1,4 @@
-#include "Rpch.h"
+﻿#include "Rpch.h"
 #include "RSwapchain.h"
 
 #include "Devices/RWindow.h"
@@ -82,11 +82,11 @@ namespace At0::Ray
 			Graphics::Get().GetDevice(), m_Swapchain, &swapchainImageCount, m_Images.data());
 
 		// Create image views
-		m_ImageViews.reserve(m_Images.size());
+		m_ImageViews.resize(m_Images.size());
 		for (uint32_t i = 0; i < m_ImageViews.size(); ++i)
 		{
-			m_ImageViews.emplace_back(
-				MakeScope<ImageView>(m_Images[i], m_Format, VK_IMAGE_ASPECT_COLOR_BIT));
+			m_ImageViews[i] =
+				MakeScope<ImageView>(m_Images[i], m_Format, VK_IMAGE_ASPECT_COLOR_BIT);
 		}
 	}
 
