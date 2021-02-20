@@ -25,6 +25,8 @@ namespace At0::Ray
 
 	class RAY_EXPORT Graphics : NonCopyable
 	{
+		friend class Window;
+
 	public:
 		~Graphics();
 		static Graphics& Get();
@@ -56,6 +58,7 @@ namespace At0::Ray
 		void CreateCommandBuffers();
 		void RecordCommandBuffer(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer);
 		void CreateSyncObjects();
+		void OnFramebufferResized();
 
 	private:
 		inline static Graphics* s_Instance = nullptr;
@@ -82,5 +85,7 @@ namespace At0::Ray
 		std::array<VkSemaphore, s_MaxFramesInFlight> m_RenderFinishedSemaphore;
 
 		uint32_t m_CurrentFrame = 0;
+
+		bool m_FramebufferResized = false;
 	};
 }  // namespace At0::Ray

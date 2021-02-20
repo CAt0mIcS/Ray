@@ -86,6 +86,11 @@ namespace At0::Ray
 		 */
 		~Window();
 
+		/**
+		 * Sleeps the current thread until new window messages arrive
+		 */
+		void WaitForEvents() const;
+
 	private:
 		Window(uint32_t width, uint32_t height, std::string_view title);
 		void SetEventCallbacks();

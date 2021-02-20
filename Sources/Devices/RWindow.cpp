@@ -1,6 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RWindow.h"
 
+#include "Graphics/RGraphics.h"
 #include "Devices/RMouse.h"
 #include "Devices/RKeyboard.h"
 #include "Utils/RAssert.h"
@@ -84,6 +85,8 @@ namespace At0::Ray
 		glfwGetFramebufferSize(m_hWnd, (int*)&size.x, (int*)&size.y);
 		return size;
 	}
+
+	void Window::WaitForEvents() const { glfwWaitEvents(); }
 
 	Window::Window(uint32_t width, uint32_t height, std::string_view title)
 	{
@@ -198,6 +201,10 @@ namespace At0::Ray
 			{
 				// Mouse wheel left event
 			}
+		});
+
+		glfwSetFramebufferSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height) {
+			Graphics::Get().m_FramebufferResized = true;
 		});
 
 		glfwSetWindowSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height) {

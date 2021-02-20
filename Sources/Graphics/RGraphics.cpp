@@ -84,6 +84,7 @@ namespace At0::Ray
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR)
 		{
+			OnFramebufferResized();
 			return;
 		}
 		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
@@ -134,10 +135,9 @@ namespace At0::Ray
 
 		result = vkQueuePresentKHR(GetDevice().GetPresentQueue(), &presentInfo);
 
-		if (result == VK_ERROR_OUT_OF_DATE_KHR ||
-			result == VK_SUBOPTIMAL_KHR /* || m_FramebufferResized*/)
-		{
-		}
+		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR ||
+			m_FramebufferResized)
+			OnFramebufferResized();
 		else if (result != VK_SUCCESS)
 			RAY_THROW_RUNTIME("[Graphics] Failed to present swapchain image.");
 
@@ -316,5 +316,35 @@ namespace At0::Ray
 				vkCreateFence(GetDevice(), &fenceCreateInfo, nullptr, &m_InFlightFences[i]),
 				"[Graphics] Failed to create in flight fence.");
 		}
+	}
+
+	void Graphics::OnFramebufferResized()
+	{
+		// Minimized window will have framebuffer size of [0 | 0]
+		// Sleep until window is back in foreground
+		UInt2 size = Window::Get().GetFramebufferSize();
+		while (size == UInt2{ 0, 0 })
+		{
+			size = Window::Get().GetFramebufferSize();
+			Window::Get().WaitForEvents();
+		}
+
+		m_LogicalDevice->WaitIdle();
+
+		m_CommandBuffers.clear();
+		m_Framebuffers.clear();
+
+		m_RenderPass.reset();
+
+		m_Swapchain.reset();
+		m_CommandPool.reset();
+
+		m_Swapchain = MakeScope<Swapchain>();
+		m_CommandPool = MakeScope<CommandPool>();
+		CreateRenderPass();
+		UpdateViewport();
+		UpdateScissor();
+		CreateFramebuffers();
+		CreateCommandBuffers();
 	}
 }  // namespace At0::Ray
