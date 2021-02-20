@@ -54,6 +54,8 @@ set(SRC
 	"Graphics/Buffers/RUniformBuffer.cpp"
 	"Graphics/Buffers/RVertexBuffer.h"
 	"Graphics/Buffers/RVertexBuffer.cpp"
+	"Graphics/Buffers/RFramebuffer.h"
+	"Graphics/Buffers/RFramebuffer.cpp"
 
 	"Graphics/Images/RImage.h"
 	"Graphics/Images/RImage.cpp"
@@ -63,11 +65,16 @@ set(SRC
 	"Graphics/Images/RDepthImage.cpp"
 	"Graphics/Images/RImageView.h"
 	"Graphics/Images/RImageView.cpp"
+	"Graphics/Images/RTexture.h"
+	"Graphics/Images/RTexture.cpp"
 
 	"Graphics/Commands/RCommandBuffer.h"
 	"Graphics/Commands/RCommandBuffer.cpp"
 	"Graphics/Commands/RCommandPool.h"
 	"Graphics/Commands/RCommandPool.cpp"
+
+	"Graphics/RenderPass/RRenderPass.h"
+	"Graphics/RenderPass/RRenderPass.cpp"
 
 
 

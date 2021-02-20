@@ -29,7 +29,7 @@ namespace At0::Ray
 		vkFreeCommandBuffers(Graphics::Get().GetDevice(), m_CommandPool, 1, &m_CommandBuffer);
 	}
 
-	void CommandBuffer::Begin(VkCommandBufferUsageFlags usageFlags)
+	void CommandBuffer::Begin(VkCommandBufferUsageFlags usageFlags) const
 	{
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -40,7 +40,7 @@ namespace At0::Ray
 			"[CommandBuffer] Failed to begin recording.");
 	}
 
-	void CommandBuffer::End()
+	void CommandBuffer::End() const
 	{
 		RAY_VK_THROW_FAILED(
 			vkEndCommandBuffer(m_CommandBuffer), "[CommandBuffer] Failed to end recording.");

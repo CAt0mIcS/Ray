@@ -4,6 +4,7 @@
 #include "../Utils/RNonCopyable.h"
 
 #include <vulkan/vulkan_core.h>
+#include <vector>
 
 
 namespace At0::Ray
@@ -14,6 +15,8 @@ namespace At0::Ray
 	class LogicalDevice;
 	class Swapchain;
 	class CommandPool;
+	class RenderPass;
+	class Framebuffer;
 
 	class RAY_EXPORT Graphics : NonCopyable
 	{
@@ -34,6 +37,8 @@ namespace At0::Ray
 		// -------------------------------------------------------------
 		// Vulkan object creation functions
 		void CreateVulkanObjects();
+		void CreateRenderPass();
+		void CreateFramebuffers();
 
 	private:
 		inline static Graphics* s_Instance = nullptr;
@@ -44,5 +49,8 @@ namespace At0::Ray
 		Scope<LogicalDevice> m_LogicalDevice;
 		Scope<Swapchain> m_Swapchain;
 		Scope<CommandPool> m_CommandPool;
+		Scope<RenderPass> m_RenderPass;
+
+		std::vector<Scope<Framebuffer>> m_Framebuffers;
 	};
 }  // namespace At0::Ray
