@@ -64,6 +64,11 @@ set(SRC
 	"Graphics/Images/RImageView.h"
 	"Graphics/Images/RImageView.cpp"
 
+	"Graphics/Commands/RCommandBuffer.h"
+	"Graphics/Commands/RCommandBuffer.cpp"
+	"Graphics/Commands/RCommandPool.h"
+	"Graphics/Commands/RCommandPool.cpp"
+
 
 
 	# ------------------------------------------------------------------

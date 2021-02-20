@@ -13,6 +13,7 @@ namespace At0::Ray
 	class Surface;
 	class LogicalDevice;
 	class Swapchain;
+	class CommandPool;
 
 	class RAY_EXPORT Graphics : NonCopyable
 	{
@@ -25,6 +26,7 @@ namespace At0::Ray
 		const PhysicalDevice& GetPhysicalDevice() const { return *m_PhysicalDevice; }
 		const LogicalDevice& GetDevice() const { return *m_LogicalDevice; }
 		const Swapchain& GetSwapchain() const { return *m_Swapchain; }
+		const CommandPool& GetCommandPool() const { return *m_CommandPool; }
 
 	private:
 		Graphics();
@@ -41,5 +43,6 @@ namespace At0::Ray
 		Scope<Surface> m_Surface;
 		Scope<LogicalDevice> m_LogicalDevice;
 		Scope<Swapchain> m_Swapchain;
+		Scope<CommandPool> m_CommandPool;
 	};
 }  // namespace At0::Ray

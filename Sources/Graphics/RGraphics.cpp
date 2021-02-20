@@ -10,6 +10,9 @@
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Core/RSwapchain.h"
 
+#include "Graphics/Commands/RCommandPool.h"
+#include "Graphics/Commands/RCommandBuffer.h"
+
 
 namespace At0::Ray
 {
@@ -17,6 +20,7 @@ namespace At0::Ray
 	{
 		m_LogicalDevice->WaitIdle();
 
+		m_CommandPool.reset();
 		m_Swapchain.reset();
 
 		m_LogicalDevice.reset();
@@ -51,5 +55,6 @@ namespace At0::Ray
 		m_LogicalDevice = MakeScope<LogicalDevice>();
 
 		m_Swapchain = MakeScope<Swapchain>();
+		m_CommandPool = MakeScope<CommandPool>();
 	}
 }  // namespace At0::Ray
