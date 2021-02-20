@@ -8,6 +8,7 @@
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Core/RSurface.h"
 #include "Graphics/Core/RLogicalDevice.h"
+#include "Graphics/Core/RSwapchain.h"
 
 
 namespace At0::Ray
@@ -15,6 +16,8 @@ namespace At0::Ray
 	Graphics::~Graphics()
 	{
 		m_LogicalDevice->WaitIdle();
+
+		m_Swapchain.reset();
 
 		m_LogicalDevice.reset();
 		m_Surface.reset();
@@ -46,5 +49,7 @@ namespace At0::Ray
 		m_PhysicalDevice = MakeScope<PhysicalDevice>();
 		m_Surface = MakeScope<Surface>();
 		m_LogicalDevice = MakeScope<LogicalDevice>();
+
+		m_Swapchain = MakeScope<Swapchain>();
 	}
 }  // namespace At0::Ray

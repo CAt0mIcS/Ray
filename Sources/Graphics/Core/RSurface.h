@@ -1,13 +1,14 @@
 #pragma once
 
 #include "../../RBase.h"
+#include "../../Utils/RNonCopyable.h"
 
 #include <vulkan/vulkan_core.h>
 
 
 namespace At0::Ray
 {
-	class RAY_EXPORT Surface
+	class RAY_EXPORT Surface : NonCopyable
 	{
 	public:
 		Surface();

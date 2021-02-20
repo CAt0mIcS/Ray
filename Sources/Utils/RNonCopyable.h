@@ -11,8 +11,8 @@ namespace At0::Ray
 		NonCopyable(const NonCopyable&) = delete;
 		NonCopyable& operator=(const NonCopyable&) = delete;
 
-		NonCopyable(NonCopyable&&) = delete;
-		NonCopyable& operator=(NonCopyable&&) = delete;
+		NonCopyable(NonCopyable&&) = default;
+		NonCopyable& operator=(NonCopyable&&) = default;
 
 	protected:
 		NonCopyable() = default;

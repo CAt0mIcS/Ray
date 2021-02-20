@@ -36,6 +36,15 @@ set(SRC
 	"Graphics/Core/RSurface.cpp"
 	"Graphics/Core/RLogicalDevice.h"
 	"Graphics/Core/RLogicalDevice.cpp"
+	"Graphics/Core/RSwapchain.h"
+	"Graphics/Core/RSwapchain.cpp"
+
+	"Graphics/Pipelines/RPipeline.h"
+	"Graphics/Pipelines/RPipeline.cpp"
+	"Graphics/Pipelines/RGraphicsPipeline.h"
+	"Graphics/Pipelines/RGraphicsPipeline.cpp"
+	"Graphics/Pipelines/RComputePipeline.h"
+	"Graphics/Pipelines/RComputePipeline.cpp"
 
 	"Graphics/Buffers/RBuffer.h"
 	"Graphics/Buffers/RBuffer.cpp"

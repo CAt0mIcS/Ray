@@ -1,13 +1,14 @@
 #pragma once
 
 #include "../../RBase.h"
+#include "../../Utils/RNonCopyable.h"
 
 #include <vulkan/vulkan_core.h>
 
 
 namespace At0::Ray
 {
-	class ImageView
+	class ImageView : NonCopyable
 	{
 	public:
 		ImageView(VkImage image, VkFormat format,

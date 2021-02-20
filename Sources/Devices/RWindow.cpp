@@ -78,6 +78,13 @@ namespace At0::Ray
 		return size;
 	}
 
+	UInt2 Window::GetFramebufferSize() const
+	{
+		UInt2 size;
+		glfwGetFramebufferSize(m_hWnd, (int*)&size.x, (int*)&size.y);
+		return size;
+	}
+
 	Window::Window(uint32_t width, uint32_t height, std::string_view title)
 	{
 		int success = glfwInit();

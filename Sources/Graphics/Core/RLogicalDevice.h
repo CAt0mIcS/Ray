@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../RBase.h"
+#include "../../Utils/RNonCopyable.h"
 
 #include <vulkan/vulkan_core.h>
 #include <vector>
@@ -8,7 +9,7 @@
 
 namespace At0::Ray
 {
-	class RAY_EXPORT LogicalDevice
+	class RAY_EXPORT LogicalDevice : NonCopyable
 	{
 	public:
 		LogicalDevice();

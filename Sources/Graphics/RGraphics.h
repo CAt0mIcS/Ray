@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "../RBase.h"
+#include "../Utils/RNonCopyable.h"
 
 #include <vulkan/vulkan_core.h>
 
@@ -11,8 +12,9 @@ namespace At0::Ray
 	class PhysicalDevice;
 	class Surface;
 	class LogicalDevice;
+	class Swapchain;
 
-	class RAY_EXPORT Graphics
+	class RAY_EXPORT Graphics : NonCopyable
 	{
 	public:
 		~Graphics();
@@ -22,6 +24,7 @@ namespace At0::Ray
 		const Surface& GetSurface() const { return *m_Surface; }
 		const PhysicalDevice& GetPhysicalDevice() const { return *m_PhysicalDevice; }
 		const LogicalDevice& GetDevice() const { return *m_LogicalDevice; }
+		const Swapchain& GetSwapchain() const { return *m_Swapchain; }
 
 	private:
 		Graphics();
@@ -37,5 +40,6 @@ namespace At0::Ray
 		Scope<PhysicalDevice> m_PhysicalDevice;
 		Scope<Surface> m_Surface;
 		Scope<LogicalDevice> m_LogicalDevice;
+		Scope<Swapchain> m_Swapchain;
 	};
 }  // namespace At0::Ray

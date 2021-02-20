@@ -72,9 +72,14 @@ namespace At0::Ray
 			VkSurfaceKHR* surface) const;
 
 		/**
-		 * @returns the size in pixels of the window
+		 * @returns the size in screen coordinates of the window
 		 */
 		UInt2 GetSize() const;
+
+		/**
+		 * @returns The size in pixels of the window
+		 */
+		UInt2 GetFramebufferSize() const;
 
 		/**
 		 * Terminates glfw
