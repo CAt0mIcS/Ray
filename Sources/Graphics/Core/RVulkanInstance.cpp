@@ -202,7 +202,9 @@ namespace At0::Ray
 
 		if (CreateDebugUtilsMessengerEXT(m_Instance, &createInfo, nullptr, &m_DebugMessenger) !=
 			VK_SUCCESS)
+		{
 			Log::Error("[VulkanInstance] Failed to create debug messenger");
+		}
 	}
 
 	VkDebugUtilsMessengerCreateInfoEXT VulkanInstance::GetDebugMessengerCreateInfo() const

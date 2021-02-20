@@ -45,6 +45,7 @@ namespace At0::Ray
 		}
 
 		RAY_THROW_RUNTIME("[PhysicalDevice] Failed to find suitable memory type.");
+		return 0;
 	}
 
 	VkPhysicalDevice PhysicalDevice::ChoosePhysicalDevice(
@@ -54,6 +55,9 @@ namespace At0::Ray
 
 		for (VkPhysicalDevice device : devices)
 			scoreMap.emplace(ScorePhysicalDevice(device), device);
+
+		if (scoreMap.size() == 0)
+			return nullptr;
 
 		if (scoreMap.rbegin()->first > 0)
 			return scoreMap.rbegin()->second;

@@ -55,6 +55,7 @@ namespace At0::Ray
 	#define RAY_VK_THROW_NO_EXPR(msg, ...)                                                       \
 		throw ::At0::Ray::VulkanException(::At0::Ray::SerializeString(msg, __VA_ARGS__).c_str(), \
 			(uint16_t)__LINE__, __FILE__, VK_ERROR_UNKNOWN)
+
 	#define RAY_VK_THROW_FAILED(expr, msg, ...)                                                  \
 		if (VkResult RL__VKRES__RL = (expr); RL__VKRES__RL != VK_SUCCESS)                        \
 		throw ::At0::Ray::VulkanException(::At0::Ray::SerializeString(msg, __VA_ARGS__).c_str(), \
@@ -64,7 +65,16 @@ namespace At0::Ray
 		throw ::At0::Ray::RuntimeException( \
 			::At0::Ray::SerializeString(msg, __VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
 #else
-	#define RAY_VK_THROW_NO_EXPR(msg, ...)
-	#define RAY_VK_THROW_FAILED(expr, msg, ...)
-	#define RAY_THROW_RUNTIME(msg, ...)
+	#define RAY_VK_THROW_NO_EXPR(msg, ...)                                                         \
+		throw ::At0::Ray::VulkanException(::At0::Ray::SerializeString(msg, ##__VA_ARGS__).c_str(), \
+			(uint16_t)__LINE__, __FILE__, VK_ERROR_UNKNOWN)
+
+	#define RAY_VK_THROW_FAILED(expr, msg, ...)                                                    \
+		if (VkResult RL__VKRES__RL = (expr); RL__VKRES__RL != VK_SUCCESS)                          \
+		throw ::At0::Ray::VulkanException(::At0::Ray::SerializeString(msg, ##__VA_ARGS__).c_str(), \
+			(uint16_t)__LINE__, __FILE__, RL__VKRES__RL)
+
+	#define RAY_THROW_RUNTIME(msg, ...)     \
+		throw ::At0::Ray::RuntimeException( \
+			::At0::Ray::SerializeString(msg, ##__VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
 #endif

@@ -1,8 +1,9 @@
 ﻿#pragma once
 
 #include "RBaseLogger.h"
-#include <iostream>
 
+#include <iostream>
+#include <cstring>
 
 namespace At0::Ray
 {

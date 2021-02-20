@@ -2,7 +2,7 @@
 
 #ifndef NDEBUG
 
-	// clang-format off
+// clang-format off
 #include "RLogger.h"
 #include "../Utils/RSerialize.h"
 #include "../Utils/RString.h"
@@ -19,16 +19,15 @@ namespace At0::Ray
 		template<typename... Args>
 		static std::wstring AssertW(const std::string& str, Args&&... args)
 		{
-			std::wstring assertStr =
-				String::ConvertUtf16(SerializeString(str, std::forward<Args>(args)...));
+			std::string assertStr = SerializeString(str, std::forward<Args>(args)...);
 			Log::Critical("Assertion Failed with Message: {0}", assertStr);
-			return assertStr;
+			return String::ConvertUtf16(assertStr);
 		}
 
 		template<typename... Args>
 		static std::string AssertA(const std::string& str, Args&&... args)
 		{
-			std::string assertStr = String::ConvertUtf8(str, std::forward<Args>(args)...);
+			std::string assertStr = SerializeString(str, std::forward<Args>(args)...);
 			Log::Critical("Assertion Failed with Message: {0}", assertStr);
 			return assertStr;
 		}

@@ -6,6 +6,8 @@
 	#else
 		#define RAY_EXPORT __declspec(dllimport)
 	#endif
+#else
+	#define RAY_EXPORT
 #endif
 
 
