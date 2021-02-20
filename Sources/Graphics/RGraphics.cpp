@@ -4,6 +4,10 @@
 #include "Utils/RLogger.h"
 #include "Utils/RException.h"
 
+#include "Graphics/Core/RVulkanInstance.h"
+#include "Graphics/Core/RPhysicalDevice.h"
+#include "Graphics/Core/RLogicalDevice.h"
+
 
 namespace At0::Ray
 {
@@ -15,5 +19,7 @@ namespace At0::Ray
 		return graphics;
 	}
 
-	Graphics::Graphics() {}
+	Graphics::Graphics() { CreateVulkanObjects(); }
+
+	void Graphics::CreateVulkanObjects() { m_VulkanInstance = MakeScope<VulkanInstance>(); }
 }  // namespace At0::Ray

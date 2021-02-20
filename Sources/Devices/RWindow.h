@@ -7,10 +7,9 @@
 #include <utility>
 #include <stdint.h>
 
+#include <vulkan/vulkan_core.h>
+
 struct GLFWwindow;
-struct VkInstance_T;
-struct VkAllocationCallbacks;
-struct VkSurfaceKHR_T;
 
 namespace At0::Ray
 {
@@ -64,13 +63,13 @@ namespace At0::Ray
 		 * Querys required extensions for Vulkan
 		 * @returns All extensions that the Vulkan instance needs
 		 */
-		std::pair<const char**, uint32_t> GetInstanceExtensions() const;
+		static std::pair<const char**, uint32_t> GetInstanceExtensions();
 
 		/**
 		 * Creates the surface to render to
 		 */
-		void CreateSurface(VkInstance_T* instance, const VkAllocationCallbacks* allocator,
-			VkSurfaceKHR_T** surface) const;
+		void CreateSurface(VkInstance instance, const VkAllocationCallbacks* allocator,
+			VkSurfaceKHR* surface) const;
 
 		/**
 		 * @returns the size in pixels of the window

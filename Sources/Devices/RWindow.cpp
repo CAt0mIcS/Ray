@@ -57,15 +57,15 @@ namespace At0::Ray
 		return !glfwWindowShouldClose(m_hWnd);
 	}
 
-	std::pair<const char**, uint32_t> Window::GetInstanceExtensions() const
+	std::pair<const char**, uint32_t> Window::GetInstanceExtensions()
 	{
 		uint32_t count;
 		const char** extensions = glfwGetRequiredInstanceExtensions(&count);
 		return std::make_pair(extensions, count);
 	}
 
-	void Window::CreateSurface(VkInstance_T* instance, const VkAllocationCallbacks* allocator,
-		VkSurfaceKHR_T** surface) const
+	void Window::CreateSurface(
+		VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) const
 	{
 		RAY_VK_THROW_FAILED(glfwCreateWindowSurface(instance, m_hWnd, allocator, surface),
 			"[Window] GLFW failed to create the window surface.");

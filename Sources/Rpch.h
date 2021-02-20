@@ -3,6 +3,7 @@
 #include "RBase.h"
 
 #include <mutex>
+#include <cstring>
 #include <iostream>
 #include <algorithm>
 #include <vector>
