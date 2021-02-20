@@ -37,6 +37,24 @@ set(SRC
 	"Graphics/Core/RLogicalDevice.h"
 	"Graphics/Core/RLogicalDevice.cpp"
 
+	"Graphics/Buffers/RBuffer.h"
+	"Graphics/Buffers/RBuffer.cpp"
+	"Graphics/Buffers/RIndexBuffer.h"
+	"Graphics/Buffers/RIndexBuffer.cpp"
+	"Graphics/Buffers/RUniformBuffer.h"
+	"Graphics/Buffers/RUniformBuffer.cpp"
+	"Graphics/Buffers/RVertexBuffer.h"
+	"Graphics/Buffers/RVertexBuffer.cpp"
+
+	"Graphics/Images/RImage.h"
+	"Graphics/Images/RImage.cpp"
+	"Graphics/Images/RImage2D.h"
+	"Graphics/Images/RImage2D.cpp"
+	"Graphics/Images/RDepthImage.h"
+	"Graphics/Images/RDepthImage.cpp"
+	"Graphics/Images/RImageView.h"
+	"Graphics/Images/RImageView.cpp"
+
 
 
 	# ------------------------------------------------------------------
