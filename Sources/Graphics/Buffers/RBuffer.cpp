@@ -38,11 +38,7 @@ namespace At0::Ray
 
 	Buffer::Buffer(VkDeviceSize size) : m_Size(size) {}
 
-	Buffer::~Buffer()
-	{
-		vkDestroyBuffer(Graphics::Get().GetDevice(), m_Buffer, nullptr);
-		vkFreeMemory(Graphics::Get().GetDevice(), m_BufferMemory, nullptr);
-	}
+	Buffer::~Buffer() { Destroy(); }
 
 	void Buffer::MapMemory(void** data) const
 	{
@@ -51,14 +47,14 @@ namespace At0::Ray
 
 	void Buffer::UnmapMemory() const { vkUnmapMemory(Graphics::Get().GetDevice(), m_BufferMemory); }
 
-	void Buffer::Update(const void* data)
+	void Buffer::Update(const void* data, uint32_t size, uint32_t offset)
 	{
 		if (!data)
 			return;
 
 		void* mapped;
 		MapMemory(&mapped);
-		memcpy(mapped, data, m_Size);
+		memcpy((char*)mapped + offset, data, size);
 
 		if (!m_IsHostCoherent)
 			FlushMemory();
@@ -139,5 +135,11 @@ namespace At0::Ray
 		vkQueueSubmit(
 			Graphics::Get().GetDevice().GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
 		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+	}
+
+	void Buffer::Destroy()
+	{
+		vkDestroyBuffer(Graphics::Get().GetDevice(), m_Buffer, nullptr);
+		vkFreeMemory(Graphics::Get().GetDevice(), m_BufferMemory, nullptr);
 	}
 }  // namespace At0::Ray

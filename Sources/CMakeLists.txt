@@ -61,6 +61,10 @@ set(SRC
 	"Graphics/Buffers/RVertexBuffer.cpp"
 	"Graphics/Buffers/RFramebuffer.h"
 	"Graphics/Buffers/RFramebuffer.cpp"
+	"Graphics/Buffers/RUniformBufferSynchronizer.h"
+	"Graphics/Buffers/RUniformBufferSynchronizer.cpp"
+	"Graphics/Buffers/RDynamicBuffer.h"
+	"Graphics/Buffers/RDynamicBuffer.cpp"
 
 	"Graphics/Images/RImage.h"
 	"Graphics/Images/RImage.cpp"

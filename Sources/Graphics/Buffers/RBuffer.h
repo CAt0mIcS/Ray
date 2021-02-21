@@ -18,7 +18,7 @@ namespace At0::Ray
 
 		void MapMemory(void** data) const;
 		void UnmapMemory() const;
-		void Update(const void* data);
+		void Update(const void* data, uint32_t size, uint32_t offset);
 		void FlushMemory();
 
 		static void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
@@ -32,6 +32,8 @@ namespace At0::Ray
 		VkDeviceMemory m_BufferMemory;
 
 		VkDeviceSize m_Size = 0;
+
+		void Destroy();
 
 	private:
 		bool m_IsHostCoherent;
