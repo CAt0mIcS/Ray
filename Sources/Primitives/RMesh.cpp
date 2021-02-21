@@ -10,6 +10,7 @@
 #include "Core/RVertex.h"
 
 #include "Graphics/Pipelines/RUniformAccess.h"
+#include "Devices/RWindow.h"
 
 
 namespace At0::Ray
@@ -32,10 +33,15 @@ namespace At0::Ray
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
 		indexBuffer = MakeScope<IndexBuffer>(indices);
 
+		UInt2 size = Window::Get().GetSize();
+
 		uniformAccess = MakeScope<UniformAccess>(*graphicsPipeline);
 		Matrix translation = Matrix::Translation(0.0f, 2.0f, 0.0f);
 		uniformAccess->Resolve(Shader::Stage::Vertex, "model", "Transforms") = translation;
-		uniformAccess->Resolve(Shader::Stage::Vertex, "proj", "Transforms") = translation;
+		uniformAccess->Resolve(Shader::Stage::Vertex, "proj", "Transforms") =
+			Matrix::Perspective(60.0f, (float)size.x / (float)size.y, 0.1f, 256.0f);
+		uniformAccess->Resolve(Shader::Stage::Vertex, "view", "Transforms") =
+			Matrix::LookAt({ 2.0f, 2.0f, 2.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f });
 	}
 
 	Mesh::~Mesh() {}

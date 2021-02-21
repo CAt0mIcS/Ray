@@ -29,25 +29,45 @@ namespace At0::Ray
 		Matrix(glm::mat4 mat) : m_Matrix(std::move(mat)) {}
 		Matrix() : m_Matrix(glm::identity<glm::mat4>()) {}
 
-		static glm::mat4 RotationRollPitchYaw(float pitch, float roll, float yaw);
-		static glm::mat4 RotationRollPitchYaw(const Float3& vec);
-
-		static glm::mat4 Translation(const Float3& translation)
+		static Matrix Perspective(float foV, float aspectRatio, float nearZ, float farZ)
 		{
-			return glm::translate(glm::mat4(1.0f), translation);
+			glm::mat4 matrix = glm::perspective(glm::radians(foV), aspectRatio, nearZ, farZ);
+			return matrix;
 		}
 
-		static glm::mat4 Translation(float x, float y, float z) { return Translation({ x, y, z }); }
-
-		static glm::mat4 Scale(const Float3& scaling)
+		static Matrix LookAt(
+			const Float3& eyePosition, const Float3& center, const Float3& upDirection)
 		{
-			return glm::scale(glm::mat4(1.0f), scaling);
+			glm::mat4 matrix = glm::lookAt(eyePosition, center, upDirection);
+			return matrix;
 		}
 
-		static glm::mat4 Scale(float x, float y, float z) { return Scale({ x, y, z }); }
+		static Matrix RotationRollPitchYaw(float pitch, float roll, float yaw);
+		static Matrix RotationRollPitchYaw(const Float3& vec);
+
+		static Matrix Translation(const Float3& translation)
+		{
+			glm::mat4 matrix = glm::translate(glm::mat4(1.0f), translation);
+			FlipY(matrix);
+			return matrix;
+		}
+
+		static Matrix Translation(float x, float y, float z) { return Translation({ x, y, z }); }
+
+		static Matrix Scale(const Float3& scaling)
+		{
+			glm::mat4 scale = glm::scale(glm::mat4(1.0f), scaling);
+			FlipY(scale);
+			return scale;
+		}
+
+		static Matrix Scale(float x, float y, float z) { return Scale({ x, y, z }); }
 
 		operator glm::mat4 &() { return m_Matrix; }
 		operator const glm::mat4 &() const { return m_Matrix; }
+
+	private:
+		static void FlipY(glm::mat4& matrix) { matrix[1][1] *= -1.0f; }
 
 	private:
 		glm::mat4 m_Matrix;
