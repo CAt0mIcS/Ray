@@ -11,6 +11,7 @@ set(SRC
 	"Core/RTime.cpp"
 	"Core/RMath.h"
 	"Core/RKeyCodes.h"
+	"Core/RVertex.h"
 	
 
 	# ------------------------------------------------------------------
