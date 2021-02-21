@@ -92,13 +92,10 @@ namespace At0::Ray
 		uint32_t GetOffsetInVertex(VkFormat format) const
 		{
 			uint32_t offset = 0;
-			for (auto it = m_Elements.begin(); it->GetFormat() != format && it != m_Elements.end();
-				 ++it)
-			{
-				offset += SizeOf(it->GetFormat());
-			}
+			for (const Element& elem : m_Elements)
+				offset += SizeOf(elem.GetFormat());
 
-			return offset;
+			return offset - SizeOf(m_Elements[0].GetFormat());
 		}
 
 		template<typename... Args>
@@ -186,8 +183,8 @@ namespace At0::Ray
 		template<typename T>
 		void Insert(uint32_t prevSize, int run, T&& arg)
 		{
-			uint32_t elemOffset = m_Layout.GetOffsetInVertex(m_Layout.GetElement(run).GetFormat());
-			memcpy(m_Data.data() + prevSize + elemOffset, &arg, sizeof(arg));
+			uint32_t offset = prevSize + m_Layout.GetElement(run).GetOffset();
+			memcpy(m_Data.data() + offset, &arg, sizeof(arg));
 		}
 
 	private:
