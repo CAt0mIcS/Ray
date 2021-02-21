@@ -164,11 +164,12 @@ target_precompile_headers("Ray" PRIVATE "Rpch.h")
 
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("Ray" "")
-SetWorkingDirectory("Ray" "")
+SetWorkingDirectoryPlane("Ray" "${CMAKE_SOURCE_DIR}")
 
 
 # ------------------------------------------------------------------
 # Custom commands
+if(UNIX)
 add_custom_command(TARGET "Ray" PRE_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
 	"${CMAKE_SOURCE_DIR}/Resources/"
@@ -176,6 +177,7 @@ add_custom_command(TARGET "Ray" PRE_BUILD
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release/Resources>"
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/Resources>"
 )
+endif()
 
 if(WIN32)
 add_custom_command(TARGET "Ray" POST_BUILD 

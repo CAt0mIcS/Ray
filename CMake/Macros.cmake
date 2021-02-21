@@ -61,3 +61,9 @@ function(SetWorkingDirectory target dir)
         "${target}" PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin/$(Configuration)"
     )
 endfunction()
+
+function(SetWorkingDirectoryPlane target dir)
+    set_target_properties(
+        "${target}" PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${dir}"
+    )
+endfunction()

@@ -92,7 +92,7 @@ namespace At0::Ray
 
 		// Update drawables
 
-		// Check if previous frame is still using this imaage (e.g. there is its fence to wait on)
+		// Check if previous frame is still using this image (e.g. there is its fence to wait on)
 		if (m_ImagesInFlight[imageIndex] != VK_NULL_HANDLE)
 			vkWaitForFences(GetDevice(), 1, &m_ImagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
 

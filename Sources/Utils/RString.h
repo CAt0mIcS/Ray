@@ -89,5 +89,13 @@ namespace At0::Ray
 		 * @returns If a string contains a token
 		 */
 		static bool Contains(std::string_view str, std::string_view token);
+
+		/**
+		 * Splits a string at token. The token will not be included in the result strings
+		 * @param str The string
+		 * @param sep The token at which the string will be split
+		 * @returns The different parts of a string
+		 */
+		static std::vector<std::string> Split(std::string str, char sep);
 	};
 }  // namespace At0::Ray

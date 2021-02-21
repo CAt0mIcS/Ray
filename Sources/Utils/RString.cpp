@@ -238,4 +238,15 @@ namespace At0::Ray
 		return str.find(token) != std::string::npos;
 	}
 
+	std::vector<std::string> String::Split(std::string str, char sep)
+	{
+		std::vector<std::string> tokens;
+		std::string token;
+		std::istringstream tokenStream(str.data());
+
+		while (std::getline(tokenStream, token, sep))
+			tokens.emplace_back(token);
+		return tokens;
+	}
+
 }  // namespace At0::Ray

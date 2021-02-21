@@ -33,7 +33,10 @@ namespace At0::Ray
 
 		for (const std::string& shader : shaders)
 		{
+			auto path = std::filesystem::absolute(shader);
 			std::optional<std::string> shaderCode = ReadFile(shader);
+			if (!shaderCode)
+				RAY_THROW_RUNTIME("[Shader] Could not find file {0}", shader);
 
 			VkShaderStageFlagBits stageFlag = Shader::GetShaderStage(shader);
 
@@ -74,18 +77,21 @@ namespace At0::Ray
 		bindingDesc.stride = sizeof(Float3);
 		bindingDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-		VkVertexInputAttributeDescription attribDesc{};
-		attribDesc.location = 0;
-		attribDesc.binding = 0;
-		attribDesc.format = VK_FORMAT_R32G32B32_SFLOAT;
-		attribDesc.offset = 0;
+		VkVertexInputAttributeDescription attribDescPos{};
+		attribDescPos.location = 0;
+		attribDescPos.binding = 0;
+		attribDescPos.format = VK_FORMAT_R32G32B32_SFLOAT;
+		attribDescPos.offset = 0;
+
+
+		VkVertexInputAttributeDescription descs[] = { attribDescPos };
 
 		VkPipelineVertexInputStateCreateInfo vertexInput{};
 		vertexInput.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 		vertexInput.vertexBindingDescriptionCount = 1;
 		vertexInput.pVertexBindingDescriptions = &bindingDesc;
 		vertexInput.vertexAttributeDescriptionCount = 1;
-		vertexInput.pVertexAttributeDescriptions = &attribDesc;
+		vertexInput.pVertexAttributeDescriptions = descs;
 
 
 		// ---------------------------------------------------------------------------------------

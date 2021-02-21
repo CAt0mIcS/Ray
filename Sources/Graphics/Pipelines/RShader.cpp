@@ -4,6 +4,7 @@
 #include "Utils/RException.h"
 #include "Utils/RAssert.h"
 #include "Utils/RLogger.h"
+#include "Utils/RString.h"
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
@@ -69,7 +70,7 @@ namespace At0::Ray
 		}
 	}
 
-	VkFormat Shader::GlTypToVkFormat(int32_t type)
+	VkFormat Shader::GlTypeToVkFormat(int32_t type)
 	{
 		switch (type)
 		{
@@ -257,14 +258,17 @@ namespace At0::Ray
 
 		for (int32_t i = program.getNumLiveUniformBlocks() - 1; i >= 0; --i)
 		{
+			LoadUniformBlock(program, moduleFlag, i);
 		}
 
 		for (int32_t i = 0; i < program.getNumLiveUniformVariables(); ++i)
 		{
+			LoadUniform(program, moduleFlag, i);
 		}
 
 		for (int32_t i = 0; i < program.getNumLiveAttributes(); ++i)
 		{
+			LoadAttribute(program, moduleFlag, i);
 		}
 
 		glslang::SpvOptions spvOptions;
@@ -333,4 +337,108 @@ namespace At0::Ray
 	}
 
 	void Shader::CreateReflection() {}
+
+	std::vector<VkVertexInputAttributeDescription>
+		Shader::GetVertexInputAttributeDescriptions() const
+	{
+		std::vector<VkVertexInputAttributeDescription> vertexInputs;
+
+		for (const auto& [stageFlag, shaderData] : m_ShaderData)
+		{
+			for (const auto& [attribName, attribData] : shaderData.attributes.m_Attributes)
+			{
+				VkVertexInputAttributeDescription vertexInput;
+				vertexInput.location = attribData.location;
+				vertexInput.binding = attribData.binding;
+				vertexInput.format = attribData.format;
+				vertexInput.offset = 0;
+
+				vertexInputs.emplace_back(vertexInput);
+			}
+		}
+
+		return vertexInputs;
+	}
+
+	VkVertexInputBindingDescription Shader::GetBindingDescription(uint32_t binding) const
+	{
+		uint32_t stride = 0;
+
+
+		VkVertexInputBindingDescription bindingDesc;
+		bindingDesc.binding = binding;
+		bindingDesc.stride = stride;
+		bindingDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		return bindingDesc;
+	}
+
+	void Shader::LoadUniform(
+		const glslang::TProgram& program, VkShaderStageFlags stageFlag, int32_t i)
+	{
+		const glslang::TObjectReflection& uniform = program.getUniform(i);
+	}
+
+	void Shader::LoadUniformBlock(
+		const glslang::TProgram& program, VkShaderStageFlags stageFlag, int32_t i)
+	{
+		const glslang::TObjectReflection& uniformBlock = program.getUniformBlock(i);
+	}
+
+	void Shader::LoadAttribute(
+		const glslang::TProgram& program, VkShaderStageFlags stageFlag, int32_t i)
+	{
+		const glslang::TObjectReflection& attribute = program.getPipeInput(i);
+
+		const glslang::TQualifier& qualifier = attribute.getType()->getQualifier();
+
+		Attributes::AttributeData data;
+		data.location = qualifier.layoutLocation;
+		data.binding = attribute.getBinding();
+		data.size = attribute.size;
+		data.format = GlTypeToVkFormat(attribute.glDefineType);
+
+		m_ShaderData[stageFlag].attributes.Emplace(attribute.name, data);
+	}
+
+	int32_t Shader::ComputeSize(const glslang::TType* ttype)
+	{
+		int32_t components = 0;
+
+		if (ttype->getBasicType() == glslang::EbtStruct ||
+			ttype->getBasicType() == glslang::EbtBlock)
+		{
+			for (const auto& tl : *ttype->getStruct())
+				components += ComputeSize(tl.type);
+		}
+		else if (ttype->getMatrixCols() != 0)
+			components = ttype->getMatrixCols() * ttype->getMatrixRows();
+		else
+			components = ttype->getVectorSize();
+
+		if (ttype->getArraySizes())
+		{
+			int32_t arraySize = 1;
+
+			for (int32_t d = 0; d < ttype->getArraySizes()->getNumDims(); ++d)
+			{
+				// This only makes sense in paths that have a known array size.
+				if (auto dimSize = ttype->getArraySizes()->getDimSize(d);
+					dimSize != glslang::UnsizedArraySize)
+					arraySize *= dimSize;
+			}
+
+			components *= arraySize;
+		}
+
+		return sizeof(float) * components;
+	}
+
+
+	// ------------------------------------------------------------
+	// Attributes
+	void Shader::Attributes::Emplace(std::string_view attributeName, const AttributeData& data)
+	{
+		m_Attributes[attributeName.data()] = data;
+	}
 }  // namespace At0::Ray
