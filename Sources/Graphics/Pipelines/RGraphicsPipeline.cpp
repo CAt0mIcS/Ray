@@ -72,26 +72,18 @@ namespace At0::Ray
 
 	void GraphicsPipeline::CreatePipeline(const RenderPass& renderPass)
 	{
-		VkVertexInputBindingDescription bindingDesc{};
-		bindingDesc.binding = 0;
-		bindingDesc.stride = sizeof(Float3);
-		bindingDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+		std::vector<VkVertexInputBindingDescription> bindingDescs =
+			m_Shader.GetVertexInputBindingDescriptions();
 
-		VkVertexInputAttributeDescription attribDescPos{};
-		attribDescPos.location = 0;
-		attribDescPos.binding = 0;
-		attribDescPos.format = VK_FORMAT_R32G32B32_SFLOAT;
-		attribDescPos.offset = 0;
-
-
-		VkVertexInputAttributeDescription descs[] = { attribDescPos };
+		std::vector<VkVertexInputAttributeDescription> attribDescs =
+			m_Shader.GetVertexInputAttributeDescriptions();
 
 		VkPipelineVertexInputStateCreateInfo vertexInput{};
 		vertexInput.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vertexInput.vertexBindingDescriptionCount = 1;
-		vertexInput.pVertexBindingDescriptions = &bindingDesc;
-		vertexInput.vertexAttributeDescriptionCount = 1;
-		vertexInput.pVertexAttributeDescriptions = descs;
+		vertexInput.vertexBindingDescriptionCount = (uint32_t)bindingDescs.size();
+		vertexInput.pVertexBindingDescriptions = bindingDescs.data();
+		vertexInput.vertexAttributeDescriptionCount = (uint32_t)attribDescs.size();
+		vertexInput.pVertexAttributeDescriptions = attribDescs.data();
 
 
 		// ---------------------------------------------------------------------------------------

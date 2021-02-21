@@ -341,36 +341,13 @@ namespace At0::Ray
 	std::vector<VkVertexInputAttributeDescription>
 		Shader::GetVertexInputAttributeDescriptions() const
 	{
-		std::vector<VkVertexInputAttributeDescription> vertexInputs;
-
-		for (const auto& [stageFlag, shaderData] : m_ShaderData)
-		{
-			for (const auto& [attribName, attribData] : shaderData.attributes.m_Attributes)
-			{
-				VkVertexInputAttributeDescription vertexInput;
-				vertexInput.location = attribData.location;
-				vertexInput.binding = attribData.binding;
-				vertexInput.format = attribData.format;
-				vertexInput.offset = 0;
-
-				vertexInputs.emplace_back(vertexInput);
-			}
-		}
-
-		return vertexInputs;
+		return m_VertexLayout.GetVertexInputAttributeDescriptions();
 	}
 
-	VkVertexInputBindingDescription Shader::GetBindingDescription(uint32_t binding) const
+	std::vector<VkVertexInputBindingDescription> Shader::GetVertexInputBindingDescriptions(
+		uint32_t binding) const
 	{
-		uint32_t stride = 0;
-
-
-		VkVertexInputBindingDescription bindingDesc;
-		bindingDesc.binding = binding;
-		bindingDesc.stride = stride;
-		bindingDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-
-		return bindingDesc;
+		return m_VertexLayout.GetVertexInputBindingDescriptions(binding);
 	}
 
 	void Shader::LoadUniform(
@@ -383,6 +360,17 @@ namespace At0::Ray
 		const glslang::TProgram& program, VkShaderStageFlags stageFlag, int32_t i)
 	{
 		const glslang::TObjectReflection& uniformBlock = program.getUniformBlock(i);
+	}
+
+	static VertexLayout::ElementType GetVertexType(VkFormat format)
+	{
+		switch (format)
+		{
+		case VK_FORMAT_R32G32_SFLOAT: return VertexLayout::Position2D;
+		case VK_FORMAT_R32G32B32_SFLOAT: return VertexLayout::Position3D;
+		}
+
+		RAY_ASSERT(false, "[Shader] VkFormat {0} not supported.", (uint32_t)format);
 	}
 
 	void Shader::LoadAttribute(
@@ -399,6 +387,8 @@ namespace At0::Ray
 		data.format = GlTypeToVkFormat(attribute.glDefineType);
 
 		m_ShaderData[stageFlag].attributes.Emplace(attribute.name, data);
+
+		m_VertexLayout.Append(GetVertexType(data.format));
 	}
 
 	int32_t Shader::ComputeSize(const glslang::TType* ttype)

@@ -107,6 +107,60 @@ namespace At0::Ray
 			(m_Elements.emplace_back(args, Size()), ...);
 		}
 
+		VkFormat GetFormat(ElementType type) const
+		{
+			switch (type)
+			{
+			case Position2D: return VK_FORMAT_R32G32_SFLOAT;
+			case Position3D: return VK_FORMAT_R32G32B32_SFLOAT;
+			// case Texture2D: return VK_FORMAT_R32G32_SFLOAT;
+			// case Normal: return VK_FORMAT_R32G32B32_SFLOAT;
+			// case Tangent: return ;
+			// case Bitangent: return ;
+			case Float3Color: return VK_FORMAT_R32G32B32_SFLOAT;
+			case Float4Color:
+				return VK_FORMAT_R32G32B32A32_SFLOAT;
+				// case Count: return VK_FORMAT_UNDEFINED;
+			}
+
+			RAY_ASSERT(false, "[Vertex] Type {0} is invalid", (uint32_t)type);
+			return VK_FORMAT_UNDEFINED;
+		}
+
+		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributeDescriptions(
+			std::vector<uint32_t> locations = {}, uint32_t binding = 0) const
+		{
+			std::vector<VkVertexInputAttributeDescription> attributeDescs{};
+			attributeDescs.resize(m_Elements.size());
+
+			if (locations.empty())
+			{
+				for (uint32_t i = 0; i < attributeDescs.size(); ++i)
+					locations.emplace_back(i);
+			}
+
+			for (uint32_t i = 0; i < m_Elements.size(); ++i)
+			{
+				attributeDescs[i].binding = binding;
+				attributeDescs[i].location = locations[i];
+				attributeDescs[i].format = GetFormat(m_Elements[i].GetType());
+				attributeDescs[i].offset = m_Elements[i].GetOffset();
+			}
+
+			return attributeDescs;
+		}
+
+		std::vector<VkVertexInputBindingDescription> GetVertexInputBindingDescriptions(
+			uint32_t binding) const
+		{
+			VkVertexInputBindingDescription bindingDescription{};
+			bindingDescription.binding = binding;
+			bindingDescription.stride = Size();
+			bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+			return { bindingDescription };
+		}
+
 	private:
 		// Specifies all the elements in a vertex
 		std::vector<Element> m_Elements;

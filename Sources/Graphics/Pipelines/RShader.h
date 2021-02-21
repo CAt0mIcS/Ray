@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "../../RBase.h"
+#include "../../Core/RVertex.h"
 
 #include <vulkan/vulkan_core.h>
 
@@ -74,7 +75,8 @@ namespace At0::Ray
 		void CreateReflection();
 
 		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributeDescriptions() const;
-		VkVertexInputBindingDescription GetBindingDescription(uint32_t binding = 0) const;
+		std::vector<VkVertexInputBindingDescription> GetVertexInputBindingDescriptions(
+			uint32_t binding = 0) const;
 
 	private:
 		void LoadUniform(const glslang::TProgram& program, VkShaderStageFlags stageFlag, int32_t i);
@@ -93,5 +95,6 @@ namespace At0::Ray
 		};
 
 		std::unordered_map<VkShaderStageFlags, ShaderData> m_ShaderData;
+		VertexLayout m_VertexLayout;
 	};
 }  // namespace At0::Ray
