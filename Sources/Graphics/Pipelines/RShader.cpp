@@ -258,17 +258,17 @@ namespace At0::Ray
 
 		for (int32_t i = program.getNumLiveUniformBlocks() - 1; i >= 0; --i)
 		{
-			LoadUniformBlock(program, moduleFlag, i);
+			LoadUniformBlock(program, ToShaderStage(moduleFlag), i);
 		}
 
 		for (int32_t i = 0; i < program.getNumLiveUniformVariables(); ++i)
 		{
-			LoadUniform(program, moduleFlag, i);
+			LoadUniform(program, ToShaderStage(moduleFlag), i);
 		}
 
 		for (int32_t i = 0; i < program.getNumLiveAttributes(); ++i)
 		{
-			LoadAttribute(program, moduleFlag, i);
+			LoadAttribute(program, ToShaderStage(moduleFlag), i);
 		}
 
 		glslang::SpvOptions spvOptions;
@@ -350,20 +350,55 @@ namespace At0::Ray
 		return m_VertexLayout.GetVertexInputBindingDescriptions(binding);
 	}
 
-	void Shader::LoadUniform(
-		const glslang::TProgram& program, VkShaderStageFlags stageFlag, int32_t i)
+	Shader::Stage Shader::ToShaderStage(VkShaderStageFlags stageFlags)
+	{
+		switch (stageFlags)
+		{
+		case VK_SHADER_STAGE_VERTEX_BIT: return Stage::Vertex;
+		case VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT: return Stage::TesselationControl;
+		case VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT: return Stage::TesselationEvaluation;
+		case VK_SHADER_STAGE_GEOMETRY_BIT: return Stage::Geometry;
+		case VK_SHADER_STAGE_FRAGMENT_BIT: return Stage::Fragment;
+		case VK_SHADER_STAGE_COMPUTE_BIT: return Stage::Compute;
+		}
+
+		RAY_ASSERT(false, "[Shader] Vulkan shader stage {0} is invalid.", (uint32_t)stageFlags);
+		return Stage::Vertex;
+	}
+
+	void Shader::LoadUniform(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i)
 	{
 		const glslang::TObjectReflection& uniform = program.getUniform(i);
+
+		// -1 means that it's in a block
+		if (uniform.getBinding() == -1)
+		{
+			Shader::Uniforms::UniformData data{};
+
+			// Insert into the already existing uniform block
+			auto strings = String::Split(uniform.name, '.');
+			m_ShaderData[stageFlag].uniformBlocks.m_UniformBlocks[strings[0]].uniforms.Emplace(
+				strings[1], data);
+		}
+		else
+		{
+			Shader::Uniforms::UniformData data{};
+
+			m_ShaderData[stageFlag].uniforms.Emplace(uniform.name, data);
+		}
 	}
 
 	void Shader::LoadUniformBlock(
-		const glslang::TProgram& program, VkShaderStageFlags stageFlag, int32_t i)
+		const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i)
 	{
 		const glslang::TObjectReflection& uniformBlock = program.getUniformBlock(i);
+
+		UniformBlocks::UniformBlockData data{};
+
+		m_ShaderData[stageFlag].uniformBlocks.Emplace(uniformBlock.name, data);
 	}
 
-	void Shader::LoadAttribute(
-		const glslang::TProgram& program, VkShaderStageFlags stageFlag, int32_t i)
+	void Shader::LoadAttribute(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i)
 	{
 		const glslang::TObjectReflection& attribute = program.getPipeInput(i);
 
@@ -419,5 +454,22 @@ namespace At0::Ray
 	void Shader::Attributes::Emplace(std::string_view attributeName, const AttributeData& data)
 	{
 		m_Attributes[attributeName.data()] = data;
+	}
+
+
+	// ------------------------------------------------------------
+	// Uniforms
+	void Shader::Uniforms::Emplace(std::string_view uniformName, const UniformData& data)
+	{
+		m_Uniforms[uniformName.data()] = data;
+	}
+
+
+	// ------------------------------------------------------------
+	// Uniform Blocks
+	void Shader::UniformBlocks::Emplace(
+		std::string_view uniformBlockName, const UniformBlockData& data)
+	{
+		m_UniformBlocks[uniformBlockName.data()] = data;
 	}
 }  // namespace At0::Ray

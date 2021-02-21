@@ -6,9 +6,17 @@ layout(location = 1) in vec3 inColor;
 
 layout(location = 0) out vec3 outColor;
 
+layout(binding = 0) uniform Transforms
+{
+	mat4 model;
+	mat4 view;
+	mat4 proj;
+} ubo;
+
+
 
 void main()
 {
-	gl_Position = vec4(inPos, 1.0f);
+	gl_Position = ubo.proj * ubo.view * ubo.model * vec4(inPos, 1.0f);
 	outColor = inColor;
 }
