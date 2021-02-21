@@ -102,6 +102,36 @@ namespace At0::Ray
 		}
 	}
 
+	uint32_t SizeOfGlType(int32_t glType)
+	{
+		switch (glType)
+		{
+		case 0x1406:  // GL_FLOAT
+		case 0x1404:  // GL_INT
+		case 0x1405:  // GL_UNSIGNED_INT
+			return 4;
+		case 0x8B50:  // GL_FLOAT_VEC2
+		case 0x8B53:  // GL_INT_VEC2
+			return 2 * 4;
+		case 0x8B51:  // GL_FLOAT_VEC3
+		case 0x8B54:  // GL_INT_VEC3
+			return 3 * 4;
+		case 0x8DC6:  // GL_UNSIGNED_INT_VEC2
+			return 2 * 4;
+		case 0x8DC7:  // GL_UNSIGNED_INT_VEC3
+			return 3 * 4;
+		case 0x8B52:  // GL_FLOAT_VEC4
+		case 0x8B55:  // GL_INT_VEC4
+		case 0x8DC8:  // GL_UNSIGNED_INT_VEC4
+			return 4 * 4;
+		case 0x8B5C:  // GL_MAT4
+			return 64;
+		}
+
+		RAY_ASSERT(false, "[SizeOfGlType] Failed to find glType {0}", glType);
+		return 0;
+	}
+
 	TBuiltInResource GetResources()
 	{
 		TBuiltInResource resources = {};
@@ -261,7 +291,7 @@ namespace At0::Ray
 			LoadUniformBlock(program, ToShaderStage(moduleFlag), i);
 		}
 
-		for (int32_t i = 0; i < program.getNumLiveUniformVariables(); ++i)
+		for (int32_t i = program.getNumLiveUniformVariables() - 1; i >= 0; --i)
 		{
 			LoadUniform(program, ToShaderStage(moduleFlag), i);
 		}
@@ -370,11 +400,19 @@ namespace At0::Ray
 	{
 		const glslang::TObjectReflection& uniform = program.getUniform(i);
 
-		// -1 means that it's in a block
-		if (uniform.getBinding() == -1)
-		{
-			Shader::Uniforms::UniformData data{};
+		Shader::Uniforms::UniformData data{};
+		data.binding = uniform.getBinding();
+		data.size = uniform.size;
 
+		// Sampler is not stored in the global uniform buffer and thus does not have to be taken
+		// into account when calculating the next offset in said buffer.
+		// (RAY_TODO: Add more types that aren't stored in a uniform buffer)
+		if (uniform.getType()->getBasicType() != glslang::TBasicType::EbtSampler)
+			data.offset = CalculateNextOffset(SizeOfGlType(uniform.glDefineType));
+
+		// -1 means that it's in a block
+		if (data.binding == -1)
+		{
 			// Insert into the already existing uniform block
 			auto strings = String::Split(uniform.name, '.');
 			m_ShaderData[stageFlag].uniformBlocks.m_UniformBlocks[strings[0]].uniforms.Emplace(
@@ -382,8 +420,6 @@ namespace At0::Ray
 		}
 		else
 		{
-			Shader::Uniforms::UniformData data{};
-
 			m_ShaderData[stageFlag].uniforms.Emplace(uniform.name, data);
 		}
 	}
@@ -394,6 +430,8 @@ namespace At0::Ray
 		const glslang::TObjectReflection& uniformBlock = program.getUniformBlock(i);
 
 		UniformBlocks::UniformBlockData data{};
+		data.binding = uniformBlock.getBinding();
+		data.size = uniformBlock.size;
 
 		m_ShaderData[stageFlag].uniformBlocks.Emplace(uniformBlock.name, data);
 	}
@@ -446,6 +484,16 @@ namespace At0::Ray
 		}
 
 		return sizeof(float) * components;
+	}
+
+	uint32_t Shader::CalculateNextOffset(uint32_t uniformSize)
+	{
+		static uint32_t currentOffset = 0;
+		uint32_t prevOffset = currentOffset;
+
+		currentOffset += uniformSize;
+
+		return prevOffset;
 	}
 
 

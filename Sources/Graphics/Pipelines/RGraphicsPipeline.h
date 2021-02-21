@@ -28,6 +28,5 @@ namespace At0::Ray
 
 	private:
 		std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStages;
-		Shader m_Shader;
 	};
 }  // namespace At0::Ray

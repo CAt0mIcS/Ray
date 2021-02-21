@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <vector>
 #include <vulkan/vulkan_core.h>
@@ -68,7 +68,7 @@ namespace At0::Ray
 		/**
 		 * @returns The size in bytes of the type associated to the format
 		 */
-		uint32_t SizeOf(VkFormat format) const
+		static uint32_t SizeOf(VkFormat format)
 		{
 			// RAY_TODO: Add more formats
 

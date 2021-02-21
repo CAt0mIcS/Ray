@@ -59,9 +59,16 @@ namespace At0::Ray
 		public:
 			struct AttributeData
 			{
+				// The location specified in the shader, e.g. "layout(location = 0) in vec3 inPos"
 				uint32_t location;
+
+				// No idea what that is tbh, it's usually 0 or (uint32_t)-1
 				uint32_t binding;
+
+				// The size in bytes of the type to input, e.g. vec3 == 3 * sizeof(float)
 				uint32_t size;
+
+				// The format of the data to input
 				VkFormat format;
 			};
 
@@ -79,6 +86,14 @@ namespace At0::Ray
 		public:
 			struct UniformData
 			{
+				// The binding specified in the shader, e.g. "layout(binding = 0) uniform..."
+				uint32_t binding;
+
+				// The global offset in the global uniform buffer
+				uint32_t offset;
+
+				// The size in bytes of this uniform
+				uint32_t size;
 			};
 
 		public:
@@ -95,6 +110,13 @@ namespace At0::Ray
 		public:
 			struct UniformBlockData
 			{
+				// The binding specified in the shader, e.g. "layout(binding = 0) uniform..."
+				uint32_t binding;
+
+				// The size in bytes of the entire uniform block
+				uint32_t size;
+
+				// All the uniforms in the uniform block
 				Uniforms uniforms;
 			};
 
@@ -130,6 +152,7 @@ namespace At0::Ray
 
 	private:
 		static int32_t ComputeSize(const glslang::TType* ttype);
+		static uint32_t CalculateNextOffset(uint32_t uniformSize);
 
 	private:
 		struct ShaderData
