@@ -371,6 +371,7 @@ namespace At0::Ray
 		}
 
 		RAY_ASSERT(false, "[Shader] VkFormat {0} not supported.", (uint32_t)format);
+		return VertexLayout::Position3D;
 	}
 
 	void Shader::LoadAttribute(

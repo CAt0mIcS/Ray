@@ -77,6 +77,7 @@ namespace At0::Ray
 		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributeDescriptions() const;
 		std::vector<VkVertexInputBindingDescription> GetVertexInputBindingDescriptions(
 			uint32_t binding = 0) const;
+		const VertexLayout& GetVertexLayout() const { return m_VertexLayout; }
 
 	private:
 		void LoadUniform(const glslang::TProgram& program, VkShaderStageFlags stageFlag, int32_t i);

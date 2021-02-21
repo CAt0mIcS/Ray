@@ -37,6 +37,7 @@ namespace At0::Ray
 		const LogicalDevice& GetDevice() const { return *m_LogicalDevice; }
 		const Swapchain& GetSwapchain() const { return *m_Swapchain; }
 		const CommandPool& GetCommandPool() const { return *m_CommandPool; }
+		const RenderPass& GetRenderPass() const { return *m_RenderPass; }
 
 		/**
 		 * Acquires the next frame for rendering and presentation

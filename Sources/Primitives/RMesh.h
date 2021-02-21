@@ -7,6 +7,7 @@ namespace At0::Ray
 {
 	class VertexBuffer;
 	class IndexBuffer;
+	class GraphicsPipeline;
 	class CommandBuffer;
 
 	class RAY_EXPORT Mesh
@@ -21,5 +22,6 @@ namespace At0::Ray
 	private:
 		Scope<VertexBuffer> vertexBuffer;
 		Scope<IndexBuffer> indexBuffer;
+		Scope<GraphicsPipeline> graphicsPipeline;
 	};
 }  // namespace At0::Ray

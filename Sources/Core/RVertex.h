@@ -199,6 +199,9 @@ namespace At0::Ray
 			(Insert(prevSize, run++, std::forward<Args>(args)), ...);
 		}
 
+		uint32_t SizeBytes() const { return m_Data.size(); }
+		const char* Data() const { return m_Data.data(); }
+
 	private:
 		template<typename T>
 		void Insert(uint32_t prevSize, int run, T&& arg)

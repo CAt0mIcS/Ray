@@ -1,20 +1,31 @@
 ﻿#include "Rpch.h"
 #include "RMesh.h"
 
+#include "Graphics/RGraphics.h"
 #include "Graphics/Buffers/RIndexBuffer.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
+#include "Graphics/Pipelines/RGraphicsPipeline.h"
 #include "Graphics/Commands/RCommandBuffer.h"
+
+#include "Core/RVertex.h"
 
 
 namespace At0::Ray
 {
 	Mesh::Mesh()
 	{
-		std::vector<Float3> vertices;
-		vertices.emplace_back(-0.5f, -0.5f, 0.0f);
-		vertices.emplace_back(0.5f, -0.5f, 0.0f);
-		vertices.emplace_back(0.0f, 0.5f, 0.0f);
-		vertexBuffer = MakeScope<VertexBuffer>(vertices);
+		graphicsPipeline = MakeScope<GraphicsPipeline>(Graphics::Get().GetRenderPass(),
+			std::vector<std::string>{
+				"Resources/Shaders/DefaultShader.vert", "Resources/Shaders/DefaultShader.frag" });
+
+		VertexInput vertexInput(graphicsPipeline->GetVertexLayout());
+		// clang-format off
+		vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f }, Float3{ 1.0f, 0.0f, 0.0f });
+		vertexInput.Emplace(Float3{  0.5f, -0.5f, 0.0f }, Float3{ 0.0f, 1.0f, 0.0f });
+		vertexInput.Emplace(Float3{  0.0f,  0.5f, 0.0f }, Float3{ 0.0f, 0.0f, 1.0f });
+		// clang-format on
+
+		vertexBuffer = MakeScope<VertexBuffer>(vertexInput);
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
 		indexBuffer = MakeScope<IndexBuffer>(indices);
