@@ -9,6 +9,8 @@
 
 #include "Core/RVertex.h"
 
+#include "Graphics/Pipelines/RUniformAccess.h"
+
 
 namespace At0::Ray
 {
@@ -29,6 +31,10 @@ namespace At0::Ray
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
 		indexBuffer = MakeScope<IndexBuffer>(indices);
+
+		uniformAccess = MakeScope<UniformAccess>(*graphicsPipeline);
+		Matrix translation = Matrix::Translation(0.0f, 2.0f, 0.0f);
+		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms"]["model"] = translation;
 	}
 
 	Mesh::~Mesh() {}

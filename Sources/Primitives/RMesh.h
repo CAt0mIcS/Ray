@@ -2,13 +2,14 @@
 
 #include "../RBase.h"
 
-
 namespace At0::Ray
 {
 	class VertexBuffer;
 	class IndexBuffer;
 	class GraphicsPipeline;
 	class CommandBuffer;
+
+	class UniformAccess;
 
 	class RAY_EXPORT Mesh
 	{
@@ -20,6 +21,8 @@ namespace At0::Ray
 		void CmdDraw(const CommandBuffer& cmdBuff);
 
 		Scope<GraphicsPipeline>& GetPipeline() { return graphicsPipeline; }
+
+		Scope<UniformAccess> uniformAccess;
 
 	private:
 		Scope<VertexBuffer> vertexBuffer;

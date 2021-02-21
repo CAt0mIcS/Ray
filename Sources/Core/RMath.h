@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_FORCE_RADIANS
@@ -27,6 +27,7 @@ namespace At0::Ray
 	{
 	public:
 		Matrix(glm::mat4 mat) : m_Matrix(std::move(mat)) {}
+		Matrix() : m_Matrix(glm::identity<glm::mat4>()) {}
 
 		static glm::mat4 RotationRollPitchYaw(float pitch, float roll, float yaw);
 		static glm::mat4 RotationRollPitchYaw(const Float3& vec);

@@ -42,6 +42,16 @@ namespace At0::Ray
 	class RAY_EXPORT Shader
 	{
 	public:
+		enum class Stage
+		{
+			Vertex,
+			TesselationControl,
+			TesselationEvaluation,
+			Geometry,
+			Fragment,
+			Compute,
+		};
+
 		class Attributes
 		{
 			friend class Shader;
