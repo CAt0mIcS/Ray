@@ -98,6 +98,7 @@ namespace At0::Ray
 
 		public:
 			void Emplace(std::string_view uniformName, const UniformData& data);
+			std::optional<Uniforms::UniformData> Get(std::string_view uniformName) const;
 
 		private:
 			std::unordered_map<std::string, UniformData> m_Uniforms;
@@ -122,6 +123,9 @@ namespace At0::Ray
 
 		public:
 			void Emplace(std::string_view uniformBlockName, const UniformBlockData& data);
+			std::optional<UniformBlocks::UniformBlockData> Get(
+				std::string_view uniformBlockName) const;
+
 
 		private:
 			std::unordered_map<std::string, UniformBlockData> m_UniformBlocks;
@@ -144,6 +148,10 @@ namespace At0::Ray
 			uint32_t binding = 0) const;
 		const VertexLayout& GetVertexLayout() const { return m_VertexLayout; }
 		static Shader::Stage ToShaderStage(VkShaderStageFlags stageFlags);
+
+		std::optional<Shader::UniformBlocks> GetUniformBlocks(Shader::Stage stage) const;
+		std::optional<Shader::Uniforms> GetUniforms(Shader::Stage stage) const;
+		std::vector<Shader::Stage> GetLiveShaderStages() const;
 
 	private:
 		void LoadUniform(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i);

@@ -34,7 +34,8 @@ namespace At0::Ray
 
 		uniformAccess = MakeScope<UniformAccess>(*graphicsPipeline);
 		Matrix translation = Matrix::Translation(0.0f, 2.0f, 0.0f);
-		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms"]["model"] = translation;
+		uniformAccess->Resolve(Shader::Stage::Vertex, "model", "Transforms") = translation;
+		uniformAccess->Resolve(Shader::Stage::Vertex, "proj", "Transforms") = translation;
 	}
 
 	Mesh::~Mesh() {}

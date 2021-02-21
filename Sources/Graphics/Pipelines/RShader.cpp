@@ -396,6 +396,33 @@ namespace At0::Ray
 		return Stage::Vertex;
 	}
 
+	std::optional<Shader::UniformBlocks> Shader::GetUniformBlocks(Shader::Stage stage) const
+	{
+		if (auto& it = m_ShaderData.find(stage); it != m_ShaderData.end())
+			return it->second.uniformBlocks;
+		return std::nullopt;
+	}
+
+	std::optional<Shader::Uniforms> Shader::GetUniforms(Shader::Stage stage) const
+	{
+		if (auto& it = m_ShaderData.find(stage); it != m_ShaderData.end())
+			return it->second.uniforms;
+		return std::nullopt;
+	}
+
+	std::vector<Shader::Stage> Shader::GetLiveShaderStages() const
+	{
+		std::vector<Shader::Stage> stages;
+		stages.reserve(m_ShaderData.size());
+
+		for (auto& it : m_ShaderData)
+		{
+			stages.emplace_back(it.first);
+		}
+
+		return stages;
+	}
+
 	void Shader::LoadUniform(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i)
 	{
 		const glslang::TObjectReflection& uniform = program.getUniform(i);
@@ -512,6 +539,14 @@ namespace At0::Ray
 		m_Uniforms[uniformName.data()] = data;
 	}
 
+	std::optional<Shader::Uniforms::UniformData> Shader::Uniforms::Get(
+		std::string_view uniformName) const
+	{
+		if (auto& it = m_Uniforms.find(uniformName.data()); it != m_Uniforms.end())
+			return it->second;
+		return std::nullopt;
+	}
+
 
 	// ------------------------------------------------------------
 	// Uniform Blocks
@@ -519,5 +554,13 @@ namespace At0::Ray
 		std::string_view uniformBlockName, const UniformBlockData& data)
 	{
 		m_UniformBlocks[uniformBlockName.data()] = data;
+	}
+
+	std::optional<Shader::UniformBlocks::UniformBlockData> Shader::UniformBlocks::Get(
+		std::string_view uniformBlockName) const
+	{
+		if (auto& it = m_UniformBlocks.find(uniformBlockName.data()); it != m_UniformBlocks.end())
+			return it->second;
+		return std::nullopt;
 	}
 }  // namespace At0::Ray

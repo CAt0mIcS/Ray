@@ -35,16 +35,13 @@ namespace At0::Ray
 			uint32_t m_GlobalOffset;
 		};
 
-	private:
-		using ValueType =
-			std::unordered_map<std::string, std::unordered_map<std::string, UniformData>>;
-
 	public:
 		UniformAccess(const Pipeline& pipeline);
 
-		ValueType& Resolve(Shader::Stage stageFlag);
+		UniformData Resolve(Shader::Stage stageFlag, std::string_view uniformName,
+			std::string_view uniformBlockName = "");
 
 	private:
-		std::unordered_map<Shader::Stage, ValueType> m_Uniforms;
+		const Shader& m_Shader;
 	};
 }  // namespace At0::Ray
