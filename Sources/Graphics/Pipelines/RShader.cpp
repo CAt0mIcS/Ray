@@ -362,18 +362,6 @@ namespace At0::Ray
 		const glslang::TObjectReflection& uniformBlock = program.getUniformBlock(i);
 	}
 
-	static VertexLayout::ElementType GetVertexType(VkFormat format)
-	{
-		switch (format)
-		{
-		case VK_FORMAT_R32G32_SFLOAT: return VertexLayout::Position2D;
-		case VK_FORMAT_R32G32B32_SFLOAT: return VertexLayout::Position3D;
-		}
-
-		RAY_ASSERT(false, "[Shader] VkFormat {0} not supported.", (uint32_t)format);
-		return VertexLayout::Position3D;
-	}
-
 	void Shader::LoadAttribute(
 		const glslang::TProgram& program, VkShaderStageFlags stageFlag, int32_t i)
 	{
@@ -389,7 +377,7 @@ namespace At0::Ray
 
 		m_ShaderData[stageFlag].attributes.Emplace(attribute.name, data);
 
-		m_VertexLayout.Append(GetVertexType(data.format));
+		m_VertexLayout.Append(data.format);
 	}
 
 	int32_t Shader::ComputeSize(const glslang::TType* ttype)

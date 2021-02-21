@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <vulkan/vulkan_core.h>
 
 #include "../Utils/RAssert.h"
 
@@ -10,24 +11,16 @@ namespace At0::Ray
 	class VertexLayout
 	{
 	public:
-		enum ElementType
-		{
-			Position2D,
-			Position3D,
-			Float3Color,
-			Float4Color,
-		};
-
 		class Element
 		{
 		public:
-			Element(ElementType type, uint32_t offset) : m_Type(type), m_Offset(offset) {}
+			Element(VkFormat format, uint32_t offset) : m_Format(format), m_Offset(offset) {}
 
-			ElementType GetType() const { return m_Type; }
+			VkFormat GetFormat() const { return m_Format; }
 			uint32_t GetOffset() const { return m_Offset; }
 
 		private:
-			ElementType m_Type;
+			VkFormat m_Format;
 
 			// Specifies the offset in bytes in VertexInput::m_Data;
 			uint32_t m_Offset;
@@ -42,7 +35,7 @@ namespace At0::Ray
 			int32_t size = 0;
 			for (const Element& elem : m_Elements)
 			{
-				size += SizeOf(elem.GetType());
+				size += SizeOf(elem.GetFormat());
 			}
 
 			return size;
@@ -65,7 +58,7 @@ namespace At0::Ray
 			}
 
 			if (m_Elements.size() > 0)
-				size += SizeOf(m_Elements.back().GetType());
+				size += SizeOf(m_Elements.back().GetFormat());
 
 			return size;
 		}
@@ -73,29 +66,36 @@ namespace At0::Ray
 		const Element& GetElement(uint32_t i) const { return m_Elements[i]; }
 
 		/**
-		 * @returns The size in bytes of the type associated to the element type
+		 * @returns The size in bytes of the type associated to the format
 		 */
-		uint32_t SizeOf(ElementType type) const
+		uint32_t SizeOf(VkFormat format) const
 		{
-			switch (type)
+			// RAY_TODO: Add more formats
+
+			switch (format)
 			{
-			case Position2D: return sizeof(Float2);
-			case Position3D: return sizeof(Float3);
-			case Float3Color: return sizeof(Float3);
-			case Float4Color: return sizeof(Float4);
+			case VK_FORMAT_R32_UINT:
+			case VK_FORMAT_R32_SINT:
+			case VK_FORMAT_R32_SFLOAT: return 4;
+			case VK_FORMAT_R32G32_UINT:
+			case VK_FORMAT_R32G32_SINT:
+			case VK_FORMAT_R32G32_SFLOAT: return 2 * 4;
+			case VK_FORMAT_R32G32B32_UINT:
+			case VK_FORMAT_R32G32B32_SINT:
+			case VK_FORMAT_R32G32B32_SFLOAT: return 3 * 4;
 			}
 
-			RAY_ASSERT(false, "[Vertex] Element type {0} is invalid", (uint32_t)type);
+			RAY_ASSERT(false, "[Vertex] Format {0} is not supported.", (uint32_t)format);
 			return 0;
 		}
 
-		uint32_t GetOffsetInVertex(ElementType type) const
+		uint32_t GetOffsetInVertex(VkFormat format) const
 		{
 			uint32_t offset = 0;
-			for (auto it = m_Elements.begin(); it->GetType() != type && it != m_Elements.end();
+			for (auto it = m_Elements.begin(); it->GetFormat() != format && it != m_Elements.end();
 				 ++it)
 			{
-				offset += SizeOf(it->GetType());
+				offset += SizeOf(it->GetFormat());
 			}
 
 			return offset;
@@ -105,26 +105,6 @@ namespace At0::Ray
 		void Append(Args&&... args)
 		{
 			(m_Elements.emplace_back(args, Size()), ...);
-		}
-
-		VkFormat GetFormat(ElementType type) const
-		{
-			switch (type)
-			{
-			case Position2D: return VK_FORMAT_R32G32_SFLOAT;
-			case Position3D: return VK_FORMAT_R32G32B32_SFLOAT;
-			// case Texture2D: return VK_FORMAT_R32G32_SFLOAT;
-			// case Normal: return VK_FORMAT_R32G32B32_SFLOAT;
-			// case Tangent: return ;
-			// case Bitangent: return ;
-			case Float3Color: return VK_FORMAT_R32G32B32_SFLOAT;
-			case Float4Color:
-				return VK_FORMAT_R32G32B32A32_SFLOAT;
-				// case Count: return VK_FORMAT_UNDEFINED;
-			}
-
-			RAY_ASSERT(false, "[Vertex] Type {0} is invalid", (uint32_t)type);
-			return VK_FORMAT_UNDEFINED;
 		}
 
 		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributeDescriptions(
@@ -143,7 +123,7 @@ namespace At0::Ray
 			{
 				attributeDescs[i].binding = binding;
 				attributeDescs[i].location = locations[i];
-				attributeDescs[i].format = GetFormat(m_Elements[i].GetType());
+				attributeDescs[i].format = m_Elements[i].GetFormat();
 				attributeDescs[i].offset = m_Elements[i].GetOffset();
 			}
 
@@ -206,7 +186,7 @@ namespace At0::Ray
 		template<typename T>
 		void Insert(uint32_t prevSize, int run, T&& arg)
 		{
-			uint32_t elemOffset = m_Layout.GetOffsetInVertex(m_Layout.GetElement(run).GetType());
+			uint32_t elemOffset = m_Layout.GetOffsetInVertex(m_Layout.GetElement(run).GetFormat());
 			memcpy(m_Data.data() + prevSize + elemOffset, &arg, sizeof(arg));
 		}
 

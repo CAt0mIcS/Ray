@@ -44,7 +44,7 @@ namespace At0::Ray
 
 		m_CommandBuffers.clear();
 
-		m_GraphicsPipeline.reset();
+		// m_GraphicsPipeline.reset();
 
 		delete mesh;
 
@@ -189,9 +189,9 @@ namespace At0::Ray
 		CreateRenderPass();
 		CreateFramebuffers();
 
-		m_GraphicsPipeline = MakeScope<GraphicsPipeline>(
-			*m_RenderPass, std::vector<std::string>{ "Resources/Shaders/DefaultShader.vert",
-							   "Resources/Shaders/DefaultShader.frag" });
+		// m_GraphicsPipeline = MakeScope<GraphicsPipeline>(
+		//	*m_RenderPass, std::vector<std::string>{ "Resources/Shaders/DefaultShader.vert",
+		//					   "Resources/Shaders/DefaultShader.frag" });
 
 		mesh = new Mesh();
 
@@ -281,7 +281,7 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		vkCmdBindPipeline(cmdBuff, m_GraphicsPipeline->GetBindPoint(), *m_GraphicsPipeline);
+		vkCmdBindPipeline(cmdBuff, mesh->GetPipeline()->GetBindPoint(), *mesh->GetPipeline());
 
 		mesh->CmdBind(cmdBuff);
 		mesh->CmdDraw(cmdBuff);

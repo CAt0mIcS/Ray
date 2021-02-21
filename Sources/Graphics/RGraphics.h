@@ -75,7 +75,7 @@ namespace At0::Ray
 		Scope<Swapchain> m_Swapchain;
 		Scope<CommandPool> m_CommandPool;
 		Scope<RenderPass> m_RenderPass;
-		Scope<GraphicsPipeline> m_GraphicsPipeline;
+		// Scope<GraphicsPipeline> m_GraphicsPipeline;
 
 		std::vector<Scope<Framebuffer>> m_Framebuffers;
 		std::vector<Scope<CommandBuffer>> m_CommandBuffers;

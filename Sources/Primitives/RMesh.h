@@ -19,6 +19,8 @@ namespace At0::Ray
 		void CmdBind(const CommandBuffer& cmdBuff);
 		void CmdDraw(const CommandBuffer& cmdBuff);
 
+		Scope<GraphicsPipeline>& GetPipeline() { return graphicsPipeline; }
+
 	private:
 		Scope<VertexBuffer> vertexBuffer;
 		Scope<IndexBuffer> indexBuffer;
