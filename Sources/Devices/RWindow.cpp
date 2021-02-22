@@ -88,6 +88,11 @@ namespace At0::Ray
 
 	void Window::WaitForEvents() const { glfwWaitEvents(); }
 
+	void Window::SetTitle(std::string_view newTitle) const
+	{
+		glfwSetWindowTitle(m_hWnd, newTitle.data());
+	}
+
 	Window::Window(uint32_t width, uint32_t height, std::string_view title)
 	{
 		int success = glfwInit();

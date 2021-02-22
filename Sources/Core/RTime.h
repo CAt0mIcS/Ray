@@ -181,6 +181,13 @@ namespace At0::Ray
 	{
 	public:
 		/**
+		 * Constructor which takes an already existing floating point delta time in milliseconds and
+		 * integrates it into the class
+		 */
+		Delta(float delta) : m_Change(Time::Milliseconds(delta)) {}
+		Delta() = default;
+
+		/**
 		 * Updates time
 		 */
 		void Update()

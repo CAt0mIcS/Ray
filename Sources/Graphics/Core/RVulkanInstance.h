@@ -45,11 +45,11 @@ namespace At0::Ray
 
 	private:
 		VkInstance m_Instance = VK_NULL_HANDLE;
+		VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
 
 #ifndef NDEBUG
 		inline static std::vector<const char*> s_ValidationLayers{ "VK_LAYER_KHRONOS_validation" };
 		bool m_ValidationLayersEnabled = true;
-		VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
 #else
 		inline static std::vector<const char*> s_ValidationLayers{};
 		bool m_ValidationLayersEnabled = false;

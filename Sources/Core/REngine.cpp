@@ -20,12 +20,26 @@ namespace At0::Ray
 
 	int Engine::Run()
 	{
+		auto startSecTime = std::chrono::high_resolution_clock::now();
 		while (Window::Get().Update())
 		{
 			m_Delta.Update();
 			m_FPS.Update(Time::Now());
 			Graphics::Get().Update(m_Delta);
 			Update();
+
+
+			if (std::chrono::duration<float, std::chrono::milliseconds::period>(
+					std::chrono::high_resolution_clock::now() - startSecTime)
+					.count() > 500)
+			{
+				std::ostringstream oss;
+				oss << "Frametime: " << m_Delta.Change().AsSeconds() << "s"
+					<< ",\nFPS: " << m_FPS.Value();
+				Window::Get().SetTitle(oss.str());
+
+				startSecTime = std::chrono::high_resolution_clock::now();
+			}
 		}
 
 		Graphics::Destroy();

@@ -91,6 +91,8 @@ namespace At0::Ray
 		 */
 		void WaitForEvents() const;
 
+		void SetTitle(std::string_view newTitle) const;
+
 	private:
 		Window(uint32_t width, uint32_t height, std::string_view title);
 		void SetEventCallbacks();
