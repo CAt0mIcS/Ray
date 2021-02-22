@@ -32,6 +32,7 @@ namespace At0::Ray
 		static Matrix Perspective(float foV, float aspectRatio, float nearZ, float farZ)
 		{
 			glm::mat4 matrix = glm::perspective(glm::radians(foV), aspectRatio, nearZ, farZ);
+			FlipY(matrix);
 			return matrix;
 		}
 
@@ -48,7 +49,6 @@ namespace At0::Ray
 		static Matrix Translation(const Float3& translation)
 		{
 			glm::mat4 matrix = glm::translate(glm::mat4(1.0f), translation);
-			FlipY(matrix);
 			return matrix;
 		}
 
@@ -57,11 +57,12 @@ namespace At0::Ray
 		static Matrix Scale(const Float3& scaling)
 		{
 			glm::mat4 scale = glm::scale(glm::mat4(1.0f), scaling);
-			FlipY(scale);
 			return scale;
 		}
 
 		static Matrix Scale(float x, float y, float z) { return Scale({ x, y, z }); }
+
+		static Matrix Identity() { return glm::identity<glm::mat4>(); }
 
 		operator glm::mat4 &() { return m_Matrix; }
 		operator const glm::mat4 &() const { return m_Matrix; }
