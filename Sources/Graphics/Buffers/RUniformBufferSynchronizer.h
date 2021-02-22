@@ -27,6 +27,8 @@ namespace At0::Ray
 			m_UniformBuffer.Update(&data, sizeof(data), offset);
 		}
 
+		const UniformBuffer& GetBuffer() const { return m_UniformBuffer; }
+
 	private:
 		UniformBufferSynchronizer() = default;
 		~UniformBufferSynchronizer() = default;

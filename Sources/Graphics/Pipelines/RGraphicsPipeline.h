@@ -21,6 +21,12 @@ namespace At0::Ray
 		VkPipelineBindPoint GetBindPoint() const override;
 		const VertexLayout& GetVertexLayout() const { return m_Shader.GetVertexLayout(); }
 
+		const VkDescriptorPool& GetDescriptorPool() const { return m_DescriptorPool; }
+		const VkDescriptorSetLayout& GetDescriptorSetLayout() const
+		{
+			return m_DescriptorSetLayout;
+		}
+
 	private:
 		void CreateShaderProgram(const std::vector<std::string>& shaders);
 		void CreateDescriptorSetLayout();

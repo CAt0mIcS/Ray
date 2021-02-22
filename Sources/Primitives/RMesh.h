@@ -28,5 +28,7 @@ namespace At0::Ray
 		Scope<VertexBuffer> vertexBuffer;
 		Scope<IndexBuffer> indexBuffer;
 		Scope<GraphicsPipeline> graphicsPipeline;
+
+		VkDescriptorSet descSet;
 	};
 }  // namespace At0::Ray

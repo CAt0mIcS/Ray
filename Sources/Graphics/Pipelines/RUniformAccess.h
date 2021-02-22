@@ -31,6 +31,8 @@ namespace At0::Ray
 				return *this;
 			}
 
+			uint32_t GetOffset() const { return m_GlobalOffset; }
+
 		private:
 			uint32_t m_GlobalOffset = 0;
 		};
