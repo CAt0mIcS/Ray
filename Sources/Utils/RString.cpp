@@ -1,6 +1,8 @@
 ﻿#include "Rpch.h"
 #include "RString.h"
 
+#include "Utils/RAssert.h"
+
 #include <vulkan/vulkan_core.h>
 
 
@@ -201,6 +203,22 @@ namespace At0::Ray
 		}
 
 		return "Unknown Vulkan result code.";
+	}
+
+	std::string String::Construct(Shader::Stage stage)
+	{
+		switch (stage)
+		{
+		case Shader::Stage::Vertex: return "Vertex Shader";
+		case Shader::Stage::TesselationControl: return "Tesselation Control Shader";
+		case Shader::Stage::TesselationEvaluation: return "Tesselation Evaluation Shader";
+		case Shader::Stage::Geometry: return "Geometry Shader";
+		case Shader::Stage::Fragment: return "Fragment Shader";
+		case Shader::Stage::Compute: return "Compute Shader";
+		}
+
+		RAY_ASSERT(false, "[String] Shader stage {0} is invalid.", (uint32_t)stage);
+		return "";
 	}
 
 	std::string String::ConvertUtf8(std::wstring_view string)

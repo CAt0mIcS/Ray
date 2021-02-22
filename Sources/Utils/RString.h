@@ -3,6 +3,7 @@
 #include "../RBase.h"
 #include "../Core/RKeyCodes.h"
 #include "RNonCopyable.h"
+#include "../Graphics/Pipelines/RShader.h"
 
 #include <string>
 
@@ -37,6 +38,13 @@ namespace At0::Ray
 		 * @returns The string representation of the resulting code
 		 */
 		static std::string Construct(VkResult res);
+
+		/**
+		 * Constructs a string from a shader stage
+		 * @param stage The stage to strinify
+		 * @returns The string describing the stage (e.g. VertexShader, FragmentShader, ...)
+		 */
+		static std::string Construct(Shader::Stage stage);
 
 		/**
 		 * Converts a string from UTF16 to UTF8

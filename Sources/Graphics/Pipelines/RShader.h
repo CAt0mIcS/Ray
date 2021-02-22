@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "../../RBase.h"
-#include "../../Core/RVertex.h"
 
 #include <vulkan/vulkan_core.h>
 
@@ -10,6 +9,7 @@
 #include <vector>
 #include <filesystem>
 #include <optional>
+#include <fstream>
 
 
 namespace glslang
@@ -21,6 +21,8 @@ namespace glslang
 
 namespace At0::Ray
 {
+	class VertexLayout;
+
 	inline std::optional<std::string> ReadFile(const std::filesystem::path& filepath)
 	{
 		std::ifstream reader(filepath, std::ios::binary | std::ios::ate);
@@ -133,20 +135,19 @@ namespace At0::Ray
 
 	public:
 		Shader();
-		~Shader() = default;
+		~Shader();
 
 		static VkFormat GlTypeToVkFormat(int32_t type);
 		VkShaderModule CreateShaderModule(const std::filesystem::path& moduleName,
 			std::string_view moduleCode, std::string_view preamble, VkShaderStageFlags moduleFlag);
 		static VkShaderStageFlagBits GetShaderStage(const std::filesystem::path& filepath);
-		static EShLanguage GetEShLanguage(VkShaderStageFlags stageFlags);
 
 		void CreateReflection();
 
 		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributeDescriptions() const;
 		std::vector<VkVertexInputBindingDescription> GetVertexInputBindingDescriptions(
 			uint32_t binding = 0) const;
-		const VertexLayout& GetVertexLayout() const { return m_VertexLayout; }
+		const VertexLayout& GetVertexLayout() const { return *m_VertexLayout; }
 		static Shader::Stage ToShaderStage(VkShaderStageFlags stageFlags);
 
 		std::optional<Shader::UniformBlocks> GetUniformBlocks(Shader::Stage stage) const;
@@ -171,6 +172,6 @@ namespace At0::Ray
 		};
 
 		std::unordered_map<Shader::Stage, ShaderData> m_ShaderData;
-		VertexLayout m_VertexLayout;
+		Scope<VertexLayout> m_VertexLayout;
 	};
 }  // namespace At0::Ray

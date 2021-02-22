@@ -6,6 +6,8 @@
 #include "Utils/RLogger.h"
 #include "Utils/RString.h"
 
+#include "Core/RVertex.h"
+
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
@@ -60,7 +62,7 @@ namespace At0::Ray
 	};
 
 
-	Shader::Shader()
+	Shader::Shader() : m_VertexLayout(MakeScope<VertexLayout>())
 	{
 		static bool glslangInitialized = false;
 		if (!glslangInitialized)
@@ -69,6 +71,8 @@ namespace At0::Ray
 			glslangInitialized = true;
 		}
 	}
+
+	Shader::~Shader() {}
 
 	VkFormat Shader::GlTypeToVkFormat(int32_t type)
 	{
@@ -230,6 +234,22 @@ namespace At0::Ray
 		return resources;
 	}
 
+	EShLanguage GetEShLanguage(VkShaderStageFlags stageFlags)
+	{
+		switch (stageFlags)
+		{
+		case VK_SHADER_STAGE_VERTEX_BIT: return EShLangVertex;
+		case VK_SHADER_STAGE_FRAGMENT_BIT: return EShLangFragment;
+		case VK_SHADER_STAGE_COMPUTE_BIT: return EShLangCompute;
+		case VK_SHADER_STAGE_GEOMETRY_BIT: return EShLangGeometry;
+		case VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT: return EShLangTessControl;
+		case VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT: return EShLangTessEvaluation;
+		}
+
+		RAY_THROW_RUNTIME("[Shader] Stage flag {0} is incompatible.", stageFlags);
+		return EShLangAnyHit;
+	}
+
 	VkShaderModule Shader::CreateShaderModule(const std::filesystem::path& moduleName,
 		std::string_view moduleCode, std::string_view preamble, VkShaderStageFlags moduleFlag)
 	{
@@ -350,34 +370,18 @@ namespace At0::Ray
 		return VK_SHADER_STAGE_ALL;
 	}
 
-	EShLanguage Shader::GetEShLanguage(VkShaderStageFlags stageFlags)
-	{
-		switch (stageFlags)
-		{
-		case VK_SHADER_STAGE_VERTEX_BIT: return EShLangVertex;
-		case VK_SHADER_STAGE_FRAGMENT_BIT: return EShLangFragment;
-		case VK_SHADER_STAGE_COMPUTE_BIT: return EShLangCompute;
-		case VK_SHADER_STAGE_GEOMETRY_BIT: return EShLangGeometry;
-		case VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT: return EShLangTessControl;
-		case VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT: return EShLangTessEvaluation;
-		}
-
-		RAY_THROW_RUNTIME("[Shader] Stage flag {0} is incompatible.", stageFlags);
-		return EShLangAnyHit;
-	}
-
 	void Shader::CreateReflection() {}
 
 	std::vector<VkVertexInputAttributeDescription>
 		Shader::GetVertexInputAttributeDescriptions() const
 	{
-		return m_VertexLayout.GetVertexInputAttributeDescriptions();
+		return m_VertexLayout->GetVertexInputAttributeDescriptions();
 	}
 
 	std::vector<VkVertexInputBindingDescription> Shader::GetVertexInputBindingDescriptions(
 		uint32_t binding) const
 	{
-		return m_VertexLayout.GetVertexInputBindingDescriptions(binding);
+		return m_VertexLayout->GetVertexInputBindingDescriptions(binding);
 	}
 
 	Shader::Stage Shader::ToShaderStage(VkShaderStageFlags stageFlags)
@@ -477,7 +481,7 @@ namespace At0::Ray
 
 		m_ShaderData[stageFlag].attributes.Emplace(attribute.name, data);
 
-		m_VertexLayout.Append(data.format);
+		m_VertexLayout->Append(data.format);
 	}
 
 	int32_t Shader::ComputeSize(const glslang::TType* ttype)

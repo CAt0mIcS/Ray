@@ -18,7 +18,7 @@ private:
 
 int main()
 {
-	Ray::Log::Open("../../Ray.log");
+	Ray::Log::Open("Ray.log");
 	Ray::Log::SetLogLevel(Ray::LogLevel::Trace);
 
 	App app;
