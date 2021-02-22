@@ -14,6 +14,7 @@ namespace At0::Ray
 	{
 	public:
 		static UniformBufferSynchronizer& Get();
+		static void Destroy();
 
 		/**
 		 * Updates the uniform buffer.
@@ -32,5 +33,6 @@ namespace At0::Ray
 
 	private:
 		UniformBuffer m_UniformBuffer;
+		inline static UniformBufferSynchronizer* s_Instance;
 	};
 }  // namespace At0::Ray

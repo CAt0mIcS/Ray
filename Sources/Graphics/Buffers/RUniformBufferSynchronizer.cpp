@@ -6,7 +6,10 @@ namespace At0::Ray
 {
 	UniformBufferSynchronizer& UniformBufferSynchronizer::Get()
 	{
-		static UniformBufferSynchronizer instance;
-		return instance;
+		if (!s_Instance)
+			s_Instance = new UniformBufferSynchronizer();
+		return *s_Instance;
 	}
+
+	void UniformBufferSynchronizer::Destroy() { delete s_Instance; }
 }  // namespace At0::Ray

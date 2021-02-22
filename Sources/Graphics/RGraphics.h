@@ -30,6 +30,7 @@ namespace At0::Ray
 	public:
 		~Graphics();
 		static Graphics& Get();
+		static void Destroy();
 
 		const VulkanInstance& GetInstance() const { return *m_VulkanInstance; }
 		const Surface& GetSurface() const { return *m_Surface; }

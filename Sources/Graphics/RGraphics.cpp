@@ -23,8 +23,8 @@
 #include "Graphics/Buffers/RFramebuffer.h"
 
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
-
 #include "Primitives/RMesh.h"
+#include "Buffers/RUniformBufferSynchronizer.h"
 
 
 namespace At0::Ray
@@ -44,7 +44,7 @@ namespace At0::Ray
 
 		m_CommandBuffers.clear();
 
-		// m_GraphicsPipeline.reset();
+		UniformBufferSynchronizer::Destroy();
 
 		delete mesh;
 
@@ -58,8 +58,6 @@ namespace At0::Ray
 		m_Surface.reset();
 		m_PhysicalDevice.reset();
 		m_VulkanInstance.reset();
-
-		delete s_Instance;
 	}
 
 	Graphics& Graphics::Get()
@@ -156,6 +154,8 @@ namespace At0::Ray
 
 		CreateVulkanObjects();
 	}
+
+	void Graphics::Destroy() { delete s_Instance; }
 
 	void Graphics::UpdateViewport()
 	{

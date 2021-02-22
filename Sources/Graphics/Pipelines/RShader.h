@@ -96,11 +96,17 @@ namespace At0::Ray
 
 				// The size in bytes of this uniform
 				uint32_t size;
+
+				// The type ID of the gl type
+				int32_t glType;
 			};
 
 		public:
 			void Emplace(std::string_view uniformName, const UniformData& data);
 			std::optional<Uniforms::UniformData> Get(std::string_view uniformName) const;
+
+			const auto begin() const { return m_Uniforms.begin(); }
+			const auto end() const { return m_Uniforms.end(); }
 
 		private:
 			std::unordered_map<std::string, UniformData> m_Uniforms;
@@ -111,6 +117,14 @@ namespace At0::Ray
 			friend class Shader;
 
 		public:
+			enum class Type
+			{
+				None,
+				Uniform,
+				Storage,
+				Push
+			};
+
 			struct UniformBlockData
 			{
 				// The binding specified in the shader, e.g. "layout(binding = 0) uniform..."
@@ -121,7 +135,13 @@ namespace At0::Ray
 
 				// All the uniforms in the uniform block
 				Uniforms uniforms;
+
+				// The type of the uniform block
+				Type type;
 			};
+
+			const auto begin() const { return m_UniformBlocks.begin(); }
+			const auto end() const { return m_UniformBlocks.end(); }
 
 		public:
 			void Emplace(std::string_view uniformBlockName, const UniformBlockData& data);
@@ -149,6 +169,7 @@ namespace At0::Ray
 			uint32_t binding = 0) const;
 		const VertexLayout& GetVertexLayout() const { return *m_VertexLayout; }
 		static Shader::Stage ToShaderStage(VkShaderStageFlags stageFlags);
+		static VkShaderStageFlags ToVkShaderStage(Shader::Stage stageFlags);
 
 		std::optional<Shader::UniformBlocks> GetUniformBlocks(Shader::Stage stage) const;
 		std::optional<Shader::Uniforms> GetUniforms(Shader::Stage stage) const;
@@ -165,6 +186,9 @@ namespace At0::Ray
 	private:
 		static int32_t ComputeSize(const glslang::TType* ttype);
 		static uint32_t CalculateNextOffset(uint32_t uniformSize);
+		static void IncrementDescriptorPool(
+			std::unordered_map<VkDescriptorType, uint32_t>& descriptorPoolCounts,
+			VkDescriptorType type);
 
 	private:
 		struct ShaderData

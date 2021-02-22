@@ -28,6 +28,8 @@ namespace At0::Ray
 			Update();
 		}
 
+		Graphics::Destroy();
+
 		return 0;
 	}
 

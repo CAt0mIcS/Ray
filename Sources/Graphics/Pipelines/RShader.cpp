@@ -10,6 +10,7 @@
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
+#include "Graphics/Buffers/RUniformBuffer.h"
 
 
 namespace At0::Ray
@@ -370,7 +371,91 @@ namespace At0::Ray
 		return VK_SHADER_STAGE_ALL;
 	}
 
-	void Shader::CreateReflection() {}
+	void Shader::CreateReflection()
+	{
+		std::unordered_map<VkDescriptorType, uint32_t> descriptorPoolCounts;
+
+		for (const auto& [shaderStage, shaderData] : m_ShaderData)
+		{
+			for (auto& uniformBlock : shaderData.uniformBlocks)
+			{
+				VkDescriptorType descriptorType = VK_DESCRIPTOR_TYPE_MAX_ENUM;
+
+				switch (uniformBlock.second.type)
+				{
+				case Shader::UniformBlocks::Type::Uniform:
+				{
+					descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+					m_DescriptorSetLayoutBindings.emplace_back(
+						UniformBuffer::GetDescriptorSetLayout((uint32_t)uniformBlock.second.binding,
+							descriptorType, ToVkShaderStage(shaderStage), 1));
+					break;
+				}
+				}
+
+				IncrementDescriptorPool(descriptorPoolCounts, descriptorType);
+			}
+
+			for (const auto& [uniformName, uniformData] : shaderData.uniforms)
+			{
+				VkDescriptorType descriptorType = VK_DESCRIPTOR_TYPE_MAX_ENUM;
+				switch (uniformData.glType)
+				{
+				case 0x8B5E:  // GL_SAMPLER_2D
+				case 0x904D:  // GL_IMAGE_2D
+				case 0x8DC1:  // GL_TEXTURE_2D_ARRAY
+				case 0x9108:  // GL_SAMPLER_2D_MULTISAMPLE
+				case 0x9055:  // GL_IMAGE_2D_MULTISAMPLE
+							  // descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+							  // m_DescriptorSetLayoutBindings.emplace_back(Image2D::GetDescriptorSetLayout(
+							  //	uniformData.binding, descriptorType,
+							  // ToVkShaderStage(shaderStage), 1)); break;
+				// case 0x8B60:  // GL_SAMPLER_CUBE
+				// case 0x9050:  // GL_IMAGE_CUBE
+				// case 0x9054:  // GL_IMAGE_CUBE_MAP_ARRAY
+				// descriptorType = uniform.IsWriteOnly() ? VK_DESCRIPTOR_TYPE_STORAGE_IMAGE :
+				//										 VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				// m_DescriptorSetLayouts.emplace_back(ImageCube::GetDescriptorSetLayout(
+				//	(uint32_t)uniform.GetBinding(), descriptorType, uniform.GetStageFlags(), 1));
+				// break;
+				default: break;
+				}
+
+				IncrementDescriptorPool(descriptorPoolCounts, descriptorType);
+			}
+		}
+
+
+		for (const auto& [type, descriptorCount] : descriptorPoolCounts)
+		{
+			VkDescriptorPoolSize poolSize{};
+			poolSize.type = type;
+			poolSize.descriptorCount = descriptorCount;
+			m_DescriptorPoolSizes.emplace_back(poolSize);
+		}
+
+		// RAY_TODO: This is a AMD workaround that works on NVidia too...
+		// We don't know the total usages of descriptor types by the pipeline.
+		m_DescriptorPoolSizes.resize(6);
+		m_DescriptorPoolSizes[0].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		m_DescriptorPoolSizes[0].descriptorCount = 4096;
+		m_DescriptorPoolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		m_DescriptorPoolSizes[1].descriptorCount = 2048;
+		m_DescriptorPoolSizes[2].type = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+		m_DescriptorPoolSizes[2].descriptorCount = 2048;
+		m_DescriptorPoolSizes[3].type = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
+		m_DescriptorPoolSizes[3].descriptorCount = 2048;
+		m_DescriptorPoolSizes[4].type = VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER;
+		m_DescriptorPoolSizes[4].descriptorCount = 2048;
+		m_DescriptorPoolSizes[5].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+		m_DescriptorPoolSizes[5].descriptorCount = 2048;
+
+		// Sort descriptor set layout bindings by binding
+		std::sort(m_DescriptorSetLayoutBindings.begin(), m_DescriptorSetLayoutBindings.end(),
+			[](const VkDescriptorSetLayoutBinding& l, const VkDescriptorSetLayoutBinding& r) {
+				return l.binding < r.binding;
+			});
+	}
 
 	std::vector<VkVertexInputAttributeDescription>
 		Shader::GetVertexInputAttributeDescriptions() const
@@ -398,6 +483,22 @@ namespace At0::Ray
 
 		RAY_ASSERT(false, "[Shader] Vulkan shader stage {0} is invalid.", (uint32_t)stageFlags);
 		return Stage::Vertex;
+	}
+
+	VkShaderStageFlags Shader::ToVkShaderStage(Shader::Stage stageFlags)
+	{
+		switch (stageFlags)
+		{
+		case Stage::Vertex: return VK_SHADER_STAGE_VERTEX_BIT;
+		case Stage::TesselationControl: return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+		case Stage::TesselationEvaluation: return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+		case Stage::Geometry: return VK_SHADER_STAGE_GEOMETRY_BIT;
+		case Stage::Fragment: return VK_SHADER_STAGE_FRAGMENT_BIT;
+		case Stage::Compute: return VK_SHADER_STAGE_COMPUTE_BIT;
+		}
+
+		RAY_ASSERT(false, "[Shader] Vulkan shader stage {0} is invalid.", (uint32_t)stageFlags);
+		return VK_SHADER_STAGE_VERTEX_BIT;
 	}
 
 	std::optional<Shader::UniformBlocks> Shader::GetUniformBlocks(Shader::Stage stage) const
@@ -434,6 +535,7 @@ namespace At0::Ray
 		Shader::Uniforms::UniformData data{};
 		data.binding = uniform.getBinding();
 		data.size = uniform.size;
+		data.glType = uniform.glDefineType;
 
 		// Sampler is not stored in the global uniform buffer and thus does not have to be taken
 		// into account when calculating the next offset in said buffer.
@@ -463,6 +565,7 @@ namespace At0::Ray
 		UniformBlocks::UniformBlockData data{};
 		data.binding = uniformBlock.getBinding();
 		data.size = uniformBlock.size;
+		data.type = Shader::UniformBlocks::Type::Uniform;
 
 		m_ShaderData[stageFlag].uniformBlocks.Emplace(uniformBlock.name, data);
 	}
@@ -527,6 +630,17 @@ namespace At0::Ray
 		return prevOffset;
 	}
 
+	void Shader::IncrementDescriptorPool(
+		std::unordered_map<VkDescriptorType, uint32_t>& descriptorPoolCounts, VkDescriptorType type)
+	{
+		if (type == VK_DESCRIPTOR_TYPE_MAX_ENUM)
+			return;
+
+		if (auto it = descriptorPoolCounts.find(type); it != descriptorPoolCounts.end())
+			it->second++;
+		else
+			descriptorPoolCounts.emplace(type, 1);
+	}
 
 	// ------------------------------------------------------------
 	// Attributes
