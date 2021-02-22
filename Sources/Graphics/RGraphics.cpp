@@ -341,12 +341,14 @@ namespace At0::Ray
 		m_Framebuffers.clear();
 
 		m_RenderPass.reset();
+		// m_DepthImage.reset();
 
 		m_Swapchain.reset();
 		m_CommandPool.reset();
 
 		m_Swapchain = MakeScope<Swapchain>();
 		m_CommandPool = MakeScope<CommandPool>();
+		// m_DepthImage = MakeScope<DepthImage>();
 		CreateRenderPass();
 		UpdateViewport();
 		UpdateScissor();
@@ -355,5 +357,7 @@ namespace At0::Ray
 
 		size = Window::Get().GetFramebufferSize();
 		cam.UpdateAspectRatio((float)size.x / (float)size.y);
+
+		m_FramebufferResized = false;
 	}
 }  // namespace At0::Ray

@@ -241,9 +241,7 @@ namespace At0::Ray
 				}
 			});
 
-		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode) {
-			Log::Debug("Character {0} written.", (unsigned char)keycode);
-		});
+		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode) {});
 
 		glfwSetScrollCallback(m_hWnd, [](GLFWwindow* window, double xOffset, double yOffset) {
 			if (yOffset > 0)
