@@ -1,4 +1,4 @@
-#include "Rpch.h"
+﻿#include "Rpch.h"
 #include "RVulkanInstance.h"
 
 #include "Devices/RWindow.h"
@@ -10,27 +10,6 @@
 
 namespace At0::Ray
 {
-	static VkResult CreateDebugUtilsMessengerEXT(VkInstance instance,
-		const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
-		const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
-	{
-		auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(
-			vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT"));
-		if (func)
-			return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
-		return VK_ERROR_EXTENSION_NOT_PRESENT;
-	}
-
-	static void DestroyDebugUtilsMessengerEXT(VkInstance instance,
-		VkDebugUtilsMessengerEXT messenger, const VkAllocationCallbacks* pAllocator)
-	{
-		auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(
-			vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT"));
-		if (func)
-			return func(instance, messenger, pAllocator);
-	}
-
-
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -105,7 +84,11 @@ namespace At0::Ray
 	VulkanInstance::~VulkanInstance()
 	{
 		if (m_DebugMessenger)
-			DestroyDebugUtilsMessengerEXT(m_Instance, m_DebugMessenger, nullptr);
+			if (auto destroyDebugMessenger = (PFN_vkDestroyDebugUtilsMessengerEXT)LoadFunction(
+					"vkDestroyDebugUtilsMessengerEXT"))
+				destroyDebugMessenger(m_Instance, m_DebugMessenger, nullptr);
+			else
+				Log::Error("[VulkanInstance] Unable to find vkDestroyDebugUtilsMessengerEXT");
 
 		vkDestroyInstance(m_Instance, nullptr);
 	}
@@ -200,11 +183,15 @@ namespace At0::Ray
 	{
 		VkDebugUtilsMessengerCreateInfoEXT createInfo = GetDebugMessengerCreateInfo();
 
-		if (CreateDebugUtilsMessengerEXT(m_Instance, &createInfo, nullptr, &m_DebugMessenger) !=
-			VK_SUCCESS)
+		if (auto createDebugMessenger =
+				(PFN_vkCreateDebugUtilsMessengerEXT)LoadFunction("vkCreateDebugUtilsMessengerEXT"))
 		{
-			Log::Error("[VulkanInstance] Failed to create debug messenger");
+			if (createDebugMessenger(m_Instance, &createInfo, nullptr, &m_DebugMessenger) !=
+				VK_SUCCESS)
+				Log::Error("[VulkanInstance] Failed to create debug messenger.");
 		}
+		else
+			Log::Error("[VulkanInstance] Unable to find vkCreateDebugUtilsMessengerEXT.");
 	}
 
 	VkDebugUtilsMessengerCreateInfoEXT VulkanInstance::GetDebugMessengerCreateInfo() const
