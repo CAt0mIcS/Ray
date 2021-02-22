@@ -28,14 +28,13 @@ namespace At0::Ray
 		operator const VkBuffer&() const { return m_Buffer; }
 
 	protected:
-		VkBuffer m_Buffer;
-		VkDeviceMemory m_BufferMemory;
-
-		VkDeviceSize m_Size = 0;
-
 		void Destroy();
 
-	private:
-		bool m_IsHostCoherent;
+	protected:
+		VkBuffer m_Buffer = VK_NULL_HANDLE;
+		VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
+
+		VkDeviceSize m_Size = 0;
+		bool m_IsHostCoherent = false;
 	};
 }  // namespace At0::Ray

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
@@ -39,9 +39,9 @@ namespace At0::Ray
 		VkExtent2D ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
 
 	private:
-		VkSwapchainKHR m_Swapchain;
-		VkFormat m_Format;
-		VkExtent2D m_Extent;
+		VkSwapchainKHR m_Swapchain = VK_NULL_HANDLE;
+		VkFormat m_Format = VK_FORMAT_UNDEFINED;
+		VkExtent2D m_Extent{};
 
 		std::vector<VkImage> m_Images;
 		std::vector<Scope<ImageView>> m_ImageViews;

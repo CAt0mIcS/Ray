@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
@@ -17,6 +17,6 @@ namespace At0::Ray
 		operator const VkSurfaceKHR&() const { return m_Surface; }
 
 	private:
-		VkSurfaceKHR m_Surface;
+		VkSurfaceKHR m_Surface = VK_NULL_HANDLE;
 	};
 }  // namespace At0::Ray

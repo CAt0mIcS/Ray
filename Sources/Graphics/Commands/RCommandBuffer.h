@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
@@ -23,7 +23,7 @@ namespace At0::Ray
 		operator const VkCommandBuffer&() const { return m_CommandBuffer; }
 
 	private:
-		VkCommandBuffer m_CommandBuffer;
+		VkCommandBuffer m_CommandBuffer = VK_NULL_HANDLE;
 		const CommandPool& m_CommandPool;
 	};
 }  // namespace At0::Ray

@@ -36,9 +36,9 @@ namespace At0::Ray
 		void InternalEmplace(void* data, uint32_t size);
 
 	private:
-		VkBufferUsageFlags m_BufferUsage;
-		VkMemoryPropertyFlags m_MemoryProperties;
+		VkBufferUsageFlags m_BufferUsage{};
+		VkMemoryPropertyFlags m_MemoryProperties{};
 
-		uint32_t m_Capacity;
+		uint32_t m_Capacity = 0;
 	};
 }  // namespace At0::Ray

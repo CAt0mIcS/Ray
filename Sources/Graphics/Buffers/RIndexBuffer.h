@@ -21,6 +21,6 @@ namespace At0::Ray
 		uint32_t GetNumberOfIndices() const;
 
 	private:
-		uint32_t m_NumIndices;
+		uint32_t m_NumIndices = 0;
 	};
 }  // namespace At0::Ray

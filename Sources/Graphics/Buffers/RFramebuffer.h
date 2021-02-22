@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
@@ -20,6 +20,6 @@ namespace At0::Ray
 		operator const VkFramebuffer&() const { return m_Framebuffer; }
 
 	private:
-		VkFramebuffer m_Framebuffer;
+		VkFramebuffer m_Framebuffer = VK_NULL_HANDLE;
 	};
 }  // namespace At0::Ray

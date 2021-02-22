@@ -20,10 +20,10 @@ namespace At0::Ray
 			uint32_t GetOffset() const { return m_Offset; }
 
 		private:
-			VkFormat m_Format;
+			VkFormat m_Format = VK_FORMAT_UNDEFINED;
 
 			// Specifies the offset in bytes in VertexInput::m_Data;
-			uint32_t m_Offset;
+			uint32_t m_Offset = 0;
 		};
 
 	public:
@@ -150,8 +150,8 @@ namespace At0::Ray
 		Vertex(char* startAddress, uint32_t size) : m_StartAddress(startAddress), m_Size(size) {}
 
 	private:
-		char* m_StartAddress;
-		uint32_t m_Size;
+		char* m_StartAddress = nullptr;
+		uint32_t m_Size = 0;
 	};
 
 

@@ -201,9 +201,9 @@ namespace At0::Ray
 		Time Change() const { return m_Change; }
 
 	private:
-		Time m_CurrentFrameTime;
-		Time m_LastFrameTime;
-		Time m_Change;
+		Time m_CurrentFrameTime{};
+		Time m_LastFrameTime{};
+		Time m_Change{};
 	};
 
 	class ChangePerSecond
@@ -226,7 +226,7 @@ namespace At0::Ray
 
 	private:
 		uint32_t m_ValueTemp = 0, m_Value = 0;
-		Time m_ValueTime;
+		Time m_ValueTime{};
 	};
 
 }  // namespace At0::Ray

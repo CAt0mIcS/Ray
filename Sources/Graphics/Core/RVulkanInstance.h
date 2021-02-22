@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
@@ -44,12 +44,12 @@ namespace At0::Ray
 		VkDebugUtilsMessengerCreateInfoEXT GetDebugMessengerCreateInfo() const;
 
 	private:
-		VkInstance m_Instance;
+		VkInstance m_Instance = VK_NULL_HANDLE;
 
 #ifndef NDEBUG
 		inline static std::vector<const char*> s_ValidationLayers{ "VK_LAYER_KHRONOS_validation" };
 		bool m_ValidationLayersEnabled = true;
-		VkDebugUtilsMessengerEXT m_DebugMessenger;
+		VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
 #else
 		inline static std::vector<const char*> s_ValidationLayers{};
 		bool m_ValidationLayersEnabled = false;

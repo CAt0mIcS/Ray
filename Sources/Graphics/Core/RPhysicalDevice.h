@@ -25,9 +25,9 @@ namespace At0::Ray
 		int32_t ScorePhysicalDevice(VkPhysicalDevice device);
 
 	private:
-		VkPhysicalDevice m_Device;
+		VkPhysicalDevice m_Device = VK_NULL_HANDLE;
 
-		VkPhysicalDeviceFeatures m_Features;
-		VkPhysicalDeviceMemoryProperties m_MemoryProperties;
+		VkPhysicalDeviceFeatures m_Features{};
+		VkPhysicalDeviceMemoryProperties m_MemoryProperties{};
 	};
 }  // namespace At0::Ray

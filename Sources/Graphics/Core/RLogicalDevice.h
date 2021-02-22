@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
@@ -47,18 +47,18 @@ namespace At0::Ray
 			VK_KHR_SWAPCHAIN_EXTENSION_NAME
 		};
 
-		VkDevice m_Device;
+		VkDevice m_Device = VK_NULL_HANDLE;
 
-		uint32_t m_GraphicsFamily;
-		uint32_t m_PresentFamily;
-		uint32_t m_ComputeFamily;
-		uint32_t m_TransferFamily;
+		uint32_t m_GraphicsFamily = 0;
+		uint32_t m_PresentFamily = 0;
+		uint32_t m_ComputeFamily = 0;
+		uint32_t m_TransferFamily = 0;
 
-		VkQueue m_GraphicsQueue;
-		VkQueue m_PresentQueue;
-		VkQueue m_ComputeQueue;
-		VkQueue m_TransferQueue;
+		VkQueue m_GraphicsQueue = VK_NULL_HANDLE;
+		VkQueue m_PresentQueue = VK_NULL_HANDLE;
+		VkQueue m_ComputeQueue = VK_NULL_HANDLE;
+		VkQueue m_TransferQueue = VK_NULL_HANDLE;
 
-		VkQueueFlags m_SupportedQueues;
+		VkQueueFlags m_SupportedQueues = 0;
 	};
 }  // namespace At0::Ray

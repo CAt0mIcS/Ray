@@ -26,8 +26,8 @@ namespace At0::Ray
 		Pipeline() = default;
 
 	protected:
-		VkPipeline m_Pipeline;
-		VkPipelineLayout m_Layout;
+		VkPipeline m_Pipeline = VK_NULL_HANDLE;
+		VkPipelineLayout m_Layout = VK_NULL_HANDLE;
 
 		Shader m_Shader;
 	};

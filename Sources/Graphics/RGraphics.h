@@ -66,8 +66,8 @@ namespace At0::Ray
 		inline static Graphics* s_Instance = nullptr;
 		inline static constexpr uint8_t s_MaxFramesInFlight = 2;
 
-		VkViewport m_Viewport;
-		VkRect2D m_Scissor;
+		VkViewport m_Viewport{};
+		VkRect2D m_Scissor{};
 
 		Scope<VulkanInstance> m_VulkanInstance;
 		Scope<PhysicalDevice> m_PhysicalDevice;

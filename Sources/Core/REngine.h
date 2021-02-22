@@ -40,7 +40,7 @@ namespace At0::Ray
 
 	private:
 		static Engine* s_Instance;
-		Delta m_Delta;
-		ChangePerSecond m_FPS;
+		Delta m_Delta{};
+		ChangePerSecond m_FPS{};
 	};
 }  // namespace At0::Ray

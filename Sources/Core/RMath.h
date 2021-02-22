@@ -70,6 +70,6 @@ namespace At0::Ray
 		static void FlipY(glm::mat4& matrix) { matrix[1][1] *= -1.0f; }
 
 	private:
-		glm::mat4 m_Matrix;
+		glm::mat4 m_Matrix{};
 	};
 }  // namespace At0::Ray

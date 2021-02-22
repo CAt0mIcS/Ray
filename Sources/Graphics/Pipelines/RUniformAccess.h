@@ -32,7 +32,7 @@ namespace At0::Ray
 			}
 
 		private:
-			uint32_t m_GlobalOffset;
+			uint32_t m_GlobalOffset = 0;
 		};
 
 	public:
