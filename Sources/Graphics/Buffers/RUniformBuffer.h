@@ -7,10 +7,8 @@ namespace At0::Ray
 {
 	class RAY_EXPORT UniformBuffer : public DynamicBuffer
 	{
-		inline static uint32_t s_InitialSize = 1000;
-
 	public:
-		UniformBuffer();
+		UniformBuffer(VkDeviceSize initialSize = 10000);
 
 	private:
 	};

@@ -154,6 +154,9 @@ namespace At0::Ray
 		std::optional<Shader::Uniforms> GetUniforms(Shader::Stage stage) const;
 		std::vector<Shader::Stage> GetLiveShaderStages() const;
 
+		const auto& GetDescriptorSetLayoutBindings() const { return m_DescriptorSetLayoutBindings; }
+		const auto& GetDescriptorPoolSizes() const { return m_DescriptorPoolSizes; }
+
 	private:
 		void LoadUniform(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i);
 		void LoadUniformBlock(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i);
@@ -173,5 +176,8 @@ namespace At0::Ray
 
 		std::unordered_map<Shader::Stage, ShaderData> m_ShaderData;
 		Scope<VertexLayout> m_VertexLayout;
+
+		std::vector<VkDescriptorSetLayoutBinding> m_DescriptorSetLayoutBindings;
+		std::vector<VkDescriptorPoolSize> m_DescriptorPoolSizes;
 	};
 }  // namespace At0::Ray

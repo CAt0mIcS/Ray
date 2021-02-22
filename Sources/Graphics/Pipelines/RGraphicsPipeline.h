@@ -23,10 +23,15 @@ namespace At0::Ray
 
 	private:
 		void CreateShaderProgram(const std::vector<std::string>& shaders);
+		void CreateDescriptorSetLayout();
+		void CreateDescriptorPool();
 		void CreatePipelineLayout();
 		void CreatePipeline(const RenderPass& renderPass);
 
 	private:
 		std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStages;
+
+		VkDescriptorPool m_DescriptorPool;
+		VkDescriptorSetLayout m_DescriptorSetLayout;
 	};
 }  // namespace At0::Ray

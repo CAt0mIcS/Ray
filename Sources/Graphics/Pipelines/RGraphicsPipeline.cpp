@@ -16,6 +16,8 @@ namespace At0::Ray
 		const RenderPass& renderPass, const std::vector<std::string>& shaders)
 	{
 		CreateShaderProgram(shaders);
+		CreateDescriptorSetLayout();
+		CreateDescriptorPool();
 		CreatePipelineLayout();
 		CreatePipeline(renderPass);
 	}
@@ -55,13 +57,47 @@ namespace At0::Ray
 		m_Shader.CreateReflection();
 	}
 
+	void GraphicsPipeline::CreateDescriptorSetLayout()
+	{
+		const std::vector<VkDescriptorSetLayoutBinding>& descriptorSetLayoutBindings =
+			m_Shader.GetDescriptorSetLayoutBindings();
+
+		VkDescriptorSetLayoutCreateInfo createInfo{};
+		createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+		createInfo.flags =
+			/*m_PushDescriptors ? VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR : */ 0;
+		createInfo.bindingCount = (uint32_t)descriptorSetLayoutBindings.size();
+		createInfo.pBindings = descriptorSetLayoutBindings.data();
+
+		RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(), &createInfo,
+								nullptr, &m_DescriptorSetLayout),
+			"[GraphicsPipeline] Failed to create descriptor set layout.");
+	}
+
+	void GraphicsPipeline::CreateDescriptorPool()
+	{
+		const std::vector<VkDescriptorPoolSize>& descriptorPoolSizes =
+			m_Shader.GetDescriptorPoolSizes();
+
+		VkDescriptorPoolCreateInfo createInfo{};
+		createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+		createInfo.flags = 0;
+		createInfo.maxSets = 8192;
+		createInfo.poolSizeCount = (uint32_t)descriptorPoolSizes.size();
+		createInfo.pPoolSizes = descriptorPoolSizes.data();
+
+		RAY_VK_THROW_FAILED(vkCreateDescriptorPool(Graphics::Get().GetDevice(), &createInfo,
+								nullptr, &m_DescriptorPool),
+			"[GraphicsPipeline] Failed to create descriptor pool.");
+	}
+
 	void GraphicsPipeline::CreatePipelineLayout()
 	{
 		VkPipelineLayoutCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		createInfo.flags = 0;
-		createInfo.setLayoutCount = 0;
-		createInfo.pSetLayouts = nullptr;
+		createInfo.setLayoutCount = 1;
+		createInfo.pSetLayouts = &m_DescriptorSetLayout;
 		createInfo.pushConstantRangeCount = 0;
 		createInfo.pPushConstantRanges = nullptr;
 
