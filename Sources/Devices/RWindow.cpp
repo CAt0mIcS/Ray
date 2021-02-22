@@ -112,6 +112,16 @@ namespace At0::Ray
 	void Window::SetEventCallbacks()
 	{
 		glfwSetCursorPosCallback(m_hWnd, [](GLFWwindow* window, double xPos, double yPos) {
+			int dx = (int)Window::Get().m_PrevousMousePos.x - xPos;
+			int dy = (int)Window::Get().m_PrevousMousePos.y - yPos;
+
+			if (!Window::Get().CursorEnabled())
+				Graphics::Get().cam.Rotate(
+					glm::vec3{ dy, -dx, 0.0f } * Graphics::Get().cam.RotationSpeed);
+
+			Window::Get().m_PrevousMousePos = { (float)xPos, (float)yPos };
+
+
 			Mouse::SetPos({ (float)xPos, (float)yPos });
 
 			Float2 rawDelta{ 0.0f, 0.0f };
@@ -156,6 +166,53 @@ namespace At0::Ray
 
 		glfwSetKeyCallback(
 			m_hWnd, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+				if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+				{
+					if (Window::Get().CursorEnabled())
+						Window::Get().DisableCursor();
+					else
+						Window::Get().EnableCursor();
+				}
+
+				if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS)
+				{
+					Graphics::Get().cam.SetMovementSpeed(Graphics::Get().cam.MovementSpeed * 5.0f);
+				}
+				else if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE)
+				{
+					Graphics::Get().cam.SetMovementSpeed(Graphics::Get().cam.MovementSpeed / 5.0f);
+				}
+
+				if (Graphics::Get().cam.Type == Camera::FirstPerson)
+				{
+					switch (action)
+					{
+					case GLFW_PRESS:
+						switch (key)
+						{
+						case GLFW_KEY_W: Graphics::Get().cam.Keys.Forward = true; break;
+						case GLFW_KEY_S: Graphics::Get().cam.Keys.Backward = true; break;
+						case GLFW_KEY_A: Graphics::Get().cam.Keys.Left = true; break;
+						case GLFW_KEY_D: Graphics::Get().cam.Keys.Right = true; break;
+						case GLFW_KEY_SPACE: Graphics::Get().cam.Keys.Up = true; break;
+						case GLFW_KEY_LEFT_CONTROL: Graphics::Get().cam.Keys.Down = true; break;
+						}
+						break;
+					case GLFW_RELEASE:
+						switch (key)
+						{
+						case GLFW_KEY_W: Graphics::Get().cam.Keys.Forward = false; break;
+						case GLFW_KEY_S: Graphics::Get().cam.Keys.Backward = false; break;
+						case GLFW_KEY_A: Graphics::Get().cam.Keys.Left = false; break;
+						case GLFW_KEY_D: Graphics::Get().cam.Keys.Right = false; break;
+						case GLFW_KEY_SPACE: Graphics::Get().cam.Keys.Up = false; break;
+						case GLFW_KEY_LEFT_CONTROL: Graphics::Get().cam.Keys.Down = false; break;
+						}
+						break;
+					}
+				}
+
+
 				switch (action)
 				{
 				case GLFW_PRESS:

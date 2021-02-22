@@ -8,15 +8,13 @@ layout(location = 0) out vec3 outColor;
 
 layout(binding = 0) uniform Transforms
 {
-	mat4 model;
-	mat4 view;
-	mat4 proj;
+	mat4 modelViewProj;
 } ubo;
 
 
 
 void main()
 {
-	gl_Position = ubo.proj * ubo.view * ubo.model * vec4(inPos, 1.0f);
+	gl_Position = ubo.modelViewProj * vec4(inPos, 1.0f);
 	outColor = inColor;
 }

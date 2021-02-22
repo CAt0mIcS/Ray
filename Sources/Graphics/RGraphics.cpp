@@ -69,6 +69,8 @@ namespace At0::Ray
 
 	void Graphics::Update(Delta dt)
 	{
+		cam.Update(dt.Change().AsSeconds());
+
 		// Wait for fence in VkQueueSubmit to become signaled
 		// which means that the command buffer finished executing
 		vkWaitForFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
@@ -153,6 +155,13 @@ namespace At0::Ray
 		UpdateScissor();
 
 		CreateVulkanObjects();
+
+		UInt2 size = Window::Get().GetFramebufferSize();
+		cam.SetPosition(glm::vec3(0.0f, 0.0f, -2.5f));
+		cam.SetRotation(glm::vec3(0.0f));
+		cam.SetRotationSpeed(0.1f);
+		cam.SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 256.0f);
+		cam.SetMovementSpeed(2.0f);
 	}
 
 	void Graphics::Destroy() { delete s_Instance; }
@@ -346,5 +355,8 @@ namespace At0::Ray
 		UpdateScissor();
 		CreateFramebuffers();
 		CreateCommandBuffers();
+
+		size = Window::Get().GetFramebufferSize();
+		cam.UpdateAspectRatio((float)size.x / (float)size.y);
 	}
 }  // namespace At0::Ray

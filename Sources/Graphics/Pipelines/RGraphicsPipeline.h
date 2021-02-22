@@ -16,7 +16,7 @@ namespace At0::Ray
 	{
 	public:
 		GraphicsPipeline(const RenderPass& renderPass, const std::vector<std::string>& shaders);
-		~GraphicsPipeline() = default;
+		~GraphicsPipeline();
 
 		VkPipelineBindPoint GetBindPoint() const override;
 		const VertexLayout& GetVertexLayout() const { return m_Shader.GetVertexLayout(); }

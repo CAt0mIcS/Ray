@@ -34,16 +34,18 @@ namespace At0::Ray
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
 		indexBuffer = MakeScope<IndexBuffer>(indices);
+		uniformAccess = MakeScope<UniformAccess>(*graphicsPipeline);
+
 
 		UInt2 size = Window::Get().GetSize();
 
-		uniformAccess = MakeScope<UniformAccess>(*graphicsPipeline);
-		Matrix translation = Matrix::Translation(0.0f, 2.0f, 0.0f);
-		uniformAccess->Resolve(Shader::Stage::Vertex, "model", "Transforms") = translation;
-		uniformAccess->Resolve(Shader::Stage::Vertex, "proj", "Transforms") =
-			Matrix::Perspective(60.0f, (float)size.x / (float)size.y, 0.1f, 256.0f);
-		uniformAccess->Resolve(Shader::Stage::Vertex, "view", "Transforms") =
-			Matrix::LookAt({ 2.0f, 2.0f, 2.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f });
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+		glm::mat4 view = glm::lookAt(glm::vec3{ 2.0f, 2.0f, 2.0f }, glm::vec3{ 0.0f, 0.0f, 0.0f },
+			glm::vec3{ 0.0f, 0.0f, 1.0f });
+		glm::mat4 proj = glm::perspective(45.0f, (float)size.x / (float)size.y, 0.1f, 256.0f);
+
+		uniformAccess->Resolve(Shader::Stage::Vertex, "modelViewProj", "Transforms") =
+			proj * view * model;
 
 
 		VkDescriptorSetAllocateInfo allocInfo{};
@@ -59,7 +61,8 @@ namespace At0::Ray
 		VkDescriptorBufferInfo bufferInfo{};
 		bufferInfo.buffer = UniformBufferSynchronizer::Get().GetBuffer();
 		bufferInfo.offset =
-			uniformAccess->Resolve(Shader::Stage::Vertex, "model", "Transforms").GetOffset();
+			uniformAccess->Resolve(Shader::Stage::Vertex, "modelViewProj", "Transforms")
+				.GetOffset();
 		bufferInfo.range = sizeof(Matrix) * 3;
 
 		VkWriteDescriptorSet descWrite{};

@@ -22,6 +22,12 @@ namespace At0::Ray
 		CreatePipeline(renderPass);
 	}
 
+	GraphicsPipeline::~GraphicsPipeline()
+	{
+		vkDestroyDescriptorSetLayout(Graphics::Get().GetDevice(), m_DescriptorSetLayout, nullptr);
+		vkDestroyDescriptorPool(Graphics::Get().GetDevice(), m_DescriptorPool, nullptr);
+	}
+
 	VkPipelineBindPoint GraphicsPipeline::GetBindPoint() const
 	{
 		return VK_PIPELINE_BIND_POINT_GRAPHICS;

@@ -4,6 +4,7 @@
 #include "../Utils/RNonCopyable.h"
 #include "../Core/RTime.h"
 #include "../Core/RMath.h"
+#include "../Core/RCamera.h"
 
 #include <vulkan/vulkan_core.h>
 #include <vector>
@@ -45,6 +46,8 @@ namespace At0::Ray
 		 * @param dt is the time since the last frame
 		 */
 		void Update(Delta dt);
+
+		Camera cam;
 
 	private:
 		Graphics();

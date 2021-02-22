@@ -99,5 +99,6 @@ namespace At0::Ray
 		static Scope<Window> s_Instance;
 		GLFWwindow* m_hWnd = nullptr;
 		Float2 m_CachedRawDeltaMousePos{};
+		Float2 m_PrevousMousePos{};
 	};
 }  // namespace At0::Ray

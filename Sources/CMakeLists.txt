@@ -12,6 +12,8 @@ set(SRC
 	"Core/RMath.h"
 	"Core/RKeyCodes.h"
 	"Core/RVertex.h"
+	"Core/RCamera.cpp"
+	"Core/RCamera.h"
 	
 
 	# ------------------------------------------------------------------
