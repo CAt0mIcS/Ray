@@ -17,6 +17,8 @@ namespace At0::Ray
 		Mesh();
 		~Mesh();
 
+		void Update();
+
 		void CmdBind(const CommandBuffer& cmdBuff);
 		void CmdDraw(const CommandBuffer& cmdBuff);
 

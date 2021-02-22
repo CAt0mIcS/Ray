@@ -36,17 +36,7 @@ namespace At0::Ray
 		indexBuffer = MakeScope<IndexBuffer>(indices);
 		uniformAccess = MakeScope<UniformAccess>(*graphicsPipeline);
 
-
 		UInt2 size = Window::Get().GetSize();
-
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-		glm::mat4 view = glm::lookAt(glm::vec3{ 2.0f, 2.0f, 2.0f }, glm::vec3{ 0.0f, 0.0f, 0.0f },
-			glm::vec3{ 0.0f, 0.0f, 1.0f });
-		glm::mat4 proj = glm::perspective(45.0f, (float)size.x / (float)size.y, 0.1f, 256.0f);
-
-		uniformAccess->Resolve(Shader::Stage::Vertex, "modelViewProj", "Transforms") =
-			proj * view * model;
-
 
 		VkDescriptorSetAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -80,6 +70,20 @@ namespace At0::Ray
 	}
 
 	Mesh::~Mesh() {}
+
+	void Mesh::Update()
+	{
+		glm::mat4 model = glm::identity<glm::mat4>();
+		// glm::mat4 view = glm::lookAt(glm::vec3{ 2.0f, 2.0f, 2.0f }, glm::vec3{ 0.0f, 0.0f, 0.0f
+		// }, glm::vec3{ 0.0f, 0.0f, 1.0f });
+		// glm::mat4 proj = glm::perspective(45.0f, (float)size.x / (float)size.y, 0.1f, 256.0f);
+
+		glm::mat4 view = Graphics::Get().cam.Matrices.View;
+		glm::mat4 proj = Graphics::Get().cam.Matrices.Perspective;
+
+		uniformAccess->Resolve(Shader::Stage::Vertex, "modelViewProj", "Transforms") =
+			proj * view * model;
+	}
 
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff)
 	{

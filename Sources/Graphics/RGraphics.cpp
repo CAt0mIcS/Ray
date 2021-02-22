@@ -91,6 +91,7 @@ namespace At0::Ray
 			RAY_THROW_RUNTIME("[Graphics] Failed to acquire next swapchain image.");
 
 		// Update drawables
+		mesh->Update();
 
 		// Check if previous frame is still using this image (e.g. there is its fence to wait on)
 		if (m_ImagesInFlight[imageIndex] != VK_NULL_HANDLE)
@@ -159,7 +160,7 @@ namespace At0::Ray
 		UInt2 size = Window::Get().GetFramebufferSize();
 		cam.SetPosition(glm::vec3(0.0f, 0.0f, -2.5f));
 		cam.SetRotation(glm::vec3(0.0f));
-		cam.SetRotationSpeed(0.1f);
+		cam.SetRotationSpeed(0.07f);
 		cam.SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 256.0f);
 		cam.SetMovementSpeed(2.0f);
 	}
@@ -197,10 +198,6 @@ namespace At0::Ray
 
 		CreateRenderPass();
 		CreateFramebuffers();
-
-		// m_GraphicsPipeline = MakeScope<GraphicsPipeline>(
-		//	*m_RenderPass, std::vector<std::string>{ "Resources/Shaders/DefaultShader.vert",
-		//					   "Resources/Shaders/DefaultShader.frag" });
 
 		mesh = new Mesh();
 
