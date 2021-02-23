@@ -29,6 +29,7 @@ namespace At0::Ray
 
 	protected:
 		void Destroy();
+		virtual void Resize(VkDeviceSize newSize) {}
 
 	protected:
 		VkBuffer m_Buffer = VK_NULL_HANDLE;

@@ -111,7 +111,7 @@ namespace At0::Ray
 		 * @returns The different parts of a string
 		 */
 		template<uint32_t MaxSeparators>
-		static std::array<std::string, MaxSeparators + 1> Split(std::string str, char sep)
+		static std::array<std::string, MaxSeparators + 1> Split(std::string_view str, char sep)
 		{
 			std::array<std::string, MaxSeparators + 1> tokens;
 
@@ -120,7 +120,7 @@ namespace At0::Ray
 			while ((pos = str.find(sep)) != std::string::npos)
 			{
 				tokens[i] = str.substr(0, pos);
-				str.erase(0, pos + 1);
+				str = str.substr(pos + 1, str.size());
 				++i;
 			}
 			tokens[MaxSeparators] = str;

@@ -13,6 +13,7 @@ namespace At0::Ray
 	class RAY_EXPORT UniformBufferSynchronizer
 	{
 	public:
+		static void Create();
 		static UniformBufferSynchronizer& Get();
 		static void Destroy();
 

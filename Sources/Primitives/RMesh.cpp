@@ -97,16 +97,19 @@ namespace At0::Ray
 
 	void Mesh::Update()
 	{
-		glm::mat4 model = MatrixTranslation(translation);
-		glm::mat4 view = Graphics::Get().cam.Matrices.View;
-		glm::mat4 proj = Graphics::Get().cam.Matrices.Perspective;
+		uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "model")
+			.Update(MatrixTranslation(translation), m_GlobalUniformBufferOffset);
+		uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "view")
+			.Update(Graphics::Get().cam.Matrices.View, m_GlobalUniformBufferOffset);
+		uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "proj")
+			.Update(Graphics::Get().cam.Matrices.Perspective, m_GlobalUniformBufferOffset);
 
-		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.model"].Update(
-			model, m_GlobalUniformBufferOffset);
-		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.view"].Update(
-			view, m_GlobalUniformBufferOffset);
-		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.proj"].Update(
-			proj, m_GlobalUniformBufferOffset);
+		// uniformAccess->Resolve(Shader::Stage::Vertex)("Transforms", "model")
+		//	.Update(MatrixTranslation(translation), m_GlobalUniformBufferOffset);
+		// uniformAccess->Resolve(Shader::Stage::Vertex)("Transforms", "view")
+		//	.Update(Graphics::Get().cam.Matrices.View, m_GlobalUniformBufferOffset);
+		// uniformAccess->Resolve(Shader::Stage::Vertex)("Transforms", "proj")
+		//	.Update(Graphics::Get().cam.Matrices.Perspective, m_GlobalUniformBufferOffset);
 	}
 
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff)

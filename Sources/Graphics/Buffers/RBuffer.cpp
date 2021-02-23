@@ -7,6 +7,7 @@
 #include "Graphics/Commands/RCommandBuffer.h"
 
 #include "Utils/RException.h"
+#include "Utils/RAssert.h"
 
 
 namespace At0::Ray
@@ -51,6 +52,9 @@ namespace At0::Ray
 	{
 		if (!data)
 			return;
+
+		if (offset + size > m_Size)
+			Resize(offset + size);
 
 		void* mapped;
 		MapMemory(&mapped);

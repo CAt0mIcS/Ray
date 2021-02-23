@@ -204,11 +204,12 @@ namespace At0::Ray
 
 		CreateRenderPass();
 		CreateFramebuffers();
+		UniformBufferSynchronizer::Create();
 
 		std::mt19937 device;
 		std::uniform_real_distribution<float> dist(-50.0f, 50.0f);
 
-		for (uint32_t i = 0; i < 18191; ++i)
+		for (uint32_t i = 0; i < 50000; ++i)
 		{
 			meshes.emplace_back(new Mesh());
 			meshes[i]->Translate({ dist(device), dist(device), dist(device) });

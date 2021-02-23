@@ -47,7 +47,8 @@ namespace At0::Ray
 			{
 			}
 
-			UniformData operator[](std::string_view uniformPath);
+			UniformData operator()(std::string_view uniformBlockName, std::string_view uniformName);
+			UniformData operator()(std::string_view uniformName);
 
 		private:
 			const Shader::Uniforms* m_Uniforms;
@@ -57,7 +58,19 @@ namespace At0::Ray
 	public:
 		UniformAccess(const Pipeline& pipeline);
 
-		UniformDataAccess Resolve(Shader::Stage stageFlag);
+		UniformDataAccess Resolve(Shader::Stage stage);
+
+		template<Shader::Stage stage>
+		UniformData Resolve(std::string_view uniformBlockName, std::string_view uniformName)
+		{
+			return Resolve(stage)(uniformBlockName, uniformName);
+		}
+
+		template<Shader::Stage stage>
+		UniformData Resolve(std::string_view uniformName)
+		{
+			return Resolve(stage)(uniformName);
+		}
 
 	private:
 		const Shader& m_Shader;

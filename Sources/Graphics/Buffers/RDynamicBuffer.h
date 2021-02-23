@@ -19,7 +19,7 @@ namespace At0::Ray
 		 * Discards any data if the newSize is less than the current size.
 		 * When enlargening the buffer, the new data is undefined.
 		 */
-		void Resize(uint32_t newSize);
+		void Resize(VkDeviceSize newSize) override;
 
 		/**
 		 * Appends the data at the end of the buffer.

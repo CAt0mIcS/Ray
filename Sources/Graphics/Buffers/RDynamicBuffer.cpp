@@ -8,14 +8,15 @@ namespace At0::Ray
 {
 	DynamicBuffer::DynamicBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
 		VkMemoryPropertyFlags properties, const void* data)
-		: Buffer(size, usage, properties, data), m_Capacity(size)
+		: Buffer(size, usage, properties, data), m_Capacity(size), m_BufferUsage(std::move(usage)),
+		  m_MemoryProperties(std::move(properties))
 	{
-		RAY_MEXPECTS((properties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) &&
-						 (properties & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT),
+		RAY_MEXPECTS((m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) &&
+						 (m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT),
 			"[DynamicBuffer] Needs to be visible to the host and host coherent.");
 	}
 
-	void DynamicBuffer::Resize(uint32_t newSize)
+	void DynamicBuffer::Resize(VkDeviceSize newSize)
 	{
 		std::vector<char> prevData(m_Size);
 
@@ -33,7 +34,7 @@ namespace At0::Ray
 
 		// Copy the cached data back to the new buffer. Make sure not to access invalid memory
 		MapMemory(&data);
-		memcpy(&data, prevData.data(), std::min(m_Size, (uint64_t)newSize));
+		memcpy(&data, prevData.data(), std::min(prevData.size(), m_Size));
 		UnmapMemory();
 
 		m_Capacity = m_Size;
