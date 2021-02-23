@@ -3,6 +3,7 @@
 #include "../../RBase.h"
 #include "RShader.h"
 #include "../Buffers/RUniformBufferSynchronizer.h"
+#include "../../Utils/RAssert.h"
 
 #include <unordered_map>
 #include <vector>

@@ -52,7 +52,7 @@ namespace At0::Ray
 		bufferInfo.buffer = UniformBufferSynchronizer::Get().GetBuffer();
 		bufferInfo.offset =
 			uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.modelViewProj"].GetOffset();
-		bufferInfo.range = sizeof(Matrix) * 3;
+		bufferInfo.range = sizeof(glm::mat4) * 3;
 
 		VkWriteDescriptorSet descWrite{};
 		descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

@@ -503,14 +503,14 @@ namespace At0::Ray
 
 	std::optional<Shader::UniformBlocks> Shader::GetUniformBlocks(Shader::Stage stage) const
 	{
-		if (auto& it = m_ShaderData.find(stage); it != m_ShaderData.end())
+		if (auto it = m_ShaderData.find(stage); it != m_ShaderData.end())
 			return it->second.uniformBlocks;
 		return std::nullopt;
 	}
 
 	std::optional<Shader::Uniforms> Shader::GetUniforms(Shader::Stage stage) const
 	{
-		if (auto& it = m_ShaderData.find(stage); it != m_ShaderData.end())
+		if (auto it = m_ShaderData.find(stage); it != m_ShaderData.end())
 			return it->second.uniforms;
 		return std::nullopt;
 	}
@@ -660,7 +660,7 @@ namespace At0::Ray
 	std::optional<Shader::Uniforms::UniformData> Shader::Uniforms::Get(
 		std::string_view uniformName) const
 	{
-		if (auto& it = m_Uniforms.find(uniformName.data()); it != m_Uniforms.end())
+		if (auto it = m_Uniforms.find(uniformName.data()); it != m_Uniforms.end())
 			return it->second;
 		return std::nullopt;
 	}
@@ -677,7 +677,7 @@ namespace At0::Ray
 	std::optional<Shader::UniformBlocks::UniformBlockData> Shader::UniformBlocks::Get(
 		std::string_view uniformBlockName) const
 	{
-		if (auto& it = m_UniformBlocks.find(uniformBlockName.data()); it != m_UniformBlocks.end())
+		if (auto it = m_UniformBlocks.find(uniformBlockName.data()); it != m_UniformBlocks.end())
 			return it->second;
 		return std::nullopt;
 	}
