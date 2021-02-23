@@ -84,9 +84,15 @@ namespace At0::Ray
 
 	Mesh::~Mesh()
 	{
-		// delete indexBuffer;
-		// delete vertexBuffer;
-		// delete graphicsPipeline;
+		if (indexBuffer)
+		{
+			delete indexBuffer;
+			delete vertexBuffer;
+			delete graphicsPipeline;
+		}
+		indexBuffer = nullptr;
+		vertexBuffer = nullptr;
+		graphicsPipeline = nullptr;
 	}
 
 	void Mesh::Update()

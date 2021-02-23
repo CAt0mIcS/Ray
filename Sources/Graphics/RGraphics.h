@@ -22,7 +22,7 @@ namespace At0::Ray
 	class CommandBuffer;
 	class RenderPass;
 	class Framebuffer;
-	class GraphicsPipeline;
+	class DepthImage;
 
 	class RAY_EXPORT Graphics : NonCopyable
 	{
@@ -79,7 +79,7 @@ namespace At0::Ray
 		Scope<Swapchain> m_Swapchain;
 		Scope<CommandPool> m_CommandPool;
 		Scope<RenderPass> m_RenderPass;
-		// Scope<GraphicsPipeline> m_GraphicsPipeline;
+		Scope<DepthImage> m_DepthImage;
 
 		std::vector<Scope<Framebuffer>> m_Framebuffers;
 		std::vector<Scope<CommandBuffer>> m_CommandBuffers;

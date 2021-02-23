@@ -135,6 +135,7 @@ namespace At0::Ray
 		inputAssembler.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		inputAssembler.primitiveRestartEnable = VK_FALSE;
 
+
 		// ---------------------------------------------------------------------------------------
 		// Viewport State
 		VkPipelineViewportStateCreateInfo viewportState{};
@@ -171,6 +172,21 @@ namespace At0::Ray
 		multisampling.pSampleMask = nullptr;
 		multisampling.alphaToCoverageEnable = VK_FALSE;
 		multisampling.alphaToOneEnable = VK_FALSE;
+
+
+		// ---------------------------------------------------------------------------------------
+		// Depth stencil
+		VkPipelineDepthStencilStateCreateInfo depthStencil{};
+		depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+		depthStencil.depthTestEnable = VK_TRUE;
+		depthStencil.depthWriteEnable = VK_TRUE;
+		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+		depthStencil.depthBoundsTestEnable = VK_FALSE;
+		depthStencil.minDepthBounds = 0.0f;	 // Optional
+		depthStencil.maxDepthBounds = 1.0f;	 // Optional
+		depthStencil.stencilTestEnable = VK_FALSE;
+		depthStencil.front = {};  // Optional
+		depthStencil.back = {};	  // Optional
 
 
 		// ---------------------------------------------------------------------------------------
@@ -220,7 +236,7 @@ namespace At0::Ray
 		createInfo.pViewportState = &viewportState;
 		createInfo.pRasterizationState = &rasterizer;
 		createInfo.pMultisampleState = &multisampling;
-		createInfo.pDepthStencilState = nullptr;
+		createInfo.pDepthStencilState = &depthStencil;
 		createInfo.pColorBlendState = &colorBlending;
 		createInfo.pDynamicState = &dynamicStateInfo;
 		createInfo.layout = m_Layout;

@@ -1,8 +1,11 @@
 ﻿#pragma once
 
 #include "../../RBase.h"
+#include "../../Core/RMath.h"
+#include "RImageView.h"
 
 #include <vulkan/vulkan_core.h>
+#include <vector>
 
 
 namespace At0::Ray
@@ -10,6 +13,22 @@ namespace At0::Ray
 	class Image
 	{
 	public:
+		Image(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
+			VkImageUsageFlags usage, VkMemoryPropertyFlags memProps);
 		virtual ~Image();
+
+		VkFormat GetFormat() const { return m_Format; }
+		operator const VkImage&() const { return m_Image; }
+		const VkImageView& GetImageView() const { return *m_ImageView; }
+
+		static std::vector<VkFormat> FindSupportedFormats(std::vector<VkFormat> candidates,
+			VkImageTiling tiling, VkFormatFeatureFlags featureFlags);
+
+	protected:
+		VkImage m_Image = VK_NULL_HANDLE;
+		VkDeviceMemory m_ImageMemory = VK_NULL_HANDLE;
+		Scope<ImageView> m_ImageView;
+
+		VkFormat m_Format;
 	};
 }  // namespace At0::Ray
