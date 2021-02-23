@@ -19,23 +19,22 @@ namespace At0::Ray
 		class UniformData
 		{
 		public:
-			UniformData(uint32_t globalOffset) : m_GlobalOffset(globalOffset) {}
-			UniformData() : m_GlobalOffset((uint32_t)-1) {}
+			UniformData(uint32_t offset) : m_OffsetInUniformBlock(offset) {}
+			UniformData() : m_OffsetInUniformBlock((uint32_t)-1) {}
 
 			template<typename T>
-			UniformData& operator=(T&& data)
+			UniformData& Update(T&& data, uint32_t globalOffset)
 			{
-				RAY_MEXPECTS(m_GlobalOffset != (uint32_t)-1,
-					"[UniformAccess::UniformData] Uniform does not exist.");
+				RAY_MEXPECTS(m_OffsetInUniformBlock != (uint32_t)-1,
+					"[UniformData] Uniform does not exist.");
 
-				UniformBufferSynchronizer::Get().Update(data, m_GlobalOffset);
+				UniformBufferSynchronizer::Get().Update(
+					data, globalOffset + m_OffsetInUniformBlock);
 				return *this;
 			}
 
-			uint32_t GetOffset() const { return m_GlobalOffset; }
-
 		private:
-			uint32_t m_GlobalOffset = 0;
+			uint32_t m_OffsetInUniformBlock = 0;
 		};
 
 

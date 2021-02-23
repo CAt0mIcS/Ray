@@ -20,26 +20,29 @@
 
 namespace At0::Ray
 {
-	Mesh::Mesh()
+	Mesh::Mesh() : m_GlobalUniformBufferOffset(nextOffset)
 	{
-		graphicsPipeline = MakeScope<GraphicsPipeline>(Graphics::Get().GetRenderPass(),
-			std::vector<std::string>{
-				"Resources/Shaders/DefaultShader.vert", "Resources/Shaders/DefaultShader.frag" });
+		if (!graphicsPipeline)
+		{
+			graphicsPipeline = new GraphicsPipeline(Graphics::Get().GetRenderPass(),
+				std::vector<std::string>{ "Resources/Shaders/DefaultShader.vert",
+					"Resources/Shaders/DefaultShader.frag" });
 
-		VertexInput vertexInput(graphicsPipeline->GetVertexLayout());
-		// clang-format off
-		vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f }, Float3{ 1.0f, 0.0f, 0.0f });
-		vertexInput.Emplace(Float3{  0.5f, -0.5f, 0.0f }, Float3{ 0.0f, 1.0f, 0.0f });
-		vertexInput.Emplace(Float3{  0.0f,  0.5f, 0.0f }, Float3{ 0.0f, 0.0f, 1.0f });
-		// clang-format on
+			VertexInput vertexInput(graphicsPipeline->GetVertexLayout());
+			// clang-format off
+			vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f }, Float3{ 1.0f, 0.0f, 0.0f });
+			vertexInput.Emplace(Float3{  0.5f, -0.5f, 0.0f }, Float3{ 0.0f, 1.0f, 0.0f });
+			vertexInput.Emplace(Float3{  0.0f,  0.5f, 0.0f }, Float3{ 0.0f, 0.0f, 1.0f });
+			// clang-format on
 
-		vertexBuffer = MakeScope<VertexBuffer>(vertexInput);
+			vertexBuffer = new VertexBuffer(vertexInput);
 
-		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
-		indexBuffer = MakeScope<IndexBuffer>(indices);
+			std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
+			indexBuffer = new IndexBuffer(indices);
+		}
+
 		uniformAccess = MakeScope<UniformAccess>(*graphicsPipeline);
 
-		UInt2 size = Window::Get().GetSize();
 
 		VkDescriptorSetAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -51,14 +54,19 @@ namespace At0::Ray
 			vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo, &descSet),
 			"Failed to allocate descriptor set.");
 
-		uint32_t offset =
-			uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.model"].GetOffset();
 		VkDescriptorBufferInfo bufferInfo{};
 		bufferInfo.buffer = UniformBufferSynchronizer::Get().GetBuffer();
-		bufferInfo.offset = offset;
-
-
+		bufferInfo.offset = m_GlobalUniformBufferOffset;
 		bufferInfo.range = sizeof(glm::mat4) * 3;
+
+		uint32_t minBufferAlignment = Graphics::Get()
+										  .GetPhysicalDevice()
+										  .GetProperties()
+										  .limits.minUniformBufferOffsetAlignment;
+
+		nextOffset += bufferInfo.range < minBufferAlignment && bufferInfo.range != 0 ?
+						  minBufferAlignment :
+						  bufferInfo.range;
 
 		VkWriteDescriptorSet descWrite{};
 		descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -74,7 +82,12 @@ namespace At0::Ray
 		vkUpdateDescriptorSets(Graphics::Get().GetDevice(), 1, &descWrite, 0, nullptr);
 	}
 
-	Mesh::~Mesh() {}
+	Mesh::~Mesh()
+	{
+		// delete indexBuffer;
+		// delete vertexBuffer;
+		// delete graphicsPipeline;
+	}
 
 	void Mesh::Update()
 	{
@@ -82,9 +95,12 @@ namespace At0::Ray
 		glm::mat4 view = Graphics::Get().cam.Matrices.View;
 		glm::mat4 proj = Graphics::Get().cam.Matrices.Perspective;
 
-		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.model"] = model;
-		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.view"] = view;
-		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.proj"] = proj;
+		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.model"].Update(
+			model, m_GlobalUniformBufferOffset);
+		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.view"].Update(
+			view, m_GlobalUniformBufferOffset);
+		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.proj"].Update(
+			proj, m_GlobalUniformBufferOffset);
 	}
 
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff)

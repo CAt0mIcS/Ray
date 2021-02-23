@@ -91,7 +91,7 @@ namespace At0::Ray
 				// The binding specified in the shader, e.g. "layout(binding = 0) uniform..."
 				uint32_t binding;
 
-				// The global offset in the global uniform buffer
+				// The offset in the uniform block or 0 if thhe uniform is not in a uniform block
 				uint32_t offset;
 
 				// The size in bytes of this uniform
@@ -184,7 +184,6 @@ namespace At0::Ray
 
 	private:
 		static int32_t ComputeSize(const glslang::TType* ttype);
-		static uint32_t CalculateNextOffset(uint32_t uniformSize);
 		static void IncrementDescriptorPool(
 			std::unordered_map<VkDescriptorType, uint32_t>& descriptorPoolCounts,
 			VkDescriptorType type);

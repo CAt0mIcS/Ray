@@ -546,12 +546,7 @@ namespace At0::Ray
 		data.binding = uniform.getBinding();
 		data.size = uniform.size;
 		data.glType = uniform.glDefineType;
-
-		// Sampler is not stored in the global uniform buffer and thus does not have to be taken
-		// into account when calculating the next offset in said buffer.
-		// (RAY_TODO: Add more types that aren't stored in a uniform buffer)
-		if (uniform.getType()->getBasicType() != glslang::TBasicType::EbtSampler)
-			data.offset = CalculateNextOffset(SizeOfGlType(uniform.glDefineType));
+		data.offset = uniform.offset;
 
 		// -1 means that it's in a block
 		if (data.binding == -1)
@@ -628,16 +623,6 @@ namespace At0::Ray
 		}
 
 		return sizeof(float) * components;
-	}
-
-	uint32_t Shader::CalculateNextOffset(uint32_t uniformSize)
-	{
-		static uint32_t currentOffset = 0;
-		uint32_t prevOffset = currentOffset;
-
-		currentOffset += uniformSize;
-
-		return prevOffset;
 	}
 
 	void Shader::IncrementDescriptorPool(

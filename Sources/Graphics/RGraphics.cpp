@@ -26,6 +26,8 @@
 #include "Primitives/RMesh.h"
 #include "Buffers/RUniformBufferSynchronizer.h"
 
+#include <random>
+
 
 namespace At0::Ray
 {
@@ -201,10 +203,13 @@ namespace At0::Ray
 		CreateRenderPass();
 		CreateFramebuffers();
 
-		for (uint32_t i = 0; i < 1; ++i)
+		std::mt19937 device;
+		std::uniform_real_distribution<float> dist(-50.0f, 50.0f);
+
+		for (uint32_t i = 0; i < 8000; ++i)
 		{
 			meshes.emplace_back(new Mesh());
-			meshes[i]->Translate({ i, 0, 0 });
+			meshes[i]->Translate({ dist(device), dist(device), dist(device) });
 		}
 
 		CreateCommandBuffers();
@@ -295,7 +300,7 @@ namespace At0::Ray
 
 		for (Mesh* mesh : meshes)
 		{
-			vkCmdBindPipeline(cmdBuff, mesh->GetPipeline()->GetBindPoint(), *mesh->GetPipeline());
+			vkCmdBindPipeline(cmdBuff, mesh->GetPipeline().GetBindPoint(), mesh->GetPipeline());
 
 			mesh->CmdBind(cmdBuff);
 			mesh->CmdDraw(cmdBuff);

@@ -23,19 +23,22 @@ namespace At0::Ray
 		void CmdBind(const CommandBuffer& cmdBuff);
 		void CmdDraw(const CommandBuffer& cmdBuff);
 
-		Scope<GraphicsPipeline>& GetPipeline() { return graphicsPipeline; }
+		GraphicsPipeline& GetPipeline() { return *graphicsPipeline; }
 
 		Scope<UniformAccess> uniformAccess;
 
 		void Translate(Float3 translation);
 
 	private:
-		Scope<VertexBuffer> vertexBuffer;
-		Scope<IndexBuffer> indexBuffer;
-		Scope<GraphicsPipeline> graphicsPipeline;
+		inline static VertexBuffer* vertexBuffer = nullptr;
+		inline static IndexBuffer* indexBuffer = nullptr;
+		inline static GraphicsPipeline* graphicsPipeline = nullptr;
 
 		VkDescriptorSet descSet;
 
 		Float3 translation{};
+
+		uint32_t m_GlobalUniformBufferOffset = 0;
+		inline static uint32_t nextOffset = 0;
 	};
 }  // namespace At0::Ray
