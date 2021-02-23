@@ -41,9 +41,10 @@ namespace At0::Ray
 		class UniformDataAccess
 		{
 		public:
-			UniformDataAccess(
-				const Shader::Uniforms* uniforms, const Shader::UniformBlocks* uniformBlocks)
-				: m_Uniforms(uniforms), m_UniformBlocks(uniformBlocks)
+			UniformDataAccess(const Shader::Uniforms* uniforms,
+				const Shader::UniformBlocks* uniformBlocks,
+				std::pair<std::string, const Shader::UniformBlocks::UniformBlockData*>& blockCache)
+				: m_Uniforms(uniforms), m_UniformBlocks(uniformBlocks), m_BlockCache(blockCache)
 			{
 			}
 
@@ -53,6 +54,7 @@ namespace At0::Ray
 		private:
 			const Shader::Uniforms* m_Uniforms;
 			const Shader::UniformBlocks* m_UniformBlocks;
+			std::pair<std::string, const Shader::UniformBlocks::UniformBlockData*>& m_BlockCache;
 		};
 
 	public:
@@ -74,5 +76,6 @@ namespace At0::Ray
 
 	private:
 		const Shader& m_Shader;
+		std::pair<std::string, const Shader::UniformBlocks::UniformBlockData*> m_BlockCache{};
 	};
 }  // namespace At0::Ray
