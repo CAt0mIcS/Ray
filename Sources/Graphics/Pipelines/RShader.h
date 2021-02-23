@@ -103,7 +103,7 @@ namespace At0::Ray
 
 		public:
 			void Emplace(std::string_view uniformName, const UniformData& data);
-			std::optional<Uniforms::UniformData> Get(std::string_view uniformName) const;
+			const Uniforms::UniformData* Get(std::string_view uniformName) const;
 
 			const auto begin() const { return m_Uniforms.begin(); }
 			const auto end() const { return m_Uniforms.end(); }
@@ -145,8 +145,7 @@ namespace At0::Ray
 
 		public:
 			void Emplace(std::string_view uniformBlockName, const UniformBlockData& data);
-			std::optional<UniformBlocks::UniformBlockData> Get(
-				std::string_view uniformBlockName) const;
+			const UniformBlocks::UniformBlockData* Get(std::string_view uniformBlockName) const;
 
 
 		private:
@@ -171,8 +170,8 @@ namespace At0::Ray
 		static Shader::Stage ToShaderStage(VkShaderStageFlags stageFlags);
 		static VkShaderStageFlags ToVkShaderStage(Shader::Stage stageFlags);
 
-		std::optional<Shader::UniformBlocks> GetUniformBlocks(Shader::Stage stage) const;
-		std::optional<Shader::Uniforms> GetUniforms(Shader::Stage stage) const;
+		const Shader::UniformBlocks* GetUniformBlocks(Shader::Stage stage) const;
+		const Shader::Uniforms* GetUniforms(Shader::Stage stage) const;
 		std::vector<Shader::Stage> GetLiveShaderStages() const;
 
 		const auto& GetDescriptorSetLayoutBindings() const { return m_DescriptorSetLayoutBindings; }

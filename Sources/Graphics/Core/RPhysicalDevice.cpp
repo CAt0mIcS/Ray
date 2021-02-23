@@ -27,6 +27,7 @@ namespace At0::Ray
 
 		vkGetPhysicalDeviceFeatures(m_Device, &m_Features);
 		vkGetPhysicalDeviceMemoryProperties(m_Device, &m_MemoryProperties);
+		vkGetPhysicalDeviceProperties(m_Device, &m_Properties);
 	}
 
 	const VkPhysicalDeviceMemoryProperties& PhysicalDevice::GetMemoryProperties() const

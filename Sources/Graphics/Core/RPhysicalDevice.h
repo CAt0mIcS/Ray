@@ -17,6 +17,7 @@ namespace At0::Ray
 
 		const VkPhysicalDeviceFeatures& GetFeatures() const { return m_Features; }
 		const VkPhysicalDeviceMemoryProperties& GetMemoryProperties() const;
+		const VkPhysicalDeviceProperties& GetProperties() const { return m_Properties; }
 
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
 
@@ -29,5 +30,6 @@ namespace At0::Ray
 
 		VkPhysicalDeviceFeatures m_Features{};
 		VkPhysicalDeviceMemoryProperties m_MemoryProperties{};
+		VkPhysicalDeviceProperties m_Properties;
 	};
 }  // namespace At0::Ray

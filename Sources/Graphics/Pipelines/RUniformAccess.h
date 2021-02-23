@@ -42,8 +42,8 @@ namespace At0::Ray
 		class UniformDataAccess
 		{
 		public:
-			UniformDataAccess(std::optional<Shader::Uniforms> uniforms,
-				std::optional<Shader::UniformBlocks> uniformBlocks)
+			UniformDataAccess(
+				const Shader::Uniforms* uniforms, const Shader::UniformBlocks* uniformBlocks)
 				: m_Uniforms(uniforms), m_UniformBlocks(uniformBlocks)
 			{
 			}
@@ -51,8 +51,8 @@ namespace At0::Ray
 			UniformData operator[](std::string_view uniformPath);
 
 		private:
-			std::optional<Shader::Uniforms> m_Uniforms;
-			std::optional<Shader::UniformBlocks> m_UniformBlocks;
+			const Shader::Uniforms* m_Uniforms;
+			const Shader::UniformBlocks* m_UniformBlocks;
 		};
 
 	public:

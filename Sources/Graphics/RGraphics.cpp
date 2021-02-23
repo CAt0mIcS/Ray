@@ -29,7 +29,7 @@
 
 namespace At0::Ray
 {
-	Mesh* mesh;
+	std::vector<Mesh*> meshes;
 
 	Graphics::~Graphics()
 	{
@@ -46,7 +46,8 @@ namespace At0::Ray
 
 		UniformBufferSynchronizer::Destroy();
 
-		delete mesh;
+		for (Mesh* mesh : meshes)
+			delete mesh;
 
 		m_Framebuffers.clear();
 		m_RenderPass.reset();
@@ -91,7 +92,8 @@ namespace At0::Ray
 			RAY_THROW_RUNTIME("[Graphics] Failed to acquire next swapchain image.");
 
 		// Update drawables
-		mesh->Update();
+		for (Mesh* mesh : meshes)
+			mesh->Update();
 
 		// Check if previous frame is still using this image (e.g. there is its fence to wait on)
 		if (m_ImagesInFlight[imageIndex] != VK_NULL_HANDLE)
@@ -199,7 +201,11 @@ namespace At0::Ray
 		CreateRenderPass();
 		CreateFramebuffers();
 
-		mesh = new Mesh();
+		for (uint32_t i = 0; i < 1; ++i)
+		{
+			meshes.emplace_back(new Mesh());
+			meshes[i]->Translate({ i, 0, 0 });
+		}
 
 		CreateCommandBuffers();
 		CreateSyncObjects();
@@ -287,10 +293,13 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		vkCmdBindPipeline(cmdBuff, mesh->GetPipeline()->GetBindPoint(), *mesh->GetPipeline());
+		for (Mesh* mesh : meshes)
+		{
+			vkCmdBindPipeline(cmdBuff, mesh->GetPipeline()->GetBindPoint(), *mesh->GetPipeline());
 
-		mesh->CmdBind(cmdBuff);
-		mesh->CmdDraw(cmdBuff);
+			mesh->CmdBind(cmdBuff);
+			mesh->CmdDraw(cmdBuff);
+		}
 
 		m_RenderPass->End(cmdBuff);
 

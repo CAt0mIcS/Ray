@@ -1,12 +1,15 @@
 ﻿#include "Rpch.h"
 #include "RMesh.h"
 
+#include <numeric>
+
 #include "Graphics/RGraphics.h"
 #include "Graphics/Buffers/RIndexBuffer.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/Core/RLogicalDevice.h"
+#include "Graphics/Core/RPhysicalDevice.h"
 
 #include "Core/RVertex.h"
 #include "Utils/RException.h"
@@ -48,10 +51,13 @@ namespace At0::Ray
 			vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo, &descSet),
 			"Failed to allocate descriptor set.");
 
+		uint32_t offset =
+			uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.model"].GetOffset();
 		VkDescriptorBufferInfo bufferInfo{};
 		bufferInfo.buffer = UniformBufferSynchronizer::Get().GetBuffer();
-		bufferInfo.offset =
-			uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.modelViewProj"].GetOffset();
+		bufferInfo.offset = offset;
+
+
 		bufferInfo.range = sizeof(glm::mat4) * 3;
 
 		VkWriteDescriptorSet descWrite{};
@@ -72,12 +78,13 @@ namespace At0::Ray
 
 	void Mesh::Update()
 	{
-		glm::mat4 model = glm::identity<glm::mat4>();
+		glm::mat4 model = MatrixTranslation(translation);
 		glm::mat4 view = Graphics::Get().cam.Matrices.View;
 		glm::mat4 proj = Graphics::Get().cam.Matrices.Perspective;
 
-		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.modelViewProj"] =
-			proj * view * model;
+		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.model"] = model;
+		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.view"] = view;
+		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.proj"] = proj;
 	}
 
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff)
@@ -95,4 +102,6 @@ namespace At0::Ray
 	{
 		vkCmdDrawIndexed(cmdBuff, indexBuffer->GetNumberOfIndices(), 1, 0, 0, 0);
 	}
+
+	void Mesh::Translate(Float3 translation) { this->translation += translation; }
 }  // namespace At0::Ray

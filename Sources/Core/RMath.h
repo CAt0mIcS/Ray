@@ -22,4 +22,9 @@ namespace At0::Ray
 	using Float2 = glm::vec<2, float, glm::defaultp>;
 	using Float3 = glm::vec<3, float, glm::defaultp>;
 	using Float4 = glm::vec<4, float, glm::defaultp>;
+
+	using Matrix = glm::mat4;
+
+	Matrix MatrixTranslation(Float3 translation);
+	Matrix MatrixTranslation(float x, float y, float z);
 }  // namespace At0::Ray

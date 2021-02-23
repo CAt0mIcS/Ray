@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "../RBase.h"
+#include "../Core/RMath.h"
 
 namespace At0::Ray
 {
@@ -26,11 +27,15 @@ namespace At0::Ray
 
 		Scope<UniformAccess> uniformAccess;
 
+		void Translate(Float3 translation);
+
 	private:
 		Scope<VertexBuffer> vertexBuffer;
 		Scope<IndexBuffer> indexBuffer;
 		Scope<GraphicsPipeline> graphicsPipeline;
 
 		VkDescriptorSet descSet;
+
+		Float3 translation{};
 	};
 }  // namespace At0::Ray

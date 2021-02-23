@@ -501,18 +501,28 @@ namespace At0::Ray
 		return VK_SHADER_STAGE_VERTEX_BIT;
 	}
 
-	std::optional<Shader::UniformBlocks> Shader::GetUniformBlocks(Shader::Stage stage) const
+	const Shader::UniformBlocks* Shader::GetUniformBlocks(Shader::Stage stage) const
 	{
-		if (auto it = m_ShaderData.find(stage); it != m_ShaderData.end())
-			return it->second.uniformBlocks;
-		return std::nullopt;
+		try
+		{
+			return &m_ShaderData.at(stage).uniformBlocks;
+		}
+		catch (std::out_of_range&)
+		{
+			return nullptr;
+		}
 	}
 
-	std::optional<Shader::Uniforms> Shader::GetUniforms(Shader::Stage stage) const
+	const Shader::Uniforms* Shader::GetUniforms(Shader::Stage stage) const
 	{
-		if (auto it = m_ShaderData.find(stage); it != m_ShaderData.end())
-			return it->second.uniforms;
-		return std::nullopt;
+		try
+		{
+			return &m_ShaderData.at(stage).uniforms;
+		}
+		catch (std::out_of_range&)
+		{
+			return nullptr;
+		}
 	}
 
 	std::vector<Shader::Stage> Shader::GetLiveShaderStages() const
@@ -657,12 +667,16 @@ namespace At0::Ray
 		m_Uniforms[uniformName.data()] = data;
 	}
 
-	std::optional<Shader::Uniforms::UniformData> Shader::Uniforms::Get(
-		std::string_view uniformName) const
+	const Shader::Uniforms::UniformData* Shader::Uniforms::Get(std::string_view uniformName) const
 	{
-		if (auto it = m_Uniforms.find(uniformName.data()); it != m_Uniforms.end())
-			return it->second;
-		return std::nullopt;
+		try
+		{
+			return &m_Uniforms.at(uniformName.data());
+		}
+		catch (std::out_of_range&)
+		{
+			return nullptr;
+		}
 	}
 
 
@@ -674,11 +688,16 @@ namespace At0::Ray
 		m_UniformBlocks[uniformBlockName.data()] = data;
 	}
 
-	std::optional<Shader::UniformBlocks::UniformBlockData> Shader::UniformBlocks::Get(
+	const Shader::UniformBlocks::UniformBlockData* Shader::UniformBlocks::Get(
 		std::string_view uniformBlockName) const
 	{
-		if (auto it = m_UniformBlocks.find(uniformBlockName.data()); it != m_UniformBlocks.end())
-			return it->second;
-		return std::nullopt;
+		try
+		{
+			return &m_UniformBlocks.at(uniformBlockName.data());
+		}
+		catch (std::out_of_range&)
+		{
+			return nullptr;
+		}
 	}
 }  // namespace At0::Ray

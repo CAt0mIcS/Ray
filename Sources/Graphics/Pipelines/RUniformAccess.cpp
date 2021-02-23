@@ -14,10 +14,7 @@ namespace At0::Ray
 
 	UniformAccess::UniformDataAccess UniformAccess::Resolve(Shader::Stage stageFlag)
 	{
-		auto uniformBlocks = m_Shader.GetUniformBlocks(stageFlag);
-		auto uniforms = m_Shader.GetUniforms(stageFlag);
-
-		return { uniforms, uniformBlocks };
+		return { m_Shader.GetUniforms(stageFlag), m_Shader.GetUniformBlocks(stageFlag) };
 	}
 
 	UniformAccess::UniformData UniformAccess::UniformDataAccess::operator[](
@@ -52,7 +49,7 @@ namespace At0::Ray
 					"[UniformAccess] Uniform Block {0} was not found.", uniformBlockAndName[0]);
 
 			auto uniformData = uniformBlockData->uniforms.Get(uniformBlockAndName[1]);
-			if (!uniformBlockData)
+			if (!uniformData)
 				RAY_THROW_RUNTIME(
 					"[UniformAccess] Uniform {0} was not found.", uniformBlockAndName[1]);
 

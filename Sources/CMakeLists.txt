@@ -10,6 +10,7 @@ set(SRC
 	"Core/RTime.h"
 	"Core/RTime.cpp"
 	"Core/RMath.h"
+	"Core/RMath.cpp"
 	"Core/RKeyCodes.h"
 	"Core/RVertex.h"
 	"Core/RCamera.cpp"
