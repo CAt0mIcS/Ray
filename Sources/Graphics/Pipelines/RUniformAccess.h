@@ -37,11 +37,27 @@ namespace At0::Ray
 			uint32_t m_GlobalOffset = 0;
 		};
 
+
+		class UniformDataAccess
+		{
+		public:
+			UniformDataAccess(std::optional<Shader::Uniforms> uniforms,
+				std::optional<Shader::UniformBlocks> uniformBlocks)
+				: m_Uniforms(uniforms), m_UniformBlocks(uniformBlocks)
+			{
+			}
+
+			UniformData operator[](std::string_view uniformPath);
+
+		private:
+			std::optional<Shader::Uniforms> m_Uniforms;
+			std::optional<Shader::UniformBlocks> m_UniformBlocks;
+		};
+
 	public:
 		UniformAccess(const Pipeline& pipeline);
 
-		UniformData Resolve(Shader::Stage stageFlag, std::string_view uniformName,
-			std::string_view uniformBlockName = "");
+		UniformDataAccess Resolve(Shader::Stage stageFlag);
 
 	private:
 		const Shader& m_Shader;

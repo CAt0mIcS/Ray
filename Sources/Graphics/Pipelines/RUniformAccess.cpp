@@ -12,39 +12,49 @@ namespace At0::Ray
 {
 	UniformAccess::UniformAccess(const Pipeline& pipeline) : m_Shader(pipeline.GetShader()) {}
 
-	UniformAccess::UniformData UniformAccess::Resolve(
-		Shader::Stage stageFlag, std::string_view uniformName, std::string_view uniformBlockName)
+	UniformAccess::UniformDataAccess UniformAccess::Resolve(Shader::Stage stageFlag)
 	{
-		// If no uniform block was specified the uniform is in global space
-		if (uniformBlockName.empty())
-		{
-			auto uniforms = m_Shader.GetUniforms(stageFlag);
-			if (!uniforms)
-				RAY_THROW_RUNTIME("[UniformAccess] No uniforms registered for shader stage {0}.",
-					String::Construct(stageFlag));
+		auto uniformBlocks = m_Shader.GetUniformBlocks(stageFlag);
+		auto uniforms = m_Shader.GetUniforms(stageFlag);
 
-			auto uniformData = uniforms->Get(uniformName);
+		return { uniforms, uniformBlocks };
+	}
+
+	UniformAccess::UniformData UniformAccess::UniformDataAccess::operator[](
+		std::string_view uniformPath)
+	{
+		std::vector<std::string> uniformBlockAndName = String::Split(uniformPath, '.');
+		if (uniformBlockAndName.size() > 2)
+			RAY_THROW_RUNTIME("[UniformDataAccess] Uniform path {0} is invalid.", uniformPath);
+
+		// If the string doesn't contain a '.', assume that the uniform is global
+		if (uniformBlockAndName.size() == 1)
+		{
+			if (!m_Uniforms)
+				RAY_THROW_RUNTIME("[UniformDataAccess] No uniforms registered for shader stage.");
+
+			auto uniformData = m_Uniforms->Get(uniformBlockAndName[0]);
 			if (!uniformData)
-				RAY_THROW_RUNTIME("[UniformAccess] Uniform {0} was not found.", uniformName);
+				RAY_THROW_RUNTIME(
+					"[UniformAccess] Uniform {0} was not found.", uniformBlockAndName[0]);
 
 			return { uniformData->offset };
 		}
 		else
 		{
-			auto uniformBlocks = m_Shader.GetUniformBlocks(stageFlag);
-			if (!uniformBlocks)
+			if (!m_UniformBlocks)
 				RAY_THROW_RUNTIME(
-					"[UniformAccess] No uniform blocks registered for shader stage {0}.",
-					String::Construct(stageFlag));
+					"[UniformDataAccess] No uniform blocks registered for shader stage.");
 
-			auto uniformBlockData = uniformBlocks->Get(uniformBlockName);
+			auto uniformBlockData = m_UniformBlocks->Get(uniformBlockAndName[0]);
 			if (!uniformBlockData)
 				RAY_THROW_RUNTIME(
-					"[UniformAccess] Uniform Block {0} was not found.", uniformBlockName);
+					"[UniformAccess] Uniform Block {0} was not found.", uniformBlockAndName[0]);
 
-			auto uniformData = uniformBlockData->uniforms.Get(uniformName);
+			auto uniformData = uniformBlockData->uniforms.Get(uniformBlockAndName[1]);
 			if (!uniformBlockData)
-				RAY_THROW_RUNTIME("[UniformAccess] Uniform {0} was not found.", uniformName);
+				RAY_THROW_RUNTIME(
+					"[UniformAccess] Uniform {0} was not found.", uniformBlockAndName[1]);
 
 			return { uniformData->offset };
 		}

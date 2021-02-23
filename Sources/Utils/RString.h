@@ -104,6 +104,6 @@ namespace At0::Ray
 		 * @param sep The token at which the string will be split
 		 * @returns The different parts of a string
 		 */
-		static std::vector<std::string> Split(std::string str, char sep);
+		static std::vector<std::string> Split(std::string_view str, char sep);
 	};
 }  // namespace At0::Ray

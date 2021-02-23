@@ -51,8 +51,7 @@ namespace At0::Ray
 		VkDescriptorBufferInfo bufferInfo{};
 		bufferInfo.buffer = UniformBufferSynchronizer::Get().GetBuffer();
 		bufferInfo.offset =
-			uniformAccess->Resolve(Shader::Stage::Vertex, "modelViewProj", "Transforms")
-				.GetOffset();
+			uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.modelViewProj"].GetOffset();
 		bufferInfo.range = sizeof(Matrix) * 3;
 
 		VkWriteDescriptorSet descWrite{};
@@ -74,14 +73,10 @@ namespace At0::Ray
 	void Mesh::Update()
 	{
 		glm::mat4 model = glm::identity<glm::mat4>();
-		// glm::mat4 view = glm::lookAt(glm::vec3{ 2.0f, 2.0f, 2.0f }, glm::vec3{ 0.0f, 0.0f, 0.0f
-		// }, glm::vec3{ 0.0f, 0.0f, 1.0f });
-		// glm::mat4 proj = glm::perspective(45.0f, (float)size.x / (float)size.y, 0.1f, 256.0f);
-
 		glm::mat4 view = Graphics::Get().cam.Matrices.View;
 		glm::mat4 proj = Graphics::Get().cam.Matrices.Perspective;
 
-		uniformAccess->Resolve(Shader::Stage::Vertex, "modelViewProj", "Transforms") =
+		uniformAccess->Resolve(Shader::Stage::Vertex)["Transforms.modelViewProj"] =
 			proj * view * model;
 	}
 
