@@ -20,7 +20,7 @@ namespace At0::Ray
 	UniformAccess::UniformData UniformAccess::UniformDataAccess::operator[](
 		std::string_view uniformPath)
 	{
-		std::vector<std::string> uniformBlockAndName = String::Split(uniformPath, '.');
+		std::array<std::string, 2> uniformBlockAndName = String::Split<1>(uniformPath.data(), '.');
 		if (uniformBlockAndName.size() > 2)
 			RAY_THROW_RUNTIME("[UniformDataAccess] Uniform path {0} is invalid.", uniformPath);
 

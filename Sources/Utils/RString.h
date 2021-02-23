@@ -100,10 +100,32 @@ namespace At0::Ray
 
 		/**
 		 * Splits a string at token. The token will not be included in the result strings
-		 * @param str The string
-		 * @param sep The token at which the string will be split
 		 * @returns The different parts of a string
 		 */
-		static std::vector<std::string> Split(std::string_view str, char sep);
+		static std::vector<std::string> Split(std::string str, char sep);
+
+		/**
+		 * Splits the string at the separator. The separator will not be included in the result
+		 * strings
+		 * @tparam MaxTokens the maximum number of tokens in the string
+		 * @returns The different parts of a string
+		 */
+		template<uint32_t MaxSeparators>
+		static std::array<std::string, MaxSeparators + 1> Split(std::string str, char sep)
+		{
+			std::array<std::string, MaxSeparators + 1> tokens;
+
+			size_t pos = 0;
+			uint32_t i = 0;
+			while ((pos = str.find(sep)) != std::string::npos)
+			{
+				tokens[i] = str.substr(0, pos);
+				str.erase(0, pos + 1);
+				++i;
+			}
+			tokens[MaxSeparators] = str;
+
+			return tokens;
+		}
 	};
 }  // namespace At0::Ray

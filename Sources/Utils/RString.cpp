@@ -256,14 +256,19 @@ namespace At0::Ray
 		return str.find(token) != std::string::npos;
 	}
 
-	std::vector<std::string> String::Split(std::string_view str, char sep)
+	std::vector<std::string> String::Split(std::string str, char sep)
 	{
 		std::vector<std::string> tokens;
-		std::string token;
-		std::istringstream tokenStream(str.data());
 
-		while (std::getline(tokenStream, token, sep))
-			tokens.emplace_back(token);
+		size_t pos = 0;
+		while ((pos = str.find(sep)) != std::string::npos)
+		{
+			tokens.emplace_back(str.substr(0, pos));
+			str.erase(0, pos + 1);
+		}
+
+		tokens.emplace_back(str);
+
 		return tokens;
 	}
 
