@@ -249,8 +249,6 @@ namespace At0::Ray
 		});
 
 		glfwSetFramebufferSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height) {
-			Graphics::Get().m_FramebufferResized = true;
-
 			FramebufferResizedEvent e({ width, height });
 			for (auto* listener : Window::Get().EventDispatcher<FramebufferResizedEvent>::Get())
 				listener->OnEvent(e);

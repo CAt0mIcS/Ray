@@ -5,6 +5,7 @@
 #include "../Core/RTime.h"
 #include "../Core/RMath.h"
 #include "../Core/RCamera.h"
+#include "../Events/REngineEvents.h"
 
 #include <vulkan/vulkan_core.h>
 #include <vector>
@@ -24,10 +25,8 @@ namespace At0::Ray
 	class Framebuffer;
 	class DepthImage;
 
-	class RAY_EXPORT Graphics : NonCopyable
+	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
 	{
-		friend class Window;
-
 	public:
 		~Graphics();
 		static Graphics& Get();
@@ -63,6 +62,7 @@ namespace At0::Ray
 		void CreateCommandBuffers();
 		void RecordCommandBuffer(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer);
 		void CreateSyncObjects();
+		void OnEvent(FramebufferResizedEvent& e) override;
 		void OnFramebufferResized();
 
 	private:

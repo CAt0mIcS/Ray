@@ -364,7 +364,7 @@ namespace At0::Ray
 		}
 	}
 
-	void Graphics::OnFramebufferResized()
+	void At0::Ray::Graphics::OnFramebufferResized()
 	{
 		// Minimized window will have framebuffer size of [0 | 0]
 		// Sleep until window is back in foreground
@@ -401,4 +401,6 @@ namespace At0::Ray
 
 		m_FramebufferResized = false;
 	}
+
+	void Graphics::OnEvent(FramebufferResizedEvent& e) { m_FramebufferResized = true; }
 }  // namespace At0::Ray
