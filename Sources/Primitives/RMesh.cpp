@@ -97,13 +97,13 @@ namespace At0::Ray
 
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff)
 	{
-		VkDeviceSize offsets[] = { 0 };
-		VkBuffer vbuff = *vertexBuffer;
-		VkBuffer idxBuff = *indexBuffer;
+		graphicsPipeline->CmdBind(cmdBuff);
+
 		vkCmdBindDescriptorSets(cmdBuff, VK_PIPELINE_BIND_POINT_GRAPHICS,
 			graphicsPipeline->GetLayout(), 0, 1, &descSet, 0, nullptr);
-		vkCmdBindVertexBuffers(cmdBuff, 0, 1, &vbuff, offsets);
-		vkCmdBindIndexBuffer(cmdBuff, idxBuff, 0, VK_INDEX_TYPE_UINT16);
+
+		vertexBuffer->CmdBind(cmdBuff);
+		indexBuffer->CmdBind(cmdBuff);
 	}
 
 	void Mesh::CmdDraw(const CommandBuffer& cmdBuff)

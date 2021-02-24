@@ -334,8 +334,6 @@ namespace At0::Ray
 
 		for (Mesh* mesh : meshes)
 		{
-			vkCmdBindPipeline(cmdBuff, mesh->GetPipeline().GetBindPoint(), mesh->GetPipeline());
-
 			mesh->CmdBind(cmdBuff);
 			mesh->CmdDraw(cmdBuff);
 		}
