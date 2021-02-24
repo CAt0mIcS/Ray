@@ -13,8 +13,11 @@ set(SRC
 	"Core/RMath.cpp"
 	"Core/RKeyCodes.h"
 	"Core/RVertex.h"
-	"Core/RCamera.cpp"
 	"Core/RCamera.h"
+	"Core/RCamera.cpp"
+	"Core/REntity.h"
+	"Core/RScene.h"
+	"Core/RScene.cpp"
 	
 
 	# ------------------------------------------------------------------
@@ -99,6 +102,8 @@ set(SRC
 	"Primitives/RModel.cpp"
 	"Primitives/RMesh.h"
 	"Primitives/RMesh.cpp"
+	"Primitives/RComponents.h"
+	"Primitives/RComponents.cpp"
 
 	# ------------------------------------------------------------------
 	# Utilities

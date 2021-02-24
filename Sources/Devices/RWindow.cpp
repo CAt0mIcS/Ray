@@ -203,7 +203,7 @@ namespace At0::Ray
 				case GLFW_REPEAT:
 				{
 					Key k = (Key)key;
-					uint32_t repeatCount;
+					uint32_t repeatCount = 1;
 
 					KeyRepeatedEvent e(k, repeatCount);
 					for (auto* listener : Window::Get().EventDispatcher<KeyRepeatedEvent>::Get())

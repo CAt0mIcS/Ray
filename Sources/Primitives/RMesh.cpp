@@ -14,6 +14,7 @@
 
 #include "Core/RVertex.h"
 #include "Utils/RException.h"
+#include "Core/RScene.h"
 
 #include "Graphics/Pipelines/RUniformAccess.h"
 #include "Devices/RWindow.h"
@@ -21,8 +22,10 @@
 
 namespace At0::Ray
 {
-	Mesh::Mesh() : m_GlobalUniformBufferOffset(nextOffset)
+	Mesh::Mesh() : m_GlobalUniformBufferOffset(nextOffset), m_Entity(Scene::Get().CreateEntity())
 	{
+		m_Entity.Emplace<Transform>();
+
 		graphicsPipeline = Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(),
 			std::vector<std::string>{
 				"Resources/Shaders/DefaultShader.vert", "Resources/Shaders/DefaultShader.frag" });
@@ -85,18 +88,11 @@ namespace At0::Ray
 	void Mesh::Update()
 	{
 		uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "model")
-			.Update(MatrixTranslation(translation), m_GlobalUniformBufferOffset);
+			.Update(m_Entity.Get<Transform>().ToMatrix(), m_GlobalUniformBufferOffset);
 		uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "view")
 			.Update(Graphics::Get().cam.Matrices.View, m_GlobalUniformBufferOffset);
 		uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "proj")
 			.Update(Graphics::Get().cam.Matrices.Perspective, m_GlobalUniformBufferOffset);
-
-		// uniformAccess->Resolve(Shader::Stage::Vertex)("Transforms", "model")
-		//	.Update(MatrixTranslation(translation), m_GlobalUniformBufferOffset);
-		// uniformAccess->Resolve(Shader::Stage::Vertex)("Transforms", "view")
-		//	.Update(Graphics::Get().cam.Matrices.View, m_GlobalUniformBufferOffset);
-		// uniformAccess->Resolve(Shader::Stage::Vertex)("Transforms", "proj")
-		//	.Update(Graphics::Get().cam.Matrices.Perspective, m_GlobalUniformBufferOffset);
 	}
 
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff)
@@ -114,6 +110,4 @@ namespace At0::Ray
 	{
 		vkCmdDrawIndexed(cmdBuff, indexBuffer->GetNumberOfIndices(), 1, 0, 0, 0);
 	}
-
-	void Mesh::Translate(Float3 translation) { this->translation += translation; }
 }  // namespace At0::Ray

@@ -27,4 +27,8 @@ namespace At0::Ray
 
 	Matrix MatrixTranslation(Float3 translation);
 	Matrix MatrixTranslation(float x, float y, float z);
+	Matrix MatrixRotation(Float3 pitchYawRoll);
+	Matrix MatrixRotation(float pitch, float yaw, float roll);
+	Matrix MatrixScale(Float3 scale);
+	Matrix MatrixScale(float x, float y, float z);
 }  // namespace At0::Ray

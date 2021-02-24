@@ -102,7 +102,7 @@ namespace At0::Ray
 		createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		createInfo.flags = 0;
 		// createInfo.maxSets = 8192;
-		createInfo.maxSets = 70000;
+		createInfo.maxSets = 50000;
 		createInfo.poolSizeCount = (uint32_t)descriptorPoolSizes.size();
 		createInfo.pPoolSizes = descriptorPoolSizes.data();
 

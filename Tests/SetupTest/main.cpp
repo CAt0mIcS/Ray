@@ -4,6 +4,7 @@
 #include <Graphics/RGraphics.h>
 
 #include <Core/RVertex.h>
+#include <Core/RScene.h>
 
 using namespace At0;
 
@@ -11,6 +12,8 @@ using namespace At0;
 class App : public Ray::Engine
 {
 public:
+	App() {}
+
 private:
 	void Update() override {}
 };

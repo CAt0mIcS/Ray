@@ -2,6 +2,8 @@
 
 #include "../RBase.h"
 #include "../Core/RMath.h"
+#include "../Core/REntity.h"
+#include "RComponents.h"
 
 namespace At0::Ray
 {
@@ -27,7 +29,7 @@ namespace At0::Ray
 
 		Scope<UniformAccess> uniformAccess;
 
-		void Translate(Float3 translation);
+		Entity GetEntity() { return m_Entity; }
 
 	private:
 		Ref<VertexBuffer> vertexBuffer = nullptr;
@@ -35,8 +37,7 @@ namespace At0::Ray
 		Ref<GraphicsPipeline> graphicsPipeline = nullptr;
 
 		VkDescriptorSet descSet;
-
-		Float3 translation{};
+		Entity m_Entity;
 
 		uint32_t m_GlobalUniformBufferOffset = 0;
 		inline static uint32_t nextOffset = 0;
