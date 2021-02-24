@@ -30,9 +30,9 @@ namespace At0::Ray
 		void Translate(Float3 translation);
 
 	private:
-		inline static VertexBuffer* vertexBuffer = nullptr;
-		inline static IndexBuffer* indexBuffer = nullptr;
-		inline static GraphicsPipeline* graphicsPipeline = nullptr;
+		Ref<VertexBuffer> vertexBuffer = nullptr;
+		Ref<IndexBuffer> indexBuffer = nullptr;
+		Ref<GraphicsPipeline> graphicsPipeline = nullptr;
 
 		VkDescriptorSet descSet;
 

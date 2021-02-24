@@ -2,6 +2,7 @@
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
+#include "../Core/RBindable.h"
 
 #include "RShader.h"
 
@@ -10,12 +11,13 @@
 
 namespace At0::Ray
 {
-	class RAY_EXPORT Pipeline
+	class RAY_EXPORT Pipeline : public Bindable
 	{
 	public:
 		virtual ~Pipeline();
 
 		virtual VkPipelineBindPoint GetBindPoint() const = 0;
+		void CmdBind(const CommandBuffer& cmdBuff) const override;
 
 		const Shader& GetShader() const { return m_Shader; }
 		const VkPipelineLayout& GetLayout() const { return m_Layout; }

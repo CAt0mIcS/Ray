@@ -11,6 +11,7 @@
 #include "Graphics/Core/RSurface.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Core/RSwapchain.h"
+#include "Graphics/Core/RCodex.h"
 
 #include "Graphics/Commands/RCommandPool.h"
 #include "Graphics/Commands/RCommandBuffer.h"
@@ -50,6 +51,8 @@ namespace At0::Ray
 
 		for (Mesh* mesh : meshes)
 			delete mesh;
+
+		Codex::Shutdown();
 
 		m_DepthImage.reset();
 		m_Framebuffers.clear();
@@ -209,7 +212,7 @@ namespace At0::Ray
 		std::mt19937 device;
 		std::uniform_real_distribution<float> dist(-50.0f, 50.0f);
 
-		for (uint32_t i = 0; i < 50000; ++i)
+		for (uint32_t i = 0; i < 70000; ++i)
 		{
 			meshes.emplace_back(new Mesh());
 			meshes[i]->Translate({ dist(device), dist(device), dist(device) });

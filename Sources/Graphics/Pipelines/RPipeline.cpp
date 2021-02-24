@@ -1,8 +1,9 @@
-#include "Rpch.h"
+﻿#include "Rpch.h"
 #include "RPipeline.h"
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
+#include "Graphics/Commands/RCommandBuffer.h"
 
 
 namespace At0::Ray
@@ -11,5 +12,10 @@ namespace At0::Ray
 	{
 		vkDestroyPipelineLayout(Graphics::Get().GetDevice(), m_Layout, nullptr);
 		vkDestroyPipeline(Graphics::Get().GetDevice(), m_Pipeline, nullptr);
+	}
+
+	void Pipeline::CmdBind(const CommandBuffer& cmdBuff) const
+	{
+		vkCmdBindPipeline(cmdBuff, GetBindPoint(), m_Pipeline);
 	}
 }  // namespace At0::Ray

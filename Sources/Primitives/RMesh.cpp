@@ -10,6 +10,7 @@
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Core/RPhysicalDevice.h"
+#include "Graphics/Core/RCodex.h"
 
 #include "Core/RVertex.h"
 #include "Utils/RException.h"
@@ -22,24 +23,21 @@ namespace At0::Ray
 {
 	Mesh::Mesh() : m_GlobalUniformBufferOffset(nextOffset)
 	{
-		if (!graphicsPipeline)
-		{
-			graphicsPipeline = new GraphicsPipeline(Graphics::Get().GetRenderPass(),
-				std::vector<std::string>{ "Resources/Shaders/DefaultShader.vert",
-					"Resources/Shaders/DefaultShader.frag" });
+		graphicsPipeline = Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(),
+			std::vector<std::string>{
+				"Resources/Shaders/DefaultShader.vert", "Resources/Shaders/DefaultShader.frag" });
 
-			VertexInput vertexInput(graphicsPipeline->GetVertexLayout());
-			// clang-format off
-			vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f }, Float3{ 1.0f, 0.0f, 0.0f });
-			vertexInput.Emplace(Float3{  0.5f, -0.5f, 0.0f }, Float3{ 0.0f, 1.0f, 0.0f });
-			vertexInput.Emplace(Float3{  0.0f,  0.5f, 0.0f }, Float3{ 0.0f, 0.0f, 1.0f });
-			// clang-format on
+		VertexInput vertexInput(graphicsPipeline->GetVertexLayout());
+		// clang-format off
+		vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f }, Float3{ 1.0f, 0.0f, 0.0f });
+		vertexInput.Emplace(Float3{  0.5f, -0.5f, 0.0f }, Float3{ 0.0f, 1.0f, 0.0f });
+		vertexInput.Emplace(Float3{  0.0f,  0.5f, 0.0f }, Float3{ 0.0f, 0.0f, 1.0f });
+		// clang-format on
 
-			vertexBuffer = new VertexBuffer(vertexInput);
+		vertexBuffer = Codex::Resolve<VertexBuffer>("Triangle", vertexInput);
 
-			std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
-			indexBuffer = new IndexBuffer(indices);
-		}
+		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
+		indexBuffer = Codex::Resolve<IndexBuffer>("012", indices);
 
 		uniformAccess = MakeScope<UniformAccess>(*graphicsPipeline);
 
@@ -82,18 +80,7 @@ namespace At0::Ray
 		vkUpdateDescriptorSets(Graphics::Get().GetDevice(), 1, &descWrite, 0, nullptr);
 	}
 
-	Mesh::~Mesh()
-	{
-		if (indexBuffer)
-		{
-			delete indexBuffer;
-			delete vertexBuffer;
-			delete graphicsPipeline;
-		}
-		indexBuffer = nullptr;
-		vertexBuffer = nullptr;
-		graphicsPipeline = nullptr;
-	}
+	Mesh::~Mesh() {}
 
 	void Mesh::Update()
 	{

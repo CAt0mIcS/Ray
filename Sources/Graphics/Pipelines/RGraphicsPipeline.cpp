@@ -24,13 +24,26 @@ namespace At0::Ray
 
 	GraphicsPipeline::~GraphicsPipeline()
 	{
-		vkDestroyDescriptorSetLayout(Graphics::Get().GetDevice(), m_DescriptorSetLayout, nullptr);
 		vkDestroyDescriptorPool(Graphics::Get().GetDevice(), m_DescriptorPool, nullptr);
+		vkDestroyDescriptorSetLayout(Graphics::Get().GetDevice(), m_DescriptorSetLayout, nullptr);
 	}
 
 	VkPipelineBindPoint GraphicsPipeline::GetBindPoint() const
 	{
 		return VK_PIPELINE_BIND_POINT_GRAPHICS;
+	}
+
+	std::string GraphicsPipeline::GetUID(
+		const RenderPass& renderPass, const std::vector<std::string>& shaders)
+	{
+		std::ostringstream oss;
+		oss << typeid(GraphicsPipeline).name() << "#";
+		for (const std::string& shader : shaders)
+		{
+			oss << shader << "#";
+		}
+
+		return oss.str();
 	}
 
 	void GraphicsPipeline::CreateShaderProgram(const std::vector<std::string>& shaders)
@@ -89,7 +102,7 @@ namespace At0::Ray
 		createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		createInfo.flags = 0;
 		// createInfo.maxSets = 8192;
-		createInfo.maxSets = 50000;
+		createInfo.maxSets = 70000;
 		createInfo.poolSizeCount = (uint32_t)descriptorPoolSizes.size();
 		createInfo.pPoolSizes = descriptorPoolSizes.data();
 

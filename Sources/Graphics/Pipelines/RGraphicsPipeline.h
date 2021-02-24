@@ -27,6 +27,9 @@ namespace At0::Ray
 			return m_DescriptorSetLayout;
 		}
 
+		static std::string GetUID(
+			const RenderPass& renderPass, const std::vector<std::string>& shaders);
+
 	private:
 		void CreateShaderProgram(const std::vector<std::string>& shaders);
 		void CreateDescriptorSetLayout();

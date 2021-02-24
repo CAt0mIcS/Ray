@@ -42,6 +42,9 @@ set(SRC
 	"Graphics/Core/RLogicalDevice.cpp"
 	"Graphics/Core/RSwapchain.h"
 	"Graphics/Core/RSwapchain.cpp"
+	"Graphics/Core/RCodex.h"
+	"Graphics/Core/RBindable.h"
+	"Graphics/Core/RBindable.cpp"
 
 	"Graphics/Pipelines/RPipeline.h"
 	"Graphics/Pipelines/RPipeline.cpp"
