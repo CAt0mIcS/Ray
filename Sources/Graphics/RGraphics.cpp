@@ -328,6 +328,10 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
+		Float3 col{ 1.0f, 0.0f, 0.0f };
+		vkCmdPushConstants(cmdBuff, meshes[0]->GetPipeline().GetLayout(),
+			VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(Float3), &col);
+
 		for (Mesh* mesh : meshes)
 		{
 			vkCmdBindPipeline(cmdBuff, mesh->GetPipeline().GetBindPoint(), mesh->GetPipeline());
