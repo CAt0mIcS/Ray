@@ -176,6 +176,7 @@ namespace At0::Ray
 
 		const auto& GetDescriptorSetLayoutBindings() const { return m_DescriptorSetLayoutBindings; }
 		const auto& GetDescriptorPoolSizes() const { return m_DescriptorPoolSizes; }
+		std::vector<VkPushConstantRange> GetPushConstantRanges() const;
 
 	private:
 		void LoadUniform(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i);

@@ -538,6 +538,31 @@ namespace At0::Ray
 		return stages;
 	}
 
+	std::vector<VkPushConstantRange> Shader::GetPushConstantRanges() const
+	{
+		std::vector<VkPushConstantRange> pushConstantRanges;
+
+		uint32_t currentOffset = 0;
+		for (const auto& [shaderStage, shaderData] : m_ShaderData)
+		{
+			for (const auto& [uniformBlockName, uniformBlockData] : shaderData.uniformBlocks)
+			{
+				if (uniformBlockData.type != UniformBlocks::Type::Push)
+					continue;
+
+				VkPushConstantRange pushConstantRange{};
+				pushConstantRange.stageFlags = ToVkShaderStage(shaderStage);
+				pushConstantRange.offset = currentOffset;
+				pushConstantRange.size = uniformBlockData.size;
+				pushConstantRanges.emplace_back(pushConstantRange);
+
+				currentOffset += uniformBlockData.size;
+			}
+		}
+
+		return pushConstantRanges;
+	}
+
 	void Shader::LoadUniform(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i)
 	{
 		const glslang::TObjectReflection& uniform = program.getUniform(i);
@@ -570,7 +595,13 @@ namespace At0::Ray
 		UniformBlocks::UniformBlockData data{};
 		data.binding = uniformBlock.getBinding();
 		data.size = uniformBlock.size;
-		data.type = Shader::UniformBlocks::Type::Uniform;
+
+		if (uniformBlock.getType()->getQualifier().storage == glslang::EvqUniform)
+			data.type = Shader::UniformBlocks::Type::Uniform;
+		// if (uniformBlock.getType()->getQualifier().storage == glslang::EvqBuffer)
+		//	data.type = Shader::UniformBlocks::Type::Storage;
+		if (uniformBlock.getType()->getQualifier().layoutPushConstant)
+			data.type = Shader::UniformBlocks::Type::Push;
 
 		m_ShaderData[stageFlag].uniformBlocks.Emplace(uniformBlock.name, data);
 	}

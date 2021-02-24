@@ -113,13 +113,16 @@ namespace At0::Ray
 
 	void GraphicsPipeline::CreatePipelineLayout()
 	{
+		const std::vector<VkPushConstantRange>& pushConstantRanges =
+			m_Shader.GetPushConstantRanges();
+
 		VkPipelineLayoutCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		createInfo.flags = 0;
 		createInfo.setLayoutCount = 1;
 		createInfo.pSetLayouts = &m_DescriptorSetLayout;
-		createInfo.pushConstantRangeCount = 0;
-		createInfo.pPushConstantRanges = nullptr;
+		createInfo.pushConstantRangeCount = (uint32_t)pushConstantRanges.size();
+		createInfo.pPushConstantRanges = pushConstantRanges.data();
 
 		RAY_VK_THROW_FAILED(
 			vkCreatePipelineLayout(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Layout),

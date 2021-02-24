@@ -14,10 +14,14 @@ layout(binding = 0) uniform Transforms
 	mat4 proj;
 } ubo;
 
+layout(push_constant) uniform PushConstants
+{
+	vec3 col;
+} pc;
 
 
 void main()
 {
 	gl_Position = ubo.proj * ubo.view * ubo.model * vec4(inPos, 1.0f);
-	outColor = inColor;
+	outColor = pc.col + inColor;
 }

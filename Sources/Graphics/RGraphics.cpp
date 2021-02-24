@@ -210,16 +210,16 @@ namespace At0::Ray
 		UniformBufferSynchronizer::Create();
 
 		std::mt19937 device;
-		std::uniform_real_distribution<float> distPos(-50.0f, 50.0f);
+		std::uniform_real_distribution<float> distPos(-1.0f, 1.0f);
 		std::uniform_real_distribution<float> distSize(0.5f, 5.0f);
 
-		for (uint32_t i = 0; i < 50000; ++i)
+		for (uint32_t i = 0; i < 1; ++i)
 		{
 			meshes.emplace_back(new Mesh());
 			Transform& tform = meshes[i]->GetEntity().Get<Transform>();
-			tform.Translation = { distPos(device), distPos(device), distPos(device) };
-			tform.Rotation = { distPos(device), distPos(device), distPos(device) };
-			tform.Scale = { distSize(device), distSize(device), distSize(device) };
+			// tform.Translation = { distPos(device), distPos(device), distPos(device) };
+			// tform.Rotation = { distPos(device), distPos(device), distPos(device) };
+			// tform.Scale = { distSize(device), distSize(device), distSize(device) };
 		}
 
 		CreateCommandBuffers();
