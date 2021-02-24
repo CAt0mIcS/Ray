@@ -3,6 +3,11 @@
 #include "../RBase.h"
 #include "../Core/RMath.h"
 
+#include "../Events/REventDispatcher.h"
+#include "../Events/REngineEvents.h"
+#include "../Events/RMouseEvents.h"
+#include "../Events/RKeyboardEvents.h"
+
 #include <string_view>
 #include <utility>
 #include <stdint.h>
@@ -11,9 +16,25 @@
 
 struct GLFWwindow;
 
+
 namespace At0::Ray
 {
-	class RAY_EXPORT Window
+	class RAY_EXPORT Window :
+		public EventDispatcher<WindowResizedEvent>,
+		public EventDispatcher<FramebufferResizedEvent>,
+		public EventDispatcher<WindowMovedEvent>,
+		public EventDispatcher<WindowClosedEvent>,
+		public EventDispatcher<MouseButtonPressedEvent>,
+		public EventDispatcher<MouseButtonReleasedEvent>,
+		public EventDispatcher<MouseMovedEvent>,
+		public EventDispatcher<ScrollUpEvent>,
+		public EventDispatcher<ScrollDownEvent>,
+		public EventDispatcher<ScrollLeftEvent>,
+		public EventDispatcher<ScrollRightEvent>,
+		public EventDispatcher<KeyPressedEvent>,
+		public EventDispatcher<KeyReleasedEvent>,
+		public EventDispatcher<KeyRepeatedEvent>,
+		public EventDispatcher<CharEvent>
 	{
 	public:
 		/**
@@ -100,7 +121,6 @@ namespace At0::Ray
 	private:
 		static Scope<Window> s_Instance;
 		GLFWwindow* m_hWnd = nullptr;
-		Float2 m_CachedRawDeltaMousePos{};
 		Float2 m_PrevousMousePos{};
 	};
 }  // namespace At0::Ray

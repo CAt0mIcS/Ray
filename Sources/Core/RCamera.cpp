@@ -120,4 +120,56 @@ namespace At0::Ray
 
 		Updated = true;
 	}
+
+	void Camera::OnEvent(MouseMovedEvent& e)
+	{
+		if (!Window::Get().CursorEnabled())
+			Rotate(Float3{ (float)e.GetDelta().y, (float)-e.GetDelta().x, 0.0f } * RotationSpeed);
+	}
+
+	void Camera::OnEvent(KeyPressedEvent& e)
+	{
+		if (e.GetKey() == Key::Escape)
+		{
+			if (Window::Get().CursorEnabled())
+				Window::Get().DisableCursor();
+			else
+				Window::Get().EnableCursor();
+		}
+
+		if (e.GetKey() == Key::LeftShift)
+			SetMovementSpeed(MovementSpeed * 5.0f);
+
+		if (this->Type == Camera::FirstPerson)
+		{
+			switch (e.GetKey())
+			{
+			case Key::W: Keys.Forward = true; break;
+			case Key::S: Keys.Backward = true; break;
+			case Key::A: Keys.Left = true; break;
+			case Key::D: Keys.Right = true; break;
+			case Key::Space: Keys.Up = true; break;
+			case Key::LeftControl: Keys.Down = true; break;
+			}
+		}
+	}
+
+	void Camera::OnEvent(KeyReleasedEvent& e)
+	{
+		if (e.GetKey() == Key::LeftShift)
+			SetMovementSpeed(MovementSpeed / 5.0f);
+
+		if (this->Type == Camera::FirstPerson)
+		{
+			switch (e.GetKey())
+			{
+			case Key::W: Keys.Forward = false; break;
+			case Key::S: Keys.Backward = false; break;
+			case Key::A: Keys.Left = false; break;
+			case Key::D: Keys.Right = false; break;
+			case Key::Space: Keys.Up = false; break;
+			case Key::LeftControl: Keys.Down = false; break;
+			}
+		}
+	}
 }  // namespace At0::Ray

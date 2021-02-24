@@ -7,11 +7,17 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "../RBase.h"
+#include "../Events/REventListener.h"
+#include "../Events/RMouseEvents.h"
+#include "../Events/RKeyboardEvents.h"
 
 
 namespace At0::Ray
 {
-	class RAY_EXPORT Camera
+	class RAY_EXPORT Camera :
+		EventListener<MouseMovedEvent>,
+		EventListener<KeyPressedEvent>,
+		EventListener<KeyReleasedEvent>
 	{
 	public:
 		enum CameraType
@@ -63,6 +69,10 @@ namespace At0::Ray
 
 	private:
 		void UpdateViewMatrix();
+
+		void OnEvent(MouseMovedEvent& e) override;
+		void OnEvent(KeyPressedEvent& e) override;
+		void OnEvent(KeyReleasedEvent& e) override;
 
 	private:
 		float m_FoV;
