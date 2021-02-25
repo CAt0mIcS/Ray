@@ -107,8 +107,20 @@ namespace At0::Ray
 
 		VkDescriptorSet descSets[] = { *descSet, *camDescSet };
 
+
+		VkDescriptorSet dscSet = *descSet;
+		VkDescriptorSet camDscSet = *camDescSet;
 		vkCmdBindDescriptorSets(cmdBuff, graphicsPipeline->GetBindPoint(),
-			graphicsPipeline->GetLayout(), 0, std::size(descSets), descSets, 0, nullptr);
+			graphicsPipeline->GetLayout(),
+			0,	// bind to binding point 0 (DescriptorSetLayout in pipeline)
+			1, &dscSet, 0, nullptr);
+		vkCmdBindDescriptorSets(cmdBuff, graphicsPipeline->GetBindPoint(),
+			graphicsPipeline->GetLayout(),
+			1,	// bind to binding point 1 (DescriptorSetLayout in pipeline)
+			1, &camDscSet, 0, nullptr);
+
+		// vkCmdBindDescriptorSets(cmdBuff, graphicsPipeline->GetBindPoint(),
+		//	graphicsPipeline->GetLayout(), 0, std::size(descSets), descSets, 0, nullptr);
 
 		// descSet->CmdBind(cmdBuff);
 		// camDescSet->CmdBind(cmdBuff);
