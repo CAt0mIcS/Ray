@@ -25,7 +25,7 @@
 
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 #include "Primitives/RMesh.h"
-#include "Buffers/RUniformBufferSynchronizer.h"
+#include "Buffers/RBufferSynchronizer.h"
 
 #include <random>
 
@@ -47,7 +47,7 @@ namespace At0::Ray
 
 		m_CommandBuffers.clear();
 
-		UniformBufferSynchronizer::Destroy();
+		BufferSynchronizer::Destroy();
 
 		for (Mesh* mesh : meshes)
 			delete mesh;
@@ -207,7 +207,7 @@ namespace At0::Ray
 
 		CreateRenderPass();
 		CreateFramebuffers();
-		UniformBufferSynchronizer::Create();
+		BufferSynchronizer::Create();
 
 		std::mt19937 device;
 		std::uniform_real_distribution<float> distPos(-1.0f, 1.0f);

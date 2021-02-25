@@ -2,7 +2,7 @@
 
 #include "../../RBase.h"
 #include "RShader.h"
-#include "../Buffers/RUniformBufferSynchronizer.h"
+#include "../Buffers/RBufferSynchronizer.h"
 #include "../../Utils/RAssert.h"
 
 #include <unordered_map>
@@ -28,8 +28,7 @@ namespace At0::Ray
 				RAY_MEXPECTS(m_OffsetInUniformBlock != (uint32_t)-1,
 					"[UniformData] Uniform does not exist.");
 
-				UniformBufferSynchronizer::Get().Update(
-					data, globalOffset + m_OffsetInUniformBlock);
+				BufferSynchronizer::Get().Update(data, globalOffset + m_OffsetInUniformBlock);
 				return *this;
 			}
 

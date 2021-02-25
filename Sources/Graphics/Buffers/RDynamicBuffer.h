@@ -19,7 +19,7 @@ namespace At0::Ray
 		 * Discards any data if the newSize is less than the current size.
 		 * When enlargening the buffer, the new data is undefined.
 		 */
-		void Resize(VkDeviceSize newSize) override;
+		void Resize(VkDeviceSize newSize);
 
 		/**
 		 * Appends the data at the end of the buffer.
@@ -31,6 +31,14 @@ namespace At0::Ray
 		{
 			InternalEmplace(&data, sizeof(T));
 		}
+
+		/**
+		 * Updates a specific part of the buffer
+		 * @param data The data to add to the buffer
+		 * @param size The size of the data
+		 * @param offset The offset in the buffer
+		 */
+		void Update(const void* data, uint32_t size, uint32_t offset);
 
 	private:
 		void InternalEmplace(void* data, uint32_t size);

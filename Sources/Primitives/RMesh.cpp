@@ -56,7 +56,7 @@ namespace At0::Ray
 			"Failed to allocate descriptor set.");
 
 		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer = UniformBufferSynchronizer::Get().GetBuffer();
+		bufferInfo.buffer = BufferSynchronizer::Get().GetUniformBuffer();
 		bufferInfo.offset = m_GlobalUniformBufferOffset;
 		bufferInfo.range = sizeof(glm::mat4) * 3;
 

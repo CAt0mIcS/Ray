@@ -48,24 +48,6 @@ namespace At0::Ray
 
 	void Buffer::UnmapMemory() const { vkUnmapMemory(Graphics::Get().GetDevice(), m_BufferMemory); }
 
-	void Buffer::Update(const void* data, uint32_t size, uint32_t offset)
-	{
-		if (!data)
-			return;
-
-		if (offset + size > m_Size)
-			Resize(offset + size);
-
-		void* mapped;
-		MapMemory(&mapped);
-		memcpy((char*)mapped + offset, data, size);
-
-		if (!m_IsHostCoherent)
-			FlushMemory();
-
-		UnmapMemory();
-	}
-
 	void Buffer::FlushMemory()
 	{
 		VkMappedMemoryRange mappedMemoryRange{};

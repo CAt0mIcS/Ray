@@ -18,7 +18,6 @@ namespace At0::Ray
 
 		void MapMemory(void** data) const;
 		void UnmapMemory() const;
-		void Update(const void* data, uint32_t size, uint32_t offset);
 		void FlushMemory();
 
 		static void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
@@ -29,7 +28,6 @@ namespace At0::Ray
 
 	protected:
 		void Destroy();
-		virtual void Resize(VkDeviceSize newSize) {}
 
 	protected:
 		VkBuffer m_Buffer = VK_NULL_HANDLE;

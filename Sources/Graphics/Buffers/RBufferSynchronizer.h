@@ -2,19 +2,21 @@
 
 #include "../../RBase.h"
 #include "RUniformBuffer.h"
+#include "RIndexBuffer.h"
+#include "RVertexBuffer.h"
 
 
 namespace At0::Ray
 {
 	/**
-	 * Handles the global uniform buffer to ensure thread-safety
+	 * Handles the global buffers to ensure thread-safety
 	 * RAY_TODO: Make thread-safe
 	 */
-	class RAY_EXPORT UniformBufferSynchronizer
+	class RAY_EXPORT BufferSynchronizer
 	{
 	public:
 		static void Create();
-		static UniformBufferSynchronizer& Get();
+		static BufferSynchronizer& Get();
 		static void Destroy();
 
 		/**
@@ -28,14 +30,16 @@ namespace At0::Ray
 			m_UniformBuffer.Update(&data, sizeof(data), offset);
 		}
 
-		const UniformBuffer& GetBuffer() const { return m_UniformBuffer; }
+		// const VertexBuffer& GetVertexBuffer() const { return m_VertexBuffer; }
+		// const IndexBuffer& GetIndexBuffer() const { return m_IndexBuffer; }
+		const UniformBuffer& GetUniformBuffer() const { return m_UniformBuffer; }
 
 	private:
-		UniformBufferSynchronizer() = default;
-		~UniformBufferSynchronizer() = default;
+		BufferSynchronizer();
+		~BufferSynchronizer() = default;
 
 	private:
 		UniformBuffer m_UniformBuffer;
-		inline static UniformBufferSynchronizer* s_Instance;
+		inline static BufferSynchronizer* s_Instance;
 	};
 }  // namespace At0::Ray

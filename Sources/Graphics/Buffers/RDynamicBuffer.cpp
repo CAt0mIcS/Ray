@@ -40,6 +40,24 @@ namespace At0::Ray
 		m_Capacity = m_Size;
 	}
 
+	void DynamicBuffer::Update(const void* data, uint32_t size, uint32_t offset)
+	{
+		if (!data)
+			return;
+
+		if (offset + size > m_Size)
+			Resize(offset + size);
+
+		void* mapped;
+		MapMemory(&mapped);
+		memcpy((char*)mapped + offset, data, size);
+
+		if (!m_IsHostCoherent)
+			FlushMemory();
+
+		UnmapMemory();
+	}
+
 	void DynamicBuffer::InternalEmplace(void* data, uint32_t size)
 	{
 		// Resize the buffer if the requested data goes beyond buffer size
