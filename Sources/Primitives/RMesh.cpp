@@ -7,6 +7,7 @@
 #include "Graphics/Buffers/RIndexBuffer.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
+#include "Graphics/Pipelines/RDescriptor.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Core/RPhysicalDevice.h"
@@ -45,15 +46,7 @@ namespace At0::Ray
 		uniformAccess = MakeScope<UniformAccess>(*graphicsPipeline);
 
 
-		VkDescriptorSetAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		allocInfo.descriptorPool = graphicsPipeline->GetDescriptorPool();
-		allocInfo.descriptorSetCount = 1;
-		allocInfo.pSetLayouts = &graphicsPipeline->GetDescriptorSetLayout();
-
-		RAY_VK_THROW_FAILED(
-			vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo, &descSet),
-			"Failed to allocate descriptor set.");
+		descSet = MakeScope<DescriptorSet>(*graphicsPipeline);
 
 		VkDescriptorBufferInfo bufferInfo{};
 		bufferInfo.buffer = BufferSynchronizer::Get().GetUniformBuffer();
@@ -71,7 +64,7 @@ namespace At0::Ray
 
 		VkWriteDescriptorSet descWrite{};
 		descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descWrite.dstSet = descSet;
+		descWrite.dstSet = *descSet;
 		descWrite.dstBinding = 0;
 		descWrite.dstArrayElement = 0;
 		descWrite.descriptorCount = 1;
@@ -80,7 +73,7 @@ namespace At0::Ray
 		descWrite.pBufferInfo = &bufferInfo;
 		descWrite.pTexelBufferView = nullptr;
 
-		vkUpdateDescriptorSets(Graphics::Get().GetDevice(), 1, &descWrite, 0, nullptr);
+		DescriptorSet::Update({ descWrite });
 	}
 
 	Mesh::~Mesh() {}
@@ -99,8 +92,9 @@ namespace At0::Ray
 	{
 		graphicsPipeline->CmdBind(cmdBuff);
 
+		VkDescriptorSet bindDesc = *descSet;
 		vkCmdBindDescriptorSets(cmdBuff, VK_PIPELINE_BIND_POINT_GRAPHICS,
-			graphicsPipeline->GetLayout(), 0, 1, &descSet, 0, nullptr);
+			graphicsPipeline->GetLayout(), 0, 1, &bindDesc, 0, nullptr);
 
 		vertexBuffer->CmdBind(cmdBuff);
 		indexBuffer->CmdBind(cmdBuff);

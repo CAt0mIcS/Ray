@@ -11,6 +11,7 @@ namespace At0::Ray
 	class IndexBuffer;
 	class GraphicsPipeline;
 	class CommandBuffer;
+	class DescriptorSet;
 
 	class UniformAccess;
 
@@ -36,7 +37,7 @@ namespace At0::Ray
 		Ref<IndexBuffer> indexBuffer = nullptr;
 		Ref<GraphicsPipeline> graphicsPipeline = nullptr;
 
-		VkDescriptorSet descSet;
+		Scope<DescriptorSet> descSet;
 		Entity m_Entity;
 
 		uint32_t m_GlobalUniformBufferOffset = 0;
