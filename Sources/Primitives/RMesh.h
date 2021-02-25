@@ -12,6 +12,7 @@ namespace At0::Ray
 	class GraphicsPipeline;
 	class CommandBuffer;
 	class DescriptorSet;
+	class UniformBuffer;
 
 	class UniformAccess;
 
@@ -38,6 +39,8 @@ namespace At0::Ray
 		Ref<GraphicsPipeline> graphicsPipeline = nullptr;
 
 		Scope<DescriptorSet> descSet;
+		Scope<DescriptorSet> camDescSet;
+		Scope<UniformBuffer> camUniformBuffer;
 		Entity m_Entity;
 
 		uint32_t m_GlobalUniformBufferOffset = 0;

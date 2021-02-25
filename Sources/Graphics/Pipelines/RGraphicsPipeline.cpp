@@ -25,7 +25,8 @@ namespace At0::Ray
 	GraphicsPipeline::~GraphicsPipeline()
 	{
 		vkDestroyDescriptorPool(Graphics::Get().GetDevice(), m_DescriptorPool, nullptr);
-		vkDestroyDescriptorSetLayout(Graphics::Get().GetDevice(), m_DescriptorSetLayout, nullptr);
+		for (VkDescriptorSetLayout layout : m_DescriptorSetLayouts)
+			vkDestroyDescriptorSetLayout(Graphics::Get().GetDevice(), layout, nullptr);
 	}
 
 	VkPipelineBindPoint GraphicsPipeline::GetBindPoint() const
@@ -81,16 +82,21 @@ namespace At0::Ray
 		const std::vector<VkDescriptorSetLayoutBinding>& descriptorSetLayoutBindings =
 			m_Shader.GetDescriptorSetLayoutBindings();
 
-		VkDescriptorSetLayoutCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-		createInfo.flags =
-			/*m_PushDescriptors ? VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR : */ 0;
-		createInfo.bindingCount = (uint32_t)descriptorSetLayoutBindings.size();
-		createInfo.pBindings = descriptorSetLayoutBindings.data();
+		m_DescriptorSetLayouts.resize(descriptorSetLayoutBindings.size());
+		for (uint32_t i = 0; i < descriptorSetLayoutBindings.size(); ++i)
+		{
+			VkDescriptorSetLayoutCreateInfo createInfo{};
+			createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+			createInfo.flags =
+				/*m_PushDescriptors ? VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR : */
+				0;
+			createInfo.bindingCount = 1;
+			createInfo.pBindings = descriptorSetLayoutBindings.data() + i;
 
-		RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(), &createInfo,
-								nullptr, &m_DescriptorSetLayout),
-			"[GraphicsPipeline] Failed to create descriptor set layout.");
+			RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(),
+									&createInfo, nullptr, &m_DescriptorSetLayouts[i]),
+				"[GraphicsPipeline] Failed to create descriptor set layout.");
+		}
 	}
 
 	void GraphicsPipeline::CreateDescriptorPool()
@@ -119,8 +125,8 @@ namespace At0::Ray
 		VkPipelineLayoutCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		createInfo.flags = 0;
-		createInfo.setLayoutCount = 1;
-		createInfo.pSetLayouts = &m_DescriptorSetLayout;
+		createInfo.setLayoutCount = (uint32_t)m_DescriptorSetLayouts.size();
+		createInfo.pSetLayouts = m_DescriptorSetLayouts.data();
 		createInfo.pushConstantRangeCount = (uint32_t)pushConstantRanges.size();
 		createInfo.pPushConstantRanges = pushConstantRanges.data();
 

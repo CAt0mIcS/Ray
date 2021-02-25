@@ -6,6 +6,9 @@
 #include <Core/RVertex.h>
 #include <Core/RScene.h>
 
+#include <signal.h>
+
+
 using namespace At0;
 
 
@@ -18,9 +21,19 @@ private:
 	void Update() override {}
 };
 
+void __CRTDECL SignalHandler(int signal)
+{
+	Ray::Log::Critical("Signal {0} received", signal);
+	Ray::Log::Close();
+}
 
 int main()
 {
+	signal(SIGABRT, SignalHandler);
+	signal(SIGILL, SignalHandler);
+	signal(SIGINT, SignalHandler);
+	signal(SIGBREAK, SignalHandler);
+
 	Ray::Log::Open("Ray.log");
 	Ray::Log::SetLogLevel(Ray::LogLevel::Trace);
 

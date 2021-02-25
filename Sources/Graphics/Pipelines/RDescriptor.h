@@ -14,7 +14,7 @@ namespace At0::Ray
 	class DescriptorSet : public Bindable, NonCopyable
 	{
 	public:
-		DescriptorSet(const GraphicsPipeline& pipeline);
+		DescriptorSet(const GraphicsPipeline& pipeline, uint32_t binding);
 		~DescriptorSet() = default;
 
 		void CmdBind(const CommandBuffer& cmdBuff) const override;

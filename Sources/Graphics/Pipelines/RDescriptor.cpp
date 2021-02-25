@@ -11,13 +11,14 @@
 
 namespace At0::Ray
 {
-	DescriptorSet::DescriptorSet(const GraphicsPipeline& pipeline) : m_Pipeline(pipeline)
+	DescriptorSet::DescriptorSet(const GraphicsPipeline& pipeline, uint32_t binding)
+		: m_Pipeline(pipeline)
 	{
 		VkDescriptorSetAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 		allocInfo.descriptorPool = m_Pipeline.GetDescriptorPool();
 		allocInfo.descriptorSetCount = 1;
-		allocInfo.pSetLayouts = &m_Pipeline.GetDescriptorSetLayout();
+		allocInfo.pSetLayouts = &m_Pipeline.GetDescriptorSetLayout()[binding];
 
 		RAY_VK_THROW_FAILED(
 			vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo, &m_DescriptorSet),

@@ -97,10 +97,6 @@ namespace At0::Ray
 		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
 			RAY_THROW_RUNTIME("[Graphics] Failed to acquire next swapchain image.");
 
-		// Update camera uniform buffer
-		camUniformBuffer->Update(&cam.Matrices.View, sizeof(Matrix), 0);
-		camUniformBuffer->Update(&cam.Matrices.Perspective, sizeof(Matrix), sizeof(Matrix));
-
 		// Update drawables
 		mesh->Update();
 
@@ -226,27 +222,6 @@ namespace At0::Ray
 		//	// tform.Scale = { distSize(device), distSize(device), distSize(device) };
 		//}
 
-		camUniformBuffer = MakeScope<UniformBuffer>(sizeof(Matrix) * 2);
-		camDescriptorSet = MakeScope<DescriptorSet>(mesh->GetPipeline());
-
-		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer = *camUniformBuffer;
-		bufferInfo.offset = 0;
-		bufferInfo.range = sizeof(Matrix) * 2;
-
-		VkWriteDescriptorSet descWrite{};
-		descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descWrite.dstSet = *camDescriptorSet;
-		descWrite.dstBinding = 1;
-		descWrite.dstArrayElement = 0;
-		descWrite.descriptorCount = 1;
-		descWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descWrite.pImageInfo = nullptr;
-		descWrite.pBufferInfo = &bufferInfo;
-		descWrite.pTexelBufferView = nullptr;
-
-		DescriptorSet::Update({ descWrite });
-
 		CreateCommandBuffers();
 		CreateSyncObjects();
 	}
@@ -354,7 +329,6 @@ namespace At0::Ray
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
 		mesh->CmdBind(cmdBuff);
-		camDescriptorSet->CmdBind(cmdBuff);
 		mesh->CmdDraw(cmdBuff);
 
 		m_RenderPass->End(cmdBuff);
