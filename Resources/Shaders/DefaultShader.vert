@@ -7,13 +7,13 @@ layout(location = 1) in vec3 inColor;
 
 layout(location = 0) out vec3 outColor;
 
-layout(binding = 0, set = 0) uniform Transforms
+layout(set = 0, binding = 0) uniform Transforms
 {
 	mat4 model;
 } ubo;
 
 
-layout(binding = 1, set = 1) uniform Camera
+layout(set = 1, binding = 1) uniform Camera
 {
 	mat4 view;
 	mat4 proj;

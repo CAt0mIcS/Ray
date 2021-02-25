@@ -44,20 +44,13 @@ namespace At0::Ray
 		indexBuffer = Codex::Resolve<IndexBuffer>("012", indices);
 
 		uniformAccess = MakeScope<UniformAccess>(*graphicsPipeline);
-		camUniformBuffer = MakeScope<UniformBuffer>(128);
 
 		descSet = MakeScope<DescriptorSet>(*graphicsPipeline, 0);
-		camDescSet = MakeScope<DescriptorSet>(*graphicsPipeline, 1);
 
 		VkDescriptorBufferInfo bufferInfo{};
 		bufferInfo.buffer = BufferSynchronizer::Get().GetUniformBuffer();
 		bufferInfo.offset = 0;
 		bufferInfo.range = sizeof(Matrix);
-
-		VkDescriptorBufferInfo bufferInfoCam{};
-		bufferInfoCam.buffer = *camUniformBuffer;
-		bufferInfoCam.offset = 0;
-		bufferInfoCam.range = sizeof(Matrix) * 2;
 
 
 		VkWriteDescriptorSet descWrite{};
@@ -71,18 +64,8 @@ namespace At0::Ray
 		descWrite.pBufferInfo = &bufferInfo;
 		descWrite.pTexelBufferView = nullptr;
 
-		VkWriteDescriptorSet descWriteCam{};
-		descWriteCam.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descWriteCam.dstSet = *camDescSet;
-		descWriteCam.dstBinding = 1;
-		descWriteCam.dstArrayElement = 0;
-		descWriteCam.descriptorCount = 1;
-		descWriteCam.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descWriteCam.pImageInfo = nullptr;
-		descWriteCam.pBufferInfo = &bufferInfoCam;
-		descWriteCam.pTexelBufferView = nullptr;
 
-		DescriptorSet::Update({ descWrite, descWriteCam });
+		DescriptorSet::Update({ descWrite });
 	}
 
 	Mesh::~Mesh() {}
@@ -95,35 +78,21 @@ namespace At0::Ray
 		//	.Update(Graphics::Get().cam.Matrices.View, m_GlobalUniformBufferOffset);
 		// uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "proj")
 		//	.Update(Graphics::Get().cam.Matrices.Perspective, m_GlobalUniformBufferOffset);
-
-		camUniformBuffer->Update(&Camera::Get().Matrices.View, sizeof(Matrix), 0);
-		camUniformBuffer->Update(
-			&Camera::Get().Matrices.Perspective, sizeof(Matrix), sizeof(Matrix));
 	}
 
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff)
 	{
 		graphicsPipeline->CmdBind(cmdBuff);
 
-		VkDescriptorSet descSets[] = { *descSet, *camDescSet };
-
-
 		VkDescriptorSet dscSet = *descSet;
-		VkDescriptorSet camDscSet = *camDescSet;
 		vkCmdBindDescriptorSets(cmdBuff, graphicsPipeline->GetBindPoint(),
 			graphicsPipeline->GetLayout(),
-			0,	// bind to binding point 0 (DescriptorSetLayout in pipeline)
+			0,	// bind to binding point 0 (DescriptorSetLayout in pipeline (set = 0 in shader))
 			1, &dscSet, 0, nullptr);
-		vkCmdBindDescriptorSets(cmdBuff, graphicsPipeline->GetBindPoint(),
-			graphicsPipeline->GetLayout(),
-			1,	// bind to binding point 1 (DescriptorSetLayout in pipeline)
-			1, &camDscSet, 0, nullptr);
 
 		// vkCmdBindDescriptorSets(cmdBuff, graphicsPipeline->GetBindPoint(),
 		//	graphicsPipeline->GetLayout(), 0, std::size(descSets), descSets, 0, nullptr);
 
-		// descSet->CmdBind(cmdBuff);
-		// camDescSet->CmdBind(cmdBuff);
 
 		vertexBuffer->CmdBind(cmdBuff);
 		indexBuffer->CmdBind(cmdBuff);
