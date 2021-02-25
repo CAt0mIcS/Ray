@@ -26,13 +26,14 @@
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 #include "Primitives/RMesh.h"
 #include "Buffers/RBufferSynchronizer.h"
+#include "Graphics/Pipelines/RDescriptor.h"
 
 #include <random>
 
 
 namespace At0::Ray
 {
-	std::vector<Mesh*> meshes;
+	Mesh* mesh;
 
 	Graphics::~Graphics()
 	{
@@ -49,8 +50,7 @@ namespace At0::Ray
 
 		BufferSynchronizer::Destroy();
 
-		for (Mesh* mesh : meshes)
-			delete mesh;
+		delete mesh;
 
 		Codex::Shutdown();
 
@@ -97,9 +97,12 @@ namespace At0::Ray
 		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
 			RAY_THROW_RUNTIME("[Graphics] Failed to acquire next swapchain image.");
 
+		// Update camera uniform buffer
+		camUniformBuffer->Update(&cam.Matrices.View, sizeof(Matrix), 0);
+		camUniformBuffer->Update(&cam.Matrices.Perspective, sizeof(Matrix), sizeof(Matrix));
+
 		// Update drawables
-		for (Mesh* mesh : meshes)
-			mesh->Update();
+		mesh->Update();
 
 		// Check if previous frame is still using this image (e.g. there is its fence to wait on)
 		if (m_ImagesInFlight[imageIndex] != VK_NULL_HANDLE)
@@ -213,14 +216,36 @@ namespace At0::Ray
 		std::uniform_real_distribution<float> distPos(-1.0f, 1.0f);
 		std::uniform_real_distribution<float> distSize(0.5f, 5.0f);
 
-		for (uint32_t i = 0; i < 1; ++i)
-		{
-			meshes.emplace_back(new Mesh());
-			Transform& tform = meshes[i]->GetEntity().Get<Transform>();
-			// tform.Translation = { distPos(device), distPos(device), distPos(device) };
-			// tform.Rotation = { distPos(device), distPos(device), distPos(device) };
-			// tform.Scale = { distSize(device), distSize(device), distSize(device) };
-		}
+		mesh = new Mesh();
+		// for (uint32_t i = 0; i < 1; ++i)
+		//{
+		//	meshes.emplace_back(new Mesh());
+		//	Transform& tform = meshes[i]->GetEntity().Get<Transform>();
+		//	// tform.Translation = { distPos(device), distPos(device), distPos(device) };
+		//	// tform.Rotation = { distPos(device), distPos(device), distPos(device) };
+		//	// tform.Scale = { distSize(device), distSize(device), distSize(device) };
+		//}
+
+		camUniformBuffer = MakeScope<UniformBuffer>(sizeof(Matrix) * 2);
+		camDescriptorSet = MakeScope<DescriptorSet>(mesh->GetPipeline());
+
+		VkDescriptorBufferInfo bufferInfo{};
+		bufferInfo.buffer = *camUniformBuffer;
+		bufferInfo.offset = 0;
+		bufferInfo.range = sizeof(Matrix) * 2;
+
+		VkWriteDescriptorSet descWrite{};
+		descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descWrite.dstSet = *camDescriptorSet;
+		descWrite.dstBinding = 1;
+		descWrite.dstArrayElement = 0;
+		descWrite.descriptorCount = 1;
+		descWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descWrite.pImageInfo = nullptr;
+		descWrite.pBufferInfo = &bufferInfo;
+		descWrite.pTexelBufferView = nullptr;
+
+		DescriptorSet::Update({ descWrite });
 
 		CreateCommandBuffers();
 		CreateSyncObjects();
@@ -328,11 +353,9 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		for (Mesh* mesh : meshes)
-		{
-			mesh->CmdBind(cmdBuff);
-			mesh->CmdDraw(cmdBuff);
-		}
+		mesh->CmdBind(cmdBuff);
+		camDescriptorSet->CmdBind(cmdBuff);
+		mesh->CmdDraw(cmdBuff);
 
 		m_RenderPass->End(cmdBuff);
 

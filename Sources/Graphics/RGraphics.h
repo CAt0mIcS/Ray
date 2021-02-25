@@ -25,6 +25,9 @@ namespace At0::Ray
 	class Framebuffer;
 	class DepthImage;
 
+	class UniformBuffer;
+	class DescriptorSet;
+
 	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
 	{
 	public:
@@ -47,6 +50,8 @@ namespace At0::Ray
 		void Update(Delta dt);
 
 		Camera cam;
+		Scope<UniformBuffer> camUniformBuffer;
+		Scope<DescriptorSet> camDescriptorSet;
 
 	private:
 		Graphics();

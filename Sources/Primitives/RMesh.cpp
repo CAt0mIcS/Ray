@@ -43,58 +43,53 @@ namespace At0::Ray
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
 		indexBuffer = Codex::Resolve<IndexBuffer>("012", indices);
 
-		uniformAccess = MakeScope<UniformAccess>(*graphicsPipeline);
+		// uniformAccess = MakeScope<UniformAccess>(*graphicsPipeline);
+		// descSet = MakeScope<DescriptorSet>(*graphicsPipeline);
 
+		// VkDescriptorBufferInfo bufferInfo{};
+		// bufferInfo.buffer = BufferSynchronizer::Get().GetUniformBuffer();
+		// bufferInfo.offset = m_GlobalUniformBufferOffset;
+		// bufferInfo.range = sizeof(glm::mat4) * 3;
 
-		descSet = MakeScope<DescriptorSet>(*graphicsPipeline);
+		// uint32_t minBufferAlignment = Graphics::Get()
+		//								  .GetPhysicalDevice()
+		//								  .GetProperties()
+		//								  .limits.minUniformBufferOffsetAlignment;
 
-		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer = BufferSynchronizer::Get().GetUniformBuffer();
-		bufferInfo.offset = m_GlobalUniformBufferOffset;
-		bufferInfo.range = sizeof(glm::mat4) * 3;
+		// nextOffset += bufferInfo.range < minBufferAlignment && bufferInfo.range != 0 ?
+		//				  minBufferAlignment :
+		//				  bufferInfo.range;
 
-		uint32_t minBufferAlignment = Graphics::Get()
-										  .GetPhysicalDevice()
-										  .GetProperties()
-										  .limits.minUniformBufferOffsetAlignment;
+		// VkWriteDescriptorSet descWrite{};
+		// descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		// descWrite.dstSet = *descSet;
+		// descWrite.dstBinding = 0;
+		// descWrite.dstArrayElement = 0;
+		// descWrite.descriptorCount = 1;
+		// descWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		// descWrite.pImageInfo = nullptr;
+		// descWrite.pBufferInfo = &bufferInfo;
+		// descWrite.pTexelBufferView = nullptr;
 
-		nextOffset += bufferInfo.range < minBufferAlignment && bufferInfo.range != 0 ?
-						  minBufferAlignment :
-						  bufferInfo.range;
-
-		VkWriteDescriptorSet descWrite{};
-		descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descWrite.dstSet = *descSet;
-		descWrite.dstBinding = 0;
-		descWrite.dstArrayElement = 0;
-		descWrite.descriptorCount = 1;
-		descWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descWrite.pImageInfo = nullptr;
-		descWrite.pBufferInfo = &bufferInfo;
-		descWrite.pTexelBufferView = nullptr;
-
-		DescriptorSet::Update({ descWrite });
+		// DescriptorSet::Update({ descWrite });
 	}
 
 	Mesh::~Mesh() {}
 
 	void Mesh::Update()
 	{
-		uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "model")
-			.Update(m_Entity.Get<Transform>().ToMatrix(), m_GlobalUniformBufferOffset);
-		uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "view")
-			.Update(Graphics::Get().cam.Matrices.View, m_GlobalUniformBufferOffset);
-		uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "proj")
-			.Update(Graphics::Get().cam.Matrices.Perspective, m_GlobalUniformBufferOffset);
+		// uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "model")
+		//	.Update(m_Entity.Get<Transform>().ToMatrix(), m_GlobalUniformBufferOffset);
+		// uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "view")
+		//	.Update(Graphics::Get().cam.Matrices.View, m_GlobalUniformBufferOffset);
+		// uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "proj")
+		//	.Update(Graphics::Get().cam.Matrices.Perspective, m_GlobalUniformBufferOffset);
 	}
 
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff)
 	{
 		graphicsPipeline->CmdBind(cmdBuff);
-
-		VkDescriptorSet bindDesc = *descSet;
-		vkCmdBindDescriptorSets(cmdBuff, VK_PIPELINE_BIND_POINT_GRAPHICS,
-			graphicsPipeline->GetLayout(), 0, 1, &bindDesc, 0, nullptr);
+		// descSet->CmdBind(cmdBuff);
 
 		vertexBuffer->CmdBind(cmdBuff);
 		indexBuffer->CmdBind(cmdBuff);
