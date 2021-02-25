@@ -74,18 +74,16 @@ namespace At0::Ray
 		BufferSynchronizer::Create();
 
 		std::mt19937 device;
-		std::uniform_real_distribution<float> distPos(-1.0f, 1.0f);
+		std::uniform_real_distribution<float> distPos(-50.0f, 50.0f);
 		std::uniform_real_distribution<float> distSize(0.5f, 5.0f);
 
-		for (uint32_t i = 0; i < 2; ++i)
+		for (uint32_t i = 0; i < 49999; ++i)
 		{
 			meshes.emplace_back(new Mesh());
 			Transform& tform = meshes[i]->GetEntity().Get<Transform>();
-			tform.Translation = { i, i, i };
-
-			// tform.Translation = { distPos(device), distPos(device), distPos(device) };
-			// tform.Rotation = { distPos(device), distPos(device), distPos(device) };
-			// tform.Scale = { distSize(device), distSize(device), distSize(device) };
+			tform.Translation = { distPos(device), distPos(device), distPos(device) };
+			tform.Rotation = { distPos(device), distPos(device), distPos(device) };
+			tform.Scale = { distSize(device), distSize(device), distSize(device) };
 		}
 
 		camUniformBuffer = MakeScope<UniformBuffer>(sizeof(Matrix) * 2);
@@ -235,7 +233,6 @@ namespace At0::Ray
 					mesh->GetPipeline().GetLayout(),
 					1,	// bind to binding point 1 (DescriptorSetLayout in pipeline)
 					1, &camDscSet, 0, nullptr);
-				descSetBound = true;
 			}
 
 			mesh->CmdDraw(cmdBuff);
@@ -295,6 +292,7 @@ namespace At0::Ray
 		}
 		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
 			RAY_THROW_RUNTIME("[Graphics] Failed to acquire next swapchain image.");
+
 
 		camUniformBuffer->Update(&Camera::Get().Matrices.View, sizeof(Matrix), 0);
 		camUniformBuffer->Update(
