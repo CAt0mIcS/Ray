@@ -27,6 +27,12 @@ namespace At0::Ray
 		};
 
 	public:
+		static Camera& Get()
+		{
+			static Camera cam;
+			return cam;
+		}
+
 		glm::vec3 Rotation{};
 		glm::vec3 Position{};
 		glm::vec4 ViewPos{};
@@ -68,6 +74,7 @@ namespace At0::Ray
 		void Update(float dt);
 
 	private:
+		Camera() = default;
 		void UpdateViewMatrix();
 
 		void OnEvent(MouseMovedEvent& e) override;

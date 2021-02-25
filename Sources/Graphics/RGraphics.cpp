@@ -76,7 +76,7 @@ namespace At0::Ray
 
 	void Graphics::Update(Delta dt)
 	{
-		cam.Update(dt.Change().AsSeconds());
+		Camera::Get().Update(dt.Change().AsSeconds());
 
 		// Wait for fence in VkQueueSubmit to become signaled
 		// which means that the command buffer finished executing
@@ -155,7 +155,7 @@ namespace At0::Ray
 	Graphics::Graphics()
 	{
 		if (s_Instance)
-			RAY_THROW_RUNTIME("[Graphics] Object already creaed.");
+			RAY_THROW_RUNTIME("[Graphics] Object already created.");
 
 		s_Instance = this;
 
@@ -165,11 +165,11 @@ namespace At0::Ray
 		CreateVulkanObjects();
 
 		UInt2 size = Window::Get().GetFramebufferSize();
-		cam.SetPosition(glm::vec3(0.0f, 0.0f, -2.5f));
-		cam.SetRotation(glm::vec3(0.0f));
-		cam.SetRotationSpeed(0.07f);
-		cam.SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 256.0f);
-		cam.SetMovementSpeed(2.0f);
+		Camera::Get().SetPosition(glm::vec3(0.0f, 0.0f, -2.5f));
+		Camera::Get().SetRotation(glm::vec3(0.0f));
+		Camera::Get().SetRotationSpeed(0.07f);
+		Camera::Get().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 256.0f);
+		Camera::Get().SetMovementSpeed(2.0f);
 	}
 
 	void Graphics::Destroy() { delete s_Instance; }
@@ -396,7 +396,7 @@ namespace At0::Ray
 		CreateCommandBuffers();
 
 		size = Window::Get().GetFramebufferSize();
-		cam.UpdateAspectRatio((float)size.x / (float)size.y);
+		Camera::Get().UpdateAspectRatio((float)size.x / (float)size.y);
 
 		m_FramebufferResized = false;
 	}

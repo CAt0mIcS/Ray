@@ -96,9 +96,9 @@ namespace At0::Ray
 		// uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "proj")
 		//	.Update(Graphics::Get().cam.Matrices.Perspective, m_GlobalUniformBufferOffset);
 
-		camUniformBuffer->Update(&Graphics::Get().cam.Matrices.View, sizeof(Matrix), 0);
+		camUniformBuffer->Update(&Camera::Get().Matrices.View, sizeof(Matrix), 0);
 		camUniformBuffer->Update(
-			&Graphics::Get().cam.Matrices.Perspective, sizeof(Matrix), sizeof(Matrix));
+			&Camera::Get().Matrices.Perspective, sizeof(Matrix), sizeof(Matrix));
 	}
 
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff)

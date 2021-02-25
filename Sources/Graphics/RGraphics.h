@@ -47,8 +47,6 @@ namespace At0::Ray
 		 */
 		void Update(Delta dt);
 
-		Camera cam;
-
 	private:
 		Graphics();
 
