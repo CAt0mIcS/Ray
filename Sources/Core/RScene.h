@@ -2,6 +2,7 @@
 
 #include "../RBase.h"
 #include "REntity.h"
+#include "RTime.h"
 
 
 namespace At0::Ray
@@ -21,6 +22,11 @@ namespace At0::Ray
 		 * @returns A newly created, empty entity
 		 */
 		Entity& CreateEntity();
+
+		/**
+		 * Updates all components
+		 */
+		void Update(Delta dt);
 
 	protected:
 		Scene();

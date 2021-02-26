@@ -100,6 +100,7 @@ set(SRC
 
 	# ------------------------------------------------------------------
 	# Primitives
+	"Components/RComponent.h"
 	"Components/RMesh.h"
 	"Components/RMesh.cpp"
 	"Components/RTransform.h"

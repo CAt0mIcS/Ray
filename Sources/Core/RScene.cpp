@@ -4,6 +4,9 @@
 #include "RScene.h"
 #include "Utils/RException.h"
 
+#include "Components/RMesh.h"
+#include "Components/RTransform.h"
+
 
 namespace At0::Ray
 {
@@ -12,6 +15,12 @@ namespace At0::Ray
 	Entity& Scene::CreateEntity()
 	{
 		return *m_Entities.emplace_back(MakeScope<Entity>(m_Registry));
+	}
+
+	void Scene::Update(Delta dt)
+	{
+		auto view = m_Registry.view<Mesh>();
+		view.each([&dt](Mesh& mesh) { mesh.Update(dt); });
 	}
 
 	Scene::Scene() {}

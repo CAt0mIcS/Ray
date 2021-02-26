@@ -3,6 +3,7 @@
 #include "../RBase.h"
 #include "../Utils/RAssert.h"
 #include "../Utils/RNonCopyable.h"
+#include "../Components/RComponent.h"
 
 #include <../../Extern/entt/src/entt/entt.hpp>
 
@@ -22,42 +23,43 @@ namespace At0::Ray
 		 * @tparam Args Arguments to initialize the component
 		 * @returns A reference to the created component
 		 */
-		template<typename Component, typename... Args>
+		template<typename Comp, typename... Args>
 		decltype(auto) Emplace(Args&&... args)
 		{
-			RAY_MEXPECTS(!Has<Component>(), "[Entity] Entity (ID={0}) already has component.",
+			RAY_MEXPECTS(!Has<Comp>(), "[Entity] Entity (ID={0}) already has component.",
 				(uint32_t)m_EntityHandle);
-			return m_Registry.emplace<Component>(m_EntityHandle, std::forward<Args>(args)...);
+			Component& comp = m_Registry.emplace<Comp>(m_EntityHandle, std::forward<Args>(args)...);
+			comp.SetEntity(*this);
 		}
 
 		/**
 		 * @tparam Components The components to check
 		 * @returns If this entity has all of the specified components
 		 */
-		template<typename... Component>
+		template<typename... Comp>
 		bool Has() const
 		{
-			return m_Registry.has<Component...>(m_EntityHandle);
+			return m_Registry.has<Comp...>(m_EntityHandle);
 		}
 
 		/**
 		 * @tparam Components The components to check
 		 * @returns If this entity has any of the specified components
 		 */
-		template<typename... Component>
+		template<typename... Comp>
 		bool HasAny() const
 		{
-			return m_Registry.any<Component...>(m_EntityHandle);
+			return m_Registry.any<Comp...>(m_EntityHandle);
 		}
 
 		/**
 		 * @tparam Component The components to get
 		 * @returns The component specified or a tuple of components
 		 */
-		template<typename... Component>
+		template<typename... Comp>
 		decltype(auto) Get()
 		{
-			return m_Registry.get<Component...>(m_EntityHandle);
+			return m_Registry.get<Comp...>(m_EntityHandle);
 		}
 
 		/**

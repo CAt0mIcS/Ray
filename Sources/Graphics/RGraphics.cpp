@@ -5,6 +5,7 @@
 #include "Utils/RException.h"
 
 #include "Devices/RWindow.h"
+#include "Core/RScene.h"
 
 #include "Graphics/Core/RVulkanInstance.h"
 #include "Graphics/Core/RPhysicalDevice.h"
@@ -241,6 +242,8 @@ namespace At0::Ray
 
 		// Mark the image as now being in use by this frame
 		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
+
+		Scene::Get().Update(dt);
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

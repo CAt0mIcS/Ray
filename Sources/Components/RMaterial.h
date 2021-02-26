@@ -14,6 +14,7 @@ namespace At0::Ray
 		virtual ~Material() = default;
 
 		const VertexLayout& GetVertexLayout() const;
+		const GraphicsPipeline& GetGraphicsPipeline() const { return *m_GraphicsPipeline; }
 
 		static Material Default();
 
