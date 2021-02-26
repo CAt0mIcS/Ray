@@ -294,9 +294,9 @@ namespace At0::Ray
 			RAY_THROW_RUNTIME("[Graphics] Failed to acquire next swapchain image.");
 
 
-		camUniformBuffer->Update(&Camera::Get().Matrices.View, sizeof(Matrix), 0);
+		camUniformBuffer->Update(&Camera::Get().Matrices.View, sizeof(Matrix), 0, 0);
 		camUniformBuffer->Update(
-			&Camera::Get().Matrices.Perspective, sizeof(Matrix), sizeof(Matrix));
+			&Camera::Get().Matrices.Perspective, sizeof(Matrix), sizeof(Matrix), 0);
 
 		// Update drawables
 		for (Mesh* mesh : meshes)

@@ -18,13 +18,22 @@ namespace At0::Ray
 
 		void MapMemory(void** data) const;
 		void UnmapMemory() const;
-		void FlushMemory();
+		void FlushMemory() const;
+
+
+		static void MapMemory(void** data, VkDeviceMemory memory, VkDeviceSize size);
+		static void UnmapMemory(VkDeviceMemory memory);
+		static void FlushMemory(VkDeviceMemory bufferMemory, VkDeviceSize size);
 
 		static void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
 			VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 		static void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
-		static uint32_t PadSize(uint32_t originalSize, uint32_t alignment);
+		static uint32_t PadSizeToAlignment(uint32_t originalSize, uint32_t alignment);
+		static void BindBufferToMemory(VkBuffer buffer, VkDeviceMemory memory);
 
+		const VkBuffer& GetBuffer() const { return m_Buffer; }
+		VkDeviceSize GetSize() const { return m_Size; }
+		const VkDeviceMemory& GetMemory() const { return m_BufferMemory; }
 		operator const VkBuffer&() const { return m_Buffer; }
 
 	protected:

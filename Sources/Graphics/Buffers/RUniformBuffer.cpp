@@ -10,6 +10,8 @@ namespace At0::Ray
 	{
 	}
 
+	UniformBuffer::~UniformBuffer() {}
+
 	VkDescriptorSetLayoutBinding UniformBuffer::GetDescriptorSetLayout(
 		uint32_t binding, VkDescriptorType descriptorType, VkShaderStageFlags stage, uint32_t count)
 	{

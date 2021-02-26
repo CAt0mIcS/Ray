@@ -8,7 +8,8 @@ namespace At0::Ray
 	class RAY_EXPORT UniformBuffer : public DynamicBuffer
 	{
 	public:
-		UniformBuffer(VkDeviceSize initialSize = 50000000);
+		UniformBuffer(VkDeviceSize initialSize = 1048576);	// 1024kb initial size
+		~UniformBuffer();
 
 		static VkDescriptorSetLayoutBinding GetDescriptorSetLayout(uint32_t binding,
 			VkDescriptorType descriptorType, VkShaderStageFlags stage, uint32_t count);

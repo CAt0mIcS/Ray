@@ -23,12 +23,13 @@ namespace At0::Ray
 			UniformData() : m_OffsetInUniformBlock((uint32_t)-1) {}
 
 			template<typename T>
-			UniformData& Update(T&& data, uint32_t globalOffset)
+			UniformData& Update(T&& data, uint32_t globalOffset, uint32_t bufferID)
 			{
 				RAY_MEXPECTS(m_OffsetInUniformBlock != (uint32_t)-1,
 					"[UniformData] Uniform does not exist.");
 
-				BufferSynchronizer::Get().Update(data, globalOffset + m_OffsetInUniformBlock);
+				BufferSynchronizer::Get().Update(
+					data, globalOffset + m_OffsetInUniformBlock, bufferID);
 				return *this;
 			}
 

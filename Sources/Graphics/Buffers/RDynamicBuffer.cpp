@@ -14,37 +14,38 @@ namespace At0::Ray
 		RAY_MEXPECTS((m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) &&
 						 (m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT),
 			"[DynamicBuffer] Needs to be visible to the host and host coherent.");
+
+		m_Buffers.emplace_back((Buffer*)this);
 	}
 
-	void DynamicBuffer::Resize(VkDeviceSize newSize)
+	DynamicBuffer::~DynamicBuffer()
 	{
-		std::vector<char> prevData(m_Size);
-
-		// Store the previous data in the vector
-		void* data;
-		MapMemory(&data);
-		memcpy(prevData.data(), data, m_Size);
-		UnmapMemory();
-
-		// Destroy the buffer and buffer memory
-		Destroy();
-
-		CreateBuffer(newSize, m_BufferUsage, m_MemoryProperties, m_Buffer, m_BufferMemory);
-		m_Size = newSize;
-
-		// Copy the cached data back to the new buffer. Make sure not to access invalid memory
-		MapMemory(&data);
-		memcpy(&data, prevData.data(), std::min(prevData.size(), m_Size));
-		UnmapMemory();
+		// Make sure not to delete the first element as it's this buffer
+		for (uint32_t i = 1; i < m_Buffers.size(); ++i)
+		{
+			delete m_Buffers[i];
+		}
 	}
 
-	void DynamicBuffer::Emplace(uint32_t allocSize, uint32_t alignment, uint32_t* offset)
+
+	void DynamicBuffer::Emplace(
+		uint32_t allocSize, uint32_t alignment, uint32_t* offset, uint32_t* bufferID)
 	{
+		// Resize the buffer if the requested data goes beyond buffer size
+		uint32_t prevSize = m_Size;
+		if (m_EmplaceLocation + allocSize >= m_Size)
+		{
+			Reallocate(allocSize < s_LowestReallocationSize ?
+						   s_LowestReallocationSize :
+						   allocSize);	// Request more size than neccessary
+		}
+
 		*offset = m_EmplaceLocation;
-		InternalEmplace(nullptr, Buffer::PadSize(allocSize, alignment));
+		InternalEmplace(nullptr, Buffer::PadSizeToAlignment(allocSize, alignment));
+		*bufferID = m_Buffers.size() - 1;
 	}
 
-	void DynamicBuffer::Update(const void* data, uint32_t size, uint32_t offset)
+	void DynamicBuffer::Update(const void* data, uint32_t size, uint32_t offset, uint32_t bufferID)
 	{
 		if (!data)
 			return;
@@ -53,23 +54,24 @@ namespace At0::Ray
 			"[DynamicBuffer] Does not have enough storage to hold the data");
 
 		void* mapped;
-		MapMemory(&mapped);
+		MapMemory(&mapped, m_Buffers[bufferID]->GetMemory(), m_Buffers[bufferID]->GetSize());
 		memcpy((char*)mapped + offset, data, size);
 
 		if (!m_IsHostCoherent)
 			FlushMemory();
 
-		UnmapMemory();
+		UnmapMemory(m_Buffers[bufferID]->GetMemory());
 	}
 
 	void DynamicBuffer::InternalEmplace(const void* data, uint32_t size)
 	{
-		// Resize the buffer if the requested data goes beyond buffer size
-		uint32_t prevSize = m_Size;
-		if (m_EmplaceLocation + size >= m_Size)
-			Resize(m_Size + size);
-
-		Update(data, size, m_EmplaceLocation);
+		Update(data, size, m_EmplaceLocation, m_Buffers.size() - 1);
 		m_EmplaceLocation += size;
+	}
+
+	void DynamicBuffer::Reallocate(uint32_t size)
+	{
+		m_Buffers.emplace_back(new Buffer(size, m_BufferUsage, m_MemoryProperties));
+		m_EmplaceLocation = 0;
 	}
 }  // namespace At0::Ray

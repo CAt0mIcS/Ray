@@ -25,19 +25,12 @@ namespace At0::Ray
 		 * @param offset The global offset of the data in the buffer
 		 */
 		template<typename T>
-		void Update(T&& data, uint32_t offset)
+		void Update(T&& data, uint32_t offset, uint32_t bufferID)
 		{
-			m_UniformBuffer.Update(&data, sizeof(data), offset);
+			m_UniformBuffer.Update(&data, sizeof(data), offset, bufferID);
 		}
 
-		/**
-		 * Allocates allocSize of bytes at the end of the buffer
-		 * Resizes the buffer if the capacity is not enough
-		 * @param allocSize The size to free
-		 * @param alignment The minimum alignment requirements in bytes
-		 * @param offset Writes to offset the offset in the global buffer
-		 */
-		void Emplace(uint32_t size, uint32_t alignment, uint32_t* offset);
+		void Emplace(uint32_t size, uint32_t alignment, uint32_t* offset, uint32_t* bufferID);
 
 		// const VertexBuffer& GetVertexBuffer() const { return m_VertexBuffer; }
 		// const IndexBuffer& GetIndexBuffer() const { return m_IndexBuffer; }

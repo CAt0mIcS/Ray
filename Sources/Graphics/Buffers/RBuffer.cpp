@@ -41,20 +41,29 @@ namespace At0::Ray
 
 	Buffer::~Buffer() { Destroy(); }
 
-	void Buffer::MapMemory(void** data) const
+	void Buffer::MapMemory(void** data) const { MapMemory(data, m_BufferMemory, m_Size); }
+
+	void Buffer::UnmapMemory() const { UnmapMemory(m_BufferMemory); }
+
+	void Buffer::FlushMemory() const { FlushMemory(m_BufferMemory, m_Size); }
+
+	void Buffer::MapMemory(void** data, VkDeviceMemory memory, VkDeviceSize size)
 	{
-		vkMapMemory(Graphics::Get().GetDevice(), m_BufferMemory, 0, m_Size, 0, data);
+		vkMapMemory(Graphics::Get().GetDevice(), memory, 0, size, 0, data);
 	}
 
-	void Buffer::UnmapMemory() const { vkUnmapMemory(Graphics::Get().GetDevice(), m_BufferMemory); }
+	void Buffer::UnmapMemory(VkDeviceMemory memory)
+	{
+		vkUnmapMemory(Graphics::Get().GetDevice(), memory);
+	}
 
-	void Buffer::FlushMemory()
+	void Buffer::FlushMemory(VkDeviceMemory bufferMemory, VkDeviceSize size)
 	{
 		VkMappedMemoryRange mappedMemoryRange{};
 		mappedMemoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
 		mappedMemoryRange.offset = 0;
-		mappedMemoryRange.memory = m_BufferMemory;
-		mappedMemoryRange.size = m_Size;
+		mappedMemoryRange.memory = bufferMemory;
+		mappedMemoryRange.size = size;
 		RAY_VK_THROW_FAILED(
 			vkFlushMappedMemoryRanges(Graphics::Get().GetDevice(), 1, &mappedMemoryRange),
 			"[Buffer] Failed to flush memory.");
@@ -123,7 +132,7 @@ namespace At0::Ray
 		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 	}
 
-	uint32_t Buffer::PadSize(uint32_t originalSize, uint32_t alignment)
+	uint32_t Buffer::PadSizeToAlignment(uint32_t originalSize, uint32_t alignment)
 	{
 		// Calculate required alignment based on minimum device offset alignment
 		uint32_t alignedSize = originalSize;
@@ -138,5 +147,11 @@ namespace At0::Ray
 	{
 		vkDestroyBuffer(Graphics::Get().GetDevice(), m_Buffer, nullptr);
 		vkFreeMemory(Graphics::Get().GetDevice(), m_BufferMemory, nullptr);
+	}
+
+	void Buffer::BindBufferToMemory(VkBuffer buffer, VkDeviceMemory memory)
+	{  // Attach the memory to the buffer
+		RAY_VK_THROW_FAILED(vkBindBufferMemory(Graphics::Get().GetDevice(), buffer, memory, 0),
+			"[Buffer] Failed to map buffer to buffer memory.");
 	}
 }  // namespace At0::Ray
