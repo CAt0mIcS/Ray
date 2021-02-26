@@ -3,6 +3,9 @@
 #include <Devices/RWindow.h>
 #include <Graphics/RGraphics.h>
 
+#include <Components/RMesh.h>
+#include <Components/RTransform.h>
+
 #include <Core/RVertex.h>
 #include <Core/RScene.h>
 
@@ -12,13 +15,19 @@
 using namespace At0;
 
 
-class App : public Ray::Engine
+class App : public Ray::Engine, Ray::EventListener<Ray::MouseButtonPressedEvent>
 {
 public:
 	App() {}
 
 private:
 	void Update() override {}
+
+	void OnEvent(Ray::MouseButtonPressedEvent& e) override
+	{
+		Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
+		entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(Ray::Material::Default()));
+	}
 };
 
 void __CRTDECL SignalHandler(int signal)
@@ -37,11 +46,9 @@ int main()
 	Ray::Log::Open("Ray.log");
 	Ray::Log::SetLogLevel(Ray::LogLevel::Trace);
 
-	App app;
-
 	Ray::Window::Create();
 	Ray::Window::Get().Show();
 	Ray::Graphics::Get();
 
-	return app.Run();
+	return App{}.Run();
 }

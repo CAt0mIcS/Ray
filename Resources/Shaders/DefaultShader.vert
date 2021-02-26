@@ -3,9 +3,7 @@
 
 
 layout(location = 0) in vec3 inPos;
-layout(location = 1) in vec3 inColor;
 
-layout(location = 0) out vec3 outColor;
 
 layout(set = 0, binding = 0) uniform Transforms
 {
@@ -22,11 +20,5 @@ layout(set = 1, binding = 1) uniform Camera
 
 void main()
 {
-	mat4 mvp = camUBO.proj * camUBO.view * ubo.model;
-	
-	// gl_Position = ubo.model * vec4(inPos, 1.0f);
-
-	gl_Position = mvp * vec4(inPos, 1.0f);
-
-	outColor = inColor;
+	gl_Position = camUBO.proj * camUBO.view * ubo.model * vec4(inPos, 1.0f);
 }

@@ -21,19 +21,13 @@
 
 #include "Graphics/RenderPass/RRenderPass.h"
 
+#include "Graphics/Buffers/RBufferSynchronizer.h"
 #include "Graphics/Buffers/RFramebuffer.h"
 
-#include "Graphics/Pipelines/RGraphicsPipeline.h"
-#include "Primitives/RMesh.h"
-#include "Buffers/RBufferSynchronizer.h"
 #include "Graphics/Pipelines/RDescriptor.h"
-
-#include <random>
-
 
 namespace At0::Ray
 {
-	std::vector<Mesh*> meshes;
 	Scope<DescriptorSet> camDescSet;
 	uint32_t cameraUniformOffset;
 
@@ -72,49 +66,6 @@ namespace At0::Ray
 		CreateRenderPass();
 		CreateFramebuffers();
 		BufferSynchronizer::Create();
-
-		std::mt19937 device;
-		std::uniform_real_distribution<float> distPos(-40.0f, 40.0f);
-		std::uniform_real_distribution<float> distSize(0.5f, 5.0f);
-
-		for (uint32_t i = 0; i < 49999; ++i)
-		{
-			meshes.emplace_back(new Mesh());
-			Transform& tform = meshes[i]->GetEntity().Get<Transform>();
-			tform.Translation = { distPos(device), distPos(device), distPos(device) };
-			tform.Rotation = { distPos(device), distPos(device), distPos(device) };
-			tform.Scale = { distSize(device), distSize(device), distSize(device) };
-		}
-
-		camDescSet =
-			MakeScope<DescriptorSet>(meshes[0]->GetPipeline(), DescriptorSet::Frequency::PerScene);
-
-		uint32_t minBufferAlignment = Graphics::Get()
-										  .GetPhysicalDevice()
-										  .GetProperties()
-										  .limits.minUniformBufferOffsetAlignment;
-		BufferSynchronizer::Get().Emplace(
-			sizeof(Matrix) * 2, minBufferAlignment, &cameraUniformOffset);
-
-		VkDescriptorBufferInfo bufferInfoCam{};
-		bufferInfoCam.buffer =
-			BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(cameraUniformOffset);
-		bufferInfoCam.offset =
-			BufferSynchronizer::Get().GetUniformBuffer().GetOffset(cameraUniformOffset);
-		bufferInfoCam.range = sizeof(Matrix) * 2;
-
-		VkWriteDescriptorSet descWriteCam{};
-		descWriteCam.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descWriteCam.dstSet = *camDescSet;
-		descWriteCam.dstBinding = 1;
-		descWriteCam.dstArrayElement = 0;
-		descWriteCam.descriptorCount = 1;
-		descWriteCam.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descWriteCam.pImageInfo = nullptr;
-		descWriteCam.pBufferInfo = &bufferInfoCam;
-		descWriteCam.pTexelBufferView = nullptr;
-
-		DescriptorSet::Update({ descWriteCam });
 
 		CreateCommandBuffers();
 		CreateSyncObjects();
@@ -229,23 +180,6 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		bool descSetBound = false;
-		for (Mesh* mesh : meshes)
-		{
-			mesh->CmdBind(cmdBuff);
-
-			if (!descSetBound)
-			{
-				VkDescriptorSet camDscSet = *camDescSet;
-				vkCmdBindDescriptorSets(cmdBuff, mesh->GetPipeline().GetBindPoint(),
-					mesh->GetPipeline().GetLayout(),
-					1,	// bind to binding point 1 (DescriptorSetLayout in pipeline)
-					1, &camDscSet, 0, nullptr);
-			}
-
-			mesh->CmdDraw(cmdBuff);
-		}
-
 		m_RenderPass->End(cmdBuff);
 
 		cmdBuff.End();
@@ -300,16 +234,6 @@ namespace At0::Ray
 		}
 		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
 			RAY_THROW_RUNTIME("[Graphics] Failed to acquire next swapchain image.");
-
-
-		BufferSynchronizer::Get().Update(Camera::Get().Matrices.View, cameraUniformOffset);
-		BufferSynchronizer::Get().Update(
-			Camera::Get().Matrices.Perspective, cameraUniformOffset + sizeof(Matrix));
-
-		// Update drawables
-		for (Mesh* mesh : meshes)
-			mesh->Update();
-
 
 		// Check if previous frame is still using this image (e.g. there is its fence to wait on)
 		if (m_ImagesInFlight[imageIndex] != VK_NULL_HANDLE)
@@ -379,9 +303,6 @@ namespace At0::Ray
 		m_CommandBuffers.clear();
 
 		BufferSynchronizer::Destroy();
-
-		for (Mesh* mesh : meshes)
-			delete mesh;
 
 		camDescSet.reset();
 

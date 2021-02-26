@@ -9,7 +9,10 @@ namespace At0::Ray
 {
 	Scene::~Scene() {}
 
-	Entity Scene::CreateEntity() { return { m_Registry }; }
+	Entity& Scene::CreateEntity()
+	{
+		return *m_Entities.emplace_back(MakeScope<Entity>(m_Registry));
+	}
 
 	Scene::Scene() {}
 

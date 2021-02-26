@@ -100,12 +100,11 @@ set(SRC
 
 	# ------------------------------------------------------------------
 	# Primitives
-	"Primitives/RModel.h"
-	"Primitives/RModel.cpp"
-	"Primitives/RMesh.h"
-	"Primitives/RMesh.cpp"
-	"Primitives/RComponents.h"
-	"Primitives/RComponents.cpp"
+	"Components/RMesh.h"
+	"Components/RMesh.cpp"
+	"Components/RTransform.h"
+	"Components/RMaterial.h"
+	"Components/RMaterial.cpp"
 
 	# ------------------------------------------------------------------
 	# Utilities

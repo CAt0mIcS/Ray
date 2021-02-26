@@ -20,13 +20,16 @@ namespace At0::Ray
 		/**
 		 * @returns A newly created, empty entity
 		 */
-		Entity CreateEntity();
+		Entity& CreateEntity();
 
 	protected:
 		Scene();
 
 	private:
 		entt::registry m_Registry;
+
+		// Heap allocate them to avoid Entity& from being invalid when the vector is resized
+		std::vector<Scope<Entity>> m_Entities;
 	};
 
 }  // namespace At0::Ray

@@ -2,13 +2,14 @@
 
 #include "../RBase.h"
 #include "../Utils/RAssert.h"
+#include "../Utils/RNonCopyable.h"
 
 #include <../../Extern/entt/src/entt/entt.hpp>
 
 
 namespace At0::Ray
 {
-	class Entity
+	class Entity : NonCopyable
 	{
 	public:
 		Entity(entt::registry& registry) : m_Registry(registry), m_EntityHandle(registry.create())

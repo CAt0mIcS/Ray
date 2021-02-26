@@ -13,7 +13,7 @@
 namespace At0::Ray
 {
 	GraphicsPipeline::GraphicsPipeline(
-		const RenderPass& renderPass, const std::vector<std::string>& shaders)
+		const RenderPass& renderPass, const std::vector<std::string_view>& shaders)
 	{
 		CreateShaderProgram(shaders);
 		CreateDescriptorSetLayout();
@@ -35,11 +35,11 @@ namespace At0::Ray
 	}
 
 	std::string GraphicsPipeline::GetUID(
-		const RenderPass& renderPass, const std::vector<std::string>& shaders)
+		const RenderPass& renderPass, const std::vector<std::string_view>& shaders)
 	{
 		std::ostringstream oss;
 		oss << typeid(GraphicsPipeline).name() << "#";
-		for (const std::string& shader : shaders)
+		for (std::string_view shader : shaders)
 		{
 			oss << shader << "#";
 		}
@@ -47,13 +47,13 @@ namespace At0::Ray
 		return oss.str();
 	}
 
-	void GraphicsPipeline::CreateShaderProgram(const std::vector<std::string>& shaders)
+	void GraphicsPipeline::CreateShaderProgram(const std::vector<std::string_view>& shaders)
 	{
 		// std::ostringstream defineBlock;
 		// for (const auto& [defineName, defineValue] : m_Defines)
 		//	defineBlock << "#define " << defineName << " " << defineValue << '\n';
 
-		for (const std::string& shader : shaders)
+		for (std::string_view shader : shaders)
 		{
 			auto path = std::filesystem::absolute(shader);
 			std::optional<std::string> shaderCode = ReadFile(shader);
