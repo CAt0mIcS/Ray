@@ -14,7 +14,7 @@ namespace At0::Ray
 	class DescriptorSet : public Bindable, NonCopyable
 	{
 	public:
-		enum Frequency : uint8_t
+		enum class Frequency : uint8_t
 		{
 			PerObject = 0,
 			PerScene = 1

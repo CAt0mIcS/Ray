@@ -45,7 +45,7 @@ namespace At0::Ray
 
 		uniformAccess = MakeScope<UniformAccess>(*graphicsPipeline);
 
-		descSet = MakeScope<DescriptorSet>(*graphicsPipeline, DescriptorSet::PerObject);
+		descSet = MakeScope<DescriptorSet>(*graphicsPipeline, DescriptorSet::Frequency::PerObject);
 
 		uint32_t minBufferAlignment = Graphics::Get()
 										  .GetPhysicalDevice()
