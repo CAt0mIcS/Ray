@@ -53,11 +53,13 @@ namespace At0::Ray
 										  .limits.minUniformBufferOffsetAlignment;
 
 		BufferSynchronizer::Get().Emplace(
-			sizeof(Matrix), minBufferAlignment, &m_GlobalUniformBufferOffset, &m_BufferID);
+			sizeof(Matrix), minBufferAlignment, &m_GlobalUniformBufferOffset);
 
 		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer = BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(m_BufferID);
-		bufferInfo.offset = m_GlobalUniformBufferOffset;
+		bufferInfo.buffer =
+			BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(m_GlobalUniformBufferOffset);
+		bufferInfo.offset =
+			BufferSynchronizer::Get().GetUniformBuffer().GetOffset(m_GlobalUniformBufferOffset);
 		bufferInfo.range = sizeof(Matrix);
 
 		VkWriteDescriptorSet descWrite{};
@@ -80,7 +82,7 @@ namespace At0::Ray
 	void Mesh::Update()
 	{
 		uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "model")
-			.Update(m_Entity.Get<Transform>().ToMatrix(), m_GlobalUniformBufferOffset, m_BufferID);
+			.Update(m_Entity.Get<Transform>().ToMatrix(), m_GlobalUniformBufferOffset);
 		// uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "view")
 		//	.Update(Graphics::Get().cam.Matrices.View, m_GlobalUniformBufferOffset);
 		// uniformAccess->Resolve<Shader::Stage::Vertex>("Transforms", "proj")

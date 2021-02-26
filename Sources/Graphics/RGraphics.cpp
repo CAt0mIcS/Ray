@@ -74,7 +74,7 @@ namespace At0::Ray
 		BufferSynchronizer::Create();
 
 		std::mt19937 device;
-		std::uniform_real_distribution<float> distPos(-50.0f, 50.0f);
+		std::uniform_real_distribution<float> distPos(-40.0f, 40.0f);
 		std::uniform_real_distribution<float> distSize(0.5f, 5.0f);
 
 		for (uint32_t i = 0; i < 49999; ++i)
@@ -294,9 +294,9 @@ namespace At0::Ray
 			RAY_THROW_RUNTIME("[Graphics] Failed to acquire next swapchain image.");
 
 
-		camUniformBuffer->Update(&Camera::Get().Matrices.View, sizeof(Matrix), 0, 0);
+		camUniformBuffer->Update(&Camera::Get().Matrices.View, sizeof(Matrix), 0);
 		camUniformBuffer->Update(
-			&Camera::Get().Matrices.Perspective, sizeof(Matrix), sizeof(Matrix), 0);
+			&Camera::Get().Matrices.Perspective, sizeof(Matrix), sizeof(Matrix));
 
 		// Update drawables
 		for (Mesh* mesh : meshes)

@@ -9,10 +9,9 @@ namespace At0::Ray
 
 	void BufferSynchronizer::Destroy() { delete s_Instance; }
 
-	void BufferSynchronizer::Emplace(
-		uint32_t size, uint32_t alignment, uint32_t* offset, uint32_t* bufferID)
+	void BufferSynchronizer::Emplace(uint32_t size, uint32_t alignment, uint32_t* offset)
 	{
-		m_UniformBuffer.Emplace(size, alignment, offset, bufferID);
+		m_UniformBuffer.Emplace(size, alignment, offset);
 	}
 
 	BufferSynchronizer::BufferSynchronizer() {}

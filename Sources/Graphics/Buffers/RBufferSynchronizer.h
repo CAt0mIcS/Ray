@@ -25,12 +25,12 @@ namespace At0::Ray
 		 * @param offset The global offset of the data in the buffer
 		 */
 		template<typename T>
-		void Update(T&& data, uint32_t offset, uint32_t bufferID)
+		void Update(T&& data, uint32_t offset)
 		{
-			m_UniformBuffer.Update(&data, sizeof(data), offset, bufferID);
+			m_UniformBuffer.Update(&data, sizeof(data), offset);
 		}
 
-		void Emplace(uint32_t size, uint32_t alignment, uint32_t* offset, uint32_t* bufferID);
+		void Emplace(uint32_t size, uint32_t alignment, uint32_t* offset);
 
 		// const VertexBuffer& GetVertexBuffer() const { return m_VertexBuffer; }
 		// const IndexBuffer& GetIndexBuffer() const { return m_IndexBuffer; }
