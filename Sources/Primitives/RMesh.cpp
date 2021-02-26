@@ -23,7 +23,7 @@
 
 namespace At0::Ray
 {
-	Mesh::Mesh() : m_GlobalUniformBufferOffset(nextOffset), m_Entity(Scene::Get().CreateEntity())
+	Mesh::Mesh() : m_Entity(Scene::Get().CreateEntity())
 	{
 		m_Entity.Emplace<Transform>();
 
@@ -47,20 +47,19 @@ namespace At0::Ray
 
 		descSet = MakeScope<DescriptorSet>(*graphicsPipeline, 0);
 
-		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer = BufferSynchronizer::Get().GetUniformBuffer();
-		bufferInfo.offset = m_GlobalUniformBufferOffset;
-		bufferInfo.range = sizeof(Matrix);
-
 		uint32_t minBufferAlignment = Graphics::Get()
 										  .GetPhysicalDevice()
 										  .GetProperties()
 										  .limits.minUniformBufferOffsetAlignment;
 
-		nextOffset += bufferInfo.range < minBufferAlignment && bufferInfo.range != 0 ?
-						  minBufferAlignment :
-						  bufferInfo.range;
+		uint32_t offset;
+		BufferSynchronizer::Get().Emplace(sizeof(Matrix), minBufferAlignment, &offset);
+		m_GlobalUniformBufferOffset = offset;
 
+		VkDescriptorBufferInfo bufferInfo{};
+		bufferInfo.buffer = BufferSynchronizer::Get().GetUniformBuffer();
+		bufferInfo.offset = m_GlobalUniformBufferOffset;
+		bufferInfo.range = sizeof(Matrix);
 
 		VkWriteDescriptorSet descWrite{};
 		descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

@@ -23,6 +23,7 @@ namespace At0::Ray
 		static void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
 			VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 		static void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+		static uint32_t PadSize(uint32_t originalSize, uint32_t alignment);
 
 		operator const VkBuffer&() const { return m_Buffer; }
 

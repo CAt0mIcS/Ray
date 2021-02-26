@@ -8,7 +8,7 @@ namespace At0::Ray
 {
 	DynamicBuffer::DynamicBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
 		VkMemoryPropertyFlags properties, const void* data)
-		: Buffer(size, usage, properties, data), m_Capacity(size), m_BufferUsage(std::move(usage)),
+		: Buffer(size, usage, properties, data), m_BufferUsage(std::move(usage)),
 		  m_MemoryProperties(std::move(properties))
 	{
 		RAY_MEXPECTS((m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) &&
@@ -36,8 +36,12 @@ namespace At0::Ray
 		MapMemory(&data);
 		memcpy(&data, prevData.data(), std::min(prevData.size(), m_Size));
 		UnmapMemory();
+	}
 
-		m_Capacity = m_Size;
+	void DynamicBuffer::Emplace(uint32_t allocSize, uint32_t alignment, uint32_t* offset)
+	{
+		*offset = m_EmplaceLocation;
+		InternalEmplace(nullptr, Buffer::PadSize(allocSize, alignment));
 	}
 
 	void DynamicBuffer::Update(const void* data, uint32_t size, uint32_t offset)
@@ -45,8 +49,8 @@ namespace At0::Ray
 		if (!data)
 			return;
 
-		if (offset + size > m_Size)
-			Resize(offset + size);
+		RAY_MEXPECTS(offset + size <= m_Size,
+			"[DynamicBuffer] Does not have enough storage to hold the data");
 
 		void* mapped;
 		MapMemory(&mapped);
@@ -58,16 +62,14 @@ namespace At0::Ray
 		UnmapMemory();
 	}
 
-	void DynamicBuffer::InternalEmplace(void* data, uint32_t size)
+	void DynamicBuffer::InternalEmplace(const void* data, uint32_t size)
 	{
 		// Resize the buffer if the requested data goes beyond buffer size
 		uint32_t prevSize = m_Size;
-		if (m_Size + size > m_Capacity)
+		if (m_EmplaceLocation + size >= m_Size)
 			Resize(m_Size + size);
 
-		void* mapped;
-		MapMemory(&mapped);
-		memcpy((char*)mapped + prevSize, data, size);
-		UnmapMemory();
+		Update(data, size, m_EmplaceLocation);
+		m_EmplaceLocation += size;
 	}
 }  // namespace At0::Ray

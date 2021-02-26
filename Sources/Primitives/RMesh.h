@@ -42,6 +42,5 @@ namespace At0::Ray
 		Entity m_Entity;
 
 		uint32_t m_GlobalUniformBufferOffset = 0;
-		inline static uint32_t nextOffset = 0;
 	};
 }  // namespace At0::Ray

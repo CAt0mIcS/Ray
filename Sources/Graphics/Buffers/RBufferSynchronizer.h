@@ -30,6 +30,15 @@ namespace At0::Ray
 			m_UniformBuffer.Update(&data, sizeof(data), offset);
 		}
 
+		/**
+		 * Allocates allocSize of bytes at the end of the buffer
+		 * Resizes the buffer if the capacity is not enough
+		 * @param allocSize The size to free
+		 * @param alignment The minimum alignment requirements in bytes
+		 * @param offset Writes to offset the offset in the global buffer
+		 */
+		void Emplace(uint32_t size, uint32_t alignment, uint32_t* offset);
+
 		// const VertexBuffer& GetVertexBuffer() const { return m_VertexBuffer; }
 		// const IndexBuffer& GetIndexBuffer() const { return m_IndexBuffer; }
 		const UniformBuffer& GetUniformBuffer() const { return m_UniformBuffer; }

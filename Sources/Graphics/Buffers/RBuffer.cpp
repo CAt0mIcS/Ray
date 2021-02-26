@@ -123,6 +123,17 @@ namespace At0::Ray
 		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 	}
 
+	uint32_t Buffer::PadSize(uint32_t originalSize, uint32_t alignment)
+	{
+		// Calculate required alignment based on minimum device offset alignment
+		uint32_t alignedSize = originalSize;
+		if (alignment > 0)
+		{
+			alignedSize = (alignedSize + alignment - 1) & ~(alignment - 1);
+		}
+		return alignedSize;
+	}
+
 	void Buffer::Destroy()
 	{
 		vkDestroyBuffer(Graphics::Get().GetDevice(), m_Buffer, nullptr);
