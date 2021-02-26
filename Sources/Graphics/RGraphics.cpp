@@ -35,7 +35,7 @@ namespace At0::Ray
 {
 	std::vector<Mesh*> meshes;
 	Scope<DescriptorSet> camDescSet;
-	Scope<UniformBuffer> camUniformBuffer;
+	uint32_t cameraUniformOffset;
 
 	Graphics::Graphics()
 	{
@@ -86,13 +86,20 @@ namespace At0::Ray
 			tform.Scale = { distSize(device), distSize(device), distSize(device) };
 		}
 
-		camUniformBuffer = MakeScope<UniformBuffer>(sizeof(Matrix) * 2);
 		camDescSet = MakeScope<DescriptorSet>(meshes[0]->GetPipeline(), 1);
 
+		uint32_t minBufferAlignment = Graphics::Get()
+										  .GetPhysicalDevice()
+										  .GetProperties()
+										  .limits.minUniformBufferOffsetAlignment;
+		BufferSynchronizer::Get().Emplace(
+			sizeof(Matrix) * 2, minBufferAlignment, &cameraUniformOffset);
 
 		VkDescriptorBufferInfo bufferInfoCam{};
-		bufferInfoCam.buffer = *camUniformBuffer;
-		bufferInfoCam.offset = 0;
+		bufferInfoCam.buffer =
+			BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(cameraUniformOffset);
+		bufferInfoCam.offset =
+			BufferSynchronizer::Get().GetUniformBuffer().GetOffset(cameraUniformOffset);
 		bufferInfoCam.range = sizeof(Matrix) * 2;
 
 		VkWriteDescriptorSet descWriteCam{};
@@ -294,9 +301,9 @@ namespace At0::Ray
 			RAY_THROW_RUNTIME("[Graphics] Failed to acquire next swapchain image.");
 
 
-		camUniformBuffer->Update(&Camera::Get().Matrices.View, sizeof(Matrix), 0);
-		camUniformBuffer->Update(
-			&Camera::Get().Matrices.Perspective, sizeof(Matrix), sizeof(Matrix));
+		BufferSynchronizer::Get().Update(Camera::Get().Matrices.View, cameraUniformOffset);
+		BufferSynchronizer::Get().Update(
+			Camera::Get().Matrices.Perspective, cameraUniformOffset + sizeof(Matrix));
 
 		// Update drawables
 		for (Mesh* mesh : meshes)
@@ -376,7 +383,6 @@ namespace At0::Ray
 			delete mesh;
 
 		camDescSet.reset();
-		camUniformBuffer.reset();
 
 		Codex::Shutdown();
 
