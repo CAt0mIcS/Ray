@@ -86,7 +86,7 @@ namespace At0::Ray
 			tform.Scale = { distSize(device), distSize(device), distSize(device) };
 		}
 
-		camDescSet = MakeScope<DescriptorSet>(meshes[0]->GetPipeline(), 1);
+		camDescSet = MakeScope<DescriptorSet>(meshes[0]->GetPipeline(), DescriptorSet::PerScene);
 
 		uint32_t minBufferAlignment = Graphics::Get()
 										  .GetPhysicalDevice()

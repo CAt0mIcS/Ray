@@ -14,7 +14,14 @@ namespace At0::Ray
 	class DescriptorSet : public Bindable, NonCopyable
 	{
 	public:
-		DescriptorSet(const GraphicsPipeline& pipeline, uint32_t binding);
+		enum Frequency : uint8_t
+		{
+			PerObject = 0,
+			PerScene = 1
+		};
+
+	public:
+		DescriptorSet(const GraphicsPipeline& pipeline, Frequency setNumber);
 		~DescriptorSet() = default;
 
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
