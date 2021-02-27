@@ -102,6 +102,7 @@ namespace At0::Ray
 		m_DescriptorSet = std::move(other.m_DescriptorSet);
 
 		m_GlobalUniformBufferOffset = other.m_GlobalUniformBufferOffset;
+		m_Transform = std::move(other.m_Transform);
 
 		if (other.EntitySet())
 			SetEntity(other.GetEntity());
@@ -113,7 +114,8 @@ namespace At0::Ray
 		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
 		  m_Uniforms(std::move(other.m_Uniforms)),
 		  m_GlobalUniformBufferOffset(other.m_GlobalUniformBufferOffset),
-		  m_DescriptorSet(std::move(other.m_DescriptorSet))
+		  m_DescriptorSet(std::move(other.m_DescriptorSet)),
+		  m_Transform(std::move(other.m_Transform))
 	{
 		if (other.EntitySet())
 			SetEntity(other.GetEntity());

@@ -42,9 +42,9 @@ private:
 			Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
 			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Cube(Ray::Material::Default()));
 			auto& transform = mesh.Get<Ray::Transform>();
-			// transform.Translation = { posRotDist(device), posRotDist(device), posRotDist(device)
-			// }; transform.Rotation = { posRotDist(device), posRotDist(device), posRotDist(device)
-			// }; transform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device) };
+			transform.Translation = { posRotDist(device), posRotDist(device), posRotDist(device) };
+			transform.Rotation = { posRotDist(device), posRotDist(device), posRotDist(device) };
+			transform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device) };
 		}
 	}
 };
