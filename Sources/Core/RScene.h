@@ -24,6 +24,15 @@ namespace At0::Ray
 		Entity& CreateEntity();
 
 		/**
+		 * Creates iterable list of all components of the Comp type
+		 */
+		template<typename... Comp>
+		auto EntityView()
+		{
+			return m_Registry.view<Comp...>();
+		}
+
+		/**
 		 * Updates all components
 		 */
 		void Update(Delta dt);

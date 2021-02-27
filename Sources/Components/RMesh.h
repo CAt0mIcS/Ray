@@ -12,6 +12,7 @@ namespace At0::Ray
 	class VertexBuffer;
 	class IndexBuffer;
 	class VertexInput;
+	class CommandBuffer;
 
 
 	class RAY_EXPORT Mesh : public Component
@@ -23,6 +24,8 @@ namespace At0::Ray
 		 * Updates uniform buffers
 		 */
 		void Update(Delta ts);
+
+		void Bind(const CommandBuffer& cmdBuff) const;
 
 		~Mesh();
 

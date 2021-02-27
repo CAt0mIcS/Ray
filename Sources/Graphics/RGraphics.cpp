@@ -26,6 +26,8 @@
 #include "Graphics/Buffers/RFramebuffer.h"
 
 #include "Graphics/Pipelines/RDescriptor.h"
+#include "Components/RMesh.h"
+#include "Core/RScene.h"
 
 namespace At0::Ray
 {
@@ -181,6 +183,9 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
+		auto view = Scene::Get().EntityView<Mesh>();
+		view.each([&cmdBuff](Mesh& mesh) { mesh.Bind(cmdBuff); });
+
 		m_RenderPass->End(cmdBuff);
 
 		cmdBuff.End();
@@ -254,6 +259,10 @@ namespace At0::Ray
 			&m_ImageAvailableSemaphore[m_CurrentFrame];	 // Wait unitl image was acquired
 		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.commandBufferCount = 1;
+
+		// RAY_TODO: Multithreaded recording
+		m_CommandBuffers[imageIndex] = MakeScope<CommandBuffer>();
+		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex]);
 
 		VkCommandBuffer commandBuffer = *m_CommandBuffers[imageIndex];
 		submitInfo.pCommandBuffers = &commandBuffer;

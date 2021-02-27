@@ -38,6 +38,14 @@ namespace At0::Ray
 			.Update(GetEntity().Get<Transform>().ToMatrix(), m_GlobalUniformBufferOffset);
 	}
 
+	void Mesh::Bind(const CommandBuffer& cmdBuff) const
+	{
+		m_Material.GetGraphicsPipeline().CmdBind(cmdBuff);
+
+		m_VertexBuffer->CmdBind(cmdBuff);
+		m_IndexBuffer->CmdBind(cmdBuff);
+	}
+
 	Mesh::~Mesh() {}
 
 	Mesh& Mesh::operator=(Mesh&& other) noexcept
