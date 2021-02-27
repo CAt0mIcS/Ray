@@ -4,10 +4,26 @@
 #include "REntity.h"
 #include "RTime.h"
 
+#include "../Events/REventDispatcher.h"
+
 
 namespace At0::Ray
 {
-	class RAY_EXPORT Scene
+	/**
+	 * Gets dispatched to listeners when entity is added to the scene
+	 */
+	class EntityCreatedEvent
+	{
+	public:
+		EntityCreatedEvent(Entity& entity) : m_Entity(entity) {}
+		Entity& GetEntity() const { return m_Entity; }
+
+	private:
+		Entity& m_Entity;
+	};
+
+
+	class RAY_EXPORT Scene : public EventDispatcher<EntityCreatedEvent>
 	{
 	public:
 		static Scene& Get()

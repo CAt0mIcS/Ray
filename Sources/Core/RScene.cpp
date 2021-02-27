@@ -7,6 +7,8 @@
 #include "Components/RMesh.h"
 #include "Components/RTransform.h"
 
+#include "Events/REventListener.h"
+
 
 namespace At0::Ray
 {
@@ -16,6 +18,15 @@ namespace At0::Ray
 	{
 		Scope<Entity> entity = MakeScope<Entity>(m_Registry);
 		entity->Emplace<Transform>();
+
+		// Dispatch entity created event to listeners
+		EntityCreatedEvent e(*entity);
+		for (EventListener<EntityCreatedEvent>* listener :
+			EventDispatcher<EntityCreatedEvent>::Get())
+		{
+			listener->OnEvent(e);
+		}
+
 		return *m_Entities.emplace_back(std::move(entity));
 	}
 

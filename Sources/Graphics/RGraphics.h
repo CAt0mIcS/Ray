@@ -6,6 +6,7 @@
 #include "../Core/RMath.h"
 #include "../Core/RCamera.h"
 #include "../Events/REngineEvents.h"
+#include "../Core/RScene.h"
 
 #include <vulkan/vulkan_core.h>
 #include <vector>
@@ -26,7 +27,10 @@ namespace At0::Ray
 	class DepthImage;
 
 
-	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
+	class RAY_EXPORT Graphics :
+		NonCopyable,
+		EventListener<FramebufferResizedEvent>,
+		EventListener<EntityCreatedEvent>
 	{
 	public:
 		~Graphics();
@@ -64,6 +68,8 @@ namespace At0::Ray
 		void OnEvent(FramebufferResizedEvent& e) override;
 		void OnFramebufferResized();
 
+		void OnEvent(EntityCreatedEvent& e) override;
+
 	private:
 		inline static Graphics* s_Instance = nullptr;
 		inline static constexpr uint8_t s_MaxFramesInFlight = 2;
@@ -91,5 +97,6 @@ namespace At0::Ray
 		uint32_t m_CurrentFrame = 0;
 
 		bool m_FramebufferResized = false;
+		bool m_RerecordCommandBuffers = false;
 	};
 }  // namespace At0::Ray

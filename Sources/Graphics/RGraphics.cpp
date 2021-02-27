@@ -34,7 +34,7 @@ namespace At0::Ray
 	Scope<DescriptorSet> camDescSet;
 	uint32_t cameraUniformOffset;
 
-	Graphics::Graphics()
+	Graphics::Graphics() : EventListener<EntityCreatedEvent>(Scene::Get())
 	{
 		if (s_Instance)
 			RAY_THROW_RUNTIME("[Graphics] Object already created.");
@@ -340,13 +340,17 @@ namespace At0::Ray
 		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 		submitInfo.waitSemaphoreCount = 1;
 		submitInfo.pWaitSemaphores =
-			&m_ImageAvailableSemaphore[m_CurrentFrame];	 // Wait unitl image was acquired
+			&m_ImageAvailableSemaphore[m_CurrentFrame];	 // Wait until image was acquired
 		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.commandBufferCount = 1;
 
-		// RAY_TODO: Multithreaded recording
-		m_CommandBuffers[imageIndex] = MakeScope<CommandBuffer>(*m_CommandPool);
-		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex]);
+		// Rerecord command buffers if an entity was created since the last time the buffers were
+		// recorded
+		if (m_RerecordCommandBuffers)
+		{
+			CreateCommandBuffers();
+			m_RerecordCommandBuffers = false;
+		}
 
 		VkCommandBuffer commandBuffer = *m_CommandBuffers[imageIndex];
 		submitInfo.pCommandBuffers = &commandBuffer;
@@ -471,4 +475,6 @@ namespace At0::Ray
 	}
 
 	void Graphics::OnEvent(FramebufferResizedEvent& e) { m_FramebufferResized = true; }
+
+	void Graphics::OnEvent(EntityCreatedEvent& e) { m_RerecordCommandBuffers = true; }
 }  // namespace At0::Ray
