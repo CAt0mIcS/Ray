@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "RComponent.h"
+#include "RTransform.h"
 #include "../Core/RTime.h"
 
 struct aiMesh;
@@ -22,6 +23,18 @@ namespace At0::Ray
 		void Update(Delta ts);
 		void Render(const CommandBuffer& cmdBuff) const;
 
+		template<typename T>
+		T& Get()
+		{
+			static_assert(false, "Template not specialized.");
+		}
+
+		template<>
+		Transform& Get()
+		{
+			return m_Transform;
+		}
+
 		Model& operator=(Model&& other);
 		Model(Model&& other);
 
@@ -31,5 +44,6 @@ namespace At0::Ray
 
 	private:
 		std::vector<Mesh> m_Meshes;
+		Transform m_Transform{};
 	};
 }  // namespace At0::Ray

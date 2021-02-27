@@ -108,10 +108,10 @@ namespace At0::Ray
 
 	// Mesh Mesh::UVSphere(Material material) { return Mesh(); }
 
-	void Mesh::Update(Delta ts)
+	void Mesh::Update(Delta ts, const Transform& parentTransform)
 	{
 		m_Uniforms.Resolve<Shader::Stage::Vertex>("PerObjectData", "model")
-			.Update(m_Transform.ToMatrix(), m_GlobalUniformBufferOffset);
+			.Update((m_Transform + parentTransform).ToMatrix(), m_GlobalUniformBufferOffset);
 	}
 
 	void Mesh::Bind(const CommandBuffer& cmdBuff) const

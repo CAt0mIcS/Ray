@@ -35,7 +35,7 @@ private:
 	void OnEvent(Ray::MouseButtonPressedEvent& e) override
 	{
 		static std::mt19937 device;
-		static std::uniform_real_distribution<float> posRotDist(-50.0f, 50.0f);
+		static std::uniform_real_distribution<float> posRotDist(-10.0f, 10.0f);
 		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
 
 		for (uint32_t i = 0; i < 1; ++i)
@@ -50,6 +50,10 @@ private:
 
 			Ray::Model& model =
 				entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
+			auto& transform = model.Get<Ray::Transform>();
+			transform.Translation = { posRotDist(device), posRotDist(device), posRotDist(device) };
+			// transform.Rotation = { posRotDist(device), posRotDist(device), posRotDist(device) };
+			// transform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device) };
 		}
 	}
 };

@@ -33,5 +33,14 @@ namespace At0::Ray
 		{
 			return MatrixScale(Scale) * MatrixRotation(Rotation) * MatrixTranslation(Translation);
 		}
+
+		Transform operator+(const Transform& other)
+		{
+			Transform transform;
+			transform.Translation = Translation + other.Translation;
+			transform.Rotation = Rotation + other.Rotation;
+			transform.Scale = Scale + other.Scale;
+			return transform;
+		}
 	};
 }  // namespace At0::Ray

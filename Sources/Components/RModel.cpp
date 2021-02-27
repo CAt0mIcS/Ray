@@ -40,7 +40,7 @@ namespace At0::Ray
 	void Model::Update(Delta ts)
 	{
 		for (Mesh& mesh : m_Meshes)
-			mesh.Update(ts);
+			mesh.Update(ts, m_Transform);
 	}
 
 	void Model::Render(const CommandBuffer& cmdBuff) const

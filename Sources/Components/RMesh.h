@@ -45,7 +45,7 @@ namespace At0::Ray
 		/**
 		 * Updates uniform buffers
 		 */
-		void Update(Delta ts);
+		void Update(Delta ts, const Transform& parentTransform = {});
 
 		void Bind(const CommandBuffer& cmdBuff) const;
 		void Render(const CommandBuffer& cmdBuff) const;
