@@ -11,14 +11,14 @@ layout(set = 0, binding = 0) uniform Transforms
 } ubo;
 
 
-// layout(set = 1, binding = 1) uniform Camera
-// {
-// 	mat4 view;
-// 	mat4 proj;
-// } camUBO;
+layout(set = 1, binding = 1) uniform Camera
+{
+	mat4 view;
+	mat4 proj;
+} camUBO;
 
 
 void main()
 {
-	gl_Position = ubo.model * vec4(inPos, 1.0f);
+	gl_Position = camUBO.proj * camUBO.view * ubo.model * vec4(inPos, 1.0f);
 }

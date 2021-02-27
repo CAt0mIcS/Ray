@@ -44,6 +44,7 @@ namespace At0::Ray
 		m_Frequency = other.m_Frequency;
 		return *this;
 	}
+
 	DescriptorSet::DescriptorSet(DescriptorSet&& other) noexcept
 		: m_DescriptorSet(other.m_DescriptorSet), m_Pipeline(other.m_Pipeline),
 		  m_Frequency(other.m_Frequency)

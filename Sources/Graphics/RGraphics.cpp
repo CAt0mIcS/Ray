@@ -31,6 +31,9 @@
 
 namespace At0::Ray
 {
+	Scope<DescriptorSet> camDescSet;
+	uint32_t cameraUniformOffset;
+
 	Graphics::Graphics()
 	{
 		if (s_Instance)
@@ -66,6 +69,13 @@ namespace At0::Ray
 		CreateRenderPass();
 		CreateFramebuffers();
 		BufferSynchronizer::Create();
+
+		uint32_t minBufferAlignment = Graphics::Get()
+										  .GetPhysicalDevice()
+										  .GetProperties()
+										  .limits.minUniformBufferOffsetAlignment;
+		BufferSynchronizer::Get().Emplace(
+			sizeof(Matrix) * 2, minBufferAlignment, &cameraUniformOffset);
 
 		CreateCommandBuffers();
 		CreateSyncObjects();
@@ -165,6 +175,7 @@ namespace At0::Ray
 	{
 		cmdBuff.Begin();
 
+
 		VkClearValue clearColor{ 0.0137254f, 0.014117f, 0.0149019f };
 		VkClearValue depthStencilClearColor{};
 		depthStencilClearColor.depthStencil = { 1.0f, 0 };
@@ -181,6 +192,31 @@ namespace At0::Ray
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
 		Scene::Get().EntityView<Mesh>().each([&cmdBuff](Mesh& mesh) {
+			camDescSet = MakeScope<DescriptorSet>(
+				mesh.GetMaterial().GetGraphicsPipeline(), DescriptorSet::Frequency::PerScene);
+
+			VkDescriptorBufferInfo bufferInfoCam{};
+			bufferInfoCam.buffer =
+				BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(cameraUniformOffset);
+			bufferInfoCam.offset =
+				BufferSynchronizer::Get().GetUniformBuffer().GetOffset(cameraUniformOffset);
+			bufferInfoCam.range = sizeof(Matrix) * 2;
+
+			VkWriteDescriptorSet descWriteCam{};
+			descWriteCam.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descWriteCam.dstSet = *camDescSet;
+			descWriteCam.dstBinding = 1;
+			descWriteCam.dstArrayElement = 0;
+			descWriteCam.descriptorCount = 1;
+			descWriteCam.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			descWriteCam.pImageInfo = nullptr;
+			descWriteCam.pBufferInfo = &bufferInfoCam;
+			descWriteCam.pTexelBufferView = nullptr;
+
+			DescriptorSet::Update({ descWriteCam });
+
+			camDescSet->CmdBind(cmdBuff);
+
 			mesh.Bind(cmdBuff);
 			mesh.Render(cmdBuff);
 		});
@@ -246,6 +282,10 @@ namespace At0::Ray
 
 		// Mark the image as now being in use by this frame
 		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
+
+		BufferSynchronizer::Get().Update(Camera::Get().Matrices.View, cameraUniformOffset);
+		BufferSynchronizer::Get().Update(
+			Camera::Get().Matrices.Perspective, cameraUniformOffset + sizeof(Matrix));
 
 		Scene::Get().Update(dt);
 

@@ -21,8 +21,7 @@ namespace At0::Ray
 
 	void Scene::Update(Delta dt)
 	{
-		auto view = m_Registry.view<Mesh>();
-		view.each([&dt](Mesh& mesh) { mesh.Update(dt); });
+		m_Registry.view<Mesh>().each([&dt](Mesh& mesh) { mesh.Update(dt); });
 	}
 
 	Scene::Scene() {}

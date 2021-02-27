@@ -29,6 +29,8 @@ namespace At0::Ray
 		void Bind(const CommandBuffer& cmdBuff) const;
 		void Render(const CommandBuffer& cmdBuff) const;
 
+		const Material& GetMaterial() const { return m_Material; }
+
 		~Mesh();
 
 		Mesh& operator=(Mesh&& other) noexcept;
