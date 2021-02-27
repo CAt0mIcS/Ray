@@ -6,7 +6,7 @@
 
 namespace At0::Ray
 {
-	struct Transform : public Component
+	struct Transform
 	{
 		Float3 Translation{};
 

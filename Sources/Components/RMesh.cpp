@@ -73,7 +73,7 @@ namespace At0::Ray
 	void Mesh::Update(Delta ts)
 	{
 		m_Uniforms.Resolve<Shader::Stage::Vertex>("Transforms", "model")
-			.Update(GetEntity().Get<Transform>().ToMatrix(), m_GlobalUniformBufferOffset);
+			.Update(m_Transform.ToMatrix(), m_GlobalUniformBufferOffset);
 	}
 
 	void Mesh::Bind(const CommandBuffer& cmdBuff) const

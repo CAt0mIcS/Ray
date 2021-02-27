@@ -32,6 +32,7 @@ namespace At0::Ray
 				(uint32_t)m_EntityHandle);
 			Component& comp = m_Registry.emplace<Comp>(m_EntityHandle, std::forward<Args>(args)...);
 			comp.SetEntity(*this);
+			return *(Comp*)&comp;
 		}
 
 		/**

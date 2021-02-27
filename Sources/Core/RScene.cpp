@@ -32,7 +32,6 @@ namespace At0::Ray
 	Entity& Scene::CreateEntity()
 	{
 		Scope<Entity> entity = MakeScope<Entity>(m_Registry);
-		entity->Emplace<Transform>();
 
 		// Dispatch entity created event to listeners
 		EntityCreatedEvent e(*entity);

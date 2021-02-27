@@ -2,6 +2,7 @@
 
 #include "RComponent.h"
 #include "RMaterial.h"
+#include "RTransform.h"
 
 #include "../Core/RTime.h"
 #include "../Graphics/Pipelines/RUniformAccess.h"
@@ -27,6 +28,17 @@ namespace At0::Ray
 		static Mesh IcoSphere(Material material);
 		static Mesh UVSphere(Material material);
 
+		template<typename T>
+		T& Get()
+		{
+			static_assert(false, "Template not specialized.");
+		}
+
+		template<>
+		Transform& Get<Transform>()
+		{
+			return m_Transform;
+		}
 
 		/**
 		 * Updates uniform buffers
@@ -55,5 +67,7 @@ namespace At0::Ray
 		DescriptorSet m_DescriptorSet;
 
 		uint32_t m_GlobalUniformBufferOffset = 0;
+
+		Transform m_Transform;
 	};
 }  // namespace At0::Ray
