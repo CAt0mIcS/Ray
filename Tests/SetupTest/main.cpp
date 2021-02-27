@@ -16,10 +16,17 @@
 using namespace At0;
 
 
+class Scene : public Ray::Scene
+{
+public:
+	Scene() {}
+};
+
+
 class App : public Ray::Engine, Ray::EventListener<Ray::MouseButtonPressedEvent>
 {
 public:
-	App() {}
+	App() { Scene::Set(Ray::MakeScope<Scene>()); }
 
 private:
 	void Update() override {}
@@ -60,7 +67,10 @@ int main()
 
 	Ray::Window::Create();
 	Ray::Window::Get().Show();
+
+	App app;
+
 	Ray::Graphics::Get();
 
-	return App{}.Run();
+	return app.Run();
 }

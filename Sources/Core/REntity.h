@@ -17,6 +17,8 @@ namespace At0::Ray
 		{
 		}
 
+		~Entity() { m_Registry.destroy(m_EntityHandle); }
+
 		/**
 		 * Adds a new component to the entity
 		 * @tparam Component The component to add to the entity

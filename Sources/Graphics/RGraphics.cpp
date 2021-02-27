@@ -31,6 +31,9 @@
 
 namespace At0::Ray
 {
+	VkDescriptorSetLayout cameraDescSetLayout;
+	VkDescriptorPool cameraDescriptorPool;
+	VkPipelineLayout cameraPipelineLayout;
 	Scope<DescriptorSet> camDescSet;
 	uint32_t cameraUniformOffset;
 
@@ -87,7 +90,6 @@ namespace At0::Ray
 		descriptorSetLayoutCreateInfo.bindingCount = 1;
 		descriptorSetLayoutCreateInfo.pBindings = &cameraBinding;
 
-		VkDescriptorSetLayout cameraDescSetLayout;
 		RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(GetDevice(), &descriptorSetLayoutCreateInfo,
 								nullptr, &cameraDescSetLayout),
 			"[Graphics] Failed to create descriptor set layout for camera.");
@@ -100,7 +102,6 @@ namespace At0::Ray
 		pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
 		pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
 
-		VkPipelineLayout cameraPipelineLayout;
 		RAY_VK_THROW_FAILED(vkCreatePipelineLayout(GetDevice(), &pipelineLayoutCreateInfo, nullptr,
 								&cameraPipelineLayout),
 			"[Graphics] Failed to create pipeline layout for camera.");
@@ -115,7 +116,6 @@ namespace At0::Ray
 		descriptorPoolCreateInfo.poolSizeCount = 1;
 		descriptorPoolCreateInfo.pPoolSizes = &poolSize;
 
-		VkDescriptorPool cameraDescriptorPool;
 		RAY_VK_THROW_FAILED(vkCreateDescriptorPool(GetDevice(), &descriptorPoolCreateInfo, nullptr,
 								&cameraDescriptorPool),
 			"[GraphicsPipeline] Failed to create descriptor pool.");
@@ -402,6 +402,11 @@ namespace At0::Ray
 
 		m_CommandBuffers.clear();
 
+		vkDestroyDescriptorSetLayout(GetDevice(), cameraDescSetLayout, nullptr);
+		vkDestroyDescriptorPool(GetDevice(), cameraDescriptorPool, nullptr);
+		vkDestroyPipelineLayout(GetDevice(), cameraPipelineLayout, nullptr);
+
+		Scene::Destroy();
 		BufferSynchronizer::Destroy();
 		Codex::Shutdown();
 

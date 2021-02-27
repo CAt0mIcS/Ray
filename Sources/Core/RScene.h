@@ -26,11 +26,9 @@ namespace At0::Ray
 	class RAY_EXPORT Scene : public EventDispatcher<EntityCreatedEvent>
 	{
 	public:
-		static Scene& Get()
-		{
-			static Scene instance;
-			return instance;
-		}
+		static Scene& Get();
+		static void Set(Scope<Scene> scene);
+		static void Destroy();
 
 		virtual ~Scene();
 
@@ -61,6 +59,7 @@ namespace At0::Ray
 
 		// Heap allocate them to avoid Entity& from being invalid when the vector is resized
 		std::vector<Scope<Entity>> m_Entities;
+		inline static Scope<Scene> s_CurrentScene = nullptr;
 	};
 
 }  // namespace At0::Ray

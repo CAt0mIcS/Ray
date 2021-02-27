@@ -12,6 +12,21 @@
 
 namespace At0::Ray
 {
+	Scene& Scene::Get()
+	{
+		RAY_MEXPECTS(s_CurrentScene, "[Scene] Current Scene was not set.");
+		return *s_CurrentScene;
+	}
+
+	void Scene::Set(Scope<Scene> scene) { s_CurrentScene = std::move(scene); }
+
+	void Scene::Destroy()
+	{
+		if (s_CurrentScene)
+			s_CurrentScene.reset();
+		s_CurrentScene = nullptr;
+	}
+
 	Scene::~Scene() {}
 
 	Entity& Scene::CreateEntity()

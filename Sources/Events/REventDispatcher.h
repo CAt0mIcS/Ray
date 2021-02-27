@@ -29,6 +29,9 @@ namespace At0::Ray
 		 */
 		void Unregister(EventListener<T, void>* listener)
 		{
+			if (m_Listeners.size() == 0)
+				return;
+
 			if (auto it = std::find(m_Listeners.begin(), m_Listeners.end(), listener);
 				it != m_Listeners.end())
 				m_Listeners.erase(it);
