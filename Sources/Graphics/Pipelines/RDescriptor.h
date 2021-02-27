@@ -9,19 +9,19 @@
 
 namespace At0::Ray
 {
-	class GraphicsPipeline;
-
 	class DescriptorSet : public Bindable, NonCopyable
 	{
 	public:
 		enum class Frequency : uint8_t
 		{
-			PerObject = 0,
-			PerScene = 1
+			PerScene = 0,
+			PerObject = 1
 		};
 
 	public:
-		DescriptorSet(const GraphicsPipeline& pipeline, Frequency setNumber);
+		DescriptorSet(VkDescriptorPool pool, VkDescriptorSetLayout descriptorLayout,
+			VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout,
+			Frequency setNumber);
 		~DescriptorSet() = default;
 
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
@@ -36,6 +36,8 @@ namespace At0::Ray
 	private:
 		VkDescriptorSet m_DescriptorSet;
 		Frequency m_Frequency;
-		const GraphicsPipeline* m_Pipeline;
+
+		VkPipelineBindPoint m_PipelineBindPoint;
+		VkPipelineLayout m_PipelineLayout;
 	};
 }  // namespace At0::Ray

@@ -5,18 +5,16 @@
 layout(location = 0) in vec3 inPos;
 
 
-layout(set = 0, binding = 0) uniform Transforms
-{
-	mat4 model;
-} ubo;
-
-
-layout(set = 1, binding = 1) uniform Camera
+layout(set = 0, binding = 0) uniform Camera
 {
 	mat4 view;
 	mat4 proj;
 } camUBO;
 
+layout(set = 1, binding = 1) uniform Transforms
+{
+	mat4 model;
+} ubo;
 
 void main()
 {

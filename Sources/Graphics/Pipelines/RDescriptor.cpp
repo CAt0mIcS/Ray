@@ -11,14 +11,17 @@
 
 namespace At0::Ray
 {
-	DescriptorSet::DescriptorSet(const GraphicsPipeline& pipeline, Frequency setNumber)
-		: m_Pipeline(&pipeline), m_Frequency(setNumber)
+	DescriptorSet::DescriptorSet(VkDescriptorPool pool, VkDescriptorSetLayout descriptorLayout,
+		VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout, Frequency setNumber)
+		: m_PipelineBindPoint(pipelineBindPoint), m_PipelineLayout(pipelineLayout),
+		  m_Frequency(setNumber)
 	{
 		VkDescriptorSetAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		allocInfo.descriptorPool = m_Pipeline->GetDescriptorPool();
+		allocInfo.descriptorPool = pool;
 		allocInfo.descriptorSetCount = 1;
-		allocInfo.pSetLayouts = &m_Pipeline->GetDescriptorSetLayout()[(size_t)m_Frequency];
+		allocInfo.pSetLayouts = &descriptorLayout;
+		// allocInfo.pSetLayouts = &m_Pipeline->GetDescriptorSetLayout()[(size_t)m_Frequency];
 
 		RAY_VK_THROW_FAILED(
 			vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo, &m_DescriptorSet),
@@ -27,7 +30,7 @@ namespace At0::Ray
 
 	void DescriptorSet::CmdBind(const CommandBuffer& cmdBuff) const
 	{
-		vkCmdBindDescriptorSets(cmdBuff, m_Pipeline->GetBindPoint(), m_Pipeline->GetLayout(),
+		vkCmdBindDescriptorSets(cmdBuff, m_PipelineBindPoint, m_PipelineLayout,
 			(uint32_t)m_Frequency, 1, &m_DescriptorSet, 0, nullptr);
 	}
 
@@ -40,14 +43,15 @@ namespace At0::Ray
 	DescriptorSet& DescriptorSet::operator=(DescriptorSet&& other) noexcept
 	{
 		m_DescriptorSet = other.m_DescriptorSet;
-		m_Pipeline = other.m_Pipeline;
 		m_Frequency = other.m_Frequency;
+		m_PipelineBindPoint = other.m_PipelineBindPoint;
+		m_PipelineLayout = other.m_PipelineLayout;
 		return *this;
 	}
 
 	DescriptorSet::DescriptorSet(DescriptorSet&& other) noexcept
-		: m_DescriptorSet(other.m_DescriptorSet), m_Pipeline(other.m_Pipeline),
-		  m_Frequency(other.m_Frequency)
+		: m_DescriptorSet(other.m_DescriptorSet), m_Frequency(other.m_Frequency),
+		  m_PipelineBindPoint(other.m_PipelineBindPoint), m_PipelineLayout(other.m_PipelineLayout)
 	{
 	}
 }  // namespace At0::Ray

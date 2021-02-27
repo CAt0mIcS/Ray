@@ -70,12 +70,81 @@ namespace At0::Ray
 		CreateFramebuffers();
 		BufferSynchronizer::Create();
 
-		uint32_t minBufferAlignment = Graphics::Get()
-										  .GetPhysicalDevice()
-										  .GetProperties()
-										  .limits.minUniformBufferOffsetAlignment;
+		uint32_t minBufferAlignment =
+			GetPhysicalDevice().GetProperties().limits.minUniformBufferOffsetAlignment;
 		BufferSynchronizer::Get().Emplace(
 			sizeof(Matrix) * 2, minBufferAlignment, &cameraUniformOffset);
+
+		VkDescriptorSetLayoutBinding cameraBinding{};
+		cameraBinding.binding = 0;
+		cameraBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		cameraBinding.descriptorCount = 1;
+		cameraBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+		cameraBinding.pImmutableSamplers = nullptr;
+
+		VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo{};
+		descriptorSetLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+		descriptorSetLayoutCreateInfo.bindingCount = 1;
+		descriptorSetLayoutCreateInfo.pBindings = &cameraBinding;
+
+		VkDescriptorSetLayout cameraDescSetLayout;
+		RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(GetDevice(), &descriptorSetLayoutCreateInfo,
+								nullptr, &cameraDescSetLayout),
+			"[Graphics] Failed to create descriptor set layout for camera.");
+
+		VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
+		pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+		pipelineLayoutCreateInfo.flags = 0;
+		pipelineLayoutCreateInfo.setLayoutCount = 1;
+		pipelineLayoutCreateInfo.pSetLayouts = &cameraDescSetLayout;
+		pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
+		pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
+
+		VkPipelineLayout cameraPipelineLayout;
+		RAY_VK_THROW_FAILED(vkCreatePipelineLayout(GetDevice(), &pipelineLayoutCreateInfo, nullptr,
+								&cameraPipelineLayout),
+			"[Graphics] Failed to create pipeline layout for camera.");
+
+		VkDescriptorPoolSize poolSize{};
+		poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		poolSize.descriptorCount = 1;
+
+		VkDescriptorPoolCreateInfo descriptorPoolCreateInfo{};
+		descriptorPoolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+		descriptorPoolCreateInfo.maxSets = 1;
+		descriptorPoolCreateInfo.poolSizeCount = 1;
+		descriptorPoolCreateInfo.pPoolSizes = &poolSize;
+
+		VkDescriptorPool cameraDescriptorPool;
+		RAY_VK_THROW_FAILED(vkCreateDescriptorPool(GetDevice(), &descriptorPoolCreateInfo, nullptr,
+								&cameraDescriptorPool),
+			"[GraphicsPipeline] Failed to create descriptor pool.");
+
+		camDescSet = MakeScope<DescriptorSet>(cameraDescriptorPool, cameraDescSetLayout,
+			VK_PIPELINE_BIND_POINT_GRAPHICS, cameraPipelineLayout,
+			DescriptorSet::Frequency::PerScene);
+
+
+		VkDescriptorBufferInfo bufferInfoCam{};
+		bufferInfoCam.buffer =
+			BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(cameraUniformOffset);
+		bufferInfoCam.offset =
+			BufferSynchronizer::Get().GetUniformBuffer().GetOffset(cameraUniformOffset);
+		bufferInfoCam.range = sizeof(Matrix) * 2;
+
+		VkWriteDescriptorSet descWriteCam{};
+		descWriteCam.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descWriteCam.dstSet = *camDescSet;
+		descWriteCam.dstBinding = 0;
+		descWriteCam.dstArrayElement = 0;
+		descWriteCam.descriptorCount = 1;
+		descWriteCam.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descWriteCam.pImageInfo = nullptr;
+		descWriteCam.pBufferInfo = &bufferInfoCam;
+		descWriteCam.pTexelBufferView = nullptr;
+
+		DescriptorSet::Update({ descWriteCam });
+
 
 		CreateCommandBuffers();
 		CreateSyncObjects();
@@ -191,32 +260,8 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
+		camDescSet->CmdBind(cmdBuff);
 		Scene::Get().EntityView<Mesh>().each([&cmdBuff](Mesh& mesh) {
-			camDescSet = MakeScope<DescriptorSet>(
-				mesh.GetMaterial().GetGraphicsPipeline(), DescriptorSet::Frequency::PerScene);
-
-			VkDescriptorBufferInfo bufferInfoCam{};
-			bufferInfoCam.buffer =
-				BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(cameraUniformOffset);
-			bufferInfoCam.offset =
-				BufferSynchronizer::Get().GetUniformBuffer().GetOffset(cameraUniformOffset);
-			bufferInfoCam.range = sizeof(Matrix) * 2;
-
-			VkWriteDescriptorSet descWriteCam{};
-			descWriteCam.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descWriteCam.dstSet = *camDescSet;
-			descWriteCam.dstBinding = 1;
-			descWriteCam.dstArrayElement = 0;
-			descWriteCam.descriptorCount = 1;
-			descWriteCam.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			descWriteCam.pImageInfo = nullptr;
-			descWriteCam.pBufferInfo = &bufferInfoCam;
-			descWriteCam.pTexelBufferView = nullptr;
-
-			DescriptorSet::Update({ descWriteCam });
-
-			camDescSet->CmdBind(cmdBuff);
-
 			mesh.Bind(cmdBuff);
 			mesh.Render(cmdBuff);
 		});

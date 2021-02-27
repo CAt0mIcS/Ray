@@ -25,10 +25,13 @@ private:
 
 	void OnEvent(Ray::MouseButtonPressedEvent& e) override
 	{
+		static int i = 0;
+		++i;
+
 		Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
 		entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(Ray::Material::Default()));
 		auto& transform = entity.Get<Ray::Transform>();
-		transform.Translation = { 1.0f, 0.0, 0.0f };
+		transform.Translation = { i, i, i };
 	}
 };
 

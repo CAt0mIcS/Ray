@@ -86,7 +86,11 @@ namespace At0::Ray
 	Mesh::Mesh(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Material material)
 		: m_VertexBuffer(std::move(vertexBuffer)), m_IndexBuffer(std::move(indexBuffer)),
 		  m_Material(std::move(material)), m_Uniforms(m_Material.GetGraphicsPipeline()),
-		  m_DescriptorSet(m_Material.GetGraphicsPipeline(), DescriptorSet::Frequency::PerObject)
+		  m_DescriptorSet(m_Material.GetGraphicsPipeline().GetDescriptorPool(),
+			  m_Material.GetGraphicsPipeline()
+				  .GetDescriptorSetLayout()[(size_t)DescriptorSet::Frequency::PerObject],
+			  m_Material.GetGraphicsPipeline().GetBindPoint(),
+			  m_Material.GetGraphicsPipeline().GetLayout(), DescriptorSet::Frequency::PerObject)
 	{
 		// Allocate uniform buffer memory
 		uint32_t alignment = Graphics::Get()
