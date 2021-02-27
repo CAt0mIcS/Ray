@@ -8,6 +8,6 @@ namespace At0::Ray
 	class ComputePipeline : public Pipeline
 	{
 	public:
-		VkPipelineBindPoint GetBindPoint() const override { return VK_PIPELINE_BIND_POINT_COMPUTE; }
+		Pipeline::BindPoint GetBindPoint() const override { return Pipeline::BindPoint::Compute; }
 	};
 }  // namespace At0::Ray

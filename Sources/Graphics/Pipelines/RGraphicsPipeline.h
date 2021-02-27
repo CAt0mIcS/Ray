@@ -19,7 +19,7 @@ namespace At0::Ray
 			const RenderPass& renderPass, const std::vector<std::string_view>& shaders);
 		~GraphicsPipeline();
 
-		VkPipelineBindPoint GetBindPoint() const override;
+		Pipeline::BindPoint GetBindPoint() const override;
 		const VertexLayout& GetVertexLayout() const { return m_Shader.GetVertexLayout(); }
 
 		const VkDescriptorPool& GetDescriptorPool() const { return m_DescriptorPool; }

@@ -29,9 +29,9 @@ namespace At0::Ray
 			vkDestroyDescriptorSetLayout(Graphics::Get().GetDevice(), layout, nullptr);
 	}
 
-	VkPipelineBindPoint GraphicsPipeline::GetBindPoint() const
+	Pipeline::BindPoint GraphicsPipeline::GetBindPoint() const
 	{
-		return VK_PIPELINE_BIND_POINT_GRAPHICS;
+		return Pipeline::BindPoint::Graphics;
 	}
 
 	std::string GraphicsPipeline::GetUID(

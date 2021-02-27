@@ -121,7 +121,7 @@ namespace At0::Ray
 			"[GraphicsPipeline] Failed to create descriptor pool.");
 
 		camDescSet = MakeScope<DescriptorSet>(cameraDescriptorPool, cameraDescSetLayout,
-			VK_PIPELINE_BIND_POINT_GRAPHICS, cameraPipelineLayout,
+			Pipeline::BindPoint::Graphics, cameraPipelineLayout,
 			DescriptorSet::Frequency::PerScene);
 
 

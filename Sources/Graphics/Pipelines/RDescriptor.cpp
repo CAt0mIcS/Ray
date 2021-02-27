@@ -12,7 +12,7 @@
 namespace At0::Ray
 {
 	DescriptorSet::DescriptorSet(VkDescriptorPool pool, VkDescriptorSetLayout descriptorLayout,
-		VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout, Frequency setNumber)
+		Pipeline::BindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout, Frequency setNumber)
 		: m_PipelineBindPoint(pipelineBindPoint), m_PipelineLayout(pipelineLayout),
 		  m_Frequency(setNumber)
 	{
@@ -30,7 +30,7 @@ namespace At0::Ray
 
 	void DescriptorSet::CmdBind(const CommandBuffer& cmdBuff) const
 	{
-		vkCmdBindDescriptorSets(cmdBuff, m_PipelineBindPoint, m_PipelineLayout,
+		vkCmdBindDescriptorSets(cmdBuff, (VkPipelineBindPoint)m_PipelineBindPoint, m_PipelineLayout,
 			(uint32_t)m_Frequency, 1, &m_DescriptorSet, 0, nullptr);
 	}
 

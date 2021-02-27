@@ -14,9 +14,17 @@ namespace At0::Ray
 	class RAY_EXPORT Pipeline : public Bindable
 	{
 	public:
+		enum class BindPoint
+		{
+			Graphics = 0,
+			Compute = 1,
+			RayTracing = 1000165000
+		};
+
+	public:
 		virtual ~Pipeline();
 
-		virtual VkPipelineBindPoint GetBindPoint() const = 0;
+		virtual Pipeline::BindPoint GetBindPoint() const = 0;
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
 
 		const Shader& GetShader() const { return m_Shader; }

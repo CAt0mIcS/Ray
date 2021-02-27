@@ -16,6 +16,6 @@ namespace At0::Ray
 
 	void Pipeline::CmdBind(const CommandBuffer& cmdBuff) const
 	{
-		vkCmdBindPipeline(cmdBuff, GetBindPoint(), m_Pipeline);
+		vkCmdBindPipeline(cmdBuff, (VkPipelineBindPoint)GetBindPoint(), m_Pipeline);
 	}
 }  // namespace At0::Ray

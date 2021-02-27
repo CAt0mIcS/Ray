@@ -3,6 +3,7 @@
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
 #include "Graphics/Core/RBindable.h"
+#include "RPipeline.h"
 
 #include <vulkan/vulkan_core.h>
 
@@ -20,7 +21,7 @@ namespace At0::Ray
 
 	public:
 		DescriptorSet(VkDescriptorPool pool, VkDescriptorSetLayout descriptorLayout,
-			VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout,
+			Pipeline::BindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout,
 			Frequency setNumber);
 		~DescriptorSet() = default;
 
@@ -37,7 +38,7 @@ namespace At0::Ray
 		VkDescriptorSet m_DescriptorSet;
 		Frequency m_Frequency;
 
-		VkPipelineBindPoint m_PipelineBindPoint;
+		Pipeline::BindPoint m_PipelineBindPoint;
 		VkPipelineLayout m_PipelineLayout;
 	};
 }  // namespace At0::Ray
