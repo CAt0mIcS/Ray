@@ -5,6 +5,7 @@
 #include "Utils/RException.h"
 
 #include "Components/RMesh.h"
+#include "Components/RModel.h"
 #include "Components/RTransform.h"
 
 #include "Events/REventListener.h"
@@ -46,7 +47,20 @@ namespace At0::Ray
 
 	void Scene::Update(Delta dt)
 	{
-		m_Registry.view<Mesh>().each([&dt](Mesh& mesh) { mesh.Update(dt); });
+		for (Scope<Entity>& entity : m_Entities)
+		{
+			// if (entity->Has<Mesh>())
+			//	entity->Get<Mesh>().Update(dt);
+			if (entity->Has<Model>())
+				entity->Get<Model>().Update(dt);
+		}
+
+		// Does not work for some reason!
+		// auto meshView = m_Registry.view<Mesh>();
+		// meshView.each([&dt](Mesh& mesh) { mesh.Update(dt); });
+
+		// auto modelView = m_Registry.view<Model>();
+		// modelView.each([&dt](Model& model) { model.Update(dt); });
 	}
 
 	Scene::Scene() {}

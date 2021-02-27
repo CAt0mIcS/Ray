@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../RBase.h"
 #include "../Utils/RAssert.h"
@@ -6,11 +6,12 @@
 
 namespace At0::Ray
 {
+
+	class Entity;
+
 	/**
 	 * Base class for all components
 	 */
-
-	class Entity;
 	class Component
 	{
 	public:

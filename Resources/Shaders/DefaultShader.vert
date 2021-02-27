@@ -11,7 +11,7 @@ layout(set = 0, binding = 0) uniform Camera
 	mat4 proj;
 } camUBO;
 
-layout(set = 1, binding = 1) uniform Transforms
+layout(set = 1, binding = 1) uniform PerObjectData
 {
 	mat4 model;
 } ubo;

@@ -26,8 +26,8 @@ namespace At0::Ray
 			: Translation(translation), Rotation(rotation)
 		{
 		}
-		Transform(Float3 translation) : Translation(translation) {}
-		Transform() = default;
+		Transform(Float3 translation) : Translation(translation), Rotation{ 0.0f, 0.0f, 0.0f } {}
+		Transform() : Rotation{ 0.0f, 0.0f, 0.0f } {}
 
 		Matrix ToMatrix() const
 		{

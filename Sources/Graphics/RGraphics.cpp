@@ -27,7 +27,9 @@
 
 #include "Graphics/Pipelines/RDescriptor.h"
 #include "Components/RMesh.h"
+#include "Components/RModel.h"
 #include "Core/RScene.h"
+
 
 namespace At0::Ray
 {
@@ -261,10 +263,29 @@ namespace At0::Ray
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
 		camDescSet->CmdBind(cmdBuff);
-		Scene::Get().EntityView<Mesh>().each([&cmdBuff](Mesh& mesh) {
-			mesh.Bind(cmdBuff);
-			mesh.Render(cmdBuff);
-		});
+
+		for (const Scope<Entity>& entity : Scene::Get().GetEntities())
+		{
+			// if (entity->Has<Mesh>())
+			//{
+			//	Mesh& mesh = entity->Get<Mesh>();
+			//	mesh.Bind(cmdBuff);
+			//	mesh.Render(cmdBuff);
+			//}
+			if (entity->Has<Model>())
+			{
+				entity->Get<Model>().Render(cmdBuff);
+			}
+		}
+
+		// auto meshView = Scene::Get().EntityView<Mesh>();
+		// meshView.each([&cmdBuff](Mesh& mesh) {
+		//	mesh.Bind(cmdBuff);
+		//	mesh.Render(cmdBuff);
+		//});
+
+		// auto modelView = Scene::Get().EntityView<Model>();
+		// modelView.each([&cmdBuff](Model& model) { model.Render(cmdBuff); });
 
 		m_RenderPass->End(cmdBuff);
 

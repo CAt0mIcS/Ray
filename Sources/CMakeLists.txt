@@ -108,6 +108,8 @@ set(SRC
 	"Components/RTransform.h"
 	"Components/RMaterial.h"
 	"Components/RMaterial.cpp"
+	"Components/RModel.h"
+	"Components/RModel.cpp"
 
 	# ------------------------------------------------------------------
 	# Utilities

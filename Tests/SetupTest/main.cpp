@@ -5,6 +5,7 @@
 
 #include <Components/RMesh.h>
 #include <Components/RTransform.h>
+#include <Components/RModel.h>
 
 #include <Core/RVertex.h>
 #include <Core/RScene.h>
@@ -37,14 +38,18 @@ private:
 		static std::uniform_real_distribution<float> posRotDist(-50.0f, 50.0f);
 		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
 
-		for (uint32_t i = 0; i < 10000; ++i)
+		for (uint32_t i = 0; i < 1; ++i)
 		{
 			Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
-			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Cube(Ray::Material::Default()));
-			auto& transform = mesh.Get<Ray::Transform>();
-			transform.Translation = { posRotDist(device), posRotDist(device), posRotDist(device) };
-			transform.Rotation = { posRotDist(device), posRotDist(device), posRotDist(device) };
-			transform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device) };
+			// Ray::Mesh& mesh =
+			// entity.Emplace<Ray::Mesh>(Ray::Mesh::Cube(Ray::Material::Default())); auto& transform
+			// = mesh.Get<Ray::Transform>(); transform.Translation = { posRotDist(device),
+			// posRotDist(device), posRotDist(device) }; transform.Rotation = { posRotDist(device),
+			// posRotDist(device), posRotDist(device) }; transform.Scale = { scaleDist(device),
+			// scaleDist(device), scaleDist(device) };
+
+			Ray::Model& model =
+				entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
 		}
 	}
 };

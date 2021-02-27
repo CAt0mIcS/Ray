@@ -37,6 +37,8 @@ namespace At0::Ray
 		 */
 		Entity& CreateEntity();
 
+		const auto& GetEntities() const { return m_Entities; }
+
 		/**
 		 * Creates iterable list of all components of the Comp type
 		 */

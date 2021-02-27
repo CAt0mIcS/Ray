@@ -20,6 +20,8 @@ namespace At0::Ray
 	class RAY_EXPORT Mesh : public Component
 	{
 	public:
+		Mesh(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Material material);
+
 		static Mesh Triangle(Material material);
 		static Mesh Plane(Material material);
 		static Mesh Circle(Material material, int segments = 360, float radius = 1.0f);
@@ -54,9 +56,6 @@ namespace At0::Ray
 
 		Mesh& operator=(Mesh&& other) noexcept;
 		Mesh(Mesh&& other) noexcept;
-
-	private:
-		Mesh(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Material material);
 
 	private:
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;

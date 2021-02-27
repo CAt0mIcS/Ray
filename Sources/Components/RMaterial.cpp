@@ -1,4 +1,4 @@
-#include "Rpch.h"
+﻿#include "Rpch.h"
 #include "RMaterial.h"
 
 #include "Graphics/Core/RCodex.h"
@@ -9,6 +9,8 @@
 
 namespace At0::Ray
 {
+	Material::Material(Ref<GraphicsPipeline> pipeline) : m_GraphicsPipeline(std::move(pipeline)) {}
+
 	const VertexLayout& Material::GetVertexLayout() const
 	{
 		return m_GraphicsPipeline->GetVertexLayout();
@@ -20,6 +22,4 @@ namespace At0::Ray
 			"Resources/Shaders/DefaultShader.frag" };
 		return { Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(), shaders) };
 	}
-
-	Material::Material(Ref<GraphicsPipeline> pipeline) : m_GraphicsPipeline(std::move(pipeline)) {}
 }  // namespace At0::Ray
