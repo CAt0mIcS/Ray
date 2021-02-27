@@ -53,8 +53,8 @@ namespace At0::Ray
 		Camera::Get().SetPosition(glm::vec3(0.0f, 0.0f, -2.5f));
 		Camera::Get().SetRotation(glm::vec3(0.0f));
 		Camera::Get().SetRotationSpeed(0.07f);
-		Camera::Get().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 256.0f);
-		Camera::Get().SetMovementSpeed(2.0f);
+		Camera::Get().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
+		Camera::Get().SetMovementSpeed(3.0f);
 	}
 
 	void Graphics::CreateVulkanObjects()
