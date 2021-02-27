@@ -11,6 +11,7 @@
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 
+#include "Core/RGeometricPrimitives.h"
 #include "Core/REntity.h"
 #include "Core/RVertex.h"
 
@@ -21,18 +22,53 @@ namespace At0::Ray
 {
 	Mesh Mesh::Triangle(Material material)
 	{
-		VertexInput vertexInput(material.GetVertexLayout());
-		vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f });
-		vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.0f });
-		vertexInput.Emplace(Float3{ 0.0f, 0.5f, 0.0f });
+		IndexedTriangleList triangle = IndexedTriangleList::Triangle(material.GetVertexLayout());
 
-		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
-
-		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>("Triangle", vertexInput);
-		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>("012", indices);
+		Ref<VertexBuffer> vertexBuffer =
+			Codex::Resolve<VertexBuffer>(triangle.vertexTag, triangle.vertices);
+		Ref<IndexBuffer> indexBuffer =
+			Codex::Resolve<IndexBuffer>(triangle.indexTag, triangle.indices);
 
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
+
+	Mesh Mesh::Plane(Material material)
+	{
+		IndexedTriangleList plane = IndexedTriangleList::Plane(material.GetVertexLayout());
+
+		Ref<VertexBuffer> vertexBuffer =
+			Codex::Resolve<VertexBuffer>(plane.vertexTag, plane.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(plane.indexTag, plane.indices);
+
+		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	}
+
+	// Mesh Mesh::Circle(Material material, int segments, float radius)
+	//{
+	//	IndexedTriangleList circle =
+	//		IndexedTriangleList::Circle(material.GetVertexLayout(), segments, radius);
+
+	//	Ref<VertexBuffer> vertexBuffer =
+	//		Codex::Resolve<VertexBuffer>(circle.vertexTag, circle.vertices);
+	//	Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(circle.indexTag, circle.indices);
+
+	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	//}
+
+	Mesh Mesh::Cube(Material material)
+	{
+		IndexedTriangleList cube = IndexedTriangleList::Cube(material.GetVertexLayout());
+
+		Ref<VertexBuffer> vertexBuffer =
+			Codex::Resolve<VertexBuffer>(cube.vertexTag, cube.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(cube.indexTag, cube.indices);
+
+		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	}
+
+	// Mesh Mesh::IcoSphere(Material material) { return Mesh(); }
+
+	// Mesh Mesh::UVSphere(Material material) { return Mesh(); }
 
 	void Mesh::Update(Delta ts)
 	{

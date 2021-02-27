@@ -40,7 +40,7 @@ private:
 		for (uint32_t i = 0; i < 10000; ++i)
 		{
 			Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
-			entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(Ray::Material::Default()));
+			entity.Emplace<Ray::Mesh>(Ray::Mesh::Cube(Ray::Material::Default()));
 			auto& transform = entity.Get<Ray::Transform>();
 			transform.Translation = { posRotDist(device), posRotDist(device), posRotDist(device) };
 			transform.Rotation = { posRotDist(device), posRotDist(device), posRotDist(device) };

@@ -11,6 +11,12 @@
 
 namespace At0::Ray
 {
+	namespace Math
+	{
+		inline constexpr double PI_D = 3.1415926535897932384626433832795;
+		inline constexpr float PI = 3.141592653f;
+	}  // namespace Math
+
 	using Int2 = glm::vec<2, int32_t, glm::defaultp>;
 	using Int3 = glm::vec<3, int32_t, glm::defaultp>;
 	using Int4 = glm::vec<4, int32_t, glm::defaultp>;

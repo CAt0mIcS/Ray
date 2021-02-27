@@ -18,6 +18,8 @@ set(SRC
 	"Core/REntity.h"
 	"Core/RScene.h"
 	"Core/RScene.cpp"
+	"Core/RGeometricPrimitives.h"
+	"Core/RGeometricPrimitives.cpp"
 	
 
 	# ------------------------------------------------------------------

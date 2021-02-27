@@ -20,6 +20,13 @@ namespace At0::Ray
 	{
 	public:
 		static Mesh Triangle(Material material);
+		static Mesh Plane(Material material);
+		static Mesh Circle(Material material, int segments = 360, float radius = 1.0f);
+
+		static Mesh Cube(Material material);
+		static Mesh IcoSphere(Material material);
+		static Mesh UVSphere(Material material);
+
 
 		/**
 		 * Updates uniform buffers
