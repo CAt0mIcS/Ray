@@ -34,11 +34,8 @@ namespace At0::Ray
 
 	void Mesh::Update(Delta ts)
 	{
-		if (GetEntity().Has<Transform>())
-		{
-			m_Uniforms.Resolve<Shader::Stage::Vertex>("Transforms", "model")
-				.Update(GetEntity().Get<Transform>().ToMatrix(), m_GlobalUniformBufferOffset);
-		}
+		m_Uniforms.Resolve<Shader::Stage::Vertex>("Transforms", "model")
+			.Update(GetEntity().Get<Transform>().ToMatrix(), m_GlobalUniformBufferOffset);
 	}
 
 	Mesh::~Mesh() {}
