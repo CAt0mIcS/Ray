@@ -14,7 +14,9 @@ namespace At0::Ray
 
 	Entity& Scene::CreateEntity()
 	{
-		return *m_Entities.emplace_back(MakeScope<Entity>(m_Registry));
+		Scope<Entity> entity = MakeScope<Entity>(m_Registry);
+		entity->Emplace<Transform>();
+		return *m_Entities.emplace_back(std::move(entity));
 	}
 
 	void Scene::Update(Delta dt)

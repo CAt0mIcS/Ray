@@ -74,7 +74,7 @@ namespace At0::Ray
 		}
 
 	private:
-		const Shader& m_Shader;
+		const Shader* m_Shader;
 		std::pair<std::string, const Shader::UniformBlocks::UniformBlockData*> m_BlockCache{};
 	};
 }  // namespace At0::Ray

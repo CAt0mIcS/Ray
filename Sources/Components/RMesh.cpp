@@ -36,10 +36,7 @@ namespace At0::Ray
 	{
 		if (GetEntity().Has<Transform>())
 		{
-			if (!m_Uniforms)
-				CreateUniformAccess();
-
-			m_Uniforms->Resolve<Shader::Stage::Vertex>("Transforms", "model")
+			m_Uniforms.Resolve<Shader::Stage::Vertex>("Transforms", "model")
 				.Update(GetEntity().Get<Transform>().ToMatrix(), m_GlobalUniformBufferOffset);
 		}
 	}
@@ -73,18 +70,12 @@ namespace At0::Ray
 
 	Mesh::Mesh(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Material material)
 		: m_VertexBuffer(std::move(vertexBuffer)), m_IndexBuffer(std::move(indexBuffer)),
-		  m_Material(std::move(material))
-	{
-	}
-
-	void Mesh::CreateUniformAccess()
+		  m_Material(std::move(material)), m_Uniforms(m_Material.GetGraphicsPipeline())
 	{
 		uint32_t alignment = Graphics::Get()
 								 .GetPhysicalDevice()
 								 .GetProperties()
 								 .limits.minUniformBufferOffsetAlignment;
 		BufferSynchronizer::Get().Emplace(sizeof(Matrix), alignment, &m_GlobalUniformBufferOffset);
-
-		m_Uniforms = MakeScope<UniformAccess>(m_Material.GetGraphicsPipeline());
 	}
 }  // namespace At0::Ray

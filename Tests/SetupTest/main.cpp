@@ -30,7 +30,6 @@ private:
 		// RAY_TODO: Adding the transform first causes vector out of range subscription when
 		// updating the mesh in Scene::Update
 		entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(Ray::Material::Default()));
-		entity.Emplace<Ray::Transform>();
 	}
 };
 

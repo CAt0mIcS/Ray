@@ -10,11 +10,11 @@
 
 namespace At0::Ray
 {
-	UniformAccess::UniformAccess(const Pipeline& pipeline) : m_Shader(pipeline.GetShader()) {}
+	UniformAccess::UniformAccess(const Pipeline& pipeline) : m_Shader(&pipeline.GetShader()) {}
 
 	UniformAccess::UniformDataAccess UniformAccess::Resolve(Shader::Stage stageFlag)
 	{
-		return { m_Shader.GetUniforms(stageFlag), m_Shader.GetUniformBlocks(stageFlag),
+		return { m_Shader->GetUniforms(stageFlag), m_Shader->GetUniformBlocks(stageFlag),
 			m_BlockCache };
 	}
 

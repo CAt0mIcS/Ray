@@ -4,6 +4,7 @@
 #include "RMaterial.h"
 
 #include "../Core/RTime.h"
+#include "../Graphics/Pipelines/RUniformAccess.h"
 
 
 namespace At0::Ray
@@ -11,7 +12,7 @@ namespace At0::Ray
 	class VertexBuffer;
 	class IndexBuffer;
 	class VertexInput;
-	class UniformAccess;
+
 
 	class RAY_EXPORT Mesh : public Component
 	{
@@ -30,14 +31,13 @@ namespace At0::Ray
 
 	private:
 		Mesh(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Material material);
-		void CreateUniformAccess();
 
 	private:
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;
 		Ref<IndexBuffer> m_IndexBuffer = nullptr;
 
 		Material m_Material;
-		Scope<UniformAccess> m_Uniforms;
+		UniformAccess m_Uniforms;
 
 		uint32_t m_GlobalUniformBufferOffset = 0;
 	};
