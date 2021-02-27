@@ -21,7 +21,6 @@ namespace At0::Ray
 		allocInfo.descriptorPool = pool;
 		allocInfo.descriptorSetCount = 1;
 		allocInfo.pSetLayouts = &descriptorLayout;
-		// allocInfo.pSetLayouts = &m_Pipeline->GetDescriptorSetLayout()[(size_t)m_Frequency];
 
 		RAY_VK_THROW_FAILED(
 			vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo, &m_DescriptorSet),

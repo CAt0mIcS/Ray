@@ -10,6 +10,7 @@
 #include <Core/RScene.h>
 
 #include <signal.h>
+#include <random>
 
 
 using namespace At0;
@@ -25,13 +26,19 @@ private:
 
 	void OnEvent(Ray::MouseButtonPressedEvent& e) override
 	{
-		static int i = 0;
-		++i;
+		static std::mt19937 device;
+		static std::uniform_real_distribution<float> posRotDist(-50.0f, 50.0f);
+		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
 
-		Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
-		entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(Ray::Material::Default()));
-		auto& transform = entity.Get<Ray::Transform>();
-		transform.Translation = { i, i, i };
+		for (uint32_t i = 0; i < 10000; ++i)
+		{
+			Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
+			entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(Ray::Material::Default()));
+			auto& transform = entity.Get<Ray::Transform>();
+			transform.Translation = { posRotDist(device), posRotDist(device), posRotDist(device) };
+			transform.Rotation = { posRotDist(device), posRotDist(device), posRotDist(device) };
+			transform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device) };
+		}
 	}
 };
 
