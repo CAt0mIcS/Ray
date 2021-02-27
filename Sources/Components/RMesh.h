@@ -1,10 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "RComponent.h"
 #include "RMaterial.h"
 
 #include "../Core/RTime.h"
 #include "../Graphics/Pipelines/RUniformAccess.h"
+#include "../Graphics/Pipelines/RDescriptor.h"
 
 
 namespace At0::Ray
@@ -26,6 +27,7 @@ namespace At0::Ray
 		void Update(Delta ts);
 
 		void Bind(const CommandBuffer& cmdBuff) const;
+		void Render(const CommandBuffer& cmdBuff) const;
 
 		~Mesh();
 
@@ -41,6 +43,7 @@ namespace At0::Ray
 
 		Material m_Material;
 		UniformAccess m_Uniforms;
+		DescriptorSet m_DescriptorSet;
 
 		uint32_t m_GlobalUniformBufferOffset = 0;
 	};

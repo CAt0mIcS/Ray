@@ -26,11 +26,16 @@ namespace At0::Ray
 
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
 		static void Update(const std::vector<VkWriteDescriptorSet>& descriptorWrites);
+		Frequency GetFrequency() const { return m_Frequency; }
 
 		operator const VkDescriptorSet&() const { return m_DescriptorSet; }
 
+		DescriptorSet& operator=(DescriptorSet&& other) noexcept;
+		DescriptorSet(DescriptorSet&& other) noexcept;
+
 	private:
 		VkDescriptorSet m_DescriptorSet;
-		const GraphicsPipeline& m_Pipeline;
+		Frequency m_Frequency;
+		const GraphicsPipeline* m_Pipeline;
 	};
 }  // namespace At0::Ray

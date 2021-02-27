@@ -31,9 +31,6 @@
 
 namespace At0::Ray
 {
-	Scope<DescriptorSet> camDescSet;
-	uint32_t cameraUniformOffset;
-
 	Graphics::Graphics()
 	{
 		if (s_Instance)
@@ -183,8 +180,10 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		auto view = Scene::Get().EntityView<Mesh>();
-		view.each([&cmdBuff](Mesh& mesh) { mesh.Bind(cmdBuff); });
+		Scene::Get().EntityView<Mesh>().each([&cmdBuff](Mesh& mesh) {
+			mesh.Bind(cmdBuff);
+			mesh.Render(cmdBuff);
+		});
 
 		m_RenderPass->End(cmdBuff);
 
@@ -261,7 +260,7 @@ namespace At0::Ray
 		submitInfo.commandBufferCount = 1;
 
 		// RAY_TODO: Multithreaded recording
-		m_CommandBuffers[imageIndex] = MakeScope<CommandBuffer>();
+		m_CommandBuffers[imageIndex] = MakeScope<CommandBuffer>(*m_CommandPool);
 		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex]);
 
 		VkCommandBuffer commandBuffer = *m_CommandBuffers[imageIndex];
@@ -315,9 +314,6 @@ namespace At0::Ray
 		m_CommandBuffers.clear();
 
 		BufferSynchronizer::Destroy();
-
-		camDescSet.reset();
-
 		Codex::Shutdown();
 
 		m_DepthImage.reset();
