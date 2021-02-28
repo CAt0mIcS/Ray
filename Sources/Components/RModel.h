@@ -39,12 +39,6 @@ namespace At0::Ray
 		static Mesh ParseMesh(
 			std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials);
 
-		template<typename T>
-		T& Get(std::type_identity<T>)
-		{
-			assert(false);
-		}
-
 		Transform& Get(std::type_identity<Transform>) { return m_Transform; }
 
 	private:

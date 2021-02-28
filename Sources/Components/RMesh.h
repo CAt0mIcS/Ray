@@ -54,12 +54,6 @@ namespace At0::Ray
 		Mesh(Mesh&& other) noexcept;
 
 	private:
-		template<typename T>
-		T& Get(std::type_identity<T>)
-		{
-			assert(false);
-		}
-
 		Transform& Get(std::type_identity<Transform>) { return m_Transform; }
 
 	private:

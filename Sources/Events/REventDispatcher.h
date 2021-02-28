@@ -42,11 +42,13 @@ namespace At0::Ray
 			if (m_Listeners.size() == 0)
 				return;
 
-			for (auto it = m_Listeners.begin(); it != m_Listeners.end(); ++it)
+			for (int i = m_Listeners.size() - 1; i >= 0; --i)
 			{
-				if (*it == listener)
+				if (m_Listeners[i] == nullptr)
+					m_Listeners.erase(m_Listeners.begin() + i);
+				else if (m_Listeners[i] == listener)
 				{
-					m_Listeners.erase(it);
+					m_Listeners.erase(m_Listeners.begin() + i);
 					break;
 				}
 			}

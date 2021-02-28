@@ -78,5 +78,5 @@ namespace At0::Ray
 
 	#define RAY_THROW_RUNTIME(msg, ...)     \
 		throw ::At0::Ray::RuntimeException( \
-			::At0::Ray::SerializeString(msg, ##__VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
+			::At0::Ray::String::Serialize(msg, ##__VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
 #endif
