@@ -200,7 +200,7 @@ namespace At0::Ray
 		/**
 		 * Conversion operator for mathematical operations
 		 */
-		operator float() const { return m_Change.AsMilliseconds(); }
+		operator float() const { return m_Change.AsSeconds(); }
 
 		/**
 		 * @returns The deltatime between two updates

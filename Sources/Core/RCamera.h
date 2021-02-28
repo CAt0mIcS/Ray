@@ -10,6 +10,7 @@
 #include "../Events/REventListener.h"
 #include "../Events/RMouseEvents.h"
 #include "../Events/RKeyboardEvents.h"
+#include "RTime.h"
 
 
 namespace At0::Ray
@@ -71,7 +72,7 @@ namespace At0::Ray
 		void Translate(glm::vec3 delta);
 		void SetRotationSpeed(float speed) { RotationSpeed = speed; }
 		void SetMovementSpeed(float speed) { MovementSpeed = speed; }
-		void Update(float dt);
+		void Update(Delta dt);
 
 	private:
 		Camera() = default;

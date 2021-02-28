@@ -237,7 +237,6 @@ namespace At0::Ray
 		for (uint32_t i = 0; i < m_CommandBuffers.size(); ++i)
 		{
 			m_CommandBuffers[i] = MakeScope<CommandBuffer>(*m_CommandPool);
-
 			RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i]);
 		}
 	}
@@ -307,8 +306,6 @@ namespace At0::Ray
 
 	void Graphics::Update(Delta dt)
 	{
-		Camera::Get().Update(dt.Change().AsSeconds());
-
 		// Wait for fence in VkQueueSubmit to become signaled
 		// which means that the command buffer finished executing
 		vkWaitForFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);

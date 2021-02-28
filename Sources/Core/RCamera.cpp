@@ -14,7 +14,7 @@ namespace At0::Ray
 		m_FoV = fov;
 		m_NearZ = nearZ;
 		m_FarZ = farZ;
-		Matrices.Perspective = glm::perspective(glm::radians(fov), aspect, nearZ, farZ);
+		Matrices.Perspective = glm::perspective(Radians(fov), aspect, nearZ, farZ);
 		if (FlipY)
 		{
 			Matrices.Perspective[1][1] *= -1.0f;
@@ -23,7 +23,7 @@ namespace At0::Ray
 
 	void Camera::UpdateAspectRatio(float aspect)
 	{
-		Matrices.Perspective = glm::perspective(glm::radians(m_FoV), aspect, m_NearZ, m_FarZ);
+		Matrices.Perspective = glm::perspective(Radians(m_FoV), aspect, m_NearZ, m_FarZ);
 		if (FlipY)
 		{
 			Matrices.Perspective[1][1] *= -1.0f;
@@ -54,7 +54,7 @@ namespace At0::Ray
 		UpdateViewMatrix();
 	}
 
-	void Camera::Update(float dt)
+	void Camera::Update(Delta dt)
 	{
 		Updated = false;
 
@@ -62,11 +62,11 @@ namespace At0::Ray
 		{
 			if (IsMoving())
 			{
-				glm::vec3 camFront;
-				camFront.x = -cos(glm::radians(Rotation.x)) * sin(glm::radians(Rotation.y));
-				camFront.y = sin(glm::radians(Rotation.x));
-				camFront.z = cos(glm::radians(Rotation.x)) * cos(glm::radians(Rotation.y));
-				camFront = glm::normalize(camFront);
+				Float3 camFront;
+				camFront.x = -cos(Radians(Rotation.x)) * sin(Radians(Rotation.y));
+				camFront.y = sin(Radians(Rotation.x));
+				camFront.z = cos(Radians(Rotation.x)) * cos(Radians(Rotation.y));
+				camFront = Normalize(camFront);
 
 				float moveSpeed = dt * MovementSpeed;
 
@@ -75,11 +75,11 @@ namespace At0::Ray
 				if (Keys.Backward)
 					Position -= camFront * moveSpeed;
 				if (Keys.Left)
-					Position -= glm::normalize(glm::cross(camFront, glm::vec3(0.0f, 1.0f, 0.0f))) *
-								moveSpeed;
+					Position -=
+						Normalize(CrossProduct(camFront, glm::vec3(0.0f, 1.0f, 0.0f))) * moveSpeed;
 				if (Keys.Right)
-					Position += glm::normalize(glm::cross(camFront, glm::vec3(0.0f, 1.0f, 0.0f))) *
-								moveSpeed;
+					Position +=
+						Normalize(CrossProduct(camFront, glm::vec3(0.0f, 1.0f, 0.0f))) * moveSpeed;
 				if (Keys.Up)
 					Position.y += 1.0f * moveSpeed;
 				if (Keys.Down)
@@ -92,20 +92,20 @@ namespace At0::Ray
 
 	void Camera::UpdateViewMatrix()
 	{
-		glm::mat4 rotM = glm::mat4(1.0f);
-		glm::mat4 transM;
+		Matrix rotM = MatrixIdentity();
+		Matrix transM;
 
 		rotM = glm::rotate(
-			rotM, glm::radians(Rotation.x * (FlipY ? -1.0f : 1.0f)), glm::vec3(1.0f, 0.0f, 0.0f));
-		rotM = glm::rotate(rotM, glm::radians(Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		rotM = glm::rotate(rotM, glm::radians(Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+			rotM, Radians(Rotation.x * (FlipY ? -1.0f : 1.0f)), Float3(1.0f, 0.0f, 0.0f));
+		rotM = glm::rotate(rotM, Radians(Rotation.y), Float3(0.0f, 1.0f, 0.0f));
+		rotM = glm::rotate(rotM, Radians(Rotation.z), Float3(0.0f, 0.0f, 1.0f));
 
-		glm::vec3 translation = Position;
+		Float3 translation = Position;
 		if (FlipY)
 		{
 			translation.y *= -1.0f;
 		}
-		transM = glm::translate(glm::mat4(1.0f), translation);
+		transM = MatrixTranslation(translation);
 
 		if (Type == CameraType::FirstPerson)
 		{
@@ -116,7 +116,7 @@ namespace At0::Ray
 			Matrices.View = transM * rotM;
 		}
 
-		ViewPos = glm::vec4(Position, 0.0f) * glm::vec4(-1.0f, 1.0f, -1.0f, 1.0f);
+		ViewPos = Float4(Position, 0.0f) * Float4(-1.0f, 1.0f, -1.0f, 1.0f);
 
 		Updated = true;
 	}

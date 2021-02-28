@@ -25,6 +25,7 @@ namespace At0::Ray
 		{
 			m_Delta.Update();
 			m_FPS.Update(Time::Now());
+			Camera::Get().Update(m_Delta);
 			Graphics::Get().Update(m_Delta);
 			Update();
 

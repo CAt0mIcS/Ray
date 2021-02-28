@@ -15,9 +15,6 @@ namespace At0::Ray
 		template<typename U = T>
 		EventListener(typename std::enable_if_t<std::is_base_of_v<EventDispatcher<U>, Window>>* = 0)
 		{
-			// static_assert(std::is_base_of<EventDispatcher<T>, Window>::value,
-			//	"Window does not dispatch specified event.");
-
 			m_Dispatcher = &Window::Get();
 			m_Dispatcher->Register(this);
 		}
@@ -47,9 +44,6 @@ namespace At0::Ray
 	public:
 		EventListener()
 		{
-			// static_assert(std::is_base_of<EventDispatcher<T>, Window>::value,
-			//	"Window does not dispatch specified event.");
-
 			m_Dispatcher = &Window::Get();
 			m_Dispatcher->Register(this);
 		}

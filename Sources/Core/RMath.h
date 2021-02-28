@@ -39,7 +39,17 @@ namespace At0::Ray
 	RAY_EXPORT Matrix MatrixRotation(float pitch, float yaw, float roll);
 	RAY_EXPORT Matrix MatrixScale(Float3 scale);
 	RAY_EXPORT Matrix MatrixScale(float x, float y, float z);
+	RAY_EXPORT Matrix MatrixIdentity();
 
+	RAY_EXPORT float Radians(float degrees);
+	RAY_EXPORT double Radians(double degrees);
+	RAY_EXPORT Float2 Normalize(Float2 vec);
+	RAY_EXPORT Float3 Normalize(Float3 vec);
+	RAY_EXPORT Float4 Normalize(Float4 vec);
+	RAY_EXPORT float DotProduct(Float2 x, Float2 y);
+	RAY_EXPORT float DotProduct(Float3 x, Float3 y);
+	RAY_EXPORT float DotProduct(Float4 x, Float4 y);
+	RAY_EXPORT Float3 CrossProduct(Float3 x, Float3 y);
 
 	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Int2& data);
 
