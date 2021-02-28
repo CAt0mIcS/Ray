@@ -194,7 +194,7 @@ target_link_libraries("Ray"
 	PRIVATE
 		"${PRIVATE_LIB}"
 )
-target_compile_definitions("Ray" PRIVATE "RAY_BUILD")
+target_compile_definitions("Ray" PRIVATE "RAY_BUILD" "ENTT_DLL_EXPORT")
 target_precompile_headers("Ray" PRIVATE "Rpch.h")
 
 AddRecursiveFilters("${SRC}")

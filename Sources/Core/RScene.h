@@ -22,7 +22,7 @@ namespace At0::Ray
 		Entity& m_Entity;
 	};
 
-
+	class Model;
 	class RAY_EXPORT Scene : public EventDispatcher<EntityCreatedEvent>
 	{
 	public:
@@ -60,7 +60,7 @@ namespace At0::Ray
 		entt::registry m_Registry;
 
 		// Heap allocate them to avoid Entity& from being invalid when the vector is resized
-		std::vector<Scope<Entity>> m_Entities;
+		std::vector<Entity> m_Entities;
 		inline static Scope<Scene> s_CurrentScene = nullptr;
 	};
 

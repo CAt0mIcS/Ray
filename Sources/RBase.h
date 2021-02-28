@@ -10,6 +10,8 @@
 	#define RAY_EXPORT
 #endif
 
+#define ENTT_API RAY_EXPORT
+
 
 #include <memory>
 

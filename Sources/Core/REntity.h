@@ -10,14 +10,17 @@
 
 namespace At0::Ray
 {
-	class Entity : NonCopyable
+	class Entity
 	{
 	public:
-		Entity(entt::registry& registry) : m_Registry(registry), m_EntityHandle(registry.create())
+		Entity() = default;
+
+		Entity(entt::entity handle, entt::registry* registry)
+			: m_EntityHandle(handle), m_Registry(registry)
 		{
 		}
 
-		~Entity() { m_Registry.destroy(m_EntityHandle); }
+		Entity(const Entity& other) = default;
 
 		/**
 		 * Adds a new component to the entity
@@ -30,7 +33,8 @@ namespace At0::Ray
 		{
 			RAY_MEXPECTS(!Has<Comp>(), "[Entity] Entity (ID={0}) already has component.",
 				(uint32_t)m_EntityHandle);
-			Component& comp = m_Registry.emplace<Comp>(m_EntityHandle, std::forward<Args>(args)...);
+			Component& comp =
+				m_Registry->emplace<Comp>(m_EntityHandle, std::forward<Args>(args)...);
 			comp.SetEntity(*this);
 			return *(Comp*)&comp;
 		}
@@ -42,7 +46,7 @@ namespace At0::Ray
 		template<typename... Comp>
 		bool Has() const
 		{
-			return m_Registry.has<Comp...>(m_EntityHandle);
+			return m_Registry->has<Comp...>(m_EntityHandle);
 		}
 
 		/**
@@ -52,7 +56,7 @@ namespace At0::Ray
 		template<typename... Comp>
 		bool HasAny() const
 		{
-			return m_Registry.any<Comp...>(m_EntityHandle);
+			return m_Registry->any<Comp...>(m_EntityHandle);
 		}
 
 		/**
@@ -62,7 +66,7 @@ namespace At0::Ray
 		template<typename... Comp>
 		decltype(auto) Get()
 		{
-			return m_Registry.get<Comp...>(m_EntityHandle);
+			return m_Registry->get<Comp...>(m_EntityHandle);
 		}
 
 		/**
@@ -72,11 +76,16 @@ namespace At0::Ray
 		template<typename... Component>
 		decltype(auto) Get() const
 		{
-			return m_Registry.get<Component...>(m_EntityHandle);
+			return m_Registry->get<Component...>(m_EntityHandle);
 		}
 
+		/**
+		 * Casting operator to the entity identifier
+		 */
+		explicit operator entt::entity() const { return m_EntityHandle; }
+
 	private:
-		entt::registry& m_Registry;
+		entt::registry* m_Registry;
 		entt::entity m_EntityHandle;
 	};
 }  // namespace At0::Ray

@@ -28,39 +28,36 @@ namespace At0::Ray
 		s_CurrentScene = nullptr;
 	}
 
-	Scene::~Scene() {}
+	Scene::~Scene()
+	{
+		for (Entity& entity : m_Entities)
+		{
+			m_Registry.destroy((entt::entity)entity);
+		}
+	}
 
 	Entity& Scene::CreateEntity()
 	{
-		Scope<Entity> entity = MakeScope<Entity>(m_Registry);
+		Entity entity(m_Registry.create(), &m_Registry);
 
 		// Dispatch entity created event to listeners
-		EntityCreatedEvent e(*entity);
+		EntityCreatedEvent e(entity);
 		for (EventListener<EntityCreatedEvent>* listener :
 			EventDispatcher<EntityCreatedEvent>::Get())
 		{
 			listener->OnEvent(e);
 		}
 
-		return *m_Entities.emplace_back(std::move(entity));
+		return m_Entities.emplace_back(std::move(entity));
 	}
 
 	void Scene::Update(Delta dt)
 	{
-		for (Scope<Entity>& entity : m_Entities)
-		{
-			// if (entity->Has<Mesh>())
-			//	entity->Get<Mesh>().Update(dt);
-			if (entity->Has<Model>())
-				entity->Get<Model>().Update(dt);
-		}
+		auto meshView = m_Registry.view<Mesh>();
+		meshView.each([&dt](Mesh& mesh) { mesh.Update(dt); });
 
-		// Does not work for some reason!
-		// auto meshView = m_Registry.view<Mesh>();
-		// meshView.each([&dt](Mesh& mesh) { mesh.Update(dt); });
-
-		// auto modelView = m_Registry.view<Model>();
-		// modelView.each([&dt](Model& model) { model.Update(dt); });
+		auto modelView = m_Registry.view<Model>();
+		modelView.each([&dt](Model& model) { model.Update(dt); });
 	}
 
 	Scene::Scene() {}

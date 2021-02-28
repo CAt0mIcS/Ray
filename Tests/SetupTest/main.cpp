@@ -51,7 +51,8 @@ private:
 			Ray::Model& model =
 				entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
 			auto& transform = model.Get<Ray::Transform>();
-			transform.Translation = { posRotDist(device), posRotDist(device), posRotDist(device) };
+			// transform.Translation = { posRotDist(device), posRotDist(device), posRotDist(device)
+			// };
 			// transform.Rotation = { posRotDist(device), posRotDist(device), posRotDist(device) };
 			// transform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device) };
 		}

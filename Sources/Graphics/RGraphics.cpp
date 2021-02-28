@@ -264,28 +264,14 @@ namespace At0::Ray
 
 		camDescSet->CmdBind(cmdBuff);
 
-		for (const Scope<Entity>& entity : Scene::Get().GetEntities())
-		{
-			// if (entity->Has<Mesh>())
-			//{
-			//	Mesh& mesh = entity->Get<Mesh>();
-			//	mesh.Bind(cmdBuff);
-			//	mesh.Render(cmdBuff);
-			//}
-			if (entity->Has<Model>())
-			{
-				entity->Get<Model>().Render(cmdBuff);
-			}
-		}
+		auto meshView = Scene::Get().EntityView<Mesh>();
+		meshView.each([&cmdBuff](Mesh& mesh) {
+			mesh.Bind(cmdBuff);
+			mesh.Render(cmdBuff);
+		});
 
-		// auto meshView = Scene::Get().EntityView<Mesh>();
-		// meshView.each([&cmdBuff](Mesh& mesh) {
-		//	mesh.Bind(cmdBuff);
-		//	mesh.Render(cmdBuff);
-		//});
-
-		// auto modelView = Scene::Get().EntityView<Model>();
-		// modelView.each([&cmdBuff](Model& model) { model.Render(cmdBuff); });
+		auto modelView = Scene::Get().EntityView<Model>();
+		modelView.each([&cmdBuff](Model& model) { model.Render(cmdBuff); });
 
 		m_RenderPass->End(cmdBuff);
 
