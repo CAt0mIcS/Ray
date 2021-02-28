@@ -5,7 +5,6 @@
 #include <vector>
 #include <sstream>
 
-#include "Utils/RSerialize.h"
 #include "Utils/RString.h"
 
 #include "../Formatters/RBracketFormatter.h"
@@ -306,7 +305,7 @@ namespace At0::Ray
 		template<typename... Args>
 		std::string FormatMessage(std::string_view str, LogMessageType msgLvl, Args&&... args)
 		{
-			std::string msg = SerializeString(str.data(), args...);
+			std::string msg = String::Serialize(str.data(), args...);
 
 			for (auto formatter : m_Formatters)
 			{

@@ -13,12 +13,6 @@ namespace At0::Ray
 	class RAY_EXPORT ThreadPool
 	{
 	public:
-		/// <summary>
-		/// Adds a new task to the queue
-		/// </summary>
-		/// <typeparam name="F">Is any callable function without parameters or return type</typeparam>
-		/// <param name="func">Is the function to execute</param>
-
 		/**
 		 * Adds a new task to the queue to execute
 		 * @tparam F Any callable function without parameters

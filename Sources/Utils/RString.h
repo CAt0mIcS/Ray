@@ -6,6 +6,9 @@
 #include "../Graphics/Pipelines/RShader.h"
 
 #include <string>
+#include <sstream>
+#include <type_traits>
+#include <assert.h>
 
 #include <vulkan/vulkan_core.h>
 
@@ -127,5 +130,26 @@ namespace At0::Ray
 
 			return tokens;
 		}
+
+		/**
+		 * Takes a correct string possibly containing "{0}", "{1}", ... and fills these in with the
+		 * corresponding argument
+		 * @tparam Args Any list of arguments that have a output operator defined
+		 * @param serializedStr The string which should be serialized
+		 * @param args... The arguments to insert into the string
+		 * @returns The serialized string
+		 */
+		template<typename... Args>
+		static std::string Serialize(std::string serializedStr, Args&&... args);
 	};
+
+#include "RSerialize.inl"
+
+	template<typename... Args>
+	inline std::string String::Serialize(std::string serializedStr, Args&&... args)
+	{
+		int argCount = 0;
+		(SerializeStringArg(serializedStr, args, argCount), ...);
+		return serializedStr;
+	}
 }  // namespace At0::Ray

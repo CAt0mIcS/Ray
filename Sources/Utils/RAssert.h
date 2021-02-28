@@ -4,7 +4,6 @@
 
 // clang-format off
 #include "RLogger.h"
-#include "../Utils/RSerialize.h"
 #include "../Utils/RString.h"
 
 #include <assert.h>
@@ -19,7 +18,7 @@ namespace At0::Ray
 		template<typename... Args>
 		static std::wstring AssertW(const std::string& str, Args&&... args)
 		{
-			std::string assertStr = SerializeString(str, std::forward<Args>(args)...);
+			std::string assertStr = String::Serialize(str, std::forward<Args>(args)...);
 			Log::Critical("Assertion Failed with Message: {0}", assertStr);
 			return String::ConvertUtf16(assertStr);
 		}
@@ -27,7 +26,7 @@ namespace At0::Ray
 		template<typename... Args>
 		static std::string AssertA(const std::string& str, Args&&... args)
 		{
-			std::string assertStr = SerializeString(str, std::forward<Args>(args)...);
+			std::string assertStr = String::Serialize(str, std::forward<Args>(args)...);
 			Log::Critical("Assertion Failed with Message: {0}", assertStr);
 			return assertStr;
 		}
