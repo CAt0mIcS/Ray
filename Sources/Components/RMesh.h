@@ -4,10 +4,11 @@
 #include "RMaterial.h"
 #include "RTransform.h"
 
-#include "../Utils/RTypeTraits.h"
 #include "../Core/RTime.h"
 #include "../Graphics/Pipelines/RUniformAccess.h"
 #include "../Graphics/Pipelines/RDescriptor.h"
+
+#include <type_traits>
 
 
 namespace At0::Ray
@@ -34,7 +35,7 @@ namespace At0::Ray
 		template<typename T>
 		T& Get()
 		{
-			return Get(Identity<T>());
+			return Get(std::type_identity<T>());
 		}
 
 		/**
@@ -54,12 +55,12 @@ namespace At0::Ray
 
 	private:
 		template<typename T>
-		T& Get(Identity<T>)
+		T& Get(std::type_identity<T>)
 		{
 			assert(false);
 		}
 
-		Transform& Get(Identity<Transform>) { return m_Transform; }
+		Transform& Get(std::type_identity<Transform>) { return m_Transform; }
 
 	private:
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;

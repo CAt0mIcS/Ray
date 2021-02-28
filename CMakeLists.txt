@@ -98,7 +98,7 @@ add_definitions(-D_UNICODE)
 
 # ------------------------------------------------------------------------------------------------
 # Set C++ Version requirement
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 set(CMAKE_CXX_EXTENSIONS OFF)
 

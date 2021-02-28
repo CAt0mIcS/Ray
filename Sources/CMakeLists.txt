@@ -134,16 +134,12 @@ set(SRC
 	"Utils/RQueue.h"
 	"Utils/RException.h"
 	"Utils/RException.cpp"
-	"Utils/RTypeTraits.h"
 
 	# ------------------------------------------------------------------
 	# Event system
 	"Events/REngineEvents.h"
-	"Events/REngineEvents.cpp"
 	"Events/RMouseEvents.h"
-	"Events/RMouseEvents.cpp"
 	"Events/RKeyboardEvents.h"
-	"Events/RKeyboardEvents.cpp"
 	"Events/REventDispatcher.h"
 	"Events/REventListener.h"
 )

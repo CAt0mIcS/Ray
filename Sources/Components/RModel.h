@@ -3,7 +3,9 @@
 #include "RComponent.h"
 #include "RTransform.h"
 #include "../Core/RTime.h"
-#include "../Utils/RTypeTraits.h"
+
+#include <type_traits>
+
 
 struct aiMesh;
 struct aiMaterial;
@@ -27,7 +29,7 @@ namespace At0::Ray
 		template<typename T>
 		T& Get()
 		{
-			return Get(Identity<T>());
+			return Get(std::type_identity<T>());
 		}
 
 		Model& operator=(Model&& other) noexcept;
@@ -38,12 +40,12 @@ namespace At0::Ray
 			std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials);
 
 		template<typename T>
-		T& Get(Identity<T>)
+		T& Get(std::type_identity<T>)
 		{
 			assert(false);
 		}
 
-		Transform& Get(Identity<Transform>) { return m_Transform; }
+		Transform& Get(std::type_identity<Transform>) { return m_Transform; }
 
 	private:
 		std::vector<Mesh> m_Meshes;
