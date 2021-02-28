@@ -35,26 +35,33 @@ private:
 	void OnEvent(Ray::MouseButtonPressedEvent& e) override
 	{
 		static std::mt19937 device;
-		static std::uniform_real_distribution<float> posRotDist(-10.0f, 10.0f);
+		static std::uniform_real_distribution<float> posRotDist(-30.0f, 30.0f);
 		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
+		static uint32_t modelCount = 0;
 
 		for (uint32_t i = 0; i < 1; ++i)
 		{
+			auto modelView = Scene::Get().EntityView<Ray::Model>();
+
 			Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
 			// Ray::Mesh& mesh =
-			// entity.Emplace<Ray::Mesh>(Ray::Mesh::Cube(Ray::Material::Default())); auto& transform
-			// = mesh.Get<Ray::Transform>(); transform.Translation = { posRotDist(device),
-			// posRotDist(device), posRotDist(device) }; transform.Rotation = { posRotDist(device),
-			// posRotDist(device), posRotDist(device) }; transform.Scale = { scaleDist(device),
-			// scaleDist(device), scaleDist(device) };
+			// entity.Emplace<Ray::Mesh>(Ray::Mesh::Cube(Ray::Material::Default())); auto&
+			// cubeTransform = mesh.Get<Ray::Transform>(); cubeTransform.Translation = {
+			// posRotDist(device), posRotDist(device), 	posRotDist(device) }; cubeTransform.Rotation
+			// = { posRotDist(device), posRotDist(device), posRotDist(device) }; cubeTransform.Scale
+			// = { scaleDist(device), scaleDist(device), scaleDist(device) };
 
 			Ray::Model& model =
 				entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
-			auto& transform = model.Get<Ray::Transform>();
-			// transform.Translation = { posRotDist(device), posRotDist(device), posRotDist(device)
+			auto& modelTransform = model.Get<Ray::Transform>();
+			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
+			//	posRotDist(device) };
+			// modelTransform.Rotation = { posRotDist(device), posRotDist(device),
+			// posRotDist(device)
+			// }; modelTransform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device)
 			// };
-			// transform.Rotation = { posRotDist(device), posRotDist(device), posRotDist(device) };
-			// transform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device) };
+
+			++modelCount;
 		}
 	}
 };

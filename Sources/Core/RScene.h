@@ -53,6 +53,11 @@ namespace At0::Ray
 		 */
 		void Update(Delta dt);
 
+		/**
+		 * @returns The entity storage registry
+		 */
+		entt::registry& GetRegistry() { return m_Registry; }
+
 	protected:
 		Scene();
 

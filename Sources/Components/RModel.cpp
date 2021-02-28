@@ -4,6 +4,7 @@
 #include "RMesh.h"
 #include "Core/RVertex.h"
 #include "Graphics/Core/RCodex.h"
+#include "Utils/RLogger.h"
 #include "Utils/RException.h"
 
 #include "Graphics/RGraphics.h"
@@ -20,6 +21,8 @@ namespace At0::Ray
 {
 	Model::Model(std::string_view filepath)
 	{
+		Log::Info("[Model] Importing model \"{0}\"", filepath);
+
 		Assimp::Importer imp;
 		const aiScene* pScene = imp.ReadFile(
 			filepath.data(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
@@ -55,6 +58,8 @@ namespace At0::Ray
 	Mesh Model::ParseMesh(
 		std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials)
 	{
+		Log::Info("[Model] Parsing mesh \"{0}\"", mesh.mName.C_Str());
+
 		using namespace std::string_literals;
 		const std::string meshTag = std::string(base) + "%"s + mesh.mName.C_Str();
 
@@ -92,11 +97,15 @@ namespace At0::Ray
 			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)), std::move(material) };
 	}
 
-	Model& Model::operator=(Model&& other)
+	Model& Model::operator=(Model&& other) noexcept
 	{
 		m_Meshes = std::move(other.m_Meshes);
+		m_Transform = std::move(other.m_Transform);
 		return *this;
 	}
 
-	Model::Model(Model&& other) : m_Meshes(std::move(other.m_Meshes)) {}
+	Model::Model(Model&& other) noexcept
+		: m_Meshes(std::move(other.m_Meshes)), m_Transform(std::move(other.m_Transform))
+	{
+	}
 }  // namespace At0::Ray

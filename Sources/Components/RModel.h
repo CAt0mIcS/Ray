@@ -35,8 +35,8 @@ namespace At0::Ray
 			return m_Transform;
 		}
 
-		Model& operator=(Model&& other);
-		Model(Model&& other);
+		Model& operator=(Model&& other) noexcept;
+		Model(Model&& other) noexcept;
 
 	private:
 		static Mesh ParseMesh(
