@@ -27,4 +27,61 @@ namespace At0::Ray
 	Matrix MatrixScale(Float3 scale) { return glm::scale(glm::mat4(1.0f), scale); }
 
 	Matrix MatrixScale(float x, float y, float z) { return MatrixScale({ x, y, z }); }
+
+
+	inline std::ostream& operator<<(std::ostream& os, const Int2& data)
+	{
+		os << "[x=" << data.x << ", y=" << data.y << "]";
+		return os;
+	}
+
+	std::ostream& operator<<(std::ostream& os, const Int3& data)
+	{
+		os << "[x=" << data.x << ", y=" << data.y << ", z=" << data.z << "]";
+		return os;
+	}
+
+	std::ostream& operator<<(std::ostream& os, const Int4& data)
+	{
+		os << "[x=" << data.x << ", y=" << data.y << ", z=" << data.z << ", w=" << data.w << "]";
+		return os;
+	}
+
+
+	std::ostream& operator<<(std::ostream& os, const UInt2& data)
+	{
+		os << "[x=" << data.x << ", y=" << data.y << "]";
+		return os;
+	}
+
+	std::ostream& operator<<(std::ostream& os, const UInt3& data)
+	{
+		os << "[x=" << data.x << ", y=" << data.y << ", z=" << data.z << "]";
+		return os;
+	}
+
+	std::ostream& operator<<(std::ostream& os, const UInt4& data)
+	{
+		os << "[x=" << data.x << ", y=" << data.y << ", z=" << data.z << ", w=" << data.w << "]";
+		return os;
+	}
+
+
+	std::ostream& operator<<(std::ostream& os, const Float2& data)
+	{
+		os << "[x=" << data.x << ", y=" << data.y << "]";
+		return os;
+	}
+
+	std::ostream& operator<<(std::ostream& os, const Float3& data)
+	{
+		os << "[x=" << data.x << ", y=" << data.y << ", z=" << data.z << "]";
+		return os;
+	}
+
+	std::ostream& operator<<(std::ostream& os, const Float4& data)
+	{
+		os << "[x=" << data.x << ", y=" << data.y << ", z=" << data.z << ", w=" << data.w << "]";
+		return os;
+	}
 }  // namespace At0::Ray

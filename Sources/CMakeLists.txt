@@ -134,6 +134,7 @@ set(SRC
 	"Utils/RQueue.h"
 	"Utils/RException.h"
 	"Utils/RException.cpp"
+	"Utils/RTypeTraits.h"
 
 	# ------------------------------------------------------------------
 	# Event system

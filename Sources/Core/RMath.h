@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "../RBase.h"
+
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -13,8 +15,8 @@ namespace At0::Ray
 {
 	namespace Math
 	{
-		inline constexpr double PI_D = 3.1415926535897932384626433832795;
-		inline constexpr float PI = 3.141592653f;
+		static constexpr double PI_D = 3.1415926535897932384626433832795;
+		static constexpr float PI = 3.141592653f;
 	}  // namespace Math
 
 	using Int2 = glm::vec<2, int32_t, glm::defaultp>;
@@ -31,67 +33,31 @@ namespace At0::Ray
 
 	using Matrix = glm::mat4;
 
-	Matrix MatrixTranslation(Float3 translation);
-	Matrix MatrixTranslation(float x, float y, float z);
-	Matrix MatrixRotation(Float3 pitchYawRoll);
-	Matrix MatrixRotation(float pitch, float yaw, float roll);
-	Matrix MatrixScale(Float3 scale);
-	Matrix MatrixScale(float x, float y, float z);
+	RAY_EXPORT Matrix MatrixTranslation(Float3 translation);
+	RAY_EXPORT Matrix MatrixTranslation(float x, float y, float z);
+	RAY_EXPORT Matrix MatrixRotation(Float3 pitchYawRoll);
+	RAY_EXPORT Matrix MatrixRotation(float pitch, float yaw, float roll);
+	RAY_EXPORT Matrix MatrixScale(Float3 scale);
+	RAY_EXPORT Matrix MatrixScale(float x, float y, float z);
 
 
-	inline std::ostream& operator<<(std::ostream& os, const Int2& data)
-	{
-		os << "[x=" << data.x << ", y=" << data.y << "]";
-		return os;
-	}
+	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Int2& data);
 
-	inline std::ostream& operator<<(std::ostream& os, const Int3& data)
-	{
-		os << "[x=" << data.x << ", y=" << data.y << ", z=" << data.z << "]";
-		return os;
-	}
+	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Int3& data);
 
-	inline std::ostream& operator<<(std::ostream& os, const Int4& data)
-	{
-		os << "[x=" << data.x << ", y=" << data.y << ", z=" << data.z << ", w=" << data.w << "]";
-		return os;
-	}
+	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Int4& data);
 
 
-	inline std::ostream& operator<<(std::ostream& os, const UInt2& data)
-	{
-		os << "[x=" << data.x << ", y=" << data.y << "]";
-		return os;
-	}
+	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const UInt2& data);
 
-	inline std::ostream& operator<<(std::ostream& os, const UInt3& data)
-	{
-		os << "[x=" << data.x << ", y=" << data.y << ", z=" << data.z << "]";
-		return os;
-	}
+	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const UInt3& data);
 
-	inline std::ostream& operator<<(std::ostream& os, const UInt4& data)
-	{
-		os << "[x=" << data.x << ", y=" << data.y << ", z=" << data.z << ", w=" << data.w << "]";
-		return os;
-	}
+	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const UInt4& data);
 
 
-	inline std::ostream& operator<<(std::ostream& os, const Float2& data)
-	{
-		os << "[x=" << data.x << ", y=" << data.y << "]";
-		return os;
-	}
+	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Float2& data);
 
-	inline std::ostream& operator<<(std::ostream& os, const Float3& data)
-	{
-		os << "[x=" << data.x << ", y=" << data.y << ", z=" << data.z << "]";
-		return os;
-	}
+	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Float3& data);
 
-	inline std::ostream& operator<<(std::ostream& os, const Float4& data)
-	{
-		os << "[x=" << data.x << ", y=" << data.y << ", z=" << data.z << ", w=" << data.w << "]";
-		return os;
-	}
+	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Float4& data);
 }  // namespace At0::Ray

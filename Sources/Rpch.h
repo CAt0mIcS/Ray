@@ -28,7 +28,6 @@
 #include <assert.h>
 
 #include <vulkan/vulkan.h>
-#include "Core/RMath.h"
 
 #include <GLFW/glfw3.h>
 

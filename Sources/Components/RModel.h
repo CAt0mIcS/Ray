@@ -3,6 +3,7 @@
 #include "RComponent.h"
 #include "RTransform.h"
 #include "../Core/RTime.h"
+#include "../Utils/RTypeTraits.h"
 
 struct aiMesh;
 struct aiMaterial;
@@ -26,13 +27,7 @@ namespace At0::Ray
 		template<typename T>
 		T& Get()
 		{
-			static_assert(false, "Template not specialized.");
-		}
-
-		template<>
-		Transform& Get()
-		{
-			return m_Transform;
+			return Get(Identity<T>());
 		}
 
 		Model& operator=(Model&& other) noexcept;
@@ -41,6 +36,14 @@ namespace At0::Ray
 	private:
 		static Mesh ParseMesh(
 			std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials);
+
+		template<typename T>
+		T& Get(Identity<T>)
+		{
+			assert(false);
+		}
+
+		Transform& Get(Identity<Transform>) { return m_Transform; }
 
 	private:
 		std::vector<Mesh> m_Meshes;

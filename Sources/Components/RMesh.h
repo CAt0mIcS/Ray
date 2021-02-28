@@ -4,6 +4,7 @@
 #include "RMaterial.h"
 #include "RTransform.h"
 
+#include "../Utils/RTypeTraits.h"
 #include "../Core/RTime.h"
 #include "../Graphics/Pipelines/RUniformAccess.h"
 #include "../Graphics/Pipelines/RDescriptor.h"
@@ -33,13 +34,7 @@ namespace At0::Ray
 		template<typename T>
 		T& Get()
 		{
-			static_assert(false, "Template not specialized.");
-		}
-
-		template<>
-		Transform& Get<Transform>()
-		{
-			return m_Transform;
+			return Get(Identity<T>());
 		}
 
 		/**
@@ -56,6 +51,15 @@ namespace At0::Ray
 
 		Mesh& operator=(Mesh&& other) noexcept;
 		Mesh(Mesh&& other) noexcept;
+
+	private:
+		template<typename T>
+		T& Get(Identity<T>)
+		{
+			assert(false);
+		}
+
+		Transform& Get(Identity<Transform>) { return m_Transform; }
 
 	private:
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;

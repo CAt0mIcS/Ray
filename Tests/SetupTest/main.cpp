@@ -66,7 +66,7 @@ private:
 	}
 };
 
-void __CRTDECL SignalHandler(int signal)
+void SignalHandler(int signal)
 {
 	Ray::Log::Critical("Signal {0} received", signal);
 	Ray::Log::Close();
@@ -77,7 +77,6 @@ int main()
 	signal(SIGABRT, SignalHandler);
 	signal(SIGILL, SignalHandler);
 	signal(SIGINT, SignalHandler);
-	signal(SIGBREAK, SignalHandler);
 
 	Ray::Log::Open("Ray.log");
 	Ray::Log::SetLogLevel(Ray::LogLevel::Trace);
