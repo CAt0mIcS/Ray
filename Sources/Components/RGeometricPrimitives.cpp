@@ -14,7 +14,9 @@ namespace At0::Ray
 		vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.0f });
 		vertexInput.Emplace(Float3{ 0.0f, 0.5f, 0.0f });
 
-		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
+		// RAY_TODO: 2D objects are only visible from one side because of backface culling
+		// Specifying the vertices again in the reversed order works for now
+		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 /*|*/, 2, 1, 0 };
 
 		return { vertexInput, indices, "Triangle", "012" };
 	}

@@ -5,39 +5,29 @@
 
 namespace At0::Ray
 {
-#ifdef __GNUC__
 	template<typename T>
 	class EventListener;
-#elif defined(_MSC_VER)
-	template<typename T, typename>
-	class EventListener;
-#endif
 
 	template<typename T>
 	class EventDispatcher
 	{
-#ifdef __GNUC__
-		using EventListenerType = EventListener<T>;
-#elif defined(_MSC_VER)
-		using EventListenerType = EventListener<T, void>;
-#endif
 	public:
 		EventDispatcher() = default;
 
 		/**
 		 * Iterate over all listeners in the event dispatcher
 		 */
-		std::vector<EventListenerType*>& Get() { return m_Listeners; }
+		std::vector<EventListener<T>*>& Get() { return m_Listeners; }
 
 		/**
 		 * Adds a new listener to dispatch the events to
 		 */
-		void Register(EventListenerType* listener) { m_Listeners.emplace_back(listener); }
+		void Register(EventListener<T>* listener) { m_Listeners.emplace_back(listener); }
 
 		/**
 		 * Removes a listener from getting events
 		 */
-		void Unregister(EventListenerType* listener)
+		void Unregister(EventListener<T>* listener)
 		{
 			if (m_Listeners.size() == 0)
 				return;
@@ -55,6 +45,6 @@ namespace At0::Ray
 		}
 
 	private:
-		std::vector<EventListenerType*> m_Listeners;
+		std::vector<EventListener<T>*> m_Listeners;
 	};
 }  // namespace At0::Ray

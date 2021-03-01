@@ -6,19 +6,27 @@
 
 namespace At0::Ray
 {
-#ifdef __GNUC__
-
 	template<typename T>
 	class EventListener
 	{
 	public:
+		/**
+		 * Registers the listener to receive event of type T.
+		 * If the dispatcher<T> is a base class of the Window then the window is selected
+		 * automatically as the dispatcher
+		 */
 		template<typename U = T>
-		EventListener(typename std::enable_if_t<std::is_base_of_v<EventDispatcher<U>, Window>>* = 0)
+		requires std::is_base_of_v<EventDispatcher<U>, Window> EventListener()
 		{
 			m_Dispatcher = &Window::Get();
 			m_Dispatcher->Register(this);
 		}
 
+		/**
+		 * Registers the listener to receive event of type T.
+		 * If the dispatcher<T> is not a base class of the Window the dispatcher<T> needs to be
+		 * specified
+		 */
 		template<typename U = T>
 		EventListener(EventDispatcher<U>& dispatcher)
 		{
@@ -36,49 +44,4 @@ namespace At0::Ray
 	private:
 		EventDispatcher<T>* m_Dispatcher;
 	};
-#elif defined(_MSC_VER)
-
-	template<typename T, typename = void>
-	class EventListener
-	{
-	public:
-		EventListener()
-		{
-			m_Dispatcher = &Window::Get();
-			m_Dispatcher->Register(this);
-		}
-
-		/**
-		 * Events of type T will get dispatched to this function
-		 */
-		virtual void OnEvent(T& e) = 0;
-
-		virtual ~EventListener() { m_Dispatcher->Unregister(this); }
-
-	private:
-		EventDispatcher<T>* m_Dispatcher;
-	};
-
-
-	template<typename T>
-	class EventListener<T,
-		typename std::enable_if_t<!std::is_base_of_v<EventDispatcher<T>, Window>>>
-	{
-	public:
-		EventListener(EventDispatcher<T>& dispatcher) : m_Dispatcher(&dispatcher)
-		{
-			m_Dispatcher->Register(this);
-		}
-		/**
-		 * Events of type T will get dispatched to this function
-		 */
-		virtual void OnEvent(T& e) = 0;
-
-		virtual ~EventListener() { m_Dispatcher->Unregister(this); }
-
-	private:
-		EventDispatcher<T>* m_Dispatcher;
-	};
-
-#endif
 }  // namespace At0::Ray
