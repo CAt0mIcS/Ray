@@ -6,7 +6,7 @@
 #include "Utils/RLogger.h"
 #include "Utils/RString.h"
 
-#include "Core/RVertex.h"
+#include "Graphics/RVertex.h"
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"

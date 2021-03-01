@@ -2,6 +2,16 @@ set(SRC
 	"Rpch.h"
 	"RBase.h"
 	
+	# ------------------------------------------------------------------
+	# Cameras
+	"Cameras/RCamera.h"
+	"Cameras/RCamera.cpp"
+
+	# ------------------------------------------------------------------
+	# Scene
+	"Scene/REntity.h"
+	"Scene/RScene.h"
+	"Scene/RScene.cpp"
 
 	# ------------------------------------------------------------------
 	# Core classes
@@ -12,16 +22,7 @@ set(SRC
 	"Core/RMath.h"
 	"Core/RMath.cpp"
 	"Core/RKeyCodes.h"
-	"Core/RVertex.h"
-	"Core/RCamera.h"
-	"Core/RCamera.cpp"
-	"Core/REntity.h"
-	"Core/RScene.h"
-	"Core/RScene.cpp"
-	"Core/RGeometricPrimitives.h"
-	"Core/RGeometricPrimitives.cpp"
 	
-
 	# ------------------------------------------------------------------
 	# Devices
 	"Devices/RWindow.h"
@@ -31,11 +32,12 @@ set(SRC
 	"Devices/RKeyboard.h"
 	"Devices/RKeyboard.cpp"
 
-
 	# ------------------------------------------------------------------
 	# Graphics
 	"Graphics/RGraphics.h"
 	"Graphics/RGraphics.cpp"
+	"Graphics/RVertex.h"
+	"Graphics/RCodex.h"
 	
 	"Graphics/Core/RVulkanInstance.h"
 	"Graphics/Core/RVulkanInstance.cpp"
@@ -47,7 +49,6 @@ set(SRC
 	"Graphics/Core/RLogicalDevice.cpp"
 	"Graphics/Core/RSwapchain.h"
 	"Graphics/Core/RSwapchain.cpp"
-	"Graphics/Core/RCodex.h"
 	"Graphics/Core/RBindable.h"
 	"Graphics/Core/RBindable.cpp"
 
@@ -98,10 +99,8 @@ set(SRC
 	"Graphics/RenderPass/RRenderPass.h"
 	"Graphics/RenderPass/RRenderPass.cpp"
 
-
-
 	# ------------------------------------------------------------------
-	# Primitives
+	# Components
 	"Components/RComponent.h"
 	"Components/RMesh.h"
 	"Components/RMesh.cpp"
@@ -110,6 +109,8 @@ set(SRC
 	"Components/RMaterial.cpp"
 	"Components/RModel.h"
 	"Components/RModel.cpp"
+	"Components/RGeometricPrimitives.h"
+	"Components/RGeometricPrimitives.cpp"
 
 	# ------------------------------------------------------------------
 	# Utilities

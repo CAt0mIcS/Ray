@@ -1,7 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RBindable.h"
 
-#include "Graphics/Core/RCodex.h"
+#include "Graphics/RCodex.h"
 
 
 namespace At0::Ray

@@ -7,8 +7,8 @@
 #include <Components/RTransform.h>
 #include <Components/RModel.h>
 
-#include <Core/RVertex.h>
-#include <Core/RScene.h>
+#include <Graphics/RVertex.h>
+#include <Scene/RScene.h>
 
 #include <signal.h>
 #include <random>

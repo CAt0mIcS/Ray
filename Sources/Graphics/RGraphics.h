@@ -4,9 +4,9 @@
 #include "../Utils/RNonCopyable.h"
 #include "../Core/RTime.h"
 #include "../Core/RMath.h"
-#include "../Core/RCamera.h"
+#include "../Cameras/RCamera.h"
 #include "../Events/REngineEvents.h"
-#include "../Core/RScene.h"
+#include "../Scene/RScene.h"
 
 #include <vulkan/vulkan_core.h>
 #include <vector>

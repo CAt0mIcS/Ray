@@ -2,7 +2,7 @@
 #include "RMesh.h"
 
 #include "Graphics/RGraphics.h"
-#include "Graphics/Core/RCodex.h"
+#include "Graphics/RCodex.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
 #include "Graphics/Buffers/RIndexBuffer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
@@ -11,9 +11,9 @@
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 
-#include "Core/RGeometricPrimitives.h"
-#include "Core/REntity.h"
-#include "Core/RVertex.h"
+#include "RGeometricPrimitives.h"
+#include "Scene/REntity.h"
+#include "Graphics/RVertex.h"
 
 #include "RTransform.h"
 

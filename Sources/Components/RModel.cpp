@@ -2,8 +2,8 @@
 #include "RModel.h"
 
 #include "RMesh.h"
-#include "Core/RVertex.h"
-#include "Graphics/Core/RCodex.h"
+#include "Graphics/RVertex.h"
+#include "Graphics/RCodex.h"
 #include "Utils/RLogger.h"
 #include "Utils/RException.h"
 

@@ -1,7 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RVertexBuffer.h"
 
-#include "Core/RVertex.h"
+#include "Graphics/RVertex.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 
 

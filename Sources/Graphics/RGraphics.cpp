@@ -5,14 +5,14 @@
 #include "Utils/RException.h"
 
 #include "Devices/RWindow.h"
-#include "Core/RScene.h"
+#include "Scene/RScene.h"
 
 #include "Graphics/Core/RVulkanInstance.h"
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Core/RSurface.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Core/RSwapchain.h"
-#include "Graphics/Core/RCodex.h"
+#include "RCodex.h"
 
 #include "Graphics/Commands/RCommandPool.h"
 #include "Graphics/Commands/RCommandBuffer.h"
@@ -28,7 +28,6 @@
 #include "Graphics/Pipelines/RDescriptor.h"
 #include "Components/RMesh.h"
 #include "Components/RModel.h"
-#include "Core/RScene.h"
 
 
 namespace At0::Ray

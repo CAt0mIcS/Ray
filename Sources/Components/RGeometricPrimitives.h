@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "RVertex.h"
+#include "../Graphics/RVertex.h"
 #include "../Graphics/Buffers/RIndexBuffer.h"
 
 

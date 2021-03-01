@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "../../RBase.h"
-#include "RBindable.h"
+#include "../RBase.h"
+#include "Core/RBindable.h"
 
 #include <string>
 #include <unordered_map>
