@@ -15,8 +15,6 @@
 #include "Scene/REntity.h"
 #include "Graphics/RVertex.h"
 
-#include "RTransform.h"
-
 
 namespace At0::Ray
 {
@@ -111,7 +109,7 @@ namespace At0::Ray
 	void Mesh::Update(Delta ts, const Transform& parentTransform)
 	{
 		m_Uniforms.Resolve<Shader::Stage::Vertex>("PerObjectData", "model")
-			.Update((m_Transform + parentTransform).ToMatrix(), m_GlobalUniformBufferOffset);
+			.Update((m_Transform + parentTransform).AsMatrix(), m_GlobalUniformBufferOffset);
 	}
 
 	void Mesh::Bind(const CommandBuffer& cmdBuff) const

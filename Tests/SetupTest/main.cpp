@@ -4,7 +4,6 @@
 #include <Graphics/RGraphics.h>
 
 #include <Components/RMesh.h>
-#include <Components/RTransform.h>
 #include <Components/RModel.h>
 
 #include <Graphics/RVertex.h>

@@ -104,7 +104,6 @@ set(SRC
 	"Components/RComponent.h"
 	"Components/RMesh.h"
 	"Components/RMesh.cpp"
-	"Components/RTransform.h"
 	"Components/RMaterial.h"
 	"Components/RMaterial.cpp"
 	"Components/RModel.h"

@@ -35,6 +35,34 @@ namespace At0::Ray
 	Float3 CrossProduct(Float3 x, Float3 y) { return glm::cross(x, y); }
 
 
+	Transform::Transform(Float3 translation, Float3 rotation, Float3 scale)
+		: Translation(translation), Rotation(rotation), Scale(scale)
+	{
+	}
+
+	Transform::Transform(Float3 translation, Float3 rotation)
+		: Translation(translation), Rotation(rotation)
+	{
+	}
+
+	Transform::Transform(Float3 translation)
+		: Translation(translation), Rotation{ 0.0f, 0.0f, 0.0f }
+	{
+	}
+	Transform::Transform() : Rotation{ 0.0f, 0.0f, 0.0f } {}
+	Matrix Transform::AsMatrix() const
+	{
+		return MatrixScale(Scale) * MatrixRotation(Rotation) * MatrixTranslation(Translation);
+	}
+	Transform Transform::operator+(const Transform& other)
+	{
+		Transform transform;
+		transform.Translation = Translation + other.Translation;
+		transform.Rotation = Rotation + other.Rotation;
+		transform.Scale = Scale + other.Scale;
+		return transform;
+	}
+
 	inline std::ostream& operator<<(std::ostream& os, const Int2& data)
 	{
 		os << "[x=" << data.x << ", y=" << data.y << "]";

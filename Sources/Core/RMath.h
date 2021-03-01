@@ -51,6 +51,28 @@ namespace At0::Ray
 	RAY_EXPORT float DotProduct(Float4 x, Float4 y);
 	RAY_EXPORT Float3 CrossProduct(Float3 x, Float3 y);
 
+	struct RAY_EXPORT Transform
+	{
+		Float3 Translation{};
+
+		union
+		{
+			float Yaw, Roll, Pitch;
+			Float3 Rotation;
+		};
+
+		Float3 Scale{ 1.0f, 1.0f, 1.0f };
+
+		Transform(Float3 translation, Float3 rotation, Float3 scale);
+		Transform(Float3 translation, Float3 rotation);
+		Transform(Float3 translation);
+		Transform();
+
+		Matrix AsMatrix() const;
+
+		Transform operator+(const Transform& other);
+	};
+
 	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Int2& data);
 
 	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Int3& data);

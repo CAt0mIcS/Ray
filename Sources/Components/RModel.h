@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "RComponent.h"
-#include "RTransform.h"
+#include "../Core/RMath.h"
 #include "../Core/RTime.h"
 
 #include <type_traits>

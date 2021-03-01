@@ -6,7 +6,6 @@
 
 #include "Components/RMesh.h"
 #include "Components/RModel.h"
-#include "Components/RTransform.h"
 
 #include "Events/REventListener.h"
 
