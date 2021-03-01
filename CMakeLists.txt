@@ -24,29 +24,36 @@ option(RAY_BUILD_TESTS "Include tests into the solution/makefile" ON)
 # ------------------------------------------------------------------------------------------------
 # Set architecture acording to RAY_ARCHITECTURE option above
 if(UNIX AND NOT APPLE)
-    message(STATUS "Setting Build Architecture (Linux) to ${RAY_ARCHITECTURE}")
     if("${RAY_ARCHITECTURE}" STREQUAL "x64")
+    	message(STATUS "Setting Build Architecture (Linux) to x64")
         set(CMAKE_C_FLAGS "-m64")
         set(CMAKE_CXX_FLAGS "-m64")
     elseif("${RAY_ARCHITECTURE}" STREQUAL "x86")
+    	message(STATUS "Setting Build Architecture (Linux) to x86")
         set(CMAKE_C_FLAGS "-m32")
         set(CMAKE_CXX_FLAGS "-m32")
     endif()
 elseif(WIN32)
     # Should be automatically set using the -A switch in the .bat script
 elseif(APPLE)
-    message(STATUS "Setting Build Architecture (Apple) to ${RAY_ARCHITECTURE}")
     if("${RAY_ARCHITECTURE}" STREQUAL "x64")
         set(CMAKE_OSX_ARCHITECTURES "x86_64")
+	    message(STATUS "Setting Build Architecture (Apple) to x86_64")
     elseif("${RAY_ARCHITECTURE}" STREQUAL "x86")
+    	message(STATUS "Setting Build Architecture (Apple) to i386")
         set(CMAKE_OSX_ARCHITECTURES "i386")
     endif()
 endif()
 
 # TODO: Enable for gcc and clang only
 if(UNIX)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wno-attributes")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wno-attributes")
+    # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wno-attributes")
+    # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wno-attributes")
+    
+    # set(CMAKE_C_COMPILER gcc-10)
+    # set(CMAKE_CXX_COMPILER g++-10)
+	# set(CMAKE_REQUIRED_FLAGS -fconcepts)
+	# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconcepts")
 endif()
 
 # ------------------------------------------------------------------------------------------------
