@@ -1,4 +1,4 @@
-#include "Rpch.h"
+﻿#include "Rpch.h"
 #include "RFramebuffer.h"
 
 #include "Graphics/Core/RLogicalDevice.h"
@@ -7,6 +7,7 @@
 #include "Graphics/RenderPass/RRenderPass.h"
 
 #include "Utils/RException.h"
+#include "Utils/RLogger.h"
 
 
 namespace At0::Ray
@@ -27,6 +28,8 @@ namespace At0::Ray
 		RAY_VK_THROW_FAILED(
 			vkCreateFramebuffer(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Framebuffer),
 			"[Framebuffer] Failed to create.");
+		Log::Info("[Framebuffer] Created with size [width={0}, height={1}].", createInfo.width,
+			createInfo.height);
 	}
 
 	Framebuffer::~Framebuffer()

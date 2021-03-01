@@ -2,6 +2,7 @@
 
 #include "../RBase.h"
 #include "Core/RBindable.h"
+#include "../Utils/RLogger.h"
 
 #include <string>
 #include <unordered_map>
@@ -51,11 +52,14 @@ namespace At0::Ray
 			if (it == m_Bindables.end())
 			{
 				m_Bindables[tag] = MakeRef<T>(std::forward<Args>(args)...);
+				Log::Debug(
+					"[Codex] Bindable (Tag=\"{0}\") was created because it didn't exist.", tag);
 				return std::static_pointer_cast<T>(m_Bindables[tag]);
 			}
 			// Key exists, return it
 			else
 			{
+				Log::Debug("[Codex] Bindable (Tag=\"{0}\") already exists.", tag);
 				return std::static_pointer_cast<T>(it->second);
 			}
 		}

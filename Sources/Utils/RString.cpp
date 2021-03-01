@@ -221,6 +221,19 @@ namespace At0::Ray
 		return "";
 	}
 
+	std::string String::Construct(VkPhysicalDeviceType deviceType)
+	{
+		switch (deviceType)
+		{
+		case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: return "Integrated GPU";
+		case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU: return "Discrete GPU";
+		case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU: return "Virtual GPU";
+		case VK_PHYSICAL_DEVICE_TYPE_CPU: return "CPU";
+		}
+
+		return "Unknown Physical Device type";
+	}
+
 	std::string String::ConvertUtf8(std::wstring_view string)
 	{
 		return g_UtfConverter.to_bytes(string.data(), string.data() + string.length());

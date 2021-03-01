@@ -10,6 +10,7 @@
 #include "Graphics/Images/RImageView.h"
 
 #include "Utils/RException.h"
+#include "Utils/RLogger.h"
 
 
 namespace At0::Ray
@@ -29,6 +30,8 @@ namespace At0::Ray
 		{
 			imageCount = supportDetails.Capabilities.maxImageCount;
 		}
+
+		Log::Info("[Swapchain] Creating {0} images.", imageCount);
 
 		VkSwapchainCreateInfoKHR createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -52,6 +55,8 @@ namespace At0::Ray
 			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 			createInfo.queueFamilyIndexCount = 2;
 			createInfo.pQueueFamilyIndices = queueFamilyIndices;
+			Log::Warn(
+				"[Swapchain] Enabling image sharing between the graphics and present families.");
 		}
 		else
 		{
@@ -140,9 +145,13 @@ namespace At0::Ray
 		for (const VkPresentModeKHR& presentMode : presentModes)
 		{
 			if (presentMode == VK_PRESENT_MODE_MAILBOX_KHR)
+			{
+				Log::Info("[Swapchain] Choosing mailbox present mode.");
 				return presentMode;
+			}
 		}
 
+		Log::Info("[Swapchain] Choosing FIFO present mode.");
 		return VK_PRESENT_MODE_FIFO_KHR;
 	}
 
@@ -160,6 +169,9 @@ namespace At0::Ray
 				extent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
 			extent.height = std::clamp(extent.height, capabilities.minImageExtent.height,
 				capabilities.maxImageExtent.height);
+
+			Log::Info(
+				"[Swapchain] Choosing extent [width={0}, height={1}]", extent.width, extent.height);
 
 			return extent;
 		}

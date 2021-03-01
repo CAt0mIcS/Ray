@@ -109,6 +109,7 @@ namespace At0::Ray
 		// Create the window
 		m_hWnd = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
 		RAY_MEXPECTS(m_hWnd, "[Window] Failed to create window.");
+		Log::Info("[Window] Created successfully ({0})", m_hWnd);
 
 		glfwSetWindowUserPointer(m_hWnd, this);
 

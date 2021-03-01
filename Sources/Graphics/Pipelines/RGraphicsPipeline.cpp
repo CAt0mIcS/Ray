@@ -58,7 +58,8 @@ namespace At0::Ray
 			auto path = std::filesystem::absolute(shader);
 			std::optional<std::string> shaderCode = ReadFile(shader);
 			if (!shaderCode)
-				RAY_THROW_RUNTIME("[Shader] Could not find file {0}", shader);
+				RAY_THROW_RUNTIME("[Shader] Could not find file {0}.", shader);
+			Log::Info("[GraphicsPipeline] Loading shader \"{0}\".", shader);
 
 			VkShaderStageFlagBits stageFlag = Shader::GetShaderStage(shader);
 
@@ -133,6 +134,10 @@ namespace At0::Ray
 		RAY_VK_THROW_FAILED(
 			vkCreatePipelineLayout(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Layout),
 			"[GraphicsPipeline] Failed to create layout.");
+
+		Log::Info("[GraphicsPipeline] Created pipeline layout with {0} descriptor set layout(s) "
+				  "and {1} push constant range(s).",
+			createInfo.setLayoutCount, createInfo.pushConstantRangeCount);
 	}
 
 	void GraphicsPipeline::CreatePipeline(const RenderPass& renderPass)

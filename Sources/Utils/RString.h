@@ -50,6 +50,13 @@ namespace At0::Ray
 		static std::string Construct(Shader::Stage stage);
 
 		/**
+		 * Constructs a string from a physical device type
+		 * @param deviceType The type to strinify
+		 * @returns The string describing the type of device
+		 */
+		static std::string Construct(VkPhysicalDeviceType deviceType);
+
+		/**
 		 * Converts a string from UTF16 to UTF8
 		 * @param string The string to convert
 		 * @returns The converted string

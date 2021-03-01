@@ -20,6 +20,7 @@ namespace At0::Ray
 
 	int Engine::Run()
 	{
+		Log::Info("[Engine] Startup.");
 		auto startSecTime = std::chrono::high_resolution_clock::now();
 		while (Window::Get().Update())
 		{
@@ -36,8 +37,9 @@ namespace At0::Ray
 			{
 				std::ostringstream oss;
 				oss << "Frametime: " << m_Delta.Change().AsSeconds() << "s"
-					<< ",        FPS: " << m_FPS.Value();
+					<< ", FPS: " << m_FPS.Value() << '.';
 				Window::Get().SetTitle(oss.str());
+				Log::Debug("{0}", oss.str());
 
 				startSecTime = std::chrono::high_resolution_clock::now();
 			}
@@ -45,6 +47,7 @@ namespace At0::Ray
 
 		Graphics::Destroy();
 
+		Log::Info("[Engine] Shutdown.");
 		return 0;
 	}
 

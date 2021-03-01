@@ -1,6 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RDynamicBuffer.h"
 
+#include "Utils/RLogger.h"
 #include "Utils/RAssert.h"
 
 
@@ -93,6 +94,7 @@ namespace At0::Ray
 
 	void DynamicBuffer::Reallocate(uint32_t size)
 	{
+		Log::Info("[DynamicBuffer] Allocating new buffer {0}", m_Buffers.size() + 1);
 		m_Buffers.emplace_back(new Buffer(size, m_BufferUsage, m_MemoryProperties));
 	}
 
