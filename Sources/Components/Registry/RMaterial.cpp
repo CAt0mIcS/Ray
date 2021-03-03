@@ -9,18 +9,19 @@
 
 namespace At0::Ray
 {
-	const VertexLayout& Material::GetVertexLayout() const
-	{
-		return m_GraphicsPipeline->GetVertexLayout();
-	}
-
-	void Material::Create()
+	Material::Material(const Float4& baseDiffuse, std::shared_ptr<Image2D> imageDiffuse,
+		float metallic, float roughness, std::shared_ptr<Image2D> imageMaterial,
+		std::shared_ptr<Image2D> imageNormal)
 	{
 		std::vector<std::string_view> shaders{ "Resources/Shaders/DefaultShader.vert",
 			"Resources/Shaders/DefaultShader.frag" };
+
 		m_GraphicsPipeline =
 			Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(), shaders);
 	}
 
-
+	const VertexLayout& Material::GetVertexLayout() const
+	{
+		return m_GraphicsPipeline->GetVertexLayout();
+	}
 }  // namespace At0::Ray

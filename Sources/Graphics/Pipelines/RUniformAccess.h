@@ -58,21 +58,18 @@ namespace At0::Ray
 
 	public:
 		UniformAccess(const Pipeline& pipeline);
-		UniformAccess() = default;
 
 		UniformDataAccess Resolve(Shader::Stage stage);
 
 		template<Shader::Stage stage>
 		UniformData Resolve(std::string_view uniformBlockName, std::string_view uniformName)
 		{
-			RAY_MEXPECTS(m_Shader, "[UniformAccess] Not created using pipeline.");
 			return Resolve(stage)(uniformBlockName, uniformName);
 		}
 
 		template<Shader::Stage stage>
 		UniformData Resolve(std::string_view uniformName)
 		{
-			RAY_MEXPECTS(m_Shader, "[UniformAccess] Not created using pipeline.");
 			return Resolve(stage)(uniformName);
 		}
 

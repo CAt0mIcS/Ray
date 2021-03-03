@@ -23,7 +23,6 @@ namespace At0::Ray
 		DescriptorSet(VkDescriptorPool pool, VkDescriptorSetLayout descriptorLayout,
 			Pipeline::BindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout,
 			Frequency setNumber);
-		DescriptorSet() = default;
 
 		~DescriptorSet() = default;
 

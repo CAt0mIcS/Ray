@@ -44,8 +44,6 @@ private:
 
 			Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
 			Ray::Material triangleMaterial;
-			triangleMaterial.Emplace<Ray::Material::Roughness>(1.0f);
-			triangleMaterial.Emplace<Ray::Material::Metallic>(2.0f);
 
 			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(triangleMaterial));
 

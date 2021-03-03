@@ -22,7 +22,6 @@ set(SRC
 	"Core/RMath.h"
 	"Core/RMath.cpp"
 	"Core/RKeyCodes.h"
-	"Core/RColor.h"
 	
 	# ------------------------------------------------------------------
 	# Devices

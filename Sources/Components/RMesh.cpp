@@ -20,18 +20,13 @@ namespace At0::Ray
 {
 	Mesh::Mesh(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Material material)
 		: m_VertexBuffer(std::move(vertexBuffer)), m_IndexBuffer(std::move(indexBuffer)),
-		  m_Material(std::move(material))
+		  m_Material(std::move(material)), m_Uniforms(m_Material.GetGraphicsPipeline()),
+		  m_DescriptorSet(m_Material.GetGraphicsPipeline().GetDescriptorPool(),
+			  m_Material.GetGraphicsPipeline()
+				  .GetDescriptorSetLayout()[(size_t)DescriptorSet::Frequency::PerObject],
+			  m_Material.GetGraphicsPipeline().GetBindPoint(),
+			  m_Material.GetGraphicsPipeline().GetLayout(), DescriptorSet::Frequency::PerObject)
 	{
-		if (!m_Material.WasCreated())
-			m_Material.Create();
-
-		m_Uniforms = UniformAccess(m_Material.GetGraphicsPipeline());
-
-		auto& pipeline = m_Material.GetGraphicsPipeline();
-		m_DescriptorSet = DescriptorSet(pipeline.GetDescriptorPool(),
-			pipeline.GetDescriptorSetLayout()[(size_t)DescriptorSet::Frequency::PerObject],
-			pipeline.GetBindPoint(), pipeline.GetLayout(), DescriptorSet::Frequency::PerObject);
-
 		// Allocate uniform buffer memory
 		uint32_t alignment = Graphics::Get()
 								 .GetPhysicalDevice()
@@ -63,7 +58,6 @@ namespace At0::Ray
 
 	Mesh Mesh::Triangle(Material material)
 	{
-		material.Create();
 		IndexedTriangleList triangle = IndexedTriangleList::Triangle(material.GetVertexLayout());
 
 		Ref<VertexBuffer> vertexBuffer =
@@ -76,7 +70,6 @@ namespace At0::Ray
 
 	Mesh Mesh::Plane(Material material)
 	{
-		material.Create();
 		IndexedTriangleList plane = IndexedTriangleList::Plane(material.GetVertexLayout());
 
 		Ref<VertexBuffer> vertexBuffer =
@@ -101,7 +94,6 @@ namespace At0::Ray
 
 	Mesh Mesh::Cube(Material material)
 	{
-		material.Create();
 		IndexedTriangleList cube = IndexedTriangleList::Cube(material.GetVertexLayout());
 
 		Ref<VertexBuffer> vertexBuffer =
