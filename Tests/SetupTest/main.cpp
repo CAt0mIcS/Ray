@@ -43,16 +43,21 @@ private:
 			auto modelView = Scene::Get().EntityView<Ray::Model>();
 
 			Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
-			// Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(Ray::Material()));
+			Ray::Material triangleMaterial;
+			triangleMaterial.Emplace<Ray::Material::Roughness>(1.0f);
+			triangleMaterial.Emplace<Ray::Material::Metallic>(2.0f);
+
+			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(triangleMaterial));
+
 			// auto&
 			// cubeTransform = mesh.Get<Ray::Transform>(); cubeTransform.Translation = {
 			// posRotDist(device), posRotDist(device), 	posRotDist(device) }; cubeTransform.Rotation
 			// = { posRotDist(device), posRotDist(device), posRotDist(device) }; cubeTransform.Scale
 			// = { scaleDist(device), scaleDist(device), scaleDist(device) };
 
-			Ray::Model& model =
-				entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
-			auto& modelTransform = model.Get<Ray::Transform>();
+			// Ray::Model& model =
+			//	entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
+			// auto& modelTransform = model.Get<Ray::Transform>();
 			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
 			//	posRotDist(device) };
 			// modelTransform.Rotation = { posRotDist(device), posRotDist(device),
