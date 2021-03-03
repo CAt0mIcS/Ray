@@ -43,8 +43,7 @@ private:
 			auto modelView = Scene::Get().EntityView<Ray::Model>();
 
 			Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
-			Ray::Mesh& mesh =
-				entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(Ray::Material::Default()));
+			// Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(Ray::Material()));
 			// auto&
 			// cubeTransform = mesh.Get<Ray::Transform>(); cubeTransform.Translation = {
 			// posRotDist(device), posRotDist(device), 	posRotDist(device) }; cubeTransform.Rotation

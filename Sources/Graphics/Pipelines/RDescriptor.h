@@ -23,6 +23,8 @@ namespace At0::Ray
 		DescriptorSet(VkDescriptorPool pool, VkDescriptorSetLayout descriptorLayout,
 			Pipeline::BindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout,
 			Frequency setNumber);
+		DescriptorSet() = default;
+
 		~DescriptorSet() = default;
 
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
@@ -35,10 +37,10 @@ namespace At0::Ray
 		DescriptorSet(DescriptorSet&& other) noexcept;
 
 	private:
-		VkDescriptorSet m_DescriptorSet;
+		VkDescriptorSet m_DescriptorSet = VK_NULL_HANDLE;
 		Frequency m_Frequency;
 
 		Pipeline::BindPoint m_PipelineBindPoint;
-		VkPipelineLayout m_PipelineLayout;
+		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
 	};
 }  // namespace At0::Ray

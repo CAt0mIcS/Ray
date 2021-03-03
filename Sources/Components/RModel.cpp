@@ -88,10 +88,7 @@ namespace At0::Ray
 			indices.emplace_back(face.mIndices[2]);
 		}
 
-		std::vector<std::string_view> shaders{ "Resources/Shaders/DefaultShader.vert",
-			"Resources/Shaders/DefaultShader.frag" };
-		Material material(
-			Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(), shaders));
+		Material material;
 
 		return { Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
 			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)), std::move(material) };

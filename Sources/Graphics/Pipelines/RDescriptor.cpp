@@ -29,6 +29,8 @@ namespace At0::Ray
 
 	void DescriptorSet::CmdBind(const CommandBuffer& cmdBuff) const
 	{
+		RAY_MEXPECTS(m_DescriptorSet && m_PipelineLayout,
+			"[DescriptorSet] Not created using proper arguments.");
 		vkCmdBindDescriptorSets(cmdBuff, (VkPipelineBindPoint)m_PipelineBindPoint, m_PipelineLayout,
 			(uint32_t)m_Frequency, 1, &m_DescriptorSet, 0, nullptr);
 	}

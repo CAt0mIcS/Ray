@@ -22,6 +22,7 @@ set(SRC
 	"Core/RMath.h"
 	"Core/RMath.cpp"
 	"Core/RKeyCodes.h"
+	"Core/RColor.h"
 	
 	# ------------------------------------------------------------------
 	# Devices
@@ -104,12 +105,12 @@ set(SRC
 	"Components/RComponent.h"
 	"Components/RMesh.h"
 	"Components/RMesh.cpp"
-	"Components/RMaterial.h"
-	"Components/RMaterial.cpp"
 	"Components/RModel.h"
 	"Components/RModel.cpp"
-	"Components/RGeometricPrimitives.h"
-	"Components/RGeometricPrimitives.cpp"
+	"Components/Registry/RGeometricPrimitives.h"
+	"Components/Registry/RGeometricPrimitives.cpp"
+	"Components/Registry/RMaterial.h"
+	"Components/Registry/RMaterial.cpp"
 
 	# ------------------------------------------------------------------
 	# Utilities

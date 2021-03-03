@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "../Graphics/RVertex.h"
-#include "../Graphics/Buffers/RIndexBuffer.h"
+#include "../../Graphics/RVertex.h"
+#include "../../Graphics/Buffers/RIndexBuffer.h"
 
 
 namespace At0::Ray

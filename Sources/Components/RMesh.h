@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "RComponent.h"
-#include "RMaterial.h"
+#include "Registry/RMaterial.h"
 
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
