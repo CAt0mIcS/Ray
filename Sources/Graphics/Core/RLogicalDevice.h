@@ -9,6 +9,24 @@
 
 namespace At0::Ray
 {
+	enum class DeviceFeature
+	{
+		SampleRateShading,
+		FillModeNonSolid,
+		WiderLines,
+		SamplerAnisotropy,
+		BCTextureCompression,
+		ASTC_LDRTextureCompression,
+		ETC2TextureCompression,
+		VertexPipelineStoresAndAtomics,
+		FragmentStoresAndAtomics,
+		ShaderStorageImageExtendedFormats,
+		ShaderStorageImageWriteWithoutFormat,
+		GeometryShader,
+		TesselationShader,
+		MultiViewport
+	};
+
 	class RAY_EXPORT LogicalDevice : NonCopyable
 	{
 	public:
@@ -24,6 +42,11 @@ namespace At0::Ray
 		 * Waits for the logical device to finish work
 		 */
 		void WaitIdle() const;
+
+		/**
+		 * @returns If a specified gpu feature was enabled
+		 */
+		bool IsEnabled(DeviceFeature feature) const;
 
 		static const std::vector<const char*>& GetDeviceExtensions() { return s_DeviceExtensions; }
 		operator const VkDevice&() const { return m_Device; }
@@ -60,5 +83,7 @@ namespace At0::Ray
 		VkQueue m_TransferQueue = VK_NULL_HANDLE;
 
 		VkQueueFlags m_SupportedQueues = 0;
+
+		std::unordered_map<DeviceFeature, bool> m_DeviceFeatures;
 	};
 }  // namespace At0::Ray

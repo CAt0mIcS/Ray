@@ -1,6 +1,8 @@
 ﻿#include "Rpch.h"
 #include "RTexture2D.h"
 
+#include "RImage2D.h"
+
 #include "Utils/RException.h"
 #include "../Buffers/RBuffer.h"
 
@@ -10,6 +12,7 @@
 	#define STB_IMAGE_IMPLEMENTATION
 #endif
 #include <stb_image/stb_image.h>
+
 
 namespace At0::Ray
 {

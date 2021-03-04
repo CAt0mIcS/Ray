@@ -36,6 +36,14 @@ namespace At0::Ray
 			vkDeviceWaitIdle(m_Device), "Failed to wait for the logica device to finish work");
 	}
 
+	bool LogicalDevice::IsEnabled(DeviceFeature feature) const
+	{
+		if (auto it = m_DeviceFeatures.find(feature); it != m_DeviceFeatures.end())
+			return it->second;
+		else
+			return false;
+	}
+
 	void LogicalDevice::CreateQueueIndices()
 	{
 		uint32_t familyPropCount = 0;
@@ -148,6 +156,7 @@ namespace At0::Ray
 		if (physicalDeviceFeatures.sampleRateShading)
 		{
 			enabledFeatures.sampleRateShading = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::SampleRateShading, true);
 			Log::Info("[LogicalDevice] Enabling sample rate shading filtering feature.");
 		}
 
@@ -155,6 +164,7 @@ namespace At0::Ray
 		if (physicalDeviceFeatures.fillModeNonSolid)
 		{
 			enabledFeatures.fillModeNonSolid = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::FillModeNonSolid, true);
 			Log::Info("[LogicalDevice] Enabling non solid fill mode feature.");
 		}
 
@@ -162,6 +172,7 @@ namespace At0::Ray
 		if (physicalDeviceFeatures.wideLines)
 		{
 			enabledFeatures.wideLines = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::WiderLines, true);
 			Log::Info("[LogicalDevice] Enabling wider lines feature.");
 		}
 		else
@@ -170,6 +181,7 @@ namespace At0::Ray
 		if (physicalDeviceFeatures.samplerAnisotropy)
 		{
 			enabledFeatures.samplerAnisotropy = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::SamplerAnisotropy, true);
 			Log::Info("[LogicalDevice] Enabling sampler anisotropy feature.");
 		}
 		else
@@ -178,22 +190,26 @@ namespace At0::Ray
 		if (physicalDeviceFeatures.textureCompressionBC)
 		{
 			enabledFeatures.textureCompressionBC = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::BCTextureCompression, true);
 			Log::Info("[LogicalDevice] Enabling BC texture compression feature.");
 		}
 		else if (physicalDeviceFeatures.textureCompressionASTC_LDR)
 		{
 			enabledFeatures.textureCompressionASTC_LDR = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::ASTC_LDRTextureCompression, true);
 			Log::Info("[LogicalDevice] Enabling ASTC_LDR texture compression feature.");
 		}
 		else if (physicalDeviceFeatures.textureCompressionETC2)
 		{
 			enabledFeatures.textureCompressionETC2 = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::ETC2TextureCompression, true);
 			Log::Info("[LogicalDevice] Enabling ETC2 texture compression feature.");
 		}
 
 		if (physicalDeviceFeatures.vertexPipelineStoresAndAtomics)
 		{
 			enabledFeatures.vertexPipelineStoresAndAtomics = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::VertexPipelineStoresAndAtomics, true);
 			Log::Info("[LogicalDevice] Enabling vertex pipeline stores andd atomics feature.");
 		}
 		else
@@ -203,6 +219,7 @@ namespace At0::Ray
 		if (physicalDeviceFeatures.fragmentStoresAndAtomics)
 		{
 			enabledFeatures.fragmentStoresAndAtomics = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::FragmentStoresAndAtomics, true);
 			Log::Info("[LogicalDevice] Enabling fragment pipeline stores andd atomics feature.");
 		}
 		else
@@ -211,6 +228,7 @@ namespace At0::Ray
 		if (physicalDeviceFeatures.shaderStorageImageExtendedFormats)
 		{
 			enabledFeatures.shaderStorageImageExtendedFormats = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::ShaderStorageImageExtendedFormats, true);
 			Log::Info("[LogicalDevice] Enabling shader storage image extended formats feature.");
 		}
 		else
@@ -220,6 +238,7 @@ namespace At0::Ray
 		if (physicalDeviceFeatures.shaderStorageImageWriteWithoutFormat)
 		{
 			enabledFeatures.shaderStorageImageWriteWithoutFormat = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::ShaderStorageImageWriteWithoutFormat, true);
 			Log::Info(
 				"[LogicalDevice] Enabling shader storage image write without format feature.");
 		}
@@ -230,6 +249,7 @@ namespace At0::Ray
 		if (physicalDeviceFeatures.geometryShader)
 		{
 			enabledFeatures.geometryShader = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::GeometryShader, true);
 			Log::Info("[LogicalDevice] Enabling geometry shader feature.");
 		}
 		else
@@ -238,6 +258,7 @@ namespace At0::Ray
 		if (physicalDeviceFeatures.tessellationShader)
 		{
 			enabledFeatures.tessellationShader = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::TesselationShader, true);
 			Log::Info("[LogicalDevice] Enabling tesselation shader feature.");
 		}
 		else
@@ -246,6 +267,7 @@ namespace At0::Ray
 		if (physicalDeviceFeatures.multiViewport)
 		{
 			enabledFeatures.multiViewport = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::MultiViewport, true);
 			Log::Info("[LogicalDevice] Enabling multi-viewport feature.");
 		}
 		else

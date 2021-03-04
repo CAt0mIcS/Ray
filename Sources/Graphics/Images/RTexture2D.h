@@ -1,13 +1,15 @@
 ﻿#pragma once
 
 #include "RTexture.h"
-#include "RImage2D.h"
+#include "RTextureSampler.h"
 
 #include <string_view>
 
 
 namespace At0::Ray
 {
+	class Image2D;
+
 	class RAY_EXPORT Texture2D : public Texture
 	{
 	public:
@@ -18,6 +20,7 @@ namespace At0::Ray
 
 	private:
 		Scope<Image2D> m_Image;
+		TextureSampler m_Sampler;
 	};
 
 }  // namespace At0::Ray

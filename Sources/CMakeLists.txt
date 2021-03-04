@@ -93,6 +93,9 @@ set(SRC
 	"Graphics/Images/RTexture.cpp"
 	"Graphics/Images/RTexture2D.h"
 	"Graphics/Images/RTexture2D.cpp"
+	"Graphics/Images/RTextureSampler.h"
+	"Graphics/Images/RTextureSampler.cpp"
+
 
 	"Graphics/Commands/RCommandBuffer.h"
 	"Graphics/Commands/RCommandBuffer.cpp"

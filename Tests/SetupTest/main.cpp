@@ -47,7 +47,7 @@ private:
 			Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
 			Ray::Material triangleMaterial;
 
-			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(triangleMaterial));
+			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Cube(triangleMaterial));
 			entity.Emplace<Ray::Texture2D>("Resources/Textures/gridbase.png");
 
 			// auto&
@@ -56,11 +56,11 @@ private:
 			// = { posRotDist(device), posRotDist(device), posRotDist(device) }; cubeTransform.Scale
 			// = { scaleDist(device), scaleDist(device), scaleDist(device) };
 
-			// Ray::Model& model =
-			//	entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
-			// auto& modelTransform = model.Get<Ray::Transform>();
-			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
-			//	posRotDist(device) };
+			Ray::Model& model =
+				entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
+			auto& modelTransform = model.Get<Ray::Transform>();
+			modelTransform.Translation = { posRotDist(device), posRotDist(device),
+				posRotDist(device) };
 			// modelTransform.Rotation = { posRotDist(device), posRotDist(device),
 			// posRotDist(device)
 			// }; modelTransform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device)
