@@ -12,6 +12,9 @@
 
 #define ENTT_API RAY_EXPORT
 
+// Export some entt symbols. Specialization is not exported for some reason... (RAY_TODO)
+#include <../../Extern/entt/src/entt/core/type_info.hpp>
+#include <../../Extern/entt/src/entt/entity/storage.hpp>
 #define RAY_EXPORT_COMPONENT(type)                                                                 \
 	template<>                                                                                     \
 	struct RAY_EXPORT entt::type_seq<At0::Ray::type>                                               \

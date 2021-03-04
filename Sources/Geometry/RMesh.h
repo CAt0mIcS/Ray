@@ -67,3 +67,6 @@ namespace At0::Ray
 		Transform m_Transform;
 	};
 }  // namespace At0::Ray
+
+
+RAY_EXPORT_COMPONENT(Mesh);

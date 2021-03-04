@@ -5,8 +5,6 @@
 
 #include <string_view>
 
-#include <../../Extern/entt/src/entt/entt.hpp>
-
 
 namespace At0::Ray
 {
@@ -23,5 +21,6 @@ namespace At0::Ray
 	};
 
 }  // namespace At0::Ray
+
 
 RAY_EXPORT_COMPONENT(Texture2D);
