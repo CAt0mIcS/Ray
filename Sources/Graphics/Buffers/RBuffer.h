@@ -37,9 +37,6 @@ namespace At0::Ray
 		const VkDeviceMemory& GetMemory() const { return m_BufferMemory; }
 		operator const VkBuffer&() const { return m_Buffer; }
 
-		Buffer& operator=(Buffer&& other);
-		Buffer(Buffer&& other);
-
 	protected:
 		void Destroy();
 

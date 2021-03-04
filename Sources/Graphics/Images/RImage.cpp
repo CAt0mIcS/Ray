@@ -180,15 +180,4 @@ namespace At0::Ray
 
 		return candidates;
 	}
-
-	Image& Image::operator=(Image&& other)
-	{
-		m_Image = std::move(other.m_Image);
-		m_ImageMemory = std::move(other.m_ImageMemory);
-		m_ImageView = std::move(other.m_ImageView);
-		m_Format = std::move(other.m_Format);
-		return *this;
-	}
-
-	Image::Image(Image&& other) { *this = std::move(other); }
 }  // namespace At0::Ray

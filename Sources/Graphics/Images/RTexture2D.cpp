@@ -15,7 +15,6 @@ namespace At0::Ray
 {
 	Texture2D::Texture2D(std::string_view filepath)
 	{
-		Buffer stagingBuffer;
 		int texWidth, texHeight, texChannels;
 		stbi_uc* pixels =
 			stbi_load(filepath.data(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
@@ -24,19 +23,19 @@ namespace At0::Ray
 		if (!pixels)
 			RAY_THROW_RUNTIME("[Texture2D] Failed to load texture from file \"{0}\"", filepath);
 
-		stagingBuffer = Buffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+		Buffer stagingBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, pixels);
 
 		stbi_image_free(pixels);
 
-		m_Image = Image2D({ texWidth, texHeight }, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
-			VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+		m_Image = MakeScope<Image2D>(UInt2{ texWidth, texHeight }, VK_FORMAT_R8G8B8A8_SRGB,
+			VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
 			VK_SHARING_MODE_EXCLUSIVE);
 
-		m_Image.TransitionLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-		m_Image.CopyFromBuffer(stagingBuffer);
+		m_Image->TransitionLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+		m_Image->CopyFromBuffer(stagingBuffer);
 
-		m_Image.TransitionLayout(
+		m_Image->TransitionLayout(
 			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 	}
 

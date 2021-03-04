@@ -17,7 +17,7 @@ namespace At0::Ray
 		Texture2D(Texture2D&& other);
 
 	private:
-		Image2D m_Image;
+		Scope<Image2D> m_Image;
 	};
 
 }  // namespace At0::Ray

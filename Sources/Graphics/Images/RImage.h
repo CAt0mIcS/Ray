@@ -19,7 +19,6 @@ namespace At0::Ray
 		Image(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
 			VkImageUsageFlags usage, VkMemoryPropertyFlags memProps,
 			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT);
-		Image() = default;
 		virtual ~Image();
 
 		VkFormat GetFormat() const { return m_Format; }
@@ -31,9 +30,6 @@ namespace At0::Ray
 
 		static std::vector<VkFormat> FindSupportedFormats(std::vector<VkFormat> candidates,
 			VkImageTiling tiling, VkFormatFeatureFlags featureFlags);
-
-		Image& operator=(Image&& other);
-		Image(Image&& other);
 
 	protected:
 		VkImage m_Image = VK_NULL_HANDLE;
