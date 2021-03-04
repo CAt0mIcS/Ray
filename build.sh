@@ -29,7 +29,7 @@ echo Selecting Build Settings "$configuration" "$unameOut" and "$architecture"
 
 [ ! -d "./$buildPath" ] && mkdir ./$buildPath
 cd ./$buildPath
-cmake .. -DCMAKE_BUILD_TYPE=$configuration -DRAY_ARCHITECTURE=$architecture
+cmake .. -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10 -DCMAKE_BUILD_TYPE=$configuration -DRAY_ARCHITECTURE=$architecture
 
 read -s -n 1 -p "Press any key to continue . . ."
 cd ..
