@@ -64,8 +64,6 @@ namespace At0::Ray
 		UniformAccess m_Uniforms;
 		DescriptorSet m_DescriptorSet;
 
-		uint32_t m_GlobalUniformBufferOffset = 0;
-
 		Transform m_Transform;
 	};
 }  // namespace At0::Ray

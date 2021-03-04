@@ -23,7 +23,7 @@ namespace At0::Ray
 		  m_Material(std::move(material)),
 		  m_DescriptorSet(m_Material.GetGraphicsPipeline().GetDescriptorPool(),
 			  m_Material.GetGraphicsPipeline()
-				  .GetDescriptorSetLayout()[(size_t)DescriptorSet::Frequency::PerObject],
+				  .GetDescriptorSetLayouts()[(size_t)DescriptorSet::Frequency::PerObject],
 			  m_Material.GetGraphicsPipeline().GetBindPoint(),
 			  m_Material.GetGraphicsPipeline().GetLayout(), DescriptorSet::Frequency::PerObject)
 	{
@@ -32,16 +32,17 @@ namespace At0::Ray
 								 .GetPhysicalDevice()
 								 .GetProperties()
 								 .limits.minUniformBufferOffsetAlignment;
-		BufferSynchronizer::Get().Emplace(sizeof(Matrix), alignment, &m_GlobalUniformBufferOffset);
+		uint32_t globalUniformBufferOffset = 0;
+		BufferSynchronizer::Get().Emplace(sizeof(Matrix), alignment, &globalUniformBufferOffset);
 
-		m_Uniforms = UniformAccess(m_Material.GetGraphicsPipeline(), m_GlobalUniformBufferOffset);
+		m_Uniforms = UniformAccess(m_Material.GetGraphicsPipeline(), globalUniformBufferOffset);
 
 		// Update descriptor set
 		VkDescriptorBufferInfo bufferInfo{};
 		bufferInfo.buffer =
-			BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(m_GlobalUniformBufferOffset);
+			BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(globalUniformBufferOffset);
 		bufferInfo.offset =
-			BufferSynchronizer::Get().GetUniformBuffer().GetOffset(m_GlobalUniformBufferOffset);
+			BufferSynchronizer::Get().GetUniformBuffer().GetOffset(globalUniformBufferOffset);
 		bufferInfo.range = sizeof(Matrix);
 
 		VkWriteDescriptorSet descWrite{};
@@ -140,7 +141,6 @@ namespace At0::Ray
 		m_Uniforms = std::move(other.m_Uniforms);
 		m_DescriptorSet = std::move(other.m_DescriptorSet);
 
-		m_GlobalUniformBufferOffset = other.m_GlobalUniformBufferOffset;
 		m_Transform = std::move(other.m_Transform);
 
 		if (other.EntitySet())
@@ -152,7 +152,6 @@ namespace At0::Ray
 		: m_VertexBuffer(std::move(other.m_VertexBuffer)),
 		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
 		  m_Uniforms(std::move(other.m_Uniforms)),
-		  m_GlobalUniformBufferOffset(other.m_GlobalUniformBufferOffset),
 		  m_DescriptorSet(std::move(other.m_DescriptorSet)),
 		  m_Transform(std::move(other.m_Transform))
 	{

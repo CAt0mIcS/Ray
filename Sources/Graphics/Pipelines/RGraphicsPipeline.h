@@ -23,7 +23,7 @@ namespace At0::Ray
 		const VertexLayout& GetVertexLayout() const { return m_Shader.GetVertexLayout(); }
 
 		const VkDescriptorPool& GetDescriptorPool() const { return m_DescriptorPool; }
-		const auto& GetDescriptorSetLayout() const { return m_DescriptorSetLayouts; }
+		const auto& GetDescriptorSetLayouts() const { return m_DescriptorSetLayouts; }
 
 		static std::string GetUID(
 			const RenderPass& renderPass, const std::vector<std::string_view>& shaders);
