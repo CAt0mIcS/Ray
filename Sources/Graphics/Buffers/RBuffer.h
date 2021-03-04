@@ -14,6 +14,7 @@ namespace At0::Ray
 		Buffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties,
 			const void* data = nullptr);
 		Buffer(VkDeviceSize size);
+		Buffer() = default;
 		virtual ~Buffer();
 
 		void MapMemory(void** data) const;
@@ -35,6 +36,9 @@ namespace At0::Ray
 		VkDeviceSize GetSize() const { return m_Size; }
 		const VkDeviceMemory& GetMemory() const { return m_BufferMemory; }
 		operator const VkBuffer&() const { return m_Buffer; }
+
+		Buffer& operator=(Buffer&& other);
+		Buffer(Buffer&& other);
 
 	protected:
 		void Destroy();

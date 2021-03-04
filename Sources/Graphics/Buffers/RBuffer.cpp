@@ -143,6 +143,17 @@ namespace At0::Ray
 		return alignedSize;
 	}
 
+	Buffer& Buffer::operator=(Buffer&& other)
+	{
+		m_Buffer = std::move(other.m_Buffer);
+		m_BufferMemory = std::move(other.m_BufferMemory);
+		m_Size = std::move(other.m_Size);
+		m_IsHostCoherent = std::move(other.m_IsHostCoherent);
+		return *this;
+	}
+
+	Buffer::Buffer(Buffer&& other) { *this = std::move(other); }
+
 	void Buffer::Destroy()
 	{
 		vkDestroyBuffer(Graphics::Get().GetDevice(), m_Buffer, nullptr);

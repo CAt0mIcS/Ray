@@ -26,8 +26,8 @@
 #include "Graphics/Buffers/RFramebuffer.h"
 
 #include "Graphics/Pipelines/RDescriptor.h"
-#include "Components/RMesh.h"
-#include "Components/RModel.h"
+#include "Geometry/RMesh.h"
+#include "Geometry/RModel.h"
 
 
 namespace At0::Ray

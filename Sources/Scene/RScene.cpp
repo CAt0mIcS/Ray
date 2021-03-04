@@ -4,8 +4,8 @@
 #include "RScene.h"
 #include "Utils/RException.h"
 
-#include "Components/RMesh.h"
-#include "Components/RModel.h"
+#include "Geometry/RMesh.h"
+#include "Geometry/RModel.h"
 
 #include "Events/REventListener.h"
 

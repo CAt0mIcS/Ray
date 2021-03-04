@@ -3,8 +3,10 @@
 #include <Devices/RWindow.h>
 #include <Graphics/RGraphics.h>
 
-#include <Components/RMesh.h>
-#include <Components/RModel.h>
+#include <Geometry/RMesh.h>
+#include <Geometry/RModel.h>
+#include <Graphics/Images/RTexture2D.h>
+#include <Utils/RException.h>
 
 #include <Graphics/RVertex.h>
 #include <Scene/RScene.h>
@@ -46,6 +48,7 @@ private:
 			Ray::Material triangleMaterial;
 
 			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(triangleMaterial));
+			entity.Emplace<Ray::Texture2D>("Resources/Textures/DefaultTexture.jpg");
 
 			// auto&
 			// cubeTransform = mesh.Get<Ray::Transform>(); cubeTransform.Translation = {
@@ -53,8 +56,8 @@ private:
 			// = { posRotDist(device), posRotDist(device), posRotDist(device) }; cubeTransform.Scale
 			// = { scaleDist(device), scaleDist(device), scaleDist(device) };
 
-			Ray::Model& model =
-				entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
+			// Ray::Model& model =
+			//	entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
 			// auto& modelTransform = model.Get<Ray::Transform>();
 			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
 			//	posRotDist(device) };
@@ -83,12 +86,27 @@ int main()
 	Ray::Log::Open("Ray.log");
 	Ray::Log::SetLogLevel(Ray::LogLevel::Trace);
 
-	Ray::Window::Create();
-	Ray::Window::Get().Show();
+	try
+	{
+		Ray::Window::Create();
+		Ray::Window::Get().Show();
 
-	App app;
+		App app;
 
-	Ray::Graphics::Get();
+		Ray::Graphics::Get();
 
-	return app.Run();
+		return app.Run();
+	}
+	catch (Ray::Exception& e)
+	{
+		Ray::Log::Critical("{0}: {1}", e.GetType(), e.what());
+	}
+	catch (std::exception& e)
+	{
+		Ray::Log::Critical("Standard Exception: {0}", e.what());
+	}
+	catch (...)
+	{
+		Ray::Log::Critical("Unknown exception occured.");
+	}
 }

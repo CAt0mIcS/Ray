@@ -11,5 +11,6 @@ namespace At0::Ray
 	public:
 		Image2D(UInt2 extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
 			VkMemoryPropertyFlags memProps);
+		Image2D() = default;
 	};
 }  // namespace At0::Ray

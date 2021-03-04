@@ -12,6 +12,30 @@
 
 #define ENTT_API RAY_EXPORT
 
+#define RAY_EXPORT_COMPONENT(type)                                                                 \
+	template<>                                                                                     \
+	struct RAY_EXPORT entt::type_seq<At0::Ray::type>                                               \
+	{                                                                                              \
+		[[nodiscard]] static entt::id_type value() ENTT_NOEXCEPT                                   \
+		{                                                                                          \
+			static const entt::id_type value = entt::internal::type_seq::next();                   \
+			return value;                                                                          \
+		}                                                                                          \
+	};                                                                                             \
+                                                                                                   \
+	template<>                                                                                     \
+	struct RAY_EXPORT entt::type_seq<                                                              \
+		entt::sigh_storage_mixin<                                                                  \
+			entt::storage_adapter_mixin<entt::basic_storage<entt::entity, At0::Ray::type, void>>>, \
+		void>                                                                                      \
+	{                                                                                              \
+		[[nodiscard]] static entt::id_type value() ENTT_NOEXCEPT                                   \
+		{                                                                                          \
+			static const entt::id_type value = entt::internal::type_seq::next();                   \
+			return value;                                                                          \
+		}                                                                                          \
+	};
+
 
 #include <memory>
 

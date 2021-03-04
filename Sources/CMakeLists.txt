@@ -22,6 +22,7 @@ set(SRC
 	"Core/RMath.h"
 	"Core/RMath.cpp"
 	"Core/RKeyCodes.h"
+	"Core/RComponent.h"
 	
 	# ------------------------------------------------------------------
 	# Devices
@@ -90,6 +91,8 @@ set(SRC
 	"Graphics/Images/RImageView.cpp"
 	"Graphics/Images/RTexture.h"
 	"Graphics/Images/RTexture.cpp"
+	"Graphics/Images/RTexture2D.h"
+	"Graphics/Images/RTexture2D.cpp"
 
 	"Graphics/Commands/RCommandBuffer.h"
 	"Graphics/Commands/RCommandBuffer.cpp"
@@ -100,16 +103,15 @@ set(SRC
 	"Graphics/RenderPass/RRenderPass.cpp"
 
 	# ------------------------------------------------------------------
-	# Components
-	"Components/RComponent.h"
-	"Components/RMesh.h"
-	"Components/RMesh.cpp"
-	"Components/RModel.h"
-	"Components/RModel.cpp"
-	"Components/Registry/RGeometricPrimitives.h"
-	"Components/Registry/RGeometricPrimitives.cpp"
-	"Components/Registry/RMaterial.h"
-	"Components/Registry/RMaterial.cpp"
+	# Geometry
+	"Geometry/RMesh.h"
+	"Geometry/RMesh.cpp"
+	"Geometry/RModel.h"
+	"Geometry/RModel.cpp"
+	"Geometry/Registry/RGeometricPrimitives.h"
+	"Geometry/Registry/RGeometricPrimitives.cpp"
+	"Geometry/Registry/RMaterial.h"
+	"Geometry/Registry/RMaterial.cpp"
 
 	# ------------------------------------------------------------------
 	# Utilities
@@ -161,6 +163,7 @@ set(PRIVATE_INC
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/Extern/entt/src"
     "${CMAKE_SOURCE_DIR}/Extern/glfw/include"
+    "${CMAKE_SOURCE_DIR}/Extern"
 )
 
 set(PUBLIC_LIB
