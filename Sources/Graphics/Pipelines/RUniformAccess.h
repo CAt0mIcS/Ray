@@ -23,10 +23,9 @@ namespace At0::Ray
 			UniformData() : m_Offset((uint32_t)-1) {}
 
 			template<typename T>
-			UniformData& Update(T&& data)
+			UniformData& operator=(T&& data)
 			{
 				RAY_MEXPECTS(m_Offset != (uint32_t)-1, "[UniformData] Uniform does not exist.");
-
 				BufferSynchronizer::Get().Update(data, m_Offset);
 				return *this;
 			}

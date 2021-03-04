@@ -111,8 +111,8 @@ namespace At0::Ray
 
 	void Mesh::Update(Delta ts, const Transform& parentTransform)
 	{
-		m_Uniforms.Resolve<Shader::Stage::Vertex>("PerObjectData", "model")
-			.Update((m_Transform + parentTransform).AsMatrix());
+		m_Uniforms.Resolve<Shader::Stage::Vertex>("PerObjectData", "model") =
+			(m_Transform + parentTransform).AsMatrix();
 	}
 
 	void Mesh::Bind(const CommandBuffer& cmdBuff) const
