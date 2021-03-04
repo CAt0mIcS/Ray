@@ -48,7 +48,7 @@ private:
 			Ray::Material triangleMaterial;
 
 			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(triangleMaterial));
-			entity.Emplace<Ray::Texture2D>("Resources/Textures/DefaultTexture.jpg");
+			entity.Emplace<Ray::Texture2D>("Resources/Textures/gridbase.png");
 
 			// auto&
 			// cubeTransform = mesh.Get<Ray::Transform>(); cubeTransform.Translation = {

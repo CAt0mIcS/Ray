@@ -13,7 +13,7 @@
 namespace At0::Ray
 {
 	Image::Image(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
-		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps)
+		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, VkImageAspectFlags imageAspect)
 		: m_Format(format), m_Extent(extent)
 	{
 		std::array queueFamily = { Graphics::Get().GetDevice().GetGraphicsFamily(),
@@ -55,7 +55,7 @@ namespace At0::Ray
 
 		vkBindImageMemory(Graphics::Get().GetDevice(), m_Image, m_ImageMemory, 0);
 
-		m_ImageView = MakeScope<ImageView>(m_Image, format, VK_IMAGE_ASPECT_DEPTH_BIT);
+		m_ImageView = MakeScope<ImageView>(m_Image, format, imageAspect);
 	}
 
 	Image::~Image()

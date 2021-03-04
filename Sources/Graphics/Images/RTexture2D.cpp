@@ -18,7 +18,7 @@ namespace At0::Ray
 		Buffer stagingBuffer;
 		int texWidth, texHeight, texChannels;
 		stbi_uc* pixels =
-			stbi_load("textures/texture.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+			stbi_load(filepath.data(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 		VkDeviceSize imageSize = texWidth * texHeight * 4;
 
 		if (!pixels)

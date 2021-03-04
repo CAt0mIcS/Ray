@@ -17,7 +17,8 @@ namespace At0::Ray
 	{
 	public:
 		Image(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
-			VkImageUsageFlags usage, VkMemoryPropertyFlags memProps);
+			VkImageUsageFlags usage, VkMemoryPropertyFlags memProps,
+			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT);
 		Image() = default;
 		virtual ~Image();
 
