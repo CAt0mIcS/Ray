@@ -13,7 +13,7 @@ namespace At0::Ray
 	class RAY_EXPORT Texture : public Component, NonCopyable
 	{
 	public:
-		Texture() = default;
+		Texture(Entity& entity);
 		virtual ~Texture() = default;
 
 		Texture& operator=(Texture&& other) = default;

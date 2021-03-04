@@ -13,7 +13,7 @@ namespace At0::Ray
 	class RAY_EXPORT Texture2D : public Texture
 	{
 	public:
-		Texture2D(std::string_view filepath);
+		Texture2D(Entity& entity, std::string_view filepath);
 
 		Texture2D& operator=(Texture2D&& other);
 		Texture2D(Texture2D&& other);

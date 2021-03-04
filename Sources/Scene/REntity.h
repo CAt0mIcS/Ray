@@ -33,12 +33,10 @@ namespace At0::Ray
 		{
 			RAY_MEXPECTS(!Has<Comp>(), "[Entity] Entity (ID={0}) already has component.",
 				(uint32_t)m_EntityHandle);
-			if constexpr (std::is_base_of_v<Component, Comp>)
+			if constexpr (std::is_constructible_v<Comp, Entity&, Args...>)
 			{
-				Component& comp =
-					m_Registry->emplace<Comp>(m_EntityHandle, std::forward<Args>(args)...);
-				comp.SetEntity(*this);
-				return *(Comp*)&comp;
+				return m_Registry->emplace<Comp>(
+					m_EntityHandle, *this, std::forward<Args>(args)...);
 			}
 			else
 			{

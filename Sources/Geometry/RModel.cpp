@@ -19,7 +19,7 @@
 
 namespace At0::Ray
 {
-	Model::Model(std::string_view filepath)
+	Model::Model(Entity& entity, std::string_view filepath) : Component(entity)
 	{
 		Log::Info("[Model] Importing model \"{0}\"", filepath);
 
@@ -34,7 +34,8 @@ namespace At0::Ray
 
 		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
 		{
-			m_Meshes.emplace_back(ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials));
+			m_Meshes.emplace_back(
+				ParseMesh(entity, filepath, *pScene->mMeshes[i], pScene->mMaterials));
 		}
 	}
 
@@ -55,8 +56,8 @@ namespace At0::Ray
 		}
 	}
 
-	Mesh Model::ParseMesh(
-		std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials)
+	Mesh Model::ParseMesh(Entity& entity, std::string_view base, const aiMesh& mesh,
+		const aiMaterial* const* pMaterials)
 	{
 		Log::Info("[Model] Parsing mesh \"{0}\"", mesh.mName.C_Str());
 
@@ -90,7 +91,7 @@ namespace At0::Ray
 
 		Material material;
 
-		return { Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
+		return { entity, Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
 			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)), std::move(material) };
 	}
 
@@ -102,7 +103,8 @@ namespace At0::Ray
 	}
 
 	Model::Model(Model&& other) noexcept
-		: m_Meshes(std::move(other.m_Meshes)), m_Transform(std::move(other.m_Transform))
+		: Component(*other.m_Entity), m_Meshes(std::move(other.m_Meshes)),
+		  m_Transform(std::move(other.m_Transform))
 	{
 	}
 }  // namespace At0::Ray

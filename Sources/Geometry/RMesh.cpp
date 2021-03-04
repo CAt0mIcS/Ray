@@ -18,48 +18,32 @@
 
 namespace At0::Ray
 {
-	Mesh::Mesh(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Material material)
-		: m_VertexBuffer(std::move(vertexBuffer)), m_IndexBuffer(std::move(indexBuffer)),
-		  m_Material(std::move(material)),
+	Mesh::Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
+		Material material)
+		: Component(entity), m_VertexBuffer(std::move(vertexBuffer)),
+		  m_IndexBuffer(std::move(indexBuffer)), m_Material(std::move(material)),
 		  m_DescriptorSet(m_Material.GetGraphicsPipeline().GetDescriptorPool(),
 			  m_Material.GetGraphicsPipeline()
 				  .GetDescriptorSetLayouts()[(size_t)DescriptorSet::Frequency::PerObject],
 			  m_Material.GetGraphicsPipeline().GetBindPoint(),
 			  m_Material.GetGraphicsPipeline().GetLayout(), DescriptorSet::Frequency::PerObject)
 	{
-		// Allocate uniform buffer memory
-		uint32_t alignment = Graphics::Get()
-								 .GetPhysicalDevice()
-								 .GetProperties()
-								 .limits.minUniformBufferOffsetAlignment;
-		uint32_t globalUniformBufferOffset = 0;
-		BufferSynchronizer::Get().Emplace(sizeof(Matrix), alignment, &globalUniformBufferOffset);
-
-		m_Uniforms = UniformAccess(m_Material.GetGraphicsPipeline(), globalUniformBufferOffset);
-
-		// Update descriptor set
-		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer =
-			BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(globalUniformBufferOffset);
-		bufferInfo.offset =
-			BufferSynchronizer::Get().GetUniformBuffer().GetOffset(globalUniformBufferOffset);
-		bufferInfo.range = sizeof(Matrix);
-
-		VkWriteDescriptorSet descWrite{};
-		descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descWrite.dstSet = m_DescriptorSet;
-		descWrite.dstBinding = (uint32_t)m_DescriptorSet.GetFrequency();
-		descWrite.dstArrayElement = 0;
-		descWrite.descriptorCount = 1;
-		descWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descWrite.pImageInfo = nullptr;
-		descWrite.pBufferInfo = &bufferInfo;
-		descWrite.pTexelBufferView = nullptr;
-
-		DescriptorSet::Update({ descWrite });
+		Setup();
 	}
 
-	Mesh Mesh::Triangle(Material material)
+	Mesh::Mesh(Entity& entity, const MeshData& data)
+		: Component(entity), m_VertexBuffer(std::move(data.vertexBuffer)),
+		  m_IndexBuffer(std::move(data.indexBuffer)), m_Material(std::move(data.material)),
+		  m_DescriptorSet(m_Material.GetGraphicsPipeline().GetDescriptorPool(),
+			  m_Material.GetGraphicsPipeline()
+				  .GetDescriptorSetLayouts()[(size_t)DescriptorSet::Frequency::PerObject],
+			  m_Material.GetGraphicsPipeline().GetBindPoint(),
+			  m_Material.GetGraphicsPipeline().GetLayout(), DescriptorSet::Frequency::PerObject)
+	{
+		Setup();
+	}
+
+	Mesh::MeshData Mesh::Triangle(Material material)
 	{
 		IndexedTriangleList triangle = IndexedTriangleList::Triangle(material.GetVertexLayout());
 
@@ -71,7 +55,7 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	Mesh Mesh::Plane(Material material)
+	Mesh::MeshData Mesh::Plane(Material material)
 	{
 		IndexedTriangleList plane = IndexedTriangleList::Plane(material.GetVertexLayout());
 
@@ -82,7 +66,7 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	// Mesh Mesh::Circle(Material material, int segments, float radius)
+	// Mesh::MeshData Mesh::Circle(Material material, int segments, float radius)
 	//{
 	// material.Create();
 	//	IndexedTriangleList circle =
@@ -95,7 +79,7 @@ namespace At0::Ray
 	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	//}
 
-	Mesh Mesh::Cube(Material material)
+	Mesh::MeshData Mesh::Cube(Material material)
 	{
 		IndexedTriangleList cube = IndexedTriangleList::Cube(material.GetVertexLayout());
 
@@ -106,9 +90,9 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	// Mesh Mesh::IcoSphere(Material material) { return Mesh(); }
+	// Mesh::MeshData Mesh::IcoSphere(Material material) { return Mesh(); }
 
-	// Mesh Mesh::UVSphere(Material material) { return Mesh(); }
+	// Mesh::MeshData Mesh::UVSphere(Material material) { return Mesh(); }
 
 	void Mesh::Update(Delta ts, const Transform& parentTransform)
 	{
@@ -142,20 +126,49 @@ namespace At0::Ray
 		m_DescriptorSet = std::move(other.m_DescriptorSet);
 
 		m_Transform = std::move(other.m_Transform);
-
-		if (other.EntitySet())
-			SetEntity(other.GetEntity());
 		return *this;
 	}
 
 	Mesh::Mesh(Mesh&& other) noexcept
-		: m_VertexBuffer(std::move(other.m_VertexBuffer)),
+		: Component(*other.m_Entity), m_VertexBuffer(std::move(other.m_VertexBuffer)),
 		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
 		  m_Uniforms(std::move(other.m_Uniforms)),
 		  m_DescriptorSet(std::move(other.m_DescriptorSet)),
 		  m_Transform(std::move(other.m_Transform))
 	{
-		if (other.EntitySet())
-			SetEntity(other.GetEntity());
+	}
+
+	void Mesh::Setup()
+	{
+		// Allocate uniform buffer memory
+		uint32_t alignment = Graphics::Get()
+								 .GetPhysicalDevice()
+								 .GetProperties()
+								 .limits.minUniformBufferOffsetAlignment;
+		uint32_t globalUniformBufferOffset = 0;
+		BufferSynchronizer::Get().Emplace(sizeof(Matrix), alignment, &globalUniformBufferOffset);
+
+		m_Uniforms = UniformAccess(m_Material.GetGraphicsPipeline(), globalUniformBufferOffset);
+
+		// Update descriptor set
+		VkDescriptorBufferInfo bufferInfo{};
+		bufferInfo.buffer =
+			BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(globalUniformBufferOffset);
+		bufferInfo.offset =
+			BufferSynchronizer::Get().GetUniformBuffer().GetOffset(globalUniformBufferOffset);
+		bufferInfo.range = sizeof(Matrix);
+
+		VkWriteDescriptorSet descWrite{};
+		descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descWrite.dstSet = m_DescriptorSet;
+		descWrite.dstBinding = (uint32_t)m_DescriptorSet.GetFrequency();
+		descWrite.dstArrayElement = 0;
+		descWrite.descriptorCount = 1;
+		descWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descWrite.pImageInfo = nullptr;
+		descWrite.pBufferInfo = &bufferInfo;
+		descWrite.pTexelBufferView = nullptr;
+
+		DescriptorSet::Update({ descWrite });
 	}
 }  // namespace At0::Ray

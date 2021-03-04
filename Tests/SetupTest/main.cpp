@@ -56,11 +56,11 @@ private:
 			// = { posRotDist(device), posRotDist(device), posRotDist(device) }; cubeTransform.Scale
 			// = { scaleDist(device), scaleDist(device), scaleDist(device) };
 
-			Ray::Model& model =
-				entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
-			auto& modelTransform = model.Get<Ray::Transform>();
-			modelTransform.Translation = { posRotDist(device), posRotDist(device),
-				posRotDist(device) };
+			// Ray::Model& model =
+			//	entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
+			// auto& modelTransform = model.Get<Ray::Transform>();
+			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
+			//	posRotDist(device) };
 			// modelTransform.Rotation = { posRotDist(device), posRotDist(device),
 			// posRotDist(device)
 			// }; modelTransform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device)

@@ -21,16 +21,26 @@ namespace At0::Ray
 
 	class RAY_EXPORT Mesh : public Component
 	{
+	private:
+		struct MeshData
+		{
+			Ref<VertexBuffer> vertexBuffer;
+			Ref<IndexBuffer> indexBuffer;
+			Material material;
+		};
+
 	public:
-		Mesh(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Material material);
+		Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
+			Material material);
+		Mesh(Entity& entity, const MeshData& data);
 
-		static Mesh Triangle(Material material);
-		static Mesh Plane(Material material);
-		static Mesh Circle(Material material, int segments = 360, float radius = 1.0f);
+		static MeshData Triangle(Material material);
+		static MeshData Plane(Material material);
+		static MeshData Circle(Material material, int segments = 360, float radius = 1.0f);
 
-		static Mesh Cube(Material material);
-		static Mesh IcoSphere(Material material);
-		static Mesh UVSphere(Material material);
+		static MeshData Cube(Material material);
+		static MeshData IcoSphere(Material material);
+		static MeshData UVSphere(Material material);
 
 		template<typename T>
 		T& Get()
@@ -55,6 +65,7 @@ namespace At0::Ray
 
 	private:
 		Transform& Get(std::type_identity<Transform>) { return m_Transform; }
+		void Setup();
 
 	private:
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;

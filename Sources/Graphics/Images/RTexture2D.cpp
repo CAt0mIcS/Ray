@@ -16,7 +16,7 @@
 
 namespace At0::Ray
 {
-	Texture2D::Texture2D(std::string_view filepath)
+	Texture2D::Texture2D(Entity& entity, std::string_view filepath) : Texture(entity)
 	{
 		int texWidth, texHeight, texChannels;
 		stbi_uc* pixels =
@@ -48,5 +48,5 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Texture2D::Texture2D(Texture2D&& other) { *this = std::move(other); }
+	Texture2D::Texture2D(Texture2D&& other) : Texture(*other.m_Entity) { *this = std::move(other); }
 }  // namespace At0::Ray
