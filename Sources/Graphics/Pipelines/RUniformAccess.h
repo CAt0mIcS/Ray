@@ -19,21 +19,20 @@ namespace At0::Ray
 		class UniformData
 		{
 		public:
-			UniformData(uint32_t offset) : m_OffsetInUniformBlock(offset) {}
-			UniformData() : m_OffsetInUniformBlock((uint32_t)-1) {}
+			UniformData(uint32_t offset, uint32_t globalOffset) : m_Offset(offset + globalOffset) {}
+			UniformData() : m_Offset((uint32_t)-1) {}
 
 			template<typename T>
-			UniformData& Update(T&& data, uint32_t globalOffset)
+			UniformData& Update(T&& data)
 			{
-				RAY_MEXPECTS(m_OffsetInUniformBlock != (uint32_t)-1,
-					"[UniformData] Uniform does not exist.");
+				RAY_MEXPECTS(m_Offset != (uint32_t)-1, "[UniformData] Uniform does not exist.");
 
-				BufferSynchronizer::Get().Update(data, globalOffset + m_OffsetInUniformBlock);
+				BufferSynchronizer::Get().Update(data, m_Offset);
 				return *this;
 			}
 
 		private:
-			uint32_t m_OffsetInUniformBlock = 0;
+			uint32_t m_Offset = 0;
 		};
 
 
@@ -42,8 +41,10 @@ namespace At0::Ray
 		public:
 			UniformDataAccess(const Shader::Uniforms* uniforms,
 				const Shader::UniformBlocks* uniformBlocks,
-				std::pair<std::string, const Shader::UniformBlocks::UniformBlockData*>& blockCache)
-				: m_Uniforms(uniforms), m_UniformBlocks(uniformBlocks), m_BlockCache(blockCache)
+				std::pair<std::string, const Shader::UniformBlocks::UniformBlockData*>& blockCache,
+				uint32_t globalOffset)
+				: m_Uniforms(uniforms), m_UniformBlocks(uniformBlocks), m_BlockCache(blockCache),
+				  m_GlobalOffset(globalOffset)
 			{
 			}
 
@@ -53,28 +54,33 @@ namespace At0::Ray
 		private:
 			const Shader::Uniforms* m_Uniforms;
 			const Shader::UniformBlocks* m_UniformBlocks;
+			uint32_t m_GlobalOffset = (uint32_t)-1;
 			std::pair<std::string, const Shader::UniformBlocks::UniformBlockData*>& m_BlockCache;
 		};
 
 	public:
-		UniformAccess(const Pipeline& pipeline);
+		UniformAccess(const Pipeline& pipeline, uint32_t globalOffset = 0);
+		UniformAccess() = default;
 
 		UniformDataAccess Resolve(Shader::Stage stage);
 
 		template<Shader::Stage stage>
 		UniformData Resolve(std::string_view uniformBlockName, std::string_view uniformName)
 		{
+			RAY_MEXPECTS(m_Shader, "[UniformAccess] Not created using pipeline.");
 			return Resolve(stage)(uniformBlockName, uniformName);
 		}
 
 		template<Shader::Stage stage>
 		UniformData Resolve(std::string_view uniformName)
 		{
+			RAY_MEXPECTS(m_Shader, "[UniformAccess] Not created using pipeline.");
 			return Resolve(stage)(uniformName);
 		}
 
 	private:
 		const Shader* m_Shader = nullptr;
+		uint32_t m_GlobalOffset = (uint32_t)-1;
 		std::pair<std::string, const Shader::UniformBlocks::UniformBlockData*> m_BlockCache{};
 	};
 }  // namespace At0::Ray

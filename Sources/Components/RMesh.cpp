@@ -20,7 +20,7 @@ namespace At0::Ray
 {
 	Mesh::Mesh(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, Material material)
 		: m_VertexBuffer(std::move(vertexBuffer)), m_IndexBuffer(std::move(indexBuffer)),
-		  m_Material(std::move(material)), m_Uniforms(m_Material.GetGraphicsPipeline()),
+		  m_Material(std::move(material)),
 		  m_DescriptorSet(m_Material.GetGraphicsPipeline().GetDescriptorPool(),
 			  m_Material.GetGraphicsPipeline()
 				  .GetDescriptorSetLayout()[(size_t)DescriptorSet::Frequency::PerObject],
@@ -33,6 +33,8 @@ namespace At0::Ray
 								 .GetProperties()
 								 .limits.minUniformBufferOffsetAlignment;
 		BufferSynchronizer::Get().Emplace(sizeof(Matrix), alignment, &m_GlobalUniformBufferOffset);
+
+		m_Uniforms = UniformAccess(m_Material.GetGraphicsPipeline(), m_GlobalUniformBufferOffset);
 
 		// Update descriptor set
 		VkDescriptorBufferInfo bufferInfo{};
@@ -110,7 +112,7 @@ namespace At0::Ray
 	void Mesh::Update(Delta ts, const Transform& parentTransform)
 	{
 		m_Uniforms.Resolve<Shader::Stage::Vertex>("PerObjectData", "model")
-			.Update((m_Transform + parentTransform).AsMatrix(), m_GlobalUniformBufferOffset);
+			.Update((m_Transform + parentTransform).AsMatrix());
 	}
 
 	void Mesh::Bind(const CommandBuffer& cmdBuff) const

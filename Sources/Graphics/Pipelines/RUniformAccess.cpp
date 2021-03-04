@@ -10,12 +10,15 @@
 
 namespace At0::Ray
 {
-	UniformAccess::UniformAccess(const Pipeline& pipeline) : m_Shader(&pipeline.GetShader()) {}
+	UniformAccess::UniformAccess(const Pipeline& pipeline, uint32_t globalOffset)
+		: m_Shader(&pipeline.GetShader()), m_GlobalOffset(globalOffset)
+	{
+	}
 
 	UniformAccess::UniformDataAccess UniformAccess::Resolve(Shader::Stage stageFlag)
 	{
 		return { m_Shader->GetUniforms(stageFlag), m_Shader->GetUniformBlocks(stageFlag),
-			m_BlockCache };
+			m_BlockCache, m_GlobalOffset };
 	}
 
 	UniformAccess::UniformData UniformAccess::UniformDataAccess::operator()(
@@ -44,7 +47,7 @@ namespace At0::Ray
 
 		if (!uniformData)
 			RAY_THROW_RUNTIME("[UniformAccess] Uniform {0} was not found.", uniformName);
-		return { uniformData->offset };
+		return { uniformData->offset, m_GlobalOffset };
 	}
 
 	UniformAccess::UniformData UniformAccess::UniformDataAccess::operator()(
@@ -57,6 +60,6 @@ namespace At0::Ray
 		if (!uniformData)
 			RAY_THROW_RUNTIME("[UniformAccess] Uniform {0} was not found.", uniformName);
 
-		return { uniformData->offset };
+		return { uniformData->offset, m_GlobalOffset };
 	}
 }  // namespace At0::Ray
