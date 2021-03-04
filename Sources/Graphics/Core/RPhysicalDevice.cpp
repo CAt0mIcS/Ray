@@ -26,19 +26,18 @@ namespace At0::Ray
 		if (!m_Device)
 			RAY_THROW_RUNTIME("[VulkanInstance] Failed to find suitable GPU");
 
-		VkPhysicalDeviceProperties props;
-		vkGetPhysicalDeviceProperties(m_Device, &props);
+		vkGetPhysicalDeviceProperties(m_Device, &m_Properties);
 		Log::Info("[PhysicalDevice] Graphics card info: ");
-		Log::Info("[PhysicalDevice]\tAPI Version: {0}.", props.apiVersion);
-		Log::Info("[PhysicalDevice]\tDriver Version: {0}.", props.driverVersion);
-		Log::Info("[PhysicalDevice]\tVendor ID: {0}.", props.vendorID);
-		Log::Info("[PhysicalDevice]\tDevice ID: {0}.", props.deviceID);
-		Log::Info("[PhysicalDevice]\tDevice Type: {0}.", String::Construct(props.deviceType));
-		Log::Info("[PhysicalDevice]\tDevice Name: {0}.", props.deviceName);
+		Log::Info("[PhysicalDevice]\tAPI Version: {0}.", m_Properties.apiVersion);
+		Log::Info("[PhysicalDevice]\tDriver Version: {0}.", m_Properties.driverVersion);
+		Log::Info("[PhysicalDevice]\tVendor ID: {0}.", m_Properties.vendorID);
+		Log::Info("[PhysicalDevice]\tDevice ID: {0}.", m_Properties.deviceID);
+		Log::Info(
+			"[PhysicalDevice]\tDevice Type: {0}.", String::Construct(m_Properties.deviceType));
+		Log::Info("[PhysicalDevice]\tDevice Name: {0}.", m_Properties.deviceName);
 
 		vkGetPhysicalDeviceFeatures(m_Device, &m_Features);
 		vkGetPhysicalDeviceMemoryProperties(m_Device, &m_MemoryProperties);
-		vkGetPhysicalDeviceProperties(m_Device, &m_Properties);
 	}
 
 	const VkPhysicalDeviceMemoryProperties& PhysicalDevice::GetMemoryProperties() const
