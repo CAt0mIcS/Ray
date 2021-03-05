@@ -11,3 +11,6 @@
 [submodule "Extern/glm"]
 	path = Extern/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "Extern/Ion"]
+	path = Extern/Ion
+	url = https://github.com/CAt0mIcS/Ion.git
