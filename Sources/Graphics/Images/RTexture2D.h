@@ -13,10 +13,13 @@ namespace At0::Ray
 	class RAY_EXPORT Texture2D : public Texture
 	{
 	public:
-		Texture2D(Entity& entity, std::string_view filepath);
+		Texture2D(std::string_view filepath);
 
 		Texture2D& operator=(Texture2D&& other);
 		Texture2D(Texture2D&& other);
+
+		const TextureSampler& GetSampler() const { return m_Sampler; }
+		const Image2D& GetImage() const { return *m_Image; }
 
 	private:
 		Scope<Image2D> m_Image;
@@ -24,6 +27,3 @@ namespace At0::Ray
 	};
 
 }  // namespace At0::Ray
-
-
-RAY_EXPORT_COMPONENT(Texture2D);

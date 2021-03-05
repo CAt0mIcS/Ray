@@ -12,9 +12,9 @@
 namespace At0::Ray
 {
 	DescriptorSet::DescriptorSet(VkDescriptorPool pool, VkDescriptorSetLayout descriptorLayout,
-		Pipeline::BindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout, Frequency setNumber)
+		Pipeline::BindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout, uint32_t setNumber)
 		: m_PipelineBindPoint(pipelineBindPoint), m_PipelineLayout(pipelineLayout),
-		  m_Frequency(setNumber)
+		  m_SetNumber(setNumber)
 	{
 		VkDescriptorSetAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -30,7 +30,7 @@ namespace At0::Ray
 	void DescriptorSet::CmdBind(const CommandBuffer& cmdBuff) const
 	{
 		vkCmdBindDescriptorSets(cmdBuff, (VkPipelineBindPoint)m_PipelineBindPoint, m_PipelineLayout,
-			(uint32_t)m_Frequency, 1, &m_DescriptorSet, 0, nullptr);
+			m_SetNumber, 1, &m_DescriptorSet, 0, nullptr);
 	}
 
 	void DescriptorSet::Update(const std::vector<VkWriteDescriptorSet>& descriptorWrites)
@@ -42,14 +42,14 @@ namespace At0::Ray
 	DescriptorSet& DescriptorSet::operator=(DescriptorSet&& other) noexcept
 	{
 		m_DescriptorSet = other.m_DescriptorSet;
-		m_Frequency = other.m_Frequency;
+		m_SetNumber = other.m_SetNumber;
 		m_PipelineBindPoint = other.m_PipelineBindPoint;
 		m_PipelineLayout = other.m_PipelineLayout;
 		return *this;
 	}
 
 	DescriptorSet::DescriptorSet(DescriptorSet&& other) noexcept
-		: m_DescriptorSet(other.m_DescriptorSet), m_Frequency(other.m_Frequency),
+		: m_DescriptorSet(other.m_DescriptorSet), m_SetNumber(other.m_SetNumber),
 		  m_PipelineBindPoint(other.m_PipelineBindPoint), m_PipelineLayout(other.m_PipelineLayout)
 	{
 	}

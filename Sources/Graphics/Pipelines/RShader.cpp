@@ -406,19 +406,28 @@ namespace At0::Ray
 				case 0x8DC1:  // GL_TEXTURE_2D_ARRAY
 				case 0x9108:  // GL_SAMPLER_2D_MULTISAMPLE
 				case 0x9055:  // GL_IMAGE_2D_MULTISAMPLE
-							  // descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-							  // m_DescriptorSetLayoutBindings.emplace_back(Image2D::GetDescriptorSetLayout(
-							  //	uniformData.binding, descriptorType,
-							  // ToVkShaderStage(shaderStage), 1)); break;
-				// case 0x8B60:  // GL_SAMPLER_CUBE
-				// case 0x9050:  // GL_IMAGE_CUBE
-				// case 0x9054:  // GL_IMAGE_CUBE_MAP_ARRAY
-				// descriptorType = uniform.IsWriteOnly() ? VK_DESCRIPTOR_TYPE_STORAGE_IMAGE :
-				//										 VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-				// m_DescriptorSetLayouts.emplace_back(ImageCube::GetDescriptorSetLayout(
-				//	(uint32_t)uniform.GetBinding(), descriptorType, uniform.GetStageFlags(), 1));
-				// break;
-				default: break;
+				{
+					descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+					VkDescriptorSetLayoutBinding samplerLayoutBinding{};
+					samplerLayoutBinding.binding = uniformData.binding;
+					samplerLayoutBinding.descriptorCount = 1;
+					samplerLayoutBinding.descriptorType = descriptorType;
+					samplerLayoutBinding.pImmutableSamplers = nullptr;
+					samplerLayoutBinding.stageFlags = ToVkShaderStage(shaderStage);
+
+					descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+					m_DescriptorSetLayoutBindings.emplace_back(samplerLayoutBinding);
+					break;
+				}
+					// case 0x8B60:  // GL_SAMPLER_CUBE
+					// case 0x9050:  // GL_IMAGE_CUBE
+					// case 0x9054:  // GL_IMAGE_CUBE_MAP_ARRAY
+					// descriptorType = uniform.IsWriteOnly() ? VK_DESCRIPTOR_TYPE_STORAGE_IMAGE :
+					//										 VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+					// m_DescriptorSetLayouts.emplace_back(ImageCube::GetDescriptorSetLayout(
+					//	(uint32_t)uniform.GetBinding(), descriptorType, uniform.GetStageFlags(),
+					// 1));
+					// break;
 				}
 
 				IncrementDescriptorPool(descriptorPoolCounts, descriptorType);

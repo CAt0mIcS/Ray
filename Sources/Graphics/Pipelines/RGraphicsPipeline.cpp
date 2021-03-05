@@ -16,7 +16,7 @@ namespace At0::Ray
 		const RenderPass& renderPass, const std::vector<std::string_view>& shaders)
 	{
 		CreateShaderProgram(shaders);
-		CreateDescriptorSetLayout();
+		CreateDescriptorSetLayouts();
 		CreateDescriptorPool();
 		CreatePipelineLayout();
 		CreatePipeline(renderPass);
@@ -78,7 +78,7 @@ namespace At0::Ray
 		m_Shader.CreateReflection();
 	}
 
-	void GraphicsPipeline::CreateDescriptorSetLayout()
+	void GraphicsPipeline::CreateDescriptorSetLayouts()
 	{
 		const std::vector<VkDescriptorSetLayoutBinding>& descriptorSetLayoutBindings =
 			m_Shader.GetDescriptorSetLayoutBindings();

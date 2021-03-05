@@ -32,7 +32,7 @@ namespace At0::Ray
 	public:
 		Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
 			Material material);
-		Mesh(Entity& entity, const MeshData& data);
+		Mesh(Entity& entity, MeshData data);
 
 		static MeshData Triangle(Material material);
 		static MeshData Plane(Material material);
@@ -74,6 +74,7 @@ namespace At0::Ray
 		Material m_Material;
 		UniformAccess m_Uniforms;
 		DescriptorSet m_DescriptorSet;
+		Scope<DescriptorSet> m_MaterialDescSet = nullptr;
 
 		Transform m_Transform;
 	};

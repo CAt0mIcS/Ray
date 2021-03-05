@@ -10,6 +10,7 @@
 #include "Graphics/Buffers/RBufferSynchronizer.h"
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Commands/RCommandBuffer.h"
+#include "Graphics/Images/RTexture2D.h"
 
 #include "Registry/RGeometricPrimitives.h"
 #include "Scene/REntity.h"
@@ -24,21 +25,20 @@ namespace At0::Ray
 		  m_IndexBuffer(std::move(indexBuffer)), m_Material(std::move(material)),
 		  m_DescriptorSet(m_Material.GetGraphicsPipeline().GetDescriptorPool(),
 			  m_Material.GetGraphicsPipeline()
-				  .GetDescriptorSetLayouts()[(size_t)DescriptorSet::Frequency::PerObject],
+				  .GetDescriptorSetLayouts()[1 /*Descriptor set (set = 1)*/],
 			  m_Material.GetGraphicsPipeline().GetBindPoint(),
-			  m_Material.GetGraphicsPipeline().GetLayout(), DescriptorSet::Frequency::PerObject)
+			  m_Material.GetGraphicsPipeline().GetLayout(), 1)
 	{
 		Setup();
 	}
 
-	Mesh::Mesh(Entity& entity, const MeshData& data)
+	Mesh::Mesh(Entity& entity, MeshData data)
 		: Component(entity), m_VertexBuffer(std::move(data.vertexBuffer)),
 		  m_IndexBuffer(std::move(data.indexBuffer)), m_Material(std::move(data.material)),
 		  m_DescriptorSet(m_Material.GetGraphicsPipeline().GetDescriptorPool(),
-			  m_Material.GetGraphicsPipeline()
-				  .GetDescriptorSetLayouts()[(size_t)DescriptorSet::Frequency::PerObject],
+			  m_Material.GetGraphicsPipeline().GetDescriptorSetLayouts()[1],
 			  m_Material.GetGraphicsPipeline().GetBindPoint(),
-			  m_Material.GetGraphicsPipeline().GetLayout(), DescriptorSet::Frequency::PerObject)
+			  m_Material.GetGraphicsPipeline().GetLayout(), 1)
 	{
 		Setup();
 	}
@@ -103,6 +103,11 @@ namespace At0::Ray
 	void Mesh::Bind(const CommandBuffer& cmdBuff) const
 	{
 		m_Material.GetGraphicsPipeline().CmdBind(cmdBuff);
+		if (m_Material.GetMaterialImage())
+		{
+			m_Material.GetMaterialImage()->CmdBind(cmdBuff);
+			m_MaterialDescSet->CmdBind(cmdBuff);
+		}
 
 		m_DescriptorSet.CmdBind(cmdBuff);
 		m_VertexBuffer->CmdBind(cmdBuff);
@@ -126,6 +131,7 @@ namespace At0::Ray
 		m_DescriptorSet = std::move(other.m_DescriptorSet);
 
 		m_Transform = std::move(other.m_Transform);
+		m_MaterialDescSet = std::move(other.m_MaterialDescSet);
 		return *this;
 	}
 
@@ -134,12 +140,24 @@ namespace At0::Ray
 		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
 		  m_Uniforms(std::move(other.m_Uniforms)),
 		  m_DescriptorSet(std::move(other.m_DescriptorSet)),
-		  m_Transform(std::move(other.m_Transform))
+		  m_Transform(std::move(other.m_Transform)),
+		  m_MaterialDescSet(std::move(other.m_MaterialDescSet))
 	{
 	}
 
 	void Mesh::Setup()
 	{
+		if (m_Material.GetMaterialImage())
+		{
+			m_MaterialDescSet =
+				MakeScope<DescriptorSet>(m_Material.GetGraphicsPipeline().GetDescriptorPool(),
+					m_Material.GetGraphicsPipeline()
+						.GetDescriptorSetLayouts()[2 /*Descriptor set (set = 2)*/],
+					m_Material.GetGraphicsPipeline().GetBindPoint(),
+					m_Material.GetGraphicsPipeline().GetLayout(), 2);
+		}
+
+
 		// Allocate uniform buffer memory
 		uint32_t alignment = Graphics::Get()
 								 .GetPhysicalDevice()
@@ -158,17 +176,33 @@ namespace At0::Ray
 			BufferSynchronizer::Get().GetUniformBuffer().GetOffset(globalUniformBufferOffset);
 		bufferInfo.range = sizeof(Matrix);
 
-		VkWriteDescriptorSet descWrite{};
-		descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descWrite.dstSet = m_DescriptorSet;
-		descWrite.dstBinding = (uint32_t)m_DescriptorSet.GetFrequency();
-		descWrite.dstArrayElement = 0;
-		descWrite.descriptorCount = 1;
-		descWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descWrite.pImageInfo = nullptr;
-		descWrite.pBufferInfo = &bufferInfo;
-		descWrite.pTexelBufferView = nullptr;
+		if (m_Material.GetMaterialImage())
+		{
+			VkDescriptorImageInfo imageInfo{};
+			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageInfo.sampler = m_Material.GetMaterialImage()->GetSampler();
+			imageInfo.imageView = m_Material.GetMaterialImage()->GetImage().GetImageView();
 
-		DescriptorSet::Update({ descWrite });
+			VkWriteDescriptorSet descWriteImg{};
+			descWriteImg.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descWriteImg.dstSet = *m_MaterialDescSet;
+			descWriteImg.dstBinding = 2;
+			descWriteImg.dstArrayElement = 0;
+			descWriteImg.descriptorCount = 1;
+			descWriteImg.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			descWriteImg.pImageInfo = &imageInfo;
+			DescriptorSet::Update({ descWriteImg });
+		}
+
+		VkWriteDescriptorSet descWriteBuff{};
+		descWriteBuff.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descWriteBuff.dstSet = m_DescriptorSet;
+		descWriteBuff.dstBinding = 1;
+		descWriteBuff.dstArrayElement = 0;
+		descWriteBuff.descriptorCount = 1;
+		descWriteBuff.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descWriteBuff.pBufferInfo = &bufferInfo;
+
+		DescriptorSet::Update({ descWriteBuff });
 	}
 }  // namespace At0::Ray

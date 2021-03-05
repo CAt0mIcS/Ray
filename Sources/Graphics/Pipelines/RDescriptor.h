@@ -13,22 +13,16 @@ namespace At0::Ray
 	class DescriptorSet : public Bindable, NonCopyable
 	{
 	public:
-		enum class Frequency : uint8_t
-		{
-			PerScene = 0,
-			PerObject = 1
-		};
-
 	public:
 		DescriptorSet(VkDescriptorPool pool, VkDescriptorSetLayout descriptorLayout,
 			Pipeline::BindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout,
-			Frequency setNumber);
+			uint32_t setNumber);
 
 		~DescriptorSet() = default;
 
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
 		static void Update(const std::vector<VkWriteDescriptorSet>& descriptorWrites);
-		Frequency GetFrequency() const { return m_Frequency; }
+		uint32_t GetSetNumber() const { return m_SetNumber; }
 
 		operator const VkDescriptorSet&() const { return m_DescriptorSet; }
 
@@ -37,7 +31,7 @@ namespace At0::Ray
 
 	private:
 		VkDescriptorSet m_DescriptorSet = VK_NULL_HANDLE;
-		Frequency m_Frequency;
+		uint32_t m_SetNumber;
 
 		Pipeline::BindPoint m_PipelineBindPoint;
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;

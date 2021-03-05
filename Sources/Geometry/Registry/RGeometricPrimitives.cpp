@@ -9,6 +9,7 @@ namespace At0::Ray
 {
 	IndexedTriangleList IndexedTriangleList::Triangle(const VertexLayout& layout)
 	{
+		// Compose one vertex
 		VertexInput vertexInput(layout);
 		vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f });
 		vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.0f });
@@ -24,10 +25,10 @@ namespace At0::Ray
 	IndexedTriangleList IndexedTriangleList::Plane(const VertexLayout& layout)
 	{
 		VertexInput vertexInput(layout);
-		vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f });
-		vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.0f });
-		vertexInput.Emplace(Float3{ 0.5f, 0.5f, 0.0f });
-		vertexInput.Emplace(Float3{ -0.5f, 0.5f, 0.0f });
+		vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f }, Float2{ 1.0f, 0.0f });
+		vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.0f }, Float2{ 0.0f, 0.0f });
+		vertexInput.Emplace(Float3{ 0.5f, 0.5f, 0.0f }, Float2{ 0.0f, 1.0f });
+		vertexInput.Emplace(Float3{ -0.5f, 0.5f, 0.0f }, Float2{ 1.0f, 1.0f });
 
 		// RAY_TODO: 2D objects are only visible from one side because of backface culling
 		// Specifying the vertices again in the reversed order works for now

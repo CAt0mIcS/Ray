@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../../RBase.h"
 
@@ -12,6 +12,8 @@ namespace At0::Ray
 	public:
 		TextureSampler();
 		~TextureSampler();
+
+		operator const VkSampler&() const { return m_Sampler; }
 
 	private:
 		VkSampler m_Sampler;

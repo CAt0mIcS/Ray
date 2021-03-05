@@ -150,6 +150,8 @@ set(SRC
 )
 
 set(SHADERS
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/TexturedShader.vert"
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/TexturedShader.frag"
 	"${CMAKE_SOURCE_DIR}/Resources/Shaders/DefaultShader.vert"
 	"${CMAKE_SOURCE_DIR}/Resources/Shaders/DefaultShader.frag"
 )

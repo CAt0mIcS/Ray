@@ -30,7 +30,7 @@ namespace At0::Ray
 
 	private:
 		void CreateShaderProgram(const std::vector<std::string_view>& shaders);
-		void CreateDescriptorSetLayout();
+		void CreateDescriptorSetLayouts();
 		void CreateDescriptorPool();
 		void CreatePipelineLayout();
 		void CreatePipeline(const RenderPass& renderPass);
