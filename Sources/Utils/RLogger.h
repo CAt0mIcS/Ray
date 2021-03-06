@@ -1,8 +1,7 @@
 ﻿#pragma once
 
 #include "../RBase.h"
-#include "Logger/Loggers/RConsoleLogger.h"
-#include "Logger/Loggers/RFileLogger.h"
+#include "../../Extern/Violent/include/Violent/Violent.h"
 
 #include <string_view>
 
@@ -14,7 +13,7 @@ namespace At0::Ray
 	public:
 		static void Open(const char* filepath);
 		static void Close();
-		static void SetLogLevel(LogLevel lvl);
+		static void SetLogLevel(Violent::LogLevel lvl);
 		static void Flush();
 
 		template<typename... Args>
@@ -92,7 +91,7 @@ namespace At0::Ray
 		}
 
 	private:
-		static FileLogger s_FileLogger;
-		static ConsoleLogger s_ConsoleLogger;
+		static Violent::FileLogger s_FileLogger;
+		static Violent::ConsoleLogger s_ConsoleLogger;
 	};
 }  // namespace At0::Ray

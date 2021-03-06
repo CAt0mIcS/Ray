@@ -4,13 +4,10 @@
 
 namespace At0::Ray
 {
-	FileLogger Log::s_FileLogger;
-	ConsoleLogger Log::s_ConsoleLogger;
+	Violent::FileLogger Log::s_FileLogger;
+	Violent::ConsoleLogger Log::s_ConsoleLogger;
 
-	void Log::Open(const char* filepath)
-	{
-		s_FileLogger.Open(filepath);
-	}
+	void Log::Open(const char* filepath) { s_FileLogger.Open(filepath); }
 
 	void Log::Close()
 	{
@@ -18,7 +15,7 @@ namespace At0::Ray
 		s_ConsoleLogger.Close();
 	}
 
-	void Log::SetLogLevel(LogLevel lvl)
+	void Log::SetLogLevel(Violent::LogLevel lvl)
 	{
 		s_FileLogger.SetLogLevel(lvl);
 		s_ConsoleLogger.SetLogLevel(lvl);

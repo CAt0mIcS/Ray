@@ -78,6 +78,8 @@ set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_ZLIB OFF CACHE BOOL "" FORCE)
 
+set(VIOLENT_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+
 # ------------------------------------------------------------------------------------------------
 # Initialize the Solution Project
 project("Ray")

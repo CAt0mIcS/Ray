@@ -2,7 +2,7 @@
 #include "../../Core/RMath.h"
 #include "RGeometricPrimitives.h"
 
-#include "Utils/RLogger.h"
+#include "Utils/RString.h"
 
 
 namespace At0::Ray
@@ -43,7 +43,7 @@ namespace At0::Ray
 	//	VertexInput vertices(layout);
 	//	std::vector<IndexBuffer::Type> indices;
 
-	//	std::string tag = SerializeString("Circle-segs{0}-radius{1}", segments, radius);
+	//	std::string tag = String::Serialize("Circle-segs{0}-radius{1}", segments, radius);
 	//	return { vertices, indices, tag, tag };
 	//}
 

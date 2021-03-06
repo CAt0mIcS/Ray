@@ -14,3 +14,6 @@
 [submodule "Extern/Ion"]
 	path = Extern/Ion
 	url = https://github.com/CAt0mIcS/Ion.git
+[submodule "Extern/Violent"]
+	path = Extern/Violent
+	url = https://www.github.com/CAt0mIcS/Violent.git

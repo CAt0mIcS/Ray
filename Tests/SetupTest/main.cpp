@@ -85,7 +85,7 @@ int main()
 	signal(SIGINT, SignalHandler);
 
 	Ray::Log::Open("Ray.log");
-	Ray::Log::SetLogLevel(Ray::LogLevel::Trace);
+	Ray::Log::SetLogLevel(Violent::LogLevel::Trace);
 
 	try
 	{
