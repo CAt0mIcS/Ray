@@ -160,6 +160,7 @@ set(PRIVATE_INC
     "${CMAKE_SOURCE_DIR}/Extern/entt/src"
     "${CMAKE_SOURCE_DIR}/Extern/glfw/include"
     "${CMAKE_SOURCE_DIR}/Extern"
+    "${CMAKE_SOURCE_DIR}/Extern/Ion"
 )
 
 set(PUBLIC_LIB
@@ -172,6 +173,7 @@ set(PRIVATE_LIB
     "assimp"
     "glslang"
     "SPIRV"
+    "Ion"
 )
 
 

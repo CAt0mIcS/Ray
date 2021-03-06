@@ -2,6 +2,7 @@ add_subdirectory("glfw")
 add_subdirectory("glm")
 add_subdirectory("glslang")
 add_subdirectory("assimp")
+add_subdirectory("Ion")
 
 SetOutputDirectory("glfw" "")
 
