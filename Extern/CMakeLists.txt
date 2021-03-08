@@ -23,3 +23,6 @@ set_target_properties("OSDependent" PROPERTIES FOLDER "Extern/glslang")
 set_target_properties("SPIRV" PROPERTIES FOLDER "Extern/glslang")
 set_target_properties("GenericCodeGen" PROPERTIES FOLDER "Extern/glslang")
 set_target_properties("MachineIndependent" PROPERTIES FOLDER "Extern/glslang")
+
+
+set_target_properties("Ion" PROPERTIES FOLDER "Extern")
