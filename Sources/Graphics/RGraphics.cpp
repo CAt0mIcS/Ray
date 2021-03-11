@@ -32,11 +32,6 @@
 
 namespace At0::Ray
 {
-	VkDescriptorSetLayout cameraDescSetLayout;
-	VkDescriptorPool cameraDescriptorPool;
-	VkPipelineLayout cameraPipelineLayout;
-	Scope<Uniform> cameraUniform;
-
 	Graphics::Graphics() : EventListener<EntityCreatedEvent>(Scene::Get())
 	{
 		if (s_Instance)
@@ -72,55 +67,6 @@ namespace At0::Ray
 		CreateRenderPass();
 		CreateFramebuffers();
 		BufferSynchronizer::Create();
-
-
-		VkDescriptorSetLayoutBinding cameraBinding{};
-		cameraBinding.binding = 0;
-		cameraBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		cameraBinding.descriptorCount = 1;
-		cameraBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-		cameraBinding.pImmutableSamplers = nullptr;
-
-		VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo{};
-		descriptorSetLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-		descriptorSetLayoutCreateInfo.bindingCount = 1;
-		descriptorSetLayoutCreateInfo.pBindings = &cameraBinding;
-
-		RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(GetDevice(), &descriptorSetLayoutCreateInfo,
-								nullptr, &cameraDescSetLayout),
-			"[Graphics] Failed to create descriptor set layout for camera");
-
-		VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
-		pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutCreateInfo.flags = 0;
-		pipelineLayoutCreateInfo.setLayoutCount = 1;
-		pipelineLayoutCreateInfo.pSetLayouts = &cameraDescSetLayout;
-		pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
-		pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
-
-		RAY_VK_THROW_FAILED(vkCreatePipelineLayout(GetDevice(), &pipelineLayoutCreateInfo, nullptr,
-								&cameraPipelineLayout),
-			"[Graphics] Failed to create pipeline layout for camera");
-
-		VkDescriptorPoolSize poolSize{};
-		poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		poolSize.descriptorCount = 1;
-
-		VkDescriptorPoolCreateInfo descriptorPoolCreateInfo{};
-		descriptorPoolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-		descriptorPoolCreateInfo.maxSets = 1;
-		descriptorPoolCreateInfo.poolSizeCount = 1;
-		descriptorPoolCreateInfo.pPoolSizes = &poolSize;
-
-		RAY_VK_THROW_FAILED(vkCreateDescriptorPool(GetDevice(), &descriptorPoolCreateInfo, nullptr,
-								&cameraDescriptorPool),
-			"[GraphicsPipeline] Failed to create descriptor pool");
-
-		cameraUniform = MakeScope<Uniform>(cameraDescSetLayout, cameraDescriptorPool,
-			Pipeline::BindPoint::Graphics, cameraPipelineLayout, (uint32_t)sizeof(Matrix) * 2,
-			0,	// Using descriptor set 0 for per-scene data (set=0 in vs)
-			std::vector{ 0u });
-
 
 		CreateCommandBuffers();
 		CreateSyncObjects();
@@ -235,7 +181,7 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		cameraUniform->CmdBind(cmdBuff);
+		Camera::Get().CmdBind(cmdBuff);
 
 		auto meshView = Scene::Get().EntityView<Mesh>();
 		meshView.each([&cmdBuff](Mesh& mesh) {
@@ -306,11 +252,6 @@ namespace At0::Ray
 		// Mark the image as now being in use by this frame
 		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
 
-		BufferSynchronizer::Get().Update(
-			Camera::Get().Matrices.View, cameraUniform->GetGlobalBufferOffset());
-		BufferSynchronizer::Get().Update(Camera::Get().Matrices.Perspective,
-			cameraUniform->GetGlobalBufferOffset() + sizeof(Matrix));
-
 		Scene::Get().Update(dt);
 
 		VkSubmitInfo submitInfo{};
@@ -380,10 +321,6 @@ namespace At0::Ray
 		}
 
 		m_CommandBuffers.clear();
-
-		vkDestroyDescriptorSetLayout(GetDevice(), cameraDescSetLayout, nullptr);
-		vkDestroyDescriptorPool(GetDevice(), cameraDescriptorPool, nullptr);
-		vkDestroyPipelineLayout(GetDevice(), cameraPipelineLayout, nullptr);
 
 		Scene::Destroy();
 		BufferSynchronizer::Destroy();
