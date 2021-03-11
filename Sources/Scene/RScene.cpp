@@ -52,6 +52,8 @@ namespace At0::Ray
 
 	void Scene::Update(Delta dt)
 	{
+		m_Camera->Update(dt);
+
 		auto meshView = m_Registry.view<Mesh>();
 		meshView.each([&dt](Mesh& mesh) { mesh.Update(dt); });
 
@@ -59,6 +61,12 @@ namespace At0::Ray
 		modelView.each([&dt](Model& model) { model.Update(dt); });
 	}
 
-	Scene::Scene() {}
+	void Scene::SetCamera(Scope<Camera> cam) { m_Camera = std::move(cam); }
+
+	const Camera& Scene::GetCamera() const
+	{
+		RAY_MEXPECTS(m_Camera, "[Scene] Camera not created");
+		return *m_Camera;
+	}
 
 }  // namespace At0::Ray

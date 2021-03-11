@@ -21,12 +21,14 @@ namespace At0::Ray
 	int Engine::Run()
 	{
 		Log::Info("[Engine] Startup");
+
+		Scene::Get().Start();
+
 		auto startSecTime = std::chrono::high_resolution_clock::now();
 		while (Window::Get().Update())
 		{
 			m_Delta.Update();
 			m_FPS.Update(Time::Now());
-			Camera::Get().Update(m_Delta);
 			Graphics::Get().Update(m_Delta);
 			Update();
 

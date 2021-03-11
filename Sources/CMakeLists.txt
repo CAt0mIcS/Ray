@@ -1,17 +1,14 @@
 set(SRC
 	"Rpch.h"
 	"RBase.h"
-	
-	# ------------------------------------------------------------------
-	# Cameras
-	"Cameras/RCamera.h"
-	"Cameras/RCamera.cpp"
 
 	# ------------------------------------------------------------------
 	# Scene
 	"Scene/REntity.h"
 	"Scene/RScene.h"
 	"Scene/RScene.cpp"
+	"Scene/RCamera.h"
+	"Scene/RCamera.cpp"
 
 	# ------------------------------------------------------------------
 	# Core classes

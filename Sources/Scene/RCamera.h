@@ -34,12 +34,6 @@ namespace At0::Ray
 		};
 
 	public:
-		static Camera& Get()
-		{
-			static Camera cam;
-			return cam;
-		}
-
 		Float3 Rotation{};
 		Float3 Position{};
 		Float4 ViewPos{};
@@ -67,6 +61,8 @@ namespace At0::Ray
 		} Keys{};
 
 	public:
+		Camera();
+		~Camera();
 		bool IsMoving() const;
 		float GetNearClip() const { return m_NearZ; }
 		float GetFarClip() const { return m_FarZ; }
@@ -83,8 +79,6 @@ namespace At0::Ray
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
 
 	private:
-		Camera();
-		~Camera();
 		void UpdateViewMatrix();
 		void UpdateUniform();
 

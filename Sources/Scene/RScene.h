@@ -3,6 +3,7 @@
 #include "../RBase.h"
 #include "REntity.h"
 #include "../Core/RTime.h"
+#include "RCamera.h"
 
 #include "../Events/REventDispatcher.h"
 
@@ -22,7 +23,6 @@ namespace At0::Ray
 		Entity& m_Entity;
 	};
 
-	class Model;
 	class RAY_EXPORT Scene : public EventDispatcher<EntityCreatedEvent>
 	{
 	public:
@@ -58,11 +58,18 @@ namespace At0::Ray
 		 */
 		entt::registry& GetRegistry() { return m_Registry; }
 
+		void SetCamera(Scope<Camera> camera);
+		const Camera& GetCamera() const;
+		Camera& GetCamera() { return (Camera&)std::as_const(*this).GetCamera(); }
+
+		virtual void Start() {}
+
 	protected:
-		Scene();
+		Scene() = default;
 
 	private:
 		entt::registry m_Registry;
+		Scope<Camera> m_Camera = nullptr;
 
 		// Heap allocate them to avoid Entity& from being invalid when the vector is resized
 		std::vector<Entity> m_Entities;

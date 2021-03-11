@@ -6,6 +6,7 @@
 
 #include "Devices/RWindow.h"
 #include "Scene/RScene.h"
+#include "Scene/RCamera.h"
 
 #include "Graphics/Core/RVulkanInstance.h"
 #include "Graphics/Core/RPhysicalDevice.h"
@@ -43,13 +44,6 @@ namespace At0::Ray
 		UpdateScissor();
 
 		CreateVulkanObjects();
-
-		UInt2 size = Window::Get().GetFramebufferSize();
-		Camera::Get().SetPosition(glm::vec3(0.0f, 0.0f, -2.5f));
-		Camera::Get().SetRotation(glm::vec3(0.0f));
-		Camera::Get().SetRotationSpeed(0.07f);
-		Camera::Get().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
-		Camera::Get().SetMovementSpeed(3.0f);
 	}
 
 	void Graphics::CreateVulkanObjects()
@@ -157,7 +151,7 @@ namespace At0::Ray
 		for (uint32_t i = 0; i < m_CommandBuffers.size(); ++i)
 		{
 			m_CommandBuffers[i] = MakeScope<CommandBuffer>(*m_CommandPool);
-			RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i]);
+			// RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i]);
 		}
 	}
 
@@ -181,7 +175,7 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		Camera::Get().CmdBind(cmdBuff);
+		Scene::Get().GetCamera().CmdBind(cmdBuff);
 
 		auto meshView = Scene::Get().EntityView<Mesh>();
 		meshView.each([&cmdBuff](Mesh& mesh) {
@@ -268,7 +262,10 @@ namespace At0::Ray
 		// recorded
 		if (m_RerecordCommandBuffers)
 		{
-			CreateCommandBuffers();
+			for (uint32_t i = 0; i < m_Swapchain->GetNumberOfImages(); ++i)
+			{
+				RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i]);
+			}
 			m_RerecordCommandBuffers = false;
 		}
 
@@ -390,7 +387,7 @@ namespace At0::Ray
 		CreateCommandBuffers();
 
 		size = Window::Get().GetFramebufferSize();
-		Camera::Get().UpdateAspectRatio((float)size.x / (float)size.y);
+		Scene::Get().GetCamera().UpdateAspectRatio((float)size.x / (float)size.y);
 
 		m_FramebufferResized = false;
 	}

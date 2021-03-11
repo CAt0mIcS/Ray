@@ -4,9 +4,11 @@
 #include "../Utils/RNonCopyable.h"
 #include "../Core/RTime.h"
 #include "../Core/RMath.h"
-#include "../Cameras/RCamera.h"
 #include "../Events/REngineEvents.h"
 #include "../Scene/RScene.h"
+
+#include "../Events/REventListener.h"
+#include "../Events/REngineEvents.h"
 
 #include <vulkan/vulkan_core.h>
 #include <vector>
@@ -97,6 +99,6 @@ namespace At0::Ray
 		uint32_t m_CurrentFrame = 0;
 
 		bool m_FramebufferResized = false;
-		bool m_RerecordCommandBuffers = false;
+		bool m_RerecordCommandBuffers = true;
 	};
 }  // namespace At0::Ray

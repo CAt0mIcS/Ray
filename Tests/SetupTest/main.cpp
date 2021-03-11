@@ -10,6 +10,7 @@
 
 #include <Graphics/RVertex.h>
 #include <Scene/RScene.h>
+#include <Scene/RCamera.h>
 
 #include <signal.h>
 #include <random>
@@ -22,6 +23,17 @@ class Scene : public Ray::Scene
 {
 public:
 	Scene() {}
+
+	void Start() override
+	{
+		SetCamera(Ray::MakeScope<Ray::Camera>());
+		Ray::UInt2 size = Ray::Window::Get().GetFramebufferSize();
+		GetCamera().SetPosition(glm::vec3(0.0f, 0.0f, -2.5f));
+		GetCamera().SetRotation(glm::vec3(0.0f));
+		GetCamera().SetRotationSpeed(0.07f);
+		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
+		GetCamera().SetMovementSpeed(3.0f);
+	}
 };
 
 
