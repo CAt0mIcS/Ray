@@ -386,7 +386,8 @@ namespace At0::Ray
 				case Shader::UniformBlocks::Type::Uniform:
 				{
 					descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-					m_DescriptorSetLayoutBindings.emplace_back(
+
+					m_DescriptorSetLayoutBindings[uniformBlock.second.set].emplace_back(
 						UniformBuffer::GetDescriptorSetLayout((uint32_t)uniformBlock.second.binding,
 							descriptorType, ToVkShaderStage(shaderStage), 1));
 					break;
@@ -416,18 +417,10 @@ namespace At0::Ray
 					samplerLayoutBinding.stageFlags = ToVkShaderStage(shaderStage);
 
 					descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-					m_DescriptorSetLayoutBindings.emplace_back(samplerLayoutBinding);
+					m_DescriptorSetLayoutBindings[uniformData.set].emplace_back(
+						samplerLayoutBinding);
 					break;
 				}
-					// case 0x8B60:  // GL_SAMPLER_CUBE
-					// case 0x9050:  // GL_IMAGE_CUBE
-					// case 0x9054:  // GL_IMAGE_CUBE_MAP_ARRAY
-					// descriptorType = uniform.IsWriteOnly() ? VK_DESCRIPTOR_TYPE_STORAGE_IMAGE :
-					//										 VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-					// m_DescriptorSetLayouts.emplace_back(ImageCube::GetDescriptorSetLayout(
-					//	(uint32_t)uniform.GetBinding(), descriptorType, uniform.GetStageFlags(),
-					// 1));
-					// break;
 				}
 
 				IncrementDescriptorPool(descriptorPoolCounts, descriptorType);
@@ -458,12 +451,6 @@ namespace At0::Ray
 		m_DescriptorPoolSizes[4].descriptorCount = 2048;
 		m_DescriptorPoolSizes[5].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
 		m_DescriptorPoolSizes[5].descriptorCount = 2048;
-
-		// Sort descriptor set layout bindings by binding
-		std::sort(m_DescriptorSetLayoutBindings.begin(), m_DescriptorSetLayoutBindings.end(),
-			[](const VkDescriptorSetLayoutBinding& l, const VkDescriptorSetLayoutBinding& r) {
-				return l.binding < r.binding;
-			});
 	}
 
 	std::vector<VkVertexInputAttributeDescription>
@@ -581,6 +568,7 @@ namespace At0::Ray
 		data.size = uniform.size;
 		data.glType = uniform.glDefineType;
 		data.offset = uniform.offset;
+		data.set = uniform.getType()->getQualifier().layoutSet;
 
 		// -1 means that it's in a block
 		if (data.binding == -1)
@@ -604,6 +592,7 @@ namespace At0::Ray
 		UniformBlocks::UniformBlockData data{};
 		data.binding = uniformBlock.getBinding();
 		data.size = uniformBlock.size;
+		data.set = uniformBlock.getType()->getQualifier().layoutSet;
 
 		if (uniformBlock.getType()->getQualifier().storage == glslang::EvqUniform)
 			data.type = Shader::UniformBlocks::Type::Uniform;

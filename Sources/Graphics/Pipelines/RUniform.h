@@ -20,9 +20,10 @@ namespace At0::Ray
 	public:
 		Uniform(VkDescriptorSetLayout descSetLayout, VkDescriptorPool descSetPool,
 			Pipeline::BindPoint bindPoint, VkPipelineLayout pipelineLayout, uint32_t bufferSize,
-			uint32_t binding, uint32_t set = 0,
+			uint32_t set, std::vector<uint32_t> binding,
 			VkDescriptorType descType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
-		Uniform(const Pipeline& pipeline, uint32_t bufferSize, uint32_t binding, uint32_t set = 0,
+		Uniform(const Pipeline& pipeline, uint32_t bufferSize, uint32_t set,
+			std::vector<uint32_t> binding,
 			VkDescriptorType descType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
 
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
@@ -30,7 +31,7 @@ namespace At0::Ray
 		uint32_t GetGlobalBufferOffset() const { return m_GlobalBufferOffset; }
 
 	private:
-		void Setup(uint32_t bufferSize, uint32_t binding, VkDescriptorType descType);
+		void Setup(uint32_t bufferSize, std::vector<uint32_t> binding, VkDescriptorType descType);
 
 	private:
 		DescriptorSet m_DescriptorSet;

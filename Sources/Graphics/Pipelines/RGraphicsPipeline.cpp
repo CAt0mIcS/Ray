@@ -25,8 +25,8 @@ namespace At0::Ray
 	GraphicsPipeline::~GraphicsPipeline()
 	{
 		vkDestroyDescriptorPool(Graphics::Get().GetDevice(), m_DescriptorPool, nullptr);
-		for (VkDescriptorSetLayout layout : m_DescriptorSetLayouts)
-			vkDestroyDescriptorSetLayout(Graphics::Get().GetDevice(), layout, nullptr);
+		for (auto [set, descSetLayout] : m_DescriptorSetLayouts)
+			vkDestroyDescriptorSetLayout(Graphics::Get().GetDevice(), descSetLayout, nullptr);
 	}
 
 	Pipeline::BindPoint GraphicsPipeline::GetBindPoint() const
@@ -34,9 +34,15 @@ namespace At0::Ray
 		return Pipeline::BindPoint::Graphics;
 	}
 
-	std::vector<VkDescriptorSetLayout> GraphicsPipeline::GetDescriptorSetLayouts() const
+	VkDescriptorSetLayout GraphicsPipeline::GetDescriptorSetLayout(uint32_t set) const
 	{
-		return m_DescriptorSetLayouts;
+		for (auto [vecSet, descSetLayout] : m_DescriptorSetLayouts)
+			if (vecSet == set)
+				return descSetLayout;
+
+		RAY_ASSERT(
+			false, "[GraphicsPipeline] Descriptor set layout at set {0} does not exist", set);
+		return VK_NULL_HANDLE;
 	}
 
 	std::string GraphicsPipeline::GetUID(
@@ -85,24 +91,31 @@ namespace At0::Ray
 
 	void GraphicsPipeline::CreateDescriptorSetLayouts()
 	{
-		const std::vector<VkDescriptorSetLayoutBinding>& descriptorSetLayoutBindings =
-			m_Shader.GetDescriptorSetLayoutBindings();
+		const auto& descriptorSetLayoutBindings = m_Shader.GetDescriptorSetLayoutBindings();
 
 		m_DescriptorSetLayouts.resize(descriptorSetLayoutBindings.size());
-		for (uint32_t i = 0; i < descriptorSetLayoutBindings.size(); ++i)
+		uint32_t i = 0;
+		for (auto& [set, layoutBindings] : descriptorSetLayoutBindings)
 		{
 			VkDescriptorSetLayoutCreateInfo createInfo{};
 			createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 			createInfo.flags =
 				/*m_PushDescriptors ? VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR : */
 				0;
-			createInfo.bindingCount = 1;
-			createInfo.pBindings = descriptorSetLayoutBindings.data() + i;
+			createInfo.bindingCount = layoutBindings.size();
+			createInfo.pBindings = layoutBindings.data();
 
 			RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(),
-									&createInfo, nullptr, &m_DescriptorSetLayouts[i]),
+									&createInfo, nullptr, &m_DescriptorSetLayouts[i].second),
 				"[GraphicsPipeline] Failed to create descriptor set layout");
+
+			m_DescriptorSetLayouts[i].first = set;
+			++i;
 		}
+
+		// Sort descriptor set layouts by set
+		std::sort(m_DescriptorSetLayouts.begin(), m_DescriptorSetLayouts.end(),
+			[](const auto& l, const auto& r) { return l.first < r.first; });
 	}
 
 	void GraphicsPipeline::CreateDescriptorPool()
@@ -128,11 +141,17 @@ namespace At0::Ray
 		const std::vector<VkPushConstantRange>& pushConstantRanges =
 			m_Shader.GetPushConstantRanges();
 
+		// Move descriptor set layouts from std::vector<std::pair<>> to std::vector<>
+		std::vector<VkDescriptorSetLayout> descSetLayouts;
+		descSetLayouts.reserve(m_DescriptorSetLayouts.size());
+		for (const auto& [set, descSetLayout] : m_DescriptorSetLayouts)
+			descSetLayouts.emplace_back(descSetLayout);
+
 		VkPipelineLayoutCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		createInfo.flags = 0;
 		createInfo.setLayoutCount = (uint32_t)m_DescriptorSetLayouts.size();
-		createInfo.pSetLayouts = m_DescriptorSetLayouts.data();
+		createInfo.pSetLayouts = descSetLayouts.data();
 		createInfo.pushConstantRangeCount = (uint32_t)pushConstantRanges.size();
 		createInfo.pPushConstantRanges = pushConstantRanges.data();
 

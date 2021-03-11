@@ -23,15 +23,15 @@ namespace At0::Ray
 		Material material)
 		: Component(entity), m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer),
 		  m_Material(material),
-		  m_PerObjectUniform(material.GetGraphicsPipeline(), sizeof(Matrix), 1, 1)
+		  m_PerObjectUniform(material.GetGraphicsPipeline(), sizeof(Matrix), 1, { 1 })
 	{
 		Setup();
 	}
 
 	Mesh::Mesh(Entity& entity, MeshData data)
 		: Component(entity), m_VertexBuffer(data.vertexBuffer), m_IndexBuffer(data.indexBuffer),
-		  m_Material(data.material), m_PerObjectUniform(data.material.GetGraphicsPipeline(),
-										 sizeof(Matrix), 1 /*binding*/, 1 /*set*/)
+		  m_Material(data.material),
+		  m_PerObjectUniform(data.material.GetGraphicsPipeline(), sizeof(Matrix), 1, { 1 })
 	{
 		Setup();
 	}
@@ -144,8 +144,7 @@ namespace At0::Ray
 		{
 			m_MaterialDescSet =
 				MakeScope<DescriptorSet>(m_Material.GetGraphicsPipeline().GetDescriptorPool(),
-					m_Material.GetGraphicsPipeline()
-						.GetDescriptorSetLayouts()[2 /*Descriptor set (set = 2)*/],
+					m_Material.GetGraphicsPipeline().GetDescriptorSetLayout(2),
 					m_Material.GetGraphicsPipeline().GetBindPoint(),
 					m_Material.GetGraphicsPipeline().GetLayout(), 2);
 

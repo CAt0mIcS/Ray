@@ -88,17 +88,32 @@ namespace At0::Ray
 		public:
 			struct UniformData
 			{
-				// The binding specified in the shader, e.g. "layout(binding = 0) uniform.."
+				/*
+				 * The binding specified in the shader, e.g. "layout(binding = 0) uniform.."
+				 * If the uniform is in a block this value is undefined
+				 */
 				uint32_t binding;
 
-				// The offset in the uniform block or 0 if thhe uniform is not in a uniform block
+				/*
+				 * The offset in the uniform block or 0 if the uniform is not in a uniform block
+				 */
 				uint32_t offset;
 
-				// The size in bytes of this uniform
+				/*
+				 * The size in bytes of this uniform
+				 */
 				uint32_t size;
 
-				// The type ID of the gl type
+				/*
+				 * The type ID of the gl type
+				 */
 				int32_t glType;
+
+				/**
+				 * The set specified in the shader layout (layout(set = 0, binding = x)).
+				 * If the uniform is in a uniform block, this value is undefined
+				 */
+				uint32_t set;
 			};
 
 		public:
@@ -138,6 +153,11 @@ namespace At0::Ray
 
 				// The type of the uniform block
 				Type type;
+
+				/**
+				 * The set specified in the shader layout (layout(set = 0, binding = x))
+				 */
+				uint32_t set;
 			};
 
 			const auto begin() const { return m_UniformBlocks.begin(); }
@@ -200,7 +220,8 @@ namespace At0::Ray
 		std::unordered_map<Shader::Stage, ShaderData> m_ShaderData;
 		Scope<VertexLayout> m_VertexLayout;
 
-		std::vector<VkDescriptorSetLayoutBinding> m_DescriptorSetLayoutBindings;
+		std::unordered_map<uint32_t, std::vector<VkDescriptorSetLayoutBinding>>
+			m_DescriptorSetLayoutBindings;
 		std::vector<VkDescriptorPoolSize> m_DescriptorPoolSizes;
 	};
 }  // namespace At0::Ray

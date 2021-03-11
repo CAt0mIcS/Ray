@@ -6,6 +6,7 @@
 
 #include "RShader.h"
 
+#include <unordered_map>
 #include <vulkan/vulkan_core.h>
 
 
@@ -24,7 +25,10 @@ namespace At0::Ray
 	public:
 		virtual ~Pipeline();
 
-		virtual std::vector<VkDescriptorSetLayout> GetDescriptorSetLayouts() const { return {}; }
+		virtual VkDescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const
+		{
+			return VK_NULL_HANDLE;
+		}
 		virtual VkDescriptorPool GetDescriptorPool() const { return VK_NULL_HANDLE; };
 		virtual Pipeline::BindPoint GetBindPoint() const = 0;
 		void CmdBind(const CommandBuffer& cmdBuff) const override;

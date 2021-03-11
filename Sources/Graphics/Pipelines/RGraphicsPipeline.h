@@ -23,7 +23,7 @@ namespace At0::Ray
 		const VertexLayout& GetVertexLayout() const { return m_Shader.GetVertexLayout(); }
 
 		VkDescriptorPool GetDescriptorPool() const override { return m_DescriptorPool; }
-		std::vector<VkDescriptorSetLayout> GetDescriptorSetLayouts() const override;
+		VkDescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const override;
 
 		static std::string GetUID(
 			const RenderPass& renderPass, const std::vector<std::string_view>& shaders);
@@ -39,6 +39,6 @@ namespace At0::Ray
 		std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStages;
 
 		VkDescriptorPool m_DescriptorPool;
-		std::vector<VkDescriptorSetLayout> m_DescriptorSetLayouts;
+		std::vector<std::pair<uint32_t, VkDescriptorSetLayout>> m_DescriptorSetLayouts;
 	};
 }  // namespace At0::Ray

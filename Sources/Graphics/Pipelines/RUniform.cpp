@@ -10,15 +10,15 @@ namespace At0::Ray
 {
 	Uniform::Uniform(VkDescriptorSetLayout descSetLayout, VkDescriptorPool descSetPool,
 		Pipeline::BindPoint bindPoint, VkPipelineLayout pipelineLayout, uint32_t bufferSize,
-		uint32_t binding, uint32_t set, VkDescriptorType descType)
+		uint32_t set, std::vector<uint32_t> binding, VkDescriptorType descType)
 		: m_DescriptorSet(descSetPool, descSetLayout, bindPoint, pipelineLayout, set)
 	{
 		Setup(bufferSize, binding, descType);
 	}
 
-	Uniform::Uniform(const Pipeline& pipeline, uint32_t bufferSize, uint32_t binding, uint32_t set,
-		VkDescriptorType descType)
-		: m_DescriptorSet(pipeline.GetDescriptorPool(), pipeline.GetDescriptorSetLayouts()[set],
+	Uniform::Uniform(const Pipeline& pipeline, uint32_t bufferSize, uint32_t set,
+		std::vector<uint32_t> binding, VkDescriptorType descType)
+		: m_DescriptorSet(pipeline.GetDescriptorPool(), pipeline.GetDescriptorSetLayout(set),
 			  pipeline.GetBindPoint(), pipeline.GetLayout(), set)
 	{
 		Setup(bufferSize, binding, descType);
@@ -26,7 +26,8 @@ namespace At0::Ray
 
 	void Uniform::CmdBind(const CommandBuffer& cmdBuff) const { m_DescriptorSet.CmdBind(cmdBuff); }
 
-	void Uniform::Setup(uint32_t bufferSize, uint32_t binding, VkDescriptorType descType)
+	void Uniform::Setup(
+		uint32_t bufferSize, std::vector<uint32_t> binding, VkDescriptorType descType)
 	{
 		uint32_t minBufferAlignment = Graphics::Get()
 										  .GetPhysicalDevice()
@@ -41,17 +42,22 @@ namespace At0::Ray
 			BufferSynchronizer::Get().GetUniformBuffer().GetOffset(m_GlobalBufferOffset);
 		bufferInfo.range = bufferSize;
 
-		VkWriteDescriptorSet descWrite{};
-		descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descWrite.dstSet = m_DescriptorSet;
-		descWrite.dstBinding = binding;
-		descWrite.dstArrayElement = 0;
-		descWrite.descriptorCount = 1;
-		descWrite.descriptorType = descType;
-		descWrite.pImageInfo = nullptr;
-		descWrite.pBufferInfo = &bufferInfo;
-		descWrite.pTexelBufferView = nullptr;
+		std::vector<VkWriteDescriptorSet> descWrites{};
+		for (uint32_t bind : binding)
+		{
+			VkWriteDescriptorSet descWrite{};
+			descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descWrite.dstSet = m_DescriptorSet;
+			descWrite.dstBinding = bind;
+			descWrite.dstArrayElement = 0;
+			descWrite.descriptorCount = 1;
+			descWrite.descriptorType = descType;
+			descWrite.pImageInfo = nullptr;
+			descWrite.pBufferInfo = &bufferInfo;
+			descWrite.pTexelBufferView = nullptr;
+			descWrites.emplace_back(descWrite);
+		}
 
-		DescriptorSet::Update({ descWrite });
+		DescriptorSet::Update(descWrites);
 	}
 }  // namespace At0::Ray

@@ -117,9 +117,9 @@ namespace At0::Ray
 			"[GraphicsPipeline] Failed to create descriptor pool");
 
 		cameraUniform = MakeScope<Uniform>(cameraDescSetLayout, cameraDescriptorPool,
-			Pipeline::BindPoint::Graphics, cameraPipelineLayout, (uint32_t)sizeof(Matrix) * 2, 0,
-			0  // Using descriptor set 0 for per-scene data (set=0 in vs)
-		);
+			Pipeline::BindPoint::Graphics, cameraPipelineLayout, (uint32_t)sizeof(Matrix) * 2,
+			0,	// Using descriptor set 0 for per-scene data (set=0 in vs)
+			std::vector{ 0u });
 
 
 		CreateCommandBuffers();
