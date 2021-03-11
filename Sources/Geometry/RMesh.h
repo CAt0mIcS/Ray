@@ -71,7 +71,7 @@ namespace At0::Ray
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;
 		Ref<IndexBuffer> m_IndexBuffer = nullptr;
 
-		Uniform m_Uniform;
+		Uniform m_PerObjectUniform;
 		Material m_Material;
 		UniformAccess m_Uniforms;
 		Scope<DescriptorSet> m_MaterialDescSet = nullptr;
