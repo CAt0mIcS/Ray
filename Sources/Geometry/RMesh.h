@@ -6,7 +6,7 @@
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
 #include "../Graphics/Pipelines/RUniformAccess.h"
-#include "../Graphics/Pipelines/RDescriptor.h"
+#include "../Graphics/Pipelines/RUniform.h"
 
 #include <type_traits>
 
@@ -71,9 +71,9 @@ namespace At0::Ray
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;
 		Ref<IndexBuffer> m_IndexBuffer = nullptr;
 
+		Uniform m_Uniform;
 		Material m_Material;
 		UniformAccess m_Uniforms;
-		DescriptorSet m_DescriptorSet;
 		Scope<DescriptorSet> m_MaterialDescSet = nullptr;
 
 		Transform m_Transform;

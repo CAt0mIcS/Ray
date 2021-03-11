@@ -24,6 +24,8 @@ namespace At0::Ray
 	public:
 		virtual ~Pipeline();
 
+		virtual std::vector<VkDescriptorSetLayout> GetDescriptorSetLayouts() const { return {}; }
+		virtual VkDescriptorPool GetDescriptorPool() const { return VK_NULL_HANDLE; };
 		virtual Pipeline::BindPoint GetBindPoint() const = 0;
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
 

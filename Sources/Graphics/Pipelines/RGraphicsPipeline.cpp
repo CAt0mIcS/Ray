@@ -34,6 +34,11 @@ namespace At0::Ray
 		return Pipeline::BindPoint::Graphics;
 	}
 
+	std::vector<VkDescriptorSetLayout> GraphicsPipeline::GetDescriptorSetLayouts() const
+	{
+		return m_DescriptorSetLayouts;
+	}
+
 	std::string GraphicsPipeline::GetUID(
 		const RenderPass& renderPass, const std::vector<std::string_view>& shaders)
 	{

@@ -23,11 +23,7 @@ namespace At0::Ray
 		Material material)
 		: Component(entity), m_VertexBuffer(std::move(vertexBuffer)),
 		  m_IndexBuffer(std::move(indexBuffer)), m_Material(std::move(material)),
-		  m_DescriptorSet(m_Material.GetGraphicsPipeline().GetDescriptorPool(),
-			  m_Material.GetGraphicsPipeline()
-				  .GetDescriptorSetLayouts()[1 /*Descriptor set (set = 1)*/],
-			  m_Material.GetGraphicsPipeline().GetBindPoint(),
-			  m_Material.GetGraphicsPipeline().GetLayout(), 1)
+		  m_Uniform(material.GetGraphicsPipeline(), sizeof(Matrix), 1, 1)
 	{
 		Setup();
 	}
@@ -35,10 +31,7 @@ namespace At0::Ray
 	Mesh::Mesh(Entity& entity, MeshData data)
 		: Component(entity), m_VertexBuffer(std::move(data.vertexBuffer)),
 		  m_IndexBuffer(std::move(data.indexBuffer)), m_Material(std::move(data.material)),
-		  m_DescriptorSet(m_Material.GetGraphicsPipeline().GetDescriptorPool(),
-			  m_Material.GetGraphicsPipeline().GetDescriptorSetLayouts()[1],
-			  m_Material.GetGraphicsPipeline().GetBindPoint(),
-			  m_Material.GetGraphicsPipeline().GetLayout(), 1)
+		  m_Uniform(data.material.GetGraphicsPipeline(), sizeof(Matrix), 1, 1)
 	{
 		Setup();
 	}
@@ -109,7 +102,7 @@ namespace At0::Ray
 			m_MaterialDescSet->CmdBind(cmdBuff);
 		}
 
-		m_DescriptorSet.CmdBind(cmdBuff);
+		m_Uniform.CmdBind(cmdBuff);
 		m_VertexBuffer->CmdBind(cmdBuff);
 		m_IndexBuffer->CmdBind(cmdBuff);
 	}
@@ -128,7 +121,7 @@ namespace At0::Ray
 
 		m_Material = std::move(other.m_Material);
 		m_Uniforms = std::move(other.m_Uniforms);
-		m_DescriptorSet = std::move(other.m_DescriptorSet);
+		m_Uniform = std::move(other.m_Uniform);
 
 		m_Transform = std::move(other.m_Transform);
 		m_MaterialDescSet = std::move(other.m_MaterialDescSet);
@@ -138,8 +131,7 @@ namespace At0::Ray
 	Mesh::Mesh(Mesh&& other) noexcept
 		: Component(*other.m_Entity), m_VertexBuffer(std::move(other.m_VertexBuffer)),
 		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
-		  m_Uniforms(std::move(other.m_Uniforms)),
-		  m_DescriptorSet(std::move(other.m_DescriptorSet)),
+		  m_Uniforms(std::move(other.m_Uniforms)), m_Uniform(std::move(other.m_Uniform)),
 		  m_Transform(std::move(other.m_Transform)),
 		  m_MaterialDescSet(std::move(other.m_MaterialDescSet))
 	{
@@ -155,29 +147,7 @@ namespace At0::Ray
 						.GetDescriptorSetLayouts()[2 /*Descriptor set (set = 2)*/],
 					m_Material.GetGraphicsPipeline().GetBindPoint(),
 					m_Material.GetGraphicsPipeline().GetLayout(), 2);
-		}
 
-
-		// Allocate uniform buffer memory
-		uint32_t alignment = Graphics::Get()
-								 .GetPhysicalDevice()
-								 .GetProperties()
-								 .limits.minUniformBufferOffsetAlignment;
-		uint32_t globalUniformBufferOffset = 0;
-		BufferSynchronizer::Get().Emplace(sizeof(Matrix), alignment, &globalUniformBufferOffset);
-
-		m_Uniforms = UniformAccess(m_Material.GetGraphicsPipeline(), globalUniformBufferOffset);
-
-		// Update descriptor set
-		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer =
-			BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(globalUniformBufferOffset);
-		bufferInfo.offset =
-			BufferSynchronizer::Get().GetUniformBuffer().GetOffset(globalUniformBufferOffset);
-		bufferInfo.range = sizeof(Matrix);
-
-		if (m_Material.GetMaterialImage())
-		{
 			VkDescriptorImageInfo imageInfo{};
 			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			imageInfo.sampler = m_Material.GetMaterialImage()->GetSampler();
@@ -194,15 +164,7 @@ namespace At0::Ray
 			DescriptorSet::Update({ descWriteImg });
 		}
 
-		VkWriteDescriptorSet descWriteBuff{};
-		descWriteBuff.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descWriteBuff.dstSet = m_DescriptorSet;
-		descWriteBuff.dstBinding = 1;
-		descWriteBuff.dstArrayElement = 0;
-		descWriteBuff.descriptorCount = 1;
-		descWriteBuff.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descWriteBuff.pBufferInfo = &bufferInfo;
-
-		DescriptorSet::Update({ descWriteBuff });
+		m_Uniforms =
+			UniformAccess(m_Material.GetGraphicsPipeline(), m_Uniform.GetGlobalBufferOffset());
 	}
 }  // namespace At0::Ray

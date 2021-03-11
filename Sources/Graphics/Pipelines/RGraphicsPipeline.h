@@ -22,8 +22,8 @@ namespace At0::Ray
 		Pipeline::BindPoint GetBindPoint() const override;
 		const VertexLayout& GetVertexLayout() const { return m_Shader.GetVertexLayout(); }
 
-		const VkDescriptorPool& GetDescriptorPool() const { return m_DescriptorPool; }
-		const auto& GetDescriptorSetLayouts() const { return m_DescriptorSetLayouts; }
+		VkDescriptorPool GetDescriptorPool() const override { return m_DescriptorPool; }
+		std::vector<VkDescriptorSetLayout> GetDescriptorSetLayouts() const override;
 
 		static std::string GetUID(
 			const RenderPass& renderPass, const std::vector<std::string_view>& shaders);

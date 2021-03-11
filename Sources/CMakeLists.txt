@@ -65,6 +65,8 @@ set(SRC
 	"Graphics/Pipelines/RUniformAccess.cpp"
 	"Graphics/Pipelines/RDescriptor.h"
 	"Graphics/Pipelines/RDescriptor.cpp"
+	"Graphics/Pipelines/RUniform.h"
+	"Graphics/Pipelines/RUniform.cpp"
 
 	"Graphics/Buffers/RBuffer.h"
 	"Graphics/Buffers/RBuffer.cpp"

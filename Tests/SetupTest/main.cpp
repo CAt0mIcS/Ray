@@ -42,8 +42,6 @@ private:
 
 		for (uint32_t i = 0; i < 1; ++i)
 		{
-			auto modelView = Scene::Get().EntityView<Ray::Model>();
-
 			Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
 			Ray::Material triangleMaterial({ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 0.0f, 0.0f,
 				Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true);
