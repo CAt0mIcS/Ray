@@ -54,7 +54,7 @@ namespace At0::Ray
 		m_LogicalDevice = MakeScope<LogicalDevice>();
 
 		m_Swapchain = MakeScope<Swapchain>();
-		m_CommandPool = MakeScope<CommandPool>();
+		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 		m_DepthImage = MakeScope<DepthImage>(
 			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height });
 
