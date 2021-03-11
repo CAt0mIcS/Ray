@@ -35,8 +35,7 @@ namespace At0::Ray
 	VkDescriptorSetLayout cameraDescSetLayout;
 	VkDescriptorPool cameraDescriptorPool;
 	VkPipelineLayout cameraPipelineLayout;
-	Scope<DescriptorSet> camDescSet;
-	uint32_t cameraUniformOffset;
+	Scope<Uniform> cameraUniform;
 
 	Graphics::Graphics() : EventListener<EntityCreatedEvent>(Scene::Get())
 	{
@@ -74,10 +73,6 @@ namespace At0::Ray
 		CreateFramebuffers();
 		BufferSynchronizer::Create();
 
-		uint32_t minBufferAlignment =
-			GetPhysicalDevice().GetProperties().limits.minUniformBufferOffsetAlignment;
-		BufferSynchronizer::Get().Emplace(
-			sizeof(Matrix) * 2, minBufferAlignment, &cameraUniformOffset);
 
 		VkDescriptorSetLayoutBinding cameraBinding{};
 		cameraBinding.binding = 0;
@@ -121,31 +116,10 @@ namespace At0::Ray
 								&cameraDescriptorPool),
 			"[GraphicsPipeline] Failed to create descriptor pool.");
 
-		camDescSet = MakeScope<DescriptorSet>(
-			cameraDescriptorPool, cameraDescSetLayout, Pipeline::BindPoint::Graphics,
-			cameraPipelineLayout, 0	 // Using descriptor set 0 for per-scene data (set=0 in vs)
+		cameraUniform = MakeScope<Uniform>(cameraDescSetLayout, cameraDescriptorPool,
+			Pipeline::BindPoint::Graphics, cameraPipelineLayout, (uint32_t)sizeof(Matrix) * 2, 0,
+			0  // Using descriptor set 0 for per-scene data (set=0 in vs)
 		);
-
-
-		VkDescriptorBufferInfo bufferInfoCam{};
-		bufferInfoCam.buffer =
-			BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(cameraUniformOffset);
-		bufferInfoCam.offset =
-			BufferSynchronizer::Get().GetUniformBuffer().GetOffset(cameraUniformOffset);
-		bufferInfoCam.range = sizeof(Matrix) * 2;
-
-		VkWriteDescriptorSet descWriteCam{};
-		descWriteCam.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descWriteCam.dstSet = *camDescSet;
-		descWriteCam.dstBinding = 0;
-		descWriteCam.dstArrayElement = 0;
-		descWriteCam.descriptorCount = 1;
-		descWriteCam.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descWriteCam.pImageInfo = nullptr;
-		descWriteCam.pBufferInfo = &bufferInfoCam;
-		descWriteCam.pTexelBufferView = nullptr;
-
-		DescriptorSet::Update({ descWriteCam });
 
 
 		CreateCommandBuffers();
@@ -261,7 +235,7 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		camDescSet->CmdBind(cmdBuff);
+		cameraUniform->CmdBind(cmdBuff);
 
 		auto meshView = Scene::Get().EntityView<Mesh>();
 		meshView.each([&cmdBuff](Mesh& mesh) {
@@ -332,9 +306,10 @@ namespace At0::Ray
 		// Mark the image as now being in use by this frame
 		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
 
-		BufferSynchronizer::Get().Update(Camera::Get().Matrices.View, cameraUniformOffset);
 		BufferSynchronizer::Get().Update(
-			Camera::Get().Matrices.Perspective, cameraUniformOffset + sizeof(Matrix));
+			Camera::Get().Matrices.View, cameraUniform->GetGlobalBufferOffset());
+		BufferSynchronizer::Get().Update(Camera::Get().Matrices.Perspective,
+			cameraUniform->GetGlobalBufferOffset() + sizeof(Matrix));
 
 		Scene::Get().Update(dt);
 
