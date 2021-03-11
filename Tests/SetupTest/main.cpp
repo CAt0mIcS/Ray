@@ -22,6 +22,7 @@ using namespace At0;
 class Scene : public Ray::Scene
 {
 public:
+	// Creating the camera here wouldn't work!
 	Scene() {}
 
 	void Start() override
