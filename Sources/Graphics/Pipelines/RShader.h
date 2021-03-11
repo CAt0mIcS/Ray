@@ -88,7 +88,7 @@ namespace At0::Ray
 		public:
 			struct UniformData
 			{
-				// The binding specified in the shader, e.g. "layout(binding = 0) uniform..."
+				// The binding specified in the shader, e.g. "layout(binding = 0) uniform.."
 				uint32_t binding;
 
 				// The offset in the uniform block or 0 if thhe uniform is not in a uniform block
@@ -127,7 +127,7 @@ namespace At0::Ray
 
 			struct UniformBlockData
 			{
-				// The binding specified in the shader, e.g. "layout(binding = 0) uniform..."
+				// The binding specified in the shader, e.g. "layout(binding = 0) uniform.."
 				uint32_t binding;
 
 				// The size in bytes of the entire uniform block

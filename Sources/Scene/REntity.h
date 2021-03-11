@@ -31,7 +31,7 @@ namespace At0::Ray
 		template<typename Comp, typename... Args>
 		decltype(auto) Emplace(Args&&... args)
 		{
-			RAY_MEXPECTS(!Has<Comp>(), "[Entity] Entity (ID={0}) already has component.",
+			RAY_MEXPECTS(!Has<Comp>(), "[Entity] Entity (ID={0}) already has component",
 				(uint32_t)m_EntityHandle);
 			if constexpr (std::is_constructible_v<Comp, Entity&, Args...>)
 			{

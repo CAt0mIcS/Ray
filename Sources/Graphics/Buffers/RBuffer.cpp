@@ -34,7 +34,7 @@ namespace At0::Ray
 		// Attach the memory to the buffer
 		RAY_VK_THROW_FAILED(
 			vkBindBufferMemory(Graphics::Get().GetDevice(), m_Buffer, m_BufferMemory, 0),
-			"[Buffer] Failed to map buffer to buffer memory.");
+			"[Buffer] Failed to map buffer to buffer memory");
 	}
 
 	Buffer::Buffer(VkDeviceSize size) : m_Size(size) {}
@@ -66,7 +66,7 @@ namespace At0::Ray
 		mappedMemoryRange.size = size;
 		RAY_VK_THROW_FAILED(
 			vkFlushMappedMemoryRanges(Graphics::Get().GetDevice(), 1, &mappedMemoryRange),
-			"[Buffer] Failed to flush memory.");
+			"[Buffer] Failed to flush memory");
 	}
 
 	void Buffer::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
@@ -86,7 +86,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(
 			vkCreateBuffer(Graphics::Get().GetDevice(), &bufferCreateInfo, nullptr, &buffer),
-			"[Buffer] Failed to create.");
+			"[Buffer] Failed to create");
 
 		// Create the memory backing up the buffer handle
 		VkMemoryRequirements memRequirements;
@@ -100,7 +100,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(
 			vkAllocateMemory(Graphics::Get().GetDevice(), &allocInfo, nullptr, &bufferMemory),
-			"[Buffer] Failed to allocate buffer memory.");
+			"[Buffer] Failed to allocate buffer memory");
 	}
 
 	void Buffer::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
@@ -152,6 +152,6 @@ namespace At0::Ray
 	void Buffer::BindBufferToMemory(VkBuffer buffer, VkDeviceMemory memory)
 	{  // Attach the memory to the buffer
 		RAY_VK_THROW_FAILED(vkBindBufferMemory(Graphics::Get().GetDevice(), buffer, memory, 0),
-			"[Buffer] Failed to map buffer to buffer memory.");
+			"[Buffer] Failed to map buffer to buffer memory");
 	}
 }  // namespace At0::Ray

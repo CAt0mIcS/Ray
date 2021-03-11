@@ -33,7 +33,7 @@ namespace At0::Ray
 	uint32_t IndexBuffer::GetNumberOfIndices() const
 	{
 		RAY_MEXPECTS(m_NumIndices != 0,
-			"[IndexBuffer] Invalid number of indices. This is likely the developer's fault.");
+			"[IndexBuffer] Invalid number of indices. This is likely the developer's fault");
 		return m_NumIndices;
 	}
 

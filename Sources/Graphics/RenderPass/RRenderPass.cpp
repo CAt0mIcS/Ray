@@ -1,4 +1,4 @@
-#include "Rpch.h"
+﻿#include "Rpch.h"
 #include "RRenderPass.h"
 
 #include "Graphics/RGraphics.h"
@@ -27,7 +27,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(
 			vkCreateRenderPass(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Renderpass),
-			"[RenderPass] Failed to create.");
+			"[RenderPass] Failed to create");
 	}
 
 	RenderPass::~RenderPass()

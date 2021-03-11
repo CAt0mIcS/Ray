@@ -53,13 +53,13 @@ namespace At0::Ray
 			{
 				m_Bindables[tag] = MakeRef<T>(std::forward<Args>(args)...);
 				Log::Debug(
-					"[Codex] Bindable (Tag=\"{0}\") was created because it didn't exist.", tag);
+					"[Codex] Bindable (Tag=\"{0}\") was created because it didn't exist", tag);
 				return std::static_pointer_cast<T>(m_Bindables[tag]);
 			}
 			// Key exists, return it
 			else
 			{
-				Log::Debug("[Codex] Bindable (Tag=\"{0}\") already exists.", tag);
+				Log::Debug("[Codex] Bindable (Tag=\"{0}\") already exists", tag);
 				return std::static_pointer_cast<T>(it->second);
 			}
 		}

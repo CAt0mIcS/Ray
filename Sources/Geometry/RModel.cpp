@@ -83,7 +83,7 @@ namespace At0::Ray
 		for (uint32_t i = 0; i < mesh.mNumFaces; ++i)
 		{
 			const auto& face = mesh.mFaces[i];
-			RAY_MEXPECTS(face.mNumIndices == 3, "[Model] Was not triangulated.");
+			RAY_MEXPECTS(face.mNumIndices == 3, "[Model] Was not triangulated");
 			indices.emplace_back(face.mIndices[0]);
 			indices.emplace_back(face.mIndices[1]);
 			indices.emplace_back(face.mIndices[2]);

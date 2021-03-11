@@ -14,7 +14,7 @@ namespace At0::Ray
 	{
 		RAY_MEXPECTS((m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) &&
 						 (m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT),
-			"[DynamicBuffer] Needs to be visible to the host and host coherent.");
+			"[DynamicBuffer] Needs to be visible to the host and host coherent");
 
 		m_Buffers.emplace_back((Buffer*)this);
 	}
@@ -36,8 +36,8 @@ namespace At0::Ray
 		if (m_EmplaceLocation + allocSize >= GetTotalSize())
 		{
 			Reallocate(allocSize < s_LowestReallocationSize ?
-						   s_LowestReallocationSize :
-						   allocSize);	// Request more size than neccessary
+							 s_LowestReallocationSize :
+							 allocSize);	// Request more size than neccessary
 		}
 
 		*offset = m_EmplaceLocation;

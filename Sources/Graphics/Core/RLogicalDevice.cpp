@@ -63,7 +63,7 @@ namespace At0::Ray
 				graphicsFamily = i;
 				m_GraphicsFamily = i;
 				m_SupportedQueues |= VK_QUEUE_GRAPHICS_BIT;
-				Log::Info("[LogicalDevice] Graphics queue family {0} found.", m_GraphicsFamily);
+				Log::Info("[LogicalDevice] Graphics queue family {0} found", m_GraphicsFamily);
 			}
 
 			VkBool32 presentSupport;
@@ -74,7 +74,7 @@ namespace At0::Ray
 			{
 				presentFamily = i;
 				m_PresentFamily = i;
-				Log::Info("[LogicalDevice] Present queue family {0} found.", m_PresentFamily);
+				Log::Info("[LogicalDevice] Present queue family {0} found", m_PresentFamily);
 			}
 
 			if (queueFamilyProperties[i].queueFlags & VK_QUEUE_COMPUTE_BIT)
@@ -82,7 +82,7 @@ namespace At0::Ray
 				computeFamily = i;
 				m_ComputeFamily = i;
 				m_SupportedQueues |= VK_QUEUE_COMPUTE_BIT;
-				Log::Info("[LogicalDevice] Compute queue family {0} found.", m_ComputeFamily);
+				Log::Info("[LogicalDevice] Compute queue family {0} found", m_ComputeFamily);
 			}
 
 			if (queueFamilyProperties[i].queueFlags & VK_QUEUE_TRANSFER_BIT)
@@ -90,7 +90,7 @@ namespace At0::Ray
 				transferFamily = i;
 				m_TransferFamily = i;
 				m_SupportedQueues |= VK_QUEUE_TRANSFER_BIT;
-				Log::Info("[LogicalDevice] Transfer queue family {0} found.", m_TransferFamily);
+				Log::Info("[LogicalDevice] Transfer queue family {0} found", m_TransferFamily);
 			}
 
 			// Search until all queues are found
@@ -99,7 +99,7 @@ namespace At0::Ray
 		}
 
 		if (!graphicsFamily)
-			RAY_THROW_RUNTIME("[LogicalDevice] Failed to find graphics queue family.");
+			RAY_THROW_RUNTIME("[LogicalDevice] Failed to find graphics queue family");
 	}
 
 	void LogicalDevice::CreateLogicalDevice()
@@ -118,7 +118,7 @@ namespace At0::Ray
 			graphicsQueueCreateInfo.queueCount = 1;
 			graphicsQueueCreateInfo.pQueuePriorities = queuePriorities;
 			queueCreateInfos.push_back(std::move(graphicsQueueCreateInfo));
-			Log::Info("[LogicalDevice] Creating graphics queue.");
+			Log::Info("[LogicalDevice] Creating graphics queue");
 		}
 		else
 			m_GraphicsFamily = 0;
@@ -131,7 +131,7 @@ namespace At0::Ray
 			computeQueueCreateInfo.queueCount = 1;
 			computeQueueCreateInfo.pQueuePriorities = queuePriorities;
 			queueCreateInfos.push_back(std::move(computeQueueCreateInfo));
-			Log::Info("[LogicalDevice] Creating compute queue.");
+			Log::Info("[LogicalDevice] Creating compute queue");
 		}
 		else
 			m_ComputeFamily = m_GraphicsFamily;
@@ -145,7 +145,7 @@ namespace At0::Ray
 			transferQueueCreateInfo.queueCount = 1;
 			transferQueueCreateInfo.pQueuePriorities = queuePriorities;
 			queueCreateInfos.push_back(std::move(transferQueueCreateInfo));
-			Log::Info("[LogicalDevice] Creating transfer queue.");
+			Log::Info("[LogicalDevice] Creating transfer queue");
 		}
 		else
 			m_TransferFamily = m_GraphicsFamily;
@@ -157,7 +157,7 @@ namespace At0::Ray
 		{
 			enabledFeatures.sampleRateShading = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::SampleRateShading, true);
-			Log::Info("[LogicalDevice] Enabling sample rate shading filtering feature.");
+			Log::Info("[LogicalDevice] Enabling sample rate shading filtering feature");
 		}
 
 		// Fill mode non solid is required for wireframe display.
@@ -165,7 +165,7 @@ namespace At0::Ray
 		{
 			enabledFeatures.fillModeNonSolid = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::FillModeNonSolid, true);
-			Log::Info("[LogicalDevice] Enabling non solid fill mode feature.");
+			Log::Info("[LogicalDevice] Enabling non solid fill mode feature");
 		}
 
 		// Wide lines must be present for line width > 1.0f.
@@ -173,44 +173,44 @@ namespace At0::Ray
 		{
 			enabledFeatures.wideLines = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::WiderLines, true);
-			Log::Info("[LogicalDevice] Enabling wider lines feature.");
+			Log::Info("[LogicalDevice] Enabling wider lines feature");
 		}
 		else
-			Log::Warn("[LogicalDevice] Selected GPU does not support wireframe pipelines.");
+			Log::Warn("[LogicalDevice] Selected GPU does not support wireframe pipelines");
 
 		if (physicalDeviceFeatures.samplerAnisotropy)
 		{
 			enabledFeatures.samplerAnisotropy = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::SamplerAnisotropy, true);
-			Log::Info("[LogicalDevice] Enabling sampler anisotropy feature.");
+			Log::Info("[LogicalDevice] Enabling sampler anisotropy feature");
 		}
 		else
-			Log::Warn("[LogicalDevice] Selected GPU does not support sampler anisotropy.");
+			Log::Warn("[LogicalDevice] Selected GPU does not support sampler anisotropy");
 
 		if (physicalDeviceFeatures.textureCompressionBC)
 		{
 			enabledFeatures.textureCompressionBC = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::BCTextureCompression, true);
-			Log::Info("[LogicalDevice] Enabling BC texture compression feature.");
+			Log::Info("[LogicalDevice] Enabling BC texture compression feature");
 		}
 		else if (physicalDeviceFeatures.textureCompressionASTC_LDR)
 		{
 			enabledFeatures.textureCompressionASTC_LDR = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::ASTC_LDRTextureCompression, true);
-			Log::Info("[LogicalDevice] Enabling ASTC_LDR texture compression feature.");
+			Log::Info("[LogicalDevice] Enabling ASTC_LDR texture compression feature");
 		}
 		else if (physicalDeviceFeatures.textureCompressionETC2)
 		{
 			enabledFeatures.textureCompressionETC2 = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::ETC2TextureCompression, true);
-			Log::Info("[LogicalDevice] Enabling ETC2 texture compression feature.");
+			Log::Info("[LogicalDevice] Enabling ETC2 texture compression feature");
 		}
 
 		if (physicalDeviceFeatures.vertexPipelineStoresAndAtomics)
 		{
 			enabledFeatures.vertexPipelineStoresAndAtomics = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::VertexPipelineStoresAndAtomics, true);
-			Log::Info("[LogicalDevice] Enabling vertex pipeline stores andd atomics feature.");
+			Log::Info("[LogicalDevice] Enabling vertex pipeline stores andd atomics feature");
 		}
 		else
 			Log::Warn(
@@ -220,58 +220,57 @@ namespace At0::Ray
 		{
 			enabledFeatures.fragmentStoresAndAtomics = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::FragmentStoresAndAtomics, true);
-			Log::Info("[LogicalDevice] Enabling fragment pipeline stores andd atomics feature.");
+			Log::Info("[LogicalDevice] Enabling fragment pipeline stores andd atomics feature");
 		}
 		else
-			Log::Warn("[LogicalDevice] Selected GPU does not support fragment stores and atomics.");
+			Log::Warn("[LogicalDevice] Selected GPU does not support fragment stores and atomics");
 
 		if (physicalDeviceFeatures.shaderStorageImageExtendedFormats)
 		{
 			enabledFeatures.shaderStorageImageExtendedFormats = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::ShaderStorageImageExtendedFormats, true);
-			Log::Info("[LogicalDevice] Enabling shader storage image extended formats feature.");
+			Log::Info("[LogicalDevice] Enabling shader storage image extended formats feature");
 		}
 		else
 			Log::Warn(
-				"[LogicalDevice] Selected GPU does not support m_Shader storage extended formats.");
+				"[LogicalDevice] Selected GPU does not support m_Shader storage extended formats");
 
 		if (physicalDeviceFeatures.shaderStorageImageWriteWithoutFormat)
 		{
 			enabledFeatures.shaderStorageImageWriteWithoutFormat = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::ShaderStorageImageWriteWithoutFormat, true);
-			Log::Info(
-				"[LogicalDevice] Enabling shader storage image write without format feature.");
+			Log::Info("[LogicalDevice] Enabling shader storage image write without format feature");
 		}
 		else
 			Log::Warn("[LogicalDevice] Selected GPU does not support shader storage write without "
-					  "format.");
+					  "format");
 
 		if (physicalDeviceFeatures.geometryShader)
 		{
 			enabledFeatures.geometryShader = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::GeometryShader, true);
-			Log::Info("[LogicalDevice] Enabling geometry shader feature.");
+			Log::Info("[LogicalDevice] Enabling geometry shader feature");
 		}
 		else
-			Log::Warn("[LogicalDeivce] Selected GPU does not support geometry shaders.");
+			Log::Warn("[LogicalDeivce] Selected GPU does not support geometry shaders");
 
 		if (physicalDeviceFeatures.tessellationShader)
 		{
 			enabledFeatures.tessellationShader = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::TesselationShader, true);
-			Log::Info("[LogicalDevice] Enabling tesselation shader feature.");
+			Log::Info("[LogicalDevice] Enabling tesselation shader feature");
 		}
 		else
-			Log::Warn("[LogicalDevice] Selected GPU does not support tesselation shaders.");
+			Log::Warn("[LogicalDevice] Selected GPU does not support tesselation shaders");
 
 		if (physicalDeviceFeatures.multiViewport)
 		{
 			enabledFeatures.multiViewport = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::MultiViewport, true);
-			Log::Info("[LogicalDevice] Enabling multi-viewport feature.");
+			Log::Info("[LogicalDevice] Enabling multi-viewport feature");
 		}
 		else
-			Log::Warn("[LogicalDevice] Selected GPU does not support multiple viewports.");
+			Log::Warn("[LogicalDevice] Selected GPU does not support multiple viewports");
 
 		// Finally create the logical device
 		VkDeviceCreateInfo deviceCreateInfo{};
@@ -291,7 +290,7 @@ namespace At0::Ray
 		deviceCreateInfo.pEnabledFeatures = &enabledFeatures;
 		RAY_VK_THROW_FAILED(vkCreateDevice(Graphics::Get().GetPhysicalDevice(), &deviceCreateInfo,
 								nullptr, &m_Device),
-			"[LogicalDevice] Failed to create logical device.");
+			"[LogicalDevice] Failed to create logical device");
 
 		vkGetDeviceQueue(m_Device, m_GraphicsFamily, 0, &m_GraphicsQueue);
 		vkGetDeviceQueue(m_Device, m_PresentFamily, 0, &m_PresentQueue);

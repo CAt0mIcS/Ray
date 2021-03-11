@@ -27,8 +27,8 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(
 			vkCreateFramebuffer(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Framebuffer),
-			"[Framebuffer] Failed to create.");
-		Log::Info("[Framebuffer] Created with size [width={0}, height={1}].", createInfo.width,
+			"[Framebuffer] Failed to create");
+		Log::Info("[Framebuffer] Created with size [width={0}, height={1}]", createInfo.width,
 			createInfo.height);
 	}
 

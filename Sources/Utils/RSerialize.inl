@@ -93,6 +93,6 @@ void SerializeStringArg(std::string& message, T&& arg, int& argCount)
 		struct False : std::false_type
 		{
 		};
-		static_assert(False::value, "No output stream can convert the specified type T.");
+		static_assert(False::value, "No output stream can convert the specified type T");
 	}
 }

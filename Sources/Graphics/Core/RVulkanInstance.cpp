@@ -68,14 +68,14 @@ namespace At0::Ray
 		}
 		else
 		{
-			Log::Warn("[VulkanInstance] Validation layers disabled.");
+			Log::Warn("[VulkanInstance] Validation layers disabled");
 			m_ValidationLayersEnabled = false;
 
 			createInfo.enabledLayerCount = 0;
 		}
 
 		RAY_VK_THROW_FAILED(vkCreateInstance(&createInfo, nullptr, &m_Instance),
-			"[VulkanInstance] Creation failed.");
+			"[VulkanInstance] Creation failed");
 
 		if (m_ValidationLayersEnabled)
 			CreateDebugMessenger();
@@ -152,12 +152,12 @@ namespace At0::Ray
 		uint32_t extPropCount = 0;
 		vkEnumerateInstanceExtensionProperties(nullptr, &extPropCount, nullptr);
 		RAY_MEXPECTS(extPropCount != 0,
-			"[VulkanInstance] Failed to enumerate instance extension properties.");
+			"[VulkanInstance] Failed to enumerate instance extension properties");
 
 		std::vector<VkExtensionProperties> extProps(extPropCount);
 		vkEnumerateInstanceExtensionProperties(nullptr, &extPropCount, extProps.data());
 		RAY_MEXPECTS(!extProps.empty(),
-			"[VulkanInstance] Failed to enumerate instance extension properties.");
+			"[VulkanInstance] Failed to enumerate instance extension properties");
 
 		for (const char* extension : instanceExtensions)
 		{
@@ -188,10 +188,10 @@ namespace At0::Ray
 		{
 			if (createDebugMessenger(m_Instance, &createInfo, nullptr, &m_DebugMessenger) !=
 				VK_SUCCESS)
-				Log::Error("[VulkanInstance] Failed to create debug messenger.");
+				Log::Error("[VulkanInstance] Failed to create debug messenger");
 		}
 		else
-			Log::Error("[VulkanInstance] Unable to find vkCreateDebugUtilsMessengerEXT.");
+			Log::Error("[VulkanInstance] Unable to find vkCreateDebugUtilsMessengerEXT");
 	}
 
 	VkDebugUtilsMessengerCreateInfoEXT VulkanInstance::GetDebugMessengerCreateInfo() const

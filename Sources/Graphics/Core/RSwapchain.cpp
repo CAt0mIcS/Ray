@@ -31,7 +31,7 @@ namespace At0::Ray
 			imageCount = supportDetails.Capabilities.maxImageCount;
 		}
 
-		Log::Info("[Swapchain] Creating {0} images.", imageCount);
+		Log::Info("[Swapchain] Creating {0} images", imageCount);
 
 		VkSwapchainCreateInfoKHR createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -56,7 +56,7 @@ namespace At0::Ray
 			createInfo.queueFamilyIndexCount = 2;
 			createInfo.pQueueFamilyIndices = queueFamilyIndices;
 			Log::Warn(
-				"[Swapchain] Enabling image sharing between the graphics and present families.");
+				"[Swapchain] Enabling image sharing between the graphics and present families");
 		}
 		else
 		{
@@ -73,14 +73,14 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(
 			vkCreateSwapchainKHR(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Swapchain),
-			"[Swapchain] Failed to create.");
+			"[Swapchain] Failed to create");
 
 		// Retrieve swapchain images
 		uint32_t swapchainImageCount = 0;
 		vkGetSwapchainImagesKHR(
 			Graphics::Get().GetDevice(), m_Swapchain, &swapchainImageCount, nullptr);
 		if (swapchainImageCount == 0)
-			RAY_THROW_RUNTIME("[Swapchain] Image count is 0.");
+			RAY_THROW_RUNTIME("[Swapchain] Image count is 0");
 
 		m_Images.resize(swapchainImageCount);
 		vkGetSwapchainImagesKHR(
@@ -146,12 +146,12 @@ namespace At0::Ray
 		{
 			if (presentMode == VK_PRESENT_MODE_MAILBOX_KHR)
 			{
-				Log::Info("[Swapchain] Choosing mailbox present mode.");
+				Log::Info("[Swapchain] Choosing mailbox present mode");
 				return presentMode;
 			}
 		}
 
-		Log::Info("[Swapchain] Choosing FIFO present mode.");
+		Log::Info("[Swapchain] Choosing FIFO present mode");
 		return VK_PRESENT_MODE_FIFO_KHR;
 	}
 

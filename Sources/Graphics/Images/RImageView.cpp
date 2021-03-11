@@ -1,4 +1,4 @@
-#include "Rpch.h"
+﻿#include "Rpch.h"
 #include "RImageView.h"
 
 #include "Graphics/RGraphics.h"
@@ -28,7 +28,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(
 			vkCreateImageView(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_View),
-			"[ImageView] Failed to create.");
+			"[ImageView] Failed to create");
 	}
 
 	ImageView::~ImageView() { vkDestroyImageView(Graphics::Get().GetDevice(), m_View, nullptr); }

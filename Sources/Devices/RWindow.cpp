@@ -34,7 +34,7 @@ namespace At0::Ray
 
 	Window& Window::Get()
 	{
-		RAY_MEXPECTS(s_Instance, "[Window::Get] Cannot get window that has not been created yet.");
+		RAY_MEXPECTS(s_Instance, "[Window::Get] Cannot get window that has not been created yet");
 		return *s_Instance;
 	}
 
@@ -72,7 +72,7 @@ namespace At0::Ray
 		VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) const
 	{
 		RAY_VK_THROW_FAILED(glfwCreateWindowSurface(instance, m_hWnd, allocator, surface),
-			"[Window] GLFW failed to create the window surface.");
+			"[Window] GLFW failed to create the window surface");
 	}
 
 	UInt2 Window::GetSize() const
@@ -99,8 +99,8 @@ namespace At0::Ray
 	Window::Window(uint32_t width, uint32_t height, std::string_view title)
 	{
 		int success = glfwInit();
-		RAY_MEXPECTS(success, "[Window] Failed to initialize GLFW.");
-		Log::Info("[Window] GLFW successfully initialized.");
+		RAY_MEXPECTS(success, "[Window] Failed to initialize GLFW");
+		Log::Info("[Window] GLFW successfully initialized");
 		glfwSetErrorCallback(GLFWErrorCallback);
 
 		// Remove default opengl api that comes with glfw
@@ -108,7 +108,7 @@ namespace At0::Ray
 
 		// Create the window
 		m_hWnd = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
-		RAY_MEXPECTS(m_hWnd, "[Window] Failed to create window.");
+		RAY_MEXPECTS(m_hWnd, "[Window] Failed to create window");
 		Log::Info("[Window] Created successfully ({0})", m_hWnd);
 
 		glfwSetWindowUserPointer(m_hWnd, this);

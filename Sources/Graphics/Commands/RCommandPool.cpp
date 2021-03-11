@@ -1,4 +1,4 @@
-#include "Rpch.h"
+﻿#include "Rpch.h"
 #include "RCommandPool.h"
 
 #include "Graphics/RGraphics.h"
@@ -18,7 +18,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(
 			vkCreateCommandPool(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_CommandPool),
-			"[CommandPool] Failed to create.");
+			"[CommandPool] Failed to create");
 	}
 
 	CommandPool::~CommandPool()

@@ -85,7 +85,7 @@ namespace At0::Ray
 			case VK_FORMAT_R32G32B32_SFLOAT: return 3 * 4;
 			}
 
-			RAY_ASSERT(false, "[Vertex] Format {0} is not supported.", (uint32_t)format);
+			RAY_ASSERT(false, "[Vertex] Format {0} is not supported", (uint32_t)format);
 			return 0;
 		}
 
@@ -165,7 +165,7 @@ namespace At0::Ray
 		{
 			RAY_MEXPECTS(sizeof...(args) == m_Layout.NumberOfElements(),
 				"[VertexInput] Number of arguments ({0}) must match number of layout elements "
-				"({1}).",
+				"({1})",
 				sizeof...(args), m_Layout.NumberOfElements());
 
 			// Resize the buffer to hold the new vertex

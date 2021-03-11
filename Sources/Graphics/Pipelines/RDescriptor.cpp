@@ -24,7 +24,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(
 			vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo, &m_DescriptorSet),
-			"[DescriptorSet] Failed to allocate.");
+			"[DescriptorSet] Failed to allocate");
 	}
 
 	void DescriptorSet::CmdBind(const CommandBuffer& cmdBuff) const

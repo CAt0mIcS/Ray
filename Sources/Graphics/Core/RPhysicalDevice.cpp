@@ -16,7 +16,7 @@ namespace At0::Ray
 		uint32_t physicalDeviceCount = 0;
 		vkEnumeratePhysicalDevices(Graphics::Get().GetInstance(), &physicalDeviceCount, nullptr);
 		if (physicalDeviceCount == 0)
-			RAY_THROW_RUNTIME("[PhysicalDevice] Failed to find suitable GPU supporting Vulkan.");
+			RAY_THROW_RUNTIME("[PhysicalDevice] Failed to find suitable GPU supporting Vulkan");
 
 		std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
 		vkEnumeratePhysicalDevices(
@@ -28,13 +28,12 @@ namespace At0::Ray
 
 		vkGetPhysicalDeviceProperties(m_Device, &m_Properties);
 		Log::Info("[PhysicalDevice] Graphics card info: ");
-		Log::Info("[PhysicalDevice]\tAPI Version: {0}.", m_Properties.apiVersion);
-		Log::Info("[PhysicalDevice]\tDriver Version: {0}.", m_Properties.driverVersion);
-		Log::Info("[PhysicalDevice]\tVendor ID: {0}.", m_Properties.vendorID);
-		Log::Info("[PhysicalDevice]\tDevice ID: {0}.", m_Properties.deviceID);
-		Log::Info(
-			"[PhysicalDevice]\tDevice Type: {0}.", String::Construct(m_Properties.deviceType));
-		Log::Info("[PhysicalDevice]\tDevice Name: {0}.", m_Properties.deviceName);
+		Log::Info("[PhysicalDevice]\tAPI Version: {0}", m_Properties.apiVersion);
+		Log::Info("[PhysicalDevice]\tDriver Version: {0}", m_Properties.driverVersion);
+		Log::Info("[PhysicalDevice]\tVendor ID: {0}", m_Properties.vendorID);
+		Log::Info("[PhysicalDevice]\tDevice ID: {0}", m_Properties.deviceID);
+		Log::Info("[PhysicalDevice]\tDevice Type: {0}", String::Construct(m_Properties.deviceType));
+		Log::Info("[PhysicalDevice]\tDevice Name: {0}", m_Properties.deviceName);
 
 		vkGetPhysicalDeviceFeatures(m_Device, &m_Features);
 		vkGetPhysicalDeviceMemoryProperties(m_Device, &m_MemoryProperties);
@@ -55,7 +54,7 @@ namespace At0::Ray
 				return i;
 		}
 
-		RAY_THROW_RUNTIME("[PhysicalDevice] Failed to find suitable memory type.");
+		RAY_THROW_RUNTIME("[PhysicalDevice] Failed to find suitable memory type");
 		return 0;
 	}
 

@@ -1,4 +1,4 @@
-#include "Rpch.h"
+﻿#include "Rpch.h"
 #include "RCommandBuffer.h"
 
 #include "Graphics/RGraphics.h"
@@ -21,7 +21,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(
 			vkAllocateCommandBuffers(Graphics::Get().GetDevice(), &allocInfo, &m_CommandBuffer),
-			"[CommandBuffer] Failed to allocate command buffer.");
+			"[CommandBuffer] Failed to allocate command buffer");
 	}
 
 	CommandBuffer::~CommandBuffer()
@@ -37,12 +37,12 @@ namespace At0::Ray
 		beginInfo.pInheritanceInfo = nullptr;
 
 		RAY_VK_THROW_FAILED(vkBeginCommandBuffer(m_CommandBuffer, &beginInfo),
-			"[CommandBuffer] Failed to begin recording.");
+			"[CommandBuffer] Failed to begin recording");
 	}
 
 	void CommandBuffer::End() const
 	{
 		RAY_VK_THROW_FAILED(
-			vkEndCommandBuffer(m_CommandBuffer), "[CommandBuffer] Failed to end recording.");
+			vkEndCommandBuffer(m_CommandBuffer), "[CommandBuffer] Failed to end recording");
 	}
 }  // namespace At0::Ray

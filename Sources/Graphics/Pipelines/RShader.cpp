@@ -27,7 +27,7 @@ namespace At0::Ray
 			if (!fileContents)
 			{
 				Log::Error(
-					"[ShaderIncluder] Include file {0} could not be loaded.", dir / headerName);
+					"[ShaderIncluder] Include file {0} could not be loaded", dir / headerName);
 				return nullptr;
 			}
 
@@ -43,7 +43,7 @@ namespace At0::Ray
 
 			if (!fileContents)
 			{
-				Log::Error("[ShaderIncluder] Include file {0} could not be loaded.", headerName);
+				Log::Error("[ShaderIncluder] Include file {0} could not be loaded", headerName);
 				return nullptr;
 			}
 
@@ -247,7 +247,7 @@ namespace At0::Ray
 		case VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT: return EShLangTessEvaluation;
 		}
 
-		RAY_THROW_RUNTIME("[Shader] Stage flag {0} is incompatible.", stageFlags);
+		RAY_THROW_RUNTIME("[Shader] Stage flag {0} is incompatible", stageFlags);
 		return EShLangAnyHit;
 	}
 
@@ -286,20 +286,20 @@ namespace At0::Ray
 		if (!shader.preprocess(
 				&resource, defaultVersion, ENoProfile, false, false, messages, &outStr, includer))
 		{
-			Log::Error("[Shader] Shader preproccessing failed: {0}.", shader.getInfoLog());
-			Log::Error("[Shader] {0}.", shader.getInfoDebugLog());
+			Log::Error("[Shader] Shader preproccessing failed: {0}", shader.getInfoLog());
+			Log::Error("[Shader] {0}", shader.getInfoDebugLog());
 		}
 
 		if (!shader.parse(&resource, defaultVersion, true, messages, includer))
 		{
-			Log::Error("[Shader] Shader preproccessing failed: {0}.", shader.getInfoLog());
-			Log::Error("[Shader] {0}.", shader.getInfoDebugLog());
+			Log::Error("[Shader] Shader preproccessing failed: {0}", shader.getInfoLog());
+			Log::Error("[Shader] {0}", shader.getInfoDebugLog());
 		}
 
 		program.addShader(&shader);
 
 		if (!program.link(messages) || !program.mapIO())
-			Log::Error("[Shader] Failed to link shader.");
+			Log::Error("[Shader] Failed to link shader");
 
 		program.buildReflection();
 
@@ -346,7 +346,7 @@ namespace At0::Ray
 		VkShaderModule shaderModule;
 		RAY_VK_THROW_FAILED(vkCreateShaderModule(Graphics::Get().GetDevice(),
 								&shaderModuleCreateInfo, nullptr, &shaderModule),
-			"[Shader] Failed to create shader module.");
+			"[Shader] Failed to create shader module");
 
 		return shaderModule;
 	}
@@ -490,7 +490,7 @@ namespace At0::Ray
 		case VK_SHADER_STAGE_COMPUTE_BIT: return Stage::Compute;
 		}
 
-		RAY_ASSERT(false, "[Shader] Vulkan shader stage {0} is invalid.", (uint32_t)stageFlags);
+		RAY_ASSERT(false, "[Shader] Vulkan shader stage {0} is invalid", (uint32_t)stageFlags);
 		return Stage::Vertex;
 	}
 
@@ -506,7 +506,7 @@ namespace At0::Ray
 		case Stage::Compute: return VK_SHADER_STAGE_COMPUTE_BIT;
 		}
 
-		RAY_ASSERT(false, "[Shader] Vulkan shader stage {0} is invalid.", (uint32_t)stageFlags);
+		RAY_ASSERT(false, "[Shader] Vulkan shader stage {0} is invalid", (uint32_t)stageFlags);
 		return VK_SHADER_STAGE_VERTEX_BIT;
 	}
 

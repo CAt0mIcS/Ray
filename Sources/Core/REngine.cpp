@@ -14,13 +14,13 @@ namespace At0::Ray
 
 	Engine& Engine::Get()
 	{
-		RAY_MEXPECTS(s_Instance, "[Engine::Get] Engine not initialized.");
+		RAY_MEXPECTS(s_Instance, "[Engine::Get] Engine not initialized");
 		return *s_Instance;
 	}
 
 	int Engine::Run()
 	{
-		Log::Info("[Engine] Startup.");
+		Log::Info("[Engine] Startup");
 		auto startSecTime = std::chrono::high_resolution_clock::now();
 		while (Window::Get().Update())
 		{
@@ -37,7 +37,7 @@ namespace At0::Ray
 			{
 				std::ostringstream oss;
 				oss << "Frametime: " << m_Delta.Change().AsSeconds() << "s"
-					<< ", FPS: " << m_FPS.Value() << '.';
+					<< ", FPS: " << m_FPS.Value();
 				Window::Get().SetTitle(oss.str());
 				Log::Debug("{0}", oss.str());
 
@@ -47,13 +47,13 @@ namespace At0::Ray
 
 		Graphics::Destroy();
 
-		Log::Info("[Engine] Shutdown.");
+		Log::Info("[Engine] Shutdown");
 		return 0;
 	}
 
 	Engine::Engine()
 	{
-		RAY_MEXPECTS(!s_Instance, "[Engine] Already initialized.");
+		RAY_MEXPECTS(!s_Instance, "[Engine] Already initialized");
 		s_Instance = this;
 	}
 }  // namespace At0::Ray

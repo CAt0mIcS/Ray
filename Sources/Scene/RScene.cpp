@@ -14,7 +14,7 @@ namespace At0::Ray
 {
 	Scene& Scene::Get()
 	{
-		RAY_MEXPECTS(s_CurrentScene, "[Scene] Current Scene was not set.");
+		RAY_MEXPECTS(s_CurrentScene, "[Scene] Current Scene was not set");
 		return *s_CurrentScene;
 	}
 

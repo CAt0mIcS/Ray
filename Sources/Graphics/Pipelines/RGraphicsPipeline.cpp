@@ -63,8 +63,8 @@ namespace At0::Ray
 			auto path = std::filesystem::absolute(shader);
 			std::optional<std::string> shaderCode = ReadFile(shader);
 			if (!shaderCode)
-				RAY_THROW_RUNTIME("[Shader] Could not find file {0}.", shader);
-			Log::Info("[GraphicsPipeline] Loading shader \"{0}\".", shader);
+				RAY_THROW_RUNTIME("[Shader] Could not find file {0}", shader);
+			Log::Info("[GraphicsPipeline] Loading shader \"{0}\"", shader);
 
 			VkShaderStageFlagBits stageFlag = Shader::GetShaderStage(shader);
 
@@ -101,7 +101,7 @@ namespace At0::Ray
 
 			RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(),
 									&createInfo, nullptr, &m_DescriptorSetLayouts[i]),
-				"[GraphicsPipeline] Failed to create descriptor set layout.");
+				"[GraphicsPipeline] Failed to create descriptor set layout");
 		}
 	}
 
@@ -120,7 +120,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(vkCreateDescriptorPool(Graphics::Get().GetDevice(), &createInfo,
 								nullptr, &m_DescriptorPool),
-			"[GraphicsPipeline] Failed to create descriptor pool.");
+			"[GraphicsPipeline] Failed to create descriptor pool");
 	}
 
 	void GraphicsPipeline::CreatePipelineLayout()
@@ -138,10 +138,10 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(
 			vkCreatePipelineLayout(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Layout),
-			"[GraphicsPipeline] Failed to create layout.");
+			"[GraphicsPipeline] Failed to create layout");
 
 		Log::Info("[GraphicsPipeline] Created pipeline layout with {0} descriptor set layout(s) "
-				  "and {1} push constant range(s).",
+				  "and {1} push constant range(s)",
 			createInfo.setLayoutCount, createInfo.pushConstantRangeCount);
 	}
 
@@ -280,7 +280,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(vkCreateGraphicsPipelines(Graphics::Get().GetDevice(), nullptr, 1,
 								&createInfo, nullptr, &m_Pipeline),
-			"[GraphicsPipeline] Failed to create.");
+			"[GraphicsPipeline] Failed to create");
 
 		// Destroy shader modules as they aren't needed anymore
 		for (const VkPipelineShaderStageCreateInfo& shaderStage : m_ShaderStages)

@@ -40,7 +40,7 @@ namespace At0::Ray
 	Graphics::Graphics() : EventListener<EntityCreatedEvent>(Scene::Get())
 	{
 		if (s_Instance)
-			RAY_THROW_RUNTIME("[Graphics] Object already created.");
+			RAY_THROW_RUNTIME("[Graphics] Object already created");
 
 		s_Instance = this;
 
@@ -88,7 +88,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(GetDevice(), &descriptorSetLayoutCreateInfo,
 								nullptr, &cameraDescSetLayout),
-			"[Graphics] Failed to create descriptor set layout for camera.");
+			"[Graphics] Failed to create descriptor set layout for camera");
 
 		VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
 		pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -100,7 +100,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(vkCreatePipelineLayout(GetDevice(), &pipelineLayoutCreateInfo, nullptr,
 								&cameraPipelineLayout),
-			"[Graphics] Failed to create pipeline layout for camera.");
+			"[Graphics] Failed to create pipeline layout for camera");
 
 		VkDescriptorPoolSize poolSize{};
 		poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -114,7 +114,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(vkCreateDescriptorPool(GetDevice(), &descriptorPoolCreateInfo, nullptr,
 								&cameraDescriptorPool),
-			"[GraphicsPipeline] Failed to create descriptor pool.");
+			"[GraphicsPipeline] Failed to create descriptor pool");
 
 		cameraUniform = MakeScope<Uniform>(cameraDescSetLayout, cameraDescriptorPool,
 			Pipeline::BindPoint::Graphics, cameraPipelineLayout, (uint32_t)sizeof(Matrix) * 2, 0,
@@ -266,15 +266,15 @@ namespace At0::Ray
 		{
 			RAY_VK_THROW_FAILED(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
 									&m_ImageAvailableSemaphore[i]),
-				"[Graphics] Failed to semaphore to signal when an image is avaliable.");
+				"[Graphics] Failed to semaphore to signal when an image is avaliable");
 
 			RAY_VK_THROW_FAILED(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
 									&m_RenderFinishedSemaphore[i]),
-				"[Graphics] Failed to semaphore to signal when an image has finished rendering.");
+				"[Graphics] Failed to semaphore to signal when an image has finished rendering");
 
 			RAY_VK_THROW_FAILED(
 				vkCreateFence(GetDevice(), &fenceCreateInfo, nullptr, &m_InFlightFences[i]),
-				"[Graphics] Failed to create in flight fence.");
+				"[Graphics] Failed to create in flight fence");
 		}
 	}
 
@@ -297,7 +297,7 @@ namespace At0::Ray
 			return;
 		}
 		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
-			RAY_THROW_RUNTIME("[Graphics] Failed to acquire next swapchain image.");
+			RAY_THROW_RUNTIME("[Graphics] Failed to acquire next swapchain image");
 
 		// Check if previous frame is still using this image (e.g. there is its fence to wait on)
 		if (m_ImagesInFlight[imageIndex] != VK_NULL_HANDLE)
@@ -343,7 +343,7 @@ namespace At0::Ray
 		// Fence will be signaled once the command buffer finishes executing
 		RAY_VK_THROW_FAILED(vkQueueSubmit(GetDevice().GetGraphicsQueue(), 1, &submitInfo,
 								m_InFlightFences[m_CurrentFrame]),
-			"[Graphics] Failed to submit image to queue for rendering.");
+			"[Graphics] Failed to submit image to queue for rendering");
 
 		VkSwapchainKHR swapChain = GetSwapchain();
 		VkPresentInfoKHR presentInfo{};
@@ -361,7 +361,7 @@ namespace At0::Ray
 			m_FramebufferResized)
 			OnFramebufferResized();
 		else if (result != VK_SUCCESS)
-			RAY_THROW_RUNTIME("[Graphics] Failed to present swapchain image.");
+			RAY_THROW_RUNTIME("[Graphics] Failed to present swapchain image");
 
 		m_CurrentFrame = (m_CurrentFrame + 1) % s_MaxFramesInFlight;
 	}

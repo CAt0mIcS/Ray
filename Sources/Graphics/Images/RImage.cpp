@@ -38,7 +38,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(
 			vkCreateImage(Graphics::Get().GetDevice(), &imageCreateInfo, nullptr, &m_Image),
-			"[Image] Failed to create.");
+			"[Image] Failed to create");
 
 		VkMemoryRequirements memRequirements;
 		vkGetImageMemoryRequirements(Graphics::Get().GetDevice(), m_Image, &memRequirements);
@@ -51,7 +51,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(
 			vkAllocateMemory(Graphics::Get().GetDevice(), &allocInfo, nullptr, &m_ImageMemory),
-			"[Image] Failed to allocate image memory.");
+			"[Image] Failed to allocate image memory");
 
 		vkBindImageMemory(Graphics::Get().GetDevice(), m_Image, m_ImageMemory, 0);
 
@@ -104,7 +104,7 @@ namespace At0::Ray
 			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 		}
 		else
-			RAY_THROW_RUNTIME("[Image] Invalid or unsupported combination of old and new layout.");
+			RAY_THROW_RUNTIME("[Image] Invalid or unsupported combination of old and new layout");
 
 		vkCmdPipelineBarrier(
 			commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);

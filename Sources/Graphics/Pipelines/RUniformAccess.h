@@ -25,7 +25,7 @@ namespace At0::Ray
 			template<typename T>
 			UniformData& operator=(T&& data)
 			{
-				RAY_MEXPECTS(m_Offset != (uint32_t)-1, "[UniformData] Uniform does not exist.");
+				RAY_MEXPECTS(m_Offset != (uint32_t)-1, "[UniformData] Uniform does not exist");
 				BufferSynchronizer::Get().Update(data, m_Offset);
 				return *this;
 			}
@@ -66,14 +66,14 @@ namespace At0::Ray
 		template<Shader::Stage stage>
 		UniformData Resolve(std::string_view uniformBlockName, std::string_view uniformName)
 		{
-			RAY_MEXPECTS(m_Shader, "[UniformAccess] Not created using pipeline.");
+			RAY_MEXPECTS(m_Shader, "[UniformAccess] Not created using pipeline");
 			return Resolve(stage)(uniformBlockName, uniformName);
 		}
 
 		template<Shader::Stage stage>
 		UniformData Resolve(std::string_view uniformName)
 		{
-			RAY_MEXPECTS(m_Shader, "[UniformAccess] Not created using pipeline.");
+			RAY_MEXPECTS(m_Shader, "[UniformAccess] Not created using pipeline");
 			return Resolve(stage)(uniformName);
 		}
 
