@@ -90,9 +90,17 @@ namespace At0::Ray
 					Position +=
 						Normalize(CrossProduct(camFront, Float3(0.0f, 1.0f, 0.0f))) * moveSpeed;
 				if (Keys.Up)
-					Position.y += 1.0f * moveSpeed;
+				{
+					Position += Normalize(CrossProduct(
+									camFront, CrossProduct(Float3(0.0f, 1.0f, 0.0f), camFront))) *
+								moveSpeed;
+				}
 				if (Keys.Down)
-					Position.y -= 1.0f * moveSpeed;
+				{
+					Position -= Normalize(CrossProduct(
+									camFront, CrossProduct(Float3(0.0f, 1.0f, 0.0f), camFront))) *
+								moveSpeed;
+				}
 
 				UpdateViewMatrix();
 			}
