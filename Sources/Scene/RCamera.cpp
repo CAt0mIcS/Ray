@@ -26,6 +26,7 @@ namespace At0::Ray
 		{
 			Matrices.Projection[1][1] *= -1.0f;
 		}
+		UpdateViewMatrix();
 	}
 
 	void Camera::UpdateAspectRatio(float aspect)
@@ -35,6 +36,7 @@ namespace At0::Ray
 		{
 			Matrices.Projection[1][1] *= -1.0f;
 		}
+		UpdateViewMatrix();
 	}
 
 	void Camera::SetPosition(Float3 pos)
@@ -147,8 +149,6 @@ namespace At0::Ray
 			Pipeline::BindPoint::Graphics, m_PipelineLayout, (uint32_t)sizeof(Matrix) * 2,
 			0,	// Using descriptor set 0 for per-scene data (set=0 in vs)
 			std::vector{ 0u });
-
-		UpdateViewMatrix();
 	}
 
 	Camera::~Camera()
