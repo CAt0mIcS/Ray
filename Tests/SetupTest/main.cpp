@@ -49,30 +49,31 @@ private:
 	void OnEvent(Ray::MouseButtonPressedEvent& e) override
 	{
 		static std::mt19937 device;
-		static std::uniform_real_distribution<float> posRotDist(-30.0f, 30.0f);
+		static std::uniform_real_distribution<float> posRotDist(-100.0f, 100.0f);
 		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
 		static uint32_t modelCount = 0;
 
-		for (uint32_t i = 0; i < 1; ++i)
+		for (uint32_t i = 0; i < 10000; ++i)
 		{
 			Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
-			Ray::Material triangleMaterial({ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 0.0f, 0.0f,
-				Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true);
+			// Ray::Material texturedMaterial({ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 0.0f, 0.0f,
+			//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true);
+			Ray::Material defaultMaterial;
 
-			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(triangleMaterial));
+			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
 
-			// auto& cubeTransform = mesh.Get<Ray::Transform>();
-			// cubeTransform.Translation = { posRotDist(device), posRotDist(device),
-			// posRotDist(device) };
+			auto& cubeTransform = mesh.GetTransform();
+			cubeTransform.Translation = { posRotDist(device), posRotDist(device),
+				posRotDist(device) };
 			// cubeTransform.Rotation
 			// = { posRotDist(device), posRotDist(device), posRotDist(device) }; cubeTransform.Scale
 			// = { scaleDist(device), scaleDist(device), scaleDist(device) };
 
-			Ray::Model& model =
-				entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
-			auto& modelTransform = model.Get<Ray::Transform>();
-			modelTransform.Translation = { posRotDist(device), posRotDist(device),
-				posRotDist(device) };
+			// Ray::Model& model =
+			//	entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
+			// auto& modelTransform = model.Get<Ray::Transform>();
+			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
+			//	posRotDist(device) };
 			// modelTransform.Rotation = { posRotDist(device), posRotDist(device),
 			// posRotDist(device)
 			// }; modelTransform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device)
@@ -96,7 +97,7 @@ int main()
 	signal(SIGINT, SignalHandler);
 
 	Ray::Log::Open("Ray.log");
-	Ray::Log::SetLogLevel(Violent::LogLevel::Trace);
+	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
 
 	try
 	{

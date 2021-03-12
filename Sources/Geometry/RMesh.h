@@ -42,11 +42,8 @@ namespace At0::Ray
 		static MeshData IcoSphere(Material material);
 		static MeshData UVSphere(Material material);
 
-		template<typename T>
-		T& Get()
-		{
-			return Get(std::type_identity<T>());
-		}
+		Transform& GetTransform() { return (Transform&)std::as_const(*this).GetTransform(); }
+		const Transform& GetTransform() const { return m_Transform; }
 
 		/**
 		 * Updates uniform buffers
@@ -64,7 +61,6 @@ namespace At0::Ray
 		Mesh(Mesh&& other) noexcept;
 
 	private:
-		Transform& Get(std::type_identity<Transform>) { return m_Transform; }
 		void Setup();
 
 	private:

@@ -62,7 +62,7 @@ namespace At0::Ray
 		CreateFramebuffers();
 		BufferSynchronizer::Create();
 
-		CreateCommandBuffers();
+		// CreateCommandBuffers();
 		CreateSyncObjects();
 	}
 
@@ -151,7 +151,7 @@ namespace At0::Ray
 		for (uint32_t i = 0; i < m_CommandBuffers.size(); ++i)
 		{
 			m_CommandBuffers[i] = MakeScope<CommandBuffer>(*m_CommandPool);
-			// RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i]);
+			RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i]);
 		}
 	}
 
@@ -262,10 +262,11 @@ namespace At0::Ray
 		// recorded
 		if (m_RerecordCommandBuffers)
 		{
-			for (uint32_t i = 0; i < m_Swapchain->GetNumberOfImages(); ++i)
-			{
-				RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i]);
-			}
+			// for (uint32_t i = 0; i < m_Swapchain->GetNumberOfImages(); ++i)
+			//{
+			//	RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i]);
+			//}
+			CreateCommandBuffers();
 			m_RerecordCommandBuffers = false;
 		}
 
