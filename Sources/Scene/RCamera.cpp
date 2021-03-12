@@ -80,15 +80,23 @@ namespace At0::Ray
 				float moveSpeed = dt * MovementSpeed;
 
 				if (Keys.Forward)
+				{
 					Position += camFront * moveSpeed;
+				}
 				if (Keys.Backward)
+				{
 					Position -= camFront * moveSpeed;
+				}
 				if (Keys.Left)
+				{
 					Position -=
 						Normalize(CrossProduct(camFront, Float3(0.0f, 1.0f, 0.0f))) * moveSpeed;
+				}
 				if (Keys.Right)
+				{
 					Position +=
 						Normalize(CrossProduct(camFront, Float3(0.0f, 1.0f, 0.0f))) * moveSpeed;
+				}
 				if (Keys.Up)
 				{
 					Position += Normalize(CrossProduct(
