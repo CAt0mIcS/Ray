@@ -381,14 +381,14 @@ namespace At0::Ray
 			{
 				VkDescriptorType descriptorType = VK_DESCRIPTOR_TYPE_MAX_ENUM;
 
-				switch (uniformBlock.second.type)
+				switch (uniformBlock.type)
 				{
 				case Shader::UniformBlocks::Type::Uniform:
 				{
 					descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 
-					m_DescriptorSetLayoutBindings[uniformBlock.second.set].emplace_back(
-						UniformBuffer::GetDescriptorSetLayout((uint32_t)uniformBlock.second.binding,
+					m_DescriptorSetLayoutBindings[uniformBlock.set].emplace_back(
+						UniformBuffer::GetDescriptorSetLayout((uint32_t)uniformBlock.binding,
 							descriptorType, ToVkShaderStage(shaderStage), 1));
 					break;
 				}
@@ -397,7 +397,7 @@ namespace At0::Ray
 				IncrementDescriptorPool(descriptorPoolCounts, descriptorType);
 			}
 
-			for (const auto& [uniformName, uniformData] : shaderData.uniforms)
+			for (const auto& uniformData : shaderData.uniforms)
 			{
 				VkDescriptorType descriptorType = VK_DESCRIPTOR_TYPE_MAX_ENUM;
 				switch (uniformData.glType)
@@ -541,7 +541,7 @@ namespace At0::Ray
 		uint32_t currentOffset = 0;
 		for (const auto& [shaderStage, shaderData] : m_ShaderData)
 		{
-			for (const auto& [uniformBlockName, uniformBlockData] : shaderData.uniformBlocks)
+			for (const auto& uniformBlockData : shaderData.uniformBlocks)
 			{
 				if (uniformBlockData.type != UniformBlocks::Type::Push)
 					continue;
@@ -569,18 +569,25 @@ namespace At0::Ray
 		data.glType = uniform.glDefineType;
 		data.offset = uniform.offset;
 		data.set = uniform.getType()->getQualifier().layoutSet;
+		data.uniformName = uniform.name;
 
 		// -1 means that it's in a block
 		if (data.binding == -1)
 		{
 			// Insert into the already existing uniform block
 			auto strings = String::Split(uniform.name, '.');
-			m_ShaderData[stageFlag].uniformBlocks.m_UniformBlocks[strings[0]].uniforms.Emplace(
-				strings[1], data);
+			data.uniformName = strings[1];
+
+			for (UniformBlocks::UniformBlockData& uBlockData :
+				m_ShaderData[stageFlag].uniformBlocks)
+			{
+				if (uBlockData.uniformBlockName == strings[0])
+					uBlockData.uniforms.Emplace(data);
+			}
 		}
 		else
 		{
-			m_ShaderData[stageFlag].uniforms.Emplace(uniform.name, data);
+			m_ShaderData[stageFlag].uniforms.Emplace(data);
 		}
 	}
 
@@ -593,6 +600,7 @@ namespace At0::Ray
 		data.binding = uniformBlock.getBinding();
 		data.size = uniformBlock.size;
 		data.set = uniformBlock.getType()->getQualifier().layoutSet;
+		data.uniformBlockName = uniformBlock.name;
 
 		if (uniformBlock.getType()->getQualifier().storage == glslang::EvqUniform)
 			data.type = Shader::UniformBlocks::Type::Uniform;
@@ -601,7 +609,7 @@ namespace At0::Ray
 		if (uniformBlock.getType()->getQualifier().layoutPushConstant)
 			data.type = Shader::UniformBlocks::Type::Push;
 
-		m_ShaderData[stageFlag].uniformBlocks.Emplace(uniformBlock.name, data);
+		m_ShaderData[stageFlag].uniformBlocks.Emplace(data);
 	}
 
 	void Shader::LoadAttribute(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i)
@@ -615,8 +623,9 @@ namespace At0::Ray
 		data.binding = attribute.getBinding();
 		data.size = attribute.size;
 		data.format = GlTypeToVkFormat(attribute.glDefineType);
+		data.attributeName = attribute.name;
 
-		m_ShaderData[stageFlag].attributes.Emplace(attribute.name, data);
+		m_ShaderData[stageFlag].attributes.Emplace(data);
 
 		m_VertexLayout->Append(data.format);
 	}
@@ -667,51 +676,28 @@ namespace At0::Ray
 	}
 
 	// ------------------------------------------------------------
-	// Attributes
-	void Shader::Attributes::Emplace(std::string_view attributeName, const AttributeData& data)
-	{
-		m_Attributes[attributeName.data()] = data;
-	}
-
-
-	// ------------------------------------------------------------
 	// Uniforms
-	void Shader::Uniforms::Emplace(std::string_view uniformName, const UniformData& data)
-	{
-		m_Uniforms[uniformName.data()] = data;
-	}
-
 	const Shader::Uniforms::UniformData* Shader::Uniforms::Get(std::string_view uniformName) const
 	{
-		try
+		for (const UniformData& dt : m_Uniforms)
 		{
-			return &m_Uniforms.at(uniformName.data());
+			if (dt.uniformName == uniformName)
+				return &dt;
 		}
-		catch (std::out_of_range&)
-		{
-			return nullptr;
-		}
+		return nullptr;
 	}
 
 
 	// ------------------------------------------------------------
 	// Uniform Blocks
-	void Shader::UniformBlocks::Emplace(
-		std::string_view uniformBlockName, const UniformBlockData& data)
-	{
-		m_UniformBlocks[uniformBlockName.data()] = data;
-	}
-
 	const Shader::UniformBlocks::UniformBlockData* Shader::UniformBlocks::Get(
 		std::string_view uniformBlockName) const
 	{
-		try
+		for (const UniformBlockData& dt : m_UniformBlocks)
 		{
-			return &m_UniformBlocks.at(uniformBlockName.data());
+			if (dt.uniformBlockName == uniformBlockName)
+				return &dt;
 		}
-		catch (std::out_of_range&)
-		{
-			return nullptr;
-		}
+		return nullptr;
 	}
 }  // namespace At0::Ray

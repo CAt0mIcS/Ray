@@ -72,13 +72,24 @@ namespace At0::Ray
 
 				// The format of the data to input
 				VkFormat format;
+
+				/**
+				 * The name of the attribute (layout(location = 0) in vec3 inPos) --> inPos
+				 */
+				std::string attributeName;
 			};
 
 		public:
-			void Emplace(std::string_view attributeName, const AttributeData& data);
+			void Emplace(const AttributeData& data) { m_Attributes.emplace_back(data); }
+
+			const auto begin() const { return m_Attributes.begin(); }
+			const auto end() const { return m_Attributes.end(); }
+
+			auto begin() { return m_Attributes.begin(); }
+			auto end() { return m_Attributes.end(); }
 
 		private:
-			std::unordered_map<std::string, AttributeData> m_Attributes;
+			std::vector<AttributeData> m_Attributes;
 		};
 
 		class Uniforms
@@ -114,17 +125,22 @@ namespace At0::Ray
 				 * If the uniform is in a uniform block, this value is undefined
 				 */
 				uint32_t set;
+
+				std::string uniformName;
 			};
 
 		public:
-			void Emplace(std::string_view uniformName, const UniformData& data);
+			void Emplace(const UniformData& data) { m_Uniforms.emplace_back(data); }
 			const Uniforms::UniformData* Get(std::string_view uniformName) const;
 
 			const auto begin() const { return m_Uniforms.begin(); }
 			const auto end() const { return m_Uniforms.end(); }
 
+			auto begin() { return m_Uniforms.begin(); }
+			auto end() { return m_Uniforms.end(); }
+
 		private:
-			std::unordered_map<std::string, UniformData> m_Uniforms;
+			std::vector<UniformData> m_Uniforms;
 		};
 
 		class UniformBlocks
@@ -158,18 +174,25 @@ namespace At0::Ray
 				 * The set specified in the shader layout (layout(set = 0, binding = x))
 				 */
 				uint32_t set;
+
+				/**
+				 * The name of the uniform block
+				 */
+				std::string uniformBlockName;
 			};
+
+		public:
+			void Emplace(const UniformBlockData& data) { m_UniformBlocks.emplace_back(data); }
+			const UniformBlocks::UniformBlockData* Get(std::string_view uniformBlockName) const;
 
 			const auto begin() const { return m_UniformBlocks.begin(); }
 			const auto end() const { return m_UniformBlocks.end(); }
 
-		public:
-			void Emplace(std::string_view uniformBlockName, const UniformBlockData& data);
-			const UniformBlocks::UniformBlockData* Get(std::string_view uniformBlockName) const;
-
+			auto begin() { return m_UniformBlocks.begin(); }
+			auto end() { return m_UniformBlocks.end(); }
 
 		private:
-			std::unordered_map<std::string, UniformBlockData> m_UniformBlocks;
+			std::vector<UniformBlockData> m_UniformBlocks;
 		};
 
 	public:
