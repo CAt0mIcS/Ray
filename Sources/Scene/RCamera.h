@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "../RBase.h"
+#include "../Utils/RNonCopyable.h"
 #include "../Events/REventListener.h"
 #include "../Events/RMouseEvents.h"
 #include "../Events/RKeyboardEvents.h"
@@ -22,6 +23,7 @@ namespace At0::Ray
 
 	class RAY_EXPORT Camera :
 		public Bindable,
+		NonCopyable,
 		EventListener<MouseMovedEvent>,
 		EventListener<KeyPressedEvent>,
 		EventListener<KeyReleasedEvent>

@@ -49,7 +49,7 @@ private:
 	void OnEvent(Ray::MouseButtonPressedEvent& e) override
 	{
 		static std::mt19937 device;
-		// static std::uniform_real_distribution<float> posRotDist(-100.0f, 100.0f);
+		static std::uniform_real_distribution<float> posRotDist(-100.0f, 100.0f);
 		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
 		static uint32_t modelCount = 0;
 
@@ -73,7 +73,7 @@ private:
 
 			Ray::Model& model =
 				entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
-			auto& modelTransform = model.Get<Ray::Transform>();
+			// auto& modelTransform = model.Get<Ray::Transform>();
 			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
 			//	posRotDist(device) };
 			// modelTransform.Rotation = { posRotDist(device), posRotDist(device),

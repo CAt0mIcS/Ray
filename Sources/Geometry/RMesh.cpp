@@ -104,8 +104,8 @@ namespace At0::Ray
 		m_Material.GetGraphicsPipeline().CmdBind(cmdBuff);
 		if (m_Material.GetMaterialImage())
 		{
-			m_Material.GetMaterialImage()->CmdBind(cmdBuff);
-			m_MaterialDescSet->CmdBind(cmdBuff);
+			// m_Material.GetMaterialImage()->CmdBind(cmdBuff);
+			m_Texture->CmdBind(cmdBuff);
 		}
 
 		m_PerObjectUniform.CmdBind(cmdBuff);
@@ -126,51 +126,25 @@ namespace At0::Ray
 		m_IndexBuffer = std::move(other.m_IndexBuffer);
 
 		m_Material = std::move(other.m_Material);
-		// m_Uniforms = std::move(other.m_Uniforms);
 		m_PerObjectUniform = std::move(other.m_PerObjectUniform);
 
 		m_Transform = std::move(other.m_Transform);
-		m_MaterialDescSet = std::move(other.m_MaterialDescSet);
+		m_Texture = std::move(other.m_Texture);
 		return *this;
 	}
 
 	Mesh::Mesh(Mesh&& other) noexcept
 		: Component(*other.m_Entity), m_VertexBuffer(std::move(other.m_VertexBuffer)),
 		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
-		  // m_Uniforms(std::move(other.m_Uniforms)),
 		  m_PerObjectUniform(std::move(other.m_PerObjectUniform)),
-		  m_Transform(std::move(other.m_Transform)),
-		  m_MaterialDescSet(std::move(other.m_MaterialDescSet))
+		  m_Transform(std::move(other.m_Transform)), m_Texture(std::move(other.m_Texture))
 	{
 	}
 
 	void Mesh::Setup()
 	{
 		if (m_Material.GetMaterialImage())
-		{
-			m_MaterialDescSet =
-				MakeScope<DescriptorSet>(m_Material.GetGraphicsPipeline().GetDescriptorPool(),
-					m_Material.GetGraphicsPipeline().GetDescriptorSetLayout(2),
-					m_Material.GetGraphicsPipeline().GetBindPoint(),
-					m_Material.GetGraphicsPipeline().GetLayout(), 2);
-
-			VkDescriptorImageInfo imageInfo{};
-			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageInfo.sampler = m_Material.GetMaterialImage()->GetSampler();
-			imageInfo.imageView = m_Material.GetMaterialImage()->GetImage().GetImageView();
-
-			VkWriteDescriptorSet descWriteImg{};
-			descWriteImg.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descWriteImg.dstSet = *m_MaterialDescSet;
-			descWriteImg.dstBinding = 2;
-			descWriteImg.dstArrayElement = 0;
-			descWriteImg.descriptorCount = 1;
-			descWriteImg.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			descWriteImg.pImageInfo = &imageInfo;
-			DescriptorSet::Update({ descWriteImg });
-		}
-
-		// m_Uniforms = UniformAccess(
-		//	m_Material.GetGraphicsPipeline(), m_PerObjectUniform.GetGlobalBufferOffset());
+			m_Texture = MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment,
+				*m_Material.GetMaterialImage(), m_Material.GetGraphicsPipeline());
 	}
 }  // namespace At0::Ray

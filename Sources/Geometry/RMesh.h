@@ -6,6 +6,8 @@
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
 #include "../Graphics/Pipelines/Uniforms/RBufferUniform.h"
+#include "../Graphics/Pipelines/Uniforms/RSamplerUniform.h"
+
 
 #include <type_traits>
 
@@ -68,8 +70,9 @@ namespace At0::Ray
 		Ref<IndexBuffer> m_IndexBuffer = nullptr;
 
 		BufferUniform m_PerObjectUniform;
+		Scope<SamplerUniform> m_Texture;
 		Material m_Material;
-		Scope<DescriptorSet> m_MaterialDescSet = nullptr;
+		// Scope<DescriptorSet> m_MaterialDescSet = nullptr;
 
 		Transform m_Transform;
 	};
