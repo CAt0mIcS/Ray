@@ -11,6 +11,7 @@
 #include "Graphics/Buffers/RIndexBuffer.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
+#include "Graphics/Images/RTexture2D.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -66,7 +67,8 @@ namespace At0::Ray
 
 		VertexLayout layout{};
 		layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Position
-		layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Normal
+		// layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Normal
+		layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Texture coordinate
 
 		VertexInput vertexInput(layout);
 
@@ -74,7 +76,9 @@ namespace At0::Ray
 		{
 			vertexInput.Emplace(
 				Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z),
-				Float3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z));
+				// Float3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z),
+				Float3(mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y,
+					mesh.mTextureCoords[0][i].z));
 		}
 
 		std::vector<IndexBuffer::Type> indices;
@@ -89,8 +93,15 @@ namespace At0::Ray
 			indices.emplace_back(face.mIndices[2]);
 		}
 
+		aiString texFileName;
+		pMaterials[mesh.mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &texFileName);
+
+		std::string path =
+			std::filesystem::path(base).replace_filename("").string() + texFileName.C_Str();
+
 		Material material(
-			{ "Resources/Shaders/ModelTestShader.vert", "Resources/Shaders/ModelTestShader.frag" });
+			{ "Resources/Shaders/ModelTestShader.vert", "Resources/Shaders/ModelTestShader.frag" },
+			{ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 0.0f, 0.0f, MakeRef<Texture2D>(path));
 
 		return { entity, Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
 			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)), std::move(material) };

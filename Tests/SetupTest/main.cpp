@@ -70,7 +70,7 @@ private:
 			// = { scaleDist(device), scaleDist(device), scaleDist(device) };
 
 			Ray::Model& model =
-				entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
+				entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/Nanosuit.obj");
 			auto& modelTransform = model.Get<Ray::Transform>();
 			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
 			//	posRotDist(device) };

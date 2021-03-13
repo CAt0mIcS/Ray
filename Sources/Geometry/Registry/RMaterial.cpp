@@ -32,7 +32,11 @@ namespace At0::Ray
 		}
 	}
 
-	Material::Material(const std::vector<std::string_view>& shaders)
+	Material::Material(const std::vector<std::string_view>& shaders, const Float4& baseDiffuse,
+		Ref<Texture2D> imageDiffuse, float metallic, float roughness, Ref<Texture2D> imageMaterial,
+		Ref<Texture2D> imageNormal, bool useTexturedShader)
+		: m_BaseDiffuse(baseDiffuse), m_DiffuseImage(imageDiffuse), m_Metallic(metallic),
+		  m_Roughness(roughness), m_MaterialImage(imageMaterial), m_NormalImage(imageNormal)
 	{
 		m_GraphicsPipeline =
 			Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(), shaders);

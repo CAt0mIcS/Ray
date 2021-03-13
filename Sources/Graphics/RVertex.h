@@ -83,6 +83,7 @@ namespace At0::Ray
 			case VK_FORMAT_R32G32B32_UINT:
 			case VK_FORMAT_R32G32B32_SINT:
 			case VK_FORMAT_R32G32B32_SFLOAT: return 3 * 4;
+			case VK_FORMAT_R32G32B32A32_SFLOAT: return 4 * 4;
 			}
 
 			RAY_ASSERT(false, "[Vertex] Format {0} is not supported", (uint32_t)format);

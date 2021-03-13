@@ -20,7 +20,11 @@ namespace At0::Ray
 			Ref<Texture2D> imageDiffuse = nullptr, float metallic = 0.0f, float roughness = 0.0f,
 			Ref<Texture2D> imageMaterial = nullptr, Ref<Texture2D> imageNormal = nullptr,
 			bool useTexturedShader = false);
-		Material(const std::vector<std::string_view>& shaders);
+		Material(const std::vector<std::string_view>& shaders,
+			const Float4& baseDiffuse = { 1.0f, 1.0f, 1.0f, 1.0f },
+			Ref<Texture2D> imageDiffuse = nullptr, float metallic = 0.0f, float roughness = 0.0f,
+			Ref<Texture2D> imageMaterial = nullptr, Ref<Texture2D> imageNormal = nullptr,
+			bool useTexturedShader = false);
 		~Material();
 
 		const Float4& GetBaseDiffuse() const { return m_BaseDiffuse; }
