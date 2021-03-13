@@ -36,23 +36,34 @@ namespace At0::Ray
 
 
 	Transform::Transform(Float3 translation, Float3 rotation, Float3 scale)
-		: Translation(translation), Rotation(rotation), Scale(scale)
+		: Translation{ translation }, Rotation{ rotation }, Scale{ scale },
+		  m_OldTranslation{ Translation }, m_OldRotation{ Rotation }, m_OldScale{ Scale }
 	{
 	}
 
 	Transform::Transform(Float3 translation, Float3 rotation)
-		: Translation(translation), Rotation(rotation)
+		: Translation{ translation }, Rotation{ rotation }, m_OldTranslation{ Translation },
+		  m_OldRotation{ Rotation }
 	{
 	}
 
 	Transform::Transform(Float3 translation)
-		: Translation(translation), Rotation{ 0.0f, 0.0f, 0.0f }
+		: Translation{ translation }, Rotation{ 0.0f, 0.0f, 0.0f }, m_OldTranslation{ Translation },
+		  m_OldRotation{ Rotation }
 	{
 	}
-	Transform::Transform() : Rotation{ 0.0f, 0.0f, 0.0f } {}
-	Matrix Transform::AsMatrix() const
+	Transform::Transform() : Rotation{ 0.0f, 0.0f, 0.0f }, m_OldRotation{ Rotation } {}
+	Matrix Transform::AsMatrix()
 	{
-		return MatrixScale(Scale) * MatrixRotation(Rotation) * MatrixTranslation(Translation);
+		if (m_OldTranslation != Translation || m_OldRotation != Rotation || m_OldScale != Scale)
+		{
+			m_CachedMatrix =
+				MatrixScale(Scale) * MatrixRotation(Rotation) * MatrixTranslation(Translation);
+			m_OldTranslation = Translation;
+			m_OldRotation = Rotation;
+			m_OldScale = Scale;
+		}
+		return m_CachedMatrix;
 	}
 	Transform Transform::operator+(const Transform& other)
 	{
@@ -60,6 +71,11 @@ namespace At0::Ray
 		transform.Translation = Translation + other.Translation;
 		transform.Rotation = Rotation + other.Rotation;
 		transform.Scale = Scale + other.Scale;
+
+		transform.m_OldTranslation = m_OldTranslation + other.m_OldTranslation;
+		transform.m_OldRotation = m_OldRotation + other.m_OldRotation;
+		transform.m_OldScale = m_OldScale + other.m_OldScale;
+
 		return transform;
 	}
 

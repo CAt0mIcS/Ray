@@ -68,9 +68,15 @@ namespace At0::Ray
 		Transform(Float3 translation);
 		Transform();
 
-		Matrix AsMatrix() const;
+		Matrix AsMatrix();
 
 		Transform operator+(const Transform& other);
+
+	private:
+		Matrix m_CachedMatrix = MatrixIdentity();
+		Float3 m_OldTranslation = Translation;
+		Float3 m_OldRotation = Rotation;
+		Float3 m_OldScale = Scale;
 	};
 
 	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Int2& data);

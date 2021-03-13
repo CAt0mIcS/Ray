@@ -87,10 +87,19 @@ namespace At0::Ray
 
 	// Mesh::MeshData Mesh::UVSphere(Material material) { return Mesh(); }
 
-	void Mesh::Update(Delta ts, const Transform& parentTransform)
+	void Mesh::Update(Delta ts)
 	{
 		m_Uniforms.Resolve<Shader::Stage::Vertex>("PerObjectData", "model") =
-			(m_Transform + parentTransform).AsMatrix();
+			m_Transform.AsMatrix();
+	}
+
+	void Mesh::Update(Delta ts, const Transform& parentTransform)
+	{
+		// Calculate it raw here to avoid the cache check
+		m_Uniforms.Resolve<Shader::Stage::Vertex>("PerObjectData", "model") =
+			MatrixScale(m_Transform.Scale + parentTransform.Scale) *
+			MatrixRotation(m_Transform.Rotation + parentTransform.Rotation) *
+			MatrixTranslation(m_Transform.Translation + parentTransform.Translation);
 	}
 
 	void Mesh::Bind(const CommandBuffer& cmdBuff) const

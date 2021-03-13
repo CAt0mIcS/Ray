@@ -210,7 +210,7 @@ namespace At0::Ray
 		{
 			enabledFeatures.vertexPipelineStoresAndAtomics = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::VertexPipelineStoresAndAtomics, true);
-			Log::Info("[LogicalDevice] Enabling vertex pipeline stores andd atomics feature");
+			Log::Info("[LogicalDevice] Enabling vertex pipeline stores and atomics feature");
 		}
 		else
 			Log::Warn(
@@ -220,7 +220,7 @@ namespace At0::Ray
 		{
 			enabledFeatures.fragmentStoresAndAtomics = VK_TRUE;
 			m_DeviceFeatures.emplace(DeviceFeature::FragmentStoresAndAtomics, true);
-			Log::Info("[LogicalDevice] Enabling fragment pipeline stores andd atomics feature");
+			Log::Info("[LogicalDevice] Enabling fragment stores and atomics feature");
 		}
 		else
 			Log::Warn("[LogicalDevice] Selected GPU does not support fragment stores and atomics");
