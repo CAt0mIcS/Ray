@@ -67,8 +67,8 @@ namespace At0::Ray
 
 		VertexLayout layout{};
 		layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Position
+		layout.Append(VK_FORMAT_R32G32_SFLOAT);		// Texture coordinate
 		// layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Normal
-		layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Texture coordinate
 
 		VertexInput vertexInput(layout);
 
@@ -76,9 +76,8 @@ namespace At0::Ray
 		{
 			vertexInput.Emplace(
 				Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z),
-				// Float3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z),
-				Float3(mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y,
-					mesh.mTextureCoords[0][i].z));
+				Float2(mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y)/*,
+				Float3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z)*/);
 		}
 
 		std::vector<IndexBuffer::Type> indices;
