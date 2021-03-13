@@ -10,7 +10,7 @@
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/Images/RTexture2D.h"
-#include "Graphics/Pipelines/RDescriptor.h"
+#include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 
 #include "Registry/RGeometricPrimitives.h"
 #include "Scene/REntity.h"

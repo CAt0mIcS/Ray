@@ -1,7 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RCamera.h"
 
-#include "Graphics/Pipelines/RUniform.h"
+#include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Buffers/RBufferSynchronizer.h"

@@ -1,5 +1,5 @@
 ﻿#include "Rpch.h"
-#include "RUniform.h"
+#include "RBufferUniform.h"
 
 #include "Graphics/RGraphics.h"
 #include "Utils/RString.h"
@@ -9,18 +9,6 @@
 
 namespace At0::Ray
 {
-	Uniform::~Uniform() {}
-
-	void Uniform::CmdBind(const CommandBuffer& cmdBuff) const { m_DescriptorSet->CmdBind(cmdBuff); }
-
-	Uniform& Uniform::operator=(Uniform&& other) noexcept
-	{
-		m_DescriptorSet = std::move(other.m_DescriptorSet);
-		return *this;
-	}
-
-	Uniform::Uniform(Uniform&& other) noexcept { *this = std::move(other); }
-
 	BufferUniform::BufferUniform(VkDescriptorSetLayout descSetLayout, VkDescriptorPool descSetPool,
 		Pipeline::BindPoint bindPoint, VkPipelineLayout pipelineLayout, uint32_t bufferSize,
 		uint32_t set, uint32_t binding)
@@ -109,6 +97,4 @@ namespace At0::Ray
 
 		return m_Uniforms->Get(uniformName)->offset;
 	}
-
-	ImageSamplerUniform::~ImageSamplerUniform() {}
 }  // namespace At0::Ray

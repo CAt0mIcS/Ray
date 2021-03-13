@@ -3,7 +3,7 @@
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
-#include "RGraphicsPipeline.h"
+#include "../RGraphicsPipeline.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 
 #include "Utils/RException.h"

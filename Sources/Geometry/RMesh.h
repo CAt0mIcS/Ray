@@ -5,7 +5,7 @@
 
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
-#include "../Graphics/Pipelines/RUniform.h"
+#include "../Graphics/Pipelines/Uniforms/RBufferUniform.h"
 
 #include <type_traits>
 

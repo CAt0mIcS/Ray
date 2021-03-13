@@ -26,7 +26,7 @@
 #include "Graphics/Buffers/RBufferSynchronizer.h"
 #include "Graphics/Buffers/RFramebuffer.h"
 
-#include "Graphics/Pipelines/RDescriptor.h"
+#include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "Geometry/RMesh.h"
 #include "Geometry/RModel.h"
 

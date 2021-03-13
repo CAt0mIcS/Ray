@@ -1,34 +1,10 @@
 ﻿#pragma once
 
-#include "../../RBase.h"
-
-#include "../Core/RBindable.h"
-#include "RPipeline.h"
-#include "RDescriptor.h"
-#include "../Buffers/RBufferSynchronizer.h"
-
-#include <vulkan/vulkan_core.h>
+#include "RUniform.h"
 
 
 namespace At0::Ray
 {
-	class RAY_EXPORT Uniform : public Bindable
-	{
-	public:
-		virtual ~Uniform();
-		void CmdBind(const CommandBuffer& cmdBuff) const override;
-
-		Uniform& operator=(Uniform&& other) noexcept;
-		Uniform(Uniform&& other) noexcept;
-
-	protected:
-		Uniform() = default;
-
-	protected:
-		Scope<DescriptorSet> m_DescriptorSet;
-	};
-
-
 	class RAY_EXPORT BufferUniform : public Uniform
 	{
 		friend class ProxyType;
@@ -105,14 +81,4 @@ namespace At0::Ray
 		 */
 		std::optional<Shader::Uniforms> m_Uniforms = std::nullopt;
 	};
-
-
-	class RAY_EXPORT ImageSamplerUniform : public Uniform
-	{
-	public:
-		~ImageSamplerUniform();
-
-	private:
-	};
-
 }  // namespace At0::Ray
