@@ -9,12 +9,14 @@ layout(location = 2) in vec3 inNormal;
 layout(location = 0) out vec3 outNormal;
 layout(location = 1) out vec3 outFragPos;
 layout(location = 2) out vec2 outTexCoord;
+layout(location = 3) out vec3 outViewPos;
 
 
 layout(set = 0, binding = 0) uniform Camera
 {
 	mat4 view;
 	mat4 proj;
+	vec3 pos;
 } camUBO;
 
 layout(set = 1, binding = 1) uniform PerObjectData
@@ -28,6 +30,7 @@ void main()
 	// outNormal = vec3(0.0f, 1.0f, 1.0f);
 	outFragPos = vec3(ubo.model * vec4(inPos, 1.0f));
 	outTexCoord = inTexCoord;
+	outViewPos = camUBO.pos;
 
 	gl_Position = camUBO.proj * camUBO.view * ubo.model * vec4(inPos, 1.0f);
 }

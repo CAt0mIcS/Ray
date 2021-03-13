@@ -36,7 +36,6 @@ namespace At0::Ray
 	public:
 		Float3 Rotation{};
 		Float3 Position{};
-		Float4 ViewPos{};
 
 		float RotationSpeed = 1.0f, MovementSpeed = 1.0f;
 
@@ -46,9 +45,10 @@ namespace At0::Ray
 
 		struct
 		{
-			Matrix Projection = MatrixIdentity();
 			Matrix View = MatrixIdentity();
-		} Matrices{};
+			Matrix Projection = MatrixIdentity();
+			Float3 ViewPos{};
+		} ShaderData{};
 
 		struct
 		{

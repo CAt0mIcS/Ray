@@ -21,20 +21,20 @@ namespace At0::Ray
 		m_FoV = fov;
 		m_NearZ = nearZ;
 		m_FarZ = farZ;
-		Matrices.Projection = glm::perspective(Radians(fov), aspect, nearZ, farZ);
+		ShaderData.Projection = glm::perspective(Radians(fov), aspect, nearZ, farZ);
 		if (FlipY)
 		{
-			Matrices.Projection[1][1] *= -1.0f;
+			ShaderData.Projection[1][1] *= -1.0f;
 		}
 		UpdateViewMatrix();
 	}
 
 	void Camera::UpdateAspectRatio(float aspect)
 	{
-		Matrices.Projection = glm::perspective(Radians(m_FoV), aspect, m_NearZ, m_FarZ);
+		ShaderData.Projection = glm::perspective(Radians(m_FoV), aspect, m_NearZ, m_FarZ);
 		if (FlipY)
 		{
-			Matrices.Projection[1][1] *= -1.0f;
+			ShaderData.Projection[1][1] *= -1.0f;
 		}
 		UpdateViewMatrix();
 	}
@@ -162,7 +162,7 @@ namespace At0::Ray
 			"[Camera] Failed to create descriptor pool");
 
 		m_Uniform = MakeScope<Uniform>(m_DescriptorSetLayout, m_DescriptorPool,
-			Pipeline::BindPoint::Graphics, m_PipelineLayout, (uint32_t)sizeof(Matrix) * 2,
+			Pipeline::BindPoint::Graphics, m_PipelineLayout, uint32_t(sizeof(ShaderData)),
 			0,	// Using descriptor set 0 for per-scene data (set=0 in vs)
 			std::vector{ 0u });
 	}
@@ -193,14 +193,15 @@ namespace At0::Ray
 
 		if (Type == CameraType::FirstPerson)
 		{
-			Matrices.View = rotM * transM;
+			ShaderData.View = rotM * transM;
 		}
 		else
 		{
-			Matrices.View = transM * rotM;
+			ShaderData.View = transM * rotM;
 		}
 
-		ViewPos = Float4(Position, 0.0f) * Float4(-1.0f, 1.0f, -1.0f, 1.0f);
+		// ShaderData.ViewPos = Float4(Position, 0.0f) * Float4(-1.0f, 1.0f, -1.0f, 1.0f);
+		ShaderData.ViewPos = Position * Float3(-1.0f, 1.0f, -1.0f);
 
 		Updated = true;
 
@@ -209,9 +210,7 @@ namespace At0::Ray
 
 	void Camera::UpdateUniform()
 	{
-		BufferSynchronizer::Get().Update(Matrices.View, m_Uniform->GetGlobalBufferOffset());
-		BufferSynchronizer::Get().Update(
-			Matrices.Projection, m_Uniform->GetGlobalBufferOffset() + sizeof(Matrix));
+		BufferSynchronizer::Get().Update(ShaderData, m_Uniform->GetGlobalBufferOffset());
 	}
 
 	void Camera::OnEvent(MouseMovedEvent& e)
