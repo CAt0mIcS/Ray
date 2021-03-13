@@ -22,7 +22,11 @@ namespace At0::Ray
 
 		bool EntitySet() const { return m_Entity != nullptr; }
 
-		Component& operator=(Component&& other) noexcept { m_Entity = other.m_Entity; }
+		Component& operator=(Component&& other) noexcept
+		{
+			m_Entity = other.m_Entity;
+			return *this;
+		}
 		Component(Component&& other) noexcept { *this = std::move(other); }
 
 	protected:
