@@ -21,13 +21,13 @@ vec3 materialSpecular = vec3(1.0f, 1.0f, 1.0f);
 void main()
 {
     // ambient
-    // vec3 ambient = lightAmbient * texture(materialDiffuse, inTexCoord).rgb;
+    vec3 ambient = lightAmbient * texture(materialDiffuse, inTexCoord.xy).rgb;
 
     // diffuse 
     // vec3 norm = normalize(inNormal);
     // vec3 lightDir = normalize(lightPosition - inFragPos);
     // float diff = max(dot(norm, lightDir), 0.0f);
-    // vec3 diffuse = lightDiffuse * diff * texture(materialDiffuse, inTexCoord).rgb;
+    // vec3 diffuse = lightDiffuse * diff * texture(materialDiffuse, inTexCoord.xy).rgb;
 
     // specular
     // vec3 viewDir = normalize(viewPos - FragPos);
@@ -36,5 +36,6 @@ void main()
     // vec3 specular = light.specular * spec * texture(material.specular, TexCoords).rgb;
     
     // outColor = vec4(ambient + diffuse, 1.0f);
-    outColor = texture(materialDiffuse, inTexCoord.xy);
+    outColor = vec4(ambient, 1.0f);
+    // outColor = texture(materialDiffuse, inTexCoord.xy);
 }
