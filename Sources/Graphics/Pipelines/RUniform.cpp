@@ -32,6 +32,15 @@ namespace At0::Ray
 	}
 
 	BufferUniform::BufferUniform(
+		const Pipeline& pipeline, uint32_t bufferSize, uint32_t set, uint32_t binding)
+	{
+		m_DescriptorSet = MakeScope<DescriptorSet>(pipeline.GetDescriptorPool(),
+			pipeline.GetDescriptorSetLayout(set), pipeline.GetBindPoint(), pipeline.GetLayout(),
+			set);
+		Setup(bufferSize, binding);
+	}
+
+	BufferUniform::BufferUniform(
 		std::string_view uniformName, Shader::Stage stage, const Pipeline& pipeline)
 	{
 		uint32_t size = 0;

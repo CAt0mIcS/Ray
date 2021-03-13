@@ -34,6 +34,8 @@ namespace At0::Ray
 		BufferUniform(VkDescriptorSetLayout descSetLayout, VkDescriptorPool descSetPool,
 			Pipeline::BindPoint bindPoint, VkPipelineLayout pipelineLayout, uint32_t bufferSize,
 			uint32_t set, uint32_t binding);
+		BufferUniform(
+			const Pipeline& pipeline, uint32_t bufferSize, uint32_t set, uint32_t binding);
 		BufferUniform(std::string_view uniformName, Shader::Stage stage, const Pipeline& pipeline);
 		~BufferUniform();
 
