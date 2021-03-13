@@ -100,8 +100,7 @@ namespace At0::Ray
 
 		Material material(
 			{ "Resources/Shaders/ModelTestShader.vert", "Resources/Shaders/ModelTestShader.frag" },
-			{ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 1.0f, 1.0f, MakeRef<Texture2D>(path), nullptr,
-			&layout);
+			{ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 1.0f, 1.0f, MakeRef<Texture2D>(path), nullptr);
 
 		return { entity, Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
 			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)), std::move(material) };

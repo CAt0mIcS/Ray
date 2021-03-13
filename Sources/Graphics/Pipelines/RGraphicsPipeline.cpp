@@ -170,7 +170,7 @@ namespace At0::Ray
 		std::vector<VkVertexInputBindingDescription> bindingDescs;
 		std::vector<VkVertexInputAttributeDescription> attribDescs;
 
-		if (!pLayout)
+		if (pLayout)
 		{
 			bindingDescs = pLayout->GetVertexInputBindingDescriptions();
 			attribDescs = pLayout->GetVertexInputAttributeDescriptions();
@@ -180,38 +180,6 @@ namespace At0::Ray
 			bindingDescs = m_Shader.GetVertexInputBindingDescriptions();
 			attribDescs = m_Shader.GetVertexInputAttributeDescriptions();
 		}
-
-
-		// VkVertexInputBindingDescription bindingDesc{};
-		// bindingDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-		// bindingDesc.binding = 0;
-		// bindingDesc.stride = sizeof(Float3) * 2 + sizeof(Float2);
-
-		// VkVertexInputAttributeDescription posAttribDesc{};
-		// posAttribDesc.location = 0;
-		// posAttribDesc.binding = 0;
-		// posAttribDesc.format = VK_FORMAT_R32G32B32_SFLOAT;
-		// posAttribDesc.offset = 0;
-
-		// VkVertexInputAttributeDescription texCoordAttribDesc{};
-		// texCoordAttribDesc.location = 1;
-		// texCoordAttribDesc.binding = 0;
-		// texCoordAttribDesc.format = VK_FORMAT_R32G32_SFLOAT;
-		// texCoordAttribDesc.offset = sizeof(Float3);
-
-		// VkVertexInputAttributeDescription normalAttribDesc{};
-		// normalAttribDesc.location = 2;
-		// normalAttribDesc.binding = 0;
-		// normalAttribDesc.format = VK_FORMAT_R32G32B32_SFLOAT;
-		// normalAttribDesc.offset = sizeof(Float3) + sizeof(Float2);
-
-		// bindingDescs.clear();
-		// bindingDescs.emplace_back(bindingDesc);
-
-		// attribDescs.clear();
-		// attribDescs.emplace_back(posAttribDesc);
-		// attribDescs.emplace_back(texCoordAttribDesc);
-		// attribDescs.emplace_back(normalAttribDesc);
 
 
 		VkPipelineVertexInputStateCreateInfo vertexInput{};

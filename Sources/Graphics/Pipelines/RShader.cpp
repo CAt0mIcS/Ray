@@ -375,8 +375,20 @@ namespace At0::Ray
 	{
 		std::unordered_map<VkDescriptorType, uint32_t> descriptorPoolCounts;
 
-		for (const auto& [shaderStage, shaderData] : m_ShaderData)
+		for (auto& [shaderStage, shaderData] : m_ShaderData)
 		{
+			// Sort attributes by location and add their format to the vertex layout
+			std::sort(shaderData.attributes.begin(), shaderData.attributes.end(),
+				[](const Attributes::AttributeData& l, const Attributes::AttributeData& r) {
+					return l.location < r.location;
+				});
+
+			if (shaderStage == Shader::Stage::Vertex)
+			{
+				for (const auto& attribData : shaderData.attributes)
+					m_VertexLayout->Append(attribData.format);
+			}
+
 			for (auto& uniformBlock : shaderData.uniformBlocks)
 			{
 				VkDescriptorType descriptorType = VK_DESCRIPTOR_TYPE_MAX_ENUM;
@@ -626,8 +638,6 @@ namespace At0::Ray
 		data.attributeName = attribute.name;
 
 		m_ShaderData[stageFlag].attributes.Emplace(data);
-
-		m_VertexLayout->Append(data.format);
 	}
 
 	int32_t Shader::ComputeSize(const glslang::TType* ttype)

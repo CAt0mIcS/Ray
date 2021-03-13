@@ -82,6 +82,9 @@ namespace At0::Ray
 		public:
 			void Emplace(const AttributeData& data) { m_Attributes.emplace_back(data); }
 
+			AttributeData& operator[](uint32_t i) { return m_Attributes[i]; }
+			const AttributeData& operator[](uint32_t i) const { return m_Attributes[i]; }
+
 			const auto begin() const { return m_Attributes.begin(); }
 			const auto end() const { return m_Attributes.end(); }
 
