@@ -31,6 +31,31 @@ namespace At0::Ray
 
 	class RAY_EXPORT BufferUniform : public Uniform
 	{
+		friend class ProxyType;
+
+	private:
+		class ProxyType
+		{
+		public:
+			ProxyType(BufferUniform* pUpper, std::string_view uniformName)
+				: m_BufferUniform(pUpper), m_UniformName(uniformName)
+			{
+			}
+
+			template<typename T>
+			ProxyType& operator=(T&& data)
+			{
+				BufferSynchronizer::Get().Update(
+					data, m_BufferUniform->GetGlobalBufferOffset() +
+							  m_BufferUniform->GetUniformOffsetInBlock(m_UniformName));
+				return *this;
+			}
+
+		private:
+			BufferUniform* m_BufferUniform;
+			std::string m_UniformName;
+		};
+
 	public:
 		BufferUniform(VkDescriptorSetLayout descSetLayout, VkDescriptorPool descSetPool,
 			Pipeline::BindPoint bindPoint, VkPipelineLayout pipelineLayout, uint32_t bufferSize,
@@ -59,6 +84,8 @@ namespace At0::Ray
 			BufferSynchronizer::Get().Update(
 				data, m_GlobalBufferOffset + GetUniformOffsetInBlock(uniformName));
 		}
+
+		ProxyType operator[](std::string_view uniformName) { return { this, uniformName }; }
 
 		BufferUniform& operator=(BufferUniform&& other) noexcept = default;
 		BufferUniform(BufferUniform&& other) noexcept = default;
