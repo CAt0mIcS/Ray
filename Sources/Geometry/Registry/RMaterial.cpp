@@ -10,36 +10,14 @@
 
 namespace At0::Ray
 {
-	Material::Material(const Float4& baseDiffuse, std::shared_ptr<Texture2D> imageDiffuse,
-		float metallic, float roughness, std::shared_ptr<Texture2D> imageMaterial,
-		std::shared_ptr<Texture2D> imageNormal, bool useTexturedShader)
-		: m_BaseDiffuse(baseDiffuse), m_DiffuseImage(imageDiffuse), m_Metallic(metallic),
-		  m_Roughness(roughness), m_MaterialImage(imageMaterial), m_NormalImage(imageNormal)
-	{
-		if (useTexturedShader)
-		{
-			std::vector<std::string_view> shaders{ "Resources/Shaders/TexturedShader.vert",
-				"Resources/Shaders/TexturedShader.frag" };
-			m_GraphicsPipeline =
-				Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(), shaders);
-		}
-		else
-		{
-			std::vector<std::string_view> shaders{ "Resources/Shaders/DefaultShader.vert",
-				"Resources/Shaders/DefaultShader.frag" };
-			m_GraphicsPipeline =
-				Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(), shaders);
-		}
-	}
-
 	Material::Material(const std::vector<std::string_view>& shaders, const Float4& baseDiffuse,
 		Ref<Texture2D> imageDiffuse, float metallic, float roughness, Ref<Texture2D> imageMaterial,
-		Ref<Texture2D> imageNormal, bool useTexturedShader)
+		Ref<Texture2D> imageNormal, const VertexLayout* pLayout)
 		: m_BaseDiffuse(baseDiffuse), m_DiffuseImage(imageDiffuse), m_Metallic(metallic),
 		  m_Roughness(roughness), m_MaterialImage(imageMaterial), m_NormalImage(imageNormal)
 	{
 		m_GraphicsPipeline =
-			Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(), shaders);
+			Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(), shaders, pLayout);
 	}
 
 	Material::~Material() {}

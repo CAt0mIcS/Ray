@@ -4,6 +4,7 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/RenderPass/RRenderPass.h"
+#include "Graphics/RVertex.h"
 
 #include "Utils/RAssert.h"
 #include "Utils/RException.h"
@@ -12,14 +13,14 @@
 
 namespace At0::Ray
 {
-	GraphicsPipeline::GraphicsPipeline(
-		const RenderPass& renderPass, const std::vector<std::string_view>& shaders)
+	GraphicsPipeline::GraphicsPipeline(const RenderPass& renderPass,
+		const std::vector<std::string_view>& shaders, const VertexLayout* pLayout)
 	{
 		CreateShaderProgram(shaders);
 		CreateDescriptorSetLayouts();
 		CreateDescriptorPool();
 		CreatePipelineLayout();
-		CreatePipeline(renderPass);
+		CreatePipeline(renderPass, pLayout);
 	}
 
 	GraphicsPipeline::~GraphicsPipeline()
@@ -45,8 +46,8 @@ namespace At0::Ray
 		return VK_NULL_HANDLE;
 	}
 
-	std::string GraphicsPipeline::GetUID(
-		const RenderPass& renderPass, const std::vector<std::string_view>& shaders)
+	std::string GraphicsPipeline::GetUID(const RenderPass& renderPass,
+		const std::vector<std::string_view>& shaders, const VertexLayout* pLayout)
 	{
 		std::ostringstream oss;
 		oss << typeid(GraphicsPipeline).name() << "#";
@@ -164,13 +165,54 @@ namespace At0::Ray
 			createInfo.setLayoutCount, createInfo.pushConstantRangeCount);
 	}
 
-	void GraphicsPipeline::CreatePipeline(const RenderPass& renderPass)
+	void GraphicsPipeline::CreatePipeline(const RenderPass& renderPass, const VertexLayout* pLayout)
 	{
-		std::vector<VkVertexInputBindingDescription> bindingDescs =
-			m_Shader.GetVertexInputBindingDescriptions();
+		std::vector<VkVertexInputBindingDescription> bindingDescs;
+		std::vector<VkVertexInputAttributeDescription> attribDescs;
 
-		std::vector<VkVertexInputAttributeDescription> attribDescs =
-			m_Shader.GetVertexInputAttributeDescriptions();
+		if (!pLayout)
+		{
+			bindingDescs = pLayout->GetVertexInputBindingDescriptions();
+			attribDescs = pLayout->GetVertexInputAttributeDescriptions();
+		}
+		else
+		{
+			bindingDescs = m_Shader.GetVertexInputBindingDescriptions();
+			attribDescs = m_Shader.GetVertexInputAttributeDescriptions();
+		}
+
+
+		// VkVertexInputBindingDescription bindingDesc{};
+		// bindingDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+		// bindingDesc.binding = 0;
+		// bindingDesc.stride = sizeof(Float3) * 2 + sizeof(Float2);
+
+		// VkVertexInputAttributeDescription posAttribDesc{};
+		// posAttribDesc.location = 0;
+		// posAttribDesc.binding = 0;
+		// posAttribDesc.format = VK_FORMAT_R32G32B32_SFLOAT;
+		// posAttribDesc.offset = 0;
+
+		// VkVertexInputAttributeDescription texCoordAttribDesc{};
+		// texCoordAttribDesc.location = 1;
+		// texCoordAttribDesc.binding = 0;
+		// texCoordAttribDesc.format = VK_FORMAT_R32G32_SFLOAT;
+		// texCoordAttribDesc.offset = sizeof(Float3);
+
+		// VkVertexInputAttributeDescription normalAttribDesc{};
+		// normalAttribDesc.location = 2;
+		// normalAttribDesc.binding = 0;
+		// normalAttribDesc.format = VK_FORMAT_R32G32B32_SFLOAT;
+		// normalAttribDesc.offset = sizeof(Float3) + sizeof(Float2);
+
+		// bindingDescs.clear();
+		// bindingDescs.emplace_back(bindingDesc);
+
+		// attribDescs.clear();
+		// attribDescs.emplace_back(posAttribDesc);
+		// attribDescs.emplace_back(texCoordAttribDesc);
+		// attribDescs.emplace_back(normalAttribDesc);
+
 
 		VkPipelineVertexInputStateCreateInfo vertexInput{};
 		vertexInput.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;

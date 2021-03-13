@@ -4,7 +4,7 @@
 
 layout(location = 0) in vec3 inPos;
 layout(location = 1) in vec2 inTexCoord;
-// layout(location = 2) in vec3 inNormal;
+layout(location = 2) in vec3 inNormal;
 
 layout(location = 0) out vec3 outNormal;
 layout(location = 1) out vec3 outFragPos;
@@ -24,8 +24,8 @@ layout(set = 1, binding = 1) uniform PerObjectData
 
 void main()
 {
-	// outNormal = mat3(transpose(inverse(ubo.model))) * inNormal;
-	outNormal = vec3(0.0f, 1.0f, 1.0f);
+	outNormal = mat3(transpose(inverse(ubo.model))) * inNormal;
+	// outNormal = vec3(0.0f, 1.0f, 1.0f);
 	outFragPos = vec3(ubo.model * vec4(inPos, 1.0f));
 	outTexCoord = inTexCoord;
 

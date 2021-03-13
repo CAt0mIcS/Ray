@@ -129,11 +129,11 @@ namespace At0::Ray
 		}
 
 		std::vector<VkVertexInputBindingDescription> GetVertexInputBindingDescriptions(
-			uint32_t binding) const
+			uint32_t binding = 0) const
 		{
 			VkVertexInputBindingDescription bindingDescription{};
 			bindingDescription.binding = binding;
-			bindingDescription.stride = Size();
+			bindingDescription.stride = SizeVertex();
 			bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
 			return { bindingDescription };

@@ -4,6 +4,10 @@
 #include "../Core/RBindable.h"
 
 
+#include "Core/RMath.h"
+#include <vector>
+
+
 namespace At0::Ray
 {
 	class VertexInput;

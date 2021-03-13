@@ -68,7 +68,7 @@ namespace At0::Ray
 		VertexLayout layout{};
 		layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Position
 		layout.Append(VK_FORMAT_R32G32_SFLOAT);		// Texture coordinate
-		// layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Normal
+		layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Normal
 
 		VertexInput vertexInput(layout);
 
@@ -76,8 +76,8 @@ namespace At0::Ray
 		{
 			vertexInput.Emplace(
 				Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z),
-				Float2(mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y)/*,
-				Float3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z)*/);
+				Float2(mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y),
+				Float3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z));
 		}
 
 		std::vector<IndexBuffer::Type> indices;
@@ -100,7 +100,8 @@ namespace At0::Ray
 
 		Material material(
 			{ "Resources/Shaders/ModelTestShader.vert", "Resources/Shaders/ModelTestShader.frag" },
-			{ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 0.0f, 0.0f, MakeRef<Texture2D>(path));
+			{ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 1.0f, 1.0f, MakeRef<Texture2D>(path), nullptr,
+			&layout);
 
 		return { entity, Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
 			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)), std::move(material) };

@@ -103,7 +103,7 @@ namespace At0::Ray
 			return VK_FORMAT_R32G32B32_SINT;
 		case 0x8DC8:  // GL_UNSIGNED_INT_VEC4
 			return VK_FORMAT_R32G32B32A32_SINT;
-		default: return VK_FORMAT_UNDEFINED;
+		default: Log::Warn("[Shader] Undefined GL type {0}", type); return VK_FORMAT_UNDEFINED;
 		}
 	}
 
@@ -133,7 +133,7 @@ namespace At0::Ray
 			return 64;
 		}
 
-		RAY_ASSERT(false, "[SizeOfGlType] Failed to find glType {0}", glType);
+		RAY_ASSERT(false, "[Shader] Failed to find size of GL type {0}", glType);
 		return 0;
 	}
 
