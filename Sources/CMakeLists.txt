@@ -58,8 +58,6 @@ set(SRC
 	"Graphics/Pipelines/RComputePipeline.cpp"
 	"Graphics/Pipelines/RShader.h"
 	"Graphics/Pipelines/RShader.cpp"
-	"Graphics/Pipelines/RUniformAccess.h"
-	"Graphics/Pipelines/RUniformAccess.cpp"
 	"Graphics/Pipelines/RDescriptor.h"
 	"Graphics/Pipelines/RDescriptor.cpp"
 	"Graphics/Pipelines/RUniform.h"

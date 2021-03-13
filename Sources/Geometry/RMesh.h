@@ -5,7 +5,6 @@
 
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
-#include "../Graphics/Pipelines/RUniformAccess.h"
 #include "../Graphics/Pipelines/RUniform.h"
 
 #include <type_traits>
@@ -70,7 +69,6 @@ namespace At0::Ray
 
 		BufferUniform m_PerObjectUniform;
 		Material m_Material;
-		UniformAccess m_Uniforms;
 		Scope<DescriptorSet> m_MaterialDescSet = nullptr;
 
 		Transform m_Transform;

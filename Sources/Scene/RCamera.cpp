@@ -208,10 +208,7 @@ namespace At0::Ray
 		UpdateUniform();
 	}
 
-	void Camera::UpdateUniform()
-	{
-		BufferSynchronizer::Get().Update(ShaderData, m_Uniform->GetGlobalBufferOffset());
-	}
+	void Camera::UpdateUniform() { m_Uniform->Update(ShaderData); }
 
 	void Camera::OnEvent(MouseMovedEvent& e)
 	{

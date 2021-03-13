@@ -41,33 +41,26 @@ namespace At0::Ray
 	}
 
 	BufferUniform::BufferUniform(
-		std::string_view uniformName, Shader::Stage stage, const Pipeline& pipeline)
+		std::string_view uniformBlockName, Shader::Stage stage, const Pipeline& pipeline)
 	{
 		uint32_t size = 0;
 		uint32_t binding = 0;
 		uint32_t set = 0;
-		if (auto uniforms = pipeline.GetShader().GetUniforms(stage))
-		{
-			if (auto uniformData = uniforms->Get(uniformName))
-			{
-				size = uniformData->size;
-				binding = uniformData->binding;
-				set = uniformData->set;
-			}
-		}
 		if (auto uniformBlocks = pipeline.GetShader().GetUniformBlocks(stage))
 		{
-			if (auto uBlockData = uniformBlocks->Get(uniformName))
+			if (auto uBlockData = uniformBlocks->Get(uniformBlockName))
 			{
 				size = uBlockData->size;
 				binding = uBlockData->binding;
 				set = uBlockData->set;
+
+				m_Uniforms = uBlockData->uniforms;
 			}
 		}
 
 		// The size should never be 0 here
 		RAY_MEXPECTS(size != 0, "[BufferUniform] Failed to find uniform {0} in stage {1}",
-			uniformName, String::Construct(stage));
+			uniformBlockName, String::Construct(stage));
 
 		m_DescriptorSet = MakeScope<DescriptorSet>(pipeline.GetDescriptorPool(),
 			pipeline.GetDescriptorSetLayout(set), pipeline.GetBindPoint(), pipeline.GetLayout(),
@@ -107,6 +100,14 @@ namespace At0::Ray
 		descWrites.emplace_back(descWrite);
 
 		DescriptorSet::Update(descWrites);
+	}
+
+	uint32_t BufferUniform::GetUniformOffsetInBlock(std::string_view uniformName) const
+	{
+		if (!m_Uniforms)
+			return 0;
+
+		return m_Uniforms->Get(uniformName)->offset;
 	}
 
 	ImageSamplerUniform::~ImageSamplerUniform() {}

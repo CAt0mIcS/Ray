@@ -6,7 +6,6 @@
 #include "Graphics/Buffers/RVertexBuffer.h"
 #include "Graphics/Buffers/RIndexBuffer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
-#include "Graphics/Pipelines/RUniformAccess.h"
 #include "Graphics/Buffers/RBufferSynchronizer.h"
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Commands/RCommandBuffer.h"
@@ -88,19 +87,15 @@ namespace At0::Ray
 
 	// Mesh::MeshData Mesh::UVSphere(Material material) { return Mesh(); }
 
-	void Mesh::Update(Delta ts)
-	{
-		m_Uniforms.Resolve<Shader::Stage::Vertex>("PerObjectData", "model") =
-			m_Transform.AsMatrix();
-	}
+	void Mesh::Update(Delta ts) { m_PerObjectUniform.Update("model", m_Transform.AsMatrix()); }
 
 	void Mesh::Update(Delta ts, const Transform& parentTransform)
 	{
 		// Calculate it raw here to avoid the cache check
-		m_Uniforms.Resolve<Shader::Stage::Vertex>("PerObjectData", "model") =
-			MatrixScale(m_Transform.Scale + parentTransform.Scale) *
-			MatrixRotation(m_Transform.Rotation + parentTransform.Rotation) *
-			MatrixTranslation(m_Transform.Translation + parentTransform.Translation);
+		m_PerObjectUniform.Update(
+			"model", MatrixScale(m_Transform.Scale + parentTransform.Scale) *
+						 MatrixRotation(m_Transform.Rotation + parentTransform.Rotation) *
+						 MatrixTranslation(m_Transform.Translation + parentTransform.Translation));
 	}
 
 	void Mesh::Bind(const CommandBuffer& cmdBuff) const
@@ -130,7 +125,7 @@ namespace At0::Ray
 		m_IndexBuffer = std::move(other.m_IndexBuffer);
 
 		m_Material = std::move(other.m_Material);
-		m_Uniforms = std::move(other.m_Uniforms);
+		// m_Uniforms = std::move(other.m_Uniforms);
 		m_PerObjectUniform = std::move(other.m_PerObjectUniform);
 
 		m_Transform = std::move(other.m_Transform);
@@ -141,7 +136,7 @@ namespace At0::Ray
 	Mesh::Mesh(Mesh&& other) noexcept
 		: Component(*other.m_Entity), m_VertexBuffer(std::move(other.m_VertexBuffer)),
 		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
-		  m_Uniforms(std::move(other.m_Uniforms)),
+		  // m_Uniforms(std::move(other.m_Uniforms)),
 		  m_PerObjectUniform(std::move(other.m_PerObjectUniform)),
 		  m_Transform(std::move(other.m_Transform)),
 		  m_MaterialDescSet(std::move(other.m_MaterialDescSet))
@@ -174,7 +169,7 @@ namespace At0::Ray
 			DescriptorSet::Update({ descWriteImg });
 		}
 
-		m_Uniforms = UniformAccess(
-			m_Material.GetGraphicsPipeline(), m_PerObjectUniform.GetGlobalBufferOffset());
+		// m_Uniforms = UniformAccess(
+		//	m_Material.GetGraphicsPipeline(), m_PerObjectUniform.GetGlobalBufferOffset());
 	}
 }  // namespace At0::Ray
