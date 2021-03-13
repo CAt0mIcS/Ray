@@ -161,10 +161,10 @@ namespace At0::Ray
 								&descriptorPoolCreateInfo, nullptr, &m_DescriptorPool),
 			"[Camera] Failed to create descriptor pool");
 
-		m_Uniform = MakeScope<Uniform>(m_DescriptorSetLayout, m_DescriptorPool,
+		m_Uniform = MakeScope<BufferUniform>(m_DescriptorSetLayout, m_DescriptorPool,
 			Pipeline::BindPoint::Graphics, m_PipelineLayout, uint32_t(sizeof(ShaderData)),
 			0,	// Using descriptor set 0 for per-scene data (set=0 in vs)
-			std::vector{ 0u });
+			0);
 	}
 
 	Camera::~Camera()

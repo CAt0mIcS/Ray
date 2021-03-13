@@ -18,7 +18,7 @@
 
 namespace At0::Ray
 {
-	class Uniform;
+	class BufferUniform;
 
 	class RAY_EXPORT Camera :
 		public Bindable,
@@ -94,6 +94,6 @@ namespace At0::Ray
 		VkDescriptorPool m_DescriptorPool;
 		VkPipelineLayout m_PipelineLayout;
 
-		Scope<Uniform> m_Uniform;
+		Scope<BufferUniform> m_Uniform;
 	};
 }  // namespace At0::Ray

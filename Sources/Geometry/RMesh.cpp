@@ -11,6 +11,7 @@
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/Images/RTexture2D.h"
+#include "Graphics/Pipelines/RDescriptor.h"
 
 #include "Registry/RGeometricPrimitives.h"
 #include "Scene/REntity.h"
@@ -23,15 +24,15 @@ namespace At0::Ray
 		Material material)
 		: Component(entity), m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer),
 		  m_Material(material),
-		  m_PerObjectUniform(material.GetGraphicsPipeline(), sizeof(Matrix), 1, { 1 })
+		  m_PerObjectUniform("PerObjectData", Shader::Stage::Vertex, material.GetGraphicsPipeline())
 	{
 		Setup();
 	}
 
 	Mesh::Mesh(Entity& entity, MeshData data)
 		: Component(entity), m_VertexBuffer(data.vertexBuffer), m_IndexBuffer(data.indexBuffer),
-		  m_Material(data.material),
-		  m_PerObjectUniform(data.material.GetGraphicsPipeline(), sizeof(Matrix), 1, { 1 })
+		  m_Material(data.material), m_PerObjectUniform("PerObjectData", Shader::Stage::Vertex,
+										 data.material.GetGraphicsPipeline())
 	{
 		Setup();
 	}
