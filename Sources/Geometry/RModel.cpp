@@ -66,15 +66,15 @@ namespace At0::Ray
 
 		VertexLayout layout{};
 		layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Position
-		// layout.Append(VK_FORMAT_R32G32B32_SFLOAT; // Normal
+		layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Normal
 
 		VertexInput vertexInput(layout);
 
 		for (uint32_t i = 0; i < mesh.mNumVertices; ++i)
 		{
 			vertexInput.Emplace(
-				glm::vec3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z)); /*,
-				glm::vec3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z));*/
+				Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z),
+				Float3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z));
 		}
 
 		std::vector<IndexBuffer::Type> indices;
@@ -89,7 +89,8 @@ namespace At0::Ray
 			indices.emplace_back(face.mIndices[2]);
 		}
 
-		Material material;
+		Material material(
+			{ "Resources/Shaders/ModelTestShader.vert", "Resources/Shaders/ModelTestShader.frag" });
 
 		return { entity, Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
 			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)), std::move(material) };

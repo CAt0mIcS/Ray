@@ -32,6 +32,12 @@ namespace At0::Ray
 		}
 	}
 
+	Material::Material(const std::vector<std::string_view>& shaders)
+	{
+		m_GraphicsPipeline =
+			Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(), shaders);
+	}
+
 	Material::~Material() {}
 
 	const VertexLayout& Material::GetVertexLayout() const
