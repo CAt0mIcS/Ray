@@ -11,3 +11,9 @@
 [submodule "Extern/glm"]
 	path = Extern/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "Extern/Violent"]
+	path = Extern/Violent
+	url = https://github.com/CAt0mIcS/Violent.git
+[submodule "Extern/Ion"]
+	path = Extern/Ion
+	url = https://github.com/CAt0mIcS/Ion.git
