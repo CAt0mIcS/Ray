@@ -30,16 +30,7 @@ namespace At0::Ray
 		/**
 		 * @returns The size in bytes of a vertex
 		 */
-		uint32_t SizeVertex() const
-		{
-			int32_t size = 0;
-			for (const Element& elem : m_Elements)
-			{
-				size += SizeOf(elem.GetFormat());
-			}
-
-			return size;
-		}
+		uint32_t SizeVertex() const { return Size(); }
 
 		uint32_t Size() const
 		{
@@ -163,11 +154,20 @@ namespace At0::Ray
 	class Vertex
 	{
 	public:
-		Vertex(char* startAddress, uint32_t size) : m_StartAddress(startAddress), m_Size(size) {}
+		Vertex(char* startAddress, VertexLayout& layout)
+			: m_StartAddress(startAddress), m_Layout(&layout)
+		{
+		}
+
+		template<typename T>
+		T& Get(uint32_t addIdx)
+		{
+			return *(T*)(m_StartAddress + m_Layout->GetElement(addIdx).GetOffset());
+		}
 
 	private:
 		char* m_StartAddress = nullptr;
-		uint32_t m_Size = 0;
+		VertexLayout* m_Layout = nullptr;
 	};
 
 
@@ -195,6 +195,11 @@ namespace At0::Ray
 		uint32_t SizeBytes() const { return m_Data.size(); }
 		uint32_t Size() const { return m_Data.size() / m_Layout.Size(); }
 		const char* Data() const { return m_Data.data(); }
+
+		Vertex operator[](uint32_t i)
+		{
+			return { m_Data.data() + m_Layout.SizeVertex() * i, m_Layout };
+		}
 
 	private:
 		template<typename T>

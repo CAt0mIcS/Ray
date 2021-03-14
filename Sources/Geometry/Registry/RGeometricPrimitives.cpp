@@ -42,6 +42,12 @@ namespace At0::Ray
 	{
 		VertexInput vertexInput(layout);
 
+		RAY_MEXPECTS(segments % 2 == 0,
+			"[IndexedTriangleList] Cannot create half circle with {0} segments because this value "
+			"is "
+			"uneven",
+			segments);
+
 		// circle middle
 		vertexInput.Emplace(Float3(0.0f, 0.0f, 0.0f));
 
@@ -74,6 +80,13 @@ namespace At0::Ray
 	{
 		VertexInput vertexInput(layout);
 
+		RAY_MEXPECTS(segments % 2 == 0,
+			"[IndexedTriangleList] Cannot create circle with {0} segments because this value is "
+			"uneven",
+			segments);
+		// Split segments for half circle
+		segments /= 2;
+
 		// circle middle
 		vertexInput.Emplace(Float3(0.0f, 0.0f, 0.0f));
 
@@ -83,16 +96,18 @@ namespace At0::Ray
 		for (int segment = 0; segment <= segments; ++segment)
 		{
 			Float3 calculatedPos = base * glm::rotate(Matrix(1.0f), lattitudeAngle * segment,
-											  Float3(1.0f, 0.0f, 0.0f));
+											  Float3(0.0f, -1.0f, 0.0f));
 			vertexInput.Emplace(calculatedPos);
+			vertexInput.Emplace(-calculatedPos);
 		}
 
 		std::vector<IndexBuffer::Type> indices;
-		for (int segment = 0; segment <= segments; ++segment)
+
+		for (uint32_t segment = 1; segment <= segments * 2; ++segment)
 		{
 			indices.emplace_back(0);
 			indices.emplace_back(segment);
-			indices.emplace_back(segment + 1);
+			indices.emplace_back(segment + 2);
 		}
 
 		std::string tag = String::Serialize("Circle#{0}#{1}", segments, radius);
