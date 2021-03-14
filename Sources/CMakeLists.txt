@@ -1,3 +1,18 @@
+set(SHADERS
+	"../Resources/Shaders/TexturedShader.vert"
+	"../Resources/Shaders/TexturedShader.frag"
+	"../Resources/Shaders/DefaultShader.vert"
+	"../Resources/Shaders/DefaultShader.frag"
+	"../Resources/Shaders/ModelShader.vert"
+	"../Resources/Shaders/ModelShader.frag"
+	"../Resources/Shaders/ModelShader_Spec.vert"
+	"../Resources/Shaders/ModelShader_Spec.frag"
+	"../Resources/Shaders/ModelShader_Diff.vert"
+	"../Resources/Shaders/ModelShader_Diff.frag"
+	"../Resources/Shaders/ModelShader_DiffSpec.vert"
+	"../Resources/Shaders/ModelShader_DiffSpec.frag"
+)
+
 set(SRC
 	"Rpch.h"
 	"RBase.h"
@@ -140,21 +155,8 @@ set(SRC
 	"Events/RKeyboardEvents.h"
 	"Events/REventDispatcher.h"
 	"Events/REventListener.h"
-)
 
-set(SHADERS
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/TexturedShader.vert"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/TexturedShader.frag"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/DefaultShader.vert"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/DefaultShader.frag"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader.vert"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader.frag"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader_Spec.vert"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader_Spec.frag"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader_Diff.vert"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader_Diff.frag"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader_DiffSpec.vert"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader_DiffSpec.frag"
+	"${SHADERS}"
 )
 
 # ------------------------------------------------------------------
@@ -189,7 +191,7 @@ set(PRIVATE_LIB
 
 # ------------------------------------------------------------------
 # Setup
-add_library("Ray" SHARED "${SRC}" "${SHADERS}")
+add_library("Ray" SHARED "${SRC}")
 target_include_directories("Ray"
 	PUBLIC
 		"${PUBLIC_INC}"

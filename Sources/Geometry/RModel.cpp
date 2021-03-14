@@ -133,7 +133,7 @@ namespace At0::Ray
 		std::vector<std::string> shaders =
 			GetShaders(diffuseMap != nullptr, specularMap != nullptr, normalMap != nullptr);
 
-		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, diffuseMap, specularMap);
+		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, diffuseMap, specularMap, normalMap);
 		Mesh retMesh(entity, vertexBuffer, indexBuffer, std::move(material));
 
 		if (diffuseMap)

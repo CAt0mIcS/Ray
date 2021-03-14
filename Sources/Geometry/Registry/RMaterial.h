@@ -19,7 +19,8 @@ namespace At0::Ray
 		Material(const std::vector<std::string>& shaders,
 			const Float4& baseDiffuse = { 1.0f, 1.0f, 1.0f, 1.0f },
 			Ref<Texture2D> diffuseMap = nullptr, Ref<Texture2D> specularMap = nullptr,
-			float metallic = 0.0f, float roughness = 0.0f, const VertexLayout* pLayout = nullptr);
+			Ref<Texture2D> normalMap = nullptr, float metallic = 0.0f, float roughness = 0.0f,
+			const VertexLayout* pLayout = nullptr);
 		~Material();
 
 		const Float4& GetBaseDiffuse() const { return m_BaseDiffuse; }
