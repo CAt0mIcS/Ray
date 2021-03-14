@@ -16,7 +16,7 @@ namespace At0::Ray
 	class RAY_EXPORT Material
 	{
 	public:
-		Material(const std::vector<std::string_view>& shaders,
+		Material(const std::vector<std::string>& shaders,
 			const Float4& baseDiffuse = { 1.0f, 1.0f, 1.0f, 1.0f },
 			Ref<Texture2D> diffuseMap = nullptr, Ref<Texture2D> specularMap = nullptr,
 			float metallic = 0.0f, float roughness = 0.0f, const VertexLayout* pLayout = nullptr);

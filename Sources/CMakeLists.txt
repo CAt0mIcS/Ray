@@ -147,10 +147,14 @@ set(SHADERS
 	"${CMAKE_SOURCE_DIR}/Resources/Shaders/TexturedShader.frag"
 	"${CMAKE_SOURCE_DIR}/Resources/Shaders/DefaultShader.vert"
 	"${CMAKE_SOURCE_DIR}/Resources/Shaders/DefaultShader.frag"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelTestShader.vert"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelTestShader.frag"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelTestShaderSpec.vert"
-	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelTestShaderSpec.frag"
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader.vert"
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader.frag"
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader_Spec.vert"
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader_Spec.frag"
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader_Diff.vert"
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader_Diff.frag"
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader_DiffSpec.vert"
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelShader_DiffSpec.frag"
 )
 
 # ------------------------------------------------------------------

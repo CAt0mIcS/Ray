@@ -122,21 +122,10 @@ namespace At0::Ray
 			specularMap = MakeRef<Texture2D>(basePath + specularTexFileName.C_Str());
 		}
 
-		std::vector<std::string_view> shaders;
-		if (diffuseMap && specularMap)
-		{
-			shaders.emplace_back("Resources/Shaders/ModelTestShaderSpec.vert");
-			shaders.emplace_back("Resources/Shaders/ModelTestShaderSpec.frag");
-		}
-		else if (diffuseMap)
-		{
-			shaders.emplace_back("Resources/Shaders/ModelTestShader.vert");
-			shaders.emplace_back("Resources/Shaders/ModelTestShader.frag");
-		}
-
+		std::vector<std::string> shaders =
+			GetShaders(diffuseMap != nullptr, specularMap != nullptr, false);
 
 		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, diffuseMap, specularMap);
-
 		Mesh retMesh(entity, vertexBuffer, indexBuffer, std::move(material));
 
 		if (diffuseMap)
@@ -152,6 +141,32 @@ namespace At0::Ray
 		}
 
 		return retMesh;
+	}
+
+	std::vector<std::string> Model::GetShaders(
+		bool hasDiffuseMap, bool hasSpecularMap, bool hasNormalMap)
+	{
+		std::vector<std::string> shaders;
+		std::vector<std::string> shaderCodes;
+
+		if (hasDiffuseMap)
+			shaderCodes.emplace_back("Diff");
+		if (hasSpecularMap)
+			shaderCodes.emplace_back("Spec");
+		if (hasNormalMap)
+			shaderCodes.emplace_back("Norm");
+
+		// Sort shader codes alphabetically
+		std::sort(shaderCodes.begin(), shaderCodes.end());
+
+		shaderCodes.emplace(shaderCodes.begin(), "_");
+		std::string shaderCode =
+			std::accumulate(shaderCodes.begin(), shaderCodes.end(), std::string{});
+
+		shaders.emplace_back("Resources/Shaders/ModelShader" + shaderCode + ".vert");
+		shaders.emplace_back("Resources/Shaders/ModelShader" + shaderCode + ".frag");
+
+		return shaders;
 	}
 
 	Model& Model::operator=(Model&& other) noexcept

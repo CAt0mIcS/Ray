@@ -24,6 +24,7 @@
 #include <utility>
 #include <map>
 #include <optional>
+#include <numeric>
 #include <filesystem>
 #include <assert.h>
 

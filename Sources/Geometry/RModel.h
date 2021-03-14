@@ -43,6 +43,8 @@ namespace At0::Ray
 		static Mesh CreateMesh(Entity& entity, const std::string& basePath, const aiMesh& mesh,
 			const aiMaterial* const* pMaterials, Ref<VertexBuffer> vertexBuffer,
 			Ref<IndexBuffer> indexBuffer);
+		static std::vector<std::string> GetShaders(
+			bool hasDiffuseMap, bool hasSpecularMap, bool hasNormalMap);
 
 		Transform& Get(std::type_identity<Transform>) { return m_Transform; }
 

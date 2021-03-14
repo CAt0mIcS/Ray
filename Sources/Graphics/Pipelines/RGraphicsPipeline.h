@@ -15,7 +15,7 @@ namespace At0::Ray
 	class RAY_EXPORT GraphicsPipeline : public Pipeline
 	{
 	public:
-		GraphicsPipeline(const RenderPass& renderPass, const std::vector<std::string_view>& shaders,
+		GraphicsPipeline(const RenderPass& renderPass, const std::vector<std::string>& shaders,
 			const VertexLayout* pLayout = nullptr);
 		~GraphicsPipeline();
 
@@ -26,10 +26,10 @@ namespace At0::Ray
 		VkDescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const override;
 
 		static std::string GetUID(const RenderPass& renderPass,
-			const std::vector<std::string_view>& shaders, const VertexLayout* pLayout = nullptr);
+			const std::vector<std::string>& shaders, const VertexLayout* pLayout = nullptr);
 
 	private:
-		void CreateShaderProgram(const std::vector<std::string_view>& shaders);
+		void CreateShaderProgram(const std::vector<std::string>& shaders);
 		void CreateDescriptorSetLayouts();
 		void CreateDescriptorPool();
 		void CreatePipelineLayout();

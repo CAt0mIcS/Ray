@@ -10,7 +10,7 @@
 
 namespace At0::Ray
 {
-	Material::Material(const std::vector<std::string_view>& shaders, const Float4& baseDiffuse,
+	Material::Material(const std::vector<std::string>& shaders, const Float4& baseDiffuse,
 		Ref<Texture2D> diffuseMap, Ref<Texture2D> specularMap, float metallic, float roughness,
 		const VertexLayout* pLayout)
 		: m_BaseDiffuse(baseDiffuse), m_DiffuseMap(diffuseMap), m_Metallic(metallic),

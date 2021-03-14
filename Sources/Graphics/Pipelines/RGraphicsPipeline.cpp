@@ -14,7 +14,7 @@
 namespace At0::Ray
 {
 	GraphicsPipeline::GraphicsPipeline(const RenderPass& renderPass,
-		const std::vector<std::string_view>& shaders, const VertexLayout* pLayout)
+		const std::vector<std::string>& shaders, const VertexLayout* pLayout)
 	{
 		CreateShaderProgram(shaders);
 		CreateDescriptorSetLayouts();
@@ -47,7 +47,7 @@ namespace At0::Ray
 	}
 
 	std::string GraphicsPipeline::GetUID(const RenderPass& renderPass,
-		const std::vector<std::string_view>& shaders, const VertexLayout* pLayout)
+		const std::vector<std::string>& shaders, const VertexLayout* pLayout)
 	{
 		std::ostringstream oss;
 		oss << typeid(GraphicsPipeline).name() << "#";
@@ -59,7 +59,7 @@ namespace At0::Ray
 		return oss.str();
 	}
 
-	void GraphicsPipeline::CreateShaderProgram(const std::vector<std::string_view>& shaders)
+	void GraphicsPipeline::CreateShaderProgram(const std::vector<std::string>& shaders)
 	{
 		// std::ostringstream defineBlock;
 		// for (const auto& [defineName, defineValue] : m_Defines)
