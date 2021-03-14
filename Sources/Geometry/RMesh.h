@@ -41,7 +41,8 @@ namespace At0::Ray
 
 		static MeshData Cube(Material material);
 		static MeshData IcoSphere(Material material);
-		static MeshData UVSphere(Material material);
+		static MeshData UVSphere(
+			Material material, float radius = 1.0f, int latDiv = 12, int longDiv = 24);
 
 		Transform& GetTransform() { return (Transform&)std::as_const(*this).GetTransform(); }
 		const Transform& GetTransform() const { return m_Transform; }

@@ -59,10 +59,10 @@ private:
 			// Ray::Material texturedMaterial({ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 0.0f, 0.0f,
 			//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true,
 			//	nullptr);
-			// Ray::Material defaultMaterial(
-			//	{ "Resources/Shaders/DefaultShader.vert", "Resources/Shaders/DefaultShader.frag" });
+			Ray::Material defaultMaterial(
+				{ "Resources/Shaders/DefaultShader.vert", "Resources/Shaders/DefaultShader.frag" });
 
-			// Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
+			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(defaultMaterial, 0.5f));
 
 			// auto& cubeTransform = mesh.GetTransform();
 			// cubeTransform.Translation = { posRotDist(device), posRotDist(device),

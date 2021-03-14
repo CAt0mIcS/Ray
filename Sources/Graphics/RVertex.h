@@ -41,6 +41,16 @@ namespace At0::Ray
 			return size;
 		}
 
+		uint32_t Size() const
+		{
+			uint32_t size = 0;
+			for (const Element& elem : m_Elements)
+			{
+				size += SizeOf(elem.GetFormat());
+			}
+			return size;
+		}
+
 		/**
 		 * @returns The number of elements
 		 */
@@ -49,7 +59,7 @@ namespace At0::Ray
 		/**
 		 * @returns The size in bytes of all of the elements
 		 */
-		uint32_t Size() const
+		uint32_t GetOffsetAfterLastElement() const
 		{
 			uint32_t size = 0;
 			for (const Element& elem : m_Elements)
@@ -102,7 +112,7 @@ namespace At0::Ray
 		template<typename... Args>
 		void Append(Args&&... args)
 		{
-			(m_Elements.emplace_back(args, Size()), ...);
+			(m_Elements.emplace_back(args, GetOffsetAfterLastElement()), ...);
 		}
 
 		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributeDescriptions(
@@ -138,6 +148,11 @@ namespace At0::Ray
 
 			return { bindingDescription };
 		}
+
+		// uint32_t Size() const
+		//{
+		//	return m_Elements.empty() ? 0 : Size();
+		//}
 
 	private:
 		// Specifies all the elements in a vertex
@@ -178,6 +193,7 @@ namespace At0::Ray
 		}
 
 		uint32_t SizeBytes() const { return m_Data.size(); }
+		uint32_t Size() const { return m_Data.size() / m_Layout.Size(); }
 		const char* Data() const { return m_Data.data(); }
 
 	private:

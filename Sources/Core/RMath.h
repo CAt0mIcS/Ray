@@ -15,8 +15,8 @@ namespace At0::Ray
 {
 	namespace Math
 	{
-		static constexpr double PI_D = 3.1415926535897932384626433832795;
-		static constexpr float PI = 3.141592653f;
+		template<typename T = float>
+		static constexpr T PI = (T)3.1415926535897932384626433832795L;
 	}  // namespace Math
 
 	using Int2 = glm::vec<2, int32_t, glm::defaultp>;

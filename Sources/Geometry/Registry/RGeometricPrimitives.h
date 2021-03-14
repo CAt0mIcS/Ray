@@ -15,7 +15,8 @@ namespace At0::Ray
 
 		static IndexedTriangleList Cube(const VertexLayout& layout);
 		static IndexedTriangleList IcoSphere(const VertexLayout& layout);
-		static IndexedTriangleList UVSphere(const VertexLayout& layout);
+		static IndexedTriangleList UVSphere(
+			const VertexLayout& layout, float radius, int latDiv, int longDiv);
 
 		VertexInput vertices;
 		std::vector<IndexBuffer::Type> indices;

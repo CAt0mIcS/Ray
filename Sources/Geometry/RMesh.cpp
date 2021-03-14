@@ -85,14 +85,24 @@ namespace At0::Ray
 
 	// Mesh::MeshData Mesh::IcoSphere(Material material) { return Mesh(); }
 
-	// Mesh::MeshData Mesh::UVSphere(Material material) { return Mesh(); }
+	Mesh::MeshData Mesh::UVSphere(Material material, float radius, int latDiv, int longDiv)
+	{
+		IndexedTriangleList uvSphere =
+			IndexedTriangleList::UVSphere(material.GetVertexLayout(), radius, latDiv, longDiv);
+
+		Ref<VertexBuffer> vertexBuffer =
+			Codex::Resolve<VertexBuffer>(uvSphere.vertexTag, uvSphere.vertices);
+		Ref<IndexBuffer> indexBuffer =
+			Codex::Resolve<IndexBuffer>(uvSphere.indexTag, uvSphere.indices);
+
+		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	}
 
 	void Mesh::Update(Delta ts) { m_PerObjectUniform["model"] = m_Transform.AsMatrix(); }
 
 	void Mesh::Update(Delta ts, const Transform& parentTransform)
 	{
-		// Calculate it raw here to avoid the cache check
-
+		// Calculate it raw here to avoid the cache check in Transform::AsMatrix
 		m_PerObjectUniform["model"] =
 			MatrixScale(m_Transform.Scale + parentTransform.Scale) *
 			MatrixRotation(m_Transform.Rotation + parentTransform.Rotation) *
@@ -102,11 +112,7 @@ namespace At0::Ray
 	void Mesh::Bind(const CommandBuffer& cmdBuff) const
 	{
 		m_Material.GetGraphicsPipeline().CmdBind(cmdBuff);
-		// if (m_Material.GetMaterialImage())
-		//{
-		//	// m_Material.GetMaterialImage()->CmdBind(cmdBuff);
-		//	m_Texture->CmdBind(cmdBuff);
-		//}
+
 		for (const Scope<Uniform>& uniform : m_Uniforms)
 			uniform->CmdBind(cmdBuff);
 
