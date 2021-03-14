@@ -106,9 +106,11 @@ namespace At0::Ray
 	{
 		aiString diffuseTexFileName;
 		aiString specularTexFileName;
+		aiString normalTexFileName;
 
 		Ref<Texture2D> diffuseMap = nullptr;
 		Ref<Texture2D> specularMap = nullptr;
+		Ref<Texture2D> normalMap = nullptr;
 
 		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
 				aiTextureType_DIFFUSE, 0, &diffuseTexFileName) == aiReturn_SUCCESS)
@@ -122,8 +124,14 @@ namespace At0::Ray
 			specularMap = MakeRef<Texture2D>(basePath + specularTexFileName.C_Str());
 		}
 
+		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
+				aiTextureType_NORMALS, 0, &normalTexFileName) == aiReturn_SUCCESS)
+		{
+			normalMap = MakeRef<Texture2D>(basePath + normalTexFileName.C_Str());
+		}
+
 		std::vector<std::string> shaders =
-			GetShaders(diffuseMap != nullptr, specularMap != nullptr, false);
+			GetShaders(diffuseMap != nullptr, specularMap != nullptr, normalMap != nullptr);
 
 		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, diffuseMap, specularMap);
 		Mesh retMesh(entity, vertexBuffer, indexBuffer, std::move(material));
