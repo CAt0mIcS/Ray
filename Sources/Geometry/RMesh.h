@@ -55,6 +55,8 @@ namespace At0::Ray
 		void Bind(const CommandBuffer& cmdBuff) const;
 		void Render(const CommandBuffer& cmdBuff) const;
 
+		void AddUniform(Scope<Uniform> uniform) { m_Uniforms.emplace_back(std::move(uniform)); }
+
 		const Material& GetMaterial() const { return m_Material; }
 
 		~Mesh();
@@ -70,9 +72,8 @@ namespace At0::Ray
 		Ref<IndexBuffer> m_IndexBuffer = nullptr;
 
 		BufferUniform m_PerObjectUniform;
-		Scope<SamplerUniform> m_Texture;
 		Material m_Material;
-		// Scope<DescriptorSet> m_MaterialDescSet = nullptr;
+		std::vector<Scope<Uniform>> m_Uniforms;
 
 		Transform m_Transform;
 	};

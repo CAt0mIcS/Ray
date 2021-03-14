@@ -149,6 +149,8 @@ set(SHADERS
 	"${CMAKE_SOURCE_DIR}/Resources/Shaders/DefaultShader.frag"
 	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelTestShader.vert"
 	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelTestShader.frag"
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelTestShaderSpec.vert"
+	"${CMAKE_SOURCE_DIR}/Resources/Shaders/ModelTestShaderSpec.frag"
 )
 
 # ------------------------------------------------------------------

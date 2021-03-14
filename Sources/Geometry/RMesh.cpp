@@ -102,11 +102,13 @@ namespace At0::Ray
 	void Mesh::Bind(const CommandBuffer& cmdBuff) const
 	{
 		m_Material.GetGraphicsPipeline().CmdBind(cmdBuff);
-		if (m_Material.GetMaterialImage())
-		{
-			// m_Material.GetMaterialImage()->CmdBind(cmdBuff);
-			m_Texture->CmdBind(cmdBuff);
-		}
+		// if (m_Material.GetMaterialImage())
+		//{
+		//	// m_Material.GetMaterialImage()->CmdBind(cmdBuff);
+		//	m_Texture->CmdBind(cmdBuff);
+		//}
+		for (const Scope<Uniform>& uniform : m_Uniforms)
+			uniform->CmdBind(cmdBuff);
 
 		m_PerObjectUniform.CmdBind(cmdBuff);
 		m_VertexBuffer->CmdBind(cmdBuff);
@@ -129,7 +131,7 @@ namespace At0::Ray
 		m_PerObjectUniform = std::move(other.m_PerObjectUniform);
 
 		m_Transform = std::move(other.m_Transform);
-		m_Texture = std::move(other.m_Texture);
+		m_Uniforms = std::move(other.m_Uniforms);
 		return *this;
 	}
 
@@ -137,14 +139,14 @@ namespace At0::Ray
 		: Component(*other.m_Entity), m_VertexBuffer(std::move(other.m_VertexBuffer)),
 		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
 		  m_PerObjectUniform(std::move(other.m_PerObjectUniform)),
-		  m_Transform(std::move(other.m_Transform)), m_Texture(std::move(other.m_Texture))
+		  m_Transform(std::move(other.m_Transform)), m_Uniforms(std::move(other.m_Uniforms))
 	{
 	}
 
 	void Mesh::Setup()
 	{
-		if (m_Material.GetMaterialImage())
-			m_Texture = MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment,
-				*m_Material.GetMaterialImage(), m_Material.GetGraphicsPipeline());
+		// if (m_Material.GetMaterialImage())
+		//	m_Texture = MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment,
+		//		*m_Material.GetMaterialImage(), m_Material.GetGraphicsPipeline());
 	}
 }  // namespace At0::Ray

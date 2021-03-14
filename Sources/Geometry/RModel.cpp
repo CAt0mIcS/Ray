@@ -92,18 +92,60 @@ namespace At0::Ray
 			indices.emplace_back(face.mIndices[2]);
 		}
 
-		aiString texFileName;
-		pMaterials[mesh.mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &texFileName);
+		aiString diffuseTexFileName;
+		pMaterials[mesh.mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &diffuseTexFileName);
 
-		std::string path =
-			std::filesystem::path(base).replace_filename("").string() + texFileName.C_Str();
+		aiString specularTexFileName;
+		pMaterials[mesh.mMaterialIndex]->GetTexture(
+			aiTextureType_SPECULAR, 0, &specularTexFileName);
 
-		Material material(
-			{ "Resources/Shaders/ModelTestShader.vert", "Resources/Shaders/ModelTestShader.frag" },
-			{ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 1.0f, 1.0f, MakeRef<Texture2D>(path), nullptr);
+		std::string basePath = std::filesystem::path(base).replace_filename("").string();
 
-		return { entity, Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
-			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)), std::move(material) };
+		Ref<Texture2D> diffuseMap = nullptr;
+		Ref<Texture2D> specularMap = nullptr;
+
+		std::vector<std::string_view> shaders;
+
+		if (diffuseTexFileName != aiString(""))
+		{
+			diffuseMap = MakeRef<Texture2D>(basePath + diffuseTexFileName.C_Str());
+		}
+
+		if (specularTexFileName != aiString(""))
+		{
+			specularMap = MakeRef<Texture2D>(basePath + specularTexFileName.C_Str());
+		}
+
+		if (diffuseMap && specularMap)
+		{
+			shaders.emplace_back("Resources/Shaders/ModelTestShaderSpec.vert");
+			shaders.emplace_back("Resources/Shaders/ModelTestShaderSpec.frag");
+		}
+		else if (diffuseMap)
+		{
+			shaders.emplace_back("Resources/Shaders/ModelTestShader.vert");
+			shaders.emplace_back("Resources/Shaders/ModelTestShader.frag");
+		}
+
+
+		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, diffuseMap, specularMap);
+
+		Mesh retMesh(entity, Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
+			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)), std::move(material));
+
+		if (diffuseMap)
+		{
+			retMesh.AddUniform(MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment,
+				*diffuseMap, retMesh.GetMaterial().GetGraphicsPipeline()));
+		}
+		if (specularMap)
+		{
+			retMesh.AddUniform(
+				MakeScope<SamplerUniform>("materialSpecular", Shader::Stage::Fragment, *specularMap,
+					retMesh.GetMaterial().GetGraphicsPipeline()));
+		}
+
+		return retMesh;
 	}
 
 	Model& Model::operator=(Model&& other) noexcept

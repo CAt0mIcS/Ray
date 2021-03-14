@@ -18,17 +18,16 @@ namespace At0::Ray
 	public:
 		Material(const std::vector<std::string_view>& shaders,
 			const Float4& baseDiffuse = { 1.0f, 1.0f, 1.0f, 1.0f },
-			Ref<Texture2D> imageDiffuse = nullptr, float metallic = 0.0f, float roughness = 0.0f,
-			Ref<Texture2D> imageMaterial = nullptr, Ref<Texture2D> imageNormal = nullptr,
-			const VertexLayout* pLayout = nullptr);
+			Ref<Texture2D> diffuseMap = nullptr, Ref<Texture2D> specularMap = nullptr,
+			float metallic = 0.0f, float roughness = 0.0f, const VertexLayout* pLayout = nullptr);
 		~Material();
 
 		const Float4& GetBaseDiffuse() const { return m_BaseDiffuse; }
-		const Texture2D* GetDiffuseImage() const { return m_DiffuseImage.get(); }
+		const Texture2D* GetDiffuseMap() const { return m_DiffuseMap.get(); }
 		float GetMetallic() const { return m_Metallic; }
 		float GetRoughness() const { return m_Roughness; }
-		const Texture2D* GetMaterialImage() const { return m_MaterialImage.get(); }
-		const Texture2D* GetNormalImage() const { return m_NormalImage.get(); }
+		const Texture2D* GetSpecularMap() const { return m_SpecularMap.get(); }
+		const Texture2D* GetNormalMap() const { return m_NormalMap.get(); }
 
 		const GraphicsPipeline& GetGraphicsPipeline() const { return *m_GraphicsPipeline; }
 		const VertexLayout& GetVertexLayout() const;
@@ -38,11 +37,11 @@ namespace At0::Ray
 		Ref<GraphicsPipeline> m_GraphicsPipeline = nullptr;
 
 		Float4 m_BaseDiffuse{ 1.0f, 1.0f, 1.0f, 1.0f };
-		Ref<Texture2D> m_DiffuseImage = nullptr;
+		Ref<Texture2D> m_DiffuseMap = nullptr;
 		float m_Metallic = 0.0f;
 		float m_Roughness = 0.0f;
-		Ref<Texture2D> m_MaterialImage = nullptr;
-		Ref<Texture2D> m_NormalImage = nullptr;
+		Ref<Texture2D> m_SpecularMap = nullptr;
+		Ref<Texture2D> m_NormalMap = nullptr;
 	};
 
 
