@@ -149,13 +149,6 @@ namespace At0::Ray
 					retMesh.GetMaterial().GetGraphicsPipeline()));
 		}
 
-		auto lightBuff = MakeScope<BufferUniform>(
-			"Light", Shader::Stage::Fragment, retMesh.GetMaterial().GetGraphicsPipeline());
-
-		(*lightBuff)["lightPos"] = Float3{ 0.0f, 0.0f, 0.0f };
-
-		retMesh.AddUniform("Light", std::move(lightBuff));
-
 		return retMesh;
 	}
 

@@ -172,10 +172,5 @@ namespace At0::Ray
 	{
 	}
 
-	void Mesh::Setup()
-	{
-		// if (m_Material.GetMaterialImage())
-		//	m_Texture = MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment,
-		//		*m_Material.GetMaterialImage(), m_Material.GetGraphicsPipeline());
-	}
+	void Mesh::Setup() {}
 }  // namespace At0::Ray
