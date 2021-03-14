@@ -92,10 +92,20 @@ namespace At0::Ray
 			indices.emplace_back(face.mIndices[2]);
 		}
 
+
+		std::string basePath = std::filesystem::path(base).remove_filename().string();
+
+		return CreateMesh(entity, basePath, mesh, pMaterials,
+			Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
+			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)));
+	}
+
+	Mesh Model::CreateMesh(Entity& entity, const std::string& basePath, const aiMesh& mesh,
+		const aiMaterial* const* pMaterials, Ref<VertexBuffer> vertexBuffer,
+		Ref<IndexBuffer> indexBuffer)
+	{
 		aiString diffuseTexFileName;
 		aiString specularTexFileName;
-
-		std::string basePath = std::filesystem::path(base).replace_filename("").string();
 
 		Ref<Texture2D> diffuseMap = nullptr;
 		Ref<Texture2D> specularMap = nullptr;
@@ -127,8 +137,7 @@ namespace At0::Ray
 
 		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, diffuseMap, specularMap);
 
-		Mesh retMesh(entity, Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
-			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)), std::move(material));
+		Mesh retMesh(entity, vertexBuffer, indexBuffer, std::move(material));
 
 		if (diffuseMap)
 		{

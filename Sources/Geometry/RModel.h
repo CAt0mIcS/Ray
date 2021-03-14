@@ -16,6 +16,8 @@ namespace At0::Ray
 {
 	class Mesh;
 	class CommandBuffer;
+	class VertexBuffer;
+	class IndexBuffer;
 
 	class RAY_EXPORT Model : public Component
 	{
@@ -38,6 +40,9 @@ namespace At0::Ray
 	private:
 		static Mesh ParseMesh(Entity& entity, std::string_view base, const aiMesh& mesh,
 			const aiMaterial* const* pMaterials);
+		static Mesh CreateMesh(Entity& entity, const std::string& basePath, const aiMesh& mesh,
+			const aiMaterial* const* pMaterials, Ref<VertexBuffer> vertexBuffer,
+			Ref<IndexBuffer> indexBuffer);
 
 		Transform& Get(std::type_identity<Transform>) { return m_Transform; }
 
