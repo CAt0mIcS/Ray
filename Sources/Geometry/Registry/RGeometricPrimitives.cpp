@@ -71,6 +71,12 @@ namespace At0::Ray
 			indices.emplace_back(segment + 1);
 		}
 
+		// RAY_TODO: Needed because of backface culling, SLOW!
+		std::vector<IndexBuffer::Type> reversedIndices = indices;
+		std::reverse(reversedIndices.begin(), reversedIndices.end());
+		for (IndexBuffer::Type idx : reversedIndices)
+			indices.emplace_back(idx);
+
 		std::string tag = String::Serialize("HalfCircle#{0}#{1}", segments, radius);
 		return { vertexInput, indices, tag, tag };
 	}
@@ -102,13 +108,18 @@ namespace At0::Ray
 		}
 
 		std::vector<IndexBuffer::Type> indices;
-
 		for (uint32_t segment = 1; segment <= segments * 2; ++segment)
 		{
 			indices.emplace_back(0);
 			indices.emplace_back(segment);
 			indices.emplace_back(segment + 2);
 		}
+
+		// RAY_TODO: Needed because of backface culling, SLOW!
+		std::vector<IndexBuffer::Type> reversedIndices = indices;
+		std::reverse(reversedIndices.begin(), reversedIndices.end());
+		for (IndexBuffer::Type idx : reversedIndices)
+			indices.emplace_back(idx);
 
 		std::string tag = String::Serialize("Circle#{0}#{1}", segments, radius);
 		return { vertexInput, indices, tag, tag };
