@@ -10,6 +10,8 @@ namespace At0::Ray
 	{
 		static IndexedTriangleList Triangle(const VertexLayout& layout);
 		static IndexedTriangleList Plane(const VertexLayout& layout);
+		static IndexedTriangleList HalfCircle(
+			const VertexLayout& layout, int segments, float radius = 1.0f);
 		static IndexedTriangleList Circle(
 			const VertexLayout& layout, int segments, float radius = 1.0f);
 

@@ -63,7 +63,7 @@ private:
 				{ "Resources/Shaders/DefaultShader.vert", "Resources/Shaders/DefaultShader.frag" });
 
 			Ray::Mesh& mesh =
-				meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(defaultMaterial, 0.5f));
+				meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::HalfCircle(defaultMaterial, 10));
 
 			// auto& cubeTransform = mesh.GetTransform();
 			// cubeTransform.Translation = { posRotDist(device), posRotDist(device),

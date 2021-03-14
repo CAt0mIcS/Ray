@@ -60,18 +60,29 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	// Mesh::MeshData Mesh::Circle(Material material, int segments, float radius)
-	//{
-	// material.Create();
-	//	IndexedTriangleList circle =
-	//		IndexedTriangleList::Circle(material.GetVertexLayout(), segments, radius);
+	Mesh::MeshData Mesh::HalfCircle(Material material, int segments, float radius)
+	{
+		IndexedTriangleList circle =
+			IndexedTriangleList::HalfCircle(material.GetVertexLayout(), segments, radius);
 
-	//	Ref<VertexBuffer> vertexBuffer =
-	//		Codex::Resolve<VertexBuffer>(circle.vertexTag, circle.vertices);
-	//	Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(circle.indexTag, circle.indices);
+		Ref<VertexBuffer> vertexBuffer =
+			Codex::Resolve<VertexBuffer>(circle.vertexTag, circle.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(circle.indexTag, circle.indices);
 
-	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
-	//}
+		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	}
+
+	Mesh::MeshData Mesh::Circle(Material material, int segments, float radius)
+	{
+		IndexedTriangleList circle =
+			IndexedTriangleList::Circle(material.GetVertexLayout(), segments, radius);
+
+		Ref<VertexBuffer> vertexBuffer =
+			Codex::Resolve<VertexBuffer>(circle.vertexTag, circle.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(circle.indexTag, circle.indices);
+
+		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	}
 
 	Mesh::MeshData Mesh::Cube(Material material)
 	{

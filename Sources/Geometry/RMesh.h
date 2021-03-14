@@ -37,6 +37,7 @@ namespace At0::Ray
 
 		static MeshData Triangle(Material material);
 		static MeshData Plane(Material material);
+		static MeshData HalfCircle(Material material, int segments = 360, float radius = 1.0f);
 		static MeshData Circle(Material material, int segments = 360, float radius = 1.0f);
 
 		static MeshData Cube(Material material);

@@ -37,15 +37,67 @@ namespace At0::Ray
 		return { vertexInput, indices, "Plane", "012230032210" };
 	}
 
-	// IndexedTriangleList IndexedTriangleList::Circle(
-	//	const VertexLayout& layout, int segments, float radius)
-	//{
-	//	VertexInput vertices(layout);
-	//	std::vector<IndexBuffer::Type> indices;
+	IndexedTriangleList IndexedTriangleList::HalfCircle(
+		const VertexLayout& layout, int segments, float radius)
+	{
+		VertexInput vertexInput(layout);
 
-	//	std::string tag = String::Serialize("Circle-segs{0}-radius{1}", segments, radius);
-	//	return { vertices, indices, tag, tag };
-	//}
+		// circle middle
+		vertexInput.Emplace(Float3(0.0f, 0.0f, 0.0f));
+
+		const Float4 base = Float4{ 0.0f, 0.0f, radius, 0.0f };
+		const float lattitudeAngle = Math::PI<float> / segments;
+
+		for (int segment = 0; segment <= segments; ++segment)
+		{
+			Float3 calculatedPos = base * glm::rotate(Matrix(1.0f), lattitudeAngle * segment,
+											  Float3(0.0f, -1.0f, 0.0f));
+			vertexInput.Emplace(calculatedPos);
+		}
+
+		std::vector<IndexBuffer::Type> indices;
+		for (int segment = 0; segment <= segments; ++segment)
+		{
+			// circle middle
+			indices.emplace_back(0);
+
+			indices.emplace_back(segment);
+			indices.emplace_back(segment + 1);
+		}
+
+		std::string tag = String::Serialize("HalfCircle#{0}#{1}", segments, radius);
+		return { vertexInput, indices, tag, tag };
+	}
+
+	IndexedTriangleList IndexedTriangleList::Circle(
+		const VertexLayout& layout, int segments, float radius)
+	{
+		VertexInput vertexInput(layout);
+
+		// circle middle
+		vertexInput.Emplace(Float3(0.0f, 0.0f, 0.0f));
+
+		const Float4 base = Float4{ 0.0f, 0.0f, radius, 0.0f };
+		const float lattitudeAngle = Math::PI<float> / segments;
+
+		for (int segment = 0; segment <= segments; ++segment)
+		{
+			Float3 calculatedPos = base * glm::rotate(Matrix(1.0f), lattitudeAngle * segment,
+											  Float3(1.0f, 0.0f, 0.0f));
+			vertexInput.Emplace(calculatedPos);
+		}
+
+		std::vector<IndexBuffer::Type> indices;
+		for (int segment = 0; segment <= segments; ++segment)
+		{
+			indices.emplace_back(0);
+			indices.emplace_back(segment);
+			indices.emplace_back(segment + 1);
+		}
+
+		std::string tag = String::Serialize("Circle#{0}#{1}", segments, radius);
+		return { vertexInput, indices, tag, tag };
+	}
 
 	IndexedTriangleList IndexedTriangleList::Cube(const VertexLayout& layout)
 	{
@@ -72,7 +124,7 @@ namespace At0::Ray
 		const float lattitudeAngle = Math::PI<float> / latDiv;
 		const float longitudeAngle = 2.0f * Math::PI<float> / longDiv;
 
-		VertexInput vb{ std::move(layout) };
+		VertexInput vertexInput(layout);
 		for (int iLat = 1; iLat < latDiv; iLat++)
 		{
 			Float4 latBase =
@@ -83,20 +135,20 @@ namespace At0::Ray
 				Float3 calculatedPos = latBase * glm::rotate(Matrix(1.0f), longitudeAngle * iLong,
 													 Float3(0.0f, 0.0f, 1.0f));
 
-				vb.Emplace(calculatedPos);
+				vertexInput.Emplace(calculatedPos);
 			}
 		}
 
 		// add the cap vertices
-		const uint16_t iNorthPole = (uint16_t)vb.Size();
+		const uint16_t iNorthPole = (uint16_t)vertexInput.Size();
 		{
 			Float3 northPos = base;
-			vb.Emplace(northPos);
+			vertexInput.Emplace(northPos);
 		}
-		const uint16_t iSouthPole = (uint16_t)vb.Size();
+		const uint16_t iSouthPole = (uint16_t)vertexInput.Size();
 		{
 			Float3 southPos = -base;
-			vb.Emplace(southPos);
+			vertexInput.Emplace(southPos);
 		}
 
 		const auto calcIdx = [latDiv, longDiv](IndexBuffer::Type iLat, IndexBuffer::Type iLong) {
@@ -108,48 +160,46 @@ namespace At0::Ray
 		{
 			for (IndexBuffer::Type iLong = 0; iLong < longDiv - 1; iLong++)
 			{
-				indices.push_back(calcIdx(iLat + 1, iLong + 1));
-				indices.push_back(calcIdx(iLat + 1, iLong));
-				indices.push_back(calcIdx(iLat, iLong + 1));
-				indices.push_back(calcIdx(iLat, iLong + 1));
-				indices.push_back(calcIdx(iLat + 1, iLong));
-				indices.push_back(calcIdx(iLat, iLong));
+				indices.emplace_back(calcIdx(iLat + 1, iLong + 1));
+				indices.emplace_back(calcIdx(iLat + 1, iLong));
+				indices.emplace_back(calcIdx(iLat, iLong + 1));
+				indices.emplace_back(calcIdx(iLat, iLong + 1));
+				indices.emplace_back(calcIdx(iLat + 1, iLong));
+				indices.emplace_back(calcIdx(iLat, iLong));
 			}
 			// wrap band
-			indices.push_back(calcIdx(iLat + 1, 0));
-			indices.push_back(calcIdx(iLat + 1, longDiv - 1));
-			indices.push_back(calcIdx(iLat, 0));
-			indices.push_back(calcIdx(iLat, 0));
-			indices.push_back(calcIdx(iLat + 1, longDiv - 1));
-			indices.push_back(calcIdx(iLat, longDiv - 1));
+			indices.emplace_back(calcIdx(iLat + 1, 0));
+			indices.emplace_back(calcIdx(iLat + 1, longDiv - 1));
+			indices.emplace_back(calcIdx(iLat, 0));
+			indices.emplace_back(calcIdx(iLat, 0));
+			indices.emplace_back(calcIdx(iLat + 1, longDiv - 1));
+			indices.emplace_back(calcIdx(iLat, longDiv - 1));
 		}
 
 		// cap fans
 		for (IndexBuffer::Type iLong = 0; iLong < longDiv - 1; iLong++)
 		{
 			// north
-			indices.push_back(calcIdx(0, iLong + 1));
-			indices.push_back(calcIdx(0, iLong));
-			indices.push_back(iNorthPole);
+			indices.emplace_back(calcIdx(0, iLong + 1));
+			indices.emplace_back(calcIdx(0, iLong));
+			indices.emplace_back(iNorthPole);
 			// south
-			indices.push_back(iSouthPole);
-			indices.push_back(calcIdx(latDiv - 2, iLong));
-			indices.push_back(calcIdx(latDiv - 2, iLong + 1));
+			indices.emplace_back(iSouthPole);
+			indices.emplace_back(calcIdx(latDiv - 2, iLong));
+			indices.emplace_back(calcIdx(latDiv - 2, iLong + 1));
 		}
 		// wrap triangles
 		// north
-		indices.push_back(calcIdx(0, 0));
-		indices.push_back(calcIdx(0, longDiv - 1));
-		indices.push_back(iNorthPole);
+		indices.emplace_back(calcIdx(0, 0));
+		indices.emplace_back(calcIdx(0, longDiv - 1));
+		indices.emplace_back(iNorthPole);
 		// south
-		indices.push_back(iSouthPole);
-		indices.push_back(calcIdx(latDiv - 2, longDiv - 1));
-		indices.push_back(calcIdx(latDiv - 2, 0));
+		indices.emplace_back(iSouthPole);
+		indices.emplace_back(calcIdx(latDiv - 2, longDiv - 1));
+		indices.emplace_back(calcIdx(latDiv - 2, 0));
 
-		std::ostringstream oss;
-		oss << "UVSPhere#" << radius << "#" << latDiv << "#" << longDiv;
-
-		return { vb, indices, oss.str(), oss.str() };
+		std::string tag = String::Serialize("UVSphere#{0}#{1}#{2}", radius, latDiv, longDiv);
+		return { vertexInput, indices, tag, tag };
 	}
 
 	// IndexedTriangleList IndexedTriangleList::IcoSphere(const VertexLayout& layout) {}
