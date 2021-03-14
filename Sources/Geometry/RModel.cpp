@@ -93,29 +93,26 @@ namespace At0::Ray
 		}
 
 		aiString diffuseTexFileName;
-		pMaterials[mesh.mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &diffuseTexFileName);
-
 		aiString specularTexFileName;
-		pMaterials[mesh.mMaterialIndex]->GetTexture(
-			aiTextureType_SPECULAR, 0, &specularTexFileName);
 
 		std::string basePath = std::filesystem::path(base).replace_filename("").string();
 
 		Ref<Texture2D> diffuseMap = nullptr;
 		Ref<Texture2D> specularMap = nullptr;
 
-		std::vector<std::string_view> shaders;
-
-		if (diffuseTexFileName != aiString(""))
+		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
+				aiTextureType_DIFFUSE, 0, &diffuseTexFileName) == aiReturn_SUCCESS)
 		{
 			diffuseMap = MakeRef<Texture2D>(basePath + diffuseTexFileName.C_Str());
 		}
 
-		if (specularTexFileName != aiString(""))
+		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
+				aiTextureType_SPECULAR, 0, &specularTexFileName) == aiReturn_SUCCESS)
 		{
 			specularMap = MakeRef<Texture2D>(basePath + specularTexFileName.C_Str());
 		}
 
+		std::vector<std::string_view> shaders;
 		if (diffuseMap && specularMap)
 		{
 			shaders.emplace_back("Resources/Shaders/ModelTestShaderSpec.vert");
