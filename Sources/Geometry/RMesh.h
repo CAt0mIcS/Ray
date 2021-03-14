@@ -56,7 +56,10 @@ namespace At0::Ray
 		void Bind(const CommandBuffer& cmdBuff) const;
 		void Render(const CommandBuffer& cmdBuff) const;
 
-		void AddUniform(Scope<Uniform> uniform) { m_Uniforms.emplace_back(std::move(uniform)); }
+		void AddUniform(std::string_view tag, Scope<Uniform> uniform);
+
+		bool HasUniform(std::string_view tag) const;
+		Uniform& GetUniform(std::string_view tag);
 
 		const Material& GetMaterial() const { return m_Material; }
 
@@ -74,7 +77,7 @@ namespace At0::Ray
 
 		BufferUniform m_PerObjectUniform;
 		Material m_Material;
-		std::vector<Scope<Uniform>> m_Uniforms;
+		std::vector<std::pair<std::string, Scope<Uniform>>> m_Uniforms;
 
 		Transform m_Transform;
 	};

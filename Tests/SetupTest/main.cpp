@@ -38,7 +38,10 @@ public:
 };
 
 
-class App : public Ray::Engine, Ray::EventListener<Ray::MouseButtonPressedEvent>
+class App :
+	public Ray::Engine,
+	Ray::EventListener<Ray::MouseButtonPressedEvent>,
+	Ray::EventListener<Ray::KeyPressedEvent>
 {
 public:
 	App() { Scene::Set(Ray::MakeScope<Scene>()); }
@@ -55,14 +58,15 @@ private:
 
 		for (uint32_t i = 0; i < 1; ++i)
 		{
-			Ray::Entity& entity = Ray::Scene::Get().CreateEntity();
+			m_LightEntity = &Ray::Scene::Get().CreateEntity();
 			// Ray::Material texturedMaterial({ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 0.0f, 0.0f,
 			//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true,
 			//	nullptr);
 			Ray::Material defaultMaterial(
 				{ "Resources/Shaders/DefaultShader.vert", "Resources/Shaders/DefaultShader.frag" });
 
-			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(defaultMaterial, 0.5f));
+			Ray::Mesh& mesh =
+				m_LightEntity->Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(defaultMaterial, 0.5f));
 
 			// auto& cubeTransform = mesh.GetTransform();
 			// cubeTransform.Translation = { posRotDist(device), posRotDist(device),
@@ -71,8 +75,9 @@ private:
 			// = { posRotDist(device), posRotDist(device), posRotDist(device) }; cubeTransform.Scale
 			// = { scaleDist(device), scaleDist(device), scaleDist(device) };
 
+			m_ModelEntity = &Ray::Scene::Get().CreateEntity();
 			Ray::Model& model =
-				entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
+				m_ModelEntity->Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
 			// auto& modelTransform = model.Get<Ray::Transform>();
 			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
 			//	posRotDist(device) };
@@ -84,6 +89,43 @@ private:
 			++modelCount;
 		}
 	}
+
+	void OnEvent(Ray::KeyPressedEvent& e) override
+	{
+		static Ray::Float3 oldLightPos{};
+		Ray::Float3 newLightPos = oldLightPos;
+
+		if (e.GetKey() == Ray::Key::Up)
+		{
+			newLightPos.y += 1.0f;
+		}
+		if (e.GetKey() == Ray::Key::Down)
+		{
+			newLightPos.y -= 1.0f;
+		}
+		if (e.GetKey() == Ray::Key::Left)
+		{
+			newLightPos.x -= 1.0f;
+		}
+		if (e.GetKey() == Ray::Key::Right)
+		{
+			newLightPos.x += 1.0f;
+		}
+
+		oldLightPos = newLightPos;
+		m_LightEntity->Get<Ray::Mesh>().GetTransform().Translation = newLightPos;
+		for (Ray::Mesh& mesh : m_ModelEntity->Get<Ray::Model>())
+		{
+			if (mesh.HasUniform("Light"))
+			{
+				((Ray::BufferUniform&)mesh.GetUniform("Light"))["lightPos"] = newLightPos;
+			}
+		}
+	}
+
+private:
+	Ray::Entity* m_ModelEntity;
+	Ray::Entity* m_LightEntity;
 };
 
 void SignalHandler(int signal)

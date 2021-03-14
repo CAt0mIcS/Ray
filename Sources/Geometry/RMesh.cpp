@@ -14,6 +14,7 @@
 
 #include "Registry/RGeometricPrimitives.h"
 #include "Scene/REntity.h"
+#include "Utils/RException.h"
 #include "Graphics/RVertex.h"
 
 
@@ -113,7 +114,7 @@ namespace At0::Ray
 	{
 		m_Material.GetGraphicsPipeline().CmdBind(cmdBuff);
 
-		for (const Scope<Uniform>& uniform : m_Uniforms)
+		for (const auto& [tag, uniform] : m_Uniforms)
 			uniform->CmdBind(cmdBuff);
 
 		m_PerObjectUniform.CmdBind(cmdBuff);
@@ -124,6 +125,28 @@ namespace At0::Ray
 	void Mesh::Render(const CommandBuffer& cmdBuff) const
 	{
 		vkCmdDrawIndexed(cmdBuff, m_IndexBuffer->GetNumberOfIndices(), 1, 0, 0, 0);
+	}
+
+	void Mesh::AddUniform(std::string_view tag, Scope<Uniform> uniform)
+	{
+		m_Uniforms.emplace_back(tag, std::move(uniform));
+	}
+
+	bool Mesh::HasUniform(std::string_view tag) const
+	{
+		for (auto& [uTag, uniform] : m_Uniforms)
+			if (tag == uTag)
+				return true;
+		return false;
+	}
+
+	Uniform& Mesh::GetUniform(std::string_view tag)
+	{
+		for (auto& [uTag, uniform] : m_Uniforms)
+			if (tag == uTag)
+				return *uniform;
+
+		RAY_THROW_RUNTIME("[Mesh] Failed to get uniform with tag {0}", tag);
 	}
 
 	Mesh::~Mesh() {}

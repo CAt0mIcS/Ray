@@ -37,6 +37,12 @@ namespace At0::Ray
 		Model& operator=(Model&& other) noexcept;
 		Model(Model&& other) noexcept;
 
+		auto begin() { return m_Meshes.begin(); }
+		auto end() { return m_Meshes.end(); }
+
+		auto begin() const { return m_Meshes.begin(); }
+		auto end() const { return m_Meshes.end(); }
+
 	private:
 		static Mesh ParseMesh(Entity& entity, std::string_view base, const aiMesh& mesh,
 			const aiMaterial* const* pMaterials);

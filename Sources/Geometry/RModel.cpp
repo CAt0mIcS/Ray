@@ -138,15 +138,23 @@ namespace At0::Ray
 
 		if (diffuseMap)
 		{
-			retMesh.AddUniform(MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment,
-				*diffuseMap, retMesh.GetMaterial().GetGraphicsPipeline()));
+			retMesh.AddUniform("materialDiffuse",
+				MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment, *diffuseMap,
+					retMesh.GetMaterial().GetGraphicsPipeline()));
 		}
 		if (specularMap)
 		{
-			retMesh.AddUniform(
+			retMesh.AddUniform("materialSpecular",
 				MakeScope<SamplerUniform>("materialSpecular", Shader::Stage::Fragment, *specularMap,
 					retMesh.GetMaterial().GetGraphicsPipeline()));
 		}
+
+		auto lightBuff = MakeScope<BufferUniform>(
+			"Light", Shader::Stage::Fragment, retMesh.GetMaterial().GetGraphicsPipeline());
+
+		(*lightBuff)["lightPos"] = Float3{ 0.0f, 0.0f, 0.0f };
+
+		retMesh.AddUniform("Light", std::move(lightBuff));
 
 		return retMesh;
 	}

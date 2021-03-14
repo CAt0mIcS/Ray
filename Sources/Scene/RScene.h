@@ -72,7 +72,7 @@ namespace At0::Ray
 		Scope<Camera> m_Camera = nullptr;
 
 		// Heap allocate them to avoid Entity& from being invalid when the vector is resized
-		std::vector<Entity> m_Entities;
+		std::vector<Scope<Entity>> m_Entities;
 		inline static Scope<Scene> s_CurrentScene = nullptr;
 	};
 

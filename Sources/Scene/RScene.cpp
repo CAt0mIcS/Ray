@@ -29,25 +29,25 @@ namespace At0::Ray
 
 	Scene::~Scene()
 	{
-		for (Entity& entity : m_Entities)
+		for (Scope<Entity>& entity : m_Entities)
 		{
-			m_Registry.destroy((entt::entity)entity);
+			m_Registry.destroy((entt::entity)*entity);
 		}
 	}
 
 	Entity& Scene::CreateEntity()
 	{
-		Entity entity(m_Registry.create(), &m_Registry);
+		Scope<Entity> entity = MakeScope<Entity>(m_Registry.create(), &m_Registry);
 
 		// Dispatch entity created event to listeners
-		EntityCreatedEvent e(entity);
+		EntityCreatedEvent e(*entity);
 		for (EventListener<EntityCreatedEvent>* listener :
 			EventDispatcher<EntityCreatedEvent>::Get())
 		{
 			listener->OnEvent(e);
 		}
 
-		return m_Entities.emplace_back(std::move(entity));
+		return *m_Entities.emplace_back(std::move(entity));
 	}
 
 	void Scene::Update(Delta dt)
