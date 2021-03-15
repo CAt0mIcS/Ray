@@ -50,26 +50,56 @@ namespace At0::Ray
 			Material material, float radius = 1.0f, int latDiv = 12, int longDiv = 24);
 		static MeshData Import(std::string_view filepath);
 
+		/**
+		 * @returns The root transform of this mesh
+		 */
 		Transform& GetTransform() { return (Transform&)std::as_const(*this).GetTransform(); }
+
+		/**
+		 * @returns The root transform of this mesh
+		 */
 		const Transform& GetTransform() const { return m_Transform; }
 
 		/**
-		 * Updates uniform buffers
+		 * Updates all resources.
 		 */
 		void Update(Delta ts);
+
+		/**
+		 * Updates all resources.
+		 * This function is called for children of a parent mesh
+		 */
 		void Update(Delta ts, const Transform& parentTransform);
 
+		/**
+		 * Binds all bindables and draws the object
+		 */
 		void Render(const CommandBuffer& cmdBuff) const;
 
+		/**
+		 * Adds a uniform to the list of uniforms which are automatically bound in CmdBind
+		 * @param tag Unique tag to identify the uniform
+		 * @param uniform Uniform to add
+		 */
 		void AddUniform(std::string_view tag, Scope<Uniform> uniform);
 
+		/**
+		 * @returns If the uniform with tag has been added
+		 */
 		bool HasUniform(std::string_view tag) const;
+
+		/**
+		 * @param tag The tag used when adding the uniform with "AddUniform"
+		 * @returns The uniform which was added using "AddUniform"
+		 */
 		Uniform& GetUniform(std::string_view tag);
 
+		/**
+		 * @returns The material this mesh is using
+		 */
 		const Material& GetMaterial() const { return m_Material; }
 
 		~Mesh();
-
 		Mesh& operator=(Mesh&& other) noexcept;
 		Mesh(Mesh&& other) noexcept;
 

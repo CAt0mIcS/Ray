@@ -37,7 +37,10 @@ public:
 };
 
 
-class App : public Ray::Engine, Ray::EventListener<Ray::MouseButtonPressedEvent>
+class App :
+	public Ray::Engine,
+	Ray::EventListener<Ray::MouseButtonPressedEvent>,
+	Ray::EventListener<Ray::KeyPressedEvent>
 {
 public:
 	App() { Scene::Set(Ray::MakeScope<Scene>()); }
@@ -70,8 +73,8 @@ private:
 			// = { posRotDist(device), posRotDist(device), posRotDist(device) }; cubeTransform.Scale
 			// = { scaleDist(device), scaleDist(device), scaleDist(device) };
 
-			Ray::Entity& modelEntity = Ray::Scene::Get().CreateEntity();
-			Ray::Mesh& model = modelEntity.Emplace<Ray::Mesh>(
+			m_ModelEntity = &Ray::Scene::Get().CreateEntity();
+			Ray::Mesh& model = m_ModelEntity->Emplace<Ray::Mesh>(
 				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 			// auto& modelTransform = model.Get<Ray::Transform>();
 			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
@@ -84,6 +87,12 @@ private:
 			++modelCount;
 		}
 	}
+
+
+	void OnEvent(Ray::KeyPressedEvent& e) override {}
+
+private:
+	Ray::Entity* m_ModelEntity;
 };
 
 void SignalHandler(int signal)
