@@ -111,14 +111,14 @@ namespace At0::Ray
 
 	Mesh::MeshData Mesh::Import(std::string_view filepath)
 	{
-		return { *Model{ filepath }.rootMesh };
+		return { Model{ filepath }.GetMesh() };
 	}
 
 	void Mesh::Update(Delta ts)
 	{
 		m_PerObjectUniform["model"] = m_Transform.AsMatrix();
 		for (Mesh& child : m_Children)
-			child.Update(ts);
+			child.Update(ts, m_Transform);
 	}
 
 	void Mesh::Update(Delta ts, const Transform& parentTransform)
@@ -130,7 +130,7 @@ namespace At0::Ray
 			MatrixTranslation(m_Transform.Translation + parentTransform.Translation);
 
 		for (Mesh& child : m_Children)
-			child.Update(ts, parentTransform);
+			child.Update(ts, m_Transform);
 	}
 
 	void Mesh::Render(const CommandBuffer& cmdBuff) const

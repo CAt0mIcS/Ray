@@ -81,13 +81,13 @@ namespace At0::Ray
 			CreateMaterial(basePath, mesh, pMaterials) };
 
 		// RAY_TODO: Scene hierachy
-		if (!rootMesh)
+		if (!m_RootMesh)
 		{
-			rootMesh = MakeScope<Mesh::MeshData>(std::move(data));
+			m_RootMesh = MakeScope<Mesh::MeshData>(std::move(data));
 		}
 		else
 		{
-			rootMesh->children.emplace_back(std::move(data));
+			m_RootMesh->children.emplace_back(std::move(data));
 		}
 	}
 

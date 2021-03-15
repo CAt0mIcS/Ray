@@ -27,6 +27,8 @@ namespace At0::Ray
 		Model& operator=(Model&& other) noexcept = default;
 		Model(Model&& other) noexcept = default;
 
+		Mesh::MeshData& GetMesh() { return *m_RootMesh; }
+
 	private:
 		void ParseMesh(
 			std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials);
@@ -35,8 +37,8 @@ namespace At0::Ray
 		static std::vector<std::string> GetShaders(
 			bool hasDiffuseMap, bool hasSpecularMap, bool hasNormalMap);
 
-	public:
-		Scope<Mesh::MeshData> rootMesh;
+	private:
+		Scope<Mesh::MeshData> m_RootMesh;
 	};
 }  // namespace At0::Ray
 
