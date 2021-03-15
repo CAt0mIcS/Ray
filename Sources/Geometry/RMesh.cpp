@@ -12,6 +12,7 @@
 #include "Graphics/Images/RTexture2D.h"
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 
+#include "Registry/RModel.h"
 #include "Registry/RGeometricPrimitives.h"
 #include "Scene/REntity.h"
 #include "Utils/RException.h"
@@ -21,12 +22,12 @@
 namespace At0::Ray
 {
 	Mesh::Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
-		Material material)
+		Material material, std::vector<MeshData> children)
 		: Component(entity), m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer),
 		  m_Material(material),
 		  m_PerObjectUniform("PerObjectData", Shader::Stage::Vertex, material.GetGraphicsPipeline())
 	{
-		Setup();
+		Setup(std::move(children));
 	}
 
 	Mesh::Mesh(Entity& entity, MeshData data)
@@ -34,7 +35,7 @@ namespace At0::Ray
 		  m_Material(data.material), m_PerObjectUniform("PerObjectData", Shader::Stage::Vertex,
 										 data.material.GetGraphicsPipeline())
 	{
-		Setup();
+		Setup(std::move(data.children));
 	}
 
 	Mesh::MeshData Mesh::Triangle(Material material)
@@ -95,8 +96,6 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	// Mesh::MeshData Mesh::IcoSphere(Material material) { return Mesh(); }
-
 	Mesh::MeshData Mesh::UVSphere(Material material, float radius, int latDiv, int longDiv)
 	{
 		IndexedTriangleList uvSphere =
@@ -110,7 +109,17 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	void Mesh::Update(Delta ts) { m_PerObjectUniform["model"] = m_Transform.AsMatrix(); }
+	Mesh::MeshData Mesh::Import(std::string_view filepath)
+	{
+		return { *Model{ filepath }.rootMesh };
+	}
+
+	void Mesh::Update(Delta ts)
+	{
+		m_PerObjectUniform["model"] = m_Transform.AsMatrix();
+		for (Mesh& child : m_Children)
+			child.Update(ts);
+	}
 
 	void Mesh::Update(Delta ts, const Transform& parentTransform)
 	{
@@ -119,9 +128,12 @@ namespace At0::Ray
 			MatrixScale(m_Transform.Scale + parentTransform.Scale) *
 			MatrixRotation(m_Transform.Rotation + parentTransform.Rotation) *
 			MatrixTranslation(m_Transform.Translation + parentTransform.Translation);
+
+		for (Mesh& child : m_Children)
+			child.Update(ts, parentTransform);
 	}
 
-	void Mesh::Bind(const CommandBuffer& cmdBuff) const
+	void Mesh::Render(const CommandBuffer& cmdBuff) const
 	{
 		m_Material.GetGraphicsPipeline().CmdBind(cmdBuff);
 
@@ -131,11 +143,11 @@ namespace At0::Ray
 		m_PerObjectUniform.CmdBind(cmdBuff);
 		m_VertexBuffer->CmdBind(cmdBuff);
 		m_IndexBuffer->CmdBind(cmdBuff);
-	}
 
-	void Mesh::Render(const CommandBuffer& cmdBuff) const
-	{
 		vkCmdDrawIndexed(cmdBuff, m_IndexBuffer->GetNumberOfIndices(), 1, 0, 0, 0);
+
+		for (const Mesh& child : m_Children)
+			child.Render(cmdBuff);
 	}
 
 	void Mesh::AddUniform(std::string_view tag, Scope<Uniform> uniform)
@@ -172,6 +184,7 @@ namespace At0::Ray
 
 		m_Transform = std::move(other.m_Transform);
 		m_Uniforms = std::move(other.m_Uniforms);
+		m_Children = std::move(other.m_Children);
 		return *this;
 	}
 
@@ -179,9 +192,42 @@ namespace At0::Ray
 		: Component(*other.m_Entity), m_VertexBuffer(std::move(other.m_VertexBuffer)),
 		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
 		  m_PerObjectUniform(std::move(other.m_PerObjectUniform)),
-		  m_Transform(std::move(other.m_Transform)), m_Uniforms(std::move(other.m_Uniforms))
+		  m_Transform(std::move(other.m_Transform)), m_Uniforms(std::move(other.m_Uniforms)),
+		  m_Children(std::move(other.m_Children))
 	{
 	}
 
-	void Mesh::Setup() {}
+	void Mesh::Setup(std::vector<MeshData> children)
+	{
+		for (MeshData& child : children)
+		{
+			m_Children.emplace_back(GetEntity(), child);
+
+			if (const Texture2D* diffuseMap = m_Children.back().GetMaterial().GetDiffuseMap())
+			{
+				m_Children.back().AddUniform("materialDiffuse",
+					MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment,
+						*diffuseMap, m_Children.back().GetMaterial().GetGraphicsPipeline()));
+			}
+			if (const Texture2D* specularMap = m_Children.back().GetMaterial().GetSpecularMap())
+			{
+				m_Children.back().AddUniform("materialSpecular",
+					MakeScope<SamplerUniform>("materialSpecular", Shader::Stage::Fragment,
+						*specularMap, m_Children.back().GetMaterial().GetGraphicsPipeline()));
+			}
+		}
+
+		if (const Texture2D* diffuseMap = m_Material.GetDiffuseMap())
+		{
+			AddUniform("materialDiffuse",
+				MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment, *diffuseMap,
+					m_Material.GetGraphicsPipeline()));
+		}
+		if (const Texture2D* specularMap = m_Material.GetSpecularMap())
+		{
+			AddUniform("materialSpecular",
+				MakeScope<SamplerUniform>("materialSpecular", Shader::Stage::Fragment, *specularMap,
+					m_Material.GetGraphicsPipeline()));
+		}
+	}
 }  // namespace At0::Ray

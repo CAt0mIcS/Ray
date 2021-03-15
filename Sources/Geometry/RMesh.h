@@ -18,21 +18,25 @@ namespace At0::Ray
 	class IndexBuffer;
 	class VertexInput;
 	class CommandBuffer;
+	class Texture2D;
 
 
 	class RAY_EXPORT Mesh : public Component
 	{
+		friend class Model;
+
 	private:
 		struct MeshData
 		{
 			Ref<VertexBuffer> vertexBuffer;
 			Ref<IndexBuffer> indexBuffer;
 			Material material;
+			std::vector<MeshData> children;
 		};
 
 	public:
 		Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
-			Material material);
+			Material material, std::vector<MeshData> children = {});
 		Mesh(Entity& entity, MeshData data);
 
 		static MeshData Triangle(Material material);
@@ -44,6 +48,7 @@ namespace At0::Ray
 		static MeshData IcoSphere(Material material);
 		static MeshData UVSphere(
 			Material material, float radius = 1.0f, int latDiv = 12, int longDiv = 24);
+		static MeshData Import(std::string_view filepath);
 
 		Transform& GetTransform() { return (Transform&)std::as_const(*this).GetTransform(); }
 		const Transform& GetTransform() const { return m_Transform; }
@@ -54,7 +59,6 @@ namespace At0::Ray
 		void Update(Delta ts);
 		void Update(Delta ts, const Transform& parentTransform);
 
-		void Bind(const CommandBuffer& cmdBuff) const;
 		void Render(const CommandBuffer& cmdBuff) const;
 
 		void AddUniform(std::string_view tag, Scope<Uniform> uniform);
@@ -70,7 +74,7 @@ namespace At0::Ray
 		Mesh(Mesh&& other) noexcept;
 
 	private:
-		void Setup();
+		void Setup(std::vector<MeshData> children = {});
 
 	private:
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;
@@ -78,7 +82,9 @@ namespace At0::Ray
 
 		BufferUniform m_PerObjectUniform;
 		Material m_Material;
+
 		std::vector<std::pair<std::string, Scope<Uniform>>> m_Uniforms;
+		std::vector<Mesh> m_Children;
 
 		Transform m_Transform;
 	};

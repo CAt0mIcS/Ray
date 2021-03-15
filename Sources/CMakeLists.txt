@@ -126,12 +126,12 @@ set(SRC
 	# Geometry
 	"Geometry/RMesh.h"
 	"Geometry/RMesh.cpp"
-	"Geometry/RModel.h"
-	"Geometry/RModel.cpp"
 	"Geometry/Registry/RGeometricPrimitives.h"
 	"Geometry/Registry/RGeometricPrimitives.cpp"
 	"Geometry/Registry/RMaterial.h"
 	"Geometry/Registry/RMaterial.cpp"
+	"Geometry/Registry/RModel.h"
+	"Geometry/Registry/RModel.cpp"
 
 	# ------------------------------------------------------------------
 	# Utilities

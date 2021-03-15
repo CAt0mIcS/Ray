@@ -28,7 +28,6 @@
 
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "Geometry/RMesh.h"
-#include "Geometry/RModel.h"
 
 
 namespace At0::Ray
@@ -178,13 +177,7 @@ namespace At0::Ray
 		Scene::Get().GetCamera().CmdBind(cmdBuff);
 
 		auto meshView = Scene::Get().EntityView<Mesh>();
-		meshView.each([&cmdBuff](Mesh& mesh) {
-			mesh.Bind(cmdBuff);
-			mesh.Render(cmdBuff);
-		});
-
-		auto modelView = Scene::Get().EntityView<Model>();
-		modelView.each([&cmdBuff](Model& model) { model.Render(cmdBuff); });
+		meshView.each([&cmdBuff](Mesh& mesh) { mesh.Render(cmdBuff); });
 
 		m_RenderPass->End(cmdBuff);
 

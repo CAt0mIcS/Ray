@@ -1,7 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RModel.h"
 
-#include "RMesh.h"
+#include "../RMesh.h"
 #include "Graphics/RVertex.h"
 #include "Graphics/RCodex.h"
 #include "Utils/RLogger.h"
@@ -20,7 +20,7 @@
 
 namespace At0::Ray
 {
-	Model::Model(Entity& entity, std::string_view filepath) : Component(entity)
+	Model::Model(std::string_view filepath)
 	{
 		Log::Info("[Model] Importing model \"{0}\"", filepath);
 
@@ -35,30 +35,12 @@ namespace At0::Ray
 
 		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
 		{
-			m_Meshes.emplace_back(
-				ParseMesh(entity, filepath, *pScene->mMeshes[i], pScene->mMaterials));
+			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials);
 		}
 	}
 
-	Model::~Model() {}
-
-	void Model::Update(Delta ts)
-	{
-		for (Mesh& mesh : m_Meshes)
-			mesh.Update(ts, m_Transform);
-	}
-
-	void Model::Render(const CommandBuffer& cmdBuff) const
-	{
-		for (const Mesh& mesh : m_Meshes)
-		{
-			mesh.Bind(cmdBuff);
-			mesh.Render(cmdBuff);
-		}
-	}
-
-	Mesh Model::ParseMesh(Entity& entity, std::string_view base, const aiMesh& mesh,
-		const aiMaterial* const* pMaterials)
+	void Model::ParseMesh(
+		std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials)
 	{
 		Log::Info("[Model] Parsing mesh \"{0}\"", mesh.mName.C_Str());
 
@@ -92,17 +74,25 @@ namespace At0::Ray
 			indices.emplace_back(face.mIndices[2]);
 		}
 
-
 		std::string basePath = std::filesystem::path(base).remove_filename().string();
 
-		return CreateMesh(entity, basePath, mesh, pMaterials,
-			Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
-			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)));
+		Mesh::MeshData data{ Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
+			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)),
+			CreateMaterial(basePath, mesh, pMaterials) };
+
+		// RAY_TODO: Scene hierachy
+		if (!rootMesh)
+		{
+			rootMesh = MakeScope<Mesh::MeshData>(std::move(data));
+		}
+		else
+		{
+			rootMesh->children.emplace_back(std::move(data));
+		}
 	}
 
-	Mesh Model::CreateMesh(Entity& entity, const std::string& basePath, const aiMesh& mesh,
-		const aiMaterial* const* pMaterials, Ref<VertexBuffer> vertexBuffer,
-		Ref<IndexBuffer> indexBuffer)
+	Material Model::CreateMaterial(
+		const std::string& basePath, const aiMesh& mesh, const aiMaterial* const* pMaterials)
 	{
 		aiString diffuseTexFileName;
 		aiString specularTexFileName;
@@ -133,23 +123,7 @@ namespace At0::Ray
 		std::vector<std::string> shaders =
 			GetShaders(diffuseMap != nullptr, specularMap != nullptr, normalMap != nullptr);
 
-		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, diffuseMap, specularMap, normalMap);
-		Mesh retMesh(entity, vertexBuffer, indexBuffer, std::move(material));
-
-		if (diffuseMap)
-		{
-			retMesh.AddUniform("materialDiffuse",
-				MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment, *diffuseMap,
-					retMesh.GetMaterial().GetGraphicsPipeline()));
-		}
-		if (specularMap)
-		{
-			retMesh.AddUniform("materialSpecular",
-				MakeScope<SamplerUniform>("materialSpecular", Shader::Stage::Fragment, *specularMap,
-					retMesh.GetMaterial().GetGraphicsPipeline()));
-		}
-
-		return retMesh;
+		return { shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, diffuseMap, specularMap, normalMap };
 	}
 
 	std::vector<std::string> Model::GetShaders(
@@ -176,18 +150,5 @@ namespace At0::Ray
 		shaders.emplace_back("Resources/Shaders/ModelShader" + shaderCode + ".frag");
 
 		return shaders;
-	}
-
-	Model& Model::operator=(Model&& other) noexcept
-	{
-		m_Meshes = std::move(other.m_Meshes);
-		m_Transform = std::move(other.m_Transform);
-		return *this;
-	}
-
-	Model::Model(Model&& other) noexcept
-		: Component(*other.m_Entity), m_Meshes(std::move(other.m_Meshes)),
-		  m_Transform(std::move(other.m_Transform))
-	{
 	}
 }  // namespace At0::Ray

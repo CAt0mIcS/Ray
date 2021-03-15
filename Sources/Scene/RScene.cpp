@@ -5,7 +5,6 @@
 #include "Utils/RException.h"
 
 #include "Geometry/RMesh.h"
-#include "Geometry/RModel.h"
 
 #include "Events/REventListener.h"
 
@@ -56,9 +55,6 @@ namespace At0::Ray
 
 		auto meshView = m_Registry.view<Mesh>();
 		meshView.each([&dt](Mesh& mesh) { mesh.Update(dt); });
-
-		auto modelView = m_Registry.view<Model>();
-		modelView.each([&dt](Model& model) { model.Update(dt); });
 	}
 
 	void Scene::SetCamera(Scope<Camera> cam) { m_Camera = std::move(cam); }

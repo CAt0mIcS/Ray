@@ -4,7 +4,6 @@
 #include <Graphics/RGraphics.h>
 
 #include <Geometry/RMesh.h>
-#include <Geometry/RModel.h>
 #include <Graphics/Images/RTexture2D.h>
 #include <Utils/RException.h>
 
@@ -72,8 +71,8 @@ private:
 			// = { scaleDist(device), scaleDist(device), scaleDist(device) };
 
 			Ray::Entity& modelEntity = Ray::Scene::Get().CreateEntity();
-			Ray::Model& model =
-				modelEntity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
+			Ray::Mesh& model = modelEntity.Emplace<Ray::Mesh>(
+				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 			// auto& modelTransform = model.Get<Ray::Transform>();
 			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
 			//	posRotDist(device) };
