@@ -104,7 +104,7 @@ private:
 	}
 
 private:
-	Ray::Entity* m_ModelEntity;
+	Ray::Entity* m_ModelEntity = nullptr;
 };
 
 void SignalHandler(int signal)
