@@ -5,6 +5,8 @@
 
 #include <Geometry/RMesh.h>
 #include <Graphics/Images/RTexture2D.h>
+#include <Graphics/Renderers/RRenderer.h>
+#include <Graphics/Renderers/RMeshRenderer.h>
 #include <Utils/RException.h>
 
 #include <Graphics/RVertex.h>
@@ -31,6 +33,8 @@ public:
 		GetCamera().SetRotationSpeed(0.07f);
 		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
 		GetCamera().SetMovementSpeed(3.0f);
+
+		Ray::Renderer::Get().Emplace<Ray::MeshRenderer>();
 	}
 };
 

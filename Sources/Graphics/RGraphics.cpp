@@ -15,6 +15,8 @@
 #include "Graphics/Core/RSwapchain.h"
 #include "RCodex.h"
 
+#include "Renderers/RRenderer.h"
+
 #include "Graphics/Commands/RCommandPool.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 
@@ -173,9 +175,7 @@ namespace At0::Ray
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
 		Scene::Get().GetCamera().CmdBind(cmdBuff);
-
-		auto meshView = Scene::Get().EntityView<Mesh>();
-		meshView.each([&cmdBuff](Mesh& mesh) { mesh.Render(cmdBuff); });
+		Renderer::Get().Bind(cmdBuff);
 
 		m_RenderPass->End(cmdBuff);
 
@@ -238,6 +238,7 @@ namespace At0::Ray
 		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
 
 		Scene::Get().Update(dt);
+		Renderer::Get().Update(dt);
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

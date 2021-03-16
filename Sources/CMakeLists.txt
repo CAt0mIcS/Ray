@@ -113,7 +113,6 @@ set(SRC
 	"Graphics/Images/RTextureSampler.h"
 	"Graphics/Images/RTextureSampler.cpp"
 
-
 	"Graphics/Commands/RCommandBuffer.h"
 	"Graphics/Commands/RCommandBuffer.cpp"
 	"Graphics/Commands/RCommandPool.h"
@@ -121,6 +120,13 @@ set(SRC
 
 	"Graphics/RenderPass/RRenderPass.h"
 	"Graphics/RenderPass/RRenderPass.cpp"
+	
+	"Graphics/Renderers/RRenderer.h"
+	"Graphics/Renderers/RRenderer.cpp"
+	"Graphics/Renderers/RSubRenderer.cpp"
+	"Graphics/Renderers/RSubRenderer.h"
+	"Graphics/Renderers/RMeshRenderer.cpp"
+	"Graphics/Renderers/RMeshRenderer.h"
 
 	# ------------------------------------------------------------------
 	# Geometry
