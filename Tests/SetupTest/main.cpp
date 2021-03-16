@@ -66,30 +66,42 @@ private:
 
 			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Circle(defaultMaterial));
 
-			// auto& cubeTransform = mesh.GetTransform();
-			// cubeTransform.Translation = { posRotDist(device), posRotDist(device),
-			//	posRotDist(device) };
-			// cubeTransform.Rotation
-			// = { posRotDist(device), posRotDist(device), posRotDist(device) }; cubeTransform.Scale
-			// = { scaleDist(device), scaleDist(device), scaleDist(device) };
+			// auto& meshTransform = mesh.GetTransform();
+			// meshTransform.Translation(
+			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
+			// meshTransform.Rotation({ posRotDist(device), posRotDist(device), posRotDist(device)
+			// }); meshTransform.Scale({ scaleDist(device), scaleDist(device), scaleDist(device) });
 
 			m_ModelEntity = &Ray::Scene::Get().CreateEntity();
 			Ray::Mesh& model = m_ModelEntity->Emplace<Ray::Mesh>(
 				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
-			// auto& modelTransform = model.Get<Ray::Transform>();
+			// auto& modelTransform = model.GetTransform();
 			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
 			//	posRotDist(device) };
 			// modelTransform.Rotation = { posRotDist(device), posRotDist(device),
-			// posRotDist(device)
-			// }; modelTransform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device)
-			// };
+			//	posRotDist(device) };
+			// modelTransform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device) };
 
 			++modelCount;
 		}
 	}
 
 
-	void OnEvent(Ray::KeyPressedEvent& e) override {}
+	void OnEvent(Ray::KeyPressedEvent& e) override
+	{
+		if (e.GetKey() == Ray::Key::Up)
+		{
+			auto& mesh = m_ModelEntity->Get<Ray::Mesh>();
+			mesh.GetTransform().Translation(
+				mesh.GetTransform().Translation() + Ray::Float3{ 0.0f, 1.0f, 0.0f });
+		}
+		if (e.GetKey() == Ray::Key::Down)
+		{
+			auto& mesh = m_ModelEntity->Get<Ray::Mesh>();
+			mesh.GetTransform().Translation(
+				mesh.GetTransform().Translation() + Ray::Float3{ 0.0f, -1.0f, 0.0f });
+		}
+	}
 
 private:
 	Ray::Entity* m_ModelEntity;

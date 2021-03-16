@@ -34,49 +34,102 @@ namespace At0::Ray
 	float DotProduct(Float4 x, Float4 y) { return glm::dot(x, y); }
 	Float3 CrossProduct(Float3 x, Float3 y) { return glm::cross(x, y); }
 
-
+	void Transform::Translation(Float3 translation)
+	{
+		m_Translation = translation;
+		m_Changed = true;
+	}
+	void Transform::Rotation(Float3 rotation)
+	{
+		m_Rotation = rotation;
+		m_Changed = true;
+	}
+	void Transform::Scale(Float3 scale)
+	{
+		m_Scale = scale;
+		m_Changed = true;
+	}
 	Transform::Transform(Float3 translation, Float3 rotation, Float3 scale)
-		: Translation{ translation }, Rotation{ rotation }, Scale{ scale },
-		  m_OldTranslation{ Translation }, m_OldRotation{ Rotation }, m_OldScale{ Scale }
+		: m_Translation{ translation }, m_Rotation{ rotation }, m_Scale{ scale }
+
 	{
 	}
 
 	Transform::Transform(Float3 translation, Float3 rotation)
-		: Translation{ translation }, Rotation{ rotation }, m_OldTranslation{ Translation },
-		  m_OldRotation{ Rotation }
+		: m_Translation{ translation }, m_Rotation{ rotation }
 	{
 	}
 
 	Transform::Transform(Float3 translation)
-		: Translation{ translation }, Rotation{ 0.0f, 0.0f, 0.0f }, m_OldTranslation{ Translation },
-		  m_OldRotation{ Rotation }
+		: m_Translation{ translation }, m_Rotation{ 0.0f, 0.0f, 0.0f }
 	{
 	}
-	Transform::Transform() : Rotation{ 0.0f, 0.0f, 0.0f }, m_OldRotation{ Rotation } {}
+	Transform::Transform() : m_Rotation{ 0.0f, 0.0f, 0.0f } {}
 	Matrix Transform::AsMatrix()
 	{
-		if (m_OldTranslation != Translation || m_OldRotation != Rotation || m_OldScale != Scale)
+		if (m_Changed)
 		{
-			m_CachedMatrix =
-				MatrixScale(Scale) * MatrixRotation(Rotation) * MatrixTranslation(Translation);
-			m_OldTranslation = Translation;
-			m_OldRotation = Rotation;
-			m_OldScale = Scale;
+			m_CachedMatrix = MatrixScale(m_Scale) * MatrixRotation(m_Rotation) *
+							 MatrixTranslation(m_Translation);
+			m_Changed = false;
 		}
 		return m_CachedMatrix;
 	}
-	Transform Transform::operator+(const Transform& other)
+	Transform Transform::operator+(const Transform& other) const
 	{
 		Transform transform;
-		transform.Translation = Translation + other.Translation;
-		transform.Rotation = Rotation + other.Rotation;
-		transform.Scale = Scale + other.Scale;
-
-		transform.m_OldTranslation = m_OldTranslation + other.m_OldTranslation;
-		transform.m_OldRotation = m_OldRotation + other.m_OldRotation;
-		transform.m_OldScale = m_OldScale + other.m_OldScale;
+		transform.m_Translation = m_Translation + other.m_Translation;
+		transform.m_Rotation = m_Rotation + other.m_Rotation;
+		transform.m_Scale = m_Scale + other.m_Scale;
 
 		return transform;
+	}
+	Transform Transform::operator-(const Transform& other) const
+	{
+		Transform transform;
+		transform.m_Translation = m_Translation - other.m_Translation;
+		transform.m_Rotation = m_Rotation - other.m_Rotation;
+		transform.m_Scale = m_Scale - other.m_Scale;
+
+		return transform;
+	}
+	Transform Transform::operator*(const Transform& other) const
+	{
+		Transform transform;
+		transform.m_Translation = m_Translation * other.m_Translation;
+		transform.m_Rotation = m_Rotation * other.m_Rotation;
+		transform.m_Scale = m_Scale * other.m_Scale;
+
+		return transform;
+	}
+	Transform Transform::operator/(const Transform& other) const
+	{
+		Transform transform;
+		transform.m_Translation = m_Translation / other.m_Translation;
+		transform.m_Rotation = m_Rotation / other.m_Rotation;
+		transform.m_Scale = m_Scale / other.m_Scale;
+
+		return transform;
+	}
+	Transform& Transform::operator+=(const Transform& other)
+	{
+		*this = *this + other;
+		return *this;
+	}
+	Transform& Transform::operator-=(const Transform& other)
+	{
+		*this = *this - other;
+		return *this;
+	}
+	Transform& Transform::operator*=(const Transform& other)
+	{
+		*this = *this * other;
+		return *this;
+	}
+	Transform& Transform::operator/=(const Transform& other)
+	{
+		*this = *this / other;
+		return *this;
 	}
 
 	inline std::ostream& operator<<(std::ostream& os, const Int2& data)

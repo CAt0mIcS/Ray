@@ -125,9 +125,9 @@ namespace At0::Ray
 	{
 		// Calculate it raw here to avoid the cache check in Transform::AsMatrix
 		m_PerObjectUniform["model"] =
-			MatrixScale(m_Transform.Scale * parentTransform.Scale) *
-			MatrixRotation(m_Transform.Rotation + parentTransform.Rotation) *
-			MatrixTranslation(m_Transform.Translation + parentTransform.Translation);
+			MatrixScale(m_Transform.Scale() * parentTransform.Scale()) *
+			MatrixRotation(m_Transform.Rotation() + parentTransform.Rotation()) *
+			MatrixTranslation(m_Transform.Translation() + parentTransform.Translation());
 
 		for (Mesh& child : m_Children)
 			child.Update(ts, m_Transform);
