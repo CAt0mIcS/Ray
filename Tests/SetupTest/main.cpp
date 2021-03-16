@@ -22,9 +22,7 @@ class Scene : public Ray::Scene
 {
 public:
 	// Creating the camera here wouldn't work!
-	Scene() {}
-
-	void Start() override
+	Scene()
 	{
 		SetCamera(Ray::MakeScope<Ray::Camera>());
 		Ray::UInt2 size = Ray::Window::Get().GetFramebufferSize();
@@ -43,7 +41,7 @@ class App :
 	Ray::EventListener<Ray::KeyPressedEvent>
 {
 public:
-	App() { Scene::Set(Ray::MakeScope<Scene>()); }
+	App() { Ray::Scene::Create<Scene>(); }
 
 private:
 	void Update() override {}

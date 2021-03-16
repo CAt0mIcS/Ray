@@ -17,8 +17,6 @@ namespace At0::Ray
 		return *s_CurrentScene;
 	}
 
-	void Scene::Set(Scope<Scene> scene) { s_CurrentScene = std::move(scene); }
-
 	void Scene::Destroy()
 	{
 		if (s_CurrentScene)

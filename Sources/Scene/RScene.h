@@ -27,7 +27,6 @@ namespace At0::Ray
 	{
 	public:
 		static Scene& Get();
-		static void Set(Scope<Scene> scene);
 		static void Destroy();
 
 		virtual ~Scene();
@@ -62,10 +61,15 @@ namespace At0::Ray
 		const Camera& GetCamera() const;
 		Camera& GetCamera() { return (Camera&)std::as_const(*this).GetCamera(); }
 
-		virtual void Start() {}
+		template<typename T, typename... Args>
+		static Scene& Create(Args&&... args)
+		{
+			new T(std::forward<Args>(args)...);
+			return *s_CurrentScene;
+		}
 
 	protected:
-		Scene() = default;
+		Scene() { s_CurrentScene = Scope<Scene>(this); }
 
 	private:
 		entt::registry m_Registry;

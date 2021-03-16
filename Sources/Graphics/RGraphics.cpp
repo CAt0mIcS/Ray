@@ -61,7 +61,6 @@ namespace At0::Ray
 		CreateFramebuffers();
 		BufferSynchronizer::Create();
 
-		// CreateCommandBuffers();
 		CreateSyncObjects();
 	}
 
@@ -157,7 +156,6 @@ namespace At0::Ray
 	void Graphics::RecordCommandBuffer(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer)
 	{
 		cmdBuff.Begin();
-
 
 		VkClearValue clearColor{ 0.0137254f, 0.014117f, 0.0149019f };
 		VkClearValue depthStencilClearColor{};
@@ -348,7 +346,7 @@ namespace At0::Ray
 		m_Scissor.extent = { (uint32_t)size.x, (uint32_t)size.y };
 	}
 
-	void At0::Ray::Graphics::OnFramebufferResized()
+	void Graphics::OnFramebufferResized()
 	{
 		// Minimized window will have framebuffer size of [0 | 0]
 		// Sleep until window is back in foreground
