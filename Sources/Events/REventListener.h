@@ -18,7 +18,8 @@ namespace At0::Ray
 		 * If the dispatcher<T> is a base class of the Window then the window is selected
 		 * automatically as the dispatcher
 		 */
-		EventListener() requires std::is_base_of_v<EventDispatcher<T>, Window>
+		template<typename U = T>
+		EventListener() requires std::derived_from<Window, EventDispatcher<U>>
 		{
 			m_Dispatcher = &Window::Get();
 			m_Dispatcher->Register(this);
@@ -29,7 +30,8 @@ namespace At0::Ray
 		 * If the dispatcher<T> is not a base class of the Window the dispatcher<T> needs to be
 		 * specified
 		 */
-		EventListener(EventDispatcher<T>& dispatcher)
+		template<typename U = T>
+		EventListener(EventDispatcher<U>& dispatcher)
 		{
 			m_Dispatcher = &dispatcher;
 			m_Dispatcher->Register(this);
