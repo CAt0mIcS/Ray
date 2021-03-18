@@ -78,10 +78,10 @@ namespace At0::Ray
 		 * @tparam Component The components to get
 		 * @returns The component specified or a tuple of components
 		 */
-		template<typename... Component>
+		template<typename... Comp>
 		decltype(auto) Get() const
 		{
-			return m_Registry->get<Component...>(m_EntityHandle);
+			return m_Registry->get<Comp...>(m_EntityHandle);
 		}
 
 		/**

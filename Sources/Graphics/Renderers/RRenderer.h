@@ -6,6 +6,8 @@
 
 #include "RSubRenderer.h"
 
+#include <concepts>
+
 
 namespace At0::Ray
 {
@@ -18,7 +20,8 @@ namespace At0::Ray
 		 * Adds a subrenderer to the list of subrenderers
 		 */
 		template<typename T, typename... Args>
-		SubRenderer& Emplace(Args&&... args)
+		SubRenderer& Emplace(Args&&... args) requires std::derived_from<T,
+			SubRenderer>&& std::constructible_from<T, Args...>
 		{
 			return *m_SubRenderers.emplace_back(MakeScope<T>(std::forward<Args>(args)...));
 		}

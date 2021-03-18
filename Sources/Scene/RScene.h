@@ -7,6 +7,8 @@
 
 #include "../Events/REventDispatcher.h"
 
+#include <concepts>
+
 
 namespace At0::Ray
 {
@@ -62,10 +64,9 @@ namespace At0::Ray
 		Camera& GetCamera() { return (Camera&)std::as_const(*this).GetCamera(); }
 
 		template<typename T, typename... Args>
-		static Scene& Create(Args&&... args)
+		static Scene& Create(Args&&... args) requires std::derived_from<T,
+			Scene>&& std::constructible_from<T, Args...>
 		{
-			static_assert(
-				std::is_base_of_v<Scene, T>, "[Scene] Template T must be derived from Ray::Scene");
 			// s_CurrentScene is set in the constructor of Scene
 			new T(std::forward<Args>(args)...);
 			return *s_CurrentScene;
