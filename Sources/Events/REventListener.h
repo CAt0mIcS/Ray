@@ -4,6 +4,7 @@
 #include "../Devices/RWindow.h"
 
 #include <type_traits>
+#include <concepts>
 
 
 namespace At0::Ray
@@ -12,26 +13,17 @@ namespace At0::Ray
 	class EventListener
 	{
 	public:
-/**
- * Registers the listener to receive event of type T.
- * If the dispatcher<T> is a base class of the Window then the window is selected
- * automatically as the dispatcher
- */
-#ifdef _MSC_VER
+		/**
+		 * Registers the listener to receive event of type T.
+		 * If the dispatcher<T> is a base class of the Window then the window is selected
+		 * automatically as the dispatcher
+		 */
 		template<typename U = T>
 		requires std::is_base_of_v<EventDispatcher<U>, Window> EventListener()
 		{
 			m_Dispatcher = &Window::Get();
 			m_Dispatcher->Register(this);
 		}
-#elif defined(__GNUC__)
-		template<typename U = T>
-		EventListener(typename std::enable_if_t<std::is_base_of_v<EventDispatcher<U>, Window>>* = 0)
-		{
-			m_Dispatcher = &Window::Get();
-			m_Dispatcher->Register(this);
-		}
-#endif
 
 		/**
 		 * Registers the listener to receive event of type T.

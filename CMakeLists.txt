@@ -45,17 +45,6 @@ elseif(APPLE)
     endif()
 endif()
 
-# TODO: Enable for gcc and clang only
-if(UNIX)
-    # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wno-attributes")
-    # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wno-attributes")
-    
-    # set(CMAKE_C_COMPILER gcc-10)
-    # set(CMAKE_CXX_COMPILER g++-10)
-	# set(CMAKE_REQUIRED_FLAGS -fconcepts)
-	# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconcepts")
-endif()
-
 # ------------------------------------------------------------------------------------------------
 # Set common options
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -88,6 +77,15 @@ project("Ray")
 # ------------------------------------------------------------------------------------------------
 # Required for Solution Folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+# TODO: Enable for gcc and clang only
+if(UNIX)
+    # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wno-attributes")
+    # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wno-attributes")
+    
+	# set(CMAKE_C_COMPILER gcc-10)
+	# set(CMAKE_CXX_COMPILER g++-10)
+endif()
 
 if(NOT DEFINED CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")

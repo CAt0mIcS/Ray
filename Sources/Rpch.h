@@ -27,6 +27,7 @@
 #include <numeric>
 #include <filesystem>
 #include <assert.h>
+#include <concepts>
 
 #include <vulkan/vulkan.h>
 
