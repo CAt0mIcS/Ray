@@ -29,10 +29,7 @@ namespace At0::Ray
 	class DepthImage;
 
 
-	class RAY_EXPORT Graphics :
-		NonCopyable,
-		EventListener<FramebufferResizedEvent>,
-		EventListener<EntityCreatedEvent>
+	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
 	{
 	public:
 		~Graphics();
@@ -53,6 +50,11 @@ namespace At0::Ray
 		 */
 		void Update(Delta dt);
 
+		/**
+		 * Querys rerecording of all command buffers in the next draw call
+		 */
+		void RerecordCommandBuffers() { m_RerecordCommandBuffers = true; }
+
 	private:
 		Graphics();
 
@@ -69,8 +71,6 @@ namespace At0::Ray
 		void CreateSyncObjects();
 		void OnEvent(FramebufferResizedEvent& e) override;
 		void OnFramebufferResized();
-
-		void OnEvent(EntityCreatedEvent& e) override;
 
 	private:
 		inline static Graphics* s_Instance = nullptr;

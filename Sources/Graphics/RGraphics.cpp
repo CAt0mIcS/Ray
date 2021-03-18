@@ -34,7 +34,7 @@
 
 namespace At0::Ray
 {
-	Graphics::Graphics() : EventListener<EntityCreatedEvent>(Scene::Get())
+	Graphics::Graphics()
 	{
 		if (s_Instance)
 			RAY_THROW_RUNTIME("[Graphics] Object already created");
@@ -386,6 +386,4 @@ namespace At0::Ray
 	}
 
 	void Graphics::OnEvent(FramebufferResizedEvent& e) { m_FramebufferResized = true; }
-
-	void Graphics::OnEvent(EntityCreatedEvent& e) { m_RerecordCommandBuffers = true; }
 }  // namespace At0::Ray

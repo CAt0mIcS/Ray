@@ -16,8 +16,5 @@ namespace At0::Ray
 
 	private:
 		void OnEvent(EntityCreatedEvent& e) override;
-
-	private:
-		bool m_RerecordCommandBuffers = true;
 	};
 }  // namespace At0::Ray

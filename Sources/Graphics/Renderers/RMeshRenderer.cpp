@@ -1,6 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RMeshRenderer.h"
 
+#include "Graphics/RGraphics.h"
 #include "Geometry/RMesh.h"
 
 
@@ -16,5 +17,5 @@ namespace At0::Ray
 		meshView.each([&cmdBuff](Mesh& mesh) { mesh.Render(cmdBuff); });
 	}
 
-	void MeshRenderer::OnEvent(EntityCreatedEvent& e) { m_RerecordCommandBuffers = true; }
+	void MeshRenderer::OnEvent(EntityCreatedEvent& e) { Graphics::Get().RerecordCommandBuffers(); }
 }  // namespace At0::Ray
