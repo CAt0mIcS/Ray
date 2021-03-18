@@ -23,10 +23,8 @@ using namespace At0;
 class Scene : public Ray::Scene
 {
 public:
-	// Creating the camera here wouldn't work!
-	Scene()
+	Scene() : Ray::Scene(Ray::MakeScope<Ray::Camera>())
 	{
-		SetCamera(Ray::MakeScope<Ray::Camera>());
 		Ray::UInt2 size = Ray::Window::Get().GetFramebufferSize();
 		GetCamera().SetPosition(glm::vec3(0.0f, 0.0f, -2.5f));
 		GetCamera().SetRotation(glm::vec3(0.0f));
@@ -129,11 +127,7 @@ int main()
 		Ray::Window::Create();
 		Ray::Window::Get().Show();
 
-		App app;
-
-		Ray::Graphics::Get();
-
-		return app.Run();
+		return App{}.Run();
 	}
 	catch (Ray::Exception& e)
 	{

@@ -63,4 +63,9 @@ namespace At0::Ray
 		return *m_Camera;
 	}
 
+	Scene::Scene(Scope<Camera> camera) : m_Camera(std::move(camera))
+	{
+		s_CurrentScene = Scope<Scene>(this);
+	}
+
 }  // namespace At0::Ray

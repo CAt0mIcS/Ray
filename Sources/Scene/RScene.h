@@ -64,12 +64,15 @@ namespace At0::Ray
 		template<typename T, typename... Args>
 		static Scene& Create(Args&&... args)
 		{
+			static_assert(
+				std::is_base_of_v<Scene, T>, "[Scene] Template T must be derived from Ray::Scene");
+			// s_CurrentScene is set in the constructor of Scene
 			new T(std::forward<Args>(args)...);
 			return *s_CurrentScene;
 		}
 
 	protected:
-		Scene() { s_CurrentScene = Scope<Scene>(this); }
+		Scene(Scope<Camera> camera);
 
 	private:
 		entt::registry m_Registry;
