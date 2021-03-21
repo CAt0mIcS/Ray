@@ -57,7 +57,7 @@ private:
 
 		for (uint32_t i = 0; i < 1; ++i)
 		{
-			Ray::Entity& meshEntity = Ray::Scene::Get().CreateEntity();
+			Ray::Entity meshEntity = Ray::Scene::Get().CreateEntity();
 			// Ray::Material texturedMaterial({ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 0.0f, 0.0f,
 			//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true,
 			//	nullptr);
@@ -72,8 +72,8 @@ private:
 			// meshTransform.Rotation({ posRotDist(device), posRotDist(device), posRotDist(device)
 			// }); meshTransform.Scale({ scaleDist(device), scaleDist(device), scaleDist(device) });
 
-			m_ModelEntity = &Ray::Scene::Get().CreateEntity();
-			Ray::Mesh& model = m_ModelEntity->Emplace<Ray::Mesh>(
+			m_ModelEntity = Ray::Scene::Get().CreateEntity();
+			Ray::Mesh& model = m_ModelEntity.Emplace<Ray::Mesh>(
 				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 			// auto& modelTransform = model.GetTransform();
 			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
@@ -91,20 +91,20 @@ private:
 	{
 		if (e.GetKey() == Ray::Key::Up)
 		{
-			auto& mesh = m_ModelEntity->Get<Ray::Mesh>();
+			auto& mesh = m_ModelEntity.Get<Ray::Mesh>();
 			mesh.GetTransform().Translation(
 				mesh.GetTransform().Translation() + Ray::Float3{ 0.0f, 1.0f, 0.0f });
 		}
 		if (e.GetKey() == Ray::Key::Down)
 		{
-			auto& mesh = m_ModelEntity->Get<Ray::Mesh>();
+			auto& mesh = m_ModelEntity.Get<Ray::Mesh>();
 			mesh.GetTransform().Translation(
 				mesh.GetTransform().Translation() + Ray::Float3{ 0.0f, -1.0f, 0.0f });
 		}
 	}
 
 private:
-	Ray::Entity* m_ModelEntity = nullptr;
+	Ray::Entity m_ModelEntity;
 };
 
 void SignalHandler(int signal)
