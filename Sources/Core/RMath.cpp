@@ -34,17 +34,17 @@ namespace At0::Ray
 	float DotProduct(Float4 x, Float4 y) { return glm::dot(x, y); }
 	Float3 CrossProduct(Float3 x, Float3 y) { return glm::cross(x, y); }
 
-	void Transform::Translation(Float3 translation)
+	void Transform::SetTranslation(Float3 translation)
 	{
 		m_Translation = translation;
 		m_Changed = true;
 	}
-	void Transform::Rotation(Float3 rotation)
+	void Transform::SetRotation(Float3 rotation)
 	{
 		m_Rotation = rotation;
 		m_Changed = true;
 	}
-	void Transform::Scale(Float3 scale)
+	void Transform::SetScale(Float3 scale)
 	{
 		m_Scale = scale;
 		m_Changed = true;

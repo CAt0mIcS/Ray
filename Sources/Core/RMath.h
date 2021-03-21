@@ -57,9 +57,9 @@ namespace At0::Ray
 		const Float3& Rotation() const { return m_Rotation; }
 		const Float3& Scale() const { return m_Scale; }
 
-		void Translation(Float3 translation);
-		void Rotation(Float3 rotation);
-		void Scale(Float3 scale);
+		void SetTranslation(Float3 translation);
+		void SetRotation(Float3 rotation);
+		void SetScale(Float3 scale);
 
 		Transform(Float3 translation, Float3 rotation, Float3 scale);
 		Transform(Float3 translation, Float3 rotation);

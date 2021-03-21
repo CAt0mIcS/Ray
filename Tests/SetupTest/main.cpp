@@ -92,13 +92,13 @@ private:
 		if (e.GetKey() == Ray::Key::Up)
 		{
 			auto& mesh = m_ModelEntity.Get<Ray::Mesh>();
-			mesh.GetTransform().Translation(
+			mesh.GetTransform().SetTranslation(
 				mesh.GetTransform().Translation() + Ray::Float3{ 0.0f, 1.0f, 0.0f });
 		}
 		if (e.GetKey() == Ray::Key::Down)
 		{
 			auto& mesh = m_ModelEntity.Get<Ray::Mesh>();
-			mesh.GetTransform().Translation(
+			mesh.GetTransform().SetTranslation(
 				mesh.GetTransform().Translation() + Ray::Float3{ 0.0f, -1.0f, 0.0f });
 		}
 	}
