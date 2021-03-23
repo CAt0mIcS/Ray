@@ -192,6 +192,7 @@ set(PRIVATE_LIB
     "glslang"
     "SPIRV"
     "Ion"
+    "ImGui"
 )
 
 

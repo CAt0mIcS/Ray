@@ -12,6 +12,18 @@
 
 #define ENTT_API RAY_EXPORT
 
+#define RAY_USE_IMGUI 1
+
+/**
+ * When declaring/calling a function to spawn imgui widgets in a class the function will be wrapped
+ * with this macro, so that the function won't be declared/called if imgui is disabled.
+ */
+#if RAY_USE_IMGUI
+	#define RAY_IMGUI_FN(x) x
+#else
+	#define RAY_IMGUI_FN(x)
+#endif
+
 // Export some entt symbols. Specialization is not exported for some reason... (RAY_TODO)
 #include <../../Extern/entt/src/entt/core/type_info.hpp>
 #include <../../Extern/entt/src/entt/entity/storage.hpp>

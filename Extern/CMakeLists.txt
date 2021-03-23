@@ -3,6 +3,7 @@ add_subdirectory("glm")
 add_subdirectory("glslang")
 add_subdirectory("assimp")
 add_subdirectory("Ion")
+add_subdirectory("ImGui")
 
 SetOutputDirectory("glfw" "")
 
@@ -26,3 +27,4 @@ set_target_properties("MachineIndependent" PROPERTIES FOLDER "Extern/glslang")
 
 
 set_target_properties("Ion" PROPERTIES FOLDER "Extern")
+set_target_properties("ImGui" PROPERTIES FOLDER "Extern")

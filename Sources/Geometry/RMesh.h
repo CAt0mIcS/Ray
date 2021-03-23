@@ -105,6 +105,7 @@ namespace At0::Ray
 
 	private:
 		void Setup(std::vector<MeshData> children = {});
+		RAY_IMGUI_FN(void ImGuiWindowUpdate());
 
 	private:
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;

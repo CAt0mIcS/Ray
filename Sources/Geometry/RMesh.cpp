@@ -18,6 +18,8 @@
 #include "Utils/RException.h"
 #include "Graphics/RVertex.h"
 
+#include <ImGui/imgui.h>
+
 
 namespace At0::Ray
 {
@@ -116,6 +118,8 @@ namespace At0::Ray
 
 	void Mesh::Update(Delta ts)
 	{
+		RAY_IMGUI_FN(ImGuiWindowUpdate());
+
 		m_PerObjectUniform["model"] = m_Transform.AsMatrix();
 		for (Mesh& child : m_Children)
 			child.Update(ts, m_Transform);
@@ -123,6 +127,8 @@ namespace At0::Ray
 
 	void Mesh::Update(Delta ts, const Transform& parentTransform)
 	{
+		RAY_IMGUI_FN(ImGuiWindowUpdate());
+
 		// Calculate it raw here to avoid the cache check in Transform::AsMatrix
 		m_PerObjectUniform["model"] =
 			MatrixScale(m_Transform.Scale() * parentTransform.Scale()) *
@@ -230,4 +236,18 @@ namespace At0::Ray
 					m_Material.GetGraphicsPipeline()));
 		}
 	}
+
+#if RAY_USE_IMGUI
+	void Mesh::ImGuiWindowUpdate()
+	{
+		ImGui::Text("Hello World, %d", 123);
+		if (ImGui::Button("Save"))
+		{
+			Log::Info("[Mesh] ImGui Button 'Save' pressed");
+		}
+		float f;
+		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+		Log::Info("[Mesh] ImGui Slider float {0}", f);
+	}
+#endif
 }  // namespace At0::Ray

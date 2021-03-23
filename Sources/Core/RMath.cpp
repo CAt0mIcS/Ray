@@ -49,6 +49,9 @@ namespace At0::Ray
 		m_Scale = scale;
 		m_Changed = true;
 	}
+	void Transform::Translate(Float3 translation) { m_Translation += translation; }
+	void Transform::Rotate(Float3 rotation) { m_Rotation += rotation; }
+	void Transform::Scale(Float3 scale) { m_Scale += scale; }
 	Transform::Transform(Float3 translation, Float3 rotation, Float3 scale)
 		: m_Translation{ translation }, m_Rotation{ rotation }, m_Scale{ scale }
 

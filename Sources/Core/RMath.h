@@ -61,6 +61,10 @@ namespace At0::Ray
 		void SetRotation(Float3 rotation);
 		void SetScale(Float3 scale);
 
+		void Translate(Float3 translation);
+		void Rotate(Float3 rotation);
+		void Scale(Float3 scale);
+
 		Transform(Float3 translation, Float3 rotation, Float3 scale);
 		Transform(Float3 translation, Float3 rotation);
 		Transform(Float3 translation);
