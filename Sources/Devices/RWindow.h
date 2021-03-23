@@ -114,6 +114,11 @@ namespace At0::Ray
 
 		void SetTitle(std::string_view newTitle) const;
 
+		/**
+		 * @returns The underlying GLFW window handle
+		 */
+		GLFWwindow* GetNative() { return m_hWnd; }
+
 	private:
 		Window(uint32_t width, uint32_t height, std::string_view title);
 		void SetEventCallbacks();

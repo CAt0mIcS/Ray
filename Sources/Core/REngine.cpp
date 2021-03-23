@@ -6,6 +6,7 @@
 #include "Utils/RAssert.h"
 
 #include "Graphics/RGraphics.h"
+#include "ImGui/RImGui.h"
 
 
 namespace At0::Ray
@@ -22,11 +23,16 @@ namespace At0::Ray
 	{
 		Log::Info("[Engine] Startup");
 
+		// Create Graphics just in case it hasn't been created yet.
+		Graphics::Get();
+		ImGuiContext::Create();
+
 		auto startSecTime = std::chrono::high_resolution_clock::now();
 		while (Window::Get().Update())
 		{
 			m_Delta.Update();
 			m_FPS.Update(Time::Now());
+			ImGuiContext::Get().NewFrame();
 			Graphics::Get().Update(m_Delta);
 			Update();
 

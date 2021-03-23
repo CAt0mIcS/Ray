@@ -162,6 +162,11 @@ set(SRC
 	"Events/REventDispatcher.h"
 	"Events/REventListener.h"
 
+	# ------------------------------------------------------------------
+	# ImGui
+	"ImGui/RImGui.h"
+	"ImGui/RImGui.cpp"
+
 	"${SHADERS}"
 )
 
