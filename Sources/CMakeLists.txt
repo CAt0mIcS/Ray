@@ -162,11 +162,6 @@ set(SRC
 	"Events/REventDispatcher.h"
 	"Events/REventListener.h"
 
-	# ------------------------------------------------------------------
-	# ImGui
-	"ImGui/RImGui.h"
-	"ImGui/RImGui.cpp"
-
 	"${SHADERS}"
 )
 
@@ -197,7 +192,6 @@ set(PRIVATE_LIB
     "glslang"
     "SPIRV"
     "Ion"
-    "ImGui"
 )
 
 

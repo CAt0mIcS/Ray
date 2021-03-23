@@ -30,7 +30,6 @@
 
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "Geometry/RMesh.h"
-#include "ImGui/RImGui.h"
 
 
 namespace At0::Ray
@@ -84,11 +83,7 @@ namespace At0::Ray
 		colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 		colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 		colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-#if RAY_USE_IMGUI
-		colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-#else
 		colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-#endif
 
 		VkAttachmentDescription depthAttachment{};
 		depthAttachment.format = m_DepthImage->GetFormat();
@@ -320,7 +315,6 @@ namespace At0::Ray
 		Scene::Destroy();
 		BufferSynchronizer::Destroy();
 		Codex::Shutdown();
-		ImGuiContext::Destroy();
 
 		m_DepthImage.reset();
 		m_Framebuffers.clear();
@@ -387,8 +381,6 @@ namespace At0::Ray
 
 		size = Window::Get().GetFramebufferSize();
 		Scene::Get().GetCamera().UpdateAspectRatio((float)size.x / (float)size.y);
-
-		ImGuiContext::Get().OnFramebufferResized();
 
 		m_FramebufferResized = false;
 	}
