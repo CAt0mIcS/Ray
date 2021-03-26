@@ -47,6 +47,9 @@ namespace At0::Ray
 		UpdateScissor();
 
 		CreateVulkanObjects();
+
+		m_RerecordCommandBuffers.resize(m_Swapchain->GetNumberOfImages());
+		RerecordCommandBuffers();
 	}
 
 	void Graphics::CreateVulkanObjects()
@@ -58,11 +61,13 @@ namespace At0::Ray
 
 		m_Swapchain = MakeScope<Swapchain>();
 		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
+
 		m_DepthImage = MakeScope<DepthImage>(
 			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height });
 
 		CreateRenderPass();
 		CreateFramebuffers();
+		CreateCommandBuffers();
 		CreatePipelineCache();
 		BufferSynchronizer::Create();
 
@@ -206,7 +211,6 @@ namespace At0::Ray
 		for (uint32_t i = 0; i < m_CommandBuffers.size(); ++i)
 		{
 			m_CommandBuffers[i] = MakeScope<CommandBuffer>(*m_CommandPool);
-			RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i]);
 		}
 	}
 
@@ -278,16 +282,11 @@ namespace At0::Ray
 		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.commandBufferCount = 1;
 
-		// Rerecord command buffers if an entity was created since the last time the buffers were
-		// recorded
-		if (m_RerecordCommandBuffers)
+		// Rerecord the command buffer for the current image if it was queried for rerecording
+		if (m_RerecordCommandBuffers[imageIndex])
 		{
-			// for (uint32_t i = 0; i < m_Swapchain->GetNumberOfImages(); ++i)
-			//{
-			//	RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i]);
-			//}
-			CreateCommandBuffers();
-			m_RerecordCommandBuffers = false;
+			RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex]);
+			m_RerecordCommandBuffers[imageIndex] = false;
 		}
 
 		VkCommandBuffer commandBuffer = *m_CommandBuffers[imageIndex];
@@ -323,6 +322,11 @@ namespace At0::Ray
 			RAY_THROW_RUNTIME("[Graphics] Failed to present swapchain image");
 
 		m_CurrentFrame = (m_CurrentFrame + 1) % s_MaxFramesInFlight;
+	}
+
+	void Graphics::RerecordCommandBuffers()
+	{
+		std::fill(m_RerecordCommandBuffers.begin(), m_RerecordCommandBuffers.end(), true);
 	}
 
 	void Graphics::Destroy() { delete s_Instance; }
@@ -411,6 +415,7 @@ namespace At0::Ray
 		UpdateScissor();
 		CreateFramebuffers();
 		CreateCommandBuffers();
+		RerecordCommandBuffers();
 
 		size = Window::Get().GetFramebufferSize();
 		Scene::Get().GetCamera().UpdateAspectRatio((float)size.x / (float)size.y);

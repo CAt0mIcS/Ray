@@ -54,7 +54,7 @@ namespace At0::Ray
 		/**
 		 * Querys rerecording of all command buffers in the next draw call
 		 */
-		void RerecordCommandBuffers() { m_RerecordCommandBuffers = true; }
+		void RerecordCommandBuffers();
 
 	private:
 		Graphics();
@@ -104,6 +104,6 @@ namespace At0::Ray
 		uint32_t m_CurrentFrame = 0;
 
 		bool m_FramebufferResized = false;
-		bool m_RerecordCommandBuffers = true;
+		std::vector<bool> m_RerecordCommandBuffers{};
 	};
 }  // namespace At0::Ray
