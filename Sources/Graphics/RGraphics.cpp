@@ -342,6 +342,7 @@ namespace At0::Ray
 		Codex::Shutdown();
 
 		WritePipelineCache();
+		vkDestroyPipelineCache(GetDevice(), m_PipelineCache, nullptr);
 
 		m_DepthImage.reset();
 		m_Framebuffers.clear();
