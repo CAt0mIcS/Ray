@@ -29,6 +29,8 @@ namespace At0::Ray
 
 		Mesh::MeshData& GetMesh() { return *m_RootMesh; }
 
+		static std::string GetUID(std::string_view filepath) { return filepath.data(); }
+
 	private:
 		void ParseMesh(
 			std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials);

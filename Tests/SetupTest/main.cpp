@@ -55,7 +55,7 @@ private:
 		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
 		static uint32_t modelCount = 0;
 
-		for (uint32_t i = 0; i < 1; ++i)
+		for (uint32_t i = 0; i < 10; ++i)
 		{
 			Ray::Entity meshEntity = Ray::Scene::Get().CreateEntity();
 			// Ray::Material texturedMaterial({ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 0.0f, 0.0f,
@@ -67,20 +67,21 @@ private:
 			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Circle(defaultMaterial));
 
 			// auto& meshTransform = mesh.GetTransform();
-			// meshTransform.Translation(
+			// meshTransform.SetTranslation(
 			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
-			// meshTransform.Rotation({ posRotDist(device), posRotDist(device), posRotDist(device)
-			// }); meshTransform.Scale({ scaleDist(device), scaleDist(device), scaleDist(device) });
+			// meshTransform.SetRotation(
+			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
+			// meshTransform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
 
 			m_ModelEntity = Ray::Scene::Get().CreateEntity();
 			Ray::Mesh& model = m_ModelEntity.Emplace<Ray::Mesh>(
 				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
-			// auto& modelTransform = model.GetTransform();
-			// modelTransform.Translation = { posRotDist(device), posRotDist(device),
-			//	posRotDist(device) };
-			// modelTransform.Rotation = { posRotDist(device), posRotDist(device),
-			//	posRotDist(device) };
-			// modelTransform.Scale = { scaleDist(device), scaleDist(device), scaleDist(device) };
+			auto& modelTransform = model.GetTransform();
+			modelTransform.SetTranslation(
+				{ posRotDist(device), posRotDist(device), posRotDist(device) });
+			// modelTransform.SetRotation(
+			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
+			// modelTransform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
 
 			++modelCount;
 		}

@@ -2,6 +2,7 @@
 
 #include "../RBase.h"
 #include "Core/RBindable.h"
+#include "../Geometry/Registry/RModel.h"
 #include "../Utils/RLogger.h"
 
 #include <string>
@@ -24,9 +25,10 @@ namespace At0::Ray
 		template<typename T, typename... Args>
 		static Ref<T> Resolve(Args&&... args)
 		{
-			static_assert(std::is_base_of<Bindable, T>::value,
-				"Template argument must be derived from Bindable");
-			return Get().InternalResolve<T>(std::forward<Args>(args)...);
+			if constexpr (std::is_base_of_v<Bindable, T>)
+				return Get().BindableResolve<T>(std::forward<Args>(args)...);
+			else
+				return Get().ModelResolve<T>(std::forward<Args>(args)...);
 		}
 
 		/**
@@ -42,7 +44,7 @@ namespace At0::Ray
 		}
 
 		template<typename T, typename... Args>
-		Ref<T> InternalResolve(Args&&... args)
+		Ref<T> BindableResolve(Args&&... args)
 		{
 			std::string tag = T::GetUID(args...);
 
@@ -64,14 +66,41 @@ namespace At0::Ray
 			}
 		}
 
+		template<typename T, typename... Args>
+		Ref<T> ModelResolve(Args&&... args)
+		{
+			std::string tag = T::GetUID(args...);
+
+			std::scoped_lock lock(m_ModelMutex);
+			auto it = m_Models.find(tag);
+			// Key does not exist, create it
+			if (it == m_Models.end())
+			{
+				m_Models[tag] = MakeRef<T>(std::forward<Args>(args)...);
+				Log::Debug("[Codex] Model (Tag=\"{0}\") was created because it didn't exist", tag);
+				return std::static_pointer_cast<T>(m_Models[tag]);
+			}
+			// Key exists, return it
+			else
+			{
+				Log::Debug("[Codex] Model (Tag=\"{0}\") already exists", tag);
+				return std::static_pointer_cast<T>(it->second);
+			}
+		}
+
 		void InternalShutdown()
 		{
-			std::scoped_lock lock(m_BindableMutex);
+			std::scoped_lock lockModel(m_ModelMutex);
+			m_Models.clear();
+
+			std::scoped_lock lockBindable(m_BindableMutex);
 			m_Bindables.clear();
 		}
 
 	private:
 		std::unordered_map<std::string, Ref<Bindable>> m_Bindables;
+		std::unordered_map<std::string, Ref<Model>> m_Models;
 		std::mutex m_BindableMutex;
+		std::mutex m_ModelMutex;
 	};
 }  // namespace At0::Ray
