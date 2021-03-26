@@ -42,6 +42,6 @@ namespace At0::Ray
 
 	private:
 		UniformBuffer m_UniformBuffer;
-		inline static BufferSynchronizer* s_Instance;
+		static BufferSynchronizer* s_Instance;
 	};
 }  // namespace At0::Ray

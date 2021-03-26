@@ -7,6 +7,11 @@
 
 namespace At0::Ray
 {
+	Float2 Mouse::m_MousePos{};
+	bool Mouse::m_IsLeftPressed = false;
+	bool Mouse::m_IsMiddlePressed = false;
+	bool Mouse::m_IsRightPressed = false;
+
 	bool Mouse::IsLeftPressed() { return m_IsLeftPressed; }
 
 	bool Mouse::IsMiddlePressed() { return m_IsMiddlePressed; }

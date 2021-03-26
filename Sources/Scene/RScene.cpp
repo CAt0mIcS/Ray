@@ -11,6 +11,8 @@
 
 namespace At0::Ray
 {
+	Scope<Scene> Scene::s_CurrentScene = nullptr;
+
 	Scene& Scene::Get()
 	{
 		RAY_MEXPECTS(s_CurrentScene, "[Scene] Current Scene was not set");

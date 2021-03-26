@@ -10,6 +10,12 @@
 
 namespace At0::Ray
 {
+#ifndef NDEBUG
+	std::vector<const char*> VulkanInstance::s_ValidationLayers{ "VK_LAYER_KHRONOS_validation" };
+#else
+	std::vector<const char*> VulkanInstance::s_ValidationLayers{};
+#endif
+
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,

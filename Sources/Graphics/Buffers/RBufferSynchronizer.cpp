@@ -4,6 +4,8 @@
 
 namespace At0::Ray
 {
+	BufferSynchronizer* BufferSynchronizer::s_Instance = nullptr;
+
 	void BufferSynchronizer::Create() { s_Instance = new BufferSynchronizer(); }
 	BufferSynchronizer& BufferSynchronizer::Get() { return *s_Instance; }
 

@@ -13,6 +13,10 @@
 
 namespace At0::Ray
 {
+	const std::vector<const char*> LogicalDevice::s_DeviceExtensions{
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME
+	};
+
 	LogicalDevice::LogicalDevice()
 	{
 		CreateQueueIndices();

@@ -66,9 +66,7 @@ namespace At0::Ray
 		void CreateLogicalDevice();
 
 	private:
-		inline static const std::vector<const char*> s_DeviceExtensions{
-			VK_KHR_SWAPCHAIN_EXTENSION_NAME
-		};
+		static const std::vector<const char*> s_DeviceExtensions;
 
 		VkDevice m_Device = VK_NULL_HANDLE;
 

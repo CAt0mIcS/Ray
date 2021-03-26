@@ -30,7 +30,7 @@ namespace At0::Ray
 		/**
 		 * @returns The number of threads
 		 */
-		uint32_t MaxThreads() const { return m_MaxThreads; }
+		uint32_t MaxThreads() const { return s_MaxThreads; }
 
 		/**
 		 * Waits for all tasks to finnish and destroys the pool
@@ -59,7 +59,7 @@ namespace At0::Ray
 		std::mutex m_PoolMutex;
 		std::mutex m_QueueMutex;
 
-		inline static const uint32_t m_MaxThreads = std::thread::hardware_concurrency();
+		static const uint32_t s_MaxThreads;
 	};
 
 

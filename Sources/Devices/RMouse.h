@@ -31,10 +31,10 @@ namespace At0::Ray
 		static void SetMiddlePressed(bool isMiddlePressed) { m_IsMiddlePressed = isMiddlePressed; }
 
 	private:
-		inline static Float2 m_MousePos{};
+		static Float2 m_MousePos;
 
-		inline static bool m_IsLeftPressed = false;
-		inline static bool m_IsMiddlePressed = false;
-		inline static bool m_IsRightPressed = false;
+		static bool m_IsLeftPressed;
+		static bool m_IsMiddlePressed;
+		static bool m_IsRightPressed;
 	};
 }  // namespace At0::Ray

@@ -36,6 +36,6 @@ namespace At0::Ray
 		// Allocate new buffers if the last one in the list is full
 		std::vector<Buffer*> m_Buffers{};
 
-		inline static constexpr uint32_t s_LowestReallocationSize = 1048576;
+		static constexpr uint32_t s_LowestReallocationSize = 1048576;
 	};
 }  // namespace At0::Ray

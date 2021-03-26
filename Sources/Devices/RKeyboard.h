@@ -26,6 +26,6 @@ namespace At0::Ray
 
 	private:
 		// Holds pressed-info about every keycode
-		inline static std::bitset<512> m_Keys;
+		static std::bitset<512> m_Keys;
 	};
 }  // namespace At0::Ray

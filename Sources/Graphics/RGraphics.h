@@ -71,14 +71,14 @@ namespace At0::Ray
 		void CreateSyncObjects();
 		void CreateCommandBuffers();
 		void RecordCommandBuffer(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer);
+
 		void OnEvent(FramebufferResizedEvent& e) override;
 		void OnFramebufferResized();
-
 		void WritePipelineCache();
 
 	private:
-		inline static Graphics* s_Instance = nullptr;
-		inline static constexpr uint8_t s_MaxFramesInFlight = 2;
+		static Graphics* s_Instance;
+		static constexpr uint8_t s_MaxFramesInFlight = 2;
 
 		VkViewport m_Viewport{};
 		VkRect2D m_Scissor{};

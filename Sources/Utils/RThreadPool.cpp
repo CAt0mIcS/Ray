@@ -9,10 +9,12 @@
 
 namespace At0::Ray
 {
-	ThreadPool::ThreadPool() : m_Threads(MakeScope<std::thread[]>(m_MaxThreads)), m_Shutdown(false)
+	const uint32_t ThreadPool::s_MaxThreads = std::thread::hardware_concurrency();
+
+	ThreadPool::ThreadPool() : m_Threads(MakeScope<std::thread[]>(s_MaxThreads)), m_Shutdown(false)
 	{
 		Log::Info("[ThreadPool] Initialized {0} threads", MaxThreads());
-		for (uint16_t i = 0; i < m_MaxThreads; ++i)
+		for (uint16_t i = 0; i < s_MaxThreads; ++i)
 		{
 			m_Threads[i] = std::thread([this]() { InfiniteWait(); });
 		}
@@ -34,7 +36,7 @@ namespace At0::Ray
 		m_TaskQueue.GetWaiter().notify_all();
 
 		Log::Info("[ThreadPool] Joining Threads");
-		for (uint16_t i = 0; i < m_MaxThreads; ++i)
+		for (uint16_t i = 0; i < s_MaxThreads; ++i)
 		{
 			auto id = m_Threads[i].get_id();
 			Log::Info("[ThreadPool] Joining Thread {0}", id);

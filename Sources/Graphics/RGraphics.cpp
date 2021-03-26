@@ -34,6 +34,8 @@
 
 namespace At0::Ray
 {
+	Graphics* Graphics::s_Instance = nullptr;
+
 	Graphics::Graphics()
 	{
 		if (s_Instance)
