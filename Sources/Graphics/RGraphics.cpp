@@ -366,10 +366,9 @@ namespace At0::Ray
 		m_RenderPass.reset();
 		m_DepthImage.reset();
 
-		m_Swapchain.reset();
+		m_Swapchain = MakeScope<Swapchain>((VkSwapchainKHR)*m_Swapchain);
 		m_CommandPool.reset();
 
-		m_Swapchain = MakeScope<Swapchain>();
 		m_CommandPool = MakeScope<CommandPool>();
 		m_DepthImage = MakeScope<DepthImage>(
 			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height });
