@@ -43,6 +43,7 @@ namespace At0::Ray
 		const Swapchain& GetSwapchain() const { return *m_Swapchain; }
 		const CommandPool& GetCommandPool() const { return *m_CommandPool; }
 		const RenderPass& GetRenderPass() const { return *m_RenderPass; }
+		VkPipelineCache GetPipelineCache() const { return m_PipelineCache; }
 
 		/**
 		 * Acquires the next frame for rendering and presentation
@@ -66,11 +67,14 @@ namespace At0::Ray
 		void CreateVulkanObjects();
 		void CreateRenderPass();
 		void CreateFramebuffers();
+		void CreatePipelineCache();
+		void CreateSyncObjects();
 		void CreateCommandBuffers();
 		void RecordCommandBuffer(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer);
-		void CreateSyncObjects();
 		void OnEvent(FramebufferResizedEvent& e) override;
 		void OnFramebufferResized();
+
+		void WritePipelineCache();
 
 	private:
 		inline static Graphics* s_Instance = nullptr;
@@ -86,6 +90,7 @@ namespace At0::Ray
 		Scope<Swapchain> m_Swapchain;
 		Scope<CommandPool> m_CommandPool;
 		Scope<RenderPass> m_RenderPass;
+		VkPipelineCache m_PipelineCache = nullptr;
 		Scope<DepthImage> m_DepthImage;
 
 		std::vector<Scope<Framebuffer>> m_Framebuffers;

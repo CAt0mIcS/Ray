@@ -9,3 +9,4 @@ Doxyfile
 build*/
 *.spv
 .vscode/
+*.cache

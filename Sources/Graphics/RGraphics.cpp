@@ -61,6 +61,7 @@ namespace At0::Ray
 
 		CreateRenderPass();
 		CreateFramebuffers();
+		CreatePipelineCache();
 		BufferSynchronizer::Create();
 
 		CreateSyncObjects();
@@ -144,6 +145,57 @@ namespace At0::Ray
 		}
 	}
 
+	void Graphics::CreatePipelineCache()
+	{
+		std::ifstream reader("Resources/Caches/Pipeline.cache", std::ios::binary | std::ios::ate);
+		std::vector<char> data;
+
+		VkPipelineCacheCreateInfo createInfo{};
+		createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+
+		if (reader.is_open())
+		{
+			size_t filesize = (size_t)reader.tellg();
+			reader.seekg(std::ios::beg);
+
+			data.resize(filesize);
+			reader.read(data.data(), filesize);
+			createInfo.initialDataSize = filesize;
+			createInfo.pInitialData = data.data();
+		}
+
+		if (vkCreatePipelineCache(GetDevice(), &createInfo, nullptr, &m_PipelineCache) !=
+			VK_SUCCESS)
+			Log::Warn("[Graphics] Failed to create pipeline cache.");
+	}
+
+	void Graphics::CreateSyncObjects()
+	{
+		m_ImagesInFlight.resize(m_Swapchain->GetNumberOfImages(), VK_NULL_HANDLE);
+
+		VkSemaphoreCreateInfo semaphoreCreateInfo{};
+		semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+		VkFenceCreateInfo fenceCreateInfo{};
+		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+		fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+		for (uint32_t i = 0; i < s_MaxFramesInFlight; ++i)
+		{
+			RAY_VK_THROW_FAILED(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
+									&m_ImageAvailableSemaphore[i]),
+				"[Graphics] Failed to semaphore to signal when an image is avaliable");
+
+			RAY_VK_THROW_FAILED(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
+									&m_RenderFinishedSemaphore[i]),
+				"[Graphics] Failed to semaphore to signal when an image has finished rendering");
+
+			RAY_VK_THROW_FAILED(
+				vkCreateFence(GetDevice(), &fenceCreateInfo, nullptr, &m_InFlightFences[i]),
+				"[Graphics] Failed to create in flight fence");
+		}
+	}
+
 	void Graphics::CreateCommandBuffers()
 	{
 		m_CommandBuffers.resize(m_Framebuffers.size());
@@ -180,33 +232,6 @@ namespace At0::Ray
 		m_RenderPass->End(cmdBuff);
 
 		cmdBuff.End();
-	}
-
-	void Graphics::CreateSyncObjects()
-	{
-		m_ImagesInFlight.resize(m_Swapchain->GetNumberOfImages(), VK_NULL_HANDLE);
-
-		VkSemaphoreCreateInfo semaphoreCreateInfo{};
-		semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
-		VkFenceCreateInfo fenceCreateInfo{};
-		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-		fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-		for (uint32_t i = 0; i < s_MaxFramesInFlight; ++i)
-		{
-			RAY_VK_THROW_FAILED(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
-									&m_ImageAvailableSemaphore[i]),
-				"[Graphics] Failed to semaphore to signal when an image is avaliable");
-
-			RAY_VK_THROW_FAILED(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
-									&m_RenderFinishedSemaphore[i]),
-				"[Graphics] Failed to semaphore to signal when an image has finished rendering");
-
-			RAY_VK_THROW_FAILED(
-				vkCreateFence(GetDevice(), &fenceCreateInfo, nullptr, &m_InFlightFences[i]),
-				"[Graphics] Failed to create in flight fence");
-		}
 	}
 
 	void Graphics::Update(Delta dt)
@@ -316,6 +341,8 @@ namespace At0::Ray
 		BufferSynchronizer::Destroy();
 		Codex::Shutdown();
 
+		WritePipelineCache();
+
 		m_DepthImage.reset();
 		m_Framebuffers.clear();
 		m_RenderPass.reset();
@@ -385,4 +412,24 @@ namespace At0::Ray
 	}
 
 	void Graphics::OnEvent(FramebufferResizedEvent& e) { m_FramebufferResized = true; }
+
+	void Graphics::WritePipelineCache()
+	{
+		if (!m_PipelineCache)
+			return;
+
+		size_t pipelineBufferSize;
+		if (vkGetPipelineCacheData(GetDevice(), m_PipelineCache, &pipelineBufferSize, nullptr) !=
+			VK_SUCCESS)
+			Log::Warn("[Graphics] Failed to get pipeline cache size");
+
+		std::vector<char> pipelineData(pipelineBufferSize);
+		if (vkGetPipelineCacheData(GetDevice(), m_PipelineCache, &pipelineBufferSize,
+				pipelineData.data()) != VK_SUCCESS)
+			Log::Warn("[Graphics] Failed to get pipeline cache data");
+
+		std::ofstream writer("Resources/Caches/Pipeline.cache");
+		writer.write(pipelineData.data(), pipelineData.size());
+		writer.close();
+	}
 }  // namespace At0::Ray
