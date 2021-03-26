@@ -13,7 +13,7 @@
 namespace At0::Ray
 {
 	/**
-	 * Handles static bindables by hasing them by tag
+	 * Handles static bindables and models by hashing them by tag
 	 */
 	class Codex
 	{

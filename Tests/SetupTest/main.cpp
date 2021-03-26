@@ -53,9 +53,10 @@ private:
 		static std::mt19937 device;
 		static std::uniform_real_distribution<float> posRotDist(-100.0f, 100.0f);
 		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
-		static uint32_t modelCount = 0;
+		static Ray::Float3 posOffset{};
+		static int run = 0;
 
-		for (uint32_t i = 0; i < 10; ++i)
+		for (uint32_t i = 0; i < 1; ++i)
 		{
 			Ray::Entity meshEntity = Ray::Scene::Get().CreateEntity();
 			// Ray::Material texturedMaterial({ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 0.0f, 0.0f,
@@ -77,16 +78,39 @@ private:
 			Ray::Mesh& model = m_ModelEntity.Emplace<Ray::Mesh>(
 				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 			auto& modelTransform = model.GetTransform();
-			modelTransform.SetTranslation(
-				{ posRotDist(device), posRotDist(device), posRotDist(device) });
+			modelTransform.SetTranslation({ posOffset });
+
+			// modelTransform.SetTranslation(
+			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
 			// modelTransform.SetRotation(
 			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
 			// modelTransform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
 
-			++modelCount;
+			posOffset = PositioningScript(run, posOffset);
 		}
 	}
 
+	Ray::Float3 PositioningScript(
+		int& run, Ray::Float3 posOffset, uint32_t peopleInRow = 10, uint32_t incX = 8)
+	{
+		if (run % peopleInRow == 0 && run != 0)
+		{
+			posOffset.z += 6;
+			posOffset.x = 0;
+		}
+
+		posOffset.x *= -1;
+		if (run % 2 == 0)
+		{
+			if (posOffset.x >= 0)
+				posOffset.x += incX;
+			else
+				posOffset.x -= incX;
+		}
+		++run;
+
+		return posOffset;
+	}
 
 	void OnEvent(Ray::KeyPressedEvent& e) override
 	{

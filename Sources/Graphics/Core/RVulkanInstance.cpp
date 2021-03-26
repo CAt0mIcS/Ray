@@ -74,7 +74,7 @@ namespace At0::Ray
 		}
 		else
 		{
-			Log::Warn("[VulkanInstance] Validation layers disabled");
+			Log::Info("[VulkanInstance] Validation layers disabled");
 			m_ValidationLayersEnabled = false;
 
 			createInfo.enabledLayerCount = 0;
