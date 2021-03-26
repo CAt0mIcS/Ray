@@ -160,6 +160,7 @@ namespace At0::Ray
 
 			data.resize(filesize);
 			reader.read(data.data(), filesize);
+			reader.close();
 			createInfo.initialDataSize = filesize;
 			createInfo.pInitialData = data.data();
 		}
@@ -341,8 +342,11 @@ namespace At0::Ray
 		BufferSynchronizer::Destroy();
 		Codex::Shutdown();
 
-		WritePipelineCache();
-		vkDestroyPipelineCache(GetDevice(), m_PipelineCache, nullptr);
+		if (m_PipelineCache)
+		{
+			WritePipelineCache();
+			vkDestroyPipelineCache(GetDevice(), m_PipelineCache, nullptr);
+		}
 
 		m_DepthImage.reset();
 		m_Framebuffers.clear();
@@ -416,9 +420,6 @@ namespace At0::Ray
 
 	void Graphics::WritePipelineCache()
 	{
-		if (!m_PipelineCache)
-			return;
-
 		size_t pipelineBufferSize;
 		if (vkGetPipelineCacheData(GetDevice(), m_PipelineCache, &pipelineBufferSize, nullptr) !=
 			VK_SUCCESS)
@@ -429,7 +430,7 @@ namespace At0::Ray
 				pipelineData.data()) != VK_SUCCESS)
 			Log::Warn("[Graphics] Failed to get pipeline cache data");
 
-		std::ofstream writer("Resources/Caches/Pipeline.cache");
+		std::ofstream writer("Resources/Caches/Pipeline.cache", std::ios::binary);
 		writer.write(pipelineData.data(), pipelineData.size());
 		writer.close();
 	}

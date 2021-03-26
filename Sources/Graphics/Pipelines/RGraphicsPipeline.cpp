@@ -14,13 +14,14 @@
 namespace At0::Ray
 {
 	GraphicsPipeline::GraphicsPipeline(const RenderPass& renderPass,
-		const std::vector<std::string>& shaders, const VertexLayout* pLayout)
+		const std::vector<std::string>& shaders, const VertexLayout* pLayout,
+		VkPipelineCache pipelineCache)
 	{
 		CreateShaderProgram(shaders);
 		CreateDescriptorSetLayouts();
 		CreateDescriptorPool();
 		CreatePipelineLayout();
-		CreatePipeline(renderPass, pLayout);
+		CreatePipeline(renderPass, pLayout, pipelineCache);
 	}
 
 	GraphicsPipeline::~GraphicsPipeline()
@@ -47,10 +48,11 @@ namespace At0::Ray
 	}
 
 	std::string GraphicsPipeline::GetUID(const RenderPass& renderPass,
-		const std::vector<std::string>& shaders, const VertexLayout* pLayout)
+		const std::vector<std::string>& shaders, const VertexLayout* pLayout,
+		VkPipelineCache pipelineCache)
 	{
 		std::ostringstream oss;
-		oss << typeid(GraphicsPipeline).name() << "#";
+		oss << typeid(GraphicsPipeline).name() << "#" << pipelineCache << "#";
 		for (std::string_view shader : shaders)
 		{
 			oss << shader << "#";
@@ -165,7 +167,8 @@ namespace At0::Ray
 			createInfo.setLayoutCount, createInfo.pushConstantRangeCount);
 	}
 
-	void GraphicsPipeline::CreatePipeline(const RenderPass& renderPass, const VertexLayout* pLayout)
+	void GraphicsPipeline::CreatePipeline(
+		const RenderPass& renderPass, const VertexLayout* pLayout, VkPipelineCache pipelineCache)
 	{
 		std::vector<VkVertexInputBindingDescription> bindingDescs;
 		std::vector<VkVertexInputAttributeDescription> attribDescs;
@@ -307,15 +310,13 @@ namespace At0::Ray
 		createInfo.basePipelineHandle = VK_NULL_HANDLE;
 		createInfo.basePipelineIndex = -1;
 
-		RAY_VK_THROW_FAILED(vkCreateGraphicsPipelines(Graphics::Get().GetDevice(), nullptr, 1,
+		RAY_VK_THROW_FAILED(vkCreateGraphicsPipelines(Graphics::Get().GetDevice(), pipelineCache, 1,
 								&createInfo, nullptr, &m_Pipeline),
 			"[GraphicsPipeline] Failed to create");
 
 		// Destroy shader modules as they aren't needed anymore
 		for (const VkPipelineShaderStageCreateInfo& shaderStage : m_ShaderStages)
-		{
 			vkDestroyShaderModule(Graphics::Get().GetDevice(), shaderStage.module, nullptr);
-		}
 
 		// These vectors aren't needed anymore and can be freed
 		m_ShaderStages.resize(0);

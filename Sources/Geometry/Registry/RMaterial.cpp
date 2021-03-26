@@ -16,8 +16,8 @@ namespace At0::Ray
 		: m_BaseDiffuse(baseDiffuse), m_DiffuseMap(diffuseMap), m_Metallic(metallic),
 		  m_Roughness(roughness), m_SpecularMap(specularMap), m_NormalMap(normalMap)
 	{
-		m_GraphicsPipeline =
-			Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(), shaders, pLayout);
+		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(
+			Graphics::Get().GetRenderPass(), shaders, pLayout, Graphics::Get().GetPipelineCache());
 	}
 
 	Material::~Material() {}
