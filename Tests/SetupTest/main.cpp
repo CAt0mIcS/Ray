@@ -3,6 +3,8 @@
 #include <Devices/RWindow.h>
 #include <Graphics/RGraphics.h>
 
+#include <UI/RButton.h>
+
 #include <Geometry/RMesh.h>
 #include <Graphics/Images/RTexture2D.h>
 #include <Graphics/Renderers/RRenderer.h>
@@ -43,7 +45,14 @@ class App :
 	Ray::EventListener<Ray::KeyPressedEvent>
 {
 public:
-	App() { Ray::Scene::Create<Scene>(); }
+	App()
+	{
+		Ray::Scene::Create<Scene>();
+
+		// Create UI
+		Ray::Entity buttonEntity = Ray::Scene::Get().CreateEntity();
+		Ray::Button& button = buttonEntity.Emplace<Ray::Button>();
+	}
 
 private:
 	void Update() override {}

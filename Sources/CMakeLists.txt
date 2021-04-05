@@ -11,6 +11,8 @@ set(SHADERS
 	"../Resources/Shaders/ModelShader_Diff.frag"
 	"../Resources/Shaders/ModelShader_DiffSpec.vert"
 	"../Resources/Shaders/ModelShader_DiffSpec.frag"
+	"../Resources/Shaders/UITestShader.vert"
+	"../Resources/Shaders/UITestShader.frag"
 )
 
 set(SRC
