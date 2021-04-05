@@ -58,6 +58,11 @@ namespace At0::Ray
 		{
 			Float3 calculatedPos = base * glm::rotate(Matrix(1.0f), lattitudeAngle * segment,
 											  Float3(0.0f, -1.0f, 0.0f));
+
+			// Rotate circle to face camera instead of floor
+			std::swap(calculatedPos.z, calculatedPos.x);
+			std::swap(calculatedPos.z, calculatedPos.y);
+
 			vertexInput.Emplace(calculatedPos);
 		}
 
@@ -103,6 +108,10 @@ namespace At0::Ray
 		{
 			Float3 calculatedPos = base * glm::rotate(Matrix(1.0f), lattitudeAngle * segment,
 											  Float3(0.0f, -1.0f, 0.0f));
+
+			// Rotate circle to face camera instead of floor
+			std::swap(calculatedPos.z, calculatedPos.y);
+
 			vertexInput.Emplace(calculatedPos);
 			vertexInput.Emplace(-calculatedPos);
 		}

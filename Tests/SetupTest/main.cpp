@@ -65,7 +65,7 @@ private:
 			Ray::Material defaultMaterial(
 				{ "Resources/Shaders/DefaultShader.vert", "Resources/Shaders/DefaultShader.frag" });
 
-			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Circle(defaultMaterial));
+			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::HalfCircle(defaultMaterial));
 
 			// auto& meshTransform = mesh.GetTransform();
 			// meshTransform.SetTranslation(
