@@ -140,6 +140,14 @@ set(SRC
 	"Geometry/Registry/RModel.cpp"
 
 	# ------------------------------------------------------------------
+	# User Interface
+	"UI/RWidget.h"
+	"UI/RWidget.cpp"
+	"UI/RButton.h"
+	"UI/RButton.cpp"
+	
+
+	# ------------------------------------------------------------------
 	# Utilities
 	"Utils/RSerialize.inl"
 	"Utils/RString.h"

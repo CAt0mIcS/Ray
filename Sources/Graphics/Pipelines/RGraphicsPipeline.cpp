@@ -15,13 +15,13 @@ namespace At0::Ray
 {
 	GraphicsPipeline::GraphicsPipeline(const RenderPass& renderPass,
 		const std::vector<std::string>& shaders, const VertexLayout* pLayout,
-		VkPipelineCache pipelineCache)
+		VkPipelineCache pipelineCache, VkCullModeFlags cullMode)
 	{
 		CreateShaderProgram(shaders);
 		CreateDescriptorSetLayouts();
 		CreateDescriptorPool();
 		CreatePipelineLayout();
-		CreatePipeline(renderPass, pLayout, pipelineCache);
+		CreatePipeline(renderPass, pLayout, pipelineCache, cullMode);
 	}
 
 	GraphicsPipeline::~GraphicsPipeline()
@@ -49,10 +49,11 @@ namespace At0::Ray
 
 	std::string GraphicsPipeline::GetUID(const RenderPass& renderPass,
 		const std::vector<std::string>& shaders, const VertexLayout* pLayout,
-		VkPipelineCache pipelineCache)
+		VkPipelineCache pipelineCache, VkCullModeFlags cullMode)
 	{
 		std::ostringstream oss;
-		oss << typeid(GraphicsPipeline).name() << "#" << pipelineCache << "#";
+		oss << typeid(GraphicsPipeline).name() << "#" << pipelineCache << "#" << (uint32_t)cullMode
+			<< "#";
 		for (std::string_view shader : shaders)
 		{
 			oss << shader << "#";
@@ -167,8 +168,8 @@ namespace At0::Ray
 			createInfo.setLayoutCount, createInfo.pushConstantRangeCount);
 	}
 
-	void GraphicsPipeline::CreatePipeline(
-		const RenderPass& renderPass, const VertexLayout* pLayout, VkPipelineCache pipelineCache)
+	void GraphicsPipeline::CreatePipeline(const RenderPass& renderPass, const VertexLayout* pLayout,
+		VkPipelineCache pipelineCache, VkCullModeFlags cullMode)
 	{
 		std::vector<VkVertexInputBindingDescription> bindingDescs;
 		std::vector<VkVertexInputAttributeDescription> attribDescs;
@@ -219,7 +220,7 @@ namespace At0::Ray
 		rasterizer.rasterizerDiscardEnable = VK_FALSE;
 		rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
 		rasterizer.lineWidth = 1.0f;
-		rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+		rasterizer.cullMode = cullMode;
 		rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizer.depthBiasEnable = VK_FALSE;
 		rasterizer.depthBiasConstantFactor = 0.0f;

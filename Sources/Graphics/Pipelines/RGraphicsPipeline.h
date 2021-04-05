@@ -16,7 +16,8 @@ namespace At0::Ray
 	{
 	public:
 		GraphicsPipeline(const RenderPass& renderPass, const std::vector<std::string>& shaders,
-			const VertexLayout* pLayout = nullptr, VkPipelineCache pipelineCache = VK_NULL_HANDLE);
+			const VertexLayout* pLayout = nullptr, VkPipelineCache pipelineCache = VK_NULL_HANDLE,
+			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT);
 		~GraphicsPipeline();
 
 		Pipeline::BindPoint GetBindPoint() const override;
@@ -27,7 +28,8 @@ namespace At0::Ray
 
 		static std::string GetUID(const RenderPass& renderPass,
 			const std::vector<std::string>& shaders, const VertexLayout* pLayout = nullptr,
-			VkPipelineCache pipelineCache = VK_NULL_HANDLE);
+			VkPipelineCache pipelineCache = VK_NULL_HANDLE,
+			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT);
 
 	private:
 		void CreateShaderProgram(const std::vector<std::string>& shaders);
@@ -35,7 +37,7 @@ namespace At0::Ray
 		void CreateDescriptorPool();
 		void CreatePipelineLayout();
 		void CreatePipeline(const RenderPass& renderPass, const VertexLayout* pLayout,
-			VkPipelineCache pipelineCache);
+			VkPipelineCache pipelineCache, VkCullModeFlags cullMode);
 
 	private:
 		std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStages;
