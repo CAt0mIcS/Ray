@@ -92,6 +92,10 @@ namespace At0::Ray
 		bool m_Changed = true;
 	};
 
+	RAY_EXPORT Float2 NDCSpaceToScreenSpace(Float2 coords);
+	RAY_EXPORT Float2 ScreenSpaceToNDCSpace(Float2 coords);
+
+
 	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Int2& data);
 
 	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Int3& data);

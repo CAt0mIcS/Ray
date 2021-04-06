@@ -22,15 +22,12 @@ namespace At0::Ray
 
 	static void UIHitTesting()
 	{
-		Log::Debug("Mouse Position: [x={0}, y={1}]", Mouse::GetPos().x, Mouse::GetPos().y);
+		// Log::Debug("Mouse Position: [x={0}, y={1}]", Mouse::GetPos().x, Mouse::GetPos().y);
 	}
 
 	int Engine::Run()
 	{
 		Log::Info("[Engine] Startup");
-
-		// Create Graphics just in case it hasn't been created yet.
-		Graphics::Get();
 
 		auto startSecTime = std::chrono::high_resolution_clock::now();
 		while (Window::Get().Update())

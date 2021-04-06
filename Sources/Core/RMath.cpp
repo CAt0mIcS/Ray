@@ -1,5 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RMath.h"
+#include "Devices/RWindow.h"
 
 
 namespace At0::Ray
@@ -133,6 +134,18 @@ namespace At0::Ray
 	{
 		*this = *this / other;
 		return *this;
+	}
+
+	RAY_EXPORT Float2 NDCSpaceToScreenSpace(Float2 coords)
+	{
+		return { (coords.x + 1) * 0.5f * Window::Get().GetFramebufferSize().x,
+			(coords.y + 1) * 0.5f * Window::Get().GetFramebufferSize().y };
+	}
+
+	RAY_EXPORT Float2 ScreenSpaceToNDCSpace(Float2 coords)
+	{
+		return { coords.x / (0.5f * Window::Get().GetFramebufferSize().x) - 1,
+			coords.y / (0.5f * Window::Get().GetFramebufferSize().y) - 1 };
 	}
 
 	inline std::ostream& operator<<(std::ostream& os, const Int2& data)
