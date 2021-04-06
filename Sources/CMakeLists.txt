@@ -151,7 +151,6 @@ set(SRC
 
 	# ------------------------------------------------------------------
 	# Utilities
-	"Utils/RSerialize.inl"
 	"Utils/RString.h"
 	"Utils/RString.cpp"
 	"Utils/RThreadPool.h"

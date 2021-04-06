@@ -7,6 +7,8 @@
 
 #include "Graphics/RGraphics.h"
 
+#include "Devices/RMouse.h"
+
 
 namespace At0::Ray
 {
@@ -16,6 +18,11 @@ namespace At0::Ray
 	{
 		RAY_MEXPECTS(s_Instance, "[Engine::Get] Engine not initialized");
 		return *s_Instance;
+	}
+
+	static void UIHitTesting()
+	{
+		Log::Debug("Mouse Position: [x={0}, y={1}]", Mouse::GetPos().x, Mouse::GetPos().y);
 	}
 
 	int Engine::Run()
@@ -33,6 +40,7 @@ namespace At0::Ray
 			Graphics::Get().Update(m_Delta);
 			Update();
 
+			UIHitTesting();
 
 			if (std::chrono::duration<float, std::chrono::milliseconds::period>(
 					std::chrono::high_resolution_clock::now() - startSecTime)

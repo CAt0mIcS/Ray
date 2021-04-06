@@ -11,6 +11,7 @@
 #include <assert.h>
 
 #include <vulkan/vulkan_core.h>
+#include <../../Extern/Violent/include/Violent/Utils/VSerialize.h>
 
 
 namespace At0::Ray
@@ -150,13 +151,12 @@ namespace At0::Ray
 		static std::string Serialize(std::string serializedStr, Args&&... args);
 	};
 
-#include "RSerialize.inl"
 
 	template<typename... Args>
 	inline std::string String::Serialize(std::string serializedStr, Args&&... args)
 	{
 		int argCount = 0;
-		(SerializeStringArg(serializedStr, args, argCount), ...);
+		(Violent::SerializeStringArg(serializedStr, args, argCount), ...);
 		return serializedStr;
 	}
 }  // namespace At0::Ray
