@@ -4,6 +4,7 @@
 #include "RWidget.h"
 
 #include "../Scene/REntity.h"
+#include "../Core/RMath.h"
 
 
 namespace At0::Ray
@@ -11,7 +12,7 @@ namespace At0::Ray
 	class RAY_EXPORT Button : public Widget
 	{
 	public:
-		Button(Entity& entity);
+		Button(Entity& entity, Float2 pos);
 
 	private:
 		Entity m_PlaneEntity;
