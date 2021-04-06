@@ -125,9 +125,9 @@ namespace At0::Ray
 	{
 		// Calculate it raw here to avoid the cache check in Transform::AsMatrix
 		m_PerObjectUniform["model"] =
-			MatrixScale(m_Transform.Scale() * parentTransform.Scale()) *
+			MatrixTranslation(m_Transform.Translation() + parentTransform.Translation()) *
 			MatrixRotation(m_Transform.Rotation() + parentTransform.Rotation()) *
-			MatrixTranslation(m_Transform.Translation() + parentTransform.Translation());
+			MatrixScale(m_Transform.Scale() * parentTransform.Scale());
 
 		for (Mesh& child : m_Children)
 			child.Update(ts, m_Transform);
@@ -202,19 +202,6 @@ namespace At0::Ray
 		for (MeshData& child : children)
 		{
 			m_Children.emplace_back(GetEntity(), child);
-
-			if (const Texture2D* diffuseMap = m_Children.back().GetMaterial().GetDiffuseMap())
-			{
-				m_Children.back().AddUniform("materialDiffuse",
-					MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment,
-						*diffuseMap, m_Children.back().GetMaterial().GetGraphicsPipeline()));
-			}
-			if (const Texture2D* specularMap = m_Children.back().GetMaterial().GetSpecularMap())
-			{
-				m_Children.back().AddUniform("materialSpecular",
-					MakeScope<SamplerUniform>("materialSpecular", Shader::Stage::Fragment,
-						*specularMap, m_Children.back().GetMaterial().GetGraphicsPipeline()));
-			}
 		}
 
 		if (const Texture2D* diffuseMap = m_Material.GetDiffuseMap())
