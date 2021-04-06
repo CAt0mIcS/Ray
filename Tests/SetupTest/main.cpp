@@ -50,8 +50,8 @@ public:
 		Ray::Scene::Create<Scene>();
 
 		// Create UI
-		// Ray::Entity buttonEntity = Ray::Scene::Get().CreateEntity();
-		// Ray::Button& button = buttonEntity.Emplace<Ray::Button>(Ray::Float2{ 0.0f, 0.0f });
+		Ray::Entity buttonEntity = Ray::Scene::Get().CreateEntity();
+		Ray::Button& button = buttonEntity.Emplace<Ray::Button>(Ray::Float2{ 0.0f, 0.0f });
 	}
 
 private:
