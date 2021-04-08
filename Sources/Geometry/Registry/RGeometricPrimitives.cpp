@@ -254,13 +254,9 @@ namespace At0::Ray
 		vertexInput.Emplace(l2.vertices);
 
 		std::vector<IndexBuffer::Type> indices(l1.indices.size() + l2.indices.size());
-		uint32_t nextInsertID = 0;
-		for (uint32_t i = 0; i < l1.indices.size(); ++i)
-		{
-			indices[nextInsertID] = l1.indices[i];
-			++nextInsertID;
-		}
+		memcpy(indices.data(), l1.indices.data(), l1.indices.size() * sizeof(IndexBuffer::Type));
 
+		uint32_t nextInsertID = l1.indices.size();
 		uint32_t maxIdx = *std::max_element(indices.begin(), indices.end());
 		for (uint32_t i = 0; i < l2.indices.size(); ++i)
 		{
