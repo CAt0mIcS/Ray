@@ -71,11 +71,9 @@ private:
 			// Ray::Material texturedMaterial({ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 0.0f, 0.0f,
 			//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true,
 			//	nullptr);
-			// Ray::Material defaultMaterial(
-			//	{ "Resources/Shaders/DefaultShader.vert", "Resources/Shaders/DefaultShader.frag" });
 
-			// Ray::Mesh& mesh =
-			// meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::HalfCircle(defaultMaterial));
+			Ray::Mesh& mesh =
+				meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Vector({ 5.0f, 2.0f, 1.0f }));
 
 			// auto& meshTransform = mesh.GetTransform();
 			// meshTransform.SetTranslation(
@@ -160,7 +158,7 @@ int main()
 	signal(SIGINT, SignalHandler);
 
 	Ray::Log::Open("Ray.log");
-	Ray::Log::SetLogLevel(Violent::LogLevel::Trace);
+	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
 
 	try
 	{

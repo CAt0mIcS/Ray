@@ -21,6 +21,9 @@
 
 namespace At0::Ray
 {
+	const Mesh::Shaders Mesh::s_DefaultShaders = { "Resources/Shaders/DefaultShader.vert",
+		"Resources/Shaders/DefaultShader.frag" };
+
 	Mesh::Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
 		Material material, std::vector<MeshData> children)
 		: Component(entity), m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer),
@@ -38,8 +41,11 @@ namespace At0::Ray
 		Setup(std::move(data.children));
 	}
 
-	Mesh::MeshData Mesh::Triangle(Material material)
+	Mesh::MeshData Mesh::Triangle(const Shaders& shaders)
 	{
+		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, nullptr, nullptr, 0.0f,
+			0.0f, nullptr, VK_CULL_MODE_NONE);
+
 		IndexedTriangleList triangle = IndexedTriangleList::Triangle(material.GetVertexLayout());
 
 		Ref<VertexBuffer> vertexBuffer =
@@ -50,8 +56,11 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	Mesh::MeshData Mesh::Plane(Material material)
+	Mesh::MeshData Mesh::Plane(const Shaders& shaders)
 	{
+		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, nullptr, nullptr, 0.0f,
+			0.0f, nullptr, VK_CULL_MODE_NONE);
+
 		IndexedTriangleList plane = IndexedTriangleList::Plane(material.GetVertexLayout());
 
 		Ref<VertexBuffer> vertexBuffer =
@@ -61,8 +70,11 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	Mesh::MeshData Mesh::HalfCircle(Material material, int segments, float radius)
+	Mesh::MeshData Mesh::HalfCircle(int segments, float radius, const Shaders& shaders)
 	{
+		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, nullptr, nullptr, 0.0f,
+			0.0f, nullptr, VK_CULL_MODE_NONE);
+
 		IndexedTriangleList circle =
 			IndexedTriangleList::HalfCircle(material.GetVertexLayout(), segments, radius);
 
@@ -73,8 +85,11 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	Mesh::MeshData Mesh::Circle(Material material, int segments, float radius)
+	Mesh::MeshData Mesh::Circle(int segments, float radius, const Shaders& shaders)
 	{
+		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, nullptr, nullptr, 0.0f,
+			0.0f, nullptr, VK_CULL_MODE_NONE);
+
 		IndexedTriangleList circle =
 			IndexedTriangleList::Circle(material.GetVertexLayout(), segments, radius);
 
@@ -85,8 +100,10 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	Mesh::MeshData Mesh::Cube(Material material)
+	Mesh::MeshData Mesh::Cube(const Shaders& shaders)
 	{
+		Material material(shaders);
+
 		IndexedTriangleList cube = IndexedTriangleList::Cube(material.GetVertexLayout());
 
 		Ref<VertexBuffer> vertexBuffer =
@@ -96,8 +113,10 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	Mesh::MeshData Mesh::UVSphere(Material material, float radius, int latDiv, int longDiv)
+	Mesh::MeshData Mesh::UVSphere(float radius, int latDiv, int longDiv, const Shaders& shaders)
 	{
+		Material material(shaders);
+
 		IndexedTriangleList uvSphere =
 			IndexedTriangleList::UVSphere(material.GetVertexLayout(), radius, latDiv, longDiv);
 
@@ -107,6 +126,20 @@ namespace At0::Ray
 			Codex::Resolve<IndexBuffer>(uvSphere.indexTag, uvSphere.indices);
 
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	}
+
+	Mesh::MeshData Mesh::Vector(const Float3& headPos, const Shaders& shaders)
+	{
+		Material lineMaterial(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, nullptr, nullptr, 0.0f,
+			0.0f, nullptr, VK_CULL_MODE_BACK_BIT, VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
+
+		IndexedTriangleList vec =
+			IndexedTriangleList::Vector(lineMaterial.GetVertexLayout(), headPos);
+
+		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(vec.vertexTag, vec.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(vec.indexTag, vec.indices);
+
+		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(lineMaterial) };
 	}
 
 	Mesh::MeshData Mesh::Import(std::string_view filepath)

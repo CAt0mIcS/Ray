@@ -15,13 +15,13 @@ namespace At0::Ray
 {
 	GraphicsPipeline::GraphicsPipeline(const RenderPass& renderPass,
 		const std::vector<std::string>& shaders, const VertexLayout* pLayout,
-		VkPipelineCache pipelineCache, VkCullModeFlags cullMode)
+		VkPipelineCache pipelineCache, VkCullModeFlags cullMode, VkPrimitiveTopology topology)
 	{
 		CreateShaderProgram(shaders);
 		CreateDescriptorSetLayouts();
 		CreateDescriptorPool();
 		CreatePipelineLayout();
-		CreatePipeline(renderPass, pLayout, pipelineCache, cullMode);
+		CreatePipeline(renderPass, pLayout, pipelineCache, cullMode, topology);
 	}
 
 	GraphicsPipeline::~GraphicsPipeline()
@@ -49,11 +49,11 @@ namespace At0::Ray
 
 	std::string GraphicsPipeline::GetUID(const RenderPass& renderPass,
 		const std::vector<std::string>& shaders, const VertexLayout* pLayout,
-		VkPipelineCache pipelineCache, VkCullModeFlags cullMode)
+		VkPipelineCache pipelineCache, VkCullModeFlags cullMode, VkPrimitiveTopology topology)
 	{
 		std::ostringstream oss;
 		oss << typeid(GraphicsPipeline).name() << "#" << pipelineCache << "#" << (uint32_t)cullMode
-			<< "#";
+			<< "#" << (uint32_t)topology << "#";
 		for (std::string_view shader : shaders)
 		{
 			oss << shader << "#";
@@ -169,7 +169,7 @@ namespace At0::Ray
 	}
 
 	void GraphicsPipeline::CreatePipeline(const RenderPass& renderPass, const VertexLayout* pLayout,
-		VkPipelineCache pipelineCache, VkCullModeFlags cullMode)
+		VkPipelineCache pipelineCache, VkCullModeFlags cullMode, VkPrimitiveTopology topology)
 	{
 		std::vector<VkVertexInputBindingDescription> bindingDescs;
 		std::vector<VkVertexInputAttributeDescription> attribDescs;
@@ -198,7 +198,7 @@ namespace At0::Ray
 		// Input Assembler
 		VkPipelineInputAssemblyStateCreateInfo inputAssembler{};
 		inputAssembler.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-		inputAssembler.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		inputAssembler.topology = topology;
 		inputAssembler.primitiveRestartEnable = VK_FALSE;
 
 

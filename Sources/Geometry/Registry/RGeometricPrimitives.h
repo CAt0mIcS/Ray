@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "../../Graphics/RVertex.h"
+#include "../../Core/RMath.h"
 #include "../../Graphics/Buffers/RIndexBuffer.h"
 
 
@@ -19,6 +20,7 @@ namespace At0::Ray
 		static IndexedTriangleList IcoSphere(const VertexLayout& layout);
 		static IndexedTriangleList UVSphere(
 			const VertexLayout& layout, float radius, int latDiv, int longDiv);
+		static IndexedTriangleList Vector(const VertexLayout& layout, const Float3& headPos);
 
 		VertexInput vertices;
 		std::vector<IndexBuffer::Type> indices;

@@ -14,7 +14,8 @@ namespace At0::Ray
 		Material material(
 			{ "Resources/Shaders/UITestShader.vert", "Resources/Shaders/UITestShader.frag" });
 
-		Mesh& mesh = m_PlaneEntity.Emplace<Mesh>(Mesh::Plane(std::move(material)));
+		Mesh& mesh = m_PlaneEntity.Emplace<Mesh>(Mesh::Plane(
+			{ "Resources/Shaders/UITestShader.vert", "Resources/Shaders/UITestShader.frag" }));
 		Transform& transform = mesh.GetTransform();
 		transform.SetScale({ 0.2f, 0.2f, 0.2f });
 

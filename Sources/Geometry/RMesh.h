@@ -34,20 +34,27 @@ namespace At0::Ray
 			std::vector<MeshData> children;
 		};
 
+	private:
+		using Shaders = std::vector<std::string>;
+		static const Shaders s_DefaultShaders;
+
 	public:
 		Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
 			Material material, std::vector<MeshData> children = {});
 		Mesh(Entity& entity, MeshData data);
 
-		static MeshData Triangle(Material material);
-		static MeshData Plane(Material material);
-		static MeshData HalfCircle(Material material, int segments = 360, float radius = 1.0f);
-		static MeshData Circle(Material material, int segments = 360, float radius = 1.0f);
+		static MeshData Triangle(const Shaders& shaders = s_DefaultShaders);
+		static MeshData Plane(const Shaders& shaders = s_DefaultShaders);
+		static MeshData HalfCircle(
+			int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
+		static MeshData Circle(
+			int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
 
-		static MeshData Cube(Material material);
-		static MeshData IcoSphere(Material material);
-		static MeshData UVSphere(
-			Material material, float radius = 1.0f, int latDiv = 12, int longDiv = 24);
+		static MeshData Cube(const Shaders& shaders = s_DefaultShaders);
+		static MeshData IcoSphere(const Shaders& shaders = s_DefaultShaders);
+		static MeshData UVSphere(float radius = 1.0f, int latDiv = 12, int longDiv = 24,
+			const Shaders& shaders = s_DefaultShaders);
+		static MeshData Vector(const Float3& headPos, const Shaders& shaders = s_DefaultShaders);
 		static MeshData Import(std::string_view filepath);
 
 		/**

@@ -20,7 +20,8 @@ namespace At0::Ray
 			const Float4& baseDiffuse = { 1.0f, 1.0f, 1.0f, 1.0f },
 			Ref<Texture2D> diffuseMap = nullptr, Ref<Texture2D> specularMap = nullptr,
 			Ref<Texture2D> normalMap = nullptr, float metallic = 0.0f, float roughness = 0.0f,
-			const VertexLayout* pLayout = nullptr);
+			const VertexLayout* pLayout = nullptr, VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT,
+			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
 		~Material();
 
 		const Float4& GetBaseDiffuse() const { return m_BaseDiffuse; }

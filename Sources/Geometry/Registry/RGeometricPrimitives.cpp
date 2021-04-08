@@ -15,9 +15,7 @@ namespace At0::Ray
 		vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.0f });
 		vertexInput.Emplace(Float3{ 0.0f, 0.5f, 0.0f });
 
-		// RAY_TODO: 2D objects are only visible from one side because of backface culling
-		// Specifying the vertices again in the reversed order works for now
-		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 /*|*/, 2, 1, 0 };
+		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
 
 		return { vertexInput, indices, "Triangle", "012" };
 	}
@@ -30,9 +28,7 @@ namespace At0::Ray
 		vertexInput.Emplace(Float3{ 0.5f, 0.5f, 0.0f } /*, Float2{ 0.0f, 1.0f }*/);
 		vertexInput.Emplace(Float3{ -0.5f, 0.5f, 0.0f } /*, Float2{ 1.0f, 1.0f }*/);
 
-		// RAY_TODO: 2D objects are only visible from one side because of backface culling
-		// Specifying the vertices again in the reversed order works for now
-		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 /*|*/, 0, 3, 2, 2, 1, 0 };
+		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
 
 		return { vertexInput, indices, "Plane", "012230032210" };
 	}
@@ -76,12 +72,6 @@ namespace At0::Ray
 			indices.emplace_back(segment + 1);
 		}
 
-		// RAY_TODO: Needed because of backface culling, SLOW!
-		std::vector<IndexBuffer::Type> reversedIndices = indices;
-		std::reverse(reversedIndices.begin(), reversedIndices.end());
-		for (IndexBuffer::Type idx : reversedIndices)
-			indices.emplace_back(idx);
-
 		std::string tag = String::Serialize("HalfCircle#{0}#{1}", segments, radius);
 		return { vertexInput, indices, tag, tag };
 	}
@@ -123,12 +113,6 @@ namespace At0::Ray
 			indices.emplace_back(segment);
 			indices.emplace_back(segment + 2);
 		}
-
-		// RAY_TODO: Needed because of backface culling, SLOW!
-		std::vector<IndexBuffer::Type> reversedIndices = indices;
-		std::reverse(reversedIndices.begin(), reversedIndices.end());
-		for (IndexBuffer::Type idx : reversedIndices)
-			indices.emplace_back(idx);
 
 		std::string tag = String::Serialize("Circle#{0}#{1}", segments, radius);
 		return { vertexInput, indices, tag, tag };
@@ -238,4 +222,18 @@ namespace At0::Ray
 	}
 
 	// IndexedTriangleList IndexedTriangleList::IcoSphere(const VertexLayout& layout) {}
+
+	IndexedTriangleList IndexedTriangleList::Vector(
+		const VertexLayout& layout, const Float3& headPos)
+	{
+		VertexInput vertexInput(layout);
+
+		vertexInput.Emplace(Float3{ 0.0f, 0.0f, 0.0f });
+		vertexInput.Emplace(headPos);
+
+		std::vector<IndexBuffer::Type> indices{ 0, 1 };
+
+		std::string tag = String::Serialize("Vector#{0}#{1}#{2}", headPos.x, headPos.y, headPos.z);
+		return { vertexInput, indices, tag, tag };
+	}
 }  // namespace At0::Ray
