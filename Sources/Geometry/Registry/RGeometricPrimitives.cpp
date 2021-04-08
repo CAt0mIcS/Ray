@@ -17,7 +17,7 @@ namespace At0::Ray
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
 
-		return { vertexInput, indices, "Triangle", "012" };
+		return { vertexInput, indices, "Triangle#012" };
 	}
 
 	IndexedTriangleList IndexedTriangleList::Plane(const VertexLayout& layout)
@@ -30,7 +30,7 @@ namespace At0::Ray
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
 
-		return { vertexInput, indices, "Plane", "012230032210" };
+		return { vertexInput, indices, "Plane#012230032210" };
 	}
 
 	IndexedTriangleList IndexedTriangleList::HalfCircle(
@@ -73,7 +73,7 @@ namespace At0::Ray
 		}
 
 		std::string tag = String::Serialize("HalfCircle#{0}#{1}", segments, radius);
-		return { vertexInput, indices, tag, tag };
+		return { vertexInput, indices, tag };
 	}
 
 	IndexedTriangleList IndexedTriangleList::Circle(
@@ -115,7 +115,7 @@ namespace At0::Ray
 		}
 
 		std::string tag = String::Serialize("Circle#{0}#{1}", segments, radius);
-		return { vertexInput, indices, tag, tag };
+		return { vertexInput, indices, tag };
 	}
 
 	IndexedTriangleList IndexedTriangleList::Cube(const VertexLayout& layout)
@@ -133,7 +133,7 @@ namespace At0::Ray
 		std::vector<IndexBuffer::Type> indices{ 0, 2, 1, 2, 3, 1, 1, 3, 5, 3, 7, 5, 2, 6, 3, 3, 6,
 			7, 4, 5, 7, 4, 7, 6, 0, 4, 2, 2, 4, 6, 0, 1, 4, 1, 5, 4 };
 
-		return { vertexInput, indices, "Cube", "Cube" };
+		return { vertexInput, indices, "Cube#021231135375263367457476042246014154" };
 	}
 
 	IndexedTriangleList IndexedTriangleList::UVSphere(
@@ -218,10 +218,16 @@ namespace At0::Ray
 		indices.emplace_back(calcIdx(latDiv - 2, 0));
 
 		std::string tag = String::Serialize("UVSphere#{0}#{1}#{2}", radius, latDiv, longDiv);
-		return { vertexInput, indices, tag, tag };
+		return { vertexInput, indices, tag };
 	}
 
 	// IndexedTriangleList IndexedTriangleList::IcoSphere(const VertexLayout& layout) {}
+
+	IndexedTriangleList IndexedTriangleList::Cylinder(
+		const VertexLayout& layout, float radius, int segments)
+	{
+		return Append(Plane(layout), Circle(layout));
+	}
 
 	IndexedTriangleList IndexedTriangleList::Vector(
 		const VertexLayout& layout, const Float3& headPos)
@@ -234,6 +240,26 @@ namespace At0::Ray
 		std::vector<IndexBuffer::Type> indices{ 0, 1 };
 
 		std::string tag = String::Serialize("Vector#{0}#{1}#{2}", headPos.x, headPos.y, headPos.z);
-		return { vertexInput, indices, tag, tag };
+		return { vertexInput, indices, tag };
+	}
+
+	IndexedTriangleList IndexedTriangleList::Append(
+		const IndexedTriangleList& l1, const IndexedTriangleList& l2)
+	{
+		// RAY_MEXPECTS(l1.vertices.GetLayout() == l2.vertices.GetLayout(),
+		//	"[IndexedTriangleList] Mismatching layouts between two lists.");
+
+		VertexInput vertexInput(l1.vertices.GetLayout());
+		vertexInput.EmplaceRaw(l1.vertices.Data(), l1.vertices.SizeBytes());
+		vertexInput.EmplaceRaw(l2.vertices.Data(), l2.vertices.SizeBytes());
+
+		std::vector<IndexBuffer::Type> indices{ l1.indices };
+		uint32_t maxIdx = *std::max_element(indices.begin(), indices.end());
+		for (IndexBuffer::Type idx : l2.indices)
+		{
+			indices.emplace_back(idx + maxIdx + 1);
+		}
+
+		return { vertexInput, indices, l1.tag + l2.tag };
 	}
 }  // namespace At0::Ray

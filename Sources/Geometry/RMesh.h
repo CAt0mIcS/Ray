@@ -54,6 +54,8 @@ namespace At0::Ray
 		static MeshData IcoSphere(const Shaders& shaders = s_DefaultShaders);
 		static MeshData UVSphere(float radius = 1.0f, int latDiv = 12, int longDiv = 24,
 			const Shaders& shaders = s_DefaultShaders);
+		static MeshData Cylinder(
+			float radius = 1.0f, int segments = 360, const Shaders& shaders = s_DefaultShaders);
 		static MeshData Vector(const Float3& headPos, float lineWidth = 1.0f,
 			const Shaders& shaders = s_DefaultShaders);
 		static MeshData Import(std::string_view filepath);

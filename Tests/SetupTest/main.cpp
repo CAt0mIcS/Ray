@@ -72,8 +72,7 @@ private:
 			//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true,
 			//	nullptr);
 
-			Ray::Mesh& mesh =
-				meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Vector({ 5.0f, 2.0f, 1.0f }, 15.0f));
+			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Cylinder());
 
 			// auto& meshTransform = mesh.GetTransform();
 			// meshTransform.SetTranslation(
@@ -158,7 +157,7 @@ int main()
 	signal(SIGINT, SignalHandler);
 
 	Ray::Log::Open("Ray.log");
-	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
+	Ray::Log::SetLogLevel(Violent::LogLevel::Trace);
 
 	try
 	{

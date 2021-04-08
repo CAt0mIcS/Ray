@@ -140,11 +140,6 @@ namespace At0::Ray
 			return { bindingDescription };
 		}
 
-		// uint32_t Size() const
-		//{
-		//	return m_Elements.empty() ? 0 : Size();
-		//}
-
 	private:
 		// Specifies all the elements in a vertex
 		std::vector<Element> m_Elements;
@@ -192,6 +187,21 @@ namespace At0::Ray
 			(Insert(prevSize, run++, std::forward<Args>(args)), ...);
 		}
 
+		/**
+		 * Inserts an already existing block of data into the current vertex data. No validation is
+		 * done wether the data is valid in the current vertex input!
+		 * @param data The data of the existing vertex input
+		 * @param size The size in bytes of the data to insert
+		 */
+		void EmplaceRaw(const void* const data, size_t size)
+		{
+			// Resize the buffer to hold the data to insert
+			uint32_t prevSize = (uint32_t)m_Data.size();
+			m_Data.resize(m_Data.size() + size);
+
+			memcpy(m_Data.data() + prevSize, data, size);
+		}
+
 		uint32_t SizeBytes() const { return m_Data.size(); }
 		uint32_t Size() const { return m_Data.size() / m_Layout.Size(); }
 		const char* Data() const { return m_Data.data(); }
@@ -200,6 +210,8 @@ namespace At0::Ray
 		{
 			return { m_Data.data() + m_Layout.SizeVertex() * i, m_Layout };
 		}
+
+		const VertexLayout& GetLayout() const { return m_Layout; }
 
 	private:
 		template<typename T>

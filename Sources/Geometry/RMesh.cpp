@@ -52,9 +52,8 @@ namespace At0::Ray
 		IndexedTriangleList triangle = IndexedTriangleList::Triangle(material.GetVertexLayout());
 
 		Ref<VertexBuffer> vertexBuffer =
-			Codex::Resolve<VertexBuffer>(triangle.vertexTag, triangle.vertices);
-		Ref<IndexBuffer> indexBuffer =
-			Codex::Resolve<IndexBuffer>(triangle.indexTag, triangle.indices);
+			Codex::Resolve<VertexBuffer>(triangle.tag, triangle.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(triangle.tag, triangle.indices);
 
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
@@ -69,9 +68,8 @@ namespace At0::Ray
 
 		IndexedTriangleList plane = IndexedTriangleList::Plane(material.GetVertexLayout());
 
-		Ref<VertexBuffer> vertexBuffer =
-			Codex::Resolve<VertexBuffer>(plane.vertexTag, plane.vertices);
-		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(plane.indexTag, plane.indices);
+		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(plane.tag, plane.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(plane.tag, plane.indices);
 
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
@@ -87,9 +85,8 @@ namespace At0::Ray
 		IndexedTriangleList circle =
 			IndexedTriangleList::HalfCircle(material.GetVertexLayout(), segments, radius);
 
-		Ref<VertexBuffer> vertexBuffer =
-			Codex::Resolve<VertexBuffer>(circle.vertexTag, circle.vertices);
-		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(circle.indexTag, circle.indices);
+		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(circle.tag, circle.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(circle.tag, circle.indices);
 
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
@@ -105,9 +102,8 @@ namespace At0::Ray
 		IndexedTriangleList circle =
 			IndexedTriangleList::Circle(material.GetVertexLayout(), segments, radius);
 
-		Ref<VertexBuffer> vertexBuffer =
-			Codex::Resolve<VertexBuffer>(circle.vertexTag, circle.vertices);
-		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(circle.indexTag, circle.indices);
+		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(circle.tag, circle.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(circle.tag, circle.indices);
 
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
@@ -118,9 +114,8 @@ namespace At0::Ray
 
 		IndexedTriangleList cube = IndexedTriangleList::Cube(material.GetVertexLayout());
 
-		Ref<VertexBuffer> vertexBuffer =
-			Codex::Resolve<VertexBuffer>(cube.vertexTag, cube.vertices);
-		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(cube.indexTag, cube.indices);
+		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(cube.tag, cube.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(cube.tag, cube.indices);
 
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
@@ -133,9 +128,22 @@ namespace At0::Ray
 			IndexedTriangleList::UVSphere(material.GetVertexLayout(), radius, latDiv, longDiv);
 
 		Ref<VertexBuffer> vertexBuffer =
-			Codex::Resolve<VertexBuffer>(uvSphere.vertexTag, uvSphere.vertices);
-		Ref<IndexBuffer> indexBuffer =
-			Codex::Resolve<IndexBuffer>(uvSphere.indexTag, uvSphere.indices);
+			Codex::Resolve<VertexBuffer>(uvSphere.tag, uvSphere.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(uvSphere.tag, uvSphere.indices);
+
+		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	}
+
+	Mesh::MeshData Mesh::Cylinder(float radius, int segments, const Shaders& shaders)
+	{
+		Material material(shaders);
+
+		IndexedTriangleList cylinder =
+			IndexedTriangleList::Cylinder(material.GetVertexLayout(), radius, segments);
+
+		Ref<VertexBuffer> vertexBuffer =
+			Codex::Resolve<VertexBuffer>(cylinder.tag, cylinder.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(cylinder.tag, cylinder.indices);
 
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
@@ -152,8 +160,8 @@ namespace At0::Ray
 		IndexedTriangleList vec =
 			IndexedTriangleList::Vector(lineMaterial.GetVertexLayout(), headPos);
 
-		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(vec.vertexTag, vec.vertices);
-		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(vec.indexTag, vec.indices);
+		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(vec.tag, vec.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(vec.tag, vec.indices);
 
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(lineMaterial) };
 	}
