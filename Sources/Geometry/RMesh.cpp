@@ -140,11 +140,12 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	Mesh::MeshData Mesh::Vector(const Float3& headPos, const Shaders& shaders)
+	Mesh::MeshData Mesh::Vector(const Float3& headPos, float lineWidth, const Shaders& shaders)
 	{
 		Material::Config matConfig{};
 		matConfig.shaders = shaders;
 		matConfig.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+		matConfig.lineWidth = lineWidth;
 
 		Material lineMaterial(matConfig);
 

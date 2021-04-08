@@ -28,6 +28,8 @@ namespace At0::Ray
 			VertexLayout* vertexLayout = nullptr;
 			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT;
 			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+			VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL;
+			float lineWidth = 1.0f;
 		};
 
 	public:

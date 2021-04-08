@@ -15,13 +15,15 @@ namespace At0::Ray
 {
 	GraphicsPipeline::GraphicsPipeline(const RenderPass& renderPass,
 		const std::vector<std::string>& shaders, const VertexLayout* pLayout,
-		VkPipelineCache pipelineCache, VkCullModeFlags cullMode, VkPrimitiveTopology topology)
+		VkPipelineCache pipelineCache, VkCullModeFlags cullMode, VkPrimitiveTopology topology,
+		VkPolygonMode polygonMode, float lineWidth)
 	{
 		CreateShaderProgram(shaders);
 		CreateDescriptorSetLayouts();
 		CreateDescriptorPool();
 		CreatePipelineLayout();
-		CreatePipeline(renderPass, pLayout, pipelineCache, cullMode, topology);
+		CreatePipeline(
+			renderPass, pLayout, pipelineCache, cullMode, topology, polygonMode, lineWidth);
 	}
 
 	GraphicsPipeline::~GraphicsPipeline()
@@ -49,11 +51,12 @@ namespace At0::Ray
 
 	std::string GraphicsPipeline::GetUID(const RenderPass& renderPass,
 		const std::vector<std::string>& shaders, const VertexLayout* pLayout,
-		VkPipelineCache pipelineCache, VkCullModeFlags cullMode, VkPrimitiveTopology topology)
+		VkPipelineCache pipelineCache, VkCullModeFlags cullMode, VkPrimitiveTopology topology,
+		VkPolygonMode polygonMode, float lineWidth)
 	{
 		std::ostringstream oss;
-		oss << typeid(GraphicsPipeline).name() << "#" << pipelineCache << "#" << (uint32_t)cullMode
-			<< "#" << (uint32_t)topology << "#";
+		oss << "GraphicsPipeline#" << pipelineCache << "#" << (uint32_t)cullMode << "#"
+			<< (uint32_t)topology << "#" << (uint32_t)polygonMode << "#" << lineWidth << "#";
 		for (std::string_view shader : shaders)
 		{
 			oss << shader << "#";
@@ -169,7 +172,8 @@ namespace At0::Ray
 	}
 
 	void GraphicsPipeline::CreatePipeline(const RenderPass& renderPass, const VertexLayout* pLayout,
-		VkPipelineCache pipelineCache, VkCullModeFlags cullMode, VkPrimitiveTopology topology)
+		VkPipelineCache pipelineCache, VkCullModeFlags cullMode, VkPrimitiveTopology topology,
+		VkPolygonMode polygonMode, float lineWidth)
 	{
 		std::vector<VkVertexInputBindingDescription> bindingDescs;
 		std::vector<VkVertexInputAttributeDescription> attribDescs;
@@ -218,8 +222,8 @@ namespace At0::Ray
 		rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 		rasterizer.depthClampEnable = VK_FALSE;
 		rasterizer.rasterizerDiscardEnable = VK_FALSE;
-		rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
-		rasterizer.lineWidth = 1.0f;
+		rasterizer.polygonMode = polygonMode;
+		rasterizer.lineWidth = lineWidth;
 		rasterizer.cullMode = cullMode;
 		rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizer.depthBiasEnable = VK_FALSE;

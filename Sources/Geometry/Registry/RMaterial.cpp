@@ -17,7 +17,7 @@ namespace At0::Ray
 	{
 		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(),
 			config.shaders, config.vertexLayout, Graphics::Get().GetPipelineCache(),
-			config.cullMode, config.topology);
+			config.cullMode, config.topology, config.polygonMode, config.lineWidth);
 	}
 
 	Material::Material(const std::vector<std::string>& shaders)

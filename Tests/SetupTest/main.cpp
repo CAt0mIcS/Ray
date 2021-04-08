@@ -73,7 +73,7 @@ private:
 			//	nullptr);
 
 			Ray::Mesh& mesh =
-				meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Vector({ 5.0f, 2.0f, 1.0f }));
+				meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Vector({ 5.0f, 2.0f, 1.0f }, 15.0f));
 
 			// auto& meshTransform = mesh.GetTransform();
 			// meshTransform.SetTranslation(
