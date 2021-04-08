@@ -246,18 +246,26 @@ namespace At0::Ray
 	IndexedTriangleList IndexedTriangleList::Append(
 		const IndexedTriangleList& l1, const IndexedTriangleList& l2)
 	{
-		// RAY_MEXPECTS(l1.vertices.GetLayout() == l2.vertices.GetLayout(),
-		//	"[IndexedTriangleList] Mismatching layouts between two lists.");
+		RAY_MEXPECTS(l1.vertices.GetLayout() == l2.vertices.GetLayout(),
+			"[IndexedTriangleList] Mismatching layouts between two lists.");
 
 		VertexInput vertexInput(l1.vertices.GetLayout());
-		vertexInput.EmplaceRaw(l1.vertices.Data(), l1.vertices.SizeBytes());
-		vertexInput.EmplaceRaw(l2.vertices.Data(), l2.vertices.SizeBytes());
+		vertexInput.Emplace(l1.vertices);
+		vertexInput.Emplace(l2.vertices);
 
-		std::vector<IndexBuffer::Type> indices{ l1.indices };
-		uint32_t maxIdx = *std::max_element(indices.begin(), indices.end());
-		for (IndexBuffer::Type idx : l2.indices)
+		std::vector<IndexBuffer::Type> indices(l1.indices.size() + l2.indices.size());
+		uint32_t nextInsertID = 0;
+		for (uint32_t i = 0; i < l1.indices.size(); ++i)
 		{
-			indices.emplace_back(idx + maxIdx + 1);
+			indices[nextInsertID] = l1.indices[i];
+			++nextInsertID;
+		}
+
+		uint32_t maxIdx = *std::max_element(indices.begin(), indices.end());
+		for (uint32_t i = 0; i < l2.indices.size(); ++i)
+		{
+			indices[nextInsertID] = l2.indices[i] + maxIdx + 1;
+			++nextInsertID;
 		}
 
 		return { vertexInput, indices, l1.tag + l2.tag };

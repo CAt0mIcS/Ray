@@ -19,6 +19,9 @@ namespace At0::Ray
 			VkFormat GetFormat() const { return m_Format; }
 			uint32_t GetOffset() const { return m_Offset; }
 
+			bool operator==(const Element&) const = default;
+			bool operator!=(const Element&) const = default;
+
 		private:
 			VkFormat m_Format = VK_FORMAT_UNDEFINED;
 
@@ -41,6 +44,9 @@ namespace At0::Ray
 			}
 			return size;
 		}
+
+		bool operator==(const VertexLayout&) const = default;
+		bool operator!=(const VertexLayout&) const = default;
 
 		/**
 		 * @returns The number of elements
@@ -200,6 +206,14 @@ namespace At0::Ray
 			m_Data.resize(m_Data.size() + size);
 
 			memcpy(m_Data.data() + prevSize, data, size);
+		}
+
+		/**
+		 * Inserts the vertices of another vertex input into this one
+		 */
+		void Emplace(const VertexInput& vertexInput)
+		{
+			EmplaceRaw(vertexInput.Data(), vertexInput.SizeBytes());
 		}
 
 		uint32_t SizeBytes() const { return m_Data.size(); }
