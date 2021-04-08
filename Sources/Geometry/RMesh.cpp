@@ -43,8 +43,11 @@ namespace At0::Ray
 
 	Mesh::MeshData Mesh::Triangle(const Shaders& shaders)
 	{
-		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, nullptr, nullptr, 0.0f,
-			0.0f, nullptr, VK_CULL_MODE_NONE);
+		Material::Config matConfig{};
+		matConfig.shaders = shaders;
+		matConfig.cullMode = VK_CULL_MODE_NONE;
+
+		Material material(matConfig);
 
 		IndexedTriangleList triangle = IndexedTriangleList::Triangle(material.GetVertexLayout());
 
@@ -58,8 +61,11 @@ namespace At0::Ray
 
 	Mesh::MeshData Mesh::Plane(const Shaders& shaders)
 	{
-		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, nullptr, nullptr, 0.0f,
-			0.0f, nullptr, VK_CULL_MODE_NONE);
+		Material::Config matConfig{};
+		matConfig.shaders = shaders;
+		matConfig.cullMode = VK_CULL_MODE_NONE;
+
+		Material material(matConfig);
 
 		IndexedTriangleList plane = IndexedTriangleList::Plane(material.GetVertexLayout());
 
@@ -72,8 +78,11 @@ namespace At0::Ray
 
 	Mesh::MeshData Mesh::HalfCircle(int segments, float radius, const Shaders& shaders)
 	{
-		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, nullptr, nullptr, 0.0f,
-			0.0f, nullptr, VK_CULL_MODE_NONE);
+		Material::Config matConfig{};
+		matConfig.shaders = shaders;
+		matConfig.cullMode = VK_CULL_MODE_NONE;
+
+		Material material(matConfig);
 
 		IndexedTriangleList circle =
 			IndexedTriangleList::HalfCircle(material.GetVertexLayout(), segments, radius);
@@ -87,8 +96,11 @@ namespace At0::Ray
 
 	Mesh::MeshData Mesh::Circle(int segments, float radius, const Shaders& shaders)
 	{
-		Material material(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, nullptr, nullptr, 0.0f,
-			0.0f, nullptr, VK_CULL_MODE_NONE);
+		Material::Config matConfig{};
+		matConfig.shaders = shaders;
+		matConfig.cullMode = VK_CULL_MODE_NONE;
+
+		Material material(matConfig);
 
 		IndexedTriangleList circle =
 			IndexedTriangleList::Circle(material.GetVertexLayout(), segments, radius);
@@ -130,8 +142,11 @@ namespace At0::Ray
 
 	Mesh::MeshData Mesh::Vector(const Float3& headPos, const Shaders& shaders)
 	{
-		Material lineMaterial(shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, nullptr, nullptr, 0.0f,
-			0.0f, nullptr, VK_CULL_MODE_BACK_BIT, VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
+		Material::Config matConfig{};
+		matConfig.shaders = shaders;
+		matConfig.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+
+		Material lineMaterial(matConfig);
 
 		IndexedTriangleList vec =
 			IndexedTriangleList::Vector(lineMaterial.GetVertexLayout(), headPos);

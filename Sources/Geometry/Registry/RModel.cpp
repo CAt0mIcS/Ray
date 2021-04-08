@@ -123,7 +123,13 @@ namespace At0::Ray
 		std::vector<std::string> shaders =
 			GetShaders(diffuseMap != nullptr, specularMap != nullptr, normalMap != nullptr);
 
-		return { shaders, { 1.0f, 1.0f, 1.0f, 1.0f }, diffuseMap, specularMap, normalMap };
+		Material::Config matConfig{};
+		matConfig.shaders = shaders;
+		matConfig.diffuseMap = diffuseMap;
+		matConfig.specularMap = specularMap;
+		matConfig.normalMap = normalMap;
+
+		return { matConfig };
 	}
 
 	std::vector<std::string> Model::GetShaders(

@@ -10,15 +10,20 @@
 
 namespace At0::Ray
 {
-	Material::Material(const std::vector<std::string>& shaders, const Float4& baseDiffuse,
-		Ref<Texture2D> diffuseMap, Ref<Texture2D> specularMap, Ref<Texture2D> normalMap,
-		float metallic, float roughness, const VertexLayout* pLayout, VkCullModeFlags cullMode,
-		VkPrimitiveTopology topology)
-		: m_BaseDiffuse(baseDiffuse), m_DiffuseMap(diffuseMap), m_Metallic(metallic),
-		  m_Roughness(roughness), m_SpecularMap(specularMap), m_NormalMap(normalMap)
+	Material::Material(const Material::Config& config)
+		: m_BaseDiffuse(config.baseDiffuse), m_DiffuseMap(config.diffuseMap),
+		  m_Metallic(config.metallic), m_Roughness(config.roughness),
+		  m_SpecularMap(config.specularMap), m_NormalMap(config.normalMap)
 	{
 		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(),
-			shaders, pLayout, Graphics::Get().GetPipelineCache(), cullMode, topology);
+			config.shaders, config.vertexLayout, Graphics::Get().GetPipelineCache(),
+			config.cullMode, config.topology);
+	}
+
+	Material::Material(const std::vector<std::string>& shaders)
+	{
+		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(
+			Graphics::Get().GetRenderPass(), shaders, nullptr, Graphics::Get().GetPipelineCache());
 	}
 
 	Material::~Material() {}

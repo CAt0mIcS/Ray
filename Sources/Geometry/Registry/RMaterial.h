@@ -16,12 +16,23 @@ namespace At0::Ray
 	class RAY_EXPORT Material
 	{
 	public:
-		Material(const std::vector<std::string>& shaders,
-			const Float4& baseDiffuse = { 1.0f, 1.0f, 1.0f, 1.0f },
-			Ref<Texture2D> diffuseMap = nullptr, Ref<Texture2D> specularMap = nullptr,
-			Ref<Texture2D> normalMap = nullptr, float metallic = 0.0f, float roughness = 0.0f,
-			const VertexLayout* pLayout = nullptr, VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT,
-			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+		struct Config
+		{
+			std::vector<std::string> shaders;
+			Float4 baseDiffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+			Ref<Texture2D> diffuseMap = nullptr;
+			Ref<Texture2D> specularMap = nullptr;
+			Ref<Texture2D> normalMap = nullptr;
+			float metallic = 0.0f;
+			float roughness = 0.0f;
+			VertexLayout* vertexLayout = nullptr;
+			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT;
+			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		};
+
+	public:
+		Material(const Material::Config& config);
+		Material(const std::vector<std::string>& shaders);
 		~Material();
 
 		const Float4& GetBaseDiffuse() const { return m_BaseDiffuse; }
