@@ -224,9 +224,74 @@ namespace At0::Ray
 	// IndexedTriangleList IndexedTriangleList::IcoSphere(const VertexLayout& layout) {}
 
 	IndexedTriangleList IndexedTriangleList::Cylinder(
-		const VertexLayout& layout, float radius, int segments)
+		const VertexLayout& layout, int segments, float radius)
 	{
-		return Append(Plane(layout), Circle(layout));
+		// Top and bottom circles
+		IndexedTriangleList topCircle = Circle(layout, segments, radius);
+		IndexedTriangleList bottomCircle = topCircle;
+
+		// Translate coordinates so that the middle of the cylinder is at [0, 0, 0],
+		// rotate the circles to face upwards/downwards (backface-culling)
+		for (uint32_t i = 0; i < topCircle.vertices.Size(); ++i)
+		{
+			Float3& topCirclePos = topCircle.vertices[i].Get<Float3>(0);
+			std::swap(topCirclePos.z, topCirclePos.y);
+			topCirclePos.y += 0.5f;
+
+			Float3& bottomCirclePos = bottomCircle.vertices[i].Get<Float3>(0);
+			std::swap(bottomCirclePos.z, bottomCirclePos.y);
+			bottomCirclePos.y -= 0.5f;
+
+			// Flip circle to face downwards (backface-culling)
+			bottomCirclePos.z *= -1;
+		}
+
+		// Concatinate both circles to one VertexInput
+		IndexedTriangleList finalMesh = Append(topCircle, bottomCircle);
+		uint32_t maxIdx = *std::max_element(finalMesh.indices.begin(), finalMesh.indices.end());
+
+		// Generate indices for shell surface and add them to the final mesh
+		for (uint32_t i = 0; i < segments; i += 2)
+		{
+			if (1 - (int)i < 0)
+				finalMesh.indices.emplace_back(topCircle.vertices.Size() - (i + 1));
+			else
+				finalMesh.indices.emplace_back(1);
+
+			finalMesh.indices.emplace_back(topCircle.vertices.Size() + 4 + i);
+			finalMesh.indices.emplace_back(topCircle.vertices.Size() + 2 + i);
+
+
+			if (1 - (int)i < 0)
+				finalMesh.indices.emplace_back(topCircle.vertices.Size() - (i + 1));
+			else
+				finalMesh.indices.emplace_back(1);
+
+			finalMesh.indices.emplace_back(topCircle.vertices.Size() - 3 - i);
+			finalMesh.indices.emplace_back(topCircle.vertices.Size() + 4 + i);
+		}
+
+		// Do all the uneven vertices
+		for (uint32_t i = 1; i < segments; i += 2)
+		{
+			if (2 - (int)i < 0)
+				finalMesh.indices.emplace_back(topCircle.vertices.Size() - (i + 1));
+			else
+				finalMesh.indices.emplace_back(2);
+
+			finalMesh.indices.emplace_back(topCircle.vertices.Size() + 2 + i);
+			finalMesh.indices.emplace_back(topCircle.vertices.Size() + i);
+
+			if (2 - (int)i < 0)
+				finalMesh.indices.emplace_back(topCircle.vertices.Size() - (i + 1));
+			else
+				finalMesh.indices.emplace_back(2);
+
+			finalMesh.indices.emplace_back(topCircle.vertices.Size() - 3 - i);
+			finalMesh.indices.emplace_back(topCircle.vertices.Size() + 2 + i);
+		}
+
+		return finalMesh;
 	}
 
 	IndexedTriangleList IndexedTriangleList::Vector(
@@ -257,7 +322,7 @@ namespace At0::Ray
 		memcpy(indices.data(), l1.indices.data(), l1.indices.size() * sizeof(IndexBuffer::Type));
 
 		uint32_t nextInsertID = l1.indices.size();
-		uint32_t maxIdx = *std::max_element(indices.begin(), indices.end());
+		uint32_t maxIdx = *std::max_element(l1.indices.begin(), l1.indices.end());
 		for (uint32_t i = 0; i < l2.indices.size(); ++i)
 		{
 			indices[nextInsertID] = l2.indices[i] + maxIdx + 1;

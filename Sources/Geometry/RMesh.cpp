@@ -134,12 +134,12 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	Mesh::MeshData Mesh::Cylinder(float radius, int segments, const Shaders& shaders)
+	Mesh::MeshData Mesh::Cylinder(int segments, float radius, const Shaders& shaders)
 	{
 		Material material(shaders);
 
 		IndexedTriangleList cylinder =
-			IndexedTriangleList::Cylinder(material.GetVertexLayout(), radius, segments);
+			IndexedTriangleList::Cylinder(material.GetVertexLayout(), segments, radius);
 
 		Ref<VertexBuffer> vertexBuffer =
 			Codex::Resolve<VertexBuffer>(cylinder.tag, cylinder.vertices);
