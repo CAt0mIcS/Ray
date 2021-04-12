@@ -9,6 +9,7 @@ namespace At0::Ray
 {
 	SamplerUniform::SamplerUniform(std::string_view uniformName, Shader::Stage stage,
 		const Texture2D& texture, const Pipeline& pipeline)
+		: Uniform(uniformName)
 	{
 		std::optional<uint32_t> set;
 

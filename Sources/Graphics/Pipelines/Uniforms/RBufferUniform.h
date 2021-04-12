@@ -33,11 +33,11 @@ namespace At0::Ray
 		};
 
 	public:
-		BufferUniform(VkDescriptorSetLayout descSetLayout, VkDescriptorPool descSetPool,
-			Pipeline::BindPoint bindPoint, VkPipelineLayout pipelineLayout, uint32_t bufferSize,
+		BufferUniform(std::string_view name, VkDescriptorSetLayout descSetLayout,
+			VkDescriptorPool descSetPool, Pipeline::BindPoint bindPoint,
+			VkPipelineLayout pipelineLayout, uint32_t bufferSize, uint32_t set, uint32_t binding);
+		BufferUniform(std::string_view name, const Pipeline& pipeline, uint32_t bufferSize,
 			uint32_t set, uint32_t binding);
-		BufferUniform(
-			const Pipeline& pipeline, uint32_t bufferSize, uint32_t set, uint32_t binding);
 		BufferUniform(
 			std::string_view uniformBlockName, Shader::Stage stage, const Pipeline& pipeline);
 		~BufferUniform();

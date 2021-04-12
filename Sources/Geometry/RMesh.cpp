@@ -25,10 +25,10 @@ namespace At0::Ray
 		"Resources/Shaders/DefaultShader.frag" };
 
 	Mesh::Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
-		Material material, std::vector<MeshData> children)
+		Ref<Material> material, std::vector<MeshData> children)
 		: Component(entity), m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer),
-		  m_Material(material),
-		  m_PerObjectUniform("PerObjectData", Shader::Stage::Vertex, material.GetGraphicsPipeline())
+		  m_Material(material), m_PerObjectUniform("PerObjectData", Shader::Stage::Vertex,
+									material->GetGraphicsPipeline())
 	{
 		Setup(std::move(children));
 	}
@@ -36,20 +36,14 @@ namespace At0::Ray
 	Mesh::Mesh(Entity& entity, MeshData data)
 		: Component(entity), m_VertexBuffer(data.vertexBuffer), m_IndexBuffer(data.indexBuffer),
 		  m_Material(data.material), m_PerObjectUniform("PerObjectData", Shader::Stage::Vertex,
-										 data.material.GetGraphicsPipeline())
+										 data.material->GetGraphicsPipeline())
 	{
 		Setup(std::move(data.children));
 	}
 
-	Mesh::MeshData Mesh::Triangle(const Shaders& shaders)
+	Mesh::MeshData Mesh::Triangle(Ref<Material> material)
 	{
-		Material::Config matConfig{};
-		matConfig.shaders = shaders;
-		matConfig.cullMode = VK_CULL_MODE_NONE;
-
-		Material material(matConfig);
-
-		IndexedTriangleList triangle = IndexedTriangleList::Triangle(material.GetVertexLayout());
+		IndexedTriangleList triangle = IndexedTriangleList::Triangle(material->GetVertexLayout());
 
 		Ref<VertexBuffer> vertexBuffer =
 			Codex::Resolve<VertexBuffer>(triangle.tag, triangle.vertices);
@@ -58,118 +52,118 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	Mesh::MeshData Mesh::Plane(const Shaders& shaders)
-	{
-		Material::Config matConfig{};
-		matConfig.shaders = shaders;
-		matConfig.cullMode = VK_CULL_MODE_NONE;
+	// Mesh::MeshData Mesh::Plane(const Shaders& shaders)
+	//{
+	//	Material::Config matConfig{};
+	//	matConfig.shaders = shaders;
+	//	matConfig.cullMode = VK_CULL_MODE_NONE;
 
-		Material material(matConfig);
+	//	Material material(matConfig);
 
-		IndexedTriangleList plane = IndexedTriangleList::Plane(material.GetVertexLayout());
+	//	IndexedTriangleList plane = IndexedTriangleList::Plane(material.GetVertexLayout());
 
-		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(plane.tag, plane.vertices);
-		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(plane.tag, plane.indices);
+	//	Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(plane.tag, plane.vertices);
+	//	Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(plane.tag, plane.indices);
 
-		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
-	}
+	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	//}
 
-	Mesh::MeshData Mesh::HalfCircle(int segments, float radius, const Shaders& shaders)
-	{
-		Material::Config matConfig{};
-		matConfig.shaders = shaders;
-		matConfig.cullMode = VK_CULL_MODE_NONE;
+	// Mesh::MeshData Mesh::HalfCircle(int segments, float radius, const Shaders& shaders)
+	//{
+	//	Material::Config matConfig{};
+	//	matConfig.shaders = shaders;
+	//	matConfig.cullMode = VK_CULL_MODE_NONE;
 
-		Material material(matConfig);
+	//	Material material(matConfig);
 
-		IndexedTriangleList circle =
-			IndexedTriangleList::HalfCircle(material.GetVertexLayout(), segments, radius);
+	//	IndexedTriangleList circle =
+	//		IndexedTriangleList::HalfCircle(material.GetVertexLayout(), segments, radius);
 
-		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(circle.tag, circle.vertices);
-		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(circle.tag, circle.indices);
+	//	Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(circle.tag, circle.vertices);
+	//	Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(circle.tag, circle.indices);
 
-		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
-	}
+	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	//}
 
-	Mesh::MeshData Mesh::Circle(int segments, float radius, const Shaders& shaders)
-	{
-		Material::Config matConfig{};
-		matConfig.shaders = shaders;
-		matConfig.cullMode = VK_CULL_MODE_NONE;
+	// Mesh::MeshData Mesh::Circle(int segments, float radius, const Shaders& shaders)
+	//{
+	//	Material::Config matConfig{};
+	//	matConfig.shaders = shaders;
+	//	matConfig.cullMode = VK_CULL_MODE_NONE;
 
-		Material material(matConfig);
+	//	Material material(matConfig);
 
-		IndexedTriangleList circle =
-			IndexedTriangleList::Circle(material.GetVertexLayout(), segments, radius);
+	//	IndexedTriangleList circle =
+	//		IndexedTriangleList::Circle(material.GetVertexLayout(), segments, radius);
 
-		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(circle.tag, circle.vertices);
-		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(circle.tag, circle.indices);
+	//	Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(circle.tag, circle.vertices);
+	//	Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(circle.tag, circle.indices);
 
-		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
-	}
+	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	//}
 
-	Mesh::MeshData Mesh::Cube(const Shaders& shaders)
-	{
-		Material material(shaders);
+	// Mesh::MeshData Mesh::Cube(const Shaders& shaders)
+	//{
+	//	Material material(shaders);
 
-		IndexedTriangleList cube = IndexedTriangleList::Cube(material.GetVertexLayout());
+	//	IndexedTriangleList cube = IndexedTriangleList::Cube(material.GetVertexLayout());
 
-		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(cube.tag, cube.vertices);
-		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(cube.tag, cube.indices);
+	//	Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(cube.tag, cube.vertices);
+	//	Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(cube.tag, cube.indices);
 
-		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
-	}
+	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	//}
 
-	Mesh::MeshData Mesh::UVSphere(float radius, int latDiv, int longDiv, const Shaders& shaders)
-	{
-		Material material(shaders);
+	// Mesh::MeshData Mesh::UVSphere(float radius, int latDiv, int longDiv, const Shaders& shaders)
+	//{
+	//	Material material(shaders);
 
-		IndexedTriangleList uvSphere =
-			IndexedTriangleList::UVSphere(material.GetVertexLayout(), radius, latDiv, longDiv);
+	//	IndexedTriangleList uvSphere =
+	//		IndexedTriangleList::UVSphere(material.GetVertexLayout(), radius, latDiv, longDiv);
 
-		Ref<VertexBuffer> vertexBuffer =
-			Codex::Resolve<VertexBuffer>(uvSphere.tag, uvSphere.vertices);
-		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(uvSphere.tag, uvSphere.indices);
+	//	Ref<VertexBuffer> vertexBuffer =
+	//		Codex::Resolve<VertexBuffer>(uvSphere.tag, uvSphere.vertices);
+	//	Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(uvSphere.tag, uvSphere.indices);
 
-		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
-	}
+	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	//}
 
-	Mesh::MeshData Mesh::Cylinder(int segments, float radius, const Shaders& shaders)
-	{
-		Material material(shaders);
+	// Mesh::MeshData Mesh::Cylinder(int segments, float radius, const Shaders& shaders)
+	//{
+	//	Material material(shaders);
 
-		IndexedTriangleList cylinder =
-			IndexedTriangleList::Cylinder(material.GetVertexLayout(), segments, radius);
+	//	IndexedTriangleList cylinder =
+	//		IndexedTriangleList::Cylinder(material.GetVertexLayout(), segments, radius);
 
-		Ref<VertexBuffer> vertexBuffer =
-			Codex::Resolve<VertexBuffer>(cylinder.tag, cylinder.vertices);
-		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(cylinder.tag, cylinder.indices);
+	//	Ref<VertexBuffer> vertexBuffer =
+	//		Codex::Resolve<VertexBuffer>(cylinder.tag, cylinder.vertices);
+	//	Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(cylinder.tag, cylinder.indices);
 
-		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
-	}
+	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	//}
 
-	Mesh::MeshData Mesh::Vector(const Float3& headPos, float lineWidth, const Shaders& shaders)
-	{
-		Material::Config matConfig{};
-		matConfig.shaders = shaders;
-		matConfig.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
-		matConfig.lineWidth = lineWidth;
+	// Mesh::MeshData Mesh::Vector(const Float3& headPos, float lineWidth, const Shaders& shaders)
+	//{
+	//	Material::Config matConfig{};
+	//	matConfig.shaders = shaders;
+	//	matConfig.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+	//	matConfig.lineWidth = lineWidth;
 
-		Material lineMaterial(matConfig);
+	//	Material lineMaterial(matConfig);
 
-		IndexedTriangleList vec =
-			IndexedTriangleList::Vector(lineMaterial.GetVertexLayout(), headPos);
+	//	IndexedTriangleList vec =
+	//		IndexedTriangleList::Vector(lineMaterial.GetVertexLayout(), headPos);
 
-		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(vec.tag, vec.vertices);
-		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(vec.tag, vec.indices);
+	//	Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(vec.tag, vec.vertices);
+	//	Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(vec.tag, vec.indices);
 
-		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(lineMaterial) };
-	}
+	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(lineMaterial) };
+	//}
 
-	Mesh::MeshData Mesh::Import(std::string_view filepath)
-	{
-		return { Codex::Resolve<Model>(filepath)->GetMesh() };
-	}
+	// Mesh::MeshData Mesh::Import(std::string_view filepath)
+	//{
+	//	return { Codex::Resolve<Model>(filepath)->GetMesh() };
+	//}
 
 	void Mesh::Update(Delta ts)
 	{
@@ -192,10 +186,7 @@ namespace At0::Ray
 
 	void Mesh::Render(const CommandBuffer& cmdBuff) const
 	{
-		m_Material.GetGraphicsPipeline().CmdBind(cmdBuff);
-
-		for (const auto& [tag, uniform] : m_Uniforms)
-			uniform->CmdBind(cmdBuff);
+		m_Material->CmdBind(cmdBuff);
 
 		m_PerObjectUniform.CmdBind(cmdBuff);
 		m_VertexBuffer->CmdBind(cmdBuff);
@@ -205,28 +196,6 @@ namespace At0::Ray
 
 		for (const Mesh& child : m_Children)
 			child.Render(cmdBuff);
-	}
-
-	void Mesh::AddUniform(std::string_view tag, Scope<Uniform> uniform)
-	{
-		m_Uniforms.emplace_back(tag, std::move(uniform));
-	}
-
-	bool Mesh::HasUniform(std::string_view tag) const
-	{
-		for (auto& [uTag, uniform] : m_Uniforms)
-			if (tag == uTag)
-				return true;
-		return false;
-	}
-
-	Uniform& Mesh::GetUniform(std::string_view tag)
-	{
-		for (auto& [uTag, uniform] : m_Uniforms)
-			if (tag == uTag)
-				return *uniform;
-
-		RAY_THROW_RUNTIME("[Mesh] Failed to get uniform with tag {0}", tag);
 	}
 
 	Mesh::~Mesh() {}
@@ -240,7 +209,6 @@ namespace At0::Ray
 		m_PerObjectUniform = std::move(other.m_PerObjectUniform);
 
 		m_Transform = std::move(other.m_Transform);
-		m_Uniforms = std::move(other.m_Uniforms);
 		m_Children = std::move(other.m_Children);
 		return *this;
 	}
@@ -249,8 +217,7 @@ namespace At0::Ray
 		: Component(*other.m_Entity), m_VertexBuffer(std::move(other.m_VertexBuffer)),
 		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
 		  m_PerObjectUniform(std::move(other.m_PerObjectUniform)),
-		  m_Transform(std::move(other.m_Transform)), m_Uniforms(std::move(other.m_Uniforms)),
-		  m_Children(std::move(other.m_Children))
+		  m_Transform(std::move(other.m_Transform)), m_Children(std::move(other.m_Children))
 	{
 	}
 
@@ -261,17 +228,17 @@ namespace At0::Ray
 			m_Children.emplace_back(GetEntity(), child);
 		}
 
-		if (const Texture2D* diffuseMap = m_Material.GetDiffuseMap())
+		if (const Texture2D* diffuseMap = m_Material->GetDiffuseMap())
 		{
-			AddUniform("materialDiffuse",
+			m_Material->AddUniform("materialDiffuse",
 				MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment, *diffuseMap,
-					m_Material.GetGraphicsPipeline()));
+					m_Material->GetGraphicsPipeline()));
 		}
-		if (const Texture2D* specularMap = m_Material.GetSpecularMap())
+		if (const Texture2D* specularMap = m_Material->GetSpecularMap())
 		{
-			AddUniform("materialSpecular",
+			m_Material->AddUniform("materialSpecular",
 				MakeScope<SamplerUniform>("materialSpecular", Shader::Stage::Fragment, *specularMap,
-					m_Material.GetGraphicsPipeline()));
+					m_Material->GetGraphicsPipeline()));
 		}
 	}
 

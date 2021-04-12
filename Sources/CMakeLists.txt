@@ -1,8 +1,8 @@
 set(SHADERS
 	"../Resources/Shaders/TexturedShader.vert"
 	"../Resources/Shaders/TexturedShader.frag"
-	"../Resources/Shaders/DefaultShader.vert"
-	"../Resources/Shaders/DefaultShader.frag"
+	"../Resources/Shaders/FlatShader.vert"
+	"../Resources/Shaders/FlatShader.frag"
 	"../Resources/Shaders/ModelShader.vert"
 	"../Resources/Shaders/ModelShader.frag"
 	"../Resources/Shaders/ModelShader_Spec.vert"
@@ -136,10 +136,12 @@ set(SRC
 	"Geometry/RMesh.cpp"
 	"Geometry/Registry/RGeometricPrimitives.h"
 	"Geometry/Registry/RGeometricPrimitives.cpp"
-	"Geometry/Registry/RMaterial.h"
-	"Geometry/Registry/RMaterial.cpp"
 	"Geometry/Registry/RModel.h"
 	"Geometry/Registry/RModel.cpp"
+	"Geometry/Materials/RMaterial.h"
+	"Geometry/Materials/RMaterial.cpp"
+	"Geometry/Materials/RFlatMaterial.h"
+	"Geometry/Materials/RFlatMaterial.cpp"
 
 	# ------------------------------------------------------------------
 	# User Interface

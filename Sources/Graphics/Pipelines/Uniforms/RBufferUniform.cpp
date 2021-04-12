@@ -9,9 +9,10 @@
 
 namespace At0::Ray
 {
-	BufferUniform::BufferUniform(VkDescriptorSetLayout descSetLayout, VkDescriptorPool descSetPool,
-		Pipeline::BindPoint bindPoint, VkPipelineLayout pipelineLayout, uint32_t bufferSize,
-		uint32_t set, uint32_t binding)
+	BufferUniform::BufferUniform(std::string_view name, VkDescriptorSetLayout descSetLayout,
+		VkDescriptorPool descSetPool, Pipeline::BindPoint bindPoint,
+		VkPipelineLayout pipelineLayout, uint32_t bufferSize, uint32_t set, uint32_t binding)
+		: Uniform(name)
 	{
 		m_DescriptorSet =
 			MakeScope<DescriptorSet>(descSetPool, descSetLayout, bindPoint, pipelineLayout, set);
@@ -19,8 +20,9 @@ namespace At0::Ray
 		Setup(bufferSize, binding);
 	}
 
-	BufferUniform::BufferUniform(
-		const Pipeline& pipeline, uint32_t bufferSize, uint32_t set, uint32_t binding)
+	BufferUniform::BufferUniform(std::string_view name, const Pipeline& pipeline,
+		uint32_t bufferSize, uint32_t set, uint32_t binding)
+		: Uniform(name)
 	{
 		m_DescriptorSet = MakeScope<DescriptorSet>(pipeline.GetDescriptorPool(),
 			pipeline.GetDescriptorSetLayout(set), pipeline.GetBindPoint(), pipeline.GetLayout(),
@@ -30,6 +32,7 @@ namespace At0::Ray
 
 	BufferUniform::BufferUniform(
 		std::string_view uniformBlockName, Shader::Stage stage, const Pipeline& pipeline)
+		: Uniform(uniformBlockName)
 	{
 		uint32_t size = 0;
 		uint32_t binding = 0;

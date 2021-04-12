@@ -11,6 +11,8 @@
 #include <Graphics/Renderers/RMeshRenderer.h>
 #include <Utils/RException.h>
 
+#include <Geometry/Materials/RFlatMaterial.h>
+
 #include <Graphics/RVertex.h>
 #include <Scene/RScene.h>
 #include <Scene/RCamera.h>
@@ -72,7 +74,12 @@ private:
 			//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true,
 			//	nullptr);
 
-			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Cylinder());
+			Ray::Ref<Ray::FlatMaterial> defaultMaterial =
+				Ray::FlatMaterial::Create(Ray::Material::CullMode(VK_CULL_MODE_NONE),
+					Ray::Material::PolygonMode(VK_POLYGON_MODE_LINE),
+					Ray::Material::LineWidth(2.0f), Ray::Material::Color({ 0.0f, 1.0f, 0.4f }));
+
+			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
 
 			// auto& meshTransform = mesh.GetTransform();
 			// meshTransform.SetTranslation(
@@ -81,10 +88,10 @@ private:
 			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
 			// meshTransform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
 
-			m_ModelEntities.emplace_back(Ray::Scene::Get().CreateEntity());
-			Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(
-				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
-			model.GetTransform().SetTranslation({ posOffset });
+			// m_ModelEntities.emplace_back(Ray::Scene::Get().CreateEntity());
+			// Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(
+			//	Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+			// model.GetTransform().SetTranslation({ posOffset });
 
 			// modelTransform.SetTranslation(
 			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
