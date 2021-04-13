@@ -44,7 +44,7 @@ namespace At0::Ray
 		Mesh(Entity& entity, MeshData data);
 
 		static MeshData Triangle(Ref<Material> material);
-		// static MeshData Plane(const Shaders& shaders = s_DefaultShaders);
+		static MeshData Plane(Ref<Material> material);
 		// static MeshData HalfCircle(
 		//	int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
 		// static MeshData Circle(

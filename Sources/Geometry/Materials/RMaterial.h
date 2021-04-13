@@ -4,6 +4,7 @@
 #include "../../Graphics/Core/RBindable.h"
 #include "../../Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "../../Graphics/Pipelines/Uniforms/RSamplerUniform.h"
+#include "../../Graphics/Images/RTexture2D.h"
 
 #include <type_traits>
 #include <vector>
@@ -13,7 +14,6 @@ namespace At0::Ray
 {
 	class GraphicsPipeline;
 	class VertexLayout;
-	class Texture2D;
 
 
 	class RAY_EXPORT Material : public Bindable
@@ -58,6 +58,7 @@ namespace At0::Ray
 			PolygonMode polygonMode = VK_POLYGON_MODE_FILL;
 			LineWidth lineWidth = 1.0f;
 			Color color = { { 1.0f, 1.0f, 1.0f } };
+			Ref<Texture2D> texture2D;
 		};
 
 	public:
@@ -94,11 +95,8 @@ namespace At0::Ray
 		Material(Material&& other) noexcept;
 
 	protected:
-		Material(std::vector<std::string> shaders,
-			const Float4& baseDiffuse = { 1.0f, 1.0f, 1.0f, 1.0f },
-			Ref<Texture2D> diffuseMap = nullptr, Ref<Texture2D> specularMap = nullptr,
-			Ref<Texture2D> normalMap = nullptr, float metallic = 0.0f, float roughness = 0.0f,
-			VertexLayout* pVertexLayout = nullptr, VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT,
+		Material(std::vector<std::string> shaders, VertexLayout* pVertexLayout = nullptr,
+			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT,
 			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
 			VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL, float lineWidth = 1.0f);
 
@@ -106,6 +104,7 @@ namespace At0::Ray
 		static void FillConfig(Config& config, PolygonMode polygonMode);
 		static void FillConfig(Config& config, LineWidth lineWidth);
 		static void FillConfig(Config& config, Color color) { config.color = color; }
+		static void FillConfig(Config& config, Ref<Texture2D> tex) { config.texture2D = tex; }
 
 
 	private:

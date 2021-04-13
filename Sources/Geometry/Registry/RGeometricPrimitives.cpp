@@ -23,10 +23,10 @@ namespace At0::Ray
 	IndexedTriangleList IndexedTriangleList::Plane(const VertexLayout& layout)
 	{
 		VertexInput vertexInput(layout);
-		vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f } /*, Float2{ 1.0f, 0.0f }*/);
-		vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.0f } /*, Float2{ 0.0f, 0.0f }*/);
-		vertexInput.Emplace(Float3{ 0.5f, 0.5f, 0.0f } /*, Float2{ 0.0f, 1.0f }*/);
-		vertexInput.Emplace(Float3{ -0.5f, 0.5f, 0.0f } /*, Float2{ 1.0f, 1.0f }*/);
+		vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f }, Float2{ 1.0f, 0.0f });
+		vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.0f }, Float2{ 0.0f, 0.0f });
+		vertexInput.Emplace(Float3{ 0.5f, 0.5f, 0.0f }, Float2{ 0.0f, 1.0f });
+		vertexInput.Emplace(Float3{ -0.5f, 0.5f, 0.0f }, Float2{ 1.0f, 1.0f });
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
 

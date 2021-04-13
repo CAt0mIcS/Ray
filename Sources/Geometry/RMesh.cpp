@@ -52,21 +52,15 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	// Mesh::MeshData Mesh::Plane(const Shaders& shaders)
-	//{
-	//	Material::Config matConfig{};
-	//	matConfig.shaders = shaders;
-	//	matConfig.cullMode = VK_CULL_MODE_NONE;
+	Mesh::MeshData Mesh::Plane(Ref<Material> material)
+	{
+		IndexedTriangleList plane = IndexedTriangleList::Plane(material->GetVertexLayout());
 
-	//	Material material(matConfig);
+		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(plane.tag, plane.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(plane.tag, plane.indices);
 
-	//	IndexedTriangleList plane = IndexedTriangleList::Plane(material.GetVertexLayout());
-
-	//	Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(plane.tag, plane.vertices);
-	//	Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(plane.tag, plane.indices);
-
-	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
-	//}
+		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	}
 
 	// Mesh::MeshData Mesh::HalfCircle(int segments, float radius, const Shaders& shaders)
 	//{

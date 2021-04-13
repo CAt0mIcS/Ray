@@ -142,6 +142,8 @@ set(SRC
 	"Geometry/Materials/RMaterial.cpp"
 	"Geometry/Materials/RFlatMaterial.h"
 	"Geometry/Materials/RFlatMaterial.cpp"
+	"Geometry/Materials/RTextureMaterial.h"
+	"Geometry/Materials/RTextureMaterial.cpp"
 
 	# ------------------------------------------------------------------
 	# User Interface

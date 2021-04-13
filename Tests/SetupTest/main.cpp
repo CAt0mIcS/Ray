@@ -12,6 +12,7 @@
 #include <Utils/RException.h>
 
 #include <Geometry/Materials/RFlatMaterial.h>
+#include <Geometry/Materials/RTextureMaterial.h>
 
 #include <Graphics/RVertex.h>
 #include <Scene/RScene.h>
@@ -74,12 +75,11 @@ private:
 			//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true,
 			//	nullptr);
 
-			Ray::Ref<Ray::FlatMaterial> defaultMaterial =
-				Ray::FlatMaterial::Create(Ray::Material::CullMode(VK_CULL_MODE_NONE),
-					Ray::Material::PolygonMode(VK_POLYGON_MODE_LINE),
-					Ray::Material::LineWidth(2.0f), Ray::Material::Color({ 0.0f, 1.0f, 0.4f }));
+			Ray::Ref<Ray::TextureMaterial> defaultMaterial =
+				Ray::TextureMaterial::Create(Ray::Material::CullMode(VK_CULL_MODE_NONE),
+					Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
 
-			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
+			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(defaultMaterial));
 
 			// auto& meshTransform = mesh.GetTransform();
 			// meshTransform.SetTranslation(

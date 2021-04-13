@@ -58,10 +58,9 @@ namespace At0::Ray
 
 	Material::Material(Material&& other) noexcept { *this = std::move(other); }
 
-	Material::Material(std::vector<std::string> shaders, const Float4& baseDiffuse,
-		Ref<Texture2D> diffuseMap, Ref<Texture2D> specularMap, Ref<Texture2D> normalMap,
-		float metallic, float roughness, VertexLayout* pVertexLayout, VkCullModeFlags cullMode,
-		VkPrimitiveTopology topology, VkPolygonMode polygonMode, float lineWidth)
+	Material::Material(std::vector<std::string> shaders, VertexLayout* pVertexLayout,
+		VkCullModeFlags cullMode, VkPrimitiveTopology topology, VkPolygonMode polygonMode,
+		float lineWidth)
 	{
 		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(),
 			shaders, pVertexLayout, Graphics::Get().GetPipelineCache(), cullMode, topology,
