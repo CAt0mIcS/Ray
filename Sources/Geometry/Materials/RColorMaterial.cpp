@@ -1,12 +1,12 @@
 ﻿#include "Rpch.h"
-#include "RFlatMaterial.h"
+#include "RColorMaterial.h"
 
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 
 
 namespace At0::Ray
 {
-	FlatMaterial::FlatMaterial(const Material::Config& config)
+	ColorMaterial::ColorMaterial(const Material::Config& config)
 		: Material({ "Resources/Shaders/FlatShader.vert", "Resources/Shaders/FlatShader.frag" },
 			  nullptr, config.cullMode, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, config.polygonMode,
 			  config.lineWidth),

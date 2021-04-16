@@ -51,6 +51,44 @@ namespace At0::Ray
 			Float3 value;
 		};
 
+		struct SpecularMap
+		{
+			SpecularMap(Ref<Texture2D> val) : value(std::move(val)) {}
+			operator const Ref<Texture2D>&() const { return value; }
+
+			Ref<Texture2D> value;
+		};
+
+		struct DiffuseMap
+		{
+			DiffuseMap(Ref<Texture2D> val) : value(std::move(val)) {}
+			operator const Ref<Texture2D>&() const { return value; }
+
+			Ref<Texture2D> value;
+		};
+
+		struct NormalMap
+		{
+			NormalMap(Ref<Texture2D> val) : value(std::move(val)) {}
+			operator const Ref<Texture2D>&() const { return value; }
+
+			Ref<Texture2D> value;
+		};
+
+		struct LightTechnique
+		{
+			enum Technique
+			{
+				Flat,
+				Phong
+			};
+
+			LightTechnique(Technique val) : value(val) {}
+			operator Technique() const { return value; }
+
+			Technique value;
+		};
+
 	protected:
 		struct Config
 		{
@@ -58,7 +96,11 @@ namespace At0::Ray
 			PolygonMode polygonMode = VK_POLYGON_MODE_FILL;
 			LineWidth lineWidth = 1.0f;
 			Color color = { { 1.0f, 1.0f, 1.0f } };
-			Ref<Texture2D> texture2D;
+			SpecularMap specularMap = { nullptr };
+			DiffuseMap diffuseMap = { nullptr };
+			NormalMap normalMap = { nullptr };
+			Ref<Texture2D> texture2D = nullptr;
+			LightTechnique lightTechnique = LightTechnique::Phong;
 		};
 
 	public:
@@ -95,8 +137,14 @@ namespace At0::Ray
 		Material(Material&& other) noexcept;
 
 	protected:
-		Material(std::vector<std::string> shaders, VertexLayout* pVertexLayout = nullptr,
+		Material(const std::vector<std::string>& shaders, VertexLayout* pVertexLayout = nullptr,
 			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT,
+			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+			VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL, float lineWidth = 1.0f);
+		Material() = default;
+
+		void CreatePipeline(const std::vector<std::string>& shaders,
+			VertexLayout* pVertexLayout = nullptr, VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT,
 			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
 			VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL, float lineWidth = 1.0f);
 
@@ -104,8 +152,11 @@ namespace At0::Ray
 		static void FillConfig(Config& config, PolygonMode polygonMode);
 		static void FillConfig(Config& config, LineWidth lineWidth);
 		static void FillConfig(Config& config, Color color) { config.color = color; }
+		static void FillConfig(Config& config, SpecularMap spec) { config.specularMap = spec; }
+		static void FillConfig(Config& config, DiffuseMap diff) { config.diffuseMap = diff; }
+		static void FillConfig(Config& config, NormalMap norm) { config.normalMap = norm; }
 		static void FillConfig(Config& config, Ref<Texture2D> tex) { config.texture2D = tex; }
-
+		static void FillConfig(Config& config, LightTechnique tec) { config.lightTechnique = tec; }
 
 	private:
 		Ref<GraphicsPipeline> m_GraphicsPipeline = nullptr;

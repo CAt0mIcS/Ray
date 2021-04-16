@@ -11,9 +11,8 @@
 #include <Graphics/Renderers/RMeshRenderer.h>
 #include <Utils/RException.h>
 
-#include <Geometry/Materials/RFlatMaterial.h>
 #include <Geometry/Materials/RTextureMaterial.h>
-#include <Geometry/Materials/RShaderGenerator.h>
+#include <Geometry/Materials/RColorMaterial.h>
 
 #include <Graphics/RVertex.h>
 #include <Scene/RScene.h>
@@ -76,25 +75,12 @@ private:
 			//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true,
 			//	nullptr);
 
-			Ray::Ref<Ray::TextureMaterial> defaultMaterial =
-				Ray::TextureMaterial::Create(Ray::Material::CullMode(VK_CULL_MODE_NONE),
-					Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
+			// Ray::Ref<Ray::Material> defaultMaterial = Ray::TextureMaterial::Create(
+			// Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"),
+			// Ray::Material::Color({ 1.0f, 1.0f, 0.0f }),
+			// Ray::Material::CullMode(VK_CULL_MODE_NONE));
 
-			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(defaultMaterial));
-
-			Ray::ShaderGenerator generator;
-			generator.AddInputAttribute(0, "inPos", Ray::Shader::DataType::Vec3);
-			generator.AddInputAttribute(1, "inColor", Ray::Shader::DataType::Vec3);
-			generator.AddOutputAttribute(0, "outColor", Ray::Shader::DataType::Vec3);
-			generator.AddUniform(0, "PerSceneData",
-				{ { "view", Ray::Shader::DataType::Mat4 },
-					{ "proj", Ray::Shader::DataType::Mat4 } },
-				"psdUBO");
-			generator.AddUniform(
-				1, "PerObjectData", { { "model", Ray::Shader::DataType::Mat4 } }, "podUBO");
-			generator.AddFunction("main",
-				"gl_Position = psdUBO.proj * psdUBO.view * podUBO.model;\noutColor = inColor;");
-			Ray::Log::Warn(generator.GetSource());
+			// Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(defaultMaterial));
 
 			// auto& meshTransform = mesh.GetTransform();
 			// meshTransform.SetTranslation(
@@ -103,10 +89,10 @@ private:
 			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
 			// meshTransform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
 
-			// m_ModelEntities.emplace_back(Ray::Scene::Get().CreateEntity());
-			// Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(
-			//	Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
-			// model.GetTransform().SetTranslation({ posOffset });
+			m_ModelEntities.emplace_back(Ray::Scene::Get().CreateEntity());
+			Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(
+				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+			model.GetTransform().SetTranslation({ posOffset });
 
 			// modelTransform.SetTranslation(
 			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });

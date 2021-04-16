@@ -9,7 +9,7 @@ namespace At0::Ray
 	{
 	public:
 		template<typename... Args>
-		static Ref<TextureMaterial> Create(Args&&... args);
+		static Ref<TextureMaterial> Create(Ref<Texture2D> texture2D, Args&&... args);
 
 	private:
 		TextureMaterial(const Material::Config& config);
@@ -20,9 +20,10 @@ namespace At0::Ray
 
 
 	template<typename... Args>
-	inline Ref<TextureMaterial> TextureMaterial::Create(Args&&... args)
+	inline Ref<TextureMaterial> TextureMaterial::Create(Ref<Texture2D> texture2D, Args&&... args)
 	{
 		Material::Config config{};
+		config.texture2D = texture2D;
 		(FillConfig(config, args), ...);
 
 		return Ref<TextureMaterial>(new TextureMaterial(config));

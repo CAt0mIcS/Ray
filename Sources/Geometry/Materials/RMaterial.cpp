@@ -58,9 +58,16 @@ namespace At0::Ray
 
 	Material::Material(Material&& other) noexcept { *this = std::move(other); }
 
-	Material::Material(std::vector<std::string> shaders, VertexLayout* pVertexLayout,
+	Material::Material(const std::vector<std::string>& shaders, VertexLayout* pVertexLayout,
 		VkCullModeFlags cullMode, VkPrimitiveTopology topology, VkPolygonMode polygonMode,
 		float lineWidth)
+	{
+		CreatePipeline(shaders, pVertexLayout, cullMode, topology, polygonMode, lineWidth);
+	}
+
+	void Material::CreatePipeline(const std::vector<std::string>& shaders,
+		VertexLayout* pVertexLayout, VkCullModeFlags cullMode, VkPrimitiveTopology topology,
+		VkPolygonMode polygonMode, float lineWidth)
 	{
 		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(),
 			shaders, pVertexLayout, Graphics::Get().GetPipelineCache(), cullMode, topology,

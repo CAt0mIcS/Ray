@@ -246,6 +246,7 @@ namespace At0::Ray
 		case Shader::DataType::UInt: return "uint";
 		case Shader::DataType::Vec2: return "vec2";
 		case Shader::DataType::Vec3: return "vec3";
+		case Shader::DataType::Vec4: return "vec4";
 		case Shader::DataType::Mat3: return "mat3";
 		case Shader::DataType::Mat4: return "mat4";
 		}

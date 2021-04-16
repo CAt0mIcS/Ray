@@ -58,7 +58,7 @@ namespace At0::Ray
 		//	int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
 		// static MeshData Vector(const Float3& headPos, float lineWidth = 1.0f,
 		//	const Shaders& shaders = s_DefaultShaders);
-		// static MeshData Import(std::string_view filepath);
+		static MeshData Import(std::string_view filepath);
 
 		/**
 		 * @returns The root transform of this mesh

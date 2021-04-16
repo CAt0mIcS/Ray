@@ -18,6 +18,7 @@ namespace At0::Ray
 	class CommandBuffer;
 	class VertexBuffer;
 	class IndexBuffer;
+	class ModelMaterial;
 
 	class Model
 	{
@@ -34,10 +35,8 @@ namespace At0::Ray
 	private:
 		void ParseMesh(
 			std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials);
-		static Material CreateMaterial(
+		static Ref<ModelMaterial> CreateMaterial(
 			const std::string& basePath, const aiMesh& mesh, const aiMaterial* const* pMaterials);
-		static std::vector<std::string> GetShaders(
-			bool hasDiffuseMap, bool hasSpecularMap, bool hasNormalMap);
 
 	private:
 		Scope<Mesh::MeshData> m_RootMesh;

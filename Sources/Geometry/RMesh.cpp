@@ -154,10 +154,10 @@ namespace At0::Ray
 	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(lineMaterial) };
 	//}
 
-	// Mesh::MeshData Mesh::Import(std::string_view filepath)
-	//{
-	//	return { Codex::Resolve<Model>(filepath)->GetMesh() };
-	//}
+	Mesh::MeshData Mesh::Import(std::string_view filepath)
+	{
+		return { Codex::Resolve<Model>(filepath)->GetMesh() };
+	}
 
 	void Mesh::Update(Delta ts)
 	{
@@ -220,19 +220,6 @@ namespace At0::Ray
 		for (MeshData& child : children)
 		{
 			m_Children.emplace_back(GetEntity(), child);
-		}
-
-		if (const Texture2D* diffuseMap = m_Material->GetDiffuseMap())
-		{
-			m_Material->AddUniform("materialDiffuse",
-				MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment, *diffuseMap,
-					m_Material->GetGraphicsPipeline()));
-		}
-		if (const Texture2D* specularMap = m_Material->GetSpecularMap())
-		{
-			m_Material->AddUniform("materialSpecular",
-				MakeScope<SamplerUniform>("materialSpecular", Shader::Stage::Fragment, *specularMap,
-					m_Material->GetGraphicsPipeline()));
 		}
 	}
 
