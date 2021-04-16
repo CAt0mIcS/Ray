@@ -144,6 +144,8 @@ set(SRC
 	"Geometry/Materials/RFlatMaterial.cpp"
 	"Geometry/Materials/RTextureMaterial.h"
 	"Geometry/Materials/RTextureMaterial.cpp"
+	"Geometry/Materials/RShaderGenerator.h"
+	"Geometry/Materials/RShaderGenerator.cpp"
 
 	# ------------------------------------------------------------------
 	# User Interface

@@ -58,6 +58,13 @@ namespace At0::Ray
 		static std::string Construct(VkPhysicalDeviceType deviceType);
 
 		/**
+		 * Constructs a string from a shader data type
+		 * @param type The shader data type
+		 * @returns The string equal to the GLSL shader type
+		 */
+		static std::string Construct(Shader::DataType type);
+
+		/**
 		 * Converts a string from UTF16 to UTF8
 		 * @param string The string to convert
 		 * @returns The converted string

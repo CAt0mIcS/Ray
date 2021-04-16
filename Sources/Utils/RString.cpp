@@ -136,6 +136,7 @@ namespace At0::Ray
 		case Key::Menu: return "Menu";
 		}
 
+		RAY_ASSERT(false, "[String] Key {0} is invalid", (uint32_t)key);
 		return "INVALID KEY";
 	}
 
@@ -153,6 +154,7 @@ namespace At0::Ray
 		case MouseButton::Button7: return "Button7";
 		}
 
+		RAY_ASSERT(false, "[String] Mouse button {0} is invalid", (uint32_t)button);
 		return "INVALID MOUSE BUTTON";
 	}
 
@@ -202,7 +204,7 @@ namespace At0::Ray
 		case VK_PIPELINE_COMPILE_REQUIRED_EXT: return "Vulkan pipeline compile required";
 		}
 
-		return "Unknown Vulkan result code";
+		return "UNKNOWN VULKAN RESULT CODE";
 	}
 
 	std::string String::Construct(Shader::Stage stage)
@@ -218,7 +220,7 @@ namespace At0::Ray
 		}
 
 		RAY_ASSERT(false, "[String] Shader stage {0} is invalid", (uint32_t)stage);
-		return "";
+		return "INVALID SHADER STAGE";
 	}
 
 	std::string String::Construct(VkPhysicalDeviceType deviceType)
@@ -231,7 +233,25 @@ namespace At0::Ray
 		case VK_PHYSICAL_DEVICE_TYPE_CPU: return "CPU";
 		}
 
-		return "Unknown Physical Device type";
+		RAY_ASSERT(false, "[String] Physical Device type {0} is invalid", (uint32_t)deviceType);
+		return "INVALID PHYSICAL DEVICE TYPE";
+	}
+
+	std::string String::Construct(Shader::DataType type)
+	{
+		switch (type)
+		{
+		case Shader::DataType::Float: return "float";
+		case Shader::DataType::Int: return "int";
+		case Shader::DataType::UInt: return "uint";
+		case Shader::DataType::Vec2: return "vec2";
+		case Shader::DataType::Vec3: return "vec3";
+		case Shader::DataType::Mat3: return "mat3";
+		case Shader::DataType::Mat4: return "mat4";
+		}
+
+		RAY_ASSERT(false, "[String] Shader Data type {0} is invalid", (uint32_t)type);
+		return "INVALID SHADER DATA TYPE";
 	}
 
 	std::string String::ConvertUtf8(std::wstring_view string)

@@ -16,6 +16,13 @@ namespace At0::Ray
 	class RAY_EXPORT Uniform : public Bindable
 	{
 	public:
+		enum class Type
+		{
+			Buffer,
+			Sampler
+		};
+
+	public:
 		virtual ~Uniform();
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
 
@@ -25,7 +32,7 @@ namespace At0::Ray
 		Uniform(Uniform&& other) noexcept;
 
 	protected:
-		Uniform(std::string_view name) : m_Name(name){};
+		Uniform(std::string_view name) : m_Name(name) {}
 
 	protected:
 		Scope<DescriptorSet> m_DescriptorSet;

@@ -13,6 +13,7 @@
 
 #include <Geometry/Materials/RFlatMaterial.h>
 #include <Geometry/Materials/RTextureMaterial.h>
+#include <Geometry/Materials/RShaderGenerator.h>
 
 #include <Graphics/RVertex.h>
 #include <Scene/RScene.h>
@@ -80,6 +81,20 @@ private:
 					Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
 
 			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(defaultMaterial));
+
+			Ray::ShaderGenerator generator;
+			generator.AddInputAttribute(0, "inPos", Ray::Shader::DataType::Vec3);
+			generator.AddInputAttribute(1, "inColor", Ray::Shader::DataType::Vec3);
+			generator.AddOutputAttribute(0, "outColor", Ray::Shader::DataType::Vec3);
+			generator.AddUniform(0, "PerSceneData",
+				{ { "view", Ray::Shader::DataType::Mat4 },
+					{ "proj", Ray::Shader::DataType::Mat4 } },
+				"psdUBO");
+			generator.AddUniform(
+				1, "PerObjectData", { { "model", Ray::Shader::DataType::Mat4 } }, "podUBO");
+			generator.AddFunction("main",
+				"gl_Position = psdUBO.proj * psdUBO.view * podUBO.model;\noutColor = inColor;");
+			Ray::Log::Warn(generator.GetSource());
 
 			// auto& meshTransform = mesh.GetTransform();
 			// meshTransform.SetTranslation(

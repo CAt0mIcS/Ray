@@ -54,6 +54,19 @@ namespace At0::Ray
 			Compute,
 		};
 
+		enum class DataType
+		{
+			Float,
+			Int,
+			UInt,
+
+			Vec2,
+			Vec3,
+
+			Mat3,
+			Mat4
+		};
+
 		class Attributes
 		{
 			friend class Shader;
