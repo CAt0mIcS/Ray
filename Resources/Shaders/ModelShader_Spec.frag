@@ -24,19 +24,20 @@ float specularStrength = 0.5f;
 void main()
 {
     // ambient
-    vec3 ambient = lightAmbient * texture(materialDiffuse, inTexCoord).rgb;
+    // vec3 ambient = lightAmbient * texture(materialDiffuse, inTexCoord).rgb;
 
-    // diffuse 
+    // diffuse  (no map)
     vec3 norm = normalize(inNormal);
     vec3 lightDir = normalize(lightPosition - inFragPos);
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * lightColor;
     
-    // specular (no map)
+    // specular (map)
     vec3 viewDir = normalize(inViewPos - inFragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 32);
-    vec3 specular = specularStrength * spec * lightColor;
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), materialShininess);
+    vec3 specular = lightSpecular * spec * texture(materialSpecular, inTexCoord).rgb;
 
-    outColor = vec4(ambient + diffuse + specular, 1.0f);
+    // outColor = vec4(ambient + diffuse + specular, 1.0f);
+    outColor = vec4(diffuse + specular, 1.0f);
 }

@@ -28,7 +28,7 @@ void main()
     // ambient
     vec3 ambient = lightAmbient * texture(materialDiffuse, inTexCoord).rgb;
 
-    // diffuse 
+    // diffuse (map)
     vec3 norm = normalize(inNormal);
     vec3 lightDir = normalize(lightPosition - inFragPos);
     float diff = max(dot(norm, lightDir), 0.0f);

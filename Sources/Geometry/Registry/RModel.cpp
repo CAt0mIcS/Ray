@@ -21,7 +21,7 @@
 
 namespace At0::Ray
 {
-	Model::Model(std::string_view filepath)
+	Model::Model(std::string_view filepath, int flags)
 	{
 		Log::Info("[Model] Importing model \"{0}\"", filepath);
 
@@ -36,12 +36,16 @@ namespace At0::Ray
 
 		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
 		{
-			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials);
+			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials, flags);
 		}
 	}
 
+	Model::~Model() {}
+
+	std::string Model::GetUID(std::string_view filepath, int flags) { return filepath.data(); }
+
 	void Model::ParseMesh(
-		std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials)
+		std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials, int flags)
 	{
 		Log::Info("[Model] Parsing mesh \"{0}\"", mesh.mName.C_Str());
 
@@ -77,14 +81,14 @@ namespace At0::Ray
 
 		std::string basePath = std::filesystem::path(base).remove_filename().string();
 
-		Mesh::MeshData data{ Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
+		MeshData data{ Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
 			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)),
-			CreateMaterial(basePath, mesh, pMaterials) };
+			CreateMaterial(basePath, mesh, pMaterials, flags) };
 
 		// RAY_TODO: Scene hierachy
 		if (!m_RootMesh)
 		{
-			m_RootMesh = MakeScope<Mesh::MeshData>(std::move(data));
+			m_RootMesh = MakeScope<MeshData>(std::move(data));
 		}
 		else
 		{
@@ -92,8 +96,8 @@ namespace At0::Ray
 		}
 	}
 
-	Ref<ModelMaterial> Model::CreateMaterial(
-		const std::string& basePath, const aiMesh& mesh, const aiMaterial* const* pMaterials)
+	Ref<ModelMaterial> Model::CreateMaterial(const std::string& basePath, const aiMesh& mesh,
+		const aiMaterial* const* pMaterials, int flags)
 	{
 		aiString diffuseTexFileName;
 		aiString specularTexFileName;
@@ -103,20 +107,34 @@ namespace At0::Ray
 		Ref<Texture2D> specularMap = nullptr;
 		Ref<Texture2D> normalMap = nullptr;
 
+#ifndef NDEBUG
+		if ((flags & Model::NoDiffuseMap) != 0)
+			Log::Debug("[Model] Diffuse map for model \"{0}\" disabled.", basePath);
+
+		if ((flags & Model::NoSpecularMap) != 0)
+			Log::Debug("[Model] Diffuse map for model \"{0}\" disabled.", basePath);
+
+		if ((flags & Model::NoNormalMap) != 0)
+			Log::Debug("[Model] Diffuse map for model \"{0}\" disabled.", basePath);
+#endif
+
 		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
-				aiTextureType_DIFFUSE, 0, &diffuseTexFileName) == aiReturn_SUCCESS)
+				aiTextureType_DIFFUSE, 0, &diffuseTexFileName) == aiReturn_SUCCESS &&
+			(flags & Model::NoDiffuseMap) == 0)
 		{
 			diffuseMap = MakeRef<Texture2D>(basePath + diffuseTexFileName.C_Str());
 		}
 
 		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
-				aiTextureType_SPECULAR, 0, &specularTexFileName) == aiReturn_SUCCESS)
+				aiTextureType_SPECULAR, 0, &specularTexFileName) == aiReturn_SUCCESS &&
+			(flags & Model::NoSpecularMap) == 0)
 		{
 			specularMap = MakeRef<Texture2D>(basePath + specularTexFileName.C_Str());
 		}
 
 		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
-				aiTextureType_NORMALS, 0, &normalTexFileName) == aiReturn_SUCCESS)
+				aiTextureType_NORMALS, 0, &normalTexFileName) == aiReturn_SUCCESS &&
+			(flags & Model::NoNormalMap) == 0)
 		{
 			normalMap = MakeRef<Texture2D>(basePath + normalTexFileName.C_Str());
 		}

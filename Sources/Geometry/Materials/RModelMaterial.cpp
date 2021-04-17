@@ -22,6 +22,13 @@ namespace At0::Ray
 		// Sort shader codes alphabetically
 		std::sort(shaderCodes.begin(), shaderCodes.end());
 
+		if (shaderCodes.empty())
+		{
+			shaders.emplace_back("Resources/Shaders/ModelShader.vert");
+			shaders.emplace_back("Resources/Shaders/ModelShader.frag");
+			return shaders;
+		}
+
 		shaderCodes.emplace(shaderCodes.begin(), "_");
 		std::string shaderCode =
 			std::accumulate(shaderCodes.begin(), shaderCodes.end(), std::string{});

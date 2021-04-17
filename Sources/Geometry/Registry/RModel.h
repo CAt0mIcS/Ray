@@ -2,7 +2,6 @@
 
 #include "../../Core/RMath.h"
 #include "../../Core/RTime.h"
-#include "../RMesh.h"
 
 #include <type_traits>
 
@@ -14,7 +13,7 @@ struct aiNode;
 
 namespace At0::Ray
 {
-	class Mesh;
+	class MeshData;
 	class CommandBuffer;
 	class VertexBuffer;
 	class IndexBuffer;
@@ -23,23 +22,33 @@ namespace At0::Ray
 	class Model
 	{
 	public:
-		Model(std::string_view filepath);
+		enum Flags
+		{
+			Unspecified = 0b00000000,
+			NoDiffuseMap = 0b0000001,
+			NoSpecularMap = 0b0000010,
+			NoNormalMap = 0b00000100
+		};
+
+	public:
+		Model(std::string_view filepath, int flags = 0);
+		~Model();
 
 		Model& operator=(Model&& other) noexcept = default;
 		Model(Model&& other) noexcept = default;
 
-		Mesh::MeshData& GetMesh() { return *m_RootMesh; }
+		MeshData& GetMesh() { return *m_RootMesh; }
 
-		static std::string GetUID(std::string_view filepath) { return filepath.data(); }
-
-	private:
-		void ParseMesh(
-			std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials);
-		static Ref<ModelMaterial> CreateMaterial(
-			const std::string& basePath, const aiMesh& mesh, const aiMaterial* const* pMaterials);
+		static std::string GetUID(std::string_view filepath, int flags = 0);
 
 	private:
-		Scope<Mesh::MeshData> m_RootMesh;
+		void ParseMesh(std::string_view base, const aiMesh& mesh,
+			const aiMaterial* const* pMaterials, int flags);
+		static Ref<ModelMaterial> CreateMaterial(const std::string& basePath, const aiMesh& mesh,
+			const aiMaterial* const* pMaterials, int flags);
+
+	private:
+		Scope<MeshData> m_RootMesh;
 	};
 }  // namespace At0::Ray
 

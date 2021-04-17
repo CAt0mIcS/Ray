@@ -41,7 +41,7 @@ namespace At0::Ray
 		Setup(std::move(data.children));
 	}
 
-	Mesh::MeshData Mesh::Triangle(Ref<Material> material)
+	MeshData Mesh::Triangle(Ref<Material> material)
 	{
 		IndexedTriangleList triangle = IndexedTriangleList::Triangle(material->GetVertexLayout());
 
@@ -52,7 +52,7 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	Mesh::MeshData Mesh::Plane(Ref<Material> material)
+	MeshData Mesh::Plane(Ref<Material> material)
 	{
 		IndexedTriangleList plane = IndexedTriangleList::Plane(material->GetVertexLayout());
 
@@ -154,9 +154,9 @@ namespace At0::Ray
 	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(lineMaterial) };
 	//}
 
-	Mesh::MeshData Mesh::Import(std::string_view filepath)
+	MeshData Mesh::Import(std::string_view filepath, int flags)
 	{
-		return { Codex::Resolve<Model>(filepath)->GetMesh() };
+		return { Codex::Resolve<Model>(filepath, flags)->GetMesh() };
 	}
 
 	void Mesh::Update(Delta ts)

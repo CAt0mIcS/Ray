@@ -7,7 +7,7 @@
 #include "../Core/RTime.h"
 #include "../Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "../Graphics/Pipelines/Uniforms/RSamplerUniform.h"
-
+#include "Registry/RModel.h"
 
 #include <type_traits>
 
@@ -21,20 +21,16 @@ namespace At0::Ray
 	class Texture2D;
 
 
+	struct MeshData
+	{
+		Ref<VertexBuffer> vertexBuffer;
+		Ref<IndexBuffer> indexBuffer;
+		Ref<Material> material;
+		std::vector<MeshData> children;
+	};
+
 	class RAY_EXPORT Mesh : public Component
 	{
-		friend class Model;
-
-	private:
-		struct MeshData
-		{
-			Ref<VertexBuffer> vertexBuffer;
-			Ref<IndexBuffer> indexBuffer;
-			Ref<Material> material;
-			std::vector<MeshData> children;
-		};
-
-	private:
 		using Shaders = std::vector<std::string>;
 		static const Shaders s_DefaultShaders;
 
@@ -58,7 +54,7 @@ namespace At0::Ray
 		//	int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
 		// static MeshData Vector(const Float3& headPos, float lineWidth = 1.0f,
 		//	const Shaders& shaders = s_DefaultShaders);
-		static MeshData Import(std::string_view filepath);
+		static MeshData Import(std::string_view filepath, int flags = 0);
 
 		/**
 		 * @returns The root transform of this mesh

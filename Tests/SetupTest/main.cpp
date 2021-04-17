@@ -90,8 +90,8 @@ private:
 			// meshTransform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
 
 			m_ModelEntities.emplace_back(Ray::Scene::Get().CreateEntity());
-			Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(
-				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+			Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(Ray::Mesh::Import(
+				"Resources/Models/Nanosuit/nanosuit.obj", Ray::Model::NoSpecularMap));
 			model.GetTransform().SetTranslation({ posOffset });
 
 			// modelTransform.SetTranslation(
