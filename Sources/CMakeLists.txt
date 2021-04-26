@@ -140,12 +140,6 @@ set(SRC
 	"Geometry/Registry/RModel.cpp"
 	"Geometry/Materials/RMaterial.h"
 	"Geometry/Materials/RMaterial.cpp"
-	"Geometry/Materials/RColorMaterial.h"
-	"Geometry/Materials/RColorMaterial.cpp"
-	"Geometry/Materials/RTextureMaterial.h"
-	"Geometry/Materials/RTextureMaterial.cpp"
-	"Geometry/Materials/RModelMaterial.h"
-	"Geometry/Materials/RModelMaterial.cpp"
 
 	# ------------------------------------------------------------------
 	# User Interface

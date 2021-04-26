@@ -11,9 +11,6 @@
 #include <Graphics/Renderers/RMeshRenderer.h>
 #include <Utils/RException.h>
 
-#include <Geometry/Materials/RTextureMaterial.h>
-#include <Geometry/Materials/RColorMaterial.h>
-
 #include <Graphics/RVertex.h>
 #include <Scene/RScene.h>
 #include <Scene/RCamera.h>
@@ -75,12 +72,10 @@ private:
 			//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true,
 			//	nullptr);
 
-			// Ray::Ref<Ray::Material> defaultMaterial = Ray::TextureMaterial::Create(
-			// Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"),
-			// Ray::Material::Color({ 1.0f, 1.0f, 0.0f }),
-			// Ray::Material::CullMode(VK_CULL_MODE_NONE));
+			Ray::Ref<Ray::Material> defaultMaterial =
+				Ray::MakeRef<Ray::Material>(Ray::Material::CullMode(VK_CULL_MODE_NONE));
 
-			// Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(defaultMaterial));
+			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
 
 			// auto& meshTransform = mesh.GetTransform();
 			// meshTransform.SetTranslation(
@@ -89,10 +84,10 @@ private:
 			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
 			// meshTransform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
 
-			m_ModelEntities.emplace_back(Ray::Scene::Get().CreateEntity());
-			Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(Ray::Mesh::Import(
-				"Resources/Models/Nanosuit/nanosuit.obj", Ray::Model::NoSpecularMap));
-			model.GetTransform().SetTranslation({ posOffset });
+			// m_ModelEntities.emplace_back(Ray::Scene::Get().CreateEntity());
+			// Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(Ray::Mesh::Import(
+			//	"Resources/Models/Nanosuit/nanosuit.obj", Ray::Model::NoSpecularMap));
+			// model.GetTransform().SetTranslation({ posOffset });
 
 			// modelTransform.SetTranslation(
 			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });

@@ -27,6 +27,7 @@ namespace At0::Ray
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
 
 		std::string_view GetName() const { return m_Name; }
+		uint32_t GetSetNumber() const { return m_DescriptorSet->GetSetNumber(); }
 
 		Uniform& operator=(Uniform&& other) noexcept;
 		Uniform(Uniform&& other) noexcept;
@@ -36,6 +37,7 @@ namespace At0::Ray
 
 	protected:
 		Scope<DescriptorSet> m_DescriptorSet;
+
 		std::string m_Name;
 	};
 

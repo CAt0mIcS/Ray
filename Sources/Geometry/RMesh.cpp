@@ -27,16 +27,18 @@ namespace At0::Ray
 	Mesh::Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
 		Ref<Material> material, std::vector<MeshData> children)
 		: Component(entity), m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer),
-		  m_Material(material), m_PerObjectUniform("PerObjectData", Shader::Stage::Vertex,
-									material->GetGraphicsPipeline())
+		  m_Material(std::move(material)),
+		  m_PerObjectData(std::static_pointer_cast<BufferUniform, Uniform>(
+			  m_Material->GetUniform("PerObjectData")))
 	{
 		Setup(std::move(children));
 	}
 
 	Mesh::Mesh(Entity& entity, MeshData data)
 		: Component(entity), m_VertexBuffer(data.vertexBuffer), m_IndexBuffer(data.indexBuffer),
-		  m_Material(data.material), m_PerObjectUniform("PerObjectData", Shader::Stage::Vertex,
-										 data.material->GetGraphicsPipeline())
+		  m_Material(std::move(data.material)),
+		  m_PerObjectData(std::static_pointer_cast<BufferUniform, Uniform>(
+			  m_Material->GetUniform("PerObjectData")))
 	{
 		Setup(std::move(data.children));
 	}
@@ -156,12 +158,12 @@ namespace At0::Ray
 
 	MeshData Mesh::Import(std::string_view filepath, int flags)
 	{
-		return { Codex::Resolve<Model>(filepath, flags)->GetMesh() };
+		return { std::move(Codex::Resolve<Model>(filepath, flags)->GetMesh()) };
 	}
 
 	void Mesh::Update(Delta ts)
 	{
-		m_PerObjectUniform["model"] = m_Transform.AsMatrix();
+		(*m_PerObjectData)["model"] = m_Transform.AsMatrix();
 		for (Mesh& child : m_Children)
 			child.Update(ts, m_Transform);
 	}
@@ -169,7 +171,7 @@ namespace At0::Ray
 	void Mesh::Update(Delta ts, const Transform& parentTransform)
 	{
 		// Calculate it raw here to avoid the cache check in Transform::AsMatrix
-		m_PerObjectUniform["model"] =
+		(*m_PerObjectData)["model"] =
 			MatrixTranslation(m_Transform.Translation() + parentTransform.Translation()) *
 			MatrixRotation(m_Transform.Rotation() + parentTransform.Rotation()) *
 			MatrixScale(m_Transform.Scale() * parentTransform.Scale());
@@ -182,7 +184,6 @@ namespace At0::Ray
 	{
 		m_Material->CmdBind(cmdBuff);
 
-		m_PerObjectUniform.CmdBind(cmdBuff);
 		m_VertexBuffer->CmdBind(cmdBuff);
 		m_IndexBuffer->CmdBind(cmdBuff);
 
@@ -200,7 +201,7 @@ namespace At0::Ray
 		m_IndexBuffer = std::move(other.m_IndexBuffer);
 
 		m_Material = std::move(other.m_Material);
-		m_PerObjectUniform = std::move(other.m_PerObjectUniform);
+		m_PerObjectData = std::move(other.m_PerObjectData);
 
 		m_Transform = std::move(other.m_Transform);
 		m_Children = std::move(other.m_Children);
@@ -210,7 +211,7 @@ namespace At0::Ray
 	Mesh::Mesh(Mesh&& other) noexcept
 		: Component(*other.m_Entity), m_VertexBuffer(std::move(other.m_VertexBuffer)),
 		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
-		  m_PerObjectUniform(std::move(other.m_PerObjectUniform)),
+		  m_PerObjectData(std::move(other.m_PerObjectData)),
 		  m_Transform(std::move(other.m_Transform)), m_Children(std::move(other.m_Children))
 	{
 	}
@@ -219,8 +220,7 @@ namespace At0::Ray
 	{
 		for (MeshData& child : children)
 		{
-			m_Children.emplace_back(GetEntity(), child);
+			m_Children.emplace_back(GetEntity(), std::move(child));
 		}
 	}
-
 }  // namespace At0::Ray

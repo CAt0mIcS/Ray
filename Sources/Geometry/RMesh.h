@@ -8,6 +8,7 @@
 #include "../Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "../Graphics/Pipelines/Uniforms/RSamplerUniform.h"
 #include "Registry/RModel.h"
+#include "Materials/RMaterial.h"
 
 #include <type_traits>
 
@@ -97,9 +98,8 @@ namespace At0::Ray
 	private:
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;
 		Ref<IndexBuffer> m_IndexBuffer = nullptr;
-
-		BufferUniform m_PerObjectUniform;
-		Ref<Material> m_Material;
+		Ref<Material> m_Material = nullptr;
+		Ref<BufferUniform> m_PerObjectData = nullptr;
 
 		std::vector<Mesh> m_Children;
 

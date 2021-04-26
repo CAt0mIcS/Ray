@@ -27,9 +27,9 @@ namespace At0::Ray
 			uniform->CmdBind(cmdBuff);
 	}
 
-	Uniform& Material::AddUniform(std::string_view tag, Scope<Uniform> uniform)
+	Ref<Uniform> Material::AddUniform(std::string_view tag, Ref<Uniform> uniform)
 	{
-		return *m_Uniforms.emplace_back(std::move(uniform));
+		return m_Uniforms.emplace_back(std::move(uniform));
 	}
 
 	bool Material::HasUniform(std::string_view tag) const
@@ -40,11 +40,11 @@ namespace At0::Ray
 		return false;
 	}
 
-	Uniform& Material::GetUniform(std::string_view tag)
+	Ref<Uniform> Material::GetUniform(std::string_view tag)
 	{
 		for (auto& uniform : m_Uniforms)
 			if (tag == uniform->GetName())
-				return *uniform;
+				return uniform;
 
 		RAY_THROW_RUNTIME("[Mesh] Failed to get uniform with tag {0}", tag);
 	}
@@ -58,20 +58,28 @@ namespace At0::Ray
 
 	Material::Material(Material&& other) noexcept { *this = std::move(other); }
 
-	Material::Material(const std::vector<std::string>& shaders, VertexLayout* pVertexLayout,
-		VkCullModeFlags cullMode, VkPrimitiveTopology topology, VkPolygonMode polygonMode,
-		float lineWidth)
+	void Material::CreatePipeline(Material::Config& config)
 	{
-		CreatePipeline(shaders, pVertexLayout, cullMode, topology, polygonMode, lineWidth);
-	}
+		bool customShaders = !config.shaders.value.empty();
+		if (!customShaders)
+		{
+			config.shaders = GetShaders(config);
+		}
 
-	void Material::CreatePipeline(const std::vector<std::string>& shaders,
-		VertexLayout* pVertexLayout, VkCullModeFlags cullMode, VkPrimitiveTopology topology,
-		VkPolygonMode polygonMode, float lineWidth)
-	{
 		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(Graphics::Get().GetRenderPass(),
-			shaders, pVertexLayout, Graphics::Get().GetPipelineCache(), cullMode, topology,
-			polygonMode, lineWidth);
+			config.shaders, nullptr, Graphics::Get().GetPipelineCache(), config.cullMode,
+			VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, config.polygonMode, config.lineWidth);
+
+
+		if (!customShaders && !config.diffuseMap.value && !config.specularMap.value &&
+			!config.normalMap.value && !config.color)
+		{
+			config.color = Float3{ 1.0f, 1.0f, 1.0f };
+			BufferUniform* uShading = (BufferUniform*)AddUniform("Shading",
+				MakeRef<BufferUniform>("Shading", Shader::Stage::Fragment, *m_GraphicsPipeline))
+										  .get();
+			(*uShading)["color"] = config.color;
+		}
 	}
 
 	void Material::FillConfig(Config& config, PolygonMode polygonMode)
@@ -80,4 +88,42 @@ namespace At0::Ray
 	}
 
 	void Material::FillConfig(Config& config, LineWidth lineWidth) { config.lineWidth = lineWidth; }
+
+	std::vector<std::string> Material::GetShaders(Material::Config& config)
+	{
+		std::vector<std::string> shaders;
+		std::vector<std::string> shaderCodes;
+
+		if (config.diffuseMap.value)
+			shaderCodes.emplace_back("Diff");
+		if (config.specularMap.value)
+			shaderCodes.emplace_back("Spec");
+		if (config.normalMap.value)
+			shaderCodes.emplace_back("Norm");
+
+		// Sort shader codes alphabetically
+		std::sort(shaderCodes.begin(), shaderCodes.end());
+
+		if (shaderCodes.empty())
+		{
+			shaders.emplace_back("Resources/Shaders/ModelShader.vert");
+			shaders.emplace_back("Resources/Shaders/ModelShader.frag");
+			return shaders;
+		}
+
+		shaderCodes.emplace(shaderCodes.begin(), "_");
+		std::string shaderCode =
+			std::accumulate(shaderCodes.begin(), shaderCodes.end(), std::string{});
+
+		shaders.emplace_back("Resources/Shaders/ModelShader" + shaderCode + ".vert");
+		shaders.emplace_back("Resources/Shaders/ModelShader" + shaderCode + ".frag");
+
+		return shaders;
+	}
+
+	void Material::Setup(Material::Config& config)
+	{
+		AddUniform("PerObjectData",
+			MakeRef<BufferUniform>("PerObjectData", Shader::Stage::Vertex, *m_GraphicsPipeline));
+	}
 }  // namespace At0::Ray

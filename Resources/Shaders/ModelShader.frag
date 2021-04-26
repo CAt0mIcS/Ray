@@ -4,8 +4,7 @@
 
 layout(location = 0) in vec3 inNormal;
 layout(location = 1) in vec3 inFragPos;
-layout(location = 2) in vec2 inTexCoord;
-layout(location = 3) in vec3 inViewPos;
+layout(location = 2) in vec3 inViewPos;
 
 layout(location = 0) out vec4 outColor;
 
@@ -17,11 +16,15 @@ vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
 
 float materialShininess = 1.0f;
 vec3 materialSpecular = vec3(1.0f, 1.0f, 1.0f);
-
-
-
-
 float specularStrength = 0.5f;
+
+
+layout(set = 2, binding = 2) uniform Shading
+{
+	vec3 color;
+} ubo;
+
+
 
 void main()
 {
@@ -41,5 +44,5 @@ void main()
     vec3 specular = specularStrength * spec * lightColor;
 
     // outColor = vec4(ambient + diffuse + specular, 1.0f);
-    outColor = vec4(diffuse + specular, 1.0f);
+    outColor = vec4(diffuse + specular + ubo.color, 1.0f);
 }

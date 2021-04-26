@@ -12,7 +12,6 @@
 #include "Graphics/Buffers/RVertexBuffer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 #include "Graphics/Images/RTexture2D.h"
-#include "../Materials/RModelMaterial.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -96,7 +95,7 @@ namespace At0::Ray
 		}
 	}
 
-	Ref<ModelMaterial> Model::CreateMaterial(const std::string& basePath, const aiMesh& mesh,
+	Ref<Material> Model::CreateMaterial(const std::string& basePath, const aiMesh& mesh,
 		const aiMaterial* const* pMaterials, int flags)
 	{
 		aiString diffuseTexFileName;
@@ -139,7 +138,7 @@ namespace At0::Ray
 			normalMap = MakeRef<Texture2D>(basePath + normalTexFileName.C_Str());
 		}
 
-		return ModelMaterial::Create(Material::DiffuseMap(diffuseMap),
+		return MakeRef<Material>(Material::DiffuseMap(diffuseMap),
 			Material::SpecularMap(specularMap), Material::NormalMap(normalMap));
 	}
 

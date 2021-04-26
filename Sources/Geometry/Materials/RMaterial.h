@@ -8,6 +8,7 @@
 
 #include <type_traits>
 #include <vector>
+#include <optional>
 
 
 namespace At0::Ray
@@ -19,6 +20,17 @@ namespace At0::Ray
 	class RAY_EXPORT Material : public Bindable
 	{
 	public:
+		struct Shaders
+		{
+			template<typename... Args>
+			Shaders(Args&&... args) : value(args...)
+			{
+			}
+			operator const std::vector<std::string>&() const { return value; }
+
+			std::vector<std::string> value;
+		};
+
 		struct CullMode
 		{
 			CullMode(VkCullModeFlags val) : value(val) {}
@@ -51,59 +63,55 @@ namespace At0::Ray
 			Float3 value;
 		};
 
+		struct Texture2D
+		{
+			Texture2D(Ref<Ray::Texture2D> val) : value(std::move(val)) {}
+			operator const Ref<Ray::Texture2D>&() const { return value; }
+
+			Ref<Ray::Texture2D> value;
+		};
+
 		struct SpecularMap
 		{
-			SpecularMap(Ref<Texture2D> val) : value(std::move(val)) {}
-			operator const Ref<Texture2D>&() const { return value; }
+			SpecularMap(Ref<Ray::Texture2D> val) : value(std::move(val)) {}
+			operator const Ref<Ray::Texture2D>&() const { return value; }
 
-			Ref<Texture2D> value;
+			Ref<Ray::Texture2D> value;
 		};
 
 		struct DiffuseMap
 		{
-			DiffuseMap(Ref<Texture2D> val) : value(std::move(val)) {}
-			operator const Ref<Texture2D>&() const { return value; }
+			DiffuseMap(Ref<Ray::Texture2D> val) : value(std::move(val)) {}
+			operator const Ref<Ray::Texture2D>&() const { return value; }
 
-			Ref<Texture2D> value;
+			Ref<Ray::Texture2D> value;
 		};
 
 		struct NormalMap
 		{
-			NormalMap(Ref<Texture2D> val) : value(std::move(val)) {}
-			operator const Ref<Texture2D>&() const { return value; }
+			NormalMap(Ref<Ray::Texture2D> val) : value(std::move(val)) {}
+			operator const Ref<Ray::Texture2D>&() const { return value; }
 
-			Ref<Texture2D> value;
-		};
-
-		struct LightTechnique
-		{
-			enum Technique
-			{
-				Flat,
-				Phong
-			};
-
-			LightTechnique(Technique val) : value(val) {}
-			operator Technique() const { return value; }
-
-			Technique value;
+			Ref<Ray::Texture2D> value;
 		};
 
 	protected:
 		struct Config
 		{
+			Shaders shaders = {};
 			CullMode cullMode = VK_CULL_MODE_BACK_BIT;
 			PolygonMode polygonMode = VK_POLYGON_MODE_FILL;
 			LineWidth lineWidth = 1.0f;
-			Color color = { { 1.0f, 1.0f, 1.0f } };
+			std::optional<Color> color;
+			Texture2D texture2D = { nullptr };
 			SpecularMap specularMap = { nullptr };
 			DiffuseMap diffuseMap = { nullptr };
 			NormalMap normalMap = { nullptr };
-			Ref<Texture2D> texture2D = nullptr;
-			LightTechnique lightTechnique = LightTechnique::Phong;
 		};
 
 	public:
+		template<typename... Args>
+		Material(Args&&... args);
 		virtual ~Material();
 
 		virtual const Texture2D* GetDiffuseMap() const { return nullptr; }
@@ -120,7 +128,7 @@ namespace At0::Ray
 		 * @param tag Unique tag to identify the uniform
 		 * @param uniform Uniform to add
 		 */
-		Uniform& AddUniform(std::string_view tag, Scope<Uniform> uniform);
+		Ref<Uniform> AddUniform(std::string_view tag, Ref<Uniform> uniform);
 
 		/**
 		 * @returns If the uniform with tag has been added
@@ -131,37 +139,41 @@ namespace At0::Ray
 		 * @param tag The tag used when adding the uniform with "AddUniform"
 		 * @returns The uniform which was added using "AddUniform"
 		 */
-		Uniform& GetUniform(std::string_view tag);
+		Ref<Uniform> GetUniform(std::string_view tag);
 
 		Material& operator=(Material&& other) noexcept;
 		Material(Material&& other) noexcept;
 
-	protected:
-		Material(const std::vector<std::string>& shaders, VertexLayout* pVertexLayout = nullptr,
-			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT,
-			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-			VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL, float lineWidth = 1.0f);
-		Material() = default;
+	private:
+		void CreatePipeline(Material::Config& config);
+		void Setup(Material::Config& config);
 
-		void CreatePipeline(const std::vector<std::string>& shaders,
-			VertexLayout* pVertexLayout = nullptr, VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT,
-			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-			VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL, float lineWidth = 1.0f);
-
+		static void FillConfig(Config& config, Shaders shaders) { config.shaders = shaders; }
 		static void FillConfig(Config& config, CullMode cullMode) { config.cullMode = cullMode; }
 		static void FillConfig(Config& config, PolygonMode polygonMode);
 		static void FillConfig(Config& config, LineWidth lineWidth);
 		static void FillConfig(Config& config, Color color) { config.color = color; }
+		static void FillConfig(Config& config, Texture2D tex) { config.texture2D = tex; }
 		static void FillConfig(Config& config, SpecularMap spec) { config.specularMap = spec; }
 		static void FillConfig(Config& config, DiffuseMap diff) { config.diffuseMap = diff; }
 		static void FillConfig(Config& config, NormalMap norm) { config.normalMap = norm; }
-		static void FillConfig(Config& config, Ref<Texture2D> tex) { config.texture2D = tex; }
-		static void FillConfig(Config& config, LightTechnique tec) { config.lightTechnique = tec; }
+
+		static std::vector<std::string> GetShaders(Material::Config& config);
 
 	private:
 		Ref<GraphicsPipeline> m_GraphicsPipeline = nullptr;
-		std::vector<Scope<Uniform>> m_Uniforms;
+		std::vector<Ref<Uniform>> m_Uniforms;
 	};
 
+
+	template<typename... Args>
+	inline Material::Material(Args&&... args)
+	{
+		Material::Config config{};
+		(FillConfig(config, args), ...);
+
+		CreatePipeline(config);
+		Setup(config);
+	}
 
 }  // namespace At0::Ray

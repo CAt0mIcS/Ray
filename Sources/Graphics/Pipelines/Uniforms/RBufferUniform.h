@@ -66,6 +66,9 @@ namespace At0::Ray
 		BufferUniform& operator=(BufferUniform&& other) noexcept = default;
 		BufferUniform(BufferUniform&& other) noexcept = default;
 
+		BufferUniform& operator=(const BufferUniform& other) = default;
+		BufferUniform(const BufferUniform& other) = default;
+
 		uint32_t GetGlobalBufferOffset() const { return m_GlobalBufferOffset; }
 
 	private:

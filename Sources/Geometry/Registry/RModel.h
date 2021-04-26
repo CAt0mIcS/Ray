@@ -2,6 +2,7 @@
 
 #include "../../Core/RMath.h"
 #include "../../Core/RTime.h"
+#include "../Materials/RMaterial.h"
 
 #include <type_traits>
 
@@ -17,7 +18,7 @@ namespace At0::Ray
 	class CommandBuffer;
 	class VertexBuffer;
 	class IndexBuffer;
-	class ModelMaterial;
+
 
 	class Model
 	{
@@ -44,7 +45,7 @@ namespace At0::Ray
 	private:
 		void ParseMesh(std::string_view base, const aiMesh& mesh,
 			const aiMaterial* const* pMaterials, int flags);
-		static Ref<ModelMaterial> CreateMaterial(const std::string& basePath, const aiMesh& mesh,
+		static Ref<Material> CreateMaterial(const std::string& basePath, const aiMesh& mesh,
 			const aiMaterial* const* pMaterials, int flags);
 
 	private:
