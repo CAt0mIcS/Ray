@@ -158,7 +158,7 @@ namespace At0::Ray
 
 	MeshData Mesh::Import(std::string_view filepath, int flags)
 	{
-		return { std::move(Codex::Resolve<Model>(filepath, flags)->GetMesh()) };
+		return { Codex::Resolve<Model>(filepath, flags)->GetMesh() };
 	}
 
 	void Mesh::Update(Delta ts)

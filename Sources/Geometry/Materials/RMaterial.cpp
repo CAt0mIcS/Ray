@@ -61,6 +61,8 @@ namespace At0::Ray
 	void Material::CreatePipeline(Material::Config& config)
 	{
 		bool customShaders = !config.shaders.value.empty();
+
+		// Set default shaders none were specified
 		if (!customShaders)
 		{
 			config.shaders = GetShaders(config);
@@ -71,14 +73,29 @@ namespace At0::Ray
 			VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, config.polygonMode, config.lineWidth);
 
 
-		if (!customShaders && !config.diffuseMap.value && !config.specularMap.value &&
-			!config.normalMap.value && !config.color)
+		// Add default uniforms if no custom shader was given.
+		// If the client uses custom shaders, they will need to add the uniforms themselves
+		if (!customShaders)
 		{
-			config.color = Float3{ 1.0f, 1.0f, 1.0f };
-			BufferUniform* uShading = (BufferUniform*)AddUniform("Shading",
-				MakeRef<BufferUniform>("Shading", Shader::Stage::Fragment, *m_GraphicsPipeline))
-										  .get();
-			(*uShading)["color"] = config.color;
+			if (config.diffuseMap.value)
+				AddUniform("DiffuseMap",
+					MakeRef<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment,
+						*config.diffuseMap.value, *m_GraphicsPipeline));
+			if (config.specularMap.value)
+				AddUniform("SpecularMap",
+					MakeRef<SamplerUniform>("materialSpecular", Shader::Stage::Fragment,
+						*config.specularMap.value, *m_GraphicsPipeline));
+
+			// If no custom shader and no map was given, the shader expects a color uniform
+			if (!config.diffuseMap.value && !config.specularMap.value && !config.normalMap.value &&
+				!config.color)
+			{
+				config.color = Float3{ 1.0f, 1.0f, 1.0f };
+				BufferUniform* uShading = (BufferUniform*)AddUniform("Shading",
+					MakeRef<BufferUniform>("Shading", Shader::Stage::Fragment, *m_GraphicsPipeline))
+											  .get();
+				(*uShading)["color"] = config.color;
+			}
 		}
 	}
 

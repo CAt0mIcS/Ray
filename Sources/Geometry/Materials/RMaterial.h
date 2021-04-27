@@ -163,6 +163,10 @@ namespace At0::Ray
 	private:
 		Ref<GraphicsPipeline> m_GraphicsPipeline = nullptr;
 		std::vector<Ref<Uniform>> m_Uniforms;
+
+		Ref<Ray::Texture2D> m_DiffuseMap = nullptr;
+		Ref<Ray::Texture2D> m_SpecularMap = nullptr;
+		Ref<Ray::Texture2D> m_NormalMap = nullptr;
 	};
 
 
@@ -171,6 +175,10 @@ namespace At0::Ray
 	{
 		Material::Config config{};
 		(FillConfig(config, args), ...);
+
+		m_DiffuseMap = config.diffuseMap.value;
+		m_SpecularMap = config.specularMap.value;
+		m_NormalMap = config.normalMap.value;
 
 		CreatePipeline(config);
 		Setup(config);
