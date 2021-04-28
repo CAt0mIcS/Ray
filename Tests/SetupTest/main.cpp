@@ -72,18 +72,16 @@ private:
 			//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true,
 			//	nullptr);
 
-			// Ray::Ref<Ray::Material> defaultMaterial =
-			//	Ray::MakeRef<Ray::Material>(Ray::Material::CullMode(VK_CULL_MODE_NONE));
+			Ray::Material defaultMaterial{ Ray::Material::CullMode(VK_CULL_MODE_NONE) };
 
-			// Ray::Mesh& mesh =
-			// meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
+			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
 
-			// auto& meshTransform = mesh.GetTransform();
-			// meshTransform.SetTranslation(
-			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
-			// meshTransform.SetRotation(
-			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
-			// meshTransform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
+			auto& meshTransform = mesh.GetTransform();
+			meshTransform.SetTranslation(
+				{ posRotDist(device), posRotDist(device), posRotDist(device) });
+			meshTransform.SetRotation(
+				{ posRotDist(device), posRotDist(device), posRotDist(device) });
+			meshTransform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
 
 			m_ModelEntities.emplace_back(Ray::Scene::Get().CreateEntity());
 			Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(

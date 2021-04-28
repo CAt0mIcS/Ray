@@ -19,16 +19,21 @@ namespace At0::Ray
 	class GraphicsPipeline;
 	class VertexLayout;
 
+	template<typename T1, typename... T2>
+	concept DisableCopy = (std::negation_v<std::is_same<T1, T2>> && ...);
 
 	class RAY_EXPORT Material : public Bindable
 	{
+
 	public:
 		struct Shaders
 		{
 			template<typename... Args>
-			Shaders(Args&&... args) : value(args...)
+			Shaders(Args&&... args) requires(std::is_convertible_v<Args, std::string>&&...)
+				: value(args...)
 			{
 			}
+			Shaders(std::vector<std::string> val) : value(std::move(val)) {}
 			operator const std::vector<std::string>&() const { return value; }
 
 			std::vector<std::string> value;
@@ -114,7 +119,8 @@ namespace At0::Ray
 
 	public:
 		template<typename... Args>
-		Material(Args&&... args) requires(std::negation_v<std::is_same<Args, Ref<Material>>>&&...);
+		Material(Args&&... args) requires(
+			DisableCopy<Args, const Material&, Material&, Material&&>&&...);
 		virtual ~Material();
 
 		const GraphicsPipeline& GetGraphicsPipeline() const { return *m_GraphicsPipeline; }
@@ -171,7 +177,7 @@ namespace At0::Ray
 
 	template<typename... Args>
 	inline Material::Material(Args&&... args) requires(
-		std::negation_v<std::is_same<Args, Ref<Material>>>&&...)
+		DisableCopy<Args, const Material&, Material&, Material&&>&&...)
 	{
 		Material::Config config{};
 		(FillConfig(config, args), ...);
