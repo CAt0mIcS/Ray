@@ -66,8 +66,8 @@ namespace At0::Ray
 		BufferUniform& operator=(BufferUniform&& other) noexcept = default;
 		BufferUniform(BufferUniform&& other) noexcept = default;
 
-		BufferUniform& operator=(const BufferUniform& other) = default;
-		BufferUniform(const BufferUniform& other) = default;
+		BufferUniform& operator=(const BufferUniform& other);
+		BufferUniform(const BufferUniform& other);
 
 		uint32_t GetGlobalBufferOffset() const { return m_GlobalBufferOffset; }
 
@@ -77,6 +77,8 @@ namespace At0::Ray
 
 	private:
 		uint32_t m_GlobalBufferOffset = (uint32_t)-1;
+		uint32_t m_BufferSize = 0;
+		uint32_t m_Binding = 0;
 
 		/**
 		 * A BufferUniform is always in a block in Vulkan.

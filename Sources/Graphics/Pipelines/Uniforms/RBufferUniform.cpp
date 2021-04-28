@@ -12,7 +12,7 @@ namespace At0::Ray
 	BufferUniform::BufferUniform(std::string_view name, VkDescriptorSetLayout descSetLayout,
 		VkDescriptorPool descSetPool, Pipeline::BindPoint bindPoint,
 		VkPipelineLayout pipelineLayout, uint32_t bufferSize, uint32_t set, uint32_t binding)
-		: Uniform(name)
+		: Uniform(name), m_BufferSize(bufferSize), m_Binding(binding)
 	{
 		m_DescriptorSet =
 			MakeScope<DescriptorSet>(descSetPool, descSetLayout, bindPoint, pipelineLayout, set);
@@ -22,7 +22,7 @@ namespace At0::Ray
 
 	BufferUniform::BufferUniform(std::string_view name, const Pipeline& pipeline,
 		uint32_t bufferSize, uint32_t set, uint32_t binding)
-		: Uniform(name)
+		: Uniform(name), m_BufferSize(bufferSize), m_Binding(binding)
 	{
 		m_DescriptorSet = MakeScope<DescriptorSet>(pipeline.GetDescriptorPool(),
 			pipeline.GetDescriptorSetLayout(set), pipeline.GetBindPoint(), pipeline.GetLayout(),
@@ -53,6 +53,9 @@ namespace At0::Ray
 		RAY_MEXPECTS(size != 0, "[BufferUniform] Failed to find uniform {0} in stage {1}",
 			uniformBlockName, String::Construct(stage));
 
+		m_BufferSize = size;
+		m_Binding = binding;
+
 		m_DescriptorSet = MakeScope<DescriptorSet>(pipeline.GetDescriptorPool(),
 			pipeline.GetDescriptorSetLayout(set), pipeline.GetBindPoint(), pipeline.GetLayout(),
 			set);
@@ -61,6 +64,22 @@ namespace At0::Ray
 	}
 
 	BufferUniform::~BufferUniform() {}
+
+	BufferUniform& BufferUniform::operator=(const BufferUniform& other)
+	{
+		Uniform::operator=(other);
+		m_BufferSize = other.m_BufferSize;
+		m_Binding = other.m_Binding;
+
+		Setup(m_BufferSize, m_Binding);
+
+		return *this;
+	}
+
+	BufferUniform::BufferUniform(const BufferUniform& other) : Uniform(other.m_Name)
+	{
+		*this = other;
+	}
 
 	void BufferUniform::Setup(uint32_t bufferSize, uint32_t binding)
 	{

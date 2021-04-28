@@ -14,13 +14,13 @@ namespace At0::Ray
 	DescriptorSet::DescriptorSet(VkDescriptorPool pool, VkDescriptorSetLayout descriptorLayout,
 		Pipeline::BindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout, uint32_t setNumber)
 		: m_PipelineBindPoint(pipelineBindPoint), m_PipelineLayout(pipelineLayout),
-		  m_SetNumber(setNumber)
+		  m_SetNumber(setNumber), m_DescriptorPool(pool), m_DescriptorSetLayout(descriptorLayout)
 	{
 		VkDescriptorSetAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		allocInfo.descriptorPool = pool;
+		allocInfo.descriptorPool = m_DescriptorPool;
 		allocInfo.descriptorSetCount = 1;
-		allocInfo.pSetLayouts = &descriptorLayout;
+		allocInfo.pSetLayouts = &m_DescriptorSetLayout;
 
 		RAY_VK_THROW_FAILED(
 			vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo, &m_DescriptorSet),
@@ -53,4 +53,27 @@ namespace At0::Ray
 		  m_PipelineBindPoint(other.m_PipelineBindPoint), m_PipelineLayout(other.m_PipelineLayout)
 	{
 	}
+
+	DescriptorSet& DescriptorSet::operator=(const DescriptorSet& other)
+	{
+		m_DescriptorPool = other.m_DescriptorPool;
+		m_DescriptorSetLayout = other.m_DescriptorSetLayout;
+		m_PipelineBindPoint = other.m_PipelineBindPoint;
+		m_PipelineLayout = other.m_PipelineLayout;
+		m_SetNumber = other.m_SetNumber;
+
+		VkDescriptorSetAllocateInfo allocInfo{};
+		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+		allocInfo.descriptorPool = m_DescriptorPool;
+		allocInfo.descriptorSetCount = 1;
+		allocInfo.pSetLayouts = &m_DescriptorSetLayout;
+
+		RAY_VK_THROW_FAILED(
+			vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo, &m_DescriptorSet),
+			"[DescriptorSet] Failed to allocate");
+
+		return *this;
+	}
+
+	DescriptorSet::DescriptorSet(const DescriptorSet& other) { *this = other; }
 }  // namespace At0::Ray

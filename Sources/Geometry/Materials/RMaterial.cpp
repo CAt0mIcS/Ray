@@ -27,9 +27,9 @@ namespace At0::Ray
 			uniform->CmdBind(cmdBuff);
 	}
 
-	Ref<Uniform> Material::AddUniform(std::string_view tag, Ref<Uniform> uniform)
+	Uniform& Material::AddUniform(std::string_view tag, Scope<Uniform> uniform)
 	{
-		return m_Uniforms.emplace_back(std::move(uniform));
+		return *m_Uniforms.emplace_back(std::move(uniform));
 	}
 
 	bool Material::HasUniform(std::string_view tag) const
@@ -38,15 +38,6 @@ namespace At0::Ray
 			if (tag == uniform->GetName())
 				return true;
 		return false;
-	}
-
-	Ref<Uniform> Material::GetUniform(std::string_view tag)
-	{
-		for (auto& uniform : m_Uniforms)
-			if (tag == uniform->GetName())
-				return uniform;
-
-		RAY_THROW_RUNTIME("[Mesh] Failed to get uniform with tag {0}", tag);
 	}
 
 	Material& Material::operator=(Material&& other) noexcept
@@ -79,25 +70,48 @@ namespace At0::Ray
 		{
 			if (config.diffuseMap.value)
 				AddUniform("DiffuseMap",
-					MakeRef<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment,
-						*config.diffuseMap.value, *m_GraphicsPipeline));
+					MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment,
+						config.diffuseMap.value, *m_GraphicsPipeline));
 			if (config.specularMap.value)
 				AddUniform("SpecularMap",
-					MakeRef<SamplerUniform>("materialSpecular", Shader::Stage::Fragment,
-						*config.specularMap.value, *m_GraphicsPipeline));
+					MakeScope<SamplerUniform>("materialSpecular", Shader::Stage::Fragment,
+						config.specularMap.value, *m_GraphicsPipeline));
 
 			// If no custom shader and no map was given, the shader expects a color uniform
 			if (!config.diffuseMap.value && !config.specularMap.value && !config.normalMap.value &&
 				!config.color)
 			{
 				config.color = Float3{ 1.0f, 1.0f, 1.0f };
-				BufferUniform* uShading = (BufferUniform*)AddUniform("Shading",
-					MakeRef<BufferUniform>("Shading", Shader::Stage::Fragment, *m_GraphicsPipeline))
-											  .get();
-				(*uShading)["color"] = config.color;
+				BufferUniform& uShading = (BufferUniform&)AddUniform(
+					"Shading", MakeScope<BufferUniform>(
+								   "Shading", Shader::Stage::Fragment, *m_GraphicsPipeline));
+				uShading["color"] = config.color;
 			}
 		}
 	}
+
+	Material& Material::operator=(const Material& other)
+	{
+		m_GraphicsPipeline = other.m_GraphicsPipeline;
+
+		for (const Scope<Uniform>& uniform : other.m_Uniforms)
+		{
+			if (auto uBuff = dynamic_cast<const BufferUniform*>(uniform.get()))
+			{
+				m_Uniforms.emplace_back(MakeScope<BufferUniform>(*uBuff));
+			}
+			else if (auto uSampler = dynamic_cast<const SamplerUniform*>(uniform.get()))
+			{
+				m_Uniforms.emplace_back(MakeScope<SamplerUniform>(*uSampler));
+			}
+			else
+				RAY_ASSERT(false, "[Material] Trying to copy unknown uniform type");
+		}
+
+		return *this;
+	}
+
+	Material::Material(const Material& other) { *this = other; }
 
 	void Material::FillConfig(Config& config, PolygonMode polygonMode)
 	{
@@ -141,6 +155,6 @@ namespace At0::Ray
 	void Material::Setup(Material::Config& config)
 	{
 		AddUniform("PerObjectData",
-			MakeRef<BufferUniform>("PerObjectData", Shader::Stage::Vertex, *m_GraphicsPipeline));
+			MakeScope<BufferUniform>("PerObjectData", Shader::Stage::Vertex, *m_GraphicsPipeline));
 	}
 }  // namespace At0::Ray

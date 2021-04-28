@@ -95,7 +95,7 @@ namespace At0::Ray
 		}
 	}
 
-	Ref<Material> Model::CreateMaterial(const std::string& basePath, const aiMesh& mesh,
+	Material Model::CreateMaterial(const std::string& basePath, const aiMesh& mesh,
 		const aiMaterial* const* pMaterials, int flags)
 	{
 		aiString diffuseTexFileName;
@@ -138,8 +138,8 @@ namespace At0::Ray
 			normalMap = MakeRef<Texture2D>(basePath + normalTexFileName.C_Str());
 		}
 
-		return MakeRef<Material>(Material::DiffuseMap(diffuseMap),
-			Material::SpecularMap(specularMap), Material::NormalMap(normalMap));
+		return { Material::DiffuseMap(diffuseMap), Material::SpecularMap(specularMap),
+			Material::NormalMap(normalMap) };
 	}
 
 }  // namespace At0::Ray

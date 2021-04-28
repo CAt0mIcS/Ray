@@ -26,7 +26,7 @@ namespace At0::Ray
 	{
 		Ref<VertexBuffer> vertexBuffer;
 		Ref<IndexBuffer> indexBuffer;
-		Ref<Material> material;
+		Material material;
 		std::vector<MeshData> children;
 	};
 
@@ -37,11 +37,11 @@ namespace At0::Ray
 
 	public:
 		Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
-			Ref<Material> material, std::vector<MeshData> children = {});
+			Material material, std::vector<MeshData> children = {});
 		Mesh(Entity& entity, MeshData data);
 
-		static MeshData Triangle(Ref<Material> material);
-		static MeshData Plane(Ref<Material> material);
+		static MeshData Triangle(Material material);
+		static MeshData Plane(Material material);
 		// static MeshData HalfCircle(
 		//	int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
 		// static MeshData Circle(
@@ -86,7 +86,7 @@ namespace At0::Ray
 		/**
 		 * @returns The material this mesh is using
 		 */
-		const Material& GetMaterial() const { return *m_Material; }
+		const Material& GetMaterial() const { return m_Material; }
 
 		~Mesh();
 		Mesh& operator=(Mesh&& other) noexcept;
@@ -98,8 +98,8 @@ namespace At0::Ray
 	private:
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;
 		Ref<IndexBuffer> m_IndexBuffer = nullptr;
-		Ref<Material> m_Material = nullptr;
-		Ref<BufferUniform> m_PerObjectData = nullptr;
+		Material m_Material = nullptr;
+		// BufferUniform& m_PerObjectData;
 
 		std::vector<Mesh> m_Children;
 

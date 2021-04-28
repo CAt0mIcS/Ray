@@ -25,27 +25,25 @@ namespace At0::Ray
 		"Resources/Shaders/DefaultShader.frag" };
 
 	Mesh::Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
-		Ref<Material> material, std::vector<MeshData> children)
+		Material material, std::vector<MeshData> children)
 		: Component(entity), m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer),
-		  m_Material(std::move(material)),
-		  m_PerObjectData(std::static_pointer_cast<BufferUniform, Uniform>(
-			  m_Material->GetUniform("PerObjectData")))
+		  m_Material(std::move(material)) /*,
+		   m_PerObjectData((BufferUniform&)m_Material.GetUniform("PerObjectData"))*/
 	{
 		Setup(std::move(children));
 	}
 
 	Mesh::Mesh(Entity& entity, MeshData data)
 		: Component(entity), m_VertexBuffer(data.vertexBuffer), m_IndexBuffer(data.indexBuffer),
-		  m_Material(std::move(data.material)),
-		  m_PerObjectData(std::static_pointer_cast<BufferUniform, Uniform>(
-			  m_Material->GetUniform("PerObjectData")))
+		  m_Material(std::move(data.material)) /*,
+		   m_PerObjectData((BufferUniform&)m_Material.GetUniform("PerObjectData"))*/
 	{
 		Setup(std::move(data.children));
 	}
 
-	MeshData Mesh::Triangle(Ref<Material> material)
+	MeshData Mesh::Triangle(Material material)
 	{
-		IndexedTriangleList triangle = IndexedTriangleList::Triangle(material->GetVertexLayout());
+		IndexedTriangleList triangle = IndexedTriangleList::Triangle(material.GetVertexLayout());
 
 		Ref<VertexBuffer> vertexBuffer =
 			Codex::Resolve<VertexBuffer>(triangle.tag, triangle.vertices);
@@ -54,9 +52,9 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	MeshData Mesh::Plane(Ref<Material> material)
+	MeshData Mesh::Plane(Material material)
 	{
-		IndexedTriangleList plane = IndexedTriangleList::Plane(material->GetVertexLayout());
+		IndexedTriangleList plane = IndexedTriangleList::Plane(material.GetVertexLayout());
 
 		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(plane.tag, plane.vertices);
 		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(plane.tag, plane.indices);
@@ -163,7 +161,7 @@ namespace At0::Ray
 
 	void Mesh::Update(Delta ts)
 	{
-		(*m_PerObjectData)["model"] = m_Transform.AsMatrix();
+		m_Material.GetUniform<BufferUniform>("PerObjectData")["model"] = m_Transform.AsMatrix();
 		for (Mesh& child : m_Children)
 			child.Update(ts, m_Transform);
 	}
@@ -171,7 +169,7 @@ namespace At0::Ray
 	void Mesh::Update(Delta ts, const Transform& parentTransform)
 	{
 		// Calculate it raw here to avoid the cache check in Transform::AsMatrix
-		(*m_PerObjectData)["model"] =
+		m_Material.GetUniform<BufferUniform>("PerObjectData")["model"] =
 			MatrixTranslation(m_Transform.Translation() + parentTransform.Translation()) *
 			MatrixRotation(m_Transform.Rotation() + parentTransform.Rotation()) *
 			MatrixScale(m_Transform.Scale() * parentTransform.Scale());
@@ -182,7 +180,7 @@ namespace At0::Ray
 
 	void Mesh::Render(const CommandBuffer& cmdBuff) const
 	{
-		m_Material->CmdBind(cmdBuff);
+		m_Material.CmdBind(cmdBuff);
 
 		m_VertexBuffer->CmdBind(cmdBuff);
 		m_IndexBuffer->CmdBind(cmdBuff);
@@ -201,7 +199,7 @@ namespace At0::Ray
 		m_IndexBuffer = std::move(other.m_IndexBuffer);
 
 		m_Material = std::move(other.m_Material);
-		m_PerObjectData = std::move(other.m_PerObjectData);
+		// m_PerObjectData = std::move(other.m_PerObjectData);
 
 		m_Transform = std::move(other.m_Transform);
 		m_Children = std::move(other.m_Children);
@@ -211,8 +209,8 @@ namespace At0::Ray
 	Mesh::Mesh(Mesh&& other) noexcept
 		: Component(*other.m_Entity), m_VertexBuffer(std::move(other.m_VertexBuffer)),
 		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
-		  m_PerObjectData(std::move(other.m_PerObjectData)),
-		  m_Transform(std::move(other.m_Transform)), m_Children(std::move(other.m_Children))
+		  /*m_PerObjectData(other.m_PerObjectData), */ m_Transform(std::move(other.m_Transform)),
+		  m_Children(std::move(other.m_Children))
 	{
 	}
 
@@ -220,7 +218,7 @@ namespace At0::Ray
 	{
 		for (MeshData& child : children)
 		{
-			m_Children.emplace_back(GetEntity(), std::move(child));
+			m_Children.emplace_back(GetEntity(), child);
 		}
 	}
 }  // namespace At0::Ray

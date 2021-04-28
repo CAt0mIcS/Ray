@@ -60,7 +60,7 @@ private:
 	void OnEvent(Ray::MouseButtonPressedEvent& e) override
 	{
 		static std::mt19937 device;
-		static std::uniform_real_distribution<float> posRotDist(-100.0f, 100.0f);
+		static std::uniform_real_distribution<float> posRotDist(-10.0f, 10.0f);
 		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
 		static Ray::Float3 posOffset{};
 		static int run = 0;
@@ -86,8 +86,8 @@ private:
 			// meshTransform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
 
 			m_ModelEntities.emplace_back(Ray::Scene::Get().CreateEntity());
-			Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(Ray::Mesh::Import(
-				"Resources/Models/Nanosuit/nanosuit.obj", Ray::Model::NoSpecularMap));
+			Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(
+				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 			model.GetTransform().SetTranslation({ posOffset });
 
 			// modelTransform.SetTranslation(

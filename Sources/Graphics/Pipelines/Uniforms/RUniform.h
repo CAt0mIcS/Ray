@@ -32,6 +32,9 @@ namespace At0::Ray
 		Uniform& operator=(Uniform&& other) noexcept;
 		Uniform(Uniform&& other) noexcept;
 
+		Uniform& operator=(const Uniform& other);
+		Uniform(const Uniform& other);
+
 	protected:
 		Uniform(std::string_view name) : m_Name(name) {}
 

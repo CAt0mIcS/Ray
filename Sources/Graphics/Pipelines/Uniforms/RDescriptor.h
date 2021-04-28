@@ -29,8 +29,13 @@ namespace At0::Ray
 		DescriptorSet& operator=(DescriptorSet&& other) noexcept;
 		DescriptorSet(DescriptorSet&& other) noexcept;
 
+		DescriptorSet& operator=(const DescriptorSet& other);
+		DescriptorSet(const DescriptorSet& other);
+
 	private:
 		VkDescriptorSet m_DescriptorSet = VK_NULL_HANDLE;
+		VkDescriptorPool m_DescriptorPool = VK_NULL_HANDLE;
+		VkDescriptorSetLayout m_DescriptorSetLayout = VK_NULL_HANDLE;
 		uint32_t m_SetNumber;
 
 		Pipeline::BindPoint m_PipelineBindPoint;

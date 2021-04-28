@@ -6,6 +6,9 @@
 #include "../../Graphics/Pipelines/Uniforms/RSamplerUniform.h"
 #include "../../Graphics/Images/RTexture2D.h"
 
+#include "../../Utils/RException.h"
+#include "../../Utils/RAssert.h"
+
 #include <type_traits>
 #include <vector>
 #include <optional>
@@ -111,12 +114,8 @@ namespace At0::Ray
 
 	public:
 		template<typename... Args>
-		Material(Args&&... args);
+		Material(Args&&... args) requires(std::negation_v<std::is_same<Args, Ref<Material>>>&&...);
 		virtual ~Material();
-
-		virtual const Texture2D* GetDiffuseMap() const { return nullptr; }
-		virtual const Texture2D* GetSpecularMap() const { return nullptr; }
-		virtual const Texture2D* GetNormalMap() const { return nullptr; }
 
 		const GraphicsPipeline& GetGraphicsPipeline() const { return *m_GraphicsPipeline; }
 		const VertexLayout& GetVertexLayout() const;
@@ -128,7 +127,7 @@ namespace At0::Ray
 		 * @param tag Unique tag to identify the uniform
 		 * @param uniform Uniform to add
 		 */
-		Ref<Uniform> AddUniform(std::string_view tag, Ref<Uniform> uniform);
+		Uniform& AddUniform(std::string_view tag, Scope<Uniform> uniform);
 
 		/**
 		 * @returns If the uniform with tag has been added
@@ -139,10 +138,14 @@ namespace At0::Ray
 		 * @param tag The tag used when adding the uniform with "AddUniform"
 		 * @returns The uniform which was added using "AddUniform"
 		 */
-		Ref<Uniform> GetUniform(std::string_view tag);
+		template<typename U>
+		U& GetUniform(std::string_view tag);
 
 		Material& operator=(Material&& other) noexcept;
 		Material(Material&& other) noexcept;
+
+		Material& operator=(const Material& other);
+		Material(const Material& other);
 
 	private:
 		void CreatePipeline(Material::Config& config);
@@ -162,26 +165,35 @@ namespace At0::Ray
 
 	private:
 		Ref<GraphicsPipeline> m_GraphicsPipeline = nullptr;
-		std::vector<Ref<Uniform>> m_Uniforms;
-
-		Ref<Ray::Texture2D> m_DiffuseMap = nullptr;
-		Ref<Ray::Texture2D> m_SpecularMap = nullptr;
-		Ref<Ray::Texture2D> m_NormalMap = nullptr;
+		std::vector<Scope<Uniform>> m_Uniforms;
 	};
 
 
 	template<typename... Args>
-	inline Material::Material(Args&&... args)
+	inline Material::Material(Args&&... args) requires(
+		std::negation_v<std::is_same<Args, Ref<Material>>>&&...)
 	{
 		Material::Config config{};
 		(FillConfig(config, args), ...);
 
-		m_DiffuseMap = config.diffuseMap.value;
-		m_SpecularMap = config.specularMap.value;
-		m_NormalMap = config.normalMap.value;
-
 		CreatePipeline(config);
 		Setup(config);
+	}
+
+
+	template<typename U>
+	U& Material::GetUniform(std::string_view tag)
+	{
+		for (auto& uniform : m_Uniforms)
+			if (tag == uniform->GetName())
+			{
+				RAY_MEXPECTS(dynamic_cast<U*>(uniform.get()),
+					"[Material] Type \"{0}\" is not compatible with uniform \"{1}\"",
+					typeid(U).name(), tag);
+				return *(U*)uniform.get();
+			}
+
+		RAY_THROW_RUNTIME("[Material] Failed to get uniform with tag {0}", tag);
 	}
 
 }  // namespace At0::Ray
