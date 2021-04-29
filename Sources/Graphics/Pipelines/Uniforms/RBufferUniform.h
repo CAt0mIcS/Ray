@@ -52,6 +52,13 @@ namespace At0::Ray
 		}
 
 		/**
+		 * Updates a range of the buffer with data
+		 * @param data Pointer to the data to update
+		 * @param size Size of the data to update
+		 */
+		void Update(void* data, uint32_t size);
+
+		/**
 		 * Updates the uniform with the name.
 		 */
 		template<typename T>

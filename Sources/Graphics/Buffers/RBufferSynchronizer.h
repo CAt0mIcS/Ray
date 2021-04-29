@@ -30,7 +30,23 @@ namespace At0::Ray
 			m_UniformBuffer.Update(&data, sizeof(data), offset);
 		}
 
+		/**
+		 * Updates a range of the buffer with data
+		 * @param data Pointer to the data to update
+		 * @param size Size of the data
+		 * @param offset The global offset of the data in the buffer
+		 */
+		void Update(void* data, uint32_t size, uint32_t offset);
+
 		void Emplace(uint32_t size, uint32_t alignment, uint32_t* offset);
+
+		/**
+		 * Copies a range of the buffer to another
+		 * @param srcOffset Offset where the data currently is
+		 * @param dstOffset Offset of destination
+		 * @param size Size of the data to copy
+		 */
+		void Copy(uint32_t srcOffset, uint32_t dstOffset, uint32_t size);
 
 		// const VertexBuffer& GetVertexBuffer() const { return m_VertexBuffer; }
 		// const IndexBuffer& GetIndexBuffer() const { return m_IndexBuffer; }

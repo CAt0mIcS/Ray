@@ -110,7 +110,7 @@ namespace At0::Ray
 			CullMode cullMode = VK_CULL_MODE_BACK_BIT;
 			PolygonMode polygonMode = VK_POLYGON_MODE_FILL;
 			LineWidth lineWidth = 1.0f;
-			std::optional<Color> color;
+			Color color = { { 1.0f, 1.0f, 1.0f } };
 			Texture2D texture2D = { nullptr };
 			SpecularMap specularMap = { nullptr };
 			DiffuseMap diffuseMap = { nullptr };

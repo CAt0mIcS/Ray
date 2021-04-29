@@ -78,10 +78,8 @@ namespace At0::Ray
 						config.specularMap.value, *m_GraphicsPipeline));
 
 			// If no custom shader and no map was given, the shader expects a color uniform
-			if (!config.diffuseMap.value && !config.specularMap.value && !config.normalMap.value &&
-				!config.color)
+			if (!config.diffuseMap.value && !config.specularMap.value && !config.normalMap.value)
 			{
-				config.color = Float3{ 1.0f, 1.0f, 1.0f };
 				BufferUniform& uShading = (BufferUniform&)AddUniform(
 					"Shading", MakeScope<BufferUniform>(
 								   "Shading", Shader::Stage::Fragment, *m_GraphicsPipeline));

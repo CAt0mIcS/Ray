@@ -65,6 +65,11 @@ namespace At0::Ray
 
 	BufferUniform::~BufferUniform() {}
 
+	void BufferUniform::Update(void* data, uint32_t size)
+	{
+		BufferSynchronizer::Get().Update(data, size, m_GlobalBufferOffset);
+	}
+
 	BufferUniform& BufferUniform::operator=(const BufferUniform& other)
 	{
 		Uniform::operator=(other);
@@ -72,6 +77,8 @@ namespace At0::Ray
 		m_Binding = other.m_Binding;
 
 		Setup(m_BufferSize, m_Binding);
+		BufferSynchronizer::Get().Copy(
+			other.m_GlobalBufferOffset, m_GlobalBufferOffset, m_BufferSize);
 
 		return *this;
 	}

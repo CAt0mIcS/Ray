@@ -49,7 +49,8 @@ namespace At0::Ray
 
 	void Buffer::MapMemory(void** data, VkDeviceMemory memory, VkDeviceSize size)
 	{
-		vkMapMemory(Graphics::Get().GetDevice(), memory, 0, size, 0, data);
+		RAY_VK_THROW_FAILED(vkMapMemory(Graphics::Get().GetDevice(), memory, 0, size, 0, data),
+			"[Buffer] Failed to map memory");
 	}
 
 	void Buffer::UnmapMemory(VkDeviceMemory memory)
