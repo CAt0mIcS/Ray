@@ -15,6 +15,26 @@ namespace At0::Ray
 			const void* data = nullptr);
 		virtual ~DynamicBuffer();
 
+		/**
+		 * When mappping the dynamic buffer the offset of the data is required to be able to choose
+		 * the correct buffer
+		 */
+		void MapMemory(void** data, uint32_t offset);
+
+		/**
+		 * When unmapping the dynamic buffer the offset is required to be able to choose
+		 * the correct buffer. If the buffer at offset is not mapped, behaviour is undefined.
+		 */
+		void UnmapMemory(uint32_t offset);
+
+		/**
+		 * Copies a range of data to a new location in the buffer
+		 * @param srcOffset The global data offset of the source data
+		 * @param dstOffset The global data offset of the destination memory location
+		 * @param size Size of the data to copy
+		 */
+		void CopyBuffer(uint32_t srcOffset, uint32_t dstOffset, uint32_t size);
+
 		void Emplace(uint32_t allocSize, uint32_t alignment, uint32_t* offset);
 		void Update(const void* data, uint32_t size, uint32_t offset);
 		uint32_t GetOffset(uint32_t globalOffset) const;

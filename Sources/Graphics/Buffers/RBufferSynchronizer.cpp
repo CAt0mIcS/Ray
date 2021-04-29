@@ -26,11 +26,7 @@ namespace At0::Ray
 
 	void BufferSynchronizer::Copy(uint32_t srcOffset, uint32_t dstOffset, uint32_t size)
 	{
-		void* uData = nullptr;
-		m_UniformBuffer.MapMemory(&uData);
-
-		memcpy((char*)uData + dstOffset, (char*)uData + srcOffset, size);
-		m_UniformBuffer.UnmapMemory();
+		m_UniformBuffer.CopyBuffer(srcOffset, dstOffset, size);
 	}
 
 	BufferSynchronizer::BufferSynchronizer() {}

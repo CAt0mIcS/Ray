@@ -28,6 +28,44 @@ namespace At0::Ray
 		}
 	}
 
+	void DynamicBuffer::MapMemory(void** data, uint32_t offset)
+	{
+		m_Buffers[GetBufferID(offset)]->MapMemory(data);
+	}
+
+	void DynamicBuffer::UnmapMemory(uint32_t offset)
+	{
+		m_Buffers[GetBufferID(offset)]->UnmapMemory();
+	}
+
+	void DynamicBuffer::CopyBuffer(uint32_t srcOffset, uint32_t dstOffset, uint32_t size)
+	{
+
+		if (GetBufferID(srcOffset) == GetBufferID(dstOffset))
+		{
+			void* data;
+			MapMemory(&data, srcOffset);
+
+			memcpy((char*)data + GetOffset(dstOffset), (char*)data + GetOffset(srcOffset), size);
+			UnmapMemory(srcOffset);
+		}
+		else
+		{
+			uint32_t srcBufferID = GetBufferID(srcOffset);
+			uint32_t dstBufferID = GetBufferID(dstOffset);
+
+			void* srcData;
+			m_Buffers[srcBufferID]->MapMemory(&srcData);
+			void* dstData;
+			m_Buffers[dstBufferID]->MapMemory(&dstData);
+
+			memcpy(
+				(char*)dstData + GetOffset(dstOffset), (char*)srcData + GetOffset(srcOffset), size);
+
+			m_Buffers[srcBufferID]->UnmapMemory();
+			m_Buffers[dstBufferID]->UnmapMemory();
+		}
+	}
 
 	void DynamicBuffer::Emplace(uint32_t allocSize, uint32_t alignment, uint32_t* offset)
 	{
@@ -52,13 +90,13 @@ namespace At0::Ray
 		uint32_t bufferID = GetBufferID(offset);
 
 		void* mapped;
-		MapMemory(&mapped, m_Buffers[bufferID]->GetMemory(), m_Buffers[bufferID]->GetSize());
+		m_Buffers[bufferID]->MapMemory(&mapped);
 		memcpy((char*)mapped + GetOffset(offset), data, size);
 
 		if (!m_IsHostCoherent)
 			FlushMemory();
 
-		UnmapMemory(m_Buffers[bufferID]->GetMemory());
+		m_Buffers[bufferID]->UnmapMemory();
 	}
 
 	uint32_t DynamicBuffer::GetOffset(uint32_t globalOffset) const
