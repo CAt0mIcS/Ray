@@ -98,7 +98,7 @@ namespace At0::Ray
 	private:
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;
 		Ref<IndexBuffer> m_IndexBuffer = nullptr;
-		Material m_Material = nullptr;
+		Material m_Material;
 		// BufferUniform& m_PerObjectData;
 
 		std::vector<Mesh> m_Children;

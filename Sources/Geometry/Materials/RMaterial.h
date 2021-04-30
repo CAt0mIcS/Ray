@@ -119,7 +119,7 @@ namespace At0::Ray
 
 	public:
 		template<typename... Args>
-		Material(Args&&... args) requires(
+		explicit Material(Args&&... args) requires(
 			DisableCopy<Args, const Material&, Material&, Material&&>&&...);
 		virtual ~Material();
 

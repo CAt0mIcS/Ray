@@ -60,13 +60,13 @@ private:
 	void OnEvent(Ray::MouseButtonPressedEvent& e) override
 	{
 		static std::mt19937 device;
-		static std::uniform_real_distribution<float> posRotDist(-100.0f, 100.0f);
+		static std::uniform_real_distribution<float> posRotDist(-30.0f, 30.0f);
 		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
 		static std::uniform_real_distribution<float> colorDist(0.0f, 1.0f);
 		static Ray::Float3 posOffset{};
 		static int run = 0;
 
-		for (uint32_t i = 0; i < 10000; ++i)
+		for (uint32_t i = 0; i < 1; ++i)
 		{
 			Ray::Entity meshEntity = Ray::Scene::Get().CreateEntity();
 			// Ray::Material texturedMaterial({ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 0.0f, 0.0f,
@@ -85,10 +85,10 @@ private:
 				{ posRotDist(device), posRotDist(device), posRotDist(device) });
 			meshTransform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
 
-			// m_ModelEntities.emplace_back(Ray::Scene::Get().CreateEntity());
-			// Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(
-			//	Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
-			// model.GetTransform().SetTranslation({ posOffset });
+			m_ModelEntities.emplace_back(Ray::Scene::Get().CreateEntity());
+			Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(
+				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+			model.GetTransform().SetTranslation({ posOffset });
 
 			// modelTransform.SetTranslation(
 			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
