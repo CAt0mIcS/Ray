@@ -79,10 +79,10 @@ namespace At0::Ray
 		void Update(Delta dt);
 
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
+		void UpdateUniform();
 
 	private:
 		void UpdateViewMatrix();
-		void UpdateUniform();
 
 		void OnEvent(MouseMovedEvent& e) override;
 		void OnEvent(KeyPressedEvent& e) override;

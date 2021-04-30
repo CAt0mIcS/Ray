@@ -24,7 +24,6 @@ namespace At0::Ray
 
 	class RAY_EXPORT Material : public Bindable
 	{
-
 	public:
 		struct Shaders
 		{

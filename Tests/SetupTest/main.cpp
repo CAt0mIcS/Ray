@@ -66,12 +66,9 @@ private:
 		static Ray::Float3 posOffset{};
 		static int run = 0;
 
-		for (uint32_t i = 0; i < 1; ++i)
+		for (uint32_t i = 0; i < 10; ++i)
 		{
 			Ray::Entity meshEntity = Ray::Scene::Get().CreateEntity();
-			// Ray::Material texturedMaterial({ 1.0f, 1.0f, 1.0f, 1.0f }, nullptr, 0.0f, 0.0f,
-			//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"), nullptr, true,
-			//	nullptr);
 
 			Ray::Material defaultMaterial{ Ray::Material::CullMode(VK_CULL_MODE_NONE),
 				Ray::Material::Color({ colorDist(device), colorDist(device), colorDist(device) }) };
@@ -89,12 +86,6 @@ private:
 			Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(
 				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 			model.GetTransform().SetTranslation({ posOffset });
-
-			// modelTransform.SetTranslation(
-			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
-			// modelTransform.SetRotation(
-			//	{ posRotDist(device), posRotDist(device), posRotDist(device) });
-			// modelTransform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
 
 			posOffset = PositioningScript(run, posOffset);
 		}

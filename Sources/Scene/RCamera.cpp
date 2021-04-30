@@ -117,6 +117,8 @@ namespace At0::Ray
 
 	void Camera::CmdBind(const CommandBuffer& cmdBuff) const { m_Uniform->CmdBind(cmdBuff); }
 
+	void Camera::UpdateUniform() { m_Uniform->Update(ShaderData); }
+
 	Camera::Camera()
 	{
 		VkDescriptorSetLayoutBinding cameraBinding{};
@@ -205,10 +207,8 @@ namespace At0::Ray
 
 		Updated = true;
 
-		UpdateUniform();
+		// UpdateUniform();
 	}
-
-	void Camera::UpdateUniform() { m_Uniform->Update(ShaderData); }
 
 	void Camera::OnEvent(MouseMovedEvent& e)
 	{

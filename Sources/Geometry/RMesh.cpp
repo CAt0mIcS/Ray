@@ -162,6 +162,9 @@ namespace At0::Ray
 	void Mesh::Update(Delta ts)
 	{
 		m_Material.GetUniform<BufferUniform>("PerObjectData")["model"] = m_Transform.AsMatrix();
+
+		Scene::Get().GetCamera().UpdateUniform();
+
 		for (Mesh& child : m_Children)
 			child.Update(ts, m_Transform);
 	}
@@ -173,6 +176,8 @@ namespace At0::Ray
 			MatrixTranslation(m_Transform.Translation() + parentTransform.Translation()) *
 			MatrixRotation(m_Transform.Rotation() + parentTransform.Rotation()) *
 			MatrixScale(m_Transform.Scale() * parentTransform.Scale());
+
+		Scene::Get().GetCamera().UpdateUniform();
 
 		for (Mesh& child : m_Children)
 			child.Update(ts, m_Transform);

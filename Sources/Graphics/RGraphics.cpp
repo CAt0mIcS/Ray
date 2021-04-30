@@ -30,6 +30,7 @@
 
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "Geometry/RMesh.h"
+#include "Graphics/Pipelines/RGraphicsPipeline.h"
 
 
 namespace At0::Ray

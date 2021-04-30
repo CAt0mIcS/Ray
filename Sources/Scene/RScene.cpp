@@ -19,12 +19,7 @@ namespace At0::Ray
 		return *s_CurrentScene;
 	}
 
-	void Scene::Destroy()
-	{
-		if (s_CurrentScene)
-			s_CurrentScene.reset();
-		s_CurrentScene = nullptr;
-	}
+	void Scene::Destroy() { s_CurrentScene = nullptr; }
 
 	Scene::~Scene()
 	{
