@@ -132,19 +132,19 @@ namespace At0::Ray
 		 * @param tag Unique tag to identify the uniform
 		 * @param uniform Uniform to add
 		 */
-		Uniform& AddUniform(std::string_view tag, Scope<Uniform> uniform);
+		Uniform& AddUniform(Scope<Uniform> uniform);
 
 		/**
 		 * @returns If the uniform with tag has been added
 		 */
-		bool HasUniform(std::string_view tag) const;
+		bool HasUniform(std::string_view uniformName) const;
 
 		/**
 		 * @param tag The tag used when adding the uniform with "AddUniform"
 		 * @returns The uniform which was added using "AddUniform"
 		 */
 		template<typename U>
-		U& GetUniform(std::string_view tag);
+		U& GetUniform(std::string_view uniformName);
 
 		Material& operator=(Material&& other) noexcept;
 		Material(Material&& other) noexcept;
@@ -187,18 +187,19 @@ namespace At0::Ray
 
 
 	template<typename U>
-	U& Material::GetUniform(std::string_view tag)
+	U& Material::GetUniform(std::string_view uniformName)
 	{
 		for (auto& uniform : m_Uniforms)
-			if (tag == uniform->GetName())
+		{
+			if (uniformName == uniform->GetName())
 			{
 				RAY_MEXPECTS(dynamic_cast<U*>(uniform.get()),
 					"[Material] Type \"{0}\" is not compatible with uniform \"{1}\"",
-					typeid(U).name(), tag);
+					typeid(U).name(), uniform);
 				return *(U*)uniform.get();
 			}
-
-		RAY_THROW_RUNTIME("[Material] Failed to get uniform with tag {0}", tag);
+		}
+		RAY_THROW_RUNTIME("[Material] Failed to get uniform with tag {0}", uniformName);
 	}
 
 }  // namespace At0::Ray

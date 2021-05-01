@@ -27,15 +27,15 @@ namespace At0::Ray
 			uniform->CmdBind(cmdBuff);
 	}
 
-	Uniform& Material::AddUniform(std::string_view tag, Scope<Uniform> uniform)
+	Uniform& Material::AddUniform(Scope<Uniform> uniform)
 	{
 		return *m_Uniforms.emplace_back(std::move(uniform));
 	}
 
-	bool Material::HasUniform(std::string_view tag) const
+	bool Material::HasUniform(std::string_view uniformName) const
 	{
 		for (auto& uniform : m_Uniforms)
-			if (tag == uniform->GetName())
+			if (uniformName == uniform->GetName())
 				return true;
 		return false;
 	}
@@ -69,20 +69,17 @@ namespace At0::Ray
 		if (!customShaders)
 		{
 			if (config.diffuseMap.value)
-				AddUniform("DiffuseMap",
-					MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment,
-						config.diffuseMap.value, *m_GraphicsPipeline));
+				AddUniform(MakeScope<SamplerUniform>("materialDiffuse", Shader::Stage::Fragment,
+					config.diffuseMap.value, *m_GraphicsPipeline));
 			if (config.specularMap.value)
-				AddUniform("SpecularMap",
-					MakeScope<SamplerUniform>("materialSpecular", Shader::Stage::Fragment,
-						config.specularMap.value, *m_GraphicsPipeline));
+				AddUniform(MakeScope<SamplerUniform>("materialSpecular", Shader::Stage::Fragment,
+					config.specularMap.value, *m_GraphicsPipeline));
 
 			// If no custom shader and no map was given, the shader expects a color uniform
 			if (!config.diffuseMap.value && !config.specularMap.value && !config.normalMap.value)
 			{
-				BufferUniform& uShading = (BufferUniform&)AddUniform(
-					"Shading", MakeScope<BufferUniform>(
-								   "Shading", Shader::Stage::Fragment, *m_GraphicsPipeline));
+				BufferUniform& uShading = (BufferUniform&)AddUniform(MakeScope<BufferUniform>(
+					"Shading", Shader::Stage::Fragment, *m_GraphicsPipeline));
 				uShading["color"] = config.color;
 			}
 		}
@@ -152,7 +149,7 @@ namespace At0::Ray
 
 	void Material::Setup(Material::Config& config)
 	{
-		AddUniform("PerObjectData",
+		AddUniform(
 			MakeScope<BufferUniform>("PerObjectData", Shader::Stage::Vertex, *m_GraphicsPipeline));
 	}
 }  // namespace At0::Ray

@@ -27,16 +27,14 @@ namespace At0::Ray
 	Mesh::Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
 		Material material, std::vector<MeshData> children)
 		: Component(entity), m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer),
-		  m_Material(std::move(material)) /*,
-		   m_PerObjectData((BufferUniform&)m_Material.GetUniform("PerObjectData"))*/
+		  m_Material(std::move(material))
 	{
 		Setup(std::move(children));
 	}
 
 	Mesh::Mesh(Entity& entity, MeshData data)
 		: Component(entity), m_VertexBuffer(data.vertexBuffer), m_IndexBuffer(data.indexBuffer),
-		  m_Material(std::move(data.material)) /*,
-		   m_PerObjectData((BufferUniform&)m_Material.GetUniform("PerObjectData"))*/
+		  m_Material(std::move(data.material))
 	{
 		Setup(std::move(data.children));
 	}
@@ -200,7 +198,6 @@ namespace At0::Ray
 		m_IndexBuffer = std::move(other.m_IndexBuffer);
 
 		m_Material = std::move(other.m_Material);
-		// m_PerObjectData = std::move(other.m_PerObjectData);
 
 		m_Transform = std::move(other.m_Transform);
 		m_Children = std::move(other.m_Children);
@@ -210,8 +207,7 @@ namespace At0::Ray
 	Mesh::Mesh(Mesh&& other) noexcept
 		: Component(*other.m_Entity), m_VertexBuffer(std::move(other.m_VertexBuffer)),
 		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
-		  /*m_PerObjectData(other.m_PerObjectData), */ m_Transform(std::move(other.m_Transform)),
-		  m_Children(std::move(other.m_Children))
+		  m_Transform(std::move(other.m_Transform)), m_Children(std::move(other.m_Children))
 	{
 	}
 
