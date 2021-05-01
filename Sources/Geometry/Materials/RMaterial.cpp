@@ -49,6 +49,29 @@ namespace At0::Ray
 
 	Material::Material(Material&& other) noexcept { *this = std::move(other); }
 
+	Material& Material::operator=(const Material& other)
+	{
+		m_GraphicsPipeline = other.m_GraphicsPipeline;
+
+		for (const Scope<Uniform>& uniform : other.m_Uniforms)
+		{
+			if (auto uBuff = dynamic_cast<const BufferUniform*>(uniform.get()))
+			{
+				m_Uniforms.emplace_back(MakeScope<BufferUniform>(*uBuff));
+			}
+			else if (auto uSampler = dynamic_cast<const SamplerUniform*>(uniform.get()))
+			{
+				m_Uniforms.emplace_back(MakeScope<SamplerUniform>(*uSampler));
+			}
+			else
+				RAY_ASSERT(false, "[Material] Trying to copy unknown uniform type");
+		}
+
+		return *this;
+	}
+
+	Material::Material(const Material& other) { *this = other; }
+
 	void Material::CreatePipeline(Material::Config& config)
 	{
 		bool customShaders = !config.shaders.value.empty();
@@ -75,38 +98,29 @@ namespace At0::Ray
 				AddUniform(MakeScope<SamplerUniform>("materialSpecular", Shader::Stage::Fragment,
 					config.specularMap.value, *m_GraphicsPipeline));
 
-			// If no custom shader and no map was given, the shader expects a color uniform
-			if (!config.diffuseMap.value && !config.specularMap.value && !config.normalMap.value)
+			if (config.texture2D.value)
+				AddUniform(MakeScope<SamplerUniform>("texSampler", Shader::Stage::Fragment,
+					config.texture2D.value, *m_GraphicsPipeline));
+
+			// If no custom shader and no maps were given, the shader expects a color uniform
+			if (!config.diffuseMap.value && !config.specularMap.value && !config.normalMap.value &&
+				!config.texture2D.value)
 			{
+				if (!config.color)
+					config.color = { { 1.0f, 1.0f, 1.0f } };
+
 				BufferUniform& uShading = (BufferUniform&)AddUniform(MakeScope<BufferUniform>(
 					"Shading", Shader::Stage::Fragment, *m_GraphicsPipeline));
-				uShading["color"] = config.color;
+				uShading["color"] = *config.color;
 			}
 		}
 	}
 
-	Material& Material::operator=(const Material& other)
+	void Material::Setup(Material::Config& config)
 	{
-		m_GraphicsPipeline = other.m_GraphicsPipeline;
-
-		for (const Scope<Uniform>& uniform : other.m_Uniforms)
-		{
-			if (auto uBuff = dynamic_cast<const BufferUniform*>(uniform.get()))
-			{
-				m_Uniforms.emplace_back(MakeScope<BufferUniform>(*uBuff));
-			}
-			else if (auto uSampler = dynamic_cast<const SamplerUniform*>(uniform.get()))
-			{
-				m_Uniforms.emplace_back(MakeScope<SamplerUniform>(*uSampler));
-			}
-			else
-				RAY_ASSERT(false, "[Material] Trying to copy unknown uniform type");
-		}
-
-		return *this;
+		AddUniform(
+			MakeScope<BufferUniform>("PerObjectData", Shader::Stage::Vertex, *m_GraphicsPipeline));
 	}
-
-	Material::Material(const Material& other) { *this = other; }
 
 	void Material::FillConfig(Config& config, PolygonMode polygonMode)
 	{
@@ -115,41 +129,123 @@ namespace At0::Ray
 
 	void Material::FillConfig(Config& config, LineWidth lineWidth) { config.lineWidth = lineWidth; }
 
+	void Material::FillConfig(Config& config, Material::LightingTechnique tech)
+	{
+		config.lightingTechnique = tech;
+	}
+
 	std::vector<std::string> Material::GetShaders(Material::Config& config)
 	{
 		std::vector<std::string> shaders;
-		std::vector<std::string> shaderCodes;
 
-		if (config.diffuseMap.value)
-			shaderCodes.emplace_back("Diff");
-		if (config.specularMap.value)
-			shaderCodes.emplace_back("Spec");
-		if (config.normalMap.value)
-			shaderCodes.emplace_back("Norm");
-
-		// Sort shader codes alphabetically
-		std::sort(shaderCodes.begin(), shaderCodes.end());
-
-		if (shaderCodes.empty())
+		switch (config.lightingTechnique)
 		{
-			shaders.emplace_back("Resources/Shaders/ModelShader.vert");
-			shaders.emplace_back("Resources/Shaders/ModelShader.frag");
-			return shaders;
+		case LightingTechnique::Flat:
+		{
+			std::vector<std::string> shaderCodes;
+
+			if (config.texture2D.value)
+				shaderCodes.emplace_back("Tex");
+
+			if (shaderCodes.empty())
+			{
+				shaders.emplace_back("Resources/Shaders/Flat.vert");
+				shaders.emplace_back("Resources/Shaders/Flat.frag");
+				return shaders;
+			}
+
+			shaderCodes.emplace(shaderCodes.begin(), "_");
+			std::string shaderCode =
+				std::accumulate(shaderCodes.begin(), shaderCodes.end(), std::string{});
+
+			shaders.emplace_back("Resources/Shaders/Flat" + shaderCode + ".vert");
+			shaders.emplace_back("Resources/Shaders/Flat" + shaderCode + ".frag");
+
+			break;
+		}
+		case LightingTechnique::Gouraud:
+		{
+			break;
+		}
+		case LightingTechnique::Phong:
+		{
+			std::vector<std::string> shaderCodes;
+
+			if (config.diffuseMap.value)
+				shaderCodes.emplace_back("Diff");
+			if (config.specularMap.value)
+				shaderCodes.emplace_back("Spec");
+			if (config.normalMap.value)
+				shaderCodes.emplace_back("Norm");
+
+			// Sort shader codes alphabetically
+			std::sort(shaderCodes.begin(), shaderCodes.end());
+
+			if (shaderCodes.empty())
+			{
+				shaders.emplace_back("Resources/Shaders/Phong.vert");
+				shaders.emplace_back("Resources/Shaders/Phong.frag");
+				return shaders;
+			}
+
+			shaderCodes.emplace(shaderCodes.begin(), "_");
+			std::string shaderCode =
+				std::accumulate(shaderCodes.begin(), shaderCodes.end(), std::string{});
+
+			shaders.emplace_back("Resources/Shaders/Phong" + shaderCode + ".vert");
+			shaders.emplace_back("Resources/Shaders/Phong" + shaderCode + ".frag");
+			break;
+		}
 		}
 
-		shaderCodes.emplace(shaderCodes.begin(), "_");
-		std::string shaderCode =
-			std::accumulate(shaderCodes.begin(), shaderCodes.end(), std::string{});
-
-		shaders.emplace_back("Resources/Shaders/ModelShader" + shaderCode + ".vert");
-		shaders.emplace_back("Resources/Shaders/ModelShader" + shaderCode + ".frag");
-
+		RAY_MEXPECTS(!shaders.empty(),
+			"[Material] Invalid lighting technique {0} or Material configuration",
+			(uint32_t)config.lightingTechnique);
 		return shaders;
 	}
 
-	void Material::Setup(Material::Config& config)
+	std::string Material::AssertConfigCompatibility(const Material::Config& config)
 	{
-		AddUniform(
-			MakeScope<BufferUniform>("PerObjectData", Shader::Stage::Vertex, *m_GraphicsPipeline));
+		std::string errors = "";
+
+		switch (config.lightingTechnique)
+		{
+		case LightingTechnique::Flat:
+		{
+			if (config.diffuseMap.value)
+				errors += "\n\tFlat shading is not compatible with a diffuse map";
+			if (config.specularMap.value)
+				errors += "\n\tFlat shading is not compatible with a specular map";
+			if (config.normalMap.value)
+				errors += "\n\tFlat shading is not compatible with a normal map";
+
+			if (config.texture2D.value && config.color)
+				errors += "\n\tCannot add both texture2D and color";
+
+			break;
+		}
+		case LightingTechnique::Gouraud:
+		{
+			break;
+		}
+		case LightingTechnique::Phong:
+		{
+			if (config.texture2D.value)
+				errors += "\n\tPhong shading does not take in a texture2D. Use diffuse or specular "
+						  "maps for texturing";
+
+			if (config.diffuseMap.value && config.color)
+				errors += "\n\tCannot add both diffuse map and color";
+			if (config.specularMap.value && config.color)
+				errors += "\n\tCannot add both specular map and color";
+			if (config.normalMap.value && config.color)
+				errors += "\n\tCannot add both normal map and color";
+
+			break;
+		}
+		}
+
+		return errors;
 	}
+
 }  // namespace At0::Ray

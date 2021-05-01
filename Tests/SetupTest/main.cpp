@@ -70,8 +70,15 @@ private:
 		{
 			Ray::Entity meshEntity = Ray::Scene::Get().CreateEntity();
 
-			Ray::Material defaultMaterial{ Ray::Material::CullMode(VK_CULL_MODE_NONE),
-				Ray::Material::Color({ colorDist(device), colorDist(device), colorDist(device) }) };
+			// clang-format off
+			Ray::Material defaultMaterial
+			{ 
+				Ray::Material::LightingTechnique(Ray::Material::LightingTechnique::Flat),
+				Ray::Material::CullMode(VK_CULL_MODE_NONE),
+				// Ray::Material::Texture2D(Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png")),
+				Ray::Material::Color({ colorDist(device), colorDist(device), colorDist(device) })
+			};
+			//clang-format on
 
 			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
 

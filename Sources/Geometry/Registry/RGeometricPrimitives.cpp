@@ -9,11 +9,10 @@ namespace At0::Ray
 {
 	IndexedTriangleList IndexedTriangleList::Triangle(const VertexLayout& layout)
 	{
-		// Compose one vertex (RAY_TODO: Add correct normals)
 		VertexInput vertexInput(layout);
-		vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f }, Float3{ 0.0f, 0.0f, 1.0f });
-		vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.0f }, Float3{ 0.0f, 0.0f, 1.0f });
-		vertexInput.Emplace(Float3{ 0.0f, 0.5f, 0.0f }, Float3{ 0.0f, 0.0f, 1.0f });
+		vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f });
+		vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.0f });
+		vertexInput.Emplace(Float3{ 0.0f, 0.5f, 0.0f });
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
 

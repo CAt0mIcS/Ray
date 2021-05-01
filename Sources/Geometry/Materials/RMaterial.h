@@ -102,6 +102,25 @@ namespace At0::Ray
 			Ref<Ray::Texture2D> value;
 		};
 
+		struct LightingTechnique
+		{
+			enum Technique
+			{
+				Phong = 0,
+				Gouraud,
+				Flat,
+
+				PerPixel = Phong,
+				PerVertex = Gouraud,
+				None = Flat
+			};
+
+			LightingTechnique(Technique val) : value(val) {}
+			operator Technique() const { return value; }
+
+			Technique value;
+		};
+
 	protected:
 		struct Config
 		{
@@ -109,11 +128,12 @@ namespace At0::Ray
 			CullMode cullMode = VK_CULL_MODE_BACK_BIT;
 			PolygonMode polygonMode = VK_POLYGON_MODE_FILL;
 			LineWidth lineWidth = 1.0f;
-			Color color = { { 1.0f, 1.0f, 1.0f } };
+			std::optional<Color> color;
 			Texture2D texture2D = { nullptr };
 			SpecularMap specularMap = { nullptr };
 			DiffuseMap diffuseMap = { nullptr };
 			NormalMap normalMap = { nullptr };
+			LightingTechnique lightingTechnique = { LightingTechnique::Phong };
 		};
 
 	public:
@@ -165,8 +185,10 @@ namespace At0::Ray
 		static void FillConfig(Config& config, SpecularMap spec) { config.specularMap = spec; }
 		static void FillConfig(Config& config, DiffuseMap diff) { config.diffuseMap = diff; }
 		static void FillConfig(Config& config, NormalMap norm) { config.normalMap = norm; }
+		static void FillConfig(Config& config, LightingTechnique tech);
 
 		static std::vector<std::string> GetShaders(Material::Config& config);
+		static std::string AssertConfigCompatibility(const Material::Config& config);
 
 	private:
 		Ref<GraphicsPipeline> m_GraphicsPipeline = nullptr;
@@ -180,6 +202,11 @@ namespace At0::Ray
 	{
 		Material::Config config{};
 		(FillConfig(config, args), ...);
+
+#ifndef NDEBUG
+		if (std::string err = AssertConfigCompatibility(config); !err.empty())
+			RAY_THROW_RUNTIME("[Material] Config arguments are not compatible: {0}", err);
+#endif
 
 		CreatePipeline(config);
 		Setup(config);
