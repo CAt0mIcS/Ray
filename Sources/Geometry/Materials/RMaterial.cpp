@@ -206,6 +206,14 @@ namespace At0::Ray
 
 	std::string Material::AssertConfigCompatibility(const Material::Config& config)
 	{
+		if (!config.shaders.value.empty())
+		{
+			Log::Warn(
+				"[Material] Using custom shaders. All specified material properties will be "
+				"ignored and uniforms will need to be added manually using Material::AddUniform");
+			return "";
+		}
+
 		std::string errors = "";
 
 		switch (config.lightingTechnique)

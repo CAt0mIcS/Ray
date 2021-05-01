@@ -29,7 +29,7 @@ namespace At0::Ray
 		{
 			template<typename... Args>
 			Shaders(Args&&... args) requires(std::is_convertible_v<Args, std::string>&&...)
-				: value(args...)
+				: value({ args... })
 			{
 			}
 			Shaders(std::vector<std::string> val) : value(std::move(val)) {}
