@@ -74,21 +74,12 @@ private:
 			// clang-format off
 			Ray::Material defaultMaterial
 			{
-				Ray::Material::Shaders("Resources/Shaders/Flat.vert", "Resources/Shaders/Flat.frag"),
 				Ray::Material::LightingTechnique(Ray::Material::LightingTechnique::Flat),
 				Ray::Material::CullMode(VK_CULL_MODE_NONE),
-				 // Ray::Material::Texture2D(Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png")),
+				  //Ray::Material::Texture2D(Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png")),
 				Ray::Material::Color({ colorDist(device), colorDist(device), colorDist(device) })
 			};
 			//clang-format on
-
-			Ray::BufferUniform& uColor = (Ray::BufferUniform&)defaultMaterial.AddUniform(
-				Ray::MakeScope<Ray::BufferUniform>("Shading", 
-					Ray::Shader::Stage::Fragment, 
-					defaultMaterial.GetGraphicsPipeline()));
-
-			uColor["color"] = Ray::Float3{1.0f, 1.0f, 0.0f};
-
 
 			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
 
