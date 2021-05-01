@@ -88,6 +88,11 @@ namespace At0::Ray
 		 */
 		const Material& GetMaterial() const { return m_Material; }
 
+		/**
+		 * @returns The material this mesh is using
+		 */
+		Material& GetMaterial() { return m_Material; }
+
 		~Mesh();
 		Mesh& operator=(Mesh&& other) noexcept;
 		Mesh(Mesh&& other) noexcept;
