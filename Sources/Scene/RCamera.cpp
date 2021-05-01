@@ -9,6 +9,9 @@
 #include "Utils/RException.h"
 
 
+#include "Graphics/Core/RLogicalDevice.h"
+
+
 namespace At0::Ray
 {
 	bool Camera::IsMoving() const
@@ -117,7 +120,11 @@ namespace At0::Ray
 
 	void Camera::CmdBind(const CommandBuffer& cmdBuff) const { m_Uniform->CmdBind(cmdBuff); }
 
-	void Camera::UpdateUniform() { m_Uniform->Update(ShaderData); }
+	void Camera::UpdateUniform()
+	{
+		Graphics::Get().GetDevice().WaitIdle();
+		m_Uniform->Update(ShaderData);
+	}
 
 	Camera::Camera()
 	{
@@ -207,7 +214,7 @@ namespace At0::Ray
 
 		Updated = true;
 
-		// UpdateUniform();
+		UpdateUniform();
 	}
 
 	void Camera::OnEvent(MouseMovedEvent& e)

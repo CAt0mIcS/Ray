@@ -271,6 +271,7 @@ namespace At0::Ray
 		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
 
 		Scene::Get().Update(dt);
+		Scene::Get().GetCamera().Update(dt);
 		Renderer::Get().Update(dt);
 
 		VkSubmitInfo submitInfo{};
