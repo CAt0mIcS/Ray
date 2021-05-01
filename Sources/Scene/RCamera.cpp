@@ -122,7 +122,10 @@ namespace At0::Ray
 
 	void Camera::UpdateUniform()
 	{
+		// We wait here to avoid some images having an old camera matrix while new ones already have
+		// the new one (RAY_TODO: Synchronization so that this is not required)
 		Graphics::Get().GetDevice().WaitIdle();
+
 		m_Uniform->Update(ShaderData);
 	}
 
