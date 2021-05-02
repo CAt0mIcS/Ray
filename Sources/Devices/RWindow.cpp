@@ -140,7 +140,7 @@ namespace At0::Ray
 			{
 			case GLFW_PRESS:
 			{
-				MouseButton btn = (MouseButton)(button + 1);
+				MouseButton btn = (MouseButton)button;
 
 				switch (btn)
 				{
@@ -148,15 +148,16 @@ namespace At0::Ray
 				case MouseButton::Right: Mouse::SetRightPressed(true); break;
 				case MouseButton::Middle: Mouse::SetMiddlePressed(true); break;
 				}
-				break;
 
 				MouseButtonPressedEvent e(btn);
 				for (auto* listener : Window::Get().EventDispatcher<MouseButtonPressedEvent>::Get())
 					listener->OnEvent(e);
+
+				break;
 			}
 			case GLFW_RELEASE:
 			{
-				MouseButton btn = (MouseButton)(button + 1);
+				MouseButton btn = (MouseButton)button;
 
 				switch (btn)
 				{
@@ -164,12 +165,13 @@ namespace At0::Ray
 				case MouseButton::Right: Mouse::SetRightPressed(false); break;
 				case MouseButton::Middle: Mouse::SetMiddlePressed(false); break;
 				}
-				break;
 
 				MouseButtonReleasedEvent e(btn);
 				for (auto* listener :
 					Window::Get().EventDispatcher<MouseButtonReleasedEvent>::Get())
 					listener->OnEvent(e);
+
+				break;
 			}
 			}
 		});
