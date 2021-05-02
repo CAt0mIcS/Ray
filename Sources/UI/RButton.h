@@ -13,9 +13,6 @@ namespace At0::Ray
 	{
 	public:
 		Button(Entity& entity, Float2 pos);
-
-	private:
-		Entity m_PlaneEntity;
 	};
 }  // namespace At0::Ray
 

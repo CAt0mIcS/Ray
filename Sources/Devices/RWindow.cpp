@@ -142,10 +142,6 @@ namespace At0::Ray
 			{
 				MouseButton btn = (MouseButton)(button + 1);
 
-				MouseButtonPressedEvent e(btn);
-				for (auto* listener : Window::Get().EventDispatcher<MouseButtonPressedEvent>::Get())
-					listener->OnEvent(e);
-
 				switch (btn)
 				{
 				case MouseButton::Left: Mouse::SetLeftPressed(true); break;
@@ -153,15 +149,14 @@ namespace At0::Ray
 				case MouseButton::Middle: Mouse::SetMiddlePressed(true); break;
 				}
 				break;
+
+				MouseButtonPressedEvent e(btn);
+				for (auto* listener : Window::Get().EventDispatcher<MouseButtonPressedEvent>::Get())
+					listener->OnEvent(e);
 			}
 			case GLFW_RELEASE:
 			{
 				MouseButton btn = (MouseButton)(button + 1);
-
-				MouseButtonReleasedEvent e(btn);
-				for (auto* listener :
-					Window::Get().EventDispatcher<MouseButtonReleasedEvent>::Get())
-					listener->OnEvent(e);
 
 				switch (btn)
 				{
@@ -170,6 +165,11 @@ namespace At0::Ray
 				case MouseButton::Middle: Mouse::SetMiddlePressed(false); break;
 				}
 				break;
+
+				MouseButtonReleasedEvent e(btn);
+				for (auto* listener :
+					Window::Get().EventDispatcher<MouseButtonReleasedEvent>::Get())
+					listener->OnEvent(e);
 			}
 			}
 		});
@@ -182,11 +182,12 @@ namespace At0::Ray
 				{
 					Key k = (Key)key;
 
+					Keyboard::SetKeyState(k, true);
+
 					KeyPressedEvent e(k);
 					for (auto* listener : Window::Get().EventDispatcher<KeyPressedEvent>::Get())
 						listener->OnEvent(e);
 
-					Keyboard::SetKeyState(k, true);
 					break;
 				}
 
@@ -194,11 +195,12 @@ namespace At0::Ray
 				{
 					Key k = (Key)key;
 
+					Keyboard::SetKeyState(k, false);
+
 					KeyReleasedEvent e(k);
 					for (auto* listener : Window::Get().EventDispatcher<KeyReleasedEvent>::Get())
 						listener->OnEvent(e);
 
-					Keyboard::SetKeyState(k, false);
 					break;
 				}
 				case GLFW_REPEAT:

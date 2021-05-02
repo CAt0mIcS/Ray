@@ -64,7 +64,10 @@ namespace At0::Ray
 				m_Uniforms.emplace_back(MakeScope<SamplerUniform>(*uSampler));
 			}
 			else
+			{
+				Log::Error("[Material] Trying to copy unknown uniform type");
 				RAY_ASSERT(false, "[Material] Trying to copy unknown uniform type");
+			}
 		}
 
 		return *this;
@@ -208,9 +211,9 @@ namespace At0::Ray
 	{
 		if (!config.shaders.value.empty())
 		{
-			Log::Warn(
-				"[Material] Using custom shaders. All specified material properties will be "
-				"ignored and uniforms will need to be added manually using Material::AddUniform");
+			Log::Warn("[Material] Using custom shaders. Material properties such the color, any "
+					  "maps, textures and lighting techniques will be ignored and uniforms will "
+					  "need to be added manually using Material::AddUniform");
 			return "";
 		}
 

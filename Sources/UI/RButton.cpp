@@ -9,11 +9,10 @@
 
 namespace At0::Ray
 {
-	Button::Button(Entity& entity, Float2 pos)
-		: Widget(entity), m_PlaneEntity(Scene::Get().CreateEntity())
+	Button::Button(Entity& entity, Float2 pos) : Widget(entity)
 	{
 		// clang-format off
-		Mesh& mesh = m_PlaneEntity.Emplace<Mesh>(Mesh::Plane(
+		Mesh& mesh = GetEntity().Emplace<Mesh>(Mesh::Plane(
 			Material
 			{
 				Material::Shaders("Resources/Shaders/UITestShader.vert", "Resources/Shaders/UITestShader.frag"),
