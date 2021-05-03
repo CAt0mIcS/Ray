@@ -38,8 +38,6 @@ namespace At0::Ray
 		 */
 		Entity CreateEntity();
 
-		const auto& GetEntities() const { return m_Entities; }
-
 		/**
 		 * Creates iterable list of all components of the Comp type
 		 */
@@ -79,8 +77,6 @@ namespace At0::Ray
 		entt::registry m_Registry;
 		Scope<Camera> m_Camera = nullptr;
 
-		// Heap allocate them to avoid Entity& from being invalid when the vector is resized
-		std::vector<Entity> m_Entities;
 		static Scope<Scene> s_CurrentScene;
 	};
 

@@ -21,13 +21,7 @@ namespace At0::Ray
 
 	void Scene::Destroy() { s_CurrentScene = nullptr; }
 
-	Scene::~Scene()
-	{
-		for (Entity& entity : m_Entities)
-		{
-			m_Registry.destroy((entt::entity)entity);
-		}
-	}
+	Scene::~Scene() { m_Registry.clear(); }
 
 	Entity Scene::CreateEntity()
 	{
@@ -41,7 +35,7 @@ namespace At0::Ray
 			listener->OnEvent(e);
 		}
 
-		return m_Entities.emplace_back(std::move(entity));
+		return entity;
 	}
 
 	void Scene::Update(Delta dt)
