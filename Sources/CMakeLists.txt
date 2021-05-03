@@ -22,6 +22,7 @@ set(SRC
 	# ------------------------------------------------------------------
 	# Scene
 	"Scene/REntity.h"
+	"Scene/REntity.cpp"
 	"Scene/RScene.h"
 	"Scene/RScene.cpp"
 	"Scene/RCamera.h"

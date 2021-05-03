@@ -30,7 +30,7 @@ namespace At0::Ray
 		auto btnView = Scene::Get().EntityView<Button, Mesh>();
 		for (entt::entity btnEntity : btnView)
 		{
-			Entity entity = { btnEntity, &Scene::Get().GetRegistry() };
+			Entity entity(btnEntity);
 			Button& btn = entity.Get<Button>();
 
 			float width = btn.GetWidth();
