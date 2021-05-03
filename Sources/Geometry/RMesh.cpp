@@ -24,7 +24,7 @@ namespace At0::Ray
 	const Mesh::Shaders Mesh::s_DefaultShaders = { "Resources/Shaders/DefaultShader.vert",
 		"Resources/Shaders/DefaultShader.frag" };
 
-	Mesh::Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
+	Mesh::Mesh(Entity entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
 		Material material, std::vector<MeshData> children)
 		: Component(entity), m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer),
 		  m_Material(std::move(material))
@@ -32,7 +32,7 @@ namespace At0::Ray
 		Setup(std::move(children));
 	}
 
-	Mesh::Mesh(Entity& entity, MeshData data)
+	Mesh::Mesh(Entity entity, MeshData data)
 		: Component(entity), m_VertexBuffer(data.vertexBuffer), m_IndexBuffer(data.indexBuffer),
 		  m_Material(std::move(data.material))
 	{
@@ -198,18 +198,14 @@ namespace At0::Ray
 		m_IndexBuffer = std::move(other.m_IndexBuffer);
 
 		m_Material = std::move(other.m_Material);
+		m_Entity = std::move(other.m_Entity);
 
 		m_Transform = std::move(other.m_Transform);
 		m_Children = std::move(other.m_Children);
 		return *this;
 	}
 
-	Mesh::Mesh(Mesh&& other) noexcept
-		: Component(*other.m_Entity), m_VertexBuffer(std::move(other.m_VertexBuffer)),
-		  m_IndexBuffer(std::move(other.m_IndexBuffer)), m_Material(std::move(other.m_Material)),
-		  m_Transform(std::move(other.m_Transform)), m_Children(std::move(other.m_Children))
-	{
-	}
+	Mesh::Mesh(Mesh&& other) noexcept : Component(other.m_Entity) { *this = std::move(other); }
 
 	void Mesh::Setup(std::vector<MeshData> children)
 	{

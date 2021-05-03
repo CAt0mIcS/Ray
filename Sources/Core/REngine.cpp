@@ -9,6 +9,9 @@
 
 #include "Devices/RMouse.h"
 
+#include "UI/RButton.h"
+#include "Geometry/RMesh.h"
+
 
 namespace At0::Ray
 {
@@ -22,7 +25,24 @@ namespace At0::Ray
 
 	static void UIHitTesting()
 	{
-		// Log::Debug("Mouse Position: [x={0}, y={1}]", Mouse::GetPos().x, Mouse::GetPos().y);
+		Log::Debug("Mouse Position: [x={0}, y={1}]", Mouse::GetPos().x, Mouse::GetPos().y);
+
+		auto btnView = Scene::Get().EntityView<Button, Mesh>();
+		for (entt::entity btnEntity : btnView)
+		{
+			Entity entity = { btnEntity, &Scene::Get().GetRegistry() };
+			Button& btn = entity.Get<Button>();
+
+			float width = btn.GetWidth();
+			float height = btn.GetHeight();
+			Float2 translation = btn.GetTranslation();
+
+			if (Mouse::GetPos().x >= translation.x && Mouse::GetPos().x < translation.x + width &&
+				Mouse::GetPos().y >= translation.y && Mouse::GetPos().y < translation.y + height)
+			{
+				Log::Critical("Mouse is on Button");
+			}
+		}
 	}
 
 	int Engine::Run()

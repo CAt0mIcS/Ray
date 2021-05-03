@@ -36,9 +36,9 @@ namespace At0::Ray
 		static const Shaders s_DefaultShaders;
 
 	public:
-		Mesh(Entity& entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
+		Mesh(Entity entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
 			Material material, std::vector<MeshData> children = {});
-		Mesh(Entity& entity, MeshData data);
+		Mesh(Entity entity, MeshData data);
 
 		static MeshData Triangle(Material material);
 		static MeshData Plane(Material material);

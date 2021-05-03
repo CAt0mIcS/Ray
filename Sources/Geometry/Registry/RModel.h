@@ -52,6 +52,3 @@ namespace At0::Ray
 		Scope<MeshData> m_RootMesh;
 	};
 }  // namespace At0::Ray
-
-
-RAY_EXPORT_COMPONENT(Model);

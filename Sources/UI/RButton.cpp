@@ -9,7 +9,7 @@
 
 namespace At0::Ray
 {
-	Button::Button(Entity& entity, Float2 pos) : Widget(entity)
+	Button::Button(Entity entity, Float2 pos) : Widget(entity)
 	{
 		// clang-format off
 		Mesh& mesh = GetEntity().Emplace<Mesh>(Mesh::Plane(
