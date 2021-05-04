@@ -25,7 +25,7 @@ namespace At0::Ray
 
 	static void UIHitTesting()
 	{
-		Log::Debug("Mouse Position: [x={0}, y={1}]", Mouse::GetPos().x, Mouse::GetPos().y);
+		// Log::Debug("Mouse Position: [x={0}, y={1}]", Mouse::GetPos().x, Mouse::GetPos().y);
 
 		auto btnView = Scene::Get().EntityView<Button, Mesh>();
 		for (entt::entity btnEntity : btnView)

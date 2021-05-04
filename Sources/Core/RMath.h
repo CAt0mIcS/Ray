@@ -95,6 +95,12 @@ namespace At0::Ray
 	RAY_EXPORT Float2 NDCSpaceToScreenSpace(Float2 coords);
 	RAY_EXPORT Float2 ScreenSpaceToNDCSpace(Float2 coords);
 
+	RAY_EXPORT float NDCSpaceToScreenSpaceX(float x);
+	RAY_EXPORT float ScreenSpaceToNDCSpaceX(float x);
+
+	RAY_EXPORT float NDCSpaceToScreenSpaceY(float y);
+	RAY_EXPORT float ScreenSpaceToNDCSpaceY(float y);
+
 
 	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Int2& data);
 

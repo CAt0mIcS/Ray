@@ -25,13 +25,9 @@ namespace At0::Ray
 				"Shading", Shader::Stage::Fragment, mesh.GetMaterial().GetGraphicsPipeline()));
 		uColor["color"] = Float3{ 1.0f, 1.0f, 1.0f };
 
-		Transform& transform = mesh.GetTransform();
-		transform.SetScale({ 0.2f, 0.2f, 0.2f });
+		SetWidth(100);
+		SetHeight(100);
 
-		pos = ScreenSpaceToNDCSpace(pos);
-		pos.x += 0.5f * transform.Scale().x;
-		pos.y += 0.5f * transform.Scale().y;
-
-		transform.SetTranslation({ pos, 0.0f });
+		SetTranslation({ 0.0f, 0.0f });
 	}
 }  // namespace At0::Ray

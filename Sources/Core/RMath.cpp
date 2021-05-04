@@ -153,11 +153,26 @@ namespace At0::Ray
 		return { (coords.x + 1) * 0.5f * Window::Get().GetFramebufferSize().x,
 			(coords.y + 1) * 0.5f * Window::Get().GetFramebufferSize().y };
 	}
-
 	RAY_EXPORT Float2 ScreenSpaceToNDCSpace(Float2 coords)
 	{
 		return { coords.x / (0.5f * Window::Get().GetFramebufferSize().x) - 1,
 			coords.y / (0.5f * Window::Get().GetFramebufferSize().y) - 1 };
+	}
+	RAY_EXPORT float NDCSpaceToScreenSpaceX(float x)
+	{
+		return (x + 1) * 0.5f * Window::Get().GetFramebufferSize().x;
+	}
+	RAY_EXPORT float ScreenSpaceToNDCSpaceX(float x)
+	{
+		return x / (0.5f * Window::Get().GetFramebufferSize().x) - 1;
+	}
+	RAY_EXPORT float NDCSpaceToScreenSpaceY(float y)
+	{
+		return (y + 1) * 0.5f * Window::Get().GetFramebufferSize().y;
+	}
+	RAY_EXPORT float ScreenSpaceToNDCSpaceY(float y)
+	{
+		return y / (0.5f * Window::Get().GetFramebufferSize().y) - 1;
 	}
 
 	inline std::ostream& operator<<(std::ostream& os, const Int2& data)

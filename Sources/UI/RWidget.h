@@ -21,6 +21,16 @@ namespace At0::Ray
 		Float2 GetTranslation() const;
 
 		/**
+		 * @returns X-Coordinate in screen space
+		 */
+		float GetX() const;
+
+		/**
+		 * @returns Y-Coordinate in screen space
+		 */
+		float GetY() const;
+
+		/**
 		 * @returns Scale in pixels of the widget
 		 */
 		Float2 GetScale() const;
@@ -34,6 +44,36 @@ namespace At0::Ray
 		 * @returns Height of the widget in pixels
 		 */
 		float GetHeight() const;
+
+		/**
+		 * @param coords Coordinates in screen space
+		 */
+		void SetTranslation(Float2 coords);
+
+		/**
+		 * @param x X-Coordinate in screen space
+		 */
+		void SetX(float x);
+
+		/**
+		 * @param y Y-Coordinate in screen space
+		 */
+		void SetY(float y);
+
+		/**
+		 * @param scale Width and height in pixels
+		 */
+		void SetScale(Float2 scale);
+
+		/**
+		 * @param width Width in pixels
+		 */
+		void SetWidth(float width);
+
+		/**
+		 * @param height Height in pixels
+		 */
+		void SetHeight(float height);
 
 	protected:
 		Widget(Entity entity);
