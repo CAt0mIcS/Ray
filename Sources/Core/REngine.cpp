@@ -23,28 +23,6 @@ namespace At0::Ray
 		return *s_Instance;
 	}
 
-	static void UIHitTesting()
-	{
-		// Log::Debug("Mouse Position: [x={0}, y={1}]", Mouse::GetPos().x, Mouse::GetPos().y);
-
-		auto btnView = Scene::Get().EntityView<Button, Mesh>();
-		for (entt::entity btnEntity : btnView)
-		{
-			Entity entity(btnEntity);
-			Button& btn = entity.Get<Button>();
-
-			float width = btn.GetWidth();
-			float height = btn.GetHeight();
-			Float2 translation = btn.GetTranslation();
-
-			if (Mouse::GetPos().x >= translation.x && Mouse::GetPos().x < translation.x + width &&
-				Mouse::GetPos().y >= translation.y && Mouse::GetPos().y < translation.y + height)
-			{
-				Log::Critical("Mouse is on Button");
-			}
-		}
-	}
-
 	int Engine::Run()
 	{
 		Log::Info("[Engine] Startup");
@@ -56,8 +34,6 @@ namespace At0::Ray
 			m_FPS.Update(Time::Now());
 			Graphics::Get().Update(m_Delta);
 			Update();
-
-			UIHitTesting();
 
 			if (std::chrono::duration<float, std::chrono::milliseconds::period>(
 					std::chrono::high_resolution_clock::now() - startSecTime)

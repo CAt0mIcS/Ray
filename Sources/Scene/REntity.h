@@ -25,7 +25,7 @@ namespace At0::Ray
 		 * Construct an entity from an existing entity handle. Entity must've been created from the
 		 * Scene's registry (default)
 		 */
-		explicit Entity(entt::entity handle);
+		Entity(entt::entity handle);
 
 		Entity(const Entity& other) = default;
 

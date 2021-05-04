@@ -178,6 +178,7 @@ int main()
 	{
 		Ray::Window::Create();
 		Ray::Window::Get().Show();
+		Ray::Window::Get().SetTitle("SetupTest");
 
 		return App{}.Run();
 	}

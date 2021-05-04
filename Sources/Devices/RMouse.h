@@ -6,8 +6,7 @@
 
 namespace At0::Ray
 {
-	// class Widget;
-	// class Window;
+	class Widget;
 
 	class RAY_EXPORT Mouse
 	{
@@ -20,8 +19,7 @@ namespace At0::Ray
 		static bool IsMiddlePressed();
 		static bool IsRightPressed();
 
-		// bool IsOnWidget(const Widget& widget) const;
-		// bool IsOnWindow(const Window& window) const;
+		static bool IsOnWidget(const Widget& widget);
 
 	private:
 		static void SetPos(const Float2& mousePos);

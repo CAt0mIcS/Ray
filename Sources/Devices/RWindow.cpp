@@ -10,6 +10,8 @@
 
 #include "Events/REventListener.h"
 
+#include "UI/RButton.h"
+
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -127,11 +129,13 @@ namespace At0::Ray
 			Float2 newPos = { (float)xPos, (float)yPos };
 			Window::Get().m_PrevousMousePos = newPos;
 
+			Mouse::SetPos(newPos);
+
 			MouseMovedEvent e(newPos, { dx, dy });
 			for (auto* listener : Window::Get().EventDispatcher<MouseMovedEvent>::Get())
 				listener->OnEvent(e);
 
-			Mouse::SetPos(newPos);
+			Window::Get().GenerateHoverEvents();
 		});
 
 		glfwSetMouseButtonCallback(m_hWnd, [](GLFWwindow* window, int button, int action,
@@ -149,7 +153,7 @@ namespace At0::Ray
 				case MouseButton::Middle: Mouse::SetMiddlePressed(true); break;
 				}
 
-				MouseButtonPressedEvent e(btn);
+				MouseButtonPressedEvent e(btn, Window::Get().GetClickedWidget());
 				for (auto* listener : Window::Get().EventDispatcher<MouseButtonPressedEvent>::Get())
 					listener->OnEvent(e);
 
@@ -166,7 +170,7 @@ namespace At0::Ray
 				case MouseButton::Middle: Mouse::SetMiddlePressed(false); break;
 				}
 
-				MouseButtonReleasedEvent e(btn);
+				MouseButtonReleasedEvent e(btn, Window::Get().GetReleasedWidget());
 				for (auto* listener :
 					Window::Get().EventDispatcher<MouseButtonReleasedEvent>::Get())
 					listener->OnEvent(e);
@@ -278,5 +282,60 @@ namespace At0::Ray
 
 			Window::Get().Close();
 		});
+	}
+
+	void Window::GenerateHoverEvents()
+	{
+		auto btnView = Scene::Get().EntityView<Button>();
+		for (Entity btnEntity : btnView)
+		{
+			Button& btn = btnEntity.Get<Button>();
+			if (!Mouse::IsOnWidget(btn) && &btn == m_HoverWidget)
+			{
+				HoverLeaveEvent e(m_HoverWidget);
+				for (auto* listener : EventDispatcher<HoverLeaveEvent>::Get())
+					listener->OnEvent(e);
+
+				m_HoverWidget = nullptr;
+			}
+			else if (Mouse::IsOnWidget(btn) && &btn != m_HoverWidget)
+			{
+				m_HoverWidget = &btn;
+
+				HoverEnterEvent e(m_HoverWidget);
+				for (auto* listener : EventDispatcher<HoverEnterEvent>::Get())
+					listener->OnEvent(e);
+			}
+		}
+	}
+
+	Widget* Window::GetClickedWidget()
+	{
+		auto btnView = Scene::Get().EntityView<Button>();
+		for (Entity btnEntity : btnView)
+		{
+			Button& btn = btnEntity.Get<Button>();
+			if (Mouse::IsOnWidget(btn))
+			{
+				m_ClickedWidget = &btn;
+				return m_ClickedWidget;
+			}
+		}
+		return nullptr;
+	}
+
+	Widget* Window::GetReleasedWidget()
+	{
+		auto btnView = Scene::Get().EntityView<Button>();
+		for (Entity btnEntity : btnView)
+		{
+			Button& btn = btnEntity.Get<Button>();
+			if (m_ClickedWidget == &btn)
+			{
+				m_ClickedWidget = nullptr;
+				return &btn;
+			}
+		}
+		return nullptr;
 	}
 }  // namespace At0::Ray

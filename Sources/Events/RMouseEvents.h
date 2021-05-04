@@ -7,26 +7,36 @@
 
 namespace At0::Ray
 {
+	class Widget;
+
 	class MouseButtonPressedEvent
 	{
 	public:
-		MouseButtonPressedEvent(MouseButton btn) : m_Button(btn) {}
+		MouseButtonPressedEvent(MouseButton btn, Widget* widget) : m_Button(btn), m_Widget(widget)
+		{
+		}
 
 		MouseButton GetKey() const { return m_Button; }
+		Widget* GetWidget() { return m_Widget; }
 
 	private:
 		MouseButton m_Button;
+		Widget* m_Widget;
 	};
 
 	class MouseButtonReleasedEvent
 	{
 	public:
-		MouseButtonReleasedEvent(MouseButton btn) : m_Button(btn) {}
+		MouseButtonReleasedEvent(MouseButton btn, Widget* widget) : m_Button(btn), m_Widget(widget)
+		{
+		}
 
 		MouseButton GetKey() const { return m_Button; }
+		Widget* GetWidget() { return m_Widget; }
 
 	private:
 		MouseButton m_Button;
+		Widget* m_Widget;
 	};
 
 	class MouseMovedEvent
@@ -76,4 +86,27 @@ namespace At0::Ray
 	public:
 		using ScrollEvent::ScrollEvent;
 	};
+
+	class HoverEnterEvent
+	{
+	public:
+		HoverEnterEvent(Widget* widget) : m_Widget(widget) {}
+
+		Widget* GetWidget() { return m_Widget; }
+
+	private:
+		Widget* m_Widget;
+	};
+
+	class HoverLeaveEvent
+	{
+	public:
+		HoverLeaveEvent(Widget* widget) : m_Widget(widget) {}
+
+		Widget* GetWidget() { return m_Widget; }
+
+	private:
+		Widget* m_Widget;
+	};
+
 }  // namespace At0::Ray

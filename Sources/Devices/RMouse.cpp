@@ -4,6 +4,8 @@
 #include "Utils/RLogger.h"
 #include "Utils/RAssert.h"
 
+#include "UI/RWidget.h"
+
 
 namespace At0::Ray
 {
@@ -18,28 +20,15 @@ namespace At0::Ray
 
 	bool Mouse::IsRightPressed() { return m_IsRightPressed; }
 
-	// bool MouseInput::IsOnWindow(const Window& window) const
-	//{
-	//	Float2 widgetPos = window.GetPos();
-	//	Float2 widgetSize = window.GetSize();
+	bool Mouse::IsOnWidget(const Widget& widget)
+	{
+		float width = widget.GetWidth();
+		float height = widget.GetHeight();
+		Float2 translation = widget.GetTranslation();
 
-	//	// Mouse position is stored in window pixel coordinates.
-	//	// We need to transform the window pos/size to match
-	//	widgetSize -= widgetPos;
-	//	widgetPos = { 0.0f, 0.0f };
-
-	//	return (m_MousePos.x > widgetPos.x) && (m_MousePos.x < widgetPos.x + widgetSize.x) &&
-	//		(m_MousePos.y > widgetPos.y) && (m_MousePos.y < widgetPos.y + widgetSize.y);
-	//}
-
-	// bool MouseInput::IsOnWidget(const Widget& widget) const
-	//{
-	//	Float2 widgetPos = widget.GetPos();
-	//	Float2 widgetSize = widget.GetSize();
-
-	//	return (m_MousePos.x > widgetPos.x) && (m_MousePos.x < widgetPos.x + widgetSize.x) &&
-	//		(m_MousePos.y > widgetPos.y) && (m_MousePos.y < widgetPos.y + widgetSize.y);
-	//}
+		return (m_MousePos.x >= translation.x && m_MousePos.x < translation.x + width &&
+				m_MousePos.y >= translation.y && m_MousePos.y < translation.y + height);
+	}
 
 	const Float2& Mouse::GetPos() { return m_MousePos; }
 

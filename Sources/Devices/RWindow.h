@@ -19,6 +19,8 @@ struct GLFWwindow;
 
 namespace At0::Ray
 {
+	class Widget;
+
 	class RAY_EXPORT Window :
 		public EventDispatcher<WindowResizedEvent>,
 		public EventDispatcher<FramebufferResizedEvent>,
@@ -34,7 +36,9 @@ namespace At0::Ray
 		public EventDispatcher<KeyPressedEvent>,
 		public EventDispatcher<KeyReleasedEvent>,
 		public EventDispatcher<KeyRepeatedEvent>,
-		public EventDispatcher<CharEvent>
+		public EventDispatcher<CharEvent>,
+		public EventDispatcher<HoverEnterEvent>,
+		public EventDispatcher<HoverLeaveEvent>
 	{
 	public:
 		/**
@@ -123,9 +127,16 @@ namespace At0::Ray
 		Window(uint32_t width, uint32_t height, std::string_view title);
 		void SetEventCallbacks();
 
+		void GenerateHoverEvents();
+		Widget* GetClickedWidget();
+		Widget* GetReleasedWidget();
+
 	private:
 		static Scope<Window> s_Instance;
+
 		GLFWwindow* m_hWnd = nullptr;
 		Float2 m_PrevousMousePos{};
+		Widget* m_HoverWidget = nullptr;
+		Widget* m_ClickedWidget = nullptr;
 	};
 }  // namespace At0::Ray

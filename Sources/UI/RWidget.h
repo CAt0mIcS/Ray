@@ -88,8 +88,13 @@ namespace At0::Ray
 		 */
 		void SetHeight(float height);
 
+		/**
+		 * @returns Name given to the widget at construction
+		 */
+		std::string_view GetName() const { return m_Name; }
+
 	protected:
-		Widget(Entity entity);
+		Widget(Entity entity, std::string_view name);
 
 	private:
 		virtual void OnEvent(WindowResizedEvent& e) override;
@@ -98,5 +103,6 @@ namespace At0::Ray
 		float m_Width;
 		float m_Height;
 		Float2 m_Translation;
+		std::string m_Name;
 	};
 }  // namespace At0::Ray
