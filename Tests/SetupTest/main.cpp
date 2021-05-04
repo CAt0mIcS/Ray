@@ -51,8 +51,10 @@ public:
 		Ray::Scene::Create<Scene>();
 
 		// Create UI
-		Ray::Entity buttonEntity = Ray::Scene::Get().CreateEntity();
-		Ray::Button& button = buttonEntity.Emplace<Ray::Button>(Ray::Float2{ 0.0f, 0.0f });
+		m_ButtonEntity = Ray::Scene::Get().CreateEntity();
+		Ray::Button& button =
+			m_ButtonEntity.Emplace<Ray::Button>(Ray::Float2{ 100.0f, 10.0f }, 200.0f, 50.0f);
+		Ray::Mesh& btnMesh = m_ButtonEntity.Get<Ray::Mesh>();
 	}
 
 private:
@@ -67,6 +69,11 @@ private:
 		static Ray::Float3 posOffset{};
 		static int run = 0;
 
+		Ray::Button& button = m_ButtonEntity.Get<Ray::Button>();
+		button.SetWidth(button.GetWidth() + 5.0f);
+		button.SetHeight(button.GetHeight() + 5.0f);
+		button.SetTranslation(button.GetTranslation() + 1.0f);
+
 		for (uint32_t i = 0; i < 10; ++i)
 		{
 			Ray::Entity meshEntity = Ray::Scene::Get().CreateEntity();
@@ -76,7 +83,7 @@ private:
 			{
 				Ray::Material::LightingTechnique(Ray::Material::LightingTechnique::Flat),
 				Ray::Material::CullMode(VK_CULL_MODE_NONE),
-				  //Ray::Material::Texture2D(Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png")),
+				// Ray::Material::Texture2D(Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png")),
 				Ray::Material::Color({ colorDist(device), colorDist(device), colorDist(device) })
 			};
 			// clang-format on
@@ -145,6 +152,7 @@ private:
 
 private:
 	std::vector<Ray::Entity> m_ModelEntities;
+	Ray::Entity m_ButtonEntity;
 };
 
 void SignalHandler(int signal)

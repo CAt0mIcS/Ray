@@ -12,7 +12,7 @@ namespace At0::Ray
 	class RAY_EXPORT Button : public Widget
 	{
 	public:
-		Button(Entity entity, Float2 pos);
+		Button(Entity entity, Float2 pos, float width, float height);
 	};
 }  // namespace At0::Ray
 

@@ -9,7 +9,7 @@
 
 namespace At0::Ray
 {
-	Button::Button(Entity entity, Float2 pos) : Widget(entity)
+	Button::Button(Entity entity, Float2 pos, float width, float height) : Widget(entity)
 	{
 		// clang-format off
 		Mesh& mesh = GetEntity().Emplace<Mesh>(Mesh::Plane(
@@ -25,9 +25,8 @@ namespace At0::Ray
 				"Shading", Shader::Stage::Fragment, mesh.GetMaterial().GetGraphicsPipeline()));
 		uColor["color"] = Float3{ 1.0f, 1.0f, 1.0f };
 
-		SetWidth(100);
-		SetHeight(100);
-
-		SetTranslation({ 0.0f, 0.0f });
+		SetWidth(width);
+		SetHeight(height);
+		SetTranslation(pos);
 	}
 }  // namespace At0::Ray
