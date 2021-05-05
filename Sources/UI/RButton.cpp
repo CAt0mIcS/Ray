@@ -30,4 +30,9 @@ namespace At0::Ray
 		SetHeight(height);
 		SetTranslation(pos);
 	}
+
+	void Button::SetColor(const Float3& color)
+	{
+		GetEntity().Get<Mesh>().GetMaterial().GetUniform<BufferUniform>("Shading")["color"] = color;
+	}
 }  // namespace At0::Ray

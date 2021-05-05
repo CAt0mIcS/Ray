@@ -44,6 +44,27 @@ namespace At0::Ray
 
 		virtual ~EventListener() { m_Dispatcher->Unregister(this); }
 
+		EventListener<T>& operator=(EventListener<T>&& other)
+		{
+			m_Dispatcher = std::move(other.m_Dispatcher);
+
+			// Register again because deconstructore unregisters (RAY_TODO)
+			m_Dispatcher->Register(this);
+			return *this;
+		}
+
+		EventListener(EventListener<T>&& other) { *this = std::move(other); }
+
+		EventListener<T>& operator=(const EventListener<T>& other)
+		{
+			m_Dispatcher = other.m_Dispatcher;
+
+			// Register again because deconstructore unregisters (RAY_TODO)
+			m_Dispatcher->Register(this);
+			return *this;
+		}
+		EventListener(const EventListener<T>& other) { *this = other; }
+
 	private:
 		EventDispatcher<T>* m_Dispatcher;
 	};

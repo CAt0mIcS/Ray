@@ -265,6 +265,7 @@ namespace At0::Ray
 
 		glfwSetWindowSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height) {
 			WindowResizedEvent e({ width, height });
+			auto& eDispatchers = Window::Get().EventDispatcher<WindowResizedEvent>::Get();
 			for (auto* listener : Window::Get().EventDispatcher<WindowResizedEvent>::Get())
 				listener->OnEvent(e);
 		});
