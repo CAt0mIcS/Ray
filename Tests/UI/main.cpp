@@ -58,12 +58,13 @@ public:
 		Ray::Scene::Create<Scene>();
 
 		// Create UI
-		Ray::Button& whiteButton = Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>(
-			"WhiteButton", Ray::Float2{ 100.0f, 10.0f }, 200.0f, 50.0f);
+		Ray::Button& texturedButton = Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>(
+			"TexturedButton", Ray::Float2{ 100.0f, 10.0f }, 200.0f, 50.0f,
+			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
 
-		Ray::Button& greenButton = Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>(
-			"GreenButton", Ray::Float2{ 100.0f, 200.0f }, 200.0f, 50.0f);
-		greenButton.SetColor(Ray::Float3{ 0.0f, 1.0f, 0.0f });
+		// Ray::Button& greenButton =
+		//	Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>("GreenButton",
+		//		Ray::Float2{ 100.0f, 200.0f }, 200.0f, 50.0f, Ray::Float3{ 0.0f, 1.0f, 0.0f });
 	}
 
 private:

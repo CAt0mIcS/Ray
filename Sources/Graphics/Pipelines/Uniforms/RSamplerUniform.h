@@ -19,6 +19,7 @@ namespace At0::Ray
 		SamplerUniform(const SamplerUniform& other);
 
 		const Texture2D& GetTexture() const { return *m_Texture; }
+		void SetTexture(Ref<Texture2D> tex);
 
 	private:
 		void Setup();

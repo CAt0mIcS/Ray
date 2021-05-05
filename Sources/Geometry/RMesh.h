@@ -93,6 +93,11 @@ namespace At0::Ray
 		 */
 		Material& GetMaterial() { return m_Material; }
 
+		/**
+		 * Sets a new material for the mesh
+		 */
+		void SetMaterial(Material material) { m_Material = std::move(material); }
+
 		~Mesh();
 		Mesh& operator=(Mesh&& other) noexcept;
 		Mesh(Mesh&& other) noexcept;

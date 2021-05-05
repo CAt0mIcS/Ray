@@ -11,8 +11,10 @@ set(SHADERS
 	"../Resources/Shaders/Phong_Diff.frag"
 	"../Resources/Shaders/Phong_DiffSpec.vert"
 	"../Resources/Shaders/Phong_DiffSpec.frag"
-	"../Resources/Shaders/UITestShader.vert"
-	"../Resources/Shaders/UITestShader.frag"
+	"../Resources/Shaders/UI.vert"
+	"../Resources/Shaders/UI.frag"
+	"../Resources/Shaders/UI_Tex.vert"
+	"../Resources/Shaders/UI_Tex.frag"
 )
 
 set(SRC

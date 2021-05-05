@@ -47,6 +47,12 @@ namespace At0::Ray
 		*this = other;
 	}
 
+	void SamplerUniform::SetTexture(Ref<Texture2D> tex)
+	{
+		m_Texture = std::move(tex);
+		Setup();
+	}
+
 	void SamplerUniform::Setup()
 	{
 		// RAY_TODO: Check if image is in the correct format
