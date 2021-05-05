@@ -50,9 +50,10 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	MeshData Mesh::Plane(Material material)
+	MeshData Mesh::Plane(Material material, Vertex::Flags vertexFlags)
 	{
-		IndexedTriangleList plane = IndexedTriangleList::Plane(material.GetVertexLayout());
+		IndexedTriangleList plane =
+			IndexedTriangleList::Plane(material.GetVertexLayout(), vertexFlags);
 
 		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(plane.tag, plane.vertices);
 		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(plane.tag, plane.indices);
@@ -152,7 +153,7 @@ namespace At0::Ray
 	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(lineMaterial) };
 	//}
 
-	MeshData Mesh::Import(std::string_view filepath, int flags)
+	MeshData Mesh::Import(std::string_view filepath, Model::Flags flags)
 	{
 		return { Codex::Resolve<Model>(filepath, flags)->GetMesh() };
 	}

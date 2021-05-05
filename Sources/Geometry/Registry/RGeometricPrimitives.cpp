@@ -20,18 +20,30 @@ namespace At0::Ray
 		return { vertexInput, indices, "Triangle#012" };
 	}
 
-	IndexedTriangleList IndexedTriangleList::Plane(const VertexLayout& layout)
+	IndexedTriangleList IndexedTriangleList::Plane(const VertexLayout& layout, Vertex::Flags flags)
 	{
 		VertexInput vertexInput(layout);
 
-		vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f }, Float2{ 1.0f, 0.0f });
-		vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.0f }, Float2{ 0.0f, 0.0f });
-		vertexInput.Emplace(Float3{ 0.5f, 0.5f, 0.0f }, Float2{ 0.0f, 1.0f });
-		vertexInput.Emplace(Float3{ -0.5f, 0.5f, 0.0f }, Float2{ 1.0f, 1.0f });
+		if (flags & Vertex::Position3D && flags & Vertex::TextureCoordinate)
+		{
+			vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f }, Float2{ 1.0f, 0.0f });
+			vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.0f }, Float2{ 0.0f, 0.0f });
+			vertexInput.Emplace(Float3{ 0.5f, 0.5f, 0.0f }, Float2{ 0.0f, 1.0f });
+			vertexInput.Emplace(Float3{ -0.5f, 0.5f, 0.0f }, Float2{ 1.0f, 1.0f });
+		}
+		else if (flags & Vertex::Position3D)
+		{
+			vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.0f });
+			vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.0f });
+			vertexInput.Emplace(Float3{ 0.5f, 0.5f, 0.0f });
+			vertexInput.Emplace(Float3{ -0.5f, 0.5f, 0.0f });
+		}
+		else
+			RAY_ASSERT(false, "[IndexedTriangleList] Unsuported flags configuration.");
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
 
-		return { vertexInput, indices, "Plane#012230032210" };
+		return { vertexInput, indices, String::Serialize("Plane#012230032210#{0}", (int)flags) };
 	}
 
 	IndexedTriangleList IndexedTriangleList::HalfCircle(

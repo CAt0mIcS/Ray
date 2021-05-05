@@ -10,7 +10,7 @@ namespace At0::Ray
 	struct IndexedTriangleList
 	{
 		static IndexedTriangleList Triangle(const VertexLayout& layout);
-		static IndexedTriangleList Plane(const VertexLayout& layout);
+		static IndexedTriangleList Plane(const VertexLayout& layout, Vertex::Flags flags);
 		static IndexedTriangleList HalfCircle(
 			const VertexLayout& layout, int segments = 360, float radius = 1.0f);
 		static IndexedTriangleList Circle(

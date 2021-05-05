@@ -20,7 +20,7 @@
 
 namespace At0::Ray
 {
-	Model::Model(std::string_view filepath, int flags)
+	Model::Model(std::string_view filepath, Model::Flags flags)
 	{
 		Log::Info("[Model] Importing model \"{0}\"", filepath);
 
@@ -41,10 +41,13 @@ namespace At0::Ray
 
 	Model::~Model() {}
 
-	std::string Model::GetUID(std::string_view filepath, int flags) { return filepath.data(); }
+	std::string Model::GetUID(std::string_view filepath, Model::Flags flags)
+	{
+		return filepath.data();
+	}
 
-	void Model::ParseMesh(
-		std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials, int flags)
+	void Model::ParseMesh(std::string_view base, const aiMesh& mesh,
+		const aiMaterial* const* pMaterials, Model::Flags flags)
 	{
 		Log::Info("[Model] Parsing mesh \"{0}\"", mesh.mName.C_Str());
 
@@ -96,7 +99,7 @@ namespace At0::Ray
 	}
 
 	Material Model::CreateMaterial(const std::string& basePath, const aiMesh& mesh,
-		const aiMaterial* const* pMaterials, int flags)
+		const aiMaterial* const* pMaterials, Model::Flags flags)
 	{
 		aiString diffuseTexFileName;
 		aiString specularTexFileName;

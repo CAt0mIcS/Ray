@@ -155,6 +155,14 @@ namespace At0::Ray
 	class Vertex
 	{
 	public:
+		enum Flags
+		{
+			Position3D = 1,
+			Normal = 2,
+			TextureCoordinate = 4
+		};
+
+	public:
 		Vertex(char* startAddress, VertexLayout& layout)
 			: m_StartAddress(startAddress), m_Layout(&layout)
 		{
@@ -170,6 +178,12 @@ namespace At0::Ray
 		char* m_StartAddress = nullptr;
 		VertexLayout* m_Layout = nullptr;
 	};
+
+
+	inline Vertex::Flags operator|(Vertex::Flags r, Vertex::Flags l)
+	{
+		return (Vertex::Flags)((int)r | (int)l);
+	}
 
 
 	class VertexInput

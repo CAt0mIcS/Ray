@@ -42,7 +42,7 @@ namespace At0::Ray
 			{
 				Material::Shaders("Resources/Shaders/UI_Tex.vert", "Resources/Shaders/UI_Tex.frag"),
 				Material::CullMode(VK_CULL_MODE_NONE)
-			}));
+			}, Vertex::Position3D | Vertex::TextureCoordinate));
 		// clang-format on
 
 		mesh.GetMaterial().AddUniform(MakeScope<SamplerUniform>("texSampler",

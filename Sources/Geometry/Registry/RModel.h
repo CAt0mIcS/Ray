@@ -32,7 +32,7 @@ namespace At0::Ray
 		};
 
 	public:
-		Model(std::string_view filepath, int flags = 0);
+		Model(std::string_view filepath, Model::Flags flags = Model::Flags::Unspecified);
 		~Model();
 
 		Model& operator=(Model&& other) noexcept = default;
@@ -40,15 +40,22 @@ namespace At0::Ray
 
 		MeshData& GetMesh() { return *m_RootMesh; }
 
-		static std::string GetUID(std::string_view filepath, int flags = 0);
+		static std::string GetUID(
+			std::string_view filepath, Model::Flags flags = Model::Flags::Unspecified);
 
 	private:
 		void ParseMesh(std::string_view base, const aiMesh& mesh,
-			const aiMaterial* const* pMaterials, int flags);
+			const aiMaterial* const* pMaterials, Model::Flags flags);
 		static Material CreateMaterial(const std::string& basePath, const aiMesh& mesh,
-			const aiMaterial* const* pMaterials, int flags);
+			const aiMaterial* const* pMaterials, Model::Flags flags);
 
 	private:
 		Scope<MeshData> m_RootMesh;
 	};
+
+
+	inline Model::Flags operator|(Model::Flags r, Model::Flags l)
+	{
+		return (Model::Flags)((int)r | (int)l);
+	}
 }  // namespace At0::Ray

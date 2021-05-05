@@ -9,6 +9,7 @@
 #include "../Graphics/Pipelines/Uniforms/RSamplerUniform.h"
 #include "Registry/RModel.h"
 #include "Materials/RMaterial.h"
+#include "../Graphics/RVertex.h"
 
 #include <type_traits>
 
@@ -41,7 +42,7 @@ namespace At0::Ray
 		Mesh(Entity entity, MeshData data);
 
 		static MeshData Triangle(Material material);
-		static MeshData Plane(Material material);
+		static MeshData Plane(Material material, Vertex::Flags vertexFlags = Vertex::Position3D);
 		// static MeshData HalfCircle(
 		//	int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
 		// static MeshData Circle(
@@ -55,7 +56,8 @@ namespace At0::Ray
 		//	int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
 		// static MeshData Vector(const Float3& headPos, float lineWidth = 1.0f,
 		//	const Shaders& shaders = s_DefaultShaders);
-		static MeshData Import(std::string_view filepath, int flags = 0);
+		static MeshData Import(
+			std::string_view filepath, Model::Flags flags = Model::Flags::Unspecified);
 
 		/**
 		 * @returns The root transform of this mesh
