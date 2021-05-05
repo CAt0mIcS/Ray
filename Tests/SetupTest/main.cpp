@@ -18,6 +18,7 @@
 
 #include <signal.h>
 #include <random>
+#include <filesystem>
 
 
 using namespace At0;
@@ -46,16 +47,7 @@ class App :
 	Ray::EventListener<Ray::KeyPressedEvent>
 {
 public:
-	App()
-	{
-		Ray::Scene::Create<Scene>();
-
-		// Create UI
-		m_ButtonEntity = Ray::Scene::Get().CreateEntity();
-		Ray::Button& button =
-			m_ButtonEntity.Emplace<Ray::Button>(Ray::Float2{ 100.0f, 10.0f }, 200.0f, 50.0f);
-		Ray::Mesh& btnMesh = m_ButtonEntity.Get<Ray::Mesh>();
-	}
+	App() { Ray::Scene::Create<Scene>(); }
 
 private:
 	void Update() override {}
@@ -68,11 +60,6 @@ private:
 		static std::uniform_real_distribution<float> colorDist(0.0f, 1.0f);
 		static Ray::Float3 posOffset{};
 		static int run = 0;
-
-		Ray::Button& button = m_ButtonEntity.Get<Ray::Button>();
-		button.SetWidth(button.GetWidth() + 5.0f);
-		button.SetHeight(button.GetHeight() + 5.0f);
-		button.SetTranslation(button.GetTranslation() + 1.0f);
 
 		for (uint32_t i = 0; i < 10; ++i)
 		{
@@ -176,6 +163,7 @@ int main()
 
 	try
 	{
+		Ray::Log::Info("Launch Path: \"{0}\"", std::filesystem::absolute("."));
 		Ray::Window::Create();
 		Ray::Window::Get().Show();
 		Ray::Window::Get().SetTitle("SetupTest");

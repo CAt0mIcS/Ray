@@ -138,7 +138,7 @@ namespace At0::Ray
 			normalMap = MakeRef<Texture2D>(basePath + normalTexFileName.C_Str());
 		}
 
-		return { Material::DiffuseMap(diffuseMap), Material::SpecularMap(specularMap),
+		return Material{ Material::DiffuseMap(diffuseMap), Material::SpecularMap(specularMap),
 			Material::NormalMap(normalMap) };
 	}
 
