@@ -114,20 +114,17 @@ namespace At0::Ray
 	ImGUI::ImGUI()
 	{
 		ImGui::CreateContext();
-		ImGui::GetIO().IniFilename = nullptr;
-
-		ImGuiStyle& style = ImGui::GetStyle();
-		style.Colors[ImGuiCol_TitleBg] = ImVec4(1.0f, 1.0, 1.0f, 0.6f);
-		style.Colors[ImGuiCol_TitleBgActive] = ImVec4(1.0f, 1.0f, 1.0f, 0.8f);
-		style.Colors[ImGuiCol_MenuBarBg] = ImVec4(1.0f, 1.0f, 1.0f, 0.4f);
-		style.Colors[ImGuiCol_Header] = ImVec4(1.0f, 1.0f, 1.0f, 0.4f);
-		style.Colors[ImGuiCol_CheckMark] = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
 
 		ImGuiIO& io = ImGui::GetIO();
+		io.IniFilename = nullptr;
+		ImGui::StyleColorsDark();
+
 		io.DisplaySize =
 			ImVec2(Window::Get().GetFramebufferSize().x, Window::Get().GetFramebufferSize().y);
 		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
+		MapKeySpace();
 		InitResources();
 	}
 
@@ -602,6 +599,32 @@ namespace At0::Ray
 			m_ShaderModules.emplace_back(shaderStage.module);
 	}
 
+	void ImGUI::MapKeySpace()
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
+		io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
+		io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
+		io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
+		io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
+		io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
+		io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
+		io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
+		io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
+		io.KeyMap[ImGuiKey_Insert] = GLFW_KEY_INSERT;
+		io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
+		io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
+		io.KeyMap[ImGuiKey_Space] = GLFW_KEY_SPACE;
+		io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
+		io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
+		io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
+		io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
+		io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
+		io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
+		io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
+		io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
+	}
+
 	void ImGUI::OnEvent(FramebufferResizedEvent& e)
 	{
 		ImGuiIO& io = ImGui::GetIO();
@@ -635,5 +658,38 @@ namespace At0::Ray
 		case MouseButton::Right: io.MouseDown[1] = false; break;
 		}
 	}
+
+	void ImGUI::OnEvent(KeyPressedEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.WantCaptureKeyboard)
+		{
+			io.KeysDown[(int)e.GetKey()] = true;
+		}
+	}
+
+	void ImGUI::OnEvent(KeyReleasedEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.WantCaptureKeyboard)
+		{
+			io.KeysDown[(int)e.GetKey()] = false;
+		}
+	}
+
+	void ImGUI::OnEvent(CharEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.WantTextInput)
+			io.AddInputCharacter(e.GetChar());
+	}
+
+	void ImGUI::OnEvent(ScrollLeftEvent& e) {}
+
+	void ImGUI::OnEvent(ScrollRightEvent& e) {}
+
+	void ImGUI::OnEvent(ScrollUpEvent& e) {}
+
+	void ImGUI::OnEvent(ScrollDownEvent& e) {}
 
 }  // namespace At0::Ray

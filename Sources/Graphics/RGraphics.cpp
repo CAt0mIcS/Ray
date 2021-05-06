@@ -291,6 +291,8 @@ namespace At0::Ray
 		submitInfo.commandBufferCount = 1;
 
 		// Rerecord the command buffer for the current image if it was queried for rerecording
+		// RAY_TODO: Separate render pass and command buffers for ImGui so that we don't have to
+		// rerecord there command buffers
 		RerecordCommandBuffers();
 		if (m_RerecordCommandBuffers[imageIndex])
 		{

@@ -47,7 +47,14 @@ namespace At0::Ray
 		EventListener<FramebufferResizedEvent>,
 		EventListener<MouseMovedEvent>,
 		EventListener<MouseButtonPressedEvent>,
-		EventListener<MouseButtonReleasedEvent>
+		EventListener<MouseButtonReleasedEvent>,
+		EventListener<KeyPressedEvent>,
+		EventListener<KeyReleasedEvent>,
+		EventListener<CharEvent>,
+		EventListener<ScrollLeftEvent>,
+		EventListener<ScrollRightEvent>,
+		EventListener<ScrollUpEvent>,
+		EventListener<ScrollDownEvent>
 	{
 	public:
 		struct PushConstBlock
@@ -70,11 +77,19 @@ namespace At0::Ray
 
 		void InitResources();
 		void CreatePipeline();
+		void MapKeySpace();
 
 		void OnEvent(FramebufferResizedEvent& e) override;
 		void OnEvent(MouseMovedEvent& e) override;
 		void OnEvent(MouseButtonPressedEvent& e) override;
 		void OnEvent(MouseButtonReleasedEvent& e) override;
+		void OnEvent(KeyPressedEvent& e) override;
+		void OnEvent(KeyReleasedEvent& e) override;
+		void OnEvent(CharEvent& e) override;
+		void OnEvent(ScrollLeftEvent& e) override;
+		void OnEvent(ScrollRightEvent& e) override;
+		void OnEvent(ScrollUpEvent& e) override;
+		void OnEvent(ScrollDownEvent& e) override;
 
 	private:
 		VkImage m_FontImage;
