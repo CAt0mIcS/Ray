@@ -66,6 +66,11 @@ namespace At0::Ray
 
 	void Image::TransitionLayout(VkImageLayout oldLayout, VkImageLayout newLayout)
 	{
+		TransitionLayout(m_Image, oldLayout, newLayout);
+	}
+
+	void Image::TransitionLayout(VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout)
+	{
 		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
 		commandBuffer.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
@@ -75,7 +80,7 @@ namespace At0::Ray
 		barrier.newLayout = newLayout;
 		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		barrier.image = m_Image;
+		barrier.image = image;
 		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 		barrier.subresourceRange.baseMipLevel = 0;
 		barrier.subresourceRange.levelCount = 1;

@@ -150,6 +150,8 @@ set(SRC
 	"UI/RWidget.cpp"
 	"UI/RButton.h"
 	"UI/RButton.cpp"
+	"UI/RImGui.h"
+	"UI/RImGui.cpp"
 	
 
 	# ------------------------------------------------------------------
@@ -175,6 +177,11 @@ set(SRC
 	"Events/REventListener.h"
 
 	"${SHADERS}"
+
+	"${CMAKE_SOURCE_DIR}/Extern/imgui/imgui.cpp"
+	"${CMAKE_SOURCE_DIR}/Extern/imgui/imgui_demo.cpp"
+	"${CMAKE_SOURCE_DIR}/Extern/imgui/imgui_draw.cpp"
+	"${CMAKE_SOURCE_DIR}/Extern/imgui/imgui_widgets.cpp"
 )
 
 # ------------------------------------------------------------------

@@ -24,6 +24,8 @@
 #include <Events/RKeyboardEvents.h>
 #include <Events/RMouseEvents.h>
 
+#include <UI/RImGui.h>
+
 
 using namespace At0;
 
@@ -70,6 +72,7 @@ public:
 private:
 	void OnEvent(Ray::HoverEnterEvent& e) override
 	{
+		Ray::ImGUI::Get();
 		Ray::Log::Warn("HoverEnterEvent {0}", e.GetWidget() ? e.GetWidget()->GetName() : "{Null}");
 	}
 

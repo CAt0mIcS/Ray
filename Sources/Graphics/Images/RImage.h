@@ -26,6 +26,8 @@ namespace At0::Ray
 		const VkImageView& GetImageView() const { return *m_ImageView; }
 
 		void TransitionLayout(VkImageLayout oldLayout, VkImageLayout newLayout);
+		static void TransitionLayout(
+			VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout);
 		void CopyFromBuffer(const Buffer& buffer);
 
 		static std::vector<VkFormat> FindSupportedFormats(std::vector<VkFormat> candidates,
