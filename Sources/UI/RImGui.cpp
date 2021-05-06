@@ -90,9 +90,31 @@ namespace At0::Ray
 		return instance;
 	}
 
+	void ImGUI::Destroy()
+	{
+		// RAY_TODO: ImGui flickering if imgui.ini file exists (created when context is destroyed)
+		ImGui::DestroyContext();
+
+		// Release all Vulkan resources required for rendering imGui
+		Get().m_VertexBuffer.destroy();
+		Get().m_IndexBuffer.destroy();
+		vkDestroyImage(Graphics::Get().GetDevice(), Get().m_FontImage, nullptr);
+		vkDestroyImageView(Graphics::Get().GetDevice(), Get().m_FontView, nullptr);
+		vkFreeMemory(Graphics::Get().GetDevice(), Get().m_FontMemory, nullptr);
+		vkDestroySampler(Graphics::Get().GetDevice(), Get().m_Sampler, nullptr);
+		for (VkShaderModule shaderModule : Get().m_ShaderModules)
+			vkDestroyShaderModule(Graphics::Get().GetDevice(), shaderModule, nullptr);
+		vkDestroyPipeline(Graphics::Get().GetDevice(), Get().m_Pipeline, nullptr);
+		vkDestroyPipelineLayout(Graphics::Get().GetDevice(), Get().m_PipelineLayout, nullptr);
+		vkDestroyDescriptorPool(Graphics::Get().GetDevice(), Get().m_DescriptorPool, nullptr);
+		vkDestroyDescriptorSetLayout(
+			Graphics::Get().GetDevice(), Get().m_DescriptorSetLayout, nullptr);
+	}
+
 	ImGUI::ImGUI()
 	{
 		ImGui::CreateContext();
+		ImGui::GetIO().IniFilename = nullptr;
 
 		ImGuiStyle& style = ImGui::GetStyle();
 		style.Colors[ImGuiCol_TitleBg] = ImVec4(1.0f, 1.0, 1.0f, 0.6f);
@@ -230,8 +252,6 @@ namespace At0::Ray
 
 		ImGui::Text("Camera");
 		ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiSetCond_FirstUseEver);
-		ImGui::Begin("Example settings");
-		ImGui::End();
 
 		ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
 		ImGui::ShowDemoWindow();
@@ -247,9 +267,7 @@ namespace At0::Ray
 		VkDeviceSize indexBufferSize = imDrawData->TotalIdxCount * sizeof(ImDrawIdx);
 
 		if ((vertexBufferSize == 0) || (indexBufferSize == 0))
-		{
 			return;
-		}
 
 		// Update buffers only if vertex or index count has been changed compared to current buffer
 		// size
@@ -312,8 +330,8 @@ namespace At0::Ray
 		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 
 		// UI scale and translate via push constants
-		m_PushConstBlock.scale = glm::vec2(2.0f / io.DisplaySize.x, 2.0f / io.DisplaySize.y);
-		m_PushConstBlock.translate = glm::vec2(-1.0f);
+		m_PushConstBlock.scale = Float2(2.0f / io.DisplaySize.x, 2.0f / io.DisplaySize.y);
+		m_PushConstBlock.translate = Float2(-1.0f);
 		vkCmdPushConstants(commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0,
 			sizeof(PushConstBlock), &m_PushConstBlock);
 
@@ -349,15 +367,10 @@ namespace At0::Ray
 		}
 	}
 
-	void ImGUI::Update()
+	void ImGUI::Update(Delta dt)
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		io.DisplaySize =
-			ImVec2(Window::Get().GetFramebufferSize().x, Window::Get().GetFramebufferSize().y);
-
-		io.MousePos = ImVec2(Mouse::GetPos().x, Mouse::GetPos().y);
-		io.MouseDown[0] = Mouse::IsLeftPressed();
-		io.MouseDown[1] = Mouse::IsRightPressed();
+		io.DeltaTime = dt.Change().AsSeconds();
 	}
 
 	void ImGUI::CreatePipeline()
@@ -584,6 +597,43 @@ namespace At0::Ray
 		RAY_VK_THROW_FAILED(vkCreateGraphicsPipelines(Graphics::Get().GetDevice(), nullptr, 1,
 								&pipelineCreateInfo, nullptr, &m_Pipeline),
 			"[ImGui] Failed to create pipeline");
+
+		for (const auto& shaderStage : shaderStages)
+			m_ShaderModules.emplace_back(shaderStage.module);
+	}
+
+	void ImGUI::OnEvent(FramebufferResizedEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.DisplaySize = ImVec2(e.GetSize().x, e.GetSize().y);
+	}
+
+	void ImGUI::OnEvent(MouseMovedEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MousePos = ImVec2(e.GetPos().x, e.GetPos().y);
+	}
+
+	void ImGUI::OnEvent(MouseButtonPressedEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+
+		switch (e.GetKey())
+		{
+		case MouseButton::Left: io.MouseDown[0] = true; break;
+		case MouseButton::Right: io.MouseDown[1] = true; break;
+		}
+	}
+
+	void ImGUI::OnEvent(MouseButtonReleasedEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+
+		switch (e.GetKey())
+		{
+		case MouseButton::Left: io.MouseDown[0] = false; break;
+		case MouseButton::Right: io.MouseDown[1] = false; break;
+		}
 	}
 
 }  // namespace At0::Ray

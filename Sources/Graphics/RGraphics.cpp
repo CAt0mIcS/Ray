@@ -219,8 +219,6 @@ namespace At0::Ray
 
 	void Graphics::RecordCommandBuffer(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer)
 	{
-		// ImGUI::Get().Update();
-
 		cmdBuff.Begin();
 
 		VkClearValue clearColor{ 0.0137254f, 0.014117f, 0.0149019f };
@@ -278,6 +276,7 @@ namespace At0::Ray
 		// Mark the image as now being in use by this frame
 		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
 
+		ImGUI::Get().Update(dt);
 		Scene::Get().Update(dt);
 		Renderer::Get().Update(dt);
 
@@ -292,6 +291,7 @@ namespace At0::Ray
 		submitInfo.commandBufferCount = 1;
 
 		// Rerecord the command buffer for the current image if it was queried for rerecording
+		RerecordCommandBuffers();
 		if (m_RerecordCommandBuffers[imageIndex])
 		{
 			RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex]);
@@ -353,6 +353,7 @@ namespace At0::Ray
 
 		m_CommandBuffers.clear();
 
+		ImGUI::Destroy();
 		Scene::Destroy();
 		BufferSynchronizer::Destroy();
 		Codex::Shutdown();

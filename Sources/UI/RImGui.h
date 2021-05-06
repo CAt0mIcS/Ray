@@ -2,7 +2,13 @@
 
 #include "../RBase.h"
 #include "../Core/RMath.h"
+#include "../Core/RTime.h"
 #include "../Graphics/Pipelines/RShader.h"
+
+#include "../Events/REventListener.h"
+#include "../Events/RKeyboardEvents.h"
+#include "../Events/RMouseEvents.h"
+#include "../Events/REngineEvents.h"
 
 
 namespace At0::Ray
@@ -37,7 +43,11 @@ namespace At0::Ray
 	};
 
 
-	class RAY_EXPORT ImGUI
+	class RAY_EXPORT ImGUI :
+		EventListener<FramebufferResizedEvent>,
+		EventListener<MouseMovedEvent>,
+		EventListener<MouseButtonPressedEvent>,
+		EventListener<MouseButtonReleasedEvent>
 	{
 	public:
 		struct PushConstBlock
@@ -48,17 +58,23 @@ namespace At0::Ray
 
 	public:
 		static ImGUI& Get();
+		static void Destroy();
 
 		void NewFrame();
 		void UpdateBuffers();
 		void DrawFrame(VkCommandBuffer commandBuffer);
-		void Update();
+		void Update(Delta dt);
 
 	private:
 		ImGUI();
 
 		void InitResources();
 		void CreatePipeline();
+
+		void OnEvent(FramebufferResizedEvent& e) override;
+		void OnEvent(MouseMovedEvent& e) override;
+		void OnEvent(MouseButtonPressedEvent& e) override;
+		void OnEvent(MouseButtonReleasedEvent& e) override;
 
 	private:
 		VkImage m_FontImage;

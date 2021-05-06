@@ -44,7 +44,7 @@ namespace At0::Ray
 	public:
 		MouseMovedEvent(Float2 newPos, Int2 delta) : m_Pos(newPos), m_Delta(delta) {}
 
-		Float2 GetPosition() const { return m_Pos; }
+		Float2 GetPos() const { return m_Pos; }
 		Int2 GetDelta() const { return m_Delta; }
 
 	private:
