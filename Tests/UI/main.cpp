@@ -60,19 +60,18 @@ public:
 		Ray::Scene::Create<Scene>();
 
 		// Create UI
-		Ray::Button& texturedButton = Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>(
-			"TexturedButton", Ray::Float2{ 100.0f, 10.0f }, 200.0f, 50.0f,
-			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
+		// Ray::Button& texturedButton = Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>(
+		//	"TexturedButton", Ray::Float2{ 100.0f, 10.0f }, 200.0f, 50.0f,
+		//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
 
-		Ray::Button& greenButton =
-			Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>("GreenButton",
-				Ray::Float2{ 100.0f, 200.0f }, 200.0f, 50.0f, Ray::Float3{ 0.0f, 1.0f, 0.0f });
+		// Ray::Button& greenButton =
+		//	Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>("GreenButton",
+		//		Ray::Float2{ 100.0f, 200.0f }, 200.0f, 50.0f, Ray::Float3{ 0.0f, 1.0f, 0.0f });
 	}
 
 private:
 	void OnEvent(Ray::HoverEnterEvent& e) override
 	{
-		Ray::ImGUI::Get();
 		Ray::Log::Warn("HoverEnterEvent {0}", e.GetWidget() ? e.GetWidget()->GetName() : "{Null}");
 	}
 

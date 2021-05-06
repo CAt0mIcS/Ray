@@ -15,6 +15,8 @@ set(SHADERS
 	"../Resources/Shaders/UI.frag"
 	"../Resources/Shaders/UI_Tex.vert"
 	"../Resources/Shaders/UI_Tex.frag"
+	"../Resources/Shaders/ImGui.vert"
+	"../Resources/Shaders/ImGui.frag"
 )
 
 set(SRC
@@ -178,10 +180,10 @@ set(SRC
 
 	"${SHADERS}"
 
-	"${CMAKE_SOURCE_DIR}/Extern/imgui/imgui.cpp"
-	"${CMAKE_SOURCE_DIR}/Extern/imgui/imgui_demo.cpp"
-	"${CMAKE_SOURCE_DIR}/Extern/imgui/imgui_draw.cpp"
-	"${CMAKE_SOURCE_DIR}/Extern/imgui/imgui_widgets.cpp"
+	"../Extern/imgui/imgui.cpp"
+	"../Extern/imgui/imgui_demo.cpp"
+	"../Extern/imgui/imgui_draw.cpp"
+	"../Extern/imgui/imgui_widgets.cpp"
 )
 
 # ------------------------------------------------------------------

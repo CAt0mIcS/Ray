@@ -32,6 +32,8 @@
 #include "Geometry/RMesh.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 
+#include "UI/RImGui.h"
+
 
 namespace At0::Ray
 {
@@ -217,6 +219,8 @@ namespace At0::Ray
 
 	void Graphics::RecordCommandBuffer(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer)
 	{
+		// ImGUI::Get().Update();
+
 		cmdBuff.Begin();
 
 		VkClearValue clearColor{ 0.0137254f, 0.014117f, 0.0149019f };
@@ -227,6 +231,9 @@ namespace At0::Ray
 		clearValues.emplace_back(clearColor);
 		clearValues.emplace_back(depthStencilClearColor);
 
+		ImGUI::Get().NewFrame();
+		ImGUI::Get().UpdateBuffers();
+
 		m_RenderPass->Begin(cmdBuff, framebuffer, clearValues);
 
 		const VkViewport viewports[] = { m_Viewport };
@@ -234,8 +241,9 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		Scene::Get().GetCamera().CmdBind(cmdBuff);
-		Renderer::Get().Bind(cmdBuff);
+		// Scene::Get().GetCamera().CmdBind(cmdBuff);
+		// Renderer::Get().Bind(cmdBuff);
+		ImGUI::Get().DrawFrame(cmdBuff);
 
 		m_RenderPass->End(cmdBuff);
 

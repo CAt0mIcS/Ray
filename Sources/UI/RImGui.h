@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../RBase.h"
 #include "../Core/RMath.h"
@@ -14,7 +14,6 @@ namespace At0::Ray
 	 */
 	struct RAY_EXPORT GuiBuffer
 	{
-		VkDevice device;
 		VkBuffer buffer = VK_NULL_HANDLE;
 		VkDeviceMemory memory = VK_NULL_HANDLE;
 		VkDescriptorBufferInfo descriptor;
@@ -49,11 +48,11 @@ namespace At0::Ray
 
 	public:
 		static ImGUI& Get();
-		static void Destroy();
 
 		void NewFrame();
 		void UpdateBuffers();
 		void DrawFrame(VkCommandBuffer commandBuffer);
+		void Update();
 
 	private:
 		ImGUI();
@@ -80,5 +79,6 @@ namespace At0::Ray
 		int32_t m_IndexCount = 0;
 
 		Shader m_Shader;
+		std::vector<VkShaderModule> m_ShaderModules;
 	};
 }  // namespace At0::Ray

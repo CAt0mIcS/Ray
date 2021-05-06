@@ -1,7 +1,9 @@
-#include "Rpch.h"
+﻿#include "Rpch.h"
 #include "RImGui.h"
 
 #include "Devices/RWindow.h"
+#include "Devices/RMouse.h"
+
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Core/RPhysicalDevice.h"
@@ -19,21 +21,21 @@ namespace At0::Ray
 #pragma region TestBuffer
 	VkResult GuiBuffer::map(VkDeviceSize size, VkDeviceSize offset)
 	{
-		return vkMapMemory(device, memory, offset, size, 0, &mapped);
+		return vkMapMemory(Graphics::Get().GetDevice(), memory, offset, size, 0, &mapped);
 	}
 
 	void GuiBuffer::unmap()
 	{
 		if (mapped)
 		{
-			vkUnmapMemory(device, memory);
+			vkUnmapMemory(Graphics::Get().GetDevice(), memory);
 			mapped = nullptr;
 		}
 	}
 
 	VkResult GuiBuffer::bind(VkDeviceSize offset)
 	{
-		return vkBindBufferMemory(device, buffer, memory, offset);
+		return vkBindBufferMemory(Graphics::Get().GetDevice(), buffer, memory, offset);
 	}
 
 	void GuiBuffer::setupDescriptor(VkDeviceSize size, VkDeviceSize offset)
@@ -56,7 +58,7 @@ namespace At0::Ray
 		mappedRange.memory = memory;
 		mappedRange.offset = offset;
 		mappedRange.size = size;
-		return vkFlushMappedMemoryRanges(device, 1, &mappedRange);
+		return vkFlushMappedMemoryRanges(Graphics::Get().GetDevice(), 1, &mappedRange);
 	}
 
 	VkResult GuiBuffer::invalidate(VkDeviceSize size, VkDeviceSize offset)
@@ -66,18 +68,18 @@ namespace At0::Ray
 		mappedRange.memory = memory;
 		mappedRange.offset = offset;
 		mappedRange.size = size;
-		return vkInvalidateMappedMemoryRanges(device, 1, &mappedRange);
+		return vkInvalidateMappedMemoryRanges(Graphics::Get().GetDevice(), 1, &mappedRange);
 	}
 
 	void GuiBuffer::destroy()
 	{
 		if (buffer)
 		{
-			vkDestroyBuffer(device, buffer, nullptr);
+			vkDestroyBuffer(Graphics::Get().GetDevice(), buffer, nullptr);
 		}
 		if (memory)
 		{
-			vkFreeMemory(device, memory, nullptr);
+			vkFreeMemory(Graphics::Get().GetDevice(), memory, nullptr);
 		}
 	}
 #pragma endregion
@@ -88,10 +90,10 @@ namespace At0::Ray
 		return instance;
 	}
 
-	void ImGUI::Destroy() {}
-
 	ImGUI::ImGUI()
 	{
+		ImGui::CreateContext();
+
 		ImGuiStyle& style = ImGui::GetStyle();
 		style.Colors[ImGuiCol_TitleBg] = ImVec4(1.0f, 1.0, 1.0f, 0.6f);
 		style.Colors[ImGuiCol_TitleBgActive] = ImVec4(1.0f, 1.0f, 1.0f, 0.8f);
@@ -136,9 +138,9 @@ namespace At0::Ray
 			vkCreateImage(Graphics::Get().GetDevice(), &imageInfo, nullptr, &m_FontImage),
 			"[ImGui] Failed to create font image");
 
-		VkMemoryRequirements memReqs;
+		VkMemoryRequirements memReqs{};
 		vkGetImageMemoryRequirements(Graphics::Get().GetDevice(), m_FontImage, &memReqs);
-		VkMemoryAllocateInfo memAllocInfo;
+		VkMemoryAllocateInfo memAllocInfo{};
 		memAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 		memAllocInfo.allocationSize = memReqs.size;
 		memAllocInfo.memoryTypeIndex = Graphics::Get().GetPhysicalDevice().FindMemoryType(
@@ -151,7 +153,7 @@ namespace At0::Ray
 			"[ImGui] Failed to bind font memory");
 
 		// Image view
-		VkImageViewCreateInfo viewInfo;
+		VkImageViewCreateInfo viewInfo{};
 		viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 		viewInfo.image = m_FontImage;
 		viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
@@ -183,8 +185,7 @@ namespace At0::Ray
 		vkCmdCopyBufferToImage(copyCmd, stagingBuffer, m_FontImage,
 			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &bufferCopyRegion);
 
-		Image::TransitionLayout(m_FontImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		copyCmd.End();
 
 		VkCommandBuffer cmdBuff = copyCmd;
 		VkSubmitInfo submitInfo{};
@@ -196,6 +197,9 @@ namespace At0::Ray
 		vkQueueSubmit(
 			Graphics::Get().GetDevice().GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
 		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+
+		Image::TransitionLayout(m_FontImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
 		// Font texture Sampler
 		VkSamplerCreateInfo samplerInfo{};
@@ -259,6 +263,7 @@ namespace At0::Ray
 			Buffer::CreateBuffer(vertexBufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, m_VertexBuffer.buffer, m_VertexBuffer.memory);
 			m_VertexCount = imDrawData->TotalVtxCount;
+			m_VertexBuffer.bind();
 			m_VertexBuffer.map();
 		}
 
@@ -270,6 +275,7 @@ namespace At0::Ray
 			Buffer::CreateBuffer(indexBufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, m_IndexBuffer.buffer, m_IndexBuffer.memory);
 			m_IndexCount = imDrawData->TotalIdxCount;
+			m_IndexBuffer.bind();
 			m_IndexBuffer.map();
 		}
 
@@ -297,10 +303,98 @@ namespace At0::Ray
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0,
 			1, &m_DescriptorSet, 0, nullptr);
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
+
+		VkViewport viewport{};
+		viewport.width = io.DisplaySize.x;
+		viewport.height = io.DisplaySize.y;
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+
+		// UI scale and translate via push constants
+		m_PushConstBlock.scale = glm::vec2(2.0f / io.DisplaySize.x, 2.0f / io.DisplaySize.y);
+		m_PushConstBlock.translate = glm::vec2(-1.0f);
+		vkCmdPushConstants(commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0,
+			sizeof(PushConstBlock), &m_PushConstBlock);
+
+		// Render commands
+		ImDrawData* imDrawData = ImGui::GetDrawData();
+		int32_t vertexOffset = 0;
+		int32_t indexOffset = 0;
+
+		if (imDrawData->CmdListsCount > 0)
+		{
+			VkDeviceSize offsets[1] = { 0 };
+			vkCmdBindVertexBuffers(commandBuffer, 0, 1, &m_VertexBuffer.buffer, offsets);
+			vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer.buffer, 0, VK_INDEX_TYPE_UINT16);
+
+			for (int32_t i = 0; i < imDrawData->CmdListsCount; i++)
+			{
+				const ImDrawList* cmd_list = imDrawData->CmdLists[i];
+				for (int32_t j = 0; j < cmd_list->CmdBuffer.Size; j++)
+				{
+					const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[j];
+					VkRect2D scissorRect;
+					scissorRect.offset.x = std::max((int32_t)(pcmd->ClipRect.x), 0);
+					scissorRect.offset.y = std::max((int32_t)(pcmd->ClipRect.y), 0);
+					scissorRect.extent.width = (uint32_t)(pcmd->ClipRect.z - pcmd->ClipRect.x);
+					scissorRect.extent.height = (uint32_t)(pcmd->ClipRect.w - pcmd->ClipRect.y);
+					vkCmdSetScissor(commandBuffer, 0, 1, &scissorRect);
+					vkCmdDrawIndexed(
+						commandBuffer, pcmd->ElemCount, 1, indexOffset, vertexOffset, 0);
+					indexOffset += pcmd->ElemCount;
+				}
+				vertexOffset += cmd_list->VtxBuffer.Size;
+			}
+		}
+	}
+
+	void ImGUI::Update()
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.DisplaySize =
+			ImVec2(Window::Get().GetFramebufferSize().x, Window::Get().GetFramebufferSize().y);
+
+		io.MousePos = ImVec2(Mouse::GetPos().x, Mouse::GetPos().y);
+		io.MouseDown[0] = Mouse::IsLeftPressed();
+		io.MouseDown[1] = Mouse::IsRightPressed();
 	}
 
 	void ImGUI::CreatePipeline()
 	{
+		// Shader stages
+		std::array<VkPipelineShaderStageCreateInfo, 2> shaderStages{};
+		{
+			std::string shader = "Resources/Shaders/ImGui.vert";
+			VkShaderStageFlagBits stageFlag = Shader::GetShaderStage(shader);
+			std::optional<std::string> shaderCode = ReadFile(shader);
+
+			VkShaderModule shaderModule = m_Shader.CreateShaderModule(
+				shader, *shaderCode, /*defineBlock.str()*/ "", stageFlag);
+
+			VkPipelineShaderStageCreateInfo shaderStageCreateInfo{};
+			shaderStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+			shaderStageCreateInfo.stage = stageFlag;
+			shaderStageCreateInfo.module = shaderModule;
+			shaderStageCreateInfo.pName = "main";
+			shaderStages[0] = shaderStageCreateInfo;
+		}
+		{
+			std::string shader = "Resources/Shaders/ImGui.frag";
+			VkShaderStageFlagBits stageFlag = Shader::GetShaderStage(shader);
+			std::optional<std::string> shaderCode = ReadFile(shader);
+
+			VkShaderModule shaderModule = m_Shader.CreateShaderModule(
+				shader, *shaderCode, /*defineBlock.str()*/ "", stageFlag);
+
+			VkPipelineShaderStageCreateInfo shaderStageCreateInfo{};
+			shaderStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+			shaderStageCreateInfo.stage = stageFlag;
+			shaderStageCreateInfo.module = shaderModule;
+			shaderStageCreateInfo.pName = "main";
+			shaderStages[1] = shaderStageCreateInfo;
+		}
+
 		// Descriptor pool
 		VkDescriptorPoolSize poolSize{};
 		poolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -434,8 +528,6 @@ namespace At0::Ray
 		dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStateEnables.size());
 		dynamicState.flags = 0;
 
-		std::array<VkPipelineShaderStageCreateInfo, 2> shaderStages{};
-
 		VkGraphicsPipelineCreateInfo pipelineCreateInfo{};
 		pipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 		pipelineCreateInfo.layout = m_PipelineLayout;
@@ -460,66 +552,34 @@ namespace At0::Ray
 		vertexInputBinding.stride = sizeof(ImDrawVert);
 		vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-		std::vector<VkVertexInputAttributeDescription> vertexInputAttributes;
+		std::array<VkVertexInputAttributeDescription, 3> vertexInputAttributes;
 		VkVertexInputAttributeDescription vInputPos{};
 		vInputPos.location = 0;
 		vInputPos.binding = 0;
 		vInputPos.format = VK_FORMAT_R32G32_SFLOAT;
 		vInputPos.offset = offsetof(ImDrawVert, pos);
 		VkVertexInputAttributeDescription vInputUV{};
-		vInputPos.location = 1;
-		vInputPos.binding = 0;
-		vInputPos.format = VK_FORMAT_R32G32_SFLOAT;
-		vInputPos.offset = offsetof(ImDrawVert, uv);
+		vInputUV.location = 1;
+		vInputUV.binding = 0;
+		vInputUV.format = VK_FORMAT_R32G32_SFLOAT;
+		vInputUV.offset = offsetof(ImDrawVert, uv);
 		VkVertexInputAttributeDescription vInputCol{};
-		vInputPos.location = 2;
-		vInputPos.binding = 0;
-		vInputPos.format = VK_FORMAT_R8G8B8A8_UNORM;
-		vInputPos.offset = offsetof(ImDrawVert, col);
-		vertexInputAttributes.emplace_back(vInputPos);
-		vertexInputAttributes.emplace_back(vInputUV);
-		vertexInputAttributes.emplace_back(vInputCol);
+		vInputCol.location = 2;
+		vInputCol.binding = 0;
+		vInputCol.format = VK_FORMAT_R8G8B8A8_UNORM;
+		vInputCol.offset = offsetof(ImDrawVert, col);
+		vertexInputAttributes[0] = vInputPos;
+		vertexInputAttributes[1] = vInputUV;
+		vertexInputAttributes[2] = vInputCol;
 
 		VkPipelineVertexInputStateCreateInfo vertexInputState{};
 		vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 		vertexInputState.vertexBindingDescriptionCount = 1;
 		vertexInputState.pVertexBindingDescriptions = &vertexInputBinding;
-		vertexInputState.vertexAttributeDescriptionCount =
-			static_cast<uint32_t>(vertexInputAttributes.size());
+		vertexInputState.vertexAttributeDescriptionCount = (uint32_t)vertexInputAttributes.size();
 		vertexInputState.pVertexAttributeDescriptions = vertexInputAttributes.data();
 
 		pipelineCreateInfo.pVertexInputState = &vertexInputState;
-
-		{
-			std::string shader = "Resources/Shaders/ImGui.vert";
-			VkShaderStageFlagBits stageFlag = Shader::GetShaderStage(shader);
-			std::optional<std::string> shaderCode = ReadFile(shader);
-
-			VkShaderModule shaderModule = m_Shader.CreateShaderModule(
-				shader, *shaderCode, /*defineBlock.str()*/ "", stageFlag);
-
-			VkPipelineShaderStageCreateInfo shaderStageCreateInfo{};
-			shaderStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-			shaderStageCreateInfo.stage = stageFlag;
-			shaderStageCreateInfo.module = shaderModule;
-			shaderStageCreateInfo.pName = "main";
-			shaderStages[0] = shaderStageCreateInfo;
-		}
-		{
-			std::string shader = "Resources/Shaders/ImGui.frag";
-			VkShaderStageFlagBits stageFlag = Shader::GetShaderStage(shader);
-			std::optional<std::string> shaderCode = ReadFile(shader);
-
-			VkShaderModule shaderModule = m_Shader.CreateShaderModule(
-				shader, *shaderCode, /*defineBlock.str()*/ "", stageFlag);
-
-			VkPipelineShaderStageCreateInfo shaderStageCreateInfo{};
-			shaderStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-			shaderStageCreateInfo.stage = stageFlag;
-			shaderStageCreateInfo.module = shaderModule;
-			shaderStageCreateInfo.pName = "main";
-			shaderStages[1] = shaderStageCreateInfo;
-		}
 
 		RAY_VK_THROW_FAILED(vkCreateGraphicsPipelines(Graphics::Get().GetDevice(), nullptr, 1,
 								&pipelineCreateInfo, nullptr, &m_Pipeline),
