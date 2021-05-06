@@ -30,8 +30,8 @@ public:
 	Scene() : Ray::Scene(Ray::MakeScope<Ray::Camera>())
 	{
 		Ray::UInt2 size = Ray::Window::Get().GetFramebufferSize();
-		GetCamera().SetPosition(glm::vec3(0.0f, 0.0f, -2.5f));
-		GetCamera().SetRotation(glm::vec3(0.0f));
+		GetCamera().SetPosition(Ray::Float3(0.0f, 0.0f, -2.5f));
+		GetCamera().SetRotation(Ray::Float3(0.0f));
 		GetCamera().SetRotationSpeed(0.07f);
 		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
 		GetCamera().SetMovementSpeed(3.0f);
