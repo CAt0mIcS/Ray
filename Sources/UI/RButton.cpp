@@ -52,4 +52,10 @@ namespace At0::Ray
 		SetHeight(height);
 		SetTranslation(pos);
 	}
+
+	void Button::SetColor(const Float3& color)
+	{
+		RAY_MEXPECTS(m_UseColorMaterial, "[Button] RAY_TODO: Cannot set color on textured button");
+		GetEntity().Get<Mesh>().GetMaterial().GetUniform<BufferUniform>("Shading")["color"] = color;
+	}
 }  // namespace At0::Ray

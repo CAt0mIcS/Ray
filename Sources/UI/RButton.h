@@ -19,6 +19,8 @@ namespace At0::Ray
 		Button(Entity entity, std::string_view name, Float2 pos, float width, float height,
 			Ref<Texture2D> texture);
 
+		void SetColor(const Float3& color);
+
 	private:
 		/**
 		 * True if the color material is in use.

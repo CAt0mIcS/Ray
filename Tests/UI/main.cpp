@@ -60,24 +60,21 @@ public:
 	{
 		Ray::Scene::Create<Scene>();
 
-		bool displayModels = true;
-		float lightSpeed = 1.0f;
+		// Create UI
+		Ray::Button& texturedButton = Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>(
+			"TexturedButton", Ray::Float2{ 100.0f, 10.0f }, 200.0f, 50.0f,
+			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
+
+		Ray::Button& greenButton =
+			Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>("ColoredButton",
+				Ray::Float2{ 100.0f, 200.0f }, 200.0f, 50.0f, Ray::Float3{ 0.0f, 1.0f, 0.0f });
+
 
 		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
-			ImGui::Begin("Example settings");
-			ImGui::Checkbox("Render models", &displayModels);
-			ImGui::SliderFloat("Light speed", &lightSpeed, 0.1f, 1.0f);
+			ImGui::Begin("Button settings");
+			ImGui::ColorPicker3("Color", m_ButtonColors);
 			ImGui::End();
 		});
-
-		// Create UI
-		// Ray::Button& texturedButton = Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>(
-		//	"TexturedButton", Ray::Float2{ 100.0f, 10.0f }, 200.0f, 50.0f,
-		//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
-
-		// Ray::Button& greenButton =
-		//	Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>("GreenButton",
-		//		Ray::Float2{ 100.0f, 200.0f }, 200.0f, 50.0f, Ray::Float3{ 0.0f, 1.0f, 0.0f });
 	}
 
 private:
@@ -103,7 +100,19 @@ private:
 			"MouseButtonReleasedEvent {0}", e.GetWidget() ? e.GetWidget()->GetName() : "{Null}");
 	}
 
-	void Update() override {}
+	void Update() override
+	{
+		auto btnView = Ray::Scene::Get().EntityView<Ray::Button>();
+		for (Ray::Entity btnEntity : btnView)
+		{
+			Ray::Button& btn = btnEntity.Get<Ray::Button>();
+			if (btn.GetName() == "ColoredButton")
+				btn.SetColor({ m_ButtonColors[0], m_ButtonColors[1], m_ButtonColors[2] });
+		}
+	}
+
+private:
+	float m_ButtonColors[3];
 };
 
 void SignalHandler(int signal)

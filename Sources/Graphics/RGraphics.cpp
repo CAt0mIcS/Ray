@@ -241,8 +241,8 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		// Scene::Get().GetCamera().CmdBind(cmdBuff);
-		// Renderer::Get().Bind(cmdBuff);
+		Scene::Get().GetCamera().CmdBind(cmdBuff);
+		Renderer::Get().Bind(cmdBuff);
 
 #if RAY_ENABLE_IMGUI
 		ImGUI::Get().CmdBind(cmdBuff);

@@ -9,7 +9,7 @@
 
 namespace At0::Ray
 {
-	class Entity
+	class RAY_EXPORT Entity
 	{
 	public:
 		Entity() = default;
