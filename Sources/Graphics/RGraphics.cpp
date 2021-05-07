@@ -229,8 +229,10 @@ namespace At0::Ray
 		clearValues.emplace_back(clearColor);
 		clearValues.emplace_back(depthStencilClearColor);
 
+#if RAY_ENABLE_IMGUI
 		ImGUI::Get().NewFrame();
 		ImGUI::Get().UpdateBuffers();
+#endif
 
 		m_RenderPass->Begin(cmdBuff, framebuffer, clearValues);
 
@@ -241,7 +243,10 @@ namespace At0::Ray
 
 		// Scene::Get().GetCamera().CmdBind(cmdBuff);
 		// Renderer::Get().Bind(cmdBuff);
+
+#if RAY_ENABLE_IMGUI
 		ImGUI::Get().CmdBind(cmdBuff);
+#endif
 
 		m_RenderPass->End(cmdBuff);
 
@@ -276,7 +281,9 @@ namespace At0::Ray
 		// Mark the image as now being in use by this frame
 		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
 
+#if RAY_ENABLE_IMGUI
 		ImGUI::Get().Update(dt);
+#endif
 		Scene::Get().Update(dt);
 		Renderer::Get().Update(dt);
 
@@ -355,7 +362,9 @@ namespace At0::Ray
 
 		m_CommandBuffers.clear();
 
+#if RAY_ENABLE_IMGUI
 		ImGUI::Destroy();
+#endif
 		Scene::Destroy();
 		BufferSynchronizer::Destroy();
 		Codex::Shutdown();
