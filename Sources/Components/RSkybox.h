@@ -11,6 +11,9 @@ namespace At0::Ray
 	{
 	public:
 		Skybox(Entity entity);
+
+	private:
+		Ref<Texture2D> m_Texture;
 	};
 }  // namespace At0::Ray
 

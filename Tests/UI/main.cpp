@@ -5,7 +5,7 @@
 
 #include <UI/RButton.h>
 
-#include <Geometry/RMesh.h>
+#include <Components/RMesh.h>
 #include <Graphics/Images/RTexture2D.h>
 #include <Graphics/Renderers/RRenderer.h>
 #include <Graphics/Renderers/RMeshRenderer.h>
