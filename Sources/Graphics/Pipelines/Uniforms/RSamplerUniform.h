@@ -13,6 +13,9 @@ namespace At0::Ray
 	public:
 		SamplerUniform(std::string_view uniformName, Shader::Stage stage, Ref<Texture2D> texture,
 			const Pipeline& pipeline);
+		SamplerUniform(std::string_view uniformName, VkDescriptorSetLayout descSetLayout,
+			VkDescriptorPool descSetPool, Pipeline::BindPoint bindPoint,
+			VkPipelineLayout pipelineLayout, uint32_t set, Ref<Texture2D> texture);
 		~SamplerUniform();
 
 		SamplerUniform& operator=(const SamplerUniform& other);

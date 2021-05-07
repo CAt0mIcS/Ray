@@ -28,7 +28,21 @@ namespace At0::Ray
 			pipeline.GetDescriptorSetLayout(*set), pipeline.GetBindPoint(), pipeline.GetLayout(),
 			*set);
 
-		Setup();
+		if (m_Texture)
+			Setup();
+	}
+
+	SamplerUniform::SamplerUniform(std::string_view uniformName,
+		VkDescriptorSetLayout descSetLayout, VkDescriptorPool descSetPool,
+		Pipeline::BindPoint bindPoint, VkPipelineLayout pipelineLayout, uint32_t set,
+		Ref<Texture2D> texture)
+		: Uniform(uniformName), m_Set(set), m_Texture(std::move(texture))
+	{
+		m_DescriptorSet =
+			MakeScope<DescriptorSet>(descSetPool, descSetLayout, bindPoint, pipelineLayout, m_Set);
+
+		if (m_Texture)
+			Setup();
 	}
 
 	SamplerUniform::~SamplerUniform() {}

@@ -15,78 +15,14 @@
 #include "Graphics/Images/RTextureSampler.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
 #include "Graphics/Buffers/RIndexBuffer.h"
+#include "Graphics/Pipelines/Uniforms/RSamplerUniform.h"
+#include "Graphics/Images/RTexture2D.h"
 
 #include <../../Extern/imgui/imgui.h>
 
 
 namespace At0::Ray
 {
-#pragma region TestBuffer
-	VkResult GuiBuffer::map(VkDeviceSize size, VkDeviceSize offset)
-	{
-		return vkMapMemory(Graphics::Get().GetDevice(), memory, offset, size, 0, &mapped);
-	}
-
-	void GuiBuffer::unmap()
-	{
-		if (mapped)
-		{
-			vkUnmapMemory(Graphics::Get().GetDevice(), memory);
-			mapped = nullptr;
-		}
-	}
-
-	VkResult GuiBuffer::bind(VkDeviceSize offset)
-	{
-		return vkBindBufferMemory(Graphics::Get().GetDevice(), buffer, memory, offset);
-	}
-
-	void GuiBuffer::setupDescriptor(VkDeviceSize size, VkDeviceSize offset)
-	{
-		descriptor.offset = offset;
-		descriptor.buffer = buffer;
-		descriptor.range = size;
-	}
-
-	void GuiBuffer::copyTo(void* data, VkDeviceSize size)
-	{
-		assert(mapped);
-		memcpy(mapped, data, size);
-	}
-
-	VkResult GuiBuffer::flush(VkDeviceSize size, VkDeviceSize offset)
-	{
-		VkMappedMemoryRange mappedRange = {};
-		mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-		mappedRange.memory = memory;
-		mappedRange.offset = offset;
-		mappedRange.size = size;
-		return vkFlushMappedMemoryRanges(Graphics::Get().GetDevice(), 1, &mappedRange);
-	}
-
-	VkResult GuiBuffer::invalidate(VkDeviceSize size, VkDeviceSize offset)
-	{
-		VkMappedMemoryRange mappedRange = {};
-		mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-		mappedRange.memory = memory;
-		mappedRange.offset = offset;
-		mappedRange.size = size;
-		return vkInvalidateMappedMemoryRanges(Graphics::Get().GetDevice(), 1, &mappedRange);
-	}
-
-	void GuiBuffer::destroy()
-	{
-		if (buffer)
-		{
-			vkDestroyBuffer(Graphics::Get().GetDevice(), buffer, nullptr);
-		}
-		if (memory)
-		{
-			vkFreeMemory(Graphics::Get().GetDevice(), memory, nullptr);
-		}
-	}
-#pragma endregion
-
 	ImGUI& ImGUI::Get()
 	{
 		static ImGUI instance;
@@ -101,8 +37,7 @@ namespace At0::Ray
 		// Release all Vulkan resources required for rendering imGui
 		Get().m_VertexBuffer.reset();
 		Get().m_IndexBuffer.reset();
-		Get().m_FontImage.reset();
-		Get().m_Sampler.reset();
+		Get().m_FontUniform.reset();
 		for (VkShaderModule shaderModule : Get().m_ShaderModules)
 			vkDestroyShaderModule(Graphics::Get().GetDevice(), shaderModule, nullptr);
 		vkDestroyPipeline(Graphics::Get().GetDevice(), Get().m_Pipeline, nullptr);
@@ -140,25 +75,25 @@ namespace At0::Ray
 		VkDeviceSize uploadSize = texWidth * texHeight * 4 * sizeof(char);
 
 		// Create target image for copy
-		m_FontImage = MakeScope<Image2D>(UInt2{ texWidth, texHeight }, VK_FORMAT_R8G8B8A8_UNORM,
+		m_FontImage = MakeRef<Texture2D>(UInt2{ texWidth, texHeight }, VK_FORMAT_R8G8B8A8_UNORM,
 			VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
 		Buffer stagingBuffer(uploadSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, fontData);
 
-		m_FontImage->TransitionLayout(
+		m_FontImage->GetImage().TransitionLayout(
 			VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
 		// Copy
-		m_FontImage->CopyFromBuffer(stagingBuffer);
+		m_FontImage->GetImage().CopyFromBuffer(stagingBuffer);
 
-		m_FontImage->TransitionLayout(
+		m_FontImage->GetImage().TransitionLayout(
 			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
 		// Font texture sampler
-		m_Sampler = MakeScope<TextureSampler>(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-			VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE);
+		// m_Sampler = MakeScope<TextureSampler>(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+		//	VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE);
 
 		CreatePipeline();
 	}
@@ -228,7 +163,7 @@ namespace At0::Ray
 		ImDrawVert* vtxDst = (ImDrawVert*)m_VertexBufferMapped;
 		ImDrawIdx* idxDst = (ImDrawIdx*)m_IndexBufferMapped;
 
-		for (int n = 0; n < imDrawData->CmdListsCount; n++)
+		for (int n = 0; n < imDrawData->CmdListsCount; ++n)
 		{
 			const ImDrawList* cmdList = imDrawData->CmdLists[n];
 			memcpy(vtxDst, cmdList->VtxBuffer.Data, cmdList->VtxBuffer.Size * sizeof(ImDrawVert));
@@ -242,24 +177,23 @@ namespace At0::Ray
 		m_IndexBuffer->FlushMemory();
 	}
 
-	void ImGUI::DrawFrame(VkCommandBuffer commandBuffer)
+	void ImGUI::DrawFrame(const CommandBuffer& cmdBuff)
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0,
-			1, &m_DescriptorSet, 0, nullptr);
-		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
+		vkCmdBindPipeline(cmdBuff, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
+		m_FontUniform->CmdBind(cmdBuff);
 
 		VkViewport viewport{};
 		viewport.width = io.DisplaySize.x;
 		viewport.height = io.DisplaySize.y;
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+		vkCmdSetViewport(cmdBuff, 0, 1, &viewport);
 
 		// UI scale and translate via push constants
 		m_PushConstBlock.scale = Float2(2.0f / io.DisplaySize.x, 2.0f / io.DisplaySize.y);
 		m_PushConstBlock.translate = Float2(-1.0f);
-		vkCmdPushConstants(commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0,
+		vkCmdPushConstants(cmdBuff, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0,
 			sizeof(PushConstBlock), &m_PushConstBlock);
 
 		// Render commands
@@ -271,8 +205,8 @@ namespace At0::Ray
 		{
 			VkDeviceSize offsets[1] = { 0 };
 			VkBuffer vBuff = *m_VertexBuffer;
-			vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vBuff, offsets);
-			vkCmdBindIndexBuffer(commandBuffer, *m_IndexBuffer, 0, VK_INDEX_TYPE_UINT16);
+			vkCmdBindVertexBuffers(cmdBuff, 0, 1, &vBuff, offsets);
+			vkCmdBindIndexBuffer(cmdBuff, *m_IndexBuffer, 0, VK_INDEX_TYPE_UINT16);
 
 			for (int32_t i = 0; i < imDrawData->CmdListsCount; i++)
 			{
@@ -285,9 +219,8 @@ namespace At0::Ray
 					scissorRect.offset.y = std::max((int32_t)(pcmd->ClipRect.y), 0);
 					scissorRect.extent.width = (uint32_t)(pcmd->ClipRect.z - pcmd->ClipRect.x);
 					scissorRect.extent.height = (uint32_t)(pcmd->ClipRect.w - pcmd->ClipRect.y);
-					vkCmdSetScissor(commandBuffer, 0, 1, &scissorRect);
-					vkCmdDrawIndexed(
-						commandBuffer, pcmd->ElemCount, 1, indexOffset, vertexOffset, 0);
+					vkCmdSetScissor(cmdBuff, 0, 1, &scissorRect);
+					vkCmdDrawIndexed(cmdBuff, pcmd->ElemCount, 1, indexOffset, vertexOffset, 0);
 					indexOffset += pcmd->ElemCount;
 				}
 				vertexOffset += cmd_list->VtxBuffer.Size;
@@ -365,34 +298,6 @@ namespace At0::Ray
 								&descriptorSetLayoutCreateInfo, nullptr, &m_DescriptorSetLayout),
 			"[ImGui] Failed to create descriptor set layout");
 
-		// Descriptor set
-		VkDescriptorSetAllocateInfo descriptorSetAllocateInfo{};
-		descriptorSetAllocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		descriptorSetAllocateInfo.descriptorPool = m_DescriptorPool;
-		descriptorSetAllocateInfo.pSetLayouts = &m_DescriptorSetLayout;
-		descriptorSetAllocateInfo.descriptorSetCount = 1;
-
-		RAY_VK_THROW_FAILED(vkAllocateDescriptorSets(Graphics::Get().GetDevice(),
-								&descriptorSetAllocateInfo, &m_DescriptorSet),
-			"[ImGui] Failed to allocate descriptor set");
-
-		VkDescriptorImageInfo fontDescriptor{};
-		fontDescriptor.sampler = *m_Sampler;
-		fontDescriptor.imageView = m_FontImage->GetImageView();
-		fontDescriptor.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		std::vector<VkWriteDescriptorSet> writeDescriptorSets;
-		VkWriteDescriptorSet writeDescriptorSet{};
-		writeDescriptorSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		writeDescriptorSet.dstSet = m_DescriptorSet;
-		writeDescriptorSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		writeDescriptorSet.dstBinding = 0;
-		writeDescriptorSet.pImageInfo = &fontDescriptor;
-		writeDescriptorSet.descriptorCount = 1;
-		writeDescriptorSets.emplace_back(writeDescriptorSet);
-		vkUpdateDescriptorSets(Graphics::Get().GetDevice(),
-			static_cast<uint32_t>(writeDescriptorSets.size()), writeDescriptorSets.data(), 0,
-			nullptr);
-
 		// Pipeline layout
 		// Push constants for UI rendering parameters
 		VkPushConstantRange pushConstantRange{};
@@ -409,6 +314,10 @@ namespace At0::Ray
 		RAY_VK_THROW_FAILED(vkCreatePipelineLayout(Graphics::Get().GetDevice(),
 								&pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout),
 			"[ImGui] Failed to create pipeline layout");
+
+		m_FontUniform =
+			MakeScope<SamplerUniform>("ImGuiFonts", m_DescriptorSetLayout, m_DescriptorPool,
+				Pipeline::BindPoint::Graphics, m_PipelineLayout, 0, std::move(m_FontImage));
 
 		// Setup graphics pipeline for UI rendering
 		VkPipelineInputAssemblyStateCreateInfo inputAssemblyState{};

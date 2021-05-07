@@ -42,6 +42,12 @@ namespace At0::Ray
 			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 	}
 
+	Texture2D::Texture2D(UInt2 extent, VkFormat format, VkImageTiling tiling,
+		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, VkImageAspectFlags imageAspect)
+	{
+		m_Image = MakeScope<Image2D>(extent, format, tiling, usage, memProps, imageAspect);
+	}
+
 	Texture2D& Texture2D::operator=(Texture2D&& other)
 	{
 		m_Image = std::move(other.m_Image);
