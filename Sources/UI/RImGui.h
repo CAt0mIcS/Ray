@@ -1,6 +1,10 @@
 ﻿#pragma once
 
 #include "../RBase.h"
+
+#if RAY_ENABLE_IMGUI
+
+// clang-format off
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
 #include "../Graphics/Pipelines/RShader.h"
@@ -10,6 +14,7 @@
 #include "../Events/RKeyboardEvents.h"
 #include "../Events/RMouseEvents.h"
 #include "../Events/REngineEvents.h"
+// clang-format on
 
 
 namespace At0::Ray
@@ -19,6 +24,11 @@ namespace At0::Ray
 	class SamplerUniform;
 	class CommandBuffer;
 	class GraphicsPipeline;
+
+	/**
+	 * RAY_TODO:
+	 *	ImGui should be the first to receive events
+	 */
 
 	class RAY_EXPORT ImGUI :
 		EventListener<FramebufferResizedEvent>,
@@ -86,3 +96,5 @@ namespace At0::Ray
 		int32_t m_IndexCount = 0;
 	};
 }  // namespace At0::Ray
+
+#endif

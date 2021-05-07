@@ -13,6 +13,8 @@ namespace At0::Ray
 
 		Key GetKey() const { return m_Key; }
 
+		bool Handled = false;
+
 	private:
 		Key m_Key;
 	};
@@ -23,6 +25,8 @@ namespace At0::Ray
 		KeyReleasedEvent(Key k) : m_Key(k) {}
 
 		Key GetKey() const { return m_Key; }
+
+		bool Handled = false;
 
 	private:
 		Key m_Key;
@@ -36,6 +40,8 @@ namespace At0::Ray
 		Key GetKey() const { return m_Key; }
 		uint32_t GetRepeatCount() const { return m_RepeatCount; }
 
+		bool Handled = false;
+
 	private:
 		Key m_Key;
 		uint32_t m_RepeatCount;
@@ -47,6 +53,8 @@ namespace At0::Ray
 		CharEvent(unsigned char ch) : m_Ch(ch) {}
 
 		unsigned char GetChar() const { return m_Ch; }
+
+		bool Handled = false;
 
 	private:
 		unsigned char m_Ch;

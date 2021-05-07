@@ -12,6 +12,8 @@ namespace At0::Ray
 
 		Int2 GetSize() const { return m_Size; }
 
+		bool Handled = false;
+
 	private:
 		Int2 m_Size;
 	};
@@ -22,6 +24,8 @@ namespace At0::Ray
 		FramebufferResizedEvent(Int2 newSize) : m_Size(newSize) {}
 
 		Int2 GetSize() const { return m_Size; }
+
+		bool Handled = false;
 
 	private:
 		Int2 m_Size;
@@ -34,11 +38,15 @@ namespace At0::Ray
 
 		Int2 GetPosition() const { return m_Pos; }
 
+		bool Handled = false;
+
 	private:
 		Int2 m_Pos;
 	};
 
 	class WindowClosedEvent
 	{
+	public:
+		bool Handled = false;
 	};
 }  // namespace At0::Ray

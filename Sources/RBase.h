@@ -40,6 +40,9 @@
 	};
 
 
+#define RAY_ENABLE_IMGUI 1
+
+
 #include <memory>
 
 namespace At0::Ray

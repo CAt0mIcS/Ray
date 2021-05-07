@@ -1,6 +1,9 @@
 ﻿#include "Rpch.h"
 #include "RImGui.h"
 
+#if RAY_ENABLE_IMGUI
+
+// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -20,7 +23,7 @@
 #include "Graphics/Images/RTexture2D.h"
 
 #include <../../Extern/imgui/imgui.h>
-
+// clang-format on
 
 namespace At0::Ray
 {
@@ -298,22 +301,30 @@ namespace At0::Ray
 	void ImGUI::OnEvent(MouseButtonPressedEvent& e)
 	{
 		ImGuiIO& io = ImGui::GetIO();
-
-		switch (e.GetKey())
+		if (io.WantCaptureMouse)
 		{
-		case MouseButton::Left: io.MouseDown[0] = true; break;
-		case MouseButton::Right: io.MouseDown[1] = true; break;
+			switch (e.GetKey())
+			{
+			case MouseButton::Left: io.MouseDown[0] = true; break;
+			case MouseButton::Right: io.MouseDown[1] = true; break;
+			case MouseButton::Middle: io.MouseDown[2] = true; break;
+			}
+			e.Handled = true;
 		}
 	}
 
 	void ImGUI::OnEvent(MouseButtonReleasedEvent& e)
 	{
 		ImGuiIO& io = ImGui::GetIO();
-
-		switch (e.GetKey())
+		if (io.WantCaptureMouse)
 		{
-		case MouseButton::Left: io.MouseDown[0] = false; break;
-		case MouseButton::Right: io.MouseDown[1] = false; break;
+			switch (e.GetKey())
+			{
+			case MouseButton::Left: io.MouseDown[0] = false; break;
+			case MouseButton::Right: io.MouseDown[1] = false; break;
+			case MouseButton::Middle: io.MouseDown[2] = false; break;
+			}
+			e.Handled = true;
 		}
 	}
 
@@ -323,6 +334,7 @@ namespace At0::Ray
 		if (io.WantCaptureKeyboard)
 		{
 			io.KeysDown[(int)e.GetKey()] = true;
+			e.Handled = true;
 		}
 	}
 
@@ -332,6 +344,7 @@ namespace At0::Ray
 		if (io.WantCaptureKeyboard)
 		{
 			io.KeysDown[(int)e.GetKey()] = false;
+			e.Handled = true;
 		}
 	}
 
@@ -339,7 +352,10 @@ namespace At0::Ray
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantTextInput)
+		{
 			io.AddInputCharacter(e.GetChar());
+			e.Handled = true;
+		}
 	}
 
 	void ImGUI::OnEvent(ScrollLeftEvent& e) {}
@@ -351,3 +367,5 @@ namespace At0::Ray
 	void ImGUI::OnEvent(ScrollDownEvent& e) {}
 
 }  // namespace At0::Ray
+
+#endif

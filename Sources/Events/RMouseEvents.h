@@ -19,6 +19,8 @@ namespace At0::Ray
 		MouseButton GetKey() const { return m_Button; }
 		Widget* GetWidget() { return m_Widget; }
 
+		bool Handled = false;
+
 	private:
 		MouseButton m_Button;
 		Widget* m_Widget;
@@ -34,6 +36,8 @@ namespace At0::Ray
 		MouseButton GetKey() const { return m_Button; }
 		Widget* GetWidget() { return m_Widget; }
 
+		bool Handled = false;
+
 	private:
 		MouseButton m_Button;
 		Widget* m_Widget;
@@ -47,6 +51,8 @@ namespace At0::Ray
 		Float2 GetPos() const { return m_Pos; }
 		Int2 GetDelta() const { return m_Delta; }
 
+		bool Handled = false;
+
 	private:
 		Float2 m_Pos;
 		Int2 m_Delta;
@@ -58,6 +64,8 @@ namespace At0::Ray
 		ScrollEvent(Int2 offset) : m_Offset(offset) {}
 
 		Int2 GetOffset() const { return m_Offset; }
+
+		bool Handled = false;
 
 	private:
 		Int2 m_Offset;

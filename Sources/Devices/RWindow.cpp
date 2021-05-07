@@ -133,7 +133,11 @@ namespace At0::Ray
 
 			MouseMovedEvent e(newPos, { dx, dy });
 			for (auto* listener : Window::Get().EventDispatcher<MouseMovedEvent>::Get())
+			{
 				listener->OnEvent(e);
+				if (e.Handled)
+					break;
+			}
 
 			Window::Get().GenerateHoverEvents();
 		});
@@ -155,7 +159,11 @@ namespace At0::Ray
 
 				MouseButtonPressedEvent e(btn, Window::Get().GetClickedWidget());
 				for (auto* listener : Window::Get().EventDispatcher<MouseButtonPressedEvent>::Get())
+				{
 					listener->OnEvent(e);
+					if (e.Handled)
+						break;
+				}
 
 				break;
 			}
@@ -173,7 +181,11 @@ namespace At0::Ray
 				MouseButtonReleasedEvent e(btn, Window::Get().GetReleasedWidget());
 				for (auto* listener :
 					Window::Get().EventDispatcher<MouseButtonReleasedEvent>::Get())
+				{
 					listener->OnEvent(e);
+					if (e.Handled)
+						break;
+				}
 
 				break;
 			}
@@ -192,7 +204,11 @@ namespace At0::Ray
 
 					KeyPressedEvent e(k);
 					for (auto* listener : Window::Get().EventDispatcher<KeyPressedEvent>::Get())
+					{
 						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
 
 					break;
 				}
@@ -205,7 +221,11 @@ namespace At0::Ray
 
 					KeyReleasedEvent e(k);
 					for (auto* listener : Window::Get().EventDispatcher<KeyReleasedEvent>::Get())
+					{
 						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
 
 					break;
 				}
@@ -216,7 +236,11 @@ namespace At0::Ray
 
 					KeyRepeatedEvent e(k, repeatCount);
 					for (auto* listener : Window::Get().EventDispatcher<KeyRepeatedEvent>::Get())
+					{
 						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
 
 					break;
 				}
@@ -226,7 +250,11 @@ namespace At0::Ray
 		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode) {
 			CharEvent e(keycode);
 			for (auto* listener : Window::Get().EventDispatcher<CharEvent>::Get())
+			{
 				listener->OnEvent(e);
+				if (e.Handled)
+					break;
+			}
 		});
 
 		glfwSetScrollCallback(m_hWnd, [](GLFWwindow* window, double xOffset, double yOffset) {
@@ -234,51 +262,83 @@ namespace At0::Ray
 			{
 				ScrollUpEvent e({ xOffset, yOffset });
 				for (auto* listener : Window::Get().EventDispatcher<ScrollUpEvent>::Get())
+				{
 					listener->OnEvent(e);
+					if (e.Handled)
+						break;
+				}
 			}
 			else if (yOffset < 0)
 			{
 				ScrollDownEvent e({ xOffset, yOffset });
 				for (auto* listener : Window::Get().EventDispatcher<ScrollDownEvent>::Get())
+				{
 					listener->OnEvent(e);
+					if (e.Handled)
+						break;
+				}
 			}
 
 			if (xOffset > 0)
 			{
 				ScrollRightEvent e({ xOffset, yOffset });
 				for (auto* listener : Window::Get().EventDispatcher<ScrollRightEvent>::Get())
+				{
 					listener->OnEvent(e);
+					if (e.Handled)
+						break;
+				}
 			}
 			else if (xOffset < 0)
 			{
 				ScrollLeftEvent e({ xOffset, yOffset });
 				for (auto* listener : Window::Get().EventDispatcher<ScrollLeftEvent>::Get())
+				{
 					listener->OnEvent(e);
+					if (e.Handled)
+						break;
+				}
 			}
 		});
 
 		glfwSetFramebufferSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height) {
 			FramebufferResizedEvent e({ width, height });
 			for (auto* listener : Window::Get().EventDispatcher<FramebufferResizedEvent>::Get())
+			{
 				listener->OnEvent(e);
+				if (e.Handled)
+					break;
+			}
 		});
 
 		glfwSetWindowSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height) {
 			WindowResizedEvent e({ width, height });
 			for (auto* listener : Window::Get().EventDispatcher<WindowResizedEvent>::Get())
+			{
 				listener->OnEvent(e);
+				if (e.Handled)
+					break;
+			}
 		});
 
 		glfwSetWindowPosCallback(m_hWnd, [](GLFWwindow* window, int x, int y) {
 			WindowMovedEvent e({ x, y });
 			for (auto* listener : Window::Get().EventDispatcher<WindowMovedEvent>::Get())
+			{
 				listener->OnEvent(e);
+				if (e.Handled)
+					break;
+			}
 		});
 
 		glfwSetWindowCloseCallback(m_hWnd, [](GLFWwindow* window) {
 			WindowClosedEvent e;
 			for (auto* listener : Window::Get().EventDispatcher<WindowClosedEvent>::Get())
+			{
 				listener->OnEvent(e);
+				if (e.Handled)
+					break;
+			}
 
 			Window::Get().Close();
 		});
