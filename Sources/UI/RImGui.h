@@ -4,6 +4,7 @@
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
 #include "../Graphics/Pipelines/RShader.h"
+#include "../Graphics/Core/RBindable.h"
 
 #include "../Events/REventListener.h"
 #include "../Events/RKeyboardEvents.h"
@@ -17,6 +18,7 @@ namespace At0::Ray
 	class Buffer;
 	class SamplerUniform;
 	class CommandBuffer;
+	class GraphicsPipeline;
 
 	class RAY_EXPORT ImGUI :
 		EventListener<FramebufferResizedEvent>,
@@ -40,11 +42,12 @@ namespace At0::Ray
 
 	public:
 		static ImGUI& Get();
-		static void Destroy();
+		static void Destroy() { s_Instance.reset(); }
+		~ImGUI();
 
 		void NewFrame();
 		void UpdateBuffers();
-		void DrawFrame(const CommandBuffer& cmdBuff);
+		void CmdBind(const CommandBuffer& cmdBuff);
 		void Update(Delta dt);
 
 	private:
@@ -67,13 +70,12 @@ namespace At0::Ray
 		void OnEvent(ScrollDownEvent& e) override;
 
 	private:
+		static Scope<ImGUI> s_Instance;
+
 		Ref<Texture2D> m_FontImage;
 
-		VkDescriptorPool m_DescriptorPool;
-		VkDescriptorSetLayout m_DescriptorSetLayout;
+		Scope<GraphicsPipeline> m_Pipeline;
 		Scope<SamplerUniform> m_FontUniform;
-		VkPipelineLayout m_PipelineLayout;
-		VkPipeline m_Pipeline;
 
 		Scope<Buffer> m_VertexBuffer;
 		Scope<Buffer> m_IndexBuffer;
@@ -82,7 +84,5 @@ namespace At0::Ray
 
 		int32_t m_VertexCount = 0;
 		int32_t m_IndexCount = 0;
-
-		std::vector<VkShaderModule> m_ShaderModules;
 	};
 }  // namespace At0::Ray

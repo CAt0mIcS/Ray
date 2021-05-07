@@ -241,7 +241,7 @@ namespace At0::Ray
 
 		// Scene::Get().GetCamera().CmdBind(cmdBuff);
 		// Renderer::Get().Bind(cmdBuff);
-		ImGUI::Get().DrawFrame(cmdBuff);
+		ImGUI::Get().CmdBind(cmdBuff);
 
 		m_RenderPass->End(cmdBuff);
 
