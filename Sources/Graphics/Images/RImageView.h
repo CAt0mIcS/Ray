@@ -8,17 +8,23 @@
 
 namespace At0::Ray
 {
+	class Image;
+
 	class ImageView : NonCopyable
 	{
 	public:
-		ImageView(VkImage image, VkFormat format,
-			VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT,
-			VkImageViewType viewType = VK_IMAGE_VIEW_TYPE_2D);
+		ImageView(const Image& image);
+		ImageView(VkImage image, VkImageViewType viewType, VkFormat format, uint32_t mipLevels = 1,
+			VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT);
 		~ImageView();
 
 		operator const VkImageView&() const { return m_View; }
 
 	private:
-		VkImageView m_View;
+		void Setup(VkImage image, VkImageViewType viewType, VkFormat format, uint32_t mipLevels,
+			VkImageAspectFlags aspectFlags);
+
+	private:
+		VkImageView m_View = VK_NULL_HANDLE;
 	};
 }  // namespace At0::Ray

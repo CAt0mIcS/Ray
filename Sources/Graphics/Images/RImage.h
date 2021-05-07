@@ -2,6 +2,7 @@
 
 #include "../../RBase.h"
 #include "../../Core/RMath.h"
+#include "../../Utils/RNonCopyable.h"
 #include "RImageView.h"
 
 #include <vulkan/vulkan_core.h>
@@ -13,32 +14,54 @@ namespace At0::Ray
 {
 	class Buffer;
 
-	class Image
+	class Image : NonCopyable
 	{
 	public:
 		Image(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
-			VkImageUsageFlags usage, VkMemoryPropertyFlags memProps,
+			VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, uint32_t mipLevels = 1,
 			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT);
 		virtual ~Image();
 
-		VkFormat GetFormat() const { return m_Format; }
 		operator const VkImage&() const { return m_Image; }
-		const VkImageView& GetImageView() const { return *m_ImageView; }
+		const ImageView& GetImageView() const { return *m_ImageView; }
+		VkImageLayout GetImageLayout() const { return m_ImageLayout; }
+		UInt2 GetExtent() const { return m_Extent; }
+		VkImageType GetImageType() const { return m_ImageType; }
+		VkFormat GetFormat() const { return m_Format; }
+		VkImageTiling GetTiling() const { return m_Tiling; }
+		VkImageUsageFlags GetUsageFlags() const { return m_Usage; }
+		VkMemoryPropertyFlags GetMemoryProperties() const { return m_MemoryProperties; }
+		uint32_t GetMipLevels() const { return m_MipLevels; }
+		VkImageAspectFlags GetAspectFlags() const { return m_ImageAspect; }
 
-		void TransitionLayout(VkImageLayout oldLayout, VkImageLayout newLayout);
-		static void TransitionLayout(
-			VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout);
+		void TransitionLayout(VkImageLayout newLayout);
 		void CopyFromBuffer(const Buffer& buffer);
 
+		Image& operator=(Image&& other) noexcept;
+		Image(Image&& other) noexcept { *this = std::move(other); }
+
+		static void TransitionLayout(VkImage image, VkImageLayout oldLayout,
+			VkImageLayout newLayout, uint32_t mipLevels = 1);
 		static std::vector<VkFormat> FindSupportedFormats(std::vector<VkFormat> candidates,
 			VkImageTiling tiling, VkFormatFeatureFlags featureFlags);
 
 	protected:
+		void Setup();
+		Image() = default;
+
+	protected:
 		VkImage m_Image = VK_NULL_HANDLE;
-		UInt2 m_Extent{};
 		VkDeviceMemory m_ImageMemory = VK_NULL_HANDLE;
 		Scope<ImageView> m_ImageView;
 
-		VkFormat m_Format;
+		VkImageLayout m_ImageLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		UInt2 m_Extent{};
+		VkImageType m_ImageType;
+		VkFormat m_Format = VK_FORMAT_UNDEFINED;
+		VkImageTiling m_Tiling;
+		VkImageUsageFlags m_Usage;
+		VkMemoryPropertyFlags m_MemoryProperties;
+		uint32_t m_MipLevels = 1;
+		VkImageAspectFlags m_ImageAspect;
 	};
 }  // namespace At0::Ray

@@ -90,8 +90,8 @@ namespace At0::Ray
 		m_ImageViews.resize(m_Images.size());
 		for (uint32_t i = 0; i < m_ImageViews.size(); ++i)
 		{
-			m_ImageViews[i] =
-				MakeScope<ImageView>(m_Images[i], m_Format, VK_IMAGE_ASPECT_COLOR_BIT);
+			m_ImageViews[i] = MakeScope<ImageView>(
+				m_Images[i], VK_IMAGE_VIEW_TYPE_2D, m_Format, VK_IMAGE_ASPECT_COLOR_BIT);
 		}
 	}
 

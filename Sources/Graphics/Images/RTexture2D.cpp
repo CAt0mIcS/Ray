@@ -26,33 +26,26 @@ namespace At0::Ray
 		if (!pixels)
 			RAY_THROW_RUNTIME("[Texture2D] Failed to load texture from file \"{0}\"", filepath);
 
+		// RAY_TODO: Option to enable/disable mipmapping
+		uint32_t mipLevels = (uint32_t)(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+
 		Buffer stagingBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, pixels);
 
 		stbi_image_free(pixels);
 
-		m_Image = MakeScope<Image2D>(UInt2{ texWidth, texHeight }, VK_FORMAT_R8G8B8A8_SRGB,
+		Image2D::Setup(UInt2{ texWidth, texHeight }, VK_FORMAT_R8G8B8A8_SRGB,
 			VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
-			VK_SHARING_MODE_EXCLUSIVE);
+			VK_SHARING_MODE_EXCLUSIVE, mipLevels);
 
-		m_Image->TransitionLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-		m_Image->CopyFromBuffer(stagingBuffer);
-
-		m_Image->TransitionLayout(
-			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+		CopyFromBuffer(stagingBuffer);
+		TransitionLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 	}
 
 	Texture2D::Texture2D(UInt2 extent, VkFormat format, VkImageTiling tiling,
 		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, VkImageAspectFlags imageAspect)
+		: Image2D(extent, format, tiling, usage, memProps, imageAspect)
 	{
-		m_Image = MakeScope<Image2D>(extent, format, tiling, usage, memProps, imageAspect);
 	}
-
-	Texture2D& Texture2D::operator=(Texture2D&& other)
-	{
-		m_Image = std::move(other.m_Image);
-		return *this;
-	}
-
-	Texture2D::Texture2D(Texture2D&& other) { *this = std::move(other); }
 }  // namespace At0::Ray

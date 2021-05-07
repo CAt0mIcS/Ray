@@ -10,7 +10,14 @@ namespace At0::Ray
 	{
 	public:
 		Image2D(UInt2 extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
-			VkMemoryPropertyFlags memProps,
+			VkMemoryPropertyFlags memProps, uint32_t mipLevels = 1,
+			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT);
+
+	protected:
+		Image2D() = default;
+
+		void Setup(UInt2 extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
+			VkMemoryPropertyFlags memProps, uint32_t mipLevels = 1,
 			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT);
 	};
 }  // namespace At0::Ray

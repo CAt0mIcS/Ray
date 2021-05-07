@@ -3,14 +3,29 @@
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
+#include "RImage.h"
 
 #include "Utils/RException.h"
 
 
 namespace At0::Ray
 {
-	ImageView::ImageView(
-		VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkImageViewType viewType)
+	ImageView::ImageView(const Image& image)
+	{
+		Setup(image, (VkImageViewType)image.GetImageType(), image.GetFormat(), image.GetMipLevels(),
+			image.GetAspectFlags());
+	}
+
+	ImageView::ImageView(VkImage image, VkImageViewType viewType, VkFormat format,
+		uint32_t mipLevels, VkImageAspectFlags aspectFlags)
+	{
+		Setup(image, viewType, format, mipLevels, aspectFlags);
+	}
+
+	ImageView::~ImageView() { vkDestroyImageView(Graphics::Get().GetDevice(), m_View, nullptr); }
+
+	void ImageView::Setup(VkImage image, VkImageViewType viewType, VkFormat format,
+		uint32_t mipLevels, VkImageAspectFlags aspectFlags)
 	{
 		VkImageViewCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -22,7 +37,7 @@ namespace At0::Ray
 			VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY };
 		createInfo.subresourceRange.aspectMask = aspectFlags;
 		createInfo.subresourceRange.baseMipLevel = 0;
-		createInfo.subresourceRange.levelCount = 1;
+		createInfo.subresourceRange.levelCount = mipLevels;
 		createInfo.subresourceRange.baseArrayLayer = 0;
 		createInfo.subresourceRange.layerCount = 1;
 
@@ -30,6 +45,4 @@ namespace At0::Ray
 			vkCreateImageView(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_View),
 			"[ImageView] Failed to create");
 	}
-
-	ImageView::~ImageView() { vkDestroyImageView(Graphics::Get().GetDevice(), m_View, nullptr); }
 }  // namespace At0::Ray

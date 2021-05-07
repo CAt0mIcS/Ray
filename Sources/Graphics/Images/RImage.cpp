@@ -13,49 +13,13 @@
 namespace At0::Ray
 {
 	Image::Image(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
-		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, VkImageAspectFlags imageAspect)
-		: m_Format(format), m_Extent(extent)
+		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, uint32_t mipLevels,
+		VkImageAspectFlags imageAspect)
+		: m_Extent(extent), m_ImageType(imageType), m_Format(format), m_Tiling(tiling),
+		  m_Usage(usage), m_MemoryProperties(memProps), m_MipLevels(mipLevels),
+		  m_ImageAspect(imageAspect)
 	{
-		std::array queueFamily = { Graphics::Get().GetDevice().GetGraphicsFamily(),
-			Graphics::Get().GetDevice().GetPresentFamily(),
-			Graphics::Get().GetDevice().GetComputeFamily() };
-
-		VkImageCreateInfo imageCreateInfo{};
-		imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-		imageCreateInfo.flags = 0;
-		imageCreateInfo.imageType = imageType;
-		imageCreateInfo.format = format;
-		imageCreateInfo.extent = VkExtent3D{ extent.x, extent.y, 1 };
-		imageCreateInfo.mipLevels = 1;
-		imageCreateInfo.arrayLayers = 1;
-		imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-		imageCreateInfo.tiling = tiling;
-		imageCreateInfo.usage = usage;
-		imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		imageCreateInfo.queueFamilyIndexCount = (uint32_t)queueFamily.size();
-		imageCreateInfo.pQueueFamilyIndices = queueFamily.data();
-		imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-
-		RAY_VK_THROW_FAILED(
-			vkCreateImage(Graphics::Get().GetDevice(), &imageCreateInfo, nullptr, &m_Image),
-			"[Image] Failed to create");
-
-		VkMemoryRequirements memRequirements;
-		vkGetImageMemoryRequirements(Graphics::Get().GetDevice(), m_Image, &memRequirements);
-
-		VkMemoryAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = Graphics::Get().GetPhysicalDevice().FindMemoryType(
-			memRequirements.memoryTypeBits, memProps);
-
-		RAY_VK_THROW_FAILED(
-			vkAllocateMemory(Graphics::Get().GetDevice(), &allocInfo, nullptr, &m_ImageMemory),
-			"[Image] Failed to allocate image memory");
-
-		vkBindImageMemory(Graphics::Get().GetDevice(), m_Image, m_ImageMemory, 0);
-
-		m_ImageView = MakeScope<ImageView>(m_Image, format, imageAspect);
+		Setup();
 	}
 
 	Image::~Image()
@@ -64,12 +28,14 @@ namespace At0::Ray
 		vkFreeMemory(Graphics::Get().GetDevice(), m_ImageMemory, nullptr);
 	}
 
-	void Image::TransitionLayout(VkImageLayout oldLayout, VkImageLayout newLayout)
+	void Image::TransitionLayout(VkImageLayout newLayout)
 	{
-		TransitionLayout(m_Image, oldLayout, newLayout);
+		TransitionLayout(m_Image, m_ImageLayout, newLayout, m_MipLevels);
+		m_ImageLayout = newLayout;
 	}
 
-	void Image::TransitionLayout(VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout)
+	void Image::TransitionLayout(
+		VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
 	{
 		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
 		commandBuffer.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
@@ -83,7 +49,7 @@ namespace At0::Ray
 		barrier.image = image;
 		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 		barrier.subresourceRange.baseMipLevel = 0;
-		barrier.subresourceRange.levelCount = 1;
+		barrier.subresourceRange.levelCount = mipLevels;
 		barrier.subresourceRange.baseArrayLayer = 0;
 		barrier.subresourceRange.layerCount = 1;
 
@@ -141,7 +107,7 @@ namespace At0::Ray
 		region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 		region.imageSubresource.mipLevel = 0;
 		region.imageSubresource.baseArrayLayer = 0;
-		region.imageSubresource.layerCount = 1;
+		region.imageSubresource.layerCount = 1;	 // RAY_TODO: MipLevel
 
 		region.imageOffset = { 0, 0, 0 };
 		region.imageExtent = { m_Extent.x, m_Extent.y, 1 };
@@ -160,6 +126,16 @@ namespace At0::Ray
 		vkQueueSubmit(
 			Graphics::Get().GetDevice().GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
 		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+	}
+
+	Image& Image::operator=(Image&& other) noexcept
+	{
+		m_Extent = std::move(other.m_Extent);
+		m_Format = std::move(other.m_Format);
+		m_ImageLayout = std::move(other.m_ImageLayout);
+		m_MipLevels = std::move(other.m_MipLevels);
+		Setup();
+		return *this;
 	}
 
 	std::vector<VkFormat> Image::FindSupportedFormats(
@@ -184,5 +160,49 @@ namespace At0::Ray
 		}
 
 		return candidates;
+	}
+
+	void Image::Setup()
+	{
+		std::array queueFamily = { Graphics::Get().GetDevice().GetGraphicsFamily(),
+			Graphics::Get().GetDevice().GetPresentFamily(),
+			Graphics::Get().GetDevice().GetComputeFamily() };
+
+		VkImageCreateInfo imageCreateInfo{};
+		imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+		imageCreateInfo.flags = 0;
+		imageCreateInfo.imageType = m_ImageType;
+		imageCreateInfo.format = m_Format;
+		imageCreateInfo.extent = VkExtent3D{ m_Extent.x, m_Extent.y, 1 };
+		imageCreateInfo.mipLevels = m_MipLevels;
+		imageCreateInfo.arrayLayers = 1;
+		imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+		imageCreateInfo.tiling = m_Tiling;
+		imageCreateInfo.usage = m_Usage;
+		imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		imageCreateInfo.queueFamilyIndexCount = (uint32_t)queueFamily.size();
+		imageCreateInfo.pQueueFamilyIndices = queueFamily.data();
+		imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+		RAY_VK_THROW_FAILED(
+			vkCreateImage(Graphics::Get().GetDevice(), &imageCreateInfo, nullptr, &m_Image),
+			"[Image] Failed to create");
+
+		VkMemoryRequirements memRequirements;
+		vkGetImageMemoryRequirements(Graphics::Get().GetDevice(), m_Image, &memRequirements);
+
+		VkMemoryAllocateInfo allocInfo{};
+		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		allocInfo.allocationSize = memRequirements.size;
+		allocInfo.memoryTypeIndex = Graphics::Get().GetPhysicalDevice().FindMemoryType(
+			memRequirements.memoryTypeBits, m_MemoryProperties);
+
+		RAY_VK_THROW_FAILED(
+			vkAllocateMemory(Graphics::Get().GetDevice(), &allocInfo, nullptr, &m_ImageMemory),
+			"[Image] Failed to allocate image memory");
+
+		vkBindImageMemory(Graphics::Get().GetDevice(), m_Image, m_ImageMemory, 0);
+
+		m_ImageView = MakeScope<ImageView>(*this);
 	}
 }  // namespace At0::Ray
