@@ -83,7 +83,6 @@ namespace At0::Ray
 		int32_t m_VertexCount = 0;
 		int32_t m_IndexCount = 0;
 
-		Shader m_Shader;
 		std::vector<VkShaderModule> m_ShaderModules;
 	};
 }  // namespace At0::Ray

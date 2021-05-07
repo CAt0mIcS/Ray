@@ -34,7 +34,7 @@ namespace At0::Ray
 		// RAY_TODO: ImGui flickering if imgui.ini file exists (created when context is destroyed)
 		ImGui::DestroyContext();
 
-		// Release all Vulkan resources required for rendering imGui
+		// Release all Vulkan resources required for rendering ImGui
 		Get().m_VertexBuffer.reset();
 		Get().m_IndexBuffer.reset();
 		Get().m_FontUniform.reset();
@@ -90,10 +90,6 @@ namespace At0::Ray
 
 		m_FontImage->GetImage().TransitionLayout(
 			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-		// Font texture sampler
-		// m_Sampler = MakeScope<TextureSampler>(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-		//	VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE);
 
 		CreatePipeline();
 	}
@@ -237,13 +233,14 @@ namespace At0::Ray
 	void ImGUI::CreatePipeline()
 	{
 		// Shader stages
+		Shader shaderReflector;
 		std::array<VkPipelineShaderStageCreateInfo, 2> shaderStages{};
 		{
 			std::string shader = "Resources/Shaders/ImGui.vert";
 			VkShaderStageFlagBits stageFlag = Shader::GetShaderStage(shader);
 			std::optional<std::string> shaderCode = ReadFile(shader);
 
-			VkShaderModule shaderModule = m_Shader.CreateShaderModule(
+			VkShaderModule shaderModule = shaderReflector.CreateShaderModule(
 				shader, *shaderCode, /*defineBlock.str()*/ "", stageFlag);
 
 			VkPipelineShaderStageCreateInfo shaderStageCreateInfo{};
@@ -258,7 +255,7 @@ namespace At0::Ray
 			VkShaderStageFlagBits stageFlag = Shader::GetShaderStage(shader);
 			std::optional<std::string> shaderCode = ReadFile(shader);
 
-			VkShaderModule shaderModule = m_Shader.CreateShaderModule(
+			VkShaderModule shaderModule = shaderReflector.CreateShaderModule(
 				shader, *shaderCode, /*defineBlock.str()*/ "", stageFlag);
 
 			VkPipelineShaderStageCreateInfo shaderStageCreateInfo{};
