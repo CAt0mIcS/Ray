@@ -13,6 +13,8 @@
 #include "Graphics/Images/RImage2D.h"
 #include "Graphics/RenderPass/RRenderPass.h"
 #include "Graphics/Images/RTextureSampler.h"
+#include "Graphics/Buffers/RVertexBuffer.h"
+#include "Graphics/Buffers/RIndexBuffer.h"
 
 #include <../../Extern/imgui/imgui.h>
 
@@ -97,8 +99,8 @@ namespace At0::Ray
 		ImGui::DestroyContext();
 
 		// Release all Vulkan resources required for rendering imGui
-		Get().m_VertexBuffer.destroy();
-		Get().m_IndexBuffer.destroy();
+		Get().m_VertexBuffer.reset();
+		Get().m_IndexBuffer.reset();
 		Get().m_FontImage.reset();
 		Get().m_Sampler.reset();
 		for (VkShaderModule shaderModule : Get().m_ShaderModules)
@@ -165,9 +167,6 @@ namespace At0::Ray
 	{
 		ImGui::NewFrame();
 
-		// Init imGui windows and elements
-		ImVec4 clear_color = ImColor(114, 144, 154);
-		static float f = 0.0f;
 		ImGui::TextUnformatted("Window Title Here");
 		ImGui::TextUnformatted(Graphics::Get().GetPhysicalDevice().GetProperties().deviceName);
 
@@ -194,46 +193,53 @@ namespace At0::Ray
 		// size
 
 		// Vertex buffer
-		if ((m_VertexBuffer.buffer == VK_NULL_HANDLE) ||
-			(m_VertexCount != imDrawData->TotalVtxCount))
+		if (!m_VertexBuffer || m_VertexCount != imDrawData->TotalVtxCount)
 		{
-			m_VertexBuffer.unmap();
-			m_VertexBuffer.destroy();
-			Buffer::CreateBuffer(vertexBufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, m_VertexBuffer.buffer, m_VertexBuffer.memory);
+			if (m_VertexBuffer)
+			{
+				m_VertexBuffer->UnmapMemory();
+				m_VertexBuffer.reset();
+			}
+
+			m_VertexBuffer = MakeScope<Buffer>(vertexBufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+
 			m_VertexCount = imDrawData->TotalVtxCount;
-			m_VertexBuffer.bind();
-			m_VertexBuffer.map();
+			m_VertexBuffer->MapMemory(&m_VertexBufferMapped);
 		}
 
 		// Index buffer
-		if ((m_IndexBuffer.buffer == VK_NULL_HANDLE) || (m_IndexCount < imDrawData->TotalIdxCount))
+		if (!m_IndexBuffer || m_IndexCount < imDrawData->TotalIdxCount)
 		{
-			m_IndexBuffer.unmap();
-			m_IndexBuffer.destroy();
-			Buffer::CreateBuffer(indexBufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, m_IndexBuffer.buffer, m_IndexBuffer.memory);
+			if (m_IndexBuffer)
+			{
+				m_IndexBuffer->UnmapMemory();
+				m_IndexBuffer.reset();
+			}
+
+			m_IndexBuffer = MakeScope<Buffer>(indexBufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+
 			m_IndexCount = imDrawData->TotalIdxCount;
-			m_IndexBuffer.bind();
-			m_IndexBuffer.map();
+			m_IndexBuffer->MapMemory(&m_IndexBufferMapped);
 		}
 
 		// Upload data
-		ImDrawVert* vtxDst = (ImDrawVert*)m_VertexBuffer.mapped;
-		ImDrawIdx* idxDst = (ImDrawIdx*)m_IndexBuffer.mapped;
+		ImDrawVert* vtxDst = (ImDrawVert*)m_VertexBufferMapped;
+		ImDrawIdx* idxDst = (ImDrawIdx*)m_IndexBufferMapped;
 
 		for (int n = 0; n < imDrawData->CmdListsCount; n++)
 		{
-			const ImDrawList* cmd_list = imDrawData->CmdLists[n];
-			memcpy(vtxDst, cmd_list->VtxBuffer.Data, cmd_list->VtxBuffer.Size * sizeof(ImDrawVert));
-			memcpy(idxDst, cmd_list->IdxBuffer.Data, cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx));
-			vtxDst += cmd_list->VtxBuffer.Size;
-			idxDst += cmd_list->IdxBuffer.Size;
+			const ImDrawList* cmdList = imDrawData->CmdLists[n];
+			memcpy(vtxDst, cmdList->VtxBuffer.Data, cmdList->VtxBuffer.Size * sizeof(ImDrawVert));
+			memcpy(idxDst, cmdList->IdxBuffer.Data, cmdList->IdxBuffer.Size * sizeof(ImDrawIdx));
+			vtxDst += cmdList->VtxBuffer.Size;
+			idxDst += cmdList->IdxBuffer.Size;
 		}
 
 		// Flush to make writes visible to GPU
-		m_VertexBuffer.flush();
-		m_IndexBuffer.flush();
+		m_VertexBuffer->FlushMemory();
+		m_IndexBuffer->FlushMemory();
 	}
 
 	void ImGUI::DrawFrame(VkCommandBuffer commandBuffer)
@@ -264,8 +270,9 @@ namespace At0::Ray
 		if (imDrawData->CmdListsCount > 0)
 		{
 			VkDeviceSize offsets[1] = { 0 };
-			vkCmdBindVertexBuffers(commandBuffer, 0, 1, &m_VertexBuffer.buffer, offsets);
-			vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer.buffer, 0, VK_INDEX_TYPE_UINT16);
+			VkBuffer vBuff = *m_VertexBuffer;
+			vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vBuff, offsets);
+			vkCmdBindIndexBuffer(commandBuffer, *m_IndexBuffer, 0, VK_INDEX_TYPE_UINT16);
 
 			for (int32_t i = 0; i < imDrawData->CmdListsCount; i++)
 			{

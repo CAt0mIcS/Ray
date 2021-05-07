@@ -45,7 +45,10 @@ namespace At0::Ray
 
 	void Buffer::UnmapMemory() const { UnmapMemory(m_BufferMemory); }
 
-	void Buffer::FlushMemory() const { FlushMemory(m_BufferMemory, m_Size); }
+	void Buffer::FlushMemory(VkDeviceSize size, uint32_t offset) const
+	{
+		FlushMemory(m_BufferMemory, size, offset);
+	}
 
 	void Buffer::MapMemory(void** data, VkDeviceMemory memory, VkDeviceSize size)
 	{
@@ -58,11 +61,11 @@ namespace At0::Ray
 		vkUnmapMemory(Graphics::Get().GetDevice(), memory);
 	}
 
-	void Buffer::FlushMemory(VkDeviceMemory bufferMemory, VkDeviceSize size)
+	void Buffer::FlushMemory(VkDeviceMemory bufferMemory, VkDeviceSize size, uint32_t offset)
 	{
 		VkMappedMemoryRange mappedMemoryRange{};
 		mappedMemoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-		mappedMemoryRange.offset = 0;
+		mappedMemoryRange.offset = offset;
 		mappedMemoryRange.memory = bufferMemory;
 		mappedMemoryRange.size = size;
 		RAY_VK_THROW_FAILED(

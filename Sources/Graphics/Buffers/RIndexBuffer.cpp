@@ -44,4 +44,5 @@ namespace At0::Ray
 		oss << typeid(IndexBuffer).name() << "#" << tag;
 		return oss.str();
 	}
+
 }  // namespace At0::Ray

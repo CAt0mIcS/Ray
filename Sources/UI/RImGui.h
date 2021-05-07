@@ -44,6 +44,7 @@ namespace At0::Ray
 
 	class Image2D;
 	class TextureSampler;
+	class Buffer;
 
 	class RAY_EXPORT ImGUI :
 		EventListener<FramebufferResizedEvent>,
@@ -103,8 +104,10 @@ namespace At0::Ray
 		VkPipelineLayout m_PipelineLayout;
 		VkPipeline m_Pipeline;
 
-		GuiBuffer m_VertexBuffer;
-		GuiBuffer m_IndexBuffer;
+		Scope<Buffer> m_VertexBuffer;
+		Scope<Buffer> m_IndexBuffer;
+		void* m_VertexBufferMapped = nullptr;
+		void* m_IndexBufferMapped = nullptr;
 
 		int32_t m_VertexCount = 0;
 		int32_t m_IndexCount = 0;
