@@ -88,14 +88,8 @@ namespace At0::Ray
 	{
 		ImGui::NewFrame();
 
-		ImGui::TextUnformatted("Window Title Here");
-		ImGui::TextUnformatted(Graphics::Get().GetPhysicalDevice().GetProperties().deviceName);
-
-		ImGui::Text("Camera");
-		ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiSetCond_FirstUseEver);
-
-		ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
-		ImGui::ShowDemoWindow();
+		for (const auto& fn : m_NewFrameFunctions)
+			fn();
 
 		// Render to generate draw buffers
 		ImGui::Render();

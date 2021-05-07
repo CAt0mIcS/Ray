@@ -30,7 +30,18 @@
 // Define attributes of all API symbols declarations (e.g. for DLL under Windows)
 // IMGUI_API is used for core imgui functions, IMGUI_IMPL_API is used for the default bindings files (imgui_impl_xxx.h)
 #ifndef IMGUI_API
+#ifdef _MSC_VER
+#ifdef RAY_BUILD
+#define IMGUI_API __declspec(dllexport)
+#else
+#define IMGUI_API __declspec(dllimport)
+#endif
+#else
 #define IMGUI_API
+#endif
+#ifndef IMGUI_IMPL_API
+#define IMGUI_IMPL_API IMGUI_API
+#endif
 #endif
 #ifndef IMGUI_IMPL_API
 #define IMGUI_IMPL_API              IMGUI_API

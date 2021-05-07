@@ -60,6 +60,12 @@ namespace At0::Ray
 		void CmdBind(const CommandBuffer& cmdBuff);
 		void Update(Delta dt);
 
+		template<typename F>
+		void RegisterNewFrameFunction(F&& func)
+		{
+			m_NewFrameFunctions.emplace_back(func);
+		}
+
 	private:
 		ImGUI();
 
@@ -94,6 +100,8 @@ namespace At0::Ray
 
 		int32_t m_VertexCount = 0;
 		int32_t m_IndexCount = 0;
+
+		std::vector<std::function<void()>> m_NewFrameFunctions;
 	};
 }  // namespace At0::Ray
 

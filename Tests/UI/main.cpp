@@ -25,6 +25,7 @@
 #include <Events/RMouseEvents.h>
 
 #include <UI/RImGui.h>
+#include <../../Extern/imgui/imgui.h>
 
 
 using namespace At0;
@@ -58,6 +59,16 @@ public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
+
+		bool displayModels = true;
+		float lightSpeed = 1.0f;
+
+		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+			ImGui::Begin("Example settings");
+			ImGui::Checkbox("Render models", &displayModels);
+			ImGui::SliderFloat("Light speed", &lightSpeed, 0.1f, 1.0f);
+			ImGui::End();
+		});
 
 		// Create UI
 		// Ray::Button& texturedButton = Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>(
