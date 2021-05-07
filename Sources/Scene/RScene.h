@@ -39,6 +39,11 @@ namespace At0::Ray
 		Entity CreateEntity();
 
 		/**
+		 * Destroys the specified entity and all it's components
+		 */
+		void DestroyEntity(Entity entity);
+
+		/**
 		 * Creates iterable list of all components of the Comp type
 		 */
 		template<typename... Comp>

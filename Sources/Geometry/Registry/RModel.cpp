@@ -43,7 +43,9 @@ namespace At0::Ray
 
 	std::string Model::GetUID(std::string_view filepath, Model::Flags flags)
 	{
-		return filepath.data();
+		std::ostringstream oss;
+		oss << filepath << "#" << (uint32_t)flags;
+		return oss.str();
 	}
 
 	void Model::ParseMesh(std::string_view base, const aiMesh& mesh,

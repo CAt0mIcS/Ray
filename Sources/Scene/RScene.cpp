@@ -38,6 +38,8 @@ namespace At0::Ray
 		return entity;
 	}
 
+	void Scene::DestroyEntity(Entity entity) { m_Registry.destroy((entt::entity)entity); }
+
 	void Scene::Update(Delta dt)
 	{
 		m_Camera->Update(dt);

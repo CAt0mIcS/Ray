@@ -20,6 +20,9 @@
 #include <random>
 #include <filesystem>
 
+#include <UI/RImGui.h>
+#include <../../Extern/imgui/imgui.h>
+
 
 using namespace At0;
 
@@ -41,105 +44,69 @@ public:
 };
 
 
-class App :
-	public Ray::Engine,
-	Ray::EventListener<Ray::MouseButtonPressedEvent>,
-	Ray::EventListener<Ray::KeyPressedEvent>
+class App : public Ray::Engine
 {
 public:
-	App() { Ray::Scene::Create<Scene>(); }
+	App()
+	{
+		Ray::Scene::Create<Scene>();
+		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+			ImGui::Begin("Nanosuit");
+			ImGui::Checkbox("RenderModel", &m_RenderModel);
+
+			bool oldDiffuseMap = m_DiffuseMap;
+			bool oldSpecularMap = m_SpecularMap;
+
+			ImGui::Checkbox("DiffuseMap", &m_DiffuseMap);
+			ImGui::Checkbox("SpecularMap", &m_SpecularMap);
+
+			if (m_DiffuseMap != oldDiffuseMap || m_SpecularMap != oldSpecularMap)
+				m_MapConfigChanged = true;
+
+			ImGui::End();
+		});
+	}
 
 private:
-	void Update() override {}
-
-	void OnEvent(Ray::MouseButtonPressedEvent& e) override
+	void Update() override
 	{
-		static std::mt19937 device;
-		static std::uniform_real_distribution<float> posRotDist(-30.0f, 30.0f);
-		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
-		static std::uniform_real_distribution<float> colorDist(0.0f, 1.0f);
-		static Ray::Float3 posOffset{};
-		static int run = 0;
-
-		for (uint32_t i = 0; i < 10; ++i)
+		if (m_RenderModel)
 		{
-			Ray::Entity meshEntity = Ray::Scene::Get().CreateEntity();
-
-			// clang-format off
-			Ray::Material defaultMaterial
+			if (m_MapConfigChanged || !m_ModelEntity)
 			{
-				Ray::Material::LightingTechnique(Ray::Material::LightingTechnique::Flat),
-				Ray::Material::CullMode(VK_CULL_MODE_NONE),
-				// Ray::Material::Texture2D(Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png")),
-				Ray::Material::Color({ colorDist(device), colorDist(device), colorDist(device) })
-			};
-			// clang-format on
+				if (m_ModelEntity)
+					Ray::Scene::Get().DestroyEntity(*m_ModelEntity);
 
-			Ray::Mesh& mesh = meshEntity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
+				Ray::Model::Flags flags = Ray::Model::NoNormalMap;
+				if (m_DiffuseMap && m_SpecularMap)
+				{
+				}
+				else if (m_DiffuseMap)
+					flags = flags | Ray::Model::NoSpecularMap;
+				else if (m_SpecularMap)
+					flags = flags | Ray::Model::NoDiffuseMap;
+				else
+					flags = flags | Ray::Model::NoDiffuseMap | Ray::Model::NoSpecularMap;
 
-			auto& meshTransform = mesh.GetTransform();
-			meshTransform.SetTranslation(
-				{ posRotDist(device), posRotDist(device), posRotDist(device) });
-			meshTransform.SetRotation(
-				{ posRotDist(device), posRotDist(device), posRotDist(device) });
-			meshTransform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
-
-			m_ModelEntities.emplace_back(Ray::Scene::Get().CreateEntity());
-			Ray::Mesh& model = m_ModelEntities.back().Emplace<Ray::Mesh>(
-				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
-			model.GetTransform().SetTranslation({ posOffset });
-
-			posOffset = PositioningScript(run, posOffset);
-		}
-	}
-
-	Ray::Float3 PositioningScript(
-		int& run, Ray::Float3 posOffset, uint32_t peopleInRow = 10, uint32_t incX = 8)
-	{
-		if (run % peopleInRow == 0 && run != 0)
-		{
-			posOffset.z += 6;
-			posOffset.x = 0;
-		}
-
-		posOffset.x *= -1;
-		if (run % 2 == 0)
-		{
-			if (posOffset.x >= 0)
-				posOffset.x += incX;
-			else
-				posOffset.x -= incX;
-		}
-		++run;
-
-		return posOffset;
-	}
-
-	void OnEvent(Ray::KeyPressedEvent& e) override
-	{
-		if (e.GetKey() == Ray::Key::Up)
-		{
-			for (Ray::Entity modelEntity : m_ModelEntities)
-			{
-				auto& model = modelEntity.Get<Ray::Mesh>();
-				model.GetTransform().Translate(Ray::Float3{ 0.0f, 1.0f, 0.0f });
-				// model.GetTransform().Rotate(Ray::Float3{ 1.0f, 0.0f, 1.0f });
+				m_ModelEntity = Ray::Scene::Get().CreateEntity();
+				m_ModelEntity->Emplace<Ray::Mesh>(
+					Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj", flags));
+				m_MapConfigChanged = false;
 			}
 		}
-		if (e.GetKey() == Ray::Key::Down)
+		else if (!m_RenderModel && m_ModelEntity)
 		{
-			for (Ray::Entity modelEntity : m_ModelEntities)
-			{
-				auto& model = modelEntity.Get<Ray::Mesh>();
-				model.GetTransform().Translate(Ray::Float3{ 0.0f, -1.0f, 0.0f });
-				// model.GetTransform().Rotate(Ray::Float3{ -1.0f, 0.0f, -1.0f });
-			}
+			Ray::Scene::Get().DestroyEntity(*m_ModelEntity);
+			m_ModelEntity = std::nullopt;
 		}
 	}
 
 private:
-	std::vector<Ray::Entity> m_ModelEntities;
-	Ray::Entity m_ButtonEntity;
+	std::optional<Ray::Entity> m_ModelEntity;
+	bool m_RenderModel = true;
+	bool m_DiffuseMap = true;
+	bool m_SpecularMap = true;
+	bool m_MapConfigChanged = false;
 };
 
 void SignalHandler(int signal)
@@ -158,7 +125,7 @@ int main()
 #ifdef NDEBUG
 	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
 #else
-	Ray::Log::SetLogLevel(Violent::LogLevel::Trace);
+	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
 #endif
 
 	try
