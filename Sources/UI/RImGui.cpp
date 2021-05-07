@@ -10,8 +10,9 @@
 #include "Utils/RException.h"
 #include "Graphics/Buffers/RBuffer.h"
 #include "Graphics/Commands/RCommandBuffer.h"
-#include "Graphics/Images/RImage.h"
+#include "Graphics/Images/RImage2D.h"
 #include "Graphics/RenderPass/RRenderPass.h"
+#include "Graphics/Images/RTextureSampler.h"
 
 #include <../../Extern/imgui/imgui.h>
 
@@ -98,10 +99,8 @@ namespace At0::Ray
 		// Release all Vulkan resources required for rendering imGui
 		Get().m_VertexBuffer.destroy();
 		Get().m_IndexBuffer.destroy();
-		vkDestroyImage(Graphics::Get().GetDevice(), Get().m_FontImage, nullptr);
-		vkDestroyImageView(Graphics::Get().GetDevice(), Get().m_FontView, nullptr);
-		vkFreeMemory(Graphics::Get().GetDevice(), Get().m_FontMemory, nullptr);
-		vkDestroySampler(Graphics::Get().GetDevice(), Get().m_Sampler, nullptr);
+		Get().m_FontImage.reset();
+		Get().m_Sampler.reset();
 		for (VkShaderModule shaderModule : Get().m_ShaderModules)
 			vkDestroyShaderModule(Graphics::Get().GetDevice(), shaderModule, nullptr);
 		vkDestroyPipeline(Graphics::Get().GetDevice(), Get().m_Pipeline, nullptr);
@@ -139,100 +138,25 @@ namespace At0::Ray
 		VkDeviceSize uploadSize = texWidth * texHeight * 4 * sizeof(char);
 
 		// Create target image for copy
-		VkImageCreateInfo imageInfo{};
-		imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-		imageInfo.imageType = VK_IMAGE_TYPE_2D;
-		imageInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
-		imageInfo.extent.width = texWidth;
-		imageInfo.extent.height = texHeight;
-		imageInfo.extent.depth = 1;
-		imageInfo.mipLevels = 1;
-		imageInfo.arrayLayers = 1;
-		imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-		imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-		imageInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		RAY_VK_THROW_FAILED(
-			vkCreateImage(Graphics::Get().GetDevice(), &imageInfo, nullptr, &m_FontImage),
-			"[ImGui] Failed to create font image");
-
-		VkMemoryRequirements memReqs{};
-		vkGetImageMemoryRequirements(Graphics::Get().GetDevice(), m_FontImage, &memReqs);
-		VkMemoryAllocateInfo memAllocInfo{};
-		memAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		memAllocInfo.allocationSize = memReqs.size;
-		memAllocInfo.memoryTypeIndex = Graphics::Get().GetPhysicalDevice().FindMemoryType(
-			memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-		RAY_VK_THROW_FAILED(
-			vkAllocateMemory(Graphics::Get().GetDevice(), &memAllocInfo, nullptr, &m_FontMemory),
-			"[ImGui] Failed to allocate memory for fonts");
-		RAY_VK_THROW_FAILED(
-			vkBindImageMemory(Graphics::Get().GetDevice(), m_FontImage, m_FontMemory, 0),
-			"[ImGui] Failed to bind font memory");
-
-		// Image view
-		VkImageViewCreateInfo viewInfo{};
-		viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-		viewInfo.image = m_FontImage;
-		viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-		viewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
-		viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		viewInfo.subresourceRange.levelCount = 1;
-		viewInfo.subresourceRange.layerCount = 1;
-		RAY_VK_THROW_FAILED(
-			vkCreateImageView(Graphics::Get().GetDevice(), &viewInfo, nullptr, &m_FontView),
-			"[ImGui] Failed to create font image view");
+		m_FontImage = MakeScope<Image2D>(UInt2{ texWidth, texHeight }, VK_FORMAT_R8G8B8A8_UNORM,
+			VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
 		Buffer stagingBuffer(uploadSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, fontData);
 
-		Image::TransitionLayout(
-			m_FontImage, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+		m_FontImage->TransitionLayout(
+			VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
 		// Copy
-		CommandBuffer copyCmd(Graphics::Get().GetCommandPool());
-		copyCmd.Begin();
+		m_FontImage->CopyFromBuffer(stagingBuffer);
 
-		VkBufferImageCopy bufferCopyRegion = {};
-		bufferCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		bufferCopyRegion.imageSubresource.layerCount = 1;
-		bufferCopyRegion.imageExtent.width = texWidth;
-		bufferCopyRegion.imageExtent.height = texHeight;
-		bufferCopyRegion.imageExtent.depth = 1;
+		m_FontImage->TransitionLayout(
+			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
-		vkCmdCopyBufferToImage(copyCmd, stagingBuffer, m_FontImage,
-			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &bufferCopyRegion);
-
-		copyCmd.End();
-
-		VkCommandBuffer cmdBuff = copyCmd;
-		VkSubmitInfo submitInfo{};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &cmdBuff;
-
-		// RAY_TODO: Get best queue
-		vkQueueSubmit(
-			Graphics::Get().GetDevice().GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
-		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
-
-		Image::TransitionLayout(m_FontImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-		// Font texture Sampler
-		VkSamplerCreateInfo samplerInfo{};
-		samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-		samplerInfo.magFilter = VK_FILTER_LINEAR;
-		samplerInfo.minFilter = VK_FILTER_LINEAR;
-		samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-		samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-		samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-		samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-		samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
-		RAY_VK_THROW_FAILED(
-			vkCreateSampler(Graphics::Get().GetDevice(), &samplerInfo, nullptr, &m_Sampler),
-			"[ImGui] Failed to create font texture sampler");
+		// Font texture sampler
+		m_Sampler = MakeScope<TextureSampler>(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+			VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE);
 
 		CreatePipeline();
 	}
@@ -446,8 +370,8 @@ namespace At0::Ray
 			"[ImGui] Failed to allocate descriptor set");
 
 		VkDescriptorImageInfo fontDescriptor{};
-		fontDescriptor.sampler = m_Sampler;
-		fontDescriptor.imageView = m_FontView;
+		fontDescriptor.sampler = *m_Sampler;
+		fontDescriptor.imageView = m_FontImage->GetImageView();
 		fontDescriptor.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		std::vector<VkWriteDescriptorSet> writeDescriptorSets;
 		VkWriteDescriptorSet writeDescriptorSet{};

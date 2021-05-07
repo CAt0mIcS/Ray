@@ -42,6 +42,8 @@ namespace At0::Ray
 		void destroy();
 	};
 
+	class Image2D;
+	class TextureSampler;
 
 	class RAY_EXPORT ImGUI :
 		EventListener<FramebufferResizedEvent>,
@@ -92,10 +94,8 @@ namespace At0::Ray
 		void OnEvent(ScrollDownEvent& e) override;
 
 	private:
-		VkImage m_FontImage;
-		VkDeviceMemory m_FontMemory;
-		VkImageView m_FontView;
-		VkSampler m_Sampler;
+		Scope<Image2D> m_FontImage;
+		Scope<TextureSampler> m_Sampler;
 
 		VkDescriptorPool m_DescriptorPool;
 		VkDescriptorSetLayout m_DescriptorSetLayout;
