@@ -5,7 +5,9 @@
 
 #include <UI/RButton.h>
 
-#include <Geometry/RMesh.h>
+#include <Components/RMesh.h>
+#include <Components/RSkybox.h>
+
 #include <Graphics/Images/RTexture2D.h>
 #include <Graphics/Renderers/RRenderer.h>
 #include <Graphics/Renderers/RMeshRenderer.h>
@@ -65,6 +67,8 @@ public:
 
 			ImGui::End();
 		});
+
+		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>();
 	}
 
 private:
@@ -104,8 +108,8 @@ private:
 private:
 	std::optional<Ray::Entity> m_ModelEntity;
 	bool m_RenderModel = true;
-	bool m_DiffuseMap = true;
 	bool m_SpecularMap = true;
+	bool m_DiffuseMap = false;
 	bool m_MapConfigChanged = false;
 };
 

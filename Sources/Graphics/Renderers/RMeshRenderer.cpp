@@ -2,7 +2,7 @@
 #include "RMeshRenderer.h"
 
 #include "Graphics/RGraphics.h"
-#include "Geometry/RMesh.h"
+#include "Components/RMesh.h"
 
 
 namespace At0::Ray

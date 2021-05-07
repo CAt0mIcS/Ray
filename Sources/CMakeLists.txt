@@ -41,7 +41,6 @@ set(SRC
 	"Core/RMath.h"
 	"Core/RMath.cpp"
 	"Core/RKeyCodes.h"
-	"Core/RComponent.h"
 	
 	# ------------------------------------------------------------------
 	# Devices
@@ -136,15 +135,16 @@ set(SRC
 	"Graphics/Renderers/RMeshRenderer.h"
 
 	# ------------------------------------------------------------------
-	# Geometry
-	"Geometry/RMesh.h"
-	"Geometry/RMesh.cpp"
-	"Geometry/Registry/RGeometricPrimitives.h"
-	"Geometry/Registry/RGeometricPrimitives.cpp"
-	"Geometry/Registry/RModel.h"
-	"Geometry/Registry/RModel.cpp"
-	"Geometry/Materials/RMaterial.h"
-	"Geometry/Materials/RMaterial.cpp"
+	# Components
+	"Components/RComponent.h"
+	"Components/RMesh.h"
+	"Components/RMesh.cpp"
+	"Components/RSkybox.h"
+	"Components/RSkybox.cpp"
+
+	# Shading
+	"Shading/RMaterial.h"
+	"Shading/RMaterial.cpp"
 
 	# ------------------------------------------------------------------
 	# User Interface
@@ -169,6 +169,10 @@ set(SRC
 	"Utils/RQueue.h"
 	"Utils/RException.h"
 	"Utils/RException.cpp"
+	"Utils/RGeometricPrimitives.h"
+	"Utils/RGeometricPrimitives.cpp"
+	"Utils/RModel.h"
+	"Utils/RModel.cpp"
 
 	# ------------------------------------------------------------------
 	# Event system
@@ -213,6 +217,7 @@ set(PRIVATE_LIB
     "glslang"
     "SPIRV"
     "Ion"
+    "ktx"
 )
 
 

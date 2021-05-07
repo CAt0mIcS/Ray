@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "RBase.h"
-#include "../Core/RComponent.h"
+#include "../Components/RComponent.h"
 #include "../Core/RMath.h"
 
 #include "../Events/REventListener.h"

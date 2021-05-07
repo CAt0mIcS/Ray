@@ -2,7 +2,7 @@
 
 #include "../RBase.h"
 #include "Core/RBindable.h"
-#include "../Geometry/Registry/RModel.h"
+#include "../Utils/RModel.h"
 #include "../Utils/RLogger.h"
 
 #include <string>

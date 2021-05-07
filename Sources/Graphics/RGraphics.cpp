@@ -29,7 +29,7 @@
 #include "Graphics/Buffers/RFramebuffer.h"
 
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
-#include "Geometry/RMesh.h"
+#include "Components/RMesh.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 
 #include "UI/RImGui.h"

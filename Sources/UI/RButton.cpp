@@ -2,7 +2,7 @@
 #include "RButton.h"
 
 #include "Scene/RScene.h"
-#include "Geometry/RMesh.h"
+#include "Components/RMesh.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 #include "Core/RMath.h"
 

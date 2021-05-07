@@ -10,7 +10,7 @@
 #include "Devices/RMouse.h"
 
 #include "UI/RButton.h"
-#include "Geometry/RMesh.h"
+#include "Components/RMesh.h"
 
 
 namespace At0::Ray

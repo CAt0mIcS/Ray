@@ -2,7 +2,7 @@
 #include "RWidget.h"
 
 #include "Scene/REntity.h"
-#include "Geometry/RMesh.h"
+#include "Components/RMesh.h"
 
 #include "Devices/RWindow.h"
 
