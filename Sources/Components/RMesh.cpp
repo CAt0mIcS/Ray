@@ -94,17 +94,16 @@ namespace At0::Ray
 	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	//}
 
-	// Mesh::MeshData Mesh::Cube(const Shaders& shaders)
-	//{
-	//	Material material(shaders);
+	MeshData Mesh::Cube(Material material, Vertex::Flags vertexFlags)
+	{
+		IndexedTriangleList cube =
+			IndexedTriangleList::Cube(material.GetVertexLayout(), vertexFlags);
 
-	//	IndexedTriangleList cube = IndexedTriangleList::Cube(material.GetVertexLayout());
+		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(cube.tag, cube.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(cube.tag, cube.indices);
 
-	//	Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(cube.tag, cube.vertices);
-	//	Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(cube.tag, cube.indices);
-
-	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
-	//}
+		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	}
 
 	// Mesh::MeshData Mesh::UVSphere(float radius, int latDiv, int longDiv, const Shaders& shaders)
 	//{

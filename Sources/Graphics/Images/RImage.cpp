@@ -14,10 +14,10 @@ namespace At0::Ray
 {
 	Image::Image(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
 		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, uint32_t mipLevels,
-		VkImageAspectFlags imageAspect)
+		VkImageAspectFlags imageAspect, uint32_t arrayLayers, VkImageCreateFlags createFlags)
 		: m_Extent(extent), m_ImageType(imageType), m_Format(format), m_Tiling(tiling),
 		  m_Usage(usage), m_MemoryProperties(memProps), m_MipLevels(mipLevels),
-		  m_ImageAspect(imageAspect)
+		  m_ImageAspect(imageAspect), m_ArrayLayers(arrayLayers), m_CreateFlags(createFlags)
 	{
 		Setup();
 	}
@@ -30,7 +30,7 @@ namespace At0::Ray
 
 	void Image::TransitionLayout(VkImageLayout newLayout)
 	{
-		TransitionLayout(m_Image, m_ImageLayout, newLayout, m_MipLevels);
+		TransitionLayout(m_Image, m_ImageLayout, newLayout, m_MipLevels, m_ArrayLayers);
 		m_ImageLayout = newLayout;
 	}
 
@@ -42,8 +42,8 @@ namespace At0::Ray
 		return GenerateMipmaps(m_Image, m_Format, m_Extent.x, m_Extent.y, m_MipLevels);
 	}
 
-	void Image::TransitionLayout(
-		VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
+	void Image::TransitionLayout(VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout,
+		uint32_t mipLevels, uint32_t layerCount)
 	{
 		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
 		commandBuffer.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
@@ -59,7 +59,7 @@ namespace At0::Ray
 		barrier.subresourceRange.baseMipLevel = 0;
 		barrier.subresourceRange.levelCount = mipLevels;
 		barrier.subresourceRange.baseArrayLayer = 0;
-		barrier.subresourceRange.layerCount = 1;
+		barrier.subresourceRange.layerCount = layerCount;
 
 		VkPipelineStageFlags sourceStage;
 		VkPipelineStageFlags destinationStage;
@@ -200,8 +200,11 @@ namespace At0::Ray
 	}
 
 
-	void Image::CopyFromBuffer(const Buffer& buffer)
+	void Image::CopyFromBuffer(const Buffer& buffer, std::vector<VkBufferImageCopy> copyRegions)
 	{
+		if (m_ImageLayout != VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
+			TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
 		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
 		commandBuffer.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
@@ -218,8 +221,11 @@ namespace At0::Ray
 		region.imageOffset = { 0, 0, 0 };
 		region.imageExtent = { m_Extent.x, m_Extent.y, 1 };
 
-		vkCmdCopyBufferToImage(
-			commandBuffer, buffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+		if (copyRegions.empty())
+			copyRegions.emplace_back(region);
+
+		vkCmdCopyBufferToImage(commandBuffer, buffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			(uint32_t)copyRegions.size(), copyRegions.data());
 		commandBuffer.End();
 
 		VkCommandBuffer cmdBuff = commandBuffer;
@@ -276,12 +282,12 @@ namespace At0::Ray
 
 		VkImageCreateInfo imageCreateInfo{};
 		imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-		imageCreateInfo.flags = 0;
+		imageCreateInfo.flags = m_CreateFlags;
 		imageCreateInfo.imageType = m_ImageType;
 		imageCreateInfo.format = m_Format;
 		imageCreateInfo.extent = VkExtent3D{ m_Extent.x, m_Extent.y, 1 };
 		imageCreateInfo.mipLevels = m_MipLevels;
-		imageCreateInfo.arrayLayers = 1;
+		imageCreateInfo.arrayLayers = m_ArrayLayers;
 		imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 		imageCreateInfo.tiling = m_Tiling;
 		imageCreateInfo.usage = m_Usage;

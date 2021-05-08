@@ -19,7 +19,8 @@ namespace At0::Ray
 	public:
 		Image(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
 			VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, uint32_t mipLevels = 1,
-			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT);
+			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t arrayLayers = 1,
+			VkImageCreateFlags createFlags = 0);
 		virtual ~Image();
 
 		operator const VkImage&() const { return m_Image; }
@@ -33,16 +34,17 @@ namespace At0::Ray
 		VkMemoryPropertyFlags GetMemoryProperties() const { return m_MemoryProperties; }
 		uint32_t GetMipLevels() const { return m_MipLevels; }
 		VkImageAspectFlags GetAspectFlags() const { return m_ImageAspect; }
+		uint32_t GetArrayLayers() const { return m_ArrayLayers; }
 
 		void TransitionLayout(VkImageLayout newLayout);
-		void CopyFromBuffer(const Buffer& buffer);
+		void CopyFromBuffer(const Buffer& buffer, std::vector<VkBufferImageCopy> copyRegions = {});
 		bool GenerateMipmaps();
 
 		Image& operator=(Image&& other) noexcept;
 		Image(Image&& other) noexcept { *this = std::move(other); }
 
 		static void TransitionLayout(VkImage image, VkImageLayout oldLayout,
-			VkImageLayout newLayout, uint32_t mipLevels = 1);
+			VkImageLayout newLayout, uint32_t mipLevels = 1, uint32_t layerCount = 1);
 		static bool GenerateMipmaps(
 			VkImage image, VkFormat imageFormat, int32_t width, int32_t height, uint32_t mipLevels);
 		static std::vector<VkFormat> FindSupportedFormats(std::vector<VkFormat> candidates,
@@ -66,5 +68,7 @@ namespace At0::Ray
 		VkMemoryPropertyFlags m_MemoryProperties;
 		uint32_t m_MipLevels = 1;
 		VkImageAspectFlags m_ImageAspect;
+		uint32_t m_ArrayLayers = 1;
+		VkImageCreateFlags m_CreateFlags = 0;
 	};
 }  // namespace At0::Ray

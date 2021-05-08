@@ -16,7 +16,7 @@ namespace At0::Ray
 		static IndexedTriangleList Circle(
 			const VertexLayout& layout, int segments = 360, float radius = 1.0f);
 
-		static IndexedTriangleList Cube(const VertexLayout& layout);
+		static IndexedTriangleList Cube(const VertexLayout& layout, Vertex::Flags flags);
 		static IndexedTriangleList IcoSphere(const VertexLayout& layout);
 		static IndexedTriangleList UVSphere(
 			const VertexLayout& layout, float radius, int latDiv = 12, int longDiv = 24);

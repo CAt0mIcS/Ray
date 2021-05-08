@@ -47,7 +47,7 @@ namespace At0::Ray
 		// static MeshData Circle(
 		//	int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
 
-		// static MeshData Cube(const Shaders& shaders = s_DefaultShaders);
+		static MeshData Cube(Material material, Vertex::Flags vertexFlags = Vertex::Position3D);
 		// static MeshData IcoSphere(const Shaders& shaders = s_DefaultShaders);
 		// static MeshData UVSphere(float radius = 1.0f, int latDiv = 12, int longDiv = 24,
 		//	const Shaders& shaders = s_DefaultShaders);

@@ -17,6 +17,8 @@ set(SHADERS
 	"../Resources/Shaders/UI_Tex.frag"
 	"../Resources/Shaders/ImGui.vert"
 	"../Resources/Shaders/ImGui.frag"
+	"../Resources/Shaders/Skybox.vert"
+	"../Resources/Shaders/Skybox.frag"
 )
 
 set(SRC

@@ -15,14 +15,14 @@ namespace At0::Ray
 	public:
 		ImageView(const Image& image);
 		ImageView(VkImage image, VkImageViewType viewType, VkFormat format, uint32_t mipLevels = 1,
-			VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT);
+			VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t layerCount = 1);
 		~ImageView();
 
 		operator const VkImageView&() const { return m_View; }
 
 	private:
 		void Setup(VkImage image, VkImageViewType viewType, VkFormat format, uint32_t mipLevels,
-			VkImageAspectFlags aspectFlags);
+			VkImageAspectFlags aspectFlags, uint32_t layerCount);
 
 	private:
 		VkImageView m_View = VK_NULL_HANDLE;
