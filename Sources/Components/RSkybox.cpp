@@ -48,7 +48,9 @@ namespace At0::Ray
 				// Calculate offset into staging buffer for the current mip level and face
 				ktx_size_t offset;
 				KTX_error_code ret = ktxTexture_GetImageOffset(ktxTexture, level, 0, face, &offset);
-				assert(ret == KTX_SUCCESS);
+				RAY_MEXPECTS(ret == KTX_SUCCESS,
+					"[Skybox] Failed to get texture image offset at face {1}, mip level {1}", face,
+					level);
 				VkBufferImageCopy bufferCopyRegion = {};
 				bufferCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 				bufferCopyRegion.imageSubresource.mipLevel = level;
@@ -58,7 +60,7 @@ namespace At0::Ray
 				bufferCopyRegion.imageExtent.height = ktxTexture->baseHeight >> level;
 				bufferCopyRegion.imageExtent.depth = 1;
 				bufferCopyRegion.bufferOffset = offset;
-				bufferCopyRegions.push_back(bufferCopyRegion);
+				bufferCopyRegions.emplace_back(bufferCopyRegion);
 			}
 		}
 
@@ -66,8 +68,5 @@ namespace At0::Ray
 		m_Texture->TransitionLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
 		ktxTexture_Destroy(ktxTexture);
-
-
-		GetEntity().Emplace<Mesh>(Mesh::Cube());
 	}
 }  // namespace At0::Ray

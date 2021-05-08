@@ -68,7 +68,13 @@ public:
 			ImGui::End();
 		});
 
-		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>();
+		Ray::Mesh& mesh = Ray::Scene::Get().CreateEntity().Emplace<Ray::Mesh>(Ray::Mesh::Import(
+			"Resources/Models/UVSPhere.obj",
+			Ray::Material{ Ray::Material::LightingTechnique(Ray::Material::LightingTechnique::Flat),
+				Ray::Material::Texture2D(
+					Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg")),
+				Ray::Material::CullMode(VK_CULL_MODE_FRONT_BIT) }));
+		mesh.GetTransform().SetScale(Ray::Float3{ 10.0f, 10.0f, 10.0f });
 	}
 
 private:
@@ -109,7 +115,8 @@ private:
 	std::optional<Ray::Entity> m_ModelEntity;
 	bool m_RenderModel = true;
 	bool m_SpecularMap = true;
-	bool m_DiffuseMap = false;
+	// Not working if false
+	bool m_DiffuseMap = true;
 	bool m_MapConfigChanged = false;
 };
 

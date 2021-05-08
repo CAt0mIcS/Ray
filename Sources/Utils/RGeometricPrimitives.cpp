@@ -135,18 +135,7 @@ namespace At0::Ray
 	{
 		VertexInput vertexInput(layout);
 
-		if (flags & Vertex::Position3D && flags & Vertex::TextureCoordinate)
-		{
-			vertexInput.Emplace(Float3{ -0.5f, -0.5f, -0.5f });
-			vertexInput.Emplace(Float3{ 0.5f, -0.5f, -0.5f });
-			vertexInput.Emplace(Float3{ -0.5f, 0.5f, -0.5f });
-			vertexInput.Emplace(Float3{ 0.5f, 0.5f, -0.5f });
-			vertexInput.Emplace(Float3{ -0.5f, -0.5f, 0.5f });
-			vertexInput.Emplace(Float3{ 0.5f, -0.5f, 0.5f });
-			vertexInput.Emplace(Float3{ -0.5f, 0.5f, 0.5f });
-			vertexInput.Emplace(Float3{ 0.5f, 0.5f, 0.5f });
-		}
-		else if (flags & Vertex::Position3D)
+		if (flags & Vertex::Position3D)
 		{
 			vertexInput.Emplace(Float3{ -0.5f, -0.5f, -0.5f });
 			vertexInput.Emplace(Float3{ 0.5f, -0.5f, -0.5f });
@@ -168,11 +157,12 @@ namespace At0::Ray
 	}
 
 	IndexedTriangleList IndexedTriangleList::UVSphere(
-		const VertexLayout& layout, float radius, int latDiv, int longDiv)
+		const VertexLayout& layout, float radius, int latDiv, int longDiv, Vertex::Flags flags)
 	{
 		const Float4 base = Float4{ 0.0f, 0.0f, radius, 0.0f };
 		const float lattitudeAngle = Math::PI<float> / latDiv;
 		const float longitudeAngle = 2.0f * Math::PI<float> / longDiv;
+		bool texCoords = flags & Vertex::TextureCoordinate;
 
 		VertexInput vertexInput(layout);
 		for (int iLat = 1; iLat < latDiv; iLat++)

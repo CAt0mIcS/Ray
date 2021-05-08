@@ -105,19 +105,18 @@ namespace At0::Ray
 		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
 	}
 
-	// Mesh::MeshData Mesh::UVSphere(float radius, int latDiv, int longDiv, const Shaders& shaders)
-	//{
-	//	Material material(shaders);
+	MeshData Mesh::UVSphere(
+		Material material, float radius, int latDiv, int longDiv, Vertex::Flags vertexFlags)
+	{
+		IndexedTriangleList uvSphere = IndexedTriangleList::UVSphere(
+			material.GetVertexLayout(), radius, latDiv, longDiv, vertexFlags);
 
-	//	IndexedTriangleList uvSphere =
-	//		IndexedTriangleList::UVSphere(material.GetVertexLayout(), radius, latDiv, longDiv);
+		Ref<VertexBuffer> vertexBuffer =
+			Codex::Resolve<VertexBuffer>(uvSphere.tag, uvSphere.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(uvSphere.tag, uvSphere.indices);
 
-	//	Ref<VertexBuffer> vertexBuffer =
-	//		Codex::Resolve<VertexBuffer>(uvSphere.tag, uvSphere.vertices);
-	//	Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(uvSphere.tag, uvSphere.indices);
-
-	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
-	//}
+		return { std::move(vertexBuffer), std::move(indexBuffer), std::move(material) };
+	}
 
 	// Mesh::MeshData Mesh::Cylinder(int segments, float radius, const Shaders& shaders)
 	//{
