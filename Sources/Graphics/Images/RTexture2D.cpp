@@ -35,12 +35,17 @@ namespace At0::Ray
 		stbi_image_free(pixels);
 
 		Image2D::Setup(UInt2{ texWidth, texHeight }, VK_FORMAT_R8G8B8A8_SRGB,
-			VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+			VK_IMAGE_TILING_OPTIMAL,
+			VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT |
+				VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
 			VK_SHARING_MODE_EXCLUSIVE, mipLevels);
 
 		TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 		CopyFromBuffer(stagingBuffer);
-		TransitionLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+		// If mitpmap generation failed we need to transition the layout ourselves
+		if (!GenerateMipmaps())
+			TransitionLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 	}
 
 	Texture2D::Texture2D(UInt2 extent, VkFormat format, VkImageTiling tiling,

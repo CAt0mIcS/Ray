@@ -36,12 +36,15 @@ namespace At0::Ray
 
 		void TransitionLayout(VkImageLayout newLayout);
 		void CopyFromBuffer(const Buffer& buffer);
+		bool GenerateMipmaps();
 
 		Image& operator=(Image&& other) noexcept;
 		Image(Image&& other) noexcept { *this = std::move(other); }
 
 		static void TransitionLayout(VkImage image, VkImageLayout oldLayout,
 			VkImageLayout newLayout, uint32_t mipLevels = 1);
+		static bool GenerateMipmaps(
+			VkImage image, VkFormat imageFormat, int32_t width, int32_t height, uint32_t mipLevels);
 		static std::vector<VkFormat> FindSupportedFormats(std::vector<VkFormat> candidates,
 			VkImageTiling tiling, VkFormatFeatureFlags featureFlags);
 
