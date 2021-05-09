@@ -9,6 +9,7 @@
 #include <Components/RSkybox.h>
 
 #include <Graphics/Images/RTexture2D.h>
+#include <Graphics/Images/RTextureCubemap.h>
 #include <Graphics/Renderers/RRenderer.h>
 #include <Graphics/Renderers/RMeshRenderer.h>
 #include <Graphics/Pipelines/RGraphicsPipeline.h>
@@ -68,8 +69,11 @@ public:
 			ImGui::End();
 		});
 
+		// Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+		//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
+
 		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
+			Ray::MakeRef<Ray::TextureCubemap>("Resources/Textures/cubemap_space.ktx"));
 	}
 
 private:

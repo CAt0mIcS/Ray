@@ -116,6 +116,8 @@ set(SRC
 	"Graphics/Images/RImageView.cpp"
 	"Graphics/Images/RTexture2D.h"
 	"Graphics/Images/RTexture2D.cpp"
+	"Graphics/Images/RTextureCubemap.h"
+	"Graphics/Images/RTextureCubemap.cpp"
 	"Graphics/Images/RTextureSampler.h"
 	"Graphics/Images/RTextureSampler.cpp"
 

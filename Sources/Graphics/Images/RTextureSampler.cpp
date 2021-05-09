@@ -11,7 +11,7 @@
 namespace At0::Ray
 {
 	TextureSampler::TextureSampler(VkSamplerAddressMode addressModeU,
-		VkSamplerAddressMode addressModeV, VkSamplerAddressMode addressModeW)
+		VkSamplerAddressMode addressModeV, VkSamplerAddressMode addressModeW, float maxLod)
 	{
 		VkSamplerCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -39,7 +39,7 @@ namespace At0::Ray
 		createInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
 		createInfo.mipLodBias = 0.0f;
 		createInfo.minLod = 0.0f;
-		createInfo.maxLod = 0.0f;
+		createInfo.maxLod = maxLod;
 
 		RAY_VK_THROW_FAILED(
 			vkCreateSampler(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Sampler),
