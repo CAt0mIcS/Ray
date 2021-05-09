@@ -25,10 +25,13 @@ namespace At0::Ray
 	public:
 		enum Flags
 		{
-			Unspecified = 0b00000000,
-			NoDiffuseMap = 0b0000001,
-			NoSpecularMap = 0b0000010,
-			NoNormalMap = 0b00000100
+			Unspecified = 0 << 0,
+			NoDiffuseMap = 1 << 0,
+			NoSpecularMap = 1 << 1,
+			NoNormalMap = 1 << 2,
+
+			NoTextureCoordinates = 1 << 3,
+			NoNormals = 1 << 4
 		};
 
 	public:
