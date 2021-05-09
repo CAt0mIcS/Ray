@@ -69,13 +69,12 @@ public:
 		});
 
 		m_Skybox = Ray::Scene::Get().CreateEntity();
-		Ray::Mesh& mesh = m_Skybox.Emplace<Ray::Mesh>(
-			Ray::Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", Ray::Model::NoNormals));
-		mesh.SetMaterial(
+		Ray::Mesh& mesh = m_Skybox.Emplace<Ray::Mesh>(Ray::Mesh::Import(
+			"Resources/Models/UVSphere/UVSphere.obj", Ray::Model::NoNormals,
 			Ray::Material{ Ray::Material::LightingTechnique(Ray::Material::LightingTechnique::Flat),
 				Ray::Material::Texture2D(
 					Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg")),
-				Ray::Material::CullMode(VK_CULL_MODE_FRONT_BIT) });
+				Ray::Material::CullMode(VK_CULL_MODE_FRONT_BIT) }));
 		mesh.GetTransform().SetScale({ Ray::Scene::Get().GetCamera().GetFarClip() - 5.0f,
 			Ray::Scene::Get().GetCamera().GetFarClip() - 5.0f,
 			Ray::Scene::Get().GetCamera().GetFarClip() - 5.0f });
@@ -84,37 +83,39 @@ public:
 private:
 	void Update() override
 	{
-		// if (m_RenderModel)
-		//{
-		//	if (m_MapConfigChanged || !m_ModelEntity)
-		//	{
-		//		if (m_ModelEntity)
-		//			Ray::Scene::Get().DestroyEntity(*m_ModelEntity);
+		if (m_RenderModel)
+		{
+			if (m_MapConfigChanged || !m_ModelEntity)
+			{
+				if (m_ModelEntity)
+					Ray::Scene::Get().DestroyEntity(*m_ModelEntity);
 
-		//		Ray::Model::Flags flags = Ray::Model::NoNormalMap;
-		//		if (m_DiffuseMap && m_SpecularMap)
-		//		{
-		//		}
-		//		else if (m_DiffuseMap)
-		//			flags = flags | Ray::Model::NoSpecularMap;
-		//		else if (m_SpecularMap)
-		//			flags = flags | Ray::Model::NoDiffuseMap;
-		//		else
-		//			flags = flags | Ray::Model::NoDiffuseMap | Ray::Model::NoSpecularMap;
+				Ray::Model::Flags flags = Ray::Model::NoNormalMap;
+				if (m_DiffuseMap && m_SpecularMap)
+				{
+				}
+				else if (m_DiffuseMap)
+					flags = flags | Ray::Model::NoSpecularMap;
+				else if (m_SpecularMap)
+					flags = flags | Ray::Model::NoDiffuseMap;
+				else
+					flags = flags | Ray::Model::NoDiffuseMap | Ray::Model::NoSpecularMap;
 
-		//		m_ModelEntity = Ray::Scene::Get().CreateEntity();
-		//		m_ModelEntity->Emplace<Ray::Mesh>(
-		//			Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj", flags));
-		//		m_MapConfigChanged = false;
-		//	}
-		//}
-		// else if (!m_RenderModel && m_ModelEntity)
-		//{
-		//	Ray::Scene::Get().DestroyEntity(*m_ModelEntity);
-		//	m_ModelEntity = std::nullopt;
-		//}
+				m_ModelEntity = Ray::Scene::Get().CreateEntity();
+				m_ModelEntity->Emplace<Ray::Mesh>(
+					Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj", flags));
+				m_MapConfigChanged = false;
+			}
+		}
+		else if (!m_RenderModel && m_ModelEntity)
+		{
+			Ray::Scene::Get().DestroyEntity(*m_ModelEntity);
+			m_ModelEntity = std::nullopt;
+		}
 
-		m_Skybox.Get<Ray::Mesh>().GetTransform().SetTranslation(Scene::Get().GetCamera().Position);
+		Ray::Float3 camPos = Scene::Get().GetCamera().Position;
+		Ray::Float3 negCamPos = -camPos;
+		m_Skybox.Get<Ray::Mesh>().GetTransform().SetTranslation({ -camPos.x, camPos.y, -camPos.z });
 	}
 
 private:

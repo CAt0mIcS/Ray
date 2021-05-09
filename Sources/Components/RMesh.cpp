@@ -150,9 +150,10 @@ namespace At0::Ray
 	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(lineMaterial) };
 	//}
 
-	MeshData Mesh::Import(std::string_view filepath, Model::Flags flags)
+	MeshData Mesh::Import(
+		std::string_view filepath, Model::Flags flags, std::optional<Material> material)
 	{
-		return { Codex::Resolve<Model>(filepath, flags)->GetMesh() };
+		return { Codex::Resolve<Model>(filepath, flags, material)->GetMesh() };
 	}
 
 	void Mesh::Update(Delta ts)

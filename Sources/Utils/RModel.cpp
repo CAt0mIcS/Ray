@@ -20,7 +20,7 @@
 
 namespace At0::Ray
 {
-	Model::Model(std::string_view filepath, Model::Flags flags)
+	Model::Model(std::string_view filepath, Model::Flags flags, std::optional<Material> material)
 	{
 		Log::Info("[Model] Importing model \"{0}\"", filepath);
 
@@ -44,13 +44,14 @@ namespace At0::Ray
 
 		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
 		{
-			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials, flags);
+			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials, flags, material);
 		}
 	}
 
 	Model::~Model() {}
 
-	std::string Model::GetUID(std::string_view filepath, Model::Flags flags)
+	std::string Model::GetUID(
+		std::string_view filepath, Model::Flags flags, std::optional<Material> material)
 	{
 		std::ostringstream oss;
 		oss << filepath << "#" << (uint32_t)flags;
@@ -58,7 +59,7 @@ namespace At0::Ray
 	}
 
 	void Model::ParseMesh(std::string_view base, const aiMesh& mesh,
-		const aiMaterial* const* pMaterials, Model::Flags flags)
+		const aiMaterial* const* pMaterials, Model::Flags flags, std::optional<Material> material)
 	{
 		Log::Info("[Model] Parsing mesh \"{0}\"", mesh.mName.C_Str());
 
@@ -114,7 +115,7 @@ namespace At0::Ray
 
 		MeshData data{ Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
 			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)),
-			CreateMaterial(basePath, mesh, pMaterials, flags) };
+			material ? *material : CreateMaterial(basePath, mesh, pMaterials, flags) };
 
 		// RAY_TODO: Scene hierachy
 		if (!m_RootMesh)
