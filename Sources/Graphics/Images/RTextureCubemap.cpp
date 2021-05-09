@@ -67,7 +67,7 @@ namespace At0::Ray
 
 		m_Sampler = MakeScope<TextureSampler>(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
 			VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-			GetMipLevels());
+			(float)GetMipLevels());
 
 		ktxTexture_Destroy(ktxTexture);
 	}

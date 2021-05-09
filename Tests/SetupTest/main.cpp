@@ -69,11 +69,12 @@ public:
 			ImGui::End();
 		});
 
-		// Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-		//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
-
 		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::MakeRef<Ray::TextureCubemap>("Resources/Textures/cubemap_space.ktx"));
+			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
+
+		// RAY_TODO:
+		// Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+		//	Ray::MakeRef<Ray::TextureCubemap>("Resources/Textures/cubemap_space.ktx"));
 	}
 
 private:

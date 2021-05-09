@@ -2,10 +2,12 @@ set(SRC
 	"main.cpp"
 )
 
-add_executable("UITest" "${SRC}")
-target_include_directories("UITest" PRIVATE "${CMAKE_SOURCE_DIR}/Sources")
-target_compile_definitions("UITest" PRIVATE "ENTT_API_IMPORT")
-target_link_libraries("UITest" PRIVATE "Ray")
+add_executable("UI" "${SRC}")
+target_include_directories("UI" PRIVATE "${CMAKE_SOURCE_DIR}/Sources")
+target_compile_definitions("UI" PRIVATE "ENTT_API_IMPORT")
+target_link_libraries("UI" PRIVATE "Ray")
 
-SetOutputDirectory("UITest" "")
-SetWorkingDirectoryPlane("UITest" "${CMAKE_SOURCE_DIR}")
+set_target_properties("UI" PROPERTIES FOLDER "Tests")
+
+SetOutputDirectory("UI" "")
+SetWorkingDirectoryPlane("UI" "${CMAKE_SOURCE_DIR}")
