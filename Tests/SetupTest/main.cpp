@@ -68,16 +68,8 @@ public:
 			ImGui::End();
 		});
 
-		m_Skybox = Ray::Scene::Get().CreateEntity();
-		Ray::Mesh& mesh = m_Skybox.Emplace<Ray::Mesh>(Ray::Mesh::Import(
-			"Resources/Models/UVSphere/UVSphere.obj", Ray::Model::NoNormals,
-			Ray::Material{ Ray::Material::LightingTechnique(Ray::Material::LightingTechnique::Flat),
-				Ray::Material::Texture2D(
-					Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg")),
-				Ray::Material::CullMode(VK_CULL_MODE_FRONT_BIT) }));
-		mesh.GetTransform().SetScale({ Ray::Scene::Get().GetCamera().GetFarClip() - 5.0f,
-			Ray::Scene::Get().GetCamera().GetFarClip() - 5.0f,
-			Ray::Scene::Get().GetCamera().GetFarClip() - 5.0f });
+		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:
@@ -112,15 +104,10 @@ private:
 			Ray::Scene::Get().DestroyEntity(*m_ModelEntity);
 			m_ModelEntity = std::nullopt;
 		}
-
-		Ray::Float3 camPos = Scene::Get().GetCamera().Position;
-		Ray::Float3 negCamPos = -camPos;
-		m_Skybox.Get<Ray::Mesh>().GetTransform().SetTranslation({ -camPos.x, camPos.y, -camPos.z });
 	}
 
 private:
 	std::optional<Ray::Entity> m_ModelEntity;
-	Ray::Entity m_Skybox;
 	bool m_RenderModel = true;
 	bool m_SpecularMap = true;
 	// Not working if false

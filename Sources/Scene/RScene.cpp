@@ -5,6 +5,7 @@
 #include "Utils/RException.h"
 
 #include "Components/RMesh.h"
+#include "Components/RSkybox.h"
 
 #include "Events/REventListener.h"
 
@@ -44,8 +45,8 @@ namespace At0::Ray
 	{
 		m_Camera->Update(dt);
 
-		auto meshView = m_Registry.view<Mesh>();
-		meshView.each([&dt](Mesh& mesh) { mesh.Update(dt); });
+		m_Registry.view<Mesh>().each([&dt](Mesh& mesh) { mesh.Update(dt); });
+		m_Registry.view<Skybox>().each([&dt](Skybox& skybox) { skybox.Update(dt); });
 	}
 
 	void Scene::SetCamera(Scope<Camera> cam) { m_Camera = std::move(cam); }

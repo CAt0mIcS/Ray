@@ -5,6 +5,7 @@
 #include "Graphics/Images/RImage.h"
 #include "Graphics/Buffers/RBuffer.h"
 #include "RMesh.h"
+#include "Scene/RScene.h"
 
 #include <ktx.h>
 #include <ktxvulkan.h>
@@ -12,61 +13,27 @@
 
 namespace At0::Ray
 {
-	Skybox::Skybox(Entity entity) : Component(entity)
+	Skybox::Skybox(Entity entity, Ref<Texture2D> texture) : Component(entity), m_Texture(texture)
 	{
-		std::string filepath = "Resources/Textures/cubemap_space.ktx";
+		Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Import(
+			"Resources/Models/UVSphere/UVSphere.obj", Ray::Model::NoNormals,
+			Ray::Material{ Ray::Material::LightingTechnique(Ray::Material::LightingTechnique::Flat),
+				Ray::Material::Texture2D(texture),
+				Ray::Material::CullMode(VK_CULL_MODE_FRONT_BIT) }));
+		mesh.GetTransform().SetScale({ Ray::Scene::Get().GetCamera().GetFarClip() - 5.0f,
+			Ray::Scene::Get().GetCamera().GetFarClip() - 5.0f,
+			Ray::Scene::Get().GetCamera().GetFarClip() - 5.0f });
+	}
 
-		ktxResult result;
-		ktxTexture* ktxTexture;
+	void Skybox::Update(Delta dt)
+	{
+		Transform& tform = GetEntity().Get<Mesh>().GetTransform();
+		Camera& cam = Scene::Get().GetCamera();
 
-		result = ktxTexture_CreateFromNamedFile(
-			filepath.c_str(), KTX_TEXTURE_CREATE_LOAD_IMAGE_DATA_BIT, &ktxTexture);
-		RAY_MEXPECTS(result == KTX_SUCCESS, "[Skybox] Failed to load texture \"{0}\"", filepath);
+		tform.SetScale(
+			{ cam.GetFarClip() - 5.0f, cam.GetFarClip() - 5.0f, cam.GetFarClip() - 5.0f });
 
-		ktx_uint8_t* ktxTextureData = ktxTexture_GetData(ktxTexture);
-		ktx_size_t ktxTextureSize = ktxTexture_GetSize(ktxTexture);
-
-		Buffer stagingBuffer((VkDeviceSize)ktxTextureSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-			ktxTextureData);
-
-		m_Texture = MakeRef<Image2D>(UInt2{ ktxTexture->baseWidth, ktxTexture->baseHeight },
-			VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL,
-			VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
-			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, ktxTexture->numLevels, VK_IMAGE_ASPECT_COLOR_BIT,
-			6,	// Array layers count as cube faces in vulkan
-			VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT);
-
-		// Setup buffer copy regions for each face including all of its miplevels
-		std::vector<VkBufferImageCopy> bufferCopyRegions;
-		uint32_t offset = 0;
-
-		for (uint32_t face = 0; face < 6; face++)
-		{
-			for (uint32_t level = 0; level < m_Texture->GetMipLevels(); level++)
-			{
-				// Calculate offset into staging buffer for the current mip level and face
-				ktx_size_t offset;
-				KTX_error_code ret = ktxTexture_GetImageOffset(ktxTexture, level, 0, face, &offset);
-				RAY_MEXPECTS(ret == KTX_SUCCESS,
-					"[Skybox] Failed to get texture image offset at face {1}, mip level {1}", face,
-					level);
-				VkBufferImageCopy bufferCopyRegion = {};
-				bufferCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-				bufferCopyRegion.imageSubresource.mipLevel = level;
-				bufferCopyRegion.imageSubresource.baseArrayLayer = face;
-				bufferCopyRegion.imageSubresource.layerCount = 1;
-				bufferCopyRegion.imageExtent.width = ktxTexture->baseWidth >> level;
-				bufferCopyRegion.imageExtent.height = ktxTexture->baseHeight >> level;
-				bufferCopyRegion.imageExtent.depth = 1;
-				bufferCopyRegion.bufferOffset = offset;
-				bufferCopyRegions.emplace_back(bufferCopyRegion);
-			}
-		}
-
-		m_Texture->CopyFromBuffer(stagingBuffer, bufferCopyRegions);
-		m_Texture->TransitionLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-		ktxTexture_Destroy(ktxTexture);
+		Float3 camPos = cam.Position;
+		tform.SetTranslation({ -camPos.x, camPos.y, -camPos.z });
 	}
 }  // namespace At0::Ray

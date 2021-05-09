@@ -9,6 +9,7 @@
 #include "../RBase.h"
 #include "../Utils/RNonCopyable.h"
 #include "../Events/REventListener.h"
+#include "../Events/REventDispatcher.h"
 #include "../Events/RMouseEvents.h"
 #include "../Events/RKeyboardEvents.h"
 #include "../Core/RTime.h"
