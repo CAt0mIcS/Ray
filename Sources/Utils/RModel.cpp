@@ -69,9 +69,12 @@ namespace At0::Ray
 		VertexLayout layout{};
 		layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Position
 
+		aiString normalTexFileName;
 		if ((flags & Flags::NoTextureCoordinates) == 0)
 			layout.Append(VK_FORMAT_R32G32_SFLOAT);	 // Texture coordinate
-		if ((flags & Flags::NoNormals) == 0)
+		if (HasNormalMap(mesh, pMaterials, material))
+			flags = flags | Model::NoNormals;
+		else if ((flags & Model::NoNormals) == 0)
 			layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Normal
 
 		VertexInput vertexInput(layout);
@@ -173,6 +176,23 @@ namespace At0::Ray
 
 		return Material{ Material::DiffuseMap(diffuseMap), Material::SpecularMap(specularMap),
 			Material::NormalMap(normalMap) };
+	}
+
+	bool Model::HasNormalMap(
+		const aiMesh& mesh, const aiMaterial* const* pMaterials, std::optional<Material> material)
+	{
+		aiString normalTexFileName("");
+		aiReturn ret = pMaterials[mesh.mMaterialIndex]->GetTexture(
+			aiTextureType_NORMALS, 0, &normalTexFileName);
+
+// RAY_TODO: Check if std::optional<Material> material has normal map
+#ifndef NDEBUG
+		if (material)
+			Log::Error("[Model] Missing implementation to check for the existence of a normal map "
+					   "in a custom material");
+#endif
+
+		return ret == aiReturn_SUCCESS || normalTexFileName.length != 0;
 	}
 
 }  // namespace At0::Ray

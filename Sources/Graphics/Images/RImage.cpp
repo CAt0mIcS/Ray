@@ -7,6 +7,7 @@
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/Buffers/RBuffer.h"
 
+#include "Utils/RLogger.h"
 #include "Utils/RException.h"
 
 

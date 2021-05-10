@@ -55,6 +55,9 @@ namespace At0::Ray
 		static Material CreateMaterial(const std::string& basePath, const aiMesh& mesh,
 			const aiMaterial* const* pMaterials, Model::Flags flags);
 
+		static bool HasNormalMap(const aiMesh& mesh, const aiMaterial* const* pMaterials,
+			std::optional<Material> material);
+
 	private:
 		Scope<MeshData> m_RootMesh;
 	};

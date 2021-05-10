@@ -87,7 +87,7 @@ private:
 				if (m_ModelEntity)
 					Ray::Scene::Get().DestroyEntity(*m_ModelEntity);
 
-				Ray::Model::Flags flags = Ray::Model::NoNormalMap;
+				Ray::Model::Flags flags = Ray::Model::Unspecified;
 				if (m_DiffuseMap && m_SpecularMap)
 				{
 				}
@@ -99,8 +99,11 @@ private:
 					flags = flags | Ray::Model::NoDiffuseMap | Ray::Model::NoSpecularMap;
 
 				m_ModelEntity = Ray::Scene::Get().CreateEntity();
-				m_ModelEntity->Emplace<Ray::Mesh>(
-					Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj", flags));
+				m_ModelEntity
+					->Emplace<Ray::Mesh>(
+						Ray::Mesh::Import("Resources/Scenes/Sponza/scene.gltf", flags))
+					.GetTransform()
+					.SetScale(Ray::Float3{ 0.1f });
 				m_MapConfigChanged = false;
 			}
 		}

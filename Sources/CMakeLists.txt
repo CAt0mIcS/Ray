@@ -9,6 +9,8 @@ set(SHADERS
 	"../Resources/Shaders/Phong_Spec.frag"
 	"../Resources/Shaders/Phong_Diff.vert"
 	"../Resources/Shaders/Phong_Diff.frag"
+	"../Resources/Shaders/Phong_DiffNorm.vert"
+	"../Resources/Shaders/Phong_DiffNorm.frag"
 	"../Resources/Shaders/Phong_DiffSpec.vert"
 	"../Resources/Shaders/Phong_DiffSpec.frag"
 	"../Resources/Shaders/UI.vert"

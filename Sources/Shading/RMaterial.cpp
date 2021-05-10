@@ -100,6 +100,9 @@ namespace At0::Ray
 			if (config.specularMap.value)
 				AddUniform(MakeScope<SamplerUniform>("materialSpecular", Shader::Stage::Fragment,
 					config.specularMap.value, *m_GraphicsPipeline));
+			if (config.normalMap.value)
+				AddUniform(MakeScope<SamplerUniform>("materialNormal", Shader::Stage::Fragment,
+					config.normalMap.value, *m_GraphicsPipeline));
 
 			if (config.texture2D.value)
 				AddUniform(MakeScope<SamplerUniform>("texSampler", Shader::Stage::Fragment,
