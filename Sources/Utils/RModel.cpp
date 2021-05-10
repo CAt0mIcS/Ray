@@ -70,9 +70,9 @@ namespace At0::Ray
 		layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Position
 
 		aiString normalTexFileName;
-		if ((flags & Flags::NoTextureCoordinates) == 0)
+		if ((flags & Model::NoTextureCoordinates) == 0)
 			layout.Append(VK_FORMAT_R32G32_SFLOAT);	 // Texture coordinate
-		if (HasNormalMap(mesh, pMaterials, material))
+		if (HasNormalMap(mesh, pMaterials, material) && (flags & Model::NoNormalMap) == 0)
 			flags = flags | Model::NoNormals;
 		else if ((flags & Model::NoNormals) == 0)
 			layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Normal
@@ -81,16 +81,16 @@ namespace At0::Ray
 
 		for (uint32_t i = 0; i < mesh.mNumVertices; ++i)
 		{
-			if (flags & Flags::NoTextureCoordinates && flags & Flags::NoNormals)
+			if (flags & Model::NoTextureCoordinates && flags & Model::NoNormals)
 				vertexInput.Emplace(
 					Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z));
 
-			else if (flags & Flags::NoTextureCoordinates)
+			else if (flags & Model::NoTextureCoordinates)
 				vertexInput.Emplace(
 					Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z),
 					Float3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z));
 
-			else if (flags & Flags::NoNormals)
+			else if (flags & Model::NoNormals)
 				vertexInput.Emplace(
 					Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z),
 					Float2(mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y));

@@ -57,13 +57,24 @@ public:
 			ImGui::Begin("Nanosuit");
 			ImGui::Checkbox("RenderModel", &m_RenderModel);
 
-			bool oldDiffuseMap = m_DiffuseMap;
-			bool oldSpecularMap = m_SpecularMap;
+			bool oldDiffuseMap = m_NoDiffuseMap;
+			bool oldSpecularMap = m_NoSpecularMap;
+			bool oldNormalMap = m_NoNormalMap;
 
-			ImGui::Checkbox("DiffuseMap", &m_DiffuseMap);
-			ImGui::Checkbox("SpecularMap", &m_SpecularMap);
+			bool inputDiffuse = !m_NoDiffuseMap;
+			bool inputSpecular = !m_NoSpecularMap;
+			bool inputNormal = !m_NoNormalMap;
 
-			if (m_DiffuseMap != oldDiffuseMap || m_SpecularMap != oldSpecularMap)
+			ImGui::Checkbox("DiffuseMap", &inputDiffuse);
+			ImGui::Checkbox("SpecularMap", &inputSpecular);
+			ImGui::Checkbox("NormalMap", &inputNormal);
+
+			m_NoDiffuseMap = !inputDiffuse;
+			m_NoSpecularMap = !inputSpecular;
+			m_NoNormalMap = !inputNormal;
+
+			if (m_NoDiffuseMap != oldDiffuseMap || m_NoSpecularMap != oldSpecularMap ||
+				m_NoNormalMap != oldNormalMap)
 				m_MapConfigChanged = true;
 
 			ImGui::End();
@@ -88,15 +99,12 @@ private:
 					Ray::Scene::Get().DestroyEntity(*m_ModelEntity);
 
 				Ray::Model::Flags flags = Ray::Model::Unspecified;
-				if (m_DiffuseMap && m_SpecularMap)
-				{
-				}
-				else if (m_DiffuseMap)
-					flags = flags | Ray::Model::NoSpecularMap;
-				else if (m_SpecularMap)
+				if (m_NoDiffuseMap)
 					flags = flags | Ray::Model::NoDiffuseMap;
-				else
-					flags = flags | Ray::Model::NoDiffuseMap | Ray::Model::NoSpecularMap;
+				if (m_NoSpecularMap)
+					flags = flags | Ray::Model::NoSpecularMap;
+				if (m_NoNormalMap)
+					flags = flags | Ray::Model::NoNormalMap;
 
 				m_ModelEntity = Ray::Scene::Get().CreateEntity();
 				m_ModelEntity
@@ -117,9 +125,10 @@ private:
 private:
 	std::optional<Ray::Entity> m_ModelEntity;
 	bool m_RenderModel = true;
-	bool m_SpecularMap = true;
-	// Not working if false
-	bool m_DiffuseMap = true;
+	bool m_NoSpecularMap = false;
+	bool m_NoNormalMap = false;
+	// Not working if true
+	bool m_NoDiffuseMap = false;
 	bool m_MapConfigChanged = false;
 };
 
