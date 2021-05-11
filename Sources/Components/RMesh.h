@@ -23,14 +23,6 @@ namespace At0::Ray
 	class Texture2D;
 
 
-	struct MeshData
-	{
-		Ref<VertexBuffer> vertexBuffer;
-		Ref<IndexBuffer> indexBuffer;
-		Material material;
-		std::vector<MeshData> children;
-	};
-
 	class RAY_EXPORT Mesh : public Component
 	{
 		using Shaders = std::vector<std::string>;
@@ -61,10 +53,14 @@ namespace At0::Ray
 		static MeshData Import(std::string_view filepath, Model::Flags flags = Model::Unspecified,
 			std::optional<Material> material = std::nullopt, MaterialArgs&&... args)
 		{
-			return { Codex::Resolve<Model>(
-				filepath, flags, material, std::forward<MaterialArgs>(args)...)
-						 ->GetMesh() };
+			Material::Config config{};
+			(Material::FillConfig(config, args), ...);
+			return Import(filepath, config, flags, material);
 		}
+
+		static MeshData Import(std::string_view filepath, Material::Config& config,
+			Model::Flags flags = Model::Unspecified,
+			std::optional<Material> material = std::nullopt);
 
 		/**
 		 * @returns The root transform of this mesh

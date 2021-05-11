@@ -19,6 +19,15 @@ namespace At0::Ray
 	class VertexBuffer;
 	class IndexBuffer;
 
+	// RAY_TODO: Move somewhere else
+	struct MeshData
+	{
+		Ref<VertexBuffer> vertexBuffer;
+		Ref<IndexBuffer> indexBuffer;
+		Material material;
+		std::vector<MeshData> children;
+	};
+
 
 	class RAY_EXPORT Model
 	{
@@ -35,15 +44,9 @@ namespace At0::Ray
 		};
 
 	public:
-		template<typename... MaterialArgs>
-		Model(std::string_view filepath, Model::Flags flags = Model::Flags::Unspecified,
-			std::optional<Material> material = std::nullopt, MaterialArgs&&... args)
-		{
-			Material::Config config{};
-			(Material::FillConfig(config, args), ...);
-
-			Setup(filepath, config, flags, material);
-		}
+		Model(std::string_view filepath, Material::Config& config,
+			Model::Flags flags = Model::Flags::Unspecified,
+			std::optional<Material> material = std::nullopt);
 		~Model();
 
 		Model& operator=(Model&& other) noexcept = default;
@@ -51,21 +54,11 @@ namespace At0::Ray
 
 		MeshData& GetMesh() { return *m_RootMesh; }
 
-		template<typename... MaterialArgs>
-		static std::string GetUID(std::string_view filepath,
-			Model::Flags flags = Model::Flags::Unspecified,
-			std::optional<Material> material = std::nullopt, MaterialArgs&&... args)
-		{
-			// RAY_TODO: Take MaterialArgs and custom material into account
-			std::ostringstream oss;
-			oss << filepath << "#" << (uint32_t)flags;
-			return oss.str();
-		}
-
-	private:
-		void Setup(std::string_view filepath, Material::Config& config,
+		static std::string GetUID(std::string_view filepath, Material::Config& config,
 			Model::Flags flags = Model::Flags::Unspecified,
 			std::optional<Material> material = std::nullopt);
+
+	private:
 		void ParseMesh(std::string_view base, const aiMesh& mesh,
 			const aiMaterial* const* pMaterials, Model::Flags flags,
 			std::optional<Material> material, Material::Config& config);
@@ -76,7 +69,7 @@ namespace At0::Ray
 			std::optional<Material> material);
 
 	private:
-		MeshData* m_RootMesh = nullptr;
+		std::optional<MeshData> m_RootMesh;
 	};
 
 

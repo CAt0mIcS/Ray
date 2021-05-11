@@ -109,10 +109,10 @@ private:
 				m_ModelEntity = Ray::Scene::Get().CreateEntity();
 				m_ModelEntity
 					->Emplace<Ray::Mesh>(
-						Ray::Mesh::Import("Resources/Models/BrickWall/brick_wall.obj", flags,
+						Ray::Mesh::Import("Resources/Models/BrickModel/BrickModel.obj", flags,
 							std::nullopt, Ray::Material::CullMode(VK_CULL_MODE_NONE)))
-					.GetTransform();
-				//.SetScale(Ray::Float3{ 0.1f });
+					.GetTransform()
+					.SetTranslation({ 0.0f, -5.0f, 0.0f });
 
 				m_MapConfigChanged = false;
 			}

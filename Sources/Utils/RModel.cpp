@@ -1,7 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RModel.h"
 
-#include "Components/RMesh.h"
 #include "Graphics/RVertex.h"
 #include "Graphics/RCodex.h"
 #include "Utils/RLogger.h"
@@ -20,7 +19,7 @@
 
 namespace At0::Ray
 {
-	void Model::Setup(std::string_view filepath, Material::Config& config, Model::Flags flags,
+	Model::Model(std::string_view filepath, Material::Config& config, Model::Flags flags,
 		std::optional<Material> material)
 	{
 		Log::Info("[Model] Importing model \"{0}\"", filepath);
@@ -50,10 +49,15 @@ namespace At0::Ray
 		}
 	}
 
-	Model::~Model()
+	Model::~Model() {}
+
+	std::string Model::GetUID(std::string_view filepath, Material::Config& config,
+		Model::Flags flags, std::optional<Material> material)
 	{
-		if (m_RootMesh)
-			delete m_RootMesh;
+		// RAY_TODO: Take custom material into account
+		std::ostringstream oss;
+		oss << filepath << "#" << (uint32_t)flags;
+		return oss.str();
 	}
 
 	void Model::ParseMesh(std::string_view base, const aiMesh& mesh,
@@ -63,7 +67,8 @@ namespace At0::Ray
 		Log::Info("[Model] Parsing mesh \"{0}\"", mesh.mName.C_Str());
 
 		using namespace std::string_literals;
-		const std::string meshTag = std::string(base) + "%"s + mesh.mName.C_Str();
+		const std::string meshTag =
+			std::string(base) + "%"s + mesh.mName.C_Str() + std::to_string((uint32_t)flags);
 
 		bool hasNormalMap = HasNormalMap(mesh, pMaterials, material);
 
@@ -130,18 +135,19 @@ namespace At0::Ray
 
 		std::string basePath = std::filesystem::path(base).remove_filename().string();
 
-		MeshData data{ Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
-			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)),
-			material ? *material : CreateMaterial(basePath, mesh, pMaterials, flags, config) };
-
 		// RAY_TODO: Scene hierachy
-		if (!m_RootMesh)
+		if (m_RootMesh)
 		{
-			m_RootMesh = new MeshData(std::move(data));
+			m_RootMesh->children.emplace_back(MeshData{
+				Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
+				Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)),
+				material ? *material : CreateMaterial(basePath, mesh, pMaterials, flags, config) });
 		}
 		else
 		{
-			m_RootMesh->children.emplace_back(std::move(data));
+			m_RootMesh = MeshData{ Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
+				Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)),
+				material ? *material : CreateMaterial(basePath, mesh, pMaterials, flags, config) };
 		}
 	}
 

@@ -150,6 +150,13 @@ namespace At0::Ray
 	//	return { std::move(vertexBuffer), std::move(indexBuffer), std::move(lineMaterial) };
 	//}
 
+
+	MeshData Mesh::Import(std::string_view filepath, Material::Config& config, Model::Flags flags,
+		std::optional<Material> material)
+	{
+		return { Codex::Resolve<Model>(filepath, config, flags, material)->GetMesh() };
+	}
+
 	void Mesh::Update(Delta ts)
 	{
 		m_Material.GetUniform<BufferUniform>("PerObjectData")["model"] = m_Transform.AsMatrix();
