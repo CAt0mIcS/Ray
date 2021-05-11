@@ -51,6 +51,7 @@ namespace At0::Ray
 			Matrix View = MatrixIdentity();
 			Matrix Projection = MatrixIdentity();
 			Float3 ViewPos{};
+			Float3 LightPos{};
 		} ShaderData{};
 
 		struct

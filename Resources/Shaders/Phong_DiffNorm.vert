@@ -7,10 +7,11 @@ layout(location = 1) in vec2 inUV;
 layout(location = 2) in vec3 inNormal;
 layout(location = 3) in vec3 inTangent;
 
-layout (location = 0) out vec3 outNormal;
-layout (location = 1) out vec2 outUV;
-layout (location = 2) out vec3 outViewVec;
-layout (location = 3) out vec3 outTangent;
+layout(location = 0) out vec3 outNormal;
+layout(location = 1) out vec2 outUV;
+layout(location = 2) out vec3 outViewVec;
+layout(location = 3) out vec3 outTangent;
+layout(location = 4) out vec3 outLightVec;
 
 
 layout(set = 0, binding = 0) uniform Camera
@@ -18,6 +19,7 @@ layout(set = 0, binding = 0) uniform Camera
 	mat4 view;
 	mat4 proj;
 	vec3 pos;
+	vec3 lightPos;
 } camUBO;
 
 layout(set = 1, binding = 1) uniform PerObjectData
@@ -34,5 +36,6 @@ void main()
 
 	outNormal = mat3(ubo.model) * inNormal;
 	vec4 pos = ubo.model * vec4(inPos, 1.0);
+	outLightVec = camUBO.lightPos - pos.xyz;
 	outViewVec = camUBO.pos - pos.xyz;
 }

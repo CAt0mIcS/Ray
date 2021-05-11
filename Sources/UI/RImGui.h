@@ -4,7 +4,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
 #include "../Graphics/Pipelines/RShader.h"
@@ -65,6 +65,8 @@ namespace At0::Ray
 		{
 			m_NewFrameFunctions.emplace_back(func);
 		}
+
+		static void Float3Widget(std::string_view title, Float3& data);
 
 	private:
 		ImGUI();

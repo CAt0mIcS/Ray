@@ -145,6 +145,8 @@ set(SRC
 	"Components/RMesh.cpp"
 	"Components/RSkybox.h"
 	"Components/RSkybox.cpp"
+	"Components/RPointLight.h"
+	"Components/RPointLight.cpp"
 
 	# Shading
 	"Shading/RMaterial.h"

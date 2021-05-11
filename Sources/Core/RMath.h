@@ -72,6 +72,8 @@ namespace At0::Ray
 
 		Matrix AsMatrix();
 
+		void RecalculateCachedMatrix() { m_Changed = true; }
+
 		Transform operator+(const Transform& other) const;
 		Transform operator-(const Transform& other) const;
 		Transform operator*(const Transform& other) const;

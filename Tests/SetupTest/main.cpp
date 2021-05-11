@@ -7,6 +7,7 @@
 
 #include <Components/RMesh.h>
 #include <Components/RSkybox.h>
+#include <Components/RPointLight.h>
 
 #include <Graphics/Images/RTexture2D.h>
 #include <Graphics/Images/RTextureCubemap.h>
@@ -80,12 +81,65 @@ public:
 			ImGui::End();
 		});
 
-		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
+		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+			{
+				ImGui::Begin("Light");
+
+				Ray::Mesh& mesh = m_LightEntity.Get<Ray::Mesh>();
+
+				Ray::Float3& translation =
+					const_cast<Ray::Float3&>(mesh.GetTransform().Translation());
+				Ray::Float3& rotation = const_cast<Ray::Float3&>(mesh.GetTransform().Rotation());
+				Ray::Float3& scale = const_cast<Ray::Float3&>(mesh.GetTransform().Scale());
+
+				Ray::ImGUI::Float3Widget("Translation", translation);
+				Ray::ImGUI::Float3Widget("Rotation", rotation);
+				Ray::ImGUI::Float3Widget("Scale", scale);
+				ImGui::Spacing();
+
+				mesh.GetTransform().RecalculateCachedMatrix();
+
+				ImGui::End();
+			}
+			{
+				if (!m_ModelEntity)
+					return;
+
+				ImGui::Begin("BrickWall");
+
+				Ray::Mesh& mesh = m_ModelEntity->Get<Ray::Mesh>();
+
+				Ray::Float3& translation =
+					const_cast<Ray::Float3&>(mesh.GetTransform().Translation());
+				Ray::Float3& rotation = const_cast<Ray::Float3&>(mesh.GetTransform().Rotation());
+				Ray::Float3& scale = const_cast<Ray::Float3&>(mesh.GetTransform().Scale());
+
+				Ray::ImGUI::Float3Widget("Translation", translation);
+				Ray::ImGUI::Float3Widget("Rotation", rotation);
+				Ray::ImGUI::Float3Widget("Scale", scale);
+				ImGui::Spacing();
+
+				mesh.GetTransform().RecalculateCachedMatrix();
+
+				ImGui::End();
+			}
+		});
+
+		// Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+		//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
 
 		// RAY_TODO:
 		// Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 		//	Ray::MakeRef<Ray::TextureCubemap>("Resources/Textures/cubemap_space.ktx"));
+
+		m_LightEntity = Ray::Scene::Get().CreateEntity();
+		m_LightEntity
+			.Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(Ray::Material{
+				Ray::Material::LightingTechnique(Ray::Material::LightingTechnique::Flat) }))
+			.GetTransform()
+			.SetScale(Ray::Float3{ 0.2f });
+
+		m_LightEntity.Emplace<Ray::PointLight>();
 	}
 
 private:
@@ -126,6 +180,7 @@ private:
 
 private:
 	std::optional<Ray::Entity> m_ModelEntity;
+	Ray::Entity m_LightEntity;
 	bool m_RenderModel = true;
 	bool m_NoSpecularMap = false;
 	bool m_NoNormalMap = false;

@@ -6,8 +6,9 @@
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Buffers/RBufferSynchronizer.h"
 
-#include "Utils/RException.h"
+#include "Components/RPointLight.h"
 
+#include "Utils/RException.h"
 
 #include "Graphics/Core/RLogicalDevice.h"
 
@@ -116,6 +117,9 @@ namespace At0::Ray
 				UpdateViewMatrix();
 			}
 		}
+
+		// RAY_TODO: Remove if lighting was moved somewhere else
+		UpdateUniform();
 	}
 
 	void Camera::CmdBind(const CommandBuffer& cmdBuff) const { m_Uniform->CmdBind(cmdBuff); }
@@ -125,6 +129,10 @@ namespace At0::Ray
 		// We wait here to avoid some images having an old camera matrix while new ones already have
 		// the new one (RAY_TODO: Synchronization so that this is not required)
 		Graphics::Get().GetDevice().WaitIdle();
+
+		auto view = Scene::Get().EntityView<PointLight>();
+		for (Entity e : view)
+			ShaderData.LightPos = e.Get<PointLight>().GetTranslation();
 
 		m_Uniform->Update(ShaderData);
 	}
@@ -174,7 +182,7 @@ namespace At0::Ray
 			"[Camera] Failed to create descriptor pool");
 
 		m_Uniform = MakeScope<BufferUniform>("Camera", m_DescriptorSetLayout, m_DescriptorPool,
-			Pipeline::BindPoint::Graphics, m_PipelineLayout, uint32_t(sizeof(ShaderData)),
+			Pipeline::BindPoint::Graphics, m_PipelineLayout, (uint32_t)sizeof(ShaderData),
 			0,	// Using descriptor set 0 for per-scene data (set=0 in vs)
 			0);
 	}

@@ -96,6 +96,9 @@ namespace At0::Ray
 		 */
 		explicit operator entt::entity() const { return m_EntityHandle; }
 
+		constexpr bool operator==(const Entity& other) const;
+		constexpr bool operator!=(const Entity& other) const;
+
 	private:
 		entt::registry* m_Registry;
 		entt::entity m_EntityHandle;
