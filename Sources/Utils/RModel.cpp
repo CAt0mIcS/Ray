@@ -20,23 +20,25 @@
 
 namespace At0::Ray
 {
-	Model::Model(std::string_view filepath, Model::Flags flags, std::optional<Material> material)
+	void Model::Setup(std::string_view filepath, Material::Config& config, Model::Flags flags,
+		std::optional<Material> material)
 	{
 		Log::Info("[Model] Importing model \"{0}\"", filepath);
 
 		const aiScene* pScene = nullptr;
 		Assimp::Importer imp;
-		if (flags & Flags::NoNormals)
+		if (flags & Model::NoNormals)
 		{
 			pScene = imp.ReadFile(filepath.data(),
 				aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
-					aiProcess_ConvertToLeftHanded /* | aiProcess_CalcTangentSpace*/);
+					aiProcess_ConvertToLeftHanded |
+					(aiProcess_CalcTangentSpace ? (flags & Model::NoNormalMap) == 0 : 0));
 		}
 		else
 		{
-			pScene = imp.ReadFile(
-				filepath.data(), aiProcess_Triangulate | aiProcess_ConvertToLeftHanded |
-									 aiProcess_GenNormals /* | aiProcess_CalcTangentSpace*/);
+			pScene = imp.ReadFile(filepath.data(),
+				aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_GenNormals |
+					(aiProcess_CalcTangentSpace ? (flags & Model::NoNormalMap) == 0 : 0));
 		}
 
 		if (!pScene)
@@ -44,44 +46,49 @@ namespace At0::Ray
 
 		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
 		{
-			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials, flags, material);
+			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials, flags, material, config);
 		}
 	}
 
-	Model::~Model() {}
-
-	std::string Model::GetUID(
-		std::string_view filepath, Model::Flags flags, std::optional<Material> material)
+	Model::~Model()
 	{
-		std::ostringstream oss;
-		oss << filepath << "#" << (uint32_t)flags;
-		return oss.str();
+		if (m_RootMesh)
+			delete m_RootMesh;
 	}
 
 	void Model::ParseMesh(std::string_view base, const aiMesh& mesh,
-		const aiMaterial* const* pMaterials, Model::Flags flags, std::optional<Material> material)
+		const aiMaterial* const* pMaterials, Model::Flags flags, std::optional<Material> material,
+		Material::Config& config)
 	{
 		Log::Info("[Model] Parsing mesh \"{0}\"", mesh.mName.C_Str());
 
 		using namespace std::string_literals;
 		const std::string meshTag = std::string(base) + "%"s + mesh.mName.C_Str();
 
+		bool hasNormalMap = HasNormalMap(mesh, pMaterials, material);
+
 		VertexLayout layout{};
 		layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Position
 
-		aiString normalTexFileName;
 		if ((flags & Model::NoTextureCoordinates) == 0)
 			layout.Append(VK_FORMAT_R32G32_SFLOAT);	 // Texture coordinate
-		if (HasNormalMap(mesh, pMaterials, material) && (flags & Model::NoNormalMap) == 0)
-			flags = flags | Model::NoNormals;
-		else if ((flags & Model::NoNormals) == 0)
+		if ((flags & Model::NoNormals) == 0)
 			layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Normal
+		if ((flags & Model::NoNormalMap) == 0 && hasNormalMap)
+			layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Tangent space
+		else
+			hasNormalMap = false;
+
 
 		VertexInput vertexInput(layout);
 
 		for (uint32_t i = 0; i < mesh.mNumVertices; ++i)
 		{
 			if (flags & Model::NoTextureCoordinates && flags & Model::NoNormals)
+				vertexInput.Emplace(
+					Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z));
+
+			else if (flags & Model::NoTextureCoordinates && flags & Model::NoNormals)
 				vertexInput.Emplace(
 					Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z));
 
@@ -94,6 +101,13 @@ namespace At0::Ray
 				vertexInput.Emplace(
 					Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z),
 					Float2(mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y));
+
+			else if (hasNormalMap)
+				vertexInput.Emplace(
+					Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z),
+					Float2(mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y),
+					Float3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z),
+					Float3(mesh.mTangents[i].x, mesh.mTangents[i].y, mesh.mTangents[i].z));
 
 			else
 				vertexInput.Emplace(
@@ -118,12 +132,12 @@ namespace At0::Ray
 
 		MeshData data{ Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
 			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)),
-			material ? *material : CreateMaterial(basePath, mesh, pMaterials, flags) };
+			material ? *material : CreateMaterial(basePath, mesh, pMaterials, flags, config) };
 
 		// RAY_TODO: Scene hierachy
 		if (!m_RootMesh)
 		{
-			m_RootMesh = MakeScope<MeshData>(std::move(data));
+			m_RootMesh = new MeshData(std::move(data));
 		}
 		else
 		{
@@ -132,7 +146,7 @@ namespace At0::Ray
 	}
 
 	Material Model::CreateMaterial(const std::string& basePath, const aiMesh& mesh,
-		const aiMaterial* const* pMaterials, Model::Flags flags)
+		const aiMaterial* const* pMaterials, Model::Flags flags, Material::Config& config)
 	{
 		aiString diffuseTexFileName;
 		aiString specularTexFileName;
@@ -155,27 +169,29 @@ namespace At0::Ray
 
 		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
 				aiTextureType_DIFFUSE, 0, &diffuseTexFileName) == aiReturn_SUCCESS &&
-			(flags & Model::NoDiffuseMap) == 0)
+			(flags & Model::NoDiffuseMap) == 0 && !config.diffuseMap.value)
 		{
 			diffuseMap = MakeRef<Texture2D>(basePath + diffuseTexFileName.C_Str());
+			config.diffuseMap = diffuseMap;
 		}
 
 		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
 				aiTextureType_SPECULAR, 0, &specularTexFileName) == aiReturn_SUCCESS &&
-			(flags & Model::NoSpecularMap) == 0)
+			(flags & Model::NoSpecularMap) == 0 && !config.specularMap.value)
 		{
 			specularMap = MakeRef<Texture2D>(basePath + specularTexFileName.C_Str());
+			config.specularMap = specularMap;
 		}
 
 		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
 				aiTextureType_NORMALS, 0, &normalTexFileName) == aiReturn_SUCCESS &&
-			(flags & Model::NoNormalMap) == 0)
+			(flags & Model::NoNormalMap) == 0 && !config.normalMap.value)
 		{
 			normalMap = MakeRef<Texture2D>(basePath + normalTexFileName.C_Str());
+			config.normalMap = normalMap;
 		}
 
-		return Material{ Material::DiffuseMap(diffuseMap), Material::SpecularMap(specularMap),
-			Material::NormalMap(normalMap) };
+		return Material{ config };
 	}
 
 	bool Model::HasNormalMap(
@@ -194,5 +210,4 @@ namespace At0::Ray
 
 		return ret == aiReturn_SUCCESS || normalTexFileName.length != 0;
 	}
-
 }  // namespace At0::Ray

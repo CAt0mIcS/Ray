@@ -43,7 +43,7 @@ namespace At0::Ray
 
 		RAY_VK_THROW_FAILED(
 			vkCreateSampler(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Sampler),
-			"[TextureSampler] Failed to creaate");
+			"[TextureSampler] Failed to create");
 	}
 
 	TextureSampler::~TextureSampler()

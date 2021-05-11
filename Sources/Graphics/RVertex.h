@@ -199,12 +199,8 @@ namespace At0::Ray
 				"({1})",
 				sizeof...(args), m_Layout.NumberOfElements());
 
-			// Resize the buffer to hold the new vertex
-			uint32_t prevSize = (uint32_t)m_Data.size();
-			m_Data.resize(m_Data.size() + m_Layout.SizeVertex());
-
-			int run = 0;
-			(Insert(prevSize, run++, std::forward<Args>(args)), ...);
+			// RAY_TODO: Multiple reallocations
+			(EmplaceRaw(&args, sizeof(args)), ...);
 		}
 
 		/**

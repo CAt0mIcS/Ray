@@ -121,7 +121,7 @@ namespace At0::Ray
 			Technique value;
 		};
 
-	protected:
+	public:
 		struct Config
 		{
 			Shaders shaders = {};
@@ -140,6 +140,7 @@ namespace At0::Ray
 		template<typename... Args>
 		explicit Material(Args&&... args) requires(
 			DisableCopy<Args, const Material&, Material&, Material&&>&&...);
+		Material(Material::Config& config);
 		virtual ~Material();
 
 		const GraphicsPipeline& GetGraphicsPipeline() const { return *m_GraphicsPipeline; }
@@ -172,10 +173,6 @@ namespace At0::Ray
 		Material& operator=(const Material& other);
 		Material(const Material& other);
 
-	private:
-		void CreatePipeline(Material::Config& config);
-		void Setup(Material::Config& config);
-
 		static void FillConfig(Config& config, Shaders shaders) { config.shaders = shaders; }
 		static void FillConfig(Config& config, CullMode cullMode) { config.cullMode = cullMode; }
 		static void FillConfig(Config& config, PolygonMode polygonMode);
@@ -186,6 +183,10 @@ namespace At0::Ray
 		static void FillConfig(Config& config, DiffuseMap diff) { config.diffuseMap = diff; }
 		static void FillConfig(Config& config, NormalMap norm) { config.normalMap = norm; }
 		static void FillConfig(Config& config, LightingTechnique tech);
+
+	private:
+		void CreatePipeline(Material::Config& config);
+		void Setup(Material::Config& config);
 
 		static std::vector<std::string> GetShaders(Material::Config& config);
 		static std::string AssertConfigCompatibility(const Material::Config& config);

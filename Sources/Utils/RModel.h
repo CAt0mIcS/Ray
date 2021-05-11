@@ -20,7 +20,7 @@ namespace At0::Ray
 	class IndexBuffer;
 
 
-	class Model
+	class RAY_EXPORT Model
 	{
 	public:
 		enum Flags
@@ -35,8 +35,15 @@ namespace At0::Ray
 		};
 
 	public:
+		template<typename... MaterialArgs>
 		Model(std::string_view filepath, Model::Flags flags = Model::Flags::Unspecified,
-			std::optional<Material> material = std::nullopt);
+			std::optional<Material> material = std::nullopt, MaterialArgs&&... args)
+		{
+			Material::Config config{};
+			(Material::FillConfig(config, args), ...);
+
+			Setup(filepath, config, flags, material);
+		}
 		~Model();
 
 		Model& operator=(Model&& other) noexcept = default;
@@ -44,22 +51,32 @@ namespace At0::Ray
 
 		MeshData& GetMesh() { return *m_RootMesh; }
 
+		template<typename... MaterialArgs>
 		static std::string GetUID(std::string_view filepath,
 			Model::Flags flags = Model::Flags::Unspecified,
-			std::optional<Material> material = std::nullopt);
+			std::optional<Material> material = std::nullopt, MaterialArgs&&... args)
+		{
+			// RAY_TODO: Take MaterialArgs and custom material into account
+			std::ostringstream oss;
+			oss << filepath << "#" << (uint32_t)flags;
+			return oss.str();
+		}
 
 	private:
+		void Setup(std::string_view filepath, Material::Config& config,
+			Model::Flags flags = Model::Flags::Unspecified,
+			std::optional<Material> material = std::nullopt);
 		void ParseMesh(std::string_view base, const aiMesh& mesh,
 			const aiMaterial* const* pMaterials, Model::Flags flags,
-			std::optional<Material> material);
+			std::optional<Material> material, Material::Config& config);
 		static Material CreateMaterial(const std::string& basePath, const aiMesh& mesh,
-			const aiMaterial* const* pMaterials, Model::Flags flags);
+			const aiMaterial* const* pMaterials, Model::Flags flags, Material::Config& config);
 
 		static bool HasNormalMap(const aiMesh& mesh, const aiMaterial* const* pMaterials,
 			std::optional<Material> material);
 
 	private:
-		Scope<MeshData> m_RootMesh;
+		MeshData* m_RootMesh = nullptr;
 	};
 
 

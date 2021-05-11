@@ -9,6 +9,7 @@
 #include "../Graphics/Pipelines/Uniforms/RSamplerUniform.h"
 #include "../Utils/RModel.h"
 #include "../Graphics/RVertex.h"
+#include "../Graphics/RCodex.h"
 
 #include <type_traits>
 
@@ -56,9 +57,14 @@ namespace At0::Ray
 		//	int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
 		// static MeshData Vector(const Float3& headPos, float lineWidth = 1.0f,
 		//	const Shaders& shaders = s_DefaultShaders);
-		static MeshData Import(std::string_view filepath,
-			Model::Flags flags = Model::Flags::Unspecified,
-			std::optional<Material> material = std::nullopt);
+		template<typename... MaterialArgs>
+		static MeshData Import(std::string_view filepath, Model::Flags flags = Model::Unspecified,
+			std::optional<Material> material = std::nullopt, MaterialArgs&&... args)
+		{
+			return { Codex::Resolve<Model>(
+				filepath, flags, material, std::forward<MaterialArgs>(args)...)
+						 ->GetMesh() };
+		}
 
 		/**
 		 * @returns The root transform of this mesh

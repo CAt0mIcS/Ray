@@ -12,6 +12,17 @@
 
 namespace At0::Ray
 {
+	Material::Material(Material::Config& config)
+	{
+#ifndef NDEBUG
+		if (std::string err = AssertConfigCompatibility(config); !err.empty())
+			RAY_THROW_RUNTIME("[Material] Config arguments are not compatible: {0}", err);
+#endif
+
+		CreatePipeline(config);
+		Setup(config);
+	}
+
 	Material::~Material() {}
 
 	const VertexLayout& Material::GetVertexLayout() const
