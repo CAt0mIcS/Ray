@@ -7,7 +7,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "../RBase.h"
-#include "../Utils/RNonCopyable.h"
 #include "../Events/REventListener.h"
 #include "../Events/REventDispatcher.h"
 #include "../Events/RMouseEvents.h"
@@ -15,22 +14,19 @@
 #include "../Core/RTime.h"
 #include "../Core/RMath.h"
 
-#include "../Graphics/Core/RBindable.h"
-
 
 namespace At0::Ray
 {
-	class CameraMovedEvent
+	class BufferUniform;
+
+	class RAY_EXPORT CameraChangedEvent
 	{
+	public:
+		CameraChangedEvent() = default;
 	};
 
-	class BufferUniform;
-	class DescriptorSet;
-
 	class RAY_EXPORT Camera :
-		public Bindable,
-		public EventDispatcher<CameraMovedEvent>,
-		NonCopyable,
+		public EventDispatcher<CameraChangedEvent>,
 		EventListener<MouseMovedEvent>,
 		EventListener<KeyPressedEvent>,
 		EventListener<KeyReleasedEvent>
@@ -57,7 +53,6 @@ namespace At0::Ray
 			Matrix View = MatrixIdentity();
 			Matrix Projection = MatrixIdentity();
 			Float3 ViewPos{};
-			Float3 LightPos{ 1.0f };
 		} ShaderData{};
 
 		struct
@@ -86,11 +81,9 @@ namespace At0::Ray
 		void SetMovementSpeed(float speed) { MovementSpeed = speed; }
 		void Update(Delta dt);
 
-		void CmdBind(const CommandBuffer& cmdBuff) const override;
-		void UpdateUniform();
-
 	private:
 		void UpdateViewMatrix();
+		void DispatchCameraChanged(CameraChangedEvent e);
 
 		void OnEvent(MouseMovedEvent& e) override;
 		void OnEvent(KeyPressedEvent& e) override;
@@ -99,12 +92,5 @@ namespace At0::Ray
 	private:
 		float m_FoV;
 		float m_NearZ, m_FarZ;
-
-		VkDescriptorSetLayout m_DescriptorSetLayout;
-		VkDescriptorPool m_DescriptorPool;
-		VkPipelineLayout m_PipelineLayout;
-
-		Scope<BufferUniform> m_Uniform;
-		Scope<DescriptorSet> m_Descriptor;
 	};
 }  // namespace At0::Ray

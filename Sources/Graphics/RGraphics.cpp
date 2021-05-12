@@ -239,7 +239,7 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		Scene::Get().GetCamera().CmdBind(cmdBuff);
+		Scene::Get().CmdBind(cmdBuff);
 		Scene::Get().EntityView<Mesh>().each([&cmdBuff](Mesh& mesh) { mesh.Render(cmdBuff); });
 
 #if RAY_ENABLE_IMGUI

@@ -41,7 +41,7 @@ namespace At0::Ray
 	class RAY_EXPORT Scene :
 		public EventDispatcher<EntityCreatedEvent>,
 		public Bindable,
-		EventListener<CameraMovedEvent>
+		EventListener<CameraChangedEvent>
 	{
 	public:
 		static Scene& Get();
@@ -99,18 +99,19 @@ namespace At0::Ray
 		Scene(Scope<Camera> camera);
 
 	private:
-		void OnEvent(CameraMovedEvent& e) override;
+		void OnEvent(CameraChangedEvent& e) override { UpdateUniform(); }
 		void SetupPerSceneUniform();
+		void UpdateUniform();
 
 	private:
 		entt::registry m_Registry;
 		Scope<Camera> m_Camera = nullptr;
 
-		// VkDescriptorSetLayout m_DescriptorSetLayout;
-		// VkPipelineLayout m_PipelineLayout;
-		// VkDescriptorPool m_DescriptorPool;
-		// Scope<DescriptorSet> m_PerSceneDescriptor;
-		// Scope<BufferUniform> m_PerSceneUniform;
+		VkDescriptorSetLayout m_DescriptorSetLayout;
+		VkPipelineLayout m_PipelineLayout;
+		VkDescriptorPool m_DescriptorPool;
+		Scope<DescriptorSet> m_PerSceneDescriptor;
+		Scope<BufferUniform> m_PerSceneUniform;
 
 		static Scope<Scene> s_CurrentScene;
 	};

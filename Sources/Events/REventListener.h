@@ -44,7 +44,7 @@ namespace At0::Ray
 
 		virtual ~EventListener() { m_Dispatcher->Unregister(this); }
 
-		EventListener<T>& operator=(EventListener<T>&& other)
+		EventListener<T>& operator=(EventListener<T>&& other) noexcept
 		{
 			m_Dispatcher = std::move(other.m_Dispatcher);
 
@@ -53,7 +53,7 @@ namespace At0::Ray
 			return *this;
 		}
 
-		EventListener(EventListener<T>&& other) { *this = std::move(other); }
+		EventListener(EventListener<T>&& other) noexcept { *this = std::move(other); }
 
 		EventListener<T>& operator=(const EventListener<T>& other)
 		{
