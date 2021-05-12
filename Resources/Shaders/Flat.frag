@@ -4,14 +4,13 @@
 
 layout(location = 0) out vec4 outColor;
 
-
 layout(set = 2, binding = 2) uniform Shading
 {
 	vec3 color;
-} uCol;
+} uShading;
 
 
 void main()
 {
-	outColor = vec4(uCol.color, 1.0f);
+	outColor = vec4(uShading.color, 1.0f);
 }

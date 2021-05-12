@@ -78,6 +78,20 @@ namespace At0::Ray
 		 */
 		ProxyType operator[](std::string_view name);
 
+		/**
+		 * Writes data directly into the buffer
+		 */
+		template<typename T>
+		void Update(T&& data)
+		{
+			Update(&data, (uint32_t)sizeof(data));
+		}
+
+		/**
+		 * Writes raw data directly into the buffer
+		 */
+		void Update(void* data, uint32_t size);
+
 	private:
 		void Setup(uint32_t bufferSize);
 

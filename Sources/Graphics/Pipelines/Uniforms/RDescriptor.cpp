@@ -32,6 +32,10 @@ namespace At0::Ray
 
 	void DescriptorSet::CmdBind(const CommandBuffer& cmdBuff) const
 	{
+#ifndef NDEBUG
+		if (!m_UniformBound)
+			Log::Warn("[DescriptorSet] No uniforms bound to descriptor set {0}", m_SetNumber);
+#endif
 		vkCmdBindDescriptorSets(cmdBuff, (VkPipelineBindPoint)m_PipelineBindPoint, m_PipelineLayout,
 			m_SetNumber, 1, &m_DescriptorSet, 0, nullptr);
 	}
@@ -59,6 +63,10 @@ namespace At0::Ray
 		descWrite.pBufferInfo = &bufferInfo;
 
 		Update({ descWrite });
+
+#ifndef NDEBUG
+		m_UniformBound = true;
+#endif
 	}
 
 	void DescriptorSet::BindUniform(const Sampler2DUniform& uniform)
@@ -78,6 +86,10 @@ namespace At0::Ray
 		descWrites.pImageInfo = &imageInfo;
 
 		Update({ descWrites });
+
+#ifndef NDEBUG
+		m_UniformBound = true;
+#endif
 	}
 
 	DescriptorSet& DescriptorSet::operator=(DescriptorSet&& other) noexcept

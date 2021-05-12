@@ -53,6 +53,11 @@ namespace At0::Ray
 		return BufferUniform::ProxyType{ this, m_UniformInBlockOffsets[name.data()] };
 	}
 
+	void BufferUniform::Update(void* data, uint32_t size)
+	{
+		BufferSynchronizer::Get().Update(data, size, m_Offset);
+	}
+
 	void BufferUniform::Setup(uint32_t bufferSize)
 	{
 		m_Size = bufferSize;

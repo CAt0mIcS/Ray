@@ -4,13 +4,10 @@
 
 layout(location = 0) in vec3 inPos;
 
-
 layout(set = 0, binding = 0) uniform PerSceneData
 {
 	mat4 View;
 	mat4 Proj;
-	vec3 ViewPos;
-	vec3 LightPos;
 } uScene;
 
 layout(set = 1, binding = 1) uniform PerObjectData
@@ -20,10 +17,5 @@ layout(set = 1, binding = 1) uniform PerObjectData
 
 void main()
 {
-	uScene.View;
-	uScene.Proj;
-	uScene.ViewPos;
-	uScene.LightPos;
-
 	gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 1.0f);
 }

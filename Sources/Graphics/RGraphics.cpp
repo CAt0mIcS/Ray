@@ -239,7 +239,7 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		Scene::Get().CmdBind(cmdBuff);
+		Scene::Get().GetCamera().CmdBind(cmdBuff);
 		Scene::Get().EntityView<Mesh>().each([&cmdBuff](Mesh& mesh) { mesh.Render(cmdBuff); });
 
 #if RAY_ENABLE_IMGUI
@@ -296,7 +296,7 @@ namespace At0::Ray
 
 		// Rerecord the command buffer for the current image if it was queried for rerecording
 		// RAY_TODO: Separate render pass and command buffers for ImGui so that we don't have to
-		// rerecord there command buffers
+		// rerecord these command buffers
 		RerecordCommandBuffers();
 		if (m_RerecordCommandBuffers[imageIndex])
 		{

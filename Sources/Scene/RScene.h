@@ -91,7 +91,7 @@ namespace At0::Ray
 			return *s_CurrentScene;
 		}
 
-		const DescriptorSet& GetPerSceneDescriptor() const { return *m_PerSceneDescriptor; }
+		// const DescriptorSet& GetPerSceneDescriptor() const { return *m_PerSceneDescriptor; }
 
 		void CmdBind(const CommandBuffer& cmdBuff) const;
 
@@ -106,11 +106,11 @@ namespace At0::Ray
 		entt::registry m_Registry;
 		Scope<Camera> m_Camera = nullptr;
 
-		VkDescriptorSetLayout m_DescriptorSetLayout;
-		VkPipelineLayout m_PipelineLayout;
-		VkDescriptorPool m_DescriptorPool;
-		Scope<DescriptorSet> m_PerSceneDescriptor;
-		Scope<BufferUniform> m_PerSceneUniform;
+		// VkDescriptorSetLayout m_DescriptorSetLayout;
+		// VkPipelineLayout m_PipelineLayout;
+		// VkDescriptorPool m_DescriptorPool;
+		// Scope<DescriptorSet> m_PerSceneDescriptor;
+		// Scope<BufferUniform> m_PerSceneUniform;
 
 		static Scope<Scene> s_CurrentScene;
 	};

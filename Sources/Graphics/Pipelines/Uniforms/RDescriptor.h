@@ -42,5 +42,9 @@ namespace At0::Ray
 
 		Pipeline::BindPoint m_PipelineBindPoint;
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
+
+#ifndef NDEBUG
+		bool m_UniformBound = false;
+#endif
 	};
 }  // namespace At0::Ray

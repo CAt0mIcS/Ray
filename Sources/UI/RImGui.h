@@ -1,10 +1,12 @@
 ﻿#pragma once
 
-#include "../RBase.h"
+#define RAY_ENABLE_IMGUI 1
+
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
+// clang-format off
+#include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
 #include "../Graphics/Pipelines/RShader.h"

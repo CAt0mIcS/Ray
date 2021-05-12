@@ -79,7 +79,6 @@ public:
 
 		Ray::Ref<Ray::Material> material = Ray::MakeRef<Ray::Material>(layout);
 		material->AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
-		material->AddBufferUniform("PerSceneData", Ray::Shader::Stage::Vertex);
 		(*material->AddBufferUniform("Shading", Ray::Shader::Stage::Fragment))["color"] =
 			Ray::Float3{ 1.0f, 1.0f, 0.0f };
 
