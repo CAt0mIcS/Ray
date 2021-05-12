@@ -171,8 +171,12 @@ namespace At0::Ray
 
 		if (layout.bindingDescriptions)
 			bindingDescs = *layout.bindingDescriptions;
+		else
+			bindingDescs = m_Shader.GetVertexInputBindings();
 		if (layout.attributeDescriptions)
 			attribDescs = *layout.attributeDescriptions;
+		else
+			attribDescs = m_Shader.GetVertexInputAttributes();
 
 		VkPipelineVertexInputStateCreateInfo vertexInput{};
 		vertexInput.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;

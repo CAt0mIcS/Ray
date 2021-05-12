@@ -5,13 +5,18 @@
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
+#include "Graphics/RCodex.h"
 
 #include "Utils/RAssert.h"
 
 
 namespace At0::Ray
 {
-	Material::Material() {}
+	Material::Material(const Material::Layout& layout)
+	{
+		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(layout.pipelineLayout);
+	}
+
 	Material::~Material() {}
 
 	void Material::CmdBind(const CommandBuffer& cmdBuff) const
@@ -22,7 +27,7 @@ namespace At0::Ray
 			descSet.second->CmdBind(cmdBuff);
 	}
 
-	void Material::AddBufferUniform(std::string_view name, Shader::Stage stage)
+	Ref<BufferUniform> Material::AddBufferUniform(std::string_view name, Shader::Stage stage)
 	{
 		RAY_MEXPECTS(m_GraphicsPipeline->GetShader().HasUniform(name, stage),
 			"[Material] Uniform \"{0}\" was not found in shader stage \"{1}\"", name,
@@ -40,9 +45,11 @@ namespace At0::Ray
 		Ref<BufferUniform> uniform = m_BufferUniforms[set].emplace_back(
 			MakeRef<BufferUniform>(name, stage, *m_GraphicsPipeline));
 		m_DescriptorSets[set]->BindUniform(*uniform);
+
+		return uniform;
 	}
 
-	void Material::AddSampler2DUniform(
+	Ref<Sampler2DUniform> Material::AddSampler2DUniform(
 		std::string_view name, Shader::Stage stage, Ref<Texture2D> texture)
 	{
 		RAY_MEXPECTS(m_GraphicsPipeline->GetShader().HasUniform(name, stage),
@@ -61,29 +68,25 @@ namespace At0::Ray
 		Ref<Sampler2DUniform> uniform = m_Sampler2DUniforms[set].emplace_back(
 			MakeRef<Sampler2DUniform>(name, stage, std::move(texture), *m_GraphicsPipeline));
 		m_DescriptorSets[set]->BindUniform(*uniform);
+
+		return uniform;
 	}
 
-	Ref<BufferUniform> Material::GetBufferUniform(std::string_view name)
+	Ref<BufferUniform> Material::GetBufferUniform(std::string_view name) const
 	{
 		for (auto& descriptors : m_BufferUniforms)
-		{
 			for (auto& uBuff : descriptors.second)
 				if (uBuff->GetName() == name)
 					return uBuff;
-		}
-
 		return nullptr;
 	}
 
-	Ref<Sampler2DUniform> Material::GetSampler2DUniform(std::string_view name)
+	Ref<Sampler2DUniform> Material::GetSampler2DUniform(std::string_view name) const
 	{
 		for (auto& descriptors : m_Sampler2DUniforms)
-		{
 			for (auto& uBuff : descriptors.second)
 				if (uBuff->GetName() == name)
 					return uBuff;
-		}
-
 		return nullptr;
 	}
 

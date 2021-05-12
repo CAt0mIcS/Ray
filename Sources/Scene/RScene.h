@@ -100,6 +100,7 @@ namespace At0::Ray
 
 	private:
 		void OnEvent(CameraMovedEvent& e) override;
+		void SetupPerSceneUniform();
 
 	private:
 		entt::registry m_Registry;

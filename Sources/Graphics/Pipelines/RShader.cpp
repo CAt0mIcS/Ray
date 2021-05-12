@@ -1,6 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RShader.h"
 
+#include "Core/RDynamicVertex.h"
 #include "Utils/RException.h"
 #include "Utils/RAssert.h"
 #include "Utils/RLogger.h"
@@ -723,6 +724,18 @@ namespace At0::Ray
 		}
 
 		return pushConstantRanges;
+	}
+
+	std::vector<VkVertexInputBindingDescription> Shader::GetVertexInputBindings(
+		uint32_t binding) const
+	{
+		return DynamicVertex{ *this }.GetVertexInputBindings(binding);
+	}
+
+	std::vector<VkVertexInputAttributeDescription> Shader::GetVertexInputAttributes(
+		uint32_t binding) const
+	{
+		return DynamicVertex{ *this }.GetVertexInputAttributes(binding);
 	}
 
 	void Shader::LoadUniform(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i)

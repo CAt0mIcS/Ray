@@ -49,16 +49,16 @@ namespace At0::Ray
 		bufferInfo.offset = uniform.GetOffset();
 		bufferInfo.range = uniform.GetSize();
 
-		VkWriteDescriptorSet descWrites{};
-		descWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descWrites.dstSet = m_DescriptorSet;
-		descWrites.dstBinding = uniform.GetBinding();
-		// descWrites.dstArrayElement;
-		descWrites.descriptorCount = 1;
-		descWrites.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descWrites.pBufferInfo = &bufferInfo;
+		VkWriteDescriptorSet descWrite{};
+		descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descWrite.dstSet = m_DescriptorSet;
+		descWrite.dstBinding = uniform.GetBinding();
+		descWrite.dstArrayElement = 0;
+		descWrite.descriptorCount = 1;
+		descWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descWrite.pBufferInfo = &bufferInfo;
 
-		Update({ descWrites });
+		Update({ descWrite });
 	}
 
 	void DescriptorSet::BindUniform(const Sampler2DUniform& uniform)
@@ -72,7 +72,7 @@ namespace At0::Ray
 		descWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		descWrites.dstSet = m_DescriptorSet;
 		descWrites.dstBinding = uniform.GetBinding();
-		// descWrites.dstArrayElement;
+		descWrites.dstArrayElement = 0;
 		descWrites.descriptorCount = 1;
 		descWrites.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		descWrites.pImageInfo = &imageInfo;

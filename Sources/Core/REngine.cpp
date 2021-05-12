@@ -43,7 +43,6 @@ namespace At0::Ray
 				oss << "Frametime: " << m_Delta.Change().AsSeconds() << "s"
 					<< ", FPS: " << m_FPS.Value();
 				Window::Get().SetTitle(oss.str());
-				Log::Debug("{0}", oss.str());
 
 				startSecTime = std::chrono::high_resolution_clock::now();
 			}

@@ -160,7 +160,12 @@ namespace At0::Ray
 	void Camera::OnEvent(MouseMovedEvent& e)
 	{
 		if (!Window::Get().CursorEnabled())
+		{
 			Rotate(Float3{ (float)e.GetDelta().y, (float)-e.GetDelta().x, 0.0f } * RotationSpeed);
+			CameraMovedEvent camMoved;
+			for (auto* listener : EventDispatcher<CameraMovedEvent>::Get())
+				listener->OnEvent(camMoved);
+		}
 	}
 
 	void Camera::OnEvent(KeyPressedEvent& e)

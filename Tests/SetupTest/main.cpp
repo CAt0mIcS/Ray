@@ -53,42 +53,38 @@ public:
 			{
 				ImGui::Begin("TestEntity");
 
-				// Ray::Mesh& mesh = m_Entity.Get<Ray::Mesh>();
+				Ray::Mesh& mesh = m_Entity.Get<Ray::Mesh>();
 
-				// Ray::Float3& translation =
-				//	const_cast<Ray::Float3&>(mesh.GetTransform().Translation());
-				// Ray::Float3& rotation = const_cast<Ray::Float3&>(mesh.GetTransform().Rotation());
-				// Ray::Float3& scale = const_cast<Ray::Float3&>(mesh.GetTransform().Scale());
+				Ray::Float3& translation =
+					const_cast<Ray::Float3&>(mesh.GetTransform().Translation());
+				Ray::Float3& rotation = const_cast<Ray::Float3&>(mesh.GetTransform().Rotation());
+				Ray::Float3& scale = const_cast<Ray::Float3&>(mesh.GetTransform().Scale());
 
-				// Ray::ImGUI::Float3Widget("Translation", translation);
-				// Ray::ImGUI::Float3Widget("Rotation", rotation);
-				// Ray::ImGUI::Float3Widget("Scale", scale);
-				// ImGui::Spacing();
+				Ray::ImGUI::Float3Widget("Translation", translation);
+				Ray::ImGUI::Float3Widget("Rotation", rotation);
+				Ray::ImGUI::Float3Widget("Scale", scale);
+				ImGui::Spacing();
 
-				// mesh.GetTransform().RecalculateCachedMatrix();
+				mesh.GetTransform().RecalculateCachedMatrix();
 
 				ImGui::End();
 			}
-
-			Ray::Shader shader;
-			shader.CreateShaderModule("Resources/Shaders/Flat_Tex.vert",
-				*Ray::ReadFile("Resources/Shaders/Flat_Tex.vert"), "", VK_SHADER_STAGE_VERTEX_BIT);
-			shader.CreateShaderModule("Resources/Shaders/Flat_Tex.frag",
-				*Ray::ReadFile("Resources/Shaders/Flat_Tex.frag"), "",
-				VK_SHADER_STAGE_FRAGMENT_BIT);
-			shader.CreateReflection();
-
-			Ray::DynamicVertex vertex(shader);
-
-			for (uint32_t i = 0; i < 10; ++i)
-			{
-				uint32_t vID = vertex.BeginVertex();
-				vertex["inPos"] = Ray::Float3{ 1.0f + (float)i / 100.0f, 0.0f + (float)i / 100.0f,
-					0.0f + (float)i / 100.0f };
-				vertex["inTexCoord"] =
-					Ray::Float2{ 1.0f + (float)i / 100.0f, 0.0f + (float)i / 100.0f };
-			}
 		});
+
+
+		Ray::Material::Layout layout{};
+		layout.pipelineLayout.shaders = { "Resources/Shaders/Flat.vert",
+			"Resources/Shaders/Flat.frag" };
+		layout.pipelineLayout.cullMode = VK_CULL_MODE_NONE;
+
+		Ray::Ref<Ray::Material> material = Ray::MakeRef<Ray::Material>(layout);
+		material->AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
+		material->AddBufferUniform("PerSceneData", Ray::Shader::Stage::Vertex);
+		(*material->AddBufferUniform("Shading", Ray::Shader::Stage::Fragment))["color"] =
+			Ray::Float3{ 1.0f, 1.0f, 0.0f };
+
+		m_Entity = Scene::Get().CreateEntity();
+		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
 	}
 
 private:
@@ -114,7 +110,7 @@ int main()
 #ifdef NDEBUG
 	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
 #else
-	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
+	Ray::Log::SetLogLevel(Violent::LogLevel::Trace);
 #endif
 
 	try

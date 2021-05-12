@@ -1,13 +1,13 @@
 ﻿#include "Rpch.h"
 #include "RVertexBuffer.h"
 
-#include "Graphics/RVertex.h"
 #include "Graphics/Commands/RCommandBuffer.h"
+#include "Core/RDynamicVertex.h"
 
 
 namespace At0::Ray
 {
-	VertexBuffer::VertexBuffer(std::string_view tag, const VertexInput& vertices)
+	VertexBuffer::VertexBuffer(std::string_view tag, const DynamicVertex& vertices)
 		: Buffer(vertices.SizeBytes(),
 			  VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
 			  VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
@@ -27,7 +27,7 @@ namespace At0::Ray
 		vkCmdBindVertexBuffers(cmdBuff, 0, 1, &m_Buffer, offsets);
 	}
 
-	std::string VertexBuffer::GetUID(std::string_view tag, const VertexInput& vertices)
+	std::string VertexBuffer::GetUID(std::string_view tag, const DynamicVertex& vertices)
 	{
 		std::ostringstream oss;
 		oss << typeid(VertexBuffer).name() << "#" << tag;

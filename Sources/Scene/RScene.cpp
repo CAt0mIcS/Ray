@@ -8,6 +8,7 @@
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "Utils/RException.h"
+#include "Utils/RLogger.h"
 
 #include "Components/RMesh.h"
 #include "Components/RSkybox.h"
@@ -77,7 +78,22 @@ namespace At0::Ray
 		: EventListener<CameraMovedEvent>(*camera), m_Camera(std::move(camera))
 	{
 		s_CurrentScene = Scope<Scene>(this);
+		SetupPerSceneUniform();
+	}
 
+	void Scene::OnEvent(CameraMovedEvent& e)
+	{
+		// RAY_TODO: Synchronization
+		Graphics::Get().GetDevice().WaitIdle();
+		(*m_PerSceneUniform)["View"] = m_Camera->ShaderData.View;
+		(*m_PerSceneUniform)["Proj"] = m_Camera->ShaderData.Projection;
+		(*m_PerSceneUniform)["ViewPos"] = m_Camera->ShaderData.ViewPos;
+
+		Log::Debug("View: \n{0}", m_Camera->ShaderData.View);
+	}
+
+	void Scene::SetupPerSceneUniform()
+	{
 		// Create per-scene descriptor set
 		VkDescriptorSetLayoutBinding perSceneBinding{};
 		perSceneBinding.binding = 0;
@@ -135,15 +151,6 @@ namespace At0::Ray
 			"PerSceneData", 0, (uint32_t)sizeof(PerSceneData), std::move(uniformInBlockOffsets));
 
 		m_PerSceneDescriptor->BindUniform(*m_PerSceneUniform);
-	}
-
-	void Scene::OnEvent(CameraMovedEvent& e)
-	{
-		// RAY_TODO: Synchronization
-		Graphics::Get().GetDevice().WaitIdle();
-		(*m_PerSceneUniform)["View"] = m_Camera->ShaderData.View;
-		(*m_PerSceneUniform)["Proj"] = m_Camera->ShaderData.Projection;
-		(*m_PerSceneUniform)["ViewPos"] = m_Camera->ShaderData.ViewPos;
 	}
 
 }  // namespace At0::Ray

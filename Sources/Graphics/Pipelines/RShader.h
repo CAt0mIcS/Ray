@@ -239,6 +239,11 @@ namespace At0::Ray
 		const auto& GetDescriptorPoolSizes() const { return m_DescriptorPoolSizes; }
 		std::vector<VkPushConstantRange> GetPushConstantRanges() const;
 
+		std::vector<VkVertexInputBindingDescription> GetVertexInputBindings(
+			uint32_t binding = 0) const;
+		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributes(
+			uint32_t binding = 0) const;
+
 	private:
 		void LoadUniform(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i);
 		void LoadUniformBlock(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i);

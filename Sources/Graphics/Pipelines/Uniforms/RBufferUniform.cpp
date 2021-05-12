@@ -56,12 +56,6 @@ namespace At0::Ray
 	void BufferUniform::Setup(uint32_t bufferSize)
 	{
 		m_Size = bufferSize;
-
 		BufferSynchronizer::Get().Emplace(bufferSize, &m_Offset);
-
-		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer = BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(m_Offset);
-		bufferInfo.offset = BufferSynchronizer::Get().GetUniformBuffer().GetOffset(m_Offset);
-		bufferInfo.range = m_Size;
 	}
 }  // namespace At0::Ray

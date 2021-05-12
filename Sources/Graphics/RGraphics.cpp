@@ -240,6 +240,7 @@ namespace At0::Ray
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
 		Scene::Get().CmdBind(cmdBuff);
+		Scene::Get().EntityView<Mesh>().each([&cmdBuff](Mesh& mesh) { mesh.Render(cmdBuff); });
 
 #if RAY_ENABLE_IMGUI
 		ImGUI::Get().CmdBind(cmdBuff);

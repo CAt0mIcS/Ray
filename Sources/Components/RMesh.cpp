@@ -38,6 +38,18 @@ namespace At0::Ray
 		Setup(std::move(data.children));
 	}
 
+	MeshData Mesh::Plane(Ref<Material> material)
+	{
+		IndexedTriangleList plane =
+			IndexedTriangleList::Plane(material->GetGraphicsPipeline()->GetShader());
+
+		Ref<VertexBuffer> vertexBuffer =
+			Codex::Resolve<VertexBuffer>(plane.uniqueTag, plane.vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(plane.uniqueTag, plane.indices);
+		
+		return { vertexBuffer, indexBuffer, material };
+	}
+
 	// MeshData Mesh::Import(std::string_view filepath)
 	//{
 	//	return { Codex::Resolve<Model>(filepath)->GetMesh() };
