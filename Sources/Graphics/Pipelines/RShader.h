@@ -221,6 +221,7 @@ namespace At0::Ray
 		VkShaderModule CreateShaderModule(const std::filesystem::path& moduleName,
 			std::string_view moduleCode, std::string_view preamble, VkShaderStageFlags moduleFlag);
 		static VkShaderStageFlagBits GetShaderStage(const std::filesystem::path& filepath);
+		static uint32_t SizeOf(VkFormat format);
 
 		void CreateReflection();
 
@@ -231,6 +232,7 @@ namespace At0::Ray
 
 		const Shader::UniformBlocks* GetUniformBlocks(Shader::Stage stage) const;
 		const Shader::Uniforms* GetUniforms(Shader::Stage stage) const;
+		const Shader::Attributes* GetAttributes(Shader::Stage stage) const;
 		std::vector<Shader::Stage> GetLiveShaderStages() const;
 
 		const auto& GetDescriptorSetLayoutBindings() const { return m_DescriptorSetLayoutBindings; }

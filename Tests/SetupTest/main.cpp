@@ -12,6 +12,7 @@
 #include <Graphics/Images/RTextureCubemap.h>
 #include <Graphics/Pipelines/RGraphicsPipeline.h>
 #include <Utils/RException.h>
+#include <Core/RDynamicVertex.h>
 
 #include <Scene/RScene.h>
 #include <Scene/RCamera.h>
@@ -67,6 +68,25 @@ public:
 				// mesh.GetTransform().RecalculateCachedMatrix();
 
 				ImGui::End();
+			}
+
+			Ray::Shader shader;
+			shader.CreateShaderModule("Resources/Shaders/Flat_Tex.vert",
+				*Ray::ReadFile("Resources/Shaders/Flat_Tex.vert"), "", VK_SHADER_STAGE_VERTEX_BIT);
+			shader.CreateShaderModule("Resources/Shaders/Flat_Tex.frag",
+				*Ray::ReadFile("Resources/Shaders/Flat_Tex.frag"), "",
+				VK_SHADER_STAGE_FRAGMENT_BIT);
+			shader.CreateReflection();
+
+			Ray::DynamicVertex vertex(shader);
+
+			for (uint32_t i = 0; i < 10; ++i)
+			{
+				uint32_t vID = vertex.BeginVertex();
+				vertex["inPos"] = Ray::Float3{ 1.0f + (float)i / 100.0f, 0.0f + (float)i / 100.0f,
+					0.0f + (float)i / 100.0f };
+				vertex["inTexCoord"] =
+					Ray::Float2{ 1.0f + (float)i / 100.0f, 0.0f + (float)i / 100.0f };
 			}
 		});
 	}
