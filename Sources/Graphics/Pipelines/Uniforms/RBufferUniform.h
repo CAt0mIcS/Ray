@@ -1,20 +1,24 @@
 ﻿#pragma once
 
-#include "RUniform.h"
+#include "../../../RBase.h"
+#include "../RShader.h"
+
+#include "../../Buffers/RBufferSynchronizer.h"
 
 
 namespace At0::Ray
 {
-	class RAY_EXPORT BufferUniform : public Uniform
-	{
-		friend class ProxyType;
+	class Pipeline;
+	class Buffer;
 
+	class RAY_EXPORT BufferUniform
+	{
 	private:
 		class ProxyType
 		{
 		public:
-			ProxyType(BufferUniform* pUpper, std::string_view uniformName)
-				: m_BufferUniform(pUpper), m_UniformName(uniformName)
+			ProxyType(BufferUniform* pThis, uint32_t offsetInUniformBlock)
+				: m_BufferUniform(pThis), m_OffsetInUniformBlock(offsetInUniformBlock)
 			{
 			}
 
@@ -22,75 +26,72 @@ namespace At0::Ray
 			ProxyType& operator=(T&& data)
 			{
 				BufferSynchronizer::Get().Update(
-					data, m_BufferUniform->GetGlobalBufferOffset() +
-							  m_BufferUniform->GetUniformOffsetInBlock(m_UniformName));
+					data, m_BufferUniform->GetOffset() + m_OffsetInUniformBlock);
 				return *this;
 			}
 
 		private:
 			BufferUniform* m_BufferUniform;
-			std::string m_UniformName;
+			uint32_t m_OffsetInUniformBlock;
 		};
 
 	public:
-		BufferUniform(std::string_view name, VkDescriptorSetLayout descSetLayout,
-			VkDescriptorPool descSetPool, Pipeline::BindPoint bindPoint,
-			VkPipelineLayout pipelineLayout, uint32_t bufferSize, uint32_t set, uint32_t binding);
-		BufferUniform(std::string_view name, const Pipeline& pipeline, uint32_t bufferSize,
-			uint32_t set, uint32_t binding);
-		BufferUniform(
-			std::string_view uniformBlockName, Shader::Stage stage, const Pipeline& pipeline);
-		~BufferUniform();
+		BufferUniform(std::string_view name, Shader::Stage stage, const Pipeline& pipeline);
+		BufferUniform(std::string_view name, uint32_t binding, uint32_t size,
+			std::unordered_map<std::string, uint32_t> uniformInBlockOffsets);
 
 		/**
-		 * Updates the entire uniform block with data
+		 * @returns Name of the uniform block
 		 */
-		template<typename T>
-		void Update(T&& data)
-		{
-			BufferSynchronizer::Get().Update(data, m_GlobalBufferOffset);
-		}
+		std::string_view GetName() const { return m_Name; }
 
 		/**
-		 * Updates a range of the buffer with data
-		 * @param data Pointer to the data to update
-		 * @param size Size of the data to update
+		 * @returns Binding of the uniform block
 		 */
-		void Update(void* data, uint32_t size);
+		uint32_t GetBinding() const { return m_Binding; }
 
 		/**
-		 * Updates the uniform with the name.
+		 * This offset does not take into account multiple buffers allocated from the dynamic
+		 * uniform buffer and is the offset from the first buffer
+		 * @returns Global offset in the uniform buffer.
 		 */
-		template<typename T>
-		void Update(std::string_view uniformName, T&& data)
-		{
-			BufferSynchronizer::Get().Update(
-				data, m_GlobalBufferOffset + GetUniformOffsetInBlock(uniformName));
-		}
+		uint32_t GetGlobalOffset() const { return m_Offset; }
 
-		ProxyType operator[](std::string_view uniformName) { return { this, uniformName }; }
+		/**
+		 * @returns Offset in the buffer received when calling BufferUniform::GetBuffer
+		 */
+		uint32_t GetOffset() const;
 
-		BufferUniform& operator=(BufferUniform&& other) noexcept = default;
-		BufferUniform(BufferUniform&& other) noexcept = default;
+		/**
+		 * @returns Buffer where the uniform data is stored
+		 */
+		const Buffer& GetBuffer() const;
 
-		BufferUniform& operator=(const BufferUniform& other);
-		BufferUniform(const BufferUniform& other);
+		/**
+		 * @returns Size in bytes of the uniform block
+		 */
+		uint32_t GetSize() const { return m_Size; }
 
-		uint32_t GetGlobalBufferOffset() const { return m_GlobalBufferOffset; }
+		/**
+		 * @param name Name of the uniform to update in the uniform block
+		 * @returns Assignable type to update uniforms in the uniform block
+		 */
+		ProxyType operator[](std::string_view name);
 
 	private:
-		void Setup(uint32_t bufferSize, uint32_t binding);
-		uint32_t GetUniformOffsetInBlock(std::string_view uniformName) const;
+		void Setup(uint32_t bufferSize);
 
 	private:
-		uint32_t m_GlobalBufferOffset = (uint32_t)-1;
-		uint32_t m_BufferSize = 0;
-		uint32_t m_Binding = 0;
+		std::string m_Name;
 
-		/**
-		 * A BufferUniform is always in a block in Vulkan.
-		 * All uniforms in the uniform block are stored here too.
-		 */
-		std::optional<Shader::Uniforms> m_Uniforms = std::nullopt;
+		// The binding specified in the shader
+		uint32_t m_Binding;
+		// The offset in the global uniform buffer
+		uint32_t m_Offset;
+		// Size in bytes of the uniform block
+		uint32_t m_Size;
+
+		// Keeps track of all the uniforms in a uniform block and their offset in the block
+		std::unordered_map<std::string, uint32_t> m_UniformInBlockOffsets;
 	};
 }  // namespace At0::Ray

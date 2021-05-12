@@ -21,9 +21,10 @@ namespace At0::Ray
 {
 	class Texture2D;
 	class Buffer;
-	class SamplerUniform;
 	class CommandBuffer;
 	class GraphicsPipeline;
+	class DescriptorSet;
+	class Sampler2DUniform;
 
 	/**
 	 * RAY_TODO:
@@ -93,7 +94,8 @@ namespace At0::Ray
 		Ref<Texture2D> m_FontImage;
 
 		Scope<GraphicsPipeline> m_Pipeline;
-		Scope<SamplerUniform> m_FontUniform;
+		Scope<Sampler2DUniform> m_FontUniform;
+		Scope<DescriptorSet> m_FontDescriptor;
 
 		Scope<Buffer> m_VertexBuffer;
 		Scope<Buffer> m_IndexBuffer;

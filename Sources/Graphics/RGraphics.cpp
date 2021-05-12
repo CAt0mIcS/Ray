@@ -15,8 +15,6 @@
 #include "Graphics/Core/RSwapchain.h"
 #include "RCodex.h"
 
-#include "Renderers/RRenderer.h"
-
 #include "Graphics/Commands/RCommandPool.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 
@@ -241,8 +239,7 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
 		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		Scene::Get().GetCamera().CmdBind(cmdBuff);
-		Renderer::Get().Bind(cmdBuff);
+		Scene::Get().CmdBind(cmdBuff);
 
 #if RAY_ENABLE_IMGUI
 		ImGUI::Get().CmdBind(cmdBuff);
@@ -285,7 +282,6 @@ namespace At0::Ray
 		ImGUI::Get().Update(dt);
 #endif
 		Scene::Get().Update(dt);
-		Renderer::Get().Update(dt);
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

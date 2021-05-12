@@ -1,129 +1,67 @@
 ﻿#include "Rpch.h"
 #include "RBufferUniform.h"
 
-#include "Graphics/RGraphics.h"
+#include "../RPipeline.h"
+#include "Utils/RAssert.h"
 #include "Utils/RString.h"
-#include "Graphics/Core/RPhysicalDevice.h"
-#include "Graphics/Buffers/RBufferSynchronizer.h"
 
 
 namespace At0::Ray
 {
-	BufferUniform::BufferUniform(std::string_view name, VkDescriptorSetLayout descSetLayout,
-		VkDescriptorPool descSetPool, Pipeline::BindPoint bindPoint,
-		VkPipelineLayout pipelineLayout, uint32_t bufferSize, uint32_t set, uint32_t binding)
-		: Uniform(name), m_BufferSize(bufferSize), m_Binding(binding)
-	{
-		m_DescriptorSet =
-			MakeScope<DescriptorSet>(descSetPool, descSetLayout, bindPoint, pipelineLayout, set);
-
-		Setup(bufferSize, binding);
-	}
-
-	BufferUniform::BufferUniform(std::string_view name, const Pipeline& pipeline,
-		uint32_t bufferSize, uint32_t set, uint32_t binding)
-		: Uniform(name), m_BufferSize(bufferSize), m_Binding(binding)
-	{
-		m_DescriptorSet = MakeScope<DescriptorSet>(pipeline.GetDescriptorPool(),
-			pipeline.GetDescriptorSetLayout(set), pipeline.GetBindPoint(), pipeline.GetLayout(),
-			set);
-		Setup(bufferSize, binding);
-	}
-
 	BufferUniform::BufferUniform(
-		std::string_view uniformBlockName, Shader::Stage stage, const Pipeline& pipeline)
-		: Uniform(uniformBlockName)
+		std::string_view name, Shader::Stage stage, const Pipeline& pipeline)
+		: m_Name(name)
 	{
-		uint32_t size = 0;
-		uint32_t binding = 0;
-		uint32_t set = 0;
-		if (auto uniformBlocks = pipeline.GetShader().GetUniformBlocks(stage))
-		{
-			if (auto uBlockData = uniformBlocks->Get(uniformBlockName))
-			{
-				size = uBlockData->size;
-				binding = uBlockData->binding;
-				set = uBlockData->set;
+		RAY_MEXPECTS(pipeline.GetShader().HasUniform(name, stage),
+			"[BufferUniform] Uniform \"{0}\" was not found in shader stage \"{1}\"", name,
+			String::Construct(stage));
 
-				m_Uniforms = uBlockData->uniforms;
-			}
-		}
+		auto uniformBlock = pipeline.GetShader().GetUniformBlocks(stage)->Get(name);
+		m_Binding = uniformBlock->binding;
 
-		// The size should never be 0 here
-		RAY_MEXPECTS(size != 0, "[BufferUniform] Failed to find uniform {0} in stage {1}",
-			uniformBlockName, String::Construct(stage));
+		// Fill map with offsets of all uniforms in uniform block
+		for (auto& uniform : uniformBlock->uniforms)
+			m_UniformInBlockOffsets[uniform.uniformName] = uniform.offset;
 
-		m_BufferSize = size;
-		m_Binding = binding;
-
-		m_DescriptorSet = MakeScope<DescriptorSet>(pipeline.GetDescriptorPool(),
-			pipeline.GetDescriptorSetLayout(set), pipeline.GetBindPoint(), pipeline.GetLayout(),
-			set);
-
-		Setup(size, binding);
+		Setup(uniformBlock->size);
 	}
 
-	BufferUniform::~BufferUniform() {}
-
-	void BufferUniform::Update(void* data, uint32_t size)
+	BufferUniform::BufferUniform(std::string_view name, uint32_t binding, uint32_t size,
+		std::unordered_map<std::string, uint32_t> uniformInBlockOffsets)
+		: m_Name(name), m_Binding(binding),
+		  m_UniformInBlockOffsets(std::move(uniformInBlockOffsets))
 	{
-		BufferSynchronizer::Get().Update(data, size, m_GlobalBufferOffset);
+		Setup(size);
 	}
 
-	BufferUniform& BufferUniform::operator=(const BufferUniform& other)
+	uint32_t BufferUniform::GetOffset() const
 	{
-		Uniform::operator=(other);
-		m_BufferSize = other.m_BufferSize;
-		m_Binding = other.m_Binding;
-
-		Setup(m_BufferSize, m_Binding);
-		BufferSynchronizer::Get().Copy(
-			other.m_GlobalBufferOffset, m_GlobalBufferOffset, m_BufferSize);
-
-		return *this;
+		return BufferSynchronizer::Get().GetUniformBuffer().GetOffset(m_Offset);
 	}
 
-	BufferUniform::BufferUniform(const BufferUniform& other) : Uniform(other.m_Name)
+	const Buffer& BufferUniform::GetBuffer() const
 	{
-		*this = other;
+		return BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(m_Offset);
 	}
 
-	void BufferUniform::Setup(uint32_t bufferSize, uint32_t binding)
+	BufferUniform::ProxyType BufferUniform::operator[](std::string_view name)
 	{
-		uint32_t minBufferAlignment = Graphics::Get()
-										  .GetPhysicalDevice()
-										  .GetProperties()
-										  .limits.minUniformBufferOffsetAlignment;
-		BufferSynchronizer::Get().Emplace(bufferSize, minBufferAlignment, &m_GlobalBufferOffset);
+		RAY_MEXPECTS(m_UniformInBlockOffsets.find(name.data()) != m_UniformInBlockOffsets.end(),
+			"[BufferUniform] Uniform \"{0}\" not present in uniform block \"{1}\"", name,
+			GetName());
+
+		return BufferUniform::ProxyType{ this, m_UniformInBlockOffsets[name.data()] };
+	}
+
+	void BufferUniform::Setup(uint32_t bufferSize)
+	{
+		m_Size = bufferSize;
+
+		BufferSynchronizer::Get().Emplace(bufferSize, &m_Offset);
 
 		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer =
-			BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(m_GlobalBufferOffset);
-		bufferInfo.offset =
-			BufferSynchronizer::Get().GetUniformBuffer().GetOffset(m_GlobalBufferOffset);
-		bufferInfo.range = bufferSize;
-
-		std::vector<VkWriteDescriptorSet> descWrites{};
-		VkWriteDescriptorSet descWrite{};
-		descWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descWrite.dstSet = *m_DescriptorSet;
-		descWrite.dstBinding = binding;
-		descWrite.dstArrayElement = 0;
-		descWrite.descriptorCount = 1;
-		descWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descWrite.pImageInfo = nullptr;
-		descWrite.pBufferInfo = &bufferInfo;
-		descWrite.pTexelBufferView = nullptr;
-		descWrites.emplace_back(descWrite);
-
-		DescriptorSet::Update(descWrites);
-	}
-
-	uint32_t BufferUniform::GetUniformOffsetInBlock(std::string_view uniformName) const
-	{
-		if (!m_Uniforms)
-			return 0;
-
-		return m_Uniforms->Get(uniformName)->offset;
+		bufferInfo.buffer = BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(m_Offset);
+		bufferInfo.offset = BufferSynchronizer::Get().GetUniformBuffer().GetOffset(m_Offset);
+		bufferInfo.range = m_Size;
 	}
 }  // namespace At0::Ray

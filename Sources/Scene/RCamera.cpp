@@ -6,8 +6,6 @@
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Buffers/RBufferSynchronizer.h"
 
-#include "Components/RPointLight.h"
-
 #include "Utils/RException.h"
 
 #include "Graphics/Core/RLogicalDevice.h"
@@ -115,84 +113,17 @@ namespace At0::Ray
 				}
 
 				UpdateViewMatrix();
+
+				CameraMovedEvent e;
+				for (auto* listener : EventDispatcher<CameraMovedEvent>::Get())
+					listener->OnEvent(e);
 			}
 		}
-
-		// RAY_TODO: Remove if lighting was moved somewhere else
-		UpdateUniform();
 	}
 
-	void Camera::CmdBind(const CommandBuffer& cmdBuff) const { m_Uniform->CmdBind(cmdBuff); }
+	Camera::Camera() {}
 
-	void Camera::UpdateUniform()
-	{
-		// We wait here to avoid some images having an old camera matrix while new ones already have
-		// the new one (RAY_TODO: Synchronization so that this is not required)
-		Graphics::Get().GetDevice().WaitIdle();
-
-		auto view = Scene::Get().EntityView<PointLight>();
-		for (Entity e : view)
-			ShaderData.LightPos = e.Get<PointLight>().GetTranslation();
-
-		m_Uniform->Update(ShaderData);
-	}
-
-	Camera::Camera()
-	{
-		VkDescriptorSetLayoutBinding cameraBinding{};
-		cameraBinding.binding = 0;
-		cameraBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		cameraBinding.descriptorCount = 1;
-		cameraBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-		cameraBinding.pImmutableSamplers = nullptr;
-
-		VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo{};
-		descriptorSetLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-		descriptorSetLayoutCreateInfo.bindingCount = 1;
-		descriptorSetLayoutCreateInfo.pBindings = &cameraBinding;
-
-		RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(),
-								&descriptorSetLayoutCreateInfo, nullptr, &m_DescriptorSetLayout),
-			"[Camera] Failed to create descriptor set layout for camera");
-
-		VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
-		pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutCreateInfo.flags = 0;
-		pipelineLayoutCreateInfo.setLayoutCount = 1;
-		pipelineLayoutCreateInfo.pSetLayouts = &m_DescriptorSetLayout;
-		pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
-		pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
-
-		RAY_VK_THROW_FAILED(vkCreatePipelineLayout(Graphics::Get().GetDevice(),
-								&pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout),
-			"[Camera] Failed to create pipeline layout for camera");
-
-		VkDescriptorPoolSize poolSize{};
-		poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		poolSize.descriptorCount = 1;
-
-		VkDescriptorPoolCreateInfo descriptorPoolCreateInfo{};
-		descriptorPoolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-		descriptorPoolCreateInfo.maxSets = 1;
-		descriptorPoolCreateInfo.poolSizeCount = 1;
-		descriptorPoolCreateInfo.pPoolSizes = &poolSize;
-
-		RAY_VK_THROW_FAILED(vkCreateDescriptorPool(Graphics::Get().GetDevice(),
-								&descriptorPoolCreateInfo, nullptr, &m_DescriptorPool),
-			"[Camera] Failed to create descriptor pool");
-
-		m_Uniform = MakeScope<BufferUniform>("Camera", m_DescriptorSetLayout, m_DescriptorPool,
-			Pipeline::BindPoint::Graphics, m_PipelineLayout, (uint32_t)sizeof(ShaderData),
-			0,	// Using descriptor set 0 for per-scene data (set=0 in vs)
-			0);
-	}
-
-	Camera::~Camera()
-	{
-		vkDestroyDescriptorSetLayout(Graphics::Get().GetDevice(), m_DescriptorSetLayout, nullptr);
-		vkDestroyDescriptorPool(Graphics::Get().GetDevice(), m_DescriptorPool, nullptr);
-		vkDestroyPipelineLayout(Graphics::Get().GetDevice(), m_PipelineLayout, nullptr);
-	}
+	Camera::~Camera() {}
 
 	void Camera::UpdateViewMatrix()
 	{
@@ -224,8 +155,6 @@ namespace At0::Ray
 		ShaderData.ViewPos = Position * Float3(-1.0f, 1.0f, -1.0f);
 
 		Updated = true;
-
-		UpdateUniform();
 	}
 
 	void Camera::OnEvent(MouseMovedEvent& e)

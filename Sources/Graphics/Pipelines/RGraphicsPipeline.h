@@ -5,52 +5,47 @@
 
 #include <vector>
 #include <string>
+#include <optional>
 
 
 namespace At0::Ray
 {
 	class RenderPass;
-	class VertexLayout;
 
 	class RAY_EXPORT GraphicsPipeline : public Pipeline
 	{
 	public:
-		GraphicsPipeline(const RenderPass& renderPass, const std::vector<std::string>& shaders,
-			const VertexLayout* pLayout = nullptr, VkPipelineCache pipelineCache = VK_NULL_HANDLE,
-			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT,
-			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-			VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL, float lineWidth = 1.0f,
-			bool enableDepthTest = true,
-			std::vector<VkVertexInputBindingDescription> bindingDescs = {},
-			std::vector<VkVertexInputAttributeDescription> attribDescs = {});
+		struct Layout
+		{
+			const RenderPass& renderPass;
+			std::vector<std::string> shaders;
+			VkPipelineCache pipelineCache = VK_NULL_HANDLE;
+			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT;
+			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+			VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL;
+			float lineWidth = 1.0f;
+			bool depthTestEnabled = true;
+			std::optional<std::vector<VkVertexInputBindingDescription>> bindingDescriptions;
+			std::optional<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions;
+		};
+
+	public:
+		GraphicsPipeline(const Layout& layout);
 		~GraphicsPipeline();
 
 		Pipeline::BindPoint GetBindPoint() const override;
-		const VertexLayout& GetVertexLayout() const { return m_Shader.GetVertexLayout(); }
 
 		VkDescriptorPool GetDescriptorPool() const override { return m_DescriptorPool; }
 		VkDescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const override;
 
-		static std::string GetUID(const RenderPass& renderPass,
-			const std::vector<std::string>& shaders, const VertexLayout* pLayout = nullptr,
-			VkPipelineCache pipelineCache = VK_NULL_HANDLE,
-			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT,
-			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-			VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL, float lineWidth = 1.0f,
-			bool enableDepthTest = true,
-			std::vector<VkVertexInputBindingDescription> bindingDescs = {},
-			std::vector<VkVertexInputAttributeDescription> attribDescs = {});
+		static std::string GetUID(const Layout& layout);
 
 	private:
 		void CreateShaderProgram(const std::vector<std::string>& shaders);
 		void CreateDescriptorSetLayouts();
 		void CreateDescriptorPool();
 		void CreatePipelineLayout();
-		void CreatePipeline(const RenderPass& renderPass, const VertexLayout* pLayout,
-			VkPipelineCache pipelineCache, VkCullModeFlags cullMode, VkPrimitiveTopology topology,
-			VkPolygonMode polygonMode, float lineWidth, bool enableDepthTest,
-			std::vector<VkVertexInputBindingDescription> bindingDescs,
-			std::vector<VkVertexInputAttributeDescription> attribDescs);
+		void CreatePipeline(const Layout& layout);
 
 	private:
 		std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStages;

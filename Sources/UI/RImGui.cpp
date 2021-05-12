@@ -19,7 +19,9 @@
 #include "Graphics/Images/RTextureSampler.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
 #include "Graphics/Buffers/RIndexBuffer.h"
-#include "Graphics/Pipelines/Uniforms/RSamplerUniform.h"
+#include "Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
+#include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
+#include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "Graphics/Images/RTexture2D.h"
 
 #include <../../Extern/imgui/imgui.h>
@@ -158,7 +160,7 @@ namespace At0::Ray
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		m_Pipeline->CmdBind(cmdBuff);
-		m_FontUniform->CmdBind(cmdBuff);
+		m_FontDescriptor->CmdBind(cmdBuff);
 
 		VkViewport viewport{};
 		viewport.width = io.DisplaySize.x;
@@ -239,16 +241,21 @@ namespace At0::Ray
 		vertexInputAttributes.emplace_back(vInputUV);
 		vertexInputAttributes.emplace_back(vInputCol);
 
-		m_Pipeline = MakeScope<GraphicsPipeline>(Graphics::Get().GetRenderPass(),
-			std::vector<std::string>{
-				"Resources/Shaders/ImGui.vert", "Resources/Shaders/ImGui.frag" },
-			nullptr, nullptr, VK_CULL_MODE_NONE, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-			VK_POLYGON_MODE_FILL, 1.0f, false, std::vector{ vertexInputBinding },
-			vertexInputAttributes);
+		GraphicsPipeline::Layout layout{ Graphics::Get().GetRenderPass() };
+		layout.shaders = { "Resources/Shaders/ImGui.vert", "Resources/Shaders/ImGui.frag" };
+		layout.cullMode = VK_CULL_MODE_NONE;
+		layout.depthTestEnabled = false;
+		layout.bindingDescriptions = { vertexInputBinding };
+		layout.attributeDescriptions = { vertexInputAttributes };
 
-		m_FontUniform = MakeScope<SamplerUniform>("ImGuiFonts",
-			m_Pipeline->GetDescriptorSetLayout(0), m_Pipeline->GetDescriptorPool(),
-			Pipeline::BindPoint::Graphics, m_Pipeline->GetLayout(), 0, std::move(m_FontImage));
+		m_Pipeline = MakeScope<GraphicsPipeline>(std::move(layout));
+
+		m_FontDescriptor = MakeScope<DescriptorSet>(m_Pipeline->GetDescriptorPool(),
+			m_Pipeline->GetDescriptorSetLayout(0), Pipeline::BindPoint::Graphics,
+			m_Pipeline->GetLayout(), 0);
+
+		m_FontUniform = MakeScope<Sampler2DUniform>("ImGuiFonts", std::move(m_FontImage), 0);
+		m_FontDescriptor->BindUniform(*m_FontUniform);
 	}
 
 	void ImGUI::MapKeySpace()

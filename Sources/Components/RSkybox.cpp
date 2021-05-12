@@ -15,21 +15,21 @@ namespace At0::Ray
 
 	Skybox::Skybox(Entity entity, Ref<Texture2D> texture) : Component(entity), m_Texture(texture)
 	{
-		Mesh& mesh = GetEntity().Emplace<Mesh>(
-			Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", Model::NoNormals,
-				Material{ Material::LightingTechnique(Material::LightingTechnique::Flat),
-					Material::Texture2D(texture), Material::CullMode(VK_CULL_MODE_FRONT_BIT) }));
-		mesh.GetTransform().SetScale(Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
+		// Mesh& mesh = GetEntity().Emplace<Mesh>(
+		//	Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", Model::NoNormals,
+		//		Material{ Material::LightingTechnique(Material::LightingTechnique::Flat),
+		//			Material::Texture2D(texture), Material::CullMode(VK_CULL_MODE_FRONT_BIT) }));
+		// mesh.GetTransform().SetScale(Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
 	}
 
 	Skybox::Skybox(Entity entity, Ref<TextureCubemap> texture)
 		: Component(entity), m_Texture(texture)
 	{
-		Mesh& mesh = GetEntity().Emplace<Mesh>(Mesh::Import("Resources/Models/Cube/Cube.obj",
-			Model::NoNormals | Model::NoTextureCoordinates,
-			Material{ Material::LightingTechnique(Material::LightingTechnique::Flat),
-				Material::Color({ 0.0f, 1.0f, 0.0f }),
-				Material::CullMode(VK_CULL_MODE_FRONT_BIT) }));
+		// Mesh& mesh = GetEntity().Emplace<Mesh>(Mesh::Import("Resources/Models/Cube/Cube.obj",
+		//	Model::NoNormals | Model::NoTextureCoordinates,
+		//	Material{ Material::LightingTechnique(Material::LightingTechnique::Flat),
+		//		Material::Color({ 0.0f, 1.0f, 0.0f }),
+		//		Material::CullMode(VK_CULL_MODE_FRONT_BIT) }));
 		// mesh.GetTransform().SetScale(Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
 	}
 

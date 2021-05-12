@@ -1,17 +1,30 @@
 ﻿#pragma once
 
 #include "../RBase.h"
-#include "REntity.h"
 #include "../Core/RTime.h"
-#include "RCamera.h"
-
 #include "../Events/REventDispatcher.h"
+#include "../Graphics/Core/RBindable.h"
+
+#include "REntity.h"
+#include "RCamera.h"
+#include "../Core/RMath.h"
 
 #include <concepts>
 
 
 namespace At0::Ray
 {
+	class DescriptorSet;
+	class BufferUniform;
+
+	struct PerSceneData
+	{
+		Matrix View = MatrixIdentity();
+		Matrix Projection = MatrixIdentity();
+		Float3 ViewPos{};
+		Float3 LightPos{};
+	};
+
 	/**
 	 * Gets dispatched to listeners when entity is added to the scene
 	 */
@@ -25,7 +38,10 @@ namespace At0::Ray
 		Entity& m_Entity;
 	};
 
-	class RAY_EXPORT Scene : public EventDispatcher<EntityCreatedEvent>
+	class RAY_EXPORT Scene :
+		public EventDispatcher<EntityCreatedEvent>,
+		public Bindable,
+		EventListener<CameraMovedEvent>
 	{
 	public:
 		static Scene& Get();
@@ -75,12 +91,25 @@ namespace At0::Ray
 			return *s_CurrentScene;
 		}
 
+		const DescriptorSet& GetPerSceneDescriptor() const { return *m_PerSceneDescriptor; }
+
+		void CmdBind(const CommandBuffer& cmdBuff) const;
+
 	protected:
 		Scene(Scope<Camera> camera);
 
 	private:
+		void OnEvent(CameraMovedEvent& e) override;
+
+	private:
 		entt::registry m_Registry;
 		Scope<Camera> m_Camera = nullptr;
+
+		VkDescriptorSetLayout m_DescriptorSetLayout;
+		VkPipelineLayout m_PipelineLayout;
+		VkDescriptorPool m_DescriptorPool;
+		Scope<DescriptorSet> m_PerSceneDescriptor;
+		Scope<BufferUniform> m_PerSceneUniform;
 
 		static Scope<Scene> s_CurrentScene;
 	};

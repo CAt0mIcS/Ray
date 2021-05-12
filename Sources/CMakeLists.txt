@@ -59,7 +59,6 @@ set(SRC
 	# Graphics
 	"Graphics/RGraphics.h"
 	"Graphics/RGraphics.cpp"
-	"Graphics/RVertex.h"
 	"Graphics/RCodex.h"
 	
 	"Graphics/Core/RVulkanInstance.h"
@@ -86,12 +85,10 @@ set(SRC
 
 	"Graphics/Pipelines/Uniforms/RDescriptor.h"
 	"Graphics/Pipelines/Uniforms/RDescriptor.cpp"
-	"Graphics/Pipelines/Uniforms/RUniform.h"
-	"Graphics/Pipelines/Uniforms/RUniform.cpp"
 	"Graphics/Pipelines/Uniforms/RBufferUniform.h"
 	"Graphics/Pipelines/Uniforms/RBufferUniform.cpp"
-	"Graphics/Pipelines/Uniforms/RSamplerUniform.h"
-	"Graphics/Pipelines/Uniforms/RSamplerUniform.cpp"
+	"Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
+	"Graphics/Pipelines/Uniforms/RSampler2DUniform.cpp"
 
 	"Graphics/Buffers/RBuffer.h"
 	"Graphics/Buffers/RBuffer.cpp"
@@ -130,13 +127,6 @@ set(SRC
 
 	"Graphics/RenderPass/RRenderPass.h"
 	"Graphics/RenderPass/RRenderPass.cpp"
-	
-	"Graphics/Renderers/RRenderer.h"
-	"Graphics/Renderers/RRenderer.cpp"
-	"Graphics/Renderers/RSubRenderer.cpp"
-	"Graphics/Renderers/RSubRenderer.h"
-	"Graphics/Renderers/RMeshRenderer.cpp"
-	"Graphics/Renderers/RMeshRenderer.h"
 
 	# ------------------------------------------------------------------
 	# Components
@@ -145,8 +135,8 @@ set(SRC
 	"Components/RMesh.cpp"
 	"Components/RSkybox.h"
 	"Components/RSkybox.cpp"
-	"Components/RPointLight.h"
-	"Components/RPointLight.cpp"
+	"Components/RMeshRenderer.h"
+	"Components/RMeshRenderer.cpp"
 
 	# Shading
 	"Shading/RMaterial.h"

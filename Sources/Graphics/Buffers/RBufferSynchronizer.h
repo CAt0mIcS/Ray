@@ -38,7 +38,8 @@ namespace At0::Ray
 		 */
 		void Update(void* data, uint32_t size, uint32_t offset);
 
-		void Emplace(uint32_t size, uint32_t alignment, uint32_t* offset);
+		void Emplace(
+			uint32_t size, uint32_t* offset, std::optional<uint32_t> alignment = std::nullopt);
 
 		/**
 		 * Copies a range of the buffer to another

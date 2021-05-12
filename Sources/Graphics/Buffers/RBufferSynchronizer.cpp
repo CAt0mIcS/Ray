@@ -3,6 +3,7 @@
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
+#include "Graphics/Core/RPhysicalDevice.h"
 
 
 namespace At0::Ray
@@ -19,9 +20,20 @@ namespace At0::Ray
 		m_UniformBuffer.Update(data, size, offset);
 	}
 
-	void BufferSynchronizer::Emplace(uint32_t size, uint32_t alignment, uint32_t* offset)
+	void BufferSynchronizer::Emplace(
+		uint32_t size, uint32_t* offset, std::optional<uint32_t> alignment)
 	{
-		m_UniformBuffer.Emplace(size, alignment, offset);
+		uint32_t minBufferAlignment;
+
+		if (!alignment)
+			minBufferAlignment = Graphics::Get()
+									 .GetPhysicalDevice()
+									 .GetProperties()
+									 .limits.minUniformBufferOffsetAlignment;
+		else
+			minBufferAlignment = *alignment;
+
+		m_UniformBuffer.Emplace(size, minBufferAlignment, offset);
 	}
 
 	void BufferSynchronizer::Copy(uint32_t srcOffset, uint32_t dstOffset, uint32_t size)

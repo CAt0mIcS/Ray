@@ -24,57 +24,31 @@ namespace At0::Ray
 	{
 		Ref<VertexBuffer> vertexBuffer;
 		Ref<IndexBuffer> indexBuffer;
-		Material material;
+		Ref<Material> material;
 		std::vector<MeshData> children;
 	};
 
 
-	class RAY_EXPORT Model
-	{
-	public:
-		enum Flags
-		{
-			Unspecified = 0 << 0,
-			NoDiffuseMap = 1 << 0,
-			NoSpecularMap = 1 << 1,
-			NoNormalMap = 1 << 2,
+	// class RAY_EXPORT Model
+	//{
+	// public:
+	//	Model(std::string_view filepath);
+	//	~Model();
 
-			NoTextureCoordinates = 1 << 3,
-			NoNormals = 1 << 4
-		};
+	//	Model& operator=(Model&& other) noexcept = default;
+	//	Model(Model&& other) noexcept = default;
 
-	public:
-		Model(std::string_view filepath, Material::Config& config,
-			Model::Flags flags = Model::Flags::Unspecified,
-			std::optional<Material> material = std::nullopt);
-		~Model();
+	//	MeshData& GetMesh() { return *m_RootMesh; }
 
-		Model& operator=(Model&& other) noexcept = default;
-		Model(Model&& other) noexcept = default;
+	//	static std::string GetUID(std::string_view filepath);
 
-		MeshData& GetMesh() { return *m_RootMesh; }
+	// private:
+	//	void ParseMesh(
+	//		std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials);
+	//	static Material CreateMaterial(
+	//		const std::string& basePath, const aiMesh& mesh, const aiMaterial* const* pMaterials);
 
-		static std::string GetUID(std::string_view filepath, Material::Config& config,
-			Model::Flags flags = Model::Flags::Unspecified,
-			std::optional<Material> material = std::nullopt);
-
-	private:
-		void ParseMesh(std::string_view base, const aiMesh& mesh,
-			const aiMaterial* const* pMaterials, Model::Flags flags,
-			std::optional<Material> material, Material::Config& config);
-		static Material CreateMaterial(const std::string& basePath, const aiMesh& mesh,
-			const aiMaterial* const* pMaterials, Model::Flags flags, Material::Config& config);
-
-		static bool HasNormalMap(const aiMesh& mesh, const aiMaterial* const* pMaterials,
-			std::optional<Material> material);
-
-	private:
-		std::optional<MeshData> m_RootMesh;
-	};
-
-
-	inline Model::Flags operator|(Model::Flags r, Model::Flags l)
-	{
-		return (Model::Flags)((int)r | (int)l);
-	}
+	// private:
+	//	std::optional<MeshData> m_RootMesh;
+	//};
 }  // namespace At0::Ray

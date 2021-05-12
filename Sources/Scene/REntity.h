@@ -78,6 +78,7 @@ namespace At0::Ray
 		template<typename... Comp>
 		decltype(auto) Get()
 		{
+			RAY_MEXPECTS(Has<Comp...>(), "[Entity] Does not have specified component(s)");
 			return m_Registry->get<Comp...>(m_EntityHandle);
 		}
 
@@ -88,6 +89,7 @@ namespace At0::Ray
 		template<typename... Comp>
 		decltype(auto) Get() const
 		{
+			RAY_MEXPECTS(Has<Comp...>(), "[Entity] Does not have specified component(s)");
 			return m_Registry->get<Comp...>(m_EntityHandle);
 		}
 

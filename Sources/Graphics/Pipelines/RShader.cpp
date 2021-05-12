@@ -6,8 +6,6 @@
 #include "Utils/RLogger.h"
 #include "Utils/RString.h"
 
-#include "Graphics/RVertex.h"
-
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Buffers/RUniformBuffer.h"
@@ -63,7 +61,7 @@ namespace At0::Ray
 	};
 
 
-	Shader::Shader() : m_VertexLayout(MakeScope<VertexLayout>())
+	Shader::Shader()
 	{
 		static bool glslangInitialized = false;
 		if (!glslangInitialized)
@@ -385,8 +383,8 @@ namespace At0::Ray
 
 			if (shaderStage == Shader::Stage::Vertex)
 			{
-				for (const auto& attribData : shaderData.attributes)
-					m_VertexLayout->Append(attribData.format);
+				// for (const auto& attribData : shaderData.attributes)
+				//	m_VertexLayout->Append(attribData.format);
 			}
 
 			for (auto& uniformBlock : shaderData.uniformBlocks)
@@ -465,16 +463,19 @@ namespace At0::Ray
 		m_DescriptorPoolSizes[5].descriptorCount = 2048;
 	}
 
-	std::vector<VkVertexInputAttributeDescription>
-		Shader::GetVertexInputAttributeDescriptions() const
+	bool Shader::HasUniform(std::string_view name, Shader::Stage stage) const
 	{
-		return m_VertexLayout->GetVertexInputAttributeDescriptions();
-	}
+		if (auto data = m_ShaderData.find(stage); data != m_ShaderData.end())
+		{
+			if (data->second.uniformBlocks.HasUniform(name) ||
+				data->second.uniformBlocks.HasUniformBlock(name))
+				return true;
 
-	std::vector<VkVertexInputBindingDescription> Shader::GetVertexInputBindingDescriptions(
-		uint32_t binding) const
-	{
-		return m_VertexLayout->GetVertexInputBindingDescriptions(binding);
+			if (data->second.uniforms.HasUniform(name))
+				return true;
+		}
+
+		return false;
 	}
 
 	Shader::Stage Shader::ToShaderStage(VkShaderStageFlags stageFlags)
@@ -697,6 +698,16 @@ namespace At0::Ray
 		return nullptr;
 	}
 
+	bool Shader::Uniforms::HasUniform(std::string_view name) const
+	{
+		for (auto& uniform : m_Uniforms)
+		{
+			if (uniform.uniformName == name)
+				return true;
+		}
+		return false;
+	}
+
 
 	// ------------------------------------------------------------
 	// Uniform Blocks
@@ -709,5 +720,25 @@ namespace At0::Ray
 				return &dt;
 		}
 		return nullptr;
+	}
+
+	bool Shader::UniformBlocks::HasUniformBlock(std::string_view name) const
+	{
+		for (auto& uBlock : m_UniformBlocks)
+		{
+			if (uBlock.uniformBlockName == name)
+				return true;
+		}
+		return false;
+	}
+
+	bool Shader::UniformBlocks::HasUniform(std::string_view name) const
+	{
+		for (auto& uBlock : m_UniformBlocks)
+		{
+			if (uBlock.uniforms.HasUniform(name))
+				return true;
+		}
+		return false;
 	}
 }  // namespace At0::Ray

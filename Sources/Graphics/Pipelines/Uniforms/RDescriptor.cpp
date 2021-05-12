@@ -5,6 +5,9 @@
 #include "Graphics/Core/RLogicalDevice.h"
 #include "../RGraphicsPipeline.h"
 #include "Graphics/Commands/RCommandBuffer.h"
+#include "Graphics/Images/RTexture2D.h"
+#include "RBufferUniform.h"
+#include "RSampler2DUniform.h"
 
 #include "Utils/RException.h"
 
@@ -39,6 +42,44 @@ namespace At0::Ray
 			descriptorWrites.data(), 0, nullptr);
 	}
 
+	void DescriptorSet::BindUniform(const BufferUniform& uniform)
+	{
+		VkDescriptorBufferInfo bufferInfo{};
+		bufferInfo.buffer = uniform.GetBuffer();
+		bufferInfo.offset = uniform.GetOffset();
+		bufferInfo.range = uniform.GetSize();
+
+		VkWriteDescriptorSet descWrites{};
+		descWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descWrites.dstSet = m_DescriptorSet;
+		descWrites.dstBinding = uniform.GetBinding();
+		// descWrites.dstArrayElement;
+		descWrites.descriptorCount = 1;
+		descWrites.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descWrites.pBufferInfo = &bufferInfo;
+
+		Update({ descWrites });
+	}
+
+	void DescriptorSet::BindUniform(const Sampler2DUniform& uniform)
+	{
+		VkDescriptorImageInfo imageInfo{};
+		imageInfo.sampler = uniform.GetTexture()->GetSampler();
+		imageInfo.imageView = uniform.GetTexture()->GetImageView();
+		imageInfo.imageLayout = uniform.GetTexture()->GetImageLayout();
+
+		VkWriteDescriptorSet descWrites{};
+		descWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descWrites.dstSet = m_DescriptorSet;
+		descWrites.dstBinding = uniform.GetBinding();
+		// descWrites.dstArrayElement;
+		descWrites.descriptorCount = 1;
+		descWrites.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		descWrites.pImageInfo = &imageInfo;
+
+		Update({ descWrites });
+	}
+
 	DescriptorSet& DescriptorSet::operator=(DescriptorSet&& other) noexcept
 	{
 		m_DescriptorSet = other.m_DescriptorSet;
@@ -53,27 +94,4 @@ namespace At0::Ray
 		  m_PipelineBindPoint(other.m_PipelineBindPoint), m_PipelineLayout(other.m_PipelineLayout)
 	{
 	}
-
-	DescriptorSet& DescriptorSet::operator=(const DescriptorSet& other)
-	{
-		m_DescriptorPool = other.m_DescriptorPool;
-		m_DescriptorSetLayout = other.m_DescriptorSetLayout;
-		m_PipelineBindPoint = other.m_PipelineBindPoint;
-		m_PipelineLayout = other.m_PipelineLayout;
-		m_SetNumber = other.m_SetNumber;
-
-		VkDescriptorSetAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		allocInfo.descriptorPool = m_DescriptorPool;
-		allocInfo.descriptorSetCount = 1;
-		allocInfo.pSetLayouts = &m_DescriptorSetLayout;
-
-		RAY_VK_THROW_FAILED(
-			vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo, &m_DescriptorSet),
-			"[DescriptorSet] Failed to allocate");
-
-		return *this;
-	}
-
-	DescriptorSet::DescriptorSet(const DescriptorSet& other) { *this = other; }
 }  // namespace At0::Ray

@@ -21,8 +21,6 @@ namespace glslang
 
 namespace At0::Ray
 {
-	class VertexLayout;
-
 	inline std::optional<std::string> ReadFile(const std::filesystem::path& filepath)
 	{
 		std::ifstream reader(filepath, std::ios::binary | std::ios::ate);
@@ -149,6 +147,7 @@ namespace At0::Ray
 		public:
 			void Emplace(const UniformData& data) { m_Uniforms.emplace_back(data); }
 			const Uniforms::UniformData* Get(std::string_view uniformName) const;
+			bool HasUniform(std::string_view name) const;
 
 			const auto begin() const { return m_Uniforms.begin(); }
 			const auto end() const { return m_Uniforms.end(); }
@@ -201,6 +200,8 @@ namespace At0::Ray
 		public:
 			void Emplace(const UniformBlockData& data) { m_UniformBlocks.emplace_back(data); }
 			const UniformBlocks::UniformBlockData* Get(std::string_view uniformBlockName) const;
+			bool HasUniformBlock(std::string_view name) const;
+			bool HasUniform(std::string_view name) const;
 
 			const auto begin() const { return m_UniformBlocks.begin(); }
 			const auto end() const { return m_UniformBlocks.end(); }
@@ -223,10 +224,8 @@ namespace At0::Ray
 
 		void CreateReflection();
 
-		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributeDescriptions() const;
-		std::vector<VkVertexInputBindingDescription> GetVertexInputBindingDescriptions(
-			uint32_t binding = 0) const;
-		const VertexLayout& GetVertexLayout() const { return *m_VertexLayout; }
+		bool HasUniform(std::string_view name, Shader::Stage stage) const;
+
 		static Shader::Stage ToShaderStage(VkShaderStageFlags stageFlags);
 		static VkShaderStageFlags ToVkShaderStage(Shader::Stage stageFlags);
 
@@ -258,7 +257,6 @@ namespace At0::Ray
 		};
 
 		std::unordered_map<Shader::Stage, ShaderData> m_ShaderData;
-		Scope<VertexLayout> m_VertexLayout;
 
 		std::unordered_map<uint32_t, std::vector<VkDescriptorSetLayoutBinding>>
 			m_DescriptorSetLayoutBindings;

@@ -1,7 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RModel.h"
 
-#include "Graphics/RVertex.h"
 #include "Graphics/RCodex.h"
 #include "Utils/RLogger.h"
 #include "Utils/RException.h"
@@ -19,201 +18,109 @@
 
 namespace At0::Ray
 {
-	Model::Model(std::string_view filepath, Material::Config& config, Model::Flags flags,
-		std::optional<Material> material)
-	{
-		Log::Info("[Model] Importing model \"{0}\"", filepath);
+	// Model::Model(std::string_view filepath)
+	//{
+	//	Log::Info("[Model] Importing model \"{0}\"", filepath);
 
-		const aiScene* pScene = nullptr;
-		Assimp::Importer imp;
-		if (flags & Model::NoNormals)
-		{
-			pScene = imp.ReadFile(filepath.data(),
-				aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
-					aiProcess_ConvertToLeftHanded |
-					(aiProcess_CalcTangentSpace ? (flags & Model::NoNormalMap) == 0 : 0));
-		}
-		else
-		{
-			pScene = imp.ReadFile(filepath.data(),
-				aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_GenNormals |
-					(aiProcess_CalcTangentSpace ? (flags & Model::NoNormalMap) == 0 : 0));
-		}
+	//	const aiScene* pScene = nullptr;
+	//	Assimp::Importer imp;
+	//	pScene = imp.ReadFile(filepath.data(),
+	//		aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
+	//			aiProcess_ConvertToLeftHanded |
+	//			(aiProcess_CalcTangentSpace ? (flags & Model::NoNormalMap) == 0 : 0));
 
-		if (!pScene)
-			RAY_THROW_RUNTIME("[Model] Failed to load: \"{0}\"", imp.GetErrorString());
+	//	if (!pScene)
+	//		RAY_THROW_RUNTIME("[Model] Failed to load: \"{0}\"", imp.GetErrorString());
 
-		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
-		{
-			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials, flags, material, config);
-		}
-	}
+	//	for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
+	//	{
+	//		ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials);
+	//	}
+	//}
 
-	Model::~Model() {}
+	// Model::~Model() {}
 
-	std::string Model::GetUID(std::string_view filepath, Material::Config& config,
-		Model::Flags flags, std::optional<Material> material)
-	{
-		// RAY_TODO: Take custom material into account
-		std::ostringstream oss;
-		oss << filepath << "#" << (uint32_t)flags;
-		return oss.str();
-	}
+	// std::string Model::GetUID(std::string_view filepath)
+	//{
+	//	// RAY_TODO: Take custom material into account
+	//	std::ostringstream oss;
+	//	oss << filepath;
+	//	return oss.str();
+	//}
 
-	void Model::ParseMesh(std::string_view base, const aiMesh& mesh,
-		const aiMaterial* const* pMaterials, Model::Flags flags, std::optional<Material> material,
-		Material::Config& config)
-	{
-		Log::Info("[Model] Parsing mesh \"{0}\"", mesh.mName.C_Str());
+	// void Model::ParseMesh(
+	//	std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials)
+	//{
+	//	Log::Info("[Model] Parsing mesh \"{0}\"", mesh.mName.C_Str());
 
-		using namespace std::string_literals;
-		const std::string meshTag =
-			std::string(base) + "%"s + mesh.mName.C_Str() + std::to_string((uint32_t)flags);
-
-		bool hasNormalMap = HasNormalMap(mesh, pMaterials, material);
-
-		VertexLayout layout{};
-		layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Position
-
-		if ((flags & Model::NoTextureCoordinates) == 0)
-			layout.Append(VK_FORMAT_R32G32_SFLOAT);	 // Texture coordinate
-		if ((flags & Model::NoNormals) == 0)
-			layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Normal
-		if ((flags & Model::NoNormalMap) == 0 && hasNormalMap)
-			layout.Append(VK_FORMAT_R32G32B32_SFLOAT);	// Tangent space
-		else
-			hasNormalMap = false;
+	//	using namespace std::string_literals;
+	//	const std::string meshTag = std::string(base) + "%"s + mesh.mName.C_Str();
 
 
-		VertexInput vertexInput(layout);
+	//	std::vector<IndexBuffer::Type> indices;
+	//	indices.reserve(mesh.mNumFaces * 3);
 
-		for (uint32_t i = 0; i < mesh.mNumVertices; ++i)
-		{
-			if (flags & Model::NoTextureCoordinates && flags & Model::NoNormals)
-				vertexInput.Emplace(
-					Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z));
+	//	for (uint32_t i = 0; i < mesh.mNumFaces; ++i)
+	//	{
+	//		const auto& face = mesh.mFaces[i];
+	//		RAY_MEXPECTS(face.mNumIndices == 3, "[Model] Was not triangulated");
+	//		indices.emplace_back(face.mIndices[0]);
+	//		indices.emplace_back(face.mIndices[1]);
+	//		indices.emplace_back(face.mIndices[2]);
+	//	}
 
-			else if (flags & Model::NoTextureCoordinates && flags & Model::NoNormals)
-				vertexInput.Emplace(
-					Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z));
+	//	std::string basePath = std::filesystem::path(base).remove_filename().string();
 
-			else if (flags & Model::NoTextureCoordinates)
-				vertexInput.Emplace(
-					Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z),
-					Float3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z));
+	//	// RAY_TODO:
+	//	Scene hierachy if (m_RootMesh)
+	//	{
+	//		m_RootMesh->children.emplace_back(MeshData{
+	//			Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
+	//			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)),
+	//			material ? *material : CreateMaterial(basePath, mesh, pMaterials, flags, config) });
+	//	}
+	//	else
+	//	{
+	//		m_RootMesh = MeshData{ Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
+	//			Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)),
+	//			material ? *material : CreateMaterial(basePath, mesh, pMaterials, flags, config) };
+	//	}
+	//}
 
-			else if (flags & Model::NoNormals)
-				vertexInput.Emplace(
-					Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z),
-					Float2(mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y));
+	// Material Model::CreateMaterial(const std::string& basePath, const aiMesh& mesh)
+	//{
+	//	aiString diffuseTexFileName;
+	//	aiString specularTexFileName;
+	//	aiString normalTexFileName;
 
-			else if (hasNormalMap)
-				vertexInput.Emplace(
-					Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z),
-					Float2(mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y),
-					Float3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z),
-					Float3(mesh.mTangents[i].x, mesh.mTangents[i].y, mesh.mTangents[i].z));
+	//	Ref<Texture2D> diffuseMap = nullptr;
+	//	Ref<Texture2D> specularMap = nullptr;
+	//	Ref<Texture2D> normalMap = nullptr;
 
-			else
-				vertexInput.Emplace(
-					Float3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z),
-					Float2(mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y),
-					Float3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z));
-		}
+	//	if (pMaterials[mesh.mMaterialIndex]->GetTexture(
+	//			aiTextureType_DIFFUSE, 0, &diffuseTexFileName) == aiReturn_SUCCESS &&
+	//		(flags & Model::NoDiffuseMap) == 0 && !config.diffuseMap.value)
+	//	{
+	//		diffuseMap = MakeRef<Texture2D>(basePath + diffuseTexFileName.C_Str());
+	//		config.diffuseMap = diffuseMap;
+	//	}
 
-		std::vector<IndexBuffer::Type> indices;
-		indices.reserve(mesh.mNumFaces * 3);
+	//	if (pMaterials[mesh.mMaterialIndex]->GetTexture(
+	//			aiTextureType_SPECULAR, 0, &specularTexFileName) == aiReturn_SUCCESS &&
+	//		(flags & Model::NoSpecularMap) == 0 && !config.specularMap.value)
+	//	{
+	//		specularMap = MakeRef<Texture2D>(basePath + specularTexFileName.C_Str());
+	//		config.specularMap = specularMap;
+	//	}
 
-		for (uint32_t i = 0; i < mesh.mNumFaces; ++i)
-		{
-			const auto& face = mesh.mFaces[i];
-			RAY_MEXPECTS(face.mNumIndices == 3, "[Model] Was not triangulated");
-			indices.emplace_back(face.mIndices[0]);
-			indices.emplace_back(face.mIndices[1]);
-			indices.emplace_back(face.mIndices[2]);
-		}
+	//	if (pMaterials[mesh.mMaterialIndex]->GetTexture(
+	//			aiTextureType_NORMALS, 0, &normalTexFileName) == aiReturn_SUCCESS &&
+	//		(flags & Model::NoNormalMap) == 0 && !config.normalMap.value)
+	//	{
+	//		normalMap = MakeRef<Texture2D>(basePath + normalTexFileName.C_Str());
+	//		config.normalMap = normalMap;
+	//	}
 
-		std::string basePath = std::filesystem::path(base).remove_filename().string();
-
-		// RAY_TODO: Scene hierachy
-		if (m_RootMesh)
-		{
-			m_RootMesh->children.emplace_back(MeshData{
-				Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
-				Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)),
-				material ? *material : CreateMaterial(basePath, mesh, pMaterials, flags, config) });
-		}
-		else
-		{
-			m_RootMesh = MeshData{ Codex::Resolve<VertexBuffer>(meshTag, std::move(vertexInput)),
-				Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)),
-				material ? *material : CreateMaterial(basePath, mesh, pMaterials, flags, config) };
-		}
-	}
-
-	Material Model::CreateMaterial(const std::string& basePath, const aiMesh& mesh,
-		const aiMaterial* const* pMaterials, Model::Flags flags, Material::Config& config)
-	{
-		aiString diffuseTexFileName;
-		aiString specularTexFileName;
-		aiString normalTexFileName;
-
-		Ref<Texture2D> diffuseMap = nullptr;
-		Ref<Texture2D> specularMap = nullptr;
-		Ref<Texture2D> normalMap = nullptr;
-
-#ifndef NDEBUG
-		if ((flags & Model::NoDiffuseMap) != 0)
-			Log::Debug("[Model] Diffuse map for model \"{0}\" disabled.", basePath);
-
-		if ((flags & Model::NoSpecularMap) != 0)
-			Log::Debug("[Model] Diffuse map for model \"{0}\" disabled.", basePath);
-
-		if ((flags & Model::NoNormalMap) != 0)
-			Log::Debug("[Model] Diffuse map for model \"{0}\" disabled.", basePath);
-#endif
-
-		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
-				aiTextureType_DIFFUSE, 0, &diffuseTexFileName) == aiReturn_SUCCESS &&
-			(flags & Model::NoDiffuseMap) == 0 && !config.diffuseMap.value)
-		{
-			diffuseMap = MakeRef<Texture2D>(basePath + diffuseTexFileName.C_Str());
-			config.diffuseMap = diffuseMap;
-		}
-
-		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
-				aiTextureType_SPECULAR, 0, &specularTexFileName) == aiReturn_SUCCESS &&
-			(flags & Model::NoSpecularMap) == 0 && !config.specularMap.value)
-		{
-			specularMap = MakeRef<Texture2D>(basePath + specularTexFileName.C_Str());
-			config.specularMap = specularMap;
-		}
-
-		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
-				aiTextureType_NORMALS, 0, &normalTexFileName) == aiReturn_SUCCESS &&
-			(flags & Model::NoNormalMap) == 0 && !config.normalMap.value)
-		{
-			normalMap = MakeRef<Texture2D>(basePath + normalTexFileName.C_Str());
-			config.normalMap = normalMap;
-		}
-
-		return Material{ config };
-	}
-
-	bool Model::HasNormalMap(
-		const aiMesh& mesh, const aiMaterial* const* pMaterials, std::optional<Material> material)
-	{
-		aiString normalTexFileName("");
-		aiReturn ret = pMaterials[mesh.mMaterialIndex]->GetTexture(
-			aiTextureType_NORMALS, 0, &normalTexFileName);
-
-// RAY_TODO: Check if std::optional<Material> material has normal map
-#ifndef NDEBUG
-		if (material)
-			Log::Error("[Model] Missing implementation to check for the existence of a normal map "
-					   "in a custom material");
-#endif
-
-		return ret == aiReturn_SUCCESS || normalTexFileName.length != 0;
-	}
+	//	return Material{ config };
+	//}
 }  // namespace At0::Ray

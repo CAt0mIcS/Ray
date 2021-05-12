@@ -5,10 +5,7 @@
 
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
-#include "../Graphics/Pipelines/Uniforms/RBufferUniform.h"
-#include "../Graphics/Pipelines/Uniforms/RSamplerUniform.h"
 #include "../Utils/RModel.h"
-#include "../Graphics/RVertex.h"
 #include "../Graphics/RCodex.h"
 
 #include <type_traits>
@@ -30,37 +27,26 @@ namespace At0::Ray
 
 	public:
 		Mesh(Entity entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
-			Material material, std::vector<MeshData> children = {});
+			Ref<Material> material, std::vector<MeshData> children = {});
 		Mesh(Entity entity, MeshData data);
 
-		static MeshData Triangle(Material material);
-		static MeshData Plane(Material material, Vertex::Flags vertexFlags = Vertex::Position3D);
+		// static MeshData Triangle(Ref<Material> material);
+		// static MeshData Plane(Material material);
 		// static MeshData HalfCircle(
 		//	int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
 		// static MeshData Circle(
 		//	int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
 
-		static MeshData Cube(Material material, Vertex::Flags vertexFlags = Vertex::Position3D);
+		// static MeshData Cube(Ref<Material> material);
 		// static MeshData IcoSphere(
 		//	Material material, Vertex::Flags vertexFlags = Vertex::Position3D);
-		static MeshData UVSphere(Material material, float radius = 1.0f, int latDiv = 12,
-			int longDiv = 24, Vertex::Flags vertexFlags = Vertex::Position3D);
+		// static MeshData UVSphere(Material material, float radius = 1.0f, int latDiv = 12,
+		//	int longDiv = 24);
 		// static MeshData Cylinder(
 		//	int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
 		// static MeshData Vector(const Float3& headPos, float lineWidth = 1.0f,
 		//	const Shaders& shaders = s_DefaultShaders);
-		template<typename... MaterialArgs>
-		static MeshData Import(std::string_view filepath, Model::Flags flags = Model::Unspecified,
-			std::optional<Material> material = std::nullopt, MaterialArgs&&... args)
-		{
-			Material::Config config{};
-			(Material::FillConfig(config, args), ...);
-			return Import(filepath, config, flags, material);
-		}
-
-		static MeshData Import(std::string_view filepath, Material::Config& config,
-			Model::Flags flags = Model::Unspecified,
-			std::optional<Material> material = std::nullopt);
+		// static MeshData Import(std::string_view filepath);
 
 		/**
 		 * @returns The root transform of this mesh
@@ -91,17 +77,17 @@ namespace At0::Ray
 		/**
 		 * @returns The material this mesh is using
 		 */
-		const Material& GetMaterial() const { return m_Material; }
+		const Material& GetMaterial() const { return *m_Material; }
 
 		/**
 		 * @returns The material this mesh is using
 		 */
-		Material& GetMaterial() { return m_Material; }
+		Material& GetMaterial() { return *m_Material; }
 
 		/**
 		 * Sets a new material for the mesh
 		 */
-		void SetMaterial(Material material) { m_Material = std::move(material); }
+		void SetMaterial(Ref<Material> material) { m_Material = std::move(material); }
 
 		~Mesh();
 		Mesh& operator=(Mesh&& other) noexcept;
@@ -113,7 +99,7 @@ namespace At0::Ray
 	private:
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;
 		Ref<IndexBuffer> m_IndexBuffer = nullptr;
-		Material m_Material;
+		Ref<Material> m_Material;
 
 		std::vector<Mesh> m_Children;
 

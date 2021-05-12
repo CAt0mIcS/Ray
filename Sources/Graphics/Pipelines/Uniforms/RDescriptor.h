@@ -10,6 +10,9 @@
 
 namespace At0::Ray
 {
+	class BufferUniform;
+	class Sampler2DUniform;
+
 	class DescriptorSet : public Bindable, NonCopyable
 	{
 	public:
@@ -24,13 +27,12 @@ namespace At0::Ray
 		static void Update(const std::vector<VkWriteDescriptorSet>& descriptorWrites);
 		uint32_t GetSetNumber() const { return m_SetNumber; }
 
-		operator const VkDescriptorSet&() const { return m_DescriptorSet; }
+		void BindUniform(const BufferUniform& uniform);
+		void BindUniform(const Sampler2DUniform& uniform);
 
+		operator const VkDescriptorSet&() const { return m_DescriptorSet; }
 		DescriptorSet& operator=(DescriptorSet&& other) noexcept;
 		DescriptorSet(DescriptorSet&& other) noexcept;
-
-		DescriptorSet& operator=(const DescriptorSet& other);
-		DescriptorSet(const DescriptorSet& other);
 
 	private:
 		VkDescriptorSet m_DescriptorSet = VK_NULL_HANDLE;
