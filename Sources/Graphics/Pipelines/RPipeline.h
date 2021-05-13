@@ -33,18 +33,18 @@ namespace At0::Ray
 		virtual Pipeline::BindPoint GetBindPoint() const = 0;
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
 
-		const Shader& GetShader() const { return m_Shader; }
+		const Shader& GetShader() const { return *m_Shader; }
 		const VkPipelineLayout& GetLayout() const { return m_Layout; }
 
 		operator const VkPipeline&() const { return m_Pipeline; }
 
 	protected:
-		Pipeline() = default;
+		Pipeline(std::vector<std::string> shaders);
 
 	protected:
 		VkPipeline m_Pipeline = VK_NULL_HANDLE;
 		VkPipelineLayout m_Layout = VK_NULL_HANDLE;
 
-		Shader m_Shader;
+		Ref<Shader> m_Shader;
 	};
 }  // namespace At0::Ray

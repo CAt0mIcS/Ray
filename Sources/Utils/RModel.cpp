@@ -21,6 +21,8 @@ namespace At0::Ray
 {
 	Model::Model(std::string_view filepath, Material::Layout layout)
 	{
+		m_Data.layout = std::move(layout);
+
 		Log::Info("[Model] Importing model \"{0}\"", filepath);
 
 		const aiScene* pScene = nullptr;
@@ -34,7 +36,7 @@ namespace At0::Ray
 
 		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
 		{
-			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials, std::move(layout));
+			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials);
 		}
 	}
 
@@ -48,8 +50,8 @@ namespace At0::Ray
 		return oss.str();
 	}
 
-	void Model::ParseMesh(std::string_view base, const aiMesh& mesh,
-		const aiMaterial* const* pMaterials, Material::Layout layout)
+	void Model::ParseMesh(
+		std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials)
 	{
 		Log::Info("[Model] Parsing mesh \"{0}\"", mesh.mName.C_Str());
 
@@ -57,8 +59,8 @@ namespace At0::Ray
 		const std::string meshTag = std::string(base) + "%"s + mesh.mName.C_Str();
 		std::string basePath = std::filesystem::path(base).remove_filename().string();
 
-		Ref<Material> material = CreateMaterial(basePath, mesh, pMaterials, std::move(layout));
-		DynamicVertex vertices(material->GetGraphicsPipeline()->GetShader());
+		m_Data.layout = CreateMaterial(basePath, mesh, pMaterials, std::move(m_Data.layout));
+		DynamicVertex vertices(*Codex::Resolve<Shader>(m_Data.layout.shaders));
 
 		bool hasPos = vertices.Has(AttributeMap<AttributeType::Position>::Semantic);
 		bool hasUV = vertices.Has(AttributeMap<AttributeType::UV>::Semantic);
@@ -98,20 +100,23 @@ namespace At0::Ray
 
 
 		// RAY_TODO: Scene hierachy
-		if (m_RootMesh)
+		if (!m_Data.vertexBuffer || !m_Data.indexBuffer)
 		{
-			m_RootMesh->children.emplace_back(MeshData{
-				Codex::Resolve<VertexBuffer>(meshTag, std::move(vertices)),
-				Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)), std::move(material) });
+			m_Data.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, std::move(vertices));
+			m_Data.indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, std::move(indices));
 		}
 		else
 		{
-			m_RootMesh = MeshData{ Codex::Resolve<VertexBuffer>(meshTag, std::move(vertices)),
-				Codex::Resolve<IndexBuffer>(meshTag, std::move(indices)), std::move(material) };
+			Model::Data data{};
+			data.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, std::move(vertices));
+			data.indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, std::move(indices));
+			data.layout = m_Data.layout;
+
+			m_Data.children.emplace_back(data);
 		}
 	}
 
-	Ref<Material> Model::CreateMaterial(const std::string& basePath, const aiMesh& mesh,
+	Material::Layout Model::CreateMaterial(const std::string& basePath, const aiMesh& mesh,
 		const aiMaterial* const* pMaterials, Material::Layout layout)
 	{
 		aiString diffuseTexFileName;
@@ -146,6 +151,6 @@ namespace At0::Ray
 			layout.normalMap = normalMap;
 		}
 
-		return MakeRef<Material>(layout);
+		return layout;
 	}
 }  // namespace At0::Ray

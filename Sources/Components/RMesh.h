@@ -19,6 +19,14 @@ namespace At0::Ray
 	class CommandBuffer;
 	class Texture2D;
 
+	struct MeshData
+	{
+		Ref<VertexBuffer> vertexBuffer;
+		Ref<IndexBuffer> indexBuffer;
+		Ref<Material> material;
+		std::vector<MeshData> children;
+	};
+
 
 	class RAY_EXPORT Mesh : public Component
 	{

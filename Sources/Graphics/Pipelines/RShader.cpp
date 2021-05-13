@@ -62,7 +62,7 @@ namespace At0::Ray
 	};
 
 
-	Shader::Shader()
+	Shader::Shader(std::vector<std::string> shaders)
 	{
 		static bool glslangInitialized = false;
 		if (!glslangInitialized)
@@ -70,6 +70,16 @@ namespace At0::Ray
 			glslang::InitializeProcess();
 			glslangInitialized = true;
 		}
+
+		for (const std::string& shader : shaders)
+		{
+			VkShaderStageFlags vkShaderStage = GetShaderStage(shader);
+			Shader::Stage shaderStage = ToShaderStage(vkShaderStage);
+
+			m_Shaders[shaderStage] = shader;
+			m_ShaderModules[shaderStage] = CreateShaderModule("", vkShaderStage);
+		}
+		CreateReflection();
 	}
 
 	Shader::~Shader() {}
@@ -250,9 +260,13 @@ namespace At0::Ray
 		return EShLangAnyHit;
 	}
 
-	VkShaderModule Shader::CreateShaderModule(const std::filesystem::path& moduleName,
-		std::string_view moduleCode, std::string_view preamble, VkShaderStageFlags moduleFlag)
+	VkShaderModule Shader::CreateShaderModule(
+		std::string_view preamble, VkShaderStageFlags moduleFlag)
 	{
+		std::string moduleName = m_Shaders[ToShaderStage(moduleFlag)];
+		std::optional<std::string> moduleCode = ReadFile(moduleName);
+		RAY_MEXPECTS(moduleCode, "[Shader] Failed to read file \"{0}\"", moduleName);
+
 		// Convert GLSL to SPIRV
 		EShLanguage language = GetEShLanguage(moduleFlag);
 
@@ -266,9 +280,8 @@ namespace At0::Ray
 		messages = EShMessages(messages | EShMsgDebugInfo);
 #endif
 
-		std::string shaderName = moduleName.string();
-		const char* shaderNameCstr = shaderName.c_str();
-		const char* shaderSource = moduleCode.data();
+		const char* shaderNameCstr = moduleName.c_str();
+		const char* shaderSource = (*moduleCode).data();
 		shader.setStringsWithLengthsAndNames(&shaderSource, nullptr, &shaderNameCstr, 1);
 		shader.setPreamble(preamble.data());
 
@@ -636,7 +649,7 @@ namespace At0::Ray
 		return Stage::Vertex;
 	}
 
-	VkShaderStageFlags Shader::ToVkShaderStage(Shader::Stage stageFlags)
+	VkShaderStageFlagBits Shader::ToVkShaderStage(Shader::Stage stageFlags)
 	{
 		switch (stageFlags)
 		{
@@ -736,6 +749,15 @@ namespace At0::Ray
 		uint32_t binding) const
 	{
 		return DynamicVertex{ *this }.GetVertexInputAttributes(binding);
+	}
+
+	std::string Shader::GetUID(const std::vector<std::string>& shaders)
+	{
+		std::ostringstream oss;
+		oss << "Shader";
+		for (const std::string& str : shaders)
+			oss << "#" << str;
+		return oss.str();
 	}
 
 	void Shader::LoadUniform(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i)

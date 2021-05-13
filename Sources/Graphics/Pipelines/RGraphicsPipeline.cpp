@@ -14,9 +14,8 @@
 
 namespace At0::Ray
 {
-	GraphicsPipeline::GraphicsPipeline(const Layout& layout)
+	GraphicsPipeline::GraphicsPipeline(const Layout& layout) : Pipeline(layout.shaders)
 	{
-		CreateShaderProgram(layout.shaders);
 		CreateDescriptorSetLayouts();
 		CreateDescriptorPool();
 		CreatePipelineLayout();
@@ -58,40 +57,9 @@ namespace At0::Ray
 		return oss.str();
 	}
 
-	void GraphicsPipeline::CreateShaderProgram(const std::vector<std::string>& shaders)
-	{
-		// std::ostringstream defineBlock;
-		// for (const auto& [defineName, defineValue] : m_Defines)
-		//	defineBlock << "#define " << defineName << " " << defineValue << '\n';
-
-		for (std::string_view shader : shaders)
-		{
-			auto path = std::filesystem::absolute(shader);
-			std::optional<std::string> shaderCode = ReadFile(shader);
-			if (!shaderCode)
-				RAY_THROW_RUNTIME("[Shader] Could not find file {0}", shader);
-			Log::Info("[GraphicsPipeline] Loading shader \"{0}\"", shader);
-
-			VkShaderStageFlagBits stageFlag = Shader::GetShaderStage(shader);
-
-			VkShaderModule shaderModule = m_Shader.CreateShaderModule(
-				shader, *shaderCode, /*defineBlock.str()*/ "", stageFlag);
-
-			VkPipelineShaderStageCreateInfo pipelineShaderStageCreateInfo{};
-			pipelineShaderStageCreateInfo.sType =
-				VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-			pipelineShaderStageCreateInfo.stage = stageFlag;
-			pipelineShaderStageCreateInfo.module = shaderModule;
-			pipelineShaderStageCreateInfo.pName = "main";
-			m_ShaderStages.emplace_back(pipelineShaderStageCreateInfo);
-		}
-
-		m_Shader.CreateReflection();
-	}
-
 	void GraphicsPipeline::CreateDescriptorSetLayouts()
 	{
-		const auto& descriptorSetLayoutBindings = m_Shader.GetDescriptorSetLayoutBindings();
+		const auto& descriptorSetLayoutBindings = m_Shader->GetDescriptorSetLayoutBindings();
 
 		m_DescriptorSetLayouts.resize(descriptorSetLayoutBindings.size());
 		uint32_t i = 0;
@@ -121,7 +89,7 @@ namespace At0::Ray
 	void GraphicsPipeline::CreateDescriptorPool()
 	{
 		const std::vector<VkDescriptorPoolSize>& descriptorPoolSizes =
-			m_Shader.GetDescriptorPoolSizes();
+			m_Shader->GetDescriptorPoolSizes();
 
 		VkDescriptorPoolCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -139,7 +107,7 @@ namespace At0::Ray
 	void GraphicsPipeline::CreatePipelineLayout()
 	{
 		const std::vector<VkPushConstantRange>& pushConstantRanges =
-			m_Shader.GetPushConstantRanges();
+			m_Shader->GetPushConstantRanges();
 
 		// Move descriptor set layouts from std::vector<std::pair<>> to std::vector<>
 		std::vector<VkDescriptorSetLayout> descSetLayouts;
@@ -172,11 +140,11 @@ namespace At0::Ray
 		if (layout.bindingDescriptions)
 			bindingDescs = *layout.bindingDescriptions;
 		else
-			bindingDescs = m_Shader.GetVertexInputBindings();
+			bindingDescs = m_Shader->GetVertexInputBindings();
 		if (layout.attributeDescriptions)
 			attribDescs = *layout.attributeDescriptions;
 		else
-			attribDescs = m_Shader.GetVertexInputAttributes();
+			attribDescs = m_Shader->GetVertexInputAttributes();
 
 		VkPipelineVertexInputStateCreateInfo vertexInput{};
 		vertexInput.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -184,6 +152,25 @@ namespace At0::Ray
 		vertexInput.pVertexBindingDescriptions = bindingDescs.data();
 		vertexInput.vertexAttributeDescriptionCount = (uint32_t)attribDescs.size();
 		vertexInput.pVertexAttributeDescriptions = attribDescs.data();
+
+		std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
+		// Create shader module structs
+		for (const auto& [stage, filepath] : m_Shader->GetShaders())
+		{
+			// std::ostringstream defineBlock;
+			// for (const auto& [defineName, defineValue] : m_Defines)
+			//	defineBlock << "#define " << defineName << " " << defineValue << '\n';
+
+			Log::Info("[GraphicsPipeline] Loading shader \"{0}\"", filepath);
+
+			VkPipelineShaderStageCreateInfo pipelineShaderStageCreateInfo{};
+			pipelineShaderStageCreateInfo.sType =
+				VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+			pipelineShaderStageCreateInfo.stage = Shader::ToVkShaderStage(stage);
+			pipelineShaderStageCreateInfo.module = m_Shader->GetShaderModules()[stage];
+			pipelineShaderStageCreateInfo.pName = "main";
+			shaderStages.emplace_back(pipelineShaderStageCreateInfo);
+		}
 
 
 		// ---------------------------------------------------------------------------------------
@@ -286,8 +273,8 @@ namespace At0::Ray
 		VkGraphicsPipelineCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 		createInfo.flags = 0;
-		createInfo.stageCount = (uint32_t)m_ShaderStages.size();
-		createInfo.pStages = m_ShaderStages.data();
+		createInfo.stageCount = (uint32_t)shaderStages.size();
+		createInfo.pStages = shaderStages.data();
 		createInfo.pVertexInputState = &vertexInput;
 		createInfo.pInputAssemblyState = &inputAssembler;
 		createInfo.pTessellationState = nullptr;
@@ -298,7 +285,7 @@ namespace At0::Ray
 		createInfo.pColorBlendState = &colorBlending;
 		createInfo.pDynamicState = &dynamicStateInfo;
 		createInfo.layout = m_Layout;
-		createInfo.renderPass = layout.renderPass;
+		createInfo.renderPass = *layout.renderPass;
 		createInfo.subpass = 0;	 // Index of subpass used with pipeline;
 		createInfo.basePipelineHandle = VK_NULL_HANDLE;
 		createInfo.basePipelineIndex = -1;
@@ -308,10 +295,7 @@ namespace At0::Ray
 			"[GraphicsPipeline] Failed to create");
 
 		// Destroy shader modules as they aren't needed anymore
-		for (const VkPipelineShaderStageCreateInfo& shaderStage : m_ShaderStages)
+		for (const VkPipelineShaderStageCreateInfo& shaderStage : shaderStages)
 			vkDestroyShaderModule(Graphics::Get().GetDevice(), shaderStage.module, nullptr);
-
-		// These vectors aren't needed anymore and can be freed
-		m_ShaderStages.resize(0);
 	}
 }  // namespace At0::Ray

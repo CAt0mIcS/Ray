@@ -47,12 +47,28 @@ namespace At0::Ray
 			Codex::Resolve<VertexBuffer>(plane.uniqueTag, plane.vertices);
 		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(plane.uniqueTag, plane.indices);
 
-		return { vertexBuffer, indexBuffer, material };
+		return { vertexBuffer, indexBuffer, std::move(material) };
+	}
+
+	// Recursively emplace children into MeshData.
+	static std::vector<MeshData> EmplaceChildren(const std::vector<Model::Data>& model)
+	{
+		std::vector<MeshData> children;
+		for (const Model::Data& child : model)
+		{
+			children.emplace_back(child.vertexBuffer, child.indexBuffer,
+				MakeRef<Material>(child.layout), EmplaceChildren(child.children));
+		}
+		return children;
 	}
 
 	MeshData Mesh::Import(std::string_view filepath, Material::Layout layout)
 	{
-		return { Codex::Resolve<Model>(filepath, std::move(layout))->GetMesh() };
+		Ref<Model> model = Codex::Resolve<Model>(filepath, std::move(layout));
+
+		return { model->GetData().vertexBuffer, model->GetData().indexBuffer,
+			MakeRef<Material>(model->GetData().layout),
+			EmplaceChildren(model->GetData().children) };
 	}
 
 	void Mesh::Update(Delta ts)

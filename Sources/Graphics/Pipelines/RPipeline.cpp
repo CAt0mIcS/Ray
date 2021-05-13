@@ -4,6 +4,7 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Commands/RCommandBuffer.h"
+#include "Graphics/RCodex.h"
 
 
 namespace At0::Ray
@@ -17,5 +18,10 @@ namespace At0::Ray
 	void Pipeline::CmdBind(const CommandBuffer& cmdBuff) const
 	{
 		vkCmdBindPipeline(cmdBuff, (VkPipelineBindPoint)GetBindPoint(), m_Pipeline);
+	}
+
+	Pipeline::Pipeline(std::vector<std::string> shaders)
+		: m_Shader(Codex::Resolve<Shader>(std::move(shaders)))
+	{
 	}
 }  // namespace At0::Ray

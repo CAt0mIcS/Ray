@@ -19,18 +19,17 @@ namespace At0::Ray
 	class VertexBuffer;
 	class IndexBuffer;
 
-	// RAY_TODO: Move somewhere else
-	struct MeshData
-	{
-		Ref<VertexBuffer> vertexBuffer;
-		Ref<IndexBuffer> indexBuffer;
-		Ref<Material> material;
-		std::vector<MeshData> children;
-	};
-
-
 	class RAY_EXPORT Model
 	{
+	public:
+		struct Data
+		{
+			Ref<VertexBuffer> vertexBuffer;
+			Ref<IndexBuffer> indexBuffer;
+			Material::Layout layout;
+			std::vector<Model::Data> children;
+		};
+
 	public:
 		Model(std::string_view filepath, Material::Layout layout);
 		~Model();
@@ -38,17 +37,17 @@ namespace At0::Ray
 		Model& operator=(Model&& other) noexcept = default;
 		Model(Model&& other) noexcept = default;
 
-		MeshData& GetMesh() { return *m_RootMesh; }
+		const Model::Data& GetData() const { return m_Data; }
 
 		static std::string GetUID(std::string_view filepath, Material::Layout layout);
 
 	private:
-		void ParseMesh(std::string_view base, const aiMesh& mesh,
-			const aiMaterial* const* pMaterials, Material::Layout layout);
-		static Ref<Material> CreateMaterial(const std::string& basePath, const aiMesh& mesh,
+		void ParseMesh(
+			std::string_view base, const aiMesh& mesh, const aiMaterial* const* pMaterials);
+		static Material::Layout CreateMaterial(const std::string& basePath, const aiMesh& mesh,
 			const aiMaterial* const* pMaterials, Material::Layout layout);
 
 	private:
-		std::optional<MeshData> m_RootMesh;
+		Model::Data m_Data;
 	};
 }  // namespace At0::Ray

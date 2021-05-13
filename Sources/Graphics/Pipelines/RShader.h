@@ -214,21 +214,17 @@ namespace At0::Ray
 		};
 
 	public:
-		Shader();
+		Shader(std::vector<std::string> shaders);
 		~Shader();
 
 		static VkFormat GlTypeToVkFormat(int32_t type);
-		VkShaderModule CreateShaderModule(const std::filesystem::path& moduleName,
-			std::string_view moduleCode, std::string_view preamble, VkShaderStageFlags moduleFlag);
 		static VkShaderStageFlagBits GetShaderStage(const std::filesystem::path& filepath);
 		static uint32_t SizeOf(VkFormat format);
-
-		void CreateReflection();
 
 		bool HasUniform(std::string_view name, Shader::Stage stage) const;
 
 		static Shader::Stage ToShaderStage(VkShaderStageFlags stageFlags);
-		static VkShaderStageFlags ToVkShaderStage(Shader::Stage stageFlags);
+		static VkShaderStageFlagBits ToVkShaderStage(Shader::Stage stageFlags);
 
 		const Shader::UniformBlocks* GetUniformBlocks(Shader::Stage stage) const;
 		const Shader::Uniforms* GetUniforms(Shader::Stage stage) const;
@@ -238,13 +234,19 @@ namespace At0::Ray
 		const auto& GetDescriptorSetLayoutBindings() const { return m_DescriptorSetLayoutBindings; }
 		const auto& GetDescriptorPoolSizes() const { return m_DescriptorPoolSizes; }
 		std::vector<VkPushConstantRange> GetPushConstantRanges() const;
+		const auto& GetShaders() const { return m_Shaders; }
+		auto& GetShaderModules() { return m_ShaderModules; }
 
 		std::vector<VkVertexInputBindingDescription> GetVertexInputBindings(
 			uint32_t binding = 0) const;
 		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributes(
 			uint32_t binding = 0) const;
 
+		static std::string GetUID(const std::vector<std::string>& shaders);
+
 	private:
+		VkShaderModule CreateShaderModule(std::string_view preamble, VkShaderStageFlags moduleFlag);
+		void CreateReflection();
 		void LoadUniform(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i);
 		void LoadUniformBlock(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i);
 		void LoadAttribute(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i);
@@ -256,6 +258,9 @@ namespace At0::Ray
 			VkDescriptorType type);
 
 	private:
+		std::unordered_map<Shader::Stage, std::string> m_Shaders;
+		std::unordered_map<Shader::Stage, VkShaderModule> m_ShaderModules;
+
 		struct ShaderData
 		{
 			Attributes attributes;

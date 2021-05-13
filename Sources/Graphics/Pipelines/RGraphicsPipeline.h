@@ -18,7 +18,7 @@ namespace At0::Ray
 	public:
 		struct Layout
 		{
-			const RenderPass& renderPass = Graphics::Get().GetRenderPass();
+			const RenderPass* renderPass = &Graphics::Get().GetRenderPass();
 			std::vector<std::string> shaders;
 			VkPipelineCache pipelineCache = Graphics::Get().GetPipelineCache();
 			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT;
@@ -44,15 +44,13 @@ namespace At0::Ray
 		static std::string GetUID(const Layout& layout);
 
 	private:
-		void CreateShaderProgram(const std::vector<std::string>& shaders);
+		void CreateShaderProgram(std::string_view filepath);
 		void CreateDescriptorSetLayouts();
 		void CreateDescriptorPool();
 		void CreatePipelineLayout();
 		void CreatePipeline(const Layout& layout);
 
 	private:
-		std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStages;
-
 		VkDescriptorPool m_DescriptorPool;
 		std::vector<std::pair<uint32_t, VkDescriptorSetLayout>> m_DescriptorSetLayouts;
 	};
