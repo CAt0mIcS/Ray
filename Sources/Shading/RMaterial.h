@@ -21,11 +21,23 @@ namespace At0::Ray
 	class RAY_EXPORT Material : public Bindable, NonCopyable
 	{
 	public:
-		struct Layout : public GraphicsPipeline::Layout
+		struct RAY_EXPORT Layout : public GraphicsPipeline::Layout
 		{
+			friend class Material;
+
+		public:
 			Ref<Texture2D> diffuseMap;
 			Ref<Texture2D> specularMap;
 			Ref<Texture2D> normalMap;
+
+			void AddBufferUniform(const std::string& name, Shader::Stage stage);
+			void AddSampler2DUniform(
+				const std::string& name, Shader::Stage stage, Ref<Texture2D> texture);
+
+		private:
+			std::unordered_map<std::string, Shader::Stage> m_BufferUniforms;
+			std::unordered_map<std::string, std::pair<Shader::Stage, Ref<Texture2D>>>
+				m_Sampler2DUniforms;
 		};
 
 	public:

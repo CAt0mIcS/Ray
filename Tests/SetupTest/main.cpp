@@ -76,16 +76,17 @@ public:
 		layout.shaders = { "Resources/Shaders/Flat.vert", "Resources/Shaders/Flat.frag" };
 		layout.cullMode = VK_CULL_MODE_NONE;
 
-		auto material = Ray::MakeRef<Ray::Material>(layout);
-		material->AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
-		(*material->AddBufferUniform("Shading", Ray::Shader::Stage::Fragment))["color"] =
-			Ray::Float3{ 1.0f, 1.0f, 0.0f };
+		layout.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
+		layout.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
 
 		m_Entity = Scene::Get().CreateEntity();
-		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
+		Ray::Mesh& mesh = m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(layout));
+		(*mesh.GetMaterial().GetBufferUniform("Shading"))["color"] =
+			Ray::Float3{ 1.0f, 0.0f, 1.0f };
 
-		// NOT WORKING!!! SHARING MATERIALS AND THUS SHARING UNIFORMS
-		// Scene::Get().CreateEntity().Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
+		Ray::Mesh& mesh2 = Scene::Get().CreateEntity().Emplace<Ray::Mesh>(Ray::Mesh::Plane(layout));
+		(*mesh2.GetMaterial().GetBufferUniform("Shading"))["color"] =
+			Ray::Float3{ 0.0f, 1.0f, 0.0f };
 
 		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));

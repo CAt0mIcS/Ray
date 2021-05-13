@@ -12,11 +12,28 @@
 
 namespace At0::Ray
 {
+	void Material::Layout::AddBufferUniform(const std::string& name, Shader::Stage stage)
+	{
+		m_BufferUniforms[name] = stage;
+	}
+
+	void Material::Layout::AddSampler2DUniform(
+		const std::string& name, Shader::Stage stage, Ref<Texture2D> texture)
+	{
+		m_Sampler2DUniforms[name] = std::pair{ stage, texture };
+	}
+
 	Material::Material(const Material::Layout& layout)
 		: m_DiffuseMap(layout.diffuseMap), m_SpecularMap(layout.specularMap),
 		  m_NormalMap(layout.normalMap)
 	{
 		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(layout);
+
+		for (const auto& [name, stage] : layout.m_BufferUniforms)
+			AddBufferUniform(name, stage);
+
+		for (const auto& [name, stageTexture] : layout.m_Sampler2DUniforms)
+			AddSampler2DUniform(name, stageTexture.first, stageTexture.second);
 	}
 
 	Material::~Material() {}

@@ -23,8 +23,8 @@ namespace At0::Ray
 	{
 		Ref<VertexBuffer> vertexBuffer;
 		Ref<IndexBuffer> indexBuffer;
-		Ref<Material> material;
-		std::vector<MeshData> children;
+		Scope<Material> material;
+		std::vector<Scope<MeshData>> children;
 	};
 
 
@@ -35,11 +35,11 @@ namespace At0::Ray
 
 	public:
 		Mesh(Entity entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
-			Ref<Material> material, std::vector<MeshData> children = {});
+			Scope<Material> material, std::vector<Scope<MeshData>> children = {});
 		Mesh(Entity entity, MeshData data);
 
 		// static MeshData Triangle(Ref<Material> material);
-		static MeshData Plane(Ref<Material> material);
+		static MeshData Plane(Material::Layout layout);
 		// static MeshData HalfCircle(
 		//	int segments = 360, float radius = 1.0f, const Shaders& shaders = s_DefaultShaders);
 		// static MeshData Circle(
@@ -95,19 +95,19 @@ namespace At0::Ray
 		/**
 		 * Sets a new material for the mesh
 		 */
-		void SetMaterial(Ref<Material> material) { m_Material = std::move(material); }
+		void SetMaterial(Material::Layout layout) { m_Material = MakeScope<Material>(layout); }
 
 		~Mesh();
 		Mesh& operator=(Mesh&& other) noexcept;
 		Mesh(Mesh&& other) noexcept;
 
 	private:
-		void Setup(std::vector<MeshData> children = {});
+		void Setup(std::vector<Scope<MeshData>> children = {});
 
 	private:
 		Ref<VertexBuffer> m_VertexBuffer = nullptr;
 		Ref<IndexBuffer> m_IndexBuffer = nullptr;
-		Ref<Material> m_Material;
+		Scope<Material> m_Material;
 
 		std::vector<Mesh> m_Children;
 

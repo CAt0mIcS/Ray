@@ -24,7 +24,7 @@ namespace At0::Ray
 		"Resources/Shaders/DefaultShader.frag" };
 
 	Mesh::Mesh(Entity entity, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
-		Ref<Material> material, std::vector<MeshData> children)
+		Scope<Material> material, std::vector<Scope<MeshData>> children)
 		: Component(entity), m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer),
 		  m_Material(std::move(material))
 	{
@@ -38,8 +38,10 @@ namespace At0::Ray
 		Setup(std::move(data.children));
 	}
 
-	MeshData Mesh::Plane(Ref<Material> material)
+	MeshData Mesh::Plane(Material::Layout layout)
 	{
+		Scope<Material> material = MakeScope<Material>(std::move(layout));
+
 		IndexedTriangleList plane =
 			IndexedTriangleList::Plane(material->GetGraphicsPipeline()->GetShader());
 
@@ -51,13 +53,13 @@ namespace At0::Ray
 	}
 
 	// Recursively emplace children into MeshData.
-	static std::vector<MeshData> EmplaceChildren(const std::vector<Model::Data>& model)
+	static std::vector<Scope<MeshData>> EmplaceChildren(const std::vector<Model::Data>& model)
 	{
-		std::vector<MeshData> children;
+		std::vector<Scope<MeshData>> children;
 		for (const Model::Data& child : model)
 		{
-			children.emplace_back(child.vertexBuffer, child.indexBuffer,
-				MakeRef<Material>(child.layout), EmplaceChildren(child.children));
+			children.emplace_back(MakeScope<MeshData>(child.vertexBuffer, child.indexBuffer,
+				MakeScope<Material>(child.layout), EmplaceChildren(child.children)));
 		}
 		return children;
 	}
@@ -67,7 +69,7 @@ namespace At0::Ray
 		Ref<Model> model = Codex::Resolve<Model>(filepath, std::move(layout));
 
 		return { model->GetData().vertexBuffer, model->GetData().indexBuffer,
-			MakeRef<Material>(model->GetData().layout),
+			MakeScope<Material>(model->GetData().layout),
 			EmplaceChildren(model->GetData().children) };
 	}
 
@@ -121,11 +123,11 @@ namespace At0::Ray
 
 	Mesh::Mesh(Mesh&& other) noexcept : Component(other.m_Entity) { *this = std::move(other); }
 
-	void Mesh::Setup(std::vector<MeshData> children)
+	void Mesh::Setup(std::vector<Scope<MeshData>> children)
 	{
-		for (MeshData& child : children)
+		for (Scope<MeshData>& child : children)
 		{
-			m_Children.emplace_back(GetEntity(), child);
+			m_Children.emplace_back(GetEntity(), std::move(*child));
 		}
 	}
 }  // namespace At0::Ray
