@@ -139,10 +139,14 @@ set(SRC
 	"Components/RSkybox.cpp"
 	"Components/RMeshRenderer.h"
 	"Components/RMeshRenderer.cpp"
+	"Components/RTransform.h"
+	"Components/RTransform.cpp"
 
 	# Shading
 	"Shading/RMaterial.h"
 	"Shading/RMaterial.cpp"
+	"Shading/RStandardMaterial.h"
+	"Shading/RStandardMaterial.cpp"
 
 	# ------------------------------------------------------------------
 	# User Interface

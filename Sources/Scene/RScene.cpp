@@ -12,6 +12,7 @@
 
 #include "Components/RMesh.h"
 #include "Components/RSkybox.h"
+#include "Components/RTransform.h"
 
 #include "Events/REventListener.h"
 
@@ -39,6 +40,9 @@ namespace At0::Ray
 	Entity Scene::CreateEntity()
 	{
 		Entity entity(m_Registry.create(), &m_Registry);
+
+		// RAY_TODO: Should maybe be moved to client
+		entity.Emplace<Transform>();
 
 		// Dispatch entity created event to listeners
 		EntityCreatedEvent e(entity);
