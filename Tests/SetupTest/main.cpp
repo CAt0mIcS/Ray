@@ -84,7 +84,8 @@ public:
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
 
-		Scene::Get().CreateEntity().Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
+		// NOT WORKING!!! SHARING MATERIALS AND THUS SHARING UNIFORMS
+		// Scene::Get().CreateEntity().Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
 
 		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));

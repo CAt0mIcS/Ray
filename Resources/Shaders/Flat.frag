@@ -4,7 +4,7 @@
 
 layout(location = 0) out vec4 outColor;
 
-layout(set = 2, binding = 2) uniform Shading
+layout(set = 1, binding = 2) uniform Shading
 {
 	vec3 color;
 } uShading;
