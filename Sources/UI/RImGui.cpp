@@ -292,12 +292,16 @@ namespace At0::Ray
 
 	void ImGUI::OnEvent(MouseMovedEvent& e)
 	{
+		if (!Window::Get().CursorEnabled())
+			return;
 		ImGuiIO& io = ImGui::GetIO();
 		io.MousePos = ImVec2(e.GetPos().x, e.GetPos().y);
 	}
 
 	void ImGUI::OnEvent(MouseButtonPressedEvent& e)
 	{
+		if (!Window::Get().CursorEnabled())
+			return;
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantCaptureMouse)
 		{
@@ -313,6 +317,8 @@ namespace At0::Ray
 
 	void ImGUI::OnEvent(MouseButtonReleasedEvent& e)
 	{
+		if (!Window::Get().CursorEnabled())
+			return;
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantCaptureMouse)
 		{
@@ -328,6 +334,8 @@ namespace At0::Ray
 
 	void ImGUI::OnEvent(KeyPressedEvent& e)
 	{
+		if (!Window::Get().CursorEnabled())
+			return;
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantCaptureKeyboard)
 		{
@@ -338,6 +346,8 @@ namespace At0::Ray
 
 	void ImGUI::OnEvent(KeyReleasedEvent& e)
 	{
+		if (!Window::Get().CursorEnabled())
+			return;
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantCaptureKeyboard)
 		{
@@ -348,6 +358,8 @@ namespace At0::Ray
 
 	void ImGUI::OnEvent(CharEvent& e)
 	{
+		if (!Window::Get().CursorEnabled())
+			return;
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantTextInput)
 		{
