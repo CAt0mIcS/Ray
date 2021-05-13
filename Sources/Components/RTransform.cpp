@@ -40,23 +40,23 @@ namespace At0::Ray
 		m_Changed = true;
 	}
 
-	Transform::Transform(Float3 translation, Float3 rotation, Float3 scale)
-		: m_Translation{ translation }, m_Rotation{ rotation }, m_Scale{ scale }
+	Transform::Transform(Entity entity, Float3 translation, Float3 rotation, Float3 scale)
+		: Component(entity), m_Translation{ translation }, m_Rotation{ rotation }, m_Scale{ scale }
 
 	{
 	}
 
-	Transform::Transform(Float3 translation, Float3 rotation)
-		: m_Translation{ translation }, m_Rotation{ rotation }
+	Transform::Transform(Entity entity, Float3 translation, Float3 rotation)
+		: Component(entity), m_Translation{ translation }, m_Rotation{ rotation }
 	{
 	}
 
-	Transform::Transform(Float3 translation)
-		: m_Translation{ translation }, m_Rotation{ 0.0f, 0.0f, 0.0f }
+	Transform::Transform(Entity entity, Float3 translation)
+		: Component(entity), m_Translation{ translation }, m_Rotation{ 0.0f, 0.0f, 0.0f }
 	{
 	}
 
-	Transform::Transform() : m_Rotation{ 0.0f, 0.0f, 0.0f } {}
+	Transform::Transform(Entity entity) : Component(entity), m_Rotation{ 0.0f, 0.0f, 0.0f } {}
 
 	Matrix Transform::AsMatrix()
 	{
@@ -67,69 +67,5 @@ namespace At0::Ray
 			m_Changed = false;
 		}
 		return m_CachedMatrix;
-	}
-
-	Transform Transform::operator+(const Transform& other) const
-	{
-		Transform transform;
-		transform.m_Translation = m_Translation + other.m_Translation;
-		transform.m_Rotation = m_Rotation + other.m_Rotation;
-		transform.m_Scale = m_Scale + other.m_Scale;
-
-		return transform;
-	}
-
-	Transform Transform::operator-(const Transform& other) const
-	{
-		Transform transform;
-		transform.m_Translation = m_Translation - other.m_Translation;
-		transform.m_Rotation = m_Rotation - other.m_Rotation;
-		transform.m_Scale = m_Scale - other.m_Scale;
-
-		return transform;
-	}
-
-	Transform Transform::operator*(const Transform& other) const
-	{
-		Transform transform;
-		transform.m_Translation = m_Translation * other.m_Translation;
-		transform.m_Rotation = m_Rotation * other.m_Rotation;
-		transform.m_Scale = m_Scale * other.m_Scale;
-
-		return transform;
-	}
-
-	Transform Transform::operator/(const Transform& other) const
-	{
-		Transform transform;
-		transform.m_Translation = m_Translation / other.m_Translation;
-		transform.m_Rotation = m_Rotation / other.m_Rotation;
-		transform.m_Scale = m_Scale / other.m_Scale;
-
-		return transform;
-	}
-
-	Transform& Transform::operator+=(const Transform& other)
-	{
-		*this = *this + other;
-		return *this;
-	}
-
-	Transform& Transform::operator-=(const Transform& other)
-	{
-		*this = *this - other;
-		return *this;
-	}
-
-	Transform& Transform::operator*=(const Transform& other)
-	{
-		*this = *this * other;
-		return *this;
-	}
-
-	Transform& Transform::operator/=(const Transform& other)
-	{
-		*this = *this / other;
-		return *this;
 	}
 }  // namespace At0::Ray

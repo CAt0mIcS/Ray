@@ -2,11 +2,14 @@
 
 #include "../RBase.h"
 #include "../Core/RMath.h"
+#include "RComponent.h"
+
 
 namespace At0::Ray
 {
-	struct RAY_EXPORT Transform
+	class RAY_EXPORT Transform : public Component
 	{
+	public:
 		const Float3& Translation() const { return m_Translation; }
 		const Float3& Rotation() const { return m_Rotation; }
 		const Float3& Scale() const { return m_Scale; }
@@ -19,24 +22,13 @@ namespace At0::Ray
 		void Rotate(Float3 rotation);
 		void Scale(Float3 scale);
 
-		Transform(Float3 translation, Float3 rotation, Float3 scale);
-		Transform(Float3 translation, Float3 rotation);
-		Transform(Float3 translation);
-		Transform();
+		Transform(Entity entity, Float3 translation, Float3 rotation, Float3 scale);
+		Transform(Entity entity, Float3 translation, Float3 rotation);
+		Transform(Entity entity, Float3 translation);
+		Transform(Entity entity);
 
 		Matrix AsMatrix();
-
 		void RecalculateCachedMatrix() { m_Changed = true; }
-
-		Transform operator+(const Transform& other) const;
-		Transform operator-(const Transform& other) const;
-		Transform operator*(const Transform& other) const;
-		Transform operator/(const Transform& other) const;
-
-		Transform& operator+=(const Transform& other);
-		Transform& operator-=(const Transform& other);
-		Transform& operator*=(const Transform& other);
-		Transform& operator/=(const Transform& other);
 
 		auto operator<=>(const Transform&) const = default;
 
