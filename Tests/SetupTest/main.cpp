@@ -53,43 +53,23 @@ public:
 			{
 				ImGui::Begin("TestEntity");
 
-				Ray::Mesh& mesh = m_Entity.Get<Ray::Mesh>();
+				// Ray::Mesh& mesh = m_Entity.Get<Ray::Mesh>();
 
-				Ray::Float3& translation =
-					const_cast<Ray::Float3&>(mesh.GetTransform().Translation());
-				Ray::Float3& rotation = const_cast<Ray::Float3&>(mesh.GetTransform().Rotation());
-				Ray::Float3& scale = const_cast<Ray::Float3&>(mesh.GetTransform().Scale());
+				// Ray::Float3& translation =
+				//	const_cast<Ray::Float3&>(mesh.GetTransform().Translation());
+				// Ray::Float3& rotation = const_cast<Ray::Float3&>(mesh.GetTransform().Rotation());
+				// Ray::Float3& scale = const_cast<Ray::Float3&>(mesh.GetTransform().Scale());
 
-				Ray::ImGUI::Float3Widget("Translation", translation);
-				Ray::ImGUI::Float3Widget("Rotation", rotation);
-				Ray::ImGUI::Float3Widget("Scale", scale);
-				ImGui::Spacing();
+				// Ray::ImGUI::Float3Widget("Translation", translation);
+				// Ray::ImGUI::Float3Widget("Rotation", rotation);
+				// Ray::ImGUI::Float3Widget("Scale", scale);
+				// ImGui::Spacing();
 
-				mesh.GetTransform().RecalculateCachedMatrix();
+				// mesh.GetTransform().RecalculateCachedMatrix();
 
 				ImGui::End();
 			}
 		});
-
-
-		Ray::Material::Layout layout{};
-		layout.shaders = { "Resources/Shaders/Flat.vert", "Resources/Shaders/Flat.frag" };
-		layout.cullMode = VK_CULL_MODE_NONE;
-
-		layout.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
-		layout.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
-
-		m_Entity = Scene::Get().CreateEntity();
-		Ray::Mesh& mesh = m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(layout));
-		(*mesh.GetMaterial().GetBufferUniform("Shading"))["color"] =
-			Ray::Float3{ 1.0f, 0.0f, 1.0f };
-
-		Ray::Mesh& mesh2 = Scene::Get().CreateEntity().Emplace<Ray::Mesh>(Ray::Mesh::Plane(layout));
-		(*mesh2.GetMaterial().GetBufferUniform("Shading"))["color"] =
-			Ray::Float3{ 0.0f, 1.0f, 0.0f };
-
-		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:

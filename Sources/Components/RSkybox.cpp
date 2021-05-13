@@ -15,17 +15,16 @@ namespace At0::Ray
 
 	Skybox::Skybox(Entity entity, Ref<Texture2D> texture) : Component(entity)
 	{
-		Material::Layout layout{};
-		layout.shaders = { "Resources/Shaders/Flat_Tex.vert", "Resources/Shaders/Flat_Tex.frag" };
-		layout.cullMode = VK_CULL_MODE_FRONT_BIT;
-		layout.diffuseMap = texture;
+		// Material::Layout layout{};
+		// layout.shaders = { "Resources/Shaders/Flat_Tex.vert", "Resources/Shaders/Flat_Tex.frag"
+		// }; layout.cullMode = VK_CULL_MODE_FRONT_BIT; layout.diffuseMap = texture;
 
-		Mesh& mesh = GetEntity().Emplace<Mesh>(
-			Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", std::move(layout)));
-		mesh.GetTransform().SetScale(Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
+		// Mesh& mesh = GetEntity().Emplace<Mesh>(
+		//	Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", std::move(layout)));
+		// mesh.GetTransform().SetScale(Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
 
-		mesh.GetMaterial().AddBufferUniform("PerObjectData", Shader::Stage::Vertex);
-		mesh.GetMaterial().AddSampler2DUniform("texSampler", Shader::Stage::Fragment, texture);
+		// mesh.GetMaterial().AddBufferUniform("PerObjectData", Shader::Stage::Vertex);
+		// mesh.GetMaterial().AddSampler2DUniform("texSampler", Shader::Stage::Fragment, texture);
 	}
 
 	Skybox::Skybox(Entity entity, Ref<TextureCubemap> texture) : Component(entity)
@@ -40,13 +39,13 @@ namespace At0::Ray
 
 	void Skybox::Update(Delta dt)
 	{
-		Transform& tform = GetEntity().Get<Mesh>().GetTransform();
-		Camera& cam = Scene::Get().GetCamera();
+		// Transform& tform = GetEntity().Get<Mesh>().GetTransform();
+		// Camera& cam = Scene::Get().GetCamera();
 
-		tform.SetScale(
-			{ cam.GetFarClip() - 5.0f, cam.GetFarClip() - 5.0f, cam.GetFarClip() - 5.0f });
+		// tform.SetScale(
+		//	{ cam.GetFarClip() - 5.0f, cam.GetFarClip() - 5.0f, cam.GetFarClip() - 5.0f });
 
-		Float3 camPos = cam.Position;
-		tform.SetTranslation({ -camPos.x, camPos.y, -camPos.z });
+		// Float3 camPos = cam.Position;
+		// tform.SetTranslation({ -camPos.x, camPos.y, -camPos.z });
 	}
 }  // namespace At0::Ray

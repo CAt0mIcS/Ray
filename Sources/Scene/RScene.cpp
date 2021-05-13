@@ -57,7 +57,8 @@ namespace At0::Ray
 	{
 		m_Camera->Update(dt);
 
-		m_Registry.view<Mesh>().each([&dt](Mesh& mesh) { mesh.Update(dt); });
+		// RAY_MESH_REWORK:
+		// m_Registry.view<Mesh>().each([&dt](Mesh& mesh) { mesh.Update(dt); });
 		m_Registry.view<Skybox>().each([&dt](Skybox& skybox) { skybox.Update(dt); });
 	}
 

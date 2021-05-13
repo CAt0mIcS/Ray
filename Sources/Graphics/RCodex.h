@@ -28,8 +28,6 @@ namespace At0::Ray
 		{
 			if constexpr (std::is_base_of_v<Bindable, T>)
 				return Get().BindableResolve<T>(std::forward<Args>(args)...);
-			else if constexpr (std::is_same_v<Model, T>)
-				return Get().ModelResolve(std::forward<Args>(args)...);
 			else if constexpr (std::is_same_v<Shader, T>)
 				return Get().ShaderResolve(std::forward<Args>(args)...);
 		}
@@ -70,28 +68,6 @@ namespace At0::Ray
 		}
 
 		template<typename... Args>
-		Ref<Model> ModelResolve(Args&&... args)
-		{
-			std::string tag = Model::GetUID(args...);
-
-			std::scoped_lock lock(m_ModelMutex);
-			auto it = m_Models.find(tag);
-			// Key does not exist, create it
-			if (it == m_Models.end())
-			{
-				m_Models[tag] = MakeRef<Model>(std::forward<Args>(args)...);
-				Log::Debug("[Codex] Model (Tag=\"{0}\") was created because it didn't exist", tag);
-				return m_Models[tag];
-			}
-			// Key exists, return it
-			else
-			{
-				Log::Debug("[Codex] Model (Tag=\"{0}\") already exists", tag);
-				return it->second;
-			}
-		}
-
-		template<typename... Args>
 		Ref<Shader> ShaderResolve(Args&&... args)
 		{
 			std::string tag = Shader::GetUID(args...);
@@ -118,19 +94,14 @@ namespace At0::Ray
 			std::scoped_lock lockShaders(m_ShaderMutex);
 			m_Shaders.clear();
 
-			std::scoped_lock lockModel(m_ModelMutex);
-			m_Models.clear();
-
 			std::scoped_lock lockBindable(m_BindableMutex);
 			m_Bindables.clear();
 		}
 
 	private:
 		std::unordered_map<std::string, Ref<Bindable>> m_Bindables;
-		std::unordered_map<std::string, Ref<Model>> m_Models;
 		std::unordered_map<std::string, Ref<Shader>> m_Shaders;
 		std::mutex m_BindableMutex;
-		std::mutex m_ModelMutex;
 		std::mutex m_ShaderMutex;
 	};
 }  // namespace At0::Ray
