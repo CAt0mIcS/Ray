@@ -21,13 +21,11 @@ namespace At0::Ray
 	class RAY_EXPORT Material : public Bindable, NonCopyable
 	{
 	public:
-		struct Layout
+		struct Layout : public GraphicsPipeline::Layout
 		{
-			GraphicsPipeline::Layout pipelineLayout;
 			Ref<Texture2D> diffuseMap;
 			Ref<Texture2D> specularMap;
 			Ref<Texture2D> normalMap;
-			Float3 color = { 1.0f, 1.0f, 1.0f };
 		};
 
 	public:
@@ -50,6 +48,10 @@ namespace At0::Ray
 
 	private:
 		Ref<GraphicsPipeline> m_GraphicsPipeline = nullptr;
+
+		Ref<Texture2D> m_DiffuseMap;
+		Ref<Texture2D> m_SpecularMap;
+		Ref<Texture2D> m_NormalMap;
 
 		std::unordered_map<uint32_t, Ref<DescriptorSet>> m_DescriptorSets;
 		std::unordered_map<uint32_t, std::vector<Ref<BufferUniform>>> m_BufferUniforms;

@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
+// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -241,7 +241,7 @@ namespace At0::Ray
 		vertexInputAttributes.emplace_back(vInputUV);
 		vertexInputAttributes.emplace_back(vInputCol);
 
-		GraphicsPipeline::Layout layout{ Graphics::Get().GetRenderPass() };
+		GraphicsPipeline::Layout layout;
 		layout.shaders = { "Resources/Shaders/ImGui.vert", "Resources/Shaders/ImGui.frag" };
 		layout.cullMode = VK_CULL_MODE_NONE;
 		layout.depthTestEnabled = false;

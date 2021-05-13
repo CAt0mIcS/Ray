@@ -73,9 +73,8 @@ public:
 
 
 		Ray::Material::Layout layout{};
-		layout.pipelineLayout.shaders = { "Resources/Shaders/Flat.vert",
-			"Resources/Shaders/Flat.frag" };
-		layout.pipelineLayout.cullMode = VK_CULL_MODE_NONE;
+		layout.shaders = { "Resources/Shaders/Flat.vert", "Resources/Shaders/Flat.frag" };
+		layout.cullMode = VK_CULL_MODE_NONE;
 
 		Ray::Ref<Ray::Material> material = Ray::MakeRef<Ray::Material>(layout);
 		material->AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
@@ -84,6 +83,9 @@ public:
 
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
+
+		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:

@@ -28,6 +28,8 @@ namespace At0::Ray
 			bool depthTestEnabled = true;
 			std::optional<std::vector<VkVertexInputBindingDescription>> bindingDescriptions;
 			std::optional<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions;
+
+			virtual ~Layout() = default;
 		};
 
 	public:

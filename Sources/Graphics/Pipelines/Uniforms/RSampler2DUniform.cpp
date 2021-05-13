@@ -18,7 +18,7 @@ namespace At0::Ray
 			"[BufferUniform] Uniform \"{0}\" was not found in shader stage \"{1}\"", name,
 			String::Construct(stage));
 
-		auto uniform = pipeline.GetShader().GetUniformBlocks(stage)->Get(name);
+		auto uniform = pipeline.GetShader().GetUniforms(stage)->Get(name);
 		m_Binding = uniform->binding;
 	}
 

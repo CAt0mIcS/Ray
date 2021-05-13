@@ -40,7 +40,13 @@ namespace At0::Ray
 		RAY_MEXPECTS(m_Usage & VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
 			"[Image] Cannot generate mipmaps if the image was not created with usage flag "
 			"VK_IMAGE_USAGE_TRANSFER_SRC_BIT");
-		return GenerateMipmaps(m_Image, m_Format, m_Extent.x, m_Extent.y, m_MipLevels);
+
+		if (GenerateMipmaps(m_Image, m_Format, m_Extent.x, m_Extent.y, m_MipLevels))
+		{
+			m_ImageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			return true;
+		}
+		return false;
 	}
 
 	void Image::TransitionLayout(VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout,

@@ -46,14 +46,14 @@ namespace At0::Ray
 		Ref<VertexBuffer> vertexBuffer =
 			Codex::Resolve<VertexBuffer>(plane.uniqueTag, plane.vertices);
 		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(plane.uniqueTag, plane.indices);
-		
+
 		return { vertexBuffer, indexBuffer, material };
 	}
 
-	// MeshData Mesh::Import(std::string_view filepath)
-	//{
-	//	return { Codex::Resolve<Model>(filepath)->GetMesh() };
-	//}
+	MeshData Mesh::Import(std::string_view filepath, Material::Layout layout)
+	{
+		return { Codex::Resolve<Model>(filepath, std::move(layout))->GetMesh() };
+	}
 
 	void Mesh::Update(Delta ts)
 	{

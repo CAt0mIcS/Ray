@@ -13,8 +13,10 @@
 namespace At0::Ray
 {
 	Material::Material(const Material::Layout& layout)
+		: m_DiffuseMap(layout.diffuseMap), m_SpecularMap(layout.specularMap),
+		  m_NormalMap(layout.normalMap)
 	{
-		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(layout.pipelineLayout);
+		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(layout);
 	}
 
 	Material::~Material() {}

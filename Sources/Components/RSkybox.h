@@ -19,9 +19,6 @@ namespace At0::Ray
 		Skybox(Entity entity, Ref<TextureCubemap> texture);
 
 		void Update(Delta dt);
-
-	private:
-		Ref<Image2D> m_Texture;
 	};
 }  // namespace At0::Ray
 
