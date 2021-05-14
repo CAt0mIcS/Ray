@@ -107,6 +107,21 @@ namespace At0::Ray
 		bool Valid() const { return m_EntityHandle != Entity::Null; }
 
 		/**
+		 * Adds/Removes/Changes the ParentEntity component's entity
+		 */
+		void SetParent(Entity parent);
+
+		/**
+		 * Checks if the entity has the ParentEntity component
+		 */
+		bool HasParent() const;
+
+		/**
+		 * @returns Parent entity, fails if the parent does not exist
+		 */
+		Entity GetParent() const;
+
+		/**
 		 * Casting operator to the entity identifier
 		 */
 		explicit operator entt::entity() const { return m_EntityHandle; }

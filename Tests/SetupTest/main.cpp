@@ -81,6 +81,11 @@ public:
 		meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
 		auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
 		uShading["color"] = Ray::Float3{ 1.0f, 0.0f, 1.0f };
+
+		Ray::Entity child1 = Scene::Get().CreateEntity();
+		child1.Emplace<Ray::MeshRenderer>(sharedMaterial)
+			.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
+		child1.SetParent(m_Entity);
 	}
 
 private:

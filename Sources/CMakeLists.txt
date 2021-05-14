@@ -141,6 +141,8 @@ set(SRC
 	"Components/RMeshRenderer.cpp"
 	"Components/RTransform.h"
 	"Components/RTransform.cpp"
+	"Components/RParentEntity.h"
+	"Components/RParentEntity.cpp"
 
 	# Shading
 	"Shading/RMaterial.h"
