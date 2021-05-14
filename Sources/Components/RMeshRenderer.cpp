@@ -21,8 +21,13 @@ namespace At0::Ray
 
 	void MeshRenderer::Update()
 	{
-		GetBufferUniform(UniformTag::PerObjectData)["Model"] =
-			GetEntity().Get<Transform>().AsMatrix();
+		if (GetEntity().HasParent())
+			GetBufferUniform(UniformTag::PerObjectData)["Model"] =
+				GetEntity().Get<Transform>().AsMatrix() *
+				GetEntity().GetParent().Get<Transform>().AsMatrix();
+		else
+			GetBufferUniform(UniformTag::PerObjectData)["Model"] =
+				GetEntity().Get<Transform>().AsMatrix();
 	}
 
 	BufferUniform& MeshRenderer::AddBufferUniform(std::string_view name, Shader::Stage stage)
