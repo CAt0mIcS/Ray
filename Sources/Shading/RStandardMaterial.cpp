@@ -1,6 +1,9 @@
 ﻿#include "Rpch.h"
 #include "RStandardMaterial.h"
 
+#include "Graphics/Pipelines/RGraphicsPipeline.h"
+#include "Graphics/RCodex.h"
+
 
 namespace At0::Ray
 {
@@ -10,6 +13,10 @@ namespace At0::Ray
 		  m_SpecularMap(std::move(specularMap)), m_NormalMap(std::move(normalMap)),
 		  m_Color(std::move(color)), m_Metallic(metallic)
 	{
+		GraphicsPipeline::Layout layout{};
+		layout.shaders = { "Resources/Shaders/Flat.vert", "Resources/Shaders/Flat.frag" };
+
+		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(std::move(layout));
 	}
 
 	void StandardMaterial::SetAlbedoMap(Ref<Texture2D> albedo)

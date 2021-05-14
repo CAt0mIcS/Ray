@@ -8,6 +8,9 @@
 #include "../Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "../Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
 
+#include <vector>
+#include <unordered_map>
+
 
 namespace At0::Ray
 {
@@ -64,9 +67,9 @@ namespace At0::Ray
 		 */
 		Ref<Material> m_Material;
 
-		std::vector<Scope<DescriptorSet>> m_DescriptorSets;
-		std::unordered_map<uint32_t, Scope<BufferUniform>> m_BufferUniforms;
-		std::unordered_map<uint32_t, Scope<Sampler2DUniform>> m_Sampler2DUniforms;
+		std::unordered_map<uint32_t, Scope<DescriptorSet>> m_DescriptorSets;
+		std::unordered_map<uint32_t, std::vector<Scope<BufferUniform>>> m_BufferUniforms;
+		std::unordered_map<uint32_t, std::vector<Scope<Sampler2DUniform>>> m_Sampler2DUniforms;
 	};
 }  // namespace At0::Ray
 
