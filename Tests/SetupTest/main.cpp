@@ -52,47 +52,36 @@ public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
-		// Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
-		//	{
-		//		ImGui::Begin("TestEntity");
+		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+			{
+				ImGui::Begin("TestEntity");
 
-		//		Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
+				Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
 
-		//		Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
-		//		Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
-		//		Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
+				Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
+				Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
+				Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
 
-		//		Ray::ImGUI::Float3Widget("Translation", translation);
-		//		Ray::ImGUI::Float3Widget("Rotation", rotation);
-		//		Ray::ImGUI::Float3Widget("Scale", scale);
-		//		ImGui::Spacing();
+				Ray::ImGUI::Float3Widget("Translation", translation);
+				Ray::ImGUI::Float3Widget("Rotation", rotation);
+				Ray::ImGUI::Float3Widget("Scale", scale);
+				ImGui::Spacing();
 
-		//		tform.RecalculateCachedMatrix();
+				tform.RecalculateCachedMatrix();
 
-		//		ImGui::End();
-		//	}
-		//});
+				ImGui::End();
+			}
+		});
 
 		auto sharedMaterial = Ray::MakeRef<Ray::StandardMaterial>();
 
-		std::mt19937 device(time(0));
-		std::uniform_real_distribution<float> colorDist(0.0f, 1.0f);
-		std::uniform_real_distribution<float> posDist(-100.0f, 100.0f);
+		m_Entity = Scene::Get().CreateEntity();
+		Ray::MeshRenderer& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(sharedMaterial);
+		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(sharedMaterial));
 
-		for (uint32_t i = 0; i < 90000; ++i)
-		{
-			m_Entity = Scene::Get().CreateEntity();
-			Ray::MeshRenderer& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(sharedMaterial);
-			m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(sharedMaterial));
-
-			m_Entity.Get<Ray::Transform>().SetTranslation(
-				{ posDist(device), posDist(device), posDist(device) });
-
-			meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
-			auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
-			uShading["color"] =
-				Ray::Float3{ colorDist(device), colorDist(device), colorDist(device) };
-		}
+		meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
+		auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
+		uShading["color"] = Ray::Float3{ 1.0f, 1.0f, 1.0f };
 	}
 
 private:
