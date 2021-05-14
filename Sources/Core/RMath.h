@@ -60,6 +60,14 @@ namespace At0::Ray
 	RAY_EXPORT float NDCSpaceToScreenSpaceY(float y);
 	RAY_EXPORT float ScreenSpaceToNDCSpaceY(float y);
 
+	/**
+	 * Splits a integer (number) into an array of integers
+	 * which are all almost the same size.
+	 * Example:
+	 *	SplitToIntegers(10, 4) --> [2, 3, 2, 3]		(2 + 3 + 2 + 3 == 10)
+	 * @returns Vector with numbers split. Not guaranteed to have size splits
+	 */
+	std::vector<uint32_t> SplitToIntegers(uint32_t number, uint32_t splits);
 
 	RAY_EXPORT std::ostream& operator<<(std::ostream& os, const Int2& data);
 

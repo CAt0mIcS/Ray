@@ -57,32 +57,6 @@ namespace At0::Ray
 
 	void Scene::DestroyEntity(Entity entity) { m_Registry.destroy((entt::entity)entity); }
 
-	static std::vector<uint32_t> SplitIntoArray(uint32_t numEntities, uint32_t numThreads)
-	{
-		// Add fractions from left to right
-		float firstFraction = (float)numEntities / (float)numThreads;
-		std::vector<float> fractions(numThreads);
-		for (uint32_t i = 1; i <= numThreads; ++i)
-		{
-			fractions[i - 1] = firstFraction * i;
-		}
-
-		// Taking the integer parts
-		std::vector<uint32_t> integers(numThreads);
-		for (uint32_t i = 0; i < numThreads; ++i)
-		{
-			integers[i] = std::floor(fractions[i]);
-		}
-
-		std::vector<uint32_t> ret(numThreads);
-		ret[0] = integers[0];
-		for (uint32_t i = 1; i < numThreads; ++i)
-		{
-			ret[i] = integers[i] - integers[i - 1];
-		}
-		return ret;
-	}
-
 	void Scene::Update(Delta dt)
 	{
 		m_Camera->Update(dt);
@@ -92,7 +66,7 @@ namespace At0::Ray
 
 		// Split into almost equal parts to launch as many threads as the CPU has
 		auto entitiesPerThread =
-			SplitIntoArray(tformView.size(), std::thread::hardware_concurrency());
+			SplitToIntegers(tformView.size(), std::thread::hardware_concurrency());
 
 		std::vector<std::future<void>> futures;
 		for (uint32_t i = 0; i < entitiesPerThread.size(); ++i)

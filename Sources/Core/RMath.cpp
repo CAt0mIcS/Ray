@@ -62,6 +62,29 @@ namespace At0::Ray
 		return y / (0.5f * (float)Window::Get().GetFramebufferSize().y) - 1;
 	}
 
+	std::vector<uint32_t> SplitToIntegers(uint32_t number, uint32_t splits)
+	{
+		if (number < splits)
+			return { number };
+
+		// Add fractions from left to right
+		float firstFraction = (float)number / (float)splits;
+		std::vector<float> fractions(splits);
+		for (uint32_t i = 1; i <= splits; ++i)
+			fractions[i - 1] = firstFraction * i;
+
+		// Taking the integer parts
+		std::vector<uint32_t> integers(splits);
+		for (uint32_t i = 0; i < splits; ++i)
+			integers[i] = std::floor(fractions[i]);
+
+		std::vector<uint32_t> ret(splits);
+		ret[0] = integers[0];
+		for (uint32_t i = 1; i < splits; ++i)
+			ret[i] = integers[i] - integers[i - 1];
+		return ret;
+	}
+
 	inline std::ostream& operator<<(std::ostream& os, const Int2& data)
 	{
 		os << "[x=" << data.x << ", y=" << data.y << "]";
