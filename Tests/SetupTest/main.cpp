@@ -56,19 +56,18 @@ public:
 			{
 				ImGui::Begin("TestEntity");
 
-				// Ray::Mesh& mesh = m_Entity.Get<Ray::Mesh>();
+				Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
 
-				// Ray::Float3& translation =
-				//	const_cast<Ray::Float3&>(mesh.GetTransform().Translation());
-				// Ray::Float3& rotation = const_cast<Ray::Float3&>(mesh.GetTransform().Rotation());
-				// Ray::Float3& scale = const_cast<Ray::Float3&>(mesh.GetTransform().Scale());
+				Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
+				Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
+				Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
 
-				// Ray::ImGUI::Float3Widget("Translation", translation);
-				// Ray::ImGUI::Float3Widget("Rotation", rotation);
-				// Ray::ImGUI::Float3Widget("Scale", scale);
-				// ImGui::Spacing();
+				Ray::ImGUI::Float3Widget("Translation", translation);
+				Ray::ImGUI::Float3Widget("Rotation", rotation);
+				Ray::ImGUI::Float3Widget("Scale", scale);
+				ImGui::Spacing();
 
-				// mesh.GetTransform().RecalculateCachedMatrix();
+				tform.RecalculateCachedMatrix();
 
 				ImGui::End();
 			}
@@ -78,15 +77,11 @@ public:
 
 		m_Entity = Scene::Get().CreateEntity();
 		Ray::MeshRenderer& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(sharedMaterial);
+		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(sharedMaterial));
 
 		meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
 		auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
 		uShading["color"] = Ray::Float3{ 1.0f, 0.0f, 1.0f };
-
-		Ray::Entity child1 = Scene::Get().CreateEntity();
-		child1.Emplace<Ray::MeshRenderer>(sharedMaterial)
-			.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
-		child1.SetParent(m_Entity);
 	}
 
 private:

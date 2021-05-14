@@ -2,6 +2,7 @@
 #include "RMeshRenderer.h"
 
 #include "RTransform.h"
+#include "RMesh.h"
 
 #include "Shading/RMaterial.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
@@ -17,7 +18,16 @@ namespace At0::Ray
 	{
 	}
 
-	void MeshRenderer::Render(const CommandBuffer& cmdBuff) const { m_Material->CmdBind(cmdBuff); }
+	void MeshRenderer::Render(const CommandBuffer& cmdBuff) const
+	{
+		m_Material->CmdBind(cmdBuff);
+
+		for (const auto& [set, descriptorSet] : m_DescriptorSets)
+			descriptorSet->CmdBind(cmdBuff);
+
+		// RAY_TODO: MeshRenderer requires mesh!
+		GetEntity().Get<Mesh>().CmdBind(cmdBuff);
+	}
 
 	void MeshRenderer::Update()
 	{
