@@ -22,8 +22,8 @@ namespace At0::Ray
 	{
 		m_Material->CmdBind(cmdBuff);
 
-		for (const auto& [set, descriptorSet] : m_DescriptorSets)
-			descriptorSet->CmdBind(cmdBuff);
+		for (const auto& descSet : m_DescriptorSets)
+			descSet.CmdBind(cmdBuff);
 
 		// RAY_TODO: MeshRenderer requires mesh!
 		GetEntity().Get<Mesh>().CmdBind(cmdBuff);
@@ -31,13 +31,15 @@ namespace At0::Ray
 
 	void MeshRenderer::Update()
 	{
+		RAY_MEXPECTS(m_PerObjectDataUniformRef,
+			"[MeshRenderer] Mandatory BufferUniform \"{0}\" was not added",
+			UniformTag::PerObjectData);
+
 		if (GetEntity().HasParent())
-			GetBufferUniform(UniformTag::PerObjectData)["Model"] =
-				GetEntity().Get<Transform>().AsMatrix() *
-				GetEntity().GetParent().Get<Transform>().AsMatrix();
+			(*m_PerObjectDataUniformRef) = GetEntity().Get<Transform>().AsMatrix() *
+										   GetEntity().GetParent().Get<Transform>().AsMatrix();
 		else
-			GetBufferUniform(UniformTag::PerObjectData)["Model"] =
-				GetEntity().Get<Transform>().AsMatrix();
+			(*m_PerObjectDataUniformRef) = GetEntity().Get<Transform>().AsMatrix();
 	}
 
 	BufferUniform& MeshRenderer::AddBufferUniform(std::string_view name, Shader::Stage stage)
@@ -50,8 +52,17 @@ namespace At0::Ray
 			m_Material->GetGraphicsPipeline().GetShader().GetUniformBlocks(stage)->Get(name)->set;
 
 		// Create descriptor set if the one for this set does not exist yet
-		if (!m_DescriptorSets[set])
-			m_DescriptorSets[set] = MakeScope<DescriptorSet>(
+		DescriptorSet* pDescriptor = nullptr;
+		for (auto& descSet : m_DescriptorSets)
+			if (descSet.GetSetNumber() == set)
+			{
+				pDescriptor = &descSet;
+				break;
+			}
+
+		// If the descriptor set wasn't found in the existing ones, create it
+		if (pDescriptor == nullptr)
+			pDescriptor = &m_DescriptorSets.emplace_back(
 				m_Material->GetGraphicsPipeline().GetDescriptorPool(),
 				m_Material->GetGraphicsPipeline().GetDescriptorSetLayout(set),
 				Pipeline::BindPoint::Graphics, m_Material->GetGraphicsPipeline().GetLayout(), set);
@@ -59,7 +70,10 @@ namespace At0::Ray
 		// Create buffer uniform
 		Scope<BufferUniform>& uniform = m_BufferUniforms[set].emplace_back(
 			MakeScope<BufferUniform>(name, stage, m_Material->GetGraphicsPipeline()));
-		m_DescriptorSets[set]->BindUniform(*uniform);
+		pDescriptor->BindUniform(*uniform);
+
+		if (name == UniformTag::PerObjectData)
+			m_PerObjectDataUniformRef = (*uniform)["Model"];
 
 		return *uniform;
 	}
@@ -72,11 +86,20 @@ namespace At0::Ray
 			String::Construct(stage));
 
 		uint32_t set =
-			m_Material->GetGraphicsPipeline().GetShader().GetUniformBlocks(stage)->Get(name)->set;
+			m_Material->GetGraphicsPipeline().GetShader().GetUniforms(stage)->Get(name)->set;
 
 		// Create descriptor set if the one for this set does not exist yet
-		if (!m_DescriptorSets[set])
-			m_DescriptorSets[set] = MakeScope<DescriptorSet>(
+		DescriptorSet* pDescriptor = nullptr;
+		for (auto& descSet : m_DescriptorSets)
+			if (descSet.GetSetNumber() == set)
+			{
+				pDescriptor = &descSet;
+				break;
+			}
+
+		// If the descriptor set wasn't found in the existing ones, create it
+		if (pDescriptor == nullptr)
+			pDescriptor = &m_DescriptorSets.emplace_back(
 				m_Material->GetGraphicsPipeline().GetDescriptorPool(),
 				m_Material->GetGraphicsPipeline().GetDescriptorSetLayout(set),
 				Pipeline::BindPoint::Graphics, m_Material->GetGraphicsPipeline().GetLayout(), set);
@@ -85,7 +108,7 @@ namespace At0::Ray
 		Scope<Sampler2DUniform>& uniform =
 			m_Sampler2DUniforms[set].emplace_back(MakeScope<Sampler2DUniform>(
 				name, stage, std::move(texture), m_Material->GetGraphicsPipeline()));
-		m_DescriptorSets[set]->BindUniform(*uniform);
+		pDescriptor->BindUniform(*uniform);
 
 		return *uniform;
 	}

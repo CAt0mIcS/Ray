@@ -15,6 +15,7 @@ namespace At0::Ray
 	{
 		GraphicsPipeline::Layout layout{};
 		layout.shaders = { "Resources/Shaders/Flat.vert", "Resources/Shaders/Flat.frag" };
+		layout.cullMode = VK_CULL_MODE_NONE;
 
 		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(std::move(layout));
 	}

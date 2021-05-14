@@ -13,17 +13,17 @@ namespace At0::Ray
 
 	class RAY_EXPORT BufferUniform
 	{
-	private:
-		class ProxyType
+	public:
+		class AccessType
 		{
 		public:
-			ProxyType(BufferUniform* pThis, uint32_t offsetInUniformBlock)
+			AccessType(BufferUniform* pThis, uint32_t offsetInUniformBlock)
 				: m_BufferUniform(pThis), m_OffsetInUniformBlock(offsetInUniformBlock)
 			{
 			}
 
 			template<typename T>
-			ProxyType& operator=(T&& data)
+			AccessType& operator=(T&& data)
 			{
 				BufferSynchronizer::Get().Update(
 					data, m_BufferUniform->GetOffset() + m_OffsetInUniformBlock);
@@ -76,7 +76,7 @@ namespace At0::Ray
 		 * @param name Name of the uniform to update in the uniform block
 		 * @returns Assignable type to update uniforms in the uniform block
 		 */
-		ProxyType operator[](std::string_view name);
+		AccessType operator[](const std::string& name);
 
 		/**
 		 * Writes data directly into the buffer
@@ -106,6 +106,6 @@ namespace At0::Ray
 		uint32_t m_Size;
 
 		// Keeps track of all the uniforms in a uniform block and their offset in the block
-		std::unordered_map<std::string, uint32_t> m_UniformInBlockOffsets;
+		std::vector<std::pair<std::string, uint32_t>> m_UniformInBlockOffsets;
 	};
 }  // namespace At0::Ray

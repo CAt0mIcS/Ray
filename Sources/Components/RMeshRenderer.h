@@ -67,9 +67,14 @@ namespace At0::Ray
 		 */
 		Ref<Material> m_Material;
 
-		std::unordered_map<uint32_t, Scope<DescriptorSet>> m_DescriptorSets;
+		std::vector<DescriptorSet> m_DescriptorSets;
 		std::unordered_map<uint32_t, std::vector<Scope<BufferUniform>>> m_BufferUniforms;
 		std::unordered_map<uint32_t, std::vector<Scope<Sampler2DUniform>>> m_Sampler2DUniforms;
+
+		/**
+		 * Points to the buffer uniform in the unordered_map to make MeshRenderer::Update faster
+		 */
+		std::optional<BufferUniform::AccessType> m_PerObjectDataUniformRef;
 	};
 }  // namespace At0::Ray
 

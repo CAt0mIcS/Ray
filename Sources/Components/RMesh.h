@@ -26,9 +26,7 @@ namespace At0::Ray
 	public:
 		Mesh(Entity entity, VertexData vertexData);
 
-		/**
-		 * Generates a triangle
-		 */
+		static VertexData Triangle(Ref<Material> material);
 		static VertexData Plane(Ref<Material> material);
 
 		/**

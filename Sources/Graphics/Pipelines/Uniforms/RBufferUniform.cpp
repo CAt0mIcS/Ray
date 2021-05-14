@@ -21,16 +21,18 @@ namespace At0::Ray
 
 		// Fill map with offsets of all uniforms in uniform block
 		for (auto& uniform : uniformBlock->uniforms)
-			m_UniformInBlockOffsets[uniform.uniformName] = uniform.offset;
+			m_UniformInBlockOffsets.emplace_back(std::pair{ uniform.uniformName, uniform.offset });
 
 		Setup(uniformBlock->size);
 	}
 
 	BufferUniform::BufferUniform(std::string_view name, uint32_t binding, uint32_t size,
 		std::unordered_map<std::string, uint32_t> uniformInBlockOffsets)
-		: m_Name(name), m_Binding(binding),
-		  m_UniformInBlockOffsets(std::move(uniformInBlockOffsets))
+		: m_Name(name), m_Binding(binding)
 	{
+		for (const auto& [name, offset] : uniformInBlockOffsets)
+			m_UniformInBlockOffsets.emplace_back(std::pair{ name, offset });
+
 		Setup(size);
 	}
 
@@ -44,13 +46,20 @@ namespace At0::Ray
 		return BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(m_Offset);
 	}
 
-	BufferUniform::ProxyType BufferUniform::operator[](std::string_view name)
+	BufferUniform::AccessType BufferUniform::operator[](const std::string& name)
 	{
-		RAY_MEXPECTS(m_UniformInBlockOffsets.find(name.data()) != m_UniformInBlockOffsets.end(),
+		RAY_MEXPECTS(std::find_if(m_UniformInBlockOffsets.begin(), m_UniformInBlockOffsets.end(),
+						 [&name](const auto& r) { return r.first == name; }) !=
+						 m_UniformInBlockOffsets.end(),
 			"[BufferUniform] Uniform \"{0}\" not present in uniform block \"{1}\"", name,
 			GetName());
 
-		return BufferUniform::ProxyType{ this, m_UniformInBlockOffsets[name.data()] };
+		uint32_t offset;
+		for (const auto& pair : m_UniformInBlockOffsets)
+			if (pair.first == name)
+				offset = pair.second;
+
+		return BufferUniform::AccessType{ this, offset };
 	}
 
 	void BufferUniform::Update(void* data, uint32_t size)
