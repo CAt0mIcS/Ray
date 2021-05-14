@@ -6,6 +6,7 @@
 #include <UI/RButton.h>
 
 #include <Components/RMesh.h>
+#include <Components/RMeshRenderer.h>
 #include <Components/RSkybox.h>
 
 #include <Graphics/Images/RTexture2D.h>
@@ -13,6 +14,7 @@
 #include <Graphics/Pipelines/RGraphicsPipeline.h>
 #include <Utils/RException.h>
 #include <Core/RDynamicVertex.h>
+#include <Shading/RStandardMaterial.h>
 
 #include <Scene/RScene.h>
 #include <Scene/RCamera.h>
@@ -70,6 +72,15 @@ public:
 				ImGui::End();
 			}
 		});
+
+		auto sharedMaterial = Ray::MakeRef<Ray::StandardMaterial>();
+
+		m_Entity = Scene::Get().CreateEntity();
+		Ray::MeshRenderer& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(sharedMaterial);
+
+		meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
+		auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
+		uShading["color"] = Ray::Float3{ 1.0f, 0.0f, 1.0f };
 	}
 
 private:

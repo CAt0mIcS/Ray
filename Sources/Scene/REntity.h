@@ -12,6 +12,9 @@ namespace At0::Ray
 	class RAY_EXPORT Entity
 	{
 	public:
+		static constexpr entt::entity Null = (entt::entity)-1;
+
+	public:
 		Entity() = default;
 
 		/**
@@ -40,6 +43,7 @@ namespace At0::Ray
 		{
 			RAY_MEXPECTS(!Has<Comp>(), "[Entity] Entity (ID={0}) already has component",
 				(uint32_t)m_EntityHandle);
+			RAY_MEXPECTS(Valid(), "[Entity] Cannot assign component to null entity.");
 			if constexpr (std::is_constructible_v<Comp, Entity&, Args...>)
 			{
 				return m_Registry->emplace<Comp>(
@@ -58,6 +62,7 @@ namespace At0::Ray
 		template<typename... Comp>
 		bool Has() const
 		{
+			RAY_MEXPECTS(Valid(), "[Entity] Cannot check component(s) of null entity.");
 			return m_Registry->has<Comp...>(m_EntityHandle);
 		}
 
@@ -68,6 +73,7 @@ namespace At0::Ray
 		template<typename... Comp>
 		bool HasAny() const
 		{
+			RAY_MEXPECTS(Valid(), "[Entity] Cannot check component(s) of null entity.");
 			return m_Registry->any<Comp...>(m_EntityHandle);
 		}
 
@@ -78,6 +84,7 @@ namespace At0::Ray
 		template<typename... Comp>
 		decltype(auto) Get()
 		{
+			RAY_MEXPECTS(Valid(), "[Entity] Cannot get component(s) of null entity.");
 			RAY_MEXPECTS(Has<Comp...>(), "[Entity] Does not have specified component(s)");
 			return m_Registry->get<Comp...>(m_EntityHandle);
 		}
@@ -89,9 +96,15 @@ namespace At0::Ray
 		template<typename... Comp>
 		decltype(auto) Get() const
 		{
+			RAY_MEXPECTS(Valid(), "[Entity] Cannot get component(s) of null entity.");
 			RAY_MEXPECTS(Has<Comp...>(), "[Entity] Does not have specified component(s)");
 			return m_Registry->get<Comp...>(m_EntityHandle);
 		}
+
+		/**
+		 * @returns True if the entity is not the null entity
+		 */
+		bool Valid() const { return m_EntityHandle != Entity::Null; }
 
 		/**
 		 * Casting operator to the entity identifier
