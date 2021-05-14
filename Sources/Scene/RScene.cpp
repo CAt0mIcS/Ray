@@ -16,6 +16,8 @@
 
 #include "Events/REventListener.h"
 
+#define RAY_MULTITHREADED_TRANSFORM_CALCULATIONS 1
+
 
 namespace At0::Ray
 {
@@ -61,9 +63,10 @@ namespace At0::Ray
 	{
 		m_Camera->Update(dt);
 
-		// Multithreaded transform recalculation
 		auto tformView = m_Registry.view<Transform>();
 
+		// Multithreaded transform recalculation
+#if RAY_MULTITHREADED_TRANSFORM_CALCULATIONS
 		// Split into almost equal parts to launch as many threads as the CPU has
 		unsigned int numThreads = std::thread::hardware_concurrency();
 		// Only enable if we can get at least two loops per thread
@@ -90,6 +93,9 @@ namespace At0::Ray
 		for (std::thread& thread : threads)
 			if (thread.joinable())
 				thread.join();
+#else
+		tformView.each([](Transform& tform) { tform.UpdateMatrix(); });
+#endif
 
 		m_Registry.view<MeshRenderer>().each([](MeshRenderer& mesh) { mesh.Update(); });
 		m_Registry.view<Skybox>().each([&dt](Skybox& skybox) { skybox.Update(dt); });

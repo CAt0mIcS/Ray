@@ -21,8 +21,8 @@ namespace At0::Ray
 		: Component(entity), m_VertexBuffer(std::move(vertexData.vertexBuffer)),
 		  m_IndexBuffer(std::move(vertexData.indexBuffer))
 	{
-		if (!vertexData.children.empty())
-			EmplaceChildren(vertexData.children);
+		// if (!vertexData.children.empty())
+		//	EmplaceChildren(std::move(vertexData.children));
 	}
 
 	Mesh::VertexData Mesh::Triangle(Ref<Material> material)
@@ -102,9 +102,9 @@ namespace At0::Ray
 			Codex::Resolve<IndexBuffer>(tag, indices) };
 	}
 
-	Mesh::VertexData At0::Ray::Mesh::Import(std::string_view filepath, Ref<Material> material)
+	void Mesh::Import(Entity entity, std::string_view filepath, Ref<Material> material)
 	{
-		return Model{ filepath, material }.GetVertexData();
+		Model{ entity, filepath, material }.GetVertexData();
 	}
 
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff) const
@@ -115,13 +115,23 @@ namespace At0::Ray
 		vkCmdDrawIndexed(cmdBuff, m_IndexBuffer->GetNumberOfIndices(), 1, 0, 0, 0);
 	}
 
-	void Mesh::EmplaceChildren(const std::vector<VertexData>& vertexData)
+	Mesh& Mesh::operator=(Mesh&& other) noexcept
 	{
-		for (const VertexData& child : vertexData)
-		{
-			Entity entity = Scene::Get().CreateEntity();
-			entity.SetParent(GetEntity());
-			// entity.Emplace<Mesh>(child);
-		}
+		m_VertexBuffer = std::move(other.m_VertexBuffer);
+		m_IndexBuffer = std::move(other.m_IndexBuffer);
+		m_Entity = std::move(other.m_Entity);
+		return *this;
+	}
+
+	Mesh::Mesh(Mesh&& other) noexcept : Component(other.m_Entity) { *this = std::move(other); }
+
+	void Mesh::EmplaceChildren(std::vector<VertexData> children)
+	{
+		// for (VertexData& child : children)
+		//{
+		//	Entity entity = Scene::Get().CreateEntity();
+		//	// entity.SetParent(GetEntity());
+		//	entity.Emplace<Mesh>(child);
+		//}
 	}
 }  // namespace At0::Ray

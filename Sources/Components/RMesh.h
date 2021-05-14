@@ -4,6 +4,9 @@
 #include "RComponent.h"
 #include "../Graphics/Core/RBindable.h"
 
+#include "../Core/RDynamicVertex.h"
+#include "../Graphics/Buffers/RIndexBuffer.h"
+
 
 namespace At0::Ray
 {
@@ -36,15 +39,19 @@ namespace At0::Ray
 		 * and use any maps(diffuse/specular/...) that are contained in the model file. If this
 		 * material is set, the importer will ignore said maps.
 		 */
-		static VertexData Import(std::string_view filepath, Ref<Material> material = nullptr);
+		static void Import(
+			Entity entity, std::string_view filepath, Ref<Material> material = nullptr);
 
 		/**
 		 * Called by the mesh renderer to bind mesh-specific resources
 		 */
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
 
+		Mesh& operator=(Mesh&& other) noexcept;
+		Mesh(Mesh&& other) noexcept;
+
 	private:
-		void EmplaceChildren(const std::vector<VertexData>& vertexData);
+		void EmplaceChildren(std::vector<VertexData> children);
 
 	private:
 		// Created by the mesh renderer
