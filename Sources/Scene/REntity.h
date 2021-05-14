@@ -125,6 +125,7 @@ namespace At0::Ray
 		 * Casting operator to the entity identifier
 		 */
 		explicit operator entt::entity() const { return m_EntityHandle; }
+		explicit operator uint32_t() const { return (uint32_t)m_EntityHandle; }
 
 		constexpr bool operator==(const Entity& other) const;
 		constexpr bool operator!=(const Entity& other) const;

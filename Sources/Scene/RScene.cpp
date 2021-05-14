@@ -65,24 +65,31 @@ namespace At0::Ray
 		auto tformView = m_Registry.view<Transform>();
 
 		// Split into almost equal parts to launch as many threads as the CPU has
-		auto entitiesPerThread =
-			SplitToIntegers(tformView.size(), std::thread::hardware_concurrency());
+		unsigned int numThreads = std::thread::hardware_concurrency();
+		// Only enable if we can get at least two loops per thread
+		std::vector<uint32_t> entitiesPerThread;
+		if (tformView.size() / numThreads >= 2)
+			entitiesPerThread = SplitToIntegers((uint32_t)tformView.size(), numThreads);
+		else
+			entitiesPerThread.emplace_back((uint32_t)tformView.size());
 
-		std::vector<std::future<void>> futures;
+		std::vector<std::thread> threads;
+		threads.reserve(entitiesPerThread.size());
 		for (uint32_t i = 0; i < entitiesPerThread.size(); ++i)
 		{
 			uint32_t startIdx = i * entitiesPerThread[i];
 			uint32_t endIdx = (i + 1) * entitiesPerThread[i];
 
-			futures.push_back(std::async([&tformView, &startIdx, &endIdx]() {
+			threads.emplace_back([&tformView, &startIdx, &endIdx]() {
 				for (uint32_t i = startIdx; i < endIdx; ++i)
 					Entity{ tformView[i] }.Get<Transform>().UpdateMatrix();
-			}));
+			});
 		}
 
 		// Wait for calculations to finnish
-		for (std::future<void>& future : futures)
-			future.get();
+		for (std::thread& thread : threads)
+			if (thread.joinable())
+				thread.join();
 
 		m_Registry.view<MeshRenderer>().each([](MeshRenderer& mesh) { mesh.Update(); });
 		m_Registry.view<Skybox>().each([&dt](Skybox& skybox) { skybox.Update(dt); });

@@ -1,6 +1,8 @@
 ﻿#include "Rpch.h"
 #include "RMesh.h"
 
+#include "RParentEntity.h"
+
 #include "Graphics/RCodex.h"
 #include "Shading/RMaterial.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
@@ -10,6 +12,7 @@
 
 #include "Core/RDynamicVertex.h"
 #include "Utils/RString.h"
+#include "Utils/RModel.h"
 
 
 namespace At0::Ray
@@ -18,6 +21,8 @@ namespace At0::Ray
 		: Component(entity), m_VertexBuffer(std::move(vertexData.vertexBuffer)),
 		  m_IndexBuffer(std::move(vertexData.indexBuffer))
 	{
+		if (!vertexData.children.empty())
+			EmplaceChildren(vertexData.children);
 	}
 
 	Mesh::VertexData Mesh::Triangle(Ref<Material> material)
@@ -97,11 +102,26 @@ namespace At0::Ray
 			Codex::Resolve<IndexBuffer>(tag, indices) };
 	}
 
+	Mesh::VertexData At0::Ray::Mesh::Import(std::string_view filepath, Ref<Material> material)
+	{
+		return Model{ filepath, material }.GetVertexData();
+	}
+
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff) const
 	{
 		m_VertexBuffer->CmdBind(cmdBuff);
 		m_IndexBuffer->CmdBind(cmdBuff);
 
 		vkCmdDrawIndexed(cmdBuff, m_IndexBuffer->GetNumberOfIndices(), 1, 0, 0, 0);
+	}
+
+	void Mesh::EmplaceChildren(const std::vector<VertexData>& vertexData)
+	{
+		for (const VertexData& child : vertexData)
+		{
+			Entity entity = Scene::Get().CreateEntity();
+			entity.SetParent(GetEntity());
+			// entity.Emplace<Mesh>(child);
+		}
 	}
 }  // namespace At0::Ray
