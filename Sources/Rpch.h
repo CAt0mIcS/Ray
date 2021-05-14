@@ -28,6 +28,7 @@
 #include <filesystem>
 #include <assert.h>
 #include <concepts>
+#include <future>
 
 #include <vulkan/vulkan.h>
 

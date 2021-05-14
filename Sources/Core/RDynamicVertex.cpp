@@ -15,10 +15,11 @@ namespace At0::Ray
 			return;
 		}
 
-		for (const auto& attrib : (*shader.GetAttributes(Shader::Stage::Vertex)))
+		auto& attribs = *shader.GetAttributes(Shader::Stage::Vertex);
+		for (uint32_t i = 0; i < attribs.Size(); ++i)
 		{
-			m_AttribSizeMap.emplace_back(attrib.attributeName, attrib.size);
-			m_SizeVertex += attrib.size;
+			m_AttribSizeMap.emplace_back(attribs[i].attributeName, attribs[i].size);
+			m_SizeVertex += attribs[i].size;
 		}
 	}
 

@@ -22,12 +22,14 @@ namespace At0::Ray
 		void Rotate(Float3 rotation);
 		void Scale(Float3 scale);
 
+		void UpdateMatrix();
+
 		Transform(Entity entity, Float3 translation, Float3 rotation, Float3 scale);
 		Transform(Entity entity, Float3 translation, Float3 rotation);
 		Transform(Entity entity, Float3 translation);
 		Transform(Entity entity);
 
-		Matrix AsMatrix();
+		const Matrix& AsMatrix();
 		void RecalculateCachedMatrix() { m_Changed = true; }
 
 		auto operator<=>(const Transform&) const = default;

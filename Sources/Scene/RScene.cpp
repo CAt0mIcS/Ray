@@ -57,9 +57,58 @@ namespace At0::Ray
 
 	void Scene::DestroyEntity(Entity entity) { m_Registry.destroy((entt::entity)entity); }
 
+	static std::vector<uint32_t> SplitIntoArray(uint32_t numEntities, uint32_t numThreads)
+	{
+		// Add fractions from left to right
+		float firstFraction = (float)numEntities / (float)numThreads;
+		std::vector<float> fractions(numThreads);
+		for (uint32_t i = 1; i <= numThreads; ++i)
+		{
+			fractions[i - 1] = firstFraction * i;
+		}
+
+		// Taking the integer parts
+		std::vector<uint32_t> integers(numThreads);
+		for (uint32_t i = 0; i < numThreads; ++i)
+		{
+			integers[i] = std::floor(fractions[i]);
+		}
+
+		std::vector<uint32_t> ret(numThreads);
+		ret[0] = integers[0];
+		for (uint32_t i = 1; i < numThreads; ++i)
+		{
+			ret[i] = integers[i] - integers[i - 1];
+		}
+		return ret;
+	}
+
 	void Scene::Update(Delta dt)
 	{
 		m_Camera->Update(dt);
+
+		// Multithreaded transform recalculation
+		auto tformView = m_Registry.view<Transform>();
+
+		// Split into almost equal parts to launch as many threads as the CPU has
+		auto entitiesPerThread =
+			SplitIntoArray(tformView.size(), std::thread::hardware_concurrency());
+
+		std::vector<std::future<void>> futures;
+		for (uint32_t i = 0; i < entitiesPerThread.size(); ++i)
+		{
+			uint32_t startIdx = i * entitiesPerThread[i];
+			uint32_t endIdx = (i + 1) * entitiesPerThread[i];
+
+			futures.push_back(std::async([&tformView, &startIdx, &endIdx]() {
+				for (uint32_t i = startIdx; i < endIdx; ++i)
+					Entity{ tformView[i] }.Get<Transform>().UpdateMatrix();
+			}));
+		}
+
+		// Wait for calculations to finnish
+		for (std::future<void>& future : futures)
+			future.get();
 
 		m_Registry.view<MeshRenderer>().each([](MeshRenderer& mesh) { mesh.Update(); });
 		m_Registry.view<Skybox>().each([&dt](Skybox& skybox) { skybox.Update(dt); });

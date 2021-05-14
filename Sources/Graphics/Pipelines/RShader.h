@@ -103,6 +103,8 @@ namespace At0::Ray
 			auto begin() { return m_Attributes.begin(); }
 			auto end() { return m_Attributes.end(); }
 
+			uint32_t Size() const { return m_Attributes.size(); }
+
 		private:
 			std::vector<AttributeData> m_Attributes;
 		};

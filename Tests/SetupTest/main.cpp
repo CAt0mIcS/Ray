@@ -7,6 +7,7 @@
 
 #include <Components/RMesh.h>
 #include <Components/RMeshRenderer.h>
+#include <Components/RTransform.h>
 #include <Components/RSkybox.h>
 
 #include <Graphics/Images/RTexture2D.h>
@@ -73,26 +74,35 @@ public:
 			}
 		});
 
-		auto sharedMaterial = Ray::MakeRef<Ray::StandardMaterial>();
+		// auto sharedMaterial = Ray::MakeRef<Ray::StandardMaterial>();
 
-		m_Entity = Scene::Get().CreateEntity();
-		Ray::MeshRenderer& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(sharedMaterial);
+		// m_Entity = Scene::Get().CreateEntity();
+		// Ray::MeshRenderer& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(sharedMaterial);
 
-		meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
-		auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
-		uShading["color"] = Ray::Float3{ 1.0f, 0.0f, 1.0f };
+		// meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
+		// auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
+		// uShading["color"] = Ray::Float3{ 1.0f, 0.0f, 1.0f };
 
-		Ray::Entity child1 = Scene::Get().CreateEntity();
-		child1.Emplace<Ray::MeshRenderer>(sharedMaterial)
-			.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
-		child1.SetParent(m_Entity);
+		// Ray::Entity child1 = Scene::Get().CreateEntity();
+		// child1.Emplace<Ray::MeshRenderer>(sharedMaterial)
+		//	.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
+		// child1.SetParent(m_Entity);
+
+		for (uint32_t i = 0; i < 100000; ++i)
+		{
+			m_Entities.emplace_back(Scene::Get().CreateEntity());
+		}
 	}
 
 private:
-	void Update() override {}
+	void Update() override
+	{
+		for (Ray::Entity e : m_Entities)
+			e.Get<Ray::Transform>().RecalculateCachedMatrix();
+	}
 
 private:
-	Ray::Entity m_Entity;
+	std::vector<Ray::Entity> m_Entities;
 };
 
 void SignalHandler(int signal)

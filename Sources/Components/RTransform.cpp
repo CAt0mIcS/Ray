@@ -40,6 +40,16 @@ namespace At0::Ray
 		m_Changed = true;
 	}
 
+	void Transform::UpdateMatrix()
+	{
+		if (m_Changed)
+		{
+			m_CachedMatrix = MatrixTranslation(m_Translation) * MatrixRotation(m_Rotation) *
+							 MatrixScale(m_Scale);
+			m_Changed = false;
+		}
+	}
+
 	Transform::Transform(Entity entity, Float3 translation, Float3 rotation, Float3 scale)
 		: Component(entity), m_Translation{ translation }, m_Rotation{ rotation }, m_Scale{ scale }
 
@@ -58,14 +68,9 @@ namespace At0::Ray
 
 	Transform::Transform(Entity entity) : Component(entity), m_Rotation{ 0.0f, 0.0f, 0.0f } {}
 
-	Matrix Transform::AsMatrix()
+	const Matrix& Transform::AsMatrix()
 	{
-		if (m_Changed)
-		{
-			m_CachedMatrix = MatrixTranslation(m_Translation) * MatrixRotation(m_Rotation) *
-							 MatrixScale(m_Scale);
-			m_Changed = false;
-		}
+		RAY_MEXPECTS(!m_Changed, "[Transform] Matrix should've already been recalculated");
 		return m_CachedMatrix;
 	}
 }  // namespace At0::Ray
