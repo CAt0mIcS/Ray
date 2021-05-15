@@ -58,31 +58,31 @@ namespace At0::Ray
 		Ref<IndexBuffer> indexBuffer;
 		if (!m_ParentSet)
 		{
-			// m_VertexData.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
-			// m_VertexData.indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
+			m_VertexData.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
+			m_VertexData.indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
 
-			vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
-			indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
+			// vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
+			// indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
 			m_ParentSet = true;
 		}
 		// Children
 		else
 		{
-			// m_VertexData.children.emplace_back(Codex::Resolve<VertexBuffer>(meshTag, vertices),
-			//	Codex::Resolve<IndexBuffer>(meshTag, indices));
+			m_VertexData.children.emplace_back(Codex::Resolve<VertexBuffer>(meshTag, vertices),
+				Codex::Resolve<IndexBuffer>(meshTag, indices));
 
-			vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
-			indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
-			Ray::Entity parent = entity;
-			entity = Scene::Get().CreateEntity();
-			entity.Emplace<ParentEntity>(parent);
+			// vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
+			// indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
+			// Ray::Entity parent = entity;
+			// entity = Scene::Get().CreateEntity();
+			// entity.Emplace<ParentEntity>(parent);
 		}
 
-		entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
-		Ray::MeshRenderer& meshRenderer = entity.Emplace<Ray::MeshRenderer>(material);
-		meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
-		auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
-		uShading["color"] = Ray::Float3{ 1.0f, 1.0f, 1.0f };
+		// entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
+		// Ray::MeshRenderer& meshRenderer = entity.Emplace<Ray::MeshRenderer>(material);
+		// meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
+		// auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
+		// uShading["color"] = Ray::Float3{ 1.0f, 1.0f, 1.0f };
 	}
 
 	Ref<Material> Model::CreateMaterial(

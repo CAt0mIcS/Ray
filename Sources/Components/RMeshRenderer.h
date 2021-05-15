@@ -58,6 +58,7 @@ namespace At0::Ray
 
 		Material& GetMaterial() { return *m_Material; }
 		const Material& GetMaterial() const { return *m_Material; }
+		Ref<Material> GetSharedMaterial() const { return m_Material; }
 
 	private:
 		/**

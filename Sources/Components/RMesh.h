@@ -39,7 +39,7 @@ namespace At0::Ray
 		 * and use any maps(diffuse/specular/...) that are contained in the model file. If this
 		 * material is set, the importer will ignore said maps.
 		 */
-		static void Import(
+		static Mesh::VertexData Import(
 			Entity entity, std::string_view filepath, Ref<Material> material = nullptr);
 
 		/**
@@ -50,9 +50,9 @@ namespace At0::Ray
 		Mesh& operator=(Mesh&& other) noexcept;
 		Mesh(Mesh&& other) noexcept;
 
-	private:
-		void EmplaceChildren(std::vector<VertexData> children);
+		static void EmplaceChildren(std::vector<VertexData> children, Ref<Material> material);
 
+	private:
 	private:
 		// Created by the mesh renderer
 		Ref<VertexBuffer> m_VertexBuffer;
