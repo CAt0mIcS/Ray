@@ -20,7 +20,7 @@
 
 namespace At0::Ray
 {
-	Model::Model(Entity entity, std::string_view filepath, Ref<Material> material)
+	Model::Model(std::string_view filepath, Ref<Material> material)
 	{
 		Assimp::Importer importer;
 		const aiScene* pScene = importer.ReadFile(filepath.data(),
@@ -32,11 +32,11 @@ namespace At0::Ray
 
 		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
 		{
-			ParseMesh(entity, filepath, *pScene->mMeshes[i], pScene->mMaterials, material);
+			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials, material);
 		}
 	}
 
-	void Model::ParseMesh(Entity entity, std::string_view filepath, const aiMesh& mesh,
+	void Model::ParseMesh(std::string_view filepath, const aiMesh& mesh,
 		const aiMaterial* const* pMaterials, Ref<Material> material)
 	{
 		const std::string basePath = std::filesystem::path(filepath).remove_filename().string();
@@ -54,8 +54,6 @@ namespace At0::Ray
 		std::vector<IndexBuffer::Type> indices = GenerateIndices(mesh);
 
 		// Parents
-		Ref<VertexBuffer> vertexBuffer;
-		Ref<IndexBuffer> indexBuffer;
 		if (!m_ParentSet)
 		{
 			m_VertexData.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
@@ -68,21 +66,22 @@ namespace At0::Ray
 		// Children
 		else
 		{
-			m_VertexData.children.emplace_back(Codex::Resolve<VertexBuffer>(meshTag, vertices),
-				Codex::Resolve<IndexBuffer>(meshTag, indices));
+			// m_VertexData.children.emplace_back(Codex::Resolve<VertexBuffer>(meshTag, vertices),
+			//	Codex::Resolve<IndexBuffer>(meshTag, indices));
 
-			// vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
-			// indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
+			Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
+			Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
 			// Ray::Entity parent = entity;
-			// entity = Scene::Get().CreateEntity();
+			Entity entity = Scene::Get().CreateEntity();
 			// entity.Emplace<ParentEntity>(parent);
-		}
+			entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
+			Ray::MeshRenderer& meshRenderer = entity.Emplace<Ray::MeshRenderer>(material);
+			meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
+			auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
+			uShading["color"] = Ray::Float3{ 1.0f, 1.0f, 1.0f };
 
-		// entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
-		// Ray::MeshRenderer& meshRenderer = entity.Emplace<Ray::MeshRenderer>(material);
-		// meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
-		// auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
-		// uShading["color"] = Ray::Float3{ 1.0f, 1.0f, 1.0f };
+			m_VertexData.children.emplace_back(entity);
+		}
 	}
 
 	Ref<Material> Model::CreateMaterial(

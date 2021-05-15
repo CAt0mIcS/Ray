@@ -19,12 +19,12 @@ namespace At0::Ray
 	class RAY_EXPORT Model
 	{
 	public:
-		Model(Entity entity, std::string_view filepath, Ref<Material> material = nullptr);
+		Model(std::string_view filepath, Ref<Material> material = nullptr);
 
 		const Mesh::VertexData& GetVertexData() const { return m_VertexData; }
 
 	private:
-		void ParseMesh(Entity entity, std::string_view filepath, const aiMesh& mesh,
+		void ParseMesh(std::string_view filepath, const aiMesh& mesh,
 			const aiMaterial* const* pMaterials, Ref<Material> material);
 		static Ref<Material> CreateMaterial(
 			const std::string& basePath, const aiMesh& mesh, const aiMaterial* const* pMaterials);

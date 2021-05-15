@@ -22,6 +22,11 @@ namespace At0::Ray
 		: Component(entity), m_VertexBuffer(std::move(vertexData.vertexBuffer)),
 		  m_IndexBuffer(std::move(vertexData.indexBuffer))
 	{
+		for (Entity e : vertexData.children)
+		{
+			e.Emplace<ParentEntity>(entity);
+		}
+
 		// if (!vertexData.children.empty())
 		//	EmplaceChildren(std::move(vertexData.children),
 		//		GetEntity().Get<MeshRenderer>().GetSharedMaterial());
@@ -104,9 +109,9 @@ namespace At0::Ray
 			Codex::Resolve<IndexBuffer>(tag, indices) };
 	}
 
-	Mesh::VertexData Mesh::Import(Entity entity, std::string_view filepath, Ref<Material> material)
+	Mesh::VertexData Mesh::Import(std::string_view filepath, Ref<Material> material)
 	{
-		return Model{ entity, filepath, material }.GetVertexData();
+		return Model{ filepath, material }.GetVertexData();
 	}
 
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff) const
@@ -126,18 +131,4 @@ namespace At0::Ray
 	}
 
 	Mesh::Mesh(Mesh&& other) noexcept : Component(other.m_Entity) { *this = std::move(other); }
-
-	void Mesh::EmplaceChildren(std::vector<VertexData> children, Ref<Material> material)
-	{
-		for (Ray::Mesh::VertexData& child : children)
-		{
-			Ray::Entity entity = Scene::Get().CreateEntity();
-			entity.Emplace<Ray::Mesh>(
-				Ray::Mesh::VertexData{ child.vertexBuffer, child.indexBuffer });
-			Ray::MeshRenderer& meshRenderer = entity.Emplace<Ray::MeshRenderer>(material);
-			meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
-			auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
-			uShading["color"] = Ray::Float3{ 1.0f, 1.0f, 1.0f };
-		}
-	}
 }  // namespace At0::Ray

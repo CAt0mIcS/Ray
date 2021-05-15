@@ -76,16 +76,12 @@ public:
 		auto sharedMaterial = Ray::MakeRef<Ray::StandardMaterial>();
 
 		m_Entity = Scene::Get().CreateEntity();
-		auto vData = Ray::Mesh::Import(m_Entity, "Resources/Models/Nanosuit/nanosuit.obj");
+		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+
 		Ray::MeshRenderer& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(sharedMaterial);
-
-		m_Entity.Emplace<Ray::Mesh>(vData);
-
 		meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
 		auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
 		uShading["color"] = Ray::Float3{ 1.0f, 1.0f, 1.0f };
-
-		Ray::Mesh::EmplaceChildren(std::move(vData.children), sharedMaterial);
 
 		// for (Ray::Mesh::VertexData& child : vData.children)
 		//{

@@ -24,7 +24,7 @@ namespace At0::Ray
 		{
 			Ref<VertexBuffer> vertexBuffer;
 			Ref<IndexBuffer> indexBuffer;
-			std::vector<VertexData> children;
+			std::vector<Entity> children;
 		};
 
 	public:
@@ -39,8 +39,7 @@ namespace At0::Ray
 		 * and use any maps(diffuse/specular/...) that are contained in the model file. If this
 		 * material is set, the importer will ignore said maps.
 		 */
-		static Mesh::VertexData Import(
-			Entity entity, std::string_view filepath, Ref<Material> material = nullptr);
+		static Mesh::VertexData Import(std::string_view filepath, Ref<Material> material = nullptr);
 
 		/**
 		 * Called by the mesh renderer to bind mesh-specific resources
@@ -50,9 +49,6 @@ namespace At0::Ray
 		Mesh& operator=(Mesh&& other) noexcept;
 		Mesh(Mesh&& other) noexcept;
 
-		static void EmplaceChildren(std::vector<VertexData> children, Ref<Material> material);
-
-	private:
 	private:
 		// Created by the mesh renderer
 		Ref<VertexBuffer> m_VertexBuffer;
