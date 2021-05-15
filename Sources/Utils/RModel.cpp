@@ -19,6 +19,9 @@
 #include "Components/RMeshRenderer.h"
 #include "Components/RParentEntity.h"
 #include "Scene/RScene.h"
+#include "Core/RTime.h"
+
+#define RAY_MULTITHREADED_IMPORT 1
 
 
 namespace At0::Ray
@@ -33,10 +36,15 @@ namespace At0::Ray
 		if (!pScene)
 			RAY_THROW_RUNTIME("[Model] Failed to load: \"{0}\"", importer.GetErrorString());
 
+		Time start = Time::Now();
+
+#if RAY_MULTITHREADED_IMPORT
 		std::vector<std::future<void>> futures;
-		std::mutex mutex;
-		auto parseMeshAsync = [this, &mutex](std::string_view filepath, const aiMesh* pMesh,
-								  const aiMaterial* const* pMaterials, Ref<Material> material) {
+		std::mutex mutexMaterial;
+		std::mutex mutexScene;
+		auto parseMeshAsync = [this, &mutexMaterial, &mutexScene](std::string_view filepath,
+								  const aiMesh* pMesh, const aiMaterial* const* pMaterials,
+								  Ref<Material> material) {
 			const aiMesh& mesh = *pMesh;
 			const std::string basePath = std::filesystem::path(filepath).remove_filename().string();
 			const std::string meshTag =
@@ -45,7 +53,7 @@ namespace At0::Ray
 			// Material creation stage
 			if (!material)
 			{
-				std::scoped_lock lock(mutex);
+				std::scoped_lock lock(mutexMaterial);
 				material = CreateMaterial(basePath, mesh, pMaterials);
 			}
 
@@ -57,7 +65,7 @@ namespace At0::Ray
 			std::vector<IndexBuffer::Type> indices = GenerateIndices(mesh);
 
 			// Parents
-			std::scoped_lock lock(mutex);
+			std::scoped_lock lock(mutexScene);
 			if (!m_ParentSet)
 			{
 				m_VertexData.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
@@ -79,7 +87,8 @@ namespace At0::Ray
 				m_VertexData.children.emplace_back(entity);
 			}
 
-			Log::Info("[Model] Loaded mesh \"{0}\" of model \"{1}\"", mesh.mName.C_Str(), filepath);
+			Log::Info(
+				"[Model] Loaded mesh \"{0}\" of resource \"{1}\"", mesh.mName.C_Str(), filepath);
 		};
 
 		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
@@ -91,6 +100,15 @@ namespace At0::Ray
 		// RAY_TODO: Finish while scene is already rendering
 		for (auto& future : futures)
 			future.get();
+#else
+		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
+		{
+			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials, material);
+		}
+#endif
+
+		Log::Info("[Model] Loading of resource \"{0}\" took {1}s", filepath,
+			(Time::Now() - start).AsSeconds());
 	}
 
 	void Model::ParseMesh(std::string_view filepath, const aiMesh& mesh,
@@ -99,7 +117,7 @@ namespace At0::Ray
 		const std::string basePath = std::filesystem::path(filepath).remove_filename().string();
 		const std::string meshTag = std::string(filepath) + std::string("#") + mesh.mName.C_Str();
 
-		Log::Info("[Model] Parsing mesh \"{0}\" of model \"{1}\"", mesh.mName.C_Str(), filepath);
+		Log::Info("[Model] Parsing mesh \"{0}\" of resource \"{1}\"", mesh.mName.C_Str(), filepath);
 
 		// Material creation stage
 		if (!material)

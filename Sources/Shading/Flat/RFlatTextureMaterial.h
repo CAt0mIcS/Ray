@@ -18,6 +18,8 @@ namespace At0::Ray
 	public:
 		FlatTextureMaterial(Layout layout = {}, GraphicsPipeline::Layout pipelineLayout = {});
 
+		Ref<Texture2D> GetDiffuseMap() const override { return m_Layout.texture; }
+
 	private:
 		std::vector<std::string> ChooseShaders();
 

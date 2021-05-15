@@ -92,6 +92,9 @@ public:
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Scenes/Sponza/scene.gltf"));
 		m_Entity.Get<Ray::Transform>().SetScale(Ray::Float3{ 0.1f });
+
+		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:

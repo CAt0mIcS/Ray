@@ -20,16 +20,15 @@ namespace At0::Ray
 
 	Skybox::Skybox(Entity entity, Ref<Texture2D> texture) : Component(entity)
 	{
-		// Material::Layout layout{};
-		// layout.shaders = { "Resources/Shaders/Flat_Tex.vert", "Resources/Shaders/Flat_Tex.frag"
-		// }; layout.cullMode = VK_CULL_MODE_FRONT_BIT; layout.diffuseMap = texture;
+		GraphicsPipeline::Layout layout{};
+		layout.cullMode = VK_CULL_MODE_FRONT_BIT;
+		Ref<Material> material = MakeRef<FlatTextureMaterial>(
+			FlatTextureMaterial::Layout{ std::move(texture) }, std::move(layout));
 
-		// Mesh& mesh = GetEntity().Emplace<Mesh>(
-		//	Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", std::move(layout)));
-		// mesh.GetTransform().SetScale(Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
-
-		// renderer.AddBufferUniform("PerObjectData", Shader::Stage::Vertex);
-		// renderer.AddSampler2DUniform("materialDiffuse", Shader::Stage::Fragment, texture);
+		Mesh& mesh = GetEntity().Emplace<Mesh>(
+			Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", material));
+		GetEntity().Get<Transform>().SetScale(
+			Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
 	}
 
 	Skybox::Skybox(Entity entity, Ref<TextureCubemap> texture) : Component(entity)
