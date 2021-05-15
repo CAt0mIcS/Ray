@@ -9,18 +9,18 @@ layout(location = 4) in vec3 inLightVec;
 
 layout (location = 0) out vec4 outColor;
 
-layout (set = 2, binding = 2) uniform sampler2D materialDiffuse;
-layout (set = 3, binding = 3) uniform sampler2D materialNormal;
+layout (set = 2, binding = 2) uniform sampler2D samplerDiffuse;
+layout (set = 3, binding = 3) uniform sampler2D samplerNormal;
 
 void main()
 {
-    vec4 color = texture(materialDiffuse, inUV);
+    vec4 color = texture(samplerDiffuse, inUV);
 	
 	vec3 N = normalize(inNormal);
 	vec3 T = normalize(inTangent.xyz);
 	vec3 B = cross(inNormal, inTangent.xyz);
 	mat3 TBN = mat3(T, B, N);
-	N = TBN * normalize(texture(materialNormal, inUV).xyz * 2.0 - vec3(1.0));
+	N = TBN * normalize(texture(samplerNormal, inUV).xyz * 2.0 - vec3(1.0));
 	
 	const float ambient = 0.1;
 	vec3 L = normalize(inLightVec);

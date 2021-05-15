@@ -24,6 +24,7 @@ namespace At0::Ray
 		{
 			Ref<VertexBuffer> vertexBuffer;
 			Ref<IndexBuffer> indexBuffer;
+			Ref<Material> material;
 			std::vector<Entity> children;
 		};
 

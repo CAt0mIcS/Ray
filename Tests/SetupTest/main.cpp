@@ -79,9 +79,6 @@ public:
 
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
-
-		Ray::MeshRenderer& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(sharedMaterial);
-		meshRenderer.GetBufferUniform("Shading")["color"] = Ray::Float3{ 1.0f, 0.0f, 1.0f };
 	}
 
 private:

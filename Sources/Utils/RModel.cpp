@@ -61,6 +61,7 @@ namespace At0::Ray
 		{
 			m_VertexData.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
 			m_VertexData.indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
+			m_VertexData.material = std::move(material);
 
 			// vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
 			// indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
@@ -74,14 +75,12 @@ namespace At0::Ray
 
 			Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
 			Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
-			// Ray::Entity parent = entity;
-			Entity entity = Scene::Get().CreateEntity();
-			// entity.Emplace<ParentEntity>(parent);
-			entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
-			Ray::MeshRenderer& meshRenderer = entity.Emplace<Ray::MeshRenderer>(material);
-			auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
-			uShading["color"] = Ray::Float3{ 1.0f, 1.0f, 1.0f };
 
+			// ParentEntity component added by mesh
+			Entity entity = Scene::Get().CreateEntity();
+			Ray::MeshRenderer& meshRenderer =
+				entity.Emplace<Ray::MeshRenderer>(std::move(material));
+			entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
 			m_VertexData.children.emplace_back(entity);
 		}
 	}
@@ -120,8 +119,7 @@ namespace At0::Ray
 		layout.specularMap = specularMap;
 		layout.normalMap = normalMap;
 
-		// return MakeRef<PhongMaterial>(layout);
-		return MakeRef<FlatColorMaterial>();
+		return MakeRef<PhongMaterial>(layout);
 	}
 
 	DynamicVertex Model::AssembleVertices(const aiMesh& mesh, const Shader& shader)

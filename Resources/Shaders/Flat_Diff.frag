@@ -6,9 +6,9 @@ layout(location = 0) in vec2 inUV;
 
 layout(location = 0) out vec4 outColor;
 
-layout(set = 1, binding = 2) uniform sampler2D texSampler;
+layout(set = 1, binding = 2) uniform sampler2D samplerDiffuse;
 
 void main()
 {
-    outColor = texture(texSampler, inUV);
+    outColor = texture(samplerDiffuse, inUV);
 }

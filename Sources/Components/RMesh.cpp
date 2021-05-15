@@ -22,6 +22,12 @@ namespace At0::Ray
 		: Component(entity), m_VertexBuffer(std::move(vertexData.vertexBuffer)),
 		  m_IndexBuffer(std::move(vertexData.indexBuffer))
 	{
+		if (vertexData.material)
+			if (!GetEntity().Has<MeshRenderer>())
+				GetEntity().Emplace<MeshRenderer>(std::move(vertexData.material));
+			else
+				GetEntity().Get<MeshRenderer>().SetMaterial(std::move(vertexData.material));
+
 		for (Entity e : vertexData.children)
 		{
 			e.Emplace<ParentEntity>(entity);

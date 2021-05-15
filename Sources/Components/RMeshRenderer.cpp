@@ -155,6 +155,9 @@ namespace At0::Ray
 			else if (uniformName == UniformTag::NormalMapSampler)
 				AddSampler2DUniform(
 					UniformTag::NormalMapSampler, stage, m_Material->GetNormalMap());
+			else
+				RAY_ASSERT(
+					false, "[MeshRenderer] Unknown predefined uniform name \"{0}\"", uniformName);
 		};
 
 		for (const auto& [stage, stageData] :
