@@ -33,10 +33,64 @@ namespace At0::Ray
 		if (!pScene)
 			RAY_THROW_RUNTIME("[Model] Failed to load: \"{0}\"", importer.GetErrorString());
 
+		std::vector<std::future<void>> futures;
+		std::mutex mutex;
+		auto parseMeshAsync = [this, &mutex](std::string_view filepath, const aiMesh* pMesh,
+								  const aiMaterial* const* pMaterials, Ref<Material> material) {
+			const aiMesh& mesh = *pMesh;
+			const std::string basePath = std::filesystem::path(filepath).remove_filename().string();
+			const std::string meshTag =
+				std::string(filepath) + std::string("#") + mesh.mName.C_Str();
+
+			// Material creation stage
+			if (!material)
+			{
+				std::scoped_lock lock(mutex);
+				material = CreateMaterial(basePath, mesh, pMaterials);
+			}
+
+			// Vertex assembly stage
+			DynamicVertex vertices =
+				AssembleVertices(mesh, material->GetGraphicsPipeline().GetShader());
+
+			// Index generation stage
+			std::vector<IndexBuffer::Type> indices = GenerateIndices(mesh);
+
+			// Parents
+			std::scoped_lock lock(mutex);
+			if (!m_ParentSet)
+			{
+				m_VertexData.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
+				m_VertexData.indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
+				m_VertexData.material = std::move(material);
+				m_ParentSet = true;
+			}
+			// Children
+			else
+			{
+				Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
+				Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
+
+				// ParentEntity component added by mesh
+				Entity entity = Scene::Get().CreateEntity();
+				Ray::MeshRenderer& meshRenderer =
+					entity.Emplace<Ray::MeshRenderer>(std::move(material));
+				entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
+				m_VertexData.children.emplace_back(entity);
+			}
+
+			Log::Info("[Model] Loaded mesh \"{0}\" of model \"{1}\"", mesh.mName.C_Str(), filepath);
+		};
+
 		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
 		{
-			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials, material);
+			futures.push_back(std::async(std::launch::async, parseMeshAsync, filepath,
+				pScene->mMeshes[i], pScene->mMaterials, material));
 		}
+
+		// RAY_TODO: Finish while scene is already rendering
+		for (auto& future : futures)
+			future.get();
 	}
 
 	void Model::ParseMesh(std::string_view filepath, const aiMesh& mesh,
