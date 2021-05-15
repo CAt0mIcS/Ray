@@ -1,8 +1,6 @@
 ﻿#pragma once
 
 #include "RPipeline.h"
-#include "RShader.h"
-#include "../RGraphics.h"
 
 #include <vector>
 #include <string>
@@ -18,9 +16,10 @@ namespace At0::Ray
 	public:
 		struct Layout
 		{
-			const RenderPass* renderPass = &Graphics::Get().GetRenderPass();
+			const RenderPass* renderPass = nullptr;	 // Set to Graphics::Get().GetRenderPass()
 			std::vector<std::string> shaders;
-			VkPipelineCache pipelineCache = Graphics::Get().GetPipelineCache();
+			std::optional<VkPipelineCache>
+				pipelineCache;	// set to Graphics::Get().GetPipelineCache()
 			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT;
 			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL;
@@ -33,7 +32,7 @@ namespace At0::Ray
 		};
 
 	public:
-		GraphicsPipeline(const Layout& layout);
+		GraphicsPipeline(Layout layout);
 		~GraphicsPipeline();
 
 		Pipeline::BindPoint GetBindPoint() const override;

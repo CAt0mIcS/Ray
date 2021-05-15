@@ -4,31 +4,27 @@
 #include "../../Utils/RNonCopyable.h"
 #include "../Core/RBindable.h"
 
-#include "RShader.h"
-
-#include <unordered_map>
 #include <vulkan/vulkan_core.h>
 
 
 namespace At0::Ray
 {
+	class Shader;
+
 	class RAY_EXPORT Pipeline : public Bindable
 	{
 	public:
 		enum class BindPoint
 		{
-			Graphics = 0,
-			Compute = 1,
-			RayTracing = 1000165000
+			Graphics = VK_PIPELINE_BIND_POINT_GRAPHICS,
+			Compute = VK_PIPELINE_BIND_POINT_COMPUTE,
+			RayTracing = VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR
 		};
 
 	public:
 		virtual ~Pipeline();
 
-		virtual VkDescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const
-		{
-			return VK_NULL_HANDLE;
-		}
+		virtual VkDescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const;
 		virtual VkDescriptorPool GetDescriptorPool() const { return VK_NULL_HANDLE; };
 		virtual Pipeline::BindPoint GetBindPoint() const = 0;
 		void CmdBind(const CommandBuffer& cmdBuff) const override;

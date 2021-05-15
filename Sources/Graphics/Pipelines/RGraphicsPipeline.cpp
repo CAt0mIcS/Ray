@@ -1,6 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RGraphicsPipeline.h"
 
+#include "RShader.h"
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/RenderPass/RRenderPass.h"
@@ -14,8 +15,13 @@
 
 namespace At0::Ray
 {
-	GraphicsPipeline::GraphicsPipeline(const Layout& layout) : Pipeline(layout.shaders)
+	GraphicsPipeline::GraphicsPipeline(Layout layout) : Pipeline(layout.shaders)
 	{
+		if (!layout.renderPass)
+			layout.renderPass = &Graphics::Get().GetRenderPass();
+		if (!layout.pipelineCache)
+			layout.pipelineCache = Graphics::Get().GetPipelineCache();
+
 		CreateDescriptorSetLayouts();
 		CreateDescriptorPool();
 		CreatePipelineLayout();
@@ -48,9 +54,10 @@ namespace At0::Ray
 	std::string GraphicsPipeline::GetUID(const Layout& layout)
 	{
 		std::ostringstream oss;
-		oss << "GraphicsPipeline#" << layout.pipelineCache << "#" << (uint32_t)layout.cullMode
-			<< "#" << (uint32_t)layout.topology << "#" << (uint32_t)layout.polygonMode << "#"
-			<< layout.lineWidth << "#" << layout.depthTestEnabled << "#";
+		oss << "GraphicsPipeline#"
+			<< "#" << (uint32_t)layout.cullMode << "#" << (uint32_t)layout.topology << "#"
+			<< (uint32_t)layout.polygonMode << "#" << layout.lineWidth << "#"
+			<< layout.depthTestEnabled << "#";
 		for (std::string_view shader : layout.shaders)
 			oss << shader << "#";
 
@@ -291,11 +298,10 @@ namespace At0::Ray
 		createInfo.basePipelineIndex = -1;
 
 		RAY_VK_THROW_FAILED(vkCreateGraphicsPipelines(Graphics::Get().GetDevice(),
-								layout.pipelineCache, 1, &createInfo, nullptr, &m_Pipeline),
+								*layout.pipelineCache, 1, &createInfo, nullptr, &m_Pipeline),
 			"[GraphicsPipeline] Failed to create");
 
 		// Destroy shader modules as they aren't needed anymore
-		for (const VkPipelineShaderStageCreateInfo& shaderStage : shaderStages)
-			vkDestroyShaderModule(Graphics::Get().GetDevice(), shaderStage.module, nullptr);
+		m_Shader->DestroyShaderModules();
 	}
 }  // namespace At0::Ray

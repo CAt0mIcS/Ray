@@ -2,6 +2,7 @@
 
 #include "../RMaterial.h"
 #include "../../Graphics/Pipelines/RGraphicsPipeline.h"
+#include "../../Core/RMath.h"
 
 
 namespace At0::Ray

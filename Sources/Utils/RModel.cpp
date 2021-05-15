@@ -18,6 +18,7 @@
 
 #include "Components/RMeshRenderer.h"
 #include "Components/RParentEntity.h"
+#include "Scene/RScene.h"
 
 
 namespace At0::Ray

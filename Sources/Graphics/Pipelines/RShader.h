@@ -246,6 +246,8 @@ namespace At0::Ray
 		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributes(
 			uint32_t binding = 0) const;
 
+		void DestroyShaderModules();
+
 		static std::string GetUID(const std::vector<std::string>& shaders);
 
 	private:

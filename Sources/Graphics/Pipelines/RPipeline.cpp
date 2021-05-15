@@ -5,6 +5,7 @@
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/RCodex.h"
+#include "RShader.h"
 
 
 namespace At0::Ray
@@ -13,6 +14,11 @@ namespace At0::Ray
 	{
 		vkDestroyPipelineLayout(Graphics::Get().GetDevice(), m_Layout, nullptr);
 		vkDestroyPipeline(Graphics::Get().GetDevice(), m_Pipeline, nullptr);
+	}
+
+	VkDescriptorSetLayout Pipeline::GetDescriptorSetLayout(uint32_t set) const
+	{
+		return VK_NULL_HANDLE;
 	}
 
 	void Pipeline::CmdBind(const CommandBuffer& cmdBuff) const

@@ -75,9 +75,6 @@ public:
 			}
 		});
 
-		Ray::Shader shader(
-			{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" });
-
 		auto sharedMaterial = Ray::MakeRef<Ray::FlatColorMaterial>();
 
 		m_Entity = Scene::Get().CreateEntity();

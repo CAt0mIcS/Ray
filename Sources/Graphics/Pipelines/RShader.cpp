@@ -82,7 +82,14 @@ namespace At0::Ray
 		CreateReflection();
 	}
 
-	Shader::~Shader() {}
+	Shader::~Shader()
+	{
+		for (const auto [stage, shaderModule] : m_ShaderModules)
+		{
+			if (shaderModule)
+				vkDestroyShaderModule(Graphics::Get().GetDevice(), shaderModule, nullptr);
+		}
+	}
 
 	VkFormat Shader::GlTypeToVkFormat(int32_t type)
 	{
@@ -750,6 +757,13 @@ namespace At0::Ray
 		uint32_t binding) const
 	{
 		return DynamicVertex{ *this }.GetVertexInputAttributes(binding);
+	}
+
+	void Shader::DestroyShaderModules()
+	{
+		for (const auto [stage, shaderModule] : m_ShaderModules)
+			vkDestroyShaderModule(Graphics::Get().GetDevice(), shaderModule, nullptr);
+		m_ShaderModules.clear();
 	}
 
 	std::string Shader::GetUID(const std::vector<std::string>& shaders)
