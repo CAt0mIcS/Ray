@@ -76,12 +76,8 @@ namespace At0::Ray
 		else
 			entitiesPerThread.emplace_back((uint32_t)tformView.size());
 
-		std::vector<std::thread> threads;
-		threads.reserve(entitiesPerThread.size());
-
-		std::unordered_map<uint32_t, bool> updated;
-		for (Entity e : tformView)
-			updated[(uint32_t)e] = false;
+		std::vector<std::future<void>> futures;
+		futures.reserve(entitiesPerThread.size());
 
 		uint32_t endIdx = 0;
 		for (uint32_t i = 0; i < entitiesPerThread.size(); ++i)
@@ -89,16 +85,15 @@ namespace At0::Ray
 			uint32_t startIdx = endIdx;
 			endIdx += entitiesPerThread[i];
 
-			threads.emplace_back([&updated, &tformView, &startIdx, &endIdx]() {
+			futures.push_back(std::async(std::launch::async, [&tformView, &startIdx, &endIdx]() {
 				for (uint32_t i = startIdx; i < endIdx; ++i)
 					Entity{ tformView[i] }.Get<Transform>().UpdateMatrix();
-			});
+			}));
 		}
 
 		// Wait for calculations to finnish
-		for (std::thread& thread : threads)
-			if (thread.joinable())
-				thread.join();
+		for (auto& future : futures)
+			future.get();
 #else
 		tformView.each([](Transform& tform) { tform.UpdateMatrix(); });
 #endif
