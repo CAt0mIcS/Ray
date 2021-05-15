@@ -19,7 +19,7 @@ vec3 materialSpecular = vec3(1.0f, 1.0f, 1.0f);
 float specularStrength = 0.5f;
 
 
-layout(set = 2, binding = 2) uniform Shading
+layout(set = 1, binding = 2) uniform Shading
 {
 	vec3 color;
 } ubo;

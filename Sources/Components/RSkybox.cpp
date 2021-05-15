@@ -5,8 +5,13 @@
 #include "Graphics/Images/RTextureCubemap.h"
 #include "Graphics/Images/RImage.h"
 #include "Graphics/Buffers/RBuffer.h"
-#include "RMesh.h"
+
 #include "Scene/RScene.h"
+#include "Shading/Flat/RFlatTextureMaterial.h"
+
+#include "RMesh.h"
+#include "RTransform.h"
+#include "RMeshRenderer.h"
 
 
 namespace At0::Ray
@@ -23,8 +28,8 @@ namespace At0::Ray
 		//	Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", std::move(layout)));
 		// mesh.GetTransform().SetScale(Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
 
-		// mesh.GetMaterial().AddBufferUniform("PerObjectData", Shader::Stage::Vertex);
-		// mesh.GetMaterial().AddSampler2DUniform("texSampler", Shader::Stage::Fragment, texture);
+		// renderer.AddBufferUniform("PerObjectData", Shader::Stage::Vertex);
+		// renderer.AddSampler2DUniform("materialDiffuse", Shader::Stage::Fragment, texture);
 	}
 
 	Skybox::Skybox(Entity entity, Ref<TextureCubemap> texture) : Component(entity)

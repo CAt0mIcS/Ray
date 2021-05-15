@@ -8,6 +8,24 @@ namespace At0::Ray
 {
 	class GraphicsPipeline;
 
+	/**
+	 * Specifies strings which identify the different shader configurations
+	 */
+	struct ShaderFileCode
+	{
+		static constexpr const char* AlbedoMap = "_Alb";
+		static constexpr const char* DiffuseMap = "_Diff";
+		static constexpr const char* Metallic = "_Metal";
+		static constexpr const char* SpecularMap = "_Spec";
+		static constexpr const char* NormalMap = "_Norm";
+		static constexpr const char* HeightMap = "_Height";
+		static constexpr const char* Occlusion = "_Occl";
+		static constexpr const char* DetailMask = "_DtlMsk";
+		static constexpr const char* Emission = "_Emi";
+
+		static constexpr const char* Color = "_Col";
+	};
+
 	class RAY_EXPORT Material : public Bindable
 	{
 	public:

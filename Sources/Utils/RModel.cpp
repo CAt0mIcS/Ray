@@ -3,10 +3,12 @@
 
 #include "Core/RDynamicVertex.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
-#include "Shading/RStandardMaterial.h"
 #include "Graphics/Images/RTexture2D.h"
 #include "Graphics/RCodex.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
+
+#include "Shading/Phong/RPhongMaterial.h"
+#include "Shading/Flat/RFlatColorMaterial.h"
 
 #include "RException.h"
 
@@ -113,7 +115,13 @@ namespace At0::Ray
 			normalMap = MakeRef<Texture2D>(basePath + normalTexFileName.C_Str());
 		}
 
-		return MakeRef<StandardMaterial>(nullptr, diffuseMap, specularMap, normalMap);
+		PhongMaterial::Layout layout{};
+		layout.diffuseMap = diffuseMap;
+		layout.specularMap = specularMap;
+		layout.normalMap = normalMap;
+
+		// return MakeRef<PhongMaterial>(layout);
+		return MakeRef<FlatColorMaterial>();
 	}
 
 	DynamicVertex Model::AssembleVertices(const aiMesh& mesh, const Shader& shader)

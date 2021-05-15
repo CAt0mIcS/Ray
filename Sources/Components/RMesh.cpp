@@ -26,10 +26,6 @@ namespace At0::Ray
 		{
 			e.Emplace<ParentEntity>(entity);
 		}
-
-		// if (!vertexData.children.empty())
-		//	EmplaceChildren(std::move(vertexData.children),
-		//		GetEntity().Get<MeshRenderer>().GetSharedMaterial());
 	}
 
 	Mesh::VertexData Mesh::Triangle(Ref<Material> material)

@@ -4,7 +4,7 @@
 
 layout(location = 0) in vec3 inNormal;
 layout(location = 1) in vec3 inFragPos;
-layout(location = 2) in vec2 inTexCoord;
+layout(location = 2) in vec2 inUV;
 layout(location = 3) in vec3 inViewPos;
 
 layout(location = 0) out vec4 outColor;
@@ -15,7 +15,7 @@ float lightSpecular = 1.0f;
 vec3 lightPosition = vec3(0.0f, 0.0f, 0.0f);
 vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
 
-layout(set = 2, binding = 2) uniform sampler2D materialDiffuse;
+layout(set = 1, binding = 2) uniform sampler2D materialDiffuse;
 float materialShininess = 1.0f;
 vec3 materialSpecularColor = vec3(1.0f, 1.0f, 1.0f);
 float specularStrength = 0.5f;
@@ -24,13 +24,13 @@ float specularStrength = 0.5f;
 void main()
 {
     // ambient
-    vec3 ambient = lightAmbient * texture(materialDiffuse, inTexCoord).rgb;
+    vec3 ambient = lightAmbient * texture(materialDiffuse, inUV).rgb;
 
     // diffuse 
     vec3 norm = normalize(inNormal);
     vec3 lightDir = normalize(lightPosition - inFragPos);
     float diff = max(dot(norm, lightDir), 0.0f);
-    vec3 diffuse = lightDiffuse * diff * texture(materialDiffuse, inTexCoord).rgb * lightColor;
+    vec3 diffuse = lightDiffuse * diff * texture(materialDiffuse, inUV).rgb * lightColor;
     
     // specular (no map)
     vec3 viewDir = normalize(inViewPos - inFragPos);

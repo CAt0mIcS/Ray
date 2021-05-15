@@ -10,24 +10,24 @@ layout(location = 1) out vec3 outFragPos;
 layout(location = 2) out vec3 outViewPos;
 
 
-layout(set = 0, binding = 0) uniform Camera
+layout(set = 0, binding = 0) uniform PerSceneData
 {
-	mat4 view;
-	mat4 proj;
-	vec3 pos;
-} camUBO;
+	mat4 View;
+	mat4 Proj;
+	vec3 ViewPos;
+} uScene;
 
 layout(set = 1, binding = 1) uniform PerObjectData
 {
-	mat4 model;
-} ubo;
+	mat4 Model;
+} uObj;
+
 
 void main()
 {
-	outNormal = mat3(transpose(inverse(ubo.model))) * inNormal;
-	// outNormal = vec3(0.0f, 1.0f, 1.0f);
-	outFragPos = vec3(ubo.model * vec4(inPos, 1.0f));
-	outViewPos = camUBO.pos;
+	outNormal = mat3(transpose(inverse(uObj.Model))) * inNormal;
+	outFragPos = vec3(uObj.Model * vec4(inPos, 1.0f));
+	outViewPos = uScene.ViewPos;
 
-	gl_Position = camUBO.proj * camUBO.view * ubo.model * vec4(inPos, 1.0f);
+	gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 1.0f);
 }

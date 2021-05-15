@@ -15,7 +15,9 @@
 #include <Graphics/Pipelines/RGraphicsPipeline.h>
 #include <Utils/RException.h>
 #include <Core/RDynamicVertex.h>
-#include <Shading/RStandardMaterial.h>
+
+#include <Shading/Phong/RPhongMaterial.h>
+#include <Shading/Flat/RFlatColorMaterial.h>
 
 #include <Scene/RScene.h>
 #include <Scene/RCamera.h>
@@ -73,7 +75,8 @@ public:
 			}
 		});
 
-		auto sharedMaterial = Ray::MakeRef<Ray::StandardMaterial>();
+
+		auto sharedMaterial = Ray::MakeRef<Ray::FlatColorMaterial>();
 
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
@@ -82,17 +85,6 @@ public:
 		meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
 		auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
 		uShading["color"] = Ray::Float3{ 1.0f, 1.0f, 1.0f };
-
-		// for (Ray::Mesh::VertexData& child : vData.children)
-		//{
-		//	Ray::Entity entity = Scene::Get().CreateEntity();
-		//	entity.Emplace<Ray::Mesh>(
-		//		Ray::Mesh::VertexData{ child.vertexBuffer, child.indexBuffer });
-		//	Ray::MeshRenderer& meshRenderer = entity.Emplace<Ray::MeshRenderer>(sharedMaterial);
-		//	meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
-		//	auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
-		//	uShading["color"] = Ray::Float3{ 1.0f, 1.0f, 1.0f };
-		//}
 	}
 
 private:

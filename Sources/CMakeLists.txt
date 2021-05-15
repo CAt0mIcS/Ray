@@ -1,8 +1,8 @@
 set(SHADERS
-	"../Resources/Shaders/Flat.vert"
-	"../Resources/Shaders/Flat.frag"
-	"../Resources/Shaders/Flat_Tex.vert"
-	"../Resources/Shaders/Flat_Tex.frag"
+	"../Resources/Shaders/Flat_Col.vert"
+	"../Resources/Shaders/Flat_Col.frag"
+	"../Resources/Shaders/Flat_Diff.vert"
+	"../Resources/Shaders/Flat_Diff.frag"
 	"../Resources/Shaders/Phong.vert"
 	"../Resources/Shaders/Phong.frag"
 	"../Resources/Shaders/Phong_Spec.vert"
@@ -147,8 +147,12 @@ set(SRC
 	# Shading
 	"Shading/RMaterial.h"
 	"Shading/RMaterial.cpp"
-	"Shading/RStandardMaterial.h"
-	"Shading/RStandardMaterial.cpp"
+	"Shading/Phong/RPhongMaterial.h"
+	"Shading/Phong/RPhongMaterial.cpp"
+	"Shading/Flat/RFlatColorMaterial.h"
+	"Shading/Flat/RFlatColorMaterial.cpp"
+	"Shading/Flat/RFlatTextureMaterial.h"
+	"Shading/Flat/RFlatTextureMaterial.cpp"
 
 	# ------------------------------------------------------------------
 	# User Interface
