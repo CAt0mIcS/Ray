@@ -24,6 +24,11 @@ namespace At0::Ray
 	struct UniformTag
 	{
 		static constexpr const char* PerObjectData = "PerObjectData";
+		static constexpr const char* Shading = "Shading";
+		static constexpr const char* AlbedoMapSampler = "samplerAlbedo";
+		static constexpr const char* DiffuseMapSampler = "samplerDiffuse";
+		static constexpr const char* SpecularMapSampler = "samplerSpecular";
+		static constexpr const char* NormalMapSampler = "samplerNormal";
 	};
 
 
@@ -54,11 +59,14 @@ namespace At0::Ray
 		BufferUniform& GetBufferUniform(std::string_view name);
 		Sampler2DUniform& GetSampler2DUniform(std::string_view name);
 
-		void SetMaterial(Ref<Material> material) { m_Material = std::move(material); }
+		void SetMaterial(Ref<Material> material);
 
 		Material& GetMaterial() { return *m_Material; }
 		const Material& GetMaterial() const { return *m_Material; }
 		Ref<Material> GetSharedMaterial() const { return m_Material; }
+
+	private:
+		void AddUniforms();
 
 	private:
 		/**

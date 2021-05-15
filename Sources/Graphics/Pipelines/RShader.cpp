@@ -548,7 +548,8 @@ namespace At0::Ray
 
 				switch (uniformBlock.type)
 				{
-				case Shader::UniformBlocks::Type::Uniform:
+				case Shader::UniformBlocks::Type::UniformBuffer:
+				case Shader::UniformBlocks::Type::UniformSampler2D:
 				{
 					descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 
@@ -803,8 +804,12 @@ namespace At0::Ray
 		data.set = uniformBlock.getType()->getQualifier().layoutSet;
 		data.uniformBlockName = uniformBlock.name;
 
+		// RAY_TODO: Better way of detecting whether uniform is sampler or buffer
 		if (uniformBlock.getType()->getQualifier().storage == glslang::EvqUniform)
-			data.type = Shader::UniformBlocks::Type::Uniform;
+			if (uniformBlock.getType()->getSampler().combined)
+				data.type = Shader::UniformBlocks::Type::UniformSampler2D;
+			else
+				data.type = Shader::UniformBlocks::Type::UniformBuffer;
 		// if (uniformBlock.getType()->getQualifier().storage == glslang::EvqBuffer)
 		//	data.type = Shader::UniformBlocks::Type::Storage;
 		if (uniformBlock.getType()->getQualifier().layoutPushConstant)

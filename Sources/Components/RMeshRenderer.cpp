@@ -16,6 +16,7 @@ namespace At0::Ray
 	MeshRenderer::MeshRenderer(Entity entity, Ref<Material> material)
 		: Component(entity), m_Material(std::move(material))
 	{
+		AddUniforms();
 	}
 
 	void MeshRenderer::Render(const CommandBuffer& cmdBuff) const
@@ -129,5 +130,49 @@ namespace At0::Ray
 				if (uBuff->GetName() == name)
 					return *uBuff;
 		RAY_THROW_RUNTIME("[MeshRenderer] Failed to retrieve Sampler2DUniform \"{0}\"", name);
+	}
+
+	void MeshRenderer::SetMaterial(Ref<Material> material)
+	{
+		m_Material = std::move(material);
+		AddUniforms();
+	}
+
+	void MeshRenderer::AddUniforms()
+	{
+		AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
+
+		auto addSamplerUniforms = [this](std::string_view uniformName, Shader::Stage stage) {
+			if (uniformName == UniformTag::AlbedoMapSampler)
+				AddSampler2DUniform(
+					UniformTag::AlbedoMapSampler, stage, m_Material->GetAlbedoMap());
+			else if (uniformName == UniformTag::DiffuseMapSampler)
+				AddSampler2DUniform(
+					UniformTag::DiffuseMapSampler, stage, m_Material->GetDiffuseMap());
+			else if (uniformName == UniformTag::SpecularMapSampler)
+				AddSampler2DUniform(
+					UniformTag::SpecularMapSampler, stage, m_Material->GetSpecularMap());
+			else if (uniformName == UniformTag::NormalMapSampler)
+				AddSampler2DUniform(
+					UniformTag::NormalMapSampler, stage, m_Material->GetNormalMap());
+		};
+
+		for (const auto& [stage, stageData] :
+			m_Material->GetGraphicsPipeline().GetShader().GetShaderData())
+		{
+			for (const auto& uBlock : stageData.uniformBlocks)
+			{
+				if (uBlock.uniformBlockName == UniformTag::PerObjectData)
+					AddBufferUniform(UniformTag::PerObjectData, stage);
+				else if (uBlock.uniformBlockName == UniformTag::Shading)
+					AddBufferUniform(UniformTag::Shading, stage);
+			}
+
+			// Only sampler uniforms can be outside of a block
+			for (const auto& uniform : stageData.uniforms)
+			{
+				addSamplerUniforms(uniform.uniformName, stage);
+			}
+		}
 	}
 }  // namespace At0::Ray

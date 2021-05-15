@@ -75,6 +75,8 @@ public:
 			}
 		});
 
+		Ray::Shader shader(
+			{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" });
 
 		auto sharedMaterial = Ray::MakeRef<Ray::FlatColorMaterial>();
 
@@ -82,9 +84,7 @@ public:
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 
 		Ray::MeshRenderer& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(sharedMaterial);
-		meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
-		auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
-		uShading["color"] = Ray::Float3{ 1.0f, 1.0f, 1.0f };
+		meshRenderer.GetBufferUniform("Shading")["color"] = Ray::Float3{ 1.0f, 0.0f, 1.0f };
 	}
 
 private:

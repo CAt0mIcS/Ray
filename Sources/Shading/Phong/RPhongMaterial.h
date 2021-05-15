@@ -52,6 +52,14 @@ namespace At0::Ray
 		void SetEmissionColor(Float3 color) { m_Layout.emission.color = std::move(color); }
 		void SetEmissionIntensity(float intensity) { m_Layout.emission.intensity = intensity; }
 
+		Ref<Texture2D> GetAlbedoMap() const override { return m_Layout.albedoMap; }
+		Ref<Texture2D> GetDiffuseMap() const override { return m_Layout.diffuseMap; }
+		Ref<Texture2D> GetSpecularMap() const override { return m_Layout.specularMap; }
+		Ref<Texture2D> GetNormalMap() const override { return m_Layout.normalMap; }
+		Ref<Texture2D> GetHeightMap() const override { return m_Layout.heightMap; }
+		Ref<Texture2D> GetOcclusion() const override { return m_Layout.occlusion; }
+		Ref<Texture2D> GetDetailMask() const override { return m_Layout.detailMask; }
+
 	private:
 		std::vector<std::string> ChooseShaders();
 

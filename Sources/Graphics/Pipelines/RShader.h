@@ -169,7 +169,8 @@ namespace At0::Ray
 			enum class Type
 			{
 				None,
-				Uniform,
+				UniformBuffer,
+				UniformSampler2D,
 				Storage,
 				Push
 			};
@@ -238,6 +239,7 @@ namespace At0::Ray
 		std::vector<VkPushConstantRange> GetPushConstantRanges() const;
 		const auto& GetShaders() const { return m_Shaders; }
 		auto& GetShaderModules() { return m_ShaderModules; }
+		const auto& GetShaderData() const { return m_ShaderData; }
 
 		std::vector<VkVertexInputBindingDescription> GetVertexInputBindings(
 			uint32_t binding = 0) const;

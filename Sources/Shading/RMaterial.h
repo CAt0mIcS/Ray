@@ -7,6 +7,7 @@
 namespace At0::Ray
 {
 	class GraphicsPipeline;
+	class Texture2D;
 
 	/**
 	 * Specifies strings which identify the different shader configurations
@@ -38,6 +39,14 @@ namespace At0::Ray
 		 * Bind the graphics pipeline
 		 */
 		void CmdBind(const CommandBuffer& cmdBuff) const;
+
+		virtual Ref<Texture2D> GetAlbedoMap() const { return nullptr; }
+		virtual Ref<Texture2D> GetDiffuseMap() const { return nullptr; }
+		virtual Ref<Texture2D> GetSpecularMap() const { return nullptr; }
+		virtual Ref<Texture2D> GetNormalMap() const { return nullptr; }
+		virtual Ref<Texture2D> GetHeightMap() const { return nullptr; }
+		virtual Ref<Texture2D> GetOcclusion() const { return nullptr; }
+		virtual Ref<Texture2D> GetDetailMask() const { return nullptr; }
 
 	protected:
 		Material();

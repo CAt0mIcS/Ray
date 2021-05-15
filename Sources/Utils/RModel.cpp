@@ -78,7 +78,6 @@ namespace At0::Ray
 			// entity.Emplace<ParentEntity>(parent);
 			entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
 			Ray::MeshRenderer& meshRenderer = entity.Emplace<Ray::MeshRenderer>(material);
-			meshRenderer.AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
 			auto& uShading = meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment);
 			uShading["color"] = Ray::Float3{ 1.0f, 1.0f, 1.0f };
 
