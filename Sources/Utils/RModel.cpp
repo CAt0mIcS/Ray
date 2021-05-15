@@ -15,6 +15,7 @@
 #include <assimp/scene.h>
 
 #include "Components/RMeshRenderer.h"
+#include "Components/RParentEntity.h"
 
 
 namespace At0::Ray
@@ -72,7 +73,9 @@ namespace At0::Ray
 
 			vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
 			indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
+			Ray::Entity parent = entity;
 			entity = Scene::Get().CreateEntity();
+			entity.Emplace<ParentEntity>(parent);
 		}
 
 		entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
