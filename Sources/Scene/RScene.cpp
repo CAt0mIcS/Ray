@@ -78,12 +78,18 @@ namespace At0::Ray
 
 		std::vector<std::thread> threads;
 		threads.reserve(entitiesPerThread.size());
+
+		std::unordered_map<uint32_t, bool> updated;
+		for (Entity e : tformView)
+			updated[(uint32_t)e] = false;
+
+		uint32_t endIdx = 0;
 		for (uint32_t i = 0; i < entitiesPerThread.size(); ++i)
 		{
-			uint32_t startIdx = i * entitiesPerThread[i];
-			uint32_t endIdx = (i + 1) * entitiesPerThread[i];
+			uint32_t startIdx = endIdx;
+			endIdx += entitiesPerThread[i];
 
-			threads.emplace_back([&tformView, &startIdx, &endIdx]() {
+			threads.emplace_back([&updated, &tformView, &startIdx, &endIdx]() {
 				for (uint32_t i = startIdx; i < endIdx; ++i)
 					Entity{ tformView[i] }.Get<Transform>().UpdateMatrix();
 			});

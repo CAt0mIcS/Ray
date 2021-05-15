@@ -14,28 +14,28 @@ layout(location = 3) out vec3 outTangent;
 layout(location = 4) out vec3 outLightVec;
 
 
-layout(set = 0, binding = 0) uniform Camera
+layout(set = 0, binding = 0) uniform PerSceneData
 {
-	mat4 view;
-	mat4 proj;
-	vec3 pos;
-	vec3 lightPos;
-} camUBO;
+	mat4 View;
+	mat4 Proj;
+	vec3 ViewPos;
+	vec3 LightPos;
+} uScene;
 
 layout(set = 1, binding = 1) uniform PerObjectData
 {
-	mat4 model;
-} ubo;
+	mat4 Model;
+} uObj;
 
 void main()
 {
 	outNormal = inNormal;
 	outUV = inUV;
 	outTangent = inTangent;
-	gl_Position = camUBO.proj * camUBO.view * ubo.model * vec4(inPos, 1.0f);
+	gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 1.0f);
 
-	outNormal = mat3(ubo.model) * inNormal;
-	vec4 pos = ubo.model * vec4(inPos, 1.0);
-	outLightVec = camUBO.lightPos - pos.xyz;
-	outViewVec = camUBO.pos - pos.xyz;
+	outNormal = mat3(uObj.Model) * inNormal;
+	vec4 pos = uObj.Model * vec4(inPos, 1.0);
+	outLightVec = uScene.LightPos - pos.xyz;
+	outViewVec = uScene.ViewPos - pos.xyz;
 }

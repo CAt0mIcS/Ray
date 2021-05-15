@@ -45,6 +45,8 @@ namespace At0::Ray
 		const std::string basePath = std::filesystem::path(filepath).remove_filename().string();
 		const std::string meshTag = std::string(filepath) + std::string("#") + mesh.mName.C_Str();
 
+		Log::Info("[Model] Parsing mesh \"{0}\" of model \"{1}\"", mesh.mName.C_Str(), filepath);
+
 		// Material creation stage
 		if (!material)
 			material = CreateMaterial(basePath, mesh, pMaterials);

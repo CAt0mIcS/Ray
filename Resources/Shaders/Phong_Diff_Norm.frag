@@ -9,8 +9,8 @@ layout(location = 4) in vec3 inLightVec;
 
 layout (location = 0) out vec4 outColor;
 
-layout (set = 2, binding = 2) uniform sampler2D samplerDiffuse;
-layout (set = 3, binding = 3) uniform sampler2D samplerNormal;
+layout (set = 1, binding = 2) uniform sampler2D samplerDiffuse;
+layout (set = 1, binding = 3) uniform sampler2D samplerNormal;
 
 void main()
 {

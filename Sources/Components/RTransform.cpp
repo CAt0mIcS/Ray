@@ -1,6 +1,8 @@
 ﻿#include "Rpch.h"
 #include "RTransform.h"
 
+#include "Utils/RLogger.h"
+
 
 namespace At0::Ray
 {
@@ -70,7 +72,13 @@ namespace At0::Ray
 
 	const Matrix& Transform::AsMatrix()
 	{
-		RAY_MEXPECTS(!m_Changed, "[Transform] Matrix should've already been recalculated");
+#ifndef NDEBUG
+		if (m_Changed)
+		{
+			UpdateMatrix();
+			Log::Error("[Transform] Matrix should've already been recalculated");
+		}
+#endif
 		return m_CachedMatrix;
 	}
 }  // namespace At0::Ray
