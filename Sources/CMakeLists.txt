@@ -225,7 +225,7 @@ set(PRIVATE_LIB
     "glslang"
     "SPIRV"
     "Ion"
-    "ktx"
+    # "ktx"
 )
 
 

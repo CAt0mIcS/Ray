@@ -5,6 +5,8 @@
 
 #include "../../Graphics/Pipelines/RGraphicsPipeline.h"
 
+#include <optional>
+
 
 namespace At0::Ray
 {
@@ -41,11 +43,14 @@ namespace At0::Ray
 				bool enabled = false;
 				Float3 color{};
 				float intensity = 0.0f;
-			} emission;
+			} emission{};
 		};
 
 	public:
-		PhongMaterial(Layout layout = {}, GraphicsPipeline::Layout pipelineLayout = {});
+		PhongMaterial(
+			Layout layout = Layout{ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+				{ 1.0f, 1.0f, 1.0f, 1.0f }, 1.0f, { false, { 0.0f, 0.0f, 0.0f }, 0.0f } },
+			GraphicsPipeline::Layout pipelineLayout = GraphicsPipeline::Layout{});
 
 		void SetColor(Float4 color) { m_Layout.color = std::move(color); }
 		void SetMetallic(float metallic) { m_Layout.metallic = metallic; }

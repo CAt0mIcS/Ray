@@ -11,6 +11,7 @@ namespace At0::Ray
 	PhongMaterial::PhongMaterial(Layout layout, GraphicsPipeline::Layout pipelineLayout)
 		: m_Layout(std::move(layout))
 	{
+
 		if (pipelineLayout.shaders.empty())
 			pipelineLayout.shaders = ChooseShaders();
 

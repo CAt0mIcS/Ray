@@ -3,7 +3,7 @@ add_subdirectory("glm")
 add_subdirectory("glslang")
 add_subdirectory("assimp")
 add_subdirectory("Ion")
-add_subdirectory("ktx")
+# add_subdirectory("ktx")
 
 SetOutputDirectory("glfw" "")
 
