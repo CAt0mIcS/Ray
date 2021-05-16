@@ -15,7 +15,10 @@ This repository is where I develop the Ray game engine. The source code as well 
 You can find the full documentation on the [wiki](https://github.com/CAt0mIcS/Ray/wiki) (soon).
 
 ## How to Build
-* First you will need the [Vulkan SDK](https://vulkan.lunarg.com/) to be installed.
+* ### Prerequisits
+  * [Vulkan SDK](https://vulkan.lunarg.com/)
+  * [Mono x64 (for Windows)](https://www.mono-project.com/docs/getting-started/install/windows/)
+  * [Mono x64 (for Linux)](https://www.mono-project.com/download/stable/#download-lin)
 * Clone the Repository with ```git clone --recursive https://github.com/CAt0mIcS/Ray.git ```
 * Run ```build.bat``` or ```build.sh``` depending on your OS. Make sure you have at least CMake Version 3.16 installed. The generated build files will be in the newly created build directory.
 
