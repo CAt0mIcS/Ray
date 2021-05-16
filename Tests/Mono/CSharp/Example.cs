@@ -4,7 +4,10 @@ class TestScript
 {
 	int classInteger;
 
-	static void StaticMethod(int i) { Console.WriteLine("Static method called " + i.ToString()); }
+	static void StaticMethod(int i)
+	{
+		Console.WriteLine("Static method called " + i.ToString());
+	}
 
 	void Start()
 	{

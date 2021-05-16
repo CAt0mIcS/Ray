@@ -67,33 +67,45 @@ namespace At0
 				std::cerr << "mono_method_desc_serach_in_image failed\n";
 
 
+			// Typeid of parameter type mapped to it's size
 			std::unordered_map<std::string, size_t> paramSizeMap;
 			(paramSizeMap.emplace(typeid(params).name(), sizeof(params)), ...);
 
-			int run = 0;
+			// Offset in the array of all parameters in the parameter pack
 			std::unordered_map<std::string, size_t> paramOffsetMap;
-			(GetParamOffsetMap(paramOffsetMap, run, params), ...);
+			(GetParamOffsetMap(paramOffsetMap, paramSizeMap, params), ...);
 
+			// Allocate storage to hold all parameters in aligned memory
 			size_t paramsSize = (sizeof(params) + ...);
 			void* parameterArray = malloc(paramsSize);
+
+			// Copy to the allocated pointer using the offset of every parameter and it's size
 			(memcpy((char*)parameterArray + paramOffsetMap[typeid(params).name()], &params,
 				 paramSizeMap[typeid(params).name()]),
 				...);
 
 			mono_runtime_invoke(method, nullptr, &parameterArray, nullptr);
-			mono_method_desc_free(typeMethodDesc);
 
+			mono_method_desc_free(typeMethodDesc);
 			free(parameterArray);
 		}
 
 		~MonoScript() { mono_jit_cleanup(m_Domain); }
 
 	private:
-		template<typename... Args>
-		void GetParamOffsetMap(
-			std::unordered_map<std::string, size_t>& map, int& run, Args&&... args)
+		template<typename T>
+		void GetParamOffsetMap(std::unordered_map<std::string, size_t>& offsetMap,
+			std::unordered_map<std::string, size_t>& sizeMap, T&& arg)
 		{
-			map["int"] = 0;
+			size_t offset = 0;
+			for (auto& [typeID, size] : sizeMap)
+			{
+				if (typeID == typeid(T).name())
+					break;
+
+				offset += sizeMap[typeID];
+			}
+			offsetMap[typeid(T).name()] = offset;
 		}
 
 	private:
