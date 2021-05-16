@@ -29,13 +29,7 @@
 #include <UI/RImGui.h>
 #include <../../Extern/imgui/imgui.h>
 
-
-#include <mono/jit/jit.h>
-#include <mono/metadata/object.h>
-#include <mono/metadata/environment.h>
-#include <mono/metadata/assembly.h>
-#include <mono/metadata/debug-helpers.h>
-#include <mono/metadata/mono-config.h>
+#include "MonoTestEnv.h"
 
 
 using namespace At0;
@@ -56,75 +50,55 @@ public:
 };
 
 
-void RunStaticMethod(MonoDomain* domain, MonoImage* image, const char* methodDesc)
-{
-	MonoMethodDesc* TypeMethodDesc;
-	TypeMethodDesc = mono_method_desc_new(methodDesc, NULL);
-	if (!TypeMethodDesc)
-		std::cout << "mono_method_desc_new failed" << std::endl;
-
-	// Search the method in the image
-	MonoMethod* method;
-	method = mono_method_desc_search_in_image(TypeMethodDesc, image);
-	if (!method)
-		std::cout << "mono_method_desc_search_in_image failed" << std::endl;
-
-	// run the method
-	std::cout << "Running the static method: " << methodDesc << std::endl;
-	mono_runtime_invoke(method, nullptr, nullptr, nullptr);
-}
-
-
 class App : public Ray::Engine
 {
 public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
+		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+			{
+				ImGui::Begin("TestEntity");
 
-		// Initialize mono
+				Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
 
-		std::string assemblyDir = "Tests/Mono/CSharp/";
+				Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
+				Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
+				Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
 
-#ifdef _WIN32
-		std::string command = Ray::String::Serialize(
-			"\"C:/Program Files/Mono/bin/mcs\" {0}Dog.cs -target:library", assemblyDir);
-#elif defined(__linux__)
-		std::string command = Ray::String::Serialize("mcs {0}Dog.cs -target:library", assemblyDir);
-#endif
+				Ray::ImGUI::Float3Widget("Translation", translation);
+				Ray::ImGUI::Float3Widget("Rotation", rotation);
+				Ray::ImGUI::Float3Widget("Scale", scale);
+				ImGui::Spacing();
 
-		// Compile the script
-		system(command.c_str());
+				tform.RecalculateCachedMatrix();
 
-#ifdef _WIN32
-		mono_set_dirs("C:\\Program Files\\Mono\\lib", "C:\\Program Files\\Mono\\etc");
-#endif
+				ImGui::End();
+			}
+		});
 
-		/*
-		 * Load the default Mono configuration file, this is needed
-		 * if you are planning on using the dllmaps defined on the
-		 * system configuration
-		 */
-		mono_config_parse(NULL);
+		// RAY_TODO: Fix matrix not being recalculated at the beginning
+		// auto sharedMaterial = Ray::MakeRef<Ray::FlatColorMaterial>();
 
-		MonoDomain* domain =
-			mono_jit_init(Ray::String::Serialize("{0}Dog.dll", assemblyDir).c_str());
+		// for (uint32_t i = 0; i < 9; ++i)
+		//{
+		//	m_Entity = Scene::Get().CreateEntity();
+		//	m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(sharedMaterial));
+		//	auto& renderer = m_Entity.Emplace<Ray::MeshRenderer>(sharedMaterial);
+		//	renderer.GetBufferUniform("Shading")["color"] =
+		//		Ray::Float3{ i / 3.0f, i / 4.0f, i / 2.0f };
 
-		MonoAssembly* assembly;
+		//	m_Entity.Get<Ray::Transform>().SetTranslation({ i + 1, 0.0f, 0.0f });
+		//}
 
-		assembly = mono_domain_assembly_open(
-			domain, Ray::String::Serialize("{0}Dog.dll", assemblyDir).c_str());
-		if (!assembly)
-			exit(2);
+		MonoScript script("Tests/Mono/CSharp/Example.cs");
+		script.CallStatic("TestScript:StaticMethod(int)", 3);
 
-		MonoImage* image;
-		image = mono_assembly_get_image(assembly);
-		if (!image)
-			std::cout << "mono_assembly_get_image failed" << std::endl;
+		m_Entity = Scene::Get().CreateEntity();
+		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 
-		RunStaticMethod(domain, image, "Dog::Type()");
-
-		mono_jit_cleanup(domain);
+		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:

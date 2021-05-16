@@ -1,5 +1,12 @@
+set(SCRIPT_SRC
+	"CSharp/Example.cs"
+)
+
 set(SRC
 	"main.cpp"
+	"MonoTestEnv.h"
+	
+	"${SCRIPT_SRC}"
 )
 
 SetMonoIncludesAndLibraries()
@@ -13,3 +20,4 @@ set_target_properties("Mono" PROPERTIES FOLDER "Tests")
 
 SetOutputDirectory("Mono" "")
 SetWorkingDirectoryPlane("Mono" "${CMAKE_SOURCE_DIR}")
+source_group("CSharp" FILES "${SCRIPT_SRC}")
