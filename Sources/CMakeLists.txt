@@ -202,6 +202,9 @@ set(SRC
 # Find required packages
 find_package("Vulkan" REQUIRED FATAL_ERROR)
 
+# Get paths to Mono installation
+SetMonoIncludesAndLibraries()
+
 set(PUBLIC_INC
     "${Vulkan_INCLUDE_DIRS}"
 )
@@ -212,6 +215,7 @@ set(PRIVATE_INC
     "${CMAKE_SOURCE_DIR}/Extern/glfw/include"
     "${CMAKE_SOURCE_DIR}/Extern"
     "${CMAKE_SOURCE_DIR}/Extern/Ion"
+    "${MONO_INC}"
 )
 
 set(PUBLIC_LIB
@@ -226,6 +230,7 @@ set(PRIVATE_LIB
     "SPIRV"
     "Ion"
     # "ktx"
+    "${MONO_LIB}"
 )
 
 
@@ -264,10 +269,20 @@ add_custom_command(TARGET "Ray" PRE_BUILD
 )
 endif()
 
+
+# ------------------------------------------------------------------
+# Copy dlls
 if(WIN32)
 add_custom_command(TARGET "Ray" POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CMAKE_SOURCE_DIR}/Extern/assimp/lib/x64/assimp-vc142-mt.dll"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo>"
+)
+add_custom_command(TARGET "Ray" PRE_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	"C:/Program FIles/Mono/bin/mono-2.0-sgen.dll"
     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug>"
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release>"
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo>"

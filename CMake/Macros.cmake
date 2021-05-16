@@ -67,3 +67,15 @@ function(SetWorkingDirectoryPlane target dir)
         "${target}" PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${dir}"
     )
 endfunction()
+
+# Sets MONO_INC and MONO_LIB
+macro(SetMonoIncludesAndLibraries)
+# /usr on Linux and C:/Program Files/Mono on Windows
+	if(WIN32)
+		set(MONO_INC "C:/Program Files/Mono/include/mono-2.0")
+		set(MONO_LIB "C:/Program Files/Mono/lib/mono-2.0-sgen.lib")
+	else()
+		set(MONO_INC "/usr/include/mono-2.0")
+		set(MONO_LIB "/usr/lib/libmono-2.0.so")
+	endif()
+endmacro()

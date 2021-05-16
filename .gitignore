@@ -11,3 +11,5 @@ build*/
 .vscode/
 *.cache
 imgui.ini
+*.dll
+!Extern/assimp/lib/x64/*.*
