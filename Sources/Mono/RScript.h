@@ -1,0 +1,47 @@
+﻿#pragma once
+
+#include "../RBase.h"
+#include "RFunction.h"
+#include "RStaticFunction.h"
+#include "RObject.h"
+
+typedef struct _MonoDomain MonoDomain;
+typedef struct _MonoAssembly MonoAssembly;
+typedef struct _MonoImage MonoImage;
+
+
+namespace At0::Ray::Mono
+{
+	class RAY_EXPORT Script
+	{
+	public:
+		static Script FromFile(std::string_view filepath);
+		static Script FromCompiled(std::string_view filepath);
+
+		/**
+		 * @param functionDescriptor Mono-compatible function descriptor
+		 */
+		StaticFunction GetStaticFunction(std::string_view functionDescriptor);
+
+		/**
+		 * @param className Descriptor for the namespace and the name of the class (e.g.
+		 * TestNamespace:TestClass)
+		 */
+		Object GetObject(std::string_view className);
+
+	public:
+		static bool Compile(std::string_view filepath);
+
+	private:
+		Script(std::string_view compiledFilePath);
+		static void MonoInit();
+
+	private:
+		static bool s_MonoInitialized;
+
+		// RAY_TODO: Sharing between coppies
+		MonoDomain* m_Domain = nullptr;
+		MonoAssembly* m_Assembly = nullptr;
+		MonoImage* m_Image = nullptr;
+	};
+}  // namespace At0::Ray::Mono

@@ -4,6 +4,8 @@ class TestScript
 {
 	int classInteger;
 
+	TestScript() { Console.WriteLine("Constructor called"); }
+
 	static void StaticMethod(int i)
 	{
 		Console.WriteLine("Static method called " + i.ToString());

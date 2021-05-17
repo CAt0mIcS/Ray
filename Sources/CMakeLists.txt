@@ -143,6 +143,8 @@ set(SRC
 	"Components/RTransform.cpp"
 	"Components/RParentEntity.h"
 	"Components/RParentEntity.cpp"
+	"Components/RScriptableEntity.h"
+	"Components/RScriptableEntity.cpp"
 
 	# Shading
 	"Shading/RMaterial.h"
@@ -163,6 +165,18 @@ set(SRC
 	"UI/RImGui.h"
 	"UI/RImGui.cpp"
 	
+	# ------------------------------------------------------------------
+	# Mono
+	"Mono/RScript.h"
+	"Mono/RScript.cpp"
+	"Mono/RObject.h"
+	"Mono/RObject.cpp"
+	"Mono/RFunctionBase.h"
+	"Mono/RFunctionBase.cpp"
+	"Mono/RFunction.h"
+	"Mono/RFunction.cpp"
+	"Mono/RStaticFunction.h"
+	"Mono/RStaticFunction.cpp"
 
 	# ------------------------------------------------------------------
 	# Utilities

@@ -4,7 +4,6 @@ set(SCRIPT_SRC
 
 set(SRC
 	"main.cpp"
-	"MonoTestEnv.h"
 	
 	"${SCRIPT_SRC}"
 )

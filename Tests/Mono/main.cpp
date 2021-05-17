@@ -29,7 +29,7 @@
 #include <UI/RImGui.h>
 #include <../../Extern/imgui/imgui.h>
 
-#include "MonoTestEnv.h"
+#include <Mono/RScript.h>
 
 
 using namespace At0;
@@ -106,8 +106,16 @@ public:
 		//	m_Entity.Get<Ray::Transform>().SetTranslation({ i + 1, 0.0f, 0.0f });
 		//}
 
-		MonoScript script("Tests/Mono/CSharp/Example.cs");
-		script.CallStatic("TestScript:StaticMethod(int)", 3);
+		auto script = Ray::Mono::Script::FromFile("Tests/Mono/CSharp/Example.cs");
+		auto staticFunction = script.GetStaticFunction("TestScript:StaticMethod(int)");
+		staticFunction(3);
+
+		auto object = script.GetObject("TestScript");
+		auto function = object.GetFunction("Update");
+		function(12);
+
+		// MonoScript script("Tests/Mono/CSharp/Example.cs");
+		// script.CallStatic("TestScript:StaticMethod(int)", 3);
 
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
