@@ -15,6 +15,7 @@ namespace At0::Ray::Mono
 		 * @param pImage Image where the function is contained
 		 */
 		StaticFunction(std::string_view functionDescriptor, MonoImage* pImage);
+		StaticFunction() = default;
 
 		/**
 		 * Invokes the method with the parameters

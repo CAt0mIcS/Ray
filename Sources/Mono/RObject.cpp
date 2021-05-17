@@ -38,7 +38,7 @@ namespace At0::Ray::Mono
 		mono_runtime_object_init(m_Object);
 	}
 
-	Function Object::GetFunction(std::string_view methodName)
+	Function Object::GetFunction(std::string_view methodName) const
 	{
 		return Function{ methodName, m_Object };
 	}

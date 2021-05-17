@@ -14,6 +14,7 @@ namespace At0::Ray::Mono
 		 */
 	public:
 		Function(std::string_view methodName, MonoObject* pObject);
+		Function() = default;
 
 		/**
 		 * Invokes the method with the parameters

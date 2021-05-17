@@ -18,8 +18,9 @@ namespace At0::Ray::Mono
 		 * TestNamespace:TestClass)
 		 */
 		Object(std::string_view className, MonoDomain* pDomain, MonoImage* pImage);
+		Object() = default;
 
-		Function GetFunction(std::string_view methodName);
+		Function GetFunction(std::string_view methodName) const;
 
 	private:
 		MonoObject* m_Object = nullptr;

@@ -17,6 +17,27 @@ namespace At0::Ray::Mono
 {
 	bool Script::s_MonoInitialized = false;
 
+	Script::Script(std::string_view compiledFilePath)
+	{
+		MonoInit();
+
+		m_Domain = mono_jit_init(compiledFilePath.data());
+		if (!m_Domain)
+			RAY_THROW_RUNTIME("[Mono::Script] Failed to initialize mono jit for assembly \"{0}\"",
+				compiledFilePath);
+
+		// Open a assembly in the domain
+		m_Assembly = mono_domain_assembly_open(m_Domain, compiledFilePath.data());
+		if (!m_Assembly)
+			RAY_THROW_RUNTIME("[Mono::Script] Failed to open assembly \"{0}\"", compiledFilePath);
+
+		// Get a image from the assembly
+		m_Image = mono_assembly_get_image(m_Assembly);
+		if (!m_Image)
+			RAY_THROW_RUNTIME(
+				"[Mono::Script] Failed to get image from the assembly \"{0}\"", compiledFilePath);
+	}
+
 	Script Script::FromFile(std::string_view filepath)
 	{
 		MonoInit();
@@ -32,12 +53,12 @@ namespace At0::Ray::Mono
 		return Script{ filepath };
 	}
 
-	StaticFunction Script::GetStaticFunction(std::string_view functionDescriptor)
+	StaticFunction Script::GetStaticFunction(std::string_view functionDescriptor) const
 	{
 		return StaticFunction{ functionDescriptor, m_Image };
 	}
 
-	Object Script::GetObject(std::string_view className)
+	Object Script::GetObject(std::string_view className) const
 	{
 		return Object{ className, m_Domain, m_Image };
 	}
@@ -55,25 +76,6 @@ namespace At0::Ray::Mono
 #endif
 		// Compile the script
 		return system(command.c_str()) == 0;
-	}
-
-	Script::Script(std::string_view compiledFilePath)
-	{
-		m_Domain = mono_jit_init(compiledFilePath.data());
-		if (!m_Domain)
-			RAY_THROW_RUNTIME("[Mono::Script] Failed to initialize mono jit for assembly \"{0}\"",
-				compiledFilePath);
-
-		// Open a assembly in the domain
-		m_Assembly = mono_domain_assembly_open(m_Domain, compiledFilePath.data());
-		if (!m_Assembly)
-			RAY_THROW_RUNTIME("[Mono::Script] Failed to open assembly \"{0}\"", compiledFilePath);
-
-		// Get a image from the assembly
-		m_Image = mono_assembly_get_image(m_Assembly);
-		if (!m_Image)
-			RAY_THROW_RUNTIME(
-				"[Mono::Script] Failed to get image from the assembly \"{0}\"", compiledFilePath);
 	}
 
 	void Script::MonoInit()
