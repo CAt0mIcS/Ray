@@ -76,6 +76,21 @@ public:
 				ImGui::End();
 			}
 		});
+		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+			{
+				ImGui::Begin("Camera");
+
+				ImGui::SliderFloat(
+					"Rotation Speed", &Scene::Get().GetCamera().RotationSpeed, 0.0f, 100.0f);
+				ImGui::SliderFloat(
+					"Movement Speed", &Scene::Get().GetCamera().MovementSpeed, 0.1f, 100.0f);
+
+				Ray::ImGUI::Float3Widget("Camera Position", Scene::Get().GetCamera().Position);
+				Ray::ImGUI::Float3Widget("Camera Rotation", Scene::Get().GetCamera().Rotation);
+
+				ImGui::End();
+			}
+		});
 
 		// RAY_TODO: Fix matrix not being recalculated at the beginning
 		// auto sharedMaterial = Ray::MakeRef<Ray::FlatColorMaterial>();

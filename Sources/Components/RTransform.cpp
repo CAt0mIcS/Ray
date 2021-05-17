@@ -72,13 +72,13 @@ namespace At0::Ray
 
 	const Matrix& Transform::AsMatrix()
 	{
-#ifndef NDEBUG
+		//#ifndef NDEBUG
 		if (m_Changed)
 		{
 			UpdateMatrix();
-			Log::Error("[Transform] Matrix should've already been recalculated");
+			// Log::Error("[Transform] Matrix should've already been recalculated");
 		}
-#endif
+		//#endif
 		return m_CachedMatrix;
 	}
 }  // namespace At0::Ray

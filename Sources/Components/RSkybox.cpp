@@ -43,13 +43,13 @@ namespace At0::Ray
 
 	void Skybox::Update(Delta dt)
 	{
-		// Transform& tform = GetEntity().Get<Mesh>().GetTransform();
-		// Camera& cam = Scene::Get().GetCamera();
+		Transform& tform = GetEntity().Get<Transform>();
+		Camera& cam = Scene::Get().GetCamera();
 
-		// tform.SetScale(
-		//	{ cam.GetFarClip() - 5.0f, cam.GetFarClip() - 5.0f, cam.GetFarClip() - 5.0f });
+		tform.SetScale(
+			{ cam.GetFarClip() - 5.0f, cam.GetFarClip() - 5.0f, cam.GetFarClip() - 5.0f });
 
-		// Float3 camPos = cam.Position;
-		// tform.SetTranslation({ -camPos.x, camPos.y, -camPos.z });
+		Float3 camPos = cam.Position;
+		tform.SetTranslation({ -camPos.x, camPos.y, -camPos.z });
 	}
 }  // namespace At0::Ray
