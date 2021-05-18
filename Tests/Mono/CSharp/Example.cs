@@ -14,25 +14,16 @@ struct Translation
 
 class TestScript
 {
-	int classInteger;
 	Translation translation;
-
-	TestScript() { Console.WriteLine("Constructor called"); }
-
-	static void StaticMethod(int i)
-	{
-		Console.WriteLine("Static method called " + i.ToString());
-	}
 
 	void Start()
 	{
-		Console.WriteLine("Start::ClassInteger: " + classInteger.ToString());
 	}
 
-	void Update(int dt)
+	void Update(float dt)
 	{
-		Console.WriteLine("Update::ClassInteger: " + classInteger.ToString());
-		Console.WriteLine("Update::DeltaTime: " + dt.ToString());
-		Console.WriteLine("Update::Translation: " + translation.ToString());
+		translation.x += 1.0f * dt;
+		translation.y += 1.0f * dt;
+		translation.z += 1.0f * dt;
 	}
 }

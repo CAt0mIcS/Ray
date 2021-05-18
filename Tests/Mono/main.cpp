@@ -113,18 +113,7 @@ public:
 		Ray::Mono::Script& script = scriptableEntity.GetScript();
 		Ray::Mono::Object& object = scriptableEntity.GetObject();
 
-		auto staticFunction = script.GetStaticFunction("TestScript:StaticMethod(int)");
-		staticFunction(3);
-
-		auto update = object.GetFunction("Update");
-		update(12);
-
-		object["classInteger"] = 100;
-		update(13);
-
-		object["translation"] = Ray::Float3{ 1.32f, 1.333f, 0.15485f };
-		update(14);
-
+		m_Update = object.GetFunction("Update");
 
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 
@@ -133,10 +122,17 @@ public:
 	}
 
 private:
-	void Update() override {}
+	void Update() override
+	{
+		m_Update(Ray::Engine::Get().GetDelta().AsSeconds());
+
+		m_Entity.Get<Ray::Transform>().SetTranslation(
+			m_Entity.Get<Ray::ScriptableEntity>().GetObject()["translation"].Get<Ray::Float3>());
+	}
 
 private:
 	Ray::Entity m_Entity;
+	Ray::Mono::Function m_Update;
 };
 
 void SignalHandler(int signal)
