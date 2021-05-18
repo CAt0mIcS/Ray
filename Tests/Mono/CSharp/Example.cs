@@ -1,8 +1,21 @@
 ﻿using System;
 
+struct Translation
+{
+	public float x;
+	public float y;
+	public float z;
+
+	public override string ToString()
+	{
+		return "(x=" + x + "|y=" + y + "|z=" + z + ")";
+	}
+}
+
 class TestScript
 {
 	int classInteger;
+	Translation translation;
 
 	TestScript() { Console.WriteLine("Constructor called"); }
 
@@ -20,5 +33,6 @@ class TestScript
 	{
 		Console.WriteLine("Update::ClassInteger: " + classInteger.ToString());
 		Console.WriteLine("Update::DeltaTime: " + dt.ToString());
+		Console.WriteLine("Update::Translation: " + translation.ToString());
 	}
 }

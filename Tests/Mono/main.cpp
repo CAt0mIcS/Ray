@@ -120,8 +120,10 @@ public:
 		update(12);
 
 		object["classInteger"] = 100;
-		std::cout << object["classInteger"].Get<int>() << '\n';
 		update(13);
+
+		object["translation"] = Ray::Float3{ 1.32f, 1.333f, 0.15485f };
+		update(14);
 
 
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
