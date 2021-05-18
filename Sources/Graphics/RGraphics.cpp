@@ -209,12 +209,6 @@ namespace At0::Ray
 		for (uint32_t i = 0; i < m_CommandBuffers.size(); ++i)
 		{
 			m_CommandBuffers[i] = MakeScope<CommandBuffer>(*m_CommandPool);
-
-			VkCommandBufferInheritanceInfo inheritanceInfo{};
-			inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-			inheritanceInfo.renderPass = *m_RenderPass;
-			inheritanceInfo.framebuffer = *m_Framebuffers[i];
-			m_CommandBuffers[i]->AddSecondary(inheritanceInfo);
 		}
 	}
 
@@ -235,32 +229,20 @@ namespace At0::Ray
 		ImGUI::Get().UpdateBuffers();
 #endif
 
-		m_RenderPass->Begin(
-			cmdBuff, framebuffer, clearValues, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+		m_RenderPass->Begin(cmdBuff, framebuffer, clearValues);
 
 		const VkViewport viewports[] = { m_Viewport };
 		const VkRect2D scissors[] = { m_Scissor };
-		// vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
-		// vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
+		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
+		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		const SecondaryCommandBuffer& secCmdBuff = cmdBuff.GetSecondaryCommandBuffers()[0];
-
-		secCmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT);
-		vkCmdSetViewport(secCmdBuff, 0, std::size(viewports), viewports);
-		vkCmdSetScissor(secCmdBuff, 0, std::size(scissors), scissors);
-
-		Scene::Get().CmdBind(secCmdBuff);
+		Scene::Get().CmdBind(cmdBuff);
 		Scene::Get().EntityView<MeshRenderer>().each(
-			[&secCmdBuff](MeshRenderer& mesh) { mesh.Render(secCmdBuff); });
+			[&cmdBuff](MeshRenderer& mesh) { mesh.Render(cmdBuff); });
 
 #if RAY_ENABLE_IMGUI
-		ImGUI::Get().CmdBind(secCmdBuff);
+		ImGUI::Get().CmdBind(cmdBuff);
 #endif
-
-		secCmdBuff.End();
-
-		VkCommandBuffer secCommandBuffer = secCmdBuff;
-		vkCmdExecuteCommands(cmdBuff, 1, &secCommandBuffer);
 
 		m_RenderPass->End(cmdBuff);
 
