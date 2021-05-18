@@ -110,14 +110,19 @@ public:
 		m_Entity = Scene::Get().CreateEntity();
 		auto& scriptableEntity =
 			m_Entity.Emplace<Ray::ScriptableEntity>("Tests/Mono/CSharp/Example.cs", "TestScript");
-		const auto& script = scriptableEntity.GetScript();
-		const auto& object = scriptableEntity.GetObject();
+		Ray::Mono::Script& script = scriptableEntity.GetScript();
+		Ray::Mono::Object& object = scriptableEntity.GetObject();
 
 		auto staticFunction = script.GetStaticFunction("TestScript:StaticMethod(int)");
 		staticFunction(3);
 
-		auto function = object.GetFunction("Update");
-		function(12);
+		auto update = object.GetFunction("Update");
+		update(12);
+
+		object["classInteger"] = 100;
+		std::cout << object["classInteger"].Get<int>() << '\n';
+		update(13);
+
 
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 

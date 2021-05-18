@@ -15,6 +15,18 @@
 
 namespace At0::Ray::Mono
 {
+	void Object::MemberAccessProxy::Set(void* data)
+	{
+		mono_field_set_value(m_Object, m_Field, data);
+	}
+
+	std::vector<char> Object::MemberAccessProxy::Get(uint32_t size) const
+	{
+		std::vector<char> data(size);
+		mono_field_get_value(m_Object, m_Field, data.data());
+		return data;
+	}
+
 	Object::Object(std::string_view className, MonoDomain* pDomain, MonoImage* pImage)
 	{
 		MonoClass* monoClass = nullptr;
@@ -41,5 +53,17 @@ namespace At0::Ray::Mono
 	Function Object::GetFunction(std::string_view methodName) const
 	{
 		return Function{ methodName, m_Object };
+	}
+
+	Object::MemberAccessProxy Object::ValueTypeAccess(std::string_view memberName) const
+	{
+		MonoClass* monoClass = mono_object_get_class(m_Object);
+		MonoClassField* field = mono_class_get_field_from_name(monoClass, memberName.data());
+
+		if (!field)
+			RAY_THROW_RUNTIME("[Mono::Object] Could not find member \"{0}\" in class \"{0}\"",
+				memberName, mono_class_get_name(monoClass));
+
+		return MemberAccessProxy{ m_Object, field };
 	}
 }  // namespace At0::Ray::Mono

@@ -21,6 +21,8 @@ namespace At0::Ray
 
 		const Mono::Script& GetScript() const { return m_Script; }
 		const Mono::Object& GetObject() const { return m_Object; }
+		Mono::Script& GetScript() { return m_Script; }
+		Mono::Object& GetObject() { return m_Object; }
 
 	private:
 		Mono::Script m_Script;
