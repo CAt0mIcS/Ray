@@ -5,10 +5,14 @@
 #include <Scene/RCamera.h>
 #include <Core/REngine.h>
 #include <Devices/RWindow.h>
-#include <Graphics/Renderers/RMeshRenderer.h>
-#include <Graphics/Renderers/RRenderer.h>
 #include <Utils/RException.h>
 #include <Utils/RLogger.h>
+#include <Graphics/Images/RTexture2D.h>
+
+#include <Components/RMesh.h>
+#include <Components/RMeshRenderer.h>
+#include <Components/RTransform.h>
+#include <Components/RSkybox.h>
 
 using namespace At0;
 
@@ -24,8 +28,6 @@ public:
 		GetCamera().SetRotationSpeed(0.07f);
 		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
 		GetCamera().SetMovementSpeed(3.0f);
-
-		Ray::Renderer::Get().Emplace<Ray::MeshRenderer>();
 	}
 };
 
@@ -33,10 +35,22 @@ public:
 class App : public Ray::Engine
 {
 public:
-	App() { Ray::Scene::Create<Scene>(); }
+	App()
+	{
+		Ray::Scene::Create<Scene>();
+
+		m_Entity = Scene::Get().CreateEntity();
+		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+
+		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
+	}
 
 private:
 	void Update() override {}
+
+private:
+	Ray::Entity m_Entity;
 };
 
 

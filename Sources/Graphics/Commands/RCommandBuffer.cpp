@@ -11,11 +11,11 @@
 namespace At0::Ray
 {
 	CommandBuffer::CommandBuffer(const CommandPool& commandPool, VkCommandBufferLevel bufferLevel)
-		: m_CommandPool(commandPool)
+		: m_CommandPool(&commandPool)
 	{
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-		allocInfo.commandPool = m_CommandPool;
+		allocInfo.commandPool = *m_CommandPool;
 		allocInfo.level = bufferLevel;
 		allocInfo.commandBufferCount = 1;
 
@@ -26,7 +26,7 @@ namespace At0::Ray
 
 	CommandBuffer::~CommandBuffer()
 	{
-		vkFreeCommandBuffers(Graphics::Get().GetDevice(), m_CommandPool, 1, &m_CommandBuffer);
+		vkFreeCommandBuffers(Graphics::Get().GetDevice(), *m_CommandPool, 1, &m_CommandBuffer);
 	}
 
 	void CommandBuffer::Begin(VkCommandBufferUsageFlags usageFlags) const
@@ -34,7 +34,7 @@ namespace At0::Ray
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		beginInfo.flags = usageFlags;
-		beginInfo.pInheritanceInfo = nullptr;
+		beginInfo.pInheritanceInfo = GetInheritanceInfo();
 
 		RAY_VK_THROW_FAILED(vkBeginCommandBuffer(m_CommandBuffer, &beginInfo),
 			"[CommandBuffer] Failed to begin recording");
@@ -44,5 +44,44 @@ namespace At0::Ray
 	{
 		RAY_VK_THROW_FAILED(
 			vkEndCommandBuffer(m_CommandBuffer), "[CommandBuffer] Failed to end recording");
+	}
+
+	VkResult CommandBuffer::Submit(VkQueue queue, VkFence fence) const
+	{
+		VkSubmitInfo submitInfo{};
+		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+		submitInfo.commandBufferCount = 1;
+		submitInfo.pCommandBuffers = &m_CommandBuffer;
+
+		return vkQueueSubmit(queue, 1, &submitInfo, fence);
+	}
+
+	SecondaryCommandBuffer& CommandBuffer::AddSecondary(
+		VkCommandBufferInheritanceInfo inheritanceInfo)
+	{
+		return m_SecondaryCommandBuffers.emplace_back(*m_CommandPool, std::move(inheritanceInfo));
+	}
+
+	CommandBuffer& CommandBuffer::operator=(CommandBuffer&& other) noexcept
+	{
+		m_CommandBuffer = other.m_CommandBuffer;
+		m_CommandPool = other.m_CommandPool;
+		m_SecondaryCommandBuffers = std::move(other.m_SecondaryCommandBuffers);
+		return *this;
+	}
+
+	CommandBuffer::CommandBuffer(CommandBuffer&& other) noexcept { *this = std::move(other); }
+
+	// -----------------------------------------------------------------------------------------------
+	// Secondary Command Buffer
+	SecondaryCommandBuffer::SecondaryCommandBuffer(
+		const CommandPool& commandPool, VkCommandBufferInheritanceInfo inheritanceInfo)
+		: CommandBuffer(commandPool, VK_COMMAND_BUFFER_LEVEL_SECONDARY)
+	{
+	}
+
+	const VkCommandBufferInheritanceInfo* SecondaryCommandBuffer::GetInheritanceInfo() const
+	{
+		return &m_InheritanceInfo;
 	}
 }  // namespace At0::Ray

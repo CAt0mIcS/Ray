@@ -97,15 +97,8 @@ namespace At0::Ray
 
 		commandBuffer.End();
 
-		VkCommandBuffer cmdBuff = commandBuffer;
-		VkSubmitInfo submitInfo{};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &cmdBuff;
-
 		// RAY_TODO: Get best queue
-		vkQueueSubmit(
-			Graphics::Get().GetDevice().GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+		commandBuffer.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
 		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 	}
 
@@ -194,14 +187,8 @@ namespace At0::Ray
 
 		cmdBuff.End();
 
-		VkCommandBuffer commandBuffer = cmdBuff;
-		VkSubmitInfo submit{};
-		submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		submit.commandBufferCount = 1;
-		submit.pCommandBuffers = &commandBuffer;
-
 		// RAY_TODO: Transfer queue with graphics capabilities is faster
-		vkQueueSubmit(Graphics::Get().GetDevice().GetGraphicsQueue(), 1, &submit, VK_NULL_HANDLE);
+		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
 		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 		return true;
 	}
@@ -235,15 +222,8 @@ namespace At0::Ray
 			(uint32_t)copyRegions.size(), copyRegions.data());
 		commandBuffer.End();
 
-		VkCommandBuffer cmdBuff = commandBuffer;
-		VkSubmitInfo submitInfo{};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &cmdBuff;
-
 		// RAY_TODO: Get best queue
-		vkQueueSubmit(
-			Graphics::Get().GetDevice().GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+		commandBuffer.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
 		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 	}
 
