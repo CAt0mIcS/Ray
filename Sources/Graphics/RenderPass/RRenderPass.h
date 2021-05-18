@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
@@ -20,7 +20,8 @@ namespace At0::Ray
 		~RenderPass();
 
 		void Begin(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer,
-			const std::vector<VkClearValue>& clearValues) const;
+			const std::vector<VkClearValue>& clearValues,
+			VkSubpassContents subpassContents = VK_SUBPASS_CONTENTS_INLINE) const;
 		void End(const CommandBuffer& cmdBuff) const;
 
 		operator const VkRenderPass&() const { return m_Renderpass; }

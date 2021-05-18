@@ -48,9 +48,6 @@ namespace At0::Ray
 		UpdateScissor();
 
 		CreateVulkanObjects();
-
-		m_RerecordCommandBuffers.resize(m_Swapchain->GetNumberOfImages());
-		RerecordCommandBuffers();
 	}
 
 	void Graphics::CreateVulkanObjects()
@@ -212,6 +209,12 @@ namespace At0::Ray
 		for (uint32_t i = 0; i < m_CommandBuffers.size(); ++i)
 		{
 			m_CommandBuffers[i] = MakeScope<CommandBuffer>(*m_CommandPool);
+
+			VkCommandBufferInheritanceInfo inheritanceInfo{};
+			inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+			inheritanceInfo.renderPass = *m_RenderPass;
+			inheritanceInfo.framebuffer = *m_Framebuffers[i];
+			m_CommandBuffers[i]->AddSecondary(inheritanceInfo);
 		}
 	}
 
@@ -232,20 +235,32 @@ namespace At0::Ray
 		ImGUI::Get().UpdateBuffers();
 #endif
 
-		m_RenderPass->Begin(cmdBuff, framebuffer, clearValues);
+		m_RenderPass->Begin(
+			cmdBuff, framebuffer, clearValues, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
 
 		const VkViewport viewports[] = { m_Viewport };
 		const VkRect2D scissors[] = { m_Scissor };
-		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
-		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
+		// vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
+		// vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
 
-		Scene::Get().CmdBind(cmdBuff);
+		const SecondaryCommandBuffer& secCmdBuff = cmdBuff.GetSecondaryCommandBuffers()[0];
+
+		secCmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT);
+		vkCmdSetViewport(secCmdBuff, 0, std::size(viewports), viewports);
+		vkCmdSetScissor(secCmdBuff, 0, std::size(scissors), scissors);
+
+		Scene::Get().CmdBind(secCmdBuff);
 		Scene::Get().EntityView<MeshRenderer>().each(
-			[&cmdBuff](MeshRenderer& mesh) { mesh.Render(cmdBuff); });
+			[&secCmdBuff](MeshRenderer& mesh) { mesh.Render(secCmdBuff); });
 
 #if RAY_ENABLE_IMGUI
-		ImGUI::Get().CmdBind(cmdBuff);
+		ImGUI::Get().CmdBind(secCmdBuff);
 #endif
+
+		secCmdBuff.End();
+
+		VkCommandBuffer secCommandBuffer = secCmdBuff;
+		vkCmdExecuteCommands(cmdBuff, 1, &secCommandBuffer);
 
 		m_RenderPass->End(cmdBuff);
 
@@ -295,15 +310,8 @@ namespace At0::Ray
 		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.commandBufferCount = 1;
 
-		// Rerecord the command buffer for the current image if it was queried for rerecording
-		// RAY_TODO: Separate render pass and command buffers for ImGui so that we don't have to
-		// rerecord these command buffers
-		RerecordCommandBuffers();
-		if (m_RerecordCommandBuffers[imageIndex])
-		{
-			RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex]);
-			m_RerecordCommandBuffers[imageIndex] = false;
-		}
+		// RAY_TODO: Multithreaded command buffer rerecording
+		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex]);
 
 		VkCommandBuffer commandBuffer = *m_CommandBuffers[imageIndex];
 		submitInfo.pCommandBuffers = &commandBuffer;
@@ -338,11 +346,6 @@ namespace At0::Ray
 			RAY_THROW_RUNTIME("[Graphics] Failed to present swapchain image");
 
 		m_CurrentFrame = (m_CurrentFrame + 1) % s_MaxFramesInFlight;
-	}
-
-	void Graphics::RerecordCommandBuffers()
-	{
-		std::fill(m_RerecordCommandBuffers.begin(), m_RerecordCommandBuffers.end(), true);
 	}
 
 	void Graphics::Destroy() { delete s_Instance; }
@@ -434,7 +437,8 @@ namespace At0::Ray
 		UpdateScissor();
 		CreateFramebuffers();
 		CreateCommandBuffers();
-		RerecordCommandBuffers();
+		for (uint32_t i = 0; i < m_CommandBuffers.size(); ++i)
+			RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i]);
 
 		size = Window::Get().GetFramebufferSize();
 		Scene::Get().GetCamera().UpdateAspectRatio((float)size.x / (float)size.y);

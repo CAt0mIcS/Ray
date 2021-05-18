@@ -76,7 +76,8 @@ namespace At0::Ray
 	// Secondary Command Buffer
 	SecondaryCommandBuffer::SecondaryCommandBuffer(
 		const CommandPool& commandPool, VkCommandBufferInheritanceInfo inheritanceInfo)
-		: CommandBuffer(commandPool, VK_COMMAND_BUFFER_LEVEL_SECONDARY)
+		: CommandBuffer(commandPool, VK_COMMAND_BUFFER_LEVEL_SECONDARY),
+		  m_InheritanceInfo(std::move(inheritanceInfo))
 	{
 	}
 

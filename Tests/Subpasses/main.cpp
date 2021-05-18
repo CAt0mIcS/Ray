@@ -14,6 +14,9 @@
 #include <Components/RTransform.h>
 #include <Components/RSkybox.h>
 
+#include <UI/RImGui.h>
+#include <../../Extern/imgui/imgui.h>
+
 using namespace At0;
 
 
@@ -38,6 +41,26 @@ public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
+		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+			{
+				ImGui::Begin("TestEntity");
+
+				Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
+
+				Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
+				Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
+				Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
+
+				Ray::ImGUI::Float3Widget("Translation", translation);
+				Ray::ImGUI::Float3Widget("Rotation", rotation);
+				Ray::ImGUI::Float3Widget("Scale", scale);
+				ImGui::Spacing();
+
+				tform.RecalculateCachedMatrix();
+
+				ImGui::End();
+			}
+		});
 
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));

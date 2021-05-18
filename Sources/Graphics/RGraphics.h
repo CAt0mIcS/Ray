@@ -51,11 +51,6 @@ namespace At0::Ray
 		 */
 		void Update(Delta dt);
 
-		/**
-		 * Querys rerecording of all command buffers in the next draw call
-		 */
-		void RerecordCommandBuffers();
-
 	private:
 		Graphics();
 
@@ -102,8 +97,6 @@ namespace At0::Ray
 		std::array<VkSemaphore, s_MaxFramesInFlight> m_RenderFinishedSemaphore;
 
 		uint32_t m_CurrentFrame = 0;
-
 		bool m_FramebufferResized = false;
-		std::vector<bool> m_RerecordCommandBuffers{};
 	};
 }  // namespace At0::Ray
