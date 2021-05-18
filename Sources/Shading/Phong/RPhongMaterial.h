@@ -47,10 +47,15 @@ namespace At0::Ray
 		};
 
 	public:
+#ifdef _MSC_VER
+		PhongMaterial(Layout layout = {}, GraphicsPipeline::Layout pipelineLayout = {});
+#else
 		PhongMaterial(
 			Layout layout = Layout{ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 				{ 1.0f, 1.0f, 1.0f, 1.0f }, 1.0f, { false, { 0.0f, 0.0f, 0.0f }, 0.0f } },
 			GraphicsPipeline::Layout pipelineLayout = GraphicsPipeline::Layout{});
+#endif
+
 
 		void SetColor(Float4 color) { m_Layout.color = std::move(color); }
 		void SetMetallic(float metallic) { m_Layout.metallic = metallic; }
