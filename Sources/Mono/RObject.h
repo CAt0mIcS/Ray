@@ -19,25 +19,50 @@ namespace At0::Ray::Mono
 		class RAY_EXPORT MemberAccessProxy
 		{
 		public:
-			MemberAccessProxy(MonoObject* pObj, MonoClassField* pField)
-				: m_Object(pObj), m_Field(pField)
-			{
-			}
+			MemberAccessProxy(MonoObject* pObj, MonoClassField* pField);
 
+			/**
+			 * Sets the value of the field
+			 */
 			template<typename T>
 			void operator=(T&& data)
 			{
+				RAY_MEXPECTS(sizeof(T) == SizeBytes(),
+					"[Mono::Object] Size of template parameter ({0}) is larger/smaller than size "
+					"of the type you're trying to access ({1})",
+					sizeof(T), SizeBytes());
+
 				Set(&data);
 			}
 
+			/**
+			 * @returns Value of the object in the field
+			 */
 			template<typename T>
 			T Get() const
 			{
+				RAY_MEXPECTS(sizeof(T) == SizeBytes(),
+					"[Mono::Object] Size of template parameter ({0}) is larger/smaller than size "
+					"of the type you're trying to access ({1})",
+					sizeof(T), SizeBytes());
+
 				return *(T*)Get(sizeof(T)).data();
 			}
 
+			/**
+			 * Sets the managed type to data
+			 */
 			void Set(void* data);
+
+			/**
+			 * @returns Raw buffer of the data
+			 */
 			std::vector<char> Get(uint32_t size) const;
+
+			/**
+			 * @returns Size in bytes of the managed type
+			 */
+			uint32_t SizeBytes() const;
 
 		private:
 			MonoObject* m_Object;
@@ -52,6 +77,10 @@ namespace At0::Ray::Mono
 		Object(std::string_view className, MonoDomain* pDomain, MonoImage* pImage);
 		Object() = default;
 
+		/**
+		 * @param methodName Name of the method you're trying to access
+		 * @returns Callable function
+		 */
 		Function GetFunction(std::string_view methodName) const;
 
 		/**
@@ -67,6 +96,5 @@ namespace At0::Ray::Mono
 
 	private:
 		MonoObject* m_Object = nullptr;
-		std::vector<char> m_CachedValueTypeData;
 	};
 }  // namespace At0::Ray::Mono

@@ -15,6 +15,11 @@
 
 namespace At0::Ray::Mono
 {
+	Object::MemberAccessProxy::MemberAccessProxy(MonoObject* pObj, MonoClassField* pField)
+		: m_Object(pObj), m_Field(pField)
+	{
+	}
+
 	void Object::MemberAccessProxy::Set(void* data)
 	{
 		mono_field_set_value(m_Object, m_Field, data);
@@ -25,6 +30,12 @@ namespace At0::Ray::Mono
 		std::vector<char> data(size);
 		mono_field_get_value(m_Object, m_Field, data.data());
 		return data;
+	}
+
+	uint32_t Object::MemberAccessProxy::SizeBytes() const
+	{
+		int alignment = 0;
+		return mono_type_size(mono_field_get_type(m_Field), &alignment);
 	}
 
 	Object::Object(std::string_view className, MonoDomain* pDomain, MonoImage* pImage)

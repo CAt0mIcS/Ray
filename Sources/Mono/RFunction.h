@@ -8,10 +8,6 @@ namespace At0::Ray::Mono
 {
 	class RAY_EXPORT Function : public FunctionBase
 	{
-		/**
-		 * @param functionDescriptor Mono-compatible function descriptor
-		 * @param pObject Object which should call the function
-		 */
 	public:
 		Function(std::string_view methodName, MonoObject* pObject);
 		Function() = default;
