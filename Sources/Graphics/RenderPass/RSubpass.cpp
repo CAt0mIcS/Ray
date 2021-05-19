@@ -6,6 +6,15 @@
 
 namespace At0::Ray
 {
+	void Subpass::AddInputAttachment(const Attachment& attachment)
+	{
+		VkAttachmentReference reference{};
+		reference.attachment = m_AttachmentIndex++;
+		reference.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		m_InputAttachments.emplace_back(reference);
+		UpdateDescription();
+	}
+
 	void Subpass::AddColorAttachment(const Attachment& attachment)
 	{
 		VkAttachmentReference reference{};

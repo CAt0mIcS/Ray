@@ -15,7 +15,7 @@ namespace At0::Ray
 	public:
 		Subpass() = default;
 
-		// void AddInputAttachment(const Attachment& attachment);
+		void AddInputAttachment(const Attachment& attachment);
 		void AddColorAttachment(const Attachment& attachment);
 		// void AddResolveAttachment(const Attachment& attachment);
 		void AddDepthAttachment(const Attachment& attachment);
