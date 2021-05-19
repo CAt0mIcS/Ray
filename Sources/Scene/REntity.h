@@ -122,6 +122,12 @@ namespace At0::Ray
 		Entity GetParent() const;
 
 		/**
+		 * Loops over all ParentEntity components and checks if the parent is this entity
+		 * (RAY_TODO: Maybe slow?)
+		 */
+		std::vector<Entity> GetChildren() const;
+
+		/**
 		 * Casting operator to the entity identifier
 		 */
 		explicit operator entt::entity() const { return m_EntityHandle; }

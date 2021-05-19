@@ -37,8 +37,8 @@ namespace At0::Ray
 			UniformTag::PerObjectData);
 
 		if (GetEntity().HasParent())
-			(*m_PerObjectDataUniformRef) = GetEntity().Get<Transform>().AsMatrix() *
-										   GetEntity().GetParent().Get<Transform>().AsMatrix();
+			(*m_PerObjectDataUniformRef) = GetEntity().GetParent().Get<Transform>().AsMatrix() *
+										   GetEntity().Get<Transform>().AsMatrix();
 		else
 			(*m_PerObjectDataUniformRef) = GetEntity().Get<Transform>().AsMatrix();
 	}

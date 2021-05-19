@@ -56,42 +56,52 @@ public:
 		Ray::Scene::Create<Scene>();
 		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
 			{
+
 				ImGui::Begin("TestEntity");
+				Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
 
-				// Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
+				Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
+				Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
+				Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
 
-				// Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
-				// Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
-				// Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
+				Ray::ImGUI::Float3Widget("Translation", translation);
+				Ray::ImGUI::Float3Widget("Rotation", rotation);
+				Ray::ImGUI::Float3Widget("Scale", scale);
+				ImGui::Spacing();
 
-				// Ray::ImGUI::Float3Widget("Translation", translation);
-				// Ray::ImGUI::Float3Widget("Rotation", rotation);
-				// Ray::ImGUI::Float3Widget("Scale", scale);
-				// ImGui::Spacing();
+				tform.RecalculateCachedMatrix();
+				ImGui::End();
+			}
+		});
 
-				// tform.RecalculateCachedMatrix();
+		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+			{
 
+				ImGui::Begin("TestEntityChild0");
+				Ray::Transform& tform = m_ChildEntity0.Get<Ray::Transform>();
+
+				Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
+				Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
+				Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
+
+				Ray::ImGUI::Float3Widget("Translation", translation);
+				Ray::ImGUI::Float3Widget("Rotation", rotation);
+				Ray::ImGUI::Float3Widget("Scale", scale);
+				ImGui::Spacing();
+
+				tform.RecalculateCachedMatrix();
 				ImGui::End();
 			}
 		});
 
 		// RAY_TODO: Fix matrix not being recalculated at the beginning
-		// auto sharedMaterial = Ray::MakeRef<Ray::FlatColorMaterial>();
-
-		// for (uint32_t i = 0; i < 9; ++i)
-		//{
-		//	m_Entity = Scene::Get().CreateEntity();
-		//	m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(sharedMaterial));
-		//	auto& renderer = m_Entity.Emplace<Ray::MeshRenderer>(sharedMaterial);
-		//	renderer.GetBufferUniform("Shading")["color"] =
-		//		Ray::Float3{ i / 3.0f, i / 4.0f, i / 2.0f };
-
-		//	m_Entity.Get<Ray::Transform>().SetTranslation({ i + 1, 0.0f, 0.0f });
-		//}
 
 		m_Entity = Scene::Get().CreateEntity();
-		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Scenes/Sponza/scene.gltf"));
-		m_Entity.Get<Ray::Transform>().SetScale(Ray::Float3{ 0.1f });
+		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+		m_Entity.Get<Ray::Transform>().SetScale(Ray::Float3{ 1.0f });
+
+		m_ChildEntity0 = m_Entity.GetChildren()[0];
+
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
@@ -102,6 +112,7 @@ private:
 
 private:
 	Ray::Entity m_Entity;
+	Ray::Entity m_ChildEntity0;
 };
 
 void SignalHandler(int signal)

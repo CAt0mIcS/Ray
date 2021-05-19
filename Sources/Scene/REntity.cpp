@@ -37,6 +37,18 @@ namespace At0::Ray
 		return Get<ParentEntity>().GetParent();
 	}
 
+	std::vector<Entity> Entity::GetChildren() const
+	{
+		std::vector<Entity> children;
+		auto view = m_Registry->view<ParentEntity>();
+
+		for (Entity e : view)
+			if (e.GetParent() == m_EntityHandle)
+				children.emplace_back(e);
+
+		return children;
+	}
+
 	constexpr bool Entity::operator==(const Entity& other) const
 	{
 		return m_Registry == other.m_Registry && m_EntityHandle == other.m_EntityHandle;
