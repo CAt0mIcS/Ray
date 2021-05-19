@@ -10,7 +10,8 @@ namespace At0::Ray
 	class DepthImage : public Image2D
 	{
 	public:
-		DepthImage(UInt2 extent);
+		DepthImage(
+			UInt2 extent, VkImageUsageFlags usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
 
 		static std::vector<VkFormat> FindDepthFormats();
 		static bool HasStencilComponent(VkFormat format);

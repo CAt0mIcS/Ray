@@ -63,7 +63,8 @@ namespace At0::Ray
 		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 
 		m_DepthImage = MakeScope<DepthImage>(
-			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height });
+			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height },
+			VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT);
 
 		CreateRenderPass();
 		CreateFramebuffers();
@@ -83,38 +84,71 @@ namespace At0::Ray
 
 	void Graphics::CreateRenderPass()
 	{
-		Attachment colorAttachment(GetSwapchain().GetFormat(), VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+		m_ColorImage = MakeScope<Image2D>(
+			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height },
+			GetSwapchain().GetFormat(), VK_IMAGE_TILING_OPTIMAL,
+			VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+		Attachment swapChainAttachment(GetSwapchain().GetFormat(), VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
 			Attachment::LoadOp::Clear, Attachment::StoreOp::Store, Attachment::LoadOp::Undefined,
+			Attachment::StoreOp::Undefined);
+
+		Attachment colorAttachment(m_ColorImage->GetFormat(),
+			VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, Attachment::LoadOp::Clear,
+			Attachment::StoreOp::Undefined, Attachment::LoadOp::Undefined,
 			Attachment::StoreOp::Undefined);
 
 		Attachment depthAttachment(*m_DepthImage, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
 			Attachment::LoadOp::Clear, Attachment::StoreOp::Undefined,
 			Attachment::LoadOp::Undefined, Attachment::StoreOp::Undefined);
 
-		Subpass subpass;
-		subpass.AddColorAttachment(colorAttachment);
-		subpass.AddDepthAttachment(depthAttachment);
+		Subpass firstSubpass;
+		firstSubpass.AddColorAttachment(1, colorAttachment);
+		firstSubpass.AddDepthAttachment(2, depthAttachment);
 
-		VkSubpassDependency dependency{};
-		dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-		dependency.dstSubpass = 0;
-		dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT |
-								  VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-		dependency.srcAccessMask = 0;
-		dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT |
-								  VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-		dependency.dstAccessMask =
-			VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+		Subpass secondSubpass;
+		secondSubpass.AddColorAttachment(0, swapChainAttachment);
+		secondSubpass.AddInputAttachment(1, colorAttachment);
+		secondSubpass.AddInputAttachment(2, depthAttachment);
+
+		std::vector<VkSubpassDependency> dependencies(3);
+
+		dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+		dependencies[0].dstSubpass = 0;
+		dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+		dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+		dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+		dependencies[0].dstAccessMask =
+			VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+		// This dependency transitions the input attachment from color attachment to shader read
+		dependencies[1].srcSubpass = 0;
+		dependencies[1].dstSubpass = 1;
+		dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+		dependencies[1].dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+		dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+		dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+		dependencies[2].srcSubpass = 0;
+		dependencies[2].dstSubpass = VK_SUBPASS_EXTERNAL;
+		dependencies[2].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+		dependencies[2].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+		dependencies[2].srcAccessMask =
+			VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		dependencies[2].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+		dependencies[2].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
 		std::vector<VkAttachmentDescription> attachments;
+		attachments.emplace_back(swapChainAttachment);
 		attachments.emplace_back(colorAttachment);
 		attachments.emplace_back(depthAttachment);
 
 		std::vector<VkSubpassDescription> subpasses;
-		subpasses.emplace_back(subpass);
-
-		std::vector<VkSubpassDependency> dependencies;
-		dependencies.emplace_back(dependency);
+		subpasses.emplace_back(firstSubpass);
+		subpasses.emplace_back(secondSubpass);
 
 		m_RenderPass = MakeScope<RenderPass>(attachments, subpasses, dependencies);
 	}
@@ -126,7 +160,7 @@ namespace At0::Ray
 		{
 			m_Framebuffers[i] = MakeScope<Framebuffer>(
 				*m_RenderPass, std::vector<VkImageView>{ *GetSwapchain().GetImageViews()[i],
-								   m_DepthImage->GetImageView() });
+								   m_ColorImage->GetImageView(), m_DepthImage->GetImageView() });
 		}
 	}
 
@@ -202,6 +236,7 @@ namespace At0::Ray
 
 		std::vector<VkClearValue> clearValues;
 		clearValues.emplace_back(clearColor);
+		clearValues.emplace_back(clearColor);
 		clearValues.emplace_back(depthStencilClearColor);
 
 #if RAY_ENABLE_IMGUI
@@ -223,6 +258,7 @@ namespace At0::Ray
 #if RAY_ENABLE_IMGUI
 		ImGUI::Get().CmdBind(cmdBuff);
 #endif
+		// RAY_TODO: Pipelines for subpasses
 
 		m_RenderPass->End(cmdBuff);
 

@@ -16,10 +16,10 @@ namespace At0::Ray
 	public:
 		Subpass() = default;
 
-		void AddInputAttachment(const Attachment& attachment);
-		void AddColorAttachment(const Attachment& attachment);
-		// void AddResolveAttachment(const Attachment& attachment);
-		void AddDepthAttachment(const Attachment& attachment);
+		void AddInputAttachment(uint32_t index, const Attachment& attachment);
+		void AddColorAttachment(uint32_t index, const Attachment& attachment);
+		// void AddResolveAttachment(cuint32_t index, onst Attachment& attachment);
+		void AddDepthAttachment(uint32_t index, const Attachment& attachment);
 		void AddPreserveAttachment(uint32_t index);
 
 		operator const VkSubpassDescription&() const { return m_Description; }
@@ -35,7 +35,5 @@ namespace At0::Ray
 		std::vector<VkAttachmentReference> m_ResolveAttachments;
 		std::optional<VkAttachmentReference> m_DepthAttachment;
 		std::vector<uint32_t> m_PreserveAttachments;
-
-		uint32_t m_AttachmentIndex = 0;
 	};
 }  // namespace At0::Ray

@@ -6,25 +6,25 @@
 
 namespace At0::Ray
 {
-	void Subpass::AddInputAttachment(const Attachment& attachment)
+	void Subpass::AddInputAttachment(uint32_t index, const Attachment& attachment)
 	{
 		VkAttachmentReference reference{};
-		reference.attachment = m_AttachmentIndex++;
+		reference.attachment = index;
 		reference.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		m_InputAttachments.emplace_back(reference);
 		UpdateDescription();
 	}
 
-	void Subpass::AddColorAttachment(const Attachment& attachment)
+	void Subpass::AddColorAttachment(uint32_t index, const Attachment& attachment)
 	{
 		VkAttachmentReference reference{};
-		reference.attachment = m_AttachmentIndex++;
+		reference.attachment = index;
 		reference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 		m_ColorAttachments.emplace_back(reference);
 		UpdateDescription();
 	}
 
-	void Subpass::AddDepthAttachment(const Attachment& attachment)
+	void Subpass::AddDepthAttachment(uint32_t index, const Attachment& attachment)
 	{
 #ifndef NDEBUG
 		if (m_DepthAttachment)
@@ -32,7 +32,7 @@ namespace At0::Ray
 #endif
 
 		m_DepthAttachment = VkAttachmentReference{};
-		m_DepthAttachment->attachment = m_AttachmentIndex++;
+		m_DepthAttachment->attachment = index;
 		m_DepthAttachment->layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 		UpdateDescription();
 	}
