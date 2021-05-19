@@ -23,6 +23,7 @@
 
 #include "Graphics/RenderPass/RRenderPass.h"
 #include "Graphics/RenderPass/RAttachment.h"
+#include "Graphics/RenderPass/RSubpass.h"
 
 #include "Graphics/Buffers/RBufferSynchronizer.h"
 #include "Graphics/Buffers/RFramebuffer.h"
@@ -90,19 +91,9 @@ namespace At0::Ray
 			Attachment::LoadOp::Clear, Attachment::StoreOp::Undefined,
 			Attachment::LoadOp::Undefined, Attachment::StoreOp::Undefined);
 
-		VkAttachmentReference colorAttachmentRef{};
-		colorAttachmentRef.attachment = 0;
-		colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-		VkAttachmentReference depthAttachmentRef{};
-		depthAttachmentRef.attachment = 1;
-		depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-		VkSubpassDescription subpass{};
-		subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-		subpass.colorAttachmentCount = 1;
-		subpass.pColorAttachments = &colorAttachmentRef;
-		subpass.pDepthStencilAttachment = &depthAttachmentRef;
+		Subpass subpass;
+		subpass.AddColorAttachment(colorAttachment);
+		subpass.AddDepthAttachment(depthAttachment);
 
 		VkSubpassDependency dependency{};
 		dependency.srcSubpass = VK_SUBPASS_EXTERNAL;

@@ -131,6 +131,8 @@ set(SRC
 	"Graphics/RenderPass/RRenderPass.cpp"
 	"Graphics/RenderPass/RAttachment.h"
 	"Graphics/RenderPass/RAttachment.cpp"
+	"Graphics/RenderPass/RSubpass.h"
+	"Graphics/RenderPass/RSubpass.cpp"
 
 	# ------------------------------------------------------------------
 	# Components
