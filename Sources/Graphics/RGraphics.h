@@ -27,7 +27,6 @@ namespace At0::Ray
 	class RenderPass;
 	class Framebuffer;
 	class DepthImage;
-	class Image2D;
 
 
 	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
@@ -88,7 +87,6 @@ namespace At0::Ray
 		Scope<RenderPass> m_RenderPass;
 		VkPipelineCache m_PipelineCache = nullptr;
 		Scope<DepthImage> m_DepthImage;
-		Scope<Image2D> m_ColorImage;
 
 		std::vector<Scope<Framebuffer>> m_Framebuffers;
 		std::vector<Scope<CommandBuffer>> m_CommandBuffers;
