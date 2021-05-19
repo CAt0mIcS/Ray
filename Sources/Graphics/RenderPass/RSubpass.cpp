@@ -27,12 +27,13 @@ namespace At0::Ray
 	void Subpass::AddDepthAttachment(const Attachment& attachment)
 	{
 #ifndef NDEBUG
-		if (m_DepthAttachment.layout == VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL)
+		if (m_DepthAttachment)
 			Log::Warn("[Subpass] Depth attachment already set");
 #endif
 
-		m_DepthAttachment.attachment = m_AttachmentIndex++;
-		m_DepthAttachment.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+		m_DepthAttachment = VkAttachmentReference{};
+		m_DepthAttachment->attachment = m_AttachmentIndex++;
+		m_DepthAttachment->layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 		UpdateDescription();
 	}
 
@@ -50,7 +51,7 @@ namespace At0::Ray
 		m_Description.colorAttachmentCount = (uint32_t)m_ColorAttachments.size();
 		m_Description.pColorAttachments = m_ColorAttachments.data();
 		m_Description.pResolveAttachments = m_ResolveAttachments.data();
-		m_Description.pDepthStencilAttachment = &m_DepthAttachment;
+		m_Description.pDepthStencilAttachment = m_DepthAttachment ? &*m_DepthAttachment : nullptr;
 		m_Description.preserveAttachmentCount = (uint32_t)m_PreserveAttachments.size();
 		m_Description.pPreserveAttachments = m_PreserveAttachments.data();
 	}

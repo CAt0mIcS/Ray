@@ -4,6 +4,7 @@
 
 #include <vulkan/vulkan_core.h>
 #include <vector>
+#include <optional>
 
 
 namespace At0::Ray
@@ -32,7 +33,7 @@ namespace At0::Ray
 		std::vector<VkAttachmentReference> m_InputAttachments;
 		std::vector<VkAttachmentReference> m_ColorAttachments;
 		std::vector<VkAttachmentReference> m_ResolveAttachments;
-		VkAttachmentReference m_DepthAttachment{};
+		std::optional<VkAttachmentReference> m_DepthAttachment;
 		std::vector<uint32_t> m_PreserveAttachments;
 
 		uint32_t m_AttachmentIndex = 0;
