@@ -17,7 +17,7 @@ namespace At0::Ray::Mono
 	StaticFunction::StaticFunction(std::string_view functionDescriptor, MonoImage* pImage)
 		: m_Image(pImage)
 	{
-		MonoMethodDesc* typeMethodDesc = mono_method_desc_new(functionDescriptor.data(), NULL);
+		MonoMethodDesc* typeMethodDesc = mono_method_desc_new(functionDescriptor.data(), 0);
 		if (!typeMethodDesc)
 			RAY_THROW_RUNTIME(
 				"[Mono::StaticFunction] Failed to create method description from \"{0}\"",

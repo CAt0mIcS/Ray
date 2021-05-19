@@ -1,5 +1,5 @@
 set(SCRIPT_SRC
-	"CSharp/Example.cs"
+	"${CMAKE_SOURCE_DIR}/Resources/Scripts/Example.cs"
 )
 
 set(SRC
