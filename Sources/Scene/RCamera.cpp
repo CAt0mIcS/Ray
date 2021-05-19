@@ -169,7 +169,7 @@ namespace At0::Ray
 
 	void Camera::OnEvent(KeyPressedEvent& e)
 	{
-		if (e.GetKey() == Key::Escape)
+		if (e.GetKey() == Key::Tab)
 		{
 			if (Window::Get().CursorEnabled())
 				Window::Get().DisableCursor();
