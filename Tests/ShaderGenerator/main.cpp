@@ -40,10 +40,11 @@ public:
 	}
 };
 
-std::vector<std::string> WriteToFiles(std::vector<std::string> codes)
+std::vector<std::string> WriteToFiles(std::vector<std::string> codes, std::string name = "Shader")
 {
-	std::string vertexShaderPath = "Resources/Shaders/VertexShader.vert";
-	std::string fragmentShaderPath = "Resources/Shaders/FragmentShader.frag";
+	std::filesystem::create_directories("Resources/Shaders/Generated/");
+	std::string vertexShaderPath = "Resources/Shaders/Generated/" + name + ".vert";
+	std::string fragmentShaderPath = "Resources/Shaders/Generated/" + name + ".frag";
 
 	{
 		std::ofstream writer(vertexShaderPath);
@@ -92,7 +93,8 @@ public:
 		Ray::FlatShaderGenerator generator;
 		generator.Connect(Ray::ShaderGenerator::Connection::Color, std::move(colorTechnique));
 
-		std::vector<std::string> shaderPaths = WriteToFiles(generator.Generate());
+		std::vector<std::string> shaderPaths =
+			WriteToFiles(generator.Generate(), "FlatStaticColor");
 
 		Ray::FlatColorMaterial::Layout materialLayout{};
 		materialLayout.color =

@@ -13,3 +13,4 @@ build*/
 imgui.ini
 *.dll
 !Extern/assimp/lib/x64/*.*
+Resources/Shaders/Generated/*.*
