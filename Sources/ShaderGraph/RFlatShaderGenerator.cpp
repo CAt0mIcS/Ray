@@ -3,8 +3,6 @@
 
 #include "Utils/RString.h"
 
-#include "Techniques/RColorTechnique.h"
-
 
 namespace At0::Ray
 {
@@ -12,24 +10,28 @@ namespace At0::Ray
 	{
 		std::vector shaderTemplates = GetShaderTemplates();
 
-		shaderTemplates[0] = String::Serialize(shaderTemplates[0],
-			"layout(location = 0) in vec3 inPos;",	// Input attributes
-			"",										// Output attributes
-			"",										// Extra per-scene data
-			"",										// Extra per-object data
-			"",										// Extra uniforms
-			"",										// Constants
-			"",										// Functions
-			"gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 1.0f);"	 // Main
-																						 // function
-																						 // code
-		);
-
 		for (const auto& [connection, technique] : m_Connections)
 		{
-			shaderTemplates[1] = String::Serialize(shaderTemplates[1], "", "", "",
-				technique->GetFunctions(), "outColor = " + technique->GetFunctionCalls() + ";");
+			shaderTemplates[1] =
+				String::Serialize(shaderTemplates[1], technique->GetInputAttributes(),
+					technique->GetBufferUniforms() + "\n" + technique->GetSamplerUniforms(), "",
+					technique->GetFunctions(), "outColor = " + technique->GetFunctionCalls() + ";");
 		}
+
+		shaderTemplates[0] = String::Serialize(shaderTemplates[0],
+			"layout(location = 0) in vec3 inPos;\nlayout(location = 1) in vec2 inUV;",	// Input
+																						// attributes
+			"layout(location = 0) out vec2 outUV;",	 // Output attributes
+			"",										 // Extra per-scene data
+			"",										 // Extra per-object data
+			"",										 // Extra uniforms
+			"",										 // Constants
+			"",										 // Functions
+			"gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 1.0f); outUV = "
+			"inUV;"	 // Main
+					 // function
+					 // code
+		);
 
 		return shaderTemplates;
 	}

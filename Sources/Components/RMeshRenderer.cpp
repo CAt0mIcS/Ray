@@ -13,10 +13,14 @@
 
 namespace At0::Ray
 {
-	MeshRenderer::MeshRenderer(Entity entity, Ref<Material> material)
+	MeshRenderer::MeshRenderer(
+		Entity entity, Ref<Material> material, bool automaticUniformEmplacement)
 		: Component(entity), m_Material(std::move(material))
 	{
-		AddUniforms();
+		if (automaticUniformEmplacement)
+			AddUniforms();
+		else
+			AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
 	}
 
 	void MeshRenderer::Render(const CommandBuffer& cmdBuff) const

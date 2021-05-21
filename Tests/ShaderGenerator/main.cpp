@@ -20,9 +20,11 @@
 #include <../../Extern/imgui/imgui.h>
 
 
-#include <ShaderGraph/Techniques/RColorTechnique.h>
 #include <ShaderGraph/RFlatShaderGenerator.h>
+#include <ShaderGraph/Techniques/RFloat4Technique.h>
 #include <ShaderGraph/Techniques/RMultiplyTechnique.h>
+#include <ShaderGraph/Techniques/RTexture2DTechnique.h>
+#include <ShaderGraph/Techniques/RSampler2DTechnique.h>
 
 using namespace At0;
 
@@ -89,18 +91,15 @@ public:
 			}
 		});
 
-		Ray::Scope<Ray::ColorTechnique> colorTechnique = Ray::MakeScope<Ray::ColorTechnique>();
-		colorTechnique->SetColor({ 1.0f, 0.0f, 1.0f, 1.0f });
-		Ray::Scope<Ray::ColorTechnique> colorTechnique2 = Ray::MakeScope<Ray::ColorTechnique>();
-		colorTechnique2->SetColor({ 0.0f, 0.0f, 1.0f, 1.0f });
 
-		Ray::Scope<Ray::MultiplyTechnique> multiplyTechnique =
-			Ray::MakeScope<Ray::MultiplyTechnique>();
-		multiplyTechnique->Connect(Ray::MultiplyTechnique::Left, std::move(colorTechnique));
-		multiplyTechnique->Connect(Ray::MultiplyTechnique::Right, std::move(colorTechnique2));
+		auto texture2DTech = Ray::MakeScope<Ray::Texture2DTechnique>(
+			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
+
+		auto sampler2DTech = Ray::MakeScope<Ray::Sampler2DTechnique>();
+		sampler2DTech->Connect(Ray::Sampler2DTechnique::Texture, std::move(texture2DTech));
 
 		Ray::FlatShaderGenerator generator;
-		generator.Connect(Ray::ShaderGenerator::Connection::Color, std::move(multiplyTechnique));
+		generator.Connect(Ray::ShaderGenerator::Connection::Color, std::move(sampler2DTech));
 
 		std::vector<std::string> shaderPaths =
 			WriteToFiles(generator.Generate(), "FlatStaticColor");
@@ -114,8 +113,13 @@ public:
 
 
 		m_Entity = Scene::Get().CreateEntity();
-		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(colorMaterial));
-		m_Entity.Emplace<Ray::MeshRenderer>(colorMaterial);
+		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(colorMaterial));
+		auto& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(colorMaterial, false);
+		meshRenderer.AddSampler2DUniform("sampler2D_0", Ray::Shader::Stage::Fragment,
+			generator
+				.GetTechnique<Ray::Sampler2DTechnique>(Ray::FlatShaderGenerator::Connection::Color)
+				.GetTechnique<Ray::Texture2DTechnique>(Ray::Sampler2DTechnique::Texture)
+				.GetSharedTexture());
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));

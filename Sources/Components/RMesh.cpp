@@ -45,7 +45,7 @@ namespace At0::Ray
 
 		RAY_MEXPECTS(!hasNormal && !hasTangent && !hasUV,
 			"[IndexedTriangleList] Normals, tangents and "
-			"UV-Coordinates not supported for plane yet");
+			"UV-Coordinates not supported for triangle yet");
 
 		vertex.BeginVertex();
 		if (hasPos)
