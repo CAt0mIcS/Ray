@@ -92,8 +92,8 @@ public:
 		});
 
 
-		auto texTech =
-			Ray::MakeScope<Ray::Texture2DTechnique>(Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
+		auto texTech = Ray::MakeScope<Ray::Texture2DTechnique>(
+			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
 
 		auto samplerTech = Ray::MakeScope<Ray::Sampler2DTechnique>();
 		samplerTech->Connect(Ray::Sampler2DTechnique::Texture, std::move(texTech));
@@ -113,7 +113,11 @@ public:
 
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(colorMaterial));
-		auto& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(colorMaterial);
+		auto& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(colorMaterial, false);
+		meshRenderer.AddSampler2DUniform("sampler2D_0", Ray::Shader::Stage::Fragment,
+			generator.GetTechnique<Ray::Sampler2DTechnique>(Ray::FlatShaderGenerator::Color)
+				.GetTechnique<Ray::Texture2DTechnique>(Ray::Sampler2DTechnique::Texture)
+				.GetSharedTexture());
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));

@@ -2,6 +2,7 @@
 #include "RFlatShaderGenerator.h"
 
 #include "Utils/RString.h"
+#include "Core/RDynamicVertex.h"
 
 
 namespace At0::Ray
@@ -20,16 +21,19 @@ namespace At0::Ray
 		}
 
 		shaderTemplates[0] = String::Serialize(shaderTemplates[0],
-			"layout(location = 0) in vec3 inPos;",	// Input attributes
-			"",										// Output attributes
-			"",										// Extra per-scene data
-			"",										// Extra per-object data
-			"",										// Extra uniforms
-			"",										// Constants
-			"",										// Functions
-			"gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 1.0f);"	 // Main
-																						 // function
-																						 // code
+			String::Serialize("layout(location = 0) in vec3 {0};\n{1}",
+				AttributeMap<AttributeType::Position>::Semantic,
+				"layout(location = 1) in vec2 inUV;"),	// Input attributes
+			"layout(location = 0) out vec2 outUV;",		// Output attributes
+			"",											// Extra per-scene data
+			"",											// Extra per-object data
+			"",											// Extra uniforms
+			"",											// Constants
+			"",											// Functions
+			"gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 1.0f); outUV = "
+			"inUV;"	 // Main
+					 // function
+					 // code
 		);
 
 		return shaderTemplates;
