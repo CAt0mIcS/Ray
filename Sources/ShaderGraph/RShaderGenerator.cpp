@@ -6,11 +6,6 @@
 
 namespace At0::Ray
 {
-	void ShaderGenerator::Connect(Connection connectionPoint, Scope<Technique> technique)
-	{
-		m_Connections[connectionPoint] = std::move(technique);
-	}
-
 	std::vector<std::string> ShaderGenerator::GetShaderTemplates() const
 	{
 		std::string vertexShaderCode = R"(#version 450 core

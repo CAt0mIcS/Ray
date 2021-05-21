@@ -96,7 +96,7 @@ public:
 			Ray::MakeScope<Ray::Float4Technique>(Ray::Float4{ 1.0f, 0.0f, 1.0f, 1.0f });
 
 		Ray::FlatShaderGenerator generator;
-		generator.Connect(Ray::ShaderGenerator::Connection::Color, std::move(colorTech));
+		generator.Connect(Ray::FlatShaderGenerator::Color, std::move(colorTech));
 
 		std::vector<std::string> shaderPaths =
 			WriteToFiles(generator.Generate(), "FlatStaticColor");

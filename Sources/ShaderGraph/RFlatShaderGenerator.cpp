@@ -10,7 +10,7 @@ namespace At0::Ray
 	{
 		std::vector shaderTemplates = GetShaderTemplates();
 
-		for (const auto& [connection, technique] : m_Connections)
+		for (const auto& [connection, technique] : m_ChildTechniques)
 		{
 			shaderTemplates[1] =
 				String::Serialize(shaderTemplates[1], technique->GetInputAttributes(),
