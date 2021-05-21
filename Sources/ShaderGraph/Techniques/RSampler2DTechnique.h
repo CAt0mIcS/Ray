@@ -16,8 +16,6 @@ namespace At0::Ray
 	public:
 		Sampler2DTechnique();
 
-		std::string GetInputAttributes() const override;
-		std::string GetSamplerUniforms() const override;
 		std::string GetFunctionCalls() const override;
 
 	private:

@@ -2,6 +2,7 @@
 #include "RShaderGenerator.h"
 
 #include "Utils/RString.h"
+#include "Utils/RAssert.h"
 
 
 namespace At0::Ray
