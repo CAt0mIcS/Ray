@@ -11,12 +11,11 @@ namespace At0::Ray
 	public:
 		ColorTechnique(Float4 defaultColor = Float4{ 1.0f, 1.0f, 1.0f, 1.0f });
 
-		std::string GetInputAttributes() const override;
-		std::string GetUniforms() const override;
-		std::string GetVariables() const override;
-		std::string GetFunctions() const override;
-		std::string GetMainShaderCode() const override;
 
+		std::string GetFunctions() const override;
+		std::string GetFunctionCalls() const override;
+
+		void SetColor(Float4 color) { m_Color = std::move(color); }
 		const Float4& GetColor() const { return m_Color; }
 
 	private:

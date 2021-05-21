@@ -89,6 +89,7 @@ public:
 		});
 
 		Ray::Scope<Ray::ColorTechnique> colorTechnique = Ray::MakeScope<Ray::ColorTechnique>();
+		colorTechnique->SetColor({ 1.0f, 0.0f, 1.0f, 1.0f });
 
 		Ray::FlatShaderGenerator generator;
 		generator.Connect(Ray::ShaderGenerator::Connection::Color, std::move(colorTechnique));
@@ -96,17 +97,12 @@ public:
 		std::vector<std::string> shaderPaths =
 			WriteToFiles(generator.Generate(), "FlatStaticColor");
 
-		Ray::FlatColorMaterial::Layout materialLayout{};
-		materialLayout.color =
-			generator.GetTechnique<Ray::ColorTechnique>(Ray::ShaderGenerator::Connection::Color)
-				.GetColor();
-
 		Ray::GraphicsPipeline::Layout pipelineLayout{};
 		pipelineLayout.shaders = shaderPaths;
 		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
 
 		auto colorMaterial = Ray::MakeRef<Ray::FlatColorMaterial>(
-			std::move(materialLayout), std::move(pipelineLayout));
+			Ray::FlatColorMaterial::Layout{}, std::move(pipelineLayout));
 
 
 		m_Entity = Scene::Get().CreateEntity();
