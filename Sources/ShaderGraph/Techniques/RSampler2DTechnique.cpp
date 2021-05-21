@@ -10,16 +10,9 @@ namespace At0::Ray
 
 	Sampler2DTechnique::Sampler2DTechnique() : m_SamplerID(s_SamplerID++) {}
 
-	std::string Sampler2DTechnique::GetInputAttributes() const
-	{
-		return "layout(location = 0) in vec2 inUV;";
-	}
+	std::string Sampler2DTechnique::GetInputAttributes() const { return ""; }
 
-	std::string Sampler2DTechnique::GetSamplerUniforms() const
-	{
-		return String::Serialize(
-			"layout(set = 1, binding = 2) uniform sampler2D sampler2D_{0};", m_SamplerID);
-	}
+	std::string Sampler2DTechnique::GetSamplerUniforms() const { return ""; }
 
 	std::string Sampler2DTechnique::GetFunctionCalls() const
 	{

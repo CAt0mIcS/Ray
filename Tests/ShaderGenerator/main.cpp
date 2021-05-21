@@ -92,14 +92,11 @@ public:
 		});
 
 
-		auto texture2DTech = Ray::MakeScope<Ray::Texture2DTechnique>(
-			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
-
-		auto sampler2DTech = Ray::MakeScope<Ray::Sampler2DTechnique>();
-		sampler2DTech->Connect(Ray::Sampler2DTechnique::Texture, std::move(texture2DTech));
+		auto colorTech =
+			Ray::MakeScope<Ray::Float4Technique>(Ray::Float4{ 1.0f, 0.0f, 1.0f, 1.0f });
 
 		Ray::FlatShaderGenerator generator;
-		generator.Connect(Ray::ShaderGenerator::Connection::Color, std::move(sampler2DTech));
+		generator.Connect(Ray::ShaderGenerator::Connection::Color, std::move(colorTech));
 
 		std::vector<std::string> shaderPaths =
 			WriteToFiles(generator.Generate(), "FlatStaticColor");
@@ -111,15 +108,9 @@ public:
 		auto colorMaterial = Ray::MakeRef<Ray::FlatColorMaterial>(
 			Ray::FlatColorMaterial::Layout{}, std::move(pipelineLayout));
 
-
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(colorMaterial));
-		auto& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(colorMaterial, false);
-		meshRenderer.AddSampler2DUniform("sampler2D_0", Ray::Shader::Stage::Fragment,
-			generator
-				.GetTechnique<Ray::Sampler2DTechnique>(Ray::FlatShaderGenerator::Connection::Color)
-				.GetTechnique<Ray::Texture2DTechnique>(Ray::Sampler2DTechnique::Texture)
-				.GetSharedTexture());
+		auto& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(colorMaterial);
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
