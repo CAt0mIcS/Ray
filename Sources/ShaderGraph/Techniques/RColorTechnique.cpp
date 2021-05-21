@@ -15,7 +15,7 @@ namespace At0::Ray
 
 	std::string ColorTechnique::GetFunctionCalls() const
 	{
-		return String::Serialize("ColorTechnique(vec4({0}, {1}, {2}, {3}));", m_Color.x, m_Color.y,
-			m_Color.z, m_Color.w);
+		return String::Serialize(
+			"ColorTechnique(vec4({0}, {1}, {2}, {3}))", m_Color.x, m_Color.y, m_Color.z, m_Color.w);
 	}
 }  // namespace At0::Ray

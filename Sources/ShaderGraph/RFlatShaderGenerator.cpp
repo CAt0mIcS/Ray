@@ -28,7 +28,7 @@ namespace At0::Ray
 		for (const auto& [connection, technique] : m_Connections)
 		{
 			shaderTemplates[1] = String::Serialize(shaderTemplates[1], "", "", "",
-				technique->GetFunctions(), "outColor = " + technique->GetFunctionCalls());
+				technique->GetFunctions(), "outColor = " + technique->GetFunctionCalls() + ";");
 		}
 
 		return shaderTemplates;

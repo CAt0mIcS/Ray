@@ -63,6 +63,8 @@ set(SRC
 	"ShaderGraph/Techniques/RTechnique.cpp"
 	"ShaderGraph/Techniques/RColorTechnique.h"
 	"ShaderGraph/Techniques/RColorTechnique.cpp"
+	"ShaderGraph/Techniques/RMultiplyTechnique.h"
+	"ShaderGraph/Techniques/RMultiplyTechnique.cpp"
 
 	"ShaderGraph/RShaderGenerator.h"
 	"ShaderGraph/RShaderGenerator.cpp"

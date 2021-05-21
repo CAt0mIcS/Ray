@@ -22,6 +22,7 @@
 
 #include <ShaderGraph/Techniques/RColorTechnique.h>
 #include <ShaderGraph/RFlatShaderGenerator.h>
+#include <ShaderGraph/Techniques/RMultiplyTechnique.h>
 
 using namespace At0;
 
@@ -90,9 +91,16 @@ public:
 
 		Ray::Scope<Ray::ColorTechnique> colorTechnique = Ray::MakeScope<Ray::ColorTechnique>();
 		colorTechnique->SetColor({ 1.0f, 0.0f, 1.0f, 1.0f });
+		Ray::Scope<Ray::ColorTechnique> colorTechnique2 = Ray::MakeScope<Ray::ColorTechnique>();
+		colorTechnique2->SetColor({ 0.0f, 0.0f, 1.0f, 1.0f });
+
+		Ray::Scope<Ray::MultiplyTechnique> multiplyTechnique =
+			Ray::MakeScope<Ray::MultiplyTechnique>();
+		multiplyTechnique->Connect(Ray::MultiplyTechnique::Left, std::move(colorTechnique));
+		multiplyTechnique->Connect(Ray::MultiplyTechnique::Right, std::move(colorTechnique2));
 
 		Ray::FlatShaderGenerator generator;
-		generator.Connect(Ray::ShaderGenerator::Connection::Color, std::move(colorTechnique));
+		generator.Connect(Ray::ShaderGenerator::Connection::Color, std::move(multiplyTechnique));
 
 		std::vector<std::string> shaderPaths =
 			WriteToFiles(generator.Generate(), "FlatStaticColor");
