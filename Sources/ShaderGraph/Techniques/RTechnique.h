@@ -53,6 +53,9 @@ namespace At0::Ray
 		void RequiresBufferUniform(std::string_view uniformBlockName, std::string_view uniformName);
 		void RequiresSampler2DUniform(std::string_view uniformName);
 
+		std::string MergeAttributes(uint32_t& location) const;
+		std::string MergeUniforms(uint32_t& binding) const;
+
 	protected:
 		Technique() = default;
 

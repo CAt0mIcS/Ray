@@ -92,11 +92,14 @@ public:
 		});
 
 
-		auto colorTech =
-			Ray::MakeScope<Ray::Float4Technique>(Ray::Float4{ 1.0f, 0.0f, 1.0f, 1.0f });
+		auto texTech =
+			Ray::MakeScope<Ray::Texture2DTechnique>(Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
+
+		auto samplerTech = Ray::MakeScope<Ray::Sampler2DTechnique>();
+		samplerTech->Connect(Ray::Sampler2DTechnique::Texture, std::move(texTech));
 
 		Ray::FlatShaderGenerator generator;
-		generator.Connect(Ray::FlatShaderGenerator::Color, std::move(colorTech));
+		generator.Connect(Ray::FlatShaderGenerator::Color, std::move(samplerTech));
 
 		std::vector<std::string> shaderPaths =
 			WriteToFiles(generator.Generate(), "FlatStaticColor");

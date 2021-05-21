@@ -30,6 +30,8 @@ namespace At0::Ray
 	{
 		RAY_MEXPECTS(
 			!HasAttribute(attribName), "[Technique] Attribute \"{0}\" already exists", attribName);
+
+		m_Attributes[attribName.data()] = attribType;
 	}
 
 	void Technique::RequiresBufferUniform(
@@ -48,6 +50,54 @@ namespace At0::Ray
 			"[Technique] Sampler2D uniform \"{0}\" already exists", uniformName);
 
 		m_Sampler2DUniforms.emplace_back(uniformName);
+	}
+
+	std::string Technique::MergeAttributes(uint32_t& location) const
+	{
+		std::string merged = "";
+		for (const auto& child : m_ChildTechniques)
+		{
+			merged += child.second->MergeAttributes(location) + '\n';
+		}
+
+		for (const auto& [attribName, attribType] : m_Attributes)
+		{
+			if (!String::Contains(merged, attribName))
+				merged += String::Serialize(
+					"layout(location = {0}) in {1} {2};", location++, attribType, attribName);
+		}
+
+		return merged;
+	}
+
+	std::string Technique::MergeUniforms(uint32_t& binding) const
+	{
+		std::string merged = "";
+		for (const auto& child : m_ChildTechniques)
+		{
+			merged += child.second->MergeUniforms(binding) + '\n';
+		}
+
+		for (const auto& [uBlockName, uNames] : m_BufferUniforms)
+		{
+			std::string uniformStr = "";
+			for (const std::string& uName : uNames)
+				if (!String::Contains(uniformStr, uName))
+					uniformStr += uName + ";\n";
+
+			if (!String::Contains(merged, uBlockName))
+				merged += String::Serialize("layout(set = 1, binding = {0}) uniform {1}\n{{2}\n}",
+					binding++, uBlockName, uniformStr);
+		}
+
+		for (std::string_view uniformName : m_Sampler2DUniforms)
+		{
+			if (!String::Contains(merged, uniformName))
+				merged += String::Serialize("layout(set = 1, binding = {0}) uniform sampler2D {1};",
+					binding++, uniformName);
+		}
+
+		return merged;
 	}
 
 	void Technique::Connect(uint32_t pointID, Scope<Technique> tech)

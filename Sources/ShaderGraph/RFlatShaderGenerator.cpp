@@ -12,10 +12,11 @@ namespace At0::Ray
 
 		for (const auto& [connection, technique] : m_ChildTechniques)
 		{
-			shaderTemplates[1] =
-				String::Serialize(shaderTemplates[1], technique->GetInputAttributes(),
-					technique->GetBufferUniforms() + "\n" + technique->GetSamplerUniforms(), "",
-					technique->GetFunctions(), "outColor = " + technique->GetFunctionCalls() + ";");
+			uint32_t location = 0;
+			uint32_t binding = 2;
+			shaderTemplates[1] = String::Serialize(shaderTemplates[1], MergeAttributes(location),
+				MergeUniforms(binding), "", technique->GetFunctions(),
+				"outColor = " + technique->GetFunctionCalls() + ";");
 		}
 
 		shaderTemplates[0] = String::Serialize(shaderTemplates[0],
