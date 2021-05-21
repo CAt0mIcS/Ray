@@ -9,6 +9,8 @@
 #include <Utils/RLogger.h>
 #include <Graphics/Images/RTexture2D.h>
 
+#include <Shading/Flat/RFlatColorMaterial.h>
+
 #include <Components/RMesh.h>
 #include <Components/RMeshRenderer.h>
 #include <Components/RTransform.h>
@@ -16,6 +18,10 @@
 
 #include <UI/RImGui.h>
 #include <../../Extern/imgui/imgui.h>
+
+
+#include <ShaderGraph/Techniques/RColorTechnique.h>
+#include <ShaderGraph/RFlatShaderGenerator.h>
 
 using namespace At0;
 
@@ -33,6 +39,25 @@ public:
 		GetCamera().SetMovementSpeed(3.0f);
 	}
 };
+
+std::vector<std::string> WriteToFiles(std::vector<std::string> codes)
+{
+	std::string vertexShaderPath = "Resources/Shaders/VertexShader.vert";
+	std::string fragmentShaderPath = "Resources/Shaders/FragmentShader.frag";
+
+	{
+		std::ofstream writer(vertexShaderPath);
+		writer << codes[0];
+		writer.close();
+	}
+	{
+		std::ofstream writer(fragmentShaderPath);
+		writer << codes[1];
+		writer.close();
+	}
+
+	return { vertexShaderPath, fragmentShaderPath };
+}
 
 
 class App : public Ray::Engine
@@ -62,8 +87,29 @@ public:
 			}
 		});
 
+		Ray::Scope<Ray::ColorTechnique> colorTechnique = Ray::MakeScope<Ray::ColorTechnique>();
+
+		Ray::FlatShaderGenerator generator;
+		generator.Connect(Ray::ShaderGenerator::Connection::Color, std::move(colorTechnique));
+
+		std::vector<std::string> shaderPaths = WriteToFiles(generator.Generate());
+
+		Ray::FlatColorMaterial::Layout materialLayout{};
+		materialLayout.color =
+			generator.GetTechnique<Ray::ColorTechnique>(Ray::ShaderGenerator::Connection::Color)
+				.GetColor();
+
+		Ray::GraphicsPipeline::Layout pipelineLayout{};
+		pipelineLayout.shaders = shaderPaths;
+		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
+
+		auto colorMaterial = Ray::MakeRef<Ray::FlatColorMaterial>(
+			std::move(materialLayout), std::move(pipelineLayout));
+
+
 		m_Entity = Scene::Get().CreateEntity();
-		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(colorMaterial));
+		m_Entity.Emplace<Ray::MeshRenderer>(colorMaterial);
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));

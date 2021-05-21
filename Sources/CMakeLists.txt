@@ -58,6 +58,18 @@ set(SRC
 	"Devices/RKeyboard.cpp"
 
 	# ------------------------------------------------------------------
+	# Shader graph
+	"ShaderGraph/Techniques/RTechnique.h"
+	"ShaderGraph/Techniques/RTechnique.cpp"
+	"ShaderGraph/Techniques/RColorTechnique.h"
+	"ShaderGraph/Techniques/RColorTechnique.cpp"
+
+	"ShaderGraph/RShaderGenerator.h"
+	"ShaderGraph/RShaderGenerator.cpp"
+	"ShaderGraph/RFlatShaderGenerator.h"
+	"ShaderGraph/RFlatShaderGenerator.cpp"
+
+	# ------------------------------------------------------------------
 	# Graphics
 	"Graphics/RGraphics.h"
 	"Graphics/RGraphics.cpp"
