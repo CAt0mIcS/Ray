@@ -9,5 +9,7 @@ namespace At0::Ray
 	{
 	public:
 		FlatShaderGenerator() = default;
+
+		std::vector<std::string> Generate() const override;
 	};
 }  // namespace At0::Ray

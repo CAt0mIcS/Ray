@@ -8,6 +8,12 @@ namespace At0::Ray
 {
 	ColorTechnique::ColorTechnique(Float4 defaultColor) : m_Color(std::move(defaultColor)) {}
 
+	std::string ColorTechnique::GetInputAttributes() const { return ""; }
+
+	std::string ColorTechnique::GetUniforms() const { return ""; }
+
+	std::string ColorTechnique::GetFunctions() const { return ""; }
+
 	std::string ColorTechnique::GetMainShaderCode() const
 	{
 		return String::Serialize(

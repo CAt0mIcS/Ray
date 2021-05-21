@@ -34,19 +34,39 @@ namespace At0::Ray
 		/**
 		 * Generates the shaders
 		 */
-		std::vector<std::string> Generate() const;
+		virtual std::vector<std::string> Generate() const = 0;
 
 		template<typename T = Technique>
 		T& GetTechnique(Connection connectionPoint)
 		{
-			return *(T*)m_Connections[connectionPoint].get();
+			return *(T*)m_Connections.at(connectionPoint).get();
 		}
 
 		template<typename T = Technique>
 		const T& GetTechnique(Connection connectionPoint) const
 		{
-			return *(const T*)m_Connections[connectionPoint].get();
+			return *(const T*)m_Connections.at(connectionPoint).get();
 		}
+
+	protected:
+		/**
+		 * Returns the default shader code, ready to insert into.
+		 * VertexShader:
+		 *	{0}: Input attributes
+		 *	{1}: Output attributes
+		 *	{2}: Extra per-scene data (default: View, Proj)
+		 *	{3}: Extra per-object data (default: Model)
+		 *	{4}: Extra uniforms (default: PerScene, PerObject)
+		 *	{5}: Functions
+		 *	{6}: Main shader code
+		 *
+		 * FragmentShader:
+		 *	{0}: Input attributes
+		 *	{1}: Uniforms
+		 *	{2}: Functions
+		 *	{3}: Main shader code
+		 */
+		std::vector<std::string> GetShaderTemplates() const;
 
 	protected:
 		ShaderGenerator() = default;
