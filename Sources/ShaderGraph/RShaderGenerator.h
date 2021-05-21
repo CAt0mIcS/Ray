@@ -57,14 +57,16 @@ namespace At0::Ray
 		 *	{2}: Extra per-scene data (default: View, Proj)
 		 *	{3}: Extra per-object data (default: Model)
 		 *	{4}: Extra uniforms (default: PerScene, PerObject)
-		 *	{5}: Functions
-		 *	{6}: Main shader code
+		 *	{5}: Variables
+		 *	{6}: Functions
+		 *	{7}: Main shader code
 		 *
 		 * FragmentShader:
 		 *	{0}: Input attributes
 		 *	{1}: Uniforms
-		 *	{2}: Functions
-		 *	{3}: Main shader code
+		 *	{2}: Variables
+		 *	{3}: Functions
+		 *	{4}: Main shader code
 		 */
 		std::vector<std::string> GetShaderTemplates() const;
 

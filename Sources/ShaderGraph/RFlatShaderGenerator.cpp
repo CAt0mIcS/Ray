@@ -19,18 +19,16 @@ namespace At0::Ray
 			"",										// Extra per-scene data
 			"",										// Extra per-object data
 			"",										// Extra uniforms
+			"",										// Constants
 			"",										// Functions
 			"gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 1.0f);"	 // Main
 																						 // function
 																						 // code
 		);
 
-		shaderTemplates[1] = String::Serialize(shaderTemplates[1],
-			technique.GetInputAttributes(),	 // Input attributes
-			technique.GetUniforms(),		 // Uniforms
-			technique.GetFunctions(),		 // Functions
-			technique.GetMainShaderCode()	 // Main function code
-		);
+		shaderTemplates[1] = String::Serialize(shaderTemplates[1], technique.GetInputAttributes(),
+			technique.GetUniforms(), technique.GetVariables(), technique.GetFunctions(),
+			technique.GetMainShaderCode());
 
 		return shaderTemplates;
 	}

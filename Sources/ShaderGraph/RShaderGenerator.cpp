@@ -36,9 +36,11 @@ layout(set = 1, binding = 1) uniform PerObjectData
 
 {5}
 
+{6}
+
 void main()
 {
-	{6}
+	{7}
 })";
 
 		std::string fragmentShaderCode = R"(#version 450 core
@@ -52,10 +54,12 @@ layout(location = 0) out vec4 outColor;
 
 {2}
 
+{3}
+
 
 void main()
 {
-	{3}
+	{4}
 }
 )";
 

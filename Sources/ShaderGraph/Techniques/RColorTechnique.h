@@ -13,6 +13,7 @@ namespace At0::Ray
 
 		std::string GetInputAttributes() const override;
 		std::string GetUniforms() const override;
+		std::string GetVariables() const override;
 		std::string GetFunctions() const override;
 		std::string GetMainShaderCode() const override;
 

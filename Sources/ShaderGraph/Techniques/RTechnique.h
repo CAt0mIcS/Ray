@@ -25,6 +25,11 @@ namespace At0::Ray
 		virtual std::string GetUniforms() const = 0;
 
 		/**
+		 * @returns Global variables needed by this technique
+		 */
+		virtual std::string GetVariables() const = 0;
+
+		/**
 		 * @returns All functions which may be called by this technique
 		 */
 		virtual std::string GetFunctions() const = 0;

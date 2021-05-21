@@ -12,6 +12,8 @@ namespace At0::Ray
 
 	std::string ColorTechnique::GetUniforms() const { return ""; }
 
+	std::string ColorTechnique::GetVariables() const { return ""; }
+
 	std::string ColorTechnique::GetFunctions() const { return ""; }
 
 	std::string ColorTechnique::GetMainShaderCode() const
