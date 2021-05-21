@@ -17,9 +17,21 @@ namespace At0::Ray
 		}
 
 
-		functions +=
-			"vec4 MultiplyTechnique(vec4 MultiplyTechnique_left, vec4 MultiplyTechnique_right) { "
-			"return MultiplyTechnique_left * MultiplyTechnique_right; }";
+		// Add function for multiple possible data types
+		std::string multiplyFunctions;
+		const char* dataTypes[] = { "vec4", "vec3", "vec2", "float", "int", "double", "uint" };
+		for (uint32_t i = 0; i < std::size(dataTypes); ++i)
+		{
+			multiplyFunctions +=
+				String::Serialize("{0} MultiplyTechnique({0} MultiplyTechnique_left, {0} "
+								  "MultiplyTechnique_right) { "
+								  "return MultiplyTechnique_left * MultiplyTechnique_right; }\n",
+					dataTypes[i]);
+		}
+
+		// Remove trailing \n
+		multiplyFunctions.erase(multiplyFunctions.end() - 1);
+		functions += multiplyFunctions;
 
 		return functions;
 	}
