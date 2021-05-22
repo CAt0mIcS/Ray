@@ -59,6 +59,13 @@ set(SRC
 
 	# ------------------------------------------------------------------
 	# Shader graph
+	"ShaderGraph/Nodes/RNode.h"
+	"ShaderGraph/Nodes/RNode.cpp"
+
+	"ShaderGraph/RVertexShaderGenerator.h"
+	"ShaderGraph/RVertexShaderGenerator.cpp"
+	"ShaderGraph/RFragmentShaderGenerator.h"
+	"ShaderGraph/RFragmentShaderGenerator.cpp"
 
 	# ------------------------------------------------------------------
 	# Graphics
