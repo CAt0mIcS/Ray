@@ -20,12 +20,6 @@
 #include <../../Extern/imgui/imgui.h>
 
 
-#include <ShaderGraph/RFlatShaderGenerator.h>
-#include <ShaderGraph/Techniques/RFloat4Technique.h>
-#include <ShaderGraph/Techniques/RMultiplyTechnique.h>
-#include <ShaderGraph/Techniques/RTexture2DTechnique.h>
-#include <ShaderGraph/Techniques/RSampler2DTechnique.h>
-
 using namespace At0;
 
 
@@ -74,18 +68,18 @@ public:
 			{
 				ImGui::Begin("TestEntity");
 
-				Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
+				// Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
 
-				Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
-				Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
-				Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
+				// Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
+				// Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
+				// Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
 
-				Ray::ImGUI::Float3Widget("Translation", translation);
-				Ray::ImGUI::Float3Widget("Rotation", rotation);
-				Ray::ImGUI::Float3Widget("Scale", scale);
-				ImGui::Spacing();
+				// Ray::ImGUI::Float3Widget("Translation", translation);
+				// Ray::ImGUI::Float3Widget("Rotation", rotation);
+				// Ray::ImGUI::Float3Widget("Scale", scale);
+				// ImGui::Spacing();
 
-				tform.RecalculateCachedMatrix();
+				// tform.RecalculateCachedMatrix();
 
 				ImGui::End();
 			}
@@ -93,63 +87,13 @@ public:
 
 
 		auto texture = Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png");
-		Ray::Float4 colorTechVal = { 1.0f, 1.0f, 0.0f, 1.0f };
-		std::vector<std::string> shaderCodes;
-		{
-			Ray::Time tStart = Ray::Time::Now();
-
-			auto texTech = Ray::MakeScope<Ray::Texture2DTechnique>(texture);
-
-			auto samplerTech = Ray::MakeScope<Ray::Sampler2DTechnique>();
-			samplerTech->Connect(Ray::Sampler2DTechnique::Texture, std::move(texTech));
-
-			auto colorTech = Ray::MakeScope<Ray::Float4Technique>(colorTechVal, "Shading", "color");
-
-			auto multiptlyTech = Ray::MakeScope<Ray::MultiplyTechnique>();
-			multiptlyTech->Connect(Ray::MultiplyTechnique::Left, std::move(samplerTech));
-			multiptlyTech->Connect(Ray::MultiplyTechnique::Right, std::move(colorTech));
-
-			Ray::FlatShaderGenerator generator;
-			generator.Connect(Ray::FlatShaderGenerator::Color, std::move(multiptlyTech));
-
-			shaderCodes = generator.Generate();
-			Ray::Log::Info(
-				"Shader generator took {0}ms", (Ray::Time::Now() - tStart).AsMilliseconds());
-		}
-
-
-		std::vector<std::string> shaderPaths =
-			WriteToFiles(std::move(shaderCodes), "FlatStaticColor");
-
-		Ray::GraphicsPipeline::Layout pipelineLayout{};
-		pipelineLayout.shaders = shaderPaths;
-		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
-
-		auto colorMaterial = Ray::MakeRef<Ray::FlatColorMaterial>(
-			Ray::FlatColorMaterial::Layout{}, std::move(pipelineLayout));
-
-		m_Entity = Scene::Get().CreateEntity();
-		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(colorMaterial));
-		auto& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(colorMaterial, false);
-		meshRenderer.AddSampler2DUniform(
-			"sampler2D_0", Ray::Shader::Stage::Fragment, std::move(texture));
-		meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment)["color"] =
-			colorTechVal;
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:
-	void Update() override
-	{
-		static Ray::Time tStart = Ray::Time::Now();
-
-		Ray::Float4 sinColor(sin((Ray::Time::Now() - tStart).AsSeconds()),
-			cos((Ray::Time::Now() - tStart).AsSeconds()),
-			tan((Ray::Time::Now() - tStart).AsSeconds()), 1.0f);
-		m_Entity.Get<Ray::MeshRenderer>().GetBufferUniform("Shading")["color"] = sinColor;
-	}
+	void Update() override {}
 
 private:
 	Ray::Entity m_Entity;

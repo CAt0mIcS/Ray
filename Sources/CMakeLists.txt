@@ -59,23 +59,6 @@ set(SRC
 
 	# ------------------------------------------------------------------
 	# Shader graph
-	"ShaderGraph/Techniques/RTechnique.h"
-	"ShaderGraph/Techniques/RTechnique.cpp"
-	"ShaderGraph/Techniques/RFloat4Technique.h"
-	"ShaderGraph/Techniques/RFloat4Technique.cpp"
-	"ShaderGraph/Techniques/RMultiplyTechnique.h"
-	"ShaderGraph/Techniques/RMultiplyTechnique.cpp"
-	"ShaderGraph/Techniques/RTexture2DTechnique.h"
-	"ShaderGraph/Techniques/RTexture2DTechnique.cpp"
-	"ShaderGraph/Techniques/RSampler2DTechnique.h"
-	"ShaderGraph/Techniques/RSampler2DTechnique.cpp"
-
-	"ShaderGraph/RShaderGenerator.h"
-	"ShaderGraph/RShaderGenerator.cpp"
-	"ShaderGraph/RFlatShaderGenerator.h"
-	"ShaderGraph/RFlatShaderGenerator.cpp"
-	"ShaderGraph/RPBRShaderGenerator.h"
-	"ShaderGraph/RPBRShaderGenerator.cpp"
 
 	# ------------------------------------------------------------------
 	# Graphics
