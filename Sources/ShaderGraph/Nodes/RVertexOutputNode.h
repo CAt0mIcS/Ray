@@ -13,5 +13,8 @@ namespace At0::Ray
 			// Input
 			Vertex
 		};
+
+	public:
+		std::string GetFunctionCalls(OutputID outputID) const override;
 	};
 }  // namespace At0::Ray

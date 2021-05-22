@@ -20,6 +20,8 @@ namespace At0::Ray
 		float GetFloat() const { return m_Value; }
 		void SetFloat(float value) { m_Value = value; }
 
+		std::string GetFunctionCalls(OutputID outputID) const override;
+
 	private:
 		float m_Value;
 	};

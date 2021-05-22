@@ -13,5 +13,8 @@ namespace At0::Ray
 			// Output
 			ScreenSpacePosition
 		};
+
+	public:
+		std::string GetFunctionCalls(OutputID outputID) const override;
 	};
 }  // namespace At0::Ray

@@ -19,5 +19,8 @@ namespace At0::Ray
 			// Output
 			Result
 		};
+
+	public:
+		std::string GetFunctionCalls(OutputID outputID) const override;
 	};
 }  // namespace At0::Ray

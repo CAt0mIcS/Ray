@@ -100,6 +100,7 @@ public:
 		auto texture = MakeRef<Texture2D>("Resources/Textures/gridbase.png");
 
 		{
+			Time tStart = Time::Now();
 			VertexShaderGenerator generator;
 
 			auto cameraNode = MakeRef<CameraNode>();
@@ -117,7 +118,6 @@ public:
 			vec4Node->Connect(splitNode, SplitNode::B, Vector4Node::B);
 			vec4Node->Connect(floatNode, FloatNode::Result, Vector4Node::A);
 
-
 			// uScene.Proj * uScene.View
 			auto multiplyNodeCamViewProj = MakeRef<MultiplyNode>();
 			multiplyNodeCamViewProj->Connect(
@@ -131,8 +131,6 @@ public:
 			multiplyNodeCamTrans->Connect(
 				transformNode, TransformationMatrixNode::Model, MultiplyNode::Right);
 
-			std::string test = multiplyNodeCamTrans->GetFunctionCalls(MultiplyNode::Result);
-
 			// ((uScene.Proj * uSceen.View) * uObj.Model) * inPos
 			auto multiplyVertex = MakeRef<MultiplyNode>();
 			multiplyVertex->Connect(multiplyNodeCamTrans, MultiplyNode::Result, MultiplyNode::Left);
@@ -142,7 +140,10 @@ public:
 			vertexOutputNode->Connect(
 				multiplyVertex, MultiplyNode::Result, VertexOutputNode::Vertex);
 
+			std::string test = vertexOutputNode->GetFunctionCalls(MultiplyNode::Result);
 			generator.Generate({ vertexOutputNode });
+
+			Log::Info("Shader generation took {0}ms", (Time::Now() - tStart).AsMilliseconds());
 		}
 
 
