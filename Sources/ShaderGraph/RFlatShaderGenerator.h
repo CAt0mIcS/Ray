@@ -17,5 +17,12 @@ namespace At0::Ray
 		FlatShaderGenerator() = default;
 
 		std::vector<std::string> Generate() const override;
+
+	private:
+		std::string GenerateVertexShader(
+			std::string shaderTemplate, std::string fragmentShaderInputs) const;
+
+		static void AddAttributes(
+			std::string fragmentAttributes, std::string& attributes, std::string& main);
 	};
 }  // namespace At0::Ray
