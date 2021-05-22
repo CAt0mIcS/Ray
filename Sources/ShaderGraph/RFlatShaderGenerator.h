@@ -12,13 +12,5 @@ namespace At0::Ray
 		{
 			Color
 		};
-
-	public:
-		FlatShaderGenerator() = default;
-
-		std::vector<std::string> Generate() const override;
-
-	private:
-		std::string GenerateVertexShader(std::string shaderTemplate) const;
 	};
 }  // namespace At0::Ray

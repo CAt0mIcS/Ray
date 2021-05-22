@@ -20,11 +20,11 @@ namespace At0::Ray
 		/**
 		 * @returns All functions which may be called by this technique
 		 */
-		virtual std::string GetInputAttributes() const { return ""; }
-		virtual std::string GetFunctions() const { return ""; }
-		virtual std::string GetFunctionCalls() const { return ""; }
-		virtual std::string GetBufferUniforms() const { return ""; }
-		virtual std::string GetSamplerUniforms() const { return ""; }
+		virtual std::string GetInputAttributes() const;
+		virtual std::string GetFunctions() const;
+		virtual std::string GetFunctionCalls() const;
+		virtual std::string GetBufferUniforms() const;
+		virtual std::string GetSamplerUniforms() const;
 
 		void Connect(uint32_t pointID, Scope<Technique> tech);
 		void Disconnect(uint32_t pointID) { m_ChildTechniques.erase(pointID); }
@@ -55,8 +55,8 @@ namespace At0::Ray
 			const std::string& outAttribName, const std::string& inAttribName) const;
 
 		void RequiresAttribute(std::string_view attribType, const std::string& attribName);
-		void RequiresBufferUniform(
-			const std::string& uniformBlockName, std::string_view uniformName);
+		void RequiresBufferUniform(const std::string& uniformBlockName,
+			std::string_view uniformType, const std::string& uniformName);
 		void RequiresSampler2DUniform(std::string_view uniformName);
 
 		void RequiresVertexInputAttribute(
@@ -83,8 +83,9 @@ namespace At0::Ray
 		// Attribute name --> attribute type
 		std::unordered_map<std::string, std::string> m_Attributes;
 
-		// Uniform block name --> uniform names in block
-		std::unordered_map<std::string, std::vector<std::string>> m_BufferUniforms;
+		// Uniform block name --> [uniform name in block --> type]
+		std::unordered_map<std::string, std::unordered_map<std::string, std::string>>
+			m_BufferUniforms;
 
 		// Sampler names
 		std::vector<std::string> m_Sampler2DUniforms;

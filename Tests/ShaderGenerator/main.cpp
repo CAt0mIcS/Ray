@@ -93,6 +93,7 @@ public:
 
 
 		auto texture = Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png");
+		Ray::Float4 colorTechVal = { 1.0f, 1.0f, 0.0f, 1.0f };
 		std::vector<std::string> shaderCodes;
 		{
 			Ray::Time tStart = Ray::Time::Now();
@@ -102,8 +103,7 @@ public:
 			auto samplerTech = Ray::MakeScope<Ray::Sampler2DTechnique>();
 			samplerTech->Connect(Ray::Sampler2DTechnique::Texture, std::move(texTech));
 
-			auto colorTech =
-				Ray::MakeScope<Ray::Float4Technique>(Ray::Float4{ 1.0f, 1.0f, 0.0f, 1.0f });
+			auto colorTech = Ray::MakeScope<Ray::Float4Technique>(colorTechVal, "Shading", "color");
 
 			auto multiptlyTech = Ray::MakeScope<Ray::MultiplyTechnique>();
 			multiptlyTech->Connect(Ray::MultiplyTechnique::Left, std::move(samplerTech));
@@ -133,13 +133,23 @@ public:
 		auto& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(colorMaterial, false);
 		meshRenderer.AddSampler2DUniform(
 			"sampler2D_0", Ray::Shader::Stage::Fragment, std::move(texture));
+		meshRenderer.AddBufferUniform("Shading", Ray::Shader::Stage::Fragment)["color"] =
+			colorTechVal;
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:
-	void Update() override {}
+	void Update() override
+	{
+		static Ray::Time tStart = Ray::Time::Now();
+
+		Ray::Float4 sinColor(sin((Ray::Time::Now() - tStart).AsSeconds()),
+			cos((Ray::Time::Now() - tStart).AsSeconds()),
+			tan((Ray::Time::Now() - tStart).AsSeconds()), 1.0f);
+		m_Entity.Get<Ray::MeshRenderer>().GetBufferUniform("Shading")["color"] = sinColor;
+	}
 
 private:
 	Ray::Entity m_Entity;

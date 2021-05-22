@@ -7,6 +7,46 @@
 
 namespace At0::Ray
 {
+	std::string Technique::GetInputAttributes() const
+	{
+		std::string merged;
+		for (const auto& [connection, tech] : m_ChildTechniques)
+			merged += '\n' + tech->GetInputAttributes();
+		return merged;
+	}
+
+	std::string Technique::GetFunctions() const
+	{
+		std::string merged;
+		for (const auto& [connection, tech] : m_ChildTechniques)
+			merged += '\n' + tech->GetFunctions();
+		return merged;
+	}
+
+	std::string Technique::GetFunctionCalls() const
+	{
+		std::string merged;
+		for (const auto& [connection, tech] : m_ChildTechniques)
+			merged += '\n' + tech->GetFunctionCalls();
+		return merged;
+	}
+
+	std::string Technique::GetBufferUniforms() const
+	{
+		std::string merged;
+		for (const auto& [connection, tech] : m_ChildTechniques)
+			merged += '\n' + tech->GetBufferUniforms();
+		return merged;
+	}
+
+	std::string Technique::GetSamplerUniforms() const
+	{
+		std::string merged;
+		for (const auto& [connection, tech] : m_ChildTechniques)
+			merged += '\n' + tech->GetSamplerUniforms();
+		return merged;
+	}
+
 	bool Technique::HasAttribute(const std::string& attribName) const
 	{
 		return m_Attributes.find(attribName) != m_Attributes.end();
@@ -16,9 +56,8 @@ namespace At0::Ray
 		const std::string& uniformBlockName, const std::string& uniformName) const
 	{
 		return m_BufferUniforms.find(uniformBlockName) != m_BufferUniforms.end() &&
-			   std::find(m_BufferUniforms.at(uniformBlockName).begin(),
-				   m_BufferUniforms.at(uniformBlockName).end(),
-				   uniformName) != m_BufferUniforms.at(uniformBlockName).end();
+			   m_BufferUniforms.at(uniformBlockName).find(uniformName) !=
+				   m_BufferUniforms.at(uniformBlockName).end();
 	}
 
 	bool Technique::HasSampler2DUniform(const std::string& uniformName) const
@@ -52,14 +91,14 @@ namespace At0::Ray
 		m_Attributes[attribName] = attribType;
 	}
 
-	void Technique::RequiresBufferUniform(
-		const std::string& uniformBlockName, std::string_view uniformName)
+	void Technique::RequiresBufferUniform(const std::string& uniformBlockName,
+		std::string_view uniformType, const std::string& uniformName)
 	{
 		RAY_MEXPECTS(!HasUniformInBlock(uniformBlockName, uniformName.data()),
 			"[Technique] Uniform block \"{0}\" already has uniform \"{1}\"", uniformBlockName,
 			uniformName);
 
-		m_BufferUniforms[uniformBlockName].emplace_back(uniformName);
+		m_BufferUniforms[uniformBlockName][uniformName] = uniformType;
 	}
 
 	void Technique::RequiresSampler2DUniform(std::string_view uniformName)
@@ -124,16 +163,17 @@ namespace At0::Ray
 			merged += child.second->MergeUniforms(binding) + '\n';
 		}
 
-		for (const auto& [uBlockName, uNames] : m_BufferUniforms)
+		for (const auto& [uBlockName, uniforms] : m_BufferUniforms)
 		{
 			std::string uniformStr = "";
-			for (const std::string& uName : uNames)
+			for (const auto& [uName, uType] : uniforms)
 				if (!String::Contains(uniformStr, uName))
-					uniformStr += uName + ';';
+					uniformStr += uType + ' ' + uName + ';';
 
 			if (!String::Contains(merged, uBlockName))
-				merged += String::Serialize("\nlayout(set = 1, binding = {0}) uniform {1}\n{{2}\n}",
-					binding++, uBlockName, uniformStr);
+				merged += String::Serialize(
+					"\nlayout(set = 1, binding = {0}) uniform {1}\n{\n{2}\n} u{1};", binding++,
+					uBlockName, uniformStr);
 		}
 
 		for (std::string_view uniformName : m_Sampler2DUniforms)

@@ -16,7 +16,7 @@ namespace At0::Ray
 		/**
 		 * Generates the shaders
 		 */
-		virtual std::vector<std::string> Generate() const = 0;
+		std::vector<std::string> Generate() const;
 
 	protected:
 		ShaderGenerator() = default;
@@ -41,5 +41,7 @@ namespace At0::Ray
 		 *	{4}: Main shader code
 		 */
 		std::vector<std::string> GetShaderTemplates() const;
+
+		std::string GenerateVertexShader(std::string shaderTemplate) const;
 	};
 }  // namespace At0::Ray

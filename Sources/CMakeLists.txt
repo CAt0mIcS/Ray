@@ -74,6 +74,8 @@ set(SRC
 	"ShaderGraph/RShaderGenerator.cpp"
 	"ShaderGraph/RFlatShaderGenerator.h"
 	"ShaderGraph/RFlatShaderGenerator.cpp"
+	"ShaderGraph/RPBRShaderGenerator.h"
+	"ShaderGraph/RPBRShaderGenerator.cpp"
 
 	# ------------------------------------------------------------------
 	# Graphics
