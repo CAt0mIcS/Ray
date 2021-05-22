@@ -85,10 +85,47 @@ public:
 			}
 		});
 
+		using namespace At0::Ray;
+		auto texture = MakeRef<Texture2D>("Resources/Textures/gridbase.png");
 
-		auto texture = Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png");
+		{
+			VertexShaderGenerator generator;
 
-		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+			auto cameraNode = MakeRef<CameraNode>();
+			auto transformNode = MakeRef<TransformNode>();
+
+			// generate vec4 from vec3
+			auto vertexNode = MakeRef<VertexNode>();
+			auto vec4Node = MakeRef<Vector4Node>();
+			auto splitNode = MakeRef<SplitNode>();
+			auto floatNode = MakeRef<FloatNode>(1.0f);
+
+			splitNode.Connect(vertexNode, VertexNode::ScreenSpacePosition, SplitNode::Input);
+			vec4Node.Connect(splitNode, SplitNode::R, Vector4Node::R);
+			vec4Node.Connect(splitNode, SplitNode::G, Vector4Node::G);
+			vec4Node.Connect(splitNode, SplitNode::B, Vector4Node::B);
+			vec4Node.Connect(floatNode, FloatNode::Result, Vector4Node::A);
+
+
+			// uScene.Proj * uScene.View
+			auto multiplyNodeCamViewProj = MakeRef<MultiplyNode>();
+			multiplyNodeCamViewProj.Connect(cameraNode, CameraNode::Projection, MultiplyNode::Left);
+			multiplyNodeCamViewProj.Connect(cameraNode, CameraNode::View, MultiplyNode::Right);
+
+			// (uScene.Proj * uScene.View) * uObj.Model
+			auto multiplyNodeCamTrans = MakeRef<MultiplyNode>();
+			multiplyNodeCamTrans.Connect(
+				multiplyNodeCamViewProj, MultiplyNode::Result, MultiplyNode::Left);
+			multiplyNodeCamTrans.Connect(transformNode, TransformNode::Model, MultiplyNode::Right);
+
+			// ((uScene.Proj * uSceen.View) * uObj.Model) * inPos
+			auto multiplyVertex = MakeRef<MultiplyNode>();
+			multiplyVertex.Connect(multiplyNodeCamTrans, MultiplyNode::Result, MultiplyNode::Left);
+			multiplyVertex.Connect(vec4Node, Vector4Node::Result, MultiplyNode::Right);
+		}
+
+
+		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
