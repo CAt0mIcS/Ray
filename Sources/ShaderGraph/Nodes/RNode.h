@@ -17,7 +17,7 @@ namespace At0::Ray
 		 *
 		 * @param node Output of node will be connected to input of this node at pointID
 		 */
-		void Connect(Scope<Node> childNode, uint32_t childPointID, uint32_t pointID);
+		void Connect(Ref<Node> childNode, uint32_t childPointID, uint32_t pointID);
 
 	protected:
 		Node() = default;
@@ -26,7 +26,7 @@ namespace At0::Ray
 		struct ChildNode
 		{
 			// child node
-			Scope<Node> node;
+			Ref<Node> node;
 
 			// Output id of child node
 			uint32_t connectionPoint{};

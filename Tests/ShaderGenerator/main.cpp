@@ -20,6 +20,16 @@
 #include <../../Extern/imgui/imgui.h>
 
 
+#include <ShaderGraph/RVertexShaderGenerator.h>
+#include <ShaderGraph/Nodes/RCameraNode.h>
+#include <ShaderGraph/Nodes/RFloatNode.h>
+#include <ShaderGraph/Nodes/RMultiplyNode.h>
+#include <ShaderGraph/Nodes/RSplitNode.h>
+#include <ShaderGraph/Nodes/RTransformationMatrixNode.h>
+#include <ShaderGraph/Nodes/RVector4Node.h>
+#include <ShaderGraph/Nodes/RVertexNode.h>
+
+
 using namespace At0;
 
 
@@ -92,7 +102,7 @@ public:
 			VertexShaderGenerator generator;
 
 			auto cameraNode = MakeRef<CameraNode>();
-			auto transformNode = MakeRef<TransformNode>();
+			auto transformNode = MakeRef<TransformationMatrix>();
 
 			// generate vec4 from vec3
 			auto vertexNode = MakeRef<VertexNode>();
@@ -100,28 +110,30 @@ public:
 			auto splitNode = MakeRef<SplitNode>();
 			auto floatNode = MakeRef<FloatNode>(1.0f);
 
-			splitNode.Connect(vertexNode, VertexNode::ScreenSpacePosition, SplitNode::Input);
-			vec4Node.Connect(splitNode, SplitNode::R, Vector4Node::R);
-			vec4Node.Connect(splitNode, SplitNode::G, Vector4Node::G);
-			vec4Node.Connect(splitNode, SplitNode::B, Vector4Node::B);
-			vec4Node.Connect(floatNode, FloatNode::Result, Vector4Node::A);
+			splitNode->Connect(vertexNode, VertexNode::ScreenSpacePosition, SplitNode::Input);
+			vec4Node->Connect(splitNode, SplitNode::R, Vector4Node::R);
+			vec4Node->Connect(splitNode, SplitNode::G, Vector4Node::G);
+			vec4Node->Connect(splitNode, SplitNode::B, Vector4Node::B);
+			vec4Node->Connect(floatNode, FloatNode::Result, Vector4Node::A);
 
 
 			// uScene.Proj * uScene.View
 			auto multiplyNodeCamViewProj = MakeRef<MultiplyNode>();
-			multiplyNodeCamViewProj.Connect(cameraNode, CameraNode::Projection, MultiplyNode::Left);
-			multiplyNodeCamViewProj.Connect(cameraNode, CameraNode::View, MultiplyNode::Right);
+			multiplyNodeCamViewProj->Connect(
+				cameraNode, CameraNode::Projection, MultiplyNode::Left);
+			multiplyNodeCamViewProj->Connect(cameraNode, CameraNode::View, MultiplyNode::Right);
 
 			// (uScene.Proj * uScene.View) * uObj.Model
 			auto multiplyNodeCamTrans = MakeRef<MultiplyNode>();
-			multiplyNodeCamTrans.Connect(
+			multiplyNodeCamTrans->Connect(
 				multiplyNodeCamViewProj, MultiplyNode::Result, MultiplyNode::Left);
-			multiplyNodeCamTrans.Connect(transformNode, TransformNode::Model, MultiplyNode::Right);
+			multiplyNodeCamTrans->Connect(
+				transformNode, TransformationMatrix::Model, MultiplyNode::Right);
 
 			// ((uScene.Proj * uSceen.View) * uObj.Model) * inPos
 			auto multiplyVertex = MakeRef<MultiplyNode>();
-			multiplyVertex.Connect(multiplyNodeCamTrans, MultiplyNode::Result, MultiplyNode::Left);
-			multiplyVertex.Connect(vec4Node, Vector4Node::Result, MultiplyNode::Right);
+			multiplyVertex->Connect(multiplyNodeCamTrans, MultiplyNode::Result, MultiplyNode::Left);
+			multiplyVertex->Connect(vec4Node, Vector4Node::Result, MultiplyNode::Right);
 		}
 
 
