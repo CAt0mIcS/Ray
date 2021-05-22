@@ -92,6 +92,8 @@ public:
 		});
 
 
+		Ray::Time tStart = Ray::Time::Now();
+
 		auto texTech = Ray::MakeScope<Ray::Texture2DTechnique>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
 
@@ -108,8 +110,12 @@ public:
 		Ray::FlatShaderGenerator generator;
 		generator.Connect(Ray::FlatShaderGenerator::Color, std::move(multiptlyTech));
 
+		auto shaderCodes = generator.Generate();
+		Ray::Log::Info("Shader generator took {0}ms", (Ray::Time::Now() - tStart).AsMilliseconds());
+
+
 		std::vector<std::string> shaderPaths =
-			WriteToFiles(generator.Generate(), "FlatStaticColor");
+			WriteToFiles(std::move(shaderCodes), "FlatStaticColor");
 
 		Ray::GraphicsPipeline::Layout pipelineLayout{};
 		pipelineLayout.shaders = shaderPaths;

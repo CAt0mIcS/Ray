@@ -44,16 +44,22 @@ namespace At0::Ray
 			return *(T*)m_ChildTechniques.at(connectionPoint).get();
 		}
 
-		bool HasAttribute(std::string_view attribName) const;
+		bool HasAttribute(const std::string& attribName) const;
 		bool HasUniformInBlock(
 			std::string_view uniformBlockName, std::string_view uniformName) const;
-		bool HasSampler2DUniform(std::string_view uniformName);
+		bool HasSampler2DUniform(const std::string& uniformName);
 
-		void RequiresAttribute(std::string_view attribType, std::string_view attribName);
-		void RequiresBufferUniform(std::string_view uniformBlockName, std::string_view uniformName);
+		bool HasVertexAttribute(const std::string& attribName);
+
+		void RequiresAttribute(std::string_view attribType, const std::string& attribName);
+		void RequiresBufferUniform(
+			const std::string& uniformBlockName, std::string_view uniformName);
 		void RequiresSampler2DUniform(std::string_view uniformName);
 
+		void RequiresVertexAttribute(std::string_view attribType, const std::string& attribName);
+
 		std::string MergeAttributes(uint32_t& location) const;
+		std::string MergeVertexAttributes(uint32_t& location) const;
 		std::string MergeUniforms(uint32_t& binding) const;
 
 	protected:
@@ -71,5 +77,8 @@ namespace At0::Ray
 
 		// Sampler names
 		std::vector<std::string> m_Sampler2DUniforms;
+
+		// (VertexShader): Attribute name --> attribute type
+		std::unordered_map<std::string, std::string> m_VertexAttributes;
 	};
 }  // namespace At0::Ray

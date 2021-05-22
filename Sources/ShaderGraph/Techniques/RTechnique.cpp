@@ -6,9 +6,9 @@
 
 namespace At0::Ray
 {
-	bool Technique::HasAttribute(std::string_view attribName) const
+	bool Technique::HasAttribute(const std::string& attribName) const
 	{
-		return m_Attributes.find(attribName.data()) != m_Attributes.end();
+		return m_Attributes.find(attribName) != m_Attributes.end();
 	}
 
 	bool Technique::HasUniformInBlock(
@@ -20,36 +20,50 @@ namespace At0::Ray
 				   uniformName) != m_BufferUniforms.at(uniformBlockName.data()).end();
 	}
 
-	bool Technique::HasSampler2DUniform(std::string_view uniformName)
+	bool Technique::HasSampler2DUniform(const std::string& uniformName)
 	{
 		return std::find(m_Sampler2DUniforms.begin(), m_Sampler2DUniforms.end(), uniformName) !=
 			   m_Sampler2DUniforms.end();
 	}
 
-	void Technique::RequiresAttribute(std::string_view attribType, std::string_view attribName)
+	bool Technique::HasVertexAttribute(const std::string& attribName)
+	{
+		return m_VertexAttributes.find(attribName) != m_Attributes.end();
+	}
+
+	void Technique::RequiresAttribute(std::string_view attribType, const std::string& attribName)
 	{
 		RAY_MEXPECTS(
 			!HasAttribute(attribName), "[Technique] Attribute \"{0}\" already exists", attribName);
 
-		m_Attributes[attribName.data()] = attribType;
+		m_Attributes[attribName] = attribType;
 	}
 
 	void Technique::RequiresBufferUniform(
-		std::string_view uniformBlockName, std::string_view uniformName)
+		const std::string& uniformBlockName, std::string_view uniformName)
 	{
 		RAY_MEXPECTS(!HasUniformInBlock(uniformBlockName, uniformName),
 			"[Technique] Uniform block \"{0}\" already has uniform \"{1}\"", uniformBlockName,
 			uniformName);
 
-		m_BufferUniforms[uniformBlockName.data()].emplace_back(uniformName);
+		m_BufferUniforms[uniformBlockName].emplace_back(uniformName);
 	}
 
 	void Technique::RequiresSampler2DUniform(std::string_view uniformName)
 	{
-		RAY_MEXPECTS(!HasSampler2DUniform(uniformName),
+		RAY_MEXPECTS(!HasSampler2DUniform(uniformName.data()),
 			"[Technique] Sampler2D uniform \"{0}\" already exists", uniformName);
 
 		m_Sampler2DUniforms.emplace_back(uniformName);
+	}
+
+	void Technique::RequiresVertexAttribute(
+		std::string_view attribType, const std::string& attribName)
+	{
+		RAY_MEXPECTS(!HasVertexAttribute(attribName),
+			"[Technique] Vertex attribute \"{0}\" already exists", attribName);
+
+		m_VertexAttributes[attribName] = attribType;
 	}
 
 	std::string Technique::MergeAttributes(uint32_t& location) const
@@ -69,6 +83,8 @@ namespace At0::Ray
 
 		return merged;
 	}
+
+	std::string Technique::MergeVertexAttributes(uint32_t& location) const { return std::string(); }
 
 	std::string Technique::MergeUniforms(uint32_t& binding) const
 	{
