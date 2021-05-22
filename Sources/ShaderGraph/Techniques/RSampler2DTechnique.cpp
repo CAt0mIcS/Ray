@@ -10,6 +10,10 @@ namespace At0::Ray
 
 	Sampler2DTechnique::Sampler2DTechnique() : m_SamplerID(s_SamplerID++)
 	{
+		RequiresVertexInputAttribute("vec2", "inUV");
+		RequiresVertexOutputAttribute("vec2", "outUV");
+		RequiresVertexAssignment("outUV", "inUV");
+
 		RequiresAttribute("vec2", "inUV");
 		RequiresSampler2DUniform(String::Serialize("sampler2D_{0}", m_SamplerID));
 	}

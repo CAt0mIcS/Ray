@@ -47,16 +47,24 @@ namespace At0::Ray
 		bool HasAttribute(const std::string& attribName) const;
 		bool HasUniformInBlock(
 			std::string_view uniformBlockName, std::string_view uniformName) const;
-		bool HasSampler2DUniform(const std::string& uniformName);
+		bool HasSampler2DUniform(const std::string& uniformName) const;
 
-		bool HasVertexAttribute(const std::string& attribName);
+		bool HasVertexInputAttribute(const std::string& attribName) const;
+		bool HasVertexOutputAttribute(const std::string& attribName) const;
+		bool HasVertexAsignment(
+			const std::string& outAttribName, const std::string& inAttribName) const;
 
 		void RequiresAttribute(std::string_view attribType, const std::string& attribName);
 		void RequiresBufferUniform(
 			const std::string& uniformBlockName, std::string_view uniformName);
 		void RequiresSampler2DUniform(std::string_view uniformName);
 
-		void RequiresVertexAttribute(std::string_view attribType, const std::string& attribName);
+		void RequiresVertexInputAttribute(
+			std::string_view attribType, const std::string& attribName);
+		void RequiresVertexOutputAttribute(
+			std::string_view attribType, const std::string& attribName);
+		void RequiresVertexAssignment(
+			const std::string& outAttribName, const std::string& inAttribName);
 
 		std::string MergeAttributes(uint32_t& location) const;
 		std::string MergeVertexAttributes(uint32_t& location) const;
@@ -79,6 +87,10 @@ namespace At0::Ray
 		std::vector<std::string> m_Sampler2DUniforms;
 
 		// (VertexShader): Attribute name --> attribute type
-		std::unordered_map<std::string, std::string> m_VertexAttributes;
+		std::unordered_map<std::string, std::string> m_VertexInputAttributes;
+		std::unordered_map<std::string, std::string> m_VertexOutputAttributes;
+
+		// outAttribute --> inAttribute
+		std::unordered_map<std::string, std::string> m_VertexAssignments;
 	};
 }  // namespace At0::Ray

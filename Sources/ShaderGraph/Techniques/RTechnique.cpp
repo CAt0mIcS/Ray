@@ -20,15 +20,27 @@ namespace At0::Ray
 				   uniformName) != m_BufferUniforms.at(uniformBlockName.data()).end();
 	}
 
-	bool Technique::HasSampler2DUniform(const std::string& uniformName)
+	bool Technique::HasSampler2DUniform(const std::string& uniformName) const
 	{
 		return std::find(m_Sampler2DUniforms.begin(), m_Sampler2DUniforms.end(), uniformName) !=
 			   m_Sampler2DUniforms.end();
 	}
 
-	bool Technique::HasVertexAttribute(const std::string& attribName)
+	bool Technique::HasVertexInputAttribute(const std::string& attribName) const
 	{
-		return m_VertexAttributes.find(attribName) != m_Attributes.end();
+		return m_VertexInputAttributes.find(attribName) != m_VertexInputAttributes.end();
+	}
+
+	bool Technique::HasVertexOutputAttribute(const std::string& attribName) const
+	{
+		return m_VertexOutputAttributes.find(attribName) != m_VertexOutputAttributes.end();
+	}
+
+	bool Technique::HasVertexAsignment(
+		const std::string& outAttribName, const std::string& inAttribName) const
+	{
+		return m_VertexAssignments.find(outAttribName) != m_VertexAssignments.end() &&
+			   m_VertexAssignments.at(outAttribName) == inAttribName;
 	}
 
 	void Technique::RequiresAttribute(std::string_view attribType, const std::string& attribName)
@@ -57,13 +69,32 @@ namespace At0::Ray
 		m_Sampler2DUniforms.emplace_back(uniformName);
 	}
 
-	void Technique::RequiresVertexAttribute(
+	void Technique::RequiresVertexInputAttribute(
 		std::string_view attribType, const std::string& attribName)
 	{
-		RAY_MEXPECTS(!HasVertexAttribute(attribName),
+		RAY_MEXPECTS(!HasVertexInputAttribute(attribName),
 			"[Technique] Vertex attribute \"{0}\" already exists", attribName);
 
-		m_VertexAttributes[attribName] = attribType;
+		m_VertexInputAttributes[attribName] = attribType;
+	}
+
+	void Technique::RequiresVertexOutputAttribute(
+		std::string_view attribType, const std::string& attribName)
+	{
+		RAY_MEXPECTS(!HasVertexOutputAttribute(attribName),
+			"[Technique] Vertex attribute \"{0}\" already exists", attribName);
+
+		m_VertexOutputAttributes[attribName] = attribType;
+	}
+
+	void Technique::RequiresVertexAssignment(
+		const std::string& outAttribName, const std::string& inAttribName)
+	{
+		RAY_MEXPECTS(!HasVertexAsignment(outAttribName, inAttribName),
+			"[Technique] Vertex asignment of \"{0} = {1}\" already exists", outAttribName,
+			inAttribName);
+
+		m_VertexAssignments[outAttribName] = inAttribName;
 	}
 
 	std::string Technique::MergeAttributes(uint32_t& location) const
