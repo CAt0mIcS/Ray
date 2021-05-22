@@ -28,6 +28,7 @@
 #include <ShaderGraph/Nodes/RTransformationMatrixNode.h>
 #include <ShaderGraph/Nodes/RVector4Node.h>
 #include <ShaderGraph/Nodes/RVertexNode.h>
+#include <ShaderGraph/Nodes/RVertexOutputNode.h>
 
 
 using namespace At0;
@@ -134,6 +135,10 @@ public:
 			auto multiplyVertex = MakeRef<MultiplyNode>();
 			multiplyVertex->Connect(multiplyNodeCamTrans, MultiplyNode::Result, MultiplyNode::Left);
 			multiplyVertex->Connect(vec4Node, Vector4Node::Result, MultiplyNode::Right);
+
+			auto vertexOutputNode = MakeRef<VertexOutputNode>();
+			vertexOutputNode->Connect(
+				multiplyVertex, MultiplyNode::Result, VertexOutputNode::Vertex);
 		}
 
 
