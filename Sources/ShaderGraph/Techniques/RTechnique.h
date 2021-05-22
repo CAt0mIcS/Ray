@@ -46,7 +46,7 @@ namespace At0::Ray
 
 		bool HasAttribute(const std::string& attribName) const;
 		bool HasUniformInBlock(
-			std::string_view uniformBlockName, std::string_view uniformName) const;
+			const std::string& uniformBlockName, const std::string& uniformName) const;
 		bool HasSampler2DUniform(const std::string& uniformName) const;
 
 		bool HasVertexInputAttribute(const std::string& attribName) const;
@@ -67,8 +67,11 @@ namespace At0::Ray
 			const std::string& outAttribName, const std::string& inAttribName);
 
 		std::string MergeAttributes(uint32_t& location) const;
-		std::string MergeVertexAttributes(uint32_t& location) const;
 		std::string MergeUniforms(uint32_t& binding) const;
+
+		std::string MergeVertexAttributes(
+			uint32_t& vertexInputLocation, uint32_t& vertexOutputLocation) const;
+		std::string MergeVertexAssignments() const;
 
 	protected:
 		Technique() = default;

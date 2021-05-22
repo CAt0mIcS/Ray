@@ -92,26 +92,30 @@ public:
 		});
 
 
-		Ray::Time tStart = Ray::Time::Now();
+		auto texture = Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png");
+		std::vector<std::string> shaderCodes;
+		{
+			Ray::Time tStart = Ray::Time::Now();
 
-		auto texTech = Ray::MakeScope<Ray::Texture2DTechnique>(
-			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
+			auto texTech = Ray::MakeScope<Ray::Texture2DTechnique>(texture);
 
-		auto samplerTech = Ray::MakeScope<Ray::Sampler2DTechnique>();
-		samplerTech->Connect(Ray::Sampler2DTechnique::Texture, std::move(texTech));
+			auto samplerTech = Ray::MakeScope<Ray::Sampler2DTechnique>();
+			samplerTech->Connect(Ray::Sampler2DTechnique::Texture, std::move(texTech));
 
-		auto colorTech =
-			Ray::MakeScope<Ray::Float4Technique>(Ray::Float4{ 1.0f, 1.0f, 0.0f, 1.0f });
+			auto colorTech =
+				Ray::MakeScope<Ray::Float4Technique>(Ray::Float4{ 1.0f, 1.0f, 0.0f, 1.0f });
 
-		auto multiptlyTech = Ray::MakeScope<Ray::MultiplyTechnique>();
-		multiptlyTech->Connect(Ray::MultiplyTechnique::Left, std::move(samplerTech));
-		multiptlyTech->Connect(Ray::MultiplyTechnique::Right, std::move(colorTech));
+			auto multiptlyTech = Ray::MakeScope<Ray::MultiplyTechnique>();
+			multiptlyTech->Connect(Ray::MultiplyTechnique::Left, std::move(samplerTech));
+			multiptlyTech->Connect(Ray::MultiplyTechnique::Right, std::move(colorTech));
 
-		Ray::FlatShaderGenerator generator;
-		generator.Connect(Ray::FlatShaderGenerator::Color, std::move(multiptlyTech));
+			Ray::FlatShaderGenerator generator;
+			generator.Connect(Ray::FlatShaderGenerator::Color, std::move(multiptlyTech));
 
-		auto shaderCodes = generator.Generate();
-		Ray::Log::Info("Shader generator took {0}ms", (Ray::Time::Now() - tStart).AsMilliseconds());
+			shaderCodes = generator.Generate();
+			Ray::Log::Info(
+				"Shader generator took {0}ms", (Ray::Time::Now() - tStart).AsMilliseconds());
+		}
 
 
 		std::vector<std::string> shaderPaths =
@@ -127,11 +131,8 @@ public:
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(colorMaterial));
 		auto& meshRenderer = m_Entity.Emplace<Ray::MeshRenderer>(colorMaterial, false);
-		meshRenderer.AddSampler2DUniform("sampler2D_0", Ray::Shader::Stage::Fragment,
-			generator.GetTechnique<Ray::MultiplyTechnique>(Ray::FlatShaderGenerator::Color)
-				.GetTechnique<Ray::Sampler2DTechnique>(Ray::MultiplyTechnique::Left)
-				.GetTechnique<Ray::Texture2DTechnique>(Ray::Sampler2DTechnique::Texture)
-				.GetSharedTexture());
+		meshRenderer.AddSampler2DUniform(
+			"sampler2D_0", Ray::Shader::Stage::Fragment, std::move(texture));
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));

@@ -2,6 +2,7 @@
 #include "RTechnique.h"
 
 #include "Utils/RAssert.h"
+#include "Utils/RString.h"
 
 
 namespace At0::Ray
@@ -12,12 +13,12 @@ namespace At0::Ray
 	}
 
 	bool Technique::HasUniformInBlock(
-		std::string_view uniformBlockName, std::string_view uniformName) const
+		const std::string& uniformBlockName, const std::string& uniformName) const
 	{
-		return m_BufferUniforms.find(uniformBlockName.data()) != m_BufferUniforms.end() &&
-			   std::find(m_BufferUniforms.at(uniformBlockName.data()).begin(),
-				   m_BufferUniforms.at(uniformBlockName.data()).end(),
-				   uniformName) != m_BufferUniforms.at(uniformBlockName.data()).end();
+		return m_BufferUniforms.find(uniformBlockName) != m_BufferUniforms.end() &&
+			   std::find(m_BufferUniforms.at(uniformBlockName).begin(),
+				   m_BufferUniforms.at(uniformBlockName).end(),
+				   uniformName) != m_BufferUniforms.at(uniformBlockName).end();
 	}
 
 	bool Technique::HasSampler2DUniform(const std::string& uniformName) const
@@ -54,7 +55,7 @@ namespace At0::Ray
 	void Technique::RequiresBufferUniform(
 		const std::string& uniformBlockName, std::string_view uniformName)
 	{
-		RAY_MEXPECTS(!HasUniformInBlock(uniformBlockName, uniformName),
+		RAY_MEXPECTS(!HasUniformInBlock(uniformBlockName, uniformName.data()),
 			"[Technique] Uniform block \"{0}\" already has uniform \"{1}\"", uniformBlockName,
 			uniformName);
 
@@ -102,20 +103,18 @@ namespace At0::Ray
 		std::string merged = "";
 		for (const auto& child : m_ChildTechniques)
 		{
-			merged += child.second->MergeAttributes(location) + '\n';
+			merged += child.second->MergeAttributes(location);
 		}
 
 		for (const auto& [attribName, attribType] : m_Attributes)
 		{
 			if (!String::Contains(merged, attribName))
 				merged += String::Serialize(
-					"layout(location = {0}) in {1} {2};", location++, attribType, attribName);
+					"\nlayout(location = {0}) in {1} {2};", location++, attribType, attribName);
 		}
 
 		return merged;
 	}
-
-	std::string Technique::MergeVertexAttributes(uint32_t& location) const { return std::string(); }
 
 	std::string Technique::MergeUniforms(uint32_t& binding) const
 	{
@@ -130,18 +129,62 @@ namespace At0::Ray
 			std::string uniformStr = "";
 			for (const std::string& uName : uNames)
 				if (!String::Contains(uniformStr, uName))
-					uniformStr += uName + ";\n";
+					uniformStr += uName + ';';
 
 			if (!String::Contains(merged, uBlockName))
-				merged += String::Serialize("layout(set = 1, binding = {0}) uniform {1}\n{{2}\n}",
+				merged += String::Serialize("\nlayout(set = 1, binding = {0}) uniform {1}\n{{2}\n}",
 					binding++, uBlockName, uniformStr);
 		}
 
 		for (std::string_view uniformName : m_Sampler2DUniforms)
 		{
 			if (!String::Contains(merged, uniformName))
-				merged += String::Serialize("layout(set = 1, binding = {0}) uniform sampler2D {1};",
-					binding++, uniformName);
+				merged +=
+					String::Serialize("\nlayout(set = 1, binding = {0}) uniform sampler2D {1};",
+						binding++, uniformName);
+		}
+
+		return merged;
+	}
+
+	std::string Technique::MergeVertexAttributes(
+		uint32_t& vertexInputLocation, uint32_t& vertexOutputLocation) const
+	{
+		std::string merged = "";
+		for (const auto& child : m_ChildTechniques)
+		{
+			merged +=
+				child.second->MergeVertexAttributes(vertexInputLocation, vertexOutputLocation);
+		}
+
+		for (const auto& [attribName, attribType] : m_VertexInputAttributes)
+		{
+			if (!String::Contains(merged, attribName))
+				merged += String::Serialize("\nlayout(location = {0}) in {1} {2};",
+					vertexInputLocation++, attribType, attribName);
+		}
+
+		for (const auto& [attribName, attribType] : m_VertexOutputAttributes)
+		{
+			if (!String::Contains(merged, attribName))
+				merged += String::Serialize("\nlayout(location = {0}) out {1} {2};",
+					vertexOutputLocation++, attribType, attribName);
+		}
+
+		return merged;
+	}
+
+	std::string Technique::MergeVertexAssignments() const
+	{
+		std::string merged;
+		for (const auto& child : m_ChildTechniques)
+		{
+			merged += child.second->MergeVertexAssignments() + '\n';
+		}
+
+		for (const auto& [outAttrib, inAttrib] : m_VertexAssignments)
+		{
+			merged += String::Serialize("\n{0} = {1};", outAttrib, inAttrib);
 		}
 
 		return merged;

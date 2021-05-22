@@ -22,15 +22,14 @@ namespace At0::Ray
 			shaderTemplates[1] =
 				String::Serialize(shaderTemplates[1], mergedAttribs, MergeUniforms(binding), "",
 					technique->GetFunctions(), "outColor = " + technique->GetFunctionCalls() + ";");
-		}
 
-		shaderTemplates[0] = GenerateVertexShader(shaderTemplates[0], mergedAttribs);
+			shaderTemplates[0] = GenerateVertexShader(shaderTemplates[0]);
+		}
 
 		return shaderTemplates;
 	}
 
-	std::string FlatShaderGenerator::GenerateVertexShader(
-		std::string shaderTemplate, std::string fragmentShaderInputs) const
+	std::string FlatShaderGenerator::GenerateVertexShader(std::string shaderTemplate) const
 	{
 		std::string attributes = String::Serialize(
 			"layout(location = 0) in vec3 {0};", AttributeMap<AttributeType::Position>::Semantic);
@@ -38,59 +37,11 @@ namespace At0::Ray
 		std::string main =
 			"gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 1.0f);";
 
-		AddAttributes(fragmentShaderInputs, attributes, main);
+		uint32_t vertexInputLocation = 1;
+		uint32_t vertexOutputLocation = 0;
+		attributes += MergeVertexAttributes(vertexInputLocation, vertexOutputLocation);
+		main += MergeVertexAssignments();
 
 		return String::Serialize(shaderTemplate, attributes, "", "", "", "", "", "", main);
-	}
-
-	void FlatShaderGenerator::AddAttributes(
-		std::string fragmentAttributes, std::string& attributes, std::string& main)
-	{
-		// Maps input attribute name to output attribute name
-		std::unordered_map<std::string, std::string> inputToOutput;
-
-		// Increment location by 1 to be able to take position at location 0
-		std::string vertexInputs;
-		{
-			std::istringstream iss(fragmentAttributes);
-
-			uint32_t i = 0;
-			for (std::string line; std::getline(iss, line); ++i)
-			{
-				std::string currentLocation = String::Serialize("location = {0}", i);
-				std::string nextLocation = String::Serialize("location = {0}", i + 1);
-
-				if (size_t pos = line.find(currentLocation); pos != std::string::npos)
-				{
-					line.replace(pos, currentLocation.length(), nextLocation);
-					vertexInputs += '\n' + line;
-
-					std::string inputName = line.substr(line.find_last_of(' '));
-					inputName.erase(inputName.end() - 1);
-					std::string outputName = inputName;
-					outputName.replace(outputName.find("in"), strlen("in"), "out");
-					inputToOutput[inputName] = outputName;
-				}
-				else
-					--i;
-			}
-		}
-
-		{
-			// Replace in with out, preserve index
-			size_t idx = fragmentAttributes.find("in");
-			while (idx != std::string::npos)
-			{
-				fragmentAttributes.replace(idx, strlen("in"), "out");
-				idx = fragmentAttributes.find("in");
-			}
-
-			attributes += vertexInputs + fragmentAttributes;
-
-			for (const auto& [inputName, outputName] : inputToOutput)
-			{
-				main += '\n' + outputName + " = " + inputName + ';';
-			}
-		}
 	}
 }  // namespace At0::Ray
