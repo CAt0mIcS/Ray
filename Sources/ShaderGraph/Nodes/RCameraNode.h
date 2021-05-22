@@ -10,9 +10,12 @@ namespace At0::Ray
 	public:
 		enum Connection
 		{
-			// Outputs/Inputs
+			// Outputs
 			Projection,
 			View
 		};
+
+	public:
+		std::string GetFunctionCalls(OutputID outputID) const override;
 	};
 }  // namespace At0::Ray

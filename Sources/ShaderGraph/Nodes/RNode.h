@@ -9,6 +9,10 @@ namespace At0::Ray
 	class RAY_EXPORT Node : NonCopyable
 	{
 	public:
+		using OutputID = uint32_t;
+		using InputID = uint32_t;
+
+	public:
 		virtual ~Node() = default;
 
 		/**
@@ -17,10 +21,29 @@ namespace At0::Ray
 		 *
 		 * @param node Output of node will be connected to input of this node at pointID
 		 */
-		void Connect(Ref<Node> childNode, uint32_t childPointID, uint32_t pointID);
+		void Connect(Ref<Node> childNode, OutputID childConnectionID, InputID connectionID);
+
+		virtual std::string GetFunctionCalls(OutputID outputID) const { return ""; }
+
+		/**
+		 * Checks if a connection at the connection ID exists
+		 */
+		bool HasConnection(InputID connectionID) const;
 
 	protected:
 		Node() = default;
+
+		/**
+		 * Called when one of this node's inputs is connected to a child
+		 */
+		virtual void OnChildConnected(
+			Ref<Node> childNode, OutputID childConnectionID, InputID connectionID);
+
+		/**
+		 * Called when a parent node connects to an output of this one
+		 */
+		virtual void OnParentConnected(
+			Node* parentNode, InputID parentConnectionID, OutputID connectionID);
 
 	protected:
 		struct ChildNode
@@ -29,10 +52,22 @@ namespace At0::Ray
 			Ref<Node> node;
 
 			// Output id of child node
-			uint32_t connectionPoint{};
+			OutputID connectionPoint{};
 		};
 
 		// Maps id of an input connection to child
-		std::unordered_map<uint32_t, ChildNode> m_Children;
+		std::unordered_map<InputID, ChildNode> m_Children;
+
+		// List of all required functions for this node
+		std::vector<std::string> m_Functions;
+
+		// Maps output connection id to function call, e.g.
+		// splitNode.GetFunctionCalls(SplitNode::R) only gets function calls needed for output R
+		struct FunctionCall
+		{
+			OutputID outputConnectionID{};
+			std::string call;
+		};
+		std::vector<FunctionCall> m_FunctionCalls;
 	};
 }  // namespace At0::Ray

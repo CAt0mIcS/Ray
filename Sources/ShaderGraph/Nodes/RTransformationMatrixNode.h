@@ -5,7 +5,7 @@
 
 namespace At0::Ray
 {
-	class RAY_EXPORT TransformationMatrix : public Node
+	class RAY_EXPORT TransformationMatrixNode : public Node
 	{
 	public:
 		enum Connection
@@ -13,5 +13,8 @@ namespace At0::Ray
 			// Output
 			Model
 		};
+
+	public:
+		std::string GetFunctionCalls(OutputID outputID) const override;
 	};
 }  // namespace At0::Ray

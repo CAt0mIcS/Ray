@@ -103,7 +103,7 @@ public:
 			VertexShaderGenerator generator;
 
 			auto cameraNode = MakeRef<CameraNode>();
-			auto transformNode = MakeRef<TransformationMatrix>();
+			auto transformNode = MakeRef<TransformationMatrixNode>();
 
 			// generate vec4 from vec3
 			auto vertexNode = MakeRef<VertexNode>();
@@ -129,7 +129,9 @@ public:
 			multiplyNodeCamTrans->Connect(
 				multiplyNodeCamViewProj, MultiplyNode::Result, MultiplyNode::Left);
 			multiplyNodeCamTrans->Connect(
-				transformNode, TransformationMatrix::Model, MultiplyNode::Right);
+				transformNode, TransformationMatrixNode::Model, MultiplyNode::Right);
+
+			std::string test = multiplyNodeCamTrans->GetFunctionCalls(MultiplyNode::Result);
 
 			// ((uScene.Proj * uSceen.View) * uObj.Model) * inPos
 			auto multiplyVertex = MakeRef<MultiplyNode>();
@@ -139,6 +141,8 @@ public:
 			auto vertexOutputNode = MakeRef<VertexOutputNode>();
 			vertexOutputNode->Connect(
 				multiplyVertex, MultiplyNode::Result, VertexOutputNode::Vertex);
+
+			generator.Generate({ vertexOutputNode });
 		}
 
 
