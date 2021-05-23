@@ -94,6 +94,9 @@ void GenerateVertexShader()
 
 	// generate vec4 from vec3
 	auto vertexNode = MakeRef<VertexNode>();
+	auto uvOutput = MakeRef<OutputNode>("vec2", "outUV");
+	uvOutput->Connect(vertexNode, VertexNode::UV, OutputNode::Input);
+
 	auto vec4Node = MakeRef<Vector4Node>();
 	auto splitNode = MakeRef<SplitNode>();
 	auto floatNode = MakeRef<FloatNode>(1.0f);
@@ -125,7 +128,7 @@ void GenerateVertexShader()
 	auto vertexOutputNode = MakeRef<VertexOutputNode>();
 	vertexOutputNode->Connect(multiplyVertex, MultiplyNode::Result, VertexOutputNode::Vertex);
 
-	WriteToFile(generator.Generate({ vertexOutputNode }), "VertexShader.vert");
+	WriteToFile(generator.Generate({ vertexOutputNode, uvOutput }), "VertexShader.vert");
 
 	Log::Info("Vertex shader generation took {0}ms", (Time::Now() - tStart).AsMilliseconds());
 }

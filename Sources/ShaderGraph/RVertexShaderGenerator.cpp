@@ -6,33 +6,41 @@
 
 namespace At0::Ray
 {
-	static std::string GetAttributes(
-		const Node& rootNode, uint32_t& inputLocation, uint32_t& outputLocation)
+	static std::string GetAttributes(const Node& rootNode, uint32_t& inputLocation,
+		uint32_t& outputLocation, std::string_view attributes)
 	{
-		std::string attributes;
+		std::string newAttributes;
+
 		auto attribs = rootNode.GetAttributes();
 		for (const auto& [attribName, attribData] : attribs)
 		{
+			if (attributes.find(attribName) != std::string::npos)
+				continue;
+
 			if (attribData.inOut == "in")
-				attributes += String::Serialize("layout(location = {0}) in {1} {2};\n",
+				newAttributes += String::Serialize("layout(location = {0}) in {1} {2};\n",
 					inputLocation++, attribData.type, attribName);
 			else if (attribData.inOut == "out")
-				attributes += String::Serialize("layout(location = {0}) out {1} {2};\n",
+				newAttributes += String::Serialize("layout(location = {0}) out {1} {2};\n",
 					outputLocation++, attribData.type, attribName);
 		}
 
-		return attributes;
+		return newAttributes;
 	}
 
-	static std::string GetUniforms(const Node& rootNode, uint32_t& binding)
+	static std::string GetUniforms(
+		const Node& rootNode, uint32_t& binding, std::string_view uniforms)
 	{
-		std::string uniforms;
+		std::string newUniforms;
 
 		// Buffer uniforms
 		{
 			auto bufferUniforms = rootNode.GetBufferUniforms();
 			for (const auto& [uBufferName, uniformData] : bufferUniforms)
 			{
+				if (uniforms.find(uBufferName) != std::string::npos)
+					continue;
+
 				std::string uniformsInBlock;
 
 				for (const auto& [uniformType, uniformName] : uniformData)
@@ -40,11 +48,11 @@ namespace At0::Ray
 
 				// Predefined set 0 for per scene data uniform
 				if (uBufferName == "PerSceneData")
-					uniforms += String::Serialize("layout(set = 0, binding = 0) uniform "
-												  "PerSceneData\n{{0}\n} uPerSceneData;\n",
+					newUniforms += String::Serialize("layout(set = 0, binding = 0) uniform "
+													 "PerSceneData\n{{0}\n} uPerSceneData;\n",
 						uniformsInBlock);
 				else
-					uniforms += String::Serialize(
+					newUniforms += String::Serialize(
 						"layout(set = 1, binding = {0}) uniform {1}\n{{2}\n} u{1};\n", binding++,
 						uBufferName, uniformsInBlock);
 			}
@@ -54,11 +62,23 @@ namespace At0::Ray
 		{
 			auto samplerUniforms = rootNode.GetSamplerUniforms();
 			for (const auto& [samplerName, samplerType] : samplerUniforms)
-				uniforms += String::Serialize("layout(set = 1, binding = {0}) uniform {1} {2};\n",
-					binding++, samplerType, samplerName);
+				if (uniforms.find(samplerName) == std::string::npos)
+					newUniforms +=
+						String::Serialize("layout(set = 1, binding = {0}) uniform {1} {2};\n",
+							binding++, samplerType, samplerName);
 		}
 
-		return uniforms;
+		return newUniforms;
+	}
+
+	static std::string GetFunctions(const Node& rootNode, std::string_view functions)
+	{
+		std::string newFunctions;
+		auto nodeFunctions = rootNode.GetFunctions();
+		for (const std::string& fn : nodeFunctions)
+			if (functions.find(fn) == std::string::npos)
+				newFunctions += fn;
+		return newFunctions;
 	}
 
 	std::string VertexShaderGenerator::Generate(std::vector<Ref<Node>> rootNodes)
@@ -73,13 +93,10 @@ namespace At0::Ray
 		uint32_t binding = 1;
 		for (const Ref<Node>& rootNode : rootNodes)
 		{
-			attributes += GetAttributes(*rootNode, inputLocation, outputLocation);
-			uniforms += GetUniforms(*rootNode, binding);
-
-			auto nodeFunctions = rootNode->GetFunctions();
-			functions += std::accumulate(nodeFunctions.begin(), nodeFunctions.end(), std::string{});
-
-			mainCode += rootNode->GetFunctionCalls() + ';';
+			attributes += GetAttributes(*rootNode, inputLocation, outputLocation, attributes);
+			uniforms += GetUniforms(*rootNode, binding, uniforms);
+			functions += GetFunctions(*rootNode, functions);
+			mainCode += rootNode->GetFunctionCalls() + ";\n";
 		}
 
 		return String::Serialize(GenerateTemplate(), attributes, uniforms, functions, mainCode);
