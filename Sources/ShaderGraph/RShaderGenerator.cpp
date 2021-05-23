@@ -1,5 +1,5 @@
 ﻿#include "Rpch.h"
-#include "RVertexShaderGenerator.h"
+#include "RShaderGenerator.h"
 
 #include "Utils/RString.h"
 
@@ -81,20 +81,18 @@ namespace At0::Ray
 		return newFunctions;
 	}
 
-	std::string VertexShaderGenerator::Generate(std::vector<Ref<Node>> rootNodes)
+	std::string ShaderGenerator::GenerateVertexShader(std::vector<Ref<Node>> rootNodes)
 	{
 		std::string attributes;
 		std::string uniforms;
 		std::string functions;
 		std::string mainCode;
 
-		uint32_t inputLocation = 0;
-		uint32_t outputLocation = 0;
-		uint32_t binding = 1;
 		for (const Ref<Node>& rootNode : rootNodes)
 		{
-			attributes += GetAttributes(*rootNode, inputLocation, outputLocation, attributes);
-			uniforms += GetUniforms(*rootNode, binding, uniforms);
+			attributes += GetAttributes(*rootNode, m_VSNextInputAttributeLocation,
+				m_VSNextOutputAttributeLocation, attributes);
+			uniforms += GetUniforms(*rootNode, m_NextBinding, uniforms);
 			functions += GetFunctions(*rootNode, functions);
 			mainCode += rootNode->GetFunctionCalls() + ";\n";
 		}
@@ -102,7 +100,26 @@ namespace At0::Ray
 		return String::Serialize(GenerateTemplate(), attributes, uniforms, functions, mainCode);
 	}
 
-	std::string VertexShaderGenerator::GenerateTemplate() const
+	std::string ShaderGenerator::GenerateFragmentShader(std::vector<Ref<Node>> rootNodes)
+	{
+		std::string attributes;
+		std::string uniforms;
+		std::string functions;
+		std::string mainCode;
+
+		for (const Ref<Node>& rootNode : rootNodes)
+		{
+			attributes += GetAttributes(*rootNode, m_FSNextInputAttributeLocation,
+				m_FSNextOutputAttributeLocation, attributes);
+			uniforms += GetUniforms(*rootNode, m_NextBinding, uniforms);
+			functions += GetFunctions(*rootNode, functions);
+			mainCode += rootNode->GetFunctionCalls() + ";\n";
+		}
+
+		return String::Serialize(GenerateTemplate(), attributes, uniforms, functions, mainCode);
+	}
+
+	std::string ShaderGenerator::GenerateTemplate() const
 	{
 		return R"(#version 450 core
 #extension GL_ARB_separate_shader_objects : enable

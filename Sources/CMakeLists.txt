@@ -81,11 +81,13 @@ set(SRC
 	"ShaderGraph/Nodes/RInputNode.cpp"
 	"ShaderGraph/Nodes/ROutputNode.h"
 	"ShaderGraph/Nodes/ROutputNode.cpp"
+	"ShaderGraph/Nodes/RTexture2DNode.h"
+	"ShaderGraph/Nodes/RTexture2DNode.cpp"
+	"ShaderGraph/Nodes/RSampler2DNode.h"
+	"ShaderGraph/Nodes/RSampler2DNode.cpp"
 
-	"ShaderGraph/RVertexShaderGenerator.h"
-	"ShaderGraph/RVertexShaderGenerator.cpp"
-	"ShaderGraph/RFragmentShaderGenerator.h"
-	"ShaderGraph/RFragmentShaderGenerator.cpp"
+	"ShaderGraph/RShaderGenerator.h"
+	"ShaderGraph/RShaderGenerator.cpp"
 
 	# ------------------------------------------------------------------
 	# Graphics

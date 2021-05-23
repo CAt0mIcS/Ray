@@ -20,8 +20,7 @@
 #include <../../Extern/imgui/imgui.h>
 
 
-#include <ShaderGraph/RVertexShaderGenerator.h>
-#include <ShaderGraph/RFragmentShaderGenerator.h>
+#include <ShaderGraph/RShaderGenerator.h>
 
 #include <ShaderGraph/Nodes/RCameraNode.h>
 #include <ShaderGraph/Nodes/RFloatNode.h>
@@ -33,6 +32,8 @@
 #include <ShaderGraph/Nodes/ROutputNode.h>
 #include <ShaderGraph/Nodes/RVertexNode.h>
 #include <ShaderGraph/Nodes/RVertexOutputNode.h>
+#include <ShaderGraph/Nodes/RSampler2DNode.h>
+#include <ShaderGraph/Nodes/RTexture2DNode.h>
 
 
 using namespace At0;
@@ -82,85 +83,6 @@ static void WriteToFile(std::string_view str, const std::string& filename)
 }
 
 
-void GenerateVertexShader()
-{
-	using namespace At0::Ray;
-
-	Time tStart = Time::Now();
-	VertexShaderGenerator generator;
-
-	auto cameraNode = MakeRef<CameraNode>();
-	auto transformNode = MakeRef<TransformationMatrixNode>();
-
-	// generate vec4 from vec3
-	auto vertexNode = MakeRef<VertexNode>();
-	auto uvOutput = MakeRef<OutputNode>("vec2", "outUV");
-	uvOutput->Connect(vertexNode, VertexNode::UV, OutputNode::Input);
-
-	auto vec4Node = MakeRef<Vector4Node>();
-	auto splitNode = MakeRef<SplitNode>();
-	auto floatNode = MakeRef<FloatNode>(1.0f);
-
-	splitNode->Connect(vertexNode, VertexNode::Position, SplitNode::Input);
-
-	vec4Node->Connect(splitNode, SplitNode::R, Vector4Node::R);
-	vec4Node->Connect(splitNode, SplitNode::G, Vector4Node::G);
-	vec4Node->Connect(splitNode, SplitNode::B, Vector4Node::B);
-	vec4Node->Connect(floatNode, FloatNode::Result, Vector4Node::A);
-
-	// uScene.Proj * uScene.View
-	auto multiplyNodeCamViewProj = MakeRef<MultiplyNode>();
-	multiplyNodeCamViewProj->Connect(cameraNode, CameraNode::Projection, MultiplyNode::Left);
-	multiplyNodeCamViewProj->Connect(cameraNode, CameraNode::View, MultiplyNode::Right);
-
-	// (uScene.Proj * uScene.View) * uObj.Model
-	auto multiplyNodeCamTrans = MakeRef<MultiplyNode>();
-	multiplyNodeCamTrans->Connect(
-		multiplyNodeCamViewProj, MultiplyNode::Result, MultiplyNode::Left);
-	multiplyNodeCamTrans->Connect(
-		transformNode, TransformationMatrixNode::Model, MultiplyNode::Right);
-
-	// ((uScene.Proj * uSceen.View) * uObj.Model) * inPos
-	auto multiplyVertex = MakeRef<MultiplyNode>();
-	multiplyVertex->Connect(multiplyNodeCamTrans, MultiplyNode::Result, MultiplyNode::Left);
-	multiplyVertex->Connect(vec4Node, Vector4Node::Result, MultiplyNode::Right);
-
-	auto vertexOutputNode = MakeRef<VertexOutputNode>();
-	vertexOutputNode->Connect(multiplyVertex, MultiplyNode::Result, VertexOutputNode::Vertex);
-
-	WriteToFile(generator.Generate({ vertexOutputNode, uvOutput }), "VertexShader.vert");
-
-	Log::Info("Vertex shader generation took {0}ms", (Time::Now() - tStart).AsMilliseconds());
-}
-
-
-void GenerateFragmentShader()
-{
-	using namespace At0::Ray;
-
-	Time tStart = Time::Now();
-	FragmentShaderGenerator generator;
-
-	auto r = MakeRef<FloatNode>(1.0f);
-	auto g = MakeRef<FloatNode>(1.0f);
-	auto b = MakeRef<FloatNode>(0.0f);
-	auto a = MakeRef<FloatNode>(1.0f);
-
-	auto vec4Node = MakeRef<Vector4Node>();
-	vec4Node->Connect(r, FloatNode::Result, Vector4Node::R);
-	vec4Node->Connect(g, FloatNode::Result, Vector4Node::G);
-	vec4Node->Connect(b, FloatNode::Result, Vector4Node::B);
-	vec4Node->Connect(a, FloatNode::Result, Vector4Node::A);
-
-	auto outColorNode = MakeRef<OutputNode>("vec4", "outColor");
-	outColorNode->Connect(vec4Node, Vector4Node::Result, OutputNode::Input);
-
-	WriteToFile(generator.Generate({ outColorNode }), "FragmentShader.frag");
-
-	Log::Info("Fragment shader generation took {0}ms", (Time::Now() - tStart).AsMilliseconds());
-}
-
-
 class App : public Ray::Engine
 {
 public:
@@ -188,11 +110,12 @@ public:
 			}
 		});
 
-		auto texture = Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png");
+		m_Texture = Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png");
 
 		// Vertex Shader
-		GenerateVertexShader();
-		GenerateFragmentShader();
+		Ray::ShaderGenerator generator;
+		GenerateVertexShader(generator);
+		GenerateFragmentShader(generator);
 
 		Ray::FlatColorMaterial::Layout layout{};
 
@@ -206,18 +129,94 @@ public:
 
 		m_Entity = Ray::Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
-		auto& renderer = m_Entity.Emplace<Ray::MeshRenderer>(material);
-		// renderer.GetBufferUniform("Shading")["color"] = Ray::Float3{ 1.0f, 0.0f, 1.0f };
+		auto& renderer = m_Entity.Emplace<Ray::MeshRenderer>(material, false);
+		renderer.AddSampler2DUniform("sampler2D_0", Ray::Shader::Stage::Fragment, m_Texture);
 
 		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
+
+		m_Texture.reset();
 	}
 
 private:
 	void Update() override {}
 
+	void GenerateVertexShader(Ray::ShaderGenerator& generator)
+	{
+		using namespace At0::Ray;
+
+		Time tStart = Time::Now();
+
+		auto cameraNode = MakeRef<CameraNode>();
+		auto transformNode = MakeRef<TransformationMatrixNode>();
+
+		// generate vec4 from vec3
+		auto vertexNode = MakeRef<VertexNode>();
+		auto uvOutput = MakeRef<OutputNode>("vec2", "outUV");
+		uvOutput->Connect(vertexNode, VertexNode::UV, OutputNode::Input);
+
+		auto vec4Node = MakeRef<Vector4Node>();
+		auto splitNode = MakeRef<SplitNode>();
+		auto floatNode = MakeRef<FloatNode>(1.0f);
+
+		splitNode->Connect(vertexNode, VertexNode::Position, SplitNode::Input);
+
+		vec4Node->Connect(splitNode, SplitNode::R, Vector4Node::R);
+		vec4Node->Connect(splitNode, SplitNode::G, Vector4Node::G);
+		vec4Node->Connect(splitNode, SplitNode::B, Vector4Node::B);
+		vec4Node->Connect(floatNode, FloatNode::Result, Vector4Node::A);
+
+		// uScene.Proj * uScene.View
+		auto multiplyNodeCamViewProj = MakeRef<MultiplyNode>();
+		multiplyNodeCamViewProj->Connect(cameraNode, CameraNode::Projection, MultiplyNode::Left);
+		multiplyNodeCamViewProj->Connect(cameraNode, CameraNode::View, MultiplyNode::Right);
+
+		// (uScene.Proj * uScene.View) * uObj.Model
+		auto multiplyNodeCamTrans = MakeRef<MultiplyNode>();
+		multiplyNodeCamTrans->Connect(
+			multiplyNodeCamViewProj, MultiplyNode::Result, MultiplyNode::Left);
+		multiplyNodeCamTrans->Connect(
+			transformNode, TransformationMatrixNode::Model, MultiplyNode::Right);
+
+		// ((uScene.Proj * uSceen.View) * uObj.Model) * inPos
+		auto multiplyVertex = MakeRef<MultiplyNode>();
+		multiplyVertex->Connect(multiplyNodeCamTrans, MultiplyNode::Result, MultiplyNode::Left);
+		multiplyVertex->Connect(vec4Node, Vector4Node::Result, MultiplyNode::Right);
+
+		auto vertexOutputNode = MakeRef<VertexOutputNode>();
+		vertexOutputNode->Connect(multiplyVertex, MultiplyNode::Result, VertexOutputNode::Vertex);
+
+		WriteToFile(
+			generator.GenerateVertexShader({ vertexOutputNode, uvOutput }), "VertexShader.vert");
+
+		Log::Info("Vertex shader generation took {0}ms", (Time::Now() - tStart).AsMilliseconds());
+	}
+
+
+	void GenerateFragmentShader(Ray::ShaderGenerator& generator)
+	{
+		using namespace At0::Ray;
+
+		Time tStart = Time::Now();
+
+		auto uvInput = MakeRef<InputNode>("vec2", "inUV");
+		auto textureNode = MakeRef<Texture2DNode>(m_Texture);
+		auto samplerNode = MakeRef<Sampler2DNode>();
+
+		samplerNode->Connect(textureNode, Texture2DNode::Output, Sampler2DNode::Texture);
+		samplerNode->Connect(uvInput, InputNode::Result, Sampler2DNode::UV);
+
+		auto outColorNode = MakeRef<OutputNode>("vec4", "outColor");
+		outColorNode->Connect(samplerNode, Sampler2DNode::Result, OutputNode::Input);
+
+		WriteToFile(generator.GenerateFragmentShader({ outColorNode }), "FragmentShader.frag");
+
+		Log::Info("Fragment shader generation took {0}ms", (Time::Now() - tStart).AsMilliseconds());
+	}
+
 private:
 	Ray::Entity m_Entity;
+	Ray::Ref<Ray::Texture2D> m_Texture;
 };
 
 
