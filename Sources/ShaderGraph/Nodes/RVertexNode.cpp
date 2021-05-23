@@ -5,15 +5,6 @@
 
 namespace At0::Ray
 {
-	std::string VertexNode::GetAttributes(
-		uint32_t& inputLocation, uint32_t& outputLocation, OutputID outputID) const
-	{
-		if (outputID == VertexNode::ScreenSpacePosition)
-			return String::Serialize("layout(location = {0}) in vec3 inPos;", inputLocation++);
-
-		return "";
-	}
-
 	std::string VertexNode::GetFunctionCalls(OutputID outputID) const
 	{
 		switch (outputID)
@@ -22,5 +13,16 @@ namespace At0::Ray
 		}
 
 		return "";
+	}
+
+	void VertexNode::OnParentConnected(
+		Node* parentNode, InputID parentConnectionID, OutputID connectionID)
+	{
+		switch (connectionID)
+		{
+		case VertexNode::ScreenSpacePosition:
+			m_Attributes["inPos"] = Node::AttributeData{ "in", "vec3" };
+			break;
+		}
 	}
 }  // namespace At0::Ray

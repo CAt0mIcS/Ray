@@ -12,33 +12,17 @@ namespace At0::Ray
 		OnChildConnected(std::move(childNode), childConnectionID, connectionID);
 	}
 
-	std::string Node::GetAttributes(
-		uint32_t& inputLocation, uint32_t& outputLocation, OutputID outputID) const
+	std::unordered_map<std::string, Node::AttributeData> Node::GetAttributes(
+		OutputID outputID) const
 	{
-		std::string merged;
+		std::unordered_map<std::string, AttributeData> data = m_Attributes;
 		for (const auto& [connection, child] : m_Children)
 		{
-			std::string attribs =
-				child.node->GetAttributes(inputLocation, outputLocation, child.connectionPoint);
-			if (merged.find(attribs) == std::string::npos)
-			{
-				// Check if only location is different
-				std::string noLocation = attribs.substr(
-					strlen("layout(location = ") + 2);	// max number of locations: 99
-
-				if (merged.find(noLocation) == std::string::npos)
-					merged += attribs;
-				else
-				{
-					// Decrement input/output location
-					if (attribs.find(" in ") != std::string::npos)
-						--inputLocation;
-					else
-						--outputLocation;
-				}
-			}
+			auto childData = child.node->GetAttributes(child.connectionPoint);
+			for (const auto& [attribName, attribData] : childData)
+				data[attribName] = attribData;
 		}
-		return merged;
+		return data;
 	}
 
 	std::string Node::GetFunctionCalls(OutputID outputID) const

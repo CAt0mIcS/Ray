@@ -8,6 +8,13 @@ namespace At0::Ray
 {
 	class RAY_EXPORT Node : NonCopyable
 	{
+	protected:
+		struct AttributeData
+		{
+			std::string inOut;
+			std::string type;
+		};
+
 	public:
 		using OutputID = uint32_t;
 		using InputID = uint32_t;
@@ -25,7 +32,7 @@ namespace At0::Ray
 		 */
 		void Connect(Ref<Node> childNode, OutputID childConnectionID, InputID connectionID);
 
-		virtual std::string GetAttributes(uint32_t& inputLocation, uint32_t& outputLocation,
+		std::unordered_map<std::string, AttributeData> GetAttributes(
 			OutputID outputID = s_DefaultOutput) const;
 		virtual std::string GetFunctionCalls(OutputID outputID = s_DefaultOutput) const;
 
@@ -73,5 +80,8 @@ namespace At0::Ray
 			std::string call;
 		};
 		std::vector<FunctionCall> m_FunctionCalls;
+
+		// Maps attribName to attribData
+		std::unordered_map<std::string, AttributeData> m_Attributes;
 	};
 }  // namespace At0::Ray

@@ -17,7 +17,17 @@ namespace At0::Ray
 		uint32_t outputLocation = 0;
 		for (const Ref<Node>& rootNode : rootNodes)
 		{
-			attributes += rootNode->GetAttributes(inputLocation, outputLocation) + '\n';
+			auto attribs = rootNode->GetAttributes();
+			for (const auto& [attribName, attribData] : attribs)
+			{
+				if (attribData.inOut == "in")
+					attributes += String::Serialize("layout(location = {0}) in {1} {2};\n",
+						inputLocation++, attribData.type, attribName);
+				else if (attribData.inOut == "out")
+					attributes += String::Serialize("layout(location = {0}) out {1} {2};\n",
+						outputLocation++, attribData.type, attribName);
+			}
+
 			mainCode += rootNode->GetFunctionCalls();
 		}
 
