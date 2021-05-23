@@ -113,6 +113,7 @@ public:
 			auto floatNode = MakeRef<FloatNode>(1.0f);
 
 			splitNode->Connect(vertexNode, VertexNode::ScreenSpacePosition, SplitNode::Input);
+
 			vec4Node->Connect(splitNode, SplitNode::R, Vector4Node::R);
 			vec4Node->Connect(splitNode, SplitNode::G, Vector4Node::G);
 			vec4Node->Connect(splitNode, SplitNode::B, Vector4Node::B);
@@ -140,8 +141,7 @@ public:
 			vertexOutputNode->Connect(
 				multiplyVertex, MultiplyNode::Result, VertexOutputNode::Vertex);
 
-			std::string test = vertexOutputNode->GetFunctionCalls(MultiplyNode::Result);
-			generator.Generate({ vertexOutputNode });
+			std::string test = generator.Generate({ vertexOutputNode });
 
 			Log::Info("Shader generation took {0}ms", (Time::Now() - tStart).AsMilliseconds());
 		}

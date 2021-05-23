@@ -12,6 +12,8 @@ namespace At0::Ray
 		using OutputID = uint32_t;
 		using InputID = uint32_t;
 
+		static constexpr uint32_t s_DefaultOutput = (uint32_t)-1;
+
 	public:
 		virtual ~Node() = default;
 
@@ -23,7 +25,9 @@ namespace At0::Ray
 		 */
 		void Connect(Ref<Node> childNode, OutputID childConnectionID, InputID connectionID);
 
-		virtual std::string GetFunctionCalls(OutputID outputID) const { return ""; }
+		virtual std::string GetAttributes(uint32_t& inputLocation, uint32_t& outputLocation,
+			OutputID outputID = s_DefaultOutput) const;
+		virtual std::string GetFunctionCalls(OutputID outputID = s_DefaultOutput) const;
 
 		/**
 		 * Checks if a connection at the connection ID exists
