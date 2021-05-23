@@ -25,6 +25,33 @@ namespace At0::Ray
 		return data;
 	}
 
+	std::unordered_map<std::string, std::vector<std::pair<std::string, std::string>>>
+		Node::GetBufferUniforms(OutputID outputID) const
+	{
+		std::unordered_map<std::string, std::vector<std::pair<std::string, std::string>>> uniforms =
+			m_BufferUniforms;
+
+		for (const auto& [connection, child] : m_Children)
+		{
+			auto childData = child.node->GetBufferUniforms(child.connectionPoint);
+			for (const auto& [uBufferName, uniformData] : childData)
+			{
+				for (const auto& [uniformType, uniformName] : uniformData)
+				{
+					// Check if uniformName already exists in this block
+					if (std::find_if(uniforms[uBufferName].begin(), uniforms[uBufferName].end(),
+							[&uniformName](const auto& pair) {
+								return pair.second == uniformName;
+							}) == uniforms[uBufferName].end())
+					{
+						uniforms[uBufferName].emplace_back(uniformType, uniformName);
+					}
+				}
+			}
+		}
+		return uniforms;
+	}
+
 	std::string Node::GetFunctionCalls(OutputID outputID) const
 	{
 		std::string merged;

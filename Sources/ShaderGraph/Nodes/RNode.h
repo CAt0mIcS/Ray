@@ -34,6 +34,8 @@ namespace At0::Ray
 
 		std::unordered_map<std::string, AttributeData> GetAttributes(
 			OutputID outputID = s_DefaultOutput) const;
+		std::unordered_map<std::string, std::vector<std::pair<std::string, std::string>>>
+			GetBufferUniforms(OutputID outputID = s_DefaultOutput) const;
 		virtual std::string GetFunctionCalls(OutputID outputID = s_DefaultOutput) const;
 
 		/**
@@ -83,5 +85,12 @@ namespace At0::Ray
 
 		// Maps attribName to attribData
 		std::unordered_map<std::string, AttributeData> m_Attributes;
+
+		// Maps uniform block name to [uniformType and uniform name]
+		std::unordered_map<std::string, std::vector<std::pair<std::string, std::string>>>
+			m_BufferUniforms;
+
+		// Maps uniform name to sampler type
+		std::unordered_map<std::string, std::string> m_SamplerUniforms;
 	};
 }  // namespace At0::Ray

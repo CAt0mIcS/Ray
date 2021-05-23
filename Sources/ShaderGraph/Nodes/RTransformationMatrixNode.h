@@ -16,5 +16,9 @@ namespace At0::Ray
 
 	public:
 		std::string GetFunctionCalls(OutputID outputID) const override;
+
+	private:
+		void OnParentConnected(
+			Node* parentNode, InputID parentConnectionID, OutputID connectionID) override;
 	};
 }  // namespace At0::Ray

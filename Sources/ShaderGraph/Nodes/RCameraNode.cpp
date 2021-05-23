@@ -12,4 +12,11 @@ namespace At0::Ray
 
 		return "";
 	}
+
+	void CameraNode::OnParentConnected(
+		Node* parentNode, InputID parentConnectionID, OutputID connectionID)
+	{
+		m_BufferUniforms["PerSceneData"].emplace_back("mat4", "View");
+		m_BufferUniforms["PerSceneData"].emplace_back("mat4", "Proj");
+	}
 }  // namespace At0::Ray

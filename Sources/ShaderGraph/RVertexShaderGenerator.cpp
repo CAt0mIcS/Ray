@@ -6,6 +6,53 @@
 
 namespace At0::Ray
 {
+	static std::string GetAttributes(
+		const Node& rootNode, uint32_t& inputLocation, uint32_t& outputLocation)
+	{
+		std::string attributes;
+		auto attribs = rootNode.GetAttributes();
+		for (const auto& [attribName, attribData] : attribs)
+		{
+			if (attribData.inOut == "in")
+				attributes += String::Serialize("layout(location = {0}) in {1} {2};\n",
+					inputLocation++, attribData.type, attribName);
+			else if (attribData.inOut == "out")
+				attributes += String::Serialize("layout(location = {0}) out {1} {2};\n",
+					outputLocation++, attribData.type, attribName);
+		}
+
+		return attributes;
+	}
+
+	static std::string GetUniforms(const Node& rootNode, uint32_t& binding)
+	{
+		std::string uniforms;
+
+		// Buffer uniforms
+		{
+			auto bufferUniforms = rootNode.GetBufferUniforms();
+			for (const auto& [uBufferName, uniformData] : bufferUniforms)
+			{
+				std::string uniformsInBlock;
+
+				for (const auto& [uniformType, uniformName] : uniformData)
+					uniformsInBlock += '\n' + uniformType + ' ' + uniformName + ';';
+
+				// Predefined set 0 for per scene data uniform
+				if (uBufferName == "PerSceneData")
+					uniforms += String::Serialize("layout(set = 0, binding = 0) uniform "
+												  "PerSceneData\n{{0}\n} uPerSceneData;\n",
+						uniformsInBlock);
+				else
+					uniforms += String::Serialize(
+						"layout(set = 1, binding = {0}) uniform {1}\n{{2}\n} u{1};\n", binding++,
+						uBufferName, uniformsInBlock);
+			}
+		}
+
+		return uniforms;
+	}
+
 	std::string VertexShaderGenerator::Generate(std::vector<Ref<Node>> rootNodes)
 	{
 		std::string attributes;
@@ -15,18 +62,11 @@ namespace At0::Ray
 
 		uint32_t inputLocation = 0;
 		uint32_t outputLocation = 0;
+		uint32_t binding = 1;
 		for (const Ref<Node>& rootNode : rootNodes)
 		{
-			auto attribs = rootNode->GetAttributes();
-			for (const auto& [attribName, attribData] : attribs)
-			{
-				if (attribData.inOut == "in")
-					attributes += String::Serialize("layout(location = {0}) in {1} {2};\n",
-						inputLocation++, attribData.type, attribName);
-				else if (attribData.inOut == "out")
-					attributes += String::Serialize("layout(location = {0}) out {1} {2};\n",
-						outputLocation++, attribData.type, attribName);
-			}
+			attributes += GetAttributes(*rootNode, inputLocation, outputLocation);
+			uniforms += GetUniforms(*rootNode, binding);
 
 			mainCode += rootNode->GetFunctionCalls();
 		}
