@@ -36,6 +36,7 @@ namespace At0::Ray
 			OutputID outputID = s_DefaultOutput) const;
 		std::unordered_map<std::string, std::vector<std::pair<std::string, std::string>>>
 			GetBufferUniforms(OutputID outputID = s_DefaultOutput) const;
+		std::vector<std::string> GetFunctions(OutputID outputID = s_DefaultOutput) const;
 		virtual std::string GetFunctionCalls(OutputID outputID = s_DefaultOutput) const;
 
 		/**
@@ -71,9 +72,6 @@ namespace At0::Ray
 		// Maps id of an input connection to child
 		std::unordered_map<InputID, ChildNode> m_Children;
 
-		// List of all required functions for this node
-		std::vector<std::string> m_Functions;
-
 		// Maps output connection id to function call, e.g.
 		// splitNode.GetFunctionCalls(SplitNode::R) only gets function calls needed for output R
 		struct FunctionCall
@@ -92,5 +90,8 @@ namespace At0::Ray
 
 		// Maps uniform name to sampler type
 		std::unordered_map<std::string, std::string> m_SamplerUniforms;
+
+		// Contains raw function strings
+		std::vector<std::string> m_Functions;
 	};
 }  // namespace At0::Ray

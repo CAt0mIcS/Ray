@@ -52,6 +52,23 @@ namespace At0::Ray
 		return uniforms;
 	}
 
+	std::vector<std::string> Node::GetFunctions(OutputID outputID) const
+	{
+		std::vector<std::string> functions = m_Functions;
+
+		for (const auto& [connection, child] : m_Children)
+		{
+			auto childFunctions = child.node->GetFunctions(child.connectionPoint);
+			for (const std::string& function : childFunctions)
+			{
+				if (std::find(functions.begin(), functions.end(), function) == functions.end())
+					functions.emplace_back(function + '\n');
+			}
+		}
+
+		return functions;
+	}
+
 	std::string Node::GetFunctionCalls(OutputID outputID) const
 	{
 		std::string merged;

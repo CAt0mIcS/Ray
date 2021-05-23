@@ -68,6 +68,15 @@ std::vector<std::string> WriteToFiles(std::vector<std::string> codes, std::strin
 	return { vertexShaderPath, fragmentShaderPath };
 }
 
+static void WriteToFile(std::string_view str, const std::string& filename)
+{
+	std::filesystem::create_directory("Resources/Shaders/Generated/");
+	std::ofstream writer("Resources/Shaders/Generated/" + filename);
+
+	writer << str;
+	writer.close();
+}
+
 
 class App : public Ray::Engine
 {
@@ -141,7 +150,7 @@ public:
 			vertexOutputNode->Connect(
 				multiplyVertex, MultiplyNode::Result, VertexOutputNode::Vertex);
 
-			std::string test = generator.Generate({ vertexOutputNode });
+			WriteToFile(generator.Generate({ vertexOutputNode }), "VertexShader.vert");
 
 			Log::Info("Shader generation took {0}ms", (Time::Now() - tStart).AsMilliseconds());
 		}
@@ -150,6 +159,8 @@ public:
 
 		GraphicsPipeline::Layout pipelineLayout{};
 		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
+		pipelineLayout.shaders = { "Resources/Shaders/Generated/VertexShader.vert",
+			"Resources/Shaders/Flat_Col.frag" };
 
 		Ref<Material> material = MakeRef<FlatColorMaterial>(layout, pipelineLayout);
 

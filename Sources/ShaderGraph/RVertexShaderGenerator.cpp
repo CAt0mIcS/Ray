@@ -68,6 +68,9 @@ namespace At0::Ray
 			attributes += GetAttributes(*rootNode, inputLocation, outputLocation);
 			uniforms += GetUniforms(*rootNode, binding);
 
+			auto nodeFunctions = rootNode->GetFunctions();
+			functions += std::accumulate(nodeFunctions.begin(), nodeFunctions.end(), std::string{});
+
 			mainCode += rootNode->GetFunctionCalls() + ';';
 		}
 
