@@ -79,18 +79,18 @@ public:
 			{
 				ImGui::Begin("TestEntity");
 
-				// Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
+				Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
 
-				// Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
-				// Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
-				// Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
+				Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
+				Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
+				Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
 
-				// Ray::ImGUI::Float3Widget("Translation", translation);
-				// Ray::ImGUI::Float3Widget("Rotation", rotation);
-				// Ray::ImGUI::Float3Widget("Scale", scale);
-				// ImGui::Spacing();
+				Ray::ImGUI::Float3Widget("Translation", translation);
+				Ray::ImGUI::Float3Widget("Rotation", rotation);
+				Ray::ImGUI::Float3Widget("Scale", scale);
+				ImGui::Spacing();
 
-				// tform.RecalculateCachedMatrix();
+				tform.RecalculateCachedMatrix();
 
 				ImGui::End();
 			}
@@ -146,6 +146,17 @@ public:
 			Log::Info("Shader generation took {0}ms", (Time::Now() - tStart).AsMilliseconds());
 		}
 
+		FlatColorMaterial::Layout layout{};
+
+		GraphicsPipeline::Layout pipelineLayout{};
+		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
+
+		Ref<Material> material = MakeRef<FlatColorMaterial>(layout, pipelineLayout);
+
+		m_Entity = Ray::Scene::Get().CreateEntity();
+		m_Entity.Emplace<Mesh>(Mesh::Plane(material));
+		auto& renderer = m_Entity.Emplace<MeshRenderer>(material);
+		renderer.GetBufferUniform("Shading")["color"] = Float3{ 1.0f, 0.0f, 1.0f };
 
 		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));

@@ -68,7 +68,7 @@ namespace At0::Ray
 			attributes += GetAttributes(*rootNode, inputLocation, outputLocation);
 			uniforms += GetUniforms(*rootNode, binding);
 
-			mainCode += rootNode->GetFunctionCalls();
+			mainCode += rootNode->GetFunctionCalls() + ';';
 		}
 
 		return String::Serialize(GenerateTemplate(), attributes, uniforms, functions, mainCode);
