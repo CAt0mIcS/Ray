@@ -50,6 +50,14 @@ namespace At0::Ray
 			}
 		}
 
+		// Sampler uniforms
+		{
+			auto samplerUniforms = rootNode.GetSamplerUniforms();
+			for (const auto& [samplerName, samplerType] : samplerUniforms)
+				uniforms += String::Serialize("layout(set = 1, binding = {0}) uniform {1} {2};\n",
+					binding++, samplerType, samplerName);
+		}
+
 		return uniforms;
 	}
 

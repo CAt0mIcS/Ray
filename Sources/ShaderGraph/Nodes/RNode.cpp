@@ -52,6 +52,20 @@ namespace At0::Ray
 		return uniforms;
 	}
 
+	std::unordered_map<std::string, std::string> Node::GetSamplerUniforms(OutputID outputID) const
+	{
+		std::unordered_map<std::string, std::string> samplers = m_SamplerUniforms;
+
+		for (const auto& [connection, child] : m_Children)
+		{
+			auto childSamplers = child.node->GetSamplerUniforms(child.connectionPoint);
+			for (const auto& [samplerName, samplerType] : childSamplers)
+				samplers[samplerName] = samplerType;
+		}
+
+		return samplers;
+	}
+
 	std::vector<std::string> Node::GetFunctions(OutputID outputID) const
 	{
 		std::vector<std::string> functions = m_Functions;

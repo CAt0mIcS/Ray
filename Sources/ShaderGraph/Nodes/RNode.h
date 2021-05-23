@@ -36,6 +36,8 @@ namespace At0::Ray
 			OutputID outputID = s_DefaultOutput) const;
 		std::unordered_map<std::string, std::vector<std::pair<std::string, std::string>>>
 			GetBufferUniforms(OutputID outputID = s_DefaultOutput) const;
+		std::unordered_map<std::string, std::string> GetSamplerUniforms(
+			OutputID outputID = s_DefaultOutput) const;
 		std::vector<std::string> GetFunctions(OutputID outputID = s_DefaultOutput) const;
 		virtual std::string GetFunctionCalls(OutputID outputID = s_DefaultOutput) const;
 
