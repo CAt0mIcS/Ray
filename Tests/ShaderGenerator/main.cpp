@@ -27,6 +27,7 @@
 #include <ShaderGraph/Nodes/RSplitNode.h>
 #include <ShaderGraph/Nodes/RTransformationMatrixNode.h>
 #include <ShaderGraph/Nodes/RVector4Node.h>
+#include <ShaderGraph/Nodes/RInputNode.h>
 #include <ShaderGraph/Nodes/RVertexNode.h>
 #include <ShaderGraph/Nodes/RVertexOutputNode.h>
 
@@ -121,7 +122,7 @@ public:
 			auto splitNode = MakeRef<SplitNode>();
 			auto floatNode = MakeRef<FloatNode>(1.0f);
 
-			splitNode->Connect(vertexNode, VertexNode::ScreenSpacePosition, SplitNode::Input);
+			splitNode->Connect(vertexNode, VertexNode::Position, SplitNode::Input);
 
 			vec4Node->Connect(splitNode, SplitNode::R, Vector4Node::R);
 			vec4Node->Connect(splitNode, SplitNode::G, Vector4Node::G);

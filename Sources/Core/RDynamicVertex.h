@@ -25,24 +25,28 @@ namespace At0::Ray
 	struct AttributeMap<AttributeType::Position>
 	{
 		static constexpr const char* Semantic = "inPos";
+		static constexpr const char* Type = "vec3";
 		static constexpr VkFormat Format = VK_FORMAT_R32G32B32_SFLOAT;
 	};
 	template<>
 	struct AttributeMap<AttributeType::UV>
 	{
 		static constexpr const char* Semantic = "inUV";
+		static constexpr const char* Type = "vec2";
 		static constexpr VkFormat Format = VK_FORMAT_R32G32_SFLOAT;
 	};
 	template<>
 	struct AttributeMap<AttributeType::Normal>
 	{
 		static constexpr const char* Semantic = "inNormal";
+		static constexpr const char* Type = "vec3";
 		static constexpr VkFormat Format = VK_FORMAT_R32G32B32_SFLOAT;
 	};
 	template<>
 	struct AttributeMap<AttributeType::Tangent>
 	{
 		static constexpr const char* Semantic = "inTangent";
+		static constexpr const char* Type = "vec3";
 		static constexpr VkFormat Format = VK_FORMAT_R32G32B32_SFLOAT;
 	};
 

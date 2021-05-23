@@ -77,6 +77,10 @@ set(SRC
 	"ShaderGraph/Nodes/RVertexNode.cpp"
 	"ShaderGraph/Nodes/RVertexOutputNode.h"
 	"ShaderGraph/Nodes/RVertexOutputNode.cpp"
+	"ShaderGraph/Nodes/RInputNode.h"
+	"ShaderGraph/Nodes/RInputNode.cpp"
+	"ShaderGraph/Nodes/ROutputNode.h"
+	"ShaderGraph/Nodes/ROutputNode.cpp"
 
 	"ShaderGraph/RVertexShaderGenerator.h"
 	"ShaderGraph/RVertexShaderGenerator.cpp"
