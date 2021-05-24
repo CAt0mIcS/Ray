@@ -247,6 +247,7 @@ set(SRC
 	"../Extern/imgui/imgui_draw.cpp"
 	"../Extern/imgui/imgui_widgets.cpp"
 	"../Extern/imgui/imgui_tables.cpp"
+	"../Extern/imgui/imgui_impl_glfw.cpp"
 )
 
 # ------------------------------------------------------------------

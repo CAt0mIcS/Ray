@@ -26,6 +26,20 @@
 
 #include <../../Extern/imgui/imgui.h>
 #include <../../Extern/imgui/imgui_internal.h>
+#include <../../Extern/imgui/imgui_impl_glfw.h>
+
+#ifdef _WIN32
+	#define GLFW_EXPOSE_NATIVE_WIN32
+#else
+	#define GLFW_EXPOSE_NATIVE_X11
+#endif
+
+#include <GLFW/glfw3.h>
+
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <GLFW/glfw3native.h>
 // clang-format on
 
 namespace At0::Ray
@@ -52,6 +66,16 @@ namespace At0::Ray
 			ImVec2(Window::Get().GetFramebufferSize().x, Window::Get().GetFramebufferSize().y);
 		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::GetStyle().WindowRounding = 0.0f;
+			ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 1.0f;
+		}
+
+		ImGui_ImplGlfw_InitForVulkan(Window::Get().GetNative(), false);
 
 		MapKeySpace();
 		InitResources();
@@ -260,28 +284,28 @@ namespace At0::Ray
 
 	void ImGUI::MapKeySpace()
 	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
-		io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
-		io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
-		io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
-		io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
-		io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
-		io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
-		io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
-		io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
-		io.KeyMap[ImGuiKey_Insert] = GLFW_KEY_INSERT;
-		io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
-		io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
-		io.KeyMap[ImGuiKey_Space] = GLFW_KEY_SPACE;
-		io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
-		io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
-		io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
-		io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
-		io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
-		io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
-		io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
-		io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
+		// ImGuiIO& io = ImGui::GetIO();
+		// io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
+		// io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
+		// io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
+		// io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
+		// io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
+		// io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
+		// io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
+		// io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
+		// io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
+		// io.KeyMap[ImGuiKey_Insert] = GLFW_KEY_INSERT;
+		// io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
+		// io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
+		// io.KeyMap[ImGuiKey_Space] = GLFW_KEY_SPACE;
+		// io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
+		// io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
+		// io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
+		// io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
+		// io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
+		// io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
+		// io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
+		// io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
 	}
 
 	void ImGUI::OnEvent(FramebufferResizedEvent& e)
@@ -368,13 +392,29 @@ namespace At0::Ray
 		}
 	}
 
-	void ImGUI::OnEvent(ScrollLeftEvent& e) {}
+	void ImGUI::OnEvent(ScrollLeftEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseWheelH += (float)e.GetOffset().x;
+	}
 
-	void ImGUI::OnEvent(ScrollRightEvent& e) {}
+	void ImGUI::OnEvent(ScrollRightEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseWheelH += (float)e.GetOffset().x;
+	}
 
-	void ImGUI::OnEvent(ScrollUpEvent& e) {}
+	void ImGUI::OnEvent(ScrollUpEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseWheel += (float)e.GetOffset().y;
+	}
 
-	void ImGUI::OnEvent(ScrollDownEvent& e) {}
+	void ImGUI::OnEvent(ScrollDownEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseWheel += (float)e.GetOffset().y;
+	}
 
 	void ImGUI::Float3Widget(std::string_view title, Float3& data)
 	{
