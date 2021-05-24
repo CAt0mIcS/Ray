@@ -16,7 +16,6 @@ SetOutputDirectory("GenericCodeGen" "")
 SetOutputDirectory("MachineIndependent" "")
 
 set_target_properties("glfw" PROPERTIES FOLDER "Extern")
-set_target_properties("glm" PROPERTIES FOLDER "Extern")
 
 set_target_properties("glslang" PROPERTIES FOLDER "Extern/glslang")
 set_target_properties("OGLCompiler" PROPERTIES FOLDER "Extern/glslang")
