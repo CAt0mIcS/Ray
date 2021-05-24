@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #define RAY_ENABLE_IMGUI 1
+#define RAY_ENABLE_IMGUI_DOCKSPACE 1
 
 
 #if RAY_ENABLE_IMGUI

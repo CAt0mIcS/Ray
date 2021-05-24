@@ -109,12 +109,6 @@ public:
 				ImGui::End();
 			}
 		});
-		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
-			{
-				static bool show = true;
-				ImGui::ShowDemoWindow(&show);
-			}
-		});
 
 		m_Texture = Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png");
 

@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -110,8 +110,38 @@ namespace At0::Ray
 	{
 		ImGui::NewFrame();
 
+	#if RAY_ENABLE_IMGUI_DOCKSPACE
+		static bool dockspaceOpen = true;
+		// Enable dockspace
+		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->Pos);
+		ImGui::SetNextWindowSize(viewport->Size);
+		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
+					   ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+					   ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		ImGui::Begin("Dockspace", &dockspaceOpen, windowFlags);
+		ImGui::PopStyleVar(3);
+
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+		{
+			ImGuiID dockspaceID = ImGui::GetID("MyDockSpace");
+			ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), ImGuiDragDropFlags_None);
+		}
+	#endif
+
 		for (const auto& fn : m_NewFrameFunctions)
 			fn();
+
+	#if RAY_ENABLE_IMGUI_DOCKSPACE
+		ImGui::End();
+	#endif
 
 		// Render to generate draw buffers
 		ImGui::Render();
