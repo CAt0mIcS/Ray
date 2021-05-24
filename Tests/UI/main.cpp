@@ -70,6 +70,15 @@ public:
 			ImGui::ColorPicker3("Color", m_ButtonColors);
 			ImGui::End();
 		});
+
+		Ray::Ref<Ray::Texture2D> gridbase =
+			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png");
+		Ray::ImGUI::Get().StoreTexture(gridbase);
+		Ray::ImGUI::Get().RegisterNewFrameFunction([gridbase]() {
+			ImGui::Begin("Gridbase");
+			ImGui::Image(Ray::ImGUI::Get().PushTexture(gridbase), ImVec2{ 512.0f, 512.0f });
+			ImGui::End();
+		});
 	}
 
 private:

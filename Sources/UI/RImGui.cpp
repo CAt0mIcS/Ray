@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
+// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -112,17 +112,11 @@ namespace At0::Ray
 
 		CreatePipeline();
 		CreateTextureUploadResources();
-
-		m_TestTexture = MakeRef<Texture2D>("Resources/Textures/gridbase.png");
 	}
 
 	void ImGUI::NewFrame()
 	{
 		ImGui::NewFrame();
-
-		ImGui::Begin("Image");
-		ImGui::Image(AddTexture(m_TestTexture), ImVec2{ 256.0f, 256.0f });
-		ImGui::End();
 
 	#if RAY_ENABLE_IMGUI_DOCKSPACE
 		static bool dockspaceOpen = true;
@@ -349,8 +343,11 @@ namespace At0::Ray
 		}
 	}
 
-	void* ImGUI::AddTexture(Ref<Texture2D> texture)
+	void* ImGUI::PushTexture(Ref<Texture2D> texture)
 	{
+		RAY_MEXPECTS(std::find(m_Textures.begin(), m_Textures.end(), texture) != m_Textures.end(),
+			"[ImGUI] Trying to push texture that was not added using ImGUI::StoreTexture");
+
 		// Descriptor set
 		{
 			m_TextureDescriptorSets.emplace_back();

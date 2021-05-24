@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #define RAY_ENABLE_IMGUI 1
-#define RAY_ENABLE_IMGUI_DOCKSPACE 0
+#define RAY_ENABLE_IMGUI_DOCKSPACE 1
 
 
 #if RAY_ENABLE_IMGUI
@@ -71,6 +71,8 @@ namespace At0::Ray
 		}
 
 		static void Float3Widget(std::string_view title, Float3& data);
+		void* PushTexture(Ref<Texture2D> texture);
+		Ref<Texture2D> StoreTexture(Ref<Texture2D> tex) { return m_Textures.emplace_back(tex); }
 
 	private:
 		ImGUI();
@@ -78,7 +80,6 @@ namespace At0::Ray
 		void InitResources();
 		void CreatePipeline();
 		void CreateTextureUploadResources();
-		void* AddTexture(Ref<Texture2D> texture);
 
 		void OnEvent(FramebufferResizedEvent& e) override;
 		void OnEvent(MouseMovedEvent& e) override;
@@ -103,6 +104,7 @@ namespace At0::Ray
 
 		VkDescriptorSetLayout m_TextureDescriptorSetLayout;
 		std::vector<VkDescriptorSet> m_TextureDescriptorSets;
+		std::vector<Ref<Texture2D>> m_Textures;
 
 		Scope<Buffer> m_VertexBuffer;
 		Scope<Buffer> m_IndexBuffer;
@@ -113,8 +115,6 @@ namespace At0::Ray
 		int32_t m_IndexCount = 0;
 
 		std::vector<std::function<void()>> m_NewFrameFunctions;
-
-		Ref<Texture2D> m_TestTexture;
 	};
 }  // namespace At0::Ray
 
