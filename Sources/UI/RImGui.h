@@ -1,12 +1,12 @@
 ﻿#pragma once
 
 #define RAY_ENABLE_IMGUI 1
-#define RAY_ENABLE_IMGUI_DOCKSPACE 1
+#define RAY_ENABLE_IMGUI_DOCKSPACE 0
 
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
