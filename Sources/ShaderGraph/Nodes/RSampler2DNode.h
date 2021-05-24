@@ -24,6 +24,7 @@ namespace At0::Ray
 		Sampler2DNode(std::string_view samplerName = "");
 
 		std::string GetFunctionCalls(OutputID outputID) const override;
+		std::string_view GetName() const { return m_Name; }
 
 	private:
 		void OnParentConnected(

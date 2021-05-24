@@ -114,8 +114,10 @@ public:
 
 		// Vertex Shader
 		Ray::ShaderGenerator generator;
-		GenerateVertexShader(generator);
-		GenerateFragmentShader(generator);
+		auto rootNodes = GenerateVertexShader(generator);
+		auto fsRootNodes = GenerateFragmentShader(generator);
+		rootNodes.insert(rootNodes.begin(), fsRootNodes.begin(), fsRootNodes.end());
+		fsRootNodes.clear();
 
 		Ray::FlatColorMaterial::Layout layout{};
 
@@ -130,7 +132,7 @@ public:
 		m_Entity = Ray::Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
 		auto& renderer = m_Entity.Emplace<Ray::MeshRenderer>(material, false);
-		renderer.AddSampler2DUniform("sampler2D_0", Ray::Shader::Stage::Fragment, m_Texture);
+		generator.AddUniforms(renderer);
 
 		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
@@ -141,7 +143,7 @@ public:
 private:
 	void Update() override {}
 
-	void GenerateVertexShader(Ray::ShaderGenerator& generator)
+	std::vector<Ray::Ref<Ray::Node>> GenerateVertexShader(Ray::ShaderGenerator& generator)
 	{
 		using namespace At0::Ray;
 
@@ -190,10 +192,11 @@ private:
 			generator.GenerateVertexShader({ vertexOutputNode, uvOutput }), "VertexShader.vert");
 
 		Log::Info("Vertex shader generation took {0}ms", (Time::Now() - tStart).AsMilliseconds());
+		return { vertexOutputNode, uvOutput };
 	}
 
 
-	void GenerateFragmentShader(Ray::ShaderGenerator& generator)
+	std::vector<Ray::Ref<Ray::Node>> GenerateFragmentShader(Ray::ShaderGenerator& generator)
 	{
 		using namespace At0::Ray;
 
@@ -212,6 +215,8 @@ private:
 		WriteToFile(generator.GenerateFragmentShader({ outColorNode }), "FragmentShader.frag");
 
 		Log::Info("Fragment shader generation took {0}ms", (Time::Now() - tStart).AsMilliseconds());
+
+		return { outColorNode };
 	}
 
 private:

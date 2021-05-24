@@ -21,6 +21,15 @@ namespace At0::Ray
 
 		static constexpr uint32_t s_DefaultOutput = (uint32_t)-1;
 
+		struct ChildNode
+		{
+			// child node
+			Ref<Node> node;
+
+			// Output id of child node
+			OutputID connectionPoint{};
+		};
+
 	public:
 		virtual ~Node() = default;
 
@@ -46,6 +55,13 @@ namespace At0::Ray
 		 */
 		bool HasConnection(InputID connectionID) const;
 
+		ChildNode GetChild(InputID connectionID) const { return m_Children.at(connectionID); }
+
+		auto begin() { return m_Children.begin(); }
+		auto end() { return m_Children.end(); }
+		auto begin() const { return m_Children.begin(); }
+		auto end() const { return m_Children.end(); }
+
 	protected:
 		Node() = default;
 
@@ -62,15 +78,6 @@ namespace At0::Ray
 			Node* parentNode, InputID parentConnectionID, OutputID connectionID);
 
 	protected:
-		struct ChildNode
-		{
-			// child node
-			Ref<Node> node;
-
-			// Output id of child node
-			OutputID connectionPoint{};
-		};
-
 		// Maps id of an input connection to child
 		std::unordered_map<InputID, ChildNode> m_Children;
 

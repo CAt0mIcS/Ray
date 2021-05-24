@@ -18,6 +18,8 @@ namespace At0::Ray
 	public:
 		Texture2DNode(Ref<Texture2D> texture);
 
+		Ref<Texture2D> GetSharedTexture() const { return m_Texture; }
+
 	private:
 		Ref<Texture2D> m_Texture;
 	};

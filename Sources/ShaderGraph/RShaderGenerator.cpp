@@ -1,7 +1,12 @@
 ﻿#include "Rpch.h"
 #include "RShaderGenerator.h"
 
+#include "Components/RMeshRenderer.h"
+#include "Nodes/RTexture2DNode.h"
+#include "Nodes/RSampler2DNode.h"
+
 #include "Utils/RString.h"
+#include "Utils/RLogger.h"
 
 
 namespace At0::Ray
@@ -28,8 +33,28 @@ namespace At0::Ray
 		return newAttributes;
 	}
 
-	static std::string GetUniforms(
-		const Node& rootNode, uint32_t& binding, std::string_view uniforms)
+	static Ref<Texture2D> GetTexture(const Node& rootNode, std::string_view samplerName)
+	{
+		for (const auto& [connection, node] : rootNode)
+		{
+			if (Sampler2DNode* samplerNode = dynamic_cast<Sampler2DNode*>(node.node.get());
+				samplerNode != nullptr && samplerNode->GetName() == samplerName)
+			{
+				return ((Texture2DNode*)samplerNode->GetChild(Sampler2DNode::Texture).node.get())
+					->GetSharedTexture();
+			}
+			else if (Ref<Texture2D> tex = GetTexture(*node.node, samplerName))
+			{
+				return tex;
+			}
+		}
+
+		Log::Warn("[ShaderGenerator] Failed to find texture for sampler \"{0}\"", samplerName);
+		return nullptr;
+	}
+
+	std::string ShaderGenerator::GetUniforms(
+		const Node& rootNode, std::string_view uniforms, Shader::Stage stage)
 	{
 		std::string newUniforms;
 
@@ -52,9 +77,17 @@ namespace At0::Ray
 													 "PerSceneData\n{{0}\n} uPerSceneData;\n",
 						uniformsInBlock);
 				else
+				{
 					newUniforms += String::Serialize(
-						"layout(set = 1, binding = {0}) uniform {1}\n{{2}\n} u{1};\n", binding++,
-						uBufferName, uniformsInBlock);
+						"layout(set = 1, binding = {0}) uniform {1}\n{{2}\n} u{1};\n",
+						m_NextBinding++, uBufferName, uniformsInBlock);
+
+					UniformData data{};
+					data.stage = stage;
+					data.name = uBufferName;
+					data.type = Shader::UniformBlocks::Type::UniformBuffer;
+					m_Uniforms.emplace_back(data);
+				}
 			}
 		}
 
@@ -63,9 +96,18 @@ namespace At0::Ray
 			auto samplerUniforms = rootNode.GetSamplerUniforms();
 			for (const auto& [samplerName, samplerType] : samplerUniforms)
 				if (uniforms.find(samplerName) == std::string::npos)
+				{
 					newUniforms +=
 						String::Serialize("layout(set = 1, binding = {0}) uniform {1} {2};\n",
-							binding++, samplerType, samplerName);
+							m_NextBinding++, samplerType, samplerName);
+
+					UniformData data{};
+					data.stage = stage;
+					data.name = samplerName;
+					data.type = Shader::UniformBlocks::Type::UniformSampler2D;
+					data.texture = GetTexture(rootNode, samplerName);
+					m_Uniforms.emplace_back(data);
+				}
 		}
 
 		return newUniforms;
@@ -92,7 +134,7 @@ namespace At0::Ray
 		{
 			attributes += GetAttributes(*rootNode, m_VSNextInputAttributeLocation,
 				m_VSNextOutputAttributeLocation, attributes);
-			uniforms += GetUniforms(*rootNode, m_NextBinding, uniforms);
+			uniforms += GetUniforms(*rootNode, uniforms, Shader::Stage::Vertex);
 			functions += GetFunctions(*rootNode, functions);
 			mainCode += rootNode->GetFunctionCalls() + ";\n";
 		}
@@ -111,12 +153,23 @@ namespace At0::Ray
 		{
 			attributes += GetAttributes(*rootNode, m_FSNextInputAttributeLocation,
 				m_FSNextOutputAttributeLocation, attributes);
-			uniforms += GetUniforms(*rootNode, m_NextBinding, uniforms);
+			uniforms += GetUniforms(*rootNode, uniforms, Shader::Stage::Fragment);
 			functions += GetFunctions(*rootNode, functions);
 			mainCode += rootNode->GetFunctionCalls() + ";\n";
 		}
 
 		return String::Serialize(GenerateTemplate(), attributes, uniforms, functions, mainCode);
+	}
+
+	void ShaderGenerator::AddUniforms(MeshRenderer& renderer)
+	{
+		for (const UniformData& data : m_Uniforms)
+		{
+			if (data.type == Shader::UniformBlocks::Type::UniformBuffer)
+				renderer.AddBufferUniform(data.name, data.stage);
+			else if (data.type == Shader::UniformBlocks::Type::UniformSampler2D)
+				renderer.AddSampler2DUniform(data.name, data.stage, data.texture);
+		}
 	}
 
 	std::string ShaderGenerator::GenerateTemplate() const

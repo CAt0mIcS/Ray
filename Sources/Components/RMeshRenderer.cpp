@@ -19,8 +19,6 @@ namespace At0::Ray
 	{
 		if (automaticUniformEmplacement)
 			AddUniforms();
-		else
-			AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
 	}
 
 	void MeshRenderer::Render(const CommandBuffer& cmdBuff) const
