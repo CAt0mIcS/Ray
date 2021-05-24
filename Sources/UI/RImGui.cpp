@@ -56,12 +56,11 @@ namespace At0::Ray
 		return *s_Instance;
 	}
 
-	VkDescriptorPool descPool;
 	ImGUI::~ImGUI()
 	{
 		ImGui::DestroyContext();
-		vkDestroyDescriptorPool(Graphics::Get().GetDevice(), descPool, nullptr);
-		delete m_InitInfo;
+		vkDestroyDescriptorSetLayout(
+			Graphics::Get().GetDevice(), m_TextureDescriptorSetLayout, nullptr);
 	}
 
 	ImGUI::ImGUI()
@@ -84,46 +83,7 @@ namespace At0::Ray
 			ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		// Create Descriptor Pool
-		{
-			VkDescriptorPoolSize pool_sizes[] = { { VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
-				{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
-				{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
-				{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
-				{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
-				{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
-				{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
-				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
-				{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
-				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
-				{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 } };
-			VkDescriptorPoolCreateInfo descPoolInfo = {};
-			descPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-			descPoolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-			descPoolInfo.maxSets = 1000 * IM_ARRAYSIZE(pool_sizes);
-			descPoolInfo.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
-			descPoolInfo.pPoolSizes = pool_sizes;
-			RAY_VK_THROW_FAILED(vkCreateDescriptorPool(
-									Graphics::Get().GetDevice(), &descPoolInfo, nullptr, &descPool),
-				"[ImGUI] Failed to create descriptor pool");
-		}
-
 		ImGui_ImplGlfw_InitForVulkan(Window::Get().GetNative(), false);
-		m_InitInfo = new ImGui_ImplVulkan_InitInfo();
-		m_InitInfo->Instance = Graphics::Get().GetInstance();
-		m_InitInfo->PhysicalDevice = Graphics::Get().GetPhysicalDevice();
-		m_InitInfo->Device = Graphics::Get().GetDevice();
-		m_InitInfo->QueueFamily = Graphics::Get().GetDevice().GetGraphicsFamily();
-		m_InitInfo->Queue = Graphics::Get().GetDevice().GetGraphicsQueue();
-		m_InitInfo->PipelineCache = Graphics::Get().GetPipelineCache();
-		m_InitInfo->DescriptorPool = descPool;
-		m_InitInfo->Allocator = nullptr;
-		m_InitInfo->MinImageCount = 2;
-		m_InitInfo->ImageCount = Graphics::Get().GetImageCount();
-		m_InitInfo->CheckVkResultFn = [](VkResult err) {
-			RAY_VK_THROW_FAILED(err, "[ImGUI] Vulkan error");
-		};
-
 		InitResources();
 	}
 
@@ -151,18 +111,17 @@ namespace At0::Ray
 		m_FontImage->TransitionLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
 		CreatePipeline();
+		CreateTextureUploadResources();
+
+		m_TestTexture = MakeRef<Texture2D>("Resources/Textures/gridbase.png");
 	}
 
-	Ref<Texture2D> texture;
 	void ImGUI::NewFrame()
 	{
-		if (!texture)
-			texture = MakeRef<Texture2D>("Resources/Textures/gridbase.png");
-
 		ImGui::NewFrame();
 
 		ImGui::Begin("Image");
-		ImGui::Image(AddTexture(texture), ImVec2{ 256.0f, 256.0f });
+		ImGui::Image(AddTexture(m_TestTexture), ImVec2{ 256.0f, 256.0f });
 		ImGui::End();
 
 	#if RAY_ENABLE_IMGUI_DOCKSPACE
@@ -306,6 +265,12 @@ namespace At0::Ray
 					scissorRect.offset.y = std::max((int32_t)(pcmd->ClipRect.y), 0);
 					scissorRect.extent.width = (uint32_t)(pcmd->ClipRect.z - pcmd->ClipRect.x);
 					scissorRect.extent.height = (uint32_t)(pcmd->ClipRect.w - pcmd->ClipRect.y);
+
+					VkDescriptorSet texDescSet = (VkDescriptorSet)pcmd->TextureId;
+					if (texDescSet)
+						vkCmdBindDescriptorSets(cmdBuff, VK_PIPELINE_BIND_POINT_GRAPHICS,
+							m_Pipeline->GetLayout(), 0, 1, &texDescSet, 0, nullptr);
+
 					vkCmdSetScissor(cmdBuff, 0, 1, &scissorRect);
 					vkCmdDrawIndexed(cmdBuff, pcmd->ElemCount, 1, indexOffset, vertexOffset, 0);
 					indexOffset += pcmd->ElemCount;
@@ -366,10 +331,9 @@ namespace At0::Ray
 		m_FontDescriptor->BindUniform(*m_FontUniform);
 	}
 
-	void* ImGUI::AddTexture(Ref<Texture2D> texture)
+	void ImGUI::CreateTextureUploadResources()
 	{
-		static VkDescriptorSetLayout descSetLayout = VK_NULL_HANDLE;
-		if (!descSetLayout)
+		// Descriptor set layout
 		{
 			VkDescriptorSetLayoutBinding binding[1] = {};
 			binding[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -379,21 +343,24 @@ namespace At0::Ray
 			info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 			info.bindingCount = 1;
 			info.pBindings = binding;
-			RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(m_InitInfo->Device, &info,
-									m_InitInfo->Allocator, &descSetLayout),
-				"[ImGUI] Failed to create descriptor set layout");
+			RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(), &info,
+									nullptr, &m_TextureDescriptorSetLayout),
+				"[ImGUI] Failed to create descriptor set layout for texture upload");
 		}
+	}
 
-		VkDescriptorSet descriptorSet;
-		// Create Descriptor Set:
+	void* ImGUI::AddTexture(Ref<Texture2D> texture)
+	{
+		// Descriptor set
 		{
+			m_TextureDescriptorSets.emplace_back();
 			VkDescriptorSetAllocateInfo allocInfo = {};
 			allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-			allocInfo.descriptorPool = m_InitInfo->DescriptorPool;
+			allocInfo.descriptorPool = m_Pipeline->GetDescriptorPool();
 			allocInfo.descriptorSetCount = 1;
-			allocInfo.pSetLayouts = &descSetLayout;
-			RAY_VK_THROW_FAILED(
-				vkAllocateDescriptorSets(m_InitInfo->Device, &allocInfo, &descriptorSet),
+			allocInfo.pSetLayouts = &m_TextureDescriptorSetLayout;
+			RAY_VK_THROW_FAILED(vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo,
+									&m_TextureDescriptorSets.back()),
 				"[ImGUI] Failed to create texture descriptor set");
 		}
 
@@ -405,14 +372,14 @@ namespace At0::Ray
 			descImage[0].imageLayout = texture->GetImageLayout();
 			VkWriteDescriptorSet writeDesc[1] = {};
 			writeDesc[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			writeDesc[0].dstSet = descriptorSet;
+			writeDesc[0].dstSet = m_TextureDescriptorSets.back();
 			writeDesc[0].descriptorCount = 1;
 			writeDesc[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 			writeDesc[0].pImageInfo = descImage;
-			vkUpdateDescriptorSets(m_InitInfo->Device, 1, writeDesc, 0, NULL);
+			vkUpdateDescriptorSets(Graphics::Get().GetDevice(), 1, writeDesc, 0, NULL);
 		}
 
-		return (ImTextureID)descriptorSet;
+		return (ImTextureID)m_TextureDescriptorSets.back();
 	}
 
 	void ImGUI::OnEvent(FramebufferResizedEvent& e)

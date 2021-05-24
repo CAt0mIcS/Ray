@@ -6,7 +6,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
+// clang-format off
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
@@ -18,8 +18,6 @@
 #include "../Events/RMouseEvents.h"
 #include "../Events/REngineEvents.h"
 // clang-format on
-
-struct ImGui_ImplVulkan_InitInfo;
 
 
 namespace At0::Ray
@@ -79,6 +77,7 @@ namespace At0::Ray
 
 		void InitResources();
 		void CreatePipeline();
+		void CreateTextureUploadResources();
 		void* AddTexture(Ref<Texture2D> texture);
 
 		void OnEvent(FramebufferResizedEvent& e) override;
@@ -102,6 +101,9 @@ namespace At0::Ray
 		Scope<Sampler2DUniform> m_FontUniform;
 		Scope<DescriptorSet> m_FontDescriptor;
 
+		VkDescriptorSetLayout m_TextureDescriptorSetLayout;
+		std::vector<VkDescriptorSet> m_TextureDescriptorSets;
+
 		Scope<Buffer> m_VertexBuffer;
 		Scope<Buffer> m_IndexBuffer;
 		void* m_VertexBufferMapped = nullptr;
@@ -112,7 +114,7 @@ namespace At0::Ray
 
 		std::vector<std::function<void()>> m_NewFrameFunctions;
 
-		ImGui_ImplVulkan_InitInfo* m_InitInfo;
+		Ref<Texture2D> m_TestTexture;
 	};
 }  // namespace At0::Ray
 
