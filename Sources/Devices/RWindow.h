@@ -78,6 +78,11 @@ namespace At0::Ray
 		 */
 		void DisableCursor() const;
 
+		/**
+		 * @returns If the window is minimzed
+		 */
+		bool Minimized() const;
+
 		/*
 		 * Polls events and updates everything
 		 * @returns If the window should stay open

@@ -56,6 +56,8 @@ namespace At0::Ray
 		glfwSetInputMode(m_hWnd, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 
+	bool Window::Minimized() const { return glfwGetWindowAttrib(m_hWnd, GLFW_ICONIFIED) != 0; }
+
 	bool Window::Update()
 	{
 		glfwPollEvents();
