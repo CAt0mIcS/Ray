@@ -8,6 +8,8 @@
 #include "Devices/RMouse.h"
 
 #include "Graphics/RGraphics.h"
+#include "Graphics/Core/RVulkanInstance.h"
+#include "Graphics/Core/RSurface.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
@@ -27,6 +29,7 @@
 #include <../../Extern/imgui/imgui.h>
 #include <../../Extern/imgui/imgui_internal.h>
 #include <../../Extern/imgui/imgui_impl_glfw.h>
+#include <../../Extern/imgui/imgui_impl_vulkan.h>
 
 #ifdef _WIN32
 	#define GLFW_EXPOSE_NATIVE_WIN32
@@ -53,7 +56,13 @@ namespace At0::Ray
 		return *s_Instance;
 	}
 
-	ImGUI::~ImGUI() { ImGui::DestroyContext(); }
+	VkDescriptorPool descPool;
+	ImGUI::~ImGUI()
+	{
+		ImGui::DestroyContext();
+		vkDestroyDescriptorPool(Graphics::Get().GetDevice(), descPool, nullptr);
+		delete m_InitInfo;
+	}
 
 	ImGUI::ImGUI()
 	{
@@ -75,7 +84,45 @@ namespace At0::Ray
 			ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
+		// Create Descriptor Pool
+		{
+			VkDescriptorPoolSize pool_sizes[] = { { VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
+				{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
+				{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
+				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
+				{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 } };
+			VkDescriptorPoolCreateInfo descPoolInfo = {};
+			descPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+			descPoolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+			descPoolInfo.maxSets = 1000 * IM_ARRAYSIZE(pool_sizes);
+			descPoolInfo.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
+			descPoolInfo.pPoolSizes = pool_sizes;
+			RAY_VK_THROW_FAILED(vkCreateDescriptorPool(
+									Graphics::Get().GetDevice(), &descPoolInfo, nullptr, &descPool),
+				"[ImGUI] Failed to create descriptor pool");
+		}
+
 		ImGui_ImplGlfw_InitForVulkan(Window::Get().GetNative(), false);
+		m_InitInfo = new ImGui_ImplVulkan_InitInfo();
+		m_InitInfo->Instance = Graphics::Get().GetInstance();
+		m_InitInfo->PhysicalDevice = Graphics::Get().GetPhysicalDevice();
+		m_InitInfo->Device = Graphics::Get().GetDevice();
+		m_InitInfo->QueueFamily = Graphics::Get().GetDevice().GetGraphicsFamily();
+		m_InitInfo->Queue = Graphics::Get().GetDevice().GetGraphicsQueue();
+		m_InitInfo->PipelineCache = Graphics::Get().GetPipelineCache();
+		m_InitInfo->DescriptorPool = descPool;
+		m_InitInfo->Allocator = nullptr;
+		m_InitInfo->MinImageCount = 2;
+		m_InitInfo->ImageCount = Graphics::Get().GetImageCount();
+		m_InitInfo->CheckVkResultFn = [](VkResult err) {
+			RAY_VK_THROW_FAILED(err, "[ImGUI] Vulkan error");
+		};
 
 		InitResources();
 	}
@@ -106,9 +153,17 @@ namespace At0::Ray
 		CreatePipeline();
 	}
 
+	Ref<Texture2D> texture;
 	void ImGUI::NewFrame()
 	{
+		if (!texture)
+			texture = MakeRef<Texture2D>("Resources/Textures/gridbase.png");
+
 		ImGui::NewFrame();
+
+		ImGui::Begin("Image");
+		ImGui::Image(AddTexture(texture), ImVec2{ 256.0f, 256.0f });
+		ImGui::End();
 
 	#if RAY_ENABLE_IMGUI_DOCKSPACE
 		static bool dockspaceOpen = true;
@@ -309,6 +364,55 @@ namespace At0::Ray
 
 		m_FontUniform = MakeScope<Sampler2DUniform>("ImGuiFonts", std::move(m_FontImage), 0);
 		m_FontDescriptor->BindUniform(*m_FontUniform);
+	}
+
+	void* ImGUI::AddTexture(Ref<Texture2D> texture)
+	{
+		static VkDescriptorSetLayout descSetLayout = VK_NULL_HANDLE;
+		if (!descSetLayout)
+		{
+			VkDescriptorSetLayoutBinding binding[1] = {};
+			binding[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			binding[0].descriptorCount = 1;
+			binding[0].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+			VkDescriptorSetLayoutCreateInfo info = {};
+			info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+			info.bindingCount = 1;
+			info.pBindings = binding;
+			RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(m_InitInfo->Device, &info,
+									m_InitInfo->Allocator, &descSetLayout),
+				"[ImGUI] Failed to create descriptor set layout");
+		}
+
+		VkDescriptorSet descriptorSet;
+		// Create Descriptor Set:
+		{
+			VkDescriptorSetAllocateInfo allocInfo = {};
+			allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+			allocInfo.descriptorPool = m_InitInfo->DescriptorPool;
+			allocInfo.descriptorSetCount = 1;
+			allocInfo.pSetLayouts = &descSetLayout;
+			RAY_VK_THROW_FAILED(
+				vkAllocateDescriptorSets(m_InitInfo->Device, &allocInfo, &descriptorSet),
+				"[ImGUI] Failed to create texture descriptor set");
+		}
+
+		// Update the Descriptor Set:
+		{
+			VkDescriptorImageInfo descImage[1] = {};
+			descImage[0].sampler = texture->GetSampler();
+			descImage[0].imageView = texture->GetImageView();
+			descImage[0].imageLayout = texture->GetImageLayout();
+			VkWriteDescriptorSet writeDesc[1] = {};
+			writeDesc[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			writeDesc[0].dstSet = descriptorSet;
+			writeDesc[0].descriptorCount = 1;
+			writeDesc[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			writeDesc[0].pImageInfo = descImage;
+			vkUpdateDescriptorSets(m_InitInfo->Device, 1, writeDesc, 0, NULL);
+		}
+
+		return (ImTextureID)descriptorSet;
 	}
 
 	void ImGUI::OnEvent(FramebufferResizedEvent& e)

@@ -1,12 +1,12 @@
 ﻿#pragma once
 
 #define RAY_ENABLE_IMGUI 1
-#define RAY_ENABLE_IMGUI_DOCKSPACE 1
+#define RAY_ENABLE_IMGUI_DOCKSPACE 0
 
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
@@ -19,7 +19,7 @@
 #include "../Events/REngineEvents.h"
 // clang-format on
 
-struct ImGui_ImplVulkanH_Window;
+struct ImGui_ImplVulkan_InitInfo;
 
 
 namespace At0::Ray
@@ -66,8 +66,6 @@ namespace At0::Ray
 		void CmdBind(const CommandBuffer& cmdBuff);
 		void Update(Delta dt);
 
-		ImGui_ImplVulkanH_Window* GetWindowData() const { return m_WindowData; }
-
 		template<typename F>
 		void RegisterNewFrameFunction(F&& func)
 		{
@@ -81,6 +79,7 @@ namespace At0::Ray
 
 		void InitResources();
 		void CreatePipeline();
+		void* AddTexture(Ref<Texture2D> texture);
 
 		void OnEvent(FramebufferResizedEvent& e) override;
 		void OnEvent(MouseMovedEvent& e) override;
@@ -113,7 +112,7 @@ namespace At0::Ray
 
 		std::vector<std::function<void()>> m_NewFrameFunctions;
 
-		ImGui_ImplVulkanH_Window* m_WindowData;
+		ImGui_ImplVulkan_InitInfo* m_InitInfo;
 	};
 }  // namespace At0::Ray
 
