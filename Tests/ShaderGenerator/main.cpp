@@ -247,7 +247,7 @@ int main()
 #ifdef NDEBUG
 	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
 #else
-	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
+	Ray::Log::SetLogLevel(Violent::LogLevel::Trace);
 #endif
 
 	try

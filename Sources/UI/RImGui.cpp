@@ -3,11 +3,14 @@
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
 #include "Graphics/RGraphics.h"
+#include "Graphics/Core/RSurface.h"
+#include "Graphics/Core/RSwapchain.h"
+#include "Graphics/Core/RVulkanInstance.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
@@ -27,6 +30,7 @@
 #include <../../Extern/imgui/imgui.h>
 #include <../../Extern/imgui/imgui_internal.h>
 #include <../../Extern/imgui/imgui_impl_glfw.h>
+#include <../../Extern/imgui/imgui_impl_vulkan.h>
 
 #ifdef _WIN32
 	#define GLFW_EXPOSE_NATIVE_WIN32
@@ -53,10 +57,40 @@ namespace At0::Ray
 		return *s_Instance;
 	}
 
-	ImGUI::~ImGUI() { ImGui::DestroyContext(); }
+	ImGUI::~ImGUI()
+	{
+		ImGui::DestroyContext();
+		delete m_WindowData;
+	}
+
+	static void CheckVkResult(VkResult err) { RAY_VK_THROW_FAILED(err, "[ImGui] Vulkan Error"); }
 
 	ImGUI::ImGUI()
 	{
+		m_WindowData = new ImGui_ImplVulkanH_Window();
+		memset(m_WindowData, 0, sizeof(ImGui_ImplVulkanH_Window));
+		m_WindowData->Surface = Graphics::Get().GetSurface();
+		m_WindowData->Swapchain = Graphics::Get().GetSwapchain();
+
+		// Select Surface Format
+		const VkFormat requestSurfaceImageFormat[] = { VK_FORMAT_B8G8R8A8_UNORM,
+			VK_FORMAT_R8G8B8A8_UNORM, VK_FORMAT_B8G8R8_UNORM, VK_FORMAT_R8G8B8_UNORM };
+		const VkColorSpaceKHR requestSurfaceColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
+		m_WindowData->SurfaceFormat = ImGui_ImplVulkanH_SelectSurfaceFormat(
+			Graphics::Get().GetPhysicalDevice(), m_WindowData->Surface, requestSurfaceImageFormat,
+			(size_t)IM_ARRAYSIZE(requestSurfaceImageFormat), requestSurfaceColorSpace);
+
+		VkPresentModeKHR present_modes[] = { VK_PRESENT_MODE_MAILBOX_KHR,
+			VK_PRESENT_MODE_IMMEDIATE_KHR, VK_PRESENT_MODE_FIFO_KHR };
+		m_WindowData->PresentMode =
+			ImGui_ImplVulkanH_SelectPresentMode(Graphics::Get().GetPhysicalDevice(),
+				m_WindowData->Surface, &present_modes[0], IM_ARRAYSIZE(present_modes));
+		// ImGui_ImplVulkanH_CreateOrResizeWindow(Graphics::Get().GetInstance(),
+		//	Graphics::Get().GetPhysicalDevice(), Graphics::Get().GetDevice(), m_WindowData,
+		//	Graphics::Get().GetDevice().GetGraphicsFamily(), nullptr,
+		//	Window::Get().GetFramebufferSize().x, Window::Get().GetFramebufferSize().y, 2);
+
+
 		ImGui::CreateContext();
 
 		ImGuiIO& io = ImGui::GetIO();
@@ -77,7 +111,41 @@ namespace At0::Ray
 
 		ImGui_ImplGlfw_InitForVulkan(Window::Get().GetNative(), false);
 
-		MapKeySpace();
+		VkDescriptorPool descriptorPool;
+		VkDescriptorPoolSize pool_sizes[] = { { VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 }, { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
+			{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
+			{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
+			{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
+			{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 } };
+		VkDescriptorPoolCreateInfo pool_info = {};
+		pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+		pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+		pool_info.maxSets = 1000 * IM_ARRAYSIZE(pool_sizes);
+		pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
+		pool_info.pPoolSizes = pool_sizes;
+		CheckVkResult(vkCreateDescriptorPool(
+			Graphics::Get().GetDevice(), &pool_info, nullptr, &descriptorPool));
+
+		ImGui_ImplVulkan_InitInfo vulkanInfo{};
+		vulkanInfo.Instance = Graphics::Get().GetInstance();
+		vulkanInfo.PhysicalDevice = Graphics::Get().GetPhysicalDevice();
+		vulkanInfo.Device = Graphics::Get().GetDevice();
+		vulkanInfo.QueueFamily = Graphics::Get().GetDevice().GetGraphicsFamily();
+		vulkanInfo.Queue = Graphics::Get().GetDevice().GetGraphicsQueue();
+		vulkanInfo.PipelineCache = Graphics::Get().GetPipelineCache();
+		vulkanInfo.DescriptorPool = descriptorPool;
+		vulkanInfo.Allocator = nullptr;
+		vulkanInfo.MinImageCount = 2;
+		vulkanInfo.ImageCount = Graphics::GetImageCount();
+		vulkanInfo.CheckVkResultFn = CheckVkResult;
+
+		ImGui_ImplVulkan_Init(&vulkanInfo, Graphics::Get().GetRenderPass());
+
 		InitResources();
 	}
 
@@ -109,6 +177,8 @@ namespace At0::Ray
 
 	void ImGUI::NewFrame()
 	{
+		ImGui_ImplVulkan_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
 		for (const auto& fn : m_NewFrameFunctions)
@@ -183,51 +253,23 @@ namespace At0::Ray
 	void ImGUI::CmdBind(const CommandBuffer& cmdBuff)
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		m_Pipeline->CmdBind(cmdBuff);
-		m_FontDescriptor->CmdBind(cmdBuff);
-
-		VkViewport viewport{};
-		viewport.width = io.DisplaySize.x;
-		viewport.height = io.DisplaySize.y;
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(cmdBuff, 0, 1, &viewport);
-
-		// UI scale and translate via push constants
-		m_PushConstBlock.scale = Float2(2.0f / io.DisplaySize.x, 2.0f / io.DisplaySize.y);
-		m_PushConstBlock.translate = Float2(-1.0f);
-		vkCmdPushConstants(cmdBuff, m_Pipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0,
-			sizeof(PushConstBlock), &m_PushConstBlock);
-
-		// Render commands
-		ImDrawData* imDrawData = ImGui::GetDrawData();
-		int32_t vertexOffset = 0;
-		int32_t indexOffset = 0;
-
-		if (imDrawData->CmdListsCount > 0)
+		ImDrawData* drawData = ImGui::GetDrawData();
+		const bool windowMinimized =
+			(drawData->DisplaySize.x <= 0.0f || drawData->DisplaySize.y <= 0.0f);
+		m_WindowData->ClearValue.color.float32[0] = 0.0f;
+		m_WindowData->ClearValue.color.float32[1] = 0.0f;
+		m_WindowData->ClearValue.color.float32[2] = 0.0f;
+		m_WindowData->ClearValue.color.float32[3] = 1.0f;
+		if (!windowMinimized)
 		{
-			VkDeviceSize offsets[1] = { 0 };
-			VkBuffer vBuff = *m_VertexBuffer;
-			vkCmdBindVertexBuffers(cmdBuff, 0, 1, &vBuff, offsets);
-			vkCmdBindIndexBuffer(cmdBuff, *m_IndexBuffer, 0, VK_INDEX_TYPE_UINT16);
+			ImGui_ImplVulkan_RenderDrawData(drawData, cmdBuff);
+		}
 
-			for (int32_t i = 0; i < imDrawData->CmdListsCount; i++)
-			{
-				const ImDrawList* cmd_list = imDrawData->CmdLists[i];
-				for (int32_t j = 0; j < cmd_list->CmdBuffer.Size; j++)
-				{
-					const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[j];
-					VkRect2D scissorRect;
-					scissorRect.offset.x = std::max((int32_t)(pcmd->ClipRect.x), 0);
-					scissorRect.offset.y = std::max((int32_t)(pcmd->ClipRect.y), 0);
-					scissorRect.extent.width = (uint32_t)(pcmd->ClipRect.z - pcmd->ClipRect.x);
-					scissorRect.extent.height = (uint32_t)(pcmd->ClipRect.w - pcmd->ClipRect.y);
-					vkCmdSetScissor(cmdBuff, 0, 1, &scissorRect);
-					vkCmdDrawIndexed(cmdBuff, pcmd->ElemCount, 1, indexOffset, vertexOffset, 0);
-					indexOffset += pcmd->ElemCount;
-				}
-				vertexOffset += cmd_list->VtxBuffer.Size;
-			}
+		// Update and Render additional Platform Windows
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
 		}
 	}
 
@@ -280,32 +322,6 @@ namespace At0::Ray
 
 		m_FontUniform = MakeScope<Sampler2DUniform>("ImGuiFonts", std::move(m_FontImage), 0);
 		m_FontDescriptor->BindUniform(*m_FontUniform);
-	}
-
-	void ImGUI::MapKeySpace()
-	{
-		// ImGuiIO& io = ImGui::GetIO();
-		// io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
-		// io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
-		// io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
-		// io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
-		// io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
-		// io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
-		// io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
-		// io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
-		// io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
-		// io.KeyMap[ImGuiKey_Insert] = GLFW_KEY_INSERT;
-		// io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
-		// io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
-		// io.KeyMap[ImGuiKey_Space] = GLFW_KEY_SPACE;
-		// io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
-		// io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
-		// io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
-		// io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
-		// io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
-		// io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
-		// io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
-		// io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
 	}
 
 	void ImGUI::OnEvent(FramebufferResizedEvent& e)

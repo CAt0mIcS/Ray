@@ -248,6 +248,7 @@ set(SRC
 	"../Extern/imgui/imgui_widgets.cpp"
 	"../Extern/imgui/imgui_tables.cpp"
 	"../Extern/imgui/imgui_impl_glfw.cpp"
+	"../Extern/imgui/imgui_impl_vulkan.cpp"
 )
 
 # ------------------------------------------------------------------

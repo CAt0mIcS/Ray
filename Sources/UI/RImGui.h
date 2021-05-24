@@ -5,7 +5,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
+// clang-format off
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
@@ -17,6 +17,8 @@
 #include "../Events/RMouseEvents.h"
 #include "../Events/REngineEvents.h"
 // clang-format on
+
+struct ImGui_ImplVulkanH_Window;
 
 
 namespace At0::Ray
@@ -63,6 +65,8 @@ namespace At0::Ray
 		void CmdBind(const CommandBuffer& cmdBuff);
 		void Update(Delta dt);
 
+		ImGui_ImplVulkanH_Window* GetWindowData() const { return m_WindowData; }
+
 		template<typename F>
 		void RegisterNewFrameFunction(F&& func)
 		{
@@ -76,7 +80,6 @@ namespace At0::Ray
 
 		void InitResources();
 		void CreatePipeline();
-		void MapKeySpace();
 
 		void OnEvent(FramebufferResizedEvent& e) override;
 		void OnEvent(MouseMovedEvent& e) override;
@@ -108,6 +111,8 @@ namespace At0::Ray
 		int32_t m_IndexCount = 0;
 
 		std::vector<std::function<void()>> m_NewFrameFunctions;
+
+		ImGui_ImplVulkanH_Window* m_WindowData;
 	};
 }  // namespace At0::Ray
 

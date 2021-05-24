@@ -44,6 +44,7 @@ namespace At0::Ray
 		const CommandPool& GetCommandPool() const { return *m_CommandPool; }
 		const RenderPass& GetRenderPass() const { return *m_RenderPass; }
 		VkPipelineCache GetPipelineCache() const { return m_PipelineCache; }
+		static uint32_t GetImageCount() { return s_MaxFramesInFlight; }
 
 		/**
 		 * Acquires the next frame for rendering and presentation
