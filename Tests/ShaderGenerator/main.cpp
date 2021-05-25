@@ -111,6 +111,21 @@ public:
 			}
 		});
 
+		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+			{
+				ImGui::Begin("ColorPicker");
+
+				float col[4] = { m_Color.x, m_Color.y, m_Color.z, m_Color.w };
+				ImGui::ColorPicker4("TextureColor", col);
+				m_Color.x = col[0];
+				m_Color.y = col[1];
+				m_Color.z = col[2];
+				m_Color.w = col[3];
+
+				ImGui::End();
+			}
+		});
+
 		m_Texture = Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png");
 
 		// Vertex Shader
