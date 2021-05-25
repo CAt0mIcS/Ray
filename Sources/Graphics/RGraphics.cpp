@@ -55,6 +55,7 @@ namespace At0::Ray
 		CreateVulkanObjects();
 	}
 
+	std::array<VkSampler, 3> swapchainSamplers;
 	void Graphics::CreateVulkanObjects()
 	{
 		m_VulkanInstance = MakeScope<VulkanInstance>();
@@ -62,7 +63,9 @@ namespace At0::Ray
 		m_Surface = MakeScope<Surface>();
 		m_LogicalDevice = MakeScope<LogicalDevice>();
 
-		m_Swapchain = MakeScope<Swapchain>();
+		// RAY_TODO: Sampled swapchain only for rendering in ImGui window
+		m_Swapchain = MakeScope<Swapchain>(VkSwapchainKHR{ VK_NULL_HANDLE },
+			VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
 		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 
 		m_DepthImage = MakeScope<DepthImage>(
@@ -76,6 +79,32 @@ namespace At0::Ray
 		BufferSynchronizer::Create();
 
 		CreateSyncObjects();
+
+		for (VkSampler& sampler : swapchainSamplers)
+		{
+			VkSamplerCreateInfo createInfo{};
+			createInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+			createInfo.magFilter = VK_FILTER_LINEAR;
+			createInfo.minFilter = VK_FILTER_LINEAR;
+
+			createInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+			createInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+			createInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+			createInfo.anisotropyEnable = VK_FALSE;
+
+			createInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+			createInfo.unnormalizedCoordinates = VK_FALSE;
+			createInfo.compareEnable = VK_FALSE;
+			createInfo.compareOp = VK_COMPARE_OP_ALWAYS;
+
+			createInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+			createInfo.mipLodBias = 0.0f;
+			createInfo.minLod = 0.0f;
+			createInfo.maxLod = 1.0f;
+
+			RAY_VK_THROW_FAILED(vkCreateSampler(GetDevice(), &createInfo, nullptr, &sampler),
+				"[Graphics::Sampler] Failed to create");
+		}
 	}
 
 	Graphics& Graphics::Get()
@@ -210,9 +239,11 @@ namespace At0::Ray
 		clearValues.emplace_back(depthStencilClearColor);
 
 #if RAY_ENABLE_IMGUI
-		ImGUI::Get().NewFrame([this]() {
-			ImGui::Begin("Sceen");
-			// ImGui::Image(Ray::ImGUI::Get().PushTexture(), ImVec2{ 512.0f, 512.0f });
+		ImGUI::Get().NewFrame([this, imageIndex]() {
+			ImGui::Begin("Scene");
+			ImGui::Image(Ray::ImGUI::Get().PushTexture(swapchainSamplers[imageIndex],
+							 *m_Swapchain->GetImageViews()[imageIndex], VK_IMAGE_LAYOUT_GENERAL),
+				ImVec2{ 512.0f, 512.0f });
 			ImGui::End();
 		});
 		ImGUI::Get().UpdateBuffers();
@@ -397,7 +428,9 @@ namespace At0::Ray
 		m_RenderPass.reset();
 		m_DepthImage.reset();
 
-		m_Swapchain = MakeScope<Swapchain>((VkSwapchainKHR)*m_Swapchain);
+		// RAY_TODO: Sampled swapchain only for rendering in ImGui window
+		m_Swapchain = MakeScope<Swapchain>((VkSwapchainKHR)*m_Swapchain,
+			VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
 		m_CommandPool.reset();
 
 		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);

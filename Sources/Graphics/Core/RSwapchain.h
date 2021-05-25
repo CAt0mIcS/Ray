@@ -21,7 +21,8 @@ namespace At0::Ray
 		};
 
 	public:
-		Swapchain(VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE);
+		Swapchain(VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE,
+			VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
 		~Swapchain();
 
 		SupportDetails QuerySwapchainSupport() const;

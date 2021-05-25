@@ -15,7 +15,7 @@
 
 namespace At0::Ray
 {
-	Swapchain::Swapchain(VkSwapchainKHR oldSwapchain)
+	Swapchain::Swapchain(VkSwapchainKHR oldSwapchain, VkImageUsageFlags imageUsage)
 	{
 		SupportDetails supportDetails = QuerySwapchainSupport();
 		VkSurfaceFormatKHR surfaceFormat = ChooseSurfaceFormat(supportDetails.Formats);
@@ -41,7 +41,7 @@ namespace At0::Ray
 		createInfo.imageColorSpace = surfaceFormat.colorSpace;
 		createInfo.imageExtent = m_Extent;
 		createInfo.imageArrayLayers = 1;
-		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+		createInfo.imageUsage = imageUsage;
 
 		// Queue families
 		uint32_t queueFamilyIndices[] = { Graphics::Get().GetDevice().GetGraphicsFamily(),
