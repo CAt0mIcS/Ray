@@ -34,6 +34,9 @@
 
 #include "UI/RImGui.h"
 
+// RAY_TEMPORARY
+#include <imgui/imgui.h>
+
 
 namespace At0::Ray
 {
@@ -193,7 +196,8 @@ namespace At0::Ray
 		}
 	}
 
-	void Graphics::RecordCommandBuffer(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer)
+	void Graphics::RecordCommandBuffer(
+		const CommandBuffer& cmdBuff, const Framebuffer& framebuffer, uint32_t imageIndex)
 	{
 		cmdBuff.Begin();
 
@@ -206,7 +210,11 @@ namespace At0::Ray
 		clearValues.emplace_back(depthStencilClearColor);
 
 #if RAY_ENABLE_IMGUI
-		ImGUI::Get().NewFrame();
+		ImGUI::Get().NewFrame([this]() {
+			ImGui::Begin("Sceen");
+			// ImGui::Image(Ray::ImGUI::Get().PushTexture(), ImVec2{ 512.0f, 512.0f });
+			ImGui::End();
+		});
 		ImGUI::Get().UpdateBuffers();
 #endif
 
@@ -274,7 +282,7 @@ namespace At0::Ray
 		submitInfo.commandBufferCount = 1;
 
 		// RAY_TODO: Multithreaded command buffer rerecording
-		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex]);
+		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex], imageIndex);
 
 		VkCommandBuffer commandBuffer = *m_CommandBuffers[imageIndex];
 		submitInfo.pCommandBuffers = &commandBuffer;
@@ -401,7 +409,7 @@ namespace At0::Ray
 		CreateFramebuffers();
 		CreateCommandBuffers();
 		for (uint32_t i = 0; i < m_CommandBuffers.size(); ++i)
-			RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i]);
+			RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i], i);
 
 		size = Window::Get().GetFramebufferSize();
 		Scene::Get().GetCamera().UpdateAspectRatio((float)size.x / (float)size.y);

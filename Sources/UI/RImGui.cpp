@@ -114,7 +114,7 @@ namespace At0::Ray
 		CreateTextureUploadResources();
 	}
 
-	void ImGUI::NewFrame()
+	void ImGUI::NewFrame(std::function<void()> fn)
 	{
 		ImGui::NewFrame();
 
@@ -144,8 +144,9 @@ namespace At0::Ray
 		}
 	#endif
 
-		for (const auto& fn : m_NewFrameFunctions)
-			fn();
+		fn();
+		for (const auto& func : m_NewFrameFunctions)
+			func();
 
 	#if RAY_ENABLE_IMGUI_DOCKSPACE
 		ImGui::End();
@@ -348,9 +349,18 @@ namespace At0::Ray
 
 	void* ImGUI::PushTexture(Ref<Texture2D> texture)
 	{
-		RAY_MEXPECTS(std::find(m_Textures.begin(), m_Textures.end(), texture) != m_Textures.end(),
-			"[ImGUI] Trying to push texture that was not added using ImGUI::StoreTexture");
+	#ifndef NDEBUG
+		if (std::find(m_Textures.begin(), m_Textures.end(), texture) == m_Textures.end())
+			Log::Warn(
+				"[ImGUI] Trying to push texture that was not added using ImGUI::StoreTexture");
+	#endif
 
+		return PushTexture(
+			texture->GetSampler(), texture->GetImageView(), texture->GetImageLayout());
+	}
+
+	void* ImGUI::PushTexture(VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout)
+	{
 		// Descriptor set
 		{
 			m_TextureDescriptorSets.emplace_back();
@@ -367,9 +377,9 @@ namespace At0::Ray
 		// Update the Descriptor Set:
 		{
 			VkDescriptorImageInfo descImage[1] = {};
-			descImage[0].sampler = texture->GetSampler();
-			descImage[0].imageView = texture->GetImageView();
-			descImage[0].imageLayout = texture->GetImageLayout();
+			descImage[0].sampler = sampler;
+			descImage[0].imageView = imageView;
+			descImage[0].imageLayout = imageLayout;
 			VkWriteDescriptorSet writeDesc[1] = {};
 			writeDesc[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			writeDesc[0].dstSet = m_TextureDescriptorSets.back();

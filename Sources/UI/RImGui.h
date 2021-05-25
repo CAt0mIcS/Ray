@@ -21,6 +21,8 @@
 #include "../Events/RKeyboardEvents.h"
 #include "../Events/RMouseEvents.h"
 #include "../Events/REngineEvents.h"
+
+#include <functional>
 // clang-format on
 
 
@@ -63,7 +65,7 @@ namespace At0::Ray
 		static void Destroy() { s_Instance.reset(); }
 		~ImGUI();
 
-		void NewFrame();
+		void NewFrame(std::function<void()> fn = []() {});
 		void UpdateBuffers();
 		void CmdBind(const CommandBuffer& cmdBuff);
 		void Update(Delta dt);
@@ -76,6 +78,7 @@ namespace At0::Ray
 
 		static void Float3Widget(std::string_view title, Float3& data);
 		void* PushTexture(Ref<Texture2D> texture);
+		void* PushTexture(VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout);
 		Ref<Texture2D> StoreTexture(Ref<Texture2D> tex) { return m_Textures.emplace_back(tex); }
 
 	private:

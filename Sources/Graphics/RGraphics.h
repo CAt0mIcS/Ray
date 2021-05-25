@@ -66,7 +66,8 @@ namespace At0::Ray
 		void CreatePipelineCache();
 		void CreateSyncObjects();
 		void CreateCommandBuffers();
-		void RecordCommandBuffer(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer);
+		void RecordCommandBuffer(
+			const CommandBuffer& cmdBuff, const Framebuffer& framebuffer, uint32_t imageIndex);
 
 		void OnEvent(FramebufferResizedEvent& e) override;
 		void OnFramebufferResized();
