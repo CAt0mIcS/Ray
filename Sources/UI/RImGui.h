@@ -1,7 +1,11 @@
 ﻿#pragma once
 
-#define RAY_ENABLE_IMGUI 1
-#define RAY_ENABLE_IMGUI_DOCKSPACE 0
+#ifndef RAY_ENABLE_IMGUI
+	#define RAY_ENABLE_IMGUI 1
+#endif
+#ifndef RAY_ENABLE_IMGUI_DOCKSPACE
+	#define RAY_ENABLE_IMGUI_DOCKSPACE 0
+#endif
 
 
 #if RAY_ENABLE_IMGUI

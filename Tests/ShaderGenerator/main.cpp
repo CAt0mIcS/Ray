@@ -205,12 +205,21 @@ private:
 		auto uvInput = MakeRef<InputNode>("vec2", "inUV");
 		auto textureNode = MakeRef<Texture2DNode>(m_Texture);
 		auto samplerNode = MakeRef<Sampler2DNode>();
+		auto colorInputNode = MakeRef<Vector4Node>();
+		colorInputNode->Connect(MakeRef<FloatNode>(1.0f), FloatNode::Result, Vector4Node::R);
+		colorInputNode->Connect(MakeRef<FloatNode>(1.0f), FloatNode::Result, Vector4Node::G);
+		colorInputNode->Connect(MakeRef<FloatNode>(0.0f), FloatNode::Result, Vector4Node::B);
+		colorInputNode->Connect(MakeRef<FloatNode>(1.0f), FloatNode::Result, Vector4Node::A);
 
 		samplerNode->Connect(textureNode, Texture2DNode::Output, Sampler2DNode::Texture);
 		samplerNode->Connect(uvInput, InputNode::Result, Sampler2DNode::UV);
 
+		auto multiplyNode = MakeRef<MultiplyNode>();
+		multiplyNode->Connect(samplerNode, Sampler2DNode::Result, MultiplyNode::Left);
+		multiplyNode->Connect(colorInputNode, Vector4Node::Result, MultiplyNode::Right);
+
 		auto outColorNode = MakeRef<OutputNode>("vec4", "outColor");
-		outColorNode->Connect(samplerNode, Sampler2DNode::Result, OutputNode::Input);
+		outColorNode->Connect(multiplyNode, MultiplyNode::Result, OutputNode::Input);
 
 		WriteToFile(generator.GenerateFragmentShader({ outColorNode }), "FragmentShader.frag");
 
@@ -222,6 +231,7 @@ private:
 private:
 	Ray::Entity m_Entity;
 	Ray::Ref<Ray::Texture2D> m_Texture;
+	Ray::Float3 m_Color;
 };
 
 

@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
+// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
