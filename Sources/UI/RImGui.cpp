@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -221,7 +221,6 @@ namespace At0::Ray
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		m_Pipeline->CmdBind(cmdBuff);
-		m_FontDescriptor->CmdBind(cmdBuff);
 
 		VkViewport viewport{};
 		viewport.width = io.DisplaySize.x;
@@ -260,10 +259,10 @@ namespace At0::Ray
 					scissorRect.extent.width = (uint32_t)(pcmd->ClipRect.z - pcmd->ClipRect.x);
 					scissorRect.extent.height = (uint32_t)(pcmd->ClipRect.w - pcmd->ClipRect.y);
 
-					VkDescriptorSet texDescSet = (VkDescriptorSet)pcmd->TextureId;
-					if (texDescSet)
-						vkCmdBindDescriptorSets(cmdBuff, VK_PIPELINE_BIND_POINT_GRAPHICS,
-							m_Pipeline->GetLayout(), 0, 1, &texDescSet, 0, nullptr);
+					// Bind descriptorset with font or user texture
+					VkDescriptorSet descSet[1] = { (VkDescriptorSet)pcmd->TextureId };
+					vkCmdBindDescriptorSets(cmdBuff, VK_PIPELINE_BIND_POINT_GRAPHICS,
+						m_Pipeline->GetLayout(), 0, 1, descSet, 0, nullptr);
 
 					vkCmdSetScissor(cmdBuff, 0, 1, &scissorRect);
 					vkCmdDrawIndexed(cmdBuff, pcmd->ElemCount, 1, indexOffset, vertexOffset, 0);
@@ -323,6 +322,10 @@ namespace At0::Ray
 
 		m_FontUniform = MakeScope<Sampler2DUniform>("ImGuiFonts", std::move(m_FontImage), 0);
 		m_FontDescriptor->BindUniform(*m_FontUniform);
+
+		// Set font id for default font to the descriptor set which should be bound when rendering
+		ImGuiIO& io = ImGui::GetIO();
+		io.Fonts[0].SetTexID((ImTextureID)*m_FontDescriptor);
 	}
 
 	void ImGUI::CreateTextureUploadResources()
