@@ -34,6 +34,7 @@
 #include <ShaderGraph/Nodes/RVertexOutputNode.h>
 #include <ShaderGraph/Nodes/RSampler2DNode.h>
 #include <ShaderGraph/Nodes/RTexture2DNode.h>
+#include <ShaderGraph/Nodes/RPropertyNode.h>
 
 
 using namespace At0;
@@ -141,7 +142,10 @@ public:
 	}
 
 private:
-	void Update() override {}
+	void Update() override
+	{
+		m_Entity.Get<Ray::MeshRenderer>().GetBufferUniform("Shading")["color"] = m_Color;
+	}
 
 	std::vector<Ray::Ref<Ray::Node>> GenerateVertexShader(Ray::ShaderGenerator& generator)
 	{
@@ -205,18 +209,14 @@ private:
 		auto uvInput = MakeRef<InputNode>("vec2", "inUV");
 		auto textureNode = MakeRef<Texture2DNode>(m_Texture);
 		auto samplerNode = MakeRef<Sampler2DNode>();
-		auto colorInputNode = MakeRef<Vector4Node>();
-		colorInputNode->Connect(MakeRef<FloatNode>(1.0f), FloatNode::Result, Vector4Node::R);
-		colorInputNode->Connect(MakeRef<FloatNode>(1.0f), FloatNode::Result, Vector4Node::G);
-		colorInputNode->Connect(MakeRef<FloatNode>(0.0f), FloatNode::Result, Vector4Node::B);
-		colorInputNode->Connect(MakeRef<FloatNode>(1.0f), FloatNode::Result, Vector4Node::A);
+		auto colorInputNode = MakeRef<PropertyNode>("Shading", "vec4", "color");
 
 		samplerNode->Connect(textureNode, Texture2DNode::Output, Sampler2DNode::Texture);
 		samplerNode->Connect(uvInput, InputNode::Result, Sampler2DNode::UV);
 
 		auto multiplyNode = MakeRef<MultiplyNode>();
 		multiplyNode->Connect(samplerNode, Sampler2DNode::Result, MultiplyNode::Left);
-		multiplyNode->Connect(colorInputNode, Vector4Node::Result, MultiplyNode::Right);
+		multiplyNode->Connect(colorInputNode, PropertyNode::Result, MultiplyNode::Right);
 
 		auto outColorNode = MakeRef<OutputNode>("vec4", "outColor");
 		outColorNode->Connect(multiplyNode, MultiplyNode::Result, OutputNode::Input);
@@ -231,7 +231,7 @@ private:
 private:
 	Ray::Entity m_Entity;
 	Ray::Ref<Ray::Texture2D> m_Texture;
-	Ray::Float3 m_Color;
+	Ray::Float4 m_Color{ 1.0f, 1.0f, 1.0f, 1.0f };
 };
 
 

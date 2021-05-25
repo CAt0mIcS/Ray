@@ -85,6 +85,8 @@ set(SRC
 	"ShaderGraph/Nodes/RTexture2DNode.cpp"
 	"ShaderGraph/Nodes/RSampler2DNode.h"
 	"ShaderGraph/Nodes/RSampler2DNode.cpp"
+	"ShaderGraph/Nodes/RPropertyNode.h"
+	"ShaderGraph/Nodes/RPropertyNode.cpp"
 
 	"ShaderGraph/RShaderGenerator.h"
 	"ShaderGraph/RShaderGenerator.cpp"
