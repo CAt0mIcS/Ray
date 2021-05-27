@@ -10,6 +10,7 @@
 #include <Components/RTransform.h>
 #include <Components/RSkybox.h>
 #include <Components/RScriptableEntity.h>
+#include <Components/RTagComponent.h>
 
 #include <Graphics/Images/RTexture2D.h>
 #include <Graphics/Images/RTextureCubemap.h>
@@ -79,6 +80,7 @@ private:
 				Ray::FlatColorMaterial::Layout{}, std::move(layout));
 
 			Ray::Entity entity = Scene::Get().CreateEntity();
+			entity.Emplace<Ray::TagComponent>("Triangle_" + std::to_string(i));
 			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
 			auto& renderer = entity.Emplace<Ray::MeshRenderer>(defaultMaterial);
 			renderer.GetBufferUniform("Shading")["color"] =

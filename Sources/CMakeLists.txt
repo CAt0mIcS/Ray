@@ -185,6 +185,8 @@ set(SRC
 	"Components/RParentEntity.cpp"
 	"Components/RScriptableEntity.h"
 	"Components/RScriptableEntity.cpp"
+	"Components/RTagComponent.h"
+	"Components/RTagComponent.cpp"
 
 	# Shading
 	"Shading/RMaterial.h"
