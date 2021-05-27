@@ -11,6 +11,11 @@ namespace At0::Ray
 	class RAY_EXPORT Texture2D : public Image2D
 	{
 	public:
+		static Ref<Texture2D> Acquire(std::string_view filepath);
+		static Ref<Texture2D> Acquire(UInt2 extent, VkFormat format, VkImageTiling tiling,
+			VkImageUsageFlags usage, VkMemoryPropertyFlags memProps,
+			VkImageAspectFlags imageAspect);
+
 		Texture2D(std::string_view filepath);
 		Texture2D(UInt2 extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
 			VkMemoryPropertyFlags memProps,

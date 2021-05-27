@@ -14,6 +14,7 @@
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Core/RSwapchain.h"
 #include "RCodex.h"
+#include "Core/RResource.h"
 
 #include "Graphics/Commands/RCommandPool.h"
 #include "Graphics/Commands/RCommandBuffer.h"
@@ -366,6 +367,7 @@ namespace At0::Ray
 		Scene::Destroy();
 		BufferSynchronizer::Destroy();
 		Codex::Shutdown();
+		Resources::Destroy();
 
 		if (m_PipelineCache)
 		{

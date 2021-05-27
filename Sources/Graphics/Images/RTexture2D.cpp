@@ -16,6 +16,20 @@
 
 namespace At0::Ray
 {
+	Ref<Texture2D> Texture2D::Acquire(std::string_view filepath)
+	{
+		return Resources::Get().EmplaceIfNonExistent<Texture2D>(filepath.data(), filepath);
+	}
+
+	Ref<Texture2D> Texture2D::Acquire(UInt2 extent, VkFormat format, VkImageTiling tiling,
+		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, VkImageAspectFlags imageAspect)
+	{
+		return Resources::Get().EmplaceIfNonExistent<Texture2D>(
+			String::Serialize("{0}{1}{2}{3}{4}{5}{6}", extent.x, extent.y, (uint32_t)format,
+				(uint32_t)tiling, (uint32_t)usage, (uint32_t)memProps, (uint32_t)imageAspect),
+			std::move(extent), format, tiling, usage, memProps, imageAspect);
+	}
+
 	Texture2D::Texture2D(std::string_view filepath)
 	{
 		int texWidth, texHeight, texChannels;

@@ -47,6 +47,8 @@ set(SRC
 	"Core/RKeyCodes.h"
 	"Core/RDynamicVertex.h"
 	"Core/RDynamicVertex.cpp"
+	"Core/RResource.h"
+	"Core/RResource.cpp"
 	
 	# ------------------------------------------------------------------
 	# Devices

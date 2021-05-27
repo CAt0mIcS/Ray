@@ -2,6 +2,7 @@
 
 #include "../../RBase.h"
 #include "../../Core/RMath.h"
+#include "../../Core/RResource.h"
 #include "../../Utils/RNonCopyable.h"
 #include "RImageView.h"
 
@@ -14,7 +15,7 @@ namespace At0::Ray
 {
 	class Buffer;
 
-	class Image : NonCopyable
+	class Image : public Resource, NonCopyable
 	{
 	public:
 		Image(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
