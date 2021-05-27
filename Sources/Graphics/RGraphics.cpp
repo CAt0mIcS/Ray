@@ -63,8 +63,7 @@ namespace At0::Ray
 		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 
 		m_DepthImage = MakeScope<DepthImage>(
-			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height },
-			VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT);
+			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height });
 
 		CreateRenderPass();
 		CreateFramebuffers();
