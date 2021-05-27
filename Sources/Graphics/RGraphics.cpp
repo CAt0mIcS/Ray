@@ -92,18 +92,52 @@ namespace At0::Ray
 			Attachment::LoadOp::Clear, Attachment::StoreOp::Undefined,
 			Attachment::LoadOp::Undefined, Attachment::StoreOp::Undefined);
 
+		// Subpass before 0 transforms image from VkAttachmentDescription::initialLayout to
+		// VkAttachmentReference::layout
+
+		// Subpass after the last one transforms image from VkAttachmentReference::layout to
+		// VkAttachmentDescription::finalLayout
+
 		Subpass subpass;
 		subpass.AddColorAttachment(0, colorAttachment);
 		subpass.AddDepthAttachment(1, depthAttachment);
 
 		VkSubpassDependency dependency{};
+
+		// Commands recorded in the source subpass are in the source scope
+		// Commands recorded in the destination subpass are in the destination scope
+		// -->
+		//	All commands in the source subpass must at least reach srcStage before any of the
+		//	commands in the destination subpass are allowed to start the dstStage of their execution
+
+		// If srcSubpass = VK_SUBPASS_EXTERNAL then the source scope is all commands recorded before
+		// vkCmdBeginRenderPass. This means that once subpass 0 starts stages in srcStage must be
+		// finished before any commands of the dstSubpass (0) start execution
+
+		// Who is this subpass dependent on?
 		dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+
+		// Who is this subpass?
 		dependency.dstSubpass = 0;
+
+		// Stages specified here must be finished once the subpass has started
+
+		// Everything before the renderpass
+		// This stage mask mean that before the renderpass starts, all commands in the color
+		// attachment output and the early fragment test stage must finish execution.
 		dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT |
 								  VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-		dependency.srcAccessMask = 0;
+
+		// Future commands/subpasses need to wait for these stages to finish executing
+		// This stage mask means that we wait for the color attachment output and early fragment
+		// test stage to finish before recording new commands into these stages
 		dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT |
 								  VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+
+
+		dependency.srcAccessMask = 0;
+
+		// Do we need to write or read from the previous image
 		dependency.dstAccessMask =
 			VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 

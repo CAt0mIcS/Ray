@@ -10,6 +10,7 @@ namespace At0::Ray
 	{
 		VkAttachmentReference reference{};
 		reference.attachment = index;
+		// Layout the image will have once the subpass is started
 		reference.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		m_InputAttachments.emplace_back(reference);
 		UpdateDescription();
@@ -19,6 +20,8 @@ namespace At0::Ray
 	{
 		VkAttachmentReference reference{};
 		reference.attachment = index;
+
+		// Layout the image will have once the subpass is started
 		reference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 		m_ColorAttachments.emplace_back(reference);
 		UpdateDescription();
@@ -33,6 +36,7 @@ namespace At0::Ray
 
 		m_DepthAttachment = VkAttachmentReference{};
 		m_DepthAttachment->attachment = index;
+		// Layout the image will have once the subpass is started
 		m_DepthAttachment->layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 		UpdateDescription();
 	}
