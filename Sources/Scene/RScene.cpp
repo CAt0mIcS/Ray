@@ -16,6 +16,9 @@
 
 #include "Events/REventListener.h"
 
+// RAY_TEMPORARY
+#include "Core/RTime.h"
+
 #define RAY_MULTITHREADED_TRANSFORM_CALCULATIONS 1
 
 
@@ -65,6 +68,9 @@ namespace At0::Ray
 
 		auto tformView = m_Registry.view<Transform>();
 
+		// Global define to enable/disable profiling
+		Time tStart = Time::Now();
+
 		// Multithreaded transform recalculation
 #if RAY_MULTITHREADED_TRANSFORM_CALCULATIONS
 		// Split into almost equal parts to launch as many threads as the CPU has
@@ -98,8 +104,10 @@ namespace At0::Ray
 		tformView.each([](Transform& tform) { tform.UpdateMatrix(); });
 #endif
 
+		Log::Debug("[Scene] Transformation recalculations took {0}us",
+			(Time::Now() - tStart).AsMicroseconds());
+
 		m_Registry.view<MeshRenderer>().each([](MeshRenderer& mesh) { mesh.Update(); });
-		m_Registry.view<Skybox>().each([&dt](Skybox& skybox) { skybox.Update(dt); });
 	}
 
 	void Scene::SetCamera(Scope<Camera> cam) { m_Camera = std::move(cam); }

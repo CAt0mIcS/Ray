@@ -55,14 +55,14 @@ namespace At0::Ray
 			if (it == m_Bindables.end())
 			{
 				m_Bindables[tag] = MakeRef<T>(std::forward<Args>(args)...);
-				Log::Debug(
+				Log::Trace(
 					"[Codex] Bindable (Tag=\"{0}\") was created because it didn't exist", tag);
 				return std::static_pointer_cast<T>(m_Bindables[tag]);
 			}
 			// Key exists, return it
 			else
 			{
-				Log::Debug("[Codex] Bindable (Tag=\"{0}\") already exists", tag);
+				Log::Trace("[Codex] Bindable (Tag=\"{0}\") already exists", tag);
 				return std::static_pointer_cast<T>(it->second);
 			}
 		}
@@ -78,13 +78,13 @@ namespace At0::Ray
 			if (it == m_Shaders.end())
 			{
 				m_Shaders[tag] = MakeRef<Shader>(std::forward<Args>(args)...);
-				Log::Debug("[Codex] Model (Tag=\"{0}\") was created because it didn't exist", tag);
+				Log::Trace("[Codex] Model (Tag=\"{0}\") was created because it didn't exist", tag);
 				return m_Shaders[tag];
 			}
 			// Key exists, return it
 			else
 			{
-				Log::Debug("[Codex] Model (Tag=\"{0}\") already exists", tag);
+				Log::Trace("[Codex] Model (Tag=\"{0}\") already exists", tag);
 				return it->second;
 			}
 		}

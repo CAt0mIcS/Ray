@@ -18,7 +18,8 @@ namespace At0::Ray
 {
 	// RAY_TODO: Disable depth stencil for skybox
 
-	Skybox::Skybox(Entity entity, Ref<Texture2D> texture) : Component(entity)
+	Skybox::Skybox(Entity entity, Ref<Texture2D> texture)
+		: Component(entity), EventListener<CameraChangedEvent>(Scene::Get().GetCamera())
 	{
 		GraphicsPipeline::Layout layout{};
 		layout.cullMode = VK_CULL_MODE_FRONT_BIT;
@@ -31,7 +32,8 @@ namespace At0::Ray
 			Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
 	}
 
-	Skybox::Skybox(Entity entity, Ref<TextureCubemap> texture) : Component(entity)
+	Skybox::Skybox(Entity entity, Ref<TextureCubemap> texture)
+		: Component(entity), EventListener<CameraChangedEvent>(Scene::Get().GetCamera())
 	{
 		// Mesh& mesh = GetEntity().Emplace<Mesh>(Mesh::Import("Resources/Models/Cube/Cube.obj",
 		//	Model::NoNormals | Model::NoTextureCoordinates,
@@ -41,7 +43,7 @@ namespace At0::Ray
 		// mesh.GetTransform().SetScale(Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
 	}
 
-	void Skybox::Update(Delta dt)
+	void Skybox::OnEvent(CameraChangedEvent& e)
 	{
 		Transform& tform = GetEntity().Get<Transform>();
 		Camera& cam = Scene::Get().GetCamera();

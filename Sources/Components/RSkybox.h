@@ -2,6 +2,7 @@
 
 #include "../RBase.h"
 #include "../Core/RTime.h"
+#include "../Scene/RCamera.h"
 
 #include "RComponent.h"
 
@@ -12,13 +13,14 @@ namespace At0::Ray
 	class TextureCubemap;
 	class Image2D;
 
-	class RAY_EXPORT Skybox : public Component
+	class RAY_EXPORT Skybox : public Component, EventListener<CameraChangedEvent>
 	{
 	public:
 		Skybox(Entity entity, Ref<Texture2D> texture);
 		Skybox(Entity entity, Ref<TextureCubemap> texture);
 
-		void Update(Delta dt);
+	private:
+		void OnEvent(CameraChangedEvent& e);
 	};
 }  // namespace At0::Ray
 
