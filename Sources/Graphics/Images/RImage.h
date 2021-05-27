@@ -18,6 +18,11 @@ namespace At0::Ray
 	class Image : public Resource, NonCopyable
 	{
 	public:
+		static Ref<Image> Acquire(UInt2 extent, VkImageType imageType, VkFormat format,
+			VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags memProps,
+			uint32_t mipLevels = 1, VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT,
+			uint32_t arrayLayers = 1, VkImageCreateFlags createFlags = 0);
+
 		Image(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
 			VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, uint32_t mipLevels = 1,
 			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t arrayLayers = 1,

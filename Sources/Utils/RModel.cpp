@@ -173,19 +173,19 @@ namespace At0::Ray
 		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
 				aiTextureType_DIFFUSE, 0, &diffuseTexFileName) == aiReturn_SUCCESS)
 		{
-			diffuseMap = MakeRef<Texture2D>(basePath + diffuseTexFileName.C_Str());
+			diffuseMap = Texture2D::Acquire(basePath + diffuseTexFileName.C_Str());
 		}
 
 		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
 				aiTextureType_SPECULAR, 0, &specularTexFileName) == aiReturn_SUCCESS)
 		{
-			specularMap = MakeRef<Texture2D>(basePath + specularTexFileName.C_Str());
+			specularMap = Texture2D::Acquire(basePath + specularTexFileName.C_Str());
 		}
 
 		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
 				aiTextureType_NORMALS, 0, &normalTexFileName) == aiReturn_SUCCESS)
 		{
-			normalMap = MakeRef<Texture2D>(basePath + normalTexFileName.C_Str());
+			normalMap = Texture2D::Acquire(basePath + normalTexFileName.C_Str());
 		}
 
 		PhongMaterial::Layout layout{};
