@@ -52,7 +52,7 @@ public:
 };
 
 
-class App : public Ray::Engine, Ray::EventListener<Ray::MouseButtonPressedEvent>
+class App : public Ray::Engine
 {
 public:
 	App()
@@ -60,39 +60,74 @@ public:
 		Ray::Scene::Create<Scene>();
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
+
+		Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
+			ImGui::Begin("Triangles");
+			int prevTriangleCount = m_Triangles;
+			ImGui::SliderInt("Triangle Count", &m_Triangles, 0, 6000);
+			if (prevTriangleCount != m_Triangles)
+				TriangleCountChanged(prevTriangleCount);
+			ImGui::End();
+		});
+
+
+		for (uint32_t i = 0; i < m_Triangles; ++i)
+		{
+			AddTriangle(std::to_string(i));
+		}
 	}
 
 private:
 	void Update() override {}
 
-	void OnEvent(Ray::MouseButtonPressedEvent& e)
+	void AddTriangle(const std::string& tag)
 	{
 		static std::mt19937 device;
 		static std::uniform_real_distribution<float> posRotDist(-30.0f, 30.0f);
 		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
 		static std::uniform_real_distribution<float> colDist(0.0f, 1.0f);
 
-		for (uint32_t i = 0; i < 5460; ++i)
+		Ray::GraphicsPipeline::Layout layout{};
+		layout.cullMode = VK_CULL_MODE_NONE;
+		auto defaultMaterial = Ray::MakeRef<Ray::FlatColorMaterial>(
+			Ray::FlatColorMaterial::Layout{}, std::move(layout));
+
+		Ray::Entity entity = Scene::Get().CreateEntity();
+		entity.Emplace<Ray::TagComponent>("Triangle_" + tag);
+		Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
+		auto& renderer = entity.Emplace<Ray::MeshRenderer>(defaultMaterial);
+		renderer.GetBufferUniform("Shading")["color"] =
+			Ray::Float3{ colDist(device), colDist(device), colDist(device) };
+
+		auto& transform = entity.Get<Ray::Transform>();
+		transform.SetTranslation({ posRotDist(device), posRotDist(device), posRotDist(device) });
+		transform.SetRotation({ posRotDist(device), posRotDist(device), posRotDist(device) });
+		transform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
+	}
+
+	void RemoveTriangle()
+	{
+		auto triangleView = Scene::Get().EntityView<Ray::TagComponent>();
+		Scene::Get().DestroyEntity(triangleView.back());
+	}
+
+	void TriangleCountChanged(int prevTriangleCount)
+	{
+		if (m_Triangles > prevTriangleCount)
 		{
-			Ray::GraphicsPipeline::Layout layout{};
-			layout.cullMode = VK_CULL_MODE_NONE;
-			auto defaultMaterial = Ray::MakeRef<Ray::FlatColorMaterial>(
-				Ray::FlatColorMaterial::Layout{}, std::move(layout));
-
-			Ray::Entity entity = Scene::Get().CreateEntity();
-			entity.Emplace<Ray::TagComponent>("Triangle_" + std::to_string(i));
-			Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
-			auto& renderer = entity.Emplace<Ray::MeshRenderer>(defaultMaterial);
-			renderer.GetBufferUniform("Shading")["color"] =
-				Ray::Float3{ colDist(device), colDist(device), colDist(device) };
-
-			auto& transform = entity.Get<Ray::Transform>();
-			transform.SetTranslation(
-				{ posRotDist(device), posRotDist(device), posRotDist(device) });
-			transform.SetRotation({ posRotDist(device), posRotDist(device), posRotDist(device) });
-			transform.SetScale({ scaleDist(device), scaleDist(device), scaleDist(device) });
+			for (uint32_t i = prevTriangleCount; i < m_Triangles; ++i)
+				AddTriangle(std::to_string(i));
+		}
+		else if (m_Triangles < prevTriangleCount)
+		{
+			for (uint32_t i = prevTriangleCount; i > m_Triangles; --i)
+				RemoveTriangle();
 		}
 	}
+
+private:
+	int m_Triangles = 200;
+	// int m_Triangles = 5460;
 };
 
 void SignalHandler(int signal)
@@ -108,7 +143,7 @@ int main()
 	signal(SIGINT, SignalHandler);
 
 	Ray::Log::Open("Ray.log");
-	Ray::Log::SetLogLevel(Violent::LogLevel::Debug);
+	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
 
 	try
 	{
