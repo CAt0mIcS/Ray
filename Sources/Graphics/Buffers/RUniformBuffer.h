@@ -11,7 +11,7 @@ namespace At0::Ray
 		/**
 		 * @param initialSize Initial buffer size (default 2MB)
 		 */
-		UniformBuffer(VkDeviceSize initialSize = 2097152);
+		UniformBuffer(VkDeviceSize initialSize = /*2097152*/ 209715200);
 		~UniformBuffer();
 
 		static VkDescriptorSetLayoutBinding GetDescriptorSetLayout(uint32_t binding,

@@ -63,8 +63,9 @@ public:
 
 		Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
 			ImGui::Begin("Triangles");
+			ImGui::InputInt("Upper range", &m_UpperRange, 100, 10000);
 			int prevTriangleCount = m_Triangles;
-			ImGui::SliderInt("Triangle Count", &m_Triangles, 0, 6000);
+			ImGui::SliderInt("Triangle Count", &m_Triangles, 0, m_UpperRange);
 			if (prevTriangleCount != m_Triangles)
 				TriangleCountChanged(prevTriangleCount);
 			ImGui::End();
@@ -127,6 +128,7 @@ private:
 
 private:
 	int m_Triangles = 200;
+	int m_UpperRange = 10000;
 	// int m_Triangles = 5460;
 };
 
