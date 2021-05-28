@@ -3,6 +3,9 @@
 #include "../RBase.h"
 #include "../Core/RMath.h"
 
+#include <source_location>
+
+
 namespace At0::Ray
 {
 	inline std::ostream& operator<<(std::ostream& os, const Matrix& matrix)
@@ -36,78 +39,82 @@ namespace At0::Ray
 		static void Flush();
 
 		template<typename... Args>
-		static void Trace(std::string_view msg, Args&&... args)
+		struct Trace
 		{
-			s_FileLogger.Trace(msg, std::forward<Args>(args)...);
-			s_ConsoleLogger.Trace(msg, std::forward<Args>(args)...);
-		}
-		template<typename... Args>
-		static void Debug(std::string_view msg, Args&&... args)
-		{
-			s_FileLogger.Debug(msg, std::forward<Args>(args)...);
-			s_ConsoleLogger.Debug(msg, std::forward<Args>(args)...);
-		}
-		template<typename... Args>
-		static void Info(std::string_view msg, Args&&... args)
-		{
-			s_FileLogger.Info(msg, std::forward<Args>(args)...);
-			s_ConsoleLogger.Info(msg, std::forward<Args>(args)...);
-		}
-		template<typename... Args>
-		static void Warn(std::string_view msg, Args&&... args)
-		{
-			s_FileLogger.Warn(msg, std::forward<Args>(args)...);
-			s_ConsoleLogger.Warn(msg, std::forward<Args>(args)...);
-		}
-		template<typename... Args>
-		static void Error(std::string_view msg, Args&&... args)
-		{
-			s_FileLogger.Error(msg, std::forward<Args>(args)...);
-			s_ConsoleLogger.Error(msg, std::forward<Args>(args)...);
-		}
-		template<typename... Args>
-		static void Critical(std::string_view msg, Args&&... args)
-		{
-			s_FileLogger.Critical(msg, std::forward<Args>(args)...);
-			s_ConsoleLogger.Critical(msg, std::forward<Args>(args)...);
-		}
+			Trace(Args&&... args, std::source_location loc = std::source_location::current())
+			{
+				s_FileLogger.Trace(std::forward<Args>(args)...);
+				s_ConsoleLogger.Trace(std::forward<Args>(args)...);
+			}
+		};
 
 		template<typename... Args>
-		static void Trace(std::wstring_view msg, Args&&... args)
+		struct Debug
 		{
-			s_FileLogger.Trace(msg, std::forward<Args>(args)...);
-			s_ConsoleLogger.Trace(msg, std::forward<Args>(args)...);
-		}
+			Debug(Args&&... args, std::source_location loc = std::source_location::current())
+			{
+				s_FileLogger.Debug(std::forward<Args>(args)...);
+				s_ConsoleLogger.Debug(std::forward<Args>(args)...);
+			}
+		};
+
 		template<typename... Args>
-		static void Debug(std::wstring_view msg, Args&&... args)
+		struct Info
 		{
-			s_FileLogger.Debug(msg, std::forward<Args>(args)...);
-			s_ConsoleLogger.Debug(msg, std::forward<Args>(args)...);
-		}
+			Info(Args&&... args, std::source_location loc = std::source_location::current())
+			{
+				s_FileLogger.Info(std::forward<Args>(args)...);
+				s_ConsoleLogger.Info(std::forward<Args>(args)...);
+			}
+		};
+
 		template<typename... Args>
-		static void Info(std::wstring_view msg, Args&&... args)
+		struct Warn
 		{
-			s_FileLogger.Info(msg, std::forward<Args>(args)...);
-			s_ConsoleLogger.Info(msg, std::forward<Args>(args)...);
-		}
+			Warn(Args&&... args, std::source_location loc = std::source_location::current())
+			{
+				s_FileLogger.Warn(std::forward<Args>(args)...);
+				s_ConsoleLogger.Warn(std::forward<Args>(args)...);
+			}
+		};
+
 		template<typename... Args>
-		static void Warn(std::wstring_view msg, Args&&... args)
+		struct Error
 		{
-			s_FileLogger.Warn(msg, std::forward<Args>(args)...);
-			s_ConsoleLogger.Warn(msg, std::forward<Args>(args)...);
-		}
+			Error(Args&&... args, std::source_location loc = std::source_location::current())
+			{
+				s_FileLogger.Error(std::forward<Args>(args)...);
+				s_ConsoleLogger.Error(std::forward<Args>(args)...);
+			}
+		};
+
 		template<typename... Args>
-		static void Error(std::wstring_view msg, Args&&... args)
+		struct Critical
 		{
-			s_FileLogger.Error(msg, std::forward<Args>(args)...);
-			s_ConsoleLogger.Error(msg, std::forward<Args>(args)...);
-		}
+			Critical(Args&&... args, std::source_location loc = std::source_location::current())
+			{
+				s_FileLogger.Critical(std::forward<Args>(args)...);
+				s_ConsoleLogger.Critical(std::forward<Args>(args)...);
+			}
+		};
+
 		template<typename... Args>
-		static void Critical(std::wstring_view msg, Args&&... args)
-		{
-			s_FileLogger.Critical(msg, std::forward<Args>(args)...);
-			s_ConsoleLogger.Critical(msg, std::forward<Args>(args)...);
-		}
+		Trace(Args&&...) -> Trace<Args...>;
+
+		template<typename... Args>
+		Debug(Args&&...) -> Debug<Args...>;
+
+		template<typename... Args>
+		Info(Args&&...) -> Info<Args...>;
+
+		template<typename... Args>
+		Warn(Args&&...) -> Warn<Args...>;
+
+		template<typename... Args>
+		Error(Args&&...) -> Error<Args...>;
+
+		template<typename... Args>
+		Critical(Args&&...) -> Critical<Args...>;
 
 	private:
 		static Violent::FileLogger s_FileLogger;
