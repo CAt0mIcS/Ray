@@ -41,80 +41,86 @@ namespace At0::Ray
 		template<typename... Args>
 		struct Trace
 		{
-			Trace(Args&&... args, std::source_location loc = std::source_location::current())
+			Trace(std::string_view msg, Args&&... args,
+				std::source_location loc = std::source_location::current())
 			{
-				s_FileLogger.Trace(std::forward<Args>(args)...);
-				s_ConsoleLogger.Trace(std::forward<Args>(args)...);
+				s_FileLogger.Trace(msg, std::forward<Args>(args)...);
+				s_ConsoleLogger.Trace(msg, std::forward<Args>(args)...);
 			}
 		};
 
 		template<typename... Args>
 		struct Debug
 		{
-			Debug(Args&&... args, std::source_location loc = std::source_location::current())
+			Debug(std::string_view msg, Args&&... args,
+				std::source_location loc = std::source_location::current())
 			{
-				s_FileLogger.Debug(std::forward<Args>(args)...);
-				s_ConsoleLogger.Debug(std::forward<Args>(args)...);
+				s_FileLogger.Debug(msg, std::forward<Args>(args)...);
+				s_ConsoleLogger.Debug(msg, std::forward<Args>(args)...);
 			}
 		};
 
 		template<typename... Args>
 		struct Info
 		{
-			Info(Args&&... args, std::source_location loc = std::source_location::current())
+			Info(std::string_view msg, Args&&... args,
+				std::source_location loc = std::source_location::current())
 			{
-				s_FileLogger.Info(std::forward<Args>(args)...);
-				s_ConsoleLogger.Info(std::forward<Args>(args)...);
+				s_FileLogger.Info(msg, std::forward<Args>(args)...);
+				s_ConsoleLogger.Info(msg, std::forward<Args>(args)...);
 			}
 		};
 
 		template<typename... Args>
 		struct Warn
 		{
-			Warn(Args&&... args, std::source_location loc = std::source_location::current())
+			Warn(std::string_view msg, Args&&... args,
+				std::source_location loc = std::source_location::current())
 			{
-				s_FileLogger.Warn(std::forward<Args>(args)...);
-				s_ConsoleLogger.Warn(std::forward<Args>(args)...);
+				s_FileLogger.Warn(msg, std::forward<Args>(args)...);
+				s_ConsoleLogger.Warn(msg, std::forward<Args>(args)...);
 			}
 		};
 
 		template<typename... Args>
 		struct Error
 		{
-			Error(Args&&... args, std::source_location loc = std::source_location::current())
+			Error(std::string_view msg, Args&&... args,
+				std::source_location loc = std::source_location::current())
 			{
-				s_FileLogger.Error(std::forward<Args>(args)...);
-				s_ConsoleLogger.Error(std::forward<Args>(args)...);
+				s_FileLogger.Error(msg, std::forward<Args>(args)...);
+				s_ConsoleLogger.Error(msg, std::forward<Args>(args)...);
 			}
 		};
 
 		template<typename... Args>
 		struct Critical
 		{
-			Critical(Args&&... args, std::source_location loc = std::source_location::current())
+			Critical(std::string_view msg, Args&&... args,
+				std::source_location loc = std::source_location::current())
 			{
-				s_FileLogger.Critical(std::forward<Args>(args)...);
-				s_ConsoleLogger.Critical(std::forward<Args>(args)...);
+				s_FileLogger.Critical(msg, std::forward<Args>(args)...);
+				s_ConsoleLogger.Critical(msg, std::forward<Args>(args)...);
 			}
 		};
 
 		template<typename... Args>
-		Trace(Args&&...) -> Trace<Args...>;
+		Trace(std::string_view, Args&&...) -> Trace<Args...>;
 
 		template<typename... Args>
-		Debug(Args&&...) -> Debug<Args...>;
+		Debug(std::string_view, Args&&...) -> Debug<Args...>;
 
 		template<typename... Args>
-		Info(Args&&...) -> Info<Args...>;
+		Info(std::string_view, Args&&...) -> Info<Args...>;
 
 		template<typename... Args>
-		Warn(Args&&...) -> Warn<Args...>;
+		Warn(std::string_view, Args&&...) -> Warn<Args...>;
 
 		template<typename... Args>
-		Error(Args&&...) -> Error<Args...>;
+		Error(std::string_view, Args&&...) -> Error<Args...>;
 
 		template<typename... Args>
-		Critical(Args&&...) -> Critical<Args...>;
+		Critical(std::string_view, Args&&...) -> Critical<Args...>;
 
 	private:
 		static Violent::FileLogger s_FileLogger;
