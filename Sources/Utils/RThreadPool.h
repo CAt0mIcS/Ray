@@ -17,11 +17,17 @@ namespace At0::Ray
 	public:
 		ThreadPool();
 
+		/**
+		 * Submits a new function with arguments to the queue of tasks
+		 */
 		template<typename F, typename... Args,
 			typename = std::enable_if_t<
 				std::is_void_v<std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>>>>
 		/*std::future<bool>*/ void Submit(F&& func, Args&&... args);
 
+		/**
+		 * Submits a new function with arguments to the queue of tasks
+		 */
 		template<typename F, typename... Args,
 			typename R = std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>,
 			typename = std::enable_if_t<!std::is_void_v<R>>>
@@ -33,28 +39,14 @@ namespace At0::Ray
 		template<typename F, typename... Args>
 		void PushTask(F&& func, Args&&... args);
 
+		/**
+		 * Multithreads a loop
+		 * @param firstIdx Starting index (inclusive)
+		 * @param lastIdx Ending index (exclusive)
+		 * @param loop Function to execute which takes the current loop index
+		 */
 		template<typename T, typename F>
-		void SubmitLoop(T firstIdx, T lastIdx, const F& loop)
-		{
-			// Only enable if we can get at least two loops per thread
-			std::vector<uint32_t> runsPerThread;
-			if (lastIdx / s_MaxThreads >= 2)
-				runsPerThread = GenerateChunks((uint32_t)lastIdx, s_MaxThreads);
-			else
-				runsPerThread.emplace_back((uint32_t)lastIdx);
-
-			uint32_t endIdx = 0;
-			for (uint32_t i = 0; i < runsPerThread.size(); ++i)
-			{
-				uint32_t startIdx = endIdx;
-				endIdx += runsPerThread[i];
-
-				PushTask([startIdx, endIdx, &loop]() {
-					for (T i = startIdx; i < endIdx; ++i)
-						loop(i);
-				});
-			}
-		}
+		void SubmitLoop(T firstIdx, T lastIdx, const F& loop);
 
 		/**
 		 * Waits until all task have finished
@@ -114,6 +106,29 @@ namespace At0::Ray
 	inline void ThreadPool::PushTask(F&& func, Args&&... args)
 	{
 		PushTask([&func, &args...]() { func(args...); });
+	}
+
+	template<typename T, typename F>
+	inline void ThreadPool::SubmitLoop(T firstIdx, T lastIdx, const F& loop)
+	{
+		// Only enable if we can get at least two loops per thread
+		std::vector<uint32_t> runsPerThread;
+		if (lastIdx / s_MaxThreads >= 2)
+			runsPerThread = GenerateChunks((uint32_t)lastIdx, s_MaxThreads);
+		else
+			runsPerThread.emplace_back((uint32_t)lastIdx);
+
+		uint32_t endIdx = 0;
+		for (uint32_t i = 0; i < runsPerThread.size(); ++i)
+		{
+			uint32_t startIdx = endIdx;
+			endIdx += runsPerThread[i];
+
+			PushTask([startIdx, endIdx, &loop]() {
+				for (T i = startIdx; i < endIdx; ++i)
+					loop(i);
+			});
+		}
 	}
 
 }  // namespace At0::Ray

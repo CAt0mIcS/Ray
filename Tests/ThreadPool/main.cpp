@@ -51,7 +51,7 @@ void SpeedTest()
 		Time tStart = Time::Now();
 
 #if MULTITHREADED
-		Log::Debug("Multi-threaded matrix recalculation");
+		Log::Debug("Multi-threaded matrix recalculation ({0} entities)", tformView.size());
 		threadPool.SubmitLoop(0u, (uint32_t)tformView.size(),
 			[](uint32_t i) { Entity{ tformView[i] }.Get<Transform>().UpdateMatrix(); });
 
@@ -64,7 +64,7 @@ void SpeedTest()
 		for (Entity e : tformView)
 			e.Get<Transform>().RecalculateCachedMatrix();
 #else
-		Log::Debug("Single-threaded matrix recalculation");
+		Log::Debug("Single-threaded matrix recalculation ({0} entities)", tformView.size());
 
 		tStart = Time::Now();
 		tformView.each([](Transform& tform) { tform.UpdateMatrix(); });
