@@ -68,44 +68,12 @@ namespace At0::Ray
 
 		auto tformView = m_Registry.view<Transform>();
 
-		// Global define to enable/disable profiling
+		// RAY_TODO: Global define to enable/disable profiling
 		Time tStart = Time::Now();
 
-		// Multithreaded transform recalculation
-#if RAY_MULTITHREADED_TRANSFORM_CALCULATIONS
-		// Split into almost equal parts to launch as many threads as the CPU has
-		unsigned int numThreads = std::thread::hardware_concurrency();
-		// Only enable if we can get at least two loops per thread
-		std::vector<uint32_t> entitiesPerThread;
-		if (tformView.size() / numThreads >= 2)
-			entitiesPerThread = SplitToIntegers((uint32_t)tformView.size(), numThreads);
-		else
-			entitiesPerThread.emplace_back((uint32_t)tformView.size());
 
-		std::vector<std::future<void>> futures;
-		futures.reserve(entitiesPerThread.size());
-
-		uint32_t endIdx = 0;
-		for (uint32_t i = 0; i < entitiesPerThread.size(); ++i)
-		{
-			uint32_t startIdx = endIdx;
-			endIdx += entitiesPerThread[i];
-
-			futures.push_back(std::async(std::launch::async, [&tformView, &startIdx, &endIdx]() {
-				for (uint32_t i = startIdx; i < endIdx; ++i)
-					Entity{ tformView[i] }.Get<Transform>().UpdateMatrix();
-			}));
-		}
-
-		// Wait for calculations to finnish
-		for (auto& future : futures)
-			future.get();
-#else
-		tformView.each([](Transform& tform) { tform.UpdateMatrix(); });
-#endif
-
-		Log::Debug("[Scene] Transformation recalculations took {0}us",
-			(Time::Now() - tStart).AsMicroseconds());
+		// Log::Debug("[Scene] Transformation recalculations took {0}us",
+		//	(Time::Now() - tStart).AsMicroseconds());
 
 		m_Registry.view<MeshRenderer>().each([](MeshRenderer& mesh) { mesh.Update(); });
 	}

@@ -127,8 +127,8 @@ private:
 	}
 
 private:
-	int m_Triangles = 200;
-	int m_UpperRange = 10000;
+	int m_Triangles = 20000;
+	int m_UpperRange = 100000;
 	// int m_Triangles = 5460;
 };
 

@@ -83,6 +83,11 @@ namespace At0::Ray
 		 */
 		bool Minimized() const;
 
+		/**
+		 * @returns If the window is shown
+		 */
+		bool IsOpen() const;
+
 		/*
 		 * Polls events and updates everything
 		 * @returns If the window should stay open

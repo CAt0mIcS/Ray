@@ -58,6 +58,8 @@ namespace At0::Ray
 
 	bool Window::Minimized() const { return glfwGetWindowAttrib(m_hWnd, GLFW_ICONIFIED) != 0; }
 
+	bool Window::IsOpen() const { return glfwGetWindowAttrib(m_hWnd, GLFW_VISIBLE) != 0; }
+
 	bool Window::Update()
 	{
 		glfwPollEvents();

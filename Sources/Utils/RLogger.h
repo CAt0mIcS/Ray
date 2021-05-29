@@ -4,28 +4,9 @@
 #include "../Core/RMath.h"
 
 #include <source_location>
-
-
-namespace At0::Ray
-{
-	inline std::ostream& operator<<(std::ostream& os, const Matrix& matrix)
-	{
-		for (uint32_t row = 0; row < matrix.length(); ++row)
-		{
-			if (row + 1 < matrix.length())
-				os << matrix[row].x << " | " << matrix[row].y << " | " << matrix[row].z << " | "
-				   << matrix[row].w << "\n";
-			else
-				os << matrix[row].x << " | " << matrix[row].y << " | " << matrix[row].z << " | "
-				   << matrix[row].w;
-		}
-		return os;
-	}
-}  // namespace At0::Ray
-
-#include "../../Extern/Violent/include/Violent/Violent.h"
-
 #include <string_view>
+
+#include <../../Extern/Violent/include/Violent/Violent.h>
 
 
 namespace At0::Ray

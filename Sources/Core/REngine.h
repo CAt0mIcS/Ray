@@ -35,7 +35,7 @@ namespace At0::Ray
 		/**
 		 * First thing updated for now
 		 */
-		virtual void Update() = 0;
+		virtual void Update() {}
 
 	protected:
 		Engine();

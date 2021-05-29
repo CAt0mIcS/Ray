@@ -62,25 +62,25 @@ namespace At0::Ray
 		return y / (0.5f * (float)Window::Get().GetFramebufferSize().y) - 1;
 	}
 
-	std::vector<uint32_t> SplitToIntegers(uint32_t number, uint32_t splits)
+	RAY_EXPORT std::vector<uint32_t> GenerateChunks(uint32_t number, uint32_t chunks)
 	{
-		if (number < splits)
+		if (number < chunks)
 			return { number };
 
 		// Add fractions from left to right
-		float firstFraction = (float)number / (float)splits;
-		std::vector<float> fractions(splits);
-		for (uint32_t i = 1; i <= splits; ++i)
+		float firstFraction = (float)number / (float)chunks;
+		std::vector<float> fractions(chunks);
+		for (uint32_t i = 1; i <= chunks; ++i)
 			fractions[i - 1] = firstFraction * i;
 
 		// Taking the integer parts
-		std::vector<uint32_t> integers(splits);
-		for (uint32_t i = 0; i < splits; ++i)
+		std::vector<uint32_t> integers(chunks);
+		for (uint32_t i = 0; i < chunks; ++i)
 			integers[i] = std::floor(fractions[i]);
 
-		std::vector<uint32_t> ret(splits);
+		std::vector<uint32_t> ret(chunks);
 		ret[0] = integers[0];
-		for (uint32_t i = 1; i < splits; ++i)
+		for (uint32_t i = 1; i < chunks; ++i)
 			ret[i] = integers[i] - integers[i - 1];
 		return ret;
 	}

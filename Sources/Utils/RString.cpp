@@ -32,7 +32,7 @@ namespace At0::Ray
 		case Key::D9: return "D9";
 		case Key::Semicolon: return "Semicolon";
 		case Key::Equal: return "Equal";
-		case Key::A: return "A";
+		case Key::A: return "Args";
 		case Key::B: return "B";
 		case Key::C: return "c";
 		case Key::D: return "D";

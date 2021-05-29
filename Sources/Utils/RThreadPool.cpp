@@ -13,26 +13,25 @@ namespace At0::Ray
 
 	ThreadPool::ThreadPool() : m_Threads(MakeScope<std::thread[]>(s_MaxThreads)), m_Shutdown(false)
 	{
-		Log::Info("[ThreadPool] Initialized {0} threads", MaxThreads());
+		Log::Info("[ThreadPool] Initialized {0} threads", NumThreads());
 		for (uint16_t i = 0; i < s_MaxThreads; ++i)
 		{
 			m_Threads[i] = std::thread([this]() { InfiniteWait(); });
 		}
 	}
 
-	ThreadPool& ThreadPool::Get()
+	void ThreadPool::WaitForTasks()
 	{
-		static ThreadPool instance;
-		return instance;
+		// m_TaskQueue.WaitFor([this]() { return m_TaskQueue.Empty(); });
+		while (!m_TaskQueue.Empty())
+		{
+		}
 	}
 
 	void ThreadPool::Shutdown()
 	{
 		Log::Info("[ThreadPool] Shutting down");
-		{
-			std::scoped_lock lock(m_PoolMutex);
-			m_Shutdown = true;
-		}
+		m_Shutdown = true;
 		m_TaskQueue.GetWaiter().notify_all();
 
 		Log::Info("[ThreadPool] Joining Threads");
@@ -43,14 +42,14 @@ namespace At0::Ray
 			m_Threads[i].join();
 			Log::Info("[ThreadPool] Thread {0} joined", id);
 		}
-		Log::Info("[ThreadPool] Finnished joining Threads");
+		Log::Info("[ThreadPool] Finished joining Threads");
 	}
 
 	ThreadPool::~ThreadPool()
 	{
 		if (!m_Shutdown)
 		{
-			Log::Info("[ThreadPool] Calling ThreadPool::Shutdown from Deconstructor");
+			Log::Debug("[ThreadPool] Calling ThreadPool::Shutdown from Deconstructor");
 			Shutdown();
 		}
 		Log::Info("[ThreadPool] Destroyed");
@@ -60,8 +59,6 @@ namespace At0::Ray
 	{
 		while (!m_Shutdown)
 		{
-			Log::Info("[ThreadPool] Thread {0} entered ThreadPool::InfiniteWait",
-				std::this_thread::get_id());
 			std::function<void()> task;
 			{
 				std::scoped_lock lock(m_QueueMutex);
@@ -73,11 +70,7 @@ namespace At0::Ray
 			}
 			if (task)
 			{
-				Log::Info("[ThreadPool] Thread {0} Task {1} Execution started",
-					std::this_thread::get_id(), &task);
 				task();
-				Log::Info("[ThreadPool] Thread {0} Task {1} Execution finnished",
-					std::this_thread::get_id(), &task);
 			}
 		}
 	}
