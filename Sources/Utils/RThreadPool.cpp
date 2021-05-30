@@ -9,12 +9,12 @@
 
 namespace At0::Ray
 {
-	const uint32_t ThreadPool::s_MaxThreads = std::thread::hardware_concurrency();
+	const uint32_t ThreadPool::s_ThreadCount = std::thread::hardware_concurrency();
 
-	ThreadPool::ThreadPool() : m_Threads(MakeScope<std::thread[]>(s_MaxThreads)), m_Shutdown(false)
+	ThreadPool::ThreadPool() : m_Threads(MakeScope<std::thread[]>(s_ThreadCount)), m_Shutdown(false)
 	{
-		Log::Info("[ThreadPool] Initialized {0} threads", NumThreads());
-		for (uint16_t i = 0; i < s_MaxThreads; ++i)
+		Log::Info("[ThreadPool] Initialized {0} threads", s_ThreadCount);
+		for (uint16_t i = 0; i < s_ThreadCount; ++i)
 		{
 			m_Threads[i] = std::thread([this]() { InfiniteWait(); });
 		}
@@ -23,14 +23,15 @@ namespace At0::Ray
 	void ThreadPool::WaitForTasks()
 	{
 		// RAY_TODO:
-		// if (m_TaskQueue.empty())
-		//	return;
-
-		// std::unique_lock lock(m_QueueMutex);
-		// m_Condition.wait(lock, [this]() { return m_TaskQueue.empty(); });
-		while (!m_TaskQueue.empty())
+		while (GetTasksRunning() != 0)
 		{
 		}
+	}
+
+	uint32_t ThreadPool::GetTasksQueued() const
+	{
+		std::scoped_lock lock(m_QueueMutex);
+		return m_TaskQueue.size();
 	}
 
 	void ThreadPool::Shutdown()
@@ -43,7 +44,7 @@ namespace At0::Ray
 
 		m_Condition.notify_all();
 
-		for (uint16_t i = 0; i < s_MaxThreads; ++i)
+		for (uint16_t i = 0; i < s_ThreadCount; ++i)
 		{
 			auto id = m_Threads[i].get_id();
 			m_Threads[i].join();
@@ -73,6 +74,7 @@ namespace At0::Ray
 				m_TaskQueue.pop();
 			}
 			task();
+			--m_TotalTasks;
 		}
 	}
 }  // namespace At0::Ray

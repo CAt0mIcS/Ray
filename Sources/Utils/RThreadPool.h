@@ -7,6 +7,7 @@
 #include <functional>
 #include <thread>
 #include <future>
+#include <atomic>
 #include <queue>
 
 
@@ -54,7 +55,11 @@ namespace At0::Ray
 		/**
 		 * @returns The number of threads
 		 */
-		uint32_t NumThreads() const { return s_MaxThreads; }
+		uint32_t GetThreadCount() const { return s_ThreadCount; }
+
+		uint32_t GetTasksQueued() const;
+		uint32_t GetTasksRunning() const { return m_TotalTasks - GetTasksQueued(); }
+		uint32_t GetTasksTotal() const { return m_TotalTasks; }
 
 		/**
 		 * Waits for all tasks to finish and destroys the pool
@@ -77,11 +82,15 @@ namespace At0::Ray
 
 		Scope<std::thread[]> m_Threads;
 		std::queue<std::function<void()>> m_TaskQueue;
-		std::mutex m_QueueMutex;
-		std::mutex m_PoolMutex;
+
+		mutable std::mutex m_QueueMutex;
+		mutable std::mutex m_PoolMutex;
 		std::condition_variable m_Condition;
 
-		static const uint32_t s_MaxThreads;
+		// Keeps track of the total number of unfinished tasks
+		std::atomic<uint32_t> m_TotalTasks = 0;
+
+		static const uint32_t s_ThreadCount;
 	};
 
 	template<typename F, typename... Args>
@@ -102,6 +111,7 @@ namespace At0::Ray
 	template<typename F>
 	inline void ThreadPool::PushTask(F&& func)
 	{
+		++m_TotalTasks;
 		{
 			std::scoped_lock lock(m_QueueMutex);
 			m_TaskQueue.push(func);
@@ -120,8 +130,8 @@ namespace At0::Ray
 	{
 		// Only enable if we can get at least two loops per thread
 		std::vector<uint32_t> runsPerThread;
-		if (lastIdx / s_MaxThreads >= 2)
-			runsPerThread = GenerateChunks((uint32_t)lastIdx, s_MaxThreads);
+		if (lastIdx / s_ThreadCount >= 2)
+			runsPerThread = GenerateChunks((uint32_t)lastIdx, s_ThreadCount);
 		else
 			runsPerThread.emplace_back((uint32_t)lastIdx);
 

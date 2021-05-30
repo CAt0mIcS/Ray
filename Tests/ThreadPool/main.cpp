@@ -28,7 +28,7 @@ public:
 	}
 };
 
-uint32_t numEntities = 10000000;
+uint32_t numEntities = 10000;
 void Setup()
 {
 	for (uint32_t i = 0; i < numEntities; ++i)
@@ -48,10 +48,11 @@ void SpeedTest()
 	if (Window::Get().IsOpen())
 	{
 		static auto tformView = Scene::Get().EntityView<Transform>();
-		Time tStart = Time::Now();
 
 #if MULTITHREADED
 		Log::Debug("Multi-threaded matrix recalculation ({0} entities)", tformView.size());
+
+		Time tStart = Time::Now();
 		threadPool.SubmitLoop(0u, (uint32_t)tformView.size(),
 			[](uint32_t i) { Entity{ tformView[i] }.Get<Transform>().UpdateMatrix(); });
 
@@ -66,7 +67,7 @@ void SpeedTest()
 #else
 		Log::Debug("Single-threaded matrix recalculation ({0} entities)", tformView.size());
 
-		tStart = Time::Now();
+		Time tStart = Time::Now();
 		tformView.each([](Transform& tform) { tform.UpdateMatrix(); });
 		Log::Debug("\tTook {0}us\n", (Time::Now() - tStart).AsMicroseconds());
 
