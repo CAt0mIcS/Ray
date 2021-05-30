@@ -2,12 +2,12 @@
 
 #include "../RBase.h"
 #include "../Core/RTime.h"
-#include "../Events/REventDispatcher.h"
+#include "../Core/RMath.h"
 #include "../Graphics/Core/RBindable.h"
-
+#include "../Events/REventDispatcher.h"
+#include "../Utils/RThreadPool.h"
 #include "REntity.h"
 #include "RCamera.h"
-#include "../Core/RMath.h"
 
 #include <concepts>
 
@@ -106,6 +106,7 @@ namespace At0::Ray
 	private:
 		entt::registry m_Registry;
 		Scope<Camera> m_Camera = nullptr;
+		ThreadPool m_ThreadPool;
 
 		VkDescriptorSetLayout m_DescriptorSetLayout;
 		VkPipelineLayout m_PipelineLayout;

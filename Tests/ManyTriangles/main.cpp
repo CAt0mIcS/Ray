@@ -58,8 +58,22 @@ public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
-		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
+
+		Ray::ImGUI::Get().RegisterNewFrameFunction([]() {
+			ImGui::Begin("Skybox");
+			static bool enabled = false;
+			bool previous = enabled;
+			ImGui::Checkbox("Enabled", &enabled);
+
+			if (previous != enabled)
+			{
+				if (enabled)
+					Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+						Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
+				else
+					Scene::Get().DestroyEntity(Scene::Get().EntityView<Ray::Skybox>()[0]);
+			}
+		});
 
 		Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
 			ImGui::Begin("Triangles");
@@ -84,7 +98,7 @@ private:
 	void AddTriangle(const std::string& tag)
 	{
 		static std::mt19937 device;
-		static std::uniform_real_distribution<float> posRotDist(-30.0f, 30.0f);
+		static std::uniform_real_distribution<float> posRotDist(-100.0f, 100.0f);
 		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
 		static std::uniform_real_distribution<float> colDist(0.0f, 1.0f);
 
