@@ -1,13 +1,13 @@
 ﻿#pragma once
 
 #include "../RBase.h"
-#include "RQueue.h"
 #include "../Core/RMath.h"
 
 #include <mutex>
 #include <functional>
 #include <thread>
 #include <future>
+#include <queue>
 
 
 namespace At0::Ray
@@ -76,8 +76,10 @@ namespace At0::Ray
 		bool m_Shutdown;
 
 		Scope<std::thread[]> m_Threads;
-		Queue<std::function<void()>> m_TaskQueue;
+		std::queue<std::function<void()>> m_TaskQueue;
 		std::mutex m_QueueMutex;
+		std::mutex m_PoolMutex;
+		std::condition_variable m_Condition;
 
 		static const uint32_t s_MaxThreads;
 	};
@@ -100,7 +102,11 @@ namespace At0::Ray
 	template<typename F>
 	inline void ThreadPool::PushTask(F&& func)
 	{
-		m_TaskQueue.PushBack(func);
+		{
+			std::scoped_lock lock(m_QueueMutex);
+			m_TaskQueue.push(func);
+		}
+		m_Condition.notify_one();
 	}
 
 	template<typename F, typename... Args>

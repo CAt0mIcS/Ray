@@ -22,8 +22,13 @@ namespace At0::Ray
 
 	void ThreadPool::WaitForTasks()
 	{
-		// m_TaskQueue.WaitFor([this]() { return m_TaskQueue.Empty(); });
-		while (!m_TaskQueue.Empty())
+		// RAY_TODO:
+		// if (m_TaskQueue.empty())
+		//	return;
+
+		// std::unique_lock lock(m_QueueMutex);
+		// m_Condition.wait(lock, [this]() { return m_TaskQueue.empty(); });
+		while (!m_TaskQueue.empty())
 		{
 		}
 	}
@@ -31,27 +36,25 @@ namespace At0::Ray
 	void ThreadPool::Shutdown()
 	{
 		Log::Info("[ThreadPool] Shutting down");
-		m_Shutdown = true;
-		m_TaskQueue.GetWaiter().notify_all();
+		{
+			std::scoped_lock lock(m_PoolMutex);
+			m_Shutdown = true;
+		}
 
-		Log::Info("[ThreadPool] Joining Threads");
+		m_Condition.notify_all();
+
 		for (uint16_t i = 0; i < s_MaxThreads; ++i)
 		{
 			auto id = m_Threads[i].get_id();
-			Log::Info("[ThreadPool] Joining Thread {0}", id);
 			m_Threads[i].join();
 			Log::Info("[ThreadPool] Thread {0} joined", id);
 		}
-		Log::Info("[ThreadPool] Finished joining Threads");
 	}
 
 	ThreadPool::~ThreadPool()
 	{
 		if (!m_Shutdown)
-		{
-			Log::Debug("[ThreadPool] Calling ThreadPool::Shutdown from Deconstructor");
 			Shutdown();
-		}
 		Log::Info("[ThreadPool] Destroyed");
 	}
 
@@ -61,12 +64,13 @@ namespace At0::Ray
 		{
 			std::function<void()> task;
 			{
-				std::scoped_lock lock(m_QueueMutex);
-				m_TaskQueue.WaitFor([this]() { return !m_TaskQueue.Empty() || m_Shutdown; });
+				std::unique_lock lock(m_QueueMutex);
+				m_Condition.wait(lock, [this]() { return !m_TaskQueue.empty() || m_Shutdown; });
 
 				if (m_Shutdown)
 					return;
-				task = m_TaskQueue.PopFront();
+				task = m_TaskQueue.front();
+				m_TaskQueue.pop();
 			}
 			task();
 		}

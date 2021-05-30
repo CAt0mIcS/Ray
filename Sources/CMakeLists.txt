@@ -230,7 +230,6 @@ set(SRC
 	"Utils/RLogger.h"
 	"Utils/RLogger.cpp"
 	"Utils/RAssert.h"
-	"Utils/RQueue.h"
 	"Utils/RException.h"
 	"Utils/RException.cpp"
 	"Utils/RGeometricPrimitives.h"
