@@ -10,12 +10,11 @@
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
+// clang-format off
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
 #include "../Graphics/Pipelines/RShader.h"
-#include "../Graphics/Core/RBindable.h"
 
 #include "../Events/REventListener.h"
 #include "../Events/RKeyboardEvents.h"

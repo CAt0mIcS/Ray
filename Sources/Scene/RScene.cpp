@@ -73,6 +73,7 @@ namespace At0::Ray
 
 		m_ThreadPool.SubmitLoop(0u, (uint32_t)tformView.size(),
 			[this](uint32_t i) { Entity{ tformView[i] }.Get<Transform>().UpdateMatrix(); });
+		m_ThreadPool.WaitForTasks();
 
 		Log::Debug("[Scene] Transformation recalculations took {0}us",
 			(Time::Now() - tStart).AsMicroseconds());

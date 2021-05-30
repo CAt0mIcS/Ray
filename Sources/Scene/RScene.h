@@ -3,7 +3,7 @@
 #include "../RBase.h"
 #include "../Core/RTime.h"
 #include "../Core/RMath.h"
-#include "../Graphics/Core/RBindable.h"
+#include "../Graphics/Core/RSharedBindable.h"
 #include "../Events/REventDispatcher.h"
 #include "../Utils/RThreadPool.h"
 #include "REntity.h"
@@ -40,7 +40,6 @@ namespace At0::Ray
 
 	class RAY_EXPORT Scene :
 		public EventDispatcher<EntityCreatedEvent>,
-		public Bindable,
 		EventListener<CameraChangedEvent>
 	{
 	public:

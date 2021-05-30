@@ -2,7 +2,7 @@
 
 #include "../RBase.h"
 #include "RComponent.h"
-#include "../Graphics/Core/RBindable.h"
+#include "../Graphics/Core/RSharedBindable.h"
 
 #include "../Core/RDynamicVertex.h"
 #include "../Graphics/Buffers/RIndexBuffer.h"
@@ -15,7 +15,7 @@ namespace At0::Ray
 	class Material;
 
 
-	class RAY_EXPORT Mesh : public Component, public Bindable
+	class RAY_EXPORT Mesh : public Component, public SharedBindable
 	{
 		friend class MeshRenderer;
 

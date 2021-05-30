@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "../RBase.h"
-#include "Core/RBindable.h"
+#include "Core/RSharedBindable.h"
 #include "../Utils/RModel.h"
 #include "Pipelines/RShader.h"
 #include "../Utils/RLogger.h"
@@ -26,7 +26,7 @@ namespace At0::Ray
 		template<typename T, typename... Args>
 		static Ref<T> Resolve(Args&&... args)
 		{
-			if constexpr (std::is_base_of_v<Bindable, T>)
+			if constexpr (std::is_base_of_v<SharedBindable, T>)
 				return Get().BindableResolve<T>(std::forward<Args>(args)...);
 			else if constexpr (std::is_same_v<Shader, T>)
 				return Get().ShaderResolve(std::forward<Args>(args)...);
@@ -56,13 +56,14 @@ namespace At0::Ray
 			{
 				m_Bindables[tag] = MakeRef<T>(std::forward<Args>(args)...);
 				Log::Trace(
-					"[Codex] Bindable (Tag=\"{0}\") was created because it didn't exist", tag);
+					"[Codex] SharedBindable (Tag=\"{0}\") was created because it didn't exist",
+					tag);
 				return std::static_pointer_cast<T>(m_Bindables[tag]);
 			}
 			// Key exists, return it
 			else
 			{
-				Log::Trace("[Codex] Bindable (Tag=\"{0}\") already exists", tag);
+				Log::Trace("[Codex] SharedBindable (Tag=\"{0}\") already exists", tag);
 				return std::static_pointer_cast<T>(it->second);
 			}
 		}
@@ -99,7 +100,7 @@ namespace At0::Ray
 		}
 
 	private:
-		std::unordered_map<std::string, Ref<Bindable>> m_Bindables;
+		std::unordered_map<std::string, Ref<SharedBindable>> m_Bindables;
 		std::unordered_map<std::string, Ref<Shader>> m_Shaders;
 		std::mutex m_BindableMutex;
 		std::mutex m_ShaderMutex;

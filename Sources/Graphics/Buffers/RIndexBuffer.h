@@ -2,7 +2,7 @@
 
 #include "../../RBase.h"
 #include "RBuffer.h"
-#include "../Core/RBindable.h"
+#include "../Core/RSharedBindable.h"
 
 #include <vulkan/vulkan_core.h>
 #include <vector>
@@ -11,7 +11,7 @@
 
 namespace At0::Ray
 {
-	class RAY_EXPORT IndexBuffer : public Buffer, public Bindable
+	class RAY_EXPORT IndexBuffer : public Buffer, public SharedBindable
 	{
 	public:
 		using Type = uint16_t;

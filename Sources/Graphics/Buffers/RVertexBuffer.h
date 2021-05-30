@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "RBuffer.h"
-#include "../Core/RBindable.h"
+#include "../Core/RSharedBindable.h"
 
 
 #include "Core/RMath.h"
@@ -12,7 +12,7 @@ namespace At0::Ray
 {
 	class DynamicVertex;
 
-	class RAY_EXPORT VertexBuffer : public Buffer, public Bindable
+	class RAY_EXPORT VertexBuffer : public Buffer, public SharedBindable
 	{
 	public:
 		VertexBuffer(std::string_view tag, const DynamicVertex& vertices);

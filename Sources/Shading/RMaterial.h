@@ -1,13 +1,13 @@
 ﻿#pragma once
 
 #include "../RBase.h"
-#include "../Graphics/Core/RBindable.h"
 
 
 namespace At0::Ray
 {
 	class GraphicsPipeline;
 	class Texture2D;
+	class CommandBuffer;
 
 	/**
 	 * Specifies strings which identify the different shader configurations
@@ -27,7 +27,7 @@ namespace At0::Ray
 		static constexpr const char* Color = "_Col";
 	};
 
-	class RAY_EXPORT Material : public Bindable
+	class RAY_EXPORT Material
 	{
 	public:
 		virtual ~Material() = default;

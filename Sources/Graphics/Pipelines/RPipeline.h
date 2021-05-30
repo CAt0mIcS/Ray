@@ -2,7 +2,7 @@
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
-#include "../Core/RBindable.h"
+#include "../Core/RSharedBindable.h"
 
 #include <vulkan/vulkan_core.h>
 
@@ -11,7 +11,7 @@ namespace At0::Ray
 {
 	class Shader;
 
-	class RAY_EXPORT Pipeline : public Bindable
+	class RAY_EXPORT Pipeline : public SharedBindable
 	{
 	public:
 		enum class BindPoint

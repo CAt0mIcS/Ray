@@ -2,7 +2,6 @@
 
 #include "../../../RBase.h"
 #include "../../../Utils/RNonCopyable.h"
-#include "../../Core/RBindable.h"
 #include "../RPipeline.h"
 
 #include <vulkan/vulkan_core.h>
@@ -13,7 +12,7 @@ namespace At0::Ray
 	class BufferUniform;
 	class Sampler2DUniform;
 
-	class DescriptorSet : public Bindable, NonCopyable
+	class DescriptorSet : NonCopyable
 	{
 	public:
 	public:
@@ -23,7 +22,7 @@ namespace At0::Ray
 
 		~DescriptorSet() = default;
 
-		void CmdBind(const CommandBuffer& cmdBuff) const override;
+		void CmdBind(const CommandBuffer& cmdBuff) const;
 		static void Update(const std::vector<VkWriteDescriptorSet>& descriptorWrites);
 		uint32_t GetSetNumber() const { return m_SetNumber; }
 

@@ -7,13 +7,13 @@ namespace At0::Ray
 {
 	class CommandBuffer;
 
-	class RAY_EXPORT Bindable
+	class RAY_EXPORT SharedBindable
 	{
 	public:
-		virtual ~Bindable() = default;
+		virtual ~SharedBindable() = default;
 		virtual void CmdBind(const CommandBuffer& cmdBuff) const = 0;
 
 	protected:
-		Bindable() = default;
+		SharedBindable() = default;
 	};
 }  // namespace At0::Ray
