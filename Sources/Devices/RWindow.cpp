@@ -2,6 +2,7 @@
 #include "RWindow.h"
 
 #include "Graphics/RGraphics.h"
+#include "Scene/RScene.h"
 #include "Devices/RMouse.h"
 #include "Devices/RKeyboard.h"
 #include "Utils/RAssert.h"

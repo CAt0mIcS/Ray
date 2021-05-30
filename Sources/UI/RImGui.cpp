@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -25,6 +25,7 @@
 #include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "Graphics/Images/RTexture2D.h"
+#include "Utils/RLogger.h"
 
 #include <../../Extern/imgui/imgui.h>
 #include <../../Extern/imgui/imgui_internal.h>

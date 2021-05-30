@@ -5,7 +5,6 @@
 #include "../Core/RTime.h"
 #include "../Core/RMath.h"
 #include "../Events/REngineEvents.h"
-#include "../Scene/RScene.h"
 
 #include "../Events/REventListener.h"
 #include "../Events/REngineEvents.h"

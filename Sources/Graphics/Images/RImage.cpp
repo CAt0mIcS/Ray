@@ -9,6 +9,7 @@
 
 #include "Utils/RLogger.h"
 #include "Utils/RException.h"
+#include "Utils/RAssert.h"
 
 
 namespace At0::Ray

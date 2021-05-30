@@ -10,6 +10,7 @@
 #include "RSampler2DUniform.h"
 
 #include "Utils/RException.h"
+#include "Utils/RLogger.h"
 
 
 namespace At0::Ray
