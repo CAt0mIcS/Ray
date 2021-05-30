@@ -64,14 +64,11 @@ namespace At0::Ray
 				std::scoped_lock lock(m_QueueMutex);
 				m_TaskQueue.WaitFor([this]() { return !m_TaskQueue.Empty() || m_Shutdown; });
 
-				// Need to check again if waiting thread was restored because of m_Shutdown
-				if (!m_TaskQueue.Empty())
-					task = m_TaskQueue.PopFront();
+				if (m_Shutdown)
+					return;
+				task = m_TaskQueue.PopFront();
 			}
-			if (task)
-			{
-				task();
-			}
+			task();
 		}
 	}
 }  // namespace At0::Ray

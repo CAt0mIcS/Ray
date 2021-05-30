@@ -20,18 +20,16 @@ namespace At0::Ray
 		/**
 		 * Submits a new function with arguments to the queue of tasks
 		 */
-		template<typename F, typename... Args,
-			typename = std::enable_if_t<
-				std::is_void_v<std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>>>>
-		/*std::future<bool>*/ void Submit(F&& func, Args&&... args);
+		template<typename F, typename... Args>
+		/*std::future<bool>*/ void Submit(F&& task, Args&&... args) requires std::is_void_v<
+			std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>>;
 
 		/**
 		 * Submits a new function with arguments to the queue of tasks
 		 */
 		template<typename F, typename... Args,
-			typename R = std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>,
-			typename = std::enable_if_t<!std::is_void_v<R>>>
-		/*std::future<R>*/ void Submit(F&& task, Args&&... args);
+			typename R = std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>>
+		/*std::future<R>*/ void Submit(F&& task, Args&&... args) requires(!std::is_void_v<R>);
 
 		template<typename F>
 		void PushTask(F&& func);
@@ -84,16 +82,19 @@ namespace At0::Ray
 		static const uint32_t s_MaxThreads;
 	};
 
-	template<typename F, typename... Args, typename>
-	inline /*std::future<bool>*/ void ThreadPool::Submit(F&& func, Args&&... args)
+	template<typename F, typename... Args>
+	inline /*std::future<bool>*/ void
+		ThreadPool::Submit(F&& task, Args&&... args) requires std::is_void_v<
+			std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>>
 	{
-		PushTask(func, std::forward<Args>(args)...);
+		PushTask(task, std::forward<Args>(args)...);
 	}
 
-	template<typename F, typename... Args, typename R, typename>
-	inline /*std::future<R>*/ void ThreadPool::Submit(F&& func, Args&&... args)
+	template<typename F, typename... Args, typename R>
+	/*std::future<R>*/ void ThreadPool::Submit(F&& task, Args&&... args) requires(
+		!std::is_void_v<R>)
 	{
-		PushTask(func, std::forward<Args>(args)...);
+		PushTask(task, std::forward<Args>(args)...);
 	}
 
 	template<typename F>
