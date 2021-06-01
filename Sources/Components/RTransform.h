@@ -23,7 +23,7 @@ namespace At0::Ray
 		void Scale(Float3 scale);
 
 		void UpdateMatrix();
-		bool HasChanged() const { return m_HasChanged; }
+		bool HasChanged() const;
 
 		Transform(Entity entity, Float3 translation, Float3 rotation, Float3 scale);
 		Transform(Entity entity, Float3 translation, Float3 rotation);

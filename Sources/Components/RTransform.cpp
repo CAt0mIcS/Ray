@@ -82,6 +82,15 @@ namespace At0::Ray
 			m_HasChanged = false;
 	}
 
+	bool Transform::HasChanged() const
+	{
+		bool parentChanged = false;
+		if (GetEntity().HasParent())
+			parentChanged = GetEntity().GetParent().Get<Transform>().HasChanged();
+
+		return m_HasChanged || parentChanged;
+	}
+
 	Transform::Transform(Entity entity, Float3 translation, Float3 rotation, Float3 scale)
 		: Component(entity), m_Translation{ translation }, m_Rotation{ rotation }, m_Scale{ scale }
 

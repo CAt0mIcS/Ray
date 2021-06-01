@@ -98,10 +98,8 @@ public:
 
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
-		m_Entity.Get<Ray::Transform>().SetScale(Ray::Float3{ 1.0f });
 
 		m_ChildEntity0 = m_Entity.GetChildren()[0];
-
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));

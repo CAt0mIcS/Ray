@@ -79,7 +79,7 @@ namespace At0::Ray
 		tformView.each([](Transform& tform) { tform.UpdateMatrix(); });
 #endif
 
-		CLog::Debug("[Scene] Transformation recalculations took {0}us",
+		CLog::Trace("[Scene] Transformation recalculations took {0}us",
 			(Time::Now() - tStart).AsMicroseconds());
 
 		m_Registry.view<MeshRenderer>().each([](MeshRenderer& mesh) { mesh.Update(); });

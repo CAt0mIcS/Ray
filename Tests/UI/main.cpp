@@ -132,11 +132,7 @@ int main()
 	signal(SIGINT, SignalHandler);
 
 	Ray::Log::Open("Ray.log");
-#ifdef NDEBUG
-	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
-#else
-	Ray::Log::SetLogLevel(Violent::LogLevel::Trace);
-#endif
+	Ray::Log::SetLogLevel(Violent::LogLevel::Debug);
 
 	try
 	{
