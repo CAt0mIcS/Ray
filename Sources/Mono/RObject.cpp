@@ -66,7 +66,7 @@ namespace At0::Ray::Mono
 		return Function{ methodName, m_Object };
 	}
 
-	Object::MemberAccessProxy Object::ValueTypeAccess(std::string_view memberName) const
+	Object::MemberAccessProxy Object::operator[](std::string_view memberName) const
 	{
 		MonoClass* monoClass = mono_object_get_class(m_Object);
 		MonoClassField* field = mono_class_get_field_from_name(monoClass, memberName.data());

@@ -86,13 +86,7 @@ namespace At0::Ray::Mono
 		/**
 		 * Accesses a member of a class by name
 		 */
-		MemberAccessProxy operator[](std::string_view memberName) const
-		{
-			return ValueTypeAccess(memberName);
-		}
-
-	private:
-		MemberAccessProxy ValueTypeAccess(std::string_view memberName) const;
+		MemberAccessProxy operator[](std::string_view memberName) const;
 
 	private:
 		MonoObject* m_Object = nullptr;
