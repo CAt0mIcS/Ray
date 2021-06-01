@@ -38,11 +38,14 @@ namespace At0::Ray
 			"[MeshRenderer] Mandatory BufferUniform \"{0}\" was not added",
 			UniformTag::PerObjectData);
 
-		if (GetEntity().HasParent())
-			(*m_PerObjectDataUniformRef) = GetEntity().GetParent().Get<Transform>().AsMatrix() *
-										   GetEntity().Get<Transform>().AsMatrix();
-		else
-			(*m_PerObjectDataUniformRef) = GetEntity().Get<Transform>().AsMatrix();
+		if (auto& tform = GetEntity().Get<Transform>(); tform.HasChanged())
+		{
+			if (GetEntity().HasParent())
+				(*m_PerObjectDataUniformRef) =
+					GetEntity().GetParent().Get<Transform>().AsMatrix() * tform.AsMatrix();
+			else
+				(*m_PerObjectDataUniformRef) = tform.AsMatrix();
+		}
 	}
 
 	BufferUniform& MeshRenderer::AddBufferUniform(std::string_view name, Shader::Stage stage)

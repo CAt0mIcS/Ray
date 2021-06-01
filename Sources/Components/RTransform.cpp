@@ -76,7 +76,10 @@ namespace At0::Ray
 			// clang-format on
 
 			m_Changed = false;
+			m_HasChanged = true;
 		}
+		else
+			m_HasChanged = false;
 	}
 
 	Transform::Transform(Entity entity, Float3 translation, Float3 rotation, Float3 scale)

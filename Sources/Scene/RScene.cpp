@@ -71,11 +71,15 @@ namespace At0::Ray
 		// RAY_TODO: Global define to enable/disable profiling
 		Time tStart = Time::Now();
 
+#if RAY_MULTITHREADED_TRANSFORM_CALCULATIONS
 		m_ThreadPool.SubmitLoop(0u, (uint32_t)tformView.size(),
 			[this](uint32_t i) { Entity{ tformView[i] }.Get<Transform>().UpdateMatrix(); });
 		m_ThreadPool.WaitForTasks();
+#else
+		tformView.each([](Transform& tform) { tform.UpdateMatrix(); });
+#endif
 
-		Log::Debug("[Scene] Transformation recalculations took {0}us",
+		Log::Trace("[Scene] Transformation recalculations took {0}us",
 			(Time::Now() - tStart).AsMicroseconds());
 
 		m_Registry.view<MeshRenderer>().each([](MeshRenderer& mesh) { mesh.Update(); });
