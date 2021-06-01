@@ -12,10 +12,17 @@
 
 namespace At0::Ray
 {
+	uint32_t Buffer::s_NonCoherentAtomSize = 0;
+
 	Buffer::Buffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties,
 		const void* data)
 		: m_Size(size), m_IsHostCoherent((properties & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) != 0)
 	{
+		// Set non coherent atom size
+		if (s_NonCoherentAtomSize == 0)
+			s_NonCoherentAtomSize =
+				Graphics::Get().GetPhysicalDevice().GetProperties().limits.nonCoherentAtomSize;
+
 		CreateBuffer(m_Size, usage, properties, m_Buffer, m_BufferMemory);
 
 		if (data)
@@ -67,7 +74,7 @@ namespace At0::Ray
 		mappedMemoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
 		mappedMemoryRange.offset = offset;
 		mappedMemoryRange.memory = bufferMemory;
-		mappedMemoryRange.size = size;
+		mappedMemoryRange.size = PadSizeToAlignment(size, s_NonCoherentAtomSize);
 		RAY_VK_THROW_FAILED(
 			vkFlushMappedMemoryRanges(Graphics::Get().GetDevice(), 1, &mappedMemoryRange),
 			"[Buffer] Failed to flush memory");
@@ -138,12 +145,12 @@ namespace At0::Ray
 
 	uint32_t Buffer::PadSizeToAlignment(uint32_t originalSize, uint32_t alignment)
 	{
+		if (alignment == 0)
+			return originalSize;
+
 		// Calculate required alignment based on minimum device offset alignment
 		uint32_t alignedSize = originalSize;
-		if (alignment > 0)
-		{
-			alignedSize = (alignedSize + alignment - 1) & ~(alignment - 1);
-		}
+		alignedSize = (alignedSize + alignment - 1) & ~(alignment - 1);
 		return alignedSize;
 	}
 

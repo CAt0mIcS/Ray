@@ -21,6 +21,7 @@ namespace At0::Ray
 		void UnmapMemory() const;
 		void FlushMemory(VkDeviceSize size = VK_WHOLE_SIZE, uint32_t offset = 0) const;
 
+		bool IsHostCoherent() const { return m_IsHostCoherent; }
 
 		static void MapMemory(void** data, VkDeviceMemory memory, VkDeviceSize size);
 		static void UnmapMemory(VkDeviceMemory memory);
@@ -42,6 +43,8 @@ namespace At0::Ray
 		void Destroy();
 
 	protected:
+		static uint32_t s_NonCoherentAtomSize;
+
 		VkBuffer m_Buffer = VK_NULL_HANDLE;
 		VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
 

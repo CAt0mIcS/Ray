@@ -73,6 +73,7 @@ public:
 				else
 					Scene::Get().DestroyEntity(Scene::Get().EntityView<Ray::Skybox>()[0]);
 			}
+			ImGui::End();
 		});
 
 		Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {

@@ -12,9 +12,8 @@ namespace At0::Ray
 		: Buffer(size, usage, properties, data), m_BufferUsage(std::move(usage)),
 		  m_MemoryProperties(std::move(properties))
 	{
-		RAY_MEXPECTS((m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) &&
-						 (m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT),
-			"[DynamicBuffer] Needs to be visible to the host and host coherent");
+		RAY_MEXPECTS((m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT),
+			"[DynamicBuffer] Needs to have VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT");
 
 		m_Buffers.emplace_back((Buffer*)this);
 	}
@@ -40,14 +39,18 @@ namespace At0::Ray
 
 	void DynamicBuffer::CopyBuffer(uint32_t srcOffset, uint32_t dstOffset, uint32_t size)
 	{
-
 		if (GetBufferID(srcOffset) == GetBufferID(dstOffset))
 		{
+			Buffer* buffer = m_Buffers[GetBufferID(srcOffset)];
+
 			void* data;
 			MapMemory(&data, srcOffset);
 
 			memcpy((char*)data + GetOffset(dstOffset), (char*)data + GetOffset(srcOffset), size);
 			UnmapMemory(srcOffset);
+
+			if (!buffer->IsHostCoherent())
+				buffer->FlushMemory();
 		}
 		else
 		{
@@ -64,6 +67,10 @@ namespace At0::Ray
 
 			m_Buffers[srcBufferID]->UnmapMemory();
 			m_Buffers[dstBufferID]->UnmapMemory();
+
+			if (!m_Buffers[dstBufferID]->IsHostCoherent())
+				m_Buffers[dstBufferID]->FlushMemory(
+					/*size, GetOffset(dstOffset)*/);  // RAY_TODO: Only flush updated memory range
 		}
 	}
 
@@ -88,13 +95,14 @@ namespace At0::Ray
 			return;
 
 		uint32_t bufferID = GetBufferID(offset);
+		uint32_t localOffset = GetOffset(offset);
 
 		void* mapped;
 		m_Buffers[bufferID]->MapMemory(&mapped);
-		memcpy((char*)mapped + GetOffset(offset), data, size);
+		memcpy((char*)mapped + localOffset, data, size);
 
-		if (!m_IsHostCoherent)
-			FlushMemory();
+		if (!m_Buffers[bufferID]->IsHostCoherent())
+			m_Buffers[bufferID]->FlushMemory(size, localOffset);
 
 		m_Buffers[bufferID]->UnmapMemory();
 	}
