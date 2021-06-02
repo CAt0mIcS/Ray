@@ -58,8 +58,7 @@ namespace At0::Ray
 		uint32_t GetThreadCount() const { return s_ThreadCount; }
 
 		uint32_t GetTasksQueued() const;
-		uint32_t GetTasksRunning() const { return m_TotalTasks - GetTasksQueued(); }
-		uint32_t GetTasksTotal() const { return m_TotalTasks; }
+		uint32_t GetTasksRunning() const { return m_TasksRunning; }
 
 		/**
 		 * Waits for all tasks to finish and destroys the pool
@@ -88,7 +87,7 @@ namespace At0::Ray
 		std::condition_variable m_Condition;
 
 		// Keeps track of the total number of unfinished tasks
-		std::atomic<uint32_t> m_TotalTasks = 0;
+		std::atomic<uint32_t> m_TasksRunning = 0;
 
 		static const uint32_t s_ThreadCount;
 	};
@@ -111,7 +110,6 @@ namespace At0::Ray
 	template<typename F>
 	inline void ThreadPool::PushTask(F&& func)
 	{
-		++m_TotalTasks;
 		{
 			std::scoped_lock lock(m_QueueMutex);
 			m_TaskQueue.push(func);

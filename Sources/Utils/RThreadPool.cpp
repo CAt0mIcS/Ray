@@ -6,6 +6,9 @@
 
 #include "Utils/RLogger.h"
 
+// RAY_TEMPORARY
+#include "Core/RTime.h"
+
 
 namespace At0::Ray
 {
@@ -22,10 +25,13 @@ namespace At0::Ray
 
 	void ThreadPool::WaitForTasks()
 	{
+		// Time tStart = Time::Now();
 		// RAY_TODO:
-		while (GetTasksRunning() != 0)
+		while (m_TasksRunning != 0)
 		{
 		}
+
+		// CLog::Debug("[ThreadPool] Waited for {0}us", (Time::Now() - tStart).AsMicroseconds());
 	}
 
 	uint32_t ThreadPool::GetTasksQueued() const
@@ -67,14 +73,19 @@ namespace At0::Ray
 			{
 				std::unique_lock lock(m_QueueMutex);
 				m_Condition.wait(lock, [this]() { return !m_TaskQueue.empty() || m_Shutdown; });
+				++m_TasksRunning;
 
 				if (m_Shutdown)
+				{
+					--m_TasksRunning;
 					return;
+				}
+
 				task = m_TaskQueue.front();
 				m_TaskQueue.pop();
 			}
 			task();
-			--m_TotalTasks;
+			--m_TasksRunning;
 		}
 	}
 }  // namespace At0::Ray

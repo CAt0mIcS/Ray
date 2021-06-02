@@ -51,51 +51,47 @@ public:
 };
 
 
-class App : public Ray::Engine
+class App : public Ray::Engine, Ray::EventListener<Ray::MouseButtonPressedEvent>
 {
 public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
-		Ray::ImGUI::Get().RegisterNewFrameFunction(
-			[&]()
+		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
 			{
-				{
-					ImGui::Begin("TestEntity");
+				ImGui::Begin("TestEntity");
 
-					Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
+				Ray::Transform& tform = m_Entities[0].Get<Ray::Transform>();
 
-					Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
-					Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
-					Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
+				Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
+				Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
+				Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
 
-					Ray::ImGUI::Float3Widget("Translation", translation);
-					Ray::ImGUI::Float3Widget("Rotation", rotation);
-					Ray::ImGUI::Float3Widget("Scale", scale);
-					ImGui::Spacing();
+				Ray::ImGUI::Float3Widget("Translation", translation);
+				Ray::ImGUI::Float3Widget("Rotation", rotation);
+				Ray::ImGUI::Float3Widget("Scale", scale);
+				ImGui::Spacing();
 
-					tform.RecalculateCachedMatrix();
+				tform.RecalculateCachedMatrix();
 
-					ImGui::End();
-				}
-			});
-		Ray::ImGUI::Get().RegisterNewFrameFunction(
-			[&]()
+				ImGui::End();
+			}
+		});
+		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
 			{
-				{
-					ImGui::Begin("Camera");
+				ImGui::Begin("Camera");
 
-					ImGui::SliderFloat(
-						"Rotation Speed", &Scene::Get().GetCamera().RotationSpeed, 0.0f, 100.0f);
-					ImGui::SliderFloat(
-						"Movement Speed", &Scene::Get().GetCamera().MovementSpeed, 0.1f, 100.0f);
+				ImGui::SliderFloat(
+					"Rotation Speed", &Scene::Get().GetCamera().RotationSpeed, 0.0f, 100.0f);
+				ImGui::SliderFloat(
+					"Movement Speed", &Scene::Get().GetCamera().MovementSpeed, 0.1f, 100.0f);
 
-					Ray::ImGUI::Float3Widget("Camera Position", Scene::Get().GetCamera().Position);
-					Ray::ImGUI::Float3Widget("Camera Rotation", Scene::Get().GetCamera().Rotation);
+				Ray::ImGUI::Float3Widget("Camera Position", Scene::Get().GetCamera().Position);
+				Ray::ImGUI::Float3Widget("Camera Rotation", Scene::Get().GetCamera().Rotation);
 
-					ImGui::End();
-				}
-			});
+				ImGui::End();
+			}
+		});
 
 		// RAY_TODO: Fix matrix not being recalculated at the beginning
 		// auto sharedMaterial = Ray::MakeRef<Ray::FlatColorMaterial>();
@@ -111,15 +107,15 @@ public:
 		//	m_Entity.Get<Ray::Transform>().SetTranslation({ i + 1, 0.0f, 0.0f });
 		//}
 
-		m_Entity = Scene::Get().CreateEntity();
+		auto e = m_Entities.emplace_back(Scene::Get().CreateEntity());
 		auto& scriptableEntity =
-			m_Entity.Emplace<Ray::ScriptableEntity>("Resources/Scripts/Example.cs", "TestScript");
+			e.Emplace<Ray::ScriptableEntity>("Resources/Scripts/Example.cs", "TestScript");
 		Ray::Mono::Script& script = scriptableEntity.GetScript();
 		Ray::Mono::Object& object = scriptableEntity.GetObject();
 
 		m_Update = object.GetFunction("Update");
 
-		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+		e.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
@@ -130,12 +126,24 @@ private:
 	{
 		m_Update(Ray::Engine::Get().GetDelta().AsSeconds());
 
-		m_Entity.Get<Ray::Transform>().SetTranslation(
-			m_Entity.Get<Ray::ScriptableEntity>().GetObject()["translation"].Get<Ray::Float3>());
+		Ray::Float3 translation = m_Entities[0]
+									  .Get<Ray::ScriptableEntity>()
+									  .GetObject()["translation"]
+									  .Get<Ray::Float3>();
+		for (uint32_t i = 0; i < m_Entities.size(); ++i)
+		{
+			m_Entities[i].Get<Ray::Transform>().SetTranslation(translation + (float)i);
+		}
+	}
+
+	void OnEvent(Ray::MouseButtonPressedEvent& e)
+	{
+		auto entity = m_Entities.emplace_back(Scene::Get().CreateEntity());
+		entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 	}
 
 private:
-	Ray::Entity m_Entity;
+	std::vector<Ray::Entity> m_Entities;
 	Ray::Mono::Function m_Update;
 };
 
@@ -152,11 +160,7 @@ int main()
 	signal(SIGINT, SignalHandler);
 
 	Ray::Log::Open("Ray.log");
-#ifdef NDEBUG
-	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
-#else
-	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
-#endif
+	Ray::Log::SetLogLevel(Violent::LogLevel::Debug);
 
 	try
 	{

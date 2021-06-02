@@ -66,6 +66,7 @@ namespace At0::Ray
 	{
 		m_Camera->Update(dt);
 
+		// RAY_TODO: Works as static for now, but shouldn't be
 		static auto tformView = m_Registry.view<Transform>();
 
 		// RAY_TODO: Global define to enable/disable profiling
@@ -74,6 +75,8 @@ namespace At0::Ray
 #if RAY_MULTITHREADED_TRANSFORM_CALCULATIONS
 		m_ThreadPool.SubmitLoop(0u, (uint32_t)tformView.size(),
 			[this](uint32_t i) { Entity{ tformView[i] }.Get<Transform>().UpdateMatrix(); });
+
+		// RAY_TODO: Not working
 		m_ThreadPool.WaitForTasks();
 #else
 		tformView.each([](Transform& tform) { tform.UpdateMatrix(); });

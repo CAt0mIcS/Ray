@@ -3,6 +3,7 @@
 #include "../RBase.h"
 #include "../Core/RTime.h"
 #include "../Core/RMath.h"
+#include "../Components/RTransform.h"
 #include "../Graphics/Core/RSharedBindable.h"
 #include "../Events/REventDispatcher.h"
 #include "../Utils/RThreadPool.h"
