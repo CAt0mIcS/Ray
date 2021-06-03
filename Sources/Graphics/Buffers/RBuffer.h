@@ -24,7 +24,7 @@ namespace At0::Ray
 		void Update(void* data, VkDeviceSize size, VkDeviceSize offset);
 		void CopyRange(VkDeviceSize srcOffset, VkDeviceSize dstOffset, VkDeviceSize size);
 
-		bool IsHostCoherent() const { return m_IsHostCoherent; }
+		VkMemoryPropertyFlags GetMemoryProperties() const { return m_MemoryProperties; }
 
 		static void MapMemory(
 			void** data, VkDeviceMemory memory, VkDeviceSize size, VkDeviceSize offset = 0);
@@ -52,7 +52,8 @@ namespace At0::Ray
 		VkBuffer m_Buffer = VK_NULL_HANDLE;
 		VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
 
+		VkMemoryPropertyFlags m_MemoryProperties;
+
 		VkDeviceSize m_Size = 0;
-		bool m_IsHostCoherent = false;
 	};
 }  // namespace At0::Ray

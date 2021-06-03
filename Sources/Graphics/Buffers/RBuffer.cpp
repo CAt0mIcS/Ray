@@ -16,7 +16,7 @@ namespace At0::Ray
 
 	Buffer::Buffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties,
 		const void* data)
-		: m_Size(size), m_IsHostCoherent((properties & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) != 0)
+		: m_Size(size), m_MemoryProperties(properties)
 	{
 		// Set non coherent atom size
 		if (s_NonCoherentAtomSize == 0)
@@ -32,7 +32,7 @@ namespace At0::Ray
 			memcpy(mapped, data, m_Size);
 
 			// If host coherent hasn't been requested, do a manual flush to make writes visible
-			if (!m_IsHostCoherent)
+			if (!(m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
 				FlushMemory();
 
 			UnmapMemory();
