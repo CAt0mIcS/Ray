@@ -10,7 +10,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
@@ -114,8 +114,6 @@ namespace At0::Ray
 
 		Scope<Buffer> m_VertexBuffer;
 		Scope<Buffer> m_IndexBuffer;
-		void* m_VertexBufferMapped = nullptr;
-		void* m_IndexBufferMapped = nullptr;
 
 		int32_t m_VertexCount = 0;
 		int32_t m_IndexCount = 0;

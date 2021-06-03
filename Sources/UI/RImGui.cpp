@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
+// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -173,37 +173,29 @@ namespace At0::Ray
 		if (!m_VertexBuffer || m_VertexCount != imDrawData->TotalVtxCount)
 		{
 			if (m_VertexBuffer)
-			{
-				m_VertexBuffer->UnmapMemory();
 				m_VertexBuffer.reset();
-			}
 
 			m_VertexBuffer = MakeScope<Buffer>(vertexBufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 
 			m_VertexCount = imDrawData->TotalVtxCount;
-			m_VertexBuffer->MapMemory(&m_VertexBufferMapped);
 		}
 
 		// Index buffer
 		if (!m_IndexBuffer || m_IndexCount < imDrawData->TotalIdxCount)
 		{
 			if (m_IndexBuffer)
-			{
-				m_IndexBuffer->UnmapMemory();
 				m_IndexBuffer.reset();
-			}
 
 			m_IndexBuffer = MakeScope<Buffer>(indexBufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 
 			m_IndexCount = imDrawData->TotalIdxCount;
-			m_IndexBuffer->MapMemory(&m_IndexBufferMapped);
 		}
 
 		// Upload data
-		ImDrawVert* vtxDst = (ImDrawVert*)m_VertexBufferMapped;
-		ImDrawIdx* idxDst = (ImDrawIdx*)m_IndexBufferMapped;
+		ImDrawVert* vtxDst = (ImDrawVert*)m_VertexBuffer->GetMapped();
+		ImDrawIdx* idxDst = (ImDrawIdx*)m_IndexBuffer->GetMapped();
 
 		for (int n = 0; n < imDrawData->CmdListsCount; ++n)
 		{

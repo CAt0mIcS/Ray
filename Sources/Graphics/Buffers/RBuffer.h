@@ -46,6 +46,8 @@ namespace At0::Ray
 		const VkBuffer& GetBuffer() const { return m_Buffer; }
 		VkDeviceSize GetSize() const { return m_Size; }
 		const VkDeviceMemory& GetMemory() const { return m_BufferMemory; }
+		void* GetMapped() { return m_Mapped; }
+		const void* GetMapped() const { return m_Mapped; }
 		operator const VkBuffer&() const { return m_Buffer; }
 
 	protected:
@@ -59,7 +61,7 @@ namespace At0::Ray
 		VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
 
 		VkMemoryPropertyFlags m_MemoryProperties;
-
 		VkDeviceSize m_Size = 0;
+		void* m_Mapped = nullptr;
 	};
 }  // namespace At0::Ray

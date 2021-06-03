@@ -29,17 +29,16 @@ namespace At0::Ray
 
 		CreateBuffer(m_Size, usage, properties, m_Buffer, m_BufferMemory);
 
+		if (m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
+			MapMemory(&m_Mapped);
+
 		if (data)
 		{
-			void* mapped;
-			MapMemory(&mapped);
-			memcpy(mapped, data, m_Size);
+			memcpy(m_Mapped, data, m_Size);
 
 			// If host coherent hasn't been requested, do a manual flush to make writes visible
 			if (!(m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
 				FlushMemory();
-
-			UnmapMemory();
 		}
 
 		// Attach the memory to the buffer
@@ -52,12 +51,17 @@ namespace At0::Ray
 
 	void Buffer::MapMemory(void** data, VkDeviceSize size, VkDeviceSize offset) const
 	{
+		RAY_MEXPECTS(!m_Mapped, "[Buffer] Trying to map mapped memory");
 		RAY_MEXPECTS(m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
 			"[Buffer] Must be host visible");
 		MapMemory(data, m_BufferMemory, size, offset);
 	}
 
-	void Buffer::UnmapMemory() const { UnmapMemory(m_BufferMemory); }
+	void Buffer::UnmapMemory() const
+	{
+		RAY_MEXPECTS(m_Mapped, "[Buffer] Trying to unmap unmapped memory");
+		UnmapMemory(m_BufferMemory);
+	}
 
 	void Buffer::FlushMemory(VkDeviceSize size, uint32_t offset) const
 	{
@@ -69,10 +73,7 @@ namespace At0::Ray
 		RAY_MEXPECTS(
 			offset + size < m_Size, "[Buffer] Trying to update buffer outside of buffer range");
 
-		void* mapped;
-		MapMemory(&mapped, size, offset);
-		memcpy(mapped, data, size);
-		UnmapMemory();
+		memcpy((char*)m_Mapped + offset, data, size);
 	}
 
 	void Buffer::CopyRange(VkDeviceSize srcOffset, VkDeviceSize dstOffset, VkDeviceSize size)
@@ -207,6 +208,9 @@ namespace At0::Ray
 
 	void Buffer::Destroy()
 	{
+		if (m_Mapped)
+			UnmapMemory();
+
 		vkDestroyBuffer(Graphics::Get().GetDevice(), m_Buffer, nullptr);
 		vkFreeMemory(Graphics::Get().GetDevice(), m_BufferMemory, nullptr);
 	}
