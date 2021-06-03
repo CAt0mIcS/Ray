@@ -83,6 +83,7 @@ public:
 			ImGui::SliderInt("Triangle Count", &m_Triangles, 0, m_UpperRange);
 			if (prevTriangleCount != m_Triangles)
 				TriangleCountChanged(prevTriangleCount);
+			ImGui::SliderFloat("Movement Speed", &m_MovementSpeed, -50.0f, 50.0f);
 			ImGui::End();
 		});
 
@@ -94,7 +95,13 @@ public:
 	}
 
 private:
-	void Update() override {}
+	void Update() override
+	{
+		Scene::Get().EntityView<Ray::Transform>().each([this](Ray::Transform& tform) {
+			tform.Translate(
+				Ray::Float3{ m_MovementSpeed * Ray::Engine::Get().GetDelta().AsSeconds() });
+		});
+	}
 
 	void AddTriangle(const std::string& tag)
 	{
@@ -144,6 +151,7 @@ private:
 private:
 	int m_Triangles = 20000;
 	int m_UpperRange = 100000;
+	float m_MovementSpeed = 1.0f;
 	// int m_Triangles = 5460;
 };
 
