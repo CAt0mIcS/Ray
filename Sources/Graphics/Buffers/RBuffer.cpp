@@ -8,6 +8,7 @@
 
 #include "Utils/RException.h"
 #include "Utils/RAssert.h"
+#include "Utils/RLogger.h"
 
 
 namespace At0::Ray
@@ -18,8 +19,8 @@ namespace At0::Ray
 		const void* data)
 		: m_Size(size), m_MemoryProperties(properties)
 	{
-		// RAY_TODO: Check if memory properties are available on this device
-		// (VkPhysicalDeviceMemoryProperties.memoryTypes)
+		// Check if requested memory properties are supported on this GPU
+		m_MemoryProperties = ValidateMemoryProperties();
 
 		// Set non coherent atom size
 		if (s_NonCoherentAtomSize == 0)
@@ -66,7 +67,7 @@ namespace At0::Ray
 	void Buffer::Update(void* data, VkDeviceSize size, VkDeviceSize offset)
 	{
 		RAY_MEXPECTS(
-			offset + size < m_Size, "[Buffer] Trying to update buffer outside of buffer range")
+			offset + size < m_Size, "[Buffer] Trying to update buffer outside of buffer range");
 
 		void* mapped;
 		MapMemory(&mapped, size, offset);
@@ -114,6 +115,20 @@ namespace At0::Ray
 		RAY_VK_THROW_FAILED(
 			vkFlushMappedMemoryRanges(Graphics::Get().GetDevice(), 1, &mappedMemoryRange),
 			"[Buffer] Failed to flush memory");
+	}
+
+	bool Buffer::HasMemoryProperties(VkMemoryPropertyFlags memProps)
+	{
+		const VkMemoryType* memoryTypes =
+			Graphics::Get().GetPhysicalDevice().GetMemoryProperties().memoryTypes;
+		for (uint32_t i = 0;
+			 i < Graphics::Get().GetPhysicalDevice().GetMemoryProperties().memoryTypeCount; ++i)
+		{
+			if (memoryTypes[i].propertyFlags & memProps)
+				return true;
+		}
+
+		return false;
 	}
 
 	void Buffer::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
@@ -194,6 +209,33 @@ namespace At0::Ray
 	{
 		vkDestroyBuffer(Graphics::Get().GetDevice(), m_Buffer, nullptr);
 		vkFreeMemory(Graphics::Get().GetDevice(), m_BufferMemory, nullptr);
+	}
+
+	VkMemoryPropertyFlags Buffer::ValidateMemoryProperties() const
+	{
+		if (!HasMemoryProperties(m_MemoryProperties))
+		{
+			if (m_MemoryProperties ==
+				(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT))
+			{
+				Log::Warn("[Buffer] Memory properties VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | "
+						  "VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT are not supported on this GPU. "
+						  "Trying fallback VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | "
+						  "VK_MEMORY_PROPERTY_HOST_COHERENT_BIT...");
+
+				if (!HasMemoryProperties(
+						VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
+					RAY_THROW_RUNTIME(
+						"[Buffer] Fallback memory properties are not supported on this GPU");
+
+				Log::Warn(
+					"[Buffer] Using fallback memory properties VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT "
+					"| VK_MEMORY_PROPERTY_HOST_COHERENT_BIT");
+				return VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+			}
+		}
+
+		return m_MemoryProperties;
 	}
 
 	void Buffer::BindBufferToMemory(VkBuffer buffer, VkDeviceMemory memory)
