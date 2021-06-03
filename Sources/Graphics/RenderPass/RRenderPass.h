@@ -20,7 +20,7 @@ namespace At0::Ray
 		~RenderPass();
 
 		void Begin(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer,
-			const std::vector<VkClearValue>& clearValues,
+			const VkClearValue clearValues[], uint32_t clearValueCount,
 			VkSubpassContents subpassContents = VK_SUBPASS_CONTENTS_INLINE) const;
 		void End(const CommandBuffer& cmdBuff) const;
 

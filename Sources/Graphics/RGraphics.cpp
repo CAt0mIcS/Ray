@@ -232,20 +232,14 @@ namespace At0::Ray
 	{
 		cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
-		VkClearValue clearColor{ 0.0137254f, 0.014117f, 0.0149019f };
-		VkClearValue depthStencilClearColor{};
-		depthStencilClearColor.depthStencil = { 1.0f, 0 };
+		VkClearValue clearValues[2];
+		clearValues[0].color = { 0.0137254f, 0.014117f, 0.0149019f };
+		clearValues[1].depthStencil = { 1.0f, 0 };
 
-		std::vector<VkClearValue> clearValues;
-		clearValues.emplace_back(clearColor);
-		clearValues.emplace_back(depthStencilClearColor);
+		m_RenderPass->Begin(cmdBuff, framebuffer, clearValues, std::size(clearValues));
 
-		m_RenderPass->Begin(cmdBuff, framebuffer, clearValues);
-
-		const VkViewport viewports[] = { m_Viewport };
-		const VkRect2D scissors[] = { m_Scissor };
-		vkCmdSetViewport(cmdBuff, 0, std::size(viewports), viewports);
-		vkCmdSetScissor(cmdBuff, 0, std::size(scissors), scissors);
+		vkCmdSetViewport(cmdBuff, 0, 1, &m_Viewport);
+		vkCmdSetScissor(cmdBuff, 0, 1, &m_Scissor);
 
 		Scene::Get().CmdBind(cmdBuff);
 		Scene::Get().EntityView<MeshRenderer>().each(

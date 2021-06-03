@@ -36,7 +36,8 @@ namespace At0::Ray
 	}
 
 	void RenderPass::Begin(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer,
-		const std::vector<VkClearValue>& clearValues, VkSubpassContents subpassContents) const
+		const VkClearValue clearValues[], uint32_t clearValueCount,
+		VkSubpassContents subpassContents) const
 	{
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -44,8 +45,8 @@ namespace At0::Ray
 		renderPassInfo.framebuffer = framebuffer;
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = Graphics::Get().GetSwapchain().GetExtent();
-		renderPassInfo.clearValueCount = (uint32_t)clearValues.size();
-		renderPassInfo.pClearValues = clearValues.data();
+		renderPassInfo.clearValueCount = clearValueCount;
+		renderPassInfo.pClearValues = clearValues;
 
 		vkCmdBeginRenderPass(cmdBuff, &renderPassInfo, subpassContents);
 	}
