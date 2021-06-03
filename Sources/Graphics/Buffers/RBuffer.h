@@ -32,11 +32,6 @@ namespace At0::Ray
 		static void FlushMemory(
 			VkDeviceMemory bufferMemory, VkDeviceSize size = VK_WHOLE_SIZE, uint32_t offset = 0);
 
-		/**
-		 * @returns If the GPU supports a combination of memory properties
-		 */
-		static bool HasMemoryProperties(VkMemoryPropertyFlags memProps);
-
 		static void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
 			VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 		static void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
@@ -60,7 +55,7 @@ namespace At0::Ray
 		VkBuffer m_Buffer = VK_NULL_HANDLE;
 		VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
 
-		VkMemoryPropertyFlags m_MemoryProperties;
+		VkMemoryPropertyFlags m_MemoryProperties = 0;
 		VkDeviceSize m_Size = 0;
 		void* m_Mapped = nullptr;
 	};

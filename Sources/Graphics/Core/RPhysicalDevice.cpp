@@ -58,6 +58,17 @@ namespace At0::Ray
 		return 0;
 	}
 
+	bool PhysicalDevice::HasMemoryProperties(VkMemoryPropertyFlags memProps) const
+	{
+		for (uint32_t i = 0; i < m_MemoryProperties.memoryTypeCount; ++i)
+		{
+			if (m_MemoryProperties.memoryTypes[i].propertyFlags & memProps)
+				return true;
+		}
+
+		return false;
+	}
+
 	VkPhysicalDevice PhysicalDevice::ChoosePhysicalDevice(
 		const std::vector<VkPhysicalDevice>& devices)
 	{

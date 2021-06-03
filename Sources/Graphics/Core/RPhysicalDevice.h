@@ -21,6 +21,11 @@ namespace At0::Ray
 
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
 
+		/**
+		 * @returns If the GPU supports a combination of memory properties
+		 */
+		bool HasMemoryProperties(VkMemoryPropertyFlags memProps) const;
+
 	private:
 		VkPhysicalDevice ChoosePhysicalDevice(const std::vector<VkPhysicalDevice>& devices);
 		int32_t ScorePhysicalDevice(VkPhysicalDevice device);
