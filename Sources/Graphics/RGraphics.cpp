@@ -230,7 +230,7 @@ namespace At0::Ray
 	void Graphics::RecordCommandBuffer(
 		const CommandBuffer& cmdBuff, const Framebuffer& framebuffer, uint32_t imageIndex)
 	{
-		cmdBuff.Begin();
+		cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
 		VkClearValue clearColor{ 0.0137254f, 0.014117f, 0.0149019f };
 		VkClearValue depthStencilClearColor{};
@@ -239,11 +239,6 @@ namespace At0::Ray
 		std::vector<VkClearValue> clearValues;
 		clearValues.emplace_back(clearColor);
 		clearValues.emplace_back(depthStencilClearColor);
-
-#if RAY_ENABLE_IMGUI
-		ImGUI::Get().NewFrame();
-		ImGUI::Get().UpdateBuffers();
-#endif
 
 		m_RenderPass->Begin(cmdBuff, framebuffer, clearValues);
 
@@ -294,6 +289,8 @@ namespace At0::Ray
 		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
 
 #if RAY_ENABLE_IMGUI
+		ImGUI::Get().NewFrame();
+		ImGUI::Get().UpdateBuffers();
 		ImGUI::Get().Update(dt);
 #endif
 		Scene::Get().Update(dt);
