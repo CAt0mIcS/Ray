@@ -20,8 +20,7 @@ namespace At0::Ray
 		m_UniformBuffer.Update(data, size, offset);
 	}
 
-	void BufferSynchronizer::Emplace(
-		uint32_t size, uint32_t* offset, std::optional<uint32_t> alignment)
+	uint32_t BufferSynchronizer::Emplace(uint32_t size, std::optional<uint32_t> alignment)
 	{
 		uint32_t minBufferAlignment;
 
@@ -33,12 +32,16 @@ namespace At0::Ray
 		else
 			minBufferAlignment = *alignment;
 
-		m_UniformBuffer.Emplace(size, minBufferAlignment, offset);
+		// m_UniformBuffer.Emplace(size, minBufferAlignment, offset);
+		auto offset = m_NextUniformBufferOffset;
+		m_NextUniformBufferOffset += Buffer::PadSizeToAlignment(size, minBufferAlignment);
+
+		return offset;
 	}
 
 	void BufferSynchronizer::Copy(uint32_t srcOffset, uint32_t dstOffset, uint32_t size)
 	{
-		m_UniformBuffer.CopyBuffer(srcOffset, dstOffset, size);
+		m_UniformBuffer.CopyRange(srcOffset, dstOffset, size);
 	}
 
 	BufferSynchronizer::BufferSynchronizer() {}

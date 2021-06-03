@@ -31,7 +31,7 @@ namespace At0::Ray
 			MapMemory(&mapped);
 			memcpy(mapped, data, m_Size);
 
-			// If host coherent hasn't been requested, do a manual flush t omake writes visible
+			// If host coherent hasn't been requested, do a manual flush to make writes visible
 			if (!m_IsHostCoherent)
 				FlushMemory();
 
@@ -39,16 +39,17 @@ namespace At0::Ray
 		}
 
 		// Attach the memory to the buffer
-		RAY_VK_THROW_FAILED(
-			vkBindBufferMemory(Graphics::Get().GetDevice(), m_Buffer, m_BufferMemory, 0),
-			"[Buffer] Failed to map buffer to buffer memory");
+		BindBufferToMemory(m_Buffer, m_BufferMemory);
 	}
 
 	Buffer::Buffer(VkDeviceSize size) : m_Size(size) {}
 
 	Buffer::~Buffer() { Destroy(); }
 
-	void Buffer::MapMemory(void** data) const { MapMemory(data, m_BufferMemory, m_Size); }
+	void Buffer::MapMemory(void** data, VkDeviceSize size, VkDeviceSize offset) const
+	{
+		MapMemory(data, m_BufferMemory, size, offset);
+	}
 
 	void Buffer::UnmapMemory() const { UnmapMemory(m_BufferMemory); }
 
@@ -57,9 +58,39 @@ namespace At0::Ray
 		FlushMemory(m_BufferMemory, size, offset);
 	}
 
-	void Buffer::MapMemory(void** data, VkDeviceMemory memory, VkDeviceSize size)
+	void Buffer::Update(void* data, VkDeviceSize size, VkDeviceSize offset)
 	{
-		RAY_VK_THROW_FAILED(vkMapMemory(Graphics::Get().GetDevice(), memory, 0, size, 0, data),
+		RAY_MEXPECTS(
+			offset + size < m_Size, "[Buffer] Trying to update buffer outside of buffer range");
+
+		void* mapped;
+		MapMemory(&mapped, size, offset);
+		memcpy(mapped, data, size);
+		UnmapMemory();
+	}
+
+	void Buffer::CopyRange(VkDeviceSize srcOffset, VkDeviceSize dstOffset, VkDeviceSize size)
+	{
+		RAY_ASSERT(
+			false, "[Buffer] Buffer::CopyRange is untested! Remove this if it works as expected");
+		RAY_MEXPECTS(srcOffset + size < m_Size && dstOffset + size < m_Size,
+			"[Buffer] Trying to copy buffer data outside of buffer range");
+
+		void* srcMapped;
+		MapMemory(&srcMapped, size, srcOffset);
+
+		void* dstMapped;
+		MapMemory(&dstMapped, size, dstOffset);
+
+		memcpy(dstMapped, srcMapped, size);
+
+		UnmapMemory();
+	}
+
+	void Buffer::MapMemory(
+		void** data, VkDeviceMemory memory, VkDeviceSize size, VkDeviceSize offset)
+	{
+		RAY_VK_THROW_FAILED(vkMapMemory(Graphics::Get().GetDevice(), memory, offset, size, 0, data),
 			"[Buffer] Failed to map memory");
 	}
 
@@ -161,7 +192,8 @@ namespace At0::Ray
 	}
 
 	void Buffer::BindBufferToMemory(VkBuffer buffer, VkDeviceMemory memory)
-	{  // Attach the memory to the buffer
+	{
+		// Attach the memory to the buffer
 		RAY_VK_THROW_FAILED(vkBindBufferMemory(Graphics::Get().GetDevice(), buffer, memory, 0),
 			"[Buffer] Failed to map buffer to buffer memory");
 	}

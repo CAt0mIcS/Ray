@@ -17,13 +17,17 @@ namespace At0::Ray
 		Buffer() = default;
 		virtual ~Buffer();
 
-		void MapMemory(void** data) const;
+		void MapMemory(
+			void** data, VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0) const;
 		void UnmapMemory() const;
 		void FlushMemory(VkDeviceSize size = VK_WHOLE_SIZE, uint32_t offset = 0) const;
+		void Update(void* data, VkDeviceSize size, VkDeviceSize offset);
+		void CopyRange(VkDeviceSize srcOffset, VkDeviceSize dstOffset, VkDeviceSize size);
 
 		bool IsHostCoherent() const { return m_IsHostCoherent; }
 
-		static void MapMemory(void** data, VkDeviceMemory memory, VkDeviceSize size);
+		static void MapMemory(
+			void** data, VkDeviceMemory memory, VkDeviceSize size, VkDeviceSize offset = 0);
 		static void UnmapMemory(VkDeviceMemory memory);
 		static void FlushMemory(
 			VkDeviceMemory bufferMemory, VkDeviceSize size = VK_WHOLE_SIZE, uint32_t offset = 0);

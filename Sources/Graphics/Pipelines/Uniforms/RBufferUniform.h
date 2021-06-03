@@ -55,17 +55,12 @@ namespace At0::Ray
 		 * uniform buffer and is the offset from the first buffer
 		 * @returns Global offset in the uniform buffer.
 		 */
-		uint32_t GetGlobalOffset() const { return m_Offset; }
-
-		/**
-		 * @returns Offset in the buffer received when calling BufferUniform::GetBuffer
-		 */
-		uint32_t GetOffset() const;
+		uint32_t GetOffset() const { return m_Offset; }
 
 		/**
 		 * @returns Buffer where the uniform data is stored
 		 */
-		const Buffer& GetBuffer() const;
+		const UniformBuffer& GetUniformBuffer() const;
 
 		/**
 		 * @returns Size in bytes of the uniform block

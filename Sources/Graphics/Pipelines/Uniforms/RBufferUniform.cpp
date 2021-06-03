@@ -36,14 +36,9 @@ namespace At0::Ray
 		Setup(size);
 	}
 
-	uint32_t BufferUniform::GetOffset() const
+	const UniformBuffer& BufferUniform::GetUniformBuffer() const
 	{
-		return BufferSynchronizer::Get().GetUniformBuffer().GetOffset(m_Offset);
-	}
-
-	const Buffer& BufferUniform::GetBuffer() const
-	{
-		return BufferSynchronizer::Get().GetUniformBuffer().GetBuffer(m_Offset);
+		return BufferSynchronizer::Get().GetUniformBuffer();
 	}
 
 	BufferUniform::AccessType BufferUniform::operator[](const std::string& name)
@@ -70,6 +65,6 @@ namespace At0::Ray
 	void BufferUniform::Setup(uint32_t bufferSize)
 	{
 		m_Size = bufferSize;
-		BufferSynchronizer::Get().Emplace(bufferSize, &m_Offset);
+		m_Offset = BufferSynchronizer::Get().Emplace(bufferSize);
 	}
 }  // namespace At0::Ray

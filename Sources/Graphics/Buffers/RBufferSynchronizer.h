@@ -27,7 +27,7 @@ namespace At0::Ray
 		template<typename T>
 		void Update(T&& data, uint32_t offset)
 		{
-			m_UniformBuffer.Update(&data, sizeof(data), offset);
+			m_UniformBuffer.Update((void*)&data, sizeof(data), offset);
 		}
 
 		/**
@@ -38,8 +38,11 @@ namespace At0::Ray
 		 */
 		void Update(void* data, uint32_t size, uint32_t offset);
 
-		void Emplace(
-			uint32_t size, uint32_t* offset, std::optional<uint32_t> alignment = std::nullopt);
+		/**
+		 * Reserves a block of memory in the global uniform buffer
+		 * @returns Offset into the uniform buffer
+		 */
+		uint32_t Emplace(uint32_t size, std::optional<uint32_t> alignment = std::nullopt);
 
 		/**
 		 * Copies a range of the buffer to another
@@ -59,6 +62,8 @@ namespace At0::Ray
 
 	private:
 		UniformBuffer m_UniformBuffer;
+		uint32_t m_NextUniformBufferOffset = 0;
+
 		static BufferSynchronizer* s_Instance;
 	};
 }  // namespace At0::Ray

@@ -152,7 +152,6 @@ private:
 	int m_Triangles = 20000;
 	int m_UpperRange = 100000;
 	float m_MovementSpeed = 1.0f;
-	// int m_Triangles = 5460;
 };
 
 void SignalHandler(int signal)
@@ -172,6 +171,8 @@ int main()
 
 	try
 	{
+		Ray::UniformBuffer::SetAllocationSize(209715200);
+
 		Ray::Log::Info("Launch Path: \"{0}\"", std::filesystem::absolute("."));
 		Ray::Window::Create();
 		Ray::Window::Get().Show();

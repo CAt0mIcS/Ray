@@ -140,8 +140,6 @@ set(SRC
 	"Graphics/Buffers/RFramebuffer.cpp"
 	"Graphics/Buffers/RBufferSynchronizer.h"
 	"Graphics/Buffers/RBufferSynchronizer.cpp"
-	"Graphics/Buffers/RDynamicBuffer.h"
-	"Graphics/Buffers/RDynamicBuffer.cpp"
 
 	"Graphics/Images/RImage.h"
 	"Graphics/Images/RImage.cpp"

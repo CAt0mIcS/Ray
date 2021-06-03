@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿
+#pragma once
 
 #include "../RBase.h"
 #include "../Core/RMath.h"
@@ -7,6 +8,11 @@
 #include <string_view>
 
 #include <../../Extern/Violent/include/Violent/Violent.h>
+
+#ifdef _MSC_VER
+	// Don't try to declare a variable with no name
+	#pragma warning(disable : 26444)
+#endif
 
 
 namespace At0::Ray
