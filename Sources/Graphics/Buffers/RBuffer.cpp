@@ -18,6 +18,9 @@ namespace At0::Ray
 		const void* data)
 		: m_Size(size), m_MemoryProperties(properties)
 	{
+		// RAY_TODO: Check if memory properties are available on this device
+		// (VkPhysicalDeviceMemoryProperties.memoryTypes)
+
 		// Set non coherent atom size
 		if (s_NonCoherentAtomSize == 0)
 			s_NonCoherentAtomSize =
