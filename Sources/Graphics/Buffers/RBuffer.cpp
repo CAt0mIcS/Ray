@@ -48,6 +48,8 @@ namespace At0::Ray
 
 	void Buffer::MapMemory(void** data, VkDeviceSize size, VkDeviceSize offset) const
 	{
+		RAY_MEXPECTS(m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			"[Buffer] Must be host visible");
 		MapMemory(data, m_BufferMemory, size, offset);
 	}
 
@@ -61,7 +63,7 @@ namespace At0::Ray
 	void Buffer::Update(void* data, VkDeviceSize size, VkDeviceSize offset)
 	{
 		RAY_MEXPECTS(
-			offset + size < m_Size, "[Buffer] Trying to update buffer outside of buffer range");
+			offset + size < m_Size, "[Buffer] Trying to update buffer outside of buffer range")
 
 		void* mapped;
 		MapMemory(&mapped, size, offset);
