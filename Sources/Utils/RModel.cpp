@@ -34,7 +34,7 @@ namespace At0::Ray
 				aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
 
 		if (!pScene)
-			RAY_THROW_RUNTIME("[Model] Failed to load: \"{0}\"", importer.GetErrorString());
+			ThrowRuntime("[Model] Failed to load: \"{0}\"", importer.GetErrorString());
 
 		Time start = Time::Now();
 

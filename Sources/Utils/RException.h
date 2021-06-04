@@ -2,12 +2,14 @@
 
 #include "../RBase.h"
 #include "../Utils/RString.h"
+#include "../Utils/RLogger.h"
 
 #include <exception>
 #include <string>
 #include <stdint.h>
+#include <source_location>
 
-enum VkResult;
+#include <vulkan/vulkan_core.h>
 
 
 namespace At0::Ray
@@ -48,35 +50,55 @@ namespace At0::Ray
 	private:
 		VkResult m_Error;
 	};
+
+
+	template<typename... Args>
+	struct ThrowVulkanError
+	{
+		ThrowVulkanError(VkResult result, std::string msg, Args&&... args,
+			std::source_location location = std::source_location::current())
+		{
+			if (result != VK_SUCCESS)
+			{
+				VulkanException exception(
+					String::Serialize(msg, std::forward<Args>(args)...).c_str(),
+					(uint16_t)location.line(), location.file_name(), result);
+
+				Log::Critical(exception.what());
+				throw exception;
+			}
+		}
+
+		ThrowVulkanError(std::string msg, Args&&... args,
+			std::source_location location = std::source_location::current())
+		{
+			VulkanException exception(String::Serialize(msg, std::forward<Args>(args)...).c_str(),
+				(uint16_t)location.line(), location.file_name(), VK_ERROR_UNKNOWN);
+
+			Log::Critical(exception.what());
+			throw exception;
+		}
+	};
+
+	template<typename... Args>
+	struct ThrowRuntime
+	{
+		ThrowRuntime(std::string msg, Args&&... args,
+			std::source_location location = std::source_location::current())
+		{
+			RuntimeException exception(String::Serialize(msg, std::forward<Args>(args)...).c_str(),
+				(uint16_t)location.line(), location.file_name());
+			Log::Critical(exception.what());
+			throw exception;
+		}
+	};
+
+	template<typename... Args>
+	ThrowVulkanError(VkResult, std::string, Args&&...) -> ThrowVulkanError<Args...>;
+
+	template<typename... Args>
+	ThrowVulkanError(std::string, Args&&...) -> ThrowVulkanError<Args...>;
+
+	template<typename... Args>
+	ThrowRuntime(std::string, Args&&...) -> ThrowRuntime<Args...>;
 }  // namespace At0::Ray
-
-
-#ifdef _MSC_VER
-	#define RAY_VK_THROW_NO_EXPR(msg, ...)                                                         \
-		throw ::At0::Ray::VulkanException(::At0::Ray::String::Serialize(msg, __VA_ARGS__).c_str(), \
-			(uint16_t)__LINE__, __FILE__, VK_ERROR_UNKNOWN)
-
-	#define RAY_VK_THROW_FAILED(expr, msg, ...)                                                    \
-		if (VkResult RL__VKRES__RL = (expr); RL__VKRES__RL != VK_SUCCESS)                          \
-		throw ::At0::Ray::VulkanException(::At0::Ray::String::Serialize(msg, __VA_ARGS__).c_str(), \
-			(uint16_t)__LINE__, __FILE__, RL__VKRES__RL)
-
-	#define RAY_THROW_RUNTIME(msg, ...)     \
-		throw ::At0::Ray::RuntimeException( \
-			::At0::Ray::String::Serialize(msg, __VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
-#else
-	#define RAY_VK_THROW_NO_EXPR(msg, ...)                                                 \
-		throw ::At0::Ray::VulkanException(                                                 \
-			::At0::Ray::String::Serialize(msg, ##__VA_ARGS__).c_str(), (uint16_t)__LINE__, \
-			__FILE__, VK_ERROR_UNKNOWN)
-
-	#define RAY_VK_THROW_FAILED(expr, msg, ...)                                            \
-		if (VkResult RL__VKRES__RL = (expr); RL__VKRES__RL != VK_SUCCESS)                  \
-		throw ::At0::Ray::VulkanException(                                                 \
-			::At0::Ray::String::Serialize(msg, ##__VA_ARGS__).c_str(), (uint16_t)__LINE__, \
-			__FILE__, RL__VKRES__RL)
-
-	#define RAY_THROW_RUNTIME(msg, ...)     \
-		throw ::At0::Ray::RuntimeException( \
-			::At0::Ray::String::Serialize(msg, ##__VA_ARGS__).c_str(), (uint16_t)__LINE__, __FILE__)
-#endif

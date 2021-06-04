@@ -53,7 +53,7 @@ namespace At0::Ray::Mono
 			// No namespace
 			monoClass = mono_class_from_name(pImage, "", strings[0].c_str());
 		if (!monoClass)
-			RAY_THROW_RUNTIME("[Mono::Object] Failed to get class from name \"{0}\"", className);
+			ThrowRuntime("[Mono::Object] Failed to get class from name \"{0}\"", className);
 
 		// Doesn't call the constructor
 		m_Object = mono_object_new(pDomain, monoClass);
@@ -72,7 +72,7 @@ namespace At0::Ray::Mono
 		MonoClassField* field = mono_class_get_field_from_name(monoClass, memberName.data());
 
 		if (!field)
-			RAY_THROW_RUNTIME("[Mono::Object] Could not find member \"{0}\" in class \"{0}\"",
+			ThrowRuntime("[Mono::Object] Could not find member \"{0}\" in class \"{0}\"",
 				memberName, mono_class_get_name(monoClass));
 
 		return MemberAccessProxy{ m_Object, field };

@@ -3,7 +3,7 @@
 #include "../../../RBase.h"
 #include "../RShader.h"
 
-#include "../../Buffers/RBufferSynchronizer.h"
+#include "../../Buffers/Dynamic/RDynamicUniformBuffer.h"
 
 
 namespace At0::Ray
@@ -17,21 +17,20 @@ namespace At0::Ray
 		class AccessType
 		{
 		public:
-			AccessType(BufferUniform* pThis, uint32_t offsetInUniformBlock)
-				: m_BufferUniform(pThis), m_OffsetInUniformBlock(offsetInUniformBlock)
+			AccessType(DynamicUniformBuffer* pBuffer, uint32_t offsetInUniformBlock)
+				: m_UniformBuffer(pBuffer), m_OffsetInUniformBlock(offsetInUniformBlock)
 			{
 			}
 
 			template<typename T>
 			AccessType& operator=(T&& data)
 			{
-				BufferSynchronizer::Get().Update(
-					data, m_BufferUniform->GetOffset() + m_OffsetInUniformBlock);
+				m_UniformBuffer->Update(data, m_OffsetInUniformBlock);
 				return *this;
 			}
 
 		private:
-			BufferUniform* m_BufferUniform;
+			DynamicUniformBuffer* m_UniformBuffer;
 			uint32_t m_OffsetInUniformBlock;
 		};
 
@@ -51,21 +50,20 @@ namespace At0::Ray
 		uint32_t GetBinding() const { return m_Binding; }
 
 		/**
-		 * This offset does not take into account multiple buffers allocated from the dynamic
-		 * uniform buffer and is the offset from the first buffer
-		 * @returns Global offset in the uniform buffer.
+		 * @returns Global offset in the single global uniform buffer
 		 */
-		uint32_t GetOffset() const { return m_Offset; }
+		uint32_t GetOffset() const { return m_UniformBuffer->GetOffset(); }
 
 		/**
 		 * @returns Buffer where the uniform data is stored
 		 */
-		const UniformBuffer& GetUniformBuffer() const;
+		DynamicUniformBuffer& GetUniformBuffer() { return *m_UniformBuffer; }
+		const DynamicUniformBuffer& GetUniformBuffer() const { return *m_UniformBuffer; }
 
 		/**
 		 * @returns Size in bytes of the uniform block
 		 */
-		uint32_t GetSize() const { return m_Size; }
+		uint32_t GetSize() const { return m_UniformBuffer->GetSize(); }
 
 		/**
 		 * @param name Name of the uniform to update in the uniform block
@@ -95,10 +93,9 @@ namespace At0::Ray
 
 		// The binding specified in the shader
 		uint32_t m_Binding;
-		// The offset in the global uniform buffer
-		uint32_t m_Offset;
-		// Size in bytes of the uniform block
-		uint32_t m_Size;
+
+		// Memory range in global uniform buffer
+		Scope<DynamicUniformBuffer> m_UniformBuffer;
 
 		// Keeps track of all the uniforms in a uniform block and their offset in the block
 		std::vector<std::pair<std::string, uint32_t>> m_UniformInBlockOffsets;

@@ -80,8 +80,8 @@ namespace At0::Ray
 			createInfo.bindingCount = layoutBindings.size();
 			createInfo.pBindings = layoutBindings.data();
 
-			RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(),
-									&createInfo, nullptr, &m_DescriptorSetLayouts[i].second),
+			ThrowVulkanError(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(), &createInfo,
+								 nullptr, &m_DescriptorSetLayouts[i].second),
 				"[GraphicsPipeline] Failed to create descriptor set layout");
 
 			m_DescriptorSetLayouts[i].first = set;
@@ -106,8 +106,8 @@ namespace At0::Ray
 		createInfo.poolSizeCount = (uint32_t)descriptorPoolSizes.size();
 		createInfo.pPoolSizes = descriptorPoolSizes.data();
 
-		RAY_VK_THROW_FAILED(vkCreateDescriptorPool(Graphics::Get().GetDevice(), &createInfo,
-								nullptr, &m_DescriptorPool),
+		ThrowVulkanError(vkCreateDescriptorPool(
+							 Graphics::Get().GetDevice(), &createInfo, nullptr, &m_DescriptorPool),
 			"[GraphicsPipeline] Failed to create descriptor pool");
 	}
 
@@ -130,7 +130,7 @@ namespace At0::Ray
 		createInfo.pushConstantRangeCount = (uint32_t)pushConstantRanges.size();
 		createInfo.pPushConstantRanges = pushConstantRanges.data();
 
-		RAY_VK_THROW_FAILED(
+		ThrowVulkanError(
 			vkCreatePipelineLayout(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Layout),
 			"[GraphicsPipeline] Failed to create layout");
 
@@ -297,8 +297,8 @@ namespace At0::Ray
 		createInfo.basePipelineHandle = VK_NULL_HANDLE;
 		createInfo.basePipelineIndex = -1;
 
-		RAY_VK_THROW_FAILED(vkCreateGraphicsPipelines(Graphics::Get().GetDevice(),
-								*layout.pipelineCache, 1, &createInfo, nullptr, &m_Pipeline),
+		ThrowVulkanError(vkCreateGraphicsPipelines(Graphics::Get().GetDevice(),
+							 *layout.pipelineCache, 1, &createInfo, nullptr, &m_Pipeline),
 			"[GraphicsPipeline] Failed to create");
 
 		// Destroy shader modules as they aren't needed anymore

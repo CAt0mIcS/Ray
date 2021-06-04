@@ -123,8 +123,8 @@ namespace At0::Ray
 		descriptorSetLayoutCreateInfo.bindingCount = 1;
 		descriptorSetLayoutCreateInfo.pBindings = &perSceneBinding;
 
-		RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(),
-								&descriptorSetLayoutCreateInfo, nullptr, &m_DescriptorSetLayout),
+		ThrowVulkanError(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(),
+							 &descriptorSetLayoutCreateInfo, nullptr, &m_DescriptorSetLayout),
 			"[Scene] Failed to create descriptor set layout for per scene data");
 
 		VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
@@ -135,8 +135,8 @@ namespace At0::Ray
 		pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
 		pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
 
-		RAY_VK_THROW_FAILED(vkCreatePipelineLayout(Graphics::Get().GetDevice(),
-								&pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout),
+		ThrowVulkanError(vkCreatePipelineLayout(Graphics::Get().GetDevice(),
+							 &pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout),
 			"[Scene] Failed to create pipeline layout for per scene data");
 
 		VkDescriptorPoolSize poolSize{};
@@ -149,8 +149,8 @@ namespace At0::Ray
 		descriptorPoolCreateInfo.poolSizeCount = 1;
 		descriptorPoolCreateInfo.pPoolSizes = &poolSize;
 
-		RAY_VK_THROW_FAILED(vkCreateDescriptorPool(Graphics::Get().GetDevice(),
-								&descriptorPoolCreateInfo, nullptr, &m_DescriptorPool),
+		ThrowVulkanError(vkCreateDescriptorPool(Graphics::Get().GetDevice(),
+							 &descriptorPoolCreateInfo, nullptr, &m_DescriptorPool),
 			"[Scene] Failed to create descriptor pool");
 
 		m_PerSceneDescriptor = MakeScope<DescriptorSet>(m_DescriptorPool, m_DescriptorSetLayout,

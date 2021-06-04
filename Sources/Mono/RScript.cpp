@@ -23,18 +23,18 @@ namespace At0::Ray::Mono
 
 		m_Domain = mono_jit_init(compiledFilePath.data());
 		if (!m_Domain)
-			RAY_THROW_RUNTIME("[Mono::Script] Failed to initialize mono jit for assembly \"{0}\"",
+			ThrowRuntime("[Mono::Script] Failed to initialize mono jit for assembly \"{0}\"",
 				compiledFilePath);
 
 		// Open a assembly in the domain
 		m_Assembly = mono_domain_assembly_open(m_Domain, compiledFilePath.data());
 		if (!m_Assembly)
-			RAY_THROW_RUNTIME("[Mono::Script] Failed to open assembly \"{0}\"", compiledFilePath);
+			ThrowRuntime("[Mono::Script] Failed to open assembly \"{0}\"", compiledFilePath);
 
 		// Get a image from the assembly
 		m_Image = mono_assembly_get_image(m_Assembly);
 		if (!m_Image)
-			RAY_THROW_RUNTIME(
+			ThrowRuntime(
 				"[Mono::Script] Failed to get image from the assembly \"{0}\"", compiledFilePath);
 	}
 
@@ -42,7 +42,7 @@ namespace At0::Ray::Mono
 	{
 		MonoInit();
 		if (!Compile(filepath))
-			RAY_THROW_RUNTIME("[Mono::Script] Failed to compile script file \"{0}\"", filepath);
+			ThrowRuntime("[Mono::Script] Failed to compile script file \"{0}\"", filepath);
 
 		return Script{ std::filesystem::path(filepath).replace_extension("dll").string() };
 	}

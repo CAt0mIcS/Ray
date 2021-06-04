@@ -39,7 +39,7 @@ namespace At0::Ray
 		VkDeviceSize imageSize = texWidth * texHeight * 4;
 
 		if (!pixels)
-			RAY_THROW_RUNTIME("[Texture2D] Failed to load texture from file \"{0}\"", filepath);
+			ThrowRuntime("[Texture2D] Failed to load texture from file \"{0}\"", filepath);
 
 		// RAY_TODO: Option to enable/disable mipmapping
 		uint32_t mipLevels = (uint32_t)(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;

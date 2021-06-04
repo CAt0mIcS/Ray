@@ -78,7 +78,7 @@ namespace At0::Ray
 	void Window::CreateSurface(
 		VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) const
 	{
-		RAY_VK_THROW_FAILED(glfwCreateWindowSurface(instance, m_hWnd, allocator, surface),
+		ThrowVulkanError(glfwCreateWindowSurface(instance, m_hWnd, allocator, surface),
 			"[Window] GLFW failed to create the window surface");
 	}
 

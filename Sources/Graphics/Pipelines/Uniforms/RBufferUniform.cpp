@@ -36,11 +36,6 @@ namespace At0::Ray
 		Setup(size);
 	}
 
-	const UniformBuffer& BufferUniform::GetUniformBuffer() const
-	{
-		return BufferSynchronizer::Get().GetUniformBuffer();
-	}
-
 	BufferUniform::AccessType BufferUniform::operator[](const std::string& name)
 	{
 		RAY_MEXPECTS(std::find_if(m_UniformInBlockOffsets.begin(), m_UniformInBlockOffsets.end(),
@@ -54,17 +49,13 @@ namespace At0::Ray
 			if (pair.first == name)
 				offset = pair.second;
 
-		return BufferUniform::AccessType{ this, offset };
+		return BufferUniform::AccessType{ m_UniformBuffer.get(), offset };
 	}
 
-	void BufferUniform::Update(void* data, uint32_t size)
-	{
-		BufferSynchronizer::Get().Update(data, size, m_Offset);
-	}
+	void BufferUniform::Update(void* data, uint32_t size) { m_UniformBuffer->Update(data); }
 
 	void BufferUniform::Setup(uint32_t bufferSize)
 	{
-		m_Size = bufferSize;
-		m_Offset = BufferSynchronizer::Get().Emplace(bufferSize);
+		m_UniformBuffer = MakeScope<DynamicUniformBuffer>(bufferSize);
 	}
 }  // namespace At0::Ray

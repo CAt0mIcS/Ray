@@ -16,7 +16,7 @@ namespace At0::Ray
 		uint32_t physicalDeviceCount = 0;
 		vkEnumeratePhysicalDevices(Graphics::Get().GetInstance(), &physicalDeviceCount, nullptr);
 		if (physicalDeviceCount == 0)
-			RAY_THROW_RUNTIME("[PhysicalDevice] Failed to find suitable GPU supporting Vulkan");
+			ThrowRuntime("[PhysicalDevice] Failed to find suitable GPU supporting Vulkan");
 
 		std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
 		vkEnumeratePhysicalDevices(
@@ -24,7 +24,7 @@ namespace At0::Ray
 
 		m_Device = ChoosePhysicalDevice(physicalDevices);
 		if (!m_Device)
-			RAY_THROW_RUNTIME("[VulkanInstance] Failed to find suitable GPU");
+			ThrowRuntime("[VulkanInstance] Failed to find suitable GPU");
 
 		vkGetPhysicalDeviceProperties(m_Device, &m_Properties);
 		Log::Info("[PhysicalDevice] Graphics card info: ");
@@ -54,7 +54,7 @@ namespace At0::Ray
 				return i;
 		}
 
-		RAY_THROW_RUNTIME("[PhysicalDevice] Failed to find suitable memory type");
+		ThrowRuntime("[PhysicalDevice] Failed to find suitable memory type");
 		return 0;
 	}
 

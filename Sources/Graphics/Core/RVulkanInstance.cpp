@@ -58,7 +58,7 @@ namespace At0::Ray
 		if (auto unsuportedExtensions = ExtensionsSupported(instanceExtensions);
 			!unsuportedExtensions.empty())
 		{
-			RAY_THROW_RUNTIME("[VulkanInstance] VulkanExtension {0} not supported");
+			ThrowRuntime("[VulkanInstance] VulkanExtension {0} not supported");
 		}
 
 		createInfo.enabledExtensionCount = (uint32_t)instanceExtensions.size();
@@ -80,7 +80,7 @@ namespace At0::Ray
 			createInfo.enabledLayerCount = 0;
 		}
 
-		RAY_VK_THROW_FAILED(vkCreateInstance(&createInfo, nullptr, &m_Instance),
+		ThrowVulkanError(vkCreateInstance(&createInfo, nullptr, &m_Instance),
 			"[VulkanInstance] Creation failed");
 
 		if (m_ValidationLayersEnabled)

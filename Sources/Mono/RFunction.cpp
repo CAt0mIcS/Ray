@@ -28,7 +28,7 @@ namespace At0::Ray::Mono
 		}
 
 		if (!m_Method)
-			RAY_THROW_RUNTIME("[Mono::Function] Failed to find method \"{0}\"", methodName);
+			ThrowRuntime("[Mono::Function] Failed to find method \"{0}\"", methodName);
 	}
 
 	void Function::Invoke(void** ppParamters) const

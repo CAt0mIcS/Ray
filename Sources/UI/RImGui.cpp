@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -334,8 +334,8 @@ namespace At0::Ray
 			info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 			info.bindingCount = 1;
 			info.pBindings = binding;
-			RAY_VK_THROW_FAILED(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(), &info,
-									nullptr, &m_TextureDescriptorSetLayout),
+			ThrowVulkanError(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(), &info,
+								 nullptr, &m_TextureDescriptorSetLayout),
 				"[ImGUI] Failed to create descriptor set layout for texture upload");
 		}
 	}
@@ -362,8 +362,8 @@ namespace At0::Ray
 			allocInfo.descriptorPool = m_Pipeline->GetDescriptorPool();
 			allocInfo.descriptorSetCount = 1;
 			allocInfo.pSetLayouts = &m_TextureDescriptorSetLayout;
-			RAY_VK_THROW_FAILED(vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo,
-									&m_TextureDescriptorSets.back()),
+			ThrowVulkanError(vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo,
+								 &m_TextureDescriptorSets.back()),
 				"[ImGUI] Failed to create texture descriptor set");
 		}
 

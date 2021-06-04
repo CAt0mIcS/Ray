@@ -36,7 +36,7 @@ namespace At0::Ray
 
 	void LogicalDevice::WaitIdle() const
 	{
-		RAY_VK_THROW_FAILED(
+		ThrowVulkanError(
 			vkDeviceWaitIdle(m_Device), "Failed to wait for the logica device to finish work");
 	}
 
@@ -103,7 +103,7 @@ namespace At0::Ray
 		}
 
 		if (!graphicsFamily)
-			RAY_THROW_RUNTIME("[LogicalDevice] Failed to find graphics queue family");
+			ThrowRuntime("[LogicalDevice] Failed to find graphics queue family");
 	}
 
 	void LogicalDevice::CreateLogicalDevice()
@@ -292,8 +292,8 @@ namespace At0::Ray
 		deviceCreateInfo.enabledExtensionCount = (uint32_t)GetDeviceExtensions().size();
 		deviceCreateInfo.ppEnabledExtensionNames = GetDeviceExtensions().data();
 		deviceCreateInfo.pEnabledFeatures = &enabledFeatures;
-		RAY_VK_THROW_FAILED(vkCreateDevice(Graphics::Get().GetPhysicalDevice(), &deviceCreateInfo,
-								nullptr, &m_Device),
+		ThrowVulkanError(vkCreateDevice(Graphics::Get().GetPhysicalDevice(), &deviceCreateInfo,
+							 nullptr, &m_Device),
 			"[LogicalDevice] Failed to create logical device");
 
 		vkGetDeviceQueue(m_Device, m_GraphicsFamily, 0, &m_GraphicsQueue);

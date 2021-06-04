@@ -43,7 +43,7 @@ namespace At0::Ray
 	Graphics::Graphics()
 	{
 		if (s_Instance)
-			RAY_THROW_RUNTIME("[Graphics] Object already created");
+			ThrowRuntime("[Graphics] Object already created");
 
 		s_Instance = this;
 
@@ -203,15 +203,15 @@ namespace At0::Ray
 
 		for (uint32_t i = 0; i < s_MaxFramesInFlight; ++i)
 		{
-			RAY_VK_THROW_FAILED(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
-									&m_ImageAvailableSemaphore[i]),
+			ThrowVulkanError(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
+								 &m_ImageAvailableSemaphore[i]),
 				"[Graphics] Failed to semaphore to signal when an image is avaliable");
 
-			RAY_VK_THROW_FAILED(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
-									&m_RenderFinishedSemaphore[i]),
+			ThrowVulkanError(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
+								 &m_RenderFinishedSemaphore[i]),
 				"[Graphics] Failed to semaphore to signal when an image has finished rendering");
 
-			RAY_VK_THROW_FAILED(
+			ThrowVulkanError(
 				vkCreateFence(GetDevice(), &fenceCreateInfo, nullptr, &m_InFlightFences[i]),
 				"[Graphics] Failed to create in flight fence");
 		}
@@ -273,7 +273,7 @@ namespace At0::Ray
 			return;
 		}
 		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
-			RAY_THROW_RUNTIME("[Graphics] Failed to acquire next swapchain image");
+			ThrowRuntime("[Graphics] Failed to acquire next swapchain image");
 
 		// Check if previous frame is still using this image (e.g. there is its fence to wait on)
 		if (m_ImagesInFlight[imageIndex] != VK_NULL_HANDLE)
@@ -312,8 +312,8 @@ namespace At0::Ray
 		vkResetFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
 
 		// Fence will be signaled once the command buffer finishes executing
-		RAY_VK_THROW_FAILED(vkQueueSubmit(GetDevice().GetGraphicsQueue(), 1, &submitInfo,
-								m_InFlightFences[m_CurrentFrame]),
+		ThrowVulkanError(vkQueueSubmit(GetDevice().GetGraphicsQueue(), 1, &submitInfo,
+							 m_InFlightFences[m_CurrentFrame]),
 			"[Graphics] Failed to submit image to queue for rendering");
 
 		VkSwapchainKHR swapChain = GetSwapchain();
@@ -332,7 +332,7 @@ namespace At0::Ray
 			m_FramebufferResized)
 			OnFramebufferResized();
 		else if (result != VK_SUCCESS)
-			RAY_THROW_RUNTIME("[Graphics] Failed to present swapchain image");
+			ThrowRuntime("[Graphics] Failed to present swapchain image");
 
 		m_CurrentFrame = (m_CurrentFrame + 1) % s_MaxFramesInFlight;
 	}

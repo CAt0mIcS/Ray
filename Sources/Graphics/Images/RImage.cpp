@@ -105,7 +105,7 @@ namespace At0::Ray
 			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 		}
 		else
-			RAY_THROW_RUNTIME("[Image] Invalid or unsupported combination of old and new layout");
+			ThrowRuntime("[Image] Invalid or unsupported combination of old and new layout");
 
 		vkCmdPipelineBarrier(
 			commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
@@ -298,7 +298,7 @@ namespace At0::Ray
 		imageCreateInfo.pQueueFamilyIndices = queueFamily.data();
 		imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-		RAY_VK_THROW_FAILED(
+		ThrowVulkanError(
 			vkCreateImage(Graphics::Get().GetDevice(), &imageCreateInfo, nullptr, &m_Image),
 			"[Image] Failed to create");
 
@@ -311,7 +311,7 @@ namespace At0::Ray
 		allocInfo.memoryTypeIndex = Graphics::Get().GetPhysicalDevice().FindMemoryType(
 			memRequirements.memoryTypeBits, m_MemoryProperties);
 
-		RAY_VK_THROW_FAILED(
+		ThrowVulkanError(
 			vkAllocateMemory(Graphics::Get().GetDevice(), &allocInfo, nullptr, &m_ImageMemory),
 			"[Image] Failed to allocate image memory");
 

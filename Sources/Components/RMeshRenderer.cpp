@@ -125,7 +125,7 @@ namespace At0::Ray
 			for (auto& uBuff : descriptors.second)
 				if (uBuff->GetName() == name)
 					return *uBuff;
-		RAY_THROW_RUNTIME("[MeshRenderer] Failed to retrieve BufferUniform \"{0}\"", name);
+		ThrowRuntime("[MeshRenderer] Failed to retrieve BufferUniform \"{0}\"", name);
 	}
 
 	Sampler2DUniform& MeshRenderer::GetSampler2DUniform(std::string_view name)
@@ -134,7 +134,7 @@ namespace At0::Ray
 			for (auto& uBuff : descriptors.second)
 				if (uBuff->GetName() == name)
 					return *uBuff;
-		RAY_THROW_RUNTIME("[MeshRenderer] Failed to retrieve Sampler2DUniform \"{0}\"", name);
+		ThrowRuntime("[MeshRenderer] Failed to retrieve Sampler2DUniform \"{0}\"", name);
 	}
 
 	void MeshRenderer::SetMaterial(Ref<Material> material)

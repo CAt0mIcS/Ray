@@ -71,7 +71,7 @@ namespace At0::Ray
 		createInfo.clipped = VK_TRUE;
 		createInfo.oldSwapchain = oldSwapchain;
 
-		RAY_VK_THROW_FAILED(
+		ThrowVulkanError(
 			vkCreateSwapchainKHR(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Swapchain),
 			"[Swapchain] Failed to create");
 
@@ -80,7 +80,7 @@ namespace At0::Ray
 		vkGetSwapchainImagesKHR(
 			Graphics::Get().GetDevice(), m_Swapchain, &swapchainImageCount, nullptr);
 		if (swapchainImageCount == 0)
-			RAY_THROW_RUNTIME("[Swapchain] Image count is 0");
+			ThrowRuntime("[Swapchain] Image count is 0");
 
 		m_Images.resize(swapchainImageCount);
 		vkGetSwapchainImagesKHR(

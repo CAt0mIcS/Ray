@@ -19,13 +19,12 @@ namespace At0::Ray::Mono
 	{
 		MonoMethodDesc* typeMethodDesc = mono_method_desc_new(functionDescriptor.data(), 0);
 		if (!typeMethodDesc)
-			RAY_THROW_RUNTIME(
-				"[Mono::StaticFunction] Failed to create method description from \"{0}\"",
+			ThrowRuntime("[Mono::StaticFunction] Failed to create method description from \"{0}\"",
 				functionDescriptor);
 
 		m_Method = mono_method_desc_search_in_image(typeMethodDesc, m_Image);
 		if (!m_Method)
-			RAY_THROW_RUNTIME("[Mono::StaticFunction] Failed to find method \"{0}\" in image",
+			ThrowRuntime("[Mono::StaticFunction] Failed to find method \"{0}\" in image",
 				functionDescriptor);
 
 		mono_method_desc_free(typeMethodDesc);

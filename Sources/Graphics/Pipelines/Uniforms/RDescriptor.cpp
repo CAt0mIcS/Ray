@@ -26,7 +26,7 @@ namespace At0::Ray
 		allocInfo.descriptorSetCount = 1;
 		allocInfo.pSetLayouts = &m_DescriptorSetLayout;
 
-		RAY_VK_THROW_FAILED(
+		ThrowVulkanError(
 			vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo, &m_DescriptorSet),
 			"[DescriptorSet] Failed to allocate");
 	}
@@ -50,7 +50,7 @@ namespace At0::Ray
 	void DescriptorSet::BindUniform(const BufferUniform& uniform)
 	{
 		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer = uniform.GetUniformBuffer();
+		bufferInfo.buffer = uniform.GetUniformBuffer().GetBuffer();
 		bufferInfo.offset = uniform.GetOffset();
 		bufferInfo.range = uniform.GetSize();
 

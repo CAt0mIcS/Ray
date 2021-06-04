@@ -263,7 +263,7 @@ namespace At0::Ray
 		case VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT: return EShLangTessEvaluation;
 		}
 
-		RAY_THROW_RUNTIME("[Shader] Stage flag {0} is incompatible", stageFlags);
+		ThrowRuntime("[Shader] Stage flag {0} is incompatible", stageFlags);
 		return EShLangAnyHit;
 	}
 
@@ -363,8 +363,8 @@ namespace At0::Ray
 		shaderModuleCreateInfo.pCode = spirvCode.data();
 
 		VkShaderModule shaderModule;
-		RAY_VK_THROW_FAILED(vkCreateShaderModule(Graphics::Get().GetDevice(),
-								&shaderModuleCreateInfo, nullptr, &shaderModule),
+		ThrowVulkanError(vkCreateShaderModule(Graphics::Get().GetDevice(), &shaderModuleCreateInfo,
+							 nullptr, &shaderModule),
 			"[Shader] Failed to create shader module");
 
 		return shaderModule;
