@@ -168,6 +168,7 @@ int main()
 
 	Ray::Log::Open("Ray.log");
 	Ray::Log::SetLogLevel(Violent::LogLevel::Debug);
+	// Ray::CLog::SetLogLevel(Violent::LogLevel::Trace);
 
 	try
 	{

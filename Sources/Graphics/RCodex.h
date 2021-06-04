@@ -4,7 +4,7 @@
 #include "Core/RSharedBindable.h"
 #include "../Utils/RModel.h"
 #include "Pipelines/RShader.h"
-#include "../Utils/RLogger.h"
+//#include "../Utils/RLogger.h"
 
 #include <string>
 #include <unordered_map>
@@ -55,15 +55,15 @@ namespace At0::Ray
 			if (it == m_Bindables.end())
 			{
 				m_Bindables[tag] = MakeRef<T>(std::forward<Args>(args)...);
-				Log::Trace(
-					"[Codex] SharedBindable (Tag=\"{0}\") was created because it didn't exist",
-					tag);
+				// Log::Trace(
+				//	"[Codex] SharedBindable (Tag=\"{0}\") was created because it didn't exist",
+				//	tag);
 				return std::static_pointer_cast<T>(m_Bindables[tag]);
 			}
 			// Key exists, return it
 			else
 			{
-				Log::Trace("[Codex] SharedBindable (Tag=\"{0}\") already exists", tag);
+				// Log::Trace("[Codex] SharedBindable (Tag=\"{0}\") already exists", tag);
 				return std::static_pointer_cast<T>(it->second);
 			}
 		}
@@ -79,13 +79,14 @@ namespace At0::Ray
 			if (it == m_Shaders.end())
 			{
 				m_Shaders[tag] = MakeRef<Shader>(std::forward<Args>(args)...);
-				Log::Trace("[Codex] Model (Tag=\"{0}\") was created because it didn't exist", tag);
+				// Log::Trace("[Codex] Model (Tag=\"{0}\") was created because it didn't exist",
+				// tag);
 				return m_Shaders[tag];
 			}
 			// Key exists, return it
 			else
 			{
-				Log::Trace("[Codex] Model (Tag=\"{0}\") already exists", tag);
+				// Log::Trace("[Codex] Model (Tag=\"{0}\") already exists", tag);
 				return it->second;
 			}
 		}

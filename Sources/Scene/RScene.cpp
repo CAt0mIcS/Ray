@@ -20,6 +20,7 @@
 #include "Core/RTime.h"
 
 #define RAY_MULTITHREADED_TRANSFORM_CALCULATIONS 1
+#define RAY_MULTITHREADED_MESHRENDERER_UPDATES 1
 
 
 namespace At0::Ray
@@ -85,7 +86,20 @@ namespace At0::Ray
 		CLog::Trace("[Scene] Transformation recalculations took {0}us",
 			(Time::Now() - tStart).AsMicroseconds());
 
+		tStart = Time::Now();
+
+#if RAY_MULTITHREADED_MESHRENDERER_UPDATES
+		static auto meshRendererView = m_Registry.view<MeshRenderer>();
+		m_ThreadPool.SubmitLoop(0u, (uint32_t)meshRendererView.size(),
+			[](uint32_t i) { Entity{ meshRendererView[i] }.Get<MeshRenderer>().Update(); });
+		m_ThreadPool.WaitForTasks();
+
+#else
 		m_Registry.view<MeshRenderer>().each([](MeshRenderer& mesh) { mesh.Update(); });
+#endif
+
+		CLog::Trace(
+			"[Scene] MeshRenderer updates took {0}us", (Time::Now() - tStart).AsMicroseconds());
 	}
 
 	void Scene::SetCamera(Scope<Camera> cam) { m_Camera = std::move(cam); }
@@ -171,8 +185,8 @@ namespace At0::Ray
 
 	void Scene::UpdateUniform()
 	{
-		// We wait here to avoid some images having an old camera matrix while new ones already have
-		// the new one (RAY_TODO: Synchronization so that this is not required)
+		// We wait here to avoid some images having an old camera matrix while new ones already
+		// have the new one (RAY_TODO: Synchronization so that this is not required)
 		Graphics::Get().GetDevice().WaitIdle();
 		m_PerSceneUniform->Update(m_Camera->ShaderData);
 	}
