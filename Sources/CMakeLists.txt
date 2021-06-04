@@ -138,8 +138,6 @@ set(SRC
 	"Graphics/Buffers/RVertexBuffer.cpp"
 	"Graphics/Buffers/RFramebuffer.h"
 	"Graphics/Buffers/RFramebuffer.cpp"
-	"Graphics/Buffers/RBufferSynchronizer.h"
-	"Graphics/Buffers/RBufferSynchronizer.cpp"
 	"Graphics/Buffers/Dynamic/RDynamicBuffer.h"
 	"Graphics/Buffers/Dynamic/RDynamicBuffer.cpp"
 	"Graphics/Buffers/Dynamic/RDynamicVertexBuffer.h"

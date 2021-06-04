@@ -17,20 +17,20 @@ namespace At0::Ray
 		class AccessType
 		{
 		public:
-			AccessType(DynamicUniformBuffer* pBuffer, uint32_t offsetInUniformBlock)
-				: m_UniformBuffer(pBuffer), m_OffsetInUniformBlock(offsetInUniformBlock)
+			AccessType(DynamicBuffer* pBuffer, uint32_t offsetInUniformBlock)
+				: m_Buffer(pBuffer), m_OffsetInUniformBlock(offsetInUniformBlock)
 			{
 			}
 
 			template<typename T>
 			AccessType& operator=(T&& data)
 			{
-				m_UniformBuffer->Update(data, m_OffsetInUniformBlock);
+				m_Buffer->Update(data, m_OffsetInUniformBlock);
 				return *this;
 			}
 
 		private:
-			DynamicUniformBuffer* m_UniformBuffer;
+			DynamicBuffer* m_Buffer;
 			uint32_t m_OffsetInUniformBlock;
 		};
 

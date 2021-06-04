@@ -4,8 +4,6 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RPhysicalDevice.h"
 
-#include "../RBufferSynchronizer.h"
-
 
 namespace At0::Ray
 {
@@ -13,15 +11,22 @@ namespace At0::Ray
 	std::atomic<VkDeviceSize> DynamicUniformBuffer::s_NextOffset = 0;
 
 	DynamicUniformBuffer::DynamicUniformBuffer(VkDeviceSize size)
-		: DynamicBuffer(s_UniformBuffer, size, s_NextOffset)
+		: DynamicBuffer(size, s_NextOffset)
 	{
 		if (!s_UniformBuffer)
 			s_UniformBuffer = MakeRef<UniformBuffer>();
+		m_Buffer = s_UniformBuffer;
 
 		s_NextOffset +=
 			Buffer::PadSizeToAlignment(size, Graphics::Get()
 												 .GetPhysicalDevice()
 												 .GetProperties()
 												 .limits.minUniformBufferOffsetAlignment);
+	}
+
+	void DynamicUniformBuffer::Reset()
+	{
+		s_UniformBuffer.reset();
+		s_NextOffset = 0;
 	}
 }  // namespace At0::Ray

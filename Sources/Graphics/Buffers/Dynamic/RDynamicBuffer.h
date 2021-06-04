@@ -38,14 +38,15 @@ namespace At0::Ray
 		void Update(void* data, VkDeviceSize offset = 0);
 
 		const Buffer& GetBuffer() const { return *m_Buffer; }
+		Buffer& GetBuffer() { return *m_Buffer; }
 		VkDeviceSize GetSize() const { return m_Size; }
 		VkDeviceSize GetOffset() const { return m_Offset; }
 
 	protected:
-		DynamicBuffer(Ref<Buffer> buffer, VkDeviceSize size, VkDeviceSize offset);
+		DynamicBuffer(VkDeviceSize size, VkDeviceSize offset);
+		Ref<Buffer> m_Buffer = nullptr;
 
 	private:
-		Ref<Buffer> m_Buffer = nullptr;
 		VkDeviceSize m_Size = 0;
 		VkDeviceSize m_Offset = 0;
 	};

@@ -13,6 +13,8 @@ namespace At0::Ray
 	public:
 		DynamicUniformBuffer(VkDeviceSize size);
 
+		static void Reset();
+
 	private:
 		static Ref<UniformBuffer> s_UniformBuffer;
 		static std::atomic<VkDeviceSize> s_NextOffset;

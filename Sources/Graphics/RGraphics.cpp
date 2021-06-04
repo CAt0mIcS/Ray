@@ -26,7 +26,9 @@
 #include "Graphics/RenderPass/RAttachment.h"
 #include "Graphics/RenderPass/RSubpass.h"
 
-#include "Graphics/Buffers/RBufferSynchronizer.h"
+#include "Graphics/Buffers/Dynamic/RDynamicVertexBuffer.h"
+#include "Graphics/Buffers/Dynamic/RDynamicIndexBuffer.h"
+#include "Graphics/Buffers/Dynamic/RDynamicUniformBuffer.h"
 #include "Graphics/Buffers/RFramebuffer.h"
 
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
@@ -70,7 +72,6 @@ namespace At0::Ray
 		CreateFramebuffers();
 		CreateCommandBuffers();
 		CreatePipelineCache();
-		BufferSynchronizer::Create();
 
 		CreateSyncObjects();
 	}
@@ -283,9 +284,9 @@ namespace At0::Ray
 		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
 
 #if RAY_ENABLE_IMGUI
+		ImGUI::Get().Update(dt);
 		ImGUI::Get().NewFrame();
 		ImGUI::Get().UpdateBuffers();
-		ImGUI::Get().Update(dt);
 #endif
 		Scene::Get().Update(dt);
 
@@ -356,7 +357,7 @@ namespace At0::Ray
 		ImGUI::Destroy();
 #endif
 		Scene::Destroy();
-		BufferSynchronizer::Destroy();
+		DynamicUniformBuffer::Reset();
 		Codex::Shutdown();
 		Resources::Destroy();
 
