@@ -43,11 +43,12 @@ namespace At0::Ray
 		VkDeviceSize GetOffset() const { return m_Offset; }
 
 	protected:
-		DynamicBuffer(VkDeviceSize size, VkDeviceSize offset);
-		Ref<Buffer> m_Buffer = nullptr;
+		DynamicBuffer() = default;
+		void Init(Ref<Buffer> buffer, VkDeviceSize size, VkDeviceSize offset);
 
 	private:
 		VkDeviceSize m_Size = 0;
 		VkDeviceSize m_Offset = 0;
+		Ref<Buffer> m_Buffer = nullptr;
 	};
 }  // namespace At0::Ray

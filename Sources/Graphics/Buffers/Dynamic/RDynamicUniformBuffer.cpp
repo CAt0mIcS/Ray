@@ -11,17 +11,18 @@ namespace At0::Ray
 	std::atomic<VkDeviceSize> DynamicUniformBuffer::s_NextOffset = 0;
 
 	DynamicUniformBuffer::DynamicUniformBuffer(VkDeviceSize size)
-		: DynamicBuffer(size, s_NextOffset)
 	{
 		if (!s_UniformBuffer)
 			s_UniformBuffer = MakeRef<UniformBuffer>();
-		m_Buffer = s_UniformBuffer;
 
+		VkDeviceSize offset = s_NextOffset;
 		s_NextOffset +=
 			Buffer::PadSizeToAlignment(size, Graphics::Get()
 												 .GetPhysicalDevice()
 												 .GetProperties()
 												 .limits.minUniformBufferOffsetAlignment);
+
+		DynamicBuffer::Init(s_UniformBuffer, size, offset);
 	}
 
 	void DynamicUniformBuffer::Reset()
