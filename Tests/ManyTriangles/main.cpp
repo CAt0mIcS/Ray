@@ -97,10 +97,13 @@ public:
 private:
 	void Update() override
 	{
-		Scene::Get().EntityView<Ray::Transform>().each([this](Ray::Transform& tform) {
-			tform.Translate(
+		if (m_MovementSpeed == 0)
+			return;
+
+		auto view = Scene::Get().EntityView<Ray::TagComponent>();
+		for (Ray::Entity e : view)
+			e.Get<Ray::Transform>().Translate(
 				Ray::Float3{ m_MovementSpeed * Ray::Engine::Get().GetDelta().AsSeconds() });
-		});
 	}
 
 	void AddTriangle(const std::string& tag)
