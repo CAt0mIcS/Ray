@@ -210,8 +210,8 @@ IMGUI_VULKAN_FUNC_MAP(IMGUI_VULKAN_FUNC_DEF)
 //-----------------------------------------------------------------------------
 
 // Forward Declarations
-static void ImGui_ImplVulkan_InitPlatformInterface();
-static void ImGui_ImplVulkan_ShutdownPlatformInterface();
+void ImGui_ImplVulkan_InitPlatformInterface();
+void ImGui_ImplVulkan_ShutdownPlatformInterface();
 
 // glsl_shader.vert, compiled with:
 // # glslangValidator -V -x -o glsl_shader.vert.u32 glsl_shader.vert

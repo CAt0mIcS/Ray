@@ -7,7 +7,6 @@
 #include <exception>
 #include <string>
 #include <stdint.h>
-#include <source_location>
 
 #include <vulkan/vulkan_core.h>
 
@@ -56,7 +55,7 @@ namespace At0::Ray
 	struct ThrowVulkanError
 	{
 		ThrowVulkanError(VkResult result, std::string msg, Args&&... args,
-			std::source_location location = std::source_location::current())
+			SourceLocation location = SourceLocation::current())
 		{
 			if (result != VK_SUCCESS)
 			{
@@ -69,8 +68,8 @@ namespace At0::Ray
 			}
 		}
 
-		ThrowVulkanError(std::string msg, Args&&... args,
-			std::source_location location = std::source_location::current())
+		ThrowVulkanError(
+			std::string msg, Args&&... args, SourceLocation location = SourceLocation::current())
 		{
 			VulkanException exception(String::Serialize(msg, std::forward<Args>(args)...).c_str(),
 				(uint16_t)location.line(), location.file_name(), VK_ERROR_UNKNOWN);
@@ -83,8 +82,8 @@ namespace At0::Ray
 	template<typename... Args>
 	struct ThrowRuntime
 	{
-		ThrowRuntime(std::string msg, Args&&... args,
-			std::source_location location = std::source_location::current())
+		ThrowRuntime(
+			std::string msg, Args&&... args, SourceLocation location = SourceLocation::current())
 		{
 			RuntimeException exception(String::Serialize(msg, std::forward<Args>(args)...).c_str(),
 				(uint16_t)location.line(), location.file_name());
