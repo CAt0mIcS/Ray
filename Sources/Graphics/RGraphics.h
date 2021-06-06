@@ -26,6 +26,7 @@ namespace At0::Ray
 	class RenderPass;
 	class Framebuffer;
 	class DepthImage;
+	class CommandBufferRecorder;
 
 
 	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
@@ -91,6 +92,7 @@ namespace At0::Ray
 
 		std::vector<Scope<Framebuffer>> m_Framebuffers;
 		std::vector<Scope<CommandBuffer>> m_CommandBuffers;
+		Scope<CommandBufferRecorder> m_CommandBufferRecorder;
 
 		std::array<VkFence, s_MaxFramesInFlight> m_InFlightFences;
 		std::array<VkSemaphore, s_MaxFramesInFlight> m_ImageAvailableSemaphore;

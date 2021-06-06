@@ -166,6 +166,8 @@ set(SRC
 	"Graphics/Commands/RCommandBuffer.cpp"
 	"Graphics/Commands/RCommandPool.h"
 	"Graphics/Commands/RCommandPool.cpp"
+	"Graphics/Commands/RCommandBufferRecorder.h"
+	"Graphics/Commands/RCommandBufferRecorder.cpp"
 
 	"Graphics/RenderPass/RRenderPass.h"
 	"Graphics/RenderPass/RRenderPass.cpp"

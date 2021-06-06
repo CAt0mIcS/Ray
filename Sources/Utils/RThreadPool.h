@@ -8,7 +8,7 @@
 #include <thread>
 #include <future>
 #include <atomic>
-#include <queue>
+#include <deque>
 
 
 namespace At0::Ray

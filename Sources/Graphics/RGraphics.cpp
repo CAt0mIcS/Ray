@@ -18,6 +18,7 @@
 
 #include "Graphics/Commands/RCommandPool.h"
 #include "Graphics/Commands/RCommandBuffer.h"
+#include "Graphics/Commands/RCommandBufferRecorder.h"
 
 #include "Graphics/Images/RDepthImage.h"
 #include "Graphics/Images/RImageView.h"
@@ -36,6 +37,9 @@
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 
 #include "UI/RImGui.h"
+
+
+#define RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING 1
 
 
 namespace At0::Ray
@@ -220,12 +224,18 @@ namespace At0::Ray
 
 	void Graphics::CreateCommandBuffers()
 	{
+#if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
+		m_CommandBufferRecorder = MakeScope<CommandBufferRecorder>(1,  // threadCount
+			(uint32_t)m_Framebuffers.size());
+#else
+
 		m_CommandBuffers.resize(m_Framebuffers.size());
 
 		for (uint32_t i = 0; i < m_CommandBuffers.size(); ++i)
 		{
 			m_CommandBuffers[i] = MakeScope<CommandBuffer>(*m_CommandPool);
 		}
+#endif
 	}
 
 	void Graphics::RecordCommandBuffer(
@@ -280,6 +290,12 @@ namespace At0::Ray
 		if (m_ImagesInFlight[imageIndex] != VK_NULL_HANDLE)
 			vkWaitForFences(GetDevice(), 1, &m_ImagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
 
+#if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
+		// Reset command pool that was used for this frame
+		vkResetCommandPool(GetDevice(),
+			*m_CommandBufferRecorder->GetCommandResources()[imageIndex].commandPool, 0);
+#endif
+
 		// Mark the image as now being in use by this frame
 		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
 
@@ -300,10 +316,18 @@ namespace At0::Ray
 		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.commandBufferCount = 1;
 
-		// RAY_TODO: Multithreaded command buffer rerecording
-		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex], imageIndex);
 
+#if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
+		m_CommandBufferRecorder->Record(
+			*m_RenderPass, *m_Framebuffers[imageIndex], imageIndex, m_Viewport, m_Scissor);
+		m_CommandBufferRecorder->WaitForTasks();
+		VkCommandBuffer commandBuffer =
+			*m_CommandBufferRecorder->GetCommandResources()[imageIndex].commandBuffer;
+#else
+		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex], imageIndex);
 		VkCommandBuffer commandBuffer = *m_CommandBuffers[imageIndex];
+#endif
+
 		submitInfo.pCommandBuffers = &commandBuffer;
 		submitInfo.signalSemaphoreCount = 1;
 		submitInfo.pSignalSemaphores =
@@ -352,6 +376,7 @@ namespace At0::Ray
 		}
 
 		m_CommandBuffers.clear();
+		m_CommandBufferRecorder.reset();
 
 #if RAY_ENABLE_IMGUI
 		ImGUI::Destroy();
@@ -412,6 +437,7 @@ namespace At0::Ray
 		m_LogicalDevice->WaitIdle();
 
 		m_CommandBuffers.clear();
+		m_CommandBufferRecorder.reset();
 		m_Framebuffers.clear();
 
 		m_RenderPass.reset();
