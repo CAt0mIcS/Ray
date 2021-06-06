@@ -17,6 +17,7 @@ namespace At0::Ray
 
 	public:
 		FlatColorMaterial(Layout layout = {}, GraphicsPipeline::Layout pipelineLayout = {});
+		Float4 GetColor() const override { return m_Layout.color; }
 
 	private:
 		std::vector<std::string> ChooseShaders();

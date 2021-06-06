@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "../RBase.h"
+#include "../Core/RMath.h"
 
 
 namespace At0::Ray
@@ -40,6 +41,7 @@ namespace At0::Ray
 		 */
 		void CmdBind(const CommandBuffer& cmdBuff) const;
 
+		virtual Float4 GetColor() const { return { 1.0f, 1.0f, 1.0f, 1.0f }; }
 		virtual Ref<Texture2D> GetAlbedoMap() const { return nullptr; }
 		virtual Ref<Texture2D> GetDiffuseMap() const { return nullptr; }
 		virtual Ref<Texture2D> GetSpecularMap() const { return nullptr; }
