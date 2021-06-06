@@ -56,41 +56,35 @@ public:
 		Ray::Scene::Create<Scene>();
 		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
 			{
+				auto translate = [](Ray::Transform& tform) {
+					Ray::Float3 newTranslation =
+						Ray::ImGUI::Float3Widget("Translation", tform.Translation());
+					Ray::Float3 newRotation =
+						Ray::ImGUI::Float3Widget("Rotation", tform.Rotation());
+					Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
 
-				ImGui::Begin("TestEntity");
-				Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
+					if (newTranslation != tform.Translation())
+						tform.SetTranslation(newTranslation);
+					if (newRotation != tform.Rotation())
+						tform.SetRotation(newRotation);
+					if (newScale != tform.Scale())
+						tform.SetScale(newScale);
+				};
 
-				Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
-				Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
-				Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
-
-				Ray::ImGUI::Float3Widget("Translation", translation);
-				Ray::ImGUI::Float3Widget("Rotation", rotation);
-				Ray::ImGUI::Float3Widget("Scale", scale);
-				ImGui::Spacing();
-
-				tform.RecalculateCachedMatrix();
-				ImGui::End();
-			}
-		});
-
-		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
-			{
-
-				ImGui::Begin("TestEntityChild0");
-				Ray::Transform& tform = m_ChildEntity0.Get<Ray::Transform>();
-
-				Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
-				Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
-				Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
-
-				Ray::ImGUI::Float3Widget("Translation", translation);
-				Ray::ImGUI::Float3Widget("Rotation", rotation);
-				Ray::ImGUI::Float3Widget("Scale", scale);
-				ImGui::Spacing();
-
-				tform.RecalculateCachedMatrix();
-				ImGui::End();
+				{
+					ImGui::Begin("TestEntity");
+					Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
+					translate(tform);
+					ImGui::Spacing();
+					ImGui::End();
+				}
+				{
+					ImGui::Begin("TestEntityChild0");
+					Ray::Transform& tform = m_ChildEntity0.Get<Ray::Transform>();
+					translate(tform);
+					ImGui::Spacing();
+					ImGui::End();
+				}
 			}
 		});
 

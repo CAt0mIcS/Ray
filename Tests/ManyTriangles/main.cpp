@@ -123,7 +123,7 @@ private:
 		Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
 		auto& renderer = entity.Emplace<Ray::MeshRenderer>(defaultMaterial);
 		renderer.GetBufferUniform("Shading")["color"] =
-			Ray::Float3{ colDist(device), colDist(device), colDist(device) };
+			Ray::Float4{ colDist(device), colDist(device), colDist(device), 1.0f };
 
 		auto& transform = entity.Get<Ray::Transform>();
 		transform.SetTranslation({ posRotDist(device), posRotDist(device), posRotDist(device) });

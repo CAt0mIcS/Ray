@@ -16,7 +16,7 @@ namespace At0::Ray
 	class RAY_EXPORT ThreadPool
 	{
 	public:
-		ThreadPool();
+		ThreadPool(uint32_t threadCount = std::thread::hardware_concurrency());
 
 		/**
 		 * Submits a new function with arguments to the queue of tasks
@@ -55,7 +55,7 @@ namespace At0::Ray
 		/**
 		 * @returns The number of threads
 		 */
-		uint32_t GetThreadCount() const { return s_ThreadCount; }
+		uint32_t GetThreadCount() const { return m_ThreadCount; }
 
 		uint32_t GetTasksQueued() const;
 		uint32_t GetTasksRunning() const { return m_TasksRunning; }
@@ -80,16 +80,17 @@ namespace At0::Ray
 		bool m_Shutdown;
 
 		Scope<std::thread[]> m_Threads;
-		std::queue<std::function<void()>> m_TaskQueue;
+		std::deque<std::function<void()>> m_TaskQueue;
 
 		mutable std::mutex m_QueueMutex;
 		mutable std::mutex m_PoolMutex;
 		std::condition_variable m_Condition;
+		std::condition_variable m_TaskFinished;
 
 		// Keeps track of the total number of unfinished tasks
 		std::atomic<uint32_t> m_TasksRunning = 0;
 
-		static const uint32_t s_ThreadCount;
+		const uint32_t m_ThreadCount;
 	};
 
 	template<typename F, typename... Args>
@@ -110,10 +111,8 @@ namespace At0::Ray
 	template<typename F>
 	inline void ThreadPool::PushTask(F&& func)
 	{
-		{
-			std::scoped_lock lock(m_QueueMutex);
-			m_TaskQueue.push(func);
-		}
+		std::scoped_lock lock(m_QueueMutex);
+		m_TaskQueue.emplace_back(std::forward<F>(func));
 		m_Condition.notify_one();
 	}
 
@@ -128,8 +127,8 @@ namespace At0::Ray
 	{
 		// Only enable if we can get at least two loops per thread
 		std::vector<uint32_t> runsPerThread;
-		if (lastIdx / s_ThreadCount >= 2)
-			runsPerThread = GenerateChunks((uint32_t)lastIdx, s_ThreadCount);
+		if (lastIdx / m_ThreadCount >= 2)
+			runsPerThread = GenerateChunks((uint32_t)lastIdx, m_ThreadCount);
 		else
 			runsPerThread.emplace_back((uint32_t)lastIdx);
 

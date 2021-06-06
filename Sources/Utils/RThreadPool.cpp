@@ -6,18 +6,15 @@
 
 #include "Utils/RLogger.h"
 
-// RAY_TEMPORARY
-#include "Core/RTime.h"
-
 
 namespace At0::Ray
 {
-	const uint32_t ThreadPool::s_ThreadCount = std::thread::hardware_concurrency();
-
-	ThreadPool::ThreadPool() : m_Threads(MakeScope<std::thread[]>(s_ThreadCount)), m_Shutdown(false)
+	ThreadPool::ThreadPool(uint32_t threadCount)
+		: m_ThreadCount(threadCount), m_Threads(MakeScope<std::thread[]>(threadCount)),
+		  m_Shutdown(false)
 	{
-		Log::Info("[ThreadPool] Initialized {0} threads", s_ThreadCount);
-		for (uint16_t i = 0; i < s_ThreadCount; ++i)
+		Log::Info("[ThreadPool] Initialized {0} thread(s)", m_ThreadCount);
+		for (uint16_t i = 0; i < m_ThreadCount; ++i)
 		{
 			m_Threads[i] = std::thread([this]() { InfiniteWait(); });
 		}
@@ -25,13 +22,9 @@ namespace At0::Ray
 
 	void ThreadPool::WaitForTasks()
 	{
-		// Time tStart = Time::Now();
-		// RAY_TODO:
-		while (m_TasksRunning != 0)
-		{
-		}
-
-		// CLog::Debug("[ThreadPool] Waited for {0}us", (Time::Now() - tStart).AsMicroseconds());
+		std::unique_lock lock(m_QueueMutex);
+		m_TaskFinished.wait(
+			lock, [this]() { return m_TaskQueue.empty() && (m_TasksRunning == 0); });
 	}
 
 	uint32_t ThreadPool::GetTasksQueued() const
@@ -50,7 +43,7 @@ namespace At0::Ray
 
 		m_Condition.notify_all();
 
-		for (uint16_t i = 0; i < s_ThreadCount; ++i)
+		for (uint16_t i = 0; i < m_ThreadCount; ++i)
 		{
 			auto id = m_Threads[i].get_id();
 			m_Threads[i].join();
@@ -69,23 +62,27 @@ namespace At0::Ray
 	{
 		while (!m_Shutdown)
 		{
-			std::function<void()> task;
-			{
-				std::unique_lock lock(m_QueueMutex);
-				m_Condition.wait(lock, [this]() { return !m_TaskQueue.empty() || m_Shutdown; });
-				++m_TasksRunning;
+			std::unique_lock lock(m_QueueMutex);
+			m_Condition.wait(lock, [this]() { return m_Shutdown || !m_TaskQueue.empty(); });
 
-				if (m_Shutdown)
-				{
-					--m_TasksRunning;
-					return;
-				}
+			if (m_Shutdown)
+				break;
 
-				task = m_TaskQueue.front();
-				m_TaskQueue.pop();
-			}
-			task();
+			++m_TasksRunning;
+
+			// Pull from queue
+			auto fn = m_TaskQueue.front();
+			m_TaskQueue.pop_front();
+
+			// Release lock, run task async
+			lock.unlock();
+
+			// Run function outside context
+			fn();
+
+			lock.lock();
 			--m_TasksRunning;
+			m_TaskFinished.notify_one();
 		}
 	}
 }  // namespace At0::Ray
