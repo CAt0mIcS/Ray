@@ -10,7 +10,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
+// clang-format off
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
@@ -75,7 +75,7 @@ namespace At0::Ray
 			m_NewFrameFunctions.emplace_back(func);
 		}
 
-		static void Float3Widget(std::string_view title, Float3& data);
+		static Float3 Float3Widget(std::string_view title, Float3 data);
 		void* PushTexture(Ref<Texture2D> texture);
 		void* PushTexture(VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout);
 		Ref<Texture2D> StoreTexture(Ref<Texture2D> tex) { return m_Textures.emplace_back(tex); }

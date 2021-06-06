@@ -493,7 +493,7 @@ namespace At0::Ray
 		io.MouseWheel += (float)e.GetOffset().y;
 	}
 
-	void ImGUI::Float3Widget(std::string_view title, Float3& data)
+	Float3 ImGUI::Float3Widget(std::string_view title, Float3 data)
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		auto boldFont = io.Fonts->Fonts[0];
@@ -549,6 +549,8 @@ namespace At0::Ray
 		ImGui::PopStyleVar();
 		ImGui::Columns(1);
 		ImGui::PopID();
+
+		return data;
 	}
 
 }  // namespace At0::Ray

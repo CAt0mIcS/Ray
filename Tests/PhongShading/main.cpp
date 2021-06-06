@@ -57,38 +57,35 @@ public:
 		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
 			{
 
+				auto translate = [](Ray::Transform& tform) {
+					Ray::Float3 newTranslation =
+						Ray::ImGUI::Float3Widget("Translation", tform.Translation());
+					Ray::Float3 newRotation =
+						Ray::ImGUI::Float3Widget("Rotation", tform.Rotation());
+					Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
+
+					if (newTranslation != tform.Translation())
+						tform.SetTranslation(newTranslation);
+					if (newRotation != tform.Rotation())
+						tform.SetRotation(newRotation);
+					if (newScale != tform.Scale())
+						tform.SetScale(newScale);
+				};
+
 				ImGui::Begin("Transforms");
 				{
 					ImGui::Begin("Entity");
 					Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
-
-					Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
-					Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
-					Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
-
-					Ray::ImGUI::Float3Widget("Translation", translation);
-					Ray::ImGUI::Float3Widget("Rotation", rotation);
-					Ray::ImGUI::Float3Widget("Scale", scale);
+					translate(tform);
 					ImGui::Spacing();
 					ImGui::End();
-
-					tform.RecalculateCachedMatrix();
 				}
 				{
 					ImGui::Begin("Light");
 					Ray::Transform& tform = m_Light.Get<Ray::Transform>();
-
-					Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
-					Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
-					Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
-
-					Ray::ImGUI::Float3Widget("Translation", translation);
-					Ray::ImGUI::Float3Widget("Rotation", rotation);
-					Ray::ImGUI::Float3Widget("Scale", scale);
+					translate(tform);
 					ImGui::Spacing();
 					ImGui::End();
-
-					tform.RecalculateCachedMatrix();
 				}
 
 				ImGui::End();
@@ -107,6 +104,7 @@ public:
 			Ray::Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", flatWhiteMaterial));
 		m_Light.Get<Ray::MeshRenderer>().GetBufferUniform("Shading")["color"] =
 			flatWhiteMaterial->GetColor();
+		m_Light.Get<Ray::Transform>().SetScale(Ray::Float3(0.4f));
 
 		// Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 		//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
