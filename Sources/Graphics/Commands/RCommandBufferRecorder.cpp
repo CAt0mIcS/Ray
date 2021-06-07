@@ -14,7 +14,8 @@
 namespace At0::Ray
 {
 	CommandBufferRecorder::CommandBufferRecorder(uint32_t numThreads, uint32_t numPools)
-		: m_ThreadPool(numThreads)
+		: m_ThreadPool(numThreads), m_VkCommandBuffers(numThreads * numPools), m_WaitSemaphores(1),
+		  m_SignalSemaphores(1)
 	{
 		m_CommandResources.reserve(numThreads * numPools);
 		for (uint32_t i = 0; i < numPools; ++i)
@@ -32,6 +33,9 @@ namespace At0::Ray
 				MakeScope<CommandBuffer>(*m_CommandResources[i].commandPool);
 		});
 		m_ThreadPool.WaitForTasks();
+
+		for (uint32_t i = 0; i < m_CommandResources.size(); ++i)
+			m_VkCommandBuffers[i] = *m_CommandResources[i].commandBuffer;
 	}
 
 	CommandBufferRecorder::~CommandBufferRecorder() {}
@@ -64,5 +68,21 @@ namespace At0::Ray
 
 			cmdBuff.End();
 		});
+	}
+
+	void CommandBufferRecorder::FillSubmitInfo(uint32_t imageIndex,
+		VkSemaphore imageAvailableSemaphore, VkSemaphore renderFinishedSemaphore,
+		VkSubmitInfo& submitInfo)
+	{
+		submitInfo.commandBufferCount = m_ThreadPool.GetThreadCount();
+		m_WaitSemaphores[0] = imageAvailableSemaphore;
+		m_SignalSemaphores[0] = renderFinishedSemaphore;
+
+		submitInfo.waitSemaphoreCount = (uint32_t)m_WaitSemaphores.size();
+		submitInfo.pWaitSemaphores = m_WaitSemaphores.data();
+		submitInfo.pCommandBuffers = m_VkCommandBuffers.data() + imageIndex;
+
+		submitInfo.signalSemaphoreCount = (uint32_t)m_SignalSemaphores.size();
+		submitInfo.pSignalSemaphores = m_SignalSemaphores.data();
 	}
 }  // namespace At0::Ray

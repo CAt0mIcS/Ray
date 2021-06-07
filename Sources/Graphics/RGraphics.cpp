@@ -310,29 +310,35 @@ namespace At0::Ray
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
 		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-		submitInfo.waitSemaphoreCount = 1;
-		submitInfo.pWaitSemaphores =
-			&m_ImageAvailableSemaphore[m_CurrentFrame];	 // Wait until image was acquired
-		submitInfo.pWaitDstStageMask = waitStages;
-		submitInfo.commandBufferCount = 1;
 
 
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
 		m_CommandBufferRecorder->Record(
 			*m_RenderPass, *m_Framebuffers[imageIndex], imageIndex, m_Viewport, m_Scissor);
 		m_CommandBufferRecorder->WaitForTasks();
-		VkCommandBuffer commandBuffer =
-			*m_CommandBufferRecorder->GetCommandResources()[imageIndex].commandBuffer;
+		// VkCommandBuffer commandBuffer =
+		//	*m_CommandBufferRecorder->GetCommandResources()[imageIndex].commandBuffer;
+		m_CommandBufferRecorder->FillSubmitInfo(imageIndex,
+			m_ImageAvailableSemaphore[m_CurrentFrame],	// Wait until image was acquired
+
+			m_RenderFinishedSemaphore[m_CurrentFrame],	// Signal when rendering finished and
+														// presentation can happen
+			submitInfo);
 #else
 		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex], imageIndex);
 		VkCommandBuffer commandBuffer = *m_CommandBuffers[imageIndex];
-#endif
-
+		submitInfo.commandBufferCount = 1;
+		submitInfo.waitSemaphoreCount = 1;
+		submitInfo.pWaitSemaphores =
+			&m_ImageAvailableSemaphore[m_CurrentFrame];	 // Wait until image was acquired
 		submitInfo.pCommandBuffers = &commandBuffer;
 		submitInfo.signalSemaphoreCount = 1;
 		submitInfo.pSignalSemaphores =
 			&m_RenderFinishedSemaphore[m_CurrentFrame];	 // Signal when rendering finished and
 														 // presentation can happen
+#endif
+
+		submitInfo.pWaitDstStageMask = waitStages;
 
 		vkResetFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
 
