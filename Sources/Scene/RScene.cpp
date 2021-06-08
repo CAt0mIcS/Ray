@@ -67,15 +67,15 @@ namespace At0::Ray
 	{
 		m_Camera->Update(dt);
 
-		// RAY_TODO: Works as static for now, but shouldn't be
-		static auto tformView = m_Registry.view<Transform>();
+		auto tformView = m_Registry.view<Transform>();
 
 		// RAY_TODO: Global define to enable/disable profiling
 		Time tStart = Time::Now();
 
 #if RAY_MULTITHREADED_TRANSFORM_CALCULATIONS
-		m_ThreadPool.SubmitLoop(0u, (uint32_t)tformView.size(),
-			[this](uint32_t i) { Entity{ tformView[i] }.Get<Transform>().UpdateMatrix(); });
+		m_ThreadPool.SubmitLoop(0u, (uint32_t)tformView.size(), [this, &tformView](uint32_t i) {
+			Entity{ tformView[i] }.Get<Transform>().UpdateMatrix();
+		});
 
 		// RAY_TODO: Not working
 		m_ThreadPool.WaitForTasks();
@@ -89,9 +89,11 @@ namespace At0::Ray
 		tStart = Time::Now();
 
 #if RAY_MULTITHREADED_MESHRENDERER_UPDATES
-		static auto meshRendererView = m_Registry.view<MeshRenderer>();
-		m_ThreadPool.SubmitLoop(0u, (uint32_t)meshRendererView.size(),
-			[](uint32_t i) { Entity{ meshRendererView[i] }.Get<MeshRenderer>().Update(); });
+		auto meshRendererView = m_Registry.view<MeshRenderer>();
+		m_ThreadPool.SubmitLoop(
+			0u, (uint32_t)meshRendererView.size(), [&meshRendererView](uint32_t i) {
+				Entity{ meshRendererView[i] }.Get<MeshRenderer>().Update();
+			});
 		m_ThreadPool.WaitForTasks();
 
 #else
