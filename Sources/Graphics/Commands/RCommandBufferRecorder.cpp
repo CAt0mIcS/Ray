@@ -27,9 +27,7 @@ namespace At0::Ray
 		{
 			for (uint32_t j = 0; j < numThreads; ++j)
 			{
-				m_CommandResources[i][j] = Resources{
-					MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT), nullptr
-				};
+				m_CommandResources[i][j] = Resources{ MakeScope<CommandPool>(), nullptr };
 				m_CommandResources[i][j].commandBuffer =
 					MakeScope<CommandBuffer>(*m_CommandResources[i][j].commandPool);
 				m_VkCommandBuffers[i][j] = *m_CommandResources[i][j].commandBuffer;
