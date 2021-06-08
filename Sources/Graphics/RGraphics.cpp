@@ -292,8 +292,9 @@ namespace At0::Ray
 
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
 		// Reset command pool that was used for this frame
-		vkResetCommandPool(GetDevice(),
-			*m_CommandBufferRecorder->GetCommandResources()[imageIndex].commandPool, 0);
+		for (uint32_t thread = 0; thread < m_CommandBufferRecorder->GetThreadCount(); ++thread)
+			vkResetCommandPool(GetDevice(),
+				*m_CommandBufferRecorder->GetCommandResources(imageIndex)[thread].commandPool, 0);
 #endif
 
 		// Mark the image as now being in use by this frame
@@ -347,11 +348,14 @@ namespace At0::Ray
 							 m_InFlightFences[m_CurrentFrame]),
 			"[Graphics] Failed to submit image to queue for rendering");
 
+		auto presentWaitSemaphores = m_CommandBufferRecorder->GetPresentWaitSemaphores(imageIndex);
+		presentWaitSemaphores.emplace_back(m_RenderFinishedSemaphore[m_CurrentFrame]);
+
 		VkSwapchainKHR swapChain = GetSwapchain();
 		VkPresentInfoKHR presentInfo{};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-		presentInfo.waitSemaphoreCount = 1;
-		presentInfo.pWaitSemaphores = &m_RenderFinishedSemaphore[m_CurrentFrame];
+		presentInfo.waitSemaphoreCount = (uint32_t)presentWaitSemaphores.size();
+		presentInfo.pWaitSemaphores = presentWaitSemaphores.data();
 		presentInfo.swapchainCount = 1;
 		presentInfo.pSwapchains = &swapChain;
 		presentInfo.pImageIndices = &imageIndex;

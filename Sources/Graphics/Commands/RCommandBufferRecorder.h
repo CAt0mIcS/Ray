@@ -32,14 +32,23 @@ namespace At0::Ray
 		void FillSubmitInfo(uint32_t imageIndex, VkSemaphore imageAvailableSemaphore,
 			VkSemaphore renderFinishedSemaphore, VkSubmitInfo& submitInfo);
 
-		const std::vector<Resources>& GetCommandResources() const { return m_CommandResources; }
+		uint32_t GetThreadCount() const { return m_ThreadPool.GetThreadCount(); }
+
+		/**
+		 * @returns The semaphores to wait on for all command buffers to finish recording before
+		 * calling vkQueuePresentKHR
+		 */
+		const std::vector<VkSemaphore>& GetPresentWaitSemaphores(uint32_t imageIndex) const;
+		const std::vector<Resources>& GetCommandResources(uint32_t imageIndex) const;
 
 	private:
 		ThreadPool m_ThreadPool;
-		std::vector<Resources> m_CommandResources;
 
-		std::vector<VkSemaphore> m_WaitSemaphores;
-		std::vector<VkSemaphore> m_SignalSemaphores;
-		std::vector<VkCommandBuffer> m_VkCommandBuffers;
+		// [imageIndex][thread]
+		std::vector<std::vector<Resources>> m_CommandResources;
+		std::vector<std::vector<VkCommandBuffer>> m_VkCommandBuffers;
+		std::vector<std::vector<VkSemaphore>> m_WaitSemaphores;
+		std::vector<std::vector<VkSemaphore>> m_SignalSemaphores;
+		std::vector<std::vector<VkSemaphore>> m_PresentWaitSemaphores;
 	};
 }  // namespace At0::Ray
