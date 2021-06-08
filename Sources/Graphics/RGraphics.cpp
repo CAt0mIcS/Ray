@@ -225,8 +225,8 @@ namespace At0::Ray
 	void Graphics::CreateCommandBuffers()
 	{
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
-		m_CommandBufferRecorder = MakeScope<CommandBufferRecorder>(2,  // threadCount
-			(uint32_t)m_Framebuffers.size());
+		m_CommandBufferRecorder = MakeScope<CommandBufferRecorder>(
+			std::thread::hardware_concurrency(), (uint32_t)m_Framebuffers.size());
 #else
 
 		m_CommandBuffers.resize(m_Framebuffers.size());
