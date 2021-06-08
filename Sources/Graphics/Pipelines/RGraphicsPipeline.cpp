@@ -300,8 +300,5 @@ namespace At0::Ray
 		ThrowVulkanError(vkCreateGraphicsPipelines(Graphics::Get().GetDevice(),
 							 *layout.pipelineCache, 1, &createInfo, nullptr, &m_Pipeline),
 			"[GraphicsPipeline] Failed to create");
-
-		// Destroy shader modules as they aren't needed anymore
-		m_Shader->DestroyShaderModules();
 	}
 }  // namespace At0::Ray
