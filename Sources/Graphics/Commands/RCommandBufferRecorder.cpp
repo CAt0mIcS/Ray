@@ -14,8 +14,7 @@
 namespace At0::Ray
 {
 	CommandBufferRecorder::CommandBufferRecorder(uint32_t numThreads, uint32_t numPools)
-		: m_ThreadPool(numThreads), m_VkCommandBuffers(numPools), m_WaitSemaphores(numPools),
-		  m_SignalSemaphores(numPools), m_PresentWaitSemaphores(numPools)
+		: m_ThreadPool(numThreads), m_VkCommandBuffers(numPools)
 	{
 		m_CommandResources.resize(numPools);
 		for (auto& resources : m_CommandResources)
@@ -23,17 +22,6 @@ namespace At0::Ray
 
 		for (auto& vkCmdBuffers : m_VkCommandBuffers)
 			vkCmdBuffers.resize(numThreads);
-
-		// TEMPORARY
-		for (auto& waitSemaphores : m_WaitSemaphores)
-			waitSemaphores.resize(1);
-
-		// TEMPORARY
-		for (auto& signalSemaphores : m_SignalSemaphores)
-			signalSemaphores.resize(1);
-
-		// for (auto& presentWaitSemaphores : m_PresentWaitSemaphores)
-		//	presentWaitSemaphores.resize();
 
 		for (uint32_t i = 0; i < numPools; ++i)
 		{
@@ -89,33 +77,5 @@ namespace At0::Ray
 
 			cmdBuff.End();
 		}
-	}
-
-	void CommandBufferRecorder::FillSubmitInfo(uint32_t imageIndex,
-		VkSemaphore imageAvailableSemaphore, VkSemaphore renderFinishedSemaphore,
-		VkSubmitInfo& submitInfo)
-	{
-		submitInfo.commandBufferCount = m_ThreadPool.GetThreadCount();
-		m_WaitSemaphores[imageIndex][0] = imageAvailableSemaphore;
-		m_SignalSemaphores[imageIndex][0] = renderFinishedSemaphore;
-
-		submitInfo.waitSemaphoreCount = (uint32_t)m_WaitSemaphores[imageIndex].size();
-		submitInfo.pWaitSemaphores = m_WaitSemaphores[imageIndex].data();
-		submitInfo.pCommandBuffers = m_VkCommandBuffers[imageIndex].data();
-
-		submitInfo.signalSemaphoreCount = (uint32_t)m_SignalSemaphores[imageIndex].size();
-		submitInfo.pSignalSemaphores = m_SignalSemaphores[imageIndex].data();
-	}
-
-	const std::vector<VkSemaphore>& CommandBufferRecorder::GetPresentWaitSemaphores(
-		uint32_t imageIndex) const
-	{
-		return m_PresentWaitSemaphores[imageIndex];
-	}
-
-	const std::vector<CommandBufferRecorder::Resources>& CommandBufferRecorder::GetCommandResources(
-		uint32_t imageIndex) const
-	{
-		return m_CommandResources[imageIndex];
 	}
 }  // namespace At0::Ray

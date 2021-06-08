@@ -316,30 +316,26 @@ namespace At0::Ray
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
 		m_CommandBufferRecorder->Record(
 			*m_RenderPass, *m_Framebuffers[imageIndex], imageIndex, m_Viewport, m_Scissor);
-		m_CommandBufferRecorder->WaitForTasks();
-		// VkCommandBuffer commandBuffer =
-		//	*m_CommandBufferRecorder->GetCommandResources()[imageIndex].commandBuffer;
-		m_CommandBufferRecorder->FillSubmitInfo(imageIndex,
-			m_ImageAvailableSemaphore[m_CurrentFrame],	// Wait until image was acquired
+		submitInfo.commandBufferCount =
+			(uint32_t)m_CommandBufferRecorder->GetVkCommandBuffers(imageIndex).size();
+		submitInfo.pCommandBuffers =
+			m_CommandBufferRecorder->GetVkCommandBuffers(imageIndex).data();
 
-			m_RenderFinishedSemaphore[m_CurrentFrame],	// Signal when rendering finished and
-														// presentation can happen
-			submitInfo);
 #else
 		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex], imageIndex);
-		VkCommandBuffer commandBuffer = *m_CommandBuffers[imageIndex];
-		submitInfo.commandBufferCount = 1;
+		VkCommandBuffer commandBuffers[] = { *m_CommandBuffers[imageIndex] };
+		submitInfo.commandBufferCount = std::size(commandBuffers);
+		submitInfo.pCommandBuffers = commandBuffers;
+#endif
+
+		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.waitSemaphoreCount = 1;
 		submitInfo.pWaitSemaphores =
 			&m_ImageAvailableSemaphore[m_CurrentFrame];	 // Wait until image was acquired
-		submitInfo.pCommandBuffers = &commandBuffer;
 		submitInfo.signalSemaphoreCount = 1;
 		submitInfo.pSignalSemaphores =
 			&m_RenderFinishedSemaphore[m_CurrentFrame];	 // Signal when rendering finished and
 														 // presentation can happen
-#endif
-
-		submitInfo.pWaitDstStageMask = waitStages;
 
 		vkResetFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
 
@@ -348,14 +344,11 @@ namespace At0::Ray
 							 m_InFlightFences[m_CurrentFrame]),
 			"[Graphics] Failed to submit image to queue for rendering");
 
-		auto presentWaitSemaphores = m_CommandBufferRecorder->GetPresentWaitSemaphores(imageIndex);
-		presentWaitSemaphores.emplace_back(m_RenderFinishedSemaphore[m_CurrentFrame]);
-
 		VkSwapchainKHR swapChain = GetSwapchain();
 		VkPresentInfoKHR presentInfo{};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-		presentInfo.waitSemaphoreCount = (uint32_t)presentWaitSemaphores.size();
-		presentInfo.pWaitSemaphores = presentWaitSemaphores.data();
+		presentInfo.waitSemaphoreCount = 1;
+		presentInfo.pWaitSemaphores = &m_RenderFinishedSemaphore[m_CurrentFrame];
 		presentInfo.swapchainCount = 1;
 		presentInfo.pSwapchains = &swapChain;
 		presentInfo.pImageIndices = &imageIndex;

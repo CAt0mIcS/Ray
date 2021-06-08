@@ -29,17 +29,10 @@ namespace At0::Ray
 			uint32_t imageIndex, const VkViewport& viewport, const VkRect2D& scissor);
 
 		void WaitForTasks() { m_ThreadPool.WaitForTasks(); }
-		void FillSubmitInfo(uint32_t imageIndex, VkSemaphore imageAvailableSemaphore,
-			VkSemaphore renderFinishedSemaphore, VkSubmitInfo& submitInfo);
 
 		uint32_t GetThreadCount() const { return m_ThreadPool.GetThreadCount(); }
-
-		/**
-		 * @returns The semaphores to wait on for all command buffers to finish recording before
-		 * calling vkQueuePresentKHR
-		 */
-		const std::vector<VkSemaphore>& GetPresentWaitSemaphores(uint32_t imageIndex) const;
-		const std::vector<Resources>& GetCommandResources(uint32_t imageIndex) const;
+		auto& GetVkCommandBuffers(uint32_t imgIdx) const { return m_VkCommandBuffers[imgIdx]; }
+		auto& GetCommandResources(uint32_t imgIdx) const { return m_CommandResources[imgIdx]; }
 
 	private:
 		ThreadPool m_ThreadPool;
@@ -47,8 +40,5 @@ namespace At0::Ray
 		// [imageIndex][thread]
 		std::vector<std::vector<Resources>> m_CommandResources;
 		std::vector<std::vector<VkCommandBuffer>> m_VkCommandBuffers;
-		std::vector<std::vector<VkSemaphore>> m_WaitSemaphores;
-		std::vector<std::vector<VkSemaphore>> m_SignalSemaphores;
-		std::vector<std::vector<VkSemaphore>> m_PresentWaitSemaphores;
 	};
 }  // namespace At0::Ray
