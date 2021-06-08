@@ -152,7 +152,7 @@ private:
 	}
 
 private:
-	int m_Triangles = 20000;
+	int m_Triangles = 2000;
 	int m_UpperRange = 100000;
 	float m_MovementSpeed = 1.0f;
 };

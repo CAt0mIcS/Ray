@@ -57,30 +57,37 @@ namespace At0::Ray
 		for (uint32_t thread = 0; thread < m_ThreadPool.GetThreadCount(); ++thread)
 		{
 			const CommandBuffer& cmdBuff = *m_CommandResources[imageIndex][thread].commandBuffer;
-			m_ThreadPool.Submit([&cmdBuff, &renderPass, &framebuffer, &viewport, &scissor]() {
-				cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+			cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
-				VkClearValue clearValues[2];
-				clearValues[0].color = { 0.0137254f, 0.014117f, 0.0149019f };
-				clearValues[1].depthStencil = { 1.0f, 0 };
+			VkClearValue clearValues[2];
+			clearValues[0].color = { 0.0137254f, 0.014117f, 0.0149019f };
+			clearValues[1].depthStencil = { 1.0f, 0 };
 
-				renderPass.Begin(cmdBuff, framebuffer, clearValues, std::size(clearValues));
+			renderPass.Begin(cmdBuff, framebuffer, clearValues, std::size(clearValues));
 
-				vkCmdSetViewport(cmdBuff, 0, 1, &viewport);
-				vkCmdSetScissor(cmdBuff, 0, 1, &scissor);
+			vkCmdSetViewport(cmdBuff, 0, 1, &viewport);
+			vkCmdSetScissor(cmdBuff, 0, 1, &scissor);
+			Scene::Get().CmdBind(cmdBuff);
+		}
 
-				Scene::Get().CmdBind(cmdBuff);
-				Scene::Get().EntityView<MeshRenderer>().each(
-					[&cmdBuff](MeshRenderer& mesh) { mesh.Render(cmdBuff); });
+		static auto meshRendererView = Scene::Get().EntityView<MeshRenderer>();
+		m_ThreadPool.SubmitLoop(
+			0u, (uint32_t)meshRendererView.size(), [this, imageIndex](uint32_t i, uint32_t thread) {
+				Entity{ meshRendererView[i] }.Get<MeshRenderer>().Render(
+					*m_CommandResources[imageIndex][thread].commandBuffer);
+			});
+		m_ThreadPool.WaitForTasks();
 
+		for (uint32_t thread = 0; thread < m_ThreadPool.GetThreadCount(); ++thread)
+		{
+			const CommandBuffer& cmdBuff = *m_CommandResources[imageIndex][thread].commandBuffer;
 #if RAY_ENABLE_IMGUI
-				ImGUI::Get().CmdBind(cmdBuff);
+			ImGUI::Get().CmdBind(cmdBuff);
 #endif
 
-				renderPass.End(cmdBuff);
+			renderPass.End(cmdBuff);
 
-				cmdBuff.End();
-			});
+			cmdBuff.End();
 		}
 	}
 

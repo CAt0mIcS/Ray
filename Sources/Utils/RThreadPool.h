@@ -138,9 +138,14 @@ namespace At0::Ray
 			uint32_t startIdx = endIdx;
 			endIdx += runsPerThread[i];
 
-			PushTask([startIdx, endIdx, &loop]() {
-				for (T i = startIdx; i < endIdx; ++i)
-					loop(i);
+			PushTask([startIdx, endIdx, i, &loop]() {
+				for (T j = startIdx; j < endIdx; ++j)
+				{
+					if constexpr (std::is_invocable_v<decltype(loop), T, uint32_t>)
+						loop(j, i);
+					else
+						loop(j);
+				}
 			});
 		}
 	}
