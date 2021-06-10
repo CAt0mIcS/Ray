@@ -40,8 +40,7 @@ namespace At0::Ray
 		void ResetCommandPools(uint32_t imageIndex) const;
 
 		uint32_t GetThreadCount() const { return m_ThreadPool.GetThreadCount(); }
-		const CommandBuffer& GetMainCommandBuffer(uint32_t imgIdx) const;
-		auto& GetVkCommandBuffers(uint32_t imgIdx) const { return m_VkCommandBuffers[imgIdx]; }
+		const PrimaryResources& GetMainCommandResources(uint32_t imgIdx) const;
 		auto& GetCommandResources(uint32_t imgIdx) const { return m_CommandResources[imgIdx]; }
 
 	private:
@@ -50,6 +49,5 @@ namespace At0::Ray
 
 		// [imageIndex][thread]
 		std::vector<std::vector<SecondaryResources>> m_CommandResources;
-		std::vector<std::vector<VkCommandBuffer>> m_VkCommandBuffers;
 	};
 }  // namespace At0::Ray

@@ -20,7 +20,7 @@ namespace At0::Ray
 	CommandBufferRecorder::CommandBufferRecorder(uint32_t numThreads, uint32_t numPools,
 		const RenderPass& renderPass, uint32_t subpassID,
 		const std::vector<Scope<Framebuffer>>& framebuffers)
-		: m_ThreadPool(numThreads), m_VkCommandBuffers(numPools)
+		: m_ThreadPool(numThreads)
 	{
 		m_MainCommandResources.resize(numPools);
 		for (uint32_t i = 0; i < numPools; ++i)
@@ -33,9 +33,6 @@ namespace At0::Ray
 		m_CommandResources.resize(numPools);
 		for (auto& resources : m_CommandResources)
 			resources.resize(numThreads);
-
-		for (auto& vkCmdBuffers : m_VkCommandBuffers)
-			vkCmdBuffers.resize(numThreads);
 
 		for (uint32_t i = 0; i < numPools; ++i)
 		{
@@ -51,7 +48,6 @@ namespace At0::Ray
 
 				m_CommandResources[i][j].commandBuffer = MakeScope<SecondaryCommandBuffer>(
 					*m_CommandResources[i][j].commandPool, std::move(inheritanceInfo));
-				m_VkCommandBuffers[i][j] = *m_CommandResources[i][j].commandBuffer;
 			}
 		}
 	}
@@ -89,17 +85,20 @@ namespace At0::Ray
 					*m_CommandResources[imageIndex][thread].commandBuffer);
 			});
 
-		// End secondary command buffers and execute
+		// Wait for secondary command buffers to finish recording draw calls
 		m_ThreadPool.WaitForTasks();
+
+#if RAY_ENABLE_IMGUI
+		for (const auto& [commandPool, commandBuffer] : m_CommandResources[imageIndex])
+			ImGUI::Get().CmdBind(*commandBuffer);
+#endif
+
+		// End and execute secondary commmand buffers
 		for (const auto& [commandPool, commandBuffer] : m_CommandResources[imageIndex])
 		{
 			commandBuffer->End();
 			mainCmdBuff.Execute(*commandBuffer);
 		}
-
-#if RAY_ENABLE_IMGUI
-		ImGUI::Get().CmdBind(mainCmdBuff);
-#endif
 
 		renderPass.End(mainCmdBuff);
 		mainCmdBuff.End();
@@ -114,8 +113,9 @@ namespace At0::Ray
 			Graphics::Get().GetDevice(), *m_MainCommandResources[imageIndex].commandPool, 0);
 	}
 
-	const CommandBuffer& CommandBufferRecorder::GetMainCommandBuffer(uint32_t imgIdx) const
+	const CommandBufferRecorder::PrimaryResources& CommandBufferRecorder::GetMainCommandResources(
+		uint32_t imgIdx) const
 	{
-		return *m_MainCommandResources[imgIdx].commandBuffer;
+		return m_MainCommandResources[imgIdx];
 	}
 }  // namespace At0::Ray

@@ -320,7 +320,8 @@ namespace At0::Ray
 		// submitInfo.pCommandBuffers =
 		//	m_CommandBufferRecorder->GetVkCommandBuffers(imageIndex).data();
 		submitInfo.commandBufferCount = 1;
-		VkCommandBuffer commandBuffer = m_CommandBufferRecorder->GetMainCommandBuffer(imageIndex);
+		VkCommandBuffer commandBuffer =
+			*m_CommandBufferRecorder->GetMainCommandResources(imageIndex).commandBuffer;
 		submitInfo.pCommandBuffers = &commandBuffer;
 #else
 		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex], imageIndex);
