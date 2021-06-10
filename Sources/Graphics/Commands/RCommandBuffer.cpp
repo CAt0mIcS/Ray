@@ -56,6 +56,12 @@ namespace At0::Ray
 		return vkQueueSubmit(queue, 1, &submitInfo, fence);
 	}
 
+	void CommandBuffer::Execute(const SecondaryCommandBuffer& secCmdBuff) const
+	{
+		VkCommandBuffer buff = secCmdBuff;
+		vkCmdExecuteCommands(m_CommandBuffer, 1, &buff);
+	}
+
 	SecondaryCommandBuffer& CommandBuffer::AddSecondary(
 		VkCommandBufferInheritanceInfo inheritanceInfo)
 	{

@@ -225,8 +225,9 @@ namespace At0::Ray
 	void Graphics::CreateCommandBuffers()
 	{
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
-		m_CommandBufferRecorder = MakeScope<CommandBufferRecorder>(
-			std::thread::hardware_concurrency(), (uint32_t)m_Framebuffers.size());
+		m_CommandBufferRecorder =
+			MakeScope<CommandBufferRecorder>(std::thread::hardware_concurrency(),
+				(uint32_t)m_Framebuffers.size(), *m_RenderPass, 0, m_Framebuffers);
 #else
 
 		m_CommandBuffers.resize(m_Framebuffers.size());
@@ -292,9 +293,7 @@ namespace At0::Ray
 
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
 		// Reset command pool that was used for this frame
-		for (uint32_t thread = 0; thread < m_CommandBufferRecorder->GetThreadCount(); ++thread)
-			vkResetCommandPool(GetDevice(),
-				*m_CommandBufferRecorder->GetCommandResources(imageIndex)[thread].commandPool, 0);
+		m_CommandBufferRecorder->ResetCommandPools(imageIndex);
 #endif
 
 		// Mark the image as now being in use by this frame
@@ -316,11 +315,13 @@ namespace At0::Ray
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
 		m_CommandBufferRecorder->Record(
 			*m_RenderPass, *m_Framebuffers[imageIndex], imageIndex, m_Viewport, m_Scissor);
-		submitInfo.commandBufferCount =
-			(uint32_t)m_CommandBufferRecorder->GetVkCommandBuffers(imageIndex).size();
-		submitInfo.pCommandBuffers =
-			m_CommandBufferRecorder->GetVkCommandBuffers(imageIndex).data();
-
+		// submitInfo.commandBufferCount =
+		//	(uint32_t)m_CommandBufferRecorder->GetVkCommandBuffers(imageIndex).size();
+		// submitInfo.pCommandBuffers =
+		//	m_CommandBufferRecorder->GetVkCommandBuffers(imageIndex).data();
+		submitInfo.commandBufferCount = 1;
+		VkCommandBuffer commandBuffer = m_CommandBufferRecorder->GetMainCommandBuffer(imageIndex);
+		submitInfo.pCommandBuffers = &commandBuffer;
 #else
 		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex], imageIndex);
 		VkCommandBuffer commandBuffers[] = { *m_CommandBuffers[imageIndex] };

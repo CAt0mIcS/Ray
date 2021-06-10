@@ -22,6 +22,7 @@ namespace At0::Ray
 		void End() const;
 
 		VkResult Submit(VkQueue queue, VkFence fence = VK_NULL_HANDLE) const;
+		void Execute(const SecondaryCommandBuffer& secCmdBuff) const;
 
 		SecondaryCommandBuffer& AddSecondary(VkCommandBufferInheritanceInfo inheritanceInfo);
 		const auto& GetSecondaryCommandBuffers() const { return m_SecondaryCommandBuffers; }
