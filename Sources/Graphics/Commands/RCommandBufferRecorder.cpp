@@ -72,24 +72,34 @@ namespace At0::Ray
 		renderPass.Begin(mainCmdBuff, framebuffer, clearValues, std::size(clearValues),
 			VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
 
-		const SecondaryCommandBuffer& secCmdBuff = *m_CommandResources[imageIndex][0].commandBuffer;
+		// Start secondary command buffers
+		for (const auto& [commandPool, commandBuffer] : m_CommandResources[imageIndex])
+		{
+			commandBuffer->Begin(VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT |
+								 VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+			vkCmdSetViewport(*commandBuffer, 0, 1, &viewport);
+			vkCmdSetScissor(*commandBuffer, 0, 1, &scissor);
+			Scene::Get().CmdBind(*commandBuffer);
+		}
 
-		secCmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT |
-						 VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
-		vkCmdSetViewport(secCmdBuff, 0, 1, &viewport);
-		vkCmdSetScissor(secCmdBuff, 0, 1, &scissor);
+		auto meshRendererView = Scene::Get().EntityView<MeshRenderer>();
+		m_ThreadPool.SubmitLoop(0u, (uint32_t)meshRendererView.size(),
+			[this, imageIndex, &meshRendererView](uint32_t i, uint32_t thread) {
+				Entity{ meshRendererView[i] }.Get<MeshRenderer>().Render(
+					*m_CommandResources[imageIndex][thread].commandBuffer);
+			});
 
-		Scene::Get().CmdBind(secCmdBuff);
-		Scene::Get().EntityView<MeshRenderer>().each(
-			[&secCmdBuff](MeshRenderer& mesh) { mesh.Render(secCmdBuff); });
+		// End secondary command buffers and execute
+		m_ThreadPool.WaitForTasks();
+		for (const auto& [commandPool, commandBuffer] : m_CommandResources[imageIndex])
+		{
+			commandBuffer->End();
+			mainCmdBuff.Execute(*commandBuffer);
+		}
 
 #if RAY_ENABLE_IMGUI
-		ImGUI::Get().CmdBind(secCmdBuff);
+		ImGUI::Get().CmdBind(mainCmdBuff);
 #endif
-
-		secCmdBuff.End();
-
-		mainCmdBuff.Execute(secCmdBuff);
 
 		renderPass.End(mainCmdBuff);
 		mainCmdBuff.End();
