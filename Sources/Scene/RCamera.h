@@ -13,6 +13,7 @@
 #include "../Events/RKeyboardEvents.h"
 #include "../Core/RTime.h"
 #include "../Core/RMath.h"
+#include "../Core/RFrustum.h"
 
 
 namespace At0::Ray
@@ -46,6 +47,7 @@ namespace At0::Ray
 
 		bool Updated = false;
 		bool FlipY = true;
+		bool FreezeFrustum = false;
 		CameraType Type = CameraType::FirstPerson;
 
 		struct Data
@@ -81,6 +83,8 @@ namespace At0::Ray
 		void SetMovementSpeed(float speed) { MovementSpeed = speed; }
 		void Update(Delta dt);
 
+		const Frustum& GetFrustum() const { return m_Frustum; }
+
 	private:
 		void UpdateViewMatrix();
 		void DispatchCameraChanged(CameraChangedEvent e);
@@ -92,5 +96,6 @@ namespace At0::Ray
 	private:
 		float m_FoV;
 		float m_NearZ, m_FarZ;
+		Frustum m_Frustum;
 	};
 }  // namespace At0::Ray

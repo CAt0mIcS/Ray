@@ -87,6 +87,8 @@ public:
 			ImGui::End();
 		});
 
+#include "../ImGuiWindows.inl"
+
 
 		for (uint32_t i = 0; i < m_Triangles; ++i)
 		{

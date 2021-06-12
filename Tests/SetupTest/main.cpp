@@ -88,6 +88,9 @@ public:
 			}
 		});
 
+#include "../ImGuiWindows.inl"
+
+
 		// RAY_TODO: Fix matrix not being recalculated at the beginning
 
 		m_Entity = Scene::Get().CreateEntity();

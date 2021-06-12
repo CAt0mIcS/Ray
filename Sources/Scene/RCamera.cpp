@@ -148,6 +148,8 @@ namespace At0::Ray
 		ShaderData.ViewPos = Position * Float3(-1.0f, 1.0f, -1.0f);
 
 		Updated = true;
+		if (!FreezeFrustum)
+			m_Frustum.Update(ShaderData.Projection * ShaderData.View);
 
 		DispatchCameraChanged(CameraChangedEvent{});
 	}

@@ -4,6 +4,7 @@
 #include "RTransform.h"
 #include "RMesh.h"
 
+#include "Scene/RScene.h"
 #include "Shading/RMaterial.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
@@ -22,14 +23,20 @@ namespace At0::Ray
 			AddUniforms();
 	}
 
+	static float GetRadius(Entity entity) { return 1.0f; }
+
 	void MeshRenderer::Render(const CommandBuffer& cmdBuff) const
 	{
+		if (!Scene::Get().GetCamera().GetFrustum().SphereCheck(
+				GetEntity().Get<Transform>().Translation(), GetRadius(GetEntity())))
+			return;
+
 		m_Material->CmdBind(cmdBuff);
 
 		for (const auto& descSet : m_DescriptorSets)
 			descSet.CmdBind(cmdBuff);
 
-		// RAY_TODO: MeshRenderer requires mesh!
+		// RAY_TODO
 		GetEntity().Get<Mesh>().CmdBind(cmdBuff);
 	}
 

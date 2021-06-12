@@ -44,6 +44,8 @@ set(SRC
 	"Core/RTime.cpp"
 	"Core/RMath.h"
 	"Core/RMath.cpp"
+	"Core/RFrustum.h"
+	"Core/RFrustum.cpp"
 	"Core/RKeyCodes.h"
 	"Core/RDynamicVertex.h"
 	"Core/RDynamicVertex.cpp"
