@@ -23,13 +23,11 @@ namespace At0::Ray
 			AddUniforms();
 	}
 
-	static float GetRadius(Entity entity) { return 1.0f; }
-
 	void MeshRenderer::Render(const CommandBuffer& cmdBuff) const
 	{
-		if (!Scene::Get().GetCamera().GetFrustum().SphereCheck(
-				GetEntity().Get<Transform>().Translation(), GetRadius(GetEntity())))
-			return;
+		// if (!Scene::Get().GetCamera().GetFrustum().SphereCheck(
+		//		GetEntity().Get<Transform>().Translation(), 1.0f /*radius*/))
+		//	return;
 
 		m_Material->CmdBind(cmdBuff);
 
@@ -140,6 +138,7 @@ namespace At0::Ray
 				if (uBuff->GetName() == name)
 					return *uBuff;
 		ThrowRuntime("[MeshRenderer] Failed to retrieve BufferUniform \"{0}\"", name);
+		return *m_BufferUniforms[0][0];
 	}
 
 	Sampler2DUniform& MeshRenderer::GetSampler2DUniform(std::string_view name)
@@ -149,6 +148,7 @@ namespace At0::Ray
 				if (uBuff->GetName() == name)
 					return *uBuff;
 		ThrowRuntime("[MeshRenderer] Failed to retrieve Sampler2DUniform \"{0}\"", name);
+		return *m_Sampler2DUniforms[0][0];
 	}
 
 	void MeshRenderer::SetMaterial(Ref<Material> material)
