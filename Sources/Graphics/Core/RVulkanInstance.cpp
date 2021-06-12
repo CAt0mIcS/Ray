@@ -24,7 +24,7 @@ namespace At0::Ray
 		switch (messageSeverity)
 		{
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
-			Log::Trace("[VulkanValidation] {0}", pCallbackData->pMessage);
+			Log::Debug("[VulkanValidation] {0}", pCallbackData->pMessage);
 			break;
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
 			Log::Info("[VulkanValidation] {0}", pCallbackData->pMessage);
