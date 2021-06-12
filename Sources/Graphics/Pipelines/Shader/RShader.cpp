@@ -74,7 +74,7 @@ namespace At0::Ray
 		for (const std::string& shader : shaders)
 		{
 			VkShaderStageFlags vkShaderStage = GetShaderStage(shader);
-			Shader::Stage shaderStage = ToShaderStage(vkShaderStage);
+			ShaderStage shaderStage = (ShaderStage)vkShaderStage;
 
 			m_Shaders[shaderStage] = shader;
 			m_ShaderModules[shaderStage] = CreateShaderModule("", vkShaderStage);
@@ -270,7 +270,7 @@ namespace At0::Ray
 	VkShaderModule Shader::CreateShaderModule(
 		std::string_view preamble, VkShaderStageFlags moduleFlag)
 	{
-		std::string moduleName = m_Shaders[ToShaderStage(moduleFlag)];
+		std::string moduleName = m_Shaders[(ShaderStage)moduleFlag];
 		std::optional<std::string> moduleCode = ReadFile(moduleName);
 		RAY_MEXPECTS(moduleCode, "[Shader] Failed to read file \"{0}\"", moduleName);
 
@@ -328,17 +328,17 @@ namespace At0::Ray
 
 		for (int32_t i = program.getNumLiveUniformBlocks() - 1; i >= 0; --i)
 		{
-			LoadUniformBlock(program, ToShaderStage(moduleFlag), i);
+			LoadUniformBlock(program, (ShaderStage)moduleFlag, i);
 		}
 
 		for (int32_t i = program.getNumLiveUniformVariables() - 1; i >= 0; --i)
 		{
-			LoadUniform(program, ToShaderStage(moduleFlag), i);
+			LoadUniform(program, (ShaderStage)moduleFlag, i);
 		}
 
 		for (int32_t i = 0; i < program.getNumLiveAttributes(); ++i)
 		{
-			LoadAttribute(program, ToShaderStage(moduleFlag), i);
+			LoadAttribute(program, (ShaderStage)moduleFlag, i);
 		}
 
 		glslang::SpvOptions spvOptions;
@@ -543,7 +543,7 @@ namespace At0::Ray
 					return l.location < r.location;
 				});
 
-			if (shaderStage == Shader::Stage::Vertex)
+			if (shaderStage == ShaderStage::Vertex)
 			{
 				// for (const auto& attribData : shaderData.attributes)
 				//	m_VertexLayout->Append(attribData.format);
@@ -562,7 +562,7 @@ namespace At0::Ray
 
 					m_DescriptorSetLayoutBindings[uniformBlock.set].emplace_back(
 						UniformBuffer::GetDescriptorSetLayout((uint32_t)uniformBlock.binding,
-							descriptorType, ToVkShaderStage(shaderStage), 1));
+							descriptorType, (VkShaderStageFlags)shaderStage, 1));
 					break;
 				}
 				}
@@ -587,7 +587,7 @@ namespace At0::Ray
 					samplerLayoutBinding.descriptorCount = 1;
 					samplerLayoutBinding.descriptorType = descriptorType;
 					samplerLayoutBinding.pImmutableSamplers = nullptr;
-					samplerLayoutBinding.stageFlags = ToVkShaderStage(shaderStage);
+					samplerLayoutBinding.stageFlags = (VkShaderStageFlags)shaderStage;
 
 					descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 					m_DescriptorSetLayoutBindings[uniformData.set].emplace_back(
@@ -626,7 +626,7 @@ namespace At0::Ray
 		m_DescriptorPoolSizes[5].descriptorCount = 2048;
 	}
 
-	bool Shader::HasUniform(std::string_view name, Shader::Stage stage) const
+	bool Shader::HasUniform(std::string_view name, ShaderStage stage) const
 	{
 		if (auto data = m_ShaderData.find(stage); data != m_ShaderData.end())
 		{
@@ -641,39 +641,7 @@ namespace At0::Ray
 		return false;
 	}
 
-	Shader::Stage Shader::ToShaderStage(VkShaderStageFlags stageFlags)
-	{
-		switch (stageFlags)
-		{
-		case VK_SHADER_STAGE_VERTEX_BIT: return Stage::Vertex;
-		case VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT: return Stage::TesselationControl;
-		case VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT: return Stage::TesselationEvaluation;
-		case VK_SHADER_STAGE_GEOMETRY_BIT: return Stage::Geometry;
-		case VK_SHADER_STAGE_FRAGMENT_BIT: return Stage::Fragment;
-		case VK_SHADER_STAGE_COMPUTE_BIT: return Stage::Compute;
-		}
-
-		RAY_ASSERT(false, "[Shader] Vulkan shader stage {0} is invalid", (uint32_t)stageFlags);
-		return Stage::Vertex;
-	}
-
-	VkShaderStageFlagBits Shader::ToVkShaderStage(Shader::Stage stageFlags)
-	{
-		switch (stageFlags)
-		{
-		case Stage::Vertex: return VK_SHADER_STAGE_VERTEX_BIT;
-		case Stage::TesselationControl: return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-		case Stage::TesselationEvaluation: return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
-		case Stage::Geometry: return VK_SHADER_STAGE_GEOMETRY_BIT;
-		case Stage::Fragment: return VK_SHADER_STAGE_FRAGMENT_BIT;
-		case Stage::Compute: return VK_SHADER_STAGE_COMPUTE_BIT;
-		}
-
-		RAY_ASSERT(false, "[Shader] Vulkan shader stage {0} is invalid", (uint32_t)stageFlags);
-		return VK_SHADER_STAGE_VERTEX_BIT;
-	}
-
-	const Shader::UniformBlocks* Shader::GetUniformBlocks(Shader::Stage stage) const
+	const Shader::UniformBlocks* Shader::GetUniformBlocks(ShaderStage stage) const
 	{
 		try
 		{
@@ -685,7 +653,7 @@ namespace At0::Ray
 		}
 	}
 
-	const Shader::Uniforms* Shader::GetUniforms(Shader::Stage stage) const
+	const Shader::Uniforms* Shader::GetUniforms(ShaderStage stage) const
 	{
 		try
 		{
@@ -697,7 +665,7 @@ namespace At0::Ray
 		}
 	}
 
-	const Shader::Attributes* Shader::GetAttributes(Shader::Stage stage) const
+	const Shader::Attributes* Shader::GetAttributes(ShaderStage stage) const
 	{
 		try
 		{
@@ -709,9 +677,9 @@ namespace At0::Ray
 		}
 	}
 
-	std::vector<Shader::Stage> Shader::GetLiveShaderStages() const
+	std::vector<ShaderStage> Shader::GetLiveShaderStages() const
 	{
-		std::vector<Shader::Stage> stages;
+		std::vector<ShaderStage> stages;
 		stages.reserve(m_ShaderData.size());
 
 		for (auto& it : m_ShaderData)
@@ -735,7 +703,7 @@ namespace At0::Ray
 					continue;
 
 				VkPushConstantRange pushConstantRange{};
-				pushConstantRange.stageFlags = ToVkShaderStage(shaderStage);
+				pushConstantRange.stageFlags = (VkShaderStageFlags)shaderStage;
 				pushConstantRange.offset = currentOffset;
 				pushConstantRange.size = uniformBlockData.size;
 				pushConstantRanges.emplace_back(pushConstantRange);
@@ -775,7 +743,7 @@ namespace At0::Ray
 		return oss.str();
 	}
 
-	void Shader::LoadUniform(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i)
+	void Shader::LoadUniform(const glslang::TProgram& program, ShaderStage stageFlag, int32_t i)
 	{
 		const glslang::TObjectReflection& uniform = program.getUniform(i);
 
@@ -808,7 +776,7 @@ namespace At0::Ray
 	}
 
 	void Shader::LoadUniformBlock(
-		const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i)
+		const glslang::TProgram& program, ShaderStage stageFlag, int32_t i)
 	{
 		const glslang::TObjectReflection& uniformBlock = program.getUniformBlock(i);
 
@@ -832,7 +800,7 @@ namespace At0::Ray
 		m_ShaderData[stageFlag].uniformBlocks.Emplace(data);
 	}
 
-	void Shader::LoadAttribute(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i)
+	void Shader::LoadAttribute(const glslang::TProgram& program, ShaderStage stageFlag, int32_t i)
 	{
 		const glslang::TObjectReflection& attribute = program.getPipeInput(i);
 

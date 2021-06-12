@@ -2,6 +2,7 @@
 #include "RSampler2DUniform.h"
 
 #include "../RPipeline.h"
+#include "../Shader/RShader.h"
 #include "Graphics/Images/RTexture2D.h"
 
 #include "Utils/RAssert.h"
@@ -10,8 +11,8 @@
 
 namespace At0::Ray
 {
-	Sampler2DUniform::Sampler2DUniform(std::string_view name, Shader::Stage stage,
-		Ref<Texture2D> texture, const Pipeline& pipeline)
+	Sampler2DUniform::Sampler2DUniform(
+		std::string_view name, ShaderStage stage, Ref<Texture2D> texture, const Pipeline& pipeline)
 		: m_Texture(std::move(texture)), m_Name(name)
 	{
 		RAY_MEXPECTS(pipeline.GetShader().HasUniform(name, stage),

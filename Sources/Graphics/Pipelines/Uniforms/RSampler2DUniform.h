@@ -1,18 +1,18 @@
 ﻿#pragma once
 
 #include "../../../RBase.h"
-#include "../RShader.h"
 
 
 namespace At0::Ray
 {
 	class Pipeline;
 	class Texture2D;
+	enum class ShaderStage;
 
 	class RAY_EXPORT Sampler2DUniform
 	{
 	public:
-		Sampler2DUniform(std::string_view name, Shader::Stage stage, Ref<Texture2D> texture,
+		Sampler2DUniform(std::string_view name, ShaderStage stage, Ref<Texture2D> texture,
 			const Pipeline& pipeline);
 		Sampler2DUniform(std::string_view name, Ref<Texture2D> texture, uint32_t binding);
 

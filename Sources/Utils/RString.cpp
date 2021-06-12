@@ -2,6 +2,7 @@
 #include "RString.h"
 
 #include "Utils/RAssert.h"
+#include "Graphics/Pipelines/Shader/RShader.h"
 
 #include <vulkan/vulkan_core.h>
 
@@ -207,16 +208,16 @@ namespace At0::Ray
 		return "UNKNOWN VULKAN RESULT CODE";
 	}
 
-	std::string String::Construct(Shader::Stage stage)
+	std::string String::Construct(ShaderStage stage)
 	{
 		switch (stage)
 		{
-		case Shader::Stage::Vertex: return "Vertex Shader";
-		case Shader::Stage::TesselationControl: return "Tesselation Control Shader";
-		case Shader::Stage::TesselationEvaluation: return "Tesselation Evaluation Shader";
-		case Shader::Stage::Geometry: return "Geometry Shader";
-		case Shader::Stage::Fragment: return "Fragment Shader";
-		case Shader::Stage::Compute: return "Compute Shader";
+		case ShaderStage::Vertex: return "Vertex Shader";
+		case ShaderStage::TesselationControl: return "Tesselation Control Shader";
+		case ShaderStage::TesselationEvaluation: return "Tesselation Evaluation Shader";
+		case ShaderStage::Geometry: return "Geometry Shader";
+		case ShaderStage::Fragment: return "Fragment Shader";
+		case ShaderStage::Compute: return "Compute Shader";
 		}
 
 		RAY_ASSERT(false, "[String] Shader stage {0} is invalid", (uint32_t)stage);
@@ -237,18 +238,18 @@ namespace At0::Ray
 		return "INVALID PHYSICAL DEVICE TYPE";
 	}
 
-	std::string String::Construct(Shader::DataType type)
+	std::string String::Construct(ShaderDataType type)
 	{
 		switch (type)
 		{
-		case Shader::DataType::Float: return "float";
-		case Shader::DataType::Int: return "int";
-		case Shader::DataType::UInt: return "uint";
-		case Shader::DataType::Vec2: return "vec2";
-		case Shader::DataType::Vec3: return "vec3";
-		case Shader::DataType::Vec4: return "vec4";
-		case Shader::DataType::Mat3: return "mat3";
-		case Shader::DataType::Mat4: return "mat4";
+		case ShaderDataType::Float: return "float";
+		case ShaderDataType::Int: return "int";
+		case ShaderDataType::UInt: return "uint";
+		case ShaderDataType::Vec2: return "vec2";
+		case ShaderDataType::Vec3: return "vec3";
+		case ShaderDataType::Vec4: return "vec4";
+		case ShaderDataType::Mat3: return "mat3";
+		case ShaderDataType::Mat4: return "mat4";
 		}
 
 		RAY_ASSERT(false, "[String] Shader Data type {0} is invalid", (uint32_t)type);

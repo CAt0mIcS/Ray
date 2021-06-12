@@ -14,7 +14,6 @@
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
-#include "../Graphics/Pipelines/RShader.h"
 
 #include "../Events/REventListener.h"
 #include "../Events/RKeyboardEvents.h"

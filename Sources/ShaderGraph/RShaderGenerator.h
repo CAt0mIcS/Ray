@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Nodes/RNode.h"
-#include "../Graphics/Pipelines/RShader.h"
+#include "../Graphics/Pipelines/Shader/RShader.h"
 
 
 namespace At0::Ray
@@ -27,8 +27,7 @@ namespace At0::Ray
 		 */
 		std::string GenerateTemplate() const;
 
-		std::string GetUniforms(
-			const Node& rootNode, std::string_view uniforms, Shader::Stage stage);
+		std::string GetUniforms(const Node& rootNode, std::string_view uniforms, ShaderStage stage);
 
 	private:
 		uint32_t m_VSNextInputAttributeLocation = 0;
@@ -42,7 +41,7 @@ namespace At0::Ray
 		struct UniformData
 		{
 			std::string name;
-			Shader::Stage stage;
+			ShaderStage stage;
 			Shader::UniformBlocks::Type type;
 			Ref<Texture2D> texture;
 		};

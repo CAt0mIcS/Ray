@@ -35,7 +35,7 @@ namespace At0::Ray
 
 	void ThreadPool::Shutdown()
 	{
-		Log::Info("[ThreadPool] Shutting down");
+		Log::Debug("[ThreadPool] Shutting down");
 		{
 			std::scoped_lock lock(m_PoolMutex);
 			m_Shutdown = true;
@@ -47,7 +47,7 @@ namespace At0::Ray
 		{
 			auto id = m_Threads[i].get_id();
 			m_Threads[i].join();
-			Log::Info("[ThreadPool] Thread {0} joined", id);
+			Log::Debug("[ThreadPool] Thread {0} joined", id);
 		}
 	}
 
@@ -55,7 +55,7 @@ namespace At0::Ray
 	{
 		if (!m_Shutdown)
 			Shutdown();
-		Log::Info("[ThreadPool] Destroyed");
+		Log::Debug("[ThreadPool] Destroyed");
 	}
 
 	void ThreadPool::InfiniteWait()

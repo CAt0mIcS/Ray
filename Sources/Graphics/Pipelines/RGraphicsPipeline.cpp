@@ -1,7 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RGraphicsPipeline.h"
 
-#include "RShader.h"
+#include "Shader/RShader.h"
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/RenderPass/RRenderPass.h"
@@ -173,7 +173,7 @@ namespace At0::Ray
 			VkPipelineShaderStageCreateInfo pipelineShaderStageCreateInfo{};
 			pipelineShaderStageCreateInfo.sType =
 				VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-			pipelineShaderStageCreateInfo.stage = Shader::ToVkShaderStage(stage);
+			pipelineShaderStageCreateInfo.stage = (VkShaderStageFlagBits)stage;
 			pipelineShaderStageCreateInfo.module = m_Shader->GetShaderModules()[stage];
 			pipelineShaderStageCreateInfo.pName = "main";
 			shaderStages.emplace_back(pipelineShaderStageCreateInfo);

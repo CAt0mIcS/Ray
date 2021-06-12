@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "../../RBase.h"
+#include "../../../RBase.h"
 
 #include <vulkan/vulkan_core.h>
 
@@ -39,33 +39,34 @@ namespace At0::Ray
 	}
 
 
+	enum class ShaderStage
+	{
+		Vertex = VK_SHADER_STAGE_VERTEX_BIT,
+		TesselationControl = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,
+		TesselationEvaluation = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT,
+		Geometry = VK_SHADER_STAGE_GEOMETRY_BIT,
+		Fragment = VK_SHADER_STAGE_FRAGMENT_BIT,
+		Compute = VK_SHADER_STAGE_COMPUTE_BIT,
+	};
+
+	enum class ShaderDataType
+	{
+		Float,
+		Int,
+		UInt,
+
+		Vec2,
+		Vec3,
+		Vec4,
+
+		Mat3,
+		Mat4
+	};
+
+
 	class RAY_EXPORT Shader
 	{
 	public:
-		enum class Stage
-		{
-			Vertex,
-			TesselationControl,
-			TesselationEvaluation,
-			Geometry,
-			Fragment,
-			Compute,
-		};
-
-		enum class DataType
-		{
-			Float,
-			Int,
-			UInt,
-
-			Vec2,
-			Vec3,
-			Vec4,
-
-			Mat3,
-			Mat4
-		};
-
 		class Attributes
 		{
 			friend class Shader;
@@ -224,15 +225,12 @@ namespace At0::Ray
 		static VkShaderStageFlagBits GetShaderStage(const std::filesystem::path& filepath);
 		static uint32_t SizeOf(VkFormat format);
 
-		bool HasUniform(std::string_view name, Shader::Stage stage) const;
+		bool HasUniform(std::string_view name, ShaderStage stage) const;
 
-		static Shader::Stage ToShaderStage(VkShaderStageFlags stageFlags);
-		static VkShaderStageFlagBits ToVkShaderStage(Shader::Stage stageFlags);
-
-		const Shader::UniformBlocks* GetUniformBlocks(Shader::Stage stage) const;
-		const Shader::Uniforms* GetUniforms(Shader::Stage stage) const;
-		const Shader::Attributes* GetAttributes(Shader::Stage stage) const;
-		std::vector<Shader::Stage> GetLiveShaderStages() const;
+		const Shader::UniformBlocks* GetUniformBlocks(ShaderStage stage) const;
+		const Shader::Uniforms* GetUniforms(ShaderStage stage) const;
+		const Shader::Attributes* GetAttributes(ShaderStage stage) const;
+		std::vector<ShaderStage> GetLiveShaderStages() const;
 
 		const auto& GetDescriptorSetLayoutBindings() const { return m_DescriptorSetLayoutBindings; }
 		const auto& GetDescriptorPoolSizes() const { return m_DescriptorPoolSizes; }
@@ -253,9 +251,9 @@ namespace At0::Ray
 	private:
 		VkShaderModule CreateShaderModule(std::string_view preamble, VkShaderStageFlags moduleFlag);
 		void CreateReflection();
-		void LoadUniform(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i);
-		void LoadUniformBlock(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i);
-		void LoadAttribute(const glslang::TProgram& program, Shader::Stage stageFlag, int32_t i);
+		void LoadUniform(const glslang::TProgram& program, ShaderStage stageFlag, int32_t i);
+		void LoadUniformBlock(const glslang::TProgram& program, ShaderStage stageFlag, int32_t i);
+		void LoadAttribute(const glslang::TProgram& program, ShaderStage stageFlag, int32_t i);
 
 	private:
 		static int32_t ComputeSize(const glslang::TType* ttype);
@@ -264,8 +262,8 @@ namespace At0::Ray
 			VkDescriptorType type);
 
 	private:
-		std::unordered_map<Shader::Stage, std::string> m_Shaders;
-		std::unordered_map<Shader::Stage, VkShaderModule> m_ShaderModules;
+		std::unordered_map<ShaderStage, std::string> m_Shaders;
+		std::unordered_map<ShaderStage, VkShaderModule> m_ShaderModules;
 
 		struct ShaderData
 		{
@@ -274,7 +272,7 @@ namespace At0::Ray
 			UniformBlocks uniformBlocks;
 		};
 
-		std::unordered_map<Shader::Stage, ShaderData> m_ShaderData;
+		std::unordered_map<ShaderStage, ShaderData> m_ShaderData;
 
 		std::unordered_map<uint32_t, std::vector<VkDescriptorSetLayoutBinding>>
 			m_DescriptorSetLayoutBindings;

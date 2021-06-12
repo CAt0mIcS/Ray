@@ -1,7 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RDynamicVertex.h"
 
-#include "Graphics/Pipelines/RShader.h"
+#include "Graphics/Pipelines/Shader/RShader.h"
 #include "Utils/RLogger.h"
 
 
@@ -9,13 +9,13 @@ namespace At0::Ray
 {
 	DynamicVertex::DynamicVertex(const Shader& shader)
 	{
-		if (!shader.GetAttributes(Shader::Stage::Vertex))
+		if (!shader.GetAttributes(ShaderStage::Vertex))
 		{
 			Log::Warn("[DynamicVertex] Shader does not have attributes");
 			return;
 		}
 
-		auto& attribs = *shader.GetAttributes(Shader::Stage::Vertex);
+		auto& attribs = *shader.GetAttributes(ShaderStage::Vertex);
 		for (uint32_t i = 0; i < attribs.Size(); ++i)
 		{
 			m_AttribSizeMap.emplace_back(attribs[i].attributeName, attribs[i].size);

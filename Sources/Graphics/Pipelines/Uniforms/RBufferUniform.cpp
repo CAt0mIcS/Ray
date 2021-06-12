@@ -1,6 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RBufferUniform.h"
 
+#include "../Shader/RShader.h"
 #include "../RPipeline.h"
 #include "Utils/RAssert.h"
 #include "Utils/RString.h"
@@ -9,7 +10,7 @@
 namespace At0::Ray
 {
 	BufferUniform::BufferUniform(
-		std::string_view name, Shader::Stage stage, const Pipeline& pipeline)
+		std::string_view name, ShaderStage stage, const Pipeline& pipeline)
 		: m_Name(name)
 	{
 		RAY_MEXPECTS(pipeline.GetShader().HasUniform(name, stage),

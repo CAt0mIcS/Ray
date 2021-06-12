@@ -3,7 +3,6 @@
 #include "../RBase.h"
 #include "../Core/RKeyCodes.h"
 #include "RNonCopyable.h"
-#include "../Graphics/Pipelines/RShader.h"
 
 #include <string>
 #include <sstream>
@@ -16,6 +15,8 @@
 
 namespace At0::Ray
 {
+	enum class ShaderStage;
+	enum class ShaderDataType;
 
 	class RAY_EXPORT String : NonCopyable
 	{
@@ -48,7 +49,7 @@ namespace At0::Ray
 		 * @param stage The stage to strinify
 		 * @returns The string describing the stage (e.g. VertexShader, FragmentShader, ...)
 		 */
-		static std::string Construct(Shader::Stage stage);
+		static std::string Construct(ShaderStage stage);
 
 		/**
 		 * Constructs a string from a physical device type
@@ -62,7 +63,7 @@ namespace At0::Ray
 		 * @param type The shader data type
 		 * @returns The string equal to the GLSL shader type
 		 */
-		static std::string Construct(Shader::DataType type);
+		static std::string Construct(ShaderDataType type);
 
 		/**
 		 * Converts a string from UTF16 to UTF8

@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "../../../RBase.h"
-#include "../RShader.h"
 
 #include "../../Buffers/Dynamic/RDynamicUniformBuffer.h"
 
@@ -10,6 +9,7 @@ namespace At0::Ray
 {
 	class Pipeline;
 	class Buffer;
+	enum class ShaderStage;
 
 	class RAY_EXPORT BufferUniform
 	{
@@ -35,7 +35,7 @@ namespace At0::Ray
 		};
 
 	public:
-		BufferUniform(std::string_view name, Shader::Stage stage, const Pipeline& pipeline);
+		BufferUniform(std::string_view name, ShaderStage stage, const Pipeline& pipeline);
 		BufferUniform(std::string_view name, uint32_t binding, uint32_t size,
 			std::unordered_map<std::string, uint32_t> uniformInBlockOffsets);
 

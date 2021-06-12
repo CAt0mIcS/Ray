@@ -6,6 +6,7 @@
 
 #include "Shading/RMaterial.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
+#include "Graphics/Pipelines/Shader/RShader.h"
 #include "Graphics/Images/RTexture2D.h"
 
 #include "Utils/RException.h"
@@ -48,7 +49,7 @@ namespace At0::Ray
 		}
 	}
 
-	BufferUniform& MeshRenderer::AddBufferUniform(std::string_view name, Shader::Stage stage)
+	BufferUniform& MeshRenderer::AddBufferUniform(std::string_view name, ShaderStage stage)
 	{
 		RAY_MEXPECTS(m_Material->GetGraphicsPipeline().GetShader().HasUniform(name, stage),
 			"[Material] BufferUniform \"{0}\" was not found in shader stage \"{1}\"", name,
@@ -85,7 +86,7 @@ namespace At0::Ray
 	}
 
 	Sampler2DUniform& MeshRenderer::AddSampler2DUniform(
-		std::string_view name, Shader::Stage stage, Ref<Texture2D> texture)
+		std::string_view name, ShaderStage stage, Ref<Texture2D> texture)
 	{
 		RAY_MEXPECTS(m_Material->GetGraphicsPipeline().GetShader().HasUniform(name, stage),
 			"[Material] Sampler2DUniform \"{0}\" was not found in shader stage \"{1}\"", name,
@@ -145,9 +146,9 @@ namespace At0::Ray
 
 	void MeshRenderer::AddUniforms()
 	{
-		AddBufferUniform("PerObjectData", Ray::Shader::Stage::Vertex);
+		AddBufferUniform("PerObjectData", Ray::ShaderStage::Vertex);
 
-		auto addSamplerUniforms = [this](std::string_view uniformName, Shader::Stage stage) {
+		auto addSamplerUniforms = [this](std::string_view uniformName, ShaderStage stage) {
 			if (uniformName == UniformTag::AlbedoMapSampler)
 				AddSampler2DUniform(
 					UniformTag::AlbedoMapSampler, stage, m_Material->GetAlbedoMap());

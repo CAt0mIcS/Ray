@@ -3,7 +3,6 @@
 #include "../RBase.h"
 #include "RComponent.h"
 
-#include "../Graphics/Pipelines/RShader.h"
 #include "../Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "../Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "../Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
@@ -17,6 +16,7 @@ namespace At0::Ray
 	class CommandBuffer;
 	class Material;
 	class Texture2D;
+	enum class ShaderStage;
 
 	/**
 	 * Predefined tags by which to find certain uniforms which always need to be there
@@ -58,9 +58,9 @@ namespace At0::Ray
 		 */
 		void Update();
 
-		BufferUniform& AddBufferUniform(std::string_view name, Shader::Stage stage);
+		BufferUniform& AddBufferUniform(std::string_view name, ShaderStage stage);
 		Sampler2DUniform& AddSampler2DUniform(
-			std::string_view name, Shader::Stage stage, Ref<Texture2D> texture);
+			std::string_view name, ShaderStage stage, Ref<Texture2D> texture);
 
 		BufferUniform& GetBufferUniform(std::string_view name);
 		Sampler2DUniform& GetSampler2DUniform(std::string_view name);

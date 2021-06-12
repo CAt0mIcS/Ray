@@ -54,7 +54,7 @@ namespace At0::Ray
 	}
 
 	std::string ShaderGenerator::GetUniforms(
-		const Node& rootNode, std::string_view uniforms, Shader::Stage stage)
+		const Node& rootNode, std::string_view uniforms, ShaderStage stage)
 	{
 		std::string newUniforms;
 
@@ -134,7 +134,7 @@ namespace At0::Ray
 		{
 			attributes += GetAttributes(*rootNode, m_VSNextInputAttributeLocation,
 				m_VSNextOutputAttributeLocation, attributes);
-			uniforms += GetUniforms(*rootNode, uniforms, Shader::Stage::Vertex);
+			uniforms += GetUniforms(*rootNode, uniforms, ShaderStage::Vertex);
 			functions += GetFunctions(*rootNode, functions);
 			mainCode += rootNode->GetFunctionCalls() + ";\n";
 		}
@@ -153,7 +153,7 @@ namespace At0::Ray
 		{
 			attributes += GetAttributes(*rootNode, m_FSNextInputAttributeLocation,
 				m_FSNextOutputAttributeLocation, attributes);
-			uniforms += GetUniforms(*rootNode, uniforms, Shader::Stage::Fragment);
+			uniforms += GetUniforms(*rootNode, uniforms, ShaderStage::Fragment);
 			functions += GetFunctions(*rootNode, functions);
 			mainCode += rootNode->GetFunctionCalls() + ";\n";
 		}

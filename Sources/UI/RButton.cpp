@@ -24,7 +24,7 @@ namespace At0::Ray
 
 		// BufferUniform& uColor =
 		//	(BufferUniform&)mesh.GetMaterial().AddUniform(MakeScope<BufferUniform>(
-		//		"Shading", Shader::Stage::Fragment, mesh.GetMaterial().GetGraphicsPipeline()));
+		//		"Shading", ShaderStage::Fragment, mesh.GetMaterial().GetGraphicsPipeline()));
 		// uColor["color"] = color;
 
 		// SetWidth(width);
@@ -46,7 +46,7 @@ namespace At0::Ray
 		//// clang-format on
 
 		// mesh.GetMaterial().AddUniform(MakeScope<SamplerUniform>("texSampler",
-		//	Shader::Stage::Fragment, std::move(texture), mesh.GetMaterial().GetGraphicsPipeline()));
+		//	ShaderStage::Fragment, std::move(texture), mesh.GetMaterial().GetGraphicsPipeline()));
 
 		// SetWidth(width);
 		// SetHeight(height);
