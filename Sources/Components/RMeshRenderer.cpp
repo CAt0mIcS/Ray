@@ -49,14 +49,19 @@ namespace At0::Ray
 		}
 	}
 
-	BufferUniform& MeshRenderer::AddBufferUniform(std::string_view name, ShaderStage stage)
+	BufferUniform& MeshRenderer::AddBufferUniform(const std::string& name, ShaderStage stage)
 	{
-		RAY_MEXPECTS(m_Material->GetGraphicsPipeline().GetShader().HasUniform(name, stage),
+		RAY_MEXPECTS(
+			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniformBlock(
+				name),
 			"[Material] BufferUniform \"{0}\" was not found in shader stage \"{1}\"", name,
 			String::Construct(stage));
 
-		uint32_t set =
-			m_Material->GetGraphicsPipeline().GetShader().GetUniformBlocks(stage)->Get(name)->set;
+		uint32_t set = m_Material->GetGraphicsPipeline()
+						   .GetShader()
+						   .GetReflection(stage)
+						   .GetUniformBlock(name)
+						   .set;
 
 		// Create descriptor set if the one for this set does not exist yet
 		DescriptorSet* pDescriptor = nullptr;
@@ -86,14 +91,15 @@ namespace At0::Ray
 	}
 
 	Sampler2DUniform& MeshRenderer::AddSampler2DUniform(
-		std::string_view name, ShaderStage stage, Ref<Texture2D> texture)
+		const std::string& name, ShaderStage stage, Ref<Texture2D> texture)
 	{
-		RAY_MEXPECTS(m_Material->GetGraphicsPipeline().GetShader().HasUniform(name, stage),
+		RAY_MEXPECTS(m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniform(
+						 name, true),
 			"[Material] Sampler2DUniform \"{0}\" was not found in shader stage \"{1}\"", name,
 			String::Construct(stage));
 
 		uint32_t set =
-			m_Material->GetGraphicsPipeline().GetShader().GetUniforms(stage)->Get(name)->set;
+			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).GetUniform(name).set;
 
 		// Create descriptor set if the one for this set does not exist yet
 		DescriptorSet* pDescriptor = nullptr;
@@ -166,21 +172,21 @@ namespace At0::Ray
 					false, "[MeshRenderer] Unknown predefined uniform name \"{0}\"", uniformName);
 		};
 
-		for (const auto& [stage, stageData] :
-			m_Material->GetGraphicsPipeline().GetShader().GetShaderData())
+		for (const auto& [stage, reflection] :
+			m_Material->GetGraphicsPipeline().GetShader().GetReflections())
 		{
-			for (const auto& uBlock : stageData.uniformBlocks)
+			for (const auto& uBlock : reflection.GetUniformBlocks())
 			{
-				if (uBlock.uniformBlockName == UniformTag::PerObjectData)
+				if (uBlock.name == UniformTag::PerObjectData)
 					AddBufferUniform(UniformTag::PerObjectData, stage);
-				else if (uBlock.uniformBlockName == UniformTag::Shading)
+				else if (uBlock.name == UniformTag::Shading)
 					AddBufferUniform(UniformTag::Shading, stage);
 			}
 
 			// Only sampler uniforms can be outside of a block
-			for (const auto& uniform : stageData.uniforms)
+			for (const auto& uniform : reflection.GetUniforms())
 			{
-				addSamplerUniforms(uniform.uniformName, stage);
+				addSamplerUniforms(uniform.name, stage);
 			}
 		}
 	}

@@ -58,9 +58,9 @@ namespace At0::Ray
 		 */
 		void Update();
 
-		BufferUniform& AddBufferUniform(std::string_view name, ShaderStage stage);
+		BufferUniform& AddBufferUniform(const std::string& name, ShaderStage stage);
 		Sampler2DUniform& AddSampler2DUniform(
-			std::string_view name, ShaderStage stage, Ref<Texture2D> texture);
+			const std::string& name, ShaderStage stage, Ref<Texture2D> texture);
 
 		BufferUniform& GetBufferUniform(std::string_view name);
 		Sampler2DUniform& GetSampler2DUniform(std::string_view name);

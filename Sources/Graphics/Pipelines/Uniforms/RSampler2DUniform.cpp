@@ -15,12 +15,12 @@ namespace At0::Ray
 		std::string_view name, ShaderStage stage, Ref<Texture2D> texture, const Pipeline& pipeline)
 		: m_Texture(std::move(texture)), m_Name(name)
 	{
-		RAY_MEXPECTS(pipeline.GetShader().HasUniform(name, stage),
+		RAY_MEXPECTS(pipeline.GetShader().GetReflection(stage).HasUniform(name, true),
 			"[BufferUniform] Uniform \"{0}\" was not found in shader stage \"{1}\"", name,
 			String::Construct(stage));
 
-		auto uniform = pipeline.GetShader().GetUniforms(stage)->Get(name);
-		m_Binding = uniform->binding;
+		const auto& uniform = pipeline.GetShader().GetReflection(stage).GetUniform(name);
+		m_Binding = uniform.binding;
 	}
 
 	Sampler2DUniform::Sampler2DUniform(

@@ -42,7 +42,7 @@ namespace At0::Ray
 		{
 			std::string name;
 			ShaderStage stage;
-			Shader::UniformBlocks::Type type;
+			UniformType type;
 			Ref<Texture2D> texture;
 		};
 		std::vector<UniformData> m_Uniforms;

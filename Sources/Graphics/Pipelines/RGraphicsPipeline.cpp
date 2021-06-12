@@ -162,19 +162,17 @@ namespace At0::Ray
 
 		std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
 		// Create shader module structs
-		for (const auto& [stage, filepath] : m_Shader->GetShaders())
+		for (const auto& [stage, shaderModule] : m_Shader->GetShaderModules())
 		{
 			// std::ostringstream defineBlock;
 			// for (const auto& [defineName, defineValue] : m_Defines)
 			//	defineBlock << "#define " << defineName << " " << defineValue << '\n';
 
-			Log::Info("[GraphicsPipeline] Loading shader \"{0}\"", filepath);
-
 			VkPipelineShaderStageCreateInfo pipelineShaderStageCreateInfo{};
 			pipelineShaderStageCreateInfo.sType =
 				VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 			pipelineShaderStageCreateInfo.stage = (VkShaderStageFlagBits)stage;
-			pipelineShaderStageCreateInfo.module = m_Shader->GetShaderModules()[stage];
+			pipelineShaderStageCreateInfo.module = shaderModule;
 			pipelineShaderStageCreateInfo.pName = "main";
 			shaderStages.emplace_back(pipelineShaderStageCreateInfo);
 		}

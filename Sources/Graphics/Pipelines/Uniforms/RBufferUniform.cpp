@@ -9,22 +9,21 @@
 
 namespace At0::Ray
 {
-	BufferUniform::BufferUniform(
-		std::string_view name, ShaderStage stage, const Pipeline& pipeline)
+	BufferUniform::BufferUniform(std::string_view name, ShaderStage stage, const Pipeline& pipeline)
 		: m_Name(name)
 	{
-		RAY_MEXPECTS(pipeline.GetShader().HasUniform(name, stage),
+		RAY_MEXPECTS(pipeline.GetShader().GetReflection(stage).HasUniformBlock(name),
 			"[BufferUniform] Uniform \"{0}\" was not found in shader stage \"{1}\"", name,
 			String::Construct(stage));
 
-		auto uniformBlock = pipeline.GetShader().GetUniformBlocks(stage)->Get(name);
-		m_Binding = uniformBlock->binding;
+		auto& uniformBlock = pipeline.GetShader().GetReflection(stage).GetUniformBlock(name);
+		m_Binding = uniformBlock.binding;
 
 		// Fill map with offsets of all uniforms in uniform block
-		for (auto& uniform : uniformBlock->uniforms)
-			m_UniformInBlockOffsets.emplace_back(std::pair{ uniform.uniformName, uniform.offset });
+		for (auto& uniform : uniformBlock.uniforms)
+			m_UniformInBlockOffsets.emplace_back(std::pair{ uniform.name, uniform.offset });
 
-		Setup(uniformBlock->size);
+		Setup(uniformBlock.size);
 	}
 
 	BufferUniform::BufferUniform(std::string_view name, uint32_t binding, uint32_t size,

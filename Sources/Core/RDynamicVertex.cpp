@@ -9,16 +9,16 @@ namespace At0::Ray
 {
 	DynamicVertex::DynamicVertex(const Shader& shader)
 	{
-		if (!shader.GetAttributes(ShaderStage::Vertex))
+		if (shader.GetReflection(ShaderStage::Vertex).GetAttributes().size() == 0)
 		{
 			Log::Warn("[DynamicVertex] Shader does not have attributes");
 			return;
 		}
 
-		auto& attribs = *shader.GetAttributes(ShaderStage::Vertex);
-		for (uint32_t i = 0; i < attribs.Size(); ++i)
+		auto& attribs = shader.GetReflection(ShaderStage::Vertex).GetAttributes();
+		for (uint32_t i = 0; i < attribs.size(); ++i)
 		{
-			m_AttribSizeMap.emplace_back(attribs[i].attributeName, attribs[i].size);
+			m_AttribSizeMap.emplace_back(attribs[i].name, attribs[i].size);
 			m_SizeVertex += attribs[i].size;
 		}
 	}

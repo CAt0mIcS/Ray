@@ -85,7 +85,7 @@ namespace At0::Ray
 					UniformData data{};
 					data.stage = stage;
 					data.name = uBufferName;
-					data.type = Shader::UniformBlocks::Type::UniformBuffer;
+					data.type = UniformType::UniformBuffer;
 					m_Uniforms.emplace_back(data);
 				}
 			}
@@ -104,7 +104,7 @@ namespace At0::Ray
 					UniformData data{};
 					data.stage = stage;
 					data.name = samplerName;
-					data.type = Shader::UniformBlocks::Type::UniformSampler2D;
+					data.type = UniformType::UniformSampler2D;
 					data.texture = GetTexture(rootNode, samplerName);
 					m_Uniforms.emplace_back(data);
 				}
@@ -165,9 +165,9 @@ namespace At0::Ray
 	{
 		for (const UniformData& data : m_Uniforms)
 		{
-			if (data.type == Shader::UniformBlocks::Type::UniformBuffer)
+			if (data.type == UniformType::UniformBuffer)
 				renderer.AddBufferUniform(data.name, data.stage);
-			else if (data.type == Shader::UniformBlocks::Type::UniformSampler2D)
+			else if (data.type == UniformType::UniformSampler2D)
 				renderer.AddSampler2DUniform(data.name, data.stage, data.texture);
 		}
 	}
