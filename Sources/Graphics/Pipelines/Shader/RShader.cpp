@@ -279,7 +279,7 @@ namespace At0::Ray
 				switch (uniformBlock.type)
 				{
 				case UniformType::UniformBuffer:
-				case UniformType::UniformSampler2D:
+				case UniformType::CombinedImageSampler:
 				{
 					descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 
@@ -296,13 +296,9 @@ namespace At0::Ray
 			for (const auto& uniform : reflection.GetUniforms())
 			{
 				VkDescriptorType descriptorType = VK_DESCRIPTOR_TYPE_MAX_ENUM;
-				switch (uniform.glType)
+				switch (uniform./*glType*/ type)
 				{
-				case 0x8B5E:  // GL_SAMPLER_2D
-				case 0x904D:  // GL_IMAGE_2D
-				case 0x8DC1:  // GL_TEXTURE_2D_ARRAY
-				case 0x9108:  // GL_SAMPLER_2D_MULTISAMPLE
-				case 0x9055:  // GL_IMAGE_2D_MULTISAMPLE
+				case UniformType::CombinedImageSampler:
 				{
 					descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 					VkDescriptorSetLayoutBinding samplerLayoutBinding{};

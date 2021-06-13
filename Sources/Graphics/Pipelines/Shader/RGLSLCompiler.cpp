@@ -9,6 +9,8 @@
 #include "Utils/RLogger.h"
 #include "Utils/RException.h"
 
+#include <glslang/MachineIndependent/gl_types.h>
+
 
 namespace At0::Ray
 {
@@ -82,32 +84,36 @@ namespace At0::Ray
 	{
 		switch (type)
 		{
-		case 0x1406:  // GL_FLOAT
-			return VK_FORMAT_R32_SFLOAT;
-		case 0x8B50:  // GL_FLOAT_VEC2
-			return VK_FORMAT_R32G32_SFLOAT;
-		case 0x8B51:  // GL_FLOAT_VEC3
-			return VK_FORMAT_R32G32B32_SFLOAT;
-		case 0x8B52:  // GL_FLOAT_VEC4
-			return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case 0x1404:  // GL_INT
-			return VK_FORMAT_R32_SINT;
-		case 0x8B53:  // GL_INT_VEC2
-			return VK_FORMAT_R32G32_SINT;
-		case 0x8B54:  // GL_INT_VEC3
-			return VK_FORMAT_R32G32B32_SINT;
-		case 0x8B55:  // GL_INT_VEC4
-			return VK_FORMAT_R32G32B32A32_SINT;
-		case 0x1405:  // GL_UNSIGNED_INT
-			return VK_FORMAT_R32_SINT;
-		case 0x8DC6:  // GL_UNSIGNED_INT_VEC2
-			return VK_FORMAT_R32G32_SINT;
-		case 0x8DC7:  // GL_UNSIGNED_INT_VEC3
-			return VK_FORMAT_R32G32B32_SINT;
-		case 0x8DC8:  // GL_UNSIGNED_INT_VEC4
-			return VK_FORMAT_R32G32B32A32_SINT;
-		default: Log::Warn("[Shader] Undefined GL type {0}", type); return VK_FORMAT_UNDEFINED;
+		case GL_FLOAT: return VK_FORMAT_R32_SFLOAT;
+		case GL_FLOAT_VEC2: return VK_FORMAT_R32G32_SFLOAT;
+		case GL_FLOAT_VEC3: return VK_FORMAT_R32G32B32_SFLOAT;
+		case GL_FLOAT_VEC4: return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case GL_INT: return VK_FORMAT_R32_SINT;
+		case GL_INT_VEC2: return VK_FORMAT_R32G32_SINT;
+		case GL_INT_VEC3: return VK_FORMAT_R32G32B32_SINT;
+		case GL_INT_VEC4: return VK_FORMAT_R32G32B32A32_SINT;
+		case GL_UNSIGNED_INT: return VK_FORMAT_R32_SINT;
+		case GL_UNSIGNED_INT_VEC2: return VK_FORMAT_R32G32_SINT;
+		case GL_UNSIGNED_INT_VEC3: return VK_FORMAT_R32G32B32_SINT;
+		case GL_UNSIGNED_INT_VEC4: return VK_FORMAT_R32G32B32A32_SINT;
+		default:
+			Log::Warn("[GlslCompiler] Undefined GL type {0}", type);
+			return VK_FORMAT_UNDEFINED;
 		}
+	}
+
+	static UniformType GlTypeToUniformType(int32_t glType)
+	{
+		switch (glType)
+		{
+		case GL_SAMPLER_2D:
+		case GL_IMAGE_2D:
+		case GL_SAMPLER_2D_ARRAY:
+		case GL_SAMPLER_2D_MULTISAMPLE:
+		case GL_IMAGE_2D_MULTISAMPLE: return UniformType::CombinedImageSampler;
+		}
+		Log::Warn("[GlslCompiler] Undefined GL type {0}", glType);
+		return UniformType::None;
 	}
 
 	static TBuiltInResource GetResources()
@@ -354,7 +360,8 @@ namespace At0::Ray
 		ShaderReflection::UniformData data{};
 		data.binding = uniform.getBinding();
 		data.size = uniform.size;
-		data.glType = uniform.glDefineType;
+		// data.glType = uniform.glDefineType;
+		data.type = GlTypeToUniformType(uniform.glDefineType);
 		data.offset = uniform.offset;
 		data.set = uniform.getType()->getQualifier().layoutSet;
 
@@ -394,7 +401,7 @@ namespace At0::Ray
 		// RAY_TODO: Better way of detecting whether uniform is sampler or buffer
 		if (uniformBlock.getType()->getQualifier().storage == glslang::EvqUniform)
 			if (uniformBlock.getType()->getSampler().combined)
-				data.type = UniformType::UniformSampler2D;
+				data.type = UniformType::CombinedImageSampler;
 			else
 				data.type = UniformType::UniformBuffer;
 		if (uniformBlock.getType()->getQualifier().storage == glslang::EvqBuffer)

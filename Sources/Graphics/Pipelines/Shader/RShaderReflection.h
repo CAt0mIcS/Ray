@@ -14,7 +14,7 @@ namespace At0::Ray
 	{
 		None,
 		UniformBuffer,
-		UniformSampler2D,
+		CombinedImageSampler,
 		Storage,
 		Push
 	};
@@ -60,10 +60,8 @@ namespace At0::Ray
 			 */
 			uint32_t size;
 
-			/*
-			 * The type ID of the gl type
-			 */
-			int32_t glType;
+			// The type of the uniform
+			UniformType type;
 
 			/**
 			 * The set specified in the shader layout (layout(set = 0, binding = x)).

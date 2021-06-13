@@ -104,7 +104,7 @@ namespace At0::Ray
 					UniformData data{};
 					data.stage = stage;
 					data.name = samplerName;
-					data.type = UniformType::UniformSampler2D;
+					data.type = UniformType::CombinedImageSampler;
 					data.texture = GetTexture(rootNode, samplerName);
 					m_Uniforms.emplace_back(data);
 				}
@@ -167,7 +167,7 @@ namespace At0::Ray
 		{
 			if (data.type == UniformType::UniformBuffer)
 				renderer.AddBufferUniform(data.name, data.stage);
-			else if (data.type == UniformType::UniformSampler2D)
+			else if (data.type == UniformType::CombinedImageSampler)
 				renderer.AddSampler2DUniform(data.name, data.stage, data.texture);
 		}
 	}
