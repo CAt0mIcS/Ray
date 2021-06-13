@@ -50,7 +50,20 @@ namespace At0::Ray
 	class RAY_EXPORT Shader
 	{
 	public:
-		Shader(const std::vector<std::string>& shaders);
+		enum Flags : uint16_t
+		{
+			GLSL = 1,
+			Compiled = 2
+		};
+
+	public:
+		Shader(const std::vector<std::string>& shaders,
+			const std::vector<std::string>& reflections = {}, Flags flags = GLSL);
+
+		static Ref<Shader> FromCompiled(
+			const std::vector<std::string>& shaders, std::vector<std::string> reflections = {});
+		static Ref<Shader> FromGlsl(const std::vector<std::string>& shaders);
+
 		~Shader();
 
 		static VkFormat GlTypeToVkFormat(int32_t type);
