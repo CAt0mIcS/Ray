@@ -48,9 +48,10 @@ public:
 	{
 		Ray::GraphicsPipeline::Layout pipelineLayout{};
 		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
-		// pipelineLayout.shader = Ray::Shader::FromCompiled({ "", "" });
-		pipelineLayout.shader = Ray::Shader::FromGlsl(
-			{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" });
+		pipelineLayout.shader = Ray::Shader::FromCompiled(
+			{ "Resources/Shaders/Flat_Col.vert.spv", "Resources/Shaders/Flat_Col.frag.spv" });
+		// pipelineLayout.shader = Ray::Shader::FromGlsl(
+		//	{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" });
 
 		m_GraphicsPipeline = Ray::Codex::Resolve<Ray::GraphicsPipeline>(std::move(pipelineLayout));
 	}

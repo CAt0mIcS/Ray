@@ -48,8 +48,11 @@ namespace At0::Ray
 		{
 			for (const std::string& shader : shaders)
 			{
-				reflections.emplace_back(
-					std::filesystem::path{ shader }.replace_extension("rreflection").string());
+				if (shader.ends_with(".spv"))
+					reflections.emplace_back(
+						std::filesystem::path{ shader }.replace_extension("rreflection").string());
+				else
+					reflections.emplace_back(shader + ".rreflection");
 
 				if (!std::filesystem::exists(reflections.back()))
 					ThrowRuntime("[Shader] Reflection file \"{0}\" not found.", reflections.back());
@@ -66,6 +69,21 @@ namespace At0::Ray
 
 	Shader::~Shader()
 	{
+		uint16_t i = 0;
+		for (const auto& [stage, reflection] : m_Reflections)
+		{
+			std::string path;
+			if (m_Filepaths[i].ends_with(".spv"))
+				path = std::filesystem::path{ m_Filepaths[i] }
+						   .replace_extension("rreflection")
+						   .string();
+			else
+				path = m_Filepaths[i] + ".rreflection";
+
+			reflection.WriteToFile(path);
+			++i;
+		}
+
 		for (const auto [stage, shaderModule] : m_ShaderModules)
 			vkDestroyShaderModule(Graphics::Get().GetDevice(), shaderModule, nullptr);
 	}

@@ -17,3 +17,6 @@
 [submodule "Extern/Ion"]
 	path = Extern/Ion
 	url = https://github.com/CAt0mIcS/Ion.git
+[submodule "Extern/rapidjson"]
+	path = Extern/rapidjson
+	url = https://github.com/Tencent/rapidjson.git

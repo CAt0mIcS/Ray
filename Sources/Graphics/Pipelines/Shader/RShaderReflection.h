@@ -4,6 +4,8 @@
 
 #include <unordered_map>
 
+#include <../../Extern/rapidjson/include/rapidjson/document.h>
+
 
 namespace At0::Ray
 {
@@ -123,6 +125,13 @@ namespace At0::Ray
 		AttributeData& GetAttribute(std::string_view name);
 		UniformData& GetUniform(std::string_view name);
 		UniformBlockData& GetUniformBlock(std::string_view name);
+
+		void WriteToFile(std::string_view filepath) const;
+
+	private:
+		AttributeData LoadAttribute(const rapidjson::Value& data);
+		UniformBlockData LoadUniformBlock(const rapidjson::Value& data);
+		UniformData LoadUniform(const rapidjson::Value& data);
 
 	private:
 		std::vector<AttributeData> m_Attributes;

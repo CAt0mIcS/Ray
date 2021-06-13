@@ -220,6 +220,11 @@ set(SRC
 	"UI/RImGui.cpp"
 	
 	# ------------------------------------------------------------------
+	# File system
+	"Filesystem/RJSON.h"
+	"Filesystem/RJSON.cpp"
+
+	# ------------------------------------------------------------------
 	# Mono
 	"Mono/RScript.h"
 	"Mono/RScript.cpp"
@@ -282,6 +287,7 @@ set(PUBLIC_INC
 set(PRIVATE_INC
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/Extern/entt/src"
+    "${CMAKE_SOURCE_DIR}/Extern/rapidjson/include"
     "${CMAKE_SOURCE_DIR}/Extern/glfw/include"
     "${CMAKE_SOURCE_DIR}/Extern"
     "${CMAKE_SOURCE_DIR}/Extern/Ion"
