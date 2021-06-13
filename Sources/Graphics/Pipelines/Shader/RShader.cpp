@@ -24,7 +24,6 @@ namespace At0::Ray
 			GlslCompiler compiler(m_Filepaths);
 			m_Reflections = std::move(compiler.AcquireReflections());
 			m_ShaderModules = std::move(compiler.AcquireShaderModules());
-			CreateReflection();
 		}
 		else if (flags == Shader::Compiled)
 		{
@@ -38,6 +37,8 @@ namespace At0::Ray
 		}
 		else
 			RAY_ASSERT(false, "[Shader] Invalid flag configuration ({0})", (uint32_t)flags);
+
+		CreateReflection();
 	}
 
 	Ref<Shader> Shader::FromCompiled(
@@ -120,7 +121,16 @@ namespace At0::Ray
 
 	ShaderStage Shader::GetShaderStage(const std::filesystem::path& filepath)
 	{
-		std::string fileExt = filepath.extension().string();
+		std::string fileExt;
+		if (filepath.extension() == ".spv")
+		{
+			std::filesystem::path shaderPath = filepath;
+			shaderPath.replace_extension();
+			fileExt = shaderPath.extension().string();
+		}
+		else
+			fileExt = filepath.extension().string();
+
 		std::transform(fileExt.begin(), fileExt.end(), fileExt.begin(), ::tolower);
 
 		if (fileExt == ".comp")
