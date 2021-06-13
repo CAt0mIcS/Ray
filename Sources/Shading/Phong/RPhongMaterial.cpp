@@ -12,8 +12,8 @@ namespace At0::Ray
 		: m_Layout(std::move(layout))
 	{
 
-		if (pipelineLayout.shaders.empty())
-			pipelineLayout.shaders = ChooseShaders();
+		if (!pipelineLayout.shader)
+			pipelineLayout.shader = Codex::Resolve<Shader>(ChooseShaders());
 
 		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(std::move(pipelineLayout));
 	}

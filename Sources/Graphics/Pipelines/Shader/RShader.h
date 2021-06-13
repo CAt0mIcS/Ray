@@ -57,16 +57,15 @@ namespace At0::Ray
 		};
 
 	public:
-		Shader(const std::vector<std::string>& shaders,
-			const std::vector<std::string>& reflections = {}, Flags flags = GLSL);
+		Shader(std::vector<std::string> shaders, const std::vector<std::string>& reflections = {},
+			Flags flags = GLSL);
 
 		static Ref<Shader> FromCompiled(
-			const std::vector<std::string>& shaders, std::vector<std::string> reflections = {});
-		static Ref<Shader> FromGlsl(const std::vector<std::string>& shaders);
+			std::vector<std::string> shaders, std::vector<std::string> reflections = {});
+		static Ref<Shader> FromGlsl(std::vector<std::string> shaders);
 
 		~Shader();
 
-		static VkFormat GlTypeToVkFormat(int32_t type);
 		static ShaderStage GetShaderStage(const std::filesystem::path& filepath);
 		static uint32_t SizeOf(VkFormat format);
 
@@ -78,6 +77,7 @@ namespace At0::Ray
 		const auto& GetReflection(ShaderStage stage) const { return m_Reflections.at(stage); }
 		const auto& GetReflections() const { return m_Reflections; }
 		const auto& GetShaderModules() const { return m_ShaderModules; }
+		const auto& GetFilepaths() const { return m_Filepaths; }
 
 		std::vector<VkVertexInputBindingDescription> GetVertexInputBindings(
 			uint32_t binding = 0) const;
@@ -101,5 +101,7 @@ namespace At0::Ray
 
 		std::unordered_map<ShaderStage, ShaderReflection> m_Reflections;
 		std::unordered_map<ShaderStage, VkShaderModule> m_ShaderModules;
+
+		std::vector<std::string> m_Filepaths;
 	};
 }  // namespace At0::Ray

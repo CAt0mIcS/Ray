@@ -16,7 +16,7 @@ namespace At0::Ray
 	/**
 	 * Handles static bindables and models by hashing them by tag
 	 */
-	class Codex
+	class RAY_EXPORT Codex
 	{
 	public:
 		/**

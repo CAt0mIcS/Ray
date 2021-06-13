@@ -15,24 +15,25 @@
 
 namespace At0::Ray
 {
-	Shader::Shader(const std::vector<std::string>& shaders,
-		const std::vector<std::string>& reflections, Flags flags)
+	Shader::Shader(
+		std::vector<std::string> shaders, const std::vector<std::string>& reflections, Flags flags)
+		: m_Filepaths(std::move(shaders))
 	{
 		if (flags == Shader::GLSL)
 		{
-			GlslCompiler compiler(shaders);
+			GlslCompiler compiler(m_Filepaths);
 			m_Reflections = std::move(compiler.AcquireReflections());
 			m_ShaderModules = std::move(compiler.AcquireShaderModules());
 			CreateReflection();
 		}
 		else if (flags == Shader::Compiled)
 		{
-			RAY_MEXPECTS(shaders.size() == reflections.size(),
+			RAY_MEXPECTS(m_Filepaths.size() == reflections.size(),
 				"[Shader] Number of shaders ({0}) doesn't match number of reflections ({1})",
-				shaders.size(), reflections.size());
-			for (uint32_t i = 0; i < shaders.size(); ++i)
+				m_Filepaths.size(), reflections.size());
+			for (uint32_t i = 0; i < m_Filepaths.size(); ++i)
 			{
-				m_Reflections[GetShaderStage(shaders[i])] = ShaderReflection{ reflections[i] };
+				m_Reflections[GetShaderStage(m_Filepaths[i])] = ShaderReflection{ reflections[i] };
 			}
 		}
 		else
@@ -40,7 +41,7 @@ namespace At0::Ray
 	}
 
 	Ref<Shader> Shader::FromCompiled(
-		const std::vector<std::string>& shaders, std::vector<std::string> reflections)
+		std::vector<std::string> shaders, std::vector<std::string> reflections)
 	{
 		// Search for reflection files
 		if (reflections.empty())
@@ -55,19 +56,18 @@ namespace At0::Ray
 			}
 		}
 
-		return MakeRef<Shader>(shaders, reflections, Shader::Compiled);
+		return MakeRef<Shader>(std::move(shaders), reflections, Shader::Compiled);
 	}
 
-	Ref<Shader> Shader::FromGlsl(const std::vector<std::string>& shaders)
+	Ref<Shader> Shader::FromGlsl(std::vector<std::string> shaders)
 	{
-		return MakeRef<Shader>(shaders, std::vector<std::string>{}, Shader::GLSL);
+		return MakeRef<Shader>(std::move(shaders), std::vector<std::string>{}, Shader::GLSL);
 	}
 
 	Shader::~Shader()
 	{
 		for (const auto [stage, shaderModule] : m_ShaderModules)
 			vkDestroyShaderModule(Graphics::Get().GetDevice(), shaderModule, nullptr);
-		m_ShaderModules.clear();
 	}
 
 	uint32_t SizeOfGlType(int32_t glType)

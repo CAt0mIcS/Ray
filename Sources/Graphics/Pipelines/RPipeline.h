@@ -35,7 +35,7 @@ namespace At0::Ray
 		operator const VkPipeline&() const { return m_Pipeline; }
 
 	protected:
-		Pipeline(std::vector<std::string> shaders);
+		Pipeline(Ref<Shader> shader);
 
 	protected:
 		VkPipeline m_Pipeline = VK_NULL_HANDLE;

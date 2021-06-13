@@ -112,7 +112,6 @@ namespace At0::Ray
 		case GL_SAMPLER_2D_MULTISAMPLE:
 		case GL_IMAGE_2D_MULTISAMPLE: return UniformType::CombinedImageSampler;
 		}
-		Log::Warn("[GlslCompiler] Undefined GL type {0}", glType);
 		return UniformType::None;
 	}
 

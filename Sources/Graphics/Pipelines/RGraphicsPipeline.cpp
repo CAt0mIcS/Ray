@@ -15,7 +15,7 @@
 
 namespace At0::Ray
 {
-	GraphicsPipeline::GraphicsPipeline(Layout layout) : Pipeline(layout.shaders)
+	GraphicsPipeline::GraphicsPipeline(Layout layout) : Pipeline(layout.shader)
 	{
 		if (!layout.renderPass)
 			layout.renderPass = &Graphics::Get().GetRenderPass();
@@ -58,7 +58,7 @@ namespace At0::Ray
 			<< "#" << (uint32_t)layout.cullMode << "#" << (uint32_t)layout.topology << "#"
 			<< (uint32_t)layout.polygonMode << "#" << layout.lineWidth << "#"
 			<< layout.depthTestEnabled << "#";
-		for (std::string_view shader : layout.shaders)
+		for (std::string_view shader : layout.shader->GetFilepaths())
 			oss << shader << "#";
 
 		return oss.str();

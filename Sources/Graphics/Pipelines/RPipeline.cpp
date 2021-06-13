@@ -26,8 +26,5 @@ namespace At0::Ray
 		vkCmdBindPipeline(cmdBuff, (VkPipelineBindPoint)GetBindPoint(), m_Pipeline);
 	}
 
-	Pipeline::Pipeline(std::vector<std::string> shaders)
-		: m_Shader(Codex::Resolve<Shader>(std::move(shaders)))
-	{
-	}
+	Pipeline::Pipeline(Ref<Shader> shader) : m_Shader(std::move(shader)) {}
 }  // namespace At0::Ray

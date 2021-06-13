@@ -17,7 +17,7 @@ namespace At0::Ray
 		struct Layout
 		{
 			const RenderPass* renderPass = nullptr;	 // Set to Graphics::Get().GetRenderPass()
-			std::vector<std::string> shaders;
+			Ref<Shader> shader{};
 			std::optional<VkPipelineCache>
 				pipelineCache;	// set to Graphics::Get().GetPipelineCache()
 			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT;

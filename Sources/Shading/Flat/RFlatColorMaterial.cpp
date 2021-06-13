@@ -9,8 +9,8 @@ namespace At0::Ray
 	FlatColorMaterial::FlatColorMaterial(Layout layout, GraphicsPipeline::Layout pipelineLayout)
 		: m_Layout(std::move(layout))
 	{
-		if (pipelineLayout.shaders.empty())
-			pipelineLayout.shaders = ChooseShaders();
+		if (!pipelineLayout.shader)
+			pipelineLayout.shader = Codex::Resolve<Shader>(ChooseShaders());
 
 		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(std::move(pipelineLayout));
 	}

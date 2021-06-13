@@ -3,6 +3,7 @@ add_subdirectory("Mono")
 add_subdirectory("PhongShading")
 add_subdirectory("SetupTest")
 add_subdirectory("ShaderGenerator")
+add_subdirectory("ShaderReflection")
 add_subdirectory("ThreadPool")
 add_subdirectory("UI")
 

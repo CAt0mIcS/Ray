@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
+// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -21,6 +21,7 @@
 #include "Graphics/Images/RTextureSampler.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
 #include "Graphics/Buffers/RIndexBuffer.h"
+#include "Graphics/Pipelines/Shader/RShader.h"
 #include "Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
 #include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
@@ -302,7 +303,8 @@ namespace At0::Ray
 		vertexInputAttributes.emplace_back(vInputCol);
 
 		GraphicsPipeline::Layout layout;
-		layout.shaders = { "Resources/Shaders/ImGui.vert", "Resources/Shaders/ImGui.frag" };
+		layout.shader = MakeRef<Shader>(std::vector<std::string>{
+			"Resources/Shaders/ImGui.vert", "Resources/Shaders/ImGui.frag" });
 		layout.cullMode = VK_CULL_MODE_NONE;
 		layout.depthTestEnabled = false;
 		layout.bindingDescriptions = { vertexInputBinding };
