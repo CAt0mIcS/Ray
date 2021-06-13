@@ -32,7 +32,25 @@ namespace At0::Ray
 				m_Filepaths.size(), reflections.size());
 			for (uint32_t i = 0; i < m_Filepaths.size(); ++i)
 			{
-				m_Reflections[GetShaderStage(m_Filepaths[i])] = ShaderReflection{ reflections[i] };
+				ShaderStage stage = GetShaderStage(m_Filepaths[i]);
+				m_Reflections[stage] = ShaderReflection{ reflections[i] };
+
+				std::ifstream reader(m_Filepaths[i], std::ios::ate | std::ios::binary);
+				std::vector<char> code(reader.tellg());
+				reader.seekg(std::ios::beg);
+				reader.read(code.data(), code.size());
+				reader.close();
+
+				VkShaderModule shaderModule;
+				VkShaderModuleCreateInfo createInfo{};
+				createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+				createInfo.codeSize = (uint32_t)code.size();
+				createInfo.pCode = (uint32_t*)code.data();
+
+				ThrowVulkanError(vkCreateShaderModule(Graphics::Get().GetDevice(), &createInfo,
+									 nullptr, &shaderModule),
+					"[Shader] Failed to create shader module from file \"{0}\"", m_Filepaths[i]);
+				m_ShaderModules[stage] = shaderModule;
 			}
 		}
 		else
