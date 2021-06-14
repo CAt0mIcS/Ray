@@ -1,27 +1,27 @@
-﻿#include <Core/REngine.h>
-#include <Utils/RLogger.h>
-#include <Devices/RWindow.h>
-#include <Graphics/RGraphics.h>
+﻿#include <Ray/Core/REngine.h>
+#include <Ray/Utils/RLogger.h>
+#include <Ray/Devices/RWindow.h>
+#include <Ray/Graphics/RGraphics.h>
 
-#include <UI/RButton.h>
+#include <Ray/UI/RButton.h>
 
-#include <Components/RMesh.h>
-#include <Graphics/Images/RTexture2D.h>
-#include <Graphics/Pipelines/RGraphicsPipeline.h>
-#include <Utils/RException.h>
+#include <Ray/Components/RMesh.h>
+#include <Ray/Graphics/Images/RTexture2D.h>
+#include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
+#include <Ray/Utils/RException.h>
 
-#include <Scene/RScene.h>
-#include <Scene/RCamera.h>
+#include <Ray/Scene/RScene.h>
+#include <Ray/Scene/RCamera.h>
 
 #include <signal.h>
 #include <random>
 
-#include <Events/REventListener.h>
-#include <Events/REngineEvents.h>
-#include <Events/RKeyboardEvents.h>
-#include <Events/RMouseEvents.h>
+#include <Ray/Events/REventListener.h>
+#include <Ray/Events/REngineEvents.h>
+#include <Ray/Events/RKeyboardEvents.h>
+#include <Ray/Events/RMouseEvents.h>
 
-#include <UI/RImGui.h>
+#include <Ray/UI/RImGui.h>
 #include <../../Extern/imgui/imgui.h>
 
 

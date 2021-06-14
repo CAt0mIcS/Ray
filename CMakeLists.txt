@@ -115,7 +115,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include("CMake/Macros.cmake")
 
 add_subdirectory("Extern")
-add_subdirectory("Sources")
+add_subdirectory("Ray")
 
 if(RAY_BUILD_TESTS)
     add_subdirectory("Tests")

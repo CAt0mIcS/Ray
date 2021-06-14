@@ -3,7 +3,7 @@ set(SRC
 )
 
 add_executable("UI" "${SRC}")
-target_include_directories("UI" PRIVATE "${CMAKE_SOURCE_DIR}/Sources")
+target_include_directories("UI" PRIVATE "${CMAKE_SOURCE_DIR}")
 target_compile_definitions("UI" PRIVATE "ENTT_API_IMPORT")
 target_link_libraries("UI" PRIVATE "Ray")
 

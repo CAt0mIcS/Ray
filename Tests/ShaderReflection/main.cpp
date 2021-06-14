@@ -1,26 +1,26 @@
 ﻿#include <signal.h>
 
-#include <Scene/RScene.h>
-#include <Scene/REntity.h>
-#include <Scene/RCamera.h>
-#include <Core/REngine.h>
-#include <Devices/RWindow.h>
-#include <Utils/RException.h>
-#include <Utils/RLogger.h>
-#include <Graphics/Images/RTexture2D.h>
+#include <Ray/Scene/RScene.h>
+#include <Ray/Scene/REntity.h>
+#include <Ray/Scene/RCamera.h>
+#include <Ray/Core/REngine.h>
+#include <Ray/Devices/RWindow.h>
+#include <Ray/Utils/RException.h>
+#include <Ray/Utils/RLogger.h>
+#include <Ray/Graphics/Images/RTexture2D.h>
 
-#include <Shading/Flat/RFlatColorMaterial.h>
+#include <Ray/Shading/Flat/RFlatColorMaterial.h>
 
-#include <Components/RMesh.h>
-#include <Components/RMeshRenderer.h>
-#include <Components/RTransform.h>
-#include <Components/RSkybox.h>
+#include <Ray/Components/RMesh.h>
+#include <Ray/Components/RMeshRenderer.h>
+#include <Ray/Components/RTransform.h>
+#include <Ray/Components/RSkybox.h>
 
-#include <UI/RImGui.h>
+#include <Ray/UI/RImGui.h>
 #include <../../Extern/imgui/imgui.h>
-#include <Graphics/Pipelines/Shader/RShader.h>
-#include <Graphics/Pipelines/Shader/RShaderReflection.h>
-#include <Graphics/RCodex.h>
+#include <Ray/Graphics/Pipelines/Shader/RShader.h>
+#include <Ray/Graphics/Pipelines/Shader/RShaderReflection.h>
+#include <Ray/Graphics/RCodex.h>
 
 
 using namespace At0;

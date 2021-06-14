@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "RBase.h"
+#include "../RBase.h"
 #include "../Components/RComponent.h"
 #include "../Core/RMath.h"
 

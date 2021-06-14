@@ -3,7 +3,7 @@ set(SRC
 )
 
 add_executable("ShaderReflection" "${SRC}")
-target_include_directories("ShaderReflection" PRIVATE "${CMAKE_SOURCE_DIR}/Sources")
+target_include_directories("ShaderReflection" PRIVATE "${CMAKE_SOURCE_DIR}")
 target_compile_definitions("ShaderReflection" PRIVATE "ENTT_API_IMPORT")
 target_link_libraries("ShaderReflection" PRIVATE "Ray")
 

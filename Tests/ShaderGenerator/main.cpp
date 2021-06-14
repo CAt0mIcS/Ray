@@ -1,40 +1,40 @@
 ﻿#include <signal.h>
 
-#include <Scene/RScene.h>
-#include <Scene/REntity.h>
-#include <Scene/RCamera.h>
-#include <Core/REngine.h>
-#include <Devices/RWindow.h>
-#include <Utils/RException.h>
-#include <Utils/RLogger.h>
-#include <Graphics/Images/RTexture2D.h>
+#include <Ray/Scene/RScene.h>
+#include <Ray/Scene/REntity.h>
+#include <Ray/Scene/RCamera.h>
+#include <Ray/Core/REngine.h>
+#include <Ray/Devices/RWindow.h>
+#include <Ray/Utils/RException.h>
+#include <Ray/Utils/RLogger.h>
+#include <Ray/Graphics/Images/RTexture2D.h>
 
-#include <Shading/Flat/RFlatColorMaterial.h>
+#include <Ray/Shading/Flat/RFlatColorMaterial.h>
 
-#include <Components/RMesh.h>
-#include <Components/RMeshRenderer.h>
-#include <Components/RTransform.h>
-#include <Components/RSkybox.h>
+#include <Ray/Components/RMesh.h>
+#include <Ray/Components/RMeshRenderer.h>
+#include <Ray/Components/RTransform.h>
+#include <Ray/Components/RSkybox.h>
 
-#include <UI/RImGui.h>
+#include <Ray/UI/RImGui.h>
 #include <../../Extern/imgui/imgui.h>
 
 
-#include <ShaderGraph/RShaderGenerator.h>
+#include <Ray/ShaderGraph/RShaderGenerator.h>
 
-#include <ShaderGraph/Nodes/RCameraNode.h>
-#include <ShaderGraph/Nodes/RFloatNode.h>
-#include <ShaderGraph/Nodes/RMultiplyNode.h>
-#include <ShaderGraph/Nodes/RSplitNode.h>
-#include <ShaderGraph/Nodes/RTransformationMatrixNode.h>
-#include <ShaderGraph/Nodes/RVector4Node.h>
-#include <ShaderGraph/Nodes/RInputNode.h>
-#include <ShaderGraph/Nodes/ROutputNode.h>
-#include <ShaderGraph/Nodes/RVertexNode.h>
-#include <ShaderGraph/Nodes/RVertexOutputNode.h>
-#include <ShaderGraph/Nodes/RSampler2DNode.h>
-#include <ShaderGraph/Nodes/RTexture2DNode.h>
-#include <ShaderGraph/Nodes/RPropertyNode.h>
+#include <Ray/ShaderGraph/Nodes/RCameraNode.h>
+#include <Ray/ShaderGraph/Nodes/RFloatNode.h>
+#include <Ray/ShaderGraph/Nodes/RMultiplyNode.h>
+#include <Ray/ShaderGraph/Nodes/RSplitNode.h>
+#include <Ray/ShaderGraph/Nodes/RTransformationMatrixNode.h>
+#include <Ray/ShaderGraph/Nodes/RVector4Node.h>
+#include <Ray/ShaderGraph/Nodes/RInputNode.h>
+#include <Ray/ShaderGraph/Nodes/ROutputNode.h>
+#include <Ray/ShaderGraph/Nodes/RVertexNode.h>
+#include <Ray/ShaderGraph/Nodes/RVertexOutputNode.h>
+#include <Ray/ShaderGraph/Nodes/RSampler2DNode.h>
+#include <Ray/ShaderGraph/Nodes/RTexture2DNode.h>
+#include <Ray/ShaderGraph/Nodes/RPropertyNode.h>
 
 
 using namespace At0;
@@ -139,8 +139,9 @@ public:
 
 		Ray::GraphicsPipeline::Layout pipelineLayout{};
 		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
-		pipelineLayout.shaders = { "Resources/Shaders/Generated/VertexShader.vert",
-			"Resources/Shaders/Generated/FragmentShader.frag" };
+		pipelineLayout.shader =
+			Ray::Shader::FromGlsl({ "Resources/Shaders/Generated/VertexShader.vert",
+				"Resources/Shaders/Generated/FragmentShader.frag" });
 
 		Ray::Ref<Ray::Material> material =
 			Ray::MakeRef<Ray::FlatColorMaterial>(layout, pipelineLayout);
