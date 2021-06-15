@@ -17,6 +17,12 @@ namespace At0::Ray
 {
 	Engine* Engine::s_Instance = nullptr;
 
+	Engine::~Engine()
+	{
+		Graphics::Destroy();
+		Log::Info("[Engine] Shutdown");
+	}
+
 	Engine& Engine::Get()
 	{
 		RAY_MEXPECTS(s_Instance, "[Engine::Get] Engine not initialized");
@@ -35,10 +41,6 @@ namespace At0::Ray
 			Graphics::Get().Update(m_Delta);
 			Update();
 		}
-
-		Graphics::Destroy();
-
-		Log::Info("[Engine] Shutdown");
 		return 0;
 	}
 

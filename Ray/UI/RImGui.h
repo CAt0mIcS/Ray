@@ -10,7 +10,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
@@ -75,9 +75,18 @@ namespace At0::Ray
 		}
 
 		static Float3 Float3Widget(std::string_view title, Float3 data);
-		void* PushTexture(Ref<Texture2D> texture);
+
+		/**
+		 * Should be called on stored textures to get the ID required for ImGui::Image
+		 * @returns First parameter of ImGui::Image function
+		 */
+		void* PushTexture(const Texture2D& texture);
+
+		/**
+		 * Should be called on stored textures to get the ID required for ImGui::Image
+		 * @returns First parameter of ImGui::Image function
+		 */
 		void* PushTexture(VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout);
-		Ref<Texture2D> StoreTexture(Ref<Texture2D> tex) { return m_Textures.emplace_back(tex); }
 
 	private:
 		ImGUI();
@@ -109,7 +118,6 @@ namespace At0::Ray
 
 		VkDescriptorSetLayout m_TextureDescriptorSetLayout;
 		std::vector<VkDescriptorSet> m_TextureDescriptorSets;
-		std::vector<Ref<Texture2D>> m_Textures;
 
 		Scope<Buffer> m_VertexBuffer;
 		Scope<Buffer> m_IndexBuffer;

@@ -9,7 +9,7 @@ namespace At0::Ray
 	class RAY_EXPORT Engine
 	{
 	public:
-		virtual ~Engine() = default;
+		virtual ~Engine();
 
 		/**
 		 * @returns The static application instance

@@ -6,6 +6,7 @@
 #include <Ray/UI/RButton.h>
 
 #include <Ray/Components/RMesh.h>
+#include <Ray/Components/RTextRenderer.h>
 #include <Ray/Graphics/Images/RTexture2D.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
 #include <Ray/Utils/RException.h>
@@ -71,12 +72,10 @@ public:
 			ImGui::End();
 		});
 
-		Ray::Ref<Ray::Texture2D> gridbase =
-			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png");
-		Ray::ImGUI::Get().StoreTexture(gridbase);
-		Ray::ImGUI::Get().RegisterNewFrameFunction([gridbase]() {
+		m_Gridbase = Ray::Texture2D::Acquire("Resources/Textures/gridbase.png");
+		Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
 			ImGui::Begin("Gridbase");
-			ImGui::Image(Ray::ImGUI::Get().PushTexture(gridbase), ImVec2{ 512.0f, 512.0f });
+			ImGui::Image(Ray::ImGUI::Get().PushTexture(*m_Gridbase), ImVec2{ 512.0f, 512.0f });
 			ImGui::End();
 		});
 	}
@@ -117,6 +116,7 @@ private:
 
 private:
 	float m_ButtonColors[3];
+	Ray::Ref<Ray::Texture2D> m_Gridbase;
 };
 
 void SignalHandler(int signal)

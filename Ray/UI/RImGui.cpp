@@ -342,16 +342,9 @@ namespace At0::Ray
 		}
 	}
 
-	void* ImGUI::PushTexture(Ref<Texture2D> texture)
+	void* ImGUI::PushTexture(const Texture2D& texture)
 	{
-	#ifndef NDEBUG
-		if (std::find(m_Textures.begin(), m_Textures.end(), texture) == m_Textures.end())
-			Log::Warn(
-				"[ImGUI] Trying to push texture that was not added using ImGUI::StoreTexture");
-	#endif
-
-		return PushTexture(
-			texture->GetSampler(), texture->GetImageView(), texture->GetImageLayout());
+		return PushTexture(texture.GetSampler(), texture.GetImageView(), texture.GetImageLayout());
 	}
 
 	void* ImGUI::PushTexture(VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout)
