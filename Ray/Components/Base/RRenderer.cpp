@@ -121,4 +121,24 @@ namespace At0::Ray
 		ThrowRuntime("[Renderer] Failed to retrieve Sampler2DUniform \"{0}\"", name);
 		return m_Sampler2DUniforms[0][0];
 	}
+
+	DescriptorSet& Renderer::GetDescriptorSet(std::string_view uniformName)
+	{
+		for (const auto& [set, uniforms] : m_BufferUniforms)
+			for (const auto& uniform : uniforms)
+				if (uniform.GetName() == uniformName)
+					for (auto& descSet : m_DescriptorSets)
+						if (descSet.GetSetNumber() == set)
+							return descSet;
+
+		for (const auto& [set, uniforms] : m_Sampler2DUniforms)
+			for (const auto& uniform : uniforms)
+				if (uniform.GetName() == uniformName)
+					for (auto& descSet : m_DescriptorSets)
+						if (descSet.GetSetNumber() == set)
+							return descSet;
+		ThrowRuntime("[Renderer] Failed to retrieve Descriptor Set of uniform with name \"{0}\"",
+			uniformName);
+		return m_DescriptorSets[0];
+	}
 }  // namespace At0::Ray

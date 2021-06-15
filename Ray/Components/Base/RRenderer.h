@@ -29,6 +29,8 @@ namespace At0::Ray
 		BufferUniform& GetBufferUniform(std::string_view name);
 		Sampler2DUniform& GetSampler2DUniform(std::string_view name);
 
+		DescriptorSet& GetDescriptorSet(std::string_view uniformName);
+
 		void SetMaterial(Ref<Material> material) { m_Material = std::move(material); }
 
 		Material& GetMaterial() { return *m_Material; }

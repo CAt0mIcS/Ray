@@ -3,26 +3,26 @@
 
 
 layout(location = 0) in vec3 inPos;
-layout(location = 1) in vec2 inTexCoord;
+layout(location = 1) in vec2 inUV;
 
-layout(location = 0 ) out vec2 outTexCoord;
+layout(location = 0 ) out vec2 outUV;
 
-layout(set = 0, binding = 0) uniform Camera
+layout(set = 0, binding = 0) uniform PerSceneData
 {
-	mat4 view;
-	mat4 proj;
-} camUBO;
+	mat4 View;
+	mat4 Proj;
+} uScene;
 
 layout(set = 1, binding = 1) uniform PerObjectData
 {
-	mat4 model;
-} ubo;
+	mat4 Model;
+} uObj;
 
 void main()
 {
-	camUBO.view;
-	camUBO.proj;
+	uScene.View;
+	uScene.Proj;
 
-	gl_Position = ubo.model * vec4(inPos, 1.0f);
-	outTexCoord = inTexCoord;
+	gl_Position = uObj.Model * vec4(inPos, 1.0f);
+	outUV = inUV;
 }

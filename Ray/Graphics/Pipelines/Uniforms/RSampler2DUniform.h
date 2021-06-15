@@ -7,6 +7,7 @@ namespace At0::Ray
 {
 	class Pipeline;
 	class Texture2D;
+	class DescriptorSet;
 	enum class ShaderStage;
 
 	class RAY_EXPORT Sampler2DUniform
@@ -19,6 +20,7 @@ namespace At0::Ray
 		std::string_view GetName() const { return m_Name; }
 		uint32_t GetBinding() const { return m_Binding; }
 		Ref<Texture2D> GetTexture() const { return m_Texture; }
+		void SetTexture(Ref<Texture2D> texture, DescriptorSet& descSet);
 
 	private:
 		std::string m_Name;

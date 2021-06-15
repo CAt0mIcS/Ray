@@ -59,23 +59,24 @@ public:
 		// Create UI
 		Ray::Button& texturedButton = Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>(
 			"TexturedButton", Ray::Float2{ 100.0f, 10.0f }, 200.0f, 50.0f,
-			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png"));
+			Ray::Texture2D::Acquire("Resources/Textures/gridbase.png"));
 
-		Ray::Button& greenButton =
+		Ray::Button& coloredButton =
 			Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>("ColoredButton",
 				Ray::Float2{ 100.0f, 200.0f }, 200.0f, 50.0f, Ray::Float3{ 0.0f, 1.0f, 0.0f });
 
 
 		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
 			ImGui::Begin("Button settings");
-			ImGui::ColorPicker3("Color", m_ButtonColors);
+			ImGui::ColorPicker3("Color", (float*)&m_ButtonColors);
 			ImGui::End();
 		});
 
-		m_Gridbase = Ray::Texture2D::Acquire("Resources/Textures/gridbase.png");
 		Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
 			ImGui::Begin("Gridbase");
-			ImGui::Image(Ray::ImGUI::Get().PushTexture(*m_Gridbase), ImVec2{ 512.0f, 512.0f });
+			ImGui::Image(Ray::ImGUI::Get().PushTexture(
+							 *Ray::Texture2D::Acquire("Resources/Textures/gridbase.png")),
+				ImVec2{ 512.0f, 512.0f });
 			ImGui::End();
 		});
 	}
@@ -93,6 +94,23 @@ private:
 
 	void OnEvent(Ray::MouseButtonPressedEvent& e) override
 	{
+		static bool gridbase = true;
+		if (e.GetWidget() && e.GetWidget()->GetName() == "TexturedButton")
+		{
+			Ray::Button& btn = *(Ray::Button*)e.GetWidget();
+			if (gridbase)
+			{
+				btn.SetTexture(
+					Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
+				gridbase = false;
+			}
+			else
+			{
+				btn.SetTexture(Ray::Texture2D::Acquire("Resources/Textures/gridbase.png"));
+				gridbase = true;
+			}
+		}
+
 		Ray::Log::Warn(
 			"MouseButtonPressedEvent {0}", e.GetWidget() ? e.GetWidget()->GetName() : "{Null}");
 	}
@@ -110,13 +128,12 @@ private:
 		{
 			Ray::Button& btn = btnEntity.Get<Ray::Button>();
 			if (btn.GetName() == "ColoredButton")
-				btn.SetColor({ m_ButtonColors[0], m_ButtonColors[1], m_ButtonColors[2] });
+				btn.SetColor(m_ButtonColors);
 		}
 	}
 
 private:
-	float m_ButtonColors[3];
-	Ray::Ref<Ray::Texture2D> m_Gridbase;
+	Ray::Float3 m_ButtonColors{};
 };
 
 void SignalHandler(int signal)

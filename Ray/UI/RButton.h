@@ -20,6 +20,7 @@ namespace At0::Ray
 			Ref<Texture2D> texture);
 
 		void SetColor(const Float3& color);
+		void SetTexture(Ref<Texture2D> texture);
 
 	private:
 		/**
