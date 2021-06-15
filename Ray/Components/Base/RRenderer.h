@@ -2,9 +2,6 @@
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
-//#include "../../Graphics/Pipelines/Uniforms/RDescriptor.h"
-//#include "../../Graphics/Pipelines/Uniforms/RBufferUniform.h"
-//#include "../../Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
 
 
 namespace At0::Ray
@@ -14,6 +11,7 @@ namespace At0::Ray
 	class Sampler2DUniform;
 	class Texture2D;
 	class GraphicsPipeline;
+	class Material;
 	enum class ShaderStage;
 
 	class RAY_EXPORT Renderer : NonCopyable
@@ -31,13 +29,20 @@ namespace At0::Ray
 		BufferUniform& GetBufferUniform(std::string_view name);
 		Sampler2DUniform& GetSampler2DUniform(std::string_view name);
 
+		void SetMaterial(Ref<Material> material) { m_Material = std::move(material); }
+
+		Material& GetMaterial() { return *m_Material; }
+		const Material& GetMaterial() const { return *m_Material; }
+		Ref<Material> GetSharedMaterial() const { return m_Material; }
+
 	protected:
-		Renderer(Ref<GraphicsPipeline> pipeline);
+		Renderer(Ref<Material> material);
 
 	protected:
 		std::vector<DescriptorSet> m_DescriptorSets;
 		std::unordered_map<uint32_t, std::vector<BufferUniform>> m_BufferUniforms;
 		std::unordered_map<uint32_t, std::vector<Sampler2DUniform>> m_Sampler2DUniforms;
-		Ref<GraphicsPipeline> m_GraphicsPipeline;
+
+		Ref<Material> m_Material;
 	};
 }  // namespace At0::Ray

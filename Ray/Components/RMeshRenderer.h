@@ -59,23 +59,10 @@ namespace At0::Ray
 		 */
 		void Update();
 
-		void SetMaterial(Ref<Material> material);
-
-		Material& GetMaterial() { return *m_Material; }
-		const Material& GetMaterial() const { return *m_Material; }
-		Ref<Material> GetSharedMaterial() const { return m_Material; }
-
 	private:
 		void AddUniforms();
 
 	private:
-		/**
-		 * The shared material.
-		 * NOTE: The material can be shared as it's practically just a bunch of data like the
-		 * metallic or the specular map
-		 */
-		Ref<Material> m_Material;
-
 		/**
 		 * Points to the buffer uniform in the unordered_map to make MeshRenderer::Update faster
 		 */

@@ -17,8 +17,7 @@ namespace At0::Ray
 {
 	MeshRenderer::MeshRenderer(
 		Entity entity, Ref<Material> material, bool automaticUniformEmplacement)
-		: Component(entity), Renderer(material->GetSharedGraphicsPipeline()),
-		  m_Material(std::move(material))
+		: Component(entity), Renderer(std::move(material))
 	{
 		if (automaticUniformEmplacement)
 			AddUniforms();
@@ -53,12 +52,6 @@ namespace At0::Ray
 			else
 				(*m_PerObjectDataUniformRef) = tform.AsMatrix();
 		}
-	}
-
-	void MeshRenderer::SetMaterial(Ref<Material> material)
-	{
-		m_Material = std::move(material);
-		AddUniforms();
 	}
 
 	void MeshRenderer::AddUniforms()

@@ -1,6 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RRenderer.h"
 
+#include "Shading/RMaterial.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
@@ -18,6 +19,7 @@ namespace At0::Ray
 		m_DescriptorSets = std::move(other.m_DescriptorSets);
 		m_BufferUniforms = std::move(other.m_BufferUniforms);
 		m_Sampler2DUniforms = std::move(other.m_Sampler2DUniforms);
+		m_Material = std::move(other.m_Material);
 		return *this;
 	}
 
@@ -25,16 +27,21 @@ namespace At0::Ray
 
 	Renderer::~Renderer() {}
 
-	Renderer::Renderer(Ref<GraphicsPipeline> pipeline) : m_GraphicsPipeline(std::move(pipeline)) {}
+	Renderer::Renderer(Ref<Material> material) : m_Material(material) {}
 
 	BufferUniform& Renderer::AddBufferUniform(const std::string& name, ShaderStage stage)
 	{
-		RAY_MEXPECTS(m_GraphicsPipeline->GetShader().GetReflection(stage).HasUniformBlock(name),
+		RAY_MEXPECTS(
+			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniformBlock(
+				name),
 			"[Material] BufferUniform \"{0}\" was not found in shader stage \"{1}\"", name,
 			String::Construct(stage));
 
-		uint32_t set =
-			m_GraphicsPipeline->GetShader().GetReflection(stage).GetUniformBlock(name).set;
+		uint32_t set = m_Material->GetGraphicsPipeline()
+						   .GetShader()
+						   .GetReflection(stage)
+						   .GetUniformBlock(name)
+						   .set;
 
 		// Create descriptor set if the one for this set does not exist yet
 		DescriptorSet* pDescriptor = nullptr;
@@ -47,13 +54,14 @@ namespace At0::Ray
 
 		// If the descriptor set wasn't found in the existing ones, create it
 		if (pDescriptor == nullptr)
-			pDescriptor = &m_DescriptorSets.emplace_back(m_GraphicsPipeline->GetDescriptorPool(),
-				m_GraphicsPipeline->GetDescriptorSetLayout(set), Pipeline::BindPoint::Graphics,
-				m_GraphicsPipeline->GetLayout(), set);
+			pDescriptor = &m_DescriptorSets.emplace_back(
+				m_Material->GetGraphicsPipeline().GetDescriptorPool(),
+				m_Material->GetGraphicsPipeline().GetDescriptorSetLayout(set),
+				Pipeline::BindPoint::Graphics, m_Material->GetGraphicsPipeline().GetLayout(), set);
 
 		// Create buffer uniform
 		BufferUniform& uniform =
-			m_BufferUniforms[set].emplace_back(name, stage, *m_GraphicsPipeline);
+			m_BufferUniforms[set].emplace_back(name, stage, m_Material->GetGraphicsPipeline());
 		pDescriptor->BindUniform(uniform);
 
 		return uniform;
@@ -62,11 +70,13 @@ namespace At0::Ray
 	Sampler2DUniform& Renderer::AddSampler2DUniform(
 		const std::string& name, ShaderStage stage, Ref<Texture2D> texture)
 	{
-		RAY_MEXPECTS(m_GraphicsPipeline->GetShader().GetReflection(stage).HasUniform(name, true),
+		RAY_MEXPECTS(m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniform(
+						 name, true),
 			"[Material] Sampler2DUniform \"{0}\" was not found in shader stage \"{1}\"", name,
 			String::Construct(stage));
 
-		uint32_t set = m_GraphicsPipeline->GetShader().GetReflection(stage).GetUniform(name).set;
+		uint32_t set =
+			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).GetUniform(name).set;
 
 		// Create descriptor set if the one for this set does not exist yet
 		DescriptorSet* pDescriptor = nullptr;
@@ -79,13 +89,14 @@ namespace At0::Ray
 
 		// If the descriptor set wasn't found in the existing ones, create it
 		if (pDescriptor == nullptr)
-			pDescriptor = &m_DescriptorSets.emplace_back(m_GraphicsPipeline->GetDescriptorPool(),
-				m_GraphicsPipeline->GetDescriptorSetLayout(set), Pipeline::BindPoint::Graphics,
-				m_GraphicsPipeline->GetLayout(), set);
+			pDescriptor = &m_DescriptorSets.emplace_back(
+				m_Material->GetGraphicsPipeline().GetDescriptorPool(),
+				m_Material->GetGraphicsPipeline().GetDescriptorSetLayout(set),
+				Pipeline::BindPoint::Graphics, m_Material->GetGraphicsPipeline().GetLayout(), set);
 
 		// Create buffer uniform
 		Sampler2DUniform& uniform = m_Sampler2DUniforms[set].emplace_back(
-			name, stage, std::move(texture), *m_GraphicsPipeline);
+			name, stage, std::move(texture), m_Material->GetGraphicsPipeline());
 		pDescriptor->BindUniform(uniform);
 
 		return uniform;
