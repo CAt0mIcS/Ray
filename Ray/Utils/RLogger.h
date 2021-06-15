@@ -28,8 +28,8 @@ namespace At0::Ray
 	using SourceLocation = std::experimental::source_location;
 #endif
 
-	inline Violent::FileLogger g_FileLogger;
-	inline Violent::ConsoleLogger g_ConsoleLogger;
+	RAY_EXPORT extern Violent::FileLogger g_FileLogger;
+	RAY_EXPORT extern Violent::ConsoleLogger g_ConsoleLogger;
 
 #ifdef _MSC_VER
 	class RAY_EXPORT CLog
