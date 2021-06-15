@@ -2,6 +2,7 @@
 
 #include "../RBase.h"
 #include "RComponent.h"
+#include "Base/RRenderer.h"
 
 #include "../Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "../Graphics/Pipelines/Uniforms/RBufferUniform.h"
@@ -36,7 +37,7 @@ namespace At0::Ray
 	 * Components containing all resources specifically required for a mesh to render.
 	 * A mesh is only rendered if the contained entity has a MeshRenderer component
 	 */
-	class RAY_EXPORT MeshRenderer : public Component
+	class RAY_EXPORT MeshRenderer : public Component, public Renderer
 	{
 	public:
 		/**
@@ -58,13 +59,6 @@ namespace At0::Ray
 		 */
 		void Update();
 
-		BufferUniform& AddBufferUniform(const std::string& name, ShaderStage stage);
-		Sampler2DUniform& AddSampler2DUniform(
-			const std::string& name, ShaderStage stage, Ref<Texture2D> texture);
-
-		BufferUniform& GetBufferUniform(std::string_view name);
-		Sampler2DUniform& GetSampler2DUniform(std::string_view name);
-
 		void SetMaterial(Ref<Material> material);
 
 		Material& GetMaterial() { return *m_Material; }
@@ -81,10 +75,6 @@ namespace At0::Ray
 		 * metallic or the specular map
 		 */
 		Ref<Material> m_Material;
-
-		std::vector<DescriptorSet> m_DescriptorSets;
-		std::unordered_map<uint32_t, std::vector<Scope<BufferUniform>>> m_BufferUniforms;
-		std::unordered_map<uint32_t, std::vector<Scope<Sampler2DUniform>>> m_Sampler2DUniforms;
 
 		/**
 		 * Points to the buffer uniform in the unordered_map to make MeshRenderer::Update faster

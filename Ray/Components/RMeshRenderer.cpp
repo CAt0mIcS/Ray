@@ -17,7 +17,8 @@ namespace At0::Ray
 {
 	MeshRenderer::MeshRenderer(
 		Entity entity, Ref<Material> material, bool automaticUniformEmplacement)
-		: Component(entity), m_Material(std::move(material))
+		: Component(entity), Renderer(material->GetSharedGraphicsPipeline()),
+		  m_Material(std::move(material))
 	{
 		if (automaticUniformEmplacement)
 			AddUniforms();
@@ -54,103 +55,6 @@ namespace At0::Ray
 		}
 	}
 
-	BufferUniform& MeshRenderer::AddBufferUniform(const std::string& name, ShaderStage stage)
-	{
-		RAY_MEXPECTS(
-			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniformBlock(
-				name),
-			"[Material] BufferUniform \"{0}\" was not found in shader stage \"{1}\"", name,
-			String::Construct(stage));
-
-		uint32_t set = m_Material->GetGraphicsPipeline()
-						   .GetShader()
-						   .GetReflection(stage)
-						   .GetUniformBlock(name)
-						   .set;
-
-		// Create descriptor set if the one for this set does not exist yet
-		DescriptorSet* pDescriptor = nullptr;
-		for (auto& descSet : m_DescriptorSets)
-			if (descSet.GetSetNumber() == set)
-			{
-				pDescriptor = &descSet;
-				break;
-			}
-
-		// If the descriptor set wasn't found in the existing ones, create it
-		if (pDescriptor == nullptr)
-			pDescriptor = &m_DescriptorSets.emplace_back(
-				m_Material->GetGraphicsPipeline().GetDescriptorPool(),
-				m_Material->GetGraphicsPipeline().GetDescriptorSetLayout(set),
-				Pipeline::BindPoint::Graphics, m_Material->GetGraphicsPipeline().GetLayout(), set);
-
-		// Create buffer uniform
-		Scope<BufferUniform>& uniform = m_BufferUniforms[set].emplace_back(
-			MakeScope<BufferUniform>(name, stage, m_Material->GetGraphicsPipeline()));
-		pDescriptor->BindUniform(*uniform);
-
-		if (name == UniformTag::PerObjectData)
-			m_PerObjectDataUniformRef = (*uniform)["Model"];
-
-		return *uniform;
-	}
-
-	Sampler2DUniform& MeshRenderer::AddSampler2DUniform(
-		const std::string& name, ShaderStage stage, Ref<Texture2D> texture)
-	{
-		RAY_MEXPECTS(m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniform(
-						 name, true),
-			"[Material] Sampler2DUniform \"{0}\" was not found in shader stage \"{1}\"", name,
-			String::Construct(stage));
-
-		uint32_t set =
-			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).GetUniform(name).set;
-
-		// Create descriptor set if the one for this set does not exist yet
-		DescriptorSet* pDescriptor = nullptr;
-		for (auto& descSet : m_DescriptorSets)
-			if (descSet.GetSetNumber() == set)
-			{
-				pDescriptor = &descSet;
-				break;
-			}
-
-		// If the descriptor set wasn't found in the existing ones, create it
-		if (pDescriptor == nullptr)
-			pDescriptor = &m_DescriptorSets.emplace_back(
-				m_Material->GetGraphicsPipeline().GetDescriptorPool(),
-				m_Material->GetGraphicsPipeline().GetDescriptorSetLayout(set),
-				Pipeline::BindPoint::Graphics, m_Material->GetGraphicsPipeline().GetLayout(), set);
-
-		// Create buffer uniform
-		Scope<Sampler2DUniform>& uniform =
-			m_Sampler2DUniforms[set].emplace_back(MakeScope<Sampler2DUniform>(
-				name, stage, std::move(texture), m_Material->GetGraphicsPipeline()));
-		pDescriptor->BindUniform(*uniform);
-
-		return *uniform;
-	}
-
-	BufferUniform& MeshRenderer::GetBufferUniform(std::string_view name)
-	{
-		for (auto& descriptors : m_BufferUniforms)
-			for (auto& uBuff : descriptors.second)
-				if (uBuff->GetName() == name)
-					return *uBuff;
-		ThrowRuntime("[MeshRenderer] Failed to retrieve BufferUniform \"{0}\"", name);
-		return *m_BufferUniforms[0][0];
-	}
-
-	Sampler2DUniform& MeshRenderer::GetSampler2DUniform(std::string_view name)
-	{
-		for (auto& descriptors : m_Sampler2DUniforms)
-			for (auto& uBuff : descriptors.second)
-				if (uBuff->GetName() == name)
-					return *uBuff;
-		ThrowRuntime("[MeshRenderer] Failed to retrieve Sampler2DUniform \"{0}\"", name);
-		return *m_Sampler2DUniforms[0][0];
-	}
-
 	void MeshRenderer::SetMaterial(Ref<Material> material)
 	{
 		m_Material = std::move(material);
@@ -185,7 +89,10 @@ namespace At0::Ray
 			for (const auto& uBlock : reflection.GetUniformBlocks())
 			{
 				if (uBlock.name == UniformTag::PerObjectData)
-					AddBufferUniform(UniformTag::PerObjectData, stage);
+				{
+					m_PerObjectDataUniformRef =
+						AddBufferUniform(UniformTag::PerObjectData, stage)["Model"];
+				}
 				else if (uBlock.name == UniformTag::Shading)
 					AddBufferUniform(UniformTag::Shading, stage);
 			}

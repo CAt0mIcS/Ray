@@ -35,6 +35,7 @@ namespace At0::Ray
 
 		const GraphicsPipeline& GetGraphicsPipeline() const { return *m_GraphicsPipeline; }
 		GraphicsPipeline& GetGraphicsPipeline() { return *m_GraphicsPipeline; }
+		Ref<GraphicsPipeline> GetSharedGraphicsPipeline() const { return m_GraphicsPipeline; }
 
 		/**
 		 * Bind the graphics pipeline
