@@ -37,7 +37,7 @@ namespace At0::Ray
 	void LogicalDevice::WaitIdle() const
 	{
 		ThrowVulkanError(
-			vkDeviceWaitIdle(m_Device), "Failed to wait for the logica device to finish work");
+			vkDeviceWaitIdle(m_Device), "Failed to wait for the logical device to finish work");
 	}
 
 	bool LogicalDevice::IsEnabled(DeviceFeature feature) const

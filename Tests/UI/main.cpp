@@ -123,13 +123,10 @@ private:
 
 	void Update() override
 	{
-		auto btnView = Ray::Scene::Get().EntityView<Ray::Button>();
-		for (Ray::Entity btnEntity : btnView)
-		{
-			Ray::Button& btn = btnEntity.Get<Ray::Button>();
+		Ray::Scene::Get().EntityView<Ray::Button>().each([this](Ray::Button& btn) {
 			if (btn.GetName() == "ColoredButton")
 				btn.SetColor(m_ButtonColors);
-		}
+		});
 	}
 
 private:

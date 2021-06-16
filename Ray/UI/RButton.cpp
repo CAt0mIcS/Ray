@@ -11,6 +11,9 @@
 #include "Components/RMeshRenderer.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
 
+#include "Graphics/RGraphics.h"
+#include "Graphics/Core/RLogicalDevice.h"
+
 
 namespace At0::Ray
 {
@@ -70,6 +73,9 @@ namespace At0::Ray
 
 		MeshRenderer& renderer = GetEntity().Get<MeshRenderer>();
 
+		// Wait for command buffers to finish executing because command buffers which are in the
+		// pending state and are using the descriptor set need to finish before it can be updated
+		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 		renderer.GetSampler2DUniform("texSampler")
 			.SetTexture(std::move(texture), renderer.GetDescriptorSet("texSampler"));
 	}
