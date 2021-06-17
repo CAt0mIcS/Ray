@@ -6,6 +6,6 @@
 			.c_str());
 	ImGui::Text(Ray::String::Serialize("FPS: {0}", Ray::Engine::Get().GetFPS()).c_str());
 	ImGui::Spacing();
-	ImGui::Checkbox("Freeze Frustum", &Scene::Get().GetCamera().FreezeFrustum);
+	ImGui::Checkbox("Freeze Frustum", &Ray::Scene::Get().GetCamera().FreezeFrustum);
 	ImGui::End();
 });

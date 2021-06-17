@@ -11,7 +11,7 @@
 #else
 	#define STB_IMAGE_IMPLEMENTATION
 #endif
-#include <stb_image/stb_image.h>
+#include <stb/stb_image.h>
 
 
 namespace At0::Ray

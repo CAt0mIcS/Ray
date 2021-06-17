@@ -65,6 +65,7 @@ public:
 			Ray::Scene::Get().CreateEntity().Emplace<Ray::Button>("ColoredButton",
 				Ray::Float2{ 100.0f, 200.0f }, 200.0f, 50.0f, Ray::Float3{ 0.0f, 1.0f, 0.0f });
 
+#include "../ImGuiWindows.inl"
 
 		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
 			ImGui::Begin("Button settings");
@@ -79,6 +80,9 @@ public:
 				ImVec2{ 512.0f, 512.0f });
 			ImGui::End();
 		});
+
+		// m_TextEntity = Scene::Get().CreateEntity();
+		// m_TextEntity.Emplace<Ray::TextRenderer>();
 	}
 
 private:
@@ -131,6 +135,7 @@ private:
 
 private:
 	Ray::Float3 m_ButtonColors{};
+	Ray::Entity m_TextEntity;
 };
 
 void SignalHandler(int signal)

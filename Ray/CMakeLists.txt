@@ -101,6 +101,9 @@ set(SRC
 	"Graphics/RGraphics.cpp"
 	"Graphics/RCodex.h"
 	
+	"Graphics/Text/RFont.h"
+	"Graphics/Text/RFont.cpp"
+
 	"Graphics/Core/RVulkanInstance.h"
 	"Graphics/Core/RVulkanInstance.cpp"
 	"Graphics/Core/RPhysicalDevice.h"
@@ -213,6 +216,8 @@ set(SRC
 	"Shading/Flat/RFlatColorMaterial.cpp"
 	"Shading/Flat/RFlatTextureMaterial.h"
 	"Shading/Flat/RFlatTextureMaterial.cpp"
+	"Shading/Flat/RFlatTextMaterial.h"
+	"Shading/Flat/RFlatTextMaterial.cpp"
 
 	# ------------------------------------------------------------------
 	# User Interface
@@ -275,6 +280,8 @@ set(SRC
 	"../Extern/imgui/imgui_tables.cpp"
 	"../Extern/imgui/imgui_impl_glfw.cpp"
 	"../Extern/imgui/imgui_impl_vulkan.cpp"
+	"../Extern/msdf/msdf.cpp"
+	"../Extern/msdf/msdf.h"
 )
 
 # ------------------------------------------------------------------
