@@ -24,34 +24,5 @@ namespace At0::Ray
 			filepath.data(), filepath, size, Type::TTF);
 	}
 
-	void Font::Load(std::string_view filepath)
-	{
-		// Load data
-		std::ifstream reader(filepath, std::ios::ate | std::ios::binary);
-		std::vector<uint8_t> bytes(reader.tellg());
-		reader.seekg(std::ios::beg);
-		reader.read((char*)bytes.data(), bytes.size());
-
-		stbtt_fontinfo fontinfo;
-		stbtt_InitFont(&fontinfo, bytes.data(), stbtt_GetFontOffsetForIndex(bytes.data(), 0));
-
-		uint32_t layerCount = s_SupportedLetters.size();
-
-		uint32_t arrayLayer = 0;
-		for (auto c : s_SupportedLetters)
-		{
-			ex_metrics_t metrics = {};
-			auto bitmap = ex_msdf_glyph(&fontinfo, c, m_Size, m_Size, &metrics, 1);
-			if (bitmap)
-			{
-				// image->SetPixels(bitmap, arrayLayer);
-
-				free(bitmap);
-			}
-
-			m_Glyphs.emplace_back(Glyph(metrics.left_bearing, metrics.advance,
-				{ metrics.ix0, metrics.iy0 }, { metrics.ix1, metrics.iy1 }));
-			m_Indices[c] = arrayLayer++;
-		}
-	}
+	void Font::Load(std::string_view filepath) {}
 }  // namespace At0::Ray

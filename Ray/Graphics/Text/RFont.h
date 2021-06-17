@@ -21,14 +21,15 @@ namespace At0::Ray
 
 		struct Glyph
 		{
-			Glyph(int32_t leftBearing, int32_t advance, Int2 i0, Int2 i1)
-				: leftBearing(leftBearing), advance(advance), i0(std::move(i0)), i1(std::move(i1))
+			Glyph(Ref<Texture2D> texture, Int2 size, Int2 bearing, uint32_t advance)
+				: texture(std::move(texture)), size(size), bearing(bearing), advance(advance)
 			{
 			}
 
-			int32_t leftBearing;
-			int32_t advance;
-			Int2 i0, i1;
+			Ref<Texture2D> texture;
+			Int2 size;
+			Int2 bearing;
+			uint32_t advance;
 		};
 
 	public:
