@@ -11,6 +11,7 @@ build*/
 .vscode/
 *.cache
 imgui.ini
+*.rreflection
 *.dll
 !Extern/assimp/lib/x64/*.*
 Resources/Shaders/Generated/*.*
