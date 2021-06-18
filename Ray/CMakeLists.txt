@@ -280,8 +280,6 @@ set(SRC
 	"../Extern/imgui/imgui_tables.cpp"
 	"../Extern/imgui/imgui_impl_glfw.cpp"
 	"../Extern/imgui/imgui_impl_vulkan.cpp"
-	"../Extern/msdf/msdf.cpp"
-	"../Extern/msdf/msdf.h"
 )
 
 # ------------------------------------------------------------------
@@ -301,6 +299,7 @@ set(PRIVATE_INC
     "${CMAKE_SOURCE_DIR}/Extern/rapidjson/include"
     "${CMAKE_SOURCE_DIR}/Extern/glfw/include"
     "${CMAKE_SOURCE_DIR}/Extern"
+    "${CMAKE_SOURCE_DIR}/Extern/freetype"
     "${CMAKE_SOURCE_DIR}/Extern/Ion"
     "${MONO_INC}"
 )
@@ -318,6 +317,7 @@ set(PRIVATE_LIB
     "Ion"
     # "ktx"
     "${MONO_LIB}"
+    "freetype"
 )
 
 

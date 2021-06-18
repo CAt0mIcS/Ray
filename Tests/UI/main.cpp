@@ -23,6 +23,7 @@
 #include <Ray/Events/RMouseEvents.h>
 
 #include <Ray/UI/RImGui.h>
+#include <Ray/Graphics/Text/RFont.h>
 #include <../../Extern/imgui/imgui.h>
 
 
@@ -80,6 +81,8 @@ public:
 				ImVec2{ 512.0f, 512.0f });
 			ImGui::End();
 		});
+
+		auto font = Ray::Font::AcquireTTF("Resources/Fonts/Consolas/consola.ttf", 48);
 
 		// m_TextEntity = Scene::Get().CreateEntity();
 		// m_TextEntity.Emplace<Ray::TextRenderer>();

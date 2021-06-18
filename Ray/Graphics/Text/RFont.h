@@ -25,11 +25,12 @@ namespace At0::Ray
 				: texture(std::move(texture)), size(size), bearing(bearing), advance(advance)
 			{
 			}
+			Glyph() = default;
 
-			Ref<Texture2D> texture;
-			Int2 size;
-			Int2 bearing;
-			uint32_t advance;
+			Ref<Texture2D> texture{};
+			Int2 size{};
+			Int2 bearing{};
+			uint32_t advance{};
 		};
 
 	public:
@@ -41,10 +42,9 @@ namespace At0::Ray
 
 	private:
 		Ref<Texture2D> m_Texture;
-		std::vector<Glyph> m_Glyphs;
 
-		// Maps character to glyph index in m_Glyphs
-		std::unordered_map<char, uint32_t> m_Indices;
+		// Maps character to glyph
+		std::unordered_map<char, Glyph> m_Glyphs;
 
 		// Glyph size in pixels
 		uint32_t m_Size{};

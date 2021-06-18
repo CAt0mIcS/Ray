@@ -20,3 +20,6 @@
 [submodule "Extern/rapidjson"]
 	path = Extern/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
+[submodule "Extern/freetype2"]
+	path = Extern/freetype2
+	url = http://git.sv.nongnu.org/r/freetype/freetype2.git
