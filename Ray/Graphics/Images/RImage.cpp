@@ -67,12 +67,127 @@ namespace At0::Ray
 		return false;
 	}
 
-	void Image::WriteJPG(std::string_view filepath)
+	void Image::WritePPM(std::string_view filepath)
 	{
-		Buffer&& imageBuffer = CopyToBuffer();
-		if (stbi_write_jpg(
-				filepath.data(), m_Extent.x, m_Extent.y, 1, imageBuffer.GetMapped(), 100) == 0)
-			ThrowRuntime("[Image] Failed to write image to file \"{0}\"", filepath);
+		bool supportsBlit = true;
+		VkFormatProperties formatProps;
+
+		// Check if the device supports blitting from optimal/linear images
+		vkGetPhysicalDeviceFormatProperties(
+			Graphics::Get().GetPhysicalDevice(), m_Format, &formatProps);
+		if (!(formatProps.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT) ||
+			!(formatProps.linearTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT))
+		{
+			Log::Warn("[Image] Device does not support blitting from optimal/linear tiled images, "
+					  "using copy instead of blit");
+			supportsBlit = false;
+		}
+
+		// Create the linear tiled destination image to copy to and to read the memory from
+		Image dstImage(m_Extent, VK_IMAGE_TYPE_2D, m_Format, VK_IMAGE_TILING_LINEAR,
+			VK_IMAGE_USAGE_TRANSFER_DST_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+		CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
+		cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+
+		dstImage.TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+		VkImageLayout oldLayout = m_ImageLayout;
+		TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+
+		if (supportsBlit)
+		{
+			// Define region to blit
+			VkOffset3D blitSize{};
+			blitSize.x = m_Extent.x;
+			blitSize.y = m_Extent.y;
+			blitSize.z = 1;
+			VkImageBlit imageBlitRegion{};
+			imageBlitRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			imageBlitRegion.srcSubresource.layerCount = 1;
+			imageBlitRegion.srcOffsets[1] = blitSize;
+			imageBlitRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			imageBlitRegion.dstSubresource.layerCount = 1;
+			imageBlitRegion.dstOffsets[1] = blitSize;
+
+			// Issue the blit command
+			vkCmdBlitImage(cmdBuff, m_Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, dstImage,
+				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageBlitRegion, VK_FILTER_NEAREST);
+		}
+		else
+		{
+			// Otherwise use image copy (requires us to manually flip components)
+			VkImageCopy imageCopyRegion{};
+			imageCopyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			imageCopyRegion.srcSubresource.layerCount = 1;
+			imageCopyRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			imageCopyRegion.dstSubresource.layerCount = 1;
+			imageCopyRegion.extent.width = m_Extent.x;
+			imageCopyRegion.extent.height = m_Extent.y;
+			imageCopyRegion.extent.depth = 1;
+
+			// Issue the copy command
+			vkCmdCopyImage(cmdBuff, m_Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, dstImage,
+				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopyRegion);
+		}
+
+		cmdBuff.End();
+		// RAY_TODO: Get best queue
+		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
+		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+
+		dstImage.TransitionLayout(VK_IMAGE_LAYOUT_GENERAL);
+		TransitionLayout(oldLayout);
+
+		// Get layout of the image (including row pitch)
+		VkImageSubresource subResource{ VK_IMAGE_ASPECT_COLOR_BIT, 0, 0 };
+		VkSubresourceLayout subResourceLayout;
+		vkGetImageSubresourceLayout(
+			Graphics::Get().GetDevice(), dstImage, &subResource, &subResourceLayout);
+		const char* data;
+		vkMapMemory(Graphics::Get().GetDevice(), dstImage.GetImageMemory(), 0, VK_WHOLE_SIZE, 0,
+			(void**)&data);
+		data += subResourceLayout.offset;
+
+		std::ofstream file(filepath, std::ios::out | std::ios::binary);
+
+		// ppm header
+		file << "P6\n" << m_Extent.x << "\n" << m_Extent.y << "\n" << 255 << "\n";
+
+		// If source is BGR (destination is always RGB) and we can't use blit (which does automatic
+		// conversion), we'll have to manually swizzle color components
+		bool colorSwizzle = false;
+		// Check if source is BGR
+		// Note: Not complete, only contains most common and basic BGR surface formats for
+		// demonstration purposes
+		if (!supportsBlit)
+		{
+			std::vector<VkFormat> formatsBGR = { VK_FORMAT_B8G8R8A8_SRGB, VK_FORMAT_B8G8R8A8_UNORM,
+				VK_FORMAT_B8G8R8A8_SNORM };
+			colorSwizzle =
+				(std::find(formatsBGR.begin(), formatsBGR.end(), m_Format) != formatsBGR.end());
+		}
+
+		// ppm binary pixel data
+		for (uint32_t y = 0; y < m_Extent.y; y++)
+		{
+			unsigned int* row = (unsigned int*)data;
+			for (uint32_t x = 0; x < m_Extent.x; x++)
+			{
+				if (colorSwizzle)
+				{
+					file.write((char*)row + 2, 1);
+					file.write((char*)row + 1, 1);
+					file.write((char*)row, 1);
+				}
+				else
+					file.write((char*)row, 3);
+				row++;
+			}
+			data += subResourceLayout.rowPitch;
+		}
+		file.close();
 	}
 
 	void Image::TransitionLayout(VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout,
@@ -100,44 +215,50 @@ namespace At0::Ray
 		VkPipelineStageFlags sourceStage;
 		VkPipelineStageFlags destinationStage;
 
-		if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED &&
-			newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
+		switch (oldLayout)
 		{
+		case VK_IMAGE_LAYOUT_UNDEFINED:
 			barrier.srcAccessMask = 0;
-			barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-
 			sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-			destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-		}
-		else if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL &&
-				 newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
-		{
-			barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-
-			sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-		}
-		else if (oldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL &&
-				 newLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL)
-		{
+			break;
+		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
 			barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-
 			sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-			destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-		}
-		else if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL &&
-				 newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
-		{
+			break;
+		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
 			barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-
 			sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+			barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+			sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+			break;
+		default:
+			ThrowRuntime("[Image] Invalid or unsupported old layout ({0})", (uint32_t)oldLayout);
 		}
-		else
-			ThrowRuntime("[Image] Invalid or unsupported combination of old and new layout");
+
+		switch (newLayout)
+		{
+		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+			barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+			destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+			barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+			destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_GENERAL:
+			barrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+			destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+			break;
+
+		default:
+			ThrowRuntime("[Image] Invalid or unsupported new layout ({0})", (uint32_t)newLayout);
+		}
+
 
 		vkCmdPipelineBarrier(
 			commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
@@ -238,7 +359,7 @@ namespace At0::Ray
 		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
 		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 		return true;
-	}
+	}  // namespace At0::Ray
 
 
 	void Image::CopyFromBuffer(const Buffer& buffer, std::vector<VkBufferImageCopy> copyRegions)

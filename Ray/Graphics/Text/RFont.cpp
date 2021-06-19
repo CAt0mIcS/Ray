@@ -123,7 +123,7 @@ namespace At0::Ray
 			if (glyph.texture &&
 				std::string("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890")
 						.find(ch) != std::string::npos)
-				glyph.texture->WriteJPG(
-					String::Serialize("Resources/Fonts/Image_{0}_{1}.jpg", "Consolas", ch));
+				glyph.texture->WritePPM(
+					String::Serialize("Resources/Fonts/Image_{0}_{1}.ppm", "Consolas", ch));
 	}
 }  // namespace At0::Ray

@@ -30,6 +30,7 @@ namespace At0::Ray
 		virtual ~Image();
 
 		operator const VkImage&() const { return m_Image; }
+		const VkDeviceMemory& GetImageMemory() const { return m_ImageMemory; }
 		const ImageView& GetImageView() const { return *m_ImageView; }
 		VkImageLayout GetImageLayout() const { return m_ImageLayout; }
 		UInt2 GetExtent() const { return m_Extent; }
@@ -46,7 +47,7 @@ namespace At0::Ray
 		void CopyFromBuffer(const Buffer& buffer, std::vector<VkBufferImageCopy> copyRegions = {});
 		Buffer&& CopyToBuffer(std::vector<VkBufferImageCopy> copyRegions = {});
 		bool GenerateMipmaps();
-		void WriteJPG(std::string_view filepath);
+		void WritePPM(std::string_view filepath);
 
 		Image& operator=(Image&& other) noexcept;
 		Image(Image&& other) noexcept { *this = std::move(other); }
