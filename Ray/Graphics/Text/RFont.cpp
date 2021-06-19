@@ -71,7 +71,8 @@ namespace At0::Ray
 		Ref<Texture2D> texture =
 			Texture2D::Acquire({ width, height }, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_LINEAR,
 				VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT |
-					VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
+					VK_IMAGE_USAGE_TRANSFER_SRC_BIT,  // RAY_TEMPORARY (needed to write debug image
+													  // to file)
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 				VK_IMAGE_ASPECT_COLOR_BIT);
 
@@ -117,5 +118,12 @@ namespace At0::Ray
 		for (auto& [ch, glyph] : m_Glyphs)
 			if (glyph.texture)
 				glyph.texture->TransitionLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+		for (auto& [ch, glyph] : m_Glyphs)
+			if (glyph.texture &&
+				std::string("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890")
+						.find(ch) != std::string::npos)
+				glyph.texture->WriteJPG(
+					String::Serialize("Resources/Fonts/Image_{0}_{1}.jpg", "Consolas", ch));
 	}
 }  // namespace At0::Ray

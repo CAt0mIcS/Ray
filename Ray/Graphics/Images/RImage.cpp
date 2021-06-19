@@ -11,6 +11,9 @@
 #include "Utils/RException.h"
 #include "Utils/RAssert.h"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb/stb_image_write.h>
+
 
 namespace At0::Ray
 {
@@ -64,6 +67,14 @@ namespace At0::Ray
 		return false;
 	}
 
+	void Image::WriteJPG(std::string_view filepath)
+	{
+		Buffer&& imageBuffer = CopyToBuffer();
+		if (stbi_write_jpg(
+				filepath.data(), m_Extent.x, m_Extent.y, 1, imageBuffer.GetMapped(), 100) == 0)
+			ThrowRuntime("[Image] Failed to write image to file \"{0}\"", filepath);
+	}
+
 	void Image::TransitionLayout(VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout,
 		uint32_t mipLevels, uint32_t layerCount)
 	{
@@ -102,6 +113,24 @@ namespace At0::Ray
 				 newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
 		{
 			barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+			sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+		}
+		else if (oldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL &&
+				 newLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL)
+		{
+			barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+			barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+
+			sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+			destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+		}
+		else if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL &&
+				 newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+		{
+			barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 
 			sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
@@ -243,6 +272,51 @@ namespace At0::Ray
 		// RAY_TODO: Get best queue
 		commandBuffer.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
 		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+	}
+
+	Buffer&& Image::CopyToBuffer(std::vector<VkBufferImageCopy> copyRegions)
+	{
+		RAY_MEXPECTS(m_Usage & VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
+			"[Image] Image must be created with VK_IMAGE_USAGE_TRANSFER_SRC_BIT if it should be "
+			"copyable to a buffer");
+
+		// RAY_TODO: Check if VK_FORMAT_FEATURE_TRANSFER_SRC_BIT is set
+		VkImageLayout oldLayout = m_ImageLayout;
+		TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+
+		CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
+		cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+
+		VkBufferImageCopy region{};
+		region.bufferOffset = 0;
+		region.bufferRowLength = 0;
+		region.bufferImageHeight = 0;
+
+		region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		region.imageSubresource.mipLevel = 0;
+		region.imageSubresource.baseArrayLayer = 0;
+		region.imageSubresource.layerCount = 1;	 // RAY_TODO: MipLevel
+
+		region.imageOffset = { 0, 0, 0 };
+		region.imageExtent = { m_Extent.x, m_Extent.y, 1 };
+
+		if (copyRegions.empty())
+			copyRegions.emplace_back(region);
+
+		Buffer dstBuffer(m_Extent.x * m_Extent.y * 4, VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+		vkCmdCopyImageToBuffer(cmdBuff, m_Image, m_ImageLayout, dstBuffer,
+			(uint32_t)copyRegions.size(), copyRegions.data());
+
+		cmdBuff.End();
+
+		// RAY_TODO: Get best queue
+		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
+		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+
+		TransitionLayout(oldLayout);
+		return std::move(dstBuffer);
 	}
 
 	Image& Image::operator=(Image&& other) noexcept

@@ -44,7 +44,9 @@ namespace At0::Ray
 
 		void TransitionLayout(VkImageLayout newLayout);
 		void CopyFromBuffer(const Buffer& buffer, std::vector<VkBufferImageCopy> copyRegions = {});
+		Buffer&& CopyToBuffer(std::vector<VkBufferImageCopy> copyRegions = {});
 		bool GenerateMipmaps();
+		void WriteJPG(std::string_view filepath);
 
 		Image& operator=(Image&& other) noexcept;
 		Image(Image&& other) noexcept { *this = std::move(other); }
@@ -55,6 +57,7 @@ namespace At0::Ray
 			VkImage image, VkFormat imageFormat, int32_t width, int32_t height, uint32_t mipLevels);
 		static std::vector<VkFormat> FindSupportedFormats(std::vector<VkFormat> candidates,
 			VkImageTiling tiling, VkFormatFeatureFlags featureFlags);
+		static Buffer CopyToBuffer(VkImage image);
 
 	protected:
 		void Setup();
