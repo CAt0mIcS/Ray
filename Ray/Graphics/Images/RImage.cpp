@@ -515,6 +515,14 @@ namespace At0::Ray
 
 		vkBindImageMemory(Graphics::Get().GetDevice(), m_Image, m_ImageMemory, 0);
 
-		m_ImageView = MakeScope<ImageView>(*this);
+		// Create image view only for supported image usages
+		if ((m_Usage & VK_IMAGE_USAGE_SAMPLED_BIT) || (m_Usage & VK_IMAGE_USAGE_STORAGE_BIT) ||
+			(m_Usage & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) ||
+			(m_Usage & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) ||
+			(m_Usage & VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT) ||
+			(m_Usage & VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT) ||
+			(m_Usage & VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV) ||
+			(m_Usage & VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT))
+			m_ImageView = MakeScope<ImageView>(*this);
 	}
 }  // namespace At0::Ray
