@@ -7,6 +7,7 @@
 #include "RTransform.h"
 #include "Graphics/Text/RFont.h"
 #include "Shading/Flat/RFlatTextMaterial.h"
+#include "Graphics/Images/RTexture2DAtlas.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
@@ -18,9 +19,9 @@ namespace At0::Ray
 		: Component(entity), Renderer(material)
 	{
 		AddBufferUniform("PerObjectData", ShaderStage::Vertex);
-		AddSampler2DUniform(
-			"samplerCharacters", ShaderStage::Fragment, material->GetFont().GetGlyph('b').texture);
-		GetEntity().Get<Transform>().Rotate({ 0.0f, 0.0f, 0.0f });
+		AddSampler2DUniform("samplerCharacters", ShaderStage::Fragment,
+			material->GetFont().GetSharedTextureAtlas());
+		GetEntity().Get<Transform>().Rotate({ /*Math::PI<>*/ 0.0f, 0.0f, 0.0f });
 	}
 
 	void TextRenderer::Update()

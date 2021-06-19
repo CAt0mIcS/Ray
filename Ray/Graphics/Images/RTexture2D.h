@@ -14,7 +14,7 @@ namespace At0::Ray
 		static Ref<Texture2D> Acquire(std::string_view filepath);
 		static Ref<Texture2D> Acquire(UInt2 extent, VkFormat format, VkImageTiling tiling,
 			VkImageUsageFlags usage, VkMemoryPropertyFlags memProps,
-			VkImageAspectFlags imageAspect);
+			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT);
 
 		Texture2D(std::string_view filepath);
 		Texture2D(UInt2 extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,

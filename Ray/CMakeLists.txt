@@ -170,6 +170,8 @@ set(SRC
 	"Graphics/Images/RTextureCubemap.cpp"
 	"Graphics/Images/RTextureSampler.h"
 	"Graphics/Images/RTextureSampler.cpp"
+	"Graphics/Images/RTexture2DAtlas.h"
+	"Graphics/Images/RTexture2DAtlas.cpp"
 
 	"Graphics/Commands/RCommandBuffer.h"
 	"Graphics/Commands/RCommandBuffer.cpp"

@@ -9,7 +9,7 @@
 
 namespace At0::Ray
 {
-	class Texture2D;
+	class Texture2DAtlas;
 
 	class RAY_EXPORT Font : public Resource
 	{
@@ -21,13 +21,12 @@ namespace At0::Ray
 
 		struct Glyph
 		{
-			Glyph(Ref<Texture2D> texture, Int2 size, Int2 bearing, uint32_t advance)
-				: texture(std::move(texture)), size(size), bearing(bearing), advance(advance)
+			Glyph(Int2 size, Int2 bearing, uint32_t advance)
+				: size(size), bearing(bearing), advance(advance)
 			{
 			}
 			Glyph() = default;
 
-			Ref<Texture2D> texture{};
 			Int2 size{};
 			Int2 bearing{};
 			uint32_t advance{};
@@ -35,14 +34,17 @@ namespace At0::Ray
 
 	public:
 		Font(std::string_view filepath, uint32_t size, Type type);
+		~Font();
 
 		static Ref<Font> AcquireTTF(std::string_view filepath, uint32_t size);
 
 		void Load(std::string_view filepath);
 		const Glyph& GetGlyph(char c) const { return m_Glyphs.at(c); }
+		Ref<Texture2DAtlas> GetSharedTextureAtlas() const { return m_TextureAtlas; }
+		const Texture2DAtlas& GetTextureAtlas() const { return *m_TextureAtlas; }
 
 	private:
-		Ref<Texture2D> m_Texture;
+		Ref<Texture2DAtlas> m_TextureAtlas;
 
 		// Maps character to glyph
 		std::unordered_map<char, Glyph> m_Glyphs;

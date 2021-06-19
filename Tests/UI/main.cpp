@@ -84,7 +84,7 @@ public:
 		//	ImGui::End();
 		//});
 
-		auto font = Ray::Font::AcquireTTF("Resources/Fonts/Consolas/consola.ttf", 48);
+		auto font = Ray::Font::AcquireTTF("Resources/Fonts/Courier-Prime/Courier Prime.ttf", 48);
 		auto flatTextMaterial = Ray::MakeRef<Ray::FlatTextMaterial>(
 			Ray::FlatTextMaterial::Layout{ "Hello World", font, { 1.0f, 1.0f, 1.0f, 1.0f } });
 
