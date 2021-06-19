@@ -34,6 +34,7 @@
 
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "Components/RMeshRenderer.h"
+#include "Components/RTextRenderer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 
 #include "UI/RImGui.h"
@@ -256,6 +257,8 @@ namespace At0::Ray
 		Scene::Get().CmdBind(cmdBuff);
 		Scene::Get().EntityView<MeshRenderer>().each(
 			[&cmdBuff](MeshRenderer& mesh) { mesh.Render(cmdBuff); });
+		Scene::Get().EntityView<TextRenderer>().each(
+			[&cmdBuff](TextRenderer& text) { text.Render(cmdBuff); });
 
 #if RAY_ENABLE_IMGUI
 		ImGUI::Get().CmdBind(cmdBuff);

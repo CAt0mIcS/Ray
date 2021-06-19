@@ -11,6 +11,7 @@
 #include "Utils/RLogger.h"
 
 #include "Components/RMeshRenderer.h"
+#include "Components/RTextRenderer.h"
 #include "Components/RSkybox.h"
 #include "Components/RTransform.h"
 
@@ -76,8 +77,6 @@ namespace At0::Ray
 		m_ThreadPool.SubmitLoop(0u, (uint32_t)tformView.size(), [this, &tformView](uint32_t i) {
 			Entity{ tformView[i] }.Get<Transform>().UpdateMatrix();
 		});
-
-		// RAY_TODO: Not working
 		m_ThreadPool.WaitForTasks();
 #else
 		tformView.each([](Transform& tform) { tform.UpdateMatrix(); });
@@ -99,6 +98,8 @@ namespace At0::Ray
 #else
 		m_Registry.view<MeshRenderer>().each([](MeshRenderer& mesh) { mesh.Update(); });
 #endif
+
+		m_Registry.view<TextRenderer>().each([](TextRenderer& text) { text.Update(); });
 
 		CLog::Trace(
 			"[Scene] MeshRenderer updates took {0}us", (Time::Now() - tStart).AsMicroseconds());

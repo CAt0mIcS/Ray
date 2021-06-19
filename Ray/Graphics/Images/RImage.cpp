@@ -67,6 +67,9 @@ namespace At0::Ray
 	void Image::TransitionLayout(VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout,
 		uint32_t mipLevels, uint32_t layerCount)
 	{
+		if (oldLayout == newLayout)
+			return;
+
 		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
 		commandBuffer.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 

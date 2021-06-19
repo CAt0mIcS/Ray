@@ -12,6 +12,7 @@
 
 #include "Scene/RScene.h"
 #include "Components/RMeshRenderer.h"
+#include "Components/RTextRenderer.h"
 #include "UI/RImGui.h"
 
 
@@ -88,10 +89,14 @@ namespace At0::Ray
 		// Wait for secondary command buffers to finish recording draw calls
 		m_ThreadPool.WaitForTasks();
 
-#if RAY_ENABLE_IMGUI
 		for (const auto& [commandPool, commandBuffer] : m_CommandResources[imageIndex])
+		{
+			Scene::Get().EntityView<TextRenderer>().each(
+				[&commandBuffer](TextRenderer& renderer) { renderer.Render(*commandBuffer); });
+#if RAY_ENABLE_IMGUI
 			ImGUI::Get().CmdBind(*commandBuffer);
 #endif
+		}
 
 		// End and execute secondary commmand buffers
 		for (const auto& [commandPool, commandBuffer] : m_CommandResources[imageIndex])

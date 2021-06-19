@@ -24,6 +24,7 @@
 
 #include <Ray/UI/RImGui.h>
 #include <Ray/Graphics/Text/RFont.h>
+#include <Ray/Shading/Flat/RFlatTextMaterial.h>
 #include <../../Extern/imgui/imgui.h>
 
 
@@ -83,9 +84,12 @@ public:
 		});
 
 		auto font = Ray::Font::AcquireTTF("Resources/Fonts/Consolas/consola.ttf", 48);
+		auto flatTextMaterial = Ray::MakeRef<Ray::FlatTextMaterial>(
+			Ray::FlatTextMaterial::Layout{ "Hello World", font, { 1.0f, 1.0f, 1.0f, 1.0f } });
 
-		// m_TextEntity = Scene::Get().CreateEntity();
-		// m_TextEntity.Emplace<Ray::TextRenderer>();
+		m_TextEntity = Scene::Get().CreateEntity();
+		m_TextEntity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(flatTextMaterial));
+		m_TextEntity.Emplace<Ray::TextRenderer>(flatTextMaterial);
 	}
 
 private:

@@ -6,19 +6,19 @@
 
 namespace At0::Ray
 {
-	class Material;
+	class FlatTextMaterial;
+	class CommandBuffer;
 
 	class RAY_EXPORT TextRenderer : public Component, public Renderer
 	{
 	public:
-		TextRenderer(Entity entity, Ref<Material> material);
+		TextRenderer(Entity entity, Ref<FlatTextMaterial> material);
 
-		std::string_view GetText() const { return m_Text; }
-		void SetText(std::string_view txt) { m_Text = txt; }
+		void Update();
+		void Render(const CommandBuffer& cmdBuff) const;
 
-	private:
-		std::string m_Text;
-		Ref<Material> m_Material;
+		// std::string_view GetText() const;
+		// void SetText(std::string_view txt);
 	};
 }  // namespace At0::Ray
 

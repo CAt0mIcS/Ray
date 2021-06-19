@@ -39,6 +39,7 @@ namespace At0::Ray
 		static Ref<Font> AcquireTTF(std::string_view filepath, uint32_t size);
 
 		void Load(std::string_view filepath);
+		const Glyph& GetGlyph(char c) const { return m_Glyphs.at(c); }
 
 	private:
 		Ref<Texture2D> m_Texture;
