@@ -118,12 +118,5 @@ namespace At0::Ray
 		for (auto& [ch, glyph] : m_Glyphs)
 			if (glyph.texture)
 				glyph.texture->TransitionLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-		for (auto& [ch, glyph] : m_Glyphs)
-			if (glyph.texture &&
-				std::string("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890")
-						.find(ch) != std::string::npos)
-				glyph.texture->WritePPM(
-					String::Serialize("Resources/Fonts/Image_{0}_{1}.ppm", "Consolas", ch));
 	}
 }  // namespace At0::Ray

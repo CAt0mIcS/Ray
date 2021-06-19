@@ -19,7 +19,8 @@ namespace At0::Ray
 	{
 		AddBufferUniform("PerObjectData", ShaderStage::Vertex);
 		AddSampler2DUniform(
-			"samplerDiffuse", ShaderStage::Fragment, material->GetFont().GetGlyph('A').texture);
+			"samplerDiffuse", ShaderStage::Fragment, material->GetFont().GetGlyph('b').texture);
+		GetEntity().Get<Transform>().Rotate({ 0.0f, 0.0f, Math::PI<> });
 	}
 
 	void TextRenderer::Update()
