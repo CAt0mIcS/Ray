@@ -6,9 +6,12 @@
 
 namespace At0::Ray
 {
-	void DynamicBuffer::Update(void* data, VkDeviceSize offset)
+	void DynamicBuffer::Update(void* data, VkDeviceSize size, VkDeviceSize offset)
 	{
-		m_Buffer->Update(data, m_Size, m_Offset + offset);
+		RAY_MEXPECTS(
+			size + offset <= m_Size, "[DynamicBuffer] Trying to update region outside of buffer.");
+
+		m_Buffer->Update(data, size, m_Offset + offset);
 	}
 
 	void DynamicBuffer::Init(Ref<Buffer> buffer, VkDeviceSize size, VkDeviceSize offset)
