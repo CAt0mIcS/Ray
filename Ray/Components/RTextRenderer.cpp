@@ -80,7 +80,6 @@ namespace At0::Ray
 		AddBufferUniform("PerObjectData", ShaderStage::Vertex);
 		AddSampler2DUniform("samplerTextureAtlas", ShaderStage::Fragment,
 			material->GetFont().GetSharedTextureAtlas());
-		GetEntity().Get<Transform>().Rotate({ /*Math::PI<>*/ 0.0f, 0.0f, 0.0f });
 	}
 
 	void TextRenderer::Update()

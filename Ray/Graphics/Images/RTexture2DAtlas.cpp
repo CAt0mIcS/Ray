@@ -16,7 +16,7 @@ namespace At0::Ray
 
 	Texture2DAtlas::Area* Texture2DAtlas::Emplace(UInt2 extent, uint8_t* pixels)
 	{
-		Area* area = AllocateArea(extent + UInt2(50));
+		Area* area = AllocateArea(extent);
 
 		if (!area)
 		{
