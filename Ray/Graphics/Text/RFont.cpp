@@ -35,7 +35,8 @@ namespace At0::Ray
 			filepath.data(), filepath, size, Type::TTF);
 	}
 
-	static void CreateTextureFromBitmap(FT_GlyphSlot glyphSlot, Texture2DAtlas& atlas)
+	static Texture2DAtlas::Area* CreateTextureFromBitmap(
+		FT_GlyphSlot glyphSlot, Texture2DAtlas& atlas)
 	{
 		if (glyphSlot->bitmap.pixel_mode != FT_PIXEL_MODE_GRAY ||
 			glyphSlot->bitmap.num_grays != 256)
@@ -46,7 +47,7 @@ namespace At0::Ray
 		uint32_t bufferSize = width * height * 4;
 
 		if (bufferSize == 0)
-			return;
+			return nullptr;
 
 		std::vector<uint8_t> buffer(bufferSize);
 
@@ -70,7 +71,7 @@ namespace At0::Ray
 			startOfLine += glyphSlot->bitmap.pitch;
 		}
 
-		atlas.Emplace({ width, height }, buffer.data());
+		return atlas.Emplace({ width, height }, buffer.data());
 	}
 
 	void Font::Load(std::string_view filepath)
@@ -80,7 +81,7 @@ namespace At0::Ray
 			ThrowRuntime("[Font] Failed to create new face (Error code {0}).", error);
 
 		// FT_Set_Pixel_Sizes(face, 0, m_Size);
-		FT_Set_Char_Size(face, 0, 1500 * 64,  // char height in 1/64th of points
+		FT_Set_Char_Size(face, 0, 1000 * 64,  // char height in 1/64th of points
 			96,								  // horizontal device resolution
 			96								  // vertical device resolution
 		);
@@ -105,12 +106,16 @@ namespace At0::Ray
 			atlasSize.y += face->glyph->bitmap.rows;
 		}
 
-		m_TextureAtlas = MakeRef<Texture2DAtlas>(atlasSize / UInt2(4) /*UInt2{ 13500, 13500 }*/,
+		m_TextureAtlas = MakeRef<Texture2DAtlas>(/*atlasSize / UInt2(4)*/ UInt2{ 10000, 10000 },
 			VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_LINEAR,
 			VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
 
 		for (char supportedChar : s_SupportedLetters)
 		{
+			if (supportedChar == ' ' || supportedChar == '\t' || supportedChar == '\r' ||
+				supportedChar == '\n' || supportedChar == '\0')
+				continue;
+
 			FT_UInt glyphIndex = FT_Get_Char_Index(face, supportedChar);
 			if (FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT))
 				ThrowRuntime("[Font] Failed to load glyph for character '{0}' (Error code {1})",
@@ -122,7 +127,11 @@ namespace At0::Ray
 						"[Font] Failed to render glyph for character '{0}' (Error code {1})",
 						supportedChar, error);
 
-			CreateTextureFromBitmap(face->glyph, *m_TextureAtlas);
+			if (Texture2DAtlas::Area* area = CreateTextureFromBitmap(face->glyph, *m_TextureAtlas))
+				m_Glyphs[supportedChar].area = *area;
+			else
+				Log::Error("[Font] Texture creation for character '{0}' in font \"{1}\" failed",
+					supportedChar, filepath);
 		}
 	}
 }  // namespace At0::Ray

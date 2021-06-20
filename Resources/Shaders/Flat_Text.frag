@@ -6,7 +6,7 @@ layout(location = 0) in vec2 inUV;
 
 layout(location = 0) out vec4 outColor;
 
-layout(set = 1, binding = 2) uniform sampler2D samplerCharacters;
+layout(set = 1, binding = 2) uniform sampler2D samplerTextureAtlas;
 
 // layout(set = 1, binding = 3) uniform FontData
 // {
@@ -21,8 +21,5 @@ layout(set = 1, binding = 2) uniform sampler2D samplerCharacters;
 
 void main()
 {
-    // for(uint i = 0; i < uText.numCharacters; i++)
-    // {
-        outColor = texture(samplerCharacters, inUV);
-    // }
+    outColor = texture(samplerTextureAtlas, inUV);
 }

@@ -9,7 +9,7 @@ namespace At0::Ray
 {
 	class RAY_EXPORT Texture2DAtlas : public Texture2D
 	{
-	private:
+	public:
 		struct Area
 		{
 			UInt2 pos;
@@ -22,8 +22,8 @@ namespace At0::Ray
 			VkImageUsageFlags usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
 			VkMemoryPropertyFlags memProps = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-		void Emplace(std::string_view filepath);
-		void Emplace(UInt2 extent, uint8_t* pixels);
+		Area* Emplace(std::string_view filepath);
+		Area* Emplace(UInt2 extent, uint8_t* pixels);
 
 	private:
 		Area* AllocateArea(UInt2 extent);

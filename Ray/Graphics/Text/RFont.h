@@ -3,14 +3,13 @@
 #include "../../RBase.h"
 #include "../../Core/RResource.h"
 #include "../../Core/RMath.h"
+#include "../../Graphics/Images/RTexture2DAtlas.h"
 
 #include <unordered_map>
 
 
 namespace At0::Ray
 {
-	class Texture2DAtlas;
-
 	class RAY_EXPORT Font : public Resource
 	{
 	public:
@@ -30,6 +29,7 @@ namespace At0::Ray
 			Int2 size{};
 			Int2 bearing{};
 			uint32_t advance{};
+			Texture2DAtlas::Area area{};
 		};
 
 	public:

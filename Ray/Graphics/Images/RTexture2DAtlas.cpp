@@ -14,12 +14,16 @@ namespace At0::Ray
 		m_FreeAreas.emplace_back(UInt2{ 0, 0 }, extent);
 	}
 
-	void Texture2DAtlas::Emplace(UInt2 extent, uint8_t* pixels)
+	Texture2DAtlas::Area* Texture2DAtlas::Emplace(UInt2 extent, uint8_t* pixels)
 	{
-		Area* area = AllocateArea(extent);
+		Area* area = AllocateArea(extent + UInt2(50));
 
 		if (!area)
-			ThrowRuntime("[Texture2DAtlas] Texture atlas too small.");
+		{
+			Log::Error(
+				"[Texture2DAtlas] Too small to hold (x={0} | y={1}) image", extent.x, extent.y);
+			return nullptr;
+		}
 
 		VkDeviceSize imageSize = extent.x * extent.y * 4;
 
@@ -37,6 +41,7 @@ namespace At0::Ray
 
 		CopyFromBuffer(stagingBuffer, { region });
 		TransitionLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		return &m_AllocatedAreas.front();
 	}
 
 	Texture2DAtlas::Area* Texture2DAtlas::AllocateArea(UInt2 extent)
@@ -55,12 +60,106 @@ namespace At0::Ray
 			return Area{};
 		};
 
+		auto isAdjacent = [this](const Area& first, const Area& other) {
+			uint32_t x = first.pos.x;
+			uint32_t y = first.pos.y;
+			uint32_t width = first.size.x;
+			uint32_t height = first.size.y;
+			if (x == other.pos.x && width == other.size.x && y + height == other.pos.y)
+				// Other is immediately below
+				return true;
+			if (x == other.pos.x && width == other.size.x && other.pos.y + other.size.y == y)
+				// Other is immediately above
+				return true;
+			if (y == other.pos.y && height == other.size.y && x + width == other.pos.x)
+				// Other is immediately to the right
+				return true;
+			if (y == other.pos.y && height == other.size.y && other.pos.x + other.size.x == x)
+				// Other is immediately to the left
+				return true;
+			return false;
+		};
+
+		auto findAdjacent = [this, &isAdjacent](const Area& area) {
+			for (auto it = m_FreeAreas.cbegin(); it != m_FreeAreas.cend(); ++it)
+			{
+				if (isAdjacent(area, *it))
+					return it;
+			}
+			return m_FreeAreas.cend();
+		};
+
+		auto combine = [this](Area& first, const Area& other) {
+			uint32_t& x = first.pos.x;
+			uint32_t& y = first.pos.y;
+			uint32_t& width = first.size.x;
+			uint32_t& height = first.size.y;
+			if (x == other.pos.x && width == other.size.x && y + height == other.pos.y)
+			{
+				// Other is immediately below
+				height += other.size.y;
+				return true;
+			}
+			if (x == other.pos.x && width == other.size.x && other.pos.y + other.size.y == y)
+			{
+				// Other is immediately above
+				y -= other.size.y;
+				height += other.size.y;
+				return true;
+			}
+			if (y == other.pos.y && height == other.size.y && x + width == other.pos.x)
+			{
+				// Other is immediately to the right
+				width += other.size.x;
+				return true;
+			}
+			if (y == other.pos.y && height == other.size.y && other.pos.x + other.size.x == x)
+			{
+				// Other is immediately to the left
+				x -= other.size.x;
+				width += other.size.x;
+				return true;
+			}
+			return false;
+		};
+
+		auto collapseFreeAreas = [this, &findAdjacent, &combine]() {
+			if (m_FreeAreas.size() < 2)
+				return;
+
+			int collapsed = 0;
+			do
+			{
+				collapsed = 0;
+				std::deque<Area> collapsedAreas;
+				while (!m_FreeAreas.empty())
+				{
+					Area first = m_FreeAreas.front();
+					m_FreeAreas.pop_front();
+					while (!m_FreeAreas.empty())
+					{
+						auto other = findAdjacent(first);
+						if (other != m_FreeAreas.end())
+						{
+							combine(first, *other);
+							m_FreeAreas.erase(other);
+							++collapsed;
+						}
+						else
+							break;
+					}
+					collapsedAreas.emplace_back(first);
+				}
+				m_FreeAreas = collapsedAreas;
+			} while (collapsed > 0);
+		};
+
 		Area oldArea = getFreeArea(extent);
 
 		// Unable to find free area
 		if (oldArea.size.x == 0)
 		{
-			// collapseFreeAreas();
+			collapseFreeAreas();
 			oldArea = getFreeArea(extent);
 		}
 

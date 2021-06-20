@@ -5,6 +5,11 @@
 
 #include "RMesh.h"
 #include "RTransform.h"
+
+#include "Graphics/RCodex.h"
+#include "Graphics/Buffers/RVertexBuffer.h"
+#include "Graphics/Buffers/RIndexBuffer.h"
+
 #include "Graphics/Text/RFont.h"
 #include "Shading/Flat/RFlatTextMaterial.h"
 #include "Graphics/Images/RTexture2DAtlas.h"
@@ -15,11 +20,77 @@
 
 namespace At0::Ray
 {
+	static Mesh::VertexData GeneratePlane(Ref<FlatTextMaterial> material, char charToRender)
+	{
+		const Font::Glyph& glyph = material->GetFont().GetGlyph(charToRender);
+		const Texture2DAtlas::Area& area = glyph.area;
+		const Texture2DAtlas& textureAtlas = material->GetFont().GetTextureAtlas();
+
+		float topLeftX = (float)area.pos.x / (float)textureAtlas.GetExtent().x;
+		float topLeftY = (float)area.pos.y / (float)textureAtlas.GetExtent().y;
+
+		float bottomLeftX = (float)area.pos.x / (float)textureAtlas.GetExtent().x;
+		float bottomLeftY = ((float)area.pos.y + area.size.y) / (float)textureAtlas.GetExtent().y;
+
+		float topRightX = ((float)area.pos.x + area.size.x) / (float)textureAtlas.GetExtent().x;
+		float topRightY = (float)area.pos.y / (float)textureAtlas.GetExtent().y;
+
+		float bottomRightX = ((float)area.pos.x + area.size.x) / (float)textureAtlas.GetExtent().x;
+		float bottomRightY = ((float)area.pos.y + area.size.y) / (float)textureAtlas.GetExtent().y;
+
+
+		DynamicVertex vertex(material->GetGraphicsPipeline().GetShader());
+
+		bool hasPos = vertex.Has(AttributeMap<AttributeType::Position>::Semantic);
+		bool hasUV = vertex.Has(AttributeMap<AttributeType::UV>::Semantic);
+		bool hasNormal = vertex.Has(AttributeMap<AttributeType::Normal>::Semantic);
+		bool hasTangent = vertex.Has(AttributeMap<AttributeType::Tangent>::Semantic);
+
+		RAY_MEXPECTS(!hasNormal && !hasTangent,
+			"[IndexedTriangleList] Normals and tangents not supported for plane yet");
+
+		vertex.BeginVertex();
+		if (hasPos)
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, -0.5f, 0.0f };
+		if (hasUV)
+			vertex[AttributeMap<AttributeType::UV>::Semantic] =
+				Float2{ bottomRightX, bottomRightY };
+
+		vertex.BeginVertex();
+		if (hasPos)
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, -0.5f, 0.0f };
+		if (hasUV)
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ bottomLeftX, bottomLeftY };
+
+		vertex.BeginVertex();
+		if (hasPos)
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, 0.5f, 0.0f };
+		if (hasUV)
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ topLeftX, topLeftY };
+
+		vertex.BeginVertex();
+		if (hasPos)
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, 0.5f, 0.0f };
+		if (hasUV)
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ topRightX, topRightY };
+
+		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
+		std::string tag = String::Serialize(
+			"Plane#012230#{0}#{1}#{2}#{3}#{4}", hasPos, hasUV, hasNormal, hasTangent, charToRender);
+
+		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(tag, vertex),
+			Codex::Resolve<IndexBuffer>(tag, indices) };
+	}
+
 	TextRenderer::TextRenderer(Entity entity, Ref<FlatTextMaterial> material)
 		: Component(entity), Renderer(material)
 	{
+		char charToRender = 'a';
+
+		GetEntity().Emplace<Ray::Mesh>(GeneratePlane(material, charToRender));
+
 		AddBufferUniform("PerObjectData", ShaderStage::Vertex);
-		AddSampler2DUniform("samplerCharacters", ShaderStage::Fragment,
+		AddSampler2DUniform("samplerTextureAtlas", ShaderStage::Fragment,
 			material->GetFont().GetSharedTextureAtlas());
 		GetEntity().Get<Transform>().Rotate({ /*Math::PI<>*/ 0.0f, 0.0f, 0.0f });
 	}
