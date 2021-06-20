@@ -26,18 +26,7 @@ namespace At0::Ray
 		const Texture2DAtlas::Area& area = glyph.area;
 		const Texture2DAtlas& textureAtlas = material->GetFont().GetTextureAtlas();
 
-		float topLeftX = (float)area.pos.x / (float)textureAtlas.GetExtent().x;
-		float topLeftY = (float)area.pos.y / (float)textureAtlas.GetExtent().y;
-
-		float bottomLeftX = (float)area.pos.x / (float)textureAtlas.GetExtent().x;
-		float bottomLeftY = ((float)area.pos.y + area.size.y) / (float)textureAtlas.GetExtent().y;
-
-		float topRightX = ((float)area.pos.x + area.size.x) / (float)textureAtlas.GetExtent().x;
-		float topRightY = (float)area.pos.y / (float)textureAtlas.GetExtent().y;
-
-		float bottomRightX = ((float)area.pos.x + area.size.x) / (float)textureAtlas.GetExtent().x;
-		float bottomRightY = ((float)area.pos.y + area.size.y) / (float)textureAtlas.GetExtent().y;
-
+		std::array<Float2, 4> uvs = textureAtlas.MapUV(area);
 
 		DynamicVertex vertex(material->GetGraphicsPipeline().GetShader());
 
@@ -53,26 +42,25 @@ namespace At0::Ray
 		if (hasPos)
 			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, -0.5f, 0.0f };
 		if (hasUV)
-			vertex[AttributeMap<AttributeType::UV>::Semantic] =
-				Float2{ bottomRightX, bottomRightY };
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = uvs[0];
 
 		vertex.BeginVertex();
 		if (hasPos)
 			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, -0.5f, 0.0f };
 		if (hasUV)
-			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ bottomLeftX, bottomLeftY };
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = uvs[1];
 
 		vertex.BeginVertex();
 		if (hasPos)
 			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, 0.5f, 0.0f };
 		if (hasUV)
-			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ topLeftX, topLeftY };
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = uvs[2];
 
 		vertex.BeginVertex();
 		if (hasPos)
 			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, 0.5f, 0.0f };
 		if (hasUV)
-			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ topRightX, topRightY };
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = uvs[3];
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
 		std::string tag = String::Serialize(
@@ -85,7 +73,7 @@ namespace At0::Ray
 	TextRenderer::TextRenderer(Entity entity, Ref<FlatTextMaterial> material)
 		: Component(entity), Renderer(material)
 	{
-		char charToRender = 'a';
+		char charToRender = 'j';
 
 		GetEntity().Emplace<Ray::Mesh>(GeneratePlane(material, charToRender));
 

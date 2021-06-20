@@ -3,6 +3,7 @@
 #include "RTexture2D.h"
 
 #include <deque>
+#include <array>
 
 
 namespace At0::Ray
@@ -24,6 +25,8 @@ namespace At0::Ray
 
 		Area* Emplace(std::string_view filepath);
 		Area* Emplace(UInt2 extent, uint8_t* pixels);
+
+		std::array<Float2, 4> MapUV(const Area& area) const;
 
 	private:
 		Area* AllocateArea(UInt2 extent);

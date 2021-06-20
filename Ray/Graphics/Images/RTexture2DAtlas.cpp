@@ -44,6 +44,32 @@ namespace At0::Ray
 		return &m_AllocatedAreas.front();
 	}
 
+	std::array<Float2, 4> Texture2DAtlas::MapUV(const Area& area) const
+	{
+		std::array<Float2, 4> uvs;
+
+		Float2 areaPos = (Float2)area.pos;
+		Float2 areaSize = (Float2)area.size;
+
+		float bottomRightX = (areaPos.x + areaSize.x) / m_Extent.x;
+		float bottomRightY = (areaPos.y + areaSize.y) / m_Extent.y;
+
+		float bottomLeftX = areaPos.x / m_Extent.x;
+		float bottomLeftY = (areaPos.y + areaSize.y) / m_Extent.y;
+
+		float topLeftX = areaPos.x / m_Extent.x;
+		float topLeftY = areaPos.y / m_Extent.y;
+
+		float topRightX = (areaPos.x + areaSize.x) / m_Extent.x;
+		float topRightY = areaPos.y / m_Extent.y;
+
+		uvs[0] = { bottomRightX, bottomRightY };
+		uvs[1] = { bottomLeftX, bottomLeftY };
+		uvs[2] = { topLeftX, topLeftY };
+		uvs[3] = { topRightX, topRightY };
+		return uvs;
+	}
+
 	Texture2DAtlas::Area* Texture2DAtlas::AllocateArea(UInt2 extent)
 	{
 		auto getFreeArea = [this](UInt2 extent) {
