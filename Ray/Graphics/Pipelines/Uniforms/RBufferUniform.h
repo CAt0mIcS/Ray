@@ -75,15 +75,15 @@ namespace At0::Ray
 		 * Writes data directly into the buffer
 		 */
 		template<typename T>
-		void Update(T&& data)
+		void Update(T&& data, VkDeviceSize offset = 0) requires(!std::is_same_v<T, void*>)
 		{
-			Update(&data, (uint32_t)sizeof(data));
+			Update(&data, (uint32_t)sizeof(data), offset);
 		}
 
 		/**
 		 * Writes raw data directly into the buffer
 		 */
-		void Update(void* data, uint32_t size);
+		void Update(void* data, VkDeviceSize size, VkDeviceSize offset = 0);
 
 	private:
 		void Setup(uint32_t bufferSize);

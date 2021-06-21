@@ -21,7 +21,7 @@ namespace At0::Ray
 		 * @param offset Local offset
 		 */
 		template<typename T>
-		void Update(T&& data, VkDeviceSize offset = 0)
+		void Update(T&& data, VkDeviceSize offset = 0) requires(!std::is_same_v<T, void*>)
 		{
 			Update((void*)&data, sizeof(T), offset);
 		}
@@ -31,7 +31,7 @@ namespace At0::Ray
 		 * @param data The data to insert into the buffer
 		 * @param offset Local offset
 		 */
-		void Update(void* data, VkDeviceSize size, VkDeviceSize offset = 0);
+		void Update(void* data, VkDeviceSize size, VkDeviceSize offset);
 
 		const Buffer& GetBuffer() const { return *m_Buffer; }
 		Buffer& GetBuffer() { return *m_Buffer; }
