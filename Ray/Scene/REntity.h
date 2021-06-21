@@ -63,7 +63,7 @@ namespace At0::Ray
 		bool Has() const
 		{
 			RAY_MEXPECTS(Valid(), "[Entity] Cannot check component(s) of null entity.");
-			return m_Registry->has<Comp...>(m_EntityHandle);
+			return m_Registry->all_of<Comp...>(m_EntityHandle);
 		}
 
 		/**
@@ -74,7 +74,7 @@ namespace At0::Ray
 		bool HasAny() const
 		{
 			RAY_MEXPECTS(Valid(), "[Entity] Cannot check component(s) of null entity.");
-			return m_Registry->any<Comp...>(m_EntityHandle);
+			return m_Registry->any_of<Comp...>(m_EntityHandle);
 		}
 
 		/**

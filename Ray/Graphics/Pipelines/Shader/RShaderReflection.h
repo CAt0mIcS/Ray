@@ -101,7 +101,7 @@ namespace At0::Ray
 		/**
 		 * Generate reflection from reflection file
 		 */
-		ShaderReflection(std::string_view filepath);
+		ShaderReflection(const std::string& filepath);
 		ShaderReflection() = default;
 
 		void AddAttribute(AttributeData data) { m_Attributes.emplace_back(std::move(data)); }
@@ -126,7 +126,7 @@ namespace At0::Ray
 		UniformData& GetUniform(std::string_view name);
 		UniformBlockData& GetUniformBlock(std::string_view name);
 
-		void WriteToFile(std::string_view filepath) const;
+		void WriteToFile(const std::string& filepath) const;
 
 	private:
 		AttributeData LoadAttribute(const rapidjson::Value& data);

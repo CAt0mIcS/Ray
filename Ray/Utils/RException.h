@@ -81,7 +81,8 @@ namespace At0::Ray
 			Log::Critical(exception.what());
 #else
 			RAY_ASSERT(false, exception.what());
-#endif throw exception;
+#endif
+			throw exception;
 		}
 	};
 
@@ -97,7 +98,8 @@ namespace At0::Ray
 			Log::Critical(exception.what());
 #else
 			RAY_ASSERT(false, exception.what());
-#endif throw exception;
+#endif
+			throw exception;
 		}
 	};
 

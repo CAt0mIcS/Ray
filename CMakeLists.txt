@@ -83,6 +83,9 @@ if(UNIX)
     # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wno-attributes")
     # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wno-attributes")
     
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    
 	# set(CMAKE_C_COMPILER gcc-10)
 	# set(CMAKE_CXX_COMPILER g++-10)
 endif()

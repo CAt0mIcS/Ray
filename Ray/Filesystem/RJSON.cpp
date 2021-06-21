@@ -14,7 +14,7 @@
 
 namespace At0::Ray
 {
-	JSON::JSON(std::string_view filepath)
+	JSON::JSON(const std::string& filepath)
 	{
 		std::ifstream ifs(filepath);
 
@@ -30,7 +30,7 @@ namespace At0::Ray
 
 	JSON::JSON() { m_Document.SetObject(); }
 
-	void JSON::Write(std::string_view filepath)
+	void JSON::Write(const std::string& filepath)
 	{
 		std::ofstream ofs(filepath);
 		rapidjson::OStreamWrapper osw(ofs);

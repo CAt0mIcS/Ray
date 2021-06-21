@@ -10,7 +10,7 @@ using namespace rapidjson;
 
 namespace At0::Ray
 {
-	ShaderReflection::ShaderReflection(std::string_view filepath)
+	ShaderReflection::ShaderReflection(const std::string& filepath)
 	{
 		JSON json(filepath);
 		Document& doc = json.GetDocument();
@@ -166,7 +166,7 @@ namespace At0::Ray
 		return uniformBlock;
 	}
 
-	void ShaderReflection::WriteToFile(std::string_view filepath) const
+	void ShaderReflection::WriteToFile(const std::string& filepath) const
 	{
 		using namespace rapidjson;
 

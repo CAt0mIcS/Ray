@@ -150,7 +150,7 @@ namespace At0::Ray
 			(void**)&data);
 		data += subResourceLayout.offset;
 
-		std::ofstream file(filepath, std::ios::out | std::ios::binary);
+		std::ofstream file(filepath.data(), std::ios::out | std::ios::binary);
 
 		// ppm header
 		file << "P6\n" << m_Extent.x << "\n" << m_Extent.y << "\n" << 255 << "\n";

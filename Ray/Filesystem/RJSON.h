@@ -13,7 +13,7 @@ namespace At0::Ray
 		/**
 		 * Reads and parses document in filepath
 		 */
-		JSON(std::string_view filepath);
+		JSON(const std::string& filepath);
 		JSON();
 
 		const rapidjson::Document& GetDocument() const { return m_Document; }
@@ -22,7 +22,7 @@ namespace At0::Ray
 		/**
 		 * Writes JSON to filepath
 		 */
-		void Write(std::string_view filepath);
+		void Write(const std::string& filepath);
 
 	private:
 		rapidjson::Document m_Document;
