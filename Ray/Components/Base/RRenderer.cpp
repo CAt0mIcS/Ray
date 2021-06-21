@@ -27,14 +27,19 @@ namespace At0::Ray
 
 	Renderer::~Renderer() {}
 
-	Renderer::Renderer(Ref<Material> material) : m_Material(material) {}
+	Renderer::Renderer(Ref<Material> material, bool automaticUniformEmplacement)
+		: m_Material(material)
+	{
+		if (automaticUniformEmplacement)
+			AddUniforms();
+	}
 
 	BufferUniform& Renderer::AddBufferUniform(const std::string& name, ShaderStage stage)
 	{
 		RAY_MEXPECTS(
 			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniformBlock(
 				name),
-			"[Material] BufferUniform \"{0}\" was not found in shader stage \"{1}\"", name,
+			"[Renderer] BufferUniform \"{0}\" was not found in shader stage \"{1}\"", name,
 			String::Construct(stage));
 
 		uint32_t set = m_Material->GetGraphicsPipeline()
@@ -59,6 +64,11 @@ namespace At0::Ray
 				m_Material->GetGraphicsPipeline().GetDescriptorSetLayout(set),
 				Pipeline::BindPoint::Graphics, m_Material->GetGraphicsPipeline().GetLayout(), set);
 
+		RAY_MEXPECTS(std::find_if(m_BufferUniforms[set].begin(), m_BufferUniforms[set].end(),
+						 [&name](const auto& uniform) { return uniform.GetName() == name; }) ==
+						 m_BufferUniforms[set].end(),
+			"[Renderer] BufferUniform \"{0}\" already added", name);
+
 		// Create buffer uniform
 		BufferUniform& uniform =
 			m_BufferUniforms[set].emplace_back(name, stage, m_Material->GetGraphicsPipeline());
@@ -72,7 +82,7 @@ namespace At0::Ray
 	{
 		RAY_MEXPECTS(m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniform(
 						 name, true),
-			"[Material] Sampler2DUniform \"{0}\" was not found in shader stage \"{1}\"", name,
+			"[Renderer] Sampler2DUniform \"{0}\" was not found in shader stage \"{1}\"", name,
 			String::Construct(stage));
 
 		uint32_t set =
@@ -93,6 +103,11 @@ namespace At0::Ray
 				m_Material->GetGraphicsPipeline().GetDescriptorPool(),
 				m_Material->GetGraphicsPipeline().GetDescriptorSetLayout(set),
 				Pipeline::BindPoint::Graphics, m_Material->GetGraphicsPipeline().GetLayout(), set);
+
+		RAY_MEXPECTS(std::find_if(m_Sampler2DUniforms[set].begin(), m_Sampler2DUniforms[set].end(),
+						 [&name](const auto& uniform) { return uniform.GetName() == name; }) ==
+						 m_Sampler2DUniforms[set].end(),
+			"[Renderer] Sampler2DUniform \"{0}\" already added", name);
 
 		// Create buffer uniform
 		Sampler2DUniform& uniform = m_Sampler2DUniforms[set].emplace_back(
@@ -140,5 +155,37 @@ namespace At0::Ray
 		ThrowRuntime("[Renderer] Failed to retrieve Descriptor Set of uniform with name \"{0}\"",
 			uniformName);
 		return m_DescriptorSets[0];
+	}
+
+	void Renderer::AddUniforms()
+	{
+		AddBufferUniform("PerObjectData", ShaderStage::Vertex);
+
+		for (const auto& [stage, reflection] :
+			m_Material->GetGraphicsPipeline().GetShader().GetReflections())
+		{
+			for (const auto& uBlock : reflection.GetUniformBlocks())
+			{
+				if (uBlock.name == UniformTag::Shading)
+					AddBufferUniform(UniformTag::Shading, stage);
+			}
+
+			// Only sampler uniforms can be outside of a block
+			for (const auto& uniform : reflection.GetUniforms())
+			{
+				if (uniform.name == UniformTag::AlbedoMapSampler)
+					AddSampler2DUniform(
+						UniformTag::AlbedoMapSampler, stage, m_Material->GetAlbedoMap());
+				else if (uniform.name == UniformTag::DiffuseMapSampler)
+					AddSampler2DUniform(
+						UniformTag::DiffuseMapSampler, stage, m_Material->GetDiffuseMap());
+				else if (uniform.name == UniformTag::SpecularMapSampler)
+					AddSampler2DUniform(
+						UniformTag::SpecularMapSampler, stage, m_Material->GetSpecularMap());
+				else if (uniform.name == UniformTag::NormalMapSampler)
+					AddSampler2DUniform(
+						UniformTag::NormalMapSampler, stage, m_Material->GetNormalMap());
+			}
+		}
 	}
 }  // namespace At0::Ray

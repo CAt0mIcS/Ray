@@ -12,7 +12,7 @@
 
 namespace At0::Ray
 {
-	class RlAssert
+	class Asserter
 	{
 	public:
 		template<typename... Args>
@@ -39,12 +39,12 @@ namespace At0::Ray
 	#ifdef _WIN32
 		#define RAY_ASSERT(condition, msg, ...)                                                   \
 			if (!(condition))                                                                     \
-			_wassert(::At0::Ray::RlAssert::AssertW(msg, __VA_ARGS__).c_str(), RAY_WIDE(__FILE__), \
+			_wassert(::At0::Ray::Asserter::AssertW(msg, __VA_ARGS__).c_str(), RAY_WIDE(__FILE__), \
 				(unsigned int)__LINE__)
 	#elif defined(__linux__)
 		#define RAY_ASSERT(condition, msg, ...)                                           \
 			if (!(condition))                                                             \
-			__assert(::At0::Ray::RlAssert::AssertA(msg, ##__VA_ARGS__).c_str(), __FILE__, \
+			__assert(::At0::Ray::Asserter::AssertA(msg, ##__VA_ARGS__).c_str(), __FILE__, \
 				(unsigned int)__LINE__)
 	#endif
 

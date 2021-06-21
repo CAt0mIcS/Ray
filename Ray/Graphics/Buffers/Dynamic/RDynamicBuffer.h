@@ -43,8 +43,13 @@ namespace At0::Ray
 		void Init(Ref<Buffer> buffer, VkDeviceSize size, VkDeviceSize offset);
 
 	private:
+		// Size in bytes of part of the dynamic buffer
 		VkDeviceSize m_Size = 0;
+
+		// Offset in the static buffer this class uses
 		VkDeviceSize m_Offset = 0;
+
+		// Static buffer, thread-safe
 		Ref<Buffer> m_Buffer = nullptr;
 	};
 }  // namespace At0::Ray

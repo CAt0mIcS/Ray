@@ -2,6 +2,7 @@
 #include "RTextRenderer.h"
 
 #include "Utils/RAssert.h"
+#include "Utils/RString.h"
 
 #include "RMesh.h"
 #include "RTransform.h"
@@ -70,12 +71,14 @@ namespace At0::Ray
 			Codex::Resolve<IndexBuffer>(tag, indices) };
 	}
 
+
 	TextRenderer::TextRenderer(Entity entity, Ref<FlatTextMaterial> material)
-		: Component(entity), Renderer(material)
+		: Component(entity), Renderer(material, false)
 	{
 		char charToRender = 'j';
 
-		GetEntity().Emplace<Ray::Mesh>(GeneratePlane(material, charToRender));
+		// GetEntity().Emplace<Ray::Mesh>(GeneratePlane(material, charToRender));
+		GetEntity().Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
 
 		AddBufferUniform("PerObjectData", ShaderStage::Vertex);
 		AddSampler2DUniform("samplerTextureAtlas", ShaderStage::Fragment,

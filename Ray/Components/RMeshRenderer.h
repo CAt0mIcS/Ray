@@ -20,20 +20,6 @@ namespace At0::Ray
 	enum class ShaderStage;
 
 	/**
-	 * Predefined tags by which to find certain uniforms which always need to be there
-	 */
-	struct UniformTag
-	{
-		static constexpr const char* PerObjectData = "PerObjectData";
-		static constexpr const char* Shading = "Shading";
-		static constexpr const char* AlbedoMapSampler = "samplerAlbedo";
-		static constexpr const char* DiffuseMapSampler = "samplerDiffuse";
-		static constexpr const char* SpecularMapSampler = "samplerSpecular";
-		static constexpr const char* NormalMapSampler = "samplerNormal";
-	};
-
-
-	/**
 	 * Components containing all resources specifically required for a mesh to render.
 	 * A mesh is only rendered if the contained entity has a MeshRenderer component
 	 */
@@ -58,9 +44,6 @@ namespace At0::Ray
 		 * current transform in the transform component
 		 */
 		void Update();
-
-	private:
-		void AddUniforms();
 
 	private:
 		/**

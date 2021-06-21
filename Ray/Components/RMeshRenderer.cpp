@@ -17,10 +17,9 @@ namespace At0::Ray
 {
 	MeshRenderer::MeshRenderer(
 		Entity entity, Ref<Material> material, bool automaticUniformEmplacement)
-		: Component(entity), Renderer(std::move(material))
+		: Component(entity), Renderer(std::move(material), automaticUniformEmplacement)
 	{
-		if (automaticUniformEmplacement)
-			AddUniforms();
+		m_PerObjectDataUniformRef = GetBufferUniform(UniformTag::PerObjectData)["Model"];
 	}
 
 	void MeshRenderer::Render(const CommandBuffer& cmdBuff) const
@@ -52,11 +51,5 @@ namespace At0::Ray
 			else
 				(*m_PerObjectDataUniformRef) = tform.AsMatrix();
 		}
-	}
-
-	void MeshRenderer::AddUniforms()
-	{
-		m_PerObjectDataUniformRef =
-			AddBufferUniform(UniformTag::PerObjectData, Ray::ShaderStage::Vertex)["Model"];
 	}
 }  // namespace At0::Ray

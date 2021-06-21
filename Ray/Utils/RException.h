@@ -3,6 +3,7 @@
 #include "../RBase.h"
 #include "../Utils/RString.h"
 #include "../Utils/RLogger.h"
+#include "../Utils/RAssert.h"
 
 #include <exception>
 #include <string>
@@ -62,8 +63,11 @@ namespace At0::Ray
 				VulkanException exception(
 					String::Serialize(msg, std::forward<Args>(args)...).c_str(),
 					(uint16_t)location.line(), location.file_name(), result);
-
+#ifdef NDEBUG
 				Log::Critical(exception.what());
+#else
+				RAY_ASSERT(false, exception.what());
+#endif
 				throw exception;
 			}
 		}
@@ -73,9 +77,11 @@ namespace At0::Ray
 		{
 			VulkanException exception(String::Serialize(msg, std::forward<Args>(args)...).c_str(),
 				(uint16_t)location.line(), location.file_name(), VK_ERROR_UNKNOWN);
-
+#ifdef NDEBUG
 			Log::Critical(exception.what());
-			throw exception;
+#else
+			RAY_ASSERT(false, exception.what());
+#endif throw exception;
 		}
 	};
 
@@ -87,8 +93,11 @@ namespace At0::Ray
 		{
 			RuntimeException exception(String::Serialize(msg, std::forward<Args>(args)...).c_str(),
 				(uint16_t)location.line(), location.file_name());
+#ifdef NDEBUG
 			Log::Critical(exception.what());
-			throw exception;
+#else
+			RAY_ASSERT(false, exception.what());
+#endif throw exception;
 		}
 	};
 

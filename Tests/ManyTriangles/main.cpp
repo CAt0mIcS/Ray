@@ -16,6 +16,7 @@
 #include <Ray/Graphics/Images/RTextureCubemap.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
 #include <Ray/Utils/RException.h>
+#include <Ray/Graphics/Pipelines/Shader/RShader.h>
 #include <Ray/Core/RDynamicVertex.h>
 
 #include <Ray/Shading/Phong/RPhongMaterial.h>

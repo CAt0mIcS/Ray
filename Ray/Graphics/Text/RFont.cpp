@@ -44,34 +44,37 @@ namespace At0::Ray
 
 		uint32_t width = glyphSlot->bitmap.width;
 		uint32_t height = glyphSlot->bitmap.rows;
-		uint32_t bufferSize = width * height * 4;
+		uint32_t bufferSize = width * height;
 
 		if (bufferSize == 0)
 			return nullptr;
 
-		std::vector<uint8_t> buffer(bufferSize);
+		struct uint8_4
+		{
+			uint8_t x;
+			uint8_t y;
+			uint8_t z;
+			uint8_t w;
+		};
 
-		uint8_t* src = glyphSlot->bitmap.buffer;
-		uint8_t* startOfLine = src;
+		std::vector<uint8_4> buffer(bufferSize);
+
+		uint8_t* startOfLine = glyphSlot->bitmap.buffer;
 		int dst = 0;
-
 		for (int y = 0; y < height; ++y)
 		{
-			src = startOfLine;
+			uint8_t* src = startOfLine;
 			for (int x = 0; x < width; ++x)
 			{
-				auto value = *src;
-				src++;
+				uint8_t value = *src;
+				++src;
 
-				buffer[dst++] = 0xff;
-				buffer[dst++] = 0xff;
-				buffer[dst++] = 0xff;
-				buffer[dst++] = value;
+				buffer[dst++] = { 0xff, 0xff, 0xff, value };
 			}
 			startOfLine += glyphSlot->bitmap.pitch;
 		}
 
-		return atlas.Emplace({ width, height }, buffer.data());
+		return atlas.Emplace({ width, height }, (uint8_t*)buffer.data());
 	}
 
 	void Font::Load(std::string_view filepath)
