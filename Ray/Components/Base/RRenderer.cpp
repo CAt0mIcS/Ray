@@ -30,6 +30,7 @@ namespace At0::Ray
 	Renderer::Renderer(Ref<Material> material, bool automaticUniformEmplacement)
 		: m_Material(material)
 	{
+		AddBufferUniform("PerObjectData", ShaderStage::Vertex);
 		if (automaticUniformEmplacement)
 			AddUniforms();
 	}
@@ -159,8 +160,6 @@ namespace At0::Ray
 
 	void Renderer::AddUniforms()
 	{
-		AddBufferUniform("PerObjectData", ShaderStage::Vertex);
-
 		for (const auto& [stage, reflection] :
 			m_Material->GetGraphicsPipeline().GetShader().GetReflections())
 		{

@@ -80,7 +80,6 @@ namespace At0::Ray
 		// GetEntity().Emplace<Ray::Mesh>(GeneratePlane(material, charToRender));
 		GetEntity().Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
 
-		AddBufferUniform("PerObjectData", ShaderStage::Vertex);
 		AddSampler2DUniform("samplerTextureAtlas", ShaderStage::Fragment,
 			material->GetFont().GetSharedTextureAtlas());
 	}

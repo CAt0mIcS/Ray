@@ -166,7 +166,10 @@ namespace At0::Ray
 		for (const UniformData& data : m_Uniforms)
 		{
 			if (data.type == UniformType::UniformBuffer)
-				renderer.AddBufferUniform(data.name, data.stage);
+			{
+				if (data.name != UniformTag::PerObjectData)
+					renderer.AddBufferUniform(data.name, data.stage);
+			}
 			else if (data.type == UniformType::CombinedImageSampler)
 				renderer.AddSampler2DUniform(data.name, data.stage, data.texture);
 		}
