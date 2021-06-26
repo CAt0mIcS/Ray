@@ -7,6 +7,9 @@
 
 RrError RrInitialize(const RrInitializeInfo* pInitInfo, RrInstance* pInstance)
 {
+	// Test
+	glViewport(10, 10, 10, 10);
+
 	return RrErrorNone;
 }
 
