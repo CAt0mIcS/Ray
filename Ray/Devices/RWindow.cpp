@@ -13,6 +13,7 @@
 
 #include "UI/RButton.h"
 
+#include <RayRenderer/RBase.h>
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -110,13 +111,19 @@ namespace At0::Ray
 		Log::Info("[Window] GLFW successfully initialized");
 		glfwSetErrorCallback(GLFWErrorCallback);
 
+#if RR_RENDERER_API != RR_RENDERER_API_OPENGL
 		// Remove default opengl api that comes with glfw
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+#endif
 
 		// Create the window
 		m_hWnd = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
 		RAY_MEXPECTS(m_hWnd, "[Window] Failed to create window");
 		Log::Info("[Window] Created successfully ({0})", m_hWnd);
+
+#if RR_RENDERER_API == RR_RENDERER_API_OPENGL
+		glfwMakeContextCurrent(m_hWnd);
+#endif
 
 		glfwSetWindowUserPointer(m_hWnd, this);
 

@@ -84,6 +84,8 @@ namespace At0::Ray
 			initInfo.enabledLayerCount = 0;
 		}
 
+		initInfo.loaderFunction = glfwGetProcAddress;
+
 		ThrowRenderError(
 			RrInitialize(&initInfo, (RrInstance*)&m_Instance), "[Instance] Creation failed");
 

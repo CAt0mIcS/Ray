@@ -45,12 +45,15 @@ typedef enum RrError
 	RrErrorThreadDone,
 	RrErrorOperationDeferred,
 	RrErrorOperationNotDeferred,
-	RrErrorPipelineCompileRequired
+	RrErrorPipelineCompileRequired,
+
+	RrErrorLoaderFailed
 } RrError;
 
 
 typedef struct RrInitializeInfo
 {
+	void* loaderFunction;
 	const void* pNext;
 	uint32_t enabledExtensionCount;
 	const char* const* ppEnabledExtensions;

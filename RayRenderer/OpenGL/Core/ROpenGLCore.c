@@ -7,8 +7,16 @@
 
 RrError RrInitialize(const RrInitializeInfo* pInitInfo, RrInstance* pInstance)
 {
+	if (!gladLoadGLLoader((GLADloadproc)pInitInfo->loaderFunction))
+	{
+		if (!pInitInfo->loaderFunction)
+			return RrErrorIncomplete;
+		else
+			return RrErrorLoaderFailed;
+	}
+
 	// Test
-	glViewport(10, 10, 10, 10);
+	glViewport(0, 0, 800, 600);
 
 	return RrErrorNone;
 }
