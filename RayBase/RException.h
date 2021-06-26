@@ -8,8 +8,9 @@
 #include <exception>
 #include <string>
 #include <stdint.h>
+#include <optional>
 
-#include <vulkan/vulkan_core.h>
+#include <RayRenderer/Core/RCore.h>
 
 
 namespace At0::Ray
@@ -40,27 +41,29 @@ namespace At0::Ray
 		std::string m_Message;
 	};
 
-	class RAYBASE_API VulkanException : public RuntimeException
+	class RAYBASE_API RenderException : public RuntimeException
 	{
 	public:
-		VulkanException(const char* message, uint16_t line, const char* file, VkResult result);
+		RenderException(const char* message, uint16_t line, const char* file, RrError result);
+		RenderException(const char* message, uint16_t line, const char* file, VkResult result);
 		virtual const char* GetType() const { return "Vulkan Exception"; };
 		virtual const char* what() const noexcept override;
 
 	private:
-		VkResult m_Error;
+		std::optional<RrError> m_Error;
+		std::optional<VkResult> m_Error2;
 	};
 
 
 	template<typename... Args>
-	struct ThrowVulkanError
+	struct ThrowRenderError
 	{
-		ThrowVulkanError(VkResult result, std::string msg, Args&&... args,
+		ThrowRenderError(VkResult result, std::string msg, Args&&... args,
 			SourceLocation location = SourceLocation::current())
 		{
 			if (result != VK_SUCCESS)
 			{
-				VulkanException exception(
+				RenderException exception(
 					String::Serialize(msg, std::forward<Args>(args)...).c_str(),
 					(uint16_t)location.line(), location.file_name(), result);
 #ifdef NDEBUG
@@ -72,10 +75,27 @@ namespace At0::Ray
 			}
 		}
 
-		ThrowVulkanError(
+		ThrowRenderError(RrError result, std::string msg, Args&&... args,
+			SourceLocation location = SourceLocation::current())
+		{
+			if (result != VK_SUCCESS)
+			{
+				RenderException exception(
+					String::Serialize(msg, std::forward<Args>(args)...).c_str(),
+					(uint16_t)location.line(), location.file_name(), result);
+#ifdef NDEBUG
+				Log::Critical(exception.what());
+#else
+				RAY_ASSERT(false, exception.what());
+#endif
+				throw exception;
+			}
+		}
+
+		ThrowRenderError(
 			std::string msg, Args&&... args, SourceLocation location = SourceLocation::current())
 		{
-			VulkanException exception(String::Serialize(msg, std::forward<Args>(args)...).c_str(),
+			RenderException exception(String::Serialize(msg, std::forward<Args>(args)...).c_str(),
 				(uint16_t)location.line(), location.file_name(), VK_ERROR_UNKNOWN);
 #ifdef NDEBUG
 			Log::Critical(exception.what());
@@ -104,10 +124,13 @@ namespace At0::Ray
 	};
 
 	template<typename... Args>
-	ThrowVulkanError(VkResult, std::string, Args&&...) -> ThrowVulkanError<Args...>;
+	ThrowRenderError(VkResult, std::string, Args&&...) -> ThrowRenderError<Args...>;
 
 	template<typename... Args>
-	ThrowVulkanError(std::string, Args&&...) -> ThrowVulkanError<Args...>;
+	ThrowRenderError(RrError, std::string, Args&&...) -> ThrowRenderError<Args...>;
+
+	template<typename... Args>
+	ThrowRenderError(std::string, Args&&...) -> ThrowRenderError<Args...>;
 
 	template<typename... Args>
 	ThrowRuntime(std::string, Args&&...) -> ThrowRuntime<Args...>;

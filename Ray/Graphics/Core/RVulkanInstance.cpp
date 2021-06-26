@@ -7,6 +7,8 @@
 #include "RayBase/RAssert.h"
 #include "RayBase/RException.h"
 
+#include <RayRenderer/Core/RCore.h>
+
 
 namespace At0::Ray
 {
@@ -42,16 +44,18 @@ namespace At0::Ray
 
 	VulkanInstance::VulkanInstance()
 	{
-		VkApplicationInfo appInfo{};
-		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-		appInfo.pEngineName = "Ray";
-		appInfo.engineVersion = VK_MAKE_VERSION(0, 0, 1);
-		appInfo.apiVersion = VK_API_VERSION_1_1;
+		RrInitializeInfo initInfo{};
 
-		VkInstanceCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-		createInfo.flags = 0;
-		createInfo.pApplicationInfo = &appInfo;
+		// VkApplicationInfo appInfo{};
+		// appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+		// appInfo.pEngineName = "Ray";
+		// appInfo.engineVersion = VK_MAKE_VERSION(0, 0, 1);
+		// appInfo.apiVersion = VK_API_VERSION_1_1;
+
+		// VkInstanceCreateInfo createInfo{};
+		// createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+		// createInfo.flags = 0;
+		// createInfo.pApplicationInfo = &appInfo;
 
 		// Get required Instance extensions from glfw
 		auto instanceExtensions = GetRequiredExtensions();
@@ -61,27 +65,27 @@ namespace At0::Ray
 			ThrowRuntime("[VulkanInstance] VulkanExtension {0} not supported");
 		}
 
-		createInfo.enabledExtensionCount = (uint32_t)instanceExtensions.size();
-		createInfo.ppEnabledExtensionNames = instanceExtensions.data();
+		initInfo.enabledExtensionCount = (uint32_t)instanceExtensions.size();
+		initInfo.ppEnabledExtensions = instanceExtensions.data();
 
 		VkDebugUtilsMessengerCreateInfoEXT messengerCreateInfo = GetDebugMessengerCreateInfo();
 		if (m_ValidationLayersEnabled && HasValidationLayerSupport())
 		{
-			createInfo.enabledLayerCount = s_ValidationLayers.size();
-			createInfo.ppEnabledLayerNames = s_ValidationLayers.data();
+			initInfo.enabledLayerCount = s_ValidationLayers.size();
+			initInfo.ppEnabledLayers = s_ValidationLayers.data();
 
-			createInfo.pNext = &messengerCreateInfo;
+			initInfo.pNext = &messengerCreateInfo;
 		}
 		else
 		{
 			Log::Info("[VulkanInstance] Validation layers disabled");
 			m_ValidationLayersEnabled = false;
 
-			createInfo.enabledLayerCount = 0;
+			initInfo.enabledLayerCount = 0;
 		}
 
-		ThrowVulkanError(vkCreateInstance(&createInfo, nullptr, &m_Instance),
-			"[VulkanInstance] Creation failed");
+		ThrowRenderError(
+			RrInitialize(&initInfo, (RrInstance*)&m_Instance), "[Instance] Creation failed");
 
 		if (m_ValidationLayersEnabled)
 			CreateDebugMessenger();

@@ -209,15 +209,15 @@ namespace At0::Ray
 
 		for (uint32_t i = 0; i < s_MaxFramesInFlight; ++i)
 		{
-			ThrowVulkanError(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
+			ThrowRenderError(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
 								 &m_ImageAvailableSemaphore[i]),
 				"[Graphics] Failed to semaphore to signal when an image is avaliable");
 
-			ThrowVulkanError(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
+			ThrowRenderError(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
 								 &m_RenderFinishedSemaphore[i]),
 				"[Graphics] Failed to semaphore to signal when an image has finished rendering");
 
-			ThrowVulkanError(
+			ThrowRenderError(
 				vkCreateFence(GetDevice(), &fenceCreateInfo, nullptr, &m_InFlightFences[i]),
 				"[Graphics] Failed to create in flight fence");
 		}
@@ -345,7 +345,7 @@ namespace At0::Ray
 		vkResetFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
 
 		// Fence will be signaled once the command buffer finishes executing
-		ThrowVulkanError(vkQueueSubmit(GetDevice().GetGraphicsQueue(), 1, &submitInfo,
+		ThrowRenderError(vkQueueSubmit(GetDevice().GetGraphicsQueue(), 1, &submitInfo,
 							 m_InFlightFences[m_CurrentFrame]),
 			"[Graphics] Failed to submit image to queue for rendering");
 

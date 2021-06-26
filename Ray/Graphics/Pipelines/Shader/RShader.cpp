@@ -47,7 +47,7 @@ namespace At0::Ray
 				createInfo.codeSize = (uint32_t)code.size();
 				createInfo.pCode = (uint32_t*)code.data();
 
-				ThrowVulkanError(vkCreateShaderModule(Graphics::Get().GetDevice(), &createInfo,
+				ThrowRenderError(vkCreateShaderModule(Graphics::Get().GetDevice(), &createInfo,
 									 nullptr, &shaderModule),
 					"[Shader] Failed to create shader module from file \"{0}\"", m_Filepaths[i]);
 				m_ShaderModules[stage] = shaderModule;

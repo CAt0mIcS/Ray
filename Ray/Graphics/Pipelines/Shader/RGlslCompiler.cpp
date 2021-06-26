@@ -344,7 +344,7 @@ namespace At0::Ray
 		shaderModuleCreateInfo.pCode = spirvCode.data();
 
 		VkShaderModule shaderModule;
-		ThrowVulkanError(vkCreateShaderModule(Graphics::Get().GetDevice(), &shaderModuleCreateInfo,
+		ThrowRenderError(vkCreateShaderModule(Graphics::Get().GetDevice(), &shaderModuleCreateInfo,
 							 nullptr, &shaderModule),
 			"[GlslCompiler] Failed to create shader module");
 

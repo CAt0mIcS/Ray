@@ -19,7 +19,7 @@ namespace At0::Ray
 		allocInfo.level = bufferLevel;
 		allocInfo.commandBufferCount = 1;
 
-		ThrowVulkanError(
+		ThrowRenderError(
 			vkAllocateCommandBuffers(Graphics::Get().GetDevice(), &allocInfo, &m_CommandBuffer),
 			"[CommandBuffer] Failed to allocate command buffer");
 	}
@@ -36,13 +36,13 @@ namespace At0::Ray
 		beginInfo.flags = usageFlags;
 		beginInfo.pInheritanceInfo = GetInheritanceInfo();
 
-		ThrowVulkanError(vkBeginCommandBuffer(m_CommandBuffer, &beginInfo),
+		ThrowRenderError(vkBeginCommandBuffer(m_CommandBuffer, &beginInfo),
 			"[CommandBuffer] Failed to begin recording");
 	}
 
 	void CommandBuffer::End() const
 	{
-		ThrowVulkanError(
+		ThrowRenderError(
 			vkEndCommandBuffer(m_CommandBuffer), "[CommandBuffer] Failed to end recording");
 	}
 

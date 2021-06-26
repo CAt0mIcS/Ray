@@ -25,7 +25,7 @@ namespace At0::Ray
 		createInfo.dependencyCount = (uint32_t)dependencies.size();
 		createInfo.pDependencies = dependencies.data();
 
-		ThrowVulkanError(
+		ThrowRenderError(
 			vkCreateRenderPass(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Renderpass),
 			"[RenderPass] Failed to create");
 	}

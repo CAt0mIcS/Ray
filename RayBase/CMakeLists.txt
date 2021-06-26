@@ -35,6 +35,7 @@ find_package("Vulkan" REQUIRED FATAL_ERROR)
 
 set(PUBLIC_INC
     "${Vulkan_INCLUDE_DIRS}"
+    "${CMAKE_SOURCE_DIR}"
 )
 
 set(PRIVATE_INC

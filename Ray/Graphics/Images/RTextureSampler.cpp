@@ -41,7 +41,7 @@ namespace At0::Ray
 		createInfo.minLod = 0.0f;
 		createInfo.maxLod = maxLod;
 
-		ThrowVulkanError(
+		ThrowRenderError(
 			vkCreateSampler(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Sampler),
 			"[TextureSampler] Failed to create");
 	}

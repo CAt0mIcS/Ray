@@ -207,6 +207,53 @@ namespace At0::Ray
 		return "UNKNOWN VULKAN RESULT CODE";
 	}
 
+	std::string String::Construct(RrError res)
+	{
+		switch (res)
+		{
+		case RrErrorNone: return "Vulkan Success";
+		case RrErrorNotReady: return "Vulkan not ready";
+		case RrErrorTimeout: return "Vulkan timeout";
+		case RrErrorEventSet: return "Vulkan event set";
+		case RrErrorEventReset: return "Vulkan event reset";
+		case RrErrorIncomplete: return "Vulkan incomplete";
+		case RrErrorOutOfHostMemory: return "Vulkan out of host memory";
+		case RrErrorOutOfDeviceMemory: return "Vulkan out of device memory";
+		case RrErrorInitializationFailed: return "Vulkan initialization failed";
+		case RrErrorDeviceLost: return "Vulkan device lost";
+		case RrErrorMemoryMapFailed: return "Vulkan memory map failed";
+		case RrErrorLayerNotPresent: return "Vulkan layer not present";
+		case RrErrorExtensionNotPresent: return "Vulkan extension not present";
+		case RrErrorFeatureNotPresent: return "Vulkan feature not present";
+		case RrErrorIncompatibleDriver: return "Vulkan incompatible driver";
+		case RrErrorTooManyObjects: return "Vulkan too many objects";
+		case RrErrorFormatNotSupported: return "Vulkan format not supported";
+		case RrErrorFragmentedPool: return "Vulkan fragmented pool";
+		case RrErrorUnknown: return "Vulkan error unknown";
+		case RrErrorOutofPoolMemory: return "Vulkan out of pool memory";
+		case RrErrorInvalidExternalHandle: return "Vulkan invalid external handle";
+		case RrErrorFragmentation: return "Vulkan fragmentation error";
+		case RrErrorInvalidOpaqueCaptureAddress: return "Vulkan invalid opaque capture address";
+		case RrErrorSurfaceLost: return "Vulkan surface lost";
+		case RrErrorNativeWindowInUse: return "Vulkan native window in use";
+		case RrErrorSuboptimal: return "Vulkan suboptimal";
+		case RrErrorOutOfDate: return "Vulkan out of date";
+		case RrErrorIncompatibleDisplay: return "Vulkan incompatible display";
+		case RrErrorInvalidShader: return "Vulkan invalid shader";
+		case RrErrorInvalidDRMFormatModifierPlaneLayout:
+			return "Vulkan invalid DRM format modifier plane layout";
+		case RrErrorNotPermitted: return "Vulkan not permitted";
+		case RrErrorFullScreenExclusiveModeLost: return "Vulkan fullscreen exclusive mode lost";
+		case RrErrorThreadIdle: return "Vulkan thread idle";
+		case RrErrorThreadDone: return "Vulkan thread done";
+		case RrErrorOperationDeferred: return "Vulkan operation deferred";
+		case RrErrorOperationNotDeferred: return "Vulkan operation not deferred";
+		case RrErrorPipelineCompileRequired: return "Vulkan pipeline compile required";
+		}
+
+		return "UNKNOWN ERROR CODE";
+	}
+
 	std::string String::Construct(VkPhysicalDeviceType deviceType)
 	{
 		switch (deviceType)

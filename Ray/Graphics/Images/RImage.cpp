@@ -496,7 +496,7 @@ namespace At0::Ray
 		imageCreateInfo.pQueueFamilyIndices = queueFamily.data();
 		imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-		ThrowVulkanError(
+		ThrowRenderError(
 			vkCreateImage(Graphics::Get().GetDevice(), &imageCreateInfo, nullptr, &m_Image),
 			"[Image] Failed to create");
 
@@ -509,7 +509,7 @@ namespace At0::Ray
 		allocInfo.memoryTypeIndex = Graphics::Get().GetPhysicalDevice().FindMemoryType(
 			memRequirements.memoryTypeBits, m_MemoryProperties);
 
-		ThrowVulkanError(
+		ThrowRenderError(
 			vkAllocateMemory(Graphics::Get().GetDevice(), &allocInfo, nullptr, &m_ImageMemory),
 			"[Image] Failed to allocate image memory");
 

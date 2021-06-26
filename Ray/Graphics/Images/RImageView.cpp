@@ -41,7 +41,7 @@ namespace At0::Ray
 		createInfo.subresourceRange.baseArrayLayer = 0;
 		createInfo.subresourceRange.layerCount = layerCount;
 
-		ThrowVulkanError(
+		ThrowRenderError(
 			vkCreateImageView(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_View),
 			"[ImageView] Failed to create");
 	}

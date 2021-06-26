@@ -71,7 +71,7 @@ namespace At0::Ray
 		createInfo.clipped = VK_TRUE;
 		createInfo.oldSwapchain = oldSwapchain;
 
-		ThrowVulkanError(
+		ThrowRenderError(
 			vkCreateSwapchainKHR(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Swapchain),
 			"[Swapchain] Failed to create");
 

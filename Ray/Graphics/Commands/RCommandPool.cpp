@@ -16,7 +16,7 @@ namespace At0::Ray
 		createInfo.flags = flags;
 		createInfo.queueFamilyIndex = Graphics::Get().GetDevice().GetGraphicsFamily();
 
-		ThrowVulkanError(
+		ThrowRenderError(
 			vkCreateCommandPool(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_CommandPool),
 			"[CommandPool] Failed to create");
 	}

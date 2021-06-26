@@ -26,7 +26,7 @@ function(GeneratePCHFilters)
         foreach(configuration IN LISTS CMAKE_CONFIGURATION_TYPES ITEMS ${CMAKE_BUILD_TYPE})
             source_group("CMake" FILES "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${target}.dir/${configuration}/cmake_pch.hxx")
         endforeach()
-        source_group("CMake" FILES "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${target}.dir/cmake_pch.cxx")
+	source_group("CMake" FILES "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${target}.dir/cmake_pch.c")
     endforeach()
 endfunction()
 

@@ -26,7 +26,7 @@ namespace At0::Ray
 		allocInfo.descriptorSetCount = 1;
 		allocInfo.pSetLayouts = &m_DescriptorSetLayout;
 
-		ThrowVulkanError(
+		ThrowRenderError(
 			vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo, &m_DescriptorSet),
 			"[DescriptorSet] Failed to allocate");
 	}

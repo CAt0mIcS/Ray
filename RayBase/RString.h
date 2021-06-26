@@ -9,6 +9,7 @@
 #include <type_traits>
 #include <assert.h>
 
+#include <RayRenderer/Core/RCore.h>
 #include <vulkan/vulkan_core.h>
 #include <../../Extern/Violent/include/Violent/Utils/VSerialize.h>
 
@@ -23,6 +24,7 @@ namespace At0::Ray
 		static std::string Construct(Key key);
 		static std::string Construct(MouseButton button);
 		static std::string Construct(VkResult res);
+		static std::string Construct(RrError res);
 		static std::string Construct(VkPhysicalDeviceType deviceType);
 		static std::string Construct(VkShaderStageFlags stage);
 

@@ -36,7 +36,7 @@ namespace At0::Ray
 
 	void LogicalDevice::WaitIdle() const
 	{
-		ThrowVulkanError(
+		ThrowRenderError(
 			vkDeviceWaitIdle(m_Device), "Failed to wait for the logical device to finish work");
 	}
 
@@ -292,7 +292,7 @@ namespace At0::Ray
 		deviceCreateInfo.enabledExtensionCount = (uint32_t)GetDeviceExtensions().size();
 		deviceCreateInfo.ppEnabledExtensionNames = GetDeviceExtensions().data();
 		deviceCreateInfo.pEnabledFeatures = &enabledFeatures;
-		ThrowVulkanError(vkCreateDevice(Graphics::Get().GetPhysicalDevice(), &deviceCreateInfo,
+		ThrowRenderError(vkCreateDevice(Graphics::Get().GetPhysicalDevice(), &deviceCreateInfo,
 							 nullptr, &m_Device),
 			"[LogicalDevice] Failed to create logical device");
 

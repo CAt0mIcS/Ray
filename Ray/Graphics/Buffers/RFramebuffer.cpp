@@ -25,7 +25,7 @@ namespace At0::Ray
 		createInfo.height = Graphics::Get().GetSwapchain().GetExtent().height;
 		createInfo.layers = 1;
 
-		ThrowVulkanError(
+		ThrowRenderError(
 			vkCreateFramebuffer(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Framebuffer),
 			"[Framebuffer] Failed to create");
 		Log::Info("[Framebuffer] Created with size [width={0}, height={1}]", createInfo.width,

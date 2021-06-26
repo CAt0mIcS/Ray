@@ -302,6 +302,7 @@ set(PRIVATE_LIB
 	# "ktx"
 	"${MONO_LIB}"
 	"freetype"
+	"RayRenderer"
 )
 
 

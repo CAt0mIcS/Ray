@@ -39,21 +39,42 @@ namespace At0::Ray
 		return m_WhatBuffer.c_str();
 	}
 
-	VulkanException::VulkanException(
-		const char* message, uint16_t line, const char* file, VkResult result)
+	RenderException::RenderException(
+		const char* message, uint16_t line, const char* file, RrError result)
 		: RuntimeException(message, line, file), m_Error(result)
 	{
 	}
-	const char* VulkanException::what() const noexcept
+	RenderException::RenderException(
+		const char* message, uint16_t line, const char* file, VkResult result)
+		: RuntimeException(message, line, file), m_Error2(result)
 	{
-		std::ostringstream oss;
-		oss << GetType() << '\n'
-			<< "[Error Code] " << String::Construct(m_Error) << "(" << (int32_t)m_Error << ")"
-			<< '\n'
-			<< "[Description] " << m_Message << '\n'
-			<< GetDefaultString();
+	}
+	const char* RenderException::what() const noexcept
+	{
+		if (m_Error)
+		{
+			std::ostringstream oss;
+			oss << GetType() << '\n'
+				<< "[Error Code] " << String::Construct(*m_Error) << "(" << (int32_t)*m_Error << ")"
+				<< '\n'
+				<< "[Description] " << m_Message << '\n'
+				<< GetDefaultString();
 
-		m_WhatBuffer = oss.str();
+			m_WhatBuffer = oss.str();
+		}
+		else
+		{
+			std::ostringstream oss;
+			oss << GetType() << '\n'
+				<< "[Error Code] " << String::Construct(*m_Error2) << "(" << (int32_t)*m_Error2
+				<< ")" << '\n'
+				<< "[Description] " << m_Message << '\n'
+				<< GetDefaultString();
+
+			m_WhatBuffer = oss.str();
+		}
+
+
 		return m_WhatBuffer.c_str();
 	}
 }  // namespace At0::Ray
