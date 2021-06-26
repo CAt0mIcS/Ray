@@ -1,16 +1,27 @@
 ﻿#include "Rpch.h"
 
 #include "Core/RCore.h"
+#include "Core/RUtils.h"
 
 
 #if RR_RENDERER_API == RR_RENDERER_API_OPENGL
 
-RrError RrInitialize(const RrInitializeInfo* pInitInfo, RrInstance* pInstance)
+bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*) = NULL;
+
+
+RrError RrInitialize(
+	const RrInitializeInfo* pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger)
 {
-	if (!gladLoadGLLoader((GLADloadproc)pInitInfo->loaderFunction))
+	RrpfnValidationCallback = pInitInfo->pfnValidationCallback;
+	LogError("OpenGL is currently not supported");
+
+	if (!gladLoadGLLoader((GLADloadproc)pInitInfo->pfnLoader))
 	{
-		if (!pInitInfo->loaderFunction)
+		if (!pInitInfo->pfnLoader)
+		{
+			LogError("pInitInfo->pfnLoader was NULL. Expected function to load glad.");
 			return RrErrorIncomplete;
+		}
 		else
 			return RrErrorLoaderFailed;
 	}

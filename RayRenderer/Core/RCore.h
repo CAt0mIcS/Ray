@@ -5,6 +5,7 @@
 RR_EXTERN_C_BEG
 
 typedef void* RrInstance;
+typedef void* RrDebugMessenger;
 
 typedef enum RrError
 {
@@ -50,11 +51,21 @@ typedef enum RrError
 	RrErrorLoaderFailed
 } RrError;
 
+typedef enum RrLogMessageSeverity
+{
+	RrLogMessageSeverityDebug,
+	RrLogMessageSeverityInfo,
+	RrLogMessageSeverityWarning,
+	RrLogMessageSeverityError
+} RrLogMessageSeverity;
+
 
 typedef struct RrInitializeInfo
 {
-	void* loaderFunction;
+	void* pfnLoader;
 	const void* pNext;
+	bool (*pfnValidationCallback)(RrLogMessageSeverity, const char*);
+
 	uint32_t enabledExtensionCount;
 	const char* const* ppEnabledExtensions;
 
@@ -65,6 +76,10 @@ typedef struct RrInitializeInfo
 } RrInitializeInfo;
 
 
-RR_API RrError RrInitialize(const RrInitializeInfo* const pInitInfo, RrInstance* pInstance);
+extern bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*);
+
+
+RR_API RrError RrInitialize(
+	RrInitializeInfo* const pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger);
 
 RR_EXTERN_C_END

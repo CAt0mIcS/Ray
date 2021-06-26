@@ -18,44 +18,22 @@ namespace At0::Ray
 	std::vector<const char*> VulkanInstance::s_ValidationLayers{};
 #endif
 
-	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
-		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-		VkDebugUtilsMessageTypeFlagsEXT messageType,
-		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
+	static bool DebugCallback(RrLogMessageSeverity severity, const char* pMessage)
 	{
-		switch (messageSeverity)
+		switch (severity)
 		{
-		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
-			Log::Debug("[VulkanValidation] {0}", pCallbackData->pMessage);
-			break;
-		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
-			Log::Info("[VulkanValidation] {0}", pCallbackData->pMessage);
-			break;
-		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
-			Log::Warn("[VulkanValidation] {0}", pCallbackData->pMessage);
-			break;
-		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
-			Log::Error("[VulkanValidation] {0}", pCallbackData->pMessage);
-			break;
+		case RrLogMessageSeverityDebug: Log::Debug("[Renderer] {0}", pMessage); break;
+		case RrLogMessageSeverityInfo: Log::Info("[Renderer] {0}", pMessage); break;
+		case RrLogMessageSeverityWarning: Log::Warn("[Renderer] {0}", pMessage); break;
+		case RrLogMessageSeverityError: Log::Error("[Renderer] {0}", pMessage); break;
 		}
 
-		return VK_FALSE;
+		return false;
 	}
 
 	VulkanInstance::VulkanInstance()
 	{
 		RrInitializeInfo initInfo{};
-
-		// VkApplicationInfo appInfo{};
-		// appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-		// appInfo.pEngineName = "Ray";
-		// appInfo.engineVersion = VK_MAKE_VERSION(0, 0, 1);
-		// appInfo.apiVersion = VK_API_VERSION_1_1;
-
-		// VkInstanceCreateInfo createInfo{};
-		// createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-		// createInfo.flags = 0;
-		// createInfo.pApplicationInfo = &appInfo;
 
 		// Get required Instance extensions from glfw
 		auto instanceExtensions = GetRequiredExtensions();
@@ -68,29 +46,18 @@ namespace At0::Ray
 		initInfo.enabledExtensionCount = (uint32_t)instanceExtensions.size();
 		initInfo.ppEnabledExtensions = instanceExtensions.data();
 
-		VkDebugUtilsMessengerCreateInfoEXT messengerCreateInfo = GetDebugMessengerCreateInfo();
-		if (m_ValidationLayersEnabled && HasValidationLayerSupport())
-		{
-			initInfo.enabledLayerCount = s_ValidationLayers.size();
-			initInfo.ppEnabledLayers = s_ValidationLayers.data();
+		initInfo.enableValidationLayers = m_ValidationLayersEnabled;
+		initInfo.pfnValidationCallback = DebugCallback;
+		initInfo.enabledLayerCount = s_ValidationLayers.size();
+		initInfo.ppEnabledLayers = s_ValidationLayers.data();
 
-			initInfo.pNext = &messengerCreateInfo;
-		}
-		else
-		{
-			Log::Info("[VulkanInstance] Validation layers disabled");
-			m_ValidationLayersEnabled = false;
-
-			initInfo.enabledLayerCount = 0;
-		}
-
-		initInfo.loaderFunction = glfwGetProcAddress;
+		initInfo.pfnLoader = glfwGetProcAddress;
 
 		ThrowRenderError(
-			RrInitialize(&initInfo, (RrInstance*)&m_Instance), "[Instance] Creation failed");
+			RrInitialize(&initInfo, (RrInstance*)&m_Instance, (RrDebugMessenger*)&m_DebugMessenger),
+			"[Instance] Creation failed");
 
-		if (m_ValidationLayersEnabled)
-			CreateDebugMessenger();
+		m_ValidationLayersEnabled = initInfo.enableValidationLayers;
 	}
 
 	VulkanInstance::~VulkanInstance()
@@ -108,36 +75,6 @@ namespace At0::Ray
 	PFN_vkVoidFunction VulkanInstance::LoadFunction(const char* name)
 	{
 		return vkGetInstanceProcAddr(m_Instance, name);
-	}
-
-	bool VulkanInstance::HasValidationLayerSupport() const
-	{
-		uint32_t layerPropCount = 0;
-		vkEnumerateInstanceLayerProperties(&layerPropCount, nullptr);
-		if (layerPropCount == 0)
-			return false;
-
-		std::vector<VkLayerProperties> layerProps(layerPropCount);
-		vkEnumerateInstanceLayerProperties(&layerPropCount, layerProps.data());
-
-		for (const char* layerName : s_ValidationLayers)
-		{
-			bool layerFound = false;
-
-			for (const VkLayerProperties& layerProps : layerProps)
-			{
-				if (strcmp(layerName, layerProps.layerName) == 0)
-				{
-					layerFound = true;
-					break;
-				}
-			}
-
-			if (!layerFound)
-				return false;
-		}
-
-		return true;
 	}
 
 	std::vector<const char*> VulkanInstance::GetRequiredExtensions() const
@@ -189,36 +126,5 @@ namespace At0::Ray
 		}
 
 		return unsupportedExtensions;
-	}
-
-	void VulkanInstance::CreateDebugMessenger()
-	{
-		VkDebugUtilsMessengerCreateInfoEXT createInfo = GetDebugMessengerCreateInfo();
-
-		if (auto createDebugMessenger =
-				(PFN_vkCreateDebugUtilsMessengerEXT)LoadFunction("vkCreateDebugUtilsMessengerEXT"))
-		{
-			if (createDebugMessenger(m_Instance, &createInfo, nullptr, &m_DebugMessenger) !=
-				VK_SUCCESS)
-				Log::Error("[VulkanInstance] Failed to create debug messenger");
-		}
-		else
-			Log::Error("[VulkanInstance] Unable to find vkCreateDebugUtilsMessengerEXT");
-	}
-
-	VkDebugUtilsMessengerCreateInfoEXT VulkanInstance::GetDebugMessengerCreateInfo() const
-	{
-		VkDebugUtilsMessengerCreateInfoEXT createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-		createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
-									 VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
-									 VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-									 VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-		createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
-								 VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
-								 VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-		createInfo.pfnUserCallback = &DebugCallback;
-
-		return createInfo;
 	}
 }  // namespace At0::Ray

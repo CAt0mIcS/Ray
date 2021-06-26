@@ -44,7 +44,7 @@ namespace At0::Ray
 	public:
 		RenderException(const char* message, uint16_t line, const char* file, int result);
 		RenderException(const char* message, uint16_t line, const char* file, VkResult result);
-		virtual const char* GetType() const { return "Vulkan Exception"; };
+		virtual const char* GetType() const { return "Render Exception"; };
 		virtual const char* what() const noexcept override;
 
 	private:

@@ -7,3 +7,8 @@
 #elif RR_RENDERER_API == RR_RENDERER_API_OPENGL
 	#include <Glad/include/glad/glad.h>
 #endif
+
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
+#include <malloc.h>

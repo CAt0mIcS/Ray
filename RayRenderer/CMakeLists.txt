@@ -6,6 +6,7 @@ set(SRC
 	# Files required for initialization
 	"Core/RCore.h"
 	"Core/RUtils.h"
+	"Core/RUtils.c"
 
 	# ------------------------------------------------------------------
 	# Vulkan specific files
