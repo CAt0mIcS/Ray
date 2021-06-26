@@ -10,15 +10,15 @@
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
-#include "../RBase.h"
-#include "../Core/RMath.h"
-#include "../Core/RTime.h"
+// clang-format off
+#include "Ray/RBase.h"
+#include "RayBase/RMath.h"
+#include "RayBase/RTime.h"
 
-#include "../Events/REventListener.h"
-#include "../Events/RKeyboardEvents.h"
-#include "../Events/RMouseEvents.h"
-#include "../Events/REngineEvents.h"
+#include "Ray/Events/REventListener.h"
+#include "Ray/Events/RKeyboardEvents.h"
+#include "Ray/Events/RMouseEvents.h"
+#include "Ray/Events/REngineEvents.h"
 
 #include <functional>
 // clang-format on

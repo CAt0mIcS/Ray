@@ -1,8 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RString.h"
 
-#include "Utils/RAssert.h"
-#include "Graphics/Pipelines/Shader/RShader.h"
+#include "RAssert.h"
 
 #include <vulkan/vulkan_core.h>
 
@@ -208,22 +207,6 @@ namespace At0::Ray
 		return "UNKNOWN VULKAN RESULT CODE";
 	}
 
-	std::string String::Construct(ShaderStage stage)
-	{
-		switch (stage)
-		{
-		case ShaderStage::Vertex: return "Vertex Shader";
-		case ShaderStage::TesselationControl: return "Tesselation Control Shader";
-		case ShaderStage::TesselationEvaluation: return "Tesselation Evaluation Shader";
-		case ShaderStage::Geometry: return "Geometry Shader";
-		case ShaderStage::Fragment: return "Fragment Shader";
-		case ShaderStage::Compute: return "Compute Shader";
-		}
-
-		RAY_ASSERT(false, "[String] Shader stage {0} is invalid", (uint32_t)stage);
-		return "INVALID SHADER STAGE";
-	}
-
 	std::string String::Construct(VkPhysicalDeviceType deviceType)
 	{
 		switch (deviceType)
@@ -238,22 +221,20 @@ namespace At0::Ray
 		return "INVALID PHYSICAL DEVICE TYPE";
 	}
 
-	std::string String::Construct(ShaderDataType type)
+	std::string String::Construct(VkShaderStageFlags stage)
 	{
-		switch (type)
+		switch (stage)
 		{
-		case ShaderDataType::Float: return "float";
-		case ShaderDataType::Int: return "int";
-		case ShaderDataType::UInt: return "uint";
-		case ShaderDataType::Vec2: return "vec2";
-		case ShaderDataType::Vec3: return "vec3";
-		case ShaderDataType::Vec4: return "vec4";
-		case ShaderDataType::Mat3: return "mat3";
-		case ShaderDataType::Mat4: return "mat4";
+		case VK_SHADER_STAGE_VERTEX_BIT: return "Vertex Shader";
+		case VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT: return "Tesselation Control Shader";
+		case VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT: return "Tesselation Evaluation Shader";
+		case VK_SHADER_STAGE_GEOMETRY_BIT: return "Geometry Shader";
+		case VK_SHADER_STAGE_FRAGMENT_BIT: return "Fragment Shader";
+		case VK_SHADER_STAGE_COMPUTE_BIT: return "Compute Shader";
 		}
 
-		RAY_ASSERT(false, "[String] Shader Data type {0} is invalid", (uint32_t)type);
-		return "INVALID SHADER DATA TYPE";
+		RAY_ASSERT(false, "[String] Shader stage {0} is invalid", (uint32_t)stage);
+		return "INVALID SHADER STAGE";
 	}
 
 	std::string String::ConvertUtf8(std::wstring_view string)

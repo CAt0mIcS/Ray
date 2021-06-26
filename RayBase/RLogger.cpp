@@ -4,8 +4,8 @@
 
 namespace At0::Ray
 {
-	RAY_EXPORT Violent::FileLogger g_FileLogger;
-	RAY_EXPORT Violent::ConsoleLogger g_ConsoleLogger;
+	RAYBASE_API Violent::FileLogger g_FileLogger;
+	RAYBASE_API Violent::ConsoleLogger g_ConsoleLogger;
 
 	void CLog::Close() { g_ConsoleLogger.Close(); }
 	void CLog::SetLogLevel(Violent::LogLevel lvl) { g_ConsoleLogger.SetLogLevel(lvl); }

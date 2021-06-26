@@ -1,12 +1,12 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-#include "../Core/RMath.h"
+#include "Ray/RBase.h"
+#include "RayBase/RMath.h"
 
-#include "../Events/REventDispatcher.h"
-#include "../Events/REngineEvents.h"
-#include "../Events/RMouseEvents.h"
-#include "../Events/RKeyboardEvents.h"
+#include "Ray/Events/REventDispatcher.h"
+#include "Ray/Events/REngineEvents.h"
+#include "Ray/Events/RMouseEvents.h"
+#include "Ray/Events/RKeyboardEvents.h"
 
 #include <string_view>
 #include <utility>

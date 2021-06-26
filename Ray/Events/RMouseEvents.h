@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-#include "../Core/RMath.h"
-#include "../Core/RKeyCodes.h"
+#include "Ray/RBase.h"
+#include "RayBase/RMath.h"
+#include "RayBase/RKeyCodes.h"
 
 
 namespace At0::Ray

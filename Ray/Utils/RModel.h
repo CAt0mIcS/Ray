@@ -1,10 +1,10 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-#include "../Components/RMesh.h"
+#include "Ray/RBase.h"
+#include "Ray/Components/RMesh.h"
 
-#include "../Core/RDynamicVertex.h"
-#include "../Graphics/Buffers/RIndexBuffer.h"
+#include "Ray/Core/RDynamicVertex.h"
+#include "Ray/Graphics/Buffers/RIndexBuffer.h"
 
 
 struct aiMesh;

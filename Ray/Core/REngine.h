@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-#include "RTime.h"
+#include "Ray/RBase.h"
+#include "RayBase/RTime.h"
 
 
 namespace At0::Ray

@@ -2,7 +2,7 @@
 #include "RTexture2DAtlas.h"
 
 #include "Graphics/Buffers/RBuffer.h"
-#include "Utils/RException.h"
+#include "RayBase/RException.h"
 
 
 namespace At0::Ray

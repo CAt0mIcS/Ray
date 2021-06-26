@@ -1,12 +1,12 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-#include "../Core/RTime.h"
-#include "../Core/RMath.h"
-#include "../Components/RTransform.h"
-#include "../Graphics/Core/RSharedBindable.h"
-#include "../Events/REventDispatcher.h"
-#include "../Utils/RThreadPool.h"
+#include "Ray/RBase.h"
+#include "RayBase/RTime.h"
+#include "RayBase/RMath.h"
+#include "Ray/Components/RTransform.h"
+#include "Ray/Graphics/Core/RSharedBindable.h"
+#include "Ray/Events/REventDispatcher.h"
+#include "RayBase/RThreadPool.h"
 #include "REntity.h"
 #include "RCamera.h"
 

@@ -1,8 +1,8 @@
 ﻿#include "Rpch.h"
 #include "RGraphics.h"
 
-#include "Utils/RLogger.h"
-#include "Utils/RException.h"
+#include "RayBase/RLogger.h"
+#include "RayBase/RException.h"
 
 #include "Devices/RWindow.h"
 #include "Scene/RScene.h"

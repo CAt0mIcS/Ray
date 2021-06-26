@@ -1,12 +1,12 @@
 ﻿#pragma once
 
-#include "../RBase.h"
+#include "Ray/RBase.h"
 #include "RComponent.h"
 #include "Base/RRenderer.h"
 
-#include "../Graphics/Pipelines/Uniforms/RDescriptor.h"
-#include "../Graphics/Pipelines/Uniforms/RBufferUniform.h"
-#include "../Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
+#include "Ray/Graphics/Pipelines/Uniforms/RDescriptor.h"
+#include "Ray/Graphics/Pipelines/Uniforms/RBufferUniform.h"
+#include "Ray/Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
 
 #include <vector>
 #include <unordered_map>

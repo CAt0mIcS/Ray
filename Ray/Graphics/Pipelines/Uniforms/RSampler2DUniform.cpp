@@ -6,8 +6,8 @@
 #include "Graphics/Images/RTexture2D.h"
 #include "RDescriptor.h"
 
-#include "Utils/RAssert.h"
-#include "Utils/RString.h"
+#include "RayBase/RAssert.h"
+#include "RayBase/RString.h"
 
 
 namespace At0::Ray
@@ -18,7 +18,7 @@ namespace At0::Ray
 	{
 		RAY_MEXPECTS(pipeline.GetShader().GetReflection(stage).HasUniform(name, true),
 			"[BufferUniform] Uniform \"{0}\" was not found in shader stage \"{1}\"", name,
-			String::Construct(stage));
+			String::Construct((VkShaderStageFlags)stage));
 
 		const auto& uniform = pipeline.GetShader().GetReflection(stage).GetUniform(name);
 		m_Binding = uniform.binding;

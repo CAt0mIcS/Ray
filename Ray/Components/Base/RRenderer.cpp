@@ -8,8 +8,8 @@
 #include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
 
-#include "Utils/RException.h"
-#include "Utils/RAssert.h"
+#include "RayBase/RException.h"
+#include "RayBase/RAssert.h"
 
 
 namespace At0::Ray
@@ -41,7 +41,7 @@ namespace At0::Ray
 			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniformBlock(
 				name),
 			"[Renderer] BufferUniform \"{0}\" was not found in shader stage \"{1}\"", name,
-			String::Construct(stage));
+			String::Construct((VkShaderStageFlags)stage));
 
 		uint32_t set = m_Material->GetGraphicsPipeline()
 						   .GetShader()
@@ -84,7 +84,7 @@ namespace At0::Ray
 		RAY_MEXPECTS(m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniform(
 						 name, true),
 			"[Renderer] Sampler2DUniform \"{0}\" was not found in shader stage \"{1}\"", name,
-			String::Construct(stage));
+			String::Construct((VkShaderStageFlags)stage));
 
 		uint32_t set =
 			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).GetUniform(name).set;

@@ -5,7 +5,7 @@
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
-#include "Utils/RException.h"
+#include "RayBase/RException.h"
 
 
 namespace At0::Ray

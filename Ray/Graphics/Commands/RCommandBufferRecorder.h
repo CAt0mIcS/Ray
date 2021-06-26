@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "../../RBase.h"
-#include "../../Utils/RThreadPool.h"
-#include "../../Utils/RNonCopyable.h"
+#include "Ray/RBase.h"
+#include "RayBase/RThreadPool.h"
+#include "RayBase/RNonCopyable.h"
 
 #include "RCommandBuffer.h"
 #include "RCommandPool.h"

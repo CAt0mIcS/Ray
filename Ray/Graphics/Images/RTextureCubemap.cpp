@@ -1,9 +1,9 @@
 ﻿#include "Rpch.h"
 #include "RTextureCubemap.h"
 
-#include "Utils/RException.h"
+#include "RayBase/RException.h"
 #include "RTextureSampler.h"
-#include "Utils/RAssert.h"
+#include "RayBase/RAssert.h"
 #include "../Buffers/RBuffer.h"
 
 

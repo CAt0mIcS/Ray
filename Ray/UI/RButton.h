@@ -1,10 +1,10 @@
 ﻿#pragma once
 
-#include "../RBase.h"
+#include "Ray/RBase.h"
 #include "RWidget.h"
 
-#include "../Scene/REntity.h"
-#include "../Core/RMath.h"
+#include "Ray/Scene/REntity.h"
+#include "RayBase/RMath.h"
 
 
 namespace At0::Ray

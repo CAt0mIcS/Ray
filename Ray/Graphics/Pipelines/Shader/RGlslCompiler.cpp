@@ -5,9 +5,9 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
-#include "Utils/RAssert.h"
-#include "Utils/RLogger.h"
-#include "Utils/RException.h"
+#include "RayBase/RAssert.h"
+#include "RayBase/RLogger.h"
+#include "RayBase/RException.h"
 
 #include <glslang/MachineIndependent/gl_types.h>
 
@@ -225,8 +225,8 @@ namespace At0::Ray
 		case ShaderStage::TesselationEvaluation: return EShLangTessEvaluation;
 		}
 
-		ThrowRuntime(
-			"[GlslCompiler] Stage flag {0} is incompatible", String::Construct(stageFlags));
+		ThrowRuntime("[GlslCompiler] Stage flag {0} is incompatible",
+			String::Construct((VkShaderStageFlags)stageFlags));
 		return EShLangAnyHit;
 	}
 #pragma endregion

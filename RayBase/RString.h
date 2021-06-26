@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-#include "../Core/RKeyCodes.h"
+#include "RBase.h"
+#include "RKeyCodes.h"
 #include "RNonCopyable.h"
 
 #include <string>
@@ -15,55 +15,16 @@
 
 namespace At0::Ray
 {
-	enum class ShaderStage;
-	enum class ShaderDataType;
-
-	class RAY_EXPORT String : NonCopyable
+	class RAYBASE_API String : NonCopyable
 	{
 	public:
 		String() = delete;
 
-		/**
-		 * Constructs a string from a key
-		 * @param key The key to strinify
-		 * @returns The string representation of the key for debugging
-		 */
 		static std::string Construct(Key key);
-
-		/**
-		 * Constructs a string from a mouse button
-		 * @param button The mouse button to stringify
-		 * @returns The string representation of the mouse button for debugging
-		 */
 		static std::string Construct(MouseButton button);
-
-		/**
-		 * Constructs a string from a Vulkan function result
-		 * @param res The result code
-		 * @returns The string representation of the resulting code
-		 */
 		static std::string Construct(VkResult res);
-
-		/**
-		 * Constructs a string from a shader stage
-		 * @param stage The stage to strinify
-		 * @returns The string describing the stage (e.g. VertexShader, FragmentShader, ...)
-		 */
-		static std::string Construct(ShaderStage stage);
-
-		/**
-		 * Constructs a string from a physical device type
-		 * @param deviceType The type to strinify
-		 * @returns The string describing the type of device
-		 */
 		static std::string Construct(VkPhysicalDeviceType deviceType);
-
-		/**
-		 * Constructs a string from a shader data type
-		 * @param type The shader data type
-		 * @returns The string equal to the GLSL shader type
-		 */
-		static std::string Construct(ShaderDataType type);
+		static std::string Construct(VkShaderStageFlags stage);
 
 		/**
 		 * Converts a string from UTF16 to UTF8

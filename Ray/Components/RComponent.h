@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-#include "../Utils/RAssert.h"
-#include "../Scene/REntity.h"
+#include "Ray/RBase.h"
+#include "RayBase/RAssert.h"
+#include "Ray/Scene/REntity.h"
 
 
 namespace At0::Ray

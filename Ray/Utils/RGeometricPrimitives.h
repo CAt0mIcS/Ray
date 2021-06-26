@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "../Core/RMath.h"
-#include "../Graphics/Buffers/RIndexBuffer.h"
-#include "../Core/RDynamicVertex.h"
+#include "RayBase/RMath.h"
+#include "Ray/Graphics/Buffers/RIndexBuffer.h"
+#include "Ray/Core/RDynamicVertex.h"
 
 
 namespace At0::Ray

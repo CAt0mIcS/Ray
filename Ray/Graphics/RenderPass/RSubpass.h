@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "../../RBase.h"
+#include "Ray/RBase.h"
 
 #include <vulkan/vulkan_core.h>
 #include <vector>

@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 #include "../RMaterial.h"
-#include "../../Graphics/Pipelines/RGraphicsPipeline.h"
-#include "../../Graphics/Images/RTexture2D.h"
+#include "Ray/Graphics/Pipelines/RGraphicsPipeline.h"
+#include "Ray/Graphics/Images/RTexture2D.h"
 
 
 namespace At0::Ray

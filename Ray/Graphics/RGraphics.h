@@ -1,13 +1,13 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-#include "../Utils/RNonCopyable.h"
-#include "../Core/RTime.h"
-#include "../Core/RMath.h"
-#include "../Events/REngineEvents.h"
+#include "Ray/RBase.h"
+#include "RayBase/RNonCopyable.h"
+#include "RayBase/RTime.h"
+#include "RayBase/RMath.h"
 
-#include "../Events/REventListener.h"
-#include "../Events/REngineEvents.h"
+#include "Ray/Events/REngineEvents.h"
+#include "Ray/Events/REventListener.h"
+#include "Ray/Events/REngineEvents.h"
 
 #include <vulkan/vulkan_core.h>
 #include <vector>

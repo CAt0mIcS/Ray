@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "../RBase.h"
+#include "Ray/RBase.h"
 #include "RFunction.h"
 #include "RStaticFunction.h"
 #include "RObject.h"

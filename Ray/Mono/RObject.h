@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-#include "../RBase.h"
+#include "Ray/RBase.h"
 #include "RFunction.h"
 
-#include "../Utils/RAssert.h"
+#include "RayBase/RAssert.h"
 
 typedef struct _MonoDomain MonoDomain;
 typedef struct _MonoImage MonoImage;

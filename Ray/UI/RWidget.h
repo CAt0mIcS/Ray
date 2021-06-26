@@ -1,11 +1,11 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-#include "../Components/RComponent.h"
-#include "../Core/RMath.h"
+#include "Ray/RBase.h"
+#include "Ray/Components/RComponent.h"
+#include "RayBase/RMath.h"
 
-#include "../Events/REventListener.h"
-#include "../Events/REngineEvents.h"
+#include "Ray/Events/REventListener.h"
+#include "Ray/Events/REngineEvents.h"
 
 
 namespace At0::Ray

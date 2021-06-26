@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-#include "../Utils/RString.h"
-#include "../Utils/RLogger.h"
-#include "../Utils/RAssert.h"
+#include "RBase.h"
+#include "RString.h"
+#include "RLogger.h"
+#include "RAssert.h"
 
 #include <exception>
 #include <string>
@@ -14,7 +14,7 @@
 
 namespace At0::Ray
 {
-	class RAY_EXPORT Exception : public std::exception
+	class RAYBASE_API Exception : public std::exception
 	{
 	public:
 		Exception(uint16_t line, const char* file);
@@ -29,7 +29,7 @@ namespace At0::Ray
 		const char* m_File;
 	};
 
-	class RAY_EXPORT RuntimeException : public Exception
+	class RAYBASE_API RuntimeException : public Exception
 	{
 	public:
 		RuntimeException(const char* message, uint16_t line, const char* file);
@@ -40,7 +40,7 @@ namespace At0::Ray
 		std::string m_Message;
 	};
 
-	class RAY_EXPORT VulkanException : public RuntimeException
+	class RAYBASE_API VulkanException : public RuntimeException
 	{
 	public:
 		VulkanException(const char* message, uint16_t line, const char* file, VkResult result);

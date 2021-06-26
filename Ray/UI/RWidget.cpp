@@ -21,7 +21,8 @@ namespace At0::Ray
 		m_Translation.x = x;
 
 		Transform& tform = GetEntity().Get<Transform>();
-		tform.SetTranslation({ ScreenSpaceToNDCSpaceX(m_Translation.x + (GetScale().x / 2.0f)),
+		tform.SetTranslation({ ScreenSpaceToNDCSpaceX(m_Translation.x + (GetScale().x / 2.0f),
+								   Window::Get().GetFramebufferSize().x),
 			tform.Translation().y, 0.0f });
 	}
 
@@ -31,7 +32,9 @@ namespace At0::Ray
 
 		Transform& tform = GetEntity().Get<Transform>();
 		tform.SetTranslation({ tform.Translation().x,
-			ScreenSpaceToNDCSpaceY(m_Translation.y + (GetScale().y / 2.0f)), 0.0f });
+			ScreenSpaceToNDCSpaceY(
+				m_Translation.y + (GetScale().y / 2.0f), Window::Get().GetFramebufferSize().y),
+			0.0f });
 	}
 
 	void Widget::SetScale(Float2 scale)

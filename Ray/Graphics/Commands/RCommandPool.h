@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "../../Utils/RNonCopyable.h"
-#include "../../RBase.h"
+#include "RayBase/RNonCopyable.h"
+#include "Ray/RBase.h"
 
 #include <vulkan/vulkan_core.h>
 

@@ -3,7 +3,7 @@
 
 #include "RImage2D.h"
 
-#include "Utils/RException.h"
+#include "RayBase/RException.h"
 #include "../Buffers/RBuffer.h"
 
 #ifdef STB_IMAGE_IMPLEMENTATION

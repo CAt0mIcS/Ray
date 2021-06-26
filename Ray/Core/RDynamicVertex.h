@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-#include "../Utils/RAssert.h"
+#include "Ray/RBase.h"
+#include "RayBase/RAssert.h"
 
 #include <vulkan/vulkan_core.h>
 

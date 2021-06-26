@@ -1,5 +1,5 @@
 ﻿#include <Ray/Core/REngine.h>
-#include <Ray/Utils/RLogger.h>
+#include <RayBase/RLogger.h>
 #include <Ray/Devices/RWindow.h>
 #include <Ray/Graphics/RGraphics.h>
 
@@ -9,7 +9,7 @@
 
 #include <Ray/Graphics/Images/RTexture2D.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
-#include <Ray/Utils/RException.h>
+#include <RayBase/RException.h>
 
 #include <Ray/Scene/RScene.h>
 #include <Ray/Scene/RCamera.h>

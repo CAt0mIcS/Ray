@@ -10,7 +10,7 @@
 #include "Graphics/Pipelines/Shader/RShader.h"
 #include "Graphics/Images/RTexture2D.h"
 
-#include "Utils/RException.h"
+#include "RayBase/RException.h"
 
 
 namespace At0::Ray

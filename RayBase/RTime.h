@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "../RBase.h"
+#include "RBase.h"
 
 #include <chrono>
 #include <iomanip>
@@ -10,7 +10,7 @@
 
 namespace At0::Ray
 {
-	class RAY_EXPORT Time
+	class RAYBASE_API Time
 	{
 	public:
 		Time() = default;

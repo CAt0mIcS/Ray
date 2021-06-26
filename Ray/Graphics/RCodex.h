@@ -1,10 +1,9 @@
 ﻿#pragma once
 
-#include "../RBase.h"
+#include "Ray/RBase.h"
 #include "Core/RSharedBindable.h"
-#include "../Utils/RModel.h"
+#include "Ray/Utils/RModel.h"
 #include "Pipelines/Shader/RShader.h"
-//#include "../Utils/RLogger.h"
 
 #include <string>
 #include <unordered_map>

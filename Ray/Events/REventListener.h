@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "REventDispatcher.h"
-#include "../Devices/RWindow.h"
+#include "Ray/Devices/RWindow.h"
 
 #include <type_traits>
 #include <concepts>

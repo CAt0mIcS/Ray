@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-#include "../../RBase.h"
-#include "../../Core/RResource.h"
-#include "../../Core/RMath.h"
-#include "../../Graphics/Images/RTexture2DAtlas.h"
+#include "Ray/RBase.h"
+#include "Ray/Core/RResource.h"
+#include "RayBase/RMath.h"
+#include "Ray/Graphics/Images/RTexture2DAtlas.h"
 
 #include <unordered_map>
 

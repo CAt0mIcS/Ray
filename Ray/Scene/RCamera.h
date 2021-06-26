@@ -6,14 +6,14 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "../RBase.h"
-#include "../Events/REventListener.h"
-#include "../Events/REventDispatcher.h"
-#include "../Events/RMouseEvents.h"
-#include "../Events/RKeyboardEvents.h"
-#include "../Core/RTime.h"
-#include "../Core/RMath.h"
-#include "../Core/RFrustum.h"
+#include "Ray/RBase.h"
+#include "Ray/Events/REventListener.h"
+#include "Ray/Events/REventDispatcher.h"
+#include "Ray/Events/RMouseEvents.h"
+#include "Ray/Events/RKeyboardEvents.h"
+#include "RayBase/RTime.h"
+#include "RayBase/RMath.h"
+#include "Ray/Core/RFrustum.h"
 
 
 namespace At0::Ray

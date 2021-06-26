@@ -40,13 +40,8 @@ set(SRC
 	# Core classes
 	"Core/REngine.h"
 	"Core/REngine.cpp"
-	"Core/RTime.h"
-	"Core/RTime.cpp"
-	"Core/RMath.h"
-	"Core/RMath.cpp"
 	"Core/RFrustum.h"
 	"Core/RFrustum.cpp"
-	"Core/RKeyCodes.h"
 	"Core/RDynamicVertex.h"
 	"Core/RDynamicVertex.cpp"
 	"Core/RResource.h"
@@ -229,11 +224,6 @@ set(SRC
 	"UI/RButton.cpp"
 	"UI/RImGui.h"
 	"UI/RImGui.cpp"
-	
-	# ------------------------------------------------------------------
-	# File system
-	"Filesystem/RJSON.h"
-	"Filesystem/RJSON.cpp"
 
 	# ------------------------------------------------------------------
 	# Mono
@@ -250,16 +240,6 @@ set(SRC
 
 	# ------------------------------------------------------------------
 	# Utilities
-	"Utils/RString.h"
-	"Utils/RString.cpp"
-	"Utils/RThreadPool.h"
-	"Utils/RThreadPool.cpp"
-	"Utils/RNonCopyable.h"
-	"Utils/RLogger.h"
-	"Utils/RLogger.cpp"
-	"Utils/RAssert.h"
-	"Utils/RException.h"
-	"Utils/RException.cpp"
 	"Utils/RGeometricPrimitives.h"
 	"Utils/RGeometricPrimitives.cpp"
 	"Utils/RModel.h"
@@ -292,34 +272,36 @@ find_package("Vulkan" REQUIRED FATAL_ERROR)
 SetMonoIncludesAndLibraries()
 
 set(PUBLIC_INC
-    "${Vulkan_INCLUDE_DIRS}"
+	"${Vulkan_INCLUDE_DIRS}"
+	"${CMAKE_SOURCE_DIR}"
 )
 
 set(PRIVATE_INC
-    "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_SOURCE_DIR}/Extern/entt/src"
-    "${CMAKE_SOURCE_DIR}/Extern/rapidjson/include"
-    "${CMAKE_SOURCE_DIR}/Extern/glfw/include"
-    "${CMAKE_SOURCE_DIR}/Extern"
-    "${CMAKE_SOURCE_DIR}/Extern/freetype"
-    "${CMAKE_SOURCE_DIR}/Extern/Ion"
-    "${MONO_INC}"
+	"${CMAKE_CURRENT_SOURCE_DIR}"
+	"${CMAKE_SOURCE_DIR}/Extern/entt/src"
+	"${CMAKE_SOURCE_DIR}/Extern/rapidjson/include"
+	"${CMAKE_SOURCE_DIR}/Extern/glfw/include"
+	"${CMAKE_SOURCE_DIR}/Extern"
+	"${CMAKE_SOURCE_DIR}/Extern/freetype"
+	"${CMAKE_SOURCE_DIR}/Extern/Ion"
+	"${MONO_INC}"
 )
 
 set(PUBLIC_LIB
-    "glm"
+	"glm"
+	"RayBase"
 )
 
 set(PRIVATE_LIB
-    "glfw"
-    "${Vulkan_LIBRARIES}"
-    "assimp"
-    "glslang"
-    "SPIRV"
-    "Ion"
-    # "ktx"
-    "${MONO_LIB}"
-    "freetype"
+	"glfw"
+	"${Vulkan_LIBRARIES}"
+	"assimp"
+	"glslang"
+	"SPIRV"
+	"Ion"
+	# "ktx"
+	"${MONO_LIB}"
+	"freetype"
 )
 
 

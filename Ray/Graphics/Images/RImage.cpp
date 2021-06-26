@@ -7,9 +7,9 @@
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/Buffers/RBuffer.h"
 
-#include "Utils/RLogger.h"
-#include "Utils/RException.h"
-#include "Utils/RAssert.h"
+#include "RayBase/RLogger.h"
+#include "RayBase/RException.h"
+#include "RayBase/RAssert.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb/stb_image_write.h>
