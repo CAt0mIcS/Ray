@@ -4,6 +4,7 @@
 #include "RAssert.h"
 
 #include <vulkan/vulkan_core.h>
+#include <RayRenderer/Core/RCore.h>
 
 
 namespace At0::Ray
@@ -207,11 +208,11 @@ namespace At0::Ray
 		return "UNKNOWN VULKAN RESULT CODE";
 	}
 
-	std::string String::Construct(RrError res)
+	std::string String::Construct(int res)
 	{
 		switch (res)
 		{
-		case RrErrorNone: return "Vulkan Success";
+		case RrErrorNone: return "Success";
 		case RrErrorNotReady: return "Vulkan not ready";
 		case RrErrorTimeout: return "Vulkan timeout";
 		case RrErrorEventSet: return "Vulkan event set";

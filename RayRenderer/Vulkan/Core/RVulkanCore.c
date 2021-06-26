@@ -4,7 +4,7 @@
 #include "Core/RUtils.h"
 
 
-#if RR_RENDERER_API == Vulkan
+#if RR_RENDERER_API == RR_RENDERER_API_VULKAN
 
 RrError RrInitialize(const RrInitializeInfo* pInitInfo, RrInstance* pInstance)
 {

@@ -10,8 +10,6 @@
 #include <stdint.h>
 #include <optional>
 
-#include <RayRenderer/Core/RCore.h>
-
 
 namespace At0::Ray
 {
@@ -44,13 +42,13 @@ namespace At0::Ray
 	class RAYBASE_API RenderException : public RuntimeException
 	{
 	public:
-		RenderException(const char* message, uint16_t line, const char* file, RrError result);
+		RenderException(const char* message, uint16_t line, const char* file, int result);
 		RenderException(const char* message, uint16_t line, const char* file, VkResult result);
 		virtual const char* GetType() const { return "Vulkan Exception"; };
 		virtual const char* what() const noexcept override;
 
 	private:
-		std::optional<RrError> m_Error;
+		std::optional<int> m_Error;
 		std::optional<VkResult> m_Error2;
 	};
 
@@ -75,7 +73,7 @@ namespace At0::Ray
 			}
 		}
 
-		ThrowRenderError(RrError result, std::string msg, Args&&... args,
+		ThrowRenderError(int result, std::string msg, Args&&... args,
 			SourceLocation location = SourceLocation::current())
 		{
 			if (result != VK_SUCCESS)
@@ -127,7 +125,7 @@ namespace At0::Ray
 	ThrowRenderError(VkResult, std::string, Args&&...) -> ThrowRenderError<Args...>;
 
 	template<typename... Args>
-	ThrowRenderError(RrError, std::string, Args&&...) -> ThrowRenderError<Args...>;
+	ThrowRenderError(int, std::string, Args&&...) -> ThrowRenderError<Args...>;
 
 	template<typename... Args>
 	ThrowRenderError(std::string, Args&&...) -> ThrowRenderError<Args...>;

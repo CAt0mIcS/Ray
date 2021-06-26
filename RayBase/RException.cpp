@@ -40,7 +40,7 @@ namespace At0::Ray
 	}
 
 	RenderException::RenderException(
-		const char* message, uint16_t line, const char* file, RrError result)
+		const char* message, uint16_t line, const char* file, int result)
 		: RuntimeException(message, line, file), m_Error(result)
 	{
 	}

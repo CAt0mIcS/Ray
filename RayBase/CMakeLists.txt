@@ -34,22 +34,23 @@ set(SRC
 find_package("Vulkan" REQUIRED FATAL_ERROR)
 
 set(PUBLIC_INC
-    "${Vulkan_INCLUDE_DIRS}"
-    "${CMAKE_SOURCE_DIR}"
+	"${Vulkan_INCLUDE_DIRS}"
+	"${CMAKE_SOURCE_DIR}"
 )
 
 set(PRIVATE_INC
-    "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_SOURCE_DIR}/Extern/rapidjson/include"
-    "${CMAKE_SOURCE_DIR}/Extern"
+	"${CMAKE_CURRENT_SOURCE_DIR}"
+	"${CMAKE_SOURCE_DIR}/Extern/rapidjson/include"
+	"${CMAKE_SOURCE_DIR}/Extern"
 )
 
 set(PUBLIC_LIB
-    "glm"
+	"glm"
 )
 
 set(PRIVATE_LIB
-    "${Vulkan_LIBRARIES}"
+	"${Vulkan_LIBRARIES}"
+	"RayRenderer"
 )
 
 

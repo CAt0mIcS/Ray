@@ -30,6 +30,7 @@ set(PUBLIC_INC
 set(PRIVATE_INC
 	"${CMAKE_CURRENT_SOURCE_DIR}"
 	"${CMAKE_SOURCE_DIR}/Extern"
+	"${CMAKE_SOURCE_DIR}/Extern/Glad/include"
 )
 
 set(PUBLIC_LIB
@@ -38,6 +39,8 @@ set(PUBLIC_LIB
 
 set(PRIVATE_LIB
 	"${Vulkan_LIBRARIES}"
+	"opengl32"
+	"Glad"
 )
 
 

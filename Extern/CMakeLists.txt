@@ -3,6 +3,7 @@ add_subdirectory("glm")
 add_subdirectory("glslang")
 add_subdirectory("assimp")
 add_subdirectory("Ion")
+add_subdirectory("Glad")
 # add_subdirectory("ktx")
 
 set(SKIP_INSTALL_ALL TRUE)
@@ -22,6 +23,7 @@ SetOutputDirectory("MachineIndependent" "")
 
 set_target_properties("glfw" PROPERTIES FOLDER "Extern")
 set_target_properties("freetype" PROPERTIES FOLDER "Extern")
+set_target_properties("Glad" PROPERTIES FOLDER "Extern")
 
 set_target_properties("glslang" PROPERTIES FOLDER "Extern/glslang")
 set_target_properties("OGLCompiler" PROPERTIES FOLDER "Extern/glslang")
