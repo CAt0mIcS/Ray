@@ -7,7 +7,7 @@
 #include "RayBase/RAssert.h"
 #include "RayBase/RException.h"
 
-#include <RayRenderer/Core/RCore.h>
+#include "Core/RRendererLoader.h"
 
 
 namespace At0::Ray
@@ -53,14 +53,17 @@ namespace At0::Ray
 
 		initInfo.pfnLoader = glfwGetProcAddress;
 
-		ThrowRenderError(
-			RrInitialize(&initInfo, (RrInstance*)&m_Instance, (RrDebugMessenger*)&m_DebugMessenger),
+		ThrowRenderError(RendererAPI::Initialize(&initInfo, (RrInstance*)&m_Instance,
+							 (RrDebugMessenger*)&m_DebugMessenger),
 			"[Instance] Creation failed");
 
 		m_ValidationLayersEnabled = initInfo.enableValidationLayers;
 	}
 
-	VulkanInstance::~VulkanInstance() { RrDestroyInstance(m_Instance, m_DebugMessenger); }
+	VulkanInstance::~VulkanInstance()
+	{
+		RendererAPI::DestroyInstance(m_Instance, m_DebugMessenger);
+	}
 
 	PFN_vkVoidFunction VulkanInstance::LoadFunction(const char* name)
 	{

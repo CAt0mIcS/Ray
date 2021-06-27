@@ -1,16 +1,12 @@
 ﻿#include "Rpch.h"
 
-#include "Core/RCore.h"
-#include "Core/RUtils.h"
+#include <RayRenderer/Core/RCore.h>
 
-
-#if RR_RENDERER_API == RR_RENDERER_API_OPENGL
-
-bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*) = NULL;
+extern bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*);
 
 
 RrError RrInitialize(
-	const RrInitializeInfo* pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger)
+	RrInitializeInfo* const pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger)
 {
 	RrpfnValidationCallback = pInitInfo->pfnValidationCallback;
 	LogError("OpenGL is currently not supported");
@@ -33,5 +29,3 @@ RrError RrInitialize(
 }
 
 void RrDestroyInstance(RrInstance pInstance, RrDebugMessenger pDebugMessenger) {}
-
-#endif

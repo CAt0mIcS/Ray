@@ -46,6 +46,8 @@ set(SRC
 	"Core/RDynamicVertex.cpp"
 	"Core/RResource.h"
 	"Core/RResource.cpp"
+	"Core/RRendererLoader.h"
+	"Core/RRendererLoader.cpp"
 	
 	# ------------------------------------------------------------------
 	# Devices
@@ -302,7 +304,6 @@ set(PRIVATE_LIB
 	# "ktx"
 	"${MONO_LIB}"
 	"freetype"
-	"RayRenderer"
 )
 
 

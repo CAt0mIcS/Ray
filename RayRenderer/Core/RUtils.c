@@ -2,6 +2,8 @@
 #include "RUtils.h"
 
 
+extern bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*);
+
 bool LogDebug(const char* message)
 {
 	if (RrpfnValidationCallback)

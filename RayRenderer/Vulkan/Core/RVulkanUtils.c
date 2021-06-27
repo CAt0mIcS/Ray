@@ -1,7 +1,6 @@
 ﻿#include "Rpch.h"
-#include "Core/RUtils.h"
+#include <RayRenderer/Core/RCore.h>
 
-#if RR_RENDERER_API == RR_RENDERER_API_VULKAN
 
 RrError RrGetError(int code)
 {
@@ -50,5 +49,3 @@ RrError RrGetError(int code)
 
 	return RrErrorUnknown;
 }
-
-#endif

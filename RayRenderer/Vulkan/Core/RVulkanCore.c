@@ -1,12 +1,9 @@
 ﻿#include "Rpch.h"
 
-#include "Core/RCore.h"
-#include "Core/RUtils.h"
+#include <RayRenderer/Core/RCore.h>
 
+extern bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*);
 
-#if RR_RENDERER_API == RR_RENDERER_API_VULKAN
-
-bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*) = NULL;
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 	VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -139,5 +136,3 @@ void RrDestroyInstance(RrInstance pInstance, RrDebugMessenger pDebugMessenger)
 
 	vkDestroyInstance(pInstance, NULL);
 }
-
-#endif

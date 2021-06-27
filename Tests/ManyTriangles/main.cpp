@@ -18,6 +18,7 @@
 #include <RayBase/RException.h>
 #include <Ray/Graphics/Pipelines/Shader/RShader.h>
 #include <Ray/Core/RDynamicVertex.h>
+#include <Ray/Core/RRendererLoader.h>
 
 #include <Ray/Shading/Phong/RPhongMaterial.h>
 #include <Ray/Shading/Flat/RFlatColorMaterial.h>
@@ -155,7 +156,7 @@ private:
 	}
 
 private:
-	int m_Triangles = 2000;
+	int m_Triangles = 100;
 	int m_UpperRange = 100000;
 	float m_MovementSpeed = 1.0f;
 };
@@ -178,6 +179,7 @@ int main()
 
 	try
 	{
+		Ray::LoadRenderer(Ray::RendererAPI::Vulkan);
 		Ray::UniformBuffer::SetAllocationSize(209715200);
 
 		Ray::Log::Info("Launch Path: \"{0}\"", std::filesystem::absolute("."));

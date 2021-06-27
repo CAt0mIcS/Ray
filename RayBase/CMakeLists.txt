@@ -50,7 +50,6 @@ set(PUBLIC_LIB
 
 set(PRIVATE_LIB
 	"${Vulkan_LIBRARIES}"
-	"RayRenderer"
 )
 
 
