@@ -36,6 +36,7 @@
 #include "Components/RMeshRenderer.h"
 #include "Components/RTextRenderer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
+#include <RayRenderer/Core/RCommandPool.h>
 
 #include "UI/RImGui.h"
 
@@ -68,7 +69,7 @@ namespace At0::Ray
 		m_LogicalDevice = MakeScope<LogicalDevice>();
 
 		m_Swapchain = MakeScope<Swapchain>();
-		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
+		m_CommandPool = MakeScope<CommandPool>(RrCommandPoolCreateResetCommandBuffer);
 
 		m_DepthImage = MakeScope<DepthImage>(
 			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height });
@@ -454,7 +455,7 @@ namespace At0::Ray
 		m_Swapchain = MakeScope<Swapchain>((VkSwapchainKHR)*m_Swapchain);
 		m_CommandPool.reset();
 
-		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
+		m_CommandPool = MakeScope<CommandPool>(RrCommandPoolCreateResetCommandBuffer);
 		m_DepthImage = MakeScope<DepthImage>(
 			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height });
 		CreateRenderPass();
