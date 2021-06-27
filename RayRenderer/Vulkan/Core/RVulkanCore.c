@@ -1,6 +1,7 @@
 ﻿#include "Rpch.h"
 
 #include <RayRenderer/Core/RCore.h>
+#include <RayRenderer/Core/RUtils.h>
 
 extern bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*);
 
@@ -59,15 +60,17 @@ RrError RrInitialize(
 		createInfo.pNext = pInitInfo->pNext;
 	else
 	{
-		LogWarning("pInitInfo->enableValidationLayers: Validation layers not supported. False "
-				   "written to pInitInfo->enableValidationLayers.");
+		LogInfo(
+			"pInitInfo->enableValidationLayers: Validation layers disabled or not supported. False "
+			"written to pInitInfo->enableValidationLayers.");
 		pInitInfo->enableValidationLayers = false;
 		createInfo.enabledLayerCount = 0;
+		createInfo.pNext = NULL;
 	}
 
-	RrError error = RrGetError(vkCreateInstance(&createInfo, NULL, (VkInstance*)pInstance));
-	if (error != RrErrorNone)
-		return error;
+	VkResult error = vkCreateInstance(&createInfo, NULL, (VkInstance*)pInstance);
+	if (error != VK_SUCCESS)
+		return RrGetError(error);
 
 	if (pInitInfo->enableValidationLayers)
 	{

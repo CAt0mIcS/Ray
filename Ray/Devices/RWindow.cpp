@@ -13,7 +13,7 @@
 
 #include "UI/RButton.h"
 
-#include <Core/RRendererLoader.h>
+#include "Core/RRendererLoader.h"
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -71,9 +71,13 @@ namespace At0::Ray
 
 	std::pair<const char**, uint32_t> Window::GetInstanceExtensions()
 	{
-		uint32_t count;
-		const char** extensions = glfwGetRequiredInstanceExtensions(&count);
-		return std::make_pair(extensions, count);
+		if (RendererAPI::API == RendererAPI::Vulkan)
+		{
+			uint32_t count;
+			const char** extensions = glfwGetRequiredInstanceExtensions(&count);
+			return std::make_pair(extensions, count);
+		}
+		return std::pair<const char**, uint32_t>{};
 	}
 
 	void Window::CreateSurface(
