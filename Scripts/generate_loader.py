@@ -2,8 +2,8 @@ import sys
 import os
 
 
-loader_file = "../Ray/Core/RRendererLoader"
-header_file_directories = ["../RayRenderer/Core"]
+loader_file = sys.argv[1] + "/Ray/Core/RRendererLoader"
+header_file_directories = [ sys.argv[1] + "/RayRenderer/Core"]
 loader_template_cpp = r"""
 
 #include "Rpch.h"

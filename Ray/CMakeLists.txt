@@ -269,6 +269,7 @@ set(SRC
 # ------------------------------------------------------------------
 # Find required packages
 find_package("Vulkan" REQUIRED FATAL_ERROR)
+find_package("Python" COMPONENTS Interpreter)
 
 # Get paths to Mono installation
 SetMonoIncludesAndLibraries()
@@ -310,6 +311,7 @@ set(PRIVATE_LIB
 # ------------------------------------------------------------------
 # Setup
 add_library("Ray" SHARED "${SRC}")
+add_dependencies("Ray" "RayRendererOpenGL" "RayRendererVulkan")
 target_include_directories("Ray"
 	PUBLIC
 		"${PUBLIC_INC}"
@@ -361,4 +363,9 @@ add_custom_command(TARGET "Ray" PRE_BUILD
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo>"
 )
 endif()
+
+# Run auto loader generator
+add_custom_command(TARGET "Ray" PRE_BUILD
+	COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Scripts/generate_loader.py ${CMAKE_SOURCE_DIR}
+)
 

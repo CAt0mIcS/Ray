@@ -20,7 +20,6 @@ namespace At0::Ray
 
 	void LoadRenderer(RendererAPI::Type type)
 	{
-		// RAY_TODO: Parse automatically
 		// RAY_TODO: Make platform independent
 
 		HMODULE lib = nullptr;
