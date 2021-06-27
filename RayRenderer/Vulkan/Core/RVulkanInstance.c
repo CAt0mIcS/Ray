@@ -1,6 +1,6 @@
 ﻿#include "Rpch.h"
 
-#include <RayRenderer/Core/RCore.h>
+#include <RayRenderer/Core/RInstance.h>
 #include <RayRenderer/Core/RUtils.h>
 
 extern bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*);

@@ -3,7 +3,7 @@
 
 #include "Ray/RBase.h"
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RCommandPool.h>
-#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RCore.h>
+#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RInstance.h>
 
 
 

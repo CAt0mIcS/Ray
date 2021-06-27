@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RUtils.h"
+﻿#include "RUtils.h"
 
 
 extern bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*);

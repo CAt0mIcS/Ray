@@ -21,3 +21,6 @@
 #else
 	#define RR_API
 #endif
+
+#include <stdint.h>
+#include <stdbool.h>

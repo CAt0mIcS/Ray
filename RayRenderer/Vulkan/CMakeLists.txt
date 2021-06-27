@@ -2,19 +2,10 @@ set(SRC
 	"Rpch.h"
 
 	# ------------------------------------------------------------------
-	# Shared files
-	"../Core/RCore.h"
-	"../Core/RCore.c"
-	"../Core/RUtils.h"
-	"../Core/RUtils.c"
-	"../Core/RCommandPool.h"
-	"../Core/RLogicalDevice.h"
-	"../RBase.h"
-
-
-	# ------------------------------------------------------------------
-	# Files required for initialization
-	"Core/RVulkanCore.c"
+	# Core files
+	"Core/RVulkanInstance.c"
+	"Core/RVulkanPhysicalDevice.c"
+	"Core/RVulkanLogicalDevice.c"
 	"Core/RVulkanUtils.c"
 	"Core/RVulkanCommandPool.c"
 )
@@ -39,6 +30,7 @@ set(PUBLIC_LIB
 
 set(PRIVATE_LIB
 	"${Vulkan_LIBRARIES}"
+	"RayRendererBase"
 )
 
 
