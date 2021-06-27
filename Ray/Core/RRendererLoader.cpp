@@ -1,4 +1,6 @@
-﻿#include "Rpch.h"
+
+
+#include "Rpch.h"
 #include "RRendererLoader.h"
 
 #include <RayBase/RException.h>
@@ -12,6 +14,7 @@ namespace At0::Ray
 		Type API;
 		RrPFNInitialize Initialize = nullptr;
 		RrPFNDestroyInstance DestroyInstance = nullptr;
+
 	}  // namespace RendererAPI
 
 
@@ -40,11 +43,11 @@ namespace At0::Ray
 			ThrowRuntime("[Loader] Failed to load {0} renderer", rendererStr);
 		}
 
-
 		RendererAPI::Initialize = (RrPFNInitialize)GetProcAddress(lib, "RrInitialize");
-		RendererAPI::DestroyInstance =
-			(RrPFNDestroyInstance)GetProcAddress(lib, "RrDestroyInstance");
+		RendererAPI::DestroyInstance = (RrPFNDestroyInstance)GetProcAddress(lib, "RrDestroyInstance");
+
 
 		RendererAPI::API = type;
 	}
 }  // namespace At0::Ray
+
