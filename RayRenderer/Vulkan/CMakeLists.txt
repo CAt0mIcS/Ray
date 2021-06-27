@@ -7,6 +7,8 @@ set(SRC
 	"../Core/RCore.c"
 	"../Core/RUtils.h"
 	"../Core/RUtils.c"
+	"../Core/RCommandPool.h"
+	"../Core/RLogicalDevice.h"
 	"../RBase.h"
 
 
@@ -14,6 +16,7 @@ set(SRC
 	# Files required for initialization
 	"Core/RVulkanCore.c"
 	"Core/RVulkanUtils.c"
+	"Core/RVulkanCommandPool.c"
 )
 
 # ------------------------------------------------------------------

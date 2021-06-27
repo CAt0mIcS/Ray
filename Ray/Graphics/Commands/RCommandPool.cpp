@@ -3,26 +3,26 @@
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
+#include "Core/RRendererLoader.h"
 
 #include "RayBase/RException.h"
 
 
 namespace At0::Ray
 {
-	CommandPool::CommandPool(VkCommandPoolCreateFlags flags)
+	CommandPool::CommandPool(RrCommandPoolCreateFlags flags)
 	{
-		VkCommandPoolCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+		RrCommandPoolCreateInfo createInfo{};
 		createInfo.flags = flags;
 		createInfo.queueFamilyIndex = Graphics::Get().GetDevice().GetGraphicsFamily();
 
-		ThrowRenderError(
-			vkCreateCommandPool(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_CommandPool),
+		ThrowRenderError(RendererAPI::CreateCommandPool(
+							 Graphics::Get().GetDevice(), &createInfo, &m_CommandPool),
 			"[CommandPool] Failed to create");
 	}
 
 	CommandPool::~CommandPool()
 	{
-		vkDestroyCommandPool(Graphics::Get().GetDevice(), m_CommandPool, nullptr);
+		RendererAPI::DestroyCommandPool(Graphics::Get().GetDevice(), m_CommandPool);
 	}
 }  // namespace At0::Ray

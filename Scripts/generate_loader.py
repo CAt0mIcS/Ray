@@ -2,8 +2,10 @@ import sys
 import os
 
 
-loader_file = sys.argv[1] + "/Ray/Core/RRendererLoader" if len(sys.argv) > 1 else "../Ray/Core/RRendererLoader"
-header_file_directories = [ sys.argv[1] + "/RayRenderer/Core"] if len(sys.argv) > 1 else ["../RayRenderer/Core"]
+loader_file = sys.argv[1] + "/Ray/Core/RRendererLoader" if len(
+    sys.argv) > 1 else "../Ray/Core/RRendererLoader"
+header_file_directories = [
+    sys.argv[1] + "/RayRenderer/Core"] if len(sys.argv) > 1 else ["../RayRenderer/Core"]
 loader_template_cpp = r"""
 
 #include "Rpch.h"
@@ -84,7 +86,7 @@ loader_template_h = r"""
 #pragma once
 
 #include "Ray/RBase.h"
-#include <RayRenderer/Core/RCore.h>
+{includes}
 
 
 namespace At0::Ray
@@ -109,6 +111,7 @@ namespace At0::Ray
 
 
 sources = list(list())
+header_files = list()
 
 
 class Function:
@@ -126,13 +129,15 @@ class Function:
 
 def load_sources():
     raw_sources = list(list())
+    raw_header_files = list()
     for header_file_dir in header_file_directories:
-        header_files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(
+        header_files_raw = [os.path.join(dp, f) for dp, dn, filenames in os.walk(
             header_file_dir) for f in filenames if os.path.splitext(f)[1] == '.h']
 
-        for header_file in header_files:
+        for header_file in header_files_raw:
             with open(header_file, "r") as reader:
                 raw_sources.append(reader.readlines())
+                raw_header_files.append(header_file)
 
         for i in range(0, len(raw_sources)):
             sources.append(list())
@@ -145,6 +150,8 @@ def load_sources():
                         sources[i][j] += (raw_sources[i][j + line])
                         line += 1
                     sources[i][j] += (raw_sources[i][j + line])
+                    if raw_header_files[i] not in header_files:
+                        header_files.append(raw_header_files[i])
 
         # Remove empty lists
         for source in sources:
@@ -165,6 +172,13 @@ def load_sources():
 def build_function_declarations():
     declarations = list()
 
+    includes = ""
+    for header_file in header_files:
+        includes += f"#include <{header_file}>\n"
+
+    while "\\" in includes:
+        includes = includes.replace("\\", "/")
+
     for source in sources:
         for raw_function in source:
             function = Function(raw_function)
@@ -176,6 +190,8 @@ def build_function_declarations():
         template += declaration + "\n"
     template = loader_template_h.replace(
         "{function_declarations}", template)
+
+    template = template.replace("{includes}", includes)
 
     with open(loader_file + ".h", "w") as writer:
         writer.write(template)

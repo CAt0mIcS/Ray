@@ -7,12 +7,15 @@ set(SRC
 	"../Core/RCore.c"
 	"../Core/RUtils.h"
 	"../Core/RUtils.c"
+	"../Core/RCommandPool.h"
+	"../Core/RLogicalDevice.h"
 	"../RBase.h"
 
 	# ------------------------------------------------------------------
 	# Files required for initialization
 	"Core/ROpenGLCore.c"
 	"Core/ROpenGLUtils.c"
+	"Core/ROpenGLCommandPool.c"
 )
 
 find_package (Python COMPONENTS Interpreter)

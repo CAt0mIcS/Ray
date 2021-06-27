@@ -2,7 +2,9 @@
 #pragma once
 
 #include "Ray/RBase.h"
-#include <RayRenderer/Core/RCore.h>
+#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RCommandPool.h>
+#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RCore.h>
+
 
 
 namespace At0::Ray
@@ -17,6 +19,8 @@ namespace At0::Ray
 
 
 		extern Type API;
+		extern RrPFNCreateCommandPool CreateCommandPool;
+		extern RrPFNDestroyCommandPool DestroyCommandPool;
 		extern RrPFNInitialize Initialize;
 		extern RrPFNDestroyInstance DestroyInstance;
 

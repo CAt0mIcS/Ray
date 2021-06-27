@@ -3,7 +3,7 @@
 #include "RayBase/RNonCopyable.h"
 #include "Ray/RBase.h"
 
-#include <vulkan/vulkan_core.h>
+#include <RayRenderer/Core/RCommandPool.h>
 
 
 namespace At0::Ray
@@ -11,12 +11,12 @@ namespace At0::Ray
 	class RAY_EXPORT CommandPool : NonCopyable
 	{
 	public:
-		CommandPool(VkCommandPoolCreateFlags flags = 0);
+		CommandPool(RrCommandPoolCreateFlags flags = 0);
 		~CommandPool();
 
-		operator const VkCommandPool&() const { return m_CommandPool; }
+		operator VkCommandPool() const { return (VkCommandPool)m_CommandPool; }
 
 	private:
-		VkCommandPool m_CommandPool = VK_NULL_HANDLE;
+		RrCommandPool m_CommandPool = nullptr;
 	};
 }  // namespace At0::Ray

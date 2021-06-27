@@ -17,6 +17,8 @@ namespace At0::Ray
 	namespace RendererAPI
 	{
 		Type API;
+		RrPFNCreateCommandPool CreateCommandPool = nullptr;
+		RrPFNDestroyCommandPool DestroyCommandPool = nullptr;
 		RrPFNInitialize Initialize = nullptr;
 		RrPFNDestroyInstance DestroyInstance = nullptr;
 
@@ -68,6 +70,8 @@ namespace At0::Ray
 			ThrowRuntime("[Loader] Failed to load {0} renderer", rendererStr);
 		}
 
+		RendererAPI::CreateCommandPool = (RrPFNCreateCommandPool)LoadFunction(lib, "RrCreateCommandPool");
+		RendererAPI::DestroyCommandPool = (RrPFNDestroyCommandPool)LoadFunction(lib, "RrDestroyCommandPool");
 		RendererAPI::Initialize = (RrPFNInitialize)LoadFunction(lib, "RrInitialize");
 		RendererAPI::DestroyInstance = (RrPFNDestroyInstance)LoadFunction(lib, "RrDestroyInstance");
 
