@@ -60,17 +60,7 @@ namespace At0::Ray
 		m_ValidationLayersEnabled = initInfo.enableValidationLayers;
 	}
 
-	VulkanInstance::~VulkanInstance()
-	{
-		if (m_DebugMessenger)
-			if (auto destroyDebugMessenger = (PFN_vkDestroyDebugUtilsMessengerEXT)LoadFunction(
-					"vkDestroyDebugUtilsMessengerEXT"))
-				destroyDebugMessenger(m_Instance, m_DebugMessenger, nullptr);
-			else
-				Log::Error("[VulkanInstance] Unable to find vkDestroyDebugUtilsMessengerEXT");
-
-		vkDestroyInstance(m_Instance, nullptr);
-	}
+	VulkanInstance::~VulkanInstance() { RrDestroyInstance(m_Instance, m_DebugMessenger); }
 
 	PFN_vkVoidFunction VulkanInstance::LoadFunction(const char* name)
 	{

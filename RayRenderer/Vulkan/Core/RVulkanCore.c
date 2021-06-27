@@ -26,7 +26,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 }
 
 
-bool RrHasValidationLayers();
+bool RrHasValidationLayers(uint32_t enabledLayerCount, const char* const* ppEnabledLayers);
 
 RrError RrInitialize(
 	RrInitializeInfo* const pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger)
@@ -57,7 +57,8 @@ RrError RrInitialize(
 									   VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 	debugUtilsCreateInfo.pfnUserCallback = &DebugCallback;
 
-	if (pInitInfo->enableValidationLayers && RrHasValidationLayers())
+	if (pInitInfo->enableValidationLayers &&
+		RrHasValidationLayers(pInitInfo->enabledLayerCount, pInitInfo->ppEnabledLayers))
 		createInfo.pNext = pInitInfo->pNext;
 	else
 	{
@@ -102,7 +103,7 @@ debugMessengerError:
 }
 
 
-bool RrHasValidationLayers()
+bool RrHasValidationLayers(uint32_t enabledLayerCount, const char* const* ppEnabledLayers)
 {
 	uint32_t layerPropCount = 0;
 	vkEnumerateInstanceLayerProperties(&layerPropCount, NULL);
@@ -112,16 +113,31 @@ bool RrHasValidationLayers()
 	VkLayerProperties* layerProps = malloc(layerPropCount * sizeof(VkLayerProperties));
 	vkEnumerateInstanceLayerProperties(&layerPropCount, layerProps);
 
-	for (uint32_t i = 0; i < layerPropCount; ++i)
-		if (strcmp("VK_LAYER_KHRONOS_validation", layerProps[i].layerName) == 0)
-		{
-			free(layerProps);
-			return true;
-		}
+	for (uint32_t i = 0; i < enabledLayerCount; ++i)
+		for (uint32_t j = 0; i < layerPropCount; ++j)
+			if (strcmp(ppEnabledLayers[i], layerProps[j].layerName) == 0)
+			{
+				free(layerProps);
+				return true;
+			}
 
 	free(layerProps);
 
 	return false;
+}
+
+
+void RrDestroyInstance(RrInstance pInstance, RrDebugMessenger pDebugMessenger)
+{
+	if (pDebugMessenger)
+	{
+		PFN_vkDestroyDebugUtilsMessengerEXT destroyDebugMessenger =
+			(PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
+				pInstance, "vkDestroyDebugUtilsMessengerEXT");
+		destroyDebugMessenger(pInstance, pDebugMessenger, NULL);
+	}
+
+	vkDestroyInstance(pInstance, NULL);
 }
 
 #endif

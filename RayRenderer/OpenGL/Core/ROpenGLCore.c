@@ -32,4 +32,6 @@ RrError RrInitialize(
 	return RrErrorNone;
 }
 
+void RrDestroyInstance(RrInstance pInstance, RrDebugMessenger pDebugMessenger) {}
+
 #endif

@@ -81,5 +81,6 @@ extern bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*);
 
 RR_API RrError RrInitialize(
 	RrInitializeInfo* const pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger);
+RR_API void RrDestroyInstance(RrInstance pInstance, RrDebugMessenger pDebugMessenger);
 
 RR_EXTERN_C_END
