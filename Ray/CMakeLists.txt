@@ -364,8 +364,3 @@ add_custom_command(TARGET "Ray" PRE_BUILD
 )
 endif()
 
-# Run auto loader generator
-add_custom_command(TARGET "Ray" PRE_BUILD
-	COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Scripts/generate_loader.py ${CMAKE_SOURCE_DIR}
-)
-

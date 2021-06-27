@@ -15,6 +15,7 @@ set(SRC
 	"Core/ROpenGLUtils.c"
 )
 
+find_package (Python COMPONENTS Interpreter)
 
 set(PUBLIC_INC
 	"${CMAKE_SOURCE_DIR}"
@@ -55,5 +56,10 @@ target_precompile_headers("RayRendererOpenGL" PRIVATE "Rpch.h")
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("RayRendererOpenGL" "")
 SetWorkingDirectoryPlane("RayRendererOpenGL" "${CMAKE_SOURCE_DIR}")
+
+# Run auto loader generator
+add_custom_command(TARGET "RayRendererOpenGL" POST_BUILD
+	COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Scripts/generate_loader.py ${CMAKE_SOURCE_DIR}
+)
 
 

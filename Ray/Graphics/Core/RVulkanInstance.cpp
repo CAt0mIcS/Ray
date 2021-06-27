@@ -51,7 +51,7 @@ namespace At0::Ray
 		initInfo.enabledLayerCount = s_ValidationLayers.size();
 		initInfo.ppEnabledLayers = s_ValidationLayers.data();
 
-		initInfo.pfnLoader = glfwGetProcAddress;
+		initInfo.pfnLoader = (void*)glfwGetProcAddress;
 
 		ThrowRenderError(RendererAPI::Initialize(&initInfo, (RrInstance*)&m_Instance,
 							 (RrDebugMessenger*)&m_DebugMessenger),

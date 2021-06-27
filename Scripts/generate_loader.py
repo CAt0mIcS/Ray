@@ -2,15 +2,20 @@ import sys
 import os
 
 
-loader_file = sys.argv[1] + "/Ray/Core/RRendererLoader"
-header_file_directories = [ sys.argv[1] + "/RayRenderer/Core"]
+loader_file = sys.argv[1] + "/Ray/Core/RRendererLoader" if len(sys.argv) > 1 else "../Ray/Core/RRendererLoader"
+header_file_directories = [ sys.argv[1] + "/RayRenderer/Core"] if len(sys.argv) > 1 else ["../RayRenderer/Core"]
 loader_template_cpp = r"""
 
 #include "Rpch.h"
 #include "RRendererLoader.h"
 
 #include <RayBase/RException.h>
-#include <Windows.h>
+
+#ifdef _WIN32
+    #include <Windows.h>
+#else
+    #include <dlfcn.h>
+#endif
 
 
 namespace At0::Ray
@@ -22,17 +27,38 @@ namespace At0::Ray
 	}  // namespace RendererAPI
 
 
+    template<typename... Args>
+	void* LoadFunction(Args&&... args)
+	{
+#ifdef _WIN32
+		return GetProcAddress(std::forward<Args>(args)...);
+#else
+		return dlsym(std::forward<Args>(args)...);
+#endif
+	}
+
 	void LoadRenderer(RendererAPI::Type type)
 	{
 		// RAY_TODO: Make platform independent
 
+#ifdef _WIN32
 		HMODULE lib = nullptr;
-		switch (type)
+        switch (type)
 		{
 		case RendererAPI::OpenGL: lib = LoadLibraryA("RayRendererOpenGL.dll"); break;
 		case RendererAPI::Vulkan: lib = LoadLibraryA("RayRendererVulkan.dll"); break;
 		default: ThrowRuntime("Invalid renderer type {0}", (uint32_t)type);
 		}
+#else
+        void* lib = nullptr;
+        switch (type)
+		{
+		case RendererAPI::OpenGL: lib = dlopen("libRayRendererOpenGL.so", RTLD_LAZY); break;
+		case RendererAPI::Vulkan: lib = dlopen("libRayRendererVulkan.so", RTLD_LAZY); break;
+		default: ThrowRuntime("Invalid renderer type {0}", (uint32_t)type);
+		}
+#endif
+
 
 		if (!lib)
 		{
@@ -124,8 +150,16 @@ def load_sources():
         for source in sources:
             while "" in source:
                 source.remove("")
-            if len(source) == 0:
-                sources.remove(source)
+
+        i = 0
+        for _ in range(0, len(sources)):
+            if i < 0:
+                i = 0
+            if len(sources[i]) == 0:
+                sources.remove(sources[i])
+                i -= 1
+            else:
+                i += 1
 
 
 def build_function_declarations():
@@ -157,7 +191,7 @@ def build_function_definitions_and_assignments():
             definitions.append(
                 f"\t\tRrPFN{function.name} {function.name} = nullptr;")
             assignments.append(
-                f"\t\tRendererAPI::{function.name} = (RrPFN{function.name})GetProcAddress(lib, \"{function.raw_name}\");")
+                f"\t\tRendererAPI::{function.name} = (RrPFN{function.name})LoadFunction(lib, \"{function.raw_name}\");")
 
     template_defs = ""
     for definition in definitions:

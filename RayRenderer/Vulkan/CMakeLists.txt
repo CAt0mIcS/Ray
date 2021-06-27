@@ -19,6 +19,7 @@ set(SRC
 # ------------------------------------------------------------------
 # Find required packages
 find_package("Vulkan" REQUIRED FATAL_ERROR)
+find_package (Python COMPONENTS Interpreter)
 
 set(PUBLIC_INC
 	"${CMAKE_SOURCE_DIR}"
@@ -60,6 +61,9 @@ AddRecursiveFilters("${SRC}")
 SetOutputDirectory("RayRendererVulkan" "")
 SetWorkingDirectoryPlane("RayRendererVulkan" "${CMAKE_SOURCE_DIR}")
 
-
+# Run auto loader generator
+add_custom_command(TARGET "RayRendererVulkan" POST_BUILD
+	COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Scripts/generate_loader.py ${CMAKE_SOURCE_DIR}
+)
 
 
