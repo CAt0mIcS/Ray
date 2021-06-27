@@ -101,8 +101,8 @@ set(SRC
 	"Graphics/Text/RFont.h"
 	"Graphics/Text/RFont.cpp"
 
-	"Graphics/Core/RVulkanInstance.h"
-	"Graphics/Core/RVulkanInstance.cpp"
+	"Graphics/Core/RRendererInstance.h"
+	"Graphics/Core/RRendererInstance.cpp"
 	"Graphics/Core/RPhysicalDevice.h"
 	"Graphics/Core/RPhysicalDevice.cpp"
 	"Graphics/Core/RSurface.h"

@@ -9,11 +9,11 @@
 
 namespace At0::Ray
 {
-	class RAY_EXPORT VulkanInstance : NonCopyable
+	class RAY_EXPORT RendererInstance : NonCopyable
 	{
 	public:
-		VulkanInstance();
-		~VulkanInstance();
+		RendererInstance();
+		~RendererInstance();
 
 		/**
 		 * Loads a extension function with name and returns it

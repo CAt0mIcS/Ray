@@ -3,7 +3,7 @@
 
 #include "Graphics/RGraphics.h"
 #include "RLogicalDevice.h"
-#include "RVulkanInstance.h"
+#include "RRendererInstance.h"
 
 #include "RayBase/RException.h"
 #include "RayBase/RLogger.h"
@@ -24,7 +24,7 @@ namespace At0::Ray
 
 		m_Device = ChoosePhysicalDevice(physicalDevices);
 		if (!m_Device)
-			ThrowRuntime("[VulkanInstance] Failed to find suitable GPU");
+			ThrowRuntime("[RendererInstance] Failed to find suitable GPU");
 
 		vkGetPhysicalDeviceProperties(m_Device, &m_Properties);
 		Log::Info("[PhysicalDevice] Graphics card info: ");

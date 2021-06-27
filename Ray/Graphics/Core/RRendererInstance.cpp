@@ -1,5 +1,5 @@
 ﻿#include "Rpch.h"
-#include "RVulkanInstance.h"
+#include "RRendererInstance.h"
 
 #include "Devices/RWindow.h"
 
@@ -13,9 +13,9 @@
 namespace At0::Ray
 {
 #ifndef NDEBUG
-	std::vector<const char*> VulkanInstance::s_ValidationLayers{ "VK_LAYER_KHRONOS_validation" };
+	std::vector<const char*> RendererInstance::s_ValidationLayers{ "VK_LAYER_KHRONOS_validation" };
 #else
-	std::vector<const char*> VulkanInstance::s_ValidationLayers{};
+	std::vector<const char*> RendererInstance::s_ValidationLayers{};
 #endif
 
 	static bool DebugCallback(RrLogMessageSeverity severity, const char* pMessage)
@@ -31,7 +31,7 @@ namespace At0::Ray
 		return false;
 	}
 
-	VulkanInstance::VulkanInstance()
+	RendererInstance::RendererInstance()
 	{
 		RrInitializeInfo initInfo{};
 
@@ -40,7 +40,7 @@ namespace At0::Ray
 		if (auto unsuportedExtensions = ExtensionsSupported(instanceExtensions);
 			!unsuportedExtensions.empty())
 		{
-			ThrowRuntime("[VulkanInstance] VulkanExtension {0} not supported");
+			ThrowRuntime("[RendererInstance] VulkanExtension {0} not supported");
 		}
 
 		initInfo.enabledExtensionCount = (uint32_t)instanceExtensions.size();
@@ -60,17 +60,17 @@ namespace At0::Ray
 		m_ValidationLayersEnabled = initInfo.enableValidationLayers;
 	}
 
-	VulkanInstance::~VulkanInstance()
+	RendererInstance::~RendererInstance()
 	{
 		RendererAPI::DestroyInstance(m_Instance, m_DebugMessenger);
 	}
 
-	PFN_vkVoidFunction VulkanInstance::LoadFunction(const char* name)
+	PFN_vkVoidFunction RendererInstance::LoadFunction(const char* name)
 	{
 		return vkGetInstanceProcAddr(m_Instance, name);
 	}
 
-	std::vector<const char*> VulkanInstance::GetRequiredExtensions() const
+	std::vector<const char*> RendererInstance::GetRequiredExtensions() const
 	{
 		auto glfwExtensions = Window::GetInstanceExtensions();
 
@@ -86,7 +86,7 @@ namespace At0::Ray
 		return extensions;
 	}
 
-	std::vector<const char*> VulkanInstance::ExtensionsSupported(
+	std::vector<const char*> RendererInstance::ExtensionsSupported(
 		const std::vector<const char*>& instanceExtensions)
 	{
 		std::vector<const char*> unsupportedExtensions;
@@ -94,12 +94,12 @@ namespace At0::Ray
 		uint32_t extPropCount = 0;
 		vkEnumerateInstanceExtensionProperties(nullptr, &extPropCount, nullptr);
 		RAY_MEXPECTS(extPropCount != 0,
-			"[VulkanInstance] Failed to enumerate instance extension properties");
+			"[RendererInstance] Failed to enumerate instance extension properties");
 
 		std::vector<VkExtensionProperties> extProps(extPropCount);
 		vkEnumerateInstanceExtensionProperties(nullptr, &extPropCount, extProps.data());
 		RAY_MEXPECTS(!extProps.empty(),
-			"[VulkanInstance] Failed to enumerate instance extension properties");
+			"[RendererInstance] Failed to enumerate instance extension properties");
 
 		for (const char* extension : instanceExtensions)
 		{

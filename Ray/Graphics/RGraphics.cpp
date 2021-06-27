@@ -8,7 +8,7 @@
 #include "Scene/RScene.h"
 #include "Scene/RCamera.h"
 
-#include "Graphics/Core/RVulkanInstance.h"
+#include "Graphics/Core/RRendererInstance.h"
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Core/RSurface.h"
 #include "Graphics/Core/RLogicalDevice.h"
@@ -62,7 +62,7 @@ namespace At0::Ray
 
 	void Graphics::CreateVulkanObjects()
 	{
-		m_VulkanInstance = MakeScope<VulkanInstance>();
+		m_RendererInstance = MakeScope<RendererInstance>();
 		m_PhysicalDevice = MakeScope<PhysicalDevice>();
 		m_Surface = MakeScope<Surface>();
 		m_LogicalDevice = MakeScope<LogicalDevice>();
@@ -410,7 +410,7 @@ namespace At0::Ray
 		m_LogicalDevice.reset();
 		m_Surface.reset();
 		m_PhysicalDevice.reset();
-		m_VulkanInstance.reset();
+		m_RendererInstance.reset();
 	}
 
 	void Graphics::UpdateViewport()

@@ -2,7 +2,7 @@
 #include "RLogicalDevice.h"
 
 #include "Graphics/RGraphics.h"
-#include "RVulkanInstance.h"
+#include "RRendererInstance.h"
 #include "RPhysicalDevice.h"
 #include "RSurface.h"
 
@@ -285,8 +285,8 @@ namespace At0::Ray
 		if (Graphics::Get().GetInstance().ValidationLayersEnabled())
 		{
 			deviceCreateInfo.enabledLayerCount =
-				(uint32_t)VulkanInstance::GetValidationLayers().size();
-			deviceCreateInfo.ppEnabledLayerNames = VulkanInstance::GetValidationLayers().data();
+				(uint32_t)RendererInstance::GetValidationLayers().size();
+			deviceCreateInfo.ppEnabledLayerNames = RendererInstance::GetValidationLayers().data();
 		}
 
 		deviceCreateInfo.enabledExtensionCount = (uint32_t)GetDeviceExtensions().size();

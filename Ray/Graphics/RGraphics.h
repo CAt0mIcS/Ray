@@ -16,7 +16,7 @@
 
 namespace At0::Ray
 {
-	class VulkanInstance;
+	class RendererInstance;
 	class PhysicalDevice;
 	class Surface;
 	class LogicalDevice;
@@ -36,7 +36,7 @@ namespace At0::Ray
 		static Graphics& Get();
 		static void Destroy();
 
-		const VulkanInstance& GetInstance() const { return *m_VulkanInstance; }
+		const RendererInstance& GetInstance() const { return *m_RendererInstance; }
 		const Surface& GetSurface() const { return *m_Surface; }
 		const PhysicalDevice& GetPhysicalDevice() const { return *m_PhysicalDevice; }
 		const LogicalDevice& GetDevice() const { return *m_LogicalDevice; }
@@ -80,7 +80,7 @@ namespace At0::Ray
 		VkViewport m_Viewport{};
 		VkRect2D m_Scissor{};
 
-		Scope<VulkanInstance> m_VulkanInstance;
+		Scope<RendererInstance> m_RendererInstance;
 		Scope<PhysicalDevice> m_PhysicalDevice;
 		Scope<Surface> m_Surface;
 		Scope<LogicalDevice> m_LogicalDevice;
