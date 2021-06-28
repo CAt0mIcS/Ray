@@ -27,7 +27,7 @@ namespace At0::Ray
 
 	void IndexBuffer::CmdBind(const CommandBuffer& cmdBuff) const
 	{
-		vkCmdBindIndexBuffer(cmdBuff, m_Buffer, 0, VK_INDEX_TYPE_UINT16);
+		vkCmdBindIndexBuffer(cmdBuff, (VkBuffer)m_Buffer, 0, VK_INDEX_TYPE_UINT16);
 	}
 
 	uint32_t IndexBuffer::GetNumberOfIndices() const

@@ -10,12 +10,14 @@
 #include "RayBase/RAssert.h"
 #include "RayBase/RLogger.h"
 
+#include "Core/RRendererLoader.h"
+
 
 namespace At0::Ray
 {
 	uint32_t Buffer::s_NonCoherentAtomSize = 0;
 
-	Buffer::Buffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties,
+	Buffer::Buffer(RrDeviceSize size, RrBufferUsageFlags usage, RrMemoryPropertyFlags properties,
 		const void* data)
 		: m_Size(size), m_MemoryProperties(properties)
 	{
@@ -45,11 +47,11 @@ namespace At0::Ray
 		BindBufferToMemory(m_Buffer, m_BufferMemory);
 	}
 
-	Buffer::Buffer(VkDeviceSize size) : m_Size(size) {}
+	Buffer::Buffer(RrDeviceSize size) : m_Size(size) {}
 
 	Buffer::~Buffer() { Destroy(); }
 
-	void Buffer::MapMemory(void** data, VkDeviceSize size, VkDeviceSize offset) const
+	void Buffer::MapMemory(void** data, RrDeviceSize size, RrDeviceSize offset) const
 	{
 		RAY_MEXPECTS(!m_Mapped, "[Buffer] Trying to map mapped memory");
 		RAY_MEXPECTS(m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
@@ -63,12 +65,12 @@ namespace At0::Ray
 		UnmapMemory(m_BufferMemory);
 	}
 
-	void Buffer::FlushMemory(VkDeviceSize size, uint32_t offset) const
+	void Buffer::FlushMemory(RrDeviceSize size, RrDeviceSize offset) const
 	{
 		FlushMemory(m_BufferMemory, size, offset);
 	}
 
-	void Buffer::Update(void* data, VkDeviceSize size, VkDeviceSize offset)
+	void Buffer::Update(void* data, RrDeviceSize size, RrDeviceSize offset)
 	{
 		RAY_MEXPECTS(
 			offset + size < m_Size, "[Buffer] Trying to update buffer outside of buffer range");
@@ -76,7 +78,7 @@ namespace At0::Ray
 		memcpy((char*)m_Mapped + offset, data, size);
 	}
 
-	void Buffer::CopyRange(VkDeviceSize srcOffset, VkDeviceSize dstOffset, VkDeviceSize size)
+	void Buffer::CopyRange(RrDeviceSize srcOffset, RrDeviceSize dstOffset, RrDeviceSize size)
 	{
 		RAY_ASSERT(
 			false, "[Buffer] Buffer::CopyRange is untested! Remove this if it works as expected");
@@ -95,64 +97,66 @@ namespace At0::Ray
 	}
 
 	void Buffer::MapMemory(
-		void** data, VkDeviceMemory memory, VkDeviceSize size, VkDeviceSize offset)
+		void** data, RrDeviceMemory memory, RrDeviceSize size, RrDeviceSize offset)
 	{
-		ThrowRenderError(vkMapMemory(Graphics::Get().GetDevice(), memory, offset, size, 0, data),
+		ThrowRenderError(
+			RendererAPI::MapMemory(Graphics::Get().GetDevice(), memory, offset, size, data),
 			"[Buffer] Failed to map memory");
 	}
 
-	void Buffer::UnmapMemory(VkDeviceMemory memory)
+	void Buffer::UnmapMemory(RrDeviceMemory memory)
 	{
-		vkUnmapMemory(Graphics::Get().GetDevice(), memory);
+		RendererAPI::UnmapMemory(Graphics::Get().GetDevice(), memory);
 	}
 
-	void Buffer::FlushMemory(VkDeviceMemory bufferMemory, VkDeviceSize size, uint32_t offset)
+	void Buffer::FlushMemory(RrDeviceMemory bufferMemory, RrDeviceSize size, RrDeviceSize offset)
 	{
-		VkMappedMemoryRange mappedMemoryRange{};
-		mappedMemoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+		RrMappedMemoryRange mappedMemoryRange{};
 		mappedMemoryRange.offset = offset;
-		mappedMemoryRange.memory = bufferMemory;
 		mappedMemoryRange.size = PadSizeToAlignment(size, s_NonCoherentAtomSize);
-		ThrowRenderError(
-			vkFlushMappedMemoryRanges(Graphics::Get().GetDevice(), 1, &mappedMemoryRange),
+		mappedMemoryRange.memory = bufferMemory;
+
+		ThrowRenderError(RendererAPI::FlushMappedMemoryRanges(
+							 Graphics::Get().GetDevice(), 1, &mappedMemoryRange),
 			"[Buffer] Failed to flush memory");
 	}
 
-	void Buffer::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
-		VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
+	void Buffer::CreateBuffer(RrDeviceSize size, RrBufferUsageFlags usage,
+		RrMemoryPropertyFlags properties, RrBuffer& buffer, RrDeviceMemory& bufferMemory)
 	{
 		std::array queueFamily = { Graphics::Get().GetDevice().GetGraphicsFamily(),
 			Graphics::Get().GetDevice().GetPresentFamily(),
 			Graphics::Get().GetDevice().GetComputeFamily() };
 
-		VkBufferCreateInfo bufferCreateInfo{};
-		bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+		RrBufferCreateInfo bufferCreateInfo{};
 		bufferCreateInfo.size = size;
 		bufferCreateInfo.usage = usage;
-		bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		bufferCreateInfo.sharingMode = RrSharingModeExclusive;
 		bufferCreateInfo.queueFamilyIndexCount = (uint32_t)queueFamily.size();
 		bufferCreateInfo.pQueueFamilyIndices = queueFamily.data();
 
 		ThrowRenderError(
-			vkCreateBuffer(Graphics::Get().GetDevice(), &bufferCreateInfo, nullptr, &buffer),
+			RendererAPI::CreateBuffer(Graphics::Get().GetDevice(), &bufferCreateInfo, &buffer),
 			"[Buffer] Failed to create");
 
 		// Create the memory backing up the buffer handle
-		VkMemoryRequirements memRequirements;
-		vkGetBufferMemoryRequirements(Graphics::Get().GetDevice(), buffer, &memRequirements);
+		RrMemoryRequirements memRequirements;
+		RendererAPI::BufferGetMemoryRequirements(
+			Graphics::Get().GetDevice(), buffer, &memRequirements);
 
-		VkMemoryAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		RrMemoryAllocateInfo allocInfo{};
 		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = Graphics::Get().GetPhysicalDevice().FindMemoryType(
-			memRequirements.memoryTypeBits, properties);
+		RendererAPI::DeviceMemoryGetMemoryTypeIndex(memRequirements.memoryTypeBits, properties,
+			Graphics::Get().GetPhysicalDevice().GetMemoryProperties().memoryTypeCount,
+			Graphics::Get().GetPhysicalDevice().GetMemoryProperties().memoryTypes,
+			&allocInfo.memoryTypeIndex);
 
 		ThrowRenderError(
-			vkAllocateMemory(Graphics::Get().GetDevice(), &allocInfo, nullptr, &bufferMemory),
+			RendererAPI::AllocateMemory(Graphics::Get().GetDevice(), &allocInfo, &bufferMemory),
 			"[Buffer] Failed to allocate buffer memory");
 	}
 
-	void Buffer::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+	void Buffer::CopyBuffer(RrBuffer srcBuffer, RrBuffer dstBuffer, RrDeviceSize size)
 	{
 		// RAY_TODO: Create separate command pool for short-lived command buffers
 
@@ -164,7 +168,7 @@ namespace At0::Ray
 		bufferCopy.dstOffset = 0;
 		bufferCopy.size = size;
 
-		vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &bufferCopy);
+		vkCmdCopyBuffer(commandBuffer, (VkBuffer)srcBuffer, (VkBuffer)dstBuffer, 1, &bufferCopy);
 
 		commandBuffer.End();
 
@@ -181,13 +185,13 @@ namespace At0::Ray
 		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 	}
 
-	uint32_t Buffer::PadSizeToAlignment(uint32_t originalSize, uint32_t alignment)
+	uint32_t Buffer::PadSizeToAlignment(RrDeviceSize originalSize, RrDeviceSize alignment)
 	{
 		if (alignment == 0)
 			return originalSize;
 
 		// Calculate required alignment based on minimum device offset alignment
-		uint32_t alignedSize = originalSize;
+		RrDeviceSize alignedSize = originalSize;
 		alignedSize = (alignedSize + alignment - 1) & ~(alignment - 1);
 		return alignedSize;
 	}
@@ -197,16 +201,15 @@ namespace At0::Ray
 		if (m_Mapped)
 			UnmapMemory();
 
-		vkDestroyBuffer(Graphics::Get().GetDevice(), m_Buffer, nullptr);
-		vkFreeMemory(Graphics::Get().GetDevice(), m_BufferMemory, nullptr);
+		vkDestroyBuffer(Graphics::Get().GetDevice(), (VkBuffer)m_Buffer, nullptr);
+		vkFreeMemory(Graphics::Get().GetDevice(), (VkDeviceMemory)m_BufferMemory, nullptr);
 	}
 
-	VkMemoryPropertyFlags Buffer::ValidateMemoryProperties() const
+	RrMemoryPropertyFlags Buffer::ValidateMemoryProperties() const
 	{
 		if (!Graphics::Get().GetPhysicalDevice().HasMemoryProperties(m_MemoryProperties))
 		{
-			if (m_MemoryProperties ==
-				(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT))
+			if (m_MemoryProperties == (RrMemoryPropertyDeviceLocal | RrMemoryPropertyHostVisible))
 			{
 				Log::Warn("[Buffer] Memory properties VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | "
 						  "VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT are not supported on this GPU. "
@@ -214,24 +217,25 @@ namespace At0::Ray
 						  "VK_MEMORY_PROPERTY_HOST_COHERENT_BIT...");
 
 				if (!Graphics::Get().GetPhysicalDevice().HasMemoryProperties(
-						VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
+						RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent))
 					ThrowRuntime(
 						"[Buffer] Fallback memory properties are not supported on this GPU");
 
 				Log::Warn(
 					"[Buffer] Using fallback memory properties VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT "
 					"| VK_MEMORY_PROPERTY_HOST_COHERENT_BIT");
-				return VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+				return RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent;
 			}
 		}
 
 		return m_MemoryProperties;
 	}
 
-	void Buffer::BindBufferToMemory(VkBuffer buffer, VkDeviceMemory memory)
+	void Buffer::BindBufferToMemory(RrBuffer buffer, RrDeviceMemory memory)
 	{
 		// Attach the memory to the buffer
-		ThrowRenderError(vkBindBufferMemory(Graphics::Get().GetDevice(), buffer, memory, 0),
+		ThrowRenderError(
+			RendererAPI::BindBufferMemory(Graphics::Get().GetDevice(), buffer, memory, 0),
 			"[Buffer] Failed to map buffer to buffer memory");
 	}
 }  // namespace At0::Ray

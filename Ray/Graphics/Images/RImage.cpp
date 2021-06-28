@@ -74,7 +74,8 @@ namespace At0::Ray
 
 		// Check if the device supports blitting from optimal/linear images
 		vkGetPhysicalDeviceFormatProperties(
-			Graphics::Get().GetPhysicalDevice(), m_Format, &formatProps);
+			(VkPhysicalDevice)Graphics::Get().GetPhysicalDevice().GetPhysicalDevice(), m_Format,
+			&formatProps);
 		if (!(formatProps.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT) ||
 			!(formatProps.linearTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT))
 		{
@@ -275,7 +276,8 @@ namespace At0::Ray
 	{
 		VkFormatProperties formatProps;
 		vkGetPhysicalDeviceFormatProperties(
-			Graphics::Get().GetPhysicalDevice(), imageFormat, &formatProps);
+			(VkPhysicalDevice)Graphics::Get().GetPhysicalDevice().GetPhysicalDevice(), imageFormat,
+			&formatProps);
 
 		if (!(formatProps.optimalTilingFeatures &
 				VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT))
@@ -386,8 +388,8 @@ namespace At0::Ray
 		if (copyRegions.empty())
 			copyRegions.emplace_back(region);
 
-		vkCmdCopyBufferToImage(commandBuffer, buffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			(uint32_t)copyRegions.size(), copyRegions.data());
+		vkCmdCopyBufferToImage(commandBuffer, (VkBuffer)buffer.GetBuffer(), m_Image,
+			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, (uint32_t)copyRegions.size(), copyRegions.data());
 		commandBuffer.End();
 
 		// RAY_TODO: Get best queue
@@ -427,7 +429,7 @@ namespace At0::Ray
 		Buffer dstBuffer(m_Extent.x * m_Extent.y * 4, VK_BUFFER_USAGE_TRANSFER_DST_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-		vkCmdCopyImageToBuffer(cmdBuff, m_Image, m_ImageLayout, dstBuffer,
+		vkCmdCopyImageToBuffer(cmdBuff, m_Image, m_ImageLayout, (VkBuffer)dstBuffer.GetBuffer(),
 			(uint32_t)copyRegions.size(), copyRegions.data());
 
 		cmdBuff.End();
@@ -457,7 +459,8 @@ namespace At0::Ray
 		{
 			VkFormatProperties formatProps;
 			vkGetPhysicalDeviceFormatProperties(
-				Graphics::Get().GetPhysicalDevice(), candidates[i], &formatProps);
+				(VkPhysicalDevice)Graphics::Get().GetPhysicalDevice().GetPhysicalDevice(),
+				candidates[i], &formatProps);
 
 			if (tiling == VK_IMAGE_TILING_LINEAR &&
 				(formatProps.linearTilingFeatures & featureFlags) != featureFlags)

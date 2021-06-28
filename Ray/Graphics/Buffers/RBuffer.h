@@ -3,7 +3,8 @@
 #include "Ray/RBase.h"
 #include "RayBase/RNonCopyable.h"
 
-#include <vulkan/vulkan_core.h>
+#include <RayRenderer/Core/RBuffer.h>
+#include <RayRenderer/Core/RDeviceMemory.h>
 
 
 namespace At0::Ray
@@ -11,52 +12,52 @@ namespace At0::Ray
 	class RAY_EXPORT Buffer : NonCopyable
 	{
 	public:
-		Buffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties,
+		Buffer(RrDeviceSize size, RrBufferUsageFlags usage, RrMemoryPropertyFlags properties,
 			const void* data = nullptr);
-		Buffer(VkDeviceSize size);
+		Buffer(RrDeviceSize size);
 		Buffer() = default;
 		virtual ~Buffer();
 
 		void MapMemory(
-			void** data, VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0) const;
+			void** data, RrDeviceSize size = RR_WHOLE_SIZE, RrDeviceSize offset = 0) const;
 		void UnmapMemory() const;
-		void FlushMemory(VkDeviceSize size = VK_WHOLE_SIZE, uint32_t offset = 0) const;
-		void Update(void* data, VkDeviceSize size, VkDeviceSize offset);
-		void CopyRange(VkDeviceSize srcOffset, VkDeviceSize dstOffset, VkDeviceSize size);
+		void FlushMemory(RrDeviceSize size = RR_WHOLE_SIZE, RrDeviceSize offset = 0) const;
+		void Update(void* data, RrDeviceSize size, RrDeviceSize offset);
+		void CopyRange(RrDeviceSize srcOffset, RrDeviceSize dstOffset, RrDeviceSize size);
 
-		VkMemoryPropertyFlags GetMemoryProperties() const { return m_MemoryProperties; }
+		RrMemoryPropertyFlags GetMemoryProperties() const { return m_MemoryProperties; }
 
 		static void MapMemory(
-			void** data, VkDeviceMemory memory, VkDeviceSize size, VkDeviceSize offset = 0);
-		static void UnmapMemory(VkDeviceMemory memory);
-		static void FlushMemory(
-			VkDeviceMemory bufferMemory, VkDeviceSize size = VK_WHOLE_SIZE, uint32_t offset = 0);
+			void** data, RrDeviceMemory memory, RrDeviceSize size, RrDeviceSize offset = 0);
+		static void UnmapMemory(RrDeviceMemory memory);
+		static void FlushMemory(RrDeviceMemory bufferMemory, RrDeviceSize size = RR_WHOLE_SIZE,
+			RrDeviceSize offset = 0);
 
-		static void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
-			VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
-		static void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
-		static uint32_t PadSizeToAlignment(uint32_t originalSize, uint32_t alignment);
-		static void BindBufferToMemory(VkBuffer buffer, VkDeviceMemory memory);
+		static void CreateBuffer(RrDeviceSize size, RrBufferUsageFlags usage,
+			RrMemoryPropertyFlags properties, RrBuffer& buffer, RrDeviceMemory& bufferMemory);
+		static void CopyBuffer(RrBuffer srcBuffer, RrBuffer dstBuffer, RrDeviceSize size);
+		static uint32_t PadSizeToAlignment(RrDeviceSize originalSize, RrDeviceSize alignment);
+		static void BindBufferToMemory(RrBuffer buffer, RrDeviceMemory memory);
 
-		const VkBuffer& GetBuffer() const { return m_Buffer; }
-		VkDeviceSize GetSize() const { return m_Size; }
-		const VkDeviceMemory& GetMemory() const { return m_BufferMemory; }
+		const RrBuffer& GetBuffer() const { return m_Buffer; }
+		RrDeviceSize GetSize() const { return m_Size; }
+		const RrDeviceMemory& GetMemory() const { return m_BufferMemory; }
 		void* GetMapped() { return m_Mapped; }
 		const void* GetMapped() const { return m_Mapped; }
-		operator const VkBuffer&() const { return m_Buffer; }
+		operator const RrBuffer&() const { return m_Buffer; }
 
 	protected:
 		void Destroy();
-		VkMemoryPropertyFlags ValidateMemoryProperties() const;
+		RrMemoryPropertyFlags ValidateMemoryProperties() const;
 
 	protected:
 		static uint32_t s_NonCoherentAtomSize;
 
-		VkBuffer m_Buffer = VK_NULL_HANDLE;
-		VkDeviceMemory m_BufferMemory = VK_NULL_HANDLE;
+		RrBuffer m_Buffer = nullptr;
+		RrDeviceMemory m_BufferMemory = nullptr;
 
-		VkMemoryPropertyFlags m_MemoryProperties = 0;
-		VkDeviceSize m_Size = 0;
+		RrMemoryPropertyFlags m_MemoryProperties = 0;
+		RrDeviceSize m_Size = 0;
 		void* m_Mapped = nullptr;
 	};
 }  // namespace At0::Ray

@@ -16,8 +16,7 @@ RrError RrCreateCommandPool(RrLogicalDevice pDevice,
 	VkResult error =
 		vkCreateCommandPool(pDevice, &commandPoolCreateInfo, NULL, (VkCommandPool*)ppCommandPool);
 	if (error != VK_SUCCESS)
-		if (LogError("Failed to create command pool"))
-			return RrErrorInitializationFailed;
+		return GetError(error);
 
 	return RrErrorNone;
 }

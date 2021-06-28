@@ -5,7 +5,7 @@
 
 RR_EXTERN_C_BEG
 
-RrError RrGetError(int code);
+RrError GetError(int code);
 
 bool LogDebug(const char* message);
 bool LogInfo(const char* message);

@@ -70,7 +70,7 @@ RrError RrInitialize(
 
 	VkResult error = vkCreateInstance(&createInfo, NULL, (VkInstance*)pInstance);
 	if (error != VK_SUCCESS)
-		return RrGetError(error);
+		return GetError(error);
 
 	if (pInitInfo->enableValidationLayers)
 	{

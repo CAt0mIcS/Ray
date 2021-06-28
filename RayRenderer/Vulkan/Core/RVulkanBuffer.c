@@ -17,10 +17,21 @@ RrError RrCreateBuffer(
 	createInfo.queueFamilyIndexCount = pCreateInfo->queueFamilyIndexCount;
 	createInfo.pQueueFamilyIndices = pCreateInfo->pQueueFamilyIndices;
 
-	VkResult error = vkCreateBuffer(pDevice, &createInfo, NULL, ppBuffer);
+	VkResult error = vkCreateBuffer(pDevice, &createInfo, NULL, (VkBuffer*)ppBuffer);
 	if (error != VK_SUCCESS)
-		if (LogError("Failed to create buffer"))
-			return RrErrorInitializationFailed;
+		return GetError(error);
 
 	return RrErrorNone;
+}
+
+void RrBufferGetMemoryRequirements(
+	RrLogicalDevice pDevice, const RrBuffer pBuffer, RrMemoryRequirements* const pMemRequirements)
+{
+	vkGetBufferMemoryRequirements(pDevice, pBuffer, (VkMemoryRequirements*)pMemRequirements);
+}
+
+RrError RrBindBufferMemory(
+	RrLogicalDevice pDevice, RrBuffer buffer, RrDeviceMemory memory, RrDeviceSize memoryOffset)
+{
+	return GetError(vkBindBufferMemory(pDevice, buffer, memory, memoryOffset));
 }

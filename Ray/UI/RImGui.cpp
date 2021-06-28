@@ -238,9 +238,10 @@ namespace At0::Ray
 		if (imDrawData->CmdListsCount > 0)
 		{
 			VkDeviceSize offsets[1] = { 0 };
-			VkBuffer vBuff = *m_VertexBuffer;
+			VkBuffer vBuff = (VkBuffer)m_VertexBuffer->GetBuffer();
 			vkCmdBindVertexBuffers(cmdBuff, 0, 1, &vBuff, offsets);
-			vkCmdBindIndexBuffer(cmdBuff, *m_IndexBuffer, 0, VK_INDEX_TYPE_UINT16);
+			vkCmdBindIndexBuffer(
+				cmdBuff, (VkBuffer)m_IndexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT16);
 
 			for (int32_t i = 0; i < imDrawData->CmdListsCount; i++)
 			{

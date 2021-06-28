@@ -48,13 +48,15 @@ namespace At0::Ray
 
 	void LogicalDevice::CreateQueueIndices()
 	{
+		VkPhysicalDevice physicalDevice = VkPhysicalDevice(
+			Graphics::Get().GetPhysicalDevice().operator const RrPhysicalDevice&());
+
 		uint32_t familyPropCount = 0;
-		vkGetPhysicalDeviceQueueFamilyProperties(
-			Graphics::Get().GetPhysicalDevice(), &familyPropCount, nullptr);
+		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &familyPropCount, nullptr);
 
 		std::vector<VkQueueFamilyProperties> queueFamilyProperties(familyPropCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(
-			Graphics::Get().GetPhysicalDevice(), &familyPropCount, queueFamilyProperties.data());
+			physicalDevice, &familyPropCount, queueFamilyProperties.data());
 
 		std::optional<uint32_t> graphicsFamily, presentFamily, computeFamily, transferFamily;
 
@@ -69,8 +71,8 @@ namespace At0::Ray
 			}
 
 			VkBool32 presentSupport;
-			vkGetPhysicalDeviceSurfaceSupportKHR(Graphics::Get().GetPhysicalDevice(), i,
-				Graphics::Get().GetSurface(), &presentSupport);
+			vkGetPhysicalDeviceSurfaceSupportKHR(
+				physicalDevice, i, Graphics::Get().GetSurface(), &presentSupport);
 
 			if (queueFamilyProperties[i].queueCount > 0 && presentSupport)
 			{
@@ -106,7 +108,10 @@ namespace At0::Ray
 
 	void LogicalDevice::CreateLogicalDevice()
 	{
-		VkPhysicalDeviceFeatures physicalDeviceFeatures =
+		VkPhysicalDevice physicalDevice = VkPhysicalDevice(
+			Graphics::Get().GetPhysicalDevice().operator const RrPhysicalDevice&());
+
+		RrPhysicalDeviceFeatures physicalDeviceFeatures =
 			Graphics::Get().GetPhysicalDevice().GetFeatures();
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 		float queuePriorities[] = { 0.0f };
@@ -290,8 +295,7 @@ namespace At0::Ray
 		deviceCreateInfo.enabledExtensionCount = (uint32_t)GetDeviceExtensions().size();
 		deviceCreateInfo.ppEnabledExtensionNames = GetDeviceExtensions().data();
 		deviceCreateInfo.pEnabledFeatures = &enabledFeatures;
-		ThrowRenderError(vkCreateDevice(Graphics::Get().GetPhysicalDevice(), &deviceCreateInfo,
-							 nullptr, &m_Device),
+		ThrowRenderError(vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, &m_Device),
 			"[LogicalDevice] Failed to create logical device");
 
 		vkGetDeviceQueue(m_Device, m_GraphicsFamily, 0, &m_GraphicsQueue);

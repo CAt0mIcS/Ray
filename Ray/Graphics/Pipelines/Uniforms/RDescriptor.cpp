@@ -50,7 +50,7 @@ namespace At0::Ray
 	void DescriptorSet::BindUniform(const BufferUniform& uniform)
 	{
 		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer = uniform.GetUniformBuffer().GetBuffer();
+		bufferInfo.buffer = (VkBuffer)uniform.GetUniformBuffer().GetBuffer().GetBuffer();
 		bufferInfo.offset = uniform.GetOffset();
 		bufferInfo.range = uniform.GetSize();
 

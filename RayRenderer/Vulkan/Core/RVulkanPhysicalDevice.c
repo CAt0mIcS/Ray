@@ -40,6 +40,23 @@ RrError RrEnumeratePhysicalDevice(RrInstance pInstance,
 	return RrErrorNone;
 }
 
+void RrGetPhysicalDeviceProperties(
+	RrPhysicalDevice pDevice, RrPhysicalDeviceProperties* pProperties)
+{
+	vkGetPhysicalDeviceProperties(pDevice, (VkPhysicalDeviceProperties*)pProperties);
+}
+
+void RrGetPhysicalDeviceFeatures(RrPhysicalDevice pDevice, RrPhysicalDeviceFeatures* pFeatures)
+{
+	vkGetPhysicalDeviceFeatures(pDevice, (VkPhysicalDeviceFeatures*)pFeatures);
+}
+
+void RrGetPhysicalDeviceMemoryProperties(
+	RrPhysicalDevice pDevice, RrPhysicalDeviceMemoryProperties* pProperties)
+{
+	vkGetPhysicalDeviceMemoryProperties(pDevice, (VkPhysicalDeviceMemoryProperties*)pProperties);
+}
+
 
 VkPhysicalDevice ChoosePhysicalDevice(uint32_t deviceCount, VkPhysicalDevice* pDevices,
 	uint32_t deviceExtensionCount, const char* const* ppDeviceExtensions)

@@ -32,7 +32,7 @@ namespace At0::Ray
 	void VertexBuffer::CmdBind(const CommandBuffer& cmdBuff) const
 	{
 		VkDeviceSize offsets[] = { 0 };
-		vkCmdBindVertexBuffers(cmdBuff, 0, 1, &m_Buffer, offsets);
+		vkCmdBindVertexBuffers(cmdBuff, 0, 1, (const VkBuffer*)&m_Buffer, offsets);
 	}
 
 	std::string VertexBuffer::GetUID(std::string_view tag, const DynamicVertex& vertices)

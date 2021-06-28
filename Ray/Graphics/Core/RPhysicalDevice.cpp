@@ -23,7 +23,7 @@ namespace At0::Ray
 							 &enumInfo, (RrPhysicalDevice*)&m_Device),
 			"[PhysicalDevice] Failed to find suitable GPU.");
 
-		vkGetPhysicalDeviceProperties(m_Device, &m_Properties);
+		RendererAPI::GetPhysicalDeviceProperties(m_Device, &m_Properties);
 		Log::Info("[PhysicalDevice] Graphics card info: ");
 		Log::Info("[PhysicalDevice]\tAPI Version: {0}", m_Properties.apiVersion);
 		Log::Info("[PhysicalDevice]\tDriver Version: {0}", m_Properties.driverVersion);
@@ -32,17 +32,17 @@ namespace At0::Ray
 		Log::Info("[PhysicalDevice]\tDevice Type: {0}", String::Construct(m_Properties.deviceType));
 		Log::Info("[PhysicalDevice]\tDevice Name: {0}", m_Properties.deviceName);
 
-		vkGetPhysicalDeviceFeatures(m_Device, &m_Features);
-		vkGetPhysicalDeviceMemoryProperties(m_Device, &m_MemoryProperties);
+		RendererAPI::GetPhysicalDeviceFeatures(m_Device, &m_Features);
+		RendererAPI::GetPhysicalDeviceMemoryProperties(m_Device, &m_MemoryProperties);
 	}
 
-	const VkPhysicalDeviceMemoryProperties& PhysicalDevice::GetMemoryProperties() const
+	const RrPhysicalDeviceMemoryProperties& PhysicalDevice::GetMemoryProperties() const
 	{
 		return m_MemoryProperties;
 	}
 
 	uint32_t PhysicalDevice::FindMemoryType(
-		uint32_t typeFilter, VkMemoryPropertyFlags properties) const
+		uint32_t typeFilter, RrMemoryPropertyFlags properties) const
 	{
 		for (uint32_t i = 0; i < m_MemoryProperties.memoryTypeCount; ++i)
 		{
@@ -55,7 +55,7 @@ namespace At0::Ray
 		return 0;
 	}
 
-	bool PhysicalDevice::HasMemoryProperties(VkMemoryPropertyFlags memProps) const
+	bool PhysicalDevice::HasMemoryProperties(RrMemoryPropertyFlags memProps) const
 	{
 		for (uint32_t i = 0; i < m_MemoryProperties.memoryTypeCount; ++i)
 		{

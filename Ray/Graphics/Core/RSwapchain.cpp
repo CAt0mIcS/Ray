@@ -102,26 +102,29 @@ namespace At0::Ray
 
 	Swapchain::SupportDetails Swapchain::QuerySwapchainSupport() const
 	{
+		VkPhysicalDevice physicalDevice = VkPhysicalDevice(
+			Graphics::Get().GetPhysicalDevice().operator const RrPhysicalDevice&());
+
 		SupportDetails supportDetails;
 
-		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(Graphics::Get().GetPhysicalDevice(),
-			Graphics::Get().GetSurface(), &supportDetails.Capabilities);
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
+			physicalDevice, Graphics::Get().GetSurface(), &supportDetails.Capabilities);
 
 		uint32_t surfaceFormats;
-		vkGetPhysicalDeviceSurfaceFormatsKHR(Graphics::Get().GetPhysicalDevice(),
-			Graphics::Get().GetSurface(), &surfaceFormats, nullptr);
+		vkGetPhysicalDeviceSurfaceFormatsKHR(
+			physicalDevice, Graphics::Get().GetSurface(), &surfaceFormats, nullptr);
 
 		supportDetails.Formats.resize(surfaceFormats);
-		vkGetPhysicalDeviceSurfaceFormatsKHR(Graphics::Get().GetPhysicalDevice(),
-			Graphics::Get().GetSurface(), &surfaceFormats, supportDetails.Formats.data());
+		vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, Graphics::Get().GetSurface(),
+			&surfaceFormats, supportDetails.Formats.data());
 
 		uint32_t presentModeCount;
-		vkGetPhysicalDeviceSurfacePresentModesKHR(Graphics::Get().GetPhysicalDevice(),
-			Graphics::Get().GetSurface(), &presentModeCount, nullptr);
+		vkGetPhysicalDeviceSurfacePresentModesKHR(
+			physicalDevice, Graphics::Get().GetSurface(), &presentModeCount, nullptr);
 
 		supportDetails.PresentModes.resize(presentModeCount);
-		vkGetPhysicalDeviceSurfacePresentModesKHR(Graphics::Get().GetPhysicalDevice(),
-			Graphics::Get().GetSurface(), &presentModeCount, supportDetails.PresentModes.data());
+		vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, Graphics::Get().GetSurface(),
+			&presentModeCount, supportDetails.PresentModes.data());
 
 		return supportDetails;
 	}

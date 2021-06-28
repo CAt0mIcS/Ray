@@ -2,6 +2,7 @@
 
 #include "RCore.h"
 #include "RLogicalDevice.h"
+#include "RDeviceMemory.h"
 
 RR_EXTERN_C_BEG
 
@@ -28,7 +29,7 @@ typedef enum RrBufferUsageFlagBits
 	RrBufferUsageRayTracingNV = RrBufferUsageShaderBindingTableKHR,
 	RrBufferUsageShaderDeviceAddressEXT = RrBufferUsageShaderDeviceAddress,
 	RrBufferUsageShaderDeviceAddressKHR = RrBufferUsageShaderDeviceAddress,
-};
+} RrBufferUsageFlagBits;
 typedef uint32_t RrBufferUsageFlags;
 
 typedef enum RrSharingMode
@@ -37,6 +38,12 @@ typedef enum RrSharingMode
 	RrSharingModeConcurrent
 } RrSharingMode;
 
+typedef struct RrMemoryRequirements
+{
+	RrDeviceSize size;
+	RrDeviceSize alignment;
+	uint32_t memoryTypeBits;
+} RrMemoryRequirements;
 
 typedef struct RrBufferCreateInfo
 {
@@ -44,11 +51,20 @@ typedef struct RrBufferCreateInfo
 	RrBufferUsageFlags usage;
 	RrSharingMode sharingMode;
 	uint32_t queueFamilyIndexCount;
-	const uint32_t* const pQueueFamilyIndices;
+	uint32_t* pQueueFamilyIndices;
 } RrBufferCreateInfo;
 
 RR_API RrError RrCreateBuffer(
 	RrLogicalDevice pDevice, const RrBufferCreateInfo* const pCreateInfo, RrBuffer* ppBuffer);
 typedef RrError (*RrPFNCreateBuffer)(RrLogicalDevice, const RrBufferCreateInfo* const, RrBuffer*);
+
+RR_API void RrBufferGetMemoryRequirements(
+	RrLogicalDevice pDevice, const RrBuffer pBuffer, RrMemoryRequirements* const pMemRequirements);
+typedef void (*RrPFNBufferGetMemoryRequirements)(
+	RrLogicalDevice, const RrBuffer, RrMemoryRequirements* const);
+
+RR_API RrError RrBindBufferMemory(
+	RrLogicalDevice pDevice, RrBuffer buffer, RrDeviceMemory memory, RrDeviceSize memoryOffset);
+typedef RrError (*RrPFNBindBufferMemory)(RrLogicalDevice, RrBuffer, RrDeviceMemory, RrDeviceSize);
 
 RR_EXTERN_C_END

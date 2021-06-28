@@ -2,7 +2,7 @@
 #include <RayRenderer/Core/RCore.h>
 
 
-RrError RrGetError(int code)
+RrError GetError(int code)
 {
 	switch (code)
 	{

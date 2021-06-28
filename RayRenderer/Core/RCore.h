@@ -4,7 +4,14 @@
 
 RR_EXTERN_C_BEG
 
+#define RR_WHOLE_SIZE (~0ULL)
+#define RR_MAX_MEMORY_TYPES 32
+#define RR_MAX_MEMORY_HEAPS 16
+#define RR_MAX_PHYSICAL_DEVICE_NAME_SIZE 256
+#define RR_UUID_SIZE 16
+
 typedef uint64_t RrDeviceSize;
+typedef uint32_t RrBool32;
 
 typedef enum RrError
 {
