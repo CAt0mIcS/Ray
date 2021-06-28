@@ -27,10 +27,6 @@ namespace At0::Ray
 		bool HasMemoryProperties(VkMemoryPropertyFlags memProps) const;
 
 	private:
-		VkPhysicalDevice ChoosePhysicalDevice(const std::vector<VkPhysicalDevice>& devices);
-		int32_t ScorePhysicalDevice(VkPhysicalDevice device);
-
-	private:
 		VkPhysicalDevice m_Device = VK_NULL_HANDLE;
 
 		VkPhysicalDeviceFeatures m_Features{};
