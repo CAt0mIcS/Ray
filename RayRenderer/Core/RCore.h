@@ -4,6 +4,8 @@
 
 RR_EXTERN_C_BEG
 
+typedef uint64_t RrDeviceSize;
+
 typedef enum RrError
 {
 	RrErrorNone = 0,

@@ -7,6 +7,8 @@ set(SRC
 	"Core/RVulkanPhysicalDevice.c"
 	"Core/RVulkanLogicalDevice.c"
 	"Core/RVulkanUtils.c"
+	"Core/RVulkanDeviceMemory.c"
+	"Core/RVulkanBuffer.c"
 	"Core/RVulkanCommandPool.c"
 )
 

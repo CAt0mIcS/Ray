@@ -7,6 +7,8 @@ set(SRC
 	"Core/ROpenGLPhysicalDevice.c"
 	"Core/ROpenGLLogicalDevice.c"
 	"Core/ROpenGLUtils.c"
+	"Core/ROpenGLDeviceMemory.c"
+	"Core/ROpenGLBuffer.c"
 	"Core/ROpenGLCommandPool.c"
 )
 

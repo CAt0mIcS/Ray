@@ -6,6 +6,8 @@ set(SRC
 	"Core/RInstance.h"
 	"Core/RPhysicalDevice.h"
 	"Core/RLogicalDevice.h"
+	"Core/RDeviceMemory.h"
+	"Core/RBuffer.h"
 	"Core/RCommandPool.h"
 )
 
