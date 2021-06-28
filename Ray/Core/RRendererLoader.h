@@ -4,6 +4,7 @@
 #include "Ray/RBase.h"
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RCommandPool.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RInstance.h>
+#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RPhysicalDevice.h>
 
 
 
@@ -23,6 +24,7 @@ namespace At0::Ray
 		extern RrPFNDestroyCommandPool DestroyCommandPool;
 		extern RrPFNInitialize Initialize;
 		extern RrPFNDestroyInstance DestroyInstance;
+		extern RrPFNEnumeratePhysicalDevice EnumeratePhysicalDevice;
 
 	}  // namespace RendererAPI
 

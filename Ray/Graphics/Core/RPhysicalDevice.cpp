@@ -8,23 +8,20 @@
 #include "RayBase/RException.h"
 #include "RayBase/RLogger.h"
 
+#include "Ray/Core/RRendererLoader.h"
+
 
 namespace At0::Ray
 {
 	PhysicalDevice::PhysicalDevice()
 	{
-		uint32_t physicalDeviceCount = 0;
-		vkEnumeratePhysicalDevices(Graphics::Get().GetInstance(), &physicalDeviceCount, nullptr);
-		if (physicalDeviceCount == 0)
-			ThrowRuntime("[PhysicalDevice] Failed to find suitable GPU supporting Vulkan");
+		RrPhysicalDeviceEnumerationInfo enumInfo{};
+		enumInfo.deviceExtensionCount = LogicalDevice::GetDeviceExtensions().size();
+		enumInfo.ppDeviceExtensions = LogicalDevice::GetDeviceExtensions().data();
 
-		std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
-		vkEnumeratePhysicalDevices(
-			Graphics::Get().GetInstance(), &physicalDeviceCount, physicalDevices.data());
-
-		m_Device = ChoosePhysicalDevice(physicalDevices);
-		if (!m_Device)
-			ThrowRuntime("[RendererInstance] Failed to find suitable GPU");
+		ThrowRenderError(RendererAPI::EnumeratePhysicalDevice(Graphics::Get().GetInstance(),
+							 &enumInfo, (RrPhysicalDevice*)&m_Device),
+			"[PhysicalDevice] Failed to find suitable GPU.");
 
 		vkGetPhysicalDeviceProperties(m_Device, &m_Properties);
 		Log::Info("[PhysicalDevice] Graphics card info: ");

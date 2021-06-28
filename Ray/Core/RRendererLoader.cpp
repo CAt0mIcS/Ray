@@ -21,6 +21,7 @@ namespace At0::Ray
 		RrPFNDestroyCommandPool DestroyCommandPool = nullptr;
 		RrPFNInitialize Initialize = nullptr;
 		RrPFNDestroyInstance DestroyInstance = nullptr;
+		RrPFNEnumeratePhysicalDevice EnumeratePhysicalDevice = nullptr;
 
 	}  // namespace RendererAPI
 
@@ -74,6 +75,7 @@ namespace At0::Ray
 		RendererAPI::DestroyCommandPool = (RrPFNDestroyCommandPool)LoadFunction(lib, "RrDestroyCommandPool");
 		RendererAPI::Initialize = (RrPFNInitialize)LoadFunction(lib, "RrInitialize");
 		RendererAPI::DestroyInstance = (RrPFNDestroyInstance)LoadFunction(lib, "RrDestroyInstance");
+		RendererAPI::EnumeratePhysicalDevice = (RrPFNEnumeratePhysicalDevice)LoadFunction(lib, "RrEnumeratePhysicalDevice");
 
 
 		RendererAPI::API = type;
