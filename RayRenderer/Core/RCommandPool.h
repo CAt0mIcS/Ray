@@ -22,10 +22,7 @@ typedef struct RrCommandPoolCreateInfo
 
 RR_API RrError RrCreateCommandPool(RrLogicalDevice pDevice,
 	const RrCommandPoolCreateInfo* const pCreateInfo, RrCommandPool* ppCommandPool);
-typedef RrError (*RrPFNCreateCommandPool)(
-	RrLogicalDevice, const RrCommandPoolCreateInfo* const, RrCommandPool*);
 
 RR_API void RrDestroyCommandPool(RrLogicalDevice pDevice, RrCommandPool pCommandPool);
-typedef void (*RrPFNDestroyCommandPool)(RrLogicalDevice, RrCommandPool);
 
 RR_EXTERN_C_END

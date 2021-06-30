@@ -56,28 +56,19 @@ typedef struct RrSubmitInfo
 
 RR_API RrError RrAllocateCommandBuffers(RrLogicalDevice device,
 	RrCommandBufferAllocateInfo* pAllocInfo, RrCommandBuffer* pCommandBuffers);
-typedef RrError (*RrPFNAllocateCommandBuffers)(
-	RrLogicalDevice, RrCommandBufferAllocateInfo*, RrCommandBuffer*);
 
 RR_API RrError RrBeginCommandBuffer(
 	RrCommandBuffer commandBuffer, RrCommandBufferBeginInfo* pBeginInfo);
-typedef RrError (*RrPFNBeginCommandBuffer)(RrCommandBuffer, RrCommandBufferBeginInfo*);
 
 RR_API void RrExecuteCommands(RrCommandBuffer commandBuffer, uint32_t secondaryCommandBufferCount,
 	const RrCommandBuffer* pSecondaryCommandBuffers);
-typedef void (*RrPFNExecuteCommands)(RrCommandBuffer, uint32_t, const RrCommandBuffer*);
 
 RR_API RrError RrQueueSubmit(
 	RrQueue queue, uint32_t submitCount, const RrSubmitInfo* pSubmits, RrFence fence);
-typedef RrError (*RrPFNQueueSubmit)(RrQueue, uint32_t, const RrSubmitInfo*, RrFence);
 
 RR_API RrError RrQueueWaitIdle(RrQueue queue);
-typedef RrError (*RrPFNQueueWaitIdle)(RrQueue);
 
 RR_API RrError RrEndCommandBuffer(RrCommandBuffer commandBuffer);
-typedef RrError (*RrPFNEndCommandBuffer)(RrCommandBuffer);
 
 RR_API void RrFreeCommandBuffers(RrLogicalDevice device, RrCommandPool commandPool,
 	uint32_t commandBufferCount, const RrCommandBuffer* pCommandBuffers);
-typedef void (*RrPFNFreeCommandBuffers)(
-	RrLogicalDevice, RrCommandPool, uint32_t, const RrCommandBuffer*);

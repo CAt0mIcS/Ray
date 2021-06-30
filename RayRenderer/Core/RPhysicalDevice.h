@@ -268,20 +268,14 @@ typedef struct RrPhysicalDeviceEnumerationInfo
 
 RR_API RrError RrEnumeratePhysicalDevice(RrInstance pInstance,
 	const RrPhysicalDeviceEnumerationInfo* const pCreateInfo, RrPhysicalDevice* ppPhysicalDevice);
-typedef RrError (*RrPFNEnumeratePhysicalDevice)(
-	RrInstance, const RrPhysicalDeviceEnumerationInfo* const, RrPhysicalDevice*);
 
 RR_API void RrGetPhysicalDeviceProperties(
 	RrPhysicalDevice pDevice, RrPhysicalDeviceProperties* pProperties);
-typedef void (*RrPFNGetPhysicalDeviceProperties)(RrPhysicalDevice, RrPhysicalDeviceProperties*);
 
 RR_API void RrGetPhysicalDeviceFeatures(
 	RrPhysicalDevice pDevice, RrPhysicalDeviceFeatures* pFeatures);
-typedef void (*RrPFNGetPhysicalDeviceFeatures)(RrPhysicalDevice, RrPhysicalDeviceFeatures*);
 
 RR_API void RrGetPhysicalDeviceMemoryProperties(
 	RrPhysicalDevice pDevice, RrPhysicalDeviceMemoryProperties* pProperties);
-typedef void (*RrPFNGetPhysicalDeviceMemoryProperties)(
-	RrPhysicalDevice, RrPhysicalDeviceMemoryProperties*);
 
 RR_EXTERN_C_END

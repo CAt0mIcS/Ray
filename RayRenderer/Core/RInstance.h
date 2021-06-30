@@ -25,12 +25,9 @@ typedef struct RrInitializeInfo
 
 RR_API RrError RrInitialize(
 	RrInitializeInfo* const pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger);
-typedef RrError (*RrPFNInitialize)(RrInitializeInfo* const, RrInstance*, RrDebugMessenger*);
 
 RR_API void RrDestroyInstance(RrInstance pInstance, RrDebugMessenger pDebugMessenger);
-typedef RrError (*RrPFNDestroyInstance)(RrInstance, RrDebugMessenger);
 
 RR_API RrPFNVoidFunction RrGetInstanceProcAddr(RrInstance instance, const char* pName);
-typedef RrPFNVoidFunction (*RrPFNGetInstanceProcAddr)(RrInstance, const char*);
 
 RR_EXTERN_C_END

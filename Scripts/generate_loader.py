@@ -119,12 +119,17 @@ class Function:
         self.function = function
 
         function = function.replace("RR_API ", "")
-        self.returnType = function.split(" ")[0]
+        self.return_type = function.split(" ")[0]
         self.raw_name = function.split(" ")[1].split("(")[0]
         if "Rr" == self.raw_name[:2]:
             self.name = self.raw_name[2:]
         else:
             self.name = self.raw_name
+
+        self.args = function.split("(")[1].replace(
+            ");", "").replace("\n", "").replace("\t", "")
+        self.function_type_with_name = f"{self.return_type} (*{self.name})({self.args})"
+        self.function_type = f"{self.return_type} (*)({self.args})"
 
 
 def load_sources():
@@ -183,7 +188,7 @@ def build_function_declarations():
         for raw_function in source:
             function = Function(raw_function)
             declarations.append(
-                f"\t\textern RrPFN{function.name} {function.name};")
+                f"\t\textern {function.function_type_with_name};")
 
     template = ""
     for declaration in declarations:
@@ -205,9 +210,9 @@ def build_function_definitions_and_assignments():
         for raw_function in source:
             function = Function(raw_function)
             definitions.append(
-                f"\t\tRrPFN{function.name} {function.name} = nullptr;")
+                f"\t\t{function.function_type_with_name} = nullptr;")
             assignments.append(
-                f"\t\tRendererAPI::{function.name} = (RrPFN{function.name})LoadFunction(lib, \"{function.raw_name}\");")
+                f"\t\tRendererAPI::{function.name} = ({function.function_type})LoadFunction(lib, \"{function.raw_name}\");")
 
     template_defs = ""
     for definition in definitions:

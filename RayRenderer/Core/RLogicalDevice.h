@@ -38,20 +38,14 @@ typedef struct RrLogicalDeviceCreateInfo
 
 RR_API RrError RrCreateLogicalDevice(RrPhysicalDevice physicalDevice,
 	RrLogicalDeviceCreateInfo* pCreateInfo, RrLogicalDevice* pDevice);
-typedef RrError (*RrPFNCreateLogicalDevice)(
-	RrPhysicalDevice, RrLogicalDeviceCreateInfo*, RrLogicalDevice*);
 
 RR_API void RrGetDeviceQueue(
 	RrLogicalDevice device, uint32_t queueFamilyIndex, uint32_t queueIndex, RrQueue* pQueue);
-typedef void (*RrPFNGetDeviceQueue)(RrLogicalDevice, uint32_t, uint32_t, RrQueue*);
 
 RR_API void RrDestroyLogicalDevice(RrLogicalDevice device);
-typedef void (*RrPFNDestroyLogicalDevice)(RrLogicalDevice);
 
 RR_API RrPFNVoidFunction RrGetDeviceProcAddr(RrLogicalDevice device, const char* pName);
-typedef RrPFNVoidFunction (*RrPFNGetDeviceProcAddr)(RrLogicalDevice, const char*);
 
 RR_API RrError RrDeviceWaitIdle(RrLogicalDevice device);
-typedef RrError (*RrPFNDeviceWaitIdle)(RrLogicalDevice);
 
 RR_EXTERN_C_END

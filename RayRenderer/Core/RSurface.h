@@ -23,4 +23,3 @@ typedef struct RrSurfaceCreateInfo
 
 RR_API RrError RrCreateSurface(
 	RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, RrSurface* pSurface);
-typedef RrError (*RrPFNCreateSurface)(RrInstance, RrSurfaceCreateInfo*, RrSurface*);
