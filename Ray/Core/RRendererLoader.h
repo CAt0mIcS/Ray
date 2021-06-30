@@ -10,6 +10,8 @@
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RLogicalDevice.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RPhysicalDevice.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RSurface.h>
+#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Synchronization/RFence.h>
+#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Synchronization/RSemaphore.h>
 
 
 
@@ -57,6 +59,12 @@ namespace At0::Ray
 		extern void (*GetPhysicalDeviceFeatures)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceFeatures* pFeatures);
 		extern void (*GetPhysicalDeviceMemoryProperties)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceMemoryProperties* pProperties);
 		extern RrError (*CreateSurface)(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, RrSurface* pSurface);
+		extern RrError (*CreateFence)(RrLogicalDevice device, const RrFenceCreateInfo* pCreateInfo, RrFence* pFence);
+		extern RrError (*WaitForFences)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences,RrBool32 waitAll, uint64_t timeout);
+		extern RrError (*ResetFences)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences);
+		extern void (*DestroyFence)(RrLogicalDevice device, RrFence fence);
+		extern RrError (*CreateSemaphore)(RrLogicalDevice device, RrSemaphore* pSemaphore);
+		extern void (*DestroySemaphore)(RrLogicalDevice device, RrSemaphore semaphore);
 
 	}  // namespace RendererAPI
 

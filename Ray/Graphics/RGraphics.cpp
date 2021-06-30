@@ -201,25 +201,21 @@ namespace At0::Ray
 	{
 		m_ImagesInFlight.resize(m_Swapchain->GetNumberOfImages(), VK_NULL_HANDLE);
 
-		VkSemaphoreCreateInfo semaphoreCreateInfo{};
-		semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
-		VkFenceCreateInfo fenceCreateInfo{};
-		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-		fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+		RrFenceCreateInfo fenceCreateInfo{};
+		fenceCreateInfo.flags = RrFenceCreateSignaled;
 
 		for (uint32_t i = 0; i < s_MaxFramesInFlight; ++i)
 		{
-			ThrowRenderError(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
-								 &m_ImageAvailableSemaphore[i]),
+			ThrowRenderError(
+				RendererAPI::CreateSemaphore(GetDevice(), &m_ImageAvailableSemaphore[i]),
 				"[Graphics] Failed to semaphore to signal when an image is avaliable");
 
-			ThrowRenderError(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
-								 &m_RenderFinishedSemaphore[i]),
+			ThrowRenderError(
+				RendererAPI::CreateSemaphore(GetDevice(), &m_RenderFinishedSemaphore[i]),
 				"[Graphics] Failed to semaphore to signal when an image has finished rendering");
 
 			ThrowRenderError(
-				vkCreateFence(GetDevice(), &fenceCreateInfo, nullptr, &m_InFlightFences[i]),
+				RendererAPI::CreateFence(GetDevice(), &fenceCreateInfo, &m_InFlightFences[i]),
 				"[Graphics] Failed to create in flight fence");
 		}
 	}
@@ -274,13 +270,14 @@ namespace At0::Ray
 	{
 		// Wait for fence in VkQueueSubmit to become signaled
 		// which means that the command buffer finished executing
-		vkWaitForFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
+		RendererAPI::WaitForFences(
+			GetDevice(), 1, &m_InFlightFences[m_CurrentFrame], true, UINT64_MAX);
 
 		// Index representing the index of the next image to raw (0-2 in this case)
 		uint32_t imageIndex;
 		VkResult result = vkAcquireNextImageKHR(GetDevice(), GetSwapchain(), UINT64_MAX,
-			m_ImageAvailableSemaphore[m_CurrentFrame],	//  Signalled by this function when an image
-														//  is acquired
+			(VkSemaphore)m_ImageAvailableSemaphore[m_CurrentFrame],	 //  Signalled by this function
+																	 //  when an image is acquired
 			VK_NULL_HANDLE, &imageIndex);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR)
@@ -293,7 +290,8 @@ namespace At0::Ray
 
 		// Check if previous frame is still using this image (e.g. there is its fence to wait on)
 		if (m_ImagesInFlight[imageIndex] != VK_NULL_HANDLE)
-			vkWaitForFences(GetDevice(), 1, &m_ImagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
+			RendererAPI::WaitForFences(
+				GetDevice(), 1, &m_ImagesInFlight[imageIndex], true, UINT64_MAX);
 
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
 		// Reset command pool that was used for this frame
@@ -343,7 +341,7 @@ namespace At0::Ray
 																	   // finished and presentation
 																	   // can happen
 
-		vkResetFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
+		RendererAPI::ResetFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
 
 		// Fence will be signaled once the command buffer finishes executing
 		ThrowRenderError(RendererAPI::QueueSubmit(GetDevice().GetGraphicsQueue(), 1, &submitInfo,
@@ -354,7 +352,7 @@ namespace At0::Ray
 		VkPresentInfoKHR presentInfo{};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 		presentInfo.waitSemaphoreCount = 1;
-		presentInfo.pWaitSemaphores = &m_RenderFinishedSemaphore[m_CurrentFrame];
+		presentInfo.pWaitSemaphores = (VkSemaphore*)&m_RenderFinishedSemaphore[m_CurrentFrame];
 		presentInfo.swapchainCount = 1;
 		presentInfo.pSwapchains = &swapChain;
 		presentInfo.pImageIndices = &imageIndex;
@@ -379,9 +377,9 @@ namespace At0::Ray
 
 		for (uint32_t i = 0; i < s_MaxFramesInFlight; ++i)
 		{
-			vkDestroySemaphore(*m_LogicalDevice, m_ImageAvailableSemaphore[i], nullptr);
-			vkDestroySemaphore(*m_LogicalDevice, m_RenderFinishedSemaphore[i], nullptr);
-			vkDestroyFence(*m_LogicalDevice, m_InFlightFences[i], nullptr);
+			RendererAPI::DestroySemaphore(*m_LogicalDevice, m_ImageAvailableSemaphore[i]);
+			RendererAPI::DestroySemaphore(*m_LogicalDevice, m_RenderFinishedSemaphore[i]);
+			RendererAPI::DestroyFence(*m_LogicalDevice, m_InFlightFences[i]);
 		}
 
 		m_CommandBuffers.clear();

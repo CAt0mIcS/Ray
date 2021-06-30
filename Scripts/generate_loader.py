@@ -5,7 +5,7 @@ import os
 loader_file = sys.argv[1] + "/Ray/Core/RRendererLoader" if len(
     sys.argv) > 1 else "../Ray/Core/RRendererLoader"
 header_file_directories = [
-    sys.argv[1] + "/RayRenderer/Core"] if len(sys.argv) > 1 else ["../RayRenderer/Core"]
+    sys.argv[1] + "/RayRenderer/Core", sys.argv[1] + "/RayRenderer/Synchronization"] if len(sys.argv) > 1 else ["../RayRenderer/Core", "../RayRenderer/Synchronization"]
 loader_template_cpp = r"""
 
 #include "Rpch.h"
@@ -15,6 +15,9 @@ loader_template_cpp = r"""
 
 #ifdef _WIN32
     #include <Windows.h>
+    #ifdef CreateSemaphore
+        #undef CreateSemaphore
+    #endif
 #else
     #include <dlfcn.h>
 #endif
@@ -41,8 +44,6 @@ namespace At0::Ray
 
 	void LoadRenderer(RendererAPI::Type type)
 	{
-		// RAY_TODO: Make platform independent
-
 #ifdef _WIN32
 		HMODULE lib = nullptr;
         switch (type)
@@ -136,42 +137,41 @@ def load_sources():
     raw_sources = list(list())
     raw_header_files = list()
     for header_file_dir in header_file_directories:
-        header_files_raw = [os.path.join(dp, f) for dp, dn, filenames in os.walk(
-            header_file_dir) for f in filenames if os.path.splitext(f)[1] == '.h']
+        raw_header_files += ([os.path.join(dp, f) for dp, dn, filenames in os.walk(
+            header_file_dir) for f in filenames if os.path.splitext(f)[1] == '.h'])
 
-        for header_file in header_files_raw:
-            with open(header_file, "r") as reader:
-                raw_sources.append(reader.readlines())
-                raw_header_files.append(header_file)
+    for header_file in raw_header_files:
+        with open(header_file, "r") as reader:
+            raw_sources.append(reader.readlines())
 
-        for i in range(0, len(raw_sources)):
-            sources.append(list())
-            for j in range(0, len(raw_sources[i])):
-                sources[i].append("")
-                lineStr = raw_sources[i][j]
-                if "RR_API " in lineStr:
-                    line = 0
-                    while ";" not in raw_sources[i][j + line]:
-                        sources[i][j] += (raw_sources[i][j + line])
-                        line += 1
+    for i in range(0, len(raw_sources)):
+        sources.append(list())
+        for j in range(0, len(raw_sources[i])):
+            sources[i].append("")
+            lineStr = raw_sources[i][j]
+            if "RR_API " in lineStr:
+                line = 0
+                while ";" not in raw_sources[i][j + line]:
                     sources[i][j] += (raw_sources[i][j + line])
-                    if raw_header_files[i] not in header_files:
-                        header_files.append(raw_header_files[i])
+                    line += 1
+                sources[i][j] += (raw_sources[i][j + line])
+                if raw_header_files[i] not in header_files:
+                    header_files.append(raw_header_files[i])
 
-        # Remove empty lists
-        for source in sources:
-            while "" in source:
-                source.remove("")
+    # Remove empty lists
+    for source in sources:
+        while "" in source:
+            source.remove("")
 
-        i = 0
-        for _ in range(0, len(sources)):
-            if i < 0:
-                i = 0
-            if len(sources[i]) == 0:
-                sources.remove(sources[i])
-                i -= 1
-            else:
-                i += 1
+    i = 0
+    for _ in range(0, len(sources)):
+        if i < 0:
+            i = 0
+        if len(sources[i]) == 0:
+            sources.remove(sources[i])
+            i -= 1
+        else:
+            i += 1
 
 
 def build_function_declarations():

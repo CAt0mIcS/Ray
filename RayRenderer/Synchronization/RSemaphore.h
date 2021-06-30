@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "../Core/RCore.h"
+#include "../Core/RLogicalDevice.h"
 
 
 RR_DEFINE_HANDLE(RrSemaphore);
@@ -35,3 +36,8 @@ typedef enum RrPipelineStageFlagBits
 	RrPipelineStageCommandPreprocessBitNV = 0x00020000
 } RrPipelineStageFlagBits;
 typedef uint32_t RrPipelineStageFlags;
+
+
+RR_API RrError RrCreateSemaphore(RrLogicalDevice device, RrSemaphore* pSemaphore);
+
+RR_API void RrDestroySemaphore(RrLogicalDevice device, RrSemaphore semaphore);

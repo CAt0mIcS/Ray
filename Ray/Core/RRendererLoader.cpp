@@ -7,6 +7,9 @@
 
 #ifdef _WIN32
     #include <Windows.h>
+    #ifdef CreateSemaphore
+        #undef CreateSemaphore
+    #endif
 #else
     #include <dlfcn.h>
 #endif
@@ -49,6 +52,12 @@ namespace At0::Ray
 		void (*GetPhysicalDeviceFeatures)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceFeatures* pFeatures) = nullptr;
 		void (*GetPhysicalDeviceMemoryProperties)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceMemoryProperties* pProperties) = nullptr;
 		RrError (*CreateSurface)(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, RrSurface* pSurface) = nullptr;
+		RrError (*CreateFence)(RrLogicalDevice device, const RrFenceCreateInfo* pCreateInfo, RrFence* pFence) = nullptr;
+		RrError (*WaitForFences)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences,RrBool32 waitAll, uint64_t timeout) = nullptr;
+		RrError (*ResetFences)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences) = nullptr;
+		void (*DestroyFence)(RrLogicalDevice device, RrFence fence) = nullptr;
+		RrError (*CreateSemaphore)(RrLogicalDevice device, RrSemaphore* pSemaphore) = nullptr;
+		void (*DestroySemaphore)(RrLogicalDevice device, RrSemaphore semaphore) = nullptr;
 
 	}  // namespace RendererAPI
 
@@ -65,8 +74,6 @@ namespace At0::Ray
 
 	void LoadRenderer(RendererAPI::Type type)
 	{
-		// RAY_TODO: Make platform independent
-
 #ifdef _WIN32
 		HMODULE lib = nullptr;
         switch (type)
@@ -130,6 +137,12 @@ namespace At0::Ray
 		RendererAPI::GetPhysicalDeviceFeatures = (void (*)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceFeatures* pFeatures))LoadFunction(lib, "RrGetPhysicalDeviceFeatures");
 		RendererAPI::GetPhysicalDeviceMemoryProperties = (void (*)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceMemoryProperties* pProperties))LoadFunction(lib, "RrGetPhysicalDeviceMemoryProperties");
 		RendererAPI::CreateSurface = (RrError (*)(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, RrSurface* pSurface))LoadFunction(lib, "RrCreateSurface");
+		RendererAPI::CreateFence = (RrError (*)(RrLogicalDevice device, const RrFenceCreateInfo* pCreateInfo, RrFence* pFence))LoadFunction(lib, "RrCreateFence");
+		RendererAPI::WaitForFences = (RrError (*)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences,RrBool32 waitAll, uint64_t timeout))LoadFunction(lib, "RrWaitForFences");
+		RendererAPI::ResetFences = (RrError (*)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences))LoadFunction(lib, "RrResetFences");
+		RendererAPI::DestroyFence = (void (*)(RrLogicalDevice device, RrFence fence))LoadFunction(lib, "RrDestroyFence");
+		RendererAPI::CreateSemaphore = (RrError (*)(RrLogicalDevice device, RrSemaphore* pSemaphore))LoadFunction(lib, "RrCreateSemaphore");
+		RendererAPI::DestroySemaphore = (void (*)(RrLogicalDevice device, RrSemaphore semaphore))LoadFunction(lib, "RrDestroySemaphore");
 
 
 		RendererAPI::API = type;

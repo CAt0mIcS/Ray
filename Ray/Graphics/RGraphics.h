@@ -13,6 +13,8 @@
 #include <vector>
 #include <array>
 
+typedef struct RrFence_T* RrFence;
+typedef struct RrSemaphore_T* RrSemaphore;
 
 namespace At0::Ray
 {
@@ -94,10 +96,10 @@ namespace At0::Ray
 		std::vector<Scope<CommandBuffer>> m_CommandBuffers;
 		Scope<CommandBufferRecorder> m_CommandBufferRecorder;
 
-		std::array<VkFence, s_MaxFramesInFlight> m_InFlightFences;
-		std::array<VkSemaphore, s_MaxFramesInFlight> m_ImageAvailableSemaphore;
-		std::vector<VkFence> m_ImagesInFlight;
-		std::array<VkSemaphore, s_MaxFramesInFlight> m_RenderFinishedSemaphore;
+		std::array<RrFence, s_MaxFramesInFlight> m_InFlightFences;
+		std::array<RrSemaphore, s_MaxFramesInFlight> m_ImageAvailableSemaphore;
+		std::vector<RrFence> m_ImagesInFlight;
+		std::array<RrSemaphore, s_MaxFramesInFlight> m_RenderFinishedSemaphore;
 
 		uint32_t m_CurrentFrame = 0;
 		bool m_FramebufferResized = false;
