@@ -3,6 +3,7 @@
 #include "Ray/RBase.h"
 #include "RayBase/RNonCopyable.h"
 
+#include <RayRenderer/Core/RInstance.h>
 #include <vulkan/vulkan_core.h>
 #include <vector>
 
@@ -21,13 +22,12 @@ namespace At0::Ray
 		PFN_vkVoidFunction LoadFunction(const char* name);
 
 		static const std::vector<const char*>& GetValidationLayers() { return s_ValidationLayers; }
-		operator const VkInstance&() const { return m_Instance; }
+		operator RrInstance() const { return m_Instance; }
+		operator VkInstance() const { return (VkInstance)m_Instance; }
 
 		bool ValidationLayersEnabled() const { return m_ValidationLayersEnabled; }
 
 	private:
-		bool HasValidationLayerSupport() const;
-
 		/**
 		 * Queries the required extensions from glfw and adds the debug utils extension if
 		 * validation layers are enabled
@@ -40,12 +40,9 @@ namespace At0::Ray
 		std::vector<const char*> ExtensionsSupported(
 			const std::vector<const char*>& instanceExtensions);
 
-		void CreateDebugMessenger();
-		VkDebugUtilsMessengerCreateInfoEXT GetDebugMessengerCreateInfo() const;
-
 	private:
-		VkInstance m_Instance = VK_NULL_HANDLE;
-		VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
+		RrInstance m_Instance = nullptr;
+		RrDebugMessenger m_DebugMessenger = nullptr;
 
 		static std::vector<const char*> s_ValidationLayers;
 

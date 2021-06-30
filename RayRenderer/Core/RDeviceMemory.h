@@ -2,43 +2,11 @@
 
 #include "RCore.h"
 #include "RLogicalDevice.h"
+#include "RPhysicalDevice.h"
 
 RR_EXTERN_C_BEG
 
 RR_DEFINE_HANDLE(RrDeviceMemory);
-
-typedef enum RrMemoryPropertyFlagBits
-{
-	RrMemoryPropertyDeviceLocal = 0x00000001,
-	RrMemoryPropertyHostVisible = 0x00000002,
-	RrMemoryPropertyHostCoherent = 0x00000004,
-	RrMemoryPropertyHostCached = 0x00000008,
-	RrMemoryPropertyLazilyAllocated = 0x00000010,
-	RrMemoryPropertyProtected = 0x00000020,
-	RrMemoryPropertyDeviceCoherentAMD = 0x00000040,
-	RrMemoryPropertyDeviceUncachedAMD = 0x00000080,
-} RrMemoryPropertyFlagBits;
-typedef uint32_t RrMemoryPropertyFlags;
-
-typedef struct RrMemoryType
-{
-	RrMemoryPropertyFlags propertyFlags;
-	uint32_t heapIndex;
-} RrMemoryType;
-
-typedef enum RrMemoryHeapFlagBits
-{
-	RrMemoryHeapDeviceLocal = 0x00000001,
-	RrMemoryHeapMultiInstance = 0x00000002,
-	RrMemoryHeapMultiInstanceKHR = RrMemoryHeapMultiInstance
-} RrMemoryHeapFlagBits;
-typedef uint32_t RrMemoryHeapFlags;
-
-typedef struct RrMemoryHeap
-{
-	RrDeviceSize size;
-	RrMemoryHeapFlags flags;
-} RrMemoryHeap;
 
 typedef struct RrMappedMemoryRange
 {

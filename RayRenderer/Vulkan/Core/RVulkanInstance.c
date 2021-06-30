@@ -102,6 +102,11 @@ debugMessengerError:
 	return RrErrorLayerNotPresent;
 }
 
+RrPFNVoidFunction RrGetInstanceProcAddr(RrInstance instance, const char* pName)
+{
+	return vkGetInstanceProcAddr((VkInstance)instance, pName);
+}
+
 
 bool RrHasValidationLayers(uint32_t enabledLayerCount, const char* const* ppEnabledLayers)
 {

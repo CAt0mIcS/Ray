@@ -67,7 +67,7 @@ namespace At0::Ray
 
 	PFN_vkVoidFunction RendererInstance::LoadFunction(const char* name)
 	{
-		return vkGetInstanceProcAddr(m_Instance, name);
+		return RendererAPI::GetInstanceProcAddr(m_Instance, name);
 	}
 
 	std::vector<const char*> RendererInstance::GetRequiredExtensions() const

@@ -346,7 +346,7 @@ namespace At0::Ray
 		vkResetFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
 
 		// Fence will be signaled once the command buffer finishes executing
-		ThrowRenderError(vkQueueSubmit(GetDevice().GetGraphicsQueue(), 1, &submitInfo,
+		ThrowRenderError(vkQueueSubmit((VkQueue)GetDevice().GetGraphicsQueue(), 1, &submitInfo,
 							 m_InFlightFences[m_CurrentFrame]),
 			"[Graphics] Failed to submit image to queue for rendering");
 
@@ -360,7 +360,7 @@ namespace At0::Ray
 		presentInfo.pImageIndices = &imageIndex;
 		presentInfo.pResults = nullptr;
 
-		result = vkQueuePresentKHR(GetDevice().GetPresentQueue(), &presentInfo);
+		result = vkQueuePresentKHR((VkQueue)GetDevice().GetPresentQueue(), &presentInfo);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR ||
 			m_FramebufferResized)

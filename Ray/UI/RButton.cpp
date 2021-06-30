@@ -75,7 +75,7 @@ namespace At0::Ray
 
 		// Wait for command buffers to finish executing because command buffers which are in the
 		// pending state and are using the descriptor set need to finish before it can be updated
-		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+		vkQueueWaitIdle((VkQueue)Graphics::Get().GetDevice().GetGraphicsQueue());
 		renderer.GetSampler2DUniform("texSampler")
 			.SetTexture(std::move(texture), renderer.GetDescriptorSet("texSampler"));
 	}

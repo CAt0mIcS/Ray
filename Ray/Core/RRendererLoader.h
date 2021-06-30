@@ -6,6 +6,7 @@
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RCommandPool.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RDeviceMemory.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RInstance.h>
+#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RLogicalDevice.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RPhysicalDevice.h>
 
 
@@ -34,6 +35,12 @@ namespace At0::Ray
 		extern RrPFNFlushMappedMemoryRanges FlushMappedMemoryRanges;
 		extern RrPFNInitialize Initialize;
 		extern RrPFNDestroyInstance DestroyInstance;
+		extern RrPFNGetInstanceProcAddr GetInstanceProcAddr;
+		extern RrPFNCreateLogicalDevice CreateLogicalDevice;
+		extern RrPFNGetDeviceQueue GetDeviceQueue;
+		extern RrPFNDestroyLogicalDevice DestroyLogicalDevice;
+		extern RrPFNGetDeviceProcAddr GetDeviceProcAddr;
+		extern RrPFNDeviceWaitIdle DeviceWaitIdle;
 		extern RrPFNEnumeratePhysicalDevice EnumeratePhysicalDevice;
 		extern RrPFNGetPhysicalDeviceProperties GetPhysicalDeviceProperties;
 		extern RrPFNGetPhysicalDeviceFeatures GetPhysicalDeviceFeatures;

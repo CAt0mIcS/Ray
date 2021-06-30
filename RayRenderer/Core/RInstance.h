@@ -30,4 +30,7 @@ typedef RrError (*RrPFNInitialize)(RrInitializeInfo* const, RrInstance*, RrDebug
 RR_API void RrDestroyInstance(RrInstance pInstance, RrDebugMessenger pDebugMessenger);
 typedef RrError (*RrPFNDestroyInstance)(RrInstance, RrDebugMessenger);
 
+RR_API RrPFNVoidFunction RrGetInstanceProcAddr(RrInstance instance, const char* pName);
+typedef RrPFNVoidFunction (*RrPFNGetInstanceProcAddr)(RrInstance, const char*);
+
 RR_EXTERN_C_END

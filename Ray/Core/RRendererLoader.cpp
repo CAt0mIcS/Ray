@@ -29,6 +29,12 @@ namespace At0::Ray
 		RrPFNFlushMappedMemoryRanges FlushMappedMemoryRanges = nullptr;
 		RrPFNInitialize Initialize = nullptr;
 		RrPFNDestroyInstance DestroyInstance = nullptr;
+		RrPFNGetInstanceProcAddr GetInstanceProcAddr = nullptr;
+		RrPFNCreateLogicalDevice CreateLogicalDevice = nullptr;
+		RrPFNGetDeviceQueue GetDeviceQueue = nullptr;
+		RrPFNDestroyLogicalDevice DestroyLogicalDevice = nullptr;
+		RrPFNGetDeviceProcAddr GetDeviceProcAddr = nullptr;
+		RrPFNDeviceWaitIdle DeviceWaitIdle = nullptr;
 		RrPFNEnumeratePhysicalDevice EnumeratePhysicalDevice = nullptr;
 		RrPFNGetPhysicalDeviceProperties GetPhysicalDeviceProperties = nullptr;
 		RrPFNGetPhysicalDeviceFeatures GetPhysicalDeviceFeatures = nullptr;
@@ -94,6 +100,12 @@ namespace At0::Ray
 		RendererAPI::FlushMappedMemoryRanges = (RrPFNFlushMappedMemoryRanges)LoadFunction(lib, "RrFlushMappedMemoryRanges");
 		RendererAPI::Initialize = (RrPFNInitialize)LoadFunction(lib, "RrInitialize");
 		RendererAPI::DestroyInstance = (RrPFNDestroyInstance)LoadFunction(lib, "RrDestroyInstance");
+		RendererAPI::GetInstanceProcAddr = (RrPFNGetInstanceProcAddr)LoadFunction(lib, "RrGetInstanceProcAddr");
+		RendererAPI::CreateLogicalDevice = (RrPFNCreateLogicalDevice)LoadFunction(lib, "RrCreateLogicalDevice");
+		RendererAPI::GetDeviceQueue = (RrPFNGetDeviceQueue)LoadFunction(lib, "RrGetDeviceQueue");
+		RendererAPI::DestroyLogicalDevice = (RrPFNDestroyLogicalDevice)LoadFunction(lib, "RrDestroyLogicalDevice");
+		RendererAPI::GetDeviceProcAddr = (RrPFNGetDeviceProcAddr)LoadFunction(lib, "RrGetDeviceProcAddr");
+		RendererAPI::DeviceWaitIdle = (RrPFNDeviceWaitIdle)LoadFunction(lib, "RrDeviceWaitIdle");
 		RendererAPI::EnumeratePhysicalDevice = (RrPFNEnumeratePhysicalDevice)LoadFunction(lib, "RrEnumeratePhysicalDevice");
 		RendererAPI::GetPhysicalDeviceProperties = (RrPFNGetPhysicalDeviceProperties)LoadFunction(lib, "RrGetPhysicalDeviceProperties");
 		RendererAPI::GetPhysicalDeviceFeatures = (RrPFNGetPhysicalDeviceFeatures)LoadFunction(lib, "RrGetPhysicalDeviceFeatures");

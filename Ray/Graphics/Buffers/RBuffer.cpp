@@ -180,9 +180,9 @@ namespace At0::Ray
 
 		// RAY_TODO: Check which queue is faster and enable multithreading by using fences
 		// instead of vkQueueWaitIdle
-		vkQueueSubmit(
-			Graphics::Get().GetDevice().GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
-		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+		vkQueueSubmit((VkQueue)Graphics::Get().GetDevice().GetGraphicsQueue(), 1, &submitInfo,
+			VK_NULL_HANDLE);
+		vkQueueWaitIdle((VkQueue)Graphics::Get().GetDevice().GetGraphicsQueue());
 	}
 
 	uint32_t Buffer::PadSizeToAlignment(RrDeviceSize originalSize, RrDeviceSize alignment)

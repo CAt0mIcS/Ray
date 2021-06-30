@@ -28,11 +28,11 @@ void RrBufferGetMemoryRequirements(
 	RrLogicalDevice pDevice, const RrBuffer pBuffer, RrMemoryRequirements* const pMemRequirements)
 {
 	VkMemoryRequirements memRequirements;
-	memRequirements.size = pMemRequirements->size;
-	memRequirements.alignment = pMemRequirements->alignment;
-	memRequirements.memoryTypeBits = pMemRequirements->memoryTypeBits;
-
 	vkGetBufferMemoryRequirements((VkDevice)pDevice, (VkBuffer)pBuffer, &memRequirements);
+
+	pMemRequirements->size = memRequirements.size;
+	pMemRequirements->alignment = memRequirements.alignment;
+	pMemRequirements->memoryTypeBits = memRequirements.memoryTypeBits;
 }
 
 RrError RrBindBufferMemory(
