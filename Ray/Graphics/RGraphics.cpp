@@ -36,7 +36,7 @@
 #include "Components/RMeshRenderer.h"
 #include "Components/RTextRenderer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
-#include <RayRenderer/Core/RCommandPool.h>
+#include "Core/RRendererLoader.h"
 
 #include "UI/RImGui.h"
 
@@ -310,10 +310,8 @@ namespace At0::Ray
 #endif
 		Scene::Get().Update(dt);
 
-		VkSubmitInfo submitInfo{};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+		RrSubmitInfo submitInfo{};
+		RrPipelineStageFlags waitStages[] = { RrPipelineStageColorAttachmentOutput };
 
 
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
@@ -324,12 +322,12 @@ namespace At0::Ray
 		// submitInfo.pCommandBuffers =
 		//	m_CommandBufferRecorder->GetVkCommandBuffers(imageIndex).data();
 		submitInfo.commandBufferCount = 1;
-		VkCommandBuffer commandBuffer =
+		RrCommandBuffer commandBuffer =
 			*m_CommandBufferRecorder->GetMainCommandResources(imageIndex).commandBuffer;
 		submitInfo.pCommandBuffers = &commandBuffer;
 #else
 		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex], imageIndex);
-		VkCommandBuffer commandBuffers[] = { *m_CommandBuffers[imageIndex] };
+		RrCommandBuffer commandBuffers[] = { *m_CommandBuffers[imageIndex] };
 		submitInfo.commandBufferCount = std::size(commandBuffers);
 		submitInfo.pCommandBuffers = commandBuffers;
 #endif
@@ -337,17 +335,19 @@ namespace At0::Ray
 		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.waitSemaphoreCount = 1;
 		submitInfo.pWaitSemaphores =
-			&m_ImageAvailableSemaphore[m_CurrentFrame];	 // Wait until image was acquired
+			(RrSemaphore*)&m_ImageAvailableSemaphore[m_CurrentFrame];  // Wait until image was
+																	   // acquired
 		submitInfo.signalSemaphoreCount = 1;
 		submitInfo.pSignalSemaphores =
-			&m_RenderFinishedSemaphore[m_CurrentFrame];	 // Signal when rendering finished and
-														 // presentation can happen
+			(RrSemaphore*)&m_RenderFinishedSemaphore[m_CurrentFrame];  // Signal when rendering
+																	   // finished and presentation
+																	   // can happen
 
 		vkResetFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
 
 		// Fence will be signaled once the command buffer finishes executing
-		ThrowRenderError(vkQueueSubmit((VkQueue)GetDevice().GetGraphicsQueue(), 1, &submitInfo,
-							 m_InFlightFences[m_CurrentFrame]),
+		ThrowRenderError(RendererAPI::QueueSubmit(GetDevice().GetGraphicsQueue(), 1, &submitInfo,
+							 (RrFence)m_InFlightFences[m_CurrentFrame]),
 			"[Graphics] Failed to submit image to queue for rendering");
 
 		VkSwapchainKHR swapChain = GetSwapchain();

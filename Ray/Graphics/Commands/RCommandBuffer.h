@@ -4,6 +4,7 @@
 #include "RayBase/RNonCopyable.h"
 
 #include <vulkan/vulkan_core.h>
+#include <RayRenderer/Core/RCommandBuffer.h>
 
 
 namespace At0::Ray
@@ -15,26 +16,27 @@ namespace At0::Ray
 	{
 	public:
 		CommandBuffer(const CommandPool& commandPool,
-			VkCommandBufferLevel bufferLevel = VK_COMMAND_BUFFER_LEVEL_PRIMARY);
+			RrCommandBufferLevel bufferLevel = RrCommandBufferLevelPrimary);
 		virtual ~CommandBuffer();
 
-		void Begin(VkCommandBufferUsageFlags usageFlags = 0) const;
+		void Begin(RrCommandBufferUsageFlags usageFlags = 0) const;
 		void End() const;
 
-		VkResult Submit(VkQueue queue, VkFence fence = VK_NULL_HANDLE) const;
+		RrError Submit(RrQueue queue, RrFence fence = nullptr) const;
 		void Execute(const SecondaryCommandBuffer& secCmdBuff) const;
 
-		SecondaryCommandBuffer& AddSecondary(VkCommandBufferInheritanceInfo inheritanceInfo);
+		SecondaryCommandBuffer& AddSecondary(RrCommandBufferInheritanceInfo inheritanceInfo);
 		const auto& GetSecondaryCommandBuffers() const { return m_SecondaryCommandBuffers; }
-		virtual const VkCommandBufferInheritanceInfo* GetInheritanceInfo() const { return nullptr; }
+		virtual const RrCommandBufferInheritanceInfo* GetInheritanceInfo() const { return nullptr; }
 
-		operator const VkCommandBuffer&() const { return m_CommandBuffer; }
+		operator VkCommandBuffer() const { return (VkCommandBuffer)m_CommandBuffer; }
+		operator RrCommandBuffer() const { return m_CommandBuffer; }
 
 		CommandBuffer& operator=(CommandBuffer&& other) noexcept;
 		CommandBuffer(CommandBuffer&& other) noexcept;
 
 	private:
-		VkCommandBuffer m_CommandBuffer = VK_NULL_HANDLE;
+		RrCommandBuffer m_CommandBuffer = VK_NULL_HANDLE;
 		const CommandPool* m_CommandPool;
 
 		std::vector<SecondaryCommandBuffer> m_SecondaryCommandBuffers;
@@ -45,11 +47,11 @@ namespace At0::Ray
 	{
 	public:
 		SecondaryCommandBuffer(
-			const CommandPool& commandPool, VkCommandBufferInheritanceInfo inheritanceInfo);
+			const CommandPool& commandPool, RrCommandBufferInheritanceInfo inheritanceInfo);
 
-		const VkCommandBufferInheritanceInfo* GetInheritanceInfo() const override;
+		const RrCommandBufferInheritanceInfo* GetInheritanceInfo() const override;
 
 	private:
-		VkCommandBufferInheritanceInfo m_InheritanceInfo{};
+		RrCommandBufferInheritanceInfo m_InheritanceInfo{};
 	};
 }  // namespace At0::Ray

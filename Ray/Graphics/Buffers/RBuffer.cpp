@@ -31,7 +31,7 @@ namespace At0::Ray
 
 		CreateBuffer(m_Size, usage, properties, m_Buffer, m_BufferMemory);
 
-		if (m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
+		if (m_MemoryProperties & RrMemoryPropertyHostVisible)
 			MapMemory(&m_Mapped);
 
 		if (data)
@@ -39,7 +39,7 @@ namespace At0::Ray
 			memcpy(m_Mapped, data, m_Size);
 
 			// If host coherent hasn't been requested, do a manual flush to make writes visible
-			if (!(m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
+			if (!(m_MemoryProperties & RrMemoryPropertyHostCoherent))
 				FlushMemory();
 		}
 
@@ -54,8 +54,8 @@ namespace At0::Ray
 	void Buffer::MapMemory(void** data, RrDeviceSize size, RrDeviceSize offset) const
 	{
 		RAY_MEXPECTS(!m_Mapped, "[Buffer] Trying to map mapped memory");
-		RAY_MEXPECTS(m_MemoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-			"[Buffer] Must be host visible");
+		RAY_MEXPECTS(
+			m_MemoryProperties & RrMemoryPropertyHostVisible, "[Buffer] Must be host visible");
 		MapMemory(data, m_BufferMemory, size, offset);
 	}
 
@@ -172,17 +172,16 @@ namespace At0::Ray
 
 		commandBuffer.End();
 
-		VkCommandBuffer cmdBuff = commandBuffer;
-		VkSubmitInfo submitInfo{};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+		RrCommandBuffer cmdBuff = commandBuffer;
+		RrSubmitInfo submitInfo{};
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &cmdBuff;
 
 		// RAY_TODO: Check which queue is faster and enable multithreading by using fences
 		// instead of vkQueueWaitIdle
-		vkQueueSubmit((VkQueue)Graphics::Get().GetDevice().GetGraphicsQueue(), 1, &submitInfo,
-			VK_NULL_HANDLE);
-		vkQueueWaitIdle((VkQueue)Graphics::Get().GetDevice().GetGraphicsQueue());
+		RendererAPI::QueueSubmit(
+			Graphics::Get().GetDevice().GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+		RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 	}
 
 	uint32_t Buffer::PadSizeToAlignment(RrDeviceSize originalSize, RrDeviceSize alignment)
@@ -201,8 +200,8 @@ namespace At0::Ray
 		if (m_Mapped)
 			UnmapMemory();
 
-		vkDestroyBuffer(Graphics::Get().GetDevice(), (VkBuffer)m_Buffer, nullptr);
-		vkFreeMemory(Graphics::Get().GetDevice(), (VkDeviceMemory)m_BufferMemory, nullptr);
+		RendererAPI::DestroyBuffer(Graphics::Get().GetDevice(), m_Buffer);
+		RendererAPI::FreeMemory(Graphics::Get().GetDevice(), m_BufferMemory);
 	}
 
 	RrMemoryPropertyFlags Buffer::ValidateMemoryProperties() const
@@ -211,19 +210,18 @@ namespace At0::Ray
 		{
 			if (m_MemoryProperties == (RrMemoryPropertyDeviceLocal | RrMemoryPropertyHostVisible))
 			{
-				Log::Warn("[Buffer] Memory properties VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | "
-						  "VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT are not supported on this GPU. "
-						  "Trying fallback VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | "
-						  "VK_MEMORY_PROPERTY_HOST_COHERENT_BIT...");
+				Log::Warn("[Buffer] Memory properties RrMemoryPropertyDeviceLocal | "
+						  "RrMemoryPropertyHostVisible are not supported on this GPU. "
+						  "Trying fallback RrMemoryPropertyHostVisible | "
+						  "RrMemoryPropertyHostCoherent...");
 
 				if (!Graphics::Get().GetPhysicalDevice().HasMemoryProperties(
 						RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent))
 					ThrowRuntime(
 						"[Buffer] Fallback memory properties are not supported on this GPU");
 
-				Log::Warn(
-					"[Buffer] Using fallback memory properties VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT "
-					"| VK_MEMORY_PROPERTY_HOST_COHERENT_BIT");
+				Log::Warn("[Buffer] Using fallback memory properties RrMemoryPropertyHostVisible "
+						  "| RrMemoryPropertyHostCoherent");
 				return RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent;
 			}
 		}

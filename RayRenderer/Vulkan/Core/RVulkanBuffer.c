@@ -41,3 +41,8 @@ RrError RrBindBufferMemory(
 	return GetError(vkBindBufferMemory(
 		(VkDevice)pDevice, (VkBuffer)buffer, (VkDeviceMemory)memory, memoryOffset));
 }
+
+void RrDestroyBuffer(RrLogicalDevice device, RrBuffer buffer)
+{
+	vkDestroyBuffer((VkDevice)device, (VkBuffer)buffer, NULL);
+}

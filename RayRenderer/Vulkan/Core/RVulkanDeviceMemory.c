@@ -68,3 +68,8 @@ RrError RrFlushMappedMemoryRanges(
 	free(pRanges);
 	return error;
 }
+
+void RrFreeMemory(RrLogicalDevice device, RrDeviceMemory memory)
+{
+	vkFreeMemory((VkDevice)device, (VkDeviceMemory)memory, NULL);
+}

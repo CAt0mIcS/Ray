@@ -9,6 +9,14 @@ set(SRC
 	"Core/RDeviceMemory.h"
 	"Core/RBuffer.h"
 	"Core/RCommandPool.h"
+	"Core/RCommandBuffer.h"
+	"Core/RRenderPass.h"
+	"Core/RFramebuffer.h"
+
+	# ------------------------------------------------------------------
+	# Synchronization
+	"Synchronization/RFence.h"
+	"Synchronization/RSemaphore.h"
 )
 
 add_library("RayRendererBase" "${SRC}")

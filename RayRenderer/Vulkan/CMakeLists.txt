@@ -10,6 +10,14 @@ set(SRC
 	"Core/RVulkanDeviceMemory.c"
 	"Core/RVulkanBuffer.c"
 	"Core/RVulkanCommandPool.c"
+	"Core/RVulkanCommandBuffer.c"
+	"Core/RVulkanRenderPass.c"
+	"Core/RVulkanFramebuffer.c"
+
+	# ------------------------------------------------------------------
+	# Synchronization
+	"Synchronization/RVulkanFence.c"
+	"Synchronization/RVulkanSemaphore.c"
 )
 
 # ------------------------------------------------------------------

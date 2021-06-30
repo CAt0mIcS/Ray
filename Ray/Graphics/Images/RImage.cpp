@@ -11,6 +11,8 @@
 #include "RayBase/RException.h"
 #include "RayBase/RAssert.h"
 
+#include "Core/RRendererLoader.h"
+
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb/stb_image_write.h>
 
@@ -90,7 +92,7 @@ namespace At0::Ray
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
 		CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
-		cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+		cmdBuff.Begin(RrCommandBufferUsageOneTimeSubmit);
 
 		dstImage.TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
@@ -136,7 +138,7 @@ namespace At0::Ray
 		cmdBuff.End();
 		// RAY_TODO: Get best queue
 		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+		RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 
 		dstImage.TransitionLayout(VK_IMAGE_LAYOUT_GENERAL);
 		TransitionLayout(oldLayout);
@@ -198,7 +200,7 @@ namespace At0::Ray
 			return;
 
 		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
-		commandBuffer.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+		commandBuffer.Begin(RrCommandBufferUsageOneTimeSubmit);
 
 		VkImageMemoryBarrier barrier{};
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -268,7 +270,7 @@ namespace At0::Ray
 
 		// RAY_TODO: Get best queue
 		commandBuffer.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+		RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 	}
 
 	bool Image::GenerateMipmaps(
@@ -359,7 +361,7 @@ namespace At0::Ray
 
 		// RAY_TODO: Transfer queue with graphics capabilities is faster
 		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+		RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 		return true;
 	}  // namespace At0::Ray
 
@@ -370,7 +372,7 @@ namespace At0::Ray
 			TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
 		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
-		commandBuffer.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+		commandBuffer.Begin(RrCommandBufferUsageOneTimeSubmit);
 
 		VkBufferImageCopy region{};
 		region.bufferOffset = 0;
@@ -394,7 +396,7 @@ namespace At0::Ray
 
 		// RAY_TODO: Get best queue
 		commandBuffer.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+		RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 	}
 
 	Buffer&& Image::CopyToBuffer(std::vector<VkBufferImageCopy> copyRegions)
@@ -408,7 +410,7 @@ namespace At0::Ray
 		TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
 
 		CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
-		cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+		cmdBuff.Begin(RrCommandBufferUsageOneTimeSubmit);
 
 		VkBufferImageCopy region{};
 		region.bufferOffset = 0;
@@ -436,7 +438,7 @@ namespace At0::Ray
 
 		// RAY_TODO: Get best queue
 		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+		RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 
 		TransitionLayout(oldLayout);
 		return std::move(dstBuffer);

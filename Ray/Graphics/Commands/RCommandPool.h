@@ -15,6 +15,7 @@ namespace At0::Ray
 		~CommandPool();
 
 		operator VkCommandPool() const { return (VkCommandPool)m_CommandPool; }
+		operator RrCommandPool() const { return m_CommandPool; }
 
 	private:
 		RrCommandPool m_CommandPool = nullptr;

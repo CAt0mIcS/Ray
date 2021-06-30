@@ -25,8 +25,8 @@ namespace At0::Ray
 		createInfo.height = Graphics::Get().GetSwapchain().GetExtent().height;
 		createInfo.layers = 1;
 
-		ThrowRenderError(
-			vkCreateFramebuffer(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Framebuffer),
+		ThrowRenderError(vkCreateFramebuffer(Graphics::Get().GetDevice(), &createInfo, nullptr,
+							 (VkFramebuffer*)&m_Framebuffer),
 			"[Framebuffer] Failed to create");
 		Log::Info("[Framebuffer] Created with size [width={0}, height={1}]", createInfo.width,
 			createInfo.height);
@@ -34,6 +34,6 @@ namespace At0::Ray
 
 	Framebuffer::~Framebuffer()
 	{
-		vkDestroyFramebuffer(Graphics::Get().GetDevice(), m_Framebuffer, nullptr);
+		vkDestroyFramebuffer(Graphics::Get().GetDevice(), (VkFramebuffer)m_Framebuffer, nullptr);
 	}
 }  // namespace At0::Ray

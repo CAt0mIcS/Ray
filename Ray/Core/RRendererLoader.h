@@ -3,6 +3,7 @@
 
 #include "Ray/RBase.h"
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RBuffer.h>
+#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RCommandBuffer.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RCommandPool.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RDeviceMemory.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RInstance.h>
@@ -26,6 +27,14 @@ namespace At0::Ray
 		extern RrPFNCreateBuffer CreateBuffer;
 		extern RrPFNBufferGetMemoryRequirements BufferGetMemoryRequirements;
 		extern RrPFNBindBufferMemory BindBufferMemory;
+		extern RrPFNDestroyBuffer DestroyBuffer;
+		extern RrPFNAllocateCommandBuffers AllocateCommandBuffers;
+		extern RrPFNBeginCommandBuffer BeginCommandBuffer;
+		extern RrPFNExecuteCommands ExecuteCommands;
+		extern RrPFNQueueSubmit QueueSubmit;
+		extern RrPFNQueueWaitIdle QueueWaitIdle;
+		extern RrPFNEndCommandBuffer EndCommandBuffer;
+		extern RrPFNFreeCommandBuffers FreeCommandBuffers;
 		extern RrPFNCreateCommandPool CreateCommandPool;
 		extern RrPFNDestroyCommandPool DestroyCommandPool;
 		extern RrPFNAllocateMemory AllocateMemory;
@@ -33,6 +42,7 @@ namespace At0::Ray
 		extern RrPFNMapMemory MapMemory;
 		extern RrPFNUnmapMemory UnmapMemory;
 		extern RrPFNFlushMappedMemoryRanges FlushMappedMemoryRanges;
+		extern RrPFNFreeMemory FreeMemory;
 		extern RrPFNInitialize Initialize;
 		extern RrPFNDestroyInstance DestroyInstance;
 		extern RrPFNGetInstanceProcAddr GetInstanceProcAddr;

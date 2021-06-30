@@ -6,64 +6,63 @@
 #include "RCommandPool.h"
 
 #include "RayBase/RException.h"
+#include "Core/RRendererLoader.h"
 
 
 namespace At0::Ray
 {
-	CommandBuffer::CommandBuffer(const CommandPool& commandPool, VkCommandBufferLevel bufferLevel)
+	CommandBuffer::CommandBuffer(const CommandPool& commandPool, RrCommandBufferLevel bufferLevel)
 		: m_CommandPool(&commandPool)
 	{
-		VkCommandBufferAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+		RrCommandBufferAllocateInfo allocInfo{};
 		allocInfo.commandPool = *m_CommandPool;
 		allocInfo.level = bufferLevel;
 		allocInfo.commandBufferCount = 1;
 
-		ThrowRenderError(
-			vkAllocateCommandBuffers(Graphics::Get().GetDevice(), &allocInfo, &m_CommandBuffer),
+		ThrowRenderError(RendererAPI::AllocateCommandBuffers(
+							 Graphics::Get().GetDevice(), &allocInfo, &m_CommandBuffer),
 			"[CommandBuffer] Failed to allocate command buffer");
 	}
 
 	CommandBuffer::~CommandBuffer()
 	{
-		vkFreeCommandBuffers(Graphics::Get().GetDevice(), *m_CommandPool, 1, &m_CommandBuffer);
+		RendererAPI::FreeCommandBuffers(
+			Graphics::Get().GetDevice(), *m_CommandPool, 1, &m_CommandBuffer);
 	}
 
-	void CommandBuffer::Begin(VkCommandBufferUsageFlags usageFlags) const
+	void CommandBuffer::Begin(RrCommandBufferUsageFlags usageFlags) const
 	{
-		VkCommandBufferBeginInfo beginInfo{};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		RrCommandBufferBeginInfo beginInfo{};
 		beginInfo.flags = usageFlags;
 		beginInfo.pInheritanceInfo = GetInheritanceInfo();
 
-		ThrowRenderError(vkBeginCommandBuffer(m_CommandBuffer, &beginInfo),
+		ThrowRenderError(RendererAPI::BeginCommandBuffer(m_CommandBuffer, &beginInfo),
 			"[CommandBuffer] Failed to begin recording");
 	}
 
 	void CommandBuffer::End() const
 	{
-		ThrowRenderError(
-			vkEndCommandBuffer(m_CommandBuffer), "[CommandBuffer] Failed to end recording");
+		ThrowRenderError(RendererAPI::EndCommandBuffer(m_CommandBuffer),
+			"[CommandBuffer] Failed to end recording");
 	}
 
-	VkResult CommandBuffer::Submit(VkQueue queue, VkFence fence) const
+	RrError CommandBuffer::Submit(RrQueue queue, RrFence fence) const
 	{
-		VkSubmitInfo submitInfo{};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+		RrSubmitInfo submitInfo{};
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &m_CommandBuffer;
 
-		return vkQueueSubmit(queue, 1, &submitInfo, fence);
+		return RendererAPI::QueueSubmit(queue, 1, &submitInfo, fence);
 	}
 
 	void CommandBuffer::Execute(const SecondaryCommandBuffer& secCmdBuff) const
 	{
-		VkCommandBuffer buff = secCmdBuff;
-		vkCmdExecuteCommands(m_CommandBuffer, 1, &buff);
+		RrCommandBuffer buff = secCmdBuff;
+		RendererAPI::ExecuteCommands(m_CommandBuffer, 1, &buff);
 	}
 
 	SecondaryCommandBuffer& CommandBuffer::AddSecondary(
-		VkCommandBufferInheritanceInfo inheritanceInfo)
+		RrCommandBufferInheritanceInfo inheritanceInfo)
 	{
 		return m_SecondaryCommandBuffers.emplace_back(*m_CommandPool, std::move(inheritanceInfo));
 	}
@@ -81,13 +80,13 @@ namespace At0::Ray
 	// -----------------------------------------------------------------------------------------------
 	// Secondary Command Buffer
 	SecondaryCommandBuffer::SecondaryCommandBuffer(
-		const CommandPool& commandPool, VkCommandBufferInheritanceInfo inheritanceInfo)
-		: CommandBuffer(commandPool, VK_COMMAND_BUFFER_LEVEL_SECONDARY),
+		const CommandPool& commandPool, RrCommandBufferInheritanceInfo inheritanceInfo)
+		: CommandBuffer(commandPool, RrcommandBufferLevelSecondary),
 		  m_InheritanceInfo(std::move(inheritanceInfo))
 	{
 	}
 
-	const VkCommandBufferInheritanceInfo* SecondaryCommandBuffer::GetInheritanceInfo() const
+	const RrCommandBufferInheritanceInfo* SecondaryCommandBuffer::GetInheritanceInfo() const
 	{
 		return &m_InheritanceInfo;
 	}

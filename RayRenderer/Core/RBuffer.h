@@ -67,4 +67,7 @@ RR_API RrError RrBindBufferMemory(
 	RrLogicalDevice pDevice, RrBuffer buffer, RrDeviceMemory memory, RrDeviceSize memoryOffset);
 typedef RrError (*RrPFNBindBufferMemory)(RrLogicalDevice, RrBuffer, RrDeviceMemory, RrDeviceSize);
 
+RR_API void RrDestroyBuffer(RrLogicalDevice device, RrBuffer buffer);
+typedef void (*RrPFNDestroyBuffer)(RrLogicalDevice, RrBuffer);
+
 RR_EXTERN_C_END

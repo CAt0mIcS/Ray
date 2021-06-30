@@ -10,6 +10,14 @@ set(SRC
 	"Core/ROpenGLDeviceMemory.c"
 	"Core/ROpenGLBuffer.c"
 	"Core/ROpenGLCommandPool.c"
+	"Core/ROpenGLCommandBuffer.c"
+	"Core/ROpenGLRenderPass.c"
+	"Core/ROpenGLFramebuffer.c"
+
+	# ------------------------------------------------------------------
+	# Synchronization
+	"Synchronization/ROpenGLFence.c"
+	"Synchronization/ROpenGLSemaphore.c"
 )
 
 find_package (Python COMPONENTS Interpreter)

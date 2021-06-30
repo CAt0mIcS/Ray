@@ -41,8 +41,7 @@ namespace At0::Ray
 			{
 				m_CommandResources[i][j] = SecondaryResources{ MakeScope<CommandPool>(), nullptr };
 
-				VkCommandBufferInheritanceInfo inheritanceInfo{};
-				inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+				RrCommandBufferInheritanceInfo inheritanceInfo{};
 				inheritanceInfo.renderPass = renderPass;
 				inheritanceInfo.subpass = subpassID;
 				inheritanceInfo.framebuffer = *framebuffers[i];

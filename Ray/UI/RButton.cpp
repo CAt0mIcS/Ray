@@ -14,6 +14,8 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
+#include "Core/RRendererLoader.h"
+
 
 namespace At0::Ray
 {
@@ -75,7 +77,7 @@ namespace At0::Ray
 
 		// Wait for command buffers to finish executing because command buffers which are in the
 		// pending state and are using the descriptor set need to finish before it can be updated
-		vkQueueWaitIdle((VkQueue)Graphics::Get().GetDevice().GetGraphicsQueue());
+		RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 		renderer.GetSampler2DUniform("texSampler")
 			.SetTexture(std::move(texture), renderer.GetDescriptorSet("texSampler"));
 	}

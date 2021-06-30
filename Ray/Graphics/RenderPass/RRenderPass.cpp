@@ -25,14 +25,14 @@ namespace At0::Ray
 		createInfo.dependencyCount = (uint32_t)dependencies.size();
 		createInfo.pDependencies = dependencies.data();
 
-		ThrowRenderError(
-			vkCreateRenderPass(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Renderpass),
+		ThrowRenderError(vkCreateRenderPass(Graphics::Get().GetDevice(), &createInfo, nullptr,
+							 (VkRenderPass*)&m_Renderpass),
 			"[RenderPass] Failed to create");
 	}
 
 	RenderPass::~RenderPass()
 	{
-		vkDestroyRenderPass(Graphics::Get().GetDevice(), m_Renderpass, nullptr);
+		vkDestroyRenderPass(Graphics::Get().GetDevice(), (VkRenderPass)m_Renderpass, nullptr);
 	}
 
 	void RenderPass::Begin(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer,
@@ -41,7 +41,7 @@ namespace At0::Ray
 	{
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = m_Renderpass;
+		renderPassInfo.renderPass = (VkRenderPass)m_Renderpass;
 		renderPassInfo.framebuffer = framebuffer;
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = Graphics::Get().GetSwapchain().GetExtent();

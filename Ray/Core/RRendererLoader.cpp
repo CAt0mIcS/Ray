@@ -20,6 +20,14 @@ namespace At0::Ray
 		RrPFNCreateBuffer CreateBuffer = nullptr;
 		RrPFNBufferGetMemoryRequirements BufferGetMemoryRequirements = nullptr;
 		RrPFNBindBufferMemory BindBufferMemory = nullptr;
+		RrPFNDestroyBuffer DestroyBuffer = nullptr;
+		RrPFNAllocateCommandBuffers AllocateCommandBuffers = nullptr;
+		RrPFNBeginCommandBuffer BeginCommandBuffer = nullptr;
+		RrPFNExecuteCommands ExecuteCommands = nullptr;
+		RrPFNQueueSubmit QueueSubmit = nullptr;
+		RrPFNQueueWaitIdle QueueWaitIdle = nullptr;
+		RrPFNEndCommandBuffer EndCommandBuffer = nullptr;
+		RrPFNFreeCommandBuffers FreeCommandBuffers = nullptr;
 		RrPFNCreateCommandPool CreateCommandPool = nullptr;
 		RrPFNDestroyCommandPool DestroyCommandPool = nullptr;
 		RrPFNAllocateMemory AllocateMemory = nullptr;
@@ -27,6 +35,7 @@ namespace At0::Ray
 		RrPFNMapMemory MapMemory = nullptr;
 		RrPFNUnmapMemory UnmapMemory = nullptr;
 		RrPFNFlushMappedMemoryRanges FlushMappedMemoryRanges = nullptr;
+		RrPFNFreeMemory FreeMemory = nullptr;
 		RrPFNInitialize Initialize = nullptr;
 		RrPFNDestroyInstance DestroyInstance = nullptr;
 		RrPFNGetInstanceProcAddr GetInstanceProcAddr = nullptr;
@@ -91,6 +100,14 @@ namespace At0::Ray
 		RendererAPI::CreateBuffer = (RrPFNCreateBuffer)LoadFunction(lib, "RrCreateBuffer");
 		RendererAPI::BufferGetMemoryRequirements = (RrPFNBufferGetMemoryRequirements)LoadFunction(lib, "RrBufferGetMemoryRequirements");
 		RendererAPI::BindBufferMemory = (RrPFNBindBufferMemory)LoadFunction(lib, "RrBindBufferMemory");
+		RendererAPI::DestroyBuffer = (RrPFNDestroyBuffer)LoadFunction(lib, "RrDestroyBuffer");
+		RendererAPI::AllocateCommandBuffers = (RrPFNAllocateCommandBuffers)LoadFunction(lib, "RrAllocateCommandBuffers");
+		RendererAPI::BeginCommandBuffer = (RrPFNBeginCommandBuffer)LoadFunction(lib, "RrBeginCommandBuffer");
+		RendererAPI::ExecuteCommands = (RrPFNExecuteCommands)LoadFunction(lib, "RrExecuteCommands");
+		RendererAPI::QueueSubmit = (RrPFNQueueSubmit)LoadFunction(lib, "RrQueueSubmit");
+		RendererAPI::QueueWaitIdle = (RrPFNQueueWaitIdle)LoadFunction(lib, "RrQueueWaitIdle");
+		RendererAPI::EndCommandBuffer = (RrPFNEndCommandBuffer)LoadFunction(lib, "RrEndCommandBuffer");
+		RendererAPI::FreeCommandBuffers = (RrPFNFreeCommandBuffers)LoadFunction(lib, "RrFreeCommandBuffers");
 		RendererAPI::CreateCommandPool = (RrPFNCreateCommandPool)LoadFunction(lib, "RrCreateCommandPool");
 		RendererAPI::DestroyCommandPool = (RrPFNDestroyCommandPool)LoadFunction(lib, "RrDestroyCommandPool");
 		RendererAPI::AllocateMemory = (RrPFNAllocateMemory)LoadFunction(lib, "RrAllocateMemory");
@@ -98,6 +115,7 @@ namespace At0::Ray
 		RendererAPI::MapMemory = (RrPFNMapMemory)LoadFunction(lib, "RrMapMemory");
 		RendererAPI::UnmapMemory = (RrPFNUnmapMemory)LoadFunction(lib, "RrUnmapMemory");
 		RendererAPI::FlushMappedMemoryRanges = (RrPFNFlushMappedMemoryRanges)LoadFunction(lib, "RrFlushMappedMemoryRanges");
+		RendererAPI::FreeMemory = (RrPFNFreeMemory)LoadFunction(lib, "RrFreeMemory");
 		RendererAPI::Initialize = (RrPFNInitialize)LoadFunction(lib, "RrInitialize");
 		RendererAPI::DestroyInstance = (RrPFNDestroyInstance)LoadFunction(lib, "RrDestroyInstance");
 		RendererAPI::GetInstanceProcAddr = (RrPFNGetInstanceProcAddr)LoadFunction(lib, "RrGetInstanceProcAddr");

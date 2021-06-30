@@ -45,4 +45,7 @@ RR_API RrError RrFlushMappedMemoryRanges(
 	RrLogicalDevice pDevice, uint32_t memoryRangeCount, RrMappedMemoryRange* pMappedMemoryRanges);
 typedef RrError (*RrPFNFlushMappedMemoryRanges)(RrLogicalDevice, uint32_t, RrMappedMemoryRange*);
 
+RR_API void RrFreeMemory(RrLogicalDevice device, RrDeviceMemory memory);
+typedef void (*RrPFNFreeMemory)(RrLogicalDevice, RrDeviceMemory);
+
 RR_EXTERN_C_END
