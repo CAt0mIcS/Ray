@@ -1,9 +1,9 @@
 ﻿#pragma once
 
 #include "RCore.h"
-#include "RInstance.h"
 
 RR_DEFINE_HANDLE(RrSurface);
+RR_DEFINE_HANDLE(RrInstance);
 
 typedef struct RrSurfaceCreateInfo
 {

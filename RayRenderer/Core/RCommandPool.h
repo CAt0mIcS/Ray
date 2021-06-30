@@ -1,10 +1,11 @@
 ﻿#pragma once
 
-#include "RLogicalDevice.h"
+#include "RCore.h"
 
 RR_EXTERN_C_BEG
 
 RR_DEFINE_HANDLE(RrCommandPool);
+RR_DEFINE_HANDLE(RrLogicalDevice);
 
 typedef enum RrCommandPoolCreateFlagBits
 {

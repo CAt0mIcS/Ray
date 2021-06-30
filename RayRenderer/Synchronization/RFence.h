@@ -1,10 +1,9 @@
 ﻿#pragma once
 
 #include "../Core/RCore.h"
-#include "../Core/RLogicalDevice.h"
-
 
 RR_DEFINE_HANDLE(RrFence);
+RR_DEFINE_HANDLE(RrLogicalDevice);
 
 typedef enum RrFenceCreateFlagBits
 {

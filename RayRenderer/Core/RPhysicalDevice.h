@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #include "RCore.h"
-#include "RInstance.h"
 
 RR_EXTERN_C_BEG
 
 RR_DEFINE_HANDLE(RrPhysicalDevice);
+RR_DEFINE_HANDLE(RrInstance);
 
 typedef enum RrMemoryPropertyFlagBits
 {

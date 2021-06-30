@@ -1,13 +1,14 @@
 ﻿#pragma once
 
 #include "RCore.h"
-#include "RCommandPool.h"
-#include "RRenderPass.h"
-#include "RFramebuffer.h"
-#include "../Synchronization/RFence.h"
 #include "../Synchronization/RSemaphore.h"
 
 RR_DEFINE_HANDLE(RrCommandBuffer);
+RR_DEFINE_HANDLE(RrCommandPool);
+RR_DEFINE_HANDLE(RrRenderPass);
+RR_DEFINE_HANDLE(RrFramebuffer);
+RR_DEFINE_HANDLE(RrFence);
+RR_DEFINE_HANDLE(RrQueue);
 
 typedef enum RrCommandBufferLevel
 {

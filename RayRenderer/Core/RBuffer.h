@@ -1,12 +1,12 @@
 ﻿#pragma once
 
 #include "RCore.h"
-#include "RLogicalDevice.h"
-#include "RDeviceMemory.h"
 
 RR_EXTERN_C_BEG
 
 RR_DEFINE_HANDLE(RrBuffer);
+RR_DEFINE_HANDLE(RrLogicalDevice);
+RR_DEFINE_HANDLE(RrDeviceMemory);
 
 typedef enum RrBufferUsageFlagBits
 {
