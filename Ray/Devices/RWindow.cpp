@@ -97,6 +97,11 @@ namespace At0::Ray
 #ifdef _WIN32
 		createInfo.hWnd = glfwGetWin32Window(m_hWnd);
 #else
+		createInfo.window = (const void*)glfwGetX11Window(m_hWnd);
+		createInfo.display = (const void*)glfwGetX11Display();
+
+		// RAY_TODO
+		createInfo.xcb = true;
 #endif
 		ThrowRenderError(
 			RendererAPI::CreateSurface(Graphics::Get().GetInstance(), &createInfo, pSurface),
@@ -159,78 +164,83 @@ namespace At0::Ray
 
 	void Window::SetEventCallbacks()
 	{
-		glfwSetCursorPosCallback(m_hWnd, [](GLFWwindow* window, double xPos, double yPos) {
-			int32_t dx = (int)Window::Get().m_PrevousMousePos.x - xPos;
-			int32_t dy = (int)Window::Get().m_PrevousMousePos.y - yPos;
-
-			Float2 newPos = { (float)xPos, (float)yPos };
-			Window::Get().m_PrevousMousePos = newPos;
-
-			Mouse::SetPos(newPos);
-
-			MouseMovedEvent e(newPos, { dx, dy });
-			for (auto* listener : Window::Get().EventDispatcher<MouseMovedEvent>::Get())
+		glfwSetCursorPosCallback(m_hWnd,
+			[](GLFWwindow* window, double xPos, double yPos)
 			{
-				listener->OnEvent(e);
-				if (e.Handled)
+				int32_t dx = (int)Window::Get().m_PrevousMousePos.x - xPos;
+				int32_t dy = (int)Window::Get().m_PrevousMousePos.y - yPos;
+
+				Float2 newPos = { (float)xPos, (float)yPos };
+				Window::Get().m_PrevousMousePos = newPos;
+
+				Mouse::SetPos(newPos);
+
+				MouseMovedEvent e(newPos, { dx, dy });
+				for (auto* listener : Window::Get().EventDispatcher<MouseMovedEvent>::Get())
+				{
+					listener->OnEvent(e);
+					if (e.Handled)
+						break;
+				}
+
+				Window::Get().GenerateHoverEvents();
+			});
+
+		glfwSetMouseButtonCallback(m_hWnd,
+			[](GLFWwindow* window, int button, int action, int mods)
+			{
+				switch (action)
+				{
+				case GLFW_PRESS:
+				{
+					MouseButton btn = (MouseButton)button;
+
+					switch (btn)
+					{
+					case MouseButton::Left: Mouse::SetLeftPressed(true); break;
+					case MouseButton::Right: Mouse::SetRightPressed(true); break;
+					case MouseButton::Middle: Mouse::SetMiddlePressed(true); break;
+					}
+
+					MouseButtonPressedEvent e(btn, Window::Get().GetClickedWidget());
+					for (auto* listener :
+						Window::Get().EventDispatcher<MouseButtonPressedEvent>::Get())
+					{
+						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
+
 					break;
-			}
+				}
+				case GLFW_RELEASE:
+				{
+					MouseButton btn = (MouseButton)button;
 
-			Window::Get().GenerateHoverEvents();
-		});
+					switch (btn)
+					{
+					case MouseButton::Left: Mouse::SetLeftPressed(false); break;
+					case MouseButton::Right: Mouse::SetRightPressed(false); break;
+					case MouseButton::Middle: Mouse::SetMiddlePressed(false); break;
+					}
 
-		glfwSetMouseButtonCallback(m_hWnd, [](GLFWwindow* window, int button, int action,
-											   int mods) {
-			switch (action)
+					MouseButtonReleasedEvent e(btn, Window::Get().GetReleasedWidget());
+					for (auto* listener :
+						Window::Get().EventDispatcher<MouseButtonReleasedEvent>::Get())
+					{
+						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
+
+					break;
+				}
+				}
+			});
+
+		glfwSetKeyCallback(m_hWnd,
+			[](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
-			case GLFW_PRESS:
-			{
-				MouseButton btn = (MouseButton)button;
-
-				switch (btn)
-				{
-				case MouseButton::Left: Mouse::SetLeftPressed(true); break;
-				case MouseButton::Right: Mouse::SetRightPressed(true); break;
-				case MouseButton::Middle: Mouse::SetMiddlePressed(true); break;
-				}
-
-				MouseButtonPressedEvent e(btn, Window::Get().GetClickedWidget());
-				for (auto* listener : Window::Get().EventDispatcher<MouseButtonPressedEvent>::Get())
-				{
-					listener->OnEvent(e);
-					if (e.Handled)
-						break;
-				}
-
-				break;
-			}
-			case GLFW_RELEASE:
-			{
-				MouseButton btn = (MouseButton)button;
-
-				switch (btn)
-				{
-				case MouseButton::Left: Mouse::SetLeftPressed(false); break;
-				case MouseButton::Right: Mouse::SetRightPressed(false); break;
-				case MouseButton::Middle: Mouse::SetMiddlePressed(false); break;
-				}
-
-				MouseButtonReleasedEvent e(btn, Window::Get().GetReleasedWidget());
-				for (auto* listener :
-					Window::Get().EventDispatcher<MouseButtonReleasedEvent>::Get())
-				{
-					listener->OnEvent(e);
-					if (e.Handled)
-						break;
-				}
-
-				break;
-			}
-			}
-		});
-
-		glfwSetKeyCallback(
-			m_hWnd, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 				switch (action)
 				{
 				case GLFW_PRESS:
@@ -284,101 +294,113 @@ namespace At0::Ray
 				}
 			});
 
-		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode) {
-			CharEvent e(keycode);
-			for (auto* listener : Window::Get().EventDispatcher<CharEvent>::Get())
+		glfwSetCharCallback(m_hWnd,
+			[](GLFWwindow* window, unsigned int keycode)
 			{
-				listener->OnEvent(e);
-				if (e.Handled)
-					break;
-			}
-		});
-
-		glfwSetScrollCallback(m_hWnd, [](GLFWwindow* window, double xOffset, double yOffset) {
-			if (yOffset > 0)
-			{
-				ScrollUpEvent e({ xOffset, yOffset });
-				for (auto* listener : Window::Get().EventDispatcher<ScrollUpEvent>::Get())
+				CharEvent e(keycode);
+				for (auto* listener : Window::Get().EventDispatcher<CharEvent>::Get())
 				{
 					listener->OnEvent(e);
 					if (e.Handled)
 						break;
 				}
-			}
-			else if (yOffset < 0)
+			});
+
+		glfwSetScrollCallback(m_hWnd,
+			[](GLFWwindow* window, double xOffset, double yOffset)
 			{
-				ScrollDownEvent e({ xOffset, yOffset });
-				for (auto* listener : Window::Get().EventDispatcher<ScrollDownEvent>::Get())
+				if (yOffset > 0)
+				{
+					ScrollUpEvent e({ xOffset, yOffset });
+					for (auto* listener : Window::Get().EventDispatcher<ScrollUpEvent>::Get())
+					{
+						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
+				}
+				else if (yOffset < 0)
+				{
+					ScrollDownEvent e({ xOffset, yOffset });
+					for (auto* listener : Window::Get().EventDispatcher<ScrollDownEvent>::Get())
+					{
+						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
+				}
+
+				if (xOffset > 0)
+				{
+					ScrollRightEvent e({ xOffset, yOffset });
+					for (auto* listener : Window::Get().EventDispatcher<ScrollRightEvent>::Get())
+					{
+						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
+				}
+				else if (xOffset < 0)
+				{
+					ScrollLeftEvent e({ xOffset, yOffset });
+					for (auto* listener : Window::Get().EventDispatcher<ScrollLeftEvent>::Get())
+					{
+						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
+				}
+			});
+
+		glfwSetFramebufferSizeCallback(m_hWnd,
+			[](GLFWwindow* window, int width, int height)
+			{
+				FramebufferResizedEvent e({ width, height });
+				for (auto* listener : Window::Get().EventDispatcher<FramebufferResizedEvent>::Get())
 				{
 					listener->OnEvent(e);
 					if (e.Handled)
 						break;
 				}
-			}
+			});
 
-			if (xOffset > 0)
+		glfwSetWindowSizeCallback(m_hWnd,
+			[](GLFWwindow* window, int width, int height)
 			{
-				ScrollRightEvent e({ xOffset, yOffset });
-				for (auto* listener : Window::Get().EventDispatcher<ScrollRightEvent>::Get())
+				WindowResizedEvent e({ width, height });
+				for (auto* listener : Window::Get().EventDispatcher<WindowResizedEvent>::Get())
 				{
 					listener->OnEvent(e);
 					if (e.Handled)
 						break;
 				}
-			}
-			else if (xOffset < 0)
+			});
+
+		glfwSetWindowPosCallback(m_hWnd,
+			[](GLFWwindow* window, int x, int y)
 			{
-				ScrollLeftEvent e({ xOffset, yOffset });
-				for (auto* listener : Window::Get().EventDispatcher<ScrollLeftEvent>::Get())
+				WindowMovedEvent e({ x, y });
+				for (auto* listener : Window::Get().EventDispatcher<WindowMovedEvent>::Get())
 				{
 					listener->OnEvent(e);
 					if (e.Handled)
 						break;
 				}
-			}
-		});
+			});
 
-		glfwSetFramebufferSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height) {
-			FramebufferResizedEvent e({ width, height });
-			for (auto* listener : Window::Get().EventDispatcher<FramebufferResizedEvent>::Get())
+		glfwSetWindowCloseCallback(m_hWnd,
+			[](GLFWwindow* window)
 			{
-				listener->OnEvent(e);
-				if (e.Handled)
-					break;
-			}
-		});
+				WindowClosedEvent e;
+				for (auto* listener : Window::Get().EventDispatcher<WindowClosedEvent>::Get())
+				{
+					listener->OnEvent(e);
+					if (e.Handled)
+						break;
+				}
 
-		glfwSetWindowSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height) {
-			WindowResizedEvent e({ width, height });
-			for (auto* listener : Window::Get().EventDispatcher<WindowResizedEvent>::Get())
-			{
-				listener->OnEvent(e);
-				if (e.Handled)
-					break;
-			}
-		});
-
-		glfwSetWindowPosCallback(m_hWnd, [](GLFWwindow* window, int x, int y) {
-			WindowMovedEvent e({ x, y });
-			for (auto* listener : Window::Get().EventDispatcher<WindowMovedEvent>::Get())
-			{
-				listener->OnEvent(e);
-				if (e.Handled)
-					break;
-			}
-		});
-
-		glfwSetWindowCloseCallback(m_hWnd, [](GLFWwindow* window) {
-			WindowClosedEvent e;
-			for (auto* listener : Window::Get().EventDispatcher<WindowClosedEvent>::Get())
-			{
-				listener->OnEvent(e);
-				if (e.Handled)
-					break;
-			}
-
-			Window::Get().Close();
-		});
+				Window::Get().Close();
+			});
 	}
 
 	void Window::GenerateHoverEvents()

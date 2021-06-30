@@ -17,10 +17,7 @@ namespace At0::Ray
 	namespace RendererAPI
 	{
 		Type API;
-		RrPFNCreateBuffer CreateBuffer = nullptr;
-		RrPFNBufferGetMemoryRequirements BufferGetMemoryRequirements = nullptr;
-		RrPFNBindBufferMemory BindBufferMemory = nullptr;
-		RrPFNDestroyBuffer DestroyBuffer = nullptr;
+		RrPFNCreateSurface CreateSurface = nullptr;
 		RrPFNAllocateCommandBuffers AllocateCommandBuffers = nullptr;
 		RrPFNBeginCommandBuffer BeginCommandBuffer = nullptr;
 		RrPFNExecuteCommands ExecuteCommands = nullptr;
@@ -28,27 +25,30 @@ namespace At0::Ray
 		RrPFNQueueWaitIdle QueueWaitIdle = nullptr;
 		RrPFNEndCommandBuffer EndCommandBuffer = nullptr;
 		RrPFNFreeCommandBuffers FreeCommandBuffers = nullptr;
-		RrPFNCreateCommandPool CreateCommandPool = nullptr;
-		RrPFNDestroyCommandPool DestroyCommandPool = nullptr;
+		RrPFNInitialize Initialize = nullptr;
+		RrPFNDestroyInstance DestroyInstance = nullptr;
+		RrPFNGetInstanceProcAddr GetInstanceProcAddr = nullptr;
+		RrPFNEnumeratePhysicalDevice EnumeratePhysicalDevice = nullptr;
+		RrPFNGetPhysicalDeviceProperties GetPhysicalDeviceProperties = nullptr;
+		RrPFNGetPhysicalDeviceFeatures GetPhysicalDeviceFeatures = nullptr;
+		RrPFNGetPhysicalDeviceMemoryProperties GetPhysicalDeviceMemoryProperties = nullptr;
 		RrPFNAllocateMemory AllocateMemory = nullptr;
 		RrPFNDeviceMemoryGetMemoryTypeIndex DeviceMemoryGetMemoryTypeIndex = nullptr;
 		RrPFNMapMemory MapMemory = nullptr;
 		RrPFNUnmapMemory UnmapMemory = nullptr;
 		RrPFNFlushMappedMemoryRanges FlushMappedMemoryRanges = nullptr;
 		RrPFNFreeMemory FreeMemory = nullptr;
-		RrPFNInitialize Initialize = nullptr;
-		RrPFNDestroyInstance DestroyInstance = nullptr;
-		RrPFNGetInstanceProcAddr GetInstanceProcAddr = nullptr;
+		RrPFNCreateBuffer CreateBuffer = nullptr;
+		RrPFNBufferGetMemoryRequirements BufferGetMemoryRequirements = nullptr;
+		RrPFNBindBufferMemory BindBufferMemory = nullptr;
+		RrPFNDestroyBuffer DestroyBuffer = nullptr;
+		RrPFNCreateCommandPool CreateCommandPool = nullptr;
+		RrPFNDestroyCommandPool DestroyCommandPool = nullptr;
 		RrPFNCreateLogicalDevice CreateLogicalDevice = nullptr;
 		RrPFNGetDeviceQueue GetDeviceQueue = nullptr;
 		RrPFNDestroyLogicalDevice DestroyLogicalDevice = nullptr;
 		RrPFNGetDeviceProcAddr GetDeviceProcAddr = nullptr;
 		RrPFNDeviceWaitIdle DeviceWaitIdle = nullptr;
-		RrPFNEnumeratePhysicalDevice EnumeratePhysicalDevice = nullptr;
-		RrPFNGetPhysicalDeviceProperties GetPhysicalDeviceProperties = nullptr;
-		RrPFNGetPhysicalDeviceFeatures GetPhysicalDeviceFeatures = nullptr;
-		RrPFNGetPhysicalDeviceMemoryProperties GetPhysicalDeviceMemoryProperties = nullptr;
-		RrPFNCreateSurface CreateSurface = nullptr;
 
 	}  // namespace RendererAPI
 
@@ -98,10 +98,7 @@ namespace At0::Ray
 			ThrowRuntime("[Loader] Failed to load {0} renderer", rendererStr);
 		}
 
-		RendererAPI::CreateBuffer = (RrPFNCreateBuffer)LoadFunction(lib, "RrCreateBuffer");
-		RendererAPI::BufferGetMemoryRequirements = (RrPFNBufferGetMemoryRequirements)LoadFunction(lib, "RrBufferGetMemoryRequirements");
-		RendererAPI::BindBufferMemory = (RrPFNBindBufferMemory)LoadFunction(lib, "RrBindBufferMemory");
-		RendererAPI::DestroyBuffer = (RrPFNDestroyBuffer)LoadFunction(lib, "RrDestroyBuffer");
+		RendererAPI::CreateSurface = (RrPFNCreateSurface)LoadFunction(lib, "RrCreateSurface");
 		RendererAPI::AllocateCommandBuffers = (RrPFNAllocateCommandBuffers)LoadFunction(lib, "RrAllocateCommandBuffers");
 		RendererAPI::BeginCommandBuffer = (RrPFNBeginCommandBuffer)LoadFunction(lib, "RrBeginCommandBuffer");
 		RendererAPI::ExecuteCommands = (RrPFNExecuteCommands)LoadFunction(lib, "RrExecuteCommands");
@@ -109,27 +106,30 @@ namespace At0::Ray
 		RendererAPI::QueueWaitIdle = (RrPFNQueueWaitIdle)LoadFunction(lib, "RrQueueWaitIdle");
 		RendererAPI::EndCommandBuffer = (RrPFNEndCommandBuffer)LoadFunction(lib, "RrEndCommandBuffer");
 		RendererAPI::FreeCommandBuffers = (RrPFNFreeCommandBuffers)LoadFunction(lib, "RrFreeCommandBuffers");
-		RendererAPI::CreateCommandPool = (RrPFNCreateCommandPool)LoadFunction(lib, "RrCreateCommandPool");
-		RendererAPI::DestroyCommandPool = (RrPFNDestroyCommandPool)LoadFunction(lib, "RrDestroyCommandPool");
+		RendererAPI::Initialize = (RrPFNInitialize)LoadFunction(lib, "RrInitialize");
+		RendererAPI::DestroyInstance = (RrPFNDestroyInstance)LoadFunction(lib, "RrDestroyInstance");
+		RendererAPI::GetInstanceProcAddr = (RrPFNGetInstanceProcAddr)LoadFunction(lib, "RrGetInstanceProcAddr");
+		RendererAPI::EnumeratePhysicalDevice = (RrPFNEnumeratePhysicalDevice)LoadFunction(lib, "RrEnumeratePhysicalDevice");
+		RendererAPI::GetPhysicalDeviceProperties = (RrPFNGetPhysicalDeviceProperties)LoadFunction(lib, "RrGetPhysicalDeviceProperties");
+		RendererAPI::GetPhysicalDeviceFeatures = (RrPFNGetPhysicalDeviceFeatures)LoadFunction(lib, "RrGetPhysicalDeviceFeatures");
+		RendererAPI::GetPhysicalDeviceMemoryProperties = (RrPFNGetPhysicalDeviceMemoryProperties)LoadFunction(lib, "RrGetPhysicalDeviceMemoryProperties");
 		RendererAPI::AllocateMemory = (RrPFNAllocateMemory)LoadFunction(lib, "RrAllocateMemory");
 		RendererAPI::DeviceMemoryGetMemoryTypeIndex = (RrPFNDeviceMemoryGetMemoryTypeIndex)LoadFunction(lib, "RrDeviceMemoryGetMemoryTypeIndex");
 		RendererAPI::MapMemory = (RrPFNMapMemory)LoadFunction(lib, "RrMapMemory");
 		RendererAPI::UnmapMemory = (RrPFNUnmapMemory)LoadFunction(lib, "RrUnmapMemory");
 		RendererAPI::FlushMappedMemoryRanges = (RrPFNFlushMappedMemoryRanges)LoadFunction(lib, "RrFlushMappedMemoryRanges");
 		RendererAPI::FreeMemory = (RrPFNFreeMemory)LoadFunction(lib, "RrFreeMemory");
-		RendererAPI::Initialize = (RrPFNInitialize)LoadFunction(lib, "RrInitialize");
-		RendererAPI::DestroyInstance = (RrPFNDestroyInstance)LoadFunction(lib, "RrDestroyInstance");
-		RendererAPI::GetInstanceProcAddr = (RrPFNGetInstanceProcAddr)LoadFunction(lib, "RrGetInstanceProcAddr");
+		RendererAPI::CreateBuffer = (RrPFNCreateBuffer)LoadFunction(lib, "RrCreateBuffer");
+		RendererAPI::BufferGetMemoryRequirements = (RrPFNBufferGetMemoryRequirements)LoadFunction(lib, "RrBufferGetMemoryRequirements");
+		RendererAPI::BindBufferMemory = (RrPFNBindBufferMemory)LoadFunction(lib, "RrBindBufferMemory");
+		RendererAPI::DestroyBuffer = (RrPFNDestroyBuffer)LoadFunction(lib, "RrDestroyBuffer");
+		RendererAPI::CreateCommandPool = (RrPFNCreateCommandPool)LoadFunction(lib, "RrCreateCommandPool");
+		RendererAPI::DestroyCommandPool = (RrPFNDestroyCommandPool)LoadFunction(lib, "RrDestroyCommandPool");
 		RendererAPI::CreateLogicalDevice = (RrPFNCreateLogicalDevice)LoadFunction(lib, "RrCreateLogicalDevice");
 		RendererAPI::GetDeviceQueue = (RrPFNGetDeviceQueue)LoadFunction(lib, "RrGetDeviceQueue");
 		RendererAPI::DestroyLogicalDevice = (RrPFNDestroyLogicalDevice)LoadFunction(lib, "RrDestroyLogicalDevice");
 		RendererAPI::GetDeviceProcAddr = (RrPFNGetDeviceProcAddr)LoadFunction(lib, "RrGetDeviceProcAddr");
 		RendererAPI::DeviceWaitIdle = (RrPFNDeviceWaitIdle)LoadFunction(lib, "RrDeviceWaitIdle");
-		RendererAPI::EnumeratePhysicalDevice = (RrPFNEnumeratePhysicalDevice)LoadFunction(lib, "RrEnumeratePhysicalDevice");
-		RendererAPI::GetPhysicalDeviceProperties = (RrPFNGetPhysicalDeviceProperties)LoadFunction(lib, "RrGetPhysicalDeviceProperties");
-		RendererAPI::GetPhysicalDeviceFeatures = (RrPFNGetPhysicalDeviceFeatures)LoadFunction(lib, "RrGetPhysicalDeviceFeatures");
-		RendererAPI::GetPhysicalDeviceMemoryProperties = (RrPFNGetPhysicalDeviceMemoryProperties)LoadFunction(lib, "RrGetPhysicalDeviceMemoryProperties");
-		RendererAPI::CreateSurface = (RrPFNCreateSurface)LoadFunction(lib, "RrCreateSurface");
 
 
 		RendererAPI::API = type;

@@ -19,11 +19,18 @@ typedef struct VkWin32SurfaceCreateInfoKHR
 	HINSTANCE hinstance;
 	HWND hwnd;
 } VkWin32SurfaceCreateInfoKHR;
-typedef VkResult(APIENTRY* PFN_vkCreateWin32SurfaceKHR)(
+typedef VkResult (*PFN_vkCreateWin32SurfaceKHR)(
 	VkInstance, const VkWin32SurfaceCreateInfoKHR*, const VkAllocationCallbacks*, VkSurfaceKHR*);
 
 #else
 
+	#include <X11/Xlib.h>
+	#include <dlfcn.h>
+
+typedef XID xcb_window_t;
+typedef XID xcb_visualid_t;
+typedef struct xcb_connection_t xcb_connection_t;
+typedef xcb_connection_t* (*PFN_XGetXCBConnection)(const Display*);
 typedef uint32_t VkXlibSurfaceCreateFlagsKHR;
 typedef uint32_t VkXcbSurfaceCreateFlagsKHR;
 
@@ -45,12 +52,16 @@ typedef struct VkXcbSurfaceCreateInfoKHR
 	xcb_window_t window;
 } VkXcbSurfaceCreateInfoKHR;
 
-typedef VkResult(APIENTRY* PFN_vkCreateXlibSurfaceKHR)(
+typedef VkResult (*PFN_vkCreateXlibSurfaceKHR)(
 	VkInstance, const VkXlibSurfaceCreateInfoKHR*, const VkAllocationCallbacks*, VkSurfaceKHR*);
-typedef VkResult(APIENTRY* PFN_vkCreateXcbSurfaceKHR)(
+typedef VkResult (*PFN_vkCreateXcbSurfaceKHR)(
 	VkInstance, const VkXcbSurfaceCreateInfoKHR*, const VkAllocationCallbacks*, VkSurfaceKHR*);
 
+static PFN_XGetXCBConnection XGetXCBConnection = NULL;
+static void* x11Handle = NULL;
+
 #endif
+
 
 RrError RrCreateSurface(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, RrSurface* pSurface)
 {
@@ -76,18 +87,31 @@ RrError RrCreateSurface(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, R
 #else
 	if (pCreateInfo->xcb)
 	{
+		if (x11Handle == NULL)
+		{
+	#if defined(__CYGWIN__)
+			x11Handle = dlopen("libX11-xcb-1.so", RTLD_LAZY);
+	#else
+			x11Handle = dlopen("libX11-xcb.so.1", RTLD_LAZY);
+	#endif
+		}
+
+
+		if (XGetXCBConnection == NULL)
+			XGetXCBConnection = (PFN_XGetXCBConnection)dlsym(x11Handle, "XGetXCBConnection");
+
 		VkXcbSurfaceCreateInfoKHR sci;
 		memset(&sci, 0, sizeof(sci));
 		PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR;
-		xcb_connection_t* connection = XGetXCBConnection(pCreateInfo->display);
+		xcb_connection_t* connection = XGetXCBConnection((Display*)pCreateInfo->display);
 		if (!connection)
 		{
 			LogError("X11: Failed to retrieve XCB connection");
 			return RrErrorExtensionNotPresent;
 		}
 
-		vkCreateXcbSurfaceKHR =
-			(PFN_vkCreateXcbSurfaceKHR)vkGetInstanceProcAddr(instance, "vkCreateXcbSurfaceKHR");
+		vkCreateXcbSurfaceKHR = (PFN_vkCreateXcbSurfaceKHR)vkGetInstanceProcAddr(
+			(VkInstance)instance, "vkCreateXcbSurfaceKHR");
 		if (!vkCreateXcbSurfaceKHR)
 		{
 			LogError("X11: Vulkan instance missing VK_KHR_xcb_surface extension");
@@ -96,16 +120,17 @@ RrError RrCreateSurface(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, R
 
 		sci.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
 		sci.connection = connection;
-		sci.window = pCreateInfo->window;
-		return GetError(vkCreateXcbSurfaceKHR(instance, &sci, NULL, surface));
+		sci.window = (Window)pCreateInfo->window;
+		return GetError(
+			vkCreateXcbSurfaceKHR((VkInstance)instance, &sci, NULL, (VkSurfaceKHR*)pSurface));
 	}
 	else
 	{
 		VkXlibSurfaceCreateInfoKHR sci;
 		PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR;
 
-		vkCreateXlibSurfaceKHR =
-			(PFN_vkCreateXlibSurfaceKHR)vkGetInstanceProcAddr(instance, "vkCreateXlibSurfaceKHR");
+		vkCreateXlibSurfaceKHR = (PFN_vkCreateXlibSurfaceKHR)vkGetInstanceProcAddr(
+			(VkInstance)instance, "vkCreateXlibSurfaceKHR");
 		if (!vkCreateXlibSurfaceKHR)
 		{
 			LogError("X11: Vulkan instance missing VK_KHR_xlib_surface extension");
@@ -114,10 +139,11 @@ RrError RrCreateSurface(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, R
 
 		memset(&sci, 0, sizeof(sci));
 		sci.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
-		sci.dpy = pCreateInfo->display;
-		sci.window = pCreateInfo->window;
+		sci.dpy = (Display*)pCreateInfo->display;
+		sci.window = (Window)pCreateInfo->window;
 
-		RrError err = vkCreateXlibSurfaceKHR(instance, &sci, NULL, surface);
+		RrError err =
+			vkCreateXlibSurfaceKHR((VkInstance)instance, &sci, NULL, (VkSurfaceKHR*)pSurface);
 		if (err)
 		{
 			LogError("X11: Failed to create Vulkan X11 surface");

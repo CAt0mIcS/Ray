@@ -1,4 +1,4 @@
 ﻿#include "RCore.h"
 
 
-bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*) = NULL;
+bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*) = 0;

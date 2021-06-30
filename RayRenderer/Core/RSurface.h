@@ -7,8 +7,6 @@ RR_DEFINE_HANDLE(RrSurface);
 
 typedef struct RrSurfaceCreateInfo
 {
-	const void* connection;
-
 	union
 	{
 		const void* hWnd;
@@ -18,7 +16,7 @@ typedef struct RrSurfaceCreateInfo
 	const void* display;
 
 	// True if xcb should be used instead of xlib
-	// (_glfw.vk.KHR_xcb_surface && _glfw.x11.x11xcb.handle) == true == xcb
+	// _glfw.x11.x11xcb.handle == true == xcb
 	bool xcb;
 } RrSurfaceCreateInfo;
 
