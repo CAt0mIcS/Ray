@@ -13,6 +13,7 @@ set(SRC
 	"Core/RVulkanCommandBuffer.c"
 	"Core/RVulkanRenderPass.c"
 	"Core/RVulkanFramebuffer.c"
+	"Core/RVulkanSurface.c"
 
 	# ------------------------------------------------------------------
 	# Synchronization

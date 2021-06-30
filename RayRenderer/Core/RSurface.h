@@ -1,0 +1,28 @@
+﻿#pragma once
+
+#include "RCore.h"
+#include "RInstance.h"
+
+RR_DEFINE_HANDLE(RrSurface);
+
+typedef struct RrSurfaceCreateInfo
+{
+	const void* connection;
+
+	union
+	{
+		const void* hWnd;
+		const void* window;
+	};
+
+	const void* display;
+
+	// True if xcb should be used instead of xlib
+	// (_glfw.vk.KHR_xcb_surface && _glfw.x11.x11xcb.handle) == true == xcb
+	bool xcb;
+} RrSurfaceCreateInfo;
+
+
+RR_API RrError RrCreateSurface(
+	RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, RrSurface* pSurface);
+typedef RrError (*RrPFNCreateSurface)(RrInstance, RrSurfaceCreateInfo*, RrSurface*);

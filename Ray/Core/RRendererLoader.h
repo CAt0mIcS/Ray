@@ -9,6 +9,7 @@
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RInstance.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RLogicalDevice.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RPhysicalDevice.h>
+#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RSurface.h>
 
 
 
@@ -55,6 +56,7 @@ namespace At0::Ray
 		extern RrPFNGetPhysicalDeviceProperties GetPhysicalDeviceProperties;
 		extern RrPFNGetPhysicalDeviceFeatures GetPhysicalDeviceFeatures;
 		extern RrPFNGetPhysicalDeviceMemoryProperties GetPhysicalDeviceMemoryProperties;
+		extern RrPFNCreateSurface CreateSurface;
 
 	}  // namespace RendererAPI
 

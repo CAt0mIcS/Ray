@@ -9,6 +9,8 @@
 
 #include "Core/RRendererLoader.h"
 
+#include <GLFW/glfw3.h>
+
 
 namespace At0::Ray
 {

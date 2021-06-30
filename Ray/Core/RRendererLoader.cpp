@@ -48,6 +48,7 @@ namespace At0::Ray
 		RrPFNGetPhysicalDeviceProperties GetPhysicalDeviceProperties = nullptr;
 		RrPFNGetPhysicalDeviceFeatures GetPhysicalDeviceFeatures = nullptr;
 		RrPFNGetPhysicalDeviceMemoryProperties GetPhysicalDeviceMemoryProperties = nullptr;
+		RrPFNCreateSurface CreateSurface = nullptr;
 
 	}  // namespace RendererAPI
 
@@ -128,6 +129,7 @@ namespace At0::Ray
 		RendererAPI::GetPhysicalDeviceProperties = (RrPFNGetPhysicalDeviceProperties)LoadFunction(lib, "RrGetPhysicalDeviceProperties");
 		RendererAPI::GetPhysicalDeviceFeatures = (RrPFNGetPhysicalDeviceFeatures)LoadFunction(lib, "RrGetPhysicalDeviceFeatures");
 		RendererAPI::GetPhysicalDeviceMemoryProperties = (RrPFNGetPhysicalDeviceMemoryProperties)LoadFunction(lib, "RrGetPhysicalDeviceMemoryProperties");
+		RendererAPI::CreateSurface = (RrPFNCreateSurface)LoadFunction(lib, "RrCreateSurface");
 
 
 		RendererAPI::API = type;

@@ -2,6 +2,7 @@
 #include "RWindow.h"
 
 #include "Graphics/RGraphics.h"
+#include "Graphics/Core/RRendererInstance.h"
 #include "Scene/RScene.h"
 #include "Devices/RMouse.h"
 #include "Devices/RKeyboard.h"
@@ -15,8 +16,18 @@
 
 #include "Core/RRendererLoader.h"
 
+#ifdef _WIN32
+	#ifndef GLFW_EXPOSE_NATIVE_WIN32
+		#define GLFW_EXPOSE_NATIVE_WIN32
+	#endif
+#else
+	#ifndef GLFW_EXPOSE_NATIVE_X11
+		#define GLFW_EXPOSE_NATIVE_X11
+	#endif
+#endif
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
 
 
 namespace At0::Ray
@@ -80,12 +91,24 @@ namespace At0::Ray
 		return std::pair<const char**, uint32_t>{};
 	}
 
-	void Window::CreateSurface(
-		VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) const
+	void Window::CreateSurface(RrSurface* pSurface) const
 	{
-		ThrowRenderError(glfwCreateWindowSurface(instance, m_hWnd, allocator, surface),
-			"[Window] GLFW failed to create the window surface");
+		RrSurfaceCreateInfo createInfo{};
+#ifdef _WIN32
+		createInfo.hWnd = glfwGetWin32Window(m_hWnd);
+#else
+#endif
+		ThrowRenderError(
+			RendererAPI::CreateSurface(Graphics::Get().GetInstance(), &createInfo, pSurface),
+			"[Window] Failed to create window surface");
 	}
+
+	// void Window::CreateSurface(
+	//	VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) const
+	//{
+	//	ThrowRenderError(glfwCreateWindowSurface(instance, m_hWnd, allocator, surface),
+	//		"[Window] GLFW failed to create the window surface");
+	//}
 
 	UInt2 Window::GetSize() const
 	{

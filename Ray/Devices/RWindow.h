@@ -13,6 +13,7 @@
 #include <stdint.h>
 
 #include <vulkan/vulkan_core.h>
+#include <RayRenderer/Core/RSurface.h>
 
 struct GLFWwindow;
 
@@ -103,8 +104,7 @@ namespace At0::Ray
 		/**
 		 * Creates the surface to render to
 		 */
-		void CreateSurface(VkInstance instance, const VkAllocationCallbacks* allocator,
-			VkSurfaceKHR* surface) const;
+		void CreateSurface(RrSurface* pSurface) const;
 
 		/**
 		 * @returns the size in screen coordinates of the window
@@ -132,6 +132,11 @@ namespace At0::Ray
 		 * @returns The underlying GLFW window handle
 		 */
 		GLFWwindow* GetNative() { return m_hWnd; }
+
+		/**
+		 * @returns Internal, platform-dependent window handle
+		 */
+		void* GetInternalHandle() const;
 
 	private:
 		Window(uint32_t width, uint32_t height, std::string_view title);

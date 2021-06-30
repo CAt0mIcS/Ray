@@ -4,6 +4,7 @@
 #include "RayBase/RNonCopyable.h"
 
 #include <vulkan/vulkan_core.h>
+#include <RayRenderer/Core/RSurface.h>
 
 
 namespace At0::Ray
@@ -14,9 +15,10 @@ namespace At0::Ray
 		Surface();
 		~Surface();
 
-		operator const VkSurfaceKHR&() const { return m_Surface; }
+		operator VkSurfaceKHR() const { return (VkSurfaceKHR)m_Surface; }
+		operator RrSurface() const { return m_Surface; }
 
 	private:
-		VkSurfaceKHR m_Surface = VK_NULL_HANDLE;
+		RrSurface m_Surface = nullptr;
 	};
 }  // namespace At0::Ray
