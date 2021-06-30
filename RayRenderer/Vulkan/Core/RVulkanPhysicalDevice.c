@@ -6,15 +6,15 @@
 
 VkPhysicalDevice ChoosePhysicalDevice(uint32_t deviceCount, VkPhysicalDevice* pDevices,
 	uint32_t deviceExtensionCount, const char* const* ppDeviceExtensions);
-int32_t ScorePhysicalDevice(
-	VkPhysicalDevice device, uint32_t deviceExtensionCount, const char* const* ppDeviceExtensions);
+int32_t ScorePhysicalDevice(VkPhysicalDevice physicalDevice, uint32_t deviceExtensionCount,
+	const char* const* ppDeviceExtensions);
 
 
-RrError RrEnumeratePhysicalDevice(RrInstance pInstance,
-	const RrPhysicalDeviceEnumerationInfo* const pCreateInfo, RrPhysicalDevice* ppPhysicalDevice)
+RrError RrEnumeratePhysicalDevice(RrInstance instance,
+	const RrPhysicalDeviceEnumerationInfo* pCreateInfo, RrPhysicalDevice* pPhysicalDevice)
 {
 	uint32_t physicalDeviceCount = 0;
-	vkEnumeratePhysicalDevices((VkInstance)pInstance, &physicalDeviceCount, NULL);
+	vkEnumeratePhysicalDevices((VkInstance)instance, &physicalDeviceCount, NULL);
 	if (physicalDeviceCount == 0)
 	{
 		LogError("Failed to find suitable GPU supporting Vulkan while enumerating all physical "
@@ -23,11 +23,11 @@ RrError RrEnumeratePhysicalDevice(RrInstance pInstance,
 	}
 
 	VkPhysicalDevice* physicalDevices = malloc(sizeof(VkPhysicalDevice) * physicalDeviceCount);
-	vkEnumeratePhysicalDevices((VkInstance)pInstance, &physicalDeviceCount, physicalDevices);
+	vkEnumeratePhysicalDevices((VkInstance)instance, &physicalDeviceCount, physicalDevices);
 
-	*ppPhysicalDevice = (RrPhysicalDevice)ChoosePhysicalDevice(physicalDeviceCount, physicalDevices,
+	*pPhysicalDevice = (RrPhysicalDevice)ChoosePhysicalDevice(physicalDeviceCount, physicalDevices,
 		pCreateInfo->deviceExtensionCount, pCreateInfo->ppDeviceExtensions);
-	if (!*ppPhysicalDevice)
+	if (!*pPhysicalDevice)
 	{
 		if (LogError("Failed to find suitable physical device"))
 		{
@@ -41,22 +41,24 @@ RrError RrEnumeratePhysicalDevice(RrInstance pInstance,
 }
 
 void RrGetPhysicalDeviceProperties(
-	RrPhysicalDevice pDevice, RrPhysicalDeviceProperties* pProperties)
+	RrPhysicalDevice physicalDevice, RrPhysicalDeviceProperties* pProperties)
 {
 	vkGetPhysicalDeviceProperties(
-		(VkPhysicalDevice)pDevice, (VkPhysicalDeviceProperties*)pProperties);
+		(VkPhysicalDevice)physicalDevice, (VkPhysicalDeviceProperties*)pProperties);
 }
 
-void RrGetPhysicalDeviceFeatures(RrPhysicalDevice pDevice, RrPhysicalDeviceFeatures* pFeatures)
+void RrGetPhysicalDeviceFeatures(
+	RrPhysicalDevice physicalDevice, RrPhysicalDeviceFeatures* pFeatures)
 {
-	vkGetPhysicalDeviceFeatures((VkPhysicalDevice)pDevice, (VkPhysicalDeviceFeatures*)pFeatures);
+	vkGetPhysicalDeviceFeatures(
+		(VkPhysicalDevice)physicalDevice, (VkPhysicalDeviceFeatures*)pFeatures);
 }
 
 void RrGetPhysicalDeviceMemoryProperties(
-	RrPhysicalDevice pDevice, RrPhysicalDeviceMemoryProperties* pProperties)
+	RrPhysicalDevice physicalDevice, RrPhysicalDeviceMemoryProperties* pProperties)
 {
 	vkGetPhysicalDeviceMemoryProperties(
-		(VkPhysicalDevice)pDevice, (VkPhysicalDeviceMemoryProperties*)pProperties);
+		(VkPhysicalDevice)physicalDevice, (VkPhysicalDeviceMemoryProperties*)pProperties);
 }
 
 
@@ -84,17 +86,18 @@ VkPhysicalDevice ChoosePhysicalDevice(uint32_t deviceCount, VkPhysicalDevice* pD
 	return bestDevice;
 }
 
-int32_t ScorePhysicalDevice(
-	VkPhysicalDevice device, uint32_t deviceExtensionCount, const char* const* ppDeviceExtensions)
+int32_t ScorePhysicalDevice(VkPhysicalDevice physicalDevice, uint32_t deviceExtensionCount,
+	const char* const* ppDeviceExtensions)
 {
 	int32_t score = 0;
 
 	// Check if requested extensions are supported.
 	uint32_t extensionPropCount;
-	vkEnumerateDeviceExtensionProperties(device, NULL, &extensionPropCount, NULL);
+	vkEnumerateDeviceExtensionProperties(physicalDevice, NULL, &extensionPropCount, NULL);
 	VkExtensionProperties* extensionProperties =
 		malloc(sizeof(VkExtensionProperties) * extensionPropCount);
-	vkEnumerateDeviceExtensionProperties(device, NULL, &extensionPropCount, extensionProperties);
+	vkEnumerateDeviceExtensionProperties(
+		physicalDevice, NULL, &extensionPropCount, extensionProperties);
 
 	for (uint32_t i = 0; i < deviceExtensionCount; ++i)
 	{
@@ -116,7 +119,7 @@ int32_t ScorePhysicalDevice(
 	}
 
 	VkPhysicalDeviceProperties props;
-	vkGetPhysicalDeviceProperties(device, &props);
+	vkGetPhysicalDeviceProperties(physicalDevice, &props);
 
 	// Higher score for externally added GPU
 	if (props.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)

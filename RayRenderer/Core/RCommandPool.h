@@ -20,9 +20,9 @@ typedef struct RrCommandPoolCreateInfo
 	uint32_t queueFamilyIndex;
 } RrCommandPoolCreateInfo;
 
-RR_API RrError RrCreateCommandPool(RrLogicalDevice pDevice,
-	const RrCommandPoolCreateInfo* const pCreateInfo, RrCommandPool* ppCommandPool);
+RR_API RrError RrCreateCommandPool(RrLogicalDevice device,
+	const RrCommandPoolCreateInfo* pCreateInfo, RrCommandPool* pCommandPool);
 
-RR_API void RrDestroyCommandPool(RrLogicalDevice pDevice, RrCommandPool pCommandPool);
+RR_API void RrDestroyCommandPool(RrLogicalDevice device, RrCommandPool commandPool);
 
 RR_EXTERN_C_END

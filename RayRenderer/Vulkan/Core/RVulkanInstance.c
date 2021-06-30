@@ -27,7 +27,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 bool RrHasValidationLayers(uint32_t enabledLayerCount, const char* const* ppEnabledLayers);
 
 RrError RrInitialize(
-	RrInitializeInfo* const pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger)
+	RrInitializeInfo* pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger)
 {
 	RrpfnValidationCallback = pInitInfo->pfnValidationCallback;
 
@@ -132,16 +132,15 @@ bool RrHasValidationLayers(uint32_t enabledLayerCount, const char* const* ppEnab
 }
 
 
-void RrDestroyInstance(RrInstance pInstance, RrDebugMessenger pDebugMessenger)
+void RrDestroyInstance(RrInstance instance, RrDebugMessenger debugMessenger)
 {
-	if (pDebugMessenger)
+	if (debugMessenger)
 	{
 		PFN_vkDestroyDebugUtilsMessengerEXT destroyDebugMessenger =
 			(PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
-				(VkInstance)pInstance, "vkDestroyDebugUtilsMessengerEXT");
-		destroyDebugMessenger(
-			(VkInstance)pInstance, (VkDebugUtilsMessengerEXT)pDebugMessenger, NULL);
+				(VkInstance)instance, "vkDestroyDebugUtilsMessengerEXT");
+		destroyDebugMessenger((VkInstance)instance, (VkDebugUtilsMessengerEXT)debugMessenger, NULL);
 	}
 
-	vkDestroyInstance((VkInstance)pInstance, NULL);
+	vkDestroyInstance((VkInstance)instance, NULL);
 }

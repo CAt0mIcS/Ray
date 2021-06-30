@@ -3,8 +3,8 @@
 #include "../Core/RUtils.h"
 
 
-RrError RrAllocateMemory(RrLogicalDevice pDevice, const RrMemoryAllocateInfo* const pAllocateInfo,
-	RrDeviceMemory* ppMemory)
+RrError RrAllocateMemory(
+	RrLogicalDevice device, const RrMemoryAllocateInfo* pAllocateInfo, RrDeviceMemory* pMemory)
 {
 	VkMemoryAllocateInfo allocInfo;
 	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -12,8 +12,7 @@ RrError RrAllocateMemory(RrLogicalDevice pDevice, const RrMemoryAllocateInfo* co
 	allocInfo.allocationSize = pAllocateInfo->allocationSize;
 	allocInfo.memoryTypeIndex = pAllocateInfo->memoryTypeIndex;
 
-	VkResult error =
-		vkAllocateMemory((VkDevice)pDevice, &allocInfo, NULL, (VkDeviceMemory*)ppMemory);
+	VkResult error = vkAllocateMemory((VkDevice)device, &allocInfo, NULL, (VkDeviceMemory*)pMemory);
 	if (error != VK_SUCCESS)
 		return GetError(error);
 
@@ -22,7 +21,7 @@ RrError RrAllocateMemory(RrLogicalDevice pDevice, const RrMemoryAllocateInfo* co
 
 RrError RrDeviceMemoryGetMemoryTypeIndex(uint32_t memoryTypeBits,
 	RrMemoryPropertyFlags memoryProperties, uint32_t memoryTypeCount,
-	const RrMemoryType* const pMemoryTypes, uint32_t* pTypeIndex)
+	const RrMemoryType* pMemoryTypes, uint32_t* pTypeIndex)
 {
 	for (uint32_t i = 0; i < memoryTypeCount; ++i)
 	{
@@ -38,20 +37,20 @@ RrError RrDeviceMemoryGetMemoryTypeIndex(uint32_t memoryTypeBits,
 	return RrErrorIncomplete;
 }
 
-RrError RrMapMemory(RrLogicalDevice pDevice, RrDeviceMemory pMemory, RrDeviceSize offset,
-	RrDeviceSize size, void** mapped)
+RrError RrMapMemory(RrLogicalDevice device, RrDeviceMemory memory, RrDeviceSize offset,
+	RrDeviceSize size, void** ppMapped)
 {
 	return GetError(
-		vkMapMemory((VkDevice)pDevice, (VkDeviceMemory)pMemory, offset, size, 0, mapped));
+		vkMapMemory((VkDevice)device, (VkDeviceMemory)memory, offset, size, 0, ppMapped));
 }
 
-void RrUnmapMemory(RrLogicalDevice pDevice, RrDeviceMemory pMemory)
+void RrUnmapMemory(RrLogicalDevice device, RrDeviceMemory memory)
 {
-	vkUnmapMemory((VkDevice)pDevice, (VkDeviceMemory)pMemory);
+	vkUnmapMemory((VkDevice)device, (VkDeviceMemory)memory);
 }
 
-RrError RrFlushMappedMemoryRanges(
-	RrLogicalDevice pDevice, uint32_t memoryRangeCount, RrMappedMemoryRange* pMappedMemoryRanges)
+RrError RrFlushMappedMemoryRanges(RrLogicalDevice device, uint32_t memoryRangeCount,
+	const RrMappedMemoryRange* pMappedMemoryRanges)
 {
 	VkMappedMemoryRange* pRanges = malloc(sizeof(VkMappedMemoryRange) * memoryRangeCount);
 	for (uint32_t i = 0; i < memoryRangeCount; ++i)
@@ -64,7 +63,7 @@ RrError RrFlushMappedMemoryRanges(
 	}
 
 	RrError error =
-		GetError(vkFlushMappedMemoryRanges((VkDevice)pDevice, memoryRangeCount, pRanges));
+		GetError(vkFlushMappedMemoryRanges((VkDevice)device, memoryRangeCount, pRanges));
 	free(pRanges);
 	return error;
 }

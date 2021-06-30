@@ -5,7 +5,7 @@
 
 
 RrError RrCreateBuffer(
-	RrLogicalDevice pDevice, const RrBufferCreateInfo* const pCreateInfo, RrBuffer* ppBuffer)
+	RrLogicalDevice device, const RrBufferCreateInfo* pCreateInfo, RrBuffer* pBuffer)
 {
 	VkBufferCreateInfo createInfo;
 	createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -17,7 +17,7 @@ RrError RrCreateBuffer(
 	createInfo.queueFamilyIndexCount = pCreateInfo->queueFamilyIndexCount;
 	createInfo.pQueueFamilyIndices = pCreateInfo->pQueueFamilyIndices;
 
-	VkResult error = vkCreateBuffer((VkDevice)pDevice, &createInfo, NULL, (VkBuffer*)ppBuffer);
+	VkResult error = vkCreateBuffer((VkDevice)device, &createInfo, NULL, (VkBuffer*)pBuffer);
 	if (error != VK_SUCCESS)
 		return GetError(error);
 
@@ -25,10 +25,10 @@ RrError RrCreateBuffer(
 }
 
 void RrBufferGetMemoryRequirements(
-	RrLogicalDevice pDevice, const RrBuffer pBuffer, RrMemoryRequirements* const pMemRequirements)
+	RrLogicalDevice device, RrBuffer buffer, RrMemoryRequirements* pMemRequirements)
 {
 	VkMemoryRequirements memRequirements;
-	vkGetBufferMemoryRequirements((VkDevice)pDevice, (VkBuffer)pBuffer, &memRequirements);
+	vkGetBufferMemoryRequirements((VkDevice)device, (VkBuffer)buffer, &memRequirements);
 
 	pMemRequirements->size = memRequirements.size;
 	pMemRequirements->alignment = memRequirements.alignment;
@@ -36,10 +36,10 @@ void RrBufferGetMemoryRequirements(
 }
 
 RrError RrBindBufferMemory(
-	RrLogicalDevice pDevice, RrBuffer buffer, RrDeviceMemory memory, RrDeviceSize memoryOffset)
+	RrLogicalDevice device, RrBuffer buffer, RrDeviceMemory memory, RrDeviceSize memoryOffset)
 {
 	return GetError(vkBindBufferMemory(
-		(VkDevice)pDevice, (VkBuffer)buffer, (VkDeviceMemory)memory, memoryOffset));
+		(VkDevice)device, (VkBuffer)buffer, (VkDeviceMemory)memory, memoryOffset));
 }
 
 void RrDestroyBuffer(RrLogicalDevice device, RrBuffer buffer)

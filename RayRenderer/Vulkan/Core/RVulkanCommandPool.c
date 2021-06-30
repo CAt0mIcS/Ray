@@ -4,8 +4,8 @@
 #include "../Core/RUtils.h"
 
 
-RrError RrCreateCommandPool(RrLogicalDevice pDevice,
-	const RrCommandPoolCreateInfo* const pCreateInfo, RrCommandPool* ppCommandPool)
+RrError RrCreateCommandPool(
+	RrLogicalDevice device, const RrCommandPoolCreateInfo* pCreateInfo, RrCommandPool* pCommandPool)
 {
 	VkCommandPoolCreateInfo commandPoolCreateInfo;
 	commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -14,7 +14,7 @@ RrError RrCreateCommandPool(RrLogicalDevice pDevice,
 	commandPoolCreateInfo.queueFamilyIndex = pCreateInfo->queueFamilyIndex;
 
 	VkResult error = vkCreateCommandPool(
-		(VkDevice)pDevice, &commandPoolCreateInfo, NULL, (VkCommandPool*)ppCommandPool);
+		(VkDevice)device, &commandPoolCreateInfo, NULL, (VkCommandPool*)pCommandPool);
 	if (error != VK_SUCCESS)
 		return GetError(error);
 

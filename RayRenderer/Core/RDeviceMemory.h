@@ -22,20 +22,20 @@ typedef struct RrMemoryAllocateInfo
 } RrMemoryAllocateInfo;
 
 
-RR_API RrError RrAllocateMemory(RrLogicalDevice pDevice,
-	const RrMemoryAllocateInfo* const pAllocateInfo, RrDeviceMemory* ppMemory);
+RR_API RrError RrAllocateMemory(
+	RrLogicalDevice device, const RrMemoryAllocateInfo* pAllocateInfo, RrDeviceMemory* pMemory);
 
 RR_API RrError RrDeviceMemoryGetMemoryTypeIndex(uint32_t memoryTypeBits,
 	RrMemoryPropertyFlags memoryProperties, uint32_t memoryTypeCount,
-	const RrMemoryType* const pMemoryTypes, uint32_t* pTypeIndex);
+	const RrMemoryType* pMemoryTypes, uint32_t* pTypeIndex);
 
-RR_API RrError RrMapMemory(RrLogicalDevice pDevice, RrDeviceMemory pMemory, RrDeviceSize offset,
-	RrDeviceSize size, void** mapped);
+RR_API RrError RrMapMemory(RrLogicalDevice device, RrDeviceMemory memory, RrDeviceSize offset,
+	RrDeviceSize size, void** ppMapped);
 
-RR_API void RrUnmapMemory(RrLogicalDevice pDevice, RrDeviceMemory pMemory);
+RR_API void RrUnmapMemory(RrLogicalDevice device, RrDeviceMemory memory);
 
-RR_API RrError RrFlushMappedMemoryRanges(
-	RrLogicalDevice pDevice, uint32_t memoryRangeCount, RrMappedMemoryRange* pMappedMemoryRanges);
+RR_API RrError RrFlushMappedMemoryRanges(RrLogicalDevice device, uint32_t memoryRangeCount,
+	const RrMappedMemoryRange* pMappedMemoryRanges);
 
 RR_API void RrFreeMemory(RrLogicalDevice device, RrDeviceMemory memory);
 

@@ -51,17 +51,17 @@ typedef struct RrBufferCreateInfo
 	RrBufferUsageFlags usage;
 	RrSharingMode sharingMode;
 	uint32_t queueFamilyIndexCount;
-	uint32_t* pQueueFamilyIndices;
+	const uint32_t* pQueueFamilyIndices;
 } RrBufferCreateInfo;
 
 RR_API RrError RrCreateBuffer(
-	RrLogicalDevice pDevice, const RrBufferCreateInfo* const pCreateInfo, RrBuffer* ppBuffer);
+	RrLogicalDevice device, const RrBufferCreateInfo* pCreateInfo, RrBuffer* pBuffer);
 
 RR_API void RrBufferGetMemoryRequirements(
-	RrLogicalDevice pDevice, const RrBuffer pBuffer, RrMemoryRequirements* const pMemRequirements);
+	RrLogicalDevice device, RrBuffer buffer, RrMemoryRequirements* pMemRequirements);
 
 RR_API RrError RrBindBufferMemory(
-	RrLogicalDevice pDevice, RrBuffer buffer, RrDeviceMemory memory, RrDeviceSize memoryOffset);
+	RrLogicalDevice device, RrBuffer buffer, RrDeviceMemory memory, RrDeviceSize memoryOffset);
 
 RR_API void RrDestroyBuffer(RrLogicalDevice device, RrBuffer buffer);
 

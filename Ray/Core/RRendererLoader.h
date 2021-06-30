@@ -25,9 +25,9 @@ namespace At0::Ray
 
 
 		extern Type API;
-		extern RrError (*CreateBuffer)(RrLogicalDevice pDevice, const RrBufferCreateInfo* const pCreateInfo, RrBuffer* ppBuffer);
-		extern void (*BufferGetMemoryRequirements)(RrLogicalDevice pDevice, const RrBuffer pBuffer, RrMemoryRequirements* const pMemRequirements);
-		extern RrError (*BindBufferMemory)(RrLogicalDevice pDevice, RrBuffer buffer, RrDeviceMemory memory, RrDeviceSize memoryOffset);
+		extern RrError (*CreateBuffer)(RrLogicalDevice device, const RrBufferCreateInfo* pCreateInfo, RrBuffer* pBuffer);
+		extern void (*BufferGetMemoryRequirements)(RrLogicalDevice device, RrBuffer buffer, RrMemoryRequirements* pMemRequirements);
+		extern RrError (*BindBufferMemory)(RrLogicalDevice device, RrBuffer buffer, RrDeviceMemory memory, RrDeviceSize memoryOffset);
 		extern void (*DestroyBuffer)(RrLogicalDevice device, RrBuffer buffer);
 		extern RrError (*AllocateCommandBuffers)(RrLogicalDevice device,RrCommandBufferAllocateInfo* pAllocInfo, RrCommandBuffer* pCommandBuffers);
 		extern RrError (*BeginCommandBuffer)(RrCommandBuffer commandBuffer, RrCommandBufferBeginInfo* pBeginInfo);
@@ -36,26 +36,26 @@ namespace At0::Ray
 		extern RrError (*QueueWaitIdle)(RrQueue queue);
 		extern RrError (*EndCommandBuffer)(RrCommandBuffer commandBuffer);
 		extern void (*FreeCommandBuffers)(RrLogicalDevice device, RrCommandPool commandPool,uint32_t commandBufferCount, const RrCommandBuffer* pCommandBuffers);
-		extern RrError (*CreateCommandPool)(RrLogicalDevice pDevice,const RrCommandPoolCreateInfo* const pCreateInfo, RrCommandPool* ppCommandPool);
-		extern void (*DestroyCommandPool)(RrLogicalDevice pDevice, RrCommandPool pCommandPool);
-		extern RrError (*AllocateMemory)(RrLogicalDevice pDevice,const RrMemoryAllocateInfo* const pAllocateInfo, RrDeviceMemory* ppMemory);
-		extern RrError (*DeviceMemoryGetMemoryTypeIndex)(uint32_t memoryTypeBits,RrMemoryPropertyFlags memoryProperties, uint32_t memoryTypeCount,const RrMemoryType* const pMemoryTypes, uint32_t* pTypeIndex);
-		extern RrError (*MapMemory)(RrLogicalDevice pDevice, RrDeviceMemory pMemory, RrDeviceSize offset,RrDeviceSize size, void** mapped);
-		extern void (*UnmapMemory)(RrLogicalDevice pDevice, RrDeviceMemory pMemory);
-		extern RrError (*FlushMappedMemoryRanges)(RrLogicalDevice pDevice, uint32_t memoryRangeCount, RrMappedMemoryRange* pMappedMemoryRanges);
+		extern RrError (*CreateCommandPool)(RrLogicalDevice device,const RrCommandPoolCreateInfo* pCreateInfo, RrCommandPool* pCommandPool);
+		extern void (*DestroyCommandPool)(RrLogicalDevice device, RrCommandPool commandPool);
+		extern RrError (*AllocateMemory)(RrLogicalDevice device, const RrMemoryAllocateInfo* pAllocateInfo, RrDeviceMemory* pMemory);
+		extern RrError (*DeviceMemoryGetMemoryTypeIndex)(uint32_t memoryTypeBits,RrMemoryPropertyFlags memoryProperties, uint32_t memoryTypeCount,const RrMemoryType* pMemoryTypes, uint32_t* pTypeIndex);
+		extern RrError (*MapMemory)(RrLogicalDevice device, RrDeviceMemory memory, RrDeviceSize offset,RrDeviceSize size, void** ppMapped);
+		extern void (*UnmapMemory)(RrLogicalDevice device, RrDeviceMemory memory);
+		extern RrError (*FlushMappedMemoryRanges)(RrLogicalDevice device, uint32_t memoryRangeCount,const RrMappedMemoryRange* pMappedMemoryRanges);
 		extern void (*FreeMemory)(RrLogicalDevice device, RrDeviceMemory memory);
-		extern RrError (*Initialize)(RrInitializeInfo* const pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger);
-		extern void (*DestroyInstance)(RrInstance pInstance, RrDebugMessenger pDebugMessenger);
+		extern RrError (*Initialize)(RrInitializeInfo* pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger);
+		extern void (*DestroyInstance)(RrInstance instance, RrDebugMessenger debugMessenger);
 		extern RrPFNVoidFunction (*GetInstanceProcAddr)(RrInstance instance, const char* pName);
 		extern RrError (*CreateLogicalDevice)(RrPhysicalDevice physicalDevice,RrLogicalDeviceCreateInfo* pCreateInfo, RrLogicalDevice* pDevice);
 		extern void (*GetDeviceQueue)(RrLogicalDevice device, uint32_t queueFamilyIndex, uint32_t queueIndex, RrQueue* pQueue);
 		extern void (*DestroyLogicalDevice)(RrLogicalDevice device);
 		extern RrPFNVoidFunction (*GetDeviceProcAddr)(RrLogicalDevice device, const char* pName);
 		extern RrError (*DeviceWaitIdle)(RrLogicalDevice device);
-		extern RrError (*EnumeratePhysicalDevice)(RrInstance pInstance,const RrPhysicalDeviceEnumerationInfo* const pCreateInfo, RrPhysicalDevice* ppPhysicalDevice);
-		extern void (*GetPhysicalDeviceProperties)(RrPhysicalDevice pDevice, RrPhysicalDeviceProperties* pProperties);
-		extern void (*GetPhysicalDeviceFeatures)(RrPhysicalDevice pDevice, RrPhysicalDeviceFeatures* pFeatures);
-		extern void (*GetPhysicalDeviceMemoryProperties)(RrPhysicalDevice pDevice, RrPhysicalDeviceMemoryProperties* pProperties);
+		extern RrError (*EnumeratePhysicalDevice)(RrInstance instance,const RrPhysicalDeviceEnumerationInfo* pCreateInfo, RrPhysicalDevice* pPhysicalDevice);
+		extern void (*GetPhysicalDeviceProperties)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceProperties* pProperties);
+		extern void (*GetPhysicalDeviceFeatures)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceFeatures* pFeatures);
+		extern void (*GetPhysicalDeviceMemoryProperties)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceMemoryProperties* pProperties);
 		extern RrError (*CreateSurface)(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, RrSurface* pSurface);
 
 	}  // namespace RendererAPI
