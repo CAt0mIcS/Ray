@@ -12,7 +12,8 @@ RrError RrAllocateMemory(RrLogicalDevice pDevice, const RrMemoryAllocateInfo* co
 	allocInfo.allocationSize = pAllocateInfo->allocationSize;
 	allocInfo.memoryTypeIndex = pAllocateInfo->memoryTypeIndex;
 
-	VkResult error = vkAllocateMemory(pDevice, &allocInfo, NULL, (VkDeviceMemory*)ppMemory);
+	VkResult error =
+		vkAllocateMemory((VkDevice)pDevice, &allocInfo, NULL, (VkDeviceMemory*)ppMemory);
 	if (error != VK_SUCCESS)
 		return GetError(error);
 
@@ -40,12 +41,13 @@ RrError RrDeviceMemoryGetMemoryTypeIndex(uint32_t memoryTypeBits,
 RrError RrMapMemory(RrLogicalDevice pDevice, RrDeviceMemory pMemory, RrDeviceSize offset,
 	RrDeviceSize size, void** mapped)
 {
-	return GetError(vkMapMemory(pDevice, pMemory, offset, size, 0, mapped));
+	return GetError(
+		vkMapMemory((VkDevice)pDevice, (VkDeviceMemory)pMemory, offset, size, 0, mapped));
 }
 
 void RrUnmapMemory(RrLogicalDevice pDevice, RrDeviceMemory pMemory)
 {
-	vkUnmapMemory(pDevice, pMemory);
+	vkUnmapMemory((VkDevice)pDevice, (VkDeviceMemory)pMemory);
 }
 
 RrError RrFlushMappedMemoryRanges(
@@ -58,10 +60,11 @@ RrError RrFlushMappedMemoryRanges(
 		pRanges[i].pNext = NULL;
 		pRanges[i].size = pMappedMemoryRanges[i].size;
 		pRanges[i].offset = pMappedMemoryRanges[i].offset;
-		pRanges[i].memory = pMappedMemoryRanges[i].memory;
+		pRanges[i].memory = (VkDeviceMemory)pMappedMemoryRanges[i].memory;
 	}
 
-	RrError error = GetError(vkFlushMappedMemoryRanges(pDevice, memoryRangeCount, pRanges));
+	RrError error =
+		GetError(vkFlushMappedMemoryRanges((VkDevice)pDevice, memoryRangeCount, pRanges));
 	free(pRanges);
 	return error;
 }

@@ -4,6 +4,6 @@
 
 RR_EXTERN_C_BEG
 
-typedef void* RrLogicalDevice;
+RR_DEFINE_HANDLE(RrLogicalDevice);
 
 RR_EXTERN_C_END

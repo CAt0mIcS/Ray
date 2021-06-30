@@ -84,7 +84,7 @@ RrError RrInitialize(
 			goto debugMessengerError;
 		}
 
-		if (createDebugMessenger(*pInstance, &debugUtilsCreateInfo, NULL,
+		if (createDebugMessenger((VkInstance)*pInstance, &debugUtilsCreateInfo, NULL,
 				(VkDebugUtilsMessengerEXT*)pDebugMessenger) != VK_SUCCESS)
 		{
 			LogError("Failed to create debug messenger");
@@ -133,9 +133,10 @@ void RrDestroyInstance(RrInstance pInstance, RrDebugMessenger pDebugMessenger)
 	{
 		PFN_vkDestroyDebugUtilsMessengerEXT destroyDebugMessenger =
 			(PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
-				pInstance, "vkDestroyDebugUtilsMessengerEXT");
-		destroyDebugMessenger(pInstance, pDebugMessenger, NULL);
+				(VkInstance)pInstance, "vkDestroyDebugUtilsMessengerEXT");
+		destroyDebugMessenger(
+			(VkInstance)pInstance, (VkDebugUtilsMessengerEXT)pDebugMessenger, NULL);
 	}
 
-	vkDestroyInstance(pInstance, NULL);
+	vkDestroyInstance((VkInstance)pInstance, NULL);
 }

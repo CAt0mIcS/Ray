@@ -5,7 +5,7 @@
 
 RR_EXTERN_C_BEG
 
-typedef void* RrDeviceMemory;
+RR_DEFINE_HANDLE(RrDeviceMemory);
 
 typedef enum RrMemoryPropertyFlagBits
 {

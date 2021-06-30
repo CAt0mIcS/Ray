@@ -13,8 +13,8 @@ RrError RrCreateCommandPool(RrLogicalDevice pDevice,
 	commandPoolCreateInfo.flags = (VkCommandPoolCreateFlags)pCreateInfo->flags;
 	commandPoolCreateInfo.queueFamilyIndex = pCreateInfo->queueFamilyIndex;
 
-	VkResult error =
-		vkCreateCommandPool(pDevice, &commandPoolCreateInfo, NULL, (VkCommandPool*)ppCommandPool);
+	VkResult error = vkCreateCommandPool(
+		(VkDevice)pDevice, &commandPoolCreateInfo, NULL, (VkCommandPool*)ppCommandPool);
 	if (error != VK_SUCCESS)
 		return GetError(error);
 
@@ -23,5 +23,5 @@ RrError RrCreateCommandPool(RrLogicalDevice pDevice,
 
 void RrDestroyCommandPool(RrLogicalDevice pDevice, RrCommandPool pCommandPool)
 {
-	vkDestroyCommandPool(pDevice, pCommandPool, NULL);
+	vkDestroyCommandPool((VkDevice)pDevice, (VkCommandPool)pCommandPool, NULL);
 }

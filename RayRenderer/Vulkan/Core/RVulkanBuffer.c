@@ -17,7 +17,7 @@ RrError RrCreateBuffer(
 	createInfo.queueFamilyIndexCount = pCreateInfo->queueFamilyIndexCount;
 	createInfo.pQueueFamilyIndices = pCreateInfo->pQueueFamilyIndices;
 
-	VkResult error = vkCreateBuffer(pDevice, &createInfo, NULL, (VkBuffer*)ppBuffer);
+	VkResult error = vkCreateBuffer((VkDevice)pDevice, &createInfo, NULL, (VkBuffer*)ppBuffer);
 	if (error != VK_SUCCESS)
 		return GetError(error);
 
@@ -27,11 +27,17 @@ RrError RrCreateBuffer(
 void RrBufferGetMemoryRequirements(
 	RrLogicalDevice pDevice, const RrBuffer pBuffer, RrMemoryRequirements* const pMemRequirements)
 {
-	vkGetBufferMemoryRequirements(pDevice, pBuffer, (VkMemoryRequirements*)pMemRequirements);
+	VkMemoryRequirements memRequirements;
+	memRequirements.size = pMemRequirements->size;
+	memRequirements.alignment = pMemRequirements->alignment;
+	memRequirements.memoryTypeBits = pMemRequirements->memoryTypeBits;
+
+	vkGetBufferMemoryRequirements((VkDevice)pDevice, (VkBuffer)pBuffer, &memRequirements);
 }
 
 RrError RrBindBufferMemory(
 	RrLogicalDevice pDevice, RrBuffer buffer, RrDeviceMemory memory, RrDeviceSize memoryOffset)
 {
-	return GetError(vkBindBufferMemory(pDevice, buffer, memory, memoryOffset));
+	return GetError(vkBindBufferMemory(
+		(VkDevice)pDevice, (VkBuffer)buffer, (VkDeviceMemory)memory, memoryOffset));
 }

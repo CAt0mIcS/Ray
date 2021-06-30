@@ -9,6 +9,8 @@ RR_EXTERN_C_BEG
 #define RR_MAX_MEMORY_HEAPS 16
 #define RR_MAX_PHYSICAL_DEVICE_NAME_SIZE 256
 #define RR_UUID_SIZE 16
+#define RR_DEFINE_HANDLE(object) typedef struct object##_T* object;
+
 
 typedef uint64_t RrDeviceSize;
 typedef uint32_t RrBool32;

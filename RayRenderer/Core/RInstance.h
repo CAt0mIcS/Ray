@@ -4,8 +4,8 @@
 
 RR_EXTERN_C_BEG
 
-typedef void* RrInstance;
-typedef void* RrDebugMessenger;
+RR_DEFINE_HANDLE(RrInstance);
+RR_DEFINE_HANDLE(RrDebugMessenger);
 
 typedef struct RrInitializeInfo
 {

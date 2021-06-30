@@ -6,7 +6,7 @@
 
 RR_EXTERN_C_BEG
 
-typedef void* RrBuffer;
+RR_DEFINE_HANDLE(RrBuffer);
 
 typedef enum RrBufferUsageFlagBits
 {

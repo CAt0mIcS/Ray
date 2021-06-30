@@ -14,7 +14,7 @@ RrError RrEnumeratePhysicalDevice(RrInstance pInstance,
 	const RrPhysicalDeviceEnumerationInfo* const pCreateInfo, RrPhysicalDevice* ppPhysicalDevice)
 {
 	uint32_t physicalDeviceCount = 0;
-	vkEnumeratePhysicalDevices(pInstance, &physicalDeviceCount, NULL);
+	vkEnumeratePhysicalDevices((VkInstance)pInstance, &physicalDeviceCount, NULL);
 	if (physicalDeviceCount == 0)
 	{
 		LogError("Failed to find suitable GPU supporting Vulkan while enumerating all physical "
@@ -23,9 +23,9 @@ RrError RrEnumeratePhysicalDevice(RrInstance pInstance,
 	}
 
 	VkPhysicalDevice* physicalDevices = malloc(sizeof(VkPhysicalDevice) * physicalDeviceCount);
-	vkEnumeratePhysicalDevices(pInstance, &physicalDeviceCount, physicalDevices);
+	vkEnumeratePhysicalDevices((VkInstance)pInstance, &physicalDeviceCount, physicalDevices);
 
-	*ppPhysicalDevice = ChoosePhysicalDevice(physicalDeviceCount, physicalDevices,
+	*ppPhysicalDevice = (RrPhysicalDevice)ChoosePhysicalDevice(physicalDeviceCount, physicalDevices,
 		pCreateInfo->deviceExtensionCount, pCreateInfo->ppDeviceExtensions);
 	if (!*ppPhysicalDevice)
 	{
@@ -43,18 +43,20 @@ RrError RrEnumeratePhysicalDevice(RrInstance pInstance,
 void RrGetPhysicalDeviceProperties(
 	RrPhysicalDevice pDevice, RrPhysicalDeviceProperties* pProperties)
 {
-	vkGetPhysicalDeviceProperties(pDevice, (VkPhysicalDeviceProperties*)pProperties);
+	vkGetPhysicalDeviceProperties(
+		(VkPhysicalDevice)pDevice, (VkPhysicalDeviceProperties*)pProperties);
 }
 
 void RrGetPhysicalDeviceFeatures(RrPhysicalDevice pDevice, RrPhysicalDeviceFeatures* pFeatures)
 {
-	vkGetPhysicalDeviceFeatures(pDevice, (VkPhysicalDeviceFeatures*)pFeatures);
+	vkGetPhysicalDeviceFeatures((VkPhysicalDevice)pDevice, (VkPhysicalDeviceFeatures*)pFeatures);
 }
 
 void RrGetPhysicalDeviceMemoryProperties(
 	RrPhysicalDevice pDevice, RrPhysicalDeviceMemoryProperties* pProperties)
 {
-	vkGetPhysicalDeviceMemoryProperties(pDevice, (VkPhysicalDeviceMemoryProperties*)pProperties);
+	vkGetPhysicalDeviceMemoryProperties(
+		(VkPhysicalDevice)pDevice, (VkPhysicalDeviceMemoryProperties*)pProperties);
 }
 
 

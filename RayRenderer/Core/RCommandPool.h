@@ -4,7 +4,7 @@
 
 RR_EXTERN_C_BEG
 
-typedef void* RrCommandPool;
+RR_DEFINE_HANDLE(RrCommandPool);
 
 typedef enum RrCommandPoolCreateFlagBits
 {

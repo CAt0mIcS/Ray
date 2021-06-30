@@ -6,7 +6,7 @@
 
 RR_EXTERN_C_BEG
 
-typedef void* RrPhysicalDevice;
+RR_DEFINE_HANDLE(RrPhysicalDevice);
 
 typedef enum RrPhysicalDeviceType
 {
