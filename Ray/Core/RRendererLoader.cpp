@@ -3,7 +3,7 @@
 #include "Rpch.h"
 #include "RRendererLoader.h"
 
-#include <RayBase/RException.h>
+#include "Utils/RException.h"
 
 #ifdef _WIN32
     #include <Windows.h>

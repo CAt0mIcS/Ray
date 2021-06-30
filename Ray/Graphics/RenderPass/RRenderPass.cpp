@@ -8,7 +8,7 @@
 
 #include "Graphics/Commands/RCommandBuffer.h"
 
-#include "RayBase/RException.h"
+#include "Ray/Utils/RException.h"
 
 namespace At0::Ray
 {

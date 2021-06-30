@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "RBase.h"
+#include "../RBase.h"
 #include "RString.h"
 #include "RLogger.h"
 #include "RAssert.h"
@@ -13,7 +13,7 @@
 
 namespace At0::Ray
 {
-	class RAYBASE_API Exception : public std::exception
+	class RAY_EXPORT Exception : public std::exception
 	{
 	public:
 		Exception(uint16_t line, const char* file);
@@ -28,7 +28,7 @@ namespace At0::Ray
 		const char* m_File;
 	};
 
-	class RAYBASE_API RuntimeException : public Exception
+	class RAY_EXPORT RuntimeException : public Exception
 	{
 	public:
 		RuntimeException(const char* message, uint16_t line, const char* file);
@@ -39,7 +39,7 @@ namespace At0::Ray
 		std::string m_Message;
 	};
 
-	class RAYBASE_API RenderException : public RuntimeException
+	class RAY_EXPORT RenderException : public RuntimeException
 	{
 	public:
 		RenderException(const char* message, uint16_t line, const char* file, int result);

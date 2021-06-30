@@ -5,8 +5,8 @@
 #include <Ray/Scene/RCamera.h>
 #include <Ray/Core/REngine.h>
 #include <Ray/Devices/RWindow.h>
-#include <RayBase/RException.h>
-#include <RayBase/RLogger.h>
+#include <Ray/Utils/RException.h>
+#include <Ray/Utils/RLogger.h>
 #include <Ray/Graphics/Images/RTexture2D.h>
 
 #include <Ray/Shading/Flat/RFlatColorMaterial.h>

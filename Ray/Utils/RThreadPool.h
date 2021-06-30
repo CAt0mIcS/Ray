@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "RBase.h"
-#include "RMath.h"
+#include "../RBase.h"
+#include "../Core/RMath.h"
 
 #include <mutex>
 #include <functional>
@@ -13,7 +13,7 @@
 
 namespace At0::Ray
 {
-	class RAYBASE_API ThreadPool
+	class RAY_EXPORT ThreadPool
 	{
 	public:
 		ThreadPool(uint32_t threadCount = std::thread::hardware_concurrency());

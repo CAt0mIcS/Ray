@@ -1,7 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RSplitNode.h"
 
-#include "RayBase/RString.h"
+#include "Ray/Utils/RString.h"
 
 
 namespace At0::Ray

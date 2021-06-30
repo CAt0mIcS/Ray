@@ -10,7 +10,7 @@
 #include "Shading/Phong/RPhongMaterial.h"
 #include "Shading/Flat/RFlatColorMaterial.h"
 
-#include "RayBase/RException.h"
+#include "Ray/Utils/RException.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
@@ -19,7 +19,7 @@
 #include "Components/RMeshRenderer.h"
 #include "Components/RParentEntity.h"
 #include "Scene/RScene.h"
-#include "RayBase/RTime.h"
+#include "Core/RTime.h"
 
 #define RAY_MULTITHREADED_IMPORT 1
 

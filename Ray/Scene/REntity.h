@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 #include "Ray/RBase.h"
-#include "RayBase/RAssert.h"
-#include "RayBase/RNonCopyable.h"
+#include "Ray/Utils/RAssert.h"
+#include "Ray/Utils/RNonCopyable.h"
 
 #include <../../Extern/entt/src/entt/entt.hpp>
 

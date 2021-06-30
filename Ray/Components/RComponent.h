@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Ray/RBase.h"
-#include "RayBase/RAssert.h"
+#include "Ray/Utils/RAssert.h"
 #include "Ray/Scene/REntity.h"
 
 

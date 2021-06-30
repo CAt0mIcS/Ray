@@ -3,8 +3,8 @@
 
 #include "../Shader/RShader.h"
 #include "../RPipeline.h"
-#include "RayBase/RAssert.h"
-#include "RayBase/RString.h"
+#include "Ray/Utils/RAssert.h"
+#include "Ray/Utils/RString.h"
 
 
 namespace At0::Ray

@@ -2,7 +2,7 @@
 
 #include "../RMaterial.h"
 #include "Ray/Graphics/Pipelines/RGraphicsPipeline.h"
-#include "RayBase/RMath.h"
+#include "Ray/Core/RMath.h"
 
 
 namespace At0::Ray

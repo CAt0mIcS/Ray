@@ -48,6 +48,11 @@ set(SRC
 	"Core/RResource.cpp"
 	"Core/RRendererLoader.h"
 	"Core/RRendererLoader.cpp"
+	"Core/RKeyCodes.h"
+	"Core/RMath.h"
+	"Core/RMath.cpp"
+	"Core/RTime.h"
+	"Core/RTime.cpp"
 	
 	# ------------------------------------------------------------------
 	# Devices
@@ -228,6 +233,11 @@ set(SRC
 	"UI/RImGui.cpp"
 
 	# ------------------------------------------------------------------
+	# Filesystem
+	"Filesystem/RJSON.h"
+	"Filesystem/RJSON.cpp"
+
+	# ------------------------------------------------------------------
 	# Mono
 	"Mono/RScript.h"
 	"Mono/RScript.cpp"
@@ -242,6 +252,16 @@ set(SRC
 
 	# ------------------------------------------------------------------
 	# Utilities
+	"Utils/RAssert.h"
+	"Utils/RException.h"
+	"Utils/RException.cpp"
+	"Utils/RLogger.h"
+	"Utils/RLogger.cpp"
+	"Utils/RNonCopyable.h"
+	"Utils/RString.h"
+	"Utils/RString.cpp"
+	"Utils/RThreadPool.h"
+	"Utils/RThreadPool.cpp"
 	"Utils/RGeometricPrimitives.h"
 	"Utils/RGeometricPrimitives.cpp"
 	"Utils/RModel.h"
@@ -292,7 +312,6 @@ set(PRIVATE_INC
 
 set(PUBLIC_LIB
 	"glm"
-	"RayBase"
 )
 
 set(PRIVATE_LIB

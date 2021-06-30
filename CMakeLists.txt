@@ -120,7 +120,6 @@ include("CMake/Macros.cmake")
 add_subdirectory("Extern")
 
 add_subdirectory("RayRenderer")
-add_subdirectory("RayBase")
 add_subdirectory("Ray")
 
 if(RAY_BUILD_TESTS)

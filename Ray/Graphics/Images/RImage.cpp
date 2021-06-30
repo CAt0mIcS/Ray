@@ -7,9 +7,9 @@
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/Buffers/RBuffer.h"
 
-#include "RayBase/RLogger.h"
-#include "RayBase/RException.h"
-#include "RayBase/RAssert.h"
+#include "Ray/Utils/RLogger.h"
+#include "Ray/Utils/RException.h"
+#include "Ray/Utils/RAssert.h"
 
 #include "Core/RRendererLoader.h"
 

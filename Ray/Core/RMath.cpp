@@ -34,32 +34,32 @@ namespace At0::Ray
 	float DotProduct(Float4 x, Float4 y) { return glm::dot(x, y); }
 	Float3 CrossProduct(Float3 x, Float3 y) { return glm::cross(x, y); }
 
-	RAYBASE_API Float2 NDCSpaceToScreenSpace(Float2 coords, Float2 windowSize)
+	RAY_EXPORT Float2 NDCSpaceToScreenSpace(Float2 coords, Float2 windowSize)
 	{
 		return { (coords.x + 1) * 0.5f * windowSize.x, (coords.y + 1) * 0.5f * windowSize.y };
 	}
-	RAYBASE_API Float2 ScreenSpaceToNDCSpace(Float2 coords, Float2 windowSize)
+	RAY_EXPORT Float2 ScreenSpaceToNDCSpace(Float2 coords, Float2 windowSize)
 	{
 		return { coords.x / (0.5f * windowSize.x) - 1, coords.y / (0.5f * windowSize.y) - 1 };
 	}
-	RAYBASE_API float NDCSpaceToScreenSpaceX(float x, float windowSizeX)
+	RAY_EXPORT float NDCSpaceToScreenSpaceX(float x, float windowSizeX)
 	{
 		return (x + 1) * 0.5f * windowSizeX;
 	}
-	RAYBASE_API float ScreenSpaceToNDCSpaceX(float x, float windowSizeX)
+	RAY_EXPORT float ScreenSpaceToNDCSpaceX(float x, float windowSizeX)
 	{
 		return x / (0.5f * windowSizeX) - 1;
 	}
-	RAYBASE_API float NDCSpaceToScreenSpaceY(float y, float windowSizeY)
+	RAY_EXPORT float NDCSpaceToScreenSpaceY(float y, float windowSizeY)
 	{
 		return (y + 1) * 0.5f * windowSizeY;
 	}
-	RAYBASE_API float ScreenSpaceToNDCSpaceY(float y, float windowSizeY)
+	RAY_EXPORT float ScreenSpaceToNDCSpaceY(float y, float windowSizeY)
 	{
 		return y / (0.5f * windowSizeY) - 1;
 	}
 
-	RAYBASE_API std::vector<uint32_t> GenerateChunks(uint32_t number, uint32_t chunks)
+	RAY_EXPORT std::vector<uint32_t> GenerateChunks(uint32_t number, uint32_t chunks)
 	{
 		if (number < chunks)
 			return { number };

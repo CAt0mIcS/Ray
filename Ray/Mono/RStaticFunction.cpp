@@ -1,8 +1,8 @@
 ﻿#include "Rpch.h"
 #include "RStaticFunction.h"
 
-#include "RayBase/RAssert.h"
-#include "RayBase/RException.h"
+#include "Ray/Utils/RAssert.h"
+#include "Ray/Utils/RException.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/object.h>

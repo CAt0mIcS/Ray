@@ -5,8 +5,8 @@
 #include "RLogicalDevice.h"
 #include "RRendererInstance.h"
 
-#include "RayBase/RException.h"
-#include "RayBase/RLogger.h"
+#include "Ray/Utils/RException.h"
+#include "Ray/Utils/RLogger.h"
 
 #include "Ray/Core/RRendererLoader.h"
 

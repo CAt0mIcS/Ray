@@ -5,8 +5,8 @@
 #include "Nodes/RTexture2DNode.h"
 #include "Nodes/RSampler2DNode.h"
 
-#include "RayBase/RString.h"
-#include "RayBase/RLogger.h"
+#include "Ray/Utils/RString.h"
+#include "Ray/Utils/RLogger.h"
 
 
 namespace At0::Ray

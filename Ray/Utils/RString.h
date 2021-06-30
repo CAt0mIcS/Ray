@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "RBase.h"
-#include "RKeyCodes.h"
+#include "../RBase.h"
+#include "../Core/RKeyCodes.h"
 #include "RNonCopyable.h"
 
 #include <string>
@@ -15,7 +15,7 @@
 
 namespace At0::Ray
 {
-	class RAYBASE_API String : NonCopyable
+	class RAY_EXPORT String : NonCopyable
 	{
 	public:
 		String() = delete;

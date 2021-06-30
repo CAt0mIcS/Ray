@@ -9,8 +9,8 @@
 #include "RSurface.h"
 #include "Graphics/Images/RImageView.h"
 
-#include "RayBase/RException.h"
-#include "RayBase/RLogger.h"
+#include "Ray/Utils/RException.h"
+#include "Ray/Utils/RLogger.h"
 
 
 namespace At0::Ray

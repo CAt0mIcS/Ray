@@ -1,5 +1,5 @@
 ﻿#include <Ray/Core/REngine.h>
-#include <RayBase/RLogger.h>
+#include <Ray/Utils/RLogger.h>
 #include <Ray/Devices/RWindow.h>
 #include <Ray/Graphics/RGraphics.h>
 
@@ -14,7 +14,7 @@
 #include <Ray/Graphics/Images/RTexture2D.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
-#include <RayBase/RException.h>
+#include <Ray/Utils/RException.h>
 #include <Ray/Core/RDynamicVertex.h>
 
 #include <Ray/Shading/Phong/RPhongMaterial.h>

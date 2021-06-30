@@ -11,8 +11,8 @@
 #include "Ray/Events/REventDispatcher.h"
 #include "Ray/Events/RMouseEvents.h"
 #include "Ray/Events/RKeyboardEvents.h"
-#include "RayBase/RTime.h"
-#include "RayBase/RMath.h"
+#include "../Core/RTime.h"
+#include "Ray/Core/RMath.h"
 #include "Ray/Core/RFrustum.h"
 
 

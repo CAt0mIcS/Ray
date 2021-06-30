@@ -1,9 +1,9 @@
 ﻿#pragma once
 
 #include "Ray/RBase.h"
-#include "RayBase/RNonCopyable.h"
-#include "RayBase/RTime.h"
-#include "RayBase/RMath.h"
+#include "Ray/Utils/RNonCopyable.h"
+#include "../Core/RTime.h"
+#include "Ray/Core/RMath.h"
 
 #include "Ray/Events/REngineEvents.h"
 #include "Ray/Events/REventListener.h"

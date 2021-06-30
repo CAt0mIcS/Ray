@@ -5,7 +5,7 @@
 #include "Graphics/Core/RLogicalDevice.h"
 #include "RCommandPool.h"
 
-#include "RayBase/RException.h"
+#include "Ray/Utils/RException.h"
 #include "Core/RRendererLoader.h"
 
 

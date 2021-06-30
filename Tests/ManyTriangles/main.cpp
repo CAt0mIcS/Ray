@@ -1,5 +1,5 @@
 ﻿#include <Ray/Core/REngine.h>
-#include <RayBase/RLogger.h>
+#include <Ray/Utils/RLogger.h>
 #include <Ray/Devices/RWindow.h>
 #include <Ray/Graphics/RGraphics.h>
 
@@ -15,7 +15,7 @@
 #include <Ray/Graphics/Images/RTexture2D.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
-#include <RayBase/RException.h>
+#include <Ray/Utils/RException.h>
 #include <Ray/Graphics/Pipelines/Shader/RShader.h>
 #include <Ray/Core/RDynamicVertex.h>
 #include <Ray/Core/RRendererLoader.h>
@@ -61,37 +61,33 @@ public:
 	{
 		Ray::Scene::Create<Scene>();
 
-		Ray::ImGUI::Get().RegisterNewFrameFunction(
-			[]()
-			{
-				ImGui::Begin("Skybox");
-				static bool enabled = false;
-				bool previous = enabled;
-				ImGui::Checkbox("Enabled", &enabled);
+		Ray::ImGUI::Get().RegisterNewFrameFunction([]() {
+			ImGui::Begin("Skybox");
+			static bool enabled = false;
+			bool previous = enabled;
+			ImGui::Checkbox("Enabled", &enabled);
 
-				if (previous != enabled)
-				{
-					if (enabled)
-						Scene::Get().CreateEntity().Emplace<Ray::Skybox>(Ray::Texture2D::Acquire(
-							"Resources/Textures/EquirectangularWorldMap.jpg"));
-					else
-						Scene::Get().DestroyEntity(Scene::Get().EntityView<Ray::Skybox>()[0]);
-				}
-				ImGui::End();
-			});
-
-		Ray::ImGUI::Get().RegisterNewFrameFunction(
-			[this]()
+			if (previous != enabled)
 			{
-				ImGui::Begin("Triangles");
-				ImGui::InputInt("Upper range", &m_UpperRange, 100, 10000);
-				int prevTriangleCount = m_Triangles;
-				ImGui::SliderInt("Triangle Count", &m_Triangles, 0, m_UpperRange);
-				if (prevTriangleCount != m_Triangles)
-					TriangleCountChanged(prevTriangleCount);
-				ImGui::SliderFloat("Movement Speed", &m_MovementSpeed, -50.0f, 50.0f);
-				ImGui::End();
-			});
+				if (enabled)
+					Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+						Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
+				else
+					Scene::Get().DestroyEntity(Scene::Get().EntityView<Ray::Skybox>()[0]);
+			}
+			ImGui::End();
+		});
+
+		Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
+			ImGui::Begin("Triangles");
+			ImGui::InputInt("Upper range", &m_UpperRange, 100, 10000);
+			int prevTriangleCount = m_Triangles;
+			ImGui::SliderInt("Triangle Count", &m_Triangles, 0, m_UpperRange);
+			if (prevTriangleCount != m_Triangles)
+				TriangleCountChanged(prevTriangleCount);
+			ImGui::SliderFloat("Movement Speed", &m_MovementSpeed, -50.0f, 50.0f);
+			ImGui::End();
+		});
 
 #include "../ImGuiWindows.inl"
 

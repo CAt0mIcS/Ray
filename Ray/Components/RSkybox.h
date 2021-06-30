@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Ray/RBase.h"
-#include "RayBase/RTime.h"
+#include "../Core/RTime.h"
 #include "Ray/Scene/RCamera.h"
 
 #include "RComponent.h"

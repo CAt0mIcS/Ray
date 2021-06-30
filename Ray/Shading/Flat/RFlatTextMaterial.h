@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "../RMaterial.h"
-#include "RayBase/RMath.h"
+#include "Ray/Core/RMath.h"
 #include "Ray/Graphics/Pipelines/RGraphicsPipeline.h"
 
 

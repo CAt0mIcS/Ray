@@ -1,13 +1,13 @@
 ﻿#pragma once
 
-#include "RBase.h"
+#include "../RBase.h"
 
 #include <../../Extern/rapidjson/include/rapidjson/document.h>
 
 
 namespace At0::Ray
 {
-	class RAYBASE_API JSON
+	class RAY_EXPORT JSON
 	{
 	public:
 		/**

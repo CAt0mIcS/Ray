@@ -1,9 +1,9 @@
 ﻿#pragma once
 
 #include "Ray/RBase.h"
-#include "RayBase/RMath.h"
+#include "Ray/Core/RMath.h"
 #include "Ray/Core/RResource.h"
-#include "RayBase/RNonCopyable.h"
+#include "Ray/Utils/RNonCopyable.h"
 #include "RImageView.h"
 
 #include <vulkan/vulkan_core.h>

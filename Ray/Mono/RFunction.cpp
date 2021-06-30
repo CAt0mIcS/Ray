@@ -1,7 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RFunction.h"
 
-#include "RayBase/RException.h"
+#include "Ray/Utils/RException.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/object.h>

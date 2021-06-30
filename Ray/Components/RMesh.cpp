@@ -12,7 +12,7 @@
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 
 #include "Core/RDynamicVertex.h"
-#include "RayBase/RString.h"
+#include "Ray/Utils/RString.h"
 #include "Utils/RModel.h"
 
 

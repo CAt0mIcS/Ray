@@ -1,11 +1,11 @@
 ﻿#pragma once
 
-#include "RBase.h"
+#include "../RBase.h"
 
 
 namespace At0::Ray
 {
-	class RAYBASE_API NonCopyable
+	class RAY_EXPORT NonCopyable
 	{
 	public:
 		NonCopyable(const NonCopyable&) = delete;

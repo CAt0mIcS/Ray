@@ -6,9 +6,9 @@
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 
-#include "RayBase/RException.h"
-#include "RayBase/RAssert.h"
-#include "RayBase/RLogger.h"
+#include "Ray/Utils/RException.h"
+#include "Ray/Utils/RAssert.h"
+#include "Ray/Utils/RLogger.h"
 
 #include "Core/RRendererLoader.h"
 

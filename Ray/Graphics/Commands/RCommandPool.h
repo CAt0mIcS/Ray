@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "RayBase/RNonCopyable.h"
+#include "Ray/Utils/RNonCopyable.h"
 #include "Ray/RBase.h"
 
 #include <RayRenderer/Core/RCommandPool.h>

@@ -1,8 +1,8 @@
 ﻿
 #pragma once
 
-#include "RBase.h"
-#include "RMath.h"
+#include "../RBase.h"
+#include "../Core/RMath.h"
 
 #ifdef _MSC_VER
 	#include <source_location>
@@ -28,11 +28,11 @@ namespace At0::Ray
 	using SourceLocation = std::experimental::source_location;
 #endif
 
-	RAYBASE_API extern Violent::FileLogger g_FileLogger;
-	RAYBASE_API extern Violent::ConsoleLogger g_ConsoleLogger;
+	RAY_EXPORT extern Violent::FileLogger g_FileLogger;
+	RAY_EXPORT extern Violent::ConsoleLogger g_ConsoleLogger;
 
 #ifdef _MSC_VER
-	class RAYBASE_API CLog
+	class RAY_EXPORT CLog
 	{
 		friend class Log;
 
@@ -136,7 +136,7 @@ namespace At0::Ray
 #endif
 
 #ifdef _MSC_VER
-	class RAYBASE_API FLog
+	class RAY_EXPORT FLog
 	{
 		friend class Log;
 
@@ -242,7 +242,7 @@ namespace At0::Ray
 #endif
 
 #ifdef _MSC_VER
-	class RAYBASE_API Log
+	class RAY_EXPORT Log
 	{
 	public:
 #else

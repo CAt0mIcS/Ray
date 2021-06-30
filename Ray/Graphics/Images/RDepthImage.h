@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Ray/RBase.h"
-#include "RayBase/RMath.h"
+#include "Ray/Core/RMath.h"
 #include "RImage2D.h"
 
 

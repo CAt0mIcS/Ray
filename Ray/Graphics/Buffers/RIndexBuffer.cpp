@@ -5,7 +5,7 @@
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 
-#include "RayBase/RAssert.h"
+#include "Ray/Utils/RAssert.h"
 
 
 namespace At0::Ray

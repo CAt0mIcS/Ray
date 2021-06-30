@@ -5,9 +5,9 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
-#include "RayBase/RAssert.h"
-#include "RayBase/RLogger.h"
-#include "RayBase/RException.h"
+#include "Ray/Utils/RAssert.h"
+#include "Ray/Utils/RLogger.h"
+#include "Ray/Utils/RException.h"
 
 #include <glslang/MachineIndependent/gl_types.h>
 

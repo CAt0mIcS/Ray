@@ -1,8 +1,8 @@
 ﻿#include "Rpch.h"
 #include "RGeometricPrimitives.h"
-#include "RayBase/RMath.h"
+#include "Ray/Core/RMath.h"
 
-#include "RayBase/RString.h"
+#include "Ray/Utils/RString.h"
 
 
 namespace At0::Ray

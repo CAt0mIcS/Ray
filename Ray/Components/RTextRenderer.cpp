@@ -1,8 +1,8 @@
 ﻿#include "Rpch.h"
 #include "RTextRenderer.h"
 
-#include "RayBase/RAssert.h"
-#include "RayBase/RString.h"
+#include "Ray/Utils/RAssert.h"
+#include "Ray/Utils/RString.h"
 
 #include "RMesh.h"
 #include "RTransform.h"

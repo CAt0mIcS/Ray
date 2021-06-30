@@ -7,8 +7,8 @@
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
-#include "RayBase/RException.h"
-#include "RayBase/RLogger.h"
+#include "Ray/Utils/RException.h"
+#include "Ray/Utils/RLogger.h"
 
 #include "Components/RMeshRenderer.h"
 #include "Components/RTextRenderer.h"
@@ -18,7 +18,7 @@
 #include "Events/REventListener.h"
 
 // RAY_TEMPORARY
-#include "RayBase/RTime.h"
+#include "Core/RTime.h"
 
 #define RAY_MULTITHREADED_TRANSFORM_CALCULATIONS 1
 #define RAY_MULTITHREADED_MESHRENDERER_UPDATES 1

@@ -2,10 +2,10 @@
 #include "RShader.h"
 
 #include "Core/RDynamicVertex.h"
-#include "RayBase/RException.h"
-#include "RayBase/RAssert.h"
-#include "RayBase/RLogger.h"
-#include "RayBase/RString.h"
+#include "Ray/Utils/RException.h"
+#include "Ray/Utils/RAssert.h"
+#include "Ray/Utils/RLogger.h"
+#include "Ray/Utils/RString.h"
 
 #include "RGlslCompiler.h"
 #include "Graphics/RGraphics.h"

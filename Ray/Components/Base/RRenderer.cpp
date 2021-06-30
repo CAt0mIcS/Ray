@@ -8,8 +8,8 @@
 #include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
 
-#include "RayBase/RException.h"
-#include "RayBase/RAssert.h"
+#include "Ray/Utils/RException.h"
+#include "Ray/Utils/RAssert.h"
 
 
 namespace At0::Ray

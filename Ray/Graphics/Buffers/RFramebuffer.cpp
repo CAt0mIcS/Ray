@@ -6,8 +6,8 @@
 #include "Graphics/Core/RSwapchain.h"
 #include "Graphics/RenderPass/RRenderPass.h"
 
-#include "RayBase/RException.h"
-#include "RayBase/RLogger.h"
+#include "Ray/Utils/RException.h"
+#include "Ray/Utils/RLogger.h"
 
 
 namespace At0::Ray

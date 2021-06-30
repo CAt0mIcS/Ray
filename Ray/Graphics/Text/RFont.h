@@ -2,7 +2,7 @@
 
 #include "Ray/RBase.h"
 #include "Ray/Core/RResource.h"
-#include "RayBase/RMath.h"
+#include "Ray/Core/RMath.h"
 #include "Ray/Graphics/Images/RTexture2DAtlas.h"
 
 #include <unordered_map>

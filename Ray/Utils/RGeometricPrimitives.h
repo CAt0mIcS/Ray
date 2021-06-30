@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "RayBase/RMath.h"
+#include "Ray/Core/RMath.h"
 #include "Ray/Graphics/Buffers/RIndexBuffer.h"
 #include "Ray/Core/RDynamicVertex.h"
 

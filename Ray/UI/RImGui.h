@@ -12,8 +12,8 @@
 
 // clang-format off
 #include "Ray/RBase.h"
-#include "RayBase/RMath.h"
-#include "RayBase/RTime.h"
+#include "Ray/Core/RMath.h"
+#include "../Core/RTime.h"
 
 #include "Ray/Events/REventListener.h"
 #include "Ray/Events/RKeyboardEvents.h"

@@ -1,9 +1,9 @@
 ﻿#include "Rpch.h"
 #include "RObject.h"
 
-#include "RayBase/RString.h"
-#include "RayBase/RException.h"
-#include "RayBase/RAssert.h"
+#include "Ray/Utils/RString.h"
+#include "Ray/Utils/RException.h"
+#include "Ray/Utils/RAssert.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/object.h>
