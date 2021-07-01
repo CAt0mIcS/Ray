@@ -2,14 +2,15 @@
 #include <filesystem>
 
 #include <Ray/Utils/RLogger.h>
-#include <RayBase/RThreadPool.h>
+#include <Ray/Utils/RThreadPool.h>
 #include <Ray/Utils/RException.h>
 #include <Ray/Components/RTransform.h>
 #include <Ray/Components/RTagComponent.h>
-#include <RayBase/RMath.h>
-#include <RayBase/RTime.h>
+#include <Ray/Core/RMath.h>
+#include <Ray/Core/RTime.h>
 #include <Ray/Scene/RScene.h>
 #include <Ray/Core/REngine.h>
+#include <Ray/Core/RRendererLoader.h>
 
 #include <../../Extern/entt/src/entt/entt.hpp>
 
@@ -107,6 +108,8 @@ int main()
 
 	try
 	{
+		LoadRenderer(RendererAPI::Vulkan);
+
 		Log::Info("Launch Path: \"{0}\"", std::filesystem::absolute("."));
 
 		Window::Create();

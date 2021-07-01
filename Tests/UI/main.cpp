@@ -7,6 +7,7 @@
 #include <Ray/Components/RTextRenderer.h>
 #include <Ray/Components/RSkybox.h>
 
+#include <Ray/Core/RRendererLoader.h>
 #include <Ray/Graphics/Images/RTexture2D.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
 #include <Ray/Utils/RException.h>
@@ -178,6 +179,8 @@ int main()
 
 	try
 	{
+		Ray::LoadRenderer(Ray::RendererAPI::Vulkan);
+
 		Ray::Window::Create();
 		Ray::Window::Get().Show();
 		Ray::Window::Get().SetTitle("UITest");

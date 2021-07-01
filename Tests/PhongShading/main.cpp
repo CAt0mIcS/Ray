@@ -11,6 +11,7 @@
 #include <Ray/Components/RSkybox.h>
 #include <Ray/Components/RScriptableEntity.h>
 
+#include <Ray/Core/RRendererLoader.h>
 #include <Ray/Graphics/Images/RTexture2D.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
@@ -136,6 +137,8 @@ int main()
 
 	try
 	{
+		Ray::LoadRenderer(Ray::RendererAPI::Vulkan);
+
 		Ray::Log::Info("Launch Path: \"{0}\"", std::filesystem::absolute("."));
 		Ray::Window::Create();
 		Ray::Window::Get().Show();

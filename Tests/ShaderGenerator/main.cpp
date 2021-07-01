@@ -11,6 +11,7 @@
 
 #include <Ray/Shading/Flat/RFlatColorMaterial.h>
 
+#include <Ray/Core/RRendererLoader.h>
 #include <Ray/Components/RMesh.h>
 #include <Ray/Components/RMeshRenderer.h>
 #include <Ray/Components/RTransform.h>
@@ -268,6 +269,8 @@ int main()
 
 	try
 	{
+		Ray::LoadRenderer(Ray::RendererAPI::Vulkan);
+
 		Ray::Log::Info("Launch Path: \"{0}\"", std::filesystem::absolute("."));
 		Ray::Window::Create();
 		Ray::Window::Get().Show();
