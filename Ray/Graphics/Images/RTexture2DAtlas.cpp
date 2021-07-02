@@ -7,8 +7,8 @@
 
 namespace At0::Ray
 {
-	Texture2DAtlas::Texture2DAtlas(UInt2 extent, VkFormat format, VkImageTiling tiling,
-		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps)
+	Texture2DAtlas::Texture2DAtlas(UInt2 extent, RrFormat format, RrImageTiling tiling,
+		RrImageUsageFlags usage, RrMemoryPropertyFlags memProps)
 		: Texture2D(extent, format, tiling, usage, memProps)
 	{
 		m_FreeAreas.emplace_back(UInt2{ 0, 0 }, extent);
@@ -25,10 +25,10 @@ namespace At0::Ray
 			return nullptr;
 		}
 
-		VkDeviceSize imageSize = extent.x * extent.y * 4;
+		RrDeviceSize imageSize = extent.x * extent.y * 4;
 
-		Buffer stagingBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, pixels);
+		Buffer stagingBuffer(imageSize, RrBufferUsageTransferSrc,
+			RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent, pixels);
 
 		VkBufferImageCopy region{};
 
@@ -40,7 +40,7 @@ namespace At0::Ray
 		region.imageExtent = { extent.x, extent.y, 1 };
 
 		CopyFromBuffer(stagingBuffer, { region });
-		TransitionLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		TransitionLayout(RrImageLayoutShaderReadOnly);
 		return &m_AllocatedAreas.front();
 	}
 

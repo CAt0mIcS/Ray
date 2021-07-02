@@ -6,9 +6,9 @@
 
 namespace At0::Ray
 {
-	Ref<Image2D> Image2D::Acquire(UInt2 extent, VkFormat format, VkImageTiling tiling,
-		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, uint32_t mipLevels,
-		VkImageAspectFlags imageAspect, uint32_t arrayLayers, VkImageCreateFlags createFlags)
+	Ref<Image2D> Image2D::Acquire(UInt2 extent, RrFormat format, RrImageTiling tiling,
+		RrImageUsageFlags usage, RrMemoryPropertyFlags memProps, uint32_t mipLevels,
+		RrImageAspectFlags imageAspect, uint32_t arrayLayers, RrImageCreateFlags createFlags)
 	{
 		return Resources::Get().EmplaceIfNonExistent<Image2D>(
 			String::Serialize("Image2D{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}", extent.x, extent.y,
@@ -18,20 +18,20 @@ namespace At0::Ray
 			createFlags);
 	}
 
-	Image2D::Image2D(UInt2 extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
-		VkMemoryPropertyFlags memProps, uint32_t mipLevels, VkImageAspectFlags imageAspect,
-		uint32_t arrayLayers, VkImageCreateFlags createFlags)
-		: Image(extent, VK_IMAGE_TYPE_2D, format, tiling, usage, memProps, mipLevels, imageAspect,
+	Image2D::Image2D(UInt2 extent, RrFormat format, RrImageTiling tiling, RrImageUsageFlags usage,
+		RrMemoryPropertyFlags memProps, uint32_t mipLevels, RrImageAspectFlags imageAspect,
+		uint32_t arrayLayers, RrImageCreateFlags createFlags)
+		: Image(extent, RrImageType2D, format, tiling, usage, memProps, mipLevels, imageAspect,
 			  arrayLayers, createFlags)
 	{
 	}
 
-	void Image2D::Setup(UInt2 extent, VkFormat format, VkImageTiling tiling,
-		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, uint32_t mipLevels,
-		VkImageAspectFlags imageAspect, uint32_t arrayLayers, VkImageCreateFlags createFlags)
+	void Image2D::Setup(UInt2 extent, RrFormat format, RrImageTiling tiling,
+		RrImageUsageFlags usage, RrMemoryPropertyFlags memProps, uint32_t mipLevels,
+		RrImageAspectFlags imageAspect, uint32_t arrayLayers, RrImageCreateFlags createFlags)
 	{
 		m_Extent = extent;
-		m_ImageType = VK_IMAGE_TYPE_2D;
+		m_ImageType = RrImageType2D;
 		m_Format = format;
 		m_Tiling = tiling;
 		m_Usage = usage;

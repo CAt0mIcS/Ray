@@ -61,6 +61,13 @@ void RrGetPhysicalDeviceMemoryProperties(
 		(VkPhysicalDevice)physicalDevice, (VkPhysicalDeviceMemoryProperties*)pProperties);
 }
 
+void RrGetPhysicalDeviceFormatProperties(
+	RrPhysicalDevice physicalDevice, RrFormat format, RrFormatProperties* pProperties)
+{
+	vkGetPhysicalDeviceFormatProperties(
+		(VkPhysicalDevice)physicalDevice, (VkFormat)format, (VkFormatProperties*)pProperties);
+}
+
 
 VkPhysicalDevice ChoosePhysicalDevice(uint32_t deviceCount, VkPhysicalDevice* pDevices,
 	uint32_t deviceExtensionCount, const char* const* ppDeviceExtensions)

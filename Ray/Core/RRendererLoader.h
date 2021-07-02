@@ -6,6 +6,7 @@
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RCommandBuffer.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RCommandPool.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RDeviceMemory.h>
+#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RImage.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RInstance.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RLogicalDevice.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RPhysicalDevice.h>
@@ -46,6 +47,11 @@ namespace At0::Ray
 		extern void (*UnmapMemory)(RrLogicalDevice device, RrDeviceMemory memory);
 		extern RrError (*FlushMappedMemoryRanges)(RrLogicalDevice device, uint32_t memoryRangeCount,const RrMappedMemoryRange* pMappedMemoryRanges);
 		extern void (*FreeMemory)(RrLogicalDevice device, RrDeviceMemory memory);
+		extern RrError (*CreateImage)(RrLogicalDevice device, const RrImageCreateInfo* pCreateInfo, RrImage* pImage);
+		extern void (*ImageGetMemoryRequirements)(RrLogicalDevice device, RrImage image, RrMemoryRequirements* pMemRequirements);
+		extern RrError (*BindImageMemory)(RrLogicalDevice device, RrImage image, RrDeviceMemory memory, RrDeviceSize memoryOffset);
+		extern void (*GetImageSubresourceLayout)(RrLogicalDevice device, RrImage image,RrImageSubresource* pSubresource, RrSubresourceLayout* pLayout);
+		extern void (*DestroyImage)(RrLogicalDevice device, RrImage image);
 		extern RrError (*Initialize)(RrInitializeInfo* pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger);
 		extern void (*DestroyInstance)(RrInstance instance, RrDebugMessenger debugMessenger);
 		extern RrPFNVoidFunction (*GetInstanceProcAddr)(RrInstance instance, const char* pName);
@@ -58,6 +64,7 @@ namespace At0::Ray
 		extern void (*GetPhysicalDeviceProperties)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceProperties* pProperties);
 		extern void (*GetPhysicalDeviceFeatures)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceFeatures* pFeatures);
 		extern void (*GetPhysicalDeviceMemoryProperties)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceMemoryProperties* pProperties);
+		extern void (*GetPhysicalDeviceFormatProperties)(RrPhysicalDevice physicalDevice, RrFormat format, RrFormatProperties* pProperties);
 		extern RrError (*CreateSurface)(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, RrSurface* pSurface);
 		extern RrError (*CreateFence)(RrLogicalDevice device, const RrFenceCreateInfo* pCreateInfo, RrFence* pFence);
 		extern RrError (*WaitForFences)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences,RrBool32 waitAll, uint64_t timeout);

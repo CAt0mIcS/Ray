@@ -9,22 +9,22 @@ namespace At0::Ray
 	class Image2D : public Image
 	{
 	public:
-		static Ref<Image2D> Acquire(UInt2 extent, VkFormat format, VkImageTiling tiling,
-			VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, uint32_t mipLevels = 1,
-			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t arrayLayers = 1,
-			VkImageCreateFlags createFlags = 0);
+		static Ref<Image2D> Acquire(UInt2 extent, RrFormat format, RrImageTiling tiling,
+			RrImageUsageFlags usage, RrMemoryPropertyFlags memProps, uint32_t mipLevels = 1,
+			RrImageAspectFlags imageAspect = RrImageAspectColor, uint32_t arrayLayers = 1,
+			RrImageCreateFlags createFlags = 0);
 
-		Image2D(UInt2 extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
-			VkMemoryPropertyFlags memProps, uint32_t mipLevels = 1,
-			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t arrayLayers = 1,
-			VkImageCreateFlags createFlags = 0);
+		Image2D(UInt2 extent, RrFormat format, RrImageTiling tiling, RrImageUsageFlags usage,
+			RrMemoryPropertyFlags memProps, uint32_t mipLevels = 1,
+			RrImageAspectFlags imageAspect = RrImageAspectColor, uint32_t arrayLayers = 1,
+			RrImageCreateFlags createFlags = 0);
 
 	protected:
 		Image2D() = default;
 
-		void Setup(UInt2 extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
-			VkMemoryPropertyFlags memProps, uint32_t mipLevels = 1,
-			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t arrayLayers = 1,
-			VkImageCreateFlags createFlags = 0);
+		void Setup(UInt2 extent, RrFormat format, RrImageTiling tiling, RrImageUsageFlags usage,
+			RrMemoryPropertyFlags memProps, uint32_t mipLevels = 1,
+			RrImageAspectFlags imageAspect = RrImageAspectColor, uint32_t arrayLayers = 1,
+			RrImageCreateFlags createFlags = 0);
 	};
 }  // namespace At0::Ray

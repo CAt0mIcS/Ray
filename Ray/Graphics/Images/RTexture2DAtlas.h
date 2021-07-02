@@ -18,10 +18,9 @@ namespace At0::Ray
 		};
 
 	public:
-		Texture2DAtlas(UInt2 extent, VkFormat format,
-			VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL,
-			VkImageUsageFlags usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
-			VkMemoryPropertyFlags memProps = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+		Texture2DAtlas(UInt2 extent, RrFormat format, RrImageTiling tiling = RrImageTilingOptimal,
+			RrImageUsageFlags usage = RrImageUsageTransferDst | RrImageUsageSampled,
+			RrMemoryPropertyFlags memProps = RrMemoryPropertyDeviceLocal);
 
 		Area* Emplace(std::string_view filepath);
 		Area* Emplace(UInt2 extent, uint8_t* pixels);

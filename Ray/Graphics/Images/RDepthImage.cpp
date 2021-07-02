@@ -4,21 +4,21 @@
 
 namespace At0::Ray
 {
-	DepthImage::DepthImage(UInt2 extent, VkImageUsageFlags usage)
-		: Image2D(extent, FindDepthFormats()[0], VK_IMAGE_TILING_OPTIMAL, usage,
-			  VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 1, VK_IMAGE_ASPECT_DEPTH_BIT)
+	DepthImage::DepthImage(UInt2 extent, RrImageUsageFlags usage)
+		: Image2D(extent, FindDepthFormats()[0], RrImageTilingOptimal, usage,
+			  RrMemoryPropertyDeviceLocal, 1, RrImageAspectDepth)
 	{
 	}
 
-	std::vector<VkFormat> DepthImage::FindDepthFormats()
+	std::vector<RrFormat> DepthImage::FindDepthFormats()
 	{
 		return FindSupportedFormats(
-			{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
-			VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+			{ RRFORMAT_D32_SFLOAT, RRFORMAT_D32_SFLOAT_S8_UINT, RRFORMAT_D24_UNORM_S8_UINT },
+			RrImageTilingOptimal, RrFormatFeatureDepthStencilAttachment);
 	}
 
-	bool DepthImage::HasStencilComponent(VkFormat format)
+	bool DepthImage::HasStencilComponent(RrFormat format)
 	{
-		return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
+		return format == RRFORMAT_D32_SFLOAT_S8_UINT || format == RRFORMAT_D24_UNORM_S8_UINT;
 	}
 }  // namespace At0::Ray

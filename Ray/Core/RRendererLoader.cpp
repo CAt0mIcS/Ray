@@ -39,6 +39,11 @@ namespace At0::Ray
 		void (*UnmapMemory)(RrLogicalDevice device, RrDeviceMemory memory) = nullptr;
 		RrError (*FlushMappedMemoryRanges)(RrLogicalDevice device, uint32_t memoryRangeCount,const RrMappedMemoryRange* pMappedMemoryRanges) = nullptr;
 		void (*FreeMemory)(RrLogicalDevice device, RrDeviceMemory memory) = nullptr;
+		RrError (*CreateImage)(RrLogicalDevice device, const RrImageCreateInfo* pCreateInfo, RrImage* pImage) = nullptr;
+		void (*ImageGetMemoryRequirements)(RrLogicalDevice device, RrImage image, RrMemoryRequirements* pMemRequirements) = nullptr;
+		RrError (*BindImageMemory)(RrLogicalDevice device, RrImage image, RrDeviceMemory memory, RrDeviceSize memoryOffset) = nullptr;
+		void (*GetImageSubresourceLayout)(RrLogicalDevice device, RrImage image,RrImageSubresource* pSubresource, RrSubresourceLayout* pLayout) = nullptr;
+		void (*DestroyImage)(RrLogicalDevice device, RrImage image) = nullptr;
 		RrError (*Initialize)(RrInitializeInfo* pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger) = nullptr;
 		void (*DestroyInstance)(RrInstance instance, RrDebugMessenger debugMessenger) = nullptr;
 		RrPFNVoidFunction (*GetInstanceProcAddr)(RrInstance instance, const char* pName) = nullptr;
@@ -51,6 +56,7 @@ namespace At0::Ray
 		void (*GetPhysicalDeviceProperties)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceProperties* pProperties) = nullptr;
 		void (*GetPhysicalDeviceFeatures)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceFeatures* pFeatures) = nullptr;
 		void (*GetPhysicalDeviceMemoryProperties)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceMemoryProperties* pProperties) = nullptr;
+		void (*GetPhysicalDeviceFormatProperties)(RrPhysicalDevice physicalDevice, RrFormat format, RrFormatProperties* pProperties) = nullptr;
 		RrError (*CreateSurface)(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, RrSurface* pSurface) = nullptr;
 		RrError (*CreateFence)(RrLogicalDevice device, const RrFenceCreateInfo* pCreateInfo, RrFence* pFence) = nullptr;
 		RrError (*WaitForFences)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences,RrBool32 waitAll, uint64_t timeout) = nullptr;
@@ -124,6 +130,11 @@ namespace At0::Ray
 		RendererAPI::UnmapMemory = (void (*)(RrLogicalDevice device, RrDeviceMemory memory))LoadFunction(lib, "RrUnmapMemory");
 		RendererAPI::FlushMappedMemoryRanges = (RrError (*)(RrLogicalDevice device, uint32_t memoryRangeCount,const RrMappedMemoryRange* pMappedMemoryRanges))LoadFunction(lib, "RrFlushMappedMemoryRanges");
 		RendererAPI::FreeMemory = (void (*)(RrLogicalDevice device, RrDeviceMemory memory))LoadFunction(lib, "RrFreeMemory");
+		RendererAPI::CreateImage = (RrError (*)(RrLogicalDevice device, const RrImageCreateInfo* pCreateInfo, RrImage* pImage))LoadFunction(lib, "RrCreateImage");
+		RendererAPI::ImageGetMemoryRequirements = (void (*)(RrLogicalDevice device, RrImage image, RrMemoryRequirements* pMemRequirements))LoadFunction(lib, "RrImageGetMemoryRequirements");
+		RendererAPI::BindImageMemory = (RrError (*)(RrLogicalDevice device, RrImage image, RrDeviceMemory memory, RrDeviceSize memoryOffset))LoadFunction(lib, "RrBindImageMemory");
+		RendererAPI::GetImageSubresourceLayout = (void (*)(RrLogicalDevice device, RrImage image,RrImageSubresource* pSubresource, RrSubresourceLayout* pLayout))LoadFunction(lib, "RrGetImageSubresourceLayout");
+		RendererAPI::DestroyImage = (void (*)(RrLogicalDevice device, RrImage image))LoadFunction(lib, "RrDestroyImage");
 		RendererAPI::Initialize = (RrError (*)(RrInitializeInfo* pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger))LoadFunction(lib, "RrInitialize");
 		RendererAPI::DestroyInstance = (void (*)(RrInstance instance, RrDebugMessenger debugMessenger))LoadFunction(lib, "RrDestroyInstance");
 		RendererAPI::GetInstanceProcAddr = (RrPFNVoidFunction (*)(RrInstance instance, const char* pName))LoadFunction(lib, "RrGetInstanceProcAddr");
@@ -136,6 +147,7 @@ namespace At0::Ray
 		RendererAPI::GetPhysicalDeviceProperties = (void (*)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceProperties* pProperties))LoadFunction(lib, "RrGetPhysicalDeviceProperties");
 		RendererAPI::GetPhysicalDeviceFeatures = (void (*)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceFeatures* pFeatures))LoadFunction(lib, "RrGetPhysicalDeviceFeatures");
 		RendererAPI::GetPhysicalDeviceMemoryProperties = (void (*)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceMemoryProperties* pProperties))LoadFunction(lib, "RrGetPhysicalDeviceMemoryProperties");
+		RendererAPI::GetPhysicalDeviceFormatProperties = (void (*)(RrPhysicalDevice physicalDevice, RrFormat format, RrFormatProperties* pProperties))LoadFunction(lib, "RrGetPhysicalDeviceFormatProperties");
 		RendererAPI::CreateSurface = (RrError (*)(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, RrSurface* pSurface))LoadFunction(lib, "RrCreateSurface");
 		RendererAPI::CreateFence = (RrError (*)(RrLogicalDevice device, const RrFenceCreateInfo* pCreateInfo, RrFence* pFence))LoadFunction(lib, "RrCreateFence");
 		RendererAPI::WaitForFences = (RrError (*)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences,RrBool32 waitAll, uint64_t timeout))LoadFunction(lib, "RrWaitForFences");

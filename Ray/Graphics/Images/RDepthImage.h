@@ -10,10 +10,9 @@ namespace At0::Ray
 	class DepthImage : public Image2D
 	{
 	public:
-		DepthImage(
-			UInt2 extent, VkImageUsageFlags usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
+		DepthImage(UInt2 extent, RrImageUsageFlags usage = RrImageUsageDepthStencilAttachment);
 
-		static std::vector<VkFormat> FindDepthFormats();
-		static bool HasStencilComponent(VkFormat format);
+		static std::vector<RrFormat> FindDepthFormats();
+		static bool HasStencilComponent(RrFormat format);
 	};
 }  // namespace At0::Ray

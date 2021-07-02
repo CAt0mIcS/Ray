@@ -38,13 +38,6 @@ typedef enum RrSharingMode
 	RrSharingModeConcurrent
 } RrSharingMode;
 
-typedef struct RrMemoryRequirements
-{
-	RrDeviceSize size;
-	RrDeviceSize alignment;
-	uint32_t memoryTypeBits;
-} RrMemoryRequirements;
-
 typedef struct RrBufferCreateInfo
 {
 	RrDeviceSize size;

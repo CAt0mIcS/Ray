@@ -75,7 +75,7 @@ namespace At0::Ray
 		VkDescriptorImageInfo imageInfo{};
 		imageInfo.sampler = uniform.GetTexture()->GetSampler();
 		imageInfo.imageView = uniform.GetTexture()->GetImageView();
-		imageInfo.imageLayout = uniform.GetTexture()->GetImageLayout();
+		imageInfo.imageLayout = (VkImageLayout)uniform.GetTexture()->GetImageLayout();
 
 		VkWriteDescriptorSet descWrites{};
 		descWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

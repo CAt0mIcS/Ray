@@ -14,6 +14,7 @@ set(SRC
 	"Core/ROpenGLRenderPass.c"
 	"Core/ROpenGLFramebuffer.c"
 	"Core/ROpenGLSurface.c"
+	"Core/ROpenGLImage.c"
 
 	# ------------------------------------------------------------------
 	# Synchronization

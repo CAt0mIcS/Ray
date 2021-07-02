@@ -13,6 +13,7 @@ set(SRC
 	"Core/RRenderPass.h"
 	"Core/RFramebuffer.h"
 	"Core/RSurface.h"
+	"Core/RImage.h"
 
 	# ------------------------------------------------------------------
 	# Synchronization

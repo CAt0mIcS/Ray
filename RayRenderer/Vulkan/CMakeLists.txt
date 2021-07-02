@@ -14,6 +14,7 @@ set(SRC
 	"Core/RVulkanRenderPass.c"
 	"Core/RVulkanFramebuffer.c"
 	"Core/RVulkanSurface.c"
+	"Core/RVulkanImage.c"
 
 	# ------------------------------------------------------------------
 	# Synchronization

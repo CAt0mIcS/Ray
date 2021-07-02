@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "RCore.h"
+#include "RImage.h"
 
 RR_EXTERN_C_BEG
 
@@ -115,18 +116,6 @@ typedef struct RrPhysicalDeviceFeatures
 	RrBool32 variableMultisampleRate;
 	RrBool32 inheritedQueries;
 } RrPhysicalDeviceFeatures;
-
-typedef enum RrSampleCountFlagBits
-{
-	RrSampleCount1 = 0x00000001,
-	RrSampleCount2 = 0x00000002,
-	RrSampleCount4 = 0x00000004,
-	RrSampleCount8 = 0x00000008,
-	RrSampleCount16 = 0x00000010,
-	RrSampleCount32 = 0x00000020,
-	RrSampleCount64 = 0x00000040,
-} RrSampleCountFlagBits;
-typedef uint32_t RrSampleCountFlags;
 
 typedef struct RrPhysicalDeviceLimits
 {
@@ -277,5 +266,8 @@ RR_API void RrGetPhysicalDeviceFeatures(
 
 RR_API void RrGetPhysicalDeviceMemoryProperties(
 	RrPhysicalDevice physicalDevice, RrPhysicalDeviceMemoryProperties* pProperties);
+
+RR_API void RrGetPhysicalDeviceFormatProperties(
+	RrPhysicalDevice physicalDevice, RrFormat format, RrFormatProperties* pProperties);
 
 RR_EXTERN_C_END

@@ -12,8 +12,8 @@ namespace At0::Ray
 {
 	ImageView::ImageView(const Image& image)
 	{
-		Setup(image, (VkImageViewType)image.GetImageType(), image.GetFormat(), image.GetMipLevels(),
-			image.GetAspectFlags(), image.GetArrayLayers());
+		Setup(image, (VkImageViewType)image.GetImageType(), (VkFormat)image.GetFormat(),
+			image.GetMipLevels(), image.GetAspectFlags(), image.GetArrayLayers());
 	}
 
 	ImageView::ImageView(VkImage image, VkImageViewType viewType, VkFormat format,

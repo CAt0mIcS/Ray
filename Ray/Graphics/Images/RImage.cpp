@@ -19,10 +19,10 @@
 
 namespace At0::Ray
 {
-	Ref<Image> Image::Acquire(UInt2 extent, VkImageType imageType, VkFormat format,
-		VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags memProps,
-		uint32_t mipLevels, VkImageAspectFlags imageAspect, uint32_t arrayLayers,
-		VkImageCreateFlags createFlags)
+	Ref<Image> Image::Acquire(UInt2 extent, RrImageType imageType, RrFormat format,
+		RrImageTiling tiling, RrImageUsageFlags usage, RrMemoryPropertyFlags memProps,
+		uint32_t mipLevels, RrImageAspectFlags imageAspect, uint32_t arrayLayers,
+		RrImageCreateFlags createFlags)
 	{
 		return Resources::Get().EmplaceIfNonExistent<Image>(
 			String::Serialize("Image{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}", extent.x, extent.y,
@@ -33,9 +33,9 @@ namespace At0::Ray
 			arrayLayers, createFlags);
 	}
 
-	Image::Image(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
-		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, uint32_t mipLevels,
-		VkImageAspectFlags imageAspect, uint32_t arrayLayers, VkImageCreateFlags createFlags)
+	Image::Image(UInt2 extent, RrImageType imageType, RrFormat format, RrImageTiling tiling,
+		RrImageUsageFlags usage, RrMemoryPropertyFlags memProps, uint32_t mipLevels,
+		RrImageAspectFlags imageAspect, uint32_t arrayLayers, RrImageCreateFlags createFlags)
 		: m_Extent(extent), m_ImageType(imageType), m_Format(format), m_Tiling(tiling),
 		  m_Usage(usage), m_MemoryProperties(memProps), m_MipLevels(mipLevels),
 		  m_ImageAspect(imageAspect), m_ArrayLayers(arrayLayers), m_CreateFlags(createFlags)
@@ -45,11 +45,11 @@ namespace At0::Ray
 
 	Image::~Image()
 	{
-		vkDestroyImage(Graphics::Get().GetDevice(), m_Image, nullptr);
-		vkFreeMemory(Graphics::Get().GetDevice(), m_ImageMemory, nullptr);
+		RendererAPI::DestroyImage(Graphics::Get().GetDevice(), m_Image);
+		RendererAPI::FreeMemory(Graphics::Get().GetDevice(), m_ImageMemory);
 	}
 
-	void Image::TransitionLayout(VkImageLayout newLayout)
+	void Image::TransitionLayout(RrImageLayout newLayout)
 	{
 		TransitionLayout(m_Image, m_ImageLayout, newLayout, m_MipLevels, m_ArrayLayers);
 		m_ImageLayout = newLayout;
@@ -63,7 +63,7 @@ namespace At0::Ray
 
 		if (GenerateMipmaps(m_Image, m_Format, m_Extent.x, m_Extent.y, m_MipLevels))
 		{
-			m_ImageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			m_ImageLayout = RrImageLayoutShaderReadOnly;
 			return true;
 		}
 		return false;
@@ -72,14 +72,13 @@ namespace At0::Ray
 	void Image::WritePPM(std::string_view filepath)
 	{
 		bool supportsBlit = true;
-		VkFormatProperties formatProps;
+		RrFormatProperties formatProps;
 
 		// Check if the device supports blitting from optimal/linear images
-		vkGetPhysicalDeviceFormatProperties(
-			(VkPhysicalDevice)Graphics::Get().GetPhysicalDevice().GetPhysicalDevice(), m_Format,
-			&formatProps);
-		if (!(formatProps.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT) ||
-			!(formatProps.linearTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT))
+		RendererAPI::GetPhysicalDeviceFormatProperties(
+			Graphics::Get().GetPhysicalDevice(), m_Format, &formatProps);
+		if (!(formatProps.optimalTilingFeatures & RrFormatFeatureBlitSrc) ||
+			!(formatProps.linearTilingFeatures & RrFormatFeatureBlitDst))
 		{
 			Log::Warn("[Image] Device does not support blitting from optimal/linear tiled images, "
 					  "using copy instead of blit");
@@ -87,17 +86,16 @@ namespace At0::Ray
 		}
 
 		// Create the linear tiled destination image to copy to and to read the memory from
-		Image dstImage(m_Extent, VK_IMAGE_TYPE_2D, m_Format, VK_IMAGE_TILING_LINEAR,
-			VK_IMAGE_USAGE_TRANSFER_DST_BIT,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+		Image dstImage(m_Extent, RrImageType2D, m_Format, RrImageTilingLinear,
+			RrImageUsageTransferDst, RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent);
 
 		CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
 		cmdBuff.Begin(RrCommandBufferUsageOneTimeSubmit);
 
-		dstImage.TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+		dstImage.TransitionLayout(RrImageLayoutTransferDst);
 
-		VkImageLayout oldLayout = m_ImageLayout;
-		TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+		RrImageLayout oldLayout = m_ImageLayout;
+		TransitionLayout(RrImageLayoutTransferSrc);
 
 		if (supportsBlit)
 		{
@@ -115,8 +113,9 @@ namespace At0::Ray
 			imageBlitRegion.dstOffsets[1] = blitSize;
 
 			// Issue the blit command
-			vkCmdBlitImage(cmdBuff, m_Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, dstImage,
-				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageBlitRegion, VK_FILTER_NEAREST);
+			vkCmdBlitImage(cmdBuff, (VkImage)m_Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+				dstImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageBlitRegion,
+				VK_FILTER_NEAREST);
 		}
 		else
 		{
@@ -131,8 +130,8 @@ namespace At0::Ray
 			imageCopyRegion.extent.depth = 1;
 
 			// Issue the copy command
-			vkCmdCopyImage(cmdBuff, m_Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, dstImage,
-				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopyRegion);
+			vkCmdCopyImage(cmdBuff, (VkImage)m_Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+				dstImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopyRegion);
 		}
 
 		cmdBuff.End();
@@ -140,17 +139,17 @@ namespace At0::Ray
 		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
 		RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 
-		dstImage.TransitionLayout(VK_IMAGE_LAYOUT_GENERAL);
+		dstImage.TransitionLayout(RrImageLayoutGeneral);
 		TransitionLayout(oldLayout);
 
 		// Get layout of the image (including row pitch)
-		VkImageSubresource subResource{ VK_IMAGE_ASPECT_COLOR_BIT, 0, 0 };
-		VkSubresourceLayout subResourceLayout;
-		vkGetImageSubresourceLayout(
+		RrImageSubresource subResource{ RrImageAspectColor, 0, 0 };
+		RrSubresourceLayout subResourceLayout;
+		RendererAPI::GetImageSubresourceLayout(
 			Graphics::Get().GetDevice(), dstImage, &subResource, &subResourceLayout);
 		const char* data;
-		vkMapMemory(Graphics::Get().GetDevice(), dstImage.GetImageMemory(), 0, VK_WHOLE_SIZE, 0,
-			(void**)&data);
+		RendererAPI::MapMemory(Graphics::Get().GetDevice(), dstImage.GetImageMemory(), 0,
+			VK_WHOLE_SIZE, (void**)&data);
 		data += subResourceLayout.offset;
 
 		std::ofstream file(filepath.data(), std::ios::out | std::ios::binary);
@@ -166,8 +165,8 @@ namespace At0::Ray
 		// demonstration purposes
 		if (!supportsBlit)
 		{
-			std::vector<VkFormat> formatsBGR = { VK_FORMAT_B8G8R8A8_SRGB, VK_FORMAT_B8G8R8A8_UNORM,
-				VK_FORMAT_B8G8R8A8_SNORM };
+			std::vector<RrFormat> formatsBGR = { RRFORMAT_B8G8R8A8_SRGB, RRFORMAT_B8G8R8A8_UNORM,
+				RRFORMAT_B8G8R8A8_SNORM };
 			colorSwizzle =
 				(std::find(formatsBGR.begin(), formatsBGR.end(), m_Format) != formatsBGR.end());
 		}
@@ -193,7 +192,7 @@ namespace At0::Ray
 		file.close();
 	}
 
-	void Image::TransitionLayout(VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout,
+	void Image::TransitionLayout(RrImage image, RrImageLayout oldLayout, RrImageLayout newLayout,
 		uint32_t mipLevels, uint32_t layerCount)
 	{
 		if (oldLayout == newLayout)
@@ -204,37 +203,37 @@ namespace At0::Ray
 
 		VkImageMemoryBarrier barrier{};
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-		barrier.oldLayout = oldLayout;
-		barrier.newLayout = newLayout;
-		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		barrier.image = image;
-		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		barrier.oldLayout = (VkImageLayout)oldLayout;
+		barrier.newLayout = (VkImageLayout)newLayout;
+		barrier.srcQueueFamilyIndex = RR_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex = RR_QUEUE_FAMILY_IGNORED;
+		barrier.image = (VkImage)image;
+		barrier.subresourceRange.aspectMask = RrImageAspectColor;
 		barrier.subresourceRange.baseMipLevel = 0;
 		barrier.subresourceRange.levelCount = mipLevels;
 		barrier.subresourceRange.baseArrayLayer = 0;
 		barrier.subresourceRange.layerCount = layerCount;
 
-		VkPipelineStageFlags sourceStage;
-		VkPipelineStageFlags destinationStage;
+		RrPipelineStageFlags sourceStage;
+		RrPipelineStageFlags destinationStage;
 
 		switch (oldLayout)
 		{
-		case VK_IMAGE_LAYOUT_UNDEFINED:
+		case RrImageLayoutUndefined:
 			barrier.srcAccessMask = 0;
-			sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+			sourceStage = RrPipelineStageTopOfPipe;
 			break;
-		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
-			barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+		case RrImageLayoutShaderReadOnly:
+			barrier.srcAccessMask = RrAccessShaderRead;
+			sourceStage = RrPipelineStageFragmentShader;
 			break;
-		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+		case RrImageLayoutTransferSrc:
 			barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-			sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+			sourceStage = RrPipelineStageTransfer;
 			break;
-		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
-			barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-			sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+		case RrImageLayoutTransferDst:
+			barrier.srcAccessMask = RrAccessTransferWrite;
+			sourceStage = RrPipelineStageTransfer;
 			break;
 		default:
 			ThrowRuntime("[Image] Invalid or unsupported old layout ({0})", (uint32_t)oldLayout);
@@ -242,26 +241,25 @@ namespace At0::Ray
 
 		switch (newLayout)
 		{
-		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
-			barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-			destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+		case RrImageLayoutTransferDst:
+			barrier.dstAccessMask = RrAccessTransferWrite;
+			destinationStage = RrPipelineStageTransfer;
 			break;
-		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
-			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
-			barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-			destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+		case RrImageLayoutShaderReadOnly:
+			barrier.dstAccessMask = RrAccessShaderRead;
+			destinationStage = RrPipelineStageFragmentShader;
+		case RrImageLayoutTransferSrc:
+			barrier.dstAccessMask = RrAccessTransferRead;
+			destinationStage = RrPipelineStageTransfer;
 			break;
-		case VK_IMAGE_LAYOUT_GENERAL:
-			barrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-			destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+		case RrImageLayoutGeneral:
+			barrier.dstAccessMask = RrAccessMemoryRead;
+			destinationStage = RrPipelineStageTransfer;
 			break;
 
 		default:
 			ThrowRuntime("[Image] Invalid or unsupported new layout ({0})", (uint32_t)newLayout);
 		}
-
 
 		vkCmdPipelineBarrier(
 			commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
@@ -274,18 +272,16 @@ namespace At0::Ray
 	}
 
 	bool Image::GenerateMipmaps(
-		VkImage image, VkFormat imageFormat, int32_t width, int32_t height, uint32_t mipLevels)
+		RrImage image, RrFormat imageFormat, int32_t width, int32_t height, uint32_t mipLevels)
 	{
-		VkFormatProperties formatProps;
-		vkGetPhysicalDeviceFormatProperties(
-			(VkPhysicalDevice)Graphics::Get().GetPhysicalDevice().GetPhysicalDevice(), imageFormat,
-			&formatProps);
+		RrFormatProperties formatProps;
+		RendererAPI::GetPhysicalDeviceFormatProperties(
+			Graphics::Get().GetPhysicalDevice(), imageFormat, &formatProps);
 
-		if (!(formatProps.optimalTilingFeatures &
-				VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT))
+		if (!(formatProps.optimalTilingFeatures & RrFormatFeatureSampledImageFilterLinear))
 		{
 			Log::Error("[Image] Usable to generate mipmaps because "
-					   "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT is missing");
+					   "RrFormatFeatureSampledImageFilterLinear is missing");
 			return false;
 		}
 
@@ -294,10 +290,10 @@ namespace At0::Ray
 
 		VkImageMemoryBarrier barrier{};
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-		barrier.image = image;
-		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		barrier.image = (VkImage)image;
+		barrier.srcQueueFamilyIndex = RR_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex = RR_QUEUE_FAMILY_IGNORED;
+		barrier.subresourceRange.aspectMask = RrImageAspectColor;
 		barrier.subresourceRange.baseArrayLayer = 0;
 		barrier.subresourceRange.layerCount = 1;
 		barrier.subresourceRange.levelCount = 1;
@@ -308,10 +304,10 @@ namespace At0::Ray
 		for (uint32_t i = 1; i < mipLevels; ++i)
 		{
 			barrier.subresourceRange.baseMipLevel = i - 1;
-			barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-			barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-			barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-			barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+			barrier.oldLayout = (VkImageLayout)RrImageLayoutTransferDst;
+			barrier.newLayout = (VkImageLayout)RrImageLayoutTransferSrc;
+			barrier.srcAccessMask = RrAccessTransferWrite;
+			barrier.dstAccessMask = RrAccessTransferRead;
 
 			vkCmdPipelineBarrier(cmdBuff, VK_PIPELINE_STAGE_TRANSFER_BIT,
 				VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
@@ -331,13 +327,13 @@ namespace At0::Ray
 			blit.dstSubresource.baseArrayLayer = 0;
 			blit.dstSubresource.layerCount = 1;
 
-			vkCmdBlitImage(cmdBuff, image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, image,
-				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit, VK_FILTER_LINEAR);
+			vkCmdBlitImage(cmdBuff, (VkImage)image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+				(VkImage)image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit, VK_FILTER_LINEAR);
 
-			barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-			barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+			barrier.oldLayout = (VkImageLayout)RrImageLayoutTransferSrc;
+			barrier.newLayout = (VkImageLayout)RrImageLayoutShaderReadOnly;
+			barrier.srcAccessMask = RrAccessTransferRead;
+			barrier.dstAccessMask = RrAccessShaderRead;
 
 			vkCmdPipelineBarrier(cmdBuff, VK_PIPELINE_STAGE_TRANSFER_BIT,
 				VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
@@ -349,10 +345,10 @@ namespace At0::Ray
 		}
 
 		barrier.subresourceRange.baseMipLevel = mipLevels - 1;
-		barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-		barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+		barrier.oldLayout = (VkImageLayout)RrImageLayoutTransferDst;
+		barrier.newLayout = (VkImageLayout)RrImageLayoutShaderReadOnly;
+		barrier.srcAccessMask = RrAccessTransferWrite;
+		barrier.dstAccessMask = RrAccessShaderRead;
 
 		vkCmdPipelineBarrier(cmdBuff, VK_PIPELINE_STAGE_TRANSFER_BIT,
 			VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
@@ -368,8 +364,8 @@ namespace At0::Ray
 
 	void Image::CopyFromBuffer(const Buffer& buffer, std::vector<VkBufferImageCopy> copyRegions)
 	{
-		if (m_ImageLayout != VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
-			TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+		if (m_ImageLayout != RrImageLayoutTransferDst)
+			TransitionLayout(RrImageLayoutTransferDst);
 
 		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
 		commandBuffer.Begin(RrCommandBufferUsageOneTimeSubmit);
@@ -379,7 +375,7 @@ namespace At0::Ray
 		region.bufferRowLength = 0;
 		region.bufferImageHeight = 0;
 
-		region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		region.imageSubresource.aspectMask = RrImageAspectColor;
 		region.imageSubresource.mipLevel = 0;
 		region.imageSubresource.baseArrayLayer = 0;
 		region.imageSubresource.layerCount = 1;	 // RAY_TODO: MipLevel
@@ -390,7 +386,7 @@ namespace At0::Ray
 		if (copyRegions.empty())
 			copyRegions.emplace_back(region);
 
-		vkCmdCopyBufferToImage(commandBuffer, (VkBuffer)buffer.GetBuffer(), m_Image,
+		vkCmdCopyBufferToImage(commandBuffer, (VkBuffer)buffer.GetBuffer(), (VkImage)m_Image,
 			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, (uint32_t)copyRegions.size(), copyRegions.data());
 		commandBuffer.End();
 
@@ -401,13 +397,13 @@ namespace At0::Ray
 
 	Buffer&& Image::CopyToBuffer(std::vector<VkBufferImageCopy> copyRegions)
 	{
-		RAY_MEXPECTS(m_Usage & VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
-			"[Image] Image must be created with VK_IMAGE_USAGE_TRANSFER_SRC_BIT if it should be "
+		RAY_MEXPECTS(m_Usage & RrImageUsageTransferSrc,
+			"[Image] Image must be created with RrImageUsageTransferSrc if it should be "
 			"copyable to a buffer");
 
-		// RAY_TODO: Check if VK_FORMAT_FEATURE_TRANSFER_SRC_BIT is set
-		VkImageLayout oldLayout = m_ImageLayout;
-		TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+		// RAY_TODO: Check if RRFORMAT_FEATURE_TRANSFER_SRC_BIT is set
+		RrImageLayout oldLayout = m_ImageLayout;
+		TransitionLayout(RrImageLayoutTransferSrc);
 
 		CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
 		cmdBuff.Begin(RrCommandBufferUsageOneTimeSubmit);
@@ -428,11 +424,11 @@ namespace At0::Ray
 		if (copyRegions.empty())
 			copyRegions.emplace_back(region);
 
-		Buffer dstBuffer(m_Extent.x * m_Extent.y * 4, VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+		Buffer dstBuffer(m_Extent.x * m_Extent.y * 4, RrBufferUsageTransferDst,
+			RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent);
 
-		vkCmdCopyImageToBuffer(cmdBuff, m_Image, m_ImageLayout, (VkBuffer)dstBuffer.GetBuffer(),
-			(uint32_t)copyRegions.size(), copyRegions.data());
+		vkCmdCopyImageToBuffer(cmdBuff, (VkImage)m_Image, (VkImageLayout)m_ImageLayout,
+			(VkBuffer)dstBuffer.GetBuffer(), (uint32_t)copyRegions.size(), copyRegions.data());
 
 		cmdBuff.End();
 
@@ -454,15 +450,15 @@ namespace At0::Ray
 		return *this;
 	}
 
-	std::vector<VkFormat> Image::FindSupportedFormats(
-		std::vector<VkFormat> candidates, VkImageTiling tiling, VkFormatFeatureFlags featureFlags)
+	std::vector<RrFormat> Image::FindSupportedFormats(
+		std::vector<RrFormat> candidates, RrImageTiling tiling, RrFormatFeatureFlags featureFlags)
 	{
 		for (int32_t i = candidates.size() - 1; i >= 0; --i)
 		{
 			VkFormatProperties formatProps;
 			vkGetPhysicalDeviceFormatProperties(
 				(VkPhysicalDevice)Graphics::Get().GetPhysicalDevice().GetPhysicalDevice(),
-				candidates[i], &formatProps);
+				(VkFormat)candidates[i], &formatProps);
 
 			if (tiling == VK_IMAGE_TILING_LINEAR &&
 				(formatProps.linearTilingFeatures & featureFlags) != featureFlags)
@@ -485,49 +481,51 @@ namespace At0::Ray
 			Graphics::Get().GetDevice().GetPresentFamily(),
 			Graphics::Get().GetDevice().GetComputeFamily() };
 
-		VkImageCreateInfo imageCreateInfo{};
-		imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+		RrImageCreateInfo imageCreateInfo{};
 		imageCreateInfo.flags = m_CreateFlags;
 		imageCreateInfo.imageType = m_ImageType;
 		imageCreateInfo.format = m_Format;
-		imageCreateInfo.extent = VkExtent3D{ m_Extent.x, m_Extent.y, 1 };
+		imageCreateInfo.extent = RrExtent3D{ m_Extent.x, m_Extent.y, 1 };
 		imageCreateInfo.mipLevels = m_MipLevels;
 		imageCreateInfo.arrayLayers = m_ArrayLayers;
 		imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 		imageCreateInfo.tiling = m_Tiling;
 		imageCreateInfo.usage = m_Usage;
-		imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		imageCreateInfo.sharingMode = RrSharingModeExclusive;
 		imageCreateInfo.queueFamilyIndexCount = (uint32_t)queueFamily.size();
 		imageCreateInfo.pQueueFamilyIndices = queueFamily.data();
-		imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		imageCreateInfo.initialLayout = RrImageLayoutUndefined;
 
 		ThrowRenderError(
-			vkCreateImage(Graphics::Get().GetDevice(), &imageCreateInfo, nullptr, &m_Image),
+			RendererAPI::CreateImage(Graphics::Get().GetDevice(), &imageCreateInfo, &m_Image),
 			"[Image] Failed to create");
 
-		VkMemoryRequirements memRequirements;
-		vkGetImageMemoryRequirements(Graphics::Get().GetDevice(), m_Image, &memRequirements);
+		RrMemoryRequirements memRequirements;
+		RendererAPI::ImageGetMemoryRequirements(
+			Graphics::Get().GetDevice(), m_Image, &memRequirements);
 
-		VkMemoryAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		RrMemoryAllocateInfo allocInfo{};
 		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = Graphics::Get().GetPhysicalDevice().FindMemoryType(
-			memRequirements.memoryTypeBits, m_MemoryProperties);
+		RendererAPI::DeviceMemoryGetMemoryTypeIndex(memRequirements.memoryTypeBits,
+			m_MemoryProperties,
+			Graphics::Get().GetPhysicalDevice().GetMemoryProperties().memoryTypeCount,
+			Graphics::Get().GetPhysicalDevice().GetMemoryProperties().memoryTypes,
+			&allocInfo.memoryTypeIndex);
 
 		ThrowRenderError(
-			vkAllocateMemory(Graphics::Get().GetDevice(), &allocInfo, nullptr, &m_ImageMemory),
+			RendererAPI::AllocateMemory(Graphics::Get().GetDevice(), &allocInfo, &m_ImageMemory),
 			"[Image] Failed to allocate image memory");
 
-		vkBindImageMemory(Graphics::Get().GetDevice(), m_Image, m_ImageMemory, 0);
+		RendererAPI::BindImageMemory(Graphics::Get().GetDevice(), m_Image, m_ImageMemory, 0);
 
 		// Create image view only for supported image usages
-		if ((m_Usage & VK_IMAGE_USAGE_SAMPLED_BIT) || (m_Usage & VK_IMAGE_USAGE_STORAGE_BIT) ||
-			(m_Usage & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) ||
-			(m_Usage & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) ||
-			(m_Usage & VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT) ||
-			(m_Usage & VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT) ||
-			(m_Usage & VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV) ||
-			(m_Usage & VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT))
+		if ((m_Usage & RrImageUsageSampled) || (m_Usage & RrImageUsageStorage) ||
+			(m_Usage & RrImageUsageColorAttachment) ||
+			(m_Usage & RrImageUsageDepthStencilAttachment) ||
+			(m_Usage & RrImageUsageInputAttachment) ||
+			(m_Usage & RrImageUsageTransientAttachment) ||
+			(m_Usage & RrImageUsageShadingRateImageNV) ||
+			(m_Usage & RrImageUsageFragmentDensityMapEXT))
 			m_ImageView = MakeScope<ImageView>(*this);
 	}
 }  // namespace At0::Ray

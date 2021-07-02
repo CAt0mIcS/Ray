@@ -100,17 +100,17 @@ namespace At0::Ray
 		VkDeviceSize uploadSize = texWidth * texHeight * 4 * sizeof(char);
 
 		// Create target image for copy
-		m_FontImage = MakeRef<Texture2D>(UInt2{ texWidth, texHeight }, VK_FORMAT_R8G8B8A8_UNORM,
-			VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
-			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+		m_FontImage = MakeRef<Texture2D>(UInt2{ texWidth, texHeight }, RRFORMAT_R8G8B8A8_UNORM,
+			RrImageTilingOptimal, RrImageUsageSampled | RrImageUsageTransferDst,
+			RrMemoryPropertyDeviceLocal);
 
-		Buffer stagingBuffer(uploadSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, fontData);
+		Buffer stagingBuffer(uploadSize, RrBufferUsageTransferSrc,
+			RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent, fontData);
 
 		// Copy
-		m_FontImage->TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+		m_FontImage->TransitionLayout(RrImageLayoutTransferDst);
 		m_FontImage->CopyFromBuffer(stagingBuffer);
-		m_FontImage->TransitionLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		m_FontImage->TransitionLayout(RrImageLayoutShaderReadOnly);
 
 		CreatePipeline();
 		CreateTextureUploadResources();
@@ -348,7 +348,7 @@ namespace At0::Ray
 		return PushTexture(texture.GetSampler(), texture.GetImageView(), texture.GetImageLayout());
 	}
 
-	void* ImGUI::PushTexture(VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout)
+	void* ImGUI::PushTexture(VkSampler sampler, VkImageView imageView, RrImageLayout imageLayout)
 	{
 		// Descriptor set
 		{
@@ -368,7 +368,7 @@ namespace At0::Ray
 			VkDescriptorImageInfo descImage[1] = {};
 			descImage[0].sampler = sampler;
 			descImage[0].imageView = imageView;
-			descImage[0].imageLayout = imageLayout;
+			descImage[0].imageLayout = (VkImageLayout)imageLayout;
 			VkWriteDescriptorSet writeDesc[1] = {};
 			writeDesc[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			writeDesc[0].dstSet = m_TextureDescriptorSets.back();

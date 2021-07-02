@@ -19,6 +19,7 @@
 #include "Ray/Events/RKeyboardEvents.h"
 #include "Ray/Events/RMouseEvents.h"
 #include "Ray/Events/REngineEvents.h"
+#include <RayRenderer/Core/RImage.h>
 
 #include <functional>
 // clang-format on
@@ -86,7 +87,7 @@ namespace At0::Ray
 		 * Should be called on stored textures to get the ID required for ImGui::Image
 		 * @returns First parameter of ImGui::Image function
 		 */
-		void* PushTexture(VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout);
+		void* PushTexture(VkSampler sampler, VkImageView imageView, RrImageLayout imageLayout);
 
 	private:
 		ImGUI();

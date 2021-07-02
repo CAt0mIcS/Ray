@@ -9,13 +9,13 @@ namespace At0::Ray
 	Attachment::Attachment(const Image& image, VkImageLayout finalLayout, LoadOp loadOp,
 		StoreOp storeOp, LoadOp stencilLoadOp, StoreOp stencilStoreOp)
 	{
-		m_Description.format = image.GetFormat();
+		m_Description.format = (VkFormat)image.GetFormat();
 		m_Description.samples = VK_SAMPLE_COUNT_1_BIT;
 		m_Description.loadOp = (VkAttachmentLoadOp)loadOp;
 		m_Description.storeOp = (VkAttachmentStoreOp)storeOp;
 		m_Description.stencilLoadOp = (VkAttachmentLoadOp)stencilLoadOp;
 		m_Description.stencilStoreOp = (VkAttachmentStoreOp)stencilStoreOp;
-		m_Description.initialLayout = image.GetImageLayout();
+		m_Description.initialLayout = (VkImageLayout)image.GetImageLayout();
 		m_Description.finalLayout = finalLayout;
 	}
 

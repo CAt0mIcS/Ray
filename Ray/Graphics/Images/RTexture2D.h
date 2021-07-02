@@ -12,14 +12,13 @@ namespace At0::Ray
 	{
 	public:
 		static Ref<Texture2D> Acquire(std::string_view filepath);
-		static Ref<Texture2D> Acquire(UInt2 extent, VkFormat format, VkImageTiling tiling,
-			VkImageUsageFlags usage, VkMemoryPropertyFlags memProps,
-			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT);
+		static Ref<Texture2D> Acquire(UInt2 extent, RrFormat format, RrImageTiling tiling,
+			RrImageUsageFlags usage, RrMemoryPropertyFlags memProps,
+			RrImageAspectFlags imageAspect = RrImageAspectColor);
 
 		Texture2D(std::string_view filepath);
-		Texture2D(UInt2 extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
-			VkMemoryPropertyFlags memProps,
-			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT);
+		Texture2D(UInt2 extent, RrFormat format, RrImageTiling tiling, RrImageUsageFlags usage,
+			RrMemoryPropertyFlags memProps, RrImageAspectFlags imageAspect = RrImageAspectColor);
 
 		const TextureSampler& GetSampler() const { return m_Sampler; }
 

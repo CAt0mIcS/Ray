@@ -110,8 +110,8 @@ namespace At0::Ray
 		}
 
 		m_TextureAtlas = MakeRef<Texture2DAtlas>(/*atlasSize / UInt2(4)*/ UInt2{ 10000, 10000 },
-			VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_LINEAR,
-			VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
+			RRFORMAT_R8G8B8A8_SRGB, RrImageTilingLinear,
+			RrImageUsageTransferDst | RrImageUsageSampled);
 
 		for (char supportedChar : s_SupportedLetters)
 		{
