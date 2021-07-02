@@ -44,10 +44,9 @@ set(SRC
 	"Core/RFrustum.cpp"
 	"Core/RDynamicVertex.h"
 	"Core/RDynamicVertex.cpp"
+	"Core/RRendererLoader.cpp"
 	"Core/RResource.h"
 	"Core/RResource.cpp"
-	"Core/RRendererLoader.h"
-	"Core/RRendererLoader.cpp"
 	"Core/RKeyCodes.h"
 	"Core/RMath.h"
 	"Core/RMath.cpp"
@@ -289,7 +288,6 @@ set(SRC
 # ------------------------------------------------------------------
 # Find required packages
 find_package("Vulkan" REQUIRED FATAL_ERROR)
-find_package("Python" COMPONENTS Interpreter)
 
 # Get paths to Mono installation
 SetMonoIncludesAndLibraries()
