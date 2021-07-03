@@ -19,6 +19,13 @@ set(SRC
 	# Synchronization
 	"Synchronization/RFence.h"
 	"Synchronization/RSemaphore.h"
+
+	# ------------------------------------------------------------------
+	# Pipeline
+	"Pipeline/RPipeline.h"
+	"Pipeline/RDescriptor.h"
+	"Pipeline/RUniform.h"
+	"Pipeline/RShader.h"
 )
 
 add_library("RayRendererBase" "${SRC}")

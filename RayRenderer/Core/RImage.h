@@ -15,18 +15,6 @@ typedef enum RrImageType
 	RrImageType3D
 } RrImageType;
 
-typedef enum RrSampleCountFlagBits
-{
-	RrSampleCount1 = 0x00000001,
-	RrSampleCount2 = 0x00000002,
-	RrSampleCount4 = 0x00000004,
-	RrSampleCount8 = 0x00000008,
-	RrSampleCount16 = 0x00000010,
-	RrSampleCount32 = 0x00000020,
-	RrSampleCount64 = 0x00000040,
-} RrSampleCountFlagBits;
-typedef uint32_t RrSampleCountFlags;
-
 typedef enum RrImageCreateFlagBits
 {
 	RrImageCreateSparseBinding = 0x00000001,

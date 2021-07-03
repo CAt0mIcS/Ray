@@ -405,6 +405,16 @@ typedef struct RrRect2D
 	RrExtent2D extent;
 } RrRect2D;
 
+typedef struct RrViewport
+{
+	float x;
+	float y;
+	float width;
+	float height;
+	float minDepth;
+	float maxDepth;
+} RrViewport;
+
 typedef enum RrAccessFlagBits
 {
 	RrAccessIndirectCommandRead = 0x00000001,
@@ -468,5 +478,49 @@ typedef enum RrPipelineStageFlagBits
 	RrPipelineStageCommandPreprocessNV = 0x00020000
 } RrPipelineStageFlagBits;
 typedef uint32_t RrPipelineStageFlags;
+
+typedef enum RrSampleCountFlagBits
+{
+	RrSampleCount1 = 0x00000001,
+	RrSampleCount2 = 0x00000002,
+	RrSampleCount4 = 0x00000004,
+	RrSampleCount8 = 0x00000008,
+	RrSampleCount16 = 0x00000010,
+	RrSampleCount32 = 0x00000020,
+	RrSampleCount64 = 0x00000040,
+} RrSampleCountFlagBits;
+typedef uint32_t RrSampleCountFlags;
+
+typedef enum RrCompareOp
+{
+	RrCompareOpNever = 0,
+	RrCompareOpLess = 1,
+	RrCompareOpEqual = 2,
+	RrCompareOpLessOrEqual = 3,
+	RrCompareOpGreater = 4,
+	RrCompareOpNotEqual = 5,
+	RrCompareOpGreaterOrEqual = 6,
+	RrCompareOpAlways = 7
+} RrCompareOp;
+
+typedef enum RrLogicOp
+{
+	RrLogicOpClear = 0,
+	RrLogicOpAnd = 1,
+	RrLogicOpAndReverse = 2,
+	RrLogicOpCopy = 3,
+	RrLogicOpAndCopy = 4,
+	RrLogicOpNoOp = 5,
+	RrLogicOpXor = 6,
+	RrLogicOpOr = 7,
+	RrLogicOpNor = 8,
+	RrLogicOpEquivalent = 9,
+	RrLogicOpInvert = 10,
+	RrLogicOpOrReverse = 11,
+	RrLogicOpCopyInverted = 12,
+	RrLogicOpOrInverted = 13,
+	RrLogicOpNand = 14,
+	RrLogicOpSet = 15
+} RrLogicOp;
 
 RR_EXTERN_C_END

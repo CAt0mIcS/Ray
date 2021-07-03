@@ -9,6 +9,7 @@
 #include "Ray/Utils/RAssert.h"
 #include "Ray/Utils/RException.h"
 #include "Ray/Utils/RLogger.h"
+#include <RayRenderer/Pipeline/RPipeline.h>
 
 #include <imgui/imgui.h>
 

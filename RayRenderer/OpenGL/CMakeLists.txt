@@ -20,6 +20,10 @@ set(SRC
 	# Synchronization
 	"Synchronization/ROpenGLFence.c"
 	"Synchronization/ROpenGLSemaphore.c"
+
+	# ------------------------------------------------------------------
+	# Pipeline
+	"Pipeline/ROpenGLPipeline.c"
 )
 
 find_package (Python COMPONENTS Interpreter)

@@ -20,6 +20,10 @@ set(SRC
 	# Synchronization
 	"Synchronization/RVulkanFence.c"
 	"Synchronization/RVulkanSemaphore.c"
+
+	# ------------------------------------------------------------------
+	# Pipeline
+	"Pipeline/RVulkanPipeline.c"
 )
 
 # ------------------------------------------------------------------
