@@ -205,7 +205,7 @@ namespace At0::Ray
 		AttributeData attribData{};
 		attribData.location = data["location"].GetUint();
 		attribData.size = data["size"].GetUint();
-		attribData.format = (VkFormat)data["format"].GetUint();
+		attribData.format = (RrFormat)data["format"].GetUint();
 		return attribData;
 	}
 

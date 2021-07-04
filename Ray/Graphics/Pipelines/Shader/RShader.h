@@ -12,6 +12,10 @@
 #include <optional>
 #include <fstream>
 
+#include <RayRenderer/Pipeline/RShader.h>
+#include <RayRenderer/Pipeline/RDescriptor.h>
+#include <RayRenderer/Pipeline/RPipeline.h>
+
 
 namespace glslang
 {
@@ -67,21 +71,21 @@ namespace At0::Ray
 		~Shader();
 
 		static ShaderStage GetShaderStage(const std::filesystem::path& filepath);
-		static uint32_t SizeOf(VkFormat format);
+		static uint32_t SizeOf(RrFormat format);
 
 		std::vector<ShaderStage> GetLiveShaderStages() const;
 
 		const auto& GetDescriptorSetLayoutBindings() const { return m_DescriptorSetLayoutBindings; }
 		const auto& GetDescriptorPoolSizes() const { return m_DescriptorPoolSizes; }
-		std::vector<VkPushConstantRange> GetPushConstantRanges() const;
+		std::vector<RrPushConstantRange> GetPushConstantRanges() const;
 		const auto& GetReflection(ShaderStage stage) const { return m_Reflections.at(stage); }
 		const auto& GetReflections() const { return m_Reflections; }
 		const auto& GetShaderModules() const { return m_ShaderModules; }
 		const auto& GetFilepaths() const { return m_Filepaths; }
 
-		std::vector<VkVertexInputBindingDescription> GetVertexInputBindings(
+		std::vector<RrVertexInputBindingDescription> GetVertexInputBindings(
 			uint32_t binding = 0) const;
-		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributes(
+		std::vector<RrVertexInputAttributeDescription> GetVertexInputAttributes(
 			uint32_t binding = 0) const;
 
 		static std::string GetUID(const std::vector<std::string>& shaders);
@@ -91,16 +95,16 @@ namespace At0::Ray
 
 	private:
 		static void IncrementDescriptorPool(
-			std::unordered_map<VkDescriptorType, uint32_t>& descriptorPoolCounts,
-			VkDescriptorType type);
+			std::unordered_map<RrDescriptorType, uint32_t>& descriptorPoolCounts,
+			RrDescriptorType type);
 
 	private:
-		std::unordered_map<uint32_t, std::vector<VkDescriptorSetLayoutBinding>>
+		std::unordered_map<uint32_t, std::vector<RrDescriptorSetLayoutBinding>>
 			m_DescriptorSetLayoutBindings;
-		std::vector<VkDescriptorPoolSize> m_DescriptorPoolSizes;
+		std::vector<RrDescriptorPoolSize> m_DescriptorPoolSizes;
 
 		std::unordered_map<ShaderStage, ShaderReflection> m_Reflections;
-		std::unordered_map<ShaderStage, VkShaderModule> m_ShaderModules;
+		std::unordered_map<ShaderStage, RrShaderModule> m_ShaderModules;
 
 		std::vector<std::string> m_Filepaths;
 	};

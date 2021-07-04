@@ -15,6 +15,7 @@
 
 typedef struct RrFence_T* RrFence;
 typedef struct RrSemaphore_T* RrSemaphore;
+typedef struct RrPipelineCache_T* RrPipelineCache;
 
 namespace At0::Ray
 {
@@ -45,7 +46,7 @@ namespace At0::Ray
 		const Swapchain& GetSwapchain() const { return *m_Swapchain; }
 		const CommandPool& GetCommandPool() const { return *m_CommandPool; }
 		const RenderPass& GetRenderPass() const { return *m_RenderPass; }
-		VkPipelineCache GetPipelineCache() const { return m_PipelineCache; }
+		RrPipelineCache GetPipelineCache() const { return m_PipelineCache; }
 		static uint32_t GetImageCount() { return s_MaxFramesInFlight; }
 
 		/**
@@ -89,7 +90,7 @@ namespace At0::Ray
 		Scope<Swapchain> m_Swapchain;
 		Scope<CommandPool> m_CommandPool;
 		Scope<RenderPass> m_RenderPass;
-		VkPipelineCache m_PipelineCache = nullptr;
+		RrPipelineCache m_PipelineCache = nullptr;
 		Scope<DepthImage> m_DepthImage;
 
 		std::vector<Scope<Framebuffer>> m_Framebuffers;

@@ -192,8 +192,8 @@ namespace At0::Ray
 			createInfo.pInitialData = data.data();
 		}
 
-		if (vkCreatePipelineCache(GetDevice(), &createInfo, nullptr, &m_PipelineCache) !=
-			VK_SUCCESS)
+		if (vkCreatePipelineCache(GetDevice(), &createInfo, nullptr,
+				(VkPipelineCache*)&m_PipelineCache) != VK_SUCCESS)
 			Log::Warn("[Graphics] Failed to create pipeline cache.");
 	}
 
@@ -396,7 +396,7 @@ namespace At0::Ray
 		if (m_PipelineCache)
 		{
 			WritePipelineCache();
-			vkDestroyPipelineCache(GetDevice(), m_PipelineCache, nullptr);
+			vkDestroyPipelineCache(GetDevice(), (VkPipelineCache)m_PipelineCache, nullptr);
 		}
 
 		m_DepthImage.reset();
@@ -475,13 +475,13 @@ namespace At0::Ray
 	void Graphics::WritePipelineCache()
 	{
 		size_t pipelineBufferSize;
-		if (vkGetPipelineCacheData(GetDevice(), m_PipelineCache, &pipelineBufferSize, nullptr) !=
-			VK_SUCCESS)
+		if (vkGetPipelineCacheData(GetDevice(), (VkPipelineCache)m_PipelineCache,
+				&pipelineBufferSize, nullptr) != VK_SUCCESS)
 			Log::Warn("[Graphics] Failed to get pipeline cache size");
 
 		std::vector<char> pipelineData(pipelineBufferSize);
-		if (vkGetPipelineCacheData(GetDevice(), m_PipelineCache, &pipelineBufferSize,
-				pipelineData.data()) != VK_SUCCESS)
+		if (vkGetPipelineCacheData(GetDevice(), (VkPipelineCache)m_PipelineCache,
+				&pipelineBufferSize, pipelineData.data()) != VK_SUCCESS)
 			Log::Warn("[Graphics] Failed to get pipeline cache data");
 
 		std::ofstream writer("Resources/Caches/Pipeline.cache", std::ios::binary);

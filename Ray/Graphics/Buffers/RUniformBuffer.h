@@ -2,6 +2,9 @@
 
 #include "RBuffer.h"
 
+#include <RayRenderer/Pipeline/RDescriptor.h>
+#include <RayRenderer/Pipeline/RShader.h>
+
 
 namespace At0::Ray
 {
@@ -12,15 +15,15 @@ namespace At0::Ray
 		 * @param initialSize Initial buffer size. If 0 the value set by
 		 * UniformBuffer::SetAllocationSize() will be used (default 2097152MB)
 		 */
-		UniformBuffer(VkDeviceSize allocSize = 0);
+		UniformBuffer(RrDeviceSize allocSize = 0);
 		~UniformBuffer();
 
-		static VkDescriptorSetLayoutBinding GetDescriptorSetLayout(uint32_t binding,
-			VkDescriptorType descriptorType, VkShaderStageFlags stage, uint32_t count);
+		static RrDescriptorSetLayoutBinding GetDescriptorSetLayout(uint32_t binding,
+			RrDescriptorType descriptorType, RrShaderStageFlags stage, uint32_t count);
 
-		static void SetAllocationSize(VkDeviceSize allocSize) { s_AllocSize = allocSize; }
+		static void SetAllocationSize(RrDeviceSize allocSize) { s_AllocSize = allocSize; }
 
 	private:
-		static VkDeviceSize s_AllocSize;
+		static RrDeviceSize s_AllocSize;
 	};
 }  // namespace At0::Ray

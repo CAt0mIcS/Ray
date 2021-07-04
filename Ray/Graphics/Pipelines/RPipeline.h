@@ -5,6 +5,7 @@
 #include "../Core/RSharedBindable.h"
 
 #include <vulkan/vulkan_core.h>
+#include <RayRenderer/Pipeline/RPipeline.h>
 
 
 namespace At0::Ray
@@ -25,21 +26,21 @@ namespace At0::Ray
 		virtual ~Pipeline();
 
 		virtual VkDescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const;
-		virtual VkDescriptorPool GetDescriptorPool() const { return VK_NULL_HANDLE; };
+		virtual VkDescriptorPool GetDescriptorPool() const { return nullptr; };
 		virtual Pipeline::BindPoint GetBindPoint() const = 0;
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
 
 		const Shader& GetShader() const { return *m_Shader; }
-		const VkPipelineLayout& GetLayout() const { return m_Layout; }
-
-		operator const VkPipeline&() const { return m_Pipeline; }
+		VkPipelineLayout GetLayout() const { return (VkPipelineLayout)m_Layout; }
+		operator VkPipeline() const { return (VkPipeline)m_Pipeline; }
+		operator RrPipeline() const { return m_Pipeline; }
 
 	protected:
 		Pipeline(Ref<Shader> shader);
 
 	protected:
-		VkPipeline m_Pipeline = VK_NULL_HANDLE;
-		VkPipelineLayout m_Layout = VK_NULL_HANDLE;
+		RrPipeline m_Pipeline = nullptr;
+		RrPipelineLayout m_Layout = nullptr;
 
 		Ref<Shader> m_Shader;
 	};

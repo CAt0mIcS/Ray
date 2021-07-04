@@ -9,7 +9,10 @@
 #include "Ray/Utils/RAssert.h"
 #include "Ray/Utils/RException.h"
 #include "Ray/Utils/RLogger.h"
+
 #include <RayRenderer/Pipeline/RPipeline.h>
+#include <RayRenderer/Pipeline/RDescriptor.h>
+#include "Core/RRendererLoader.h"
 
 #include <imgui/imgui.h>
 
@@ -31,9 +34,9 @@ namespace At0::Ray
 
 	GraphicsPipeline::~GraphicsPipeline()
 	{
-		vkDestroyDescriptorPool(Graphics::Get().GetDevice(), m_DescriptorPool, nullptr);
+		RendererAPI::DestroyDescriptorPool(Graphics::Get().GetDevice(), m_DescriptorPool);
 		for (auto [set, descSetLayout] : m_DescriptorSetLayouts)
-			vkDestroyDescriptorSetLayout(Graphics::Get().GetDevice(), descSetLayout, nullptr);
+			RendererAPI::DestroyDescriptorSetLayout(Graphics::Get().GetDevice(), descSetLayout);
 	}
 
 	Pipeline::BindPoint GraphicsPipeline::GetBindPoint() const
@@ -45,11 +48,11 @@ namespace At0::Ray
 	{
 		for (auto [vecSet, descSetLayout] : m_DescriptorSetLayouts)
 			if (vecSet == set)
-				return descSetLayout;
+				return (VkDescriptorSetLayout)descSetLayout;
 
 		RAY_ASSERT(
 			false, "[GraphicsPipeline] Descriptor set layout at set {0} does not exist", set);
-		return VK_NULL_HANDLE;
+		return nullptr;
 	}
 
 	std::string GraphicsPipeline::GetUID(const Layout& layout)
@@ -73,16 +76,15 @@ namespace At0::Ray
 		uint32_t i = 0;
 		for (auto& [set, layoutBindings] : descriptorSetLayoutBindings)
 		{
-			VkDescriptorSetLayoutCreateInfo createInfo{};
-			createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+			RrDescriptorSetLayoutCreateInfo createInfo{};
 			createInfo.flags =
-				/*m_PushDescriptors ? VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR : */
+				/*m_PushDescriptors ? RrDescriptorSetLayoutCreatePushDescriptorKHR : */
 				0;
 			createInfo.bindingCount = layoutBindings.size();
 			createInfo.pBindings = layoutBindings.data();
 
-			ThrowRenderError(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(), &createInfo,
-								 nullptr, &m_DescriptorSetLayouts[i].second),
+			ThrowRenderError(RendererAPI::CreateDescriptorSetLayout(Graphics::Get().GetDevice(),
+								 &createInfo, &m_DescriptorSetLayouts[i].second),
 				"[GraphicsPipeline] Failed to create descriptor set layout");
 
 			m_DescriptorSetLayouts[i].first = set;
@@ -96,43 +98,40 @@ namespace At0::Ray
 
 	void GraphicsPipeline::CreateDescriptorPool()
 	{
-		const std::vector<VkDescriptorPoolSize>& descriptorPoolSizes =
+		const std::vector<RrDescriptorPoolSize>& descriptorPoolSizes =
 			m_Shader->GetDescriptorPoolSizes();
 
-		VkDescriptorPoolCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+		RrDescriptorPoolCreateInfo createInfo{};
 		createInfo.flags = 0;
 		// createInfo.maxSets = 8192;
 		createInfo.maxSets = 500000;
 		createInfo.poolSizeCount = (uint32_t)descriptorPoolSizes.size();
 		createInfo.pPoolSizes = descriptorPoolSizes.data();
 
-		ThrowRenderError(vkCreateDescriptorPool(
-							 Graphics::Get().GetDevice(), &createInfo, nullptr, &m_DescriptorPool),
+		ThrowRenderError(RendererAPI::CreateDescriptorPool(
+							 Graphics::Get().GetDevice(), &createInfo, &m_DescriptorPool),
 			"[GraphicsPipeline] Failed to create descriptor pool");
 	}
 
 	void GraphicsPipeline::CreatePipelineLayout()
 	{
-		const std::vector<VkPushConstantRange>& pushConstantRanges =
+		const std::vector<RrPushConstantRange>& pushConstantRanges =
 			m_Shader->GetPushConstantRanges();
 
 		// Move descriptor set layouts from std::vector<std::pair<>> to std::vector<>
-		std::vector<VkDescriptorSetLayout> descSetLayouts;
+		std::vector<RrDescriptorSetLayout> descSetLayouts;
 		descSetLayouts.reserve(m_DescriptorSetLayouts.size());
 		for (const auto& [set, descSetLayout] : m_DescriptorSetLayouts)
 			descSetLayouts.emplace_back(descSetLayout);
 
-		VkPipelineLayoutCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		createInfo.flags = 0;
+		RrPipelineLayoutCreateInfo createInfo{};
 		createInfo.setLayoutCount = (uint32_t)m_DescriptorSetLayouts.size();
 		createInfo.pSetLayouts = descSetLayouts.data();
 		createInfo.pushConstantRangeCount = (uint32_t)pushConstantRanges.size();
 		createInfo.pPushConstantRanges = pushConstantRanges.data();
 
 		ThrowRenderError(
-			vkCreatePipelineLayout(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Layout),
+			RendererAPI::CreatePipelineLayout(Graphics::Get().GetDevice(), &createInfo, &m_Layout),
 			"[GraphicsPipeline] Failed to create layout");
 
 		Log::Info("[GraphicsPipeline] Created pipeline layout with {0} descriptor set layout(s) "
@@ -142,8 +141,8 @@ namespace At0::Ray
 
 	void GraphicsPipeline::CreatePipeline(const Layout& layout)
 	{
-		std::vector<VkVertexInputBindingDescription> bindingDescs{};
-		std::vector<VkVertexInputAttributeDescription> attribDescs{};
+		std::vector<RrVertexInputBindingDescription> bindingDescs{};
+		std::vector<RrVertexInputAttributeDescription> attribDescs{};
 
 		if (layout.bindingDescriptions)
 			bindingDescs = *layout.bindingDescriptions;
@@ -154,14 +153,13 @@ namespace At0::Ray
 		else
 			attribDescs = m_Shader->GetVertexInputAttributes();
 
-		VkPipelineVertexInputStateCreateInfo vertexInput{};
-		vertexInput.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+		RrPipelineVertexInputStateCreateInfo vertexInput{};
 		vertexInput.vertexBindingDescriptionCount = (uint32_t)bindingDescs.size();
 		vertexInput.pVertexBindingDescriptions = bindingDescs.data();
 		vertexInput.vertexAttributeDescriptionCount = (uint32_t)attribDescs.size();
 		vertexInput.pVertexAttributeDescriptions = attribDescs.data();
 
-		std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
+		std::vector<RrPipelineShaderStageCreateInfo> shaderStages;
 		// Create shader module structs
 		for (const auto& [stage, shaderModule] : m_Shader->GetShaderModules())
 		{
@@ -169,10 +167,8 @@ namespace At0::Ray
 			// for (const auto& [defineName, defineValue] : m_Defines)
 			//	defineBlock << "#define " << defineName << " " << defineValue << '\n';
 
-			VkPipelineShaderStageCreateInfo pipelineShaderStageCreateInfo{};
-			pipelineShaderStageCreateInfo.sType =
-				VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-			pipelineShaderStageCreateInfo.stage = (VkShaderStageFlagBits)stage;
+			RrPipelineShaderStageCreateInfo pipelineShaderStageCreateInfo{};
+			pipelineShaderStageCreateInfo.stage = (RrShaderStageFlagBits)stage;
 			pipelineShaderStageCreateInfo.module = shaderModule;
 			pipelineShaderStageCreateInfo.pName = "main";
 			shaderStages.emplace_back(pipelineShaderStageCreateInfo);
@@ -181,16 +177,14 @@ namespace At0::Ray
 
 		// ---------------------------------------------------------------------------------------
 		// Input Assembler
-		VkPipelineInputAssemblyStateCreateInfo inputAssembler{};
-		inputAssembler.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+		RrPipelineInputAssemblyStateCreateInfo inputAssembler{};
 		inputAssembler.topology = layout.topology;
 		inputAssembler.primitiveRestartEnable = VK_FALSE;
 
 
 		// ---------------------------------------------------------------------------------------
 		// Viewport State
-		VkPipelineViewportStateCreateInfo viewportState{};
-		viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+		RrPipelineViewportStateCreateInfo viewportState{};
 		viewportState.viewportCount = 1;
 		viewportState.pViewports = nullptr;
 		viewportState.scissorCount = 1;
@@ -199,14 +193,13 @@ namespace At0::Ray
 
 		// ---------------------------------------------------------------------------------------
 		// Rasterizer
-		VkPipelineRasterizationStateCreateInfo rasterizer{};
-		rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+		RrPipelineRasterizationStateCreateInfo rasterizer{};
 		rasterizer.depthClampEnable = VK_FALSE;
 		rasterizer.rasterizerDiscardEnable = VK_FALSE;
 		rasterizer.polygonMode = layout.polygonMode;
 		rasterizer.lineWidth = layout.lineWidth;
 		rasterizer.cullMode = layout.cullMode;
-		rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+		rasterizer.frontFace = RrFrontFaceCounterClockwise;
 		rasterizer.depthBiasEnable = VK_FALSE;
 		rasterizer.depthBiasConstantFactor = 0.0f;
 		rasterizer.depthBiasClamp = 0.0f;
@@ -215,8 +208,7 @@ namespace At0::Ray
 
 		// ---------------------------------------------------------------------------------------
 		// Multisampling
-		VkPipelineMultisampleStateCreateInfo multisampling{};
-		multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+		RrPipelineMultisampleStateCreateInfo multisampling{};
 		multisampling.sampleShadingEnable = VK_FALSE;
 		multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 		multisampling.minSampleShading = 1.0f;
@@ -227,11 +219,10 @@ namespace At0::Ray
 
 		// ---------------------------------------------------------------------------------------
 		// Depth stencil
-		VkPipelineDepthStencilStateCreateInfo depthStencil{};
-		depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+		RrPipelineDepthStencilStateCreateInfo depthStencil{};
 		depthStencil.depthTestEnable = layout.depthTestEnabled;
 		depthStencil.depthWriteEnable = layout.depthTestEnabled;
-		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+		depthStencil.depthCompareOp = RrCompareOpLess;
 		depthStencil.depthBoundsTestEnable = VK_FALSE;
 		depthStencil.minDepthBounds = 0.0f;	 // Optional
 		depthStencil.maxDepthBounds = 1.0f;	 // Optional
@@ -242,21 +233,20 @@ namespace At0::Ray
 
 		// ---------------------------------------------------------------------------------------
 		// Color Blending
-		VkPipelineColorBlendAttachmentState colorBlendAttachment{};
-		colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
-											  VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+		RrPipelineColorBlendAttachmentState colorBlendAttachment{};
+		colorBlendAttachment.colorWriteMask =
+			RrColorComponentR | RrColorComponentG | RrColorComponentB | RrColorComponentA;
 		colorBlendAttachment.blendEnable = VK_TRUE;
-		colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-		colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-		colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
-		colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-		colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
-		colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+		colorBlendAttachment.srcColorBlendFactor = RrBlendFactorSrcAlpha;
+		colorBlendAttachment.dstColorBlendFactor = RrBlendFactorOneMinusSrcAlpha;
+		colorBlendAttachment.colorBlendOp = RrBlendOpAdd;
+		colorBlendAttachment.srcAlphaBlendFactor = RrBlendFactorOne;
+		colorBlendAttachment.dstAlphaBlendFactor = RrBlendFactorZero;
+		colorBlendAttachment.alphaBlendOp = RrBlendOpAdd;
 
-		VkPipelineColorBlendStateCreateInfo colorBlending{};
-		colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+		RrPipelineColorBlendStateCreateInfo colorBlending{};
 		colorBlending.logicOpEnable = VK_FALSE;
-		colorBlending.logicOp = VK_LOGIC_OP_COPY;
+		colorBlending.logicOp = RrLogicOpCopy;
 		colorBlending.attachmentCount = 1;
 		colorBlending.pAttachments = &colorBlendAttachment;
 		colorBlending.blendConstants[0] = 0.0f;
@@ -267,17 +257,15 @@ namespace At0::Ray
 
 		// ---------------------------------------------------------------------------------------
 		// Dynamic state
-		VkDynamicState dynamicStates[] = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
-		VkPipelineDynamicStateCreateInfo dynamicStateInfo{};
-		dynamicStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+		RrDynamicState dynamicStates[] = { RrDynamicStateViewport, RrDynamicStateScissor };
+		RrPipelineDynamicStateCreateInfo dynamicStateInfo{};
 		dynamicStateInfo.dynamicStateCount = std::size(dynamicStates);
 		dynamicStateInfo.pDynamicStates = dynamicStates;
 
 
 		// ---------------------------------------------------------------------------------------
 		// Pipeline creation
-		VkGraphicsPipelineCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+		RrGraphicsPipelineCreateInfo createInfo{};
 		createInfo.flags = 0;
 		createInfo.stageCount = (uint32_t)shaderStages.size();
 		createInfo.pStages = shaderStages.data();
@@ -293,11 +281,11 @@ namespace At0::Ray
 		createInfo.layout = m_Layout;
 		createInfo.renderPass = *layout.renderPass;
 		createInfo.subpass = 0;	 // Index of subpass used with pipeline;
-		createInfo.basePipelineHandle = VK_NULL_HANDLE;
+		createInfo.basePipelineHandle = nullptr;
 		createInfo.basePipelineIndex = -1;
 
-		ThrowRenderError(vkCreateGraphicsPipelines(Graphics::Get().GetDevice(),
-							 *layout.pipelineCache, 1, &createInfo, nullptr, &m_Pipeline),
+		ThrowRenderError(RendererAPI::CreateGraphicsPipeline(Graphics::Get().GetDevice(),
+							 *layout.pipelineCache, &createInfo, &m_Pipeline),
 			"[GraphicsPipeline] Failed to create");
 	}
 }  // namespace At0::Ray

@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include <../../Extern/rapidjson/include/rapidjson/document.h>
+#include <RayRenderer/Core/RCore.h>
 
 
 namespace At0::Ray
@@ -39,7 +40,7 @@ namespace At0::Ray
 			uint32_t size;
 
 			// The format of the data to input
-			VkFormat format;
+			RrFormat format;
 		};
 
 		struct UniformData

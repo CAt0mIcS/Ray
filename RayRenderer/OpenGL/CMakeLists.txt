@@ -24,6 +24,9 @@ set(SRC
 	# ------------------------------------------------------------------
 	# Pipeline
 	"Pipeline/ROpenGLPipeline.c"
+	"Pipeline/ROpenGLUniform.c"
+	"Pipeline/ROpenGLDescriptor.c"
+	"Pipeline/ROpenGLShader.c"
 )
 
 find_package (Python COMPONENTS Interpreter)

@@ -12,8 +12,8 @@ namespace At0::Ray
 {
 	Pipeline::~Pipeline()
 	{
-		vkDestroyPipelineLayout(Graphics::Get().GetDevice(), m_Layout, nullptr);
-		vkDestroyPipeline(Graphics::Get().GetDevice(), m_Pipeline, nullptr);
+		vkDestroyPipelineLayout(Graphics::Get().GetDevice(), (VkPipelineLayout)m_Layout, nullptr);
+		vkDestroyPipeline(Graphics::Get().GetDevice(), (VkPipeline)m_Pipeline, nullptr);
 	}
 
 	VkDescriptorSetLayout Pipeline::GetDescriptorSetLayout(uint32_t set) const
@@ -23,7 +23,7 @@ namespace At0::Ray
 
 	void Pipeline::CmdBind(const CommandBuffer& cmdBuff) const
 	{
-		vkCmdBindPipeline(cmdBuff, (VkPipelineBindPoint)GetBindPoint(), m_Pipeline);
+		vkCmdBindPipeline(cmdBuff, (VkPipelineBindPoint)GetBindPoint(), *this);
 	}
 
 	Pipeline::Pipeline(Ref<Shader> shader) : m_Shader(std::move(shader)) {}

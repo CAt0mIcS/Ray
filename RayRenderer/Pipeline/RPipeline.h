@@ -13,14 +13,8 @@ RR_DEFINE_HANDLE(RrPipelineCache);
 RR_DEFINE_HANDLE(RrRenderPass);
 RR_DEFINE_HANDLE(RrPipelineLayout);
 
-typedef enum RrPipelineLayoutCreateFlagBits
-{
-} RrPipelineLayoutCreateFlagBits;
-typedef uint32_t RrPipelineLayoutCreateFlags;
-
 typedef struct RrPipelineLayoutCreateInfo
 {
-	RrPipelineLayoutCreateFlags flags;
 	uint32_t setLayoutCount;
 	const RrDescriptorSetLayout* pSetLayouts;
 	uint32_t pushConstantRangeCount;
@@ -104,8 +98,8 @@ typedef enum RrPolygonMode
 typedef enum RrCullModeFlagBits
 {
 	RrCullModeNone = 0,
-	RrCullModeFrontBit = 0x00000001,
-	RrCullModeBackBit = 0x00000002,
+	RrCullModeFront = 0x00000001,
+	RrCullModeBack = 0x00000002,
 	RrCullModeFrontAndBack = 0x00000003,
 } RrCullModeFlagBits;
 typedef uint32_t RrCullModeFlags;
@@ -364,8 +358,7 @@ typedef struct RrGraphicsPipelineCreateInfo
 RR_API RrError RrCreatePipelineLayout(RrLogicalDevice device,
 	const RrPipelineLayoutCreateInfo* pCreateInfo, RrPipelineLayout* pLayout);
 
-RR_API RrError RrCreateGraphicsPipelines(RrLogicalDevice device, RrPipelineCache pipelineCache,
-	uint32_t createInfoCount, const RrGraphicsPipelineCreateInfo* pCreateInfos,
-	RrPipeline* pPipeline);
+RR_API RrError RrCreateGraphicsPipeline(RrLogicalDevice device, RrPipelineCache pipelineCache,
+	const RrGraphicsPipelineCreateInfo* pCreateInfo, RrPipeline* pPipeline);
 
 RR_EXTERN_C_END

@@ -4,6 +4,7 @@
 #include "Ray/Utils/RAssert.h"
 
 #include <vulkan/vulkan_core.h>
+#include <RayRenderer/Pipeline/RPipeline.h>
 
 
 namespace At0::Ray
@@ -26,28 +27,28 @@ namespace At0::Ray
 	{
 		static constexpr const char* Semantic = "inPos";
 		static constexpr const char* Type = "vec3";
-		static constexpr VkFormat Format = VK_FORMAT_R32G32B32_SFLOAT;
+		static constexpr RrFormat Format = RRFORMAT_R32G32B32_SFLOAT;
 	};
 	template<>
 	struct AttributeMap<AttributeType::UV>
 	{
 		static constexpr const char* Semantic = "inUV";
 		static constexpr const char* Type = "vec2";
-		static constexpr VkFormat Format = VK_FORMAT_R32G32_SFLOAT;
+		static constexpr RrFormat Format = RRFORMAT_R32G32_SFLOAT;
 	};
 	template<>
 	struct AttributeMap<AttributeType::Normal>
 	{
 		static constexpr const char* Semantic = "inNormal";
 		static constexpr const char* Type = "vec3";
-		static constexpr VkFormat Format = VK_FORMAT_R32G32B32_SFLOAT;
+		static constexpr RrFormat Format = RRFORMAT_R32G32B32_SFLOAT;
 	};
 	template<>
 	struct AttributeMap<AttributeType::Tangent>
 	{
 		static constexpr const char* Semantic = "inTangent";
 		static constexpr const char* Type = "vec3";
-		static constexpr VkFormat Format = VK_FORMAT_R32G32B32_SFLOAT;
+		static constexpr RrFormat Format = RRFORMAT_R32G32B32_SFLOAT;
 	};
 
 	class RAY_EXPORT DynamicVertex
@@ -116,13 +117,13 @@ namespace At0::Ray
 		 */
 		bool Has(std::string_view attribName) const;
 
-		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributes(
+		std::vector<RrVertexInputAttributeDescription> GetVertexInputAttributes(
 			uint32_t binding = 0) const;
 
-		std::vector<VkVertexInputBindingDescription> GetVertexInputBindings(
+		std::vector<RrVertexInputBindingDescription> GetVertexInputBindings(
 			uint32_t binding = 0) const;
 
-		VkFormat GetFormat(std::string_view attribName) const;
+		RrFormat GetFormat(std::string_view attribName) const;
 
 	private:
 		/**

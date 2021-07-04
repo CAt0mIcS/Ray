@@ -64,6 +64,12 @@ namespace At0::Ray
 		void (*DestroyFence)(RrLogicalDevice device, RrFence fence) = nullptr;
 		RrError (*CreateSemaphore)(RrLogicalDevice device, RrSemaphore* pSemaphore) = nullptr;
 		void (*DestroySemaphore)(RrLogicalDevice device, RrSemaphore semaphore) = nullptr;
+		RrError (*CreateDescriptorSetLayout)(RrLogicalDevice device,const RrDescriptorSetLayoutCreateInfo* pCreateInfo, RrDescriptorSetLayout* pLayout) = nullptr;
+		RrError (*CreateDescriptorPool)(RrLogicalDevice device, const RrDescriptorPoolCreateInfo* pCreateInfo, RrDescriptorPool* pPool) = nullptr;
+		void (*DestroyDescriptorPool)(RrLogicalDevice device, RrDescriptorPool pool) = nullptr;
+		void (*DestroyDescriptorSetLayout)(RrLogicalDevice device, RrDescriptorSetLayout layout) = nullptr;
+		RrError (*CreatePipelineLayout)(RrLogicalDevice device,const RrPipelineLayoutCreateInfo* pCreateInfo, RrPipelineLayout* pLayout) = nullptr;
+		RrError (*CreateGraphicsPipeline)(RrLogicalDevice device, RrPipelineCache pipelineCache,const RrGraphicsPipelineCreateInfo* pCreateInfo, RrPipeline* pPipeline) = nullptr;
 
 	}  // namespace RendererAPI
 
@@ -155,6 +161,12 @@ namespace At0::Ray
 		RendererAPI::DestroyFence = (void (*)(RrLogicalDevice device, RrFence fence))LoadFunction(lib, "RrDestroyFence");
 		RendererAPI::CreateSemaphore = (RrError (*)(RrLogicalDevice device, RrSemaphore* pSemaphore))LoadFunction(lib, "RrCreateSemaphore");
 		RendererAPI::DestroySemaphore = (void (*)(RrLogicalDevice device, RrSemaphore semaphore))LoadFunction(lib, "RrDestroySemaphore");
+		RendererAPI::CreateDescriptorSetLayout = (RrError (*)(RrLogicalDevice device,const RrDescriptorSetLayoutCreateInfo* pCreateInfo, RrDescriptorSetLayout* pLayout))LoadFunction(lib, "RrCreateDescriptorSetLayout");
+		RendererAPI::CreateDescriptorPool = (RrError (*)(RrLogicalDevice device, const RrDescriptorPoolCreateInfo* pCreateInfo, RrDescriptorPool* pPool))LoadFunction(lib, "RrCreateDescriptorPool");
+		RendererAPI::DestroyDescriptorPool = (void (*)(RrLogicalDevice device, RrDescriptorPool pool))LoadFunction(lib, "RrDestroyDescriptorPool");
+		RendererAPI::DestroyDescriptorSetLayout = (void (*)(RrLogicalDevice device, RrDescriptorSetLayout layout))LoadFunction(lib, "RrDestroyDescriptorSetLayout");
+		RendererAPI::CreatePipelineLayout = (RrError (*)(RrLogicalDevice device,const RrPipelineLayoutCreateInfo* pCreateInfo, RrPipelineLayout* pLayout))LoadFunction(lib, "RrCreatePipelineLayout");
+		RendererAPI::CreateGraphicsPipeline = (RrError (*)(RrLogicalDevice device, RrPipelineCache pipelineCache,const RrGraphicsPipelineCreateInfo* pCreateInfo, RrPipeline* pPipeline))LoadFunction(lib, "RrCreateGraphicsPipeline");
 
 
 		RendererAPI::API = type;

@@ -18,15 +18,15 @@ namespace At0::Ray
 		{
 			const RenderPass* renderPass = nullptr;	 // Set to Graphics::Get().GetRenderPass()
 			Ref<Shader> shader{};
-			std::optional<VkPipelineCache>
+			std::optional<RrPipelineCache>
 				pipelineCache;	// set to Graphics::Get().GetPipelineCache()
-			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT;
-			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-			VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL;
+			RrCullModeFlags cullMode = RrCullModeBack;
+			RrPrimitiveTopology topology = RrPrimitiveTopologyTriangleList;
+			RrPolygonMode polygonMode = RrPolygonModeFill;
 			float lineWidth = 1.0f;
 			bool depthTestEnabled = true;
-			std::optional<std::vector<VkVertexInputBindingDescription>> bindingDescriptions;
-			std::optional<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions;
+			std::optional<std::vector<RrVertexInputBindingDescription>> bindingDescriptions;
+			std::optional<std::vector<RrVertexInputAttributeDescription>> attributeDescriptions;
 
 			virtual ~Layout() = default;
 		};
@@ -37,20 +37,22 @@ namespace At0::Ray
 
 		Pipeline::BindPoint GetBindPoint() const override;
 
-		VkDescriptorPool GetDescriptorPool() const override { return m_DescriptorPool; }
+		VkDescriptorPool GetDescriptorPool() const override
+		{
+			return (VkDescriptorPool)m_DescriptorPool;
+		}
 		VkDescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const override;
 
 		static std::string GetUID(const Layout& layout);
 
 	private:
-		void CreateShaderProgram(std::string_view filepath);
 		void CreateDescriptorSetLayouts();
 		void CreateDescriptorPool();
 		void CreatePipelineLayout();
 		void CreatePipeline(const Layout& layout);
 
 	private:
-		VkDescriptorPool m_DescriptorPool;
-		std::vector<std::pair<uint32_t, VkDescriptorSetLayout>> m_DescriptorSetLayouts;
+		RrDescriptorPool m_DescriptorPool;
+		std::vector<std::pair<uint32_t, RrDescriptorSetLayout>> m_DescriptorSetLayouts;
 	};
 }  // namespace At0::Ray

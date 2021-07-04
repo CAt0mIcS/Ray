@@ -24,6 +24,9 @@ set(SRC
 	# ------------------------------------------------------------------
 	# Pipeline
 	"Pipeline/RVulkanPipeline.c"
+	"Pipeline/RVulkanUniform.c"
+	"Pipeline/RVulkanDescriptor.c"
+	"Pipeline/RVulkanShader.c"
 )
 
 # ------------------------------------------------------------------

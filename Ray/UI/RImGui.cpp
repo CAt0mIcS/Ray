@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -278,26 +278,26 @@ namespace At0::Ray
 	void ImGUI::CreatePipeline()
 	{
 		// Vertex bindings an attributes based on ImGui vertex definition
-		VkVertexInputBindingDescription vertexInputBinding{};
+		RrVertexInputBindingDescription vertexInputBinding{};
 		vertexInputBinding.binding = 0;
 		vertexInputBinding.stride = sizeof(ImDrawVert);
-		vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+		vertexInputBinding.inputRate = RrVertexInputRateVertex;
 
-		std::vector<VkVertexInputAttributeDescription> vertexInputAttributes;
-		VkVertexInputAttributeDescription vInputPos{};
+		std::vector<RrVertexInputAttributeDescription> vertexInputAttributes;
+		RrVertexInputAttributeDescription vInputPos{};
 		vInputPos.location = 0;
 		vInputPos.binding = 0;
-		vInputPos.format = VK_FORMAT_R32G32_SFLOAT;
+		vInputPos.format = RRFORMAT_R32G32_SFLOAT;
 		vInputPos.offset = offsetof(ImDrawVert, pos);
-		VkVertexInputAttributeDescription vInputUV{};
+		RrVertexInputAttributeDescription vInputUV{};
 		vInputUV.location = 1;
 		vInputUV.binding = 0;
-		vInputUV.format = VK_FORMAT_R32G32_SFLOAT;
+		vInputUV.format = RRFORMAT_R32G32_SFLOAT;
 		vInputUV.offset = offsetof(ImDrawVert, uv);
-		VkVertexInputAttributeDescription vInputCol{};
+		RrVertexInputAttributeDescription vInputCol{};
 		vInputCol.location = 2;
 		vInputCol.binding = 0;
-		vInputCol.format = VK_FORMAT_R8G8B8A8_UNORM;
+		vInputCol.format = RRFORMAT_R8G8B8A8_UNORM;
 		vInputCol.offset = offsetof(ImDrawVert, col);
 		vertexInputAttributes.emplace_back(vInputPos);
 		vertexInputAttributes.emplace_back(vInputUV);

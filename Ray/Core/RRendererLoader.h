@@ -13,6 +13,8 @@
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Core/RSurface.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Synchronization/RFence.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Synchronization/RSemaphore.h>
+#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Pipeline/RDescriptor.h>
+#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Pipeline/RPipeline.h>
 
 
 
@@ -72,6 +74,12 @@ namespace At0::Ray
 		extern void (*DestroyFence)(RrLogicalDevice device, RrFence fence);
 		extern RrError (*CreateSemaphore)(RrLogicalDevice device, RrSemaphore* pSemaphore);
 		extern void (*DestroySemaphore)(RrLogicalDevice device, RrSemaphore semaphore);
+		extern RrError (*CreateDescriptorSetLayout)(RrLogicalDevice device,const RrDescriptorSetLayoutCreateInfo* pCreateInfo, RrDescriptorSetLayout* pLayout);
+		extern RrError (*CreateDescriptorPool)(RrLogicalDevice device, const RrDescriptorPoolCreateInfo* pCreateInfo, RrDescriptorPool* pPool);
+		extern void (*DestroyDescriptorPool)(RrLogicalDevice device, RrDescriptorPool pool);
+		extern void (*DestroyDescriptorSetLayout)(RrLogicalDevice device, RrDescriptorSetLayout layout);
+		extern RrError (*CreatePipelineLayout)(RrLogicalDevice device,const RrPipelineLayoutCreateInfo* pCreateInfo, RrPipelineLayout* pLayout);
+		extern RrError (*CreateGraphicsPipeline)(RrLogicalDevice device, RrPipelineCache pipelineCache,const RrGraphicsPipelineCreateInfo* pCreateInfo, RrPipeline* pPipeline);
 
 	}  // namespace RendererAPI
 

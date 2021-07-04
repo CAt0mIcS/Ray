@@ -5,7 +5,7 @@ import os
 loader_file = sys.argv[1] + "/Ray/Core/RRendererLoader" if len(
     sys.argv) > 1 else "../Ray/Core/RRendererLoader"
 header_file_directories = [
-    sys.argv[1] + "/RayRenderer/Core", sys.argv[1] + "/RayRenderer/Synchronization"] if len(sys.argv) > 1 else ["../RayRenderer/Core", "../RayRenderer/Synchronization"]
+    sys.argv[1] + "/RayRenderer/Core", sys.argv[1] + "/RayRenderer/Synchronization", sys.argv[1] + "/RayRenderer/Pipeline"] if len(sys.argv) > 1 else ["../RayRenderer/Core", "../RayRenderer/Synchronization", "../RayRenderer/Pipeline"]
 loader_template_cpp = r"""
 
 #include "Rpch.h"

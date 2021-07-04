@@ -80,25 +80,23 @@ namespace At0::Ray
 		}
 	};
 
-	static VkFormat GlTypeToVkFormat(int32_t type)
+	static RrFormat GlTypeToRrFormat(int32_t type)
 	{
 		switch (type)
 		{
-		case GL_FLOAT: return VK_FORMAT_R32_SFLOAT;
-		case GL_FLOAT_VEC2: return VK_FORMAT_R32G32_SFLOAT;
-		case GL_FLOAT_VEC3: return VK_FORMAT_R32G32B32_SFLOAT;
-		case GL_FLOAT_VEC4: return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case GL_INT: return VK_FORMAT_R32_SINT;
-		case GL_INT_VEC2: return VK_FORMAT_R32G32_SINT;
-		case GL_INT_VEC3: return VK_FORMAT_R32G32B32_SINT;
-		case GL_INT_VEC4: return VK_FORMAT_R32G32B32A32_SINT;
-		case GL_UNSIGNED_INT: return VK_FORMAT_R32_SINT;
-		case GL_UNSIGNED_INT_VEC2: return VK_FORMAT_R32G32_SINT;
-		case GL_UNSIGNED_INT_VEC3: return VK_FORMAT_R32G32B32_SINT;
-		case GL_UNSIGNED_INT_VEC4: return VK_FORMAT_R32G32B32A32_SINT;
-		default:
-			Log::Warn("[GlslCompiler] Undefined GL type {0}", type);
-			return VK_FORMAT_UNDEFINED;
+		case GL_FLOAT: return RRFORMAT_R32_SFLOAT;
+		case GL_FLOAT_VEC2: return RRFORMAT_R32G32_SFLOAT;
+		case GL_FLOAT_VEC3: return RRFORMAT_R32G32B32_SFLOAT;
+		case GL_FLOAT_VEC4: return RRFORMAT_R32G32B32A32_SFLOAT;
+		case GL_INT: return RRFORMAT_R32_SINT;
+		case GL_INT_VEC2: return RRFORMAT_R32G32_SINT;
+		case GL_INT_VEC3: return RRFORMAT_R32G32B32_SINT;
+		case GL_INT_VEC4: return RRFORMAT_R32G32B32A32_SINT;
+		case GL_UNSIGNED_INT: return RRFORMAT_R32_SINT;
+		case GL_UNSIGNED_INT_VEC2: return RRFORMAT_R32G32_SINT;
+		case GL_UNSIGNED_INT_VEC3: return RRFORMAT_R32G32B32_SINT;
+		case GL_UNSIGNED_INT_VEC4: return RRFORMAT_R32G32B32A32_SINT;
+		default: Log::Warn("[GlslCompiler] Undefined GL type {0}", type); return RRFORMAT_UNDEFINED;
 		}
 	}
 
@@ -248,7 +246,7 @@ namespace At0::Ray
 		}
 	}
 
-	VkShaderModule GlslCompiler::CreateShaderModule(
+	RrShaderModule GlslCompiler::CreateShaderModule(
 		std::string_view preamble, ShaderStage shaderStage)
 	{
 		std::string_view filepath = m_Shaders[shaderStage];
@@ -348,7 +346,7 @@ namespace At0::Ray
 							 nullptr, &shaderModule),
 			"[GlslCompiler] Failed to create shader module");
 
-		return shaderModule;
+		return (RrShaderModule)shaderModule;
 	}
 
 	void GlslCompiler::LoadUniform(
@@ -420,7 +418,7 @@ namespace At0::Ray
 		ShaderReflection::AttributeData data{};
 		data.location = qualifier.layoutLocation;
 		// data.binding = attribute.getBinding();
-		data.format = GlTypeToVkFormat(attribute.glDefineType);
+		data.format = GlTypeToRrFormat(attribute.glDefineType);
 		data.size = Shader::SizeOf(data.format);
 		data.name = attribute.name;
 

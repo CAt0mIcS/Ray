@@ -53,16 +53,16 @@ namespace At0::Ray
 		return false;
 	}
 
-	std::vector<VkVertexInputAttributeDescription> DynamicVertex::GetVertexInputAttributes(
+	std::vector<RrVertexInputAttributeDescription> DynamicVertex::GetVertexInputAttributes(
 		uint32_t binding) const
 	{
-		std::vector<VkVertexInputAttributeDescription> attributeDescs{};
+		std::vector<RrVertexInputAttributeDescription> attributeDescs{};
 		attributeDescs.reserve(m_AttribSizeMap.size());
 
 		uint32_t i = 0;
 		for (const auto& pair : m_AttribSizeMap)
 		{
-			VkVertexInputAttributeDescription attribDesc{};
+			RrVertexInputAttributeDescription attribDesc{};
 
 			attribDesc.binding = binding;
 			attribDesc.location = i;
@@ -76,18 +76,18 @@ namespace At0::Ray
 		return attributeDescs;
 	}
 
-	std::vector<VkVertexInputBindingDescription> DynamicVertex::GetVertexInputBindings(
+	std::vector<RrVertexInputBindingDescription> DynamicVertex::GetVertexInputBindings(
 		uint32_t binding) const
 	{
-		VkVertexInputBindingDescription bindingDescription{};
+		RrVertexInputBindingDescription bindingDescription{};
 		bindingDescription.binding = binding;
 		bindingDescription.stride = SizeVertex();
-		bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+		bindingDescription.inputRate = RrVertexInputRateVertex;
 
 		return { bindingDescription };
 	}
 
-	VkFormat DynamicVertex::GetFormat(std::string_view attribName) const
+	RrFormat DynamicVertex::GetFormat(std::string_view attribName) const
 	{
 		if (attribName == AttributeMap<AttributeType::Position>::Semantic)
 			return AttributeMap<AttributeType::Position>::Format;
@@ -98,7 +98,7 @@ namespace At0::Ray
 		else if (attribName == AttributeMap<AttributeType::Tangent>::Semantic)
 			return AttributeMap<AttributeType::Tangent>::Format;
 
-		return VK_FORMAT_UNDEFINED;
+		return RRFORMAT_UNDEFINED;
 	}
 
 	uint32_t DynamicVertex::GetOffsetInSizeMap(std::string_view attribName) const
