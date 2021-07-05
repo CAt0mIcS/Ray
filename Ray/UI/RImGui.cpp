@@ -27,6 +27,7 @@
 #include "Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "Graphics/Images/RTexture2D.h"
 #include "Ray/Utils/RLogger.h"
+#include "Core/RRendererLoader.h"
 
 #include <../../Extern/imgui/imgui.h>
 #include <../../Extern/imgui/imgui_internal.h>
@@ -61,8 +62,8 @@ namespace At0::Ray
 	ImGUI::~ImGUI()
 	{
 		ImGui::DestroyContext();
-		vkDestroyDescriptorSetLayout(
-			Graphics::Get().GetDevice(), m_TextureDescriptorSetLayout, nullptr);
+		RendererAPI::DestroyDescriptorSetLayout(
+			Graphics::Get().GetDevice(), m_TextureDescriptorSetLayout);
 	}
 
 	ImGUI::ImGUI()
@@ -217,17 +218,17 @@ namespace At0::Ray
 		ImGuiIO& io = ImGui::GetIO();
 		m_Pipeline->CmdBind(cmdBuff);
 
-		VkViewport viewport{};
+		RrViewport viewport{};
 		viewport.width = io.DisplaySize.x;
 		viewport.height = io.DisplaySize.y;
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(cmdBuff, 0, 1, &viewport);
+		RendererAPI::CmdSetViewport(cmdBuff, 0, 1, &viewport);
 
 		// UI scale and translate via push constants
 		m_PushConstBlock.scale = Float2(2.0f / io.DisplaySize.x, 2.0f / io.DisplaySize.y);
 		m_PushConstBlock.translate = Float2(-1.0f);
-		vkCmdPushConstants(cmdBuff, m_Pipeline->GetLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0,
+		RendererAPI::CmdPushConstants(cmdBuff, m_Pipeline->GetLayout(), RrShaderStageVertex, 0,
 			sizeof(PushConstBlock), &m_PushConstBlock);
 
 		// Render commands
@@ -249,18 +250,18 @@ namespace At0::Ray
 				for (int32_t j = 0; j < cmd_list->CmdBuffer.Size; j++)
 				{
 					const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[j];
-					VkRect2D scissorRect;
+					RrRect2D scissorRect;
 					scissorRect.offset.x = std::max((int32_t)(pcmd->ClipRect.x), 0);
 					scissorRect.offset.y = std::max((int32_t)(pcmd->ClipRect.y), 0);
 					scissorRect.extent.width = (uint32_t)(pcmd->ClipRect.z - pcmd->ClipRect.x);
 					scissorRect.extent.height = (uint32_t)(pcmd->ClipRect.w - pcmd->ClipRect.y);
 
 					// Bind descriptorset with font or user texture
-					VkDescriptorSet descSet[1] = { (VkDescriptorSet)pcmd->TextureId };
-					vkCmdBindDescriptorSets(cmdBuff, VK_PIPELINE_BIND_POINT_GRAPHICS,
+					RrDescriptorSet descSet[1] = { (RrDescriptorSet)pcmd->TextureId };
+					RendererAPI::CmdBindDescriptorSets(cmdBuff, RrPipelineBindPointGraphics,
 						m_Pipeline->GetLayout(), 0, 1, descSet, 0, nullptr);
 
-					vkCmdSetScissor(cmdBuff, 0, 1, &scissorRect);
+					RendererAPI::CmdSetScissor(cmdBuff, 0, 1, &scissorRect);
 					vkCmdDrawIndexed(cmdBuff, pcmd->ElemCount, 1, indexOffset, vertexOffset, 0);
 					indexOffset += pcmd->ElemCount;
 				}
@@ -322,23 +323,22 @@ namespace At0::Ray
 
 		// Set font id for default font to the descriptor set which should be bound when rendering
 		ImGuiIO& io = ImGui::GetIO();
-		io.Fonts[0].SetTexID((ImTextureID)*m_FontDescriptor);
+		io.Fonts[0].SetTexID((ImTextureID)m_FontDescriptor->operator VkDescriptorSet());
 	}
 
 	void ImGUI::CreateTextureUploadResources()
 	{
 		// Descriptor set layout
 		{
-			VkDescriptorSetLayoutBinding binding[1] = {};
-			binding[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			RrDescriptorSetLayoutBinding binding[1] = {};
+			binding[0].descriptorType = RrDescriptorTypeCombinedImageSampler;
 			binding[0].descriptorCount = 1;
-			binding[0].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-			VkDescriptorSetLayoutCreateInfo info = {};
-			info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+			binding[0].stageFlags = RrShaderStageFragment;
+			RrDescriptorSetLayoutCreateInfo info = {};
 			info.bindingCount = 1;
 			info.pBindings = binding;
-			ThrowRenderError(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(), &info,
-								 nullptr, &m_TextureDescriptorSetLayout),
+			ThrowRenderError(RendererAPI::CreateDescriptorSetLayout(
+								 Graphics::Get().GetDevice(), &info, &m_TextureDescriptorSetLayout),
 				"[ImGUI] Failed to create descriptor set layout for texture upload");
 		}
 	}
@@ -348,34 +348,32 @@ namespace At0::Ray
 		return PushTexture(texture.GetSampler(), texture.GetImageView(), texture.GetImageLayout());
 	}
 
-	void* ImGUI::PushTexture(VkSampler sampler, VkImageView imageView, RrImageLayout imageLayout)
+	void* ImGUI::PushTexture(RrSampler sampler, RrImageView imageView, RrImageLayout imageLayout)
 	{
 		// Descriptor set
 		{
 			m_TextureDescriptorSets.emplace_back();
-			VkDescriptorSetAllocateInfo allocInfo = {};
-			allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+			RrDescriptorSetAllocateInfo allocInfo = {};
 			allocInfo.descriptorPool = m_Pipeline->GetDescriptorPool();
 			allocInfo.descriptorSetCount = 1;
 			allocInfo.pSetLayouts = &m_TextureDescriptorSetLayout;
-			ThrowRenderError(vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo,
-								 &m_TextureDescriptorSets.back()),
+			ThrowRenderError(RendererAPI::AllocateDescriptorSets(Graphics::Get().GetDevice(),
+								 &allocInfo, &m_TextureDescriptorSets.back()),
 				"[ImGUI] Failed to create texture descriptor set");
 		}
 
 		// Update the Descriptor Set:
 		{
-			VkDescriptorImageInfo descImage[1] = {};
+			RrDescriptorImageInfo descImage[1] = {};
 			descImage[0].sampler = sampler;
 			descImage[0].imageView = imageView;
-			descImage[0].imageLayout = (VkImageLayout)imageLayout;
-			VkWriteDescriptorSet writeDesc[1] = {};
-			writeDesc[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descImage[0].imageLayout = imageLayout;
+			RrWriteDescriptorSet writeDesc[1] = {};
 			writeDesc[0].dstSet = m_TextureDescriptorSets.back();
 			writeDesc[0].descriptorCount = 1;
-			writeDesc[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			writeDesc[0].descriptorType = RrDescriptorTypeCombinedImageSampler;
 			writeDesc[0].pImageInfo = descImage;
-			vkUpdateDescriptorSets(Graphics::Get().GetDevice(), 1, writeDesc, 0, NULL);
+			RendererAPI::UpdateDescriptorSets(Graphics::Get().GetDevice(), 1, writeDesc, 0, NULL);
 		}
 
 		return (ImTextureID)m_TextureDescriptorSets.back();

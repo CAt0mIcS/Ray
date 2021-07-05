@@ -37,11 +37,8 @@ namespace At0::Ray
 
 		Pipeline::BindPoint GetBindPoint() const override;
 
-		VkDescriptorPool GetDescriptorPool() const override
-		{
-			return (VkDescriptorPool)m_DescriptorPool;
-		}
-		VkDescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const override;
+		RrDescriptorPool GetDescriptorPool() const override { return m_DescriptorPool; }
+		RrDescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const override;
 
 		static std::string GetUID(const Layout& layout);
 

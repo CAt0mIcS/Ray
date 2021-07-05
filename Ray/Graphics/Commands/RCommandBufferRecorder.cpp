@@ -1,6 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RCommandBufferRecorder.h"
 
+#include "Core/RRendererLoader.h"
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
@@ -55,7 +56,7 @@ namespace At0::Ray
 	CommandBufferRecorder::~CommandBufferRecorder() {}
 
 	void CommandBufferRecorder::Record(const RenderPass& renderPass, const Framebuffer& framebuffer,
-		uint32_t imageIndex, const VkViewport& viewport, const VkRect2D& scissor)
+		uint32_t imageIndex, const RrViewport& viewport, const RrRect2D& scissor)
 	{
 		const CommandBuffer& mainCmdBuff = *m_MainCommandResources[imageIndex].commandBuffer;
 
@@ -73,8 +74,8 @@ namespace At0::Ray
 		{
 			commandBuffer->Begin(VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT |
 								 VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
-			vkCmdSetViewport(*commandBuffer, 0, 1, &viewport);
-			vkCmdSetScissor(*commandBuffer, 0, 1, &scissor);
+			RendererAPI::CmdSetViewport(*commandBuffer, 0, 1, &viewport);
+			RendererAPI::CmdSetScissor(*commandBuffer, 0, 1, &scissor);
 			Scene::Get().CmdBind(*commandBuffer);
 		}
 

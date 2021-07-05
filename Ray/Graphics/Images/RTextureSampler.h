@@ -4,6 +4,7 @@
 
 #include <vulkan/vulkan_core.h>
 
+typedef struct RrSampler_T* RrSampler;
 
 namespace At0::Ray
 {
@@ -16,7 +17,8 @@ namespace At0::Ray
 			float maxLod = 0.0f);
 		~TextureSampler();
 
-		operator const VkSampler&() const { return m_Sampler; }
+		operator VkSampler() const { return m_Sampler; }
+		operator RrSampler() const { return (RrSampler)m_Sampler; }
 
 	private:
 		VkSampler m_Sampler;

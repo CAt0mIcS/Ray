@@ -58,29 +58,6 @@ typedef enum RrImageUsageFlagBits
 } RrImageUsageFlagBits;
 typedef uint32_t RrImageUsageFlags;
 
-typedef enum RrImageLayout
-{
-	RrImageLayoutUndefined = 0,
-	RrImageLayoutGeneral = 1,
-	RrImageLayoutColorAttachment = 2,
-	RrImageLayoutDepthStencilAttachment = 3,
-	RrImageLayoutDepthStencilReadOnly = 4,
-	RrImageLayoutShaderReadOnly = 5,
-	RrImageLayoutTransferSrc = 6,
-	RrImageLayoutTransferDst = 7,
-	RrImageLayoutPreinitialized = 8,
-	RrImageLayoutDepthReadOnlyStencilAttachment = 1000117000,
-	RrImageLayoutDepthAttachmentStencilReadOnly = 1000117001,
-	RrImageLayoutDepthAttachment = 1000241000,
-	RrImageLayoutDepthReadOnly = 1000241001,
-	RrImageLayoutStencilAttachment = 1000241002,
-	RrImageLayoutStencilReadOnly = 1000241003,
-	RrImageLayoutPresentSrcKHR = 1000001002,
-	RrImageLayoutShadedPresentSrcKHR = 1000111000,
-	RrImageLayoutShadingRateNV = 1000164003,
-	RrImageLayoutFragmentDensityMapEXT = 1000218000
-} RrImageLayout;
-
 typedef enum RrImageAspectFlagBits
 {
 	RrImageAspectColor = 0x00000001,

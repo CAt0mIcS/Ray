@@ -44,11 +44,11 @@ namespace At0::Ray
 		return Pipeline::BindPoint::Graphics;
 	}
 
-	VkDescriptorSetLayout GraphicsPipeline::GetDescriptorSetLayout(uint32_t set) const
+	RrDescriptorSetLayout GraphicsPipeline::GetDescriptorSetLayout(uint32_t set) const
 	{
 		for (auto [vecSet, descSetLayout] : m_DescriptorSetLayouts)
 			if (vecSet == set)
-				return (VkDescriptorSetLayout)descSetLayout;
+				return descSetLayout;
 
 		RAY_ASSERT(
 			false, "[GraphicsPipeline] Descriptor set layout at set {0} does not exist", set);
@@ -179,7 +179,7 @@ namespace At0::Ray
 		// Input Assembler
 		RrPipelineInputAssemblyStateCreateInfo inputAssembler{};
 		inputAssembler.topology = layout.topology;
-		inputAssembler.primitiveRestartEnable = VK_FALSE;
+		inputAssembler.primitiveRestartEnable = false;
 
 
 		// ---------------------------------------------------------------------------------------
@@ -194,13 +194,13 @@ namespace At0::Ray
 		// ---------------------------------------------------------------------------------------
 		// Rasterizer
 		RrPipelineRasterizationStateCreateInfo rasterizer{};
-		rasterizer.depthClampEnable = VK_FALSE;
-		rasterizer.rasterizerDiscardEnable = VK_FALSE;
+		rasterizer.depthClampEnable = false;
+		rasterizer.rasterizerDiscardEnable = false;
 		rasterizer.polygonMode = layout.polygonMode;
 		rasterizer.lineWidth = layout.lineWidth;
 		rasterizer.cullMode = layout.cullMode;
 		rasterizer.frontFace = RrFrontFaceCounterClockwise;
-		rasterizer.depthBiasEnable = VK_FALSE;
+		rasterizer.depthBiasEnable = false;
 		rasterizer.depthBiasConstantFactor = 0.0f;
 		rasterizer.depthBiasClamp = 0.0f;
 		rasterizer.depthBiasSlopeFactor = 0.0f;
@@ -209,12 +209,12 @@ namespace At0::Ray
 		// ---------------------------------------------------------------------------------------
 		// Multisampling
 		RrPipelineMultisampleStateCreateInfo multisampling{};
-		multisampling.sampleShadingEnable = VK_FALSE;
+		multisampling.sampleShadingEnable = false;
 		multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 		multisampling.minSampleShading = 1.0f;
 		multisampling.pSampleMask = nullptr;
-		multisampling.alphaToCoverageEnable = VK_FALSE;
-		multisampling.alphaToOneEnable = VK_FALSE;
+		multisampling.alphaToCoverageEnable = false;
+		multisampling.alphaToOneEnable = false;
 
 
 		// ---------------------------------------------------------------------------------------
@@ -223,10 +223,10 @@ namespace At0::Ray
 		depthStencil.depthTestEnable = layout.depthTestEnabled;
 		depthStencil.depthWriteEnable = layout.depthTestEnabled;
 		depthStencil.depthCompareOp = RrCompareOpLess;
-		depthStencil.depthBoundsTestEnable = VK_FALSE;
+		depthStencil.depthBoundsTestEnable = false;
 		depthStencil.minDepthBounds = 0.0f;	 // Optional
 		depthStencil.maxDepthBounds = 1.0f;	 // Optional
-		depthStencil.stencilTestEnable = VK_FALSE;
+		depthStencil.stencilTestEnable = false;
 		depthStencil.front = {};  // Optional
 		depthStencil.back = {};	  // Optional
 
@@ -236,7 +236,7 @@ namespace At0::Ray
 		RrPipelineColorBlendAttachmentState colorBlendAttachment{};
 		colorBlendAttachment.colorWriteMask =
 			RrColorComponentR | RrColorComponentG | RrColorComponentB | RrColorComponentA;
-		colorBlendAttachment.blendEnable = VK_TRUE;
+		colorBlendAttachment.blendEnable = true;
 		colorBlendAttachment.srcColorBlendFactor = RrBlendFactorSrcAlpha;
 		colorBlendAttachment.dstColorBlendFactor = RrBlendFactorOneMinusSrcAlpha;
 		colorBlendAttachment.colorBlendOp = RrBlendOpAdd;
@@ -245,7 +245,7 @@ namespace At0::Ray
 		colorBlendAttachment.alphaBlendOp = RrBlendOpAdd;
 
 		RrPipelineColorBlendStateCreateInfo colorBlending{};
-		colorBlending.logicOpEnable = VK_FALSE;
+		colorBlending.logicOpEnable = false;
 		colorBlending.logicOp = RrLogicOpCopy;
 		colorBlending.attachmentCount = 1;
 		colorBlending.pAttachments = &colorBlendAttachment;

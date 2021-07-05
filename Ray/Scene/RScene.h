@@ -12,6 +12,9 @@
 
 #include <concepts>
 
+typedef struct RrDescriptorSetLayout_T* RrDescriptorSetLayout;
+typedef struct RrPipelineLayout_T* RrPipelineLayout;
+typedef struct RrDescriptorPool_T* RrDescriptorPool;
 
 namespace At0::Ray
 {
@@ -108,9 +111,9 @@ namespace At0::Ray
 		Scope<Camera> m_Camera = nullptr;
 		ThreadPool m_ThreadPool;
 
-		VkDescriptorSetLayout m_DescriptorSetLayout;
-		VkPipelineLayout m_PipelineLayout;
-		VkDescriptorPool m_DescriptorPool;
+		RrDescriptorSetLayout m_DescriptorSetLayout;
+		RrPipelineLayout m_PipelineLayout;
+		RrDescriptorPool m_DescriptorPool;
 		Scope<DescriptorSet> m_PerSceneDescriptor;
 		Scope<BufferUniform> m_PerSceneUniform;
 

@@ -10,7 +10,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "Ray/RBase.h"
 #include "Ray/Core/RMath.h"
 #include "../Core/RTime.h"
@@ -20,10 +20,13 @@
 #include "Ray/Events/RMouseEvents.h"
 #include "Ray/Events/REngineEvents.h"
 #include <RayRenderer/Core/RImage.h>
+#include <RayRenderer/Pipeline/RDescriptor.h>
 
 #include <functional>
 // clang-format on
 
+typedef struct RrSampler_T* RrSampler;
+typedef struct RrImageView_T* RrImageView;
 
 namespace At0::Ray
 {
@@ -87,7 +90,7 @@ namespace At0::Ray
 		 * Should be called on stored textures to get the ID required for ImGui::Image
 		 * @returns First parameter of ImGui::Image function
 		 */
-		void* PushTexture(VkSampler sampler, VkImageView imageView, RrImageLayout imageLayout);
+		void* PushTexture(RrSampler sampler, RrImageView imageView, RrImageLayout imageLayout);
 
 	private:
 		ImGUI();
@@ -117,8 +120,8 @@ namespace At0::Ray
 		Scope<Sampler2DUniform> m_FontUniform;
 		Scope<DescriptorSet> m_FontDescriptor;
 
-		VkDescriptorSetLayout m_TextureDescriptorSetLayout;
-		std::vector<VkDescriptorSet> m_TextureDescriptorSets;
+		RrDescriptorSetLayout m_TextureDescriptorSetLayout;
+		std::vector<RrDescriptorSet> m_TextureDescriptorSets;
 
 		Scope<Buffer> m_VertexBuffer;
 		Scope<Buffer> m_IndexBuffer;

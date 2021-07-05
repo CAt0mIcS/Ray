@@ -6,6 +6,7 @@
 
 #include "RCommandBuffer.h"
 #include "RCommandPool.h"
+#include <RayRenderer/Core/RCore.h>
 
 
 namespace At0::Ray
@@ -34,7 +35,7 @@ namespace At0::Ray
 		~CommandBufferRecorder();
 
 		void Record(const RenderPass& renderPass, const Framebuffer& framebuffer,
-			uint32_t imageIndex, const VkViewport& viewport, const VkRect2D& scissor);
+			uint32_t imageIndex, const RrViewport& viewport, const RrRect2D& scissor);
 
 		void WaitForTasks() { m_ThreadPool.WaitForTasks(); }
 		void ResetCommandPools(uint32_t imageIndex) const;

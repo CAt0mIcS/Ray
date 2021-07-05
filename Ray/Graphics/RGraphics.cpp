@@ -240,7 +240,7 @@ namespace At0::Ray
 	void Graphics::RecordCommandBuffer(
 		const CommandBuffer& cmdBuff, const Framebuffer& framebuffer, uint32_t imageIndex)
 	{
-		cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+		cmdBuff.Begin(RrCommandBufferUsageOneTimeSubmit);
 
 		VkClearValue clearValues[2];
 		clearValues[0].color = { 0.0137254f, 0.014117f, 0.0149019f };
@@ -248,8 +248,8 @@ namespace At0::Ray
 
 		m_RenderPass->Begin(cmdBuff, framebuffer, clearValues, std::size(clearValues));
 
-		vkCmdSetViewport(cmdBuff, 0, 1, &m_Viewport);
-		vkCmdSetScissor(cmdBuff, 0, 1, &m_Scissor);
+		RendererAPI::CmdSetViewport(cmdBuff, 0, 1, (RrViewport*)&m_Viewport);
+		RendererAPI::CmdSetScissor(cmdBuff, 0, 1, (RrRect2D*)&m_Scissor);
 
 		Scene::Get().CmdBind(cmdBuff);
 		Scene::Get().EntityView<MeshRenderer>().each(
@@ -313,8 +313,8 @@ namespace At0::Ray
 
 
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
-		m_CommandBufferRecorder->Record(
-			*m_RenderPass, *m_Framebuffers[imageIndex], imageIndex, m_Viewport, m_Scissor);
+		m_CommandBufferRecorder->Record(*m_RenderPass, *m_Framebuffers[imageIndex], imageIndex,
+			*(RrViewport*)&m_Viewport, *(RrRect2D*)&m_Scissor);
 		// submitInfo.commandBufferCount =
 		//	(uint32_t)m_CommandBufferRecorder->GetVkCommandBuffers(imageIndex).size();
 		// submitInfo.pCommandBuffers =

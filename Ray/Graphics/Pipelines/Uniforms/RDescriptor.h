@@ -5,6 +5,7 @@
 #include "../RPipeline.h"
 
 #include <vulkan/vulkan_core.h>
+#include <RayRenderer/Pipeline/RDescriptor.h>
 
 
 namespace At0::Ray
@@ -12,35 +13,35 @@ namespace At0::Ray
 	class BufferUniform;
 	class Sampler2DUniform;
 
-	class DescriptorSet : NonCopyable
+	class RAY_EXPORT DescriptorSet : NonCopyable
 	{
 	public:
-	public:
-		DescriptorSet(VkDescriptorPool pool, VkDescriptorSetLayout descriptorLayout,
-			Pipeline::BindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout,
+		DescriptorSet(RrDescriptorPool pool, RrDescriptorSetLayout descriptorLayout,
+			Pipeline::BindPoint pipelineBindPoint, RrPipelineLayout pipelineLayout,
 			uint32_t setNumber);
 
 		~DescriptorSet() = default;
 
 		void CmdBind(const CommandBuffer& cmdBuff) const;
-		static void Update(const std::vector<VkWriteDescriptorSet>& descriptorWrites);
+		static void Update(const std::vector<RrWriteDescriptorSet>& descriptorWrites);
 		uint32_t GetSetNumber() const { return m_SetNumber; }
 
 		void BindUniform(const BufferUniform& uniform);
 		void BindUniform(const Sampler2DUniform& uniform);
 
-		operator const VkDescriptorSet&() const { return m_DescriptorSet; }
+		operator VkDescriptorSet() const { return (VkDescriptorSet)m_DescriptorSet; }
+		operator RrDescriptorSet() const { return m_DescriptorSet; }
 		DescriptorSet& operator=(DescriptorSet&& other) noexcept;
 		DescriptorSet(DescriptorSet&& other) noexcept;
 
 	private:
-		VkDescriptorSet m_DescriptorSet = VK_NULL_HANDLE;
-		VkDescriptorPool m_DescriptorPool = VK_NULL_HANDLE;
-		VkDescriptorSetLayout m_DescriptorSetLayout = VK_NULL_HANDLE;
+		RrDescriptorSet m_DescriptorSet = nullptr;
+		RrDescriptorPool m_DescriptorPool = nullptr;
+		RrDescriptorSetLayout m_DescriptorSetLayout = nullptr;
 		uint32_t m_SetNumber;
 
 		Pipeline::BindPoint m_PipelineBindPoint;
-		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
+		RrPipelineLayout m_PipelineLayout = nullptr;
 
 #ifndef NDEBUG
 		bool m_UniformBound = false;

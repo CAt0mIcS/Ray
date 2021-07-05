@@ -16,10 +16,7 @@ namespace At0::Ray
 		vkDestroyPipeline(Graphics::Get().GetDevice(), (VkPipeline)m_Pipeline, nullptr);
 	}
 
-	VkDescriptorSetLayout Pipeline::GetDescriptorSetLayout(uint32_t set) const
-	{
-		return VK_NULL_HANDLE;
-	}
+	RrDescriptorSetLayout Pipeline::GetDescriptorSetLayout(uint32_t set) const { return nullptr; }
 
 	void Pipeline::CmdBind(const CommandBuffer& cmdBuff) const
 	{

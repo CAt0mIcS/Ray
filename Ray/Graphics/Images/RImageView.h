@@ -5,6 +5,7 @@
 
 #include <vulkan/vulkan_core.h>
 
+typedef struct RrImageView_T* RrImageView;
 
 namespace At0::Ray
 {
@@ -18,7 +19,8 @@ namespace At0::Ray
 			VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t layerCount = 1);
 		~ImageView();
 
-		operator const VkImageView&() const { return m_View; }
+		operator VkImageView() const { return m_View; }
+		operator RrImageView() const { return (RrImageView)m_View; }
 
 	private:
 		void Setup(VkImage image, VkImageViewType viewType, VkFormat format, uint32_t mipLevels,

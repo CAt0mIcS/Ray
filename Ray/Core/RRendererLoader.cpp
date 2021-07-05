@@ -66,10 +66,16 @@ namespace At0::Ray
 		void (*DestroySemaphore)(RrLogicalDevice device, RrSemaphore semaphore) = nullptr;
 		RrError (*CreateDescriptorSetLayout)(RrLogicalDevice device,const RrDescriptorSetLayoutCreateInfo* pCreateInfo, RrDescriptorSetLayout* pLayout) = nullptr;
 		RrError (*CreateDescriptorPool)(RrLogicalDevice device, const RrDescriptorPoolCreateInfo* pCreateInfo, RrDescriptorPool* pPool) = nullptr;
+		RrError (*AllocateDescriptorSets)(RrLogicalDevice device,const RrDescriptorSetAllocateInfo* pAllocInfo, RrDescriptorSet* pDescriptorSets) = nullptr;
+		void (*UpdateDescriptorSets)(RrLogicalDevice device, uint32_t descriptorWriteCount,const RrWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount,const RrCopyDescriptorSet* pDescriptorCopies) = nullptr;
 		void (*DestroyDescriptorPool)(RrLogicalDevice device, RrDescriptorPool pool) = nullptr;
 		void (*DestroyDescriptorSetLayout)(RrLogicalDevice device, RrDescriptorSetLayout layout) = nullptr;
+		void (*CmdBindDescriptorSets)(RrCommandBuffer commandBuffer,RrPipelineBindPoint pipelineBindPoint, RrPipelineLayout pipelineLayout, uint32_t firstSet,uint32_t descriptorSetCount, const RrDescriptorSet* pDescriptorSets,uint32_t dynamicOffsetCount, const uint32_t* pDynamicOffsets) = nullptr;
 		RrError (*CreatePipelineLayout)(RrLogicalDevice device,const RrPipelineLayoutCreateInfo* pCreateInfo, RrPipelineLayout* pLayout) = nullptr;
 		RrError (*CreateGraphicsPipeline)(RrLogicalDevice device, RrPipelineCache pipelineCache,const RrGraphicsPipelineCreateInfo* pCreateInfo, RrPipeline* pPipeline) = nullptr;
+		void (*CmdSetViewport)(RrCommandBuffer commandBuffer, uint32_t firstViewport,uint32_t viewportCount, const RrViewport* pViewports) = nullptr;
+		void (*CmdSetScissor)(RrCommandBuffer commandBuffer, uint32_t firstScissor,uint32_t scissorCount, const RrRect2D* pScissors) = nullptr;
+		void (*CmdPushConstants)(RrCommandBuffer commandBuffer, RrPipelineLayout pipelineLayout,RrShaderStageFlags shaderStage, uint32_t offset, uint32_t size, const void* pValues) = nullptr;
 
 	}  // namespace RendererAPI
 
@@ -163,10 +169,16 @@ namespace At0::Ray
 		RendererAPI::DestroySemaphore = (void (*)(RrLogicalDevice device, RrSemaphore semaphore))LoadFunction(lib, "RrDestroySemaphore");
 		RendererAPI::CreateDescriptorSetLayout = (RrError (*)(RrLogicalDevice device,const RrDescriptorSetLayoutCreateInfo* pCreateInfo, RrDescriptorSetLayout* pLayout))LoadFunction(lib, "RrCreateDescriptorSetLayout");
 		RendererAPI::CreateDescriptorPool = (RrError (*)(RrLogicalDevice device, const RrDescriptorPoolCreateInfo* pCreateInfo, RrDescriptorPool* pPool))LoadFunction(lib, "RrCreateDescriptorPool");
+		RendererAPI::AllocateDescriptorSets = (RrError (*)(RrLogicalDevice device,const RrDescriptorSetAllocateInfo* pAllocInfo, RrDescriptorSet* pDescriptorSets))LoadFunction(lib, "RrAllocateDescriptorSets");
+		RendererAPI::UpdateDescriptorSets = (void (*)(RrLogicalDevice device, uint32_t descriptorWriteCount,const RrWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount,const RrCopyDescriptorSet* pDescriptorCopies))LoadFunction(lib, "RrUpdateDescriptorSets");
 		RendererAPI::DestroyDescriptorPool = (void (*)(RrLogicalDevice device, RrDescriptorPool pool))LoadFunction(lib, "RrDestroyDescriptorPool");
 		RendererAPI::DestroyDescriptorSetLayout = (void (*)(RrLogicalDevice device, RrDescriptorSetLayout layout))LoadFunction(lib, "RrDestroyDescriptorSetLayout");
+		RendererAPI::CmdBindDescriptorSets = (void (*)(RrCommandBuffer commandBuffer,RrPipelineBindPoint pipelineBindPoint, RrPipelineLayout pipelineLayout, uint32_t firstSet,uint32_t descriptorSetCount, const RrDescriptorSet* pDescriptorSets,uint32_t dynamicOffsetCount, const uint32_t* pDynamicOffsets))LoadFunction(lib, "RrCmdBindDescriptorSets");
 		RendererAPI::CreatePipelineLayout = (RrError (*)(RrLogicalDevice device,const RrPipelineLayoutCreateInfo* pCreateInfo, RrPipelineLayout* pLayout))LoadFunction(lib, "RrCreatePipelineLayout");
 		RendererAPI::CreateGraphicsPipeline = (RrError (*)(RrLogicalDevice device, RrPipelineCache pipelineCache,const RrGraphicsPipelineCreateInfo* pCreateInfo, RrPipeline* pPipeline))LoadFunction(lib, "RrCreateGraphicsPipeline");
+		RendererAPI::CmdSetViewport = (void (*)(RrCommandBuffer commandBuffer, uint32_t firstViewport,uint32_t viewportCount, const RrViewport* pViewports))LoadFunction(lib, "RrCmdSetViewport");
+		RendererAPI::CmdSetScissor = (void (*)(RrCommandBuffer commandBuffer, uint32_t firstScissor,uint32_t scissorCount, const RrRect2D* pScissors))LoadFunction(lib, "RrCmdSetScissor");
+		RendererAPI::CmdPushConstants = (void (*)(RrCommandBuffer commandBuffer, RrPipelineLayout pipelineLayout,RrShaderStageFlags shaderStage, uint32_t offset, uint32_t size, const void* pValues))LoadFunction(lib, "RrCmdPushConstants");
 
 
 		RendererAPI::API = type;

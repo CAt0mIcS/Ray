@@ -7,8 +7,14 @@ RR_EXTERN_C_BEG
 
 RR_DEFINE_HANDLE(RrDescriptorSetLayout);
 RR_DEFINE_HANDLE(RrDescriptorPool);
+RR_DEFINE_HANDLE(RrDescriptorSet);
+RR_DEFINE_HANDLE(RrCommandBuffer);
 RR_DEFINE_HANDLE(RrLogicalDevice);
 RR_DEFINE_HANDLE(RrSampler);
+RR_DEFINE_HANDLE(RrImageView);
+RR_DEFINE_HANDLE(RrPipelineLayout);
+RR_DEFINE_HANDLE(RrBuffer);
+RR_DEFINE_HANDLE(RrBufferView);
 
 typedef enum RrDescriptorType
 {
@@ -73,14 +79,71 @@ typedef struct RrDescriptorPoolCreateInfo
 	const RrDescriptorPoolSize* pPoolSizes;
 } RrDescriptorPoolCreateInfo;
 
+typedef struct RrDescriptorSetAllocateInfo
+{
+	RrDescriptorPool descriptorPool;
+	uint32_t descriptorSetCount;
+	const RrDescriptorSetLayout* pSetLayouts;
+} RrDescriptorSetAllocateInfo;
+
+typedef struct RrDescriptorImageInfo
+{
+	RrSampler sampler;
+	RrImageView imageView;
+	RrImageLayout imageLayout;
+} RrDescriptorImageInfo;
+
+typedef struct RrDescriptorBufferInfo
+{
+	RrBuffer buffer;
+	RrDeviceSize offset;
+	RrDeviceSize range;
+} RrDescriptorBufferInfo;
+
+typedef struct RrWriteDescriptorSet
+{
+	RrDescriptorSet dstSet;
+	uint32_t dstBinding;
+	uint32_t dstArrayElement;
+	uint32_t descriptorCount;
+	RrDescriptorType descriptorType;
+	const RrDescriptorImageInfo* pImageInfo;
+	const RrDescriptorBufferInfo* pBufferInfo;
+	const RrBufferView* pTexelBufferView;
+} RrWriteDescriptorSet;
+
+typedef struct RrCopyDescriptorSet
+{
+	RrDescriptorSet srcSet;
+	uint32_t srcBinding;
+	uint32_t srcArrayElement;
+	RrDescriptorSet dstSet;
+	uint32_t dstBinding;
+	uint32_t dstArrayElement;
+	uint32_t descriptorCount;
+} RrCopyDescriptorSet;
+
 RR_API RrError RrCreateDescriptorSetLayout(RrLogicalDevice device,
 	const RrDescriptorSetLayoutCreateInfo* pCreateInfo, RrDescriptorSetLayout* pLayout);
 
 RR_API RrError RrCreateDescriptorPool(
 	RrLogicalDevice device, const RrDescriptorPoolCreateInfo* pCreateInfo, RrDescriptorPool* pPool);
 
+RR_API RrError RrAllocateDescriptorSets(RrLogicalDevice device,
+	const RrDescriptorSetAllocateInfo* pAllocInfo, RrDescriptorSet* pDescriptorSets);
+
+RR_API void RrUpdateDescriptorSets(RrLogicalDevice device, uint32_t descriptorWriteCount,
+	const RrWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount,
+	const RrCopyDescriptorSet* pDescriptorCopies);
+
 RR_API void RrDestroyDescriptorPool(RrLogicalDevice device, RrDescriptorPool pool);
 
 RR_API void RrDestroyDescriptorSetLayout(RrLogicalDevice device, RrDescriptorSetLayout layout);
+
+
+RR_API void RrCmdBindDescriptorSets(RrCommandBuffer commandBuffer,
+	RrPipelineBindPoint pipelineBindPoint, RrPipelineLayout pipelineLayout, uint32_t firstSet,
+	uint32_t descriptorSetCount, const RrDescriptorSet* pDescriptorSets,
+	uint32_t dynamicOffsetCount, const uint32_t* pDynamicOffsets);
 
 RR_EXTERN_C_END

@@ -15,6 +15,7 @@
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Synchronization/RSemaphore.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Pipeline/RDescriptor.h>
 #include <D:/dev/Cpp/Projects/Ray/RayRenderer/Pipeline/RPipeline.h>
+#include <D:/dev/Cpp/Projects/Ray/RayRenderer/Pipeline/RUniform.h>
 
 
 
@@ -76,10 +77,16 @@ namespace At0::Ray
 		extern void (*DestroySemaphore)(RrLogicalDevice device, RrSemaphore semaphore);
 		extern RrError (*CreateDescriptorSetLayout)(RrLogicalDevice device,const RrDescriptorSetLayoutCreateInfo* pCreateInfo, RrDescriptorSetLayout* pLayout);
 		extern RrError (*CreateDescriptorPool)(RrLogicalDevice device, const RrDescriptorPoolCreateInfo* pCreateInfo, RrDescriptorPool* pPool);
+		extern RrError (*AllocateDescriptorSets)(RrLogicalDevice device,const RrDescriptorSetAllocateInfo* pAllocInfo, RrDescriptorSet* pDescriptorSets);
+		extern void (*UpdateDescriptorSets)(RrLogicalDevice device, uint32_t descriptorWriteCount,const RrWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount,const RrCopyDescriptorSet* pDescriptorCopies);
 		extern void (*DestroyDescriptorPool)(RrLogicalDevice device, RrDescriptorPool pool);
 		extern void (*DestroyDescriptorSetLayout)(RrLogicalDevice device, RrDescriptorSetLayout layout);
+		extern void (*CmdBindDescriptorSets)(RrCommandBuffer commandBuffer,RrPipelineBindPoint pipelineBindPoint, RrPipelineLayout pipelineLayout, uint32_t firstSet,uint32_t descriptorSetCount, const RrDescriptorSet* pDescriptorSets,uint32_t dynamicOffsetCount, const uint32_t* pDynamicOffsets);
 		extern RrError (*CreatePipelineLayout)(RrLogicalDevice device,const RrPipelineLayoutCreateInfo* pCreateInfo, RrPipelineLayout* pLayout);
 		extern RrError (*CreateGraphicsPipeline)(RrLogicalDevice device, RrPipelineCache pipelineCache,const RrGraphicsPipelineCreateInfo* pCreateInfo, RrPipeline* pPipeline);
+		extern void (*CmdSetViewport)(RrCommandBuffer commandBuffer, uint32_t firstViewport,uint32_t viewportCount, const RrViewport* pViewports);
+		extern void (*CmdSetScissor)(RrCommandBuffer commandBuffer, uint32_t firstScissor,uint32_t scissorCount, const RrRect2D* pScissors);
+		extern void (*CmdPushConstants)(RrCommandBuffer commandBuffer, RrPipelineLayout pipelineLayout,RrShaderStageFlags shaderStage, uint32_t offset, uint32_t size, const void* pValues);
 
 	}  // namespace RendererAPI
 

@@ -1,8 +1,6 @@
 ﻿#pragma once
 
 #include "../Core/RCore.h"
-#include "RDescriptor.h"
-#include "RUniform.h"
 #include "RShader.h"
 
 RR_EXTERN_C_BEG
@@ -12,13 +10,17 @@ RR_DEFINE_HANDLE(RrLogicalDevice);
 RR_DEFINE_HANDLE(RrPipelineCache);
 RR_DEFINE_HANDLE(RrRenderPass);
 RR_DEFINE_HANDLE(RrPipelineLayout);
+RR_DEFINE_HANDLE(RrCommandBuffer);
+RR_DEFINE_HANDLE(RrDescriptorSetLayout);
+
+struct RrPushConstantRange;
 
 typedef struct RrPipelineLayoutCreateInfo
 {
 	uint32_t setLayoutCount;
 	const RrDescriptorSetLayout* pSetLayouts;
 	uint32_t pushConstantRangeCount;
-	const RrPushConstantRange* pPushConstantRanges;
+	const struct RrPushConstantRange* pPushConstantRanges;
 } RrPipelineLayoutCreateInfo;
 
 
@@ -360,5 +362,12 @@ RR_API RrError RrCreatePipelineLayout(RrLogicalDevice device,
 
 RR_API RrError RrCreateGraphicsPipeline(RrLogicalDevice device, RrPipelineCache pipelineCache,
 	const RrGraphicsPipelineCreateInfo* pCreateInfo, RrPipeline* pPipeline);
+
+
+RR_API void RrCmdSetViewport(RrCommandBuffer commandBuffer, uint32_t firstViewport,
+	uint32_t viewportCount, const RrViewport* pViewports);
+
+RR_API void RrCmdSetScissor(RrCommandBuffer commandBuffer, uint32_t firstScissor,
+	uint32_t scissorCount, const RrRect2D* pScissors);
 
 RR_EXTERN_C_END

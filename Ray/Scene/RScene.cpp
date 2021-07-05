@@ -14,6 +14,7 @@
 #include "Components/RTextRenderer.h"
 #include "Components/RSkybox.h"
 #include "Components/RTransform.h"
+#include "Core/RRendererLoader.h"
 
 #include "Events/REventListener.h"
 
@@ -39,9 +40,10 @@ namespace At0::Ray
 	Scene::~Scene()
 	{
 		m_Registry.clear();
-		vkDestroyDescriptorPool(Graphics::Get().GetDevice(), m_DescriptorPool, nullptr);
-		vkDestroyPipelineLayout(Graphics::Get().GetDevice(), m_PipelineLayout, nullptr);
-		vkDestroyDescriptorSetLayout(Graphics::Get().GetDevice(), m_DescriptorSetLayout, nullptr);
+		RendererAPI::DestroyDescriptorPool(Graphics::Get().GetDevice(), m_DescriptorPool);
+		vkDestroyPipelineLayout(
+			Graphics::Get().GetDevice(), (VkPipelineLayout)m_PipelineLayout, nullptr);
+		RendererAPI::DestroyDescriptorSetLayout(Graphics::Get().GetDevice(), m_DescriptorSetLayout);
 	}
 
 	Entity Scene::CreateEntity()
@@ -128,46 +130,42 @@ namespace At0::Ray
 	void Scene::SetupPerSceneUniform()
 	{
 		// Create per-scene descriptor set
-		VkDescriptorSetLayoutBinding perSceneBinding{};
+		RrDescriptorSetLayoutBinding perSceneBinding{};
 		perSceneBinding.binding = 0;
-		perSceneBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		perSceneBinding.descriptorType = RrDescriptorTypeUniformBuffer;
 		perSceneBinding.descriptorCount = 1;
-		perSceneBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+		perSceneBinding.stageFlags = RrShaderStageVertex;
 		perSceneBinding.pImmutableSamplers = nullptr;
 
-		VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo{};
-		descriptorSetLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+		RrDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo{};
 		descriptorSetLayoutCreateInfo.bindingCount = 1;
 		descriptorSetLayoutCreateInfo.pBindings = &perSceneBinding;
 
-		ThrowRenderError(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(),
-							 &descriptorSetLayoutCreateInfo, nullptr, &m_DescriptorSetLayout),
+		ThrowRenderError(RendererAPI::CreateDescriptorSetLayout(Graphics::Get().GetDevice(),
+							 &descriptorSetLayoutCreateInfo, &m_DescriptorSetLayout),
 			"[Scene] Failed to create descriptor set layout for per scene data");
 
-		VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
-		pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutCreateInfo.flags = 0;
+		RrPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
 		pipelineLayoutCreateInfo.setLayoutCount = 1;
 		pipelineLayoutCreateInfo.pSetLayouts = &m_DescriptorSetLayout;
 		pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
 		pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
 
-		ThrowRenderError(vkCreatePipelineLayout(Graphics::Get().GetDevice(),
-							 &pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout),
+		ThrowRenderError(RendererAPI::CreatePipelineLayout(Graphics::Get().GetDevice(),
+							 &pipelineLayoutCreateInfo, &m_PipelineLayout),
 			"[Scene] Failed to create pipeline layout for per scene data");
 
-		VkDescriptorPoolSize poolSize{};
-		poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		RrDescriptorPoolSize poolSize{};
+		poolSize.type = RrDescriptorTypeUniformBuffer;
 		poolSize.descriptorCount = 1;
 
-		VkDescriptorPoolCreateInfo descriptorPoolCreateInfo{};
-		descriptorPoolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+		RrDescriptorPoolCreateInfo descriptorPoolCreateInfo{};
 		descriptorPoolCreateInfo.maxSets = 1;
 		descriptorPoolCreateInfo.poolSizeCount = 1;
 		descriptorPoolCreateInfo.pPoolSizes = &poolSize;
 
-		ThrowRenderError(vkCreateDescriptorPool(Graphics::Get().GetDevice(),
-							 &descriptorPoolCreateInfo, nullptr, &m_DescriptorPool),
+		ThrowRenderError(RendererAPI::CreateDescriptorPool(Graphics::Get().GetDevice(),
+							 &descriptorPoolCreateInfo, &m_DescriptorPool),
 			"[Scene] Failed to create descriptor pool");
 
 		m_PerSceneDescriptor = MakeScope<DescriptorSet>(m_DescriptorPool, m_DescriptorSetLayout,

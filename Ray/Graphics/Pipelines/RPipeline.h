@@ -6,6 +6,7 @@
 
 #include <vulkan/vulkan_core.h>
 #include <RayRenderer/Pipeline/RPipeline.h>
+#include <RayRenderer/Pipeline/RDescriptor.h>
 
 
 namespace At0::Ray
@@ -25,13 +26,13 @@ namespace At0::Ray
 	public:
 		virtual ~Pipeline();
 
-		virtual VkDescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const;
-		virtual VkDescriptorPool GetDescriptorPool() const { return nullptr; };
+		virtual RrDescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const;
+		virtual RrDescriptorPool GetDescriptorPool() const { return nullptr; };
 		virtual Pipeline::BindPoint GetBindPoint() const = 0;
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
 
 		const Shader& GetShader() const { return *m_Shader; }
-		VkPipelineLayout GetLayout() const { return (VkPipelineLayout)m_Layout; }
+		RrPipelineLayout GetLayout() const { return m_Layout; }
 		operator VkPipeline() const { return (VkPipeline)m_Pipeline; }
 		operator RrPipeline() const { return m_Pipeline; }
 

@@ -1,6 +1,7 @@
 ﻿#include "Rpch.h"
 #include <../Pipeline/RPipeline.h>
 #include <../Core/RUtils.h>
+#include <../Pipeline/RUniform.h>
 
 
 RrError RrCreatePipelineLayout(RrLogicalDevice device,
@@ -261,4 +262,65 @@ RrError RrCreateGraphicsPipeline(RrLogicalDevice device, RrPipelineCache pipelin
 	free(shaderStages);
 	free(colorBlendAttachments);
 	return error;
+}
+
+
+void RrCmdSetViewport(RrCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount,
+	const RrViewport* pViewports)
+{
+	if (viewportCount != 1)
+	{
+		VkViewport* viewports = malloc(sizeof(VkViewport) * viewportCount);
+		for (uint32_t i = 0; i < viewportCount; ++i)
+		{
+			viewports[i].x = pViewports[i].x;
+			viewports[i].y = pViewports[i].y;
+			viewports[i].width = pViewports[i].width;
+			viewports[i].height = pViewports[i].height;
+			viewports[i].minDepth = pViewports[i].minDepth;
+			viewports[i].maxDepth = pViewports[i].maxDepth;
+		}
+
+		vkCmdSetViewport((VkCommandBuffer)commandBuffer, firstViewport, viewportCount, viewports);
+		free(viewports);
+	}
+	else
+	{
+		VkViewport viewport;
+		viewport.x = pViewports->x;
+		viewport.y = pViewports->y;
+		viewport.width = pViewports->width;
+		viewport.height = pViewports->height;
+		viewport.minDepth = pViewports->minDepth;
+		viewport.maxDepth = pViewports->maxDepth;
+		vkCmdSetViewport((VkCommandBuffer)commandBuffer, firstViewport, viewportCount, &viewport);
+	}
+}
+
+void RrCmdSetScissor(RrCommandBuffer commandBuffer, uint32_t firstScissor, uint32_t scissorCount,
+	const RrRect2D* pScissors)
+{
+	if (scissorCount != 1)
+	{
+		VkRect2D* scissors = malloc(sizeof(VkRect2D) * scissorCount);
+		for (uint32_t i = 0; i < scissorCount; ++i)
+		{
+			scissors[i].extent.width = pScissors[i].extent.width;
+			scissors[i].extent.height = pScissors[i].extent.height;
+			scissors[i].offset.x = pScissors[i].offset.x;
+			scissors[i].offset.y = pScissors[i].offset.y;
+		}
+
+		vkCmdSetScissor((VkCommandBuffer)commandBuffer, firstScissor, scissorCount, scissors);
+		free(scissors);
+	}
+	else
+	{
+		VkRect2D scissor;
+		scissor.extent.width = pScissors->extent.width;
+		scissor.extent.height = pScissors->extent.height;
+		scissor.offset.x = pScissors->offset.x;
+		scissor.offset.y = pScissors->offset.y;
+		vkCmdSetScissor((VkCommandBuffer)commandBuffer, firstScissor, scissorCount, &scissor);
+	}
 }

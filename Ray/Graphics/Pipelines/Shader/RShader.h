@@ -15,6 +15,7 @@
 #include <RayRenderer/Pipeline/RShader.h>
 #include <RayRenderer/Pipeline/RDescriptor.h>
 #include <RayRenderer/Pipeline/RPipeline.h>
+#include <RayRenderer/Pipeline/RUniform.h>
 
 
 namespace glslang
