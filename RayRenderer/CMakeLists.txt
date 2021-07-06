@@ -28,7 +28,9 @@ set(SRC
 	"Pipeline/RShader.h"
 )
 
-add_library("RayRendererBase" "${SRC}")
+find_host_package(PythonInterp 3 REQUIRED FATAL_ERROR)
+
+add_library("RayRenderer" "${SRC}")
 AddRecursiveFilters("${SRC}")
 
 add_subdirectory("OpenGL")

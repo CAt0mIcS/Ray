@@ -29,8 +29,6 @@ set(SRC
 	"Pipeline/ROpenGLShader.c"
 )
 
-find_package (Python COMPONENTS Interpreter)
-
 set(PUBLIC_INC
 	"${CMAKE_SOURCE_DIR}"
 )
@@ -46,7 +44,7 @@ set(PUBLIC_LIB
 
 set(PRIVATE_LIB
 	"Glad"
-	"RayRendererBase"
+	"RayRenderer"
 )
 
 
@@ -74,7 +72,5 @@ SetWorkingDirectoryPlane("RayRendererOpenGL" "${CMAKE_SOURCE_DIR}")
 
 # Run auto loader generator
 add_custom_command(TARGET "RayRendererOpenGL" POST_BUILD
-	COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Scripts/generate_loader.py ${CMAKE_SOURCE_DIR}
+	COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Scripts/generate_loader.py ${CMAKE_SOURCE_DIR}
 )
-
-
