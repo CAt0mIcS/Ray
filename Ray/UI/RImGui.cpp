@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
+// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -98,7 +98,7 @@ namespace At0::Ray
 		unsigned char* fontData;
 		int texWidth, texHeight;
 		io.Fonts->GetTexDataAsRGBA32(&fontData, &texWidth, &texHeight);
-		VkDeviceSize uploadSize = texWidth * texHeight * 4 * sizeof(char);
+		RrDeviceSize uploadSize = texWidth * texHeight * 4 * sizeof(char);
 
 		// Create target image for copy
 		m_FontImage = MakeRef<Texture2D>(UInt2{ texWidth, texHeight }, RRFORMAT_R8G8B8A8_UNORM,
@@ -162,8 +162,8 @@ namespace At0::Ray
 	void ImGUI::UpdateBuffers()
 	{
 		ImDrawData* imDrawData = ImGui::GetDrawData();
-		VkDeviceSize vertexBufferSize = imDrawData->TotalVtxCount * sizeof(ImDrawVert);
-		VkDeviceSize indexBufferSize = imDrawData->TotalIdxCount * sizeof(ImDrawIdx);
+		RrDeviceSize vertexBufferSize = imDrawData->TotalVtxCount * sizeof(ImDrawVert);
+		RrDeviceSize indexBufferSize = imDrawData->TotalIdxCount * sizeof(ImDrawIdx);
 
 		if ((vertexBufferSize == 0) || (indexBufferSize == 0))
 			return;
@@ -238,7 +238,7 @@ namespace At0::Ray
 
 		if (imDrawData->CmdListsCount > 0)
 		{
-			VkDeviceSize offsets[1] = { 0 };
+			RrDeviceSize offsets[1] = { 0 };
 			VkBuffer vBuff = (VkBuffer)m_VertexBuffer->GetBuffer();
 			vkCmdBindVertexBuffers(cmdBuff, 0, 1, &vBuff, offsets);
 			vkCmdBindIndexBuffer(

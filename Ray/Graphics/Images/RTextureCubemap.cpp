@@ -21,7 +21,7 @@ namespace At0::Ray
 		// ktx_uint8_t* ktxTextureData = ktxTexture_GetData(ktxTexture);
 		// ktx_size_t ktxTextureSize = ktxTexture_GetSize(ktxTexture);
 
-		// Buffer stagingBuffer((VkDeviceSize)ktxTextureSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+		// Buffer stagingBuffer((RrDeviceSize)ktxTextureSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 		// 	VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 		// 	ktxTextureData);
 

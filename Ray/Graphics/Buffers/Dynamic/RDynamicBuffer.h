@@ -4,6 +4,7 @@
 #include "Ray/Utils/RAssert.h"
 
 #include <vulkan/vulkan_core.h>
+#include <RayRenderer/Core/RCore.h>
 
 
 namespace At0::Ray
@@ -21,7 +22,7 @@ namespace At0::Ray
 		 * @param offset Local offset
 		 */
 		template<typename T>
-		void Update(T&& data, VkDeviceSize offset = 0) requires(!std::is_same_v<T, void*>)
+		void Update(T&& data, RrDeviceSize offset = 0) requires(!std::is_same_v<T, void*>)
 		{
 			Update((void*)&data, sizeof(T), offset);
 		}
@@ -31,23 +32,23 @@ namespace At0::Ray
 		 * @param data The data to insert into the buffer
 		 * @param offset Local offset
 		 */
-		void Update(void* data, VkDeviceSize size, VkDeviceSize offset);
+		void Update(void* data, RrDeviceSize size, RrDeviceSize offset);
 
 		const Buffer& GetBuffer() const { return *m_Buffer; }
 		Buffer& GetBuffer() { return *m_Buffer; }
-		VkDeviceSize GetSize() const { return m_Size; }
-		VkDeviceSize GetOffset() const { return m_Offset; }
+		RrDeviceSize GetSize() const { return m_Size; }
+		RrDeviceSize GetOffset() const { return m_Offset; }
 
 	protected:
 		DynamicBuffer() = default;
-		void Init(Ref<Buffer> buffer, VkDeviceSize size, VkDeviceSize offset);
+		void Init(Ref<Buffer> buffer, RrDeviceSize size, RrDeviceSize offset);
 
 	private:
 		// Size in bytes of part of the dynamic buffer
-		VkDeviceSize m_Size = 0;
+		RrDeviceSize m_Size = 0;
 
 		// Offset in the static buffer this class uses
-		VkDeviceSize m_Offset = 0;
+		RrDeviceSize m_Offset = 0;
 
 		// Static buffer, thread-safe
 		Ref<Buffer> m_Buffer = nullptr;

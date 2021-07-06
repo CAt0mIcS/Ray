@@ -7,7 +7,7 @@
 
 namespace At0::Ray
 {
-	VkDeviceSize VertexBuffer::s_AllocSize = 2097152;
+	RrDeviceSize VertexBuffer::s_AllocSize = 2097152;
 
 	VertexBuffer::VertexBuffer(std::string_view tag, const DynamicVertex& vertices)
 		: Buffer(vertices.SizeBytes(),
@@ -23,7 +23,7 @@ namespace At0::Ray
 		CopyBuffer(stagingBuffer, m_Buffer, m_Size);
 	}
 
-	VertexBuffer::VertexBuffer(std::string_view tag, VkDeviceSize allocSize)
+	VertexBuffer::VertexBuffer(std::string_view tag, RrDeviceSize allocSize)
 		: Buffer(allocSize ? allocSize != 0 : s_AllocSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
 			  VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
 	{
@@ -31,7 +31,7 @@ namespace At0::Ray
 
 	void VertexBuffer::CmdBind(const CommandBuffer& cmdBuff) const
 	{
-		VkDeviceSize offsets[] = { 0 };
+		RrDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(cmdBuff, 0, 1, (const VkBuffer*)&m_Buffer, offsets);
 	}
 
@@ -42,7 +42,7 @@ namespace At0::Ray
 		return oss.str();
 	}
 
-	std::string VertexBuffer::GetUID(std::string_view tag, VkDeviceSize allocSize)
+	std::string VertexBuffer::GetUID(std::string_view tag, RrDeviceSize allocSize)
 	{
 		std::ostringstream oss;
 		oss << typeid(VertexBuffer).name() << "#" << (allocSize ? allocSize != 0 : s_AllocSize)

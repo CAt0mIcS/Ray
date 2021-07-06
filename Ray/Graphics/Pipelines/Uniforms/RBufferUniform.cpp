@@ -52,7 +52,7 @@ namespace At0::Ray
 		return BufferUniform::AccessType{ m_UniformBuffer.get(), offset };
 	}
 
-	void BufferUniform::Update(void* data, VkDeviceSize size, VkDeviceSize offset)
+	void BufferUniform::Update(void* data, RrDeviceSize size, RrDeviceSize offset)
 	{
 		m_UniformBuffer->Update(data, size, offset);
 	}

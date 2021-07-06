@@ -18,15 +18,15 @@ namespace At0::Ray
 		VertexBuffer(std::string_view tag, const DynamicVertex& vertices);
 
 		// Dynamic vertex buffer, updatable from CPU
-		VertexBuffer(std::string_view tag = "Dynamic", VkDeviceSize allocSize = 0);
+		VertexBuffer(std::string_view tag = "Dynamic", RrDeviceSize allocSize = 0);
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
 
 		static std::string GetUID(std::string_view tag, const DynamicVertex& vertices);
-		static std::string GetUID(std::string_view tag = "Dynamic", VkDeviceSize allocSize = 0);
+		static std::string GetUID(std::string_view tag = "Dynamic", RrDeviceSize allocSize = 0);
 
-		static void SetAllocationSize(VkDeviceSize size) { s_AllocSize = size; }
+		static void SetAllocationSize(RrDeviceSize size) { s_AllocSize = size; }
 
 	private:
-		static VkDeviceSize s_AllocSize;
+		static RrDeviceSize s_AllocSize;
 	};
 }  // namespace At0::Ray

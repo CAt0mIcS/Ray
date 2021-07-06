@@ -4,7 +4,7 @@
 
 namespace At0::Ray
 {
-	VkDeviceSize UniformBuffer::s_AllocSize = 2097152;
+	RrDeviceSize UniformBuffer::s_AllocSize = 2097152;
 
 	UniformBuffer::UniformBuffer(RrDeviceSize allocSize)
 		: Buffer(allocSize ? allocSize != 0 : s_AllocSize, RrBufferUsageUniformBuffer,
