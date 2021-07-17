@@ -93,6 +93,7 @@ public:
 				ImGui::End();
 			}
 		});
+#include "../ImGuiWindows.inl"
 
 		// RAY_TODO: Fix matrix not being recalculated at the beginning
 		// auto sharedMaterial = Ray::MakeRef<Ray::FlatColorMaterial>();
@@ -139,8 +140,9 @@ private:
 
 	void OnEvent(Ray::MouseButtonPressedEvent& e)
 	{
-		auto entity = m_Entities.emplace_back(Scene::Get().CreateEntity());
-		entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+		if (e.GetKey() == Ray::MouseButton::Middle)
+			m_Entities.emplace_back(Scene::Get().CreateEntity())
+				.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 	}
 
 private:
