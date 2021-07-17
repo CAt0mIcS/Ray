@@ -8,21 +8,21 @@ namespace At0::Ray
 {
 	void Subpass::AddInputAttachment(uint32_t index, const Attachment& attachment)
 	{
-		VkAttachmentReference reference{};
+		RrAttachmentReference reference{};
 		reference.attachment = index;
 		// Layout the image will have once the subpass is started
-		reference.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		reference.layout = RrImageLayoutShaderReadOnly;
 		m_InputAttachments.emplace_back(reference);
 		UpdateDescription();
 	}
 
 	void Subpass::AddColorAttachment(uint32_t index, const Attachment& attachment)
 	{
-		VkAttachmentReference reference{};
+		RrAttachmentReference reference{};
 		reference.attachment = index;
 
 		// Layout the image will have once the subpass is started
-		reference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		reference.layout = RrImageLayoutColorAttachment;
 		m_ColorAttachments.emplace_back(reference);
 		UpdateDescription();
 	}
@@ -34,10 +34,10 @@ namespace At0::Ray
 			Log::Warn("[Subpass] Depth attachment already set");
 #endif
 
-		m_DepthAttachment = VkAttachmentReference{};
+		m_DepthAttachment = RrAttachmentReference{};
 		m_DepthAttachment->attachment = index;
 		// Layout the image will have once the subpass is started
-		m_DepthAttachment->layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+		m_DepthAttachment->layout = RrImageLayoutDepthStencilAttachment;
 		UpdateDescription();
 	}
 
@@ -49,7 +49,7 @@ namespace At0::Ray
 
 	void Subpass::UpdateDescription()
 	{
-		m_Description.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+		m_Description.pipelineBindPoint = RrPipelineBindPointGraphics;
 		m_Description.inputAttachmentCount = (uint32_t)m_InputAttachments.size();
 		m_Description.pInputAttachments = m_InputAttachments.data();
 		m_Description.colorAttachmentCount = (uint32_t)m_ColorAttachments.size();

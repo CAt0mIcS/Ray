@@ -1,23 +1,22 @@
 ﻿#include "Rpch.h"
 #include "RRenderPass.h"
 
-#include "Graphics/RGraphics.h"
-#include "Graphics/Core/RLogicalDevice.h"
-#include "Graphics/Core/RSwapchain.h"
-#include "Graphics/Buffers/RFramebuffer.h"
-
-#include "Graphics/Commands/RCommandBuffer.h"
+#include "Ray/Core/RRendererLoader.h"
+#include "Ray/Graphics/RGraphics.h"
+#include "Ray/Graphics/Core/RLogicalDevice.h"
+#include "Ray/Graphics/Core/RSwapchain.h"
+#include "Ray/Graphics/Buffers/RFramebuffer.h"
+#include "Ray/Graphics/Commands/RCommandBuffer.h"
 
 #include "Ray/Utils/RException.h"
 
 namespace At0::Ray
 {
-	RenderPass::RenderPass(const std::vector<VkAttachmentDescription>& attachments,
-		const std::vector<VkSubpassDescription>& subpasses,
-		const std::vector<VkSubpassDependency>& dependencies)
+	RenderPass::RenderPass(const std::vector<RrAttachmentDescription>& attachments,
+		const std::vector<RrSubpassDescription>& subpasses,
+		const std::vector<RrSubpassDependency>& dependencies)
 	{
-		VkRenderPassCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+		RrRenderPassCreateInfo createInfo{};
 		createInfo.attachmentCount = (uint32_t)attachments.size();
 		createInfo.pAttachments = attachments.data();
 		createInfo.subpassCount = (uint32_t)subpasses.size();
@@ -25,8 +24,8 @@ namespace At0::Ray
 		createInfo.dependencyCount = (uint32_t)dependencies.size();
 		createInfo.pDependencies = dependencies.data();
 
-		ThrowRenderError(vkCreateRenderPass(Graphics::Get().GetDevice(), &createInfo, nullptr,
-							 (VkRenderPass*)&m_Renderpass),
+		ThrowRenderError(
+			RendererAPI::CreateRenderPass(Graphics::Get().GetDevice(), &createInfo, &m_Renderpass),
 			"[RenderPass] Failed to create");
 	}
 
@@ -36,20 +35,22 @@ namespace At0::Ray
 	}
 
 	void RenderPass::Begin(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer,
-		const VkClearValue clearValues[], uint32_t clearValueCount,
-		VkSubpassContents subpassContents) const
+		const RrClearValue clearValues[], uint32_t clearValueCount,
+		RrSubpassContents subpassContents) const
 	{
-		VkRenderPassBeginInfo renderPassInfo{};
-		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = (VkRenderPass)m_Renderpass;
+		RrRenderPassBeginInfo renderPassInfo{};
+		renderPassInfo.renderPass = m_Renderpass;
 		renderPassInfo.framebuffer = framebuffer;
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = Graphics::Get().GetSwapchain().GetExtent();
 		renderPassInfo.clearValueCount = clearValueCount;
 		renderPassInfo.pClearValues = clearValues;
 
-		vkCmdBeginRenderPass(cmdBuff, &renderPassInfo, subpassContents);
+		RendererAPI::CmdBeginRenderPass(cmdBuff, &renderPassInfo, subpassContents);
 	}
 
-	void RenderPass::End(const CommandBuffer& cmdBuff) const { vkCmdEndRenderPass(cmdBuff); }
+	void RenderPass::End(const CommandBuffer& cmdBuff) const
+	{
+		RendererAPI::CmdEndRenderPass(cmdBuff);
+	}
 }  // namespace At0::Ray

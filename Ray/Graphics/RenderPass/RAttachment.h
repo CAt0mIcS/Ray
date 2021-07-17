@@ -2,7 +2,7 @@
 
 #include "Ray/RBase.h"
 
-#include <vulkan/vulkan_core.h>
+#include <RayRenderer/Core/RRenderPass.h>
 
 
 namespace At0::Ray
@@ -14,27 +14,27 @@ namespace At0::Ray
 	public:
 		enum class LoadOp
 		{
-			Load = VK_ATTACHMENT_LOAD_OP_LOAD,
-			Clear = VK_ATTACHMENT_LOAD_OP_CLEAR,
-			Undefined = VK_ATTACHMENT_LOAD_OP_DONT_CARE
+			Load = RrAttachmentLoadOpLoad,
+			Clear = RrAttachmentLoadOpClear,
+			Undefined = RrAttachmentLoadOpDontCare
 		};
 
 		enum class StoreOp
 		{
-			Store = VK_ATTACHMENT_STORE_OP_STORE,
-			Undefined = VK_ATTACHMENT_STORE_OP_DONT_CARE
+			Store = RrAttachmentStoreOpStore,
+			Undefined = RrAttachmentStoreOpDontCare
 		};
 
 	public:
-		Attachment(const Image& image, VkImageLayout finalLayout, LoadOp loadOp, StoreOp storeOp,
+		Attachment(const Image& image, RrImageLayout finalLayout, LoadOp loadOp, StoreOp storeOp,
 			LoadOp stencilLoadOp, StoreOp stencilStoreOp);
-		Attachment(VkFormat imageFormat, VkImageLayout finalLayout, LoadOp loadOp, StoreOp storeOp,
+		Attachment(RrFormat imageFormat, RrImageLayout finalLayout, LoadOp loadOp, StoreOp storeOp,
 			LoadOp stencilLoadOp, StoreOp stencilStoreOp,
-			VkImageLayout initialLayout = VK_IMAGE_LAYOUT_UNDEFINED);
+			RrImageLayout initialLayout = RrImageLayoutUndefined);
 
-		operator const VkAttachmentDescription&() const { return m_Description; }
+		operator const RrAttachmentDescription&() const { return m_Description; }
 
 	private:
-		VkAttachmentDescription m_Description{};
+		RrAttachmentDescription m_Description{};
 	};
 }  // namespace At0::Ray

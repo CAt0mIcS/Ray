@@ -57,6 +57,10 @@ namespace At0::Ray
 		void (*GetPhysicalDeviceFeatures)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceFeatures* pFeatures) = nullptr;
 		void (*GetPhysicalDeviceMemoryProperties)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceMemoryProperties* pProperties) = nullptr;
 		void (*GetPhysicalDeviceFormatProperties)(RrPhysicalDevice physicalDevice, RrFormat format, RrFormatProperties* pProperties) = nullptr;
+		RrError (*CreateRenderPass)(RrLogicalDevice device, const RrRenderPassCreateInfo* pCreateInfo, RrRenderPass* pRenderPass) = nullptr;
+		void (*DestroyRenderPass)(RrLogicalDevice device, RrRenderPass renderPass) = nullptr;
+		void (*CmdBeginRenderPass)(RrCommandBuffer commandBuffer,const RrRenderPassBeginInfo* pBeginInfo, RrSubpassContents subpassContents) = nullptr;
+		void (*CmdEndRenderPass)(RrCommandBuffer commandBuffer) = nullptr;
 		RrError (*CreateSurface)(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, RrSurface* pSurface) = nullptr;
 		RrError (*CreateFence)(RrLogicalDevice device, const RrFenceCreateInfo* pCreateInfo, RrFence* pFence) = nullptr;
 		RrError (*WaitForFences)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences,RrBool32 waitAll, uint64_t timeout) = nullptr;
@@ -75,6 +79,7 @@ namespace At0::Ray
 		RrError (*CreateGraphicsPipeline)(RrLogicalDevice device, RrPipelineCache pipelineCache,const RrGraphicsPipelineCreateInfo* pCreateInfo, RrPipeline* pPipeline) = nullptr;
 		void (*CmdSetViewport)(RrCommandBuffer commandBuffer, uint32_t firstViewport,uint32_t viewportCount, const RrViewport* pViewports) = nullptr;
 		void (*CmdSetScissor)(RrCommandBuffer commandBuffer, uint32_t firstScissor,uint32_t scissorCount, const RrRect2D* pScissors) = nullptr;
+		RrError (*CreateShaderModule)(RrLogicalDevice device,const RrShaderModuleCreateInfo* pCreateInfo, RrShaderModule* pShaderModule) = nullptr;
 		void (*CmdPushConstants)(RrCommandBuffer commandBuffer, RrPipelineLayout pipelineLayout,RrShaderStageFlags shaderStage, uint32_t offset, uint32_t size, const void* pValues) = nullptr;
 
 	}  // namespace RendererAPI
@@ -160,6 +165,10 @@ namespace At0::Ray
 		RendererAPI::GetPhysicalDeviceFeatures = (void (*)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceFeatures* pFeatures))LoadFunction(lib, "RrGetPhysicalDeviceFeatures");
 		RendererAPI::GetPhysicalDeviceMemoryProperties = (void (*)(RrPhysicalDevice physicalDevice, RrPhysicalDeviceMemoryProperties* pProperties))LoadFunction(lib, "RrGetPhysicalDeviceMemoryProperties");
 		RendererAPI::GetPhysicalDeviceFormatProperties = (void (*)(RrPhysicalDevice physicalDevice, RrFormat format, RrFormatProperties* pProperties))LoadFunction(lib, "RrGetPhysicalDeviceFormatProperties");
+		RendererAPI::CreateRenderPass = (RrError (*)(RrLogicalDevice device, const RrRenderPassCreateInfo* pCreateInfo, RrRenderPass* pRenderPass))LoadFunction(lib, "RrCreateRenderPass");
+		RendererAPI::DestroyRenderPass = (void (*)(RrLogicalDevice device, RrRenderPass renderPass))LoadFunction(lib, "RrDestroyRenderPass");
+		RendererAPI::CmdBeginRenderPass = (void (*)(RrCommandBuffer commandBuffer,const RrRenderPassBeginInfo* pBeginInfo, RrSubpassContents subpassContents))LoadFunction(lib, "RrCmdBeginRenderPass");
+		RendererAPI::CmdEndRenderPass = (void (*)(RrCommandBuffer commandBuffer))LoadFunction(lib, "RrCmdEndRenderPass");
 		RendererAPI::CreateSurface = (RrError (*)(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, RrSurface* pSurface))LoadFunction(lib, "RrCreateSurface");
 		RendererAPI::CreateFence = (RrError (*)(RrLogicalDevice device, const RrFenceCreateInfo* pCreateInfo, RrFence* pFence))LoadFunction(lib, "RrCreateFence");
 		RendererAPI::WaitForFences = (RrError (*)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences,RrBool32 waitAll, uint64_t timeout))LoadFunction(lib, "RrWaitForFences");
@@ -178,6 +187,7 @@ namespace At0::Ray
 		RendererAPI::CreateGraphicsPipeline = (RrError (*)(RrLogicalDevice device, RrPipelineCache pipelineCache,const RrGraphicsPipelineCreateInfo* pCreateInfo, RrPipeline* pPipeline))LoadFunction(lib, "RrCreateGraphicsPipeline");
 		RendererAPI::CmdSetViewport = (void (*)(RrCommandBuffer commandBuffer, uint32_t firstViewport,uint32_t viewportCount, const RrViewport* pViewports))LoadFunction(lib, "RrCmdSetViewport");
 		RendererAPI::CmdSetScissor = (void (*)(RrCommandBuffer commandBuffer, uint32_t firstScissor,uint32_t scissorCount, const RrRect2D* pScissors))LoadFunction(lib, "RrCmdSetScissor");
+		RendererAPI::CreateShaderModule = (RrError (*)(RrLogicalDevice device,const RrShaderModuleCreateInfo* pCreateInfo, RrShaderModule* pShaderModule))LoadFunction(lib, "RrCreateShaderModule");
 		RendererAPI::CmdPushConstants = (void (*)(RrCommandBuffer commandBuffer, RrPipelineLayout pipelineLayout,RrShaderStageFlags shaderStage, uint32_t offset, uint32_t size, const void* pValues))LoadFunction(lib, "RrCmdPushConstants");
 
 

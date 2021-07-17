@@ -2,7 +2,7 @@
 
 #include "Ray/RBase.h"
 
-#include <vulkan/vulkan_core.h>
+#include <RayRenderer/Core/RRenderPass.h>
 #include <vector>
 #include <optional>
 
@@ -22,18 +22,18 @@ namespace At0::Ray
 		void AddDepthAttachment(uint32_t index, const Attachment& attachment);
 		void AddPreserveAttachment(uint32_t index);
 
-		operator const VkSubpassDescription&() const { return m_Description; }
+		operator const RrSubpassDescription&() const { return m_Description; }
 
 	private:
 		void UpdateDescription();
 
 	private:
-		VkSubpassDescription m_Description{};
+		RrSubpassDescription m_Description{};
 
-		std::vector<VkAttachmentReference> m_InputAttachments;
-		std::vector<VkAttachmentReference> m_ColorAttachments;
-		std::vector<VkAttachmentReference> m_ResolveAttachments;
-		std::optional<VkAttachmentReference> m_DepthAttachment;
+		std::vector<RrAttachmentReference> m_InputAttachments;
+		std::vector<RrAttachmentReference> m_ColorAttachments;
+		std::vector<RrAttachmentReference> m_ResolveAttachments;
+		std::optional<RrAttachmentReference> m_DepthAttachment;
 		std::vector<uint32_t> m_PreserveAttachments;
 	};
 }  // namespace At0::Ray

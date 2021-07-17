@@ -4,6 +4,7 @@
 #include "Ray/Utils/RNonCopyable.h"
 
 #include <vulkan/vulkan_core.h>
+#include <RayRenderer/Core/RImage.h>
 
 
 namespace At0::Ray
@@ -21,13 +22,13 @@ namespace At0::Ray
 		};
 
 	public:
-		Swapchain(VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE,
-			VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
+		Swapchain(VkSwapchainKHR oldSwapchain = nullptr,
+			RrImageUsageFlags imageUsage = RrImageUsageColorAttachment);
 		~Swapchain();
 
 		SupportDetails QuerySwapchainSupport() const;
-		VkFormat GetFormat() const { return m_Format; }
-		const VkExtent2D& GetExtent() const { return m_Extent; }
+		RrFormat GetFormat() const { return m_Format; }
+		const RrExtent2D& GetExtent() const { return m_Extent; }
 		uint32_t GetNumberOfImages() const { return m_Images.size(); }
 		const std::vector<Scope<ImageView>>& GetImageViews() const { return m_ImageViews; }
 
@@ -37,14 +38,14 @@ namespace At0::Ray
 		VkSurfaceFormatKHR ChooseSurfaceFormat(
 			const std::vector<VkSurfaceFormatKHR>& formats) const;
 		VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR>& presentModes) const;
-		VkExtent2D ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
+		RrExtent2D ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
 
 	private:
-		VkSwapchainKHR m_Swapchain = VK_NULL_HANDLE;
-		VkFormat m_Format = VK_FORMAT_UNDEFINED;
-		VkExtent2D m_Extent{};
+		VkSwapchainKHR m_Swapchain = nullptr;
+		RrFormat m_Format = RRFORMAT_UNDEFINED;
+		RrExtent2D m_Extent{};
 
-		std::vector<VkImage> m_Images;
+		std::vector<RrImage> m_Images;
 		std::vector<Scope<ImageView>> m_ImageViews;
 	};
 }  // namespace At0::Ray

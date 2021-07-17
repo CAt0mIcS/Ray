@@ -6,28 +6,28 @@
 
 namespace At0::Ray
 {
-	Attachment::Attachment(const Image& image, VkImageLayout finalLayout, LoadOp loadOp,
+	Attachment::Attachment(const Image& image, RrImageLayout finalLayout, LoadOp loadOp,
 		StoreOp storeOp, LoadOp stencilLoadOp, StoreOp stencilStoreOp)
 	{
-		m_Description.format = (VkFormat)image.GetFormat();
-		m_Description.samples = VK_SAMPLE_COUNT_1_BIT;
-		m_Description.loadOp = (VkAttachmentLoadOp)loadOp;
-		m_Description.storeOp = (VkAttachmentStoreOp)storeOp;
-		m_Description.stencilLoadOp = (VkAttachmentLoadOp)stencilLoadOp;
-		m_Description.stencilStoreOp = (VkAttachmentStoreOp)stencilStoreOp;
-		m_Description.initialLayout = (VkImageLayout)image.GetImageLayout();
+		m_Description.format = image.GetFormat();
+		m_Description.samples = RrSampleCount1;
+		m_Description.loadOp = (RrAttachmentLoadOp)loadOp;
+		m_Description.storeOp = (RrAttachmentStoreOp)storeOp;
+		m_Description.stencilLoadOp = (RrAttachmentLoadOp)stencilLoadOp;
+		m_Description.stencilStoreOp = (RrAttachmentStoreOp)stencilStoreOp;
+		m_Description.initialLayout = image.GetImageLayout();
 		m_Description.finalLayout = finalLayout;
 	}
 
-	Attachment::Attachment(VkFormat imageFormat, VkImageLayout finalLayout, LoadOp loadOp,
-		StoreOp storeOp, LoadOp stencilLoadOp, StoreOp stencilStoreOp, VkImageLayout initialLayout)
+	Attachment::Attachment(RrFormat imageFormat, RrImageLayout finalLayout, LoadOp loadOp,
+		StoreOp storeOp, LoadOp stencilLoadOp, StoreOp stencilStoreOp, RrImageLayout initialLayout)
 	{
 		m_Description.format = imageFormat;
-		m_Description.samples = VK_SAMPLE_COUNT_1_BIT;
-		m_Description.loadOp = (VkAttachmentLoadOp)loadOp;
-		m_Description.storeOp = (VkAttachmentStoreOp)storeOp;
-		m_Description.stencilLoadOp = (VkAttachmentLoadOp)stencilLoadOp;
-		m_Description.stencilStoreOp = (VkAttachmentStoreOp)stencilStoreOp;
+		m_Description.samples = RrSampleCount1;
+		m_Description.loadOp = (RrAttachmentLoadOp)loadOp;
+		m_Description.storeOp = (RrAttachmentStoreOp)storeOp;
+		m_Description.stencilLoadOp = (RrAttachmentLoadOp)stencilLoadOp;
+		m_Description.stencilStoreOp = (RrAttachmentStoreOp)stencilStoreOp;
 		m_Description.initialLayout = initialLayout;
 		m_Description.finalLayout = finalLayout;
 	}

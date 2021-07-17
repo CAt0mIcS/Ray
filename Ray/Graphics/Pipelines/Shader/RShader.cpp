@@ -1,7 +1,8 @@
 ﻿#include "Rpch.h"
 #include "RShader.h"
 
-#include "Core/RDynamicVertex.h"
+#include "Ray/Core/RRendererLoader.h"
+#include "Ray/Core/RDynamicVertex.h"
 #include "Ray/Utils/RException.h"
 #include "Ray/Utils/RAssert.h"
 #include "Ray/Utils/RLogger.h"
@@ -41,16 +42,15 @@ namespace At0::Ray
 				reader.read(code.data(), code.size());
 				reader.close();
 
-				VkShaderModule shaderModule;
-				VkShaderModuleCreateInfo createInfo{};
-				createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+				RrShaderModule shaderModule;
+				RrShaderModuleCreateInfo createInfo{};
 				createInfo.codeSize = (uint32_t)code.size();
 				createInfo.pCode = (uint32_t*)code.data();
 
-				ThrowRenderError(vkCreateShaderModule(Graphics::Get().GetDevice(), &createInfo,
-									 nullptr, &shaderModule),
+				ThrowRenderError(RendererAPI::CreateShaderModule(
+									 Graphics::Get().GetDevice(), &createInfo, &shaderModule),
 					"[Shader] Failed to create shader module from file \"{0}\"", m_Filepaths[i]);
-				m_ShaderModules[stage] = (RrShaderModule)shaderModule;
+				m_ShaderModules[stage] = shaderModule;
 			}
 		}
 		else

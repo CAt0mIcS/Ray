@@ -15,11 +15,11 @@
 
 namespace At0::Ray
 {
-	Swapchain::Swapchain(VkSwapchainKHR oldSwapchain, VkImageUsageFlags imageUsage)
+	Swapchain::Swapchain(VkSwapchainKHR oldSwapchain, RrImageUsageFlags imageUsage)
 	{
 		SupportDetails supportDetails = QuerySwapchainSupport();
 		VkSurfaceFormatKHR surfaceFormat = ChooseSurfaceFormat(supportDetails.Formats);
-		m_Format = surfaceFormat.format;
+		m_Format = (RrFormat)surfaceFormat.format;
 		VkPresentModeKHR presentMode = ChoosePresentMode(supportDetails.PresentModes);
 		m_Extent = ChooseExtent(supportDetails.Capabilities);
 
@@ -39,7 +39,7 @@ namespace At0::Ray
 		createInfo.minImageCount = imageCount;
 		createInfo.imageFormat = surfaceFormat.format;
 		createInfo.imageColorSpace = surfaceFormat.colorSpace;
-		createInfo.imageExtent = m_Extent;
+		createInfo.imageExtent = *(VkExtent2D*)&m_Extent;
 		createInfo.imageArrayLayers = 1;
 		createInfo.imageUsage = imageUsage;
 
@@ -83,15 +83,15 @@ namespace At0::Ray
 			ThrowRuntime("[Swapchain] Image count is 0");
 
 		m_Images.resize(swapchainImageCount);
-		vkGetSwapchainImagesKHR(
-			Graphics::Get().GetDevice(), m_Swapchain, &swapchainImageCount, m_Images.data());
+		vkGetSwapchainImagesKHR(Graphics::Get().GetDevice(), m_Swapchain, &swapchainImageCount,
+			(VkImage*)m_Images.data());
 
 		// Create image views
 		m_ImageViews.resize(m_Images.size());
 		for (uint32_t i = 0; i < m_ImageViews.size(); ++i)
 		{
-			m_ImageViews[i] = MakeScope<ImageView>(
-				m_Images[i], VK_IMAGE_VIEW_TYPE_2D, m_Format, VK_IMAGE_ASPECT_COLOR_BIT);
+			m_ImageViews[i] = MakeScope<ImageView>((VkImage)m_Images[i], VK_IMAGE_VIEW_TYPE_2D,
+				(VkFormat)m_Format, VK_IMAGE_ASPECT_COLOR_BIT);
 		}
 	}
 
@@ -158,14 +158,14 @@ namespace At0::Ray
 		return VK_PRESENT_MODE_FIFO_KHR;
 	}
 
-	VkExtent2D Swapchain::ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities) const
+	RrExtent2D Swapchain::ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities) const
 	{
 		if (capabilities.currentExtent.width != UINT32_MAX)
-			return capabilities.currentExtent;
+			return { capabilities.currentExtent.width, capabilities.currentExtent.height };
 		else
 		{
 			UInt2 size = Window::Get().GetFramebufferSize();
-			VkExtent2D extent = { size.x, size.y };
+			RrExtent2D extent = { size.x, size.y };
 
 			// Clamp values to allowed minimum and maximum implementation extents supported
 			extent.width = std::clamp(

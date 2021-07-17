@@ -5,6 +5,7 @@
 RR_EXTERN_C_BEG
 
 RR_DEFINE_HANDLE(RrShaderModule);
+RR_DEFINE_HANDLE(RrLogicalDevice);
 
 typedef enum RrShaderStageFlagBits
 {
@@ -26,5 +27,14 @@ typedef enum RrShaderStageFlagBits
 	RrShaderStageMeshNV = 0x00000080,
 } RrShaderStageFlagBits;
 typedef uint32_t RrShaderStageFlags;
+
+typedef struct RrShaderModuleCreateInfo
+{
+	size_t codeSize;
+	const uint32_t* pCode;
+} RrShaderModuleCreateInfo;
+
+RR_API RrError RrCreateShaderModule(RrLogicalDevice device,
+	const RrShaderModuleCreateInfo* pCreateInfo, RrShaderModule* pShaderModule);
 
 RR_EXTERN_C_END

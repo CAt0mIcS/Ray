@@ -8,6 +8,7 @@
 #include "Ray/Utils/RAssert.h"
 #include "Ray/Utils/RLogger.h"
 #include "Ray/Utils/RException.h"
+#include "Ray/Core/RRendererLoader.h"
 
 #include <glslang/MachineIndependent/gl_types.h>
 
@@ -336,17 +337,16 @@ namespace At0::Ray
 		GlslangToSpv(
 			*program.getIntermediate((EShLanguage)language), spirvCode, &logger, &spvOptions);
 
-		VkShaderModuleCreateInfo shaderModuleCreateInfo{};
-		shaderModuleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+		RrShaderModuleCreateInfo shaderModuleCreateInfo{};
 		shaderModuleCreateInfo.codeSize = spirvCode.size() * sizeof(uint32_t);
 		shaderModuleCreateInfo.pCode = spirvCode.data();
 
-		VkShaderModule shaderModule;
-		ThrowRenderError(vkCreateShaderModule(Graphics::Get().GetDevice(), &shaderModuleCreateInfo,
-							 nullptr, &shaderModule),
+		RrShaderModule shaderModule;
+		ThrowRenderError(RendererAPI::CreateShaderModule(
+							 Graphics::Get().GetDevice(), &shaderModuleCreateInfo, &shaderModule),
 			"[GlslCompiler] Failed to create shader module");
 
-		return (RrShaderModule)shaderModule;
+		return shaderModule;
 	}
 
 	void GlslCompiler::LoadUniform(

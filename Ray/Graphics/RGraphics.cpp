@@ -91,11 +91,11 @@ namespace At0::Ray
 
 	void Graphics::CreateRenderPass()
 	{
-		Attachment colorAttachment(GetSwapchain().GetFormat(), VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+		Attachment colorAttachment(GetSwapchain().GetFormat(), RrImageLayoutPresentSrcKHR,
 			Attachment::LoadOp::Clear, Attachment::StoreOp::Store, Attachment::LoadOp::Undefined,
 			Attachment::StoreOp::Undefined);
 
-		Attachment depthAttachment(*m_DepthImage, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+		Attachment depthAttachment(*m_DepthImage, RrImageLayoutDepthStencilAttachment,
 			Attachment::LoadOp::Clear, Attachment::StoreOp::Undefined,
 			Attachment::LoadOp::Undefined, Attachment::StoreOp::Undefined);
 
@@ -109,7 +109,7 @@ namespace At0::Ray
 		subpass.AddColorAttachment(0, colorAttachment);
 		subpass.AddDepthAttachment(1, depthAttachment);
 
-		VkSubpassDependency dependency{};
+		RrSubpassDependency dependency{};
 
 		// Commands recorded in the source subpass are in the source scope
 		// Commands recorded in the destination subpass are in the destination scope
@@ -122,7 +122,7 @@ namespace At0::Ray
 		// finished before any commands of the dstSubpass (0) start execution
 
 		// Who is this subpass dependent on?
-		dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+		dependency.srcSubpass = RR_SUBPASS_EXTERNAL;
 
 		// Who is this subpass?
 		dependency.dstSubpass = 0;
@@ -132,30 +132,30 @@ namespace At0::Ray
 		// Everything before the renderpass
 		// This stage mask mean that before the renderpass starts, all commands in the color
 		// attachment output and the early fragment test stage must finish execution.
-		dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT |
-								  VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+		dependency.srcStageMask =
+			RrPipelineStageColorAttachmentOutput | RrPipelineStageEarlyFragmentTests;
 
 		// Future commands/subpasses need to wait for these stages to finish executing
 		// This stage mask means that we wait for the color attachment output and early fragment
 		// test stage to finish before recording new commands into these stages
-		dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT |
-								  VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+		dependency.dstStageMask =
+			RrPipelineStageColorAttachmentOutput | RrPipelineStageEarlyFragmentTests;
 
 
 		dependency.srcAccessMask = 0;
 
 		// Do we need to write or read from the previous image
 		dependency.dstAccessMask =
-			VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+			RrAccessColorAttachmentWrite | RrAccessDepthStencilAttachmentWrite;
 
-		std::vector<VkAttachmentDescription> attachments;
+		std::vector<RrAttachmentDescription> attachments;
 		attachments.emplace_back(colorAttachment);
 		attachments.emplace_back(depthAttachment);
 
-		std::vector<VkSubpassDescription> subpasses;
+		std::vector<RrSubpassDescription> subpasses;
 		subpasses.emplace_back(subpass);
 
-		std::vector<VkSubpassDependency> dependencies;
+		std::vector<RrSubpassDependency> dependencies;
 		dependencies.emplace_back(dependency);
 
 		m_RenderPass = MakeScope<RenderPass>(attachments, subpasses, dependencies);
@@ -242,7 +242,7 @@ namespace At0::Ray
 	{
 		cmdBuff.Begin(RrCommandBufferUsageOneTimeSubmit);
 
-		VkClearValue clearValues[2];
+		RrClearValue clearValues[2];
 		clearValues[0].color = { 0.0137254f, 0.014117f, 0.0149019f };
 		clearValues[1].depthStencil = { 1.0f, 0 };
 

@@ -7,6 +7,7 @@
 #include <RayRenderer/Core/RRenderPass.h>
 #include <vector>
 
+
 namespace At0::Ray
 {
 	class CommandBuffer;
@@ -15,14 +16,14 @@ namespace At0::Ray
 	class RAY_EXPORT RenderPass : NonCopyable
 	{
 	public:
-		RenderPass(const std::vector<VkAttachmentDescription>& attachments,
-			const std::vector<VkSubpassDescription>& subpasses,
-			const std::vector<VkSubpassDependency>& dependencies);
+		RenderPass(const std::vector<RrAttachmentDescription>& attachments,
+			const std::vector<RrSubpassDescription>& subpasses,
+			const std::vector<RrSubpassDependency>& dependencies);
 		~RenderPass();
 
 		void Begin(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer,
-			const VkClearValue clearValues[], uint32_t clearValueCount,
-			VkSubpassContents subpassContents = VK_SUBPASS_CONTENTS_INLINE) const;
+			const RrClearValue clearValues[], uint32_t clearValueCount,
+			RrSubpassContents subpassContents = RrSubpassContentsInline) const;
 		void End(const CommandBuffer& cmdBuff) const;
 
 		operator VkRenderPass() const { return (VkRenderPass)m_Renderpass; }
