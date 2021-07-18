@@ -72,6 +72,8 @@ namespace At0::Ray
 		RrError (*CreateSwapchainKHR)(RrLogicalDevice device,const RrSwapchainCreateInfoKHR* pCreateInfo, RrSwapchainKHR* pSwapchain) = nullptr;
 		RrError (*GetSwapchainImagesKHR)(RrLogicalDevice device, RrSwapchainKHR swapchain,uint32_t* pSwapchainImageCount, RrImage* pSwapchainImages) = nullptr;
 		void (*DestroySwapchainKHR)(RrLogicalDevice device, RrSwapchainKHR swapchain) = nullptr;
+		RrError (*AcquireNextImageKHR)(RrLogicalDevice device, RrSwapchainKHR swapchain,uint64_t timeout, RrSemaphore semaphore, RrFence fence, uint32_t* pImageIndex) = nullptr;
+		RrError (*QueuePresentKHR)(RrQueue queue, const RrPresentInfoKHR* pPresentInfo) = nullptr;
 		RrError (*CreateFence)(RrLogicalDevice device, const RrFenceCreateInfo* pCreateInfo, RrFence* pFence) = nullptr;
 		RrError (*WaitForFences)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences,RrBool32 waitAll, uint64_t timeout) = nullptr;
 		RrError (*ResetFences)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences) = nullptr;
@@ -190,6 +192,8 @@ namespace At0::Ray
 		RendererAPI::CreateSwapchainKHR = (RrError (*)(RrLogicalDevice device,const RrSwapchainCreateInfoKHR* pCreateInfo, RrSwapchainKHR* pSwapchain))LoadFunction(lib, "RrCreateSwapchainKHR");
 		RendererAPI::GetSwapchainImagesKHR = (RrError (*)(RrLogicalDevice device, RrSwapchainKHR swapchain,uint32_t* pSwapchainImageCount, RrImage* pSwapchainImages))LoadFunction(lib, "RrGetSwapchainImagesKHR");
 		RendererAPI::DestroySwapchainKHR = (void (*)(RrLogicalDevice device, RrSwapchainKHR swapchain))LoadFunction(lib, "RrDestroySwapchainKHR");
+		RendererAPI::AcquireNextImageKHR = (RrError (*)(RrLogicalDevice device, RrSwapchainKHR swapchain,uint64_t timeout, RrSemaphore semaphore, RrFence fence, uint32_t* pImageIndex))LoadFunction(lib, "RrAcquireNextImageKHR");
+		RendererAPI::QueuePresentKHR = (RrError (*)(RrQueue queue, const RrPresentInfoKHR* pPresentInfo))LoadFunction(lib, "RrQueuePresentKHR");
 		RendererAPI::CreateFence = (RrError (*)(RrLogicalDevice device, const RrFenceCreateInfo* pCreateInfo, RrFence* pFence))LoadFunction(lib, "RrCreateFence");
 		RendererAPI::WaitForFences = (RrError (*)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences,RrBool32 waitAll, uint64_t timeout))LoadFunction(lib, "RrWaitForFences");
 		RendererAPI::ResetFences = (RrError (*)(RrLogicalDevice device, uint32_t fenceCount, const RrFence* pFences))LoadFunction(lib, "RrResetFences");

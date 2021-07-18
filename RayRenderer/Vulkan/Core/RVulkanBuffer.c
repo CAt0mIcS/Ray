@@ -17,11 +17,7 @@ RrError RrCreateBuffer(
 	createInfo.queueFamilyIndexCount = pCreateInfo->queueFamilyIndexCount;
 	createInfo.pQueueFamilyIndices = pCreateInfo->pQueueFamilyIndices;
 
-	VkResult error = vkCreateBuffer((VkDevice)device, &createInfo, NULL, (VkBuffer*)pBuffer);
-	if (error != VK_SUCCESS)
-		return GetError(error);
-
-	return RrErrorNone;
+	return GetError(vkCreateBuffer((VkDevice)device, &createInfo, NULL, (VkBuffer*)pBuffer));
 }
 
 void RrBufferGetMemoryRequirements(

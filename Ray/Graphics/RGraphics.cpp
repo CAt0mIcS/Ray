@@ -199,7 +199,7 @@ namespace At0::Ray
 
 	void Graphics::CreateSyncObjects()
 	{
-		m_ImagesInFlight.resize(m_Swapchain->GetNumberOfImages(), VK_NULL_HANDLE);
+		m_ImagesInFlight.resize(m_Swapchain->GetNumberOfImages(), nullptr);
 
 		RrFenceCreateInfo fenceCreateInfo{};
 		fenceCreateInfo.flags = RrFenceCreateSignaled;
@@ -275,21 +275,21 @@ namespace At0::Ray
 
 		// Index representing the index of the next image to raw (0-2 in this case)
 		uint32_t imageIndex;
-		VkResult result = vkAcquireNextImageKHR(GetDevice(), GetSwapchain(), UINT64_MAX,
-			(VkSemaphore)m_ImageAvailableSemaphore[m_CurrentFrame],	 //  Signalled by this function
-																	 //  when an image is acquired
-			VK_NULL_HANDLE, &imageIndex);
+		RrError result = RendererAPI::AcquireNextImageKHR(GetDevice(), GetSwapchain(), UINT64_MAX,
+			m_ImageAvailableSemaphore[m_CurrentFrame],	//  Signalled by this function
+														//  when an image is acquired
+			nullptr, &imageIndex);
 
-		if (result == VK_ERROR_OUT_OF_DATE_KHR)
+		if (result == RrErrorOutOfDateKHR)
 		{
 			OnFramebufferResized();
 			return;
 		}
-		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+		else if (result != RrErrorSuccess && result != RrErrorSuboptimalKHR)
 			ThrowRuntime("[Graphics] Failed to acquire next swapchain image");
 
 		// Check if previous frame is still using this image (e.g. there is its fence to wait on)
-		if (m_ImagesInFlight[imageIndex] != VK_NULL_HANDLE)
+		if (m_ImagesInFlight[imageIndex] != nullptr)
 			RendererAPI::WaitForFences(
 				GetDevice(), 1, &m_ImagesInFlight[imageIndex], true, UINT64_MAX);
 
@@ -333,37 +333,35 @@ namespace At0::Ray
 		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.waitSemaphoreCount = 1;
 		submitInfo.pWaitSemaphores =
-			(RrSemaphore*)&m_ImageAvailableSemaphore[m_CurrentFrame];  // Wait until image was
-																	   // acquired
+			&m_ImageAvailableSemaphore[m_CurrentFrame];	 // Wait until image was
+														 // acquired
 		submitInfo.signalSemaphoreCount = 1;
 		submitInfo.pSignalSemaphores =
-			(RrSemaphore*)&m_RenderFinishedSemaphore[m_CurrentFrame];  // Signal when rendering
-																	   // finished and presentation
-																	   // can happen
+			&m_RenderFinishedSemaphore[m_CurrentFrame];	 // Signal when rendering
+														 // finished and presentation
+														 // can happen
 
 		RendererAPI::ResetFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
 
 		// Fence will be signaled once the command buffer finishes executing
 		ThrowRenderError(RendererAPI::QueueSubmit(GetDevice().GetGraphicsQueue(), 1, &submitInfo,
-							 (RrFence)m_InFlightFences[m_CurrentFrame]),
+							 m_InFlightFences[m_CurrentFrame]),
 			"[Graphics] Failed to submit image to queue for rendering");
 
-		VkSwapchainKHR swapChain = GetSwapchain();
-		VkPresentInfoKHR presentInfo{};
-		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+		RrSwapchainKHR swapChain = GetSwapchain();
+		RrPresentInfoKHR presentInfo{};
 		presentInfo.waitSemaphoreCount = 1;
-		presentInfo.pWaitSemaphores = (VkSemaphore*)&m_RenderFinishedSemaphore[m_CurrentFrame];
+		presentInfo.pWaitSemaphores = &m_RenderFinishedSemaphore[m_CurrentFrame];
 		presentInfo.swapchainCount = 1;
 		presentInfo.pSwapchains = &swapChain;
 		presentInfo.pImageIndices = &imageIndex;
 		presentInfo.pResults = nullptr;
 
-		result = vkQueuePresentKHR((VkQueue)GetDevice().GetPresentQueue(), &presentInfo);
+		result = RendererAPI::QueuePresentKHR(GetDevice().GetPresentQueue(), &presentInfo);
 
-		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR ||
-			m_FramebufferResized)
+		if (result == RrErrorOutOfDateKHR || result == RrErrorSuboptimalKHR || m_FramebufferResized)
 			OnFramebufferResized();
-		else if (result != VK_SUCCESS)
+		else if (result != RrErrorSuccess)
 			ThrowRuntime("[Graphics] Failed to present swapchain image");
 
 		m_CurrentFrame = (m_CurrentFrame + 1) % s_MaxFramesInFlight;

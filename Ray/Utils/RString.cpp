@@ -208,11 +208,11 @@ namespace At0::Ray
 		return "UNKNOWN VULKAN RESULT CODE";
 	}
 
-	std::string String::Construct(int res)
+	std::string String::Construct(RrError res)
 	{
 		switch (res)
 		{
-		case RrErrorNone: return "Success";
+		case RrErrorSuccess: return "Success";
 		case RrErrorNotReady: return "Vulkan not ready";
 		case RrErrorTimeout: return "Vulkan timeout";
 		case RrErrorEventSet: return "Vulkan event set";
@@ -231,28 +231,28 @@ namespace At0::Ray
 		case RrErrorFormatNotSupported: return "Vulkan format not supported";
 		case RrErrorFragmentedPool: return "Vulkan fragmented pool";
 		case RrErrorUnknown: return "Vulkan error unknown";
-		case RrErrorOutofPoolMemory: return "Vulkan out of pool memory";
+		case RrErrorOutOfPoolMemory: return "Vulkan out of pool memory";
 		case RrErrorInvalidExternalHandle: return "Vulkan invalid external handle";
 		case RrErrorFragmentation: return "Vulkan fragmentation error";
 		case RrErrorInvalidOpaqueCaptureAddress: return "Vulkan invalid opaque capture address";
-		case RrErrorSurfaceLost: return "Vulkan surface lost";
-		case RrErrorNativeWindowInUse: return "Vulkan native window in use";
-		case RrErrorSuboptimal: return "Vulkan suboptimal";
-		case RrErrorOutOfDate: return "Vulkan out of date";
-		case RrErrorIncompatibleDisplay: return "Vulkan incompatible display";
-		case RrErrorInvalidShader: return "Vulkan invalid shader";
-		case RrErrorInvalidDRMFormatModifierPlaneLayout:
+		case RrErrorSurfaceLostKHR: return "Vulkan surface lost";
+		case RrErrorNativeWindowInUseKHR: return "Vulkan native window in use";
+		case RrErrorSuboptimalKHR: return "Vulkan suboptimal";
+		case RrErrorOutOfDateKHR: return "Vulkan out of date";
+		case RrErrorIncompatibleDisplayKHR: return "Vulkan incompatible display";
+		case RrErrorInvalidShaderNV: return "Vulkan invalid shader";
+		case RrErrorInvalidDRMFormatModifierPlaneLayoutEXT:
 			return "Vulkan invalid DRM format modifier plane layout";
-		case RrErrorNotPermitted: return "Vulkan not permitted";
-		case RrErrorFullScreenExclusiveModeLost: return "Vulkan fullscreen exclusive mode lost";
-		case RrErrorThreadIdle: return "Vulkan thread idle";
-		case RrErrorThreadDone: return "Vulkan thread done";
-		case RrErrorOperationDeferred: return "Vulkan operation deferred";
-		case RrErrorOperationNotDeferred: return "Vulkan operation not deferred";
-		case RrErrorPipelineCompileRequired: return "Vulkan pipeline compile required";
+		case RrErrorNotPermittedEXT: return "Vulkan not permitted";
+		case RrErrorFullScreenExclusiveModeLostEXT: return "Vulkan fullscreen exclusive mode lost";
+		case RrErrorThreadIdleKHR: return "Vulkan thread idle";
+		case RrErrorThreadDoneKHR: return "Vulkan thread done";
+		case RrErrorOperationDeferredKHR: return "Vulkan operation deferred";
+		case RrErrorOperationNotDeferredKHR: return "Vulkan operation not deferred";
+		case RrErrorPipelineCompileRequiredEXT: return "Vulkan pipeline compile required";
 		}
 
-		return "UNKNOWN ERROR CODE";
+		return "Unknown Graphics Error";
 	}
 
 	std::string String::Construct(VkPhysicalDeviceType deviceType)

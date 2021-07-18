@@ -37,7 +37,7 @@ RrError RrEnumeratePhysicalDevice(RrInstance instance,
 	}
 
 	free(physicalDevices);
-	return RrErrorNone;
+	return RrErrorSuccess;
 }
 
 void RrGetPhysicalDeviceProperties(

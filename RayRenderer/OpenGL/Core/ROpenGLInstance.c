@@ -25,7 +25,7 @@ RrError RrInitialize(
 	// Test
 	glViewport(0, 0, 800, 600);
 
-	return RrErrorNone;
+	return RrErrorSuccess;
 }
 
 void RrDestroyInstance(RrInstance pInstance, RrDebugMessenger pDebugMessenger) {}

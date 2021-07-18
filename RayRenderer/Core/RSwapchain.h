@@ -9,6 +9,9 @@ RR_DEFINE_HANDLE(RrSwapchainKHR);
 RR_DEFINE_HANDLE(RrSurfaceKHR);
 RR_DEFINE_HANDLE(RrLogicalDevice);
 RR_DEFINE_HANDLE(RrImage);
+RR_DEFINE_HANDLE(RrSemaphore);
+RR_DEFINE_HANDLE(RrFence);
+RR_DEFINE_HANDLE(RrQueue);
 
 typedef enum RrSwapchainCreateFlagBitsKHR
 {
@@ -17,6 +20,16 @@ typedef enum RrSwapchainCreateFlagBitsKHR
 	RrSwapchainCreateMutableFormatKHR = 0x00000004
 } RrSwapchainCreateFlagBitsKHR;
 typedef uint32_t RrSwapchainCreateFlagsKHR;
+
+typedef struct RrPresentInfoKHR
+{
+	uint32_t waitSemaphoreCount;
+	const RrSemaphore* pWaitSemaphores;
+	uint32_t swapchainCount;
+	const RrSwapchainKHR* pSwapchains;
+	const uint32_t* pImageIndices;
+	RrError* pResults;
+} RrPresentInfoKHR;
 
 typedef struct RrSwapchainCreateInfoKHR
 {
@@ -46,5 +59,10 @@ RR_API RrError RrGetSwapchainImagesKHR(RrLogicalDevice device, RrSwapchainKHR sw
 	uint32_t* pSwapchainImageCount, RrImage* pSwapchainImages);
 
 RR_API void RrDestroySwapchainKHR(RrLogicalDevice device, RrSwapchainKHR swapchain);
+
+RR_API RrError RrAcquireNextImageKHR(RrLogicalDevice device, RrSwapchainKHR swapchain,
+	uint64_t timeout, RrSemaphore semaphore, RrFence fence, uint32_t* pImageIndex);
+
+RR_API RrError RrQueuePresentKHR(RrQueue queue, const RrPresentInfoKHR* pPresentInfo);
 
 RR_EXTERN_C_END

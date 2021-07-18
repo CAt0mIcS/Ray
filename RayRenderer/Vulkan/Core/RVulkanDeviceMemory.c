@@ -16,7 +16,7 @@ RrError RrAllocateMemory(
 	if (error != VK_SUCCESS)
 		return GetError(error);
 
-	return RrErrorNone;
+	return RrErrorSuccess;
 }
 
 RrError RrDeviceMemoryGetMemoryTypeIndex(uint32_t memoryTypeBits,
@@ -29,7 +29,7 @@ RrError RrDeviceMemoryGetMemoryTypeIndex(uint32_t memoryTypeBits,
 			(pMemoryTypes[i].propertyFlags & memoryProperties) == memoryProperties)
 		{
 			*pTypeIndex = i;
-			return RrErrorNone;
+			return RrErrorSuccess;
 		}
 	}
 

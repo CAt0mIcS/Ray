@@ -68,9 +68,9 @@ RrError RrInitialize(
 		createInfo.pNext = NULL;
 	}
 
-	VkResult error = vkCreateInstance(&createInfo, NULL, (VkInstance*)pInstance);
-	if (error != VK_SUCCESS)
-		return GetError(error);
+	RrError error = GetError(vkCreateInstance(&createInfo, NULL, (VkInstance*)pInstance));
+	if (error != RrErrorSuccess)
+		return error;
 
 	if (pInitInfo->enableValidationLayers)
 	{
@@ -81,25 +81,25 @@ RrError RrInitialize(
 		{
 			LogError("Failed to get function \"vkCreateDebugUtilsMessengerEXT\" to create debug "
 					 "messenger");
-			goto debugMessengerError;
+			*pDebugMessenger = NULL;
+			pInitInfo->enableValidationLayers = false;
+			return RrErrorLayerNotPresent;
 		}
 
-		if (createDebugMessenger((VkInstance)*pInstance, &debugUtilsCreateInfo, NULL,
-				(VkDebugUtilsMessengerEXT*)pDebugMessenger) != VK_SUCCESS)
+		error = GetError(createDebugMessenger((VkInstance)*pInstance, &debugUtilsCreateInfo, NULL,
+			(VkDebugUtilsMessengerEXT*)pDebugMessenger));
+		if (error != RrErrorSuccess)
 		{
 			LogError("Failed to create debug messenger");
-			goto debugMessengerError;
+			*pDebugMessenger = NULL;
+			pInitInfo->enableValidationLayers = false;
+			return error;
 		}
 	}
 	else
 		*pDebugMessenger = NULL;
 
-	return RrErrorNone;
-
-debugMessengerError:
-	*pDebugMessenger = NULL;
-	pInitInfo->enableValidationLayers = false;
-	return RrErrorLayerNotPresent;
+	return error;
 }
 
 RrPFNVoidFunction RrGetInstanceProcAddr(RrInstance instance, const char* pName)
