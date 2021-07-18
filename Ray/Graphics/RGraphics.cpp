@@ -450,7 +450,7 @@ namespace At0::Ray
 		m_RenderPass.reset();
 		m_DepthImage.reset();
 
-		m_Swapchain = MakeScope<Swapchain>((VkSwapchainKHR)*m_Swapchain);
+		m_Swapchain = MakeScope<Swapchain>(m_Swapchain->operator RrSwapchainKHR());
 		m_CommandPool.reset();
 
 		m_CommandPool = MakeScope<CommandPool>(RrCommandPoolCreateResetCommandBuffer);

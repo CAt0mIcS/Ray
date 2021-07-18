@@ -3,11 +3,12 @@
 
 #include "Devices/RWindow.h"
 
-#include "Graphics/RGraphics.h"
+#include "Ray/Core/RRendererLoader.h"
+#include "Ray/Graphics/Images/RImageView.h"
+#include "Ray/Graphics/RGraphics.h"
 #include "RPhysicalDevice.h"
 #include "RLogicalDevice.h"
 #include "RSurface.h"
-#include "Graphics/Images/RImageView.h"
 
 #include "Ray/Utils/RException.h"
 #include "Ray/Utils/RLogger.h"
@@ -15,12 +16,12 @@
 
 namespace At0::Ray
 {
-	Swapchain::Swapchain(VkSwapchainKHR oldSwapchain, RrImageUsageFlags imageUsage)
+	Swapchain::Swapchain(RrSwapchainKHR oldSwapchain, RrImageUsageFlags imageUsage)
 	{
 		SupportDetails supportDetails = QuerySwapchainSupport();
-		VkSurfaceFormatKHR surfaceFormat = ChooseSurfaceFormat(supportDetails.Formats);
-		m_Format = (RrFormat)surfaceFormat.format;
-		VkPresentModeKHR presentMode = ChoosePresentMode(supportDetails.PresentModes);
+		RrSurfaceFormatKHR surfaceFormat = ChooseSurfaceFormat(supportDetails.Formats);
+		m_Format = surfaceFormat.format;
+		RrPresentModeKHR presentMode = ChoosePresentMode(supportDetails.PresentModes);
 		m_Extent = ChooseExtent(supportDetails.Capabilities);
 
 		uint32_t imageCount = supportDetails.Capabilities.minImageCount + 1;
@@ -33,13 +34,12 @@ namespace At0::Ray
 
 		Log::Info("[Swapchain] Creating {0} images", imageCount);
 
-		VkSwapchainCreateInfoKHR createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+		RrSwapchainCreateInfoKHR createInfo{};
 		createInfo.surface = Graphics::Get().GetSurface();
 		createInfo.minImageCount = imageCount;
 		createInfo.imageFormat = surfaceFormat.format;
 		createInfo.imageColorSpace = surfaceFormat.colorSpace;
-		createInfo.imageExtent = *(VkExtent2D*)&m_Extent;
+		createInfo.imageExtent = m_Extent;
 		createInfo.imageArrayLayers = 1;
 		createInfo.imageUsage = imageUsage;
 
@@ -52,7 +52,7 @@ namespace At0::Ray
 		if (Graphics::Get().GetDevice().GetGraphicsFamily() !=
 			Graphics::Get().GetDevice().GetPresentFamily())
 		{
-			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+			createInfo.imageSharingMode = RrSharingModeConcurrent;
 			createInfo.queueFamilyIndexCount = 2;
 			createInfo.pQueueFamilyIndices = queueFamilyIndices;
 			Log::Warn(
@@ -60,94 +60,93 @@ namespace At0::Ray
 		}
 		else
 		{
-			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+			createInfo.imageSharingMode = RrSharingModeExclusive;
 			createInfo.queueFamilyIndexCount = 0;
 			createInfo.pQueueFamilyIndices = nullptr;
 		}
 
 		createInfo.preTransform = supportDetails.Capabilities.currentTransform;
-		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+		createInfo.compositeAlpha = RrCompositeAlphaOpaqueKHR;
 		createInfo.presentMode = presentMode;
 		createInfo.clipped = VK_TRUE;
 		createInfo.oldSwapchain = oldSwapchain;
 
 		ThrowRenderError(
-			vkCreateSwapchainKHR(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Swapchain),
+			RendererAPI::CreateSwapchainKHR(Graphics::Get().GetDevice(), &createInfo, &m_Swapchain),
 			"[Swapchain] Failed to create");
 
 		// Retrieve swapchain images
 		uint32_t swapchainImageCount = 0;
-		vkGetSwapchainImagesKHR(
+		RendererAPI::GetSwapchainImagesKHR(
 			Graphics::Get().GetDevice(), m_Swapchain, &swapchainImageCount, nullptr);
 		if (swapchainImageCount == 0)
 			ThrowRuntime("[Swapchain] Image count is 0");
 
 		m_Images.resize(swapchainImageCount);
-		vkGetSwapchainImagesKHR(Graphics::Get().GetDevice(), m_Swapchain, &swapchainImageCount,
-			(VkImage*)m_Images.data());
+		RendererAPI::GetSwapchainImagesKHR(
+			Graphics::Get().GetDevice(), m_Swapchain, &swapchainImageCount, m_Images.data());
 
 		// Create image views
 		m_ImageViews.resize(m_Images.size());
 		for (uint32_t i = 0; i < m_ImageViews.size(); ++i)
 		{
-			m_ImageViews[i] = MakeScope<ImageView>((VkImage)m_Images[i], VK_IMAGE_VIEW_TYPE_2D,
-				(VkFormat)m_Format, VK_IMAGE_ASPECT_COLOR_BIT);
+			m_ImageViews[i] =
+				MakeScope<ImageView>(m_Images[i], RrImageViewType2D, m_Format, RrImageAspectColor);
 		}
 	}
 
 	Swapchain::~Swapchain()
 	{
-		vkDestroySwapchainKHR(Graphics::Get().GetDevice(), m_Swapchain, nullptr);
+		RendererAPI::DestroySwapchainKHR(Graphics::Get().GetDevice(), m_Swapchain);
 	}
 
 	Swapchain::SupportDetails Swapchain::QuerySwapchainSupport() const
 	{
-		VkPhysicalDevice physicalDevice = VkPhysicalDevice(
-			Graphics::Get().GetPhysicalDevice().operator const RrPhysicalDevice&());
+		RrPhysicalDevice physicalDevice = Graphics::Get().GetPhysicalDevice();
 
 		SupportDetails supportDetails;
 
-		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
+		RendererAPI::GetPhysicalDeviceSurfaceCapabilitiesKHR(
 			physicalDevice, Graphics::Get().GetSurface(), &supportDetails.Capabilities);
 
 		uint32_t surfaceFormats;
-		vkGetPhysicalDeviceSurfaceFormatsKHR(
+		RendererAPI::GetPhysicalDeviceSurfaceFormatsKHR(
 			physicalDevice, Graphics::Get().GetSurface(), &surfaceFormats, nullptr);
 
 		supportDetails.Formats.resize(surfaceFormats);
-		vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, Graphics::Get().GetSurface(),
-			&surfaceFormats, supportDetails.Formats.data());
+		RendererAPI::GetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,
+			Graphics::Get().GetSurface(), &surfaceFormats, supportDetails.Formats.data());
 
 		uint32_t presentModeCount;
-		vkGetPhysicalDeviceSurfacePresentModesKHR(
+		RendererAPI::GetPhysicalDeviceSurfacePresentModesKHR(
 			physicalDevice, Graphics::Get().GetSurface(), &presentModeCount, nullptr);
 
 		supportDetails.PresentModes.resize(presentModeCount);
-		vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, Graphics::Get().GetSurface(),
-			&presentModeCount, supportDetails.PresentModes.data());
+		RendererAPI::GetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,
+			Graphics::Get().GetSurface(), &presentModeCount, supportDetails.PresentModes.data());
 
 		return supportDetails;
 	}
 
-	VkSurfaceFormatKHR Swapchain::ChooseSurfaceFormat(
-		const std::vector<VkSurfaceFormatKHR>& formats) const
+	RrSurfaceFormatKHR Swapchain::ChooseSurfaceFormat(
+		const std::vector<RrSurfaceFormatKHR>& formats) const
 	{
 		for (const auto& format : formats)
 		{
-			if (format.format == VK_FORMAT_B8G8R8A8_SRGB &&
-				format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+			if (format.format == RRFORMAT_B8G8R8A8_SRGB &&
+				format.colorSpace == RrColorSpaceSRGBNonlinearKHR)
 				return format;
 		}
 
 		return formats.front();
 	}
 
-	VkPresentModeKHR Swapchain::ChoosePresentMode(
-		const std::vector<VkPresentModeKHR>& presentModes) const
+	RrPresentModeKHR Swapchain::ChoosePresentMode(
+		const std::vector<RrPresentModeKHR>& presentModes) const
 	{
-		for (const VkPresentModeKHR& presentMode : presentModes)
+		for (const RrPresentModeKHR& presentMode : presentModes)
 		{
-			if (presentMode == VK_PRESENT_MODE_MAILBOX_KHR)
+			if (presentMode == RrPresentModeMailboxKHR)
 			{
 				Log::Info("[Swapchain] Choosing mailbox present mode");
 				return presentMode;
@@ -155,13 +154,13 @@ namespace At0::Ray
 		}
 
 		Log::Info("[Swapchain] Choosing FIFO present mode");
-		return VK_PRESENT_MODE_FIFO_KHR;
+		return RrPresentModeFifoKHR;
 	}
 
-	RrExtent2D Swapchain::ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities) const
+	RrExtent2D Swapchain::ChooseExtent(const RrSurfaceCapabilitiesKHR& capabilities) const
 	{
 		if (capabilities.currentExtent.width != UINT32_MAX)
-			return { capabilities.currentExtent.width, capabilities.currentExtent.height };
+			return capabilities.currentExtent;
 		else
 		{
 			UInt2 size = Window::Get().GetFramebufferSize();

@@ -68,6 +68,59 @@ void RrGetPhysicalDeviceFormatProperties(
 		(VkPhysicalDevice)physicalDevice, (VkFormat)format, (VkFormatProperties*)pProperties);
 }
 
+void RrGetPhysicalDeviceSurfaceCapabilitiesKHR(RrPhysicalDevice physicalDevice,
+	RrSurfaceKHR surface, RrSurfaceCapabilitiesKHR* pSurfaceCapabilities)
+{
+	VkSurfaceCapabilitiesKHR surfaceCapabilities;
+	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
+		(VkPhysicalDevice)physicalDevice, (VkSurfaceKHR)surface, &surfaceCapabilities);
+
+	pSurfaceCapabilities->minImageCount = surfaceCapabilities.minImageCount;
+	pSurfaceCapabilities->maxImageCount = surfaceCapabilities.maxImageCount;
+	pSurfaceCapabilities->currentExtent.width = surfaceCapabilities.currentExtent.width;
+	pSurfaceCapabilities->currentExtent.height = surfaceCapabilities.currentExtent.height;
+	pSurfaceCapabilities->minImageExtent.width = surfaceCapabilities.minImageExtent.width;
+	pSurfaceCapabilities->minImageExtent.height = surfaceCapabilities.minImageExtent.height;
+	pSurfaceCapabilities->maxImageExtent.width = surfaceCapabilities.maxImageExtent.width;
+	pSurfaceCapabilities->maxImageExtent.height = surfaceCapabilities.maxImageExtent.height;
+	pSurfaceCapabilities->maxImageArrayLayers = surfaceCapabilities.maxImageArrayLayers;
+	pSurfaceCapabilities->supportedTransforms = surfaceCapabilities.supportedTransforms;
+	pSurfaceCapabilities->currentTransform = surfaceCapabilities.currentTransform;
+	pSurfaceCapabilities->supportedCompositeAlpha = surfaceCapabilities.supportedCompositeAlpha;
+	pSurfaceCapabilities->supportedUsageFlags = surfaceCapabilities.supportedUsageFlags;
+}
+
+void RrGetPhysicalDeviceSurfaceFormatsKHR(RrPhysicalDevice physicalDevice, RrSurfaceKHR surface,
+	uint32_t* pSurfaceFormatCount, RrSurfaceFormatKHR* pSurfaceFormats)
+{
+	if (pSurfaceFormats == NULL)
+	{
+		vkGetPhysicalDeviceSurfaceFormatsKHR(
+			(VkPhysicalDevice)physicalDevice, (VkSurfaceKHR)surface, pSurfaceFormatCount, NULL);
+	}
+	else
+	{
+		VkSurfaceFormatKHR* surfaceFormats =
+			malloc(sizeof(VkSurfaceFormatKHR) * *pSurfaceFormatCount);
+		vkGetPhysicalDeviceSurfaceFormatsKHR((VkPhysicalDevice)physicalDevice,
+			(VkSurfaceKHR)surface, pSurfaceFormatCount, surfaceFormats);
+
+		for (uint32_t i = 0; i < *pSurfaceFormatCount; ++i)
+		{
+			pSurfaceFormats[i].format = surfaceFormats[i].format;
+			pSurfaceFormats[i].colorSpace = surfaceFormats[i].colorSpace;
+		}
+		free(surfaceFormats);
+	}
+}
+
+void RrGetPhysicalDeviceSurfacePresentModesKHR(RrPhysicalDevice physicalDevice,
+	RrSurfaceKHR surface, uint32_t* pPresentModeCount, RrPresentModeKHR* pPresentModes)
+{
+	vkGetPhysicalDeviceSurfacePresentModesKHR((VkPhysicalDevice)physicalDevice,
+		(VkSurfaceKHR)surface, pPresentModeCount, (VkPresentModeKHR*)pPresentModes);
+}
+
 
 VkPhysicalDevice ChoosePhysicalDevice(uint32_t deviceCount, VkPhysicalDevice* pDevices,
 	uint32_t deviceExtensionCount, const char* const* ppDeviceExtensions)

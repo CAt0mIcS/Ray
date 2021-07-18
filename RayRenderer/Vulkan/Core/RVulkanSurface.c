@@ -63,7 +63,8 @@ static void* x11Handle = NULL;
 #endif
 
 
-RrError RrCreateSurface(RrInstance instance, RrSurfaceCreateInfo* pCreateInfo, RrSurface* pSurface)
+RrError RrCreateSurfaceKHR(
+	RrInstance instance, const RrSurfaceCreateInfoKHR* pCreateInfo, RrSurfaceKHR* pSurface)
 {
 #ifdef _WIN32
 	VkWin32SurfaceCreateInfoKHR createInfo;

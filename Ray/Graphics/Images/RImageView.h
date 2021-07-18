@@ -3,9 +3,9 @@
 #include "Ray/RBase.h"
 #include "Ray/Utils/RNonCopyable.h"
 
+#include <RayRenderer/Core/RImageView.h>
 #include <vulkan/vulkan_core.h>
 
-typedef struct RrImageView_T* RrImageView;
 
 namespace At0::Ray
 {
@@ -15,18 +15,18 @@ namespace At0::Ray
 	{
 	public:
 		ImageView(const Image& image);
-		ImageView(VkImage image, VkImageViewType viewType, VkFormat format, uint32_t mipLevels = 1,
-			VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t layerCount = 1);
+		ImageView(RrImage image, RrImageViewType viewType, RrFormat format, uint32_t mipLevels = 1,
+			RrImageAspectFlags aspectFlags = RrImageAspectColor, uint32_t layerCount = 1);
 		~ImageView();
 
-		operator VkImageView() const { return m_View; }
-		operator RrImageView() const { return (RrImageView)m_View; }
+		operator VkImageView() const { return (VkImageView)m_View; }
+		operator RrImageView() const { return m_View; }
 
 	private:
-		void Setup(VkImage image, VkImageViewType viewType, VkFormat format, uint32_t mipLevels,
-			VkImageAspectFlags aspectFlags, uint32_t layerCount);
+		void Setup(RrImage image, RrImageViewType viewType, RrFormat format, uint32_t mipLevels,
+			RrImageAspectFlags aspectFlags, uint32_t layerCount);
 
 	private:
-		VkImageView m_View = VK_NULL_HANDLE;
+		RrImageView m_View = nullptr;
 	};
 }  // namespace At0::Ray

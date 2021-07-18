@@ -91,9 +91,9 @@ namespace At0::Ray
 		return std::pair<const char**, uint32_t>{};
 	}
 
-	void Window::CreateSurface(RrSurface* pSurface) const
+	void Window::CreateSurface(RrSurfaceKHR* pSurface) const
 	{
-		RrSurfaceCreateInfo createInfo{};
+		RrSurfaceCreateInfoKHR createInfo{};
 #ifdef _WIN32
 		createInfo.hWnd = glfwGetWin32Window(m_hWnd);
 #else
@@ -104,7 +104,7 @@ namespace At0::Ray
 		createInfo.xcb = true;
 #endif
 		ThrowRenderError(
-			RendererAPI::CreateSurface(Graphics::Get().GetInstance(), &createInfo, pSurface),
+			RendererAPI::CreateSurfaceKHR(Graphics::Get().GetInstance(), &createInfo, pSurface),
 			"[Window] Failed to create window surface");
 	}
 

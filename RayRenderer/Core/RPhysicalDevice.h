@@ -2,6 +2,7 @@
 
 #include "RCore.h"
 #include "RImage.h"
+#include "RSurface.h"
 
 RR_EXTERN_C_BEG
 
@@ -269,5 +270,15 @@ RR_API void RrGetPhysicalDeviceMemoryProperties(
 
 RR_API void RrGetPhysicalDeviceFormatProperties(
 	RrPhysicalDevice physicalDevice, RrFormat format, RrFormatProperties* pProperties);
+
+
+RR_API void RrGetPhysicalDeviceSurfaceCapabilitiesKHR(RrPhysicalDevice physicalDevice,
+	RrSurfaceKHR surface, RrSurfaceCapabilitiesKHR* pSurfaceCapabilities);
+
+RR_API void RrGetPhysicalDeviceSurfaceFormatsKHR(RrPhysicalDevice physicalDevice,
+	RrSurfaceKHR surface, uint32_t* pSurfaceFormatCount, RrSurfaceFormatKHR* pSurfaceFormats);
+
+RR_API void RrGetPhysicalDeviceSurfacePresentModesKHR(RrPhysicalDevice physicalDevice,
+	RrSurfaceKHR surface, uint32_t* pPresentModeCount, RrPresentModeKHR* pPresentModes);
 
 RR_EXTERN_C_END

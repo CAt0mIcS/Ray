@@ -104,7 +104,7 @@ namespace At0::Ray
 		/**
 		 * Creates the surface to render to
 		 */
-		void CreateSurface(RrSurface* pSurface) const;
+		void CreateSurface(RrSurfaceKHR* pSurface) const;
 
 		/**
 		 * @returns the size in screen coordinates of the window

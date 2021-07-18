@@ -1,4 +1,5 @@
-﻿Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
+﻿#if RAY_ENABLE_IMGUI
+Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
 	ImGui::Begin("Scene");
 	ImGui::Text("Stats");
 	ImGui::Text(
@@ -9,3 +10,4 @@
 	ImGui::Checkbox("Freeze Frustum", &Ray::Scene::Get().GetCamera().FreezeFrustum);
 	ImGui::End();
 });
+#endif

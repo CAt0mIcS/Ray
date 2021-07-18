@@ -16,9 +16,9 @@ namespace At0::Ray
 		~Surface();
 
 		operator VkSurfaceKHR() const { return (VkSurfaceKHR)m_Surface; }
-		operator RrSurface() const { return m_Surface; }
+		operator RrSurfaceKHR() const { return m_Surface; }
 
 	private:
-		RrSurface m_Surface = nullptr;
+		RrSurfaceKHR m_Surface = nullptr;
 	};
 }  // namespace At0::Ray

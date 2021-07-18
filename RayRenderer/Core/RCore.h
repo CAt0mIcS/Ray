@@ -553,4 +553,36 @@ typedef enum RrImageLayout
 	RrImageLayoutFragmentDensityMapEXT = 1000218000
 } RrImageLayout;
 
+typedef enum RrImageUsageFlagBits
+{
+	RrImageUsageTransferSrc = 0x00000001,
+	RrImageUsageTransferDst = 0x00000002,
+	RrImageUsageSampled = 0x00000004,
+	RrImageUsageStorage = 0x00000008,
+	RrImageUsageColorAttachment = 0x00000010,
+	RrImageUsageDepthStencilAttachment = 0x00000020,
+	RrImageUsageTransientAttachment = 0x00000040,
+	RrImageUsageInputAttachment = 0x00000080,
+	RrImageUsageShadingRateImageNV = 0x00000100,
+	RrImageUsageFragmentDensityMapEXT = 0x00000200,
+	RrImageUsageFragmentShadingRateAttachmentKHR = RrImageUsageShadingRateImageNV,
+} RrImageUsageFlagBits;
+typedef uint32_t RrImageUsageFlags;
+
+typedef enum RrSharingMode
+{
+	RrSharingModeExclusive,
+	RrSharingModeConcurrent
+} RrSharingMode;
+
+typedef enum RrPresentModeKHR
+{
+	RrPresentModeImmediateKHR = 0,
+	RrPresentModeMailboxKHR = 1,
+	RrPresentModeFifoKHR = 2,
+	RrPresentModeFifoRelaxedKHR = 3,
+	RrPresentModeSharedDemandRefreshKHR = 1000111000,
+	RrPresentModeSharedContinuousRefreshKHR = 1000111001
+} RrPresentModeKHR;
+
 RR_EXTERN_C_END

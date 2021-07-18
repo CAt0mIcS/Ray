@@ -32,12 +32,6 @@ typedef enum RrBufferUsageFlagBits
 } RrBufferUsageFlagBits;
 typedef uint32_t RrBufferUsageFlags;
 
-typedef enum RrSharingMode
-{
-	RrSharingModeExclusive,
-	RrSharingModeConcurrent
-} RrSharingMode;
-
 typedef struct RrBufferCreateInfo
 {
 	RrDeviceSize size;

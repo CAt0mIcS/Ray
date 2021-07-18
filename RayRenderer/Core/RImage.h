@@ -42,22 +42,6 @@ typedef enum RrImageTiling
 	RrImageTilingDRMFormatModifierEXT
 } RrImageTiling;
 
-typedef enum RrImageUsageFlagBits
-{
-	RrImageUsageTransferSrc = 0x00000001,
-	RrImageUsageTransferDst = 0x00000002,
-	RrImageUsageSampled = 0x00000004,
-	RrImageUsageStorage = 0x00000008,
-	RrImageUsageColorAttachment = 0x00000010,
-	RrImageUsageDepthStencilAttachment = 0x00000020,
-	RrImageUsageTransientAttachment = 0x00000040,
-	RrImageUsageInputAttachment = 0x00000080,
-	RrImageUsageShadingRateImageNV = 0x00000100,
-	RrImageUsageFragmentDensityMapEXT = 0x00000200,
-	RrImageUsageFragmentShadingRateAttachmentKHR = RrImageUsageShadingRateImageNV,
-} RrImageUsageFlagBits;
-typedef uint32_t RrImageUsageFlags;
-
 typedef enum RrImageAspectFlagBits
 {
 	RrImageAspectColor = 0x00000001,

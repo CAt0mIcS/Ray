@@ -14,6 +14,8 @@ set(SRC
 	"Core/RFramebuffer.h"
 	"Core/RSurface.h"
 	"Core/RImage.h"
+	"Core/RImageView.h"
+	"Core/RSwapchain.h"
 
 	# ------------------------------------------------------------------
 	# Synchronization
