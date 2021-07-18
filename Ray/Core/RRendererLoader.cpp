@@ -39,6 +39,8 @@ namespace At0::Ray
 		void (*UnmapMemory)(RrLogicalDevice device, RrDeviceMemory memory) = nullptr;
 		RrError (*FlushMappedMemoryRanges)(RrLogicalDevice device, uint32_t memoryRangeCount,const RrMappedMemoryRange* pMappedMemoryRanges) = nullptr;
 		void (*FreeMemory)(RrLogicalDevice device, RrDeviceMemory memory) = nullptr;
+		RrError (*CreateFramebuffer)(RrLogicalDevice device,const RrFramebufferCreateInfo* pCreateInfo, RrFramebuffer* pFramebuffer) = nullptr;
+		void (*DestroyFramebuffer)(RrLogicalDevice device, RrFramebuffer framebuffer) = nullptr;
 		RrError (*CreateImage)(RrLogicalDevice device, const RrImageCreateInfo* pCreateInfo, RrImage* pImage) = nullptr;
 		void (*ImageGetMemoryRequirements)(RrLogicalDevice device, RrImage image, RrMemoryRequirements* pMemRequirements) = nullptr;
 		RrError (*BindImageMemory)(RrLogicalDevice device, RrImage image, RrDeviceMemory memory, RrDeviceSize memoryOffset) = nullptr;
@@ -155,6 +157,8 @@ namespace At0::Ray
 		RendererAPI::UnmapMemory = (void (*)(RrLogicalDevice device, RrDeviceMemory memory))LoadFunction(lib, "RrUnmapMemory");
 		RendererAPI::FlushMappedMemoryRanges = (RrError (*)(RrLogicalDevice device, uint32_t memoryRangeCount,const RrMappedMemoryRange* pMappedMemoryRanges))LoadFunction(lib, "RrFlushMappedMemoryRanges");
 		RendererAPI::FreeMemory = (void (*)(RrLogicalDevice device, RrDeviceMemory memory))LoadFunction(lib, "RrFreeMemory");
+		RendererAPI::CreateFramebuffer = (RrError (*)(RrLogicalDevice device,const RrFramebufferCreateInfo* pCreateInfo, RrFramebuffer* pFramebuffer))LoadFunction(lib, "RrCreateFramebuffer");
+		RendererAPI::DestroyFramebuffer = (void (*)(RrLogicalDevice device, RrFramebuffer framebuffer))LoadFunction(lib, "RrDestroyFramebuffer");
 		RendererAPI::CreateImage = (RrError (*)(RrLogicalDevice device, const RrImageCreateInfo* pCreateInfo, RrImage* pImage))LoadFunction(lib, "RrCreateImage");
 		RendererAPI::ImageGetMemoryRequirements = (void (*)(RrLogicalDevice device, RrImage image, RrMemoryRequirements* pMemRequirements))LoadFunction(lib, "RrImageGetMemoryRequirements");
 		RendererAPI::BindImageMemory = (RrError (*)(RrLogicalDevice device, RrImage image, RrDeviceMemory memory, RrDeviceSize memoryOffset))LoadFunction(lib, "RrBindImageMemory");

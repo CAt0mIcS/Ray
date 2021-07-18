@@ -1,10 +1,11 @@
 ﻿#include "Rpch.h"
 #include "RFramebuffer.h"
 
-#include "Graphics/Core/RLogicalDevice.h"
-#include "Graphics/RGraphics.h"
-#include "Graphics/Core/RSwapchain.h"
-#include "Graphics/RenderPass/RRenderPass.h"
+#include "Ray/Core/RRendererLoader.h"
+#include "Ray/Graphics/Core/RLogicalDevice.h"
+#include "Ray/Graphics/RGraphics.h"
+#include "Ray/Graphics/Core/RSwapchain.h"
+#include "Ray/Graphics/RenderPass/RRenderPass.h"
 
 #include "Ray/Utils/RException.h"
 #include "Ray/Utils/RLogger.h"
@@ -13,11 +14,9 @@
 namespace At0::Ray
 {
 	Framebuffer::Framebuffer(
-		const RenderPass& renderPass, const std::vector<VkImageView>& attachments)
+		const RenderPass& renderPass, const std::vector<RrImageView>& attachments)
 	{
-		VkFramebufferCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-		createInfo.flags = 0;
+		RrFramebufferCreateInfo createInfo{};
 		createInfo.renderPass = renderPass;
 		createInfo.attachmentCount = (uint32_t)attachments.size();
 		createInfo.pAttachments = attachments.data();
@@ -25,8 +24,8 @@ namespace At0::Ray
 		createInfo.height = Graphics::Get().GetSwapchain().GetExtent().height;
 		createInfo.layers = 1;
 
-		ThrowRenderError(vkCreateFramebuffer(Graphics::Get().GetDevice(), &createInfo, nullptr,
-							 (VkFramebuffer*)&m_Framebuffer),
+		ThrowRenderError(RendererAPI::CreateFramebuffer(
+							 Graphics::Get().GetDevice(), &createInfo, &m_Framebuffer),
 			"[Framebuffer] Failed to create");
 		Log::Info("[Framebuffer] Created with size [width={0}, height={1}]", createInfo.width,
 			createInfo.height);
@@ -34,6 +33,6 @@ namespace At0::Ray
 
 	Framebuffer::~Framebuffer()
 	{
-		vkDestroyFramebuffer(Graphics::Get().GetDevice(), (VkFramebuffer)m_Framebuffer, nullptr);
+		RendererAPI::DestroyFramebuffer(Graphics::Get().GetDevice(), m_Framebuffer);
 	}
 }  // namespace At0::Ray

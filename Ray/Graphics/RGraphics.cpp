@@ -167,7 +167,7 @@ namespace At0::Ray
 		for (uint32_t i = 0; i < m_Framebuffers.size(); ++i)
 		{
 			m_Framebuffers[i] = MakeScope<Framebuffer>(
-				*m_RenderPass, std::vector<VkImageView>{ *GetSwapchain().GetImageViews()[i],
+				*m_RenderPass, std::vector<RrImageView>{ *GetSwapchain().GetImageViews()[i],
 								   m_DepthImage->GetImageView() });
 		}
 	}

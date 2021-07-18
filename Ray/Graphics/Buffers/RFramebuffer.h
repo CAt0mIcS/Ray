@@ -15,7 +15,7 @@ namespace At0::Ray
 	class RAY_EXPORT Framebuffer : NonCopyable
 	{
 	public:
-		Framebuffer(const RenderPass& renderPass, const std::vector<VkImageView>& attachments);
+		Framebuffer(const RenderPass& renderPass, const std::vector<RrImageView>& attachments);
 		~Framebuffer();
 
 		operator VkFramebuffer() const { return (VkFramebuffer)m_Framebuffer; }
