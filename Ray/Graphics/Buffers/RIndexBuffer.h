@@ -4,7 +4,6 @@
 #include "RBuffer.h"
 #include "../Core/RSharedBindable.h"
 
-#include <vulkan/vulkan_core.h>
 #include <vector>
 #include <string>
 

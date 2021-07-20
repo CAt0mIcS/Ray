@@ -60,7 +60,7 @@ namespace At0::Ray
 	{
 		const CommandBuffer& mainCmdBuff = *m_MainCommandResources[imageIndex].commandBuffer;
 
-		mainCmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+		mainCmdBuff.Begin(RrCommandBufferUsageOneTimeSubmit);
 
 		RrClearValue clearValues[2];
 		clearValues[0].color = { 0.0137254f, 0.014117f, 0.0149019f };
@@ -72,8 +72,8 @@ namespace At0::Ray
 		// Start secondary command buffers
 		for (const auto& [commandPool, commandBuffer] : m_CommandResources[imageIndex])
 		{
-			commandBuffer->Begin(VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT |
-								 VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+			commandBuffer->Begin(
+				RrCommandBufferUsageRenderPassContinue | RrCommandBufferUsageOneTimeSubmit);
 			RendererAPI::CmdSetViewport(*commandBuffer, 0, 1, &viewport);
 			RendererAPI::CmdSetScissor(*commandBuffer, 0, 1, &scissor);
 			Scene::Get().CmdBind(*commandBuffer);
@@ -112,9 +112,9 @@ namespace At0::Ray
 	void CommandBufferRecorder::ResetCommandPools(uint32_t imageIndex) const
 	{
 		for (uint32_t thread = 0; thread < m_ThreadPool.GetThreadCount(); ++thread)
-			vkResetCommandPool(Graphics::Get().GetDevice(),
+			RendererAPI::ResetCommandPool(Graphics::Get().GetDevice(),
 				*m_CommandResources[imageIndex][thread].commandPool, 0);
-		vkResetCommandPool(
+		RendererAPI::ResetCommandPool(
 			Graphics::Get().GetDevice(), *m_MainCommandResources[imageIndex].commandPool, 0);
 	}
 

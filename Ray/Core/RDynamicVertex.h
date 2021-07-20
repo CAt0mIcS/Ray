@@ -3,7 +3,6 @@
 #include "Ray/RBase.h"
 #include "Ray/Utils/RAssert.h"
 
-#include <vulkan/vulkan_core.h>
 #include <RayRenderer/Pipeline/RPipeline.h>
 
 

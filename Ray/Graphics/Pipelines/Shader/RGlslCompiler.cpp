@@ -225,7 +225,7 @@ namespace At0::Ray
 		}
 
 		ThrowRuntime("[GlslCompiler] Stage flag {0} is incompatible",
-			String::Construct((VkShaderStageFlags)stageFlags));
+			String::Construct((RrShaderStageFlags)stageFlags));
 		return EShLangAnyHit;
 	}
 #pragma endregion

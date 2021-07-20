@@ -29,7 +29,7 @@ namespace At0::Ray
 		RendererAPI::DestroyLogicalDevice(m_Device);
 	}
 
-	PFN_vkVoidFunction LogicalDevice::LoadFunction(const char* fName) const
+	RrPFNVoidFunction LogicalDevice::LoadFunction(const char* fName) const
 	{
 		return RendererAPI::GetDeviceProcAddr(m_Device, fName);
 	}
@@ -50,30 +50,30 @@ namespace At0::Ray
 
 	void LogicalDevice::CreateQueueIndices()
 	{
-		VkPhysicalDevice physicalDevice = VkPhysicalDevice(
-			Graphics::Get().GetPhysicalDevice().operator const RrPhysicalDevice&());
+		RrPhysicalDevice physicalDevice = Graphics::Get().GetPhysicalDevice();
 
 		uint32_t familyPropCount = 0;
-		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &familyPropCount, nullptr);
+		RendererAPI::GetPhysicalDeviceQueueFamilyProperties(
+			physicalDevice, &familyPropCount, nullptr);
 
-		std::vector<VkQueueFamilyProperties> queueFamilyProperties(familyPropCount);
-		vkGetPhysicalDeviceQueueFamilyProperties(
+		std::vector<RrQueueFamilyProperties> queueFamilyProperties(familyPropCount);
+		RendererAPI::GetPhysicalDeviceQueueFamilyProperties(
 			physicalDevice, &familyPropCount, queueFamilyProperties.data());
 
 		std::optional<uint32_t> graphicsFamily, presentFamily, computeFamily, transferFamily;
 
 		for (uint32_t i = 0; i < familyPropCount; ++i)
 		{
-			if (queueFamilyProperties[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
+			if (queueFamilyProperties[i].queueFlags & RrQueueGraphics)
 			{
 				graphicsFamily = i;
 				m_GraphicsFamily = i;
-				m_SupportedQueues |= VK_QUEUE_GRAPHICS_BIT;
+				m_SupportedQueues |= RrQueueGraphics;
 				Log::Info("[LogicalDevice] Graphics queue family {0} found", m_GraphicsFamily);
 			}
 
-			VkBool32 presentSupport;
-			vkGetPhysicalDeviceSurfaceSupportKHR(
+			RrBool32 presentSupport;
+			RendererAPI::GetPhysicalDeviceSurfaceSupportKHR(
 				physicalDevice, i, Graphics::Get().GetSurface(), &presentSupport);
 
 			if (queueFamilyProperties[i].queueCount > 0 && presentSupport)
@@ -83,19 +83,19 @@ namespace At0::Ray
 				Log::Info("[LogicalDevice] Present queue family {0} found", m_PresentFamily);
 			}
 
-			if (queueFamilyProperties[i].queueFlags & VK_QUEUE_COMPUTE_BIT)
+			if (queueFamilyProperties[i].queueFlags & RrQueueCompute)
 			{
 				computeFamily = i;
 				m_ComputeFamily = i;
-				m_SupportedQueues |= VK_QUEUE_COMPUTE_BIT;
+				m_SupportedQueues |= RrQueueCompute;
 				Log::Info("[LogicalDevice] Compute queue family {0} found", m_ComputeFamily);
 			}
 
-			if (queueFamilyProperties[i].queueFlags & VK_QUEUE_TRANSFER_BIT)
+			if (queueFamilyProperties[i].queueFlags & RrQueueTransfer)
 			{
 				transferFamily = i;
 				m_TransferFamily = i;
-				m_SupportedQueues |= VK_QUEUE_TRANSFER_BIT;
+				m_SupportedQueues |= RrQueueTransfer;
 				Log::Info("[LogicalDevice] Transfer queue family {0} found", m_TransferFamily);
 			}
 
@@ -116,7 +116,7 @@ namespace At0::Ray
 		float queuePriorities[] = { 0.0f };
 
 		// Fill vector with correct create info for the queues.
-		if (m_SupportedQueues & VK_QUEUE_GRAPHICS_BIT)
+		if (m_SupportedQueues & RrQueueGraphics)
 		{
 			RrDeviceQueueCreateInfo graphicsQueueCreateInfo{};
 			graphicsQueueCreateInfo.queueFamilyIndex = m_GraphicsFamily;
@@ -128,7 +128,7 @@ namespace At0::Ray
 		else
 			m_GraphicsFamily = 0;
 
-		if (m_SupportedQueues & VK_QUEUE_COMPUTE_BIT && m_ComputeFamily != m_GraphicsFamily)
+		if (m_SupportedQueues & RrQueueCompute && m_ComputeFamily != m_GraphicsFamily)
 		{
 			RrDeviceQueueCreateInfo computeQueueCreateInfo{};
 			computeQueueCreateInfo.queueFamilyIndex = m_ComputeFamily;
@@ -140,7 +140,7 @@ namespace At0::Ray
 		else
 			m_ComputeFamily = m_GraphicsFamily;
 
-		if (m_SupportedQueues & VK_QUEUE_TRANSFER_BIT && m_TransferFamily != m_GraphicsFamily &&
+		if (m_SupportedQueues & RrQueueTransfer && m_TransferFamily != m_GraphicsFamily &&
 			m_TransferFamily != m_ComputeFamily)
 		{
 			RrDeviceQueueCreateInfo transferQueueCreateInfo{};

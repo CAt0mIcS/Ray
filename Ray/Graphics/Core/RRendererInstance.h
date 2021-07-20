@@ -4,7 +4,6 @@
 #include "Ray/Utils/RNonCopyable.h"
 
 #include <RayRenderer/Core/RInstance.h>
-#include <vulkan/vulkan_core.h>
 #include <vector>
 
 
@@ -19,11 +18,10 @@ namespace At0::Ray
 		/**
 		 * Loads a extension function with name and returns it
 		 */
-		PFN_vkVoidFunction LoadFunction(const char* name);
+		RrPFNVoidFunction LoadFunction(const char* name) const;
 
 		static const std::vector<const char*>& GetValidationLayers() { return s_ValidationLayers; }
 		operator RrInstance() const { return m_Instance; }
-		operator VkInstance() const { return (VkInstance)m_Instance; }
 
 		bool ValidationLayersEnabled() const { return m_ValidationLayersEnabled; }
 
@@ -32,13 +30,13 @@ namespace At0::Ray
 		 * Queries the required extensions from glfw and adds the debug utils extension if
 		 * validation layers are enabled
 		 */
-		std::vector<const char*> GetRequiredExtensions() const;
+		std::vector<std::string> GetRequiredExtensions() const;
 
 		/**
 		 * @returns All the unsuported extensions
 		 */
-		std::vector<const char*> ExtensionsSupported(
-			const std::vector<const char*>& instanceExtensions);
+		std::vector<std::string> ExtensionsSupported(
+			const std::vector<std::string>& instanceExtensions);
 
 	private:
 		RrInstance m_Instance = nullptr;

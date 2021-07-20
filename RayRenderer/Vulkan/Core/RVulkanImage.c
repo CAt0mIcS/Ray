@@ -66,3 +66,69 @@ void RrDestroyImage(RrLogicalDevice device, RrImage image)
 {
 	vkDestroyImage((VkDevice)device, (VkImage)image, NULL);
 }
+
+
+void RrCmdBlitImage(RrCommandBuffer commandBuffer, RrImage srcImage, RrImageLayout srcImageLayout,
+	RrImage dstImage, RrImageLayout dstImageLayout, uint32_t regionCount,
+	const RrImageBlit* pRegions, RrFilter filter)
+{
+	VkImageBlit* regions = malloc(sizeof(VkImageBlit) * regionCount);
+	for (uint32_t i = 0; i < regionCount; ++i)
+	{
+		regions[i].dstOffsets[0].x = pRegions[i].dstOffsets[i].x;
+		regions[i].dstOffsets[0].y = pRegions[i].dstOffsets[i].y;
+		regions[i].dstOffsets[0].x = pRegions[i].dstOffsets[i].z;
+		regions[i].dstOffsets[1].x = pRegions[i].dstOffsets[i].x;
+		regions[i].dstOffsets[1].y = pRegions[i].dstOffsets[i].y;
+		regions[i].dstOffsets[1].x = pRegions[i].dstOffsets[i].z;
+
+		regions[i].srcOffsets[0].x = pRegions[i].srcOffsets[i].x;
+		regions[i].srcOffsets[0].y = pRegions[i].srcOffsets[i].y;
+		regions[i].srcOffsets[0].x = pRegions[i].srcOffsets[i].z;
+		regions[i].srcOffsets[1].x = pRegions[i].srcOffsets[i].x;
+		regions[i].srcOffsets[1].y = pRegions[i].srcOffsets[i].y;
+		regions[i].srcOffsets[1].x = pRegions[i].srcOffsets[i].z;
+
+		regions[i].dstSubresource.aspectMask = pRegions[i].dstSubresource.aspectMask;
+		regions[i].dstSubresource.baseArrayLayer = pRegions[i].dstSubresource.baseArrayLayer;
+		regions[i].dstSubresource.layerCount = pRegions[i].dstSubresource.layerCount;
+		regions[i].dstSubresource.mipLevel = pRegions[i].dstSubresource.mipLevel;
+
+		regions[i].srcSubresource.aspectMask = pRegions[i].srcSubresource.aspectMask;
+		regions[i].srcSubresource.baseArrayLayer = pRegions[i].srcSubresource.baseArrayLayer;
+		regions[i].srcSubresource.layerCount = pRegions[i].srcSubresource.layerCount;
+		regions[i].srcSubresource.mipLevel = pRegions[i].srcSubresource.mipLevel;
+	}
+
+	vkCmdBlitImage((VkCommandBuffer)commandBuffer, (VkImage)srcImage, srcImageLayout,
+		(VkImage)dstImage, dstImageLayout, regionCount, regions, filter);
+
+	free(regions);
+}
+
+void RrCmdCopyBufferToImage(RrCommandBuffer commandBuffer, RrBuffer srcBuffer, RrImage dstImage,
+	RrImageLayout dstImageLayout, uint32_t regionCount, const RrBufferImageCopy* pRegions)
+{
+	VkBufferImageCopy* regions = malloc(sizeof(VkBufferImageCopy) * regionCount);
+	for (uint32_t i = 0; i < regionCount; ++i)
+	{
+		regions[i].bufferOffset = pRegions[i].bufferOffset;
+		regions[i].bufferRowLength = pRegions[i].bufferRowLength;
+		regions[i].bufferImageHeight = pRegions[i].bufferImageHeight;
+		regions[i].imageSubresource.aspectMask = pRegions[i].imageSubresource.aspectMask;
+		regions[i].imageSubresource.baseArrayLayer = pRegions[i].imageSubresource.baseArrayLayer;
+		regions[i].imageSubresource.layerCount = pRegions[i].imageSubresource.layerCount;
+		regions[i].imageSubresource.mipLevel = pRegions[i].imageSubresource.mipLevel;
+		regions[i].imageOffset.x = pRegions[i].imageOffset.x;
+		regions[i].imageOffset.y = pRegions[i].imageOffset.y;
+		regions[i].imageOffset.z = pRegions[i].imageOffset.z;
+		regions[i].imageExtent.width = pRegions[i].imageExtent.width;
+		regions[i].imageExtent.height = pRegions[i].imageExtent.height;
+		regions[i].imageExtent.depth = pRegions[i].imageExtent.depth;
+	}
+
+	vkCmdCopyBufferToImage((VkCommandBuffer)commandBuffer, (VkBuffer)srcBuffer, (VkImage)dstImage,
+		dstImageLayout, regionCount, regions);
+
+	free(regions);
+}

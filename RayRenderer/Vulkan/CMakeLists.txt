@@ -17,6 +17,7 @@ set(SRC
 	"Core/RVulkanImage.c"
 	"Core/RVulkanImageView.c"
 	"Core/RVulkanSwapchain.c"
+	"Core/RVulkanSampler.c"
 
 	# ------------------------------------------------------------------
 	# Synchronization

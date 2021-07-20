@@ -174,27 +174,27 @@ namespace At0::Ray
 
 	void Graphics::CreatePipelineCache()
 	{
-		std::ifstream reader("Resources/Caches/Pipeline.cache", std::ios::binary | std::ios::ate);
-		std::vector<char> data;
+		// std::ifstream reader("Resources/Caches/Pipeline.cache", std::ios::binary |
+		// std::ios::ate); std::vector<char> data;
 
-		VkPipelineCacheCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+		// VkPipelineCacheCreateInfo createInfo{};
+		// createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 
-		if (reader.is_open())
-		{
-			size_t filesize = (size_t)reader.tellg();
-			reader.seekg(std::ios::beg);
+		// if (reader.is_open())
+		//{
+		//	size_t filesize = (size_t)reader.tellg();
+		//	reader.seekg(std::ios::beg);
 
-			data.resize(filesize);
-			reader.read(data.data(), filesize);
-			reader.close();
-			createInfo.initialDataSize = filesize;
-			createInfo.pInitialData = data.data();
-		}
+		//	data.resize(filesize);
+		//	reader.read(data.data(), filesize);
+		//	reader.close();
+		//	createInfo.initialDataSize = filesize;
+		//	createInfo.pInitialData = data.data();
+		//}
 
-		if (vkCreatePipelineCache(GetDevice(), &createInfo, nullptr,
-				(VkPipelineCache*)&m_PipelineCache) != VK_SUCCESS)
-			Log::Warn("[Graphics] Failed to create pipeline cache.");
+		// if (vkCreatePipelineCache(GetDevice(), &createInfo, nullptr,
+		//		(VkPipelineCache*)&m_PipelineCache) != VK_SUCCESS)
+		//	Log::Warn("[Graphics] Failed to create pipeline cache.");
 	}
 
 	void Graphics::CreateSyncObjects()
@@ -248,8 +248,8 @@ namespace At0::Ray
 
 		m_RenderPass->Begin(cmdBuff, framebuffer, clearValues, std::size(clearValues));
 
-		RendererAPI::CmdSetViewport(cmdBuff, 0, 1, (RrViewport*)&m_Viewport);
-		RendererAPI::CmdSetScissor(cmdBuff, 0, 1, (RrRect2D*)&m_Scissor);
+		RendererAPI::CmdSetViewport(cmdBuff, 0, 1, &m_Viewport);
+		RendererAPI::CmdSetScissor(cmdBuff, 0, 1, &m_Scissor);
 
 		Scene::Get().CmdBind(cmdBuff);
 		Scene::Get().EntityView<MeshRenderer>().each(
@@ -313,8 +313,8 @@ namespace At0::Ray
 
 
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
-		m_CommandBufferRecorder->Record(*m_RenderPass, *m_Framebuffers[imageIndex], imageIndex,
-			*(RrViewport*)&m_Viewport, *(RrRect2D*)&m_Scissor);
+		m_CommandBufferRecorder->Record(
+			*m_RenderPass, *m_Framebuffers[imageIndex], imageIndex, m_Viewport, m_Scissor);
 		// submitInfo.commandBufferCount =
 		//	(uint32_t)m_CommandBufferRecorder->GetVkCommandBuffers(imageIndex).size();
 		// submitInfo.pCommandBuffers =
@@ -394,7 +394,7 @@ namespace At0::Ray
 		if (m_PipelineCache)
 		{
 			WritePipelineCache();
-			vkDestroyPipelineCache(GetDevice(), (VkPipelineCache)m_PipelineCache, nullptr);
+			// vkDestroyPipelineCache(GetDevice(), (VkPipelineCache)m_PipelineCache, nullptr);
 		}
 
 		m_DepthImage.reset();
@@ -472,18 +472,18 @@ namespace At0::Ray
 
 	void Graphics::WritePipelineCache()
 	{
-		size_t pipelineBufferSize;
-		if (vkGetPipelineCacheData(GetDevice(), (VkPipelineCache)m_PipelineCache,
-				&pipelineBufferSize, nullptr) != VK_SUCCESS)
-			Log::Warn("[Graphics] Failed to get pipeline cache size");
+		// size_t pipelineBufferSize;
+		// if (vkGetPipelineCacheData(GetDevice(), (VkPipelineCache)m_PipelineCache,
+		//		&pipelineBufferSize, nullptr) != VK_SUCCESS)
+		//	Log::Warn("[Graphics] Failed to get pipeline cache size");
 
-		std::vector<char> pipelineData(pipelineBufferSize);
-		if (vkGetPipelineCacheData(GetDevice(), (VkPipelineCache)m_PipelineCache,
-				&pipelineBufferSize, pipelineData.data()) != VK_SUCCESS)
-			Log::Warn("[Graphics] Failed to get pipeline cache data");
+		// std::vector<char> pipelineData(pipelineBufferSize);
+		// if (vkGetPipelineCacheData(GetDevice(), (VkPipelineCache)m_PipelineCache,
+		//		&pipelineBufferSize, pipelineData.data()) != VK_SUCCESS)
+		//	Log::Warn("[Graphics] Failed to get pipeline cache data");
 
-		std::ofstream writer("Resources/Caches/Pipeline.cache", std::ios::binary);
-		writer.write(pipelineData.data(), pipelineData.size());
-		writer.close();
+		// std::ofstream writer("Resources/Caches/Pipeline.cache", std::ios::binary);
+		// writer.write(pipelineData.data(), pipelineData.size());
+		// writer.close();
 	}
 }  // namespace At0::Ray

@@ -36,7 +36,7 @@ namespace At0::Ray
 		/**
 		 * Loads a device extension function with name and returns it
 		 */
-		PFN_vkVoidFunction LoadFunction(const char* fName) const;
+		RrPFNVoidFunction LoadFunction(const char* fName) const;
 
 		/**
 		 * Waits for the logical device to finish work
@@ -49,7 +49,6 @@ namespace At0::Ray
 		bool IsEnabled(DeviceFeature feature) const;
 
 		static const std::vector<const char*>& GetDeviceExtensions() { return s_DeviceExtensions; }
-		operator VkDevice() const { return (VkDevice)m_Device; }
 		operator RrLogicalDevice() const { return m_Device; }
 
 		uint32_t GetGraphicsFamily() const { return m_GraphicsFamily; }

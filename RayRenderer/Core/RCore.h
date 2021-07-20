@@ -72,6 +72,12 @@ typedef enum RrError
 	RrErrorLoaderFailed
 } RrError;
 
+typedef struct RrExtensionProperties
+{
+	char extensionName[RR_MAX_EXTENSION_NAME_SIZE];
+	uint32_t specVersion;
+} RrExtensionProperties;
+
 typedef enum RrLogMessageSeverity
 {
 	RrLogMessageSeverityDebug,
@@ -584,5 +590,36 @@ typedef enum RrPresentModeKHR
 	RrPresentModeSharedDemandRefreshKHR = 1000111000,
 	RrPresentModeSharedContinuousRefreshKHR = 1000111001
 } RrPresentModeKHR;
+
+typedef enum RrDependencyFlagBits
+{
+	RrDependencyByRegion = 0x00000001,
+	RrDependencyDeviceGroup = 0x00000004,
+	RrDependencyViewLocal = 0x00000002
+} RrDependencyFlagBits;
+typedef uint32_t RrDependencyFlags;
+
+typedef struct RrMemoryBarrier
+{
+	RrAccessFlags srcAccessMask;
+	RrAccessFlags dstAccessMask;
+} RrMemoryBarrier;
+
+typedef enum RrFilter
+{
+	RrFilterNearest = 0,
+	RrFilterLinear = 1,
+	RrFilterCubicImg = 1000015000,
+} RrFilter;
+
+typedef enum RrQueueFlagBits
+{
+	RrQueueGraphics = 0x00000001,
+	RrQueueCompute = 0x00000002,
+	RrQueueTransfer = 0x00000004,
+	RrQueueSparseBinding = 0x00000008,
+	RrQueueProtected = 0x00000010,
+} RrQueueFlagBits;
+typedef uint32_t RrQueueFlags;
 
 RR_EXTERN_C_END

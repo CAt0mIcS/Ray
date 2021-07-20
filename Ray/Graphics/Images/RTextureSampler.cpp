@@ -1,22 +1,22 @@
 ﻿#include "Rpch.h"
 #include "RTextureSampler.h"
 
-#include "Graphics/RGraphics.h"
-#include "Graphics/Core/RPhysicalDevice.h"
-#include "Graphics/Core/RLogicalDevice.h"
+#include "Ray/Core/RRendererLoader.h"
+#include "Ray/Graphics/RGraphics.h"
+#include "Ray/Graphics/Core/RPhysicalDevice.h"
+#include "Ray/Graphics/Core/RLogicalDevice.h"
 
 #include "Ray/Utils/RException.h"
 
 
 namespace At0::Ray
 {
-	TextureSampler::TextureSampler(VkSamplerAddressMode addressModeU,
-		VkSamplerAddressMode addressModeV, VkSamplerAddressMode addressModeW, float maxLod)
+	TextureSampler::TextureSampler(RrSamplerAddressMode addressModeU,
+		RrSamplerAddressMode addressModeV, RrSamplerAddressMode addressModeW, float maxLod)
 	{
-		VkSamplerCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-		createInfo.magFilter = VK_FILTER_LINEAR;
-		createInfo.minFilter = VK_FILTER_LINEAR;
+		RrSamplerCreateInfo createInfo{};
+		createInfo.magFilter = RrFilterLinear;
+		createInfo.minFilter = RrFilterLinear;
 
 		createInfo.addressModeU = addressModeU;
 		createInfo.addressModeV = addressModeV;
@@ -24,30 +24,30 @@ namespace At0::Ray
 
 		if (Graphics::Get().GetDevice().IsEnabled(DeviceFeature::SamplerAnisotropy))
 		{
-			createInfo.anisotropyEnable = VK_TRUE;
+			createInfo.anisotropyEnable = true;
 			createInfo.maxAnisotropy =
 				Graphics::Get().GetPhysicalDevice().GetProperties().limits.maxSamplerAnisotropy;
 		}
 		else
-			createInfo.anisotropyEnable = VK_FALSE;
+			createInfo.anisotropyEnable = false;
 
-		createInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
-		createInfo.unnormalizedCoordinates = VK_FALSE;
-		createInfo.compareEnable = VK_FALSE;
-		createInfo.compareOp = VK_COMPARE_OP_ALWAYS;
+		createInfo.borderColor = RrBorderColorIntOpaqueBlack;
+		createInfo.unnormalizedCoordinates = false;
+		createInfo.compareEnable = false;
+		createInfo.compareOp = RrCompareOpAlways;
 
-		createInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+		createInfo.mipmapMode = RrSamplerMipmapModeLinear;
 		createInfo.mipLodBias = 0.0f;
 		createInfo.minLod = 0.0f;
 		createInfo.maxLod = maxLod;
 
 		ThrowRenderError(
-			vkCreateSampler(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Sampler),
+			RendererAPI::CreateSampler(Graphics::Get().GetDevice(), &createInfo, &m_Sampler),
 			"[TextureSampler] Failed to create");
 	}
 
 	TextureSampler::~TextureSampler()
 	{
-		vkDestroySampler(Graphics::Get().GetDevice(), m_Sampler, nullptr);
+		RendererAPI::DestroySampler(Graphics::Get().GetDevice(), m_Sampler);
 	}
 }  // namespace At0::Ray

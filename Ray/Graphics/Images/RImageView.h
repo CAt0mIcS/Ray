@@ -4,7 +4,6 @@
 #include "Ray/Utils/RNonCopyable.h"
 
 #include <RayRenderer/Core/RImageView.h>
-#include <vulkan/vulkan_core.h>
 
 
 namespace At0::Ray
@@ -19,7 +18,6 @@ namespace At0::Ray
 			RrImageAspectFlags aspectFlags = RrImageAspectColor, uint32_t layerCount = 1);
 		~ImageView();
 
-		operator VkImageView() const { return (VkImageView)m_View; }
 		operator RrImageView() const { return m_View; }
 
 	private:

@@ -30,7 +30,7 @@ namespace At0::Ray
 		Buffer stagingBuffer(imageSize, RrBufferUsageTransferSrc,
 			RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent, pixels);
 
-		VkBufferImageCopy region{};
+		RrBufferImageCopy region{};
 
 		region.imageSubresource.aspectMask = m_ImageAspect;
 		region.imageSubresource.mipLevel = 0;

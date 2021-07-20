@@ -178,7 +178,7 @@ namespace At0::Ray
 				m_VertexBuffer.reset();
 
 			m_VertexBuffer = MakeScope<Buffer>(vertexBufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+				RrMemoryPropertyHostVisible);
 
 			m_VertexCount = imDrawData->TotalVtxCount;
 		}
@@ -190,7 +190,7 @@ namespace At0::Ray
 				m_IndexBuffer.reset();
 
 			m_IndexBuffer = MakeScope<Buffer>(indexBufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+				RrMemoryPropertyHostVisible);
 
 			m_IndexCount = imDrawData->TotalIdxCount;
 		}

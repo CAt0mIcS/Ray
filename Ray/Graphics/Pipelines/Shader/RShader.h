@@ -3,8 +3,6 @@
 #include "Ray/RBase.h"
 #include "RShaderReflection.h"
 
-#include <vulkan/vulkan_core.h>
-
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -29,13 +27,13 @@ namespace At0::Ray
 {
 	enum class ShaderStage
 	{
-		Vertex = VK_SHADER_STAGE_VERTEX_BIT,
-		TesselationControl = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,
-		TesselationEvaluation = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT,
-		Geometry = VK_SHADER_STAGE_GEOMETRY_BIT,
-		Fragment = VK_SHADER_STAGE_FRAGMENT_BIT,
-		Compute = VK_SHADER_STAGE_COMPUTE_BIT,
-		All = VK_SHADER_STAGE_ALL
+		Vertex = RrShaderStageVertex,
+		TesselationControl = RrShaderStageTessellationControl,
+		TesselationEvaluation = RrShaderStageTessellationEvaluation,
+		Geometry = RrShaderStageGeometry,
+		Fragment = RrShaderStageFragment,
+		Compute = RrShaderStageCompute,
+		All = RrShaderStageAll
 	};
 
 	enum class ShaderDataType

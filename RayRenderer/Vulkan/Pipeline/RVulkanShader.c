@@ -16,3 +16,8 @@ RrError RrCreateShaderModule(RrLogicalDevice device, const RrShaderModuleCreateI
 	return GetError(
 		vkCreateShaderModule((VkDevice)device, &createInfo, NULL, (VkShaderModule*)pShaderModule));
 }
+
+void RrDestroyShaderModule(RrLogicalDevice device, RrShaderModule shaderModule)
+{
+	vkDestroyShaderModule((VkDevice)device, (VkShaderModule)shaderModule, NULL);
+}

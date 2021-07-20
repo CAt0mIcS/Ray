@@ -5,6 +5,7 @@
 #include "RLogger.h"
 #include "RAssert.h"
 
+#include <RayRenderer/Core/RCore.h>
 #include <exception>
 #include <string>
 #include <stdint.h>
@@ -42,41 +43,22 @@ namespace At0::Ray
 	class RAY_EXPORT RenderException : public RuntimeException
 	{
 	public:
-		RenderException(const char* message, uint16_t line, const char* file, int result);
-		RenderException(const char* message, uint16_t line, const char* file, VkResult result);
+		RenderException(const char* message, uint16_t line, const char* file, RrError result);
 		virtual const char* GetType() const { return "Render Exception"; };
 		virtual const char* what() const noexcept override;
 
 	private:
-		std::optional<int> m_Error;
-		std::optional<VkResult> m_Error2;
+		RrError m_Error;
 	};
 
 
 	template<typename... Args>
 	struct ThrowRenderError
 	{
-		ThrowRenderError(VkResult result, std::string msg, Args&&... args,
+		ThrowRenderError(RrError result, std::string msg, Args&&... args,
 			SourceLocation location = SourceLocation::current())
 		{
-			if (result != VK_SUCCESS)
-			{
-				RenderException exception(
-					String::Serialize(msg, std::forward<Args>(args)...).c_str(),
-					(uint16_t)location.line(), location.file_name(), result);
-#ifdef NDEBUG
-				Log::Critical(exception.what());
-#else
-				RAY_ASSERT(false, exception.what());
-#endif
-				throw exception;
-			}
-		}
-
-		ThrowRenderError(int result, std::string msg, Args&&... args,
-			SourceLocation location = SourceLocation::current())
-		{
-			if (result != VK_SUCCESS)
+			if (result != RrErrorSuccess)
 			{
 				RenderException exception(
 					String::Serialize(msg, std::forward<Args>(args)...).c_str(),
@@ -94,7 +76,7 @@ namespace At0::Ray
 			std::string msg, Args&&... args, SourceLocation location = SourceLocation::current())
 		{
 			RenderException exception(String::Serialize(msg, std::forward<Args>(args)...).c_str(),
-				(uint16_t)location.line(), location.file_name(), VK_ERROR_UNKNOWN);
+				(uint16_t)location.line(), location.file_name(), RrErrorUnknown);
 #ifdef NDEBUG
 			Log::Critical(exception.what());
 #else
@@ -122,10 +104,7 @@ namespace At0::Ray
 	};
 
 	template<typename... Args>
-	ThrowRenderError(VkResult, std::string, Args&&...) -> ThrowRenderError<Args...>;
-
-	template<typename... Args>
-	ThrowRenderError(int, std::string, Args&&...) -> ThrowRenderError<Args...>;
+	ThrowRenderError(RrError, std::string, Args&&...) -> ThrowRenderError<Args...>;
 
 	template<typename... Args>
 	ThrowRenderError(std::string, Args&&...) -> ThrowRenderError<Args...>;

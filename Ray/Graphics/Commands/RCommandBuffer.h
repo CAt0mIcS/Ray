@@ -3,7 +3,6 @@
 #include "Ray/RBase.h"
 #include "Ray/Utils/RNonCopyable.h"
 
-#include <vulkan/vulkan_core.h>
 #include <RayRenderer/Core/RCommandBuffer.h>
 
 
@@ -29,14 +28,13 @@ namespace At0::Ray
 		const auto& GetSecondaryCommandBuffers() const { return m_SecondaryCommandBuffers; }
 		virtual const RrCommandBufferInheritanceInfo* GetInheritanceInfo() const { return nullptr; }
 
-		operator VkCommandBuffer() const { return (VkCommandBuffer)m_CommandBuffer; }
 		operator RrCommandBuffer() const { return m_CommandBuffer; }
 
 		CommandBuffer& operator=(CommandBuffer&& other) noexcept;
 		CommandBuffer(CommandBuffer&& other) noexcept;
 
 	private:
-		RrCommandBuffer m_CommandBuffer = VK_NULL_HANDLE;
+		RrCommandBuffer m_CommandBuffer = nullptr;
 		const CommandPool* m_CommandPool;
 
 		std::vector<SecondaryCommandBuffer> m_SecondaryCommandBuffers;

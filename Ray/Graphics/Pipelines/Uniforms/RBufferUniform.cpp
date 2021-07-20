@@ -14,7 +14,7 @@ namespace At0::Ray
 	{
 		RAY_MEXPECTS(pipeline.GetShader().GetReflection(stage).HasUniformBlock(name),
 			"[BufferUniform] Uniform \"{0}\" was not found in shader stage \"{1}\"", name,
-			String::Construct((VkShaderStageFlags)stage));
+			String::Construct((RrShaderStageFlags)stage));
 
 		auto& uniformBlock = pipeline.GetShader().GetReflection(stage).GetUniformBlock(name);
 		m_Binding = uniformBlock.binding;

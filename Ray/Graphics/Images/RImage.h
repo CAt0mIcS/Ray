@@ -6,7 +6,6 @@
 #include "Ray/Utils/RNonCopyable.h"
 #include "RImageView.h"
 
-#include <vulkan/vulkan_core.h>
 #include <RayRenderer/Core/RImage.h>
 #include <RayRenderer/Core/RPhysicalDevice.h>
 #include <vector>
@@ -31,7 +30,6 @@ namespace At0::Ray
 			RrImageCreateFlags createFlags = 0);
 		virtual ~Image();
 
-		operator VkImage() const { return (VkImage)m_Image; }
 		operator RrImage() const { return m_Image; }
 		const RrDeviceMemory& GetImageMemory() const { return m_ImageMemory; }
 		const ImageView& GetImageView() const { return *m_ImageView; }
@@ -47,10 +45,10 @@ namespace At0::Ray
 		uint32_t GetArrayLayers() const { return m_ArrayLayers; }
 
 		void TransitionLayout(RrImageLayout newLayout);
-		void CopyFromBuffer(const Buffer& buffer, std::vector<VkBufferImageCopy> copyRegions = {});
-		Buffer&& CopyToBuffer(std::vector<VkBufferImageCopy> copyRegions = {});
+		void CopyFromBuffer(const Buffer& buffer, std::vector<RrBufferImageCopy> copyRegions = {});
+		// Buffer&& CopyToBuffer(std::vector<VkBufferImageCopy> copyRegions = {});
 		bool GenerateMipmaps();
-		void WritePPM(std::string_view filepath);
+		// void WritePPM(std::string_view filepath);
 
 		Image& operator=(Image&& other) noexcept;
 		Image(Image&& other) noexcept { *this = std::move(other); }
@@ -61,7 +59,7 @@ namespace At0::Ray
 			RrImage image, RrFormat imageFormat, int32_t width, int32_t height, uint32_t mipLevels);
 		static std::vector<RrFormat> FindSupportedFormats(std::vector<RrFormat> candidates,
 			RrImageTiling tiling, RrFormatFeatureFlags featureFlags);
-		static Buffer CopyToBuffer(RrImage image);
+		// static Buffer CopyToBuffer(RrImage image);
 
 	protected:
 		void Setup();

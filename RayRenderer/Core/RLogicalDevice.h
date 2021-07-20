@@ -8,16 +8,6 @@ RR_EXTERN_C_BEG
 RR_DEFINE_HANDLE(RrLogicalDevice);
 RR_DEFINE_HANDLE(RrQueue);
 
-typedef enum RrQueueFlagBits
-{
-	RrQueueGraphics = 0x00000001,
-	RrQueueCompute = 0x00000002,
-	RrQueueTransfer = 0x00000004,
-	RrQueueSparseBinding = 0x00000008,
-	RrQueueProtected = 0x00000010,
-} RrQueueFlagBits;
-typedef uint32_t RrQueueFlags;
-
 typedef struct RrDeviceQueueCreateInfo
 {
 	uint32_t queueFamilyIndex;

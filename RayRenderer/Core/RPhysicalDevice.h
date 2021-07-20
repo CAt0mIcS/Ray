@@ -250,6 +250,14 @@ typedef struct RrPhysicalDeviceProperties
 	RrPhysicalDeviceSparseProperties sparseProperties;
 } RrPhysicalDeviceProperties;
 
+typedef struct RrQueueFamilyProperties
+{
+	RrQueueFlags queueFlags;
+	uint32_t queueCount;
+	uint32_t timestampValidBits;
+	RrExtent3D minImageTransferGranularity;
+} RrQueueFamilyProperties;
+
 typedef struct RrPhysicalDeviceEnumerationInfo
 {
 	uint32_t deviceExtensionCount;
@@ -280,5 +288,11 @@ RR_API void RrGetPhysicalDeviceSurfaceFormatsKHR(RrPhysicalDevice physicalDevice
 
 RR_API void RrGetPhysicalDeviceSurfacePresentModesKHR(RrPhysicalDevice physicalDevice,
 	RrSurfaceKHR surface, uint32_t* pPresentModeCount, RrPresentModeKHR* pPresentModes);
+
+RR_API void RrGetPhysicalDeviceQueueFamilyProperties(RrPhysicalDevice physicalDevice,
+	uint32_t* pQueueFamilyPropertyCount, RrQueueFamilyProperties* pQueueFamilyProperties);
+
+RR_API RrError RrGetPhysicalDeviceSurfaceSupportKHR(RrPhysicalDevice physicalDevice,
+	uint32_t queueFamilyIndex, RrSurfaceKHR surface, RrBool32* pSupported);
 
 RR_EXTERN_C_END

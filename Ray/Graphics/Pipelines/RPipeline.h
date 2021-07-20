@@ -4,7 +4,6 @@
 #include "Ray/Utils/RNonCopyable.h"
 #include "../Core/RSharedBindable.h"
 
-#include <vulkan/vulkan_core.h>
 #include <RayRenderer/Pipeline/RPipeline.h>
 #include <RayRenderer/Pipeline/RDescriptor.h>
 
@@ -18,9 +17,9 @@ namespace At0::Ray
 	public:
 		enum class BindPoint
 		{
-			Graphics = VK_PIPELINE_BIND_POINT_GRAPHICS,
-			Compute = VK_PIPELINE_BIND_POINT_COMPUTE,
-			RayTracing = VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR
+			Graphics = RrPipelineBindPointGraphics,
+			Compute = RrPipelineBindPointCompute,
+			RayTracing = RrPipelineBindPointRayTracingKHR
 		};
 
 	public:
@@ -33,7 +32,6 @@ namespace At0::Ray
 
 		const Shader& GetShader() const { return *m_Shader; }
 		RrPipelineLayout GetLayout() const { return m_Layout; }
-		operator VkPipeline() const { return (VkPipeline)m_Pipeline; }
 		operator RrPipeline() const { return m_Pipeline; }
 
 	protected:

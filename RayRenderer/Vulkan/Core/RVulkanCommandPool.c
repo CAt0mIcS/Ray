@@ -21,3 +21,9 @@ void RrDestroyCommandPool(RrLogicalDevice pDevice, RrCommandPool pCommandPool)
 {
 	vkDestroyCommandPool((VkDevice)pDevice, (VkCommandPool)pCommandPool, NULL);
 }
+
+RrError RrResetCommandPool(
+	RrLogicalDevice device, RrCommandPool commandPool, RrCommandPoolResetFlags flags)
+{
+	return GetError(vkResetCommandPool((VkDevice)device, (VkCommandPool)commandPool, flags));
+}

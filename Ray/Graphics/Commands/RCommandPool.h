@@ -14,7 +14,6 @@ namespace At0::Ray
 		CommandPool(RrCommandPoolCreateFlags flags = 0);
 		~CommandPool();
 
-		operator VkCommandPool() const { return (VkCommandPool)m_CommandPool; }
 		operator RrCommandPool() const { return m_CommandPool; }
 
 	private:

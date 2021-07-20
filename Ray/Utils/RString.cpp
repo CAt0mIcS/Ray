@@ -2,8 +2,6 @@
 #include "RString.h"
 
 #include "RAssert.h"
-
-#include <vulkan/vulkan_core.h>
 #include <RayRenderer/Core/RCore.h>
 
 
@@ -159,55 +157,6 @@ namespace At0::Ray
 		return "INVALID MOUSE BUTTON";
 	}
 
-	std::string String::Construct(VkResult res)
-	{
-		switch (res)
-		{
-		case VK_SUCCESS: return "Vulkan Success";
-		case VK_NOT_READY: return "Vulkan not ready";
-		case VK_TIMEOUT: return "Vulkan timeout";
-		case VK_EVENT_SET: return "Vulkan event set";
-		case VK_EVENT_RESET: return "Vulkan event reset";
-		case VK_INCOMPLETE: return "Vulkan incomplete";
-		case VK_ERROR_OUT_OF_HOST_MEMORY: return "Vulkan out of host memory";
-		case VK_ERROR_OUT_OF_DEVICE_MEMORY: return "Vulkan out of device memory";
-		case VK_ERROR_INITIALIZATION_FAILED: return "Vulkan initialization failed";
-		case VK_ERROR_DEVICE_LOST: return "Vulkan device lost";
-		case VK_ERROR_MEMORY_MAP_FAILED: return "Vulkan memory map failed";
-		case VK_ERROR_LAYER_NOT_PRESENT: return "Vulkan layer not present";
-		case VK_ERROR_EXTENSION_NOT_PRESENT: return "Vulkan extension not present";
-		case VK_ERROR_FEATURE_NOT_PRESENT: return "Vulkan feature not present";
-		case VK_ERROR_INCOMPATIBLE_DRIVER: return "Vulkan incompatible driver";
-		case VK_ERROR_TOO_MANY_OBJECTS: return "Vulkan too many objects";
-		case VK_ERROR_FORMAT_NOT_SUPPORTED: return "Vulkan format not supported";
-		case VK_ERROR_FRAGMENTED_POOL: return "Vulkan fragmented pool";
-		case VK_ERROR_UNKNOWN: return "Vulkan error unknown";
-		case VK_ERROR_OUT_OF_POOL_MEMORY: return "Vulkan out of pool memory";
-		case VK_ERROR_INVALID_EXTERNAL_HANDLE: return "Vulkan invalid external handle";
-		case VK_ERROR_FRAGMENTATION: return "Vulkan fragmentation error";
-		case VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS:
-			return "Vulkan invalid opaque capture address";
-		case VK_ERROR_SURFACE_LOST_KHR: return "Vulkan surface lost";
-		case VK_ERROR_NATIVE_WINDOW_IN_USE_KHR: return "Vulkan native window in use";
-		case VK_SUBOPTIMAL_KHR: return "Vulkan suboptimal";
-		case VK_ERROR_OUT_OF_DATE_KHR: return "Vulkan out of date";
-		case VK_ERROR_INCOMPATIBLE_DISPLAY_KHR: return "Vulkan incompatible display";
-		case VK_ERROR_INVALID_SHADER_NV: return "Vulkan invalid shader";
-		case VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT:
-			return "Vulkan invalid DRM format modifier plane layout";
-		case VK_ERROR_NOT_PERMITTED_EXT: return "Vulkan not permitted";
-		case VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT:
-			return "Vulkan fullscreen exclusive mode lost";
-		case VK_THREAD_IDLE_KHR: return "Vulkan thread idle";
-		case VK_THREAD_DONE_KHR: return "Vulkan thread done";
-		case VK_OPERATION_DEFERRED_KHR: return "Vulkan operation deferred";
-		case VK_OPERATION_NOT_DEFERRED_KHR: return "Vulkan operation not deferred";
-		case VK_PIPELINE_COMPILE_REQUIRED_EXT: return "Vulkan pipeline compile required";
-		}
-
-		return "UNKNOWN VULKAN RESULT CODE";
-	}
-
 	std::string String::Construct(RrError res)
 	{
 		switch (res)
@@ -255,34 +204,34 @@ namespace At0::Ray
 		return "Unknown Graphics Error";
 	}
 
-	std::string String::Construct(VkPhysicalDeviceType deviceType)
+	std::string String::Construct(RrPhysicalDeviceType deviceType)
 	{
 		switch (deviceType)
 		{
-		case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: return "Integrated GPU";
-		case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU: return "Discrete GPU";
-		case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU: return "Virtual GPU";
-		case VK_PHYSICAL_DEVICE_TYPE_CPU: return "CPU";
+		case RrPhysicalDeviceTypeIntegratedGPU: return "Integrated GPU";
+		case RrPhysicalDeviceTypeDiscreteGPU: return "Discrete GPU";
+		case RrPhysicalDeviceTypeVirtualGPU: return "Virtual GPU";
+		case RrPhysicalDeviceTypeCPU: return "CPU";
 		}
 
 		RAY_ASSERT(false, "[String] Physical Device type {0} is invalid", (uint32_t)deviceType);
-		return "INVALID PHYSICAL DEVICE TYPE";
+		return "Unknown physical device type";
 	}
 
-	std::string String::Construct(VkShaderStageFlags stage)
+	std::string String::Construct(RrShaderStageFlags stage)
 	{
 		switch (stage)
 		{
-		case VK_SHADER_STAGE_VERTEX_BIT: return "Vertex Shader";
-		case VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT: return "Tesselation Control Shader";
-		case VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT: return "Tesselation Evaluation Shader";
-		case VK_SHADER_STAGE_GEOMETRY_BIT: return "Geometry Shader";
-		case VK_SHADER_STAGE_FRAGMENT_BIT: return "Fragment Shader";
-		case VK_SHADER_STAGE_COMPUTE_BIT: return "Compute Shader";
+		case RrShaderStageVertex: return "Vertex Shader";
+		case RrShaderStageTessellationControl: return "Tesselation Control Shader";
+		case RrShaderStageTessellationEvaluation: return "Tesselation Evaluation Shader";
+		case RrShaderStageGeometry: return "Geometry Shader";
+		case RrShaderStageFragment: return "Fragment Shader";
+		case RrShaderStageCompute: return "Compute Shader";
 		}
 
 		RAY_ASSERT(false, "[String] Shader stage {0} is invalid", (uint32_t)stage);
-		return "INVALID SHADER STAGE";
+		return "Unknown shader stage";
 	}
 
 	std::string String::ConvertUtf8(std::wstring_view string)

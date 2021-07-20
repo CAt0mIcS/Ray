@@ -3,7 +3,6 @@
 #include "Ray/RBase.h"
 #include "RShaderReflection.h"
 
-#include <vulkan/vulkan_core.h>
 #include <RayRenderer/Pipeline/RShader.h>
 
 namespace glslang

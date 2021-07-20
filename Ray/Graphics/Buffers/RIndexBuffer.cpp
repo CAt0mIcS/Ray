@@ -1,9 +1,10 @@
 ﻿#include "Rpch.h"
 #include "RIndexBuffer.h"
 
-#include "Graphics/RGraphics.h"
-#include "Graphics/Core/RLogicalDevice.h"
-#include "Graphics/Commands/RCommandBuffer.h"
+#include "Ray/Core/RRendererLoader.h"
+#include "Ray/Graphics/RGraphics.h"
+#include "Ray/Graphics/Core/RLogicalDevice.h"
+#include "Ray/Graphics/Commands/RCommandBuffer.h"
 
 #include "Ray/Utils/RAssert.h"
 
@@ -12,14 +13,12 @@ namespace At0::Ray
 {
 	IndexBuffer::IndexBuffer(std::string_view tag, const std::vector<Type>& indices)
 		: Buffer(sizeof(IndexBuffer::Type) * indices.size(),
-			  VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-			  VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT),
+			  RrBufferUsageTransferDst | RrBufferUsageIndexBuffer, RrMemoryPropertyDeviceLocal),
 		  m_NumIndices((uint32_t)indices.size())
 	{
 		// Create staging buffer
-		Buffer stagingBuffer(m_Size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-			indices.data());
+		Buffer stagingBuffer(m_Size, RrBufferUsageTransferSrc,
+			RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent, indices.data());
 
 		// Copy data from the staging buffer to this buffer
 		CopyBuffer(stagingBuffer, m_Buffer, m_Size);
@@ -27,7 +26,7 @@ namespace At0::Ray
 
 	void IndexBuffer::CmdBind(const CommandBuffer& cmdBuff) const
 	{
-		vkCmdBindIndexBuffer(cmdBuff, (VkBuffer)m_Buffer, 0, VK_INDEX_TYPE_UINT16);
+		RendererAPI::CmdBindIndexBuffer(cmdBuff, m_Buffer, 0, RrIndexTypeUInt16);
 	}
 
 	uint32_t IndexBuffer::GetNumberOfIndices() const

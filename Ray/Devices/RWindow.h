@@ -8,14 +8,16 @@
 #include "Ray/Events/RMouseEvents.h"
 #include "Ray/Events/RKeyboardEvents.h"
 
+#include <RayRenderer/Core/RCore.h>
+
 #include <string_view>
 #include <utility>
 #include <stdint.h>
 
-#include <vulkan/vulkan_core.h>
-#include <RayRenderer/Core/RSurface.h>
 
 struct GLFWwindow;
+struct RrSurfaceKHR_T;
+typedef struct RrSurfaceKHR_T* RrSurfaceKHR;
 
 
 namespace At0::Ray
@@ -99,7 +101,7 @@ namespace At0::Ray
 		 * Querys required extensions for Vulkan
 		 * @returns All extensions that the Vulkan instance needs
 		 */
-		static std::pair<const char**, uint32_t> GetInstanceExtensions();
+		static std::vector<std::string> GetInstanceExtensions();
 
 		/**
 		 * Creates the surface to render to
@@ -132,11 +134,6 @@ namespace At0::Ray
 		 * @returns The underlying GLFW window handle
 		 */
 		GLFWwindow* GetNative() { return m_hWnd; }
-
-		/**
-		 * @returns Internal, platform-dependent window handle
-		 */
-		void* GetInternalHandle() const;
 
 	private:
 		Window(uint32_t width, uint32_t height, std::string_view title);

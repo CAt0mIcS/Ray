@@ -14,8 +14,6 @@
 #include <RayRenderer/Pipeline/RDescriptor.h>
 #include "Core/RRendererLoader.h"
 
-#include <imgui/imgui.h>
-
 
 namespace At0::Ray
 {
@@ -210,7 +208,7 @@ namespace At0::Ray
 		// Multisampling
 		RrPipelineMultisampleStateCreateInfo multisampling{};
 		multisampling.sampleShadingEnable = false;
-		multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+		multisampling.rasterizationSamples = RrSampleCount1;
 		multisampling.minSampleShading = 1.0f;
 		multisampling.pSampleMask = nullptr;
 		multisampling.alphaToCoverageEnable = false;

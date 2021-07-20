@@ -16,6 +16,7 @@ set(SRC
 	"Core/RImage.h"
 	"Core/RImageView.h"
 	"Core/RSwapchain.h"
+	"Core/RSampler.h"
 
 	# ------------------------------------------------------------------
 	# Synchronization

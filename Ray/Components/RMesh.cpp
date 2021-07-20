@@ -4,16 +4,17 @@
 #include "RParentEntity.h"
 #include "RMeshRenderer.h"
 
-#include "Graphics/RCodex.h"
-#include "Shading/RMaterial.h"
-#include "Graphics/Buffers/RVertexBuffer.h"
-#include "Graphics/Buffers/RIndexBuffer.h"
-#include "Graphics/Commands/RCommandBuffer.h"
-#include "Graphics/Pipelines/RGraphicsPipeline.h"
+#include "Ray/Core/RRendererLoader.h"
+#include "Ray/Core/RDynamicVertex.h"
+#include "Ray/Graphics/RCodex.h"
+#include "Ray/Shading/RMaterial.h"
+#include "Ray/Graphics/Buffers/RVertexBuffer.h"
+#include "Ray/Graphics/Buffers/RIndexBuffer.h"
+#include "Ray/Graphics/Commands/RCommandBuffer.h"
+#include "Ray/Graphics/Pipelines/RGraphicsPipeline.h"
 
-#include "Core/RDynamicVertex.h"
 #include "Ray/Utils/RString.h"
-#include "Utils/RModel.h"
+#include "Ray/Utils/RModel.h"
 
 
 namespace At0::Ray
@@ -121,7 +122,7 @@ namespace At0::Ray
 		m_VertexBuffer->CmdBind(cmdBuff);
 		m_IndexBuffer->CmdBind(cmdBuff);
 
-		vkCmdDrawIndexed(cmdBuff, m_IndexBuffer->GetNumberOfIndices(), 1, 0, 0, 0);
+		RendererAPI::CmdDrawIndexed(cmdBuff, m_IndexBuffer->GetNumberOfIndices(), 1, 0, 0, 0);
 	}
 
 	Mesh& Mesh::operator=(Mesh&& other) noexcept

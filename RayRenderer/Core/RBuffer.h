@@ -7,6 +7,18 @@ RR_EXTERN_C_BEG
 RR_DEFINE_HANDLE(RrBuffer);
 RR_DEFINE_HANDLE(RrLogicalDevice);
 RR_DEFINE_HANDLE(RrDeviceMemory);
+RR_DEFINE_HANDLE(RrCommandBuffer);
+
+typedef struct RrBufferMemoryBarrier
+{
+	RrAccessFlags srcAccessMask;
+	RrAccessFlags dstAccessMask;
+	uint32_t srcQueueFamilyIndex;
+	uint32_t dstQueueFamilyIndex;
+	RrBuffer buffer;
+	RrDeviceSize offset;
+	RrDeviceSize size;
+} RrBufferMemoryBarrier;
 
 typedef enum RrBufferUsageFlagBits
 {
@@ -32,6 +44,19 @@ typedef enum RrBufferUsageFlagBits
 } RrBufferUsageFlagBits;
 typedef uint32_t RrBufferUsageFlags;
 
+typedef enum RrIndexType
+{
+	RrIndexTypeUInt16 = 0,
+	RrIndexTypeUInt32 = 1,
+} RrIndexType;
+
+typedef struct RrBufferCopy
+{
+	RrDeviceSize srcOffset;
+	RrDeviceSize dstOffset;
+	RrDeviceSize size;
+} RrBufferCopy;
+
 typedef struct RrBufferCreateInfo
 {
 	RrDeviceSize size;
@@ -51,5 +76,15 @@ RR_API RrError RrBindBufferMemory(
 	RrLogicalDevice device, RrBuffer buffer, RrDeviceMemory memory, RrDeviceSize memoryOffset);
 
 RR_API void RrDestroyBuffer(RrLogicalDevice device, RrBuffer buffer);
+
+
+RR_API void RrCmdBindIndexBuffer(
+	RrCommandBuffer commandBuffer, RrBuffer buffer, RrDeviceSize offset, RrIndexType indexType);
+
+RR_API void RrCmdBindVertexBuffers(RrCommandBuffer commandBuffer, uint32_t firstBinding,
+	uint32_t bindingCount, const RrBuffer* pBuffers, const RrDeviceSize* pOffsets);
+
+RR_API void RrCmdCopyBuffer(RrCommandBuffer commandBuffer, RrBuffer srcBuffer, RrBuffer dstBuffer,
+	uint32_t regionCount, const RrBufferCopy* pRegions);
 
 RR_EXTERN_C_END

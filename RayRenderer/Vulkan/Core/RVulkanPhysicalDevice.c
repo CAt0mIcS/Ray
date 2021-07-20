@@ -121,6 +121,47 @@ void RrGetPhysicalDeviceSurfacePresentModesKHR(RrPhysicalDevice physicalDevice,
 		(VkSurfaceKHR)surface, pPresentModeCount, (VkPresentModeKHR*)pPresentModes);
 }
 
+void RrGetPhysicalDeviceQueueFamilyProperties(RrPhysicalDevice physicalDevice,
+	uint32_t* pQueueFamilyPropertyCount, RrQueueFamilyProperties* pQueueFamilyProperties)
+{
+	if (pQueueFamilyProperties == NULL)
+	{
+		vkGetPhysicalDeviceQueueFamilyProperties(
+			(VkPhysicalDevice)physicalDevice, pQueueFamilyPropertyCount, NULL);
+	}
+	else
+	{
+		VkQueueFamilyProperties* properties =
+			malloc(sizeof(VkQueueFamilyProperties) * *pQueueFamilyPropertyCount);
+
+		vkGetPhysicalDeviceQueueFamilyProperties(
+			(VkPhysicalDevice)physicalDevice, pQueueFamilyPropertyCount, properties);
+
+		for (uint32_t i = 0; i < *pQueueFamilyPropertyCount; ++i)
+		{
+			pQueueFamilyProperties[i].queueCount = properties[i].queueCount;
+			pQueueFamilyProperties[i].queueFlags = properties[i].queueFlags;
+			pQueueFamilyProperties[i].timestampValidBits = properties[i].timestampValidBits;
+
+			pQueueFamilyProperties[i].minImageTransferGranularity.width =
+				properties[i].minImageTransferGranularity.width;
+			pQueueFamilyProperties[i].minImageTransferGranularity.height =
+				properties[i].minImageTransferGranularity.height;
+			pQueueFamilyProperties[i].minImageTransferGranularity.depth =
+				properties[i].minImageTransferGranularity.depth;
+		}
+
+		free(properties);
+	}
+}
+
+RrError RrGetPhysicalDeviceSurfaceSupportKHR(RrPhysicalDevice physicalDevice,
+	uint32_t queueFamilyIndex, RrSurfaceKHR surface, RrBool32* pSupported)
+{
+	return GetError(vkGetPhysicalDeviceSurfaceSupportKHR(
+		(VkPhysicalDevice)physicalDevice, queueFamilyIndex, (VkSurfaceKHR)surface, pSupported));
+}
+
 
 VkPhysicalDevice ChoosePhysicalDevice(uint32_t deviceCount, VkPhysicalDevice* pDevices,
 	uint32_t deviceExtensionCount, const char* const* ppDeviceExtensions)

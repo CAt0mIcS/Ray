@@ -22,7 +22,7 @@ namespace At0::Ray
 		: Component(entity), EventListener<CameraChangedEvent>(Scene::Get().GetCamera())
 	{
 		GraphicsPipeline::Layout layout{};
-		layout.cullMode = VK_CULL_MODE_FRONT_BIT;
+		layout.cullMode = RrCullModeFront;
 		Ref<Material> material = MakeRef<FlatTextureMaterial>(
 			FlatTextureMaterial::Layout{ std::move(texture) }, std::move(layout));
 

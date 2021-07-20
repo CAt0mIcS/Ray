@@ -30,6 +30,4 @@
 #include <concepts>
 #include <future>
 
-#include <vulkan/vulkan.h>
-
 #include <glslang/SPIRV/GlslangToSpv.h>

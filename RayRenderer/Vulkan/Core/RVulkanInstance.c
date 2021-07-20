@@ -107,6 +107,31 @@ RrPFNVoidFunction RrGetInstanceProcAddr(RrInstance instance, const char* pName)
 	return vkGetInstanceProcAddr((VkInstance)instance, pName);
 }
 
+RrError RrEnumerateInstanceExtensionProperties(
+	const char* pLayerName, uint32_t* pPropertyCount, RrExtensionProperties* pProperties)
+{
+	if (pProperties == NULL)
+	{
+		return GetError(vkEnumerateInstanceExtensionProperties(pLayerName, pPropertyCount, NULL));
+	}
+	else
+	{
+		VkExtensionProperties* properties = malloc(sizeof(VkExtensionProperties) * *pPropertyCount);
+		RrError error = GetError(
+			vkEnumerateInstanceExtensionProperties(pLayerName, pPropertyCount, properties));
+
+		for (uint32_t i = 0; i < *pPropertyCount; ++i)
+		{
+			memcpy(pProperties[i].extensionName, properties[i].extensionName,
+				RR_MAX_EXTENSION_NAME_SIZE);
+			pProperties[i].specVersion = properties[i].specVersion;
+		}
+
+		free(properties);
+		return error;
+	}
+}
+
 
 bool RrHasValidationLayers(uint32_t enabledLayerCount, const char* const* ppEnabledLayers)
 {

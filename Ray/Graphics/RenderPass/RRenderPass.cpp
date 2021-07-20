@@ -31,7 +31,7 @@ namespace At0::Ray
 
 	RenderPass::~RenderPass()
 	{
-		vkDestroyRenderPass(Graphics::Get().GetDevice(), (VkRenderPass)m_Renderpass, nullptr);
+		RendererAPI::DestroyRenderPass(Graphics::Get().GetDevice(), m_Renderpass);
 	}
 
 	void RenderPass::Begin(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer,

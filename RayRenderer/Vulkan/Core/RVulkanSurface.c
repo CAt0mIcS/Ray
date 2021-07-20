@@ -153,3 +153,8 @@ RrError RrCreateSurfaceKHR(
 	}
 #endif
 }
+
+void RrDestroySurfaceKHR(RrInstance instance, RrSurfaceKHR surface)
+{
+	vkDestroySurfaceKHR((VkInstance)instance, (VkSurfaceKHR)surface, NULL);
+}

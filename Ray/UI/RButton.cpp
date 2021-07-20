@@ -25,7 +25,7 @@ namespace At0::Ray
 	{
 		FlatColorMaterial::Layout layout{};
 		GraphicsPipeline::Layout pipelineLayout{};
-		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
+		pipelineLayout.cullMode = RrCullModeNone;
 		pipelineLayout.shader = Codex::Resolve<Shader>(
 			std::vector<std::string>{ "Resources/Shaders/UI.vert", "Resources/Shaders/UI.frag" });
 		Ref<Material> material =
@@ -47,7 +47,7 @@ namespace At0::Ray
 	{
 		FlatTextureMaterial::Layout layout{};
 		GraphicsPipeline::Layout pipelineLayout{};
-		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
+		pipelineLayout.cullMode = RrCullModeNone;
 		pipelineLayout.shader = Codex::Resolve<Shader>(std::vector<std::string>{
 			"Resources/Shaders/UI_Tex.vert", "Resources/Shaders/UI_Tex.frag" });
 		Ref<Material> material =

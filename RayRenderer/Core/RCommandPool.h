@@ -15,6 +15,12 @@ typedef enum RrCommandPoolCreateFlagBits
 } RrCommandPoolCreateFlagBits;
 typedef uint32_t RrCommandPoolCreateFlags;
 
+typedef enum RrCommandPoolResetFlagBits
+{
+	RrCommandPoolResetReleaseResources = 0x00000001
+} RrCommandPoolResetFlagBits;
+typedef uint32_t RrCommandPoolResetFlags;
+
 typedef struct RrCommandPoolCreateInfo
 {
 	RrCommandPoolCreateFlags flags;
@@ -25,5 +31,8 @@ RR_API RrError RrCreateCommandPool(RrLogicalDevice device,
 	const RrCommandPoolCreateInfo* pCreateInfo, RrCommandPool* pCommandPool);
 
 RR_API void RrDestroyCommandPool(RrLogicalDevice device, RrCommandPool commandPool);
+
+RR_API RrError RrResetCommandPool(
+	RrLogicalDevice device, RrCommandPool commandPool, RrCommandPoolResetFlags flags);
 
 RR_EXTERN_C_END

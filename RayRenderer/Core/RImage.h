@@ -7,6 +7,7 @@ RR_EXTERN_C_BEG
 
 RR_DEFINE_HANDLE(RrImage);
 RR_DEFINE_HANDLE(RrDeviceMemory);
+RR_DEFINE_HANDLE(RrCommandBuffer);
 
 typedef enum RrImageType
 {
@@ -116,6 +117,23 @@ typedef struct RrImageMemoryBarrier
 	RrImageSubresourceRange subresourceRange;
 } RrImageMemoryBarrier;
 
+typedef struct RrImageBlit
+{
+	RrImageSubresourceLayers srcSubresource;
+	RrOffset3D srcOffsets[2];
+	RrImageSubresourceLayers dstSubresource;
+	RrOffset3D dstOffsets[2];
+} RrImageBlit;
+
+typedef struct RrImageCopy
+{
+	RrImageSubresourceLayers srcSubresource;
+	RrOffset3D srcOffset;
+	RrImageSubresourceLayers dstSubresource;
+	RrOffset3D dstOffset;
+	RrExtent3D extent;
+} RrImageCopy;
+
 typedef struct RrImageCreateInfo
 {
 	RrImageCreateFlags flags;
@@ -147,5 +165,15 @@ RR_API void RrGetImageSubresourceLayout(RrLogicalDevice device, RrImage image,
 	RrImageSubresource* pSubresource, RrSubresourceLayout* pLayout);
 
 RR_API void RrDestroyImage(RrLogicalDevice device, RrImage image);
+
+
+RR_API void RrCmdBlitImage(RrCommandBuffer commandBuffer, RrImage srcImage,
+	RrImageLayout srcImageLayout, RrImage dstImage, RrImageLayout dstImageLayout,
+	uint32_t regionCount, const RrImageBlit* pRegions, RrFilter filter);
+
+RR_API void RrCmdCopyBufferToImage(RrCommandBuffer commandBuffer, RrBuffer srcBuffer,
+	RrImage dstImage, RrImageLayout dstImageLayout, uint32_t regionCount,
+	const RrBufferImageCopy* pRegions);
+
 
 RR_EXTERN_C_END

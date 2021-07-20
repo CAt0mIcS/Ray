@@ -2,6 +2,8 @@
 
 #include "RCore.h"
 
+RR_EXTERN_C_BEG
+
 RR_DEFINE_HANDLE(RrSurfaceKHR);
 RR_DEFINE_HANDLE(RrInstance);
 
@@ -84,3 +86,7 @@ typedef struct RrSurfaceCreateInfoKHR
 
 RR_API RrError RrCreateSurfaceKHR(
 	RrInstance instance, const RrSurfaceCreateInfoKHR* pCreateInfo, RrSurfaceKHR* pSurface);
+
+RR_API void RrDestroySurfaceKHR(RrInstance instance, RrSurfaceKHR surface);
+
+RR_EXTERN_C_END

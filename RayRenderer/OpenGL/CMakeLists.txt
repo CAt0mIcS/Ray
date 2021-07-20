@@ -17,6 +17,7 @@ set(SRC
 	"Core/ROpenGLImage.c"
 	"Core/ROpenGLImageView.c"
 	"Core/ROpenGLSwapchain.c"
+	"Core/ROpenGLSampler.c"
 
 	# ------------------------------------------------------------------
 	# Synchronization

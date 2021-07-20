@@ -276,24 +276,19 @@ set(SRC
 
 	"${SHADERS}"
 
-	"../Extern/imgui/imgui.cpp"
-	"../Extern/imgui/imgui_demo.cpp"
-	"../Extern/imgui/imgui_draw.cpp"
-	"../Extern/imgui/imgui_widgets.cpp"
-	"../Extern/imgui/imgui_tables.cpp"
-	"../Extern/imgui/imgui_impl_glfw.cpp"
-	"../Extern/imgui/imgui_impl_vulkan.cpp"
+	#"../Extern/imgui/imgui.cpp"
+	#"../Extern/imgui/imgui_demo.cpp"
+	#"../Extern/imgui/imgui_draw.cpp"
+	#"../Extern/imgui/imgui_widgets.cpp"
+	#"../Extern/imgui/imgui_tables.cpp"
+	#"../Extern/imgui/imgui_impl_glfw.cpp"
+	#"../Extern/imgui/imgui_impl_vulkan.cpp"
 )
-
-# ------------------------------------------------------------------
-# Find required packages
-find_package("Vulkan" REQUIRED FATAL_ERROR)
 
 # Get paths to Mono installation
 SetMonoIncludesAndLibraries()
 
 set(PUBLIC_INC
-	"${Vulkan_INCLUDE_DIRS}"
 	"${CMAKE_SOURCE_DIR}"
 )
 
@@ -314,7 +309,6 @@ set(PUBLIC_LIB
 
 set(PRIVATE_LIB
 	"glfw"
-	"${Vulkan_LIBRARIES}"
 	"assimp"
 	"glslang"
 	"SPIRV"

@@ -104,8 +104,7 @@ namespace At0::Ray
 		}
 
 		for (const auto [stage, shaderModule] : m_ShaderModules)
-			vkDestroyShaderModule(
-				Graphics::Get().GetDevice(), (VkShaderModule)shaderModule, nullptr);
+			RendererAPI::DestroyShaderModule(Graphics::Get().GetDevice(), shaderModule);
 	}
 
 	uint32_t SizeOfGlType(int32_t glType)

@@ -14,7 +14,7 @@ namespace At0::Ray
 	{
 		pipelineLayout.shader = Shader::FromGlsl(
 			{ "Resources/Shaders/Flat_Text.vert", "Resources/Shaders/Flat_Text.frag" });
-		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
+		pipelineLayout.cullMode = RrCullModeNone;
 
 		m_GraphicsPipeline = Codex::Resolve<GraphicsPipeline>(std::move(pipelineLayout));
 	}

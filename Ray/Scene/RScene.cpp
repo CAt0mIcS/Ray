@@ -41,8 +41,7 @@ namespace At0::Ray
 	{
 		m_Registry.clear();
 		RendererAPI::DestroyDescriptorPool(Graphics::Get().GetDevice(), m_DescriptorPool);
-		vkDestroyPipelineLayout(
-			Graphics::Get().GetDevice(), (VkPipelineLayout)m_PipelineLayout, nullptr);
+		RendererAPI::DestroyPipelineLayout(Graphics::Get().GetDevice(), m_PipelineLayout);
 		RendererAPI::DestroyDescriptorSetLayout(Graphics::Get().GetDevice(), m_DescriptorSetLayout);
 	}
 

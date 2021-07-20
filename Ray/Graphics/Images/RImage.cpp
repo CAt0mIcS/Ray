@@ -57,7 +57,7 @@ namespace At0::Ray
 
 	bool Image::GenerateMipmaps()
 	{
-		RAY_MEXPECTS(m_Usage & VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
+		RAY_MEXPECTS(m_Usage & RrImageUsageTransferSrc,
 			"[Image] Cannot generate mipmaps if the image was not created with usage flag "
 			"VK_IMAGE_USAGE_TRANSFER_SRC_BIT");
 
@@ -69,128 +69,128 @@ namespace At0::Ray
 		return false;
 	}
 
-	void Image::WritePPM(std::string_view filepath)
-	{
-		bool supportsBlit = true;
-		RrFormatProperties formatProps;
+	// void Image::WritePPM(std::string_view filepath)
+	//{
+	//	bool supportsBlit = true;
+	//	RrFormatProperties formatProps;
 
-		// Check if the device supports blitting from optimal/linear images
-		RendererAPI::GetPhysicalDeviceFormatProperties(
-			Graphics::Get().GetPhysicalDevice(), m_Format, &formatProps);
-		if (!(formatProps.optimalTilingFeatures & RrFormatFeatureBlitSrc) ||
-			!(formatProps.linearTilingFeatures & RrFormatFeatureBlitDst))
-		{
-			Log::Warn("[Image] Device does not support blitting from optimal/linear tiled images, "
-					  "using copy instead of blit");
-			supportsBlit = false;
-		}
+	//	// Check if the device supports blitting from optimal/linear images
+	//	RendererAPI::GetPhysicalDeviceFormatProperties(
+	//		Graphics::Get().GetPhysicalDevice(), m_Format, &formatProps);
+	//	if (!(formatProps.optimalTilingFeatures & RrFormatFeatureBlitSrc) ||
+	//		!(formatProps.linearTilingFeatures & RrFormatFeatureBlitDst))
+	//	{
+	//		Log::Warn("[Image] Device does not support blitting from optimal/linear tiled images, "
+	//				  "using copy instead of blit");
+	//		supportsBlit = false;
+	//	}
 
-		// Create the linear tiled destination image to copy to and to read the memory from
-		Image dstImage(m_Extent, RrImageType2D, m_Format, RrImageTilingLinear,
-			RrImageUsageTransferDst, RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent);
+	//	// Create the linear tiled destination image to copy to and to read the memory from
+	//	Image dstImage(m_Extent, RrImageType2D, m_Format, RrImageTilingLinear,
+	//		RrImageUsageTransferDst, RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent);
 
-		CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
-		cmdBuff.Begin(RrCommandBufferUsageOneTimeSubmit);
+	//	CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
+	//	cmdBuff.Begin(RrCommandBufferUsageOneTimeSubmit);
 
-		dstImage.TransitionLayout(RrImageLayoutTransferDst);
+	//	dstImage.TransitionLayout(RrImageLayoutTransferDst);
 
-		RrImageLayout oldLayout = m_ImageLayout;
-		TransitionLayout(RrImageLayoutTransferSrc);
+	//	RrImageLayout oldLayout = m_ImageLayout;
+	//	TransitionLayout(RrImageLayoutTransferSrc);
 
-		if (supportsBlit)
-		{
-			// Define region to blit
-			VkOffset3D blitSize{};
-			blitSize.x = m_Extent.x;
-			blitSize.y = m_Extent.y;
-			blitSize.z = 1;
-			VkImageBlit imageBlitRegion{};
-			imageBlitRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			imageBlitRegion.srcSubresource.layerCount = 1;
-			imageBlitRegion.srcOffsets[1] = blitSize;
-			imageBlitRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			imageBlitRegion.dstSubresource.layerCount = 1;
-			imageBlitRegion.dstOffsets[1] = blitSize;
+	//	if (supportsBlit)
+	//	{
+	//		// Define region to blit
+	//		VkOffset3D blitSize{};
+	//		blitSize.x = m_Extent.x;
+	//		blitSize.y = m_Extent.y;
+	//		blitSize.z = 1;
+	//		VkImageBlit imageBlitRegion{};
+	//		imageBlitRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	//		imageBlitRegion.srcSubresource.layerCount = 1;
+	//		imageBlitRegion.srcOffsets[1] = blitSize;
+	//		imageBlitRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	//		imageBlitRegion.dstSubresource.layerCount = 1;
+	//		imageBlitRegion.dstOffsets[1] = blitSize;
 
-			// Issue the blit command
-			vkCmdBlitImage(cmdBuff, (VkImage)m_Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-				dstImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageBlitRegion,
-				VK_FILTER_NEAREST);
-		}
-		else
-		{
-			// Otherwise use image copy (requires us to manually flip components)
-			VkImageCopy imageCopyRegion{};
-			imageCopyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			imageCopyRegion.srcSubresource.layerCount = 1;
-			imageCopyRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			imageCopyRegion.dstSubresource.layerCount = 1;
-			imageCopyRegion.extent.width = m_Extent.x;
-			imageCopyRegion.extent.height = m_Extent.y;
-			imageCopyRegion.extent.depth = 1;
+	//		// Issue the blit command
+	//		vkCmdBlitImage(cmdBuff, (VkImage)m_Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+	//			dstImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageBlitRegion,
+	//			VK_FILTER_NEAREST);
+	//	}
+	//	else
+	//	{
+	//		// Otherwise use image copy (requires us to manually flip components)
+	//		VkImageCopy imageCopyRegion{};
+	//		imageCopyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	//		imageCopyRegion.srcSubresource.layerCount = 1;
+	//		imageCopyRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	//		imageCopyRegion.dstSubresource.layerCount = 1;
+	//		imageCopyRegion.extent.width = m_Extent.x;
+	//		imageCopyRegion.extent.height = m_Extent.y;
+	//		imageCopyRegion.extent.depth = 1;
 
-			// Issue the copy command
-			vkCmdCopyImage(cmdBuff, (VkImage)m_Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-				dstImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopyRegion);
-		}
+	//		// Issue the copy command
+	//		vkCmdCopyImage(cmdBuff, (VkImage)m_Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+	//			dstImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopyRegion);
+	//	}
 
-		cmdBuff.End();
-		// RAY_TODO: Get best queue
-		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
-		RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+	//	cmdBuff.End();
+	//	// RAY_TODO: Get best queue
+	//	cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
+	//	RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 
-		dstImage.TransitionLayout(RrImageLayoutGeneral);
-		TransitionLayout(oldLayout);
+	//	dstImage.TransitionLayout(RrImageLayoutGeneral);
+	//	TransitionLayout(oldLayout);
 
-		// Get layout of the image (including row pitch)
-		RrImageSubresource subResource{ RrImageAspectColor, 0, 0 };
-		RrSubresourceLayout subResourceLayout;
-		RendererAPI::GetImageSubresourceLayout(
-			Graphics::Get().GetDevice(), dstImage, &subResource, &subResourceLayout);
-		const char* data;
-		RendererAPI::MapMemory(Graphics::Get().GetDevice(), dstImage.GetImageMemory(), 0,
-			VK_WHOLE_SIZE, (void**)&data);
-		data += subResourceLayout.offset;
+	//	// Get layout of the image (including row pitch)
+	//	RrImageSubresource subResource{ RrImageAspectColor, 0, 0 };
+	//	RrSubresourceLayout subResourceLayout;
+	//	RendererAPI::GetImageSubresourceLayout(
+	//		Graphics::Get().GetDevice(), dstImage, &subResource, &subResourceLayout);
+	//	const char* data;
+	//	RendererAPI::MapMemory(Graphics::Get().GetDevice(), dstImage.GetImageMemory(), 0,
+	//		VK_WHOLE_SIZE, (void**)&data);
+	//	data += subResourceLayout.offset;
 
-		std::ofstream file(filepath.data(), std::ios::out | std::ios::binary);
+	//	std::ofstream file(filepath.data(), std::ios::out | std::ios::binary);
 
-		// ppm header
-		file << "P6\n" << m_Extent.x << "\n" << m_Extent.y << "\n" << 255 << "\n";
+	//	// ppm header
+	//	file << "P6\n" << m_Extent.x << "\n" << m_Extent.y << "\n" << 255 << "\n";
 
-		// If source is BGR (destination is always RGB) and we can't use blit (which does automatic
-		// conversion), we'll have to manually swizzle color components
-		bool colorSwizzle = false;
-		// Check if source is BGR
-		// Note: Not complete, only contains most common and basic BGR surface formats for
-		// demonstration purposes
-		if (!supportsBlit)
-		{
-			std::vector<RrFormat> formatsBGR = { RRFORMAT_B8G8R8A8_SRGB, RRFORMAT_B8G8R8A8_UNORM,
-				RRFORMAT_B8G8R8A8_SNORM };
-			colorSwizzle =
-				(std::find(formatsBGR.begin(), formatsBGR.end(), m_Format) != formatsBGR.end());
-		}
+	//	// If source is BGR (destination is always RGB) and we can't use blit (which does automatic
+	//	// conversion), we'll have to manually swizzle color components
+	//	bool colorSwizzle = false;
+	//	// Check if source is BGR
+	//	// Note: Not complete, only contains most common and basic BGR surface formats for
+	//	// demonstration purposes
+	//	if (!supportsBlit)
+	//	{
+	//		std::vector<RrFormat> formatsBGR = { RRFORMAT_B8G8R8A8_SRGB, RRFORMAT_B8G8R8A8_UNORM,
+	//			RRFORMAT_B8G8R8A8_SNORM };
+	//		colorSwizzle =
+	//			(std::find(formatsBGR.begin(), formatsBGR.end(), m_Format) != formatsBGR.end());
+	//	}
 
-		// ppm binary pixel data
-		for (uint32_t y = 0; y < m_Extent.y; y++)
-		{
-			unsigned int* row = (unsigned int*)data;
-			for (uint32_t x = 0; x < m_Extent.x; x++)
-			{
-				if (colorSwizzle)
-				{
-					file.write((char*)row + 2, 1);
-					file.write((char*)row + 1, 1);
-					file.write((char*)row, 1);
-				}
-				else
-					file.write((char*)row, 3);
-				row++;
-			}
-			data += subResourceLayout.rowPitch;
-		}
-		file.close();
-	}
+	//	// ppm binary pixel data
+	//	for (uint32_t y = 0; y < m_Extent.y; y++)
+	//	{
+	//		unsigned int* row = (unsigned int*)data;
+	//		for (uint32_t x = 0; x < m_Extent.x; x++)
+	//		{
+	//			if (colorSwizzle)
+	//			{
+	//				file.write((char*)row + 2, 1);
+	//				file.write((char*)row + 1, 1);
+	//				file.write((char*)row, 1);
+	//			}
+	//			else
+	//				file.write((char*)row, 3);
+	//			row++;
+	//		}
+	//		data += subResourceLayout.rowPitch;
+	//	}
+	//	file.close();
+	//}
 
 	void Image::TransitionLayout(RrImage image, RrImageLayout oldLayout, RrImageLayout newLayout,
 		uint32_t mipLevels, uint32_t layerCount)
@@ -201,13 +201,12 @@ namespace At0::Ray
 		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
 		commandBuffer.Begin(RrCommandBufferUsageOneTimeSubmit);
 
-		VkImageMemoryBarrier barrier{};
-		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-		barrier.oldLayout = (VkImageLayout)oldLayout;
-		barrier.newLayout = (VkImageLayout)newLayout;
+		RrImageMemoryBarrier barrier{};
+		barrier.oldLayout = oldLayout;
+		barrier.newLayout = newLayout;
 		barrier.srcQueueFamilyIndex = RR_QUEUE_FAMILY_IGNORED;
 		barrier.dstQueueFamilyIndex = RR_QUEUE_FAMILY_IGNORED;
-		barrier.image = (VkImage)image;
+		barrier.image = image;
 		barrier.subresourceRange.aspectMask = RrImageAspectColor;
 		barrier.subresourceRange.baseMipLevel = 0;
 		barrier.subresourceRange.levelCount = mipLevels;
@@ -228,7 +227,7 @@ namespace At0::Ray
 			sourceStage = RrPipelineStageFragmentShader;
 			break;
 		case RrImageLayoutTransferSrc:
-			barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+			barrier.srcAccessMask = RrAccessTransferRead;
 			sourceStage = RrPipelineStageTransfer;
 			break;
 		case RrImageLayoutTransferDst:
@@ -261,7 +260,7 @@ namespace At0::Ray
 			ThrowRuntime("[Image] Invalid or unsupported new layout ({0})", (uint32_t)newLayout);
 		}
 
-		vkCmdPipelineBarrier(
+		RendererAPI::CmdPipelineBarrier(
 			commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
 		commandBuffer.End();
@@ -288,9 +287,8 @@ namespace At0::Ray
 		CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
 		cmdBuff.Begin();
 
-		VkImageMemoryBarrier barrier{};
-		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-		barrier.image = (VkImage)image;
+		RrImageMemoryBarrier barrier{};
+		barrier.image = image;
 		barrier.srcQueueFamilyIndex = RR_QUEUE_FAMILY_IGNORED;
 		barrier.dstQueueFamilyIndex = RR_QUEUE_FAMILY_IGNORED;
 		barrier.subresourceRange.aspectMask = RrImageAspectColor;
@@ -304,39 +302,39 @@ namespace At0::Ray
 		for (uint32_t i = 1; i < mipLevels; ++i)
 		{
 			barrier.subresourceRange.baseMipLevel = i - 1;
-			barrier.oldLayout = (VkImageLayout)RrImageLayoutTransferDst;
-			barrier.newLayout = (VkImageLayout)RrImageLayoutTransferSrc;
+			barrier.oldLayout = RrImageLayoutTransferDst;
+			barrier.newLayout = RrImageLayoutTransferSrc;
 			barrier.srcAccessMask = RrAccessTransferWrite;
 			barrier.dstAccessMask = RrAccessTransferRead;
 
-			vkCmdPipelineBarrier(cmdBuff, VK_PIPELINE_STAGE_TRANSFER_BIT,
-				VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+			RendererAPI::CmdPipelineBarrier(cmdBuff, RrPipelineStageTransfer,
+				RrPipelineStageTransfer, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
-			VkImageBlit blit{};
+			RrImageBlit blit{};
 			blit.srcOffsets[0] = { 0, 0, 0 };
 			blit.srcOffsets[1] = { mipWidth, mipHeight, 1 };
-			blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			blit.srcSubresource.aspectMask = RrImageAspectColor;
 			blit.srcSubresource.mipLevel = i - 1;
 			blit.srcSubresource.baseArrayLayer = 0;
 			blit.srcSubresource.layerCount = 1;
 			blit.dstOffsets[0] = { 0, 0, 0 };
 			blit.dstOffsets[1] = { mipWidth > 1 ? mipWidth / 2 : 1,
 				mipHeight > 1 ? mipHeight / 2 : 1, 1 };
-			blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			blit.dstSubresource.aspectMask = RrImageAspectColor;
 			blit.dstSubresource.mipLevel = i;
 			blit.dstSubresource.baseArrayLayer = 0;
 			blit.dstSubresource.layerCount = 1;
 
-			vkCmdBlitImage(cmdBuff, (VkImage)image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-				(VkImage)image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit, VK_FILTER_LINEAR);
+			RendererAPI::CmdBlitImage(cmdBuff, image, RrImageLayoutTransferSrc, image,
+				RrImageLayoutTransferDst, 1, &blit, RrFilterLinear);
 
-			barrier.oldLayout = (VkImageLayout)RrImageLayoutTransferSrc;
-			barrier.newLayout = (VkImageLayout)RrImageLayoutShaderReadOnly;
+			barrier.oldLayout = RrImageLayoutTransferSrc;
+			barrier.newLayout = RrImageLayoutShaderReadOnly;
 			barrier.srcAccessMask = RrAccessTransferRead;
 			barrier.dstAccessMask = RrAccessShaderRead;
 
-			vkCmdPipelineBarrier(cmdBuff, VK_PIPELINE_STAGE_TRANSFER_BIT,
-				VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+			RendererAPI::CmdPipelineBarrier(cmdBuff, RrPipelineStageTransfer,
+				RrPipelineStageFragmentShader, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
 			if (mipWidth > 1)
 				mipWidth /= 2;
@@ -345,13 +343,13 @@ namespace At0::Ray
 		}
 
 		barrier.subresourceRange.baseMipLevel = mipLevels - 1;
-		barrier.oldLayout = (VkImageLayout)RrImageLayoutTransferDst;
-		barrier.newLayout = (VkImageLayout)RrImageLayoutShaderReadOnly;
+		barrier.oldLayout = RrImageLayoutTransferDst;
+		barrier.newLayout = RrImageLayoutShaderReadOnly;
 		barrier.srcAccessMask = RrAccessTransferWrite;
 		barrier.dstAccessMask = RrAccessShaderRead;
 
-		vkCmdPipelineBarrier(cmdBuff, VK_PIPELINE_STAGE_TRANSFER_BIT,
-			VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+		RendererAPI::CmdPipelineBarrier(cmdBuff, RrPipelineStageTransfer,
+			RrPipelineStageFragmentShader, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
 		cmdBuff.End();
 
@@ -359,10 +357,10 @@ namespace At0::Ray
 		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
 		RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 		return true;
-	}  // namespace At0::Ray
+	}
 
 
-	void Image::CopyFromBuffer(const Buffer& buffer, std::vector<VkBufferImageCopy> copyRegions)
+	void Image::CopyFromBuffer(const Buffer& buffer, std::vector<RrBufferImageCopy> copyRegions)
 	{
 		if (m_ImageLayout != RrImageLayoutTransferDst)
 			TransitionLayout(RrImageLayoutTransferDst);
@@ -370,7 +368,7 @@ namespace At0::Ray
 		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
 		commandBuffer.Begin(RrCommandBufferUsageOneTimeSubmit);
 
-		VkBufferImageCopy region{};
+		RrBufferImageCopy region{};
 		region.bufferOffset = 0;
 		region.bufferRowLength = 0;
 		region.bufferImageHeight = 0;
@@ -386,8 +384,8 @@ namespace At0::Ray
 		if (copyRegions.empty())
 			copyRegions.emplace_back(region);
 
-		vkCmdCopyBufferToImage(commandBuffer, (VkBuffer)buffer.GetBuffer(), (VkImage)m_Image,
-			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, (uint32_t)copyRegions.size(), copyRegions.data());
+		RendererAPI::CmdCopyBufferToImage(commandBuffer, buffer.GetBuffer(), m_Image,
+			RrImageLayoutTransferDst, (uint32_t)copyRegions.size(), copyRegions.data());
 		commandBuffer.End();
 
 		// RAY_TODO: Get best queue
@@ -395,50 +393,50 @@ namespace At0::Ray
 		RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 	}
 
-	Buffer&& Image::CopyToBuffer(std::vector<VkBufferImageCopy> copyRegions)
-	{
-		RAY_MEXPECTS(m_Usage & RrImageUsageTransferSrc,
-			"[Image] Image must be created with RrImageUsageTransferSrc if it should be "
-			"copyable to a buffer");
+	// Buffer&& Image::CopyToBuffer(std::vector<VkBufferImageCopy> copyRegions)
+	//{
+	//	RAY_MEXPECTS(m_Usage & RrImageUsageTransferSrc,
+	//		"[Image] Image must be created with RrImageUsageTransferSrc if it should be "
+	//		"copyable to a buffer");
 
-		// RAY_TODO: Check if RRFORMAT_FEATURE_TRANSFER_SRC_BIT is set
-		RrImageLayout oldLayout = m_ImageLayout;
-		TransitionLayout(RrImageLayoutTransferSrc);
+	//	// RAY_TODO: Check if RRFORMAT_FEATURE_TRANSFER_SRC_BIT is set
+	//	RrImageLayout oldLayout = m_ImageLayout;
+	//	TransitionLayout(RrImageLayoutTransferSrc);
 
-		CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
-		cmdBuff.Begin(RrCommandBufferUsageOneTimeSubmit);
+	//	CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
+	//	cmdBuff.Begin(RrCommandBufferUsageOneTimeSubmit);
 
-		VkBufferImageCopy region{};
-		region.bufferOffset = 0;
-		region.bufferRowLength = 0;
-		region.bufferImageHeight = 0;
+	//	VkBufferImageCopy region{};
+	//	region.bufferOffset = 0;
+	//	region.bufferRowLength = 0;
+	//	region.bufferImageHeight = 0;
 
-		region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		region.imageSubresource.mipLevel = 0;
-		region.imageSubresource.baseArrayLayer = 0;
-		region.imageSubresource.layerCount = 1;	 // RAY_TODO: MipLevel
+	//	region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	//	region.imageSubresource.mipLevel = 0;
+	//	region.imageSubresource.baseArrayLayer = 0;
+	//	region.imageSubresource.layerCount = 1;	 // RAY_TODO: MipLevel
 
-		region.imageOffset = { 0, 0, 0 };
-		region.imageExtent = { m_Extent.x, m_Extent.y, 1 };
+	//	region.imageOffset = { 0, 0, 0 };
+	//	region.imageExtent = { m_Extent.x, m_Extent.y, 1 };
 
-		if (copyRegions.empty())
-			copyRegions.emplace_back(region);
+	//	if (copyRegions.empty())
+	//		copyRegions.emplace_back(region);
 
-		Buffer dstBuffer(m_Extent.x * m_Extent.y * 4, RrBufferUsageTransferDst,
-			RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent);
+	//	Buffer dstBuffer(m_Extent.x * m_Extent.y * 4, RrBufferUsageTransferDst,
+	//		RrMemoryPropertyHostVisible | RrMemoryPropertyHostCoherent);
 
-		vkCmdCopyImageToBuffer(cmdBuff, (VkImage)m_Image, (VkImageLayout)m_ImageLayout,
-			(VkBuffer)dstBuffer.GetBuffer(), (uint32_t)copyRegions.size(), copyRegions.data());
+	//	vkCmdCopyImageToBuffer(cmdBuff, (VkImage)m_Image, (VkImageLayout)m_ImageLayout,
+	//		(VkBuffer)dstBuffer.GetBuffer(), (uint32_t)copyRegions.size(), copyRegions.data());
 
-		cmdBuff.End();
+	//	cmdBuff.End();
 
-		// RAY_TODO: Get best queue
-		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
-		RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+	//	// RAY_TODO: Get best queue
+	//	cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
+	//	RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 
-		TransitionLayout(oldLayout);
-		return std::move(dstBuffer);
-	}
+	//	TransitionLayout(oldLayout);
+	//	return std::move(dstBuffer);
+	//}
 
 	Image& Image::operator=(Image&& other) noexcept
 	{
@@ -455,17 +453,16 @@ namespace At0::Ray
 	{
 		for (int32_t i = candidates.size() - 1; i >= 0; --i)
 		{
-			VkFormatProperties formatProps;
-			vkGetPhysicalDeviceFormatProperties(
-				(VkPhysicalDevice)Graphics::Get().GetPhysicalDevice().GetPhysicalDevice(),
-				(VkFormat)candidates[i], &formatProps);
+			RrFormatProperties formatProps;
+			RendererAPI::GetPhysicalDeviceFormatProperties(
+				Graphics::Get().GetPhysicalDevice(), candidates[i], &formatProps);
 
-			if (tiling == VK_IMAGE_TILING_LINEAR &&
+			if (tiling == RrImageTilingLinear &&
 				(formatProps.linearTilingFeatures & featureFlags) != featureFlags)
 			{
 				candidates.erase(candidates.begin() + i);
 			}
-			else if (tiling == VK_IMAGE_TILING_OPTIMAL &&
+			else if (tiling == RrImageTilingOptimal &&
 					 (formatProps.optimalTilingFeatures & featureFlags) != featureFlags)
 			{
 				candidates.erase(candidates.begin() + i);
@@ -488,7 +485,7 @@ namespace At0::Ray
 		imageCreateInfo.extent = RrExtent3D{ m_Extent.x, m_Extent.y, 1 };
 		imageCreateInfo.mipLevels = m_MipLevels;
 		imageCreateInfo.arrayLayers = m_ArrayLayers;
-		imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+		imageCreateInfo.samples = RrSampleCount1;
 		imageCreateInfo.tiling = m_Tiling;
 		imageCreateInfo.usage = m_Usage;
 		imageCreateInfo.sharingMode = RrSharingModeExclusive;

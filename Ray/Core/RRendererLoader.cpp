@@ -24,6 +24,9 @@ namespace At0::Ray
 		void (*BufferGetMemoryRequirements)(RrLogicalDevice device, RrBuffer buffer, RrMemoryRequirements* pMemRequirements) = nullptr;
 		RrError (*BindBufferMemory)(RrLogicalDevice device, RrBuffer buffer, RrDeviceMemory memory, RrDeviceSize memoryOffset) = nullptr;
 		void (*DestroyBuffer)(RrLogicalDevice device, RrBuffer buffer) = nullptr;
+		void (*CmdBindIndexBuffer)(RrCommandBuffer commandBuffer, RrBuffer buffer, RrDeviceSize offset, RrIndexType indexType) = nullptr;
+		void (*CmdBindVertexBuffers)(RrCommandBuffer commandBuffer, uint32_t firstBinding,uint32_t bindingCount, const RrBuffer* pBuffers, const RrDeviceSize* pOffsets) = nullptr;
+		void (*CmdCopyBuffer)(RrCommandBuffer commandBuffer, RrBuffer srcBuffer, RrBuffer dstBuffer,uint32_t regionCount, const RrBufferCopy* pRegions) = nullptr;
 		RrError (*AllocateCommandBuffers)(RrLogicalDevice device,RrCommandBufferAllocateInfo* pAllocInfo, RrCommandBuffer* pCommandBuffers) = nullptr;
 		RrError (*BeginCommandBuffer)(RrCommandBuffer commandBuffer, RrCommandBufferBeginInfo* pBeginInfo) = nullptr;
 		void (*ExecuteCommands)(RrCommandBuffer commandBuffer, uint32_t secondaryCommandBufferCount,const RrCommandBuffer* pSecondaryCommandBuffers) = nullptr;
@@ -33,6 +36,7 @@ namespace At0::Ray
 		void (*FreeCommandBuffers)(RrLogicalDevice device, RrCommandPool commandPool,uint32_t commandBufferCount, const RrCommandBuffer* pCommandBuffers) = nullptr;
 		RrError (*CreateCommandPool)(RrLogicalDevice device,const RrCommandPoolCreateInfo* pCreateInfo, RrCommandPool* pCommandPool) = nullptr;
 		void (*DestroyCommandPool)(RrLogicalDevice device, RrCommandPool commandPool) = nullptr;
+		RrError (*ResetCommandPool)(RrLogicalDevice device, RrCommandPool commandPool, RrCommandPoolResetFlags flags) = nullptr;
 		RrError (*AllocateMemory)(RrLogicalDevice device, const RrMemoryAllocateInfo* pAllocateInfo, RrDeviceMemory* pMemory) = nullptr;
 		RrError (*DeviceMemoryGetMemoryTypeIndex)(uint32_t memoryTypeBits,RrMemoryPropertyFlags memoryProperties, uint32_t memoryTypeCount,const RrMemoryType* pMemoryTypes, uint32_t* pTypeIndex) = nullptr;
 		RrError (*MapMemory)(RrLogicalDevice device, RrDeviceMemory memory, RrDeviceSize offset,RrDeviceSize size, void** ppMapped) = nullptr;
@@ -46,11 +50,14 @@ namespace At0::Ray
 		RrError (*BindImageMemory)(RrLogicalDevice device, RrImage image, RrDeviceMemory memory, RrDeviceSize memoryOffset) = nullptr;
 		void (*GetImageSubresourceLayout)(RrLogicalDevice device, RrImage image,RrImageSubresource* pSubresource, RrSubresourceLayout* pLayout) = nullptr;
 		void (*DestroyImage)(RrLogicalDevice device, RrImage image) = nullptr;
+		void (*CmdBlitImage)(RrCommandBuffer commandBuffer, RrImage srcImage,RrImageLayout srcImageLayout, RrImage dstImage, RrImageLayout dstImageLayout,uint32_t regionCount, const RrImageBlit* pRegions, RrFilter filter) = nullptr;
+		void (*CmdCopyBufferToImage)(RrCommandBuffer commandBuffer, RrBuffer srcBuffer,RrImage dstImage, RrImageLayout dstImageLayout, uint32_t regionCount,const RrBufferImageCopy* pRegions) = nullptr;
 		RrError (*CreateImageView)(RrLogicalDevice device, const RrImageViewCreateInfo* pCreateInfo, RrImageView* pImageView) = nullptr;
 		void (*DestroyImageView)(RrLogicalDevice device, RrImageView imageView) = nullptr;
 		RrError (*Initialize)(RrInitializeInfo* pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger) = nullptr;
 		void (*DestroyInstance)(RrInstance instance, RrDebugMessenger debugMessenger) = nullptr;
 		RrPFNVoidFunction (*GetInstanceProcAddr)(RrInstance instance, const char* pName) = nullptr;
+		RrError (*EnumerateInstanceExtensionProperties)(const char* pLayerName, uint32_t* pPropertyCount, RrExtensionProperties* pProperties) = nullptr;
 		RrError (*CreateLogicalDevice)(RrPhysicalDevice physicalDevice,RrLogicalDeviceCreateInfo* pCreateInfo, RrLogicalDevice* pDevice) = nullptr;
 		void (*GetDeviceQueue)(RrLogicalDevice device, uint32_t queueFamilyIndex, uint32_t queueIndex, RrQueue* pQueue) = nullptr;
 		void (*DestroyLogicalDevice)(RrLogicalDevice device) = nullptr;
@@ -64,11 +71,16 @@ namespace At0::Ray
 		void (*GetPhysicalDeviceSurfaceCapabilitiesKHR)(RrPhysicalDevice physicalDevice,RrSurfaceKHR surface, RrSurfaceCapabilitiesKHR* pSurfaceCapabilities) = nullptr;
 		void (*GetPhysicalDeviceSurfaceFormatsKHR)(RrPhysicalDevice physicalDevice,RrSurfaceKHR surface, uint32_t* pSurfaceFormatCount, RrSurfaceFormatKHR* pSurfaceFormats) = nullptr;
 		void (*GetPhysicalDeviceSurfacePresentModesKHR)(RrPhysicalDevice physicalDevice,RrSurfaceKHR surface, uint32_t* pPresentModeCount, RrPresentModeKHR* pPresentModes) = nullptr;
+		void (*GetPhysicalDeviceQueueFamilyProperties)(RrPhysicalDevice physicalDevice,uint32_t* pQueueFamilyPropertyCount, RrQueueFamilyProperties* pQueueFamilyProperties) = nullptr;
+		RrError (*GetPhysicalDeviceSurfaceSupportKHR)(RrPhysicalDevice physicalDevice,uint32_t queueFamilyIndex, RrSurfaceKHR surface, RrBool32* pSupported) = nullptr;
 		RrError (*CreateRenderPass)(RrLogicalDevice device, const RrRenderPassCreateInfo* pCreateInfo, RrRenderPass* pRenderPass) = nullptr;
 		void (*DestroyRenderPass)(RrLogicalDevice device, RrRenderPass renderPass) = nullptr;
 		void (*CmdBeginRenderPass)(RrCommandBuffer commandBuffer,const RrRenderPassBeginInfo* pBeginInfo, RrSubpassContents subpassContents) = nullptr;
 		void (*CmdEndRenderPass)(RrCommandBuffer commandBuffer) = nullptr;
+		RrError (*CreateSampler)(RrLogicalDevice device, const RrSamplerCreateInfo* pCreateInfo, RrSampler* pSampler) = nullptr;
+		void (*DestroySampler)(RrLogicalDevice device, RrSampler sampler) = nullptr;
 		RrError (*CreateSurfaceKHR)(RrInstance instance, const RrSurfaceCreateInfoKHR* pCreateInfo, RrSurfaceKHR* pSurface) = nullptr;
+		void (*DestroySurfaceKHR)(RrInstance instance, RrSurfaceKHR surface) = nullptr;
 		RrError (*CreateSwapchainKHR)(RrLogicalDevice device,const RrSwapchainCreateInfoKHR* pCreateInfo, RrSwapchainKHR* pSwapchain) = nullptr;
 		RrError (*GetSwapchainImagesKHR)(RrLogicalDevice device, RrSwapchainKHR swapchain,uint32_t* pSwapchainImageCount, RrImage* pSwapchainImages) = nullptr;
 		void (*DestroySwapchainKHR)(RrLogicalDevice device, RrSwapchainKHR swapchain) = nullptr;
@@ -89,9 +101,15 @@ namespace At0::Ray
 		void (*CmdBindDescriptorSets)(RrCommandBuffer commandBuffer,RrPipelineBindPoint pipelineBindPoint, RrPipelineLayout pipelineLayout, uint32_t firstSet,uint32_t descriptorSetCount, const RrDescriptorSet* pDescriptorSets,uint32_t dynamicOffsetCount, const uint32_t* pDynamicOffsets) = nullptr;
 		RrError (*CreatePipelineLayout)(RrLogicalDevice device,const RrPipelineLayoutCreateInfo* pCreateInfo, RrPipelineLayout* pLayout) = nullptr;
 		RrError (*CreateGraphicsPipeline)(RrLogicalDevice device, RrPipelineCache pipelineCache,const RrGraphicsPipelineCreateInfo* pCreateInfo, RrPipeline* pPipeline) = nullptr;
+		void (*DestroyPipelineLayout)(RrLogicalDevice device, RrPipelineLayout pipelineLayout) = nullptr;
+		void (*DestroyPipeline)(RrLogicalDevice device, RrPipeline pipeline) = nullptr;
+		void (*CmdBindPipeline)(RrCommandBuffer commandBuffer, RrPipelineBindPoint pipelineBindPoint, RrPipeline pipeline) = nullptr;
 		void (*CmdSetViewport)(RrCommandBuffer commandBuffer, uint32_t firstViewport,uint32_t viewportCount, const RrViewport* pViewports) = nullptr;
 		void (*CmdSetScissor)(RrCommandBuffer commandBuffer, uint32_t firstScissor,uint32_t scissorCount, const RrRect2D* pScissors) = nullptr;
+		void (*CmdDrawIndexed)(RrCommandBuffer commandBuffer, uint32_t indexCount,uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) = nullptr;
+		void (*CmdPipelineBarrier)(RrCommandBuffer commandBuffer, RrPipelineStageFlags srcStageMask,RrPipelineStageFlags dstStageMask, RrDependencyFlags dependencyFlags,uint32_t memoryBarrierCount, const RrMemoryBarrier* pMemoryBarriers,uint32_t bufferMemoryBarrierCount, const RrBufferMemoryBarrier* pBufferMemoryBarriers,uint32_t imageMemoryBarrierCount, const RrImageMemoryBarrier* pImageMemoryBarriers) = nullptr;
 		RrError (*CreateShaderModule)(RrLogicalDevice device,const RrShaderModuleCreateInfo* pCreateInfo, RrShaderModule* pShaderModule) = nullptr;
+		void (*DestroyShaderModule)(RrLogicalDevice device, RrShaderModule shaderModule) = nullptr;
 		void (*CmdPushConstants)(RrCommandBuffer commandBuffer, RrPipelineLayout pipelineLayout,RrShaderStageFlags shaderStage, uint32_t offset, uint32_t size, const void* pValues) = nullptr;
 
 	}  // namespace RendererAPI
@@ -144,6 +162,9 @@ namespace At0::Ray
 		RendererAPI::BufferGetMemoryRequirements = (void (*)(RrLogicalDevice device, RrBuffer buffer, RrMemoryRequirements* pMemRequirements))LoadFunction(lib, "RrBufferGetMemoryRequirements");
 		RendererAPI::BindBufferMemory = (RrError (*)(RrLogicalDevice device, RrBuffer buffer, RrDeviceMemory memory, RrDeviceSize memoryOffset))LoadFunction(lib, "RrBindBufferMemory");
 		RendererAPI::DestroyBuffer = (void (*)(RrLogicalDevice device, RrBuffer buffer))LoadFunction(lib, "RrDestroyBuffer");
+		RendererAPI::CmdBindIndexBuffer = (void (*)(RrCommandBuffer commandBuffer, RrBuffer buffer, RrDeviceSize offset, RrIndexType indexType))LoadFunction(lib, "RrCmdBindIndexBuffer");
+		RendererAPI::CmdBindVertexBuffers = (void (*)(RrCommandBuffer commandBuffer, uint32_t firstBinding,uint32_t bindingCount, const RrBuffer* pBuffers, const RrDeviceSize* pOffsets))LoadFunction(lib, "RrCmdBindVertexBuffers");
+		RendererAPI::CmdCopyBuffer = (void (*)(RrCommandBuffer commandBuffer, RrBuffer srcBuffer, RrBuffer dstBuffer,uint32_t regionCount, const RrBufferCopy* pRegions))LoadFunction(lib, "RrCmdCopyBuffer");
 		RendererAPI::AllocateCommandBuffers = (RrError (*)(RrLogicalDevice device,RrCommandBufferAllocateInfo* pAllocInfo, RrCommandBuffer* pCommandBuffers))LoadFunction(lib, "RrAllocateCommandBuffers");
 		RendererAPI::BeginCommandBuffer = (RrError (*)(RrCommandBuffer commandBuffer, RrCommandBufferBeginInfo* pBeginInfo))LoadFunction(lib, "RrBeginCommandBuffer");
 		RendererAPI::ExecuteCommands = (void (*)(RrCommandBuffer commandBuffer, uint32_t secondaryCommandBufferCount,const RrCommandBuffer* pSecondaryCommandBuffers))LoadFunction(lib, "RrExecuteCommands");
@@ -153,6 +174,7 @@ namespace At0::Ray
 		RendererAPI::FreeCommandBuffers = (void (*)(RrLogicalDevice device, RrCommandPool commandPool,uint32_t commandBufferCount, const RrCommandBuffer* pCommandBuffers))LoadFunction(lib, "RrFreeCommandBuffers");
 		RendererAPI::CreateCommandPool = (RrError (*)(RrLogicalDevice device,const RrCommandPoolCreateInfo* pCreateInfo, RrCommandPool* pCommandPool))LoadFunction(lib, "RrCreateCommandPool");
 		RendererAPI::DestroyCommandPool = (void (*)(RrLogicalDevice device, RrCommandPool commandPool))LoadFunction(lib, "RrDestroyCommandPool");
+		RendererAPI::ResetCommandPool = (RrError (*)(RrLogicalDevice device, RrCommandPool commandPool, RrCommandPoolResetFlags flags))LoadFunction(lib, "RrResetCommandPool");
 		RendererAPI::AllocateMemory = (RrError (*)(RrLogicalDevice device, const RrMemoryAllocateInfo* pAllocateInfo, RrDeviceMemory* pMemory))LoadFunction(lib, "RrAllocateMemory");
 		RendererAPI::DeviceMemoryGetMemoryTypeIndex = (RrError (*)(uint32_t memoryTypeBits,RrMemoryPropertyFlags memoryProperties, uint32_t memoryTypeCount,const RrMemoryType* pMemoryTypes, uint32_t* pTypeIndex))LoadFunction(lib, "RrDeviceMemoryGetMemoryTypeIndex");
 		RendererAPI::MapMemory = (RrError (*)(RrLogicalDevice device, RrDeviceMemory memory, RrDeviceSize offset,RrDeviceSize size, void** ppMapped))LoadFunction(lib, "RrMapMemory");
@@ -166,11 +188,14 @@ namespace At0::Ray
 		RendererAPI::BindImageMemory = (RrError (*)(RrLogicalDevice device, RrImage image, RrDeviceMemory memory, RrDeviceSize memoryOffset))LoadFunction(lib, "RrBindImageMemory");
 		RendererAPI::GetImageSubresourceLayout = (void (*)(RrLogicalDevice device, RrImage image,RrImageSubresource* pSubresource, RrSubresourceLayout* pLayout))LoadFunction(lib, "RrGetImageSubresourceLayout");
 		RendererAPI::DestroyImage = (void (*)(RrLogicalDevice device, RrImage image))LoadFunction(lib, "RrDestroyImage");
+		RendererAPI::CmdBlitImage = (void (*)(RrCommandBuffer commandBuffer, RrImage srcImage,RrImageLayout srcImageLayout, RrImage dstImage, RrImageLayout dstImageLayout,uint32_t regionCount, const RrImageBlit* pRegions, RrFilter filter))LoadFunction(lib, "RrCmdBlitImage");
+		RendererAPI::CmdCopyBufferToImage = (void (*)(RrCommandBuffer commandBuffer, RrBuffer srcBuffer,RrImage dstImage, RrImageLayout dstImageLayout, uint32_t regionCount,const RrBufferImageCopy* pRegions))LoadFunction(lib, "RrCmdCopyBufferToImage");
 		RendererAPI::CreateImageView = (RrError (*)(RrLogicalDevice device, const RrImageViewCreateInfo* pCreateInfo, RrImageView* pImageView))LoadFunction(lib, "RrCreateImageView");
 		RendererAPI::DestroyImageView = (void (*)(RrLogicalDevice device, RrImageView imageView))LoadFunction(lib, "RrDestroyImageView");
 		RendererAPI::Initialize = (RrError (*)(RrInitializeInfo* pInitInfo, RrInstance* pInstance, RrDebugMessenger* pDebugMessenger))LoadFunction(lib, "RrInitialize");
 		RendererAPI::DestroyInstance = (void (*)(RrInstance instance, RrDebugMessenger debugMessenger))LoadFunction(lib, "RrDestroyInstance");
 		RendererAPI::GetInstanceProcAddr = (RrPFNVoidFunction (*)(RrInstance instance, const char* pName))LoadFunction(lib, "RrGetInstanceProcAddr");
+		RendererAPI::EnumerateInstanceExtensionProperties = (RrError (*)(const char* pLayerName, uint32_t* pPropertyCount, RrExtensionProperties* pProperties))LoadFunction(lib, "RrEnumerateInstanceExtensionProperties");
 		RendererAPI::CreateLogicalDevice = (RrError (*)(RrPhysicalDevice physicalDevice,RrLogicalDeviceCreateInfo* pCreateInfo, RrLogicalDevice* pDevice))LoadFunction(lib, "RrCreateLogicalDevice");
 		RendererAPI::GetDeviceQueue = (void (*)(RrLogicalDevice device, uint32_t queueFamilyIndex, uint32_t queueIndex, RrQueue* pQueue))LoadFunction(lib, "RrGetDeviceQueue");
 		RendererAPI::DestroyLogicalDevice = (void (*)(RrLogicalDevice device))LoadFunction(lib, "RrDestroyLogicalDevice");
@@ -184,11 +209,16 @@ namespace At0::Ray
 		RendererAPI::GetPhysicalDeviceSurfaceCapabilitiesKHR = (void (*)(RrPhysicalDevice physicalDevice,RrSurfaceKHR surface, RrSurfaceCapabilitiesKHR* pSurfaceCapabilities))LoadFunction(lib, "RrGetPhysicalDeviceSurfaceCapabilitiesKHR");
 		RendererAPI::GetPhysicalDeviceSurfaceFormatsKHR = (void (*)(RrPhysicalDevice physicalDevice,RrSurfaceKHR surface, uint32_t* pSurfaceFormatCount, RrSurfaceFormatKHR* pSurfaceFormats))LoadFunction(lib, "RrGetPhysicalDeviceSurfaceFormatsKHR");
 		RendererAPI::GetPhysicalDeviceSurfacePresentModesKHR = (void (*)(RrPhysicalDevice physicalDevice,RrSurfaceKHR surface, uint32_t* pPresentModeCount, RrPresentModeKHR* pPresentModes))LoadFunction(lib, "RrGetPhysicalDeviceSurfacePresentModesKHR");
+		RendererAPI::GetPhysicalDeviceQueueFamilyProperties = (void (*)(RrPhysicalDevice physicalDevice,uint32_t* pQueueFamilyPropertyCount, RrQueueFamilyProperties* pQueueFamilyProperties))LoadFunction(lib, "RrGetPhysicalDeviceQueueFamilyProperties");
+		RendererAPI::GetPhysicalDeviceSurfaceSupportKHR = (RrError (*)(RrPhysicalDevice physicalDevice,uint32_t queueFamilyIndex, RrSurfaceKHR surface, RrBool32* pSupported))LoadFunction(lib, "RrGetPhysicalDeviceSurfaceSupportKHR");
 		RendererAPI::CreateRenderPass = (RrError (*)(RrLogicalDevice device, const RrRenderPassCreateInfo* pCreateInfo, RrRenderPass* pRenderPass))LoadFunction(lib, "RrCreateRenderPass");
 		RendererAPI::DestroyRenderPass = (void (*)(RrLogicalDevice device, RrRenderPass renderPass))LoadFunction(lib, "RrDestroyRenderPass");
 		RendererAPI::CmdBeginRenderPass = (void (*)(RrCommandBuffer commandBuffer,const RrRenderPassBeginInfo* pBeginInfo, RrSubpassContents subpassContents))LoadFunction(lib, "RrCmdBeginRenderPass");
 		RendererAPI::CmdEndRenderPass = (void (*)(RrCommandBuffer commandBuffer))LoadFunction(lib, "RrCmdEndRenderPass");
+		RendererAPI::CreateSampler = (RrError (*)(RrLogicalDevice device, const RrSamplerCreateInfo* pCreateInfo, RrSampler* pSampler))LoadFunction(lib, "RrCreateSampler");
+		RendererAPI::DestroySampler = (void (*)(RrLogicalDevice device, RrSampler sampler))LoadFunction(lib, "RrDestroySampler");
 		RendererAPI::CreateSurfaceKHR = (RrError (*)(RrInstance instance, const RrSurfaceCreateInfoKHR* pCreateInfo, RrSurfaceKHR* pSurface))LoadFunction(lib, "RrCreateSurfaceKHR");
+		RendererAPI::DestroySurfaceKHR = (void (*)(RrInstance instance, RrSurfaceKHR surface))LoadFunction(lib, "RrDestroySurfaceKHR");
 		RendererAPI::CreateSwapchainKHR = (RrError (*)(RrLogicalDevice device,const RrSwapchainCreateInfoKHR* pCreateInfo, RrSwapchainKHR* pSwapchain))LoadFunction(lib, "RrCreateSwapchainKHR");
 		RendererAPI::GetSwapchainImagesKHR = (RrError (*)(RrLogicalDevice device, RrSwapchainKHR swapchain,uint32_t* pSwapchainImageCount, RrImage* pSwapchainImages))LoadFunction(lib, "RrGetSwapchainImagesKHR");
 		RendererAPI::DestroySwapchainKHR = (void (*)(RrLogicalDevice device, RrSwapchainKHR swapchain))LoadFunction(lib, "RrDestroySwapchainKHR");
@@ -209,9 +239,15 @@ namespace At0::Ray
 		RendererAPI::CmdBindDescriptorSets = (void (*)(RrCommandBuffer commandBuffer,RrPipelineBindPoint pipelineBindPoint, RrPipelineLayout pipelineLayout, uint32_t firstSet,uint32_t descriptorSetCount, const RrDescriptorSet* pDescriptorSets,uint32_t dynamicOffsetCount, const uint32_t* pDynamicOffsets))LoadFunction(lib, "RrCmdBindDescriptorSets");
 		RendererAPI::CreatePipelineLayout = (RrError (*)(RrLogicalDevice device,const RrPipelineLayoutCreateInfo* pCreateInfo, RrPipelineLayout* pLayout))LoadFunction(lib, "RrCreatePipelineLayout");
 		RendererAPI::CreateGraphicsPipeline = (RrError (*)(RrLogicalDevice device, RrPipelineCache pipelineCache,const RrGraphicsPipelineCreateInfo* pCreateInfo, RrPipeline* pPipeline))LoadFunction(lib, "RrCreateGraphicsPipeline");
+		RendererAPI::DestroyPipelineLayout = (void (*)(RrLogicalDevice device, RrPipelineLayout pipelineLayout))LoadFunction(lib, "RrDestroyPipelineLayout");
+		RendererAPI::DestroyPipeline = (void (*)(RrLogicalDevice device, RrPipeline pipeline))LoadFunction(lib, "RrDestroyPipeline");
+		RendererAPI::CmdBindPipeline = (void (*)(RrCommandBuffer commandBuffer, RrPipelineBindPoint pipelineBindPoint, RrPipeline pipeline))LoadFunction(lib, "RrCmdBindPipeline");
 		RendererAPI::CmdSetViewport = (void (*)(RrCommandBuffer commandBuffer, uint32_t firstViewport,uint32_t viewportCount, const RrViewport* pViewports))LoadFunction(lib, "RrCmdSetViewport");
 		RendererAPI::CmdSetScissor = (void (*)(RrCommandBuffer commandBuffer, uint32_t firstScissor,uint32_t scissorCount, const RrRect2D* pScissors))LoadFunction(lib, "RrCmdSetScissor");
+		RendererAPI::CmdDrawIndexed = (void (*)(RrCommandBuffer commandBuffer, uint32_t indexCount,uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance))LoadFunction(lib, "RrCmdDrawIndexed");
+		RendererAPI::CmdPipelineBarrier = (void (*)(RrCommandBuffer commandBuffer, RrPipelineStageFlags srcStageMask,RrPipelineStageFlags dstStageMask, RrDependencyFlags dependencyFlags,uint32_t memoryBarrierCount, const RrMemoryBarrier* pMemoryBarriers,uint32_t bufferMemoryBarrierCount, const RrBufferMemoryBarrier* pBufferMemoryBarriers,uint32_t imageMemoryBarrierCount, const RrImageMemoryBarrier* pImageMemoryBarriers))LoadFunction(lib, "RrCmdPipelineBarrier");
 		RendererAPI::CreateShaderModule = (RrError (*)(RrLogicalDevice device,const RrShaderModuleCreateInfo* pCreateInfo, RrShaderModule* pShaderModule))LoadFunction(lib, "RrCreateShaderModule");
+		RendererAPI::DestroyShaderModule = (void (*)(RrLogicalDevice device, RrShaderModule shaderModule))LoadFunction(lib, "RrDestroyShaderModule");
 		RendererAPI::CmdPushConstants = (void (*)(RrCommandBuffer commandBuffer, RrPipelineLayout pipelineLayout,RrShaderStageFlags shaderStage, uint32_t offset, uint32_t size, const void* pValues))LoadFunction(lib, "RrCmdPushConstants");
 
 

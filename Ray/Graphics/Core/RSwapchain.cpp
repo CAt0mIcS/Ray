@@ -68,7 +68,7 @@ namespace At0::Ray
 		createInfo.preTransform = supportDetails.Capabilities.currentTransform;
 		createInfo.compositeAlpha = RrCompositeAlphaOpaqueKHR;
 		createInfo.presentMode = presentMode;
-		createInfo.clipped = VK_TRUE;
+		createInfo.clipped = true;
 		createInfo.oldSwapchain = oldSwapchain;
 
 		ThrowRenderError(

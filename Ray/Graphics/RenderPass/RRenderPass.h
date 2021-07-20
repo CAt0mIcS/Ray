@@ -3,7 +3,6 @@
 #include "Ray/RBase.h"
 #include "Ray/Utils/RNonCopyable.h"
 
-#include <vulkan/vulkan_core.h>
 #include <RayRenderer/Core/RRenderPass.h>
 #include <vector>
 
@@ -26,7 +25,6 @@ namespace At0::Ray
 			RrSubpassContents subpassContents = RrSubpassContentsInline) const;
 		void End(const CommandBuffer& cmdBuff) const;
 
-		operator VkRenderPass() const { return (VkRenderPass)m_Renderpass; }
 		operator RrRenderPass() const { return m_Renderpass; }
 
 	private:

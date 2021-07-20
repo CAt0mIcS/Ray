@@ -37,4 +37,6 @@ typedef struct RrShaderModuleCreateInfo
 RR_API RrError RrCreateShaderModule(RrLogicalDevice device,
 	const RrShaderModuleCreateInfo* pCreateInfo, RrShaderModule* pShaderModule);
 
+RR_API void RrDestroyShaderModule(RrLogicalDevice device, RrShaderModule shaderModule);
+
 RR_EXTERN_C_END

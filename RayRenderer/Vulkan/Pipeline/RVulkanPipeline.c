@@ -264,6 +264,22 @@ RrError RrCreateGraphicsPipeline(RrLogicalDevice device, RrPipelineCache pipelin
 	return error;
 }
 
+void RrDestroyPipelineLayout(RrLogicalDevice device, RrPipelineLayout pipelineLayout)
+{
+	vkDestroyPipelineLayout((VkDevice)device, (VkPipelineLayout)pipelineLayout, NULL);
+}
+
+void RrDestroyPipeline(RrLogicalDevice device, RrPipeline pipeline)
+{
+	vkDestroyPipeline((VkDevice)device, (VkPipeline)pipeline, NULL);
+}
+
+
+void RrCmdBindPipeline(
+	RrCommandBuffer commandBuffer, RrPipelineBindPoint pipelineBindPoint, RrPipeline pipeline)
+{
+	vkCmdBindPipeline((VkCommandBuffer)commandBuffer, pipelineBindPoint, (VkPipeline)pipeline);
+}
 
 void RrCmdSetViewport(RrCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount,
 	const RrViewport* pViewports)
@@ -323,4 +339,83 @@ void RrCmdSetScissor(RrCommandBuffer commandBuffer, uint32_t firstScissor, uint3
 		scissor.offset.y = pScissors->offset.y;
 		vkCmdSetScissor((VkCommandBuffer)commandBuffer, firstScissor, scissorCount, &scissor);
 	}
+}
+
+void RrCmdDrawIndexed(RrCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount,
+	uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance)
+{
+	vkCmdDrawIndexed((VkCommandBuffer)commandBuffer, indexCount, instanceCount, firstIndex,
+		vertexOffset, firstIndex);
+}
+
+void RrCmdPipelineBarrier(RrCommandBuffer commandBuffer, RrPipelineStageFlags srcStageMask,
+	RrPipelineStageFlags dstStageMask, RrDependencyFlags dependencyFlags,
+	uint32_t memoryBarrierCount, const RrMemoryBarrier* pMemoryBarriers,
+	uint32_t bufferMemoryBarrierCount, const RrBufferMemoryBarrier* pBufferMemoryBarriers,
+	uint32_t imageMemoryBarrierCount, const RrImageMemoryBarrier* pImageMemoryBarriers)
+{
+	VkMemoryBarrier* memoryBarriers = NULL;
+	VkBufferMemoryBarrier* bufferMemoryBarriers = NULL;
+	VkImageMemoryBarrier* imageMemoryBarriers = NULL;
+
+	if (memoryBarrierCount != 0)
+		memoryBarriers = malloc(sizeof(VkMemoryBarrier) * memoryBarrierCount);
+	if (bufferMemoryBarrierCount != 0)
+		bufferMemoryBarriers = malloc(sizeof(VkBufferMemoryBarrier) * bufferMemoryBarrierCount);
+	if (imageMemoryBarrierCount != 0)
+		imageMemoryBarriers = malloc(sizeof(VkImageMemoryBarrier) * imageMemoryBarrierCount);
+
+
+	for (uint32_t i = 0; i < memoryBarrierCount; ++i)
+	{
+		memoryBarriers[i].sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+		memoryBarriers[i].pNext = NULL;
+		memoryBarriers[i].dstAccessMask = pMemoryBarriers[i].dstAccessMask;
+		memoryBarriers[i].srcAccessMask = pMemoryBarriers[i].srcAccessMask;
+	}
+	for (uint32_t i = 0; i < bufferMemoryBarrierCount; ++i)
+	{
+		bufferMemoryBarriers[i].sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+		bufferMemoryBarriers[i].pNext = NULL;
+		bufferMemoryBarriers[i].srcAccessMask = pBufferMemoryBarriers[i].srcAccessMask;
+		bufferMemoryBarriers[i].dstAccessMask = pBufferMemoryBarriers[i].dstAccessMask;
+		bufferMemoryBarriers[i].srcQueueFamilyIndex = pBufferMemoryBarriers[i].srcQueueFamilyIndex;
+		bufferMemoryBarriers[i].dstQueueFamilyIndex = pBufferMemoryBarriers[i].dstQueueFamilyIndex;
+		bufferMemoryBarriers[i].buffer = (VkBuffer)pBufferMemoryBarriers[i].buffer;
+		bufferMemoryBarriers[i].offset = pBufferMemoryBarriers[i].offset;
+		bufferMemoryBarriers[i].size = pBufferMemoryBarriers[i].size;
+	}
+	for (uint32_t i = 0; i < imageMemoryBarrierCount; ++i)
+	{
+		imageMemoryBarriers[i].sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		imageMemoryBarriers[i].pNext = NULL;
+		imageMemoryBarriers[i].srcAccessMask = pImageMemoryBarriers[i].srcAccessMask;
+		imageMemoryBarriers[i].dstAccessMask = pImageMemoryBarriers[i].dstAccessMask;
+		imageMemoryBarriers[i].oldLayout = pImageMemoryBarriers[i].oldLayout;
+		imageMemoryBarriers[i].newLayout = pImageMemoryBarriers[i].newLayout;
+		imageMemoryBarriers[i].srcQueueFamilyIndex = pImageMemoryBarriers[i].srcQueueFamilyIndex;
+		imageMemoryBarriers[i].dstQueueFamilyIndex = pImageMemoryBarriers[i].dstQueueFamilyIndex;
+		imageMemoryBarriers[i].image = (VkImage)pImageMemoryBarriers[i].image;
+		imageMemoryBarriers[i].subresourceRange.aspectMask =
+			pImageMemoryBarriers[i].subresourceRange.aspectMask;
+		imageMemoryBarriers[i].subresourceRange.baseMipLevel =
+			pImageMemoryBarriers[i].subresourceRange.baseMipLevel;
+		imageMemoryBarriers[i].subresourceRange.levelCount =
+			pImageMemoryBarriers[i].subresourceRange.levelCount;
+		imageMemoryBarriers[i].subresourceRange.baseArrayLayer =
+			pImageMemoryBarriers[i].subresourceRange.baseArrayLayer;
+		imageMemoryBarriers[i].subresourceRange.layerCount =
+			pImageMemoryBarriers[i].subresourceRange.layerCount;
+	}
+
+	vkCmdPipelineBarrier((VkCommandBuffer)commandBuffer, srcStageMask, dstStageMask,
+		dependencyFlags, memoryBarrierCount, memoryBarriers, bufferMemoryBarrierCount,
+		bufferMemoryBarriers, imageMemoryBarrierCount, imageMemoryBarriers);
+
+	if (memoryBarrierCount != 0)
+		free(memoryBarriers);
+	if (bufferMemoryBarrierCount != 0)
+		free(bufferMemoryBarriers);
+	if (imageMemoryBarrierCount != 0)
+		free(imageMemoryBarriers);
 }

@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include "../Core/RCore.h"
+#include "../Core/RImage.h"
+#include "../Core/RBuffer.h"
 #include "RShader.h"
 
 RR_EXTERN_C_BEG
@@ -357,17 +359,34 @@ typedef struct RrGraphicsPipelineCreateInfo
 	int32_t basePipelineIndex;
 } RrGraphicsPipelineCreateInfo;
 
+
 RR_API RrError RrCreatePipelineLayout(RrLogicalDevice device,
 	const RrPipelineLayoutCreateInfo* pCreateInfo, RrPipelineLayout* pLayout);
 
 RR_API RrError RrCreateGraphicsPipeline(RrLogicalDevice device, RrPipelineCache pipelineCache,
 	const RrGraphicsPipelineCreateInfo* pCreateInfo, RrPipeline* pPipeline);
 
+RR_API void RrDestroyPipelineLayout(RrLogicalDevice device, RrPipelineLayout pipelineLayout);
+
+RR_API void RrDestroyPipeline(RrLogicalDevice device, RrPipeline pipeline);
+
+
+RR_API void RrCmdBindPipeline(
+	RrCommandBuffer commandBuffer, RrPipelineBindPoint pipelineBindPoint, RrPipeline pipeline);
 
 RR_API void RrCmdSetViewport(RrCommandBuffer commandBuffer, uint32_t firstViewport,
 	uint32_t viewportCount, const RrViewport* pViewports);
 
 RR_API void RrCmdSetScissor(RrCommandBuffer commandBuffer, uint32_t firstScissor,
 	uint32_t scissorCount, const RrRect2D* pScissors);
+
+RR_API void RrCmdDrawIndexed(RrCommandBuffer commandBuffer, uint32_t indexCount,
+	uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance);
+
+RR_API void RrCmdPipelineBarrier(RrCommandBuffer commandBuffer, RrPipelineStageFlags srcStageMask,
+	RrPipelineStageFlags dstStageMask, RrDependencyFlags dependencyFlags,
+	uint32_t memoryBarrierCount, const RrMemoryBarrier* pMemoryBarriers,
+	uint32_t bufferMemoryBarrierCount, const RrBufferMemoryBarrier* pBufferMemoryBarriers,
+	uint32_t imageMemoryBarrierCount, const RrImageMemoryBarrier* pImageMemoryBarriers);
 
 RR_EXTERN_C_END

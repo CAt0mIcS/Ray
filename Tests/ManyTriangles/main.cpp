@@ -61,6 +61,7 @@ public:
 	{
 		Ray::Scene::Create<Scene>();
 
+#if RAY_ENABLE_IMGUI
 		Ray::ImGUI::Get().RegisterNewFrameFunction([]() {
 			ImGui::Begin("Skybox");
 			static bool enabled = false;
@@ -88,6 +89,7 @@ public:
 			ImGui::SliderFloat("Movement Speed", &m_MovementSpeed, -50.0f, 50.0f);
 			ImGui::End();
 		});
+#endif
 
 #include "../ImGuiWindows.inl"
 
@@ -118,7 +120,7 @@ private:
 		static std::uniform_real_distribution<float> colDist(0.0f, 1.0f);
 
 		Ray::GraphicsPipeline::Layout layout{};
-		layout.cullMode = VK_CULL_MODE_NONE;
+		layout.cullMode = RrCullModeNone;
 		auto defaultMaterial = Ray::MakeRef<Ray::FlatColorMaterial>(
 			Ray::FlatColorMaterial::Layout{}, std::move(layout));
 

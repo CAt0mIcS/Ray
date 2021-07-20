@@ -45,8 +45,12 @@ namespace At0::Ray
 			ThrowRuntime("[RendererInstance] VulkanExtension {0} not supported");
 		}
 
-		initInfo.enabledExtensionCount = (uint32_t)instanceExtensions.size();
-		initInfo.ppEnabledExtensions = instanceExtensions.data();
+		std::vector<const char*> charInstanceExtensions(instanceExtensions.size());
+		for (uint32_t i = 0; i < charInstanceExtensions.size(); ++i)
+			charInstanceExtensions[i] = instanceExtensions[i].c_str();
+
+		initInfo.enabledExtensionCount = (uint32_t)charInstanceExtensions.size();
+		initInfo.ppEnabledExtensions = charInstanceExtensions.data();
 
 		initInfo.enableValidationLayers = m_ValidationLayersEnabled;
 		initInfo.pfnValidationCallback = DebugCallback;
@@ -67,49 +71,42 @@ namespace At0::Ray
 		RendererAPI::DestroyInstance(m_Instance, m_DebugMessenger);
 	}
 
-	PFN_vkVoidFunction RendererInstance::LoadFunction(const char* name)
+	RrPFNVoidFunction RendererInstance::LoadFunction(const char* name) const
 	{
 		return RendererAPI::GetInstanceProcAddr(m_Instance, name);
 	}
 
-	std::vector<const char*> RendererInstance::GetRequiredExtensions() const
+	std::vector<std::string> RendererInstance::GetRequiredExtensions() const
 	{
-		auto glfwExtensions = Window::GetInstanceExtensions();
-
-		std::vector<const char*> extensions(glfwExtensions.second);
-
-		// Add all the glfwExtensions to the return extensions array
-		for (uint32_t i = 0; i < glfwExtensions.second; ++i)
-			extensions[i] = glfwExtensions.first[i];
-
+		auto extensions = Window::GetInstanceExtensions();
 		if (m_ValidationLayersEnabled)
-			extensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+			extensions.emplace_back("VK_EXT_debug_utils");
 
 		return extensions;
 	}
 
-	std::vector<const char*> RendererInstance::ExtensionsSupported(
-		const std::vector<const char*>& instanceExtensions)
+	std::vector<std::string> RendererInstance::ExtensionsSupported(
+		const std::vector<std::string>& instanceExtensions)
 	{
-		std::vector<const char*> unsupportedExtensions;
+		std::vector<std::string> unsupportedExtensions;
 
 		uint32_t extPropCount = 0;
-		vkEnumerateInstanceExtensionProperties(nullptr, &extPropCount, nullptr);
+		RendererAPI::EnumerateInstanceExtensionProperties(nullptr, &extPropCount, nullptr);
 		RAY_MEXPECTS(extPropCount != 0,
 			"[RendererInstance] Failed to enumerate instance extension properties");
 
-		std::vector<VkExtensionProperties> extProps(extPropCount);
-		vkEnumerateInstanceExtensionProperties(nullptr, &extPropCount, extProps.data());
+		std::vector<RrExtensionProperties> extProps(extPropCount);
+		RendererAPI::EnumerateInstanceExtensionProperties(nullptr, &extPropCount, extProps.data());
 		RAY_MEXPECTS(!extProps.empty(),
 			"[RendererInstance] Failed to enumerate instance extension properties");
 
-		for (const char* extension : instanceExtensions)
+		for (std::string_view extension : instanceExtensions)
 		{
 			bool extensionFound = false;
 
-			for (const VkExtensionProperties& prop : extProps)
+			for (const RrExtensionProperties& prop : extProps)
 			{
-				if (strcmp(extension, prop.extensionName) == 0)
+				if (strcmp(extension.data(), prop.extensionName) == 0)
 				{
 					extensionFound = true;
 					break;

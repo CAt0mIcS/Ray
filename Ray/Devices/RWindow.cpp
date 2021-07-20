@@ -25,7 +25,6 @@
 		#define GLFW_EXPOSE_NATIVE_X11
 	#endif
 #endif
-#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 
@@ -76,19 +75,51 @@ namespace At0::Ray
 	bool Window::Update()
 	{
 		glfwPollEvents();
-
 		return !glfwWindowShouldClose(m_hWnd);
 	}
 
-	std::pair<const char**, uint32_t> Window::GetInstanceExtensions()
+	std::vector<std::string> Window::GetInstanceExtensions()
 	{
-		if (RendererAPI::API == RendererAPI::Vulkan)
+		uint32_t count;
+		RendererAPI::EnumerateInstanceExtensionProperties(nullptr, &count, nullptr);
+		if (count == 0)
+			return {};
+
+		std::vector<RrExtensionProperties> properties(count);
+		RendererAPI::EnumerateInstanceExtensionProperties(nullptr, &count, properties.data());
+
+		std::string surfaceExtension;
+		std::string surfacePlatformExtension;
+		for (const RrExtensionProperties& props : properties)
 		{
-			uint32_t count;
-			const char** extensions = glfwGetRequiredInstanceExtensions(&count);
-			return std::make_pair(extensions, count);
+			if (strcmp(props.extensionName, "VK_KHR_surface") == 0)
+				surfaceExtension = "VK_KHR_surface";
+#if defined(_WIN32)
+			else if (strcmp(props.extensionName, "VK_KHR_win32_surface") == 0)
+				surfacePlatformExtension = "VK_KHR_win32_surface";
+				// #elif defined(_GLFW_COCOA)
+				// else if (strcmp(props.extensionName, "VK_MVK_macos_surface") == 0)
+				// surfacePlatformExtension = "VK_MVK_macos_surface";
+				// else if (strcmp(props.extensionName, "VK_EXT_metal_surface") == 0)
+				// surfacePlatformExtension = "VK_EXT_metal_surface";
+
+//#elif defined(_GLFW_X11)
+#else
+			else if (strcmp(props.extensionName, "VK_KHR_xlib_surface") == 0)
+				surfacePlatformExtension = "VK_KHR_xlib_surface";
+			else if (strcmp(props.extensionName, "VK_KHR_xcb_surface") == 0)
+				surfacePlatformExtension = "VK_KHR_xcb_surface";
+				// #elif defined(_GLFW_WAYLAND)
+				// else if (strcmp(props.extensionName, "VK_KHR_wayland_surface") == 0)
+				// surfacePlatformExtension = "VK_KHR_wayland_surface";
+#endif
 		}
-		return std::pair<const char**, uint32_t>{};
+
+		if (surfaceExtension.empty() || surfacePlatformExtension.empty())
+			ThrowRuntime("Failed for find VK_KHR_surface or VK_KHR_{platform}_surface vulkan "
+						 "extensions");
+
+		return { surfaceExtension, surfacePlatformExtension };
 	}
 
 	void Window::CreateSurface(RrSurfaceKHR* pSurface) const
@@ -107,13 +138,6 @@ namespace At0::Ray
 			RendererAPI::CreateSurfaceKHR(Graphics::Get().GetInstance(), &createInfo, pSurface),
 			"[Window] Failed to create window surface");
 	}
-
-	// void Window::CreateSurface(
-	//	VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) const
-	//{
-	//	ThrowRenderError(glfwCreateWindowSurface(instance, m_hWnd, allocator, surface),
-	//		"[Window] GLFW failed to create the window surface");
-	//}
 
 	UInt2 Window::GetSize() const
 	{

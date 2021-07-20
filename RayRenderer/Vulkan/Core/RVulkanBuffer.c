@@ -42,3 +42,23 @@ void RrDestroyBuffer(RrLogicalDevice device, RrBuffer buffer)
 {
 	vkDestroyBuffer((VkDevice)device, (VkBuffer)buffer, NULL);
 }
+
+void RrCmdBindIndexBuffer(
+	RrCommandBuffer commandBuffer, RrBuffer buffer, RrDeviceSize offset, RrIndexType indexType)
+{
+	vkCmdBindIndexBuffer((VkCommandBuffer)commandBuffer, (VkBuffer)buffer, offset, indexType);
+}
+
+void RrCmdBindVertexBuffers(RrCommandBuffer commandBuffer, uint32_t firstBinding,
+	uint32_t bindingCount, const RrBuffer* pBuffers, const RrDeviceSize* pOffsets)
+{
+	vkCmdBindVertexBuffers((VkCommandBuffer)commandBuffer, firstBinding, bindingCount,
+		(const VkBuffer*)pBuffers, (const VkDeviceSize*)pOffsets);
+}
+
+void RrCmdCopyBuffer(RrCommandBuffer commandBuffer, RrBuffer srcBuffer, RrBuffer dstBuffer,
+	uint32_t regionCount, const RrBufferCopy* pRegions)
+{
+	vkCmdCopyBuffer((VkCommandBuffer)commandBuffer, (VkBuffer)srcBuffer, (VkBuffer)dstBuffer,
+		regionCount, (const VkBufferCopy*)pRegions);
+}

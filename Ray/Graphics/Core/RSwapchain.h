@@ -3,7 +3,6 @@
 #include "Ray/RBase.h"
 #include "Ray/Utils/RNonCopyable.h"
 
-#include <vulkan/vulkan_core.h>
 #include <RayRenderer/Core/RSwapchain.h>
 
 
@@ -33,7 +32,6 @@ namespace At0::Ray
 		const std::vector<Scope<ImageView>>& GetImageViews() const { return m_ImageViews; }
 
 		operator RrSwapchainKHR() const { return m_Swapchain; }
-		operator VkSwapchainKHR() const { return (VkSwapchainKHR)m_Swapchain; }
 
 	private:
 		RrSurfaceFormatKHR ChooseSurfaceFormat(

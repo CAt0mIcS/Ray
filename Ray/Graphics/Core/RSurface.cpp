@@ -14,6 +14,6 @@ namespace At0::Ray
 
 	Surface::~Surface()
 	{
-		vkDestroySurfaceKHR(Graphics::Get().GetInstance(), (VkSurfaceKHR)m_Surface, nullptr);
+		RendererAPI::DestroySurfaceKHR(Graphics::Get().GetInstance(), m_Surface);
 	}
 }  // namespace At0::Ray

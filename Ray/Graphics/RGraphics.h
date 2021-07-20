@@ -9,9 +9,9 @@
 #include "Ray/Events/REventListener.h"
 #include "Ray/Events/REngineEvents.h"
 
-#include <vulkan/vulkan_core.h>
 #include <vector>
 #include <array>
+#include <RayRenderer/Core/RCore.h>
 
 typedef struct RrFence_T* RrFence;
 typedef struct RrSemaphore_T* RrSemaphore;
@@ -80,8 +80,8 @@ namespace At0::Ray
 		static Graphics* s_Instance;
 		static constexpr uint8_t s_MaxFramesInFlight = 2;
 
-		VkViewport m_Viewport{};
-		VkRect2D m_Scissor{};
+		RrViewport m_Viewport{};
+		RrRect2D m_Scissor{};
 
 		Scope<RendererInstance> m_RendererInstance;
 		Scope<PhysicalDevice> m_PhysicalDevice;

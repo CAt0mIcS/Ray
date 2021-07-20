@@ -161,14 +161,14 @@ namespace At0::Ray
 		// RAY_TODO: Create separate command pool for short-lived command buffers
 
 		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
-		commandBuffer.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+		commandBuffer.Begin(RrCommandBufferUsageOneTimeSubmit);
 
-		VkBufferCopy bufferCopy{};
+		RrBufferCopy bufferCopy{};
 		bufferCopy.srcOffset = 0;
 		bufferCopy.dstOffset = 0;
 		bufferCopy.size = size;
 
-		vkCmdCopyBuffer(commandBuffer, (VkBuffer)srcBuffer, (VkBuffer)dstBuffer, 1, &bufferCopy);
+		RendererAPI::CmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &bufferCopy);
 
 		commandBuffer.End();
 
@@ -180,7 +180,7 @@ namespace At0::Ray
 		// RAY_TODO: Check which queue is faster and enable multithreading by using fences
 		// instead of vkQueueWaitIdle
 		RendererAPI::QueueSubmit(
-			Graphics::Get().GetDevice().GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+			Graphics::Get().GetDevice().GetGraphicsQueue(), 1, &submitInfo, nullptr);
 		RendererAPI::QueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 	}
 

@@ -72,14 +72,6 @@ typedef struct RrSubpassDescription
 	const uint32_t* pPreserveAttachments;
 } RrSubpassDescription;
 
-typedef enum RrDependencyFlagBits
-{
-	RrDependencyByRegion = 0x00000001,
-	RrDependencyDeviceGroup = 0x00000004,
-	RrDependencyViewLocal = 0x00000002
-} RrDependencyFlagBits;
-typedef uint32_t RrDependencyFlags;
-
 typedef struct RrSubpassDependency
 {
 	uint32_t srcSubpass;

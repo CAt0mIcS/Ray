@@ -4,7 +4,6 @@
 #include "Ray/Utils/RNonCopyable.h"
 #include "../RPipeline.h"
 
-#include <vulkan/vulkan_core.h>
 #include <RayRenderer/Pipeline/RDescriptor.h>
 
 
@@ -29,7 +28,6 @@ namespace At0::Ray
 		void BindUniform(const BufferUniform& uniform);
 		void BindUniform(const Sampler2DUniform& uniform);
 
-		operator VkDescriptorSet() const { return (VkDescriptorSet)m_DescriptorSet; }
 		operator RrDescriptorSet() const { return m_DescriptorSet; }
 		DescriptorSet& operator=(DescriptorSet&& other) noexcept;
 		DescriptorSet(DescriptorSet&& other) noexcept;
