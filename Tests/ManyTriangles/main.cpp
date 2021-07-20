@@ -61,8 +61,7 @@ public:
 	{
 		Ray::Scene::Create<Scene>();
 
-#if RAY_ENABLE_IMGUI
-		Ray::ImGUI::Get().RegisterNewFrameFunction([]() {
+		RAY_IMGUI_ONFRAME([]() {
 			ImGui::Begin("Skybox");
 			static bool enabled = false;
 			bool previous = enabled;
@@ -79,7 +78,7 @@ public:
 			ImGui::End();
 		});
 
-		Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
+		RAY_IMGUI_ONFRAME([this]() {
 			ImGui::Begin("Triangles");
 			ImGui::InputInt("Upper range", &m_UpperRange, 100, 10000);
 			int prevTriangleCount = m_Triangles;
@@ -89,7 +88,6 @@ public:
 			ImGui::SliderFloat("Movement Speed", &m_MovementSpeed, -50.0f, 50.0f);
 			ImGui::End();
 		});
-#endif
 
 #include "../ImGuiWindows.inl"
 

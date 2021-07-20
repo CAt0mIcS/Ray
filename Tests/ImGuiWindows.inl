@@ -1,5 +1,5 @@
 ﻿#if RAY_ENABLE_IMGUI
-Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
+::At0::Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
 	ImGui::Begin("Scene");
 	ImGui::Text("Stats");
 	ImGui::Text(

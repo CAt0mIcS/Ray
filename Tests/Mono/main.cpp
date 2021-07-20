@@ -58,7 +58,7 @@ public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
-		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+		RAY_IMGUI_ONFRAME([&]() {
 			{
 				ImGui::Begin("TestEntity");
 
@@ -78,7 +78,7 @@ public:
 				ImGui::End();
 			}
 		});
-		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+		RAY_IMGUI_ONFRAME([&]() {
 			{
 				ImGui::Begin("Camera");
 

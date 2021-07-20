@@ -75,19 +75,19 @@ void RrCmdBlitImage(RrCommandBuffer commandBuffer, RrImage srcImage, RrImageLayo
 	VkImageBlit* regions = malloc(sizeof(VkImageBlit) * regionCount);
 	for (uint32_t i = 0; i < regionCount; ++i)
 	{
-		regions[i].dstOffsets[0].x = pRegions[i].dstOffsets[i].x;
-		regions[i].dstOffsets[0].y = pRegions[i].dstOffsets[i].y;
-		regions[i].dstOffsets[0].x = pRegions[i].dstOffsets[i].z;
-		regions[i].dstOffsets[1].x = pRegions[i].dstOffsets[i].x;
-		regions[i].dstOffsets[1].y = pRegions[i].dstOffsets[i].y;
-		regions[i].dstOffsets[1].x = pRegions[i].dstOffsets[i].z;
+		regions[i].dstOffsets[0].x = pRegions[i].dstOffsets[0].x;
+		regions[i].dstOffsets[0].y = pRegions[i].dstOffsets[0].y;
+		regions[i].dstOffsets[0].z = pRegions[i].dstOffsets[0].z;
+		regions[i].dstOffsets[1].x = pRegions[i].dstOffsets[1].x;
+		regions[i].dstOffsets[1].y = pRegions[i].dstOffsets[1].y;
+		regions[i].dstOffsets[1].z = pRegions[i].dstOffsets[1].z;
 
-		regions[i].srcOffsets[0].x = pRegions[i].srcOffsets[i].x;
-		regions[i].srcOffsets[0].y = pRegions[i].srcOffsets[i].y;
-		regions[i].srcOffsets[0].x = pRegions[i].srcOffsets[i].z;
-		regions[i].srcOffsets[1].x = pRegions[i].srcOffsets[i].x;
-		regions[i].srcOffsets[1].y = pRegions[i].srcOffsets[i].y;
-		regions[i].srcOffsets[1].x = pRegions[i].srcOffsets[i].z;
+		regions[i].srcOffsets[0].x = pRegions[i].srcOffsets[0].x;
+		regions[i].srcOffsets[0].y = pRegions[i].srcOffsets[0].y;
+		regions[i].srcOffsets[0].z = pRegions[i].srcOffsets[0].z;
+		regions[i].srcOffsets[1].x = pRegions[i].srcOffsets[1].x;
+		regions[i].srcOffsets[1].y = pRegions[i].srcOffsets[1].y;
+		regions[i].srcOffsets[1].z = pRegions[i].srcOffsets[1].z;
 
 		regions[i].dstSubresource.aspectMask = pRegions[i].dstSubresource.aspectMask;
 		regions[i].dstSubresource.baseArrayLayer = pRegions[i].dstSubresource.baseArrayLayer;

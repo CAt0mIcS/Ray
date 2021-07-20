@@ -91,7 +91,7 @@ public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
-		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+		RAY_IMGUI_ONFRAME([&]() {
 			{
 				ImGui::Begin("TestEntity");
 
@@ -112,7 +112,7 @@ public:
 			}
 		});
 
-		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+		RAY_IMGUI_ONFRAME([&]() {
 			{
 				ImGui::Begin("ColorPicker");
 
@@ -139,7 +139,7 @@ public:
 		Ray::FlatColorMaterial::Layout layout{};
 
 		Ray::GraphicsPipeline::Layout pipelineLayout{};
-		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
+		pipelineLayout.cullMode = RrCullModeNone;
 		pipelineLayout.shader =
 			Ray::Shader::FromGlsl({ "Resources/Shaders/Generated/VertexShader.vert",
 				"Resources/Shaders/Generated/FragmentShader.frag" });

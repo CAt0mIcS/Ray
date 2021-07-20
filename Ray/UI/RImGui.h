@@ -7,6 +7,11 @@
 	#define RAY_ENABLE_IMGUI_DOCKSPACE 0
 #endif
 
+#if RAY_ENABLE_IMGUI
+	#define RAY_IMGUI_ONFRAME(...) ::At0::Ray::ImGUI::Get().RegisterNewFrameFunction(__VA_ARGS__);
+#else
+	#define RAY_IMGUI_ONFRAME(...)
+#endif
 
 #if RAY_ENABLE_IMGUI
 

@@ -48,7 +48,7 @@ public:
 	CustomMaterial()
 	{
 		Ray::GraphicsPipeline::Layout pipelineLayout{};
-		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
+		pipelineLayout.cullMode = RrCullModeNone;
 		pipelineLayout.shader = Ray::Shader::FromCompiled(
 			{ "Resources/Shaders/Flat_Col.vert.spv", "Resources/Shaders/Flat_Col.frag.spv" });
 		// pipelineLayout.shader = Ray::Shader::FromGlsl(

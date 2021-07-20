@@ -56,7 +56,7 @@ public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
-		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+		RAY_IMGUI_ONFRAME([&]() {
 			{
 
 				auto translate = [](Ray::Transform& tform) {

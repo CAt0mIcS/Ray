@@ -87,7 +87,7 @@ public:
 		//	ImGui::End();
 		//});
 
-		Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
+		RAY_IMGUI_ONFRAME([this]() {
 			ImGui::Begin("FontTransform");
 
 			Ray::Transform& tform = m_TextEntity.Get<Ray::Transform>();
