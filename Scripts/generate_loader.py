@@ -230,7 +230,13 @@ def build_function_definitions_and_assignments():
         writer.write(template_defs)
 
 
+def requires_reload():
+    # Write functions to file to check if declarations changed so that we don't have to rebuild Ray if only a .c file in the renderer changes
+    return True
+
+
 if __name__ == "__main__":
     load_sources()
-    build_function_declarations()
+    if requires_reload():
+        build_function_declarations()
     build_function_definitions_and_assignments()

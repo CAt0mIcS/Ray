@@ -11,7 +11,6 @@
 
 #include <GLFW/glfw3.h>
 
-
 namespace At0::Ray
 {
 #ifndef NDEBUG
@@ -36,6 +35,9 @@ namespace At0::Ray
 	RendererInstance::RendererInstance()
 	{
 		RrInitializeInfo initInfo{};
+
+		// RAY_TODO: Check latest available version
+		initInfo.apiVersion = RR_API_VERSION_1_2;
 
 		// Get required Instance extensions from glfw
 		auto instanceExtensions = GetRequiredExtensions();

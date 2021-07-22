@@ -31,10 +31,20 @@ RrError RrInitialize(
 {
 	RrpfnValidationCallback = pInitInfo->pfnValidationCallback;
 
+	// RAY_TODO: Make independent
+	VkApplicationInfo appInfo;
+	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	appInfo.pNext = NULL;
+	appInfo.pApplicationName = "RayRendererVulkan";
+	appInfo.applicationVersion = 1;
+	appInfo.pEngineName = "Ray";
+	appInfo.engineVersion = 1;
+	appInfo.apiVersion = pInitInfo->apiVersion;
+
 	VkInstanceCreateInfo createInfo;
 	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	createInfo.flags = 0;
-	createInfo.pApplicationInfo = NULL;
+	createInfo.pApplicationInfo = &appInfo;
 
 	createInfo.enabledLayerCount = pInitInfo->enabledLayerCount;
 	createInfo.ppEnabledLayerNames = pInitInfo->ppEnabledLayers;
