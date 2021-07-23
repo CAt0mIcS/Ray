@@ -258,10 +258,21 @@ def requires_reload():
     except IOError:
         return True
 
+    cached_lines.remove("")
+
     for source in sources:
         for raw_function in source:
             if raw_function not in cached_lines:
                 return True
+
+    for cached_line in cached_lines:
+        found = False
+        for source in sources:
+            if cached_line in source:
+                found = True
+        if not found:
+            return True
+
     return False
 
 
