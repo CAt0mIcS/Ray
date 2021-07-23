@@ -6,21 +6,22 @@ loader_file = sys.argv[1] + "/Ray/Core/RRendererLoader" if len(
     sys.argv) > 1 else "../Ray/Core/RRendererLoader"
 header_file_directories = [
     sys.argv[1] + "/RayRenderer/Core", sys.argv[1] + "/RayRenderer/Synchronization", sys.argv[1] + "/RayRenderer/Pipeline"] if len(sys.argv) > 1 else ["../RayRenderer/Core", "../RayRenderer/Synchronization", "../RayRenderer/Pipeline"]
+cache_path = "../loader_generator.cache"
 loader_template_cpp = r"""
 
-#include "Rpch.h"
-#include "RRendererLoader.h"
+# include "Rpch.h"
+# include "RRendererLoader.h"
 
-#include "Utils/RException.h"
+# include "Utils/RException.h"
 
-#ifdef _WIN32
-    #include <Windows.h>
-    #ifdef CreateSemaphore
-        #undef CreateSemaphore
-    #endif
-#else
-    #include <dlfcn.h>
-#endif
+# ifdef _WIN32
+    # include <Windows.h>
+    # ifdef CreateSemaphore
+        # undef CreateSemaphore
+    # endif
+# else
+    # include <dlfcn.h>
+# endif
 
 
 namespace At0::Ray
@@ -35,16 +36,16 @@ namespace At0::Ray
     template<typename... Args>
 	void* LoadFunction(Args&&... args)
 	{
-#ifdef _WIN32
+# ifdef _WIN32
 		return GetProcAddress(std::forward<Args>(args)...);
-#else
+# else
 		return dlsym(std::forward<Args>(args)...);
-#endif
+# endif
 	}
 
 	void LoadRenderer(RendererAPI::Type type)
 	{
-#ifdef _WIN32
+# ifdef _WIN32
 		HMODULE lib = nullptr;
         switch (type)
 		{
@@ -52,7 +53,7 @@ namespace At0::Ray
 		case RendererAPI::Vulkan: lib = LoadLibraryA("RayRendererVulkan.dll"); break;
 		default: ThrowRuntime("Invalid renderer type {0}", (uint32_t)type);
 		}
-#else
+# else
         void* lib = nullptr;
         switch (type)
 		{
@@ -60,7 +61,7 @@ namespace At0::Ray
 		case RendererAPI::Vulkan: lib = dlopen("libRayRendererVulkan.so", RTLD_LAZY); break;
 		default: ThrowRuntime("Invalid renderer type {0}", (uint32_t)type);
 		}
-#endif
+# endif
 
 
 		if (!lib)
@@ -84,9 +85,9 @@ namespace At0::Ray
 """
 
 loader_template_h = r"""
-#pragma once
+# pragma once
 
-#include "Ray/RBase.h"
+# include "Ray/RBase.h"
 {includes}
 
 
@@ -113,6 +114,7 @@ namespace At0::Ray
 
 sources = list(list())
 header_files = list()
+cached_functions = list()
 
 
 class Function:
@@ -152,9 +154,12 @@ def load_sources():
             if "RR_API " in lineStr:
                 line = 0
                 while ";" not in raw_sources[i][j + line]:
-                    sources[i][j] += (raw_sources[i][j + line])
+                    # Removes all tabs/newlines/...
+                    sources[i][j] += " ".join((raw_sources[i][j + line]
+                                               ).split())
                     line += 1
-                sources[i][j] += (raw_sources[i][j + line])
+                sources[i][j] += " ".join((raw_sources[i][j + line]
+                                           ).split())
                 if raw_header_files[i] not in header_files:
                     header_files.append(raw_header_files[i])
 
@@ -186,9 +191,11 @@ def build_function_declarations():
 
     for source in sources:
         for raw_function in source:
-            function = Function(raw_function)
-            declarations.append(
-                f"\t\textern {function.function_type_with_name};")
+            if raw_function not in cached_functions:
+                function = Function(raw_function)
+                declarations.append(
+                    f"\t\textern {function.function_type_with_name};")
+                cached_functions.append(raw_function)
 
     template = ""
     for declaration in declarations:
@@ -232,11 +239,41 @@ def build_function_definitions_and_assignments():
 
 def requires_reload():
     # Write functions to file to check if declarations changed so that we don't have to rebuild Ray if only a .c file in the renderer changes
-    return True
+
+    # Rebuild if cache file doesn't exist
+    cached_lines = list()
+    try:
+        with open(cache_path, "r") as reader:
+            cache = reader.read()
+            line = 0
+            cached_lines.append("")
+            for i in range(0, len(cache)):
+                if cache[i] != '\n' and cache[i] != '\r' and cache[i] != '\0' and cache[i] != '\t':
+                    if cache[i] != ';':
+                        cached_lines[line] += cache[i]
+                    else:
+                        cached_lines[line] += cache[i]
+                        line += 1
+                        cached_lines.append("")
+    except IOError:
+        return True
+
+    for source in sources:
+        for raw_function in source:
+            if raw_function not in cached_lines:
+                return True
+    return False
+
+
+def write_cached_functions():
+    with open(cache_path, "w") as writer:
+        for raw_function in cached_functions:
+            writer.write(raw_function + "\n")
 
 
 if __name__ == "__main__":
     load_sources()
     if requires_reload():
         build_function_declarations()
-    build_function_definitions_and_assignments()
+        write_cached_functions()
+        build_function_definitions_and_assignments()

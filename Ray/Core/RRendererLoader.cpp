@@ -1,18 +1,18 @@
 
 
-#include "Rpch.h"
-#include "RRendererLoader.h"
+# include "Rpch.h"
+# include "RRendererLoader.h"
 
-#include "Utils/RException.h"
+# include "Utils/RException.h"
 
-#ifdef _WIN32
-    #include <Windows.h>
-    #ifdef CreateSemaphore
-        #undef CreateSemaphore
-    #endif
-#else
-    #include <dlfcn.h>
-#endif
+# ifdef _WIN32
+    # include <Windows.h>
+    # ifdef CreateSemaphore
+        # undef CreateSemaphore
+    # endif
+# else
+    # include <dlfcn.h>
+# endif
 
 
 namespace At0::Ray
@@ -118,16 +118,16 @@ namespace At0::Ray
     template<typename... Args>
 	void* LoadFunction(Args&&... args)
 	{
-#ifdef _WIN32
+# ifdef _WIN32
 		return GetProcAddress(std::forward<Args>(args)...);
-#else
+# else
 		return dlsym(std::forward<Args>(args)...);
-#endif
+# endif
 	}
 
 	void LoadRenderer(RendererAPI::Type type)
 	{
-#ifdef _WIN32
+# ifdef _WIN32
 		HMODULE lib = nullptr;
         switch (type)
 		{
@@ -135,7 +135,7 @@ namespace At0::Ray
 		case RendererAPI::Vulkan: lib = LoadLibraryA("RayRendererVulkan.dll"); break;
 		default: ThrowRuntime("Invalid renderer type {0}", (uint32_t)type);
 		}
-#else
+# else
         void* lib = nullptr;
         switch (type)
 		{
@@ -143,7 +143,7 @@ namespace At0::Ray
 		case RendererAPI::Vulkan: lib = dlopen("libRayRendererVulkan.so", RTLD_LAZY); break;
 		default: ThrowRuntime("Invalid renderer type {0}", (uint32_t)type);
 		}
-#endif
+# endif
 
 
 		if (!lib)
