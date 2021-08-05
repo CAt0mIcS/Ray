@@ -9,10 +9,10 @@ header_file_directories = [
 cache_path = "../loader_generator.cache"
 loader_template_cpp = r"""
 
-# include "Rpch.h"
+# include "../Rpch.h"
 # include "RRendererLoader.h"
 
-# include "Utils/RException.h"
+# include "../Utils/RException.h"
 
 # ifdef _WIN32
     # include <Windows.h>
@@ -285,6 +285,8 @@ def write_cached_functions():
 if __name__ == "__main__":
     load_sources()
     if requires_reload():
+        print("Regenerating renderer loader files...")
         build_function_declarations()
         write_cached_functions()
         build_function_definitions_and_assignments()
+        print("Finnished regenerating renderer loader files.")
