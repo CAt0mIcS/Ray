@@ -1,12 +1,18 @@
 ﻿#include "Rpch.h"
 
 #include "../Core/RCommandPool.h"
+#include "../Core/RUtils.h"
 
-RrError RrCreateCommandPool(RrLogicalDevice pDevice,
-	const RrCommandPoolCreateInfo* const pCreateInfo, RrCommandPool* ppCommandPool)
+RrError RrCreateCommandPool(
+	RrLogicalDevice device, const RrCommandPoolCreateInfo* pCreateInfo, RrCommandPool* pCommandPool)
 {
-	*ppCommandPool = NULL;
 	return RrErrorSuccess;
 }
 
-void RrDestroyCommandPool(RrLogicalDevice pDevice, RrCommandPool pCommandPool) {}
+void RrDestroyCommandPool(RrLogicalDevice device, RrCommandPool commandPool) {}
+
+RrError RrResetCommandPool(
+	RrLogicalDevice device, RrCommandPool commandPool, RrCommandPoolResetFlags flags)
+{
+	return RrErrorSuccess;
+}

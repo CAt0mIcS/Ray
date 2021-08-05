@@ -1,6 +1,7 @@
 ﻿#include "Rpch.h"
 
-#include <RayRenderer/Core/RInstance.h>
+#include "../Core/RInstance.h"
+#include "../Core/RUtils.h"
 
 extern bool (*RrpfnValidationCallback)(RrLogMessageSeverity, const char*);
 
@@ -22,10 +23,18 @@ RrError RrInitialize(
 			return RrErrorLoaderFailed;
 	}
 
-	// Test
-	glViewport(0, 0, 800, 600);
-
 	return RrErrorSuccess;
 }
 
 void RrDestroyInstance(RrInstance pInstance, RrDebugMessenger pDebugMessenger) {}
+
+RrPFNVoidFunction RrGetInstanceProcAddr(RrInstance instance, const char* pName)
+{
+	return NULL;
+}
+
+RrError RrEnumerateInstanceExtensionProperties(
+	const char* pLayerName, uint32_t* pPropertyCount, RrExtensionProperties* pProperties)
+{
+	return RrErrorSuccess;
+}
