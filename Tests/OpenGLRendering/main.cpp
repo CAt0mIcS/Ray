@@ -2,10 +2,8 @@
 #include <Ray/Utils/RException.h>
 #include <signal.h>
 
-#undef RAY_EXPORT
-#define RAY_EXPORT
+#include <Ray/Graphics/RGraphics.h>
 #include <Ray/Core/RRendererLoader.h>
-#include <Ray/Core/RRendererLoader.cpp>
 
 using namespace At0::Ray;
 using namespace At0;
@@ -29,6 +27,20 @@ int main()
 	try
 	{
 		LoadRenderer(RendererAPI::OpenGL);
+
+		Window::Create();
+		Window::Get().Show();
+
+		Graphics::Create(Graphics::NoDepthImage);
+
+		const RendererInstance& instance = Graphics::Get().GetInstance();
+		const PhysicalDevice& physicalDevice = Graphics::Get().GetPhysicalDevice();
+		const Surface& surface = Graphics::Get().GetSurface();
+		const LogicalDevice& device = Graphics::Get().GetDevice();
+
+		while (Window::Get().Update())
+		{
+		}
 	}
 	catch (Exception& e)
 	{

@@ -48,7 +48,7 @@ namespace At0::Ray
 {
 	Graphics* Graphics::s_Instance = nullptr;
 
-	Graphics::Graphics()
+	Graphics::Graphics(int flags)
 	{
 		if (s_Instance)
 			ThrowRuntime("[Graphics] Object already created");
@@ -58,11 +58,6 @@ namespace At0::Ray
 		UpdateViewport();
 		UpdateScissor();
 
-		CreateVulkanObjects();
-	}
-
-	void Graphics::CreateVulkanObjects()
-	{
 		m_RendererInstance = MakeScope<RendererInstance>();
 		m_PhysicalDevice = MakeScope<PhysicalDevice>();
 		m_Surface = MakeScope<Surface>();
@@ -71,8 +66,9 @@ namespace At0::Ray
 		m_Swapchain = MakeScope<Swapchain>();
 		m_CommandPool = MakeScope<CommandPool>(RrCommandPoolCreateResetCommandBuffer);
 
-		m_DepthImage = MakeScope<DepthImage>(
-			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height });
+		if (!(flags & Graphics::NoDepthImage))
+			m_DepthImage = MakeScope<DepthImage>(
+				UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height });
 
 		CreateRenderPass();
 		CreateFramebuffers();
@@ -82,22 +78,41 @@ namespace At0::Ray
 		CreateSyncObjects();
 	}
 
+	bool Graphics::Create(int flags)
+	{
+		if (s_Instance)
+			return false;
+
+		new Graphics(flags);
+		return true;
+	}
+
 	Graphics& Graphics::Get()
 	{
-		if (!s_Instance)
-			new Graphics();
+		RAY_MEXPECTS(s_Instance, "[Graphics] Not created");
 		return *s_Instance;
 	}
 
 	void Graphics::CreateRenderPass()
 	{
+		Subpass subpass;
+		std::vector<RrAttachmentDescription> attachments;
+
 		Attachment colorAttachment(GetSwapchain().GetFormat(), RrImageLayoutPresentSrcKHR,
 			Attachment::LoadOp::Clear, Attachment::StoreOp::Store, Attachment::LoadOp::Undefined,
 			Attachment::StoreOp::Undefined);
 
-		Attachment depthAttachment(*m_DepthImage, RrImageLayoutDepthStencilAttachment,
-			Attachment::LoadOp::Clear, Attachment::StoreOp::Undefined,
-			Attachment::LoadOp::Undefined, Attachment::StoreOp::Undefined);
+		subpass.AddColorAttachment(0, colorAttachment);
+		attachments.emplace_back(colorAttachment);
+
+		if (m_DepthImage)
+		{
+			Attachment depthAttachment(*m_DepthImage, RrImageLayoutDepthStencilAttachment,
+				Attachment::LoadOp::Clear, Attachment::StoreOp::Undefined,
+				Attachment::LoadOp::Undefined, Attachment::StoreOp::Undefined);
+			subpass.AddDepthAttachment(1, depthAttachment);
+			attachments.emplace_back(depthAttachment);
+		}
 
 		// Subpass before 0 transforms image from VkAttachmentDescription::initialLayout to
 		// VkAttachmentReference::layout
@@ -105,9 +120,6 @@ namespace At0::Ray
 		// Subpass after the last one transforms image from VkAttachmentReference::layout to
 		// VkAttachmentDescription::finalLayout
 
-		Subpass subpass;
-		subpass.AddColorAttachment(0, colorAttachment);
-		subpass.AddDepthAttachment(1, depthAttachment);
 
 		RrSubpassDependency dependency{};
 
@@ -132,25 +144,30 @@ namespace At0::Ray
 		// Everything before the renderpass
 		// This stage mask mean that before the renderpass starts, all commands in the color
 		// attachment output and the early fragment test stage must finish execution.
-		dependency.srcStageMask =
-			RrPipelineStageColorAttachmentOutput | RrPipelineStageEarlyFragmentTests;
+		if (m_DepthImage)
+			dependency.srcStageMask =
+				RrPipelineStageColorAttachmentOutput | RrPipelineStageEarlyFragmentTests;
+		else
+			dependency.srcStageMask = RrPipelineStageColorAttachmentOutput;
 
 		// Future commands/subpasses need to wait for these stages to finish executing
 		// This stage mask means that we wait for the color attachment output and early fragment
 		// test stage to finish before recording new commands into these stages
-		dependency.dstStageMask =
-			RrPipelineStageColorAttachmentOutput | RrPipelineStageEarlyFragmentTests;
+		if (m_DepthImage)
+			dependency.dstStageMask =
+				RrPipelineStageColorAttachmentOutput | RrPipelineStageEarlyFragmentTests;
+		else
+			dependency.dstStageMask = RrPipelineStageColorAttachmentOutput;
 
 
 		dependency.srcAccessMask = 0;
 
 		// Do we need to write or read from the previous image
-		dependency.dstAccessMask =
-			RrAccessColorAttachmentWrite | RrAccessDepthStencilAttachmentWrite;
-
-		std::vector<RrAttachmentDescription> attachments;
-		attachments.emplace_back(colorAttachment);
-		attachments.emplace_back(depthAttachment);
+		if (m_DepthImage)
+			dependency.dstAccessMask =
+				RrAccessColorAttachmentWrite | RrAccessDepthStencilAttachmentWrite;
+		else
+			dependency.dstAccessMask = RrAccessColorAttachmentWrite;
 
 		std::vector<RrSubpassDescription> subpasses;
 		subpasses.emplace_back(subpass);
@@ -166,9 +183,13 @@ namespace At0::Ray
 		m_Framebuffers.resize(GetSwapchain().GetNumberOfImages());
 		for (uint32_t i = 0; i < m_Framebuffers.size(); ++i)
 		{
-			m_Framebuffers[i] = MakeScope<Framebuffer>(
-				*m_RenderPass, std::vector<RrImageView>{ *GetSwapchain().GetImageViews()[i],
-								   m_DepthImage->GetImageView() });
+			if (m_DepthImage)
+				m_Framebuffers[i] = MakeScope<Framebuffer>(
+					*m_RenderPass, std::vector<RrImageView>{ *GetSwapchain().GetImageViews()[i],
+									   m_DepthImage->GetImageView() });
+			else
+				m_Framebuffers[i] = MakeScope<Framebuffer>(
+					*m_RenderPass, std::vector<RrImageView>{ *GetSwapchain().GetImageViews()[i] });
 		}
 	}
 
@@ -446,14 +467,16 @@ namespace At0::Ray
 		m_Framebuffers.clear();
 
 		m_RenderPass.reset();
+		bool depthImageEnabled = m_DepthImage != nullptr;
 		m_DepthImage.reset();
 
 		m_Swapchain = MakeScope<Swapchain>(m_Swapchain->operator RrSwapchainKHR());
 		m_CommandPool.reset();
 
 		m_CommandPool = MakeScope<CommandPool>(RrCommandPoolCreateResetCommandBuffer);
-		m_DepthImage = MakeScope<DepthImage>(
-			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height });
+		if (depthImageEnabled)
+			m_DepthImage = MakeScope<DepthImage>(
+				UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height });
 		CreateRenderPass();
 		UpdateViewport();
 		UpdateScissor();

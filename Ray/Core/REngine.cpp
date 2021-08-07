@@ -33,6 +33,8 @@ namespace At0::Ray
 	{
 		Log::Info("[Engine] Startup");
 
+		Graphics::Create();
+
 		auto startSecTime = std::chrono::high_resolution_clock::now();
 		while (Window::Get().Update())
 		{

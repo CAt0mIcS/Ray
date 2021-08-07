@@ -122,6 +122,8 @@ namespace At0::Ray
 	Scene::Scene(Scope<Camera> camera)
 		: EventListener<CameraChangedEvent>(*camera), m_Camera(std::move(camera))
 	{
+		Graphics::Create();
+
 		s_CurrentScene = Scope<Scene>(this);
 		SetupPerSceneUniform();
 	}

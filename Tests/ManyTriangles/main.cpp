@@ -185,6 +185,7 @@ int main()
 		Ray::Window::Create();
 		Ray::Window::Get().Show();
 		Ray::Window::Get().SetTitle("SetupTest");
+		// Ray::Graphics::Create(Ray::Graphics::NoDepthImage);
 
 		return App{}.Run();
 	}

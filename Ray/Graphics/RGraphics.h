@@ -35,9 +35,19 @@ namespace At0::Ray
 	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
 	{
 	public:
+		static constexpr uint8_t s_MaxFramesInFlight = 2;
+
+		enum CreateFlags
+		{
+			None = 0,
+			NoDepthImage = 1
+		};
+
+	public:
 		~Graphics();
 		static Graphics& Get();
 		static void Destroy();
+		static bool Create(int flags = Graphics::None);
 
 		const RendererInstance& GetInstance() const { return *m_RendererInstance; }
 		const Surface& GetSurface() const { return *m_Surface; }
@@ -56,14 +66,13 @@ namespace At0::Ray
 		void Update(Delta dt);
 
 	private:
-		Graphics();
+		Graphics(int flags = Graphics::None);
 
 		void UpdateViewport();
 		void UpdateScissor();
 
 		// -------------------------------------------------------------
 		// Vulkan object creation functions
-		void CreateVulkanObjects();
 		void CreateRenderPass();
 		void CreateFramebuffers();
 		void CreatePipelineCache();
@@ -78,7 +87,6 @@ namespace At0::Ray
 
 	private:
 		static Graphics* s_Instance;
-		static constexpr uint8_t s_MaxFramesInFlight = 2;
 
 		RrViewport m_Viewport{};
 		RrRect2D m_Scissor{};

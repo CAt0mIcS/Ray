@@ -80,7 +80,7 @@ namespace At0::Ray
 
 	std::vector<std::string> Window::GetInstanceExtensions()
 	{
-		uint32_t count;
+		uint32_t count = 0;
 		RendererAPI::EnumerateInstanceExtensionProperties(nullptr, &count, nullptr);
 		if (count == 0)
 			return {};
