@@ -96,17 +96,24 @@ public:
 
 		// RAY_TODO: Fix matrix not being recalculated at the beginning
 
+		Ray::PhongMaterial::Layout layout{};
+		layout.color = Ray::Float4(1.0f);
+
 		m_Entity = Scene::Get().CreateEntity();
-		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/SmoothVase/smooth_vase.obj",
+			Ray::MakeRef<Ray::PhongMaterial>(layout)));
+		m_Entity.Get<Ray::Transform>()
+			.Rotate({ Ray::Math::PI<float>, 0.0f, 0.0f })
+			.Scale(Ray::Float3(2.0f));
 
 		auto flatWhiteMaterial = Ray::MakeRef<Ray::FlatColorMaterial>(
 			Ray::FlatColorMaterial::Layout{ { 1.0f, 1.0f, 1.0f, 1.0f } });
 		m_Light = Scene::Get().CreateEntity();
-		m_Light.Emplace<Ray::Mesh>(
-			Ray::Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", flatWhiteMaterial));
-		m_Light.Get<Ray::MeshRenderer>().GetBufferUniform("Shading")["color"] =
-			flatWhiteMaterial->GetColor();
-		m_Light.Get<Ray::Transform>().SetScale(Ray::Float3(0.4f));
+		// m_Light.Emplace<Ray::Mesh>(
+		//	Ray::Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", flatWhiteMaterial));
+		// m_Light.Get<Ray::MeshRenderer>().GetBufferUniform("Shading")["color"] =
+		//	flatWhiteMaterial->GetColor();
+		// m_Light.Get<Ray::Transform>().SetScale(Ray::Float3(0.4f));
 
 		// Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 		//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));

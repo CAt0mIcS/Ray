@@ -36,7 +36,7 @@ namespace At0::Ray
 			Ref<Texture2D> detailMask;
 			Float4 color{};
 
-			float metallic = 1.0f;
+			std::optional<float> metallic;
 
 			struct
 			{

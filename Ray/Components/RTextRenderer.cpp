@@ -90,9 +90,10 @@ namespace At0::Ray
 		{
 			if (GetEntity().HasParent())
 				GetBufferUniform("PerObjectData")["Model"] =
-					GetEntity().GetParent().Get<Transform>().AsMatrix() * tform.AsMatrix();
+					GetEntity().GetParent().Get<Transform>().GetTransformationMatrix() *
+					tform.GetTransformationMatrix();
 			else
-				GetBufferUniform("PerObjectData")["Model"] = tform.AsMatrix();
+				GetBufferUniform("PerObjectData")["Model"] = tform.GetTransformationMatrix();
 		}
 	}
 

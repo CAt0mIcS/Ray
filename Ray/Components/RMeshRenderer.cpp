@@ -47,9 +47,10 @@ namespace At0::Ray
 		{
 			if (GetEntity().HasParent())
 				(*m_PerObjectDataUniformRef) =
-					GetEntity().GetParent().Get<Transform>().AsMatrix() * tform.AsMatrix();
+					GetEntity().GetParent().Get<Transform>().GetTransformationMatrix() *
+					tform.GetTransformationMatrix();
 			else
-				(*m_PerObjectDataUniformRef) = tform.AsMatrix();
+				(*m_PerObjectDataUniformRef) = tform.GetTransformationMatrix();
 		}
 	}
 }  // namespace At0::Ray

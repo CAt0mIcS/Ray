@@ -6,40 +6,46 @@
 
 namespace At0::Ray
 {
-	void Transform::SetTranslation(Float3 translation)
+	Transform& Transform::SetTranslation(Float3 translation)
 	{
 		m_Translation = translation;
 		m_Changed = true;
+		return *this;
 	}
 
-	void Transform::SetRotation(Float3 rotation)
+	Transform& Transform::SetRotation(Float3 rotation)
 	{
 		m_Rotation = rotation;
 		m_Changed = true;
+		return *this;
 	}
 
-	void Transform::SetScale(Float3 scale)
+	Transform& Transform::SetScale(Float3 scale)
 	{
 		m_Scale = scale;
 		m_Changed = true;
+		return *this;
 	}
 
-	void Transform::Translate(Float3 translation)
+	Transform& Transform::Translate(Float3 translation)
 	{
 		m_Translation += translation;
 		m_Changed = true;
+		return *this;
 	}
 
-	void Transform::Rotate(Float3 rotation)
+	Transform& Transform::Rotate(Float3 rotation)
 	{
 		m_Rotation += rotation;
 		m_Changed = true;
+		return *this;
 	}
 
-	void Transform::Scale(Float3 scale)
+	Transform& Transform::Scale(Float3 scale)
 	{
 		m_Scale += scale;
 		m_Changed = true;
+		return *this;
 	}
 
 	void Transform::UpdateMatrix()
@@ -53,7 +59,7 @@ namespace At0::Ray
 			const float c1 = cos(m_Rotation.y);
 			const float s1 = sin(m_Rotation.y);
 			// clang-format off
-			 m_CachedMatrix = Matrix{
+			 m_CachedTransformationMatrix = Matrix{
 				{
 					m_Scale.x * (c1 * c3 + s1 * s2 * s3),
 					m_Scale.x * (c2 * s3),
@@ -109,7 +115,7 @@ namespace At0::Ray
 
 	Transform::Transform(Entity entity) : Component(entity), m_Rotation{ 0.0f, 0.0f, 0.0f } {}
 
-	const Matrix& Transform::AsMatrix()
+	const Matrix& Transform::GetTransformationMatrix()
 	{
 		//#ifndef NDEBUG
 		if (m_Changed)
@@ -118,6 +124,35 @@ namespace At0::Ray
 			// Log::Error("[Transform] Matrix should've already been recalculated");
 		}
 		//#endif
-		return m_CachedMatrix;
+		return m_CachedTransformationMatrix;
+	}
+
+	Matrix3x3 Transform::GetNormalMatrix() const
+	{
+		// RAY_TODO: Check if caching is a good option
+		const float c3 = cos(m_Rotation.z);
+		const float s3 = sin(m_Rotation.z);
+		const float c2 = cos(m_Rotation.x);
+		const float s2 = sin(m_Rotation.x);
+		const float c1 = cos(m_Rotation.y);
+		const float s1 = sin(m_Rotation.y);
+		const Float3 invScale = 1.0f / m_Scale;
+		return Matrix3x3{
+			{
+				invScale.x * (c1 * c3 + s1 * s2 * s3),
+				invScale.x * (c2 * s3),
+				invScale.x * (c1 * s2 * s3 - c3 * s1),
+			},
+			{
+				invScale.y * (c3 * s1 * s2 - c1 * s3),
+				invScale.y * (c2 * c3),
+				invScale.y * (c1 * c3 * s2 + s1 * s3),
+			},
+			{
+				invScale.z * (c2 * s1),
+				invScale.z * (-s2),
+				invScale.z * (c1 * c2),
+			},
+		};
 	}
 }  // namespace At0::Ray

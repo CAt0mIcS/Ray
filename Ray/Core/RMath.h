@@ -32,6 +32,7 @@ namespace At0::Ray
 	using Float4 = glm::vec<4, float, glm::defaultp>;
 
 	using Matrix = glm::mat4;
+	using Matrix3x3 = glm::mat3;
 
 	RAY_EXPORT Matrix MatrixTranslation(Float3 translation);
 	RAY_EXPORT Matrix MatrixTranslation(float x, float y, float z);

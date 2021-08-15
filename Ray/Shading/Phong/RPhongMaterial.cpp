@@ -27,7 +27,7 @@ namespace At0::Ray
 			shaderCodes.emplace_back(ShaderFileCode::AlbedoMap);
 		if (m_Layout.diffuseMap)
 			shaderCodes.emplace_back(ShaderFileCode::DiffuseMap);
-		else
+		if (m_Layout.metallic)
 			shaderCodes.emplace_back(ShaderFileCode::Metallic);
 		if (m_Layout.specularMap)
 			shaderCodes.emplace_back(ShaderFileCode::SpecularMap);
@@ -48,8 +48,8 @@ namespace At0::Ray
 
 		if (shaderCodes.empty())
 		{
-			shaders.emplace_back("Resources/Shaders/Phong.vert");
-			shaders.emplace_back("Resources/Shaders/Phong.frag");
+			shaders.emplace_back("Resources/Shaders/Phong_Col.vert");
+			shaders.emplace_back("Resources/Shaders/Phong_Col.frag");
 			return shaders;
 		}
 
