@@ -35,8 +35,7 @@ namespace At0::Ray
 		/**
 		 * @returns All the unsuported extensions
 		 */
-		std::vector<std::string> ExtensionsSupported(
-			const std::vector<std::string>& instanceExtensions);
+		bool ExtensionsSupported(const std::vector<const char*>& instanceExtensions);
 
 	private:
 		RrInstance m_Instance = nullptr;

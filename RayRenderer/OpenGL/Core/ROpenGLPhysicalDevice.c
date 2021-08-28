@@ -1,4 +1,4 @@
-#include "Rpch.h"
+﻿#include "Rpch.h"
 
 #include "../Core/RPhysicalDevice.h"
 #include "../Core/RUtils.h"
@@ -13,6 +13,11 @@ RrError RrEnumeratePhysicalDevice(RrInstance instance,
 void RrGetPhysicalDeviceProperties(
 	RrPhysicalDevice physicalDevice, RrPhysicalDeviceProperties* pProperties)
 {
+	// driver or api?
+	const GLubyte* version = glGetString(GL_VERSION);
+
+	const GLubyte* vendor = glGetString(GL_VENDOR);
+	strcpy(pProperties->deviceName, glGetString(GL_RENDERER));
 }
 
 void RrGetPhysicalDeviceFeatures(

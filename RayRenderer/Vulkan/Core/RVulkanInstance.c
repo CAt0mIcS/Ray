@@ -179,3 +179,38 @@ void RrDestroyInstance(RrInstance instance, RrDebugMessenger debugMessenger)
 
 	vkDestroyInstance((VkInstance)instance, NULL);
 }
+
+
+RR_API bool RrInstanceExtensionsSupported(uint32_t extensionCount, const char* const* ppNames)
+{
+	uint32_t extPropCount;
+	if (vkEnumerateInstanceExtensionProperties(NULL, &extPropCount, NULL) != VK_SUCCESS)
+		return false;
+
+	VkExtensionProperties* pExtProps = malloc(sizeof(VkExtensionProperties) * extPropCount);
+
+	if (vkEnumerateInstanceExtensionProperties(NULL, &extPropCount, pExtProps) != VK_SUCCESS)
+		return false;
+
+	for (uint32_t i = 0; i < extensionCount; ++i)
+	{
+		bool extFound = false;
+		for (uint32_t j = 0; j < extPropCount; ++j)
+		{
+			if (strcmp(ppNames[i], pExtProps[j].extensionName) == 0)
+			{
+				extFound = true;
+				break;
+			}
+		}
+
+		if (!extFound)
+		{
+			free(pExtProps);
+			return false;
+		}
+	}
+
+	free(pExtProps);
+	return true;
+}

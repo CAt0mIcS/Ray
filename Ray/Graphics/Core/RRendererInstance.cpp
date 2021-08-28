@@ -41,15 +41,13 @@ namespace At0::Ray
 
 		// Get required Instance extensions from glfw
 		auto instanceExtensions = GetRequiredExtensions();
-		if (auto unsuportedExtensions = ExtensionsSupported(instanceExtensions);
-			!unsuportedExtensions.empty())
-		{
-			ThrowRuntime("[RendererInstance] VulkanExtension {0} not supported");
-		}
 
 		std::vector<const char*> charInstanceExtensions(instanceExtensions.size());
 		for (uint32_t i = 0; i < charInstanceExtensions.size(); ++i)
 			charInstanceExtensions[i] = instanceExtensions[i].c_str();
+
+		if (!ExtensionsSupported(charInstanceExtensions))
+			ThrowRuntime("[RendererInstance] Some required Vulkan extensions are not supported");
 
 		initInfo.enabledExtensionCount = (uint32_t)charInstanceExtensions.size();
 		initInfo.ppEnabledExtensions = charInstanceExtensions.data();
@@ -87,38 +85,9 @@ namespace At0::Ray
 		return extensions;
 	}
 
-	std::vector<std::string> RendererInstance::ExtensionsSupported(
-		const std::vector<std::string>& instanceExtensions)
+	bool RendererInstance::ExtensionsSupported(const std::vector<const char*>& instanceExtensions)
 	{
-		std::vector<std::string> unsupportedExtensions;
-
-		uint32_t extPropCount = 0;
-		RendererAPI::EnumerateInstanceExtensionProperties(nullptr, &extPropCount, nullptr);
-		RAY_MEXPECTS(extPropCount != 0,
-			"[RendererInstance] Failed to enumerate instance extension properties");
-
-		std::vector<RrExtensionProperties> extProps(extPropCount);
-		RendererAPI::EnumerateInstanceExtensionProperties(nullptr, &extPropCount, extProps.data());
-		RAY_MEXPECTS(!extProps.empty(),
-			"[RendererInstance] Failed to enumerate instance extension properties");
-
-		for (std::string_view extension : instanceExtensions)
-		{
-			bool extensionFound = false;
-
-			for (const RrExtensionProperties& prop : extProps)
-			{
-				if (strcmp(extension.data(), prop.extensionName) == 0)
-				{
-					extensionFound = true;
-					break;
-				}
-			}
-
-			if (!extensionFound)
-				unsupportedExtensions.emplace_back(extension);
-		}
-
-		return unsupportedExtensions;
+		return RendererAPI::InstanceExtensionsSupported(
+			(uint32_t)instanceExtensions.size(), instanceExtensions.data());
 	}
 }  // namespace At0::Ray

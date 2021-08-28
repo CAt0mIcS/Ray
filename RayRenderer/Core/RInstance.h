@@ -48,4 +48,7 @@ RR_API RrPFNVoidFunction RrGetInstanceProcAddr(RrInstance instance, const char* 
 RR_API RrError RrEnumerateInstanceExtensionProperties(
 	const char* pLayerName, uint32_t* pPropertyCount, RrExtensionProperties* pProperties);
 
+
+RR_API bool RrInstanceExtensionsSupported(uint32_t extensionCount, const char* const* ppNames);
+
 RR_EXTERN_C_END

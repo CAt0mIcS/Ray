@@ -38,3 +38,9 @@ RrError RrEnumerateInstanceExtensionProperties(
 {
 	return RrErrorSuccess;
 }
+
+
+RR_API bool RrInstanceExtensionsSupported(uint32_t extensionCount, const char* const* ppNames)
+{
+	return true;
+}

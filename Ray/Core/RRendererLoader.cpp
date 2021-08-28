@@ -58,6 +58,7 @@ namespace At0::Ray
 		void (*DestroyInstance)(RrInstance instance, RrDebugMessenger debugMessenger) = nullptr;
 		RrPFNVoidFunction (*GetInstanceProcAddr)(RrInstance instance, const char* pName) = nullptr;
 		RrError (*EnumerateInstanceExtensionProperties)(const char* pLayerName, uint32_t* pPropertyCount, RrExtensionProperties* pProperties) = nullptr;
+		bool (*InstanceExtensionsSupported)(uint32_t extensionCount, const char* const* ppNames) = nullptr;
 		RrError (*CreateLogicalDevice)(RrPhysicalDevice physicalDevice,RrLogicalDeviceCreateInfo* pCreateInfo, RrLogicalDevice* pDevice) = nullptr;
 		void (*GetDeviceQueue)(RrLogicalDevice device, uint32_t queueFamilyIndex, uint32_t queueIndex, RrQueue* pQueue) = nullptr;
 		void (*DestroyLogicalDevice)(RrLogicalDevice device) = nullptr;
@@ -196,6 +197,7 @@ namespace At0::Ray
 		RendererAPI::DestroyInstance = (void (*)(RrInstance instance, RrDebugMessenger debugMessenger))LoadFunction(lib, "RrDestroyInstance");
 		RendererAPI::GetInstanceProcAddr = (RrPFNVoidFunction (*)(RrInstance instance, const char* pName))LoadFunction(lib, "RrGetInstanceProcAddr");
 		RendererAPI::EnumerateInstanceExtensionProperties = (RrError (*)(const char* pLayerName, uint32_t* pPropertyCount, RrExtensionProperties* pProperties))LoadFunction(lib, "RrEnumerateInstanceExtensionProperties");
+		RendererAPI::InstanceExtensionsSupported = (bool (*)(uint32_t extensionCount, const char* const* ppNames))LoadFunction(lib, "RrInstanceExtensionsSupported");
 		RendererAPI::CreateLogicalDevice = (RrError (*)(RrPhysicalDevice physicalDevice,RrLogicalDeviceCreateInfo* pCreateInfo, RrLogicalDevice* pDevice))LoadFunction(lib, "RrCreateLogicalDevice");
 		RendererAPI::GetDeviceQueue = (void (*)(RrLogicalDevice device, uint32_t queueFamilyIndex, uint32_t queueIndex, RrQueue* pQueue))LoadFunction(lib, "RrGetDeviceQueue");
 		RendererAPI::DestroyLogicalDevice = (void (*)(RrLogicalDevice device))LoadFunction(lib, "RrDestroyLogicalDevice");
