@@ -10,6 +10,4 @@ namespace At0::Ray
 	{
 		m_GraphicsPipeline->CmdBind(cmdBuff);
 	}
-
-	Material::Material() {}
 }  // namespace At0::Ray

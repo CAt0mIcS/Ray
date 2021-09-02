@@ -27,12 +27,10 @@ namespace At0::Ray
 
 	Renderer::~Renderer() {}
 
-	Renderer::Renderer(Ref<Material> material, bool automaticUniformEmplacement)
-		: m_Material(material)
+	Renderer::Renderer(Ref<Material> material, bool addPerObjectDataUniform) : m_Material(material)
 	{
-		AddBufferUniform("PerObjectData", ShaderStage::Vertex);
-		if (automaticUniformEmplacement)
-			AddUniforms();
+		if (addPerObjectDataUniform)
+			AddBufferUniform("PerObjectData", ShaderStage::Vertex);
 	}
 
 	BufferUniform& Renderer::AddBufferUniform(const std::string& name, ShaderStage stage)
@@ -66,8 +64,8 @@ namespace At0::Ray
 				Pipeline::BindPoint::Graphics, m_Material->GetGraphicsPipeline().GetLayout(), set);
 
 		RAY_MEXPECTS(std::find_if(m_BufferUniforms[set].begin(), m_BufferUniforms[set].end(),
-						 [&name](const auto& uniform) { return uniform.GetName() == name; }) ==
-						 m_BufferUniforms[set].end(),
+						 [&name](const auto& uniform)
+						 { return uniform.GetName() == name; }) == m_BufferUniforms[set].end(),
 			"[Renderer] BufferUniform \"{0}\" already added", name);
 
 		// Create buffer uniform
@@ -106,8 +104,8 @@ namespace At0::Ray
 				Pipeline::BindPoint::Graphics, m_Material->GetGraphicsPipeline().GetLayout(), set);
 
 		RAY_MEXPECTS(std::find_if(m_Sampler2DUniforms[set].begin(), m_Sampler2DUniforms[set].end(),
-						 [&name](const auto& uniform) { return uniform.GetName() == name; }) ==
-						 m_Sampler2DUniforms[set].end(),
+						 [&name](const auto& uniform)
+						 { return uniform.GetName() == name; }) == m_Sampler2DUniforms[set].end(),
 			"[Renderer] Sampler2DUniform \"{0}\" already added", name);
 
 		// Create buffer uniform
@@ -156,35 +154,5 @@ namespace At0::Ray
 		ThrowRuntime("[Renderer] Failed to retrieve Descriptor Set of uniform with name \"{0}\"",
 			uniformName);
 		return m_DescriptorSets[0];
-	}
-
-	void Renderer::AddUniforms()
-	{
-		for (const auto& [stage, reflection] :
-			m_Material->GetGraphicsPipeline().GetShader().GetReflections())
-		{
-			for (const auto& uBlock : reflection.GetUniformBlocks())
-			{
-				if (uBlock.name == UniformTag::Shading)
-					AddBufferUniform(UniformTag::Shading, stage);
-			}
-
-			// Only sampler uniforms can be outside of a block
-			for (const auto& uniform : reflection.GetUniforms())
-			{
-				if (uniform.name == UniformTag::AlbedoMapSampler)
-					AddSampler2DUniform(
-						UniformTag::AlbedoMapSampler, stage, m_Material->GetAlbedoMap());
-				else if (uniform.name == UniformTag::DiffuseMapSampler)
-					AddSampler2DUniform(
-						UniformTag::DiffuseMapSampler, stage, m_Material->GetDiffuseMap());
-				else if (uniform.name == UniformTag::SpecularMapSampler)
-					AddSampler2DUniform(
-						UniformTag::SpecularMapSampler, stage, m_Material->GetSpecularMap());
-				else if (uniform.name == UniformTag::NormalMapSampler)
-					AddSampler2DUniform(
-						UniformTag::NormalMapSampler, stage, m_Material->GetNormalMap());
-			}
-		}
 	}
 }  // namespace At0::Ray

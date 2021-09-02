@@ -81,7 +81,8 @@ namespace At0::Ray
 
 		auto meshRendererView = Scene::Get().EntityView<MeshRenderer>();
 		m_ThreadPool.SubmitLoop(0u, (uint32_t)meshRendererView.size(),
-			[this, imageIndex, &meshRendererView](uint32_t i, uint32_t thread) {
+			[this, imageIndex, &meshRendererView](uint32_t i, uint32_t thread)
+			{
 				Entity{ meshRendererView[i] }.Get<MeshRenderer>().Render(
 					*m_CommandResources[imageIndex][thread].commandBuffer);
 			});
@@ -91,8 +92,8 @@ namespace At0::Ray
 
 		for (const auto& [commandPool, commandBuffer] : m_CommandResources[imageIndex])
 		{
-			Scene::Get().EntityView<TextRenderer>().each(
-				[&commandBuffer](TextRenderer& renderer) { renderer.Render(*commandBuffer); });
+			// Scene::Get().EntityView<TextRenderer>().each(
+			//	[&commandBuffer](TextRenderer& renderer) { renderer.Render(*commandBuffer); });
 #if RAY_ENABLE_IMGUI
 			ImGUI::Get().CmdBind(*commandBuffer);
 #endif

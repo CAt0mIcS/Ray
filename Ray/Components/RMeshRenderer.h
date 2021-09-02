@@ -31,8 +31,7 @@ namespace At0::Ray
 		 * used to add the uniforms. If false, all uniforms except for PerObjectData need to be
 		 * added
 		 */
-		MeshRenderer(
-			Entity entity, Ref<Material> material, bool automaticUniformEmplacement = true);
+		MeshRenderer(Entity entity, Ref<Material> material, bool addPerObjectDataUniform = true);
 
 		/**
 		 * Binds all of the mesh's resources

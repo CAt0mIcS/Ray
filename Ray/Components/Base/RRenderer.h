@@ -51,10 +51,7 @@ namespace At0::Ray
 		Ref<Material> GetSharedMaterial() const { return m_Material; }
 
 	protected:
-		Renderer(Ref<Material> material, bool automaticUniformEmplacement = true);
-
-	private:
-		void AddUniforms();
+		Renderer(Ref<Material> material, bool addPerObjectDataUniform = true);
 
 	protected:
 		std::vector<DescriptorSet> m_DescriptorSets;

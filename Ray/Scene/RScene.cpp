@@ -74,9 +74,9 @@ namespace At0::Ray
 		Time tStart = Time::Now();
 
 #if RAY_MULTITHREADED_TRANSFORM_CALCULATIONS
-		m_ThreadPool.SubmitLoop(0u, (uint32_t)tformView.size(), [this, &tformView](uint32_t i) {
-			Entity{ tformView[i] }.Get<Transform>().UpdateMatrix();
-		});
+		m_ThreadPool.SubmitLoop(0u, (uint32_t)tformView.size(),
+			[this, &tformView](uint32_t i)
+			{ Entity{ tformView[i] }.Get<Transform>().UpdateMatrix(); });
 		m_ThreadPool.WaitForTasks();
 #else
 		tformView.each([](Transform& tform) { tform.UpdateMatrix(); });
@@ -89,17 +89,16 @@ namespace At0::Ray
 
 #if RAY_MULTITHREADED_MESHRENDERER_UPDATES
 		auto meshRendererView = m_Registry.view<MeshRenderer>();
-		m_ThreadPool.SubmitLoop(
-			0u, (uint32_t)meshRendererView.size(), [&meshRendererView](uint32_t i) {
-				Entity{ meshRendererView[i] }.Get<MeshRenderer>().Update();
-			});
+		m_ThreadPool.SubmitLoop(0u, (uint32_t)meshRendererView.size(),
+			[&meshRendererView](uint32_t i)
+			{ Entity{ meshRendererView[i] }.Get<MeshRenderer>().Update(); });
 		m_ThreadPool.WaitForTasks();
 
 #else
 		m_Registry.view<MeshRenderer>().each([](MeshRenderer& mesh) { mesh.Update(); });
 #endif
 
-		m_Registry.view<TextRenderer>().each([](TextRenderer& text) { text.Update(); });
+		// m_Registry.view<TextRenderer>().each([](TextRenderer& text) { text.Update(); });
 
 		CLog::Trace(
 			"[Scene] MeshRenderer updates took {0}us", (Time::Now() - tStart).AsMicroseconds());

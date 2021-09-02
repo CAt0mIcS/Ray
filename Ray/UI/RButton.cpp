@@ -1,8 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RButton.h"
 
-#include "Shading/Flat/RFlatColorMaterial.h"
-#include "Shading/Flat/RFlatTextureMaterial.h"
 #include "Scene/RScene.h"
 #include "Components/RMesh.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
@@ -21,18 +19,18 @@ namespace At0::Ray
 		const Float3& color)
 		: Widget(entity, name), m_UseColorMaterial(true)
 	{
-		FlatColorMaterial::Layout layout{};
-		GraphicsPipeline::Layout pipelineLayout{};
-		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
-		pipelineLayout.shader =
-			Shader::Acquire({ "Resources/Shaders/UI.vert", "Resources/Shaders/UI.frag" });
-		Ref<Material> material =
-			MakeRef<FlatColorMaterial>(std::move(layout), std::move(pipelineLayout));
+		// FlatColorMaterial::Layout layout{};
+		// GraphicsPipeline::Layout pipelineLayout{};
+		// pipelineLayout.cullMode = VK_CULL_MODE_NONE;
+		// pipelineLayout.shader =
+		//	Shader::Acquire({ "Resources/Shaders/UI.vert", "Resources/Shaders/UI.frag" });
+		// Ref<Material> material =
+		//	MakeRef<FlatColorMaterial>(std::move(layout), std::move(pipelineLayout));
 
-		GetEntity().Emplace<Mesh>(Mesh::Plane(material));
-		MeshRenderer& renderer = GetEntity().Emplace<MeshRenderer>(std::move(material));
-		BufferUniform& uColor = renderer.AddBufferUniform("Shading", ShaderStage::Fragment);
-		uColor["color"] = color;
+		// GetEntity().Emplace<Mesh>(Mesh::Plane(material));
+		// MeshRenderer& renderer = GetEntity().Emplace<MeshRenderer>(std::move(material));
+		// BufferUniform& uColor = renderer.AddBufferUniform("Shading", ShaderStage::Fragment);
+		// uColor["color"] = color;
 
 		SetWidth(width);
 		SetHeight(height);
@@ -43,17 +41,17 @@ namespace At0::Ray
 		Ref<Texture2D> texture)
 		: Widget(entity, name), m_UseColorMaterial(false)
 	{
-		FlatTextureMaterial::Layout layout{};
-		GraphicsPipeline::Layout pipelineLayout{};
-		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
-		pipelineLayout.shader =
-			Shader::Acquire({ "Resources/Shaders/UI_Tex.vert", "Resources/Shaders/UI_Tex.frag" });
-		Ref<Material> material =
-			MakeRef<FlatTextureMaterial>(std::move(layout), std::move(pipelineLayout));
+		// FlatTextureMaterial::Layout layout{};
+		// GraphicsPipeline::Layout pipelineLayout{};
+		// pipelineLayout.cullMode = VK_CULL_MODE_NONE;
+		// pipelineLayout.shader =
+		//	Shader::Acquire({ "Resources/Shaders/UI_Tex.vert", "Resources/Shaders/UI_Tex.frag" });
+		// Ref<Material> material =
+		//	MakeRef<FlatTextureMaterial>(std::move(layout), std::move(pipelineLayout));
 
-		GetEntity().Emplace<Mesh>(Mesh::Plane(material));
-		MeshRenderer& renderer = GetEntity().Emplace<MeshRenderer>(std::move(material));
-		renderer.AddSampler2DUniform("texSampler", ShaderStage::Fragment, std::move(texture));
+		// GetEntity().Emplace<Mesh>(Mesh::Plane(material));
+		// MeshRenderer& renderer = GetEntity().Emplace<MeshRenderer>(std::move(material));
+		// renderer.AddSampler2DUniform("texSampler", ShaderStage::Fragment, std::move(texture));
 
 		SetWidth(width);
 		SetHeight(height);

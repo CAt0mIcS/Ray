@@ -15,11 +15,11 @@
 
 namespace At0::Ray
 {
-	MeshRenderer::MeshRenderer(
-		Entity entity, Ref<Material> material, bool automaticUniformEmplacement)
-		: Component(entity), Renderer(std::move(material), automaticUniformEmplacement)
+	MeshRenderer::MeshRenderer(Entity entity, Ref<Material> material, bool addPerObjectDataUniform)
+		: Component(entity), Renderer(std::move(material), addPerObjectDataUniform)
 	{
-		m_PerObjectDataUniformRef = GetBufferUniform(UniformTag::PerObjectData)["Model"];
+		if (addPerObjectDataUniform)
+			m_PerObjectDataUniformRef = GetBufferUniform(UniformTag::PerObjectData)["Model"];
 	}
 
 	void MeshRenderer::Render(const CommandBuffer& cmdBuff) const

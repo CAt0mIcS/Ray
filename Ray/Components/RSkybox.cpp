@@ -7,7 +7,6 @@
 #include "Graphics/Buffers/RBuffer.h"
 
 #include "Scene/RScene.h"
-#include "Shading/Flat/RFlatTextureMaterial.h"
 
 #include "RMesh.h"
 #include "RTransform.h"
@@ -21,18 +20,18 @@ namespace At0::Ray
 	Skybox::Skybox(Entity entity, Ref<Texture2D> texture)
 		: Component(entity), EventListener<CameraChangedEvent>(Scene::Get().GetCamera())
 	{
-		GraphicsPipeline::Layout layout{};
-		layout.cullMode = VK_CULL_MODE_FRONT_BIT;
-		Ref<Material> material = MakeRef<FlatTextureMaterial>(
-			FlatTextureMaterial::Layout{ std::move(texture) }, std::move(layout));
+		// GraphicsPipeline::Layout layout{};
+		// layout.cullMode = VK_CULL_MODE_FRONT_BIT;
+		// Ref<Material> material = MakeRef<FlatTextureMaterial>(
+		//	FlatTextureMaterial::Layout{ std::move(texture) }, std::move(layout));
 
-		Mesh& mesh = GetEntity().Emplace<Mesh>(
-			Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", material));
-		auto& tform = GetEntity().Get<Transform>();
-		tform.SetScale(Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
+		// Mesh& mesh = GetEntity().Emplace<Mesh>(
+		//	Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", material));
+		// auto& tform = GetEntity().Get<Transform>();
+		// tform.SetScale(Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
 
-		const Float3& camPos = Scene::Get().GetCamera().Position;
-		tform.SetTranslation({ -camPos.x, camPos.y, -camPos.z });
+		// const Float3& camPos = Scene::Get().GetCamera().Position;
+		// tform.SetTranslation({ -camPos.x, camPos.y, -camPos.z });
 	}
 
 	Skybox::Skybox(Entity entity, Ref<TextureCubemap> texture)

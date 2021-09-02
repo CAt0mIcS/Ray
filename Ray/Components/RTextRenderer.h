@@ -12,10 +12,10 @@ namespace At0::Ray
 	class RAY_EXPORT TextRenderer : public Component, public Renderer
 	{
 	public:
-		TextRenderer(Entity entity, Ref<FlatTextMaterial> material);
+		// TextRenderer(Entity entity, Ref<FlatTextMaterial> material);
 
-		void Update();
-		void Render(const CommandBuffer& cmdBuff) const;
+		// void Update();
+		// void Render(const CommandBuffer& cmdBuff) const;
 
 		// std::string_view GetText() const;
 		// void SetText(std::string_view txt);

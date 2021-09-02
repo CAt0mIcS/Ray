@@ -31,7 +31,8 @@ namespace At0::Ray
 	class RAY_EXPORT Material
 	{
 	public:
-		virtual ~Material() = default;
+		Material(Ref<GraphicsPipeline> pipeline) : m_GraphicsPipeline(std::move(pipeline)) {}
+		~Material() = default;
 
 		const GraphicsPipeline& GetGraphicsPipeline() const { return *m_GraphicsPipeline; }
 		GraphicsPipeline& GetGraphicsPipeline() { return *m_GraphicsPipeline; }
@@ -41,18 +42,6 @@ namespace At0::Ray
 		 * Bind the graphics pipeline
 		 */
 		void CmdBind(const CommandBuffer& cmdBuff) const;
-
-		virtual Float4 GetColor() const { return { 1.0f, 1.0f, 1.0f, 1.0f }; }
-		virtual Ref<Texture2D> GetAlbedoMap() const { return nullptr; }
-		virtual Ref<Texture2D> GetDiffuseMap() const { return nullptr; }
-		virtual Ref<Texture2D> GetSpecularMap() const { return nullptr; }
-		virtual Ref<Texture2D> GetNormalMap() const { return nullptr; }
-		virtual Ref<Texture2D> GetHeightMap() const { return nullptr; }
-		virtual Ref<Texture2D> GetOcclusion() const { return nullptr; }
-		virtual Ref<Texture2D> GetDetailMask() const { return nullptr; }
-
-	protected:
-		Material();
 
 	protected:
 		Ref<GraphicsPipeline> m_GraphicsPipeline;

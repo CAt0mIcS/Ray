@@ -212,14 +212,6 @@ set(SRC
 	# Shading
 	"Shading/RMaterial.h"
 	"Shading/RMaterial.cpp"
-	"Shading/Phong/RPhongMaterial.h"
-	"Shading/Phong/RPhongMaterial.cpp"
-	"Shading/Flat/RFlatColorMaterial.h"
-	"Shading/Flat/RFlatColorMaterial.cpp"
-	"Shading/Flat/RFlatTextureMaterial.h"
-	"Shading/Flat/RFlatTextureMaterial.cpp"
-	"Shading/Flat/RFlatTextMaterial.h"
-	"Shading/Flat/RFlatTextMaterial.cpp"
 
 	# ------------------------------------------------------------------
 	# User Interface
