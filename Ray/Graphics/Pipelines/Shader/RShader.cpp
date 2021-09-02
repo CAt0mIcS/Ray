@@ -15,6 +15,14 @@
 
 namespace At0::Ray
 {
+	Ref<Shader> Shader::Acquire(
+		std::vector<std::string> shaders, const std::vector<std::string>& reflections, Flags flags)
+	{
+		return Resources::Get().EmplaceIfNonExistent<Shader>(
+			std::accumulate(shaders.begin(), shaders.end(), std::string{}), std::move(shaders),
+			reflections, flags);
+	}
+
 	Shader::Shader(
 		std::vector<std::string> shaders, const std::vector<std::string>& reflections, Flags flags)
 		: m_Filepaths(std::move(shaders))
@@ -438,15 +446,6 @@ namespace At0::Ray
 		uint32_t binding) const
 	{
 		return DynamicVertex{ *this }.GetVertexInputAttributes(binding);
-	}
-
-	std::string Shader::GetUID(const std::vector<std::string>& shaders)
-	{
-		std::ostringstream oss;
-		oss << "Shader";
-		for (const std::string& str : shaders)
-			oss << "#" << str;
-		return oss.str();
 	}
 
 	void Shader::IncrementDescriptorPool(

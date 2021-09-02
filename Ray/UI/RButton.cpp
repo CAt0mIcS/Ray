@@ -24,8 +24,8 @@ namespace At0::Ray
 		FlatColorMaterial::Layout layout{};
 		GraphicsPipeline::Layout pipelineLayout{};
 		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
-		pipelineLayout.shader = Codex::Resolve<Shader>(
-			std::vector<std::string>{ "Resources/Shaders/UI.vert", "Resources/Shaders/UI.frag" });
+		pipelineLayout.shader =
+			Shader::Acquire({ "Resources/Shaders/UI.vert", "Resources/Shaders/UI.frag" });
 		Ref<Material> material =
 			MakeRef<FlatColorMaterial>(std::move(layout), std::move(pipelineLayout));
 
@@ -46,8 +46,8 @@ namespace At0::Ray
 		FlatTextureMaterial::Layout layout{};
 		GraphicsPipeline::Layout pipelineLayout{};
 		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
-		pipelineLayout.shader = Codex::Resolve<Shader>(std::vector<std::string>{
-			"Resources/Shaders/UI_Tex.vert", "Resources/Shaders/UI_Tex.frag" });
+		pipelineLayout.shader =
+			Shader::Acquire({ "Resources/Shaders/UI_Tex.vert", "Resources/Shaders/UI_Tex.frag" });
 		Ref<Material> material =
 			MakeRef<FlatTextureMaterial>(std::move(layout), std::move(pipelineLayout));
 

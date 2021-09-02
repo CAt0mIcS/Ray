@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "../../../RBase.h"
+#include "../../../Core/RResource.h"
 #include "RShaderReflection.h"
 
 #include <vulkan/vulkan_core.h>
@@ -47,7 +48,7 @@ namespace At0::Ray
 		Mat4
 	};
 
-	class RAY_EXPORT Shader
+	class RAY_EXPORT Shader : public Resource
 	{
 	public:
 		enum Flags : uint16_t
@@ -57,6 +58,9 @@ namespace At0::Ray
 		};
 
 	public:
+		static Ref<Shader> Acquire(std::vector<std::string> shaders,
+			const std::vector<std::string>& reflections = {}, Flags flags = GLSL);
+
 		Shader(std::vector<std::string> shaders, const std::vector<std::string>& reflections = {},
 			Flags flags = GLSL);
 
@@ -83,8 +87,6 @@ namespace At0::Ray
 			uint32_t binding = 0) const;
 		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributes(
 			uint32_t binding = 0) const;
-
-		static std::string GetUID(const std::vector<std::string>& shaders);
 
 	private:
 		void CreateReflection();
