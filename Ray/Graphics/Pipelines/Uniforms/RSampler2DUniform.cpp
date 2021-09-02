@@ -35,4 +35,6 @@ namespace At0::Ray
 		m_Texture = std::move(texture);
 		descSet.BindUniform(*this);
 	}
+
+	void Sampler2DUniform::SetTexture(Ref<Texture2D> texture) { m_Texture = std::move(texture); }
 }  // namespace At0::Ray

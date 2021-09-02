@@ -20,7 +20,16 @@ namespace At0::Ray
 		std::string_view GetName() const { return m_Name; }
 		uint32_t GetBinding() const { return m_Binding; }
 		Ref<Texture2D> GetTexture() const { return m_Texture; }
+
+		/**
+		 * Sets the texture and rebinds descriptor set to uniform
+		 */
 		void SetTexture(Ref<Texture2D> texture, DescriptorSet& descSet);
+
+		/**
+		 * Sets the texture, requires assigned descriptor set to rebind to uniform
+		 */
+		void SetTexture(Ref<Texture2D> texture);
 
 	private:
 		std::string m_Name;

@@ -27,11 +27,7 @@ namespace At0::Ray
 
 	Renderer::~Renderer() {}
 
-	Renderer::Renderer(Ref<Material> material, bool addPerObjectDataUniform) : m_Material(material)
-	{
-		if (addPerObjectDataUniform)
-			AddBufferUniform("PerObjectData", ShaderStage::Vertex);
-	}
+	Renderer::Renderer(Ref<Material> material) : m_Material(material) { AddUniforms(); }
 
 	BufferUniform& Renderer::AddBufferUniform(const std::string& name, ShaderStage stage)
 	{
@@ -110,8 +106,9 @@ namespace At0::Ray
 
 		// Create buffer uniform
 		Sampler2DUniform& uniform = m_Sampler2DUniforms[set].emplace_back(
-			name, stage, std::move(texture), m_Material->GetGraphicsPipeline());
-		pDescriptor->BindUniform(uniform);
+			name, stage, texture, m_Material->GetGraphicsPipeline());
+		if (texture)
+			pDescriptor->BindUniform(uniform);
 
 		return uniform;
 	}
@@ -154,5 +151,40 @@ namespace At0::Ray
 		ThrowRuntime("[Renderer] Failed to retrieve Descriptor Set of uniform with name \"{0}\"",
 			uniformName);
 		return m_DescriptorSets[0];
+	}
+
+	void Renderer::AddUniforms()
+	{
+		for (ShaderStage stage :
+			m_Material->GetGraphicsPipeline().GetShader().GetLiveShaderStages())
+		{
+			const ShaderReflection& reflection =
+				m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage);
+
+			for (const auto& uniform : reflection.GetUniforms())
+			{
+				switch (uniform.type)
+				{
+				case UniformType::UniformBuffer: AddBufferUniform(uniform.name, stage); break;
+				case UniformType::CombinedImageSampler:
+					AddSampler2DUniform(uniform.name, stage, nullptr);
+					break;
+				}
+			}
+
+			for (const auto& uniformBlock : reflection.GetUniformBlocks())
+			{
+				switch (uniformBlock.type)
+				{
+				case UniformType::UniformBuffer:
+					if (uniformBlock.name != "PerSceneData")  // reserved
+						AddBufferUniform(uniformBlock.name, stage);
+					break;
+				case UniformType::CombinedImageSampler:
+					AddSampler2DUniform(uniformBlock.name, stage, nullptr);
+					break;
+				}
+			}
+		}
 	}
 }  // namespace At0::Ray

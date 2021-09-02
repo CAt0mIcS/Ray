@@ -59,20 +59,20 @@ public:
 		Ray::Scene::Create<Scene>();
 
 		auto shader = Ray::Shader::Acquire(
-			{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" });
+			{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" });
 
 		Ray::GraphicsPipeline::Layout layout{};
 		layout.shader = shader;
 
 		auto pipeline = Ray::MakeRef<Ray::GraphicsPipeline>(layout);
-
 		auto material = Ray::MakeRef<Ray::Material>(pipeline);
 
 		Ray::Entity e = Scene::Get().CreateEntity();
-		e.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(material));
+		e.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
 		Ray::MeshRenderer& renderer = e.Emplace<Ray::MeshRenderer>(material);
-		auto& shading = renderer.AddBufferUniform("Shading", Ray::ShaderStage::Fragment);
-		shading["color"] = Ray::Float4{ 1.0f, 0.0f, 0.0f, 1.0f };
+		renderer.GetSampler2DUniform("samplerDiffuse")
+			.SetTexture(Ray::Texture2D::Acquire("Resources/Textures/gridbase.png"),
+				renderer.GetDescriptorSet("samplerDiffuse"));
 	}
 
 private:

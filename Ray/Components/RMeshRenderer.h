@@ -26,12 +26,7 @@ namespace At0::Ray
 	class RAY_EXPORT MeshRenderer : public Component, public Renderer
 	{
 	public:
-		/**
-		 * @param automaticUniformEmplacement Controls whether predefined uniform tags should be
-		 * used to add the uniforms. If false, all uniforms except for PerObjectData need to be
-		 * added
-		 */
-		MeshRenderer(Entity entity, Ref<Material> material, bool addPerObjectDataUniform = true);
+		MeshRenderer(Entity entity, Ref<Material> material);
 
 		/**
 		 * Binds all of the mesh's resources
