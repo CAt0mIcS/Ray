@@ -153,6 +153,21 @@ namespace At0::Ray
 		return m_DescriptorSets[0];
 	}
 
+	void Renderer::SetSamplerTexture(std::string_view name, Ref<Texture2D> texture)
+	{
+		for (auto& [set, uniforms] : m_Sampler2DUniforms)
+			for (auto& uniform : uniforms)
+				if (uniform.GetName() == name)
+					for (auto& descSet : m_DescriptorSets)
+						if (descSet.GetSetNumber() == set)
+						{
+							uniform.SetTexture(std::move(texture), descSet);
+							return;
+						}
+
+		ThrowRuntime("[Renderer] Failed to find Sampler2DUniform with name \"{0}\"", name);
+	}
+
 	void Renderer::AddUniforms()
 	{
 		for (ShaderStage stage :

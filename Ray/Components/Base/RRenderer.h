@@ -45,6 +45,7 @@ namespace At0::Ray
 		DescriptorSet& GetDescriptorSet(std::string_view uniformName);
 
 		void SetMaterial(Ref<Material> material) { m_Material = std::move(material); }
+		void SetSamplerTexture(std::string_view name, Ref<Texture2D> texture);
 
 		Material& GetMaterial() { return *m_Material; }
 		const Material& GetMaterial() const { return *m_Material; }
