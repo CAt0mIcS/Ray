@@ -70,6 +70,7 @@ public:
 		Ray::Entity e = Scene::Get().CreateEntity();
 		e.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
 		Ray::MeshRenderer& renderer = e.Emplace<Ray::MeshRenderer>(material);
+		// renderer.GetBufferUniform("Shading")["color"] = Ray::Float4{ 1.0f, 0.0f, 1.0f, 1.0f };
 		renderer.SetSamplerTexture(
 			"samplerDiffuse", Ray::Texture2D::Acquire("Resources/Textures/gridbase.png"));
 	}

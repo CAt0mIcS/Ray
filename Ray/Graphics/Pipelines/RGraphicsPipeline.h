@@ -91,8 +91,8 @@ namespace At0::Ray
 			VkPolygonMode m_PolygonMode;
 			float m_LineWidth;
 			bool m_DepthTestEnabled;
-			std::vector<VkVertexInputBindingDescription> m_BindingDescriptions;
-			std::vector<VkVertexInputAttributeDescription> m_AttributeDescriptions;
+			std::optional<std::vector<VkVertexInputBindingDescription>> m_BindingDescriptions;
+			std::optional<std::vector<VkVertexInputAttributeDescription>> m_AttributeDescriptions;
 		};
 	};
 }  // namespace At0::Ray
