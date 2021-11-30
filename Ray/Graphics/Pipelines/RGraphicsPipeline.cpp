@@ -15,17 +15,18 @@
 
 namespace At0::Ray
 {
-	GraphicsPipeline::GraphicsPipeline(Layout layout) : Pipeline(layout.shader)
+	GraphicsPipeline::GraphicsPipeline(const RenderPass& renderPass, Ref<Shader> shader,
+		VkPipelineCache pipelineCache, VkCullModeFlags cullMode, VkPrimitiveTopology topology,
+		VkPolygonMode polygonMode, float lineWidth, bool depthTestEnabled,
+		std::optional<std::vector<VkVertexInputBindingDescription>> bindingDescriptions,
+		std::optional<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions)
+		: Pipeline(std::move(shader))
 	{
-		if (!layout.renderPass)
-			layout.renderPass = &Graphics::Get().GetRenderPass();
-		if (!layout.pipelineCache)
-			layout.pipelineCache = Graphics::Get().GetPipelineCache();
-
 		CreateDescriptorSetLayouts();
 		CreateDescriptorPool();
 		CreatePipelineLayout();
-		CreatePipeline(layout);
+		CreatePipeline(renderPass, pipelineCache, cullMode, topology, polygonMode, lineWidth,
+			depthTestEnabled, std::move(bindingDescriptions), std::move(attributeDescriptions));
 	}
 
 	GraphicsPipeline::~GraphicsPipeline()
@@ -51,14 +52,17 @@ namespace At0::Ray
 		return VK_NULL_HANDLE;
 	}
 
-	std::string GraphicsPipeline::GetUID(const Layout& layout)
+	std::string GraphicsPipeline::GetUID(const RenderPass& renderPass, Ref<Shader> shader,
+		VkPipelineCache pipelineCache, VkCullModeFlags cullMode, VkPrimitiveTopology topology,
+		VkPolygonMode polygonMode, float lineWidth, bool depthTestEnabled,
+		std::optional<std::vector<VkVertexInputBindingDescription>> bindingDescriptions,
+		std::optional<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions)
 	{
 		std::ostringstream oss;
 		oss << "GraphicsPipeline#"
-			<< "#" << (uint32_t)layout.cullMode << "#" << (uint32_t)layout.topology << "#"
-			<< (uint32_t)layout.polygonMode << "#" << layout.lineWidth << "#"
-			<< layout.depthTestEnabled << "#";
-		for (std::string_view shader : layout.shader->GetFilepaths())
+			<< "#" << (uint32_t)cullMode << "#" << (uint32_t)topology << "#"
+			<< (uint32_t)polygonMode << "#" << lineWidth << "#" << depthTestEnabled << "#";
+		for (std::string_view shader : shader->GetFilepaths())
 			oss << shader << "#";
 
 		return oss.str();
@@ -139,17 +143,21 @@ namespace At0::Ray
 			createInfo.setLayoutCount, createInfo.pushConstantRangeCount);
 	}
 
-	void GraphicsPipeline::CreatePipeline(const Layout& layout)
+	void GraphicsPipeline::CreatePipeline(const RenderPass& renderPass,
+		VkPipelineCache pipelineCache, VkCullModeFlags cullMode, VkPrimitiveTopology topology,
+		VkPolygonMode polygonMode, float lineWidth, bool depthTestEnabled,
+		std::optional<std::vector<VkVertexInputBindingDescription>> bindingDescriptions,
+		std::optional<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions)
 	{
 		std::vector<VkVertexInputBindingDescription> bindingDescs{};
 		std::vector<VkVertexInputAttributeDescription> attribDescs{};
 
-		if (layout.bindingDescriptions)
-			bindingDescs = *layout.bindingDescriptions;
+		if (bindingDescriptions)
+			bindingDescs = *bindingDescriptions;
 		else
 			bindingDescs = m_Shader->GetVertexInputBindings();
-		if (layout.attributeDescriptions)
-			attribDescs = *layout.attributeDescriptions;
+		if (attributeDescriptions)
+			attribDescs = *attributeDescriptions;
 		else
 			attribDescs = m_Shader->GetVertexInputAttributes();
 
@@ -182,7 +190,7 @@ namespace At0::Ray
 		// Input Assembler
 		VkPipelineInputAssemblyStateCreateInfo inputAssembler{};
 		inputAssembler.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-		inputAssembler.topology = layout.topology;
+		inputAssembler.topology = topology;
 		inputAssembler.primitiveRestartEnable = VK_FALSE;
 
 
@@ -202,9 +210,9 @@ namespace At0::Ray
 		rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 		rasterizer.depthClampEnable = VK_FALSE;
 		rasterizer.rasterizerDiscardEnable = VK_FALSE;
-		rasterizer.polygonMode = layout.polygonMode;
-		rasterizer.lineWidth = layout.lineWidth;
-		rasterizer.cullMode = layout.cullMode;
+		rasterizer.polygonMode = polygonMode;
+		rasterizer.lineWidth = lineWidth;
+		rasterizer.cullMode = cullMode;
 		rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizer.depthBiasEnable = VK_FALSE;
 		rasterizer.depthBiasConstantFactor = 0.0f;
@@ -228,8 +236,8 @@ namespace At0::Ray
 		// Depth stencil
 		VkPipelineDepthStencilStateCreateInfo depthStencil{};
 		depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		depthStencil.depthTestEnable = layout.depthTestEnabled;
-		depthStencil.depthWriteEnable = layout.depthTestEnabled;
+		depthStencil.depthTestEnable = depthTestEnabled;
+		depthStencil.depthWriteEnable = depthTestEnabled;
 		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
 		depthStencil.depthBoundsTestEnable = VK_FALSE;
 		depthStencil.minDepthBounds = 0.0f;	 // Optional
@@ -290,13 +298,106 @@ namespace At0::Ray
 		createInfo.pColorBlendState = &colorBlending;
 		createInfo.pDynamicState = &dynamicStateInfo;
 		createInfo.layout = m_Layout;
-		createInfo.renderPass = *layout.renderPass;
+		createInfo.renderPass = renderPass;
 		createInfo.subpass = 0;	 // Index of subpass used with pipeline;
 		createInfo.basePipelineHandle = VK_NULL_HANDLE;
 		createInfo.basePipelineIndex = -1;
 
-		ThrowVulkanError(vkCreateGraphicsPipelines(Graphics::Get().GetDevice(),
-							 *layout.pipelineCache, 1, &createInfo, nullptr, &m_Pipeline),
+		ThrowVulkanError(vkCreateGraphicsPipelines(Graphics::Get().GetDevice(), pipelineCache, 1,
+							 &createInfo, nullptr, &m_Pipeline),
 			"[GraphicsPipeline] Failed to create");
 	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////// BUILDER //////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	GraphicsPipeline::Builder::Builder()
+		: m_RenderPass(&Graphics::Get().GetRenderPass()),
+		  m_PipelineCache(Graphics::Get().GetPipelineCache()), m_CullMode(VK_CULL_MODE_BACK_BIT),
+		  m_Topology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST), m_PolygonMode(VK_POLYGON_MODE_FILL),
+		  m_LineWidth(1.0f), m_DepthTestEnabled(true)
+	{
+	}
+
+	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetRenderPass(
+		const RenderPass& renderPass)
+	{
+		m_RenderPass = &renderPass;
+		return *this;
+	}
+
+	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetShader(Ref<Shader> shader)
+	{
+		m_Shader = std::move(shader);
+		return *this;
+	}
+
+	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetPipelineCache(
+		VkPipelineCache pipelineCache)
+	{
+		m_PipelineCache = pipelineCache;
+		return *this;
+	}
+
+	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetCullMode(VkCullModeFlags cullMode)
+	{
+		m_CullMode = cullMode;
+		return *this;
+	}
+
+	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetPrimitiveTopology(
+		VkPrimitiveTopology topology)
+	{
+		m_Topology = topology;
+		return *this;
+	}
+
+	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetPolygonMode(VkPolygonMode polygonMode)
+	{
+		m_PolygonMode = polygonMode;
+		return *this;
+	}
+
+	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetLineWidth(float lineWidth)
+	{
+		m_LineWidth = lineWidth;
+		return *this;
+	}
+
+	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetDepthTestEnabled(bool enabled)
+	{
+		m_DepthTestEnabled = enabled;
+		return *this;
+	}
+
+	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetVertexInputBindingDescriptions(
+		std::vector<VkVertexInputBindingDescription> descs)
+	{
+		m_BindingDescriptions = std::move(descs);
+		return *this;
+	}
+
+	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetVertexInputAttributeDescriptions(
+		std::vector<VkVertexInputAttributeDescription> descs)
+	{
+		m_AttributeDescriptions = std::move(descs);
+		return *this;
+	}
+
+	Ref<GraphicsPipeline> GraphicsPipeline::Builder::Build() const
+	{
+		return MakeRef<GraphicsPipeline>(*m_RenderPass, m_Shader, m_PipelineCache, m_CullMode,
+			m_Topology, m_PolygonMode, m_LineWidth, m_DepthTestEnabled, m_BindingDescriptions,
+			m_AttributeDescriptions);
+	}
+
+	Scope<GraphicsPipeline> GraphicsPipeline::Builder::BuildScoped() const
+	{
+		return MakeScope<GraphicsPipeline>(*m_RenderPass, m_Shader, m_PipelineCache, m_CullMode,
+			m_Topology, m_PolygonMode, m_LineWidth, m_DepthTestEnabled, m_BindingDescriptions,
+			m_AttributeDescriptions);
+	}
+
+
 }  // namespace At0::Ray

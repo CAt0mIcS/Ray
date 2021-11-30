@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -302,15 +302,14 @@ namespace At0::Ray
 		vertexInputAttributes.emplace_back(vInputUV);
 		vertexInputAttributes.emplace_back(vInputCol);
 
-		GraphicsPipeline::Layout layout;
-		layout.shader = MakeRef<Shader>(std::vector<std::string>{
-			"Resources/Shaders/ImGui.vert", "Resources/Shaders/ImGui.frag" });
-		layout.cullMode = VK_CULL_MODE_NONE;
-		layout.depthTestEnabled = false;
-		layout.bindingDescriptions = { vertexInputBinding };
-		layout.attributeDescriptions = { vertexInputAttributes };
-
-		m_Pipeline = MakeScope<GraphicsPipeline>(std::move(layout));
+		m_Pipeline = GraphicsPipeline::Builder()
+						 .SetShader(MakeRef<Shader>(std::vector<std::string>{
+							 "Resources/Shaders/ImGui.vert", "Resources/Shaders/ImGui.frag" }))
+						 .SetCullMode(VK_CULL_MODE_NONE)
+						 .SetDepthTestEnabled(false)
+						 .SetVertexInputBindingDescriptions({ vertexInputBinding })
+						 .SetVertexInputAttributeDescriptions({ vertexInputAttributes })
+						 .BuildScoped();
 
 		m_FontDescriptor = MakeScope<DescriptorSet>(m_Pipeline->GetDescriptorPool(),
 			m_Pipeline->GetDescriptorSetLayout(0), Pipeline::BindPoint::Graphics,

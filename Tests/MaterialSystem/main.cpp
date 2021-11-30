@@ -61,10 +61,10 @@ public:
 		auto shader = Ray::Shader::Acquire(
 			{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" });
 
-		Ray::GraphicsPipeline::Layout layout{};
-		layout.shader = shader;
-
-		auto pipeline = Ray::MakeRef<Ray::GraphicsPipeline>(layout);
+		auto pipeline = Ray::GraphicsPipeline::Builder()
+							.SetShader(shader)
+							.SetCullMode(VK_CULL_MODE_NONE)
+							.Build();
 		auto material = Ray::MakeRef<Ray::Material>(pipeline);
 
 		Ray::Entity e = Scene::Get().CreateEntity();
