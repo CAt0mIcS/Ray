@@ -5,6 +5,7 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/RenderPass/RRenderPass.h"
+#include "Graphics/RCodex.h"
 
 #include "Utils/RAssert.h"
 #include "Utils/RException.h"
@@ -399,5 +400,10 @@ namespace At0::Ray
 			m_AttributeDescriptions);
 	}
 
-
+	Ref<GraphicsPipeline> GraphicsPipeline::Builder::Acquire() const
+	{
+		return Codex::Resolve<GraphicsPipeline>(*m_RenderPass, m_Shader, m_PipelineCache,
+			m_CullMode, m_Topology, m_PolygonMode, m_LineWidth, m_DepthTestEnabled,
+			m_BindingDescriptions, m_AttributeDescriptions);
+	}
 }  // namespace At0::Ray

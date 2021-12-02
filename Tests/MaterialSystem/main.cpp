@@ -64,7 +64,7 @@ public:
 		auto pipeline = Ray::GraphicsPipeline::Builder()
 							.SetShader(shader)
 							.SetCullMode(VK_CULL_MODE_NONE)
-							.Build();
+							.Acquire();
 		auto material = Ray::MakeRef<Ray::Material>(pipeline);
 
 		Ray::Entity e = Scene::Get().CreateEntity();

@@ -79,8 +79,21 @@ namespace At0::Ray
 			Builder& SetVertexInputAttributeDescriptions(
 				std::vector<VkVertexInputAttributeDescription> descs);
 
+			/**
+			 * Builds a new pipeline withouth checking the codex
+			 */
 			Ref<GraphicsPipeline> Build() const;
+
+			/**
+			 * Builds a new pipeline withouth checking the codex
+			 */
 			Scope<GraphicsPipeline> BuildScoped() const;
+
+			/**
+			 * Tries to find a already created pipeline in the codex. If it's not found, it'll be
+			 * created.
+			 */
+			Ref<GraphicsPipeline> Acquire() const;
 
 		private:
 			const RenderPass* m_RenderPass;
