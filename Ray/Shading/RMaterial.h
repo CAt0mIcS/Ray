@@ -75,7 +75,7 @@ namespace At0::Ray
 		template<typename T>
 		T& Get(const std::string& name)
 		{
-			return const_cast<T&>(std::as_const(*this).Get(name));
+			return const_cast<T&>(std::as_const(*this).Get<T>(name));
 		}
 
 		template<typename T>

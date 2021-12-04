@@ -85,42 +85,54 @@ public:
 						ImGui::Spacing();
 						ImGui::End();
 					}
+					//{
+					//	ImGui::Begin("Child");
+					//	translate(m_Child.Get<Ray::Transform>());
+					//	ImGui::Spacing();
+					//	ImGui::End();
+					//}
 					{
-						ImGui::Begin("Child");
-						translate(m_Child.Get<Ray::Transform>());
-						ImGui::Spacing();
+						ImGui::Begin("Material");
+						m_Material->Set("Shading.color",
+							Ray::Float4{ Ray::ImGUI::Float3Widget("Color",
+											 m_Material->Get<Ray::Float3>("Shading.color")),
+								1.0f });
 						ImGui::End();
 					}
 				}
 			});
 #include "../ImGuiWindows.inl"
 
-		auto shader = Ray::Shader::Acquire(
-			{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" });
+		auto shader =
+			Ray::Shader::Acquire({ "Resources/Shaders/Test.vert", "Resources/Shaders/Test.frag" });
 
 		auto pipeline = Ray::GraphicsPipeline::Builder()
 							.SetShader(shader)
 							.SetCullMode(VK_CULL_MODE_NONE)
 							.Acquire();
-		auto material =
+		m_Material =
 			Ray::Material::Builder(pipeline)
 				.Set("samplerDiffuse", Ray::Texture2D::Acquire("Resources/Textures/gridbase.png"))
+				.Set("Shading.color", Ray::Float4{ 1.0f, 0.4f, 0.134f, 1.0f })
 				.Acquire();
 
 		m_Parent = Scene::Get().CreateEntity();
-		m_Parent.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
-		Ray::MeshRenderer& rendererParent = m_Parent.Emplace<Ray::MeshRenderer>(material);
+		m_Parent.Emplace<Ray::Mesh>(Ray::Mesh::Plane(m_Material));
+		Ray::MeshRenderer& rendererParent = m_Parent.Emplace<Ray::MeshRenderer>(m_Material);
 
-		material->Set("samplerDiffuse",
+		m_Material->Set("samplerDiffuse",
 			Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
 
-		m_Child = Scene::Get().CreateEntity();
-		m_Child.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f });
-		m_Child.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
-		Ray::MeshRenderer& rendererChild = m_Child.Emplace<Ray::MeshRenderer>(material);
+		// RAY_TODO: Move constructors for MeshRenderer are missing, so when enTT moves (resize due
+		// to new MeshRenderer) the listener is still active on an invalid renderer
 
-		m_Parent.Emplace<Ray::HierachyComponent>().AddChild(m_Child);
-		m_Child.Emplace<Ray::HierachyComponent>().SetParent(m_Parent);
+		// m_Child =
+		// Scene::Get().CreateEntity(); m_Child.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f
+		// }); m_Child.Emplace<Ray::Mesh>(Ray::Mesh::Plane(m_Material)); Ray::MeshRenderer&
+		// rendererChild = m_Child.Emplace<Ray::MeshRenderer>(m_Material);
+
+		// m_Parent.Emplace<Ray::HierachyComponent>().AddChild(m_Child);
+		// m_Child.Emplace<Ray::HierachyComponent>().SetParent(m_Parent);
 	}
 
 private:
@@ -129,6 +141,7 @@ private:
 private:
 	Ray::Entity m_Child;
 	Ray::Entity m_Parent;
+	Ray::Ref<Ray::Material> m_Material;
 };
 
 void SignalHandler(int signal)

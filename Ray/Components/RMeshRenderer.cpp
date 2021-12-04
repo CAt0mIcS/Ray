@@ -116,7 +116,7 @@ namespace At0::Ray
 	void MeshRenderer::UpdateUniform(const std::string& dataPath)
 	{
 		int pos = dataPath.find('.');
-		std::string_view uBlockName = dataPath.substr(0, pos);
+		std::string uBlockName = dataPath.substr(0, pos);
 		std::string uName = dataPath.substr(pos + 1);
 		switch (m_Material->GetType(dataPath))
 		{
