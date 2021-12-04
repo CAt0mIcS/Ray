@@ -3,8 +3,11 @@
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "RMaterialDataContainer.h"
+#include "../Graphics/Pipelines/Shader/RShaderReflection.h"
 
 #include <unordered_map>
+#include <vector>
+#include <functional>
 
 
 namespace At0::Ray
@@ -53,36 +56,78 @@ namespace At0::Ray
 		bool HasUniformBlock(const std::string& name) const;
 		bool HasUniform(const std::string& name) const { return m_Container.HasUniform(name); }
 		Ref<Texture2D> GetTexture(const std::string& dataPath) const;
-		void* Get(const std::string& dataPath) const { return m_Container.Get(dataPath); }
+		void* GetRaw(const std::string& dataPath) const { return m_Container.Get(dataPath); }
 		ShaderDataType GetType(const std::string& dataPath) const
 		{
 			return m_Container.GetType(dataPath);
 		}
 
-	protected:
+		template<typename T>
+		void Set(const std::string& name, T&& data)
+		{
+			Builder::ValidateUniformExistence(*m_GraphicsPipeline, name);
+			Builder::Set(name, std::move(data), m_Container);
+			CallListeners(name, UniformType::UniformBuffer);
+		}
+
+		void Set(const std::string& name, Ref<Texture2D> texture);
+
+		template<typename T>
+		T& Get(const std::string& name)
+		{
+			return const_cast<T&>(std::as_const(*this).Get(name));
+		}
+
+		template<typename T>
+		const T& Get(const std::string& name) const
+		{
+			return *(T*)m_Container.Get(name);
+		}
+
+		uint32_t AddOnDirtyListener(std::function<void(const std::string&, UniformType)> fun);
+		void RemoveOnDirtyListener(uint32_t index);
+
+	private:
+		void CallListeners(const std::string& name, UniformType type) const;
+
+	private:
 		Ref<GraphicsPipeline> m_GraphicsPipeline;
 		MaterialDataContainer m_Container;
+
+		// RAY_TODO: Test performance overhead
+		std::vector<std::function<void(const std::string&, UniformType)>> m_OnDirtyListeners;
 
 	public:
 		class RAY_EXPORT Builder
 		{
+			friend class Material;
+
 		public:
 			Builder(Ref<GraphicsPipeline> pipeline);
 
 			template<typename T>
 			Builder& Set(const std::string& name, T&& data)
 			{
-				ValidateUniformExistence(name);
-				m_Container.Set(name, std::move(data));
+				ValidateUniformExistence(*m_GraphicsPipeline, name);
+				Set(name, std::move(data), m_Container);
 				return *this;
 			}
 
+			template<typename T>
+			static void Set(const std::string& name, T&& data, MaterialDataContainer& container)
+			{
+				container.Set(name, std::move(data));
+			}
+
 			Builder& Set(const std::string& name, Ref<Texture2D> data);
+			static void Set(
+				const std::string& name, Ref<Texture2D> data, MaterialDataContainer& container);
 
 			Ref<Material> Acquire();
 
 		private:
-			void ValidateUniformExistence(const std::string& name);
+			static void ValidateUniformExistence(
+				const GraphicsPipeline& pipeline, const std::string& name);
 
 		private:
 			Ref<GraphicsPipeline> m_GraphicsPipeline;

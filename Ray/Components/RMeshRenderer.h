@@ -7,9 +7,11 @@
 #include "../Graphics/Pipelines/Uniforms/RDescriptor.h"
 #include "../Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "../Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
+#include "../Graphics/Pipelines/Shader/RShaderReflection.h"
 
 #include <vector>
 #include <unordered_map>
+#include <stdint.h>
 
 
 namespace At0::Ray
@@ -27,6 +29,10 @@ namespace At0::Ray
 	{
 	public:
 		MeshRenderer(Entity entity, Ref<Material> material);
+		//~MeshRenderer();
+
+		// MeshRenderer(MeshRenderer&& other) noexcept;
+		// MeshRenderer& operator=(MeshRenderer&& other) noexcept;
 
 		/**
 		 * Binds all of the mesh's resources
@@ -39,17 +45,26 @@ namespace At0::Ray
 		 */
 		void Update();
 
+	private:
 		/**
-		 * Updates the uniforms with the new material data. Should be called by client whenever
-		 * material attributes are changed
+		 * Updates ALL uniforms with material data
 		 */
-		void UpdateMaterialData();
+		void SetMaterialData();
+
+		/**
+		 * Updates uniform with name with material data
+		 */
+		void UpdateMaterialData(const std::string& uniformPath, UniformType uType);
+
+		void UpdateUniform(const std::string& dataPath);
 
 	private:
 		/**
 		 * Points to the buffer uniform in the unordered_map to make MeshRenderer::Update faster
 		 */
 		std::optional<BufferUniform::AccessType> m_PerObjectDataUniformRef;
+
+		uint32_t m_DirtyListenerIndex = (uint32_t)-1;
 	};
 }  // namespace At0::Ray
 

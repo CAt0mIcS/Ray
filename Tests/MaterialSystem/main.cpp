@@ -111,6 +111,8 @@ public:
 		m_Parent.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
 		Ray::MeshRenderer& rendererParent = m_Parent.Emplace<Ray::MeshRenderer>(material);
 
+		material->Set("samplerDiffuse",
+			Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
 
 		m_Child = Scene::Get().CreateEntity();
 		m_Child.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f });

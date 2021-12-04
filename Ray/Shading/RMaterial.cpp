@@ -29,6 +29,31 @@ namespace At0::Ray
 		return m_Container.GetTexture(dataPath);
 	}
 
+	void Material::Set(const std::string& name, Ref<Texture2D> texture)
+	{
+		Builder::Set(name, std::move(texture), m_Container);
+		CallListeners(name, UniformType::CombinedImageSampler);
+	}
+
+	uint32_t Material::AddOnDirtyListener(std::function<void(const std::string&, UniformType)> fun)
+	{
+		m_OnDirtyListeners.emplace_back(fun);
+		return m_OnDirtyListeners.size() - 1;
+	}
+
+	void Material::RemoveOnDirtyListener(uint32_t index)
+	{
+		// Move element to the back
+		m_OnDirtyListeners[index] = std::move(m_OnDirtyListeners.back());
+		m_OnDirtyListeners.pop_back();
+	}
+
+	void Material::CallListeners(const std::string& name, UniformType type) const
+	{
+		for (const auto& func : m_OnDirtyListeners)
+			func(name, type);
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////// BUILDER //////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,9 +65,15 @@ namespace At0::Ray
 
 	Material::Builder& Material::Builder::Set(const std::string& name, Ref<Texture2D> data)
 	{
-		ValidateUniformExistence(name);
-		m_Container.Set(name, std::move(data));
+		ValidateUniformExistence(*m_GraphicsPipeline, name);
+		Set(name, std::move(data), m_Container);
 		return *this;
+	}
+
+	void Material::Builder::Set(
+		const std::string& name, Ref<Texture2D> data, MaterialDataContainer& container)
+	{
+		container.Set(name, std::move(data));
 	}
 
 	Ref<Material> Material::Builder::Acquire()
@@ -50,10 +81,11 @@ namespace At0::Ray
 		return MakeRef<Material>(std::move(m_GraphicsPipeline), std::move(m_Container));
 	}
 
-	void Material::Builder::ValidateUniformExistence(const std::string& name)
+	void Material::Builder::ValidateUniformExistence(
+		const GraphicsPipeline& pipeline, const std::string& name)
 	{
 		bool hasUniform = false;
-		for (const auto& [stage, reflection] : m_GraphicsPipeline->GetShader().GetReflections())
+		for (const auto& [stage, reflection] : pipeline.GetShader().GetReflections())
 		{
 			if (reflection.HasPathedUniform(name))
 			{
@@ -64,7 +96,6 @@ namespace At0::Ray
 
 		RAY_MEXPECTS(hasUniform,
 			"[Material::Builder] Uniform \"{0}\" does not exist in shaders:\n\"{1}\"\n\"{2}\"",
-			name, m_GraphicsPipeline->GetShader().GetFilepaths()[0],
-			m_GraphicsPipeline->GetShader().GetFilepaths()[1]);
+			name, pipeline.GetShader().GetFilepaths()[0], pipeline.GetShader().GetFilepaths()[1]);
 	}
 }  // namespace At0::Ray
