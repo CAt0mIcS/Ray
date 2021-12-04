@@ -122,10 +122,9 @@ namespace At0::Ray
 		Entity GetParent() const;
 
 		/**
-		 * Loops over all ParentEntity components and checks if the parent is this entity
-		 * (RAY_TODO: Maybe slow?)
+		 * @returns Children of the entity, fails if it doesn't have a HierachyComponent
 		 */
-		std::vector<Entity> GetChildren() const;
+		const std::vector<Entity>& GetChildren() const;
 
 		/**
 		 * Casting operator to the entity identifier
@@ -135,6 +134,8 @@ namespace At0::Ray
 
 		constexpr bool operator==(const Entity& other) const;
 		constexpr bool operator!=(const Entity& other) const;
+
+		RAY_EXPORT friend std::ostream& operator<<(std::ostream& os, Entity e);
 
 	private:
 		entt::registry* m_Registry;

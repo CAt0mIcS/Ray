@@ -202,12 +202,12 @@ set(SRC
 	"Components/RTextRenderer.cpp"
 	"Components/RTransform.h"
 	"Components/RTransform.cpp"
-	"Components/RParentEntity.h"
-	"Components/RParentEntity.cpp"
 	"Components/RScriptableEntity.h"
 	"Components/RScriptableEntity.cpp"
 	"Components/RTagComponent.h"
 	"Components/RTagComponent.cpp"
+	"Components/RHierachyComponent.h"
+	"Components/RHierachyComponent.cpp"
 
 	# Shading
 	"Shading/RMaterial.h"

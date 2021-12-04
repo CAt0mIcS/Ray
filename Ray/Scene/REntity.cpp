@@ -2,8 +2,7 @@
 #include "REntity.h"
 
 #include "RScene.h"
-
-#include "Components/RParentEntity.h"
+#include "Components/RHierachyComponent.h"
 
 
 namespace At0::Ray
@@ -18,35 +17,25 @@ namespace At0::Ray
 	{
 	}
 
-	void Entity::SetParent(Entity parent)
-	{
-		if (Has<ParentEntity>())
-			Get<ParentEntity>().SetParent(parent);
-		else
-			Emplace<ParentEntity>(parent);
-	}
+	void Entity::SetParent(Entity parent) {}
 
 	bool Entity::HasParent() const
 	{
-		return Has<ParentEntity>() && Get<ParentEntity>().GetParent() != Entity::Null;
+		HierachyComponent* pComponent = m_Registry->try_get<HierachyComponent>(m_EntityHandle);
+		return pComponent == nullptr || pComponent->GetParent() == Entity::Null ? false : true;
 	}
 
 	Entity Entity::GetParent() const
 	{
-		RAY_MEXPECTS(Has<ParentEntity>(), "[Entity] Does not have parent component");
-		return Get<ParentEntity>().GetParent();
+		RAY_MEXPECTS(HasParent(), "[Entity] Does not have a parent");
+		return Get<HierachyComponent>().GetParent();
 	}
 
-	std::vector<Entity> Entity::GetChildren() const
+	const std::vector<Entity>& Entity::GetChildren() const
 	{
-		std::vector<Entity> children;
-		auto view = m_Registry->view<ParentEntity>();
-
-		for (Entity e : view)
-			if (e.GetParent() == m_EntityHandle)
-				children.emplace_back(e);
-
-		return children;
+		RAY_MEXPECTS(Has<HierachyComponent>(),
+			"[Entity] Does not have a HierachyComponent to get children.");
+		return Get<HierachyComponent>().GetChildren();
 	}
 
 	constexpr bool Entity::operator==(const Entity& other) const
@@ -55,4 +44,10 @@ namespace At0::Ray
 	}
 
 	constexpr bool Entity::operator!=(const Entity& other) const { return !(*this == other); }
+
+	std::ostream& operator<<(std::ostream& os, Entity e)
+	{
+		os << e.m_EntityHandle;
+		return os;
+	}
 }  // namespace At0::Ray

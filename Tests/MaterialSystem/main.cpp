@@ -10,6 +10,7 @@
 #include <Ray/Components/RTransform.h>
 #include <Ray/Components/RSkybox.h>
 #include <Ray/Components/RScriptableEntity.h>
+#include <Ray/Components/RHierachyComponent.h>
 
 #include <Ray/Graphics/Images/RTexture2D.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
@@ -58,6 +59,42 @@ public:
 	{
 		Ray::Scene::Create<Scene>();
 
+		Ray::ImGUI::Get().RegisterNewFrameFunction(
+			[&]()
+			{
+				{
+					auto translate = [](Ray::Transform& tform)
+					{
+						Ray::Float3 newTranslation =
+							Ray::ImGUI::Float3Widget("Translation", tform.Translation());
+						Ray::Float3 newRotation =
+							Ray::ImGUI::Float3Widget("Rotation", tform.Rotation());
+						Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
+
+						if (newTranslation != tform.Translation())
+							tform.SetTranslation(newTranslation);
+						if (newRotation != tform.Rotation())
+							tform.SetRotation(newRotation);
+						if (newScale != tform.Scale())
+							tform.SetScale(newScale);
+					};
+
+					{
+						ImGui::Begin("Parent");
+						translate(m_Parent.Get<Ray::Transform>());
+						ImGui::Spacing();
+						ImGui::End();
+					}
+					{
+						ImGui::Begin("Child");
+						translate(m_Child.Get<Ray::Transform>());
+						ImGui::Spacing();
+						ImGui::End();
+					}
+				}
+			});
+#include "../ImGuiWindows.inl"
+
 		auto shader = Ray::Shader::Acquire(
 			{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" });
 
@@ -67,16 +104,30 @@ public:
 							.Acquire();
 		auto material = Ray::MakeRef<Ray::Material>(pipeline);
 
-		Ray::Entity e = Scene::Get().CreateEntity();
-		e.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
-		Ray::MeshRenderer& renderer = e.Emplace<Ray::MeshRenderer>(material);
-		// renderer.GetBufferUniform("Shading")["color"] = Ray::Float4{ 1.0f, 0.0f, 1.0f, 1.0f };
-		renderer.SetSamplerTexture(
+		m_Parent = Scene::Get().CreateEntity();
+		m_Parent.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
+		Ray::MeshRenderer& rendererParent = m_Parent.Emplace<Ray::MeshRenderer>(material);
+		rendererParent.SetSamplerTexture(
 			"samplerDiffuse", Ray::Texture2D::Acquire("Resources/Textures/gridbase.png"));
+
+
+		m_Child = Scene::Get().CreateEntity();
+		m_Child.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f });
+		m_Child.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
+		Ray::MeshRenderer& rendererChild = m_Child.Emplace<Ray::MeshRenderer>(material);
+		rendererChild.SetSamplerTexture("samplerDiffuse",
+			Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
+
+		m_Parent.Emplace<Ray::HierachyComponent>().AddChild(m_Child);
+		m_Child.Emplace<Ray::HierachyComponent>().SetParent(m_Parent);
 	}
 
 private:
 	void Update() override {}
+
+private:
+	Ray::Entity m_Child;
+	Ray::Entity m_Parent;
 };
 
 void SignalHandler(int signal)

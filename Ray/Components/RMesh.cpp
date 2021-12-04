@@ -1,7 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RMesh.h"
 
-#include "RParentEntity.h"
 #include "RMeshRenderer.h"
 
 #include "Graphics/RCodex.h"
@@ -27,11 +26,6 @@ namespace At0::Ray
 				GetEntity().Emplace<MeshRenderer>(std::move(vertexData.material));
 			else
 				GetEntity().Get<MeshRenderer>().SetMaterial(std::move(vertexData.material));
-
-		for (Entity e : vertexData.children)
-		{
-			e.Emplace<ParentEntity>(entity);
-		}
 	}
 
 	Mesh::VertexData Mesh::Triangle(Ref<Material> material)
