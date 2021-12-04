@@ -112,6 +112,13 @@ namespace At0::Ray
 		bool HasUniform(std::string_view name, bool includeUniformBlocks = false) const;
 		bool HasUniformBlock(std::string_view name) const;
 
+		/**
+		 * Uses path to uniform to check if it exists, e.g. "Shader.color" -->
+		 * UniformBlock: "Shader"
+		 * Uniform in "Shader": "color"
+		 */
+		bool HasPathedUniform(std::string_view name) const;
+
 		auto& GetAttributes() const { return m_Attributes; }
 		auto& GetAttributes() { return m_Attributes; }
 		auto& GetUniforms() const { return m_Uniforms; }

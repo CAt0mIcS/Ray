@@ -3,6 +3,7 @@
 #include "../../../RBase.h"
 #include "../../../Core/RResource.h"
 #include "RShaderReflection.h"
+#include "RShaderDataTypes.h"
 
 #include <vulkan/vulkan_core.h>
 
@@ -32,20 +33,6 @@ namespace At0::Ray
 		Fragment = VK_SHADER_STAGE_FRAGMENT_BIT,
 		Compute = VK_SHADER_STAGE_COMPUTE_BIT,
 		All = VK_SHADER_STAGE_ALL
-	};
-
-	enum class ShaderDataType
-	{
-		Float,
-		Int,
-		UInt,
-
-		Vec2,
-		Vec3,
-		Vec4,
-
-		Mat3,
-		Mat4
 	};
 
 	class RAY_EXPORT Shader : public Resource

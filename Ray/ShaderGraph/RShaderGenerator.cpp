@@ -2,6 +2,7 @@
 #include "RShaderGenerator.h"
 
 #include "Components/RMeshRenderer.h"
+#include "Shading/RMaterial.h"
 #include "Nodes/RTexture2DNode.h"
 #include "Nodes/RSampler2DNode.h"
 
@@ -167,7 +168,7 @@ namespace At0::Ray
 		{
 			if (data.type == UniformType::UniformBuffer)
 			{
-				if (data.name != UniformTag::PerObjectData)
+				if (data.name != UniformBlockTag::PerObjectData)
 					renderer.AddBufferUniform(data.name, data.stage);
 			}
 			else if (data.type == UniformType::CombinedImageSampler)

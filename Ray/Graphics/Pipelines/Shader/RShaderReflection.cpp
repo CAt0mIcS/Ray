@@ -54,8 +54,8 @@ namespace At0::Ray
 	bool ShaderReflection::HasAttribute(std::string_view name) const
 	{
 		return std::find_if(m_Attributes.begin(), m_Attributes.end(),
-				   [&name](const AttributeData& data) { return data.name == name; }) !=
-			   m_Attributes.end();
+				   [&name](const AttributeData& data)
+				   { return data.name == name; }) != m_Attributes.end();
 	}
 
 	bool ShaderReflection::HasUniform(std::string_view name, bool includeUniformBlocks) const
@@ -66,16 +66,34 @@ namespace At0::Ray
 					if (uData.name == name)
 						return true;
 
-		return std::find_if(m_Uniforms.begin(), m_Uniforms.end(), [&name](const UniformData& data) {
-			return data.name == name;
-		}) != m_Uniforms.end();
+		return std::find_if(m_Uniforms.begin(), m_Uniforms.end(),
+				   [&name](const UniformData& data)
+				   { return data.name == name; }) != m_Uniforms.end();
 	}
 
 	bool ShaderReflection::HasUniformBlock(std::string_view name) const
 	{
 		return std::find_if(m_UniformBlocks.begin(), m_UniformBlocks.end(),
-				   [&name](const UniformBlockData& data) { return data.name == name; }) !=
-			   m_UniformBlocks.end();
+				   [&name](const UniformBlockData& data)
+				   { return data.name == name; }) != m_UniformBlocks.end();
+	}
+
+	bool ShaderReflection::HasPathedUniform(std::string_view name) const
+	{
+		if (int pos = name.find('.'); pos != std::string::npos)
+		{
+			std::string_view uniformBlock = name.substr(0, pos);
+			std::string_view uniform = name.substr(pos + 1);
+
+			if (!HasUniformBlock(uniformBlock))
+				return false;
+			const auto& uBlockData = GetUniformBlock(uniformBlock);
+			return std::find_if(uBlockData.uniforms.begin(), uBlockData.uniforms.end(),
+					   [&uniform](const auto& data)
+					   { return data.name == uniform; }) != uBlockData.uniforms.end();
+		}
+		else
+			return HasUniform(name);
 	}
 
 	const ShaderReflection::AttributeData& ShaderReflection::GetAttribute(

@@ -102,21 +102,20 @@ public:
 							.SetShader(shader)
 							.SetCullMode(VK_CULL_MODE_NONE)
 							.Acquire();
-		auto material = Ray::MakeRef<Ray::Material>(pipeline);
+		auto material =
+			Ray::Material::Builder(pipeline)
+				.Set("samplerDiffuse", Ray::Texture2D::Acquire("Resources/Textures/gridbase.png"))
+				.Acquire();
 
 		m_Parent = Scene::Get().CreateEntity();
 		m_Parent.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
 		Ray::MeshRenderer& rendererParent = m_Parent.Emplace<Ray::MeshRenderer>(material);
-		rendererParent.SetSamplerTexture(
-			"samplerDiffuse", Ray::Texture2D::Acquire("Resources/Textures/gridbase.png"));
 
 
 		m_Child = Scene::Get().CreateEntity();
 		m_Child.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f });
 		m_Child.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
 		Ray::MeshRenderer& rendererChild = m_Child.Emplace<Ray::MeshRenderer>(material);
-		rendererChild.SetSamplerTexture("samplerDiffuse",
-			Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
 
 		m_Parent.Emplace<Ray::HierachyComponent>().AddChild(m_Child);
 		m_Child.Emplace<Ray::HierachyComponent>().SetParent(m_Parent);

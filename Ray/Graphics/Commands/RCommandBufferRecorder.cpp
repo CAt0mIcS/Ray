@@ -12,6 +12,7 @@
 
 #include "Scene/RScene.h"
 #include "Components/RMeshRenderer.h"
+#include "Components/RMesh.h"
 #include "Components/RTextRenderer.h"
 #include "UI/RImGui.h"
 
@@ -79,12 +80,18 @@ namespace At0::Ray
 			Scene::Get().CmdBind(*commandBuffer);
 		}
 
-		auto meshRendererView = Scene::Get().EntityView<MeshRenderer>();
+		// RAY_TODO: Test group vs view performance
+		auto meshRendererView = Scene::Get().GetRegistry().group<MeshRenderer>(entt::get<Mesh>);
 		m_ThreadPool.SubmitLoop(0u, (uint32_t)meshRendererView.size(),
 			[this, imageIndex, &meshRendererView](uint32_t i, uint32_t thread)
 			{
-				Entity{ meshRendererView[i] }.Get<MeshRenderer>().Render(
-					*m_CommandResources[imageIndex][thread].commandBuffer);
+				const auto& [meshRenderer, mesh] =
+					meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
+
+				SecondaryCommandBuffer* cmdBuf =
+					m_CommandResources[imageIndex][thread].commandBuffer.get();
+				meshRenderer.Render(*cmdBuf);
+				mesh.CmdBind(*cmdBuf);
 			});
 
 		// Wait for secondary command buffers to finish recording draw calls

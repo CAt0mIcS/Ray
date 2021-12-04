@@ -129,7 +129,7 @@ set(SRC
 	"Graphics/Pipelines/Shader/RShader.cpp"
 	"Graphics/Pipelines/Shader/RShaderReflection.h"
 	"Graphics/Pipelines/Shader/RShaderReflection.cpp"
-
+	"Graphics/Pipelines/Shader/RShaderDataTypes.h"
 	"Graphics/Pipelines/Uniforms/RDescriptor.h"
 	"Graphics/Pipelines/Uniforms/RDescriptor.cpp"
 	"Graphics/Pipelines/Uniforms/RBufferUniform.h"
@@ -212,6 +212,8 @@ set(SRC
 	# Shading
 	"Shading/RMaterial.h"
 	"Shading/RMaterial.cpp"
+	"Shading/RMaterialDataContainer.h"
+	"Shading/RMaterialDataContainer.cpp"
 
 	# ------------------------------------------------------------------
 	# User Interface

@@ -2,6 +2,9 @@
 
 #include "../RBase.h"
 #include "../Core/RMath.h"
+#include "RMaterialDataContainer.h"
+
+#include <unordered_map>
 
 
 namespace At0::Ray
@@ -11,27 +14,31 @@ namespace At0::Ray
 	class CommandBuffer;
 
 	/**
-	 * Specifies strings which identify the different shader configurations
+	 * Predefined uniform block tags in the shader
 	 */
-	struct ShaderFileCode
+	struct UniformBlockTag
 	{
-		static constexpr const char* AlbedoMap = "_Alb";
-		static constexpr const char* DiffuseMap = "_Diff";
-		static constexpr const char* Metallic = "_Metal";
-		static constexpr const char* SpecularMap = "_Spec";
-		static constexpr const char* NormalMap = "_Norm";
-		static constexpr const char* HeightMap = "_Height";
-		static constexpr const char* Occlusion = "_Occl";
-		static constexpr const char* DetailMask = "_DtlMsk";
-		static constexpr const char* Emission = "_Emi";
+		static constexpr const char* PerObjectData = "PerObjectData";
+		static constexpr const char* Shading = "Shading";
+	};
 
-		static constexpr const char* Color = "_Col";
+	/**
+	 * Predefined uniform tags in the shader
+	 */
+	struct UniformTag
+	{
+		static constexpr const char* DiffuseMapSampler = "samplerDiffuse";
+		static constexpr const char* SpecularMapSampler = "samplerSpecular";
+		static constexpr const char* NormalMapSampler = "samplerNormal";
+		static constexpr const char* HeightMapSampler = "samplerHeight";
+
+		static constexpr const char* Color = "color";
 	};
 
 	class RAY_EXPORT Material
 	{
 	public:
-		Material(Ref<GraphicsPipeline> pipeline) : m_GraphicsPipeline(std::move(pipeline)) {}
+		Material(Ref<GraphicsPipeline> pipeline, MaterialDataContainer container);
 		~Material() = default;
 
 		const GraphicsPipeline& GetGraphicsPipeline() const { return *m_GraphicsPipeline; }
@@ -43,8 +50,44 @@ namespace At0::Ray
 		 */
 		void CmdBind(const CommandBuffer& cmdBuff) const;
 
+		bool HasUniformBlock(const std::string& name) const;
+		bool HasUniform(const std::string& name) const { return m_Container.HasUniform(name); }
+		Ref<Texture2D> GetTexture(const std::string& dataPath) const;
+		void* Get(const std::string& dataPath) const { return m_Container.Get(dataPath); }
+		ShaderDataType GetType(const std::string& dataPath) const
+		{
+			return m_Container.GetType(dataPath);
+		}
+
 	protected:
 		Ref<GraphicsPipeline> m_GraphicsPipeline;
+		MaterialDataContainer m_Container;
+
+	public:
+		class RAY_EXPORT Builder
+		{
+		public:
+			Builder(Ref<GraphicsPipeline> pipeline);
+
+			template<typename T>
+			Builder& Set(const std::string& name, T&& data)
+			{
+				ValidateUniformExistence(name);
+				m_Container.Set(name, std::move(data));
+				return *this;
+			}
+
+			Builder& Set(const std::string& name, Ref<Texture2D> data);
+
+			Ref<Material> Acquire();
+
+		private:
+			void ValidateUniformExistence(const std::string& name);
+
+		private:
+			Ref<GraphicsPipeline> m_GraphicsPipeline;
+			MaterialDataContainer m_Container;
+		};
 	};
 
 }  // namespace At0::Ray

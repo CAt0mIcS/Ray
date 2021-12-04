@@ -39,6 +39,12 @@ namespace At0::Ray
 		 */
 		void Update();
 
+		/**
+		 * Updates the uniforms with the new material data. Should be called by client whenever
+		 * material attributes are changed
+		 */
+		void UpdateMaterialData();
+
 	private:
 		/**
 		 * Points to the buffer uniform in the unordered_map to make MeshRenderer::Update faster

@@ -83,8 +83,8 @@ namespace At0::Ray
 		Camera& GetCamera() { return (Camera&)std::as_const(*this).GetCamera(); }
 
 		template<typename T, typename... Args>
-		static Scene& Create(Args&&... args) requires std::derived_from<T,
-			Scene>&& std::constructible_from<T, Args...>
+		static Scene& Create(Args&&... args) requires std::derived_from<T, Scene> &&
+			std::constructible_from<T, Args...>
 		{
 			// s_CurrentScene is set in the constructor of Scene
 			new T(std::forward<Args>(args)...);
