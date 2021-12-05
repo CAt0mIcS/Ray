@@ -22,6 +22,7 @@ namespace At0::Ray
 		void Set(const std::string& key, float data) { Set(key, data, ShaderDataType::Float); }
 		void Set(const std::string& key, int32_t data) { Set(key, data, ShaderDataType::Int); }
 		void Set(const std::string& key, uint32_t data) { Set(key, data, ShaderDataType::UInt); }
+		void Set(const std::string& key, bool data);
 		void Set(const std::string& key, Float2 data) { Set(key, data, ShaderDataType::Vec2); }
 		void Set(const std::string& key, Float3 data) { Set(key, data, ShaderDataType::Vec3); }
 		void Set(const std::string& key, Float4 data) { Set(key, data, ShaderDataType::Vec4); }

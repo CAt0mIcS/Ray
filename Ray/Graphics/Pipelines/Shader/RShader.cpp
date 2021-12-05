@@ -341,6 +341,7 @@ namespace At0::Ray
 						UniformBuffer::GetDescriptorSetLayout((uint32_t)uniformBlock.binding,
 							descriptorType, (VkShaderStageFlags)shaderStage, 1));
 					break;
+				case UniformType::Push: break;
 				}
 				}
 

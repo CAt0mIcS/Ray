@@ -397,12 +397,8 @@ namespace At0::Ray
 		data.set = uniformBlock.getType()->getQualifier().layoutSet;
 		data.name = uniformBlock.name;
 
-		// RAY_TODO: Better way of detecting whether uniform is sampler or buffer
 		if (uniformBlock.getType()->getQualifier().storage == glslang::EvqUniform)
-			if (uniformBlock.getType()->getSampler().combined)
-				data.type = UniformType::CombinedImageSampler;
-			else
-				data.type = UniformType::UniformBuffer;
+			data.type = UniformType::UniformBuffer;
 		if (uniformBlock.getType()->getQualifier().storage == glslang::EvqBuffer)
 			data.type = UniformType::Storage;
 		if (uniformBlock.getType()->getQualifier().layoutPushConstant)

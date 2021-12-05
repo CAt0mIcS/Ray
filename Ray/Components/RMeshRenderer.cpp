@@ -12,6 +12,9 @@
 
 #include "Utils/RException.h"
 
+// RAY_TODO: Remove
+#include "Graphics/Commands/RCommandBuffer.h"
+
 
 namespace At0::Ray
 {
@@ -33,6 +36,18 @@ namespace At0::Ray
 
 		for (const auto& descSet : m_DescriptorSets)
 			descSet.CmdBind(cmdBuff);
+
+		struct PushConstants
+		{
+			VkBool32 useColor;
+			VkBool32 useTexture;
+		};
+
+		PushConstants pushConstants{ m_Material->Get<VkBool32>("Constants.useColor"),
+			m_Material->Get<VkBool32>("Constants.useTexture") };
+
+		vkCmdPushConstants(cmdBuff, m_Material->GetGraphicsPipeline().GetLayout(),
+			VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstants), &pushConstants);
 	}
 
 	void MeshRenderer::Update()
@@ -59,7 +74,8 @@ namespace At0::Ray
 		{
 			for (const auto& uBlockData : reflection.GetUniformBlocks())
 			{
-				if (!m_Material->HasUniformBlock(uBlockData.name))
+				if (uBlockData.type == UniformType::Push ||
+					!m_Material->HasUniformBlock(uBlockData.name))
 					continue;
 				for (const auto& uniform : uBlockData.uniforms)
 				{
@@ -82,6 +98,7 @@ namespace At0::Ray
 		case UniformType::CombinedImageSampler:
 			SetSamplerTexture(uniformPath, m_Material->GetTexture(uniformPath));
 			break;
+		case UniformType::Push: RAY_ASSERT(false, "[MeshRenderer] TODO");
 		}
 	}
 
@@ -93,28 +110,31 @@ namespace At0::Ray
 		switch (m_Material->GetType(dataPath))
 		{
 		case ShaderDataType::Float:
-			GetBufferUniform(uBlockName)[uName] = *(float*)m_Material->GetRaw(dataPath);
+			GetBufferUniform(uBlockName)[uName] = m_Material->Get<float>(dataPath);
 			break;
 		case ShaderDataType::Int:
-			GetBufferUniform(uBlockName)[uName] = *(int32_t*)m_Material->GetRaw(dataPath);
+			GetBufferUniform(uBlockName)[uName] = m_Material->Get<int32_t>(dataPath);
 			break;
 		case ShaderDataType::UInt:
-			GetBufferUniform(uBlockName)[uName] = *(uint32_t*)m_Material->GetRaw(dataPath);
+			GetBufferUniform(uBlockName)[uName] = m_Material->Get<uint32_t>(dataPath);
+			break;
+		case ShaderDataType::Bool:
+			GetBufferUniform(uBlockName)[uName] = m_Material->Get<VkBool32>(dataPath);
 			break;
 		case ShaderDataType::Vec2:
-			GetBufferUniform(uBlockName)[uName] = *(Float2*)m_Material->GetRaw(dataPath);
+			GetBufferUniform(uBlockName)[uName] = m_Material->Get<Float2>(dataPath);
 			break;
 		case ShaderDataType::Vec3:
-			GetBufferUniform(uBlockName)[uName] = *(Float3*)m_Material->GetRaw(dataPath);
+			GetBufferUniform(uBlockName)[uName] = m_Material->Get<Float3>(dataPath);
 			break;
 		case ShaderDataType::Vec4:
-			GetBufferUniform(uBlockName)[uName] = *(Float4*)m_Material->GetRaw(dataPath);
+			GetBufferUniform(uBlockName)[uName] = m_Material->Get<Float4>(dataPath);
 			break;
 		case ShaderDataType::Mat3:
-			GetBufferUniform(uBlockName)[uName] = *(Matrix3*)m_Material->GetRaw(dataPath);
+			GetBufferUniform(uBlockName)[uName] = m_Material->Get<Matrix3>(dataPath);
 			break;
 		case ShaderDataType::Mat4:
-			GetBufferUniform(uBlockName)[uName] = *(Matrix*)m_Material->GetRaw(dataPath);
+			GetBufferUniform(uBlockName)[uName] = m_Material->Get<Matrix>(dataPath);
 			break;
 		default:
 			RAY_ASSERT(

@@ -245,6 +245,7 @@ namespace At0::Ray
 		case ShaderDataType::Float: return "float";
 		case ShaderDataType::Int: return "int";
 		case ShaderDataType::UInt: return "uint";
+		case ShaderDataType::Bool: return "bool";
 		case ShaderDataType::Vec2: return "vec2";
 		case ShaderDataType::Vec3: return "vec3";
 		case ShaderDataType::Vec4: return "vec4";

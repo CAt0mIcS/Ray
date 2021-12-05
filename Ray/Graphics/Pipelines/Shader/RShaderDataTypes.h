@@ -15,16 +15,18 @@ namespace At0::Ray
 		Vec4,
 
 		Mat3,
-		Mat4
+		Mat4,
+		Bool
 	};
 
 	inline uint32_t GetShaderDataTypeSize(ShaderDataType type)
 	{
 		switch (type)
 		{
-		case ShaderDataType::Float: return 4;
-		case ShaderDataType::Int: return 4;
-		case ShaderDataType::UInt: return 4;
+		case ShaderDataType::Float:
+		case ShaderDataType::Int:
+		case ShaderDataType::UInt:
+		case ShaderDataType::Bool: return 4;
 		case ShaderDataType::Vec2: return sizeof Float2;
 		case ShaderDataType::Vec3: return sizeof Float3;
 		case ShaderDataType::Vec4: return sizeof Float4;

@@ -21,6 +21,11 @@ namespace At0::Ray
 		return m_OffsetMap.at(key).second;
 	}
 
+	void MaterialDataContainer::Set(const std::string& key, bool data)
+	{
+		Set(key, (VkBool32)data, ShaderDataType::Bool);
+	}
+
 	Ref<Texture2D> MaterialDataContainer::GetTexture(const std::string& key) const
 	{
 		if (m_Images.find(key) == m_Images.end())
