@@ -2,6 +2,7 @@
 #include "RMesh.h"
 
 #include "RMeshRenderer.h"
+#include "RHierachyComponent.h"
 
 #include "Graphics/RCodex.h"
 #include "Shading/RMaterial.h"

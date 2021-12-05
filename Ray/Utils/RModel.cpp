@@ -23,180 +23,201 @@
 
 namespace At0::Ray
 {
+	struct ShaderFileCode
+	{
+		static constexpr const char* DiffuseMap = "_Diff";
+		static constexpr const char* Metallic = "_Metal";
+		static constexpr const char* SpecularMap = "_Spec";
+		static constexpr const char* NormalMap = "_Norm";
+		static constexpr const char* HeightMap = "_Height";
+		static constexpr const char* Occlusion = "_Occl";
+		static constexpr const char* DetailMask = "_DtlMsk";
+		static constexpr const char* Emission = "_Emi";
+		static constexpr const char* Color = "_Col";
+	};
+
 	Model::Model(std::string_view filepath, Ref<Material> material)
 	{
-		//		Assimp::Importer importer;
-		//		const aiScene* pScene = importer.ReadFile(filepath.data(),
-		//			aiProcess_Triangulate | /*aiProcess_JoinIdenticalVertices |*/
-		//				aiProcess_ConvertToLeftHanded | aiProcess_GenNormals |
-		//aiProcess_CalcTangentSpace);
-		//
-		//		if (!pScene)
-		//			ThrowRuntime("[Model] Failed to load: \"{0}\"", importer.GetErrorString());
-		//
-		//		Time start = Time::Now();
-		//
-		//#if RAY_MULTITHREADED_IMPORT
-		//		std::vector<std::future<void>> futures;
-		//		std::mutex mutexMaterial;
-		//		std::mutex mutexScene;
-		//		auto parseMeshAsync = [this, &mutexMaterial, &mutexScene](std::string_view filepath,
-		//								  const aiMesh* pMesh, const aiMaterial* const* pMaterials,
-		//								  Ref<Material> material)
-		//		{
-		//			const aiMesh& mesh = *pMesh;
-		//			const std::string basePath =
-		//std::filesystem::path(filepath).remove_filename().string(); 			const std::string meshTag =
-		//				std::string(filepath) + std::string("#") + mesh.mName.C_Str();
-		//
-		//			// Material creation stage
-		//			if (!material)
-		//			{
-		//				std::scoped_lock lock(mutexMaterial);
-		//				material = CreateMaterial(basePath, mesh, pMaterials);
-		//			}
-		//
-		//			// Vertex assembly stage
-		//			DynamicVertex vertices =
-		//				AssembleVertices(mesh, material->GetGraphicsPipeline().GetShader());
-		//
-		//			// Index generation stage
-		//			std::vector<IndexBuffer::Type> indices = GenerateIndices(mesh);
-		//
-		//			// Parents
-		//			std::scoped_lock lock(mutexScene);
-		//			if (!m_ParentSet)
-		//			{
-		//				m_VertexData.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
-		//				m_VertexData.indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
-		//				m_VertexData.material = std::move(material);
-		//				m_ParentSet = true;
-		//			}
-		//			// Children
-		//			else
-		//			{
-		//				Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag,
-		//vertices); 				Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
-		//
-		//				// ParentEntity component added by mesh
-		//				Entity entity = Scene::Get().CreateEntity();
-		//				Ray::MeshRenderer& meshRenderer =
-		//					entity.Emplace<Ray::MeshRenderer>(std::move(material));
-		//				entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
-		//				m_VertexData.children.emplace_back(entity);
-		//			}
-		//
-		//			Log::Info(
-		//				"[Model] Loaded mesh \"{0}\" of resource \"{1}\"", mesh.mName.C_Str(),
-		//filepath);
-		//		};
-		//
-		//		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
-		//		{
-		//			futures.push_back(std::async(std::launch::async, parseMeshAsync, filepath,
-		//				pScene->mMeshes[i], pScene->mMaterials, material));
-		//		}
-		//
-		//		// RAY_TODO: Finish while scene is already rendering
-		//		for (auto& future : futures)
-		//			future.get();
-		//#else
-		//		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
-		//		{
-		//			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials, material);
-		//		}
-		//#endif
-		//
-		//		Log::Info("[Model] Loading of resource \"{0}\" took {1}s", filepath,
-		//			(Time::Now() - start).AsSeconds());
+		Assimp::Importer importer;
+		const aiScene* pScene = importer.ReadFile(filepath.data(),
+			aiProcess_Triangulate | /*aiProcess_JoinIdenticalVertices |*/
+				aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
+
+		if (!pScene)
+			ThrowRuntime("[Model] Failed to load: \"{0}\"", importer.GetErrorString());
+
+		Time start = Time::Now();
+
+#if RAY_MULTITHREADED_IMPORT
+		std::vector<std::future<void>> futures;
+		std::mutex mutexMaterial;
+		std::mutex mutexScene;
+		auto parseMeshAsync = [this, &mutexMaterial, &mutexScene](std::string_view filepath,
+								  const aiMesh* pMesh, const aiMaterial* const* pMaterials,
+								  Ref<Material> material)
+		{
+			const aiMesh& mesh = *pMesh;
+			const std::string basePath = std::filesystem::path(filepath).remove_filename().string();
+			const std::string meshTag =
+				std::string(filepath) + std::string("#") + mesh.mName.C_Str();
+
+			// Material creation stage
+			if (!material)
+			{
+				std::scoped_lock lock(mutexMaterial);
+				material = CreateMaterial(basePath, mesh, pMaterials);
+			}
+
+			// Vertex assembly stage
+			DynamicVertex vertices =
+				AssembleVertices(mesh, material->GetGraphicsPipeline().GetShader());
+
+			// Index generation stage
+			std::vector<IndexBuffer::Type> indices = GenerateIndices(mesh);
+
+			// Parents
+			std::scoped_lock lock(mutexScene);
+			if (!m_ParentSet)
+			{
+				m_VertexData.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
+				m_VertexData.indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
+				m_VertexData.material = std::move(material);
+				m_ParentSet = true;
+			}
+			// Children
+			else
+			{
+				Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
+				Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
+
+				// ParentEntity component added by mesh
+				Entity entity = Scene::Get().CreateEntity();
+				Ray::MeshRenderer& meshRenderer =
+					entity.Emplace<Ray::MeshRenderer>(std::move(material));
+				entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
+				m_VertexData.children.emplace_back(entity);
+			}
+
+			Log::Info(
+				"[Model] Loaded mesh \"{0}\" of resource \"{1}\"", mesh.mName.C_Str(), filepath);
+		};
+
+		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
+		{
+			futures.push_back(std::async(std::launch::async, parseMeshAsync, filepath,
+				pScene->mMeshes[i], pScene->mMaterials, material));
+		}
+
+		// RAY_TODO: Finish while scene is already rendering
+		for (auto& future : futures)
+			future.get();
+#else
+		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
+		{
+			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials, material);
+		}
+#endif
+
+		Log::Info("[Model] Loading of resource \"{0}\" took {1}s", filepath,
+			(Time::Now() - start).AsSeconds());
 	}
 
 	void Model::ParseMesh(std::string_view filepath, const aiMesh& mesh,
 		const aiMaterial* const* pMaterials, Ref<Material> material)
 	{
-		// const std::string basePath = std::filesystem::path(filepath).remove_filename().string();
-		// const std::string meshTag = std::string(filepath) + std::string("#") +
-		// mesh.mName.C_Str();
+		const std::string basePath = std::filesystem::path(filepath).remove_filename().string();
+		const std::string meshTag = std::string(filepath) + std::string("#") + mesh.mName.C_Str();
 
-		// Log::Info("[Model] Parsing mesh \"{0}\" of resource \"{1}\"", mesh.mName.C_Str(),
-		// filepath);
+		Log::Info("[Model] Parsing mesh \"{0}\" of resource \"{1}\"", mesh.mName.C_Str(), filepath);
 
-		//// Material creation stage
-		// if (!material)
-		//	material = CreateMaterial(basePath, mesh, pMaterials);
+		// Material creation stage
+		if (!material)
+			material = CreateMaterial(basePath, mesh, pMaterials);
 
-		//// Vertex assembly stage
-		// DynamicVertex vertices =
-		//	AssembleVertices(mesh, material->GetGraphicsPipeline().GetShader());
+		// Vertex assembly stage
+		DynamicVertex vertices =
+			AssembleVertices(mesh, material->GetGraphicsPipeline().GetShader());
 
-		//// Index generation stage
-		// std::vector<IndexBuffer::Type> indices = GenerateIndices(mesh);
+		// Index generation stage
+		std::vector<IndexBuffer::Type> indices = GenerateIndices(mesh);
 
-		//// Parents
-		// if (!m_ParentSet)
-		//{
-		//	m_VertexData.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
-		//	m_VertexData.indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
-		//	m_VertexData.material = std::move(material);
+		// Parents
+		if (!m_ParentSet)
+		{
+			m_VertexData.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
+			m_VertexData.indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
+			m_VertexData.material = std::move(material);
+			m_ParentSet = true;
+		}
+		// Children
+		else
+		{
+			Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
+			Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
 
-		//	// vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
-		//	// indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
-		//	m_ParentSet = true;
-		//}
-		//// Children
-		// else
-		//{
-		//	// m_VertexData.children.emplace_back(Codex::Resolve<VertexBuffer>(meshTag, vertices),
-		//	//	Codex::Resolve<IndexBuffer>(meshTag, indices));
-
-		//	Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
-		//	Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
-
-		//	// ParentEntity component added by mesh
-		//	Entity entity = Scene::Get().CreateEntity();
-		//	Ray::MeshRenderer& meshRenderer =
-		//		entity.Emplace<Ray::MeshRenderer>(std::move(material));
-		//	entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
-		//	m_VertexData.children.emplace_back(entity);
-		//}
+			// ParentEntity component added by mesh
+			Entity entity = Scene::Get().CreateEntity();
+			Ray::MeshRenderer& meshRenderer =
+				entity.Emplace<Ray::MeshRenderer>(std::move(material));
+			entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
+			m_VertexData.children.emplace_back(entity);
+		}
 	}
 
 	Ref<Material> Model::CreateMaterial(
 		const std::string& basePath, const aiMesh& mesh, const aiMaterial* const* pMaterials)
 	{
-		// aiString diffuseTexFileName;
-		// aiString specularTexFileName;
-		// aiString normalTexFileName;
+		aiString diffuseTexFileName;
+		aiString specularTexFileName;
+		aiString normalTexFileName;
 
-		// Ref<Texture2D> diffuseMap = nullptr;
-		// Ref<Texture2D> specularMap = nullptr;
-		// Ref<Texture2D> normalMap = nullptr;
+		Ref<Texture2D> diffuseMap = nullptr;
+		Ref<Texture2D> specularMap = nullptr;
+		Ref<Texture2D> normalMap = nullptr;
 
-		// if (pMaterials[mesh.mMaterialIndex]->GetTexture(
-		//		aiTextureType_DIFFUSE, 0, &diffuseTexFileName) == aiReturn_SUCCESS)
-		//{
-		//	diffuseMap = Texture2D::Acquire(basePath + diffuseTexFileName.C_Str());
-		//}
+		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
+				aiTextureType_DIFFUSE, 0, &diffuseTexFileName) == aiReturn_SUCCESS)
+		{
+			diffuseMap = Texture2D::Acquire(basePath + diffuseTexFileName.C_Str());
+		}
 
-		// if (pMaterials[mesh.mMaterialIndex]->GetTexture(
-		//		aiTextureType_SPECULAR, 0, &specularTexFileName) == aiReturn_SUCCESS)
-		//{
-		//	specularMap = Texture2D::Acquire(basePath + specularTexFileName.C_Str());
-		//}
+		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
+				aiTextureType_SPECULAR, 0, &specularTexFileName) == aiReturn_SUCCESS)
+		{
+			specularMap = Texture2D::Acquire(basePath + specularTexFileName.C_Str());
+		}
 
-		// if (pMaterials[mesh.mMaterialIndex]->GetTexture(
-		//		aiTextureType_NORMALS, 0, &normalTexFileName) == aiReturn_SUCCESS)
-		//{
-		//	normalMap = Texture2D::Acquire(basePath + normalTexFileName.C_Str());
-		//}
+		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
+				aiTextureType_NORMALS, 0, &normalTexFileName) == aiReturn_SUCCESS)
+		{
+			normalMap = Texture2D::Acquire(basePath + normalTexFileName.C_Str());
+		}
 
-		// PhongMaterial::Layout layout{};
-		// layout.diffuseMap = diffuseMap;
-		// layout.specularMap = specularMap;
-		// layout.normalMap = normalMap;
+		std::string shaderFileName = "Resources/Shaders/Phong";
+		std::vector<std::string> fileCodes;
+		if (diffuseMap)
+			fileCodes.emplace_back(ShaderFileCode::DiffuseMap);
+		if (specularMap)
+			fileCodes.emplace_back(ShaderFileCode::SpecularMap);
+		if (normalMap)
+			fileCodes.emplace_back(ShaderFileCode::NormalMap);
+		std::sort(fileCodes.begin(), fileCodes.end());
+		shaderFileName += std::accumulate(fileCodes.begin(), fileCodes.end(), std::string{});
 
-		// return MakeRef<PhongMaterial>(layout);
-		return nullptr;
+		auto pipeline = Ray::GraphicsPipeline::Builder()
+							.SetShader(Ray::Shader::Acquire(
+								{ shaderFileName + ".vert", shaderFileName + ".frag" }))
+							.Acquire();
+
+		auto builder = Ray::Material::Builder(std::move(pipeline));
+		if (diffuseMap)
+			builder.Set(UniformTag::DiffuseMapSampler, diffuseMap);
+		if (specularMap)
+			builder.Set(UniformTag::SpecularMapSampler, specularMap);
+		if (normalMap)
+			builder.Set(UniformTag::NormalMapSampler, normalMap);
+
+		return builder.Acquire();
 	}
 
 	DynamicVertex Model::AssembleVertices(const aiMesh& mesh, const Shader& shader)
