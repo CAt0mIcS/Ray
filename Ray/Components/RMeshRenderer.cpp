@@ -37,17 +37,17 @@ namespace At0::Ray
 		for (const auto& descSet : m_DescriptorSets)
 			descSet.CmdBind(cmdBuff);
 
-		struct PushConstants
-		{
-			VkBool32 useColor;
-			VkBool32 useTexture;
-		};
+		// struct PushConstants
+		//{
+		//	VkBool32 useColor;
+		//	VkBool32 useTexture;
+		//};
 
-		PushConstants pushConstants{ m_Material->Get<VkBool32>("Constants.useColor"),
-			m_Material->Get<VkBool32>("Constants.useTexture") };
+		// PushConstants pushConstants{ m_Material->Get<VkBool32>("Constants.useColor"),
+		//	m_Material->Get<VkBool32>("Constants.useTexture") };
 
-		vkCmdPushConstants(cmdBuff, m_Material->GetGraphicsPipeline().GetLayout(),
-			VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstants), &pushConstants);
+		// vkCmdPushConstants(cmdBuff, m_Material->GetGraphicsPipeline().GetLayout(),
+		//	VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstants), &pushConstants);
 	}
 
 	void MeshRenderer::Update()

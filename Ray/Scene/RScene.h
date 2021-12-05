@@ -17,14 +17,7 @@ namespace At0::Ray
 {
 	class DescriptorSet;
 	class BufferUniform;
-
-	struct PerSceneData
-	{
-		Matrix View = MatrixIdentity();
-		Matrix Projection = MatrixIdentity();
-		Float3 ViewPos{};
-		Float3 LightPos{};
-	};
+	class SceneDescriptor;
 
 	/**
 	 * Gets dispatched to listeners when entity is added to the scene
@@ -100,7 +93,6 @@ namespace At0::Ray
 
 	private:
 		void OnEvent(CameraChangedEvent& e) override { UpdateUniform(); }
-		void SetupPerSceneUniform();
 		void UpdateUniform();
 
 	private:
@@ -108,11 +100,8 @@ namespace At0::Ray
 		Scope<Camera> m_Camera = nullptr;
 		ThreadPool m_ThreadPool;
 
-		VkDescriptorSetLayout m_DescriptorSetLayout;
-		VkPipelineLayout m_PipelineLayout;
-		VkDescriptorPool m_DescriptorPool;
-		Scope<DescriptorSet> m_PerSceneDescriptor;
-		Scope<BufferUniform> m_PerSceneUniform;
+		// RAY_TODO: Make stack allocated once work on SceneDescriptor is finished
+		Scope<SceneDescriptor> m_SceneDescriptor;
 
 		static Scope<Scene> s_CurrentScene;
 	};

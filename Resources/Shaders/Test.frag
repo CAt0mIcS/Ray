@@ -13,20 +13,22 @@ layout(set = 1, binding = 2) uniform Shading
 
 layout(set = 1, binding = 3) uniform sampler2D samplerDiffuse;
 
-layout(push_constant) uniform Constants
-{
-	bool useColor;
-	bool useTexture;
-} uConstants;
+// layout(push_constant) uniform Constants
+// {
+// 	bool useColor;
+// 	bool useTexture;
+// } uConstants;
 
 void main()
 {
-	if(uConstants.useColor && uConstants.useTexture)
-		outColor = texture(samplerDiffuse, inUV) * uShading.color;
-	else if(uConstants.useTexture)
-		outColor = texture(samplerDiffuse, inUV);
-	else if(uConstants.useColor)
-		outColor = uShading.color;
-	else
-		outColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+//	if(uConstants.useColor && uConstants.useTexture)
+//		outColor = texture(samplerDiffuse, inUV) * uShading.color;
+//	else if(uConstants.useTexture)
+//		outColor = texture(samplerDiffuse, inUV);
+//	else if(uConstants.useColor)
+//		outColor = uShading.color;
+//	else
+//		outColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+	outColor = texture(samplerDiffuse, inUV) * uShading.color;
 }

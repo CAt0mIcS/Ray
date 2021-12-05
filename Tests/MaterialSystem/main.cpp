@@ -146,8 +146,8 @@ public:
 			Ray::Material::Builder(pipeline)
 				.Set("samplerDiffuse", Ray::Texture2D::Acquire("Resources/Textures/gridbase.png"))
 				.Set("Shading.color", Ray::Float4{ 1.0f, 0.4f, 0.134f, 1.0f })
-				.Set("Constants.useColor", true)
-				.Set("Constants.useTexture", false)
+				//.Set("Constants.useColor", true)
+				//.Set("Constants.useTexture", false)
 				.Acquire();
 
 		m_Parent = Scene::Get().CreateEntity();

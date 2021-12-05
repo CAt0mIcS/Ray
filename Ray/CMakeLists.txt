@@ -37,6 +37,8 @@ set(SRC
 	"Scene/RScene.cpp"
 	"Scene/RCamera.h"
 	"Scene/RCamera.cpp"
+	"Scene/RSceneDescriptor.h"
+	"Scene/RSceneDescriptor.cpp"
 
 	# ------------------------------------------------------------------
 	# Core classes

@@ -77,7 +77,7 @@ namespace At0::Ray
 		template<typename T>
 		void Update(T&& data, VkDeviceSize offset = 0) requires(!std::is_same_v<T, void*>)
 		{
-			Update(&data, (uint32_t)sizeof(data), offset);
+			Update((void*)&data, (uint32_t)sizeof(data), offset);
 		}
 
 		/**
