@@ -22,12 +22,12 @@ namespace At0::Ray
 		/**
 		 * Adds a new listener to dispatch the events to
 		 */
-		void Register(EventListener<T>* listener) { m_Listeners.emplace_back(listener); }
+		void RegisterListener(EventListener<T>* listener) { m_Listeners.emplace_back(listener); }
 
 		/**
 		 * Removes a listener from getting events
 		 */
-		void Unregister(EventListener<T>* listener)
+		void UnregisterListener(EventListener<T>* listener)
 		{
 			if (m_Listeners.size() == 0)
 				return;

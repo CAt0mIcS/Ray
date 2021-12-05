@@ -22,7 +22,7 @@ namespace At0::Ray
 		EventListener() requires std::derived_from<Window, EventDispatcher<U>>
 		{
 			m_Dispatcher = &Window::Get();
-			m_Dispatcher->Register(this);
+			m_Dispatcher->RegisterListener(this);
 		}
 
 		/**
@@ -34,7 +34,7 @@ namespace At0::Ray
 		EventListener(EventDispatcher<U>& dispatcher)
 		{
 			m_Dispatcher = &dispatcher;
-			m_Dispatcher->Register(this);
+			m_Dispatcher->RegisterListener(this);
 		}
 
 		/**
@@ -42,14 +42,14 @@ namespace At0::Ray
 		 */
 		virtual void OnEvent(T& e) = 0;
 
-		virtual ~EventListener() { m_Dispatcher->Unregister(this); }
+		virtual ~EventListener() { m_Dispatcher->UnregisterListener(this); }
 
 		EventListener<T>& operator=(EventListener<T>&& other) noexcept
 		{
 			m_Dispatcher = std::move(other.m_Dispatcher);
 
 			// Register again because deconstructore unregisters (RAY_TODO)
-			m_Dispatcher->Register(this);
+			m_Dispatcher->RegisterListener(this);
 			return *this;
 		}
 
@@ -60,7 +60,7 @@ namespace At0::Ray
 			m_Dispatcher = other.m_Dispatcher;
 
 			// Register again because deconstructore unregisters (RAY_TODO)
-			m_Dispatcher->Register(this);
+			m_Dispatcher->RegisterListener(this);
 			return *this;
 		}
 		EventListener(const EventListener<T>& other) { *this = other; }
