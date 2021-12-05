@@ -16,41 +16,12 @@
 namespace At0::Ray
 {
 	MeshRenderer::MeshRenderer(Entity entity, Ref<Material> material)
-		: Component(entity), Renderer(std::move(material))
+		: Component(entity),
+		  Renderer(std::move(material)), EventListener<MaterialBecameDirtyEvent>(*m_Material)
 	{
 		m_PerObjectDataUniformRef = GetBufferUniform(UniformBlockTag::PerObjectData)["Model"];
-
-		if (m_DirtyListenerIndex == (uint32_t)-1)
-			m_DirtyListenerIndex = m_Material->AddOnDirtyListener(
-				[this](const std::string& uniformPath, UniformType uType)
-				{ UpdateMaterialData(uniformPath, uType); });
-
 		SetMaterialData();
 	}
-
-	// MeshRenderer::~MeshRenderer()
-	//{
-	//	if (m_DirtyListenerIndex != (uint32_t)-1)
-	//		m_Material->RemoveOnDirtyListener(m_DirtyListenerIndex);
-	//}
-
-	// MeshRenderer::MeshRenderer(MeshRenderer&& other) noexcept
-	//	: Component(other.GetEntity()), Renderer(other.m_Material)
-	//{
-	//	other.m_Material->RemoveOnDirtyListener(other.m_DirtyListenerIndex);
-	//	other.m_DirtyListenerIndex = (uint32_t)-1;
-
-	//	m_PerObjectDataUniformRef = std::move(other.m_PerObjectDataUniformRef);
-	//	m_DirtyListenerIndex =
-	//		m_Material->AddOnDirtyListener([this](const std::string& uniformPath, UniformType uType)
-	//			{ UpdateMaterialData(uniformPath, uType); });
-	//}
-
-	// MeshRenderer& MeshRenderer::operator=(MeshRenderer&& other) noexcept
-	//{
-	//	*this = MeshRenderer(std::move(other));
-	//	return *this;
-	//}
 
 	void MeshRenderer::Render(const CommandBuffer& cmdBuff) const
 	{
@@ -148,5 +119,10 @@ namespace At0::Ray
 			RAY_ASSERT(
 				false, "[MeshRenderer] Data type {0} unknown.", (int)m_Material->GetType(dataPath));
 		}
+	}
+
+	void MeshRenderer::OnEvent(MaterialBecameDirtyEvent& e)
+	{
+		UpdateMaterialData(e.dataPath, e.uType);
 	}
 }  // namespace At0::Ray

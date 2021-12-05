@@ -62,7 +62,14 @@ namespace At0::Ray
 		return entity;
 	}
 
-	void Scene::DestroyEntity(Entity entity) { m_Registry.destroy((entt::entity)entity); }
+	void Scene::DestroyEntity(Entity entity)
+	{
+		if (entity.HasParent())
+			for (Entity child : entity.GetChildren())
+				DestroyEntity(child);
+
+		m_Registry.destroy((entt::entity)entity);
+	}
 
 	void Scene::Update(Delta dt)
 	{
@@ -82,8 +89,8 @@ namespace At0::Ray
 		tformView.each([](Transform& tform) { tform.UpdateMatrix(); });
 #endif
 
-		CLog::Trace("[Scene] Transformation recalculations took {0}us",
-			(Time::Now() - tStart).AsMicroseconds());
+		// CLog::Trace("[Scene] Transformation recalculations took {0}us",
+		//	(Time::Now() - tStart).AsMicroseconds());
 
 		tStart = Time::Now();
 
@@ -100,8 +107,8 @@ namespace At0::Ray
 
 		// m_Registry.view<TextRenderer>().each([](TextRenderer& text) { text.Update(); });
 
-		CLog::Trace(
-			"[Scene] MeshRenderer updates took {0}us", (Time::Now() - tStart).AsMicroseconds());
+		// CLog::Trace(
+		//	"[Scene] MeshRenderer updates took {0}us", (Time::Now() - tStart).AsMicroseconds());
 	}
 
 	void Scene::SetCamera(Scope<Camera> cam) { m_Camera = std::move(cam); }

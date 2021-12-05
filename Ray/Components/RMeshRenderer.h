@@ -8,6 +8,8 @@
 #include "../Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "../Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
 #include "../Graphics/Pipelines/Shader/RShaderReflection.h"
+#include "../Shading/RMaterial.h"
+#include "../Events/REventListener.h"
 
 #include <vector>
 #include <unordered_map>
@@ -25,14 +27,13 @@ namespace At0::Ray
 	 * Components containing all resources specifically required for a mesh to render.
 	 * A mesh is only rendered if the contained entity has a MeshRenderer component
 	 */
-	class RAY_EXPORT MeshRenderer : public Component, public Renderer
+	class RAY_EXPORT MeshRenderer :
+		public Component,
+		public Renderer,
+		EventListener<MaterialBecameDirtyEvent>
 	{
 	public:
 		MeshRenderer(Entity entity, Ref<Material> material);
-		//~MeshRenderer();
-
-		// MeshRenderer(MeshRenderer&& other) noexcept;
-		// MeshRenderer& operator=(MeshRenderer&& other) noexcept;
 
 		/**
 		 * Binds all of the mesh's resources
@@ -58,13 +59,13 @@ namespace At0::Ray
 
 		void UpdateUniform(const std::string& dataPath);
 
+		virtual void OnEvent(MaterialBecameDirtyEvent& e) override;
+
 	private:
 		/**
 		 * Points to the buffer uniform in the unordered_map to make MeshRenderer::Update faster
 		 */
 		std::optional<BufferUniform::AccessType> m_PerObjectDataUniformRef;
-
-		uint32_t m_DirtyListenerIndex = (uint32_t)-1;
 	};
 }  // namespace At0::Ray
 

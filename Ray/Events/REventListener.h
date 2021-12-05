@@ -21,8 +21,7 @@ namespace At0::Ray
 		template<typename U = T>
 		EventListener() requires std::derived_from<Window, EventDispatcher<U>>
 		{
-			m_Dispatcher = &Window::Get();
-			m_Dispatcher->RegisterListener(this);
+			RegisterForDispatcher(&Window::Get());
 		}
 
 		/**
@@ -33,8 +32,27 @@ namespace At0::Ray
 		template<typename U = T>
 		EventListener(EventDispatcher<U>& dispatcher)
 		{
-			m_Dispatcher = &dispatcher;
+			RegisterForDispatcher(&dispatcher);
+		}
+
+		/**
+		 * Requires dispatcher to be registered using RegisterForDispatcher
+		 */
+		// EventListener() = default;
+
+		/**
+		 * Registers this to listen to events from dispatcher
+		 */
+		void RegisterForDispatcher(EventDispatcher<T>* dispatcher)
+		{
+			m_Dispatcher = dispatcher;
 			m_Dispatcher->RegisterListener(this);
+		}
+
+		void UnregisterForDispatcher()
+		{
+			if (m_Dispatcher)
+				m_Dispatcher->UnregisterListener(this);
 		}
 
 		/**
@@ -48,7 +66,7 @@ namespace At0::Ray
 		{
 			m_Dispatcher = std::move(other.m_Dispatcher);
 
-			// Register again because deconstructore unregisters (RAY_TODO)
+			// Register again because destructor unregisters (RAY_TODO)
 			m_Dispatcher->RegisterListener(this);
 			return *this;
 		}
@@ -59,7 +77,7 @@ namespace At0::Ray
 		{
 			m_Dispatcher = other.m_Dispatcher;
 
-			// Register again because deconstructore unregisters (RAY_TODO)
+			// Register again because destructor unregisters (RAY_TODO)
 			m_Dispatcher->RegisterListener(this);
 			return *this;
 		}

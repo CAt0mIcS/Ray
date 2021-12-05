@@ -127,78 +127,94 @@ namespace At0::Ray
 
 	void Window::SetEventCallbacks()
 	{
-		glfwSetCursorPosCallback(m_hWnd, [](GLFWwindow* window, double xPos, double yPos) {
-			int32_t dx = (int)Window::Get().m_PrevousMousePos.x - xPos;
-			int32_t dy = (int)Window::Get().m_PrevousMousePos.y - yPos;
-
-			Float2 newPos = { (float)xPos, (float)yPos };
-			Window::Get().m_PrevousMousePos = newPos;
-
-			Mouse::SetPos(newPos);
-
-			MouseMovedEvent e(newPos, { dx, dy });
-			for (auto* listener : Window::Get().EventDispatcher<MouseMovedEvent>::Get())
+		glfwSetCursorPosCallback(m_hWnd,
+			[](GLFWwindow* window, double xPos, double yPos)
 			{
-				listener->OnEvent(e);
-				if (e.Handled)
+				int32_t dx = (int)Window::Get().m_PrevousMousePos.x - xPos;
+				int32_t dy = (int)Window::Get().m_PrevousMousePos.y - yPos;
+
+				Float2 newPos = { (float)xPos, (float)yPos };
+				Window::Get().m_PrevousMousePos = newPos;
+
+				Mouse::SetPos(newPos);
+
+				Log::Trace("[Window] MouseMoveEvent {x={0}, y={1}} (Listeners: {2})", newPos.x,
+					newPos.y, Window::Get().EventDispatcher<MouseMovedEvent>::Get().size());
+
+				MouseMovedEvent e(newPos, { dx, dy });
+				for (auto* listener : Window::Get().EventDispatcher<MouseMovedEvent>::Get())
+				{
+					listener->OnEvent(e);
+					if (e.Handled)
+						break;
+				}
+
+				Window::Get().GenerateHoverEvents();
+			});
+
+		glfwSetMouseButtonCallback(m_hWnd,
+			[](GLFWwindow* window, int button, int action, int mods)
+			{
+				switch (action)
+				{
+				case GLFW_PRESS:
+				{
+					MouseButton btn = (MouseButton)button;
+
+					switch (btn)
+					{
+					case MouseButton::Left: Mouse::SetLeftPressed(true); break;
+					case MouseButton::Right: Mouse::SetRightPressed(true); break;
+					case MouseButton::Middle: Mouse::SetMiddlePressed(true); break;
+					}
+
+					Log::Trace("[Window] MouseButtonPressedEvent ({0}) (Listeners: {1})",
+						String::Construct(btn),
+						Window::Get().EventDispatcher<MouseButtonPressedEvent>::Get().size());
+
+					MouseButtonPressedEvent e(btn, Window::Get().GetClickedWidget());
+					for (auto* listener :
+						Window::Get().EventDispatcher<MouseButtonPressedEvent>::Get())
+					{
+						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
+
 					break;
-			}
+				}
+				case GLFW_RELEASE:
+				{
+					MouseButton btn = (MouseButton)button;
 
-			Window::Get().GenerateHoverEvents();
-		});
+					switch (btn)
+					{
+					case MouseButton::Left: Mouse::SetLeftPressed(false); break;
+					case MouseButton::Right: Mouse::SetRightPressed(false); break;
+					case MouseButton::Middle: Mouse::SetMiddlePressed(false); break;
+					}
 
-		glfwSetMouseButtonCallback(m_hWnd, [](GLFWwindow* window, int button, int action,
-											   int mods) {
-			switch (action)
+					Log::Trace("[Window] MouseButtonReleasedEvent ({0}) (Listeners: {1})",
+						String::Construct(btn),
+						Window::Get().EventDispatcher<MouseButtonReleasedEvent>::Get().size());
+
+					MouseButtonReleasedEvent e(btn, Window::Get().GetReleasedWidget());
+					for (auto* listener :
+						Window::Get().EventDispatcher<MouseButtonReleasedEvent>::Get())
+					{
+						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
+
+					break;
+				}
+				}
+			});
+
+		glfwSetKeyCallback(m_hWnd,
+			[](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
-			case GLFW_PRESS:
-			{
-				MouseButton btn = (MouseButton)button;
-
-				switch (btn)
-				{
-				case MouseButton::Left: Mouse::SetLeftPressed(true); break;
-				case MouseButton::Right: Mouse::SetRightPressed(true); break;
-				case MouseButton::Middle: Mouse::SetMiddlePressed(true); break;
-				}
-
-				MouseButtonPressedEvent e(btn, Window::Get().GetClickedWidget());
-				for (auto* listener : Window::Get().EventDispatcher<MouseButtonPressedEvent>::Get())
-				{
-					listener->OnEvent(e);
-					if (e.Handled)
-						break;
-				}
-
-				break;
-			}
-			case GLFW_RELEASE:
-			{
-				MouseButton btn = (MouseButton)button;
-
-				switch (btn)
-				{
-				case MouseButton::Left: Mouse::SetLeftPressed(false); break;
-				case MouseButton::Right: Mouse::SetRightPressed(false); break;
-				case MouseButton::Middle: Mouse::SetMiddlePressed(false); break;
-				}
-
-				MouseButtonReleasedEvent e(btn, Window::Get().GetReleasedWidget());
-				for (auto* listener :
-					Window::Get().EventDispatcher<MouseButtonReleasedEvent>::Get())
-				{
-					listener->OnEvent(e);
-					if (e.Handled)
-						break;
-				}
-
-				break;
-			}
-			}
-		});
-
-		glfwSetKeyCallback(
-			m_hWnd, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 				switch (action)
 				{
 				case GLFW_PRESS:
@@ -206,6 +222,10 @@ namespace At0::Ray
 					Key k = (Key)key;
 
 					Keyboard::SetKeyState(k, true);
+
+					Log::Trace("[Window] KeyPressedEvent ({0}) (Listeners: {1})",
+						String::Construct(k),
+						Window::Get().EventDispatcher<KeyPressedEvent>::Get().size());
 
 					KeyPressedEvent e(k);
 					for (auto* listener : Window::Get().EventDispatcher<KeyPressedEvent>::Get())
@@ -224,6 +244,10 @@ namespace At0::Ray
 
 					Keyboard::SetKeyState(k, false);
 
+					Log::Trace("[Window] KeyReleasedEvent ({0}) (Listeners: {1})",
+						String::Construct(k),
+						Window::Get().EventDispatcher<KeyReleasedEvent>::Get().size());
+
 					KeyReleasedEvent e(k);
 					for (auto* listener : Window::Get().EventDispatcher<KeyReleasedEvent>::Get())
 					{
@@ -239,6 +263,10 @@ namespace At0::Ray
 					Key k = (Key)key;
 					uint32_t repeatCount = 1;
 
+					Log::Trace("[Window] KeyRepeatedEvent ({0}, repeatCount: {1}) (Listeners: {2})",
+						String::Construct(k), repeatCount,
+						Window::Get().EventDispatcher<KeyRepeatedEvent>::Get().size());
+
 					KeyRepeatedEvent e(k, repeatCount);
 					for (auto* listener : Window::Get().EventDispatcher<KeyRepeatedEvent>::Get())
 					{
@@ -252,101 +280,141 @@ namespace At0::Ray
 				}
 			});
 
-		glfwSetCharCallback(m_hWnd, [](GLFWwindow* window, unsigned int keycode) {
-			CharEvent e(keycode);
-			for (auto* listener : Window::Get().EventDispatcher<CharEvent>::Get())
+		glfwSetCharCallback(m_hWnd,
+			[](GLFWwindow* window, unsigned int keycode)
 			{
-				listener->OnEvent(e);
-				if (e.Handled)
-					break;
-			}
-		});
+				Log::Trace("[Window] CharEvent ({0}) (Listeners: {1})", keycode,
+					Window::Get().EventDispatcher<CharEvent>::Get().size());
 
-		glfwSetScrollCallback(m_hWnd, [](GLFWwindow* window, double xOffset, double yOffset) {
-			if (yOffset > 0)
-			{
-				ScrollUpEvent e({ xOffset, yOffset });
-				for (auto* listener : Window::Get().EventDispatcher<ScrollUpEvent>::Get())
+				CharEvent e(keycode);
+				for (auto* listener : Window::Get().EventDispatcher<CharEvent>::Get())
 				{
 					listener->OnEvent(e);
 					if (e.Handled)
 						break;
 				}
-			}
-			else if (yOffset < 0)
+			});
+
+		glfwSetScrollCallback(m_hWnd,
+			[](GLFWwindow* window, double xOffset, double yOffset)
 			{
-				ScrollDownEvent e({ xOffset, yOffset });
-				for (auto* listener : Window::Get().EventDispatcher<ScrollDownEvent>::Get())
+				if (yOffset > 0)
+				{
+					Log::Trace("[Window] ScrollUpEvent {x={0}, y={1}} (Listeners: {2})", xOffset,
+						yOffset, Window::Get().EventDispatcher<ScrollUpEvent>::Get().size());
+
+					ScrollUpEvent e({ xOffset, yOffset });
+					for (auto* listener : Window::Get().EventDispatcher<ScrollUpEvent>::Get())
+					{
+						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
+				}
+				else if (yOffset < 0)
+				{
+					Log::Trace("[Window] ScrollDownEvent {x={0}, y={1}} (Listeners: {2})", xOffset,
+						yOffset, Window::Get().EventDispatcher<ScrollDownEvent>::Get().size());
+
+					ScrollDownEvent e({ xOffset, yOffset });
+					for (auto* listener : Window::Get().EventDispatcher<ScrollDownEvent>::Get())
+					{
+						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
+				}
+
+				if (xOffset > 0)
+				{
+					Log::Trace("[Window] ScrollRightEvent {x={0}, y={1}} (Listeners: {2})", xOffset,
+						yOffset, Window::Get().EventDispatcher<ScrollRightEvent>::Get().size());
+
+					ScrollRightEvent e({ xOffset, yOffset });
+					for (auto* listener : Window::Get().EventDispatcher<ScrollRightEvent>::Get())
+					{
+						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
+				}
+				else if (xOffset < 0)
+				{
+					Log::Trace("[Window] ScrollLeftEvent {x={0}, y={1}} (Listeners: {2})", xOffset,
+						yOffset, Window::Get().EventDispatcher<ScrollLeftEvent>::Get().size());
+
+					ScrollLeftEvent e({ xOffset, yOffset });
+					for (auto* listener : Window::Get().EventDispatcher<ScrollLeftEvent>::Get())
+					{
+						listener->OnEvent(e);
+						if (e.Handled)
+							break;
+					}
+				}
+			});
+
+		glfwSetFramebufferSizeCallback(m_hWnd,
+			[](GLFWwindow* window, int width, int height)
+			{
+				Log::Trace("[Window] FramebufferResizedEvent {w={0}, h={1}} (Listeners: {2})",
+					width, height,
+					Window::Get().EventDispatcher<FramebufferResizedEvent>::Get().size());
+
+				FramebufferResizedEvent e({ width, height });
+				for (auto* listener : Window::Get().EventDispatcher<FramebufferResizedEvent>::Get())
 				{
 					listener->OnEvent(e);
 					if (e.Handled)
 						break;
 				}
-			}
+			});
 
-			if (xOffset > 0)
+		glfwSetWindowSizeCallback(m_hWnd,
+			[](GLFWwindow* window, int width, int height)
 			{
-				ScrollRightEvent e({ xOffset, yOffset });
-				for (auto* listener : Window::Get().EventDispatcher<ScrollRightEvent>::Get())
+				Log::Trace("[Window] WindowResizedEvent {w={0}, h={1}} (Listeners: {2})", width,
+					height, Window::Get().EventDispatcher<WindowResizedEvent>::Get().size());
+
+				WindowResizedEvent e({ width, height });
+				for (auto* listener : Window::Get().EventDispatcher<WindowResizedEvent>::Get())
 				{
 					listener->OnEvent(e);
 					if (e.Handled)
 						break;
 				}
-			}
-			else if (xOffset < 0)
+			});
+
+		glfwSetWindowPosCallback(m_hWnd,
+			[](GLFWwindow* window, int x, int y)
 			{
-				ScrollLeftEvent e({ xOffset, yOffset });
-				for (auto* listener : Window::Get().EventDispatcher<ScrollLeftEvent>::Get())
+				Log::Trace("[Window] WindowMovedEvent {x={0}, y={1}} (Listeners: {2})", x, y,
+					Window::Get().EventDispatcher<WindowMovedEvent>::Get().size());
+
+				WindowMovedEvent e({ x, y });
+				for (auto* listener : Window::Get().EventDispatcher<WindowMovedEvent>::Get())
 				{
 					listener->OnEvent(e);
 					if (e.Handled)
 						break;
 				}
-			}
-		});
+			});
 
-		glfwSetFramebufferSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height) {
-			FramebufferResizedEvent e({ width, height });
-			for (auto* listener : Window::Get().EventDispatcher<FramebufferResizedEvent>::Get())
+		glfwSetWindowCloseCallback(m_hWnd,
+			[](GLFWwindow* window)
 			{
-				listener->OnEvent(e);
-				if (e.Handled)
-					break;
-			}
-		});
+				Log::Trace("[Window] WindowClosedEvent (Listeners: {0})",
+					Window::Get().EventDispatcher<WindowClosedEvent>::Get().size());
 
-		glfwSetWindowSizeCallback(m_hWnd, [](GLFWwindow* window, int width, int height) {
-			WindowResizedEvent e({ width, height });
-			for (auto* listener : Window::Get().EventDispatcher<WindowResizedEvent>::Get())
-			{
-				listener->OnEvent(e);
-				if (e.Handled)
-					break;
-			}
-		});
+				WindowClosedEvent e;
+				for (auto* listener : Window::Get().EventDispatcher<WindowClosedEvent>::Get())
+				{
+					listener->OnEvent(e);
+					if (e.Handled)
+						break;
+				}
 
-		glfwSetWindowPosCallback(m_hWnd, [](GLFWwindow* window, int x, int y) {
-			WindowMovedEvent e({ x, y });
-			for (auto* listener : Window::Get().EventDispatcher<WindowMovedEvent>::Get())
-			{
-				listener->OnEvent(e);
-				if (e.Handled)
-					break;
-			}
-		});
-
-		glfwSetWindowCloseCallback(m_hWnd, [](GLFWwindow* window) {
-			WindowClosedEvent e;
-			for (auto* listener : Window::Get().EventDispatcher<WindowClosedEvent>::Get())
-			{
-				listener->OnEvent(e);
-				if (e.Handled)
-					break;
-			}
-
-			Window::Get().Close();
-		});
+				Window::Get().Close();
+			});
 	}
 
 	void Window::GenerateHoverEvents()
@@ -357,6 +425,10 @@ namespace At0::Ray
 			Button& btn = btnEntity.Get<Button>();
 			if (!Mouse::IsOnWidget(btn) && &btn == m_HoverWidget)
 			{
+				Log::Trace("[Window] HoverLeaveEvent \"{0}\" (Listeners: {1})",
+					m_HoverWidget->GetName(),
+					Window::Get().EventDispatcher<HoverLeaveEvent>::Get().size());
+
 				HoverLeaveEvent e(m_HoverWidget);
 				for (auto* listener : EventDispatcher<HoverLeaveEvent>::Get())
 					listener->OnEvent(e);
@@ -366,6 +438,10 @@ namespace At0::Ray
 			else if (Mouse::IsOnWidget(btn) && &btn != m_HoverWidget)
 			{
 				m_HoverWidget = &btn;
+
+				Log::Trace("[Window] HoverEnterEvent \"{0}\" (Listeners: {1})",
+					m_HoverWidget->GetName(),
+					Window::Get().EventDispatcher<HoverEnterEvent>::Get().size());
 
 				HoverEnterEvent e(m_HoverWidget);
 				for (auto* listener : EventDispatcher<HoverEnterEvent>::Get())

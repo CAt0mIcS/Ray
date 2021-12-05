@@ -5,6 +5,7 @@
 #include "Graphics/Pipelines/Shader/RShaderReflection.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
 #include "Utils/RAssert.h"
+#include "Events/REventListener.h"
 
 
 namespace At0::Ray
@@ -35,23 +36,13 @@ namespace At0::Ray
 		CallListeners(name, UniformType::CombinedImageSampler);
 	}
 
-	uint32_t Material::AddOnDirtyListener(std::function<void(const std::string&, UniformType)> fun)
+	void Material::CallListeners(const std::string& name, UniformType type)
 	{
-		m_OnDirtyListeners.emplace_back(fun);
-		return m_OnDirtyListeners.size() - 1;
-	}
-
-	void Material::RemoveOnDirtyListener(uint32_t index)
-	{
-		// Move element to the back
-		m_OnDirtyListeners[index] = std::move(m_OnDirtyListeners.back());
-		m_OnDirtyListeners.pop_back();
-	}
-
-	void Material::CallListeners(const std::string& name, UniformType type) const
-	{
-		for (const auto& func : m_OnDirtyListeners)
-			func(name, type);
+		Log::Trace("[Material] Calling OnDirtyListeners (Count: {0})",
+			EventDispatcher<MaterialBecameDirtyEvent>::Get().size());
+		MaterialBecameDirtyEvent e{ name, type };
+		for (auto listener : EventDispatcher<MaterialBecameDirtyEvent>::Get())
+			listener->OnEvent(e);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

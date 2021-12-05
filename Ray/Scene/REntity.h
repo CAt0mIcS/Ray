@@ -104,7 +104,7 @@ namespace At0::Ray
 		/**
 		 * @returns True if the entity is not the null entity
 		 */
-		bool Valid() const { return m_EntityHandle != Entity::Null; }
+		constexpr bool Valid() const { return m_EntityHandle != Entity::Null; }
 
 		/**
 		 * Adds/Removes/Changes the ParentEntity component's entity
@@ -134,6 +134,8 @@ namespace At0::Ray
 
 		constexpr bool operator==(const Entity& other) const;
 		constexpr bool operator!=(const Entity& other) const;
+
+		constexpr operator bool() { return Valid(); }
 
 		RAY_EXPORT friend std::ostream& operator<<(std::ostream& os, Entity e);
 

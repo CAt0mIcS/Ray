@@ -80,23 +80,55 @@ public:
 					};
 
 					{
-						ImGui::Begin("Parent");
-						translate(m_Parent.Get<Ray::Transform>());
-						ImGui::Spacing();
-						ImGui::End();
+						if (m_Parent)
+						{
+							ImGui::Begin("Parent");
+							translate(m_Parent.Get<Ray::Transform>());
+							ImGui::Spacing();
+							ImGui::End();
+						}
 					}
-					//{
-					//	ImGui::Begin("Child");
-					//	translate(m_Child.Get<Ray::Transform>());
-					//	ImGui::Spacing();
-					//	ImGui::End();
-					//}
 					{
-						ImGui::Begin("Material");
-						m_Material->Set("Shading.color",
-							Ray::Float4{ Ray::ImGUI::Float3Widget("Color",
-											 m_Material->Get<Ray::Float3>("Shading.color")),
-								1.0f });
+						if (m_Child)
+						{
+							ImGui::Begin("Child");
+							translate(m_Child.Get<Ray::Transform>());
+							ImGui::Spacing();
+							ImGui::End();
+						}
+					}
+					{
+						ImGui::Begin("Testing");
+						Ray::Float3 oldColor = m_Material->Get<Ray::Float3>("Shading.color");
+						Ray::Float3 newColor = Ray::ImGUI::Float3Widget("Color", oldColor);
+						if (oldColor != newColor)
+							m_Material->Set("Shading.color", Ray::Float4{ newColor, 1.0f });
+
+						if (ImGui::Button("Create/Delete Child"))
+						{
+							if (m_Child == Ray::Entity::Null)
+							{
+								CreateChild();
+							}
+							else
+							{
+								Scene::Get().DestroyEntity(m_Child);
+								m_Child = Ray::Entity::Null;
+							}
+						}
+						if (ImGui::Button("Create/Delete Parent"))
+						{
+							if (m_Parent == Ray::Entity::Null)
+							{
+								CreateParent();
+							}
+							else
+							{
+								Scene::Get().DestroyEntity(m_Parent);
+								m_Parent = Ray::Entity::Null;
+								m_Child = Ray::Entity::Null;
+							}
+						}
 						ImGui::End();
 					}
 				}
@@ -126,17 +158,37 @@ public:
 		// RAY_TODO: Move constructors for MeshRenderer are missing, so when enTT moves (resize due
 		// to new MeshRenderer) the listener is still active on an invalid renderer
 
-		// m_Child =
-		// Scene::Get().CreateEntity(); m_Child.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f
-		// }); m_Child.Emplace<Ray::Mesh>(Ray::Mesh::Plane(m_Material)); Ray::MeshRenderer&
-		// rendererChild = m_Child.Emplace<Ray::MeshRenderer>(m_Material);
+		m_Child = Scene::Get().CreateEntity();
+		m_Child.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f });
+		m_Child.Emplace<Ray::Mesh>(Ray::Mesh::Plane(m_Material));
+		Ray::MeshRenderer& rendererChild = m_Child.Emplace<Ray::MeshRenderer>(m_Material);
 
-		// m_Parent.Emplace<Ray::HierachyComponent>().AddChild(m_Child);
-		// m_Child.Emplace<Ray::HierachyComponent>().SetParent(m_Parent);
+		m_Parent.Emplace<Ray::HierachyComponent>().AddChild(m_Child);
+		m_Child.Emplace<Ray::HierachyComponent>().SetParent(m_Parent);
 	}
 
 private:
 	void Update() override {}
+
+	void CreateParent()
+	{
+		m_Parent = Scene::Get().CreateEntity();
+		m_Parent.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f });
+		m_Parent.Emplace<Ray::Mesh>(Ray::Mesh::Plane(m_Material));
+		Ray::MeshRenderer& rendererParent = m_Parent.Emplace<Ray::MeshRenderer>(m_Material);
+
+		CreateChild();
+		m_Parent.Emplace<Ray::HierachyComponent>().AddChild(m_Child);
+	}
+
+	void CreateChild()
+	{
+		m_Child = Scene::Get().CreateEntity();
+		m_Child.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f });
+		m_Child.Emplace<Ray::Mesh>(Ray::Mesh::Plane(m_Material));
+		Ray::MeshRenderer& rendererChild = m_Child.Emplace<Ray::MeshRenderer>(m_Material);
+		m_Child.Emplace<Ray::HierachyComponent>().SetParent(m_Parent);
+	}
 
 private:
 	Ray::Entity m_Child;
@@ -157,7 +209,7 @@ int main()
 	signal(SIGINT, SignalHandler);
 
 	Ray::Log::Open("Ray.log");
-	Ray::Log::SetLogLevel(Violent::LogLevel::Debug);
+	Ray::Log::SetLogLevel(Violent::LogLevel::Trace);
 
 	try
 	{

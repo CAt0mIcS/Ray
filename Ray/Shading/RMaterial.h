@@ -4,6 +4,7 @@
 #include "../Core/RMath.h"
 #include "RMaterialDataContainer.h"
 #include "../Graphics/Pipelines/Shader/RShaderReflection.h"
+#include "../Events/REventDispatcher.h"
 
 #include <unordered_map>
 #include <vector>
@@ -38,7 +39,13 @@ namespace At0::Ray
 		static constexpr const char* Color = "color";
 	};
 
-	class RAY_EXPORT Material
+	struct MaterialBecameDirtyEvent
+	{
+		const std::string& dataPath;
+		UniformType uType;
+	};
+
+	class RAY_EXPORT Material : public EventDispatcher<MaterialBecameDirtyEvent>
 	{
 	public:
 		Material(Ref<GraphicsPipeline> pipeline, MaterialDataContainer container);
@@ -84,18 +91,12 @@ namespace At0::Ray
 			return *(T*)m_Container.Get(name);
 		}
 
-		uint32_t AddOnDirtyListener(std::function<void(const std::string&, UniformType)> fun);
-		void RemoveOnDirtyListener(uint32_t index);
-
 	private:
-		void CallListeners(const std::string& name, UniformType type) const;
+		void CallListeners(const std::string& name, UniformType type);
 
 	private:
 		Ref<GraphicsPipeline> m_GraphicsPipeline;
 		MaterialDataContainer m_Container;
-
-		// RAY_TODO: Test performance overhead
-		std::vector<std::function<void(const std::string&, UniformType)>> m_OnDirtyListeners;
 
 	public:
 		class RAY_EXPORT Builder
