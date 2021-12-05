@@ -150,13 +150,16 @@ namespace At0::Ray
 							 &descriptorSetLayoutCreateInfo, nullptr, &m_DescriptorSetLayout),
 			"[Scene] Failed to create descriptor set layout for per scene data");
 
+		std::vector<VkPushConstantRange> pushConstantRanges{};
+		pushConstantRanges.push_back({ VK_SHADER_STAGE_FRAGMENT_BIT, 0, 8 });
+
 		VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
 		pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipelineLayoutCreateInfo.flags = 0;
 		pipelineLayoutCreateInfo.setLayoutCount = 1;
 		pipelineLayoutCreateInfo.pSetLayouts = &m_DescriptorSetLayout;
-		pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
-		pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
+		pipelineLayoutCreateInfo.pushConstantRangeCount = pushConstantRanges.size();
+		pipelineLayoutCreateInfo.pPushConstantRanges = pushConstantRanges.data();
 
 		ThrowVulkanError(vkCreatePipelineLayout(Graphics::Get().GetDevice(),
 							 &pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout),
