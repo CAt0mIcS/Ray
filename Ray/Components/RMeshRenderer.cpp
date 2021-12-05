@@ -43,11 +43,12 @@ namespace At0::Ray
 
 		if (auto& tform = GetEntity().Get<Transform>(); tform.HasChanged())
 		{
-			if (GetEntity().HasParent())
-				(*m_PerObjectDataUniformRef) =
-					GetEntity().GetParent().Get<Transform>().AsMatrix() * tform.AsMatrix();
-			else
-				(*m_PerObjectDataUniformRef) = tform.AsMatrix();
+			// RAY_TODO: Deleting entity while checking here! Threading error
+			// if (GetEntity().HasParent())
+			//	(*m_PerObjectDataUniformRef) =
+			//		GetEntity().GetParent().Get<Transform>().AsMatrix() * tform.AsMatrix();
+			// else
+			(*m_PerObjectDataUniformRef) = tform.AsMatrix();
 		}
 	}
 

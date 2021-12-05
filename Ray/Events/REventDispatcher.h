@@ -33,7 +33,7 @@ namespace At0::Ray
 		{
 			m_Listeners.emplace_back(listener);
 			// Remove duplicates (low number of listeners --> faster than set)
-			// (RAY_TODO: Test performance)
+			// (RAY_TODO: VERY SLOW on high number of listeners)
 			std::sort(m_Listeners.begin(), m_Listeners.end());
 			m_Listeners.erase(
 				std::unique(m_Listeners.begin(), m_Listeners.end()), m_Listeners.end());

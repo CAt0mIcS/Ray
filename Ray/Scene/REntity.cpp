@@ -45,9 +45,5 @@ namespace At0::Ray
 
 	constexpr bool Entity::operator!=(const Entity& other) const { return !(*this == other); }
 
-	std::ostream& operator<<(std::ostream& os, Entity e)
-	{
-		os << e.m_EntityHandle;
-		return os;
-	}
+	std::ostream& operator<<(std::ostream& os, Entity e) { return os << (int)e.m_EntityHandle; }
 }  // namespace At0::Ray

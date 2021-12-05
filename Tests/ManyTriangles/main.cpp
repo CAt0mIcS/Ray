@@ -19,9 +19,6 @@
 #include <Ray/Graphics/Pipelines/Shader/RShader.h>
 #include <Ray/Core/RDynamicVertex.h>
 
-#include <Ray/Shading/Phong/RPhongMaterial.h>
-#include <Ray/Shading/Flat/RFlatColorMaterial.h>
-
 #include <Ray/Scene/RScene.h>
 #include <Ray/Scene/RCamera.h>
 
@@ -60,35 +57,55 @@ public:
 	{
 		Ray::Scene::Create<Scene>();
 
-		Ray::ImGUI::Get().RegisterNewFrameFunction([]() {
-			ImGui::Begin("Skybox");
-			static bool enabled = false;
-			bool previous = enabled;
-			ImGui::Checkbox("Enabled", &enabled);
-
-			if (previous != enabled)
+		Ray::ImGUI::Get().RegisterNewFrameFunction(
+			[]()
 			{
-				if (enabled)
-					Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-						Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
-				else
-					Scene::Get().DestroyEntity(Scene::Get().EntityView<Ray::Skybox>()[0]);
-			}
-			ImGui::End();
-		});
+				ImGui::Begin("Skybox");
+				static bool enabled = false;
+				bool previous = enabled;
+				ImGui::Checkbox("Enabled", &enabled);
 
-		Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
-			ImGui::Begin("Triangles");
-			ImGui::InputInt("Upper range", &m_UpperRange, 100, 10000);
-			int prevTriangleCount = m_Triangles;
-			ImGui::SliderInt("Triangle Count", &m_Triangles, 0, m_UpperRange);
-			if (prevTriangleCount != m_Triangles)
-				TriangleCountChanged(prevTriangleCount);
-			ImGui::SliderFloat("Movement Speed", &m_MovementSpeed, -50.0f, 50.0f);
-			ImGui::End();
-		});
+				if (previous != enabled)
+				{
+					if (enabled)
+						Scene::Get().CreateEntity().Emplace<Ray::Skybox>(Ray::Texture2D::Acquire(
+							"Resources/Textures/EquirectangularWorldMap.jpg"));
+					else
+						Scene::Get().DestroyEntity(Scene::Get().EntityView<Ray::Skybox>()[0]);
+				}
+				ImGui::End();
+			});
+
+		Ray::ImGUI::Get().RegisterNewFrameFunction(
+			[this]()
+			{
+				ImGui::Begin("Triangles");
+				ImGui::InputInt("Upper range", &m_UpperRange, 100, 10000);
+				int prevTriangleCount = m_Triangles;
+				ImGui::SliderInt("Triangle Count", &m_Triangles, 0, m_UpperRange);
+				if (prevTriangleCount != m_Triangles)
+					TriangleCountChanged(prevTriangleCount);
+				ImGui::SliderFloat("Movement Speed", &m_MovementSpeed, -50.0f, 50.0f);
+				ImGui::End();
+			});
 
 #include "../ImGuiWindows.inl"
+
+
+		auto defaultPipeline =
+			Ray::GraphicsPipeline::Builder()
+				.SetCullMode(VK_CULL_MODE_NONE)
+				.SetShader(Ray::Shader::Acquire(
+					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
+				.Acquire();
+
+		std::mt19937 device;
+		std::uniform_real_distribution<float> colDist(0.0f, 1.0f);
+
+		m_Material = Ray::Material::Builder(defaultPipeline)
+						 .Set("Shading.color",
+							 Ray::Float4{ colDist(device), colDist(device), colDist(device), 1.0f })
+						 .Acquire();
 
 
 		for (uint32_t i = 0; i < m_Triangles; ++i)
@@ -100,7 +117,7 @@ public:
 private:
 	void Update() override
 	{
-		if (m_MovementSpeed == 0)
+		if (m_MovementSpeed == 0.0f)
 			return;
 
 		auto view = Scene::Get().EntityView<Ray::TagComponent>();
@@ -114,19 +131,11 @@ private:
 		static std::mt19937 device;
 		static std::uniform_real_distribution<float> posRotDist(-100.0f, 100.0f);
 		static std::uniform_real_distribution<float> scaleDist(0.2f, 2.5f);
-		static std::uniform_real_distribution<float> colDist(0.0f, 1.0f);
-
-		Ray::GraphicsPipeline::Layout layout{};
-		layout.cullMode = VK_CULL_MODE_NONE;
-		auto defaultMaterial = Ray::MakeRef<Ray::FlatColorMaterial>(
-			Ray::FlatColorMaterial::Layout{}, std::move(layout));
 
 		Ray::Entity entity = Scene::Get().CreateEntity();
 		entity.Emplace<Ray::TagComponent>("Triangle_" + tag);
-		Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(defaultMaterial));
-		auto& renderer = entity.Emplace<Ray::MeshRenderer>(defaultMaterial);
-		renderer.GetBufferUniform("Shading")["color"] =
-			Ray::Float4{ colDist(device), colDist(device), colDist(device), 1.0f };
+		Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(m_Material));
+		auto& renderer = entity.Emplace<Ray::MeshRenderer>(m_Material);
 
 		auto& transform = entity.Get<Ray::Transform>();
 		transform.SetTranslation({ posRotDist(device), posRotDist(device), posRotDist(device) });
@@ -155,9 +164,11 @@ private:
 	}
 
 private:
-	int m_Triangles = 2000;
-	int m_UpperRange = 100000;
-	float m_MovementSpeed = 1.0f;
+	int m_Triangles = 25;
+	int m_UpperRange = 100;
+	float m_MovementSpeed = 0.0f;
+
+	Ray::Ref<Ray::Material> m_Material;
 };
 
 void SignalHandler(int signal)

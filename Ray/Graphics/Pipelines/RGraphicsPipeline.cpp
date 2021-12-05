@@ -388,6 +388,7 @@ namespace At0::Ray
 
 	Ref<GraphicsPipeline> GraphicsPipeline::Builder::Build() const
 	{
+		ThrowIfInvalidArguments();
 		return MakeRef<GraphicsPipeline>(*m_RenderPass, m_Shader, m_PipelineCache, m_CullMode,
 			m_Topology, m_PolygonMode, m_LineWidth, m_DepthTestEnabled, m_BindingDescriptions,
 			m_AttributeDescriptions);
@@ -395,6 +396,7 @@ namespace At0::Ray
 
 	Scope<GraphicsPipeline> GraphicsPipeline::Builder::BuildScoped() const
 	{
+		ThrowIfInvalidArguments();
 		return MakeScope<GraphicsPipeline>(*m_RenderPass, m_Shader, m_PipelineCache, m_CullMode,
 			m_Topology, m_PolygonMode, m_LineWidth, m_DepthTestEnabled, m_BindingDescriptions,
 			m_AttributeDescriptions);
@@ -402,8 +404,16 @@ namespace At0::Ray
 
 	Ref<GraphicsPipeline> GraphicsPipeline::Builder::Acquire() const
 	{
+		ThrowIfInvalidArguments();
 		return Codex::Resolve<GraphicsPipeline>(*m_RenderPass, m_Shader, m_PipelineCache,
 			m_CullMode, m_Topology, m_PolygonMode, m_LineWidth, m_DepthTestEnabled,
 			m_BindingDescriptions, m_AttributeDescriptions);
+	}
+
+	bool GraphicsPipeline::Builder::ArgumentsValid() const { return m_Shader != nullptr; }
+
+	void GraphicsPipeline::Builder::ThrowIfInvalidArguments() const
+	{
+		RAY_MEXPECTS(m_Shader != nullptr, "[GraphicsPipeline::Builder] Shader not set");
 	}
 }  // namespace At0::Ray

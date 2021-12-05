@@ -95,6 +95,14 @@ namespace At0::Ray
 			 */
 			Ref<GraphicsPipeline> Acquire() const;
 
+			/**
+			 * Checks if arguments are valid
+			 */
+			bool ArgumentsValid() const;
+
+		private:
+			void ThrowIfInvalidArguments() const;
+
 		private:
 			const RenderPass* m_RenderPass;
 			Ref<Shader> m_Shader{};

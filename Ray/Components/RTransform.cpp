@@ -85,8 +85,9 @@ namespace At0::Ray
 	bool Transform::HasChanged() const
 	{
 		bool parentChanged = false;
-		if (GetEntity().HasParent())
-			parentChanged = GetEntity().GetParent().Get<Transform>().HasChanged();
+		// RAY_TODO: Deleting entity while checking here! Threading error
+		// if (GetEntity().HasParent())
+		//	parentChanged = GetEntity().GetParent().Get<Transform>().HasChanged();
 
 		return m_HasChanged || parentChanged;
 	}
