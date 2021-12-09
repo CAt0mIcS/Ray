@@ -59,80 +59,80 @@ public:
 	{
 		Ray::Scene::Create<Scene>();
 
-		// Ray::ImGUI::Get().RegisterNewFrameFunction(
-		//	[&]()
-		//	{
-		//		{
-		//			auto translate = [](Ray::Transform& tform)
-		//			{
-		//				Ray::Float3 newTranslation =
-		//					Ray::ImGUI::Float3Widget("Translation", tform.Translation());
-		//				Ray::Float3 newRotation =
-		//					Ray::ImGUI::Float3Widget("Rotation", tform.Rotation());
-		//				Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
+		Ray::ImGUI::Get().RegisterNewFrameFunction(
+			[&]()
+			{
+				{
+					auto translate = [](Ray::Transform& tform)
+					{
+						Ray::Float3 newTranslation =
+							Ray::ImGUI::Float3Widget("Translation", tform.Translation());
+						Ray::Float3 newRotation =
+							Ray::ImGUI::Float3Widget("Rotation", tform.Rotation());
+						Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
 
-		//				if (newTranslation != tform.Translation())
-		//					tform.SetTranslation(newTranslation);
-		//				if (newRotation != tform.Rotation())
-		//					tform.SetRotation(newRotation);
-		//				if (newScale != tform.Scale())
-		//					tform.SetScale(newScale);
-		//			};
+						if (newTranslation != tform.Translation())
+							tform.SetTranslation(newTranslation);
+						if (newRotation != tform.Rotation())
+							tform.SetRotation(newRotation);
+						if (newScale != tform.Scale())
+							tform.SetScale(newScale);
+					};
 
-		//			{
-		//				if (m_Parent)
-		//				{
-		//					ImGui::Begin("Parent");
-		//					translate(m_Parent.Get<Ray::Transform>());
-		//					ImGui::Spacing();
-		//					ImGui::End();
-		//				}
-		//			}
-		//			{
-		//				if (m_Child)
-		//				{
-		//					ImGui::Begin("Child");
-		//					translate(m_Child.Get<Ray::Transform>());
-		//					ImGui::Spacing();
-		//					ImGui::End();
-		//				}
-		//			}
-		//			{
-		//				ImGui::Begin("Testing");
-		//				Ray::Float3 oldColor = m_Material->Get<Ray::Float3>("Shading.color");
-		//				Ray::Float3 newColor = Ray::ImGUI::Float3Widget("Color", oldColor);
-		//				if (oldColor != newColor)
-		//					m_Material->Set("Shading.color", Ray::Float4{ newColor, 1.0f });
+					{
+						if (m_Parent)
+						{
+							ImGui::Begin("Parent");
+							translate(m_Parent.Get<Ray::Transform>());
+							ImGui::Spacing();
+							ImGui::End();
+						}
+					}
+					{
+						if (m_Child)
+						{
+							ImGui::Begin("Child");
+							translate(m_Child.Get<Ray::Transform>());
+							ImGui::Spacing();
+							ImGui::End();
+						}
+					}
+					{
+						ImGui::Begin("Testing");
+						Ray::Float3 oldColor = m_Material->Get<Ray::Float3>("Shading.color");
+						Ray::Float3 newColor = Ray::ImGUI::Float3Widget("Color", oldColor);
+						if (oldColor != newColor)
+							m_Material->Set("Shading.color", Ray::Float4{ newColor, 1.0f });
 
-		//				if (ImGui::Button("Create/Delete Child"))
-		//				{
-		//					if (m_Child == Ray::Entity::Null)
-		//					{
-		//						CreateChild();
-		//					}
-		//					else
-		//					{
-		//						Scene::Get().DestroyEntity(m_Child);
-		//						m_Child = Ray::Entity::Null;
-		//					}
-		//				}
-		//				if (ImGui::Button("Create/Delete Parent"))
-		//				{
-		//					if (m_Parent == Ray::Entity::Null)
-		//					{
-		//						CreateParent();
-		//					}
-		//					else
-		//					{
-		//						Scene::Get().DestroyEntity(m_Parent);
-		//						m_Parent = Ray::Entity::Null;
-		//						m_Child = Ray::Entity::Null;
-		//					}
-		//				}
-		//				ImGui::End();
-		//			}
-		//		}
-		//	});
+						if (ImGui::Button("Create/Delete Child"))
+						{
+							if (m_Child == Ray::Entity::Null)
+							{
+								CreateChild();
+							}
+							else
+							{
+								Scene::Get().DestroyEntity(m_Child);
+								m_Child = Ray::Entity::Null;
+							}
+						}
+						if (ImGui::Button("Create/Delete Parent"))
+						{
+							if (m_Parent == Ray::Entity::Null)
+							{
+								CreateParent();
+							}
+							else
+							{
+								Scene::Get().DestroyEntity(m_Parent);
+								m_Parent = Ray::Entity::Null;
+								m_Child = Ray::Entity::Null;
+							}
+						}
+						ImGui::End();
+					}
+				}
+			});
 #include "../ImGuiWindows.inl"
 
 		auto shader =

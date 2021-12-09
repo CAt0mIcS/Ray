@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <vector>
+#include <set>
 #include <algorithm>
 
 
@@ -29,31 +29,14 @@ namespace At0::Ray
 		/**
 		 * Adds a new listener to dispatch the events to
 		 */
-		void RegisterListener(EventListener<T>* listener)
-		{
-			m_Listeners.emplace_back(listener);
-			// Remove duplicates (low number of listeners --> faster than set)
-			// (RAY_TODO: VERY SLOW on high number of listeners)
-			std::sort(m_Listeners.begin(), m_Listeners.end());
-			m_Listeners.erase(
-				std::unique(m_Listeners.begin(), m_Listeners.end()), m_Listeners.end());
-		}
+		void RegisterListener(EventListener<T>* listener) { m_Listeners.emplace(listener); }
 
 		/**
 		 * Removes a listener from getting events
 		 */
-		void UnregisterListener(EventListener<T>* listener)
-		{
-			if (m_Listeners.size() == 0)
-				return;
-
-			for (int i = m_Listeners.size() - 1; i >= 0; --i)
-				if (m_Listeners[i] == nullptr || m_Listeners[i] == listener)
-					m_Listeners.erase(m_Listeners.begin() + i);
-		}
+		void UnregisterListener(EventListener<T>* listener) { m_Listeners.erase(listener); }
 
 	private:
-		// RAY_TODO: Test performance to std::set (faster lookups for small amount of listeners)
-		std::vector<EventListener<T>*> m_Listeners;
+		std::set<EventListener<T>*> m_Listeners;
 	};
 }  // namespace At0::Ray

@@ -58,35 +58,45 @@ public:
 		Ray::Scene::Create<Scene>();
 
 		Ray::ImGUI::Get().RegisterNewFrameFunction(
-			[]()
-			{
-				ImGui::Begin("Skybox");
-				static bool enabled = false;
-				bool previous = enabled;
-				ImGui::Checkbox("Enabled", &enabled);
-
-				if (previous != enabled)
-				{
-					if (enabled)
-						Scene::Get().CreateEntity().Emplace<Ray::Skybox>(Ray::Texture2D::Acquire(
-							"Resources/Textures/EquirectangularWorldMap.jpg"));
-					else
-						Scene::Get().DestroyEntity(Scene::Get().EntityView<Ray::Skybox>()[0]);
-				}
-				ImGui::End();
-			});
-
-		Ray::ImGUI::Get().RegisterNewFrameFunction(
 			[this]()
 			{
-				ImGui::Begin("Triangles");
-				ImGui::InputInt("Upper range", &m_UpperRange, 100, 10000);
-				int prevTriangleCount = m_Triangles;
-				ImGui::SliderInt("Triangle Count", &m_Triangles, 0, m_UpperRange);
-				if (prevTriangleCount != m_Triangles)
-					TriangleCountChanged(prevTriangleCount);
-				ImGui::SliderFloat("Movement Speed", &m_MovementSpeed, -50.0f, 50.0f);
-				ImGui::End();
+				{
+					ImGui::Begin("Skybox");
+					static bool enabled = false;
+					bool previous = enabled;
+					ImGui::Checkbox("Enabled", &enabled);
+
+					if (previous != enabled)
+					{
+						if (enabled)
+							Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+								Ray::Texture2D::Acquire(
+									"Resources/Textures/EquirectangularWorldMap.jpg"));
+						else
+							Scene::Get().DestroyEntity(Scene::Get().EntityView<Ray::Skybox>()[0]);
+					}
+					ImGui::End();
+				}
+
+				{
+					ImGui::Begin("Triangles");
+					ImGui::InputInt("Upper range", &m_UpperRange, 100, 10000);
+					int prevTriangleCount = m_Triangles;
+					ImGui::SliderInt("Triangle Count", &m_Triangles, 0, m_UpperRange);
+					if (prevTriangleCount != m_Triangles)
+						TriangleCountChanged(prevTriangleCount);
+					ImGui::SliderFloat("Movement Speed", &m_MovementSpeed, -50.0f, 50.0f);
+					ImGui::End();
+				}
+
+				{
+					ImGui::Begin("Color");
+					Ray::Float3 oldColor = m_Material->Get<Ray::Float3>("Shading.color");
+					Ray::Float3 newColor = Ray::ImGUI::Float3Widget("Color", oldColor);
+					if (oldColor != newColor)
+						m_Material->Set("Shading.color", Ray::Float4{ newColor, 1.0f });
+					ImGui::End();
+				}
 			});
 
 #include "../ImGuiWindows.inl"
@@ -184,8 +194,7 @@ int main()
 	signal(SIGINT, SignalHandler);
 
 	Ray::Log::Open("Ray.log");
-	Ray::Log::SetLogLevel(Violent::LogLevel::Debug);
-	// Ray::CLog::SetLogLevel(Violent::LogLevel::Trace);
+	Ray::Log::SetLogLevel(Violent::LogLevel::Trace);
 
 	try
 	{

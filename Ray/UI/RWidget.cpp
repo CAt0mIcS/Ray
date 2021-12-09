@@ -62,7 +62,10 @@ namespace At0::Ray
 		SetY(GetY());
 	}
 
-	Widget::Widget(Entity entity, std::string_view name) : Component(entity), m_Name(name) {}
+	Widget::Widget(Entity entity, std::string_view name)
+		: Component(entity), m_Name(name), EventListener<WindowResizedEvent>(Window::Get())
+	{
+	}
 
 	void Widget::OnEvent(WindowResizedEvent& e)
 	{

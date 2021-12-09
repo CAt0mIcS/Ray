@@ -4,6 +4,7 @@
 #include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
+#include "Devices/RWindow.h"
 
 #include "Utils/RException.h"
 
@@ -114,7 +115,12 @@ namespace At0::Ray
 		}
 	}
 
-	Camera::Camera() {}
+	Camera::Camera()
+		: EventListener<MouseMovedEvent>(Window::Get()),
+		  EventListener<KeyPressedEvent>(Window::Get()), EventListener<KeyReleasedEvent>(
+															 Window::Get())
+	{
+	}
 
 	Camera::~Camera() {}
 

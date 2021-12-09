@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
+// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -66,6 +66,15 @@ namespace At0::Ray
 	}
 
 	ImGUI::ImGUI()
+		: EventListener<FramebufferResizedEvent>(Window::Get()),
+		  EventListener<MouseMovedEvent>(Window::Get()), EventListener<MouseButtonPressedEvent>(
+															 Window::Get()),
+		  EventListener<MouseButtonReleasedEvent>(Window::Get()), EventListener<KeyPressedEvent>(
+																	  Window::Get()),
+		  EventListener<KeyReleasedEvent>(Window::Get()), EventListener<CharEvent>(Window::Get()),
+		  EventListener<ScrollLeftEvent>(Window::Get()), EventListener<ScrollRightEvent>(
+															 Window::Get()),
+		  EventListener<ScrollUpEvent>(Window::Get()), EventListener<ScrollDownEvent>(Window::Get())
 	{
 		ImGui::CreateContext();
 

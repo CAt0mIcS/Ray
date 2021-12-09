@@ -18,22 +18,19 @@ namespace At0::Ray
 		 * If the dispatcher<T> is a base class of the Window then the window is selected
 		 * automatically as the dispatcher
 		 */
-		template<typename U = T>
-		EventListener() requires std::derived_from<Window, EventDispatcher<U>>
-		{
-			RegisterForDispatcher(&Window::Get());
-		}
+		// template<typename U = T>
+		// EventListener() requires std::derived_from<Window, EventDispatcher<U>>
+		//{
+		//	RegisterForDispatcher(&Window::Get());
+		//}
 
 		/**
 		 * Registers the listener to receive event of type T.
 		 * If the dispatcher<T> is not a base class of the Window the dispatcher<T> needs to be
 		 * specified
 		 */
-		template<typename U = T>
-		EventListener(EventDispatcher<U>& dispatcher)
-		{
-			RegisterForDispatcher(&dispatcher);
-		}
+		// template<typename U = T>
+		EventListener(EventDispatcher<T>& dispatcher) { RegisterForDispatcher(&dispatcher); }
 
 		/**
 		 * Requires dispatcher to be registered using RegisterForDispatcher
@@ -53,6 +50,7 @@ namespace At0::Ray
 		{
 			if (m_Dispatcher)
 				m_Dispatcher->UnregisterListener(this);
+			m_Dispatcher = nullptr;
 		}
 
 		/**
@@ -60,28 +58,19 @@ namespace At0::Ray
 		 */
 		virtual void OnEvent(T& e) = 0;
 
-		virtual ~EventListener() { m_Dispatcher->UnregisterListener(this); }
+		virtual ~EventListener() { UnregisterForDispatcher(); }
 
 		EventListener<T>& operator=(EventListener<T>&& other) noexcept
 		{
-			m_Dispatcher = std::move(other.m_Dispatcher);
-
-			// Register again because destructor unregisters (RAY_TODO)
-			m_Dispatcher->RegisterListener(this);
-			return *this;
-		}
-
-		EventListener(EventListener<T>&& other) noexcept { *this = std::move(other); }
-
-		EventListener<T>& operator=(const EventListener<T>& other)
-		{
 			m_Dispatcher = other.m_Dispatcher;
-
-			// Register again because destructor unregisters (RAY_TODO)
-			m_Dispatcher->RegisterListener(this);
+			if (m_Dispatcher != nullptr)
+			{
+				other.UnregisterForDispatcher();
+				m_Dispatcher->RegisterListener(this);
+			}
 			return *this;
 		}
-		EventListener(const EventListener<T>& other) { *this = other; }
+		EventListener(EventListener<T>&& other) noexcept { *this = std::move(other); }
 
 	private:
 		EventDispatcher<T>* m_Dispatcher;
