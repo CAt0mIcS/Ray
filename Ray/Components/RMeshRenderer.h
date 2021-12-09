@@ -9,6 +9,7 @@
 #include "../Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
 #include "../Graphics/Pipelines/Shader/RShaderReflection.h"
 #include "../Shading/RMaterial.h"
+#include "../Scene/RCamera.h"
 #include "../Events/REventListener.h"
 
 #include <vector>
@@ -30,7 +31,8 @@ namespace At0::Ray
 	class RAY_EXPORT MeshRenderer :
 		public Component,
 		public Renderer,
-		EventListener<MaterialBecameDirtyEvent>
+		EventListener<MaterialBecameDirtyEvent>,
+		EventListener<CameraChangedEvent>
 	{
 	public:
 		MeshRenderer(Entity entity, Ref<Material> material);
@@ -60,12 +62,20 @@ namespace At0::Ray
 		void UpdateUniform(const std::string& dataPath);
 
 		virtual void OnEvent(MaterialBecameDirtyEvent& e) override;
+		virtual void OnEvent(CameraChangedEvent& e) override { m_IsCameraDirty = true; }
 
 	private:
 		/**
 		 * Points to the buffer uniform in the unordered_map to make MeshRenderer::Update faster
 		 */
 		std::optional<BufferUniform::AccessType> m_PerObjectDataUniformRef;
+
+		/**
+		 * RAY_TEMPORARY: Due to pipeline mismatches, we'll (for now) have a descriptor set for
+		 * scene data in the mesh renderer as well
+		 */
+		BufferUniform* m_PerSceneUniform;
+		mutable bool m_IsCameraDirty = true;
 	};
 }  // namespace At0::Ray
 

@@ -38,9 +38,7 @@ namespace At0::Ray
 
 	BufferUniform::AccessType BufferUniform::operator[](const std::string& name)
 	{
-		RAY_MEXPECTS(std::find_if(m_UniformInBlockOffsets.begin(), m_UniformInBlockOffsets.end(),
-						 [&name](const auto& r) { return r.first == name; }) !=
-						 m_UniformInBlockOffsets.end(),
+		RAY_MEXPECTS(Has(name),
 			"[BufferUniform] Uniform \"{0}\" not present in uniform block \"{1}\"", name,
 			GetName());
 
@@ -55,6 +53,13 @@ namespace At0::Ray
 	void BufferUniform::Update(void* data, VkDeviceSize size, VkDeviceSize offset)
 	{
 		m_UniformBuffer->Update(data, size, offset);
+	}
+
+	bool BufferUniform::Has(const std::string& name)
+	{
+		return std::find_if(m_UniformInBlockOffsets.begin(), m_UniformInBlockOffsets.end(),
+				   [&name](const auto& r)
+				   { return r.first == name; }) != m_UniformInBlockOffsets.end();
 	}
 
 	void BufferUniform::Setup(uint32_t bufferSize)

@@ -8,7 +8,6 @@
 #include "../Events/REventDispatcher.h"
 #include "../Utils/RThreadPool.h"
 #include "REntity.h"
-#include "RCamera.h"
 
 #include <concepts>
 
@@ -17,7 +16,7 @@ namespace At0::Ray
 {
 	class DescriptorSet;
 	class BufferUniform;
-	class SceneDescriptor;
+	class Camera;
 
 	/**
 	 * Gets dispatched to listeners when entity is added to the scene
@@ -32,9 +31,7 @@ namespace At0::Ray
 		Entity& m_Entity;
 	};
 
-	class RAY_EXPORT Scene :
-		public EventDispatcher<EntityCreatedEvent>,
-		EventListener<CameraChangedEvent>
+	class RAY_EXPORT Scene : public EventDispatcher<EntityCreatedEvent>
 	{
 	public:
 		static Scene& Get();
@@ -84,24 +81,12 @@ namespace At0::Ray
 			return *s_CurrentScene;
 		}
 
-		// const DescriptorSet& GetPerSceneDescriptor() const { return *m_PerSceneDescriptor; }
 
-		void CmdBind(const CommandBuffer& cmdBuff) const;
-
-	protected:
-		Scene(Scope<Camera> camera);
-
-	private:
-		void OnEvent(CameraChangedEvent& e) override { UpdateUniform(); }
-		void UpdateUniform();
-
+	protected : Scene(Scope<Camera> camera);
 	private:
 		entt::registry m_Registry;
 		Scope<Camera> m_Camera = nullptr;
 		ThreadPool m_ThreadPool;
-
-		// RAY_TODO: Make stack allocated once work on SceneDescriptor is finished
-		Scope<SceneDescriptor> m_SceneDescriptor;
 
 		static Scope<Scene> s_CurrentScene;
 	};

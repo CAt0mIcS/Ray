@@ -165,7 +165,7 @@ private:
 
 private:
 	int m_Triangles = 25;
-	int m_UpperRange = 100;
+	int m_UpperRange = 100000;
 	float m_MovementSpeed = 0.0f;
 
 	Ray::Ref<Ray::Material> m_Material;

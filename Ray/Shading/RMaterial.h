@@ -22,6 +22,7 @@ namespace At0::Ray
 	 */
 	struct UniformBlockTag
 	{
+		static constexpr const char* PerSceneData = "PerSceneData";
 		static constexpr const char* PerObjectData = "PerObjectData";
 		static constexpr const char* Shading = "Shading";
 	};

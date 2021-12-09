@@ -85,6 +85,11 @@ namespace At0::Ray
 		 */
 		void Update(void* data, VkDeviceSize size, VkDeviceSize offset = 0);
 
+		/**
+		 * @returns If the uniform block contains a variable with name
+		 */
+		bool Has(const std::string& name);
+
 	private:
 		void Setup(uint32_t bufferSize);
 

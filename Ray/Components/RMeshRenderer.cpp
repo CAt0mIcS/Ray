@@ -20,9 +20,12 @@ namespace At0::Ray
 {
 	MeshRenderer::MeshRenderer(Entity entity, Ref<Material> material)
 		: Component(entity),
-		  Renderer(std::move(material)), EventListener<MaterialBecameDirtyEvent>(*m_Material)
+		  Renderer(std::move(material)), EventListener<MaterialBecameDirtyEvent>(*m_Material),
+		  EventListener<CameraChangedEvent>(Scene::Get().GetCamera())
 	{
 		m_PerObjectDataUniformRef = GetBufferUniform(UniformBlockTag::PerObjectData)["Model"];
+		m_PerSceneUniform = &GetBufferUniform(UniformBlockTag::PerSceneData);
+
 		SetMaterialData();
 	}
 
@@ -31,6 +34,15 @@ namespace At0::Ray
 		// if (!Scene::Get().GetCamera().GetFrustum().SphereCheck(
 		//		GetEntity().Get<Transform>().Translation(), 1.0f /*radius*/))
 		//	return;
+
+		if (m_IsCameraDirty)
+		{
+			m_IsCameraDirty = false;
+			(*m_PerSceneUniform)["View"] = Scene::Get().GetCamera().ShaderData.View;
+			(*m_PerSceneUniform)["Proj"] = Scene::Get().GetCamera().ShaderData.Projection;
+			if (m_PerSceneUniform->Has("ViewPos"))
+				(*m_PerSceneUniform)["ViewPos"] = Scene::Get().GetCamera().ShaderData.ViewPos;
+		}
 
 		m_Material->CmdBind(cmdBuff);
 

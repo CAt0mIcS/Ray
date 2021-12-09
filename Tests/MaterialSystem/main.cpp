@@ -157,9 +157,6 @@ public:
 		m_Material->Set("samplerDiffuse",
 			Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
 
-		// RAY_TODO: Move constructors for MeshRenderer are missing, so when enTT moves (resize due
-		// to new MeshRenderer) the listener is still active on an invalid renderer
-
 		m_Child = Scene::Get().CreateEntity();
 		m_Child.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f });
 		m_Child.Emplace<Ray::Mesh>(Ray::Mesh::Plane(m_Material));

@@ -77,7 +77,7 @@ namespace At0::Ray
 								 VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 			vkCmdSetViewport(*commandBuffer, 0, 1, &viewport);
 			vkCmdSetScissor(*commandBuffer, 0, 1, &scissor);
-			Scene::Get().CmdBind(*commandBuffer);
+			// Scene::Get().CmdBind(*commandBuffer);
 		}
 
 		// RAY_TODO: Test group vs view performance

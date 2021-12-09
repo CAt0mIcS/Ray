@@ -254,7 +254,7 @@ namespace At0::Ray
 		vkCmdSetViewport(cmdBuff, 0, 1, &m_Viewport);
 		vkCmdSetScissor(cmdBuff, 0, 1, &m_Scissor);
 
-		Scene::Get().CmdBind(cmdBuff);
+		// Scene::Get().CmdBind(cmdBuff);
 		Scene::Get().EntityView<MeshRenderer>().each(
 			[&cmdBuff](MeshRenderer& mesh) { mesh.Render(cmdBuff); });
 		// Scene::Get().EntityView<TextRenderer>().each(

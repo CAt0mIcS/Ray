@@ -191,10 +191,7 @@ namespace At0::Ray
 			{
 				switch (uniformBlock.type)
 				{
-				case UniformType::UniformBuffer:
-					if (uniformBlock.name != "PerSceneData")  // reserved
-						AddBufferUniform(uniformBlock.name, stage);
-					break;
+				case UniformType::UniformBuffer: AddBufferUniform(uniformBlock.name, stage); break;
 				case UniformType::CombinedImageSampler:
 					AddSampler2DUniform(uniformBlock.name, stage, nullptr);
 					break;

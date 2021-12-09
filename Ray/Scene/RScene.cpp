@@ -16,7 +16,6 @@
 #include "Components/RTransform.h"
 
 #include "Events/REventListener.h"
-#include "RSceneDescriptor.h"
 
 // RAY_TEMPORARY
 #include "Core/RTime.h"
@@ -114,15 +113,8 @@ namespace At0::Ray
 		return *m_Camera;
 	}
 
-	void Scene::CmdBind(const CommandBuffer& cmdBuff) const { m_SceneDescriptor->CmdBind(cmdBuff); }
-
-	Scene::Scene(Scope<Camera> camera)
-		: EventListener<CameraChangedEvent>(*camera), m_Camera(std::move(camera))
+	Scene::Scene(Scope<Camera> camera) : m_Camera(std::move(camera))
 	{
 		s_CurrentScene = Scope<Scene>(this);
-		m_SceneDescriptor = MakeScope<SceneDescriptor>();
 	}
-
-	void Scene::UpdateUniform() { m_SceneDescriptor->UpdateUniform(*m_Camera); }
-
 }  // namespace At0::Ray
