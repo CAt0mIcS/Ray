@@ -18,7 +18,7 @@
 #include "Scene/RScene.h"
 #include "Core/RTime.h"
 
-#define RAY_MULTITHREADED_IMPORT 1
+#define RAY_MULTITHREADED_IMPORT 0
 
 
 namespace At0::Ray
@@ -155,7 +155,7 @@ namespace At0::Ray
 			Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
 			Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
 
-			// ParentEntity component added by mesh
+			// HierachyComponent added by mesh
 			Entity entity = Scene::Get().CreateEntity();
 			Ray::MeshRenderer& meshRenderer =
 				entity.Emplace<Ray::MeshRenderer>(std::move(material));

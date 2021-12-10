@@ -44,6 +44,9 @@ namespace At0::Ray
 
 		m_Material->CmdBind(cmdBuff);
 
+		m_BufferUniforms;
+		m_Sampler2DUniforms;
+
 		for (const auto& descSet : m_DescriptorSets)
 			descSet.CmdBind(cmdBuff);
 

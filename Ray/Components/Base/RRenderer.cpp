@@ -231,10 +231,10 @@ namespace At0::Ray
 			{
 				switch (uniform.type)
 				{
-				case UniformType::UniformBuffer: AddBufferUniform(uniform.name, stage); break;
 				case UniformType::CombinedImageSampler:
 					AddSampler2DUniform(uniform.name, stage, nullptr);
 					break;
+				default: RAY_ASSERT(false, "[Renderer] Invalid uniform type");
 				}
 			}
 

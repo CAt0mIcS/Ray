@@ -121,6 +121,7 @@ namespace At0::Ray
 				const std::string& name, Ref<Texture2D> data, MaterialDataContainer& container);
 
 			Ref<Material> Acquire();
+			Ref<Material> Build();
 
 		private:
 			static void ValidateUniformExistence(

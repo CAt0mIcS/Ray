@@ -95,16 +95,15 @@ namespace At0::Ray
 
 	DescriptorSet& DescriptorSet::operator=(DescriptorSet&& other) noexcept
 	{
+#ifndef NDEBUG
+		m_UniformBound = other.m_UniformBound;
+#endif
 		m_DescriptorSet = other.m_DescriptorSet;
 		m_SetNumber = other.m_SetNumber;
 		m_PipelineBindPoint = other.m_PipelineBindPoint;
 		m_PipelineLayout = other.m_PipelineLayout;
+		m_DescriptorPool = other.m_DescriptorPool;
+		m_DescriptorSetLayout = other.m_DescriptorSetLayout;
 		return *this;
-	}
-
-	DescriptorSet::DescriptorSet(DescriptorSet&& other) noexcept
-		: m_DescriptorSet(other.m_DescriptorSet), m_SetNumber(other.m_SetNumber),
-		  m_PipelineBindPoint(other.m_PipelineBindPoint), m_PipelineLayout(other.m_PipelineLayout)
-	{
 	}
 }  // namespace At0::Ray

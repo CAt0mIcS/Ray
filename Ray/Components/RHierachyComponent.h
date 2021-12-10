@@ -11,6 +11,7 @@ namespace At0::Ray
 		HierachyComponent(Entity entity);
 
 		void AddChild(Entity entity);
+		void AddChildren(const std::vector<Entity>& children);
 		void SetParent(Entity parent) { m_Parent = parent; }
 
 		bool HasChild(Entity child) const;

@@ -112,6 +112,16 @@ namespace At0::Ray
 		void SetParent(Entity parent);
 
 		/**
+		 * Adds a child to the entity
+		 */
+		void AddChild(Entity child);
+
+		/**
+		 * Adds list of children to the entity
+		 */
+		void AddChildren(const std::vector<Entity>& children);
+
+		/**
 		 * Checks if the entity has the ParentEntity component
 		 */
 		bool HasParent() const;
@@ -125,6 +135,11 @@ namespace At0::Ray
 		 * @returns Children of the entity, fails if it doesn't have a HierachyComponent
 		 */
 		const std::vector<Entity>& GetChildren() const;
+
+		/**
+		 * @returns if this has child
+		 */
+		bool HasChild(Entity child) const;
 
 		/**
 		 * Casting operator to the entity identifier

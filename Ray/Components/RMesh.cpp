@@ -27,6 +27,13 @@ namespace At0::Ray
 				GetEntity().Emplace<MeshRenderer>(std::move(vertexData.material));
 			else
 				GetEntity().Get<MeshRenderer>().SetMaterial(std::move(vertexData.material));
+
+
+		if (vertexData.children.size() != 0)
+			GetEntity().Emplace<HierachyComponent>().AddChildren(vertexData.children);
+
+		for (Entity child : vertexData.children)
+			child.Emplace<HierachyComponent>().SetParent(GetEntity());
 	}
 
 	Mesh::VertexData Mesh::Triangle(Ref<Material> material)

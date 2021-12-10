@@ -17,7 +17,24 @@ namespace At0::Ray
 	{
 	}
 
-	void Entity::SetParent(Entity parent) {}
+	void Entity::SetParent(Entity parent)
+	{
+		RAY_MEXPECTS(Has<HierachyComponent>(), "[Entity] Does not have a HierachyComponent");
+		Get<HierachyComponent>().SetParent(parent);
+	}
+
+	void Entity::AddChild(Entity child)
+	{
+		RAY_MEXPECTS(Has<HierachyComponent>(), "[Entity] Does not have a HierachyComponent");
+		RAY_MEXPECTS(!HasChild(child), "[Entity] Already has child");
+		Get<HierachyComponent>().AddChild(child);
+	}
+
+	void Entity::AddChildren(const std::vector<Entity>& children)
+	{
+		RAY_MEXPECTS(Has<HierachyComponent>(), "[Entity] Does not have a HierachyComponent");
+		Get<HierachyComponent>().AddChildren(children);
+	}
 
 	bool Entity::HasParent() const
 	{
@@ -36,6 +53,12 @@ namespace At0::Ray
 		RAY_MEXPECTS(Has<HierachyComponent>(),
 			"[Entity] Does not have a HierachyComponent to get children.");
 		return Get<HierachyComponent>().GetChildren();
+	}
+
+	bool Entity::HasChild(Entity child) const
+	{
+		RAY_MEXPECTS(Has<HierachyComponent>(), "[Entity] Does not have a HierachyComponent.");
+		return Get<HierachyComponent>().HasChild(child);
 	}
 
 	constexpr bool Entity::operator==(const Entity& other) const

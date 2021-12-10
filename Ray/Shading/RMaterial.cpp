@@ -79,6 +79,11 @@ namespace At0::Ray
 		return MakeRef<Material>(std::move(m_GraphicsPipeline), std::move(m_Container));
 	}
 
+	Ref<Material> Material::Builder::Build()
+	{
+		return MakeRef<Material>(std::move(m_GraphicsPipeline), std::move(m_Container));
+	}
+
 	void Material::Builder::ValidateUniformExistence(
 		const GraphicsPipeline& pipeline, const std::string& name)
 	{

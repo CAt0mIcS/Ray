@@ -31,7 +31,7 @@ namespace At0::Ray
 
 		operator const VkDescriptorSet&() const { return m_DescriptorSet; }
 		DescriptorSet& operator=(DescriptorSet&& other) noexcept;
-		DescriptorSet(DescriptorSet&& other) noexcept;
+		DescriptorSet(DescriptorSet&& other) noexcept { *this = std::move(other); }
 
 	private:
 		VkDescriptorSet m_DescriptorSet = VK_NULL_HANDLE;
