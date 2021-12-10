@@ -31,7 +31,7 @@ namespace At0::Ray
 			std::move(extent), format, tiling, usage, memProps, imageAspect);
 	}
 
-	Texture2D::Texture2D(std::string_view filepath)
+	Texture2D::Texture2D(std::string_view filepath) : RAY_DEBUG_FLAG(m_FilePath(filepath))
 	{
 		int texWidth, texHeight, texChannels;
 		stbi_uc* pixels =

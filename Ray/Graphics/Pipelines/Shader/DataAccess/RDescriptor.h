@@ -12,6 +12,7 @@ namespace At0::Ray
 	class BufferUniform;
 	class Sampler2DUniform;
 
+
 	class DescriptorSet : NonCopyable
 	{
 	public:
@@ -42,8 +43,7 @@ namespace At0::Ray
 		Pipeline::BindPoint m_PipelineBindPoint;
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
 
-#ifndef NDEBUG
-		bool m_UniformBound = false;
-#endif
+		RAY_DEBUG_FLAG(bool m_UniformBound = false);
+		RAY_DEBUG_FLAG(std::string m_TexturePath);
 	};
 }  // namespace At0::Ray

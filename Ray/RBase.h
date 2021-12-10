@@ -12,6 +12,12 @@
 
 #define ENTT_API RAY_EXPORT
 
+#ifndef NDEBUG
+	#define RAY_DEBUG_FLAG(x) x
+#else
+	#define RAY_DEBUG_FLAG(x)
+#endif
+
 // Export some entt symbols. Specialization is not exported for some reason... (RAY_TODO)
 #include <../../Extern/entt/src/entt/core/type_info.hpp>
 #include <../../Extern/entt/src/entt/entity/storage.hpp>

@@ -147,6 +147,7 @@ namespace At0::Ray
 			m_VertexData.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
 			m_VertexData.indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
 			m_VertexData.material = std::move(material);
+			m_VertexData.name = meshTag;
 			m_ParentSet = true;
 		}
 		// Children
@@ -159,7 +160,8 @@ namespace At0::Ray
 			Entity entity = Scene::Get().CreateEntity();
 			Ray::MeshRenderer& meshRenderer =
 				entity.Emplace<Ray::MeshRenderer>(std::move(material));
-			entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
+			entity.Emplace<Ray::Mesh>(
+				Mesh::VertexData{ vertexBuffer, indexBuffer, nullptr, {}, meshTag });
 			m_VertexData.children.emplace_back(entity);
 		}
 	}

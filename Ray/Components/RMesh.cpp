@@ -20,7 +20,7 @@ namespace At0::Ray
 {
 	Mesh::Mesh(Entity entity, Mesh::VertexData vertexData)
 		: Component(entity), m_VertexBuffer(std::move(vertexData.vertexBuffer)),
-		  m_IndexBuffer(std::move(vertexData.indexBuffer))
+		  m_IndexBuffer(std::move(vertexData.indexBuffer)), RAY_DEBUG_FLAG(m_Name(vertexData.name))
 	{
 		if (vertexData.material)
 			if (!GetEntity().Has<MeshRenderer>())
@@ -66,7 +66,7 @@ namespace At0::Ray
 			"Triangle#012230#{0}#{1}#{2}#{3}", hasPos, hasUV, hasNormal, hasTangent);
 
 		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(tag, vertex),
-			Codex::Resolve<IndexBuffer>(tag, indices) };
+			Codex::Resolve<IndexBuffer>(tag, indices), nullptr, {}, tag };
 	}
 
 	Mesh::VertexData Mesh::Plane(Ref<Material> material)
@@ -110,7 +110,7 @@ namespace At0::Ray
 			String::Serialize("Plane#012230#{0}#{1}#{2}#{3}", hasPos, hasUV, hasNormal, hasTangent);
 
 		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(tag, vertex),
-			Codex::Resolve<IndexBuffer>(tag, indices) };
+			Codex::Resolve<IndexBuffer>(tag, indices), nullptr, {}, tag };
 	}
 
 	Mesh::VertexData Mesh::Import(std::string_view filepath, Ref<Material> material)

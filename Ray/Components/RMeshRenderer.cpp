@@ -32,6 +32,7 @@ namespace At0::Ray
 		// if (!Scene::Get().GetCamera().GetFrustum().SphereCheck(
 		//		GetEntity().Get<Transform>().Translation(), 1.0f /*radius*/))
 		//	return;
+		RAY_DEBUG_FLAG(m_Name = GetEntity().Get<Mesh>().GetName());
 
 		if (m_IsCameraDirty)
 		{
@@ -43,9 +44,6 @@ namespace At0::Ray
 		}
 
 		m_Material->CmdBind(cmdBuff);
-
-		m_BufferUniforms;
-		m_Sampler2DUniforms;
 
 		for (const auto& descSet : m_DescriptorSets)
 			descSet.CmdBind(cmdBuff);

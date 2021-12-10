@@ -73,6 +73,8 @@ namespace At0::Ray
 		 */
 		BufferUniform* m_PerSceneUniform;
 		mutable bool m_IsCameraDirty = true;
+
+		RAY_DEBUG_FLAG(mutable std::string m_Name);
 	};
 }  // namespace At0::Ray
 

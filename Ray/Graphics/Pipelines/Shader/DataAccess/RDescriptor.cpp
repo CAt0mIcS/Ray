@@ -33,10 +33,9 @@ namespace At0::Ray
 
 	void DescriptorSet::CmdBind(const CommandBuffer& cmdBuff) const
 	{
-#ifndef NDEBUG
-		if (!m_UniformBound)
-			Log::Warn("[DescriptorSet] No uniforms bound to descriptor set {0}", m_SetNumber);
-#endif
+		RAY_DEBUG_FLAG(if (!m_UniformBound)
+				Log::Warn("[DescriptorSet] No uniforms bound to descriptor set {0}", m_SetNumber));
+
 		vkCmdBindDescriptorSets(cmdBuff, (VkPipelineBindPoint)m_PipelineBindPoint, m_PipelineLayout,
 			m_SetNumber, 1, &m_DescriptorSet, 0, nullptr);
 	}
@@ -65,13 +64,13 @@ namespace At0::Ray
 
 		Update({ descWrite });
 
-#ifndef NDEBUG
-		m_UniformBound = true;
-#endif
+		RAY_DEBUG_FLAG(m_UniformBound = true);
 	}
 
 	void DescriptorSet::BindUniform(const Sampler2DUniform& uniform)
 	{
+		RAY_DEBUG_FLAG(m_TexturePath = uniform.GetTexture()->GetPath());
+
 		VkDescriptorImageInfo imageInfo{};
 		imageInfo.sampler = uniform.GetTexture()->GetSampler();
 		imageInfo.imageView = uniform.GetTexture()->GetImageView();
@@ -88,16 +87,14 @@ namespace At0::Ray
 
 		Update({ descWrites });
 
-#ifndef NDEBUG
-		m_UniformBound = true;
-#endif
+		RAY_DEBUG_FLAG(m_UniformBound = true);
 	}
 
 	DescriptorSet& DescriptorSet::operator=(DescriptorSet&& other) noexcept
 	{
-#ifndef NDEBUG
-		m_UniformBound = other.m_UniformBound;
-#endif
+		RAY_DEBUG_FLAG(m_UniformBound = other.m_UniformBound);
+		RAY_DEBUG_FLAG(m_TexturePath = std::move(other.m_TexturePath));
+
 		m_DescriptorSet = other.m_DescriptorSet;
 		m_SetNumber = other.m_SetNumber;
 		m_PipelineBindPoint = other.m_PipelineBindPoint;

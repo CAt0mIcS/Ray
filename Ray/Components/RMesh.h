@@ -17,8 +17,6 @@ namespace At0::Ray
 
 	class RAY_EXPORT Mesh : public Component, public SharedBindable
 	{
-		friend class MeshRenderer;
-
 	public:
 		struct VertexData
 		{
@@ -26,6 +24,7 @@ namespace At0::Ray
 			Ref<IndexBuffer> indexBuffer;
 			Ref<Material> material;
 			std::vector<Entity> children;
+			RAY_DEBUG_FLAG(std::string name);
 		};
 
 	public:
@@ -50,10 +49,14 @@ namespace At0::Ray
 		Mesh& operator=(Mesh&& other) noexcept;
 		Mesh(Mesh&& other) noexcept;
 
+		RAY_DEBUG_FLAG(std::string_view GetName() const { return m_Name; })
+
 	private:
 		// Created by the mesh renderer
 		Ref<VertexBuffer> m_VertexBuffer;
 		Ref<IndexBuffer> m_IndexBuffer;
+
+		RAY_DEBUG_FLAG(std::string m_Name);
 	};
 }  // namespace At0::Ray
 

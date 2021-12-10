@@ -83,7 +83,6 @@ namespace At0::Ray
 			return *s_CurrentScene;
 		}
 
-
 	protected : Scene(Scope<Camera> camera);
 	private:
 		entt::registry m_Registry;

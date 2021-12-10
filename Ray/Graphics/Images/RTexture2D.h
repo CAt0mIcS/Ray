@@ -23,8 +23,12 @@ namespace At0::Ray
 
 		const TextureSampler& GetSampler() const { return m_Sampler; }
 
+		RAY_DEBUG_FLAG(std::string_view GetPath() const { return m_FilePath; })
+
 	private:
 		TextureSampler m_Sampler;
+
+		RAY_DEBUG_FLAG(std::string m_FilePath);
 	};
 
 }  // namespace At0::Ray
