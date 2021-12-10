@@ -27,12 +27,10 @@
 #include "Graphics/RenderPass/RAttachment.h"
 #include "Graphics/RenderPass/RSubpass.h"
 
-#include "Graphics/Buffers/Dynamic/RDynamicVertexBuffer.h"
-#include "Graphics/Buffers/Dynamic/RDynamicIndexBuffer.h"
 #include "Graphics/Buffers/Dynamic/RDynamicUniformBuffer.h"
 #include "Graphics/Buffers/RFramebuffer.h"
 
-#include "Graphics/Pipelines/Uniforms/RDescriptor.h"
+#include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
 #include "Components/RMeshRenderer.h"
 #include "Components/RTextRenderer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"

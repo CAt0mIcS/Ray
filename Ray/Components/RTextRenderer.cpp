@@ -15,8 +15,8 @@
 //#include "Shading/Flat/RFlatTextMaterial.h"
 #include "Graphics/Images/RTexture2DAtlas.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
-#include "Graphics/Pipelines/Uniforms/RDescriptor.h"
-#include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
+#include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
+#include "Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
 
 
 namespace At0::Ray

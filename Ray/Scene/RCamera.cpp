@@ -1,11 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RCamera.h"
 
-#include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
-#include "Graphics/RGraphics.h"
-#include "Graphics/Core/RLogicalDevice.h"
 #include "Devices/RWindow.h"
-
 #include "Utils/RException.h"
 
 

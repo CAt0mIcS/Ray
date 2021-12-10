@@ -133,6 +133,13 @@ namespace At0::Ray
 		UniformData& GetUniform(std::string_view name);
 		UniformBlockData& GetUniformBlock(std::string_view name);
 
+		const AttributeData* TryGetAttribute(std::string_view name) const;
+		const UniformData* TryGetUniform(std::string_view name) const;
+		const UniformBlockData* TryGetUniformBlock(std::string_view name) const;
+		AttributeData* TryGetAttribute(std::string_view name);
+		UniformData* TryGetUniform(std::string_view name);
+		UniformBlockData* TryGetUniformBlock(std::string_view name);
+
 		void WriteToFile(const std::string& filepath) const;
 
 	private:

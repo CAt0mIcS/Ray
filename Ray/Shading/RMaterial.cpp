@@ -6,6 +6,7 @@
 #include "Graphics/Pipelines/Shader/RShader.h"
 #include "Utils/RAssert.h"
 #include "Utils/RLogger.h"
+#include "Utils/RException.h"
 #include "Events/REventListener.h"
 
 
@@ -33,7 +34,7 @@ namespace At0::Ray
 
 	void Material::Set(const std::string& name, Ref<Texture2D> texture)
 	{
-		Builder::Set(name, std::move(texture), m_Container);
+		m_Container.Set(name, std::move(texture));
 		CallListeners(name, UniformType::CombinedImageSampler);
 	}
 
@@ -44,6 +45,17 @@ namespace At0::Ray
 		MaterialBecameDirtyEvent e{ name, type };
 		for (auto listener : EventDispatcher<MaterialBecameDirtyEvent>::Get())
 			listener->OnEvent(e);
+	}
+
+	UniformType Material::GetUniformType(std::string_view name) const
+	{
+		for (auto& [stage, reflection] : m_GraphicsPipeline->GetShader().GetReflections())
+		{
+			if (auto* uBlockData = reflection.TryGetUniformBlock(name.substr(0, name.find('.')));
+				uBlockData)
+				return uBlockData->type;
+		}
+		return UniformType::CombinedImageSampler;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,14 +70,8 @@ namespace At0::Ray
 	Material::Builder& Material::Builder::Set(const std::string& name, Ref<Texture2D> data)
 	{
 		ValidateUniformExistence(*m_GraphicsPipeline, name);
-		Set(name, std::move(data), m_Container);
+		m_Container.Set(name, std::move(data));
 		return *this;
-	}
-
-	void Material::Builder::Set(
-		const std::string& name, Ref<Texture2D> data, MaterialDataContainer& container)
-	{
-		container.Set(name, std::move(data));
 	}
 
 	Ref<Material> Material::Builder::Acquire()

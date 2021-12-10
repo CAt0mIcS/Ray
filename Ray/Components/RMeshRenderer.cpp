@@ -7,6 +7,7 @@
 #include "Scene/RScene.h"
 #include "Shading/RMaterial.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
+#include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
 #include "Graphics/Images/RTexture2D.h"
 
@@ -49,17 +50,17 @@ namespace At0::Ray
 		for (const auto& descSet : m_DescriptorSets)
 			descSet.CmdBind(cmdBuff);
 
-		// struct PushConstants
-		//{
-		//	VkBool32 useColor;
-		//	VkBool32 useTexture;
-		//};
+		struct PushConstants
+		{
+			VkBool32 useColor;
+			VkBool32 useTexture;
+		};
 
-		// PushConstants pushConstants{ m_Material->Get<VkBool32>("Constants.useColor"),
-		//	m_Material->Get<VkBool32>("Constants.useTexture") };
+		PushConstants pushConstants{ m_Material->Get<VkBool32>("Constants.useColor"),
+			m_Material->Get<VkBool32>("Constants.useTexture") };
 
-		// vkCmdPushConstants(cmdBuff, m_Material->GetGraphicsPipeline().GetLayout(),
-		//	VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstants), &pushConstants);
+		vkCmdPushConstants(cmdBuff, m_Material->GetGraphicsPipeline().GetLayout(),
+			VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstants), &pushConstants);
 	}
 
 	void MeshRenderer::Update()
@@ -106,48 +107,38 @@ namespace At0::Ray
 	{
 		switch (uType)
 		{
-		case UniformType::UniformBuffer: UpdateUniform(uniformPath); break;
+		case UniformType::UniformBuffer: UpdateUniform(uniformPath, false); break;
 		case UniformType::CombinedImageSampler:
 			SetSamplerTexture(uniformPath, m_Material->GetTexture(uniformPath));
 			break;
-		case UniformType::Push: RAY_ASSERT(false, "[MeshRenderer] TODO");
+		case UniformType::Push: UpdateUniform(uniformPath, true); break;
 		}
 	}
 
-	void MeshRenderer::UpdateUniform(const std::string& dataPath)
+	void MeshRenderer::UpdateUniform(const std::string& dataPath, bool isPushConstant)
 	{
 		int pos = dataPath.find('.');
 		std::string uBlockName = dataPath.substr(0, pos);
 		std::string uName = dataPath.substr(pos + 1);
+
+		auto getUniform = [&]()
+		{
+			if (isPushConstant)
+				return GetPushConstant(uBlockName)[uName];
+			return GetBufferUniform(uBlockName)[uName];
+		};
+
 		switch (m_Material->GetType(dataPath))
 		{
-		case ShaderDataType::Float:
-			GetBufferUniform(uBlockName)[uName] = m_Material->Get<float>(dataPath);
-			break;
-		case ShaderDataType::Int:
-			GetBufferUniform(uBlockName)[uName] = m_Material->Get<int32_t>(dataPath);
-			break;
-		case ShaderDataType::UInt:
-			GetBufferUniform(uBlockName)[uName] = m_Material->Get<uint32_t>(dataPath);
-			break;
-		case ShaderDataType::Bool:
-			GetBufferUniform(uBlockName)[uName] = m_Material->Get<VkBool32>(dataPath);
-			break;
-		case ShaderDataType::Vec2:
-			GetBufferUniform(uBlockName)[uName] = m_Material->Get<Float2>(dataPath);
-			break;
-		case ShaderDataType::Vec3:
-			GetBufferUniform(uBlockName)[uName] = m_Material->Get<Float3>(dataPath);
-			break;
-		case ShaderDataType::Vec4:
-			GetBufferUniform(uBlockName)[uName] = m_Material->Get<Float4>(dataPath);
-			break;
-		case ShaderDataType::Mat3:
-			GetBufferUniform(uBlockName)[uName] = m_Material->Get<Matrix3>(dataPath);
-			break;
-		case ShaderDataType::Mat4:
-			GetBufferUniform(uBlockName)[uName] = m_Material->Get<Matrix>(dataPath);
-			break;
+		case ShaderDataType::Float: getUniform() = m_Material->Get<float>(dataPath); break;
+		case ShaderDataType::Int: getUniform() = m_Material->Get<int32_t>(dataPath); break;
+		case ShaderDataType::UInt: getUniform() = m_Material->Get<uint32_t>(dataPath); break;
+		case ShaderDataType::Bool: getUniform() = m_Material->Get<VkBool32>(dataPath); break;
+		case ShaderDataType::Vec2: getUniform() = m_Material->Get<Float2>(dataPath); break;
+		case ShaderDataType::Vec3: getUniform() = m_Material->Get<Float3>(dataPath); break;
+		case ShaderDataType::Vec4: getUniform() = m_Material->Get<Float4>(dataPath); break;
+		case ShaderDataType::Mat3: getUniform() = m_Material->Get<Matrix3>(dataPath); break;
+		case ShaderDataType::Mat4: getUniform() = m_Material->Get<Matrix>(dataPath); break;
 		default:
 			RAY_ASSERT(
 				false, "[MeshRenderer] Data type {0} unknown.", (int)m_Material->GetType(dataPath));

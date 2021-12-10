@@ -129,6 +129,10 @@ public:
 								m_Child = Ray::Entity::Null;
 							}
 						}
+						if (ImGui::Checkbox("Color", &m_UseColor))
+							m_Material->Set("Constants.useColor", m_UseColor);
+						if (ImGui::Checkbox("Texture", &m_UseTexture))
+							m_Material->Set("Constants.useTexture", m_UseTexture);
 						ImGui::End();
 					}
 				}
@@ -146,8 +150,8 @@ public:
 			Ray::Material::Builder(pipeline)
 				.Set("samplerDiffuse", Ray::Texture2D::Acquire("Resources/Textures/gridbase.png"))
 				.Set("Shading.color", Ray::Float4{ 1.0f, 0.4f, 0.134f, 1.0f })
-				//.Set("Constants.useColor", true)
-				//.Set("Constants.useTexture", false)
+				.Set("Constants.useColor", m_UseColor)
+				.Set("Constants.useTexture", m_UseTexture)
 				.Acquire();
 
 		m_Parent = Scene::Get().CreateEntity();
@@ -193,6 +197,9 @@ private:
 	Ray::Entity m_Child;
 	Ray::Entity m_Parent;
 	Ray::Ref<Ray::Material> m_Material;
+
+	bool m_UseColor = true;
+	bool m_UseTexture = true;
 };
 
 void SignalHandler(int signal)

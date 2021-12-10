@@ -2,11 +2,6 @@
 
 #include "REntity.h"
 #include "RScene.h"
-#include "Graphics/RGraphics.h"
-#include "Graphics/Core/RLogicalDevice.h"
-#include "Graphics/Pipelines/RGraphicsPipeline.h"
-#include "Graphics/Pipelines/Uniforms/RDescriptor.h"
-#include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
 #include "Utils/RException.h"
 #include "Utils/RLogger.h"
 
@@ -16,9 +11,6 @@
 #include "Components/RTransform.h"
 
 #include "Events/REventListener.h"
-
-// RAY_TEMPORARY
-#include "Core/RTime.h"
 
 #define RAY_MULTITHREADED_TRANSFORM_CALCULATIONS 1
 #define RAY_MULTITHREADED_MESHRENDERER_UPDATES 1

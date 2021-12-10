@@ -1,8 +1,8 @@
 ﻿#include "Rpch.h"
 #include "RSampler2DUniform.h"
 
-#include "../RPipeline.h"
-#include "../Shader/RShader.h"
+#include "../../RPipeline.h"
+#include "../../Shader/RShader.h"
 #include "Graphics/Images/RTexture2D.h"
 #include "RDescriptor.h"
 

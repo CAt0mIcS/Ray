@@ -74,8 +74,8 @@ namespace At0::Ray
 		void Set(const std::string& name, T&& data)
 		{
 			Builder::ValidateUniformExistence(*m_GraphicsPipeline, name);
-			Builder::Set(name, std::move(data), m_Container);
-			CallListeners(name, UniformType::UniformBuffer);
+			m_Container.Set(name, std::move(data));
+			CallListeners(name, GetUniformType(name));
 		}
 
 		void Set(const std::string& name, Ref<Texture2D> texture);
@@ -94,6 +94,7 @@ namespace At0::Ray
 
 	private:
 		void CallListeners(const std::string& name, UniformType type);
+		UniformType GetUniformType(std::string_view name) const;
 
 	private:
 		Ref<GraphicsPipeline> m_GraphicsPipeline;
@@ -111,14 +112,8 @@ namespace At0::Ray
 			Builder& Set(const std::string& name, T&& data)
 			{
 				ValidateUniformExistence(*m_GraphicsPipeline, name);
-				Set(name, std::move(data), m_Container);
+				m_Container.Set(name, std::move(data));
 				return *this;
-			}
-
-			template<typename T>
-			static void Set(const std::string& name, T&& data, MaterialDataContainer& container)
-			{
-				container.Set(name, std::move(data));
 			}
 
 			Builder& Set(const std::string& name, Ref<Texture2D> data);

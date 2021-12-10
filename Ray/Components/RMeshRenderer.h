@@ -4,10 +4,7 @@
 #include "RComponent.h"
 #include "Base/RRenderer.h"
 
-#include "../Graphics/Pipelines/Uniforms/RDescriptor.h"
-#include "../Graphics/Pipelines/Uniforms/RBufferUniform.h"
-#include "../Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
-#include "../Graphics/Pipelines/Shader/RShaderReflection.h"
+#include "../Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
 #include "../Shading/RMaterial.h"
 #include "../Scene/RCamera.h"
 #include "../Events/REventListener.h"
@@ -59,7 +56,7 @@ namespace At0::Ray
 		 */
 		void UpdateMaterialData(const std::string& uniformPath, UniformType uType);
 
-		void UpdateUniform(const std::string& dataPath);
+		void UpdateUniform(const std::string& dataPath, bool isPushConstant = false);
 
 		virtual void OnEvent(MaterialBecameDirtyEvent& e) override;
 		virtual void OnEvent(CameraChangedEvent& e) override { m_IsCameraDirty = true; }

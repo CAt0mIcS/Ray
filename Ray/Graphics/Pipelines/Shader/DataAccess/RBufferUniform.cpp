@@ -1,8 +1,8 @@
 ﻿#include "Rpch.h"
 #include "RBufferUniform.h"
 
-#include "../Shader/RShader.h"
-#include "../RPipeline.h"
+#include "../../Shader/RShader.h"
+#include "../../RPipeline.h"
 #include "Utils/RAssert.h"
 #include "Utils/RString.h"
 
@@ -45,7 +45,10 @@ namespace At0::Ray
 		uint32_t offset;
 		for (const auto& pair : m_UniformInBlockOffsets)
 			if (pair.first == name)
+			{
 				offset = pair.second;
+				break;
+			}
 
 		return BufferUniform::AccessType{ m_UniformBuffer.get(), offset };
 	}

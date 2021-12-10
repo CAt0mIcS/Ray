@@ -4,6 +4,7 @@
 #include "Scene/RScene.h"
 #include "Components/RMesh.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
+#include "Graphics/Pipelines/Shader/DataAccess/RSampler2DUniform.h"
 #include "Core/RMath.h"
 #include "Graphics/RCodex.h"
 #include "Components/RMeshRenderer.h"

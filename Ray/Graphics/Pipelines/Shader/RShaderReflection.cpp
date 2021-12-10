@@ -99,20 +99,16 @@ namespace At0::Ray
 	const ShaderReflection::AttributeData& ShaderReflection::GetAttribute(
 		std::string_view name) const
 	{
-		for (const auto& attrib : m_Attributes)
-			if (attrib.name == name)
-				return attrib;
-
+		if (auto* data = TryGetAttribute(name); data)
+			return *data;
 		ThrowRuntime("[ShaderReflection] Failed to get attribute with name \"{0}\"", name);
 		return m_Attributes[0];
 	}
 
 	const ShaderReflection::UniformData& ShaderReflection::GetUniform(std::string_view name) const
 	{
-		for (const auto& uniform : m_Uniforms)
-			if (uniform.name == name)
-				return uniform;
-
+		if (auto* data = TryGetUniform(name); data)
+			return *data;
 		ThrowRuntime("[ShaderReflection] Failed to get uniform with name \"{0}\"", name);
 		return m_Uniforms[0];
 	}
@@ -120,10 +116,8 @@ namespace At0::Ray
 	const ShaderReflection::UniformBlockData& ShaderReflection::GetUniformBlock(
 		std::string_view name) const
 	{
-		for (const auto& uniformBlock : m_UniformBlocks)
-			if (uniformBlock.name == name)
-				return uniformBlock;
-
+		if (auto* data = TryGetUniformBlock(name); data)
+			return *data;
 		ThrowRuntime("[ShaderReflection] Failed to get uniform block with name \"{0}\"", name);
 		return m_UniformBlocks[0];
 	}
@@ -141,6 +135,48 @@ namespace At0::Ray
 	ShaderReflection::UniformBlockData& ShaderReflection::GetUniformBlock(std::string_view name)
 	{
 		return const_cast<UniformBlockData&>(std::as_const(*this).GetUniformBlock(name));
+	}
+
+	const ShaderReflection::AttributeData* ShaderReflection::TryGetAttribute(
+		std::string_view name) const
+	{
+		for (const auto& attrib : m_Attributes)
+			if (attrib.name == name)
+				return &attrib;
+		return nullptr;
+	}
+
+	const ShaderReflection::UniformData* ShaderReflection::TryGetUniform(
+		std::string_view name) const
+	{
+		for (const auto& uniform : m_Uniforms)
+			if (uniform.name == name)
+				return &uniform;
+		return nullptr;
+	}
+
+	const ShaderReflection::UniformBlockData* ShaderReflection::TryGetUniformBlock(
+		std::string_view name) const
+	{
+		for (const auto& uniformBlock : m_UniformBlocks)
+			if (uniformBlock.name == name)
+				return &uniformBlock;
+		return nullptr;
+	}
+
+	ShaderReflection::AttributeData* ShaderReflection::TryGetAttribute(std::string_view name)
+	{
+		return const_cast<AttributeData*>(std::as_const(*this).TryGetAttribute(name));
+	}
+
+	ShaderReflection::UniformData* ShaderReflection::TryGetUniform(std::string_view name)
+	{
+		return const_cast<UniformData*>(std::as_const(*this).TryGetUniform(name));
+	}
+
+	ShaderReflection::UniformBlockData* ShaderReflection::TryGetUniformBlock(std::string_view name)
+	{
+		return const_cast<UniformBlockData*>(std::as_const(*this).TryGetUniformBlock(name));
 	}
 
 

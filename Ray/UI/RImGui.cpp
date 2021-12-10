@@ -22,9 +22,9 @@
 #include "Graphics/Buffers/RVertexBuffer.h"
 #include "Graphics/Buffers/RIndexBuffer.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
-#include "Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
-#include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
-#include "Graphics/Pipelines/Uniforms/RDescriptor.h"
+#include "Graphics/Pipelines/Shader/DataAccess/RSampler2DUniform.h"
+#include "Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
+#include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
 #include "Graphics/Images/RTexture2D.h"
 #include "Utils/RLogger.h"
 

@@ -4,9 +4,9 @@
 #include "Shading/RMaterial.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
-#include "Graphics/Pipelines/Uniforms/RDescriptor.h"
-#include "Graphics/Pipelines/Uniforms/RBufferUniform.h"
-#include "Graphics/Pipelines/Uniforms/RSampler2DUniform.h"
+#include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
+#include "Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
+#include "Graphics/Pipelines/Shader/DataAccess/RSampler2DUniform.h"
 
 #include "Utils/RException.h"
 #include "Utils/RAssert.h"
@@ -19,6 +19,7 @@ namespace At0::Ray
 		m_DescriptorSets = std::move(other.m_DescriptorSets);
 		m_BufferUniforms = std::move(other.m_BufferUniforms);
 		m_Sampler2DUniforms = std::move(other.m_Sampler2DUniforms);
+		m_PushConstants = std::move(other.m_PushConstants);
 		m_Material = std::move(other.m_Material);
 		return *this;
 	}
@@ -26,6 +27,31 @@ namespace At0::Ray
 	Renderer::Renderer(Renderer&& other) noexcept { *this = std::move(other); }
 
 	Renderer::~Renderer() {}
+
+	bool Renderer::HasBufferUniform(std::string_view name) const
+	{
+		for (auto& [set, uniforms] : m_BufferUniforms)
+			for (const BufferUniform& uniform : uniforms)
+				if (uniform.GetName() == name)
+					return true;
+		return false;
+	}
+
+	bool Renderer::HasSampler2DUniform(std::string_view name) const
+	{
+		for (auto& [set, uniforms] : m_Sampler2DUniforms)
+			for (const Sampler2DUniform& uniform : uniforms)
+				if (uniform.GetName() == name)
+					return true;
+		return false;
+	}
+
+	bool Renderer::HasPushConstant(std::string_view name) const
+	{
+		return std::find_if(m_PushConstants.begin(), m_PushConstants.end(),
+				   [name](const BufferUniform& uniform)
+				   { return uniform.GetName() == name; }) != m_PushConstants.end();
+	}
 
 	Renderer::Renderer(Ref<Material> material) : m_Material(material) { AddUniforms(); }
 
@@ -36,6 +62,8 @@ namespace At0::Ray
 				name),
 			"[Renderer] BufferUniform \"{0}\" was not found in shader stage \"{1}\"", name,
 			String::Construct(stage));
+		RAY_MEXPECTS(
+			!HasBufferUniform(name), "[Renderer] Buffer Uniform \"{0}\" was already added", name);
 
 		uint32_t set = m_Material->GetGraphicsPipeline()
 						   .GetShader()
@@ -79,6 +107,8 @@ namespace At0::Ray
 						 name, true),
 			"[Renderer] Sampler2DUniform \"{0}\" was not found in shader stage \"{1}\"", name,
 			String::Construct(stage));
+		RAY_MEXPECTS(!HasSampler2DUniform(name),
+			"[Renderer] Sampler2D Uniform \"{0}\" was already added", name);
 
 		uint32_t set =
 			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).GetUniform(name).set;
@@ -113,6 +143,18 @@ namespace At0::Ray
 		return uniform;
 	}
 
+	BufferUniform& Renderer::AddPushConstant(std::string_view name, ShaderStage stage)
+	{
+		RAY_MEXPECTS(
+			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniformBlock(
+				name),
+			"[Renderer] Push Constant \"{0}\" was not found in shader stage \"{1}\"", name,
+			String::Construct(stage));
+		RAY_MEXPECTS(
+			!HasPushConstant(name), "[Renderer] Push Constant \"{0}\" was already added", name);
+		return m_PushConstants.emplace_back(name, stage, m_Material->GetGraphicsPipeline());
+	}
+
 	BufferUniform& Renderer::GetBufferUniform(std::string_view name)
 	{
 		for (auto& descriptors : m_BufferUniforms)
@@ -131,6 +173,15 @@ namespace At0::Ray
 					return uBuff;
 		ThrowRuntime("[Renderer] Failed to retrieve Sampler2DUniform \"{0}\"", name);
 		return m_Sampler2DUniforms[0][0];
+	}
+
+	BufferUniform& Renderer::GetPushConstant(std::string_view name)
+	{
+		for (auto& pushConstant : m_PushConstants)
+			if (pushConstant.GetName() == name)
+				return pushConstant;
+		ThrowRuntime("[Renderer] Failed to retrieve push constant \"{0}\"", name);
+		return m_PushConstants[0];
 	}
 
 	DescriptorSet& Renderer::GetDescriptorSet(std::string_view uniformName)
@@ -192,6 +243,7 @@ namespace At0::Ray
 				switch (uniformBlock.type)
 				{
 				case UniformType::UniformBuffer: AddBufferUniform(uniformBlock.name, stage); break;
+				case UniformType::Push: AddPushConstant(uniformBlock.name, stage); break;
 				case UniformType::CombinedImageSampler:
 					AddSampler2DUniform(uniformBlock.name, stage, nullptr);
 					break;
