@@ -52,43 +52,43 @@ public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
-		// Ray::ImGUI::Get().RegisterNewFrameFunction(
-		//	[&]()
-		//	{
-		//		{
-		//			auto translate = [](Ray::Transform& tform)
-		//			{
-		//				Ray::Float3 newTranslation =
-		//					Ray::ImGUI::Float3Widget("Translation", tform.Translation());
-		//				Ray::Float3 newRotation =
-		//					Ray::ImGUI::Float3Widget("Rotation", tform.Rotation());
-		//				Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
+		Ray::ImGUI::Get().RegisterNewFrameFunction(
+			[&]()
+			{
+				{
+					auto translate = [](Ray::Transform& tform)
+					{
+						Ray::Float3 newTranslation =
+							Ray::ImGUI::Float3Widget("Translation", tform.Translation());
+						Ray::Float3 newRotation =
+							Ray::ImGUI::Float3Widget("Rotation", tform.Rotation());
+						Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
 
-		//				if (newTranslation != tform.Translation())
-		//					tform.SetTranslation(newTranslation);
-		//				if (newRotation != tform.Rotation())
-		//					tform.SetRotation(newRotation);
-		//				if (newScale != tform.Scale())
-		//					tform.SetScale(newScale);
-		//			};
+						if (newTranslation != tform.Translation())
+							tform.SetTranslation(newTranslation);
+						if (newRotation != tform.Rotation())
+							tform.SetRotation(newRotation);
+						if (newScale != tform.Scale())
+							tform.SetScale(newScale);
+					};
 
-		//			{
-		//				ImGui::Begin("TestEntity");
-		//				Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
-		//				translate(tform);
-		//				ImGui::Spacing();
-		//				ImGui::End();
-		//			}
-		//			if (m_ChildEntity0)
-		//			{
-		//				ImGui::Begin("TestEntityChild0");
-		//				Ray::Transform& tform = m_ChildEntity0.Get<Ray::Transform>();
-		//				translate(tform);
-		//				ImGui::Spacing();
-		//				ImGui::End();
-		//			}
-		//		}
-		//	});
+					{
+						ImGui::Begin("TestEntity");
+						Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
+						translate(tform);
+						ImGui::Spacing();
+						ImGui::End();
+					}
+					if (m_ChildEntity0)
+					{
+						ImGui::Begin("TestEntityChild0");
+						Ray::Transform& tform = m_ChildEntity0.Get<Ray::Transform>();
+						translate(tform);
+						ImGui::Spacing();
+						ImGui::End();
+					}
+				}
+			});
 
 #include "../ImGuiWindows.inl"
 
@@ -98,7 +98,7 @@ public:
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 
-		// m_ChildEntity0 = m_Entity.GetChildren()[0];
+		m_ChildEntity0 = m_Entity.GetChildren()[0];
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));

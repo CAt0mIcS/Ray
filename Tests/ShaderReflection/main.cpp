@@ -8,8 +8,7 @@
 #include <Ray/Utils/RException.h>
 #include <Ray/Utils/RLogger.h>
 #include <Ray/Graphics/Images/RTexture2D.h>
-
-#include <Ray/Shading/Flat/RFlatColorMaterial.h>
+#include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
 
 #include <Ray/Components/RMesh.h>
 #include <Ray/Components/RMeshRenderer.h>
@@ -41,25 +40,6 @@ public:
 };
 
 
-class CustomMaterial : public Ray::Material
-{
-public:
-	CustomMaterial()
-	{
-		Ray::GraphicsPipeline::Layout pipelineLayout{};
-		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
-		pipelineLayout.shader = Ray::Shader::FromCompiled(
-			{ "Resources/Shaders/Flat_Col.vert.spv", "Resources/Shaders/Flat_Col.frag.spv" });
-		// pipelineLayout.shader = Ray::Shader::FromGlsl(
-		//	{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" });
-
-		m_GraphicsPipeline = Ray::Codex::Resolve<Ray::GraphicsPipeline>(std::move(pipelineLayout));
-	}
-
-	virtual ~CustomMaterial() {}
-};
-
-
 class App : public Ray::Engine
 {
 public:
@@ -69,12 +49,14 @@ public:
 
 #include "../ImGuiWindows.inl"
 
-		// Ray::GraphicsPipeline::Layout layout{};
-		// layout.cullMode = VK_CULL_MODE_NONE;
-		// auto material = Ray::MakeRef<Ray::FlatColorMaterial>(
-		//	Ray::FlatColorMaterial::Layout{}, std::move(layout));
+		auto pipeline = Ray::GraphicsPipeline::Builder()
+							.SetShader(Ray::Shader::Acquire({ "Resources/Shaders/Flat_Col.vert",
+								"Resources/Shaders/Flat_Col.frag" }))
+							.SetCullMode(VK_CULL_MODE_NONE)
+							.Acquire();
 
-		auto material = Ray::MakeRef<CustomMaterial>();
+		auto material =
+			Ray::Material::Builder(pipeline).Set("Shading.color", Ray::Float4{ 1.0f }).Acquire();
 
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(material));

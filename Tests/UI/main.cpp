@@ -24,7 +24,6 @@
 
 #include <Ray/UI/RImGui.h>
 #include <Ray/Graphics/Text/RFont.h>
-#include <Ray/Shading/Flat/RFlatTextMaterial.h>
 #include <Ray/UI/RButton.h>
 
 #include <../../Extern/imgui/imgui.h>
@@ -57,6 +56,10 @@ class App :
 {
 public:
 	App()
+		: Ray::EventListener<Ray::HoverEnterEvent>(Ray::Window::Get()),
+		  Ray::EventListener<Ray::HoverLeaveEvent>(Ray::Window::Get()),
+		  Ray::EventListener<Ray::MouseButtonPressedEvent>(Ray::Window::Get()),
+		  Ray::EventListener<Ray::MouseButtonReleasedEvent>(Ray::Window::Get())
 	{
 		Ray::Scene::Create<Scene>();
 
@@ -86,26 +89,30 @@ public:
 		//	ImGui::End();
 		//});
 
-		Ray::ImGUI::Get().RegisterNewFrameFunction([this]() {
-			ImGui::Begin("FontTransform");
+		Ray::ImGUI::Get().RegisterNewFrameFunction(
+			[this]()
+			{
+				ImGui::Begin("FontTransform");
 
-			Ray::Transform& tform = m_TextEntity.Get<Ray::Transform>();
-			tform.SetTranslation(Ray::ImGUI::Float3Widget("Transform", tform.Translation()));
-			tform.SetRotation(Ray::ImGUI::Float3Widget("Rotation", tform.Rotation()));
-			tform.SetScale(Ray::ImGUI::Float3Widget("Scale", tform.Scale()));
+				Ray::Transform& tform = m_TextEntity.Get<Ray::Transform>();
+				tform.SetTranslation(Ray::ImGUI::Float3Widget("Transform", tform.Translation()));
+				tform.SetRotation(Ray::ImGUI::Float3Widget("Rotation", tform.Rotation()));
+				tform.SetScale(Ray::ImGUI::Float3Widget("Scale", tform.Scale()));
 
-			ImGui::End();
-		});
+				ImGui::End();
+			});
 
 		auto font = Ray::Font::AcquireTTF("Resources/Fonts/Courier-Prime/Courier Prime.ttf", 48);
-		auto flatTextMaterial = Ray::MakeRef<Ray::FlatTextMaterial>(
-			Ray::FlatTextMaterial::Layout{ "Hello World", font, { 1.0f, 1.0f, 1.0f, 1.0f } });
 
-		m_TextEntity = Scene::Get().CreateEntity();
-		m_TextEntity.Emplace<Ray::TextRenderer>(flatTextMaterial);
 
-		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
+		// auto flatTextMaterial = Ray::MakeRef<Ray::FlatTextMaterial>(
+		// 	Ray::FlatTextMaterial::Layout{ "Hello World", font, { 1.0f, 1.0f, 1.0f, 1.0f } });
+
+		// m_TextEntity = Scene::Get().CreateEntity();
+		// m_TextEntity.Emplace<Ray::TextRenderer>(flatTextMaterial);
+
+		// Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+		// 	Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:

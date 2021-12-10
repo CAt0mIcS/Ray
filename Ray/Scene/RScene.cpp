@@ -2,6 +2,7 @@
 
 #include "REntity.h"
 #include "RScene.h"
+#include "RCamera.h"
 #include "Utils/RException.h"
 #include "Utils/RLogger.h"
 

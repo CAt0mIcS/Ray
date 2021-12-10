@@ -7,6 +7,8 @@
 #include "../Graphics/Core/RSharedBindable.h"
 #include "../Events/REventDispatcher.h"
 #include "../Utils/RThreadPool.h"
+
+#include "RCamera.h"
 #include "REntity.h"
 
 #include <concepts>

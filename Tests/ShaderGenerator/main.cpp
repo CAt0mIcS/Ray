@@ -8,8 +8,8 @@
 #include <Ray/Utils/RException.h>
 #include <Ray/Utils/RLogger.h>
 #include <Ray/Graphics/Images/RTexture2D.h>
-
-#include <Ray/Shading/Flat/RFlatColorMaterial.h>
+#include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
+#include <Ray/Graphics/Pipelines/Shader/RShader.h>
 
 #include <Ray/Components/RMesh.h>
 #include <Ray/Components/RMeshRenderer.h>
@@ -90,41 +90,45 @@ public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
-		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+		Ray::ImGUI::Get().RegisterNewFrameFunction(
+			[&]()
 			{
-				ImGui::Begin("TestEntity");
+				{
+					ImGui::Begin("TestEntity");
 
-				Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
+					Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
 
-				Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
-				Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
-				Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
+					Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
+					Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
+					Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
 
-				Ray::ImGUI::Float3Widget("Translation", translation);
-				Ray::ImGUI::Float3Widget("Rotation", rotation);
-				Ray::ImGUI::Float3Widget("Scale", scale);
-				ImGui::Spacing();
+					Ray::ImGUI::Float3Widget("Translation", translation);
+					Ray::ImGUI::Float3Widget("Rotation", rotation);
+					Ray::ImGUI::Float3Widget("Scale", scale);
+					ImGui::Spacing();
 
-				tform.RecalculateCachedMatrix();
+					tform.RecalculateCachedMatrix();
 
-				ImGui::End();
-			}
-		});
+					ImGui::End();
+				}
+			});
 
-		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+		Ray::ImGUI::Get().RegisterNewFrameFunction(
+			[&]()
 			{
-				ImGui::Begin("ColorPicker");
+				{
+					ImGui::Begin("ColorPicker");
 
-				float col[4] = { m_Color.x, m_Color.y, m_Color.z, m_Color.w };
-				ImGui::ColorPicker4("TextureColor", col);
-				m_Color.x = col[0];
-				m_Color.y = col[1];
-				m_Color.z = col[2];
-				m_Color.w = col[3];
+					float col[4] = { m_Color.x, m_Color.y, m_Color.z, m_Color.w };
+					ImGui::ColorPicker4("TextureColor", col);
+					m_Color.x = col[0];
+					m_Color.y = col[1];
+					m_Color.z = col[2];
+					m_Color.w = col[3];
 
-				ImGui::End();
-			}
-		});
+					ImGui::End();
+				}
+			});
 
 		m_Texture = Ray::MakeRef<Ray::Texture2D>("Resources/Textures/gridbase.png");
 
@@ -135,21 +139,20 @@ public:
 		rootNodes.insert(rootNodes.begin(), fsRootNodes.begin(), fsRootNodes.end());
 		fsRootNodes.clear();
 
-		Ray::FlatColorMaterial::Layout layout{};
+		auto pipeline =
+			Ray::GraphicsPipeline::Builder()
+				.SetShader(Ray::Shader::Acquire({ "Resources/Shaders/Generated/VertexShader.vert",
+					"Resources/Shaders/Generated/VertexShader.frag" }))
+				.SetCullMode(VK_CULL_MODE_NONE)
+				.Acquire();
 
-		Ray::GraphicsPipeline::Layout pipelineLayout{};
-		pipelineLayout.cullMode = VK_CULL_MODE_NONE;
-		pipelineLayout.shader =
-			Ray::Shader::FromGlsl({ "Resources/Shaders/Generated/VertexShader.vert",
-				"Resources/Shaders/Generated/FragmentShader.frag" });
 
-		Ray::Ref<Ray::Material> material =
-			Ray::MakeRef<Ray::FlatColorMaterial>(layout, pipelineLayout);
+		m_Material = Ray::Material::Builder(pipeline).Acquire();
 
 		m_Entity = Ray::Scene::Get().CreateEntity();
-		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
-		auto& renderer = m_Entity.Emplace<Ray::MeshRenderer>(material, false);
-		generator.AddUniforms(renderer);
+		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(m_Material));
+		auto& renderer = m_Entity.Emplace<Ray::MeshRenderer>(m_Material);
+		// generator.AddUniforms(renderer);
 
 		Ray::Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
@@ -160,7 +163,10 @@ public:
 private:
 	void Update() override
 	{
-		m_Entity.Get<Ray::MeshRenderer>().GetBufferUniform("Shading")["color"] = m_Color;
+		static Ray::Float4 prevColor;
+		if (prevColor != m_Color)
+			m_Material->Set("Shading.color", m_Color);
+		prevColor = m_Color;
 	}
 
 	std::vector<Ray::Ref<Ray::Node>> GenerateVertexShader(Ray::ShaderGenerator& generator)
@@ -248,6 +254,7 @@ private:
 	Ray::Entity m_Entity;
 	Ray::Ref<Ray::Texture2D> m_Texture;
 	Ray::Float4 m_Color{ 1.0f, 1.0f, 1.0f, 1.0f };
+	Ray::Ref<Ray::Material> m_Material;
 };
 
 

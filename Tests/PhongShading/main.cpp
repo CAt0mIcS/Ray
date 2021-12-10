@@ -14,11 +14,9 @@
 #include <Ray/Graphics/Images/RTexture2D.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
+#include <Ray/Graphics/Pipelines/Shader/RShader.h>
 #include <Ray/Utils/RException.h>
 #include <Ray/Core/RDynamicVertex.h>
-
-#include <Ray/Shading/Phong/RPhongMaterial.h>
-#include <Ray/Shading/Flat/RFlatColorMaterial.h>
 
 #include <Ray/Scene/RScene.h>
 #include <Ray/Scene/RCamera.h>
@@ -55,60 +53,68 @@ public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
-		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+		Ray::ImGUI::Get().RegisterNewFrameFunction(
+			[&]()
 			{
-
-				auto translate = [](Ray::Transform& tform) {
-					Ray::Float3 newTranslation =
-						Ray::ImGUI::Float3Widget("Translation", tform.Translation());
-					Ray::Float3 newRotation =
-						Ray::ImGUI::Float3Widget("Rotation", tform.Rotation());
-					Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
-
-					if (newTranslation != tform.Translation())
-						tform.SetTranslation(newTranslation);
-					if (newRotation != tform.Rotation())
-						tform.SetRotation(newRotation);
-					if (newScale != tform.Scale())
-						tform.SetScale(newScale);
-				};
-
-				ImGui::Begin("Transforms");
 				{
-					ImGui::Begin("Entity");
-					Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
-					translate(tform);
-					ImGui::Spacing();
+
+					auto translate = [](Ray::Transform& tform)
+					{
+						Ray::Float3 newTranslation =
+							Ray::ImGUI::Float3Widget("Translation", tform.Translation());
+						Ray::Float3 newRotation =
+							Ray::ImGUI::Float3Widget("Rotation", tform.Rotation());
+						Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
+
+						if (newTranslation != tform.Translation())
+							tform.SetTranslation(newTranslation);
+						if (newRotation != tform.Rotation())
+							tform.SetRotation(newRotation);
+						if (newScale != tform.Scale())
+							tform.SetScale(newScale);
+					};
+
+					ImGui::Begin("Transforms");
+					{
+						ImGui::Begin("Entity");
+						Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
+						translate(tform);
+						ImGui::Spacing();
+						ImGui::End();
+					}
+					{
+						ImGui::Begin("Light");
+						Ray::Transform& tform = m_Light.Get<Ray::Transform>();
+						translate(tform);
+						ImGui::Spacing();
+						ImGui::End();
+					}
+
 					ImGui::End();
 				}
-				{
-					ImGui::Begin("Light");
-					Ray::Transform& tform = m_Light.Get<Ray::Transform>();
-					translate(tform);
-					ImGui::Spacing();
-					ImGui::End();
-				}
-
-				ImGui::End();
-			}
-		});
+			});
 
 		// RAY_TODO: Fix matrix not being recalculated at the beginning
 
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 
-		auto flatWhiteMaterial = Ray::MakeRef<Ray::FlatColorMaterial>(
-			Ray::FlatColorMaterial::Layout{ { 1.0f, 1.0f, 1.0f, 1.0f } });
+		auto pipeline = Ray::GraphicsPipeline::Builder()
+							.SetShader(Ray::Shader::Acquire({ "Resources/Shaders/Flat_Col.vert",
+								"Resources/Shaders/Flat_Col.frag" }))
+							.Acquire();
+
+		auto flatWhiteMaterial = Ray::Material::Builder(pipeline)
+									 .Set("Shading.color", Ray::Float4{ 1.0f, 1.0f, 1.0f, 1.0f })
+									 .Acquire();
+
 		m_Light = Scene::Get().CreateEntity();
 		m_Light.Emplace<Ray::Mesh>(
 			Ray::Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", flatWhiteMaterial));
-		m_Light.Get<Ray::MeshRenderer>().GetBufferUniform("Shading")["color"] =
-			flatWhiteMaterial->GetColor();
 		m_Light.Get<Ray::Transform>().SetScale(Ray::Float3(0.4f));
 
 		// Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-		//	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
+		// 	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:

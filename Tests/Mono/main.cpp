@@ -17,9 +17,6 @@
 #include <Ray/Utils/RException.h>
 #include <Ray/Core/RDynamicVertex.h>
 
-#include <Ray/Shading/Phong/RPhongMaterial.h>
-#include <Ray/Shading/Flat/RFlatColorMaterial.h>
-
 #include <Ray/Scene/RScene.h>
 #include <Ray/Scene/RCamera.h>
 
@@ -54,44 +51,48 @@ public:
 class App : public Ray::Engine, Ray::EventListener<Ray::MouseButtonPressedEvent>
 {
 public:
-	App()
+	App() : Ray::EventListener<Ray::MouseButtonPressedEvent>(Ray::Window::Get())
 	{
 		Ray::Scene::Create<Scene>();
-		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+		Ray::ImGUI::Get().RegisterNewFrameFunction(
+			[&]()
 			{
-				ImGui::Begin("TestEntity");
+				{
+					ImGui::Begin("TestEntity");
 
-				Ray::Transform& tform = m_Entities[0].Get<Ray::Transform>();
+					Ray::Transform& tform = m_Entities[0].Get<Ray::Transform>();
 
-				Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
-				Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
-				Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
+					Ray::Float3& translation = const_cast<Ray::Float3&>(tform.Translation());
+					Ray::Float3& rotation = const_cast<Ray::Float3&>(tform.Rotation());
+					Ray::Float3& scale = const_cast<Ray::Float3&>(tform.Scale());
 
-				Ray::ImGUI::Float3Widget("Translation", translation);
-				Ray::ImGUI::Float3Widget("Rotation", rotation);
-				Ray::ImGUI::Float3Widget("Scale", scale);
-				ImGui::Spacing();
+					Ray::ImGUI::Float3Widget("Translation", translation);
+					Ray::ImGUI::Float3Widget("Rotation", rotation);
+					Ray::ImGUI::Float3Widget("Scale", scale);
+					ImGui::Spacing();
 
-				tform.RecalculateCachedMatrix();
+					tform.RecalculateCachedMatrix();
 
-				ImGui::End();
-			}
-		});
-		Ray::ImGUI::Get().RegisterNewFrameFunction([&]() {
+					ImGui::End();
+				}
+			});
+		Ray::ImGUI::Get().RegisterNewFrameFunction(
+			[&]()
 			{
-				ImGui::Begin("Camera");
+				{
+					ImGui::Begin("Camera");
 
-				ImGui::SliderFloat(
-					"Rotation Speed", &Scene::Get().GetCamera().RotationSpeed, 0.0f, 100.0f);
-				ImGui::SliderFloat(
-					"Movement Speed", &Scene::Get().GetCamera().MovementSpeed, 0.1f, 100.0f);
+					ImGui::SliderFloat(
+						"Rotation Speed", &Scene::Get().GetCamera().RotationSpeed, 0.0f, 100.0f);
+					ImGui::SliderFloat(
+						"Movement Speed", &Scene::Get().GetCamera().MovementSpeed, 0.1f, 100.0f);
 
-				Ray::ImGUI::Float3Widget("Camera Position", Scene::Get().GetCamera().Position);
-				Ray::ImGUI::Float3Widget("Camera Rotation", Scene::Get().GetCamera().Rotation);
+					Ray::ImGUI::Float3Widget("Camera Position", Scene::Get().GetCamera().Position);
+					Ray::ImGUI::Float3Widget("Camera Rotation", Scene::Get().GetCamera().Rotation);
 
-				ImGui::End();
-			}
-		});
+					ImGui::End();
+				}
+			});
 
 		// RAY_TODO: Fix matrix not being recalculated at the beginning
 		// auto sharedMaterial = Ray::MakeRef<Ray::FlatColorMaterial>();
