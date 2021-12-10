@@ -25,6 +25,10 @@ namespace At0::Ray
 		m_PerSceneUniform = &GetBufferUniform(UniformBlockTag::PerSceneData);
 
 		SetMaterialData();
+
+		// Set Camera data
+		CameraChangedEvent e{};
+		OnEvent(e);
 	}
 
 	void MeshRenderer::Render(const CommandBuffer& cmdBuff) const
@@ -33,15 +37,6 @@ namespace At0::Ray
 		//		GetEntity().Get<Transform>().Translation(), 1.0f /*radius*/))
 		//	return;
 		RAY_DEBUG_FLAG(m_Name = GetEntity().Get<Mesh>().GetName());
-
-		if (m_IsCameraDirty)
-		{
-			m_IsCameraDirty = false;
-			(*m_PerSceneUniform)["View"] = Scene::Get().GetCamera().ShaderData.View;
-			(*m_PerSceneUniform)["Proj"] = Scene::Get().GetCamera().ShaderData.Projection;
-			if (m_PerSceneUniform->Has("ViewPos"))
-				(*m_PerSceneUniform)["ViewPos"] = Scene::Get().GetCamera().ShaderData.ViewPos;
-		}
 
 		m_Material->CmdBind(cmdBuff);
 
@@ -139,5 +134,13 @@ namespace At0::Ray
 	void MeshRenderer::OnEvent(MaterialBecameDirtyEvent& e)
 	{
 		UpdateMaterialData(e.dataPath, e.uType);
+	}
+
+	void MeshRenderer::OnEvent(CameraChangedEvent& e)
+	{
+		(*m_PerSceneUniform)["View"] = Scene::Get().GetCamera().ShaderData.View;
+		(*m_PerSceneUniform)["Proj"] = Scene::Get().GetCamera().ShaderData.Projection;
+		if (m_PerSceneUniform->Has("ViewPos"))
+			(*m_PerSceneUniform)["ViewPos"] = Scene::Get().GetCamera().ShaderData.ViewPos;
 	}
 }  // namespace At0::Ray

@@ -38,7 +38,7 @@
 #include "UI/RImGui.h"
 
 
-#define RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING 0
+#define RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING 1
 
 
 namespace At0::Ray
@@ -253,9 +253,16 @@ namespace At0::Ray
 		vkCmdSetScissor(cmdBuff, 0, 1, &m_Scissor);
 
 		// Scene::Get().CmdBind(cmdBuff);
-		Scene::Get().EntityView<MeshRenderer>().each(
-			[&cmdBuff](MeshRenderer& mesh) { mesh.Render(cmdBuff); });
-		Scene::Get().EntityView<Mesh>().each([&cmdBuff](Mesh& mesh) { mesh.CmdBind(cmdBuff); });
+
+		auto meshRendererView = Scene::Get().GetRegistry().group<MeshRenderer>(entt::get<Mesh>);
+		for (uint32_t i = 0; i < meshRendererView.size(); ++i)
+		{
+			const auto& [meshRenderer, mesh] =
+				meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
+			meshRenderer.Render(cmdBuff);
+			mesh.CmdBind(cmdBuff);
+		}
+
 		// Scene::Get().EntityView<TextRenderer>().each(
 		//	[&cmdBuff](TextRenderer& text) { text.Render(cmdBuff); });
 

@@ -59,7 +59,7 @@ namespace At0::Ray
 		void UpdateUniform(const std::string& dataPath, bool isPushConstant = false);
 
 		virtual void OnEvent(MaterialBecameDirtyEvent& e) override;
-		virtual void OnEvent(CameraChangedEvent& e) override { m_IsCameraDirty = true; }
+		virtual void OnEvent(CameraChangedEvent& e) override;
 
 	private:
 		/**
@@ -72,7 +72,6 @@ namespace At0::Ray
 		 * scene data in the mesh renderer as well
 		 */
 		BufferUniform* m_PerSceneUniform;
-		mutable bool m_IsCameraDirty = true;
 
 		RAY_DEBUG_FLAG(mutable std::string m_Name);
 	};

@@ -20,7 +20,7 @@ namespace At0::Ray
 		Skybox(Entity entity, Ref<TextureCubemap> texture);
 
 	private:
-		void OnEvent(CameraChangedEvent& e);
+		virtual void OnEvent(CameraChangedEvent& e) override;
 	};
 }  // namespace At0::Ray
 

@@ -6,6 +6,7 @@
 #include "Graphics/Images/RTexture2D.h"
 #include "Graphics/RCodex.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
+#include "Shading/RMaterial.h"
 
 #include "RException.h"
 
@@ -18,7 +19,7 @@
 #include "Scene/RScene.h"
 #include "Core/RTime.h"
 
-#define RAY_MULTITHREADED_IMPORT 0
+#define RAY_MULTITHREADED_IMPORT 1
 
 
 namespace At0::Ray
@@ -35,6 +36,7 @@ namespace At0::Ray
 		static constexpr const char* Emission = "_Emi";
 		static constexpr const char* Color = "_Col";
 	};
+
 
 	Model::Model(std::string_view filepath, Ref<Material> material)
 	{
@@ -147,7 +149,6 @@ namespace At0::Ray
 			m_VertexData.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
 			m_VertexData.indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
 			m_VertexData.material = std::move(material);
-			m_VertexData.name = meshTag;
 			m_ParentSet = true;
 		}
 		// Children
@@ -156,12 +157,11 @@ namespace At0::Ray
 			Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
 			Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
 
-			// HierachyComponent added by mesh
+			// ParentEntity component added by mesh
 			Entity entity = Scene::Get().CreateEntity();
 			Ray::MeshRenderer& meshRenderer =
 				entity.Emplace<Ray::MeshRenderer>(std::move(material));
-			entity.Emplace<Ray::Mesh>(
-				Mesh::VertexData{ vertexBuffer, indexBuffer, nullptr, {}, meshTag });
+			entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
 			m_VertexData.children.emplace_back(entity);
 		}
 	}
