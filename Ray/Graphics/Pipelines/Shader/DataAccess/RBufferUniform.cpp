@@ -1,6 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RBufferUniform.h"
 
+#include "Graphics/Commands/RCommandBuffer.h"
 #include "../../Shader/RShader.h"
 #include "../../RPipeline.h"
 #include "Utils/RAssert.h"
@@ -10,7 +11,7 @@
 namespace At0::Ray
 {
 	BufferUniform::BufferUniform(std::string_view name, ShaderStage stage, const Pipeline& pipeline)
-		: m_Name(name)
+		: m_Name(name), m_ShaderStage(stage)
 	{
 		RAY_MEXPECTS(pipeline.GetShader().GetReflection(stage).HasUniformBlock(name),
 			"[BufferUniform] Uniform \"{0}\" was not found in shader stage \"{1}\"", name,
@@ -63,6 +64,14 @@ namespace At0::Ray
 		return std::find_if(m_UniformInBlockOffsets.begin(), m_UniformInBlockOffsets.end(),
 				   [&name](const auto& r)
 				   { return r.first == name; }) != m_UniformInBlockOffsets.end();
+	}
+
+	void BufferUniform::CmdBindAsPushConstant(
+		const CommandBuffer& cmdBuff, VkPipelineLayout pipelineLayout) const
+	{
+		vkCmdPushConstants(cmdBuff, pipelineLayout, (VkShaderStageFlags)m_ShaderStage, 0,
+			m_UniformBuffer->GetSize(),
+			((char*)m_UniformBuffer->GetBuffer().GetMapped()) + m_UniformBuffer->GetOffset());
 	}
 
 	void BufferUniform::Setup(uint32_t bufferSize)

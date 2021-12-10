@@ -8,6 +8,7 @@ namespace At0::Ray
 {
 	class Pipeline;
 	class Buffer;
+	class CommandBuffer;
 	enum class ShaderStage;
 
 	class RAY_EXPORT BufferUniform
@@ -54,6 +55,11 @@ namespace At0::Ray
 		uint32_t GetOffset() const { return m_UniformBuffer->GetOffset(); }
 
 		/**
+		 * @returns Shader stage of this uniform
+		 */
+		ShaderStage GetShaderStage() const { return m_ShaderStage; }
+
+		/**
 		 * @returns Buffer where the uniform data is stored
 		 */
 		DynamicUniformBuffer& GetUniformBuffer() { return *m_UniformBuffer; }
@@ -89,6 +95,13 @@ namespace At0::Ray
 		 */
 		bool Has(const std::string& name);
 
+		/**
+		 * If this buffer uniform represents a push constant the function will bind it to the
+		 * command buffer
+		 */
+		void CmdBindAsPushConstant(
+			const CommandBuffer& cmdBuff, VkPipelineLayout pipelineLayout) const;
+
 	private:
 		void Setup(uint32_t bufferSize);
 
@@ -103,5 +116,7 @@ namespace At0::Ray
 
 		// Keeps track of all the uniforms in a uniform block and their offset in the block
 		std::vector<std::pair<std::string, uint32_t>> m_UniformInBlockOffsets;
+
+		ShaderStage m_ShaderStage;
 	};
 }  // namespace At0::Ray

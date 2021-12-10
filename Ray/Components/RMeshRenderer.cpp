@@ -13,9 +13,6 @@
 
 #include "Utils/RException.h"
 
-// RAY_TODO: Remove
-#include "Graphics/Commands/RCommandBuffer.h"
-
 
 namespace At0::Ray
 {
@@ -50,17 +47,9 @@ namespace At0::Ray
 		for (const auto& descSet : m_DescriptorSets)
 			descSet.CmdBind(cmdBuff);
 
-		struct PushConstants
-		{
-			VkBool32 useColor;
-			VkBool32 useTexture;
-		};
-
-		PushConstants pushConstants{ m_Material->Get<VkBool32>("Constants.useColor"),
-			m_Material->Get<VkBool32>("Constants.useTexture") };
-
-		vkCmdPushConstants(cmdBuff, m_Material->GetGraphicsPipeline().GetLayout(),
-			VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstants), &pushConstants);
+		for (const auto& pushConstant : m_PushConstants)
+			pushConstant.CmdBindAsPushConstant(
+				cmdBuff, m_Material->GetGraphicsPipeline().GetLayout());
 	}
 
 	void MeshRenderer::Update()
@@ -87,13 +76,14 @@ namespace At0::Ray
 		{
 			for (const auto& uBlockData : reflection.GetUniformBlocks())
 			{
-				if (uBlockData.type == UniformType::Push ||
-					!m_Material->HasUniformBlock(uBlockData.name))
+				if (!m_Material->HasUniformBlock(uBlockData.name))
 					continue;
+
 				for (const auto& uniform : uBlockData.uniforms)
 				{
 					if (m_Material->HasUniform(uniform.name))
-						UpdateUniform(uBlockData.name + '.' + uniform.name);
+						UpdateUniform(uBlockData.name + '.' + uniform.name,
+							uBlockData.type == UniformType::Push);
 				}
 			}
 
