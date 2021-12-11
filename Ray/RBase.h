@@ -13,9 +13,9 @@
 #define ENTT_API RAY_EXPORT
 
 #ifndef NDEBUG
-	#define RAY_DEBUG_FLAG(x) x
+	#define RAY_DEBUG_FLAG(...) __VA_ARGS__
 #else
-	#define RAY_DEBUG_FLAG(x)
+	#define RAY_DEBUG_FLAG(...)
 #endif
 
 // Export some entt symbols. Specialization is not exported for some reason... (RAY_TODO)

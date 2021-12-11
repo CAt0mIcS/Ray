@@ -19,7 +19,7 @@ namespace At0::Ray
 {
 	Mesh::Mesh(Entity entity, Mesh::VertexData vertexData)
 		: Component(entity), m_VertexBuffer(std::move(vertexData.vertexBuffer)),
-		  m_IndexBuffer(std::move(vertexData.indexBuffer)), RAY_DEBUG_FLAG(m_Name(vertexData.name))
+		  m_IndexBuffer(std::move(vertexData.indexBuffer)) RAY_DEBUG_FLAG(, m_Name(vertexData.name))
 	{
 		if (vertexData.material)
 			if (!GetEntity().Has<MeshRenderer>())
@@ -51,16 +51,20 @@ namespace At0::Ray
 	{
 		IndexedTriangleList mesh =
 			IndexedTriangleList::Triangle(material->GetGraphicsPipeline().GetShader());
-		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {}, mesh.uniqueTag };
+		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
+									 mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
+			RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::VertexData Mesh::Plane(Ref<Material> material)
 	{
 		IndexedTriangleList mesh =
 			IndexedTriangleList::Plane(material->GetGraphicsPipeline().GetShader());
-		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {}, mesh.uniqueTag };
+		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
+									 mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
+			RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::VertexData Mesh::Import(std::string_view filepath, Ref<Material> material)

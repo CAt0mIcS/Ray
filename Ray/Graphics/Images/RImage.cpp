@@ -142,7 +142,7 @@ namespace At0::Ray
 		VkSubresourceLayout subResourceLayout;
 		vkGetImageSubresourceLayout(
 			Graphics::Get().GetDevice(), dstImage, &subResource, &subResourceLayout);
-		const char* data;
+		const char* data = nullptr;
 		vkMapMemory(Graphics::Get().GetDevice(), dstImage.GetImageMemory(), 0, VK_WHOLE_SIZE, 0,
 			(void**)&data);
 		data += subResourceLayout.offset;
@@ -243,6 +243,7 @@ namespace At0::Ray
 		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
 			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+			break;
 		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
 			barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 			destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;

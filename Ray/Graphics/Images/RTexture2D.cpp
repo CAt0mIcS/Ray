@@ -28,12 +28,12 @@ namespace At0::Ray
 			std::move(extent), format, tiling, usage, memProps, imageAspect);
 	}
 
-	Texture2D::Texture2D(std::string_view filepath) : RAY_DEBUG_FLAG(m_FilePath(filepath))
+	Texture2D::Texture2D(std::string_view filepath) RAY_DEBUG_FLAG( : m_FilePath(filepath))
 	{
 		int texWidth, texHeight, texChannels;
 		stbi_uc* pixels =
 			stbi_load(filepath.data(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-		VkDeviceSize imageSize = texWidth * texHeight * 4;
+		VkDeviceSize imageSize = (VkDeviceSize)texWidth * texHeight * 4;
 
 		if (!pixels)
 			ThrowRuntime("[Texture2D] Failed to load texture from file \"{0}\"", filepath);
