@@ -11,6 +11,7 @@
 #include "../Events/REventDispatcher.h"
 #include "../Events/RMouseEvents.h"
 #include "../Events/RKeyboardEvents.h"
+#include "../Events/RCustomEvents.h"
 #include "../Core/RTime.h"
 #include "../Core/RMath.h"
 #include "../Core/RFrustum.h"
@@ -19,12 +20,6 @@
 namespace At0::Ray
 {
 	class BufferUniform;
-
-	class RAY_EXPORT CameraChangedEvent
-	{
-	public:
-		CameraChangedEvent() = default;
-	};
 
 	class RAY_EXPORT Camera :
 		public EventDispatcher<CameraChangedEvent>,

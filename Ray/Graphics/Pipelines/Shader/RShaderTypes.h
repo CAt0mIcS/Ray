@@ -19,6 +19,29 @@ namespace At0::Ray
 		Bool
 	};
 
+	/**
+	 * Specifies the different types of shader uniform inputs
+	 */
+	enum class UniformType
+	{
+		None,
+		UniformBuffer,
+		CombinedImageSampler,
+		Storage,
+		Push
+	};
+
+	enum class ShaderStage
+	{
+		Vertex = VK_SHADER_STAGE_VERTEX_BIT,
+		TesselationControl = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,
+		TesselationEvaluation = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT,
+		Geometry = VK_SHADER_STAGE_GEOMETRY_BIT,
+		Fragment = VK_SHADER_STAGE_FRAGMENT_BIT,
+		Compute = VK_SHADER_STAGE_COMPUTE_BIT,
+		All = VK_SHADER_STAGE_ALL
+	};
+
 	inline uint32_t GetShaderDataTypeSize(ShaderDataType type)
 	{
 		switch (type)

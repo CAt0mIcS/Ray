@@ -93,8 +93,8 @@ namespace At0::Ray
 			"[Renderer] BufferUniform \"{0}\" already added", name);
 
 		// Create buffer uniform
-		BufferUniform& uniform =
-			m_BufferUniforms[set].emplace_back(name, stage, m_Material->GetGraphicsPipeline());
+		BufferUniform& uniform = m_BufferUniforms[set].emplace_back(
+			name.data(), stage, m_Material->GetGraphicsPipeline());
 		pDescriptor->BindUniform(uniform);
 
 		return uniform;
@@ -136,7 +136,7 @@ namespace At0::Ray
 
 		// Create buffer uniform
 		Sampler2DUniform& uniform = m_Sampler2DUniforms[set].emplace_back(
-			name, stage, texture, m_Material->GetGraphicsPipeline());
+			name.data(), stage, texture, m_Material->GetGraphicsPipeline());
 		if (texture)
 			pDescriptor->BindUniform(uniform);
 

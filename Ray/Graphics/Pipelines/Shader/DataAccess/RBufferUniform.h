@@ -1,7 +1,14 @@
 ﻿#pragma once
 
 #include "../../../../RBase.h"
-#include "../../../Buffers/Dynamic/RDynamicUniformBuffer.h"
+#include "../RShaderTypes.h"
+#include "../../../Buffers/Dynamic/RDynamicBufferAccess.h"
+
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+#include <vulkan/vulkan_core.h>
 
 
 namespace At0::Ray
@@ -9,35 +16,17 @@ namespace At0::Ray
 	class Pipeline;
 	class Buffer;
 	class CommandBuffer;
+	class DynamicUniformBuffer;
 	enum class ShaderStage;
 
 	class RAY_EXPORT BufferUniform
 	{
 	public:
-		class AccessType
-		{
-		public:
-			AccessType(DynamicBuffer* pBuffer, uint32_t offsetInUniformBlock)
-				: m_Buffer(pBuffer), m_OffsetInUniformBlock(offsetInUniformBlock)
-			{
-			}
-
-			template<typename T>
-			AccessType& operator=(T&& data)
-			{
-				m_Buffer->Update(data, m_OffsetInUniformBlock);
-				return *this;
-			}
-
-		private:
-			DynamicBuffer* m_Buffer;
-			uint32_t m_OffsetInUniformBlock;
-		};
-
-	public:
 		BufferUniform(std::string_view name, ShaderStage stage, const Pipeline& pipeline);
 		BufferUniform(std::string_view name, uint32_t binding, uint32_t size,
 			std::unordered_map<std::string, uint32_t> uniformInBlockOffsets);
+
+		~BufferUniform();
 
 		/**
 		 * @returns Name of the uniform block
@@ -52,7 +41,7 @@ namespace At0::Ray
 		/**
 		 * @returns Global offset in the single global uniform buffer
 		 */
-		uint32_t GetOffset() const { return m_UniformBuffer->GetOffset(); }
+		uint32_t GetOffset() const;
 
 		/**
 		 * @returns Shader stage of this uniform
@@ -68,13 +57,13 @@ namespace At0::Ray
 		/**
 		 * @returns Size in bytes of the uniform block
 		 */
-		uint32_t GetSize() const { return m_UniformBuffer->GetSize(); }
+		uint32_t GetSize() const;
 
 		/**
 		 * @param name Name of the uniform to update in the uniform block
 		 * @returns Assignable type to update uniforms in the uniform block
 		 */
-		AccessType operator[](const std::string& name);
+		DynamicBufferAccess operator[](const std::string& name);
 
 		/**
 		 * Writes data directly into the buffer
@@ -101,6 +90,9 @@ namespace At0::Ray
 		 */
 		void CmdBindAsPushConstant(
 			const CommandBuffer& cmdBuff, VkPipelineLayout pipelineLayout) const;
+
+		BufferUniform(BufferUniform&& other) noexcept;
+		BufferUniform& operator=(BufferUniform&& other) noexcept;
 
 	private:
 		void Setup(uint32_t bufferSize);

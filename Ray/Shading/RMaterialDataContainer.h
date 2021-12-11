@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../RBase.h"
-#include "../Graphics/Pipelines/Shader/RShaderDataTypes.h"
+#include "../Graphics/Pipelines/Shader/RShaderTypes.h"
 #include "../Core/RMath.h"
 
 #include <unordered_map>

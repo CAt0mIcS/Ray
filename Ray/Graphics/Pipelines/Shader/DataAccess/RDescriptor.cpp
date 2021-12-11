@@ -3,14 +3,15 @@
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
-#include "../../RGraphicsPipeline.h"
+
 #include "Graphics/Commands/RCommandBuffer.h"
-#include "Graphics/Images/RTexture2D.h"
+#include "Graphics/Buffers/Dynamic/RDynamicUniformBuffer.h"
+
 #include "RBufferUniform.h"
 #include "RSampler2DUniform.h"
+#include "Graphics/Images/RTexture2D.h"
 
 #include "Utils/RException.h"
-#include "Utils/RLogger.h"
 
 
 namespace At0::Ray
@@ -69,7 +70,7 @@ namespace At0::Ray
 
 	void DescriptorSet::BindUniform(const Sampler2DUniform& uniform)
 	{
-		RAY_DEBUG_FLAG(m_TexturePath = uniform.GetTexture()->GetPath());
+		RAY_DEBUG_FLAG(m_Texture = uniform.GetTexture().get());
 
 		VkDescriptorImageInfo imageInfo{};
 		imageInfo.sampler = uniform.GetTexture()->GetSampler();
@@ -93,7 +94,7 @@ namespace At0::Ray
 	DescriptorSet& DescriptorSet::operator=(DescriptorSet&& other) noexcept
 	{
 		RAY_DEBUG_FLAG(m_UniformBound = other.m_UniformBound);
-		RAY_DEBUG_FLAG(m_TexturePath = std::move(other.m_TexturePath));
+		RAY_DEBUG_FLAG(m_Texture = other.m_Texture);
 
 		m_DescriptorSet = other.m_DescriptorSet;
 		m_SetNumber = other.m_SetNumber;

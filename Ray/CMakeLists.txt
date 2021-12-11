@@ -131,7 +131,7 @@ set(SRC
 	"Graphics/Pipelines/Shader/RShader.cpp"
 	"Graphics/Pipelines/Shader/RShaderReflection.h"
 	"Graphics/Pipelines/Shader/RShaderReflection.cpp"
-	"Graphics/Pipelines/Shader/RShaderDataTypes.h"
+	"Graphics/Pipelines/Shader/RShaderTypes.h"
 	"Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
 	"Graphics/Pipelines/Shader/DataAccess/RDescriptor.cpp"
 	"Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
@@ -151,6 +151,8 @@ set(SRC
 	"Graphics/Buffers/RFramebuffer.cpp"
 	"Graphics/Buffers/Dynamic/RDynamicBuffer.h"
 	"Graphics/Buffers/Dynamic/RDynamicBuffer.cpp"
+	"Graphics/Buffers/Dynamic/RDynamicBufferAccess.h"
+	"Graphics/Buffers/Dynamic/RDynamicBufferAccess.cpp"
 	"Graphics/Buffers/Dynamic/RDynamicUniformBuffer.h"
 	"Graphics/Buffers/Dynamic/RDynamicUniformBuffer.cpp"
 
@@ -262,6 +264,7 @@ set(SRC
 	"Events/REngineEvents.h"
 	"Events/RMouseEvents.h"
 	"Events/RKeyboardEvents.h"
+	"Events/RCustomEvents.h"
 	"Events/REventDispatcher.h"
 	"Events/REventListener.h"
 

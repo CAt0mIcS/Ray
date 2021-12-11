@@ -11,7 +11,7 @@ namespace At0::Ray
 {
 	class BufferUniform;
 	class Sampler2DUniform;
-
+	RAY_DEBUG_FLAG(class Texture2D);
 
 	class DescriptorSet : NonCopyable
 	{
@@ -44,6 +44,6 @@ namespace At0::Ray
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
 
 		RAY_DEBUG_FLAG(bool m_UniformBound = false);
-		RAY_DEBUG_FLAG(std::string m_TexturePath);
+		RAY_DEBUG_FLAG(Texture2D* m_Texture);
 	};
 }  // namespace At0::Ray

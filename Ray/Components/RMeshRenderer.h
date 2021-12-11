@@ -4,10 +4,9 @@
 #include "RComponent.h"
 #include "Base/RRenderer.h"
 
-#include "../Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
-#include "../Shading/RMaterial.h"
-#include "../Scene/RCamera.h"
 #include "../Events/REventListener.h"
+#include "../Events/RCustomEvents.h"
+#include "../Graphics/Buffers/Dynamic/RDynamicBufferAccess.h"
 
 #include <vector>
 #include <unordered_map>
@@ -19,6 +18,7 @@ namespace At0::Ray
 	class CommandBuffer;
 	class Material;
 	class Texture2D;
+	class DynamicBufferAccess;
 	enum class ShaderStage;
 
 	/**
@@ -65,13 +65,13 @@ namespace At0::Ray
 		/**
 		 * Points to the buffer uniform in the unordered_map to make MeshRenderer::Update faster
 		 */
-		std::optional<BufferUniform::AccessType> m_PerObjectDataUniformRef;
+		DynamicBufferAccess m_PerObjectDataUniformRef;
 
 		/**
 		 * RAY_TEMPORARY: Due to pipeline mismatches, we'll (for now) have a descriptor set for
 		 * scene data in the mesh renderer as well
 		 */
-		BufferUniform* m_PerSceneUniform;
+		BufferUniform* m_PerSceneUniform = nullptr;
 
 		RAY_DEBUG_FLAG(mutable std::string m_Name);
 	};

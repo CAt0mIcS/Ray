@@ -5,6 +5,7 @@
 #include "RMaterialDataContainer.h"
 #include "../Graphics/Pipelines/Shader/RShaderReflection.h"
 #include "../Events/REventDispatcher.h"
+#include "../Events/RCustomEvents.h"
 
 #include <unordered_map>
 #include <vector>
@@ -38,12 +39,6 @@ namespace At0::Ray
 		static constexpr const char* HeightMapSampler = "samplerHeight";
 
 		static constexpr const char* Color = "color";
-	};
-
-	struct MaterialBecameDirtyEvent
-	{
-		const std::string& dataPath;
-		UniformType uType;
 	};
 
 	class RAY_EXPORT Material : public EventDispatcher<MaterialBecameDirtyEvent>

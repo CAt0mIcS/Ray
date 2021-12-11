@@ -9,6 +9,7 @@
 #include "Graphics/Pipelines/Shader/RShader.h"
 
 #include "Scene/RScene.h"
+#include "Shading/RMaterial.h"
 
 #include "RMesh.h"
 #include "RTransform.h"

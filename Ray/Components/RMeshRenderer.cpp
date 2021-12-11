@@ -5,11 +5,13 @@
 #include "RMesh.h"
 
 #include "Scene/RScene.h"
+#include "Scene/RCamera.h"
 #include "Shading/RMaterial.h"
+
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 #include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
-#include "Graphics/Images/RTexture2D.h"
+#include "Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
 
 #include "Utils/RException.h"
 
@@ -19,9 +21,9 @@ namespace At0::Ray
 	MeshRenderer::MeshRenderer(Entity entity, Ref<Material> material)
 		: Component(entity),
 		  Renderer(std::move(material)), EventListener<MaterialBecameDirtyEvent>(*m_Material),
-		  EventListener<CameraChangedEvent>(Scene::Get().GetCamera())
+		  EventListener<CameraChangedEvent>(Scene::Get().GetCamera()),
+		  m_PerObjectDataUniformRef(GetBufferUniform(UniformBlockTag::PerObjectData)["Model"])
 	{
-		m_PerObjectDataUniformRef = GetBufferUniform(UniformBlockTag::PerObjectData)["Model"];
 		m_PerSceneUniform = &GetBufferUniform(UniformBlockTag::PerSceneData);
 
 		SetMaterialData();
@@ -50,10 +52,6 @@ namespace At0::Ray
 
 	void MeshRenderer::Update()
 	{
-		RAY_MEXPECTS(m_PerObjectDataUniformRef,
-			"[MeshRenderer] Mandatory BufferUniform \"{0}\" was not added",
-			UniformBlockTag::PerObjectData);
-
 		if (auto& tform = GetEntity().Get<Transform>(); tform.HasChanged())
 		{
 			// RAY_TODO: Deleting entity while checking here! Threading error
@@ -61,7 +59,7 @@ namespace At0::Ray
 			//	(*m_PerObjectDataUniformRef) =
 			//		GetEntity().GetParent().Get<Transform>().AsMatrix() * tform.AsMatrix();
 			// else
-			(*m_PerObjectDataUniformRef) = tform.AsMatrix();
+			m_PerObjectDataUniformRef = tform.AsMatrix();
 		}
 	}
 

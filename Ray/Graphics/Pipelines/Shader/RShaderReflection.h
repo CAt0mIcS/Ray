@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "../../../RBase.h"
+#include "RShaderTypes.h"
 
 #include <unordered_map>
 
@@ -9,19 +10,6 @@
 
 namespace At0::Ray
 {
-	/**
-	 * Specifies the different types of shader uniform inputs
-	 */
-	enum class UniformType
-	{
-		None,
-		UniformBuffer,
-		CombinedImageSampler,
-		Storage,
-		Push
-	};
-
-
 	/**
 	 * Reflection data for one shader file
 	 */

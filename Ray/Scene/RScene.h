@@ -2,13 +2,10 @@
 
 #include "../RBase.h"
 #include "../Core/RTime.h"
-#include "../Core/RMath.h"
-#include "../Components/RTransform.h"
-#include "../Graphics/Core/RSharedBindable.h"
 #include "../Events/REventDispatcher.h"
 #include "../Utils/RThreadPool.h"
+#include "../Events/RCustomEvents.h"
 
-#include "RCamera.h"
 #include "REntity.h"
 
 #include <concepts>
@@ -20,18 +17,6 @@ namespace At0::Ray
 	class BufferUniform;
 	class Camera;
 
-	/**
-	 * Gets dispatched to listeners when entity is added to the scene
-	 */
-	class EntityCreatedEvent
-	{
-	public:
-		EntityCreatedEvent(Entity& entity) : m_Entity(entity) {}
-		Entity& GetEntity() const { return m_Entity; }
-
-	private:
-		Entity& m_Entity;
-	};
 
 	class RAY_EXPORT Scene : public EventDispatcher<EntityCreatedEvent>
 	{

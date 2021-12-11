@@ -2,8 +2,11 @@
 #include "RBufferUniform.h"
 
 #include "Graphics/Commands/RCommandBuffer.h"
-#include "../../Shader/RShader.h"
+#include "../RShader.h"
 #include "../../RPipeline.h"
+#include "../RShaderReflection.h"
+#include "Graphics/Buffers/Dynamic/RDynamicUniformBuffer.h"
+
 #include "Utils/RAssert.h"
 #include "Utils/RString.h"
 
@@ -37,7 +40,13 @@ namespace At0::Ray
 		Setup(size);
 	}
 
-	BufferUniform::AccessType BufferUniform::operator[](const std::string& name)
+	BufferUniform::~BufferUniform() {}
+
+	uint32_t BufferUniform::GetOffset() const { return m_UniformBuffer->GetOffset(); }
+
+	uint32_t BufferUniform::GetSize() const { return m_UniformBuffer->GetSize(); }
+
+	DynamicBufferAccess BufferUniform::operator[](const std::string& name)
 	{
 		RAY_MEXPECTS(Has(name),
 			"[BufferUniform] Uniform \"{0}\" not present in uniform block \"{1}\"", name,
@@ -51,7 +60,7 @@ namespace At0::Ray
 				break;
 			}
 
-		return BufferUniform::AccessType{ m_UniformBuffer.get(), offset };
+		return DynamicBufferAccess{ m_UniformBuffer.get(), offset };
 	}
 
 	void BufferUniform::Update(void* data, VkDeviceSize size, VkDeviceSize offset)
@@ -72,6 +81,18 @@ namespace At0::Ray
 		vkCmdPushConstants(cmdBuff, pipelineLayout, (VkShaderStageFlags)m_ShaderStage, 0,
 			m_UniformBuffer->GetSize(),
 			((char*)m_UniformBuffer->GetBuffer().GetMapped()) + m_UniformBuffer->GetOffset());
+	}
+
+	BufferUniform::BufferUniform(BufferUniform&& other) noexcept { *this = std::move(other); }
+
+	BufferUniform& BufferUniform::operator=(BufferUniform&& other) noexcept
+	{
+		m_Name = std::move(other.m_Name);
+		m_Binding = other.m_Binding;
+		m_UniformBuffer = std::move(other.m_UniformBuffer);
+		m_UniformInBlockOffsets = std::move(other.m_UniformInBlockOffsets);
+		m_ShaderStage = other.m_ShaderStage;
+		return *this;
 	}
 
 	void BufferUniform::Setup(uint32_t bufferSize)
