@@ -1,7 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RString.h"
 
-#include "Utils/RAssert.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
 
 #include <vulkan/vulkan_core.h>

@@ -1,10 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RScript.h"
 
-#include "Utils/RString.h"
-#include "Utils/RAssert.h"
-#include "Utils/RException.h"
-
 #include <mono/jit/jit.h>
 #include <mono/metadata/object.h>
 #include <mono/metadata/environment.h>

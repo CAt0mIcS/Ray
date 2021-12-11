@@ -2,8 +2,6 @@
 #include "RVertexNode.h"
 
 #include "Core/RDynamicVertex.h"
-#include "Utils/RString.h"
-#include "Utils/RLogger.h"
 
 
 namespace At0::Ray

@@ -2,8 +2,6 @@
 #include "RGeometricPrimitives.h"
 #include "Core/RMath.h"
 
-#include "Utils/RString.h"
-
 
 namespace At0::Ray
 {
@@ -34,8 +32,9 @@ namespace At0::Ray
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
 
-		return { vertex, indices, String::Serialize(
-			"Triangle#012230#{0}#{1}#{2}#{3}", hasPos, hasUV, hasNormal, hasTangent) };
+		return { vertex, indices,
+			String::Serialize(
+				"Triangle#012230#{0}#{1}#{2}#{3}", hasPos, hasUV, hasNormal, hasTangent) };
 	}
 
 	IndexedTriangleList IndexedTriangleList::Plane(const Shader& shader)

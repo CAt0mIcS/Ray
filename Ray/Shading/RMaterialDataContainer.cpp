@@ -1,8 +1,6 @@
 #include "Rpch.h"
 #include "RMaterialDataContainer.h"
 
-#include "Utils/RAssert.h"
-
 
 namespace At0::Ray
 {

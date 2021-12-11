@@ -1,8 +1,6 @@
 ﻿#include "Rpch.h"
 #include "ROutputNode.h"
 
-#include "Utils/RString.h"
-
 namespace At0::Ray
 {
 	OutputNode::OutputNode(std::string_view outputType, std::string_view outputName)

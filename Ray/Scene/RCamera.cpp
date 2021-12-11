@@ -2,7 +2,6 @@
 #include "RCamera.h"
 
 #include "Devices/RWindow.h"
-#include "Utils/RException.h"
 
 
 namespace At0::Ray

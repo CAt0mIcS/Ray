@@ -18,9 +18,11 @@
 #include <Ray/Utils/RException.h>
 #include <Ray/Graphics/Pipelines/Shader/RShader.h>
 #include <Ray/Core/RDynamicVertex.h>
+#include <Ray/Graphics/Buffers/RUniformBuffer.h>
 
 #include <Ray/Scene/RScene.h>
 #include <Ray/Scene/RCamera.h>
+#include <Ray/Shading/RMaterial.h>
 
 #include <signal.h>
 #include <random>

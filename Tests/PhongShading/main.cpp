@@ -20,6 +20,7 @@
 
 #include <Ray/Scene/RScene.h>
 #include <Ray/Scene/RCamera.h>
+#include <Ray/Shading/RMaterial.h>
 
 #include <signal.h>
 #include <random>
@@ -95,27 +96,25 @@ public:
 				}
 			});
 
-		// RAY_TODO: Fix matrix not being recalculated at the beginning
-
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 
-		// auto pipeline = Ray::GraphicsPipeline::Builder()
-		//					.SetShader(Ray::Shader::Acquire({ "Resources/Shaders/Flat_Col.vert",
-		//						"Resources/Shaders/Flat_Col.frag" }))
-		//					.Acquire();
+		auto pipeline = Ray::GraphicsPipeline::Builder()
+							.SetShader(Ray::Shader::Acquire({ "Resources/Shaders/Flat_Col.vert",
+								"Resources/Shaders/Flat_Col.frag" }))
+							.Acquire();
 
-		// auto flatWhiteMaterial = Ray::Material::Builder(pipeline)
-		//							 .Set("Shading.color", Ray::Float4{ 1.0f, 1.0f, 1.0f, 1.0f })
-		//							 .Acquire();
+		auto flatWhiteMaterial = Ray::Material::Builder(pipeline)
+									 .Set("Shading.color", Ray::Float4{ 1.0f, 1.0f, 1.0f, 1.0f })
+									 .Acquire();
 
-		// m_Light = Scene::Get().CreateEntity();
-		// m_Light.Emplace<Ray::Mesh>(
-		//	Ray::Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", flatWhiteMaterial));
-		// m_Light.Get<Ray::Transform>().SetScale(Ray::Float3(0.4f));
+		m_Light = Scene::Get().CreateEntity();
+		m_Light.Emplace<Ray::Mesh>(
+			Ray::Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", flatWhiteMaterial));
+		m_Light.Get<Ray::Transform>().SetScale(Ray::Float3(0.4f));
 
-		// Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-		// 	Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
+		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:

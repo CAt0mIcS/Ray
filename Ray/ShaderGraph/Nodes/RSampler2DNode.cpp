@@ -1,8 +1,6 @@
 #include "Rpch.h"
 #include "RSampler2DNode.h"
 
-#include "Utils/RString.h"
-
 
 namespace At0::Ray
 {

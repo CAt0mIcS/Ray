@@ -1,8 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RFunction.h"
 
-#include "Utils/RException.h"
-
 #include <mono/jit/jit.h>
 #include <mono/metadata/object.h>
 #include <mono/metadata/environment.h>

@@ -3,8 +3,6 @@
 
 #include "ROutputNode.h"
 
-#include "Utils/RString.h"
-
 namespace At0::Ray
 {
 	InputNode::InputNode(std::string_view inputType, std::string_view inputName)

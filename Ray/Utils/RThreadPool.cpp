@@ -4,8 +4,6 @@
 #include <mutex>
 #include <thread>
 
-#include "Utils/RLogger.h"
-
 
 namespace At0::Ray
 {
