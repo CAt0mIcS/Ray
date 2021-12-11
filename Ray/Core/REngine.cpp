@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "REngine.h"
+﻿#include "REngine.h"
 
 #include "Devices/RWindow.h"
 #include "Graphics/RGraphics.h"

@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RShaderGenerator.h"
+﻿#include "RShaderGenerator.h"
 
 #include "Components/RMeshRenderer.h"
 #include "Shading/RMaterial.h"

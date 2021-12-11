@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RDynamicVertex.h"
+﻿#include "RDynamicVertex.h"
 
 #include "Graphics/Pipelines/Shader/RShader.h"
 #include "Graphics/Pipelines/Shader/RShaderReflection.h"

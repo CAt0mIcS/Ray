@@ -1,4 +1,3 @@
-#include "Rpch.h"
 #include "RSurface.h"
 
 #include "Graphics/RGraphics.h"

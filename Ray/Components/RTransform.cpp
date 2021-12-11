@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RTransform.h"
+﻿#include "RTransform.h"
 
 
 namespace At0::Ray

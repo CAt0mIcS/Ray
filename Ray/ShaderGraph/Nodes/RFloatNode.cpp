@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RFloatNode.h"
+﻿#include "RFloatNode.h"
 
 
 namespace At0::Ray

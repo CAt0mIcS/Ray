@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RDynamicBuffer.h"
+﻿#include "RDynamicBuffer.h"
 
 #include "../RBuffer.h"
 

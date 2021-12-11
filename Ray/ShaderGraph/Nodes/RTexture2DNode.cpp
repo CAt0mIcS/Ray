@@ -1,4 +1,3 @@
-#include "Rpch.h"
 #include "RTexture2DNode.h"
 
 

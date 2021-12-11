@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RJSON.h"
+﻿#include "RJSON.h"
 
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/ostreamwrapper.h>

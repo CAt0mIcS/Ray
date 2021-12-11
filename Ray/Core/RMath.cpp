@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RMath.h"
+﻿#include "RMath.h"
 #include "Devices/RWindow.h"
 
 

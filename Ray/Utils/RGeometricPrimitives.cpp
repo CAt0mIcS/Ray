@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RGeometricPrimitives.h"
+﻿#include "RGeometricPrimitives.h"
 #include "Core/RMath.h"
 
 

@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "ROutputNode.h"
+﻿#include "ROutputNode.h"
 
 namespace At0::Ray
 {

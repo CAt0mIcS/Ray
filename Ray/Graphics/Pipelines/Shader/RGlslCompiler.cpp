@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RGlslCompiler.h"
+﻿#include "RGlslCompiler.h"
 
 #include "RShader.h"
 #include "Graphics/RGraphics.h"

@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RUniformBuffer.h"
+﻿#include "RUniformBuffer.h"
 
 
 namespace At0::Ray

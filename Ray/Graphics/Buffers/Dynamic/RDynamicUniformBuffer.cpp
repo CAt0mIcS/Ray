@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RDynamicUniformBuffer.h"
+﻿#include "RDynamicUniformBuffer.h"
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RPhysicalDevice.h"

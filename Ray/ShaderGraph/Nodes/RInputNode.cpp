@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RInputNode.h"
+﻿#include "RInputNode.h"
 
 #include "ROutputNode.h"
 

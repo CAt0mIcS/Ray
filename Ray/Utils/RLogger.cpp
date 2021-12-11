@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RLogger.h"
+﻿#include "RLogger.h"
 
 
 namespace At0::Ray

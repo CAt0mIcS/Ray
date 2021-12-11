@@ -1,8 +1,6 @@
-﻿#include "Rpch.h"
-
+﻿
 #include "REntity.h"
 #include "RScene.h"
-#include "RCamera.h"
 
 #include "Components/RMeshRenderer.h"
 #include "Components/RTextRenderer.h"

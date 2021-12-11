@@ -39,7 +39,7 @@ namespace At0::Ray
 		 * Requires dispatcher to be registered using RegisterForDispatcher
 		 */
 		template<typename U = T>
-		EventListener() requires !std::derived_from<Window, EventDispatcher<U>>;
+		EventListener() requires(!std::derived_from<Window, EventDispatcher<U>>);
 
 		/**
 		 * Registers this to listen to events from dispatcher

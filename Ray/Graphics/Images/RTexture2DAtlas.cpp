@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RTexture2DAtlas.h"
+﻿#include "RTexture2DAtlas.h"
 
 #include "Graphics/Buffers/RBuffer.h"
 

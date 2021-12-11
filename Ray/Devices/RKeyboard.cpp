@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RKeyboard.h"
+﻿#include "RKeyboard.h"
 
 
 namespace At0::Ray

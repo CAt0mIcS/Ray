@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "REntity.h"
+﻿#include "REntity.h"
 
 #include "RScene.h"
 #include "Components/RHierachyComponent.h"

@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RDepthImage.h"
+﻿#include "RDepthImage.h"
 
 
 namespace At0::Ray

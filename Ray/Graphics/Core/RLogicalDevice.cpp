@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RLogicalDevice.h"
+﻿#include "RLogicalDevice.h"
 
 #include "Graphics/RGraphics.h"
 #include "RVulkanInstance.h"

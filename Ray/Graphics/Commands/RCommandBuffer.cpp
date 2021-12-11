@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RCommandBuffer.h"
+﻿#include "RCommandBuffer.h"
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"

@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RImGui.h"
+﻿#include "RImGui.h"
 
 #if RAY_ENABLE_IMGUI
 

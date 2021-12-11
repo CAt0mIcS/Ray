@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RShader.h"
+﻿#include "RShader.h"
 
 #include "Core/RDynamicVertex.h"
 

@@ -1,5 +1,3 @@
-#include "Rpch.h"
-#include "RException.h"
 
 
 namespace At0::Ray

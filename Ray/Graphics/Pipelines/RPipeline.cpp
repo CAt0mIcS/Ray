@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RPipeline.h"
+﻿#include "RPipeline.h"
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
