@@ -1,15 +1,11 @@
 ﻿#pragma once
 
 #include "../RBase.h"
-#include "../Core/RMath.h"
 #include "RMaterialDataContainer.h"
-#include "../Graphics/Pipelines/Shader/RShaderReflection.h"
 #include "../Events/REventDispatcher.h"
 #include "../Events/RCustomEvents.h"
 
-#include <unordered_map>
-#include <vector>
-#include <functional>
+#include <string>
 
 
 namespace At0::Ray
@@ -17,29 +13,6 @@ namespace At0::Ray
 	class GraphicsPipeline;
 	class Texture2D;
 	class CommandBuffer;
-
-	/**
-	 * Predefined uniform block tags in the shader
-	 */
-	struct UniformBlockTag
-	{
-		static constexpr const char* PerSceneData = "PerSceneData";
-		static constexpr const char* PerObjectData = "PerObjectData";
-		static constexpr const char* Shading = "Shading";
-	};
-
-	/**
-	 * Predefined uniform tags in the shader
-	 */
-	struct UniformTag
-	{
-		static constexpr const char* DiffuseMapSampler = "samplerDiffuse";
-		static constexpr const char* SpecularMapSampler = "samplerSpecular";
-		static constexpr const char* NormalMapSampler = "samplerNormal";
-		static constexpr const char* HeightMapSampler = "samplerHeight";
-
-		static constexpr const char* Color = "color";
-	};
 
 	class RAY_EXPORT Material : public EventDispatcher<MaterialBecameDirtyEvent>
 	{

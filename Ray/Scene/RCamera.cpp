@@ -111,12 +111,7 @@ namespace At0::Ray
 		}
 	}
 
-	Camera::Camera()
-		: EventListener<MouseMovedEvent>(Window::Get()),
-		  EventListener<KeyPressedEvent>(Window::Get()), EventListener<KeyReleasedEvent>(
-															 Window::Get())
-	{
-	}
+	Camera::Camera() {}
 
 	Camera::~Camera() {}
 

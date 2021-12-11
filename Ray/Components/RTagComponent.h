@@ -2,6 +2,8 @@
 
 #include "RComponent.h"
 
+#include <string>
+
 
 namespace At0::Ray
 {

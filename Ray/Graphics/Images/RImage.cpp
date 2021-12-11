@@ -6,6 +6,7 @@
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/Buffers/RBuffer.h"
+#include "RImageView.h"
 
 #include "Utils/RLogger.h"
 #include "Utils/RException.h"
@@ -450,6 +451,8 @@ namespace At0::Ray
 		return *this;
 	}
 
+	Image::Image(Image&& other) noexcept { *this = std::move(other); }
+
 	std::vector<VkFormat> Image::FindSupportedFormats(
 		std::vector<VkFormat> candidates, VkImageTiling tiling, VkFormatFeatureFlags featureFlags)
 	{
@@ -525,4 +528,6 @@ namespace At0::Ray
 			(m_Usage & VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT))
 			m_ImageView = MakeScope<ImageView>(*this);
 	}
+	
+	Image::Image() {}
 }  // namespace At0::Ray

@@ -6,7 +6,7 @@
 
 namespace At0::Ray
 {
-	class Image2D : public Image
+	class RAY_EXPORT Image2D : public Image
 	{
 	public:
 		static Ref<Image2D> Acquire(UInt2 extent, VkFormat format, VkImageTiling tiling,

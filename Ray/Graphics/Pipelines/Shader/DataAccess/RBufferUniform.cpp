@@ -6,6 +6,7 @@
 #include "../../RPipeline.h"
 #include "../RShaderReflection.h"
 #include "Graphics/Buffers/Dynamic/RDynamicUniformBuffer.h"
+#include "Graphics/Buffers/RBuffer.h"
 
 #include "Utils/RAssert.h"
 #include "Utils/RString.h"

@@ -11,6 +11,8 @@
 
 namespace At0::Ray
 {
+	class CommandBuffer;
+
 	class RAY_EXPORT IndexBuffer : public Buffer, public SharedBindable
 	{
 	public:

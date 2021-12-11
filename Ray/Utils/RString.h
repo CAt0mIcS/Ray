@@ -7,7 +7,6 @@
 #include <string>
 #include <sstream>
 #include <type_traits>
-#include <assert.h>
 
 #include <vulkan/vulkan_core.h>
 #include <../../Extern/Violent/include/Violent/Utils/VSerialize.h>

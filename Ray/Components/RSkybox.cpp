@@ -10,6 +10,7 @@
 
 #include "Scene/RScene.h"
 #include "Shading/RMaterial.h"
+#include "Scene/RCamera.h"
 
 #include "RMesh.h"
 #include "RTransform.h"

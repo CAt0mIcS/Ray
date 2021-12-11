@@ -24,7 +24,7 @@ namespace At0::Ray::Mono
 		virtual void Invoke(void** ppParamters) const override;
 
 	private:
-		MonoImage* m_Image;
-		MonoMethod* m_Method;
+		MonoImage* m_Image = nullptr;
+		MonoMethod* m_Method = nullptr;
 	};
 }  // namespace At0::Ray::Mono

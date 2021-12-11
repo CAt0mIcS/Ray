@@ -6,6 +6,8 @@
 
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/Buffers/Dynamic/RDynamicUniformBuffer.h"
+#include "Graphics/Buffers/RBuffer.h"
+#include "Graphics/Images/RImageView.h"
 
 #include "RBufferUniform.h"
 #include "RSampler2DUniform.h"

@@ -3,7 +3,7 @@
 #include "RTextureSampler.h"
 #include "RImage2D.h"
 
-#include <string_view>
+#include <string>
 
 
 namespace At0::Ray

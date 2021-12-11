@@ -79,10 +79,10 @@ public:
 						ImGui::Spacing();
 						ImGui::End();
 					}
-					if (m_ChildEntity0)
+					if (m_Entity2)
 					{
-						ImGui::Begin("TestEntityChild0");
-						Ray::Transform& tform = m_ChildEntity0.Get<Ray::Transform>();
+						ImGui::Begin("TestEntity2");
+						Ray::Transform& tform = m_Entity2.Get<Ray::Transform>();
 						translate(tform);
 						ImGui::Spacing();
 						ImGui::End();
@@ -96,7 +96,9 @@ public:
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 
-		m_ChildEntity0 = m_Entity.GetChildren()[0];
+		m_Entity2 = Scene::Get().CreateEntity();
+		m_Entity2.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+		m_Entity2.Get<Ray::Transform>().SetTranslation(Ray::Float3{ 6.0f, 0.0f, 0.0f });
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
@@ -107,7 +109,7 @@ private:
 
 private:
 	Ray::Entity m_Entity;
-	Ray::Entity m_ChildEntity0;
+	Ray::Entity m_Entity2;
 };
 
 void SignalHandler(int signal)

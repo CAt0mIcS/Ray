@@ -1,19 +1,24 @@
 ﻿#pragma once
 
 #include "RDynamicBuffer.h"
-#include "../RUniformBuffer.h"
 
 #include <atomic>
 
 
 namespace At0::Ray
 {
+	class UniformBuffer;
+
 	class RAY_EXPORT DynamicUniformBuffer : public DynamicBuffer
 	{
 	public:
 		DynamicUniformBuffer(VkDeviceSize size);
+		~DynamicUniformBuffer();
 
 		static void Reset();
+
+		DynamicUniformBuffer(DynamicUniformBuffer&& other) noexcept;
+		DynamicUniformBuffer& operator=(DynamicUniformBuffer&& other) noexcept;
 
 	private:
 		static Ref<UniformBuffer> s_UniformBuffer;

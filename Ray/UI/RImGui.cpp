@@ -26,6 +26,7 @@
 #include "Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
 #include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
 #include "Graphics/Images/RTexture2D.h"
+#include "Graphics/Images/RImageView.h"
 #include "Utils/RLogger.h"
 
 #include <../../Extern/imgui/imgui.h>
@@ -66,15 +67,6 @@ namespace At0::Ray
 	}
 
 	ImGUI::ImGUI()
-		: EventListener<FramebufferResizedEvent>(Window::Get()),
-		  EventListener<MouseMovedEvent>(Window::Get()), EventListener<MouseButtonPressedEvent>(
-															 Window::Get()),
-		  EventListener<MouseButtonReleasedEvent>(Window::Get()), EventListener<KeyPressedEvent>(
-																	  Window::Get()),
-		  EventListener<KeyReleasedEvent>(Window::Get()), EventListener<CharEvent>(Window::Get()),
-		  EventListener<ScrollLeftEvent>(Window::Get()), EventListener<ScrollRightEvent>(
-															 Window::Get()),
-		  EventListener<ScrollUpEvent>(Window::Get()), EventListener<ScrollDownEvent>(Window::Get())
 	{
 		ImGui::CreateContext();
 

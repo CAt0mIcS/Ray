@@ -2,7 +2,6 @@
 
 #include "../RBase.h"
 #include "../Scene/REntity.h"
-#include "../Utils/RAssert.h"
 
 
 namespace At0::Ray
@@ -10,7 +9,7 @@ namespace At0::Ray
 	/**
 	 * Base class for all components
 	 */
-	class Component
+	class RAY_EXPORT Component
 	{
 	public:
 		virtual ~Component() = default;

@@ -5,6 +5,10 @@
 
 #include <vulkan/vulkan_core.h>
 
+#include <vector>
+#include <string>
+
+
 namespace glslang
 {
 	class TProgram;

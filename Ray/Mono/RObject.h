@@ -5,6 +5,9 @@
 
 #include "../Utils/RAssert.h"
 
+#include <vector>
+
+
 typedef struct _MonoDomain MonoDomain;
 typedef struct _MonoImage MonoImage;
 typedef struct _MonoObject MonoObject;

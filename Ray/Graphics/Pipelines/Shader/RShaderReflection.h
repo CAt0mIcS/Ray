@@ -5,8 +5,21 @@
 
 #include <unordered_map>
 
-#include <../../Extern/rapidjson/include/rapidjson/document.h>
+namespace rapidjson
+{
+	class CrtAllocator;
 
+	template<typename BaseAllocator>
+	class MemoryPoolAllocator;
+
+	template<typename Encoding, typename Allocator>
+	class GenericValue;
+
+	template<typename CharType>
+	struct UTF8;
+
+	typedef GenericValue<UTF8<char>, MemoryPoolAllocator<CrtAllocator>> Value;
+}  // namespace rapidjson
 
 namespace At0::Ray
 {

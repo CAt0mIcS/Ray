@@ -11,7 +11,7 @@ namespace At0::Ray
 {
 	class Shader;
 
-	class RAY_EXPORT Pipeline : public SharedBindable
+	class RAY_EXPORT Pipeline : public SharedBindable, NonCopyable
 	{
 	public:
 		enum class BindPoint

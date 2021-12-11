@@ -5,6 +5,8 @@
 
 #include <vulkan/vulkan_core.h>
 
+#include <vector>
+
 
 namespace At0::Ray
 {

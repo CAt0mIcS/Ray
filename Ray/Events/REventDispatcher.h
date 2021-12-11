@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include <set>
-#include <algorithm>
 
 
 namespace At0::Ray

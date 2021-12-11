@@ -3,9 +3,7 @@
 #include "RBuffer.h"
 #include "../Core/RSharedBindable.h"
 
-
-#include "Core/RMath.h"
-#include <vector>
+#include <string_view>
 
 
 namespace At0::Ray

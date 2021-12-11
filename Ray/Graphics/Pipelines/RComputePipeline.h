@@ -5,7 +5,7 @@
 
 namespace At0::Ray
 {
-	class ComputePipeline : public Pipeline
+	class RAY_EXPORT ComputePipeline : public Pipeline
 	{
 	public:
 		Pipeline::BindPoint GetBindPoint() const override { return Pipeline::BindPoint::Compute; }

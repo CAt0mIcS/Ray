@@ -7,6 +7,7 @@
 #include "Graphics/RCodex.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
 #include "Shading/RMaterial.h"
+#include "Graphics/Pipelines/Shader/RShader.h"
 
 #include "RException.h"
 
@@ -122,6 +123,11 @@ namespace At0::Ray
 
 		Log::Info("[Model] Loading of resource \"{0}\" took {1}s", filepath,
 			(Time::Now() - start).AsSeconds());
+	}
+
+	Ref<Model> Model::Acquire(std::string_view filepath, Ref<Material> material)
+	{
+		return Resources::Get().EmplaceIfNonExistent<Model>(filepath.data(), filepath, material);
 	}
 
 	void Model::ParseMesh(std::string_view filepath, const aiMesh& mesh,

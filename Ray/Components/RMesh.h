@@ -1,11 +1,6 @@
 ﻿#pragma once
 
-#include "../RBase.h"
 #include "RComponent.h"
-#include "../Graphics/Core/RSharedBindable.h"
-
-#include "../Core/RDynamicVertex.h"
-#include "../Graphics/Buffers/RIndexBuffer.h"
 
 
 namespace At0::Ray
@@ -13,9 +8,10 @@ namespace At0::Ray
 	class VertexBuffer;
 	class IndexBuffer;
 	class Material;
+	class CommandBuffer;
 
 
-	class RAY_EXPORT Mesh : public Component, public SharedBindable
+	class RAY_EXPORT Mesh : public Component
 	{
 	public:
 		struct VertexData
@@ -42,9 +38,9 @@ namespace At0::Ray
 		static Mesh::VertexData Import(std::string_view filepath, Ref<Material> material = nullptr);
 
 		/**
-		 * Called by the mesh renderer to bind mesh-specific resources
+		 * Called to bind mesh-specific resources
 		 */
-		void CmdBind(const CommandBuffer& cmdBuff) const override;
+		void CmdBind(const CommandBuffer& cmdBuff) const;
 
 		Mesh& operator=(Mesh&& other) noexcept;
 		Mesh(Mesh&& other) noexcept;

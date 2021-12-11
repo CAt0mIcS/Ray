@@ -12,7 +12,6 @@ namespace At0::Ray
 	{
 	public:
 		PhysicalDevice();
-		~PhysicalDevice() = default;
 		operator const VkPhysicalDevice&() const { return m_Device; }
 
 		const VkPhysicalDeviceFeatures& GetFeatures() const { return m_Features; }

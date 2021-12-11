@@ -4,18 +4,19 @@
 #include "../../Core/RMath.h"
 #include "../../Core/RResource.h"
 #include "../../Utils/RNonCopyable.h"
-#include "RImageView.h"
 
 #include <vulkan/vulkan_core.h>
+
 #include <vector>
-#include <string>
+#include <string_view>
 
 
 namespace At0::Ray
 {
 	class Buffer;
+	class ImageView;
 
-	class Image : public Resource, NonCopyable
+	class RAY_EXPORT Image : public Resource, NonCopyable
 	{
 	public:
 		static Ref<Image> Acquire(UInt2 extent, VkImageType imageType, VkFormat format,
@@ -50,7 +51,7 @@ namespace At0::Ray
 		void WritePPM(std::string_view filepath);
 
 		Image& operator=(Image&& other) noexcept;
-		Image(Image&& other) noexcept { *this = std::move(other); }
+		Image(Image&& other) noexcept;
 
 		static void TransitionLayout(VkImage image, VkImageLayout oldLayout,
 			VkImageLayout newLayout, uint32_t mipLevels = 1, uint32_t layerCount = 1);
@@ -58,11 +59,10 @@ namespace At0::Ray
 			VkImage image, VkFormat imageFormat, int32_t width, int32_t height, uint32_t mipLevels);
 		static std::vector<VkFormat> FindSupportedFormats(std::vector<VkFormat> candidates,
 			VkImageTiling tiling, VkFormatFeatureFlags featureFlags);
-		static Buffer CopyToBuffer(VkImage image);
 
 	protected:
 		void Setup();
-		Image() = default;
+		Image();
 
 	protected:
 		VkImage m_Image = VK_NULL_HANDLE;

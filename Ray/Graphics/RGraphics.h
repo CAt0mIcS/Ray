@@ -3,13 +3,12 @@
 #include "../RBase.h"
 #include "../Utils/RNonCopyable.h"
 #include "../Core/RTime.h"
-#include "../Core/RMath.h"
-#include "../Events/REngineEvents.h"
 
 #include "../Events/REventListener.h"
 #include "../Events/REngineEvents.h"
 
 #include <vulkan/vulkan_core.h>
+
 #include <vector>
 #include <array>
 

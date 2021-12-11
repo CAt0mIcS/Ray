@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "../RBase.h"
 #include "RComponent.h"
 #include "Base/RRenderer.h"
 
@@ -8,9 +7,7 @@
 #include "../Events/RCustomEvents.h"
 #include "../Graphics/Buffers/Dynamic/RDynamicBufferAccess.h"
 
-#include <vector>
-#include <unordered_map>
-#include <stdint.h>
+#include <string>
 
 
 namespace At0::Ray

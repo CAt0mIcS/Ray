@@ -18,6 +18,11 @@ namespace At0::Ray
 		m_Children.insert(m_Children.end(), children.begin(), children.end());
 	}
 
+	void HierachyComponent::SetChildren(std::vector<Entity> children)
+	{
+		m_Children = std::move(children);
+	}
+
 	bool HierachyComponent::HasChild(Entity child) const
 	{
 		return std::find(m_Children.begin(), m_Children.end(), child) != m_Children.end();

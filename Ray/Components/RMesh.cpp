@@ -30,10 +30,21 @@ namespace At0::Ray
 
 
 		if (vertexData.children.size() != 0)
-			GetEntity().Emplace<HierachyComponent>().AddChildren(vertexData.children);
+		{
+			if (GetEntity().Has<HierachyComponent>())
+				GetEntity().Get<HierachyComponent>().SetChildren(std::move(vertexData.children));
+			else
+				GetEntity().Emplace<HierachyComponent>().SetChildren(std::move(vertexData.children));
+		}
+			
 
 		for (Entity child : vertexData.children)
-			child.Emplace<HierachyComponent>().SetParent(GetEntity());
+		{
+			if (!child.Has<HierachyComponent>())
+				child.Emplace<HierachyComponent>().SetParent(GetEntity());
+			else
+				child.Get<HierachyComponent>().SetParent(GetEntity());
+		}
 	}
 
 	Mesh::VertexData Mesh::Triangle(Ref<Material> material)
@@ -115,7 +126,7 @@ namespace At0::Ray
 
 	Mesh::VertexData Mesh::Import(std::string_view filepath, Ref<Material> material)
 	{
-		return Model{ filepath, material }.GetVertexData();
+		return Model::Acquire(filepath, std::move(material))->GetVertexData();
 	}
 
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff) const

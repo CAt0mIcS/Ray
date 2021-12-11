@@ -1,10 +1,9 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-#include "../Core/RTime.h"
-#include "../Scene/RCamera.h"
-
 #include "RComponent.h"
+
+#include "../Events/REventListener.h"
+#include "../Events/RCustomEvents.h"
 
 
 namespace At0::Ray

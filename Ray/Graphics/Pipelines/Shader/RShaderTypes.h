@@ -31,6 +31,14 @@ namespace At0::Ray
 		Push
 	};
 
+	enum class AttributeType
+	{
+		Position,
+		UV,
+		Normal,
+		Tangent
+	};
+
 	enum class ShaderStage
 	{
 		Vertex = VK_SHADER_STAGE_VERTEX_BIT,
@@ -40,6 +48,29 @@ namespace At0::Ray
 		Fragment = VK_SHADER_STAGE_FRAGMENT_BIT,
 		Compute = VK_SHADER_STAGE_COMPUTE_BIT,
 		All = VK_SHADER_STAGE_ALL
+	};
+
+	/**
+	 * Predefined uniform block tags in the shader
+	 */
+	struct UniformBlockTag
+	{
+		static constexpr const char* PerSceneData = "PerSceneData";
+		static constexpr const char* PerObjectData = "PerObjectData";
+		static constexpr const char* Shading = "Shading";
+	};
+
+	/**
+	 * Predefined uniform tags in the shader
+	 */
+	struct UniformTag
+	{
+		static constexpr const char* DiffuseMapSampler = "samplerDiffuse";
+		static constexpr const char* SpecularMapSampler = "samplerSpecular";
+		static constexpr const char* NormalMapSampler = "samplerNormal";
+		static constexpr const char* HeightMapSampler = "samplerHeight";
+
+		static constexpr const char* Color = "color";
 	};
 
 	inline uint32_t GetShaderDataTypeSize(ShaderDataType type)

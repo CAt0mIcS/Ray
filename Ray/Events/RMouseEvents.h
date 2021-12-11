@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RKeyCodes.h"
 

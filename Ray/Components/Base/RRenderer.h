@@ -2,6 +2,11 @@
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
+#include "../../Graphics/Pipelines/Shader/RShaderTypes.h"
+
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 
 namespace At0::Ray

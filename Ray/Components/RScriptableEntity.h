@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-
 #include "RComponent.h"
 #include "../Mono/RScript.h"
 

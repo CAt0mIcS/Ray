@@ -31,6 +31,7 @@
 #include "Graphics/Buffers/RFramebuffer.h"
 
 #include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
+#include "Components/RMesh.h"
 #include "Components/RMeshRenderer.h"
 #include "Components/RTextRenderer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
@@ -45,7 +46,7 @@ namespace At0::Ray
 {
 	Graphics* Graphics::s_Instance = nullptr;
 
-	Graphics::Graphics() : EventListener<FramebufferResizedEvent>(Window::Get())
+	Graphics::Graphics()
 	{
 		if (s_Instance)
 			ThrowRuntime("[Graphics] Object already created");

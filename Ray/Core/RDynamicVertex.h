@@ -2,6 +2,7 @@
 
 #include "../RBase.h"
 #include "../Utils/RAssert.h"
+#include "../Graphics/Pipelines/Shader/RShaderTypes.h"
 
 #include <vulkan/vulkan_core.h>
 
@@ -9,14 +10,6 @@
 namespace At0::Ray
 {
 	class Shader;
-
-	enum class AttributeType
-	{
-		Position,
-		UV,
-		Normal,
-		Tangent
-	};
 
 	// Defines the tags used to identify position, normal, UV, ... in the shader
 	template<AttributeType type>

@@ -2,7 +2,6 @@
 #pragma once
 
 #include "../RBase.h"
-#include "../Core/RMath.h"
 
 #ifdef _MSC_VER
 	#include <source_location>

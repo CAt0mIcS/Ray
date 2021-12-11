@@ -2,6 +2,8 @@
 
 #include "RBuffer.h"
 
+#include <vulkan/vulkan_core.h>
+
 
 namespace At0::Ray
 {

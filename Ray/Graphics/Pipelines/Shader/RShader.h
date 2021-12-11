@@ -10,9 +10,6 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <filesystem>
-#include <optional>
-#include <fstream>
 
 
 namespace glslang

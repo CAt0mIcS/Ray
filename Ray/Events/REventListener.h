@@ -18,24 +18,27 @@ namespace At0::Ray
 		 * If the dispatcher<T> is a base class of the Window then the window is selected
 		 * automatically as the dispatcher
 		 */
-		// template<typename U = T>
-		// EventListener() requires std::derived_from<Window, EventDispatcher<U>>
-		//{
-		//	RegisterForDispatcher(&Window::Get());
-		//}
+		template<typename U = T>
+		EventListener() requires std::derived_from<Window, EventDispatcher<U>>
+		{
+			RegisterForDispatcher(&Window::Get());
+		}
 
 		/**
 		 * Registers the listener to receive event of type T.
 		 * If the dispatcher<T> is not a base class of the Window the dispatcher<T> needs to be
 		 * specified
 		 */
-		// template<typename U = T>
-		EventListener(EventDispatcher<T>& dispatcher) { RegisterForDispatcher(&dispatcher); }
+		template<typename U = T>
+		EventListener(EventDispatcher<U>& dispatcher)
+		{
+			RegisterForDispatcher(&dispatcher);
+		}
 
 		/**
 		 * Requires dispatcher to be registered using RegisterForDispatcher
 		 */
-		// EventListener() = default;
+		EventListener() requires !std::derived_from<Window, EventDispatcher<T>> = default;
 
 		/**
 		 * Registers this to listen to events from dispatcher
@@ -60,6 +63,7 @@ namespace At0::Ray
 
 		virtual ~EventListener() { UnregisterForDispatcher(); }
 
+
 		EventListener<T>& operator=(EventListener<T>&& other) noexcept
 		{
 			m_Dispatcher = other.m_Dispatcher;
@@ -73,6 +77,6 @@ namespace At0::Ray
 		EventListener(EventListener<T>&& other) noexcept { *this = std::move(other); }
 
 	private:
-		EventDispatcher<T>* m_Dispatcher;
+		EventDispatcher<T>* m_Dispatcher = nullptr;
 	};
 }  // namespace At0::Ray

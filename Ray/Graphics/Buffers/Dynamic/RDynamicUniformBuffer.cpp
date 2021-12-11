@@ -3,6 +3,7 @@
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RPhysicalDevice.h"
+#include "Graphics/Buffers/RUniformBuffer.h"
 
 
 namespace At0::Ray
@@ -25,9 +26,21 @@ namespace At0::Ray
 		DynamicBuffer::Init(s_UniformBuffer, size, offset);
 	}
 
+	DynamicUniformBuffer::~DynamicUniformBuffer() {}
+
 	void DynamicUniformBuffer::Reset()
 	{
 		s_UniformBuffer.reset();
 		s_NextOffset = 0;
+	}
+	
+	DynamicUniformBuffer::DynamicUniformBuffer(DynamicUniformBuffer&& other) noexcept
+	{
+		*this = std::move(other);
+	}
+	
+	DynamicUniformBuffer& DynamicUniformBuffer::operator=(DynamicUniformBuffer&& other) noexcept
+	{
+		return *this;
 	}
 }  // namespace At0::Ray
