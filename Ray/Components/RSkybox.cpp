@@ -2,19 +2,15 @@
 #include "RSkybox.h"
 
 #include "Graphics/Images/RTexture2D.h"
-#include "Graphics/Images/RTextureCubemap.h"
-#include "Graphics/Images/RImage.h"
-#include "Graphics/Buffers/RBuffer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
 
 #include "Scene/RScene.h"
-#include "Shading/RMaterial.h"
 #include "Scene/RCamera.h"
+#include "Shading/RMaterial.h"
 
 #include "RMesh.h"
 #include "RTransform.h"
-#include "RMeshRenderer.h"
 
 
 namespace At0::Ray

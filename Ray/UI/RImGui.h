@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #ifndef RAY_ENABLE_IMGUI
-	#define RAY_ENABLE_IMGUI 1
+	#define RAY_ENABLE_IMGUI 0
 #endif
 #ifndef RAY_ENABLE_IMGUI_DOCKSPACE
 	#define RAY_ENABLE_IMGUI_DOCKSPACE 0
@@ -10,7 +10,9 @@
 
 #if RAY_ENABLE_IMGUI
 
-	// clang-format off
+	#define RAY_IMGUI(x) ::At0::Ray::ImGUI::RegisterNewFrameFunction(x)
+
+// clang-format off
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
@@ -128,5 +130,9 @@ namespace At0::Ray
 		std::vector<std::function<void()>> m_NewFrameFunctions;
 	};
 }  // namespace At0::Ray
+
+#else
+
+	#define RAY_IMGUI(x)
 
 #endif

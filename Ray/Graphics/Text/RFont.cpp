@@ -1,10 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RFont.h"
 
-#include "Graphics/Images/RTexture2DAtlas.h"
-#include "Graphics/Buffers/RBuffer.h"
-#include "Utils/RException.h"
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 

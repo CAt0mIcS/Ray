@@ -11,6 +11,7 @@ namespace At0::Ray
 {
 	class BufferUniform;
 	class Sampler2DUniform;
+	class Texture2D;
 	RAY_DEBUG_FLAG(class Texture2D);
 
 	class DescriptorSet : NonCopyable
@@ -28,7 +29,7 @@ namespace At0::Ray
 		uint32_t GetSetNumber() const { return m_SetNumber; }
 
 		void BindUniform(const BufferUniform& uniform);
-		void BindUniform(const Sampler2DUniform& uniform);
+		void BindUniform(const Sampler2DUniform& uniform, Ref<Texture2D> texture);
 
 		operator const VkDescriptorSet&() const { return m_DescriptorSet; }
 		DescriptorSet& operator=(DescriptorSet&& other) noexcept;

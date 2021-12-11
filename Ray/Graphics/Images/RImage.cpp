@@ -8,10 +8,6 @@
 #include "Graphics/Buffers/RBuffer.h"
 #include "RImageView.h"
 
-#include "Utils/RLogger.h"
-#include "Utils/RException.h"
-#include "Utils/RAssert.h"
-
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb/stb_image_write.h>
 
@@ -528,6 +524,6 @@ namespace At0::Ray
 			(m_Usage & VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT))
 			m_ImageView = MakeScope<ImageView>(*this);
 	}
-	
+
 	Image::Image() {}
 }  // namespace At0::Ray

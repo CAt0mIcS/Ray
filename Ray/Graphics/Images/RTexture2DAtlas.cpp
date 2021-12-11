@@ -2,7 +2,6 @@
 #include "RTexture2DAtlas.h"
 
 #include "Graphics/Buffers/RBuffer.h"
-#include "Utils/RException.h"
 
 
 namespace At0::Ray
@@ -72,7 +71,8 @@ namespace At0::Ray
 
 	Texture2DAtlas::Area* Texture2DAtlas::AllocateArea(UInt2 extent)
 	{
-		auto getFreeArea = [this](UInt2 extent) {
+		auto getFreeArea = [this](UInt2 extent)
+		{
 			// Check if we have any free areas
 			for (auto it = m_FreeAreas.begin(); it != m_FreeAreas.end(); ++it)
 			{
@@ -86,7 +86,8 @@ namespace At0::Ray
 			return Area{};
 		};
 
-		auto isAdjacent = [this](const Area& first, const Area& other) {
+		auto isAdjacent = [this](const Area& first, const Area& other)
+		{
 			uint32_t x = first.pos.x;
 			uint32_t y = first.pos.y;
 			uint32_t width = first.size.x;
@@ -106,7 +107,8 @@ namespace At0::Ray
 			return false;
 		};
 
-		auto findAdjacent = [this, &isAdjacent](const Area& area) {
+		auto findAdjacent = [this, &isAdjacent](const Area& area)
+		{
 			for (auto it = m_FreeAreas.cbegin(); it != m_FreeAreas.cend(); ++it)
 			{
 				if (isAdjacent(area, *it))
@@ -115,7 +117,8 @@ namespace At0::Ray
 			return m_FreeAreas.cend();
 		};
 
-		auto combine = [this](Area& first, const Area& other) {
+		auto combine = [this](Area& first, const Area& other)
+		{
 			uint32_t& x = first.pos.x;
 			uint32_t& y = first.pos.y;
 			uint32_t& width = first.size.x;
@@ -149,7 +152,8 @@ namespace At0::Ray
 			return false;
 		};
 
-		auto collapseFreeAreas = [this, &findAdjacent, &combine]() {
+		auto collapseFreeAreas = [this, &findAdjacent, &combine]()
+		{
 			if (m_FreeAreas.size() < 2)
 				return;
 

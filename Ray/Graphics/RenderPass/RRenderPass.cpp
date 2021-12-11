@@ -5,10 +5,8 @@
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Core/RSwapchain.h"
 #include "Graphics/Buffers/RFramebuffer.h"
-
 #include "Graphics/Commands/RCommandBuffer.h"
 
-#include "Utils/RException.h"
 
 namespace At0::Ray
 {

@@ -5,10 +5,6 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
-#include "Utils/RAssert.h"
-#include "Utils/RLogger.h"
-#include "Utils/RException.h"
-
 #include <glslang/MachineIndependent/gl_types.h>
 
 

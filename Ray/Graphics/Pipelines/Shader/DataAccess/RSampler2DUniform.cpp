@@ -3,18 +3,14 @@
 
 #include "../../RPipeline.h"
 #include "../../Shader/RShader.h"
-#include "Graphics/Images/RTexture2D.h"
 #include "RDescriptor.h"
-
-#include "Utils/RAssert.h"
-#include "Utils/RString.h"
 
 
 namespace At0::Ray
 {
 	Sampler2DUniform::Sampler2DUniform(
-		std::string_view name, ShaderStage stage, Ref<Texture2D> texture, const Pipeline& pipeline)
-		: m_Texture(std::move(texture)), m_Name(name)
+		std::string_view name, ShaderStage stage, const Pipeline& pipeline)
+		: m_Name(name)
 	{
 		RAY_MEXPECTS(pipeline.GetShader().GetReflection(stage).HasUniform(name, true),
 			"[BufferUniform] Uniform \"{0}\" was not found in shader stage \"{1}\"", name,
@@ -24,17 +20,13 @@ namespace At0::Ray
 		m_Binding = uniform.binding;
 	}
 
-	Sampler2DUniform::Sampler2DUniform(
-		std::string_view name, Ref<Texture2D> texture, uint32_t binding)
-		: m_Name(name), m_Texture(std::move(texture)), m_Binding(binding)
+	Sampler2DUniform::Sampler2DUniform(std::string_view name, uint32_t binding)
+		: m_Name(name), m_Binding(binding)
 	{
 	}
 
 	void Sampler2DUniform::SetTexture(Ref<Texture2D> texture, DescriptorSet& descSet)
 	{
-		m_Texture = std::move(texture);
-		descSet.BindUniform(*this);
+		descSet.BindUniform(*this, std::move(texture));
 	}
-
-	void Sampler2DUniform::SetTexture(Ref<Texture2D> texture) { m_Texture = std::move(texture); }
 }  // namespace At0::Ray

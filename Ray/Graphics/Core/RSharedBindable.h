@@ -1,13 +1,10 @@
 ﻿#pragma once
 
-#include "../../RBase.h"
-
-
 namespace At0::Ray
 {
 	class CommandBuffer;
 
-	class RAY_EXPORT SharedBindable
+	class SharedBindable
 	{
 	public:
 		virtual ~SharedBindable() = default;

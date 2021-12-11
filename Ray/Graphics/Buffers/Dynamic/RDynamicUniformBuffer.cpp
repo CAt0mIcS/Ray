@@ -33,12 +33,12 @@ namespace At0::Ray
 		s_UniformBuffer.reset();
 		s_NextOffset = 0;
 	}
-	
+
 	DynamicUniformBuffer::DynamicUniformBuffer(DynamicUniformBuffer&& other) noexcept
 	{
 		*this = std::move(other);
 	}
-	
+
 	DynamicUniformBuffer& DynamicUniformBuffer::operator=(DynamicUniformBuffer&& other) noexcept
 	{
 		return *this;

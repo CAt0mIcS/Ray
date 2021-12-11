@@ -4,12 +4,13 @@
 #include "../../Utils/RThreadPool.h"
 #include "../../Utils/RNonCopyable.h"
 
+#include "RCommandPool.h"
+
 
 namespace At0::Ray
 {
 	class Framebuffer;
 	class RenderPass;
-	class CommandPool;
 	class CommandBuffer;
 	class SecondaryCommandBuffer;
 

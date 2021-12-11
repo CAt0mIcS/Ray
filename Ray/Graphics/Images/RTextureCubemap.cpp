@@ -1,10 +1,7 @@
 ﻿#include "Rpch.h"
 #include "RTextureCubemap.h"
 
-#include "Utils/RException.h"
 #include "RTextureSampler.h"
-#include "Utils/RAssert.h"
-#include "../Buffers/RBuffer.h"
 
 
 namespace At0::Ray
@@ -67,5 +64,15 @@ namespace At0::Ray
 		// 	(float)GetMipLevels());
 
 		// ktxTexture_Destroy(ktxTexture);
+	}
+
+	TextureCubemap::~TextureCubemap() {}
+
+	TextureCubemap::TextureCubemap(TextureCubemap&& other) noexcept { *this = std::move(other); }
+
+	TextureCubemap& TextureCubemap::operator=(TextureCubemap&& other) noexcept
+	{
+		m_Sampler = std::move(other.m_Sampler);
+		return *this;
 	}
 }  // namespace At0::Ray

@@ -3,7 +3,7 @@
 
 #if RAY_ENABLE_IMGUI
 
-// clang-format off
+	// clang-format off
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
@@ -316,8 +316,8 @@ namespace At0::Ray
 			m_Pipeline->GetDescriptorSetLayout(0), Pipeline::BindPoint::Graphics,
 			m_Pipeline->GetLayout(), 0);
 
-		m_FontUniform = MakeScope<Sampler2DUniform>("ImGuiFonts", std::move(m_FontImage), 0);
-		m_FontDescriptor->BindUniform(*m_FontUniform);
+		m_FontUniform = MakeScope<Sampler2DUniform>("ImGuiFonts", 0);
+		m_FontDescriptor->BindUniform(*m_FontUniform, m_FontImage);
 
 		// Set font id for default font to the descriptor set which should be bound when rendering
 		ImGuiIO& io = ImGui::GetIO();

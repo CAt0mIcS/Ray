@@ -1,23 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RTextRenderer.h"
 
-#include "Utils/RAssert.h"
-#include "Utils/RString.h"
-
-#include "RMesh.h"
-#include "RTransform.h"
-
-#include "Graphics/RCodex.h"
-#include "Graphics/Buffers/RVertexBuffer.h"
-#include "Graphics/Buffers/RIndexBuffer.h"
-
-#include "Graphics/Text/RFont.h"
-//#include "Shading/Flat/RFlatTextMaterial.h"
-#include "Graphics/Images/RTexture2DAtlas.h"
-#include "Graphics/Pipelines/Shader/RShader.h"
-#include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
-#include "Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
-
 
 namespace At0::Ray
 {

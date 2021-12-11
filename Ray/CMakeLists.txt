@@ -117,7 +117,6 @@ set(SRC
 	"Graphics/Core/RSwapchain.h"
 	"Graphics/Core/RSwapchain.cpp"
 	"Graphics/Core/RSharedBindable.h"
-	"Graphics/Core/RSharedBindable.cpp"
 
 	"Graphics/Pipelines/RPipeline.h"
 	"Graphics/Pipelines/RPipeline.cpp"

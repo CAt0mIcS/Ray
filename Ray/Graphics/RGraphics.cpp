@@ -1,42 +1,34 @@
 ﻿#include "Rpch.h"
 #include "RGraphics.h"
 
-#include "Utils/RLogger.h"
-#include "Utils/RException.h"
+#include "Core/RVulkanInstance.h"
+#include "Core/RPhysicalDevice.h"
+#include "Core/RLogicalDevice.h"
+#include "Core/RSwapchain.h"
+#include "Core/RSurface.h"
 
-#include "Devices/RWindow.h"
+#include "RenderPass/RRenderPass.h"
+#include "RenderPass/RAttachment.h"
+#include "RenderPass/RSubpass.h"
+
+#include "Images/RDepthImage.h"
+#include "Images/RImageView.h"
+
+#include "Buffers/RFramebuffer.h"
+#include "Buffers/Dynamic/RDynamicUniformBuffer.h"
+
+#include "RCodex.h"
+
+#include "Commands/RCommandBuffer.h"
+#include "Commands/RCommandBufferRecorder.h"
+
 #include "Scene/RScene.h"
 #include "Scene/RCamera.h"
 
-#include "Graphics/Core/RVulkanInstance.h"
-#include "Graphics/Core/RPhysicalDevice.h"
-#include "Graphics/Core/RSurface.h"
-#include "Graphics/Core/RLogicalDevice.h"
-#include "Graphics/Core/RSwapchain.h"
-#include "RCodex.h"
-#include "Core/RResource.h"
-
-#include "Graphics/Commands/RCommandPool.h"
-#include "Graphics/Commands/RCommandBuffer.h"
-#include "Graphics/Commands/RCommandBufferRecorder.h"
-
-#include "Graphics/Images/RDepthImage.h"
-#include "Graphics/Images/RImageView.h"
-
-#include "Graphics/RenderPass/RRenderPass.h"
-#include "Graphics/RenderPass/RAttachment.h"
-#include "Graphics/RenderPass/RSubpass.h"
-
-#include "Graphics/Buffers/Dynamic/RDynamicUniformBuffer.h"
-#include "Graphics/Buffers/RFramebuffer.h"
-
-#include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
 #include "Components/RMesh.h"
 #include "Components/RMeshRenderer.h"
-#include "Components/RTextRenderer.h"
-#include "Graphics/Pipelines/RGraphicsPipeline.h"
 
-#include "UI/RImGui.h"
+#include "Devices/RWindow.h"
 
 
 #define RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING 1

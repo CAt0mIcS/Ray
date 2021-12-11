@@ -8,9 +8,6 @@
 #include "Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
 #include "Graphics/Pipelines/Shader/DataAccess/RSampler2DUniform.h"
 
-#include "Utils/RException.h"
-#include "Utils/RAssert.h"
-
 
 namespace At0::Ray
 {
@@ -136,9 +133,9 @@ namespace At0::Ray
 
 		// Create buffer uniform
 		Sampler2DUniform& uniform = m_Sampler2DUniforms[set].emplace_back(
-			name.data(), stage, texture, m_Material->GetGraphicsPipeline());
+			name.data(), stage, m_Material->GetGraphicsPipeline());
 		if (texture)
-			pDescriptor->BindUniform(uniform);
+			pDescriptor->BindUniform(uniform, std::move(texture));
 
 		return uniform;
 	}

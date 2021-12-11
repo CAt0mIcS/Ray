@@ -1,8 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RTransform.h"
 
-#include "Utils/RLogger.h"
-
 
 namespace At0::Ray
 {
@@ -86,7 +84,7 @@ namespace At0::Ray
 	{
 		bool parentChanged = false;
 		// RAY_TODO: Deleting entity while checking here! Threading error
-		 if (GetEntity().HasParent())
+		if (GetEntity().HasParent())
 			parentChanged = GetEntity().GetParent().Get<Transform>().HasChanged();
 
 		return m_HasChanged || parentChanged;

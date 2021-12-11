@@ -11,6 +11,7 @@ namespace At0::Ray
 
 	struct IndexedTriangleList
 	{
+		static IndexedTriangleList Triangle(const Shader& shader);
 		static IndexedTriangleList Plane(const Shader& shader);
 
 		DynamicVertex vertices;

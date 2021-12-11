@@ -13,6 +13,10 @@ namespace At0::Ray
 	{
 	public:
 		TextureCubemap(std::string_view filepath);
+		~TextureCubemap();
+
+		TextureCubemap(TextureCubemap&& other) noexcept;
+		TextureCubemap& operator=(TextureCubemap&& other) noexcept;
 
 	private:
 		Scope<TextureSampler> m_Sampler;

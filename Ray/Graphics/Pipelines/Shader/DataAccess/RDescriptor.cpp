@@ -13,8 +13,6 @@
 #include "RSampler2DUniform.h"
 #include "Graphics/Images/RTexture2D.h"
 
-#include "Utils/RException.h"
-
 
 namespace At0::Ray
 {
@@ -70,14 +68,14 @@ namespace At0::Ray
 		RAY_DEBUG_FLAG(m_UniformBound = true);
 	}
 
-	void DescriptorSet::BindUniform(const Sampler2DUniform& uniform)
+	void DescriptorSet::BindUniform(const Sampler2DUniform& uniform, Ref<Texture2D> texture)
 	{
-		RAY_DEBUG_FLAG(m_Texture = uniform.GetTexture().get());
+		RAY_DEBUG_FLAG(m_Texture = texture.get());
 
 		VkDescriptorImageInfo imageInfo{};
-		imageInfo.sampler = uniform.GetTexture()->GetSampler();
-		imageInfo.imageView = uniform.GetTexture()->GetImageView();
-		imageInfo.imageLayout = uniform.GetTexture()->GetImageLayout();
+		imageInfo.sampler = texture->GetSampler();
+		imageInfo.imageView = texture->GetImageView();
+		imageInfo.imageLayout = texture->GetImageLayout();
 
 		VkWriteDescriptorSet descWrites{};
 		descWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

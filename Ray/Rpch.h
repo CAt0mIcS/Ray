@@ -39,3 +39,4 @@
 #include "Utils/RAssert.h"
 #include "Utils/RLogger.h"
 #include "Utils/RException.h"
+#include "Utils/RString.h"

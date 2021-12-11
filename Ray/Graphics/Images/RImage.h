@@ -16,7 +16,7 @@ namespace At0::Ray
 	class Buffer;
 	class ImageView;
 
-	class RAY_EXPORT Image : public Resource, NonCopyable
+	class RAY_EXPORT Image : public Resource, protected NonCopyable
 	{
 	public:
 		static Ref<Image> Acquire(UInt2 extent, VkImageType imageType, VkFormat format,

@@ -1,9 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RTexture2D.h"
 
-#include "RImage2D.h"
-
-#include "Utils/RException.h"
 #include "../Buffers/RBuffer.h"
 
 #ifdef STB_IMAGE_IMPLEMENTATION

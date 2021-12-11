@@ -1,9 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RKeyboard.h"
 
-#include "Utils/RLogger.h"
-#include "Utils/RAssert.h"
-
 
 namespace At0::Ray
 {

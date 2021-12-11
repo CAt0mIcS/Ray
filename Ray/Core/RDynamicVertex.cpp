@@ -2,7 +2,7 @@
 #include "RDynamicVertex.h"
 
 #include "Graphics/Pipelines/Shader/RShader.h"
-#include "Utils/RLogger.h"
+#include "Graphics/Pipelines/Shader/RShaderReflection.h"
 
 
 namespace At0::Ray

@@ -13,8 +13,6 @@
 #include "Graphics/Pipelines/Shader/RShader.h"
 #include "Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
 
-#include "Utils/RException.h"
-
 
 namespace At0::Ray
 {
@@ -55,11 +53,11 @@ namespace At0::Ray
 		if (auto& tform = GetEntity().Get<Transform>(); tform.HasChanged())
 		{
 			// RAY_TODO: Deleting entity while checking here! Threading error
-			 if (GetEntity().HasParent())
+			if (GetEntity().HasParent())
 				m_PerObjectDataUniformRef =
 					GetEntity().GetParent().Get<Transform>().AsMatrix() * tform.AsMatrix();
-			 else
-			m_PerObjectDataUniformRef = tform.AsMatrix();
+			else
+				m_PerObjectDataUniformRef = tform.AsMatrix();
 		}
 	}
 

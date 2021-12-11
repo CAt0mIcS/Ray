@@ -11,9 +11,8 @@
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 
-#include "Core/RDynamicVertex.h"
-#include "Utils/RString.h"
 #include "Utils/RModel.h"
+#include "Utils/RGeometricPrimitives.h"
 
 
 namespace At0::Ray
@@ -34,9 +33,10 @@ namespace At0::Ray
 			if (GetEntity().Has<HierachyComponent>())
 				GetEntity().Get<HierachyComponent>().SetChildren(std::move(vertexData.children));
 			else
-				GetEntity().Emplace<HierachyComponent>().SetChildren(std::move(vertexData.children));
+				GetEntity().Emplace<HierachyComponent>().SetChildren(
+					std::move(vertexData.children));
 		}
-			
+
 
 		for (Entity child : vertexData.children)
 		{
@@ -49,79 +49,18 @@ namespace At0::Ray
 
 	Mesh::VertexData Mesh::Triangle(Ref<Material> material)
 	{
-		DynamicVertex vertex(material->GetGraphicsPipeline().GetShader());
-
-		bool hasPos = vertex.Has(AttributeMap<AttributeType::Position>::Semantic);
-		bool hasUV = vertex.Has(AttributeMap<AttributeType::UV>::Semantic);
-		bool hasNormal = vertex.Has(AttributeMap<AttributeType::Normal>::Semantic);
-		bool hasTangent = vertex.Has(AttributeMap<AttributeType::Tangent>::Semantic);
-
-		RAY_MEXPECTS(!hasNormal && !hasTangent && !hasUV,
-			"[IndexedTriangleList] Normals, tangents and "
-			"UV-Coordinates not supported for triangle yet");
-
-		vertex.BeginVertex();
-		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, -0.5f, 0.0f };
-
-		vertex.BeginVertex();
-		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, -0.5f, 0.0f };
-
-		vertex.BeginVertex();
-		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.0f, 0.5f, 0.0f };
-
-		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
-		std::string tag = String::Serialize(
-			"Triangle#012230#{0}#{1}#{2}#{3}", hasPos, hasUV, hasNormal, hasTangent);
-
-		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(tag, vertex),
-			Codex::Resolve<IndexBuffer>(tag, indices), nullptr, {}, tag };
+		IndexedTriangleList mesh =
+			IndexedTriangleList::Triangle(material->GetGraphicsPipeline().GetShader());
+		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {}, mesh.uniqueTag };
 	}
 
 	Mesh::VertexData Mesh::Plane(Ref<Material> material)
 	{
-		DynamicVertex vertex(material->GetGraphicsPipeline().GetShader());
-
-		bool hasPos = vertex.Has(AttributeMap<AttributeType::Position>::Semantic);
-		bool hasUV = vertex.Has(AttributeMap<AttributeType::UV>::Semantic);
-		bool hasNormal = vertex.Has(AttributeMap<AttributeType::Normal>::Semantic);
-		bool hasTangent = vertex.Has(AttributeMap<AttributeType::Tangent>::Semantic);
-
-		RAY_MEXPECTS(!hasNormal && !hasTangent,
-			"[IndexedTriangleList] Normals and tangents not supported for plane yet");
-
-		vertex.BeginVertex();
-		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, -0.5f, 0.0f };
-		if (hasUV)
-			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 1.0f, 0.0f };
-
-		vertex.BeginVertex();
-		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, -0.5f, 0.0f };
-		if (hasUV)
-			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 0.0f, 0.0f };
-
-		vertex.BeginVertex();
-		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, 0.5f, 0.0f };
-		if (hasUV)
-			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 0.0f, 1.0f };
-
-		vertex.BeginVertex();
-		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, 0.5f, 0.0f };
-		if (hasUV)
-			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 1.0f, 1.0f };
-
-		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
-		std::string tag =
-			String::Serialize("Plane#012230#{0}#{1}#{2}#{3}", hasPos, hasUV, hasNormal, hasTangent);
-
-		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(tag, vertex),
-			Codex::Resolve<IndexBuffer>(tag, indices), nullptr, {}, tag };
+		IndexedTriangleList mesh =
+			IndexedTriangleList::Plane(material->GetGraphicsPipeline().GetShader());
+		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {}, mesh.uniqueTag };
 	}
 
 	Mesh::VertexData Mesh::Import(std::string_view filepath, Ref<Material> material)

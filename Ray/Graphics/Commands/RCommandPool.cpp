@@ -4,8 +4,6 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
-#include "Utils/RException.h"
-
 
 namespace At0::Ray
 {

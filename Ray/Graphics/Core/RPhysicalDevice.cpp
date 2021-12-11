@@ -5,9 +5,6 @@
 #include "RLogicalDevice.h"
 #include "RVulkanInstance.h"
 
-#include "Utils/RException.h"
-#include "Utils/RLogger.h"
-
 
 namespace At0::Ray
 {

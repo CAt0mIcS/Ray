@@ -1,8 +1,6 @@
 ﻿#include "Rpch.h"
 #include "RImage2D.h"
 
-#include "Utils/RString.h"
-
 
 namespace At0::Ray
 {

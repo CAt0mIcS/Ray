@@ -2,8 +2,6 @@
 #include "RShaderReflection.h"
 
 #include "Filesystem/RJSON.h"
-#include "Utils/RException.h"
-#include "Utils/RAssert.h"
 
 using namespace rapidjson;
 
