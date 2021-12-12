@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RSampler2DUniform.h"
+﻿#include "RSampler2DUniform.h"
 
 #include "../../RPipeline.h"
 #include "../../Shader/RShader.h"

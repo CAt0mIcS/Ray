@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RStaticFunction.h"
+﻿#include "RStaticFunction.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/object.h>

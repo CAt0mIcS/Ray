@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RRenderPass.h"
+﻿#include "RRenderPass.h"
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"

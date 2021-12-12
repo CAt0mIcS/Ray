@@ -7,6 +7,7 @@
 #include "../Events/RCustomEvents.h"
 
 #include "REntity.h"
+#include "RCamera.h"
 
 #include <concepts>
 

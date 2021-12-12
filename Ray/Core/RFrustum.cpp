@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RFrustum.h"
+﻿#include "RFrustum.h"
 
 
 namespace At0::Ray

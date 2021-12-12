@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RModel.h"
+﻿#include "RModel.h"
 
 #include "Core/RDynamicVertex.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"

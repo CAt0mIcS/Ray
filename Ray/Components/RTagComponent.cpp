@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RTagComponent.h"
+﻿#include "RTagComponent.h"
 
 namespace At0::Ray
 {

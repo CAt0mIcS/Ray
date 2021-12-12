@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RWindow.h"
+﻿#include "RWindow.h"
 
 #include "Graphics/RGraphics.h"
 #include "Scene/RScene.h"

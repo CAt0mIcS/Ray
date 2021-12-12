@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RTexture2D.h"
+﻿#include "RTexture2D.h"
 
 #include "../Buffers/RBuffer.h"
 

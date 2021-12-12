@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RIndexBuffer.h"
+﻿#include "RIndexBuffer.h"
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"

@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RFont.h"
+﻿#include "RFont.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

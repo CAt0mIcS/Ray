@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RButton.h"
+﻿#include "RButton.h"
 
 #include "Components/RMeshRenderer.h"
 #include "Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"

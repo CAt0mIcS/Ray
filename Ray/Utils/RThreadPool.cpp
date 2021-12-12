@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RThreadPool.h"
+﻿#include "RThreadPool.h"
 
 #include <mutex>
 #include <thread>

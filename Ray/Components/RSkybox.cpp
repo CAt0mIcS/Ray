@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RSkybox.h"
+﻿#include "RSkybox.h"
 
 #include "Graphics/Images/RTexture2D.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"

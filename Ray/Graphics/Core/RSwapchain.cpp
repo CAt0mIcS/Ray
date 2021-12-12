@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RSwapchain.h"
+﻿#include "RSwapchain.h"
 
 #include "Devices/RWindow.h"
 

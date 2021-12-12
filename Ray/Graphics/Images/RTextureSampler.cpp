@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RTextureSampler.h"
+﻿#include "RTextureSampler.h"
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RPhysicalDevice.h"

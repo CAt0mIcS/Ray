@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RString.h"
+﻿#include "RString.h"
 
 #include "Graphics/Pipelines/Shader/RShader.h"
 

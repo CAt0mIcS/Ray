@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RCamera.h"
+﻿#include "RCamera.h"
 
 #include "Devices/RWindow.h"
 #include "Devices/RKeyboard.h"

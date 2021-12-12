@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RWidget.h"
+﻿#include "RWidget.h"
 
 #include "Scene/REntity.h"
 #include "Components/RTransform.h"

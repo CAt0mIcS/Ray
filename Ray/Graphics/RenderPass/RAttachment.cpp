@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RAttachment.h"
+﻿#include "RAttachment.h"
 
 #include "Graphics/Images/RImage.h"
 

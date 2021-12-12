@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RTextRenderer.h"
+﻿#include "RTextRenderer.h"
 
 
 namespace At0::Ray

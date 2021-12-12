@@ -8,6 +8,7 @@
 #include <thread>
 #include <atomic>
 #include <deque>
+#include <condition_variable>
 
 
 namespace At0::Ray
@@ -21,8 +22,8 @@ namespace At0::Ray
 		 * Submits a new function with arguments to the queue of tasks
 		 */
 		template<typename F, typename... Args>
-		/*std::future<bool>*/ void Submit(F&& task, Args&&... args) requires std::is_void_v<
-			std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>>;
+		/*std::future<bool>*/ void Submit(F&& task, Args&&... args) requires
+			std::is_void_v<std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>>;
 
 		/**
 		 * Submits a new function with arguments to the queue of tasks
@@ -93,9 +94,8 @@ namespace At0::Ray
 	};
 
 	template<typename F, typename... Args>
-	inline /*std::future<bool>*/ void
-		ThreadPool::Submit(F&& task, Args&&... args) requires std::is_void_v<
-			std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>>
+	inline /*std::future<bool>*/ void ThreadPool::Submit(F&& task, Args&&... args) requires
+		std::is_void_v<std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>>
 	{
 		PushTask(task, std::forward<Args>(args)...);
 	}
@@ -137,15 +137,17 @@ namespace At0::Ray
 			uint32_t startIdx = endIdx;
 			endIdx += runsPerThread[i];
 
-			PushTask([startIdx, endIdx, i, &loop]() {
-				for (T j = startIdx; j < endIdx; ++j)
+			PushTask(
+				[startIdx, endIdx, i, &loop]()
 				{
-					if constexpr (std::is_invocable_v<decltype(loop), T, uint32_t>)
-						loop(j, i);
-					else
-						loop(j);
-				}
-			});
+					for (T j = startIdx; j < endIdx; ++j)
+					{
+						if constexpr (std::is_invocable_v<decltype(loop), T, uint32_t>)
+							loop(j, i);
+						else
+							loop(j);
+					}
+				});
 		}
 	}
 

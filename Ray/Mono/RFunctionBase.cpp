@@ -1,2 +1,1 @@
-﻿#include "Rpch.h"
-#include "RFunctionBase.h"
+﻿#include "RFunctionBase.h"

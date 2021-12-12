@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RScriptableEntity.h"
+﻿#include "RScriptableEntity.h"
 
 
 namespace At0::Ray

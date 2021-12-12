@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RTextureCubemap.h"
+﻿#include "RTextureCubemap.h"
 
 #include "RTextureSampler.h"
 

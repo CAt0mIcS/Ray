@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RSubpass.h"
+﻿#include "RSubpass.h"
 
 
 namespace At0::Ray

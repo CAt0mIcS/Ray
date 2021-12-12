@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RVertexNode.h"
+﻿#include "RVertexNode.h"
 
 #include "Core/RDynamicVertex.h"
 

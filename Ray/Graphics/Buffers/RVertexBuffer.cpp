@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RVertexBuffer.h"
+﻿#include "RVertexBuffer.h"
 
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Core/RDynamicVertex.h"

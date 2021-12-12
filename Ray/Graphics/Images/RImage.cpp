@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RImage.h"
+﻿#include "RImage.h"
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RPhysicalDevice.h"

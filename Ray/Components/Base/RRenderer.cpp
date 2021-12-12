@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RRenderer.h"
+﻿#include "RRenderer.h"
 
 #include "Shading/RMaterial.h"
 #include "Graphics/Pipelines/Shader/RShader.h"

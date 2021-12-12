@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RScript.h"
+﻿#include "RScript.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/object.h>

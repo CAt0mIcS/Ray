@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RShaderReflection.h"
+﻿#include "RShaderReflection.h"
 
 #include "Filesystem/RJSON.h"
 

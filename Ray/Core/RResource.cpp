@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RResource.h"
+﻿#include "RResource.h"
 
 
 namespace At0::Ray

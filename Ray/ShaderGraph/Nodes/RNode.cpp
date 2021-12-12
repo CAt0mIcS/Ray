@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RNode.h"
+﻿#include "RNode.h"
 
 
 namespace At0::Ray

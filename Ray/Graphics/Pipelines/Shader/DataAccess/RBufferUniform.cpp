@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RBufferUniform.h"
+﻿#include "RBufferUniform.h"
 
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "../RShader.h"

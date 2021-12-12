@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RVulkanInstance.h"
+﻿#include "RVulkanInstance.h"
 
 #include "Devices/RWindow.h"
 

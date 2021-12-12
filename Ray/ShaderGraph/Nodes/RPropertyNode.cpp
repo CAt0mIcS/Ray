@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RPropertyNode.h"
+﻿#include "RPropertyNode.h"
 
 
 namespace At0::Ray

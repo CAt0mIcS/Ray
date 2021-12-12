@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RMeshRenderer.h"
+﻿#include "RMeshRenderer.h"
 
 #include "RTransform.h"
 #include "RMesh.h"

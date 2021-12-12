@@ -29,6 +29,7 @@
 #include <assert.h>
 #include <concepts>
 #include <future>
+#include <type_traits>
 
 #include <vulkan/vulkan.h>
 
@@ -36,7 +37,23 @@
 
 #include <glslang/SPIRV/GlslangToSpv.h>
 
-#include "Utils/RAssert.h"
-#include "Utils/RLogger.h"
-#include "Utils/RException.h"
+#include "RBase.h"
+#include "Core/RKeyCodes.h"
+#include "Utils/RNonCopyable.h"
+#include <vulkan/vulkan_core.h>
+#include <../../Extern/Violent/include/Violent/Utils/VSerialize.h>
+
+#ifdef _MSC_VER
+	#include <source_location>
+#else
+	#include <experimental/source_location>
+#endif
+#include <string_view>
+#include <../../Extern/Violent/include/Violent/Violent.h>
+
+#include <assert.h>
+
 #include "Utils/RString.h"
+#include "Utils/RLogger.h"
+#include "Utils/RAssert.h"
+#include "Utils/RException.h"

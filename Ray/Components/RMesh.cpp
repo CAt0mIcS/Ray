@@ -1,5 +1,4 @@
-﻿#include "Rpch.h"
-#include "RMesh.h"
+﻿#include "RMesh.h"
 
 #include "RMeshRenderer.h"
 #include "RHierachyComponent.h"
