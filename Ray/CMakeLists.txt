@@ -257,6 +257,7 @@ set(SRC
 	"Utils/RGeometricPrimitives.cpp"
 	"Utils/RModel.h"
 	"Utils/RModel.cpp"
+	"Utils/RTypeTraits.h"
 
 	# ------------------------------------------------------------------
 	# Event system

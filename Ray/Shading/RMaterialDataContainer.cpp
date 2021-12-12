@@ -15,13 +15,28 @@ namespace At0::Ray
 	ShaderDataType MaterialDataContainer::GetType(const std::string& key) const
 	{
 		if (m_OffsetMap.find(key) == m_OffsetMap.end())
-			return (ShaderDataType)-1;
+			return (ShaderDataType)0;
 		return m_OffsetMap.at(key).second;
 	}
 
 	void MaterialDataContainer::Set(const std::string& key, bool data)
 	{
-		Set(key, (VkBool32)data, ShaderDataType::Bool);
+		Set(key, (VkBool32)data, GetType<bool>());
+	}
+
+	void MaterialDataContainer::Set(const std::string& key, Bool2 data)
+	{
+		Set(key, UIBool2{ data }, GetType<Bool2>());
+	}
+
+	void MaterialDataContainer::Set(const std::string& key, Bool3 data)
+	{
+		Set(key, UIBool3{ data }, GetType<Bool3>());
+	}
+
+	void MaterialDataContainer::Set(const std::string& key, Bool4 data)
+	{
+		Set(key, UIBool4{ data }, GetType<Bool4>());
 	}
 
 	Ref<Texture2D> MaterialDataContainer::GetTexture(const std::string& key) const

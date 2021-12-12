@@ -116,14 +116,53 @@ namespace At0::Ray
 		switch (glType)
 		{
 		case GL_FLOAT: return ShaderDataType::Float;
-		case GL_INT: return ShaderDataType::Int;
-		case GL_BOOL: return ShaderDataType ::Bool;
-		case GL_UNSIGNED_INT: return ShaderDataType::UInt;
 		case GL_FLOAT_VEC2: return ShaderDataType::Vec2;
 		case GL_FLOAT_VEC3: return ShaderDataType::Vec3;
 		case GL_FLOAT_VEC4: return ShaderDataType::Vec4;
+
+		case GL_INT: return ShaderDataType::Int;
+		case GL_INT_VEC2: return ShaderDataType::IVec2;
+		case GL_INT_VEC3: return ShaderDataType::IVec3;
+		case GL_INT_VEC4: return ShaderDataType::IVec4;
+
+		case GL_UNSIGNED_INT: return ShaderDataType::UInt;
+		case GL_UNSIGNED_INT_VEC2: return ShaderDataType::UVec2;
+		case GL_UNSIGNED_INT_VEC3: return ShaderDataType::UVec3;
+		case GL_UNSIGNED_INT_VEC4: return ShaderDataType::UVec4;
+
+		case GL_BOOL: return ShaderDataType::Bool;
+		case GL_BOOL_VEC2: return ShaderDataType::BVec2;
+		case GL_BOOL_VEC3: return ShaderDataType::BVec3;
+		case GL_BOOL_VEC4: return ShaderDataType::BVec4;
+
+		case GL_DOUBLE: return ShaderDataType::Double;
+		case GL_DOUBLE_VEC2: return ShaderDataType::DVec2;
+		case GL_DOUBLE_VEC3: return ShaderDataType::DVec3;
+		case GL_DOUBLE_VEC4: return ShaderDataType::DVec4;
+
+		case GL_FLOAT_MAT2: return ShaderDataType::Mat2;
+		case GL_FLOAT_MAT2x3: return ShaderDataType::Mat2x3;
+		case GL_FLOAT_MAT2x4: return ShaderDataType::Mat2x4;
+
 		case GL_FLOAT_MAT3: return ShaderDataType::Mat3;
+		case GL_FLOAT_MAT3x2: return ShaderDataType::Mat3x2;
+		case GL_FLOAT_MAT3x4: return ShaderDataType::Mat3x4;
+
 		case GL_FLOAT_MAT4: return ShaderDataType::Mat4;
+		case GL_FLOAT_MAT4x2: return ShaderDataType::Mat4x2;
+		case GL_FLOAT_MAT4x3: return ShaderDataType::Mat4x3;
+
+		case GL_DOUBLE_MAT2: return ShaderDataType::DMat2;
+		case GL_DOUBLE_MAT2x3: return ShaderDataType::DMat2x3;
+		case GL_DOUBLE_MAT2x4: return ShaderDataType::DMat2x4;
+
+		case GL_DOUBLE_MAT3: return ShaderDataType::DMat3;
+		case GL_DOUBLE_MAT3x2: return ShaderDataType::DMat3x2;
+		case GL_DOUBLE_MAT3x4: return ShaderDataType::DMat3x4;
+
+		case GL_DOUBLE_MAT4: return ShaderDataType::DMat4;
+		case GL_DOUBLE_MAT4x2: return ShaderDataType::DMat4x2;
+		case GL_DOUBLE_MAT4x3: return ShaderDataType::DMat4x3;
 		}
 		return (ShaderDataType)0;
 	}

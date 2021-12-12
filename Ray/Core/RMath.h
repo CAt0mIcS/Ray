@@ -18,6 +18,10 @@ namespace At0::Ray
 		static constexpr T PI = (T)3.1415926535897932384626433832795L;
 	}  // namespace Math
 
+	using Float2 = glm::vec<2, float, glm::defaultp>;
+	using Float3 = glm::vec<3, float, glm::defaultp>;
+	using Float4 = glm::vec<4, float, glm::defaultp>;
+
 	using Int2 = glm::vec<2, int32_t, glm::defaultp>;
 	using Int3 = glm::vec<3, int32_t, glm::defaultp>;
 	using Int4 = glm::vec<4, int32_t, glm::defaultp>;
@@ -26,12 +30,45 @@ namespace At0::Ray
 	using UInt3 = glm::vec<3, uint32_t, glm::defaultp>;
 	using UInt4 = glm::vec<4, uint32_t, glm::defaultp>;
 
-	using Float2 = glm::vec<2, float, glm::defaultp>;
-	using Float3 = glm::vec<3, float, glm::defaultp>;
-	using Float4 = glm::vec<4, float, glm::defaultp>;
+	using Bool2 = glm::vec<2, bool, glm::defaultp>;
+	using Bool3 = glm::vec<3, bool, glm::defaultp>;
+	using Bool4 = glm::vec<4, bool, glm::defaultp>;
 
-	using Matrix = glm::mat4;
+	using UIBool2 = glm::vec<2, uint32_t, glm::defaultp>;
+	using UIBool3 = glm::vec<3, uint32_t, glm::defaultp>;
+	using UIBool4 = glm::vec<4, uint32_t, glm::defaultp>;
+
+	using Double2 = glm::vec<2, double, glm::defaultp>;
+	using Double3 = glm::vec<3, double, glm::defaultp>;
+	using Double4 = glm::vec<4, double, glm::defaultp>;
+
+	using Matrix2 = glm::mat2;
+	using Matrix2x3 = glm::mat2x3;
+	using Matrix2x4 = glm::mat2x4;
+
 	using Matrix3 = glm::mat3;
+	using Matrix3x2 = glm::mat3x2;
+	using Matrix3x4 = glm::mat3x4;
+
+	using Matrix4 = glm::mat4;
+	using Matrix4x2 = glm::mat4x2;
+	using Matrix4x3 = glm::mat4x3;
+
+	using Matrix = Matrix4;
+
+	using DMatrix2 = glm::dmat2;
+	using DMatrix2x3 = glm::dmat2x3;
+	using DMatrix2x4 = glm::dmat2x4;
+
+	using DMatrix3 = glm::dmat3;
+	using DMatrix3x2 = glm::dmat3x2;
+	using DMatrix3x4 = glm::dmat3x4;
+
+	using DMatrix4 = glm::dmat4;
+	using DMatrix4x2 = glm::dmat4x2;
+	using DMatrix4x3 = glm::dmat4x3;
+
+	using DMatrix = DMatrix4;
 
 	RAY_EXPORT Matrix MatrixTranslation(Float3 translation);
 	RAY_EXPORT Matrix MatrixTranslation(float x, float y, float z);

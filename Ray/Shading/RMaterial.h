@@ -4,8 +4,10 @@
 #include "RMaterialDataContainer.h"
 #include "../Events/REventDispatcher.h"
 #include "../Events/RCustomEvents.h"
+#include "../Utils/RTypeTraits.h"
 
 #include <string>
+#include <type_traits>
 
 
 namespace At0::Ray
@@ -41,14 +43,9 @@ namespace At0::Ray
 		template<typename T>
 		void Set(const std::string& name, T&& data)
 		{
-			// Bools in vulkan are 4 bytes
-			if constexpr (std::is_same_v<T, bool>)
-				Builder::ValidateUniformExistenceAndSize(
-					*m_GraphicsPipeline, name, sizeof(VkBool32));
-			else
-				Builder::ValidateUniformExistenceAndSize(*m_GraphicsPipeline, name, sizeof(data));
-
-			m_Container.Set(name, std::move(data));
+			Builder::ValidateUniformExistenceAndSize(
+				*m_GraphicsPipeline, name, Builder::GetTypeSize<T>());
+			m_Container.Set(name, std::forward<T>(data));
 			CallListeners(name, GetUniformType(name));
 		}
 
@@ -85,20 +82,13 @@ namespace At0::Ray
 			template<typename T>
 			Builder& Set(const std::string& name, T&& data)
 			{
-				if constexpr (std::is_same_v<T, bool>)
-					Builder::ValidateUniformExistenceAndSize(
-						*m_GraphicsPipeline, name, sizeof(VkBool32));
-				else
-					Builder::ValidateUniformExistenceAndSize(
-						*m_GraphicsPipeline, name, sizeof(data));
-
-				m_Container.Set(name, std::move(data));
+				Builder::ValidateUniformExistenceAndSize(
+					*m_GraphicsPipeline, name, GetTypeSize<T>());
+				m_Container.Set(name, std::forward<T>(data));
 				return *this;
 			}
 
 			Builder& Set(const std::string& name, Ref<Texture2D> data);
-			static void Set(
-				const std::string& name, Ref<Texture2D> data, MaterialDataContainer& container);
 
 			Ref<Material> Acquire();
 			Ref<Material> Build();
@@ -106,6 +96,21 @@ namespace At0::Ray
 		private:
 			static void ValidateUniformExistenceAndSize(
 				const GraphicsPipeline& pipeline, const std::string& name, uint32_t size);
+
+			template<typename T>
+			static uint32_t GetTypeSize()
+			{
+				// Bools in vulkan are 4 bytes each
+				if constexpr (IsSameType<T, bool>)
+					return sizeof(VkBool32);
+				else if constexpr (IsSameType<T, Bool2>)
+					return sizeof(UIBool2);
+				else if constexpr (IsSameType<T, Bool3>)
+					return sizeof(UIBool3);
+				else if constexpr (IsSameType<T, Bool4>)
+					return sizeof(UIBool4);
+				return sizeof(T);
+			}
 
 		private:
 			Ref<GraphicsPipeline> m_GraphicsPipeline;

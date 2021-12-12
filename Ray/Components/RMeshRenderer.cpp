@@ -113,14 +113,53 @@ namespace At0::Ray
 		switch (m_Material->GetType(dataPath))
 		{
 		case ShaderDataType::Float: getUniform() = m_Material->Get<float>(dataPath); break;
-		case ShaderDataType::Int: getUniform() = m_Material->Get<int32_t>(dataPath); break;
-		case ShaderDataType::UInt: getUniform() = m_Material->Get<uint32_t>(dataPath); break;
-		case ShaderDataType::Bool: getUniform() = m_Material->Get<VkBool32>(dataPath); break;
 		case ShaderDataType::Vec2: getUniform() = m_Material->Get<Float2>(dataPath); break;
 		case ShaderDataType::Vec3: getUniform() = m_Material->Get<Float3>(dataPath); break;
 		case ShaderDataType::Vec4: getUniform() = m_Material->Get<Float4>(dataPath); break;
+
+		case ShaderDataType::Int: getUniform() = m_Material->Get<int32_t>(dataPath); break;
+		case ShaderDataType::IVec2: getUniform() = m_Material->Get<Int2>(dataPath); break;
+		case ShaderDataType::IVec3: getUniform() = m_Material->Get<Int3>(dataPath); break;
+		case ShaderDataType::IVec4: getUniform() = m_Material->Get<Int4>(dataPath); break;
+
+		case ShaderDataType::UInt: getUniform() = m_Material->Get<uint32_t>(dataPath); break;
+		case ShaderDataType::UVec2: getUniform() = m_Material->Get<UInt2>(dataPath); break;
+		case ShaderDataType::UVec3: getUniform() = m_Material->Get<UInt3>(dataPath); break;
+		case ShaderDataType::UVec4: getUniform() = m_Material->Get<UInt4>(dataPath); break;
+
+		case ShaderDataType::Bool: getUniform() = m_Material->Get<VkBool32>(dataPath); break;
+		case ShaderDataType::BVec2: getUniform() = m_Material->Get<Bool2>(dataPath); break;
+		case ShaderDataType::BVec3: getUniform() = m_Material->Get<Bool3>(dataPath); break;
+		case ShaderDataType::BVec4: getUniform() = m_Material->Get<Bool4>(dataPath); break;
+
+		case ShaderDataType::Double: getUniform() = m_Material->Get<double>(dataPath); break;
+		case ShaderDataType::DVec2: getUniform() = m_Material->Get<Double2>(dataPath); break;
+		case ShaderDataType::DVec3: getUniform() = m_Material->Get<Double3>(dataPath); break;
+		case ShaderDataType::DVec4: getUniform() = m_Material->Get<Double4>(dataPath); break;
+
+		case ShaderDataType::Mat2: getUniform() = m_Material->Get<Matrix2>(dataPath); break;
+		case ShaderDataType::Mat2x3: getUniform() = m_Material->Get<Matrix2x3>(dataPath); break;
+		case ShaderDataType::Mat2x4: getUniform() = m_Material->Get<Matrix2x4>(dataPath); break;
+
 		case ShaderDataType::Mat3: getUniform() = m_Material->Get<Matrix3>(dataPath); break;
-		case ShaderDataType::Mat4: getUniform() = m_Material->Get<Matrix>(dataPath); break;
+		case ShaderDataType::Mat3x2: getUniform() = m_Material->Get<Matrix3x2>(dataPath); break;
+		case ShaderDataType::Mat3x4: getUniform() = m_Material->Get<Matrix3x4>(dataPath); break;
+
+		case ShaderDataType::Mat4: getUniform() = m_Material->Get<Matrix4>(dataPath); break;
+		case ShaderDataType::Mat4x2: getUniform() = m_Material->Get<Matrix4x2>(dataPath); break;
+		case ShaderDataType::Mat4x3: getUniform() = m_Material->Get<Matrix4x3>(dataPath); break;
+
+		case ShaderDataType::DMat2: getUniform() = m_Material->Get<DMatrix2>(dataPath); break;
+		case ShaderDataType::DMat2x3: getUniform() = m_Material->Get<DMatrix2x3>(dataPath); break;
+		case ShaderDataType::DMat2x4: getUniform() = m_Material->Get<DMatrix2x4>(dataPath); break;
+
+		case ShaderDataType::DMat3: getUniform() = m_Material->Get<DMatrix3>(dataPath); break;
+		case ShaderDataType::DMat3x2: getUniform() = m_Material->Get<DMatrix3x2>(dataPath); break;
+		case ShaderDataType::DMat3x4: getUniform() = m_Material->Get<DMatrix3x4>(dataPath); break;
+
+		case ShaderDataType::DMat4: getUniform() = m_Material->Get<DMatrix4>(dataPath); break;
+		case ShaderDataType::DMat4x2: getUniform() = m_Material->Get<DMatrix4x2>(dataPath); break;
+		case ShaderDataType::DMat4x3: getUniform() = m_Material->Get<DMatrix4x3>(dataPath); break;
 		default:
 			RAY_ASSERT(
 				false, "[MeshRenderer] Data type {0} unknown.", (int)m_Material->GetType(dataPath));
