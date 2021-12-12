@@ -9,7 +9,7 @@ namespace At0::Ray
 	class EventListener;
 
 	template<typename T>
-	class EventDispatcher
+	class RAY_EXPORT EventDispatcher
 	{
 	public:
 		EventDispatcher() = default;

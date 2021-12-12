@@ -19,7 +19,9 @@ namespace At0::Ray
 		public EventDispatcher<CameraChangedEvent>,
 		EventListener<MouseMovedEvent>,
 		EventListener<KeyPressedEvent>,
-		EventListener<KeyReleasedEvent>
+		EventListener<KeyReleasedEvent>,
+		EventListener<ScrollUpEvent>,
+		EventListener<ScrollDownEvent>
 	{
 	public:
 		enum CameraType
@@ -31,6 +33,7 @@ namespace At0::Ray
 	public:
 		Float3 Rotation{};
 		Float3 Position{};
+		Float3 Pivot{};
 
 		float RotationSpeed = 1.0f, MovementSpeed = 1.0f;
 
@@ -45,16 +48,6 @@ namespace At0::Ray
 			Matrix Projection = MatrixIdentity();
 			Float3 ViewPos{};
 		} ShaderData{};
-
-		struct
-		{
-			bool Left = false;
-			bool Right = false;
-			bool Forward = false;
-			bool Backward = false;
-			bool Up = false;
-			bool Down = false;
-		} Keys{};
 
 	public:
 		Camera();
@@ -81,6 +74,8 @@ namespace At0::Ray
 		void OnEvent(MouseMovedEvent& e) override;
 		void OnEvent(KeyPressedEvent& e) override;
 		void OnEvent(KeyReleasedEvent& e) override;
+		void OnEvent(ScrollUpEvent& e) override;
+		void OnEvent(ScrollDownEvent& e) override;
 
 	private:
 		float m_FoV;

@@ -41,7 +41,13 @@ namespace At0::Ray
 		template<typename T>
 		void Set(const std::string& name, T&& data)
 		{
-			Builder::ValidateUniformExistence(*m_GraphicsPipeline, name);
+			// Bools in vulkan are 4 bytes
+			if constexpr (std::is_same_v<T, bool>)
+				Builder::ValidateUniformExistenceAndSize(
+					*m_GraphicsPipeline, name, sizeof(VkBool32));
+			else
+				Builder::ValidateUniformExistenceAndSize(*m_GraphicsPipeline, name, sizeof(data));
+
 			m_Container.Set(name, std::move(data));
 			CallListeners(name, GetUniformType(name));
 		}
@@ -79,7 +85,13 @@ namespace At0::Ray
 			template<typename T>
 			Builder& Set(const std::string& name, T&& data)
 			{
-				ValidateUniformExistence(*m_GraphicsPipeline, name);
+				if constexpr (std::is_same_v<T, bool>)
+					Builder::ValidateUniformExistenceAndSize(
+						*m_GraphicsPipeline, name, sizeof(VkBool32));
+				else
+					Builder::ValidateUniformExistenceAndSize(
+						*m_GraphicsPipeline, name, sizeof(data));
+
 				m_Container.Set(name, std::move(data));
 				return *this;
 			}
@@ -92,8 +104,8 @@ namespace At0::Ray
 			Ref<Material> Build();
 
 		private:
-			static void ValidateUniformExistence(
-				const GraphicsPipeline& pipeline, const std::string& name);
+			static void ValidateUniformExistenceAndSize(
+				const GraphicsPipeline& pipeline, const std::string& name, uint32_t size);
 
 		private:
 			Ref<GraphicsPipeline> m_GraphicsPipeline;

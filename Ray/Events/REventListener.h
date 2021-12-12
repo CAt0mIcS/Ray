@@ -1,52 +1,32 @@
 ﻿#pragma once
 
 #include "REventDispatcher.h"
-#include "../Devices/RWindow.h"
-
-#include <type_traits>
-#include <concepts>
 
 
 namespace At0::Ray
 {
 	template<typename T>
-	class EventListener
+	class RAY_EXPORT EventListener
 	{
 	public:
-		/**
-		 * Registers the listener to receive event of type T.
-		 * If the dispatcher<T> is a base class of the Window then the window is selected
-		 * automatically as the dispatcher
-		 */
-		template<typename U = T>
-		EventListener() requires std::derived_from<Window, EventDispatcher<U>>
-		{
-			RegisterForDispatcher(&Window::Get());
-		}
-
 		/**
 		 * Registers the listener to receive event of type T.
 		 * If the dispatcher<T> is not a base class of the Window the dispatcher<T> needs to be
 		 * specified
 		 */
-		template<typename U = T>
-		EventListener(EventDispatcher<U>& dispatcher)
-		{
-			RegisterForDispatcher(&dispatcher);
-		}
+		EventListener(EventDispatcher<T>& dispatcher) { RegisterForDispatcher(dispatcher); }
 
 		/**
 		 * Requires dispatcher to be registered using RegisterForDispatcher
 		 */
-		template<typename U = T>
-		EventListener() requires(!std::derived_from<Window, EventDispatcher<U>>);
+		EventListener() = default;
 
 		/**
 		 * Registers this to listen to events from dispatcher
 		 */
-		void RegisterForDispatcher(EventDispatcher<T>* dispatcher)
+		void RegisterForDispatcher(EventDispatcher<T>& dispatcher)
 		{
-			m_Dispatcher = dispatcher;
+			m_Dispatcher = &dispatcher;
 			m_Dispatcher->RegisterListener(this);
 		}
 

@@ -40,7 +40,7 @@ namespace At0::Ray
 {
 	Graphics* Graphics::s_Instance = nullptr;
 
-	Graphics::Graphics()
+	Graphics::Graphics() : EventListener<FramebufferResizedEvent>(Window::Get())
 	{
 		if (s_Instance)
 			ThrowRuntime("[Graphics] Object already created");

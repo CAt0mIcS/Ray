@@ -120,6 +120,15 @@ namespace At0::Ray
 		return m_UniformBlocks[0];
 	}
 
+	const ShaderReflection::UniformData& ShaderReflection::GetPathedUniform(
+		std::string_view name) const
+	{
+		if (auto* data = TryGetPathedUniform(name); data)
+			return *data;
+		ThrowRuntime("[ShaderReflection] Failed to get pathed uniform \"{0}\"", name);
+		return m_UniformBlocks[0].uniforms[0];
+	}
+
 	ShaderReflection::AttributeData& ShaderReflection::GetAttribute(std::string_view name)
 	{
 		return const_cast<AttributeData&>(std::as_const(*this).GetAttribute(name));
@@ -133,6 +142,11 @@ namespace At0::Ray
 	ShaderReflection::UniformBlockData& ShaderReflection::GetUniformBlock(std::string_view name)
 	{
 		return const_cast<UniformBlockData&>(std::as_const(*this).GetUniformBlock(name));
+	}
+
+	ShaderReflection::UniformData& ShaderReflection::GetPathedUniform(std::string_view name)
+	{
+		return const_cast<UniformData&>(std::as_const(*this).GetPathedUniform(name));
 	}
 
 	const ShaderReflection::AttributeData* ShaderReflection::TryGetAttribute(
@@ -162,6 +176,27 @@ namespace At0::Ray
 		return nullptr;
 	}
 
+	const ShaderReflection::UniformData* ShaderReflection::TryGetPathedUniform(
+		std::string_view name) const
+	{
+		if (int pos = name.find('.'); pos != std::string::npos)
+		{
+			std::string_view uniformBlock = name.substr(0, pos);
+			std::string_view uniform = name.substr(pos + 1);
+
+			auto* uBlockData = TryGetUniformBlock(uniformBlock);
+			if (!uBlockData)
+				return nullptr;
+
+			for (auto& uData : uBlockData->uniforms)
+				if (uData.name == uniform)
+					return &uData;
+			return nullptr;
+		}
+		else
+			return TryGetUniform(name);
+	}
+
 	ShaderReflection::AttributeData* ShaderReflection::TryGetAttribute(std::string_view name)
 	{
 		return const_cast<AttributeData*>(std::as_const(*this).TryGetAttribute(name));
@@ -175,6 +210,11 @@ namespace At0::Ray
 	ShaderReflection::UniformBlockData* ShaderReflection::TryGetUniformBlock(std::string_view name)
 	{
 		return const_cast<UniformBlockData*>(std::as_const(*this).TryGetUniformBlock(name));
+	}
+
+	ShaderReflection::UniformData* ShaderReflection::TryGetPathedUniform(std::string_view name)
+	{
+		return const_cast<UniformData*>(std::as_const(*this).TryGetPathedUniform(name));
 	}
 
 

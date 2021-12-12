@@ -2,13 +2,17 @@
 #include "RCamera.h"
 
 #include "Devices/RWindow.h"
+#include "Devices/RKeyboard.h"
+#include "Devices/RMouse.h"
 
 
 namespace At0::Ray
 {
 	bool Camera::IsMoving() const
 	{
-		return Keys.Left || Keys.Right || Keys.Up || Keys.Down || Keys.Forward || Keys.Backward;
+		return Keyboard::IsKeyPressed(Key::W) || Keyboard::IsKeyPressed(Key::A) ||
+			   Keyboard::IsKeyPressed(Key::S) || Keyboard::IsKeyPressed(Key::D) ||
+			   Keyboard::IsKeyPressed(Key::Space) || Keyboard::IsKeyPressed(Key::LeftControl);
 	}
 
 	void Camera::SetPerspective(float fov, float aspect, float nearZ, float farZ)
@@ -74,31 +78,31 @@ namespace At0::Ray
 
 				float moveSpeed = dt * MovementSpeed;
 
-				if (Keys.Forward)
+				if (Keyboard::IsKeyPressed(Key::W))
 				{
 					Position += camFront * moveSpeed;
 				}
-				if (Keys.Backward)
+				if (Keyboard::IsKeyPressed(Key::S))
 				{
 					Position -= camFront * moveSpeed;
 				}
-				if (Keys.Left)
+				if (Keyboard::IsKeyPressed(Key::A))
 				{
 					Position -=
 						Normalize(CrossProduct(camFront, Float3(0.0f, 1.0f, 0.0f))) * moveSpeed;
 				}
-				if (Keys.Right)
+				if (Keyboard::IsKeyPressed(Key::D))
 				{
 					Position +=
 						Normalize(CrossProduct(camFront, Float3(0.0f, 1.0f, 0.0f))) * moveSpeed;
 				}
-				if (Keys.Up)
+				if (Keyboard::IsKeyPressed(Key::Space))
 				{
 					Position += Normalize(CrossProduct(
 									camFront, CrossProduct(Float3(0.0f, 1.0f, 0.0f), camFront))) *
 								moveSpeed;
 				}
-				if (Keys.Down)
+				if (Keyboard::IsKeyPressed(Key::LeftControl))
 				{
 					Position -= Normalize(CrossProduct(
 									camFront, CrossProduct(Float3(0.0f, 1.0f, 0.0f), camFront))) *
@@ -110,7 +114,13 @@ namespace At0::Ray
 		}
 	}
 
-	Camera::Camera() {}
+	Camera::Camera()
+		: EventListener<MouseMovedEvent>(Window::Get()),
+		  EventListener<KeyPressedEvent>(Window::Get()), EventListener<KeyReleasedEvent>(
+															 Window::Get()),
+		  EventListener<ScrollUpEvent>(Window::Get()), EventListener<ScrollDownEvent>(Window::Get())
+	{
+	}
 
 	Camera::~Camera() {}
 
@@ -123,6 +133,12 @@ namespace At0::Ray
 			rotM, Radians(Rotation.x * (FlipY ? -1.0f : 1.0f)), Float3(1.0f, 0.0f, 0.0f));
 		rotM = glm::rotate(rotM, Radians(Rotation.y), Float3(0.0f, 1.0f, 0.0f));
 		rotM = glm::rotate(rotM, Radians(Rotation.z), Float3(0.0f, 0.0f, 1.0f));
+		if (Type == CameraType::LookAt)
+		{
+			Matrix transToPivot = glm::translate(MatrixIdentity(), -Pivot);
+			Matrix transFromPivot = glm::translate(glm::mat4(1.0f), Pivot);
+			rotM = transFromPivot * rotM * transToPivot;
+		}
 
 		Float3 translation = Position;
 		if (FlipY)
@@ -158,13 +174,23 @@ namespace At0::Ray
 
 	void Camera::OnEvent(MouseMovedEvent& e)
 	{
-		if (!Window::Get().CursorEnabled())
-			Rotate(Float3{ (float)e.GetDelta().y, (float)-e.GetDelta().x, 0.0f } * RotationSpeed);
+		if (Type == CameraType::LookAt && Mouse::IsMiddlePressed())
+		{
+			if (Keyboard::IsKeyPressed(Key::LeftShift))
+			{
+				Pivot += Float3{ e.GetDelta().x, -e.GetDelta().y, 0.0f } * RotationSpeed;
+				Translate(Float3{ -e.GetDelta(), 0.0f } * RotationSpeed);
+				return;
+			}
+			Rotate(Float3{ e.GetDelta().y, -e.GetDelta().x, 0.0f } * RotationSpeed);
+		}
+		else if (!Window::Get().CursorEnabled())
+			Rotate(Float3{ e.GetDelta().y, -e.GetDelta().x, 0.0f } * RotationSpeed);
 	}
 
 	void Camera::OnEvent(KeyPressedEvent& e)
 	{
-		if (e.GetKey() == Key::Escape)
+		if (Type == CameraType::FirstPerson && e.GetKey() == Key::Escape)
 		{
 			if (Window::Get().CursorEnabled())
 				Window::Get().DisableCursor();
@@ -172,39 +198,29 @@ namespace At0::Ray
 				Window::Get().EnableCursor();
 		}
 
-		if (e.GetKey() == Key::LeftShift)
+		if (e.GetKey() == Key::LeftShift && !Mouse::IsMiddlePressed())
 			SetMovementSpeed(MovementSpeed * 5.0f);
-
-		if (this->Type == Camera::FirstPerson)
-		{
-			switch (e.GetKey())
-			{
-			case Key::W: Keys.Forward = true; break;
-			case Key::S: Keys.Backward = true; break;
-			case Key::A: Keys.Left = true; break;
-			case Key::D: Keys.Right = true; break;
-			case Key::Space: Keys.Up = true; break;
-			case Key::LeftControl: Keys.Down = true; break;
-			}
-		}
 	}
 
 	void Camera::OnEvent(KeyReleasedEvent& e)
 	{
 		if (e.GetKey() == Key::LeftShift)
 			SetMovementSpeed(MovementSpeed / 5.0f);
+	}
 
-		if (this->Type == Camera::FirstPerson)
+	void Camera::OnEvent(ScrollUpEvent& e)
+	{
+		if (Type == Camera::LookAt)
 		{
-			switch (e.GetKey())
-			{
-			case Key::W: Keys.Forward = false; break;
-			case Key::S: Keys.Backward = false; break;
-			case Key::A: Keys.Left = false; break;
-			case Key::D: Keys.Right = false; break;
-			case Key::Space: Keys.Up = false; break;
-			case Key::LeftControl: Keys.Down = false; break;
-			}
+			Translate(Float3(0.0f, 0.0f, (float)e.GetOffset().y * 0.3f) * MovementSpeed);
+		}
+	}
+
+	void Camera::OnEvent(ScrollDownEvent& e)
+	{
+		if (Type == Camera::LookAt)
+		{
+			Translate(Float3(0.0f, 0.0f, (float)e.GetOffset().y * 0.3f) * MovementSpeed);
 		}
 	}
 }  // namespace At0::Ray

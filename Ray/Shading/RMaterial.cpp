@@ -66,7 +66,7 @@ namespace At0::Ray
 
 	Material::Builder& Material::Builder::Set(const std::string& name, Ref<Texture2D> data)
 	{
-		ValidateUniformExistence(*m_GraphicsPipeline, name);
+		Builder::ValidateUniformExistenceAndSize(*m_GraphicsPipeline, name, -1);
 		m_Container.Set(name, std::move(data));
 		return *this;
 	}
@@ -81,15 +81,17 @@ namespace At0::Ray
 		return MakeRef<Material>(std::move(m_GraphicsPipeline), std::move(m_Container));
 	}
 
-	void Material::Builder::ValidateUniformExistence(
-		const GraphicsPipeline& pipeline, const std::string& name)
+	void Material::Builder::ValidateUniformExistenceAndSize(
+		const GraphicsPipeline& pipeline, const std::string& name, uint32_t size)
 	{
 		bool hasUniform = false;
+		uint32_t expectedSize = 0;
 		for (const auto& [stage, reflection] : pipeline.GetShader().GetReflections())
 		{
-			if (reflection.HasPathedUniform(name))
+			if (auto* uniform = reflection.TryGetPathedUniform(name); uniform)
 			{
 				hasUniform = true;
+				expectedSize = uniform->size;
 				break;
 			}
 		}
@@ -97,5 +99,11 @@ namespace At0::Ray
 		RAY_MEXPECTS(hasUniform,
 			"[Material::Builder] Uniform \"{0}\" does not exist in shaders:\n\"{1}\"\n\"{2}\"",
 			name, pipeline.GetShader().GetFilepaths()[0], pipeline.GetShader().GetFilepaths()[1]);
+
+		if (size != -1)
+			RAY_MEXPECTS(expectedSize == size,
+				"[Material::Builder] Uniform \"{0}\" expects size "
+				"of {1} byte(s) but received {2} byte(s)",
+				name, expectedSize, size);
 	}
 }  // namespace At0::Ray

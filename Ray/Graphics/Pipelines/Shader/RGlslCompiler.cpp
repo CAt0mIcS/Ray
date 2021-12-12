@@ -111,6 +111,38 @@ namespace At0::Ray
 		return UniformType::None;
 	}
 
+	static uint32_t GetGlSize(int32_t glType)
+	{
+		switch (glType)
+		{
+		case GL_FLOAT:
+		case GL_INT:
+		case GL_BOOL:
+		case GL_UNSIGNED_INT: return 4;
+		case GL_DOUBLE:
+		case GL_FLOAT_VEC2:
+		case GL_INT_VEC2:
+		case GL_BOOL_VEC2:
+		case GL_UNSIGNED_INT_VEC2: return 8;
+		case GL_FLOAT_VEC3:
+		case GL_INT_VEC3:
+		case GL_BOOL_VEC3:
+		case GL_UNSIGNED_INT_VEC3: return 12;
+		case GL_FLOAT_VEC4:
+		case GL_INT_VEC4:
+		case GL_DOUBLE_VEC2:
+		case GL_BOOL_VEC4:
+		case GL_FLOAT_MAT2:
+		case GL_UNSIGNED_INT_VEC4: return 16;
+		case GL_DOUBLE_VEC3: return 24;
+		case GL_DOUBLE_VEC4: return 32;
+
+		case GL_FLOAT_MAT3: return 36;
+		case GL_FLOAT_MAT4: return 64;
+		}
+		return 0;
+	}
+
 	static TBuiltInResource GetResources()
 	{
 		TBuiltInResource resources = {};
@@ -354,8 +386,7 @@ namespace At0::Ray
 
 		ShaderReflection::UniformData data{};
 		data.binding = uniform.getBinding();
-		data.size = uniform.size;
-		// data.glType = uniform.glDefineType;
+		data.size = GetGlSize(uniform.glDefineType);
 		data.type = GlTypeToUniformType(uniform.glDefineType);
 		data.offset = uniform.offset;
 		data.set = uniform.getType()->getQualifier().layoutSet;

@@ -34,40 +34,72 @@
 #include <Ray/Mono/RScript.h>
 
 
-using namespace At0;
-
-
-class Scene : public Ray::Scene
+namespace At0::Raditor
 {
-public:
-	Scene() : Ray::Scene(Ray::MakeScope<Ray::Camera>())
+	class Scene : public Ray::Scene
 	{
-		Ray::UInt2 size = Ray::Window::Get().GetFramebufferSize();
-		GetCamera().SetPosition(Ray::Float3(0.0f, 0.0f, -2.5f));
-		GetCamera().SetRotation(Ray::Float3(0.0f));
-		GetCamera().SetRotationSpeed(0.07f);
-		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
-		GetCamera().SetMovementSpeed(3.0f);
-	}
-};
+	public:
+		Scene() : Ray::Scene(Ray::MakeScope<Ray::Camera>())
+		{
+			Ray::UInt2 size = Ray::Window::Get().GetFramebufferSize();
+			GetCamera().Type = Ray::Camera::LookAt;
+			GetCamera().SetPosition(Ray::Float3(0.0f, 0.0f, -2.5f));
+			GetCamera().SetRotation(Ray::Float3(0.0f));
+			GetCamera().SetRotationSpeed(0.12f);
+			GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
+			GetCamera().SetMovementSpeed(3.0f);
+		}
+	};
 
+	class App : public Ray::Engine, Ray::EventListener<Ray::CameraChangedEvent>
+	{
+	public:
+		App()
+		{
+			Ray::Scene::Create<Scene>();
+			RegisterForDispatcher(Scene::Get().GetCamera());
 
-class App : public Ray::Engine
-{
-public:
-	App() { Ray::Scene::Create<Scene>(); }
+			Scene::Get().CreateEntity().Emplace<Ray::Mesh>(
+				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 
-private:
-};
+			auto pipeline = Ray::GraphicsPipeline::Builder()
+								.SetShader(Ray::Shader::Acquire({ "Resources/Shaders/Flat_Col.vert",
+									"Resources/Shaders/Flat_Col.frag" }))
+								.SetCullMode(VK_CULL_MODE_NONE)
+								.Acquire();
+
+			auto material = Ray::Material::Builder(pipeline)
+								.Set("Shading.color", Ray::Float4{ .7f, .2f, .2f, 1.f })
+								.Acquire();
+
+			m_Pivot = Scene::Get().CreateEntity();
+			m_Pivot.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(material));
+			m_Pivot.Emplace<Ray::MeshRenderer>(material);
+		}
+
+	private:
+		virtual void OnEvent(Ray::CameraChangedEvent& e) override
+		{
+			m_Pivot.Get<Ray::Transform>().SetTranslation(Scene::Get().GetCamera().Pivot);
+		}
+
+	private:
+		Ray::Entity m_Pivot;
+	};
+
+}  // namespace At0::Raditor
+
 
 void SignalHandler(int signal)
 {
-	Ray::Log::Critical("Signal {0} received", signal);
-	Ray::Log::Close();
+	At0::Ray::Log::Critical("Signal {0} received", signal);
+	At0::Ray::Log::Close();
 }
 
 int main()
 {
+	using namespace At0;
+
 	signal(SIGABRT, SignalHandler);
 	signal(SIGILL, SignalHandler);
 	signal(SIGINT, SignalHandler);
@@ -80,9 +112,9 @@ int main()
 		Ray::Log::Info("Launch Path: \"{0}\"", std::filesystem::absolute("."));
 		Ray::Window::Create();
 		Ray::Window::Get().Show();
-		Ray::Window::Get().SetTitle("SetupTest");
+		Ray::Window::Get().SetTitle("Raditor");
 
-		return App{}.Run();
+		return Raditor::App{}.Run();
 	}
 	catch (Ray::Exception& e)
 	{
