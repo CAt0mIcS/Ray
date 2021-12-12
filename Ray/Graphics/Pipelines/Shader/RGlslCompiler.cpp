@@ -111,36 +111,21 @@ namespace At0::Ray
 		return UniformType::None;
 	}
 
-	static uint32_t GetGlSize(int32_t glType)
+	static ShaderDataType GlTypeToDataType(int32_t glType)
 	{
 		switch (glType)
 		{
-		case GL_FLOAT:
-		case GL_INT:
-		case GL_BOOL:
-		case GL_UNSIGNED_INT: return 4;
-		case GL_DOUBLE:
-		case GL_FLOAT_VEC2:
-		case GL_INT_VEC2:
-		case GL_BOOL_VEC2:
-		case GL_UNSIGNED_INT_VEC2: return 8;
-		case GL_FLOAT_VEC3:
-		case GL_INT_VEC3:
-		case GL_BOOL_VEC3:
-		case GL_UNSIGNED_INT_VEC3: return 12;
-		case GL_FLOAT_VEC4:
-		case GL_INT_VEC4:
-		case GL_DOUBLE_VEC2:
-		case GL_BOOL_VEC4:
-		case GL_FLOAT_MAT2:
-		case GL_UNSIGNED_INT_VEC4: return 16;
-		case GL_DOUBLE_VEC3: return 24;
-		case GL_DOUBLE_VEC4: return 32;
-
-		case GL_FLOAT_MAT3: return 36;
-		case GL_FLOAT_MAT4: return 64;
+		case GL_FLOAT: return ShaderDataType::Float;
+		case GL_INT: return ShaderDataType::Int;
+		case GL_BOOL: return ShaderDataType ::Bool;
+		case GL_UNSIGNED_INT: return ShaderDataType::UInt;
+		case GL_FLOAT_VEC2: return ShaderDataType::Vec2;
+		case GL_FLOAT_VEC3: return ShaderDataType::Vec3;
+		case GL_FLOAT_VEC4: return ShaderDataType::Vec4;
+		case GL_FLOAT_MAT3: return ShaderDataType::Mat3;
+		case GL_FLOAT_MAT4: return ShaderDataType::Mat4;
 		}
-		return 0;
+		return (ShaderDataType)0;
 	}
 
 	static TBuiltInResource GetResources()
@@ -386,7 +371,8 @@ namespace At0::Ray
 
 		ShaderReflection::UniformData data{};
 		data.binding = uniform.getBinding();
-		data.size = GetGlSize(uniform.glDefineType);
+		data.dataType = GlTypeToDataType(uniform.glDefineType);
+		data.size = GetShaderDataTypeSize(data.dataType);
 		data.type = GlTypeToUniformType(uniform.glDefineType);
 		data.offset = uniform.offset;
 		data.set = uniform.getType()->getQualifier().layoutSet;

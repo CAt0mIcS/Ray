@@ -71,6 +71,9 @@ namespace At0::Ray
 			 * If the uniform is in a uniform block, this value is undefined
 			 */
 			uint32_t set;
+
+			// Data type of uniform in uniform block
+			ShaderDataType dataType;
 		};
 
 		struct UniformBlockData

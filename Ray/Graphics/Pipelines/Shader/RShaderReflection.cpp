@@ -237,6 +237,7 @@ namespace At0::Ray
 		uniform.AddMember("size", data.size, allocator);
 		uniform.AddMember("type", (uint32_t)data.type, allocator);
 		uniform.AddMember("set", data.set, allocator);
+		uniform.AddMember("dataType", (uint32_t)data.dataType, allocator);
 		return uniform;
 	}
 
@@ -331,6 +332,7 @@ namespace At0::Ray
 		uniformData.set = data["set"].GetUint();
 		uniformData.size = data["size"].GetUint();
 		uniformData.type = (UniformType)data["type"].GetUint();
+		uniformData.dataType = (ShaderDataType)data["dataType"].GetUint();
 		return uniformData;
 	}
 

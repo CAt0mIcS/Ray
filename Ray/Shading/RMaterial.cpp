@@ -86,12 +86,14 @@ namespace At0::Ray
 	{
 		bool hasUniform = false;
 		uint32_t expectedSize = 0;
+		ShaderDataType expectedType;
 		for (const auto& [stage, reflection] : pipeline.GetShader().GetReflections())
 		{
 			if (auto* uniform = reflection.TryGetPathedUniform(name); uniform)
 			{
 				hasUniform = true;
 				expectedSize = uniform->size;
+				expectedType = uniform->dataType;
 				break;
 			}
 		}
@@ -103,7 +105,7 @@ namespace At0::Ray
 		if (size != -1)
 			RAY_MEXPECTS(expectedSize == size,
 				"[Material::Builder] Uniform \"{0}\" expects size "
-				"of {1} byte(s) but received {2} byte(s)",
-				name, expectedSize, size);
+				"of {1} byte(s) but received {2} byte(s) (ShaderDataType: {3})",
+				name, expectedSize, size, String::Construct(expectedType));
 	}
 }  // namespace At0::Ray
