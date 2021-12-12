@@ -120,6 +120,9 @@ include("CMake/Macros.cmake")
 add_subdirectory("Extern")
 add_subdirectory("Ray")
 
+# Editor
+add_subdirectory("Raditor")
+
 if(RAY_BUILD_TESTS)
     add_subdirectory("Tests")
 endif()
