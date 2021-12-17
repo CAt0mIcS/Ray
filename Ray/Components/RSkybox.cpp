@@ -19,11 +19,12 @@ namespace At0::Ray
 	Skybox::Skybox(Entity entity, Ref<Texture2D> texture)
 		: Component(entity), EventListener<CameraChangedEvent>(Scene::Get().GetCamera())
 	{
-		auto pipeline = GraphicsPipeline::Builder()
-							.SetShader(Ray::Shader::Acquire({ "Resources/Shaders/Flat_Diff.vert",
-								"Resources/Shaders/Flat_Diff.frag" }))
-							.SetCullMode(VK_CULL_MODE_FRONT_BIT)
-							.Acquire();
+		auto pipeline =
+			GraphicsPipeline::Builder()
+				.SetShader(Ray::Shader::AcquireSourceFile(
+					{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" }))
+				.SetCullMode(VK_CULL_MODE_FRONT_BIT)
+				.Acquire();
 
 		auto material = Material::Builder(std::move(pipeline))
 							.Set("samplerDiffuse", std::move(texture))

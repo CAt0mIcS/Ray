@@ -56,17 +56,63 @@ namespace At0::Raditor
 	public:
 		App()
 		{
+			std::string vertexShader = R"(
+#version 450 core
+#extension GL_ARB_separate_shader_objects : enable
+
+
+layout(location = 0) in vec3 inPos;
+
+layout(set = 0, binding = 0) uniform PerSceneData
+{
+	mat4 View;
+	mat4 Proj;
+} uScene;
+
+layout(set = 1, binding = 1) uniform PerObjectData
+{
+	mat4 Model;
+} uObj;
+
+void main()
+{
+	gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 1.0f);
+}
+)";
+
+			std::string fragmentShader = R"(
+#version 450 core
+#extension GL_ARB_separate_shader_objects : enable
+
+
+layout(location = 0) out vec4 outColor;
+
+layout(set = 1, binding = 2) uniform Shading
+{
+	vec4 color;
+} uShading;
+
+
+void main()
+{
+	outColor = uShading.color;
+}
+
+)";
+
+
 			Ray::Scene::Create<Scene>();
 			RegisterForDispatcher(Scene::Get().GetCamera());
 
 			Scene::Get().CreateEntity().Emplace<Ray::Mesh>(
 				Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 
-			auto pipeline = Ray::GraphicsPipeline::Builder()
-								.SetShader(Ray::Shader::Acquire({ "Resources/Shaders/Flat_Col.vert",
-									"Resources/Shaders/Flat_Col.frag" }))
-								.SetCullMode(VK_CULL_MODE_NONE)
-								.Acquire();
+			auto pipeline =
+				Ray::GraphicsPipeline::Builder()
+					.SetShader(Ray::Shader::AcquireSourceString({ vertexShader, fragmentShader },
+						{ Ray::ShaderStage::Vertex, Ray::ShaderStage::Fragment }))
+					.SetCullMode(VK_CULL_MODE_NONE)
+					.Acquire();
 
 			auto material = Ray::Material::Builder(pipeline)
 								.Set("Shading.color", Ray::Float4{ .7f, .2f, .2f, 1.f })

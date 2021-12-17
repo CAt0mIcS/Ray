@@ -10,25 +10,51 @@
 
 namespace At0::Ray
 {
-	Ref<Shader> Shader::Acquire(
-		std::vector<std::string> shaders, const std::vector<std::string>& reflections, Flags flags)
+	Ref<Shader> Shader::AcquireSourceFile(
+		std::vector<std::string> shaders, const std::vector<std::string>& reflections)
 	{
 		return Resources::Get().EmplaceIfNonExistent<Shader>(
 			std::accumulate(shaders.begin(), shaders.end(), std::string{}), std::move(shaders),
-			reflections, flags);
+			GLSLFile, reflections);
 	}
 
-	Shader::Shader(
-		std::vector<std::string> shaders, const std::vector<std::string>& reflections, Flags flags)
+	Ref<Shader> Shader::AcquireCompiledFile(
+		std::vector<std::string> shaders, const std::vector<std::string>& reflections)
+	{
+		return Resources::Get().EmplaceIfNonExistent<Shader>(
+			std::accumulate(shaders.begin(), shaders.end(), std::string{}), std::move(shaders),
+			CompiledFile, reflections);
+	}
+
+	Ref<Shader> Shader::AcquireSourceString(std::vector<std::string> shaders,
+		const std::vector<ShaderStage>& stageOrder, const std::vector<std::string>& reflections)
+	{
+		return Resources::Get().EmplaceIfNonExistent<Shader>(
+			std::accumulate(shaders.begin(), shaders.end(), std::string{}), std::move(shaders),
+			GLSLString, reflections, stageOrder);
+	}
+
+	Shader::Shader(std::vector<std::string> shaders, FileType fileType,
+		const std::vector<std::string>& reflections, const std::vector<ShaderStage>& stageOrder)
 		: m_Filepaths(std::move(shaders))
 	{
-		if (flags == Shader::GLSL)
+		switch (fileType)
+		{
+		case Shader::GLSLFile:
 		{
 			GlslCompiler compiler(m_Filepaths);
 			m_Reflections = std::move(compiler.AcquireReflections());
 			m_ShaderModules = std::move(compiler.AcquireShaderModules());
+			break;
 		}
-		else if (flags == Shader::Compiled)
+		case Shader::GLSLString:
+		{
+			GlslCompiler compiler(m_Filepaths, stageOrder);
+			m_Reflections = std::move(compiler.AcquireReflections());
+			m_ShaderModules = std::move(compiler.AcquireShaderModules());
+			break;
+		}
+		case Shader::CompiledFile:
 		{
 			RAY_MEXPECTS(m_Filepaths.size() == reflections.size(),
 				"[Shader] Number of shaders ({0}) doesn't match number of reflections ({1})",
@@ -55,38 +81,11 @@ namespace At0::Ray
 					"[Shader] Failed to create shader module from file \"{0}\"", m_Filepaths[i]);
 				m_ShaderModules[stage] = shaderModule;
 			}
+			break;
 		}
-		else
-			RAY_ASSERT(false, "[Shader] Invalid flag configuration ({0})", (uint32_t)flags);
+		}
 
 		CreateReflection();
-	}
-
-	Ref<Shader> Shader::FromCompiled(
-		std::vector<std::string> shaders, std::vector<std::string> reflections)
-	{
-		// Search for reflection files
-		if (reflections.empty())
-		{
-			for (const std::string& shader : shaders)
-			{
-				if (shader.ends_with(".spv"))
-					reflections.emplace_back(
-						std::filesystem::path{ shader }.replace_extension("rreflection").string());
-				else
-					reflections.emplace_back(shader + ".rreflection");
-
-				if (!std::filesystem::exists(reflections.back()))
-					ThrowRuntime("[Shader] Reflection file \"{0}\" not found.", reflections.back());
-			}
-		}
-
-		return MakeRef<Shader>(std::move(shaders), reflections, Shader::Compiled);
-	}
-
-	Ref<Shader> Shader::FromGlsl(std::vector<std::string> shaders)
-	{
-		return MakeRef<Shader>(std::move(shaders), std::vector<std::string>{}, Shader::GLSL);
 	}
 
 	Shader::~Shader()

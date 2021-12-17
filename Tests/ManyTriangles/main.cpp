@@ -107,7 +107,7 @@ public:
 		auto defaultPipeline =
 			Ray::GraphicsPipeline::Builder()
 				.SetCullMode(VK_CULL_MODE_NONE)
-				.SetShader(Ray::Shader::Acquire(
+				.SetShader(Ray::Shader::AcquireSourceFile(
 					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
 				.Acquire();
 

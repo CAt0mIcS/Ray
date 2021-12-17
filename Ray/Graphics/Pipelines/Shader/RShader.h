@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿
+#pragma once
 
 #include "../../../RBase.h"
 #include "../../../Core/RResource.h"
@@ -25,22 +26,31 @@ namespace At0::Ray
 	class RAY_EXPORT Shader : public Resource
 	{
 	public:
-		enum Flags : uint16_t
+		enum FileType : uint16_t
 		{
-			GLSL = 1,
-			Compiled = 2
+			GLSLFile = 1,
+			CompiledFile,
+			GLSLString,
+			// CompiledString
 		};
 
 	public:
-		static Ref<Shader> Acquire(std::vector<std::string> shaders,
-			const std::vector<std::string>& reflections = {}, Flags flags = GLSL);
+		static Ref<Shader> AcquireSourceFile(
+			std::vector<std::string> shaders, const std::vector<std::string>& reflections = {});
 
-		Shader(std::vector<std::string> shaders, const std::vector<std::string>& reflections = {},
-			Flags flags = GLSL);
+		static Ref<Shader> AcquireCompiledFile(
+			std::vector<std::string> shaders, const std::vector<std::string>& reflections);
 
-		static Ref<Shader> FromCompiled(
-			std::vector<std::string> shaders, std::vector<std::string> reflections = {});
-		static Ref<Shader> FromGlsl(std::vector<std::string> shaders);
+		static Ref<Shader> AcquireSourceString(std::vector<std::string> shaders,
+			const std::vector<ShaderStage>& stageOrder,
+			const std::vector<std::string>& reflections = {});
+
+		// static Ref<Shader> AcquireCompiledString(
+		//	std::vector<std::string> shaders, const std::vector<std::string>& reflections = {});
+
+		Shader(std::vector<std::string> shaders, FileType flags,
+			const std::vector<std::string>& reflections = {},
+			const std::vector<ShaderStage>& stageOrder = {});
 
 		~Shader();
 

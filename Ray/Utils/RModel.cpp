@@ -211,7 +211,7 @@ namespace At0::Ray
 		shaderFileName += std::accumulate(fileCodes.begin(), fileCodes.end(), std::string{});
 
 		auto pipeline = Ray::GraphicsPipeline::Builder()
-							.SetShader(Ray::Shader::Acquire(
+							.SetShader(Ray::Shader::AcquireSourceFile(
 								{ shaderFileName + ".vert", shaderFileName + ".frag" }))
 							.Acquire();
 

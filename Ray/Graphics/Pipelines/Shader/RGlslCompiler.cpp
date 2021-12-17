@@ -4,6 +4,7 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
+#include <glslang/SPIRV/GlslangToSpv.h>
 #include <glslang/MachineIndependent/gl_types.h>
 
 
@@ -282,8 +283,13 @@ namespace At0::Ray
 	}
 #pragma endregion
 
-	GlslCompiler::GlslCompiler(const std::vector<std::string>& shaders)
+	GlslCompiler::GlslCompiler(
+		const std::vector<std::string>& shaders, const std::vector<ShaderStage>& stageOrder)
 	{
+		if (stageOrder.size() != 0)
+			RAY_MEXPECTS(shaders.size() == stageOrder.size(),
+				"[GlslCompiler] Number of stages does not match number of shaders");
+
 		static bool glslangInitialized = false;
 		if (!glslangInitialized)
 		{
@@ -291,20 +297,37 @@ namespace At0::Ray
 			glslangInitialized = true;
 		}
 
-		for (const std::string& shader : shaders)
+		for (uint32_t i = 0; i < shaders.size(); ++i)
 		{
-			ShaderStage shaderStage = Shader::GetShaderStage(shader);
-			m_Shaders[shaderStage] = shader;
-			m_ShaderModules[shaderStage] = CreateShaderModule("", shaderStage);
+			ShaderStage shaderStage;
+
+			if (stageOrder.size() == 0)
+				shaderStage = Shader::GetShaderStage(shaders[i]);
+			else
+				shaderStage = stageOrder[i];
+
+			m_Shaders[shaderStage] = shaders[i];
+			m_ShaderModules[shaderStage] =
+				CreateShaderModule("", shaderStage, stageOrder.size() != 0);
 		}
 	}
 
 	VkShaderModule GlslCompiler::CreateShaderModule(
-		std::string_view preamble, ShaderStage shaderStage)
+		std::string_view preamble, ShaderStage shaderStage, bool isSrcString)
 	{
-		std::string_view filepath = m_Shaders[shaderStage];
-		std::optional<std::string> moduleCode = ReadFile(filepath);
-		RAY_MEXPECTS(moduleCode, "[GlslCompiler] Failed to read file \"{0}\"", filepath);
+		std::string moduleCode;
+		std::string shaderName = "";
+
+		if (!isSrcString)
+		{
+			std::string_view filepath = m_Shaders[shaderStage];
+			std::optional<std::string> code = ReadFile(filepath);
+			RAY_MEXPECTS(code, "[GlslCompiler] Failed to read file \"{0}\"", filepath);
+			moduleCode = std::move(*code);
+			shaderName = filepath;
+		}
+		else
+			moduleCode = m_Shaders[shaderStage];
 
 		// Convert GLSL to SPIRV
 		EShLanguage language = GetEShLanguage(shaderStage);
@@ -319,8 +342,8 @@ namespace At0::Ray
 		messages = EShMessages(messages | EShMsgDebugInfo);
 #endif
 
-		const char* shaderNameCstr = filepath.data();
-		const char* shaderSource = (*moduleCode).data();
+		const char* shaderNameCstr = shaderName.data();
+		const char* shaderSource = moduleCode.data();
 		shader.setStringsWithLengthsAndNames(&shaderSource, nullptr, &shaderNameCstr, 1);
 		shader.setPreamble(preamble.data());
 

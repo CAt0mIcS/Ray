@@ -99,10 +99,11 @@ public:
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 
-		auto pipeline = Ray::GraphicsPipeline::Builder()
-							.SetShader(Ray::Shader::Acquire({ "Resources/Shaders/Flat_Col.vert",
-								"Resources/Shaders/Flat_Col.frag" }))
-							.Acquire();
+		auto pipeline =
+			Ray::GraphicsPipeline::Builder()
+				.SetShader(Ray::Shader::AcquireSourceFile(
+					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
+				.Acquire();
 
 		auto flatWhiteMaterial = Ray::Material::Builder(pipeline)
 									 .Set("Shading.color", Ray::Float4{ 1.0f, 1.0f, 1.0f, 1.0f })

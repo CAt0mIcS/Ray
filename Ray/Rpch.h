@@ -35,8 +35,6 @@
 
 #include <GLFW/glfw3.h>
 
-#include <glslang/SPIRV/GlslangToSpv.h>
-
 #include "RBase.h"
 #include "Core/RKeyCodes.h"
 #include "Utils/RNonCopyable.h"
