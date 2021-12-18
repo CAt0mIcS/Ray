@@ -19,15 +19,15 @@ namespace At0::Ray
 
 		vertex.BeginVertex();
 		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, -0.5f, 0.0f };
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, 0.0f, 0.5f };
 
 		vertex.BeginVertex();
 		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, -0.5f, 0.0f };
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, 0.0f, 0.5f };
 
 		vertex.BeginVertex();
 		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.0f, 0.5f, 0.0f };
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.0f, 0.0f, -0.5f };
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2 };
 
@@ -50,25 +50,25 @@ namespace At0::Ray
 
 		vertex.BeginVertex();
 		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, -0.5f, 0.0f };
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, 0.0f, 0.5f };
 		if (hasUV)
 			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 1.0f, 0.0f };
 
 		vertex.BeginVertex();
 		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, -0.5f, 0.0f };
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, 0.0f, 0.5f };
 		if (hasUV)
 			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 0.0f, 0.0f };
 
 		vertex.BeginVertex();
 		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, 0.5f, 0.0f };
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, 0.0f, -0.5f };
 		if (hasUV)
 			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 0.0f, 1.0f };
 
 		vertex.BeginVertex();
 		if (hasPos)
-			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, 0.5f, 0.0f };
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, 0.0f, -0.5f };
 		if (hasUV)
 			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 1.0f, 1.0f };
 

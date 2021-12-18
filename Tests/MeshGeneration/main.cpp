@@ -99,9 +99,22 @@ public:
 								.Set("Shading.color", Ray::Float4{ 1.f, 0.f, 0.f, 1.f })
 								.Acquire();
 
+		auto texturePipeline =
+			Ray::GraphicsPipeline::Builder()
+				.SetShader(Ray::Shader::AcquireSourceFile(
+					{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" }))
+				.SetCullMode(VK_CULL_MODE_NONE)
+				.Acquire();
+
+		auto textureMaterial =
+			Ray::Material::Builder(std::move(texturePipeline))
+				.Set("samplerDiffuse",
+					Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"))
+				.Acquire();
+
 		Ray::Entity plane = Scene::Get().CreateEntity();
-		plane.Emplace<Ray::Mesh>(Ray::Mesh::Plane(noCullMaterial));
-		plane.Emplace<Ray::MeshRenderer>(noCullMaterial);
+		plane.Emplace<Ray::Mesh>(Ray::Mesh::Plane(textureMaterial));
+		plane.Emplace<Ray::MeshRenderer>(textureMaterial);
 		plane.Get<Ray::Transform>().Translate({ -15.f, 0.f, 0.f });
 
 		Ray::Entity triangle = Scene::Get().CreateEntity();
