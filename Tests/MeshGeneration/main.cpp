@@ -105,9 +105,13 @@ public:
 		// uvsphere.Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(material, 2.0f, 128, 128));
 		// uvsphere.Emplace<Ray::MeshRenderer>(material);
 
-		Ray::Entity cylinder = Scene::Get().CreateEntity();
-		cylinder.Emplace<Ray::Mesh>(Ray::Mesh::Cylinder(material, 64, 0.01f));
-		cylinder.Emplace<Ray::MeshRenderer>(material);
+		// Ray::Entity cylinder = Scene::Get().CreateEntity();
+		// cylinder.Emplace<Ray::Mesh>(Ray::Mesh::Cylinder(material, 64, 0.01f));
+		// cylinder.Emplace<Ray::MeshRenderer>(material);
+
+		Ray::Entity cone = Scene::Get().CreateEntity();
+		cone.Emplace<Ray::Mesh>(Ray::Mesh::Cone(material, 32, 1.f));
+		cone.Emplace<Ray::MeshRenderer>(material);
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));

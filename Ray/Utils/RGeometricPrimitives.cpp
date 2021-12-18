@@ -340,17 +340,17 @@ namespace At0::Ray
 		indices.emplace_back(calcIdx(latDiv - 2, 0));
 
 		return { vertex, indices,
-			String::Serialize("UVSphere#{0}#{1}#{2}#{3}#{4}#{5}#{5}", hasPos, hasUV, hasNormal,
+			String::Serialize("UVSphere#{0}#{1}#{2}#{3}#{4}#{5}#{6}", hasPos, hasUV, hasNormal,
 				hasTangent, radius, latDiv, longDiv) };
 	}
 
 	// IndexedTriangleList IndexedTriangleList::IcoSphere(const VertexLayout& layout) {}
 
 	IndexedTriangleList IndexedTriangleList::Cylinder(
-		const Shader& layout, int segments, float radius)
+		const Shader& shader, int segments, float radius)
 	{
 		// Top and bottom circles
-		IndexedTriangleList topCircle = Circle(layout, segments, radius);
+		IndexedTriangleList topCircle = Circle(shader, segments, radius);
 		IndexedTriangleList bottomCircle = topCircle;
 
 		// Translate coordinates so that the middle of the cylinder is at [0, 0, 0],
@@ -417,6 +417,62 @@ namespace At0::Ray
 		}
 
 		return finalMesh;
+	}
+
+	IndexedTriangleList IndexedTriangleList::Cone(const Shader& shader, int segments, float radius)
+	{
+		DynamicVertex vertex(shader);
+
+		bool hasPos = vertex.Has(AttributeMap<AttributeType::Position>::Semantic);
+		bool hasUV = vertex.Has(AttributeMap<AttributeType::UV>::Semantic);
+		bool hasNormal = vertex.Has(AttributeMap<AttributeType::Normal>::Semantic);
+		bool hasTangent = vertex.Has(AttributeMap<AttributeType::Tangent>::Semantic);
+
+		RAY_MEXPECTS(!hasNormal && !hasTangent && !hasUV,
+			"[IndexedTriangleList] UV, normals and tangents not supported for cone yet");
+
+		// Tip of cone
+		vertex.BeginVertex();
+		if (hasPos)
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.f, 1.f, 0.f };
+
+		const Float4 base = Float4{ 0.0f, 0.0f, radius, 0.0f };
+		const float lattitudeAngle = Math::PI<float> / segments;
+
+		for (int segment = 0; segment <= segments; ++segment)
+		{
+			Float3 calculatedPos = base * glm::rotate(Matrix(1.0f), lattitudeAngle * segment,
+											  Float3(0.0f, -1.0f, 0.0f));
+
+			vertex.BeginVertex();
+			if (hasPos)
+				vertex[AttributeMap<AttributeType::Position>::Semantic] = calculatedPos;
+
+			vertex.BeginVertex();
+			if (hasPos)
+				vertex[AttributeMap<AttributeType::Position>::Semantic] = -calculatedPos;
+		}
+
+		// Circle middle
+		uint32_t circleMiddleVertexID = vertex.BeginVertex();
+		if (hasPos)
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.f, 0.f, 0.f };
+
+		std::vector<IndexBuffer::Type> indices;
+		for (uint32_t segment = 1; segment <= segments * 2; ++segment)
+		{
+			indices.emplace_back(0);
+			indices.emplace_back(segment);
+			indices.emplace_back(segment + 2);
+
+			indices.emplace_back(circleMiddleVertexID);
+			indices.emplace_back(segment + 2);
+			indices.emplace_back(segment);
+		}
+
+		return { vertex, indices,
+			String::Serialize("Cone#{0}#{1}#{2}#{3}#{4}#{5}", hasPos, hasUV, hasNormal, hasTangent,
+				segments, radius) };
 	}
 
 	IndexedTriangleList IndexedTriangleList::Append(

@@ -116,6 +116,16 @@ namespace At0::Ray
 			RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
+	Mesh::VertexData Mesh::Cone(Ref<Material> material, int segments, float radius)
+	{
+		IndexedTriangleList mesh = IndexedTriangleList::Cone(
+			material->GetGraphicsPipeline().GetShader(), segments, radius);
+		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
+									 mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
+			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+	}
+
 	Mesh::VertexData Mesh::Import(std::string_view filepath, Ref<Material> material)
 	{
 		return Model::Acquire(filepath, std::move(material))->GetVertexData();
