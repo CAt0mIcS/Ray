@@ -83,8 +83,8 @@ namespace At0::Ray
 	{
 		bool parentChanged = false;
 		// RAY_TODO: Deleting entity while checking here! Threading error
-		if (GetEntity().HasParent())
-			parentChanged = GetEntity().GetParent().Get<Transform>().HasChanged();
+		// if (GetEntity().HasParent())
+		//	parentChanged = GetEntity().GetParent().Get<Transform>().HasChanged();
 
 		return m_HasChanged || parentChanged;
 	}

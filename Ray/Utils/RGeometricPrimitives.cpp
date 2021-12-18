@@ -111,8 +111,8 @@ namespace At0::Ray
 											  Float3(0.0f, -1.0f, 0.0f));
 
 			// Rotate circle to face camera instead of floor
-			std::swap(calculatedPos.z, calculatedPos.x);
-			std::swap(calculatedPos.z, calculatedPos.y);
+			// std::swap(calculatedPos.z, calculatedPos.x);
+			// std::swap(calculatedPos.z, calculatedPos.y);
 
 			vertex.BeginVertex();
 			if (hasPos)
@@ -168,7 +168,7 @@ namespace At0::Ray
 											  Float3(0.0f, -1.0f, 0.0f));
 
 			// Rotate circle to face camera instead of floor
-			std::swap(calculatedPos.z, calculatedPos.y);
+			// std::swap(calculatedPos.z, calculatedPos.y);
 
 			vertex.BeginVertex();
 			if (hasPos)
@@ -359,12 +359,12 @@ namespace At0::Ray
 		{
 			Float3& topCirclePos =
 				topCircle.vertices[i].Get<Float3>(AttributeMap<AttributeType::Position>::Semantic);
-			std::swap(topCirclePos.z, topCirclePos.y);
+			// std::swap(topCirclePos.z, topCirclePos.y);
 			topCirclePos.y += 0.5f;
 
 			Float3& bottomCirclePos = bottomCircle.vertices[i].Get<Float3>(
 				AttributeMap<AttributeType::Position>::Semantic);
-			std::swap(bottomCirclePos.z, bottomCirclePos.y);
+			// std::swap(bottomCirclePos.z, bottomCirclePos.y);
 			bottomCirclePos.y -= 0.5f;
 
 			// Flip circle to face downwards (backface-culling)
@@ -430,6 +430,12 @@ namespace At0::Ray
 
 		RAY_MEXPECTS(!hasNormal && !hasTangent && !hasUV,
 			"[IndexedTriangleList] UV, normals and tangents not supported for cone yet");
+
+		RAY_MEXPECTS(segments % 2 == 0,
+			"[IndexedTriangleList] Cannot create circle with {0} segments because this value is "
+			"uneven",
+			segments);
+		segments /= 2;
 
 		// Tip of cone
 		vertex.BeginVertex();

@@ -78,40 +78,66 @@ public:
 
 #include "../ImGuiWindows.inl"
 
-		auto pipeline =
+		auto noCullPipeline =
 			Ray::GraphicsPipeline::Builder()
 				.SetShader(Ray::Shader::AcquireSourceFile(
 					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
 				.SetCullMode(VK_CULL_MODE_NONE)
 				.Acquire();
 
-		auto material = Ray::Material::Builder(std::move(pipeline))
-							.Set("Shading.color", Ray::Float4{ 1.0f, 1.0f, 1.0f, 1.0f })
-							.Acquire();
+		auto cullPipeline =
+			Ray::GraphicsPipeline::Builder()
+				.SetShader(Ray::Shader::AcquireSourceFile(
+					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
+				.Acquire();
 
-		// Ray::Entity halfCircle = Scene::Get().CreateEntity();
-		// halfCircle.Emplace<Ray::Mesh>(Ray::Mesh::HalfCircle(material, 32, 2.0f));
-		// halfCircle.Emplace<Ray::MeshRenderer>(material);
+		auto noCullMaterial = Ray::Material::Builder(std::move(noCullPipeline))
+								  .Set("Shading.color", Ray::Float4{ 0.0f, 1.0f, 1.0f, 1.0f })
+								  .Acquire();
 
-		// Ray::Entity circle = Scene::Get().CreateEntity();
-		// circle.Emplace<Ray::Mesh>(Ray::Mesh::Circle(material, 32, 2.0f));
-		// circle.Emplace<Ray::MeshRenderer>(material);
+		auto cullMaterial = Ray::Material::Builder(std::move(cullPipeline))
+								.Set("Shading.color", Ray::Float4{ 1.f, 0.f, 0.f, 1.f })
+								.Acquire();
 
-		// Ray::Entity cube = Scene::Get().CreateEntity();
-		// cube.Emplace<Ray::Mesh>(Ray::Mesh::Cube(material));
-		// cube.Emplace<Ray::MeshRenderer>(material);
+		Ray::Entity plane = Scene::Get().CreateEntity();
+		plane.Emplace<Ray::Mesh>(Ray::Mesh::Plane(noCullMaterial));
+		plane.Emplace<Ray::MeshRenderer>(noCullMaterial);
+		plane.Get<Ray::Transform>().Translate({ -15.f, 0.f, 0.f });
 
-		// Ray::Entity uvsphere = Scene::Get().CreateEntity();
-		// uvsphere.Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(material, 2.0f, 128, 128));
-		// uvsphere.Emplace<Ray::MeshRenderer>(material);
+		Ray::Entity triangle = Scene::Get().CreateEntity();
+		triangle.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(noCullMaterial));
+		triangle.Emplace<Ray::MeshRenderer>(noCullMaterial);
+		triangle.Get<Ray::Transform>().Translate({ -10.f, 0.f, 0.f });
 
-		// Ray::Entity cylinder = Scene::Get().CreateEntity();
-		// cylinder.Emplace<Ray::Mesh>(Ray::Mesh::Cylinder(material, 64, 0.01f));
-		// cylinder.Emplace<Ray::MeshRenderer>(material);
+		Ray::Entity halfCircle = Scene::Get().CreateEntity();
+		halfCircle.Emplace<Ray::Mesh>(Ray::Mesh::HalfCircle(noCullMaterial, 6, 2.0f));
+		halfCircle.Emplace<Ray::MeshRenderer>(noCullMaterial);
+		halfCircle.Get<Ray::Transform>().Translate({ -5.f, 0.f, 0.f });
+
+		Ray::Entity circle = Scene::Get().CreateEntity();
+		circle.Emplace<Ray::Mesh>(Ray::Mesh::Circle(noCullMaterial, 32, 2.0f));
+		circle.Emplace<Ray::MeshRenderer>(noCullMaterial);
+		circle.Get<Ray::Transform>().Translate({ 0.f, 0.f, 0.f });
+
+		Ray::Entity cube = Scene::Get().CreateEntity();
+		cube.Emplace<Ray::Mesh>(Ray::Mesh::Cube(cullMaterial));
+		cube.Emplace<Ray::MeshRenderer>(cullMaterial);
+		cube.Get<Ray::Transform>().Translate({ 5.f, 0.f, 0.f });
+
+		Ray::Entity uvsphere = Scene::Get().CreateEntity();
+		uvsphere.Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(cullMaterial, 2.0f, 128, 128));
+		uvsphere.Emplace<Ray::MeshRenderer>(cullMaterial);
+		uvsphere.Get<Ray::Transform>().Translate({ 10.f, 0.f, 0.f });
+
+		Ray::Entity cylinder = Scene::Get().CreateEntity();
+		cylinder.Emplace<Ray::Mesh>(Ray::Mesh::Cylinder(cullMaterial, 64, 1.f));
+		cylinder.Emplace<Ray::MeshRenderer>(cullMaterial);
+		cylinder.Get<Ray::Transform>().Translate({ 15.f, 0.f, 0.f });
 
 		Ray::Entity cone = Scene::Get().CreateEntity();
-		cone.Emplace<Ray::Mesh>(Ray::Mesh::Cone(material, 32, 1.f));
-		cone.Emplace<Ray::MeshRenderer>(material);
+		cone.Emplace<Ray::Mesh>(Ray::Mesh::Cone(cullMaterial, 32, 1.f));
+		cone.Emplace<Ray::MeshRenderer>(cullMaterial);
+		cone.Get<Ray::Transform>().Translate({ 20.f, 0.f, 0.f });
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
