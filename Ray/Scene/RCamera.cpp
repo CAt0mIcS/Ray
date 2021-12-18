@@ -181,7 +181,8 @@ namespace At0::Ray
 				Translate(Float3{ -e.GetDelta(), 0.0f } * RotationSpeed);
 				return;
 			}
-			Rotate(Float3{ e.GetDelta().y, -e.GetDelta().x, 0.0f } * RotationSpeed);
+			else
+				Rotate(Float3{ e.GetDelta().y, -e.GetDelta().x, 0.0f } * RotationSpeed);
 		}
 		else if (!Window::Get().CursorEnabled())
 			Rotate(Float3{ e.GetDelta().y, -e.GetDelta().x, 0.0f } * RotationSpeed);

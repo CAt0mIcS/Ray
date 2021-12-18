@@ -1,5 +1,7 @@
 set(SRC
 	"main.cpp"
+	"Gizmo.h"
+	"Gizmo.cpp"
 )
 
 add_executable("Raditor" "${SRC}")

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vulkan/vulkan_core.h>
+
+
 namespace At0::Ray
 {
 	enum class ShaderDataType
@@ -108,7 +111,7 @@ namespace At0::Ray
 		static constexpr const char* Color = "color";
 	};
 
-	inline uint32_t GetShaderDataTypeSize(ShaderDataType type)
+	constexpr inline uint32_t GetShaderDataTypeSize(ShaderDataType type)
 	{
 		switch (type)
 		{

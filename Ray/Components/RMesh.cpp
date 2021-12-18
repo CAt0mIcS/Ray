@@ -66,6 +66,56 @@ namespace At0::Ray
 			RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
+	Mesh::VertexData Mesh::HalfCircle(Ref<Material> material, int segments, float radius)
+	{
+		IndexedTriangleList mesh = IndexedTriangleList::HalfCircle(
+			material->GetGraphicsPipeline().GetShader(), segments, radius);
+		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
+									 mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
+			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+	}
+
+	Mesh::VertexData Mesh::Circle(Ref<Material> material, int segments, float radius)
+	{
+		IndexedTriangleList mesh = IndexedTriangleList::Circle(
+			material->GetGraphicsPipeline().GetShader(), segments, radius);
+		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
+									 mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
+			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+	}
+
+	Mesh::VertexData Mesh::Cube(Ref<Material> material)
+	{
+		IndexedTriangleList mesh =
+			IndexedTriangleList::Cube(material->GetGraphicsPipeline().GetShader());
+		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
+									 mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
+			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+	}
+
+	Mesh::VertexData Mesh::UVSphere(Ref<Material> material, float radius, int latDiv, int longDiv)
+	{
+		IndexedTriangleList mesh = IndexedTriangleList::UVSphere(
+			material->GetGraphicsPipeline().GetShader(), radius, latDiv, longDiv);
+		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
+									 mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
+			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+	}
+
+	Mesh::VertexData Mesh::Cylinder(Ref<Material> material, int segments, float radius)
+	{
+		IndexedTriangleList mesh = IndexedTriangleList::Cylinder(
+			material->GetGraphicsPipeline().GetShader(), segments, radius);
+		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
+									 mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
+			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+	}
+
 	Mesh::VertexData Mesh::Import(std::string_view filepath, Ref<Material> material)
 	{
 		return Model::Acquire(filepath, std::move(material))->GetVertexData();

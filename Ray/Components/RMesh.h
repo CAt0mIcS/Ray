@@ -28,6 +28,11 @@ namespace At0::Ray
 
 		static VertexData Triangle(Ref<Material> material);
 		static VertexData Plane(Ref<Material> material);
+		static VertexData HalfCircle(Ref<Material> material, int segments, float radius);
+		static VertexData Circle(Ref<Material> material, int segments, float radius);
+		static VertexData Cube(Ref<Material> material);
+		static VertexData UVSphere(Ref<Material> material, float radius, int latDiv, int longDiv);
+		static VertexData Cylinder(Ref<Material> material, int segments, float radius);
 
 		/**
 		 * Import a model from a file

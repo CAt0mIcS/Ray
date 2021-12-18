@@ -22,6 +22,13 @@ namespace At0::Ray
 		}
 	}
 
+	DynamicVertex::DynamicVertex(std::vector<std::pair<std::string, uint32_t>> attribSizeMap)
+		: m_AttribSizeMap(std::move(attribSizeMap))
+	{
+		for (const auto& [attribName, attribSize] : m_AttribSizeMap)
+			m_SizeVertex += attribSize;
+	}
+
 	uint32_t DynamicVertex::SizeAttribute(std::string_view attribName) const
 	{
 		for (const auto& pair : m_AttribSizeMap)
@@ -41,7 +48,21 @@ namespace At0::Ray
 	DynamicVertex::ProxyType DynamicVertex::operator[](std::string_view attribName)
 	{
 		return { m_Buffer.data() + (m_SizeVertex * m_VertexID) + GetOffsetInSizeMap(attribName),
-			SizeAttribute(attribName) };
+			this RAY_DEBUG_FLAG(, SizeAttribute(attribName)) };
+	}
+
+	DynamicVertex::ProxyType DynamicVertex::operator[](uint32_t vertexID)
+	{
+		return { m_Buffer.data() + (m_SizeVertex * vertexID), this RAY_DEBUG_FLAG(, 0) };
+	}
+
+	void DynamicVertex::AddAll(const DynamicVertex& vertex)
+	{
+		uint32_t offset = m_Buffer.size();
+		m_Buffer.resize(m_Buffer.size() + vertex.SizeBytes());
+		memcpy(m_Buffer.data() + offset, vertex.Data(), vertex.SizeBytes());
+
+		m_VertexID += vertex.Size();
 	}
 
 	bool DynamicVertex::Has(std::string_view attribName) const

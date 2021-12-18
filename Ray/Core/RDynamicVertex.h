@@ -45,12 +45,16 @@ namespace At0::Ray
 
 	class RAY_EXPORT DynamicVertex
 	{
+		friend class ProxyType;
+
 	private:
 		class ProxyType
 		{
 		public:
-			ProxyType(char* writeLocation, uint32_t expectedDataSize)
-				: m_WriteLocation(writeLocation), m_ExpectedSize(expectedDataSize)
+			ProxyType(
+				char* writeLocation, DynamicVertex* pVertex, RAY_DEBUG_FLAG(uint32_t expectedSize))
+				: m_WriteLocation(writeLocation),
+				  m_Vertex(pVertex) RAY_DEBUG_FLAG(, m_ExpectedSize(expectedSize))
 			{
 			}
 
@@ -65,13 +69,26 @@ namespace At0::Ray
 				return *this;
 			}
 
+			template<typename T>
+			T& Get(std::string_view attribName)
+			{
+				RAY_MEXPECTS(sizeof(T) == m_Vertex->SizeAttribute(attribName),
+					"[DynamicVertex] Size of return type does not match size of attribName. "
+					"Expected {0} byte(s), received {1} byte(s)",
+					m_Vertex->SizeAttribute(attribName), sizeof(T));
+
+				return *(T*)(m_WriteLocation + m_Vertex->GetOffsetInSizeMap(attribName));
+			}
+
 		private:
 			char* m_WriteLocation;
-			uint32_t m_ExpectedSize = 0;
+			DynamicVertex* m_Vertex = nullptr;
+			RAY_DEBUG_FLAG(uint32_t m_ExpectedSize = 0);
 		};
 
 	public:
 		DynamicVertex(const Shader& shader);
+		DynamicVertex(std::vector<std::pair<std::string, uint32_t>> attribSizeMap);
 
 		/**
 		 * @returns Size in bytes of one vertex
@@ -82,6 +99,11 @@ namespace At0::Ray
 		 * @returns Size in bytes of all the vertices
 		 */
 		uint32_t SizeBytes() const { return m_Buffer.size(); }
+
+		/**
+		 * @returns The number of vertices added
+		 */
+		uint32_t Size() const { return SizeBytes() / SizeVertex(); }
 
 		/**
 		 * @returns Raw buffer data
@@ -105,9 +127,24 @@ namespace At0::Ray
 		ProxyType operator[](std::string_view attribName);
 
 		/**
+		 * Gets vertex with specific vertex id
+		 */
+		ProxyType operator[](uint32_t vertexID);
+
+		/**
+		 * Adds vertices of vertex to this. Requires matching layouts
+		 */
+		void AddAll(const DynamicVertex& vertex);
+
+		/**
 		 * @returns True if the attribute name is present in the shader
 		 */
 		bool Has(std::string_view attribName) const;
+
+		/**
+		 * @returns the layout of the vertex
+		 */
+		const auto& GetLayout() const { return m_AttribSizeMap; }
 
 		std::vector<VkVertexInputAttributeDescription> GetVertexInputAttributes(
 			uint32_t binding = 0) const;
