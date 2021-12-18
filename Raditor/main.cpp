@@ -89,12 +89,90 @@ layout(location = 0) out vec4 outColor;
 
 layout(set = 1, binding = 2) uniform Shading
 {
+	float f;
+	vec2 v2;
+	vec3 v3;
+	vec4 v4;
+	int i;
+	ivec2 iv2;
+	ivec3 iv3;
+	ivec4 iv4;
+	uint ui;
+	uvec2 uv2;
+	uvec3 uv3;
+	uvec4 uv4;
+	bool b;
+	bvec2 bv2;
+	bvec3 bv3;
+	bvec4 bv4;
+	double d;
+	dvec2 dv2;
+	dvec3 dv3;
+	dvec4 dv4;
+	mat2 m2;
+	mat2x3 m2x3;
+	mat2x4 m2x4;
+	mat3 m3;
+	mat3x2 m3x2;
+	mat3x4 m3x4;
+	mat4 m4;
+	mat4x2 m4x2;
+	mat4x3 m4x3;
+	dmat2 dm2;
+	dmat2x3 dm2x3;
+	dmat2x4 dm2x4;
+	dmat3 dm3;
+	dmat3x2 dm3x2;
+	dmat3x4 dm3x4;
+	dmat4 dm4;
+	dmat4x2 dm4x2;
+	dmat4x3 dm4x3;
+
 	vec4 color;
 } uShading;
 
 
 void main()
 {
+	uShading.f;
+	uShading.v2;
+	uShading.v3;
+	uShading.v4;
+	uShading.i;
+	uShading.iv2;
+	uShading.iv3;
+	uShading.iv4;
+	uShading.ui;
+	uShading.uv2;
+	uShading.uv3;
+	uShading.uv4;
+	uShading.b;
+	uShading.bv2;
+	uShading.bv3;
+	uShading.bv4;
+	uShading.d;
+	uShading.dv2;
+	uShading.dv3;
+	uShading.dv4;
+	uShading.m2;
+	uShading.m2x3;
+	uShading.m2x4;
+	uShading.m3;
+	uShading.m3x2;
+	uShading.m3x4;
+	uShading.m4;
+	uShading.m4x2;
+	uShading.m4x3;
+	uShading.dm2;
+	uShading.dm2x3;
+	uShading.dm2x4;
+	uShading.dm3;
+	uShading.dm3x2;
+	uShading.dm3x4;
+	uShading.dm4;
+	uShading.dm4x2;
+	uShading.dm4x3;
+
 	outColor = uShading.color;
 }
 
@@ -116,6 +194,44 @@ void main()
 
 			auto material = Ray::Material::Builder(pipeline)
 								.Set("Shading.color", Ray::Float4{ .7f, .2f, .2f, 1.f })
+								.Set("Shading.f", 1.0f)
+								.Set("Shading.v2", Ray::Float2{})
+								.Set("Shading.v3", Ray::Float3{})
+								.Set("Shading.v4", Ray::Float4{})
+								.Set("Shading.i", 3)
+								.Set("Shading.iv2", Ray::Int2{})
+								.Set("Shading.iv3", Ray::Int3{})
+								.Set("Shading.iv4", Ray::Int4{})
+								.Set("Shading.ui", 3u)
+								.Set("Shading.uv2", Ray::UInt2{})
+								.Set("Shading.uv3", Ray::UInt3{})
+								.Set("Shading.uv4", Ray::UInt4{})
+								.Set("Shading.b", true)
+								.Set("Shading.bv2", Ray::Bool2{})
+								.Set("Shading.bv3", Ray::Bool3{})
+								.Set("Shading.bv4", Ray::Bool4{})
+								.Set("Shading.d", 3.0)
+								.Set("Shading.dv2", Ray::Double2{})
+								.Set("Shading.dv3", Ray::Double3{})
+								.Set("Shading.dv4", Ray::Double4{})
+								.Set("Shading.m2", Ray::Matrix2{})
+								.Set("Shading.m2x3", Ray::Matrix2x3{})
+								.Set("Shading.m2x4", Ray::Matrix2x4{})
+								.Set("Shading.m3", Ray::Matrix3{})
+								.Set("Shading.m3x2", Ray::Matrix3x2{})
+								.Set("Shading.m3x4", Ray::Matrix3x4{})
+								.Set("Shading.m4", Ray::Matrix4{})
+								.Set("Shading.m4x2", Ray::Matrix4x2{})
+								.Set("Shading.m4x3", Ray::Matrix4x3{})
+								.Set("Shading.dm2", Ray::DMatrix2{})
+								.Set("Shading.dm2x3", Ray::DMatrix2x3{})
+								.Set("Shading.dm2x4", Ray::DMatrix2x4{})
+								.Set("Shading.dm3", Ray::DMatrix3{})
+								.Set("Shading.dm3x2", Ray::DMatrix3x2{})
+								.Set("Shading.dm3x4", Ray::DMatrix3x4{})
+								.Set("Shading.dm4", Ray::DMatrix4{})
+								.Set("Shading.dm4x2", Ray::DMatrix4x2{})
+								.Set("Shading.dm4x3", Ray::DMatrix4x3{})
 								.Acquire();
 
 			m_Pivot = Scene::Get().CreateEntity();

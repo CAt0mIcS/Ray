@@ -167,6 +167,15 @@ namespace At0::Ray
 			Log::Info("[LogicalDevice] Enabling non solid fill mode feature");
 		}
 
+		if (physicalDeviceFeatures.shaderFloat64)
+		{
+			enabledFeatures.shaderFloat64 = VK_TRUE;
+			m_DeviceFeatures.emplace(DeviceFeature::ShaderFloat64, true);
+			Log::Info("[LogicalDevice] Enabling doubles in shaders");
+		}
+		else
+			Log::Warn("[LogicalDevice] Selected GPU does not support doubles in shaders");
+
 		// Wide lines must be present for line width > 1.0f.
 		if (physicalDeviceFeatures.wideLines)
 		{

@@ -14,6 +14,7 @@ namespace At0::Ray
 	enum class DeviceFeature
 	{
 		SampleRateShading,
+		ShaderFloat64,
 		FillModeNonSolid,
 		WiderLines,
 		SamplerAnisotropy,
