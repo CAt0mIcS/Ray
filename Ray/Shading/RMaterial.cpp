@@ -5,6 +5,8 @@
 #include "Graphics/Pipelines/Shader/RShader.h"
 #include "Events/REventListener.h"
 
+#include "Graphics/Images/RTexture2DAtlas.h"
+
 
 namespace At0::Ray
 {
@@ -31,6 +33,12 @@ namespace At0::Ray
 	void Material::Set(const std::string& name, Ref<Texture2D> texture)
 	{
 		m_Container.Set(name, std::move(texture));
+		CallListeners(name, UniformType::CombinedImageSampler);
+	}
+
+	void Material::Set(const std::string& name, Ref<Texture2DAtlas> texture)
+	{
+		m_Container.Set(name, std::static_pointer_cast<Texture2D>(std::move(texture)));
 		CallListeners(name, UniformType::CombinedImageSampler);
 	}
 
@@ -67,6 +75,13 @@ namespace At0::Ray
 	{
 		Builder::ValidateUniformExistenceAndSize(*m_GraphicsPipeline, name, -1);
 		m_Container.Set(name, std::move(data));
+		return *this;
+	}
+
+	Material::Builder& Material::Builder::Set(const std::string& name, Ref<Texture2DAtlas> data)
+	{
+		Builder::ValidateUniformExistenceAndSize(*m_GraphicsPipeline, name, -1);
+		m_Container.Set(name, std::static_pointer_cast<Texture2D>(std::move(data)));
 		return *this;
 	}
 

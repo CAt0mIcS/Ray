@@ -13,6 +13,7 @@ namespace At0::Ray
 	Ref<Shader> Shader::AcquireSourceFile(
 		std::vector<std::string> shaders, const std::vector<std::string>& reflections)
 	{
+		RAY_MEXPECTS(shaders.size() != 0, "[Shader] No source files specified");
 		return Resources::Get().EmplaceIfNonExistent<Shader>(
 			std::accumulate(shaders.begin(), shaders.end(), std::string{}), std::move(shaders),
 			GLSLFile, reflections);
@@ -21,6 +22,7 @@ namespace At0::Ray
 	Ref<Shader> Shader::AcquireCompiledFile(
 		std::vector<std::string> shaders, const std::vector<std::string>& reflections)
 	{
+		RAY_MEXPECTS(shaders.size() != 0, "[Shader] No compiled files specified");
 		return Resources::Get().EmplaceIfNonExistent<Shader>(
 			std::accumulate(shaders.begin(), shaders.end(), std::string{}), std::move(shaders),
 			CompiledFile, reflections);
@@ -29,6 +31,7 @@ namespace At0::Ray
 	Ref<Shader> Shader::AcquireSourceString(std::vector<std::string> shaders,
 		const std::vector<ShaderStage>& stageOrder, const std::vector<std::string>& reflections)
 	{
+		RAY_MEXPECTS(shaders.size() != 0, "[Shader] No source strings specified");
 		return Resources::Get().EmplaceIfNonExistent<Shader>(
 			std::accumulate(shaders.begin(), shaders.end(), std::string{}), std::move(shaders),
 			GLSLString, reflections, stageOrder);

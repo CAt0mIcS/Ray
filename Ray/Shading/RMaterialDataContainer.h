@@ -18,7 +18,7 @@ namespace At0::Ray
 	class RAY_EXPORT MaterialDataContainer
 	{
 	public:
-		void Set(std::string key, Ref<Texture2D> image) { m_Images[key] = std::move(image); }
+		void Set(const std::string& key, Ref<Texture2D> image) { m_Images[key] = std::move(image); }
 		void Set(const std::string& key, bool data);
 		void Set(const std::string& key, Bool2 data);
 		void Set(const std::string& key, Bool3 data);

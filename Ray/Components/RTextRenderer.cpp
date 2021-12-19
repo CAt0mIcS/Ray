@@ -1,5 +1,12 @@
 ﻿#include "RTextRenderer.h"
 
+#include "RMesh.h"
+#include "RTransform.h"
+#include "Shading/RMaterial.h"
+
+#include "Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
+#include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
+
 
 namespace At0::Ray
 {
@@ -54,37 +61,35 @@ namespace At0::Ray
 	//}
 
 
-	// TextRenderer::TextRenderer(Entity entity, Ref<FlatTextMaterial> material)
-	//	: Component(entity), Renderer(material, false)
-	//{
-	//	char charToRender = 'j';
+	TextRenderer::TextRenderer(Entity entity, Ref<Material> material)
+		: Component(entity), Renderer(std::move(material)),
+		  m_Mesh(GetEntity(), Mesh::Plane(m_Material))
+	{
+		// GetEntity().Emplace<Ray::Mesh>(GeneratePlane(material, charToRender));
+		// GetEntity().Emplace<Ray::Mesh>(Ray::Mesh::Plane(m_Material));
 
-	//	// GetEntity().Emplace<Ray::Mesh>(GeneratePlane(material, charToRender));
-	//	GetEntity().Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
+		// AddSampler2DUniform("samplerTextureAtlas", ShaderStage::Fragment,
+		//	material->GetFont().GetSharedTextureAtlas());
+	}
 
-	//	AddSampler2DUniform("samplerTextureAtlas", ShaderStage::Fragment,
-	//		material->GetFont().GetSharedTextureAtlas());
-	//}
+	void TextRenderer::Update()
+	{
+		if (auto& tform = GetEntity().Get<Transform>(); tform.HasChanged())
+		{
+			// RAY_TODO: Fix parent transforms
+			// if (GetEntity().HasParent())
+			//	GetBufferUniform("PerObjectData")["Model"] =
+			//		GetEntity().GetParent().Get<Transform>().AsMatrix() * tform.AsMatrix();
+			// else
+			GetBufferUniform("PerObjectData")["Model"] = tform.AsMatrix();
+		}
+	}
 
-	// void TextRenderer::Update()
-	//{
-	//	if (auto& tform = GetEntity().Get<Transform>(); tform.HasChanged())
-	//	{
-	//		if (GetEntity().HasParent())
-	//			GetBufferUniform("PerObjectData")["Model"] =
-	//				GetEntity().GetParent().Get<Transform>().AsMatrix() * tform.AsMatrix();
-	//		else
-	//			GetBufferUniform("PerObjectData")["Model"] = tform.AsMatrix();
-	//	}
-	//}
+	void TextRenderer::Render(const CommandBuffer& cmdBuff) const
+	{
+		m_Material->CmdBind(cmdBuff);
 
-	// void TextRenderer::Render(const CommandBuffer& cmdBuff) const
-	//{
-	//	m_Material->CmdBind(cmdBuff);
-
-	//	for (const auto& descSet : m_DescriptorSets)
-	//		descSet.CmdBind(cmdBuff);
-
-	//	GetEntity().Get<Mesh>().CmdBind(cmdBuff);
-	//}
+		for (const auto& descSet : m_DescriptorSets)
+			descSet.CmdBind(cmdBuff);
+	}
 }  // namespace At0::Ray

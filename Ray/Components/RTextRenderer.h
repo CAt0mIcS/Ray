@@ -3,22 +3,27 @@
 #include "RComponent.h"
 #include "Base/RRenderer.h"
 
+#include "RMesh.h"
+
 
 namespace At0::Ray
 {
-	class FlatTextMaterial;
+	class Material;
 	class CommandBuffer;
 
 	class RAY_EXPORT TextRenderer : public Component, public Renderer
 	{
 	public:
-		// TextRenderer(Entity entity, Ref<FlatTextMaterial> material);
+		TextRenderer(Entity entity, Ref<Material> material);
 
-		// void Update();
-		// void Render(const CommandBuffer& cmdBuff) const;
+		void Update();
+		void Render(const CommandBuffer& cmdBuff) const;
 
-		// std::string_view GetText() const;
-		// void SetText(std::string_view txt);
+		std::string_view GetText() const;
+		void SetText(std::string_view txt);
+
+	private:
+		Mesh m_Mesh;
 	};
 }  // namespace At0::Ray
 

@@ -20,9 +20,6 @@ layout(set = 1, binding = 1) uniform PerObjectData
 
 void main()
 {
-	uScene.View;
-	uScene.Proj;
-
-	gl_Position = uObj.Model * vec4(inPos, 1.0f);
+	gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 1.0f);
 	outUV = inUV;
 }

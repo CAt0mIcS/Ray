@@ -1,4 +1,6 @@
-﻿#include <Ray/Core/REngine.h>
+﻿#define RAY_ENABLE_IMGUI 0
+
+#include <Ray/Core/REngine.h>
 #include <Ray/Utils/RLogger.h>
 #include <Ray/Devices/RWindow.h>
 #include <Ray/Graphics/RGraphics.h>
@@ -11,6 +13,10 @@
 #include <Ray/Graphics/Images/RTexture2D.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
 #include <Ray/Utils/RException.h>
+#include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
+#include <Ray/Shading/RMaterial.h>
+#include <Ray/Graphics/Pipelines/Shader/RShader.h>
+#include <Ray/Components/RMeshRenderer.h>
 
 #include <Ray/Scene/RScene.h>
 #include <Ray/Scene/RCamera.h>
@@ -102,8 +108,23 @@ public:
 		//		ImGui::End();
 		//	});
 
-		// auto font = Ray::Font::AcquireTTF("Resources/Fonts/Courier-Prime/Courier Prime.ttf", 48);
+		auto font = Ray::Font::AcquireTTF("Resources/Fonts/Courier-Prime/Courier Prime.ttf", 48);
 
+		auto pipeline =
+			Ray::GraphicsPipeline::Builder()
+				.SetShader(Ray::Shader::AcquireSourceFile(
+					{ "Resources/Shaders/Flat_Text.vert", "Resources/Shaders/Flat_Text.frag" }))
+				.SetCullMode(VK_CULL_MODE_NONE)
+				.Acquire();
+
+		auto textMaterial = Ray::Material::Builder(pipeline)
+								.Set("samplerTextureAtlas", font->GetSharedTextureAtlas())
+								.Acquire();
+
+		m_TextEntity = Scene::Get().CreateEntity();
+		m_TextEntity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(textMaterial));
+		m_TextEntity.Emplace<Ray::MeshRenderer>(textMaterial);
+		m_TextEntity.Get<Ray::Transform>().Rotate({ Ray::Math::PI<> / 2.f, 0.f, 0.f });
 
 		// auto flatTextMaterial = Ray::MakeRef<Ray::FlatTextMaterial>(
 		//	Ray::FlatTextMaterial::Layout{ "Hello World", font, { 1.0f, 1.0f, 1.0f, 1.0f } });
@@ -111,8 +132,8 @@ public:
 		// m_TextEntity = Scene::Get().CreateEntity();
 		// m_TextEntity.Emplace<Ray::TextRenderer>(flatTextMaterial);
 
-		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
+		// Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+		//	Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:
