@@ -10,11 +10,12 @@ namespace At0::Ray
 {
 	class Material;
 	class CommandBuffer;
+	class Font;
 
 	class RAY_EXPORT TextRenderer : public Component, public Renderer
 	{
 	public:
-		TextRenderer(Entity entity, Ref<Material> material);
+		TextRenderer(Entity entity, Ref<Material> material, const Font& font, char charToRender);
 
 		void Update();
 		void Render(const CommandBuffer& cmdBuff) const;

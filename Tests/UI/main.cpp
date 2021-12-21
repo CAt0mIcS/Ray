@@ -122,9 +122,10 @@ public:
 								.Acquire();
 
 		m_TextEntity = Scene::Get().CreateEntity();
-		m_TextEntity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(textMaterial));
-		m_TextEntity.Emplace<Ray::MeshRenderer>(textMaterial);
-		m_TextEntity.Get<Ray::Transform>().Rotate({ Ray::Math::PI<> / 2.f, 0.f, 0.f });
+		// m_TextEntity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(textMaterial));
+		// m_TextEntity.Emplace<Ray::MeshRenderer>(textMaterial);
+		// m_TextEntity.Get<Ray::Transform>().Rotate({ Ray::Math::PI<> / 2.f, 0.f, 0.f });
+		m_TextEntity.Emplace<Ray::TextRenderer>(textMaterial, *font, 'A');
 
 		// auto flatTextMaterial = Ray::MakeRef<Ray::FlatTextMaterial>(
 		//	Ray::FlatTextMaterial::Layout{ "Hello World", font, { 1.0f, 1.0f, 1.0f, 1.0f } });
