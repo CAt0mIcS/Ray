@@ -108,24 +108,24 @@ public:
 		//		ImGui::End();
 		//	});
 
-		auto font = Ray::Font::AcquireTTF("Resources/Fonts/Courier-Prime/Courier Prime.ttf", 48);
+		// auto font = Ray::Font::AcquireTTF("Resources/Fonts/Courier-Prime/Courier Prime.ttf", 48);
 
-		auto pipeline =
-			Ray::GraphicsPipeline::Builder()
-				.SetShader(Ray::Shader::AcquireSourceFile(
-					{ "Resources/Shaders/Flat_Text.vert", "Resources/Shaders/Flat_Text.frag" }))
-				.SetCullMode(VK_CULL_MODE_NONE)
-				.Acquire();
+		// auto pipeline =
+		//	Ray::GraphicsPipeline::Builder()
+		//		.SetShader(Ray::Shader::AcquireSourceFile(
+		//			{ "Resources/Shaders/Flat_Text.vert", "Resources/Shaders/Flat_Text.frag" }))
+		//		.SetCullMode(VK_CULL_MODE_NONE)
+		//		.Acquire();
 
-		auto textMaterial = Ray::Material::Builder(pipeline)
-								.Set("samplerTextureAtlas", font->GetSharedTextureAtlas())
-								.Acquire();
+		// auto textMaterial = Ray::Material::Builder(pipeline)
+		//						.Set("samplerTextureAtlas", font->GetSharedTextureAtlas())
+		//						.Acquire();
 
-		m_TextEntity = Scene::Get().CreateEntity();
+		// m_TextEntity = Scene::Get().CreateEntity();
 		// m_TextEntity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(textMaterial));
 		// m_TextEntity.Emplace<Ray::MeshRenderer>(textMaterial);
 		// m_TextEntity.Get<Ray::Transform>().Rotate({ Ray::Math::PI<> / 2.f, 0.f, 0.f });
-		m_TextEntity.Emplace<Ray::TextRenderer>(textMaterial, *font, 'A');
+		// m_TextEntity.Emplace<Ray::TextRenderer>(textMaterial, *font, 'A');
 
 		// auto flatTextMaterial = Ray::MakeRef<Ray::FlatTextMaterial>(
 		//	Ray::FlatTextMaterial::Layout{ "Hello World", font, { 1.0f, 1.0f, 1.0f, 1.0f } });
@@ -135,6 +135,15 @@ public:
 
 		// Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 		//	Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
+
+		auto shaderRenderGlyph = Ray::Shader::AcquireSourceFile(
+			{ "Resources/Shaders/Text/Shared.vert", "Resources/Shaders/Text/RenderGlyph.frag" });
+
+		auto shaderBlitAtlas = Ray::Shader::AcquireSourceFile(
+			{ "Resources/Shaders/Text/Shared.vert", "Resources/Shaders/Text/BlitAtlas.frag" });
+
+		auto shaderDrawText = Ray::Shader::AcquireSourceFile(
+			{ "Resources/Shaders/Text/DrawText.vert", "Resources/Shaders/Text/DrawText.frag" });
 	}
 
 private:

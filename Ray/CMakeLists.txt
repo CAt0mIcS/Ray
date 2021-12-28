@@ -23,6 +23,12 @@ set(SHADERS
 	"../Resources/Shaders/Flat_Text.frag"
 	"../Resources/Shaders/Test.vert"
 	"../Resources/Shaders/Test.frag"
+
+	"../Resources/Shaders/Text/Shared.vert"
+	"../Resources/Shaders/Text/BlitAtlas.frag"
+	"../Resources/Shaders/Text/RenderGlyph.frag"
+	"../Resources/Shaders/Text/DrawText.vert"
+	"../Resources/Shaders/Text/DrawText.frag"
 )
 
 set(SRC
@@ -277,6 +283,10 @@ set(SRC
 	"../Extern/imgui/imgui_tables.cpp"
 	"../Extern/imgui/imgui_impl_glfw.cpp"
 	"../Extern/imgui/imgui_impl_vulkan.cpp"
+
+	"../Extern/VEFontCache/stb_truetype.h"
+	"../Extern/VEFontCache/utf8.h"
+	"../Extern/VEFontCache/ve_fontcache.h"
 )
 
 # ------------------------------------------------------------------
