@@ -11,7 +11,7 @@
 #include <Ray/Components/RSkybox.h>
 #include <Ray/Components/RScriptableEntity.h>
 
-#include <Ray/Graphics/Images/RTexture2D.h>
+#include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
 #include <Ray/Graphics/Pipelines/Shader/RShader.h>
@@ -115,7 +115,7 @@ public:
 		m_Light.Get<Ray::Transform>().SetScale(Ray::Float3(0.4f));
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
+			Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:

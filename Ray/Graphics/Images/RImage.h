@@ -80,5 +80,42 @@ namespace At0::Ray
 		VkImageAspectFlags m_ImageAspect;
 		uint32_t m_ArrayLayers = 1;
 		VkImageCreateFlags m_CreateFlags = 0;
+
+	public:
+		class RAY_EXPORT Builder
+		{
+		public:
+			Builder() = default;
+
+			Builder& SetExtent(UInt2 extent);
+			Builder& SetImageType(VkImageType imageType);
+			Builder& SetFormat(VkFormat format);
+			Builder& SetImageTiling(VkImageTiling imageTiling);
+			Builder& SetImageUsage(VkImageUsageFlags imageUsage);
+			Builder& SetMemoryProperties(VkMemoryPropertyFlags memoryProperties);
+			Builder& SetMipLevels(uint32_t mipLevels);
+			Builder& SetImageAspect(VkImageAspectFlags imageAspect);
+			Builder& SetArrayLevels(uint32_t arrayLevels);
+			Builder& SetImageCreateFlags(VkImageCreateFlags createFlags);
+
+			Ref<Image> Build();
+			Ref<Image> Acquire();
+
+		private:
+			void ThrowIfInvalidArguments() const;
+
+		private:
+			UInt2 m_Extent{ -1, -1 };
+			VkImageType m_ImageType = VK_IMAGE_TYPE_MAX_ENUM;
+			VkFormat m_Format = VK_FORMAT_MAX_ENUM;
+			VkImageTiling m_Tiling = VK_IMAGE_TILING_MAX_ENUM;
+			VkImageUsageFlags m_Usage = VK_IMAGE_USAGE_FLAG_BITS_MAX_ENUM;
+			VkMemoryPropertyFlags m_MemoryProperties = VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM;
+
+			uint32_t m_MipLevels = 1;
+			VkImageAspectFlags m_ImageAspect = VK_IMAGE_ASPECT_COLOR_BIT;
+			uint32_t m_ArrayLayers = 1;
+			VkImageCreateFlags m_CreateFlags = 0;
+		};
 	};
 }  // namespace At0::Ray

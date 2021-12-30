@@ -19,9 +19,9 @@ namespace At0::Ray
 {
 	static Mesh::VertexData GeneratePlane(const Shader& shader, const Font& font, char charToRender)
 	{
-		const Texture2DAtlas::Area& area = font.GetGlyph(charToRender).area;
+		const Texture2DDAtlas::Area& area = font.GetGlyph(charToRender).area;
 
-		std::array<Float2, 4> uvs = font.GetTextureAtlas().MapUV(area);
+		std::array<Float2, 4> uvs = font.GetTexture2DDAtlas().MapUV(area);
 
 		DynamicVertex vertex(shader);
 

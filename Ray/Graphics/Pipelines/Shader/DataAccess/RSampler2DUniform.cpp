@@ -24,7 +24,7 @@ namespace At0::Ray
 	{
 	}
 
-	void Sampler2DUniform::SetTexture(Ref<Texture2D> texture, DescriptorSet& descSet)
+	void Sampler2DUniform::SetTexture(Ref<Texture> texture, DescriptorSet& descSet)
 	{
 		descSet.BindUniform(*this, std::move(texture));
 	}

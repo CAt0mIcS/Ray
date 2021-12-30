@@ -526,4 +526,88 @@ namespace At0::Ray
 	}
 
 	Image::Image() {}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////// BUILDER //////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	Image::Builder& Image::Builder::SetExtent(UInt2 extent)
+	{
+		m_Extent = extent;
+		return *this;
+	}
+	Image::Builder& Image::Builder::SetImageType(VkImageType imageType)
+	{
+		m_ImageType = imageType;
+		return *this;
+	}
+	Image::Builder& Image::Builder::SetFormat(VkFormat format)
+	{
+		m_Format = format;
+		return *this;
+	}
+	Image::Builder& Image::Builder::SetImageTiling(VkImageTiling imageTiling)
+	{
+		m_Tiling = imageTiling;
+		return *this;
+	}
+	Image::Builder& Image::Builder::SetImageUsage(VkImageUsageFlags imageUsage)
+	{
+		m_Usage = imageUsage;
+		return *this;
+	}
+	Image::Builder& Image::Builder::SetMemoryProperties(VkMemoryPropertyFlags memoryProperties)
+	{
+		m_MemoryProperties = memoryProperties;
+		return *this;
+	}
+	Image::Builder& Image::Builder::SetMipLevels(uint32_t mipLevels)
+	{
+		m_MipLevels = mipLevels;
+		return *this;
+	}
+	Image::Builder& Image::Builder::SetImageAspect(VkImageAspectFlags imageAspect)
+	{
+		m_ImageAspect = imageAspect;
+		return *this;
+	}
+	Image::Builder& Image::Builder::SetArrayLevels(uint32_t arrayLevels)
+	{
+		m_ArrayLayers = arrayLevels;
+		return *this;
+	}
+	Image::Builder& Image::Builder::SetImageCreateFlags(VkImageCreateFlags createFlags)
+	{
+		m_CreateFlags = createFlags;
+		return *this;
+	}
+
+	Ref<Image> Image::Builder::Build()
+	{
+		ThrowIfInvalidArguments();
+		return MakeRef<Image>(m_Extent, m_ImageType, m_Format, m_Tiling, m_Usage,
+			m_MemoryProperties, m_MipLevels, m_ImageAspect, m_ArrayLayers, m_CreateFlags);
+	}
+	Ref<Image> Image::Builder::Acquire()
+	{
+		ThrowIfInvalidArguments();
+		return Image::Acquire(m_Extent, m_ImageType, m_Format, m_Tiling, m_Usage,
+			m_MemoryProperties, m_MipLevels, m_ImageAspect, m_ArrayLayers, m_CreateFlags);
+	}
+
+	void Image::Builder::ThrowIfInvalidArguments() const
+	{
+		RAY_MEXPECTS(m_Extent != UInt2(-1, -1), "[Image::Builder] Image extent not specified");
+		RAY_MEXPECTS(
+			m_ImageType != VK_IMAGE_TYPE_MAX_ENUM, "[Image::Builder] Image type not specified");
+		RAY_MEXPECTS(m_Format != VK_FORMAT_MAX_ENUM, "[Image::Builder] Image format not specified");
+		RAY_MEXPECTS(
+			m_Tiling != VK_IMAGE_TILING_MAX_ENUM, "[Image::Builder] Image tiling not specified");
+		RAY_MEXPECTS(
+			m_ImageType != VK_IMAGE_TYPE_MAX_ENUM, "[Image::Builder] Image type not specified");
+		RAY_MEXPECTS(m_Usage != VK_IMAGE_USAGE_FLAG_BITS_MAX_ENUM,
+			"[Image::Builder] Image usage not specified");
+		RAY_MEXPECTS(m_MemoryProperties != VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM,
+			"[Image::Builder] Image memory properties not specified");
+	}
 }  // namespace At0::Ray

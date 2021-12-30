@@ -2,7 +2,7 @@
 
 #include "Core/RDynamicVertex.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
-#include "Graphics/Images/RTexture2D.h"
+#include "Graphics/Images/RTexture.h"
 #include "Graphics/RCodex.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
 #include "Graphics/Buffers/RIndexBuffer.h"
@@ -177,26 +177,26 @@ namespace At0::Ray
 		aiString specularTexFileName;
 		aiString normalTexFileName;
 
-		Ref<Texture2D> diffuseMap = nullptr;
-		Ref<Texture2D> specularMap = nullptr;
-		Ref<Texture2D> normalMap = nullptr;
+		Ref<Texture> diffuseMap = nullptr;
+		Ref<Texture> specularMap = nullptr;
+		Ref<Texture> normalMap = nullptr;
 
 		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
 				aiTextureType_DIFFUSE, 0, &diffuseTexFileName) == aiReturn_SUCCESS)
 		{
-			diffuseMap = Texture2D::Acquire(basePath + diffuseTexFileName.C_Str());
+			diffuseMap = Texture::Acquire(basePath + diffuseTexFileName.C_Str());
 		}
 
 		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
 				aiTextureType_SPECULAR, 0, &specularTexFileName) == aiReturn_SUCCESS)
 		{
-			specularMap = Texture2D::Acquire(basePath + specularTexFileName.C_Str());
+			specularMap = Texture::Acquire(basePath + specularTexFileName.C_Str());
 		}
 
 		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
 				aiTextureType_NORMALS, 0, &normalTexFileName) == aiReturn_SUCCESS)
 		{
-			normalMap = Texture2D::Acquire(basePath + normalTexFileName.C_Str());
+			normalMap = Texture::Acquire(basePath + normalTexFileName.C_Str());
 		}
 
 		std::string shaderFileName = "Resources/Shaders/Phong";

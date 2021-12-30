@@ -13,12 +13,12 @@
 
 namespace At0::Ray
 {
-	class Texture2D;
+	class Texture;
 
 	class RAY_EXPORT MaterialDataContainer
 	{
 	public:
-		void Set(const std::string& key, Ref<Texture2D> image) { m_Images[key] = std::move(image); }
+		void Set(const std::string& key, Ref<Texture> image) { m_Images[key] = std::move(image); }
 		void Set(const std::string& key, bool data);
 		void Set(const std::string& key, Bool2 data);
 		void Set(const std::string& key, Bool3 data);
@@ -30,7 +30,7 @@ namespace At0::Ray
 			Set(key, std::forward<T>(data), GetType<T>());
 		}
 
-		Ref<Texture2D> GetTexture(const std::string& key) const;
+		Ref<Texture> GetTexture(const std::string& key) const;
 		void* Get(const std::string& key) const;
 		ShaderDataType GetType(const std::string& key) const;
 
@@ -154,7 +154,7 @@ namespace At0::Ray
 		}
 
 	private:
-		std::unordered_map<std::string, Ref<Texture2D>> m_Images;
+		std::unordered_map<std::string, Ref<Texture>> m_Images;
 		std::unordered_map<std::string, std::pair<int, ShaderDataType>> m_OffsetMap;
 
 		std::vector<char*> m_Data;

@@ -7,7 +7,7 @@ namespace At0::Ray
 {
 	class Pipeline;
 	class DescriptorSet;
-	class Texture2D;
+	class Texture;
 	enum class ShaderStage;
 
 	class RAY_EXPORT Sampler2DUniform
@@ -22,7 +22,7 @@ namespace At0::Ray
 		/**
 		 * Sets the texture and rebinds descriptor set to uniform
 		 */
-		void SetTexture(Ref<Texture2D> texture, DescriptorSet& descSet);
+		void SetTexture(Ref<Texture> texture, DescriptorSet& descSet);
 
 	private:
 		std::string m_Name;

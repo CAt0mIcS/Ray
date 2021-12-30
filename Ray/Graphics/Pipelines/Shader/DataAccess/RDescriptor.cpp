@@ -10,7 +10,7 @@
 
 #include "RBufferUniform.h"
 #include "RSampler2DUniform.h"
-#include "Graphics/Images/RTexture2D.h"
+#include "Graphics/Images/RTexture.h"
 
 
 namespace At0::Ray
@@ -67,7 +67,7 @@ namespace At0::Ray
 		RAY_DEBUG_FLAG(m_UniformBound = true);
 	}
 
-	void DescriptorSet::BindUniform(const Sampler2DUniform& uniform, Ref<Texture2D> texture)
+	void DescriptorSet::BindUniform(const Sampler2DUniform& uniform, Ref<Texture> texture)
 	{
 		RAY_DEBUG_FLAG(m_Texture = texture.get());
 

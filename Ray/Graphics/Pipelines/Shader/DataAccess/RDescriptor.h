@@ -11,8 +11,8 @@ namespace At0::Ray
 {
 	class BufferUniform;
 	class Sampler2DUniform;
-	class Texture2D;
-	RAY_DEBUG_FLAG(class Texture2D);
+	class Texture;
+	RAY_DEBUG_FLAG(class Texture);
 
 	class DescriptorSet : NonCopyable
 	{
@@ -29,7 +29,7 @@ namespace At0::Ray
 		uint32_t GetSetNumber() const { return m_SetNumber; }
 
 		void BindUniform(const BufferUniform& uniform);
-		void BindUniform(const Sampler2DUniform& uniform, Ref<Texture2D> texture);
+		void BindUniform(const Sampler2DUniform& uniform, Ref<Texture> texture);
 
 		operator const VkDescriptorSet&() const { return m_DescriptorSet; }
 		DescriptorSet& operator=(DescriptorSet&& other) noexcept;
@@ -45,6 +45,6 @@ namespace At0::Ray
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
 
 		RAY_DEBUG_FLAG(bool m_UniformBound = false);
-		RAY_DEBUG_FLAG(Texture2D* m_Texture);
+		RAY_DEBUG_FLAG(Texture* m_Texture);
 	};
 }  // namespace At0::Ray

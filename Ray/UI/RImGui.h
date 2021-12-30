@@ -12,7 +12,7 @@
 
 	#define RAY_IMGUI(x) ::At0::Ray::ImGUI::Get().RegisterNewFrameFunction(x)
 
-// clang-format off
+	// clang-format off
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
@@ -28,7 +28,7 @@
 
 namespace At0::Ray
 {
-	class Texture2D;
+	class Texture;
 	class Buffer;
 	class CommandBuffer;
 	class GraphicsPipeline;
@@ -82,7 +82,7 @@ namespace At0::Ray
 		 * Should be called on stored textures to get the ID required for ImGui::Image
 		 * @returns First parameter of ImGui::Image function
 		 */
-		void* PushTexture(const Texture2D& texture);
+		void* PushTexture(const Texture& texture);
 
 		/**
 		 * Should be called on stored textures to get the ID required for ImGui::Image
@@ -112,7 +112,7 @@ namespace At0::Ray
 	private:
 		static Scope<ImGUI> s_Instance;
 
-		Ref<Texture2D> m_FontImage;
+		Ref<Texture> m_FontImage;
 
 		Scope<GraphicsPipeline> m_Pipeline;
 		Scope<Sampler2DUniform> m_FontUniform;

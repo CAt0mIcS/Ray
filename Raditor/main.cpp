@@ -12,7 +12,7 @@
 #include <Ray/Components/RScriptableEntity.h>
 #include <Ray/Components/RTagComponent.h>
 
-#include <Ray/Graphics/Images/RTexture2D.h>
+#include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
 #include <Ray/Utils/RException.h>

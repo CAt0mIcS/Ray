@@ -12,7 +12,7 @@
 #include <Ray/Components/RScriptableEntity.h>
 #include <Ray/Components/RHierachyComponent.h>
 
-#include <Ray/Graphics/Images/RTexture2D.h>
+#include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
 #include <Ray/Utils/RException.h>
@@ -148,7 +148,7 @@ public:
 							.Acquire();
 		m_Material =
 			Ray::Material::Builder(pipeline)
-				.Set("samplerDiffuse", Ray::Texture2D::Acquire("Resources/Textures/gridbase.png"))
+				.Set("samplerDiffuse", Ray::Texture::Acquire("Resources/Textures/gridbase.png"))
 				.Set("Shading.color", Ray::Float4{ 1.0f, 0.4f, 0.134f, 1.0f })
 				.Set("Constants.useColor", m_UseColor)
 				.Set("Constants.useTexture", m_UseTexture)
@@ -159,7 +159,7 @@ public:
 		Ray::MeshRenderer& rendererParent = m_Parent.Emplace<Ray::MeshRenderer>(m_Material);
 
 		m_Material->Set("samplerDiffuse",
-			Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
+			Ray::Texture::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
 
 		m_Child = Scene::Get().CreateEntity();
 		m_Child.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f });

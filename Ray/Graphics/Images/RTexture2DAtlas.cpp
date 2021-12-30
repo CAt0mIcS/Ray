@@ -5,21 +5,21 @@
 
 namespace At0::Ray
 {
-	Texture2DAtlas::Texture2DAtlas(UInt2 extent, VkFormat format, VkImageTiling tiling,
+	Texture2DDAtlas::Texture2DDAtlas(UInt2 extent, VkFormat format, VkImageTiling tiling,
 		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps)
-		: Texture2D(extent, format, tiling, usage, memProps)
+		: Texture(extent, format, tiling, usage, memProps)
 	{
 		m_FreeAreas.emplace_back(UInt2{ 0, 0 }, extent);
 	}
 
-	Texture2DAtlas::Area* Texture2DAtlas::Emplace(UInt2 extent, uint8_t* pixels)
+	Texture2DDAtlas::Area* Texture2DDAtlas::Emplace(UInt2 extent, uint8_t* pixels)
 	{
 		Area* area = AllocateArea(extent);
 
 		if (!area)
 		{
 			Log::Error(
-				"[Texture2DAtlas] Too small to hold (x={0} | y={1}) image", extent.x, extent.y);
+				"[Texture2DDAtlas] Too small to hold (x={0} | y={1}) image", extent.x, extent.y);
 			return nullptr;
 		}
 
@@ -42,7 +42,7 @@ namespace At0::Ray
 		return &m_AllocatedAreas.front();
 	}
 
-	std::array<Float2, 4> Texture2DAtlas::MapUV(const Area& area) const
+	std::array<Float2, 4> Texture2DDAtlas::MapUV(const Area& area) const
 	{
 		std::array<Float2, 4> uvs;
 
@@ -68,7 +68,7 @@ namespace At0::Ray
 		return uvs;
 	}
 
-	Texture2DAtlas::Area* Texture2DAtlas::AllocateArea(UInt2 extent)
+	Texture2DDAtlas::Area* Texture2DDAtlas::AllocateArea(UInt2 extent)
 	{
 		auto getFreeArea = [this](UInt2 extent)
 		{

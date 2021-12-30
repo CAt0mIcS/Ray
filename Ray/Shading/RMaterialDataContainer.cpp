@@ -38,7 +38,7 @@ namespace At0::Ray
 		Set(key, UIBool4{ data }, GetType<Bool4>());
 	}
 
-	Ref<Texture2D> MaterialDataContainer::GetTexture(const std::string& key) const
+	Ref<Texture> MaterialDataContainer::GetTexture(const std::string& key) const
 	{
 		if (m_Images.find(key) == m_Images.end())
 			return nullptr;

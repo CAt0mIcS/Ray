@@ -30,7 +30,7 @@ namespace At0::Ray
 			Int2 size{};
 			Int2 bearing{};
 			uint32_t advance{};
-			Texture2DAtlas::Area area{};
+			Texture2DDAtlas::Area area{};
 		};
 
 	public:
@@ -41,11 +41,11 @@ namespace At0::Ray
 
 		void Load(std::string_view filepath);
 		const Glyph& GetGlyph(char c) const { return m_Glyphs.at(c); }
-		Ref<Texture2DAtlas> GetSharedTextureAtlas() const { return m_TextureAtlas; }
-		const Texture2DAtlas& GetTextureAtlas() const { return *m_TextureAtlas; }
+		Ref<Texture2DDAtlas> GetSharedTexture2DDAtlas() const { return m_Texture2DDAtlas; }
+		const Texture2DDAtlas& GetTexture2DDAtlas() const { return *m_Texture2DDAtlas; }
 
 	private:
-		Ref<Texture2DAtlas> m_TextureAtlas;
+		Ref<Texture2DDAtlas> m_Texture2DDAtlas;
 
 		// Maps character to glyph
 		std::unordered_map<char, Glyph> m_Glyphs;

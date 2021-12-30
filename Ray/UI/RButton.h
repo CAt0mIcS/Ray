@@ -5,7 +5,7 @@
 
 namespace At0::Ray
 {
-	class Texture2D;
+	class Texture;
 
 	class RAY_EXPORT Button : public Widget
 	{
@@ -13,10 +13,10 @@ namespace At0::Ray
 		Button(Entity entity, std::string_view name, Float2 pos, float width, float height,
 			const Float3& color = { 1.0f, 1.0f, 1.0f });
 		Button(Entity entity, std::string_view name, Float2 pos, float width, float height,
-			Ref<Texture2D> texture);
+			Ref<Texture> texture);
 
 		void SetColor(const Float3& color);
-		void SetTexture(Ref<Texture2D> texture);
+		void SetTexture(Ref<Texture> texture);
 
 	private:
 		/**

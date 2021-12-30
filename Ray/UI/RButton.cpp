@@ -33,7 +33,7 @@ namespace At0::Ray
 	}
 
 	Button::Button(Entity entity, std::string_view name, Float2 pos, float width, float height,
-		Ref<Texture2D> texture)
+		Ref<Texture> texture)
 		: Widget(entity, name), m_UseColorMaterial(false)
 	{
 		// FlatTextureMaterial::Layout layout{};
@@ -60,7 +60,7 @@ namespace At0::Ray
 		GetEntity().Get<MeshRenderer>().GetBufferUniform("Shading")["color"] = color;
 	}
 
-	void Button::SetTexture(Ref<Texture2D> texture)
+	void Button::SetTexture(Ref<Texture> texture)
 	{
 		RAY_MEXPECTS(
 			!m_UseColorMaterial, "[Button] RAY_TODO: Cannot set texture on colored button");

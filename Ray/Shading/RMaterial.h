@@ -13,8 +13,8 @@
 namespace At0::Ray
 {
 	class GraphicsPipeline;
-	class Texture2D;
-	class Texture2DAtlas;
+	class Texture;
+	class Texture2DDAtlas;
 	class CommandBuffer;
 
 	class RAY_EXPORT Material : public EventDispatcher<MaterialBecameDirtyEvent>
@@ -34,7 +34,7 @@ namespace At0::Ray
 
 		bool HasUniformBlock(const std::string& name) const;
 		bool HasUniform(const std::string& name) const { return m_Container.HasUniform(name); }
-		Ref<Texture2D> GetTexture(const std::string& dataPath) const;
+		Ref<Texture> GetTexture(const std::string& dataPath) const;
 		void* GetRaw(const std::string& dataPath) const { return m_Container.Get(dataPath); }
 		ShaderDataType GetType(const std::string& dataPath) const
 		{
@@ -50,8 +50,8 @@ namespace At0::Ray
 			CallListeners(name, GetUniformType(name));
 		}
 
-		void Set(const std::string& name, Ref<Texture2D> texture);
-		void Set(const std::string& name, Ref<Texture2DAtlas> texture);
+		void Set(const std::string& name, Ref<Texture> texture);
+		void Set(const std::string& name, Ref<Texture2DDAtlas> texture);
 
 		template<typename T>
 		T& Get(const std::string& name)
@@ -90,8 +90,8 @@ namespace At0::Ray
 				return *this;
 			}
 
-			Builder& Set(const std::string& name, Ref<Texture2D> data);
-			Builder& Set(const std::string& name, Ref<Texture2DAtlas> data);
+			Builder& Set(const std::string& name, Ref<Texture> data);
+			Builder& Set(const std::string& name, Ref<Texture2DDAtlas> data);
 
 			Ref<Material> Acquire();
 			Ref<Material> Build();

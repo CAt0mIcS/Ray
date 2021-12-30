@@ -14,7 +14,7 @@
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 #include "Graphics/Buffers/RBuffer.h"
 #include "Graphics/Commands/RCommandBuffer.h"
-#include "Graphics/Images/RImage2D.h"
+#include "Graphics/Images/RImage.h"
 #include "Graphics/RenderPass/RRenderPass.h"
 #include "Graphics/Images/RTextureSampler.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
@@ -23,7 +23,7 @@
 #include "Graphics/Pipelines/Shader/DataAccess/RSampler2DUniform.h"
 #include "Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
 #include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
-#include "Graphics/Images/RTexture2D.h"
+#include "Graphics/Images/RTexture.h"
 #include "Graphics/Images/RImageView.h"
 
 #include <../../Extern/imgui/imgui.h>
@@ -107,7 +107,7 @@ namespace At0::Ray
 		VkDeviceSize uploadSize = texWidth * texHeight * 4 * sizeof(char);
 
 		// Create target image for copy
-		m_FontImage = MakeRef<Texture2D>(UInt2{ texWidth, texHeight }, VK_FORMAT_R8G8B8A8_UNORM,
+		m_FontImage = MakeRef<Texture>(UInt2{ texWidth, texHeight }, VK_FORMAT_R8G8B8A8_UNORM,
 			VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
@@ -350,7 +350,7 @@ namespace At0::Ray
 		}
 	}
 
-	void* ImGUI::PushTexture(const Texture2D& texture)
+	void* ImGUI::PushTexture(const Texture& texture)
 	{
 		return PushTexture(texture.GetSampler(), texture.GetImageView(), texture.GetImageLayout());
 	}

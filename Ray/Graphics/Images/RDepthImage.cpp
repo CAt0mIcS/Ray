@@ -4,7 +4,7 @@
 namespace At0::Ray
 {
 	DepthImage::DepthImage(UInt2 extent, VkImageUsageFlags usage)
-		: Image2D(extent, FindDepthFormats()[0], VK_IMAGE_TILING_OPTIMAL, usage,
+		: Image(extent, VK_IMAGE_TYPE_2D, FindDepthFormats()[0], VK_IMAGE_TILING_OPTIMAL, usage,
 			  VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 1, VK_IMAGE_ASPECT_DEPTH_BIT)
 	{
 	}

@@ -97,7 +97,7 @@ namespace At0::Ray
 	}
 
 	Sampler2DUniform& Renderer::AddSampler2DUniform(
-		const std::string& name, ShaderStage stage, Ref<Texture2D> texture)
+		const std::string& name, ShaderStage stage, Ref<Texture> texture)
 	{
 		RAY_MEXPECTS(m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniform(
 						 name, true),
@@ -200,7 +200,7 @@ namespace At0::Ray
 		return m_DescriptorSets[0];
 	}
 
-	void Renderer::SetSamplerTexture(std::string_view name, Ref<Texture2D> texture)
+	void Renderer::SetSamplerTexture(std::string_view name, Ref<Texture> texture)
 	{
 		for (auto& [set, uniforms] : m_Sampler2DUniforms)
 			for (auto& uniform : uniforms)

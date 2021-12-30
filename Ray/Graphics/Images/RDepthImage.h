@@ -2,12 +2,12 @@
 
 #include "../../RBase.h"
 #include "../../Core/RMath.h"
-#include "RImage2D.h"
+#include "RImage.h"
 
 
 namespace At0::Ray
 {
-	class DepthImage : public Image2D
+	class DepthImage : public Image
 	{
 	public:
 		DepthImage(

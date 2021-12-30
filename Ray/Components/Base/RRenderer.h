@@ -14,7 +14,7 @@ namespace At0::Ray
 	class DescriptorSet;
 	class BufferUniform;
 	class Sampler2DUniform;
-	class Texture2D;
+	class Texture;
 	class GraphicsPipeline;
 	class Material;
 	enum class ShaderStage;
@@ -29,7 +29,7 @@ namespace At0::Ray
 
 		BufferUniform& AddBufferUniform(const std::string& name, ShaderStage stage);
 		Sampler2DUniform& AddSampler2DUniform(
-			const std::string& name, ShaderStage stage, Ref<Texture2D> texture);
+			const std::string& name, ShaderStage stage, Ref<Texture> texture);
 		BufferUniform& AddPushConstant(std::string_view name, ShaderStage stage);
 
 		BufferUniform& GetBufferUniform(std::string_view name);
@@ -39,7 +39,7 @@ namespace At0::Ray
 		DescriptorSet& GetDescriptorSet(std::string_view uniformName);
 
 		void SetMaterial(Ref<Material> material) { m_Material = std::move(material); }
-		void SetSamplerTexture(std::string_view name, Ref<Texture2D> texture);
+		void SetSamplerTexture(std::string_view name, Ref<Texture> texture);
 
 		Material& GetMaterial() { return *m_Material; }
 		const Material& GetMaterial() const { return *m_Material; }

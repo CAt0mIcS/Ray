@@ -1,6 +1,6 @@
 ﻿#include "RSkybox.h"
 
-#include "Graphics/Images/RTexture2D.h"
+#include "Graphics/Images/RTexture.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
 
@@ -16,7 +16,7 @@ namespace At0::Ray
 {
 	// RAY_TODO: Disable depth stencil for skybox
 
-	Skybox::Skybox(Entity entity, Ref<Texture2D> texture)
+	Skybox::Skybox(Entity entity, Ref<Texture> texture)
 		: Component(entity), EventListener<CameraChangedEvent>(Scene::Get().GetCamera())
 	{
 		auto pipeline =

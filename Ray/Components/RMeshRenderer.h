@@ -14,7 +14,7 @@ namespace At0::Ray
 {
 	class CommandBuffer;
 	class Material;
-	class Texture2D;
+	class Texture;
 	class DynamicBufferAccess;
 	enum class ShaderStage;
 
