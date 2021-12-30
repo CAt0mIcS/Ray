@@ -78,8 +78,7 @@ public:
 		auto shaderDrawText = Shader::AcquireSourceFile(
 			{ "Resources/Shaders/Text/DrawText.vert", "Resources/Shaders/Text/DrawText.frag" });
 
-		auto firstTexture = Image::Builder()
-								.SetImageType(VK_IMAGE_TYPE_2D)
+		auto firstTexture = Texture::Builder()
 								.SetExtent({ VE_FONTCACHE_GLYPHDRAW_BUFFER_WIDTH,
 									VE_FONTCACHE_GLYPHDRAW_BUFFER_HEIGHT })
 								.SetFormat(VK_FORMAT_R8_UNORM)

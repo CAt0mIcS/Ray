@@ -11,7 +11,7 @@
 #include <Ray/Components/RSkybox.h>
 #include <Ray/Components/RScriptableEntity.h>
 
-#include <Ray/Graphics/Images/RTexture2D.h>
+#include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
 #include <Ray/Utils/RException.h>
@@ -109,7 +109,7 @@ public:
 		auto textureMaterial =
 			Ray::Material::Builder(std::move(texturePipeline))
 				.Set("samplerDiffuse",
-					Ray::Texture2D::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"))
+					Ray::Texture::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"))
 				.Acquire();
 
 		Ray::Entity plane = Scene::Get().CreateEntity();
@@ -153,7 +153,7 @@ public:
 		cone.Get<Ray::Transform>().Translate({ 20.f, 0.f, 0.f });
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
+			Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:

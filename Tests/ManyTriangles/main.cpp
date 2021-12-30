@@ -12,7 +12,7 @@
 #include <Ray/Components/RScriptableEntity.h>
 #include <Ray/Components/RTagComponent.h>
 
-#include <Ray/Graphics/Images/RTexture2D.h>
+#include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
 #include <Ray/Utils/RException.h>
@@ -71,9 +71,8 @@ public:
 					if (previous != enabled)
 					{
 						if (enabled)
-							Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-								Ray::Texture2D::Acquire(
-									"Resources/Textures/EquirectangularWorldMap.jpg"));
+							Scene::Get().CreateEntity().Emplace<Ray::Skybox>(Ray::Texture::Acquire(
+								"Resources/Textures/EquirectangularWorldMap.jpg"));
 						else
 							Scene::Get().DestroyEntity(Scene::Get().EntityView<Ray::Skybox>()[0]);
 					}

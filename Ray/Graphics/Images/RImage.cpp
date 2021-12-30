@@ -598,13 +598,7 @@ namespace At0::Ray
 	void Image::Builder::ThrowIfInvalidArguments() const
 	{
 		RAY_MEXPECTS(m_Extent != UInt2(-1, -1), "[Image::Builder] Image extent not specified");
-		RAY_MEXPECTS(
-			m_ImageType != VK_IMAGE_TYPE_MAX_ENUM, "[Image::Builder] Image type not specified");
 		RAY_MEXPECTS(m_Format != VK_FORMAT_MAX_ENUM, "[Image::Builder] Image format not specified");
-		RAY_MEXPECTS(
-			m_Tiling != VK_IMAGE_TILING_MAX_ENUM, "[Image::Builder] Image tiling not specified");
-		RAY_MEXPECTS(
-			m_ImageType != VK_IMAGE_TYPE_MAX_ENUM, "[Image::Builder] Image type not specified");
 		RAY_MEXPECTS(m_Usage != VK_IMAGE_USAGE_FLAG_BITS_MAX_ENUM,
 			"[Image::Builder] Image usage not specified");
 		RAY_MEXPECTS(m_MemoryProperties != VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM,

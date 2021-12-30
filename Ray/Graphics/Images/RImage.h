@@ -106,12 +106,12 @@ namespace At0::Ray
 
 		private:
 			UInt2 m_Extent{ -1, -1 };
-			VkImageType m_ImageType = VK_IMAGE_TYPE_MAX_ENUM;
 			VkFormat m_Format = VK_FORMAT_MAX_ENUM;
-			VkImageTiling m_Tiling = VK_IMAGE_TILING_MAX_ENUM;
 			VkImageUsageFlags m_Usage = VK_IMAGE_USAGE_FLAG_BITS_MAX_ENUM;
 			VkMemoryPropertyFlags m_MemoryProperties = VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM;
 
+			VkImageTiling m_Tiling = VK_IMAGE_TILING_OPTIMAL;
+			VkImageType m_ImageType = VK_IMAGE_TYPE_2D;
 			uint32_t m_MipLevels = 1;
 			VkImageAspectFlags m_ImageAspect = VK_IMAGE_ASPECT_COLOR_BIT;
 			uint32_t m_ArrayLayers = 1;

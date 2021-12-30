@@ -7,7 +7,7 @@ namespace At0::Ray
 {
 	Texture2DDAtlas::Texture2DDAtlas(UInt2 extent, VkFormat format, VkImageTiling tiling,
 		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps)
-		: Texture(extent, format, tiling, usage, memProps)
+		: Texture(extent, VK_IMAGE_TYPE_2D, format, tiling, usage, memProps)
 	{
 		m_FreeAreas.emplace_back(UInt2{ 0, 0 }, extent);
 	}
