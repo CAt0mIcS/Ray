@@ -78,11 +78,23 @@ public:
 		auto shaderDrawText = Shader::AcquireSourceFile(
 			{ "Resources/Shaders/Text/DrawText.vert", "Resources/Shaders/Text/DrawText.frag" });
 
-		auto firstTexture = Texture::Builder()
-								.SetExtent({ VE_FONTCACHE_GLYPHDRAW_BUFFER_WIDTH,
-									VE_FONTCACHE_GLYPHDRAW_BUFFER_HEIGHT })
-								.SetFormat(VK_FORMAT_R8_UNORM)
-								.Build();
+		auto sampler = TextureSampler::Builder()
+						   .SetMinFilter(VK_FILTER_NEAREST)
+						   .SetMagFilter(VK_FILTER_NEAREST)
+						   .SetAddressModeU(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+						   .SetAddressModeV(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+						   .SetAddressModeW(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+						   .BuildScoped();
+
+		auto firstTexture =
+			Texture::Builder()
+				.SetExtent(
+					{ VE_FONTCACHE_GLYPHDRAW_BUFFER_WIDTH, VE_FONTCACHE_GLYPHDRAW_BUFFER_HEIGHT })
+				.SetFormat(VK_FORMAT_R8_UNORM)
+				.SetImageUsage(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT)
+				.SetMemoryProperties(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+				.SetTextureSampler(std::move(sampler))
+				.Build();
 	}
 
 private:

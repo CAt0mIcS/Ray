@@ -13,25 +13,29 @@
 namespace At0::Ray
 {
 	Texture::Texture(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
-		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, uint32_t mipLevels,
-		VkImageAspectFlags imageAspect, uint32_t arrayLayers, VkImageCreateFlags createFlags)
+		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, Scope<TextureSampler> sampler,
+		uint32_t mipLevels, VkImageAspectFlags imageAspect, uint32_t arrayLayers,
+		VkImageCreateFlags createFlags)
 		: Image(extent, imageType, format, tiling, usage, memProps, mipLevels, imageAspect,
-			  arrayLayers, createFlags)
+			  arrayLayers, createFlags),
+		  m_Sampler(std::move(sampler))
 	{
 	}
 
 	Ref<Texture> Texture::Acquire(UInt2 extent, VkImageType imageType, VkFormat format,
 		VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags memProps,
-		uint32_t mipLevels, VkImageAspectFlags imageAspect, uint32_t arrayLayers,
-		VkImageCreateFlags createFlags)
+		Scope<TextureSampler> sampler, uint32_t mipLevels, VkImageAspectFlags imageAspect,
+		uint32_t arrayLayers, VkImageCreateFlags createFlags)
 	{
+		// RAY_TODO: Add sampler in resource tag
+
 		return Resources::Get().EmplaceIfNonExistent<Texture>(
 			String::Serialize("Texture{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}", extent.x, extent.y,
 				(uint32_t)imageType, (uint32_t)format, (uint32_t)tiling, (uint32_t)usage,
 				(uint32_t)memProps, mipLevels, (uint32_t)imageAspect, arrayLayers,
 				(uint32_t)createFlags),
-			std::move(extent), imageType, format, tiling, usage, memProps, mipLevels, imageAspect,
-			arrayLayers, createFlags);
+			std::move(extent), imageType, format, tiling, usage, memProps, std::move(sampler),
+			mipLevels, imageAspect, arrayLayers, createFlags);
 	}
 
 	Ref<Texture> Texture::Acquire(std::string_view filepath)
@@ -132,18 +136,35 @@ namespace At0::Ray
 		m_CreateFlags = createFlags;
 		return *this;
 	}
+	Texture::Builder& Texture::Builder::SetTextureSampler(Scope<TextureSampler> sampler)
+	{
+		m_Sampler = std::move(sampler);
+		return *this;
+	}
 
 	Ref<Texture> Texture::Builder::Build()
 	{
 		ThrowIfInvalidArguments();
+
+		// Default sampler
+		if (!m_Sampler)
+			m_Sampler = TextureSampler::Builder().BuildScoped();
+
 		return MakeRef<Texture>(m_Extent, m_ImageType, m_Format, m_Tiling, m_Usage,
-			m_MemoryProperties, m_MipLevels, m_ImageAspect, m_ArrayLayers, m_CreateFlags);
+			m_MemoryProperties, std::move(m_Sampler), m_MipLevels, m_ImageAspect, m_ArrayLayers,
+			m_CreateFlags);
 	}
 	Ref<Texture> Texture::Builder::Acquire()
 	{
 		ThrowIfInvalidArguments();
+
+		// Default sampler
+		if (!m_Sampler)
+			m_Sampler = TextureSampler::Builder().BuildScoped();
+
 		return Texture::Acquire(m_Extent, m_ImageType, m_Format, m_Tiling, m_Usage,
-			m_MemoryProperties, m_MipLevels, m_ImageAspect, m_ArrayLayers, m_CreateFlags);
+			m_MemoryProperties, std::move(m_Sampler), m_MipLevels, m_ImageAspect, m_ArrayLayers,
+			m_CreateFlags);
 	}
 
 	void Texture::Builder::ThrowIfInvalidArguments() const
