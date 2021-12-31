@@ -70,57 +70,25 @@ public:
 		Scene::Create<Scene2>();
 #include "../ImGuiWindows.inl"
 
-		ve_fontcache cache;
-		ve_fontcache_init(&cache);
-		ve_fontcache_configure_snap(&cache, 0, 0);
+		auto font = Font::AcquireTTF("Resources/Fonts/Courier-Prime/Courier Prime.ttf", 48);
 
-		std::vector<uint8_t> buffer;
-		ve_font_id font =
-			ve_fontcache_loadfile(&cache, "Resources/Fonts/Consolas/consola.ttf", buffer);
-		ve_fontcache_draw_text(&cache, font, "Hello World");
-
-		// auto shaderRenderGlyph = Shader::AcquireSourceFile(
-		//	{ "Resources/Shaders/Text/Shared.vert", "Resources/Shaders/Text/RenderGlyph.frag" });
-
-		// auto shaderBlitAtlas = Shader::AcquireSourceFile(
-		//	{ "Resources/Shaders/Text/Shared.vert", "Resources/Shaders/Text/BlitAtlas.frag" });
-
-		// auto shaderDrawText = Shader::AcquireSourceFile(
-		//	{ "Resources/Shaders/Text/DrawText.vert", "Resources/Shaders/Text/DrawText.frag" });
-
-		// auto sampler = TextureSampler::Builder()
-		//				   .SetMinFilter(VK_FILTER_NEAREST)
-		//				   .SetMagFilter(VK_FILTER_NEAREST)
-		//				   .SetAddressModeU(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
-		//				   .SetAddressModeV(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
-		//				   .SetAddressModeW(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
-		//				   .BuildScoped();
-
-		// auto firstTexture =
-		//	Texture::Builder()
-		//		.SetExtent(
-		//			{ VE_FONTCACHE_GLYPHDRAW_BUFFER_WIDTH, VE_FONTCACHE_GLYPHDRAW_BUFFER_HEIGHT })
-		//		.SetFormat(VK_FORMAT_R8_UNORM)
-		//		.SetImageUsage(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT)
-		//		.SetMemoryProperties(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
-		//		.SetTextureSampler(std::move(sampler))
-		//		.Build();
-
-		auto atlas = Texture::Acquire("Resources/Textures/gridbase.png");
-
-		auto material = Material::Builder(
+		auto pipeline =
 			GraphicsPipeline::Builder()
 				.SetShader(Shader::AcquireSourceFile(
 					{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" }))
 				.SetCullMode(VK_CULL_MODE_NONE)
-				.Acquire())
-							.Set("samplerDiffuse", atlas)
-							.Acquire();
+				.Acquire();
 
-		Entity entity = Scene::Get().CreateEntity();
-		entity.Emplace<Mesh>(Mesh::Plane(material));
-		entity.Emplace<MeshRenderer>(material);
-		entity.Get<Transform>().SetRotation({ Math::PI<> / 2.0f, 0.0f, 0.0f });
+		auto textMaterial = Material::Builder(pipeline)
+								.Set("samplerDiffuse", font->GetGlyph('A').texture)
+								.Acquire();
+
+		m_TextEntity = Scene::Get().CreateEntity();
+		m_TextEntity.Emplace<Mesh>(Mesh::Plane(textMaterial));
+		m_TextEntity.Emplace<MeshRenderer>(textMaterial);
+		m_TextEntity.Get<Transform>().Rotate({ Math::PI<> / 2.f, 0.f, 0.f });
+
+		// m_TextEntity.Emplace<TextRenderer>(textMaterial, *font, 'A');
 	}
 
 private:

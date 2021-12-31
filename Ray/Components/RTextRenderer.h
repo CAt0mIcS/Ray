@@ -15,7 +15,8 @@ namespace At0::Ray
 	class RAY_EXPORT TextRenderer : public Component, public Renderer
 	{
 	public:
-		TextRenderer(Entity entity, Ref<Material> material, const Font& font, char charToRender);
+		TextRenderer(
+			Entity entity, Ref<Material> material, const Font& font, std::string_view toRender);
 
 		void Update();
 		void Render(const CommandBuffer& cmdBuff) const;

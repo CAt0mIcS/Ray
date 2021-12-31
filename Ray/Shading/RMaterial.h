@@ -14,7 +14,7 @@ namespace At0::Ray
 {
 	class GraphicsPipeline;
 	class Texture;
-	class Texture2DDAtlas;
+	class Texture2DAtlas;
 	class CommandBuffer;
 
 	class RAY_EXPORT Material : public EventDispatcher<MaterialBecameDirtyEvent>
@@ -51,7 +51,7 @@ namespace At0::Ray
 		}
 
 		void Set(const std::string& name, Ref<Texture> texture);
-		void Set(const std::string& name, Ref<Texture2DDAtlas> texture);
+		void Set(const std::string& name, Ref<Texture2DAtlas> texture);
 
 		template<typename T>
 		T& Get(const std::string& name)
@@ -91,7 +91,7 @@ namespace At0::Ray
 			}
 
 			Builder& Set(const std::string& name, Ref<Texture> data);
-			Builder& Set(const std::string& name, Ref<Texture2DDAtlas> data);
+			Builder& Set(const std::string& name, Ref<Texture2DAtlas> data);
 
 			Ref<Material> Acquire();
 			Ref<Material> Build();

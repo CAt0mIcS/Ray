@@ -18,6 +18,8 @@ namespace At0::Ray
 		uint32_t mipLevels, VkImageAspectFlags imageAspect, uint32_t arrayLayers,
 		VkImageCreateFlags createFlags)
 	{
+		// RAY_TODO: Add data to ressource tag
+
 		return Resources::Get().EmplaceIfNonExistent<Image>(
 			String::Serialize("Image{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}", extent.x, extent.y,
 				(uint32_t)imageType, (uint32_t)format, (uint32_t)tiling, (uint32_t)usage,
@@ -392,6 +394,21 @@ namespace At0::Ray
 		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
 	}
 
+	void Image::CopyFromData(const std::vector<uint8_t>& data)
+	{
+		Buffer stagingBuffer(data.size() * sizeof(uint8_t), VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+			data.data());
+		CopyFromBuffer(stagingBuffer);
+	}
+
+	void Image::CopyFromData(const void* data, uint32_t size)
+	{
+		Buffer stagingBuffer(size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, data);
+		CopyFromBuffer(stagingBuffer);
+	}
+
 	Buffer&& Image::CopyToBuffer(std::vector<VkBufferImageCopy> copyRegions)
 	{
 		RAY_MEXPECTS(m_Usage & VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
@@ -531,57 +548,6 @@ namespace At0::Ray
 	/////////////////////////////////////////////// BUILDER //////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	Image::Builder& Image::Builder::SetExtent(UInt2 extent)
-	{
-		m_Extent = extent;
-		return *this;
-	}
-	Image::Builder& Image::Builder::SetImageType(VkImageType imageType)
-	{
-		m_ImageType = imageType;
-		return *this;
-	}
-	Image::Builder& Image::Builder::SetFormat(VkFormat format)
-	{
-		m_Format = format;
-		return *this;
-	}
-	Image::Builder& Image::Builder::SetImageTiling(VkImageTiling imageTiling)
-	{
-		m_Tiling = imageTiling;
-		return *this;
-	}
-	Image::Builder& Image::Builder::SetImageUsage(VkImageUsageFlags imageUsage)
-	{
-		m_Usage = imageUsage;
-		return *this;
-	}
-	Image::Builder& Image::Builder::SetMemoryProperties(VkMemoryPropertyFlags memoryProperties)
-	{
-		m_MemoryProperties = memoryProperties;
-		return *this;
-	}
-	Image::Builder& Image::Builder::SetMipLevels(uint32_t mipLevels)
-	{
-		m_MipLevels = mipLevels;
-		return *this;
-	}
-	Image::Builder& Image::Builder::SetImageAspect(VkImageAspectFlags imageAspect)
-	{
-		m_ImageAspect = imageAspect;
-		return *this;
-	}
-	Image::Builder& Image::Builder::SetArrayLevels(uint32_t arrayLevels)
-	{
-		m_ArrayLayers = arrayLevels;
-		return *this;
-	}
-	Image::Builder& Image::Builder::SetImageCreateFlags(VkImageCreateFlags createFlags)
-	{
-		m_CreateFlags = createFlags;
-		return *this;
-	}
-
 	Ref<Image> Image::Builder::Build()
 	{
 		ThrowIfInvalidArguments();
@@ -594,7 +560,6 @@ namespace At0::Ray
 		return Image::Acquire(m_Extent, m_ImageType, m_Format, m_Tiling, m_Usage,
 			m_MemoryProperties, m_MipLevels, m_ImageAspect, m_ArrayLayers, m_CreateFlags);
 	}
-
 	void Image::Builder::ThrowIfInvalidArguments() const
 	{
 		RAY_MEXPECTS(m_Extent != UInt2(-1, -1), "[Image::Builder] Image extent not specified");

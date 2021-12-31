@@ -46,6 +46,8 @@ namespace At0::Ray
 
 		void TransitionLayout(VkImageLayout newLayout);
 		void CopyFromBuffer(const Buffer& buffer, std::vector<VkBufferImageCopy> copyRegions = {});
+		void CopyFromData(const std::vector<uint8_t>& data);
+		void CopyFromData(const void* data, uint32_t size);
 		Buffer&& CopyToBuffer(std::vector<VkBufferImageCopy> copyRegions = {});
 		bool GenerateMipmaps();
 		void WritePPM(std::string_view filepath);
@@ -82,29 +84,78 @@ namespace At0::Ray
 		VkImageCreateFlags m_CreateFlags = 0;
 
 	public:
-		class RAY_EXPORT Builder
+		template<typename B>
+		class RAY_EXPORT BuilderBase
 		{
 		public:
-			Builder() = default;
+			BuilderBase() = default;
+			virtual ~BuilderBase() = default;
 
-			Builder& SetExtent(UInt2 extent);
-			Builder& SetImageType(VkImageType imageType);
-			Builder& SetFormat(VkFormat format);
-			Builder& SetImageTiling(VkImageTiling imageTiling);
-			Builder& SetImageUsage(VkImageUsageFlags imageUsage);
-			Builder& SetMemoryProperties(VkMemoryPropertyFlags memoryProperties);
-			Builder& SetMipLevels(uint32_t mipLevels);
-			Builder& SetImageAspect(VkImageAspectFlags imageAspect);
-			Builder& SetArrayLevels(uint32_t arrayLevels);
-			Builder& SetImageCreateFlags(VkImageCreateFlags createFlags);
+			B& SetExtent(UInt2 extent)
+			{
+				m_Extent = extent;
+				return *(B*)this;
+			}
+			B& SetImageType(VkImageType imageType)
+			{
+				m_ImageType = imageType;
+				return *(B*)this;
+			}
+			B& SetFormat(VkFormat format)
+			{
+				m_Format = format;
+				return *(B*)this;
+			}
+			B& SetImageTiling(VkImageTiling imageTiling)
+			{
+				m_Tiling = imageTiling;
+				return *(B*)this;
+			}
+			B& SetImageUsage(VkImageUsageFlags imageUsage)
+			{
+				m_Usage = imageUsage;
+				return *(B*)this;
+			}
+			B& SetMemoryProperties(VkMemoryPropertyFlags memoryProperties)
+			{
+				m_MemoryProperties = memoryProperties;
+				return *(B*)this;
+			}
+			B& SetMipLevels(uint32_t mipLevels)
+			{
+				m_MipLevels = mipLevels;
+				return *(B*)this;
+			}
+			B& SetImageAspect(VkImageAspectFlags imageAspect)
+			{
+				m_ImageAspect = imageAspect;
+				return *(B*)this;
+			}
+			B& SetArrayLevels(uint32_t arrayLevels)
+			{
+				m_ArrayLayers = arrayLevels;
+				return *(B*)this;
+			}
+			B& SetImageCreateFlags(VkImageCreateFlags createFlags)
+			{
+				m_CreateFlags = createFlags;
+				return *(B*)this;
+			}
+			B& SetData(void* data, uint32_t size)
+			{
+				m_Data.clear();
+				m_Data.resize(size);
+				for (int i = 0; i < size; ++i)
+					m_Data[i] = *((uint8_t*)data + i);
+				return *(B*)this;
+			}
+			B& SetData(std::vector<uint8_t> data)
+			{
+				m_Data = std::move(data);
+				return *(B*)this;
+			}
 
-			Ref<Image> Build();
-			Ref<Image> Acquire();
-
-		private:
-			void ThrowIfInvalidArguments() const;
-
-		private:
+		protected:
 			UInt2 m_Extent{ -1, -1 };
 			VkFormat m_Format = VK_FORMAT_MAX_ENUM;
 			VkImageUsageFlags m_Usage = VK_IMAGE_USAGE_FLAG_BITS_MAX_ENUM;
@@ -116,6 +167,17 @@ namespace At0::Ray
 			VkImageAspectFlags m_ImageAspect = VK_IMAGE_ASPECT_COLOR_BIT;
 			uint32_t m_ArrayLayers = 1;
 			VkImageCreateFlags m_CreateFlags = 0;
+			std::vector<uint8_t> m_Data;
+		};
+
+		class RAY_EXPORT Builder : public BuilderBase<Builder>
+		{
+		public:
+			Ref<Image> Build();
+			Ref<Image> Acquire();
+
+		private:
+			void ThrowIfInvalidArguments() const;
 		};
 	};
 }  // namespace At0::Ray

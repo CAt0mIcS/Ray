@@ -56,11 +56,6 @@ namespace At0::Ray
 		// RAY_TODO: Option to enable/disable mipmapping
 		uint32_t mipLevels = (uint32_t)(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
 
-		Buffer stagingBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, pixels);
-
-		stbi_image_free(pixels);
-
 		m_Extent = UInt2{ texWidth, texHeight };
 		m_ImageType = VK_IMAGE_TYPE_2D;
 		m_Format = VK_FORMAT_R8G8B8A8_SRGB;
@@ -74,8 +69,9 @@ namespace At0::Ray
 		m_CreateFlags = 0;
 		Image::Setup();
 
-		TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-		CopyFromBuffer(stagingBuffer);
+		CopyFromData(pixels, imageSize);
+
+		stbi_image_free(pixels);
 
 		// If mitpmap generation failed we need to transition the layout ourselves
 		if (!GenerateMipmaps())
@@ -86,56 +82,6 @@ namespace At0::Ray
 	/////////////////////////////////////////////// BUILDER //////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	Texture::Builder& Texture::Builder::SetExtent(UInt2 extent)
-	{
-		m_Extent = extent;
-		return *this;
-	}
-	Texture::Builder& Texture::Builder::SetImageType(VkImageType imageType)
-	{
-		m_ImageType = imageType;
-		return *this;
-	}
-	Texture::Builder& Texture::Builder::SetFormat(VkFormat format)
-	{
-		m_Format = format;
-		return *this;
-	}
-	Texture::Builder& Texture::Builder::SetImageTiling(VkImageTiling imageTiling)
-	{
-		m_Tiling = imageTiling;
-		return *this;
-	}
-	Texture::Builder& Texture::Builder::SetImageUsage(VkImageUsageFlags imageUsage)
-	{
-		m_Usage = imageUsage;
-		return *this;
-	}
-	Texture::Builder& Texture::Builder::SetMemoryProperties(VkMemoryPropertyFlags memoryProperties)
-	{
-		m_MemoryProperties = memoryProperties;
-		return *this;
-	}
-	Texture::Builder& Texture::Builder::SetMipLevels(uint32_t mipLevels)
-	{
-		m_MipLevels = mipLevels;
-		return *this;
-	}
-	Texture::Builder& Texture::Builder::SetImageAspect(VkImageAspectFlags imageAspect)
-	{
-		m_ImageAspect = imageAspect;
-		return *this;
-	}
-	Texture::Builder& Texture::Builder::SetArrayLevels(uint32_t arrayLevels)
-	{
-		m_ArrayLayers = arrayLevels;
-		return *this;
-	}
-	Texture::Builder& Texture::Builder::SetImageCreateFlags(VkImageCreateFlags createFlags)
-	{
-		m_CreateFlags = createFlags;
-		return *this;
-	}
 	Texture::Builder& Texture::Builder::SetTextureSampler(Scope<TextureSampler> sampler)
 	{
 		m_Sampler = std::move(sampler);
@@ -150,9 +96,12 @@ namespace At0::Ray
 		if (!m_Sampler)
 			m_Sampler = TextureSampler::Builder().BuildScoped();
 
-		return MakeRef<Texture>(m_Extent, m_ImageType, m_Format, m_Tiling, m_Usage,
-			m_MemoryProperties, std::move(m_Sampler), m_MipLevels, m_ImageAspect, m_ArrayLayers,
-			m_CreateFlags);
+		auto texture =
+			MakeRef<Texture>(m_Extent, m_ImageType, m_Format, m_Tiling, m_Usage, m_MemoryProperties,
+				std::move(m_Sampler), m_MipLevels, m_ImageAspect, m_ArrayLayers, m_CreateFlags);
+		if (!m_Data.empty())
+			texture->CopyFromData(m_Data);
+		return texture;
 	}
 	Ref<Texture> Texture::Builder::Acquire()
 	{
@@ -162,19 +111,21 @@ namespace At0::Ray
 		if (!m_Sampler)
 			m_Sampler = TextureSampler::Builder().BuildScoped();
 
-		return Texture::Acquire(m_Extent, m_ImageType, m_Format, m_Tiling, m_Usage,
-			m_MemoryProperties, std::move(m_Sampler), m_MipLevels, m_ImageAspect, m_ArrayLayers,
-			m_CreateFlags);
+		auto texture =
+			Texture::Acquire(m_Extent, m_ImageType, m_Format, m_Tiling, m_Usage, m_MemoryProperties,
+				std::move(m_Sampler), m_MipLevels, m_ImageAspect, m_ArrayLayers, m_CreateFlags);
+		if (!m_Data.empty())
+			texture->CopyFromData(m_Data);
+		return texture;
 	}
 
 	void Texture::Builder::ThrowIfInvalidArguments() const
 	{
-		RAY_MEXPECTS(m_Extent != UInt2(-1, -1), "[Texture::Builder] Image extent not specified");
-		RAY_MEXPECTS(
-			m_Format != VK_FORMAT_MAX_ENUM, "[Texture::Builder] Image format not specified");
+		RAY_MEXPECTS(m_Extent != UInt2(-1, -1), "[Image::Builder] Image extent not specified");
+		RAY_MEXPECTS(m_Format != VK_FORMAT_MAX_ENUM, "[Image::Builder] Image format not specified");
 		RAY_MEXPECTS(m_Usage != VK_IMAGE_USAGE_FLAG_BITS_MAX_ENUM,
-			"[Texture::Builder] Image usage not specified");
+			"[Image::Builder] Image usage not specified");
 		RAY_MEXPECTS(m_MemoryProperties != VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM,
-			"[Texture::Builder] Image memory properties not specified");
+			"[Image::Builder] Image memory properties not specified");
 	}
 }  // namespace At0::Ray

@@ -36,7 +36,7 @@ namespace At0::Ray
 		CallListeners(name, UniformType::CombinedImageSampler);
 	}
 
-	void Material::Set(const std::string& name, Ref<Texture2DDAtlas> texture)
+	void Material::Set(const std::string& name, Ref<Texture2DAtlas> texture)
 	{
 		m_Container.Set(name, std::static_pointer_cast<Texture>(std::move(texture)));
 		CallListeners(name, UniformType::CombinedImageSampler);
@@ -78,7 +78,7 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Material::Builder& Material::Builder::Set(const std::string& name, Ref<Texture2DDAtlas> data)
+	Material::Builder& Material::Builder::Set(const std::string& name, Ref<Texture2DAtlas> data)
 	{
 		Builder::ValidateUniformExistenceAndSize(*m_GraphicsPipeline, name, -1);
 		m_Container.Set(name, std::static_pointer_cast<Texture>(std::move(data)));
