@@ -35,6 +35,7 @@
 
 #include <../../Extern/imgui/imgui.h>
 
+#define VE_FONTCACHE_IMPL
 #include "../../Extern/VEFontCache/ve_fontcache.h"
 
 
@@ -69,32 +70,57 @@ public:
 		Scene::Create<Scene2>();
 #include "../ImGuiWindows.inl"
 
-		auto shaderRenderGlyph = Shader::AcquireSourceFile(
-			{ "Resources/Shaders/Text/Shared.vert", "Resources/Shaders/Text/RenderGlyph.frag" });
+		ve_fontcache cache;
+		ve_fontcache_init(&cache);
+		ve_fontcache_configure_snap(&cache, 0, 0);
 
-		auto shaderBlitAtlas = Shader::AcquireSourceFile(
-			{ "Resources/Shaders/Text/Shared.vert", "Resources/Shaders/Text/BlitAtlas.frag" });
+		std::vector<uint8_t> buffer;
+		ve_font_id font =
+			ve_fontcache_loadfile(&cache, "Resources/Fonts/Consolas/consola.ttf", buffer);
+		ve_fontcache_draw_text(&cache, font, "Hello World");
 
-		auto shaderDrawText = Shader::AcquireSourceFile(
-			{ "Resources/Shaders/Text/DrawText.vert", "Resources/Shaders/Text/DrawText.frag" });
+		// auto shaderRenderGlyph = Shader::AcquireSourceFile(
+		//	{ "Resources/Shaders/Text/Shared.vert", "Resources/Shaders/Text/RenderGlyph.frag" });
 
-		auto sampler = TextureSampler::Builder()
-						   .SetMinFilter(VK_FILTER_NEAREST)
-						   .SetMagFilter(VK_FILTER_NEAREST)
-						   .SetAddressModeU(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
-						   .SetAddressModeV(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
-						   .SetAddressModeW(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
-						   .BuildScoped();
+		// auto shaderBlitAtlas = Shader::AcquireSourceFile(
+		//	{ "Resources/Shaders/Text/Shared.vert", "Resources/Shaders/Text/BlitAtlas.frag" });
 
-		auto firstTexture =
-			Texture::Builder()
-				.SetExtent(
-					{ VE_FONTCACHE_GLYPHDRAW_BUFFER_WIDTH, VE_FONTCACHE_GLYPHDRAW_BUFFER_HEIGHT })
-				.SetFormat(VK_FORMAT_R8_UNORM)
-				.SetImageUsage(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT)
-				.SetMemoryProperties(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
-				.SetTextureSampler(std::move(sampler))
-				.Build();
+		// auto shaderDrawText = Shader::AcquireSourceFile(
+		//	{ "Resources/Shaders/Text/DrawText.vert", "Resources/Shaders/Text/DrawText.frag" });
+
+		// auto sampler = TextureSampler::Builder()
+		//				   .SetMinFilter(VK_FILTER_NEAREST)
+		//				   .SetMagFilter(VK_FILTER_NEAREST)
+		//				   .SetAddressModeU(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+		//				   .SetAddressModeV(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+		//				   .SetAddressModeW(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+		//				   .BuildScoped();
+
+		// auto firstTexture =
+		//	Texture::Builder()
+		//		.SetExtent(
+		//			{ VE_FONTCACHE_GLYPHDRAW_BUFFER_WIDTH, VE_FONTCACHE_GLYPHDRAW_BUFFER_HEIGHT })
+		//		.SetFormat(VK_FORMAT_R8_UNORM)
+		//		.SetImageUsage(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT)
+		//		.SetMemoryProperties(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+		//		.SetTextureSampler(std::move(sampler))
+		//		.Build();
+
+		auto atlas = Texture::Acquire("Resources/Textures/gridbase.png");
+
+		auto material = Material::Builder(
+			GraphicsPipeline::Builder()
+				.SetShader(Shader::AcquireSourceFile(
+					{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" }))
+				.SetCullMode(VK_CULL_MODE_NONE)
+				.Acquire())
+							.Set("samplerDiffuse", atlas)
+							.Acquire();
+
+		Entity entity = Scene::Get().CreateEntity();
+		entity.Emplace<Mesh>(Mesh::Plane(material));
+		entity.Emplace<MeshRenderer>(material);
+		entity.Get<Transform>().SetRotation({ Math::PI<> / 2.0f, 0.0f, 0.0f });
 	}
 
 private:
