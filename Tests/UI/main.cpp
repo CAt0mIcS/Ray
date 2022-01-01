@@ -103,7 +103,10 @@ public:
 			m_TextEntity.Emplace<MeshRenderer>(textMaterial);
 			auto& tform = m_TextEntity.Get<Transform>();
 			tform.Rotate({ 3 * Math::PI<> / 2.f, Math::PI<>, 0.f });
-			tform.Translate({ c - Font::SupportedCharacters[0], 0.f, 0.f });
+			if (c <= 'Z')
+				tform.Translate({ c - Font::SupportedCharacters[0], 0.f, 0.f });
+			else
+				tform.Translate({ c - Font::SupportedCharacters[0] - 32, -1.5f, 0.f });
 		}
 	}
 

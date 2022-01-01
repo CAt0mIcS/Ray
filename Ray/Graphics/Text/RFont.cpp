@@ -7,7 +7,9 @@
 namespace At0::Ray
 {
 	const std::vector<uint8_t> Font::SupportedCharacters = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-		'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+		'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
+		's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
 	static FT_Library s_FTLibrary = nullptr;
 
@@ -86,25 +88,12 @@ namespace At0::Ray
 						"[Font] Failed to render glyph for character '{0}' (Error code {1})", c,
 						error);
 
-			m_Glyphs[c] = Glyph({ face->glyph->bitmap.width, face->glyph->bitmap.rows },
-				{ face->glyph->bitmap_left, face->glyph->bitmap_top }, face->glyph->advance.x);
-		}
-
-		for (uint8_t c : Font::SupportedCharacters)
-		{
-			FT_UInt glyphIndex = FT_Get_Char_Index(face, c);
-			if (FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT))
-				ThrowRuntime(
-					"[Font] Failed to load glyph for character '{0}' (Error code {1})", c, error);
-
-			if (face->glyph->format != FT_GLYPH_FORMAT_BITMAP)
-				if (FT_Error error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL))
-					ThrowRuntime(
-						"[Font] Failed to render glyph for character '{0}' (Error code {1})", c,
-						error);
+			Glyph& glyph = m_Glyphs[c] =
+				Glyph({ face->glyph->bitmap.width, face->glyph->bitmap.rows },
+					{ face->glyph->bitmap_left, face->glyph->bitmap_top }, face->glyph->advance.x);
 
 			if (Ref<Texture> texture = CreateTextureFromBitmap(face->glyph))
-				m_Glyphs[c].texture = std::move(texture);
+				glyph.texture = std::move(texture);
 			else
 				Log::Error("[Font] Texture creation for character '{0}' in font \"{1}\" failed", c,
 					filepath);
