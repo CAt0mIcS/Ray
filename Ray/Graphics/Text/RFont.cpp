@@ -6,9 +6,9 @@
 
 namespace At0::Ray
 {
-	static const std::string s_SupportedLetters =
-		" \t\r\nABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/"
-		"@\\^$-%+=#_&~*";
+	const std::vector<uint8_t> Font::SupportedCharacters = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+		'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+
 	static FT_Library s_FTLibrary = nullptr;
 
 	Font::Font(std::string_view filepath, uint32_t size, Type type) : m_Size(size)
@@ -43,40 +43,20 @@ namespace At0::Ray
 		if (bufferSize == 0)
 			return nullptr;
 
-		struct uint8_4
-		{
-			uint8_t x;
-			uint8_t y;
-			uint8_t z;
-			uint8_t w;
-		};
-
-		std::vector<uint8_4> buffer(bufferSize);
-
-		uint8_t* startOfLine = glyphSlot->bitmap.buffer;
-		int dst = 0;
-		for (int y = 0; y < height; ++y)
-		{
-			uint8_t* src = startOfLine;
-			for (int x = 0; x < width; ++x)
-			{
-				uint8_t value = *src;
-				++src;
-
-				buffer[dst++] = { 0xff, 0xff, 0xff, value };
-			}
-			startOfLine += glyphSlot->bitmap.pitch;
-		}
-
-		// return atlas.Emplace({ width, height }, (uint8_t*)buffer.data());
 		auto texture =
 			Texture::Builder()
 				.SetExtent({ width, height })
-				.SetFormat(VK_FORMAT_R8G8B8A8_SRGB)
-				.SetImageTiling(VK_IMAGE_TILING_LINEAR)
+				.SetFormat(VK_FORMAT_R8_UNORM)
 				.SetImageUsage(VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT)
-				.SetData(buffer.data(), buffer.size() * sizeof(uint8_4))
 				.SetMemoryProperties(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+				.SetTextureSampler(TextureSampler::Builder()
+									   .SetMinFilter(VK_FILTER_LINEAR)
+									   .SetMagFilter(VK_FILTER_LINEAR)
+									   .SetAddressModeU(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+									   .SetAddressModeV(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+									   .SetAddressModeW(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+									   .BuildScoped())
+				.SetData(glyphSlot->bitmap.buffer, bufferSize)
 				.Acquire();
 		texture->TransitionLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 		return texture;
@@ -88,58 +68,53 @@ namespace At0::Ray
 		if (FT_Error error = FT_New_Face(s_FTLibrary, filepath.data(), 0, &face))
 			ThrowRuntime("[Font] Failed to create new face (Error code {0}).", error);
 
-		// FT_Set_Pixel_Sizes(face, 0, m_Size);
-		FT_Set_Char_Size(face, 0, 1000 * 64,  // char height in 1/64th of points
-			96,								  // horizontal device resolution
-			96								  // vertical device resolution
+		FT_Set_Char_Size(face, 0, m_Size * 64,	// char height in 1/64th of points
+			96,									// horizontal device resolution
+			96									// vertical device resolution
 		);
 
-		UInt2 atlasSize{};
-		for (char supportedChar : s_SupportedLetters)
+		for (uint8_t c : Font::SupportedCharacters)
 		{
-			FT_UInt glyphIndex = FT_Get_Char_Index(face, supportedChar);
+			FT_UInt glyphIndex = FT_Get_Char_Index(face, c);
 			if (FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT))
-				ThrowRuntime("[Font] Failed to load glyph for character '{0}' (Error code {1})",
-					supportedChar, error);
+				ThrowRuntime(
+					"[Font] Failed to load glyph for character '{0}' (Error code {1})", c, error);
 
 			if (face->glyph->format != FT_GLYPH_FORMAT_BITMAP)
 				if (FT_Error error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL))
 					ThrowRuntime(
-						"[Font] Failed to render glyph for character '{0}' (Error code {1})",
-						supportedChar, error);
+						"[Font] Failed to render glyph for character '{0}' (Error code {1})", c,
+						error);
 
-			m_Glyphs[supportedChar] = Glyph({ face->glyph->bitmap.width, face->glyph->bitmap.rows },
+			m_Glyphs[c] = Glyph({ face->glyph->bitmap.width, face->glyph->bitmap.rows },
 				{ face->glyph->bitmap_left, face->glyph->bitmap_top }, face->glyph->advance.x);
-			atlasSize.x += face->glyph->bitmap.width;
-			atlasSize.y += face->glyph->bitmap.rows;
 		}
 
-		// m_TextureAtlas = MakeRef<Texture2DAtlas>(/*atlasSize / UInt2(4)*/ UInt2{ 10000, 10000 },
-		//	VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_LINEAR,
-		//	VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
-
-		for (char supportedChar : s_SupportedLetters)
+		for (uint8_t c : Font::SupportedCharacters)
 		{
-			if (supportedChar == ' ' || supportedChar == '\t' || supportedChar == '\r' ||
-				supportedChar == '\n' || supportedChar == '\0')
-				continue;
-
-			FT_UInt glyphIndex = FT_Get_Char_Index(face, supportedChar);
+			FT_UInt glyphIndex = FT_Get_Char_Index(face, c);
 			if (FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT))
-				ThrowRuntime("[Font] Failed to load glyph for character '{0}' (Error code {1})",
-					supportedChar, error);
+				ThrowRuntime(
+					"[Font] Failed to load glyph for character '{0}' (Error code {1})", c, error);
 
 			if (face->glyph->format != FT_GLYPH_FORMAT_BITMAP)
 				if (FT_Error error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL))
 					ThrowRuntime(
-						"[Font] Failed to render glyph for character '{0}' (Error code {1})",
-						supportedChar, error);
+						"[Font] Failed to render glyph for character '{0}' (Error code {1})", c,
+						error);
 
 			if (Ref<Texture> texture = CreateTextureFromBitmap(face->glyph))
-				m_Glyphs[supportedChar].texture = std::move(texture);
+				m_Glyphs[c].texture = std::move(texture);
 			else
-				Log::Error("[Font] Texture creation for character '{0}' in font \"{1}\" failed",
-					supportedChar, filepath);
+				Log::Error("[Font] Texture creation for character '{0}' in font \"{1}\" failed", c,
+					filepath);
 		}
+
+		FT_Done_Face(face);
+	}
+
+	bool Font::IsLoaded(uint8_t c) const
+	{
+		return m_Glyphs.find(c) != m_Glyphs.end() && m_Glyphs.at(c).texture;
 	}
 }  // namespace At0::Ray

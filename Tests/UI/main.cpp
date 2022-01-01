@@ -70,25 +70,41 @@ public:
 		Scene::Create<Scene2>();
 #include "../ImGuiWindows.inl"
 
-		auto font = Font::AcquireTTF("Resources/Fonts/Courier-Prime/Courier Prime.ttf", 48);
+		auto font = Font::AcquireTTF("Resources/Fonts/arial.ttf", 128);
 
 		auto pipeline =
 			GraphicsPipeline::Builder()
 				.SetShader(Shader::AcquireSourceFile(
-					{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" }))
+					{ "Resources/Shaders/Flat_Text.vert", "Resources/Shaders/Flat_Text.frag" }))
 				.SetCullMode(VK_CULL_MODE_NONE)
 				.Acquire();
 
-		auto textMaterial = Material::Builder(pipeline)
-								.Set("samplerDiffuse", font->GetGlyph('A').texture)
-								.Acquire();
+		auto placeholderPipeline =
+			GraphicsPipeline::Builder()
+				.SetShader(Shader::AcquireSourceFile(
+					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
+				.SetCullMode(VK_CULL_MODE_NONE)
+				.Acquire();
 
-		m_TextEntity = Scene::Get().CreateEntity();
-		m_TextEntity.Emplace<Mesh>(Mesh::Plane(textMaterial));
-		m_TextEntity.Emplace<MeshRenderer>(textMaterial);
-		m_TextEntity.Get<Transform>().Rotate({ Math::PI<> / 2.f, 0.f, 0.f });
+		for (uint8_t c : Font::SupportedCharacters)
+		{
+			Ref<Material> textMaterial;
+			if (font->IsLoaded(c))
+				textMaterial = Material::Builder(pipeline)
+								   .Set("samplerText", font->GetGlyph(c).texture)
+								   .Acquire();
+			else
+				textMaterial = Material::Builder(placeholderPipeline)
+								   .Set("Shading.color", Float4{ 1.0f, 0.0f, 0.0f, 1.0f })
+								   .Acquire();
 
-		// m_TextEntity.Emplace<TextRenderer>(textMaterial, *font, 'A');
+			m_TextEntity = Scene::Get().CreateEntity();
+			m_TextEntity.Emplace<Mesh>(Mesh::Plane(textMaterial));
+			m_TextEntity.Emplace<MeshRenderer>(textMaterial);
+			auto& tform = m_TextEntity.Get<Transform>();
+			tform.Rotate({ 3 * Math::PI<> / 2.f, Math::PI<>, 0.f });
+			tform.Translate({ c - Font::SupportedCharacters[0], 0.f, 0.f });
+		}
 	}
 
 private:
