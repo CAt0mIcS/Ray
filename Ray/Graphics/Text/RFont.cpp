@@ -59,7 +59,7 @@ namespace At0::Ray
 									   .SetAddressModeW(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
 									   .BuildScoped())
 				.SetData(glyphSlot->bitmap.buffer, bufferSize)
-				.Acquire();
+				.Build();
 		texture->TransitionLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 		return texture;
 	}
@@ -88,9 +88,10 @@ namespace At0::Ray
 						"[Font] Failed to render glyph for character '{0}' (Error code {1})", c,
 						error);
 
-			Glyph& glyph = m_Glyphs[c] =
-				Glyph({ face->glyph->bitmap.width, face->glyph->bitmap.rows },
-					{ face->glyph->bitmap_left, face->glyph->bitmap_top }, face->glyph->advance.x);
+			// Store glyph and convert advance from 1/64th a pixel to 1 pixel
+			Glyph& glyph = m_Glyphs[c] = Glyph(
+				{ face->glyph->bitmap.width, face->glyph->bitmap.rows },
+				{ face->glyph->bitmap_left, face->glyph->bitmap_top }, face->glyph->advance.x >> 6);
 
 			if (Ref<Texture> texture = CreateTextureFromBitmap(face->glyph))
 				glyph.texture = std::move(texture);

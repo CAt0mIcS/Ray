@@ -1,5 +1,12 @@
+set(SHADERS
+	"Shaders/ColorAndTexture.vert"
+	"Shaders/ColorAndTexture.frag"
+)
+
 set(SRC
 	"main.cpp"
+
+	${SHADERS}
 )
 
 add_executable("MaterialSystem" "${SRC}")
@@ -11,3 +18,6 @@ set_target_properties("MaterialSystem" PROPERTIES FOLDER "Tests")
 
 SetOutputDirectory("MaterialSystem" "")
 SetWorkingDirectoryPlane("MaterialSystem" "${CMAKE_SOURCE_DIR}")
+
+AddRecursiveFilters("${SHADERS}")
+

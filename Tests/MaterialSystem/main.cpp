@@ -139,8 +139,9 @@ public:
 			});
 #include "../ImGuiWindows.inl"
 
-		auto shader = Ray::Shader::AcquireSourceFile(
-			{ "Resources/Shaders/Test.vert", "Resources/Shaders/Test.frag" });
+		auto shader =
+			Ray::Shader::AcquireSourceFile({ "Tests/MaterialSystem/Shaders/ColorAndTexture.vert",
+				"Tests/MaterialSystem/Shaders/ColorAndTexture.frag" });
 
 		auto pipeline = Ray::GraphicsPipeline::Builder()
 							.SetShader(shader)

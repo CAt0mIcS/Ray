@@ -51,7 +51,9 @@ public:
 		GetCamera().SetPosition(Float3(0.0f, 0.0f, -2.5f));
 		GetCamera().SetRotation(Float3(0.0f));
 		GetCamera().SetRotationSpeed(0.07f);
-		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
+		// GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
+		GetCamera().SetOrthographic(
+			0.f, Window::Get().GetFramebufferSize().x, 0.f, Window::Get().GetFramebufferSize().y);
 		GetCamera().SetMovementSpeed(3.0f);
 	}
 };
@@ -86,27 +88,30 @@ public:
 				.SetCullMode(VK_CULL_MODE_NONE)
 				.Acquire();
 
+		float x{};
+		float y{};
+		float scale = 1.f;
 		for (uint8_t c : Font::SupportedCharacters)
 		{
-			Ref<Material> textMaterial;
-			if (font->IsLoaded(c))
-				textMaterial = Material::Builder(pipeline)
-								   .Set("samplerText", font->GetGlyph(c).texture)
-								   .Acquire();
-			else
-				textMaterial = Material::Builder(placeholderPipeline)
-								   .Set("Shading.color", Float4{ 1.0f, 0.0f, 0.0f, 1.0f })
-								   .Acquire();
+			const Font::Glyph& glyph = font->GetGlyph(c);
+			auto textMaterial =
+				Material::Builder(pipeline).Set("samplerText", glyph.texture).Acquire();
+
+			float xPos = x + glyph.bearing.x * scale;
+			float yPos = y - (glyph.size.y - glyph.bearing.y) * scale;
+
+			float w = ScreenSpaceToNDCSpaceX(glyph.size.x * scale);
+			float h = ScreenSpaceToNDCSpaceY(glyph.size.y * scale);
 
 			m_TextEntity = Scene::Get().CreateEntity();
 			m_TextEntity.Emplace<Mesh>(Mesh::Plane(textMaterial));
 			m_TextEntity.Emplace<MeshRenderer>(textMaterial);
 			auto& tform = m_TextEntity.Get<Transform>();
-			tform.Rotate({ 3 * Math::PI<> / 2.f, Math::PI<>, 0.f });
-			if (c <= 'Z')
-				tform.Translate({ c - Font::SupportedCharacters[0], 0.f, 0.f });
-			else
-				tform.Translate({ c - Font::SupportedCharacters[0] - 32, -1.5f, 0.f });
+			tform.SetRotation({ 3 * Math::PI<> / 2.f, Math::PI<>, 0.f });
+			tform.SetScale({ w, h, 1.f });
+			tform.SetTranslation({ xPos, yPos, 0.f });
+
+			x += glyph.advance * scale;
 		}
 	}
 

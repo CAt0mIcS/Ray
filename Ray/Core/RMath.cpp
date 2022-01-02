@@ -41,8 +41,7 @@ namespace At0::Ray
 	}
 	RAY_EXPORT Float2 ScreenSpaceToNDCSpace(Float2 coords)
 	{
-		return { coords.x / (0.5f * (float)Window::Get().GetFramebufferSize().x) - 1,
-			coords.y / (0.5f * (float)Window::Get().GetFramebufferSize().y) - 1 };
+		return { ScreenSpaceToNDCSpaceX(coords.x), ScreenSpaceToNDCSpaceX(coords.y) };
 	}
 	RAY_EXPORT float NDCSpaceToScreenSpaceX(float x)
 	{
@@ -50,7 +49,7 @@ namespace At0::Ray
 	}
 	RAY_EXPORT float ScreenSpaceToNDCSpaceX(float x)
 	{
-		return x / (0.5f * (float)Window::Get().GetFramebufferSize().x) - 1;
+		return 2.f * (x / Window::Get().GetFramebufferSize().x) - 1.f;
 	}
 	RAY_EXPORT float NDCSpaceToScreenSpaceY(float y)
 	{
@@ -58,7 +57,7 @@ namespace At0::Ray
 	}
 	RAY_EXPORT float ScreenSpaceToNDCSpaceY(float y)
 	{
-		return y / (0.5f * (float)Window::Get().GetFramebufferSize().y) - 1;
+		return y / Window::Get().GetFramebufferSize().y;
 	}
 
 	RAY_EXPORT std::vector<uint32_t> GenerateChunks(uint32_t number, uint32_t chunks)

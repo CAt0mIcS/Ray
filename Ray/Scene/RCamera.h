@@ -56,6 +56,7 @@ namespace At0::Ray
 		float GetNearClip() const { return m_NearZ; }
 		float GetFarClip() const { return m_FarZ; }
 		void SetPerspective(float fov, float aspect, float nearZ, float farZ);
+		void SetOrthographic(float left, float right, float bottom, float top);
 		void UpdateAspectRatio(float aspect);
 		void SetPosition(Float3 pos);
 		void SetRotation(Float3 rotation);
@@ -80,6 +81,9 @@ namespace At0::Ray
 	private:
 		float m_FoV;
 		float m_NearZ, m_FarZ;
+
+		float m_Left, m_Right, m_Bottom, m_Top;
+
 		Frustum m_Frustum;
 	};
 }  // namespace At0::Ray

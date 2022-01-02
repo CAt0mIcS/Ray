@@ -19,21 +19,38 @@ namespace At0::Ray
 		m_FoV = fov;
 		m_NearZ = nearZ;
 		m_FarZ = farZ;
+
 		ShaderData.Projection = glm::perspective(Radians(fov), aspect, nearZ, farZ);
 		if (FlipY)
-		{
 			ShaderData.Projection[1][1] *= -1.0f;
-		}
+		UpdateViewMatrix();
+	}
+
+	void Camera::SetOrthographic(float left, float right, float bottom, float top)
+	{
+		m_FoV = -1.f;
+		m_Left = left;
+		m_Right = right;
+		m_Bottom = bottom;
+		m_Top = top;
+
+		ShaderData.Projection = glm::ortho(left, right, bottom, top);
+		if (FlipY)
+			ShaderData.Projection[1][1] *= -1.f;
 		UpdateViewMatrix();
 	}
 
 	void Camera::UpdateAspectRatio(float aspect)
 	{
-		ShaderData.Projection = glm::perspective(Radians(m_FoV), aspect, m_NearZ, m_FarZ);
+		// Last set projection is orthographic
+		if (m_FoV == -1.f)
+			ShaderData.Projection = glm::ortho(m_Left, m_Right, m_Top, m_Bottom);
+		// Last set projection is perspective
+		else
+			ShaderData.Projection = glm::perspective(Radians(m_FoV), aspect, m_NearZ, m_FarZ);
+
 		if (FlipY)
-		{
 			ShaderData.Projection[1][1] *= -1.0f;
-		}
 		UpdateViewMatrix();
 	}
 
