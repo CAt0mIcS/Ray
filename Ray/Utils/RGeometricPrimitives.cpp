@@ -48,6 +48,9 @@ namespace At0::Ray
 		RAY_MEXPECTS(!hasNormal && !hasTangent,
 			"[IndexedTriangleList] Normals and tangents not supported for plane yet");
 
+#define FACING_PLAYER 1
+
+#if !FACING_PLAYER
 		vertex.BeginVertex();
 		if (hasPos)
 			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, 0.0f, 0.5f };
@@ -71,6 +74,34 @@ namespace At0::Ray
 			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, 0.0f, -0.5f };
 		if (hasUV)
 			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 1.0f, 1.0f };
+
+#else
+
+		vertex.BeginVertex();
+		if (hasPos)
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, -0.5f, 0.0f };
+		if (hasUV)
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 1.0f, 0.0f };
+
+		vertex.BeginVertex();
+		if (hasPos)
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, -0.5f, 0.0f };
+		if (hasUV)
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 0.0f, 0.0f };
+
+		vertex.BeginVertex();
+		if (hasPos)
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, 0.5f, 0.0f };
+		if (hasUV)
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 0.0f, 1.0f };
+
+		vertex.BeginVertex();
+		if (hasPos)
+			vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, 0.5f, 0.0f };
+		if (hasUV)
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 1.0f, 1.0f };
+
+#endif
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
 		return { vertex, indices,
