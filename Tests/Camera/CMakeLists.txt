@@ -5,6 +5,8 @@ set(SHADERS
 
 set(SRC
 	"main.cpp"
+
+	${SHADERS}
 )
 
 add_executable("Camera" "${SRC}")
