@@ -142,7 +142,11 @@ namespace At0::Ray
 	{
 		if (IsOrthographic())
 		{
-			ShaderData.View = glm::lookAt(Position, glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));
+			Float3 translation = Position;
+			if (FlipY)
+				translation.y *= -1.f;
+
+			ShaderData.View = glm::lookAt(translation, glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));
 		}
 		else
 		{

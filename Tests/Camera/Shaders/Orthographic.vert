@@ -26,6 +26,10 @@ void main()
 	uScene.View;
 	uScene.Proj;
 	uObj.Model;
-
-	gl_Position = vec4(inPos.xy * pModel.scale + pModel.translate, 0.0f, 1.0f);
+	pModel.scale;
+	pModel.translate;
+	
+	// gl_Position = vec4(inPos.xy * pModel.scale + pModel.translate, 0.f, 1.f);
+	
+	gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos.xy, 0.f, 1.f);
 }

@@ -74,6 +74,10 @@ public:
 		Ray::Entity entity = Scene::Get().CreateEntity();
 		entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
 		entity.Emplace<Ray::MeshRenderer>(material);
+
+		auto& cam = Scene::Get().GetCamera();
+		auto& model = entity.Get<Ray::Transform>().AsMatrix();
+		auto mvp = cam.ShaderData.Projection * cam.ShaderData.View * model;
 	}
 
 private:
