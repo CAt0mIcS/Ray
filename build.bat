@@ -61,9 +61,4 @@ echo Cmake finished.
 
 cd ..
 
-echo.
-echo Retargeting solution to Visual Studio 2022...
-python ./Scripts/retarget_solution.py ./%buildPath%
-echo Retargeting finished.
-
 PAUSE
