@@ -61,18 +61,23 @@ public:
 
 		auto pipeline = Ray::GraphicsPipeline::Builder()
 							.SetShader(Ray::Shader::AcquireSourceFile(
-								{ "Tests/Camera/Shaders/Orthographic.vert", "Tests/Camera/Shaders/Orthographic.frag" }))
+								{ "Tests/Camera/Shaders/Orthographic.vert",
+									"Tests/Camera/Shaders/Orthographic.frag" }))
 							.SetCullMode(VK_CULL_MODE_NONE)
 							.Acquire();
 
-		auto material =
-			Ray::Material::Builder(pipeline).Set("Shading.color", Ray::Float4{ 1.f }).Acquire();
+		auto material = Ray::Material::Builder(pipeline)
+							.Set("Model.scale", Ray::Float2{ 1.f })
+							.Set("Model.translate", Ray::Float2{ 0.f })
+							.Acquire();
 
 		Ray::Entity entity = Scene::Get().CreateEntity();
 		entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
 		entity.Emplace<Ray::MeshRenderer>(material);
-		entity.Get<Ray::Transform>().SetRotation(
-			{ 3 * Ray::Math::PI<> / 2.f, Ray::Math::PI<>, 0.f });
+
+		auto& cam = Scene::Get().GetCamera();
+		auto& model = entity.Get<Ray::Transform>().AsMatrix();
+		auto mvp = cam.ShaderData.Projection * cam.ShaderData.View * model;
 	}
 
 private:

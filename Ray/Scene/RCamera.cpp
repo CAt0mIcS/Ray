@@ -42,10 +42,8 @@ namespace At0::Ray
 
 	void Camera::UpdateAspectRatio(float aspect)
 	{
-		// Last set projection is orthographic
-		if (m_FoV == -1.f)
+		if (IsOrthographic())
 			ShaderData.Projection = glm::ortho(m_Left, m_Right, m_Top, m_Bottom);
-		// Last set projection is perspective
 		else
 			ShaderData.Projection = glm::perspective(Radians(m_FoV), aspect, m_NearZ, m_FarZ);
 
@@ -142,34 +140,41 @@ namespace At0::Ray
 
 	void Camera::UpdateViewMatrix()
 	{
-		Matrix rotM = MatrixIdentity();
-		Matrix transM;
-
-		rotM = glm::rotate(
-			rotM, Radians(Rotation.x * (FlipY ? -1.0f : 1.0f)), Float3(1.0f, 0.0f, 0.0f));
-		rotM = glm::rotate(rotM, Radians(Rotation.y), Float3(0.0f, 1.0f, 0.0f));
-		rotM = glm::rotate(rotM, Radians(Rotation.z), Float3(0.0f, 0.0f, 1.0f));
-		if (Type == CameraType::LookAt)
+		if (IsOrthographic())
 		{
-			Matrix transToPivot = glm::translate(MatrixIdentity(), -Pivot);
-			Matrix transFromPivot = glm::translate(glm::mat4(1.0f), Pivot);
-			rotM = transFromPivot * rotM * transToPivot;
-		}
+			Float3 translation = Position;
+			if (FlipY)
+				translation.y *= -1.f;
 
-		Float3 translation = Position;
-		if (FlipY)
-		{
-			translation.y *= -1.0f;
-		}
-		transM = MatrixTranslation(translation);
-
-		if (Type == CameraType::FirstPerson)
-		{
-			ShaderData.View = rotM * transM;
+			ShaderData.View = glm::lookAt(translation, glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));
 		}
 		else
 		{
-			ShaderData.View = transM * rotM;
+			Matrix rotM = MatrixIdentity();
+			Matrix transM;
+
+			rotM = glm::rotate(
+				rotM, Radians(Rotation.x * (FlipY ? -1.0f : 1.0f)), Float3(1.0f, 0.0f, 0.0f));
+			rotM = glm::rotate(rotM, Radians(Rotation.y), Float3(0.0f, 1.0f, 0.0f));
+			rotM = glm::rotate(rotM, Radians(Rotation.z), Float3(0.0f, 0.0f, 1.0f));
+			if (Type == CameraType::LookAt)
+			{
+				Matrix transToPivot = glm::translate(MatrixIdentity(), -Pivot);
+				Matrix transFromPivot = glm::translate(glm::mat4(1.0f), Pivot);
+				rotM = transFromPivot * rotM * transToPivot;
+			}
+
+			Float3 translation = Position;
+			if (FlipY)
+			{
+				translation.y *= -1.0f;
+			}
+			transM = MatrixTranslation(translation);
+
+			if (Type == CameraType::FirstPerson)
+				ShaderData.View = rotM * transM;
+			else
+				ShaderData.View = transM * rotM;
 		}
 
 		// ShaderData.ViewPos = Float4(Position, 0.0f) * Float4(-1.0f, 1.0f, -1.0f, 1.0f);
@@ -228,16 +233,12 @@ namespace At0::Ray
 	void Camera::OnEvent(ScrollUpEvent& e)
 	{
 		if (Type == Camera::LookAt)
-		{
 			Translate(Float3(0.0f, 0.0f, (float)e.GetOffset().y * 0.3f) * MovementSpeed);
-		}
 	}
 
 	void Camera::OnEvent(ScrollDownEvent& e)
 	{
 		if (Type == Camera::LookAt)
-		{
 			Translate(Float3(0.0f, 0.0f, (float)e.GetOffset().y * 0.3f) * MovementSpeed);
-		}
 	}
 }  // namespace At0::Ray

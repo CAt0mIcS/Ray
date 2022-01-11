@@ -68,6 +68,9 @@ namespace At0::Ray
 
 		const Frustum& GetFrustum() const { return m_Frustum; }
 
+		bool IsOrthographic() const { return m_FoV == -1; }
+		bool IsPerspective() const { return !IsOrthographic(); }
+
 	private:
 		void UpdateViewMatrix();
 		void DispatchCameraChanged(CameraChangedEvent e);
