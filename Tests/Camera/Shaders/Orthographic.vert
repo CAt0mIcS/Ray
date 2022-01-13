@@ -18,5 +18,7 @@ layout(set = 1, binding = 1) uniform PerObjectData
 
 void main()
 {
-	gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 0.f, 1.f);
+	uScene.View;
+
+	gl_Position = uScene.Proj * uObj.Model * vec4(inPos, 0.f, 1.f);
 }

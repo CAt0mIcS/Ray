@@ -20,6 +20,8 @@
 #include <Ray/Core/RDynamicVertex.h>
 #include <Ray/Graphics/Pipelines/Shader/RShader.h>
 #include <Ray/Shading/RMaterial.h>
+#include <Ray/Graphics/RGraphics.h>
+#include <Ray/Graphics/Core/RSwapchain.h>
 
 #include <Ray/Scene/RScene.h>
 #include <Ray/Scene/RCamera.h>
@@ -40,13 +42,13 @@ class Scene : public Ray::Scene
 public:
 	Scene() : Ray::Scene(Ray::MakeScope<Ray::Camera>())
 	{
-		Ray::UInt2 size = Ray::Window::Get().GetFramebufferSize();
+		VkExtent2D size = Ray::Graphics::Get().GetSwapchain().GetExtent();
 		GetCamera().SetPosition(Ray::Float3(0.0f, 0.0f, -2.5f));
 		GetCamera().SetRotation(Ray::Float3(0.0f));
 		GetCamera().SetRotationSpeed(0.07f);
 
-		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
-		// GetCamera().SetOrthographic(0.f, size.x, 0.f, size.y);
+		// GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
+		GetCamera().SetOrthographic(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
 
 		GetCamera().SetMovementSpeed(3.0f);
 	}
@@ -72,13 +74,6 @@ public:
 
 		Ray::Entity entity = Scene::Get().CreateEntity();
 		entity.Emplace<Ray::Mesh>(GetPlane(material));
-
-		// auto& cam = Scene::Get().GetCamera();
-		// auto& model = entity.Get<Ray::Transform>().AsMatrix();
-		// auto mvp = cam.ShaderData.Projection * cam.ShaderData.View * model;
-
-		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:
@@ -96,7 +91,6 @@ private:
 		vertex[AttributeMap<AttributeType::Position2D>::Semantic] = Float2{ -0.5f, 0.5f };
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
-
 		return { MakeRef<VertexBuffer>("VtxCameraTest", std::move(vertex)),
 			MakeRef<IndexBuffer>("IdxCameraTest", std::move(indices)), std::move(material) };
 	}

@@ -26,24 +26,32 @@ namespace At0::Ray
 		UpdateViewMatrix();
 	}
 
-	void Camera::SetOrthographic(float left, float right, float bottom, float top)
+	void Camera::SetOrthographic(
+		float left, float right, float top, float bottom, float nearZ, float farZ)
 	{
 		m_FoV = -1.f;
 		m_Left = left;
 		m_Right = right;
 		m_Bottom = bottom;
 		m_Top = top;
+		m_NearZ = nearZ;
+		m_FarZ = farZ;
 
-		ShaderData.Projection = glm::ortho(left, right, bottom, top);
-		if (FlipY)
-			ShaderData.Projection[1][1] *= -1.f;
+		ShaderData.Projection = Matrix{ 1.f };
+		ShaderData.Projection[0][0] = 2.f / (right - left);
+		ShaderData.Projection[1][1] = 2.f / (bottom - top);
+		ShaderData.Projection[2][2] = 1.f / (farZ - nearZ);
+		ShaderData.Projection[3][0] = -(right + left) / (right - left);
+		ShaderData.Projection[3][1] = -(bottom + top) / (bottom - top);
+		ShaderData.Projection[3][2] = -nearZ / (farZ - nearZ);
+
 		UpdateViewMatrix();
 	}
 
 	void Camera::UpdateAspectRatio(float aspect)
 	{
 		if (IsOrthographic())
-			ShaderData.Projection = glm::ortho(m_Left, m_Right, m_Top, m_Bottom);
+			ShaderData.Projection = glm::ortho(m_Left, m_Right, m_Top, m_Bottom, m_NearZ, m_FarZ);
 		else
 			ShaderData.Projection = glm::perspective(Radians(m_FoV), aspect, m_NearZ, m_FarZ);
 
@@ -142,11 +150,13 @@ namespace At0::Ray
 	{
 		if (IsOrthographic())
 		{
-			Float3 translation = Position;
-			if (FlipY)
-				translation.y *= -1.f;
+			// Float3 translation = Position;
+			// if (FlipY)
+			// translation.y *= -1.f;
 
-			ShaderData.View = glm::lookAt(translation, glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));
+			// ShaderData.View = glm::lookAt(translation, glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));
+			ShaderData.View = glm::lookAt(
+				Float3(0.0f, 0.0f, 1.0f), Float3(0.0f, 0.0f, 0.0f), Float3(0.0f, 1.0f, 0.0f));
 		}
 		else
 		{

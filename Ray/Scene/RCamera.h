@@ -56,7 +56,8 @@ namespace At0::Ray
 		float GetNearClip() const { return m_NearZ; }
 		float GetFarClip() const { return m_FarZ; }
 		void SetPerspective(float fov, float aspect, float nearZ, float farZ);
-		void SetOrthographic(float left, float right, float bottom, float top);
+		void SetOrthographic(float left, float right, float top, float bottom, float nearZ = .1f,
+			float farZ = 1000.f);
 		void UpdateAspectRatio(float aspect);
 		void SetPosition(Float3 pos);
 		void SetRotation(Float3 rotation);
