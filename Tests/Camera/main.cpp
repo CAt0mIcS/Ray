@@ -61,19 +61,17 @@ public:
 		Ray::Scene::Create<Scene>();
 #include "../ImGuiWindows.inl"
 
-		auto pipeline =
-			Ray::GraphicsPipeline::Builder()
-				.SetShader(Ray::Shader::AcquireSourceFile(
-					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
-				.SetCullMode(VK_CULL_MODE_NONE)
-				.Acquire();
-
-		auto material = Ray::Material::Builder(std::move(pipeline))
-							.Set("Shading.color", Ray::Float4{ 1.f, 1.f, 1.f, 1.f })
+		auto pipeline = Ray::GraphicsPipeline::Builder()
+							.SetShader(Ray::Shader::AcquireSourceFile(
+								{ "Tests/Camera/Shaders/Orthographic.vert",
+									"Tests/Camera/Shaders/Orthographic.frag" }))
+							.SetCullMode(VK_CULL_MODE_NONE)
 							.Acquire();
 
+		auto material = Ray::Material::Builder(std::move(pipeline)).Acquire();
+
 		Ray::Entity entity = Scene::Get().CreateEntity();
-		entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
+		entity.Emplace<Ray::Mesh>(GetPlane(material));
 
 		// auto& cam = Scene::Get().GetCamera();
 		// auto& model = entity.Get<Ray::Transform>().AsMatrix();
@@ -89,13 +87,13 @@ private:
 		using namespace Ray;
 		DynamicVertex vertex(material->GetGraphicsPipeline().GetShader());
 		vertex.BeginVertex();
-		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, -0.5f, 0.0f };
+		vertex[AttributeMap<AttributeType::Position2D>::Semantic] = Float2{ -0.5f, -0.5f };
 		vertex.BeginVertex();
-		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, -0.5f, 0.0f };
+		vertex[AttributeMap<AttributeType::Position2D>::Semantic] = Float2{ 0.5f, -0.5f };
 		vertex.BeginVertex();
-		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, 0.5f, 0.0f };
+		vertex[AttributeMap<AttributeType::Position2D>::Semantic] = Float2{ 0.5f, 0.5f };
 		vertex.BeginVertex();
-		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, 0.5f, 0.0f };
+		vertex[AttributeMap<AttributeType::Position2D>::Semantic] = Float2{ -0.5f, 0.5f };
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
 

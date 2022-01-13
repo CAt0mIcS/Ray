@@ -2,7 +2,7 @@
 #extension GL_ARB_separate_shader_objects : enable
 
 
-layout(location = 0) in vec3 inPos;
+layout(location = 0) in vec2 inPos;
 
 layout(set = 0, binding = 0) uniform PerSceneData
 {
@@ -18,5 +18,5 @@ layout(set = 1, binding = 1) uniform PerObjectData
 
 void main()
 {
-	gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 1.f);
+	gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 0.f, 1.f);
 }

@@ -111,6 +111,8 @@ namespace At0::Ray
 	{
 		if (attribName == AttributeMap<AttributeType::Position>::Semantic)
 			return AttributeMap<AttributeType::Position>::Format;
+		else if (attribName == AttributeMap<AttributeType::Position2D>::Semantic)
+			return AttributeMap<AttributeType::Position2D>::Format;
 		else if (attribName == AttributeMap<AttributeType::UV>::Semantic)
 			return AttributeMap<AttributeType::UV>::Format;
 		else if (attribName == AttributeMap<AttributeType::Normal>::Semantic)

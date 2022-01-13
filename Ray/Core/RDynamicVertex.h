@@ -22,6 +22,13 @@ namespace At0::Ray
 		static constexpr VkFormat Format = VK_FORMAT_R32G32B32_SFLOAT;
 	};
 	template<>
+	struct AttributeMap<AttributeType::Position2D>
+	{
+		static constexpr const char* Semantic = "inPos";
+		static constexpr const char* Type = "vec2";
+		static constexpr VkFormat Format = VK_FORMAT_R32G32_SFLOAT;
+	};
+	template<>
 	struct AttributeMap<AttributeType::UV>
 	{
 		static constexpr const char* Semantic = "inUV";

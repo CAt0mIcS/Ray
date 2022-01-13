@@ -72,6 +72,7 @@ namespace At0::Ray
 	enum class AttributeType
 	{
 		Position,
+		Position2D,
 		UV,
 		Normal,
 		Tangent
