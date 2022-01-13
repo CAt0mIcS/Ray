@@ -14,7 +14,7 @@ namespace At0::Ray
 	class RAY_EXPORT Mesh : public Component
 	{
 	public:
-		struct VertexData
+		struct Data
 		{
 			Ref<VertexBuffer> vertexBuffer;
 			Ref<IndexBuffer> indexBuffer;
@@ -24,16 +24,16 @@ namespace At0::Ray
 		};
 
 	public:
-		Mesh(Entity entity, VertexData vertexData);
+		Mesh(Entity entity, Data vertexData);
 
-		static VertexData Triangle(Ref<Material> material);
-		static VertexData Plane(Ref<Material> material);
-		static VertexData HalfCircle(Ref<Material> material, int segments, float radius);
-		static VertexData Circle(Ref<Material> material, int segments, float radius);
-		static VertexData Cube(Ref<Material> material);
-		static VertexData UVSphere(Ref<Material> material, float radius, int latDiv, int longDiv);
-		static VertexData Cylinder(Ref<Material> material, int segments, float radius);
-		static VertexData Cone(Ref<Material> material, int segments, float radius);
+		static Data Triangle(Ref<Material> material);
+		static Data Plane(Ref<Material> material);
+		static Data HalfCircle(Ref<Material> material, int segments, float radius);
+		static Data Circle(Ref<Material> material, int segments, float radius);
+		static Data Cube(Ref<Material> material);
+		static Data UVSphere(Ref<Material> material, float radius, int latDiv, int longDiv);
+		static Data Cylinder(Ref<Material> material, int segments, float radius);
+		static Data Cone(Ref<Material> material, int segments, float radius);
 
 		/**
 		 * Import a model from a file
@@ -41,7 +41,7 @@ namespace At0::Ray
 		 * and use any maps(diffuse/specular/...) that are contained in the model file. If this
 		 * material is set, the importer will ignore said maps.
 		 */
-		static Mesh::VertexData Import(std::string_view filepath, Ref<Material> material = nullptr);
+		static Mesh::Data Import(std::string_view filepath, Ref<Material> material = nullptr);
 
 		/**
 		 * Called to bind mesh-specific resources

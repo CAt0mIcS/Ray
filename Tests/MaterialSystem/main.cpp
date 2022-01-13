@@ -157,7 +157,6 @@ public:
 
 		m_Parent = Scene::Get().CreateEntity();
 		m_Parent.Emplace<Ray::Mesh>(Ray::Mesh::Plane(m_Material));
-		Ray::MeshRenderer& rendererParent = m_Parent.Emplace<Ray::MeshRenderer>(m_Material);
 
 		m_Material->Set("samplerDiffuse",
 			Ray::Texture::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
@@ -165,7 +164,6 @@ public:
 		m_Child = Scene::Get().CreateEntity();
 		m_Child.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f });
 		m_Child.Emplace<Ray::Mesh>(Ray::Mesh::Plane(m_Material));
-		Ray::MeshRenderer& rendererChild = m_Child.Emplace<Ray::MeshRenderer>(m_Material);
 
 		m_Parent.Emplace<Ray::HierachyComponent>().AddChild(m_Child);
 		m_Child.Emplace<Ray::HierachyComponent>().SetParent(m_Parent);
@@ -179,7 +177,6 @@ private:
 		m_Parent = Scene::Get().CreateEntity();
 		m_Parent.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f });
 		m_Parent.Emplace<Ray::Mesh>(Ray::Mesh::Plane(m_Material));
-		Ray::MeshRenderer& rendererParent = m_Parent.Emplace<Ray::MeshRenderer>(m_Material);
 
 		CreateChild();
 		m_Parent.Emplace<Ray::HierachyComponent>().AddChild(m_Child);
@@ -190,7 +187,6 @@ private:
 		m_Child = Scene::Get().CreateEntity();
 		m_Child.Get<Ray::Transform>().Translate({ 4.0f, 0.0f, 0.0f });
 		m_Child.Emplace<Ray::Mesh>(Ray::Mesh::Plane(m_Material));
-		Ray::MeshRenderer& rendererChild = m_Child.Emplace<Ray::MeshRenderer>(m_Material);
 		m_Child.Emplace<Ray::HierachyComponent>().SetParent(m_Parent);
 	}
 

@@ -44,10 +44,7 @@ namespace At0::Raditor
 								.Acquire();
 
 		m_TransEntity.x.Emplace<Ray::Mesh>(Ray::Mesh::Cylinder(redMaterial, 32, 3.0f));
-		m_TransEntity.x.Emplace<Ray::MeshRenderer>(redMaterial);
 		m_TransEntity.y.Emplace<Ray::Mesh>(Ray::Mesh::Cylinder(greenMaterial, 32, 3.0f));
-		m_TransEntity.y.Emplace<Ray::MeshRenderer>(greenMaterial);
 		m_TransEntity.z.Emplace<Ray::Mesh>(Ray::Mesh::Cylinder(blueMaterial, 32, 3.0f));
-		m_TransEntity.z.Emplace<Ray::MeshRenderer>(blueMaterial);
 	}
 }  // namespace At0::Raditor

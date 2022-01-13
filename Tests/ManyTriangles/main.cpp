@@ -146,7 +146,6 @@ private:
 		Ray::Entity entity = Scene::Get().CreateEntity();
 		entity.Emplace<Ray::TagComponent>("Triangle_" + tag);
 		Ray::Mesh& mesh = entity.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(m_Material));
-		auto& renderer = entity.Emplace<Ray::MeshRenderer>(m_Material);
 
 		auto& transform = entity.Get<Ray::Transform>();
 		transform.SetTranslation({ posRotDist(device), posRotDist(device), posRotDist(device) });

@@ -114,42 +114,34 @@ public:
 
 		Ray::Entity plane = Scene::Get().CreateEntity();
 		plane.Emplace<Ray::Mesh>(Ray::Mesh::Plane(textureMaterial));
-		plane.Emplace<Ray::MeshRenderer>(textureMaterial);
 		plane.Get<Ray::Transform>().Translate({ -15.f, 0.f, 0.f });
 
 		Ray::Entity triangle = Scene::Get().CreateEntity();
 		triangle.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(noCullMaterial));
-		triangle.Emplace<Ray::MeshRenderer>(noCullMaterial);
 		triangle.Get<Ray::Transform>().Translate({ -10.f, 0.f, 0.f });
 
 		Ray::Entity halfCircle = Scene::Get().CreateEntity();
 		halfCircle.Emplace<Ray::Mesh>(Ray::Mesh::HalfCircle(noCullMaterial, 6, 2.0f));
-		halfCircle.Emplace<Ray::MeshRenderer>(noCullMaterial);
 		halfCircle.Get<Ray::Transform>().Translate({ -5.f, 0.f, 0.f });
 
 		Ray::Entity circle = Scene::Get().CreateEntity();
 		circle.Emplace<Ray::Mesh>(Ray::Mesh::Circle(noCullMaterial, 32, 2.0f));
-		circle.Emplace<Ray::MeshRenderer>(noCullMaterial);
 		circle.Get<Ray::Transform>().Translate({ 0.f, 0.f, 0.f });
 
 		Ray::Entity cube = Scene::Get().CreateEntity();
 		cube.Emplace<Ray::Mesh>(Ray::Mesh::Cube(cullMaterial));
-		cube.Emplace<Ray::MeshRenderer>(cullMaterial);
 		cube.Get<Ray::Transform>().Translate({ 5.f, 0.f, 0.f });
 
 		Ray::Entity uvsphere = Scene::Get().CreateEntity();
 		uvsphere.Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(cullMaterial, 2.0f, 128, 128));
-		uvsphere.Emplace<Ray::MeshRenderer>(cullMaterial);
 		uvsphere.Get<Ray::Transform>().Translate({ 10.f, 0.f, 0.f });
 
 		Ray::Entity cylinder = Scene::Get().CreateEntity();
 		cylinder.Emplace<Ray::Mesh>(Ray::Mesh::Cylinder(cullMaterial, 64, 1.f));
-		cylinder.Emplace<Ray::MeshRenderer>(cullMaterial);
 		cylinder.Get<Ray::Transform>().Translate({ 15.f, 0.f, 0.f });
 
 		Ray::Entity cone = Scene::Get().CreateEntity();
 		cone.Emplace<Ray::Mesh>(Ray::Mesh::Cone(cullMaterial, 32, 1.f));
-		cone.Emplace<Ray::MeshRenderer>(cullMaterial);
 		cone.Get<Ray::Transform>().Translate({ 20.f, 0.f, 0.f });
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(

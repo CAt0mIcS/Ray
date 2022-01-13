@@ -17,7 +17,7 @@
 
 namespace At0::Ray
 {
-	static Mesh::VertexData GeneratePlane(const Shader& shader, const Font& font, char charToRender)
+	static Mesh::Data GeneratePlane(const Shader& shader, const Font& font, char charToRender)
 	{
 		// const Texture2DAtlas::Area& area = font.GetGlyph(charToRender).area;
 
@@ -61,7 +61,7 @@ namespace At0::Ray
 		// std::string tag = String::Serialize(
 		//	"Plane#012230#{0}#{1}#{2}#{3}#{4}", hasPos, hasUV, hasNormal, hasTangent, charToRender);
 
-		// return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(tag, vertex),
+		// return Mesh::Data{ Codex::Resolve<VertexBuffer>(tag, vertex),
 		//	Codex::Resolve<IndexBuffer>(tag, indices), nullptr, {}, RAY_DEBUG_FLAG(tag) };
 	}
 

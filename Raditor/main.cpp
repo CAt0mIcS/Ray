@@ -75,7 +75,6 @@ namespace At0::Raditor
 
 			m_Pivot = Scene::Get().CreateEntity();
 			m_Pivot.Emplace<Ray::Mesh>(Ray::Mesh::Triangle(material));
-			m_Pivot.Emplace<Ray::MeshRenderer>(material);
 		}
 
 	private:

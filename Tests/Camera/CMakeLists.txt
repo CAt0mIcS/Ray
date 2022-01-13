@@ -19,4 +19,5 @@ set_target_properties("Camera" PROPERTIES FOLDER "Tests")
 SetOutputDirectory("Camera" "")
 SetWorkingDirectoryPlane("Camera" "${CMAKE_SOURCE_DIR}")
 
-AddRecursiveFilters(${SHADERS})
+AddRecursiveFilters("${SHADERS}")
+

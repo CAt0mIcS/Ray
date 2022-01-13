@@ -95,7 +95,7 @@ namespace At0::Ray
 				Entity entity = Scene::Get().CreateEntity();
 				Ray::MeshRenderer& meshRenderer =
 					entity.Emplace<Ray::MeshRenderer>(std::move(material));
-				entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
+				entity.Emplace<Ray::Mesh>(Mesh::Data{ vertexBuffer, indexBuffer });
 				m_VertexData.children.emplace_back(entity);
 			}
 
@@ -165,7 +165,7 @@ namespace At0::Ray
 			Entity entity = Scene::Get().CreateEntity();
 			Ray::MeshRenderer& meshRenderer =
 				entity.Emplace<Ray::MeshRenderer>(std::move(material));
-			entity.Emplace<Ray::Mesh>(Mesh::VertexData{ vertexBuffer, indexBuffer });
+			entity.Emplace<Ray::Mesh>(Mesh::Data{ vertexBuffer, indexBuffer });
 			m_VertexData.children.emplace_back(entity);
 		}
 	}

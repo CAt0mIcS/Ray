@@ -35,9 +35,6 @@
 
 #include <../../Extern/imgui/imgui.h>
 
-#define VE_FONTCACHE_IMPL
-#include "../../Extern/VEFontCache/ve_fontcache.h"
-
 
 using namespace At0::Ray;
 
@@ -105,7 +102,6 @@ public:
 
 			m_TextEntity = Scene::Get().CreateEntity();
 			m_TextEntity.Emplace<Mesh>(Mesh::Plane(textMaterial));
-			m_TextEntity.Emplace<MeshRenderer>(textMaterial);
 			auto& tform = m_TextEntity.Get<Transform>();
 			tform.SetRotation({ 3 * Math::PI<> / 2.f, Math::PI<>, 0.f });
 			tform.SetScale({ w, h, 1.f });

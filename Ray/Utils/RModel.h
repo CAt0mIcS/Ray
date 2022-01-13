@@ -22,7 +22,7 @@ namespace At0::Ray
 	public:
 		Model(std::string_view filepath, Ref<Material> material = nullptr);
 
-		const Mesh::VertexData& GetVertexData() const { return m_VertexData; }
+		const Mesh::Data& GetVertexData() const { return m_VertexData; }
 
 		static Ref<Model> Acquire(std::string_view filepath, Ref<Material> material = nullptr);
 
@@ -35,7 +35,7 @@ namespace At0::Ray
 		static std::vector<IndexBuffer::Type> GenerateIndices(const aiMesh& mesh);
 
 	private:
-		Mesh::VertexData m_VertexData;
+		Mesh::Data m_VertexData;
 
 		bool m_ParentSet = false;
 	};

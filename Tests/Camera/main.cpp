@@ -10,6 +10,8 @@
 #include <Ray/Components/RTransform.h>
 #include <Ray/Components/RSkybox.h>
 #include <Ray/Components/RScriptableEntity.h>
+#include <Ray/Graphics/Buffers/RVertexBuffer.h>
+#include <Ray/Graphics/Buffers/RIndexBuffer.h>
 
 #include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
@@ -43,8 +45,8 @@ public:
 		GetCamera().SetRotation(Ray::Float3(0.0f));
 		GetCamera().SetRotationSpeed(0.07f);
 
-		// GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
-		GetCamera().SetOrthographic(0.f, size.x, 0.f, size.y);
+		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
+		// GetCamera().SetOrthographic(0.f, size.x, 0.f, size.y);
 
 		GetCamera().SetMovementSpeed(3.0f);
 	}
@@ -59,28 +61,48 @@ public:
 		Ray::Scene::Create<Scene>();
 #include "../ImGuiWindows.inl"
 
-		auto pipeline = Ray::GraphicsPipeline::Builder()
-							.SetShader(Ray::Shader::AcquireSourceFile(
-								{ "Tests/Camera/Shaders/Orthographic.vert",
-									"Tests/Camera/Shaders/Orthographic.frag" }))
-							.SetCullMode(VK_CULL_MODE_NONE)
-							.Acquire();
+		auto pipeline =
+			Ray::GraphicsPipeline::Builder()
+				.SetShader(Ray::Shader::AcquireSourceFile(
+					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
+				.SetCullMode(VK_CULL_MODE_NONE)
+				.Acquire();
 
-		auto material = Ray::Material::Builder(pipeline)
-							.Set("Model.scale", Ray::Float2{ 1.f })
-							.Set("Model.translate", Ray::Float2{ 0.f })
+		auto material = Ray::Material::Builder(std::move(pipeline))
+							.Set("Shading.color", Ray::Float4{ 1.f, 1.f, 1.f, 1.f })
 							.Acquire();
 
 		Ray::Entity entity = Scene::Get().CreateEntity();
 		entity.Emplace<Ray::Mesh>(Ray::Mesh::Plane(material));
-		entity.Emplace<Ray::MeshRenderer>(material);
 
-		auto& cam = Scene::Get().GetCamera();
-		auto& model = entity.Get<Ray::Transform>().AsMatrix();
-		auto mvp = cam.ShaderData.Projection * cam.ShaderData.View * model;
+		// auto& cam = Scene::Get().GetCamera();
+		// auto& model = entity.Get<Ray::Transform>().AsMatrix();
+		// auto mvp = cam.ShaderData.Projection * cam.ShaderData.View * model;
+
+		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+			Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:
+	Ray::Mesh::Data GetPlane(Ray::Ref<Ray::Material> material)
+	{
+		using namespace Ray;
+		DynamicVertex vertex(material->GetGraphicsPipeline().GetShader());
+		vertex.BeginVertex();
+		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, -0.5f, 0.0f };
+		vertex.BeginVertex();
+		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, -0.5f, 0.0f };
+		vertex.BeginVertex();
+		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ 0.5f, 0.5f, 0.0f };
+		vertex.BeginVertex();
+		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ -0.5f, 0.5f, 0.0f };
+
+		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
+
+		return { MakeRef<VertexBuffer>("VtxCameraTest", std::move(vertex)),
+			MakeRef<IndexBuffer>("IdxCameraTest", std::move(indices)), std::move(material) };
+	}
+
 	void Update() override {}
 };
 

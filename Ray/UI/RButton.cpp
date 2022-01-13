@@ -22,8 +22,7 @@ namespace At0::Ray
 		// Ref<Material> material =
 		//	MakeRef<FlatColorMaterial>(std::move(layout), std::move(pipelineLayout));
 
-		// GetEntity().Emplace<Mesh>(Mesh::Plane(material));
-		// MeshRenderer& renderer = GetEntity().Emplace<MeshRenderer>(std::move(material));
+		// GetEntity().Emplace<Mesh>(Mesh::Plane(std::move(material)));
 		// BufferUniform& uColor = renderer.AddBufferUniform("Shading", ShaderStage::Fragment);
 		// uColor["color"] = color;
 
@@ -45,8 +44,7 @@ namespace At0::Ray
 		// Ref<Material> material =
 		//	MakeRef<FlatTextureMaterial>(std::move(layout), std::move(pipelineLayout));
 
-		// GetEntity().Emplace<Mesh>(Mesh::Plane(material));
-		// MeshRenderer& renderer = GetEntity().Emplace<MeshRenderer>(std::move(material));
+		// GetEntity().Emplace<Mesh>(Mesh::Plane(std::move(material)));
 		// renderer.AddSampler2DUniform("texSampler", ShaderStage::Fragment, std::move(texture));
 
 		SetWidth(width);

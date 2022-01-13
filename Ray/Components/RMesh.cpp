@@ -16,7 +16,7 @@
 
 namespace At0::Ray
 {
-	Mesh::Mesh(Entity entity, Mesh::VertexData vertexData)
+	Mesh::Mesh(Entity entity, Mesh::Data vertexData)
 		: Component(entity), m_VertexBuffer(std::move(vertexData.vertexBuffer)),
 		  m_IndexBuffer(std::move(vertexData.indexBuffer)) RAY_DEBUG_FLAG(, m_Name(vertexData.name))
 	{
@@ -46,87 +46,79 @@ namespace At0::Ray
 		}
 	}
 
-	Mesh::VertexData Mesh::Triangle(Ref<Material> material)
+	Mesh::Data Mesh::Triangle(Ref<Material> material)
 	{
 		IndexedTriangleList mesh =
 			IndexedTriangleList::Triangle(material->GetGraphicsPipeline().GetShader());
-		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
-									 mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
-			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
-	Mesh::VertexData Mesh::Plane(Ref<Material> material)
+	Mesh::Data Mesh::Plane(Ref<Material> material)
 	{
 		IndexedTriangleList mesh =
 			IndexedTriangleList::Plane(material->GetGraphicsPipeline().GetShader());
-		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
-									 mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
-			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
-	Mesh::VertexData Mesh::HalfCircle(Ref<Material> material, int segments, float radius)
+	Mesh::Data Mesh::HalfCircle(Ref<Material> material, int segments, float radius)
 	{
 		IndexedTriangleList mesh = IndexedTriangleList::HalfCircle(
 			material->GetGraphicsPipeline().GetShader(), segments, radius);
-		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
-									 mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
-			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
-	Mesh::VertexData Mesh::Circle(Ref<Material> material, int segments, float radius)
+	Mesh::Data Mesh::Circle(Ref<Material> material, int segments, float radius)
 	{
 		IndexedTriangleList mesh = IndexedTriangleList::Circle(
 			material->GetGraphicsPipeline().GetShader(), segments, radius);
-		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
-									 mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
-			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
-	Mesh::VertexData Mesh::Cube(Ref<Material> material)
+	Mesh::Data Mesh::Cube(Ref<Material> material)
 	{
 		IndexedTriangleList mesh =
 			IndexedTriangleList::Cube(material->GetGraphicsPipeline().GetShader());
-		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
-									 mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
-			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
-	Mesh::VertexData Mesh::UVSphere(Ref<Material> material, float radius, int latDiv, int longDiv)
+	Mesh::Data Mesh::UVSphere(Ref<Material> material, float radius, int latDiv, int longDiv)
 	{
 		IndexedTriangleList mesh = IndexedTriangleList::UVSphere(
 			material->GetGraphicsPipeline().GetShader(), radius, latDiv, longDiv);
-		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
-									 mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
-			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
-	Mesh::VertexData Mesh::Cylinder(Ref<Material> material, int segments, float radius)
+	Mesh::Data Mesh::Cylinder(Ref<Material> material, int segments, float radius)
 	{
 		IndexedTriangleList mesh = IndexedTriangleList::Cylinder(
 			material->GetGraphicsPipeline().GetShader(), segments, radius);
-		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
-									 mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
-			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
-	Mesh::VertexData Mesh::Cone(Ref<Material> material, int segments, float radius)
+	Mesh::Data Mesh::Cone(Ref<Material> material, int segments, float radius)
 	{
 		IndexedTriangleList mesh = IndexedTriangleList::Cone(
 			material->GetGraphicsPipeline().GetShader(), segments, radius);
-		return Mesh::VertexData{ Codex::Resolve<VertexBuffer>(
-									 mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)), nullptr, {},
-			RAY_DEBUG_FLAG(mesh.uniqueTag) };
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
-	Mesh::VertexData Mesh::Import(std::string_view filepath, Ref<Material> material)
+	Mesh::Data Mesh::Import(std::string_view filepath, Ref<Material> material)
 	{
 		return Model::Acquire(filepath, std::move(material))->GetVertexData();
 	}
