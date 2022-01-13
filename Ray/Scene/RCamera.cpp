@@ -37,13 +37,7 @@ namespace At0::Ray
 		m_NearZ = nearZ;
 		m_FarZ = farZ;
 
-		ShaderData.Projection = Matrix{ 1.f };
-		ShaderData.Projection[0][0] = 2.f / (right - left);
-		ShaderData.Projection[1][1] = 2.f / (bottom - top);
-		ShaderData.Projection[2][2] = 1.f / (farZ - nearZ);
-		ShaderData.Projection[3][0] = -(right + left) / (right - left);
-		ShaderData.Projection[3][1] = -(bottom + top) / (bottom - top);
-		ShaderData.Projection[3][2] = -nearZ / (farZ - nearZ);
+		UpdateOrthographic();
 
 		UpdateViewMatrix();
 	}
@@ -51,12 +45,14 @@ namespace At0::Ray
 	void Camera::UpdateAspectRatio(float aspect)
 	{
 		if (IsOrthographic())
-			ShaderData.Projection = glm::ortho(m_Left, m_Right, m_Top, m_Bottom, m_NearZ, m_FarZ);
+			UpdateOrthographic();
 		else
+		{
 			ShaderData.Projection = glm::perspective(Radians(m_FoV), aspect, m_NearZ, m_FarZ);
+			if (FlipY)
+				ShaderData.Projection[1][1] *= -1.0f;
+		}
 
-		if (FlipY)
-			ShaderData.Projection[1][1] *= -1.0f;
 		UpdateViewMatrix();
 	}
 
@@ -152,7 +148,7 @@ namespace At0::Ray
 		{
 			// Float3 translation = Position;
 			// if (FlipY)
-			// translation.y *= -1.f;
+			//	translation.y *= -1.f;
 
 			// ShaderData.View = glm::lookAt(translation, glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));
 			ShaderData.View = glm::lookAt(
@@ -250,5 +246,16 @@ namespace At0::Ray
 	{
 		if (Type == Camera::LookAt)
 			Translate(Float3(0.0f, 0.0f, (float)e.GetOffset().y * 0.3f) * MovementSpeed);
+	}
+
+	void Camera::UpdateOrthographic()
+	{
+		ShaderData.Projection = Matrix{ 1.f };
+		ShaderData.Projection[0][0] = 2.f / (m_Right - m_Left);
+		ShaderData.Projection[1][1] = 2.f / (m_Bottom - m_Top);
+		ShaderData.Projection[2][2] = 1.f / (m_FarZ - m_NearZ);
+		ShaderData.Projection[3][0] = -(m_Right + m_Left) / (m_Right - m_Left);
+		ShaderData.Projection[3][1] = -(m_Bottom + m_Top) / (m_Bottom - m_Top);
+		ShaderData.Projection[3][2] = -m_NearZ / (m_FarZ - m_NearZ);
 	}
 }  // namespace At0::Ray

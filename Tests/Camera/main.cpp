@@ -48,7 +48,8 @@ public:
 		GetCamera().SetRotationSpeed(0.07f);
 
 		// GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
-		GetCamera().SetOrthographic(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
+		// GetCamera().SetOrthographic(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
+		GetCamera().SetOrthographic(0.f, size.width, 0.f, size.height, -1.f, 1.f);
 
 		GetCamera().SetMovementSpeed(3.0f);
 	}
@@ -81,6 +82,10 @@ private:
 	{
 		using namespace Ray;
 		DynamicVertex vertex(material->GetGraphicsPipeline().GetShader());
+
+#define SMALL_VERTICES 0
+
+#if SMALL_VERTICES
 		vertex.BeginVertex();
 		vertex[AttributeMap<AttributeType::Position2D>::Semantic] = Float2{ -0.5f, -0.5f };
 		vertex.BeginVertex();
@@ -89,6 +94,20 @@ private:
 		vertex[AttributeMap<AttributeType::Position2D>::Semantic] = Float2{ 0.5f, 0.5f };
 		vertex.BeginVertex();
 		vertex[AttributeMap<AttributeType::Position2D>::Semantic] = Float2{ -0.5f, 0.5f };
+#else
+		vertex.BeginVertex();
+		vertex[AttributeMap<AttributeType::Position2D>::Semantic] =
+			NDCSpaceToScreenSpace(Float2{ -0.5f, -0.5f });
+		vertex.BeginVertex();
+		vertex[AttributeMap<AttributeType::Position2D>::Semantic] =
+			NDCSpaceToScreenSpace(Float2{ 0.5f, -0.5f });
+		vertex.BeginVertex();
+		vertex[AttributeMap<AttributeType::Position2D>::Semantic] =
+			NDCSpaceToScreenSpace(Float2{ 0.5f, 0.5f });
+		vertex.BeginVertex();
+		vertex[AttributeMap<AttributeType::Position2D>::Semantic] =
+			NDCSpaceToScreenSpace(Float2{ -0.5f, 0.5f });
+#endif
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
 		return { MakeRef<VertexBuffer>("VtxCameraTest", std::move(vertex)),

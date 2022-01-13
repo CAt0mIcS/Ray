@@ -122,6 +122,11 @@ namespace At0::Ray
 		return supportDetails;
 	}
 
+	float Swapchain::GetAspectRatio() const
+	{
+		return (float)m_Extent.width / (float)m_Extent.height;
+	}
+
 	VkSurfaceFormatKHR Swapchain::ChooseSurfaceFormat(
 		const std::vector<VkSurfaceFormatKHR>& formats) const
 	{

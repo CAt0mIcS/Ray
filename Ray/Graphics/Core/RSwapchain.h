@@ -33,6 +33,8 @@ namespace At0::Ray
 		uint32_t GetNumberOfImages() const { return m_Images.size(); }
 		const std::vector<Scope<ImageView>>& GetImageViews() const { return m_ImageViews; }
 
+		float GetAspectRatio() const;
+
 		operator const VkSwapchainKHR&() const { return m_Swapchain; }
 
 	private:

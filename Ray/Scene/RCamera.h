@@ -82,6 +82,8 @@ namespace At0::Ray
 		void OnEvent(ScrollUpEvent& e) override;
 		void OnEvent(ScrollDownEvent& e) override;
 
+		void UpdateOrthographic();
+
 	private:
 		float m_FoV;
 		float m_NearZ, m_FarZ;
