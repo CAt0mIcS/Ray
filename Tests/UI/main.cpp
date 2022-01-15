@@ -83,14 +83,29 @@ public:
 				.SetCullMode(VK_CULL_MODE_NONE)
 				.Acquire();
 
+		std::string text = "Hello World";
+
 		float x{};
 		float y{};
 		float scale = 1.f;
-		for (uint8_t c : Font::SupportedCharacters)
+		for (uint8_t c : text)
 		{
 			const Font::Glyph& glyph = font->GetGlyph(c);
-			auto textMaterial =
-				Material::Builder(pipeline).Set("samplerText", glyph.texture).Build();
+
+			Ref<Material> textMaterial;
+
+			if (glyph.texture)
+				textMaterial =
+					Material::Builder(pipeline).Set("samplerText", glyph.texture).Build();
+			else
+				textMaterial = Material::Builder(placeholderPipeline)
+								   .Set("Shading.color", Float4{ 1.f, 0.f, 0.f, 1.f })
+								   .Acquire();
+
+			UInt2 windowSize = Window::Get().GetFramebufferSize();
+
+			// Float2 ndcBearing{ (Float2)glyph.bearing / (Float2)windowSize };
+			// Float2 ndcSize{ (Float2)glyph.size / (Float2)windowSize };
 
 			Float2 ndcBearing = ScreenSpaceToNDCSpace(glyph.bearing) + Float2{ 1.f, 0.f };
 			Float2 ndcSize = ScreenSpaceToNDCSpace(glyph.size) + Float2{ 1.f, 0.f };
@@ -109,6 +124,7 @@ public:
 			tform.SetTranslation({ xPos, yPos, 0.f });
 
 			x += ScreenSpaceToNDCSpaceX(glyph.advance * scale) + 1.f;
+			// x += glyph.advance * scale / windowSize.x;
 		}
 	}
 
