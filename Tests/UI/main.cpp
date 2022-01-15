@@ -92,14 +92,14 @@ public:
 			auto textMaterial =
 				Material::Builder(pipeline).Set("samplerText", glyph.texture).Build();
 
-			Float2 ndcBearing = ScreenSpaceToNDCSpace(glyph.bearing);
-			Float2 ndcSize = ScreenSpaceToNDCSpace(glyph.size);
+			Float2 ndcBearing = ScreenSpaceToNDCSpace(glyph.bearing) + Float2{ 1.f, 0.f };
+			Float2 ndcSize = ScreenSpaceToNDCSpace(glyph.size) + Float2{ 1.f, 0.f };
 
 			float xPos = x + ndcBearing.x * scale;
 			float yPos = y - (ndcSize.y - ndcBearing.y) * scale;
 
-			float w = abs(ScreenSpaceToNDCSpaceX(glyph.size.x * scale));
-			float h = abs(ScreenSpaceToNDCSpaceY(glyph.size.y * scale));
+			float w = ndcSize.x * scale;
+			float h = ndcSize.y * scale;  // Has no effect?
 
 			m_TextEntity = Scene::Get().CreateEntity();
 			m_TextEntity.Emplace<Mesh>(Mesh::Plane(textMaterial));

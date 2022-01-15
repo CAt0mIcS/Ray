@@ -41,7 +41,7 @@ namespace At0::Ray
 	}
 	RAY_EXPORT Float2 ScreenSpaceToNDCSpace(Float2 coords)
 	{
-		return { ScreenSpaceToNDCSpaceX(coords.x), ScreenSpaceToNDCSpaceX(coords.y) };
+		return { ScreenSpaceToNDCSpaceX(coords.x), ScreenSpaceToNDCSpaceY(coords.y) };
 	}
 	RAY_EXPORT float NDCSpaceToScreenSpaceX(float x)
 	{
