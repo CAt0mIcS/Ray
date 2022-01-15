@@ -48,7 +48,7 @@ namespace At0::Ray
 		RAY_MEXPECTS(!hasNormal && !hasTangent,
 			"[IndexedTriangleList] Normals and tangents not supported for plane yet");
 
-#define FACING_PLAYER 1
+#define FACING_PLAYER 0
 
 #if !FACING_PLAYER
 		vertex.BeginVertex();

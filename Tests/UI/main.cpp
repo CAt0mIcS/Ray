@@ -48,9 +48,7 @@ public:
 		GetCamera().SetPosition(Float3(0.0f, 0.0f, -2.5f));
 		GetCamera().SetRotation(Float3(0.0f));
 		GetCamera().SetRotationSpeed(0.07f);
-		// GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
-		GetCamera().SetOrthographic(
-			0.f, Window::Get().GetFramebufferSize().x, 0.f, Window::Get().GetFramebufferSize().y);
+		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
 		GetCamera().SetMovementSpeed(3.0f);
 	}
 };
@@ -92,13 +90,16 @@ public:
 		{
 			const Font::Glyph& glyph = font->GetGlyph(c);
 			auto textMaterial =
-				Material::Builder(pipeline).Set("samplerText", glyph.texture).Acquire();
+				Material::Builder(pipeline).Set("samplerText", glyph.texture).Build();
 
-			float xPos = x + glyph.bearing.x * scale;
-			float yPos = y - (glyph.size.y - glyph.bearing.y) * scale;
+			Float2 ndcBearing = ScreenSpaceToNDCSpace(glyph.bearing);
+			Float2 ndcSize = ScreenSpaceToNDCSpace(glyph.size);
 
-			float w = ScreenSpaceToNDCSpaceX(glyph.size.x * scale);
-			float h = ScreenSpaceToNDCSpaceY(glyph.size.y * scale);
+			float xPos = x + ndcBearing.x * scale;
+			float yPos = y - (ndcSize.y - ndcBearing.y) * scale;
+
+			float w = abs(ScreenSpaceToNDCSpaceX(glyph.size.x * scale));
+			float h = abs(ScreenSpaceToNDCSpaceY(glyph.size.y * scale));
 
 			m_TextEntity = Scene::Get().CreateEntity();
 			m_TextEntity.Emplace<Mesh>(Mesh::Plane(textMaterial));
@@ -107,7 +108,7 @@ public:
 			tform.SetScale({ w, h, 1.f });
 			tform.SetTranslation({ xPos, yPos, 0.f });
 
-			x += glyph.advance * scale;
+			x += abs(ScreenSpaceToNDCSpaceX(glyph.advance * scale));
 		}
 	}
 
