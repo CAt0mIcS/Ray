@@ -108,7 +108,7 @@ public:
 			tform.SetScale({ w, 1.f, h });
 			tform.SetTranslation({ xPos, yPos, 0.f });
 
-			x += abs(ScreenSpaceToNDCSpaceX(glyph.advance * scale));
+			x += ScreenSpaceToNDCSpaceX(glyph.advance * scale) + 1.f;
 		}
 	}
 
