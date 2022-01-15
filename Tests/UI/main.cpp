@@ -99,13 +99,13 @@ public:
 			float yPos = y - (ndcSize.y - ndcBearing.y) * scale;
 
 			float w = ndcSize.x * scale;
-			float h = ndcSize.y * scale;  // Has no effect?
+			float h = ndcSize.y * scale;
 
 			m_TextEntity = Scene::Get().CreateEntity();
 			m_TextEntity.Emplace<Mesh>(Mesh::Plane(textMaterial));
 			auto& tform = m_TextEntity.Get<Transform>();
 			tform.SetRotation({ 3 * Math::PI<> / 2.f, Math::PI<>, 0.f });
-			tform.SetScale({ w, h, 1.f });
+			tform.SetScale({ w, 1.f, h });
 			tform.SetTranslation({ xPos, yPos, 0.f });
 
 			x += abs(ScreenSpaceToNDCSpaceX(glyph.advance * scale));
