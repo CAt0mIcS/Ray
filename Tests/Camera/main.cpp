@@ -96,17 +96,13 @@ private:
 		vertex[AttributeMap<AttributeType::Position2D>::Semantic] = Float2{ -0.5f, 0.5f };
 #else
 		vertex.BeginVertex();
-		vertex[AttributeMap<AttributeType::Position2D>::Semantic] =
-			NDCSpaceToScreenSpace(Float2{ -0.5f, -0.5f });
+		vertex[AttributeMap<AttributeType::Position2D>::Semantic] = Float2{ 240.f, 135.f };
 		vertex.BeginVertex();
-		vertex[AttributeMap<AttributeType::Position2D>::Semantic] =
-			NDCSpaceToScreenSpace(Float2{ 0.5f, -0.5f });
+		vertex[AttributeMap<AttributeType::Position2D>::Semantic] = Float2{ 720.f, 135.f };
 		vertex.BeginVertex();
-		vertex[AttributeMap<AttributeType::Position2D>::Semantic] =
-			NDCSpaceToScreenSpace(Float2{ 0.5f, 0.5f });
+		vertex[AttributeMap<AttributeType::Position2D>::Semantic] = Float2{ 720.f, 405.f };
 		vertex.BeginVertex();
-		vertex[AttributeMap<AttributeType::Position2D>::Semantic] =
-			NDCSpaceToScreenSpace(Float2{ -0.5f, 0.5f });
+		vertex[AttributeMap<AttributeType::Position2D>::Semantic] = Float2{ 240.f, 405.f };
 #endif
 
 		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
