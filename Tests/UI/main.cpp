@@ -120,11 +120,11 @@ public:
 			float h = ndcSize.y * scale;
 
 			m_TextEntity = Scene::Get().CreateEntity();
-			m_TextEntity.Emplace<Mesh>(Mesh::Plane(textMaterial));
-			auto& tform = m_TextEntity.Get<Transform>();
-			tform.SetRotation({ 3 * Math::PI<> / 2.f, Math::PI<>, 0.f });
-			tform.SetScale({ w, 1.f, h });
-			tform.SetTranslation({ xPos, yPos, 0.f });
+			m_TextEntity.Emplace<Mesh>(GetPlane(textMaterial, xPos, yPos, w, h));
+			// auto& tform = m_TextEntity.Get<Transform>();
+			// tform.SetRotation({ 3 * Math::PI<> / 2.f, Math::PI<>, 0.f });
+			// tform.SetScale({ w, 1.f, h });
+			// tform.SetTranslation({ xPos, yPos, 0.f });
 
 			x += ScreenSpaceToNDCSpaceX(glyph.advance * scale) + 1.f;
 			// x += glyph.advance * scale / windowSize.x;
@@ -132,6 +132,37 @@ public:
 	}
 
 private:
+	Mesh::Data GetPlane(Ref<Material> material, float xPos, float yPos, float w, float h)
+	{
+		DynamicVertex vertex(material->GetGraphicsPipeline().GetShader());
+		bool hasUV = vertex.Has(AttributeMap<AttributeType::UV>::Semantic);
+
+		vertex.BeginVertex();
+		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ xPos + w, yPos + h, 0.f };
+		if (hasUV)
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 1.f, 0.f };
+
+		vertex.BeginVertex();
+		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ xPos, yPos + h, 0.f };
+		if (hasUV)
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 0.f, 0.f };
+
+		vertex.BeginVertex();
+		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ xPos, yPos, 0.f };
+		if (hasUV)
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 0.f, 1.f };
+
+		vertex.BeginVertex();
+		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ xPos + w, yPos, 0.f };
+		if (hasUV)
+			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 1.f, 1.f };
+
+		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
+
+		return { MakeRef<VertexBuffer>("VtxText", vertex), MakeRef<IndexBuffer>("IdxText", indices),
+			std::move(material) };
+	}
+
 	void OnEvent(HoverEnterEvent& e) override
 	{
 		Log::Warn("HoverEnterEvent {0}", e.GetWidget() ? e.GetWidget()->GetName() : "{Null}");
