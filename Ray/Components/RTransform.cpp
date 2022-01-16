@@ -69,7 +69,7 @@ namespace At0::Ray
 					m_Scale.z * (c1 * c2),
 					0.0f,
 				},
-				{ m_Translation.x, m_Translation.y, m_Translation.z, 1.0f } };
+				{ m_Translation.x, m_Translation.y, -m_Translation.z, 1.0f } };
 			// clang-format on
 
 			m_Changed = false;
