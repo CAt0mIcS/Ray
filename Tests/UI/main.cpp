@@ -86,7 +86,9 @@ public:
 				.SetCullMode(VK_CULL_MODE_NONE)
 				.Acquire();
 
-		std::string text = "Hello World";
+		std::string text =
+			"\"The beige hue on the waters of the loch impressed all, including the French queen, "
+			"before she heard that symphony again, just as young Arthur wanted.\" (pangram)";
 
 		float x{};
 		float y{};
