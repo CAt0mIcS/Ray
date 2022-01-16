@@ -150,9 +150,10 @@ namespace At0::Ray
 			// if (FlipY)
 			//	translation.y *= -1.f;
 
-			// ShaderData.View = glm::lookAt(translation, glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));
-			ShaderData.View = glm::lookAt(
-				Float3(0.0f, 0.0f, 1.0f), Float3(0.0f, 0.0f, 0.0f), Float3(0.0f, 1.0f, 0.0f));
+			ShaderData.View =
+				glm::lookAt(Float3{ 0.f, 0.f, 1.f }, Float3{ 0.f }, Float3{ 0.f, 1.f, 0.f });
+			// ShaderData.View = glm::lookAt(Float3(translation.x, translation.y, 1.f),
+			//	Float3(0.f, 0.f, 0.f), Float3(0.f, 1.f, 0.f));
 		}
 		else
 		{
@@ -172,9 +173,7 @@ namespace At0::Ray
 
 			Float3 translation = Position;
 			if (FlipY)
-			{
 				translation.y *= -1.0f;
-			}
 			transM = MatrixTranslation(translation);
 
 			if (Type == CameraType::FirstPerson)

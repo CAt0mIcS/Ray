@@ -20,5 +20,5 @@ void main()
 {
 	uScene.View;
 
-	gl_Position = uScene.Proj * uObj.Model * vec4(inPos, 0.f, 1.f);
+	gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 0.f, 1.f);
 }

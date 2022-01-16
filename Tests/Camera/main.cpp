@@ -43,7 +43,7 @@ public:
 	Scene() : Ray::Scene(Ray::MakeScope<Ray::Camera>())
 	{
 		VkExtent2D size = Ray::Graphics::Get().GetSwapchain().GetExtent();
-		GetCamera().SetPosition(Ray::Float3(0.0f, 0.0f, -2.5f));
+		GetCamera().SetPosition(Ray::Float3(0.f, 0.f, 0.f));
 		GetCamera().SetRotation(Ray::Float3(0.0f));
 		GetCamera().SetRotationSpeed(0.07f);
 
@@ -51,7 +51,7 @@ public:
 		// GetCamera().SetOrthographic(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
 		GetCamera().SetOrthographic(0.f, size.width, 0.f, size.height, -1.f, 1.f);
 
-		GetCamera().SetMovementSpeed(3.0f);
+		GetCamera().SetMovementSpeed(0.01f);
 	}
 };
 
