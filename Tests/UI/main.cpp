@@ -24,6 +24,9 @@
 #include <signal.h>
 #include <random>
 
+#include <Ray/Core/RDynamicVertex.h>
+#include <Ray/Graphics/Buffers/RVertexBuffer.h>
+#include <Ray/Graphics/Buffers/RIndexBuffer.h>
 #include <Ray/Events/REventListener.h>
 #include <Ray/Events/REngineEvents.h>
 #include <Ray/Events/RKeyboardEvents.h>

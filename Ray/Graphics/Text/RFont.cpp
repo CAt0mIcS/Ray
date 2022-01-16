@@ -70,10 +70,12 @@ namespace At0::Ray
 		if (FT_Error error = FT_New_Face(s_FTLibrary, filepath.data(), 0, &face))
 			ThrowRuntime("[Font] Failed to create new face (Error code {0}).", error);
 
-		FT_Set_Char_Size(face, 0, m_Size * 64,	// char height in 1/64th of points
-			96,									// horizontal device resolution
-			96									// vertical device resolution
-		);
+		FT_Set_Pixel_Sizes(face, 0, m_Size);
+
+		// FT_Set_Char_Size(face, 0, m_Size * 64,	// char height in 1/64th of points
+		//	96,									// horizontal device resolution
+		//	96									// vertical device resolution
+		//);
 
 		for (uint8_t c : Font::SupportedCharacters)
 		{
