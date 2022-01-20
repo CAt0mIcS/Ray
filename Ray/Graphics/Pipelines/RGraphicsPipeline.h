@@ -15,15 +15,15 @@ namespace At0::Ray
 	{
 	public:
 		GraphicsPipeline(const RenderPass& renderPass, Ref<Shader> shader,
-			VkPipelineCache pipelineCache = nullptr,
-			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT,
-			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-			VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL, float lineWidth = 1.0f,
-			bool depthTestEnabled = true,
-			std::optional<std::vector<VkVertexInputBindingDescription>> bindingDescriptions =
-				std::nullopt,
-			std::optional<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions =
-				std::nullopt);
+			VkPipelineCache pipelineCache, VkPipelineVertexInputStateCreateInfo* vertexInput,
+			VkPipelineInputAssemblyStateCreateInfo* inputAssembler,
+			VkPipelineViewportStateCreateInfo* viewportState,
+			VkPipelineRasterizationStateCreateInfo* rasterizer,
+			VkPipelineMultisampleStateCreateInfo* multisampling,
+			VkPipelineDepthStencilStateCreateInfo* depthStencil,
+			VkPipelineColorBlendAttachmentState* colorBlendAttachment,
+			VkPipelineColorBlendStateCreateInfo* colorBlending,
+			VkPipelineDynamicStateCreateInfo* dynamicStateInfo);
 		~GraphicsPipeline();
 
 		Pipeline::BindPoint GetBindPoint() const override;
@@ -32,25 +32,30 @@ namespace At0::Ray
 		VkDescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const override;
 
 		static std::string GetUID(const RenderPass& renderPass, Ref<Shader> shader,
-			VkPipelineCache pipelineCache = nullptr,
-			VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT,
-			VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-			VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL, float lineWidth = 1.0f,
-			bool depthTestEnabled = true,
-			std::optional<std::vector<VkVertexInputBindingDescription>> bindingDescriptions =
-				std::nullopt,
-			std::optional<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions =
-				std::nullopt);
+			VkPipelineCache pipelineCache, VkPipelineVertexInputStateCreateInfo* vertexInput,
+			VkPipelineInputAssemblyStateCreateInfo* inputAssembler,
+			VkPipelineViewportStateCreateInfo* viewportState,
+			VkPipelineRasterizationStateCreateInfo* rasterizer,
+			VkPipelineMultisampleStateCreateInfo* multisampling,
+			VkPipelineDepthStencilStateCreateInfo* depthStencil,
+			VkPipelineColorBlendAttachmentState* colorBlendAttachment,
+			VkPipelineColorBlendStateCreateInfo* colorBlending,
+			VkPipelineDynamicStateCreateInfo* dynamicStateInfo);
 
 	private:
 		void CreateDescriptorSetLayouts();
 		void CreateDescriptorPool();
 		void CreatePipelineLayout();
 		void CreatePipeline(const RenderPass& renderPass, VkPipelineCache pipelineCache,
-			VkCullModeFlags cullMode, VkPrimitiveTopology topology, VkPolygonMode polygonMode,
-			float lineWidth, bool depthTestEnabled,
-			std::optional<std::vector<VkVertexInputBindingDescription>> bindingDescriptions,
-			std::optional<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions);
+			VkPipelineVertexInputStateCreateInfo* vertexInput,
+			VkPipelineInputAssemblyStateCreateInfo* inputAssembler,
+			VkPipelineViewportStateCreateInfo* viewportState,
+			VkPipelineRasterizationStateCreateInfo* rasterizer,
+			VkPipelineMultisampleStateCreateInfo* multisampling,
+			VkPipelineDepthStencilStateCreateInfo* depthStencil,
+			VkPipelineColorBlendAttachmentState* colorBlendAttachment,
+			VkPipelineColorBlendStateCreateInfo* colorBlending,
+			VkPipelineDynamicStateCreateInfo* dynamicStateInfo);
 
 	private:
 		VkDescriptorPool m_DescriptorPool;
@@ -82,18 +87,18 @@ namespace At0::Ray
 			/**
 			 * Builds a new pipeline withouth checking the codex
 			 */
-			Ref<GraphicsPipeline> Build() const;
+			Ref<GraphicsPipeline> Build();
 
 			/**
 			 * Builds a new pipeline withouth checking the codex
 			 */
-			Scope<GraphicsPipeline> BuildScoped() const;
+			Scope<GraphicsPipeline> BuildScoped();
 
 			/**
 			 * Tries to find a already created pipeline in the codex. If it's not found, it'll be
 			 * created.
 			 */
-			Ref<GraphicsPipeline> Acquire() const;
+			Ref<GraphicsPipeline> Acquire();
 
 			/**
 			 * Checks if arguments are valid
@@ -102,18 +107,28 @@ namespace At0::Ray
 
 		private:
 			void ThrowIfInvalidArguments() const;
+			void SetFinalData();
 
 		private:
 			const RenderPass* m_RenderPass;
 			Ref<Shader> m_Shader{};
 			VkPipelineCache m_PipelineCache;
-			VkCullModeFlags m_CullMode;
-			VkPrimitiveTopology m_Topology;
-			VkPolygonMode m_PolygonMode;
-			float m_LineWidth;
-			bool m_DepthTestEnabled;
-			std::optional<std::vector<VkVertexInputBindingDescription>> m_BindingDescriptions;
-			std::optional<std::vector<VkVertexInputAttributeDescription>> m_AttributeDescriptions;
+
+			VkPipelineVertexInputStateCreateInfo m_VertexInput{};
+			VkPipelineInputAssemblyStateCreateInfo m_InputAssembler{};
+			VkPipelineViewportStateCreateInfo m_ViewportState{};
+			VkPipelineRasterizationStateCreateInfo m_Rasterizer{};
+			VkPipelineMultisampleStateCreateInfo m_Multisampling{};
+			VkPipelineDepthStencilStateCreateInfo m_DepthStencil{};
+			VkPipelineColorBlendAttachmentState m_ColorBlendAttachment{};
+			VkPipelineColorBlendStateCreateInfo m_ColorBlending{};
+			std::vector<VkDynamicState> m_DynamicStates;
+			VkPipelineDynamicStateCreateInfo m_DynamicStateInfo{};
+
+			bool m_CustomSetBinding = false;
+			bool m_CustomSetAttrib = false;
+			std::vector<VkVertexInputBindingDescription> m_BindingDescs{};
+			std::vector<VkVertexInputAttributeDescription> m_AttribDescs{};
 		};
 	};
 }  // namespace At0::Ray
