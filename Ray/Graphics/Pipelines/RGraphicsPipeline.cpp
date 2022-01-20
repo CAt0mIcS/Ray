@@ -12,6 +12,7 @@ namespace At0::Ray
 	GraphicsPipeline::GraphicsPipeline(const RenderPass& renderPass, Ref<Shader> shader,
 		VkPipelineCache pipelineCache, VkPipelineVertexInputStateCreateInfo* vertexInput,
 		VkPipelineInputAssemblyStateCreateInfo* inputAssembler,
+		VkPipelineShaderStageCreateInfo* shaderStages,
 		VkPipelineViewportStateCreateInfo* viewportState,
 		VkPipelineRasterizationStateCreateInfo* rasterizer,
 		VkPipelineMultisampleStateCreateInfo* multisampling,
@@ -24,9 +25,9 @@ namespace At0::Ray
 		CreateDescriptorSetLayouts();
 		CreateDescriptorPool();
 		CreatePipelineLayout();
-		CreatePipeline(renderPass, pipelineCache, vertexInput, inputAssembler, viewportState,
-			rasterizer, multisampling, depthStencil, colorBlendAttachment, colorBlending,
-			dynamicStateInfo);
+		CreatePipeline(renderPass, pipelineCache, vertexInput, inputAssembler, shaderStages,
+			viewportState, rasterizer, multisampling, depthStencil, colorBlendAttachment,
+			colorBlending, dynamicStateInfo);
 	}
 
 	GraphicsPipeline::~GraphicsPipeline()
@@ -55,6 +56,7 @@ namespace At0::Ray
 	std::string GraphicsPipeline::GetUID(const RenderPass& renderPass, Ref<Shader> shader,
 		VkPipelineCache pipelineCache, VkPipelineVertexInputStateCreateInfo* vertexInput,
 		VkPipelineInputAssemblyStateCreateInfo* inputAssembler,
+		VkPipelineShaderStageCreateInfo* shaderStages,
 		VkPipelineViewportStateCreateInfo* viewportState,
 		VkPipelineRasterizationStateCreateInfo* rasterizer,
 		VkPipelineMultisampleStateCreateInfo* multisampling,
@@ -152,6 +154,7 @@ namespace At0::Ray
 	void GraphicsPipeline::CreatePipeline(const RenderPass& renderPass,
 		VkPipelineCache pipelineCache, VkPipelineVertexInputStateCreateInfo* vertexInput,
 		VkPipelineInputAssemblyStateCreateInfo* inputAssembler,
+		VkPipelineShaderStageCreateInfo* shaderStages,
 		VkPipelineViewportStateCreateInfo* viewportState,
 		VkPipelineRasterizationStateCreateInfo* rasterizer,
 		VkPipelineMultisampleStateCreateInfo* multisampling,
@@ -160,32 +163,13 @@ namespace At0::Ray
 		VkPipelineColorBlendStateCreateInfo* colorBlending,
 		VkPipelineDynamicStateCreateInfo* dynamicStateInfo)
 	{
-		std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
-		shaderStages.reserve(m_Shader->GetShaderModules().size());
-		// Create shader module structs
-		for (const auto& [stage, shaderModule] : m_Shader->GetShaderModules())
-		{
-			// std::ostringstream defineBlock;
-			// for (const auto& [defineName, defineValue] : m_Defines)
-			//	defineBlock << "#define " << defineName << " " << defineValue << '\n';
-
-			VkPipelineShaderStageCreateInfo pipelineShaderStageCreateInfo{};
-			pipelineShaderStageCreateInfo.sType =
-				VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-			pipelineShaderStageCreateInfo.stage = (VkShaderStageFlagBits)stage;
-			pipelineShaderStageCreateInfo.module = shaderModule;
-			pipelineShaderStageCreateInfo.pName = "main";
-			shaderStages.emplace_back(pipelineShaderStageCreateInfo);
-		}
-
-
 		// ---------------------------------------------------------------------------------------
 		// Pipeline creation
 		VkGraphicsPipelineCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 		createInfo.flags = 0;
-		createInfo.stageCount = (uint32_t)shaderStages.size();
-		createInfo.pStages = shaderStages.data();
+		createInfo.stageCount = (uint32_t)m_Shader->GetShaderModules().size();
+		createInfo.pStages = shaderStages;
 		createInfo.pVertexInputState = vertexInput;
 		createInfo.pInputAssemblyState = inputAssembler;
 		createInfo.pTessellationState = nullptr;
@@ -314,6 +298,11 @@ namespace At0::Ray
 	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetShader(Ref<Shader> shader)
 	{
 		m_Shader = std::move(shader);
+		// Add default entry point for stages for which we haven't defined an entry point
+		for (const auto& [stage, shaderModule] : m_Shader->GetShaderModules())
+			if (m_ShaderEntryPoints.find(stage) == m_ShaderEntryPoints.end())
+				m_ShaderEntryPoints[stage] = "main";
+
 		return *this;
 	}
 
@@ -356,6 +345,19 @@ namespace At0::Ray
 		return *this;
 	}
 
+	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetBlendingEnabled(bool enabled)
+	{
+		m_ColorBlendAttachment.blendEnable = enabled;
+		return *this;
+	}
+
+	// GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetShaderEntryPoint(
+	//	ShaderStage stage, const char* pName)
+	//{
+	//	m_ShaderEntryPoints[stage] = pName;
+	//	return *this;
+	//}
+
 	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetVertexInputBindingDescriptions(
 		std::vector<VkVertexInputBindingDescription> descs)
 	{
@@ -377,8 +379,9 @@ namespace At0::Ray
 		ThrowIfInvalidArguments();
 		SetFinalData();
 		return MakeRef<GraphicsPipeline>(*m_RenderPass, m_Shader, m_PipelineCache, &m_VertexInput,
-			&m_InputAssembler, &m_ViewportState, &m_Rasterizer, &m_Multisampling, &m_DepthStencil,
-			&m_ColorBlendAttachment, &m_ColorBlending, &m_DynamicStateInfo);
+			&m_InputAssembler, m_ShaderStages.data(), &m_ViewportState, &m_Rasterizer,
+			&m_Multisampling, &m_DepthStencil, &m_ColorBlendAttachment, &m_ColorBlending,
+			&m_DynamicStateInfo);
 	}
 
 	Scope<GraphicsPipeline> GraphicsPipeline::Builder::BuildScoped()
@@ -386,8 +389,9 @@ namespace At0::Ray
 		ThrowIfInvalidArguments();
 		SetFinalData();
 		return MakeScope<GraphicsPipeline>(*m_RenderPass, m_Shader, m_PipelineCache, &m_VertexInput,
-			&m_InputAssembler, &m_ViewportState, &m_Rasterizer, &m_Multisampling, &m_DepthStencil,
-			&m_ColorBlendAttachment, &m_ColorBlending, &m_DynamicStateInfo);
+			&m_InputAssembler, m_ShaderStages.data(), &m_ViewportState, &m_Rasterizer,
+			&m_Multisampling, &m_DepthStencil, &m_ColorBlendAttachment, &m_ColorBlending,
+			&m_DynamicStateInfo);
 	}
 
 	Ref<GraphicsPipeline> GraphicsPipeline::Builder::Acquire()
@@ -395,8 +399,9 @@ namespace At0::Ray
 		ThrowIfInvalidArguments();
 		SetFinalData();
 		return Codex::Resolve<GraphicsPipeline>(*m_RenderPass, m_Shader, m_PipelineCache,
-			&m_VertexInput, &m_InputAssembler, &m_ViewportState, &m_Rasterizer, &m_Multisampling,
-			&m_DepthStencil, &m_ColorBlendAttachment, &m_ColorBlending, &m_DynamicStateInfo);
+			&m_VertexInput, &m_InputAssembler, m_ShaderStages.data(), &m_ViewportState,
+			&m_Rasterizer, &m_Multisampling, &m_DepthStencil, &m_ColorBlendAttachment,
+			&m_ColorBlending, &m_DynamicStateInfo);
 	}
 
 	bool GraphicsPipeline::Builder::ArgumentsValid() const { return m_Shader != nullptr; }
@@ -418,6 +423,25 @@ namespace At0::Ray
 		m_VertexInput.pVertexBindingDescriptions = m_BindingDescs.data();
 		m_VertexInput.vertexAttributeDescriptionCount = (uint32_t)m_AttribDescs.size();
 		m_VertexInput.pVertexAttributeDescriptions = m_AttribDescs.data();
+
+		// ---------------------------------------------------------------------------------------
+		// Shader stages
+		m_ShaderStages.clear();
+		m_ShaderStages.reserve(m_Shader->GetShaderModules().size());
+		for (const auto& [stage, shaderModule] : m_Shader->GetShaderModules())
+		{
+			// std::ostringstream defineBlock;
+			// for (const auto& [defineName, defineValue] : m_Defines)
+			//	defineBlock << "#define " << defineName << " " << defineValue << '\n';
+
+			VkPipelineShaderStageCreateInfo pipelineShaderStageCreateInfo{};
+			pipelineShaderStageCreateInfo.sType =
+				VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+			pipelineShaderStageCreateInfo.stage = (VkShaderStageFlagBits)stage;
+			pipelineShaderStageCreateInfo.module = shaderModule;
+			pipelineShaderStageCreateInfo.pName = m_ShaderEntryPoints.at(stage).c_str();
+			m_ShaderStages.emplace_back(pipelineShaderStageCreateInfo);
+		}
 	}
 
 }  // namespace At0::Ray

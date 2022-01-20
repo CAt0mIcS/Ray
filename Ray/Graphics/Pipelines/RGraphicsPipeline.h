@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "RPipeline.h"
+#include "Shader/RShaderTypes.h"
 
 #include <vector>
 #include <string>
@@ -17,6 +18,7 @@ namespace At0::Ray
 		GraphicsPipeline(const RenderPass& renderPass, Ref<Shader> shader,
 			VkPipelineCache pipelineCache, VkPipelineVertexInputStateCreateInfo* vertexInput,
 			VkPipelineInputAssemblyStateCreateInfo* inputAssembler,
+			VkPipelineShaderStageCreateInfo* shaderStages,
 			VkPipelineViewportStateCreateInfo* viewportState,
 			VkPipelineRasterizationStateCreateInfo* rasterizer,
 			VkPipelineMultisampleStateCreateInfo* multisampling,
@@ -34,6 +36,7 @@ namespace At0::Ray
 		static std::string GetUID(const RenderPass& renderPass, Ref<Shader> shader,
 			VkPipelineCache pipelineCache, VkPipelineVertexInputStateCreateInfo* vertexInput,
 			VkPipelineInputAssemblyStateCreateInfo* inputAssembler,
+			VkPipelineShaderStageCreateInfo* shaderStages,
 			VkPipelineViewportStateCreateInfo* viewportState,
 			VkPipelineRasterizationStateCreateInfo* rasterizer,
 			VkPipelineMultisampleStateCreateInfo* multisampling,
@@ -49,6 +52,7 @@ namespace At0::Ray
 		void CreatePipeline(const RenderPass& renderPass, VkPipelineCache pipelineCache,
 			VkPipelineVertexInputStateCreateInfo* vertexInput,
 			VkPipelineInputAssemblyStateCreateInfo* inputAssembler,
+			VkPipelineShaderStageCreateInfo* shaderStages,
 			VkPipelineViewportStateCreateInfo* viewportState,
 			VkPipelineRasterizationStateCreateInfo* rasterizer,
 			VkPipelineMultisampleStateCreateInfo* multisampling,
@@ -79,6 +83,11 @@ namespace At0::Ray
 			Builder& SetPolygonMode(VkPolygonMode polygonMode);
 			Builder& SetLineWidth(float lineWidth);
 			Builder& SetDepthTestEnabled(bool enabled);
+			Builder& SetBlendingEnabled(bool enabled);
+
+			// Not supported by glslang
+			// Builder& SetShaderEntryPoint(ShaderStage stage, const char* pName);
+
 			Builder& SetVertexInputBindingDescriptions(
 				std::vector<VkVertexInputBindingDescription> descs);
 			Builder& SetVertexInputAttributeDescriptions(
@@ -124,11 +133,13 @@ namespace At0::Ray
 			VkPipelineColorBlendStateCreateInfo m_ColorBlending{};
 			std::vector<VkDynamicState> m_DynamicStates;
 			VkPipelineDynamicStateCreateInfo m_DynamicStateInfo{};
+			std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStages;
 
 			bool m_CustomSetBinding = false;
 			bool m_CustomSetAttrib = false;
 			std::vector<VkVertexInputBindingDescription> m_BindingDescs{};
 			std::vector<VkVertexInputAttributeDescription> m_AttribDescs{};
+			std::unordered_map<ShaderStage, std::string> m_ShaderEntryPoints;
 		};
 	};
 }  // namespace At0::Ray
