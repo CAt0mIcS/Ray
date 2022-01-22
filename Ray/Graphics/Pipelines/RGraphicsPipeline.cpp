@@ -53,6 +53,19 @@ namespace At0::Ray
 		return VK_NULL_HANDLE;
 	}
 
+	template<typename T>
+	static void CombineStringStream(std::ostringstream& oss, T t)
+	{
+		oss << t << "#";
+	}
+
+	template<typename T, typename... Args>
+	static void CombineStringStream(std::ostringstream& oss, T t, Args... args)
+	{
+		CombineStringStream(oss, t);
+		CombineStringStream(oss, args...);
+	}
+
 	std::string GraphicsPipeline::GetUID(const RenderPass& renderPass, Ref<Shader> shader,
 		VkPipelineCache pipelineCache, VkPipelineVertexInputStateCreateInfo* vertexInput,
 		VkPipelineInputAssemblyStateCreateInfo* inputAssembler,
@@ -66,13 +79,13 @@ namespace At0::Ray
 		VkPipelineDynamicStateCreateInfo* dynamicStateInfo)
 	{
 		std::ostringstream oss;
-		oss << "GraphicsPipeline#"
-			<< "#" << (uint32_t)rasterizer->cullMode << "#" << (uint32_t)inputAssembler->topology
-			<< "#" << (uint32_t)rasterizer->polygonMode << "#" << rasterizer->lineWidth << "#"
-			<< depthStencil->depthWriteEnable << "#";
+
+		CombineStringStream(oss, (uint32_t)rasterizer->cullMode, (uint32_t)inputAssembler->topology,
+			(uint32_t)rasterizer->polygonMode, rasterizer->lineWidth,
+			depthStencil->depthWriteEnable, colorBlendAttachment->blendEnable);
+
 		for (std::string_view shader : shader->GetFilepaths())
 			oss << shader << "#";
-
 		return oss.str();
 	}
 

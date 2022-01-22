@@ -59,6 +59,6 @@ namespace At0::Ray
 		tform.SetScale(
 			{ cam.GetFarClip() - 5.0f, cam.GetFarClip() - 5.0f, cam.GetFarClip() - 5.0f });
 
-		tform.SetTranslation({ -cam.Position.x, cam.Position.y, -cam.Position.z });
+		tform.SetTranslation({ -cam.Position.x, cam.Position.y, cam.Position.z });
 	}
 }  // namespace At0::Ray
