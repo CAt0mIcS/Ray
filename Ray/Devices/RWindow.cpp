@@ -211,6 +211,9 @@ namespace At0::Ray
 		glfwSetKeyCallback(m_hWnd,
 			[](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
+				if (key == -1)
+					return;
+
 				switch (action)
 				{
 				case GLFW_PRESS:

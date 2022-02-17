@@ -37,7 +37,7 @@ namespace At0::Ray
 		tform.SetScale(Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
 
 		const Float3& camPos = Scene::Get().GetCamera().Position;
-		tform.SetTranslation({ -camPos.x, camPos.y, -camPos.z });
+		tform.SetTranslation({ -camPos.x, camPos.y, camPos.z });
 	}
 
 	Skybox::Skybox(Entity entity, Ref<TextureCubemap> texture)
