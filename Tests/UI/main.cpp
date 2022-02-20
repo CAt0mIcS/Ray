@@ -6,7 +6,6 @@
 #include <Ray/Graphics/RGraphics.h>
 
 #include <Ray/Components/RMesh.h>
-#include <Ray/Components/RTextComponent.h>
 #include <Ray/Components/RSkybox.h>
 #include <Ray/Components/RTransform.h>
 
@@ -32,11 +31,11 @@
 #include <Ray/Events/RKeyboardEvents.h>
 #include <Ray/Events/RMouseEvents.h>
 
-#include <Ray/Components/RTextComponent.h>
+#include <Ray/Components/UI/RTextComponent.h>
 
-#include <Ray/UI/RImGui.h>
+#include <Ray/Utils/RImGui.h>
 #include <Ray/Graphics/Text/RFont.h>
-#include <Ray/UI/RButton.h>
+#include <Ray/Components/UI/RButton.h>
 
 #include <../../Extern/imgui/imgui.h>
 
@@ -73,13 +72,17 @@ public:
 		Scene::Create<Scene2>();
 #include "../ImGuiWindows.inl"
 
-		auto font = Font::AcquireTTF("Resources/Fonts/arial.ttf", 128);
+		// auto font = Font::AcquireTTF("Resources/Fonts/arial.ttf", 128);
 
-		m_TextEntity = Scene::Get().CreateEntity();
-		m_TextEntity.Emplace<TextComponent>(
-			"\"The beige hue on the waters of the loch impressed all, including the French queen, "
-			"before she heard that symphony again, just as young Arthur wanted.\" (pangram)",
-			font);
+		// m_TextEntity = Scene::Get().CreateEntity();
+		// m_TextEntity.Emplace<TextComponent>(
+		//	"\"The beige hue on the waters of the loch impressed all, including the French queen, "
+		//	"before she heard that symphony again, just as young Arthur wanted.\" (pangram)",
+		//	font);
+
+
+		m_ColoredBtn = Scene::Get().CreateEntity();
+		m_ColoredBtn.Emplace<Button>("ColoredButton", Float2{ 0.f, 0.f }, 100.f, 100.f);
 	}
 
 private:
@@ -147,8 +150,11 @@ private:
 	}
 
 private:
-	Float3 m_ButtonColors{};
+	Float4 m_ButtonColors{};
 	Entity m_TextEntity;
+
+	Entity m_ColoredBtn;
+	Entity m_TexturedBtn;
 };
 
 void SignalHandler(int signal)

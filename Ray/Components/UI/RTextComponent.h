@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "RComponent.h"
+#include "../RComponent.h"
 
-#include <string_view>
+#include <string>
 
 
 namespace At0::Ray

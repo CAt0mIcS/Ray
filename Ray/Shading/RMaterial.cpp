@@ -46,6 +46,8 @@ namespace At0::Ray
 	{
 		Log::Trace("[Material] Calling OnDirtyListeners (Count: {0})",
 			EventDispatcher<MaterialBecameDirtyEvent>::Get().size());
+
+		// Tells the MeshRenderer to update descriptors with name and type
 		MaterialBecameDirtyEvent e{ name, type };
 		for (auto listener : EventDispatcher<MaterialBecameDirtyEvent>::Get())
 			listener->OnEvent(e);

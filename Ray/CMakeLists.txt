@@ -186,6 +186,8 @@ set(SRC
 	# Components
 	"Components/Base/RRenderer.h"
 	"Components/Base/RRenderer.cpp"
+	"Components/Base/RWidget.h"
+	"Components/Base/RWidget.cpp"
 	"Components/RComponent.h"
 	"Components/RMesh.h"
 	"Components/RMesh.cpp"
@@ -193,8 +195,6 @@ set(SRC
 	"Components/RSkybox.cpp"
 	"Components/RMeshRenderer.h"
 	"Components/RMeshRenderer.cpp"
-	"Components/RTextComponent.h"
-	"Components/RTextComponent.cpp"
 	"Components/RTransform.h"
 	"Components/RTransform.cpp"
 	"Components/RScriptableEntity.h"
@@ -204,20 +204,17 @@ set(SRC
 	"Components/RHierachyComponent.h"
 	"Components/RHierachyComponent.cpp"
 
+	# UI
+	"Components/UI/RButton.h"
+	"Components/UI/RButton.cpp"
+	"Components/UI/RTextComponent.h"
+	"Components/UI/RTextComponent.cpp"
+
 	# Shading
 	"Shading/RMaterial.h"
 	"Shading/RMaterial.cpp"
 	"Shading/RMaterialDataContainer.h"
 	"Shading/RMaterialDataContainer.cpp"
-
-	# ------------------------------------------------------------------
-	# User Interface
-	"UI/RWidget.h"
-	"UI/RWidget.cpp"
-	"UI/RButton.h"
-	"UI/RButton.cpp"
-	"UI/RImGui.h"
-	"UI/RImGui.cpp"
 	
 	# ------------------------------------------------------------------
 	# File system
@@ -254,6 +251,8 @@ set(SRC
 	"Utils/RModel.h"
 	"Utils/RModel.cpp"
 	"Utils/RTypeTraits.h"
+	"Utils/RImGui.h"
+	"Utils/RImGui.cpp"
 
 	# ------------------------------------------------------------------
 	# Event system

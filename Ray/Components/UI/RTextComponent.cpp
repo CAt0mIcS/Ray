@@ -1,22 +1,20 @@
 ﻿#include "RTextComponent.h"
 
-#include "RMesh.h"
-#include "RTransform.h"
-#include "RMeshRenderer.h"
-#include "Shading/RMaterial.h"
+#include "../RMesh.h"
+#include "../RHierachyComponent.h"
 
-#include "Graphics/Text/RFont.h"
-#include "Graphics/Pipelines/Shader/RShader.h"
-#include "Graphics/Pipelines/Shader/DataAccess/RBufferUniform.h"
+#include "Core/RDynamicVertex.h"
+#include "Core/RMath.h"
+
+#include "Shading/RMaterial.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
-#include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
 #include "Graphics/Buffers/RIndexBuffer.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
-#include "Graphics/RCodex.h"
-#include "Core/RDynamicVertex.h"
+#include "Graphics/Pipelines/Shader/RShader.h"
+#include "Graphics/Text/RFont.h"
+
 #include "Devices/RWindow.h"
 #include "Scene/RScene.h"
-#include "RHierachyComponent.h"
 
 
 namespace At0::Ray

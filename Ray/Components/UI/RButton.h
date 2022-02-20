@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "RWidget.h"
+#include "../Base/RWidget.h"
 
 
 namespace At0::Ray
@@ -11,11 +11,11 @@ namespace At0::Ray
 	{
 	public:
 		Button(Entity entity, std::string_view name, Float2 pos, float width, float height,
-			const Float3& color = { 1.0f, 1.0f, 1.0f });
+			const Float4& color = { 1.f, 1.f, 1.f, 1.f });
 		Button(Entity entity, std::string_view name, Float2 pos, float width, float height,
 			Ref<Texture> texture);
 
-		void SetColor(const Float3& color);
+		void SetColor(const Float4& color);
 		void SetTexture(Ref<Texture> texture);
 
 	private:

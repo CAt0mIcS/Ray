@@ -3,7 +3,6 @@
 #include "RScene.h"
 
 #include "Components/RMeshRenderer.h"
-#include "Components/RTextComponent.h"
 #include "Components/RSkybox.h"
 #include "Components/RTransform.h"
 
@@ -87,8 +86,6 @@ namespace At0::Ray
 #else
 		m_Registry.view<MeshRenderer>().each([](MeshRenderer& mesh) { mesh.Update(); });
 #endif
-
-		// m_Registry.view<TextComponent>().each([](TextComponent& text) { text.Update(); });
 
 		// CLog::Trace(
 		//	"[Scene] MeshRenderer updates took {0}us", (Time::Now() - tStart).AsMicroseconds());

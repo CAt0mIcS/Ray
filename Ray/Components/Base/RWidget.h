@@ -1,11 +1,11 @@
 ﻿#pragma once
 
-#include "../RBase.h"
-#include "../Components/RComponent.h"
-#include "../Core/RMath.h"
+#include "../RComponent.h"
 
-#include "../Events/REventListener.h"
-#include "../Events/REngineEvents.h"
+#include "../../Core/RMath.h"
+
+#include "../../Events/REventListener.h"
+#include "../../Events/REngineEvents.h"
 
 
 namespace At0::Ray
@@ -100,9 +100,9 @@ namespace At0::Ray
 		virtual void OnEvent(WindowResizedEvent& e) override;
 
 	private:
-		float m_Width;
-		float m_Height;
-		Float2 m_Translation;
+		float m_Width{};
+		float m_Height{};
+		Float2 m_Translation{};
 		std::string m_Name;
 	};
 }  // namespace At0::Ray
