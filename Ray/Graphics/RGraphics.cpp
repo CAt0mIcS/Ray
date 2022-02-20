@@ -257,8 +257,8 @@ namespace At0::Ray
 			mesh.CmdBind(cmdBuff);
 		}
 
-		// Scene::Get().EntityView<TextRenderer>().each(
-		//	[&cmdBuff](TextRenderer& text) { text.Render(cmdBuff); });
+		// Scene::Get().EntityView<TextComponent>().each(
+		//	[&cmdBuff](TextComponent& text) { text.Render(cmdBuff); });
 
 #if RAY_ENABLE_IMGUI
 		ImGUI::Get().CmdBind(cmdBuff);

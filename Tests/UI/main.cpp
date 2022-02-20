@@ -6,7 +6,7 @@
 #include <Ray/Graphics/RGraphics.h>
 
 #include <Ray/Components/RMesh.h>
-#include <Ray/Components/RTextRenderer.h>
+#include <Ray/Components/RTextComponent.h>
 #include <Ray/Components/RSkybox.h>
 #include <Ray/Components/RTransform.h>
 
@@ -31,6 +31,8 @@
 #include <Ray/Events/REngineEvents.h>
 #include <Ray/Events/RKeyboardEvents.h>
 #include <Ray/Events/RMouseEvents.h>
+
+#include <Ray/Components/RTextComponent.h>
 
 #include <Ray/UI/RImGui.h>
 #include <Ray/Graphics/Text/RFont.h>
@@ -62,107 +64,38 @@ class App :
 	EventListener<HoverEnterEvent>,
 	EventListener<HoverLeaveEvent>,
 	EventListener<MouseButtonPressedEvent>,
-	EventListener<MouseButtonReleasedEvent>
+	EventListener<MouseButtonReleasedEvent>,
+	EventListener<KeyPressedEvent>
 {
 public:
-	App()
+	App() /* : EventListener<KeyPressedEvent>(Window::Get())*/
 	{
 		Scene::Create<Scene2>();
 #include "../ImGuiWindows.inl"
 
 		auto font = Font::AcquireTTF("Resources/Fonts/arial.ttf", 128);
 
-		auto pipeline =
-			GraphicsPipeline::Builder()
-				.SetShader(Shader::AcquireSourceFile(
-					{ "Resources/Shaders/Flat_Text.vert", "Resources/Shaders/Flat_Text.frag" }))
-				.SetCullMode(VK_CULL_MODE_NONE)
-				.Acquire();
-
-		auto placeholderPipeline =
-			GraphicsPipeline::Builder()
-				.SetShader(Shader::AcquireSourceFile(
-					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
-				.SetCullMode(VK_CULL_MODE_NONE)
-				.Acquire();
-
-		std::string text =
+		m_TextEntity = Scene::Get().CreateEntity();
+		m_TextEntity.Emplace<TextComponent>(
 			"\"The beige hue on the waters of the loch impressed all, including the French queen, "
-			"before she heard that symphony again, just as young Arthur wanted.\" (pangram)";
-
-		float x{};
-		float y{};
-		float scale = 1.f;
-		for (uint8_t c : text)
-		{
-			const Font::Glyph& glyph = font->GetGlyph(c);
-
-			Ref<Material> textMaterial;
-
-			if (glyph.texture)
-				textMaterial =
-					Material::Builder(pipeline).Set("samplerText", glyph.texture).Build();
-			else
-				textMaterial = Material::Builder(placeholderPipeline)
-								   .Set("Shading.color", Float4{ 1.f, 0.f, 0.f, 1.f })
-								   .Acquire();
-
-			UInt2 windowSize = Window::Get().GetFramebufferSize();
-
-			// Float2 ndcBearing{ (Float2)glyph.bearing / (Float2)windowSize };
-			// Float2 ndcSize{ (Float2)glyph.size / (Float2)windowSize };
-
-			Float2 ndcBearing = ScreenSpaceToNDCSpace(glyph.bearing) + Float2{ 1.f, 0.f };
-			Float2 ndcSize = ScreenSpaceToNDCSpace(glyph.size) + Float2{ 1.f, 0.f };
-
-			float xPos = x + ndcBearing.x * scale;
-			float yPos = y - (ndcSize.y - ndcBearing.y) * scale;
-
-			float w = ndcSize.x * scale;
-			float h = ndcSize.y * scale;
-
-			m_TextEntity = Scene::Get().CreateEntity();
-			m_TextEntity.Emplace<Mesh>(GetPlane(textMaterial, xPos, yPos, w, h));
-			// auto& tform = m_TextEntity.Get<Transform>();
-			// tform.SetRotation({ 3 * Math::PI<> / 2.f, Math::PI<>, 0.f });
-			// tform.SetScale({ w, 1.f, h });
-			// tform.SetTranslation({ xPos, yPos, 0.f });
-
-			x += ScreenSpaceToNDCSpaceX(glyph.advance * scale) + 1.f;
-			// x += glyph.advance * scale / windowSize.x;
-		}
+			"before she heard that symphony again, just as young Arthur wanted.\" (pangram)",
+			font);
 	}
 
 private:
-	Mesh::Data GetPlane(Ref<Material> material, float xPos, float yPos, float w, float h)
+	void OnEvent(KeyPressedEvent& e) override
 	{
-		DynamicVertex vertex(material->GetGraphicsPipeline().GetShader());
-		bool hasUV = vertex.Has(AttributeMap<AttributeType::UV>::Semantic);
+		auto& textComp = m_TextEntity.Get<TextComponent>();
 
-		vertex.BeginVertex();
-		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ xPos + w, yPos + h, 0.f };
-		if (hasUV)
-			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 1.f, 0.f };
-
-		vertex.BeginVertex();
-		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ xPos, yPos + h, 0.f };
-		if (hasUV)
-			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 0.f, 0.f };
-
-		vertex.BeginVertex();
-		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ xPos, yPos, 0.f };
-		if (hasUV)
-			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 0.f, 1.f };
-
-		vertex.BeginVertex();
-		vertex[AttributeMap<AttributeType::Position>::Semantic] = Float3{ xPos + w, yPos, 0.f };
-		if (hasUV)
-			vertex[AttributeMap<AttributeType::UV>::Semantic] = Float2{ 1.f, 1.f };
-
-		std::vector<IndexBuffer::Type> indices{ 0, 1, 2, 2, 3, 0 };
-
-		return { MakeRef<VertexBuffer>("VtxText", vertex), MakeRef<IndexBuffer>("IdxText", indices),
-			std::move(material) };
+		if ((int)e.GetKey() >= 32 && (int)e.GetKey() <= 126 && e.GetKey() != Key::W &&
+			e.GetKey() != Key::A && e.GetKey() != Key::S && e.GetKey() != Key::D)
+		{
+			if (e.GetKey() == Key::Backspace)
+				textComp.SetText(
+					std::string(textComp.GetText().substr(0, textComp.GetText().size() - 1)));
+			else
+				textComp.SetText(std::string(textComp.GetText()) + String::Construct(e.GetKey()));
+		}
 	}
 
 	void OnEvent(HoverEnterEvent& e) override

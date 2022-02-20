@@ -101,6 +101,11 @@ namespace At0::Ray
 		}
 
 		/**
+		 * Destroys the entity and all of its components
+		 */
+		void Destroy();
+
+		/**
 		 * @returns True if the entity is not the null entity
 		 */
 		constexpr bool Valid() const { return m_EntityHandle != Entity::Null; }

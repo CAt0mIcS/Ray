@@ -96,8 +96,8 @@ namespace At0::Ray
 
 		for (const auto& [commandPool, commandBuffer] : m_CommandResources[imageIndex])
 		{
-			// Scene::Get().EntityView<TextRenderer>().each(
-			//	[&commandBuffer](TextRenderer& renderer) { renderer.Render(*commandBuffer); });
+			// Scene::Get().EntityView<TextComponent>().each(
+			//	[&commandBuffer](TextComponent& renderer) { renderer.Render(*commandBuffer); });
 #if RAY_ENABLE_IMGUI
 			ImGUI::Get().CmdBind(*commandBuffer);
 #endif

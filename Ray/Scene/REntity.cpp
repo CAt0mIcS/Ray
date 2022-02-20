@@ -16,6 +16,12 @@ namespace At0::Ray
 	{
 	}
 
+	void Entity::Destroy()
+	{
+		m_Registry->destroy(m_EntityHandle);
+		m_EntityHandle = Entity::Null;
+	}
+
 	void Entity::SetParent(Entity parent)
 	{
 		RAY_MEXPECTS(Has<HierachyComponent>(), "[Entity] Does not have a HierachyComponent");

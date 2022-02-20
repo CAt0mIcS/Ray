@@ -12,12 +12,13 @@ namespace At0::Ray
 
 		void AddChild(Entity entity);
 		void AddChildren(const std::vector<Entity>& children);
-		void SetParent(Entity parent) { m_Parent = parent; }
+		void SetParent(Entity parent);
 		void SetChildren(std::vector<Entity> children);
 
 		bool HasChild(Entity child) const;
 
 		const std::vector<Entity>& GetChildren() const { return m_Children; }
+		std::vector<Entity>& GetChildren() { return m_Children; }
 		Entity GetParent() const { return m_Parent; }
 
 	private:
