@@ -81,6 +81,10 @@ public:
 		//	font);
 
 
+		Scene::Get().CreateEntity().Emplace<Mesh>(
+			Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+
+
 		m_ColoredBtn = Scene::Get().CreateEntity();
 		m_ColoredBtn.Emplace<Button>("ColoredButton", Float2{ 0.f, 0.f }, 100.f, 100.f);
 	}

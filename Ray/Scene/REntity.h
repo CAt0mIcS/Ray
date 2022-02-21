@@ -55,6 +55,16 @@ namespace At0::Ray
 		}
 
 		/**
+		 * If the entity already has the component it will just be returned
+		 * Otherwise it will be added and returned
+		 */
+		template<typename Comp, typename... Args>
+		decltype(auto) EmplaceOrGet(Args&&... args)
+		{
+			return Has<Comp>() ? Get<Comp>() : Emplace<Comp>(std::forward(args)...);
+		}
+
+		/**
 		 * @tparam Components The components to check
 		 * @returns If this entity has all of the specified components
 		 */
