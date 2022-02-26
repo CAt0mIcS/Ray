@@ -57,6 +57,9 @@ namespace At0::Ray
 			//		GetEntity().GetParent().Get<Transform>().AsMatrix() * tform.AsMatrix();
 			// else
 			m_PerObjectDataUniformRef = tform.AsMatrix();
+			if (auto& uObj = GetBufferUniform(UniformBlockTag::PerObjectData);
+				uObj.Has("NormalMatrix"))
+				uObj["NormalMatrix"] = tform.GetNormalMatrix();
 		}
 	}
 

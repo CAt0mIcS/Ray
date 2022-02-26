@@ -1,3 +1,4 @@
+add_subdirectory("Bloom")
 add_subdirectory("Camera")
 add_subdirectory("ManyTriangles")
 add_subdirectory("MaterialSystem")

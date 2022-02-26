@@ -30,7 +30,7 @@ namespace At0::Ray
 		void ParseMesh(std::string_view filepath, const aiMesh& mesh,
 			const aiMaterial* const* pMaterials, Ref<Material> material);
 		static Ref<Material> CreateMaterial(
-			const std::string& basePath, const aiMesh& mesh, const aiMaterial* const* pMaterials);
+			const std::string& basePath, const aiMaterial* pMaterial);
 		static DynamicVertex AssembleVertices(const aiMesh& mesh, const Shader& shader);
 		static std::vector<IndexBuffer::Type> GenerateIndices(const aiMesh& mesh);
 

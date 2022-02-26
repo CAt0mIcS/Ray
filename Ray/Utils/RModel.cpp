@@ -18,7 +18,7 @@
 #include "Scene/RScene.h"
 #include "Core/RTime.h"
 
-#define RAY_MULTITHREADED_IMPORT 1
+#define RAY_MULTITHREADED_IMPORT 0
 
 
 namespace At0::Ray
@@ -138,7 +138,7 @@ namespace At0::Ray
 
 		// Material creation stage
 		if (!material)
-			material = CreateMaterial(basePath, mesh, pMaterials);
+			material = CreateMaterial(basePath, pMaterials[mesh.mMaterialIndex]);
 
 		// Vertex assembly stage
 		DynamicVertex vertices =
@@ -170,58 +170,65 @@ namespace At0::Ray
 		}
 	}
 
-	Ref<Material> Model::CreateMaterial(
-		const std::string& basePath, const aiMesh& mesh, const aiMaterial* const* pMaterials)
+	Ref<Material> Model::CreateMaterial(const std::string& basePath, const aiMaterial* pMaterial)
 	{
-		aiString diffuseTexFileName;
-		aiString specularTexFileName;
-		aiString normalTexFileName;
+		// aiString diffuseTexFileName;
+		// aiString specularTexFileName;
+		// aiString normalTexFileName;
 
-		Ref<Texture> diffuseMap = nullptr;
-		Ref<Texture> specularMap = nullptr;
-		Ref<Texture> normalMap = nullptr;
+		// Ref<Texture> diffuseMap = nullptr;
+		// Ref<Texture> specularMap = nullptr;
+		// Ref<Texture> normalMap = nullptr;
 
-		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
-				aiTextureType_DIFFUSE, 0, &diffuseTexFileName) == aiReturn_SUCCESS)
-		{
-			diffuseMap = Texture::Acquire(basePath + diffuseTexFileName.C_Str());
-		}
+		// if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &diffuseTexFileName) ==
+		//	aiReturn_SUCCESS)
+		//	diffuseMap = Texture::Acquire(basePath + diffuseTexFileName.C_Str());
 
-		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
-				aiTextureType_SPECULAR, 0, &specularTexFileName) == aiReturn_SUCCESS)
-		{
-			specularMap = Texture::Acquire(basePath + specularTexFileName.C_Str());
-		}
+		// if (pMaterial->GetTexture(aiTextureType_SPECULAR, 0, &specularTexFileName) ==
+		//	aiReturn_SUCCESS)
+		//	specularMap = Texture::Acquire(basePath + specularTexFileName.C_Str());
 
-		if (pMaterials[mesh.mMaterialIndex]->GetTexture(
-				aiTextureType_NORMALS, 0, &normalTexFileName) == aiReturn_SUCCESS)
-		{
-			normalMap = Texture::Acquire(basePath + normalTexFileName.C_Str());
-		}
+		// if (pMaterial->GetTexture(aiTextureType_NORMALS, 0, &normalTexFileName) ==
+		// aiReturn_SUCCESS) 	normalMap = Texture::Acquire(basePath + normalTexFileName.C_Str());
 
-		std::string shaderFileName = "Resources/Shaders/Phong";
-		std::vector<std::string> fileCodes;
-		if (diffuseMap)
-			fileCodes.emplace_back(ShaderFileCode::DiffuseMap);
-		if (specularMap)
-			fileCodes.emplace_back(ShaderFileCode::SpecularMap);
-		if (normalMap)
-			fileCodes.emplace_back(ShaderFileCode::NormalMap);
-		std::sort(fileCodes.begin(), fileCodes.end());
-		shaderFileName += std::accumulate(fileCodes.begin(), fileCodes.end(), std::string{});
+		// std::string shaderFileName = "Resources/Shaders/Phong";
+		// std::vector<std::string> fileCodes;
+		// if (diffuseMap)
+		//	fileCodes.emplace_back(ShaderFileCode::DiffuseMap);
+		// if (specularMap)
+		//	fileCodes.emplace_back(ShaderFileCode::SpecularMap);
+		// if (normalMap)
+		//	fileCodes.emplace_back(ShaderFileCode::NormalMap);
+		// std::sort(fileCodes.begin(), fileCodes.end());
+		// shaderFileName += std::accumulate(fileCodes.begin(), fileCodes.end(), std::string{});
 
-		auto pipeline = Ray::GraphicsPipeline::Builder()
-							.SetShader(Ray::Shader::AcquireSourceFile(
-								{ shaderFileName + ".vert", shaderFileName + ".frag" }))
-							.Acquire();
+		// auto pipeline = Ray::GraphicsPipeline::Builder()
+		//					.SetShader(Ray::Shader::AcquireSourceFile(
+		//						{ shaderFileName + ".vert", shaderFileName + ".frag" }))
+		//					.Acquire();
 
-		auto builder = Ray::Material::Builder(std::move(pipeline));
-		if (diffuseMap)
-			builder.Set(UniformTag::DiffuseMapSampler, diffuseMap);
-		if (specularMap)
-			builder.Set(UniformTag::SpecularMapSampler, specularMap);
-		if (normalMap)
-			builder.Set(UniformTag::NormalMapSampler, normalMap);
+		// auto builder = Ray::Material::Builder(std::move(pipeline));
+		// if (diffuseMap)
+		//	builder.Set(UniformTag::DiffuseMapSampler, diffuseMap);
+		// if (specularMap)
+		//	builder.Set(UniformTag::SpecularMapSampler, specularMap);
+		// if (normalMap)
+		//	builder.Set(UniformTag::NormalMapSampler, normalMap);
+
+		// return builder.Acquire();
+
+		auto pipeline =
+			GraphicsPipeline::Builder()
+				.SetShader(Shader::AcquireSourceFile(
+					{ "Resources/Shaders/Phong_All.vert", "Resources/Shaders/Phong_All.frag" }))
+				.Acquire();
+
+		auto builder = Material::Builder(std::move(pipeline));
+
+		builder.Set("Shading.color", Float4{ 1.f });
+		builder.Set("Shading.ambientLightColor", Float4{ 1.f, 1.f, 1.f, .02f });  // w is intensity
+		builder.Set("Shading.lightPosition", Float3{ 2.f });
+		builder.Set("Shading.lightColor", Float4{ 1.f });
 
 		return builder.Acquire();
 	}

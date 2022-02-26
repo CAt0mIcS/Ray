@@ -32,6 +32,8 @@ namespace At0::Ray
 		const Matrix& AsMatrix();
 		void RecalculateCachedMatrix() { m_Changed = true; }
 
+		Matrix3 GetNormalMatrix() const;
+
 		auto operator<=>(const Transform&) const = default;
 
 	private:

@@ -3,8 +3,6 @@
 #include <Ray/Devices/RWindow.h>
 #include <Ray/Graphics/RGraphics.h>
 
-#include <Ray/UI/RButton.h>
-
 #include <Ray/Components/RMesh.h>
 #include <Ray/Components/RMeshRenderer.h>
 #include <Ray/Components/RTransform.h>
@@ -26,21 +24,21 @@
 #include <random>
 #include <filesystem>
 
-#include <Ray/UI/RImGui.h>
+#include <Ray/Utils/RImGui.h>
 #include <../../Extern/imgui/imgui.h>
 
 
-using namespace At0;
+using namespace At0::Ray;
 
 
-class Scene : public Ray::Scene
+class Scene2 : public Scene
 {
 public:
-	Scene() : Ray::Scene(Ray::MakeScope<Ray::Camera>())
+	Scene2() : Scene(MakeScope<Camera>())
 	{
-		Ray::UInt2 size = Ray::Window::Get().GetFramebufferSize();
-		GetCamera().SetPosition(Ray::Float3(0.0f, 0.0f, -2.5f));
-		GetCamera().SetRotation(Ray::Float3(0.0f));
+		UInt2 size = Window::Get().GetFramebufferSize();
+		GetCamera().SetPosition(Float3(0.0f, 0.0f, -2.5f));
+		GetCamera().SetRotation(Float3(0.0f));
 		GetCamera().SetRotationSpeed(0.07f);
 		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
 		GetCamera().SetMovementSpeed(3.0f);
@@ -48,88 +46,73 @@ public:
 };
 
 
-class App : public Ray::Engine
+class App : public Engine
 {
 public:
 	App()
 	{
-		Ray::Scene::Create<Scene>();
-		Ray::ImGUI::Get().RegisterNewFrameFunction(
+		Scene::Create<Scene2>();
+		ImGUI::Get().RegisterNewFrameFunction(
 			[&]()
 			{
 				{
 
-					auto translate = [](Ray::Transform& tform)
-					{
-						Ray::Float3 newTranslation =
-							Ray::ImGUI::Float3Widget("Translation", tform.Translation());
-						Ray::Float3 newRotation =
-							Ray::ImGUI::Float3Widget("Rotation", tform.Rotation());
-						Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
+					ImGui::Begin("Light");
 
-						if (newTranslation != tform.Translation())
-							tform.SetTranslation(newTranslation);
-						if (newRotation != tform.Rotation())
-							tform.SetRotation(newRotation);
-						if (newScale != tform.Scale())
-							tform.SetScale(newScale);
-					};
+					m_Entity.Get<Transform>().SetTranslation(
+						ImGUI::Float3Widget("Transform", m_Entity.Get<Transform>().Translation()));
 
-					ImGui::Begin("Transforms");
-					{
-						ImGui::Begin("Entity");
-						Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
-						translate(tform);
-						ImGui::Spacing();
-						ImGui::End();
-					}
-					if (m_Light)
-					{
-						ImGui::Begin("Light");
-						Ray::Transform& tform = m_Light.Get<Ray::Transform>();
-						translate(tform);
-						ImGui::Spacing();
-						ImGui::End();
-					}
+					Float4 ambientLightColor =
+						m_FloorMaterial->Get<Float4>("Shading.ambientLightColor");
+
+					ambientLightColor = Float4{ ImGUI::Float3Widget("AmbientLightColor",
+													Float3{ ambientLightColor }),
+						ambientLightColor.w };
+
+					ImGui::SliderFloat("Intensity", &ambientLightColor.w, 0.001f, .5f);
+					m_FloorMaterial->Set("Shading.ambientLightColor", ambientLightColor);
+
+					Float3 lightPos = ImGUI::Float3Widget(
+						"LightPos", m_FloorMaterial->Get<Float3>("Shading.lightPosition"));
+					m_FloorMaterial->Set("Shading.lightPosition", lightPos);
+
+					m_Light.Get<Transform>().SetTranslation(
+						Float3{ lightPos.x, lightPos.y, lightPos.z });
 
 					ImGui::End();
 				}
 			});
 
 		m_Entity = Scene::Get().CreateEntity();
-		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+		m_Entity.Emplace<Mesh>(Mesh::Import("Resources/Models/Plane/Plane.obj"));
+		m_FloorMaterial = m_Entity.Get<MeshRenderer>().GetSharedMaterial();
 
-		auto pipeline =
-			Ray::GraphicsPipeline::Builder()
-				.SetShader(Ray::Shader::AcquireSourceFile(
+		auto flatColorPipeline =
+			GraphicsPipeline::Builder()
+				.SetShader(Shader::AcquireSourceFile(
 					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
 				.Acquire();
 
-		auto flatWhiteMaterial = Ray::Material::Builder(pipeline)
-									 .Set("Shading.color", Ray::Float4{ 1.0f, 1.0f, 1.0f, 1.0f })
-									 .Acquire();
+		auto flatWhiteMaterial =
+			Material::Builder(flatColorPipeline).Set("Shading.color", Float4{ 1.f }).Acquire();
 
 		m_Light = Scene::Get().CreateEntity();
-		m_Light.Emplace<Ray::Mesh>(
-			Ray::Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", flatWhiteMaterial));
-		m_Light.Get<Ray::Transform>().SetScale(Ray::Float3(0.4f));
-
-		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
+		m_Light.Emplace<Mesh>(Mesh::UVSphere(flatWhiteMaterial, .2f, 24, 24));
 	}
 
 private:
 	void Update() override {}
 
 private:
-	Ray::Entity m_Entity;
-	Ray::Entity m_Light;
+	Entity m_Entity;
+	Entity m_Light;
+	Ref<Material> m_FloorMaterial;
 };
 
 void SignalHandler(int signal)
 {
-	Ray::Log::Critical("Signal {0} received", signal);
-	Ray::Log::Close();
+	Log::Critical("Signal {0} received", signal);
+	Log::Close();
 }
 
 int main()
@@ -138,28 +121,28 @@ int main()
 	signal(SIGILL, SignalHandler);
 	signal(SIGINT, SignalHandler);
 
-	Ray::Log::Open("Ray.log");
-	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
+	Log::Open("Ray.log");
+	Log::SetLogLevel(At0::Violent::LogLevel::Information);
 
 	try
 	{
-		Ray::Log::Info("Launch Path: \"{0}\"", std::filesystem::absolute("."));
-		Ray::Window::Create();
-		Ray::Window::Get().Show();
-		Ray::Window::Get().SetTitle("SetupTest");
+		Log::Info("Launch Path: \"{0}\"", std::filesystem::absolute("."));
+		Window::Create();
+		Window::Get().Show();
+		Window::Get().SetTitle("SetupTest");
 
 		return App{}.Run();
 	}
-	catch (Ray::Exception& e)
+	catch (Exception& e)
 	{
-		Ray::Log::Critical("{0}: {1}", e.GetType(), e.what());
+		Log::Critical("{0}: {1}", e.GetType(), e.what());
 	}
 	catch (std::exception& e)
 	{
-		Ray::Log::Critical("Standard Exception: {0}", e.what());
+		Log::Critical("Standard Exception: {0}", e.what());
 	}
 	catch (...)
 	{
-		Ray::Log::Critical("Unknown exception occured.");
+		Log::Critical("Unknown exception occured.");
 	}
 }

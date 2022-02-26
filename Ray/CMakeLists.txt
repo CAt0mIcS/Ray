@@ -3,6 +3,8 @@ set(SHADERS
 	"../Resources/Shaders/Flat_Col.frag"
 	"../Resources/Shaders/Flat_Diff.vert"
 	"../Resources/Shaders/Flat_Diff.frag"
+	"../Resources/Shaders/Phong_All.vert"
+	"../Resources/Shaders/Phong_All.frag"
 	"../Resources/Shaders/Phong_Col.vert"
 	"../Resources/Shaders/Phong_Col.frag"
 	"../Resources/Shaders/Phong_Spec.vert"

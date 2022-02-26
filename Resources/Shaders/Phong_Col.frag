@@ -21,7 +21,7 @@ float specularStrength = 0.5f;
 
 layout(set = 1, binding = 2) uniform Shading
 {
-	vec3 color;
+	vec4 color;
 } ubo;
 
 
@@ -44,5 +44,5 @@ void main()
     vec3 specular = specularStrength * spec * lightColor;
 
     // outColor = vec4(ambient + diffuse + specular, 1.0f);
-    outColor = vec4(diffuse + specular + ubo.color, 1.0f);
+    outColor = vec4(diffuse + specular + ubo.color.xyz, ubo.color.w);
 }
