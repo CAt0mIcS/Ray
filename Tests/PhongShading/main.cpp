@@ -76,15 +76,19 @@ public:
 						"LightPos", m_FloorMaterial->Get<Float3>("Shading.lightPosition"));
 					m_FloorMaterial->Set("Shading.lightPosition", lightPos);
 
+					// RAY_TODO: Why is z direction reversed?
 					m_Light.Get<Transform>().SetTranslation(
-						Float3{ lightPos.x, lightPos.y, lightPos.z });
+						Float3{ lightPos.x, lightPos.y, -lightPos.z });
 
 					ImGui::End();
 				}
 			});
 
 		m_Entity = Scene::Get().CreateEntity();
-		m_Entity.Emplace<Mesh>(Mesh::Import("Resources/Models/Plane/Plane.obj"));
+		m_Entity.Emplace<Mesh>(Mesh::Import("Resources/Models/Vase/Vase.obj"));
+		m_Entity.Get<Transform>()
+			.SetScale(Float3{ 6.f })
+			.SetRotation(Float3{ Math::PI<>, 0.f, 0.f });
 		m_FloorMaterial = m_Entity.Get<MeshRenderer>().GetSharedMaterial();
 
 		auto flatColorPipeline =

@@ -225,7 +225,11 @@ namespace At0::Ray
 
 		auto builder = Material::Builder(std::move(pipeline));
 
-		builder.Set("Shading.color", Float4{ 1.f });
+
+		Float4 color;
+		pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, *(aiColor4D*)&color);
+
+		builder.Set("Shading.color", color);
 		builder.Set("Shading.ambientLightColor", Float4{ 1.f, 1.f, 1.f, .02f });  // w is intensity
 		builder.Set("Shading.lightPosition", Float3{ 2.f });
 		builder.Set("Shading.lightColor", Float4{ 1.f });

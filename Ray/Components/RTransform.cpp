@@ -3,40 +3,46 @@
 
 namespace At0::Ray
 {
-	void Transform::SetTranslation(Float3 translation)
+	Transform& Transform::SetTranslation(Float3 translation)
 	{
 		m_Translation = translation;
 		m_Changed = true;
+		return *this;
 	}
 
-	void Transform::SetRotation(Float3 rotation)
+	Transform& Transform::SetRotation(Float3 rotation)
 	{
 		m_Rotation = rotation;
 		m_Changed = true;
+		return *this;
 	}
 
-	void Transform::SetScale(Float3 scale)
+	Transform& Transform::SetScale(Float3 scale)
 	{
 		m_Scale = scale;
 		m_Changed = true;
+		return *this;
 	}
 
-	void Transform::Translate(Float3 translation)
+	Transform& Transform::Translate(Float3 translation)
 	{
 		m_Translation += translation;
 		m_Changed = true;
+		return *this;
 	}
 
-	void Transform::Rotate(Float3 rotation)
+	Transform& Transform::Rotate(Float3 rotation)
 	{
 		m_Rotation += rotation;
 		m_Changed = true;
+		return *this;
 	}
 
-	void Transform::Scale(Float3 scale)
+	Transform& Transform::Scale(Float3 scale)
 	{
 		m_Scale += scale;
 		m_Changed = true;
+		return *this;
 	}
 
 	void Transform::UpdateMatrix()

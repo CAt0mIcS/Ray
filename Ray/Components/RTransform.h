@@ -13,13 +13,13 @@ namespace At0::Ray
 		const Float3& Rotation() const { return m_Rotation; }
 		const Float3& Scale() const { return m_Scale; }
 
-		void SetTranslation(Float3 translation);
-		void SetRotation(Float3 rotation);
-		void SetScale(Float3 scale);
+		Transform& SetTranslation(Float3 translation);
+		Transform& SetRotation(Float3 rotation);
+		Transform& SetScale(Float3 scale);
 
-		void Translate(Float3 translation);
-		void Rotate(Float3 rotation);
-		void Scale(Float3 scale);
+		Transform& Translate(Float3 translation);
+		Transform& Rotate(Float3 rotation);
+		Transform& Scale(Float3 scale);
 
 		void UpdateMatrix();
 		bool HasChanged() const;
