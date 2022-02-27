@@ -8,6 +8,7 @@
 #include <Ray/Components/RTransform.h>
 #include <Ray/Components/RSkybox.h>
 #include <Ray/Components/RScriptableEntity.h>
+#include <Ray/Components/RPointLight.h>
 
 #include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
@@ -70,7 +71,7 @@ public:
 					ImGui::End();
 				}
 
-				for (int i = 0; i < m_Material->Get<uint32_t>("Shading.numLights"); ++i)
+				for (int i = 0; i < m_Lights.size(); ++i)
 				{
 					ImGui::Begin(("Light_" + std::to_string(i)).c_str());
 
@@ -81,6 +82,10 @@ public:
 					m_Material->Set("Shading.lightPosition" + index, Float4{ lightPos, 1.f });
 
 					m_Lights[i].Get<Transform>().SetTranslation(lightPos);
+
+					PointLight& pointLight = m_Lights[i].Get<PointLight>();
+					pointLight.SetColor(
+						{ ImGUI::Float3Widget("LightColor", pointLight.GetColor()), 1.f });
 
 					ImGui::End();
 				}
@@ -108,9 +113,17 @@ public:
 		auto flatWhiteMaterial =
 			Material::Builder(flatColorPipeline).Set("Shading.color", Float4{ 1.f }).Acquire();
 
-		for (int i = 0; i < m_Material->Get<uint32_t>("Shading.numLights"); ++i)
-			m_Lights.emplace_back(Scene::Get().CreateEntity())
-				.Emplace<Mesh>(Mesh::UVSphere(flatWhiteMaterial, .1f, 24, 24));
+		// for (int i = 0; i < m_Material->Get<uint32_t>("Shading.numLights"); ++i)
+		//	m_Lights.emplace_back(Scene::Get().CreateEntity())
+		//		.Emplace<Mesh>(Mesh::UVSphere(flatWhiteMaterial, .1f, 24, 24));
+
+		Entity light0 = m_Lights.emplace_back(Scene::Get().CreateEntity());
+		light0.Emplace<PointLight>();
+		light0.Emplace<Mesh>(Mesh::UVSphere(flatWhiteMaterial, .1f, 24, 24));
+
+		Entity light1 = m_Lights.emplace_back(Scene::Get().CreateEntity());
+		light1.Emplace<PointLight>(Float4{ 1.f, 0.f, 0.f, 1.f });
+		light1.Emplace<Mesh>(Mesh::UVSphere(flatWhiteMaterial, .1f, 24, 24));
 	}
 
 private:

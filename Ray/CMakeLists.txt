@@ -205,6 +205,8 @@ set(SRC
 	"Components/RTagComponent.cpp"
 	"Components/RHierachyComponent.h"
 	"Components/RHierachyComponent.cpp"
+	"Components/RPointLight.h"
+	"Components/RPointLight.cpp"
 
 	# UI
 	"Components/UI/RButton.h"
