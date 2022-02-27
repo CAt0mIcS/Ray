@@ -56,25 +56,20 @@ public:
 			[&]()
 			{
 				{
-
 					ImGui::Begin("Light");
 
-					m_Entity.Get<Transform>().SetTranslation(
-						ImGUI::Float3Widget("Transform", m_Entity.Get<Transform>().Translation()));
+					Float3 lightPos = ImGUI::Float3Widget(
+						"LightPos", m_Material->Get<Float3>("Shading.lightPosition"));
+					m_Material->Set("Shading.lightPosition", lightPos);
 
-					Float4 ambientLightColor =
-						m_FloorMaterial->Get<Float4>("Shading.ambientLightColor");
+					Float4 ambientLightColor = m_Material->Get<Float4>("Shading.ambientLightColor");
 
 					ambientLightColor = Float4{ ImGUI::Float3Widget("AmbientLightColor",
 													Float3{ ambientLightColor }),
 						ambientLightColor.w };
 
 					ImGui::SliderFloat("Intensity", &ambientLightColor.w, 0.001f, .5f);
-					m_FloorMaterial->Set("Shading.ambientLightColor", ambientLightColor);
-
-					Float3 lightPos = ImGUI::Float3Widget(
-						"LightPos", m_FloorMaterial->Get<Float3>("Shading.lightPosition"));
-					m_FloorMaterial->Set("Shading.lightPosition", lightPos);
+					m_Material->Set("Shading.ambientLightColor", ambientLightColor);
 
 					// RAY_TODO: Why is z direction reversed?
 					m_Light.Get<Transform>().SetTranslation(
@@ -85,11 +80,26 @@ public:
 			});
 
 		m_Entity = Scene::Get().CreateEntity();
-		m_Entity.Emplace<Mesh>(Mesh::Import("Resources/Models/Vase/Vase.obj"));
+		m_Entity.Emplace<Mesh>(Mesh::Import("Resources/Models/Plane.obj"));
 		m_Entity.Get<Transform>()
+			.SetTranslation({ 0.f, -.5f, 0.f })
 			.SetScale(Float3{ 6.f })
 			.SetRotation(Float3{ Math::PI<>, 0.f, 0.f });
-		m_FloorMaterial = m_Entity.Get<MeshRenderer>().GetSharedMaterial();
+		m_Material = m_Entity.Get<MeshRenderer>().GetSharedMaterial();
+
+		Entity smoothVase = Scene::Get().CreateEntity();
+		smoothVase.Emplace<Mesh>(Mesh::Import("Resources/Models/SmoothVase.obj", m_Material));
+		smoothVase.Get<Transform>()
+			.SetScale(Float3{ 6.f })
+			.SetRotation(Float3{ Math::PI<>, 0.f, 0.f });
+
+		Entity flatVase = Scene::Get().CreateEntity();
+		flatVase.Emplace<Mesh>(Mesh::Import("Resources/Models/FlatVase.obj", m_Material));
+		flatVase.Get<Transform>()
+			.SetTranslation(Float3{ 4.f, 0.f, 0.f })
+			.SetScale(Float3{ 6.f })
+			.SetRotation(Float3{ Math::PI<>, 0.f, 0.f });
+
 
 		auto flatColorPipeline =
 			GraphicsPipeline::Builder()
@@ -101,7 +111,7 @@ public:
 			Material::Builder(flatColorPipeline).Set("Shading.color", Float4{ 1.f }).Acquire();
 
 		m_Light = Scene::Get().CreateEntity();
-		m_Light.Emplace<Mesh>(Mesh::UVSphere(flatWhiteMaterial, .2f, 24, 24));
+		m_Light.Emplace<Mesh>(Mesh::UVSphere(flatWhiteMaterial, .1f, 24, 24));
 	}
 
 private:
@@ -110,7 +120,7 @@ private:
 private:
 	Entity m_Entity;
 	Entity m_Light;
-	Ref<Material> m_FloorMaterial;
+	Ref<Material> m_Material;
 };
 
 void SignalHandler(int signal)

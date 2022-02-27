@@ -61,7 +61,8 @@ namespace At0::Ray
 		mainCmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
 		VkClearValue clearValues[2];
-		clearValues[0].color = { 0.0137254f, 0.014117f, 0.0149019f };
+		// clearValues[0].color = { 0.0137254f, 0.014117f, 0.0149019f };
+		clearValues[0].color = { 0.f, 0.f, 0.f };
 		clearValues[1].depthStencil = { 1.0f, 0 };
 
 		renderPass.Begin(mainCmdBuff, framebuffer, clearValues, std::size(clearValues),

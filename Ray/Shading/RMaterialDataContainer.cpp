@@ -20,22 +20,22 @@ namespace At0::Ray
 
 	void MaterialDataContainer::Set(const std::string& key, bool data)
 	{
-		Set(key, (VkBool32)data, GetType<bool>());
+		Set<bool, GetType<bool>()>(key, (VkBool32)data);
 	}
 
 	void MaterialDataContainer::Set(const std::string& key, Bool2 data)
 	{
-		Set(key, UIBool2{ data }, GetType<Bool2>());
+		Set<Bool2, GetType<Bool2>()>(key, UIBool2{ data });
 	}
 
 	void MaterialDataContainer::Set(const std::string& key, Bool3 data)
 	{
-		Set(key, UIBool3{ data }, GetType<Bool3>());
+		Set<UIBool3, GetType<Bool3>()>(key, UIBool3{ data });
 	}
 
 	void MaterialDataContainer::Set(const std::string& key, Bool4 data)
 	{
-		Set(key, UIBool4{ data }, GetType<Bool4>());
+		Set<UIBool4, GetType<Bool4>()>(key, UIBool4{ data });
 	}
 
 	Ref<Texture> MaterialDataContainer::GetTexture(const std::string& key) const

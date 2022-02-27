@@ -27,7 +27,7 @@ void main()
 {
 	vec4 positionWorld = uObj.Model * vec4(inPos, 1.f);
 	
-	gl_Position = uScene.Proj * uScene.View * uObj.Model * vec4(inPos, 1.f);
+	gl_Position = uScene.Proj * uScene.View * positionWorld;
 
 	outNormalWorld = normalize(mat3(uObj.NormalMatrix) * inNormal);
 	outPosWorld = positionWorld.xyz;

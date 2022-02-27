@@ -27,7 +27,7 @@ namespace At0::Ray
 		template<typename T>
 		void Set(const std::string& key, T&& data)
 		{
-			Set(key, std::forward<T>(data), GetType<T>());
+			Set<T, GetType<T>()>(key, std::forward<T>(data));
 		}
 
 		Ref<Texture> GetTexture(const std::string& key) const;
@@ -39,8 +39,8 @@ namespace At0::Ray
 		bool HasKey(const std::string& key) const;
 
 	private:
-		template<typename T>
-		void Set(const std::string& key, T&& data, ShaderDataType type)
+		template<typename T, ShaderDataType type>
+		void Set(const std::string& key, T&& data)
 		{
 			if (HasKey(key))
 			{
@@ -50,15 +50,38 @@ namespace At0::Ray
 			}
 			else
 			{
-				int prevOffset = m_LastOffset;
-				m_OffsetMap[key] = std::make_pair(m_LastOffset, type);
-				m_LastOffset += sizeof(data);
-				m_Data.resize(m_LastOffset);
+				int prevOffset = m_NextOffset;
+				m_OffsetMap[key] = std::make_pair(m_NextOffset, type);
+				m_NextOffset += GetAlignedSize<type>(sizeof(data));
+				m_Data.resize(m_NextOffset);
 				memcpy(m_Data.data() + prevOffset, &data, sizeof(data));
 			}
 		}
 
 		static void ValidateSizeRequirements(ShaderDataType type, uint32_t size);
+
+		/**
+		 * @returns Size to add to m_NextOffset to guarantee correct data alignment
+		 */
+		template<ShaderDataType type>
+		static constexpr uint32_t GetAlignedSize(uint32_t size)
+		{
+			if constexpr (type == ShaderDataType::Vec3)
+				return GetShaderDataTypeSize(ShaderDataType::Vec4);
+			else if constexpr (type == ShaderDataType::IVec2)
+				return GetShaderDataTypeSize(ShaderDataType::IVec4);
+			else if constexpr (type == ShaderDataType::UVec3)
+				return GetShaderDataTypeSize(ShaderDataType::UVec4);
+			else if constexpr (type == ShaderDataType::BVec3)
+				return GetShaderDataTypeSize(ShaderDataType::BVec4);
+			else if constexpr (type == ShaderDataType::DVec3)
+				return GetShaderDataTypeSize(ShaderDataType::DVec4);
+
+			// RAY_TODO: Alignment of arrays, structs, column-/row-major matrices
+			// (https://stackoverflow.com/questions/45638520/ubos-and-their-alignments-in-vulkan)
+
+			return size;
+		}
 
 		template<typename T>
 		static constexpr ShaderDataType GetType()
@@ -159,6 +182,6 @@ namespace At0::Ray
 
 		std::vector<char*> m_Data;
 
-		int m_LastOffset = 0;
+		int m_NextOffset = 0;
 	};
 }  // namespace At0::Ray

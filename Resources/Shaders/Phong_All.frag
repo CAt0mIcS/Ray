@@ -18,7 +18,7 @@ layout(set = 1, binding = 2) uniform Shading
 
 void main()
 {
-	vec3 directionToLight = uShading.lightPosition - inPosWorld;
+	vec3 directionToLight = uShading.lightPosition.xyz - inPosWorld;
 	float attenuation = 1.0 / dot(directionToLight, directionToLight); // distance squared
 	
 	vec3 lightColor = uShading.lightColor.xyz * uShading.lightColor.w * attenuation;
