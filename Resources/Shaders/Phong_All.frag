@@ -13,7 +13,7 @@ layout(set = 1, binding = 2) uniform Shading
 	vec4 ambientLightColor; // w is intensity
 
 	vec4 lightColor[10];
-	vec3 lightPosition[10];
+	vec4 lightPosition[10];
 
 	uint numLights;
 } uShading;
@@ -24,10 +24,10 @@ void main()
 	vec3 diffuseLight = uShading.ambientLightColor.xyz * uShading.ambientLightColor.w;
 	vec3 surfaceNormal = normalize(inNormalWorld);
 
-	for(int i = 0; i < uShading.numLights; i++)
+	for(int i = 1; i < uShading.numLights; i++)
 	{
 		vec4 lightColor = uShading.lightColor[i];
-		vec3 lightPosition = uShading.lightPosition[i];
+		vec3 lightPosition = uShading.lightPosition[i].xyz;
 
 		vec3 directionToLight = lightPosition - inPosWorld;
 		float attenuation = 1.0 / dot(directionToLight, directionToLight); // distance squared
@@ -35,6 +35,9 @@ void main()
 		vec3 intensity = lightColor.xyz * lightColor.w * attenuation;
 
 		diffuseLight += intensity * cosAngIncidence;
+
+		outColor = lightColor;
+		return;
 	}
 
 	outColor = vec4(diffuseLight * uShading.color.xyz, uShading.color.w);

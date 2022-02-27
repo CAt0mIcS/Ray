@@ -56,11 +56,7 @@ public:
 			[&]()
 			{
 				{
-					ImGui::Begin("Light");
-
-					Float3 lightPos = ImGUI::Float3Widget(
-						"LightPos", m_Material->Get<Float3>("Shading.lightPosition[0]"));
-					m_Material->Set("Shading.lightPosition[0]", lightPos);
+					ImGui::Begin("GlobalLight");
 
 					Float4 ambientLightColor = m_Material->Get<Float4>("Shading.ambientLightColor");
 
@@ -71,7 +67,20 @@ public:
 					ImGui::SliderFloat("Intensity", &ambientLightColor.w, 0.001f, .5f);
 					m_Material->Set("Shading.ambientLightColor", ambientLightColor);
 
-					m_Light.Get<Transform>().SetTranslation(lightPos);
+					ImGui::End();
+				}
+
+				for (int i = 0; i < m_Material->Get<uint32_t>("Shading.numLights"); ++i)
+				{
+					ImGui::Begin(("Light_" + std::to_string(i)).c_str());
+
+					std::string index = "[" + std::to_string(i) + "]";
+
+					Float3 lightPos = ImGUI::Float3Widget(
+						"LightPos", m_Material->Get<Float3>("Shading.lightPosition" + index));
+					m_Material->Set("Shading.lightPosition" + index, Float4{ lightPos, 1.f });
+
+					m_Lights[i].Get<Transform>().SetTranslation(lightPos);
 
 					ImGui::End();
 				}
@@ -99,8 +108,9 @@ public:
 		auto flatWhiteMaterial =
 			Material::Builder(flatColorPipeline).Set("Shading.color", Float4{ 1.f }).Acquire();
 
-		m_Light = Scene::Get().CreateEntity();
-		m_Light.Emplace<Mesh>(Mesh::UVSphere(flatWhiteMaterial, .1f, 24, 24));
+		for (int i = 0; i < m_Material->Get<uint32_t>("Shading.numLights"); ++i)
+			m_Lights.emplace_back(Scene::Get().CreateEntity())
+				.Emplace<Mesh>(Mesh::UVSphere(flatWhiteMaterial, .1f, 24, 24));
 	}
 
 private:
@@ -108,7 +118,7 @@ private:
 
 private:
 	Entity m_Entity;
-	Entity m_Light;
+	std::vector<Entity> m_Lights;
 	Ref<Material> m_Material;
 };
 
