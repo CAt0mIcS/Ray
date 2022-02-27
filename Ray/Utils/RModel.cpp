@@ -239,24 +239,8 @@ namespace At0::Ray
 
 		builder.Set("Shading.lightColor[0]", Float4{ 1.f });
 		builder.Set("Shading.lightColor[1]", Float4{ 1.f });
-		builder.Set("Shading.lightColor[2]", Float4{ 1.f });
-		builder.Set("Shading.lightColor[3]", Float4{ 1.f });
-		builder.Set("Shading.lightColor[4]", Float4{ 1.f });
-		builder.Set("Shading.lightColor[5]", Float4{ 1.f });
-		builder.Set("Shading.lightColor[6]", Float4{ 1.f });
-		builder.Set("Shading.lightColor[7]", Float4{ 1.f });
-		builder.Set("Shading.lightColor[8]", Float4{ 1.f });
-		builder.Set("Shading.lightColor[9]", Float4{ 1.f });
 		builder.Set("Shading.lightPosition[0]", Float4{ -1.f });
 		builder.Set("Shading.lightPosition[1]", Float4{ -1.f });
-		builder.Set("Shading.lightPosition[2]", Float4{ -1.f });
-		builder.Set("Shading.lightPosition[3]", Float4{ -1.f });
-		builder.Set("Shading.lightPosition[4]", Float4{ -1.f });
-		builder.Set("Shading.lightPosition[5]", Float4{ -1.f });
-		builder.Set("Shading.lightPosition[6]", Float4{ -1.f });
-		builder.Set("Shading.lightPosition[7]", Float4{ -1.f });
-		builder.Set("Shading.lightPosition[8]", Float4{ -1.f });
-		builder.Set("Shading.lightPosition[9]", Float4{ -1.f });
 
 		builder.Set("Shading.numLights", 2u);
 
