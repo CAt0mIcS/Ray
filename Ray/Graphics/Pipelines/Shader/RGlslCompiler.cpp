@@ -459,6 +459,7 @@ namespace At0::Ray
 				{
 					data.name = (std::ostringstream{} << strings[1] << '[' << i << ']').str();
 					uniforms.emplace_back(data);
+					data.offset += data.size;
 				}
 			}
 			else

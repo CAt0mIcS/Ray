@@ -69,7 +69,7 @@ namespace At0::Ray
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	Material::Builder::Builder(Ref<GraphicsPipeline> pipeline)
-		: m_GraphicsPipeline(std::move(pipeline))
+		: m_GraphicsPipeline(std::move(pipeline)), m_Container(m_GraphicsPipeline->GetShader())
 	{
 	}
 

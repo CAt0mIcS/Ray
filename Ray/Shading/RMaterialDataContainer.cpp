@@ -1,8 +1,33 @@
 #include "RMaterialDataContainer.h"
 
+#include "Graphics/Pipelines/Shader/RShader.h"
+
 
 namespace At0::Ray
 {
+	MaterialDataContainer::MaterialDataContainer(const Shader& shader)
+	{
+		uint32_t size = 0;
+		for (auto& [stage, reflection] : shader.GetReflections())
+		{
+			for (auto& uBlock : reflection.GetUniformBlocks())
+			{
+				if (uBlock.name == UniformBlockTag::PerObjectData ||
+					uBlock.name == UniformBlockTag::PerSceneData)
+					continue;
+
+				for (auto& uniform : uBlock.uniforms)
+				{
+					std::string path = uBlock.name + '.' + uniform.name;
+					m_OffsetMap[path] = std::make_pair(size + uniform.offset, uniform.dataType);
+				}
+				size += uBlock.size;
+			}
+		}
+
+		m_Data.resize(size);
+	}
+
 	void* MaterialDataContainer::Get(const std::string& key) const
 	{
 		if (m_OffsetMap.find(key) == m_OffsetMap.end())
