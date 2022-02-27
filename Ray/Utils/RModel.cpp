@@ -217,10 +217,14 @@ namespace At0::Ray
 
 		// return builder.Acquire();
 
+		int twoSided = 0;
+		pMaterial->Get(AI_MATKEY_TWOSIDED, twoSided);
+
 		auto pipeline =
 			GraphicsPipeline::Builder()
 				.SetShader(Shader::AcquireSourceFile(
 					{ "Resources/Shaders/Phong_All.vert", "Resources/Shaders/Phong_All.frag" }))
+				.SetCullMode(twoSided == 0 ? VK_CULL_MODE_NONE : VK_CULL_MODE_BACK_BIT)
 				.Acquire();
 
 		auto builder = Material::Builder(std::move(pipeline));
@@ -229,7 +233,8 @@ namespace At0::Ray
 		Float4 color;
 		pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, *(aiColor4D*)&color);
 
-		builder.Set("Shading.color", color);
+
+		builder.Set("Shading.color", Float4{ 1.f });
 		builder.Set("Shading.ambientLightColor", Float4{ 1.f, 1.f, 1.f, .02f });  // w is intensity
 		builder.Set("Shading.lightPosition", Float3{ 1.f });
 		builder.Set("Shading.lightColor", Float4{ 1.f });
