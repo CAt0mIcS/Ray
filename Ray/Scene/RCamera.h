@@ -38,7 +38,7 @@ namespace At0::Ray
 		float RotationSpeed = 1.0f, MovementSpeed = 1.0f;
 
 		bool Updated = false;
-		bool FlipY = true;
+		bool FlipY = false;
 		bool FreezeFrustum = false;
 		CameraType Type = CameraType::FirstPerson;
 

@@ -4,7 +4,6 @@
 
 layout(location = 0) in vec3 inPosWorld;
 layout(location = 1) in vec3 inNormalWorld;
-layout(location = 2) in vec3 inNormal;
 
 layout(location = 0) out vec4 outColor;
 
@@ -26,6 +25,4 @@ void main()
 	vec3 ambientLight = uShading.ambientLightColor.xyz * uShading.ambientLightColor.w;
 	vec3 diffuseLight = lightColor * max(dot(normalize(inNormalWorld), normalize(directionToLight)), 0);
 	outColor = vec4((diffuseLight + ambientLight) * uShading.color.xyz, uShading.color.w);
-
-	outColor = vec4(inNormalWorld, 1.f);
 }

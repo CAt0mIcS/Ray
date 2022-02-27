@@ -73,7 +73,7 @@ public:
 
 					// RAY_TODO: Why is z direction reversed?
 					m_Light.Get<Transform>().SetTranslation(
-						Float3{ lightPos.x, lightPos.y, -lightPos.z });
+						Float3{ lightPos.x, lightPos.y, lightPos.z });
 
 					ImGui::End();
 				}
@@ -81,25 +81,16 @@ public:
 
 		m_Entity = Scene::Get().CreateEntity();
 		m_Entity.Emplace<Mesh>(Mesh::Import("Resources/Models/Plane.obj"));
-		m_Entity.Get<Transform>()
-			.SetTranslation({ 0.f, -.5f, 0.f })
-			.SetScale(Float3{ 6.f })
-			.SetRotation(Float3{ Math::PI<>, 0.f, 0.f });
+		m_Entity.Get<Transform>().SetTranslation({ 0.f, .5f, 0.f }).SetScale(Float3{ 6.f });
 		m_Material = m_Entity.Get<MeshRenderer>().GetSharedMaterial();
 
 		Entity smoothVase = Scene::Get().CreateEntity();
 		smoothVase.Emplace<Mesh>(Mesh::Import("Resources/Models/SmoothVase.obj", m_Material));
-		smoothVase.Get<Transform>()
-			.SetScale(Float3{ 6.f })
-			.SetRotation(Float3{ Math::PI<>, 0.f, 0.f });
+		smoothVase.Get<Transform>().SetScale(Float3{ 6.f });
 
 		Entity flatVase = Scene::Get().CreateEntity();
 		flatVase.Emplace<Mesh>(Mesh::Import("Resources/Models/FlatVase.obj", m_Material));
-		flatVase.Get<Transform>()
-			.SetTranslation(Float3{ 4.f, 0.f, 0.f })
-			.SetScale(Float3{ 6.f })
-			.SetRotation(Float3{ Math::PI<>, 0.f, 0.f });
-
+		flatVase.Get<Transform>().SetTranslation(Float3{ 4.f, 0.f, 0.f }).SetScale(Float3{ 6.f });
 
 		auto flatColorPipeline =
 			GraphicsPipeline::Builder()

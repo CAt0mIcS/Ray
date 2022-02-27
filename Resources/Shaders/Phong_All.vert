@@ -19,9 +19,8 @@ layout(set = 0, binding = 0) uniform PerSceneData
 layout(set = 1, binding = 1) uniform PerObjectData
 {
 	mat4 Model;
-	mat3 NormalMatrix;
+	mat4 NormalMatrix;
 } uObj;
-
 
 void main()
 {
