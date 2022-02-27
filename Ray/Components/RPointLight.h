@@ -14,6 +14,8 @@ namespace At0::Ray
 		const Float4& GetColor() const { return m_Color; }
 		void SetColor(Float4 color);
 
+		uint32_t GetID() const { return m_ID; }
+
 	private:
 		Float4 m_Color;
 		uint32_t m_ID;

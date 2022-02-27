@@ -1,6 +1,7 @@
 ﻿#include "RPointLight.h"
 
 #include "RMeshRenderer.h"
+#include "RTransform.h"
 
 #include "Scene/RScene.h"
 #include "Shading/RMaterial.h"
@@ -30,7 +31,8 @@ namespace At0::Ray
 				material.Set("Shading.numLights", s_ID);
 
 				material.Set("Shading.lightColor" + id, m_Color);
-				material.Set("Shading.lightPosition" + id, Float4{ 0.f });
+				material.Set("Shading.lightPosition" + id,
+					Float4{ GetEntity().Get<Transform>().Translation(), 1.f });
 			});
 	}
 
