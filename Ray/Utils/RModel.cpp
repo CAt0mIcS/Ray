@@ -238,8 +238,9 @@ namespace At0::Ray
 		builder.Set("Shading.ambientLightColor", Float4{ 1.f, 1.f, 1.f, .02f });  // w is intensity
 
 		builder.Set("Shading.lightColor[0]", Float4{ 1.f });
-		builder.Set("Shading.lightColor[1]", Float4{ 1.f });
 		builder.Set("Shading.lightPosition[0]", Float4{ -1.f });
+
+		builder.Set("Shading.lightColor[1]", Float4{ 1.f });
 		builder.Set("Shading.lightPosition[1]", Float4{ -1.f });
 
 		builder.Set("Shading.numLights", 2u);

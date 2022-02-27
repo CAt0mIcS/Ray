@@ -4,6 +4,9 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
+// RAY_TEMPORARY
+#include "Graphics/Buffers/RBuffer.h"
+
 #include <glslang/SPIRV/GlslangToSpv.h>
 #include <glslang/MachineIndependent/gl_types.h>
 
@@ -451,7 +454,7 @@ namespace At0::Ray
 			// Array
 			if (uniform.size > 1)
 			{
-				Log::Warn("Parsing uniform {0} as array", strings[1]);
+				Log::Warn("Parsing uniform {0} as array, be careful with alignment!", strings[1]);
 
 				auto& uniforms = m_Reflections[stageFlag].GetUniformBlock(strings[0]).uniforms;
 
@@ -459,6 +462,8 @@ namespace At0::Ray
 				{
 					data.name = (std::ostringstream{} << strings[1] << '[' << i << ']').str();
 					uniforms.emplace_back(data);
+
+					// RAY_TODO: Align properly
 					data.offset += data.size;
 				}
 			}
