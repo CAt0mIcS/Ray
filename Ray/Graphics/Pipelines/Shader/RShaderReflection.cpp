@@ -178,14 +178,14 @@ namespace At0::Ray
 	const ShaderReflection::UniformData* ShaderReflection::TryGetPathedUniform(
 		std::string_view name) const
 	{
-		if (int pos = name.find('.'); pos != std::string::npos)
+		if (size_t pos = name.find('.'); pos != std::string::npos)
 		{
 			std::string_view uniformBlock = name.substr(0, pos);
-			std::string_view uniform = name.substr(pos + 1);
-
 			auto* uBlockData = TryGetUniformBlock(uniformBlock);
 			if (!uBlockData)
 				return nullptr;
+
+			std::string_view uniform = name.substr(pos + 1);
 
 			for (auto& uData : uBlockData->uniforms)
 				if (uData.name == uniform)

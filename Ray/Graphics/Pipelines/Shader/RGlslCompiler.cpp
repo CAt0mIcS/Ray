@@ -445,13 +445,29 @@ namespace At0::Ray
 			auto strings = String::Split(uniform.name, '.');
 			RAY_MEXPECTS(
 				strings.size() == 2, "[GlslCompiler] Invalid uniform name \"{0}\"", uniform.name);
-
-			data.name = strings[1];
 			RAY_MEXPECTS(m_Reflections[stageFlag].HasUniformBlock(strings[0]),
 				"[GlslCompiler] Uniform block \"{0}\" not found.", strings[0]);
-			m_Reflections[stageFlag]
-				.GetUniformBlock(strings[0])
-				.uniforms.emplace_back(std::move(data));
+
+			// Array
+			if (uniform.size > 1)
+			{
+				Log::Warn("Parsing uniform {0} as array", strings[1]);
+
+				auto& uniforms = m_Reflections[stageFlag].GetUniformBlock(strings[0]).uniforms;
+
+				for (uint32_t i = 0; i < uniform.size; ++i)
+				{
+					data.name = (std::ostringstream{} << strings[1] << '[' << i << ']').str();
+					uniforms.emplace_back(data);
+				}
+			}
+			else
+			{
+				data.name = strings[1];
+				m_Reflections[stageFlag]
+					.GetUniformBlock(strings[0])
+					.uniforms.emplace_back(std::move(data));
+			}
 		}
 		else
 		{

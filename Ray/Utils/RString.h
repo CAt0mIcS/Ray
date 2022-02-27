@@ -123,6 +123,11 @@ namespace At0::Ray
 		static std::vector<std::string> Split(std::string str, char sep);
 
 		/**
+		 * Searches for [] pair in string and returns the number inside
+		 */
+		static uint32_t GetIndex(std::string_view str);
+
+		/**
 		 * Splits the string at the separator. The separator will not be included in the result
 		 * strings
 		 * @tparam MaxTokens the maximum number of tokens in the string

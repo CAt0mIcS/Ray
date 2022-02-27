@@ -335,4 +335,19 @@ namespace At0::Ray
 		return tokens;
 	}
 
+	uint32_t String::GetIndex(std::string_view str)
+	{
+		size_t startPos = str.find('[');
+		size_t endPos = str.find(']');
+
+		uint32_t index = 0;
+		for (char c : str.substr(startPos + 1, endPos - startPos - 1))
+		{
+			RAY_MEXPECTS(std::isdigit(c), "[String] Character '{0}' is no digit", c);
+			index *= 10;
+			index += (uint32_t)c - 48;
+		}
+		return index;
+	}
+
 }  // namespace At0::Ray

@@ -59,8 +59,8 @@ public:
 					ImGui::Begin("Light");
 
 					Float3 lightPos = ImGUI::Float3Widget(
-						"LightPos", m_Material->Get<Float3>("Shading.lightPosition"));
-					m_Material->Set("Shading.lightPosition", lightPos);
+						"LightPos", m_Material->Get<Float3>("Shading.lightPosition[0]"));
+					m_Material->Set("Shading.lightPosition[0]", lightPos);
 
 					Float4 ambientLightColor = m_Material->Get<Float4>("Shading.ambientLightColor");
 
@@ -71,9 +71,7 @@ public:
 					ImGui::SliderFloat("Intensity", &ambientLightColor.w, 0.001f, .5f);
 					m_Material->Set("Shading.ambientLightColor", ambientLightColor);
 
-					// RAY_TODO: Why is z direction reversed?
-					m_Light.Get<Transform>().SetTranslation(
-						Float3{ lightPos.x, lightPos.y, lightPos.z });
+					m_Light.Get<Transform>().SetTranslation(lightPos);
 
 					ImGui::End();
 				}

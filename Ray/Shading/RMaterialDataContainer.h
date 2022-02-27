@@ -42,12 +42,31 @@ namespace At0::Ray
 		template<typename T, ShaderDataType type>
 		void Set(const std::string& key, T&& data)
 		{
+			// Overriding existing data
 			if (HasKey(key))
 			{
 				auto [offset, type] = m_OffsetMap[key];
 				ValidateSizeRequirements(type, sizeof(data));
 				memcpy(m_Data.data() + offset, &data, sizeof(data));
 			}
+			//// Overriding existing data in array
+			// else if (size_t pos = key.find('[');
+			//		 pos != std::string::npos && HasKey(key.substr(0, pos)))
+			//{
+			//	auto [offset, type] = m_OffsetMap[key.substr(0, pos)];
+			//}
+			//// Emplacing new array
+			// else if (auto it = std::find(key.begin(), key.end(), '['); it != key.end())
+			//{
+			//	uint32_t index = String::GetIndex(key);
+
+			//	int prevOffset = m_NextOffset;
+			//	m_OffsetMap[key.substr(0, key.find('['))] = std::make_pair(m_NextOffset, type);
+			//	m_NextOffset += GetAlignedSize<type>(sizeof(data));
+			//	m_Data.resize(m_NextOffset);
+			//	memcpy(m_Data.data() + prevOffset, &data, sizeof(data));
+			//}
+			// Emplacing new data
 			else
 			{
 				int prevOffset = m_NextOffset;
