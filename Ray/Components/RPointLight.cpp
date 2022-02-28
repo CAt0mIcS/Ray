@@ -23,16 +23,15 @@ namespace At0::Ray
 				std::string id = "[" + std::to_string(m_ID) + "]";
 
 				Material& material = renderer.GetMaterial();
-				if (!material.HasUniform("Shading.numLights") ||
-					!material.HasUniform("Shading.lightColor" + id) ||
-					!material.HasUniform("Shading.lightPosition" + id))
-					return;
+				if (material.HasUniform("Shading.numLights"))
+					material.Set("Shading.numLights", s_ID);
 
-				material.Set("Shading.numLights", s_ID);
+				if (material.HasUniform("Shading.lightColor" + id))
+					material.Set("Shading.lightColor" + id, m_Color);
 
-				material.Set("Shading.lightColor" + id, m_Color);
-				material.Set("Shading.lightPosition" + id,
-					Float4{ GetEntity().Get<Transform>().Translation(), 1.f });
+				if (material.HasUniform("Shading.lightPosition" + id))
+					material.Set("Shading.lightPosition" + id,
+						Float4{ GetEntity().Get<Transform>().Translation(), 1.f });
 			});
 	}
 
