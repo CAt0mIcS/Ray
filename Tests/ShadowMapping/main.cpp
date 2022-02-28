@@ -80,7 +80,12 @@ public:
 	}
 
 private:
-	void Update() override {}
+	void Update() override
+	{
+		Matrix rotateLight = glm::rotate(Matrix{ 1.f }, GetDelta().AsSeconds(), { 0.f, -1.f, 0.f });
+		m_Light.Get<PointLight>().SetTranslation(
+			rotateLight * Float4{ m_Light.Get<Transform>().Translation(), 1.f });
+	}
 
 private:
 	Entity m_Floor;

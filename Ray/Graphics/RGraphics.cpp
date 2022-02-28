@@ -32,7 +32,7 @@
 #include "Utils/RImGui.h"
 
 
-#define RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING 1
+#define RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING 0
 
 
 namespace At0::Ray
@@ -257,9 +257,6 @@ namespace At0::Ray
 			meshRenderer.Render(cmdBuff);
 			mesh.CmdBind(cmdBuff);
 		}
-
-		// Scene::Get().EntityView<TextComponent>().each(
-		//	[&cmdBuff](TextComponent& text) { text.Render(cmdBuff); });
 
 #if RAY_ENABLE_IMGUI
 		ImGUI::Get().CmdBind(cmdBuff);
