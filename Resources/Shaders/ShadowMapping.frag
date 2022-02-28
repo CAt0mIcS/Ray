@@ -1,41 +1,64 @@
-#version 450 core
-#extension GL_ARB_separate_shader_objects : enable
+#version 450
 
+layout (set = 1, binding = 3) uniform sampler2D shadowMap;
 
-layout(location = 0) in vec3 inPosWorld;
-layout(location = 1) in vec3 inNormalWorld;
+layout (location = 0) in vec3 inNormal;
+layout (location = 1) in vec3 inViewVec;
+layout (location = 2) in vec3 inLightVec;
+layout (location = 3) in vec4 inShadowCoord;
 
-layout(location = 0) out vec4 outColor;
+const int enablePCF = 0;
 
-layout(set = 1, binding = 2) uniform Shading
+layout (location = 0) out vec4 outFragColor;
+
+#define ambient 0.1
+
+float textureProj(vec4 shadowCoord, vec2 off)
 {
-	vec4 color;
-	vec4 ambientLightColor; // w is intensity
-
-	vec4 lightColor[10];
-	vec4 lightPosition[10];
-
-	uint numLights;
-} uShading;
-
-
-void main()
-{
-	vec3 diffuseLight = uShading.ambientLightColor.xyz * uShading.ambientLightColor.w;
-	vec3 surfaceNormal = normalize(inNormalWorld);
-
-	for(int i = 0; i < uShading.numLights; i++)
+	float shadow = 1.0;
+	if ( shadowCoord.z > -1.0 && shadowCoord.z < 1.0 ) 
 	{
-		vec4 lightColor = uShading.lightColor[i];
-		vec3 lightPosition = uShading.lightPosition[i].xyz;
-
-		vec3 directionToLight = lightPosition - inPosWorld;
-		float attenuation = 1.0 / dot(directionToLight, directionToLight); // distance squared
-		float cosAngIncidence = max(dot(surfaceNormal, normalize(directionToLight)), 0);
-		vec3 intensity = lightColor.xyz * lightColor.w * attenuation;
-
-		diffuseLight += intensity * cosAngIncidence;
+		float dist = texture( shadowMap, shadowCoord.st + off ).r;
+		if ( shadowCoord.w > 0.0 && dist < shadowCoord.z ) 
+		{
+			shadow = ambient;
+		}
 	}
+	return shadow;
+}
 
-	outColor = vec4(diffuseLight * uShading.color.xyz, uShading.color.w);
+float filterPCF(vec4 sc)
+{
+	ivec2 texDim = textureSize(shadowMap, 0);
+	float scale = 1.5;
+	float dx = scale * 1.0 / float(texDim.x);
+	float dy = scale * 1.0 / float(texDim.y);
+
+	float shadowFactor = 0.0;
+	int count = 0;
+	int range = 1;
+	
+	for (int x = -range; x <= range; x++)
+	{
+		for (int y = -range; y <= range; y++)
+		{
+			shadowFactor += textureProj(sc, vec2(dx*x, dy*y));
+			count++;
+		}
+	
+	}
+	return shadowFactor / count;
+}
+
+void main() 
+{	
+	float shadow = (enablePCF == 1) ? filterPCF(inShadowCoord / inShadowCoord.w) : textureProj(inShadowCoord / inShadowCoord.w, vec2(0.0));
+
+	vec3 N = normalize(inNormal);
+	vec3 L = normalize(inLightVec);
+	vec3 V = normalize(inViewVec);
+	vec3 R = normalize(-reflect(L, N));
+	vec3 diffuse = max(dot(N, L), ambient) * vec3(1.f, 1.f, 1.f);
+
+	outFragColor = vec4(diffuse * shadow, 1.0);
 }

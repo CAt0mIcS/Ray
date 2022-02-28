@@ -36,7 +36,7 @@ namespace At0::Ray
 		Sampler2DUniform& GetSampler2DUniform(std::string_view name);
 		BufferUniform& GetPushConstant(std::string_view name);
 
-		DescriptorSet& GetDescriptorSet(std::string_view uniformName);
+		DescriptorSet& GetDescriptorSet(uint32_t set);
 
 		void SetMaterial(Ref<Material> material) { m_Material = std::move(material); }
 		void SetSamplerTexture(std::string_view name, Ref<Texture> texture);

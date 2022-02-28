@@ -180,23 +180,13 @@ namespace At0::Ray
 		return m_PushConstants[0];
 	}
 
-	DescriptorSet& Renderer::GetDescriptorSet(std::string_view uniformName)
+	DescriptorSet& Renderer::GetDescriptorSet(uint32_t set)
 	{
-		for (const auto& [set, uniforms] : m_BufferUniforms)
-			for (const auto& uniform : uniforms)
-				if (uniform.GetName() == uniformName)
-					for (auto& descSet : m_DescriptorSets)
-						if (descSet.GetSetNumber() == set)
-							return descSet;
+		for (DescriptorSet& descSet : m_DescriptorSets)
+			if (descSet.GetSetNumber() == set)
+				return descSet;
 
-		for (const auto& [set, uniforms] : m_Sampler2DUniforms)
-			for (const auto& uniform : uniforms)
-				if (uniform.GetName() == uniformName)
-					for (auto& descSet : m_DescriptorSets)
-						if (descSet.GetSetNumber() == set)
-							return descSet;
-		ThrowRuntime("[Renderer] Failed to retrieve Descriptor Set of uniform with name \"{0}\"",
-			uniformName);
+		ThrowRuntime("[Renderer] Failed to retrieve descriptor set with set {0}", set);
 		return m_DescriptorSets[0];
 	}
 
@@ -205,12 +195,7 @@ namespace At0::Ray
 		for (auto& [set, uniforms] : m_Sampler2DUniforms)
 			for (auto& uniform : uniforms)
 				if (uniform.GetName() == name)
-					for (auto& descSet : m_DescriptorSets)
-						if (descSet.GetSetNumber() == set)
-						{
-							uniform.SetTexture(std::move(texture), descSet);
-							return;
-						}
+					uniform.SetTexture(std::move(texture), GetDescriptorSet(set));
 
 		ThrowRuntime("[Renderer] Failed to find Sampler2DUniform with name \"{0}\"", name);
 	}

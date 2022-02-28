@@ -83,6 +83,7 @@ public:
 		Scene::Create<Scene2>();
 
 #include "../ImGuiWindows.inl"
+
 		{
 			m_Floor = Scene::Get().CreateEntity();
 			m_Floor.Emplace<Mesh>(Mesh::Import("Resources/Models/Plane.obj"));
@@ -103,16 +104,12 @@ public:
 				Material::Builder(flatColorPipeline).Set("Shading.color", Float4{ 1.f }).Acquire();
 
 			m_Light = Scene::Get().CreateEntity();
-			m_Light.Emplace<PointLight>().SetTranslation({ 1.f, -1.5f, 0.f });
+			m_Light.Emplace<PointLight>().SetTranslation({ 5.f, -5.5f, 0.f });
 			m_Light.Emplace<Mesh>(Mesh::UVSphere(flatWhiteMaterial, .1f, 24, 24));
 		}
 
-		Matrix depthProjectionMatrix = glm::perspective(Radians(45.f), 1.0f, 1.f, 96.f);
-		Matrix depthViewMatrix =
-			glm::lookAt(m_Light.Get<Transform>().Translation(), Float3(0.0f), Float3(0, 1, 0));
-		Matrix depthModelMatrix = Matrix(1.0f);
 
-		Matrix depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+		Matrix depthMVP = CalcDepthMVP();
 
 		// Render pass
 		{
@@ -221,10 +218,7 @@ public:
 				descriptor->CmdBind(cmdBuff);
 
 				for (uint32_t i = 0; i < meshRendererView.size(); ++i)
-				{
-					const Mesh& mesh = meshRendererView.get<Mesh>(meshRendererView[i]);
-					mesh.CmdBind(cmdBuff);
-				}
+					meshRendererView.get<Mesh>(meshRendererView[i]).CmdBind(cmdBuff);
 
 				renderPass->End(cmdBuff);
 			}
@@ -262,14 +256,55 @@ public:
 
 			cmdBuff.End();
 		};
+
+
+		m_Material->Set("Shading.lightSpace", depthMVP);
+		// m_Material->Set("shadowMap", framebufferImage);
+
+		VkDescriptorImageInfo imageInfo{};
+		imageInfo.sampler = framebufferImage->GetSampler();
+		imageInfo.imageView = framebufferImage->GetImageView();
+		imageInfo.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+
+		VkWriteDescriptorSet writeDesc{};
+		writeDesc.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		writeDesc.descriptorCount = 1;
+		writeDesc.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		writeDesc.pImageInfo = &imageInfo;
+		writeDesc.dstBinding = 3;
+
+		{
+			DescriptorSet& descShadowMap = m_Floor.Get<MeshRenderer>().GetDescriptorSet(1);
+			writeDesc.dstSet = descShadowMap;
+			descShadowMap.Update({ writeDesc });
+		}
+		{
+			DescriptorSet& descShadowMap = m_Vase.Get<MeshRenderer>().GetDescriptorSet(1);
+			writeDesc.dstSet = descShadowMap;
+			descShadowMap.Update({ writeDesc });
+		}
 	}
 
 private:
 	void Update() override
 	{
-		// Matrix rotateLight = glm::rotate(Matrix{ 1.f }, GetDelta().AsSeconds(), { 0.f, -1.f, 0.f
-		// }); m_Light.Get<PointLight>().SetTranslation( 	rotateLight * Float4{
-		// m_Light.Get<Transform>().Translation(), 1.f });
+		Matrix rotateLight =
+			glm::rotate(Matrix{ 1.f }, GetDelta().AsSeconds(), { 0.f, -5.5f, 0.f });
+		m_Light.Get<PointLight>().SetTranslation(
+			rotateLight * Float4{ m_Light.Get<Transform>().Translation(), 1.f });
+
+		m_Material->Set("Shading.lightSpace", CalcDepthMVP());
+	}
+
+private:
+	Matrix CalcDepthMVP()
+	{
+		Matrix depthProjectionMatrix = glm::perspective(Radians(60.f), 1.0f, 0.1f, 96.f);
+		Matrix depthViewMatrix = glm::lookAt(
+			m_Light.Get<Transform>().Translation(), Float3(0.f), Float3(0.f, -1.f, 0.f));
+		Matrix depthModelMatrix = MatrixIdentity();
+
+		return depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
 	}
 
 private:

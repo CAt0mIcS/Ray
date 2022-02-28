@@ -220,10 +220,17 @@ namespace At0::Ray
 		int twoSided = 0;
 		pMaterial->Get(AI_MATKEY_TWOSIDED, twoSided);
 
+		// auto pipeline =
+		//	GraphicsPipeline::Builder()
+		//		.SetShader(Shader::AcquireSourceFile(
+		//			{ "Resources/Shaders/Phong_All.vert", "Resources/Shaders/Phong_All.frag" }))
+		//		.SetCullMode(twoSided == 0 ? VK_CULL_MODE_NONE : VK_CULL_MODE_BACK_BIT)
+		//		.Acquire();
+
 		auto pipeline =
 			GraphicsPipeline::Builder()
-				.SetShader(Shader::AcquireSourceFile(
-					{ "Resources/Shaders/Phong_All.vert", "Resources/Shaders/Phong_All.frag" }))
+				.SetShader(Shader::AcquireSourceFile({ "Resources/Shaders/ShadowMapping.vert",
+					"Resources/Shaders/ShadowMapping.frag" }))
 				.SetCullMode(twoSided == 0 ? VK_CULL_MODE_NONE : VK_CULL_MODE_BACK_BIT)
 				.Acquire();
 
@@ -234,8 +241,9 @@ namespace At0::Ray
 		pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, *(aiColor4D*)&color);
 
 
-		builder.Set("Shading.color", Float4{ 1.f });
-		builder.Set("Shading.ambientLightColor", Float4{ 1.f, 1.f, 1.f, .02f });  // w is intensity
+		// builder.Set("Shading.color", Float4{ 1.f });
+		// builder.Set("Shading.ambientLightColor", Float4{ 1.f, 1.f, 1.f, .02f });  // w is
+		// intensity
 
 		return builder.Acquire();
 	}

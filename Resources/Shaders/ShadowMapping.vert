@@ -5,29 +5,44 @@
 layout(location = 0) in vec3 inPos;
 layout(location = 1) in vec3 inNormal;
 
-layout(location = 0) out vec3 outPosWorld;
-layout(location = 1) out vec3 outNormalWorld;
+layout (location = 0) out vec3 outNormal;
+layout (location = 1) out vec3 outViewVec;
+layout (location = 2) out vec3 outLightVec;
+layout (location = 3) out vec4 outShadowCoord;
 
 
 layout(set = 0, binding = 0) uniform PerSceneData
 {
 	mat4 View;
 	mat4 Proj;
-	vec3 ViewPos;
 } uScene;
 
 layout(set = 1, binding = 1) uniform PerObjectData
 {
 	mat4 Model;
-	mat4 NormalMatrix;
 } uObj;
+
+layout(set = 1, binding = 2) uniform Shading
+{
+	mat4 lightSpace;
+	vec4 lightPosition[10];
+} uShading;
+
+const mat4 biasMat = mat4( 
+	0.5, 0.0, 0.0, 0.0,
+	0.0, 0.5, 0.0, 0.0,
+	0.0, 0.0, 1.0, 0.0,
+	0.5, 0.5, 0.0, 1.0 );
+
 
 void main()
 {
-	vec4 positionWorld = uObj.Model * vec4(inPos, 1.f);
+    vec4 pos = uObj.Model * vec4(inPos, 1.0);
+	gl_Position = uScene.Proj * uScene.View * pos;
 	
-	gl_Position = uScene.Proj * uScene.View * positionWorld;
+    outNormal = mat3(uObj.Model) * inNormal;
+    outLightVec = normalize(uShading.lightPosition[0].xyz - inPos);
+    outViewVec = -pos.xyz;
 
-	outNormalWorld = normalize(mat3(uObj.NormalMatrix) * inNormal);
-	outPosWorld = positionWorld.xyz;
+	outShadowCoord = (biasMat * uShading.lightSpace * uObj.Model) * vec4(inPos, 1.0);
 }
