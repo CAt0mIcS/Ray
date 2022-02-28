@@ -9,7 +9,7 @@
 namespace At0::Ray
 {
 	Framebuffer::Framebuffer(
-		const RenderPass& renderPass, const std::vector<VkImageView>& attachments)
+		const RenderPass& renderPass, const std::vector<VkImageView>& attachments, UInt2 extent)
 	{
 		VkFramebufferCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -17,8 +17,10 @@ namespace At0::Ray
 		createInfo.renderPass = renderPass;
 		createInfo.attachmentCount = (uint32_t)attachments.size();
 		createInfo.pAttachments = attachments.data();
-		createInfo.width = Graphics::Get().GetSwapchain().GetExtent().width;
-		createInfo.height = Graphics::Get().GetSwapchain().GetExtent().height;
+		createInfo.width =
+			extent.x == -1 ? Graphics::Get().GetSwapchain().GetExtent().width : extent.x;
+		createInfo.height =
+			extent.y == -1 ? Graphics::Get().GetSwapchain().GetExtent().height : extent.y;
 		createInfo.layers = 1;
 
 		ThrowVulkanError(

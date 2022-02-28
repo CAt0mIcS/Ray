@@ -2,6 +2,7 @@
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
+#include "../../Core/RMath.h"
 
 #include <vulkan/vulkan_core.h>
 #include <vector>
@@ -14,7 +15,8 @@ namespace At0::Ray
 	class RAY_EXPORT Framebuffer : NonCopyable
 	{
 	public:
-		Framebuffer(const RenderPass& renderPass, const std::vector<VkImageView>& attachments);
+		Framebuffer(const RenderPass& renderPass, const std::vector<VkImageView>& attachments,
+			UInt2 extent = { -1, -1 });
 		~Framebuffer();
 
 		operator const VkFramebuffer&() const { return m_Framebuffer; }

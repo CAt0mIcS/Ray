@@ -149,7 +149,7 @@ public:
 			framebufferImage =
 				Texture::Builder()
 					.SetImageType(VK_IMAGE_TYPE_2D)
-					.SetExtent({ SHADOWMAP_DIM, SHADOWMAP_DIM })
+					.SetExtent(UInt2{ SHADOWMAP_DIM })
 					.SetMipLevels(1)
 					.SetImageTiling(VK_IMAGE_TILING_OPTIMAL)
 					.SetFormat(DEPTH_FORMAT)
@@ -166,8 +166,9 @@ public:
 										   .BuildScoped())
 					.Build();
 
-			offscreenFramebuffer = MakeScope<Framebuffer>(
-				*renderPass, std::vector<VkImageView>{ framebufferImage->GetImageView() });
+			offscreenFramebuffer = MakeScope<Framebuffer>(*renderPass,
+				std::vector<VkImageView>{ framebufferImage->GetImageView() },
+				UInt2{ SHADOWMAP_DIM });
 		}
 
 		// Pipeline/descriptor/uniform
@@ -244,8 +245,6 @@ public:
 
 				// Scene::Get().CmdBind(cmdBuff);
 
-				auto meshRendererView =
-					Scene::Get().GetRegistry().group<MeshRenderer>(entt::get<Mesh>);
 				for (uint32_t i = 0; i < meshRendererView.size(); ++i)
 				{
 					const auto& [meshRenderer, mesh] =
