@@ -53,4 +53,5 @@ namespace At0::Ray
 		};
 	};
 
+	template class RAY_EXPORT Image::BuilderBase<Texture::Builder>;
 }  // namespace At0::Ray

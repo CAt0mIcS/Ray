@@ -66,7 +66,7 @@ namespace At0::Ray
 		clearValues[1].depthStencil = { 1.0f, 0 };
 
 		renderPass.Begin(mainCmdBuff, framebuffer, clearValues, std::size(clearValues),
-			VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+			UInt2{ -1, -1 }, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
 
 		// Start secondary command buffers
 		for (const auto& [commandPool, commandBuffer] : m_CommandResources[imageIndex])

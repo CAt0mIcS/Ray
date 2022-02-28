@@ -2,6 +2,7 @@
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
+#include "../../Core/RMath.h"
 
 #include <vulkan/vulkan_core.h>
 #include <vector>
@@ -21,7 +22,7 @@ namespace At0::Ray
 		~RenderPass();
 
 		void Begin(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer,
-			const VkClearValue clearValues[], uint32_t clearValueCount,
+			const VkClearValue clearValues[], uint32_t clearValueCount, UInt2 extent = { -1, -1 },
 			VkSubpassContents subpassContents = VK_SUBPASS_CONTENTS_INLINE) const;
 		void End(const CommandBuffer& cmdBuff) const;
 

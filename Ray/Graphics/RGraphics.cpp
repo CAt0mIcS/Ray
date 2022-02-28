@@ -235,36 +235,41 @@ namespace At0::Ray
 	void Graphics::RecordCommandBuffer(
 		const CommandBuffer& cmdBuff, const Framebuffer& framebuffer, uint32_t imageIndex)
 	{
-		cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
-
-		VkClearValue clearValues[2];
-		// clearValues[0].color = { 0.0137254f, 0.014117f, 0.0149019f };
-		clearValues[0].color = { 0.f, 0.f, 0.f };
-		clearValues[1].depthStencil = { 1.0f, 0 };
-
-		m_RenderPass->Begin(cmdBuff, framebuffer, clearValues, std::size(clearValues));
-
-		vkCmdSetViewport(cmdBuff, 0, 1, &m_Viewport);
-		vkCmdSetScissor(cmdBuff, 0, 1, &m_Scissor);
-
-		// Scene::Get().CmdBind(cmdBuff);
-
-		auto meshRendererView = Scene::Get().GetRegistry().group<MeshRenderer>(entt::get<Mesh>);
-		for (uint32_t i = 0; i < meshRendererView.size(); ++i)
+		if (OnCommandBufferRecord)
+			OnCommandBufferRecord(cmdBuff, framebuffer, imageIndex);
+		else
 		{
-			const auto& [meshRenderer, mesh] =
-				meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
-			meshRenderer.Render(cmdBuff);
-			mesh.CmdBind(cmdBuff);
-		}
+			cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+
+			VkClearValue clearValues[2];
+			// clearValues[0].color = { 0.0137254f, 0.014117f, 0.0149019f };
+			clearValues[0].color = { 0.f, 0.f, 0.f };
+			clearValues[1].depthStencil = { 1.0f, 0 };
+
+			m_RenderPass->Begin(cmdBuff, framebuffer, clearValues, std::size(clearValues));
+
+			vkCmdSetViewport(cmdBuff, 0, 1, &m_Viewport);
+			vkCmdSetScissor(cmdBuff, 0, 1, &m_Scissor);
+
+			// Scene::Get().CmdBind(cmdBuff);
+
+			auto meshRendererView = Scene::Get().GetRegistry().group<MeshRenderer>(entt::get<Mesh>);
+			for (uint32_t i = 0; i < meshRendererView.size(); ++i)
+			{
+				const auto& [meshRenderer, mesh] =
+					meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
+				meshRenderer.Render(cmdBuff);
+				mesh.CmdBind(cmdBuff);
+			}
 
 #if RAY_ENABLE_IMGUI
-		ImGUI::Get().CmdBind(cmdBuff);
+			ImGUI::Get().CmdBind(cmdBuff);
 #endif
 
-		m_RenderPass->End(cmdBuff);
+			m_RenderPass->End(cmdBuff);
 
-		cmdBuff.End();
+			cmdBuff.End();
+		}
 	}
 
 	void Graphics::Update(Delta dt)

@@ -14,7 +14,7 @@ namespace At0::Ray
 	class Texture;
 	RAY_DEBUG_FLAG(class Texture);
 
-	class DescriptorSet : NonCopyable
+	class RAY_EXPORT DescriptorSet : NonCopyable
 	{
 	public:
 	public:

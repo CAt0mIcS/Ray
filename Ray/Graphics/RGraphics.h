@@ -31,6 +31,10 @@ namespace At0::Ray
 	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
 	{
 	public:
+		std::function<void(
+			const CommandBuffer& cmdBuff, const Framebuffer& framebuffer, uint32_t imageIndex)>
+			OnCommandBufferRecord;
+
 		~Graphics();
 		static Graphics& Get();
 		static void Destroy();
@@ -72,7 +76,7 @@ namespace At0::Ray
 		void OnFramebufferResized();
 		void WritePipelineCache();
 
-	private:
+	public:
 		static Graphics* s_Instance;
 		static constexpr uint8_t s_MaxFramesInFlight = 2;
 

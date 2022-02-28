@@ -84,6 +84,7 @@ namespace At0::Ray
 			Builder& SetLineWidth(float lineWidth);
 			Builder& SetDepthTestEnabled(bool enabled);
 			Builder& SetBlendingEnabled(bool enabled);
+			Builder& SetDynamicStates(std::vector<VkDynamicState> dynamicStates);
 
 			// Not supported by glslang
 			// Builder& SetShaderEntryPoint(ShaderStage stage, const char* pName);

@@ -364,6 +364,15 @@ namespace At0::Ray
 		return *this;
 	}
 
+	GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetDynamicStates(
+		std::vector<VkDynamicState> dynamicStates)
+	{
+		m_DynamicStates = std::move(dynamicStates);
+		m_DynamicStateInfo.dynamicStateCount = m_DynamicStates.size();
+		m_DynamicStateInfo.pDynamicStates = m_DynamicStates.data();
+		return *this;
+	}
+
 	// GraphicsPipeline::Builder& GraphicsPipeline::Builder::SetShaderEntryPoint(
 	//	ShaderStage stage, const char* pName)
 	//{
