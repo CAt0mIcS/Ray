@@ -147,14 +147,18 @@ public:
 private:
 	void Update() override
 	{
+		Matrix rotateLight = glm::rotate(Matrix{ 1.f }, GetDelta().AsSeconds(), { 0.f, -1.f, 0.f });
+
 		for (Entity light : m_Lights)
 		{
-			Matrix rotateLight =
-				glm::rotate(Matrix{ 1.f }, GetDelta().AsSeconds(), { 0.f, -1.f, 0.f });
-
 			light.Get<PointLight>().SetTranslation(
 				rotateLight * Float4{ light.Get<Transform>().Translation(), 1.f });
 		}
+
+		Camera& cam = Scene::Get().GetCamera();
+
+		cam.SetPosition(Matrix3{ rotateLight } * cam.Position);
+		cam.Rotate(Float3{ .0f, 820.f * GetDelta().AsSeconds(), 0.0f } * cam.RotationSpeed);
 	}
 
 private:
