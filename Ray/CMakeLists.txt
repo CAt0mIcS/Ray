@@ -23,6 +23,9 @@ set(SHADERS
 	"../Resources/Shaders/ImGui.frag"
 	"../Resources/Shaders/Flat_Text.vert"
 	"../Resources/Shaders/Flat_Text.frag"
+
+	"../Resources/Shaders/ShadowMapping.vert"
+	"../Resources/Shaders/ShadowMapping.frag"
 )
 
 set(SRC

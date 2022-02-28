@@ -56,7 +56,7 @@ public:
 
 #include "../ImGuiWindows.inl"
 
-		ImGUI::Get().RegisterNewFrameFunction(
+		RAY_IMGUI(
 			[&]()
 			{
 				{

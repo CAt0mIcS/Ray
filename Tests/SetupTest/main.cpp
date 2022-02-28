@@ -3,8 +3,6 @@
 #include <Ray/Devices/RWindow.h>
 #include <Ray/Graphics/RGraphics.h>
 
-#include <Ray/UI/RButton.h>
-
 #include <Ray/Components/RMesh.h>
 #include <Ray/Components/RMeshRenderer.h>
 #include <Ray/Components/RTransform.h>
@@ -24,7 +22,7 @@
 #include <random>
 #include <filesystem>
 
-#include <Ray/UI/RImGui.h>
+#include <Ray/Utils/RImGui.h>
 #include <../../Extern/imgui/imgui.h>
 
 

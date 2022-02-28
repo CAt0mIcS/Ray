@@ -18,7 +18,7 @@
 #include "Scene/RScene.h"
 #include "Core/RTime.h"
 
-#define RAY_MULTITHREADED_IMPORT 0
+#define RAY_MULTITHREADED_IMPORT 1
 
 
 namespace At0::Ray
@@ -66,7 +66,7 @@ namespace At0::Ray
 			if (!material)
 			{
 				std::scoped_lock lock(mutexMaterial);
-				material = CreateMaterial(basePath, mesh, pMaterials);
+				material = CreateMaterial(basePath, pMaterials[pMesh->mMaterialIndex]);
 			}
 
 			// Vertex assembly stage
@@ -236,14 +236,6 @@ namespace At0::Ray
 
 		builder.Set("Shading.color", Float4{ 1.f });
 		builder.Set("Shading.ambientLightColor", Float4{ 1.f, 1.f, 1.f, .02f });  // w is intensity
-
-		// builder.Set("Shading.lightColor[0]", Float4{ 1.f });
-		// builder.Set("Shading.lightPosition[0]", Float4{ -1.f });
-
-		// builder.Set("Shading.lightColor[1]", Float4{ 1.f });
-		// builder.Set("Shading.lightPosition[1]", Float4{ -1.f });
-
-		// builder.Set("Shading.numLights", 2u);
 
 		return builder.Acquire();
 	}
