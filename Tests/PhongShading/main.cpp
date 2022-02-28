@@ -84,9 +84,8 @@ public:
 						"LightPos", m_Material->Get<Float3>("Shading.lightPosition" + index));
 					m_Material->Set("Shading.lightPosition" + index, Float4{ lightPos, 1.f });
 
-					m_Lights[i].Get<Transform>().SetTranslation(lightPos);
-
 					PointLight& pointLight = m_Lights[i].Get<PointLight>();
+					pointLight.SetTranslation(lightPos);
 					pointLight.SetColor(
 						{ ImGUI::Float3Widget("LightColor", pointLight.GetColor()), 1.f });
 
@@ -139,9 +138,8 @@ public:
 			Matrix rotateLight = glm::rotate(Matrix{ 1.f },
 				(i * glm::two_pi<float>()) / lightColors.size(), { 0.f, -1.5f, 0.f });
 
-			light.Get<Transform>().SetTranslation(rotateLight * Float4{ -1.f, -1.f, -1.f, 1.f });
-
 			PointLight& pointLight = light.Emplace<PointLight>(lightColors[i]);
+			pointLight.SetTranslation(rotateLight * Float4{ -1.f, -1.f, -1.f, 1.f });
 			light.Emplace<Mesh>(Mesh::UVSphere(flatMaterial, .1f, 24, 24));
 		}
 	}
@@ -154,25 +152,9 @@ private:
 			Matrix rotateLight =
 				glm::rotate(Matrix{ 1.f }, GetDelta().AsSeconds(), { 0.f, -1.f, 0.f });
 
-			light.Get<Transform>().SetTranslation(
+			light.Get<PointLight>().SetTranslation(
 				rotateLight * Float4{ light.Get<Transform>().Translation(), 1.f });
 		}
-
-		Scene::Get().EntityView<MeshRenderer>().each(
-			[this](MeshRenderer& renderer)
-			{
-				for (Entity light : m_Lights)
-				{
-					std::string id = "[" + std::to_string(light.Get<PointLight>().GetID()) + "]";
-
-					Material& material = renderer.GetMaterial();
-					if (!material.HasUniform("Shading.lightPosition" + id))
-						return;
-
-					material.Set("Shading.lightPosition" + id,
-						Float4{ light.Get<Transform>().Translation(), 1.f });
-				}
-			});
 	}
 
 private:

@@ -51,4 +51,21 @@ namespace At0::Ray
 				material.Set("Shading.lightColor" + id, m_Color);
 			});
 	}
+
+	void PointLight::SetTranslation(Float3 trans)
+	{
+		const Transform& tform = GetEntity().Get<Transform>().SetTranslation(std::move(trans));
+
+		Scene::Get().EntityView<MeshRenderer>().each(
+			[this, &tform](MeshRenderer& renderer)
+			{
+				std::string id = "[" + std::to_string(m_ID) + "]";
+
+				Material& material = renderer.GetMaterial();
+				if (!material.HasUniform("Shading.lightPosition" + id))
+					return;
+
+				material.Set("Shading.lightPosition" + id, Float4{ tform.Translation(), 1.f });
+			});
+	}
 }  // namespace At0::Ray
