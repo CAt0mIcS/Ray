@@ -278,14 +278,13 @@ public:
 				vkCmdSetScissor(cmdBuff, 0, 1, &Graphics::Get().m_Scissor);
 
 				// Visualize shadow map
-				bool displayShadowMap = false;
+				bool displayShadowMap = true;
 				if (displayShadowMap)
 				{
-					debugPipeline->CmdBind(cmdBuff);
 					debugDescriptor->CmdBind(cmdBuff);
+					debugPipeline->CmdBind(cmdBuff);
 					vkCmdDraw(cmdBuff, 3, 1, 0, 0);
 				}
-
 				// debugEntity.Get<MeshRenderer>().Render(cmdBuff);
 				// debugEntity.Get<Mesh>().CmdBind(cmdBuff);
 
@@ -300,6 +299,7 @@ public:
 					meshRenderer.Render(cmdBuff);
 					mesh.CmdBind(cmdBuff);
 				}
+
 
 #if RAY_ENABLE_IMGUI
 				ImGUI::Get().CmdBind(cmdBuff);
@@ -335,8 +335,10 @@ private:
 	Matrix CalcDepthMVP()
 	{
 		static Matrix depthProjectionMatrix = glm::perspective(Radians(45.f), 1.0f, 1.f, 96.f);
+
 		Matrix depthViewMatrix = glm::lookAt(
-			m_Light.Get<Transform>().Translation(), Float3(0.f), Float3(0.f, -1.f, 0.f));
+			m_Light.Get<Transform>().Translation(), Float3{ 0.f }, Float3{ 0.f, 1.f, 0.f });
+
 		Matrix depthModelMatrix = MatrixIdentity();
 
 		return depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
