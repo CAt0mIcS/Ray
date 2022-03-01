@@ -2,6 +2,7 @@
 
 #include "../../RBase.h"
 #include "../../Utils/RNonCopyable.h"
+#include "../../Core/RMath.h"
 
 #include <vulkan/vulkan_core.h>
 
@@ -29,7 +30,7 @@ namespace At0::Ray
 
 		SupportDetails QuerySwapchainSupport() const;
 		VkFormat GetFormat() const { return m_Format; }
-		const VkExtent2D& GetExtent() const { return m_Extent; }
+		const UInt2& GetExtent() const { return m_Extent; }
 		uint32_t GetNumberOfImages() const { return m_Images.size(); }
 		const std::vector<Scope<ImageView>>& GetImageViews() const { return m_ImageViews; }
 
@@ -41,12 +42,12 @@ namespace At0::Ray
 		VkSurfaceFormatKHR ChooseSurfaceFormat(
 			const std::vector<VkSurfaceFormatKHR>& formats) const;
 		VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR>& presentModes) const;
-		VkExtent2D ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
+		UInt2 ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
 
 	private:
 		VkSwapchainKHR m_Swapchain = VK_NULL_HANDLE;
 		VkFormat m_Format = VK_FORMAT_UNDEFINED;
-		VkExtent2D m_Extent{};
+		UInt2 m_Extent{};
 
 		std::vector<VkImage> m_Images;
 		std::vector<Scope<ImageView>> m_ImageViews;

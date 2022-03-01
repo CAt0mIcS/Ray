@@ -35,7 +35,7 @@ namespace At0::Ray
 		createInfo.minImageCount = imageCount;
 		createInfo.imageFormat = surfaceFormat.format;
 		createInfo.imageColorSpace = surfaceFormat.colorSpace;
-		createInfo.imageExtent = m_Extent;
+		createInfo.imageExtent = { m_Extent.x, m_Extent.y };
 		createInfo.imageArrayLayers = 1;
 		createInfo.imageUsage = imageUsage;
 
@@ -122,10 +122,7 @@ namespace At0::Ray
 		return supportDetails;
 	}
 
-	float Swapchain::GetAspectRatio() const
-	{
-		return (float)m_Extent.width / (float)m_Extent.height;
-	}
+	float Swapchain::GetAspectRatio() const { return (float)m_Extent.x / (float)m_Extent.y; }
 
 	VkSurfaceFormatKHR Swapchain::ChooseSurfaceFormat(
 		const std::vector<VkSurfaceFormatKHR>& formats) const
@@ -156,23 +153,22 @@ namespace At0::Ray
 		return VK_PRESENT_MODE_FIFO_KHR;
 	}
 
-	VkExtent2D Swapchain::ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities) const
+	UInt2 Swapchain::ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities) const
 	{
 		if (capabilities.currentExtent.width != UINT32_MAX)
-			return capabilities.currentExtent;
+			return { capabilities.currentExtent.width, capabilities.currentExtent.height };
 		else
 		{
 			UInt2 size = Window::Get().GetFramebufferSize();
-			VkExtent2D extent = { size.x, size.y };
+			UInt2 extent = { size.x, size.y };
 
 			// Clamp values to allowed minimum and maximum implementation extents supported
-			extent.width = std::clamp(
-				extent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
-			extent.height = std::clamp(extent.height, capabilities.minImageExtent.height,
-				capabilities.maxImageExtent.height);
+			extent.x = std::clamp(
+				extent.x, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
+			extent.y = std::clamp(
+				extent.y, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
 
-			Log::Info(
-				"[Swapchain] Choosing extent [width={0}, height={1}]", extent.width, extent.height);
+			Log::Info("[Swapchain] Choosing extent [width={0}, height={1}]", extent.x, extent.y);
 
 			return extent;
 		}

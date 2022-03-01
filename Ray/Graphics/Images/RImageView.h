@@ -21,10 +21,6 @@ namespace At0::Ray
 		operator const VkImageView&() const { return m_View; }
 
 	private:
-		void Setup(VkImage image, VkImageViewType viewType, VkFormat format, uint32_t mipLevels,
-			VkImageAspectFlags aspectFlags, uint32_t layerCount);
-
-	private:
 		VkImageView m_View = VK_NULL_HANDLE;
 	};
 }  // namespace At0::Ray

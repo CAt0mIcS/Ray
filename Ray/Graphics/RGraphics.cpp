@@ -63,7 +63,7 @@ namespace At0::Ray
 		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 
 		m_DepthImage = MakeScope<DepthImage>(
-			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height });
+			UInt2{ GetSwapchain().GetExtent().x, GetSwapchain().GetExtent().y });
 
 		CreateRenderPass();
 		CreateFramebuffers();
@@ -157,9 +157,10 @@ namespace At0::Ray
 		m_Framebuffers.resize(GetSwapchain().GetNumberOfImages());
 		for (uint32_t i = 0; i < m_Framebuffers.size(); ++i)
 		{
-			m_Framebuffers[i] = MakeScope<Framebuffer>(
-				*m_RenderPass, std::vector<VkImageView>{ *GetSwapchain().GetImageViews()[i],
-								   m_DepthImage->GetImageView() });
+			m_Framebuffers[i] = MakeScope<Framebuffer>(*m_RenderPass,
+				std::vector<VkImageView>{
+					*GetSwapchain().GetImageViews()[i], m_DepthImage->GetImageView() },
+				m_Swapchain->GetExtent());
 		}
 	}
 
@@ -246,7 +247,8 @@ namespace At0::Ray
 			clearValues[0].color = { 0.f, 0.f, 0.f };
 			clearValues[1].depthStencil = { 1.0f, 0 };
 
-			m_RenderPass->Begin(cmdBuff, framebuffer, clearValues, std::size(clearValues));
+			m_RenderPass->Begin(cmdBuff, framebuffer, clearValues, std::size(clearValues),
+				m_Swapchain->GetExtent());
 
 			vkCmdSetViewport(cmdBuff, 0, 1, &m_Viewport);
 			vkCmdSetScissor(cmdBuff, 0, 1, &m_Scissor);
@@ -459,7 +461,7 @@ namespace At0::Ray
 
 		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 		m_DepthImage = MakeScope<DepthImage>(
-			UInt2{ GetSwapchain().GetExtent().width, GetSwapchain().GetExtent().height });
+			UInt2{ GetSwapchain().GetExtent().x, GetSwapchain().GetExtent().y });
 		CreateRenderPass();
 		UpdateViewport();
 		UpdateScissor();

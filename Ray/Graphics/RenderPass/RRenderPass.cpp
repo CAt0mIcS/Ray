@@ -41,9 +41,7 @@ namespace At0::Ray
 		renderPassInfo.renderPass = m_Renderpass;
 		renderPassInfo.framebuffer = framebuffer;
 		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = extent == UInt2{ -1, -1 } ?
-												 Graphics::Get().GetSwapchain().GetExtent() :
-												 VkExtent2D{ extent.x, extent.y };
+		renderPassInfo.renderArea.extent = VkExtent2D{ extent.x, extent.y };
 		renderPassInfo.clearValueCount = clearValueCount;
 		renderPassInfo.pClearValues = clearValues;
 

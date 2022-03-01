@@ -40,6 +40,8 @@
 #include <Ray/Graphics/Images/RImage.h>
 #include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Utils/RGeometricPrimitives.h>
+#include <Ray/Graphics/Core/RPhysicalDevice.h>
+#include <Ray/Graphics/Core/RSwapchain.h>
 
 
 using namespace At0::Ray;
@@ -158,16 +160,27 @@ public:
 					.SetImageTiling(VK_IMAGE_TILING_OPTIMAL)
 					.SetFormat(DEPTH_FORMAT)
 					.SetImageUsage(
-						VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
+						VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT)
 					.SetMemoryProperties(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
 					.SetImageAspect(VK_IMAGE_ASPECT_DEPTH_BIT)
-					.SetTextureSampler(TextureSampler::Builder()
-										   .SetMipmapMode(VK_SAMPLER_MIPMAP_MODE_LINEAR)
-										   .SetAddressModeU(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
-										   .SetAddressModeV(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
-										   .SetAddressModeW(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
-										   .SetBorderColor(VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE)
-										   .BuildScoped())
+					.SetTextureSampler(
+						TextureSampler::Builder()
+							.SetMinFilter(
+								Graphics::Get().GetPhysicalDevice().IsFormatLinearlyFilterable(
+									DEPTH_FORMAT, VK_IMAGE_TILING_OPTIMAL) ?
+									  VK_FILTER_LINEAR :
+									  VK_FILTER_NEAREST)
+							.SetMagFilter(
+								Graphics::Get().GetPhysicalDevice().IsFormatLinearlyFilterable(
+									DEPTH_FORMAT, VK_IMAGE_TILING_OPTIMAL) ?
+									  VK_FILTER_LINEAR :
+									  VK_FILTER_NEAREST)
+							.SetMipmapMode(VK_SAMPLER_MIPMAP_MODE_LINEAR)
+							.SetAddressModeU(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+							.SetAddressModeV(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+							.SetAddressModeW(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+							.SetBorderColor(VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE)
+							.BuildScoped())
 					.Build();
 
 			offFramebuffer = MakeScope<Framebuffer>(*offRenderPass,
@@ -258,8 +271,8 @@ public:
 				clearValues[0].color = { 0.f, 0.f, 0.f };
 				clearValues[1].depthStencil = { 1.0f, 0 };
 
-				Graphics::Get().m_RenderPass->Begin(
-					cmdBuff, framebuffer, clearValues, std::size(clearValues));
+				Graphics::Get().m_RenderPass->Begin(cmdBuff, framebuffer, clearValues,
+					std::size(clearValues), Graphics::Get().GetSwapchain().GetExtent());
 
 				vkCmdSetViewport(cmdBuff, 0, 1, &Graphics::Get().m_Viewport);
 				vkCmdSetScissor(cmdBuff, 0, 1, &Graphics::Get().m_Scissor);
@@ -304,7 +317,7 @@ public:
 			"shadowMap", offFramebufferImage, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
 
 		debugEntity.Get<MeshRenderer>().SetSamplerTexture(
-			"samplerColor", offFramebufferImage, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
+			"shadowMap", offFramebufferImage, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
 	}
 
 private:
@@ -321,7 +334,7 @@ private:
 private:
 	Matrix CalcDepthMVP()
 	{
-		static Matrix depthProjectionMatrix = glm::perspective(Radians(60.f), 1.0f, 0.1f, 96.f);
+		static Matrix depthProjectionMatrix = glm::perspective(Radians(45.f), 1.0f, 1.f, 96.f);
 		Matrix depthViewMatrix = glm::lookAt(
 			m_Light.Get<Transform>().Translation(), Float3(0.f), Float3(0.f, -1.f, 0.f));
 		Matrix depthModelMatrix = MatrixIdentity();

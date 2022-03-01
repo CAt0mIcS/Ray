@@ -16,7 +16,7 @@ namespace At0::Ray
 	{
 	public:
 		Framebuffer(const RenderPass& renderPass, const std::vector<VkImageView>& attachments,
-			UInt2 extent = { -1, -1 });
+			UInt2 extent);
 		~Framebuffer();
 
 		operator const VkFramebuffer&() const { return m_Framebuffer; }

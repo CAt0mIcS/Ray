@@ -20,6 +20,8 @@ namespace At0::Ray
 
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
 
+		bool IsFormatLinearlyFilterable(VkFormat format, VkImageTiling imageTiling) const;
+
 		/**
 		 * @returns If the GPU supports a combination of memory properties
 		 */

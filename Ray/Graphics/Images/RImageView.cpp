@@ -8,20 +8,12 @@
 namespace At0::Ray
 {
 	ImageView::ImageView(const Image& image)
+		: ImageView(image, (VkImageViewType)image.GetImageType(), image.GetFormat(),
+			  image.GetMipLevels(), image.GetAspectFlags(), image.GetArrayLayers())
 	{
-		Setup(image, (VkImageViewType)image.GetImageType(), image.GetFormat(), image.GetMipLevels(),
-			image.GetAspectFlags(), image.GetArrayLayers());
 	}
 
 	ImageView::ImageView(VkImage image, VkImageViewType viewType, VkFormat format,
-		uint32_t mipLevels, VkImageAspectFlags aspectFlags, uint32_t layerCount)
-	{
-		Setup(image, viewType, format, mipLevels, aspectFlags, layerCount);
-	}
-
-	ImageView::~ImageView() { vkDestroyImageView(Graphics::Get().GetDevice(), m_View, nullptr); }
-
-	void ImageView::Setup(VkImage image, VkImageViewType viewType, VkFormat format,
 		uint32_t mipLevels, VkImageAspectFlags aspectFlags, uint32_t layerCount)
 	{
 		VkImageViewCreateInfo createInfo{};
@@ -43,4 +35,6 @@ namespace At0::Ray
 			vkCreateImageView(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_View),
 			"[ImageView] Failed to create");
 	}
+
+	ImageView::~ImageView() { vkDestroyImageView(Graphics::Get().GetDevice(), m_View, nullptr); }
 }  // namespace At0::Ray

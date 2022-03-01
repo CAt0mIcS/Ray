@@ -54,6 +54,23 @@ namespace At0::Ray
 		return 0;
 	}
 
+	bool PhysicalDevice::IsFormatLinearlyFilterable(
+		VkFormat format, VkImageTiling imageTiling) const
+	{
+		VkFormatProperties formatProps;
+		vkGetPhysicalDeviceFormatProperties(m_Device, format, &formatProps);
+
+		if (imageTiling == VK_IMAGE_TILING_OPTIMAL)
+			return formatProps.optimalTilingFeatures &
+				   VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
+
+		if (imageTiling == VK_IMAGE_TILING_LINEAR)
+			return formatProps.linearTilingFeatures &
+				   VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
+
+		return false;
+	}
+
 	bool PhysicalDevice::HasMemoryProperties(VkMemoryPropertyFlags memProps) const
 	{
 		for (uint32_t i = 0; i < m_MemoryProperties.memoryTypeCount; ++i)

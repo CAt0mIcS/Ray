@@ -1,12 +1,12 @@
 #version 450
 
-layout (set = 1, binding = 2) uniform sampler2D samplerColor;
+layout (set = 1, binding = 2) uniform sampler2D shadowMap;
 
 layout (location = 0) in vec2 inUV;
 
-layout (location = 0) out vec4 outFragColor;
+layout (location = 0) out vec4 outColor;
 
 void main() 
 {
-	outFragColor = texture(samplerColor, inUV);
+	outColor = texture(shadowMap, inUV);
 }

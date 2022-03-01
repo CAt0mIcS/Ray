@@ -2,7 +2,6 @@
 
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/RGraphics.h"
-#include "Graphics/Core/RSwapchain.h"
 #include "Graphics/RenderPass/RRenderPass.h"
 
 
@@ -17,10 +16,8 @@ namespace At0::Ray
 		createInfo.renderPass = renderPass;
 		createInfo.attachmentCount = (uint32_t)attachments.size();
 		createInfo.pAttachments = attachments.data();
-		createInfo.width =
-			extent.x == -1 ? Graphics::Get().GetSwapchain().GetExtent().width : extent.x;
-		createInfo.height =
-			extent.y == -1 ? Graphics::Get().GetSwapchain().GetExtent().height : extent.y;
+		createInfo.width = extent.x;
+		createInfo.height = extent.y;
 		createInfo.layers = 1;
 
 		ThrowVulkanError(
