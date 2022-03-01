@@ -197,7 +197,6 @@ public:
 									{ "Tests/ShadowMapping/Shaders/DebugQuad.vert",
 										"Tests/ShadowMapping/Shaders/DebugQuad.frag" }))
 								.SetCullMode(VK_CULL_MODE_NONE)
-								.SetVertexInputAttributeDescriptions({})
 								.Build();
 
 			debugMaterial = Material::Builder(debugPipeline).Build();

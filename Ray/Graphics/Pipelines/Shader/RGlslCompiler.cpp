@@ -503,11 +503,26 @@ namespace At0::Ray
 		m_Reflections[stageFlag].AddUniformBlock(std::move(data));
 	}
 
+	/**
+	 * If we use something like gl_VertexIndex in the shader, glslang will flag it as an attribute
+	 * we need to set in the pipeline's attribute description. If the name is a reserved name like
+	 * gl_VertexIndex, we won't add it to the attributes
+	 * https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.html
+	 */
+	static bool IsGlslReservedName(std::string_view name)
+	{
+		return name == "gl_VertexIndex" || name == "gl_InstanceIndex" || name == "gl_DrawID" ||
+			   name == "gl_BaseVertex" || name == "gl_BaseInstance";
+	}
+
 	void GlslCompiler::LoadAttribute(
 		const glslang::TProgram& program, ShaderStage stageFlag, int32_t i)
 	{
 		const glslang::TObjectReflection& attribute = program.getPipeInput(i);
 		const glslang::TQualifier& qualifier = attribute.getType()->getQualifier();
+
+		if (IsGlslReservedName(attribute.name))
+			return;
 
 		ShaderReflection::AttributeData data{};
 		data.location = qualifier.layoutLocation;
