@@ -65,15 +65,20 @@ constexpr float depthBiasConstant = 1.25f;
 constexpr float depthBiasSlope = 1.75f;
 
 
-Scope<Attachment> depthAttachment;
-Subpass subpass;
-std::vector<VkSubpassDependency> dependencies(2);
-Scope<RenderPass> renderPass;
-Scope<Framebuffer> offscreenFramebuffer;
-Ref<Texture> framebufferImage;
-Ref<GraphicsPipeline> pipeline;
-Scope<DescriptorSet> descriptor;
-Scope<BufferUniform> uniform;
+Scope<Attachment> offDepthAttachment;
+Subpass offSubpass;
+std::vector<VkSubpassDependency> offDependencies(2);
+Scope<RenderPass> offRenderPass;
+Scope<Framebuffer> offFramebuffer;
+Ref<Texture> offFramebufferImage;
+Ref<GraphicsPipeline> offPipeline;
+Scope<DescriptorSet> offDescriptor;
+Scope<BufferUniform> offUniform;
+
+// Debug
+Ref<GraphicsPipeline> debugPipeline;
+Scope<DescriptorSet> debugDescriptor;
+
 
 class App : public Engine
 {
@@ -113,37 +118,37 @@ public:
 
 		// Render pass
 		{
-			depthAttachment =
+			offDepthAttachment =
 				MakeScope<Attachment>(DEPTH_FORMAT, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL,
 					Attachment::LoadOp::Clear, Attachment::StoreOp::Store,
 					Attachment::LoadOp::Undefined, Attachment::StoreOp::Undefined);
 
-			subpass.AddDepthAttachment(0, *depthAttachment);
+			offSubpass.AddDepthAttachment(0, *offDepthAttachment);
 
-			dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
-			dependencies[0].dstSubpass = 0;
-			dependencies[0].srcStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-			dependencies[0].dstStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-			dependencies[0].srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			dependencies[0].dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-			dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+			offDependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+			offDependencies[0].dstSubpass = 0;
+			offDependencies[0].srcStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+			offDependencies[0].dstStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+			offDependencies[0].srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+			offDependencies[0].dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+			offDependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
-			dependencies[1].srcSubpass = 0;
-			dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
-			dependencies[1].srcStageMask = VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
-			dependencies[1].dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-			dependencies[1].srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-			dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+			offDependencies[1].srcSubpass = 0;
+			offDependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
+			offDependencies[1].srcStageMask = VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+			offDependencies[1].dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+			offDependencies[1].srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+			offDependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+			offDependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
-			renderPass =
-				MakeScope<RenderPass>(std::vector<VkAttachmentDescription>{ *depthAttachment },
-					std::vector<VkSubpassDescription>{ subpass }, dependencies);
+			offRenderPass =
+				MakeScope<RenderPass>(std::vector<VkAttachmentDescription>{ *offDepthAttachment },
+					std::vector<VkSubpassDescription>{ offSubpass }, offDependencies);
 		}
 
 		// Framebuffer
 		{
-			framebufferImage =
+			offFramebufferImage =
 				Texture::Builder()
 					.SetImageType(VK_IMAGE_TYPE_2D)
 					.SetExtent(UInt2{ SHADOWMAP_DIM })
@@ -163,28 +168,39 @@ public:
 										   .BuildScoped())
 					.Build();
 
-			offscreenFramebuffer = MakeScope<Framebuffer>(*renderPass,
-				std::vector<VkImageView>{ framebufferImage->GetImageView() },
+			offFramebuffer = MakeScope<Framebuffer>(*offRenderPass,
+				std::vector<VkImageView>{ offFramebufferImage->GetImageView() },
 				UInt2{ SHADOWMAP_DIM });
 		}
 
-		// Pipeline/descriptor/uniform
+		// Pipeline/offDescriptor/offUniform
 		{
-			pipeline =
+			offPipeline =
 				GraphicsPipeline::Builder()
 					.SetShader(Shader::AcquireSourceFile({ "Resources/Shaders/Offscreen.vert" }))
-					.SetRenderPass(*renderPass)
+					.SetRenderPass(*offRenderPass)
 					.SetDynamicStates({ VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR,
 						VK_DYNAMIC_STATE_DEPTH_BIAS })
 					.Build();
 
-			descriptor = MakeScope<DescriptorSet>(pipeline->GetDescriptorPool(),
-				pipeline->GetDescriptorSetLayout(1), Pipeline::BindPoint::Graphics,
-				pipeline->GetLayout(), 1);
+			offDescriptor = MakeScope<DescriptorSet>(*offPipeline, 1);
 
-			uniform = MakeScope<BufferUniform>("UBO", ShaderStage::Vertex, *pipeline);
-			(*uniform)["depthMVP"] = depthMVP;
-			descriptor->BindUniform(*uniform);
+			offUniform = MakeScope<BufferUniform>("UBO", ShaderStage::Vertex, *offPipeline);
+			(*offUniform)["depthMVP"] = depthMVP;
+			offDescriptor->BindUniform(*offUniform);
+		}
+
+		// debug quad offPipeline/offDescriptor/offUniform
+		{
+			debugPipeline = GraphicsPipeline::Builder()
+								.SetShader(Shader::AcquireSourceFile(
+									{ "Tests/ShadowMapping/Shaders/DebugQuad.vert",
+										"Tests/ShadowMapping/Shaders/DebugQuad.frag" }))
+								.SetCullMode(VK_CULL_MODE_NONE)
+								.SetVertexInputAttributeDescriptions({})
+								.Build();
+
+			debugDescriptor = MakeScope<DescriptorSet>(*debugPipeline, 0);
 		}
 
 
@@ -200,8 +216,8 @@ public:
 			{
 				clearValues[0].depthStencil = { 1.f, 0 };
 
-				renderPass->Begin(cmdBuff, *offscreenFramebuffer, clearValues, 1,
-					{ SHADOWMAP_DIM, SHADOWMAP_DIM });
+				offRenderPass->Begin(
+					cmdBuff, *offFramebuffer, clearValues, 1, { SHADOWMAP_DIM, SHADOWMAP_DIM });
 
 				VkViewport viewport{};
 				viewport.width = SHADOWMAP_DIM;
@@ -214,13 +230,13 @@ public:
 				vkCmdSetScissor(cmdBuff, 0, 1, &scissor);
 
 				vkCmdSetDepthBias(cmdBuff, depthBiasConstant, 0.0f, depthBiasSlope);
-				pipeline->CmdBind(cmdBuff);
-				descriptor->CmdBind(cmdBuff);
+				offPipeline->CmdBind(cmdBuff);
+				offDescriptor->CmdBind(cmdBuff);
 
 				for (uint32_t i = 0; i < meshRendererView.size(); ++i)
 					meshRendererView.get<Mesh>(meshRendererView[i]).CmdBind(cmdBuff);
 
-				renderPass->End(cmdBuff);
+				offRenderPass->End(cmdBuff);
 			}
 
 
@@ -236,6 +252,15 @@ public:
 
 				vkCmdSetViewport(cmdBuff, 0, 1, &Graphics::Get().m_Viewport);
 				vkCmdSetScissor(cmdBuff, 0, 1, &Graphics::Get().m_Scissor);
+
+				// Visualize shadow map
+				bool displayShadowMap = true;
+				if (displayShadowMap)
+				{
+					debugPipeline->CmdBind(cmdBuff);
+					debugDescriptor->CmdBind(cmdBuff);
+					vkCmdDraw(cmdBuff, 3, 1, 0, 0);
+				}
 
 				// Scene::Get().CmdBind(cmdBuff);
 
@@ -259,11 +284,11 @@ public:
 
 
 		m_Material->Set("Shading.lightSpace", depthMVP);
-		// m_Material->Set("shadowMap", framebufferImage);
+		// m_Material->Set("shadowMap", offFramebufferImage);
 
 		VkDescriptorImageInfo imageInfo{};
-		imageInfo.sampler = framebufferImage->GetSampler();
-		imageInfo.imageView = framebufferImage->GetImageView();
+		imageInfo.sampler = offFramebufferImage->GetSampler();
+		imageInfo.imageView = offFramebufferImage->GetImageView();
 		imageInfo.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 
 		VkWriteDescriptorSet writeDesc{};
@@ -282,6 +307,11 @@ public:
 			DescriptorSet& descShadowMap = m_Vase.Get<MeshRenderer>().GetDescriptorSet(1);
 			writeDesc.dstSet = descShadowMap;
 			descShadowMap.Update({ writeDesc });
+		}
+		{
+			writeDesc.dstSet = *debugDescriptor;
+			writeDesc.dstBinding = 1;
+			debugDescriptor->Update({ writeDesc });
 		}
 	}
 

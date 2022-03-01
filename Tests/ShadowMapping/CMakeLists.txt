@@ -1,5 +1,12 @@
+set(SHADERS
+	"Shaders/DebugQuad.vert"
+	"Shaders/DebugQuad.frag"
+)
+
 set(SRC
 	"main.cpp"
+
+	${SHADERS}
 )
 
 find_package("Vulkan" REQUIRED FATAL_ERROR)

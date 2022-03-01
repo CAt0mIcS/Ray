@@ -17,7 +17,8 @@ namespace At0::Ray
 	class RAY_EXPORT DescriptorSet : NonCopyable
 	{
 	public:
-	public:
+		DescriptorSet(const Pipeline& pipeline, uint32_t setNumber);
+
 		DescriptorSet(VkDescriptorPool pool, VkDescriptorSetLayout descriptorLayout,
 			Pipeline::BindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout,
 			uint32_t setNumber);

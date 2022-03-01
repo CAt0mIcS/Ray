@@ -15,6 +15,12 @@
 
 namespace At0::Ray
 {
+	DescriptorSet::DescriptorSet(const Pipeline& pipeline, uint32_t setNumber)
+		: DescriptorSet(pipeline.GetDescriptorPool(), pipeline.GetDescriptorSetLayout(setNumber),
+			  pipeline.GetBindPoint(), pipeline.GetLayout(), setNumber)
+	{
+	}
+
 	DescriptorSet::DescriptorSet(VkDescriptorPool pool, VkDescriptorSetLayout descriptorLayout,
 		Pipeline::BindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout, uint32_t setNumber)
 		: m_PipelineBindPoint(pipelineBindPoint), m_PipelineLayout(pipelineLayout),
