@@ -9,7 +9,7 @@ layout (location = 3) in vec4 inShadowCoord;
 
 const int enablePCF = 0;
 
-layout (location = 0) out vec4 outFragColor;
+layout (location = 0) out vec4 outColor;
 
 #define ambient 0.1
 
@@ -60,5 +60,6 @@ void main()
 	vec3 R = normalize(-reflect(L, N));
 	vec3 diffuse = max(dot(N, L), ambient) * vec3(1.f, 1.f, 1.f);
 
-	outFragColor = vec4(diffuse * shadow, 1.0);
+	outColor = vec4(diffuse * shadow, 1.0);
+
 }

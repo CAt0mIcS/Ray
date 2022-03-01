@@ -278,7 +278,7 @@ public:
 				vkCmdSetScissor(cmdBuff, 0, 1, &Graphics::Get().m_Scissor);
 
 				// Visualize shadow map
-				bool displayShadowMap = true;
+				bool displayShadowMap = false;
 				if (displayShadowMap)
 				{
 					debugDescriptor->CmdBind(cmdBuff);
