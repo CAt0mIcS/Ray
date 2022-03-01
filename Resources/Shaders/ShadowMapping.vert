@@ -25,7 +25,7 @@ layout(set = 1, binding = 1) uniform PerObjectData
 layout(set = 1, binding = 2) uniform Shading
 {
 	mat4 lightSpace;
-	vec4 lightPosition[10];
+	vec4 lightPosition[1];
 } uShading;
 
 const mat4 biasMat = mat4( 

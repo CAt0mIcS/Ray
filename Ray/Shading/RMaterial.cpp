@@ -30,10 +30,10 @@ namespace At0::Ray
 		return m_Container.GetTexture(dataPath);
 	}
 
-	void Material::Set(const std::string& name, Ref<Texture> texture)
+	void Material::Set(const std::string& name, Ref<Texture> texture, VkImageLayout imageLayout)
 	{
 		m_Container.Set(name, std::move(texture));
-		CallListeners(name, UniformType::CombinedImageSampler);
+		CallListeners(name, UniformType::CombinedImageSampler, imageLayout);
 	}
 
 	void Material::Set(const std::string& name, Ref<Texture2DAtlas> texture)
@@ -42,13 +42,14 @@ namespace At0::Ray
 		CallListeners(name, UniformType::CombinedImageSampler);
 	}
 
-	void Material::CallListeners(const std::string& name, UniformType type)
+	void Material::CallListeners(
+		const std::string& name, UniformType type, VkImageLayout imageLayout)
 	{
 		Log::Trace("[Material] Calling OnDirtyListeners (Count: {0})",
 			EventDispatcher<MaterialBecameDirtyEvent>::Get().size());
 
 		// Tells the MeshRenderer to update descriptors with name and type
-		MaterialBecameDirtyEvent e{ name, type };
+		MaterialBecameDirtyEvent e{ name, type, imageLayout };
 		for (auto listener : EventDispatcher<MaterialBecameDirtyEvent>::Get())
 			listener->OnEvent(e);
 	}

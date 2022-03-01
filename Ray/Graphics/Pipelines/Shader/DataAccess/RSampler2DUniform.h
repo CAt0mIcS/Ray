@@ -22,7 +22,8 @@ namespace At0::Ray
 		/**
 		 * Sets the texture and rebinds descriptor set to uniform
 		 */
-		void SetTexture(Ref<Texture> texture, DescriptorSet& descSet);
+		void SetTexture(Ref<Texture> texture, DescriptorSet& descSet,
+			VkImageLayout imageLayout = VK_IMAGE_LAYOUT_MAX_ENUM);
 
 	private:
 		std::string m_Name;

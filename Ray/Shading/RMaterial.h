@@ -50,7 +50,8 @@ namespace At0::Ray
 			CallListeners(name, GetUniformType(name));
 		}
 
-		void Set(const std::string& name, Ref<Texture> texture);
+		void Set(const std::string& name, Ref<Texture> texture,
+			VkImageLayout imageLayout = VK_IMAGE_LAYOUT_MAX_ENUM);
 		void Set(const std::string& name, Ref<Texture2DAtlas> texture);
 
 		template<typename T>
@@ -66,7 +67,8 @@ namespace At0::Ray
 		}
 
 	private:
-		void CallListeners(const std::string& name, UniformType type);
+		void CallListeners(const std::string& name, UniformType type,
+			VkImageLayout imageLayout = VK_IMAGE_LAYOUT_MAX_ENUM);
 		UniformType GetUniformType(std::string_view name) const;
 
 	private:

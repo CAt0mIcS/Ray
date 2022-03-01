@@ -87,18 +87,6 @@ namespace At0::Ray
 		}
 	}
 
-	void MeshRenderer::UpdateMaterialData(const std::string& uniformPath, UniformType uType)
-	{
-		switch (uType)
-		{
-		case UniformType::UniformBuffer: UpdateUniform(uniformPath, false); break;
-		case UniformType::CombinedImageSampler:
-			SetSamplerTexture(uniformPath, m_Material->GetTexture(uniformPath));
-			break;
-		case UniformType::Push: UpdateUniform(uniformPath, true); break;
-		}
-	}
-
 	void MeshRenderer::UpdateUniform(const std::string& dataPath, bool isPushConstant)
 	{
 		int pos = dataPath.find('.');
@@ -170,7 +158,14 @@ namespace At0::Ray
 
 	void MeshRenderer::OnEvent(MaterialBecameDirtyEvent& e)
 	{
-		UpdateMaterialData(e.dataPath, e.uType);
+		switch (e.uType)
+		{
+		case UniformType::UniformBuffer: UpdateUniform(e.dataPath, false); break;
+		case UniformType::CombinedImageSampler:
+			SetSamplerTexture(e.dataPath, m_Material->GetTexture(e.dataPath), e.imageLayout);
+			break;
+		case UniformType::Push: UpdateUniform(e.dataPath, true); break;
+		}
 	}
 
 	void MeshRenderer::OnEvent(CameraChangedEvent& e)

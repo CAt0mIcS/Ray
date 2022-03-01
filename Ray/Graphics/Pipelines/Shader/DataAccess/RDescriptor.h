@@ -30,7 +30,8 @@ namespace At0::Ray
 		uint32_t GetSetNumber() const { return m_SetNumber; }
 
 		void BindUniform(const BufferUniform& uniform);
-		void BindUniform(const Sampler2DUniform& uniform, Ref<Texture> texture);
+		void BindUniform(const Sampler2DUniform& uniform, Ref<Texture> texture,
+			VkImageLayout imageLayout = VK_IMAGE_LAYOUT_MAX_ENUM);
 
 		operator const VkDescriptorSet&() const { return m_DescriptorSet; }
 		DescriptorSet& operator=(DescriptorSet&& other) noexcept;

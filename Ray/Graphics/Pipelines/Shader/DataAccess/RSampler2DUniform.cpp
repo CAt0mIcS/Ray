@@ -24,8 +24,9 @@ namespace At0::Ray
 	{
 	}
 
-	void Sampler2DUniform::SetTexture(Ref<Texture> texture, DescriptorSet& descSet)
+	void Sampler2DUniform::SetTexture(
+		Ref<Texture> texture, DescriptorSet& descSet, VkImageLayout imageLayout)
 	{
-		descSet.BindUniform(*this, std::move(texture));
+		descSet.BindUniform(*this, std::move(texture), imageLayout);
 	}
 }  // namespace At0::Ray

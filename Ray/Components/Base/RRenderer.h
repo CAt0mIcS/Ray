@@ -39,7 +39,8 @@ namespace At0::Ray
 		DescriptorSet& GetDescriptorSet(uint32_t set);
 
 		void SetMaterial(Ref<Material> material) { m_Material = std::move(material); }
-		void SetSamplerTexture(std::string_view name, Ref<Texture> texture);
+		void SetSamplerTexture(std::string_view name, Ref<Texture> texture,
+			VkImageLayout imageLayout = VK_IMAGE_LAYOUT_MAX_ENUM);
 
 		Material& GetMaterial() { return *m_Material; }
 		const Material& GetMaterial() const { return *m_Material; }

@@ -51,8 +51,6 @@ namespace At0::Ray
 		/**
 		 * Updates uniform with name with material data
 		 */
-		void UpdateMaterialData(const std::string& uniformPath, UniformType uType);
-
 		void UpdateUniform(const std::string& dataPath, bool isPushConstant = false);
 
 		virtual void OnEvent(MaterialBecameDirtyEvent& e) override;

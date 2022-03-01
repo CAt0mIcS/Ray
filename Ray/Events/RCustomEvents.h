@@ -32,5 +32,6 @@ namespace At0::Ray
 	{
 		const std::string& dataPath;
 		UniformType uType;
+		VkImageLayout imageLayout = VK_IMAGE_LAYOUT_MAX_ENUM;
 	};
-}
+}  // namespace At0::Ray

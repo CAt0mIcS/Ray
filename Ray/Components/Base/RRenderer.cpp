@@ -190,13 +190,14 @@ namespace At0::Ray
 		return m_DescriptorSets[0];
 	}
 
-	void Renderer::SetSamplerTexture(std::string_view name, Ref<Texture> texture)
+	void Renderer::SetSamplerTexture(
+		std::string_view name, Ref<Texture> texture, VkImageLayout imageLayout)
 	{
 		for (auto& [set, uniforms] : m_Sampler2DUniforms)
 			for (auto& uniform : uniforms)
 				if (uniform.GetName() == name)
 				{
-					uniform.SetTexture(std::move(texture), GetDescriptorSet(set));
+					uniform.SetTexture(std::move(texture), GetDescriptorSet(set), imageLayout);
 					return;
 				}
 

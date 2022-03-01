@@ -73,14 +73,16 @@ namespace At0::Ray
 		RAY_DEBUG_FLAG(m_UniformBound = true);
 	}
 
-	void DescriptorSet::BindUniform(const Sampler2DUniform& uniform, Ref<Texture> texture)
+	void DescriptorSet::BindUniform(
+		const Sampler2DUniform& uniform, Ref<Texture> texture, VkImageLayout imageLayout)
 	{
 		RAY_DEBUG_FLAG(m_Texture = texture.get());
 
 		VkDescriptorImageInfo imageInfo{};
 		imageInfo.sampler = texture->GetSampler();
 		imageInfo.imageView = texture->GetImageView();
-		imageInfo.imageLayout = texture->GetImageLayout();
+		imageInfo.imageLayout =
+			imageLayout == VK_IMAGE_LAYOUT_MAX_ENUM ? texture->GetImageLayout() : imageLayout;
 
 		VkWriteDescriptorSet descWrites{};
 		descWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

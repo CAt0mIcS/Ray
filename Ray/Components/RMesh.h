@@ -51,6 +51,7 @@ namespace At0::Ray
 		Mesh& operator=(Mesh&& other) noexcept;
 		Mesh(Mesh&& other) noexcept;
 
+		RAY_DEBUG_FLAG(void SetName(std::string name) { m_Name = std::move(name); })
 		RAY_DEBUG_FLAG(std::string_view GetName() const { return m_Name; })
 
 	private:

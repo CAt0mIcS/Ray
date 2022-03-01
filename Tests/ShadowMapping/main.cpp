@@ -39,6 +39,7 @@
 #include <Ray/Graphics/Commands/RCommandBuffer.h>
 #include <Ray/Graphics/Images/RImage.h>
 #include <Ray/Graphics/Images/RTexture.h>
+#include <Ray/Utils/RGeometricPrimitives.h>
 
 
 using namespace At0::Ray;
@@ -77,6 +78,7 @@ Scope<BufferUniform> offUniform;
 
 Ref<GraphicsPipeline> debugPipeline;
 Ref<Material> debugMaterial;
+DescriptorSet* debugDescriptor;
 Entity debugEntity;
 
 
@@ -197,12 +199,17 @@ public:
 									{ "Tests/ShadowMapping/Shaders/DebugQuad.vert",
 										"Tests/ShadowMapping/Shaders/DebugQuad.frag" }))
 								.SetCullMode(VK_CULL_MODE_NONE)
+								.SetVertexInputAttributeDescriptions({})
+								.SetVertexInputBindingDescriptions({})
 								.Build();
 
 			debugMaterial = Material::Builder(debugPipeline).Build();
 
 			debugEntity = Scene::Get().CreateEntity();
-			debugEntity.Emplace<Mesh>(Mesh::Plane(debugMaterial));
+			debugEntity.Emplace<Mesh>(
+				Mesh::Data{ nullptr, nullptr, debugMaterial, {}, RAY_DEBUG_FLAG("DebugQuad") });
+
+			debugDescriptor = &debugEntity.Get<MeshRenderer>().GetDescriptorSet(1);
 		}
 
 
@@ -236,7 +243,9 @@ public:
 				offDescriptor->CmdBind(cmdBuff);
 
 				for (uint32_t i = 0; i < meshRendererView.size(); ++i)
-					meshRendererView.get<Mesh>(meshRendererView[i]).CmdBind(cmdBuff);
+					if (auto& mesh = meshRendererView.get<Mesh>(meshRendererView[i]);
+						mesh.GetName() != "DebugQuad")
+						mesh.CmdBind(cmdBuff);
 
 				offRenderPass->End(cmdBuff);
 			}
@@ -256,26 +265,28 @@ public:
 				vkCmdSetScissor(cmdBuff, 0, 1, &Graphics::Get().m_Scissor);
 
 				// Visualize shadow map
-				// bool displayShadowMap = true;
-				// if (displayShadowMap)
-				//{
-				//	debugPipeline->CmdBind(cmdBuff);
-				//	debugDescriptor->CmdBind(cmdBuff);
-				//	vkCmdDraw(cmdBuff, 3, 1, 0, 0);
-				//}
+				bool displayShadowMap = false;
+				if (displayShadowMap)
+				{
+					debugPipeline->CmdBind(cmdBuff);
+					debugDescriptor->CmdBind(cmdBuff);
+					vkCmdDraw(cmdBuff, 3, 1, 0, 0);
+				}
 
-				// Scene::Get().CmdBind(cmdBuff);
+				// debugEntity.Get<MeshRenderer>().Render(cmdBuff);
+				// debugEntity.Get<Mesh>().CmdBind(cmdBuff);
 
-				debugEntity.Get<MeshRenderer>().Render(cmdBuff);
-				debugEntity.Get<Mesh>().CmdBind(cmdBuff);
+				for (uint32_t i = 0; i < meshRendererView.size(); ++i)
+				{
+					const auto& [meshRenderer, mesh] =
+						meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
 
-				// for (uint32_t i = 0; i < meshRendererView.size(); ++i)
-				//{
-				//	const auto& [meshRenderer, mesh] =
-				//		meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
-				//	meshRenderer.Render(cmdBuff);
-				//	mesh.CmdBind(cmdBuff);
-				//}
+					if (mesh.GetName() == "DebugQuad")
+						continue;
+
+					meshRenderer.Render(cmdBuff);
+					mesh.CmdBind(cmdBuff);
+				}
 
 #if RAY_ENABLE_IMGUI
 				ImGUI::Get().CmdBind(cmdBuff);
@@ -289,35 +300,11 @@ public:
 
 
 		m_Material->Set("Shading.lightSpace", depthMVP);
-		// m_Material->Set("shadowMap", offFramebufferImage);
+		m_Material->Set(
+			"shadowMap", offFramebufferImage, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
 
-		VkDescriptorImageInfo imageInfo{};
-		imageInfo.sampler = offFramebufferImage->GetSampler();
-		imageInfo.imageView = offFramebufferImage->GetImageView();
-		imageInfo.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
-
-		VkWriteDescriptorSet writeDesc{};
-		writeDesc.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		writeDesc.descriptorCount = 1;
-		writeDesc.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		writeDesc.pImageInfo = &imageInfo;
-		writeDesc.dstBinding = 3;
-
-		{
-			DescriptorSet& descShadowMap = m_Floor.Get<MeshRenderer>().GetDescriptorSet(1);
-			writeDesc.dstSet = descShadowMap;
-			descShadowMap.Update({ writeDesc });
-		}
-		{
-			DescriptorSet& descShadowMap = m_Vase.Get<MeshRenderer>().GetDescriptorSet(1);
-			writeDesc.dstSet = descShadowMap;
-			descShadowMap.Update({ writeDesc });
-		}
-		{
-			writeDesc.dstSet = debugEntity.Get<MeshRenderer>().GetDescriptorSet(1);
-			writeDesc.dstBinding = 2;
-			DescriptorSet::Update({ writeDesc });
-		}
+		debugEntity.Get<MeshRenderer>().SetSamplerTexture(
+			"samplerColor", offFramebufferImage, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
 	}
 
 private:
@@ -334,7 +321,7 @@ private:
 private:
 	Matrix CalcDepthMVP()
 	{
-		Matrix depthProjectionMatrix = glm::perspective(Radians(60.f), 1.0f, 0.1f, 96.f);
+		static Matrix depthProjectionMatrix = glm::perspective(Radians(60.f), 1.0f, 0.1f, 96.f);
 		Matrix depthViewMatrix = glm::lookAt(
 			m_Light.Get<Transform>().Translation(), Float3(0.f), Float3(0.f, -1.f, 0.f));
 		Matrix depthModelMatrix = MatrixIdentity();

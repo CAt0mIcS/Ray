@@ -9,7 +9,7 @@ namespace At0::Ray
 {
 	class Shader;
 
-	struct IndexedTriangleList
+	struct RAY_EXPORT IndexedTriangleList
 	{
 		static IndexedTriangleList Triangle(const Shader& shader);
 		static IndexedTriangleList Plane(const Shader& shader);
