@@ -61,7 +61,7 @@ public:
 	}
 };
 
-#define SHADOWMAP_DIM 2048
+#define SHADOWMAP_DIM 4096
 #define DEPTH_FORMAT VK_FORMAT_D16_UNORM
 
 constexpr float depthBiasConstant = 1.25f;
@@ -96,12 +96,16 @@ public:
 		{
 			m_Floor = Scene::Get().CreateEntity();
 			m_Floor.Emplace<Mesh>(Mesh::Import("Resources/Models/Plane.obj"));
-			m_Floor.Get<Transform>().SetTranslation({ 0.f, .5f, 0.f }).SetScale(Float3{ 6.f });
+			// m_Floor.Get<Transform>().SetTranslation({ 0.f, .5f, 0.f }).SetScale(Float3{ 6.f });
+			m_Floor.Get<Transform>().SetScale(Float3{ 6.f });
 			m_Material = m_Floor.Get<MeshRenderer>().GetSharedMaterial();
+			m_Material->Set("Shading2.color", Float3{ 1.f });
 
 			m_Vase = Scene::Get().CreateEntity();
-			m_Vase.Emplace<Mesh>(Mesh::Import("Resources/Models/SmoothVase.obj", m_Material));
-			m_Vase.Get<Transform>().SetTranslation(Float3{ 0.f, .4f, 0.f }).SetScale(Float3{ 3.f });
+			m_Vase.Emplace<Mesh>(Mesh::Import("Resources/Models/SmoothVase.obj"));
+			// m_Vase.Get<Transform>().SetTranslation(Float3{ 0.f, .4f, 0.f });
+			m_Material2 = m_Vase.Get<MeshRenderer>().GetSharedMaterial();
+			m_Material2->Set("Shading2.color", Float3{ 1.f, 0.f, 0.f });
 
 			auto flatColorPipeline =
 				GraphicsPipeline::Builder()
@@ -316,6 +320,10 @@ public:
 		m_Material->Set(
 			"shadowMap", offFramebufferImage, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
 
+		m_Material2->Set("Shading.lightSpace", depthMVP);
+		m_Material2->Set(
+			"shadowMap", offFramebufferImage, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
+
 		debugEntity.Get<MeshRenderer>().SetSamplerTexture(
 			"shadowMap", offFramebufferImage, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
 	}
@@ -329,12 +337,13 @@ private:
 			rotateLight * Float4{ m_Light.Get<Transform>().Translation(), 1.f });
 
 		m_Material->Set("Shading.lightSpace", CalcDepthMVP());
+		m_Material2->Set("Shading.lightSpace", CalcDepthMVP());
 	}
 
 private:
 	Matrix CalcDepthMVP()
 	{
-		static Matrix depthProjectionMatrix = glm::perspective(Radians(45.f), 1.0f, 1.f, 96.f);
+		static Matrix depthProjectionMatrix = glm::perspective(Radians(60.f), 1.0f, 1.f, 96.f);
 
 		Matrix depthViewMatrix = glm::lookAt(
 			m_Light.Get<Transform>().Translation(), Float3{ 0.f }, Float3{ 0.f, 1.f, 0.f });
@@ -349,6 +358,7 @@ private:
 	Entity m_Vase;
 	Entity m_Light;
 	Ref<Material> m_Material;
+	Ref<Material> m_Material2;
 };
 
 void SignalHandler(int signal)

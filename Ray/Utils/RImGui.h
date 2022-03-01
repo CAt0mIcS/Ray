@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #ifndef RAY_ENABLE_IMGUI
-	#define RAY_ENABLE_IMGUI 0
+	#define RAY_ENABLE_IMGUI 1
 #endif
 #ifndef RAY_ENABLE_IMGUI_DOCKSPACE
 	#define RAY_ENABLE_IMGUI_DOCKSPACE 0
@@ -12,7 +12,7 @@
 
 	#define RAY_IMGUI(x) ::At0::Ray::ImGUI::Get().RegisterNewFrameFunction(x)
 
-// clang-format off
+	// clang-format off
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
