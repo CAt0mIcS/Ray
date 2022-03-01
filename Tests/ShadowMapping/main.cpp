@@ -75,9 +75,9 @@ Ref<GraphicsPipeline> offPipeline;
 Scope<DescriptorSet> offDescriptor;
 Scope<BufferUniform> offUniform;
 
-// Debug
 Ref<GraphicsPipeline> debugPipeline;
-Scope<DescriptorSet> debugDescriptor;
+Ref<Material> debugMaterial;
+Entity debugEntity;
 
 
 class App : public Engine
@@ -200,7 +200,10 @@ public:
 								.SetVertexInputAttributeDescriptions({})
 								.Build();
 
-			debugDescriptor = MakeScope<DescriptorSet>(*debugPipeline, 0);
+			debugMaterial = Material::Builder(debugPipeline).Build();
+
+			debugEntity = Scene::Get().CreateEntity();
+			debugEntity.Emplace<Mesh>(Mesh::Plane(debugMaterial));
 		}
 
 
@@ -254,23 +257,26 @@ public:
 				vkCmdSetScissor(cmdBuff, 0, 1, &Graphics::Get().m_Scissor);
 
 				// Visualize shadow map
-				bool displayShadowMap = true;
-				if (displayShadowMap)
-				{
-					debugPipeline->CmdBind(cmdBuff);
-					debugDescriptor->CmdBind(cmdBuff);
-					vkCmdDraw(cmdBuff, 3, 1, 0, 0);
-				}
+				// bool displayShadowMap = true;
+				// if (displayShadowMap)
+				//{
+				//	debugPipeline->CmdBind(cmdBuff);
+				//	debugDescriptor->CmdBind(cmdBuff);
+				//	vkCmdDraw(cmdBuff, 3, 1, 0, 0);
+				//}
 
 				// Scene::Get().CmdBind(cmdBuff);
 
-				for (uint32_t i = 0; i < meshRendererView.size(); ++i)
-				{
-					const auto& [meshRenderer, mesh] =
-						meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
-					meshRenderer.Render(cmdBuff);
-					mesh.CmdBind(cmdBuff);
-				}
+				debugEntity.Get<MeshRenderer>().Render(cmdBuff);
+				debugEntity.Get<Mesh>().CmdBind(cmdBuff);
+
+				// for (uint32_t i = 0; i < meshRendererView.size(); ++i)
+				//{
+				//	const auto& [meshRenderer, mesh] =
+				//		meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
+				//	meshRenderer.Render(cmdBuff);
+				//	mesh.CmdBind(cmdBuff);
+				//}
 
 #if RAY_ENABLE_IMGUI
 				ImGUI::Get().CmdBind(cmdBuff);
@@ -309,9 +315,9 @@ public:
 			descShadowMap.Update({ writeDesc });
 		}
 		{
-			writeDesc.dstSet = *debugDescriptor;
-			writeDesc.dstBinding = 1;
-			debugDescriptor->Update({ writeDesc });
+			writeDesc.dstSet = debugEntity.Get<MeshRenderer>().GetDescriptorSet(1);
+			writeDesc.dstBinding = 2;
+			DescriptorSet::Update({ writeDesc });
 		}
 	}
 

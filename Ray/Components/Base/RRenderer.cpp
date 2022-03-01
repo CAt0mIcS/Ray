@@ -195,7 +195,10 @@ namespace At0::Ray
 		for (auto& [set, uniforms] : m_Sampler2DUniforms)
 			for (auto& uniform : uniforms)
 				if (uniform.GetName() == name)
+				{
 					uniform.SetTexture(std::move(texture), GetDescriptorSet(set));
+					return;
+				}
 
 		ThrowRuntime("[Renderer] Failed to find Sampler2DUniform with name \"{0}\"", name);
 	}

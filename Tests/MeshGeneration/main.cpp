@@ -3,8 +3,6 @@
 #include <Ray/Devices/RWindow.h>
 #include <Ray/Graphics/RGraphics.h>
 
-#include <Ray/UI/RButton.h>
-
 #include <Ray/Components/RMesh.h>
 #include <Ray/Components/RMeshRenderer.h>
 #include <Ray/Components/RTransform.h>
@@ -26,7 +24,7 @@
 #include <random>
 #include <filesystem>
 
-#include <Ray/UI/RImGui.h>
+#include <Ray/Utils/RImGui.h>
 #include <../../Extern/imgui/imgui.h>
 
 
@@ -144,8 +142,8 @@ public:
 		cone.Emplace<Ray::Mesh>(Ray::Mesh::Cone(cullMaterial, 32, 1.f));
 		cone.Get<Ray::Transform>().Translate({ 20.f, 0.f, 0.f });
 
-		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
+		// Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+		//	Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:

@@ -2,7 +2,7 @@
 add_subdirectory("Camera")
 # add_subdirectory("ManyTriangles")
 # add_subdirectory("MaterialSystem")
-# add_subdirectory("MeshGeneration")
+add_subdirectory("MeshGeneration")
 # add_subdirectory("Mono")
 add_subdirectory("PhongShading")
 add_subdirectory("SetupTest")
