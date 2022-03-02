@@ -33,5 +33,5 @@ void main()
 
 	inNormal;
 
-	gl_Position =  ubo.depthMVP * vec4(inPos, 1.0);
+	gl_Position =  ubo.depthMVP * uObj.Model * vec4(inPos, 1.0);
 }

@@ -77,6 +77,7 @@ Ref<Texture> offFramebufferImage;
 Ref<GraphicsPipeline> offPipeline;
 Scope<DescriptorSet> offDescriptor;
 Scope<BufferUniform> offUniform;
+Scope<BufferUniform> offObjUniform;
 
 Ref<GraphicsPipeline> debugPipeline;
 Ref<Material> debugMaterial;
@@ -103,7 +104,9 @@ public:
 
 			m_Vase = Scene::Get().CreateEntity();
 			m_Vase.Emplace<Mesh>(Mesh::Import("Resources/Models/SmoothVase.obj"));
-			// m_Vase.Get<Transform>().SetTranslation(Float3{ 0.f, .4f, 0.f });
+			m_Vase.Get<Transform>()
+				.SetTranslation(Float3{ 0.f, -.4f, 0.f })
+				.SetScale(Float3{ 2.f });
 			m_Material2 = m_Vase.Get<MeshRenderer>().GetSharedMaterial();
 			m_Material2->Set("Shading2.color", Float3{ 1.f, 0.f, 0.f });
 
@@ -207,6 +210,10 @@ public:
 			offUniform = MakeScope<BufferUniform>("UBO", ShaderStage::Vertex, *offPipeline);
 			(*offUniform)["depthMVP"] = depthMVP;
 			offDescriptor->BindUniform(*offUniform);
+
+			offObjUniform =
+				MakeScope<BufferUniform>("PerObjectData", ShaderStage::Vertex, *offPipeline);
+			offDescriptor->BindUniform(*offObjUniform);
 		}
 
 		// debug quad offPipeline/offDescriptor/offUniform
@@ -259,10 +266,15 @@ public:
 				offPipeline->CmdBind(cmdBuff);
 				offDescriptor->CmdBind(cmdBuff);
 
+				(*offObjUniform)["Model"] = m_Vase.Get<Transform>().GetCachedMatrix();
+
 				for (uint32_t i = 0; i < meshRendererView.size(); ++i)
-					if (auto& mesh = meshRendererView.get<Mesh>(meshRendererView[i]);
+					if (const auto& [meshRenderer, mesh] =
+							meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
 						mesh.GetName() != "DebugQuad")
+					{
 						mesh.CmdBind(cmdBuff);
+					}
 
 				offRenderPass->End(cmdBuff);
 			}
@@ -348,9 +360,9 @@ private:
 		Matrix depthViewMatrix = glm::lookAt(
 			m_Light.Get<Transform>().Translation(), Float3{ 0.f }, Float3{ 0.f, 1.f, 0.f });
 
-		Matrix depthModelMatrix = MatrixIdentity();
+		// clang-format on
 
-		return depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+		return depthProjectionMatrix * depthViewMatrix;
 	}
 
 private:

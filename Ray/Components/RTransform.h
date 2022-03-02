@@ -30,6 +30,7 @@ namespace At0::Ray
 		Transform(Entity entity);
 
 		const Matrix& AsMatrix();
+		const Matrix& GetCachedMatrix() const { return m_CachedMatrix; }
 		void RecalculateCachedMatrix() { m_Changed = true; }
 
 		Matrix3 GetNormalMatrix() const;
