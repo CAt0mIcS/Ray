@@ -123,20 +123,6 @@ namespace At0::Ray
 			(Time::Now() - start).AsSeconds());
 	}
 
-	static void Bind(Entity e, const CommandBuffer& cmdBuff)
-	{
-		for (Entity child : e.GetChildren())
-			Bind(child, cmdBuff);
-
-		if (e.Has<Mesh, MeshRenderer>())
-		{
-			e.Get<MeshRenderer>().Render(cmdBuff);
-			e.Get<Mesh>().CmdBind(cmdBuff);
-		}
-	}
-
-	void Model::CmdBind(const CommandBuffer& cmdBuff) { Bind(GetEntity(), cmdBuff); }
-
 	bool Model::ProcessNode(Entity parent, std::string_view filepath, aiNode* pNode,
 		const aiScene* pScene, Ref<Material> material)
 	{
@@ -153,16 +139,14 @@ namespace At0::Ray
 			aiMesh* pMesh = pScene->mMeshes[pNode->mMeshes[0]];
 			ParseMesh(parent, filepath, *pMesh, pScene, material);
 		}
-		else
+		else if (pNode->mNumMeshes > 0)
 		{
+			parent.Emplace<MeshContainer>();
+
 			for (unsigned int i = 0; i < pNode->mNumMeshes; i++)
 			{
-				Entity e = Scene::Get().CreateEntity();
-				e.Emplace<HierachyComponent>().SetParent(parent);
-				parent.AddChild(e);
-
 				aiMesh* pMesh = pScene->mMeshes[pNode->mMeshes[i]];
-				ParseMesh(e, filepath, *pMesh, pScene, material);
+				ParseMesh(parent, filepath, *pMesh, pScene, material);
 			}
 		}
 
@@ -206,8 +190,18 @@ namespace At0::Ray
 
 		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
 		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
-		entity.Emplace<Mesh>(Mesh::Data{ std::move(vertexBuffer), std::move(indexBuffer),
-			std::move(material), RAY_DEBUG_FLAG(meshTag) });
+
+		// RAY_TODO: Use meshTag for codexing
+		if (entity.Has<MeshContainer>())
+		{
+			entity.Get<MeshContainer>().AddMesh(
+				{ entity, { std::move(vertexBuffer), std::move(indexBuffer), nullptr,
+							  RAY_DEBUG_FLAG(/*meshTag*/ mesh.mName.C_Str()) } },
+				std::move(material));
+		}
+		else
+			entity.Emplace<Mesh>(Mesh::Data{ std::move(vertexBuffer), std::move(indexBuffer),
+				std::move(material), RAY_DEBUG_FLAG(/*meshTag*/ mesh.mName.C_Str()) });
 	}
 
 	Ref<Material> Model::CreateMaterial(const std::string& basePath, const aiMaterial* pMaterial)
@@ -332,5 +326,21 @@ namespace At0::Ray
 		}
 
 		return indices;
+	}
+
+
+	void MeshContainer::Render(const CommandBuffer& cmdBuff) const
+	{
+		for (const auto& [mesh, meshRenderer] : m_Meshes)
+		{
+			meshRenderer.Render(cmdBuff);
+			mesh.CmdBind(cmdBuff);
+		}
+	}
+
+	void MeshContainer::Update()
+	{
+		for (Data& data : m_Meshes)
+			data.meshRenderer.Update();
 	}
 }  // namespace At0::Ray

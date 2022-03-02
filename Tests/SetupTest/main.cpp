@@ -53,7 +53,7 @@ public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
-		Ray::ImGUI::Get().RegisterNewFrameFunction(
+		RAY_IMGUI(
 			[&]()
 			{
 				{
@@ -98,7 +98,7 @@ public:
 			Ray::GraphicsPipeline::Builder()
 				.SetShader(Ray::Shader::AcquireSourceFile(
 					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
-				.SetCullMode(VK_CULL_MODE_FRONT_BIT)
+				.SetCullMode(VK_CULL_MODE_NONE)
 				.Acquire();
 
 		auto material =
@@ -125,6 +125,8 @@ private:
 		std::string_view tag = "Empty";
 		if (e.Has<Ray::Mesh>())
 			tag = e.Get<Ray::Mesh>().GetName();
+		else if (e.Has<Ray::MeshContainer>())
+			tag = e.Get<Ray::MeshContainer>().GetName();
 
 		ImGuiTreeNodeFlags flags = ((m_SelectedEntity == e) ? ImGuiTreeNodeFlags_Selected : 0) |
 								   ImGuiTreeNodeFlags_OpenOnArrow;

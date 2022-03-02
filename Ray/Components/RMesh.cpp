@@ -20,10 +20,12 @@ namespace At0::Ray
 		  m_IndexBuffer(std::move(vertexData.indexBuffer)) RAY_DEBUG_FLAG(, m_Name(vertexData.name))
 	{
 		if (vertexData.material)
+		{
 			if (!GetEntity().Has<MeshRenderer>())
 				GetEntity().Emplace<MeshRenderer>(std::move(vertexData.material));
 			else
 				GetEntity().Get<MeshRenderer>().SetMaterial(std::move(vertexData.material));
+		}
 
 
 		// if (vertexData.children.size() != 0)
@@ -130,6 +132,7 @@ namespace At0::Ray
 		m_VertexBuffer = std::move(other.m_VertexBuffer);
 		m_IndexBuffer = std::move(other.m_IndexBuffer);
 		m_Entity = std::move(other.m_Entity);
+		RAY_DEBUG_FLAG(m_Name = std::move(other.m_Name));
 		return *this;
 	}
 

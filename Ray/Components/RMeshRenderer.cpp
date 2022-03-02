@@ -35,7 +35,7 @@ namespace At0::Ray
 		// if (!Scene::Get().GetCamera().GetFrustum().SphereCheck(
 		//		GetEntity().Get<Transform>().Translation(), 1.0f /*radius*/))
 		//	return;
-		RAY_DEBUG_FLAG(m_Name = GetEntity().Get<Mesh>().GetName());
+		// RAY_DEBUG_FLAG(m_Name = GetEntity().Get<Mesh>().GetName());
 
 		m_Material->CmdBind(cmdBuff);
 

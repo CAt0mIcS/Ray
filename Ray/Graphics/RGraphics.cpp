@@ -265,9 +265,9 @@ namespace At0::Ray
 				mesh.CmdBind(cmdBuff);
 			}
 
-			auto modelRendererView = Scene::Get().GetRegistry().view<Model>();
+			auto modelRendererView = Scene::Get().GetRegistry().view<MeshContainer>();
 			for (uint32_t i = 0; i < modelRendererView.size(); ++i)
-				modelRendererView.get<Model>(modelRendererView[i]).CmdBind(cmdBuff);
+				modelRendererView.get<MeshContainer>(modelRendererView[i]).Render(cmdBuff);
 
 #if RAY_ENABLE_IMGUI
 			ImGUI::Get().CmdBind(cmdBuff);
