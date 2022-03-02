@@ -19,7 +19,6 @@ namespace At0::Ray
 			Ref<VertexBuffer> vertexBuffer;
 			Ref<IndexBuffer> indexBuffer;
 			Ref<Material> material;
-			std::vector<Entity> children;
 			RAY_DEBUG_FLAG(std::string name);
 		};
 
@@ -34,14 +33,6 @@ namespace At0::Ray
 		static Data UVSphere(Ref<Material> material, float radius, int latDiv, int longDiv);
 		static Data Cylinder(Ref<Material> material, int segments, float radius);
 		static Data Cone(Ref<Material> material, int segments, float radius);
-
-		/**
-		 * Import a model from a file
-		 * @param material Optional material. If not set, the model importer will create it's own
-		 * and use any maps(diffuse/specular/...) that are contained in the model file. If this
-		 * material is set, the importer will ignore said maps.
-		 */
-		static Mesh::Data Import(std::string_view filepath, Ref<Material> material = nullptr);
 
 		/**
 		 * Called to bind mesh-specific resources

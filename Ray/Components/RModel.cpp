@@ -13,12 +13,14 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
+#include "Components/RMesh.h"
 #include "Components/RMeshRenderer.h"
 #include "Components/RHierachyComponent.h"
+
 #include "Scene/RScene.h"
 #include "Core/RTime.h"
 
-#define RAY_MULTITHREADED_IMPORT 1
+#define RAY_MULTITHREADED_IMPORT 0
 
 
 namespace At0::Ray
@@ -37,7 +39,8 @@ namespace At0::Ray
 	};
 
 
-	Model::Model(std::string_view filepath, Ref<Material> material)
+	Model::Model(Entity entity, std::string_view filepath, Ref<Material> material)
+		: Component(entity)
 	{
 		Assimp::Importer importer;
 		const aiScene* pScene = importer.ReadFile(filepath.data(),
@@ -113,23 +116,67 @@ namespace At0::Ray
 		for (auto& future : futures)
 			future.get();
 #else
-		for (uint32_t i = 0; i < pScene->mNumMeshes; ++i)
-		{
-			ParseMesh(filepath, *pScene->mMeshes[i], pScene->mMaterials, material);
-		}
+		ProcessNode(GetEntity(), filepath, pScene->mRootNode, pScene, std::move(material));
 #endif
 
 		Log::Info("[Model] Loading of resource \"{0}\" took {1}s", filepath,
 			(Time::Now() - start).AsSeconds());
 	}
 
-	Ref<Model> Model::Acquire(std::string_view filepath, Ref<Material> material)
+	static void Bind(Entity e, const CommandBuffer& cmdBuff)
 	{
-		return Resources::Get().EmplaceIfNonExistent<Model>(filepath.data(), filepath, material);
+		for (Entity child : e.GetChildren())
+			Bind(child, cmdBuff);
+
+		if (e.Has<Mesh, MeshRenderer>())
+		{
+			e.Get<MeshRenderer>().Render(cmdBuff);
+			e.Get<Mesh>().CmdBind(cmdBuff);
+		}
 	}
 
-	void Model::ParseMesh(std::string_view filepath, const aiMesh& mesh,
-		const aiMaterial* const* pMaterials, Ref<Material> material)
+	void Model::CmdBind(const CommandBuffer& cmdBuff) { Bind(GetEntity(), cmdBuff); }
+
+	void Model::ProcessNode(Entity parent, std::string_view filepath, aiNode* pNode,
+		const aiScene* pScene, Ref<Material> material)
+	{
+		HierachyComponent& parentHierachy = parent.EmplaceOrGet<HierachyComponent>();
+
+		// Parse this entity's meshes
+		if (pNode->mNumMeshes == 1)
+		{
+			// If only one mesh needs to be loaded for this entity, we'll store it directly in this
+			// entity
+			aiMesh* pMesh = pScene->mMeshes[pNode->mMeshes[0]];
+			ParseMesh(parent, filepath, *pMesh, pScene, material);
+		}
+		else
+		{
+			for (unsigned int i = 0; i < pNode->mNumMeshes; i++)
+			{
+				Entity e = Scene::Get().CreateEntity();
+				e.Emplace<HierachyComponent>().SetParent(parent);
+				parent.AddChild(e);
+
+				aiMesh* pMesh = pScene->mMeshes[pNode->mMeshes[i]];
+				ParseMesh(e, filepath, *pMesh, pScene, material);
+			}
+		}
+
+
+		// Parse children
+		for (unsigned int i = 0; i < pNode->mNumChildren; i++)
+		{
+			Entity e = Scene::Get().CreateEntity();
+			e.Emplace<HierachyComponent>().SetParent(parent);
+			parent.AddChild(e);
+
+			ProcessNode(e, filepath, pNode->mChildren[i], pScene, material);
+		}
+	}
+
+	void Model::ParseMesh(Entity entity, std::string_view filepath, const aiMesh& mesh,
+		const aiScene* pScene, Ref<Material> material)
 	{
 		const std::string basePath = std::filesystem::path(filepath).remove_filename().string();
 		const std::string meshTag = std::string(filepath) + std::string("#") + mesh.mName.C_Str();
@@ -138,7 +185,7 @@ namespace At0::Ray
 
 		// Material creation stage
 		if (!material)
-			material = CreateMaterial(basePath, pMaterials[mesh.mMaterialIndex]);
+			material = CreateMaterial(basePath, pScene->mMaterials[mesh.mMaterialIndex]);
 
 		// Vertex assembly stage
 		DynamicVertex vertices =
@@ -147,27 +194,10 @@ namespace At0::Ray
 		// Index generation stage
 		std::vector<IndexBuffer::Type> indices = GenerateIndices(mesh);
 
-		// Parents
-		if (!m_ParentSet)
-		{
-			m_VertexData.vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
-			m_VertexData.indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
-			m_VertexData.material = std::move(material);
-			m_ParentSet = true;
-		}
-		// Children
-		else
-		{
-			Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
-			Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
-
-			// ParentEntity component added by mesh
-			Entity entity = Scene::Get().CreateEntity();
-			Ray::MeshRenderer& meshRenderer =
-				entity.Emplace<Ray::MeshRenderer>(std::move(material));
-			entity.Emplace<Ray::Mesh>(Mesh::Data{ vertexBuffer, indexBuffer });
-			m_VertexData.children.emplace_back(entity);
-		}
+		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
+		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
+		entity.Emplace<Mesh>(Mesh::Data{ std::move(vertexBuffer), std::move(indexBuffer),
+			std::move(material) RAY_DEBUG_FLAG(, meshTag) });
 	}
 
 	Ref<Material> Model::CreateMaterial(const std::string& basePath, const aiMaterial* pMaterial)

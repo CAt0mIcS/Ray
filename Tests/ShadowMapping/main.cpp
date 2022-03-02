@@ -75,7 +75,7 @@ Scope<RenderPass> offRenderPass;
 Scope<Framebuffer> offFramebuffer;
 Ref<Texture> offFramebufferImage;
 Ref<GraphicsPipeline> offPipeline;
-Scope<DescriptorSet> offDescriptor;
+std::vector<Scope<DescriptorSet>> offDescriptors;
 Scope<BufferUniform> offUniform;
 
 Ref<GraphicsPipeline> debugPipeline;
@@ -94,20 +94,16 @@ public:
 #include "../ImGuiWindows.inl"
 
 		{
-			m_Floor = Scene::Get().CreateEntity();
-			m_Floor.Emplace<Mesh>(Mesh::Import("Resources/Models/Plane.obj"));
-			// m_Floor.Get<Transform>().SetTranslation({ 0.f, .5f, 0.f }).SetScale(Float3{ 6.f });
-			m_Floor.Get<Transform>().SetScale(Float3{ 6.f });
-			m_Material = m_Floor.Get<MeshRenderer>().GetSharedMaterial();
-			m_Material->Set("Shading2.color", Float3{ 1.f });
+			auto shadedPipeline =
+				GraphicsPipeline::Builder()
+					.SetShader(Shader::AcquireSourceFile({ "Resources/Shaders/ShadowMapping.vert",
+						"Resources/Shaders/ShadowMapping.frag" }))
+					.Acquire();
 
-			m_Vase = Scene::Get().CreateEntity();
-			m_Vase.Emplace<Mesh>(Mesh::Import("Resources/Models/SmoothVase.obj"));
-			m_Vase.Get<Transform>()
-				.SetTranslation(Float3{ 0.f, -.4f, 0.f })
-				.SetScale(Float3{ 2.f });
-			m_Material2 = m_Vase.Get<MeshRenderer>().GetSharedMaterial();
-			m_Material2->Set("Shading2.color", Float3{ 1.f, 0.f, 0.f });
+			m_Material = Material::Builder(shadedPipeline).Build();
+
+			m_Scene = Scene::Get().CreateEntity();
+			m_Scene.Emplace<Mesh>(Mesh::Import("Resources/Models/ShadingScene.gltf", m_Material));
 
 			auto flatColorPipeline =
 				GraphicsPipeline::Builder()
@@ -204,14 +200,20 @@ public:
 						VK_DYNAMIC_STATE_DEPTH_BIAS })
 					.Build();
 
-			offDescriptor = MakeScope<DescriptorSet>(*offPipeline, 1);
-
+			offDescriptors.emplace_back(MakeScope<DescriptorSet>(*offPipeline, 1));
 			offUniform = MakeScope<BufferUniform>("UBO", ShaderStage::Vertex, *offPipeline);
 			(*offUniform)["depthMVP"] = depthMVP;
-			offDescriptor->BindUniform(*offUniform);
+			offDescriptors[0]->BindUniform(*offUniform);
+			offDescriptors[0]->BindUniform(
+				m_Scene.Get<MeshRenderer>().GetBufferUniform("PerObjectData"));
 
-			offDescriptor->BindUniform(
-				m_Vase.Get<MeshRenderer>().GetBufferUniform("PerObjectData"));
+			for (int i = 0; i < m_Scene.GetChildren().size(); ++i)
+			{
+				offDescriptors.emplace_back(MakeScope<DescriptorSet>(*offPipeline, 1));
+				offDescriptors[i + 1]->BindUniform(*offUniform);
+				offDescriptors[i + 1]->BindUniform(
+					m_Scene.GetChildren()[i].Get<MeshRenderer>().GetBufferUniform("PerObjectData"));
+			}
 		}
 
 		// debug quad offPipeline/offDescriptor/offUniform
@@ -262,17 +264,23 @@ public:
 
 				vkCmdSetDepthBias(cmdBuff, depthBiasConstant, 0.0f, depthBiasSlope);
 				offPipeline->CmdBind(cmdBuff);
-				offDescriptor->CmdBind(cmdBuff);
 
-				//(*offObjUniform)["Model"] = m_Vase.Get<Transform>().GetCachedMatrix();
+				m_Scene.Get<Mesh>().CmdBind(cmdBuff);
+				offDescriptors[0]->CmdBind(cmdBuff);
 
-				for (uint32_t i = 0; i < meshRendererView.size(); ++i)
-					if (const auto& [meshRenderer, mesh] =
-							meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
-						mesh.GetName() != "DebugQuad")
-					{
-						mesh.CmdBind(cmdBuff);
-					}
+				for (int i = 0; i < m_Scene.GetChildren().size(); ++i)
+				{
+					m_Scene.GetChildren()[i].Get<Mesh>().CmdBind(cmdBuff);
+					offDescriptors[i + 1]->CmdBind(cmdBuff);
+				}
+
+				// for (uint32_t i = 0; i < meshRendererView.size(); ++i)
+				//	if (const auto& [meshRenderer, mesh] =
+				//			meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
+				//		mesh.GetName() != "DebugQuad")
+				//	{
+				//		mesh.CmdBind(cmdBuff);
+				//	}
 
 				offRenderPass->End(cmdBuff);
 			}
@@ -299,20 +307,27 @@ public:
 					debugPipeline->CmdBind(cmdBuff);
 					vkCmdDraw(cmdBuff, 3, 1, 0, 0);
 				}
-				// debugEntity.Get<MeshRenderer>().Render(cmdBuff);
-				// debugEntity.Get<Mesh>().CmdBind(cmdBuff);
 
-				for (uint32_t i = 0; i < meshRendererView.size(); ++i)
+				m_Scene.Get<MeshRenderer>().Render(cmdBuff);
+				m_Scene.Get<Mesh>().CmdBind(cmdBuff);
+
+				for (int i = 0; i < m_Scene.GetChildren().size(); ++i)
 				{
-					const auto& [meshRenderer, mesh] =
-						meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
-
-					if (mesh.GetName() == "DebugQuad")
-						continue;
-
-					meshRenderer.Render(cmdBuff);
-					mesh.CmdBind(cmdBuff);
+					m_Scene.GetChildren()[i].Get<MeshRenderer>().Render(cmdBuff);
+					m_Scene.GetChildren()[i].Get<Mesh>().CmdBind(cmdBuff);
 				}
+
+				// for (uint32_t i = 0; i < meshRendererView.size(); ++i)
+				//{
+				//	const auto& [meshRenderer, mesh] =
+				//		meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
+
+				//	if (mesh.GetName() == "DebugQuad")
+				//		continue;
+
+				//	meshRenderer.Render(cmdBuff);
+				//	mesh.CmdBind(cmdBuff);
+				//}
 
 
 #if RAY_ENABLE_IMGUI
@@ -330,10 +345,6 @@ public:
 		m_Material->Set(
 			"shadowMap", offFramebufferImage, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
 
-		m_Material2->Set("Shading.lightSpace", depthMVP);
-		m_Material2->Set(
-			"shadowMap", offFramebufferImage, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
-
 		debugEntity.Get<MeshRenderer>().SetSamplerTexture(
 			"shadowMap", offFramebufferImage, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
 	}
@@ -347,7 +358,6 @@ private:
 			rotateLight * Float4{ m_Light.Get<Transform>().Translation(), 1.f });
 
 		m_Material->Set("Shading.lightSpace", CalcDepthMVP());
-		m_Material2->Set("Shading.lightSpace", CalcDepthMVP());
 	}
 
 private:
@@ -364,11 +374,9 @@ private:
 	}
 
 private:
-	Entity m_Floor;
-	Entity m_Vase;
+	Entity m_Scene;
 	Entity m_Light;
 	Ref<Material> m_Material;
-	Ref<Material> m_Material2;
 };
 
 void SignalHandler(int signal)

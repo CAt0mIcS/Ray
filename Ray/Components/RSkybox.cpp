@@ -8,7 +8,7 @@
 #include "Scene/RCamera.h"
 #include "Shading/RMaterial.h"
 
-#include "RMesh.h"
+#include "RModel.h"
 #include "RTransform.h"
 
 
@@ -31,8 +31,7 @@ namespace At0::Ray
 							.Acquire();
 
 
-		Mesh& mesh = GetEntity().Emplace<Mesh>(
-			Mesh::Import("Resources/Models/UVSphere/UVSphere.obj", material));
+		GetEntity().Emplace<Model>("Resources/Models/UVSphere/UVSphere.obj", material);
 		auto& tform = GetEntity().Get<Transform>();
 		tform.SetScale(Float3{ Scene::Get().GetCamera().GetFarClip() - 5.0f });
 

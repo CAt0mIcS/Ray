@@ -7,16 +7,19 @@
 #include <Ray/Components/RMeshRenderer.h>
 #include <Ray/Components/RTransform.h>
 #include <Ray/Components/RSkybox.h>
+#include <Ray/Components/RModel.h>
 #include <Ray/Components/RScriptableEntity.h>
 
 #include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
+#include <Ray/Graphics/Pipelines/Shader/RShader.h>
 #include <Ray/Utils/RException.h>
 #include <Ray/Core/RDynamicVertex.h>
 
 #include <Ray/Scene/RScene.h>
 #include <Ray/Scene/RCamera.h>
+#include <Ray/Shading/RMaterial.h>
 
 #include <signal.h>
 #include <random>
@@ -91,12 +94,23 @@ public:
 #include "../ImGuiWindows.inl"
 
 
-		m_Entity = Scene::Get().CreateEntity();
-		m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+		auto pipeline =
+			Ray::GraphicsPipeline::Builder()
+				.SetShader(Ray::Shader::AcquireSourceFile(
+					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
+				.SetCullMode(VK_CULL_MODE_FRONT_BIT)
+				.Acquire();
 
-		m_Entity2 = Scene::Get().CreateEntity();
-		m_Entity2.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
-		m_Entity2.Get<Ray::Transform>().SetTranslation(Ray::Float3{ 6.0f, 0.0f, 0.0f });
+		auto material =
+			Ray::Material::Builder(pipeline).Set("Shading.color", Ray::Float4{ 1.f }).Build();
+
+		m_Entity = Scene::Get().CreateEntity();
+		// m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+		m_Entity.Emplace<Ray::Model>("Resources/Scenes/ShadowMapping.glb", material);
+
+		// m_Entity2 = Scene::Get().CreateEntity();
+		// m_Entity2.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+		// m_Entity2.Get<Ray::Transform>().SetTranslation(Ray::Float3{ 6.0f, 0.0f, 0.0f });
 
 		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 			Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));

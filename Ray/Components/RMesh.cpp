@@ -10,7 +10,6 @@
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/Pipelines/RGraphicsPipeline.h"
 
-#include "Utils/RModel.h"
 #include "Utils/RGeometricPrimitives.h"
 
 
@@ -27,23 +26,23 @@ namespace At0::Ray
 				GetEntity().Get<MeshRenderer>().SetMaterial(std::move(vertexData.material));
 
 
-		if (vertexData.children.size() != 0)
-		{
-			if (GetEntity().Has<HierachyComponent>())
-				GetEntity().Get<HierachyComponent>().SetChildren(std::move(vertexData.children));
-			else
-				GetEntity().Emplace<HierachyComponent>().SetChildren(
-					std::move(vertexData.children));
-		}
+		// if (vertexData.children.size() != 0)
+		//{
+		//	if (GetEntity().Has<HierachyComponent>())
+		//		GetEntity().Get<HierachyComponent>().SetChildren(std::move(vertexData.children));
+		//	else
+		//		GetEntity().Emplace<HierachyComponent>().SetChildren(
+		//			std::move(vertexData.children));
+		//}
 
 
-		for (Entity child : vertexData.children)
-		{
-			if (!child.Has<HierachyComponent>())
-				child.Emplace<HierachyComponent>().SetParent(GetEntity());
-			else
-				child.Get<HierachyComponent>().SetParent(GetEntity());
-		}
+		// for (Entity child : vertexData.children)
+		//{
+		//	if (!child.Has<HierachyComponent>())
+		//		child.Emplace<HierachyComponent>().SetParent(GetEntity());
+		//	else
+		//		child.Get<HierachyComponent>().SetParent(GetEntity());
+		//}
 	}
 
 	Mesh::Data Mesh::Triangle(Ref<Material> material)
@@ -52,7 +51,7 @@ namespace At0::Ray
 			IndexedTriangleList::Triangle(material->GetGraphicsPipeline().GetShader());
 		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
 			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
-			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
+			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::Plane(Ref<Material> material)
@@ -61,7 +60,7 @@ namespace At0::Ray
 			IndexedTriangleList::Plane(material->GetGraphicsPipeline().GetShader());
 		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
 			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
-			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
+			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::HalfCircle(Ref<Material> material, int segments, float radius)
@@ -70,7 +69,7 @@ namespace At0::Ray
 			material->GetGraphicsPipeline().GetShader(), segments, radius);
 		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
 			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
-			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
+			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::Circle(Ref<Material> material, int segments, float radius)
@@ -79,7 +78,7 @@ namespace At0::Ray
 			material->GetGraphicsPipeline().GetShader(), segments, radius);
 		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
 			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
-			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
+			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::Cube(Ref<Material> material)
@@ -88,7 +87,7 @@ namespace At0::Ray
 			IndexedTriangleList::Cube(material->GetGraphicsPipeline().GetShader());
 		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
 			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
-			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
+			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::UVSphere(Ref<Material> material, float radius, int latDiv, int longDiv)
@@ -97,7 +96,7 @@ namespace At0::Ray
 			material->GetGraphicsPipeline().GetShader(), radius, latDiv, longDiv);
 		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
 			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
-			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
+			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::Cylinder(Ref<Material> material, int segments, float radius)
@@ -106,7 +105,7 @@ namespace At0::Ray
 			material->GetGraphicsPipeline().GetShader(), segments, radius);
 		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
 			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
-			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
+			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::Cone(Ref<Material> material, int segments, float radius)
@@ -115,12 +114,7 @@ namespace At0::Ray
 			material->GetGraphicsPipeline().GetShader(), segments, radius);
 		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
 			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
-			std::move(material), {}, RAY_DEBUG_FLAG(mesh.uniqueTag) };
-	}
-
-	Mesh::Data Mesh::Import(std::string_view filepath, Ref<Material> material)
-	{
-		return Model::Acquire(filepath, std::move(material))->GetVertexData();
+			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff) const
