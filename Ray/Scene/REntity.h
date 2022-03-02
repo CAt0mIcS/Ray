@@ -156,6 +156,11 @@ namespace At0::Ray
 		bool HasChild(Entity child) const;
 
 		/**
+		 * Removes child if it exists
+		 */
+		void RemoveChild(Entity child);
+
+		/**
 		 * Casting operator to the entity identifier
 		 */
 		explicit operator entt::entity() const { return m_EntityHandle; }

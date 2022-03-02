@@ -53,7 +53,7 @@ public:
 	App()
 	{
 		Ray::Scene::Create<Scene>();
-		RAY_IMGUI(
+		Ray::ImGUI::Get().RegisterNewFrameFunction(
 			[&]()
 			{
 				{

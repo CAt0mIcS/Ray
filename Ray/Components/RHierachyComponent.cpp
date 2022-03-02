@@ -63,6 +63,11 @@ namespace At0::Ray
 #endif
 	}
 
+	void HierachyComponent::RemoveChild(Entity entity)
+	{
+		m_Children.erase(std::find(m_Children.begin(), m_Children.end(), entity));
+	}
+
 	bool HierachyComponent::HasChild(Entity child) const
 	{
 		return std::find(m_Children.begin(), m_Children.end(), child) != m_Children.end();

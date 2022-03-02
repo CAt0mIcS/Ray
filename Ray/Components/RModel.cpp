@@ -137,11 +137,11 @@ namespace At0::Ray
 
 	void Model::CmdBind(const CommandBuffer& cmdBuff) { Bind(GetEntity(), cmdBuff); }
 
-	void Model::ProcessNode(Entity parent, std::string_view filepath, aiNode* pNode,
+	bool Model::ProcessNode(Entity parent, std::string_view filepath, aiNode* pNode,
 		const aiScene* pScene, Ref<Material> material)
 	{
 		if (pNode->mNumMeshes <= 0 && pNode->mNumChildren <= 0)
-			return;
+			return false;
 
 		HierachyComponent& parentHierachy = parent.EmplaceOrGet<HierachyComponent>();
 
@@ -174,8 +174,15 @@ namespace At0::Ray
 			e.Emplace<HierachyComponent>().SetParent(parent);
 			parent.AddChild(e);
 
-			ProcessNode(e, filepath, pNode->mChildren[i], pScene, material);
+			// Empty entity created above, delete it
+			if (!ProcessNode(e, filepath, pNode->mChildren[i], pScene, material))
+			{
+				parent.RemoveChild(e);
+				e.Destroy();
+			}
 		}
+
+		return true;
 	}
 
 	void Model::ParseMesh(Entity entity, std::string_view filepath, const aiMesh& mesh,

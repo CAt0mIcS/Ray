@@ -66,6 +66,12 @@ namespace At0::Ray
 		return Get<HierachyComponent>().HasChild(child);
 	}
 
+	void Entity::RemoveChild(Entity child)
+	{
+		RAY_MEXPECTS(Has<HierachyComponent>(), "[Entity] Does not have a HierachyComponent.");
+		Get<HierachyComponent>().RemoveChild(child);
+	}
+
 	constexpr bool Entity::operator==(const Entity& other) const
 	{
 		return m_Registry == other.m_Registry && m_EntityHandle == other.m_EntityHandle;

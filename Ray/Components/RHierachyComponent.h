@@ -15,6 +15,8 @@ namespace At0::Ray
 		void SetParent(Entity parent);
 		void SetChildren(std::vector<Entity> children);
 
+		void RemoveChild(Entity entity);
+
 		bool HasChild(Entity child) const;
 
 		const std::vector<Entity>& GetChildren() const { return m_Children; }

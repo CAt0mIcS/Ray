@@ -25,7 +25,7 @@ namespace At0::Ray
 		void CmdBind(const CommandBuffer& cmdBuff);
 
 	private:
-		void ProcessNode(Entity parent, std::string_view filepath, aiNode* pNode,
+		bool ProcessNode(Entity parent, std::string_view filepath, aiNode* pNode,
 			const aiScene* pScene, Ref<Material> material);
 
 		void ParseMesh(Entity entity, std::string_view filepath, const aiMesh& mesh,
