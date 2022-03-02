@@ -11,9 +11,6 @@ struct aiMaterial;
 struct aiNode;
 struct aiScene;
 
-#include "RMesh.h"
-#include "RMeshRenderer.h"
-
 
 namespace At0::Ray
 {
@@ -37,37 +34,6 @@ namespace At0::Ray
 		static std::vector<IndexBuffer::Type> GenerateIndices(const aiMesh& mesh);
 	};
 
-	class MeshContainer : public Component
-	{
-	public:
-		MeshContainer(Entity entity) : Component(entity) {}
-
-		void AddMesh(Mesh mesh, Ref<Material> material)
-		{
-			Entity e = mesh.GetEntity();
-
-			m_Meshes.emplace_back(
-				MeshContainer::Data{ std::move(mesh), MeshRenderer{ e, std::move(material) } });
-			RAY_DEBUG_FLAG(m_Name += "|" + std::string(m_Meshes.back().mesh.GetName()));
-		}
-
-		RAY_DEBUG_FLAG(std::string_view GetName() const { return m_Name; })
-
-		void Render(const CommandBuffer& cmdBuff) const;
-		void Update();
-
-	private:
-		struct Data
-		{
-			Mesh mesh;
-			MeshRenderer meshRenderer;
-		};
-
-		std::vector<Data> m_Meshes;
-		RAY_DEBUG_FLAG(std::string m_Name);
-	};
-
 }  // namespace At0::Ray
 
 RAY_EXPORT_COMPONENT(Model);
-RAY_EXPORT_COMPONENT(MeshContainer);

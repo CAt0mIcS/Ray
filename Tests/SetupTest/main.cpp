@@ -9,6 +9,7 @@
 #include <Ray/Components/RSkybox.h>
 #include <Ray/Components/RModel.h>
 #include <Ray/Components/RScriptableEntity.h>
+#include <Ray/Components/RMeshContainer.h>
 
 #include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>

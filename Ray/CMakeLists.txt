@@ -198,6 +198,8 @@ set(SRC
 	"Components/RMesh.cpp"
 	"Components/RModel.h"
 	"Components/RModel.cpp"
+	"Components/RMeshContainer.h"
+	"Components/RMeshContainer.cpp"
 	"Components/RSkybox.h"
 	"Components/RSkybox.cpp"
 	"Components/RMeshRenderer.h"

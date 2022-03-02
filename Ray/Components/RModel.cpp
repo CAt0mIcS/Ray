@@ -16,6 +16,7 @@
 #include "Components/RMesh.h"
 #include "Components/RMeshRenderer.h"
 #include "Components/RHierachyComponent.h"
+#include "Components/RMeshContainer.h"
 
 #include "Scene/RScene.h"
 #include "Core/RTime.h"
@@ -326,21 +327,5 @@ namespace At0::Ray
 		}
 
 		return indices;
-	}
-
-
-	void MeshContainer::Render(const CommandBuffer& cmdBuff) const
-	{
-		for (const auto& [mesh, meshRenderer] : m_Meshes)
-		{
-			meshRenderer.Render(cmdBuff);
-			mesh.CmdBind(cmdBuff);
-		}
-	}
-
-	void MeshContainer::Update()
-	{
-		for (Data& data : m_Meshes)
-			data.meshRenderer.Update();
 	}
 }  // namespace At0::Ray

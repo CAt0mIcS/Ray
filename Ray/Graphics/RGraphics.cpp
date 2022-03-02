@@ -26,7 +26,7 @@
 
 #include "Components/RMesh.h"
 #include "Components/RMeshRenderer.h"
-#include "Components/RModel.h"
+#include "Components/RMeshContainer.h"
 
 #include "Devices/RWindow.h"
 

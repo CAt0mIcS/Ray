@@ -3,7 +3,7 @@
 #include "RScene.h"
 
 #include "Components/RMeshRenderer.h"
-#include "Components/RModel.h"
+#include "Components/RMeshContainer.h"
 #include "Components/RSkybox.h"
 #include "Components/RTransform.h"
 
