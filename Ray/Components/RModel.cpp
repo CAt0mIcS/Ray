@@ -140,6 +140,9 @@ namespace At0::Ray
 	void Model::ProcessNode(Entity parent, std::string_view filepath, aiNode* pNode,
 		const aiScene* pScene, Ref<Material> material)
 	{
+		if (pNode->mNumMeshes <= 0 && pNode->mNumChildren <= 0)
+			return;
+
 		HierachyComponent& parentHierachy = parent.EmplaceOrGet<HierachyComponent>();
 
 		// Parse this entity's meshes
@@ -197,7 +200,7 @@ namespace At0::Ray
 		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
 		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
 		entity.Emplace<Mesh>(Mesh::Data{ std::move(vertexBuffer), std::move(indexBuffer),
-			std::move(material) RAY_DEBUG_FLAG(, meshTag) });
+			std::move(material), RAY_DEBUG_FLAG(meshTag) });
 	}
 
 	Ref<Material> Model::CreateMaterial(const std::string& basePath, const aiMaterial* pMaterial)

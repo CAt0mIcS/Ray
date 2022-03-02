@@ -75,17 +75,17 @@ public:
 
 					{
 						ImGui::Begin("TestEntity");
-						Ray::Transform& tform = m_Entity.Get<Ray::Transform>();
-						translate(tform);
-						ImGui::Spacing();
-						ImGui::End();
-					}
-					if (m_Entity2)
-					{
-						ImGui::Begin("TestEntity2");
-						Ray::Transform& tform = m_Entity2.Get<Ray::Transform>();
-						translate(tform);
-						ImGui::Spacing();
+						if (m_SelectedEntity)
+						{
+							Ray::Transform& tform = m_SelectedEntity.Get<Ray::Transform>();
+							translate(tform);
+							ImGui::Spacing();
+						}
+
+
+						// Scene Hierachy
+						DrawEntityNode(m_Entity);
+
 						ImGui::End();
 					}
 				}
@@ -112,16 +112,38 @@ public:
 		// m_Entity2.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 		// m_Entity2.Get<Ray::Transform>().SetTranslation(Ray::Float3{ 6.0f, 0.0f, 0.0f });
 
-		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
+		// Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
+		//	Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
+		auto& registry = Scene::Get().GetRegistry();
 	}
 
 private:
 	void Update() override {}
 
+	void DrawEntityNode(Ray::Entity e)
+	{
+		std::string_view tag = "Empty";
+		if (e.Has<Ray::Mesh>())
+			tag = e.Get<Ray::Mesh>().GetName();
+
+		ImGuiTreeNodeFlags flags = ((m_SelectedEntity == e) ? ImGuiTreeNodeFlags_Selected : 0) |
+								   ImGuiTreeNodeFlags_OpenOnArrow;
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
+		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)e, flags, tag.data());
+		if (ImGui::IsItemClicked())
+			m_SelectedEntity = e;
+
+		if (opened)
+		{
+			for (Ray::Entity child : e.GetChildren())
+				DrawEntityNode(child);
+			ImGui::TreePop();
+		}
+	}
+
 private:
 	Ray::Entity m_Entity;
-	Ray::Entity m_Entity2;
+	Ray::Entity m_SelectedEntity;
 };
 
 void SignalHandler(int signal)
