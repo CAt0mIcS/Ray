@@ -77,7 +77,6 @@ Ref<Texture> offFramebufferImage;
 Ref<GraphicsPipeline> offPipeline;
 Scope<DescriptorSet> offDescriptor;
 Scope<BufferUniform> offUniform;
-Scope<BufferUniform> offObjUniform;
 
 Ref<GraphicsPipeline> debugPipeline;
 Ref<Material> debugMaterial;
@@ -211,9 +210,8 @@ public:
 			(*offUniform)["depthMVP"] = depthMVP;
 			offDescriptor->BindUniform(*offUniform);
 
-			offObjUniform =
-				MakeScope<BufferUniform>("PerObjectData", ShaderStage::Vertex, *offPipeline);
-			offDescriptor->BindUniform(*offObjUniform);
+			offDescriptor->BindUniform(
+				m_Vase.Get<MeshRenderer>().GetBufferUniform("PerObjectData"));
 		}
 
 		// debug quad offPipeline/offDescriptor/offUniform
@@ -266,7 +264,7 @@ public:
 				offPipeline->CmdBind(cmdBuff);
 				offDescriptor->CmdBind(cmdBuff);
 
-				(*offObjUniform)["Model"] = m_Vase.Get<Transform>().GetCachedMatrix();
+				//(*offObjUniform)["Model"] = m_Vase.Get<Transform>().GetCachedMatrix();
 
 				for (uint32_t i = 0; i < meshRendererView.size(); ++i)
 					if (const auto& [meshRenderer, mesh] =
