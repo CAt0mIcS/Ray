@@ -7,7 +7,7 @@ layout (location = 1) in vec3 inViewVec;
 layout (location = 2) in vec3 inLightVec;
 layout (location = 3) in vec4 inShadowCoord;
 
-const int enablePCF = 1;
+const int enablePCF = 0;
 
 layout (location = 0) out vec4 outColor;
 
@@ -50,11 +50,6 @@ float filterPCF(vec4 sc)
 	return shadowFactor / count;
 }
 
-layout(set = 1, binding = 4) uniform Shading2
-{
-	vec3 color;
-} uShading;
-
 void main() 
 {	
 	float shadow = (enablePCF == 1) ? filterPCF(inShadowCoord / inShadowCoord.w) : textureProj(inShadowCoord / inShadowCoord.w, vec2(0.0));
@@ -63,8 +58,7 @@ void main()
 	vec3 L = normalize(inLightVec);
 	vec3 V = normalize(inViewVec);
 	vec3 R = normalize(-reflect(L, N));
-	vec3 diffuse = max(dot(N, L), ambient) * uShading.color;
+	vec3 diffuse = max(dot(N, L), ambient) * vec3(1.f, 1.f, 1.f);
 
 	outColor = vec4(diffuse * shadow, 1.0);
-
 }

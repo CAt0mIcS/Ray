@@ -18,7 +18,7 @@ layout(set = 1, binding = 1) uniform PerObjectData
 layout (set = 1, binding = 2) uniform Shading
 {
 	mat4 lightSpace;
-	vec4 lightPosition[1];
+	vec4 lightPosition;
 } uShading;
 
 layout (location = 0) out vec3 outNormal;
@@ -45,7 +45,7 @@ void main()
 	
     vec4 pos = uObj.Model * vec4(inPos, 1.0);
     outNormal = mat3(uObj.Model) * inNormal;
-    outLightVec = normalize(uShading.lightPosition[0].xyz - inPos);
+    outLightVec = normalize(uShading.lightPosition.xyz - inPos);
     outViewVec = -pos.xyz;
 
 	outShadowCoord = (biasMat * uShading.lightSpace * uObj.Model) * vec4(inPos, 1.0);	
