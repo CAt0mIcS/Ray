@@ -9,7 +9,6 @@
 #include <Ray/Components/RSkybox.h>
 #include <Ray/Components/RModel.h>
 #include <Ray/Components/RScriptableEntity.h>
-#include <Ray/Components/RMeshContainer.h>
 
 #include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
@@ -126,8 +125,6 @@ private:
 		std::string_view tag = "Empty";
 		if (e.Has<Ray::Mesh>())
 			tag = e.Get<Ray::Mesh>().GetName();
-		else if (e.Has<Ray::MeshContainer>())
-			tag = e.Get<Ray::MeshContainer>().GetName();
 
 		ImGuiTreeNodeFlags flags = ((m_SelectedEntity == e) ? ImGuiTreeNodeFlags_Selected : 0) |
 								   ImGuiTreeNodeFlags_OpenOnArrow;

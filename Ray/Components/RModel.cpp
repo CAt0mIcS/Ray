@@ -13,10 +13,10 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-#include "Components/RMesh.h"
-#include "Components/RMeshRenderer.h"
-#include "Components/RHierachyComponent.h"
-#include "Components/RMeshContainer.h"
+#include "RMesh.h"
+#include "RMeshRenderer.h"
+#include "RHierachyComponent.h"
+#include "RTransform.h"
 
 #include "Scene/RScene.h"
 #include "Core/RTime.h"
@@ -132,6 +132,19 @@ namespace At0::Ray
 
 		HierachyComponent& parentHierachy = parent.EmplaceOrGet<HierachyComponent>();
 
+		// Decompose transformation matrix for parent
+		{
+			aiVector3D scale;
+			aiVector3D rot;
+			aiVector3D trans;
+
+			pNode->mTransformation.Decompose(scale, rot, trans);
+			parent.Get<Transform>()
+				.SetTranslation({ trans.x, trans.y, trans.z })
+				.SetRotation({ rot.x, rot.y, rot.z })
+				.SetScale({ scale.x, scale.y, scale.z });
+		}
+
 		// Parse this entity's meshes
 		if (pNode->mNumMeshes == 1)
 		{
@@ -142,8 +155,6 @@ namespace At0::Ray
 		}
 		else if (pNode->mNumMeshes > 1)
 		{
-			// parent.Emplace<MeshContainer>();
-
 			for (unsigned int i = 0; i < pNode->mNumMeshes; i++)
 			{
 				Entity e = Scene::Get().CreateEntity();
@@ -195,16 +206,6 @@ namespace At0::Ray
 
 		Ref<VertexBuffer> vertexBuffer = Codex::Resolve<VertexBuffer>(meshTag, vertices);
 		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
-
-		// RAY_TODO: Use meshTag for codexing
-		// if (entity.Has<MeshContainer>())
-		//{
-		//	entity.Get<MeshContainer>().AddMesh(
-		//		{ entity, { std::move(vertexBuffer), std::move(indexBuffer), nullptr,
-		//					  RAY_DEBUG_FLAG(/*meshTag*/ mesh.mName.C_Str()) } },
-		//		std::move(material));
-		//}
-		// else
 		entity.Emplace<Mesh>(Mesh::Data{ std::move(vertexBuffer), std::move(indexBuffer),
 			std::move(material), RAY_DEBUG_FLAG(/*meshTag*/ mesh.mName.C_Str()) });
 	}
