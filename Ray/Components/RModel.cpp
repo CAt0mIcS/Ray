@@ -140,14 +140,18 @@ namespace At0::Ray
 			aiMesh* pMesh = pScene->mMeshes[pNode->mMeshes[0]];
 			ParseMesh(parent, filepath, *pMesh, pScene, material);
 		}
-		else if (pNode->mNumMeshes > 0)
+		else if (pNode->mNumMeshes > 1)
 		{
-			parent.Emplace<MeshContainer>();
+			// parent.Emplace<MeshContainer>();
 
 			for (unsigned int i = 0; i < pNode->mNumMeshes; i++)
 			{
+				Entity e = Scene::Get().CreateEntity();
+				e.Emplace<HierachyComponent>().SetParent(parent);
+				parent.AddChild(e);
+
 				aiMesh* pMesh = pScene->mMeshes[pNode->mMeshes[i]];
-				ParseMesh(parent, filepath, *pMesh, pScene, material);
+				ParseMesh(e, filepath, *pMesh, pScene, material);
 			}
 		}
 
@@ -193,16 +197,16 @@ namespace At0::Ray
 		Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
 
 		// RAY_TODO: Use meshTag for codexing
-		if (entity.Has<MeshContainer>())
-		{
-			entity.Get<MeshContainer>().AddMesh(
-				{ entity, { std::move(vertexBuffer), std::move(indexBuffer), nullptr,
-							  RAY_DEBUG_FLAG(/*meshTag*/ mesh.mName.C_Str()) } },
-				std::move(material));
-		}
-		else
-			entity.Emplace<Mesh>(Mesh::Data{ std::move(vertexBuffer), std::move(indexBuffer),
-				std::move(material), RAY_DEBUG_FLAG(/*meshTag*/ mesh.mName.C_Str()) });
+		// if (entity.Has<MeshContainer>())
+		//{
+		//	entity.Get<MeshContainer>().AddMesh(
+		//		{ entity, { std::move(vertexBuffer), std::move(indexBuffer), nullptr,
+		//					  RAY_DEBUG_FLAG(/*meshTag*/ mesh.mName.C_Str()) } },
+		//		std::move(material));
+		//}
+		// else
+		entity.Emplace<Mesh>(Mesh::Data{ std::move(vertexBuffer), std::move(indexBuffer),
+			std::move(material), RAY_DEBUG_FLAG(/*meshTag*/ mesh.mName.C_Str()) });
 	}
 
 	Ref<Material> Model::CreateMaterial(const std::string& basePath, const aiMaterial* pMaterial)

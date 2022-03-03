@@ -3,7 +3,6 @@
 #include "RScene.h"
 
 #include "Components/RMeshRenderer.h"
-#include "Components/RMeshContainer.h"
 #include "Components/RSkybox.h"
 #include "Components/RTransform.h"
 
@@ -82,17 +81,10 @@ namespace At0::Ray
 		m_ThreadPool.SubmitLoop(0u, (uint32_t)meshRendererView.size(),
 			[&meshRendererView](uint32_t i)
 			{ Entity{ meshRendererView[i] }.Get<MeshRenderer>().Update(); });
-
-		auto meshContainerView = m_Registry.view<MeshContainer>();
-		m_ThreadPool.SubmitLoop(0u, (uint32_t)meshContainerView.size(),
-			[&meshContainerView](uint32_t i)
-			{ Entity{ meshContainerView[i] }.Get<MeshContainer>().Update(); });
-
 		m_ThreadPool.WaitForTasks();
 
 #else
 		m_Registry.view<MeshRenderer>().each([](MeshRenderer& mesh) { mesh.Update(); });
-		m_Registry.view<MeshContainer>().each([](MeshContainer& container) { container.Update(); });
 #endif
 
 		// CLog::Trace(

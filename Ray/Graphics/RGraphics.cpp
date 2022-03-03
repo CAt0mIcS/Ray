@@ -26,7 +26,6 @@
 
 #include "Components/RMesh.h"
 #include "Components/RMeshRenderer.h"
-#include "Components/RMeshContainer.h"
 
 #include "Devices/RWindow.h"
 
@@ -264,10 +263,6 @@ namespace At0::Ray
 				meshRenderer.Render(cmdBuff);
 				mesh.CmdBind(cmdBuff);
 			}
-
-			auto modelRendererView = Scene::Get().GetRegistry().view<MeshContainer>();
-			for (uint32_t i = 0; i < modelRendererView.size(); ++i)
-				modelRendererView.get<MeshContainer>(modelRendererView[i]).Render(cmdBuff);
 
 #if RAY_ENABLE_IMGUI
 			ImGUI::Get().CmdBind(cmdBuff);

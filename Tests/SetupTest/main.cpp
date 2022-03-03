@@ -107,7 +107,7 @@ public:
 
 		m_Entity = Scene::Get().CreateEntity();
 		// m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
-		m_Entity.Emplace<Ray::Model>("Resources/Scenes/ShadowMapping.glb", material);
+		m_Entity.Emplace<Ray::Model>("Resources/Scenes/ShadowMapping.gltf", material);
 
 		// m_Entity2 = Scene::Get().CreateEntity();
 		// m_Entity2.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
