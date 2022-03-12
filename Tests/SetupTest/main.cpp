@@ -9,6 +9,7 @@
 #include <Ray/Components/RSkybox.h>
 #include <Ray/Components/RModel.h>
 #include <Ray/Components/RScriptableEntity.h>
+#include <Ray/Components/RHierachyComponent.h>
 
 #include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
@@ -106,7 +107,7 @@ public:
 
 		m_Entity = Scene::Get().CreateEntity();
 		// m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
-		m_Entity.Emplace<Ray::Model>("Resources/Scenes/ShadowMapping.gltf", material);
+		m_Entity.Emplace<Ray::Model>("Resources/Models/Plane.obj", material);
 
 		// m_Entity2 = Scene::Get().CreateEntity();
 		// m_Entity2.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
@@ -135,8 +136,9 @@ private:
 
 		if (opened)
 		{
-			for (Ray::Entity child : e.GetChildren())
-				DrawEntityNode(child);
+			if (e.Has<Ray::HierachyComponent>())
+				for (Ray::Entity child : e.GetChildren())
+					DrawEntityNode(child);
 			ImGui::TreePop();
 		}
 	}

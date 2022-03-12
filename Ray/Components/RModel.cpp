@@ -130,8 +130,6 @@ namespace At0::Ray
 		if (pNode->mNumMeshes <= 0 && pNode->mNumChildren <= 0)
 			return false;
 
-		HierachyComponent& parentHierachy = parent.GetOrEmplace<HierachyComponent>();
-
 		// Decompose transformation matrix for parent
 		{
 			aiVector3D scale;
@@ -148,10 +146,16 @@ namespace At0::Ray
 		// Parse this entity's meshes
 		if (pNode->mNumMeshes == 1)
 		{
-			// If only one mesh needs to be loaded for this entity, we'll store it directly in this
-			// entity
+			// If only one mesh needs to be loaded for this entity, we'll store it directly
+			// in this entity
 			aiMesh* pMesh = pScene->mMeshes[pNode->mMeshes[0]];
 			ParseMesh(parent, filepath, *pMesh, pScene, material);
+		}
+		else if (pNode->mNumMeshes == 0 && pNode->mNumChildren == 1)
+		{
+			// If only one child needs to be loaded for this entity, we'll store it directly
+			// in this entity
+			return ProcessNode(parent, filepath, pNode->mChildren[0], pScene, std::move(material));
 		}
 		else if (pNode->mNumMeshes > 1)
 		{
@@ -159,7 +163,7 @@ namespace At0::Ray
 			{
 				Entity e = Scene::Get().CreateEntity();
 				e.Emplace<HierachyComponent>().SetParent(parent);
-				parent.AddChild(e);
+				parent.GetOrEmplace<HierachyComponent>().AddChild(e);
 
 				aiMesh* pMesh = pScene->mMeshes[pNode->mMeshes[i]];
 				ParseMesh(e, filepath, *pMesh, pScene, material);
@@ -172,7 +176,7 @@ namespace At0::Ray
 		{
 			Entity e = Scene::Get().CreateEntity();
 			e.Emplace<HierachyComponent>().SetParent(parent);
-			parent.AddChild(e);
+			parent.GetOrEmplace<HierachyComponent>().AddChild(e);
 
 			// Empty entity created above, delete it
 			if (!ProcessNode(e, filepath, pNode->mChildren[i], pScene, material))

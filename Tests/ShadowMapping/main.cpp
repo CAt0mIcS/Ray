@@ -10,6 +10,7 @@
 #include <Ray/Components/RScriptableEntity.h>
 #include <Ray/Components/RPointLight.h>
 #include <Ray/Components/RModel.h>
+#include <Ray/Components/RHierachyComponent.h>
 
 #include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
@@ -99,12 +100,22 @@ public:
 				GraphicsPipeline::Builder()
 					.SetShader(Shader::AcquireSourceFile({ "Resources/Shaders/ShadowMapping.vert",
 						"Resources/Shaders/ShadowMapping.frag" }))
+					.SetCullMode(VK_CULL_MODE_NONE)
 					.Acquire();
 
 			m_Material = Material::Builder(shadedPipeline).Build();
 
+			m_Floor = Scene::Get().CreateEntity();
+			m_Floor.Emplace<Model>("Resources/Models/Plane.obj", m_Material);
+			m_Floor.Get<Mesh>().SetName("Floor");
+			m_Floor.Get<Transform>().SetScale(Float3{ 6.f });
+
 			m_Scene = Scene::Get().CreateEntity();
-			m_Scene.Emplace<Model>("Resources/Scenes/ShadowMappingCube.gltf", m_Material);
+			m_Scene.Emplace<Model>("Resources/Models/SmoothVase.obj", m_Material);
+			m_Scene.Get<Transform>()
+				.SetTranslation(Float3{ 0.f, .4f, 0.f })
+				.SetScale(Float3{ 2.f })
+				.SetRotation(Float3{ Math::PI<>, 0.f, 0.f });
 
 			auto flatColorPipeline =
 				GraphicsPipeline::Builder()
@@ -116,8 +127,8 @@ public:
 				Material::Builder(flatColorPipeline).Set("Shading.color", Float4{ 1.f }).Acquire();
 
 			m_Light = Scene::Get().CreateEntity();
-			m_Light.Emplace<PointLight>().SetTranslation({ 5.f, 25.f, 0.f });
-			m_Light.Emplace<Mesh>(Mesh::UVSphere(flatWhiteMaterial, .1f, 24, 24));
+			m_Light.Emplace<PointLight>().SetTranslation({ 5.f, 5.f, 0.f });
+			m_Light.Emplace<Mesh>(Mesh::UVSphere(flatWhiteMaterial, .1f, 24, 24)).SetName("Light");
 		}
 
 
@@ -203,7 +214,17 @@ public:
 
 			offUniform = MakeScope<BufferUniform>("UBO", ShaderStage::Vertex, *offPipeline);
 			(*offUniform)["depthMVP"] = depthMVP;
-			EmplaceUniform(m_Scene);
+
+			auto meshRendererView = Scene::Get().GetRegistry().group<MeshRenderer>(entt::get<Mesh>);
+			for (uint32_t i = 0; i < meshRendererView.size(); ++i)
+			{
+				offDescriptors[(uint32_t)meshRendererView[i]] =
+					MakeScope<DescriptorSet>(*offPipeline, 1);
+				offDescriptors[(uint32_t)meshRendererView[i]]->BindUniform(*offUniform);
+				offDescriptors[(uint32_t)meshRendererView[i]]->BindUniform(
+					Entity{ meshRendererView[i] }.Get<MeshRenderer>().GetBufferUniform(
+						"PerObjectData"));
+			}
 		}
 
 		// debug quad offPipeline/offDescriptor/offUniform
@@ -255,7 +276,18 @@ public:
 				vkCmdSetDepthBias(cmdBuff, depthBiasConstant, 0.0f, depthBiasSlope);
 
 				offPipeline->CmdBind(cmdBuff);
-				DrawShadowPass(m_Scene, cmdBuff);
+				// DrawShadowPass(m_Scene, cmdBuff);
+				for (uint32_t i = 0; i < meshRendererView.size(); ++i)
+				{
+					const auto& mesh = meshRendererView.get<Mesh>(meshRendererView[i]);
+
+					if (mesh.GetName() == "DebugQuad" || mesh.GetName() == "Light" ||
+						mesh.GetName() == "Floor")
+						continue;
+
+					offDescriptors[(uint32_t)meshRendererView[i]]->CmdBind(cmdBuff);
+					mesh.CmdBind(cmdBuff);
+				}
 
 				offRenderPass->End(cmdBuff);
 			}
@@ -341,34 +373,9 @@ private:
 		return depthProjectionMatrix * depthViewMatrix;
 	}
 
-	void EmplaceUniform(Entity e)
-	{
-		for (Entity child : e.GetChildren())
-			EmplaceUniform(child);
-
-		if (e.Has<MeshRenderer>())
-		{
-			offDescriptors[(uint32_t)e] = MakeScope<DescriptorSet>(*offPipeline, 1);
-			offDescriptors[(uint32_t)e]->BindUniform(*offUniform);
-			offDescriptors[(uint32_t)e]->BindUniform(
-				e.Get<MeshRenderer>().GetBufferUniform("PerObjectData"));
-		}
-	}
-
-	void DrawShadowPass(Entity e, const CommandBuffer& cmdBuff)
-	{
-		for (Entity child : e.GetChildren())
-			DrawShadowPass(child, cmdBuff);
-
-		if (e.Has<Mesh>() && e.Get<Mesh>().GetName() != "DebugQuad")
-		{
-			offDescriptors[(uint32_t)e]->CmdBind(cmdBuff);
-			e.Get<Mesh>().CmdBind(cmdBuff);
-		}
-	}
-
 private:
 	Entity m_Scene;
+	Entity m_Floor;
 	Entity m_Light;
 	Ref<Material> m_Material;
 };
