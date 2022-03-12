@@ -130,7 +130,7 @@ namespace At0::Ray
 		if (pNode->mNumMeshes <= 0 && pNode->mNumChildren <= 0)
 			return false;
 
-		HierachyComponent& parentHierachy = parent.EmplaceOrGet<HierachyComponent>();
+		HierachyComponent& parentHierachy = parent.GetOrEmplace<HierachyComponent>();
 
 		// Decompose transformation matrix for parent
 		{

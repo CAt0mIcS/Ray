@@ -1,4 +1,5 @@
 ﻿#include "RTransform.h"
+#include "RHierachyComponent.h"
 
 
 namespace At0::Ray
@@ -88,9 +89,10 @@ namespace At0::Ray
 	bool Transform::HasChanged() const
 	{
 		bool parentChanged = false;
-		// RAY_TODO: Deleting entity while checking here! Threading error
-		if (GetEntity().HasParent())
-			parentChanged = GetEntity().GetParent().Get<Transform>().HasChanged();
+		// RAY_TODO: Multithreaded transform recalculations in scene: the parent stuff fails
+		if (auto hierachy = GetEntity().TryGet<HierachyComponent>();
+			hierachy && hierachy->GetParent().Valid())
+			parentChanged = hierachy->GetParent().Get<Transform>().HasChanged();
 
 		return m_HasChanged || parentChanged;
 	}

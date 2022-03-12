@@ -43,15 +43,12 @@ namespace At0::Ray
 			RAY_MEXPECTS(!Has<Comp>(), "[Entity] Entity (ID={0}) already has component",
 				(uint32_t)m_EntityHandle);
 			RAY_MEXPECTS(Valid(), "[Entity] Cannot assign component to null entity.");
+
 			if constexpr (std::is_constructible_v<Comp, Entity&, Args...>)
-			{
 				return m_Registry->emplace<Comp>(
 					m_EntityHandle, *this, std::forward<Args>(args)...);
-			}
 			else
-			{
 				return m_Registry->emplace<Comp>(m_EntityHandle, std::forward<Args>(args)...);
-			}
 		}
 
 		/**
@@ -59,9 +56,35 @@ namespace At0::Ray
 		 * Otherwise it will be added and returned
 		 */
 		template<typename Comp, typename... Args>
-		decltype(auto) EmplaceOrGet(Args&&... args)
+		decltype(auto) GetOrEmplace(Args&&... args)
 		{
-			return Has<Comp>() ? Get<Comp>() : Emplace<Comp>(std::forward(args)...);
+			RAY_MEXPECTS(Valid(), "[Entity] Cannot assign component to null entity.");
+
+			if constexpr (std::is_constructible_v<Comp, Entity&, Args...>)
+				return m_Registry->get_or_emplace<Comp>(
+					m_EntityHandle, *this, std::forward<Args>(args)...);
+			else
+				return m_Registry->get_or_emplace<Comp>(m_EntityHandle, std::forward<Args>()...);
+		}
+
+		/**
+		 * @returns Component if the entity has it, otherwise nullptr
+		 */
+		template<typename... Comp>
+		decltype(auto) TryGet() const
+		{
+			RAY_MEXPECTS(Valid(), "[Entity] Cannot assign component to null entity.");
+			return m_Registry->try_get<Comp...>(m_EntityHandle);
+		}
+
+		/**
+		 * @returns Component if the entity has it, otherwise nullptr
+		 */
+		template<typename... Comp>
+		decltype(auto) TryGet()
+		{
+			RAY_MEXPECTS(Valid(), "[Entity] Cannot assign component to null entity.");
+			return m_Registry->try_get<Comp...>(m_EntityHandle);
 		}
 
 		/**

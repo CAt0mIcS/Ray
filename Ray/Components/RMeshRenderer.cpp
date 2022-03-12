@@ -2,6 +2,7 @@
 
 #include "RTransform.h"
 #include "RMesh.h"
+#include "RHierachyComponent.h"
 
 #include "Scene/RScene.h"
 #include "Scene/RCamera.h"
@@ -51,12 +52,14 @@ namespace At0::Ray
 	{
 		if (auto& tform = GetEntity().Get<Transform>(); tform.HasChanged())
 		{
-			// RAY_TODO: Deleting entity while checking here! Threading error
-			if (GetEntity().HasParent())
+			// RAY_TODO: Multithreaded meshrenderer updates in scene: the parent stuff fails
+			if (auto hierachy = GetEntity().TryGet<HierachyComponent>();
+				hierachy && hierachy->GetParent().Valid())
 				m_PerObjectDataUniformRef =
-					GetEntity().GetParent().Get<Transform>().AsMatrix() * tform.AsMatrix();
+					hierachy->GetParent().Get<Transform>().AsMatrix() * tform.AsMatrix();
 			else
 				m_PerObjectDataUniformRef = tform.AsMatrix();
+
 			if (auto& uObj = GetBufferUniform(UniformBlockTag::PerObjectData);
 				uObj.Has("NormalMatrix"))
 				uObj["NormalMatrix"] = Matrix{ tform.GetNormalMatrix() };

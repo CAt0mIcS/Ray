@@ -18,6 +18,7 @@ namespace At0::Ray
 
 	void Entity::Destroy()
 	{
+		RAY_MEXPECTS(Valid(), "[Entity] Cannot get component(s) of null entity.");
 		m_Registry->destroy(m_EntityHandle);
 		m_EntityHandle = Entity::Null;
 	}
@@ -43,6 +44,7 @@ namespace At0::Ray
 
 	bool Entity::HasParent() const
 	{
+		RAY_MEXPECTS(Valid(), "[Entity] Cannot get component(s) of null entity.");
 		HierachyComponent* pComponent = m_Registry->try_get<HierachyComponent>(m_EntityHandle);
 		return pComponent == nullptr || pComponent->GetParent() == Entity::Null ? false : true;
 	}
