@@ -187,6 +187,9 @@ set(SRC
 	"Graphics/RenderPass/RSubpass.h"
 	"Graphics/RenderPass/RSubpass.cpp"
 
+	"Graphics/ShadowMapping/RShadowMappingObjects.h"
+	"Graphics/ShadowMapping/RShadowMappingObjects.cpp"
+
 	# ------------------------------------------------------------------
 	# Components
 	"Components/Base/RRenderer.h"

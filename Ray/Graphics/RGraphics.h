@@ -26,15 +26,12 @@ namespace At0::Ray
 	class Framebuffer;
 	class DepthImage;
 	class CommandBufferRecorder;
+	class ShadowMappingObjects;
 
 
 	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
 	{
 	public:
-		std::function<void(
-			const CommandBuffer& cmdBuff, const Framebuffer& framebuffer, uint32_t imageIndex)>
-			OnCommandBufferRecord;
-
 		~Graphics();
 		static Graphics& Get();
 		static void Destroy();
@@ -48,6 +45,8 @@ namespace At0::Ray
 		const RenderPass& GetRenderPass() const { return *m_RenderPass; }
 		VkPipelineCache GetPipelineCache() const { return m_PipelineCache; }
 		static uint32_t GetImageCount() { return s_MaxFramesInFlight; }
+
+		const ShadowMappingObjects& GetShadowMapping() { return *m_ShadowMapping; }
 
 		/**
 		 * Acquires the next frame for rendering and presentation
@@ -76,7 +75,7 @@ namespace At0::Ray
 		void OnFramebufferResized();
 		void WritePipelineCache();
 
-	public:
+	private:
 		static Graphics* s_Instance;
 		static constexpr uint8_t s_MaxFramesInFlight = 2;
 
@@ -96,6 +95,8 @@ namespace At0::Ray
 		std::vector<Scope<Framebuffer>> m_Framebuffers;
 		std::vector<Scope<CommandBuffer>> m_CommandBuffers;
 		Scope<CommandBufferRecorder> m_CommandBufferRecorder;
+
+		Scope<ShadowMappingObjects> m_ShadowMapping;
 
 		std::array<VkFence, s_MaxFramesInFlight> m_InFlightFences;
 		std::array<VkSemaphore, s_MaxFramesInFlight> m_ImageAvailableSemaphore;

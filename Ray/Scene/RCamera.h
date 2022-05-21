@@ -13,8 +13,6 @@
 
 namespace At0::Ray
 {
-	class BufferUniform;
-
 	class RAY_EXPORT Camera :
 		public EventDispatcher<CameraChangedEvent>,
 		EventListener<MouseMovedEvent>,

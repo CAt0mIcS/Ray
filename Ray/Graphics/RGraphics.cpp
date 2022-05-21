@@ -10,6 +10,8 @@
 #include "RenderPass/RAttachment.h"
 #include "RenderPass/RSubpass.h"
 
+#include "ShadowMapping/RShadowMappingObjects.h"
+
 #include "Images/RDepthImage.h"
 #include "Images/RImageView.h"
 
@@ -71,6 +73,8 @@ namespace At0::Ray
 		CreatePipelineCache();
 
 		CreateSyncObjects();
+
+		m_ShadowMapping = MakeScope<ShadowMappingObjects>();
 	}
 
 	Graphics& Graphics::Get()
@@ -236,42 +240,55 @@ namespace At0::Ray
 	void Graphics::RecordCommandBuffer(
 		const CommandBuffer& cmdBuff, const Framebuffer& framebuffer, uint32_t imageIndex)
 	{
-		if (OnCommandBufferRecord)
-			OnCommandBufferRecord(cmdBuff, framebuffer, imageIndex);
-		else
+		auto meshRendererView = Scene::Get().GetRegistry().group<MeshRenderer>(entt::get<Mesh>);
+
+		VkClearValue clearValues[2];
+		cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+
+		m_ShadowMapping->Draw(cmdBuff, meshRendererView);
+
+		/////////////////////////////////////////////////////////////////////////////////////////
+		// Seconds pass (Geometry pass)
+
+		// clearValues[0].color = { 0.0137254f, 0.014117f, 0.0149019f };
+		clearValues[0].color = { 0.f, 0.f, 0.f };
+		clearValues[1].depthStencil = { 1.0f, 0 };
+
+		Graphics::Get().m_RenderPass->Begin(cmdBuff, framebuffer, clearValues,
+			std::size(clearValues), Graphics::Get().GetSwapchain().GetExtent());
+
+		vkCmdSetViewport(cmdBuff, 0, 1, &Graphics::Get().m_Viewport);
+		vkCmdSetScissor(cmdBuff, 0, 1, &Graphics::Get().m_Scissor);
+
+		// Visualize shadow map
+		// bool displayShadowMap = false;
+		// if (displayShadowMap)
+		//{
+		//	debugDescriptor->CmdBind(cmdBuff);
+		//	debugPipeline->CmdBind(cmdBuff);
+		//	vkCmdDraw(cmdBuff, 3, 1, 0, 0);
+		//}
+
+		for (uint32_t i = 0; i < meshRendererView.size(); ++i)
 		{
-			cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+			const auto& [meshRenderer, mesh] =
+				meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
 
-			VkClearValue clearValues[2];
-			// clearValues[0].color = { 0.0137254f, 0.014117f, 0.0149019f };
-			clearValues[0].color = { 0.f, 0.f, 0.f };
-			clearValues[1].depthStencil = { 1.0f, 0 };
+			if (mesh.GetName() == "DebugQuad")
+				continue;
 
-			m_RenderPass->Begin(cmdBuff, framebuffer, clearValues, std::size(clearValues),
-				m_Swapchain->GetExtent());
+			meshRenderer.Render(cmdBuff);
+			mesh.CmdBind(cmdBuff);
+		}
 
-			vkCmdSetViewport(cmdBuff, 0, 1, &m_Viewport);
-			vkCmdSetScissor(cmdBuff, 0, 1, &m_Scissor);
-
-			// Scene::Get().CmdBind(cmdBuff);
-
-			auto meshRendererView = Scene::Get().GetRegistry().group<MeshRenderer>(entt::get<Mesh>);
-			for (uint32_t i = 0; i < meshRendererView.size(); ++i)
-			{
-				const auto& [meshRenderer, mesh] =
-					meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
-				meshRenderer.Render(cmdBuff);
-				mesh.CmdBind(cmdBuff);
-			}
 
 #if RAY_ENABLE_IMGUI
-			ImGUI::Get().CmdBind(cmdBuff);
+		ImGUI::Get().CmdBind(cmdBuff);
 #endif
 
-			m_RenderPass->End(cmdBuff);
+		Graphics::Get().m_RenderPass->End(cmdBuff);
 
-			cmdBuff.End();
-		}
+		cmdBuff.End();
 	}
 
 	void Graphics::Update(Delta dt)
@@ -380,6 +397,8 @@ namespace At0::Ray
 	Graphics::~Graphics()
 	{
 		m_LogicalDevice->WaitIdle();
+
+		m_ShadowMapping.reset();
 
 		for (uint32_t i = 0; i < s_MaxFramesInFlight; ++i)
 		{

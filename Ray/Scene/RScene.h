@@ -15,7 +15,6 @@
 namespace At0::Ray
 {
 	class DescriptorSet;
-	class BufferUniform;
 	class Camera;
 
 
