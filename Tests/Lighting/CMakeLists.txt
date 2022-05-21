@@ -1,5 +1,12 @@
+set(SHADERS
+	"Shaders/PointLighting.vert"
+	"Shaders/PointLighting.frag"
+)
+
 set(SRC
 	"main.cpp"
+
+	${SHADERS}
 )
 
 add_executable("Lighting" "${SRC}")
@@ -11,3 +18,5 @@ set_target_properties("Lighting" PROPERTIES FOLDER "Tests")
 
 SetOutputDirectory("Lighting" "")
 SetWorkingDirectoryPlane("Lighting" "${CMAKE_SOURCE_DIR}")
+
+AddRecursiveFilters("${SHADERS}")

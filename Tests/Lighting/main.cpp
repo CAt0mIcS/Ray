@@ -60,27 +60,45 @@ public:
 		RAY_IMGUI(
 			[this]()
 			{
+				ImGui::Begin("DirectionalLight");
+				{
+					Float3 oldTranslation = m_DirectionalLight.Get<Transform>().Translation();
+					Float3 newTranslation = ImGUI::Float3Widget("Translation", oldTranslation);
+					if (oldTranslation != newTranslation)
+						m_DirectionalLight.Get<Transform>().SetTranslation(newTranslation);
+				}
+				ImGui::End();
+
 				ImGui::Begin("PointLight");
+				{
+					PointLight& ptLight = m_PointLight.Get<PointLight>();
 
-				PointLight& ptLight = m_PointLight.Get<PointLight>();
+					Float3 oldTranslation = m_PointLight.Get<Transform>().Translation();
+					Float3 newTranslation = ImGUI::Float3Widget("Translation", oldTranslation);
+					if (oldTranslation != newTranslation)
+						ptLight.SetTranslation(newTranslation);
 
-				Float3 oldTranslation = m_PointLight.Get<Transform>().Translation();
-				Float3 newTranslation = ImGUI::Float3Widget("Translation", oldTranslation);
-				if (oldTranslation != newTranslation)
-					ptLight.SetTranslation(newTranslation);
+					Float4 oldColor = ptLight.GetColor();
+					Float4 newColor = ImGUI::Float4Widget("Color", oldColor);
+					if (oldColor != newColor)
+						ptLight.SetColor(newColor);
+				}
+				ImGui::End();
 
-				Float4 oldColor = ptLight.GetColor();
-				Float4 newColor = ImGUI::Float4Widget("Color", oldColor);
-				if (oldColor != newColor)
-					ptLight.SetColor(newColor);
-
+				ImGui::Begin("SpotLight");
+				{
+					Float3 oldTranslation = m_SpotLight.Get<Transform>().Translation();
+					Float3 newTranslation = ImGUI::Float3Widget("Translation", oldTranslation);
+					if (oldTranslation != newTranslation)
+						m_SpotLight.Get<Transform>().SetTranslation(newTranslation);
+				}
 				ImGui::End();
 			});
 
 		auto pipeline =
 			GraphicsPipeline::Builder()
-				.SetShader(Shader::AcquireSourceFile(
-					{ "Resources/Shaders/Phong_All.vert", "Resources/Shaders/Phong_All.frag" }))
+				.SetShader(Shader::AcquireSourceFile({ "Tests/Lighting/Shaders/PointLighting.vert",
+					"Tests/Lighting/Shaders/PointLighting.frag" }))
 				.Acquire();
 
 		auto material = Material::Builder(pipeline)
@@ -88,6 +106,34 @@ public:
 							.Set("Shading.ambientLightColor", Float4{ 1.f, 1.f, 1.f, 0.05f })
 							.Build();
 
+		m_Scene = Scene::Get().CreateEntity();
+		m_Scene.Emplace<Model>("Resources/Scenes/Sponza/scene.gltf", material);
+
+		CreateDirectionalLight();
+		CreatePointLight();
+		CreateSpotLight();
+	}
+
+private:
+	void CreateDirectionalLight()
+	{
+		auto flatPipeline =
+			GraphicsPipeline::Builder()
+				.SetShader(Shader::AcquireSourceFile(
+					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
+				.SetCullMode(VK_CULL_MODE_NONE)
+				.Acquire();
+
+		auto flatMaterial =
+			Material::Builder(flatPipeline).Set("Shading.color", Float4{ 1.f }).Build();
+
+		m_DirectionalLight = Scene::Get().CreateEntity();
+		// m_DirectionalLight.Emplace<DirectionalLight>();
+		m_DirectionalLight.Emplace<Mesh>(Mesh::Plane(flatMaterial));
+	}
+
+	void CreatePointLight()
+	{
 		auto flatPipeline =
 			GraphicsPipeline::Builder()
 				.SetShader(Shader::AcquireSourceFile(
@@ -97,12 +143,25 @@ public:
 		auto flatMaterial =
 			Material::Builder(flatPipeline).Set("Shading.color", Float4{ 1.f }).Build();
 
-		m_Scene = Scene::Get().CreateEntity();
-		m_Scene.Emplace<Model>("Resources/Scenes/Sponza/scene.gltf", material);
-
 		m_PointLight = Scene::Get().CreateEntity();
 		m_PointLight.Emplace<PointLight>();
 		m_PointLight.Emplace<Mesh>(Mesh::UVSphere(flatMaterial, 0.1f, 24, 24));
+	}
+
+	void CreateSpotLight()
+	{
+		auto flatPipeline =
+			GraphicsPipeline::Builder()
+				.SetShader(Shader::AcquireSourceFile(
+					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
+				.Acquire();
+
+		auto flatMaterial =
+			Material::Builder(flatPipeline).Set("Shading.color", Float4{ 1.f }).Build();
+
+		m_SpotLight = Scene::Get().CreateEntity();
+		// m_DirectionalLight.Emplace<SpotLight>();
+		m_SpotLight.Emplace<Mesh>(Mesh::Cone(flatMaterial, 24, 1.f));
 	}
 
 private:
