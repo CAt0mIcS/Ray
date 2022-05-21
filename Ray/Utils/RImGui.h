@@ -12,7 +12,7 @@
 
 	#define RAY_IMGUI(x) ::At0::Ray::ImGUI::Get().RegisterNewFrameFunction(x)
 
-	// clang-format off
+// clang-format off
 #include "../RBase.h"
 #include "../Core/RMath.h"
 #include "../Core/RTime.h"
@@ -77,6 +77,7 @@ namespace At0::Ray
 		}
 
 		static Float3 Float3Widget(std::string_view title, Float3 data);
+		static Float4 Float4Widget(std::string_view title, Float4 data);
 
 		/**
 		 * Should be called on stored textures to get the ID required for ImGui::Image
