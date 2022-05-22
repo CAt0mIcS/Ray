@@ -1,6 +1,6 @@
 set(SHADERS
-	"Shaders/PointLighting.vert"
-	"Shaders/PointLighting.frag"
+	"Shaders/Lighting.vert"
+	"Shaders/Lighting.frag"
 )
 
 set(SRC

@@ -10,6 +10,7 @@
 #include <Ray/Components/RScriptableEntity.h>
 #include <Ray/Components/RPointLight.h>
 #include <Ray/Components/RModel.h>
+#include <Ray/Components/RDirectionalLight.h>
 
 #include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
@@ -62,10 +63,18 @@ public:
 			{
 				ImGui::Begin("DirectionalLight");
 				{
-					Float3 oldTranslation = m_DirectionalLight.Get<Transform>().Translation();
-					Float3 newTranslation = ImGUI::Float3Widget("Translation", oldTranslation);
-					if (oldTranslation != newTranslation)
-						m_DirectionalLight.Get<Transform>().SetTranslation(newTranslation);
+					DirectionalLight& dirLight = m_DirectionalLight.Get<DirectionalLight>();
+
+					Float3 oldRot = m_DirectionalLight.Get<Transform>().Rotation();
+					Float3 newRot = ImGUI::Float3Widget("Rotation", oldRot);
+					if (oldRot != newRot)
+						dirLight.SetRotation(newRot);
+					// m_DirectionalLight.Get<Transform>().SetTranslation(newRot);
+
+					Float4 oldColor = dirLight.GetColor();
+					Float4 newColor = ImGUI::Float4Widget("Color", oldColor);
+					if (oldColor != newColor)
+						dirLight.SetColor(newColor);
 				}
 				ImGui::End();
 
@@ -97,8 +106,8 @@ public:
 
 		auto pipeline =
 			GraphicsPipeline::Builder()
-				.SetShader(Shader::AcquireSourceFile({ "Tests/Lighting/Shaders/PointLighting.vert",
-					"Tests/Lighting/Shaders/PointLighting.frag" }))
+				.SetShader(Shader::AcquireSourceFile({ "Tests/Lighting/Shaders/Lighting.vert",
+					"Tests/Lighting/Shaders/Lighting.frag" }))
 				.Acquire();
 
 		auto material = Material::Builder(pipeline)
@@ -128,7 +137,8 @@ private:
 			Material::Builder(flatPipeline).Set("Shading.color", Float4{ 1.f }).Build();
 
 		m_DirectionalLight = Scene::Get().CreateEntity();
-		// m_DirectionalLight.Emplace<DirectionalLight>();
+		m_DirectionalLight.Emplace<DirectionalLight>();
+		m_DirectionalLight.Get<Transform>().SetTranslation(Float3{ 0.f, 5.f, 0.f });
 		m_DirectionalLight.Emplace<Mesh>(Mesh::Plane(flatMaterial));
 	}
 

@@ -23,31 +23,31 @@ namespace At0::Ray
 				std::string id = "[" + std::to_string(m_ID) + "]";
 
 				Material& material = renderer.GetMaterial();
-				if (material.HasUniform("Shading.numLights"))
-					material.Set("Shading.numLights", s_ID);
+				if (material.HasUniform("Shading.ptNumLights"))
+					material.Set("Shading.ptNumLights", s_ID);
 
-				if (material.HasUniform("Shading.lightColor" + id))
-					material.Set("Shading.lightColor" + id, m_Color);
+				if (material.HasUniform("Shading.ptLightColor" + id))
+					material.Set("Shading.ptLightColor" + id, m_Color);
 
-				if (material.HasUniform("Shading.lightPosition" + id))
-					material.Set("Shading.lightPosition" + id,
+				if (material.HasUniform("Shading.ptLightPos" + id))
+					material.Set("Shading.ptLightPos" + id,
 						Float4{ GetEntity().Get<Transform>().Translation(), 1.f });
 			});
 	}
 
 	void PointLight::SetColor(Float4 color)
 	{
-		m_Color = color;
+		m_Color = std::move(color);
 		Scene::Get().EntityView<MeshRenderer>().each(
 			[this](MeshRenderer& renderer)
 			{
 				std::string id = "[" + std::to_string(m_ID) + "]";
 
 				Material& material = renderer.GetMaterial();
-				if (!material.HasUniform("Shading.lightColor" + id))
+				if (!material.HasUniform("Shading.ptLightColor" + id))
 					return;
 
-				material.Set("Shading.lightColor" + id, m_Color);
+				material.Set("Shading.ptLightColor" + id, m_Color);
 			});
 	}
 
@@ -61,10 +61,10 @@ namespace At0::Ray
 				std::string id = "[" + std::to_string(m_ID) + "]";
 
 				Material& material = renderer.GetMaterial();
-				if (!material.HasUniform("Shading.lightPosition" + id))
+				if (!material.HasUniform("Shading.ptLightPos" + id))
 					return;
 
-				material.Set("Shading.lightPosition" + id, Float4{ tform.Translation(), 1.f });
+				material.Set("Shading.ptLightPos" + id, Float4{ tform.Translation(), 1.f });
 			});
 	}
 }  // namespace At0::Ray
