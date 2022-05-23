@@ -20,6 +20,7 @@ namespace At0::Ray
 			const Shader& shader, float radius, int latDiv, int longDiv);
 		static IndexedTriangleList Cylinder(const Shader& shader, int segments, float radius);
 		static IndexedTriangleList Cone(const Shader& shader, int segments, float radius);
+		static IndexedTriangleList Vector(const Shader& shader);
 
 		static IndexedTriangleList Append(
 			const IndexedTriangleList& first, const IndexedTriangleList& last);

@@ -65,11 +65,19 @@ public:
 				{
 					DirectionalLight& dirLight = m_DirectionalLight.Get<DirectionalLight>();
 
-					Float3 oldRot = m_DirectionalLight.Get<Transform>().Rotation();
-					Float3 newRot = ImGUI::Float3Widget("Rotation", oldRot);
-					if (oldRot != newRot)
-						dirLight.SetRotation(newRot);
-					// m_DirectionalLight.Get<Transform>().SetTranslation(newRot);
+					Float3 oldDir = dirLight.GetDirection();
+					Float3 newDir = ImGUI::Float3Widget("Direction", oldDir);
+					if (oldDir != newDir)
+					{
+						dirLight.SetDirection(newDir);
+
+						Float3 rotation = newDir;
+						rotation.x *= -1.f;
+						rotation.y -= 1.f;
+
+						m_DirectionalLight.Get<Transform>().SetRotation(rotation);
+						// m_DirectionalLight.Get<Transform>().SetTranslation(newDir);
+					}
 
 					Float4 oldColor = dirLight.GetColor();
 					Float4 newColor = ImGUI::Float4Widget("Color", oldColor);
@@ -139,7 +147,7 @@ private:
 		m_DirectionalLight = Scene::Get().CreateEntity();
 		m_DirectionalLight.Emplace<DirectionalLight>();
 		m_DirectionalLight.Get<Transform>().SetTranslation(Float3{ 0.f, 5.f, 0.f });
-		m_DirectionalLight.Emplace<Mesh>(Mesh::Plane(flatMaterial));
+		m_DirectionalLight.Emplace<Mesh>(Mesh::Vector(flatMaterial));
 	}
 
 	void CreatePointLight()

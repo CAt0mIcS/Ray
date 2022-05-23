@@ -32,6 +32,9 @@ namespace At0::Ray
 					material.Set("Shading.dirLightPos" + id,
 						Float4{ GetEntity().Get<Transform>().Translation(), 1.f });
 			});
+
+		// Apply default up direction
+		SetDirection(m_Direction);
 	}
 
 	void DirectionalLight::SetColor(Float4 color)
@@ -50,12 +53,11 @@ namespace At0::Ray
 			});
 	}
 
-	void DirectionalLight::SetRotation(Float3 rot)
+	void DirectionalLight::SetDirection(Float3 dir)
 	{
-		const Transform& tform = GetEntity().Get<Transform>().SetRotation(std::move(rot));
-
+		m_Direction = std::move(dir);
 		Scene::Get().EntityView<MeshRenderer>().each(
-			[this, &tform](MeshRenderer& renderer)
+			[this](MeshRenderer& renderer)
 			{
 				std::string id = "[" + std::to_string(m_ID) + "]";
 
@@ -63,7 +65,7 @@ namespace At0::Ray
 				if (!material.HasUniform("Shading.dirLightDirection" + id))
 					return;
 
-				material.Set("Shading.dirLightDirection" + id, Float4{ tform.Rotation(), 1.f });
+				material.Set("Shading.dirLightDirection" + id, Float4{ m_Direction, 1.f });
 			});
 	}
 }  // namespace At0::Ray

@@ -512,6 +512,14 @@ namespace At0::Ray
 				segments, radius) };
 	}
 
+	IndexedTriangleList IndexedTriangleList::Vector(const Shader& shader)
+	{
+		IndexedTriangleList cylinder = IndexedTriangleList::Cylinder(shader, 24, .05f);
+		IndexedTriangleList cone = IndexedTriangleList::Cone(shader, 24, .1f);
+
+		return Append(cylinder, cone);
+	}
+
 	IndexedTriangleList IndexedTriangleList::Append(
 		const IndexedTriangleList& first, const IndexedTriangleList& last)
 	{

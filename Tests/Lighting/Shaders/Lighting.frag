@@ -53,10 +53,10 @@ void main()
 		vec4 lightColor = uShading.dirLightColor[i];
 		vec3 lightDirection = uShading.dirLightDirection[i].xyz;
 	
-		vec3 directionToLight = -lightDirection;
+		vec3 directionToLight = normalize(-lightDirection);
 		float attenuation = 1.0 / dot(directionToLight, directionToLight); // distance squared
 		
-		float cosAngIncidence = max(dot(surfaceNormal, normalize(directionToLight)), 0);
+		float cosAngIncidence = max(dot(surfaceNormal, directionToLight), 0);
 		vec3 intensity = lightColor.xyz * lightColor.w * attenuation;
 
 		diffuseLight += intensity * cosAngIncidence;

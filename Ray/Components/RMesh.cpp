@@ -119,6 +119,15 @@ namespace At0::Ray
 			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
+	Mesh::Data Mesh::Vector(Ref<Material> material)
+	{
+		IndexedTriangleList mesh =
+			IndexedTriangleList::Vector(material->GetGraphicsPipeline().GetShader());
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
+	}
+
 	void Mesh::CmdBind(const CommandBuffer& cmdBuff) const
 	{
 		m_VertexBuffer->CmdBind(cmdBuff);

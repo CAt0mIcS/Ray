@@ -33,6 +33,7 @@ namespace At0::Ray
 		static Data UVSphere(Ref<Material> material, float radius, int latDiv, int longDiv);
 		static Data Cylinder(Ref<Material> material, int segments, float radius);
 		static Data Cone(Ref<Material> material, int segments, float radius);
+		static Data Vector(Ref<Material> material);
 
 		/**
 		 * Called to bind mesh-specific resources
