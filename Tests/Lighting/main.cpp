@@ -11,6 +11,7 @@
 #include <Ray/Components/RPointLight.h>
 #include <Ray/Components/RModel.h>
 #include <Ray/Components/RDirectionalLight.h>
+#include <Ray/Components/RSpotLight.h>
 
 #include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
@@ -104,10 +105,22 @@ public:
 
 				ImGui::Begin("SpotLight");
 				{
+					SpotLight& spotLight = m_SpotLight.Get<SpotLight>();
+
 					Float3 oldTranslation = m_SpotLight.Get<Transform>().Translation();
 					Float3 newTranslation = ImGUI::Float3Widget("Translation", oldTranslation);
 					if (oldTranslation != newTranslation)
-						m_SpotLight.Get<Transform>().SetTranslation(newTranslation);
+						spotLight.SetTranslation(newTranslation);
+
+					Float3 oldDir = spotLight.GetDirection();
+					Float3 newDir = ImGUI::Float3Widget("Direction", oldDir);
+					if (oldDir != newDir)
+						spotLight.SetDirection(newDir);
+
+					Float4 oldColor = spotLight.GetColor();
+					Float4 newColor = ImGUI::Float4Widget("Color", oldColor);
+					if (oldColor != newColor)
+						spotLight.SetColor(newColor);
 				}
 				ImGui::End();
 			});
@@ -178,7 +191,7 @@ private:
 			Material::Builder(flatPipeline).Set("Shading.color", Float4{ 1.f }).Build();
 
 		m_SpotLight = Scene::Get().CreateEntity();
-		// m_DirectionalLight.Emplace<SpotLight>();
+		m_SpotLight.Emplace<SpotLight>();
 		m_SpotLight.Emplace<Mesh>(Mesh::Cone(flatMaterial, 24, 1.f));
 	}
 

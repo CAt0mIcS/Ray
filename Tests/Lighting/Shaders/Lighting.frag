@@ -22,6 +22,7 @@ layout(set = 1, binding = 2) uniform Shading
 
 	vec4 spotLightColor[10];
 	vec4 spotLightPos[10];
+	vec4 spotLightDirection[10];
 	uint spotNumLights;
 
 } uShading;
