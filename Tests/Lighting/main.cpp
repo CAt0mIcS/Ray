@@ -121,6 +121,12 @@ public:
 					Float4 newColor = ImGUI::Float4Widget("Color", oldColor);
 					if (oldColor != newColor)
 						spotLight.SetColor(newColor);
+
+					float oldAngle = spotLight.GetAngle();
+					float newAngle = oldAngle;
+					ImGui::DragFloat("Angle", &newAngle, 0.1f, 0.0f, 0.0f, "%.2f");
+					if (oldAngle != newAngle)
+						spotLight.SetAngle(newAngle);
 				}
 				ImGui::End();
 			});

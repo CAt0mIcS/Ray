@@ -23,7 +23,7 @@ namespace At0::Ray
 		Float4 m_Color;
 		uint32_t m_ID;
 
-		Float3 m_Direction{ 0.f, 1.f, 0.f };
+		Float3 m_Direction{ 0.f, -1.f, 0.f };
 
 		static uint32_t s_ID;
 	};

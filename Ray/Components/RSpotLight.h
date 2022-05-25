@@ -16,6 +16,9 @@ namespace At0::Ray
 
 		void SetTranslation(Float3 trans);
 
+		void SetAngle(float angleRadians);
+		float GetAngle() const { return m_AngleRadians; }
+
 		void SetDirection(Float3 dir);
 		Float3 GetDirection() const { return m_Direction; }
 
@@ -25,7 +28,12 @@ namespace At0::Ray
 		Float4 m_Color;
 		uint32_t m_ID;
 
-		Float3 m_Direction{ 0.f, 1.f, 0.f };
+		Float3 m_Direction{ 0.f, -1.f, 0.f };
+
+		/**
+		 * Angle measured from direction vector to end of cone
+		 */
+		float m_AngleRadians = 1.f;
 
 		static uint32_t s_ID;
 	};

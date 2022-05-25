@@ -33,8 +33,9 @@ namespace At0::Ray
 						Float4{ GetEntity().Get<Transform>().Translation(), 1.f });
 			});
 
-		// Apply default up direction
+		// Apply default down direction and angle
 		SetDirection(m_Direction);
+		SetAngle(m_AngleRadians);
 	}
 
 	void SpotLight::SetColor(Float4 color)
@@ -67,6 +68,22 @@ namespace At0::Ray
 					return;
 
 				material.Set("Shading.spotLightPos" + id, Float4{ tform.Translation(), 1.f });
+			});
+	}
+
+	void SpotLight::SetAngle(float angleRadians)
+	{
+		m_AngleRadians = angleRadians;
+		Scene::Get().EntityView<MeshRenderer>().each(
+			[this](MeshRenderer& renderer)
+			{
+				std::string id = "[" + std::to_string(m_ID) + "]";
+
+				Material& material = renderer.GetMaterial();
+				if (!material.HasUniform("Shading.spotAngle" + id))
+					return;
+
+				material.Set("Shading.spotAngle" + id, cos(m_AngleRadians));
 			});
 	}
 

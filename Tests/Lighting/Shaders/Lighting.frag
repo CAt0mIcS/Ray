@@ -23,6 +23,7 @@ layout(set = 1, binding = 2) uniform Shading
 	vec4 spotLightColor[10];
 	vec4 spotLightPos[10];
 	vec4 spotLightDirection[10];
+	float spotAngle[10];
 	uint spotNumLights;
 
 } uShading;
@@ -66,15 +67,25 @@ void main()
 	// Spot lighting
 	for(int i = 0; i < uShading.spotNumLights; i++)
 	{
-		vec4 lightColor = uShading.spotLightColor[i];
 		vec3 lightPosition = uShading.spotLightPos[i].xyz;
+		vec3 lightDirection = uShading.spotLightDirection[i].xyz;
 
 		vec3 directionToLight = lightPosition - inPosWorld;
-		float attenuation = 1.0 / dot(directionToLight, directionToLight); // distance squared
-		float cosAngIncidence = max(dot(surfaceNormal, normalize(directionToLight)), 0);
-		vec3 intensity = lightColor.xyz * lightColor.w * attenuation;
+		vec3 directionToLightNormalized = normalize(directionToLight);
+		
+		// inside the cone?
+		if (dot(normalize(-lightDirection), directionToLightNormalized) > uShading.spotAngle[i])
+		{
+			vec4 lightColor = uShading.spotLightColor[i];
 
-		diffuseLight += intensity * cosAngIncidence;
+
+			float attenuation = 1.0 / dot(directionToLight, directionToLight); // distance squared
+			float cosAngleIncidence = max(dot(surfaceNormal, directionToLightNormalized), 0);
+			
+			vec3 intensity = lightColor.xyz * lightColor.w * cosAngleIncidence * attenuation;
+			
+			diffuseLight += intensity;
+		}
 	}
 
 	outColor = vec4(diffuseLight * uShading.color.xyz, uShading.color.w);

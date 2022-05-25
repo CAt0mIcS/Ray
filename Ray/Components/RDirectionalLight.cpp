@@ -33,7 +33,7 @@ namespace At0::Ray
 						Float4{ GetEntity().Get<Transform>().Translation(), 1.f });
 			});
 
-		// Apply default up direction
+		// Apply default down direction
 		SetDirection(m_Direction);
 	}
 
