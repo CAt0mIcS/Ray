@@ -28,7 +28,7 @@ namespace At0::Ray
 		void Set(const std::string& key, Bool4 data);
 
 		template<typename T>
-		void Set(const std::string& key, T&& data)
+		constexpr void Set(const std::string& key, T&& data)
 		{
 			Set<T, GetType<T>()>(key, std::forward<T>(data));
 		}
@@ -43,7 +43,7 @@ namespace At0::Ray
 
 	private:
 		template<typename T, ShaderDataType type>
-		void Set(const std::string& key, T&& data)
+		constexpr void Set(const std::string& key, T&& data)
 		{
 			ValidateSizeRequirements(type, sizeof(data));
 			memcpy(m_Data.data() + m_OffsetMap.at(key).first, &data, sizeof(data));

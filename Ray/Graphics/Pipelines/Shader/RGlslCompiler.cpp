@@ -4,8 +4,7 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
-// RAY_TEMPORARY
-#include "Graphics/Buffers/RBuffer.h"
+#include "Utils/ROStringStream.h"
 
 #include <glslang/SPIRV/GlslangToSpv.h>
 #include <glslang/MachineIndependent/gl_types.h>
@@ -460,7 +459,7 @@ namespace At0::Ray
 
 				for (uint32_t i = 0; i < uniform.size; ++i)
 				{
-					data.name = (std::ostringstream{} << strings[1] << '[' << i << ']').str();
+					data.name = (OStringStream{} << strings[1] << '[' << i << ']').toStr();
 					uniforms.emplace_back(data);
 
 					// RAY_TODO: Align properly

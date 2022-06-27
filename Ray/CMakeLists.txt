@@ -268,6 +268,7 @@ set(SRC
 	"Utils/RTypeTraits.h"
 	"Utils/RImGui.h"
 	"Utils/RImGui.cpp"
+	"Utils/ROStringStream.h"
 
 	# ------------------------------------------------------------------
 	# Event system
@@ -382,4 +383,5 @@ add_custom_command(TARGET "Ray" PRE_BUILD
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo>"
 )
 endif()
+
 
