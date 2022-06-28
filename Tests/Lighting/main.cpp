@@ -94,7 +94,7 @@ public:
 					Float3 oldTranslation = m_PointLight.Get<Transform>().Translation();
 					Float3 newTranslation = ImGUI::Float3Widget("Translation", oldTranslation);
 					if (oldTranslation != newTranslation)
-						ptLight.SetTranslation(newTranslation);
+						m_PointLight.Get<Transform>().SetTranslation(newTranslation);
 
 					Float4 oldColor = ptLight.GetColor();
 					Float4 newColor = ImGUI::Float4Widget("Color", oldColor);

@@ -106,7 +106,8 @@ public:
 				Material::Builder(flatColorPipeline).Set("Shading.color", Float4{ 1.f }).Acquire();
 
 			m_Light = Scene::Get().CreateEntity();
-			m_Light.Emplace<PointLight>().SetTranslation({ 5.f, 5.f, 0.f });
+			m_Light.Emplace<PointLight>();
+			m_Light.Get<Transform>().SetTranslation({ 5.f, 5.f, 0.f });
 		}
 
 
@@ -123,7 +124,7 @@ private:
 	{
 		Matrix rotateLight =
 			glm::rotate(Matrix{ 1.f }, GetDelta().AsSeconds(), { 0.f, -5.5f, 0.f });
-		m_Light.Get<PointLight>().SetTranslation(
+		m_Light.Get<Transform>().SetTranslation(
 			rotateLight * Float4{ m_Light.Get<Transform>().Translation(), 1.f });
 
 		m_Material->Set("Shading.lightSpace",
