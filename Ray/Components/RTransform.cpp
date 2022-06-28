@@ -1,6 +1,8 @@
 ﻿#include "RTransform.h"
 #include "RHierachyComponent.h"
 
+#include "Events/REventListener.h"
+
 
 namespace At0::Ray
 {
@@ -81,6 +83,9 @@ namespace At0::Ray
 
 			m_Changed = false;
 			m_HasChanged = true;
+
+			// TODO: Should we do this in e.g. SetTranslation or leave it here?
+			InvokeEvent();
 		}
 		else
 			m_HasChanged = false;
@@ -99,7 +104,6 @@ namespace At0::Ray
 
 	Transform::Transform(Entity entity, Float3 translation, Float3 rotation, Float3 scale)
 		: Component(entity), m_Translation{ translation }, m_Rotation{ rotation }, m_Scale{ scale }
-
 	{
 	}
 
@@ -154,5 +158,12 @@ namespace At0::Ray
 			}
 			// clang-format on
 		};
+	}
+
+	void Transform::InvokeEvent()
+	{
+		TransformChangedEvent e{ *this };
+		for (const auto listener : EventDispatcher<TransformChangedEvent>::Get())
+			listener->OnEvent(e);
 	}
 }  // namespace At0::Ray

@@ -12,7 +12,8 @@ namespace At0::Ray
 	uint32_t PointLight::s_ID = 0;
 
 	PointLight::PointLight(Entity entity, Float4 color)
-		: Component(entity), m_Color(std::move(color)), m_ID(s_ID++)
+		: Component(entity), EventListener(entity.Get<Transform>()), m_Color(std::move(color)),
+		  m_ID(s_ID++)
 	{
 		RAY_MEXPECTS(m_ID < 10, "[PointLight] Light limit reached");
 
@@ -53,10 +54,8 @@ namespace At0::Ray
 
 	void PointLight::SetTranslation(Float3 trans)
 	{
-		const Transform& tform = GetEntity().Get<Transform>().SetTranslation(std::move(trans));
-
 		Scene::Get().EntityView<MeshRenderer>().each(
-			[this, &tform](MeshRenderer& renderer)
+			[this, &trans](MeshRenderer& renderer)
 			{
 				std::string id = "[" + std::to_string(m_ID) + "]";
 
@@ -64,7 +63,12 @@ namespace At0::Ray
 				if (!material.HasUniform("Shading.ptLightPos" + id))
 					return;
 
-				material.Set("Shading.ptLightPos" + id, Float4{ tform.Translation(), 1.f });
+				material.Set("Shading.ptLightPos" + id, Float4{ trans, 1.f });
 			});
+	}
+
+	void PointLight::OnEvent(TransformChangedEvent& e)
+	{
+		SetTranslation(e.transform.Translation());
 	}
 }  // namespace At0::Ray

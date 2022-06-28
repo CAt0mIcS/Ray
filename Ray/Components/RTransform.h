@@ -3,10 +3,13 @@
 #include "RComponent.h"
 #include "../Core/RMath.h"
 
+#include "../Events/REventDispatcher.h"
+
 
 namespace At0::Ray
 {
-	class RAY_EXPORT Transform : public Component
+
+	class RAY_EXPORT Transform : public Component, public EventDispatcher<TransformChangedEvent>
 	{
 	public:
 		const Float3& Translation() const { return m_Translation; }
@@ -36,6 +39,9 @@ namespace At0::Ray
 		Matrix3 GetNormalMatrix() const;
 
 		auto operator<=>(const Transform&) const = default;
+
+	private:
+		void InvokeEvent();
 
 	private:
 		Matrix m_CachedMatrix = MatrixIdentity();

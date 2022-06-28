@@ -34,4 +34,10 @@ namespace At0::Ray
 		UniformType uType;
 		VkImageLayout imageLayout = VK_IMAGE_LAYOUT_MAX_ENUM;
 	};
+
+	class Transform;
+	struct TransformChangedEvent
+	{
+		const Transform& transform;
+	};
 }  // namespace At0::Ray

@@ -277,6 +277,7 @@ set(SRC
 	"Events/RKeyboardEvents.h"
 	"Events/RCustomEvents.h"
 	"Events/REventDispatcher.h"
+	"Events/REventDispatcher.cpp"
 	"Events/REventListener.h"
 
 	"${SHADERS}"

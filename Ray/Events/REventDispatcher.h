@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <set>
+#include "RCustomEvents.h"
 
 
 namespace At0::Ray
@@ -15,8 +16,8 @@ namespace At0::Ray
 		EventDispatcher() = default;
 
 		// RAY_TODO:
-		EventDispatcher(EventDispatcher&&) = delete;
-		EventDispatcher& operator=(const EventDispatcher&&) = delete;
+		EventDispatcher(EventDispatcher&& other) = delete;
+		EventDispatcher& operator=(const EventDispatcher&& other) = delete;
 		EventDispatcher(EventDispatcher&) = delete;
 		EventDispatcher& operator=(const EventDispatcher&) = delete;
 
@@ -37,5 +38,39 @@ namespace At0::Ray
 
 	private:
 		std::set<EventListener<T>*> m_Listeners;
+	};
+
+	template<>
+	class RAY_EXPORT EventDispatcher<TransformChangedEvent>
+	{
+	public:
+		EventDispatcher() = default;
+
+		EventDispatcher(EventDispatcher&& other) { *this = std::move(other); }
+		EventDispatcher& operator=(const EventDispatcher&& other);
+
+		/**
+		 * Iterate over all listeners in the event dispatcher
+		 */
+		auto& Get() { return m_Listeners; }
+
+		/**
+		 * Adds a new listener to dispatch the events to
+		 */
+		void RegisterListener(EventListener<TransformChangedEvent>* listener)
+		{
+			m_Listeners.emplace(listener);
+		}
+
+		/**
+		 * Removes a listener from getting events
+		 */
+		void UnregisterListener(EventListener<TransformChangedEvent>* listener)
+		{
+			m_Listeners.erase(listener);
+		}
+
+	private:
+		std::set<EventListener<TransformChangedEvent>*> m_Listeners;
 	};
 }  // namespace At0::Ray

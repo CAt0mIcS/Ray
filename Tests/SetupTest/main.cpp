@@ -71,12 +71,7 @@ public:
 						Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
 
 						if (newTranslation != tform.Translation())
-						{
-							if (e.Has<Ray::PointLight>())
-								e.Get<Ray::PointLight>().SetTranslation(newTranslation);
-							else
-								tform.SetTranslation(newTranslation);
-						}
+							tform.SetTranslation(newTranslation);
 						if (newRotation != tform.Rotation())
 							tform.SetRotation(newRotation);
 						if (newScale != tform.Scale())
@@ -116,7 +111,6 @@ public:
 							.Build();
 
 		m_Entity = Scene::Get().CreateEntity();
-		// m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
 		m_Entity.Emplace<Ray::Model>("Resources/Scenes/Sponza/scene.gltf", material);
 
 		Ray::Entity light = Scene::Get().CreateEntity();
@@ -125,10 +119,6 @@ public:
 		light.Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(Ray::Material::FlatWhite(), 1.f, 24, 24));
 
 		m_Entity.AddChild(light);
-
-		// m_Entity2 = Scene::Get().CreateEntity();
-		// m_Entity2.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
-		// m_Entity2.Get<Ray::Transform>().SetTranslation(Ray::Float3{ 6.0f, 0.0f, 0.0f });
 
 		// Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 		//	Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
