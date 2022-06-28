@@ -42,6 +42,18 @@ namespace At0::Ray
 		CallListeners(name, UniformType::CombinedImageSampler);
 	}
 
+	const Ref<Material> Material::FlatWhite()
+	{
+		return Material::Builder(
+			GraphicsPipeline::Builder()
+				.SetShader(Shader::AcquireSourceFile(
+					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
+				.SetCullMode(VK_CULL_MODE_NONE)
+				.Acquire())
+			.Set("Shading.color", Float4{ 1.f })
+			.Acquire();
+	}
+
 	void Material::CallListeners(
 		const std::string& name, UniformType type, VkImageLayout imageLayout)
 	{

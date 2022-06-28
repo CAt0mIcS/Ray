@@ -10,6 +10,8 @@
 #include <Ray/Components/RModel.h>
 #include <Ray/Components/RScriptableEntity.h>
 #include <Ray/Components/RHierachyComponent.h>
+#include <Ray/Components/RPointLight.h>
+#include <Ray/Components/RTagComponent.h>
 
 #include <Ray/Graphics/Images/RTexture.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
@@ -58,8 +60,10 @@ public:
 			[&]()
 			{
 				{
-					auto translate = [](Ray::Transform& tform)
+					auto translate = [](Ray::Entity e)
 					{
+						auto& tform = e.Get<Ray::Transform>();
+
 						Ray::Float3 newTranslation =
 							Ray::ImGUI::Float3Widget("Translation", tform.Translation());
 						Ray::Float3 newRotation =
@@ -67,7 +71,12 @@ public:
 						Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
 
 						if (newTranslation != tform.Translation())
-							tform.SetTranslation(newTranslation);
+						{
+							if (e.Has<Ray::PointLight>())
+								e.Get<Ray::PointLight>().SetTranslation(newTranslation);
+							else
+								tform.SetTranslation(newTranslation);
+						}
 						if (newRotation != tform.Rotation())
 							tform.SetRotation(newRotation);
 						if (newScale != tform.Scale())
@@ -78,8 +87,7 @@ public:
 						ImGui::Begin("TestEntity");
 						if (m_SelectedEntity)
 						{
-							Ray::Transform& tform = m_SelectedEntity.Get<Ray::Transform>();
-							translate(tform);
+							translate(m_SelectedEntity);
 							ImGui::Spacing();
 						}
 
@@ -97,17 +105,26 @@ public:
 
 		auto pipeline =
 			Ray::GraphicsPipeline::Builder()
-				.SetShader(Ray::Shader::AcquireSourceFile(
-					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
+				.SetShader(Ray::Shader::AcquireSourceFile({ "Tests/Lighting/Shaders/Lighting.vert",
+					"Tests/Lighting/Shaders/Lighting.frag" }))
 				.SetCullMode(VK_CULL_MODE_NONE)
 				.Acquire();
 
-		auto material =
-			Ray::Material::Builder(pipeline).Set("Shading.color", Ray::Float4{ 1.f }).Build();
+		auto material = Ray::Material::Builder(pipeline)
+							.Set("Shading.color", Ray::Float4{ 1.f })
+							.Set("Shading.ambientLightColor", Ray::Float4{ 1.f, 1.f, 1.f, .1f })
+							.Build();
 
 		m_Entity = Scene::Get().CreateEntity();
 		// m_Entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
-		m_Entity.Emplace<Ray::Model>("Resources/Models/Plane.obj", material);
+		m_Entity.Emplace<Ray::Model>("Resources/Scenes/Sponza/scene.gltf", material);
+
+		Ray::Entity light = Scene::Get().CreateEntity();
+		light.Emplace<Ray::PointLight>();
+		light.Emplace<Ray::TagComponent>("Light");
+		light.Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(Ray::Material::FlatWhite(), 1.f, 24, 24));
+
+		m_Entity.AddChild(light);
 
 		// m_Entity2 = Scene::Get().CreateEntity();
 		// m_Entity2.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
@@ -124,7 +141,9 @@ private:
 	void DrawEntityNode(Ray::Entity e)
 	{
 		std::string_view tag = "Empty";
-		if (e.Has<Ray::Mesh>())
+		if (e.Has<Ray::TagComponent>())
+			tag = e.Get<Ray::TagComponent>().Tag;
+		else if (e.Has<Ray::Mesh>())
 			tag = e.Get<Ray::Mesh>().GetName();
 
 		ImGuiTreeNodeFlags flags = ((m_SelectedEntity == e) ? ImGuiTreeNodeFlags_Selected : 0) |
