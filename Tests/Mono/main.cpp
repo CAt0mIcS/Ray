@@ -3,15 +3,13 @@
 #include <Ray/Devices/RWindow.h>
 #include <Ray/Graphics/RGraphics.h>
 
-#include <Ray/UI/RButton.h>
-
-#include <Ray/Components/RMesh.h>
+#include <Ray/Graphics/Images/RTexture.h>
+#include <Ray/Components/RModel.h>
 #include <Ray/Components/RMeshRenderer.h>
 #include <Ray/Components/RTransform.h>
 #include <Ray/Components/RSkybox.h>
 #include <Ray/Components/RScriptableEntity.h>
 
-#include <Ray/Graphics/Images/RTexture2D.h>
 #include <Ray/Graphics/Images/RTextureCubemap.h>
 #include <Ray/Graphics/Pipelines/RGraphicsPipeline.h>
 #include <Ray/Utils/RException.h>
@@ -24,7 +22,7 @@
 #include <random>
 #include <filesystem>
 
-#include <Ray/UI/RImGui.h>
+#include <Ray/Utils/RImGui.h>
 #include <../../Extern/imgui/imgui.h>
 
 #include <Ray/Mono/RScript.h>
@@ -54,7 +52,7 @@ public:
 	App() : Ray::EventListener<Ray::MouseButtonPressedEvent>(Ray::Window::Get())
 	{
 		Ray::Scene::Create<Scene>();
-		Ray::ImGUI::Get().RegisterNewFrameFunction(
+		RAY_IMGUI(
 			[&]()
 			{
 				{
@@ -76,7 +74,7 @@ public:
 					ImGui::End();
 				}
 			});
-		Ray::ImGUI::Get().RegisterNewFrameFunction(
+		RAY_IMGUI(
 			[&]()
 			{
 				{
@@ -102,10 +100,10 @@ public:
 
 		m_Update = object.GetFunction("Update");
 
-		e.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+		e.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
 
-		Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::MakeRef<Ray::Texture2D>("Resources/Textures/EquirectangularWorldMap.jpg"));
+		m_Skybox = Scene::Get().CreateEntity();
+		m_Skybox.Emplace<Ray::Skybox>(Ray::Texture::Acquire("Resources/Textures/EquirectangularWorldMap.jpg"));
 	}
 
 private:
@@ -123,15 +121,16 @@ private:
 		}
 	}
 
-	void OnEvent(Ray::MouseButtonPressedEvent& e)
+	void OnEvent(Ray::MouseButtonPressedEvent& e) override
 	{
 		auto entity = m_Entities.emplace_back(Scene::Get().CreateEntity());
-		entity.Emplace<Ray::Mesh>(Ray::Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+		entity.Emplace<Ray::Model>("Resources/Models/Nanosuit/nanosuit.obj");
 	}
 
 private:
 	std::vector<Ray::Entity> m_Entities;
 	Ray::Mono::Function m_Update;
+	Ray::Entity m_Skybox;
 };
 
 void SignalHandler(int signal)

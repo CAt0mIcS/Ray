@@ -296,7 +296,8 @@ set(SRC
 find_package("Vulkan" REQUIRED FATAL_ERROR)
 
 # Get paths to Mono installation
-SetMonoIncludesAndLibraries()
+set(MONO_INC "${CMAKE_SOURCE_DIR}/Extern/mono/include")
+set(MONO_LIB "${CMAKE_SOURCE_DIR}/Extern/mono/lib/mono-2.0-sgen.lib")
 
 set(PUBLIC_INC
     "${Vulkan_INCLUDE_DIRS}"
@@ -348,6 +349,10 @@ target_link_libraries("Ray"
 target_compile_definitions("Ray" PRIVATE "RAY_BUILD" "ENTT_DLL_EXPORT")
 target_precompile_headers("Ray" PRIVATE "Rpch.h")
 
+if(MSVC)
+   target_compile_options("Ray" PRIVATE "/MP")
+endif()
+
 AddRecursiveFilters("${SRC}")
 SetOutputDirectory("Ray" "")
 SetWorkingDirectoryPlane("Ray" "${CMAKE_SOURCE_DIR}")
@@ -378,7 +383,14 @@ add_custom_command(TARGET "Ray" POST_BUILD
 )
 add_custom_command(TARGET "Ray" PRE_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_if_different
-	"C:/Program FIles/Mono/bin/mono-2.0-sgen.dll"
+	"${MONO_LIB}"
+    "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug>"
+    "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release>"
+    "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo>"
+)
+add_custom_command(TARGET "Ray" PRE_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	"${CMAKE_SOURCE_DIR}/Extern/mono/bin/mono-2.0-sgen.dll"
     "$<$<CONFIG:DEBUG>:${CMAKE_BINARY_DIR}/bin/Debug>"
     "$<$<CONFIG:RELEASE>:${CMAKE_BINARY_DIR}/bin/Release>"
     "$<$<CONFIG:RELWITHDEBINFO>:${CMAKE_BINARY_DIR}/bin/RelWithDebInfo>"

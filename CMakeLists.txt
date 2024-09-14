@@ -70,6 +70,7 @@ set(ASSIMP_BUILD_ZLIB OFF CACHE BOOL "" FORCE)
 set(VIOLENT_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(ION_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 
+
 # ------------------------------------------------------------------------------------------------
 # Initialize the Solution Project
 project("Ray")

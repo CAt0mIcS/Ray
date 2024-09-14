@@ -65,7 +65,7 @@ namespace At0::Ray::Mono
 
 #ifdef _WIN32
 		std::string command =
-			String::Serialize("\"C:/Program Files/Mono/bin/mcs\" {0} -target:library", filepath);
+			String::Serialize("\"Extern\\mono\\bin\\mcs\" {0} -target:library", filepath);
 #else
 		std::string command = String::Serialize("mcs {0} -target:library", filepath);
 #endif
@@ -78,7 +78,7 @@ namespace At0::Ray::Mono
 		if (!s_MonoInitialized)
 		{
 #ifdef _WIN32
-			mono_set_dirs("C:\\Program Files\\Mono\\lib", "C:\\Program Files\\Mono\\etc");
+			mono_set_dirs("Extern\\mono\\lib", "Extern\\mono\\ext");
 			mono_config_parse(NULL);
 #endif
 			s_MonoInitialized = true;
