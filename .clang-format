@@ -26,10 +26,7 @@ CommentPragmas:  '^/'
 Cpp11BracedListStyle: false
 FixNamespaceComments: true
 SpacesBeforeTrailingComments: 2
-AlignEscapedNewlines: Left
-AlignOperands: true
 BreakStringLiterals: true
-AlignTrailingComments: true
 AllowAllConstructorInitializersOnNextLine: true
 IncludeBlocks: Regroup
 IncludeCategories:
