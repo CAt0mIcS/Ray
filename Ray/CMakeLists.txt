@@ -280,6 +280,11 @@ set(SRC
 	"Events/REventDispatcher.cpp"
 	"Events/REventListener.h"
 
+	# ------------------------------------------------------------------
+	# Engine Layers
+	"Layers/Layer.h"
+	"Layers/Layer.cpp"
+
 	"${SHADERS}"
 
 	"../Extern/imgui/imgui.cpp"

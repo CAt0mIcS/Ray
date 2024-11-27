@@ -45,8 +45,11 @@
 #include <GLFW/glfw3native.h>
 // clang-format on
 
+
 namespace At0::Ray
 {
+	template class RAY_EXPORT EventListener<ImGuiDrawEvent>;
+
 	Scope<ImGUI> ImGUI::s_Instance = nullptr;
 
 	ImGUI& ImGUI::Get()
@@ -65,13 +68,13 @@ namespace At0::Ray
 
 	ImGUI::ImGUI()
 		: EventListener<FramebufferResizedEvent>(Window::Get()),
-		  EventListener<MouseMovedEvent>(Window::Get()), EventListener<MouseButtonPressedEvent>(
-															 Window::Get()),
-		  EventListener<MouseButtonReleasedEvent>(Window::Get()), EventListener<KeyPressedEvent>(
-																	  Window::Get()),
+		  EventListener<MouseMovedEvent>(Window::Get()),
+		  EventListener<MouseButtonPressedEvent>(Window::Get()),
+		  EventListener<MouseButtonReleasedEvent>(Window::Get()),
+		  EventListener<KeyPressedEvent>(Window::Get()),
 		  EventListener<KeyReleasedEvent>(Window::Get()), EventListener<CharEvent>(Window::Get()),
-		  EventListener<ScrollLeftEvent>(Window::Get()), EventListener<ScrollRightEvent>(
-															 Window::Get()),
+		  EventListener<ScrollLeftEvent>(Window::Get()),
+		  EventListener<ScrollRightEvent>(Window::Get()),
 		  EventListener<ScrollUpEvent>(Window::Get()), EventListener<ScrollDownEvent>(Window::Get())
 	{
 		ImGui::CreateContext();
@@ -158,8 +161,9 @@ namespace At0::Ray
 	#endif
 
 		fn();
-		for (const auto& func : m_NewFrameFunctions)
-			func();
+		ImGuiDrawEvent e{};
+		for (auto listener : EventDispatcher<ImGuiDrawEvent>::Get())
+			listener->OnEvent(e);
 
 	#if RAY_ENABLE_IMGUI_DOCKSPACE
 		ImGui::End();

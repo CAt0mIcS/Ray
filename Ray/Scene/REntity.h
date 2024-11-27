@@ -196,6 +196,9 @@ namespace At0::Ray
 
 		RAY_EXPORT friend std::ostream& operator<<(std::ostream& os, Entity e);
 
+	public:
+		static Entity Empty;
+
 	private:
 		entt::registry* m_Registry = nullptr;
 		entt::entity m_EntityHandle = Null;

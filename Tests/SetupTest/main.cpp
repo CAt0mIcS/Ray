@@ -24,6 +24,8 @@
 #include <Ray/Scene/RCamera.h>
 #include <Ray/Shading/RMaterial.h>
 
+#include <Ray/Layers/Layer.h>
+
 #include <signal.h>
 #include <random>
 #include <filesystem>
@@ -35,85 +37,28 @@
 using namespace At0;
 
 
-class Scene : public Ray::Scene
+class TestEntityLayer : public Ray::Layer, public Ray::EventListener<Ray::ImGuiDrawEvent>
 {
 public:
-	Scene() : Ray::Scene(Ray::MakeScope<Ray::Camera>())
+	TestEntityLayer(Ray::Scene& scene)
+		: Ray::Layer(scene), Ray::EventListener<Ray::ImGuiDrawEvent>(Ray::ImGUI::Get())
 	{
-		Ray::UInt2 size = Ray::Window::Get().GetFramebufferSize();
-		GetCamera().SetPosition(Ray::Float3(0.0f, 0.0f, -2.5f));
-		GetCamera().SetRotation(Ray::Float3(0.0f));
-		GetCamera().SetRotationSpeed(0.07f);
-		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
-		GetCamera().SetMovementSpeed(3.0f);
-	}
-};
-
-
-class App : public Ray::Engine
-{
-public:
-	App()
-	{
-		Ray::Scene::Create<Scene>();
-		RAY_IMGUI(
-			[&]()
-			{
-				{
-					auto translate = [](Ray::Entity e)
-					{
-						auto& tform = e.Get<Ray::Transform>();
-
-						Ray::Float3 newTranslation =
-							Ray::ImGUI::Float3Widget("Translation", tform.Translation());
-						Ray::Float3 newRotation =
-							Ray::ImGUI::Float3Widget("Rotation", tform.Rotation());
-						Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
-
-						if (newTranslation != tform.Translation())
-							tform.SetTranslation(newTranslation);
-						if (newRotation != tform.Rotation())
-							tform.SetRotation(newRotation);
-						if (newScale != tform.Scale())
-							tform.SetScale(newScale);
-					};
-
-					{
-						ImGui::Begin("TestEntity");
-						if (m_SelectedEntity)
-						{
-							translate(m_SelectedEntity);
-							ImGui::Spacing();
-						}
-
-
-						// Scene Hierachy
-						DrawEntityNode(m_Entity);
-
-						ImGui::End();
-					}
-				}
-			});
-
-#include "../ImGuiWindows.inl"
-
-
 		auto pipeline =
-			Ray::GraphicsPipeline::Builder()
-				.SetShader(Ray::Shader::AcquireSourceFile({ "Tests/Lighting/Shaders/Lighting.vert",
+			PipelineBuilder()
+				.SetShader(LoadShaderFromSourceFile({ "Tests/Lighting/Shaders/Lighting.vert",
 					"Tests/Lighting/Shaders/Lighting.frag" }))
 				.SetCullMode(VK_CULL_MODE_NONE)
 				.Acquire();
 
-		auto material = Ray::Material::Builder(pipeline)
+		auto material = MaterialBuilder(pipeline)
 							.Set("Shading.color", Ray::Float4{ 1.f })
 							.Set("Shading.ambientLightColor", Ray::Float4{ 1.f, 1.f, 1.f, .1f })
 							.Build();
 
-		m_Entity = Scene::Get().CreateEntity();
+		m_Entity = GetScene().CreateEntity();
 		m_Entity.Emplace<Ray::Model>("Resources/Scenes/Sponza/scene.gltf", material);
 
-		Ray::Entity light = Scene::Get().CreateEntity();
+		Ray::Entity light = GetScene().CreateEntity();
 		light.Emplace<Ray::PointLight>();
 		light.Emplace<Ray::TagComponent>("Light");
 		light.Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(Ray::Material::FlatWhite(), 1.f, 24, 24));
@@ -122,12 +67,10 @@ public:
 
 		// Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
 		//	Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
-		auto& registry = Scene::Get().GetRegistry();
+		auto& registry = GetScene().GetRegistry();
 	}
 
 private:
-	void Update() override {}
-
 	void DrawEntityNode(Ray::Entity e)
 	{
 		std::string_view tag = "Empty";
@@ -152,9 +95,73 @@ private:
 		}
 	}
 
+	void OnEvent(Ray::ImGuiDrawEvent& e) override
+	{
+		auto translate = [](Ray::Entity e)
+		{
+			auto& tform = e.Get<Ray::Transform>();
+
+			Ray::Float3 newTranslation =
+				Ray::ImGUI::Float3Widget("Translation", tform.Translation());
+			Ray::Float3 newRotation = Ray::ImGUI::Float3Widget("Rotation", tform.Rotation());
+			Ray::Float3 newScale = Ray::ImGUI::Float3Widget("Scale", tform.Scale());
+
+			if (newTranslation != tform.Translation())
+				tform.SetTranslation(newTranslation);
+			if (newRotation != tform.Rotation())
+				tform.SetRotation(newRotation);
+			if (newScale != tform.Scale())
+				tform.SetScale(newScale);
+		};
+
+		{
+			ImGui::Begin("TestEntity");
+			if (m_SelectedEntity)
+			{
+				translate(m_SelectedEntity);
+				ImGui::Spacing();
+			}
+
+
+			// Scene Hierachy
+			DrawEntityNode(m_Entity);
+
+			ImGui::End();
+		}
+
+#include "../ImGuiWindows.inl"
+	}
+
 private:
 	Ray::Entity m_Entity;
 	Ray::Entity m_SelectedEntity;
+};
+
+
+class Scene : public Ray::Scene
+{
+public:
+	Scene() : Ray::Scene(Ray::MakeScope<Ray::Camera>())
+	{
+		Ray::UInt2 size = Ray::Window::Get().GetFramebufferSize();
+		GetCamera().SetPosition(Ray::Float3(0.0f, 0.0f, -2.5f));
+		GetCamera().SetRotation(Ray::Float3(0.0f));
+		GetCamera().SetRotationSpeed(0.07f);
+		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
+		GetCamera().SetMovementSpeed(3.0f);
+
+		RegisterLayer<TestEntityLayer>();
+	}
+};
+
+
+class App : public Ray::Engine
+{
+public:
+	App() { Ray::Scene::Create<Scene>(); }
+
+private:
+	void Update() override {}
 };
 
 void SignalHandler(int signal)

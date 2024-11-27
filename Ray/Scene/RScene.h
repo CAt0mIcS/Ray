@@ -5,6 +5,7 @@
 #include "../Events/REventDispatcher.h"
 #include "../Utils/RThreadPool.h"
 #include "../Events/RCustomEvents.h"
+#include "../Layers/Layer.h"
 
 #include "REntity.h"
 #include "RCamera.h"
@@ -60,19 +61,33 @@ namespace At0::Ray
 		Camera& GetCamera() { return (Camera&)std::as_const(*this).GetCamera(); }
 
 		template<typename T, typename... Args>
-		static Scene& Create(Args&&... args) requires std::derived_from<T, Scene> &&
-			std::constructible_from<T, Args...>
+		static Scene& Create(Args&&... args)
+			requires std::derived_from<T, Scene> && std::constructible_from<T, Args...>
 		{
 			// s_CurrentScene is set in the constructor of Scene
 			new T(std::forward<Args>(args)...);
 			return *s_CurrentScene;
 		}
 
-	protected : Scene(Scope<Camera> camera);
+		template<typename T, typename... Args>
+		T& RegisterLayer(Args&&... args)
+			requires std::derived_from<T, Layer> /* && std::constructible_from<T, Scene, Args...>*/
+		{
+			return *(T*)&m_Layers.emplace_back(MakeScope<T>(*this, std::forward<Args>()...));
+			// m_Layer = MakeScope<T>(*this, std::forward<Args>()...);
+			// return *(T*)(m_Layer.get());
+		}
+
+	protected:
+		Scene(Scope<Camera> camera);
+
 	private:
 		entt::registry m_Registry;
 		Scope<Camera> m_Camera = nullptr;
 		ThreadPool m_ThreadPool;
+
+		std::vector<Scope<Layer>> m_Layers;
+		Scope<Layer> m_Layer;
 
 		static Scope<Scene> s_CurrentScene;
 	};

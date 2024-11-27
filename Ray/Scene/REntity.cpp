@@ -6,6 +6,8 @@
 
 namespace At0::Ray
 {
+	Entity Entity::Empty = Entity{};
+
 	Entity::Entity(entt::entity handle, entt::registry* registry)
 		: m_EntityHandle(handle), m_Registry(registry)
 	{
@@ -79,7 +81,13 @@ namespace At0::Ray
 		return m_Registry == other.m_Registry && m_EntityHandle == other.m_EntityHandle;
 	}
 
-	constexpr bool Entity::operator!=(const Entity& other) const { return !(*this == other); }
+	constexpr bool Entity::operator!=(const Entity& other) const
+	{
+		return !(*this == other);
+	}
 
-	std::ostream& operator<<(std::ostream& os, Entity e) { return os << (int)e.m_EntityHandle; }
+	std::ostream& operator<<(std::ostream& os, Entity e)
+	{
+		return os << (int)e.m_EntityHandle;
+	}
 }  // namespace At0::Ray

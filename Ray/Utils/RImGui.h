@@ -35,6 +35,10 @@ namespace At0::Ray
 	class DescriptorSet;
 	class Sampler2DUniform;
 
+	class ImGuiDrawEvent
+	{
+	};
+
 	/**
 	 * RAY_TODO:
 	 *	ImGui should be the first to receive events
@@ -51,7 +55,9 @@ namespace At0::Ray
 		EventListener<ScrollLeftEvent>,
 		EventListener<ScrollRightEvent>,
 		EventListener<ScrollUpEvent>,
-		EventListener<ScrollDownEvent>
+		EventListener<ScrollDownEvent>,
+
+		public EventDispatcher<ImGuiDrawEvent>
 	{
 	public:
 		struct PushConstBlock
@@ -69,12 +75,6 @@ namespace At0::Ray
 		void UpdateBuffers();
 		void CmdBind(const CommandBuffer& cmdBuff);
 		void Update(Delta dt);
-
-		template<typename F>
-		void RegisterNewFrameFunction(F&& func)
-		{
-			m_NewFrameFunctions.emplace_back(func);
-		}
 
 		static Float3 Float3Widget(std::string_view title, Float3 data);
 		static Float4 Float4Widget(std::string_view title, Float4 data);
@@ -127,8 +127,6 @@ namespace At0::Ray
 
 		int32_t m_VertexCount = 0;
 		int32_t m_IndexCount = 0;
-
-		std::vector<std::function<void()>> m_NewFrameFunctions;
 	};
 }  // namespace At0::Ray
 

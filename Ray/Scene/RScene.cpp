@@ -21,9 +21,15 @@ namespace At0::Ray
 		return *s_CurrentScene;
 	}
 
-	void Scene::Destroy() { s_CurrentScene = nullptr; }
+	void Scene::Destroy()
+	{
+		s_CurrentScene = nullptr;
+	}
 
-	Scene::~Scene() { m_Registry.clear(); }
+	Scene::~Scene()
+	{
+		m_Registry.clear();
+	}
 
 	Entity Scene::CreateEntity()
 	{
@@ -90,7 +96,10 @@ namespace At0::Ray
 		//	"[Scene] MeshRenderer updates took {0}us", (Time::Now() - tStart).AsMicroseconds());
 	}
 
-	void Scene::SetCamera(Scope<Camera> cam) { m_Camera = std::move(cam); }
+	void Scene::SetCamera(Scope<Camera> cam)
+	{
+		m_Camera = std::move(cam);
+	}
 
 	const Camera& Scene::GetCamera() const
 	{
