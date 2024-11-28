@@ -22,6 +22,7 @@ namespace At0::Ray
 	struct RenderContext
 	{
 		RenderContext(Window& window, const EngineRenderContext& engineContext);
+		~RenderContext();
 
 		const VulkanInstance& instance;
 		const PhysicalDevice& physicalDevice;

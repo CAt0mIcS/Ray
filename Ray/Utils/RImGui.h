@@ -73,7 +73,7 @@ namespace At0::Ray
 
 	public:
 		static ImGUI& Get();
-		static void Destroy() { s_Instance.reset(); }
+		static void Destroy();
 		~ImGUI();
 
 		void NewFrame(std::function<void()> fn = []() {});

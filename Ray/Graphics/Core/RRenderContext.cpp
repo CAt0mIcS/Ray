@@ -11,4 +11,5 @@ namespace At0::Ray
 		  graphics{ instance, physicalDevice, surface, device }
 	{
 	}
+	RenderContext::~RenderContext() {}
 }  // namespace At0::Ray

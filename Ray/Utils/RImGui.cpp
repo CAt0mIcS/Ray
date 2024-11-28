@@ -64,6 +64,11 @@ namespace At0::Ray
 		return *s_Instance;
 	}
 
+	void ImGUI::Destroy()
+	{
+		s_Instance.reset();
+	}
+
 	ImGUI::~ImGUI()
 	{
 		ImGui::DestroyContext();

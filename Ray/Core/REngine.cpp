@@ -12,7 +12,6 @@ namespace At0::Ray
 
 	Engine::~Engine()
 	{
-		Graphics::Destroy();
 		Log::Info("[Engine] Shutdown");
 	}
 

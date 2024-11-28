@@ -56,6 +56,7 @@ namespace At0::Ray
 
 	void Window::Close()
 	{
+		m_RenderContext.reset();
 		glfwDestroyWindow(m_hWnd);
 	}
 
@@ -87,10 +88,12 @@ namespace At0::Ray
 	bool Window::Update(Delta dt)
 	{
 		glfwPollEvents();
+		bool shouldClose = glfwWindowShouldClose(m_hWnd);
 
-		m_RenderContext->graphics.Update(dt);
+		if (!shouldClose)
+			m_RenderContext->graphics.Update(dt);
 
-		return !glfwWindowShouldClose(m_hWnd);
+		return !shouldClose;
 	}
 
 	std::pair<const char**, uint32_t> Window::GetInstanceExtensions()
@@ -135,7 +138,8 @@ namespace At0::Ray
 
 	Window::~Window()
 	{
-		glfwTerminate();
+		// RAY_TODO: Never freeing glfw resources
+		// glfwTerminate();
 	}
 
 	void Window::SetEventCallbacks()

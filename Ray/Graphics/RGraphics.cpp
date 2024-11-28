@@ -388,11 +388,6 @@ namespace At0::Ray
 		m_CurrentFrame = (m_CurrentFrame + 1) % s_MaxFramesInFlight;
 	}
 
-	void Graphics::Destroy()
-	{
-		delete s_Instance;
-	}
-
 	Graphics::~Graphics()
 	{
 		m_Device.WaitIdle();
@@ -409,10 +404,11 @@ namespace At0::Ray
 		m_CommandBuffers.clear();
 		m_CommandBufferRecorder.reset();
 
+		Scene::Destroy();
+
 #if RAY_ENABLE_IMGUI
 		ImGUI::Destroy();
 #endif
-		Scene::Destroy();
 		DynamicUniformBuffer::Reset();
 		Codex::Shutdown();
 		ResourceManager::Destroy();

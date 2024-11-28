@@ -36,7 +36,6 @@ namespace At0::Ray
 			const Surface& surface, const LogicalDevice& device);
 		~Graphics();
 		static Graphics& Get();
-		static void Destroy();
 
 		const VulkanInstance& GetInstance() const { return m_VulkanInstance; }
 		const Surface& GetSurface() const { return m_Surface; }
