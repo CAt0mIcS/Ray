@@ -13,6 +13,10 @@ namespace At0::Ray
 		return GetScene().GetMainWindow();
 	}
 
+	const Engine& Layer::GetEngine() const
+	{
+		return GetScene().GetEngine();
+	}
 
 	const ResourceManager& Layer::GetResourceManager() const
 	{

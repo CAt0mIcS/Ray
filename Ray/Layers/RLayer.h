@@ -13,6 +13,7 @@ namespace At0::Ray
 	class Shader;
 	class ResourceManager;
 	class Window;
+	class Engine;
 
 	class RAY_EXPORT Layer
 	{
@@ -33,6 +34,8 @@ namespace At0::Ray
 
 		const Window& GetWindow() const;
 		Window& GetWindow() { return (Window&)std::as_const(*this).GetWindow(); }
+
+		const Engine& GetEngine() const;
 
 		const ResourceManager& GetResourceManager() const;
 		ResourceManager& GetResourceManager()

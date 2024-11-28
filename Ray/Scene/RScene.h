@@ -66,6 +66,8 @@ namespace At0::Ray
 		const Window& GetMainWindow() const;
 		Window& GetMainWindow() { return (Window&)std::as_const(*this).GetMainWindow(); }
 
+		const Engine& GetEngine() const { return m_Engine; }
+
 		const ResourceManager& GetResourceManager() const;
 		ResourceManager& GetResourceManager()
 		{

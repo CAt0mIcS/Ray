@@ -8,17 +8,9 @@
 
 namespace At0::Ray
 {
-	Engine* Engine::s_Instance = nullptr;
-
 	Engine::~Engine()
 	{
 		Log::Info("[Engine] Shutdown");
-	}
-
-	Engine& Engine::Get()
-	{
-		RAY_MEXPECTS(s_Instance, "[Engine::Get] Engine not initialized");
-		return *s_Instance;
 	}
 
 	int Engine::Run()
@@ -39,7 +31,5 @@ namespace At0::Ray
 		: m_VulkanInstance{}, m_PhysicalDevice{ m_VulkanInstance },
 		  m_MainWindow{ GetRenderContext() }
 	{
-		RAY_MEXPECTS(!s_Instance, "[Engine] Already initialized");
-		s_Instance = this;
 	}
 }  // namespace At0::Ray

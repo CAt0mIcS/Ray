@@ -18,11 +18,6 @@ namespace At0::Ray
 		virtual ~Engine();
 
 		/**
-		 * @returns The static application instance
-		 */
-		static Engine& Get();
-
-		/**
 		 * Starts the application run loop
 		 * @returns the exit code
 		 */
@@ -55,7 +50,6 @@ namespace At0::Ray
 		Engine();
 
 	private:
-		static Engine* s_Instance;
 		Delta m_Delta{};
 		ChangePerSecond m_FPS{};
 
