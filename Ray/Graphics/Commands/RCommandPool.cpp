@@ -7,20 +7,21 @@
 
 namespace At0::Ray
 {
-	CommandPool::CommandPool(VkCommandPoolCreateFlags flags)
+	CommandPool::CommandPool(const RenderContext& context, VkCommandPoolCreateFlags flags)
+		: m_Context(context)
 	{
 		VkCommandPoolCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 		createInfo.flags = flags;
-		createInfo.queueFamilyIndex = Graphics::Get().GetRenderContext().device.GetGraphicsFamily();
+		createInfo.queueFamilyIndex = m_Context.device.GetGraphicsFamily();
 
-		ThrowVulkanError(vkCreateCommandPool(Graphics::Get().GetRenderContext().device, &createInfo,
-							 nullptr, &m_CommandPool),
+		ThrowVulkanError(
+			vkCreateCommandPool(m_Context.device, &createInfo, nullptr, &m_CommandPool),
 			"[CommandPool] Failed to create");
 	}
 
 	CommandPool::~CommandPool()
 	{
-		vkDestroyCommandPool(Graphics::Get().GetRenderContext().device, m_CommandPool, nullptr);
+		vkDestroyCommandPool(m_Context.device, m_CommandPool, nullptr);
 	}
 }  // namespace At0::Ray

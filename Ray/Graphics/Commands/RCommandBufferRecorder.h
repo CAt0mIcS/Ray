@@ -13,6 +13,7 @@ namespace At0::Ray
 	class RenderPass;
 	class CommandBuffer;
 	class SecondaryCommandBuffer;
+	class RenderContext;
 
 	class RAY_EXPORT CommandBufferRecorder : NonCopyable
 	{
@@ -35,7 +36,8 @@ namespace At0::Ray
 		~CommandBufferRecorder();
 
 		void Record(const RenderPass& renderPass, const Framebuffer& framebuffer,
-			uint32_t imageIndex, const VkViewport& viewport, const VkRect2D& scissor);
+			uint32_t imageIndex, const VkViewport& viewport, const VkRect2D& scissor,
+			UInt2 swapchainExtent);
 
 		void WaitForTasks() { m_ThreadPool.WaitForTasks(); }
 		void ResetCommandPools(uint32_t imageIndex) const;
@@ -50,5 +52,7 @@ namespace At0::Ray
 
 		// [imageIndex][thread]
 		std::vector<std::vector<SecondaryResources>> m_CommandResources;
+
+		const RenderContext& m_Context;
 	};
 }  // namespace At0::Ray

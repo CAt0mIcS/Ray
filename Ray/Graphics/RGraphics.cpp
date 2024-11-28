@@ -58,7 +58,8 @@ namespace At0::Ray
 	void Graphics::CreateVulkanObjects()
 	{
 		m_Swapchain = MakeScope<Swapchain>(m_Window.GetFramebufferSize());
-		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
+		m_CommandPool =
+			MakeScope<CommandPool>(m_Context, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 
 		m_DepthImage = MakeScope<DepthImage>(
 			UInt2{ GetSwapchain().GetExtent().x, GetSwapchain().GetExtent().y });
@@ -248,8 +249,8 @@ namespace At0::Ray
 		clearValues[0].color = { 0.f, 0.f, 0.f };
 		clearValues[1].depthStencil = { 1.0f, 0 };
 
-		Graphics::Get().m_RenderPass->Begin(cmdBuff, framebuffer, clearValues,
-			std::size(clearValues), Graphics::Get().GetSwapchain().GetExtent());
+		m_RenderPass->Begin(
+			cmdBuff, framebuffer, clearValues, std::size(clearValues), m_Swapchain->GetExtent());
 
 		vkCmdSetViewport(cmdBuff, 0, 1, &Graphics::Get().m_Viewport);
 		vkCmdSetScissor(cmdBuff, 0, 1, &Graphics::Get().m_Scissor);
@@ -334,8 +335,8 @@ namespace At0::Ray
 
 
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
-		m_CommandBufferRecorder->Record(
-			*m_RenderPass, *m_Framebuffers[imageIndex], imageIndex, m_Viewport, m_Scissor);
+		m_CommandBufferRecorder->Record(*m_RenderPass, *m_Framebuffers[imageIndex], imageIndex,
+			m_Viewport, m_Scissor, m_Swapchain->GetExtent());
 		// submitInfo.commandBufferCount =
 		//	(uint32_t)m_CommandBufferRecorder->GetVkCommandBuffers(imageIndex).size();
 		// submitInfo.pCommandBuffers =
@@ -469,7 +470,8 @@ namespace At0::Ray
 			MakeScope<Swapchain>(m_Window.GetFramebufferSize(), (VkSwapchainKHR)*m_Swapchain);
 		m_CommandPool.reset();
 
-		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
+		m_CommandPool =
+			MakeScope<CommandPool>(m_Context, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 		m_DepthImage = MakeScope<DepthImage>(
 			UInt2{ GetSwapchain().GetExtent().x, GetSwapchain().GetExtent().y });
 		CreateRenderPass();
