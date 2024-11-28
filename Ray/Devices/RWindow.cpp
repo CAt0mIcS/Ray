@@ -453,8 +453,7 @@ namespace At0::Ray
 			if (!Mouse::IsOnWidget(btn) && &btn == m_HoverWidget)
 			{
 				Log::Trace("[Window] HoverLeaveEvent \"{0}\" (Listeners: {1})",
-					m_HoverWidget->GetName(),
-					Window::Get().EventDispatcher<HoverLeaveEvent>::Get().size());
+					m_HoverWidget->GetName(), EventDispatcher<HoverLeaveEvent>::Get().size());
 
 				HoverLeaveEvent e(m_HoverWidget);
 				for (auto* listener : EventDispatcher<HoverLeaveEvent>::Get())
@@ -467,8 +466,7 @@ namespace At0::Ray
 				m_HoverWidget = &btn;
 
 				Log::Trace("[Window] HoverEnterEvent \"{0}\" (Listeners: {1})",
-					m_HoverWidget->GetName(),
-					Window::Get().EventDispatcher<HoverEnterEvent>::Get().size());
+					m_HoverWidget->GetName(), EventDispatcher<HoverEnterEvent>::Get().size());
 
 				HoverEnterEvent e(m_HoverWidget);
 				for (auto* listener : EventDispatcher<HoverEnterEvent>::Get())

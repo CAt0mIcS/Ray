@@ -1,5 +1,13 @@
 ﻿#pragma once
 
+namespace At0::Ray
+{
+	class ImGuiDrawEvent
+	{
+	};
+}  // namespace At0::Ray
+
+
 #ifndef RAY_ENABLE_IMGUI
 	#define RAY_ENABLE_IMGUI 1
 #endif
@@ -10,7 +18,8 @@
 
 #if RAY_ENABLE_IMGUI
 
-	#define RAY_IMGUI(x) ::At0::Ray::ImGUI::Get().RegisterNewFrameFunction(x)
+	#define RAY_IMGUI_CONSTRUCTOR \
+		::At0::Ray::EventListener<::At0::Ray::ImGuiDrawEvent>(::At0::Ray::ImGUI::Get())
 
 // clang-format off
 #include "../RBase.h"
@@ -34,10 +43,6 @@ namespace At0::Ray
 	class GraphicsPipeline;
 	class DescriptorSet;
 	class Sampler2DUniform;
-
-	class ImGuiDrawEvent
-	{
-	};
 
 	/**
 	 * RAY_TODO:
@@ -132,6 +137,6 @@ namespace At0::Ray
 
 #else
 
-	#define RAY_IMGUI(x)
+	#define RAY_IMGUI_CONSTRUCTOR ::At0::Ray::EventListener<::At0::Ray::ImGuiDrawEvent>()
 
 #endif

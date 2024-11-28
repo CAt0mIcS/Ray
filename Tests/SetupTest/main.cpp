@@ -40,8 +40,7 @@ using namespace At0;
 class TestEntityLayer : public Ray::Layer, public Ray::EventListener<Ray::ImGuiDrawEvent>
 {
 public:
-	TestEntityLayer(Ray::Scene& scene)
-		: Ray::Layer(scene), Ray::EventListener<Ray::ImGuiDrawEvent>(Ray::ImGUI::Get())
+	TestEntityLayer(Ray::Scene& scene) : Ray::Layer(scene), RAY_IMGUI_CONSTRUCTOR
 	{
 		auto pipeline =
 			PipelineBuilder()
@@ -96,8 +95,9 @@ private:
 		}
 	}
 
-	void OnEvent(Ray::ImGuiDrawEvent& e) override
+	void OnEvent(Ray::ImGuiDrawEvent& e)
 	{
+#if RAY_ENABLE_IMGUI
 		auto translate = [](Ray::Entity e)
 		{
 			auto& tform = e.Get<Ray::Transform>();
@@ -129,6 +129,7 @@ private:
 
 			ImGui::End();
 		}
+#endif
 
 #include "../ImGuiWindows.inl"
 	}

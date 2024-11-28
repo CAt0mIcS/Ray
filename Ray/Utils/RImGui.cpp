@@ -1,5 +1,12 @@
 ﻿#include "RImGui.h"
 
+#include "Events/REventListener.h"
+
+namespace At0::Ray
+{
+	template class RAY_EXPORT EventListener<ImGuiDrawEvent>;
+}
+
 #if RAY_ENABLE_IMGUI
 
 // clang-format off
@@ -48,8 +55,6 @@
 
 namespace At0::Ray
 {
-	template class RAY_EXPORT EventListener<ImGuiDrawEvent>;
-
 	Scope<ImGUI> ImGUI::s_Instance = nullptr;
 
 	ImGUI& ImGUI::Get()
