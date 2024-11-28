@@ -51,8 +51,9 @@ namespace At0::Ray
 	}
 
 
-	TextComponent::TextComponent(Entity entity, std::string text, Ref<Font> font)
-		: Component(entity), m_Text(std::move(text)), m_Font(std::move(font))
+	TextComponent::TextComponent(
+		Entity entity, const Window& window, std::string text, Ref<Font> font)
+		: Component(entity), m_Text(std::move(text)), m_Font(std::move(font)), m_Window(&window)
 	{
 		if (!GetEntity().Has<HierachyComponent>())
 			GetEntity().Emplace<HierachyComponent>();
@@ -93,20 +94,20 @@ namespace At0::Ray
 			else
 			{
 				x += ScreenSpaceToNDCSpaceX(
-						 glyph.advance * scale, Window::Get().GetFramebufferSize().x) +
+						 glyph.advance * scale, m_Window->GetFramebufferSize().x) +
 					 1.f;
 				continue;
 			}
 
-			UInt2 windowSize = Window::Get().GetFramebufferSize();
+			UInt2 windowSize = m_Window->GetFramebufferSize();
 
 			// Float2 ndcBearing{ (Float2)glyph.bearing / (Float2)windowSize };
 			// Float2 ndcSize{ (Float2)glyph.size / (Float2)windowSize };
 
 			Float2 ndcBearing =
-				ScreenSpaceToNDCSpace(glyph.bearing, Window::Get().GetFramebufferSize()) +
+				ScreenSpaceToNDCSpace(glyph.bearing, m_Window->GetFramebufferSize()) +
 				Float2{ 1.f, 0.f };
-			Float2 ndcSize = ScreenSpaceToNDCSpace(glyph.size, Window::Get().GetFramebufferSize()) +
+			Float2 ndcSize = ScreenSpaceToNDCSpace(glyph.size, m_Window->GetFramebufferSize()) +
 							 Float2{ 1.f, 0.f };
 
 			float xPos = x + ndcBearing.x * scale;
@@ -124,8 +125,7 @@ namespace At0::Ray
 			// tform.SetScale({ w, 1.f, h });
 			// tform.SetTranslation({ xPos, yPos, 0.f });
 
-			x += ScreenSpaceToNDCSpaceX(
-					 glyph.advance * scale, Window::Get().GetFramebufferSize().x) +
+			x += ScreenSpaceToNDCSpaceX(glyph.advance * scale, m_Window->GetFramebufferSize().x) +
 				 1.f;
 			// x += glyph.advance * scale / windowSize.x;
 		}

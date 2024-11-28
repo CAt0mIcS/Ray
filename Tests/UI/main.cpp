@@ -16,8 +16,10 @@
 #include <Ray/Shading/RMaterial.h>
 #include <Ray/Graphics/Pipelines/Shader/RShader.h>
 #include <Ray/Components/RMeshRenderer.h>
-
 #include <Ray/Scene/RScene.h>
+#include <Ray/Layers/RLayer.h>
+#include <Ray/Components/RModel.h>
+
 #include <Ray/Scene/RCamera.h>
 
 #include <signal.h>
@@ -42,24 +44,8 @@
 
 using namespace At0::Ray;
 
-
-class Scene2 : public Scene
-{
-public:
-	Scene2() : Scene(MakeScope<Camera>())
-	{
-		UInt2 size = Window::Get().GetFramebufferSize();
-		GetCamera().SetPosition(Float3(0.0f, 0.0f, -2.5f));
-		GetCamera().SetRotation(Float3(0.0f));
-		GetCamera().SetRotationSpeed(0.07f);
-		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
-		GetCamera().SetMovementSpeed(3.0f);
-	}
-};
-
-
-class App :
-	public Engine,
+class UiLayer :
+	public Layer,
 	EventListener<HoverEnterEvent>,
 	EventListener<HoverLeaveEvent>,
 	EventListener<MouseButtonPressedEvent>,
@@ -67,42 +53,69 @@ class App :
 	EventListener<KeyPressedEvent>
 {
 public:
-	App() /* : EventListener<KeyPressedEvent>(Window::Get())*/
+	UiLayer(Scene& scene)
+		: Layer(scene), EventListener<HoverEnterEvent>(GetWindow()),
+		  EventListener<HoverLeaveEvent>(GetWindow()),
+		  EventListener<MouseButtonPressedEvent>(GetWindow()),
+		  EventListener<MouseButtonReleasedEvent>(GetWindow()),
+		  EventListener<KeyPressedEvent>(GetWindow())
 	{
-		Scene::Create<Scene2>();
 #include "../ImGuiWindows.inl"
 
-		// auto font = Font::AcquireTTF("Resources/Fonts/arial.ttf", 128);
+		auto font = Font::AcquireTTF("Resources/Fonts/arial.ttf", 128);
 
-		// m_TextEntity = Scene::Get().CreateEntity();
-		// m_TextEntity.Emplace<TextComponent>(
-		//	"\"The beige hue on the waters of the loch impressed all, including the French queen, "
-		//	"before she heard that symphony again, just as young Arthur wanted.\" (pangram)",
-		//	font);
-
-
-		Scene::Get().CreateEntity().Emplace<Mesh>(
-			Mesh::Import("Resources/Models/Nanosuit/nanosuit.obj"));
+		m_TextEntity = GetScene().CreateEntity();
+		m_TextEntity.Emplace<TextComponent>(GetWindow(),
+			"\"The beige hue on the waters of the loch impressed all, including the French queen, "
+			"before she heard that symphony again, just as young Arthur wanted.\" (pangram)",
+			font);
 
 
-		m_ColoredBtn = Scene::Get().CreateEntity();
-		m_ColoredBtn.Emplace<Button>("ColoredButton", Float2{ 0.f, 0.f }, 100.f, 100.f);
+		// RAY_TODO: No longer working!
+		m_ColoredBtn = GetScene().CreateEntity();
+		m_ColoredBtn.Emplace<Button>(
+			GetWindow(), "ColoredButton", Float2{ 0.f, 0.f }, 100.f, 100.f);
+
+
+		// auto pipeline = PipelineBuilder()
+		//					.SetShader(LoadShaderFromSourceFile(
+		//						{ "Resources/Shaders/UI.vert", "Resources/Shaders/UI.frag" }))
+		//					.SetCullMode(VK_CULL_MODE_NONE)
+		//					.Build();
+
+		// auto material =
+		//	MaterialBuilder(pipeline).Set("Shading.color", Float4(1.f, 1.f, 1.f, 1.f)).Build();
+
+		// GetScene().CreateEntity().Emplace<Mesh>(Mesh::Plane(material));
+
+		// auto pipeline = GraphicsPipeline::Builder()
+		//					.SetShader(Shader::FromSourceFile(
+		//						{ "Resources/Shaders/UI.vert", "Resources/Shaders/UI.frag" }))
+		//					.SetCullMode(VK_CULL_MODE_NONE)
+		//					.Acquire();
+
+
+		// auto material = Material::Builder(std::move(pipeline))
+		//					.Set("Shading.color", Float4(1.f, 1.f, 1.f, 1.f))
+		//					.Build();
+
+		// GetScene().CreateEntity().Emplace<Mesh>(Mesh::Plane(std::move(material)));
 	}
 
-private:
+
 	void OnEvent(KeyPressedEvent& e) override
 	{
-		auto& textComp = m_TextEntity.Get<TextComponent>();
+		// auto& textComp = m_TextEntity.Get<TextComponent>();
 
-		if ((int)e.GetKey() >= 32 && (int)e.GetKey() <= 126 && e.GetKey() != Key::W &&
-			e.GetKey() != Key::A && e.GetKey() != Key::S && e.GetKey() != Key::D)
-		{
-			if (e.GetKey() == Key::Backspace)
-				textComp.SetText(
-					std::string(textComp.GetText().substr(0, textComp.GetText().size() - 1)));
-			else
-				textComp.SetText(std::string(textComp.GetText()) + String::Construct(e.GetKey()));
-		}
+		// if ((int)e.GetKey() >= 32 && (int)e.GetKey() <= 126 && e.GetKey() != Key::W &&
+		//	e.GetKey() != Key::A && e.GetKey() != Key::S && e.GetKey() != Key::D)
+		//{
+		//	if (e.GetKey() == Key::Backspace)
+		//		textComp.SetText(
+		//			std::string(textComp.GetText().substr(0, textComp.GetText().size() - 1)));
+		//	else
+		//		textComp.SetText(std::string(textComp.GetText()) + String::Construct(e.GetKey()));
+		// }
 	}
 
 	void OnEvent(HoverEnterEvent& e) override
@@ -143,9 +156,10 @@ private:
 			"MouseButtonReleasedEvent {0}", e.GetWidget() ? e.GetWidget()->GetName() : "{Null}");
 	}
 
-	void Update() override
+private:
+	virtual void Update(Delta dt) override
 	{
-		Scene::Get().EntityView<Button>().each(
+		GetScene().EntityView<Button>().each(
 			[this](Button& btn)
 			{
 				if (btn.GetName() == "ColoredButton")
@@ -160,6 +174,55 @@ private:
 	Entity m_ColoredBtn;
 	Entity m_TexturedBtn;
 };
+
+
+class NanosuitLayer : public Layer
+{
+public:
+	NanosuitLayer(Scene& scene) : Layer(scene)
+	{
+		// auto pipeline =
+		//	PipelineBuilder()
+		//		.SetShader(LoadShaderFromSourceFile({ "Tests/Lighting/Shaders/Lighting.vert",
+		//			"Tests/Lighting/Shaders/Lighting.frag" }))
+		//		.SetCullMode(VK_CULL_MODE_NONE)
+		//		.Acquire();
+
+		// auto material = MaterialBuilder(std::move(pipeline))
+		//					.Set("Shading.color", Float4{ 1.f })
+		//					.Set("Shading.ambientLightColor", Float4{ 1.f, 1.f, 1.f, .1f })
+		//					.Build();
+
+		// GetScene().CreateEntity().Emplace<Model>(
+		//	"Resources/Models/Nanosuit/nanosuit.obj", std::move(material));
+	}
+};
+
+
+class Scene2 : public Scene
+{
+public:
+	Scene2() : Scene(MakeScope<Camera>())
+	{
+		UInt2 size = Window::Get().GetFramebufferSize();
+		GetCamera().SetPosition(Float3(0.0f, 0.0f, -2.5f));
+		GetCamera().SetRotation(Float3(0.0f));
+		GetCamera().SetRotationSpeed(0.07f);
+		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
+		GetCamera().SetMovementSpeed(3.0f);
+
+		RegisterLayer<UiLayer>();
+		RegisterLayer<NanosuitLayer>();
+	}
+};
+
+
+class App : public Engine
+{
+public:
+	App() { Scene::Create<Scene2>(); };
+};
+
 
 void SignalHandler(int signal)
 {

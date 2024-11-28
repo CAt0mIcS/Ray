@@ -8,11 +8,12 @@
 namespace At0::Ray
 {
 	class Font;
+	class Window;
 
 	class RAY_EXPORT TextComponent : public Component
 	{
 	public:
-		TextComponent(Entity entity, std::string text, Ref<Font> font);
+		TextComponent(Entity entity, const Window& window, std::string text, Ref<Font> font);
 
 		Ref<Font> GetSharedFont() const { return m_Font; }
 		const Font& GetFont() const { return *m_Font; }
@@ -27,6 +28,8 @@ namespace At0::Ray
 	private:
 		Ref<Font> m_Font;
 		std::string m_Text;
+
+		const Window* m_Window;
 	};
 }  // namespace At0::Ray
 

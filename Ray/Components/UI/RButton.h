@@ -6,14 +6,15 @@
 namespace At0::Ray
 {
 	class Texture;
+	class Window;
 
 	class RAY_EXPORT Button : public Widget
 	{
 	public:
-		Button(Entity entity, std::string_view name, Float2 pos, float width, float height,
-			const Float4& color = { 1.f, 1.f, 1.f, 1.f });
-		Button(Entity entity, std::string_view name, Float2 pos, float width, float height,
-			Ref<Texture> texture);
+		Button(Entity entity, Window& window, std::string_view name, Float2 pos, float width,
+			float height, const Float4& color = { 1.f, 1.f, 1.f, 1.f });
+		Button(Entity entity, Window& window, std::string_view name, Float2 pos, float width,
+			float height, Ref<Texture> texture);
 
 		void SetColor(const Float4& color);
 		void SetTexture(Ref<Texture> texture);

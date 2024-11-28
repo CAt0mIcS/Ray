@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../RBase.h"
+#include "../Core/RTime.h"
 #include "../Graphics/Pipelines/RGraphicsPipeline.h"
 #include "../Graphics/Pipelines/Shader/RShaderTypes.h"
 #include "../Shading/RMaterial.h"
@@ -11,12 +12,15 @@ namespace At0::Ray
 	class Scene;
 	class Shader;
 	class ResourceManager;
+	class Window;
 
 	class RAY_EXPORT Layer
 	{
 	public:
 		Layer(Scene& scene);
 		virtual ~Layer() = default;
+
+		virtual void Update(Delta dt) {}
 
 		Layer(const Layer&) = delete;
 		Layer& operator=(const Layer&) = delete;
@@ -26,6 +30,9 @@ namespace At0::Ray
 
 		const Scene& GetScene() const { return *m_Scene; }
 		Scene& GetScene() { return *m_Scene; }
+
+		const Window& GetWindow() const;
+		Window& GetWindow() { return (Window&)std::as_const(*this).GetWindow(); }
 
 		const ResourceManager& GetResourceManager() const;
 		ResourceManager& GetResourceManager()

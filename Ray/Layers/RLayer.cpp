@@ -1,11 +1,18 @@
 #include "RLayer.h"
 
 #include "Scene/RScene.h"
+#include "Devices/RWindow.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
 
 namespace At0::Ray
 {
 	Layer::Layer(Scene& scene) : m_Scene(&scene) {}
+
+	const Window& Layer::GetWindow() const
+	{
+		return Window::Get();
+	}
+
 
 	const ResourceManager& Layer::GetResourceManager() const
 	{

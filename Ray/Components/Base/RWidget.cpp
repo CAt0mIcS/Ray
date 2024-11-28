@@ -64,8 +64,9 @@ namespace At0::Ray
 		SetY(GetY());
 	}
 
-	Widget::Widget(Entity entity, std::string_view name)
-		: EventListener<WindowResizedEvent>(Window::Get()), Component(entity), m_Name(name)
+	Widget::Widget(Entity entity, Window& window, std::string_view name)
+		: EventListener<WindowResizedEvent>(window), Component(entity), m_Name(name),
+		  m_FramebufferSize(window.GetFramebufferSize())
 	{
 	}
 
@@ -79,10 +80,8 @@ namespace At0::Ray
 
 		Ray::Float2 scale = tform.Scale();
 
-		float newX =
-			(m_Translation.x / (float)Ray::Window::Get().GetFramebufferSize().x) * 2.0f - 1;
-		float newY =
-			(m_Translation.y / (float)Ray::Window::Get().GetFramebufferSize().y) * 2.0f - 1;
+		float newX = (m_Translation.x / (float)Window::Get().GetFramebufferSize().x) * 2.0f - 1;
+		float newY = (m_Translation.y / (float)Window::Get().GetFramebufferSize().y) * 2.0f - 1;
 
 		newX += scale.x / 2.0f;
 		newY += scale.y / 2.0f;

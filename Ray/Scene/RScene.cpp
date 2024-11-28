@@ -4,6 +4,7 @@
 #include "Components/RMeshRenderer.h"
 #include "Components/RSkybox.h"
 #include "Components/RTransform.h"
+#include "Layers/RLayer.h"
 
 #include "Events/REventListener.h"
 
@@ -94,6 +95,9 @@ namespace At0::Ray
 
 		// CLog::Trace(
 		//	"[Scene] MeshRenderer updates took {0}us", (Time::Now() - tStart).AsMicroseconds());
+
+		for (auto& layer : m_Layers)
+			layer->Update(dt);
 	}
 
 	void Scene::SetCamera(Scope<Camera> cam)

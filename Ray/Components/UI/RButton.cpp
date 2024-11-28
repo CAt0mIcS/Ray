@@ -11,9 +11,9 @@
 
 namespace At0::Ray
 {
-	Button::Button(Entity entity, std::string_view name, Float2 pos, float width, float height,
-		const Float4& color)
-		: Widget(entity, name), m_UseColorMaterial(true)
+	Button::Button(Entity entity, Window& window, std::string_view name, Float2 pos, float width,
+		float height, const Float4& color)
+		: Widget(entity, window, name), m_UseColorMaterial(true)
 	{
 		auto pipeline = GraphicsPipeline::Builder()
 							.SetShader(Shader::FromSourceFile(
@@ -22,6 +22,7 @@ namespace At0::Ray
 							.Acquire();
 
 		auto material = Material::Builder(std::move(pipeline)).Set("Shading.color", color).Build();
+
 		GetEntity().Emplace<Mesh>(Mesh::Plane(std::move(material)));
 
 		SetWidth(width);
@@ -29,9 +30,9 @@ namespace At0::Ray
 		SetTranslation(pos);
 	}
 
-	Button::Button(Entity entity, std::string_view name, Float2 pos, float width, float height,
-		Ref<Texture> texture)
-		: Widget(entity, name), m_UseColorMaterial(false)
+	Button::Button(Entity entity, Window& window, std::string_view name, Float2 pos, float width,
+		float height, Ref<Texture> texture)
+		: Widget(entity, window, name), m_UseColorMaterial(false)
 	{
 		auto pipeline = GraphicsPipeline::Builder()
 							.SetShader(Shader::FromSourceFile({ "Resources/Shaders/UI_Tex.vert",

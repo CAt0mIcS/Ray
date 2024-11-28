@@ -10,6 +10,8 @@
 
 namespace At0::Ray
 {
+	class Window;
+
 	class RAY_EXPORT Widget : public Component, EventListener<WindowResizedEvent>
 	{
 	public:
@@ -94,7 +96,7 @@ namespace At0::Ray
 		std::string_view GetName() const { return m_Name; }
 
 	protected:
-		Widget(Entity entity, std::string_view name);
+		Widget(Entity entity, Window& window, std::string_view name);
 
 	private:
 		virtual void OnEvent(WindowResizedEvent& e) override;
@@ -104,5 +106,6 @@ namespace At0::Ray
 		float m_Height{};
 		Float2 m_Translation{};
 		std::string m_Name;
+		UInt2 m_FramebufferSize{};
 	};
 }  // namespace At0::Ray

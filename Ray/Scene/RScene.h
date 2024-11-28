@@ -6,7 +6,6 @@
 #include "../Core/RResourceManager.h"
 #include "../Utils/RThreadPool.h"
 #include "../Events/RCustomEvents.h"
-#include "../Layers/RLayer.h"
 
 #include "REntity.h"
 #include "RCamera.h"
@@ -18,6 +17,7 @@ namespace At0::Ray
 {
 	class DescriptorSet;
 	class Camera;
+	class Layer;
 
 
 	class RAY_EXPORT Scene : public EventDispatcher<EntityCreatedEvent>
