@@ -19,10 +19,11 @@ namespace At0::Ray
 	class DescriptorSet;
 	class BufferUniform;
 	class CommandBuffer;
+	class RenderContext;
 
 	struct RAY_EXPORT ShadowMappingObjects
 	{
-		ShadowMappingObjects();
+		ShadowMappingObjects(const RenderContext& context);
 		~ShadowMappingObjects();
 
 		Matrix CalculateDepthModelViewProjectionMatrix() const;
@@ -38,6 +39,8 @@ namespace At0::Ray
 		Ref<GraphicsPipeline> pipeline;
 		std::unordered_map<uint32_t, Scope<DescriptorSet>> descriptors;
 		Scope<BufferUniform> uniform;
+
+		const RenderContext& context;
 
 		// Ref<GraphicsPipeline> debugPipeline;
 		// Ref<Material> debugMaterial;

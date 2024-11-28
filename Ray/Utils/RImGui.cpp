@@ -79,7 +79,7 @@ namespace At0::Ray
 	{
 		ImGui::DestroyContext();
 		vkDestroyDescriptorSetLayout(
-			Graphics::Get().GetDevice(), m_TextureDescriptorSetLayout, nullptr);
+			Graphics::Get().GetRenderContext().device, m_TextureDescriptorSetLayout, nullptr);
 	}
 
 	ImGUI::ImGUI(Window& window)
@@ -364,7 +364,7 @@ namespace At0::Ray
 			info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 			info.bindingCount = 1;
 			info.pBindings = binding;
-			ThrowVulkanError(vkCreateDescriptorSetLayout(Graphics::Get().GetDevice(), &info,
+			ThrowVulkanError(vkCreateDescriptorSetLayout(Graphics::Get().GetRenderContext().device, &info,
 								 nullptr, &m_TextureDescriptorSetLayout),
 				"[ImGUI] Failed to create descriptor set layout for texture upload");
 		}
@@ -385,7 +385,7 @@ namespace At0::Ray
 			allocInfo.descriptorPool = m_Pipeline->GetDescriptorPool();
 			allocInfo.descriptorSetCount = 1;
 			allocInfo.pSetLayouts = &m_TextureDescriptorSetLayout;
-			ThrowVulkanError(vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo,
+			ThrowVulkanError(vkAllocateDescriptorSets(Graphics::Get().GetRenderContext().device, &allocInfo,
 								 &m_TextureDescriptorSets.back()),
 				"[ImGUI] Failed to create texture descriptor set");
 		}
@@ -402,7 +402,7 @@ namespace At0::Ray
 			writeDesc[0].descriptorCount = 1;
 			writeDesc[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 			writeDesc[0].pImageInfo = descImage;
-			vkUpdateDescriptorSets(Graphics::Get().GetDevice(), 1, writeDesc, 0, NULL);
+			vkUpdateDescriptorSets(Graphics::Get().GetRenderContext().device, 1, writeDesc, 0, NULL);
 		}
 
 		return (ImTextureID)m_TextureDescriptorSets.back();

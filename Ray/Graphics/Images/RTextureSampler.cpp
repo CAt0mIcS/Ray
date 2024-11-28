@@ -3,6 +3,7 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Core/RLogicalDevice.h"
+#include "Graphics/Core/RRenderContext.h"
 
 
 namespace At0::Ray
@@ -22,11 +23,13 @@ namespace At0::Ray
 		createInfo.addressModeV = addressModeV;
 		createInfo.addressModeW = addressModeW;
 
-		if (Graphics::Get().GetDevice().IsEnabled(DeviceFeature::SamplerAnisotropy))
+		if (Graphics::Get().GetRenderContext().device.IsEnabled(DeviceFeature::SamplerAnisotropy))
 		{
 			createInfo.anisotropyEnable = VK_TRUE;
-			createInfo.maxAnisotropy =
-				Graphics::Get().GetPhysicalDevice().GetProperties().limits.maxSamplerAnisotropy;
+			createInfo.maxAnisotropy = Graphics::Get()
+										   .GetRenderContext()
+										   .physicalDevice.GetProperties()
+										   .limits.maxSamplerAnisotropy;
 		}
 		else
 			createInfo.anisotropyEnable = VK_FALSE;
@@ -43,14 +46,14 @@ namespace At0::Ray
 
 		createInfo.flags = flags;
 
-		ThrowVulkanError(
-			vkCreateSampler(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Sampler),
+		ThrowVulkanError(vkCreateSampler(Graphics::Get().GetRenderContext().device, &createInfo,
+							 nullptr, &m_Sampler),
 			"[TextureSampler] Failed to create");
 	}
 
 	TextureSampler::~TextureSampler()
 	{
-		vkDestroySampler(Graphics::Get().GetDevice(), m_Sampler, nullptr);
+		vkDestroySampler(Graphics::Get().GetRenderContext().device, m_Sampler, nullptr);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,7 +1,7 @@
 ﻿#include "RFramebuffer.h"
 
+#include "Graphics/Core/RRenderContext.h"
 #include "Graphics/Core/RLogicalDevice.h"
-#include "Graphics/RGraphics.h"
 #include "Graphics/RenderPass/RRenderPass.h"
 
 
@@ -9,6 +9,7 @@ namespace At0::Ray
 {
 	Framebuffer::Framebuffer(
 		const RenderPass& renderPass, const std::vector<VkImageView>& attachments, UInt2 extent)
+		: m_Device(renderPass.GetRenderContext().device)
 	{
 		VkFramebufferCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -20,8 +21,7 @@ namespace At0::Ray
 		createInfo.height = extent.y;
 		createInfo.layers = 1;
 
-		ThrowVulkanError(
-			vkCreateFramebuffer(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Framebuffer),
+		ThrowVulkanError(vkCreateFramebuffer(m_Device, &createInfo, nullptr, &m_Framebuffer),
 			"[Framebuffer] Failed to create");
 		Log::Info("[Framebuffer] Created with size [width={0}, height={1}]", createInfo.width,
 			createInfo.height);
@@ -29,6 +29,6 @@ namespace At0::Ray
 
 	Framebuffer::~Framebuffer()
 	{
-		vkDestroyFramebuffer(Graphics::Get().GetDevice(), m_Framebuffer, nullptr);
+		vkDestroyFramebuffer(m_Device, m_Framebuffer, nullptr);
 	}
 }  // namespace At0::Ray

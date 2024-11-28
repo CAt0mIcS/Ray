@@ -4,6 +4,7 @@
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
+#include "Graphics/Core/RRenderContext.h"
 #include "Utils/ROStringStream.h"
 
 #include <glslang/SPIRV/GlslangToSpv.h>
@@ -72,7 +73,7 @@ namespace At0::Ray
 		{
 			if (result)
 			{
-				delete[](char*) result->userData;
+				delete[] (char*)result->userData;
 				delete result;
 			}
 		}
@@ -420,8 +421,8 @@ namespace At0::Ray
 		shaderModuleCreateInfo.pCode = spirvCode.data();
 
 		VkShaderModule shaderModule;
-		ThrowVulkanError(vkCreateShaderModule(Graphics::Get().GetDevice(), &shaderModuleCreateInfo,
-							 nullptr, &shaderModule),
+		ThrowVulkanError(vkCreateShaderModule(Graphics::Get().GetRenderContext().device,
+							 &shaderModuleCreateInfo, nullptr, &shaderModule),
 			"[GlslCompiler] Failed to create shader module");
 
 		return shaderModule;

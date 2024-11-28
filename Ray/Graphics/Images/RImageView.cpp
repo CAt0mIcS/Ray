@@ -1,6 +1,7 @@
 ﻿#include "RImageView.h"
 
 #include "Graphics/RGraphics.h"
+#include "Graphics/Core/RRenderContext.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "RImage.h"
 
@@ -31,10 +32,13 @@ namespace At0::Ray
 		createInfo.subresourceRange.baseArrayLayer = 0;
 		createInfo.subresourceRange.layerCount = layerCount;
 
-		ThrowVulkanError(
-			vkCreateImageView(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_View),
+		ThrowVulkanError(vkCreateImageView(Graphics::Get().GetRenderContext().device, &createInfo,
+							 nullptr, &m_View),
 			"[ImageView] Failed to create");
 	}
 
-	ImageView::~ImageView() { vkDestroyImageView(Graphics::Get().GetDevice(), m_View, nullptr); }
+	ImageView::~ImageView()
+	{
+		vkDestroyImageView(Graphics::Get().GetRenderContext().device, m_View, nullptr);
+	}
 }  // namespace At0::Ray

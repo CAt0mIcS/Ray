@@ -1,6 +1,7 @@
 ﻿#include "RDynamicUniformBuffer.h"
 
 #include "Graphics/RGraphics.h"
+#include "Graphics/Core/RRenderContext.h"
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Buffers/RUniformBuffer.h"
 
@@ -18,8 +19,8 @@ namespace At0::Ray
 		VkDeviceSize offset = s_NextOffset;
 		s_NextOffset +=
 			Buffer::PadSizeToAlignment(size, Graphics::Get()
-												 .GetPhysicalDevice()
-												 .GetProperties()
+												 .GetRenderContext()
+												 .physicalDevice.GetProperties()
 												 .limits.minUniformBufferOffsetAlignment);
 
 		DynamicBuffer::Init(s_UniformBuffer, size, offset);

@@ -120,10 +120,10 @@ namespace At0::Ray
 	void CommandBufferRecorder::ResetCommandPools(uint32_t imageIndex) const
 	{
 		for (uint32_t thread = 0; thread < m_ThreadPool.GetThreadCount(); ++thread)
-			vkResetCommandPool(Graphics::Get().GetDevice(),
+			vkResetCommandPool(Graphics::Get().GetRenderContext().device,
 				*m_CommandResources[imageIndex][thread].commandPool, 0);
 		vkResetCommandPool(
-			Graphics::Get().GetDevice(), *m_MainCommandResources[imageIndex].commandPool, 0);
+			Graphics::Get().GetRenderContext().device, *m_MainCommandResources[imageIndex].commandPool, 0);
 	}
 
 	const CommandBufferRecorder::PrimaryResources& CommandBufferRecorder::GetMainCommandResources(

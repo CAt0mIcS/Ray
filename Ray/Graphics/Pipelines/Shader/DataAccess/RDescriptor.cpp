@@ -1,6 +1,7 @@
 ﻿#include "RDescriptor.h"
 
 #include "Graphics/RGraphics.h"
+#include "Graphics/Core/RRenderContext.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
 #include "Graphics/Commands/RCommandBuffer.h"
@@ -32,8 +33,8 @@ namespace At0::Ray
 		allocInfo.descriptorSetCount = 1;
 		allocInfo.pSetLayouts = &m_DescriptorSetLayout;
 
-		ThrowVulkanError(
-			vkAllocateDescriptorSets(Graphics::Get().GetDevice(), &allocInfo, &m_DescriptorSet),
+		ThrowVulkanError(vkAllocateDescriptorSets(Graphics::Get().GetRenderContext().device,
+							 &allocInfo, &m_DescriptorSet),
 			"[DescriptorSet] Failed to allocate");
 	}
 
@@ -48,8 +49,8 @@ namespace At0::Ray
 
 	void DescriptorSet::Update(const std::vector<VkWriteDescriptorSet>& descriptorWrites)
 	{
-		vkUpdateDescriptorSets(Graphics::Get().GetDevice(), (uint32_t)descriptorWrites.size(),
-			descriptorWrites.data(), 0, nullptr);
+		vkUpdateDescriptorSets(Graphics::Get().GetRenderContext().device,
+			(uint32_t)descriptorWrites.size(), descriptorWrites.data(), 0, nullptr);
 	}
 
 	void DescriptorSet::BindUniform(const BufferUniform& uniform)

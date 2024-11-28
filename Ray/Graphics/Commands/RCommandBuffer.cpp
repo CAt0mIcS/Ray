@@ -2,6 +2,7 @@
 
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
+#include "Graphics/Core/RRenderContext.h"
 #include "RCommandPool.h"
 
 
@@ -16,14 +17,15 @@ namespace At0::Ray
 		allocInfo.level = bufferLevel;
 		allocInfo.commandBufferCount = 1;
 
-		ThrowVulkanError(
-			vkAllocateCommandBuffers(Graphics::Get().GetDevice(), &allocInfo, &m_CommandBuffer),
+		ThrowVulkanError(vkAllocateCommandBuffers(Graphics::Get().GetRenderContext().device,
+							 &allocInfo, &m_CommandBuffer),
 			"[CommandBuffer] Failed to allocate command buffer");
 	}
 
 	CommandBuffer::~CommandBuffer()
 	{
-		vkFreeCommandBuffers(Graphics::Get().GetDevice(), *m_CommandPool, 1, &m_CommandBuffer);
+		vkFreeCommandBuffers(
+			Graphics::Get().GetRenderContext().device, *m_CommandPool, 1, &m_CommandBuffer);
 	}
 
 	void CommandBuffer::Begin(VkCommandBufferUsageFlags usageFlags) const
@@ -73,7 +75,10 @@ namespace At0::Ray
 		return *this;
 	}
 
-	CommandBuffer::CommandBuffer(CommandBuffer&& other) noexcept { *this = std::move(other); }
+	CommandBuffer::CommandBuffer(CommandBuffer&& other) noexcept
+	{
+		*this = std::move(other);
+	}
 
 	// -----------------------------------------------------------------------------------------------
 	// Secondary Command Buffer

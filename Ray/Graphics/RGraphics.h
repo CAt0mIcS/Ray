@@ -28,21 +28,17 @@ namespace At0::Ray
 	class CommandBufferRecorder;
 	class ShadowMappingObjects;
 	class Window;
+	class RenderContext;
 
 
 	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
 	{
 	public:
-		Graphics(Window& window, const VulkanInstance& instance,
-			const PhysicalDevice& physicalDevice, const Surface& surface,
-			const LogicalDevice& device);
+		Graphics(Window& window, const RenderContext& context);
 		~Graphics();
 		static Graphics& Get();
 
-		const VulkanInstance& GetInstance() const { return m_VulkanInstance; }
-		const Surface& GetSurface() const { return m_Surface; }
-		const PhysicalDevice& GetPhysicalDevice() const { return m_PhysicalDevice; }
-		const LogicalDevice& GetDevice() const { return m_Device; }
+		const RenderContext& GetRenderContext() const { return m_Context; }
 		const Swapchain& GetSwapchain() const { return *m_Swapchain; }
 		const CommandPool& GetCommandPool() const { return *m_CommandPool; }
 		const RenderPass& GetRenderPass() const { return *m_RenderPass; }
@@ -85,10 +81,7 @@ namespace At0::Ray
 
 		Window& m_Window;
 
-		const VulkanInstance& m_VulkanInstance;
-		const PhysicalDevice& m_PhysicalDevice;
-		const Surface& m_Surface;
-		const LogicalDevice& m_Device;
+		const RenderContext& m_Context;
 
 		Scope<Swapchain> m_Swapchain;
 		Scope<CommandPool> m_CommandPool;

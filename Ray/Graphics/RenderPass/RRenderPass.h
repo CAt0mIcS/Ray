@@ -12,11 +12,13 @@ namespace At0::Ray
 {
 	class CommandBuffer;
 	class Framebuffer;
+	class RenderContext;
 
 	class RAY_EXPORT RenderPass : NonCopyable
 	{
 	public:
-		RenderPass(const std::vector<VkAttachmentDescription>& attachments,
+		RenderPass(const RenderContext& context,
+			const std::vector<VkAttachmentDescription>& attachments,
 			const std::vector<VkSubpassDescription>& subpasses,
 			const std::vector<VkSubpassDependency>& dependencies);
 		~RenderPass();
@@ -26,9 +28,11 @@ namespace At0::Ray
 			VkSubpassContents subpassContents = VK_SUBPASS_CONTENTS_INLINE) const;
 		void End(const CommandBuffer& cmdBuff) const;
 
-		operator const VkRenderPass&() const { return m_Renderpass; }
+		operator VkRenderPass() const { return m_Renderpass; }
+		const RenderContext& GetRenderContext() const { return m_Context; }
 
 	private:
 		VkRenderPass m_Renderpass;
+		const RenderContext& m_Context;
 	};
 }  // namespace At0::Ray

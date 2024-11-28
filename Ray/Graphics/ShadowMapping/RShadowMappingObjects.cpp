@@ -9,7 +9,7 @@
 #include "../Pipelines/Shader/DataAccess/RDescriptor.h"
 #include "../Pipelines/Shader/DataAccess/RBufferUniform.h"
 
-#include "../RGraphics.h"
+#include "../Core/RRenderContext.h"
 #include "../Core/RPhysicalDevice.h"
 #include "../Pipelines/Shader/RShader.h"
 #include "Scene/RScene.h"
@@ -27,7 +27,7 @@ constexpr float depthBiasSlope = 1.75f;
 
 namespace At0::Ray
 {
-	ShadowMappingObjects::ShadowMappingObjects()
+	ShadowMappingObjects::ShadowMappingObjects(const RenderContext& context) : context(context)
 	{
 		// RenderPass
 		{
@@ -55,9 +55,9 @@ namespace At0::Ray
 			dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 			dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
-			renderPass =
-				MakeScope<RenderPass>(std::vector<VkAttachmentDescription>{ *depthAttachment },
-					std::vector<VkSubpassDescription>{ subpass }, dependencies);
+			renderPass = MakeScope<RenderPass>(context,
+				std::vector<VkAttachmentDescription>{ *depthAttachment },
+				std::vector<VkSubpassDescription>{ subpass }, dependencies);
 		}
 
 
@@ -76,16 +76,14 @@ namespace At0::Ray
 					.SetImageAspect(VK_IMAGE_ASPECT_DEPTH_BIT)
 					.SetTextureSampler(
 						TextureSampler::Builder()
-							.SetMinFilter(
-								Graphics::Get().GetPhysicalDevice().IsFormatLinearlyFilterable(
-									DEPTH_FORMAT, VK_IMAGE_TILING_OPTIMAL) ?
-									VK_FILTER_LINEAR :
-									VK_FILTER_NEAREST)
-							.SetMagFilter(
-								Graphics::Get().GetPhysicalDevice().IsFormatLinearlyFilterable(
-									DEPTH_FORMAT, VK_IMAGE_TILING_OPTIMAL) ?
-									VK_FILTER_LINEAR :
-									VK_FILTER_NEAREST)
+							.SetMinFilter(context.physicalDevice.IsFormatLinearlyFilterable(
+											  DEPTH_FORMAT, VK_IMAGE_TILING_OPTIMAL) ?
+											  VK_FILTER_LINEAR :
+											  VK_FILTER_NEAREST)
+							.SetMagFilter(context.physicalDevice.IsFormatLinearlyFilterable(
+											  DEPTH_FORMAT, VK_IMAGE_TILING_OPTIMAL) ?
+											  VK_FILTER_LINEAR :
+											  VK_FILTER_NEAREST)
 							.SetMipmapMode(VK_SAMPLER_MIPMAP_MODE_LINEAR)
 							.SetAddressModeU(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
 							.SetAddressModeV(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)

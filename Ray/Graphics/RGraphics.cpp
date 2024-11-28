@@ -41,10 +41,8 @@ namespace At0::Ray
 {
 	Graphics* Graphics::s_Instance = nullptr;
 
-	Graphics::Graphics(Window& window, const VulkanInstance& instance,
-		const PhysicalDevice& physicalDevice, const Surface& surface, const LogicalDevice& device)
-		: m_Window(window), m_VulkanInstance(instance), m_PhysicalDevice(physicalDevice),
-		  m_Surface(surface), m_Device(device), EventListener<FramebufferResizedEvent>(window)
+	Graphics::Graphics(Window& window, const RenderContext& context)
+		: m_Window(window), m_Context(context), EventListener<FramebufferResizedEvent>(window)
 	{
 		if (s_Instance)
 			ThrowRuntime("[Graphics] Object already created");
@@ -72,7 +70,7 @@ namespace At0::Ray
 
 		CreateSyncObjects();
 
-		m_ShadowMapping = MakeScope<ShadowMappingObjects>();
+		m_ShadowMapping = MakeScope<ShadowMappingObjects>(m_Context);
 	}
 
 	Graphics& Graphics::Get()
@@ -149,7 +147,7 @@ namespace At0::Ray
 		std::vector<VkSubpassDependency> dependencies;
 		dependencies.emplace_back(dependency);
 
-		m_RenderPass = MakeScope<RenderPass>(attachments, subpasses, dependencies);
+		m_RenderPass = MakeScope<RenderPass>(m_Context, attachments, subpasses, dependencies);
 	}
 
 	void Graphics::CreateFramebuffers()
@@ -184,7 +182,7 @@ namespace At0::Ray
 			createInfo.pInitialData = data.data();
 		}
 
-		if (vkCreatePipelineCache(GetDevice(), &createInfo, nullptr, &m_PipelineCache) !=
+		if (vkCreatePipelineCache(m_Context.device, &createInfo, nullptr, &m_PipelineCache) !=
 			VK_SUCCESS)
 			Log::Warn("[Graphics] Failed to create pipeline cache.");
 	}
@@ -202,16 +200,16 @@ namespace At0::Ray
 
 		for (uint32_t i = 0; i < s_MaxFramesInFlight; ++i)
 		{
-			ThrowVulkanError(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
+			ThrowVulkanError(vkCreateSemaphore(m_Context.device, &semaphoreCreateInfo, nullptr,
 								 &m_ImageAvailableSemaphore[i]),
 				"[Graphics] Failed to semaphore to signal when an image is avaliable");
 
-			ThrowVulkanError(vkCreateSemaphore(GetDevice(), &semaphoreCreateInfo, nullptr,
+			ThrowVulkanError(vkCreateSemaphore(m_Context.device, &semaphoreCreateInfo, nullptr,
 								 &m_RenderFinishedSemaphore[i]),
 				"[Graphics] Failed to semaphore to signal when an image has finished rendering");
 
 			ThrowVulkanError(
-				vkCreateFence(GetDevice(), &fenceCreateInfo, nullptr, &m_InFlightFences[i]),
+				vkCreateFence(m_Context.device, &fenceCreateInfo, nullptr, &m_InFlightFences[i]),
 				"[Graphics] Failed to create in flight fence");
 		}
 	}
@@ -291,11 +289,12 @@ namespace At0::Ray
 	{
 		// Wait for fence in VkQueueSubmit to become signaled
 		// which means that the command buffer finished executing
-		vkWaitForFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
+		vkWaitForFences(
+			m_Context.device, 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
 
 		// Index representing the index of the next image to raw (0-2 in this case)
 		uint32_t imageIndex;
-		VkResult result = vkAcquireNextImageKHR(GetDevice(), GetSwapchain(), UINT64_MAX,
+		VkResult result = vkAcquireNextImageKHR(m_Context.device, GetSwapchain(), UINT64_MAX,
 			m_ImageAvailableSemaphore[m_CurrentFrame],	//  Signalled by this function when an image
 														//  is acquired
 			VK_NULL_HANDLE, &imageIndex);
@@ -310,7 +309,8 @@ namespace At0::Ray
 
 		// Check if previous frame is still using this image (e.g. there is its fence to wait on)
 		if (m_ImagesInFlight[imageIndex] != VK_NULL_HANDLE)
-			vkWaitForFences(GetDevice(), 1, &m_ImagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
+			vkWaitForFences(
+				m_Context.device, 1, &m_ImagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
 
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
 		// Reset command pool that was used for this frame
@@ -360,10 +360,10 @@ namespace At0::Ray
 			&m_RenderFinishedSemaphore[m_CurrentFrame];	 // Signal when rendering finished and
 														 // presentation can happen
 
-		vkResetFences(GetDevice(), 1, &m_InFlightFences[m_CurrentFrame]);
+		vkResetFences(m_Context.device, 1, &m_InFlightFences[m_CurrentFrame]);
 
 		// Fence will be signaled once the command buffer finishes executing
-		ThrowVulkanError(vkQueueSubmit(GetDevice().GetGraphicsQueue(), 1, &submitInfo,
+		ThrowVulkanError(vkQueueSubmit(m_Context.device.GetGraphicsQueue(), 1, &submitInfo,
 							 m_InFlightFences[m_CurrentFrame]),
 			"[Graphics] Failed to submit image to queue for rendering");
 
@@ -377,7 +377,7 @@ namespace At0::Ray
 		presentInfo.pImageIndices = &imageIndex;
 		presentInfo.pResults = nullptr;
 
-		result = vkQueuePresentKHR(GetDevice().GetPresentQueue(), &presentInfo);
+		result = vkQueuePresentKHR(m_Context.device.GetPresentQueue(), &presentInfo);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR ||
 			m_FramebufferResized)
@@ -390,15 +390,15 @@ namespace At0::Ray
 
 	Graphics::~Graphics()
 	{
-		m_Device.WaitIdle();
+		m_Context.device.WaitIdle();
 
 		m_ShadowMapping.reset();
 
 		for (uint32_t i = 0; i < s_MaxFramesInFlight; ++i)
 		{
-			vkDestroySemaphore(m_Device, m_ImageAvailableSemaphore[i], nullptr);
-			vkDestroySemaphore(m_Device, m_RenderFinishedSemaphore[i], nullptr);
-			vkDestroyFence(m_Device, m_InFlightFences[i], nullptr);
+			vkDestroySemaphore(m_Context.device, m_ImageAvailableSemaphore[i], nullptr);
+			vkDestroySemaphore(m_Context.device, m_RenderFinishedSemaphore[i], nullptr);
+			vkDestroyFence(m_Context.device, m_InFlightFences[i], nullptr);
 		}
 
 		m_CommandBuffers.clear();
@@ -416,7 +416,7 @@ namespace At0::Ray
 		if (m_PipelineCache)
 		{
 			WritePipelineCache();
-			vkDestroyPipelineCache(GetDevice(), m_PipelineCache, nullptr);
+			vkDestroyPipelineCache(m_Context.device, m_PipelineCache, nullptr);
 		}
 
 		m_DepthImage.reset();
@@ -456,7 +456,7 @@ namespace At0::Ray
 			m_Window.WaitForEvents();
 		}
 
-		m_Device.WaitIdle();
+		m_Context.device.WaitIdle();
 
 		m_CommandBuffers.clear();
 		m_CommandBufferRecorder.reset();
@@ -494,12 +494,12 @@ namespace At0::Ray
 	void Graphics::WritePipelineCache()
 	{
 		size_t pipelineBufferSize;
-		if (vkGetPipelineCacheData(GetDevice(), m_PipelineCache, &pipelineBufferSize, nullptr) !=
-			VK_SUCCESS)
+		if (vkGetPipelineCacheData(
+				m_Context.device, m_PipelineCache, &pipelineBufferSize, nullptr) != VK_SUCCESS)
 			Log::Warn("[Graphics] Failed to get pipeline cache size");
 
 		std::vector<char> pipelineData(pipelineBufferSize);
-		if (vkGetPipelineCacheData(GetDevice(), m_PipelineCache, &pipelineBufferSize,
+		if (vkGetPipelineCacheData(m_Context.device, m_PipelineCache, &pipelineBufferSize,
 				pipelineData.data()) != VK_SUCCESS)
 			Log::Warn("[Graphics] Failed to get pipeline cache data");
 

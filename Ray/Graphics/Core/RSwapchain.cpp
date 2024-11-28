@@ -32,7 +32,7 @@ namespace At0::Ray
 
 		VkSwapchainCreateInfoKHR createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-		createInfo.surface = Graphics::Get().GetSurface();
+		createInfo.surface = Graphics::Get().GetRenderContext().surface;
 		createInfo.minImageCount = imageCount;
 		createInfo.imageFormat = surfaceFormat.format;
 		createInfo.imageColorSpace = surfaceFormat.colorSpace;
@@ -41,13 +41,15 @@ namespace At0::Ray
 		createInfo.imageUsage = imageUsage;
 
 		// Queue families
-		uint32_t queueFamilyIndices[] = { Graphics::Get().GetDevice().GetGraphicsFamily(),
-			Graphics::Get().GetDevice().GetPresentFamily() };
+		uint32_t queueFamilyIndices[] = {
+			Graphics::Get().GetRenderContext().device.GetGraphicsFamily(),
+			Graphics::Get().GetRenderContext().device.GetPresentFamily()
+		};
 
 		// If graphics queue and presentation queue are not the same
 		// we need to share images between them.
-		if (Graphics::Get().GetDevice().GetGraphicsFamily() !=
-			Graphics::Get().GetDevice().GetPresentFamily())
+		if (Graphics::Get().GetRenderContext().device.GetGraphicsFamily() !=
+			Graphics::Get().GetRenderContext().device.GetPresentFamily())
 		{
 			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 			createInfo.queueFamilyIndexCount = 2;
@@ -68,20 +70,20 @@ namespace At0::Ray
 		createInfo.clipped = VK_TRUE;
 		createInfo.oldSwapchain = oldSwapchain;
 
-		ThrowVulkanError(
-			vkCreateSwapchainKHR(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Swapchain),
+		ThrowVulkanError(vkCreateSwapchainKHR(Graphics::Get().GetRenderContext().device,
+							 &createInfo, nullptr, &m_Swapchain),
 			"[Swapchain] Failed to create");
 
 		// Retrieve swapchain images
 		uint32_t swapchainImageCount = 0;
 		vkGetSwapchainImagesKHR(
-			Graphics::Get().GetDevice(), m_Swapchain, &swapchainImageCount, nullptr);
+			Graphics::Get().GetRenderContext().device, m_Swapchain, &swapchainImageCount, nullptr);
 		if (swapchainImageCount == 0)
 			ThrowRuntime("[Swapchain] Image count is 0");
 
 		m_Images.resize(swapchainImageCount);
-		vkGetSwapchainImagesKHR(
-			Graphics::Get().GetDevice(), m_Swapchain, &swapchainImageCount, m_Images.data());
+		vkGetSwapchainImagesKHR(Graphics::Get().GetRenderContext().device, m_Swapchain,
+			&swapchainImageCount, m_Images.data());
 
 		// Create image views
 		m_ImageViews.resize(m_Images.size());
@@ -94,31 +96,33 @@ namespace At0::Ray
 
 	Swapchain::~Swapchain()
 	{
-		vkDestroySwapchainKHR(Graphics::Get().GetDevice(), m_Swapchain, nullptr);
+		vkDestroySwapchainKHR(Graphics::Get().GetRenderContext().device, m_Swapchain, nullptr);
 	}
 
 	Swapchain::SupportDetails Swapchain::QuerySwapchainSupport() const
 	{
 		SupportDetails supportDetails;
 
-		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(Graphics::Get().GetPhysicalDevice(),
-			Graphics::Get().GetSurface(), &supportDetails.Capabilities);
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(Graphics::Get().GetRenderContext().physicalDevice,
+			Graphics::Get().GetRenderContext().surface, &supportDetails.Capabilities);
 
 		uint32_t surfaceFormats;
-		vkGetPhysicalDeviceSurfaceFormatsKHR(Graphics::Get().GetPhysicalDevice(),
-			Graphics::Get().GetSurface(), &surfaceFormats, nullptr);
+		vkGetPhysicalDeviceSurfaceFormatsKHR(Graphics::Get().GetRenderContext().physicalDevice,
+			Graphics::Get().GetRenderContext().surface, &surfaceFormats, nullptr);
 
 		supportDetails.Formats.resize(surfaceFormats);
-		vkGetPhysicalDeviceSurfaceFormatsKHR(Graphics::Get().GetPhysicalDevice(),
-			Graphics::Get().GetSurface(), &surfaceFormats, supportDetails.Formats.data());
+		vkGetPhysicalDeviceSurfaceFormatsKHR(Graphics::Get().GetRenderContext().physicalDevice,
+			Graphics::Get().GetRenderContext().surface, &surfaceFormats,
+			supportDetails.Formats.data());
 
 		uint32_t presentModeCount;
-		vkGetPhysicalDeviceSurfacePresentModesKHR(Graphics::Get().GetPhysicalDevice(),
-			Graphics::Get().GetSurface(), &presentModeCount, nullptr);
+		vkGetPhysicalDeviceSurfacePresentModesKHR(Graphics::Get().GetRenderContext().physicalDevice,
+			Graphics::Get().GetRenderContext().surface, &presentModeCount, nullptr);
 
 		supportDetails.PresentModes.resize(presentModeCount);
-		vkGetPhysicalDeviceSurfacePresentModesKHR(Graphics::Get().GetPhysicalDevice(),
-			Graphics::Get().GetSurface(), &presentModeCount, supportDetails.PresentModes.data());
+		vkGetPhysicalDeviceSurfacePresentModesKHR(Graphics::Get().GetRenderContext().physicalDevice,
+			Graphics::Get().GetRenderContext().surface, &presentModeCount,
+			supportDetails.PresentModes.data());
 
 		return supportDetails;
 	}

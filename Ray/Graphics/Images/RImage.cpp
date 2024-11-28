@@ -7,6 +7,7 @@
 #include "Graphics/Commands/RCommandBuffer.h"
 #include "Graphics/Buffers/RBuffer.h"
 #include "RImageView.h"
+#include "Graphics/Core/RRenderContext.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb/stb_image_write.h>
@@ -42,8 +43,8 @@ namespace At0::Ray
 
 	Image::~Image()
 	{
-		vkDestroyImage(Graphics::Get().GetDevice(), m_Image, nullptr);
-		vkFreeMemory(Graphics::Get().GetDevice(), m_ImageMemory, nullptr);
+		vkDestroyImage(Graphics::Get().GetRenderContext().device, m_Image, nullptr);
+		vkFreeMemory(Graphics::Get().GetRenderContext().device, m_ImageMemory, nullptr);
 	}
 
 	void Image::TransitionLayout(VkImageLayout newLayout)
@@ -73,7 +74,7 @@ namespace At0::Ray
 
 		// Check if the device supports blitting from optimal/linear images
 		vkGetPhysicalDeviceFormatProperties(
-			Graphics::Get().GetPhysicalDevice(), m_Format, &formatProps);
+			Graphics::Get().GetRenderContext().physicalDevice, m_Format, &formatProps);
 		if (!(formatProps.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT) ||
 			!(formatProps.linearTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT))
 		{
@@ -133,8 +134,8 @@ namespace At0::Ray
 
 		cmdBuff.End();
 		// RAY_TODO: Get best queue
-		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+		cmdBuff.Submit(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
+		vkQueueWaitIdle(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
 
 		dstImage.TransitionLayout(VK_IMAGE_LAYOUT_GENERAL);
 		TransitionLayout(oldLayout);
@@ -143,10 +144,10 @@ namespace At0::Ray
 		VkImageSubresource subResource{ VK_IMAGE_ASPECT_COLOR_BIT, 0, 0 };
 		VkSubresourceLayout subResourceLayout;
 		vkGetImageSubresourceLayout(
-			Graphics::Get().GetDevice(), dstImage, &subResource, &subResourceLayout);
+			Graphics::Get().GetRenderContext().device, dstImage, &subResource, &subResourceLayout);
 		const char* data = nullptr;
-		vkMapMemory(Graphics::Get().GetDevice(), dstImage.GetImageMemory(), 0, VK_WHOLE_SIZE, 0,
-			(void**)&data);
+		vkMapMemory(Graphics::Get().GetRenderContext().device, dstImage.GetImageMemory(), 0,
+			VK_WHOLE_SIZE, 0, (void**)&data);
 		data += subResourceLayout.offset;
 
 		std::ofstream file(filepath.data(), std::ios::out | std::ios::binary);
@@ -266,8 +267,8 @@ namespace At0::Ray
 		commandBuffer.End();
 
 		// RAY_TODO: Get best queue
-		commandBuffer.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+		commandBuffer.Submit(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
+		vkQueueWaitIdle(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
 	}
 
 	bool Image::GenerateMipmaps(
@@ -275,7 +276,7 @@ namespace At0::Ray
 	{
 		VkFormatProperties formatProps;
 		vkGetPhysicalDeviceFormatProperties(
-			Graphics::Get().GetPhysicalDevice(), imageFormat, &formatProps);
+			Graphics::Get().GetRenderContext().physicalDevice, imageFormat, &formatProps);
 
 		if (!(formatProps.optimalTilingFeatures &
 				VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT))
@@ -356,8 +357,8 @@ namespace At0::Ray
 		cmdBuff.End();
 
 		// RAY_TODO: Transfer queue with graphics capabilities is faster
-		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+		cmdBuff.Submit(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
+		vkQueueWaitIdle(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
 		return true;
 	}  // namespace At0::Ray
 
@@ -391,8 +392,8 @@ namespace At0::Ray
 		commandBuffer.End();
 
 		// RAY_TODO: Get best queue
-		commandBuffer.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+		commandBuffer.Submit(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
+		vkQueueWaitIdle(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
 	}
 
 	void Image::CopyFromData(const std::vector<uint8_t>& data)
@@ -448,8 +449,8 @@ namespace At0::Ray
 		cmdBuff.End();
 
 		// RAY_TODO: Get best queue
-		cmdBuff.Submit(Graphics::Get().GetDevice().GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetDevice().GetGraphicsQueue());
+		cmdBuff.Submit(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
+		vkQueueWaitIdle(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
 
 		TransitionLayout(oldLayout);
 		return std::move(dstBuffer);
@@ -477,7 +478,7 @@ namespace At0::Ray
 		{
 			VkFormatProperties formatProps;
 			vkGetPhysicalDeviceFormatProperties(
-				Graphics::Get().GetPhysicalDevice(), candidates[i], &formatProps);
+				Graphics::Get().GetRenderContext().physicalDevice, candidates[i], &formatProps);
 
 			if (tiling == VK_IMAGE_TILING_LINEAR &&
 				(formatProps.linearTilingFeatures & featureFlags) != featureFlags)
@@ -496,9 +497,9 @@ namespace At0::Ray
 
 	void Image::Setup()
 	{
-		std::array queueFamily = { Graphics::Get().GetDevice().GetGraphicsFamily(),
-			Graphics::Get().GetDevice().GetPresentFamily(),
-			Graphics::Get().GetDevice().GetComputeFamily() };
+		std::array queueFamily = { Graphics::Get().GetRenderContext().device.GetGraphicsFamily(),
+			Graphics::Get().GetRenderContext().device.GetPresentFamily(),
+			Graphics::Get().GetRenderContext().device.GetComputeFamily() };
 
 		VkImageCreateInfo imageCreateInfo{};
 		imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -516,24 +517,26 @@ namespace At0::Ray
 		imageCreateInfo.pQueueFamilyIndices = queueFamily.data();
 		imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-		ThrowVulkanError(
-			vkCreateImage(Graphics::Get().GetDevice(), &imageCreateInfo, nullptr, &m_Image),
+		ThrowVulkanError(vkCreateImage(Graphics::Get().GetRenderContext().device, &imageCreateInfo,
+							 nullptr, &m_Image),
 			"[Image] Failed to create");
 
 		VkMemoryRequirements memRequirements;
-		vkGetImageMemoryRequirements(Graphics::Get().GetDevice(), m_Image, &memRequirements);
+		vkGetImageMemoryRequirements(
+			Graphics::Get().GetRenderContext().device, m_Image, &memRequirements);
 
 		VkMemoryAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = Graphics::Get().GetPhysicalDevice().FindMemoryType(
-			memRequirements.memoryTypeBits, m_MemoryProperties);
+		allocInfo.memoryTypeIndex =
+			Graphics::Get().GetRenderContext().physicalDevice.FindMemoryType(
+				memRequirements.memoryTypeBits, m_MemoryProperties);
 
-		ThrowVulkanError(
-			vkAllocateMemory(Graphics::Get().GetDevice(), &allocInfo, nullptr, &m_ImageMemory),
+		ThrowVulkanError(vkAllocateMemory(Graphics::Get().GetRenderContext().device, &allocInfo,
+							 nullptr, &m_ImageMemory),
 			"[Image] Failed to allocate image memory");
 
-		vkBindImageMemory(Graphics::Get().GetDevice(), m_Image, m_ImageMemory, 0);
+		vkBindImageMemory(Graphics::Get().GetRenderContext().device, m_Image, m_ImageMemory, 0);
 
 		// Create image view only for supported image usages
 		if ((m_Usage & VK_IMAGE_USAGE_SAMPLED_BIT) || (m_Usage & VK_IMAGE_USAGE_STORAGE_BIT) ||

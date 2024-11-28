@@ -4,6 +4,7 @@
 
 #include "RGlslCompiler.h"
 #include "Graphics/RGraphics.h"
+#include "Graphics/Core/RRenderContext.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Buffers/RUniformBuffer.h"
 
@@ -73,8 +74,8 @@ namespace At0::Ray
 				createInfo.codeSize = (uint32_t)code.size();
 				createInfo.pCode = (uint32_t*)code.data();
 
-				ThrowVulkanError(vkCreateShaderModule(Graphics::Get().GetDevice(), &createInfo,
-									 nullptr, &shaderModule),
+				ThrowVulkanError(vkCreateShaderModule(Graphics::Get().GetRenderContext().device,
+									 &createInfo, nullptr, &shaderModule),
 					"[Shader] Failed to create shader module from file \"{0}\"", m_Filepaths[i]);
 				m_ShaderModules[stage] = shaderModule;
 			}
@@ -103,7 +104,7 @@ namespace At0::Ray
 		}
 
 		for (const auto [stage, shaderModule] : m_ShaderModules)
-			vkDestroyShaderModule(Graphics::Get().GetDevice(), shaderModule, nullptr);
+			vkDestroyShaderModule(Graphics::Get().GetRenderContext().device, shaderModule, nullptr);
 	}
 
 	uint32_t SizeOfGlType(int32_t glType)

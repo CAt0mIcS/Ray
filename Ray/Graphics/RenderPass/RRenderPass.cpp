@@ -1,6 +1,6 @@
 ﻿#include "RRenderPass.h"
 
-#include "Graphics/RGraphics.h"
+#include "Graphics/Core/RRenderContext.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Core/RSwapchain.h"
 #include "Graphics/Buffers/RFramebuffer.h"
@@ -9,9 +9,11 @@
 
 namespace At0::Ray
 {
-	RenderPass::RenderPass(const std::vector<VkAttachmentDescription>& attachments,
+	RenderPass::RenderPass(const RenderContext& context,
+		const std::vector<VkAttachmentDescription>& attachments,
 		const std::vector<VkSubpassDescription>& subpasses,
 		const std::vector<VkSubpassDependency>& dependencies)
+		: m_Context(context)
 	{
 		VkRenderPassCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -22,14 +24,13 @@ namespace At0::Ray
 		createInfo.dependencyCount = (uint32_t)dependencies.size();
 		createInfo.pDependencies = dependencies.data();
 
-		ThrowVulkanError(
-			vkCreateRenderPass(Graphics::Get().GetDevice(), &createInfo, nullptr, &m_Renderpass),
+		ThrowVulkanError(vkCreateRenderPass(m_Context.device, &createInfo, nullptr, &m_Renderpass),
 			"[RenderPass] Failed to create");
 	}
 
 	RenderPass::~RenderPass()
 	{
-		vkDestroyRenderPass(Graphics::Get().GetDevice(), m_Renderpass, nullptr);
+		vkDestroyRenderPass(m_Context.device, m_Renderpass, nullptr);
 	}
 
 	void RenderPass::Begin(const CommandBuffer& cmdBuff, const Framebuffer& framebuffer,
@@ -48,5 +49,8 @@ namespace At0::Ray
 		vkCmdBeginRenderPass(cmdBuff, &renderPassInfo, subpassContents);
 	}
 
-	void RenderPass::End(const CommandBuffer& cmdBuff) const { vkCmdEndRenderPass(cmdBuff); }
+	void RenderPass::End(const CommandBuffer& cmdBuff) const
+	{
+		vkCmdEndRenderPass(cmdBuff);
+	}
 }  // namespace At0::Ray

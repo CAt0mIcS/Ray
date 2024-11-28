@@ -11,6 +11,7 @@
 namespace At0::Ray
 {
 	class RenderPass;
+	class LogicalDevice;
 
 	class RAY_EXPORT Framebuffer : NonCopyable
 	{
@@ -23,5 +24,6 @@ namespace At0::Ray
 
 	private:
 		VkFramebuffer m_Framebuffer = VK_NULL_HANDLE;
+		const LogicalDevice& m_Device;
 	};
 }  // namespace At0::Ray
