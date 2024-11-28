@@ -8,11 +8,13 @@
 
 namespace At0::Ray
 {
+	class VulkanInstance;
+
 	class RAY_EXPORT PhysicalDevice : NonCopyable
 	{
 	public:
-		PhysicalDevice();
-		operator const VkPhysicalDevice&() const { return m_Device; }
+		PhysicalDevice(const VulkanInstance& instance);
+		operator VkPhysicalDevice() const { return m_Device; }
 
 		const VkPhysicalDeviceFeatures& GetFeatures() const { return m_Features; }
 		const VkPhysicalDeviceMemoryProperties& GetMemoryProperties() const;

@@ -1,6 +1,5 @@
 ﻿#include "RLogicalDevice.h"
 
-#include "Graphics/RGraphics.h"
 #include "RVulkanInstance.h"
 #include "RPhysicalDevice.h"
 #include "RSurface.h"
@@ -12,10 +11,10 @@ namespace At0::Ray
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
 
-	LogicalDevice::LogicalDevice()
+	LogicalDevice::LogicalDevice(const PhysicalDevice& physicalDevice, const Surface& surface)
 	{
-		CreateQueueIndices();
-		CreateLogicalDevice();
+		CreateQueueIndices(physicalDevice, surface);
+		CreateLogicalDevice(physicalDevice);
 	}
 
 	LogicalDevice::~LogicalDevice()
@@ -43,15 +42,15 @@ namespace At0::Ray
 			return false;
 	}
 
-	void LogicalDevice::CreateQueueIndices()
+	void LogicalDevice::CreateQueueIndices(
+		const PhysicalDevice& physicalDevice, const Surface& surface)
 	{
 		uint32_t familyPropCount = 0;
-		vkGetPhysicalDeviceQueueFamilyProperties(
-			Graphics::Get().GetPhysicalDevice(), &familyPropCount, nullptr);
+		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &familyPropCount, nullptr);
 
 		std::vector<VkQueueFamilyProperties> queueFamilyProperties(familyPropCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(
-			Graphics::Get().GetPhysicalDevice(), &familyPropCount, queueFamilyProperties.data());
+			physicalDevice, &familyPropCount, queueFamilyProperties.data());
 
 		std::optional<uint32_t> graphicsFamily, presentFamily, computeFamily, transferFamily;
 
@@ -66,8 +65,7 @@ namespace At0::Ray
 			}
 
 			VkBool32 presentSupport;
-			vkGetPhysicalDeviceSurfaceSupportKHR(Graphics::Get().GetPhysicalDevice(), i,
-				Graphics::Get().GetSurface(), &presentSupport);
+			vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, surface, &presentSupport);
 
 			if (queueFamilyProperties[i].queueCount > 0 && presentSupport)
 			{
@@ -101,10 +99,10 @@ namespace At0::Ray
 			ThrowRuntime("[LogicalDevice] Failed to find graphics queue family");
 	}
 
-	void LogicalDevice::CreateLogicalDevice()
+	void LogicalDevice::CreateLogicalDevice(const PhysicalDevice& physicalDevice)
 	{
-		VkPhysicalDeviceFeatures physicalDeviceFeatures =
-			Graphics::Get().GetPhysicalDevice().GetFeatures();
+		auto& physicalDeviceFeatures = physicalDevice.GetFeatures();
+
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 		float queuePriorities[] = { 0.0f };
 
@@ -286,7 +284,7 @@ namespace At0::Ray
 		deviceCreateInfo.queueCreateInfoCount = (uint32_t)queueCreateInfos.size();
 		deviceCreateInfo.pQueueCreateInfos = queueCreateInfos.data();
 
-		if (Graphics::Get().GetInstance().ValidationLayersEnabled())
+		if (VulkanInstance::ValidationLayersEnabled())
 		{
 			deviceCreateInfo.enabledLayerCount =
 				(uint32_t)VulkanInstance::GetValidationLayers().size();
@@ -296,8 +294,7 @@ namespace At0::Ray
 		deviceCreateInfo.enabledExtensionCount = (uint32_t)GetDeviceExtensions().size();
 		deviceCreateInfo.ppEnabledExtensionNames = GetDeviceExtensions().data();
 		deviceCreateInfo.pEnabledFeatures = &enabledFeatures;
-		ThrowVulkanError(vkCreateDevice(Graphics::Get().GetPhysicalDevice(), &deviceCreateInfo,
-							 nullptr, &m_Device),
+		ThrowVulkanError(vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, &m_Device),
 			"[LogicalDevice] Failed to create logical device");
 
 		vkGetDeviceQueue(m_Device, m_GraphicsFamily, 0, &m_GraphicsQueue);

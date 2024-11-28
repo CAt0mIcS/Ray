@@ -60,7 +60,7 @@ namespace At0::Ray
 		createInfo.ppEnabledExtensionNames = instanceExtensions.data();
 
 		VkDebugUtilsMessengerCreateInfoEXT messengerCreateInfo = GetDebugMessengerCreateInfo();
-		if (m_ValidationLayersEnabled && HasValidationLayerSupport())
+		if (ValidationLayersEnabled() && HasValidationLayerSupport())
 		{
 			createInfo.enabledLayerCount = s_ValidationLayers.size();
 			createInfo.ppEnabledLayerNames = s_ValidationLayers.data();
@@ -70,7 +70,7 @@ namespace At0::Ray
 		else
 		{
 			Log::Info("[VulkanInstance] Validation layers disabled");
-			m_ValidationLayersEnabled = false;
+			s_ValidationLayers.clear();
 
 			createInfo.enabledLayerCount = 0;
 		}
@@ -78,7 +78,7 @@ namespace At0::Ray
 		ThrowVulkanError(vkCreateInstance(&createInfo, nullptr, &m_Instance),
 			"[VulkanInstance] Creation failed");
 
-		if (m_ValidationLayersEnabled)
+		if (ValidationLayersEnabled())
 			CreateDebugMessenger();
 	}
 
@@ -139,7 +139,7 @@ namespace At0::Ray
 		for (uint32_t i = 0; i < glfwExtensions.second; ++i)
 			extensions[i] = glfwExtensions.first[i];
 
-		if (m_ValidationLayersEnabled)
+		if (ValidationLayersEnabled())
 			extensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
 		return extensions;

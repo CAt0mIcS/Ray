@@ -1,6 +1,6 @@
 ﻿#include "RWindow.h"
 
-#include "Graphics/RGraphics.h"
+#include "Graphics/Core/RRenderContext.h"
 #include "Scene/RScene.h"
 #include "Devices/RMouse.h"
 #include "Devices/RKeyboard.h"
@@ -23,12 +23,24 @@ namespace At0::Ray
 		Log::Flush();
 	}
 
-	Scope<Window> Window::s_Instance = nullptr;
+	Window* Window::s_Instance = nullptr;
+	bool Window::s_GlfwInitialized = false;
 
-	Window& Window::Create(uint32_t width, uint32_t height, std::string_view title)
+	Window::Window(const EngineRenderContext& engineContext, uint32_t width, uint32_t height,
+		std::string_view title)
 	{
-		s_Instance = Scope<Window>(new Window(width, height, title));
-		return *s_Instance;
+		s_Instance = this;
+		TryInitializeGlfw();
+
+		// Create the window
+		m_hWnd = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
+		RAY_MEXPECTS(m_hWnd, "[Window] Failed to create window");
+		Log::Info("[Window] Created successfully ({0})", m_hWnd);
+
+		glfwSetWindowUserPointer(m_hWnd, this);
+		SetEventCallbacks();
+
+		m_RenderContext = MakeScope<RenderContext>(*this, engineContext);
 	}
 
 	Window& Window::Get()
@@ -72,15 +84,19 @@ namespace At0::Ray
 		return glfwGetWindowAttrib(m_hWnd, GLFW_VISIBLE) != 0;
 	}
 
-	bool Window::Update()
+	bool Window::Update(Delta dt)
 	{
 		glfwPollEvents();
+
+		m_RenderContext->graphics.Update(dt);
 
 		return !glfwWindowShouldClose(m_hWnd);
 	}
 
 	std::pair<const char**, uint32_t> Window::GetInstanceExtensions()
 	{
+		TryInitializeGlfw();
+
 		uint32_t count;
 		const char** extensions = glfwGetRequiredInstanceExtensions(&count);
 		return std::make_pair(extensions, count);
@@ -115,26 +131,6 @@ namespace At0::Ray
 	void Window::SetTitle(std::string_view newTitle) const
 	{
 		glfwSetWindowTitle(m_hWnd, newTitle.data());
-	}
-
-	Window::Window(uint32_t width, uint32_t height, std::string_view title)
-	{
-		int success = glfwInit();
-		RAY_MEXPECTS(success, "[Window] Failed to initialize GLFW");
-		Log::Info("[Window] GLFW successfully initialized");
-		glfwSetErrorCallback(GLFWErrorCallback);
-
-		// Remove default opengl api that comes with glfw
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
-		// Create the window
-		m_hWnd = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
-		RAY_MEXPECTS(m_hWnd, "[Window] Failed to create window");
-		Log::Info("[Window] Created successfully ({0})", m_hWnd);
-
-		glfwSetWindowUserPointer(m_hWnd, this);
-
-		SetEventCallbacks();
 	}
 
 	Window::~Window()
@@ -503,5 +499,23 @@ namespace At0::Ray
 			}
 		}
 		return nullptr;
+	}
+
+	// RAY_TODO: Don't initialize it lazily?
+	// RAY_TODO: Try initializing every time before glfw function is called or only in constructor
+	// and Window::GetInstanceExtensions
+	void Window::TryInitializeGlfw()
+	{
+		if (s_GlfwInitialized)
+			return;
+
+		int success = glfwInit();
+		RAY_MEXPECTS(success, "[Window] Failed to initialize GLFW");
+		s_GlfwInitialized = true;
+		Log::Info("[Window] GLFW successfully initialized");
+		glfwSetErrorCallback(GLFWErrorCallback);
+
+		// Remove default opengl api that comes with glfw
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	}
 }  // namespace At0::Ray

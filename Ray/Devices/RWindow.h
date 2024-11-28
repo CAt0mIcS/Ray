@@ -2,6 +2,9 @@
 
 #include "../RBase.h"
 #include "../Core/RMath.h"
+#include "../Core/RTime.h"
+
+#include "../Graphics/Core/RRenderContext.h"
 
 #include "../Events/REventDispatcher.h"
 #include "../Events/REngineEvents.h"
@@ -20,6 +23,8 @@ struct GLFWwindow;
 namespace At0::Ray
 {
 	class Widget;
+	class EngineRenderContext;
+	class RenderContext;
 
 	class RAY_EXPORT Window :
 		public EventDispatcher<WindowResizedEvent>,
@@ -42,10 +47,10 @@ namespace At0::Ray
 	{
 	public:
 		/**
-		 * Creates the Window
+		 * Creates the Window. Call Window::Show to show it
 		 */
-		static Window& Create(
-			uint32_t width = 960, uint32_t height = 540, std::string_view title = "Window");
+		Window(const EngineRenderContext& engineContext, uint32_t width = 960,
+			uint32_t height = 540, std::string_view title = "Window");
 
 		/**
 		 * Getter for the static window instance.
@@ -89,10 +94,10 @@ namespace At0::Ray
 		bool IsOpen() const;
 
 		/*
-		 * Polls events and updates everything
+		 * Polls events and updates everything (graphics engine)
 		 * @returns If the window should stay open
 		 */
-		bool Update();
+		bool Update(Delta dt);
 
 		/**
 		 * Querys required extensions for Vulkan
@@ -134,15 +139,19 @@ namespace At0::Ray
 		GLFWwindow* GetNative() { return m_hWnd; }
 
 	private:
-		Window(uint32_t width, uint32_t height, std::string_view title);
 		void SetEventCallbacks();
 
 		void GenerateHoverEvents();
 		Widget* GetClickedWidget();
 		Widget* GetReleasedWidget();
 
+		static void TryInitializeGlfw();
+
 	private:
-		static Scope<Window> s_Instance;
+		static Window* s_Instance;
+		static bool s_GlfwInitialized;
+
+		Scope<RenderContext> m_RenderContext;
 
 		GLFWwindow* m_hWnd = nullptr;
 		Float2 m_PrevousMousePos{};

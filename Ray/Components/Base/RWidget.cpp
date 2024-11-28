@@ -20,9 +20,9 @@ namespace At0::Ray
 		m_Translation.x = x;
 
 		Transform& tform = GetEntity().Get<Transform>();
-		tform.SetTranslation({ ScreenSpaceToNDCSpaceX(m_Translation.x + (GetScale().x / 2.0f),
-								   Window::Get().GetFramebufferSize().x),
-			tform.Translation().y, 0.0f });
+		tform.SetTranslation(
+			{ ScreenSpaceToNDCSpaceX(m_Translation.x + (GetScale().x / 2.0f), m_FramebufferSize.x),
+				tform.Translation().y, 0.0f });
 	}
 
 	void Widget::SetY(float y)
@@ -31,8 +31,7 @@ namespace At0::Ray
 
 		Transform& tform = GetEntity().Get<Transform>();
 		tform.SetTranslation({ tform.Translation().x,
-			ScreenSpaceToNDCSpaceY(
-				m_Translation.y + (GetScale().y / 2.0f), Window::Get().GetFramebufferSize().y),
+			ScreenSpaceToNDCSpaceY(m_Translation.y + (GetScale().y / 2.0f), m_FramebufferSize.y),
 			0.0f });
 	}
 
@@ -47,8 +46,7 @@ namespace At0::Ray
 		m_Width = width;
 
 		Transform& tform = GetEntity().Get<Transform>();
-		Float3 newScale{ m_Width / (0.5f * Window::Get().GetFramebufferSize().x), tform.Scale().y,
-			1.0f };
+		Float3 newScale{ m_Width / (0.5f * m_FramebufferSize.x), tform.Scale().y, 1.0f };
 		tform.SetScale(newScale);
 		SetX(GetX());
 	}
@@ -58,21 +56,22 @@ namespace At0::Ray
 		m_Height = height;
 
 		Transform& tform = GetEntity().Get<Transform>();
-		Float3 newScale{ tform.Scale().x, m_Height / (0.5f * Window::Get().GetFramebufferSize().y),
-			1.0f };
+		Float3 newScale{ tform.Scale().x, m_Height / (0.5f * m_FramebufferSize.y), 1.0f };
 		tform.SetScale(newScale);
 		SetY(GetY());
 	}
 
 	Widget::Widget(Entity entity, Window& window, std::string_view name)
-		: EventListener<WindowResizedEvent>(window), Component(entity), m_Name(name),
+		: EventListener<FramebufferResizedEvent>(window), Component(entity), m_Name(name),
 		  m_FramebufferSize(window.GetFramebufferSize())
 	{
 	}
 
-	void Widget::OnEvent(WindowResizedEvent& e)
+	void Widget::OnEvent(FramebufferResizedEvent& e)
 	{
 		// Anchor mesh to stay at the same position whenever the window is resized
+
+		m_FramebufferSize = e.GetSize();
 
 		Transform& tform = GetEntity().Get<Transform>();
 		SetWidth(m_Width);
@@ -80,8 +79,8 @@ namespace At0::Ray
 
 		Ray::Float2 scale = tform.Scale();
 
-		float newX = (m_Translation.x / (float)Window::Get().GetFramebufferSize().x) * 2.0f - 1;
-		float newY = (m_Translation.y / (float)Window::Get().GetFramebufferSize().y) * 2.0f - 1;
+		float newX = (m_Translation.x / (float)m_FramebufferSize.x) * 2.0f - 1;
+		float newY = (m_Translation.y / (float)m_FramebufferSize.y) * 2.0f - 1;
 
 		newX += scale.x / 2.0f;
 		newY += scale.y / 2.0f;

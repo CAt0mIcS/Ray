@@ -41,7 +41,10 @@ namespace At0::Ray
 {
 	Graphics* Graphics::s_Instance = nullptr;
 
-	Graphics::Graphics() : EventListener<FramebufferResizedEvent>(Window::Get())
+	Graphics::Graphics(const VulkanInstance& instance, const PhysicalDevice& physicalDevice,
+		const Surface& surface, const LogicalDevice& device)
+		: m_VulkanInstance(instance), m_PhysicalDevice(physicalDevice), m_Surface(surface),
+		  m_Device(device), EventListener<FramebufferResizedEvent>(Window::Get())
 	{
 		if (s_Instance)
 			ThrowRuntime("[Graphics] Object already created");
@@ -56,11 +59,6 @@ namespace At0::Ray
 
 	void Graphics::CreateVulkanObjects()
 	{
-		m_VulkanInstance = MakeScope<VulkanInstance>();
-		m_PhysicalDevice = MakeScope<PhysicalDevice>();
-		m_Surface = MakeScope<Surface>();
-		m_LogicalDevice = MakeScope<LogicalDevice>();
-
 		m_Swapchain = MakeScope<Swapchain>();
 		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 
@@ -79,8 +77,6 @@ namespace At0::Ray
 
 	Graphics& Graphics::Get()
 	{
-		if (!s_Instance)
-			new Graphics();
 		return *s_Instance;
 	}
 
@@ -329,7 +325,7 @@ namespace At0::Ray
 		ImGUI::Get().NewFrame();
 		ImGUI::Get().UpdateBuffers();
 #endif
-		Scene::Get().Update(dt);
+		Scene::Get().UpdateTransforms(dt);
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -399,15 +395,15 @@ namespace At0::Ray
 
 	Graphics::~Graphics()
 	{
-		m_LogicalDevice->WaitIdle();
+		m_Device.WaitIdle();
 
 		m_ShadowMapping.reset();
 
 		for (uint32_t i = 0; i < s_MaxFramesInFlight; ++i)
 		{
-			vkDestroySemaphore(*m_LogicalDevice, m_ImageAvailableSemaphore[i], nullptr);
-			vkDestroySemaphore(*m_LogicalDevice, m_RenderFinishedSemaphore[i], nullptr);
-			vkDestroyFence(*m_LogicalDevice, m_InFlightFences[i], nullptr);
+			vkDestroySemaphore(m_Device, m_ImageAvailableSemaphore[i], nullptr);
+			vkDestroySemaphore(m_Device, m_RenderFinishedSemaphore[i], nullptr);
+			vkDestroyFence(m_Device, m_InFlightFences[i], nullptr);
 		}
 
 		m_CommandBuffers.clear();
@@ -433,11 +429,6 @@ namespace At0::Ray
 
 		m_CommandPool.reset();
 		m_Swapchain.reset();
-
-		m_LogicalDevice.reset();
-		m_Surface.reset();
-		m_PhysicalDevice.reset();
-		m_VulkanInstance.reset();
 	}
 
 	void Graphics::UpdateViewport()
@@ -469,7 +460,7 @@ namespace At0::Ray
 			Window::Get().WaitForEvents();
 		}
 
-		m_LogicalDevice->WaitIdle();
+		m_Device.WaitIdle();
 
 		m_CommandBuffers.clear();
 		m_CommandBufferRecorder.reset();

@@ -1,22 +1,20 @@
 ﻿#include "RPhysicalDevice.h"
 
-#include "Graphics/RGraphics.h"
 #include "RLogicalDevice.h"
 #include "RVulkanInstance.h"
 
 
 namespace At0::Ray
 {
-	PhysicalDevice::PhysicalDevice()
+	PhysicalDevice::PhysicalDevice(const VulkanInstance& instance)
 	{
 		uint32_t physicalDeviceCount = 0;
-		vkEnumeratePhysicalDevices(Graphics::Get().GetInstance(), &physicalDeviceCount, nullptr);
+		vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, nullptr);
 		if (physicalDeviceCount == 0)
 			ThrowRuntime("[PhysicalDevice] Failed to find suitable GPU supporting Vulkan");
 
 		std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
-		vkEnumeratePhysicalDevices(
-			Graphics::Get().GetInstance(), &physicalDeviceCount, physicalDevices.data());
+		vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, physicalDevices.data());
 
 		m_Device = ChoosePhysicalDevice(physicalDevices);
 		if (!m_Device)

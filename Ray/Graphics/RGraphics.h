@@ -32,14 +32,16 @@ namespace At0::Ray
 	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
 	{
 	public:
+		Graphics(const VulkanInstance& instance, const PhysicalDevice& physicalDevice,
+			const Surface& surface, const LogicalDevice& device);
 		~Graphics();
 		static Graphics& Get();
 		static void Destroy();
 
-		const VulkanInstance& GetInstance() const { return *m_VulkanInstance; }
-		const Surface& GetSurface() const { return *m_Surface; }
-		const PhysicalDevice& GetPhysicalDevice() const { return *m_PhysicalDevice; }
-		const LogicalDevice& GetDevice() const { return *m_LogicalDevice; }
+		const VulkanInstance& GetInstance() const { return m_VulkanInstance; }
+		const Surface& GetSurface() const { return m_Surface; }
+		const PhysicalDevice& GetPhysicalDevice() const { return m_PhysicalDevice; }
+		const LogicalDevice& GetDevice() const { return m_Device; }
 		const Swapchain& GetSwapchain() const { return *m_Swapchain; }
 		const CommandPool& GetCommandPool() const { return *m_CommandPool; }
 		const RenderPass& GetRenderPass() const { return *m_RenderPass; }
@@ -55,8 +57,6 @@ namespace At0::Ray
 		void Update(Delta dt);
 
 	private:
-		Graphics();
-
 		void UpdateViewport();
 		void UpdateScissor();
 
@@ -82,10 +82,12 @@ namespace At0::Ray
 		VkViewport m_Viewport{};
 		VkRect2D m_Scissor{};
 
-		Scope<VulkanInstance> m_VulkanInstance;
-		Scope<PhysicalDevice> m_PhysicalDevice;
-		Scope<Surface> m_Surface;
-		Scope<LogicalDevice> m_LogicalDevice;
+
+		const VulkanInstance& m_VulkanInstance;
+		const PhysicalDevice& m_PhysicalDevice;
+		const Surface& m_Surface;
+		const LogicalDevice& m_Device;
+
 		Scope<Swapchain> m_Swapchain;
 		Scope<CommandPool> m_CommandPool;
 		Scope<RenderPass> m_RenderPass;

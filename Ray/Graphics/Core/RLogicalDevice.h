@@ -11,6 +11,9 @@
 
 namespace At0::Ray
 {
+	class PhysicalDevice;
+	class Surface;
+
 	enum class DeviceFeature
 	{
 		SampleRateShading,
@@ -33,7 +36,7 @@ namespace At0::Ray
 	class RAY_EXPORT LogicalDevice : NonCopyable
 	{
 	public:
-		LogicalDevice();
+		LogicalDevice(const PhysicalDevice& physicalDevice, const Surface& surface);
 		~LogicalDevice();
 
 		/**
@@ -65,8 +68,8 @@ namespace At0::Ray
 		VkQueue GetTransferQueue() const { return m_TransferQueue; }
 
 	private:
-		void CreateQueueIndices();
-		void CreateLogicalDevice();
+		void CreateQueueIndices(const PhysicalDevice& physicalDevice, const Surface& surface);
+		void CreateLogicalDevice(const PhysicalDevice& physicalDevice);
 
 	private:
 		static const std::vector<const char*> s_DeviceExtensions;

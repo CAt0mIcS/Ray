@@ -79,13 +79,13 @@ namespace At0::Ray
 							.SetMinFilter(
 								Graphics::Get().GetPhysicalDevice().IsFormatLinearlyFilterable(
 									DEPTH_FORMAT, VK_IMAGE_TILING_OPTIMAL) ?
-									  VK_FILTER_LINEAR :
-									  VK_FILTER_NEAREST)
+									VK_FILTER_LINEAR :
+									VK_FILTER_NEAREST)
 							.SetMagFilter(
 								Graphics::Get().GetPhysicalDevice().IsFormatLinearlyFilterable(
 									DEPTH_FORMAT, VK_IMAGE_TILING_OPTIMAL) ?
-									  VK_FILTER_LINEAR :
-									  VK_FILTER_NEAREST)
+									VK_FILTER_LINEAR :
+									VK_FILTER_NEAREST)
 							.SetMipmapMode(VK_SAMPLER_MIPMAP_MODE_LINEAR)
 							.SetAddressModeU(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
 							.SetAddressModeV(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
@@ -132,7 +132,10 @@ namespace At0::Ray
 	{
 		static Matrix depthProjectionMatrix = glm::perspective(Radians(60.f), 1.0f, 1.f, 96.f);
 
-		auto ptLightView = Scene::Get().EntityView<PointLight>();
+		// RAY_TODO: Disabling this due to scene not yet existing for now and instead using
+		// placeholder empty vector auto ptLightView = Scene::Get().EntityView<PointLight>();
+		std::vector<Entity> ptLightView{};
+
 		if (ptLightView.size() == 0)
 			return MatrixIdentity();
 

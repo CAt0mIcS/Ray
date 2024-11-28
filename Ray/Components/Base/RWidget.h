@@ -12,7 +12,7 @@ namespace At0::Ray
 {
 	class Window;
 
-	class RAY_EXPORT Widget : public Component, EventListener<WindowResizedEvent>
+	class RAY_EXPORT Widget : public Component, EventListener<FramebufferResizedEvent>
 	{
 	public:
 		virtual ~Widget() = default;
@@ -99,7 +99,7 @@ namespace At0::Ray
 		Widget(Entity entity, Window& window, std::string_view name);
 
 	private:
-		virtual void OnEvent(WindowResizedEvent& e) override;
+		virtual void OnEvent(FramebufferResizedEvent& e) override;
 
 	private:
 		float m_Width{};

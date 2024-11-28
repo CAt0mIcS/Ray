@@ -1,6 +1,8 @@
 ﻿#include "REntity.h"
 #include "RScene.h"
 
+#include "Core/REngine.h"
+
 #include "Components/RMeshRenderer.h"
 #include "Components/RSkybox.h"
 #include "Components/RTransform.h"
@@ -59,7 +61,7 @@ namespace At0::Ray
 		m_Registry.destroy((entt::entity)entity);
 	}
 
-	void Scene::Update(Delta dt)
+	void Scene::UpdateTransforms(Delta dt)
 	{
 		m_Camera->Update(dt);
 
@@ -111,12 +113,18 @@ namespace At0::Ray
 		return *m_Camera;
 	}
 
+	const Window& Scene::GetMainWindow() const
+	{
+		return m_Engine.GetMainWindow();
+	}
+
 	const ResourceManager& Scene::GetResourceManager() const
 	{
 		return m_Resources;
 	}
 
-	Scene::Scene(Scope<Camera> camera) : m_Camera(std::move(camera))
+	Scene::Scene(Engine& engine, Scope<Camera> camera)
+		: m_Engine(engine), m_Camera(std::move(camera))
 	{
 		s_CurrentScene = Scope<Scene>(this);
 	}

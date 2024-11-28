@@ -21,9 +21,9 @@ namespace At0::Ray
 		PFN_vkVoidFunction LoadFunction(const char* name);
 
 		static const std::vector<const char*>& GetValidationLayers() { return s_ValidationLayers; }
-		operator const VkInstance&() const { return m_Instance; }
+		operator VkInstance() const { return m_Instance; }
 
-		bool ValidationLayersEnabled() const { return m_ValidationLayersEnabled; }
+		static constexpr bool ValidationLayersEnabled() { return !s_ValidationLayers.empty(); }
 
 	private:
 		bool HasValidationLayerSupport() const;
@@ -48,11 +48,5 @@ namespace At0::Ray
 		VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
 
 		static std::vector<const char*> s_ValidationLayers;
-
-#ifndef NDEBUG
-		bool m_ValidationLayersEnabled = true;
-#else
-		bool m_ValidationLayersEnabled = false;
-#endif
 	};
 }  // namespace At0::Ray

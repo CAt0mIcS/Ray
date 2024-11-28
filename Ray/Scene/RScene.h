@@ -18,6 +18,8 @@ namespace At0::Ray
 	class DescriptorSet;
 	class Camera;
 	class Layer;
+	class Engine;
+	class Window;
 
 
 	class RAY_EXPORT Scene : public EventDispatcher<EntityCreatedEvent>
@@ -48,9 +50,9 @@ namespace At0::Ray
 		}
 
 		/**
-		 * Updates all components
+		 * Updates transforms as well as uniform buffers for cameras etc.
 		 */
-		void Update(Delta dt);
+		void UpdateTransforms(Delta dt);
 
 		/**
 		 * @returns The entity storage registry
@@ -60,6 +62,9 @@ namespace At0::Ray
 		void SetCamera(Scope<Camera> camera);
 		const Camera& GetCamera() const;
 		Camera& GetCamera() { return (Camera&)std::as_const(*this).GetCamera(); }
+
+		const Window& GetMainWindow() const;
+		Window& GetMainWindow() { return (Window&)std::as_const(*this).GetMainWindow(); }
 
 		const ResourceManager& GetResourceManager() const;
 		ResourceManager& GetResourceManager()
@@ -84,7 +89,7 @@ namespace At0::Ray
 		}
 
 	protected:
-		Scene(Scope<Camera> camera);
+		Scene(Engine& engine, Scope<Camera> camera);
 
 	private:
 		entt::registry m_Registry;
@@ -94,6 +99,7 @@ namespace At0::Ray
 		ResourceManager m_Resources;
 
 		std::vector<Scope<Layer>> m_Layers;
+		const Engine& m_Engine;
 
 		static Scope<Scene> s_CurrentScene;
 	};

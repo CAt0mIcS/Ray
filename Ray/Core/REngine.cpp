@@ -3,6 +3,8 @@
 #include "Devices/RWindow.h"
 #include "Graphics/RGraphics.h"
 
+#include "Scene/RScene.h"
+
 
 namespace At0::Ray
 {
@@ -25,17 +27,18 @@ namespace At0::Ray
 		Log::Info("[Engine] Startup");
 
 		auto startSecTime = std::chrono::high_resolution_clock::now();
-		while (Window::Get().Update())
+		while (m_MainWindow.Update(m_Delta))
 		{
 			m_Delta.Update();
 			m_FPS.Update(Time::Now());
-			Graphics::Get().Update(m_Delta);
 			Update();
 		}
 		return 0;
 	}
 
 	Engine::Engine()
+		: m_VulkanInstance{}, m_PhysicalDevice{ m_VulkanInstance },
+		  m_MainWindow{ GetRenderContext() }
 	{
 		RAY_MEXPECTS(!s_Instance, "[Engine] Already initialized");
 		s_Instance = this;

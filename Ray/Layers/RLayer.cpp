@@ -10,7 +10,7 @@ namespace At0::Ray
 
 	const Window& Layer::GetWindow() const
 	{
-		return Window::Get();
+		return GetScene().GetMainWindow();
 	}
 
 
