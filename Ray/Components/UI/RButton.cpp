@@ -16,7 +16,7 @@ namespace At0::Ray
 		: Widget(entity, name), m_UseColorMaterial(true)
 	{
 		auto pipeline = GraphicsPipeline::Builder()
-							.SetShader(Shader::AcquireSourceFile(
+							.SetShader(Shader::FromSourceFile(
 								{ "Resources/Shaders/UI.vert", "Resources/Shaders/UI.frag" }))
 							.SetCullMode(VK_CULL_MODE_NONE)
 							.Acquire();
@@ -34,7 +34,7 @@ namespace At0::Ray
 		: Widget(entity, name), m_UseColorMaterial(false)
 	{
 		auto pipeline = GraphicsPipeline::Builder()
-							.SetShader(Shader::AcquireSourceFile({ "Resources/Shaders/UI_Tex.vert",
+							.SetShader(Shader::FromSourceFile({ "Resources/Shaders/UI_Tex.vert",
 								"Resources/Shaders/UI_Tex.frag" }))
 							.SetCullMode(VK_CULL_MODE_NONE)
 							.Acquire();

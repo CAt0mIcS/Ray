@@ -74,7 +74,7 @@ namespace At0::Ray
 	{
 		auto pipeline =
 			GraphicsPipeline::Builder()
-				.SetShader(Shader::AcquireSourceFile(
+				.SetShader(Shader::FromSourceFile(
 					{ "Resources/Shaders/Flat_Text.vert", "Resources/Shaders/Flat_Text.frag" }))
 				.SetCullMode(VK_CULL_MODE_NONE)
 				.Acquire();

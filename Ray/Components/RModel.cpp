@@ -247,7 +247,7 @@ namespace At0::Ray
 		// shaderFileName += std::accumulate(fileCodes.begin(), fileCodes.end(), std::string{});
 
 		// auto pipeline = Ray::GraphicsPipeline::Builder()
-		//					.SetShader(Ray::Shader::AcquireSourceFile(
+		//					.SetShader(Ray::Shader::FromSourceFile(
 		//						{ shaderFileName + ".vert", shaderFileName + ".frag" }))
 		//					.Acquire();
 
@@ -266,14 +266,14 @@ namespace At0::Ray
 
 		// auto pipeline =
 		//	GraphicsPipeline::Builder()
-		//		.SetShader(Shader::AcquireSourceFile(
+		//		.SetShader(Shader::FromSourceFile(
 		//			{ "Resources/Shaders/Phong_All.vert", "Resources/Shaders/Phong_All.frag" }))
 		//		.SetCullMode(twoSided == 0 ? VK_CULL_MODE_NONE : VK_CULL_MODE_BACK_BIT)
 		//		.Acquire();
 
 		auto pipeline =
 			GraphicsPipeline::Builder()
-				.SetShader(Shader::AcquireSourceFile({ "Resources/Shaders/ShadowMapping.vert",
+				.SetShader(Shader::FromSourceFile({ "Resources/Shaders/ShadowMapping.vert",
 					"Resources/Shaders/ShadowMapping.frag" }))
 				.SetCullMode(twoSided == 0 ? VK_CULL_MODE_NONE : VK_CULL_MODE_BACK_BIT)
 				.Acquire();

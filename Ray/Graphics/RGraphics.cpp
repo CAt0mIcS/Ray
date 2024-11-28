@@ -392,7 +392,10 @@ namespace At0::Ray
 		m_CurrentFrame = (m_CurrentFrame + 1) % s_MaxFramesInFlight;
 	}
 
-	void Graphics::Destroy() { delete s_Instance; }
+	void Graphics::Destroy()
+	{
+		delete s_Instance;
+	}
 
 	Graphics::~Graphics()
 	{
@@ -416,7 +419,7 @@ namespace At0::Ray
 		Scene::Destroy();
 		DynamicUniformBuffer::Reset();
 		Codex::Shutdown();
-		Resources::Destroy();
+		ResourceManager::Destroy();
 
 		if (m_PipelineCache)
 		{
@@ -495,7 +498,10 @@ namespace At0::Ray
 		m_FramebufferResized = false;
 	}
 
-	void Graphics::OnEvent(FramebufferResizedEvent& e) { m_FramebufferResized = true; }
+	void Graphics::OnEvent(FramebufferResizedEvent& e)
+	{
+		m_FramebufferResized = true;
+	}
 
 	void Graphics::WritePipelineCache()
 	{

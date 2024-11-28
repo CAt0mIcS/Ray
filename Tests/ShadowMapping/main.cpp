@@ -77,7 +77,7 @@ public:
 		{
 			auto shadedPipeline =
 				GraphicsPipeline::Builder()
-					.SetShader(Shader::AcquireSourceFile({ "Resources/Shaders/ShadowMapping.vert",
+					.SetShader(Shader::FromSourceFile({ "Resources/Shaders/ShadowMapping.vert",
 						"Resources/Shaders/ShadowMapping.frag" }))
 					.SetCullMode(VK_CULL_MODE_NONE)
 					.Acquire();
@@ -98,7 +98,7 @@ public:
 
 			auto flatColorPipeline =
 				GraphicsPipeline::Builder()
-					.SetShader(Shader::AcquireSourceFile(
+					.SetShader(Shader::FromSourceFile(
 						{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
 					.Acquire();
 

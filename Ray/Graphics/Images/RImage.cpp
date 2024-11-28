@@ -1,5 +1,6 @@
 ﻿#include "RImage.h"
 
+#include "Core/RResourceManager.h"
 #include "Graphics/RGraphics.h"
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Core/RLogicalDevice.h"
@@ -20,7 +21,7 @@ namespace At0::Ray
 	{
 		// RAY_TODO: Add data to ressource tag
 
-		return Resources::Get().EmplaceIfNonExistent<Image>(
+		return ResourceManager::Get().EmplaceIfNonExistent<Image>(
 			String::Serialize("Image{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}", extent.x, extent.y,
 				(uint32_t)imageType, (uint32_t)format, (uint32_t)tiling, (uint32_t)usage,
 				(uint32_t)memProps, mipLevels, (uint32_t)imageAspect, arrayLayers,
@@ -464,7 +465,10 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Image::Image(Image&& other) noexcept { *this = std::move(other); }
+	Image::Image(Image&& other) noexcept
+	{
+		*this = std::move(other);
+	}
 
 	std::vector<VkFormat> Image::FindSupportedFormats(
 		std::vector<VkFormat> candidates, VkImageTiling tiling, VkFormatFeatureFlags featureFlags)

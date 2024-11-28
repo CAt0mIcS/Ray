@@ -2,7 +2,7 @@
 
 #include "../../RBase.h"
 #include "../../Core/RMath.h"
-#include "../../Core/RResource.h"
+#include "../../Core/RResourceManager.h"
 #include "../../Utils/RNonCopyable.h"
 
 #include <vulkan/vulkan_core.h>

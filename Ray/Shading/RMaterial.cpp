@@ -46,7 +46,7 @@ namespace At0::Ray
 	{
 		return Material::Builder(
 			GraphicsPipeline::Builder()
-				.SetShader(Shader::AcquireSourceFile(
+				.SetShader(Shader::FromSourceFile(
 					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
 				.SetCullMode(VK_CULL_MODE_NONE)
 				.Acquire())

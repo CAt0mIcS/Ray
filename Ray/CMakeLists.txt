@@ -54,8 +54,8 @@ set(SRC
 	"Core/RKeyCodes.h"
 	"Core/RDynamicVertex.h"
 	"Core/RDynamicVertex.cpp"
-	"Core/RResource.h"
-	"Core/RResource.cpp"
+	"Core/RResourceManager.h"
+	"Core/RResourceManager.cpp"
 	
 	# ------------------------------------------------------------------
 	# Devices
@@ -282,8 +282,8 @@ set(SRC
 
 	# ------------------------------------------------------------------
 	# Engine Layers
-	"Layers/Layer.h"
-	"Layers/Layer.cpp"
+	"Layers/RLayer.h"
+	"Layers/RLayer.cpp"
 
 	"${SHADERS}"
 

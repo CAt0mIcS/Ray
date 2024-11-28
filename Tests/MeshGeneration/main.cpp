@@ -78,14 +78,14 @@ public:
 
 		auto noCullPipeline =
 			Ray::GraphicsPipeline::Builder()
-				.SetShader(Ray::Shader::AcquireSourceFile(
+				.SetShader(Ray::Shader::FromSourceFile(
 					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
 				.SetCullMode(VK_CULL_MODE_NONE)
 				.Acquire();
 
 		auto cullPipeline =
 			Ray::GraphicsPipeline::Builder()
-				.SetShader(Ray::Shader::AcquireSourceFile(
+				.SetShader(Ray::Shader::FromSourceFile(
 					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
 				.Acquire();
 
@@ -99,7 +99,7 @@ public:
 
 		auto texturePipeline =
 			Ray::GraphicsPipeline::Builder()
-				.SetShader(Ray::Shader::AcquireSourceFile(
+				.SetShader(Ray::Shader::FromSourceFile(
 					{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" }))
 				.SetCullMode(VK_CULL_MODE_NONE)
 				.Acquire();

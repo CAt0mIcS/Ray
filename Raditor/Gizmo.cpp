@@ -27,7 +27,7 @@ namespace At0::Raditor
 	{
 		auto pipeline =
 			Ray::GraphicsPipeline::Builder()
-				.SetShader(Ray::Shader::AcquireSourceFile(
+				.SetShader(Ray::Shader::FromSourceFile(
 					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
 				.Acquire();
 

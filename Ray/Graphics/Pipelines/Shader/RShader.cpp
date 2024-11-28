@@ -10,31 +10,25 @@
 
 namespace At0::Ray
 {
-	Ref<Shader> Shader::AcquireSourceFile(
+	Ref<Shader> Shader::FromSourceFile(
 		std::vector<std::string> shaders, const std::vector<std::string>& reflections)
 	{
 		RAY_MEXPECTS(shaders.size() != 0, "[Shader] No source files specified");
-		return Resources::Get().EmplaceIfNonExistent<Shader>(
-			std::accumulate(shaders.begin(), shaders.end(), std::string{}), std::move(shaders),
-			GLSLFile, reflections);
+		return MakeRef<Shader>(std::move(shaders), GLSLFile, reflections);
 	}
 
-	Ref<Shader> Shader::AcquireCompiledFile(
+	Ref<Shader> Shader::FromCompiledFile(
 		std::vector<std::string> shaders, const std::vector<std::string>& reflections)
 	{
 		RAY_MEXPECTS(shaders.size() != 0, "[Shader] No compiled files specified");
-		return Resources::Get().EmplaceIfNonExistent<Shader>(
-			std::accumulate(shaders.begin(), shaders.end(), std::string{}), std::move(shaders),
-			CompiledFile, reflections);
+		return MakeRef<Shader>(std::move(shaders), CompiledFile, reflections);
 	}
 
-	Ref<Shader> Shader::AcquireSourceString(std::vector<std::string> shaders,
+	Ref<Shader> Shader::FromSourceString(std::vector<std::string> shaders,
 		const std::vector<ShaderStage>& stageOrder, const std::vector<std::string>& reflections)
 	{
 		RAY_MEXPECTS(shaders.size() != 0, "[Shader] No source strings specified");
-		return Resources::Get().EmplaceIfNonExistent<Shader>(
-			std::accumulate(shaders.begin(), shaders.end(), std::string{}), std::move(shaders),
-			GLSLString, reflections, stageOrder);
+		return MakeRef<Shader>(std::move(shaders), GLSLString, reflections);
 	}
 
 	Shader::Shader(std::vector<std::string> shaders, FileType fileType,
@@ -46,15 +40,15 @@ namespace At0::Ray
 		case Shader::GLSLFile:
 		{
 			GlslCompiler compiler(m_Filepaths);
-			m_Reflections = std::move(compiler.AcquireReflections());
-			m_ShaderModules = std::move(compiler.AcquireShaderModules());
+			m_Reflections = compiler.AcquireReflections();
+			m_ShaderModules = compiler.AcquireShaderModules();
 			break;
 		}
 		case Shader::GLSLString:
 		{
 			GlslCompiler compiler(m_Filepaths, stageOrder);
-			m_Reflections = std::move(compiler.AcquireReflections());
-			m_ShaderModules = std::move(compiler.AcquireShaderModules());
+			m_Reflections = compiler.AcquireReflections();
+			m_ShaderModules = compiler.AcquireShaderModules();
 			break;
 		}
 		case Shader::CompiledFile:

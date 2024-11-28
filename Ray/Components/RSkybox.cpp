@@ -21,7 +21,7 @@ namespace At0::Ray
 	{
 		auto pipeline =
 			GraphicsPipeline::Builder()
-				.SetShader(Ray::Shader::AcquireSourceFile(
+				.SetShader(Ray::Shader::FromSourceFile(
 					{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" }))
 				.SetCullMode(VK_CULL_MODE_FRONT_BIT)
 				.Acquire();

@@ -24,7 +24,7 @@
 #include <Ray/Scene/RCamera.h>
 #include <Ray/Shading/RMaterial.h>
 
-#include <Ray/Layers/Layer.h>
+#include <Ray/Layers/RLayer.h>
 
 #include <signal.h>
 #include <random>
@@ -150,7 +150,7 @@ public:
 		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
 		GetCamera().SetMovementSpeed(3.0f);
 
-		RegisterLayer<TestEntityLayer>();
+		TestEntityLayer& layer = RegisterLayer<TestEntityLayer>();
 	}
 };
 
@@ -180,7 +180,7 @@ int main()
 #ifdef NDEBUG
 	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
 #else
-	Ray::Log::SetLogLevel(Violent::LogLevel::Information);
+	Ray::Log::SetLogLevel(Violent::LogLevel::Debug);
 #endif
 
 	try

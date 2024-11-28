@@ -65,7 +65,7 @@ public:
 #include "../ImGuiWindows.inl"
 
 		auto pipeline = Ray::GraphicsPipeline::Builder()
-							.SetShader(Ray::Shader::AcquireSourceFile(
+							.SetShader(Ray::Shader::FromSourceFile(
 								{ "Tests/Camera/Shaders/Orthographic.vert",
 									"Tests/Camera/Shaders/Orthographic.frag" }))
 							.SetCullMode(VK_CULL_MODE_NONE)

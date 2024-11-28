@@ -104,7 +104,7 @@ namespace At0::Ray
 		{
 			pipeline =
 				GraphicsPipeline::Builder()
-					.SetShader(Shader::AcquireSourceFile({ "Resources/Shaders/Offscreen.vert" }))
+					.SetShader(Shader::FromSourceFile({ "Resources/Shaders/Offscreen.vert" }))
 					.SetRenderPass(*renderPass)
 					.SetDynamicStates({ VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR,
 						VK_DYNAMIC_STATE_DEPTH_BIAS })

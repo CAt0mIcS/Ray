@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "../../RBase.h"
-#include "../../Core/RResource.h"
+#include "../../Core/RResourceManager.h"
 #include "../../Core/RMath.h"
 #include "../../Graphics/Images/RTexture2DAtlas.h"
 

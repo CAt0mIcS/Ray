@@ -107,6 +107,11 @@ namespace At0::Ray
 		return *m_Camera;
 	}
 
+	const ResourceManager& Scene::GetResourceManager() const
+	{
+		return m_Resources;
+	}
+
 	Scene::Scene(Scope<Camera> camera) : m_Camera(std::move(camera))
 	{
 		s_CurrentScene = Scope<Scene>(this);

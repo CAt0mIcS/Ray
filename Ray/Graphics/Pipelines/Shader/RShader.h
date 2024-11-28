@@ -2,7 +2,7 @@
 #pragma once
 
 #include "../../../RBase.h"
-#include "../../../Core/RResource.h"
+#include "../../../Core/RResourceManager.h"
 #include "RShaderTypes.h"
 #include "RShaderReflection.h"
 
@@ -35,18 +35,15 @@ namespace At0::Ray
 		};
 
 	public:
-		static Ref<Shader> AcquireSourceFile(
+		static Ref<Shader> FromSourceFile(
 			std::vector<std::string> shaders, const std::vector<std::string>& reflections = {});
 
-		static Ref<Shader> AcquireCompiledFile(
+		static Ref<Shader> FromCompiledFile(
 			std::vector<std::string> shaders, const std::vector<std::string>& reflections);
 
-		static Ref<Shader> AcquireSourceString(std::vector<std::string> shaders,
+		static Ref<Shader> FromSourceString(std::vector<std::string> shaders,
 			const std::vector<ShaderStage>& stageOrder,
 			const std::vector<std::string>& reflections = {});
-
-		// static Ref<Shader> AcquireCompiledString(
-		//	std::vector<std::string> shaders, const std::vector<std::string>& reflections = {});
 
 		Shader(std::vector<std::string> shaders, FileType flags,
 			const std::vector<std::string>& reflections = {},

@@ -133,7 +133,7 @@ public:
 
 		auto pipeline =
 			GraphicsPipeline::Builder()
-				.SetShader(Shader::AcquireSourceFile({ "Tests/Lighting/Shaders/Lighting.vert",
+				.SetShader(Shader::FromSourceFile({ "Tests/Lighting/Shaders/Lighting.vert",
 					"Tests/Lighting/Shaders/Lighting.frag" }))
 				.Acquire();
 
@@ -155,7 +155,7 @@ private:
 	{
 		auto flatPipeline =
 			GraphicsPipeline::Builder()
-				.SetShader(Shader::AcquireSourceFile(
+				.SetShader(Shader::FromSourceFile(
 					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
 				.SetCullMode(VK_CULL_MODE_NONE)
 				.Acquire();
@@ -173,7 +173,7 @@ private:
 	{
 		auto flatPipeline =
 			GraphicsPipeline::Builder()
-				.SetShader(Shader::AcquireSourceFile(
+				.SetShader(Shader::FromSourceFile(
 					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
 				.Acquire();
 
@@ -189,7 +189,7 @@ private:
 	{
 		auto flatPipeline =
 			GraphicsPipeline::Builder()
-				.SetShader(Shader::AcquireSourceFile(
+				.SetShader(Shader::FromSourceFile(
 					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
 				.Acquire();
 

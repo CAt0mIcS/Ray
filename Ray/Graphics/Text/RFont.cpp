@@ -29,7 +29,7 @@ namespace At0::Ray
 
 	Ref<Font> Font::AcquireTTF(std::string_view filepath, uint32_t size)
 	{
-		return Resources::Get().EmplaceIfNonExistent<Font>(
+		return ResourceManager::Get().EmplaceIfNonExistent<Font>(
 			filepath.data(), filepath, size, Type::TTF);
 	}
 

@@ -2,6 +2,7 @@
 
 #include "../RBase.h"
 #include "../Graphics/Pipelines/RGraphicsPipeline.h"
+#include "../Graphics/Pipelines/Shader/RShaderTypes.h"
 #include "../Shading/RMaterial.h"
 
 
@@ -9,6 +10,7 @@ namespace At0::Ray
 {
 	class Scene;
 	class Shader;
+	class ResourceManager;
 
 	class RAY_EXPORT Layer
 	{
@@ -25,11 +27,20 @@ namespace At0::Ray
 		const Scene& GetScene() const { return *m_Scene; }
 		Scene& GetScene() { return *m_Scene; }
 
+		const ResourceManager& GetResourceManager() const;
+		ResourceManager& GetResourceManager()
+		{
+			return (ResourceManager&)std::as_const(*this).GetResourceManager();
+		}
+
 	protected:
 		GraphicsPipeline::Builder PipelineBuilder();
 		Ref<Shader> LoadShaderFromSourceFile(const std::vector<std::string>& shaders,
 			const std::vector<std::string>& reflections = {});
 		Ref<Shader> LoadShaderFromCompiledFile(const std::vector<std::string>& shaders,
+			const std::vector<std::string>& reflections = {});
+		Ref<Shader> LoadShaderFromString(const std::vector<std::string>& shaders,
+			const std::vector<ShaderStage>& stageOrder,
 			const std::vector<std::string>& reflections = {});
 
 		Material::Builder MaterialBuilder(Ref<GraphicsPipeline> pipeline);

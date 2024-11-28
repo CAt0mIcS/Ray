@@ -3,9 +3,10 @@
 #include "../RBase.h"
 #include "../Core/RTime.h"
 #include "../Events/REventDispatcher.h"
+#include "../Core/RResourceManager.h"
 #include "../Utils/RThreadPool.h"
 #include "../Events/RCustomEvents.h"
-#include "../Layers/Layer.h"
+#include "../Layers/RLayer.h"
 
 #include "REntity.h"
 #include "RCamera.h"
@@ -60,6 +61,12 @@ namespace At0::Ray
 		const Camera& GetCamera() const;
 		Camera& GetCamera() { return (Camera&)std::as_const(*this).GetCamera(); }
 
+		const ResourceManager& GetResourceManager() const;
+		ResourceManager& GetResourceManager()
+		{
+			return (ResourceManager&)std::as_const(*this).GetResourceManager();
+		}
+
 		template<typename T, typename... Args>
 		static Scene& Create(Args&&... args)
 			requires std::derived_from<T, Scene> && std::constructible_from<T, Args...>
@@ -73,9 +80,7 @@ namespace At0::Ray
 		T& RegisterLayer(Args&&... args)
 			requires std::derived_from<T, Layer> /* && std::constructible_from<T, Scene, Args...>*/
 		{
-			return *(T*)&m_Layers.emplace_back(MakeScope<T>(*this, std::forward<Args>()...));
-			// m_Layer = MakeScope<T>(*this, std::forward<Args>()...);
-			// return *(T*)(m_Layer.get());
+			return *(T*)(m_Layers.emplace_back(MakeScope<T>(*this, std::forward<Args>()...)).get());
 		}
 
 	protected:
@@ -86,8 +91,9 @@ namespace At0::Ray
 		Scope<Camera> m_Camera = nullptr;
 		ThreadPool m_ThreadPool;
 
+		ResourceManager m_Resources;
+
 		std::vector<Scope<Layer>> m_Layers;
-		Scope<Layer> m_Layer;
 
 		static Scope<Scene> s_CurrentScene;
 	};
