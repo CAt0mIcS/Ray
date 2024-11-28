@@ -53,18 +53,17 @@ namespace At0::Ray
 			uint32_t height = 540, std::string_view title = "Window");
 
 		/**
-		 * Getter for the static window instance.
-		 * Window must be created before calling this function.
-		 */
-		static Window& Get();
-
-		/**
 		 * Shows the window
 		 */
 		void Show() const;
 
 		/**
-		 * Closes the window
+		 * Hides the window so that it can be shown again
+		 */
+		void Hide() const;
+
+		/**
+		 * Closes the window. Cannot be opened again (use Window::Hide if required)
 		 */
 		void Close();
 
@@ -148,7 +147,6 @@ namespace At0::Ray
 		static void TryInitializeGlfw();
 
 	private:
-		static Window* s_Instance;
 		static bool s_GlfwInitialized;
 
 		Scope<RenderContext> m_RenderContext;

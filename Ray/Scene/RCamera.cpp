@@ -132,11 +132,10 @@ namespace At0::Ray
 		}
 	}
 
-	Camera::Camera()
-		: EventListener<MouseMovedEvent>(Window::Get()),
-		  EventListener<KeyPressedEvent>(Window::Get()), EventListener<KeyReleasedEvent>(
-															 Window::Get()),
-		  EventListener<ScrollUpEvent>(Window::Get()), EventListener<ScrollDownEvent>(Window::Get())
+	Camera::Camera(Window& window)
+		: m_Window(window), EventListener<MouseMovedEvent>(window),
+		  EventListener<KeyPressedEvent>(window), EventListener<KeyReleasedEvent>(window),
+		  EventListener<ScrollUpEvent>(window), EventListener<ScrollDownEvent>(window)
 	{
 	}
 
@@ -211,7 +210,7 @@ namespace At0::Ray
 			else
 				Rotate(Float3{ e.GetDelta().y, -e.GetDelta().x, 0.0f } * RotationSpeed);
 		}
-		else if (!Window::Get().CursorEnabled())
+		else if (!m_Window.CursorEnabled())
 			Rotate(Float3{ e.GetDelta().y, -e.GetDelta().x, 0.0f } * RotationSpeed);
 	}
 
@@ -219,10 +218,10 @@ namespace At0::Ray
 	{
 		if (Type == CameraType::FirstPerson && e.GetKey() == Key::Escape)
 		{
-			if (Window::Get().CursorEnabled())
-				Window::Get().DisableCursor();
+			if (m_Window.CursorEnabled())
+				m_Window.DisableCursor();
 			else
-				Window::Get().EnableCursor();
+				m_Window.EnableCursor();
 		}
 
 		if (e.GetKey() == Key::LeftShift && !Mouse::IsMiddlePressed())

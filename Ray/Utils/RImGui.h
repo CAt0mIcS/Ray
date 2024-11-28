@@ -43,6 +43,7 @@ namespace At0::Ray
 	class GraphicsPipeline;
 	class DescriptorSet;
 	class Sampler2DUniform;
+	class Window;
 
 	/**
 	 * RAY_TODO:
@@ -72,6 +73,7 @@ namespace At0::Ray
 		} m_PushConstBlock;
 
 	public:
+		static ImGUI& Create(Window& window);
 		static ImGUI& Get();
 		static void Destroy();
 		~ImGUI();
@@ -97,7 +99,7 @@ namespace At0::Ray
 		void* PushTexture(VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout);
 
 	private:
-		ImGUI();
+		ImGUI(Window& window);
 
 		void InitResources();
 		void CreatePipeline();
@@ -117,6 +119,8 @@ namespace At0::Ray
 
 	private:
 		static Scope<ImGUI> s_Instance;
+
+		Window& m_Window;
 
 		Ref<Texture> m_FontImage;
 

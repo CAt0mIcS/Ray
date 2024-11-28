@@ -24,7 +24,7 @@ namespace At0::Ray
 		};
 
 	public:
-		Swapchain(VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE,
+		Swapchain(UInt2 framebufferSize, VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE,
 			VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
 		~Swapchain();
 
@@ -42,7 +42,7 @@ namespace At0::Ray
 		VkSurfaceFormatKHR ChooseSurfaceFormat(
 			const std::vector<VkSurfaceFormatKHR>& formats) const;
 		VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR>& presentModes) const;
-		UInt2 ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
+		UInt2 ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities, UInt2 extent) const;
 
 	private:
 		VkSwapchainKHR m_Swapchain = VK_NULL_HANDLE;

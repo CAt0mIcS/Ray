@@ -9,6 +9,7 @@
 #include "../Core/RTime.h"
 #include "../Core/RMath.h"
 #include "../Core/RFrustum.h"
+#include "../Devices/RWindow.h"
 
 
 namespace At0::Ray
@@ -48,7 +49,7 @@ namespace At0::Ray
 		} ShaderData{};
 
 	public:
-		Camera();
+		Camera(Window& window);
 		~Camera();
 		bool IsMoving() const;
 		float GetNearClip() const { return m_NearZ; }
@@ -89,5 +90,7 @@ namespace At0::Ray
 		float m_Left, m_Right, m_Bottom, m_Top;
 
 		Frustum m_Frustum;
+
+		Window& m_Window;
 	};
 }  // namespace At0::Ray

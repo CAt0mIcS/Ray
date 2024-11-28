@@ -65,8 +65,8 @@ public:
 
 		m_Entity.AddChild(light);
 
-		// Scene::Get().CreateEntity().Emplace<Ray::Skybox>(
-		//	Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
+		GetScene().CreateEntity().Emplace<Ray::Skybox>(
+			Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
 		auto& registry = GetScene().GetRegistry();
 	}
 
@@ -143,9 +143,12 @@ private:
 class Scene : public Ray::Scene
 {
 public:
-	Scene(Ray::Engine* engine) : Ray::Scene(*engine, Ray::MakeScope<Ray::Camera>())
+	Scene(Ray::Engine* engine)
+		: Ray::Scene(*engine, Ray::MakeScope<Ray::Camera>(engine->GetMainWindow()))
 	{
-		Ray::UInt2 size = Ray::Window::Get().GetFramebufferSize();
+		Ray::ImGUI::Create(GetMainWindow());
+
+		Ray::UInt2 size = GetMainWindow().GetFramebufferSize();
 		GetCamera().SetPosition(Ray::Float3(0.0f, 0.0f, -2.5f));
 		GetCamera().SetRotation(Ray::Float3(0.0f));
 		GetCamera().SetRotationSpeed(0.07f);

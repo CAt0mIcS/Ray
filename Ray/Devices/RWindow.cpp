@@ -23,13 +23,11 @@ namespace At0::Ray
 		Log::Flush();
 	}
 
-	Window* Window::s_Instance = nullptr;
 	bool Window::s_GlfwInitialized = false;
 
 	Window::Window(const EngineRenderContext& engineContext, uint32_t width, uint32_t height,
 		std::string_view title)
 	{
-		s_Instance = this;
 		TryInitializeGlfw();
 
 		// Create the window
@@ -43,15 +41,14 @@ namespace At0::Ray
 		m_RenderContext = MakeScope<RenderContext>(*this, engineContext);
 	}
 
-	Window& Window::Get()
-	{
-		RAY_MEXPECTS(s_Instance, "[Window::Get] Cannot get window that has not been created yet");
-		return *s_Instance;
-	}
-
 	void Window::Show() const
 	{
 		glfwShowWindow(m_hWnd);
+	}
+
+	void Window::Hide() const
+	{
+		glfwHideWindow(m_hWnd);
 	}
 
 	void Window::Close()

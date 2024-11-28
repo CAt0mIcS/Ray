@@ -41,10 +41,10 @@ namespace At0::Ray
 {
 	Graphics* Graphics::s_Instance = nullptr;
 
-	Graphics::Graphics(const VulkanInstance& instance, const PhysicalDevice& physicalDevice,
-		const Surface& surface, const LogicalDevice& device)
-		: m_VulkanInstance(instance), m_PhysicalDevice(physicalDevice), m_Surface(surface),
-		  m_Device(device), EventListener<FramebufferResizedEvent>(Window::Get())
+	Graphics::Graphics(Window& window, const VulkanInstance& instance,
+		const PhysicalDevice& physicalDevice, const Surface& surface, const LogicalDevice& device)
+		: m_Window(window), m_VulkanInstance(instance), m_PhysicalDevice(physicalDevice),
+		  m_Surface(surface), m_Device(device), EventListener<FramebufferResizedEvent>(window)
 	{
 		if (s_Instance)
 			ThrowRuntime("[Graphics] Object already created");
@@ -59,7 +59,7 @@ namespace At0::Ray
 
 	void Graphics::CreateVulkanObjects()
 	{
-		m_Swapchain = MakeScope<Swapchain>();
+		m_Swapchain = MakeScope<Swapchain>(m_Window.GetFramebufferSize());
 		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 
 		m_DepthImage = MakeScope<DepthImage>(
@@ -429,7 +429,7 @@ namespace At0::Ray
 
 	void Graphics::UpdateViewport()
 	{
-		UInt2 size = Window::Get().GetFramebufferSize();
+		UInt2 size = m_Window.GetFramebufferSize();
 		m_Viewport.x = 0.0f;
 		m_Viewport.y = 0.0f;
 		m_Viewport.width = (float)size.x;
@@ -440,7 +440,7 @@ namespace At0::Ray
 
 	void Graphics::UpdateScissor()
 	{
-		UInt2 size = Window::Get().GetFramebufferSize();
+		UInt2 size = m_Window.GetFramebufferSize();
 		m_Scissor.offset = { 0, 0 };
 		m_Scissor.extent = { (uint32_t)size.x, (uint32_t)size.y };
 	}
@@ -449,11 +449,11 @@ namespace At0::Ray
 	{
 		// Minimized window will have framebuffer size of [0 | 0]
 		// Sleep until window is back in foreground
-		UInt2 size = Window::Get().GetFramebufferSize();
+		UInt2 size = m_Window.GetFramebufferSize();
 		while (size == UInt2{ 0, 0 })
 		{
-			size = Window::Get().GetFramebufferSize();
-			Window::Get().WaitForEvents();
+			size = m_Window.GetFramebufferSize();
+			m_Window.WaitForEvents();
 		}
 
 		m_Device.WaitIdle();
@@ -465,7 +465,8 @@ namespace At0::Ray
 		m_RenderPass.reset();
 		m_DepthImage.reset();
 
-		m_Swapchain = MakeScope<Swapchain>((VkSwapchainKHR)*m_Swapchain);
+		m_Swapchain =
+			MakeScope<Swapchain>(m_Window.GetFramebufferSize(), (VkSwapchainKHR)*m_Swapchain);
 		m_CommandPool.reset();
 
 		m_CommandPool = MakeScope<CommandPool>(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
@@ -479,7 +480,7 @@ namespace At0::Ray
 		for (uint32_t i = 0; i < m_CommandBuffers.size(); ++i)
 			RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i], i);
 
-		size = Window::Get().GetFramebufferSize();
+		size = m_Window.GetFramebufferSize();
 		Scene::Get().GetCamera().UpdateAspectRatio((float)size.x / (float)size.y);
 
 		m_FramebufferResized = false;

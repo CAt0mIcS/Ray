@@ -11,13 +11,14 @@
 
 namespace At0::Ray
 {
-	Swapchain::Swapchain(VkSwapchainKHR oldSwapchain, VkImageUsageFlags imageUsage)
+	Swapchain::Swapchain(
+		UInt2 framebufferSize, VkSwapchainKHR oldSwapchain, VkImageUsageFlags imageUsage)
 	{
 		SupportDetails supportDetails = QuerySwapchainSupport();
 		VkSurfaceFormatKHR surfaceFormat = ChooseSurfaceFormat(supportDetails.Formats);
 		m_Format = surfaceFormat.format;
 		VkPresentModeKHR presentMode = ChoosePresentMode(supportDetails.PresentModes);
-		m_Extent = ChooseExtent(supportDetails.Capabilities);
+		m_Extent = ChooseExtent(supportDetails.Capabilities, framebufferSize);
 
 		uint32_t imageCount = supportDetails.Capabilities.minImageCount + 1;
 		// Make sure we don't exceed the max image count. 0 means that there is no maximum limit
@@ -122,7 +123,10 @@ namespace At0::Ray
 		return supportDetails;
 	}
 
-	float Swapchain::GetAspectRatio() const { return (float)m_Extent.x / (float)m_Extent.y; }
+	float Swapchain::GetAspectRatio() const
+	{
+		return (float)m_Extent.x / (float)m_Extent.y;
+	}
 
 	VkSurfaceFormatKHR Swapchain::ChooseSurfaceFormat(
 		const std::vector<VkSurfaceFormatKHR>& formats) const
@@ -153,15 +157,12 @@ namespace At0::Ray
 		return VK_PRESENT_MODE_FIFO_KHR;
 	}
 
-	UInt2 Swapchain::ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities) const
+	UInt2 Swapchain::ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities, UInt2 extent) const
 	{
 		if (capabilities.currentExtent.width != UINT32_MAX)
 			return { capabilities.currentExtent.width, capabilities.currentExtent.height };
 		else
 		{
-			UInt2 size = Window::Get().GetFramebufferSize();
-			UInt2 extent = { size.x, size.y };
-
 			// Clamp values to allowed minimum and maximum implementation extents supported
 			extent.x = std::clamp(
 				extent.x, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);

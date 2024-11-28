@@ -57,10 +57,16 @@ namespace At0::Ray
 {
 	Scope<ImGUI> ImGUI::s_Instance = nullptr;
 
+	ImGUI& ImGUI::Create(Window& window)
+	{
+		RAY_MEXPECTS(!s_Instance, "ImGUI was already created");
+		s_Instance = Scope<ImGUI>(new ImGUI(window));
+		return *s_Instance;
+	}
+
 	ImGUI& ImGUI::Get()
 	{
-		if (!s_Instance)
-			s_Instance = Scope<ImGUI>(new ImGUI());
+		RAY_MEXPECTS(s_Instance, "ImGUI has not been created yet");
 		return *s_Instance;
 	}
 
@@ -76,24 +82,20 @@ namespace At0::Ray
 			Graphics::Get().GetDevice(), m_TextureDescriptorSetLayout, nullptr);
 	}
 
-	ImGUI::ImGUI()
-		: EventListener<FramebufferResizedEvent>(Window::Get()),
-		  EventListener<MouseMovedEvent>(Window::Get()),
-		  EventListener<MouseButtonPressedEvent>(Window::Get()),
-		  EventListener<MouseButtonReleasedEvent>(Window::Get()),
-		  EventListener<KeyPressedEvent>(Window::Get()),
-		  EventListener<KeyReleasedEvent>(Window::Get()), EventListener<CharEvent>(Window::Get()),
-		  EventListener<ScrollLeftEvent>(Window::Get()),
-		  EventListener<ScrollRightEvent>(Window::Get()),
-		  EventListener<ScrollUpEvent>(Window::Get()), EventListener<ScrollDownEvent>(Window::Get())
+	ImGUI::ImGUI(Window& window)
+		: m_Window(window), EventListener<FramebufferResizedEvent>(window),
+		  EventListener<MouseMovedEvent>(window), EventListener<MouseButtonPressedEvent>(window),
+		  EventListener<MouseButtonReleasedEvent>(window), EventListener<KeyPressedEvent>(window),
+		  EventListener<KeyReleasedEvent>(window), EventListener<CharEvent>(window),
+		  EventListener<ScrollLeftEvent>(window), EventListener<ScrollRightEvent>(window),
+		  EventListener<ScrollUpEvent>(window), EventListener<ScrollDownEvent>(window)
 	{
 		ImGui::CreateContext();
 
 		ImGuiIO& io = ImGui::GetIO();
 		ImGui::StyleColorsDark();
 
-		io.DisplaySize =
-			ImVec2(Window::Get().GetFramebufferSize().x, Window::Get().GetFramebufferSize().y);
+		io.DisplaySize = ImVec2(m_Window.GetFramebufferSize().x, m_Window.GetFramebufferSize().y);
 		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -105,7 +107,7 @@ namespace At0::Ray
 			ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		ImGui_ImplGlfw_InitForVulkan(Window::Get().GetNative(), false);
+		ImGui_ImplGlfw_InitForVulkan(m_Window.GetNative(), false);
 		InitResources();
 	}
 
@@ -414,7 +416,7 @@ namespace At0::Ray
 
 	void ImGUI::OnEvent(MouseMovedEvent& e)
 	{
-		if (!Window::Get().CursorEnabled())
+		if (!m_Window.CursorEnabled())
 			return;
 		ImGuiIO& io = ImGui::GetIO();
 		io.MousePos = ImVec2(e.GetPos().x, e.GetPos().y);
@@ -422,7 +424,7 @@ namespace At0::Ray
 
 	void ImGUI::OnEvent(MouseButtonPressedEvent& e)
 	{
-		if (!Window::Get().CursorEnabled())
+		if (!m_Window.CursorEnabled())
 			return;
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantCaptureMouse)
@@ -439,7 +441,7 @@ namespace At0::Ray
 
 	void ImGUI::OnEvent(MouseButtonReleasedEvent& e)
 	{
-		if (!Window::Get().CursorEnabled())
+		if (!m_Window.CursorEnabled())
 			return;
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantCaptureMouse)
@@ -456,7 +458,7 @@ namespace At0::Ray
 
 	void ImGUI::OnEvent(KeyPressedEvent& e)
 	{
-		if (!Window::Get().CursorEnabled())
+		if (!m_Window.CursorEnabled())
 			return;
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantCaptureKeyboard)
@@ -468,7 +470,7 @@ namespace At0::Ray
 
 	void ImGUI::OnEvent(KeyReleasedEvent& e)
 	{
-		if (!Window::Get().CursorEnabled())
+		if (!m_Window.CursorEnabled())
 			return;
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantCaptureKeyboard)
@@ -480,7 +482,7 @@ namespace At0::Ray
 
 	void ImGUI::OnEvent(CharEvent& e)
 	{
-		if (!Window::Get().CursorEnabled())
+		if (!m_Window.CursorEnabled())
 			return;
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantTextInput)

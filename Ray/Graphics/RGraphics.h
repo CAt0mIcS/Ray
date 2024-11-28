@@ -27,13 +27,15 @@ namespace At0::Ray
 	class DepthImage;
 	class CommandBufferRecorder;
 	class ShadowMappingObjects;
+	class Window;
 
 
 	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
 	{
 	public:
-		Graphics(const VulkanInstance& instance, const PhysicalDevice& physicalDevice,
-			const Surface& surface, const LogicalDevice& device);
+		Graphics(Window& window, const VulkanInstance& instance,
+			const PhysicalDevice& physicalDevice, const Surface& surface,
+			const LogicalDevice& device);
 		~Graphics();
 		static Graphics& Get();
 
@@ -81,6 +83,7 @@ namespace At0::Ray
 		VkViewport m_Viewport{};
 		VkRect2D m_Scissor{};
 
+		Window& m_Window;
 
 		const VulkanInstance& m_VulkanInstance;
 		const PhysicalDevice& m_PhysicalDevice;
