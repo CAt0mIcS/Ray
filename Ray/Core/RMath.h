@@ -88,14 +88,14 @@ namespace At0::Ray
 	RAY_EXPORT float DotProduct(Float4 x, Float4 y);
 	RAY_EXPORT Float3 CrossProduct(Float3 x, Float3 y);
 
-	RAY_EXPORT Float2 NDCSpaceToScreenSpace(Float2 coords);
-	RAY_EXPORT Float2 ScreenSpaceToNDCSpace(Float2 coords);
+	RAY_EXPORT Float2 NDCSpaceToScreenSpace(Float2 coords, UInt2 framebufferSize);
+	RAY_EXPORT Float2 ScreenSpaceToNDCSpace(Float2 coords, UInt2 framebufferSize);
 
-	RAY_EXPORT float NDCSpaceToScreenSpaceX(float x);
-	RAY_EXPORT float ScreenSpaceToNDCSpaceX(float x);
+	RAY_EXPORT float NDCSpaceToScreenSpaceX(float x, uint32_t framebufferSizeX);
+	RAY_EXPORT float ScreenSpaceToNDCSpaceX(float x, uint32_t framebufferSizeX);
 
-	RAY_EXPORT float NDCSpaceToScreenSpaceY(float y);
-	RAY_EXPORT float ScreenSpaceToNDCSpaceY(float y);
+	RAY_EXPORT float NDCSpaceToScreenSpaceY(float y, uint32_t framebufferSizeY);
+	RAY_EXPORT float ScreenSpaceToNDCSpaceY(float y, uint32_t framebufferSizeY);
 
 	/**
 	 * Splits a integer (number) into an array of integers

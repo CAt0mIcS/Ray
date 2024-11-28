@@ -55,6 +55,7 @@ public:
 							.Set("Shading.ambientLightColor", Ray::Float4{ 1.f, 1.f, 1.f, .1f })
 							.Build();
 
+
 		m_Entity = GetScene().CreateEntity();
 		m_Entity.Emplace<Ray::Model>("Resources/Scenes/Sponza/scene.gltf", material);
 

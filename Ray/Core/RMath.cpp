@@ -8,7 +8,10 @@ namespace At0::Ray
 	{
 		return glm::translate(glm::mat4(1.0f), translation);
 	}
-	Matrix MatrixTranslation(float x, float y, float z) { return MatrixTranslation({ x, y, z }); }
+	Matrix MatrixTranslation(float x, float y, float z)
+	{
+		return MatrixTranslation({ x, y, z });
+	}
 	Matrix MatrixRotation(Float3 yawPitchRoll)
 	{
 		return glm::rotate(
@@ -20,44 +23,81 @@ namespace At0::Ray
 	{
 		return MatrixRotation({ pitch, yaw, roll });
 	}
-	Matrix MatrixScale(Float3 scale) { return glm::scale(glm::mat4(1.0f), scale); }
-	Matrix MatrixScale(float x, float y, float z) { return MatrixScale({ x, y, z }); }
-	Matrix MatrixIdentity() { return glm::identity<glm::mat4>(); }
+	Matrix MatrixScale(Float3 scale)
+	{
+		return glm::scale(glm::mat4(1.0f), scale);
+	}
+	Matrix MatrixScale(float x, float y, float z)
+	{
+		return MatrixScale({ x, y, z });
+	}
+	Matrix MatrixIdentity()
+	{
+		return glm::identity<glm::mat4>();
+	}
 
-	float Radians(float degrees) { return glm::radians(degrees); }
-	double Radians(double degrees) { return glm::radians(degrees); }
-	Float2 Normalize(Float2 vec) { return glm::normalize(vec); }
-	Float3 Normalize(Float3 vec) { return glm::normalize(vec); }
-	Float4 Normalize(Float4 vec) { return glm::normalize(vec); }
-	float DotProduct(Float2 x, Float2 y) { return glm::dot(x, y); }
-	float DotProduct(Float3 x, Float3 y) { return glm::dot(x, y); }
-	float DotProduct(Float4 x, Float4 y) { return glm::dot(x, y); }
-	Float3 CrossProduct(Float3 x, Float3 y) { return glm::cross(x, y); }
+	float Radians(float degrees)
+	{
+		return glm::radians(degrees);
+	}
+	double Radians(double degrees)
+	{
+		return glm::radians(degrees);
+	}
+	Float2 Normalize(Float2 vec)
+	{
+		return glm::normalize(vec);
+	}
+	Float3 Normalize(Float3 vec)
+	{
+		return glm::normalize(vec);
+	}
+	Float4 Normalize(Float4 vec)
+	{
+		return glm::normalize(vec);
+	}
+	float DotProduct(Float2 x, Float2 y)
+	{
+		return glm::dot(x, y);
+	}
+	float DotProduct(Float3 x, Float3 y)
+	{
+		return glm::dot(x, y);
+	}
+	float DotProduct(Float4 x, Float4 y)
+	{
+		return glm::dot(x, y);
+	}
+	Float3 CrossProduct(Float3 x, Float3 y)
+	{
+		return glm::cross(x, y);
+	}
 
-	RAY_EXPORT Float2 NDCSpaceToScreenSpace(Float2 coords)
+	RAY_EXPORT Float2 NDCSpaceToScreenSpace(Float2 coords, UInt2 framebufferSize)
 	{
-		return { (coords.x + 1) * 0.5f * Window::Get().GetFramebufferSize().x,
-			(coords.y + 1) * 0.5f * Window::Get().GetFramebufferSize().y };
+		return { (coords.x + 1) * 0.5f * framebufferSize.x,
+			(coords.y + 1) * 0.5f * framebufferSize.y };
 	}
-	RAY_EXPORT Float2 ScreenSpaceToNDCSpace(Float2 coords)
+	RAY_EXPORT Float2 ScreenSpaceToNDCSpace(Float2 coords, UInt2 framebufferSize)
 	{
-		return { ScreenSpaceToNDCSpaceX(coords.x), ScreenSpaceToNDCSpaceY(coords.y) };
+		return { ScreenSpaceToNDCSpaceX(coords.x, framebufferSize.x),
+			ScreenSpaceToNDCSpaceY(coords.y, framebufferSize.y) };
 	}
-	RAY_EXPORT float NDCSpaceToScreenSpaceX(float x)
+	RAY_EXPORT float NDCSpaceToScreenSpaceX(float x, uint32_t framebufferSizeX)
 	{
-		return (x + 1) * 0.5f * (float)Window::Get().GetFramebufferSize().x;
+		return (x + 1) * 0.5f * (float)framebufferSizeX;
 	}
-	RAY_EXPORT float ScreenSpaceToNDCSpaceX(float x)
+	RAY_EXPORT float ScreenSpaceToNDCSpaceX(float x, uint32_t framebufferSizeX)
 	{
-		return 2.f * (x / Window::Get().GetFramebufferSize().x) - 1.f;
+		return 2.f * (x / framebufferSizeX) - 1.f;
 	}
-	RAY_EXPORT float NDCSpaceToScreenSpaceY(float y)
+	RAY_EXPORT float NDCSpaceToScreenSpaceY(float y, uint32_t framebufferSizeY)
 	{
-		return (y + 1) * 0.5f * (float)Window::Get().GetFramebufferSize().y;
+		return (y + 1) * 0.5f * (float)framebufferSizeY;
 	}
-	RAY_EXPORT float ScreenSpaceToNDCSpaceY(float y)
+	RAY_EXPORT float ScreenSpaceToNDCSpaceY(float y, uint32_t framebufferSizeY)
 	{
-		return y / Window::Get().GetFramebufferSize().y;
+		return y / framebufferSizeY;
 	}
 
 	RAY_EXPORT std::vector<uint32_t> GenerateChunks(uint32_t number, uint32_t chunks)

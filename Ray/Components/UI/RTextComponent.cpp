@@ -72,12 +72,11 @@ namespace At0::Ray
 
 	void TextComponent::LoadMeshes()
 	{
-		auto pipeline =
-			GraphicsPipeline::Builder()
-				.SetShader(Shader::FromSourceFile(
-					{ "Resources/Shaders/Flat_Text.vert", "Resources/Shaders/Flat_Text.frag" }))
-				.SetCullMode(VK_CULL_MODE_NONE)
-				.Acquire();
+		auto pipeline = GraphicsPipeline::Builder()
+							.SetShader(Shader::FromSourceFile({ "Resources/Shaders/Flat_Text.vert",
+								"Resources/Shaders/Flat_Text.frag" }))
+							.SetCullMode(VK_CULL_MODE_NONE)
+							.Acquire();
 
 		float x{};
 		float y{};
@@ -93,7 +92,9 @@ namespace At0::Ray
 					Material::Builder(pipeline).Set("samplerText", glyph.texture).Build();
 			else
 			{
-				x += ScreenSpaceToNDCSpaceX(glyph.advance * scale) + 1.f;
+				x += ScreenSpaceToNDCSpaceX(
+						 glyph.advance * scale, Window::Get().GetFramebufferSize().x) +
+					 1.f;
 				continue;
 			}
 
@@ -102,8 +103,11 @@ namespace At0::Ray
 			// Float2 ndcBearing{ (Float2)glyph.bearing / (Float2)windowSize };
 			// Float2 ndcSize{ (Float2)glyph.size / (Float2)windowSize };
 
-			Float2 ndcBearing = ScreenSpaceToNDCSpace(glyph.bearing) + Float2{ 1.f, 0.f };
-			Float2 ndcSize = ScreenSpaceToNDCSpace(glyph.size) + Float2{ 1.f, 0.f };
+			Float2 ndcBearing =
+				ScreenSpaceToNDCSpace(glyph.bearing, Window::Get().GetFramebufferSize()) +
+				Float2{ 1.f, 0.f };
+			Float2 ndcSize = ScreenSpaceToNDCSpace(glyph.size, Window::Get().GetFramebufferSize()) +
+							 Float2{ 1.f, 0.f };
 
 			float xPos = x + ndcBearing.x * scale;
 			float yPos = y - (ndcSize.y - ndcBearing.y) * scale;
@@ -120,7 +124,9 @@ namespace At0::Ray
 			// tform.SetScale({ w, 1.f, h });
 			// tform.SetTranslation({ xPos, yPos, 0.f });
 
-			x += ScreenSpaceToNDCSpaceX(glyph.advance * scale) + 1.f;
+			x += ScreenSpaceToNDCSpaceX(
+					 glyph.advance * scale, Window::Get().GetFramebufferSize().x) +
+				 1.f;
 			// x += glyph.advance * scale / windowSize.x;
 		}
 	}
