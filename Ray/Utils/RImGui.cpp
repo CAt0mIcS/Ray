@@ -13,7 +13,6 @@ namespace At0::Ray
 #include "Devices/RWindow.h"
 #include "Devices/RMouse.h"
 
-#include "Graphics/RGraphics.h"
 #include "Graphics/Core/RVulkanInstance.h"
 #include "Graphics/Core/RSurface.h"
 #include "Graphics/Core/RLogicalDevice.h"
@@ -32,6 +31,7 @@ namespace At0::Ray
 #include "Graphics/Pipelines/Shader/DataAccess/RDescriptor.h"
 #include "Graphics/Images/RTexture.h"
 #include "Graphics/Images/RImageView.h"
+#include "Graphics/Core/RRenderContext.h"
 
 #include <../../Extern/imgui/imgui.h>
 #include <../../Extern/imgui/imgui_internal.h>
@@ -79,7 +79,7 @@ namespace At0::Ray
 	{
 		ImGui::DestroyContext();
 		vkDestroyDescriptorSetLayout(
-			Graphics::Get().GetRenderContext().device, m_TextureDescriptorSetLayout, nullptr);
+			m_Window.GetRenderContext().device, m_TextureDescriptorSetLayout, nullptr);
 	}
 
 	ImGUI::ImGUI(Window& window)
@@ -330,7 +330,8 @@ namespace At0::Ray
 		vertexInputAttributes.emplace_back(vInputCol);
 
 		m_Pipeline =
-			GraphicsPipeline::Builder()
+			GraphicsPipeline::Builder(m_Window.GetRenderContext().graphics.GetRenderPass(),
+				m_Window.GetRenderContext().graphics.GetPipelineCache())
 				.SetShader(MakeRef<Shader>(std::vector<std::string>{ "Resources/Shaders/ImGui.vert",
 											   "Resources/Shaders/ImGui.frag" },
 					Shader::GLSLFile))
@@ -364,7 +365,7 @@ namespace At0::Ray
 			info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 			info.bindingCount = 1;
 			info.pBindings = binding;
-			ThrowVulkanError(vkCreateDescriptorSetLayout(Graphics::Get().GetRenderContext().device, &info,
+			ThrowVulkanError(vkCreateDescriptorSetLayout(m_Window.GetRenderContext().device, &info,
 								 nullptr, &m_TextureDescriptorSetLayout),
 				"[ImGUI] Failed to create descriptor set layout for texture upload");
 		}
@@ -385,8 +386,8 @@ namespace At0::Ray
 			allocInfo.descriptorPool = m_Pipeline->GetDescriptorPool();
 			allocInfo.descriptorSetCount = 1;
 			allocInfo.pSetLayouts = &m_TextureDescriptorSetLayout;
-			ThrowVulkanError(vkAllocateDescriptorSets(Graphics::Get().GetRenderContext().device, &allocInfo,
-								 &m_TextureDescriptorSets.back()),
+			ThrowVulkanError(vkAllocateDescriptorSets(m_Window.GetRenderContext().device,
+								 &allocInfo, &m_TextureDescriptorSets.back()),
 				"[ImGUI] Failed to create texture descriptor set");
 		}
 
@@ -402,7 +403,7 @@ namespace At0::Ray
 			writeDesc[0].descriptorCount = 1;
 			writeDesc[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 			writeDesc[0].pImageInfo = descImage;
-			vkUpdateDescriptorSets(Graphics::Get().GetRenderContext().device, 1, writeDesc, 0, NULL);
+			vkUpdateDescriptorSets(m_Window.GetRenderContext().device, 1, writeDesc, 0, NULL);
 		}
 
 		return (ImTextureID)m_TextureDescriptorSets.back();

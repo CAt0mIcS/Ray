@@ -73,7 +73,8 @@ namespace At0::Ray
 
 	void TextComponent::LoadMeshes()
 	{
-		auto pipeline = GraphicsPipeline::Builder()
+		auto pipeline = GraphicsPipeline::Builder(
+			Graphics::Get().GetRenderPass(), Graphics::Get().GetPipelineCache())
 							.SetShader(Shader::FromSourceFile({ "Resources/Shaders/Flat_Text.vert",
 								"Resources/Shaders/Flat_Text.frag" }))
 							.SetCullMode(VK_CULL_MODE_NONE)

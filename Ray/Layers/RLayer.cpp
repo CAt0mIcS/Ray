@@ -2,6 +2,7 @@
 
 #include "Scene/RScene.h"
 #include "Devices/RWindow.h"
+#include "Graphics/RGraphics.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
 
 namespace At0::Ray
@@ -25,7 +26,8 @@ namespace At0::Ray
 
 	GraphicsPipeline::Builder Layer::PipelineBuilder()
 	{
-		return GraphicsPipeline::Builder();
+		auto& graphics = GetWindow().GetRenderContext().graphics;
+		return GraphicsPipeline::Builder(graphics.GetRenderPass(), graphics.GetPipelineCache());
 	}
 
 	Ref<Shader> Layer::LoadShaderFromSourceFile(

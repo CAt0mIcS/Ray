@@ -101,7 +101,8 @@ namespace At0::Ray
 		// Pipeline/offDescriptor/offUniform
 		{
 			pipeline =
-				GraphicsPipeline::Builder()
+				GraphicsPipeline::Builder(
+					context.graphics.GetRenderPass(), context.graphics.GetPipelineCache())
 					.SetShader(Shader::FromSourceFile({ "Resources/Shaders/Offscreen.vert" }))
 					.SetRenderPass(*renderPass)
 					.SetDynamicStates({ VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR,

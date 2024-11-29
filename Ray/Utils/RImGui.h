@@ -44,6 +44,7 @@ namespace At0::Ray
 	class DescriptorSet;
 	class Sampler2DUniform;
 	class Window;
+	class RenderContext;
 
 	/**
 	 * RAY_TODO:

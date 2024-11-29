@@ -6,8 +6,6 @@
 
 namespace At0::Ray
 {
-	Entity Entity::Empty = Entity{};
-
 	Entity::Entity(entt::entity handle, entt::registry* registry)
 		: m_EntityHandle(handle), m_Registry(registry)
 	{

@@ -20,7 +20,8 @@ namespace At0::Ray
 		: Component(entity), EventListener<CameraChangedEvent>(Scene::Get().GetCamera())
 	{
 		auto pipeline =
-			GraphicsPipeline::Builder()
+			GraphicsPipeline::Builder(
+				Graphics::Get().GetRenderPass(), Graphics::Get().GetPipelineCache())
 				.SetShader(Ray::Shader::FromSourceFile(
 					{ "Resources/Shaders/Flat_Diff.vert", "Resources/Shaders/Flat_Diff.frag" }))
 				.SetCullMode(VK_CULL_MODE_FRONT_BIT)

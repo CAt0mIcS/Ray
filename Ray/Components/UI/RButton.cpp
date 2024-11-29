@@ -7,6 +7,7 @@
 
 #include "../RMesh.h"
 #include "../RMeshRenderer.h"
+#include "Graphics/RGraphics.h"
 
 
 namespace At0::Ray
@@ -15,7 +16,8 @@ namespace At0::Ray
 		float height, const Float4& color)
 		: Widget(entity, window, name), m_UseColorMaterial(true)
 	{
-		auto pipeline = GraphicsPipeline::Builder()
+		auto pipeline = GraphicsPipeline::Builder(
+			Graphics::Get().GetRenderPass(), Graphics::Get().GetPipelineCache())
 							.SetShader(Shader::FromSourceFile(
 								{ "Resources/Shaders/UI.vert", "Resources/Shaders/UI.frag" }))
 							.SetCullMode(VK_CULL_MODE_NONE)
@@ -34,7 +36,8 @@ namespace At0::Ray
 		float height, Ref<Texture> texture)
 		: Widget(entity, window, name), m_UseColorMaterial(false)
 	{
-		auto pipeline = GraphicsPipeline::Builder()
+		auto pipeline = GraphicsPipeline::Builder(
+			Graphics::Get().GetRenderPass(), Graphics::Get().GetPipelineCache())
 							.SetShader(Shader::FromSourceFile({ "Resources/Shaders/UI_Tex.vert",
 								"Resources/Shaders/UI_Tex.frag" }))
 							.SetCullMode(VK_CULL_MODE_NONE)

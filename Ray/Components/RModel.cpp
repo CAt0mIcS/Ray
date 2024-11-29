@@ -272,7 +272,8 @@ namespace At0::Ray
 		//		.Acquire();
 
 		auto pipeline =
-			GraphicsPipeline::Builder()
+			GraphicsPipeline::Builder(
+				Graphics::Get().GetRenderPass(), Graphics::Get().GetPipelineCache())
 				.SetShader(Shader::FromSourceFile({ "Resources/Shaders/ShadowMapping.vert",
 					"Resources/Shaders/ShadowMapping.frag" }))
 				.SetCullMode(twoSided == 0 ? VK_CULL_MODE_NONE : VK_CULL_MODE_BACK_BIT)

@@ -11,6 +11,7 @@
 namespace At0::Ray
 {
 	class RenderPass;
+	class RenderContext;
 
 	class RAY_EXPORT GraphicsPipeline : public Pipeline
 	{
@@ -64,6 +65,7 @@ namespace At0::Ray
 	private:
 		VkDescriptorPool m_DescriptorPool;
 		std::vector<std::pair<uint32_t, VkDescriptorSetLayout>> m_DescriptorSetLayouts;
+		const RenderContext& m_Context;
 
 	public:
 		class RAY_EXPORT Builder
@@ -73,7 +75,7 @@ namespace At0::Ray
 			 * Sets some defaults for most arguments
 			 * The shader must still be set.
 			 */
-			Builder();
+			Builder(const RenderPass& renderPass, VkPipelineCache pipelineCache);
 
 			Builder& SetRenderPass(const RenderPass& renderPass);
 			Builder& SetShader(Ref<Shader> shader);

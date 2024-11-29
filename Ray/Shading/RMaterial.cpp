@@ -7,6 +7,8 @@
 
 #include "Graphics/Images/RTexture2DAtlas.h"
 
+#include "Graphics/RGraphics.h"
+
 
 namespace At0::Ray
 {
@@ -45,7 +47,8 @@ namespace At0::Ray
 	const Ref<Material> Material::FlatWhite()
 	{
 		return Material::Builder(
-			GraphicsPipeline::Builder()
+			GraphicsPipeline::Builder(
+				Graphics::Get().GetRenderPass(), Graphics::Get().GetPipelineCache())
 				.SetShader(Shader::FromSourceFile(
 					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
 				.SetCullMode(VK_CULL_MODE_NONE)

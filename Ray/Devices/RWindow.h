@@ -137,6 +137,11 @@ namespace At0::Ray
 		 */
 		GLFWwindow* GetNative() { return m_hWnd; }
 
+		/**
+		 * @returns The RenderContext containing all vulkan rendering objects
+		 */
+		const RenderContext& GetRenderContext() const { return *m_RenderContext; }
+
 	private:
 		void SetEventCallbacks();
 

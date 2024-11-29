@@ -21,7 +21,7 @@ namespace At0::Ray
 		VkPipelineColorBlendAttachmentState* colorBlendAttachment,
 		VkPipelineColorBlendStateCreateInfo* colorBlending,
 		VkPipelineDynamicStateCreateInfo* dynamicStateInfo)
-		: Pipeline(std::move(shader))
+		: Pipeline(std::move(shader)), m_Context(renderPass.GetRenderContext())
 	{
 		CreateDescriptorSetLayouts();
 		CreateDescriptorPool();
@@ -33,11 +33,9 @@ namespace At0::Ray
 
 	GraphicsPipeline::~GraphicsPipeline()
 	{
-		vkDestroyDescriptorPool(
-			Graphics::Get().GetRenderContext().device, m_DescriptorPool, nullptr);
+		vkDestroyDescriptorPool(m_Context.device, m_DescriptorPool, nullptr);
 		for (auto [set, descSetLayout] : m_DescriptorSetLayouts)
-			vkDestroyDescriptorSetLayout(
-				Graphics::Get().GetRenderContext().device, descSetLayout, nullptr);
+			vkDestroyDescriptorSetLayout(m_Context.device, descSetLayout, nullptr);
 	}
 
 	Pipeline::BindPoint GraphicsPipeline::GetBindPoint() const
@@ -108,8 +106,8 @@ namespace At0::Ray
 			createInfo.bindingCount = layoutBindings.size();
 			createInfo.pBindings = layoutBindings.data();
 
-			ThrowVulkanError(vkCreateDescriptorSetLayout(Graphics::Get().GetRenderContext().device,
-								 &createInfo, nullptr, &m_DescriptorSetLayouts[i].second),
+			ThrowVulkanError(vkCreateDescriptorSetLayout(m_Context.device, &createInfo, nullptr,
+								 &m_DescriptorSetLayouts[i].second),
 				"[GraphicsPipeline] Failed to create descriptor set layout");
 
 			m_DescriptorSetLayouts[i].first = set;
@@ -134,8 +132,8 @@ namespace At0::Ray
 		createInfo.poolSizeCount = (uint32_t)descriptorPoolSizes.size();
 		createInfo.pPoolSizes = descriptorPoolSizes.data();
 
-		ThrowVulkanError(vkCreateDescriptorPool(Graphics::Get().GetRenderContext().device,
-							 &createInfo, nullptr, &m_DescriptorPool),
+		ThrowVulkanError(
+			vkCreateDescriptorPool(m_Context.device, &createInfo, nullptr, &m_DescriptorPool),
 			"[GraphicsPipeline] Failed to create descriptor pool");
 	}
 
@@ -158,8 +156,7 @@ namespace At0::Ray
 		createInfo.pushConstantRangeCount = (uint32_t)pushConstantRanges.size();
 		createInfo.pPushConstantRanges = pushConstantRanges.data();
 
-		ThrowVulkanError(vkCreatePipelineLayout(Graphics::Get().GetRenderContext().device,
-							 &createInfo, nullptr, &m_Layout),
+		ThrowVulkanError(vkCreatePipelineLayout(m_Context.device, &createInfo, nullptr, &m_Layout),
 			"[GraphicsPipeline] Failed to create layout");
 
 		Log::Info("[GraphicsPipeline] Created pipeline layout with {0} descriptor set layout(s) "
@@ -201,8 +198,8 @@ namespace At0::Ray
 		createInfo.basePipelineHandle = VK_NULL_HANDLE;
 		createInfo.basePipelineIndex = -1;
 
-		ThrowVulkanError(vkCreateGraphicsPipelines(Graphics::Get().GetRenderContext().device,
-							 pipelineCache, 1, &createInfo, nullptr, &m_Pipeline),
+		ThrowVulkanError(vkCreateGraphicsPipelines(
+							 m_Context.device, pipelineCache, 1, &createInfo, nullptr, &m_Pipeline),
 			"[GraphicsPipeline] Failed to create");
 	}
 
@@ -210,9 +207,8 @@ namespace At0::Ray
 	/////////////////////////////////////////////// BUILDER //////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	GraphicsPipeline::Builder::Builder()
-		: m_RenderPass(&Graphics::Get().GetRenderPass()),
-		  m_PipelineCache(Graphics::Get().GetPipelineCache())
+	GraphicsPipeline::Builder::Builder(const RenderPass& renderPass, VkPipelineCache pipelineCache)
+		: m_RenderPass(&renderPass), m_PipelineCache(pipelineCache)
 	{
 		m_VertexInput.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
