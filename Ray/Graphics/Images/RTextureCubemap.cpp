@@ -5,7 +5,9 @@
 
 namespace At0::Ray
 {
-	TextureCubemap::TextureCubemap(std::string_view filepath)
+	TextureCubemap::TextureCubemap(
+		RenderContext& context, Ref<CommandPool> transientCommandPool, std::string_view filepath)
+		: Image(context, std::move(transientCommandPool))
 	{
 		// ktxResult result;
 		// ktxTexture* ktxTexture;
@@ -67,7 +69,11 @@ namespace At0::Ray
 
 	TextureCubemap::~TextureCubemap() {}
 
-	TextureCubemap::TextureCubemap(TextureCubemap&& other) noexcept { *this = std::move(other); }
+	TextureCubemap::TextureCubemap(TextureCubemap&& other) noexcept
+		: Image(other.m_Context, std::move(other.m_TransientCommandPool))
+	{
+		*this = std::move(other);
+	}
 
 	TextureCubemap& TextureCubemap::operator=(TextureCubemap&& other) noexcept
 	{

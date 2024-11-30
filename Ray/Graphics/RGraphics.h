@@ -35,13 +35,13 @@ namespace At0::Ray
 	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
 	{
 	public:
-		Graphics(Window& window, const RenderContext& context);
+		Graphics(Window& window, RenderContext& context);
 		~Graphics();
 		static Graphics& Get();
 
 		const RenderContext& GetRenderContext() const { return m_Context; }
 		const Swapchain& GetSwapchain() const { return *m_Swapchain; }
-		const CommandPool& GetCommandPool() const { return *m_CommandPool; }
+		Ref<CommandPool> GetTransientCommandPool() { return m_TransientCommandPool; }
 		const RenderPass& GetRenderPass() const { return *m_RenderPass; }
 		VkPipelineCache GetPipelineCache() const { return m_PipelineCache; }
 		static uint32_t GetImageCount() { return s_MaxFramesInFlight; }
@@ -82,10 +82,11 @@ namespace At0::Ray
 
 		Window& m_Window;
 
-		const RenderContext& m_Context;
+		RenderContext& m_Context;
 
 		Scope<Swapchain> m_Swapchain;
 		Scope<CommandPool> m_CommandPool;
+		Ref<CommandPool> m_TransientCommandPool;
 		Scope<RenderPass> m_RenderPass;
 		VkPipelineCache m_PipelineCache = nullptr;
 		Scope<DepthImage> m_DepthImage;

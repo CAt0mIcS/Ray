@@ -7,7 +7,7 @@
 namespace At0::Ray
 {
 	ThreadPool::ThreadPool(uint32_t threadCount)
-		: m_ThreadCount(threadCount), m_Threads(MakeScope<std::thread[]>(threadCount)),
+		: m_ThreadCount(threadCount), m_Threads(std::make_unique<std::thread[]>(threadCount)),
 		  m_Shutdown(false)
 	{
 		Log::Info("[ThreadPool] Initialized {0} thread(s)", m_ThreadCount);

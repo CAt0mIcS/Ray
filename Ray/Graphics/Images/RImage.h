@@ -15,17 +15,16 @@ namespace At0::Ray
 {
 	class Buffer;
 	class ImageView;
+	class RenderContext;
+	class PhysicalDevice;
+	class CommandPool;
 
 	class RAY_EXPORT Image : public Resource, protected NonCopyable
 	{
 	public:
-		static Ref<Image> Acquire(UInt2 extent, VkImageType imageType, VkFormat format,
-			VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags memProps,
-			uint32_t mipLevels = 1, VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT,
-			uint32_t arrayLayers = 1, VkImageCreateFlags createFlags = 0);
-
-		Image(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
-			VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, uint32_t mipLevels = 1,
+		Image(RenderContext& context, Ref<CommandPool> transientCommandPool, UInt2 extent,
+			VkImageType imageType, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
+			VkMemoryPropertyFlags memProps, uint32_t mipLevels = 1,
 			VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t arrayLayers = 1,
 			VkImageCreateFlags createFlags = 0);
 		virtual ~Image();
@@ -55,16 +54,18 @@ namespace At0::Ray
 		Image& operator=(Image&& other) noexcept;
 		Image(Image&& other) noexcept;
 
-		static void TransitionLayout(VkImage image, VkImageLayout oldLayout,
-			VkImageLayout newLayout, uint32_t mipLevels = 1, uint32_t layerCount = 1);
-		static bool GenerateMipmaps(
-			VkImage image, VkFormat imageFormat, int32_t width, int32_t height, uint32_t mipLevels);
-		static std::vector<VkFormat> FindSupportedFormats(std::vector<VkFormat> candidates,
-			VkImageTiling tiling, VkFormatFeatureFlags featureFlags);
+		static void TransitionLayout(CommandPool& commandPool, VkImage image,
+			VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels = 1,
+			uint32_t layerCount = 1);
+		static bool GenerateMipmaps(CommandPool& commandPool, VkImage image, VkFormat imageFormat,
+			int32_t width, int32_t height, uint32_t mipLevels);
+		static std::vector<VkFormat> FindSupportedFormats(const PhysicalDevice& physicalDevice,
+			std::vector<VkFormat> candidates, VkImageTiling tiling,
+			VkFormatFeatureFlags featureFlags);
 
 	protected:
 		void Setup();
-		Image();
+		Image(RenderContext& context, Ref<CommandPool> transientCommandPool);
 
 	protected:
 		VkImage m_Image = VK_NULL_HANDLE;
@@ -83,12 +84,18 @@ namespace At0::Ray
 		uint32_t m_ArrayLayers = 1;
 		VkImageCreateFlags m_CreateFlags = 0;
 
+		RenderContext& m_Context;
+		Ref<CommandPool> m_TransientCommandPool;
+
 	public:
 		template<typename B>
 		class RAY_EXPORT BuilderBase
 		{
 		public:
-			BuilderBase() = default;
+			BuilderBase(RenderContext& context, Ref<CommandPool> transientCommandPool)
+				: m_Context(&context), m_TransientCommandPool(std::move(transientCommandPool))
+			{
+			}
 			virtual ~BuilderBase() = default;
 
 			B& SetExtent(UInt2 extent)
@@ -168,13 +175,17 @@ namespace At0::Ray
 			uint32_t m_ArrayLayers = 1;
 			VkImageCreateFlags m_CreateFlags = 0;
 			std::vector<uint8_t> m_Data;
+
+			RenderContext* m_Context;
+			Ref<CommandPool> m_TransientCommandPool;
 		};
 
 		class RAY_EXPORT Builder : public BuilderBase<Builder>
 		{
 		public:
+			Builder(RenderContext& context, Ref<CommandPool> transientCommandPool);
+
 			Ref<Image> Build();
-			Ref<Image> Acquire();
 
 		private:
 			void ThrowIfInvalidArguments() const;

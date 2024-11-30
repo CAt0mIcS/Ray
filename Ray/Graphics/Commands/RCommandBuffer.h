@@ -16,7 +16,7 @@ namespace At0::Ray
 	class RAY_EXPORT CommandBuffer : NonCopyable
 	{
 	public:
-		CommandBuffer(const CommandPool& commandPool,
+		CommandBuffer(CommandPool& commandPool,
 			VkCommandBufferLevel bufferLevel = VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 		virtual ~CommandBuffer();
 
@@ -37,7 +37,7 @@ namespace At0::Ray
 
 	private:
 		VkCommandBuffer m_CommandBuffer = VK_NULL_HANDLE;
-		const CommandPool* m_CommandPool;
+		CommandPool* m_CommandPool;
 
 		std::vector<SecondaryCommandBuffer> m_SecondaryCommandBuffers;
 	};
@@ -47,7 +47,7 @@ namespace At0::Ray
 	{
 	public:
 		SecondaryCommandBuffer(
-			const CommandPool& commandPool, VkCommandBufferInheritanceInfo inheritanceInfo);
+			CommandPool& commandPool, VkCommandBufferInheritanceInfo inheritanceInfo);
 
 		const VkCommandBufferInheritanceInfo* GetInheritanceInfo() const override;
 

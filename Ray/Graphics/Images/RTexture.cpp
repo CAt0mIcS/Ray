@@ -12,38 +12,19 @@
 
 namespace At0::Ray
 {
-	Texture::Texture(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
-		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, Scope<TextureSampler> sampler,
-		uint32_t mipLevels, VkImageAspectFlags imageAspect, uint32_t arrayLayers,
-		VkImageCreateFlags createFlags)
-		: Image(extent, imageType, format, tiling, usage, memProps, mipLevels, imageAspect,
-			  arrayLayers, createFlags),
+	Texture::Texture(RenderContext& context, Ref<CommandPool> transientCommandPool, UInt2 extent,
+		VkImageType imageType, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
+		VkMemoryPropertyFlags memProps, Scope<TextureSampler> sampler, uint32_t mipLevels,
+		VkImageAspectFlags imageAspect, uint32_t arrayLayers, VkImageCreateFlags createFlags)
+		: Image(context, std::move(transientCommandPool), extent, imageType, format, tiling, usage,
+			  memProps, mipLevels, imageAspect, arrayLayers, createFlags),
 		  m_Sampler(std::move(sampler))
 	{
 	}
 
-	Ref<Texture> Texture::Acquire(UInt2 extent, VkImageType imageType, VkFormat format,
-		VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags memProps,
-		Scope<TextureSampler> sampler, uint32_t mipLevels, VkImageAspectFlags imageAspect,
-		uint32_t arrayLayers, VkImageCreateFlags createFlags)
-	{
-		// RAY_TODO: Add sampler in resource tag
-
-		return ResourceManager::Get().EmplaceOrGet<Texture>(
-			String::Serialize("Texture{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}", extent.x, extent.y,
-				(uint32_t)imageType, (uint32_t)format, (uint32_t)tiling, (uint32_t)usage,
-				(uint32_t)memProps, mipLevels, (uint32_t)imageAspect, arrayLayers,
-				(uint32_t)createFlags),
-			std::move(extent), imageType, format, tiling, usage, memProps, std::move(sampler),
-			mipLevels, imageAspect, arrayLayers, createFlags);
-	}
-
-	Ref<Texture> Texture::Acquire(std::string_view filepath)
-	{
-		return ResourceManager::Get().EmplaceOrGet<Texture>(filepath.data(), filepath);
-	}
-
-	Texture::Texture(std::string_view filepath) RAY_DEBUG_FLAG( : m_FilePath(filepath))
+	Texture::Texture(
+		RenderContext& context, Ref<CommandPool> transientCommandPool, std::string_view filepath)
+		: Image(context, std::move(transientCommandPool)) RAY_DEBUG_FLAG(, m_FilePath(filepath))
 	{
 		int texWidth, texHeight, texChannels;
 		stbi_uc* pixels =
@@ -82,6 +63,11 @@ namespace At0::Ray
 	/////////////////////////////////////////////// BUILDER //////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	Texture::Builder::Builder(RenderContext& context, Ref<CommandPool> transientCommandPool)
+		: Image::BuilderBase<Texture::Builder>(context, std::move(transientCommandPool))
+	{
+	}
+
 	Texture::Builder& Texture::Builder::SetTextureSampler(Scope<TextureSampler> sampler)
 	{
 		m_Sampler = std::move(sampler);
@@ -94,26 +80,11 @@ namespace At0::Ray
 
 		// Default sampler
 		if (!m_Sampler)
-			m_Sampler = TextureSampler::Builder().BuildScoped();
+			m_Sampler = TextureSampler::Builder(*m_Context).BuildScoped();
 
-		auto texture =
-			MakeRef<Texture>(m_Extent, m_ImageType, m_Format, m_Tiling, m_Usage, m_MemoryProperties,
-				std::move(m_Sampler), m_MipLevels, m_ImageAspect, m_ArrayLayers, m_CreateFlags);
-		if (!m_Data.empty())
-			texture->CopyFromData(m_Data);
-		return texture;
-	}
-	Ref<Texture> Texture::Builder::Acquire()
-	{
-		ThrowIfInvalidArguments();
-
-		// Default sampler
-		if (!m_Sampler)
-			m_Sampler = TextureSampler::Builder().BuildScoped();
-
-		auto texture =
-			Texture::Acquire(m_Extent, m_ImageType, m_Format, m_Tiling, m_Usage, m_MemoryProperties,
-				std::move(m_Sampler), m_MipLevels, m_ImageAspect, m_ArrayLayers, m_CreateFlags);
+		auto texture = MakeRef<Texture>(*m_Context, std::move(m_TransientCommandPool), m_Extent,
+			m_ImageType, m_Format, m_Tiling, m_Usage, m_MemoryProperties, std::move(m_Sampler),
+			m_MipLevels, m_ImageAspect, m_ArrayLayers, m_CreateFlags);
 		if (!m_Data.empty())
 			texture->CopyFromData(m_Data);
 		return texture;

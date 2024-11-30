@@ -9,7 +9,7 @@
 
 namespace At0::Ray
 {
-	RenderPass::RenderPass(const RenderContext& context,
+	RenderPass::RenderPass(RenderContext& context,
 		const std::vector<VkAttachmentDescription>& attachments,
 		const std::vector<VkSubpassDescription>& subpasses,
 		const std::vector<VkSubpassDependency>& dependencies)

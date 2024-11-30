@@ -55,6 +55,6 @@ namespace At0::Ray
 		// [imageIndex][thread]
 		std::vector<std::vector<SecondaryResources>> m_CommandResources;
 
-		const RenderContext& m_Context;
+		RenderContext& m_Context;
 	};
 }  // namespace At0::Ray

@@ -160,7 +160,7 @@ namespace At0::Ray
 	{
 		// RAY_TODO: Create separate command pool for short-lived command buffers
 
-		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
+		CommandBuffer commandBuffer(*Graphics::Get().GetTransientCommandPool());
 		commandBuffer.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
 		VkBufferCopy bufferCopy{};

@@ -8,11 +8,12 @@
 
 namespace At0::Ray
 {
-	TextureSampler::TextureSampler(VkFilter magFilter, VkFilter minFilter,
-		VkSamplerMipmapMode mipmapMode, VkSamplerAddressMode addressModeU,
+	TextureSampler::TextureSampler(const RenderContext& context, VkFilter magFilter,
+		VkFilter minFilter, VkSamplerMipmapMode mipmapMode, VkSamplerAddressMode addressModeU,
 		VkSamplerAddressMode addressModeV, VkSamplerAddressMode addressModeW, float mipLodBias,
 		VkBool32 compareEnable, VkCompareOp compareOp, float minLod, float maxLod,
 		VkBorderColor borderColor, VkSamplerCreateFlags flags)
+		: m_Context(context)
 	{
 		VkSamplerCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -23,13 +24,11 @@ namespace At0::Ray
 		createInfo.addressModeV = addressModeV;
 		createInfo.addressModeW = addressModeW;
 
-		if (Graphics::Get().GetRenderContext().device.IsEnabled(DeviceFeature::SamplerAnisotropy))
+		if (m_Context.device.IsEnabled(DeviceFeature::SamplerAnisotropy))
 		{
 			createInfo.anisotropyEnable = VK_TRUE;
-			createInfo.maxAnisotropy = Graphics::Get()
-										   .GetRenderContext()
-										   .physicalDevice.GetProperties()
-										   .limits.maxSamplerAnisotropy;
+			createInfo.maxAnisotropy =
+				m_Context.physicalDevice.GetProperties().limits.maxSamplerAnisotropy;
 		}
 		else
 			createInfo.anisotropyEnable = VK_FALSE;
@@ -46,19 +45,20 @@ namespace At0::Ray
 
 		createInfo.flags = flags;
 
-		ThrowVulkanError(vkCreateSampler(Graphics::Get().GetRenderContext().device, &createInfo,
-							 nullptr, &m_Sampler),
+		ThrowVulkanError(vkCreateSampler(m_Context.device, &createInfo, nullptr, &m_Sampler),
 			"[TextureSampler] Failed to create");
 	}
 
 	TextureSampler::~TextureSampler()
 	{
-		vkDestroySampler(Graphics::Get().GetRenderContext().device, m_Sampler, nullptr);
+		vkDestroySampler(m_Context.device, m_Sampler, nullptr);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////// BUILDER //////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	TextureSampler::Builder::Builder(RenderContext& context) : m_Context(&context) {}
 
 	TextureSampler::Builder& TextureSampler::Builder::SetMagFilter(VkFilter magFilter)
 	{
@@ -132,9 +132,9 @@ namespace At0::Ray
 
 	Scope<TextureSampler> TextureSampler::Builder::BuildScoped()
 	{
-		return MakeScope<TextureSampler>(m_MagFilter, m_MinFilter, m_MipmapMode, m_AddressModeU,
-			m_AddressModeV, m_AddressModeW, m_MipLodBias, m_CompareEnable, m_CompareOp, m_MinLod,
-			m_MaxLod, m_BorderColor, m_Flags);
+		return MakeScope<TextureSampler>(*m_Context, m_MagFilter, m_MinFilter, m_MipmapMode,
+			m_AddressModeU, m_AddressModeV, m_AddressModeW, m_MipLodBias, m_CompareEnable,
+			m_CompareOp, m_MinLod, m_MaxLod, m_BorderColor, m_Flags);
 	}
 
 }  // namespace At0::Ray

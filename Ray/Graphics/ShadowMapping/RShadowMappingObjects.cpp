@@ -27,7 +27,9 @@ constexpr float depthBiasSlope = 1.75f;
 
 namespace At0::Ray
 {
-	ShadowMappingObjects::ShadowMappingObjects(const RenderContext& context) : context(context)
+	ShadowMappingObjects::ShadowMappingObjects(
+		RenderContext& context, Ref<CommandPool> transientCommandPool)
+		: context(context)
 	{
 		// RenderPass
 		{
@@ -64,7 +66,7 @@ namespace At0::Ray
 		// Framebuffer
 		{
 			framebufferImage =
-				Texture::Builder()
+				Texture::Builder(context, std::move(transientCommandPool))
 					.SetImageType(VK_IMAGE_TYPE_2D)
 					.SetExtent(UInt2{ SHADOWMAP_DIM })
 					.SetMipLevels(1)
@@ -75,7 +77,7 @@ namespace At0::Ray
 					.SetMemoryProperties(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
 					.SetImageAspect(VK_IMAGE_ASPECT_DEPTH_BIT)
 					.SetTextureSampler(
-						TextureSampler::Builder()
+						TextureSampler::Builder(context)
 							.SetMinFilter(context.physicalDevice.IsFormatLinearlyFilterable(
 											  DEPTH_FORMAT, VK_IMAGE_TILING_OPTIMAL) ?
 											  VK_FILTER_LINEAR :

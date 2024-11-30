@@ -8,11 +8,14 @@
 namespace At0::Ray
 {
 	class TextureSampler;
+	class RenderContext;
+	class CommandPool;
 
 	class RAY_EXPORT TextureCubemap : public Image
 	{
 	public:
-		TextureCubemap(std::string_view filepath);
+		TextureCubemap(RenderContext& context, Ref<CommandPool> transientCommandPool,
+			std::string_view filepath);
 		~TextureCubemap();
 
 		TextureCubemap(TextureCubemap&& other) noexcept;

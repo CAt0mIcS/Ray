@@ -103,7 +103,8 @@ namespace At0::Ray
 
 		// Create target image for copy
 		m_FontImage =
-			Texture::Builder()
+			Texture::Builder(m_Window.GetRenderContext(),
+				m_Window.GetRenderContext().graphics.GetTransientCommandPool())
 				.SetExtent({ texWidth, texHeight })
 				.SetFormat(VK_FORMAT_R8G8B8A8_UNORM)
 				.SetImageUsage(VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT)

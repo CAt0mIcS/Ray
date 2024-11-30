@@ -20,10 +20,11 @@ namespace At0::Ray
 	class BufferUniform;
 	class CommandBuffer;
 	class RenderContext;
+	class CommandPool;
 
 	struct RAY_EXPORT ShadowMappingObjects
 	{
-		ShadowMappingObjects(const RenderContext& context);
+		ShadowMappingObjects(RenderContext& context, Ref<CommandPool> transientCommandPool);
 		~ShadowMappingObjects();
 
 		Matrix CalculateDepthModelViewProjectionMatrix() const;

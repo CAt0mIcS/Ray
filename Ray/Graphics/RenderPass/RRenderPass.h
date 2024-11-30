@@ -17,8 +17,7 @@ namespace At0::Ray
 	class RAY_EXPORT RenderPass : NonCopyable
 	{
 	public:
-		RenderPass(const RenderContext& context,
-			const std::vector<VkAttachmentDescription>& attachments,
+		RenderPass(RenderContext& context, const std::vector<VkAttachmentDescription>& attachments,
 			const std::vector<VkSubpassDescription>& subpasses,
 			const std::vector<VkSubpassDependency>& dependencies);
 		~RenderPass();
@@ -29,10 +28,10 @@ namespace At0::Ray
 		void End(const CommandBuffer& cmdBuff) const;
 
 		operator VkRenderPass() const { return m_Renderpass; }
-		const RenderContext& GetRenderContext() const { return m_Context; }
+		RenderContext& GetRenderContext() const { return m_Context; }
 
 	private:
 		VkRenderPass m_Renderpass;
-		const RenderContext& m_Context;
+		RenderContext& m_Context;
 	};
 }  // namespace At0::Ray

@@ -145,6 +145,7 @@ namespace At0::Ray
 		 * @returns The RenderContext containing all vulkan rendering objects
 		 */
 		const RenderContext& GetRenderContext() const { return *m_RenderContext; }
+		RenderContext& GetRenderContext() { return *m_RenderContext; }
 
 		Ref<Scene> GetActiveScene() { return m_ActiveScene.lock(); }
 

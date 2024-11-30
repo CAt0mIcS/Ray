@@ -41,7 +41,7 @@ namespace At0::Ray
 {
 	Graphics* Graphics::s_Instance = nullptr;
 
-	Graphics::Graphics(Window& window, const RenderContext& context)
+	Graphics::Graphics(Window& window, RenderContext& context)
 		: m_Window(window), m_Context(context), EventListener<FramebufferResizedEvent>(window)
 	{
 		if (s_Instance)
@@ -60,8 +60,10 @@ namespace At0::Ray
 		m_Swapchain = MakeScope<Swapchain>(m_Window.GetFramebufferSize());
 		m_CommandPool =
 			MakeScope<CommandPool>(m_Context, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
+		m_TransientCommandPool =
+			MakeRef<CommandPool>(m_Context, VK_COMMAND_POOL_CREATE_TRANSIENT_BIT);
 
-		m_DepthImage = MakeScope<DepthImage>(
+		m_DepthImage = MakeScope<DepthImage>(m_Context, m_TransientCommandPool,
 			UInt2{ GetSwapchain().GetExtent().x, GetSwapchain().GetExtent().y });
 
 		CreateRenderPass();
@@ -71,7 +73,7 @@ namespace At0::Ray
 
 		CreateSyncObjects();
 
-		m_ShadowMapping = MakeScope<ShadowMappingObjects>(m_Context);
+		m_ShadowMapping = MakeScope<ShadowMappingObjects>(m_Context, m_TransientCommandPool);
 	}
 
 	Graphics& Graphics::Get()
@@ -426,6 +428,7 @@ namespace At0::Ray
 		m_RenderPass.reset();
 
 		m_CommandPool.reset();
+		m_TransientCommandPool.reset();
 		m_Swapchain.reset();
 	}
 
@@ -470,10 +473,13 @@ namespace At0::Ray
 		m_Swapchain =
 			MakeScope<Swapchain>(m_Window.GetFramebufferSize(), (VkSwapchainKHR)*m_Swapchain);
 		m_CommandPool.reset();
+		m_TransientCommandPool.reset();
 
 		m_CommandPool =
 			MakeScope<CommandPool>(m_Context, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
-		m_DepthImage = MakeScope<DepthImage>(
+		m_TransientCommandPool =
+			MakeScope<CommandPool>(m_Context, VK_COMMAND_POOL_CREATE_TRANSIENT_BIT);
+		m_DepthImage = MakeScope<DepthImage>(m_Context, m_TransientCommandPool,
 			UInt2{ GetSwapchain().GetExtent().x, GetSwapchain().GetExtent().y });
 		CreateRenderPass();
 		UpdateViewport();

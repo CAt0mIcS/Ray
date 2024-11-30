@@ -1,13 +1,16 @@
 ﻿#include "RTexture2DAtlas.h"
 
 #include "Graphics/Buffers/RBuffer.h"
+#include "Graphics/Images/RTextureSampler.h"
 
 
 namespace At0::Ray
 {
-	Texture2DAtlas::Texture2DAtlas(UInt2 extent, VkFormat format, VkImageTiling tiling,
-		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps)
-		: Texture(extent, VK_IMAGE_TYPE_2D, format, tiling, usage, memProps)
+	Texture2DAtlas::Texture2DAtlas(RenderContext& context, Ref<CommandPool> transientCommandPool,
+		UInt2 extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
+		VkMemoryPropertyFlags memProps)
+		: Texture(context, std::move(transientCommandPool), extent, VK_IMAGE_TYPE_2D, format,
+			  tiling, usage, memProps, TextureSampler::Builder(context).BuildScoped())
 	{
 		m_FreeAreas.emplace_back(UInt2{ 0, 0 }, extent);
 	}

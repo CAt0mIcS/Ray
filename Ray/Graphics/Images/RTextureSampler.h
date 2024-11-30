@@ -3,6 +3,7 @@
 #include "../../RBase.h"
 
 #include <vulkan/vulkan_core.h>
+#include "../Core/RRenderContext.h"
 
 
 namespace At0::Ray
@@ -10,24 +11,24 @@ namespace At0::Ray
 	class RAY_EXPORT TextureSampler
 	{
 	public:
-		TextureSampler() = default;
-		TextureSampler(VkFilter magFilter, VkFilter minFilter, VkSamplerMipmapMode mipmapMode,
-			VkSamplerAddressMode addressModeU, VkSamplerAddressMode addressModeV,
-			VkSamplerAddressMode addressModeW, float mipLodBias, VkBool32 compareEnable,
-			VkCompareOp compareOp, float minLod, float maxLod, VkBorderColor borderColor,
-			VkSamplerCreateFlags flags);
+		TextureSampler(const RenderContext& context, VkFilter magFilter, VkFilter minFilter,
+			VkSamplerMipmapMode mipmapMode, VkSamplerAddressMode addressModeU,
+			VkSamplerAddressMode addressModeV, VkSamplerAddressMode addressModeW, float mipLodBias,
+			VkBool32 compareEnable, VkCompareOp compareOp, float minLod, float maxLod,
+			VkBorderColor borderColor, VkSamplerCreateFlags flags);
 		~TextureSampler();
 
-		operator const VkSampler&() const { return m_Sampler; }
+		operator VkSampler() const { return m_Sampler; }
 
 	private:
 		VkSampler m_Sampler = VK_NULL_HANDLE;
+		const RenderContext& m_Context;
 
 	public:
 		class RAY_EXPORT Builder
 		{
 		public:
-			Builder() = default;
+			Builder(RenderContext& context);
 
 			Builder& SetMagFilter(VkFilter magFilter);
 			Builder& SetMinFilter(VkFilter minFilter);
@@ -59,6 +60,7 @@ namespace At0::Ray
 			float m_MaxLod = 0.0f;
 			VkBorderColor m_BorderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
 			VkSamplerCreateFlags m_Flags = 0;
+			RenderContext* m_Context;
 		};
 	};
 }  // namespace At0::Ray

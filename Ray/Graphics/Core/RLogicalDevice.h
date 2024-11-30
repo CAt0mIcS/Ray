@@ -55,7 +55,7 @@ namespace At0::Ray
 		bool IsEnabled(DeviceFeature feature) const;
 
 		static const std::vector<const char*>& GetDeviceExtensions() { return s_DeviceExtensions; }
-		operator const VkDevice&() const { return m_Device; }
+		operator VkDevice() const { return m_Device; }
 
 		uint32_t GetGraphicsFamily() const { return m_GraphicsFamily; }
 		uint32_t GetPresentFamily() const { return m_PresentFamily; }

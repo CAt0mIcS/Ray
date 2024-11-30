@@ -1,10 +1,9 @@
 ﻿#include "RImage.h"
 
-#include "Core/RResourceManager.h"
-#include "Graphics/RGraphics.h"
 #include "Graphics/Core/RPhysicalDevice.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Commands/RCommandBuffer.h"
+#include "Graphics/Commands/RCommandPool.h"
 #include "Graphics/Buffers/RBuffer.h"
 #include "RImageView.h"
 #include "Graphics/Core/RRenderContext.h"
@@ -15,26 +14,12 @@
 
 namespace At0::Ray
 {
-	Ref<Image> Image::Acquire(UInt2 extent, VkImageType imageType, VkFormat format,
-		VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags memProps,
-		uint32_t mipLevels, VkImageAspectFlags imageAspect, uint32_t arrayLayers,
-		VkImageCreateFlags createFlags)
-	{
-		// RAY_TODO: Add data to ressource tag
-
-		return ResourceManager::Get().EmplaceOrGet<Image>(
-			String::Serialize("Image{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}", extent.x, extent.y,
-				(uint32_t)imageType, (uint32_t)format, (uint32_t)tiling, (uint32_t)usage,
-				(uint32_t)memProps, mipLevels, (uint32_t)imageAspect, arrayLayers,
-				(uint32_t)createFlags),
-			std::move(extent), imageType, format, tiling, usage, memProps, mipLevels, imageAspect,
-			arrayLayers, createFlags);
-	}
-
-	Image::Image(UInt2 extent, VkImageType imageType, VkFormat format, VkImageTiling tiling,
-		VkImageUsageFlags usage, VkMemoryPropertyFlags memProps, uint32_t mipLevels,
-		VkImageAspectFlags imageAspect, uint32_t arrayLayers, VkImageCreateFlags createFlags)
-		: m_Extent(extent), m_ImageType(imageType), m_Format(format), m_Tiling(tiling),
+	Image::Image(RenderContext& context, Ref<CommandPool> transientCommandPool, UInt2 extent,
+		VkImageType imageType, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
+		VkMemoryPropertyFlags memProps, uint32_t mipLevels, VkImageAspectFlags imageAspect,
+		uint32_t arrayLayers, VkImageCreateFlags createFlags)
+		: m_Context(context), m_TransientCommandPool(std::move(transientCommandPool)),
+		  m_Extent(extent), m_ImageType(imageType), m_Format(format), m_Tiling(tiling),
 		  m_Usage(usage), m_MemoryProperties(memProps), m_MipLevels(mipLevels),
 		  m_ImageAspect(imageAspect), m_ArrayLayers(arrayLayers), m_CreateFlags(createFlags)
 	{
@@ -43,13 +28,14 @@ namespace At0::Ray
 
 	Image::~Image()
 	{
-		vkDestroyImage(Graphics::Get().GetRenderContext().device, m_Image, nullptr);
-		vkFreeMemory(Graphics::Get().GetRenderContext().device, m_ImageMemory, nullptr);
+		vkDestroyImage(m_Context.device, m_Image, nullptr);
+		vkFreeMemory(m_Context.device, m_ImageMemory, nullptr);
 	}
 
 	void Image::TransitionLayout(VkImageLayout newLayout)
 	{
-		TransitionLayout(m_Image, m_ImageLayout, newLayout, m_MipLevels, m_ArrayLayers);
+		TransitionLayout(
+			*m_TransientCommandPool, m_Image, m_ImageLayout, newLayout, m_MipLevels, m_ArrayLayers);
 		m_ImageLayout = newLayout;
 	}
 
@@ -59,7 +45,8 @@ namespace At0::Ray
 			"[Image] Cannot generate mipmaps if the image was not created with usage flag "
 			"VK_IMAGE_USAGE_TRANSFER_SRC_BIT");
 
-		if (GenerateMipmaps(m_Image, m_Format, m_Extent.x, m_Extent.y, m_MipLevels))
+		if (GenerateMipmaps(
+				*m_TransientCommandPool, m_Image, m_Format, m_Extent.x, m_Extent.y, m_MipLevels))
 		{
 			m_ImageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			return true;
@@ -73,8 +60,7 @@ namespace At0::Ray
 		VkFormatProperties formatProps;
 
 		// Check if the device supports blitting from optimal/linear images
-		vkGetPhysicalDeviceFormatProperties(
-			Graphics::Get().GetRenderContext().physicalDevice, m_Format, &formatProps);
+		vkGetPhysicalDeviceFormatProperties(m_Context.physicalDevice, m_Format, &formatProps);
 		if (!(formatProps.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT) ||
 			!(formatProps.linearTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT))
 		{
@@ -84,11 +70,11 @@ namespace At0::Ray
 		}
 
 		// Create the linear tiled destination image to copy to and to read the memory from
-		Image dstImage(m_Extent, VK_IMAGE_TYPE_2D, m_Format, VK_IMAGE_TILING_LINEAR,
-			VK_IMAGE_USAGE_TRANSFER_DST_BIT,
+		Image dstImage(m_Context, m_TransientCommandPool, m_Extent, VK_IMAGE_TYPE_2D, m_Format,
+			VK_IMAGE_TILING_LINEAR, VK_IMAGE_USAGE_TRANSFER_DST_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-		CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
+		CommandBuffer cmdBuff(*m_TransientCommandPool);
 		cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
 		dstImage.TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
@@ -134,8 +120,8 @@ namespace At0::Ray
 
 		cmdBuff.End();
 		// RAY_TODO: Get best queue
-		cmdBuff.Submit(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
+		cmdBuff.Submit(m_Context.device.GetGraphicsQueue());
+		vkQueueWaitIdle(m_Context.device.GetGraphicsQueue());
 
 		dstImage.TransitionLayout(VK_IMAGE_LAYOUT_GENERAL);
 		TransitionLayout(oldLayout);
@@ -143,11 +129,10 @@ namespace At0::Ray
 		// Get layout of the image (including row pitch)
 		VkImageSubresource subResource{ VK_IMAGE_ASPECT_COLOR_BIT, 0, 0 };
 		VkSubresourceLayout subResourceLayout;
-		vkGetImageSubresourceLayout(
-			Graphics::Get().GetRenderContext().device, dstImage, &subResource, &subResourceLayout);
+		vkGetImageSubresourceLayout(m_Context.device, dstImage, &subResource, &subResourceLayout);
 		const char* data = nullptr;
-		vkMapMemory(Graphics::Get().GetRenderContext().device, dstImage.GetImageMemory(), 0,
-			VK_WHOLE_SIZE, 0, (void**)&data);
+		vkMapMemory(
+			m_Context.device, dstImage.GetImageMemory(), 0, VK_WHOLE_SIZE, 0, (void**)&data);
 		data += subResourceLayout.offset;
 
 		std::ofstream file(filepath.data(), std::ios::out | std::ios::binary);
@@ -190,13 +175,13 @@ namespace At0::Ray
 		file.close();
 	}
 
-	void Image::TransitionLayout(VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout,
-		uint32_t mipLevels, uint32_t layerCount)
+	void Image::TransitionLayout(CommandPool& commandPool, VkImage image, VkImageLayout oldLayout,
+		VkImageLayout newLayout, uint32_t mipLevels, uint32_t layerCount)
 	{
 		if (oldLayout == newLayout)
 			return;
 
-		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
+		CommandBuffer commandBuffer(commandPool);
 		commandBuffer.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
 		VkImageMemoryBarrier barrier{};
@@ -267,16 +252,16 @@ namespace At0::Ray
 		commandBuffer.End();
 
 		// RAY_TODO: Get best queue
-		commandBuffer.Submit(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
+		commandBuffer.Submit(commandPool.GetRenderContext().device.GetGraphicsQueue());
+		vkQueueWaitIdle(commandPool.GetRenderContext().device.GetGraphicsQueue());
 	}
 
-	bool Image::GenerateMipmaps(
-		VkImage image, VkFormat imageFormat, int32_t width, int32_t height, uint32_t mipLevels)
+	bool Image::GenerateMipmaps(CommandPool& commandPool, VkImage image, VkFormat imageFormat,
+		int32_t width, int32_t height, uint32_t mipLevels)
 	{
+		RenderContext& context = commandPool.GetRenderContext();
 		VkFormatProperties formatProps;
-		vkGetPhysicalDeviceFormatProperties(
-			Graphics::Get().GetRenderContext().physicalDevice, imageFormat, &formatProps);
+		vkGetPhysicalDeviceFormatProperties(context.physicalDevice, imageFormat, &formatProps);
 
 		if (!(formatProps.optimalTilingFeatures &
 				VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT))
@@ -286,7 +271,7 @@ namespace At0::Ray
 			return false;
 		}
 
-		CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
+		CommandBuffer cmdBuff(commandPool);
 		cmdBuff.Begin();
 
 		VkImageMemoryBarrier barrier{};
@@ -357,8 +342,8 @@ namespace At0::Ray
 		cmdBuff.End();
 
 		// RAY_TODO: Transfer queue with graphics capabilities is faster
-		cmdBuff.Submit(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
+		cmdBuff.Submit(context.device.GetGraphicsQueue());
+		vkQueueWaitIdle(context.device.GetGraphicsQueue());
 		return true;
 	}  // namespace At0::Ray
 
@@ -368,7 +353,7 @@ namespace At0::Ray
 		if (m_ImageLayout != VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
 			TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
-		CommandBuffer commandBuffer(Graphics::Get().GetCommandPool());
+		CommandBuffer commandBuffer(*m_TransientCommandPool);
 		commandBuffer.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
 		VkBufferImageCopy region{};
@@ -392,8 +377,8 @@ namespace At0::Ray
 		commandBuffer.End();
 
 		// RAY_TODO: Get best queue
-		commandBuffer.Submit(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
+		commandBuffer.Submit(m_Context.device.GetGraphicsQueue());
+		vkQueueWaitIdle(m_Context.device.GetGraphicsQueue());
 	}
 
 	void Image::CopyFromData(const std::vector<uint8_t>& data)
@@ -421,7 +406,7 @@ namespace At0::Ray
 		VkImageLayout oldLayout = m_ImageLayout;
 		TransitionLayout(VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
 
-		CommandBuffer cmdBuff(Graphics::Get().GetCommandPool());
+		CommandBuffer cmdBuff(*m_TransientCommandPool);
 		cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
 		VkBufferImageCopy region{};
@@ -449,8 +434,8 @@ namespace At0::Ray
 		cmdBuff.End();
 
 		// RAY_TODO: Get best queue
-		cmdBuff.Submit(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
-		vkQueueWaitIdle(Graphics::Get().GetRenderContext().device.GetGraphicsQueue());
+		cmdBuff.Submit(m_Context.device.GetGraphicsQueue());
+		vkQueueWaitIdle(m_Context.device.GetGraphicsQueue());
 
 		TransitionLayout(oldLayout);
 		return std::move(dstBuffer);
@@ -466,19 +451,18 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Image::Image(Image&& other) noexcept
+	Image::Image(Image&& other) noexcept : m_Context(other.m_Context)
 	{
 		*this = std::move(other);
 	}
 
-	std::vector<VkFormat> Image::FindSupportedFormats(
+	std::vector<VkFormat> Image::FindSupportedFormats(const PhysicalDevice& physicalDevice,
 		std::vector<VkFormat> candidates, VkImageTiling tiling, VkFormatFeatureFlags featureFlags)
 	{
 		for (int32_t i = candidates.size() - 1; i >= 0; --i)
 		{
 			VkFormatProperties formatProps;
-			vkGetPhysicalDeviceFormatProperties(
-				Graphics::Get().GetRenderContext().physicalDevice, candidates[i], &formatProps);
+			vkGetPhysicalDeviceFormatProperties(physicalDevice, candidates[i], &formatProps);
 
 			if (tiling == VK_IMAGE_TILING_LINEAR &&
 				(formatProps.linearTilingFeatures & featureFlags) != featureFlags)
@@ -497,9 +481,8 @@ namespace At0::Ray
 
 	void Image::Setup()
 	{
-		std::array queueFamily = { Graphics::Get().GetRenderContext().device.GetGraphicsFamily(),
-			Graphics::Get().GetRenderContext().device.GetPresentFamily(),
-			Graphics::Get().GetRenderContext().device.GetComputeFamily() };
+		std::array queueFamily = { m_Context.device.GetGraphicsFamily(),
+			m_Context.device.GetPresentFamily(), m_Context.device.GetComputeFamily() };
 
 		VkImageCreateInfo imageCreateInfo{};
 		imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -517,26 +500,22 @@ namespace At0::Ray
 		imageCreateInfo.pQueueFamilyIndices = queueFamily.data();
 		imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-		ThrowVulkanError(vkCreateImage(Graphics::Get().GetRenderContext().device, &imageCreateInfo,
-							 nullptr, &m_Image),
+		ThrowVulkanError(vkCreateImage(m_Context.device, &imageCreateInfo, nullptr, &m_Image),
 			"[Image] Failed to create");
 
 		VkMemoryRequirements memRequirements;
-		vkGetImageMemoryRequirements(
-			Graphics::Get().GetRenderContext().device, m_Image, &memRequirements);
+		vkGetImageMemoryRequirements(m_Context.device, m_Image, &memRequirements);
 
 		VkMemoryAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex =
-			Graphics::Get().GetRenderContext().physicalDevice.FindMemoryType(
-				memRequirements.memoryTypeBits, m_MemoryProperties);
+		allocInfo.memoryTypeIndex = m_Context.physicalDevice.FindMemoryType(
+			memRequirements.memoryTypeBits, m_MemoryProperties);
 
-		ThrowVulkanError(vkAllocateMemory(Graphics::Get().GetRenderContext().device, &allocInfo,
-							 nullptr, &m_ImageMemory),
+		ThrowVulkanError(vkAllocateMemory(m_Context.device, &allocInfo, nullptr, &m_ImageMemory),
 			"[Image] Failed to allocate image memory");
 
-		vkBindImageMemory(Graphics::Get().GetRenderContext().device, m_Image, m_ImageMemory, 0);
+		vkBindImageMemory(m_Context.device, m_Image, m_ImageMemory, 0);
 
 		// Create image view only for supported image usages
 		if ((m_Usage & VK_IMAGE_USAGE_SAMPLED_BIT) || (m_Usage & VK_IMAGE_USAGE_STORAGE_BIT) ||
@@ -549,24 +528,28 @@ namespace At0::Ray
 			m_ImageView = MakeScope<ImageView>(*this);
 	}
 
-	Image::Image() {}
+	Image::Image(RenderContext& context, Ref<CommandPool> transientCommandPool)
+		: m_Context(context), m_TransientCommandPool(std::move(transientCommandPool))
+	{
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////// BUILDER //////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	Image::Builder::Builder(RenderContext& context, Ref<CommandPool> transientCommandPool)
+		: Image::BuilderBase<Image::Builder>(context, std::move(transientCommandPool))
+	{
+	}
+
 	Ref<Image> Image::Builder::Build()
 	{
 		ThrowIfInvalidArguments();
-		return MakeRef<Image>(m_Extent, m_ImageType, m_Format, m_Tiling, m_Usage,
-			m_MemoryProperties, m_MipLevels, m_ImageAspect, m_ArrayLayers, m_CreateFlags);
+		return MakeRef<Image>(*m_Context, std::move(m_TransientCommandPool), m_Extent, m_ImageType,
+			m_Format, m_Tiling, m_Usage, m_MemoryProperties, m_MipLevels, m_ImageAspect,
+			m_ArrayLayers, m_CreateFlags);
 	}
-	Ref<Image> Image::Builder::Acquire()
-	{
-		ThrowIfInvalidArguments();
-		return Image::Acquire(m_Extent, m_ImageType, m_Format, m_Tiling, m_Usage,
-			m_MemoryProperties, m_MipLevels, m_ImageAspect, m_ArrayLayers, m_CreateFlags);
-	}
+
 	void Image::Builder::ThrowIfInvalidArguments() const
 	{
 		RAY_MEXPECTS(m_Extent != UInt2(-1, -1), "[Image::Builder] Image extent not specified");
@@ -575,5 +558,6 @@ namespace At0::Ray
 			"[Image::Builder] Image usage not specified");
 		RAY_MEXPECTS(m_MemoryProperties != VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM,
 			"[Image::Builder] Image memory properties not specified");
+		RAY_MEXPECTS(m_TransientCommandPool, "[Image::Builder] Invalid image command pool");
 	}
 }  // namespace At0::Ray

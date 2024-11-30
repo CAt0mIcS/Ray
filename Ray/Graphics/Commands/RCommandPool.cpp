@@ -7,7 +7,7 @@
 
 namespace At0::Ray
 {
-	CommandPool::CommandPool(const RenderContext& context, VkCommandPoolCreateFlags flags)
+	CommandPool::CommandPool(RenderContext& context, VkCommandPoolCreateFlags flags)
 		: m_Context(context)
 	{
 		VkCommandPoolCreateInfo createInfo{};

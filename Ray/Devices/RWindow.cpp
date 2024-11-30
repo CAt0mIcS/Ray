@@ -450,77 +450,77 @@ namespace At0::Ray
 
 	void Window::GenerateHoverEvents()
 	{
-		auto activeScene = m_ActiveScene.lock();
-		if (!activeScene)
-			return;
+		// auto activeScene = m_ActiveScene.lock();
+		// if (!activeScene)
+		//	return;
 
-		auto btnView = activeScene->EntityView<Button>();
-		for (auto enttBtnEntity : btnView)
-		{
-			Entity btnEntity(enttBtnEntity, &activeScene->GetRegistry());
-			Button& btn = btnEntity.Get<Button>();
-			if (!Mouse::IsOnWidget(btn) && &btn == m_HoverWidget)
-			{
-				Log::Trace("[Window] HoverLeaveEvent \"{0}\" (Listeners: {1})",
-					m_HoverWidget->GetName(), EventDispatcher<HoverLeaveEvent>::Get().size());
+		// auto btnView = activeScene->EntityView<Button>();
+		// for (auto enttBtnEntity : btnView)
+		//{
+		//	Entity btnEntity(enttBtnEntity, &activeScene->GetRegistry());
+		//	Button& btn = btnEntity.Get<Button>();
+		//	if (!Mouse::IsOnWidget(btn) && &btn == m_HoverWidget)
+		//	{
+		//		Log::Trace("[Window] HoverLeaveEvent \"{0}\" (Listeners: {1})",
+		//			m_HoverWidget->GetName(), EventDispatcher<HoverLeaveEvent>::Get().size());
 
-				HoverLeaveEvent e(m_HoverWidget);
-				for (auto* listener : EventDispatcher<HoverLeaveEvent>::Get())
-					listener->OnEvent(e);
+		//		HoverLeaveEvent e(m_HoverWidget);
+		//		for (auto* listener : EventDispatcher<HoverLeaveEvent>::Get())
+		//			listener->OnEvent(e);
 
-				m_HoverWidget = nullptr;
-			}
-			else if (Mouse::IsOnWidget(btn) && &btn != m_HoverWidget)
-			{
-				m_HoverWidget = &btn;
+		//		m_HoverWidget = nullptr;
+		//	}
+		//	else if (Mouse::IsOnWidget(btn) && &btn != m_HoverWidget)
+		//	{
+		//		m_HoverWidget = &btn;
 
-				Log::Trace("[Window] HoverEnterEvent \"{0}\" (Listeners: {1})",
-					m_HoverWidget->GetName(), EventDispatcher<HoverEnterEvent>::Get().size());
+		//		Log::Trace("[Window] HoverEnterEvent \"{0}\" (Listeners: {1})",
+		//			m_HoverWidget->GetName(), EventDispatcher<HoverEnterEvent>::Get().size());
 
-				HoverEnterEvent e(m_HoverWidget);
-				for (auto* listener : EventDispatcher<HoverEnterEvent>::Get())
-					listener->OnEvent(e);
-			}
-		}
+		//		HoverEnterEvent e(m_HoverWidget);
+		//		for (auto* listener : EventDispatcher<HoverEnterEvent>::Get())
+		//			listener->OnEvent(e);
+		//	}
+		//}
 	}
 
 	Widget* Window::GetClickedWidget()
 	{
-		auto activeScene = m_ActiveScene.lock();
-		if (!activeScene)
-			return nullptr;
+		// auto activeScene = m_ActiveScene.lock();
+		// if (!activeScene)
+		//	return nullptr;
 
-		auto btnView = activeScene->EntityView<Button>();
-		for (auto enttBtnEntity : btnView)
-		{
-			Entity btnEntity(enttBtnEntity, &activeScene->GetRegistry());
-			Button& btn = btnEntity.Get<Button>();
-			if (Mouse::IsOnWidget(btn))
-			{
-				m_ClickedWidget = &btn;
-				return m_ClickedWidget;
-			}
-		}
+		// auto btnView = activeScene->EntityView<Button>();
+		// for (auto enttBtnEntity : btnView)
+		//{
+		//	Entity btnEntity(enttBtnEntity, &activeScene->GetRegistry());
+		//	Button& btn = btnEntity.Get<Button>();
+		//	if (Mouse::IsOnWidget(btn))
+		//	{
+		//		m_ClickedWidget = &btn;
+		//		return m_ClickedWidget;
+		//	}
+		// }
 		return nullptr;
 	}
 
 	Widget* Window::GetReleasedWidget()
 	{
-		auto activeScene = m_ActiveScene.lock();
-		if (!activeScene)
-			return nullptr;
+		// auto activeScene = m_ActiveScene.lock();
+		// if (!activeScene)
+		//	return nullptr;
 
-		auto btnView = activeScene->EntityView<Button>();
-		for (auto enttBtnEntity : btnView)
-		{
-			Entity btnEntity(enttBtnEntity, &activeScene->GetRegistry());
-			Button& btn = btnEntity.Get<Button>();
-			if (m_ClickedWidget == &btn)
-			{
-				m_ClickedWidget = nullptr;
-				return &btn;
-			}
-		}
+		// auto btnView = activeScene->EntityView<Button>();
+		// for (auto enttBtnEntity : btnView)
+		//{
+		//	Entity btnEntity(enttBtnEntity, &activeScene->GetRegistry());
+		//	Button& btn = btnEntity.Get<Button>();
+		//	if (m_ClickedWidget == &btn)
+		//	{
+		//		m_ClickedWidget = nullptr;
+		//		return &btn;
+		//	}
+		// }
 		return nullptr;
 	}
 

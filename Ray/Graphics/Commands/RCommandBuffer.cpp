@@ -7,7 +7,7 @@
 
 namespace At0::Ray
 {
-	CommandBuffer::CommandBuffer(const CommandPool& commandPool, VkCommandBufferLevel bufferLevel)
+	CommandBuffer::CommandBuffer(CommandPool& commandPool, VkCommandBufferLevel bufferLevel)
 		: m_CommandPool(&commandPool)
 	{
 		VkCommandBufferAllocateInfo allocInfo{};
@@ -82,7 +82,7 @@ namespace At0::Ray
 	// -----------------------------------------------------------------------------------------------
 	// Secondary Command Buffer
 	SecondaryCommandBuffer::SecondaryCommandBuffer(
-		const CommandPool& commandPool, VkCommandBufferInheritanceInfo inheritanceInfo)
+		CommandPool& commandPool, VkCommandBufferInheritanceInfo inheritanceInfo)
 		: CommandBuffer(commandPool, VK_COMMAND_BUFFER_LEVEL_SECONDARY),
 		  m_InheritanceInfo(std::move(inheritanceInfo))
 	{

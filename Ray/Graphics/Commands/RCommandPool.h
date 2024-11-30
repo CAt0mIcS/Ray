@@ -13,14 +13,14 @@ namespace At0::Ray
 	class RAY_EXPORT CommandPool : NonCopyable
 	{
 	public:
-		CommandPool(const RenderContext& context, VkCommandPoolCreateFlags flags = 0);
+		CommandPool(RenderContext& context, VkCommandPoolCreateFlags flags = 0);
 		~CommandPool();
 
 		operator VkCommandPool() const { return m_CommandPool; }
-		const RenderContext& GetRenderContext() const { return m_Context; }
+		RenderContext& GetRenderContext() { return m_Context; }
 
 	private:
 		VkCommandPool m_CommandPool = VK_NULL_HANDLE;
-		const RenderContext& m_Context;
+		RenderContext& m_Context;
 	};
 }  // namespace At0::Ray
