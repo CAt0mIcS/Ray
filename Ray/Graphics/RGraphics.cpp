@@ -57,7 +57,7 @@ namespace At0::Ray
 
 	void Graphics::CreateVulkanObjects()
 	{
-		m_Swapchain = MakeScope<Swapchain>(m_Window.GetFramebufferSize());
+		m_Swapchain = MakeScope<Swapchain>(m_Context, m_Window.GetFramebufferSize());
 		m_CommandPool =
 			MakeScope<CommandPool>(m_Context, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 		m_TransientCommandPool =
@@ -470,8 +470,8 @@ namespace At0::Ray
 		m_RenderPass.reset();
 		m_DepthImage.reset();
 
-		m_Swapchain =
-			MakeScope<Swapchain>(m_Window.GetFramebufferSize(), (VkSwapchainKHR)*m_Swapchain);
+		m_Swapchain = MakeScope<Swapchain>(
+			m_Context, m_Window.GetFramebufferSize(), (VkSwapchainKHR)*m_Swapchain);
 		m_CommandPool.reset();
 		m_TransientCommandPool.reset();
 

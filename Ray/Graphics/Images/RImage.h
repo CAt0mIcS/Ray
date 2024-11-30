@@ -29,7 +29,7 @@ namespace At0::Ray
 			VkImageCreateFlags createFlags = 0);
 		virtual ~Image();
 
-		operator const VkImage&() const { return m_Image; }
+		operator const VkImage() const { return m_Image; }
 		const VkDeviceMemory& GetImageMemory() const { return m_ImageMemory; }
 		const ImageView& GetImageView() const { return *m_ImageView; }
 		VkImageLayout GetImageLayout() const { return m_ImageLayout; }
@@ -42,6 +42,10 @@ namespace At0::Ray
 		uint32_t GetMipLevels() const { return m_MipLevels; }
 		VkImageAspectFlags GetAspectFlags() const { return m_ImageAspect; }
 		uint32_t GetArrayLayers() const { return m_ArrayLayers; }
+
+		RenderContext& GetRenderContext() { return m_Context; }
+		const RenderContext& GetRenderContext() const { return m_Context; }
+		Ref<CommandPool> GetTransientCommandPool() { return m_TransientCommandPool; }
 
 		void TransitionLayout(VkImageLayout newLayout);
 		void CopyFromBuffer(const Buffer& buffer, std::vector<VkBufferImageCopy> copyRegions = {});

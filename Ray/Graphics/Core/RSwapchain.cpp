@@ -1,18 +1,17 @@
 ﻿#include "RSwapchain.h"
 
-#include "Devices/RWindow.h"
-
-#include "Graphics/RGraphics.h"
 #include "RPhysicalDevice.h"
 #include "RLogicalDevice.h"
 #include "RSurface.h"
 #include "Graphics/Images/RImageView.h"
+#include "Graphics/Core/RRenderContext.h"
 
 
 namespace At0::Ray
 {
-	Swapchain::Swapchain(
-		UInt2 framebufferSize, VkSwapchainKHR oldSwapchain, VkImageUsageFlags imageUsage)
+	Swapchain::Swapchain(RenderContext& context, UInt2 framebufferSize, VkSwapchainKHR oldSwapchain,
+		VkImageUsageFlags imageUsage)
+		: m_Context(context)
 	{
 		SupportDetails supportDetails = QuerySwapchainSupport();
 		VkSurfaceFormatKHR surfaceFormat = ChooseSurfaceFormat(supportDetails.Formats);
@@ -32,7 +31,7 @@ namespace At0::Ray
 
 		VkSwapchainCreateInfoKHR createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-		createInfo.surface = Graphics::Get().GetRenderContext().surface;
+		createInfo.surface = m_Context.surface;
 		createInfo.minImageCount = imageCount;
 		createInfo.imageFormat = surfaceFormat.format;
 		createInfo.imageColorSpace = surfaceFormat.colorSpace;
@@ -41,15 +40,12 @@ namespace At0::Ray
 		createInfo.imageUsage = imageUsage;
 
 		// Queue families
-		uint32_t queueFamilyIndices[] = {
-			Graphics::Get().GetRenderContext().device.GetGraphicsFamily(),
-			Graphics::Get().GetRenderContext().device.GetPresentFamily()
-		};
+		uint32_t queueFamilyIndices[] = { m_Context.device.GetGraphicsFamily(),
+			m_Context.device.GetPresentFamily() };
 
 		// If graphics queue and presentation queue are not the same
 		// we need to share images between them.
-		if (Graphics::Get().GetRenderContext().device.GetGraphicsFamily() !=
-			Graphics::Get().GetRenderContext().device.GetPresentFamily())
+		if (m_Context.device.GetGraphicsFamily() != m_Context.device.GetPresentFamily())
 		{
 			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 			createInfo.queueFamilyIndexCount = 2;
@@ -70,59 +66,55 @@ namespace At0::Ray
 		createInfo.clipped = VK_TRUE;
 		createInfo.oldSwapchain = oldSwapchain;
 
-		ThrowVulkanError(vkCreateSwapchainKHR(Graphics::Get().GetRenderContext().device,
-							 &createInfo, nullptr, &m_Swapchain),
+		ThrowVulkanError(vkCreateSwapchainKHR(m_Context.device, &createInfo, nullptr, &m_Swapchain),
 			"[Swapchain] Failed to create");
 
 		// Retrieve swapchain images
 		uint32_t swapchainImageCount = 0;
-		vkGetSwapchainImagesKHR(
-			Graphics::Get().GetRenderContext().device, m_Swapchain, &swapchainImageCount, nullptr);
+		vkGetSwapchainImagesKHR(m_Context.device, m_Swapchain, &swapchainImageCount, nullptr);
 		if (swapchainImageCount == 0)
 			ThrowRuntime("[Swapchain] Image count is 0");
 
 		m_Images.resize(swapchainImageCount);
-		vkGetSwapchainImagesKHR(Graphics::Get().GetRenderContext().device, m_Swapchain,
-			&swapchainImageCount, m_Images.data());
+		vkGetSwapchainImagesKHR(
+			m_Context.device, m_Swapchain, &swapchainImageCount, m_Images.data());
 
 		// Create image views
 		m_ImageViews.resize(m_Images.size());
 		for (uint32_t i = 0; i < m_ImageViews.size(); ++i)
 		{
 			m_ImageViews[i] = MakeScope<ImageView>(
-				m_Images[i], VK_IMAGE_VIEW_TYPE_2D, m_Format, VK_IMAGE_ASPECT_COLOR_BIT);
+				m_Context, m_Images[i], VK_IMAGE_VIEW_TYPE_2D, m_Format, VK_IMAGE_ASPECT_COLOR_BIT);
 		}
 	}
 
 	Swapchain::~Swapchain()
 	{
-		vkDestroySwapchainKHR(Graphics::Get().GetRenderContext().device, m_Swapchain, nullptr);
+		vkDestroySwapchainKHR(m_Context.device, m_Swapchain, nullptr);
 	}
 
 	Swapchain::SupportDetails Swapchain::QuerySwapchainSupport() const
 	{
 		SupportDetails supportDetails;
 
-		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(Graphics::Get().GetRenderContext().physicalDevice,
-			Graphics::Get().GetRenderContext().surface, &supportDetails.Capabilities);
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
+			m_Context.physicalDevice, m_Context.surface, &supportDetails.Capabilities);
 
 		uint32_t surfaceFormats;
-		vkGetPhysicalDeviceSurfaceFormatsKHR(Graphics::Get().GetRenderContext().physicalDevice,
-			Graphics::Get().GetRenderContext().surface, &surfaceFormats, nullptr);
+		vkGetPhysicalDeviceSurfaceFormatsKHR(
+			m_Context.physicalDevice, m_Context.surface, &surfaceFormats, nullptr);
 
 		supportDetails.Formats.resize(surfaceFormats);
-		vkGetPhysicalDeviceSurfaceFormatsKHR(Graphics::Get().GetRenderContext().physicalDevice,
-			Graphics::Get().GetRenderContext().surface, &surfaceFormats,
-			supportDetails.Formats.data());
+		vkGetPhysicalDeviceSurfaceFormatsKHR(m_Context.physicalDevice, m_Context.surface,
+			&surfaceFormats, supportDetails.Formats.data());
 
 		uint32_t presentModeCount;
-		vkGetPhysicalDeviceSurfacePresentModesKHR(Graphics::Get().GetRenderContext().physicalDevice,
-			Graphics::Get().GetRenderContext().surface, &presentModeCount, nullptr);
+		vkGetPhysicalDeviceSurfacePresentModesKHR(
+			m_Context.physicalDevice, m_Context.surface, &presentModeCount, nullptr);
 
 		supportDetails.PresentModes.resize(presentModeCount);
-		vkGetPhysicalDeviceSurfacePresentModesKHR(Graphics::Get().GetRenderContext().physicalDevice,
-			Graphics::Get().GetRenderContext().surface, &presentModeCount,
-			supportDetails.PresentModes.data());
+		vkGetPhysicalDeviceSurfacePresentModesKHR(m_Context.physicalDevice, m_Context.surface,
+			&presentModeCount, supportDetails.PresentModes.data());
 
 		return supportDetails;
 	}

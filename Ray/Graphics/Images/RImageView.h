@@ -9,12 +9,14 @@
 namespace At0::Ray
 {
 	class Image;
+	class RenderContext;
 
 	class ImageView : NonCopyable
 	{
 	public:
 		ImageView(const Image& image);
-		ImageView(VkImage image, VkImageViewType viewType, VkFormat format, uint32_t mipLevels = 1,
+		ImageView(const RenderContext& context, VkImage image, VkImageViewType viewType,
+			VkFormat format, uint32_t mipLevels = 1,
 			VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t layerCount = 1);
 		~ImageView();
 
@@ -22,5 +24,6 @@ namespace At0::Ray
 
 	private:
 		VkImageView m_View = VK_NULL_HANDLE;
+		const RenderContext& m_Context;
 	};
 }  // namespace At0::Ray

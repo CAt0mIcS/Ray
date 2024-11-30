@@ -12,6 +12,7 @@
 namespace At0::Ray
 {
 	class ImageView;
+	class RenderContext;
 
 	class RAY_EXPORT Swapchain : NonCopyable
 	{
@@ -24,7 +25,8 @@ namespace At0::Ray
 		};
 
 	public:
-		Swapchain(UInt2 framebufferSize, VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE,
+		Swapchain(RenderContext& context, UInt2 framebufferSize,
+			VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE,
 			VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
 		~Swapchain();
 
@@ -45,6 +47,7 @@ namespace At0::Ray
 		UInt2 ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities, UInt2 extent) const;
 
 	private:
+		RenderContext& m_Context;
 		VkSwapchainKHR m_Swapchain = VK_NULL_HANDLE;
 		VkFormat m_Format = VK_FORMAT_UNDEFINED;
 		UInt2 m_Extent{};
