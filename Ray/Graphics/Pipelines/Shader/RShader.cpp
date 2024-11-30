@@ -11,43 +11,43 @@
 
 namespace At0::Ray
 {
-	Ref<Shader> Shader::FromSourceFile(
-		std::vector<std::string> shaders, const std::vector<std::string>& reflections)
+	Ref<Shader> Shader::FromSourceFile(RenderContext& context, std::vector<std::string> shaders,
+		const std::vector<std::string>& reflections)
 	{
 		RAY_MEXPECTS(shaders.size() != 0, "[Shader] No source files specified");
-		return MakeRef<Shader>(std::move(shaders), GLSLFile, reflections);
+		return MakeRef<Shader>(context, std::move(shaders), GLSLFile, reflections);
 	}
 
-	Ref<Shader> Shader::FromCompiledFile(
-		std::vector<std::string> shaders, const std::vector<std::string>& reflections)
+	Ref<Shader> Shader::FromCompiledFile(RenderContext& context, std::vector<std::string> shaders,
+		const std::vector<std::string>& reflections)
 	{
 		RAY_MEXPECTS(shaders.size() != 0, "[Shader] No compiled files specified");
-		return MakeRef<Shader>(std::move(shaders), CompiledFile, reflections);
+		return MakeRef<Shader>(context, std::move(shaders), CompiledFile, reflections);
 	}
 
-	Ref<Shader> Shader::FromSourceString(std::vector<std::string> shaders,
+	Ref<Shader> Shader::FromSourceString(RenderContext& context, std::vector<std::string> shaders,
 		const std::vector<ShaderStage>& stageOrder, const std::vector<std::string>& reflections)
 	{
 		RAY_MEXPECTS(shaders.size() != 0, "[Shader] No source strings specified");
-		return MakeRef<Shader>(std::move(shaders), GLSLString, reflections);
+		return MakeRef<Shader>(context, std::move(shaders), GLSLString, reflections);
 	}
 
-	Shader::Shader(std::vector<std::string> shaders, FileType fileType,
+	Shader::Shader(RenderContext& context, std::vector<std::string> shaders, FileType fileType,
 		const std::vector<std::string>& reflections, const std::vector<ShaderStage>& stageOrder)
-		: m_Filepaths(std::move(shaders))
+		: m_Context(context), m_Filepaths(std::move(shaders))
 	{
 		switch (fileType)
 		{
 		case Shader::GLSLFile:
 		{
-			GlslCompiler compiler(m_Filepaths);
+			GlslCompiler compiler(m_Context, m_Filepaths);
 			m_Reflections = compiler.AcquireReflections();
 			m_ShaderModules = compiler.AcquireShaderModules();
 			break;
 		}
 		case Shader::GLSLString:
 		{
-			GlslCompiler compiler(m_Filepaths, stageOrder);
+			GlslCompiler compiler(m_Context, m_Filepaths, stageOrder);
 			m_Reflections = compiler.AcquireReflections();
 			m_ShaderModules = compiler.AcquireShaderModules();
 			break;
@@ -74,8 +74,8 @@ namespace At0::Ray
 				createInfo.codeSize = (uint32_t)code.size();
 				createInfo.pCode = (uint32_t*)code.data();
 
-				ThrowVulkanError(vkCreateShaderModule(Graphics::Get().GetRenderContext().device,
-									 &createInfo, nullptr, &shaderModule),
+				ThrowVulkanError(
+					vkCreateShaderModule(m_Context.device, &createInfo, nullptr, &shaderModule),
 					"[Shader] Failed to create shader module from file \"{0}\"", m_Filepaths[i]);
 				m_ShaderModules[stage] = shaderModule;
 			}
@@ -104,7 +104,7 @@ namespace At0::Ray
 		}
 
 		for (const auto [stage, shaderModule] : m_ShaderModules)
-			vkDestroyShaderModule(Graphics::Get().GetRenderContext().device, shaderModule, nullptr);
+			vkDestroyShaderModule(m_Context.device, shaderModule, nullptr);
 	}
 
 	uint32_t SizeOfGlType(int32_t glType)

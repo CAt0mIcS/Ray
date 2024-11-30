@@ -8,11 +8,12 @@
 namespace At0::Ray
 {
 	class UniformBuffer;
+	class RenderContext;
 
 	class RAY_EXPORT DynamicUniformBuffer : public DynamicBuffer
 	{
 	public:
-		DynamicUniformBuffer(VkDeviceSize size);
+		DynamicUniformBuffer(const RenderContext& context, VkDeviceSize size);
 		~DynamicUniformBuffer();
 
 		static void Reset();

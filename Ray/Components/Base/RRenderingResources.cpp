@@ -85,6 +85,7 @@ namespace At0::Ray
 		// If the descriptor set wasn't found in the existing ones, create it
 		if (pDescriptor == nullptr)
 			pDescriptor = &m_DescriptorSets.emplace_back(
+				m_Material->GetGraphicsPipeline().GetShader().GetRenderContext(),
 				m_Material->GetGraphicsPipeline().GetDescriptorPool(),
 				m_Material->GetGraphicsPipeline().GetDescriptorSetLayout(set),
 				Pipeline::BindPoint::Graphics, m_Material->GetGraphicsPipeline().GetLayout(), set);
@@ -127,6 +128,7 @@ namespace At0::Ray
 		// If the descriptor set wasn't found in the existing ones, create it
 		if (pDescriptor == nullptr)
 			pDescriptor = &m_DescriptorSets.emplace_back(
+				m_Material->GetGraphicsPipeline().GetShader().GetRenderContext(),
 				m_Material->GetGraphicsPipeline().GetDescriptorPool(),
 				m_Material->GetGraphicsPipeline().GetDescriptorSetLayout(set),
 				Pipeline::BindPoint::Graphics, m_Material->GetGraphicsPipeline().GetLayout(), set);

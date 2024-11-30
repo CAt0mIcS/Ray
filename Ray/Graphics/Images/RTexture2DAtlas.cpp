@@ -28,7 +28,7 @@ namespace At0::Ray
 
 		VkDeviceSize imageSize = extent.x * extent.y * 4;
 
-		Buffer stagingBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+		Buffer stagingBuffer(m_Context, imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, pixels);
 
 		VkBufferImageCopy region{};

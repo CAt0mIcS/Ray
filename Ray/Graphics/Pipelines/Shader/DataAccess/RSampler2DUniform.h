@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "../../../../RBase.h"
+#include "../../../Core/RRenderContext.h"
 
 
 namespace At0::Ray
@@ -14,7 +15,7 @@ namespace At0::Ray
 	{
 	public:
 		Sampler2DUniform(std::string_view name, ShaderStage stage, const Pipeline& pipeline);
-		Sampler2DUniform(std::string_view name, uint32_t binding);
+		Sampler2DUniform(const RenderContext& context, std::string_view name, uint32_t binding);
 
 		std::string_view GetName() const { return m_Name; }
 		uint32_t GetBinding() const { return m_Binding; }
@@ -25,7 +26,10 @@ namespace At0::Ray
 		void SetTexture(Ref<Texture> texture, DescriptorSet& descSet,
 			VkImageLayout imageLayout = VK_IMAGE_LAYOUT_MAX_ENUM);
 
+		const RenderContext& GetRenderContext() const { return m_Context; }
+
 	private:
+		const RenderContext& m_Context;
 		std::string m_Name;
 
 		// The binding specified in the shader

@@ -19,13 +19,14 @@ namespace At0::Ray
 		using Type = uint16_t;
 
 	public:
-		IndexBuffer(std::string_view tag, const std::vector<IndexBuffer::Type>& indices);
+		IndexBuffer(const RenderContext& context, CommandPool& transientCommandPool,
+			std::string_view tag, const std::vector<IndexBuffer::Type>& indices);
 		~IndexBuffer() = default;
 
 		void CmdBind(const CommandBuffer& cmdBuff) const override;
 		uint32_t GetNumberOfIndices() const;
 
-		static std::string GetUID(
+		static std::string GetUID(const RenderContext& context, CommandPool& transientCommandPool,
 			std::string_view tag, const std::vector<IndexBuffer::Type>& indices);
 
 	private:

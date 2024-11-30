@@ -16,6 +16,7 @@ namespace At0::Ray
 	class Texture;
 	class Texture2DAtlas;
 	class CommandBuffer;
+	class CommandPool;
 
 	class RAY_EXPORT Material : public EventDispatcher<MaterialBecameDirtyEvent>
 	{
@@ -66,14 +67,6 @@ namespace At0::Ray
 			return *(T*)m_Container.Get(name);
 		}
 
-	public:
-		/**
-		 * Use to quickly get a material to use
-		 * TODO: Should be codexed and not created every time this function is called
-		 * @returns A flat-shaded material with culling	disabled and the color set to white
-		 */
-		static const Ref<Material> FlatWhite();
-
 	private:
 		void CallListeners(const std::string& name, UniformType type,
 			VkImageLayout imageLayout = VK_IMAGE_LAYOUT_MAX_ENUM);
@@ -103,7 +96,6 @@ namespace At0::Ray
 			Builder& Set(const std::string& name, Ref<Texture> data);
 			Builder& Set(const std::string& name, Ref<Texture2DAtlas> data);
 
-			Ref<Material> Acquire();
 			Ref<Material> Build();
 
 		private:

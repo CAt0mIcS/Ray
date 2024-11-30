@@ -7,6 +7,8 @@
 
 namespace At0::Ray
 {
+	class RenderContext;
+
 	class RAY_EXPORT UniformBuffer : public Buffer
 	{
 	public:
@@ -14,7 +16,7 @@ namespace At0::Ray
 		 * @param initialSize Initial buffer size. If 0 the value set by
 		 * UniformBuffer::SetAllocationSize() will be used (default 2097152MB)
 		 */
-		UniformBuffer(VkDeviceSize allocSize = 0);
+		UniformBuffer(const RenderContext& context, VkDeviceSize allocSize = 0);
 		~UniformBuffer();
 
 		static VkDescriptorSetLayoutBinding GetDescriptorSetLayout(uint32_t binding,

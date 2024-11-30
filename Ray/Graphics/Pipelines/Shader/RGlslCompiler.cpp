@@ -1,7 +1,7 @@
 ﻿#include "RGlslCompiler.h"
 
 #include "RShader.h"
-#include "Graphics/RGraphics.h"
+#include "Graphics/Core/RRenderContext.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
 #include "Graphics/Core/RRenderContext.h"
@@ -286,8 +286,8 @@ namespace At0::Ray
 	}
 #pragma endregion
 
-	GlslCompiler::GlslCompiler(
-		const std::vector<std::string>& shaders, const std::vector<ShaderStage>& stageOrder)
+	GlslCompiler::GlslCompiler(RenderContext& context, const std::vector<std::string>& shaders,
+		const std::vector<ShaderStage>& stageOrder)
 	{
 		if (stageOrder.size() != 0)
 			RAY_MEXPECTS(shaders.size() == stageOrder.size(),
@@ -311,11 +311,11 @@ namespace At0::Ray
 
 			m_Shaders[shaderStage] = shaders[i];
 			m_ShaderModules[shaderStage] =
-				CreateShaderModule("", shaderStage, stageOrder.size() != 0);
+				CreateShaderModule(context, "", shaderStage, stageOrder.size() != 0);
 		}
 	}
 
-	VkShaderModule GlslCompiler::CreateShaderModule(
+	VkShaderModule GlslCompiler::CreateShaderModule(RenderContext& context,
 		std::string_view preamble, ShaderStage shaderStage, bool isSrcString)
 	{
 		std::string moduleCode;
@@ -421,8 +421,8 @@ namespace At0::Ray
 		shaderModuleCreateInfo.pCode = spirvCode.data();
 
 		VkShaderModule shaderModule;
-		ThrowVulkanError(vkCreateShaderModule(Graphics::Get().GetRenderContext().device,
-							 &shaderModuleCreateInfo, nullptr, &shaderModule),
+		ThrowVulkanError(
+			vkCreateShaderModule(context.device, &shaderModuleCreateInfo, nullptr, &shaderModule),
 			"[GlslCompiler] Failed to create shader module");
 
 		return shaderModule;

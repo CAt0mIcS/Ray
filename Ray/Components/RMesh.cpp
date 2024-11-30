@@ -4,6 +4,8 @@
 #include "RHierachyComponent.h"
 
 #include "Graphics/RCodex.h"
+#include "Graphics/Pipelines/Shader/RShader.h"
+#include "Graphics/Core/RRenderContext.h"
 #include "Shading/RMaterial.h"
 #include "Graphics/Buffers/RVertexBuffer.h"
 #include "Graphics/Buffers/RIndexBuffer.h"
@@ -50,82 +52,118 @@ namespace At0::Ray
 
 	Mesh::Data Mesh::Triangle(Ref<Material> material)
 	{
-		IndexedTriangleList mesh =
-			IndexedTriangleList::Triangle(material->GetGraphicsPipeline().GetShader());
-		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+		auto& shader = material->GetGraphicsPipeline().GetShader();
+		auto transientPool = shader.GetRenderContext().graphics.GetTransientCommandPool();
+
+		IndexedTriangleList mesh = IndexedTriangleList::Triangle(shader);
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(shader.GetRenderContext(), *transientPool,
+							   mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(
+				shader.GetRenderContext(), *transientPool, mesh.uniqueTag, std::move(mesh.indices)),
 			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::Plane(Ref<Material> material)
 	{
-		IndexedTriangleList mesh =
-			IndexedTriangleList::Plane(material->GetGraphicsPipeline().GetShader());
-		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+		auto& shader = material->GetGraphicsPipeline().GetShader();
+		auto transientPool = shader.GetRenderContext().graphics.GetTransientCommandPool();
+
+		IndexedTriangleList mesh = IndexedTriangleList::Plane(shader);
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(shader.GetRenderContext(), *transientPool,
+							   mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(
+				shader.GetRenderContext(), *transientPool, mesh.uniqueTag, std::move(mesh.indices)),
 			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::HalfCircle(Ref<Material> material, int segments, float radius)
 	{
-		IndexedTriangleList mesh = IndexedTriangleList::HalfCircle(
-			material->GetGraphicsPipeline().GetShader(), segments, radius);
-		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+		auto& shader = material->GetGraphicsPipeline().GetShader();
+		auto transientPool = shader.GetRenderContext().graphics.GetTransientCommandPool();
+
+		IndexedTriangleList mesh = IndexedTriangleList::HalfCircle(shader, segments, radius);
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(shader.GetRenderContext(), *transientPool,
+							   mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(
+				shader.GetRenderContext(), *transientPool, mesh.uniqueTag, std::move(mesh.indices)),
 			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::Circle(Ref<Material> material, int segments, float radius)
 	{
-		IndexedTriangleList mesh = IndexedTriangleList::Circle(
-			material->GetGraphicsPipeline().GetShader(), segments, radius);
-		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+		auto& shader = material->GetGraphicsPipeline().GetShader();
+		auto transientPool = shader.GetRenderContext().graphics.GetTransientCommandPool();
+
+		IndexedTriangleList mesh = IndexedTriangleList::Circle(shader, segments, radius);
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(shader.GetRenderContext(), *transientPool,
+							   mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(
+				shader.GetRenderContext(), *transientPool, mesh.uniqueTag, std::move(mesh.indices)),
 			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::Cube(Ref<Material> material)
 	{
-		IndexedTriangleList mesh =
-			IndexedTriangleList::Cube(material->GetGraphicsPipeline().GetShader());
-		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+		auto& shader = material->GetGraphicsPipeline().GetShader();
+		auto transientPool = shader.GetRenderContext().graphics.GetTransientCommandPool();
+
+		IndexedTriangleList mesh = IndexedTriangleList::Cube(shader);
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(shader.GetRenderContext(), *transientPool,
+							   mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(
+				shader.GetRenderContext(), *transientPool, mesh.uniqueTag, std::move(mesh.indices)),
 			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::UVSphere(Ref<Material> material, float radius, int latDiv, int longDiv)
 	{
-		IndexedTriangleList mesh = IndexedTriangleList::UVSphere(
-			material->GetGraphicsPipeline().GetShader(), radius, latDiv, longDiv);
-		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+		auto& shader = material->GetGraphicsPipeline().GetShader();
+		auto transientPool = shader.GetRenderContext().graphics.GetTransientCommandPool();
+
+		IndexedTriangleList mesh = IndexedTriangleList::UVSphere(shader, radius, latDiv, longDiv);
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(shader.GetRenderContext(), *transientPool,
+							   mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(
+				shader.GetRenderContext(), *transientPool, mesh.uniqueTag, std::move(mesh.indices)),
 			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::Cylinder(Ref<Material> material, int segments, float radius)
 	{
-		IndexedTriangleList mesh = IndexedTriangleList::Cylinder(
-			material->GetGraphicsPipeline().GetShader(), segments, radius);
-		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+		auto& shader = material->GetGraphicsPipeline().GetShader();
+		auto transientPool = shader.GetRenderContext().graphics.GetTransientCommandPool();
+
+		IndexedTriangleList mesh = IndexedTriangleList::Cylinder(shader, segments, radius);
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(shader.GetRenderContext(), *transientPool,
+							   mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(
+				shader.GetRenderContext(), *transientPool, mesh.uniqueTag, std::move(mesh.indices)),
 			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::Cone(Ref<Material> material, int segments, float radius)
 	{
-		IndexedTriangleList mesh = IndexedTriangleList::Cone(
-			material->GetGraphicsPipeline().GetShader(), segments, radius);
-		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+		auto& shader = material->GetGraphicsPipeline().GetShader();
+		auto transientPool = shader.GetRenderContext().graphics.GetTransientCommandPool();
+
+		IndexedTriangleList mesh = IndexedTriangleList::Cone(shader, segments, radius);
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(shader.GetRenderContext(), *transientPool,
+							   mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(
+				shader.GetRenderContext(), *transientPool, mesh.uniqueTag, std::move(mesh.indices)),
 			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 
 	Mesh::Data Mesh::Vector(Ref<Material> material)
 	{
-		IndexedTriangleList mesh =
-			IndexedTriangleList::Vector(material->GetGraphicsPipeline().GetShader());
-		return Mesh::Data{ Codex::Resolve<VertexBuffer>(mesh.uniqueTag, std::move(mesh.vertices)),
-			Codex::Resolve<IndexBuffer>(mesh.uniqueTag, std::move(mesh.indices)),
+		auto& shader = material->GetGraphicsPipeline().GetShader();
+		auto transientPool = shader.GetRenderContext().graphics.GetTransientCommandPool();
+
+		IndexedTriangleList mesh = IndexedTriangleList::Vector(shader);
+		return Mesh::Data{ Codex::Resolve<VertexBuffer>(shader.GetRenderContext(), *transientPool,
+							   mesh.uniqueTag, std::move(mesh.vertices)),
+			Codex::Resolve<IndexBuffer>(
+				shader.GetRenderContext(), *transientPool, mesh.uniqueTag, std::move(mesh.indices)),
 			std::move(material), RAY_DEBUG_FLAG(mesh.uniqueTag) };
 	}
 

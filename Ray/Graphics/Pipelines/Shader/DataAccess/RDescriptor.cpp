@@ -1,7 +1,6 @@
 ﻿#include "RDescriptor.h"
 
-#include "Graphics/RGraphics.h"
-#include "Graphics/Core/RRenderContext.h"
+#include "Graphics/Pipelines/Shader/RShader.h"
 #include "Graphics/Core/RLogicalDevice.h"
 
 #include "Graphics/Commands/RCommandBuffer.h"
@@ -17,15 +16,18 @@
 namespace At0::Ray
 {
 	DescriptorSet::DescriptorSet(const Pipeline& pipeline, uint32_t setNumber)
-		: DescriptorSet(pipeline.GetDescriptorPool(), pipeline.GetDescriptorSetLayout(setNumber),
-			  pipeline.GetBindPoint(), pipeline.GetLayout(), setNumber)
+		: DescriptorSet(pipeline.GetShader().GetRenderContext(), pipeline.GetDescriptorPool(),
+			  pipeline.GetDescriptorSetLayout(setNumber), pipeline.GetBindPoint(),
+			  pipeline.GetLayout(), setNumber)
 	{
 	}
 
-	DescriptorSet::DescriptorSet(VkDescriptorPool pool, VkDescriptorSetLayout descriptorLayout,
-		Pipeline::BindPoint pipelineBindPoint, VkPipelineLayout pipelineLayout, uint32_t setNumber)
-		: m_PipelineBindPoint(pipelineBindPoint), m_PipelineLayout(pipelineLayout),
-		  m_SetNumber(setNumber), m_DescriptorPool(pool), m_DescriptorSetLayout(descriptorLayout)
+	DescriptorSet::DescriptorSet(const RenderContext& context, VkDescriptorPool pool,
+		VkDescriptorSetLayout descriptorLayout, Pipeline::BindPoint pipelineBindPoint,
+		VkPipelineLayout pipelineLayout, uint32_t setNumber)
+		: m_Context(context), m_PipelineBindPoint(pipelineBindPoint),
+		  m_PipelineLayout(pipelineLayout), m_SetNumber(setNumber), m_DescriptorPool(pool),
+		  m_DescriptorSetLayout(descriptorLayout)
 	{
 		VkDescriptorSetAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -33,8 +35,7 @@ namespace At0::Ray
 		allocInfo.descriptorSetCount = 1;
 		allocInfo.pSetLayouts = &m_DescriptorSetLayout;
 
-		ThrowVulkanError(vkAllocateDescriptorSets(Graphics::Get().GetRenderContext().device,
-							 &allocInfo, &m_DescriptorSet),
+		ThrowVulkanError(vkAllocateDescriptorSets(m_Context.device, &allocInfo, &m_DescriptorSet),
 			"[DescriptorSet] Failed to allocate");
 	}
 
@@ -47,10 +48,11 @@ namespace At0::Ray
 			m_SetNumber, 1, &m_DescriptorSet, 0, nullptr);
 	}
 
-	void DescriptorSet::Update(const std::vector<VkWriteDescriptorSet>& descriptorWrites)
+	void DescriptorSet::Update(
+		const RenderContext& context, const std::vector<VkWriteDescriptorSet>& descriptorWrites)
 	{
-		vkUpdateDescriptorSets(Graphics::Get().GetRenderContext().device,
-			(uint32_t)descriptorWrites.size(), descriptorWrites.data(), 0, nullptr);
+		vkUpdateDescriptorSets(
+			context.device, (uint32_t)descriptorWrites.size(), descriptorWrites.data(), 0, nullptr);
 	}
 
 	void DescriptorSet::BindUniform(const BufferUniform& uniform)
@@ -69,7 +71,7 @@ namespace At0::Ray
 		descWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		descWrite.pBufferInfo = &bufferInfo;
 
-		Update({ descWrite });
+		Update(uniform.GetRenderContext(), { descWrite });
 
 		RAY_DEBUG_FLAG(m_UniformBound = true);
 	}
@@ -94,7 +96,7 @@ namespace At0::Ray
 		descWrites.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		descWrites.pImageInfo = &imageInfo;
 
-		Update({ descWrites });
+		Update(uniform.GetRenderContext(), { descWrites });
 
 		RAY_DEBUG_FLAG(m_UniformBound = true);
 	}
@@ -111,5 +113,10 @@ namespace At0::Ray
 		m_DescriptorPool = other.m_DescriptorPool;
 		m_DescriptorSetLayout = other.m_DescriptorSetLayout;
 		return *this;
+	}
+
+	DescriptorSet::DescriptorSet(DescriptorSet&& other) noexcept : m_Context(other.m_Context)
+	{
+		*this = std::move(other);
 	}
 }  // namespace At0::Ray

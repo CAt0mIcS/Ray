@@ -44,19 +44,6 @@ namespace At0::Ray
 		CallListeners(name, UniformType::CombinedImageSampler);
 	}
 
-	const Ref<Material> Material::FlatWhite()
-	{
-		return Material::Builder(
-			GraphicsPipeline::Builder(
-				Graphics::Get().GetRenderPass(), Graphics::Get().GetPipelineCache())
-				.SetShader(Shader::FromSourceFile(
-					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
-				.SetCullMode(VK_CULL_MODE_NONE)
-				.Acquire())
-			.Set("Shading.color", Float4{ 1.f })
-			.Acquire();
-	}
-
 	void Material::CallListeners(
 		const std::string& name, UniformType type, VkImageLayout imageLayout)
 	{
@@ -101,11 +88,6 @@ namespace At0::Ray
 		Builder::ValidateUniformExistenceAndSize(*m_GraphicsPipeline, name, -1);
 		m_Container.Set(name, std::static_pointer_cast<Texture>(std::move(data)));
 		return *this;
-	}
-
-	Ref<Material> Material::Builder::Acquire()
-	{
-		return MakeRef<Material>(std::move(m_GraphicsPipeline), std::move(m_Container));
 	}
 
 	Ref<Material> Material::Builder::Build()

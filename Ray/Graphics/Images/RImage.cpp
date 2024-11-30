@@ -383,7 +383,8 @@ namespace At0::Ray
 
 	void Image::CopyFromData(const std::vector<uint8_t>& data)
 	{
-		Buffer stagingBuffer(data.size() * sizeof(uint8_t), VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+		Buffer stagingBuffer(m_Context, data.size() * sizeof(uint8_t),
+			VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			data.data());
 		CopyFromBuffer(stagingBuffer);
@@ -391,7 +392,7 @@ namespace At0::Ray
 
 	void Image::CopyFromData(const void* data, uint32_t size)
 	{
-		Buffer stagingBuffer(size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+		Buffer stagingBuffer(m_Context, size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, data);
 		CopyFromBuffer(stagingBuffer);
 	}
@@ -425,7 +426,7 @@ namespace At0::Ray
 		if (copyRegions.empty())
 			copyRegions.emplace_back(region);
 
-		Buffer dstBuffer(m_Extent.x * m_Extent.y * 4, VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+		Buffer dstBuffer(m_Context, m_Extent.x * m_Extent.y * 4, VK_BUFFER_USAGE_TRANSFER_DST_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
 		vkCmdCopyImageToBuffer(cmdBuff, m_Image, m_ImageLayout, dstBuffer,

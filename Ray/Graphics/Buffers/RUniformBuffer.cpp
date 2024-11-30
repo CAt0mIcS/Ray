@@ -5,8 +5,9 @@ namespace At0::Ray
 {
 	VkDeviceSize UniformBuffer::s_AllocSize = 2097152;
 
-	UniformBuffer::UniformBuffer(VkDeviceSize allocSize)
-		: Buffer(allocSize ? allocSize != 0 : s_AllocSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+	UniformBuffer::UniformBuffer(const RenderContext& context, VkDeviceSize allocSize)
+		: Buffer(context, allocSize ? allocSize != 0 : s_AllocSize,
+			  VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 			  VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
 	{
 	}

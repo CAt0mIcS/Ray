@@ -37,11 +37,10 @@ namespace At0::Ray
 	public:
 		Graphics(Window& window, RenderContext& context);
 		~Graphics();
-		static Graphics& Get();
 
 		const RenderContext& GetRenderContext() const { return m_Context; }
 		const Swapchain& GetSwapchain() const { return *m_Swapchain; }
-		Ref<CommandPool> GetTransientCommandPool() { return m_TransientCommandPool; }
+		Ref<CommandPool> GetTransientCommandPool() const { return m_TransientCommandPool; }
 		const RenderPass& GetRenderPass() const { return *m_RenderPass; }
 		VkPipelineCache GetPipelineCache() const { return m_PipelineCache; }
 		static uint32_t GetImageCount() { return s_MaxFramesInFlight; }
@@ -74,7 +73,6 @@ namespace At0::Ray
 		void WritePipelineCache();
 
 	private:
-		static Graphics* s_Instance;
 		static constexpr uint8_t s_MaxFramesInFlight = 2;
 
 		VkViewport m_Viewport{};

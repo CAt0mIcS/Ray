@@ -10,8 +10,9 @@ namespace At0::Ray
 {
 	Pipeline::~Pipeline()
 	{
-		vkDestroyPipelineLayout(m_Context.device, m_Layout, nullptr);
-		vkDestroyPipeline(m_Context.device, m_Pipeline, nullptr);
+		auto& device = m_Shader->GetRenderContext().device;
+		vkDestroyPipelineLayout(device, m_Layout, nullptr);
+		vkDestroyPipeline(device, m_Pipeline, nullptr);
 	}
 
 	VkDescriptorSetLayout Pipeline::GetDescriptorSetLayout(uint32_t set) const
@@ -24,8 +25,5 @@ namespace At0::Ray
 		vkCmdBindPipeline(cmdBuff, (VkPipelineBindPoint)GetBindPoint(), m_Pipeline);
 	}
 
-	Pipeline::Pipeline(Ref<Shader> shader, const RenderContext& context)
-		: m_Shader(std::move(shader)), m_Context(context)
-	{
-	}
+	Pipeline::Pipeline(Ref<Shader> shader) : m_Shader(std::move(shader)) {}
 }  // namespace At0::Ray

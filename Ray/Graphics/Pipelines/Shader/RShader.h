@@ -23,6 +23,8 @@ namespace glslang
 
 namespace At0::Ray
 {
+	class RenderContext;
+
 	class RAY_EXPORT Shader : public Resource
 	{
 	public:
@@ -35,17 +37,17 @@ namespace At0::Ray
 		};
 
 	public:
-		static Ref<Shader> FromSourceFile(
-			std::vector<std::string> shaders, const std::vector<std::string>& reflections = {});
-
-		static Ref<Shader> FromCompiledFile(
-			std::vector<std::string> shaders, const std::vector<std::string>& reflections);
-
-		static Ref<Shader> FromSourceString(std::vector<std::string> shaders,
-			const std::vector<ShaderStage>& stageOrder,
+		static Ref<Shader> FromSourceFile(RenderContext& context, std::vector<std::string> shaders,
 			const std::vector<std::string>& reflections = {});
 
-		Shader(std::vector<std::string> shaders, FileType flags,
+		static Ref<Shader> FromCompiledFile(RenderContext& context,
+			std::vector<std::string> shaders, const std::vector<std::string>& reflections);
+
+		static Ref<Shader> FromSourceString(RenderContext& context,
+			std::vector<std::string> shaders, const std::vector<ShaderStage>& stageOrder,
+			const std::vector<std::string>& reflections = {});
+
+		Shader(RenderContext& context, std::vector<std::string> shaders, FileType flags,
 			const std::vector<std::string>& reflections = {},
 			const std::vector<ShaderStage>& stageOrder = {});
 
@@ -63,6 +65,8 @@ namespace At0::Ray
 		const auto& GetReflections() const { return m_Reflections; }
 		const auto& GetShaderModules() const { return m_ShaderModules; }
 		const auto& GetFilepaths() const { return m_Filepaths; }
+		RenderContext& GetRenderContext() { return m_Context; }
+		const RenderContext& GetRenderContext() const { return m_Context; }
 
 		std::vector<VkVertexInputBindingDescription> GetVertexInputBindings(
 			uint32_t binding = 0) const;
@@ -78,6 +82,8 @@ namespace At0::Ray
 			VkDescriptorType type);
 
 	private:
+		RenderContext& m_Context;
+
 		std::unordered_map<uint32_t, std::vector<VkDescriptorSetLayoutBinding>>
 			m_DescriptorSetLayoutBindings;
 		std::vector<VkDescriptorPoolSize> m_DescriptorPoolSizes;

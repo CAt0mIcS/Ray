@@ -10,7 +10,7 @@
 namespace At0::Ray
 {
 	BufferUniform::BufferUniform(std::string_view name, ShaderStage stage, const Pipeline& pipeline)
-		: m_Name(name), m_ShaderStage(stage)
+		: m_Name(name), m_ShaderStage(stage), m_Context(pipeline.GetShader().GetRenderContext())
 	{
 		RAY_MEXPECTS(pipeline.GetShader().GetReflection(stage).HasUniformBlock(name),
 			"[BufferUniform] Uniform \"{0}\" was not found in shader stage \"{1}\"", name,
@@ -26,9 +26,10 @@ namespace At0::Ray
 		Setup(uniformBlock.size);
 	}
 
-	BufferUniform::BufferUniform(std::string_view name, uint32_t binding, uint32_t size,
+	BufferUniform::BufferUniform(const RenderContext& context, std::string_view name,
+		uint32_t binding, uint32_t size,
 		std::unordered_map<std::string, uint32_t> uniformInBlockOffsets)
-		: m_Name(name), m_Binding(binding)
+		: m_Name(name), m_Binding(binding), m_Context(context)
 	{
 		for (const auto& [name, offset] : uniformInBlockOffsets)
 			m_UniformInBlockOffsets.emplace_back(std::pair{ name, offset });
@@ -38,9 +39,15 @@ namespace At0::Ray
 
 	BufferUniform::~BufferUniform() {}
 
-	uint32_t BufferUniform::GetOffset() const { return m_UniformBuffer->GetOffset(); }
+	uint32_t BufferUniform::GetOffset() const
+	{
+		return m_UniformBuffer->GetOffset();
+	}
 
-	uint32_t BufferUniform::GetSize() const { return m_UniformBuffer->GetSize(); }
+	uint32_t BufferUniform::GetSize() const
+	{
+		return m_UniformBuffer->GetSize();
+	}
 
 	DynamicBufferAccess BufferUniform::operator[](const std::string& name)
 	{
@@ -79,7 +86,10 @@ namespace At0::Ray
 			((char*)m_UniformBuffer->GetBuffer().GetMapped()) + m_UniformBuffer->GetOffset());
 	}
 
-	BufferUniform::BufferUniform(BufferUniform&& other) noexcept { *this = std::move(other); }
+	BufferUniform::BufferUniform(BufferUniform&& other) noexcept : m_Context(other.m_Context)
+	{
+		*this = std::move(other);
+	}
 
 	BufferUniform& BufferUniform::operator=(BufferUniform&& other) noexcept
 	{
@@ -93,6 +103,6 @@ namespace At0::Ray
 
 	void BufferUniform::Setup(uint32_t bufferSize)
 	{
-		m_UniformBuffer = MakeScope<DynamicUniformBuffer>(bufferSize);
+		m_UniformBuffer = MakeScope<DynamicUniformBuffer>(m_Context, bufferSize);
 	}
 }  // namespace At0::Ray

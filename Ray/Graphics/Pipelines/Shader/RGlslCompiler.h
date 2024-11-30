@@ -17,11 +17,12 @@ namespace glslang
 namespace At0::Ray
 {
 	enum class ShaderStage;
+	class RenderContext;
 
 	class RAY_EXPORT GlslCompiler
 	{
 	public:
-		GlslCompiler(const std::vector<std::string>& shaders,
+		GlslCompiler(RenderContext& context, const std::vector<std::string>& shaders,
 			const std::vector<ShaderStage>& stageOrder = {});
 
 		const auto& GetReflections() const { return m_Reflections; }
@@ -31,8 +32,8 @@ namespace At0::Ray
 		auto&& AcquireShaderModules() { return std::move(m_ShaderModules); }
 
 	private:
-		VkShaderModule CreateShaderModule(
-			std::string_view preamble, ShaderStage shaderStage, bool isSrcString = false);
+		VkShaderModule CreateShaderModule(RenderContext& context, std::string_view preamble,
+			ShaderStage shaderStage, bool isSrcString = false);
 		void LoadUniform(const glslang::TProgram& program, ShaderStage stageFlag, int32_t i);
 		void LoadUniformBlock(const glslang::TProgram& program, ShaderStage stageFlag, int32_t i);
 		void LoadAttribute(const glslang::TProgram& program, ShaderStage stageFlag, int32_t i);

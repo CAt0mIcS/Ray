@@ -111,7 +111,8 @@ namespace At0::Ray
 				.SetMemoryProperties(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
 				.Build();
 
-		Buffer stagingBuffer(uploadSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+		Buffer stagingBuffer(m_Window.GetRenderContext(), uploadSize,
+			VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, fontData);
 
 		// Copy
@@ -184,8 +185,8 @@ namespace At0::Ray
 			if (m_VertexBuffer)
 				m_VertexBuffer.reset();
 
-			m_VertexBuffer = MakeScope<Buffer>(vertexBufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+			m_VertexBuffer = MakeScope<Buffer>(m_Window.GetRenderContext(), vertexBufferSize,
+				VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 
 			m_VertexCount = imDrawData->TotalVtxCount;
 		}
@@ -196,8 +197,8 @@ namespace At0::Ray
 			if (m_IndexBuffer)
 				m_IndexBuffer.reset();
 
-			m_IndexBuffer = MakeScope<Buffer>(indexBufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+			m_IndexBuffer = MakeScope<Buffer>(m_Window.GetRenderContext(), indexBufferSize,
+				VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 
 			m_IndexCount = imDrawData->TotalIdxCount;
 		}
@@ -310,23 +311,24 @@ namespace At0::Ray
 		vertexInputAttributes.emplace_back(vInputUV);
 		vertexInputAttributes.emplace_back(vInputCol);
 
-		m_Pipeline =
-			GraphicsPipeline::Builder(m_Window.GetRenderContext().graphics.GetRenderPass(),
-				m_Window.GetRenderContext().graphics.GetPipelineCache())
-				.SetShader(MakeRef<Shader>(std::vector<std::string>{ "Resources/Shaders/ImGUI.vert",
-											   "Resources/Shaders/ImGUI.frag" },
-					Shader::GLSLFile))
-				.SetCullMode(VK_CULL_MODE_NONE)
-				.SetDepthTestEnabled(false)
-				.SetVertexInputBindingDescriptions({ vertexInputBinding })
-				.SetVertexInputAttributeDescriptions({ vertexInputAttributes })
-				.BuildScoped();
+		m_Pipeline = GraphicsPipeline::Builder(m_Window.GetRenderContext().graphics.GetRenderPass(),
+			m_Window.GetRenderContext().graphics.GetPipelineCache())
+						 .SetShader(MakeRef<Shader>(m_Window.GetRenderContext(),
+							 std::vector<std::string>{
+								 "Resources/Shaders/ImGUI.vert", "Resources/Shaders/ImGUI.frag" },
+							 Shader::GLSLFile))
+						 .SetCullMode(VK_CULL_MODE_NONE)
+						 .SetDepthTestEnabled(false)
+						 .SetVertexInputBindingDescriptions({ vertexInputBinding })
+						 .SetVertexInputAttributeDescriptions({ vertexInputAttributes })
+						 .BuildScoped();
 
-		m_FontDescriptor = MakeScope<DescriptorSet>(m_Pipeline->GetDescriptorPool(),
-			m_Pipeline->GetDescriptorSetLayout(0), Pipeline::BindPoint::Graphics,
-			m_Pipeline->GetLayout(), 0);
+		m_FontDescriptor = MakeScope<DescriptorSet>(m_Pipeline->GetShader().GetRenderContext(),
+			m_Pipeline->GetDescriptorPool(), m_Pipeline->GetDescriptorSetLayout(0),
+			Pipeline::BindPoint::Graphics, m_Pipeline->GetLayout(), 0);
 
-		m_FontUniform = MakeScope<Sampler2DUniform>("ImGuiFonts", 0);
+		m_FontUniform = MakeScope<Sampler2DUniform>(
+			m_Pipeline->GetShader().GetRenderContext(), "ImGuiFonts", 0);
 		m_FontDescriptor->BindUniform(*m_FontUniform, m_FontImage);
 
 		// Set font id for default font to the descriptor set which should be bound when rendering

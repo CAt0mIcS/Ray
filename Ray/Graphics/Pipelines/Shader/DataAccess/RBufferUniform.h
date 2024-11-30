@@ -17,14 +17,15 @@ namespace At0::Ray
 	class Buffer;
 	class CommandBuffer;
 	class DynamicUniformBuffer;
+	class RenderContext;
 	enum class ShaderStage;
 
 	class RAY_EXPORT BufferUniform
 	{
 	public:
 		BufferUniform(std::string_view name, ShaderStage stage, const Pipeline& pipeline);
-		BufferUniform(std::string_view name, uint32_t binding, uint32_t size,
-			std::unordered_map<std::string, uint32_t> uniformInBlockOffsets);
+		BufferUniform(const RenderContext& context, std::string_view name, uint32_t binding,
+			uint32_t size, std::unordered_map<std::string, uint32_t> uniformInBlockOffsets);
 
 		~BufferUniform();
 
@@ -69,7 +70,8 @@ namespace At0::Ray
 		 * Writes data directly into the buffer
 		 */
 		template<typename T>
-		void Update(T&& data, VkDeviceSize offset = 0) requires(!std::is_same_v<T, void*>)
+		void Update(T&& data, VkDeviceSize offset = 0)
+			requires(!std::is_same_v<T, void*>)
 		{
 			Update((void*)&data, (uint32_t)sizeof(data), offset);
 		}
@@ -91,6 +93,8 @@ namespace At0::Ray
 		void CmdBindAsPushConstant(
 			const CommandBuffer& cmdBuff, VkPipelineLayout pipelineLayout) const;
 
+		const RenderContext& GetRenderContext() const { return m_Context; }
+
 		BufferUniform(BufferUniform&& other) noexcept;
 		BufferUniform& operator=(BufferUniform&& other) noexcept;
 
@@ -98,6 +102,7 @@ namespace At0::Ray
 		void Setup(uint32_t bufferSize);
 
 	private:
+		const RenderContext& m_Context;
 		std::string m_Name;
 
 		// The binding specified in the shader

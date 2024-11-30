@@ -39,16 +39,9 @@
 
 namespace At0::Ray
 {
-	Graphics* Graphics::s_Instance = nullptr;
-
 	Graphics::Graphics(Window& window, RenderContext& context)
 		: m_Window(window), m_Context(context), EventListener<FramebufferResizedEvent>(window)
 	{
-		if (s_Instance)
-			ThrowRuntime("[Graphics] Object already created");
-
-		s_Instance = this;
-
 		UpdateViewport();
 		UpdateScissor();
 
@@ -74,11 +67,6 @@ namespace At0::Ray
 		CreateSyncObjects();
 
 		m_ShadowMapping = MakeScope<ShadowMappingObjects>(m_Context, m_TransientCommandPool);
-	}
-
-	Graphics& Graphics::Get()
-	{
-		return *s_Instance;
 	}
 
 	void Graphics::CreateRenderPass()
@@ -255,8 +243,8 @@ namespace At0::Ray
 		m_RenderPass->Begin(
 			cmdBuff, framebuffer, clearValues, std::size(clearValues), m_Swapchain->GetExtent());
 
-		vkCmdSetViewport(cmdBuff, 0, 1, &Graphics::Get().m_Viewport);
-		vkCmdSetScissor(cmdBuff, 0, 1, &Graphics::Get().m_Scissor);
+		vkCmdSetViewport(cmdBuff, 0, 1, &m_Viewport);
+		vkCmdSetScissor(cmdBuff, 0, 1, &m_Scissor);
 
 		// Visualize shadow map
 		// bool displayShadowMap = false;

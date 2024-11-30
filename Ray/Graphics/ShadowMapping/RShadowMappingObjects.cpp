@@ -102,14 +102,14 @@ namespace At0::Ray
 
 		// Pipeline/offDescriptor/offUniform
 		{
-			pipeline =
-				GraphicsPipeline::Builder(
-					context.graphics.GetRenderPass(), context.graphics.GetPipelineCache())
-					.SetShader(Shader::FromSourceFile({ "Resources/Shaders/Offscreen.vert" }))
-					.SetRenderPass(*renderPass)
-					.SetDynamicStates({ VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR,
-						VK_DYNAMIC_STATE_DEPTH_BIAS })
-					.Build();
+			pipeline = GraphicsPipeline::Builder(
+				context.graphics.GetRenderPass(), context.graphics.GetPipelineCache())
+						   .SetShader(Shader::FromSourceFile(
+							   context, { "Resources/Shaders/Offscreen.vert" }))
+						   .SetRenderPass(*renderPass)
+						   .SetDynamicStates({ VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR,
+							   VK_DYNAMIC_STATE_DEPTH_BIAS })
+						   .Build();
 
 			uniform = MakeScope<BufferUniform>("UBO", ShaderStage::Vertex, *pipeline);
 			(*uniform)["depthMVP"] = CalculateDepthModelViewProjectionMatrix();

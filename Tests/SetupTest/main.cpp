@@ -60,18 +60,34 @@ public:
 
 
 		m_Entity = GetScene().CreateEntity();
-		m_Entity.Emplace<Ray::Model>(scene, "Resources/Scenes/Sponza/scene.gltf", material);
+		// m_Entity.Emplace<Ray::Model>(scene, "Resources/Scenes/Sponza/scene.gltf", material);
 
 		Ray::Entity light = GetScene().CreateEntity();
 		light.Emplace<Ray::PointLight>();
 		light.Emplace<Ray::TagComponent>("Light");
-		light.Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(Ray::Material::FlatWhite(), 1.f, 24, 24));
+		light.Emplace<Ray::Mesh>(Ray::Mesh::UVSphere(FlatWhite(), 1.f, 24, 24));
 
-		m_Entity.AddChild(light);
+		// m_Entity.AddChild(light);
 
 		// GetScene().CreateEntity().Emplace<Ray::Skybox>(
 		//	Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
 		auto& registry = GetScene().GetRegistry();
+	}
+
+	/**
+	 * RAY_TODO: This used to be Material::FlatWhite() but we now can't use Graphics singletons
+	 *anymore RAY_TODO: Move this to the engine-side
+	 */
+	Ray::Ref<Ray::Material> FlatWhite()
+	{
+		return MaterialBuilder(
+			PipelineBuilder()
+				.SetShader(LoadShaderFromSourceFile(
+					{ "Resources/Shaders/Flat_Col.vert", "Resources/Shaders/Flat_Col.frag" }))
+				.SetCullMode(VK_CULL_MODE_NONE)
+				.Acquire())
+			.Set("Shading.color", Ray::Float4{ 1.f })
+			.Build();
 	}
 
 private:

@@ -9,7 +9,7 @@ namespace At0::Ray
 {
 	Sampler2DUniform::Sampler2DUniform(
 		std::string_view name, ShaderStage stage, const Pipeline& pipeline)
-		: m_Name(name)
+		: m_Name(name), m_Context(pipeline.GetShader().GetRenderContext())
 	{
 		RAY_MEXPECTS(pipeline.GetShader().GetReflection(stage).HasUniform(name, true),
 			"[BufferUniform] Uniform \"{0}\" was not found in shader stage \"{1}\"", name,
@@ -19,8 +19,9 @@ namespace At0::Ray
 		m_Binding = uniform.binding;
 	}
 
-	Sampler2DUniform::Sampler2DUniform(std::string_view name, uint32_t binding)
-		: m_Name(name), m_Binding(binding)
+	Sampler2DUniform::Sampler2DUniform(
+		const RenderContext& context, std::string_view name, uint32_t binding)
+		: m_Name(name), m_Binding(binding), m_Context(context)
 	{
 	}
 
