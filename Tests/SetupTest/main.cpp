@@ -31,7 +31,7 @@
 #include <filesystem>
 
 #include <Ray/Utils/RImGui.h>
-#include <../../Extern/imgui/imgui.h>
+#include <../../Extern/ImGui/ImGui.h>
 
 
 using namespace At0;
@@ -40,9 +40,12 @@ using namespace At0;
 class TestEntityLayer : public Ray::Layer, public Ray::EventListener<Ray::ImGuiDrawEvent>
 {
 public:
-	TestEntityLayer(Ray::Scene& scene, Ray::Ref<Ray::Window> window)
-		: Ray::Layer(scene, window), RAY_IMGUI_CONSTRUCTOR
+	TestEntityLayer(Ray::Scene& scene, Ray::Ref<Ray::Window> window) : Ray::Layer(scene, window)
 	{
+#if RAY_ENABLE_IMGUI
+		RegisterForDispatcher(window->GetImGui());
+#endif
+
 		auto pipeline =
 			PipelineBuilder()
 				.SetShader(LoadShaderFromSourceFile({ "Tests/Lighting/Shaders/Lighting.vert",
@@ -150,7 +153,7 @@ public:
 		mainWindow->Show();
 		mainWindow->SetTitle("SetupTest");
 
-		// Ray::ImGUI::Create(*mainWindow);
+		// Ray::ImGui::Create(*mainWindow);
 
 		// Ray::Ref<Ray::Scene> scene = CreateSceneFromFile("filepath");
 		Ray::Ref<Ray::Scene> scene = CreateScene("MainScene");
@@ -168,7 +171,7 @@ public:
 		// e.g. create GraphicsPipeline::Builder
 		//	Maybe decouple this in the future:
 		//		Layer class in the Scene is only for game logic (updating entities, applying physics
-		//			forces)
+		//			forces) (Then again, we have ScriptableEntity[Component] for game logic)
 		//		RenderLayer class (stored in the Window) is for interacting with rendering resources
 		//			(creating new graphics pipelines)
 		//

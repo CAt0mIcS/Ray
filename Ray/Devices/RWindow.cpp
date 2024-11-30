@@ -39,6 +39,9 @@ namespace At0::Ray
 		SetEventCallbacks();
 
 		m_RenderContext = MakeScope<RenderContext>(*this, vkInstance, physicalDevice);
+#if RAY_ENABLE_IMGUI
+		m_ImGui = MakeScope<ImGUI>(*this);
+#endif
 	}
 
 	void Window::Show() const

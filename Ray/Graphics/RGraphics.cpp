@@ -279,7 +279,7 @@ namespace At0::Ray
 
 
 #if RAY_ENABLE_IMGUI
-		ImGUI::Get().CmdBind(cmdBuff);
+		m_Window.GetImGui().CmdBind(cmdBuff);
 #endif
 
 		m_RenderPass->End(cmdBuff);
@@ -327,9 +327,9 @@ namespace At0::Ray
 		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
 
 #if RAY_ENABLE_IMGUI
-		ImGUI::Get().Update(dt);
-		ImGUI::Get().NewFrame();
-		ImGUI::Get().UpdateBuffers();
+		m_Window.GetImGui().Update(dt);
+		m_Window.GetImGui().NewFrame();
+		m_Window.GetImGui().UpdateBuffers();
 #endif
 		scene->UpdateTransforms(dt);
 
@@ -340,8 +340,9 @@ namespace At0::Ray
 
 
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
-		m_CommandBufferRecorder->Record(*scene, *m_RenderPass, *m_Framebuffers[imageIndex],
-			imageIndex, m_Viewport, m_Scissor, m_Swapchain->GetExtent());
+		m_CommandBufferRecorder->Record(*scene, m_Window, *m_RenderPass,
+			*m_Framebuffers[imageIndex], imageIndex, m_Viewport, m_Scissor,
+			m_Swapchain->GetExtent());
 		// submitInfo.commandBufferCount =
 		//	(uint32_t)m_CommandBufferRecorder->GetVkCommandBuffers(imageIndex).size();
 		// submitInfo.pCommandBuffers =
@@ -411,14 +412,8 @@ namespace At0::Ray
 		m_CommandBuffers.clear();
 		m_CommandBufferRecorder.reset();
 
-		// Scene::Destroy();
-
-#if RAY_ENABLE_IMGUI
-		ImGUI::Destroy();
-#endif
 		DynamicUniformBuffer::Reset();
 		Codex::Shutdown();
-		// ResourceManager::Destroy();
 
 		if (m_PipelineCache)
 		{

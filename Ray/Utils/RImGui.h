@@ -9,7 +9,7 @@ namespace At0::Ray
 
 
 #ifndef RAY_ENABLE_IMGUI
-	#define RAY_ENABLE_IMGUI 0
+	#define RAY_ENABLE_IMGUI 1
 #endif
 #ifndef RAY_ENABLE_IMGUI_DOCKSPACE
 	#define RAY_ENABLE_IMGUI_DOCKSPACE 0
@@ -17,9 +17,6 @@ namespace At0::Ray
 
 
 #if RAY_ENABLE_IMGUI
-
-	#define RAY_IMGUI_CONSTRUCTOR \
-		::At0::Ray::EventListener<::At0::Ray::ImGuiDrawEvent>(::At0::Ray::ImGUI::Get())
 
 // clang-format off
 #include "../RBase.h"
@@ -48,7 +45,7 @@ namespace At0::Ray
 
 	/**
 	 * RAY_TODO:
-	 *	ImGui should be the first to receive events
+	 *	ImGUI should be the first to receive events
 	 */
 
 	class RAY_EXPORT ImGUI :
@@ -74,9 +71,7 @@ namespace At0::Ray
 		} m_PushConstBlock;
 
 	public:
-		static ImGUI& Create(Window& window);
-		static ImGUI& Get();
-		static void Destroy();
+		ImGUI(Window& window);
 		~ImGUI();
 
 		void NewFrame(std::function<void()> fn = []() {});
@@ -88,20 +83,18 @@ namespace At0::Ray
 		static Float4 Float4Widget(std::string_view title, Float4 data);
 
 		/**
-		 * Should be called on stored textures to get the ID required for ImGui::Image
-		 * @returns First parameter of ImGui::Image function
+		 * Should be called on stored textures to get the ID required for ImGUI::Image
+		 * @returns First parameter of ImGUI::Image function
 		 */
 		void* PushTexture(const Texture& texture);
 
 		/**
-		 * Should be called on stored textures to get the ID required for ImGui::Image
-		 * @returns First parameter of ImGui::Image function
+		 * Should be called on stored textures to get the ID required for ImGUI::Image
+		 * @returns First parameter of ImGUI::Image function
 		 */
 		void* PushTexture(VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout);
 
 	private:
-		ImGUI(Window& window);
-
 		void InitResources();
 		void CreatePipeline();
 		void CreateTextureUploadResources();
@@ -119,8 +112,6 @@ namespace At0::Ray
 		void OnEvent(ScrollDownEvent& e) override;
 
 	private:
-		static Scope<ImGUI> s_Instance;
-
 		Window& m_Window;
 
 		Ref<Texture> m_FontImage;
@@ -139,9 +130,5 @@ namespace At0::Ray
 		int32_t m_IndexCount = 0;
 	};
 }  // namespace At0::Ray
-
-#else
-
-	#define RAY_IMGUI_CONSTRUCTOR ::At0::Ray::EventListener<::At0::Ray::ImGuiDrawEvent>()
 
 #endif

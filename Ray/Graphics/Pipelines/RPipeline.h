@@ -10,6 +10,7 @@
 namespace At0::Ray
 {
 	class Shader;
+	class RenderContext;
 
 	class RAY_EXPORT Pipeline : public SharedBindable, NonCopyable
 	{
@@ -35,12 +36,13 @@ namespace At0::Ray
 		operator const VkPipeline&() const { return m_Pipeline; }
 
 	protected:
-		Pipeline(Ref<Shader> shader);
+		Pipeline(Ref<Shader> shader, const RenderContext& context);
 
 	protected:
 		VkPipeline m_Pipeline = VK_NULL_HANDLE;
 		VkPipelineLayout m_Layout = VK_NULL_HANDLE;
 
 		Ref<Shader> m_Shader;
+		const RenderContext& m_Context;
 	};
 }  // namespace At0::Ray

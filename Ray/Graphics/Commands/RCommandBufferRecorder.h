@@ -15,6 +15,7 @@ namespace At0::Ray
 	class SecondaryCommandBuffer;
 	class RenderContext;
 	class Scene;
+	class Window;
 
 	class RAY_EXPORT CommandBufferRecorder : NonCopyable
 	{
@@ -36,7 +37,7 @@ namespace At0::Ray
 			uint32_t subpassID, const std::vector<Scope<Framebuffer>>& framebuffers);
 		~CommandBufferRecorder();
 
-		void Record(Scene& lockedScene, const RenderPass& renderPass,
+		void Record(Scene& lockedScene, Window& window, const RenderPass& renderPass,
 			const Framebuffer& framebuffer, uint32_t imageIndex, const VkViewport& viewport,
 			const VkRect2D& scissor, UInt2 swapchainExtent);
 

@@ -11,6 +11,8 @@
 #include "../Events/RMouseEvents.h"
 #include "../Events/RKeyboardEvents.h"
 
+#include "../Utils/RImGui.h"
+
 #include <string_view>
 #include <utility>
 #include <stdint.h>
@@ -152,6 +154,10 @@ namespace At0::Ray
 		 */
 		void SetActiveScene(Ref<Scene> scene);
 
+#if RAY_ENABLE_IMGUI
+		ImGUI& GetImGui() { return *m_ImGui; }
+#endif
+
 	private:
 		void SetEventCallbacks();
 
@@ -171,5 +177,9 @@ namespace At0::Ray
 		Float2 m_PrevousMousePos{};
 		Widget* m_HoverWidget = nullptr;
 		Widget* m_ClickedWidget = nullptr;
+
+#if RAY_ENABLE_IMGUI
+		Scope<ImGUI> m_ImGui;
+#endif
 	};
 }  // namespace At0::Ray

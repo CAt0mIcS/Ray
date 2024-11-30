@@ -55,33 +55,6 @@ namespace At0::Ray
 
 namespace At0::Ray
 {
-	Scope<ImGUI> ImGUI::s_Instance = nullptr;
-
-	ImGUI& ImGUI::Create(Window& window)
-	{
-		RAY_MEXPECTS(!s_Instance, "ImGUI was already created");
-		s_Instance = Scope<ImGUI>(new ImGUI(window));
-		return *s_Instance;
-	}
-
-	ImGUI& ImGUI::Get()
-	{
-		RAY_MEXPECTS(s_Instance, "ImGUI has not been created yet");
-		return *s_Instance;
-	}
-
-	void ImGUI::Destroy()
-	{
-		s_Instance.reset();
-	}
-
-	ImGUI::~ImGUI()
-	{
-		ImGui::DestroyContext();
-		vkDestroyDescriptorSetLayout(
-			m_Window.GetRenderContext().device, m_TextureDescriptorSetLayout, nullptr);
-	}
-
 	ImGUI::ImGUI(Window& window)
 		: m_Window(window), EventListener<FramebufferResizedEvent>(window),
 		  EventListener<MouseMovedEvent>(window), EventListener<MouseButtonPressedEvent>(window),
@@ -109,6 +82,13 @@ namespace At0::Ray
 
 		ImGui_ImplGlfw_InitForVulkan(m_Window.GetNative(), false);
 		InitResources();
+	}
+
+	ImGUI::~ImGUI()
+	{
+		ImGui::DestroyContext();
+		vkDestroyDescriptorSetLayout(
+			m_Window.GetRenderContext().device, m_TextureDescriptorSetLayout, nullptr);
 	}
 
 	void ImGUI::InitResources()
@@ -303,7 +283,7 @@ namespace At0::Ray
 
 	void ImGUI::CreatePipeline()
 	{
-		// Vertex bindings an attributes based on ImGui vertex definition
+		// Vertex bindings an attributes based on ImGUI vertex definition
 		VkVertexInputBindingDescription vertexInputBinding{};
 		vertexInputBinding.binding = 0;
 		vertexInputBinding.stride = sizeof(ImDrawVert);
@@ -332,8 +312,8 @@ namespace At0::Ray
 		m_Pipeline =
 			GraphicsPipeline::Builder(m_Window.GetRenderContext().graphics.GetRenderPass(),
 				m_Window.GetRenderContext().graphics.GetPipelineCache())
-				.SetShader(MakeRef<Shader>(std::vector<std::string>{ "Resources/Shaders/ImGui.vert",
-											   "Resources/Shaders/ImGui.frag" },
+				.SetShader(MakeRef<Shader>(std::vector<std::string>{ "Resources/Shaders/ImGUI.vert",
+											   "Resources/Shaders/ImGUI.frag" },
 					Shader::GLSLFile))
 				.SetCullMode(VK_CULL_MODE_NONE)
 				.SetDepthTestEnabled(false)

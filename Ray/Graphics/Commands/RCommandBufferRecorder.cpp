@@ -10,6 +10,7 @@
 #include "../Buffers/RFramebuffer.h"
 
 #include "Scene/RScene.h"
+#include "Devices/RWindow.h"
 #include "Components/RMeshRenderingResources.h"
 #include "Components/RMesh.h"
 #include "Utils/RImGui.h"
@@ -56,9 +57,9 @@ namespace At0::Ray
 
 	CommandBufferRecorder::~CommandBufferRecorder() {}
 
-	void CommandBufferRecorder::Record(Scene& lockedScene, const RenderPass& renderPass,
-		const Framebuffer& framebuffer, uint32_t imageIndex, const VkViewport& viewport,
-		const VkRect2D& scissor, UInt2 swapchainExtent)
+	void CommandBufferRecorder::Record(Scene& lockedScene, Window& window,
+		const RenderPass& renderPass, const Framebuffer& framebuffer, uint32_t imageIndex,
+		const VkViewport& viewport, const VkRect2D& scissor, UInt2 swapchainExtent)
 	{
 		const CommandBuffer& mainCmdBuff = *m_MainCommandResources[imageIndex].commandBuffer;
 
@@ -105,7 +106,7 @@ namespace At0::Ray
 			// Scene::Get().EntityView<TextComponent>().each(
 			//	[&commandBuffer](TextComponent& renderer) { renderer.Render(*commandBuffer); });
 #if RAY_ENABLE_IMGUI
-			ImGUI::Get().CmdBind(*commandBuffer);
+			window.GetImGui().CmdBind(*commandBuffer);
 #endif
 		}
 

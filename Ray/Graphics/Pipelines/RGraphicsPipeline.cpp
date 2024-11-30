@@ -21,7 +21,7 @@ namespace At0::Ray
 		VkPipelineColorBlendAttachmentState* colorBlendAttachment,
 		VkPipelineColorBlendStateCreateInfo* colorBlending,
 		VkPipelineDynamicStateCreateInfo* dynamicStateInfo)
-		: Pipeline(std::move(shader)), m_Context(renderPass.GetRenderContext())
+		: Pipeline(std::move(shader), renderPass.GetRenderContext())
 	{
 		CreateDescriptorSetLayouts();
 		CreateDescriptorPool();

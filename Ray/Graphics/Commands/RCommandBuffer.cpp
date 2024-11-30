@@ -1,6 +1,5 @@
 ﻿#include "RCommandBuffer.h"
 
-#include "Graphics/RGraphics.h"
 #include "Graphics/Core/RLogicalDevice.h"
 #include "Graphics/Core/RRenderContext.h"
 #include "RCommandPool.h"
@@ -17,7 +16,7 @@ namespace At0::Ray
 		allocInfo.level = bufferLevel;
 		allocInfo.commandBufferCount = 1;
 
-		ThrowVulkanError(vkAllocateCommandBuffers(Graphics::Get().GetRenderContext().device,
+		ThrowVulkanError(vkAllocateCommandBuffers(m_CommandPool->GetRenderContext().device,
 							 &allocInfo, &m_CommandBuffer),
 			"[CommandBuffer] Failed to allocate command buffer");
 	}
@@ -25,7 +24,7 @@ namespace At0::Ray
 	CommandBuffer::~CommandBuffer()
 	{
 		vkFreeCommandBuffers(
-			Graphics::Get().GetRenderContext().device, *m_CommandPool, 1, &m_CommandBuffer);
+			m_CommandPool->GetRenderContext().device, *m_CommandPool, 1, &m_CommandBuffer);
 	}
 
 	void CommandBuffer::Begin(VkCommandBufferUsageFlags usageFlags) const
