@@ -19,13 +19,10 @@ namespace At0::Ray
 	class Camera;
 	class Layer;
 	class Engine;
-	class Window;
 
 
 	class RAY_EXPORT Scene : public EventDispatcher<EntityCreatedEvent>, public Resource
 	{
-		friend class Engine;
-
 	public:
 		Scene(Engine& engine, Scope<Camera> camera);
 		virtual ~Scene();
@@ -63,20 +60,17 @@ namespace At0::Ray
 		const Camera& GetCamera() const;
 		Camera& GetCamera() { return (Camera&)std::as_const(*this).GetCamera(); }
 
-		const Window& GetWindow() const;
-		Window& GetWindow() { return (Window&)std::as_const(*this).GetWindow(); }
-
 		const Engine& GetEngine() const { return m_Engine; }
 
 		template<typename T, typename... Args>
-		T& RegisterLayer(Args&&... args)
+		T& RegisterLayer(Ref<Window> window, Args&&... args)
 			requires std::derived_from<T, Layer> /* && std::constructible_from<T, Scene, Args...>*/
 		{
-			return *(T*)(m_Layers.emplace_back(MakeScope<T>(*this, std::forward<Args>()...)).get());
+			return *(T*)(m_Layers
+							 .emplace_back(
+								 MakeScope<T>(*this, std::move(window), std::forward<Args>()...))
+							 .get());
 		}
-
-	private:
-		void SetWindow(Ref<Window> window);
 
 	private:
 		entt::registry m_Registry;
@@ -85,7 +79,6 @@ namespace At0::Ray
 
 		std::vector<Scope<Layer>> m_Layers;
 		const Engine& m_Engine;
-		WeakPtr<Window> m_Window;
 	};
 
 }  // namespace At0::Ray

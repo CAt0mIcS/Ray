@@ -9,7 +9,7 @@ namespace At0::Ray
 
 
 #ifndef RAY_ENABLE_IMGUI
-	#define RAY_ENABLE_IMGUI 1
+	#define RAY_ENABLE_IMGUI 0
 #endif
 #ifndef RAY_ENABLE_IMGUI_DOCKSPACE
 	#define RAY_ENABLE_IMGUI_DOCKSPACE 0

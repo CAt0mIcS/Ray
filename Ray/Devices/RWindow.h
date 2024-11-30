@@ -27,7 +27,6 @@ namespace At0::Ray
 	class RenderContext;
 	class VulkanInstance;
 	class PhysicalDevice;
-	class Engine;
 
 	class RAY_EXPORT Window :
 		public EventDispatcher<WindowResizedEvent>,
@@ -48,8 +47,6 @@ namespace At0::Ray
 		public EventDispatcher<HoverEnterEvent>,
 		public EventDispatcher<HoverLeaveEvent>
 	{
-		friend class Engine;
-
 	public:
 		/**
 		 * Creates the Window. Call Window::Show to show it
@@ -149,13 +146,13 @@ namespace At0::Ray
 
 		Ref<Scene> GetActiveScene() { return m_ActiveScene.lock(); }
 
-	private:
 		/**
 		 * Sets the scene which is actively being rendered in this window
 		 * RAY_TODO: Use WeakPtr<Scene> as argument to avoid atomic counter increment?
 		 */
 		void SetActiveScene(Ref<Scene> scene);
 
+	private:
 		void SetEventCallbacks();
 
 		void GenerateHoverEvents();

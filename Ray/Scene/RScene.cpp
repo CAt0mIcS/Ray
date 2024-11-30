@@ -102,18 +102,6 @@ namespace At0::Ray
 		return *m_Camera;
 	}
 
-	const Window& Scene::GetWindow() const
-	{
-		RAY_MEXPECTS(!m_Window.expired(),
-			"[Scene] Trying to get destroyed window associated with the scene");
-		return *m_Window.lock();  // RAY_TODO: This is really not good
-	}
-
-	void Scene::SetWindow(Ref<Window> window)
-	{
-		m_Window = window;
-	}
-
 	Scene::Scene(Engine& engine, Scope<Camera> camera)
 		: m_Engine(engine), m_Camera(std::move(camera))
 	{

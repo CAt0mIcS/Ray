@@ -66,12 +66,6 @@ namespace At0::Ray
 		m_Resources.Destroy(tag);
 	}
 
-	void Engine::SetActiveScene(Ref<Window> window, Ref<Scene> scene)
-	{
-		window->SetActiveScene(scene);
-		scene->SetWindow(window);
-	}
-
 	Engine::Engine()
 	{
 		// RAY_TODO: References to windows would get invalidated if rehash occurrs. Reserving max

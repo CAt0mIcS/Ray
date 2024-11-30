@@ -60,11 +60,6 @@ namespace At0::Ray
 		Ref<Scene> CreateScene(const std::string& tag);
 		void DestroyScene(const std::string& tag);
 
-		/**
-		 * Links a specific window to a specific scene
-		 */
-		void SetActiveScene(Ref<Window> window, Ref<Scene> scene);
-
 		size_t GetNumWindows() const { return m_Windows.size(); }
 		Ref<Window> GetWindow(const std::string& tag) { return m_Windows.at(tag).window; }
 		const Window& GetWindow(const std::string& tag) const { return *m_Windows.at(tag).window; }
@@ -102,8 +97,7 @@ namespace At0::Ray
 		static constexpr int s_MaxWindows = 12;
 
 		Engine::RenderContext m_Context{};
-		ResourceManager m_Resources;
-
 		std::unordered_map<std::string, WindowData> m_Windows;
+		ResourceManager m_Resources;
 	};
 }  // namespace At0::Ray

@@ -40,7 +40,8 @@ using namespace At0;
 class TestEntityLayer : public Ray::Layer, public Ray::EventListener<Ray::ImGuiDrawEvent>
 {
 public:
-	TestEntityLayer(Ray::Scene& scene) : Ray::Layer(scene), RAY_IMGUI_CONSTRUCTOR
+	TestEntityLayer(Ray::Scene& scene, Ray::Ref<Ray::Window> window)
+		: Ray::Layer(scene, window), RAY_IMGUI_CONSTRUCTOR
 	{
 		auto pipeline =
 			PipelineBuilder()
@@ -145,17 +146,17 @@ class App : public Ray::Engine
 public:
 	App()
 	{
-		auto window = CreateWindow("MainWindow");
-		window->Show();
-		window->SetTitle("SetupTest");
+		auto mainWindow = CreateWindow("MainWindow");
+		mainWindow->Show();
+		mainWindow->SetTitle("SetupTest");
 
-		Ray::ImGUI::Create(*window);
+		// Ray::ImGUI::Create(*mainWindow);
 
 		// Ray::Ref<Ray::Scene> scene = CreateSceneFromFile("filepath");
 		Ray::Ref<Ray::Scene> scene = CreateScene("MainScene");
-		SetActiveScene(window, scene);
+		mainWindow->SetActiveScene(scene);
 
-		Ray::UInt2 size = scene->GetWindow().GetFramebufferSize();
+		Ray::UInt2 size = mainWindow->GetFramebufferSize();
 		auto& camera = scene->GetCamera();
 		camera.SetPosition(Ray::Float3(0.0f, 0.0f, -2.5f));
 		camera.SetRotation(Ray::Float3(0.0f));
@@ -163,7 +164,18 @@ public:
 		camera.SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
 		camera.SetMovementSpeed(3.0f);
 
-		scene->RegisterLayer<TestEntityLayer>();
+		// RAY_TODO: Currently we need the Window (it's Vulkan Resources) in the Layer to be able to
+		// e.g. create GraphicsPipeline::Builder
+		//	Maybe decouple this in the future:
+		//		Layer class in the Scene is only for game logic (updating entities, applying physics
+		//			forces)
+		//		RenderLayer class (stored in the Window) is for interacting with rendering resources
+		//			(creating new graphics pipelines)
+		//
+		// So we'd call:
+		//	scene->RegisterLayer<PhysicsLayer>();
+		//	window->RegisterRenderingLayer<UiRenderingLayer>();
+		scene->RegisterLayer<TestEntityLayer>(mainWindow);
 	}
 
 private:

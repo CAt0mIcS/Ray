@@ -53,7 +53,6 @@ namespace At0::Ray
 
 	void Window::Close()
 	{
-		m_RenderContext.reset();
 		glfwDestroyWindow(m_hWnd);
 	}
 

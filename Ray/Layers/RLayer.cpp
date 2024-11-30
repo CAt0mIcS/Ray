@@ -8,12 +8,7 @@
 
 namespace At0::Ray
 {
-	Layer::Layer(Scene& scene) : m_Scene(&scene) {}
-
-	const Window& Layer::GetWindow() const
-	{
-		return GetScene().GetWindow();
-	}
+	Layer::Layer(Scene& scene, Ref<Window> window) : m_Scene(&scene), m_Window(std::move(window)) {}
 
 	const Engine& Layer::GetEngine() const
 	{
@@ -27,7 +22,7 @@ namespace At0::Ray
 
 	GraphicsPipeline::Builder Layer::PipelineBuilder()
 	{
-		auto& graphics = GetWindow().GetRenderContext().graphics;
+		auto& graphics = GetWindow()->GetRenderContext().graphics;
 		return GraphicsPipeline::Builder(graphics.GetRenderPass(), graphics.GetPipelineCache());
 	}
 

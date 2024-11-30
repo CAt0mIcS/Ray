@@ -18,7 +18,7 @@ namespace At0::Ray
 	class RAY_EXPORT Layer
 	{
 	public:
-		Layer(Scene& scene);
+		Layer(Scene& scene, Ref<Window> window);
 		virtual ~Layer() = default;
 
 		virtual void Update(Delta dt) {}
@@ -32,8 +32,7 @@ namespace At0::Ray
 		const Scene& GetScene() const { return *m_Scene; }
 		Scene& GetScene() { return *m_Scene; }
 
-		const Window& GetWindow() const;
-		Window& GetWindow() { return (Window&)std::as_const(*this).GetWindow(); }
+		Ref<Window> GetWindow() { return m_Window.lock(); }
 
 		const Engine& GetEngine() const;
 
@@ -58,5 +57,6 @@ namespace At0::Ray
 
 	private:
 		Scene* m_Scene;
+		WeakPtr<Window> m_Window;
 	};
 }  // namespace At0::Ray
