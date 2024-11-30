@@ -1,6 +1,6 @@
 ﻿#include "RMesh.h"
 
-#include "RMeshRenderer.h"
+#include "RMeshRenderingResources.h"
 #include "RHierachyComponent.h"
 
 #include "Graphics/RCodex.h"
@@ -21,10 +21,11 @@ namespace At0::Ray
 	{
 		if (vertexData.material)
 		{
-			if (!GetEntity().Has<MeshRenderer>())
-				GetEntity().Emplace<MeshRenderer>(std::move(vertexData.material));
+			if (!GetEntity().Has<MeshRenderingResources>())
+				GetEntity().Emplace<MeshRenderingResources>(std::move(vertexData.material));
 			else
-				GetEntity().Get<MeshRenderer>().SetMaterial(std::move(vertexData.material));
+				GetEntity().Get<MeshRenderingResources>().SetMaterial(
+					std::move(vertexData.material));
 		}
 
 
@@ -145,5 +146,8 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Mesh::Mesh(Mesh&& other) noexcept : Component(other.m_Entity) { *this = std::move(other); }
+	Mesh::Mesh(Mesh&& other) noexcept : Component(other.m_Entity)
+	{
+		*this = std::move(other);
+	}
 }  // namespace At0::Ray

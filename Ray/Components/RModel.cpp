@@ -14,7 +14,7 @@
 #include <assimp/scene.h>
 
 #include "RMesh.h"
-#include "RMeshRenderer.h"
+#include "RMeshRenderingResources.h"
 #include "RHierachyComponent.h"
 #include "RTransform.h"
 
@@ -40,7 +40,7 @@ namespace At0::Ray
 	};
 
 
-	Model::Model(Entity entity, std::string_view filepath, Ref<Material> material)
+	Model::Model(Entity entity, Scene& scene, std::string_view filepath, Ref<Material> material)
 		: Component(entity)
 	{
 		Assimp::Importer importer;
@@ -96,9 +96,9 @@ namespace At0::Ray
 				Ref<IndexBuffer> indexBuffer = Codex::Resolve<IndexBuffer>(meshTag, indices);
 
 				// ParentEntity component added by mesh
-				Entity entity = Scene::Get().CreateEntity();
-				Ray::MeshRenderer& meshRenderer =
-					entity.Emplace<Ray::MeshRenderer>(std::move(material));
+				Entity entity = scene.CreateEntity();
+				Ray::MeshRenderingResources& meshRenderer =
+					entity.Emplace<Ray::MeshRenderingResources>(std::move(material));
 				entity.Emplace<Ray::Mesh>(Mesh::Data{ vertexBuffer, indexBuffer });
 				m_VertexData.children.emplace_back(entity);
 			}
@@ -117,14 +117,14 @@ namespace At0::Ray
 		for (auto& future : futures)
 			future.get();
 #else
-		ProcessNode(GetEntity(), filepath, pScene->mRootNode, pScene, std::move(material));
+		ProcessNode(GetEntity(), scene, filepath, pScene->mRootNode, pScene, std::move(material));
 #endif
 
 		Log::Info("[Model] Loading of resource \"{0}\" took {1}s", filepath,
 			(Time::Now() - start).AsSeconds());
 	}
 
-	bool Model::ProcessNode(Entity parent, std::string_view filepath, aiNode* pNode,
+	bool Model::ProcessNode(Entity parent, Scene& scene, std::string_view filepath, aiNode* pNode,
 		const aiScene* pScene, Ref<Material> material)
 	{
 		if (pNode->mNumMeshes <= 0 && pNode->mNumChildren <= 0)
@@ -155,13 +155,14 @@ namespace At0::Ray
 		{
 			// If only one child needs to be loaded for this entity, we'll store it directly
 			// in this entity
-			return ProcessNode(parent, filepath, pNode->mChildren[0], pScene, std::move(material));
+			return ProcessNode(
+				parent, scene, filepath, pNode->mChildren[0], pScene, std::move(material));
 		}
 		else if (pNode->mNumMeshes > 1)
 		{
 			for (unsigned int i = 0; i < pNode->mNumMeshes; i++)
 			{
-				Entity e = Scene::Get().CreateEntity();
+				Entity e = scene.CreateEntity();
 				e.Emplace<HierachyComponent>().SetParent(parent);
 				parent.GetOrEmplace<HierachyComponent>().AddChild(e);
 
@@ -174,12 +175,12 @@ namespace At0::Ray
 		// Parse children
 		for (unsigned int i = 0; i < pNode->mNumChildren; i++)
 		{
-			Entity e = Scene::Get().CreateEntity();
+			Entity e = scene.CreateEntity();
 			e.Emplace<HierachyComponent>().SetParent(parent);
 			parent.GetOrEmplace<HierachyComponent>().AddChild(e);
 
 			// Empty entity created above, delete it
-			if (!ProcessNode(e, filepath, pNode->mChildren[i], pScene, material))
+			if (!ProcessNode(e, scene, filepath, pNode->mChildren[i], pScene, material))
 			{
 				parent.RemoveChild(e);
 				e.Destroy();

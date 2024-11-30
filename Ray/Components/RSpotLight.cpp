@@ -1,5 +1,5 @@
 #include "RSpotLight.h"
-#include "RMeshRenderer.h"
+#include "RMeshRenderingResources.h"
 #include "RTransform.h"
 
 #include "Scene/RScene.h"
@@ -16,8 +16,8 @@ namespace At0::Ray
 		RAY_MEXPECTS(m_ID < 10, "[SpotLight] Light limit reached");
 
 		// RAY_TODO: Shared material updated multiple times
-		Scene::Get().EntityView<MeshRenderer>().each(
-			[this](MeshRenderer& renderer)
+		GetEntity().RegistryView<MeshRenderingResources>().each(
+			[this](MeshRenderingResources& renderer)
 			{
 				std::string id = "[" + std::to_string(m_ID) + "]";
 
@@ -41,8 +41,8 @@ namespace At0::Ray
 	void SpotLight::SetColor(Float4 color)
 	{
 		m_Color = std::move(color);
-		Scene::Get().EntityView<MeshRenderer>().each(
-			[this](MeshRenderer& renderer)
+		GetEntity().RegistryView<MeshRenderingResources>().each(
+			[this](MeshRenderingResources& renderer)
 			{
 				std::string id = "[" + std::to_string(m_ID) + "]";
 
@@ -58,8 +58,8 @@ namespace At0::Ray
 	{
 		const auto& tform = GetEntity().Get<Transform>().SetTranslation(trans);
 
-		Scene::Get().EntityView<MeshRenderer>().each(
-			[this, &tform](MeshRenderer& renderer)
+		GetEntity().RegistryView<MeshRenderingResources>().each(
+			[this, &tform](MeshRenderingResources& renderer)
 			{
 				std::string id = "[" + std::to_string(m_ID) + "]";
 
@@ -74,8 +74,8 @@ namespace At0::Ray
 	void SpotLight::SetAngle(float angleRadians)
 	{
 		m_AngleRadians = angleRadians;
-		Scene::Get().EntityView<MeshRenderer>().each(
-			[this](MeshRenderer& renderer)
+		GetEntity().RegistryView<MeshRenderingResources>().each(
+			[this](MeshRenderingResources& renderer)
 			{
 				std::string id = "[" + std::to_string(m_ID) + "]";
 
@@ -90,8 +90,8 @@ namespace At0::Ray
 	void SpotLight::SetDirection(Float3 dir)
 	{
 		m_Direction = std::move(dir);
-		Scene::Get().EntityView<MeshRenderer>().each(
-			[this](MeshRenderer& renderer)
+		GetEntity().RegistryView<MeshRenderingResources>().each(
+			[this](MeshRenderingResources& renderer)
 			{
 				std::string id = "[" + std::to_string(m_ID) + "]";
 

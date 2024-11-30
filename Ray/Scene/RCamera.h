@@ -71,6 +71,8 @@ namespace At0::Ray
 		bool IsOrthographic() const { return m_FoV == -1; }
 		bool IsPerspective() const { return !IsOrthographic(); }
 
+		static Camera& Get() { return *s_Instance; }
+
 	private:
 		void UpdateViewMatrix();
 		void DispatchCameraChanged(CameraChangedEvent e);
@@ -92,5 +94,7 @@ namespace At0::Ray
 		Frustum m_Frustum;
 
 		Window& m_Window;
+
+		inline static Camera* s_Instance = nullptr;
 	};
 }  // namespace At0::Ray

@@ -25,8 +25,8 @@ namespace At0::Ray
 
 	bool Window::s_GlfwInitialized = false;
 
-	Window::Window(const EngineRenderContext& engineContext, uint32_t width, uint32_t height,
-		std::string_view title)
+	Window::Window(const VulkanInstance& vkInstance, const PhysicalDevice& physicalDevice,
+		uint32_t width, uint32_t height, std::string_view title)
 	{
 		TryInitializeGlfw();
 
@@ -38,7 +38,7 @@ namespace At0::Ray
 		glfwSetWindowUserPointer(m_hWnd, this);
 		SetEventCallbacks();
 
-		m_RenderContext = MakeScope<RenderContext>(*this, engineContext);
+		m_RenderContext = MakeScope<RenderContext>(*this, vkInstance, physicalDevice);
 	}
 
 	void Window::Show() const
@@ -137,6 +137,11 @@ namespace At0::Ray
 	{
 		// RAY_TODO: Never freeing glfw resources
 		// glfwTerminate();
+	}
+
+	void Window::SetActiveScene(Ref<Scene> scene)
+	{
+		m_ActiveScene = scene;
 	}
 
 	void Window::SetEventCallbacks()
@@ -443,9 +448,14 @@ namespace At0::Ray
 
 	void Window::GenerateHoverEvents()
 	{
-		auto btnView = Scene::Get().EntityView<Button>();
-		for (Entity btnEntity : btnView)
+		auto activeScene = m_ActiveScene.lock();
+		if (!activeScene)
+			return;
+
+		auto btnView = activeScene->EntityView<Button>();
+		for (auto enttBtnEntity : btnView)
 		{
+			Entity btnEntity(enttBtnEntity, &activeScene->GetRegistry());
 			Button& btn = btnEntity.Get<Button>();
 			if (!Mouse::IsOnWidget(btn) && &btn == m_HoverWidget)
 			{
@@ -474,9 +484,14 @@ namespace At0::Ray
 
 	Widget* Window::GetClickedWidget()
 	{
-		auto btnView = Scene::Get().EntityView<Button>();
-		for (Entity btnEntity : btnView)
+		auto activeScene = m_ActiveScene.lock();
+		if (!activeScene)
+			return nullptr;
+
+		auto btnView = activeScene->EntityView<Button>();
+		for (auto enttBtnEntity : btnView)
 		{
+			Entity btnEntity(enttBtnEntity, &activeScene->GetRegistry());
 			Button& btn = btnEntity.Get<Button>();
 			if (Mouse::IsOnWidget(btn))
 			{
@@ -489,9 +504,14 @@ namespace At0::Ray
 
 	Widget* Window::GetReleasedWidget()
 	{
-		auto btnView = Scene::Get().EntityView<Button>();
-		for (Entity btnEntity : btnView)
+		auto activeScene = m_ActiveScene.lock();
+		if (!activeScene)
+			return nullptr;
+
+		auto btnView = activeScene->EntityView<Button>();
+		for (auto enttBtnEntity : btnView)
 		{
+			Entity btnEntity(enttBtnEntity, &activeScene->GetRegistry());
 			Button& btn = btnEntity.Get<Button>();
 			if (m_ClickedWidget == &btn)
 			{

@@ -29,7 +29,7 @@ namespace At0::Ray
 	{
 		// RAY_TODO: Add sampler in resource tag
 
-		return ResourceManager::Get().EmplaceIfNonExistent<Texture>(
+		return ResourceManager::Get().EmplaceOrGet<Texture>(
 			String::Serialize("Texture{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}", extent.x, extent.y,
 				(uint32_t)imageType, (uint32_t)format, (uint32_t)tiling, (uint32_t)usage,
 				(uint32_t)memProps, mipLevels, (uint32_t)imageAspect, arrayLayers,
@@ -40,7 +40,7 @@ namespace At0::Ray
 
 	Ref<Texture> Texture::Acquire(std::string_view filepath)
 	{
-		return ResourceManager::Get().EmplaceIfNonExistent<Texture>(filepath.data(), filepath);
+		return ResourceManager::Get().EmplaceOrGet<Texture>(filepath.data(), filepath);
 	}
 
 	Texture::Texture(std::string_view filepath) RAY_DEBUG_FLAG( : m_FilePath(filepath))

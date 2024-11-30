@@ -25,7 +25,7 @@ namespace At0::Ray
 
 	private:
 		std::vector<Entity> m_Children;
-		Entity m_Parent = Entity::Null;
+		Entity m_Parent{ Entity::Null, GetEntity().GetRegistry() };
 	};
 }  // namespace At0::Ray
 

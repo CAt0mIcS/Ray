@@ -5,7 +5,7 @@
 #include "../RenderPass/RSubpass.h"
 #include "../../Core/RMath.h"
 #include "../../Scene/REntity.h"
-#include "../../Components/RMeshRenderer.h"
+#include "../../Components/RMeshRenderingResources.h"
 #include "../../Components/RMesh.h"
 
 
@@ -27,9 +27,10 @@ namespace At0::Ray
 		~ShadowMappingObjects();
 
 		Matrix CalculateDepthModelViewProjectionMatrix() const;
-		void Draw(
-			const CommandBuffer& cmdBuff, const entt::basic_group<entt::entity, entt::exclude_t<>,
-											  entt::get_t<Mesh>, MeshRenderer>& meshRendererView);
+		void Draw(const CommandBuffer& cmdBuff,
+			const entt::basic_group<entt::entity, entt::exclude_t<>, entt::get_t<Mesh>,
+				MeshRenderingResources>& meshRendererView,
+			entt::registry* registry);
 
 		Scope<Attachment> depthAttachment;
 		Subpass subpass;

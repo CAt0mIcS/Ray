@@ -1,4 +1,4 @@
-﻿#include "RRenderer.h"
+﻿#include "RRenderingResources.h"
 
 #include "Shading/RMaterial.h"
 #include "Graphics/Pipelines/Shader/RShader.h"
@@ -10,7 +10,7 @@
 
 namespace At0::Ray
 {
-	Renderer& Renderer::operator=(Renderer&& other) noexcept
+	RenderingResources& RenderingResources::operator=(RenderingResources&& other) noexcept
 	{
 		m_DescriptorSets = std::move(other.m_DescriptorSets);
 		m_BufferUniforms = std::move(other.m_BufferUniforms);
@@ -20,11 +20,14 @@ namespace At0::Ray
 		return *this;
 	}
 
-	Renderer::Renderer(Renderer&& other) noexcept { *this = std::move(other); }
+	RenderingResources::RenderingResources(RenderingResources&& other) noexcept
+	{
+		*this = std::move(other);
+	}
 
-	Renderer::~Renderer() {}
+	RenderingResources::~RenderingResources() {}
 
-	bool Renderer::HasBufferUniform(std::string_view name) const
+	bool RenderingResources::HasBufferUniform(std::string_view name) const
 	{
 		for (auto& [set, uniforms] : m_BufferUniforms)
 			for (const BufferUniform& uniform : uniforms)
@@ -33,7 +36,7 @@ namespace At0::Ray
 		return false;
 	}
 
-	bool Renderer::HasSampler2DUniform(std::string_view name) const
+	bool RenderingResources::HasSampler2DUniform(std::string_view name) const
 	{
 		for (auto& [set, uniforms] : m_Sampler2DUniforms)
 			for (const Sampler2DUniform& uniform : uniforms)
@@ -42,24 +45,27 @@ namespace At0::Ray
 		return false;
 	}
 
-	bool Renderer::HasPushConstant(std::string_view name) const
+	bool RenderingResources::HasPushConstant(std::string_view name) const
 	{
 		return std::find_if(m_PushConstants.begin(), m_PushConstants.end(),
 				   [name](const BufferUniform& uniform)
 				   { return uniform.GetName() == name; }) != m_PushConstants.end();
 	}
 
-	Renderer::Renderer(Ref<Material> material) : m_Material(material) { AddUniforms(); }
+	RenderingResources::RenderingResources(Ref<Material> material) : m_Material(material)
+	{
+		AddUniforms();
+	}
 
-	BufferUniform& Renderer::AddBufferUniform(const std::string& name, ShaderStage stage)
+	BufferUniform& RenderingResources::AddBufferUniform(const std::string& name, ShaderStage stage)
 	{
 		RAY_MEXPECTS(
 			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniformBlock(
 				name),
-			"[Renderer] BufferUniform \"{0}\" was not found in shader stage \"{1}\"", name,
-			String::Construct(stage));
-		RAY_MEXPECTS(
-			!HasBufferUniform(name), "[Renderer] Buffer Uniform \"{0}\" was already added", name);
+			"[RenderingResources] BufferUniform \"{0}\" was not found in shader stage \"{1}\"",
+			name, String::Construct(stage));
+		RAY_MEXPECTS(!HasBufferUniform(name),
+			"[RenderingResources] Buffer Uniform \"{0}\" was already added", name);
 
 		uint32_t set = m_Material->GetGraphicsPipeline()
 						   .GetShader()
@@ -86,7 +92,7 @@ namespace At0::Ray
 		RAY_MEXPECTS(std::find_if(m_BufferUniforms[set].begin(), m_BufferUniforms[set].end(),
 						 [&name](const auto& uniform)
 						 { return uniform.GetName() == name; }) == m_BufferUniforms[set].end(),
-			"[Renderer] BufferUniform \"{0}\" already added", name);
+			"[RenderingResources] BufferUniform \"{0}\" already added", name);
 
 		// Create buffer uniform
 		BufferUniform& uniform = m_BufferUniforms[set].emplace_back(
@@ -96,15 +102,15 @@ namespace At0::Ray
 		return uniform;
 	}
 
-	Sampler2DUniform& Renderer::AddSampler2DUniform(
+	Sampler2DUniform& RenderingResources::AddSampler2DUniform(
 		const std::string& name, ShaderStage stage, Ref<Texture> texture)
 	{
 		RAY_MEXPECTS(m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniform(
 						 name, true),
-			"[Renderer] Sampler2DUniform \"{0}\" was not found in shader stage \"{1}\"", name,
-			String::Construct(stage));
+			"[RenderingResources] Sampler2DUniform \"{0}\" was not found in shader stage \"{1}\"",
+			name, String::Construct(stage));
 		RAY_MEXPECTS(!HasSampler2DUniform(name),
-			"[Renderer] Sampler2D Uniform \"{0}\" was already added", name);
+			"[RenderingResources] Sampler2D Uniform \"{0}\" was already added", name);
 
 		uint32_t set =
 			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).GetUniform(name).set;
@@ -128,7 +134,7 @@ namespace At0::Ray
 		RAY_MEXPECTS(std::find_if(m_Sampler2DUniforms[set].begin(), m_Sampler2DUniforms[set].end(),
 						 [&name](const auto& uniform)
 						 { return uniform.GetName() == name; }) == m_Sampler2DUniforms[set].end(),
-			"[Renderer] Sampler2DUniform \"{0}\" already added", name);
+			"[RenderingResources] Sampler2DUniform \"{0}\" already added", name);
 
 		// Create buffer uniform
 		Sampler2DUniform& uniform = m_Sampler2DUniforms[set].emplace_back(
@@ -139,58 +145,58 @@ namespace At0::Ray
 		return uniform;
 	}
 
-	BufferUniform& Renderer::AddPushConstant(std::string_view name, ShaderStage stage)
+	BufferUniform& RenderingResources::AddPushConstant(std::string_view name, ShaderStage stage)
 	{
 		RAY_MEXPECTS(
 			m_Material->GetGraphicsPipeline().GetShader().GetReflection(stage).HasUniformBlock(
 				name),
-			"[Renderer] Push Constant \"{0}\" was not found in shader stage \"{1}\"", name,
-			String::Construct(stage));
-		RAY_MEXPECTS(
-			!HasPushConstant(name), "[Renderer] Push Constant \"{0}\" was already added", name);
+			"[RenderingResources] Push Constant \"{0}\" was not found in shader stage \"{1}\"",
+			name, String::Construct(stage));
+		RAY_MEXPECTS(!HasPushConstant(name),
+			"[RenderingResources] Push Constant \"{0}\" was already added", name);
 		return m_PushConstants.emplace_back(name, stage, m_Material->GetGraphicsPipeline());
 	}
 
-	BufferUniform& Renderer::GetBufferUniform(std::string_view name)
+	BufferUniform& RenderingResources::GetBufferUniform(std::string_view name)
 	{
 		for (auto& descriptors : m_BufferUniforms)
 			for (auto& uBuff : descriptors.second)
 				if (uBuff.GetName() == name)
 					return uBuff;
-		ThrowRuntime("[Renderer] Failed to retrieve BufferUniform \"{0}\"", name);
+		ThrowRuntime("[RenderingResources] Failed to retrieve BufferUniform \"{0}\"", name);
 		return m_BufferUniforms[0][0];
 	}
 
-	Sampler2DUniform& Renderer::GetSampler2DUniform(std::string_view name)
+	Sampler2DUniform& RenderingResources::GetSampler2DUniform(std::string_view name)
 	{
 		for (auto& descriptors : m_Sampler2DUniforms)
 			for (auto& uBuff : descriptors.second)
 				if (uBuff.GetName() == name)
 					return uBuff;
-		ThrowRuntime("[Renderer] Failed to retrieve Sampler2DUniform \"{0}\"", name);
+		ThrowRuntime("[RenderingResources] Failed to retrieve Sampler2DUniform \"{0}\"", name);
 		return m_Sampler2DUniforms[0][0];
 	}
 
-	BufferUniform& Renderer::GetPushConstant(std::string_view name)
+	BufferUniform& RenderingResources::GetPushConstant(std::string_view name)
 	{
 		for (auto& pushConstant : m_PushConstants)
 			if (pushConstant.GetName() == name)
 				return pushConstant;
-		ThrowRuntime("[Renderer] Failed to retrieve push constant \"{0}\"", name);
+		ThrowRuntime("[RenderingResources] Failed to retrieve push constant \"{0}\"", name);
 		return m_PushConstants[0];
 	}
 
-	DescriptorSet& Renderer::GetDescriptorSet(uint32_t set)
+	DescriptorSet& RenderingResources::GetDescriptorSet(uint32_t set)
 	{
 		for (DescriptorSet& descSet : m_DescriptorSets)
 			if (descSet.GetSetNumber() == set)
 				return descSet;
 
-		ThrowRuntime("[Renderer] Failed to retrieve descriptor set with set {0}", set);
+		ThrowRuntime("[RenderingResources] Failed to retrieve descriptor set with set {0}", set);
 		return m_DescriptorSets[0];
 	}
 
-	void Renderer::SetSamplerTexture(
+	void RenderingResources::SetSamplerTexture(
 		std::string_view name, Ref<Texture> texture, VkImageLayout imageLayout)
 	{
 		for (auto& [set, uniforms] : m_Sampler2DUniforms)
@@ -201,10 +207,11 @@ namespace At0::Ray
 					return;
 				}
 
-		ThrowRuntime("[Renderer] Failed to find Sampler2DUniform with name \"{0}\"", name);
+		ThrowRuntime(
+			"[RenderingResources] Failed to find Sampler2DUniform with name \"{0}\"", name);
 	}
 
-	void Renderer::AddUniforms()
+	void RenderingResources::AddUniforms()
 	{
 		for (ShaderStage stage :
 			m_Material->GetGraphicsPipeline().GetShader().GetLiveShaderStages())
@@ -219,7 +226,7 @@ namespace At0::Ray
 				case UniformType::CombinedImageSampler:
 					AddSampler2DUniform(uniform.name, stage, nullptr);
 					break;
-				default: RAY_ASSERT(false, "[Renderer] Invalid uniform type");
+				default: RAY_ASSERT(false, "[RenderingResources] Invalid uniform type");
 				}
 			}
 

@@ -27,7 +27,7 @@
 #include "Scene/RCamera.h"
 
 #include "Components/RMesh.h"
-#include "Components/RMeshRenderer.h"
+#include "Components/RMeshRenderingResources.h"
 
 #include "Devices/RWindow.h"
 
@@ -232,15 +232,16 @@ namespace At0::Ray
 #endif
 	}
 
-	void Graphics::RecordCommandBuffer(
-		const CommandBuffer& cmdBuff, const Framebuffer& framebuffer, uint32_t imageIndex)
+	void Graphics::RecordCommandBuffer(Scene& lockedScene, const CommandBuffer& cmdBuff,
+		const Framebuffer& framebuffer, uint32_t imageIndex)
 	{
-		auto meshRendererView = Scene::Get().GetRegistry().group<MeshRenderer>(entt::get<Mesh>);
+		auto meshRendererView =
+			lockedScene.GetRegistry().group<MeshRenderingResources>(entt::get<Mesh>);
 
 		VkClearValue clearValues[2];
 		cmdBuff.Begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
-		m_ShadowMapping->Draw(cmdBuff, meshRendererView);
+		m_ShadowMapping->Draw(cmdBuff, meshRendererView, &lockedScene.GetRegistry());
 
 		/////////////////////////////////////////////////////////////////////////////////////////
 		// Seconds pass (Geometry pass)
@@ -267,7 +268,7 @@ namespace At0::Ray
 		for (uint32_t i = 0; i < meshRendererView.size(); ++i)
 		{
 			const auto& [meshRenderer, mesh] =
-				meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
+				meshRendererView.get<MeshRenderingResources, Mesh>(meshRendererView[i]);
 
 			if (mesh.GetName() == "DebugQuad")
 				continue;
@@ -281,13 +282,17 @@ namespace At0::Ray
 		ImGUI::Get().CmdBind(cmdBuff);
 #endif
 
-		Graphics::Get().m_RenderPass->End(cmdBuff);
+		m_RenderPass->End(cmdBuff);
 
 		cmdBuff.End();
 	}
 
 	void Graphics::Update(Delta dt)
 	{
+		Ref<Scene> scene = m_Window.GetActiveScene();
+		if (!scene)
+			return;
+
 		// Wait for fence in VkQueueSubmit to become signaled
 		// which means that the command buffer finished executing
 		vkWaitForFences(
@@ -302,7 +307,7 @@ namespace At0::Ray
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR)
 		{
-			OnFramebufferResized();
+			OnFramebufferResized(*scene);
 			return;
 		}
 		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
@@ -326,7 +331,7 @@ namespace At0::Ray
 		ImGUI::Get().NewFrame();
 		ImGUI::Get().UpdateBuffers();
 #endif
-		Scene::Get().UpdateTransforms(dt);
+		scene->UpdateTransforms(dt);
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -335,8 +340,8 @@ namespace At0::Ray
 
 
 #if RAY_MULTITHREADED_COMMAND_BUFFER_RERECORDING
-		m_CommandBufferRecorder->Record(*m_RenderPass, *m_Framebuffers[imageIndex], imageIndex,
-			m_Viewport, m_Scissor, m_Swapchain->GetExtent());
+		m_CommandBufferRecorder->Record(*scene, *m_RenderPass, *m_Framebuffers[imageIndex],
+			imageIndex, m_Viewport, m_Scissor, m_Swapchain->GetExtent());
 		// submitInfo.commandBufferCount =
 		//	(uint32_t)m_CommandBufferRecorder->GetVkCommandBuffers(imageIndex).size();
 		// submitInfo.pCommandBuffers =
@@ -346,7 +351,8 @@ namespace At0::Ray
 			*m_CommandBufferRecorder->GetMainCommandResources(imageIndex).commandBuffer;
 		submitInfo.pCommandBuffers = &commandBuffer;
 #else
-		RecordCommandBuffer(*m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex], imageIndex);
+		RecordCommandBuffer(
+			*scene, *m_CommandBuffers[imageIndex], *m_Framebuffers[imageIndex], imageIndex);
 		VkCommandBuffer commandBuffers[] = { *m_CommandBuffers[imageIndex] };
 		submitInfo.commandBufferCount = std::size(commandBuffers);
 		submitInfo.pCommandBuffers = commandBuffers;
@@ -382,7 +388,7 @@ namespace At0::Ray
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR ||
 			m_FramebufferResized)
-			OnFramebufferResized();
+			OnFramebufferResized(*scene);
 		else if (result != VK_SUCCESS)
 			ThrowRuntime("[Graphics] Failed to present swapchain image");
 
@@ -405,14 +411,14 @@ namespace At0::Ray
 		m_CommandBuffers.clear();
 		m_CommandBufferRecorder.reset();
 
-		Scene::Destroy();
+		// Scene::Destroy();
 
 #if RAY_ENABLE_IMGUI
 		ImGUI::Destroy();
 #endif
 		DynamicUniformBuffer::Reset();
 		Codex::Shutdown();
-		ResourceManager::Destroy();
+		// ResourceManager::Destroy();
 
 		if (m_PipelineCache)
 		{
@@ -446,7 +452,7 @@ namespace At0::Ray
 		m_Scissor.extent = { (uint32_t)size.x, (uint32_t)size.y };
 	}
 
-	void Graphics::OnFramebufferResized()
+	void Graphics::OnFramebufferResized(Scene& lockedScene)
 	{
 		// Minimized window will have framebuffer size of [0 | 0]
 		// Sleep until window is back in foreground
@@ -480,10 +486,10 @@ namespace At0::Ray
 		CreateFramebuffers();
 		CreateCommandBuffers();
 		for (uint32_t i = 0; i < m_CommandBuffers.size(); ++i)
-			RecordCommandBuffer(*m_CommandBuffers[i], *m_Framebuffers[i], i);
+			RecordCommandBuffer(lockedScene, *m_CommandBuffers[i], *m_Framebuffers[i], i);
 
 		size = m_Window.GetFramebufferSize();
-		Scene::Get().GetCamera().UpdateAspectRatio((float)size.x / (float)size.y);
+		lockedScene.GetCamera().UpdateAspectRatio((float)size.x / (float)size.y);
 
 		m_FramebufferResized = false;
 	}

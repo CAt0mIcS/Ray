@@ -4,7 +4,7 @@
 #include <Ray/Graphics/RGraphics.h>
 
 #include <Ray/Components/RMesh.h>
-#include <Ray/Components/RMeshRenderer.h>
+#include <Ray/Components/RMeshRenderingResources.h>
 #include <Ray/Components/RTransform.h>
 #include <Ray/Components/RSkybox.h>
 #include <Ray/Components/RModel.h>
@@ -56,7 +56,7 @@ public:
 
 
 		m_Entity = GetScene().CreateEntity();
-		m_Entity.Emplace<Ray::Model>("Resources/Scenes/Sponza/scene.gltf", material);
+		m_Entity.Emplace<Ray::Model>(scene, "Resources/Scenes/Sponza/scene.gltf", material);
 
 		Ray::Entity light = GetScene().CreateEntity();
 		light.Emplace<Ray::PointLight>();
@@ -65,8 +65,8 @@ public:
 
 		m_Entity.AddChild(light);
 
-		GetScene().CreateEntity().Emplace<Ray::Skybox>(
-			Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
+		// GetScene().CreateEntity().Emplace<Ray::Skybox>(
+		//	Ray::MakeRef<Ray::Texture>("Resources/Textures/EquirectangularWorldMap.jpg"));
 		auto& registry = GetScene().GetRegistry();
 	}
 
@@ -140,34 +140,30 @@ private:
 };
 
 
-class Scene : public Ray::Scene
-{
-public:
-	Scene(Ray::Engine* engine)
-		: Ray::Scene(*engine, Ray::MakeScope<Ray::Camera>(engine->GetMainWindow()))
-	{
-		Ray::ImGUI::Create(GetMainWindow());
-
-		Ray::UInt2 size = GetMainWindow().GetFramebufferSize();
-		GetCamera().SetPosition(Ray::Float3(0.0f, 0.0f, -2.5f));
-		GetCamera().SetRotation(Ray::Float3(0.0f));
-		GetCamera().SetRotationSpeed(0.07f);
-		GetCamera().SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
-		GetCamera().SetMovementSpeed(3.0f);
-
-		TestEntityLayer& layer = RegisterLayer<TestEntityLayer>();
-	}
-};
-
-
 class App : public Ray::Engine
 {
 public:
 	App()
 	{
-		Ray::Scene::Create<Scene>(this);
-		GetMainWindow().Show();
-		GetMainWindow().SetTitle("SetupTest");
+		auto window = CreateWindow("MainWindow");
+		window->Show();
+		window->SetTitle("SetupTest");
+
+		Ray::ImGUI::Create(*window);
+
+		// Ray::Ref<Ray::Scene> scene = CreateSceneFromFile("filepath");
+		Ray::Ref<Ray::Scene> scene = CreateScene("MainScene");
+		SetActiveScene(window, scene);
+
+		Ray::UInt2 size = scene->GetWindow().GetFramebufferSize();
+		auto& camera = scene->GetCamera();
+		camera.SetPosition(Ray::Float3(0.0f, 0.0f, -2.5f));
+		camera.SetRotation(Ray::Float3(0.0f));
+		camera.SetRotationSpeed(0.07f);
+		camera.SetPerspective(60.0f, (float)size.x / (float)size.y, 0.1f, 512.0f);
+		camera.SetMovementSpeed(3.0f);
+
+		scene->RegisterLayer<TestEntityLayer>();
 	}
 
 private:

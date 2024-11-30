@@ -194,8 +194,8 @@ set(SRC
 
 	# ------------------------------------------------------------------
 	# Components
-	"Components/Base/RRenderer.h"
-	"Components/Base/RRenderer.cpp"
+	"Components/Base/RRenderingResources.h"
+	"Components/Base/RRenderingResources.cpp"
 	"Components/Base/RWidget.h"
 	"Components/Base/RWidget.cpp"
 	"Components/RComponent.h"
@@ -205,8 +205,8 @@ set(SRC
 	"Components/RModel.cpp"
 	"Components/RSkybox.h"
 	"Components/RSkybox.cpp"
-	"Components/RMeshRenderer.h"
-	"Components/RMeshRenderer.cpp"
+	"Components/RMeshRenderingResources.h"
+	"Components/RMeshRenderingResources.cpp"
 	"Components/RTransform.h"
 	"Components/RTransform.cpp"
 	"Components/RScriptableEntity.h"

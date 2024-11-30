@@ -5,13 +5,15 @@
 
 #include "../Graphics/Core/RVulkanInstance.h"
 #include "../Graphics/Core/RPhysicalDevice.h"
-#include "../Graphics/Core/RRenderContext.h"
 
-#include "../Devices/RWindow.h"
+#include "../Core/RResourceManager.h"
 
 
 namespace At0::Ray
 {
+	class Scene;
+	class Window;
+
 	class RAY_EXPORT Engine
 	{
 	public:
@@ -24,38 +26,84 @@ namespace At0::Ray
 		int Run();
 
 		/**
-		 * @returns the time since the last frame
+		 * @returns the time since the last frame of the window with tag
 		 */
-		Time GetDelta() const { return m_Delta.Change(); }
+		Time GetDelta(const std::string& tag) const;
 
 		/**
-		 * @returns The FPS
+		 * @returns The FPS of the window with tag
 		 */
-		uint32_t GetFPS() const { return m_FPS.Value(); }
+		uint32_t GetFPS(const std::string& tag) const;
 
-		EngineRenderContext GetRenderContext()
+		/**
+		 * Creates a new window with tag and stores it
+		 */
+		Ref<Window> CreateWindow(const std::string& tag);
+
+		/**
+		 * Destroys existing window and frees up all resources belonging to it
+		 */
+		void DestroyWindow(const std::string& tag);
+
+		/**
+		 * Creates a new empty scene using a derived scene
+		 */
+		template<typename T, typename... Args>
+		Ref<T> CreateScene(const std::string& tag, Args&&... args)
 		{
-			return EngineRenderContext{ m_VulkanInstance, m_PhysicalDevice };
+			m_Resources.Emplace(tag, std::forward<Args>(args)...);
 		}
 
-		const Window& GetMainWindow() const { return m_MainWindow; }
-		Window& GetMainWindow() { return (Window&)std::as_const(*this).GetMainWindow(); }
+		/**
+		 * Creates a new empty scene
+		 */
+		Ref<Scene> CreateScene(const std::string& tag);
+		void DestroyScene(const std::string& tag);
+
+		/**
+		 * Links a specific window to a specific scene
+		 */
+		void SetActiveScene(Ref<Window> window, Ref<Scene> scene);
+
+		size_t GetNumWindows() const { return m_Windows.size(); }
+		Ref<Window> GetWindow(const std::string& tag) { return m_Windows.at(tag).window; }
+		const Window& GetWindow(const std::string& tag) const { return *m_Windows.at(tag).window; }
+
+		ResourceManager& GetResourceManager() { return m_Resources; }
+		const ResourceManager& GetResourceManager() const { return m_Resources; }
 
 		/**
 		 * First thing updated for now
 		 */
 		virtual void Update() {}
 
+	public:
+		struct RenderContext
+		{
+			VulkanInstance instance{};
+			PhysicalDevice physicalDevice{ instance };
+		};
+
 	protected:
 		Engine();
 
 	private:
-		Delta m_Delta{};
-		ChangePerSecond m_FPS{};
+		bool UpdateWindows();
 
-		VulkanInstance m_VulkanInstance;
-		PhysicalDevice m_PhysicalDevice;
+	private:
+		struct WindowData
+		{
+			Ref<Window> window;
+			Delta deltaTime;
+			ChangePerSecond fps;
+		};
 
-		Window m_MainWindow;
+	private:
+		static constexpr int s_MaxWindows = 12;
+
+		Engine::RenderContext m_Context{};
+		ResourceManager m_Resources;
+
+		std::unordered_map<std::string, WindowData> m_Windows;
 	};
 }  // namespace At0::Ray

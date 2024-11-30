@@ -4,6 +4,10 @@
 #include "Devices/RKeyboard.h"
 #include "Devices/RMouse.h"
 
+// RAY_TODO: The following shouldn't be here
+#include "Scene/RScene.h"
+#include "Components/RMeshRenderingResources.h"
+
 
 namespace At0::Ray
 {
@@ -137,6 +141,7 @@ namespace At0::Ray
 		  EventListener<KeyPressedEvent>(window), EventListener<KeyReleasedEvent>(window),
 		  EventListener<ScrollUpEvent>(window), EventListener<ScrollDownEvent>(window)
 	{
+		s_Instance = this;
 	}
 
 	Camera::~Camera() {}
@@ -195,6 +200,20 @@ namespace At0::Ray
 	{
 		for (auto* listener : EventDispatcher<CameraChangedEvent>::Get())
 			listener->OnEvent(e);
+
+		auto scene = m_Window.GetActiveScene();
+		if (!scene)
+			return;
+
+		// RAY_TODO: Share camera uniform?
+		auto view = scene->EntityView<MeshRenderingResources>();
+		for (auto e : view)
+		{
+			Entity entity(e, &scene->GetRegistry());
+
+			auto& renderer = entity.Get<MeshRenderingResources>();
+			renderer.UpdateCameraBufferUniform(*this);
+		}
 	}
 
 	void Camera::OnEvent(MouseMovedEvent& e)

@@ -56,6 +56,9 @@ namespace At0::Ray
 	template<typename T>
 	using Ref = std::shared_ptr<T>;
 
+	template<typename T>
+	using WeakPtr = std::weak_ptr<T>;
+
 	template<typename T, typename... Args>
 	Scope<T> MakeScope(Args&&... args)
 	{

@@ -13,15 +13,10 @@ namespace At0::Ray
 	class PhysicalDevice;
 	class Window;
 
-	struct EngineRenderContext
-	{
-		const VulkanInstance& instance;
-		const PhysicalDevice& physicalDevice;
-	};
-
 	struct RenderContext
 	{
-		RenderContext(Window& window, const EngineRenderContext& engineContext);
+		RenderContext(
+			Window& window, const VulkanInstance& instance, const PhysicalDevice& physicalDevice);
 		~RenderContext();
 
 		const VulkanInstance& instance;

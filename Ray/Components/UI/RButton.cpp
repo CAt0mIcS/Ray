@@ -6,7 +6,7 @@
 #include "Shading/RMaterial.h"
 
 #include "../RMesh.h"
-#include "../RMeshRenderer.h"
+#include "../RMeshRenderingResources.h"
 #include "Graphics/RGraphics.h"
 
 
@@ -55,7 +55,7 @@ namespace At0::Ray
 	void Button::SetColor(const Float4& color)
 	{
 		RAY_MEXPECTS(m_UseColorMaterial, "[Button] RAY_TODO: Cannot set color on textured button");
-		GetEntity().Get<MeshRenderer>().GetMaterial().Set("Shading.color", color);
+		GetEntity().Get<MeshRenderingResources>().GetMaterial().Set("Shading.color", color);
 	}
 
 	void Button::SetTexture(Ref<Texture> texture)
@@ -63,7 +63,7 @@ namespace At0::Ray
 		RAY_MEXPECTS(
 			!m_UseColorMaterial, "[Button] RAY_TODO: Cannot set texture on colored button");
 
-		Material& material = GetEntity().Get<MeshRenderer>().GetMaterial();
+		Material& material = GetEntity().Get<MeshRenderingResources>().GetMaterial();
 
 		// Wait for command buffers to finish executing because command buffers which are in the
 		// pending state and are using the descriptor set need to finish before it can be updated

@@ -1,4 +1,4 @@
-﻿#include "RMeshRenderer.h"
+﻿#include "RMeshRenderingResources.h"
 
 #include "RTransform.h"
 #include "RMesh.h"
@@ -16,22 +16,20 @@
 
 namespace At0::Ray
 {
-	MeshRenderer::MeshRenderer(Entity entity, Ref<Material> material)
-		: Component(entity),
-		  Renderer(std::move(material)), EventListener<MaterialBecameDirtyEvent>(*m_Material),
-		  EventListener<CameraChangedEvent>(Scene::Get().GetCamera()),
+	MeshRenderingResources::MeshRenderingResources(Entity entity, Ref<Material> material)
+		: Component(entity), RenderingResources(std::move(material)),
+		  EventListener<MaterialBecameDirtyEvent>(*m_Material),
 		  m_PerObjectDataUniformRef(GetBufferUniform(UniformBlockTag::PerObjectData)["Model"])
 	{
 		m_PerSceneUniform = &GetBufferUniform(UniformBlockTag::PerSceneData);
 
 		SetMaterialData();
 
-		// Set Camera data
-		CameraChangedEvent e{};
-		OnEvent(e);
+		// Set Camera data (RAY_TODO)
+		UpdateCameraBufferUniform(Camera::Get());
 	}
 
-	void MeshRenderer::Render(const CommandBuffer& cmdBuff) const
+	void MeshRenderingResources::Render(const CommandBuffer& cmdBuff) const
 	{
 		// if (!Scene::Get().GetCamera().GetFrustum().SphereCheck(
 		//		GetEntity().Get<Transform>().Translation(), 1.0f /*radius*/))
@@ -48,7 +46,7 @@ namespace At0::Ray
 				cmdBuff, m_Material->GetGraphicsPipeline().GetLayout());
 	}
 
-	void MeshRenderer::Update()
+	void MeshRenderingResources::Update()
 	{
 		if (auto& tform = GetEntity().Get<Transform>(); tform.HasChanged())
 		{
@@ -66,7 +64,15 @@ namespace At0::Ray
 		}
 	}
 
-	void MeshRenderer::SetMaterialData()
+	void MeshRenderingResources::UpdateCameraBufferUniform(Camera& cam)
+	{
+		(*m_PerSceneUniform)["View"] = cam.ShaderData.View;
+		(*m_PerSceneUniform)["Proj"] = cam.ShaderData.Projection;
+		if (m_PerSceneUniform->Has("ViewPos"))
+			(*m_PerSceneUniform)["ViewPos"] = cam.ShaderData.ViewPos;
+	}
+
+	void MeshRenderingResources::SetMaterialData()
 	{
 		for (const auto& [stage, reflection] :
 			m_Material->GetGraphicsPipeline().GetShader().GetReflections())
@@ -90,7 +96,7 @@ namespace At0::Ray
 		}
 	}
 
-	void MeshRenderer::UpdateUniform(const std::string& dataPath, bool isPushConstant)
+	void MeshRenderingResources::UpdateUniform(const std::string& dataPath, bool isPushConstant)
 	{
 		int pos = dataPath.find('.');
 		std::string uBlockName = dataPath.substr(0, pos);
@@ -154,12 +160,12 @@ namespace At0::Ray
 		case ShaderDataType::DMat4x2: getUniform() = m_Material->Get<DMatrix4x2>(dataPath); break;
 		case ShaderDataType::DMat4x3: getUniform() = m_Material->Get<DMatrix4x3>(dataPath); break;
 		default:
-			RAY_ASSERT(
-				false, "[MeshRenderer] Data type {0} unknown.", (int)m_Material->GetType(dataPath));
+			RAY_ASSERT(false, "[MeshRenderingResources] Data type {0} unknown.",
+				(int)m_Material->GetType(dataPath));
 		}
 	}
 
-	void MeshRenderer::OnEvent(MaterialBecameDirtyEvent& e)
+	void MeshRenderingResources::OnEvent(MaterialBecameDirtyEvent& e)
 	{
 		switch (e.uType)
 		{
@@ -169,13 +175,5 @@ namespace At0::Ray
 			break;
 		case UniformType::Push: UpdateUniform(e.dataPath, true); break;
 		}
-	}
-
-	void MeshRenderer::OnEvent(CameraChangedEvent& e)
-	{
-		(*m_PerSceneUniform)["View"] = Scene::Get().GetCamera().ShaderData.View;
-		(*m_PerSceneUniform)["Proj"] = Scene::Get().GetCamera().ShaderData.Projection;
-		if (m_PerSceneUniform->Has("ViewPos"))
-			(*m_PerSceneUniform)["ViewPos"] = Scene::Get().GetCamera().ShaderData.ViewPos;
 	}
 }  // namespace At0::Ray

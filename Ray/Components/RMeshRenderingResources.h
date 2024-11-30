@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "RComponent.h"
-#include "Base/RRenderer.h"
+#include "Base/RRenderingResources.h"
 
 #include "../Events/REventListener.h"
 #include "../Events/RCustomEvents.h"
@@ -16,20 +16,20 @@ namespace At0::Ray
 	class Material;
 	class Texture;
 	class DynamicBufferAccess;
+	class Camera;
 	enum class ShaderStage;
 
 	/**
 	 * Components containing all resources specifically required for a mesh to render.
-	 * A mesh is only rendered if the contained entity has a MeshRenderer component
+	 * A mesh is only rendered if the contained entity has a MeshRenderingResources component
 	 */
-	class RAY_EXPORT MeshRenderer :
+	class RAY_EXPORT MeshRenderingResources :
 		public Component,
-		public Renderer,
-		EventListener<MaterialBecameDirtyEvent>,
-		EventListener<CameraChangedEvent>
+		public RenderingResources,
+		EventListener<MaterialBecameDirtyEvent>
 	{
 	public:
-		MeshRenderer(Entity entity, Ref<Material> material);
+		MeshRenderingResources(Entity entity, Ref<Material> material);
 
 		/**
 		 * Binds all of the mesh's resources
@@ -41,6 +41,9 @@ namespace At0::Ray
 		 * current transform in the transform component
 		 */
 		void Update();
+
+		// RAY_TEMPORARY: Until we have better camera implementations and share buffer uniforms
+		void UpdateCameraBufferUniform(Camera& cam);
 
 	private:
 		/**
@@ -54,11 +57,11 @@ namespace At0::Ray
 		void UpdateUniform(const std::string& dataPath, bool isPushConstant = false);
 
 		virtual void OnEvent(MaterialBecameDirtyEvent& e) override;
-		virtual void OnEvent(CameraChangedEvent& e) override;
 
 	private:
 		/**
-		 * Points to the buffer uniform in the unordered_map to make MeshRenderer::Update faster
+		 * Points to the buffer uniform in the unordered_map to make MeshRenderingResources::Update
+		 * faster
 		 */
 		DynamicBufferAccess m_PerObjectDataUniformRef;
 
@@ -73,4 +76,4 @@ namespace At0::Ray
 }  // namespace At0::Ray
 
 
-RAY_EXPORT_COMPONENT(MeshRenderer);
+RAY_EXPORT_COMPONENT(MeshRenderingResources);

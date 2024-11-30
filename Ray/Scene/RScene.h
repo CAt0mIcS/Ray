@@ -22,12 +22,12 @@ namespace At0::Ray
 	class Window;
 
 
-	class RAY_EXPORT Scene : public EventDispatcher<EntityCreatedEvent>
+	class RAY_EXPORT Scene : public EventDispatcher<EntityCreatedEvent>, public Resource
 	{
-	public:
-		static Scene& Get();
-		static void Destroy();
+		friend class Engine;
 
+	public:
+		Scene(Engine& engine, Scope<Camera> camera);
 		virtual ~Scene();
 
 		/**
@@ -63,25 +63,10 @@ namespace At0::Ray
 		const Camera& GetCamera() const;
 		Camera& GetCamera() { return (Camera&)std::as_const(*this).GetCamera(); }
 
-		const Window& GetMainWindow() const;
-		Window& GetMainWindow() { return (Window&)std::as_const(*this).GetMainWindow(); }
+		const Window& GetWindow() const;
+		Window& GetWindow() { return (Window&)std::as_const(*this).GetWindow(); }
 
 		const Engine& GetEngine() const { return m_Engine; }
-
-		const ResourceManager& GetResourceManager() const;
-		ResourceManager& GetResourceManager()
-		{
-			return (ResourceManager&)std::as_const(*this).GetResourceManager();
-		}
-
-		template<typename T, typename... Args>
-		static Scene& Create(Args&&... args)
-			requires std::derived_from<T, Scene> && std::constructible_from<T, Args...>
-		{
-			// s_CurrentScene is set in the constructor of Scene
-			new T(std::forward<Args>(args)...);
-			return *s_CurrentScene;
-		}
 
 		template<typename T, typename... Args>
 		T& RegisterLayer(Args&&... args)
@@ -90,20 +75,17 @@ namespace At0::Ray
 			return *(T*)(m_Layers.emplace_back(MakeScope<T>(*this, std::forward<Args>()...)).get());
 		}
 
-	protected:
-		Scene(Engine& engine, Scope<Camera> camera);
+	private:
+		void SetWindow(Ref<Window> window);
 
 	private:
 		entt::registry m_Registry;
 		Scope<Camera> m_Camera = nullptr;
 		ThreadPool m_ThreadPool;
 
-		ResourceManager m_Resources;
-
 		std::vector<Scope<Layer>> m_Layers;
 		const Engine& m_Engine;
-
-		static Scope<Scene> s_CurrentScene;
+		WeakPtr<Window> m_Window;
 	};
 
 }  // namespace At0::Ray

@@ -1,5 +1,6 @@
 #include "RLayer.h"
 
+#include "Core/REngine.h"
 #include "Scene/RScene.h"
 #include "Devices/RWindow.h"
 #include "Graphics/RGraphics.h"
@@ -11,7 +12,7 @@ namespace At0::Ray
 
 	const Window& Layer::GetWindow() const
 	{
-		return GetScene().GetMainWindow();
+		return GetScene().GetWindow();
 	}
 
 	const Engine& Layer::GetEngine() const
@@ -21,7 +22,7 @@ namespace At0::Ray
 
 	const ResourceManager& Layer::GetResourceManager() const
 	{
-		return m_Scene->GetResourceManager();
+		return GetEngine().GetResourceManager();
 	}
 
 	GraphicsPipeline::Builder Layer::PipelineBuilder()

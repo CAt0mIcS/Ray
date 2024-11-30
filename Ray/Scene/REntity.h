@@ -23,12 +23,6 @@ namespace At0::Ray
 		 */
 		Entity(entt::entity handle, entt::registry* registry);
 
-		/**
-		 * Construct an entity from an existing entity handle. Entity must've been created from the
-		 * Scene's registry (default)
-		 */
-		Entity(entt::entity handle);
-
 		Entity(const Entity& other) = default;
 
 		/**
@@ -182,6 +176,17 @@ namespace At0::Ray
 		 * Removes child if it exists
 		 */
 		void RemoveChild(Entity child);
+
+		/**
+		 * Creates iterable list of all components of the Comp type
+		 */
+		template<typename... Comp>
+		auto RegistryView()
+		{
+			return m_Registry->view<Comp...>();
+		}
+
+		entt::registry* GetRegistry() { return m_Registry; }
 
 		/**
 		 * Casting operator to the entity identifier

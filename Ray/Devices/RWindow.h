@@ -22,9 +22,12 @@ struct GLFWwindow;
 
 namespace At0::Ray
 {
+	class Scene;
 	class Widget;
-	class EngineRenderContext;
 	class RenderContext;
+	class VulkanInstance;
+	class PhysicalDevice;
+	class Engine;
 
 	class RAY_EXPORT Window :
 		public EventDispatcher<WindowResizedEvent>,
@@ -45,12 +48,14 @@ namespace At0::Ray
 		public EventDispatcher<HoverEnterEvent>,
 		public EventDispatcher<HoverLeaveEvent>
 	{
+		friend class Engine;
+
 	public:
 		/**
 		 * Creates the Window. Call Window::Show to show it
 		 */
-		Window(const EngineRenderContext& engineContext, uint32_t width = 960,
-			uint32_t height = 540, std::string_view title = "Window");
+		Window(const VulkanInstance& vkInstance, const PhysicalDevice& physicalDevice,
+			uint32_t width = 960, uint32_t height = 540, std::string_view title = "Window");
 
 		/**
 		 * Shows the window
@@ -142,7 +147,15 @@ namespace At0::Ray
 		 */
 		const RenderContext& GetRenderContext() const { return *m_RenderContext; }
 
+		Ref<Scene> GetActiveScene() { return m_ActiveScene.lock(); }
+
 	private:
+		/**
+		 * Sets the scene which is actively being rendered in this window
+		 * RAY_TODO: Use WeakPtr<Scene> as argument to avoid atomic counter increment?
+		 */
+		void SetActiveScene(Ref<Scene> scene);
+
 		void SetEventCallbacks();
 
 		void GenerateHoverEvents();
@@ -155,6 +168,7 @@ namespace At0::Ray
 		static bool s_GlfwInitialized;
 
 		Scope<RenderContext> m_RenderContext;
+		WeakPtr<Scene> m_ActiveScene;
 
 		GLFWwindow* m_hWnd = nullptr;
 		Float2 m_PrevousMousePos{};

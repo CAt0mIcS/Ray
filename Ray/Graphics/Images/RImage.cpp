@@ -22,7 +22,7 @@ namespace At0::Ray
 	{
 		// RAY_TODO: Add data to ressource tag
 
-		return ResourceManager::Get().EmplaceIfNonExistent<Image>(
+		return ResourceManager::Get().EmplaceOrGet<Image>(
 			String::Serialize("Image{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}", extent.x, extent.y,
 				(uint32_t)imageType, (uint32_t)format, (uint32_t)tiling, (uint32_t)usage,
 				(uint32_t)memProps, mipLevels, (uint32_t)imageAspect, arrayLayers,

@@ -113,13 +113,13 @@ namespace At0::Ray
 			(*uniform)["depthMVP"] = CalculateDepthModelViewProjectionMatrix();
 
 			// auto meshRendererView =
-			// Scene::Get().GetRegistry().group<MeshRenderer>(entt::get<Mesh>); for (uint32_t i = 0;
-			// i < meshRendererView.size(); ++i)
+			// Scene::Get().GetRegistry().group<MeshRenderingResources>(entt::get<Mesh>); for
+			// (uint32_t i = 0; i < meshRendererView.size(); ++i)
 			//{
 			//	descriptors[(uint32_t)meshRendererView[i]] = MakeScope<DescriptorSet>(*pipeline, 1);
 			//	descriptors[(uint32_t)meshRendererView[i]]->BindUniform(*uniform);
 			//	descriptors[(uint32_t)meshRendererView[i]]->BindUniform(
-			//		Entity{ meshRendererView[i] }.Get<MeshRenderer>().GetBufferUniform(
+			//		Entity{ meshRendererView[i] }.Get<MeshRenderingResources>().GetBufferUniform(
 			//			"PerObjectData"));
 			//}
 		}
@@ -147,8 +147,9 @@ namespace At0::Ray
 	}
 
 	void ShadowMappingObjects::Draw(const CommandBuffer& cmdBuff,
-		const entt::basic_group<entt::entity, entt::exclude_t<>, entt::get_t<Mesh>, MeshRenderer>&
-			meshRendererView)
+		const entt::basic_group<entt::entity, entt::exclude_t<>, entt::get_t<Mesh>,
+			MeshRenderingResources>& meshRendererView,
+		entt::registry* registry)
 	{
 		// RAY_TODO: Currently checking on every draw if we have new meshes added to scene
 		// RAY_TODO: Use events!
@@ -159,8 +160,9 @@ namespace At0::Ray
 				descriptors[(uint32_t)meshRendererView[i]] = MakeScope<DescriptorSet>(*pipeline, 1);
 				descriptors[(uint32_t)meshRendererView[i]]->BindUniform(*uniform);
 				descriptors[(uint32_t)meshRendererView[i]]->BindUniform(
-					Entity{ meshRendererView[i] }.Get<MeshRenderer>().GetBufferUniform(
-						"PerObjectData"));
+					Entity{ meshRendererView[i], registry }
+						.Get<MeshRenderingResources>()
+						.GetBufferUniform("PerObjectData"));
 			}
 		}
 

@@ -16,14 +16,18 @@ namespace At0::Ray
 {
 	class Material;
 	class Shader;
+	class Scene;
 
 	class RAY_EXPORT Model : public Component
 	{
 	public:
-		Model(Entity entity, std::string_view filepath, Ref<Material> material = nullptr);
+		// RAY_TODO: Remove dependency on scene and overhaul model loading (Should happen in e.g.
+		// ResourceManager)
+		Model(Entity entity, Scene& scene, std::string_view filepath,
+			Ref<Material> material = nullptr);
 
 	private:
-		bool ProcessNode(Entity parent, std::string_view filepath, aiNode* pNode,
+		bool ProcessNode(Entity parent, Scene& scene, std::string_view filepath, aiNode* pNode,
 			const aiScene* pScene, Ref<Material> material);
 
 		void ParseMesh(Entity entity, std::string_view filepath, const aiMesh& mesh,

@@ -19,13 +19,13 @@ namespace At0::Ray
 	class Material;
 	enum class ShaderStage;
 
-	class RAY_EXPORT Renderer : NonCopyable
+	class RAY_EXPORT RenderingResources : NonCopyable
 	{
 	public:
-		Renderer& operator=(Renderer&& other) noexcept;
-		Renderer(Renderer&& other) noexcept;
+		RenderingResources& operator=(RenderingResources&& other) noexcept;
+		RenderingResources(RenderingResources&& other) noexcept;
 
-		virtual ~Renderer();
+		virtual ~RenderingResources();
 
 		BufferUniform& AddBufferUniform(const std::string& name, ShaderStage stage);
 		Sampler2DUniform& AddSampler2DUniform(
@@ -51,7 +51,7 @@ namespace At0::Ray
 		bool HasPushConstant(std::string_view name) const;
 
 	protected:
-		Renderer(Ref<Material> material);
+		RenderingResources(Ref<Material> material);
 
 	private:
 		void AddUniforms();

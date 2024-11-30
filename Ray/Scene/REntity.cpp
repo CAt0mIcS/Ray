@@ -11,11 +11,6 @@ namespace At0::Ray
 	{
 	}
 
-	Entity::Entity(entt::entity handle)
-		: m_EntityHandle(handle), m_Registry(&Scene::Get().GetRegistry())
-	{
-	}
-
 	void Entity::Destroy()
 	{
 		RAY_MEXPECTS(Valid(), "[Entity] Cannot get component(s) of null entity.");
@@ -46,7 +41,9 @@ namespace At0::Ray
 	{
 		RAY_MEXPECTS(Valid(), "[Entity] Cannot get component(s) of null entity.");
 		HierachyComponent* pComponent = m_Registry->try_get<HierachyComponent>(m_EntityHandle);
-		return pComponent == nullptr || pComponent->GetParent() == Entity::Null ? false : true;
+		return pComponent == nullptr || (entt::entity)pComponent->GetParent() == Entity::Null ?
+				   false :
+				   true;
 	}
 
 	Entity Entity::GetParent() const

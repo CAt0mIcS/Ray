@@ -462,7 +462,7 @@ namespace At0::Ray
 		if (!m_Window.CursorEnabled())
 			return;
 		ImGuiIO& io = ImGui::GetIO();
-		if (io.WantCaptureKeyboard)
+		if (io.WantCaptureKeyboard && ImGui::IsAnyItemFocused())
 		{
 			io.KeysDown[(int)e.GetKey()] = true;
 			e.Handled = true;
@@ -474,7 +474,7 @@ namespace At0::Ray
 		if (!m_Window.CursorEnabled())
 			return;
 		ImGuiIO& io = ImGui::GetIO();
-		if (io.WantCaptureKeyboard)
+		if (io.WantCaptureKeyboard && ImGui::IsAnyItemFocused())
 		{
 			io.KeysDown[(int)e.GetKey()] = false;
 			e.Handled = true;

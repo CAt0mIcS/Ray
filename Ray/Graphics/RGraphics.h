@@ -29,6 +29,7 @@ namespace At0::Ray
 	class ShadowMappingObjects;
 	class Window;
 	class RenderContext;
+	class Scene;
 
 
 	class RAY_EXPORT Graphics : NonCopyable, EventListener<FramebufferResizedEvent>
@@ -65,11 +66,11 @@ namespace At0::Ray
 		void CreatePipelineCache();
 		void CreateSyncObjects();
 		void CreateCommandBuffers();
-		void RecordCommandBuffer(
-			const CommandBuffer& cmdBuff, const Framebuffer& framebuffer, uint32_t imageIndex);
+		void RecordCommandBuffer(Scene& lockedScene, const CommandBuffer& cmdBuff,
+			const Framebuffer& framebuffer, uint32_t imageIndex);
 
 		void OnEvent(FramebufferResizedEvent& e) override;
-		void OnFramebufferResized();
+		void OnFramebufferResized(Scene& lockedScene);
 		void WritePipelineCache();
 
 	private:

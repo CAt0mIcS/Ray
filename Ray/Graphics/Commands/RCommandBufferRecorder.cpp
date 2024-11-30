@@ -10,7 +10,7 @@
 #include "../Buffers/RFramebuffer.h"
 
 #include "Scene/RScene.h"
-#include "Components/RMeshRenderer.h"
+#include "Components/RMeshRenderingResources.h"
 #include "Components/RMesh.h"
 #include "Utils/RImGui.h"
 
@@ -56,9 +56,9 @@ namespace At0::Ray
 
 	CommandBufferRecorder::~CommandBufferRecorder() {}
 
-	void CommandBufferRecorder::Record(const RenderPass& renderPass, const Framebuffer& framebuffer,
-		uint32_t imageIndex, const VkViewport& viewport, const VkRect2D& scissor,
-		UInt2 swapchainExtent)
+	void CommandBufferRecorder::Record(Scene& lockedScene, const RenderPass& renderPass,
+		const Framebuffer& framebuffer, uint32_t imageIndex, const VkViewport& viewport,
+		const VkRect2D& scissor, UInt2 swapchainExtent)
 	{
 		const CommandBuffer& mainCmdBuff = *m_MainCommandResources[imageIndex].commandBuffer;
 
@@ -83,12 +83,13 @@ namespace At0::Ray
 		}
 
 		// RAY_TODO: Test group vs view performance
-		auto meshRendererView = Scene::Get().GetRegistry().group<MeshRenderer>(entt::get<Mesh>);
+		auto meshRendererView =
+			lockedScene.GetRegistry().group<MeshRenderingResources>(entt::get<Mesh>);
 		m_ThreadPool.SubmitLoop(0u, (uint32_t)meshRendererView.size(),
 			[this, imageIndex, &meshRendererView](uint32_t i, uint32_t thread)
 			{
 				const auto& [meshRenderer, mesh] =
-					meshRendererView.get<MeshRenderer, Mesh>(meshRendererView[i]);
+					meshRendererView.get<MeshRenderingResources, Mesh>(meshRendererView[i]);
 
 				SecondaryCommandBuffer* cmdBuf =
 					m_CommandResources[imageIndex][thread].commandBuffer.get();
