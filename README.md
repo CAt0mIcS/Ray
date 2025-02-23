@@ -16,6 +16,8 @@ You can find the full documentation on the [wiki](https://github.com/CAt0mIcS/Ra
 
 ## How to Build
 * ### Prerequisits
+  * [Python3](https://www.python.org/downloads/)
+  * [CMake](https://cmake.org/download/)
   * [Vulkan SDK](https://vulkan.lunarg.com/)
   * [Mono x64 (for Windows)](https://www.mono-project.com/docs/getting-started/install/windows/)
   * [Mono x64 (for Linux)](https://www.mono-project.com/download/stable/#download-lin)
